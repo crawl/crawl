@@ -100,10 +100,10 @@ iron sword drank mortal blood. They despise mortal vanities, the pursuit of
 Dissolution
 
 The Pits of Slime used to be a thriving civilization, and Dissolution was the
-prophet of their god. When the city was overtaken by its current residents,
-only Dissolution survived, for they alone turned faithfully to the Slime God.
-Dissolution became a tremendous mass of acidic ooze, yet retained their
-intelligence. They are filled with hatred for anything that can hold a form.
+prophet of his god. When the city was overtaken by its current residents,
+only Dissolution survived, for he alone turned faithfully to the Slime God.
+Dissolution became a tremendous mass of acidic ooze, yet retained his
+intelligence. He is filled with hatred for anything that can hold a form.
 %%%%
 Donald
 
@@ -169,9 +169,9 @@ honour.
 %%%%
 Fannar
 
-A cold-hearted elven sorcerer, draped in robes of high office. They whisper
-grimly to themself as they stalk the dungeon, trailing ice crystals through the
-air behind them.
+A cold-hearted elven sorcerer, draped in robes of high office. He whispers
+grimly to himself as he stalks the dungeon, trailing ice crystals through the
+air behind him.
 %%%%
 Frances
 
@@ -398,8 +398,8 @@ fear her; the dead obey her every command. She has a soft spot for the latter.
 %%%%
 Nessos
 
-A centaur warrior, skilled at warfare and deceit. They slew a mighty hydra, and
-now its deadly blood drips, still-fuming, from their arrows.
+A centaur warrior, skilled at warfare and deceit. He slew a mighty hydra, and
+now its deadly blood drips, still-fuming, from his arrows.
 %%%%
 Nikola
 
@@ -458,7 +458,7 @@ A human whose savage roars bring terror to all those who hear them.
 %%%%
 Saint Roka
 
-A mighty warlord. Some orcs even say they are the Chosen One of Beogh.
+A mighty warlord. Some orcs even say he is the Chosen One of Beogh.
 %%%%
 Sigmund
 
