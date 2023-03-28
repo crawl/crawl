@@ -2799,6 +2799,13 @@ vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual)
     return targets;
 }
 
+int plasma_beam_damage(int zap_dam, bool random)
+{
+    if (random)
+        return div_rand_round(zap_dam * 2, 3);
+    return zap_dam * 2 / 3;
+}
+
 spret cast_plasma_beam(int pow, const actor &agent, bool fail)
 {
     if (agent.is_player()
@@ -2832,13 +2839,15 @@ spret cast_plasma_beam(int pow, const actor &agent, bool fail)
     beam.origin_spell = SPELL_PLASMA_BEAM;
     beam.draw_delay   = 5;
     zappy(ZAP_LIGHTNING_BOLT, pow, false, beam);
+    beam.damage.size  = plasma_beam_damage(beam.damage.size, true);
     beam.fire();
 
     // second beam
-    beam.flavour = BEAM_FIRE;
-    beam.name    = "fiery plasma";
-    beam.glyph   = dchar_glyph(DCHAR_FIRED_ZAP);
+    beam.flavour      = BEAM_FIRE;
+    beam.name         = "fiery plasma";
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_ZAP);
     zappy(ZAP_PLASMA, pow, false, beam);
+    beam.damage.size  = plasma_beam_damage(beam.damage.size, true);
     beam.fire();
 
     return spret::success;

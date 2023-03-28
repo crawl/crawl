@@ -144,7 +144,7 @@ static const struct spell_desc spelldata[] =
     5,
     200,
     3, 10, // capped at LOS
-    25,
+    20,
     TILEG_PLASMA_BEAM,
 },
 
