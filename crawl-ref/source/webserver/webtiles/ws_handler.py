@@ -38,7 +38,7 @@ def shutdown():
         socket.shutdown()
 
 def update_global_status():
-    write_dgl_status_file()
+    IOLoop.current().add_callback(write_dgl_status_file)
 
 # lobbies that need updating
 game_lobby_cache = set() # type: Set[CrawlProcessHandlerBase]
