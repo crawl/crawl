@@ -2486,6 +2486,7 @@ bool melee_attack::mons_attack_effects()
 
     const bool slippery = defender->is_player()
                           && adjacent(attacker->pos(), defender->pos())
+                          && !player_stair_delay() // feet otherwise occupied
                           && player_equip_unrand(UNRAND_SLICK_SLIPPERS);
     // Don't trample while player is moving - either mean or nonsensical
     if (attacker != defender
