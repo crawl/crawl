@@ -1514,6 +1514,16 @@ vector<string> desc_beam_hit_chance(const monster_info& mi, targeter* hitfunc)
     return _desc_hit_chance(mi, beam_hitf->beam.hit, beam_hitf->beam.pierce);
 }
 
+static vector<string> _desc_plasma_hit_chance(const monster_info& mi, int powc)
+{
+    bolt beam;
+    zappy(spell_to_zap(SPELL_PLASMA_BEAM), powc, false, beam);
+    const int hit_pct = _to_hit_pct(mi, beam.hit, beam.pierce);
+    if (hit_pct == -1)
+        return vector<string>{};
+    return vector<string>{make_stringf("2x%d%% to hit", hit_pct)};
+}
+
 static vector<string> _desc_intoxicate_chance(const monster_info& mi,
                                               targeter* hitfunc, int pow)
 {
@@ -1798,6 +1808,8 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
             return bind(_desc_insubstantial, placeholders::_1, "immune to roots");
         case SPELL_STICKY_FLAME:
             return bind(_desc_insubstantial, placeholders::_1, "unstickable");
+        case SPELL_PLASMA_BEAM:
+            return bind(_desc_plasma_hit_chance, placeholders::_1, powc);
         default:
             break;
     }
