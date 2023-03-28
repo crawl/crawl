@@ -212,7 +212,7 @@ dgl_status_file = "./rcs/status"
 # (This setting can be a string or list of strings.)
 # milestone_file = ["./milestones"]
 
-# status_file_update_rate = 5
+# status_file_update_rate = 30
 # lobby_update_rate = 2
 
 # recording_term_size = (80, 24)
