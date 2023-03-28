@@ -1803,7 +1803,7 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     false,
     BEAM_FIRE,
     DCHAR_FIRED_ZAP,
-    false,
+    true,
     false
 },
 
