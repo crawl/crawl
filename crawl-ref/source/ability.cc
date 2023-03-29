@@ -868,7 +868,7 @@ const string make_cost_description(ability_type ability)
     if (hp_cost)
         ret += make_stringf(", %d HP", hp_cost);
 
-    if (abil.piety_cost || abil.flags & abflag::piety)
+    if (abil.piety_cost)
         ret += ", Piety"; // randomised and exact amount hidden from player
 
     if (abil.flags & abflag::breath)
@@ -961,17 +961,12 @@ static const string _detailed_cost_description(ability_type ability)
         ret << abil.get_hp_cost();
     }
 
-    if (abil.piety_cost || abil.flags & abflag::piety)
+    if (abil.piety_cost)
     {
         have_cost = true;
         ret << "\nPiety  : ";
-        if (abil.flags & abflag::piety)
-            ret << "variable";
-        else
-        {
-            int avgcost = abil.piety_cost.base + abil.piety_cost.add / 2;
-            ret << _get_piety_amount_str(avgcost);
-        }
+        int avgcost = abil.piety_cost.base + abil.piety_cost.add / 2;
+        ret << _get_piety_amount_str(avgcost);
     }
 
     if (abil.flags & abflag::gold)
