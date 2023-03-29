@@ -25,6 +25,7 @@ levelup_stat_frequency: 4
 mutations:
   1:
     MUT_COLD_BLOODED: 1
+    MUT_WHIPPY_TAIL: 1
 recommended_jobs:
   - JOB_BERSERKER
   - JOB_TRANSMUTER
