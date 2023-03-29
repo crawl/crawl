@@ -1380,13 +1380,15 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
         json_write_string("qty_field", _qty_field_name(next));
 
         const string prefix = item_prefix(next);
-        const int prefcol = menu_colour(next.name(DESC_INVENTORY), prefix);
+        const int prefcol = menu_colour(next.name(DESC_INVENTORY), prefix, "inventory", false);
         if (force_full)
             json_write_int("col", macro_colour(prefcol));
         else
         {
             const string current_prefix = item_prefix(current);
-            const int current_prefcol = menu_colour(current.name(DESC_INVENTORY), current_prefix);
+            const int current_prefcol = menu_colour(
+                current.name(DESC_INVENTORY), current_prefix,
+                "inventory", false);
 
             if (current_prefcol != prefcol)
                 json_write_int("col", macro_colour(prefcol));

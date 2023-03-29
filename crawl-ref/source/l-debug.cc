@@ -524,6 +524,7 @@ LUAFN(debug_check_moncasts)
         SPELL_KISS_OF_DEATH,
         SPELL_ELECTRIC_CHARGE,
         SPELL_MEPHITIC_BREATH,
+        SPELL_PLASMA_BEAM,
     };
 
     for (int s = SPELL_FIRST_SPELL; s < NUM_SPELLS; s++)

@@ -284,9 +284,6 @@ const vector<vector<god_power>> & get_all_god_powers()
         {   { 0, "Ashenzari warns you of distant threats and treasures.\n"
                  "Ashenzari reveals the structure of the dungeon to you.\n"
                  "Ashenzari shows you where magical portals lie." },
-            { 1, "Ashenzari will now protect you from malevolent surprises.",
-                 "Ashenzari no longer protects you from malevolent surprises.",
-                 "Ashenzari protects you from malevolent surprises." },
             { 1, "Ashenzari will now identify your possessions.",
                  "Ashenzari will no longer identify your possesions.",
                  "Ashenzari identifies your possessions." },
@@ -296,6 +293,10 @@ const vector<vector<god_power>> & get_all_god_powers()
             { 3, "Ashenzari will now keep your mind clear.",
                  "Ashenzari will no longer keep your mind clear.",
                  "Ashenzari keeps your mind clear." },
+            { 4, "Ashenzari will now protect you from malevolent surprises.",
+                 "Ashenzari no longer protects you from malevolent surprises.",
+                 "Ashenzari protects you from malevolent surprises." },
+
         },
 
         // Dithmenos
@@ -372,7 +373,9 @@ const vector<vector<god_power>> & get_all_god_powers()
             { 1, ABIL_HEPLIAKLQANA_IDENTITY, "remember your ancestor's identity" },
             { 3, ABIL_HEPLIAKLQANA_TRANSFERENCE, "swap creatures with your ancestor" },
             { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
-            { 5, "drain nearby creatures when transferring your ancestor"},
+            { 5, "You now drain nearby creatures when transferring your ancestor.",
+                 "You no longer drain nearby creatures when transferring your ancestor.",
+                 "You drain nearby creatures when transferring your ancestor." },
         },
 
         // Wu Jian

@@ -419,6 +419,14 @@ static vector<string> _randart_propnames(const item_def& item,
                 }
             }
 
+            // Don't show the rF+ rC+ twice.
+            if (get_armour_ego_type(item) == SPARM_RESISTANCE
+                && (ann.prop == ARTP_COLD && val == 1
+                    || ann.prop == ARTP_FIRE && val == 1))
+            {
+                continue;
+            }
+
             ostringstream work;
             switch (ann.spell_out)
             {
@@ -1572,8 +1580,8 @@ static string _describe_weapon_brand(const item_def &item)
                "abilities and divine invocations are not affected.";
     case SPWPN_SPECTRAL:
         return "When its wielder attacks, the weapon's spirit leaps out and "
-               "strikes again. The spirit shares a part of any damage it takes "
-               "with its wielder.";
+               "launches a second, slightly weaker strike. The spirit shares "
+               "part of any damage it takes with its wielder.";
     case SPWPN_ACID:
         return "It splashes victims with acid (2d4 damage, Corrosion).";
     default:
@@ -1942,10 +1950,8 @@ static const char* _item_ego_desc(special_armour_type ego)
     case SPARM_GUILE:
         return "it weakens the willpower of the wielder and everyone they hex.";
     case SPARM_ENERGY:
-        return "it occasionally powers its wielder's spells, but with a chance"
-               " of causing confusion or draining the wielder's intelligence."
-               " It becomes more likely to activate and less likely to backfire"
-               " with Evocations skill.";
+        return "it may return the magic spent to cast spells, but lowers their "
+               "success rate. It always returns the magic spent on miscasts.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }
@@ -2447,6 +2453,10 @@ string get_item_description(const item_def &item,
             string stats = mode == IDM_MONSTER ? "" : "\n\n";
             _append_weapon_stats(stats, item);
             description << stats;
+
+            string art_desc = _artefact_descrip(item);
+            if (!art_desc.empty())
+                description << "\n\n" + art_desc;
         }
         description << "\n\nIt falls into the 'Staves' category. ";
         description << _handedness_string(item);
@@ -2884,8 +2894,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
                     stair_dir == CMD_GO_DOWNSTAIRS ? "enter" : "exit",
                     how.c_str(),
                     _esc_cmd_to_str(stair_dir).c_str(),
-                    // TODO should probably derive this from `runes_for_branch`:
-                    (feat == DNGN_ENTER_ZOT || feat == DNGN_ENTER_VAULTS)
+                    (feat == DNGN_ENTER_ZOT || feat == DNGN_EXIT_VAULTS)
                         ? " if you have enough runes" : "");
         }
     }
@@ -3904,17 +3913,31 @@ static string _player_spell_desc(spell_type spell)
                     " and also " + _miscast_damage_string(spell) : "")
                 << ".\n";
 
+    if (spell == SPELL_BATTLESPHERE)
+    {
+        vector<spell_type> battlesphere_spells = player_battlesphere_spells();
+        description << "Your battlesphere";
+        if (battlesphere_spells.empty())
+            description << " is not activated by any of your spells";
+        else
+        {
+            description << " fires when you cast "
+                        << comma_separated_fn(battlesphere_spells.begin(),
+                                              battlesphere_spells.end(),
+                                              spell_title,
+                                              " or ");
+        }
+        description << ".\n";
+    }
+
     if (spell == SPELL_SPELLFORGED_SERVITOR)
     {
         spell_type servitor_spell = player_servitor_spell();
         description << "Your servitor";
         if (servitor_spell == SPELL_NO_SPELL)
-            description << " would be unable to mimic any of your spells";
+            description << " is unable to mimic any of your spells";
         else
-        {
-            description << " casts "
-                        << spell_title(player_servitor_spell());
-        }
+            description << " casts " << spell_title(player_servitor_spell());
         description << ".\n";
     }
 
@@ -4422,6 +4445,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_BARBS,             "embed barbs" },
         { AF_SPIDER,            "summon a spider" },
         { AF_BLOODZERK,         "become enraged" },
+        { AF_SLEEP,             "induce sleep" },
         { AF_SWOOP,             "" },
         { AF_PLAIN,             "" },
     };
@@ -4493,6 +4517,11 @@ static const item_def* _weapon_for_attack(const monster_info& mi, int atk)
 
 static string _monster_attacks_description(const monster_info& mi)
 {
+    // Spectral weapons use the player's stats to attack, so displaying
+    // their 'monster' damage here is just misleading.
+    if (mi.type == MONS_SPECTRAL_WEAPON)
+        return "";
+
     ostringstream result;
     map<mon_attack_info, int> attack_counts;
     brand_type special_flavour = SPWPN_NORMAL;

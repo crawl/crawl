@@ -588,7 +588,7 @@ static void _dump_options(FILE *file)
 {
     fprintf(file, "RC options:\n");
     fprintf(file, "restart_after_game = %s\n",
-            maybe_to_string(Options.restart_after_game).c_str());
+            Options.restart_after_game.to_string().c_str());
     fprintf(file, "\n\n");
 }
 

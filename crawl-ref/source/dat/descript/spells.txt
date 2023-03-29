@@ -63,7 +63,7 @@ Arcjolt spell
 
 Blasts electricity through everything connected to the caster within sight,
 either by adjacency or via a chain of other creatures. The damage dealt
-partially bypasses armour.
+bypasses half of defenders' armour.
 %%%%
 Aura of Brilliance spell
 
@@ -228,8 +228,9 @@ break free.
 %%%%
 Brain Feed spell
 
-Drains a portion of a visible enemy's intelligence. Such a loss is only
-temporary, and can be recovered by gaining experience.
+Drains a portion of a visible enemy's intelligence, with no direct line of fire
+required. Such a loss is only temporary, and can be recovered by gaining
+experience.
 %%%%
 Brothers in Arms spell
 
@@ -300,7 +301,7 @@ Chain Lightning spell
 Releases a massive electrical discharge that arcs to the creature nearest the
 caster and then outward from it. The further it travels, the less damage it
 does. Secondary arcs have limited range and do little damage to the caster.
-The spell's damage partially bypasses armour and resistance to electricity.
+The spell bypasses half of defenders' armour and resistance to electricity.
 %%%%
 Charm spell
 
@@ -356,9 +357,9 @@ direct line of fire required.
 Conjure Ball Lightning spell
 
 Creates a pack of ball lightnings, which seek out the nearest enemy before
-exploding in a huge blast of electricity. The damage dealt partially bypasses
-armour. Casters are advised to use caution; the lightning is not mindful of
-what it may hit.
+exploding in a huge blast of electricity. The damage dealt bypasses half of
+defenders' armour. Casters are advised to use caution; the lightning is not
+mindful of what it may hit.
 
 The magic which keeps ball lightnings cohesive has limited range, so they may
 dissipate harmlessly if allowed to drift too far away from their caster before
@@ -840,10 +841,10 @@ dangerously contaminated after a few castings.
 Iskenderun's Battlesphere spell
 
 Conjures a small globe of magical energy. Each time its creator casts a
-spell from the Conjuration school (other than Battlesphere itself or Spellforged
-Servitor), the battlesphere will launch its own volley of energy at a random
-foe. With increasing power, the battlesphere lasts longer and deals more damage
-per volley.
+destructive spell (other than Battlesphere itself or Spellforged Servitor), the
+battlesphere will launch its own volley of energy at a random foe. With
+increasing power, the battlesphere lasts longer and deals more damage per
+volley.
 %%%%
 Iskenderun's Mystic Blast spell
 
@@ -894,8 +895,8 @@ Beckons the target forward, attempting to place them adjacent to the caster.
 %%%%
 Lightning Bolt spell
 
-Fires a mighty bolt of lightning. Its damage partially bypasses armour and
-it can be bounced off walls to hit targets twice.
+Fires a mighty bolt of lightning. Its damage bypasses half of defenders'
+armour, and it can be bounced off walls to hit targets twice.
 %%%%
 Magic Dart spell
 
@@ -1051,7 +1052,7 @@ sight.
 Orb of Electricity spell
 
 Hurls a crackling orb of electrical energy, creating a huge explosion on
-impact. Its damage partially bypasses armour.
+impact. Its damage bypasses half of defenders' armour.
 %%%%
 Ozocubu's Armour spell
 
@@ -1114,6 +1115,12 @@ Plane Rend spell
 Summons some of the greater threats from one of the Pits of Slime, the Elven
 Halls, the Vaults, the Crypt, the Tomb of Ancients, or the Realm of Zot; the
 specific branch varies with each cast of the spell.
+%%%%
+Plasma Beam spell
+
+Fires a penetrating beam of plasma at one of the caster's most distant foes.
+The ionized beam bypasses half of defenders' armour, and a second beam of fire
+follows in its wake.
 %%%%
 Poison Arrow spell
 
@@ -1270,7 +1277,7 @@ animating them and sending them out to attack.
 %%%%
 Shock spell
 
-Throws a bouncing bolt of electricity. It partially bypasses armour.
+Throws a bouncing bolt of electricity. It bypasses half of defenders' armour.
 %%%%
 Silence spell
 

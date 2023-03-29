@@ -407,9 +407,9 @@ enter_shoals DNGN_ENTER_SHOALS
 exit_shoals DNGN_EXIT_SHOALS
 enter_slime DNGN_ENTER_SLIME
 exit_slime DNGN_EXIT_SLIME
-enter_vaults_closed DNGN_ENTER_VAULTS_CLOSED
-enter_vaults_open DNGN_ENTER_VAULTS_OPEN
-exit_vaults DNGN_EXIT_VAULTS
+enter_vaults_closed DNGN_EXIT_VAULTS_CLOSED
+enter_vaults_open DNGN_ENTER_VAULTS
+exit_vaults DNGN_EXIT_VAULTS_OPEN
 enter_depths DNGN_ENTER_DEPTHS
 return_depths DNGN_RETURN_DEPTHS
 enter_crypt DNGN_ENTER_CRYPT

@@ -259,7 +259,7 @@ int main(int argc, char *argv[])
 #endif
     // do this explicitly so that static initialization order woes can be
     // ignored.
-    msg::force_stderr echo(MB_MAYBE);
+    msg::force_stderr echo(maybe_bool::maybe);
 
     init_crash_handler();
 
@@ -305,7 +305,7 @@ int main(int argc, char *argv[])
 
         // TODO: would be simpler to just never echo? Do other builds really
         // need this outside of debugging contexts?
-        msg::force_stderr suppress_log_stderr(MB_FALSE);
+        msg::force_stderr suppress_log_stderr(false);
 #endif
         read_init_file();
     }
@@ -485,6 +485,17 @@ static void _show_commandline_options_help()
     string help;
 # define puts(x) (help += x, help += '\n')
 #endif
+    if (in_headless_mode())
+    {
+        // TODO: derive exact list from initfile.cc
+#ifdef USE_TILE_LOCAL
+        puts("Headless crawl tiles build: requires -objstat or -mapstat.");
+#else
+        puts("Headless crawl: requires -test, -script, -objstat, -builddb, or other similar parameter.");
+        puts("A single argument will be interpreted as a script name.");
+#endif
+        puts("");
+    }
 
     puts("Command line options:");
     puts("  -help                 prints this list of options");
@@ -538,8 +549,10 @@ static void _show_commandline_options_help()
     puts("  -test               run all test cases in test/ except test/big/");
     puts("  -test foo,bar       run only tests \"foo\" and \"bar\"");
     puts("  -test list          list available tests");
-    puts("  -script <name>      run script matching <name> in ./scripts");
 #endif
+    // XX should this really be advertised outside of debug builds?
+    puts("  -headless           force headless mode (no pty)");
+    puts("  -script <name>      run script matching <name> in ./scripts");
 #ifdef DEBUG_STATISTICS
 #ifndef DEBUG_DIAGNOSTICS
     puts("");
@@ -771,11 +784,6 @@ static void _start_running(int dir, int mode)
     {
         return;
     }
-
-    const coord_def next_pos = you.pos() + Compass[dir];
-    string wall_jump_err;
-    if (wu_jian_can_wall_jump(next_pos, wall_jump_err))
-       return; // Do not wall jump while running.
 
     you.running.initialise(dir, mode);
 }
@@ -1283,7 +1291,6 @@ static void _input()
     _update_replay_state();
 
     crawl_state.clear_god_acting();
-
 }
 
 static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
@@ -1360,26 +1367,22 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
     }
 
     // Rune locks
-    int min_runes = 0;
-    for (branch_iterator it; it; ++it)
-    {
-        if (ftype != it->entry_stairs)
-            continue;
-
-        if (!you.level_visited(level_id(it->id, 1)))
+    switch (ftype) {
+    case DNGN_EXIT_VAULTS:
+        if (runes_in_pack() < 1)
         {
-            min_runes = runes_for_branch(it->id);
-            if (runes_in_pack() < min_runes)
-            {
-                if (min_runes == 1)
-                    mpr("You need a rune to enter this place.");
-                else
-                    mprf("You need at least %d runes to enter this place.",
-                         min_runes);
-                return false;
-            }
+            mpr("You need a rune to leave the Vaults.");
+            return false;
         }
-
+        break;
+    case DNGN_ENTER_ZOT:
+        if (runes_in_pack() < 3)
+        {
+            mpr("You need at least three runes to enter the Realm of Zot.");
+            return false;
+        }
+        break;
+    default:
         break;
     }
 
@@ -1513,6 +1516,17 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
                 canned_msg(MSG_OK);
                 return false;
             }
+        }
+    }
+
+    if (down && ygrd == DNGN_ENTER_VAULTS && !runes_in_pack())
+    {
+        if (!yes_or_no("You cannot leave the Vaults without holding a Rune of "
+                       "Zot, and the runes within are jealously guarded."
+                       " Continue?"))
+        {
+            canned_msg(MSG_OK);
+            return false;
         }
     }
 

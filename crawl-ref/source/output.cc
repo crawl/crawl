@@ -719,7 +719,7 @@ static void _print_stats_equip(int x, int y)
     textcolour(LIGHTGREY);
     for (equipment_type eqslot : e_order)
     {
-        if (you_can_wear(eqslot))
+        if (you_can_wear(eqslot) != false)
         {
             if (you.slot_item(eqslot))
             {
@@ -1083,7 +1083,7 @@ static int _wpn_name_colour()
         const item_def& wpn = *you.weapon();
 
         const string prefix = item_prefix(wpn);
-        const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix, "stats");
+        const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix, "stats", false);
         if (prefcol != -1)
             return prefcol;
         return LIGHTGREY;
@@ -2073,7 +2073,7 @@ static void _print_overview_screen_equip(column_composer& cols,
         // leave space for all the ring slots
         if (species::arm_count(you.species) > 2
             && eqslot != EQ_WEAPON
-            && !you_can_wear(eqslot))
+            && bool(!you_can_wear(eqslot)))
         {
             continue;
         }
@@ -2084,20 +2084,20 @@ static void _print_overview_screen_equip(column_composer& cols,
             continue;
         }
 
-        if (eqslot == EQ_RING_AMULET && !you_can_wear(eqslot))
+        if (eqslot == EQ_RING_AMULET && bool(!you_can_wear(eqslot)))
             continue;
 
         const string slot_name_lwr = lowercase_string(equip_slot_to_name(eqslot));
 
         string str;
 
-        if (you.slot_item(eqslot))
+        if (you.slot_item(eqslot, true))
         {
             // The player has something equipped.
-            const item_def& item = *you.slot_item(eqslot);
+            const item_def& item = *you.slot_item(eqslot, true);
             const bool melded    = you.melded[eqslot];
             const string prefix = item_prefix(item);
-            const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix);
+            const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix, "resists", false);
             const int col = prefcol == -1 ? LIGHTGREY : prefcol;
 
             // Colour melded equipment dark grey.
@@ -2112,7 +2112,7 @@ static void _print_overview_screen_equip(column_composer& cols,
                      colname.c_str(),
                      melded ? "melded " : "",
                      chop_string(item.name(DESC_PLAIN, true),
-                                 melded ? sw - 43 : sw - 36, false).c_str(),
+                                 melded ? sw - 44 : sw - 37, false).c_str(),
                      colname.c_str());
             equip_chars.push_back(equip_char);
         }
@@ -2136,9 +2136,9 @@ static void _print_overview_screen_equip(column_composer& cols,
             str = "<darkgrey>(" + slot_name_lwr +
                                " currently unavailable)</darkgrey>";
         }
-        else if (you_can_wear(eqslot) == MB_MAYBE)
+        else if (you_can_wear(eqslot) == maybe_bool::maybe)
             str = "<darkgrey>(" + slot_name_lwr + " restricted)</darkgrey>";
-        else
+        else // maybe_bool::t
             str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
         cols.add_formatted(2, str.c_str(), false);
     }
@@ -2508,8 +2508,8 @@ static string _resist_composer(const char * name, int spacing, int value,
 static vector<formatted_string> _get_overview_resistances(
     vector<char> &equip_chars, int sw)
 {
-    // 3 columns, splits at columns 20, 33
-    column_composer cols(3, 20, 33);
+    // 3 columns, splits at columns 20, 34
+    column_composer cols(3, 20, 34);
     // First column, resist name is up to 8 chars
     int cwidth = 8;
     string out;
@@ -2576,9 +2576,6 @@ static vector<formatted_string> _get_overview_resistances(
     const int reflect = you.reflection();
     out += _resist_composer("Reflect", cwidth, reflect) + "\n";
 
-    const int harm = you.extra_harm();
-    out += _resist_composer("Harm", cwidth, harm) + "\n";
-
     const int rampage = you.rampaging();
     const string rampage_name = you.has_mutation(MUT_ROLLPAGE) ? "Roll" :
                                                                  "Rampage";
@@ -2594,10 +2591,6 @@ static vector<formatted_string> _get_overview_resistances(
     if (rclarity)
         out += _resist_composer("Clarity", cwidth, rclarity) + "\n";
 
-    const int anger_rate = you.angry();
-    if (anger_rate && !you.stasis() && !rclarity && !you.is_lifeless_undead())
-        out += make_stringf("Rage     %d%%\n", anger_rate);
-
     // Fo don't need a reminder that they can't teleport
     if (!you.stasis())
     {
@@ -2609,7 +2602,15 @@ static vector<formatted_string> _get_overview_resistances(
 
     const int no_cast = you.no_cast();
     if (no_cast)
-        out += _resist_composer("NoCast", cwidth, 1, 1, false);
+        out += _resist_composer("NoCast", cwidth, 1, 1, false) + "\n";
+
+    const int harm = you.extra_harm();
+    if (harm)
+        out += _resist_composer("Harm", cwidth, harm, 2) + "\n";
+
+    const int anger_rate = you.angry();
+    if (anger_rate && !you.stasis() && !rclarity && !you.is_lifeless_undead())
+        out += make_stringf("Rage     %d%%", anger_rate);
 
     cols.add_formatted(1, out, false);
 
@@ -2629,7 +2630,7 @@ private:
         if (find(equip_chars.begin(), equip_chars.end(), ch) != equip_chars.end())
         {
             item_def& item = you.inv[letter_to_index(ch)];
-            return frombool(describe_item(item));
+            return describe_item(item);
         }
         return formatted_scroller::process_key(ch);
     };

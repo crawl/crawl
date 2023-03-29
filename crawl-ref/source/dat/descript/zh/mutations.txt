@@ -548,7 +548,7 @@ petrification resistance mutation
 %%%%
 cold-blooded mutation
 
-你是恒温的。当受到寒冷攻击时，你可能会变慢，直到你的血液再次变暖。
+当受到寒冷攻击时，你可能会变慢，直到你的血液再次变暖。
 %%%%
 stealthy paws mutation
 

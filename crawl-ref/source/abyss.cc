@@ -221,7 +221,7 @@ static bool _abyss_place_map(const map_def *mdef)
 static bool _abyss_place_vault_tagged(const map_bitmask &abyss_genlevel_mask,
                                       const string &tag)
 {
-    const map_def *map = random_map_for_tag(tag, true, true, MB_FALSE);
+    const map_def *map = random_map_for_tag(tag, true, true, false);
     if (map)
     {
         unwind_vault_placement_mask vaultmask(&abyss_genlevel_mask);
@@ -406,7 +406,7 @@ static int _banished_depth(const int power)
     // Ancient Liches are sending you to A:5 and there's nothing
     // you can do about that.
     const int maxdepth = div_rand_round((power + 5), 6);
-    const int mindepth = (4 * power + 7) / 23;
+    const int mindepth = min(maxdepth, (4 * power + 7) / 23);
     const int bottom = brdepth[BRANCH_ABYSS];
     return min(bottom, max(1, random_range(mindepth, maxdepth)));
 }

@@ -25,6 +25,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-goditem.h" // majin_bo_vampirism
 #include "target.h"
 #include "terrain.h"
 #include "transform.h"
@@ -379,6 +380,8 @@ void polar_vortex_damage(actor *caster, int dur)
                         const int post_ac_dmg
                             = victim->apply_ac(post_res_dmg, 0, ac_type::proportional);
                         dprf("damage done: %d", post_ac_dmg);
+                        if (caster->is_player())
+                            majin_bo_vampirism(*victim->as_monster(), post_ac_dmg);
                         victim->hurt(caster, post_ac_dmg, BEAM_ICE, KILLED_BY_BEAM,
                                      "", "vortex");
                     }

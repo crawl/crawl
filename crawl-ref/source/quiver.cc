@@ -74,17 +74,17 @@ namespace quiver
     static maybe_bool _fireorder_inscription_ok(int slot, bool cycling = false)
     {
         if (slot < 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
-            return MB_MAYBE;
+            return maybe_bool::maybe;
         if (strstr(you.inv[slot].inscription.c_str(), cycling ? "=F" : "=f")
             || !_quiver_inscription_ok(slot))
         {
-            return MB_FALSE;
+            return false;
         }
         // n.b. here for completeness, this is actually handled by dodgy
         // ancient fire order code...
         if (strstr(you.inv[slot].inscription.c_str(), cycling ? "+F" : "+f"))
-            return MB_TRUE;
-        return MB_MAYBE;
+            return true;
+        return maybe_bool::maybe;
     }
 
     void action::set_target(const dist &t)
@@ -289,7 +289,7 @@ namespace quiver
 
             // =F prevents item from being in fire order.
             const maybe_bool i_check = _fireorder_inscription_ok(i_inv, true);
-            if (!ignore_inscription_etc && i_check == MB_FALSE)
+            if (!ignore_inscription_etc && bool(!i_check))
                 continue;
 
             for (unsigned int i_flags = 0; i_flags < Options.fire_order.size();
@@ -398,7 +398,7 @@ namespace quiver
 
             const string prefix = item_prefix(weapon);
             const int prefcol =
-                menu_colour(weapon.name(DESC_PLAIN), prefix, "stats");
+                menu_colour(weapon.name(DESC_PLAIN), prefix, "stats", false);
             if (!is_enabled())
                 qdesc.textcolour(DARKGREY);
             else if (prefcol != -1)
@@ -503,7 +503,7 @@ namespace quiver
             const string prefix = weapon ? item_prefix(*weapon) : "";
 
             const int prefcol =
-                menu_colour(weapon ? weapon->name(DESC_PLAIN) : "", prefix, "stats");
+                menu_colour(weapon ? weapon->name(DESC_PLAIN) : "", prefix, "stats", false);
             if (!is_enabled())
                 qdesc.textcolour(DARKGREY);
             else if (prefcol != -1)
@@ -964,7 +964,7 @@ namespace quiver
             const string prefix = item_prefix(quiver);
 
             const int prefcol =
-                menu_colour(quiver.name(DESC_PLAIN), prefix, "stats");
+                menu_colour(quiver.name(DESC_PLAIN), prefix, "stats", false);
             if (!is_enabled())
                 qdesc.textcolour(DARKGREY);
             else if (prefcol != -1)
@@ -1815,7 +1815,7 @@ namespace quiver
                     && (allow_disabled || w->is_enabled())
                     // for fire order, treat =F inscription as disabling
                     && (menu
-                        || _fireorder_inscription_ok(slot, true) != MB_FALSE)
+                        || _fireorder_inscription_ok(slot, true) != false)
                     // skip digging for fire cycling, it seems kind of
                     // non-useful? Can still be force-quivered from inv.
                     // (Maybe do this with autoinscribe?)
@@ -1917,7 +1917,7 @@ namespace quiver
                 if (w->is_valid()
                     && (allow_disabled || w->is_enabled())
                     && (menu
-                        || _fireorder_inscription_ok(slot, true) != MB_FALSE)
+                        || _fireorder_inscription_ok(slot, true) != false)
                     // TODO: autoinscribe =f?
                     && you.inv[slot].sub_type != MISC_ZIGGURAT)
                 {
@@ -2065,7 +2065,7 @@ namespace quiver
         {
             if ((*it) && (*it)->is_valid())
             {
-                if (_fireorder_inscription_ok((*it)->get_item(), false) == MB_FALSE)
+                if (!_fireorder_inscription_ok((*it)->get_item(), false))
                     continue;
 
                 return *it;
@@ -2323,7 +2323,7 @@ namespace quiver
             // XX should find_replacement respect +f?
             auto r = get()->find_replacement();
             if (r && r->is_valid()
-                && _fireorder_inscription_ok(r->get_item(), false) != MB_FALSE)
+                && _fireorder_inscription_ok(r->get_item(), false) != false)
             {
                 set(r, true);
             }
@@ -2332,7 +2332,7 @@ namespace quiver
         {
             auto r = ammo_to_action(you.m_quiver_history.get_last_ammo());
             if (r && r->is_valid()
-                && _fireorder_inscription_ok(r->get_item(), false) != MB_FALSE)
+                && _fireorder_inscription_ok(r->get_item(), false) != false)
             {
                 set(r);
             }
@@ -3166,7 +3166,7 @@ namespace quiver
     {
         if (Options.launcher_autoquiver && you.weapon()
             && is_range_weapon(*you.weapon())
-            && _fireorder_inscription_ok(you.equip[EQ_WEAPON], false) != MB_FALSE)
+            && _fireorder_inscription_ok(you.equip[EQ_WEAPON], false) != false)
         {
             you.quiver_action.set(get_primary_action());
         }
@@ -3248,7 +3248,7 @@ static int _get_pack_slot(const item_def &item)
         if (inv_item.quantity && _items_similar(item, inv_item, true))
         {
             // =f prevents item from being autoquivered.
-            if (quiver::_fireorder_inscription_ok(i, false) == MB_FALSE)
+            if (!quiver::_fireorder_inscription_ok(i, false))
                 continue;
 
             return i;

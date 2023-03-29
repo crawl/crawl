@@ -1154,11 +1154,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         make_item_unrandart(item, UNRAND_CEREBOV);
         break;
 
-    case MONS_DISPATER:
-        force_item = true;
-        make_item_unrandart(item, UNRAND_DISPATER);
-        break;
-
     case MONS_ASMODEUS:
         force_item = true;
         make_item_unrandart(item, UNRAND_ASMODEUS);
@@ -1556,6 +1551,13 @@ static void _give_shield(monster* mon, int level)
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_KITE_SHIELD,
                               level * 2 + 1, 1);
         break;
+
+    case MONS_DISPATER:
+        shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_ORB, level);
+        if (shield)
+            make_item_unrandart(*shield, UNRAND_DISPATER);
+        break;
+
     case MONS_DAEVA:
     case MONS_MENNAS:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_TOWER_SHIELD,

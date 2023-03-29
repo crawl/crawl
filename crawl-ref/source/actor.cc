@@ -205,10 +205,17 @@ void actor::shield_block_succeeded(actor *attacker)
     }
 }
 
+/// How many levels of penalties does this actor have from inaccuracy-conferring effects?
 int actor::inaccuracy() const
 {
     const item_def *amu = slot_item(EQ_AMULET);
     return amu && is_unrandom_artefact(*amu, UNRAND_AIR);
+}
+
+/// How great are the penalties to this actor's to-hit from any inaccuracy effects they have?
+int actor::inaccuracy_penalty() const
+{
+    return inaccuracy() * 5;
 }
 
 bool actor::res_corr(bool /*allow_random*/, bool temp) const
@@ -281,10 +288,14 @@ bool actor::reflection(bool items) const
             || wearing_ego(EQ_ALL_ARMOUR, SPARM_REFLECTION));
 }
 
-bool actor::extra_harm(bool items) const
+int actor::extra_harm(bool items) const
 {
-    return items &&
-           (wearing_ego(EQ_CLOAK, SPARM_HARM) || scan_artefacts(ARTP_HARM));
+    if (!items)
+        return 0;
+
+    int harm = wearing_ego(EQ_CLOAK, SPARM_HARM) + scan_artefacts(ARTP_HARM);
+
+    return harm > 2 ? 2 : harm;
 }
 
 bool actor::rmut_from_item() const

@@ -74,8 +74,7 @@ static void _loading_message(string m)
 {
     mpr(m.c_str());
 #ifdef USE_TILE_LOCAL
-    if (!crawl_state.tiles_disabled && crawl_state.title_screen)
-        loading_screen_update_msg(m.c_str());
+    loading_screen_update_msg(m.c_str());
 #endif
 }
 
@@ -131,8 +130,7 @@ static void _initialize()
     // Draw the splash screen before the database gets initialised as that
     // may take awhile and it's better if the player can look at a pretty
     // screen while this happens.
-    if (!crawl_state.tiles_disabled && crawl_state.title_screen)
-        loading_screen_open();
+    loading_screen_open();
 #endif
 
     // Initialise internal databases.
@@ -155,8 +153,7 @@ static void _initialize()
         end(0);
 
 #ifdef USE_TILE_LOCAL
-    if (!crawl_state.tiles_disabled && crawl_state.title_screen)
-        loading_screen_close();
+    loading_screen_close();
 #endif
 
     you.game_seed = crawl_state.seed;
@@ -189,19 +186,20 @@ static void _initialize()
 #error "DEBUG must be defined if DEBUG_TESTS is defined"
 #endif
 
-#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
+#if !defined(DEBUG_DIAGNOSTICS) && !defined(DEBUG_TESTS)
+        if (!crawl_state.script)
+        {
+            end(1, false, "Non-debug Crawl cannot run tests. "
+                "Please use a debug build (defined FULLDEBUG, DEBUG_DIAGNOSTIC "
+                "or DEBUG_TESTS)");
+        }
+#endif
 #ifdef USE_TILE
         init_player_doll();
 #endif
         dgn_reset_level();
         crawl_state.show_more_prompt = false;
-        run_tests();
-        // doesn't return
-#else
-        end(1, false, "Non-debug Crawl cannot run tests. "
-            "Please use a debug build (defined FULLDEBUG, DEBUG_DIAGNOSTIC "
-            "or DEBUG_TESTS)");
-#endif
+        run_tests(); // noreturn
     }
 
     mpr(opening_screen().tostring().c_str());

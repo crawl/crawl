@@ -2306,6 +2306,12 @@ skyshark
 Skysharks cut through the air with a thoughtless ease. Just a taste of blood
 gives them an enraged strength, and further morsels drive them into a frenzy.
 %%%%
+sleepcap
+
+A surprisingly ambulatory mushroom. It wafts its spores over prey to send them
+into a deep sleep, making it simple for the fungus to kill and devour them.
+It can take months for its mycelia to fully infiltrate and digest victims.
+%%%%
 slime creature
 
 An icky glob of slime that slithers along the ground. It can merge with other

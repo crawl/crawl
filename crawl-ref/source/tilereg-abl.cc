@@ -148,9 +148,10 @@ bool AbilityRegion::update_alt_text(string &alt)
 
 int AbilityRegion::get_max_slots()
 {
-    return ABIL_MAX_INTRINSIC + (ABIL_MAX_EVOKE - ABIL_MIN_EVOKE) + 1
-           // for god abilities
-           + 6;
+    const int MAX_INTRINSICS = 3;
+    const int MAX_GOD_ABILS = 6;
+    const int MAX_EVOKES = 6; // TODO: don't hardcode this
+    return MAX_INTRINSICS + MAX_GOD_ABILS + MAX_EVOKES;
 }
 
 void AbilityRegion::pack_buffers()

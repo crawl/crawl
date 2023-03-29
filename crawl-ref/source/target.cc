@@ -13,6 +13,7 @@
 #include "env.h"
 #include "fight.h"
 #include "god-abil.h"
+#include "god-passive.h"
 #include "items.h"
 #include "libutil.h"
 #include "los-def.h"
@@ -552,7 +553,8 @@ aff_type targeter_walljump::is_affected(coord_def loc)
     if (loc == wall_jump_landing_spot)
         return AFF_YES;
 
-    if (loc.distance_from(wall_jump_landing_spot) == 1 && monster_at(loc))
+    auto d = loc.distance_from(wall_jump_landing_spot);
+    if (d == 1 && wu_jian_wall_jump_monster_at(loc))
         return AFF_YES;
 
     return AFF_NO;

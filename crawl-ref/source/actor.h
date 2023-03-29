@@ -207,7 +207,7 @@ public:
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    bool slow_cold_blood = true) = 0;
     virtual void drain_stat(stat_type /*stat*/, int /*amount*/) { }
-    virtual void splash_with_acid(actor *evildoer, int acid_strength) = 0;
+    virtual void splash_with_acid(actor *evildoer) = 0;
     virtual void acid_corrode(int acid_strength) = 0;
     virtual bool corrode_equipment(const char* corrosion_source = "the acid",
                                    int degree = 1) = 0;
@@ -287,6 +287,7 @@ public:
     virtual int check_willpower(const actor* source, int power);
     virtual bool no_tele(bool blink = false) const = 0;
     virtual int inaccuracy() const;
+    int inaccuracy_penalty() const;
     virtual bool antimagic_susceptible() const = 0;
 
     virtual bool res_corr(bool /*allow_random*/ = true, bool temp = true) const;
@@ -299,7 +300,7 @@ public:
     virtual int archmagi(bool items = true) const;
     virtual bool no_cast(bool items = true) const;
     virtual bool reflection(bool items = true) const;
-    virtual bool extra_harm(bool items = true) const;
+    virtual int extra_harm(bool items = true) const;
 
     virtual bool rmut_from_item() const;
     virtual bool evokable_invis() const;

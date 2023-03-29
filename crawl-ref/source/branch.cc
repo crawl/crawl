@@ -295,16 +295,6 @@ branch_type parent_branch(branch_type branch)
     return branches[branch].parent_branch;
 }
 
-int runes_for_branch(branch_type branch)
-{
-    switch (branch)
-    {
-    case BRANCH_VAULTS:   return 1;
-    case BRANCH_ZOT:      return ZOT_ENTRY_RUNES;
-    default:              return 0;
-    }
-}
-
 /**
  * Describe the ambient noise level in this branch.
  *
@@ -362,4 +352,21 @@ branch_type rune_location(rune_type rune)
             return br.id;
 
     return NUM_BRANCHES;
+}
+
+static const string VAULTS_LOCKED_KEY = "LOCKED_VAULTS_ENTRANCE";
+
+bool vaults_is_locked()
+{
+    return you.props.exists(VAULTS_LOCKED_KEY);
+}
+
+void lock_vaults()
+{
+    you.props[VAULTS_LOCKED_KEY] = true;
+}
+
+void unlock_vaults()
+{
+    you.props.erase(VAULTS_LOCKED_KEY);
 }

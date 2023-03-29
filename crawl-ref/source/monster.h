@@ -313,8 +313,8 @@ public:
                           bool ignore_transform = false,
                           bool quiet = true) const override;
 
-    void      wield_melee_weapon(maybe_bool msg = MB_MAYBE);
-    void      swap_weapons(maybe_bool msg = MB_MAYBE);
+    void      wield_melee_weapon(maybe_bool msg = maybe_bool::maybe);
+    void      swap_weapons(maybe_bool msg = maybe_bool::maybe);
     bool      pickup_item(item_def &item, bool msg, bool force);
     bool      drop_item(mon_inv_type eslot, bool msg);
     bool      unequip(item_def &item, bool msg, bool force = false);
@@ -477,7 +477,7 @@ public:
     void slow_down(actor *, int str) override;
     void confuse(actor *, int strength) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
-    void splash_with_acid(actor *evildoer, int /*acid_strength*/) override;
+    void splash_with_acid(actor *evildoer) override;
     void acid_corrode(int /*acid_strength*/) override;
     bool corrode_equipment(const char* corrosion_source = "the acid",
                            int degree = 1) override;

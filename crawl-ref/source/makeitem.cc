@@ -658,52 +658,44 @@ static void _generate_missile_item(item_def& item, int force_type,
     item.quantity = random_range(2, 6);
 }
 
-static bool _armour_disallows_randart(int sub_type)
-{
-    // Scarves and orbs are never randarts.
-    return sub_type == ARM_SCARF || sub_type == ARM_ORB;
-}
-
 static bool _try_make_armour_artefact(item_def& item, int force_type,
-                                      int item_level, bool force_randart,
-                                      int agent)
+                                      int item_level, int agent)
 {
-    if (item_level > 0 && x_chance_in_y(101 + item_level * 3, 4000)
-        || force_randart)
+    const bool force_randart = item_level == ISPEC_RANDART;
+    if (!force_randart && (item_level <= 0
+                           || !x_chance_in_y(101 + item_level * 3, 4000)))
     {
-        // Make a randart or unrandart.
+        return false;
+    }
+    // Make a randart or unrandart.
 
-        // 1 in 20 randarts are unrandarts.
-        if (one_chance_in(item_level == ISPEC_GOOD_ITEM ? 7 : 20)
-            && !force_randart)
-        {
-            if (_try_make_item_unrand(item, force_type, item_level, agent))
-                return true;
-        }
+    // 1 in 20 randarts are unrandarts.
+    if (one_chance_in(item_level == ISPEC_GOOD_ITEM ? 7 : 20)
+        && !force_randart)
+    {
+        if (_try_make_item_unrand(item, force_type, item_level, agent))
+            return true;
+    }
 
-        if (_armour_disallows_randart(item.sub_type))
-            return false;
+    // The rest are normal randarts.
 
-        // The rest are normal randarts.
+    // 5% of boots become barding.
+    if (item.sub_type == ARM_BOOTS && one_chance_in(20))
+        item.sub_type = ARM_BARDING;
 
-        // 5% of boots become barding.
-        if (item.sub_type == ARM_BOOTS && one_chance_in(20))
-            item.sub_type = ARM_BARDING;
+    // Determine enchantment.
+    if (!armour_is_enchantable(item) || one_chance_in(5))
+        item.plus = 0;
+    else
+    {
+        int max_plus = armour_max_enchant(item);
+        item.plus = random2(max_plus + 1);
 
-        // Determine enchantment.
         if (one_chance_in(5))
-            item.plus = 0;
-        else
-        {
-            int max_plus = armour_max_enchant(item);
-            item.plus = random2(max_plus + 1);
+            item.plus += random2(max_plus + 6) / 2;
 
-            if (one_chance_in(5))
-                item.plus += random2(max_plus + 6) / 2;
-
-            if (one_chance_in(6))
-                item.plus -= random2(max_plus + 6);
-        }
+        if (one_chance_in(6))
+            item.plus -= random2(max_plus + 6);
 
         // On body armour, an enchantment of less than 0 is never viable.
         // On aux armour & shields, going below -2 is likewise unviable.
@@ -712,122 +704,13 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
             item.plus = max(static_cast<int>(item.plus), random2(2));
         else
             item.plus = max(static_cast<int>(item.plus), random_range(-2, 1));
-
-        // Needs to be done after the barding chance else we get randart
-        // bardings named Boots of xy.
-        make_item_randart(item);
-
-        // Don't let unenchantable armour get minuses.
-        if (!armour_is_enchantable(item))
-            item.plus = 0;
-
-        return true;
     }
 
-    return false;
-}
+    // Needs to be done after the barding chance else we get randart
+    // bardings named Boots of xy.
+    make_item_randart(item);
 
-/**
- * Generate an appropriate ego for a type of armour.
- *
- * @param item          The type of armour in question.
- * @return              An ego appropriate to the item type.
- *                      May be SPARM_NORMAL.
- */
-static special_armour_type _generate_armour_type_ego(armour_type type)
-{
-    // TODO: move this into data
-    switch (type)
-    {
-    case ARM_KITE_SHIELD:
-    case ARM_TOWER_SHIELD:
-    case ARM_BUCKLER:
-        return random_choose_weighted(1, SPARM_RESISTANCE,
-                                      3, SPARM_FIRE_RESISTANCE,
-                                      3, SPARM_COLD_RESISTANCE,
-                                      3, SPARM_POISON_RESISTANCE,
-                                      3, SPARM_POSITIVE_ENERGY,
-                                      6, SPARM_REFLECTION,
-                                      12, SPARM_PROTECTION);
-
-    case ARM_ORB:
-        return random_choose_weighted(1, SPARM_LIGHT,
-                                      1, SPARM_RAGE,
-                                      1, SPARM_MAYHEM,
-                                      1, SPARM_GUILE,
-                                      1, SPARM_ENERGY);
-
-    case ARM_SCARF:
-        return random_choose_weighted(1, SPARM_RESISTANCE,
-                                      1, SPARM_REPULSION,
-                                      1, SPARM_INVISIBILITY,
-                                      1, SPARM_HARM,
-                                      1, SPARM_SHADOWS);
-
-    case ARM_CLOAK:
-        return random_choose(SPARM_POISON_RESISTANCE,
-                             SPARM_WILLPOWER,
-                             SPARM_STEALTH,
-                             SPARM_PRESERVATION);
-
-    case ARM_HAT:
-        return random_choose_weighted(10, SPARM_NORMAL,
-                                      3, SPARM_STEALTH,
-                                      3, SPARM_WILLPOWER,
-                                      2, SPARM_INTELLIGENCE,
-                                      2, SPARM_SEE_INVISIBLE);
-
-    case ARM_HELMET:
-        return random_choose(SPARM_SEE_INVISIBLE, SPARM_INTELLIGENCE);
-
-    case ARM_GLOVES:
-        return random_choose(SPARM_DEXTERITY, SPARM_STRENGTH, SPARM_HURLING,
-                             SPARM_STEALTH, SPARM_INFUSION);
-
-    case ARM_BOOTS:
-        return random_choose(SPARM_FLYING, SPARM_STEALTH, SPARM_RAMPAGING);
-
-    case ARM_BARDING:
-        return random_choose(SPARM_FLYING, SPARM_STEALTH,
-                             SPARM_COLD_RESISTANCE, SPARM_FIRE_RESISTANCE);
-
-    case ARM_ROBE:
-        return random_choose_weighted(1, SPARM_RESISTANCE,
-                                      1, SPARM_ARCHMAGI,
-                                      2, SPARM_NORMAL,
-                                      2, SPARM_COLD_RESISTANCE,
-                                      2, SPARM_FIRE_RESISTANCE,
-                                      2, SPARM_POSITIVE_ENERGY,
-                                      4, SPARM_WILLPOWER);
-
-    case ARM_PLATE_ARMOUR:
-        return random_choose_weighted(26, SPARM_FIRE_RESISTANCE,
-                                      26, SPARM_COLD_RESISTANCE,
-                                      19, SPARM_POISON_RESISTANCE,
-                                      15, SPARM_WILLPOWER,
-                                       7, SPARM_POSITIVE_ENERGY,
-                                       7, SPARM_PONDEROUSNESS);
-
-    // other body armour
-    default:
-        break;
-    }
-
-    // dragon/troll armour, animal hides, and crystal plate are never generated
-    // with egos. (unless they're artefacts, but those aren't handled here.)
-    // TODO: deduplicate with armour_is_special() (same except for animal skin)
-    if (armour_type_is_hide(type)
-        || type == ARM_ANIMAL_SKIN
-        || type == ARM_CRYSTAL_PLATE_ARMOUR)
-    {
-        return SPARM_NORMAL;
-    }
-
-    return random_choose_weighted(7, SPARM_FIRE_RESISTANCE,
-                                  7, SPARM_COLD_RESISTANCE,
-                                  5, SPARM_POISON_RESISTANCE,
-                                  4, SPARM_WILLPOWER,
-                                  2, SPARM_POSITIVE_ENERGY);
+    return true;
 }
 
 /**
@@ -843,11 +726,9 @@ static special_armour_type _generate_armour_ego(const item_def& item)
     if (item.brand != SPARM_NORMAL)
         return static_cast<special_armour_type>(item.brand);
 
-    const special_armour_type ego
-        = _generate_armour_type_ego(static_cast<armour_type>(item.sub_type));
-
-    ASSERT(is_armour_brand_ok(item.sub_type, ego, true));
-    return ego;
+    const auto e = choose_armour_ego(static_cast<armour_type>(item.sub_type));
+    ASSERT(is_armour_brand_ok(item.sub_type, e, true));
+    return e;
 }
 
 bool is_armour_brand_ok(int type, int brand, bool strict)
@@ -1096,17 +977,12 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         }
     }
 
-
-    // Fall back to an ordinary item if artefacts not allowed for this type.
-    if (item_level == ISPEC_RANDART && _armour_disallows_randart(item.sub_type))
-        item_level = ISPEC_GOOD_ITEM;
-
     // Forced randart.
     if (item_level == ISPEC_RANDART)
     {
         int ego = item.brand;
         for (int i = 0; i < 100; ++i)
-            if (_try_make_armour_artefact(item, force_type, 0, true, agent)
+            if (_try_make_armour_artefact(item, force_type, item_level, agent)
                 && is_artefact(item))
             {
                 // borrowed from similar code for weapons -- is this really the
@@ -1132,7 +1008,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     }
 
     if (allow_uniques
-        && _try_make_armour_artefact(item, force_type, item_level, false, agent))
+        && _try_make_armour_artefact(item, force_type, item_level, agent))
     {
         return;
     }
@@ -1144,7 +1020,9 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     const bool forced_ego = (item.brand > 0);
     const bool no_ego     = (item.brand == SPARM_FORBID_EGO);
 
-    if (no_ego)
+    if (item_always_has_ego(item))
+        set_item_ego_type(item, OBJ_ARMOUR, _generate_armour_ego(item));
+    else if (no_ego)
         item.brand = SPARM_NORMAL;
 
     if (item_level < 0)
@@ -1158,9 +1036,6 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
 
         item.plus -= 1 + random2(3);
     }
-    // Scarves and orbs always get an ego.
-    else if (item.sub_type == ARM_SCARF || item.sub_type == ARM_ORB)
-        set_item_ego_type(item, OBJ_ARMOUR, _generate_armour_ego(item));
     else if ((forced_ego || item.sub_type == ARM_HAT
                     || x_chance_in_y(51 + item_level, 250))
                 && !item.is_mundane() || force_good)
@@ -1475,36 +1350,44 @@ static stave_type _get_random_stave_type()
     return r;
 }
 
-static void _generate_staff_item(item_def& item, bool allow_uniques,
-                                 int force_type, int item_level, int agent)
+static void _try_make_staff_artefact(item_def& item, bool allow_uniques,
+                                     int item_level, int agent)
 {
-    // If we make the unique roll, no further generation necessary.
-    // Copied unrand code from _try_make_weapon_artefact since randart enhancer staves
-    // can't happen.
+    const bool force_randart = item_level == ISPEC_RANDART;
+
     if (allow_uniques
+        && !force_randart
         && one_chance_in(item_level == ISPEC_GOOD_ITEM ? 27 : 100))
     {
         // Temporarily fix the base_type to get enhancer staves
         // TODO: ???
         item.base_type = OBJ_WEAPONS;
-        // need to use force_type here, because _try_make_item_unrand can set
-        // it for fallback randarts.
-        force_type = WPN_STAFF;
-        if (_try_make_item_unrand(item, force_type, item_level, agent))
+        int fake_force_type = WPN_STAFF;
+        if (_try_make_item_unrand(item, fake_force_type, item_level, agent))
             return;
-        if (item.base_type != OBJ_STAVES)
-        {
-            // this will happen if an unrand staff requests a real weapon as
-            // a fallback. TODO: can this be accommodated in this code path?
-            item.base_type = OBJ_STAVES;
-            force_type = OBJ_RANDOM;
-        }
+        // We failed. Go back to trying a staff.
+        // TODO: support hypothetical fallback to a specific staff type
+        item.base_type = OBJ_STAVES;
     }
 
+    if (force_randart
+        // These odds are taken uncritically from _try_make_weapon_artifact.
+        // We should probably revisit them.
+        || item_level > 0 && x_chance_in_y(101 + item_level * 3, 4000))
+    {
+        make_item_randart(item);
+    }
+}
+
+static void _generate_staff_item(item_def& item, bool allow_uniques,
+                                 int force_type, int item_level, int agent)
+{
     if (force_type == OBJ_RANDOM)
         item.sub_type = _get_random_stave_type();
     else
         item.sub_type = force_type;
+
+    _try_make_staff_artefact(item, allow_uniques, item_level, agent);
 }
 
 static void _generate_rune_item(item_def& item, int force_type)

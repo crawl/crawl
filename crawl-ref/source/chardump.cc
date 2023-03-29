@@ -1078,7 +1078,7 @@ static void _sdump_kills_by_place(dump_params &par)
 
     string header =
     "Table legend:\n"
-    " A = Kills in this place as a percentage of kills in entire the game.\n"
+    " A = Kills in this place as a percentage of kills in the entire game.\n"
     " B = Kills by you in this place as a percentage of kills by you in\n"
     "     the entire game.\n"
     " C = Kills by friends in this place as a percentage of kills by\n"
@@ -1693,12 +1693,21 @@ static bool _write_dump(const string &fname, const dump_params &par, bool quiet)
     return succeeded;
 }
 
+static int _add_text(formatted_scroller &scr, const string &tag,
+                     const string &text)
+{
+    int colour = menu_colour(text, "", tag);
+    scr.add_formatted_string(formatted_string(text, colour));
+    return colour;
+}
+
 void display_notes()
 {
     formatted_scroller scr(FS_START_AT_END | FS_PREWRAPPED_TEXT);
     scr.set_more();
-    scr.set_tag("notes");
-    scr.add_raw_text("Turn   | Place    | Note\n");
+    const string tag = "notes";
+    scr.set_tag(tag);
+    _add_text(scr, tag, "Turn   | Place    | Note\n");
     for (const Note &note : note_list)
     {
         if (note.hidden())
@@ -1716,9 +1725,12 @@ void display_notes()
         if (parts.empty()) // Disregard pure-whitespace notes.
             continue;
 
-        scr.add_raw_text(prefix + parts[0] + "\n");
+        auto colour = _add_text(scr, tag, prefix + parts[0] + "\n");
         for (unsigned int j = 1; j < parts.size(); ++j)
-            scr.add_raw_text(string(prefix.length()-2, ' ') + string("| ") + parts[j] + "\n");
+        {
+            auto str = string(prefix.length()-2, ' ') + "| " + parts[j] + "\n";
+            scr.add_formatted_string(formatted_string(str, colour));
+        }
     }
     scr.show();
 }

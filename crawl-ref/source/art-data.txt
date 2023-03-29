@@ -348,16 +348,15 @@ BRAND:   SPWPN_FLAMING
 BOOL:    evil, nogen
 DBRAND:  Hellfire:  It temporarily reduces the fire resistance of those it strikes.
 
-NAME:    staff of Dispater
-APPEAR:  golden staff
-OBJ:     OBJ_WEAPONS/WPN_STAFF
-PLUS:    +4
-COLOUR:  ETC_GOLD
-TILE:    spwpn_staff_of_dispater
-TILE_EQ: dispater
-BOOL:    evil, nogen
-DESCRIP: Wielding it grants the ability to hurl damnation at the cost of health and magic,
- with strength depending on Evocations skill.
+NAME:    orb of Dispater
+OBJ:     OBJ_ARMOUR/ARM_ORB
+COLOUR:  LIGHTRED
+TILE:    urand_dispater
+TILE_EQ: orb_of_dispater
+BOOL:    evil, nogen, corrode
+AC:      5
+INSCRIP: +Damnation
+DESCRIP: +Damnation: It grants the ability to hurl damnation at the cost of health and magic, with strength depending on Evocations skill.
 
 NAME:    sceptre of Asmodeus
 APPEAR:  ruby sceptre
@@ -507,7 +506,7 @@ OBJ:     OBJ_WEAPONS/WPN_GIANT_CLUB
 PLUS:    +3
 COLOUR:  BROWN
 TILE:    urand_skullcrusher
-TILE_EQ: giant_club_slant
+TILE_EQ: skullcrusher
 BRAND:   SPWPN_SPEED
 STR:     7
 
@@ -1525,11 +1524,10 @@ BOOL:     inv, nogen
 ENUM:     THERMIC_ENGINE
 NAME:     Maxwell's thermic engine
 OBJ:      OBJ_WEAPONS/WPN_DOUBLE_SWORD
-INSCRIP:  freeze,
-DBRAND:  It freezes those it strikes, dealing additional cold damage. It can
+INSCRIP:  freeze, rev,
+DBRAND:  Freeze:    It freezes those it strikes, dealing additional cold damage. It can
  also slow down cold-blooded creatures.
-DESCRIP:  It becomes more effective when it hits something. This effect fades
- over time.
++Rev:       It becomes more effective when it hits something. This effect fades over time.
 PLUS:     +2
 COLOUR:   ETC_VEHUMET
 TILE:     urand_thermic_engine
@@ -1713,7 +1711,7 @@ TILE:    urand_slippers
 TILE_EQ: slippers
 PLUS:    +2
 COLOUR:  ETC_DITHMENOS
-EV:      5
+EV:      4
 INSCRIP: slick, slippery,
 DBRAND:  Slick:     Its wearer cannot be constricted, engulfed, netted or webbed.
 +Slippery:  It slips away from damaging melee attacks, pulling the attacker onward.
@@ -1736,7 +1734,7 @@ NAME:     consecrated labrys
 OBJ:      OBJ_WEAPONS/WPN_BROAD_AXE
 TYPE:     labrys
 BASE_DAM: +1
-PLUS:     +5
+PLUS:     +4
 COLOUR:   ETC_HOLY
 TILE:     spwpn_holy_axe
 TILE_EQ:  holy_axe

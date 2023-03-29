@@ -1667,7 +1667,7 @@ clean-contrib:
 	+$(MAKE) -C contrib clean
 
 clean-android:
-	$(RM) -r $(datadir_fp)
+	$(RM) -r android-project/app/src/main/assets
 	+cd android-project && rm -f local.properties && rm -f app/build.gradle
 
 distclean: clean clean-contrib clean-rltiles
@@ -2110,8 +2110,8 @@ test: test-test test-all
 nonwiztest: test-test test-nonwiz
 nondebugtest: test-all
 
-test-%: $(GAME) util/fake_pty builddb
-	util/fake_pty test/stress/run $*
+test-%: $(GAME) builddb util/fake_pty
+	test/stress/run $*
 	@echo "Finished: $*"
 
 util/fake_pty: util/fake_pty.c

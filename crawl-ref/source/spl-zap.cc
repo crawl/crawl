@@ -137,6 +137,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_HURL_SLUDGE, ZAP_HURL_SLUDGE },
     { SPELL_POISONOUS_CLOUD, ZAP_BREATHE_POISON },
     { SPELL_MEPHITIC_BREATH, ZAP_BREATHE_MEPHITIC },
+    { SPELL_PLASMA_BEAM, ZAP_PLASMA },
 };
 
 // Some player abilities are internally zaps but don't go through

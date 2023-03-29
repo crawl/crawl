@@ -38,6 +38,9 @@ server_path = os.path.dirname(os.path.abspath(__file__))
 # is disabled, and opening webtiles loads the game main menu. (default: True)
 # dgl_mode = False
 
+# to enable ttyrec writing at the server level:
+# enable_ttyrecs = False
+
 bind_nonsecure = True # Set to false to only use SSL
 bind_address = ""
 bind_port = 8080

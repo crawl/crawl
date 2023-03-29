@@ -421,7 +421,7 @@ def reset_token_commands(args):
             if not user_info.email:
                 logging.warning("No email set for account '%s', use caution!" % username)
             print("Setting a password reset token on account '%s'." % username)
-            print("Email: %s\nMessage body to send to user:\n%s\n" % (username, msg))
+            print("Email: %s\nMessage body to send to user:\n%s\n" % (user_info.email, msg))
             return True
     return False
 
@@ -789,6 +789,10 @@ def run():
     except:
         err_exit("Server startup failed!", exc_info=True)
     finally:
+        # warning: need to be careful what appears in this finally block, since
+        # it may be called by child processes on fork in terminal.py in the
+        # event of rare bad timing or bugs. (So any global state that may be
+        # used here should be reset in the child process...)
         remove_pidfile()
 
 

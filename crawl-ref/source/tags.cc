@@ -4224,6 +4224,14 @@ static void _tag_read_you_items(reader &th)
                 you.melded.set(i, false);
                 continue;
             }
+            // and the staff of Dispater before it became an orb
+            if (is_unrandom_artefact(*item, UNRAND_DISPATER)
+                && i != EQ_SHIELD)
+            {
+                you.equip[i] = -1;
+                you.melded.set(i, false);
+                continue;
+            }
 #endif
 
             const unrandart_entry *entry = get_unrand_entry(item->unrand_idx);

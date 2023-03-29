@@ -733,7 +733,7 @@ public:
     void weaken(actor *attacker, int pow) override;
     bool heal(int amount) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
-    void splash_with_acid(actor *evildoer, int acid_strength) override;
+    void splash_with_acid(actor *evildoer) override;
     void acid_corrode(int acid_strength) override;
     bool corrode_equipment(const char* corrosion_source = "the acid",
                            int degree = 1) override;
@@ -997,6 +997,7 @@ int player_condensation_shield_class();
 int sanguine_armour_bonus();
 
 int player_wizardry(spell_type spell);
+int player_channeling();
 
 int player_prot_life(bool allow_random = true, bool temp = true,
                      bool items = true);

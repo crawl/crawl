@@ -11,6 +11,7 @@
 #include "clua.h"
 #include "delay.h"
 #include "libutil.h"
+#include "macro.h"
 #include "menu.h"
 #include "message.h"
 #include "options.h"
@@ -57,7 +58,7 @@ namespace ui
                     replay_messages();
                 else
                     replay_messages_during_startup(); // show a title; less cryptic for this case
-                return MB_TRUE;
+                return true;
             }
             return formatted_scroller::process_key(ch);
         }
@@ -134,10 +135,8 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
     // Allow players to answer prompts via clua.
     // XXX: always not currently supported
     maybe_bool res = clua.callmaybefn("c_answer_prompt", "s", str);
-    if (res == MB_TRUE)
-        return true;
-    if (res == MB_FALSE)
-        return false;
+    if (res.is_bool())
+        return bool(res);
 
     string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
 
@@ -347,4 +346,155 @@ int letter_to_index(int the_letter)
 
     die("slot not a letter: %s (%d)", the_letter ?
         stringize_glyph(the_letter).c_str() : "null", the_letter);
+}
+
+bool PromptMenu::process_key(int keyin)
+{
+    if (ui_is_initialized())
+        return Menu::process_key(keyin);
+
+    // otherwise, we are at a prompt. TODO: should this code try to reuse
+    // anything from the superclass? This is extremely minimalistic
+    // compared to what the superclass does
+    lastch = keyin;
+    if (ui::key_exits_popup(lastch, false))
+    {
+        deselect_all();
+        return false;
+    }
+
+    const int index = hotkey_to_index(lastch, false);
+    if (index >= 0)
+    {
+        select_index(index, MENU_SELECT_ALL);
+        return process_selection();
+    }
+    return true;
+}
+
+static string _prompt_text(const MenuEntry &me)
+{
+    // XX code dup with MenuEntry::get_text, _get_text_preface
+    // I couldn't come up with a great way of generalizing the superclass
+    // get_text, at least one that didn't involve a lot of unnecessary changes
+    // to other menu subclasses. So we get the brute force version for now.
+    if (me.level == MEL_ITEM && me.hotkeys_count())
+        return make_stringf("(%s) %s", keycode_to_name(me.hotkeys[0]).c_str(), me.text.c_str());
+    else if (me.level == MEL_ITEM && me.indent_no_hotkeys)
+        return make_stringf("    %s", me.text.c_str());
+    else
+        return me.text;
+}
+
+void PromptMenu::update_columns()
+{
+    // the 100 here is somewhat heuristic; on a fairly hires monitor, using
+    // the full local tiles line width seems way too wide, and 80 is quite
+    // narrow. 100 seems like an ok compromise that also allows the entire
+    // &~ menu to show up.
+    const int max_line_width = min(100, static_cast<int>(msgwin_line_length()));
+    if (items.size() == 0)
+    {
+        // prevent weird values with no menu items
+        columns = 1;
+        col_width = max_line_width;
+        return;
+    }
+    int max_width = 0;
+    for (MenuEntry *item : items)
+        max_width = max(max_width, static_cast<int>(_prompt_text(*item).size()));
+    // the + 2 here is to allow at least 2 spaces between cols.
+    // currently no limit on columns, maybe it shouldn't be more than 6 or so?
+    columns = max(1, max_line_width / (max_width + 2));
+    col_width = max_line_width / columns;
+}
+
+void PromptMenu::build_prompt_menu()
+{
+    // rebuild the menu text to be shown at a prompt
+    menu_text.clear();
+    update_columns();
+    int c = 0;
+    formatted_string line;
+    for (MenuEntry *item : items)
+    {
+        if (item->level != MEL_ITEM && c != 0)
+        {
+            menu_text.push_back(line);
+            line.clear();
+        }
+
+        line.textcolour(item_colour(item));
+        // TODO: support MF_ALLOW_FORMATTING
+        line.cprintf("%-*s",
+            col_width,
+            _prompt_text(*item).c_str()); // _prompt_text handles the hotkey
+
+        c++;
+        if (c >= columns || item->level != MEL_ITEM)
+        {
+            c = 0;
+            menu_text.push_back(line);
+            line.clear();
+        }
+    }
+    if (!line.empty())
+        menu_text.push_back(line);
+}
+
+void PromptMenu::update_menu(bool update_entries)
+{
+    build_prompt_menu();
+    Menu::update_menu(update_entries);
+}
+
+vector<MenuEntry *> PromptMenu::show(bool reuse_selections)
+{
+    // if the menu items fit in the msgpane, and there is no currently
+    // running ui layout, show it in the message pane. Otherwise, use a
+    // popup.
+    // XX Right now, if this starts in msgpane mode, it'll stay in msgpane
+    // mode. There's no need for this right now, but it wouldn't be too hard
+    // to refactor this so that the menu automatically switched to popup
+    // mode if the menu list changes and increases the size of the menu.
+    update_columns();
+    // handle rounding properly:
+    const int rows = (items.size() + columns - 1) / columns;
+    in_prompt_mode = !ui::has_layout() && rows < static_cast<int>(msgwin_lines());
+    // Allow an extra row for the prompt:
+    if (in_prompt_mode)
+        return show_in_msgpane();
+    else
+        return Menu::show(reuse_selections);
+}
+
+vector<MenuEntry *> PromptMenu::show_in_msgpane()
+{
+    clear_messages();
+    msgwin_temporary_mode temp;
+    build_prompt_menu(); // could just rebuild it on every loop...
+    while (true)
+    {
+        msgwin_clear_temporary();
+        const auto *t_entry = get_cur_title();
+        // currently ignores entry color for the title, assuming that the
+        // default prompt color is appropriate...
+        const string prompt_text = t_entry ? t_entry->text : "? ";
+
+        // We do this line-by-line so that webtiles formatting comes out
+        // correctly. (Unfortunately, webtiles does not add a prefix to every
+        // line of a multi-line mpr, whereas console/tiles builds do.)
+        for (const auto &line : menu_text)
+            formatted_mpr(line, MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "%s", prompt_text.c_str());
+
+        int key = get_ch();
+        if (remap_numpad)
+            key = numpad_to_regular(key, true);
+
+        if (!process_key(key))
+            break;
+    }
+    get_selected(&sel);
+    return sel;
 }

@@ -770,11 +770,12 @@ static void _wizard_restore_life()
 static int _apply_extra_harm(int dam, mid_t source)
 {
     monster* damager = monster_by_mid(source);
-    // Don't check for monster amulet if there source isn't a monster
+    // +30% damage if opp has one level of harm, +45% with two
     if (damager && damager->extra_harm())
-        return dam * 13 / 10; // +30% damage when the opponent has harm
-    else if (you.extra_harm())
-        return dam * 6 / 5; // +20% damage when you have harm
+        return dam * (100 + 15 * (damager->extra_harm() + 1)) / 100;
+    // +20% damage if you have one level of harm, +30% with two
+    if (you.extra_harm())
+        return dam * (10 + you.extra_harm() + 1) / 10;
 
     return dam;
 }
@@ -843,7 +844,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     int drain_amount = 0;
 
-    // Multiply damage if scarf of harm is in play
+    // Multiply damage if Harm is in play
     if (dam != INSTANT_DEATH)
         dam = _apply_extra_harm(dam, source);
 

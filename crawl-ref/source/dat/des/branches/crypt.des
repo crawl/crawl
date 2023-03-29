@@ -90,7 +90,7 @@ function crypt_loot_plus(e)
   e.kitem("i = necronomicon / " .. book .. "necromutation / " ..
           book .. "death's_door / " .. book .. "haunt / " ..
           book .. "borgnjor's_revivification / " .. book .. "infestation")
-  e.kitem("j = phial of floods w:20 / tin of tremorstones / box of beasts, " ..
+  e.kitem("j = phial of floods w:20 / any area misc / box of beasts, " ..
           "staff of death / any magical staff")
   e.subst("d = d:20 ef g:20")
   e.subst("h = h:5 ij")

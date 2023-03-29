@@ -868,7 +868,7 @@ class ShopEntry : public InvEntry
                                                   YELLOW;
         const string keystr = colour_to_str(keycol);
         const string itemstr =
-            colour_to_str(menu_colour(text, item_prefix(*item, false), tag));
+            colour_to_str(menu_colour(text, item_prefix(*item, false), tag, false));
         return make_stringf(" <%s>%c %c </%s><%s>%4d gold   %s%s</%s>",
                             keystr.c_str(),
                             hotkeys[0],
@@ -2227,7 +2227,7 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
 
             const string colprf = item_prefix(item, false);
             const int col = menu_colour(item.name(DESC_A),
-                                        colprf, "shop");
+                                        colprf, "shop", false);
 
             vector<tile_def> item_tiles;
             get_tiles_for_item(item, item_tiles, true);

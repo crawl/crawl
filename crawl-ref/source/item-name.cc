@@ -104,8 +104,9 @@ static string _item_inscription(const item_def &item)
 
     if (const char *orig = _interesting_origin(item))
     {
-        if (Options.show_god_gift == MB_TRUE
-            || Options.show_god_gift == MB_MAYBE && !fully_identified(item))
+        if (bool(Options.show_god_gift)
+            || Options.show_god_gift == maybe_bool::maybe
+                && !fully_identified(item))
         {
             insparts.push_back(orig);
         }
@@ -1809,7 +1810,18 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (!terse && cursed())
             buff << "cursed ";
 
-        if (!know_type)
+
+        if (is_artefact(*this) && !dbname)
+        {
+            if (know_type)
+                buff << "staff of " << staff_type_name(item_typ);
+            // TODO: crop long artefact names when not controlled by webtiles
+            buff << get_artefact_name(*this, ident);
+            if (!know_type)
+                buff << "staff";
+
+
+        } else if (!know_type)
         {
             if (!basename)
             {
@@ -3139,7 +3151,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return cannot_drink_item_reason(&item, temp, false, ident).size();
     }
     case OBJ_JEWELLERY:
-        if (temp && !you_can_wear(get_item_slot(item)))
+        if (temp && bool(!you_can_wear(get_item_slot(item))))
             return true;
 
         if (!ident && !item_type_known(item))
@@ -3346,7 +3358,7 @@ string menu_colour_item_name(const item_def &item, description_level_type desc)
     const string cprf      = item_prefix(item, false);
     const string item_name = item.name(desc);
 
-    const int col = menu_colour(item_name, cprf, "pickup");
+    const int col = menu_colour(item_name, cprf, "pickup", false);
     if (col == -1)
         return item_name;
 

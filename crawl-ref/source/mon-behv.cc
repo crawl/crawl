@@ -743,7 +743,7 @@ void handle_behaviour(monster* mon)
 
         case BEH_FLEE:
             // Check for healed.
-            if (isHealthy && !isScared)
+            if (!isScared)
                 new_beh = BEH_SEEK;
 
             // Smart monsters flee until they can flee no more...

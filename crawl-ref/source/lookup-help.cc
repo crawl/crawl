@@ -846,7 +846,7 @@ static string _mons_desc_key(monster_type type)
 void LookupType::display_keys(vector<string> &key_list) const
 {
     DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
-                | MF_USE_TWO_COLUMNS | MF_ARROWS_SELECT,
+                | MF_USE_TWO_COLUMNS | MF_ARROWS_SELECT | MF_INIT_HOVER,
             toggleable_sort());
     desc_menu.set_tag("description");
 
@@ -1154,20 +1154,18 @@ static int _describe_god(const string &key, const string &/*suffix*/,
     return 0; // no exact matches for gods, so output doesn't matter
 }
 
-static string _branch_entry_runes(branch_type br)
+static string _branch_transit_runes(branch_type br)
 {
+    if (br != BRANCH_VAULTS && br != BRANCH_ZOT)
+        return "";
+
     string desc;
-    const int num_runes = runes_for_branch(br);
-
-    if (num_runes > 0)
-    {
-        desc = make_stringf("\n\nThis %s can only be entered while carrying "
-                            "at least %d rune%s of Zot.",
-                            br == BRANCH_ZIGGURAT ? "portal" : "branch",
-                            num_runes, num_runes > 1 ? "s" : "");
-    }
-
-    return desc;
+    const bool exit = br == BRANCH_VAULTS;
+    const int num_runes = br == BRANCH_ZOT ? 3 : 1;
+    return make_stringf("\n\nThis branch can only be %sed while carrying at "
+                        "least %d rune%s of Zot.",
+                        exit ? "exit" : "enter",
+                        num_runes, num_runes > 1 ? "s" : "");
 }
 
 static string _branch_depth(branch_type br)
@@ -1256,7 +1254,7 @@ static int _describe_branch(const string &key, const string &suffix,
         info += "\n\n" + noise_desc;
 
     info += _branch_location(branch)
-            + _branch_entry_runes(branch)
+            + _branch_transit_runes(branch)
             + _branch_depth(branch)
             + _branch_subbranches(branch)
             + "\n\n"

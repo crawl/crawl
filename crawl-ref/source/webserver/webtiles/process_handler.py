@@ -486,8 +486,11 @@ class CrawlProcessHandlerBase(object):
         self.update_watcher_description()
 
     def remove_watcher(self, watcher):
-        self._receivers.remove(watcher)
-        self.update_watcher_description()
+        # if both users quit around the same time, this can get out of sync;
+        # don't crash in that case
+        if watcher in self._receivers:
+            self._receivers.remove(watcher)
+            self.update_watcher_description()
 
     def watcher_count(self):
         return len([w for w in self._receivers if w.watched_game and not w.chat_hidden])
@@ -794,7 +797,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                                     "-await-connection"]
 
         ttyrec_path = self.config_path("ttyrec_path")
-        if ttyrec_path:
+        if ttyrec_path and config.get('enable_ttyrecs'):
             self.ttyrec_filename = os.path.join(ttyrec_path, self.lock_basename)
 
         processes[os.path.abspath(self.socketpath)] = self

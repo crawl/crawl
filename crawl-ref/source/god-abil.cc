@@ -1392,36 +1392,12 @@ void elyvilon_remove_divine_vigour()
 
 bool vehumet_supports_spell(spell_type spell)
 {
-    if (spell_typematch(spell, spschool::conjuration))
-        return true;
-
     // Conjurations work by conjuring up a chunk of short-lived matter and
     // propelling it towards the victim. This is the most popular way, but
     // by no means it has a monopoly for being destructive.
     // Vehumet loves all direct physical destruction.
-    if (spell == SPELL_SHATTER
-        || spell == SPELL_LRD
-        || spell == SPELL_SANDBLAST
-        || spell == SPELL_AIRSTRIKE
-        || spell == SPELL_POLAR_VORTEX
-        || spell == SPELL_FREEZE
-        || spell == SPELL_IGNITE_POISON
-        || spell == SPELL_OZOCUBUS_REFRIGERATION
-        || spell == SPELL_OLGREBS_TOXIC_RADIANCE
-        || spell == SPELL_VIOLENT_UNRAVELLING
-        || spell == SPELL_INNER_FLAME
-        || spell == SPELL_BLASTSPARK
-        || spell == SPELL_IGNITION
-        || spell == SPELL_FROZEN_RAMPARTS
-        || spell == SPELL_MAXWELLS_COUPLING
-        || spell == SPELL_NOXIOUS_BOG
-        || spell == SPELL_POISONOUS_VAPOURS
-        || spell == SPELL_SCORCH)
-    {
-        return true;
-    }
-
-    return false;
+    return spell_typematch(spell, spschool::conjuration)
+           || (get_spell_flags(spell) & spflag::destructive);
 }
 
 void trog_do_trogs_hand(int pow)

@@ -762,29 +762,29 @@ void update_vision_range()
  *
  * @param eq   The slot in question.
  * @param temp Whether to consider forms.
- * @return   MB_FALSE if the player can never use the slot;
- *           MB_MAYBE if the player can only use some items for the slot;
- *           MB_TRUE  if the player can use any (fsvo any) item for the slot.
+ * @return   false             if the player can never use the slot;
+ *           maybe_bool::maybe if the player can only use some items for the slot;
+ *           true              if the player can use any (fsvo any) item for the slot.
  */
 maybe_bool you_can_wear(equipment_type eq, bool temp)
 {
     // EQ_NONE will crash anyways, so just make it explicit. (Would it make
-    // sense to instead return MB_FALSE?)
+    // sense to instead return false?)
     ASSERT(eq != EQ_NONE);
 
     if (temp && !get_form()->slot_available(eq))
-        return MB_FALSE;
+        return false;
 
     // handles incorrect ring slots vs species
     if (species::bans_eq(you.species, eq))
-        return MB_FALSE;
+        return false;
 
     switch (eq)
     {
     case EQ_RING_EIGHT:
     case EQ_LEFT_RING:
         if (you.get_mutation_level(MUT_MISSING_HAND))
-            return MB_FALSE;
+            return false;
         // intentional fallthrough
     case EQ_RIGHT_RING:
     case EQ_RING_ONE:
@@ -794,22 +794,23 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     case EQ_RING_FIVE:
     case EQ_RING_SIX:
     case EQ_RING_SEVEN:
-        return MB_TRUE;
+        return true;
 
     case EQ_WEAPON:
     case EQ_STAFF:
-        return you.has_mutation(MUT_NO_GRASPING) ? MB_FALSE :
-               you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM ? MB_MAYBE :
-                                         MB_TRUE;
+        return you.has_mutation(MUT_NO_GRASPING)
+            ? false : you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM
+            ? maybe_bool::maybe
+            : true;
 
     // You can always wear at least one ring (forms were already handled).
     case EQ_RINGS:
     case EQ_ALL_ARMOUR:
     case EQ_AMULET:
-        return MB_TRUE;
+        return true;
 
     case EQ_RING_AMULET:
-        return player_equip_unrand(UNRAND_FINGER_AMULET) ? MB_TRUE : MB_FALSE;
+        return player_equip_unrand(UNRAND_FINGER_AMULET);
 
     default:
         break;
@@ -864,14 +865,14 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     ASSERT(dummy.sub_type != NUM_ARMOURS);
 
     if (can_wear_armour(dummy, false, !temp))
-        return MB_TRUE;
+        return true;
     else if (alternate.sub_type != NUM_ARMOURS
              && can_wear_armour(alternate, false, !temp))
     {
-        return MB_MAYBE;
+        return maybe_bool::maybe;
     }
     else
-        return MB_FALSE;
+        return false;
 }
 
 bool player_has_feet(bool temp, bool include_mutations)
@@ -2156,6 +2157,16 @@ int player_wizardry(spell_type /*spell*/)
 {
     return you.wearing(EQ_RINGS, RING_WIZARDRY)
            + (you.get_mutation_level(MUT_BIG_BRAIN) == 3 ? 1 : 0);
+}
+
+int player_channeling()
+{
+    // Here and elsewhere, let's consider making this work for Dj.
+    if (you.has_mutation(MUT_HP_CASTING))
+        return 0;
+
+    return 2 * player_equip_unrand(UNRAND_WUCAD_MU)
+           + you.wearing_ego(EQ_ALL_ARMOUR, SPARM_ENERGY);
 }
 
 static int _sh_from_shield(const item_def &item)
@@ -3535,8 +3546,12 @@ int player::scan_artefacts(artefact_prop_type which_property,
         const item_def &item = inv[eq];
 
         // Only weapons give their effects when in our hands.
-        if (i == EQ_WEAPON && item.base_type != OBJ_WEAPONS)
+        if (i == EQ_WEAPON
+            && item.base_type != OBJ_WEAPONS
+            && item.base_type != OBJ_STAVES)
+        {
             continue;
+        }
 
         int val = 0;
 
@@ -6775,13 +6790,12 @@ bool player::corrode_equipment(const char* corrosion_source, int degree)
  * Attempts to apply corrosion to the player and deals acid damage.
  *
  * @param evildoer the cause of this acid splash.
- * @param acid_strength The strength of the acid.
  */
-void player::splash_with_acid(actor* evildoer, int acid_strength)
+void player::splash_with_acid(actor* evildoer)
 {
-    acid_corrode(acid_strength);
+    acid_corrode(3);
 
-    const int dam = roll_dice(4, acid_strength);
+    const int dam = roll_dice(4, 3);
     const int post_res_dam = resist_adjust_damage(&you, BEAM_ACID, dam);
 
     mprf("You are splashed with acid%s%s",
@@ -8307,9 +8321,7 @@ string player::hands_act(const string &plural_verb,
 
 int player::inaccuracy() const
 {
-    int degree = 0;
-    if (player_equip_unrand(UNRAND_AIR))
-        degree++;
+    int degree = actor::inaccuracy();
     if (get_mutation_level(MUT_MISSING_EYE))
         degree++;
     return degree;

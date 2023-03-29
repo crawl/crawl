@@ -1073,6 +1073,9 @@ public:
             return fang_damage + (random ? div_rand_round(hd, denom) : hd / denom);
         }
 
+        if (you.get_mutation_level(MUT_ACIDIC_BITE))
+            return fang_damage + (random ? roll_dice(2, 4) : 4);
+
         return fang_damage;
     }
 
@@ -1341,7 +1344,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             player_announce_aux_hit();
 
             if (damage_brand == SPWPN_ACID)
-                defender->splash_with_acid(&you, 3);
+                defender->acid_corrode(3);
 
             if (damage_brand == SPWPN_VENOM && coinflip())
                 poison_monster(defender->as_monster(), &you);
@@ -2483,6 +2486,7 @@ bool melee_attack::mons_attack_effects()
 
     const bool slippery = defender->is_player()
                           && adjacent(attacker->pos(), defender->pos())
+                          && !player_stair_delay() // feet otherwise occupied
                           && player_equip_unrand(UNRAND_SLICK_SLIPPERS);
     // Don't trample while player is moving - either mean or nonsensical
     if (attacker != defender
@@ -2675,7 +2679,7 @@ void melee_attack::mons_apply_attack_flavour()
 
             if (defender_visible)
             {
-                mprf("%s %s engulfed in a cloud of spores!",
+                mprf("%s %s engulfed in a cloud of dizzying spores!",
                      defender->name(DESC_THE).c_str(),
                      defender->conj_verb("are").c_str());
             }
@@ -2761,7 +2765,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_REACH_TONGUE:
     case AF_ACID:
-        defender->splash_with_acid(attacker, 3);
+        defender->splash_with_acid(attacker);
         break;
 
     case AF_CORRODE:
@@ -3059,8 +3063,27 @@ void melee_attack::mons_apply_attack_flavour()
                                       random_range(100, 200)));
             simple_monster_message(*mon, " tastes blood and grows stronger!");
         }
+        break;
     }
+    case AF_SLEEP:
+        if (crawl_state.player_moving)
+            break; // looks too weird to fall asleep while still in motion
+        if (!coinflip())
+            break;
+        if (attk_type == AT_SPORE)
+        {
+            if (defender->is_unbreathing())
+                break;
 
+            if (defender_visible)
+            {
+                mprf("%s %s engulfed in a cloud of soporific spores!",
+                     defender->name(DESC_THE).c_str(),
+                     defender->conj_verb("are").c_str());
+            }
+        }
+        defender->put_to_sleep(attacker, attacker->get_experience_level() * 3);
+        break;
     }
 }
 

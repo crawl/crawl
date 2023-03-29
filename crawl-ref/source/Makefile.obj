@@ -138,6 +138,7 @@ map-knowledge.o \
 mapdef.o \
 mapmark.o \
 maps.o \
+maybe-bool.o \
 melee-attack.o \
 menu.o \
 message-stream.o \

@@ -158,17 +158,15 @@ int attack::calc_pre_roll_to_hit(bool random)
     {
         return AUTOMATIC_HIT;
     }
-
-    int mhit = attacker->is_player() ?
-                15 + (you.dex() / 2)
-              : calc_mon_to_hit_base();
+    int mhit;
 
     // This if statement is temporary, it should be removed when the
     // implementation of a more universal (and elegant) to-hit calculation
     // is designed. The actual code is copied from the old mons_to_hit and
     // player_to_hit methods.
-    if (attacker->is_player())
+    if (stat_source().is_player())
     {
+        mhit = 15 + (you.dex() / 2);
         // fighting contribution
         mhit += maybe_random_div(you.skill(SK_FIGHTING, 100), 100, random);
 
@@ -221,6 +219,7 @@ int attack::calc_pre_roll_to_hit(bool random)
     }
     else    // Monster to-hit.
     {
+        mhit = calc_mon_to_hit_base();
         if (using_weapon())
             mhit += weapon->plus + property(*weapon, PWPN_HIT);
 
@@ -247,7 +246,7 @@ int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
     int modifiers = 0;
 
     // Penalties for both players and monsters:
-    modifiers -= 5 * attacker->inaccuracy();
+    modifiers -= attacker->inaccuracy_penalty();
 
     if (attacker->confused())
         modifiers += CONFUSION_TO_HIT_MALUS;
@@ -293,15 +292,16 @@ int attack::calc_to_hit(bool random)
         return AUTOMATIC_HIT;
 
     // hit roll
-    if (attacker->is_player())
+    const actor &src = stat_source();
+    if (src.is_player())
         mhit = maybe_random2(mhit, random);
 
     mhit += post_roll_to_hit_modifiers(mhit, random);
 
     // We already did this roll for players.
-    if (!attacker->is_player())
+    if (!src.is_player())
         mhit = maybe_random2(mhit + 1, random);
-
+;
     dprf(DIAG_COMBAT, "%s: to-hit: %d",
          attacker->name(DESC_PLAIN).c_str(), mhit);
 
@@ -533,29 +533,13 @@ void attack::antimagic_affects_defender(int pow)
         enchant_actor_with_flavour(defender, nullptr, BEAM_DRAIN_MAGIC, pow);
 }
 
-/// Whose skill should be used for a pain-weapon effect?
-static actor* _pain_weapon_user(actor* attacker)
-{
-    if (attacker->type != MONS_SPECTRAL_WEAPON)
-        return attacker;
-
-    const mid_t summoner_mid = attacker->as_monster()->summoner;
-    if (summoner_mid == MID_NOBODY)
-        return attacker;
-
-    actor* summoner = actor_by_mid(attacker->as_monster()->summoner);
-    if (!summoner || !summoner->alive())
-        return attacker;
-    return summoner;
-}
-
 void attack::pain_affects_defender()
 {
-    actor* user = _pain_weapon_user(attacker);
-    if (!one_chance_in(user->skill_rdiv(SK_NECROMANCY) + 1))
+    actor &user = stat_source();
+    if (!one_chance_in(user.skill_rdiv(SK_NECROMANCY) + 1))
     {
         special_damage += resist_adjust_damage(defender, BEAM_NEG,
-                              random2(1 + user->skill_rdiv(SK_NECROMANCY)));
+                              random2(1 + user.skill_rdiv(SK_NECROMANCY)));
 
         if (special_damage && defender_visible)
         {
@@ -1095,6 +1079,11 @@ int attack::player_apply_final_multipliers(int damage, bool /*aux*/)
     if (you.form == transformation::shadow)
         damage = div_rand_round(damage, 2);
 
+    // Spectral weapons deal "only" 70% of the damage that their
+    // owner would, matching cleaving.
+    if (attacker->type == MONS_SPECTRAL_WEAPON)
+        damage = div_rand_round(damage * 7, 10);
+
     return damage;
 }
 
@@ -1134,7 +1123,7 @@ int attack::adjusted_weapon_damage() const
 
 int attack::calc_damage()
 {
-    if (attacker->is_monster())
+    if (stat_source().is_monster())
     {
         int damage = 0;
         int damage_max = 0;
@@ -1538,7 +1527,7 @@ bool attack::apply_damage_brand(const char *what)
         break;
 
     case SPWPN_ACID:
-        defender->splash_with_acid(attacker, 3);
+        defender->splash_with_acid(attacker);
         break;
 
 
@@ -1728,4 +1717,19 @@ void attack::handle_noise(const coord_def & pos)
     loudness = min(12, loudness);
 
     noisy(loudness, pos, attacker->mid);
+}
+
+actor &attack::stat_source() const
+{
+    if (attacker->type != MONS_SPECTRAL_WEAPON)
+        return *attacker;
+
+    const mid_t summoner_mid = attacker->as_monster()->summoner;
+    if (summoner_mid == MID_NOBODY)
+        return *attacker;
+
+    actor* summoner = actor_by_mid(attacker->as_monster()->summoner);
+    if (!summoner || !summoner->alive())
+        return *attacker;
+    return *summoner;
 }

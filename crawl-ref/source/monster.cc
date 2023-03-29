@@ -5,6 +5,7 @@
 
 #include "AppHdr.h"
 
+#include <cmath>
 #include <algorithm>
 #include <functional>
 #include <queue>
@@ -1998,7 +1999,7 @@ bool monster::pickup_item(item_def &item, bool msg, bool force)
 
 void monster::swap_weapons(maybe_bool maybe_msg)
 {
-    const bool msg = tobool(maybe_msg, observable());
+    const bool msg = maybe_msg.to_bool(observable());
 
     item_def *weap = mslot_item(MSLOT_WEAPON);
     item_def *alt  = mslot_item(MSLOT_ALT_WEAPON);
@@ -3195,6 +3196,9 @@ int monster::armour_class() const
         ac += jewellery_plus;
     }
 
+    // armour from artefacts
+    ac += scan_artefacts(ARTP_AC);
+
     // various enchantments
     if (has_ench(ENCH_IDEALISED))
         ac += 4 + get_hit_dice() / 3;
@@ -3301,6 +3305,9 @@ int monster::evasion(bool ignore_helpless, const actor* /*act*/) const
         ASSERT(abs(jewellery_plus) < 30); // sanity check
         ev += jewellery_plus;
     }
+
+    // evasion from artefacts
+    ev += scan_artefacts(ARTP_EVASION);
 
     if (has_ench(ENCH_AGILE))
         ev += AGILITY_BONUS;
@@ -4142,7 +4149,7 @@ bool monster::corrode_equipment(const char* corrosion_source, int degree)
 /**
  * Attempts to apply corrosion to a monster.
  */
-void monster::splash_with_acid(actor* evildoer, int acid_strength)
+void monster::splash_with_acid(actor* evildoer)
 {
     // Splashing with acid shouldn't do anything to immune targets
     if (res_acid() == 3)
@@ -4157,7 +4164,7 @@ void monster::splash_with_acid(actor* evildoer, int acid_strength)
              attack_strength_punctuation(post_res_dam).c_str());
     }
 
-    acid_corrode(acid_strength);
+    acid_corrode(3);
 
     if (post_res_dam > 0)
         hurt(evildoer, post_res_dam, BEAM_ACID, KILLED_BY_ACID);
@@ -4212,15 +4219,15 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         else if (amount <= 0 && hit_points <= max_hit_points)
             return 0;
 
-        // Apply damage multipliers for scarf of harm
+        // Apply damage multipliers for harm
         if (amount != INSTANT_DEATH)
         {
-            // +30% damage when the opponent has harm
+            // +30% damage if opp has one level of harm, +45% with two
             if (agent && agent->extra_harm())
-                amount = amount * 13 / 10;
-            // +20% damage when self has harm
+                amount = amount * (100 + 15 * (agent->extra_harm() + 1)) / 100;
+            // +20% damage if you have one level of harm, +30% with two
             else if (extra_harm())
-                amount = amount * 6 / 5;
+                amount = amount * (10 + extra_harm() + 1) / 10;
         }
 
         // Apply damage multipliers for quad damage

@@ -1886,7 +1886,8 @@ void handle_monster_move(monster* mons)
                     mons->foe = MHITYOU;
                     mons->target = you.pos();
 
-                    if (_handle_ru_melee_redirection(*mons, &new_target))
+                    if (mons_has_attacks(*mons, true)
+                        && _handle_ru_melee_redirection(*mons, &new_target))
                     {
                         mons->speed_increment -= non_move_energy;
                         DEBUG_ENERGY_USE("_handle_ru_redirection()");

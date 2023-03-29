@@ -243,7 +243,7 @@ void TilesFramework::draw_doll_edit()
 void TilesFramework::set_map_display(const bool display)
 {
     m_map_mode_enabled = display;
-    if (!display && !tiles.is_using_small_layout())
+    if (!display && !tiles.is_using_small_layout() && m_region_tab)
         m_region_tab->activate_tab(TAB_ITEM);
     do_layout(); // recalculate the viewport setup for zoom levels
     redraw_screen(false);
@@ -261,7 +261,7 @@ void TilesFramework::do_map_display()
     do_layout(); // recalculate the viewport setup for zoom levels
     redraw_screen(false);
     update_screen();
-    if (!tiles.is_using_small_layout())
+    if (!tiles.is_using_small_layout() && m_region_tab)
         m_region_tab->activate_tab(TAB_NAVIGATION);
 }
 
@@ -473,7 +473,8 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
 {
     m_active_layer = LAYER_NORMAL;
 
-    m_region_tile->load_dungeon(vbuf, gc);
+    if (m_region_tile)
+        m_region_tile->load_dungeon(vbuf, gc);
 
     if (m_region_map)
     {
@@ -499,6 +500,8 @@ void TilesFramework::load_dungeon(const coord_def &cen)
 
 bool TilesFramework::update_dpi()
 {
+    if (crawl_state.tiles_disabled)
+        return false;
     if (wm->init_hidpi())
     {
         reconfigure_fonts();
@@ -513,7 +516,8 @@ void TilesFramework::resize()
     calculate_default_options();
     do_layout();
     ui::resize(m_windowsz.x, m_windowsz.y);
-    wm->resize(m_windowsz);
+    if (wm)
+        wm->resize(m_windowsz);
 }
 
 void TilesFramework::resize_event(int w, int h)
@@ -803,13 +807,17 @@ void TilesFramework::do_layout()
      * XXX: don't layout unless we're in a game / arena
      * this is to prevent layout code from accessing `you` while it's invalid.
      */
-    if (!species::is_valid(you.species))
+    if (in_headless_mode()
+        || !species::is_valid(you.species))
     {
         /* HACK: some code called while loading the game calls mprf(), so even
          * if we're not ready to do an actual layout, we should still give the
          * message region a size, to prevent a crash. */
-        m_region_msg->place(0, 0, 0);
-        m_region_msg->resize_to_fit(10000, 10000);
+        if (m_region_msg)
+        {
+            m_region_msg->place(0, 0, 0);
+            m_region_msg->resize_to_fit(10000, 10000);
+        }
         return;
     }
 
@@ -997,7 +1005,7 @@ void TilesFramework::do_layout()
 
 bool TilesFramework::is_using_small_layout()
 {
-    if (Options.tile_use_small_layout == MB_MAYBE)
+    if (Options.tile_use_small_layout == maybe_bool::maybe)
 #ifndef __ANDROID__
         // Rough estimation of the minimum usable window size
         //   - width > stats font width * 45 + msg font width * 45
@@ -1009,7 +1017,7 @@ bool TilesFramework::is_using_small_layout()
         return true;
 #endif
     else
-        return Options.tile_use_small_layout;
+        return bool(Options.tile_use_small_layout);
 }
 
 #define ZOOM_INC 10
@@ -1165,6 +1173,8 @@ void TilesFramework::resize_inventory()
 void TilesFramework::layout_statcol()
 {
     bool use_small_layout = is_using_small_layout();
+    if (in_headless_mode())
+        return;
 
     for (tab_iterator it = m_tabs.begin(); it != m_tabs.end(); ++it)
     {
@@ -1325,6 +1335,8 @@ void TilesFramework::redraw()
     cprintf("\nredrawing tiles");
 #endif
     m_need_redraw = false;
+    if (in_headless_mode())
+        return;
 
     glmanager->reset_view_for_redraw();
 
@@ -1400,8 +1412,11 @@ void TilesFramework::update_minimap_bounds()
 
 void TilesFramework::update_tabs()
 {
-    if (Options.tile_show_items.empty() || crawl_state.game_is_arena())
+    if (Options.tile_show_items.empty() || crawl_state.game_is_arena()
+        || in_headless_mode())
+    {
         return;
+    }
 
     m_region_tab->update();
     for (tab_iterator it = m_tabs.begin(); it != m_tabs.end(); ++it)
@@ -1416,6 +1431,8 @@ void TilesFramework::toggle_inventory_display()
 
 void TilesFramework::place_cursor(cursor_type type, const coord_def &gc)
 {
+    if (in_headless_mode())
+        return;
     m_region_tile->place_cursor(type, gc);
 }
 
@@ -1426,12 +1443,16 @@ void TilesFramework::grid_to_screen(const coord_def &gc, coord_def *pc) const
 
 void TilesFramework::clear_text_tags(text_tag_type type)
 {
+    if (in_headless_mode())
+        return;
     m_region_tile->clear_text_tags(type);
 }
 
 void TilesFramework::add_text_tag(text_tag_type type, const string &tag,
                                   const coord_def &gc)
 {
+    if (in_headless_mode())
+        return;
     m_region_tile->add_text_tag(type, tag, gc);
 }
 
@@ -1464,6 +1485,8 @@ const coord_def &TilesFramework::get_cursor() const
 
 void TilesFramework::set_need_redraw(unsigned int min_tick_delay)
 {
+    if (in_headless_mode())
+        return;
     unsigned int ticks = (wm->get_ticks() - m_last_tick_redraw);
     if (min_tick_delay && ticks <= min_tick_delay)
         return;

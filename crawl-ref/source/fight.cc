@@ -768,7 +768,8 @@ static bool _dont_harm(const actor &attacker, const actor &defender)
     if (attacker.is_player())
     {
         return defender.wont_attack()
-               || mons_attitude(*defender.as_monster()) == ATT_NEUTRAL;
+               || mons_attitude(*defender.as_monster()) == ATT_NEUTRAL
+                  && !defender.as_monster()->has_ench(ENCH_INSANE);
     }
 
     return false;
@@ -1217,10 +1218,12 @@ string stop_summoning_reason(resists_t resists, monclass_flags_t flags)
  * sight when OTR is active, regardless of how they entered LOS.
  *
  * @param resists   What does the summon resist?
+ * @param flags     What relevant flags does the summon have? (e.g. flight)
  * @param verb      The verb to be used in the prompt.
  * @return          True if the player wants to abort.
  */
-bool stop_summoning_prompt(resists_t resists, string verb)
+bool stop_summoning_prompt(resists_t resists, monclass_flags_t flags,
+                           string verb)
 {
     if (crawl_state.disables[DIS_CONFIRMATIONS]
         || crawl_state.which_god_acting() == GOD_XOM)
@@ -1228,8 +1231,7 @@ bool stop_summoning_prompt(resists_t resists, string verb)
         return false;
     }
 
-    // TODO: take flags as well (or a set of monster types..?)
-    const string noun = stop_summoning_reason(resists, M_NO_FLAGS);
+    const string noun = stop_summoning_reason(resists, flags);
     if (noun.empty())
         return false;
 

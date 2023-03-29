@@ -17,3 +17,6 @@ private:
     bool prev;
 };
 #endif
+
+bool in_headless_mode();
+void enter_headless_mode();

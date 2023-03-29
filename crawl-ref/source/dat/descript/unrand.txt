@@ -44,9 +44,16 @@ A staff which was once wielded by the mighty wizard Olgreb.
 %%%%
 staff of Wucad Mu
 
-A crystal staff overflowing with magical energies, which can be channeled by
-a skilled wielder to allow them to cast spells without exhausting any of their
-own magical energies — at the risk of damaging the user's mind.
+A crystal staff overflowing with magical energies. It is terribly difficult
+to cast spells while wielding this, but the staff may gather and return the
+magic spent on casting. Miscast spells always have the magic spent on them
+returned.
+
+{{
+    if you.race() == "Djinni" then
+        return "It is utterly useless to Djinni."
+    end
+}}
 %%%%
 Vampire's Tooth
 
@@ -74,10 +81,12 @@ sword of Cerebov
 A twisted blade, covered in eerie flames. Its demonic power burns away at the
 very essence of those it is wielded against.
 %%%%
-staff of Dispater
+orb of Dispater
 
-A legendary staff, granting the power to unleash damnation — although not
-without draining the wielder's vitality in the process.
+An orb pulsing with unholy energies, granting the power to unleash damnation
+when held — although not without draining the wielder's vitality in the
+process. It carries with it some of the corrosive malice of the Iron City of
+Dis.
 %%%%
 sceptre of Asmodeus
 

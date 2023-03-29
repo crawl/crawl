@@ -495,13 +495,6 @@ void wizard_tweak_object()
     }
 }
 
-// Returns whether an item of this type can be an artefact.
-static bool _item_type_can_be_artefact(int type)
-{
-    return type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY
-           || type == OBJ_BOOKS;
-}
-
 static bool _make_book_randart(item_def &book)
 {
     int type;
@@ -645,7 +638,7 @@ void wizard_make_object_randart()
         return;
     }
 
-    if (!_item_type_can_be_artefact(item.base_type))
+    if (!item_type_can_be_artefact(item.base_type))
     {
         mpr("That item cannot be turned into an artefact.");
         return;

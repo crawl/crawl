@@ -64,7 +64,7 @@ The contents of this text are:
                 automagic_stop, fail_severity_to_confirm, easy_door,
                 warn_hatches, enable_recast_spell, confirm_action,
                 regex_search, autopickup_search, bad_item_prompt,
-                auto_hide_spells, menu_arrow_control
+                auto_hide_spells, menu_arrow_control, single_column_item_menus
 3-h     Message and Display Enhancements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -119,9 +119,8 @@ The contents of this text are:
                 tile_cell_pixels, tile_sidebar_pixels, tile_filter_scaling,
                 tile_force_overlay, tile_overlay_col,
                 tile_overlay_alpha_percent, tile_full_screen,
-                tile_single_column_menus, tile_font_crt_file,
-                tile_font_stat_file, tile_font_msg_file, tile_font_tip_file,
-                tile_font_lbl_file, tile_font_crt_family,
+                tile_font_crt_file, tile_font_stat_file, tile_font_msg_file,
+                tile_font_tip_file, tile_font_lbl_file, tile_font_crt_family,
                 tile_font_stat_family, tile_font_msg_family,
                 tile_font_lbl_family, tile_font_crt_size, tile_font_stat_size,
                 tile_font_msg_size, tile_font_tip_size, tile_font_lbl_size,
@@ -429,9 +428,9 @@ default_manual_training = false (persistent)
 
 autopickup_starting_ammo = true
         When set, at game start, autopickup is forced on (as per the \ menu)
-        for the player's starting ammunition type (including stones for Earth
-        Elementalists). Even when this option is set, autopickup of those items
-        can be disabled from the \ menu once the game has begun.
+        for the player's starting ammunition type. Even when this option is
+        set, autopickup of those items can be disabled from the \ menu once
+        the game has begun.
 
 game_seed = none
         A number indicating the seed to initialize the random number generator
@@ -1106,7 +1105,7 @@ simple_targeting = false
 force_spell_targeter = hailstorm, starburst, frozen ramparts, ignition,
                        eringya's noxious bog, cause fear, alistair's
                        intoxication, discord, dispersal, metabolic englaciation,
-                       dazzling flash, flame wave, anguish
+                       dazzling flash, flame wave, anguish, plasma beam
         Force showing a targeter for the listed spells when casting normally,
         even if the spell isn't targeted. This for practical purposes only has
         an effect on statically targeted spells, such as the ones in the
@@ -1452,6 +1451,13 @@ menu_arrow_control = true
         menus that use hotkeys for selection. (E.g. the main menu for local
         play is not affected.)
 
+single_column_item_menus = true
+        If set to false, certain item menus will list items in two columns,
+        as long as the menu is too long to fit in the current screen. If set
+        to true, all menus will use a single column under any circumstances.
+        This option is only available on local tiles and console; on WebTiles
+        all menus are single-column regardless of the value of this option.
+
 3-h     Message and Display Enhancements.
 ------------------------------------------
 
@@ -1631,7 +1637,8 @@ default_show_all_skills = false
         trainable mode. This option does not affect hints and tutorial games.
 
 monster_list_colour = friendly:green, neutral:brown, good_neutral:brown
-monster_list_colour += trivial:darkgrey, easy:lightgrey, tough:yellow, nasty:lightred
+monster_list_colour += trivial:darkgrey, easy:lightgrey, tough:yellow,
+                       nasty:lightred
         (List option)
         Change the colours used to display monster names in the monster list.
         Valid keys, and their default colours, are:
@@ -1773,84 +1780,85 @@ action_panel_glyphs = false
 
 menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
         (Ordered list option)
-        This prints a line (of the inventory, a menu, or the discoveries
-        screen) containing regex in the stated colour. There can be
-        several statements in a list, and also several menu_colour
-        lines. When using several menu_colour lines, the colour of the
-        _first_ matching regex is applied. For a list of colours, check
-        the colour option in 5-a.
+        For menus and other screens that print items (and a few other cases; see
+        list below) this option allows you to control the colour that is used to
+        display a line by using a regular expression. For example, the default
+        options use the following line:
+            menu_colour += lightmagenta:.*orb.*Zot
+        to highlight the orb of Zot as purple in the item pickup menu. For
+        items, the regular expression is also checked against various item
+        annotations as described below. For example, the following line:
+            menu_colour += yellow:.*emergency_item.*
+        causes items that get the `emergency_item` annotation (such as scrolls
+        of teleportation) to be highlighted in yellow in inventory and other
+        item menus.
 
-        The match specifies which listings are affected by the
-        colouring. If you specify 'any', or completely skip the <match>:
-        part, then all listings are used. Possible values for match are:
-           ability       (the A screen)
-           description   (the \ screen)
-           equip         (the [, (, ), " screens)
-           help          (the manual)
-           inventory     (inventory and pickup menus)
-           pickup        (specific to pickup menus)
-           shop          (shop menus)
-           notes         (the ?: screen)
-           resists       (the % screen)
-           spell         (the Z and I screens)
-           stash         (the results from Ctrl-F)
-           stats         (the player stats panel)
+        There can be several statements in a list, and also several menu_colour
+        lines. When using several menu_colour lines, the colour of the _first_
+        matching regex is applied; the option supports `^=`, which is useful
+        for overriding default settings without building the list from scratch.
+        For a list of colours, check the colour option in 5-a.
 
-        Crawl has a couple of prefixes defined to make inventory colouring
-        easier. These are, in order of definition:
-           identified      (The item is fully identified.)
-           known           (You recognize the item's subtype.)
-           unidentified    (You don't recognize the item's subtype.)
+        The `match` part specifies which listings are affected by the
+        colouring. If you specify 'item', or completely skip the <match>:
+        part, then the pattern will apply to all item-related categories.
+        Possible item-related values for match are:
+            inventory     (inventory and pickup/drop menus)
+            pickup        (pickup menus, and items on the floor)
+            equip         (the [ and " screens)
+            use_item      (equip, unequip, read, quaff, etc)
+            shop          (shop menus)
+            stash         (the results from Ctrl-F)
+            description   (the \ screen)
+            stats         (wielded/quivered items on the main screen stats panel)
+            resists       (items on the % screen)
 
-        Items are also prefixed with their base type (armour, weapon, wand,
-        etc.)
+        Possible non-item-related values are as follows; these require an
+        explicit `match`:
+            help          (the manual)
+            notes         (the ?: screen)
 
-        The following only apply to items whose subtype is known.
-           forbidden       (Your god would hate it if you used this item.)
-           emergency_item  (This item is invaluable in emergencies.)
-           good_item       (This item is generally a good item.)
-           dangerous_item  (Using this item can be dangerous.)
-           bad_item        (This item is generally a bad item.)
-           useless_item    (This item is of no use to you.)
+        Items are annotated with many useful tags that make controlling colour
+        easier. Items are annotated with their base type (armour, weapon, wand,
+        etc.) They are also annotated with certain tags indicating usefulness:
+            forbidden       (Your god would hate it if you used this item.)
+            emergency_item  (This item is invaluable in emergencies.)
+            good_item       (This item is generally a good item.)
+            dangerous_item  (Using this item can be dangerous.)
+            bad_item        (This item is generally a bad item.)
+            useless_item    (This item is of no use to you.)
 
-        The following apply only to items of certain base types, whether
-        identified or not:
-           inedible        (You cannot eat this, or get no nutrition from it.)
-           equipped        (Equipped items.)
-           artefact        (For artefacts, whether identified or not.)
-           melee           (Melee weapons, including rods and magical staves.)
-           ranged          (Ranged weapons.)
+        as well as a range of other properties:
+            equipped        (Equipped items.)
+            ego             (Items with an offensive/defensive magical brand.)
+            artefact        (For artefacts, whether identified or not.)
+            unrand          (For non-random artefacts.)
+            melee           (Melee weapons, including magical staves.)
+            ranged          (Ranged weapons.)
+            identified      (The item is fully identified.)
+            known           (You recognize the item's subtype.)
+            unidentified    (You don't recognize the item's subtype.)
+            god gift        (an item gifted to you by a god.)
+            cursed          (Cursed by Ashenzari.)
 
-        When looking for menu_colour matches, these prefixes are prepended to
-        the actual item name, e.g. in the form of
-           identified forbidden wand of random effects (4)
+        (Of course, some of these will only apply to some menus inherently: only
+        carried items can be equipped, only non-carried items can be
+        unidentified, etc.)
+
+        When looking for menu_colour matches, these prefixes are treated as if
+        they are prepended to the actual item name, for example:
+            identified evil_item forbidden misc a piece from Xom's chessboard (15/15)
 
         The same prefixes can also be used for highlighting prompts pertaining
         to items matching the description, or to define autopickup_exceptions.
 
-        If you want to colour all items that contain a certain prefix, use
-          menu_colour ^= lightgreen:poisonous
+        For more examples, see the default settings in
+        `dat/defaults/menu_colours.txt`.
 
-        To colour worn stuff and highlight cursed items (except where other,
-        presumably more important, message colours match), use
-          menu_colour += inventory:lightred:equipped.* cursed
-          menu_colour += inventory:green:equipped
-          menu_colour += inventory:red: cursed
-
-        To colour identified artefacts, try
-          menu_colour ^= inventory:white:( [-+] the)
-        or
-          menu_colour ^= inventory:white:identified.*artefact
-
-        If you frequently die because you forget to use emergency items,
-        try
-          menu_colour ^= inventory:cyan:emergency_item
-          menu_colour ^= inventory:lightcyan:wand of (acid|iceblast)
-
-        menu_colour can also be applied to colour the in-game notes (to
-        be read with '?:'). The following line will show level ups in
-        white:
-          menu_colour ^= notes:white:Reached XP level
+        menu_colour can also be used to colour in-game morgue notes (readable
+        in colour with `?:`), by using the `notes` match. For example, the
+        following line will show level-ups in green:
+            menu_colour ^= notes:green:Reached XP level
 
 message_colour ^= <colour>:<channel>:<regex>, <colour>:<regex>, ...
         (Ordered list option)
@@ -2290,14 +2298,6 @@ tile_full_screen = auto
         on or off. Setting it to anything else will put it in auto mode, which
         enables full screen mode only if the screen resolution is smaller than
         width 1200, or height 800.
-
-tile_single_column_menus = true
-        If enabled, all in-game menus will list items in a single column,
-        regardless of the current screen size or the number of items in the
-        menu. If disabled, some in-game menus will use two columns if there is
-        insufficient space to show all items in a single column. This option
-        is only available on local tiles; all menus on console and on WebTiles
-        always list items in a single column, as if this option were enabled.
 
 tile_use_small_layout = auto
         Alternative layout designed for very small screens. It is enabled by

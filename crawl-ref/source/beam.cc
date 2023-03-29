@@ -454,7 +454,7 @@ int zap_to_hit(zap_type z_type, int power, bool is_monster)
     ASSERT(hit_calc);
     const int hit = (*hit_calc)(power);
     if (hit != AUTOMATIC_HIT && !is_monster && crawl_state.need_save)
-        return max(0, hit - 5 * you.inaccuracy());
+        return max(0, hit - you.inaccuracy_penalty());
     return hit;
 }
 
@@ -2409,8 +2409,17 @@ void bolt::affect_endpoint()
     }
 
     // Leave an object, if applicable.
-    if (drop_item && item)
-        drop_object();
+    if (item && !is_tracer && was_missile)
+    {
+        ASSERT(item->defined());
+        // Hack: we use hit_verb to determine whether a ranged attack hit.
+        const bool damned = item->props.exists(DAMNATION_BOLT_KEY)
+                            && !hit_verb.empty(); // hack!
+        if (item->flags & ISFLAG_SUMMONED || item_mulches || damned)
+            item_was_destroyed(*item);
+        else if (drop_item)
+            drop_object();
+    }
 
     if (is_explosion)
     {
@@ -2546,52 +2555,27 @@ bool bolt::stop_at_target() const
             (aimed_at_spot && (pos() == source || flavour != BEAM_DIGGING));
 }
 
-void bolt::drop_object(bool allow_mulch)
+void bolt::drop_object()
 {
     ASSERT(item != nullptr);
     ASSERT(item->defined());
 
-    // Conditions: beam is missile and not tracer.
-    if (is_tracer || !was_missile)
-        return;
-
-    // Summoned creatures' thrown items disappear.
-    if (item->flags & ISFLAG_SUMMONED)
+    if (item->sub_type == MI_THROWING_NET)
     {
-        if (you.see_cell(pos()))
+        monster* m = monster_at(pos());
+        // Player or monster at position is caught in net.
+        if (you.pos() == pos() && you.attribute[ATTR_HELD]
+            || m && m->caught())
         {
-            mprf("%s %s!",
-                 item->name(DESC_THE).c_str(),
-                 summoned_poof_msg(agent() ? agent()->as_monster() : nullptr,
-                                   *item).c_str());
+            // If no trapping net found mark this one.
+            if (get_trapping_net(pos(), true) == NON_ITEM)
+                set_net_stationary(*item);
         }
-        item_was_destroyed(*item);
-        return;
     }
 
-    // Hack alert: we use hit_verb to determine whether a ranged attack hit.
-    const bool damned = item->props.exists(DAMNATION_BOLT_KEY) && !hit_verb.empty();
-    if (!allow_mulch || (!damned && !thrown_object_destroyed(item)))
-    {
-        if (item->sub_type == MI_THROWING_NET)
-        {
-            monster* m = monster_at(pos());
-            // Player or monster at position is caught in net.
-            if (you.pos() == pos() && you.attribute[ATTR_HELD]
-                || m && m->caught())
-            {
-                // If no trapping net found mark this one.
-                if (get_trapping_net(pos(), true) == NON_ITEM)
-                    set_net_stationary(*item);
-            }
-        }
-
-        if (item->props.exists(DAMNATION_BOLT_KEY))
-            item->props.erase(DAMNATION_BOLT_KEY);
-        copy_item_to_grid(*item, pos(), 1);
-    }
-    else
-        item_was_destroyed(*item);
+    if (item->props.exists(DAMNATION_BOLT_KEY))
+        item->props.erase(DAMNATION_BOLT_KEY);
+    copy_item_to_grid(*item, pos(), 1);
 }
 
 // Returns true if the beam hits the player, fuzzing the beam if necessary
@@ -3858,7 +3842,8 @@ void bolt::affect_player()
 
     if (flavour == BEAM_MISSILE && item)
     {
-        ranged_attack attk(agent(true), &you, item, use_target_as_pos, agent());
+        ranged_attack attk(agent(true), &you, item, use_target_as_pos,
+                           agent(), item_mulches);
         attk.attack();
         // fsim purposes - throw_it detects if an attack connected through
         // hit_verb
@@ -4293,8 +4278,12 @@ void bolt::handle_stop_attack_prompt(monster* mon)
     // attempting to enslave monsters that might be affected.
     else if (flavour == BEAM_CHARM)
     {
-        const string verb = make_stringf("charm %s", mon->name(DESC_THE).c_str());
-        if (stop_summoning_prompt(monster_info(mon).resists(), verb))
+        monclass_flags_t flags = monster_info(mon).airborne() ? M_FLIES
+                                                              : M_NO_FLAGS;
+        const string verb = make_stringf("charm %s",
+                                         mon->name(DESC_THE).c_str());
+        if (stop_summoning_prompt(monster_info(mon).resists(), flags,
+            verb))
         {
             beam_cancelled = true;
             finish_beam();
@@ -4531,7 +4520,7 @@ static void _acid_splash_monsters(const bolt& beam, monster* mon, actor* agent)
                      victim->name(DESC_THE).c_str());
             }
 
-            victim->splash_with_acid(agent, 3);
+            victim->splash_with_acid(agent);
         }
     }
 }
@@ -4650,7 +4639,7 @@ void bolt::knockback_actor(actor *act, int dam)
     const int roll = origin_spell == SPELL_FORCE_LANCE
                      ? 7 + 0.27 * ench_power
                      : 17;
-    const int dist = binomial(max_dist, weight, roll); // This is silly! -- PF
+    const int dist = binomial(max_dist, roll - weight, roll); // This is silly! -- PF
 
     const string push_type =
         origin_spell == SPELL_CHILLING_BREATH ? "freezing wind" : name;
@@ -4839,7 +4828,7 @@ void bolt::affect_monster(monster* mon)
         if (!ag)
             ag = &env.mons[YOU_FAULTLESS];
         ASSERT(ag);
-        ranged_attack attk(ag, mon, item, use_target_as_pos, agent());
+        ranged_attack attk(ag, mon, item, use_target_as_pos, agent(), item_mulches);
         attk.attack();
         // fsim purposes - throw_it detects if an attack connected through
         // hit_verb

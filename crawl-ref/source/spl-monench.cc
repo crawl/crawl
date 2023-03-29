@@ -174,7 +174,7 @@ string mons_simulacrum_immune_reason(const monster *mons)
     if (!mons || !you.can_see(*mons))
         return "You can't see anything there.";
 
-    if (mons->has_ench(ENCH_SIMULACRUM))
+    if (mons->has_ench(ENCH_SIMULACRUM) || mons->has_ench(ENCH_BOUND_SOUL))
     {
         return make_stringf("%s's soul is already gripped in ice!",
                             mons->name(DESC_THE).c_str());

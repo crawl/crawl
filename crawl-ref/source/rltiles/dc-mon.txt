@@ -603,6 +603,7 @@ nikola MONS_NIKOLA
 psyche MONS_PSYCHE
 rupert MONS_RUPERT
 sigmund MONS_SIGMUND
+sigmund_scytheless MONS_SIGMUND_SCYTHELESS
 xmas-sigmund MONS_XMAS_SIGMUND
 zenata MONS_ZENATA
 %rim 1
@@ -987,6 +988,7 @@ orb_guardian MONS_ORB_GUARDIAN
 %rim 1
 %sdir mon/unique
 nessos MONS_NESSOS
+nessos_bowless MONS_NESSOS_BOWLESS
 %sdir mon/demihumanoids/taurs
 %rim 0
 # 'melee' tiles must be immediately following the normal ones
@@ -1049,6 +1051,7 @@ fungus9
 ballistomycete MONS_BALLISTOMYCETE
 wandering_mushroom MONS_WANDERING_MUSHROOM
 deathcap MONS_DEATHCAP
+sleepcap MONS_SLEEPCAP
 %rim 1
 
 ## Goblins ('g')
@@ -1286,4 +1289,5 @@ polymoth MONS_POLYMOTH
 %rim 0
 jack_o_lantern MONS_JACK_O_LANTERN
 gastronaut MONS_GASTRONAUT
+crawling_zombie_skyshark MONS_SKYSHARK_CRAWLING
 anubis_guard MONS_ANUBIS_GUARD

@@ -308,7 +308,8 @@ static void _POWER_melee_effects(item_def* /*weapon*/, actor* attacker,
 static void _HOLY_AXE_world_reacts(item_def *item)
 {
     const int horror_level = current_horror_level();
-    const int plus = min(horror_level + 5, 27);
+    // Caps at the obsidian axe's base enchant.
+    const int plus = min(horror_level * 3 + 4, 16);
     if (item->plus == plus)
         return;
 

@@ -3329,7 +3329,7 @@ SHUFFLE: CDEF
 SUBST:      C = B, E = G, DH<IJ = .
 NSUBST:     F = 1:{ / *:.
 : elseif altar_count == "14" then
-SUBST:      CDEF = B, CHIJ = ., < = {
+SUBST:      DEF = B, CHIJ = ., < = {
 : elseif altar_count == "18" then
 SUBST:      BDCEFH = ., IJ = B, < = {
 : elseif altar_count == "21" then

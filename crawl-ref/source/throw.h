@@ -42,7 +42,5 @@ void fire_item_no_quiver(dist *target=nullptr);
 
 void throw_it(quiver::action &a);
 
-bool thrown_object_destroyed(item_def *item);
-
 void setup_monster_throw_beam(monster* mons, bolt &beam);
 bool mons_throw(monster* mons, bolt &beam, bool teleport = false);

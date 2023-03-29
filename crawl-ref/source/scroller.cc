@@ -129,9 +129,9 @@ int formatted_scroller::show()
             m_scroll_dirty = false;
             m_scroller->set_scroll(m_scroll);
         }
-        if (pkey_result == MB_FALSE)
+        if (!pkey_result)
             return done = true;
-        else if (pkey_result == MB_MAYBE)
+        else if (pkey_result == maybe_bool::maybe)
         {
             if (m_scroller->on_event(ev))
                 return true;
@@ -139,7 +139,7 @@ int formatted_scroller::show()
             if (m_flags & FS_EASY_EXIT)
                 return done = true;
         }
-        // key either not processed at all, or `process_key` returned MB_TRUE
+        // key either not processed at all, or `process_key` returned true
         return true;
     });
 
@@ -172,16 +172,16 @@ int formatted_scroller::show()
     return m_lastch;
 }
 
-// MB_TRUE: key was processed, keep UI open
-// MB_FALSE: key was processed, close UI
-// MB_MAYBE: key was not processed
+// true: key was processed, keep UI open
+// false: key was processed, close UI
+// maybe: key was not processed
 // (the polarity is awkwardly opposite how this is used and derived here, but
 // we keep it this way because all process_key functions in crawl have the
 // same meanings for T/F)
 maybe_bool formatted_scroller::process_key(int ch)
 {
     // most keyhandling is in the scroller event handling, not here
-    return ui::key_exits_popup(ch, true) ? MB_FALSE : MB_MAYBE;
+    return ui::key_exits_popup(ch, true) ? false : maybe_bool::maybe;
 }
 
 void formatted_scroller::set_scroll(int y)

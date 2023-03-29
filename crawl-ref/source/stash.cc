@@ -1801,7 +1801,7 @@ bool StashTracker::display_search_results(
         else if (res.item.defined())
         {
             const int itemcol = menu_colour(res.item.name(DESC_PLAIN).c_str(),
-                                        item_prefix(res.item, false), "pickup");
+                                        item_prefix(res.item, false), "pickup", false);
             if (itemcol != -1)
                 colour = itemcol;
         }

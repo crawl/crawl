@@ -396,6 +396,7 @@ UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_ANY,
         floor_header(nullptr)
 {
     set_tag("use_item");
+    set_flags(get_flags() & ~MF_USE_TWO_COLUMNS);
     set_highlighter(new TempUselessnessHighlighter()); // pointer managed by Menu
     menu_action = ACT_EXECUTE;
     reset(oper, prompt);
@@ -987,8 +988,7 @@ static bool _can_generically_use(operation_types oper)
             return false;
         }
         // can't differentiate between these two at this point
-        if (!you_can_wear(EQ_RINGS, true)
-            && !you_can_wear(EQ_AMULET, true))
+        if (!you_can_wear(EQ_RINGS, true) && !you_can_wear(EQ_AMULET, true))
         {
             mprf(MSGCH_PROMPT, "You can't %s jewellery in your present form.",
                 oper == OPER_PUTON ? "wear" : "remove");
@@ -2396,7 +2396,7 @@ static bool _swap_rings(item_def& to_puton)
     for (auto eq : ring_types)
     {
         item_def* ring = you.slot_item(eq, true);
-        if (!you_can_wear(eq, true) || you.melded[eq])
+        if (bool(!you_can_wear(eq, true)) || you.melded[eq])
             melded++;
         else if (ring != nullptr)
         {
@@ -2581,7 +2581,7 @@ static bool _can_puton_ring(const item_def &item)
 {
     if (!_can_puton_jewellery(item))
         return false;
-    if (!you_can_wear(EQ_RINGS, true)
+    if (bool(!you_can_wear(EQ_RINGS, true))
         && !player_equip_unrand(UNRAND_FINGER_AMULET))
     {
         mprf(MSGCH_PROMPT, "You can't wear that in your present form.");
@@ -2593,7 +2593,7 @@ static bool _can_puton_ring(const item_def &item)
     int cursed = 0;
     for (auto eq : slots)
     {
-        if (!you_can_wear(eq, true) || you.melded[eq])
+        if (bool(!you_can_wear(eq, true)) || you.melded[eq])
         {
             melded++;
             continue;
@@ -3013,6 +3013,12 @@ bool drink(item_def* potion)
 
     if (!quaff_potion(*potion))
         return false;
+
+    if (you.has_mutation(MUT_LONG_TONGUE))
+    {
+        mprf("You slurp down every last drop of the %s!",
+             potion->name(DESC_QUALNAME).c_str());
+    }
 
     if (!alreadyknown)
     {

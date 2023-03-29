@@ -698,7 +698,7 @@ protected:
         // We handle these after exiting dungeon overview window
         // to prevent menus from stacking on top of each other.
         if (ch == 'G' || ch == '_' || ch == '$' || ch =='!')
-            return MB_FALSE;
+            return false;
         else
             return formatted_scroller::process_key(ch);
     }

@@ -67,7 +67,7 @@ bool crawl_should_restart(game_exit exit)
     if (exit == game_exit::abort || exit == game_exit::unknown)
         return true; // always restart on aborting out of a menu
     bool ret =
-        tobool(Options.restart_after_game, !crawl_state.bypassed_startup_menu);
+        Options.restart_after_game.to_bool(!crawl_state.bypassed_startup_menu);
     if (exit == game_exit::save)
         ret = ret && Options.restart_after_save;
     return ret;
@@ -468,7 +468,7 @@ NORETURN void end_game(scorefile_entry &se)
             crawl_state.game_type_name().c_str());
 
 #ifdef USE_TILE_LOCAL
-        const int line_height = tiles.get_crt_font()->char_height();
+        const int line_height = in_headless_mode() ? 1 : tiles.get_crt_font()->char_height();
 #else
         const int line_height = 1;
 #endif

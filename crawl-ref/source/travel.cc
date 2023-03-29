@@ -42,6 +42,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "mapmark.h"
+#include "menu.h"
 #include "message.h"
 #include "mon-death.h"
 #include "nearby-danger.h"
@@ -64,6 +65,12 @@
 
 enum IntertravelDestination
 {
+    // warning: the waypoint prompt menu uses values -1 to -10 for waypoints.
+    // if the full set of 100 waypoints were ever available from that menu, the
+    // values below would need to be shifted...
+    ID_FIRST_UI_WAYPOINT = -1,
+    ID_LAST_UI_WAYPOINT = -10,
+
     // Go down a level
     ID_DOWN     = -100,
 
@@ -130,7 +137,7 @@ static bool ignore_player_traversability = false;
 // Map of terrain types that are forbidden.
 static FixedVector<int8_t,NUM_FEATURES> forbidden_terrain;
 
-static bool _is_valid_waypoint(const level_pos &pos);
+static bool _is_valid_waypoint_pos(const level_pos &pos);
 
 // N.b. this #define only adds dprfs and so isn't very useful outside of a
 // debug build. It also makes long travel extremely slow when enabled on a
@@ -2171,70 +2178,49 @@ static bool _is_disconnected_branch(const Branch &br)
     return !is_connected_branch(br.id);
 }
 
-static int _prompt_travel_branch(int prompt_flags)
+class TravelPromptMenu : public PromptMenu
 {
-    int branch = BRANCH_DUNGEON;     // Default
-    vector<branch_type> brs =
-        _get_branches(
+public:
+    TravelPromptMenu(int _prompt_flags)
+        : PromptMenu(), result(ID_CANCEL), prompt_flags(_prompt_flags),
+          waypoint_list(false)
+    {
+        prompt_branches = _get_branches(
             (prompt_flags & TPF_SHOW_ALL_BRANCHES) ? _is_valid_branch :
             (prompt_flags & TPF_SHOW_PORTALS_ONLY) ? _is_disconnected_branch
                                                    : _is_known_branch);
 
-    // Don't kill the prompt even if the only branch we know is the main dungeon
-    // This keeps things consistent for the player.
-    if (brs.size() < 1)
-        return branch;
+        populate_menu();
+    }
 
-    const bool allow_waypoints = (prompt_flags & TPF_ALLOW_WAYPOINTS);
-    const bool allow_updown    = (prompt_flags & TPF_ALLOW_UPDOWN);
-    const bool remember_targ   = (prompt_flags & TPF_REMEMBER_TARGET);
-
-    bool waypoint_list = false;
-    const int waycount = allow_waypoints? travel_cache.get_waypoint_count() : 0;
-
-    level_id curr = level_id::current();
-    while (true)
+    void set_waypoint_result(int waypoint)
     {
-        clear_messages();
-
-        if (waypoint_list)
-            travel_cache.list_waypoints();
+        if (travel_cache.is_valid_waypoint(waypoint))
+            result = ID_FIRST_UI_WAYPOINT - waypoint; // sigh
         else
-        {
-            int linec = 0;
-            string line;
-            for (branch_type br : brs)
-            {
-                if (linec == 4)
-                {
-                    linec = 0;
-                    mpr(line);
-                    line = "";
-                }
-                line += make_stringf("(%c) %-14s ",
-                                     branches[br].travel_shortcut,
-                                     branches[br].shortname);
-                ++linec;
-            }
-            if (!line.empty())
-                mpr(line);
-        }
+            result = ID_CANCEL;
+    }
 
+    void refresh_prompt()
+    {
         string shortcuts = "(";
         {
+
             vector<string> segs;
-            if (allow_waypoints)
+            if (prompt_flags & TPF_ALLOW_WAYPOINTS)
             {
                 if (waypoint_list)
                     segs.emplace_back("* - list branches");
-                else if (waycount)
+                else if (travel_cache.get_waypoint_count())
                     segs.emplace_back("* - list waypoints");
             }
 
-            if (!trans_travel_dest.empty() && remember_targ)
+            if (!trans_travel_dest.empty()
+                                    && (prompt_flags & TPF_REMEMBER_TARGET))
             {
-                segs.push_back(
-                    make_stringf("Enter - %s", trans_travel_dest.c_str()));
+                segs.push_back(make_stringf(
+                        (in_prompt_mode ? "Enter - %s" : "Tab - %s"),
+                        trans_travel_dest.c_str()));
             }
 
             segs.emplace_back("? - help");
@@ -2243,81 +2229,163 @@ static int _prompt_travel_branch(int prompt_flags)
                                               ", ", ", ");
             shortcuts += ") ";
         }
-        mprf(MSGCH_PROMPT, "Where to? %s",
-             shortcuts.c_str());
+        set_title(make_stringf("Where to? %s", shortcuts.c_str()));
+    }
 
-        int keyin = numpad_to_regular(get_ch());
-        if (ui::key_exits_popup(keyin, false))
-            return ID_CANCEL;
+    void populate_menu()
+    {
+        clear();
+        refresh_prompt();
+
+        if (waypoint_list)
+        {
+            vector<string> wdescs = travel_cache.get_waypoint_descs();
+            // if this ever shows >10 waypoints, hotkeys would need some
+            // work
+            for (int i = 0; i < min(10, static_cast<int>(wdescs.size())); i++)
+            {
+                if (wdescs[i].size() == 0)
+                    continue;
+                MenuEntry *wp_entry = new MenuEntry(wdescs[i], '0' + i,
+                    [this,&i](const MenuEntry&)
+                    {
+                        set_waypoint_result(i);
+                        return false;
+                    });
+                add_entry(wp_entry);
+            }
+        }
+        else
+        {
+            for (const branch_type &br : prompt_branches)
+            {
+                MenuEntry *br_entry = new MenuEntry(branches[br].shortname,
+                    branches[br].travel_shortcut,
+                    [this,&br](const MenuEntry&)
+                    {
+                        result = br;
+                        return false;
+                    });
+                // branch shortcuts are stored in uppercase, allow the lowercase form
+                // as well. We show the uppercase version as the menu key, though.
+                const auto shortcut = tolower_safe(branches[br].travel_shortcut);
+                if (shortcut != branches[br].travel_shortcut)
+                    br_entry->add_hotkey(shortcut);
+                add_entry(br_entry);
+            }
+        }
+        update_menu(true);
+    }
+
+    vector<MenuEntry *> show_in_msgpane() override
+    {
+        // ensure the prompt is correct for msgpane mode. (Is there a cleaner
+        // way to do this?)
+        refresh_prompt();
+        return PromptMenu::show_in_msgpane();
+    }
+
+
+    bool process_key(int keyin) override
+    {
+        const bool allow_updown = (prompt_flags & TPF_ALLOW_UPDOWN);
+        const level_id curr = level_id::current();
+        // XX a lot of these don't do much mode checking, e.g. they work in
+        // wizmode &~
         switch (keyin)
         {
         case '?':
             show_interlevel_travel_branch_help();
-            redraw_screen();
-            update_screen();
-            break;
+            return true;
         case '_':
-            return ID_ALTAR;
+            result = ID_ALTAR;
+            return false;
         case '\n': case '\r':
-            return ID_REPEAT;
+            if (ui_is_initialized())
+                break; // awkwardness: this shortcut doesn't work in menu form
+        case '\t':
+            if (prompt_flags & TPF_REMEMBER_TARGET)
+            {
+                // awkwardness: this shortcut doesn't work in menu form
+                result = ID_REPEAT;
+                return false;
+            }
+            break;
         case '<':
-            return allow_updown ? ID_UP : ID_CANCEL;
+            result = allow_updown ? ID_UP : ID_CANCEL;
+            return false;
         case '>':
-            return allow_updown ? ID_DOWN : ID_CANCEL;
+            result = allow_updown ? ID_DOWN : ID_CANCEL;
+            return false;
         case CONTROL('P'):
             {
                 const branch_type parent = parent_branch(curr.branch);
                 if (parent < NUM_BRANCHES)
-                    return parent;
+                {
+                    result = parent;
+                    return false;
+                }
             }
             break;
         case '.':
-            return curr.branch;
+            result = curr.branch;
+            return false;
         case '*':
-            if (waypoint_list || waycount)
-                waypoint_list = !waypoint_list;
+            cycle_mode();
+            return true;
             break;
-        default:
-            // Is this a branch hotkey?
-            for (branch_type br : brs)
-            {
-                if (toupper_safe(keyin) == branches[br].travel_shortcut)
-                {
-#ifdef WIZARD
-                    const Branch &target = branches[br];
-                    string msg;
-
-                    if (!brentry[br].is_valid()
-                        && is_random_subbranch(br)
-                        && you.wizard) // don't leak mimics
-                    {
-                        msg += "Branch not generated this game. ";
-                    }
-
-                    if (target.entry_stairs == NUM_FEATURES
-                        && br != BRANCH_DUNGEON)
-                    {
-                        msg += "Branch has no entry stairs. ";
-                    }
-
-                    if (!msg.empty())
-                    {
-                        msg += "Go there anyway?";
-                        if (!yesno(msg.c_str(), true, 'n'))
-                            return ID_CANCEL;
-                    }
-#endif
-                    return br;
-                }
-            }
-
-            // Possibly a waypoint number?
-            if (allow_waypoints && keyin >= '0' && keyin <= '9')
-                return -1 - (keyin - '0');
-
-            return ID_CANCEL;
         }
+
+        // in order to let waypoint hotkeys work in both modes, we short-circuit
+        // the superclass key processing here
+        if ((prompt_flags & TPF_ALLOW_WAYPOINTS)
+            && travel_cache.get_waypoint_count()
+            && keyin >= '0' && keyin <= '9')
+        {
+            set_waypoint_result(keyin - '0');
+            if (result != ID_CANCEL)
+                return false;
+        }
+
+        // a menu exit from here is either a cancel, or it should set a
+        // selection
+        return PromptMenu::process_key(keyin);
     }
+
+    bool cycle_mode(bool=true) override
+    {
+        if (!(prompt_flags & TPF_ALLOW_WAYPOINTS) || !travel_cache.get_waypoint_count())
+            return false;
+
+        waypoint_list = !waypoint_list;
+        populate_menu();
+        return true;
+    }
+
+    int run()
+    {
+        result = ID_CANCEL;
+        show();
+        // result should be set by key processing or by one of the menu
+        // on_select actions
+        return result;
+    }
+
+    int result;
+    int prompt_flags;
+    bool waypoint_list;
+    vector<branch_type> prompt_branches;
+};
+
+static int _prompt_travel_branch(int prompt_flags)
+{
+    TravelPromptMenu pm(prompt_flags);
+    // Don't kill the prompt even if the only branch we know is the main dungeon
+    // This keeps things consistent for the player.
+    // XX I can't figure out how the above comment relates to this check..
+    if (pm.prompt_branches.size() < 1)
+        return BRANCH_DUNGEON;     // Default
+    return pm.run(); // XX waypoints
 }
 
 static god_type _god_from_initial(const char god_initial)
@@ -4072,22 +4140,31 @@ bool TravelCache::know_stair(const coord_def &c)
     return i == levels.end() ? false : i->second.know_stair(c);
 }
 
+vector<string> TravelCache::get_waypoint_descs() const
+{
+    vector<string> result;
+    for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
+    {
+        if (!is_valid_waypoint(i))
+        {
+            result.push_back("");
+            continue;
+        }
+        result.push_back(_get_trans_travel_dest(waypoints[i], false, true));
+    }
+    return result;
+}
+
 void TravelCache::list_waypoints() const
 {
     string line;
-    string dest;
-    char choice[50];
+    vector<string> wdescs = get_waypoint_descs();
     int count = 0;
-
-    for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
+    for (int i = 0; i < static_cast<int>(wdescs.size()); i++)
     {
-        if (waypoints[i].id.depth == -1 || !_is_valid_waypoint(waypoints[i]))
+        if (wdescs[i].size() == 0)
             continue;
-
-        dest = _get_trans_travel_dest(waypoints[i], false, true);
-
-        snprintf(choice, sizeof choice, "(%d) %-9s", i, dest.c_str());
-        line += choice;
+        line += make_stringf("(%d) %-9s", i, wdescs[i].c_str());
         if (!(++count % 5))
         {
             mpr(line);
@@ -4101,7 +4178,7 @@ void TravelCache::list_waypoints() const
 uint8_t TravelCache::is_waypoint(const level_pos &lp) const
 {
     for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
-        if (lp == waypoints[i] && _is_valid_waypoint(lp))
+        if (lp == waypoints[i] && _is_valid_waypoint_pos(lp))
             return '0' + i;
 
     return 0;
@@ -4110,7 +4187,7 @@ uint8_t TravelCache::is_waypoint(const level_pos &lp) const
 void TravelCache::flush_invalid_waypoints()
 {
     for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
-        if (!_is_valid_waypoint(waypoints[i])
+        if (!is_valid_waypoint(i)
             || !is_connected_branch(waypoints[i].id.branch))
         {
             waypoints[i].clear();
@@ -4147,10 +4224,9 @@ void TravelCache::delete_waypoint()
         int key = getchm();
         if (key >= '0' && key <= '9')
         {
-            key -= '0';
-            if (_is_valid_waypoint(waypoints[key]))
+            if (is_valid_waypoint(key - '0'))
             {
-                waypoints[key].clear();
+                waypoints[key - '0'].clear();
                 update_waypoints();
                 continue;
             }
@@ -4217,7 +4293,7 @@ void TravelCache::set_waypoint(int waynum, int x, int y)
 
     const level_id &lid = level_id::current();
 
-    const bool overwrite = _is_valid_waypoint(waypoints[waynum]);
+    const bool overwrite = is_valid_waypoint(waynum);
 
     string old_dest =
         overwrite ? _get_trans_travel_dest(waypoints[waynum], false, true) : "";
@@ -4244,7 +4320,7 @@ void TravelCache::set_waypoint(int waynum, int x, int y)
     update_waypoints();
 }
 
-static bool _is_valid_waypoint(const level_pos &pos)
+static bool _is_valid_waypoint_pos(const level_pos &pos)
 {
     // waypoints in portal branches are only valid while you're there
     return pos.is_valid()
@@ -4252,11 +4328,18 @@ static bool _is_valid_waypoint(const level_pos &pos)
             || you.where_are_you == pos.id.branch);
 }
 
+bool TravelCache::is_valid_waypoint(int waynum) const
+{
+    if (waynum < 0 || waynum >= TRAVEL_WAYPOINT_COUNT)
+        return false;
+    return _is_valid_waypoint_pos(waypoints[waynum]);
+}
+
 int TravelCache::get_waypoint_count() const
 {
     int count = 0;
     for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
-        if (_is_valid_waypoint(waypoints[i]))
+        if (is_valid_waypoint(i))
             count++;
 
     return count;

@@ -254,7 +254,7 @@ static const cloud_data clouds[] = {
       ETC_DARK,                                 // colour
       { TILE_CLOUD_STORM, CTVARY_RANDOM },      // tile
       BEAM_ELECTRICITY,                         // beam_effect
-      {12, 12},
+      { 23, 27 },
     },
     // CLOUD_NEGATIVE_ENERGY,
     { "negative energy", nullptr,               // terse, verbose name
@@ -1053,20 +1053,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
     case CLOUD_STEAM:
         if (player)
             maybe_melt_player_enchantments(BEAM_FIRE, final_damage);
-    case CLOUD_RAIN:
-    case CLOUD_STORM:
-        if (act->is_fiery() && final_damage > 0)
-        {
-            if (you.can_see(*act))
-            {
-                mprf("%s %s in the rain.",
-                     act->name(DESC_THE).c_str(),
-                     act->conj_verb(silenced(act->pos())?
-                                    "steam" : "sizzle").c_str());
-            }
-        }
         break;
-
     case CLOUD_MEPHITIC:
     {
         if (player)
@@ -1254,69 +1241,12 @@ static int _actor_cloud_damage(const actor *act,
     case CLOUD_SPECTRAL:
     case CLOUD_ACID:
     case CLOUD_NEGATIVE_ENERGY:
+    case CLOUD_STORM:
         final_damage =
             _cloud_damage_output(act, _cloud2beam(cloud.type),
                                  cloud_base_damage,
                                  maximum_damage);
         break;
-    case CLOUD_STORM:
-    {
-
-        // if we don't have thunder, there's always rain
-        cloud_struct raincloud = cloud;
-        raincloud.type = CLOUD_RAIN;
-        const int rain_damage = _actor_cloud_damage(act, raincloud,
-                                                    maximum_damage);
-
-        // if this isn't just a test run, and no time passed, don't trigger
-        // lightning. (just rain.)
-        if (!maximum_damage && !(you.turn_is_over && you.time_taken > 0))
-            return rain_damage;
-
-        // only announce ourselves if this isn't a test run.
-        if (!maximum_damage)
-            cloud.announce_actor_engulfed(act);
-
-        const int turns_per_lightning = 3;
-        const int aut_per_lightning = turns_per_lightning * BASELINE_DELAY;
-
-        // if we fail our lightning roll, again, just rain.
-        if (!maximum_damage && !x_chance_in_y(you.time_taken,
-                                              aut_per_lightning))
-        {
-            return rain_damage;
-        }
-
-        const int lightning_dam = _cloud_damage_output(act,
-                                                       _cloud2beam(cloud.type),
-                                                       cloud_base_damage,
-                                                       maximum_damage);
-
-        if (maximum_damage)
-        {
-            // Average maximum damage over time.
-            const int avg_dam = lightning_dam / turns_per_lightning;
-            if (avg_dam > 0)
-                return avg_dam;
-            return rain_damage; // vs relec+++ or w/e
-        }
-
-        if (act->is_player())
-            mpr("You are struck by lightning!");
-        else if (you.can_see(*act))
-        {
-            simple_monster_message(*act->as_monster(),
-                                   " is struck by lightning.");
-        }
-        else if (you.see_cell(act->pos()))
-        {
-            mpr("Lightning from the thunderstorm strikes something you cannot "
-                "see.");
-        }
-
-        return lightning_dam;
-
-    }
     default:
         break;
     }
@@ -1324,21 +1254,14 @@ static int _actor_cloud_damage(const actor *act,
     return timescale_damage(act, final_damage);
 }
 
-// Applies damage and side effects for an actor in a cloud and returns
-// the damage dealt.
-int actor_apply_cloud(actor *act)
+static void _actor_apply_cloud(actor *act, cloud_struct &cloud)
 {
-    const cloud_struct* cl = cloud_at(act->pos());
-    if (!cl)
-        return 0;
-
-    const cloud_struct &cloud(*cl);
     const bool player = act->is_player();
     monster *mons = act->as_monster();
     const beam_type cloud_flavour = _cloud2beam(cloud.type);
 
     if (actor_cloud_immune(*act, cloud))
-        return 0;
+        return;
 
     const int resist = _actor_cloud_resist(act, cloud);
     const int cloud_max_base_damage =
@@ -1347,16 +1270,12 @@ int actor_apply_cloud(actor *act)
 
     if ((player || final_damage > 0
          || _cloud_has_negative_side_effects(cloud.type))
-        && cloud.type != CLOUD_BLASTSPARKS // no effect over time
-        && cloud.type != CLOUD_STORM) // handled elsewhere
+        && cloud.type != CLOUD_BLASTSPARKS) // no effect over time
     {
         cloud.announce_actor_engulfed(act);
     }
-    if (player && cloud_max_base_damage > 0 && resist > 0
-        && (cloud.type != CLOUD_STORM || final_damage > 0))
-    {
+    if (player && cloud_max_base_damage > 0 && resist > 0)
         canned_msg(MSG_YOU_RESIST);
-    }
 
     if (cloud_flavour != BEAM_NONE)
         act->expose_to_element(cloud_flavour, 7);
@@ -1383,9 +1302,30 @@ int actor_apply_cloud(actor *act)
         act->hurt(oppressor, final_damage, BEAM_MISSILE,
                   KILLED_BY_CLOUD, "", cloud.cloud_name(true));
     }
-
-    return final_damage;
 }
+
+// Applies damage and side effects for an actor in a cloud and returns
+// the damage dealt.
+void actor_apply_cloud(actor *act)
+{
+    cloud_struct* cl = cloud_at(act->pos());
+    if (!cl)
+        return;
+    cloud_struct &cloud = *cl;
+
+    if (cloud.type == CLOUD_STORM)
+    {
+        // Rain always falls in a storm...
+        cloud.type = CLOUD_RAIN;
+        _actor_apply_cloud(act, cloud);
+        cloud.type = CLOUD_STORM;
+        // But lightning, eh, it's a tossup.
+        if (coinflip())
+            return;
+    }
+    _actor_apply_cloud(act, cloud);
+}
+
 
 // Describe cloud damage in the form "3-18". If vs_player is set,
 // extra anti-player damage is included.
@@ -1726,8 +1666,7 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
     if (!you.can_see(*act))
         return;
 
-    // Normal clouds. (Unmodified rain clouds have a different message.)
-    if (type != CLOUD_RAIN && type != CLOUD_STORM)
+    if (type != CLOUD_RAIN)
     {
         mprf("%s %s in %s.",
              act->name(DESC_THE).c_str(),
@@ -1735,16 +1674,11 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
                         : (act->conj_verb("are") + " engulfed").c_str(),
              cloud_name().c_str());
         return;
-    }
-
-    // Don't produce monster-in-rain messages in the interests
-    // of spam reduction.
-    if (act->is_player())
-    {
-        mprf("%s %s standing in %s.",
-             act->name(DESC_THE).c_str(),
-             act->conj_verb("are").c_str(),
-             type == CLOUD_STORM ? "a thunderstorm" : "the rain");
+    } else {
+        mprf("%s %s in the rain.",
+            act->name(DESC_THE).c_str(),
+            act->conj_verb(silenced(act->pos())?
+                        "steam" : "sizzle").c_str());
     }
 }
 

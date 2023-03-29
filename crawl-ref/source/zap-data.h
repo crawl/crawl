@@ -1791,4 +1791,20 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     false,
 },
 
+{
+    ZAP_PLASMA,
+    "fiery plasma",
+    200,
+    new dicedef_calculator<1, 11, 3, 5>,
+    new tohit_calculator<7, 1, 40>,
+    nullptr,
+    nullptr,
+    RED,
+    false,
+    BEAM_FIRE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false
+},
+
 };

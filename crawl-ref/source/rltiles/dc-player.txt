@@ -545,7 +545,6 @@ lochaber_axe LOCHABER_AXE
 ## staves
 elemental_staff ELEMENTAL_STAFF
 asmodeus ASMODEUS
-dispater DISPATER
 olgreb OLGREB
 order ORDER
 battle_staff BATTLE_STAFF
@@ -570,6 +569,7 @@ chilly_death CHILLY_DEATH
 crystal_spear CRYSTAL_SPEAR
 flaming_death FLAMING_DEATH
 # end TAG_MAJOR_VERSION
+skullcrusher SKULLCRUSHER
 
 %sdir player/hand1
 # blades
@@ -610,6 +610,8 @@ sword_three SWORD3
 sword_breaker SWORD_BREAKER
 sword_jag SWORD_JAG
 demonblade DEMON_BLADE
+demonblade
+randart_demon_blade
 enchantress_dagger ENCHANTRESS_DAGGER
 
 ## blunt
@@ -643,6 +645,8 @@ hammer_one HAMMER1
 hammer_two HAMMER2
 large_mace LARGE_MACE
 black_whip BLACK_WHIP
+black_whip
+randart_demon_whip
 sacred_scourge SACRED_SCOURGE
 sacred_scourge_two SACRED_SCOURGE2
 flail_stick FLAIL_STICK
@@ -670,6 +674,8 @@ halberd2
 pick_axe PICK_AXE
 trident TRIDENT
 trident_demon DEMON_TRIDENT
+trident_demon
+randart_demon_trident
 trident_elec TRIDENT_ELEC
 trident_two TRIDENT2
 trident_two2
@@ -720,6 +726,14 @@ staff_evil STAFF_EVIL
 staff_ring_blue STAFF_RING_BLUE
 staff_mummy STAFF_MUMMY
 staff_fork STAFF_FORK
+
+staff-artefact1 STAFF_RANDART_OFFSET
+staff-artefact2
+staff-artefact3
+staff-artefact4
+staff-artefact5
+staff-artefact6
+staff-artefact7
 
 # start TAG_MAJOR_VERSION == 34
 ## rods
@@ -845,6 +859,8 @@ orb2 ORB2
 orb3 ORB3 ORB_LAST
 
 ##unrand (or unique) shields
+orb_of_dispater ORB_OF_DISPATER
+
 buckler_spriggan BUCKLER_SPRIGGAN
 buckler_warlock BUCKLER_WARLOCK
 
