@@ -997,6 +997,7 @@ int player_condensation_shield_class();
 int sanguine_armour_bonus();
 
 int player_wizardry(spell_type spell);
+int player_channeling();
 
 int player_prot_life(bool allow_random = true, bool temp = true,
                      bool items = true);

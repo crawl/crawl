@@ -44,9 +44,16 @@ A staff which was once wielded by the mighty wizard Olgreb.
 %%%%
 staff of Wucad Mu
 
-A crystal staff overflowing with magical energies, which can be channeled by
-a skilled wielder to allow them to cast spells without exhausting any of their
-own magical energies — at the risk of damaging the user's mind.
+A crystal staff overflowing with magical energies. It is terribly difficult
+to cast spells while wielding this, but the staff may gather and return the
+magic spent on casting. Miscast spells always have the magic spent on them
+returned.
+
+{{
+    if you.race() == "Djinni" then
+        return "It is utterly useless to Djinni."
+    end
+}}
 %%%%
 Vampire's Tooth
 

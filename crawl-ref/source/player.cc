@@ -2159,6 +2159,16 @@ int player_wizardry(spell_type /*spell*/)
            + (you.get_mutation_level(MUT_BIG_BRAIN) == 3 ? 1 : 0);
 }
 
+int player_channeling()
+{
+    // Here and elsewhere, let's consider making this work for Dj.
+    if (you.has_mutation(MUT_HP_CASTING))
+        return 0;
+
+    return 2 * player_equip_unrand(UNRAND_WUCAD_MU)
+           + you.wearing_ego(EQ_ALL_ARMOUR, SPARM_ENERGY);
+}
+
 static int _sh_from_shield(const item_def &item)
 {
     if (item.sub_type == ARM_ORB)

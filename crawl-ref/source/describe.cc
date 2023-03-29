@@ -1950,10 +1950,8 @@ static const char* _item_ego_desc(special_armour_type ego)
     case SPARM_GUILE:
         return "it weakens the willpower of the wielder and everyone they hex.";
     case SPARM_ENERGY:
-        return "it occasionally powers its wielder's spells, but with a chance"
-               " of causing confusion or draining the wielder's intelligence."
-               " It becomes more likely to activate and less likely to backfire"
-               " with Evocations skill.";
+        return "it may return the magic spent to cast spells, but lowers their "
+               "success rate. It always returns the magic spent on miscasts.";
     default:
         return "it makes the wearer crave the taste of eggplant.";
     }

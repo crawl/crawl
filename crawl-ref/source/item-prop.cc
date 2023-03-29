@@ -1948,14 +1948,13 @@ skill_type item_attack_skill(object_class_type wclass, int wtype)
 }
 
 // True if item is a staff that deals extra damage based on Evocations skill,
-// or has an evocations-based passive effect (staff of Wucad Mu).
+// or has an evocations-based passive effect (staff of Asmodeus).
 bool staff_uses_evocations(const item_def &item)
 {
     if (is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF)
         || is_unrandom_artefact(item, UNRAND_OLGREB)
         || is_unrandom_artefact(item, UNRAND_ASMODEUS)
-        || is_unrandom_artefact(item, UNRAND_DISPATER)
-        || is_unrandom_artefact(item, UNRAND_WUCAD_MU))
+        || is_unrandom_artefact(item, UNRAND_DISPATER))
     {
         return true;
     }
@@ -2013,7 +2012,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
         if (is_shield(item))
             skills.insert(SK_SHIELDS);
 
-        if (gives_ability(item) || get_armour_ego_type(item) == SPARM_ENERGY)
+        if (gives_ability(item))
             skills.insert(SK_EVOCATIONS);
     }
 
