@@ -3206,6 +3206,7 @@ void excommunication(bool voluntary, god_type new_god)
         {
             you.duration[DUR_FIERY_ARMOUR] = 0;
             mpr("Your cloak of flame burns out.");
+            you.redraw_armour_class = true;
         }
         if (you.duration[DUR_RISING_FLAME])
         {
