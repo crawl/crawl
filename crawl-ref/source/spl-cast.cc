@@ -467,7 +467,8 @@ int raw_spell_fail(spell_type spell)
     chance2 -= 2 * you.get_mutation_level(MUT_SUBDUED_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_WILD_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_ANTI_WIZARDRY);
-    chance2 += 10 * player_channeling();
+    if (player_channeling())
+        chance2 += 10;
 
     chance2 += you.duration[DUR_VERTIGO] ? 7 : 0;
 
@@ -694,7 +695,11 @@ static void _handle_channeling(int cost, spret cast_result)
         return;
 
     const int sources = player_channeling();
-    if (cast_result == spret::success && !x_chance_in_y(sources, 6))
+    if (!sources)
+        return;
+
+    // Miscasts always get refunded, successes only sometimes do.
+    if (cast_result != spret::fail && !x_chance_in_y(sources, 6))
         return;
 
     mpr("Magical energy flows into your mind!");
