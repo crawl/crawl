@@ -145,7 +145,7 @@ Sanctuary ability
 %%%%
 Cure All Mutations ability
 
-治愈你身体中所有的突变。仅能使用一次。
+治愈你体内所有变异。仅能使用一次。
 %%%%
 # 光明神
 Divine Shield ability
