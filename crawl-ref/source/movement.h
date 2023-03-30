@@ -14,5 +14,4 @@ bool cancel_confused_move(bool stationary);
 void open_door_action(coord_def move = {0,0});
 void close_door_action(coord_def move);
 bool prompt_dangerous_portal(dungeon_feature_type ftype);
-monster *get_rampage_target(coord_def move);
 void move_player_action(coord_def move);

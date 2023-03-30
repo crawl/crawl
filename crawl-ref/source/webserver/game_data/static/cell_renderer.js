@@ -980,9 +980,6 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             if (bg.MM_UNSEEN && (bg.value || fg.value))
                 this.draw_icon(icons.MAGIC_MAP_MESH, x, y, undefined, undefined, img_scale);
 
-            if (bg.RAMPAGE)
-                this.draw_icon(icons.RAMPAGE, x, y, undefined, undefined, img_scale);
-
             // Don't let the "new stair" icon cover up any existing icons, but
             // draw it otherwise.
             if (bg.NEW_STAIR && status_shift == 0)
