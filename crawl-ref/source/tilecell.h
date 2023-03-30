@@ -42,9 +42,6 @@ struct packed_cell
     uint8_t travel_trail;
     bool quad_glow;
     uint8_t disjunct;
-#if TAG_MAJOR_VERSION == 34
-    uint8_t heat_aura;
-#endif
 
     bool operator ==(const packed_cell &other) const;
     bool operator !=(const packed_cell &other) const { return !(*this == other); }
@@ -56,9 +53,6 @@ struct packed_cell
                     awakened_forest(false), orb_glow(0), blood_rotation(0),
                     old_blood(false), travel_trail(0),
                     quad_glow(false), disjunct(false)
-#if TAG_MAJOR_VERSION == 34
-                    , heat_aura(false)
-#endif
                     {}
 
     packed_cell(const packed_cell* c) : num_dngn_overlay(c->num_dngn_overlay),
@@ -79,9 +73,6 @@ struct packed_cell
                                         travel_trail(c->travel_trail),
                                         quad_glow(c->quad_glow),
                                         disjunct(c->disjunct)
-#if TAG_MAJOR_VERSION == 34
-                                        , heat_aura(c->heat_aura)
-#endif
                                         {}
 
     void clear();

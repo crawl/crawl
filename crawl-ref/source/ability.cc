@@ -265,6 +265,37 @@ struct ability_def
     {
         return flags & abflag::souls ? mp_cost / 2 : 0;
     }
+
+    int avg_piety_cost() const
+    {
+        if (!piety_cost)
+            return 0;
+        return piety_cost.base + piety_cost.add/2;
+    }
+
+    string piety_pips() const
+    {
+        const int pip_size = 5;
+        const int n_pips = (avg_piety_cost() + pip_size - 1) / pip_size;
+        string pips;
+        for (int i = 0; i < n_pips; i++)
+            pips += "-";
+        return pips;
+    }
+
+    string piety_desc() const
+    {
+        if (ability == ABIL_IGNIS_FIERY_ARMOUR
+            || ability == ABIL_IGNIS_FOXFIRE)
+        {
+            // It'd be misleading to describe these with a % of 'max piety',
+            // since Ignis's max piety is Special.
+            return "";
+        }
+        const int perc = max(avg_piety_cost() * 100 / 200, 1);
+        return make_stringf(" (about %d%% of your maximum possible piety)",
+                            perc);
+    }
 };
 
 static int _lookup_ability_slot(ability_type abil);
@@ -868,8 +899,8 @@ const string make_cost_description(ability_type ability)
     if (hp_cost)
         ret += make_stringf(", %d HP", hp_cost);
 
-    if (abil.piety_cost || abil.flags & abflag::piety)
-        ret += ", Piety"; // randomised and exact amount hidden from player
+    if (abil.piety_cost)
+        ret += make_stringf(", Piety%s", abil.piety_pips().c_str());
 
     if (abil.flags & abflag::breath)
         ret += ", Breath";
@@ -932,14 +963,6 @@ const string make_cost_description(ability_type ability)
     return ret;
 }
 
-static string _get_piety_amount_str(int value)
-{
-    return value > 15 ? "extremely large" :
-           value > 10 ? "large" :
-           value > 5  ? "moderate" :
-                        "small";
-}
-
 static const string _detailed_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
@@ -961,17 +984,11 @@ static const string _detailed_cost_description(ability_type ability)
         ret << abil.get_hp_cost();
     }
 
-    if (abil.piety_cost || abil.flags & abflag::piety)
+    if (abil.piety_cost)
     {
         have_cost = true;
         ret << "\nPiety  : ";
-        if (abil.flags & abflag::piety)
-            ret << "variable";
-        else
-        {
-            int avgcost = abil.piety_cost.base + abil.piety_cost.add / 2;
-            ret << _get_piety_amount_str(avgcost);
-        }
+        ret << abil.piety_pips() << abil.piety_desc();
     }
 
     if (abil.flags & abflag::gold)
