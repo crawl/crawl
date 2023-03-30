@@ -125,7 +125,7 @@ class CrawlProcessHandlerBase(object):
         self.last_milestone = None
         self.kill_timeout = None
 
-        self.muted = set()
+        self.blocked = set()
 
         now = datetime.datetime.utcnow()
         self.formatted_time = now.strftime("%Y-%m-%d.%H:%M:%S")
@@ -221,14 +221,17 @@ class CrawlProcessHandlerBase(object):
         # the chat window is basically fixed width, and these are calibrated
         # to not do a linewrap
         self.handle_notification(source, "The following chat commands are available:")
-        self.chat_help_message(source, "/help", "show chat command help.")
-        self.chat_help_message(source, "/hide", "hide the chat window.")
+        self.chat_help_message(source, "/help", "show chat command help")
+        self.chat_help_message(source, "/hide", "hide the chat window")
         if self.is_player(source):
-            self.chat_help_message(source, "/mute <name>", "add <name> to the mute list.")
-            self.chat_help_message(source, "", "Must be present in channel.")
-            self.chat_help_message(source, "/mutelist", "show your entire mute list.")
-            self.chat_help_message(source, "/unmute <name>", "remove <name> from the mute list.")
-            self.chat_help_message(source, "/unmute *", "clear your mute list.")
+            self.chat_help_message(source, "/kick <name>", "kick <name>")
+            self.chat_help_message(source, "/block <name>", "kick and block <name>")
+            self.chat_help_message(source, "", "Must be present in channel. Special names:")
+            self.chat_help_message(source, "", "[anon] disables anonymous spectating")
+            self.chat_help_message(source, "", "[all] disables spectating")
+            self.chat_help_message(source, "/blocklist", "show your entire blocklist")
+            self.chat_help_message(source, "/unblock <name>", "remove <name> from blocklist")
+            self.chat_help_message(source, "/unblock *", "clear your blocklist")
 
     def handle_chat_command(self, source_ws, text):
         # type: (CrawlWebSocket, str) -> bool
@@ -244,23 +247,30 @@ class CrawlProcessHandlerBase(object):
             command, remainder = splitlist
         command = command.lower()
         # TODO: generalize
-        if command == "/mute":
-            self.mute(source, remainder)
-        elif command == "/unmute":
-            self.unmute(source, remainder)
-        elif command == "/mutelist":
-            self.show_mute_list(source)
+        if command == "/block" or command == "/mute":
+            self.block(source, remainder)
+        elif command == "/unblock" or command == "/unmute":
+            self.unblock(source, remainder)
+        elif command == "/blocklist" or command == "/mutelist":
+            self.show_block_list(source)
         elif command == "/help":
             self.chat_command_help(source)
         elif command == "/hide":
             self.hide_chat(source_ws, remainder.strip())
+        elif command == "/kick":
+            self.kick(source, remainder)
         else:
             return False
         return True
 
+    def is_blocked(self, username):
+        if "[all]" in self.blocked:
+            return username != self.username
+        if not username:
+            return "[anon]" in self.blocked
+        return username in self.blocked
+
     def handle_chat_message(self, username, text): # type: (str, str) -> None
-        if username in self.muted: # TODO: message?
-            return
         chat_msg = ("<span class='chat_sender'>%s</span>: <span class='chat_msg'>%s</span>" %
                     (username, xhtml_escape(text)))
         self.send_to_all("chat", content = chat_msg)
@@ -283,6 +293,12 @@ class CrawlProcessHandlerBase(object):
             if not r.watched_game:
                 return r
         return None
+
+    def update_receiver_permissions(self):
+        for w in self._receivers:
+            if self.is_blocked(w.username) and not w.is_admin():
+                IOLoop.current().add_callback(
+                    lambda: w.go_lobby(message="Spectating this player is restricted."))
 
     def send_to_user(self, username, msg, **data):
         # type: (str, str, Any) -> None
@@ -322,7 +338,7 @@ class CrawlProcessHandlerBase(object):
         if self.end_callback:
             self.end_callback()
 
-    def get_watchers(self, chatting_only=False):
+    def get_watchers(self, chatting_only=False, mark_admins=False):
         # TODO: I don't understand why this code didn't just use self.username,
         # when will this be different than player_name? Maybe for a console
         # player?
@@ -337,12 +353,14 @@ class CrawlProcessHandlerBase(object):
                 player_name = w.username
             else:
                 watchers.append(w.username)
+                if mark_admins and w.is_admin():
+                    watchers[-1] += " (admin)"
         watchers.sort(key=lambda s:s.lower())
         return (player_name, watchers)
 
     def is_player(self, username):
         # TODO: probably doesn't work for console players spectating themselves
-        # TODO: let admin accounts mute as well?
+        # TODO: let admin accounts block as well?
         player_name, watchers = self.get_watchers()
         return (username == player_name)
 
@@ -354,85 +372,123 @@ class CrawlProcessHandlerBase(object):
         else:
             receiver.send_message("toggle_chat")
 
-    def restore_mutelist(self, source, l):
+    def restore_blocklist(self, source, l):
         if not self.is_player(source) or l is None:
             return
         if len(l) == 0:
             return
-        self.muted = {u for u in l if u != source}
-        self.handle_notification(source, "Restoring mute list.")
-        self.show_mute_list(source)
-        self.logger.info("Player '%s' restoring mutelist %s" %
-                                            (source, repr(list(self.muted))))
+        self.blocked = {u for u in l if u != source}
+        self.handle_notification(source, "Restoring blocklist.")
+        self.show_block_list(source)
+        self.logger.info("Player '%s' restoring blocklist %s" %
+                                            (source, repr(list(self.blocked))))
 
-    def save_mutelist(self, source):
+    def save_blocklist(self, source):
         if not self.is_player(source):
             return
         receiver = self.get_primary_receiver()
         if receiver is not None:
-            receiver.save_mutelist(list(self.muted))
+            receiver.save_blocklist(list(self.blocked))
 
-    def mute(self, source, target):
+    def kick(self, source, target):
         if not self.is_player(source):
             self.handle_notification(source,
-                            "You do not have permission to mute spectators.")
+                            "You do not have permission to kick spectators.")
             return False
         if (source == target):
-            self.handle_notification(source, "You can't mute yourself!")
+            self.handle_notification(source, "You can't kick yourself!")
             return False
         player_name, watchers = self.get_watchers()
         watchers = set(watchers)
-        if not target in watchers:
-            self.handle_notification(source, "Mute who??")
+
+        if target in watchers:
+            self.logger.info("Player '%s' has kicked '%s'" % (source, target))
+            self.handle_notification(source,
+                                "Spectator '%s' has been kicked." % target)
+        else:
+            self.handle_notification(source, "Kick who??")
             return False
-        self.logger.info("Player '%s' has muted '%s'" % (source, target))
-        self.handle_notification(source,
-                            "Spectator '%s' has now been muted." % target)
-        self.muted |= {target}
-        self.save_mutelist(source)
-        self.update_watcher_description()
+
+        receivers = self.get_receivers_by_username(target)
+        for w in receivers:
+            if not w.is_admin():
+                IOLoop.current().add_callback(
+                    lambda: w.go_lobby(message="You have been kicked."))
         return True
 
-    def unmute(self, source, target):
+
+    def block(self, source, target):
         if not self.is_player(source):
             self.handle_notification(source,
-                            "You do not have permission to unmute spectators.")
+                            "You do not have permission to block spectators.")
+            return False
+        if (source == target):
+            self.handle_notification(source, "You can't block yourself!")
+            return False
+        player_name, watchers = self.get_watchers()
+        watchers = set(watchers)
+
+        if target in watchers:
+            self.logger.info("Player '%s' has blocked '%s'" % (source, target))
+            self.handle_notification(source,
+                                "Spectator '%s' has now been blocked." % target)
+        elif target == "[anon]":
+            self.logger.info("Player '%s' has disabled anonymous spectating." % source)
+            self.handle_notification(source, "Anonymous spectating disabled.")
+        elif target == "[all]":
+            self.logger.info("Player '%s' has disabled spectating." % source)
+            self.handle_notification(source, "Spectating disabled.")
+        else:
+            # this means that players can't block a username that isn't currently
+            # in their chat -- good/bad?
+            self.handle_notification(source, "Block who??")
+            return False
+        self.blocked |= {target}
+        self.save_blocklist(source)
+        self.update_receiver_permissions() # async
+        return True
+
+    def unblock(self, source, target):
+        if not self.is_player(source):
+            self.handle_notification(source,
+                            "You do not have permission to unblock spectators.")
             return False
         if (source == target):
             self.handle_notification(source,
-                                    "You can't unmute (or mute) yourself!")
+                                    "You can't unblock (or block) yourself!")
             return False
         if target == "*":
-            if (len(self.muted) == 0):
-                self.handle_notification(source, "No one is muted!")
+            if (len(self.blocked) == 0):
+                self.handle_notification(source, "No one is blocked!")
                 return False
-            self.logger.info("Player '%s' has cleared their mute list." % (source))
-            self.handle_notification(source, "You have cleared your mute list.")
-            self.muted = set()
-            self.save_mutelist(source)
+            self.logger.info("Player '%s' has cleared their blocklist." % (source))
+            self.handle_notification(source, "You have cleared your blocklist.")
+            self.blocked = set()
+            self.save_blocklist(source)
             self.update_watcher_description()
             return True
 
-        if not target in self.muted:
-            self.handle_notification(source, "Unmute who??")
+        if not target in self.blocked:
+            self.handle_notification(source, "Unblock who??")
             return False
 
-        self.logger.info("Player '%s' has unmuted '%s'" % (source, target))
-        self.handle_notification(source, "You have unmuted '%s'." % target)
-        self.muted -= {target}
-        self.save_mutelist(source)
+        # these messages are more or less ok for [all], [anon]
+        self.logger.info("Player '%s' has unblocked '%s'" % (source, target))
+        self.handle_notification(source, "You have unblocked '%s'." % target)
+        self.blocked -= {target}
+        self.save_blocklist(source)
         self.update_watcher_description()
         return True
 
-    def show_mute_list(self, source):
+    def show_block_list(self, source):
         if not self.is_player(source):
             return False
-        names = list(self.muted)
+        names = list(self.blocked)
         names.sort(key=lambda s: s.lower())
         if len(names) == 0:
-            self.handle_notification(source, "No one is muted.")
+            self.handle_notification(source, "No one is blocked.")
         else:
-            self.handle_notification(source, "You have muted: " +
+            self.handle_notification(source, "You have blocked: " +
                                                             ", ".join(names))
         return True
 
@@ -448,15 +504,13 @@ class CrawlProcessHandlerBase(object):
             else:
                 class_type = 'watcher'
             n = watcher
-            if (watcher in self.muted):
-                n += " (muted)"
             if player_url_template is None:
                 return "<span class='{0}'>{1}</span>".format(class_type, n)
             player_url = player_url_template.replace("%s", watcher.lower())
             username = "<a href='{0}' target='_blank' class='{1}'>{2}</a>".format(player_url, class_type, n)
             return username
 
-        player_name, watchers = self.get_watchers(True)
+        player_name, watchers = self.get_watchers(True, True)
 
         watcher_names = []
         if player_name is not None:

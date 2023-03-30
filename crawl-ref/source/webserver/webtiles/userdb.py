@@ -62,6 +62,8 @@ class crawl_db(object):
         return contextlib.closing(self.conn.execute(*args, **kwargs))
 
 def create_settings_db(filename):  # type: () -> None
+    # note: when this behavior was converted from muting to blocking, the db
+    # names were left as-is
     schema = """
         CREATE TABLE mutesettings (
             username TEXT PRIMARY KEY NOT NULL UNIQUE,
@@ -168,7 +170,9 @@ def init_db_connections(quiet=False):
 
 
 
-def get_mutelist(username):  # type: (str) -> Optional[str]
+def get_blocklist(username):  # type: (str) -> Optional[str]
+    # note: when this behavior was converted from muting to blocking, the db
+    # names were left as-is
     with settings_db.execute(
             "SELECT mutelist FROM mutesettings WHERE username=? COLLATE NOCASE",
             (username,)) as c:
@@ -176,10 +180,12 @@ def get_mutelist(username):  # type: (str) -> Optional[str]
     return result[0] if result is not None else None
 
 
-def set_mutelist(username, mutelist):  # type: (str, Optional[str]) -> None
-    if mutelist is None:
-        mutelist = ""
+def set_blocklist(username, blocklist):  # type: (str, Optional[str]) -> None
+    if blocklist is None:
+        blocklist = ""
 
+    # note: when this behavior was converted from muting to blocking, the db
+    # names were left as-is
     # n.b. the following will wipe out any columns not mentioned, if there
     # ever are any...
     query = """
@@ -189,7 +195,7 @@ def set_mutelist(username, mutelist):  # type: (str, Optional[str]) -> None
             (?,?);
     """
     with settings_db as db:
-        db.execute(query, (username, mutelist))
+        db.execute(query, (username, blocklist))
 
 
 # from dgamelaunch.h
