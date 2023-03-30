@@ -444,6 +444,7 @@ The Dungeon Crawl Stone Soup development team is:
     Alan Malloy
     Shmuale Mark
     John McCartney
+    Félix Medrano
     Steve Melenchuk
     Neil Middleton
     Seve Monahan
