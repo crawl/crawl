@@ -803,9 +803,6 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 {
                     if (cell.sanctuary)
                         this.draw_dngn(dngn.SANCTUARY, x, y);
-                    // TAG_MAJOR_VERSION == 34
-                    if (cell.heat_aura)
-                        this.draw_dngn(dngn.HEAT_AURA + cell.heat_aura - 1, x, y);
                     if (cell.silenced)
                         this.draw_dngn(dngn.SILENCED, x, y);
                     if (cell.halo == enums.HALO_RANGE)

@@ -392,10 +392,6 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
         {
             if (cell.is_sanctuary)
                 m_buf_feat.add(TILE_SANCTUARY, x, y);
-#if TAG_MAJOR_VERSION == 34
-            if (cell.heat_aura)
-                m_buf_feat.add(TILE_HEAT_AURA + cell.heat_aura - 1, x, y);
-#endif
             if (cell.is_silenced)
                 m_buf_feat.add(TILE_SILENCED, x, y);
             if (cell.halo == HALO_RANGE)
