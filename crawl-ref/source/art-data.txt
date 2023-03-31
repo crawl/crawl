@@ -273,10 +273,7 @@ COLOUR:  ETC_MAGIC
 TILE:    spwpn_wucad_mu
 TILE_EQ: wucad_mu
 VALUE:   1000
-DESCRIP: *Channel:  It occasionally powers its wielder's spells, but with a chance of
- causing confusion or draining the wielder's intelligence.
-+It becomes more likely to activate and less likely to backfire with increased
- Evocations skill.
+DESCRIP: *Channel:  It often returns the magic spent to cast spells, but lowers their success rate. It always returns the magic spent on miscasts.
 
 NAME:    Vampire's Tooth
 OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE
