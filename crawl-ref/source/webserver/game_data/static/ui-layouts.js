@@ -1038,6 +1038,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
         }
         catch (err)
         {
+            console.log(err);
             popup = $("<div>Buggy UI of type " + msg.type + "</div>");
         }
         ui.show_popup(popup, msg["ui-centred"], msg.generation_id);
