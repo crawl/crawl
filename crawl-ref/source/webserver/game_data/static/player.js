@@ -325,7 +325,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
     function update_stats_pane()
     {
         $("#stats_titleline").text(player.name + " " + player.title);
-        $("#stats_wizmode").text(player.wizard ? "*WIZARD*" : "");
+        $("#stats_wizmode").text(player.wizard ? "*WIZARD*" : player.explore ? "*EXPLORE*" : "");
 
         // Setup species
         // TODO: Move to a proper initialisation task

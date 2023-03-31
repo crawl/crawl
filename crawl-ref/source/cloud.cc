@@ -1258,7 +1258,8 @@ static void _actor_apply_cloud(actor *act, cloud_struct &cloud)
 {
     const bool player = act->is_player();
     monster *mons = act->as_monster();
-    const beam_type cloud_flavour = _cloud2beam(cloud.type);
+    if (mons && !mons->alive())
+        return;
 
     if (actor_cloud_immune(*act, cloud))
         return;
@@ -1277,6 +1278,7 @@ static void _actor_apply_cloud(actor *act, cloud_struct &cloud)
     if (player && cloud_max_base_damage > 0 && resist > 0)
         canned_msg(MSG_YOU_RESIST);
 
+    const beam_type cloud_flavour = _cloud2beam(cloud.type);
     if (cloud_flavour != BEAM_NONE)
         act->expose_to_element(cloud_flavour, 7);
 

@@ -45,6 +45,7 @@ struct player_info
     string name;
     string job_title;
     bool wizard;
+    bool explore;
     string species;
     string god;
     bool under_penance;
