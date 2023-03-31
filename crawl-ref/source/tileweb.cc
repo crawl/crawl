@@ -1092,6 +1092,7 @@ void TilesFramework::_send_player(bool force_full)
     _update_string(force_full, c.job_title, filtered_lang(player_title()),
                    "title");
     _update_int(force_full, c.wizard, you.wizard, "wizard");
+    _update_int(force_full, c.explore, you.explore, "explore");
     _update_string(force_full, c.species, species::name(you.species),
                    "species");
     string god = "";
