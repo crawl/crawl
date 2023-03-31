@@ -249,11 +249,9 @@ bullfrog MONS_BULLFROG
 %rim 0
 blink_frog MONS_BLINK_FROG
 goliath_frog MONS_GOLIATH_FROG
-%rim 1
 cane_toad MONS_CANE_TOAD
 
 ## Snakes ('S')
-%rim 0
 ball_python MONS_BALL_PYTHON
 adder MONS_ADDER
 black_mamba MONS_BLACK_MAMBA
