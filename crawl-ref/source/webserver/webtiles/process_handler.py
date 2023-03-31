@@ -298,7 +298,7 @@ class CrawlProcessHandlerBase(object):
         for w in self._receivers:
             if self.is_blocked(w.username) and not w.is_admin():
                 IOLoop.current().add_callback(
-                    lambda: w.go_lobby(message="Spectating this player is restricted."))
+                    lambda w=w: w.go_lobby(message="Spectating this player is restricted."))
 
     def send_to_user(self, username, msg, **data):
         # type: (str, str, Any) -> None
@@ -413,7 +413,7 @@ class CrawlProcessHandlerBase(object):
         for w in receivers:
             if not w.is_admin():
                 IOLoop.current().add_callback(
-                    lambda: w.go_lobby(message="You have been kicked."))
+                    lambda w=w: w.go_lobby(message="You have been kicked."))
         return True
 
 
