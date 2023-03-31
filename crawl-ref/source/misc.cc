@@ -219,6 +219,17 @@ bool december_holidays()
 #endif
 }
 
+/**
+ * Really, this goes without saying.
+ */
+bool today_is_serious()
+{
+    const time_t curr_time = time(nullptr);
+    const struct tm *date = TIME_FN(&curr_time);
+    // As ever, note that tm_mon is 0-based.
+    return date->tm_mon == 3 && date->tm_mday == 1;
+}
+
 bool now_is_morning()
 {
     const time_t curr_time = time(nullptr);
