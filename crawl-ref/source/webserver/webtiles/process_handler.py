@@ -247,11 +247,11 @@ class CrawlProcessHandlerBase(object):
             command, remainder = splitlist
         command = command.lower()
         # TODO: generalize
-        if command == "/block":
+        if command == "/block" or command == "/mute":
             self.block(source, remainder)
-        elif command == "/unblock":
+        elif command == "/unblock" or command == "/unmute":
             self.unblock(source, remainder)
-        elif command == "/blocklist":
+        elif command == "/blocklist" or command == "/mutelist":
             self.show_block_list(source)
         elif command == "/help":
             self.chat_command_help(source)
@@ -338,7 +338,7 @@ class CrawlProcessHandlerBase(object):
         if self.end_callback:
             self.end_callback()
 
-    def get_watchers(self, chatting_only=False):
+    def get_watchers(self, chatting_only=False, mark_admins=False):
         # TODO: I don't understand why this code didn't just use self.username,
         # when will this be different than player_name? Maybe for a console
         # player?
@@ -353,6 +353,8 @@ class CrawlProcessHandlerBase(object):
                 player_name = w.username
             else:
                 watchers.append(w.username)
+                if mark_admins and w.is_admin():
+                    watchers[-1] += " (admin)"
         watchers.sort(key=lambda s:s.lower())
         return (player_name, watchers)
 
@@ -400,7 +402,7 @@ class CrawlProcessHandlerBase(object):
         watchers = set(watchers)
 
         if target in watchers:
-            self.logger.info("Player '%s' has kicke '%s'" % (source, target))
+            self.logger.info("Player '%s' has kicked '%s'" % (source, target))
             self.handle_notification(source,
                                 "Spectator '%s' has been kicked." % target)
         else:
@@ -508,7 +510,7 @@ class CrawlProcessHandlerBase(object):
             username = "<a href='{0}' target='_blank' class='{1}'>{2}</a>".format(player_url, class_type, n)
             return username
 
-        player_name, watchers = self.get_watchers(True)
+        player_name, watchers = self.get_watchers(True, True)
 
         watcher_names = []
         if player_name is not None:
