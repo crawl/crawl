@@ -120,7 +120,7 @@ book of changes
 book of chaos
 
 一本能让施法者周围一片混乱的魔法书。
-不清楚为什么会有人写这样的东西，但它就在这里。
+不清楚为什么会有人写这样的东西，但它就是在这里。
 %%%%
 book of conjurations
 
@@ -158,7 +158,7 @@ book of dreams
 %%%%
 book of fire
 
-这本包含火系魔法学派的高级咒语的书，窃于灯神的秘密学院。
+这本窃于灯神的秘密学院的书，包含火系魔法学派的高级咒语。
 %%%%
 book of fixed level
 
