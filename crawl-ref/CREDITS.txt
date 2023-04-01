@@ -214,7 +214,6 @@
     ICC
     Icy Lich
     Ilyak
-    Implojin
     Matthew Ince
     Mitsuhiro Itakura
     Jeekaroose
@@ -433,6 +432,7 @@ The Dungeon Crawl Stone Soup development team is:
     Brendan Hickey
     Aidan Holm
     Pete Hurst
+    Implojin
     Eino Keskitalo
     Vsevolod Kozlov
     Janne Lahdenperä

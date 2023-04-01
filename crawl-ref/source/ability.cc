@@ -920,7 +920,7 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::max_hp_drain
         && (ability != ABIL_EVOKE_TURN_INVISIBLE || _invis_causes_drain()))
     {
-        ret += ", Max HP drain";
+        ret += ", Drain";
     }
 
     if (abil.flags & abflag::curse)

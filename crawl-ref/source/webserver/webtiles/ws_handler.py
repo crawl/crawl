@@ -38,7 +38,7 @@ def shutdown():
         socket.shutdown()
 
 def update_global_status():
-    write_dgl_status_file()
+    IOLoop.current().add_callback(write_dgl_status_file)
 
 # lobbies that need updating
 game_lobby_cache = set() # type: Set[CrawlProcessHandlerBase]
@@ -740,7 +740,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 return
 
             self.send_message("game_started")
-            self.restore_mutelist()
+            self.restore_blocklist()
             self.process.handle_notification(self.process.username,
                             "'/help' to see available chat commands")
 
@@ -901,7 +901,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def forget_login_cookie(self, cookie):
         auth.forget_login_cookie(cookie)
 
-    def restore_mutelist(self):
+    def restore_blocklist(self):
         if not self.username:
             return
         receiver = None
@@ -913,16 +913,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if not receiver:
             return
 
-        db_string = userdb.get_mutelist(self.username)
+        db_string = userdb.get_blocklist(self.username)
         if db_string is None:
             db_string = ""
         # list constructor here is for forward compatibility with python 3.
-        muted = list([_f for _f in db_string.strip().split(' ') if _f])
-        receiver.restore_mutelist(self.username, muted)
+        blocked = list([_f for _f in db_string.strip().split(' ') if _f])
+        receiver.restore_blocklist(self.username, blocked)
 
-    def save_mutelist(self, muted):
-        db_string = " ".join(muted).strip()
-        userdb.set_mutelist(self.username, db_string)
+    def save_blocklist(self, blocked):
+        db_string = " ".join(blocked).strip()
+        userdb.set_blocklist(self.username, db_string)
 
     def is_admin(self):
         return self.username is not None and userdb.dgl_is_admin(self.user_flags)
@@ -975,9 +975,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return
 
         if self.username and self.account_restricted():
-            self.send_message("auth_error",
-                        reason="Account restricted; spectating unavailable")
-            self.go_lobby()
+            self.go_lobby(message="Your account is restricted; spectating unavailable")
             return
 
         if not self.username and not config.get('allow_anon_spectate'):
@@ -991,10 +989,19 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                  if process.username.lower() == username.lower()]
         if len(procs) >= 1:
             process = procs[0]
+            # has the spectatee blocked this user?
+            if process.is_blocked(self.username) and not self.is_admin():
+                self.send_message("auth_error",
+                            reason="Spectating this player is restricted.")
+                self.go_lobby()
+                return
             r = process.get_primary_receiver()
+            # the spectatee has a restricted account; you can only get to this
+            # by manually typing a url
             if r and r.account_restricted():
                 self.go_lobby()
                 return
+
             if self.watched_game:
                 if self.watched_game == process:
                     return
@@ -1021,7 +1028,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if receiver:
             if self.account_restricted():
                 self.send_message("chat",
-                        content='Account restricted; chat unavailable')
+                        content='Your account is restricted; chat unavailable')
                 return
             if self.username is None:
                 self.send_message("chat",
@@ -1057,7 +1064,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         if self.account_restricted():
             self.send_message("change_password_fail",
-                    reason="Account restricted; change password unavailable.")
+                    reason="Your account is restricted; change password unavailable.")
             return
 
         if not userdb.user_passwd_match(self.username, cur_password)[0]:
@@ -1087,7 +1094,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return
         if self.account_restricted():
             self.send_message("change_email_fail",
-                    reason="Account restricted; change email unavailable.")
+                    reason="Your account is restricted; change email unavailable.")
             return
         error = userdb.change_email(self.user_id, email)
         if error is None:
@@ -1131,9 +1138,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                  username, error)
             self.send_message("reset_password_fail", reason = error)
 
-    def go_lobby(self):
+    def go_lobby(self, message=None):
         if not config.get('dgl_mode'):
             return
+
+        if message:
+            # a bit hacky: puts the message above the login box / username
+            self.send_message("auth_error", reason=message)
+
         if self.is_running():
             self.process.stop()
 

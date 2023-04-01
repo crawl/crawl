@@ -250,7 +250,7 @@ Harpoon Shot cast
 %%%%
 Throw Klown Pie cast
 
-@The_monster@ pies you viciously!
+@The_monster@ pies @target@ viciously!
 %%%%
 Stunning Burst cast
 

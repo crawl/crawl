@@ -900,6 +900,7 @@ lodul MONS_LODUL
 ogre MONS_OGRE
 two_headed_ogre MONS_TWO_HEADED_OGRE
 %rim 0
+swamp_ogre MONS_SWAMP_OGRE
 ogre_mage MONS_OGRE_MAGE
 ironbound_thunderhulk MONS_IRONBOUND_THUNDERHULK
 %rim 1

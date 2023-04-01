@@ -1733,8 +1733,18 @@ bool spell_no_hostile_in_range(spell_type spell)
             else
                 tempbeam.fire();
 
-            if (tempbeam.foe_info.count > 0
-                || allow_friends && tempbeam.friend_info.count > 0)
+            int foes = tempbeam.foe_info.count;
+            int friends = tempbeam.friend_info.count;
+
+            // Need to check both beam flavours for Plasma Beam.
+            if (zap == ZAP_PLASMA)
+            {
+                tempbeam.flavour = BEAM_ELECTRICITY;
+                tempbeam.fire();
+                foes += tempbeam.foe_info.count;
+            }
+
+            if (foes > 0 || allow_friends && friends > 0)
             {
                 found = true;
                 break;
