@@ -1,5 +1,13 @@
-Stone Soup 0.30-a0 (through 0.30-a0-g120588e8e2)
+Stone Soup 0.30-a0 (through 0.30-a0-985-g0638232e92)
 ---------------------------------------------------
+
+Branches, Environment
+---------------------
+* It is now possible to enter the Vaults without holding a rune. However,
+  a rune is still required to leave.
+* Slime walls now apply corrosion to the player, rather than dealing damage.
+  Jiyva's Oozemancy ability still deals damage as before.
+* Thunderstorms now deal much more damage.
 
 Character
 ---------
@@ -22,8 +30,9 @@ Character
   - Ice Elementalists have Hailstorm replaced by Summon Ice Beast.
   - The 'Arcane Marksman' background has been renamed to 'Hexslinger'.
 * All players regenerate an extra 0.2 HP/turn.
-* Large species move at normal speed through shallow water.
 * Mummies have innate Faith, giving them extra piety gain.
+* Large species move at normal speed through shallow water.
+* It is now possible to accumulate two levels of Harm.
 * Formicids can now shaft themselves in the Tomb of the Ancients.
 * Reaching the end of the Zot clock now causes a smaller amount of permanent
   max HP loss (similar to Borgnjor's Revivication), rather than temp HP drain.
@@ -43,12 +52,18 @@ Gods
   - Lugonu's altars are more common in the Abyss, and the piety bonus for
     converting to Lugonu in the Abyss has been increased.
   - The Bend Space ability has been removed.
+* Ashenzari:
+  - Skill boost reduced.
+  - Trap detection moved to 4* (was at 0*).
+  - Removed Astral Vision (automatically seeing through walls).
 * When worshipping at a faded altar, the player is given a preview of three
   gods the altar might belong to.
-* Gozag's corpse-to-gold effect now blocks enemies from creating simulacra.
+* Gozag's corpse-to-gold effect now blocks enemies from creating simulacra,
+  and the duration of the distraction effect is no longer based on corpse size.
 * Fedhas protects trees from being set on fire by the player.
 * Okawaru's Heroism and Finesse abilities cost more piety.
-* Removed Ashenzari's Astral Vision (automatically seeing through walls).
+* Hepliaklqana's Knight now attacks 50% more slowly.
+* Good gods will now suppress evil clouds from Condenser Vanes.
 
 Interface and Options
 ---------------------
@@ -57,12 +72,16 @@ Interface and Options
     weapons, armour, and jewellery, respectively.
   - The Unequip menu (`c`) allows to unwield, take off, or remove any equipped
     item.
+  - Tab toggles between equip and unequip.
 * Damage ratings are now shown via @, including those for unarmed combat.
 * Bumping a foe while holding a ranged weapon shoots instead of bashing.
-* Unrands (pre-defined artefacts) have a distinct colour by default.
-* The % screen no longer shows .s for low Stealth values.
+* The piety cost of divine invocations is now shown more clearly.
 * Spells' maximum damage is now displayed in their descriptions.
+* Unrands (pre-defined artefacts) have a distinct colour by default.
+* Almost all unrands with special behavior now have a corresponding inscription.
+* The % screen no longer shows .s for low Stealth values.
 * Many weapon brands now provide more quantitative damage information.
+* Up to 100 waypoints can now be placed (up from 10).
 * New show_blood option allows disabling blood spatters and bloody corpses.
 
 Items
@@ -73,35 +92,52 @@ Items
 * New unrands:
   - The Hermit's Pendant, an amulet of faith that sets the wearer's Invocations
     skill to 14 and their Evocations skill to 0.
+  - The Consecrated Labrys, a holy axe with sInv, Flight, and an enchantment
+    that grows larger while more dangerous enemies are in view.
   - The Slick Slippers, which make all damaging melee attacks trample their
     wearer backward. They provide immunity to constriction, engulfing, etc.
   - The Force Lance, a Heavy +5 lance (ala Wyrmbane) which has a 1/3 chance of
     knocking back foes when landing a damaging blow.
   - The Storm Queen's Shield, a +5 kite shield of rElec and flight which
     fires electrical retaliation at those it blocks.
+  - The toga "Victory", a robe which gains AC, Int and Slay as the wearer
+    slays dangerous foes, but loses everything if they drink or read near foes.
 * Unrand changes:
   - The Mad Mage's Maulers lose Int-3 and RegenMP, gain -Cast and MPVamp (gain
     MP from damage dealt), and deal twice as much damage when spending MP.
+  - The Staff of Dispater is now an orb with +AC and *Corrode.
   - The Ring of the Hare is now +10 (was +8).
   - Majin-Bo is now one-handed.
   - Sniper is now +27 and Heavy (was +9 and Vorpal).
   - The Dark Maul is now Heavy (was Vorpal), and has its base stats adjusted.
   - Other formerly Vorpal unrands have been adjusted individually.
   - The Lochaber Axe now causes HP Drain on unequip.
-* Scrolls of butterflies now create dramatically more butterflies. They now
-  alternate with scrolls of summoning instead of scrolls of fog.
+* Orb, scarf, and magical staff artefacts can now appear.
+* Orbs of energy and the Staff of Wucad Mu now give -Wiz in exchange for a
+  chance to refund MP when spells are cast, with no chance of backlash.
+* Scrolls of butterflies now blow back nearby creatures and create many more
+  butterflies. They now alternate with scrolls of summoning instead of fog.
 * Rings of evasion are now +5 (were +4).
 * All ranged weapons can now generate with electrocution, antimagic, and
   draining brands. Venom ranged weapons no longer appear.
+* The spectral brand now matches the player's accuracy and damage, the latter
+  reduced by 30% (ala cleaving).
+* Throwing weapons now deal extra damage when they break.
 * Short sword attack delay reduced.
 * Evocable invisibilty and blink no longer have an MP cost.
 * Spells have been reshuffled between books, and a new Maxwell's Memoranda book
   has been added.
-* Hand crossbows are slightly weaker and slower.
-* Removed the 'vorpal' brand.
+* Condensation Vanes and Tremorstones can no longer both generate in one game.
+* Longbows, arbalests and hand crossbows have had their stats slightly tweaked.
+* Removed the 'vorpal' brand and the unrand Morg.
 
 Monsters
 --------
+* New monsters:
+  - Sleepcap: native to the early Dungeon, sleepcaps may inflict sleep on hit,
+    making the player take massive damage from whoever attacks next.
+  - Skyshark: appearing in late Lair and early Shoals, skysharks become
+    enraged on drawing blood - first becoming Mighty, then Berserk!
 * Demonic Crawlers lose the Warning Cry ability and elemental resistances in
   exchange for higher damage and very fast regeneration.
 * Doom Hounds' Howl is now resistable by Will.
@@ -126,20 +162,28 @@ Spells
     and launches a crackling melee attack, phasing through creatures en route.
   - Arcjolt (L5 Air/Conj). Electrocutes everything adjacent to the caster,
     everything adjacent to those creatures, etc, etc, in a chain.
+  - Plasma Beam (L5 Fire/Air): Fires a bolt of lightning and another bolt of
+    fire both at the most distant foe.
 * Hailstorm moved to L3 (from L4) and can now miss.
 * Manifold Assault moved to L4 (from L5) and does half as many attacks with
   UC as with a weapon.
+* Lesser Beckoning moved to L2 (from L3) and is now better at low power.
+* Battlespheres now fire when any destructive spell is cast, not just Conj.
 * Ozocubu's Refrigeration's damage has been increased.
-* Lesser Beckoning is now better at low power.
 * Slow no longer has bonus hex power.
+* Irradiate now only has a 50% chance of malmutating affected creatures.
 * The Simulacrum and Static Discharge spells have been weakened.
-* Removed: Conjure Flame and Corpse Rot.
+* Removed: Conjure Flame, Corpse Rot and Lightning Bolt.
 
-Tiles
------
+Tiles and Other Art
+-------------------
 * New tiles for player draconians.
-* New art for X-shaped and orb-shaped simulacra.
-* New holiday-exclusive tiles for Sigmund and hats.
+* More icons for mutations.
+* Several new splash screens.
+* A new icon for Monstrous Menagerie.
+* New art for many monsters, including Prince Ribbit and X-shaped simulacra.
+* New art for many unrands, including the Elemental Staff and Wrath of Trog.
+* New holiday-exclusive tiles for Sigmund, ogres and hats.
 
 Stone Soup 0.29.0 (20220825)
 ----------------------------
