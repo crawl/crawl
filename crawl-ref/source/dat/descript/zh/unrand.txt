@@ -42,8 +42,6 @@ staff of Olgreb
 staff of Wucad Mu
 
 一根满溢着魔力的水晶法杖。
-在装备它时施法会变得非常困难，但这根法杖能收集并返还施法所消耗的魔力。
-施法失误所消耗的魔力总是能得以恢复。
 
 {{
     if you.race() == "Djinni" then
@@ -379,7 +377,7 @@ cloak of Starlight
 ratskin cloak
 
 有个女巫闲得无聊，用数百只地狱鼠的皮缝制出这件披风。
-还有更多的老鼠不知怎的藏在里面，它们可能会跑出来帮助穿戴者。
+还有更多的老鼠不知怎的藏在里面，它们可能会窜出来帮助穿戴者。
 %%%%
 shield of the Gong
 
