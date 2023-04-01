@@ -447,8 +447,11 @@ void set_cursor_region(GotoRegion region)
 
 void clrscr()
 {
-    save_cursor_pos save; // is this generally correct? alternative, set region
-                          // to GOTO_CRT.
+    if (is_cursor_enabled())
+    {
+        save_cursor_pos save; // is this generally correct? alternative, set region
+                              // to GOTO_CRT.
+    }
     clrscr_sys();
 
 #ifdef USE_TILE_WEB
