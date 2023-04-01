@@ -42,6 +42,7 @@ levelup_stat_frequency: 4
 mutations:
   1:
     MUT_SLOW: 1
+    MUT_COLD_BLOODED: 1
     MUT_HOP: 1
     MUT_DAYSTALKER: 1
   13:
