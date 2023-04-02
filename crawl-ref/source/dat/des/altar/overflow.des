@@ -2033,6 +2033,45 @@ v..v+v..v
 vvvv@vvvv
 ENDMAP
 
+# After much consideration, I decided this should go with the other overflow
+# altars, rather than with the other guarded unrand vaults, since the majority
+# of the tags are for its role as an overflow.
+NAME:   nicolae_overflow_guarded_unrand_okawaru_victory
+TAGS:   temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru transparent
+DEPTH:  D:3-9
+WEIGHT: 3
+KPROP:  `SLps = no_tele_into
+KFEAT:  _ = altar_okawaru
+: if you.depth() < 6 then
+KMONS:  S = gnoll bouda band / gnoll sergeant band
+KMONS:  ps = gnoll / orc / ogre w:5 / centaur w:5 / nothing
+: elseif you.depth() < 8 then
+KMONS:  S = wight band / kobold brigand band / orc warrior band
+KMONS:  ps = ogre / centaur / wight / nothing
+: else
+KMONS:  S = two-headed ogre / troll / gargoyle
+KMONS:  ps = orc warrior / kobold brigand / wight / troll w:5 / gargoyle w:5 / \
+             two-headed ogre w:5
+: end
+KITEM:  S = victory no_pickup
+KITEM:  p = any potion no_pickup
+KITEM:  s = any scroll no_pickup
+SUBST:  c : ccccv
+NSUBST: L = 2=p / 2=s
+MAP
+xxc@@@cxxxxxxxx
+xxc...cxxxxxxxx
+xcc...ccccccccx
+xcG...GcG`L`Gcx
+xc.....c````Lcx
+xc.._..=``S``cx
+xc.....c````Lcx
+xcG...GcG`L`Gcx
+xcc...ccccccccx
+xxc...cxxxxxxxx
+xxc@@@cxxxxxxxx
+ENDMAP
+
 ### Qazlal overflow altars ####################################################
 
 # There's always a safe path to the altar.
