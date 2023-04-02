@@ -8773,7 +8773,7 @@ KMONS:   p = orc knight ; halberd | demon trident | glaive w:5 / \
                                    halberd | demon trident | glaive w:5
 KMONS:   L = ettin ; executioner's axe . bardiche
 KMONS:   P = phantasmal warrior w:5 / nothing
-: else   
+: else
 KMONS:   a = war gargoyle ; broad axe | battleaxe / \
              stone giant ; broad axe | battleaxe / \
              orc warlord ; broad axe | battleaxe / \
