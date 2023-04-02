@@ -8754,6 +8754,114 @@ xxNNNxx
 xxx@xxx
 ENDMAP
 
+NAME:    nicolae_guarded_unrand_lochaber
+TAGS:    patrolling no_monster_gen no_item_gen
+DEPTH:   D:9-, Depths
+WEIGHT:  3
+KITEM:   L = lochaber axe no_pickup
+: if you.in_branch("D") then
+# Two-headed ogres get half the weight because they get twice the armament.
+KMONS:   a = orc knight ; war axe | broad axe | battleaxe w:5 / \
+             deep elf knight ; war axe | broad axe | battleaxe w:5 / \
+             tengu warrior ; war axe | broad axe | battleaxe w:5 / \
+             two-headed ogre w:5 ; war axe | broad axe | battleaxe w:5 . \
+                                   war axe | broad axe | battleaxe w:5
+KMONS:   p = orc knight ; halberd | demon trident | glaive w:5 / \
+             deep elf knight ; halberd | demon trident | glaive w:5 / \
+             tengu warrior ; halberd | demon trident | glaive w:5 / \
+             two-headed ogre w:5 ; halberd | demon trident | glaive w:5 . \
+                                   halberd | demon trident | glaive w:5
+KMONS:   L = ettin ; executioner's axe . bardiche
+KMONS:   P = phantasmal warrior w:5 / nothing
+: else   
+KMONS:   a = war gargoyle ; broad axe | battleaxe / \
+             stone giant ; broad axe | battleaxe / \
+             orc warlord ; broad axe | battleaxe / \
+             ettin w:5 ; broad axe | battleaxe . broad axe | battleaxe
+KMONS:   p = war gargoyle ; demon trident | glaive / \
+             stone giant ; demon trident | glaive / \
+             orc warlord ; demon trident | glaive / \
+             ettin w:5 ; demon trident | glaive . demon trident | glaive
+KMONS:   L = deep elf blademaster ; executioner's axe . bardiche
+KMONS:   P = phantasmal warrior / nothing w:5
+: end
+SHUFFLE: DE
+SUBST:   D : cccT., E : GGGc.
+MAP
+G.....ccccccccccccccccc
+.....Gcc.a.a.a.a.cccccc
+..c++cc..........Pccccc
+..c..cE.D.E.D.E.D.Ecccc
+@.c..............P...cc
+@.c................L..c
+@.c..............P...cc
+..c..cE.D.E.D.E.D.Ecccc
+..c++cc..........Pccccc
+.....Gcc.p.p.p.p.cccccc
+G.....ccccccccccccccccc
+ENDMAP
+
+# Skysharks because that's what the slippers are made of. Elementals, anacondas,
+# and throwing nets to demonstrate the hazards that the slippers can help you
+# with. The merfolk will also have some nets and tridents, if you're not
+# interested in the footwear.
+NAME:   nicolae_guarded_unrand_slippers
+TAGS:   no_item_gen no_monster_gen no_trap_gen no_pool_fixup transparent
+DEPTH:  D:10-
+WEIGHT: 3
+KITEM:  s = slick slippers no_pickup
+KMONS:  S = skyshark w:40 / nothing
+KMONS:  ET = nothing w:20 / water elemental / anaconda / \
+             w:20 merfolk ; trident w:45 | trident good_item | \
+                            demon trident w:5 . throwing net q:4
+KFEAT:  sS = W
+KFEAT:  E = w
+KFEAT:  T = T w:30 / V
+KPROP:  sSEwWT` = no_tele_into
+MAP
+       .........
+  ......cccnccc......
+...ccccccwwwwwcccccc...
+...cwwwwwEwEwE`````c...
+@..cwSWSwwwwww`T`T`c..@
+@..nwWsWWWWWWW`````=..@
+@..cwSWSwwwwww`T`T`c..@
+...cwwwwwEwEwE`````c...
+...ccccccwwwwwcccccc...
+  ......cccnccc......
+       .........
+ENDMAP
+
+NAME:   nicolae_guarded_unrand_storm_shield
+TAGS:   no_monster_gen no_trap_gen no_tele_into
+DEPTH:  D:10-
+KITEM:  S = storm queen's shield no_pickup
+KMONS:  S = patrolling storm dragon
+KMONS:  1 = sixfirhy w:20 / shock serpent w:20 / spark wasp w:20 / \
+            air elemental / raiju
+KMONS:  2 = tengu conjurer  / deep elf zephyrmancer / spriggan air mage w:3
+NSUBST: 1 = 2 / 1111112
+MAP
+  xxx         xxx
+ xxxxx  @@@  xxxxx
+xxxxxxc.....cxxxxxx
+xxxxxxccc=cccxxxxxx
+xxxxccc.....cccxxxx
+ xxxcG.......Gcxxx
+  ccc....1....ccc
+  .c...1...1...c.
+ @.c...........c.@
+ @.=..1..S..1..=.@
+ @.c...........c.@
+  .c...1...1...c.
+  ccc....1....ccc
+ xxxcG.......Gcxxx
+xxxxccc.....cccxxxx
+xxxxxxccc=cccxxxxxx
+xxxxxxc.....cxxxxxx
+ xxxxx  @@@  xxxxx
+  xxx         xxx
+ENDMAP
 
 ###################################################################
 #
