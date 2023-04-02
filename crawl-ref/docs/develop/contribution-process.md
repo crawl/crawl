@@ -27,8 +27,9 @@ turnaround time.
 Users with +v are members of the devteam and have commit access. Developers
 often discuss what they are working on on the channel and request comments
 before commits. Therefore the channel is logged to archive discussion and
-decisions made there. The archive can be found here:
+decisions made there. The archives can be found here:
 
+    http://crawl.akrasiac.org/logs/cheibriados/
     http://s-z.org/crawl-dev/
 
 ### Writing a proposal for gameplay-related contributions
