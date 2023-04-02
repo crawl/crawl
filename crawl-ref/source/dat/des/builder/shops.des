@@ -763,8 +763,9 @@ WEIGHT: 1
 SHUFFLE: -m
 SUBST: - = .
 KFEAT: m = iron_grate
-KFEAT: S = antiques shop type:Antique suffix:Artefacts count:6 ; \
-   any weapon randart | any armour randart | any jewellery randart w:4
+KFEAT: S = antiques shop type:Antique suffix:Artefacts count:8 ; \
+   any weapon randart | any armour randart | any jewellery randart w:4 | \
+   any magical staff randart w:4
 MAP
 .......
 .-vmv-.
