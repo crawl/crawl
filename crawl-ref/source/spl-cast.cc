@@ -699,7 +699,7 @@ static void _handle_channeling(int cost, spret cast_result)
         return;
 
     // Miscasts always get refunded, successes only sometimes do.
-    if (cast_result != spret::fail && !x_chance_in_y(sources, 6))
+    if (cast_result != spret::fail && !x_chance_in_y(sources, 5))
         return;
 
     mpr("Magical energy flows into your mind!");

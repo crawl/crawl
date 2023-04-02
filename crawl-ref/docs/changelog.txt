@@ -58,6 +58,7 @@ Gods
   - Removed Astral Vision (automatically seeing through walls).
 * When worshipping at a faded altar, the player is given a preview of three
   gods the altar might belong to.
+* Xom's mutation gifts are no longer limited to a small pool of options.
 * Gozag's corpse-to-gold effect now blocks enemies from creating simulacra,
   and the duration of the distraction effect is no longer based on corpse size.
 * Fedhas protects trees from being set on fire by the player.
