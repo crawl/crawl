@@ -1189,26 +1189,29 @@ DEPTH:  D:8-, Orc, Elf, Depths
 {{
 local count = crawl.roll_dice(2, 3) + 5
 local name = "A" .. string.sub(string.lower(crawl.make_name()), 2)
+
+--Weights of equally rare weapons are divided by two for types with 
+--two alliterative egos
+local weaponnames = {"dagger", "short sword", "falchion", "scimitar",
+                    "w:3 demon blade","eudemon blade w:2", "double sword w:3",
+                    "hand axe", "executioner's axe w:6",
+                    "club w:20", "flail", "demon whip w:3", 
+                    "sacred scourge w:1", "dire flail", "eveningstar w:6",
+                    "spear", "halberd", "demon trident w:3"}
+local egos = {"chaos", "draining", "distortion", "electrocution", "flaming",
+              "freezing", "heavy", "speed", "spectral"}
 local kstr = "S = general shop name:" .. name .. " type:Alliterative " ..
              "suffix:Armaments count:" .. count .. " ; " ..
-             "dagger ego:draining | dagger ego:distortion | " ..
-             "short sword ego:speed | short sword ego:spectral | " ..
-             "falchion ego:flaming | falchion ego:freezing | " ..
-             "scimitar ego:speed | scimitar ego:spectral |" ..
-             "w:3 demon blade ego:draining | w:3 demon blade ego:distortion | "..
-             "w:2 eudemon blade ego:electrocution |" ..
-             "w:3 double sword ego:draining | w:3 double sword ego:distortion | "..
-             "w:6 executioner's axe ego:electrocution |" ..
-             "w:20 club ego:chaos |" ..
-             "flail ego:flaming | flail ego:freezing |" ..
-             "w:3 demon whip ego:draining | w:3 demon whip ego:distortion | " ..
-             "w:1 sacred scourge ego:speed | w:1 sacred scourge ego:spectral |" ..
-             "dire flail ego:draining | dire flail ego:distortion | " ..
-             "w:6 eveningstar ego:electrocution |" ..
-             "spear ego:speed | spear ego:spectral | " ..
              "halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:speed | " ..
-             "halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:spectral | " ..
-             "w:3 demon trident ego:draining | w:3 demon trident ego:distortion"
+             "halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:spectral"
+--add any weapon-ego pair with matching first letter
+for _, weapon in ipairs(weaponnames) do
+  for _, ego in ipairs(egos) do
+    if weapon:sub(1, 1) == ego:sub(1, 1) then
+      kstr = kstr .. " | " .. weapon .. " ego:" .. ego
+    end
+  end
+end
 kfeat(kstr)
 }}
 MAP
