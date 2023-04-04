@@ -141,7 +141,7 @@ static const struct spell_desc spelldata[] =
     SPELL_PLASMA_BEAM, "Plasma Beam",
     spschool::fire | spschool::air,
     spflag::noisy | spflag::destructive,
-    5,
+    6,
     200,
     3, 10, // capped at LOS
     20,

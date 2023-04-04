@@ -2814,7 +2814,7 @@ string spell_damage_string(spell_type spell, bool evoked, int pow)
         default:
             break;
     }
-    dice_def dam = _spell_damage(spell, pow);
+    const dice_def dam = _spell_damage(spell, pow);
     if (dam.num == 0 || dam.size == 0)
         return "";
     string mult = "";
@@ -2822,7 +2822,6 @@ string spell_damage_string(spell_type spell, bool evoked, int pow)
     {
         case SPELL_FOXFIRE:
         case SPELL_PLASMA_BEAM:
-            dam.size = plasma_beam_damage(dam.size, false);
             mult = "2x";
             break;
         case SPELL_CONJURE_BALL_LIGHTNING:
