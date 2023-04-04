@@ -1327,6 +1327,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             # true means that something was queued up to send, but it may be
             # async
             return True
+        except tornado.websocket.WebSocketClosedError as e:
+            if self.failed_messages == 0:
+                self.logger.warning("Connection closed during write_message")
+            self.failed_messages += 1
+            if self.ws_connection is not None:
+                self.ws_connection._abort()
         except:
             self.logger.warning("Exception trying to send message.", exc_info = True)
             self.failed_messages += 1
