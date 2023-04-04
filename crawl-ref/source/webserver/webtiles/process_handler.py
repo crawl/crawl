@@ -126,6 +126,7 @@ class CrawlProcessHandlerBase(object):
         self.kill_timeout = None
 
         self.blocked = set()
+        self.kicked = {} # not persisted across sessions!
 
         now = datetime.datetime.utcnow()
         self.formatted_time = now.strftime("%Y-%m-%d.%H:%M:%S")
@@ -224,7 +225,8 @@ class CrawlProcessHandlerBase(object):
         self.chat_help_message(source, "/help", "show chat command help")
         self.chat_help_message(source, "/hide", "hide the chat window")
         if self.is_player(source):
-            self.chat_help_message(source, "/kick <name>", "kick <name>")
+            self.chat_help_message(source, "/kick <name> [<minutes>]", "kick <name> for some time")
+            self.chat_help_message(source, "", "default: 15 minutes. Not saved across sessions.")
             self.chat_help_message(source, "/block <name>", "kick and block <name>")
             self.chat_help_message(source, "", "Must be present in channel. Special names:")
             self.chat_help_message(source, "", "[anon] disables anonymous spectating")
@@ -268,6 +270,14 @@ class CrawlProcessHandlerBase(object):
             return username != self.username
         if not username:
             return "[anon]" in self.blocked
+        if username in self.kicked:
+            start, interval = self.kicked[username]
+            if time.time() - start < interval:
+                return True
+            else:
+                # this doesn't otherwise get cleaned up, so in principle it's
+                # a minor memory leak for a long-running process
+                del self.kicked[username]
         return username in self.blocked
 
     def handle_chat_message(self, username, text): # type: (str, str) -> None
@@ -390,11 +400,21 @@ class CrawlProcessHandlerBase(object):
         if receiver is not None:
             receiver.save_blocklist(list(self.blocked))
 
-    def kick(self, source, target):
+    def kick(self, source, target_args):
         if not self.is_player(source):
             self.handle_notification(source,
                             "You do not have permission to kick spectators.")
             return False
+
+        args = target_args.split(maxsplit=1)
+        args.extend([''] * (2 - len(args))) # pad missing args
+        target = args[0]
+        interval = 15
+        try:
+            interval = int(args[1])
+        except ValueError:
+            pass
+
         if (source == target):
             self.handle_notification(source, "You can't kick yourself!")
             return False
@@ -402,12 +422,14 @@ class CrawlProcessHandlerBase(object):
         watchers = set(watchers)
 
         if target in watchers:
-            self.logger.info("Player '%s' has kicked '%s'" % (source, target))
+            self.logger.info("Player '%s' has kicked '%s' (%dm)" % (source, target, interval))
             self.handle_notification(source,
-                                "Spectator '%s' has been kicked." % target)
+                "Spectator '%s' has been kicked for %d minutes." % (target, interval))
         else:
             self.handle_notification(source, "Kick who??")
             return False
+
+        self.kicked[target] = [time.time(), interval * 60]
 
         receivers = self.get_receivers_by_username(target)
         for w in receivers:
@@ -458,6 +480,9 @@ class CrawlProcessHandlerBase(object):
                                     "You can't unblock (or block) yourself!")
             return False
         if target == "*":
+            if len(self.kicked):
+                self.kicked = {}
+                self.handle_notification(source, "Kicks cleared.")
             if (len(self.blocked) == 0):
                 self.handle_notification(source, "No one is blocked!")
                 return False
@@ -468,8 +493,15 @@ class CrawlProcessHandlerBase(object):
             self.update_watcher_description()
             return True
 
+        did_something = False
+        if target in self.kicked:
+            del self.kicked[target]
+            self.handle_notification(source, "Removing '%s' from kicks" % target)
+            did_something = True
+
         if not target in self.blocked:
-            self.handle_notification(source, "Unblock who??")
+            if not did_something:
+                self.handle_notification(source, "Unblock who??")
             return False
 
         # these messages are more or less ok for [all], [anon]
