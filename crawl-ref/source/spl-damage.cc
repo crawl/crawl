@@ -2776,6 +2776,9 @@ vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual)
             continue;
         }
 
+        if (!actual && !agent.can_see(**mi))
+            continue;
+
         targets.push_back(mi->pos());
 
         if (!actual)
