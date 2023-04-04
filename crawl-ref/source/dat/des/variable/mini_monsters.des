@@ -8863,6 +8863,137 @@ xxxxxxc.....cxxxxxx
   xxx         xxx
 ENDMAP
 
+# From the dcss channel on the roguelikes discord:
+# Lici the Crawler: @nicolae  FR some earlyish (d7-d11) vaults
+#                   with lightning rod in them
+# Iguana Iguana:    @nicolae  FR some earlyish (d7-d11) vaults
+#                   with lightning rod and harm in them. FTFY
+# You've got to give the people what they want.
+NAME:   nicolae_have_a_lightning_rod
+DEPTH:  D:7-11
+KITEM:  L = lightning rod
+KITEM:  H = scarf ego:harm ident:all
+KMONS:  E = electric eel
+KMONS:  R = patrolling raiju
+KFEAT:  E = w
+NSUBST: E = 2=E / 2=w / 2=Ew
+MAP
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxwEwwxxxxxxxxxxxxx
+xxxwww..wwwxxxxxxxxwwx
+xwww...R..wEwxxxxEww.@
+xw..........wwwwww...@
+@.....ww..LH..ww.....@
+@...wwwwww..........wx
+@.wwExxxxwEw..R...wwwx
+xwwxxxxxxxxwww..wwwxxx
+xxxxxxxxxxxxxwwEwxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# I expanded Lici's request to a few other evokers.
+# (See comment on nicolae_have_a_lightning_rod)
+NAME:   nicolae_beast_mode
+TAGS:   transparent
+DEPTH:  D:7-11
+KITEM:  D = box of beasts
+KMONS:  D = juvenile mutant beast
+KMONS:  L = larval mutant beast
+NSUBST: D = D / L / ., L = 3=L / 3=-L / -
+SUBST:  - = .x, ` = x_
+CLEAR:  _
+MAP
+     `xxxxx`
+    `xx-.-x
+  ..xx-L.....xx`
+  .......-...-x`
+`x-...-..L...-xx`
+xxx-.L.....-..-xx`
+xxx-.-.......L.-x`
+xx-.....DD......x`
+`x-..L..DDD..-.L.
+ xx-.-...DD......
+ `x-.L........L..
+ `xx-..-.....-.-x`
+  xx-..L..-L..-xx`
+ `x..........-xx`
+  ...-xxx-..xxxx
+   .xxxxxx..xx`
+     `xxx`
+ENDMAP
+
+NAME:   nicolae_rank_and_phial
+TAGS:   transparent
+DEPTH:  D:7-11
+KITEM:  P = phial of floods
+KMONS:  E = water elemental
+KMONS:  P = patrolling merfolk
+KFEAT:  E~ = w
+KMASK:  E~ = no_pool_fixup
+SUBST:  M = w.
+NSUBST: E = 3=E / 2=Ew / w
+MAP
+MMMMMMMMMMM
+MwwwwwwwwwM
+MwE~~E~~EwM
+Mw~wwwww~wM
+Mw~w...w~wM
+MwEw.P.wEwM
+Mw~w...w~wM
+Mw~wwWww~wM
+MwE~~W~~EwM
+MwwwwWwwwwM
+MMMMMWMMMMM
+ENDMAP
+
+# Summoning a player illusion is probably too cruel at this depth, so a boggart
+# or two doing shadow creatures will have to suffice thematically instead.
+NAME:    nicolae_phantomly_mirrored
+TAGS:    no_item_gen no_monster_gen no_trap_gen
+DEPTH:   D:7-11
+KITEM:   P = phantom mirror
+# Using the same probabilities from mon-gear.cc.
+KMONS:   O : w:60 two-headed ogre ; giant club . giant club / \
+             w:30 two-headed ogre ; giant spiked club . giant spiked club / \
+             w:9  two-headed ogre ; dire flail . dire flail / \
+             w:1  two-headed ogre ; great mace . great mace
+KMONS:   S = boggart
+KFEAT:   DEFH = G
+SHUFFLE: OS
+{{
+local statuetiles = {"dngn_statue_ancient_evil", "dngn_statue_ancient_hero",
+   "dngn_statue_angel", "dngn_statue_archer", "dngn_statue_axe",
+   "dngn_statue_cat", "dngn_statue_centaur", "dngn_statue_cerebov",
+   "dngn_statue_demonic_bust", "dngn_statue_dragon", "dngn_statue_dwarf",
+   "dngn_statue_elephant", "dngn_statue_hydra", "dngn_statue_imp",
+   "dngn_statue_maw", "dngn_statue_mermaid", "dngn_statue_naga",
+   "dngn_statue_orb", "dngn_statue_orb_guardian", "dngn_statue_polearm",
+   "dngn_statue_princess", "dngn_statue_sigmund", "dngn_statue_snail",
+   "dngn_statue_sword", "dngn_statue_tengu", "dngn_statue_tentacles",
+   "dngn_statue_triangle", "dngn_statue_twins", "dngn_statue_wraith"}
+tile("D : " .. util.random_from(statuetiles))
+tile("E : " .. util.random_from(statuetiles))
+tile("F : " .. util.random_from(statuetiles))
+tile("H : " .. util.random_from(statuetiles))
+}}
+MAP
+xxxxxxxx
+xxvvvvvxxxx
+xxv...vvvvxxxx
+xxv.H....vvvvxxxx
+xvv....F....vvvvx
+xv.....O..E....vx
+@.........S..D.vx
+@............P.vx
+@.........S..D.vx
+xv.....O..E....vx
+xvv....F....vvvvx
+xxv.H....vvvvxxxx
+xxv...vvvxxxxx
+xxvvvvvxxx
+xxxxxxxx
+ENDMAP
+
 ###################################################################
 #
 # <<9>> Pre-Lair vaults with monsters guarding a manual
