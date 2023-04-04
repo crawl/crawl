@@ -3615,25 +3615,7 @@ bool mons_should_fire(bolt &beam, bool ignore_good_idea)
             return false;
     }
 
-    // Use of foeRatio:
-    // The higher this number, the more monsters will _avoid_ collateral
-    // damage to their friends.
-    // Setting this to zero will in fact have all monsters ignore their
-    // friends when considering collateral damage.
-
-    // Quick check - did we in fact get any foes?
-    if (beam.foe_info.count == 0)
-        return false;
-
-    // If we hit no friends, fire away.
-    if (beam.friend_info.count == 0)
-        return true;
-
-    // Only fire if they do acceptably low collateral damage.
-    return beam.foe_info.power >=
-           div_round_up(beam.foe_ratio *
-                        (beam.foe_info.power + beam.friend_info.power),
-                        100);
+    return beam.good_to_fire() >= ai_action::good();
 }
 
 /**

@@ -12,6 +12,7 @@
 #include "enchant-type.h"
 #include "externs.h"
 #include "killer-type.h"
+#include "mon-ai-action.h"
 #include "mon-attitude-type.h"
 #include "random.h"
 #include "ray.h"
@@ -317,6 +318,7 @@ private:
     bool fuzz_invis_tracer();
 public:
     void choose_ray();
+    ai_action::goodness good_to_fire() const;
 };
 
 int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,

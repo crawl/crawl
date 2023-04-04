@@ -6760,6 +6760,27 @@ bool bolt::can_pull(const actor &act, int dam) const
     return origin_spell == SPELL_HARPOON_SHOT && dam;
 }
 
+ai_action::goodness bolt::good_to_fire() const
+{
+    // Use of foeRatio:
+    // The higher this number, the more monsters will _avoid_ collateral
+    // damage to their friends.
+    // Setting this to zero will in fact have all monsters ignore their
+    // friends when considering collateral damage.
+
+    // Quick check - did we in fact hit anything?
+    if (foe_info.count == 0)
+        return ai_action::neutral();
+
+    // Only fire if they do acceptably low collateral damage.
+    if (!friend_info.power
+        || foe_info.power >= div_round_up(foe_ratio * friend_info.power, 100))
+    {
+        return ai_action::good();
+    }
+    return ai_action::bad();
+}
+
 void clear_zap_info_on_exit()
 {
     for (const zap_info &zap : zap_data)
