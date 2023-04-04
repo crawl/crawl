@@ -583,7 +583,7 @@ static void _throw_noise(actor* act, const item_def &ammo)
     if (act->is_player() || you.can_see(*act))
         msg = nullptr;
 
-    noisy(7, act->pos(), msg, act->mid);
+    noisy(5, act->pos(), msg, act->mid);
 }
 
 // throw_it - handles player throwing/firing only. Monster throwing is handled
