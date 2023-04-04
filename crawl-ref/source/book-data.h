@@ -70,6 +70,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Fire
     SPELL_FOXFIRE,
     SPELL_FIREBALL,
+    SPELL_PLASMA_BEAM,
     SPELL_STARBURST,
 },
 
@@ -98,10 +99,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Lightning
-    SPELL_DISCHARGE,
     SPELL_ELECTRIC_CHARGE,
-    SPELL_PLASMA_BEAM,
     SPELL_ARCJOLT,
+    SPELL_PLASMA_BEAM,
 },
 
 {   // Book of Death
@@ -407,9 +407,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Storms
+    SPELL_DISCHARGE,
     SPELL_AIRSTRIKE,
     SPELL_SUMMON_LIGHTNING_SPIRE,
-    SPELL_PLASMA_BEAM,
 },
 
 { // Book of Weapons
