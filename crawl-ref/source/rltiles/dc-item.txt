@@ -430,6 +430,10 @@ centaur_barding_red
 
 %rim 0
 orb ARM_ORB
+orb_randart1 ARM_ORB_ART_FIRST
+orb_randart2
+orb_randart3
+orb_randart4 ARM_ORB_ART_LAST
 
 buckler1 ARM_BUCKLER
 buckler2
