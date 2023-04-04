@@ -589,6 +589,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def send_lobby_html(self):
         # Rerender Banner
         # TODO: don't really need to do this every time the lobby is loaded?
+        if self.ui is None:
+            # socket has been finish()ed, and the render_string call will raise.
+            # this probably only happens in async race conditions, so don't
+            # do anything further (and hope that the close happens properly
+            # elsewhere)
+            return
         banner_html = to_unicode(self.render_string("banner.html",
                                                     username = self.username))
         self.queue_message("html", id = "banner", content = banner_html)
