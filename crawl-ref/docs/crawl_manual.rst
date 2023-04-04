@@ -2093,9 +2093,9 @@ Conjurers
 
 Summoners
   The Summoner specialises in calling creatures from this and other worlds to
-  give assistance. Although they can at first summon only very wimpy creatures,
+  give assistance. Although they can at first summon only very weak creatures,
   the more advanced summoning spells allow summoners to call on such powers as
-  elementals and demons.
+  hydras and dragons.
 
 Necromancers
   The Necromancer is a magician who specialises in the less pleasant side of
