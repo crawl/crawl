@@ -2735,28 +2735,56 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
     return spret::success;
 }
 
-vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual)
+static bool _plasma_targetable(const actor &agent, monster &m, bool actual)
+{
+    if (!_act_worth_targeting(agent, m))
+        return false;
+
+    if (agent.is_monster())
+    {
+        if (mons_atts_aligned(agent.as_monster()->attitude, m.attitude))
+            return false;
+    }
+    else
+    {
+        if (m.wont_attack())
+            return false;
+    }
+
+    return actual || agent.can_see(m);
+}
+
+vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual,
+                                      bool include_intermediates)
 {
     const int range = spell_range(SPELL_PLASMA_BEAM, pow);
     int maxdist = 0;
+    vector<actor*> target_actors;
     vector <coord_def> targets;
     coord_def source = agent.pos();
 
     // find the "actual" range of the spell
     for (monster_near_iterator mi(source, LOS_SOLID_SEE); mi; ++mi)
     {
-        if (mi->wont_attack()
-            || !_act_worth_targeting(you, **mi))
-        {
-            continue;
-        }
-
-        if (!actual && !agent.can_see(**mi))
+        if (!_plasma_targetable(agent, **mi, actual))
             continue;
 
         int dist = grid_distance(source, mi->pos());
         if (dist > maxdist && dist <= range)
             maxdist = dist;
+    }
+
+    if (agent.is_monster()
+        && !agent.as_monster()->wont_attack()
+        && cell_see_cell(source, you.pos(), LOS_SOLID_SEE)
+        && (actual || agent.can_see(you)))
+    {
+        int dist = grid_distance(source, you.pos());
+        if (dist > maxdist && dist <= range)
+        {
+            maxdist = dist;
+            target_actors.push_back(&you);
+        }
     }
 
     // nothing in range
@@ -2770,80 +2798,114 @@ vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual)
         if (dist != maxdist)
             continue;
 
-        if (mi->wont_attack()
-            || !_act_worth_targeting(you, **mi))
-        {
-            continue;
-        }
-
-        if (!actual && !agent.can_see(**mi))
+        if (!_plasma_targetable(agent, **mi, actual))
             continue;
 
-        targets.push_back(mi->pos());
+        target_actors.push_back(*mi);
+    }
 
-        if (!actual)
+    for (actor *a : target_actors)
+        targets.push_back(a->pos());
+
+    if (!include_intermediates)
+        return targets;
+
+    set<coord_def> intermediates;
+    for (actor *a : target_actors)
+    {
+        // any monster along the path could get hit, so we need to add them
+        // for targeter warnings
+        ray_def ray;
+        if (!find_ray(source, a->pos(), ray, opc_solid))
+            continue;
+
+        while (ray.advance())
         {
-            // any monster along the path could get hit, so we need to add them
-            // for targeter warnings
-            ray_def ray;
-            if (!find_ray(source, mi->pos(), ray, opc_solid))
-                continue;
+            intermediates.insert(ray.pos());
 
-            while (ray.advance())
-            {
-                targets.push_back(ray.pos());
-
-                if (ray.pos() == mi->pos())
-                    break;
-            }
+            if (ray.pos() == a->pos())
+                break;
         }
     }
 
+    for (coord_def c : intermediates)
+        targets.push_back(c);
     return targets;
+}
+
+static ai_action::goodness _fire_plasma_beam_at(const actor &agent, int pow,
+                                                coord_def target, bool tracer)
+{
+    int range = grid_distance(agent.pos(), target);
+
+    // lightning beam
+    bolt beam;
+    beam.range        = range;
+    beam.name         = "plasma beam";
+    beam.source       = agent.pos();
+    beam.source_id    = agent.mid;
+    beam.target       = target;
+    beam.thrower      = agent.is_player() ? KILL_YOU : KILL_MON;
+    beam.attitude     = agent.is_player() ? ATT_FRIENDLY : mons_attitude(*agent.as_monster());
+    beam.origin_spell = SPELL_PLASMA_BEAM;
+    beam.draw_delay   = 5;
+    beam.foe_ratio    = 80; // default
+    beam.is_tracer    = tracer;
+    zappy(ZAP_LIGHTNING_BOLT, pow, false, beam);
+    beam.fire();
+    const ai_action::goodness fire_good = beam.good_to_fire();
+
+    // fire beam
+    beam.flavour = BEAM_FIRE;
+    beam.name    = "fiery plasma";
+    beam.glyph   = dchar_glyph(DCHAR_FIRED_ZAP);
+    zappy(ZAP_PLASMA, pow, false, beam);
+    beam.fire();
+    const ai_action::goodness light_good = beam.good_to_fire();
+
+    if (fire_good == ai_action::bad() || light_good == ai_action::bad())
+        return ai_action::bad();
+    if (light_good == ai_action::good() || light_good == ai_action::good())
+        return ai_action::good();
+    return ai_action::neutral();
+}
+
+bool mons_should_fire_plasma(int pow, const actor &agent)
+{
+    vector<coord_def> targets = plasma_beam_targets(agent, pow, false, false);
+    bool ever_good = false;
+    for (auto target : targets)
+    {
+        const ai_action::goodness result = _fire_plasma_beam_at(agent, pow, target, true);
+        if (result == ai_action::bad())
+            return false; // be very careful!
+        if (result == ai_action::good())
+            ever_good = true;
+    }
+    return ever_good;
 }
 
 spret cast_plasma_beam(int pow, const actor &agent, bool fail)
 {
     if (agent.is_player()
         && _warn_about_bad_targets(SPELL_PLASMA_BEAM,
-                                   plasma_beam_targets(agent, pow, false)))
+                                   plasma_beam_targets(agent, pow, false, true)))
     {
-            return spret::abort;
+        return spret::abort;
     }
 
     fail_check();
 
-    vector<coord_def> targets = plasma_beam_targets(agent, pow, true);
+    vector<coord_def> targets = plasma_beam_targets(agent, pow, true, false);
 
     if (targets.empty())
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
+        if (you.can_see(agent))
+            canned_msg(MSG_NOTHING_HAPPENS);
         return spret::success;
     }
     auto target = *random_iterator(targets);
-
-    int range = grid_distance(agent.pos(), target);
-
-    // first beam
-    bolt beam;
-    beam.range        = range;
-    beam.name         = "plasma beam";
-    beam.source       = you.pos();
-    beam.target       = target;
-    beam.thrower      = agent.is_player() ? KILL_YOU : KILL_MON;
-    beam.attitude     = ATT_FRIENDLY;
-    beam.origin_spell = SPELL_PLASMA_BEAM;
-    beam.draw_delay   = 5;
-    zappy(ZAP_LIGHTNING_BOLT, pow, false, beam);
-    beam.fire();
-
-    // second beam
-    beam.flavour = BEAM_FIRE;
-    beam.name    = "fiery plasma";
-    beam.glyph   = dchar_glyph(DCHAR_FIRED_ZAP);
-    zappy(ZAP_PLASMA, pow, false, beam);
-    beam.fire();
-
+    _fire_plasma_beam_at(agent, pow, target, false);
     return spret::success;
 }
 
