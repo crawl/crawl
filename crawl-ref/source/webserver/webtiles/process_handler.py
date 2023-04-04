@@ -380,7 +380,7 @@ class CrawlProcessHandlerBase(object):
         self.blocked = {u for u in l if u != source}
         self.handle_notification(source, "Restoring blocklist.")
         self.show_block_list(source)
-        self.logger.info("Player '%s' restoring blocklist %s" %
+        self.logger.debug("Player '%s' restoring blocklist %s" %
                                             (source, repr(list(self.blocked))))
 
     def save_blocklist(self, source):
