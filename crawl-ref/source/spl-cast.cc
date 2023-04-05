@@ -1247,7 +1247,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_multiposition>(&you, arcjolt_targets(you, false));
     case SPELL_PLASMA_BEAM:
     {
-        auto plasma_targets = plasma_beam_targets(you, pow, false, false);
+        auto plasma_targets = plasma_beam_targets(you, pow, false, true);
         return make_unique<targeter_multiposition>(&you, plasma_targets);
     }
     case SPELL_CHAIN_LIGHTNING:
