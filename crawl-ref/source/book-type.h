@@ -26,7 +26,9 @@ enum book_type
     BOOK_VAPOURS,
     BOOK_NECROMANCY,
     BOOK_CALLINGS,
+#if TAG_MAJOR_VERSION == 34
     BOOK_MALEDICT,
+#endif
     BOOK_AIR,
     BOOK_SKY,
     BOOK_WARP,

@@ -618,7 +618,7 @@ _mon_hex_zap(ZAP_TUKIMAS_DANCE, BEAM_TUKIMAS_DANCE, 100),
 },
 
 {
-    ZAP_BLASTSPARK,
+    ZAP_BLASTMOTE,
     "concussive blast",
     50,
     new calcdice_calculator<2, 20, 1, 3>,

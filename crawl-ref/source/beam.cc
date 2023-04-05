@@ -2683,9 +2683,9 @@ void bolt::affect_place_clouds()
             extra_range_used += 5;
             return;
         }
-        // blastspark explosions
-        if (cloud->type == CLOUD_BLASTSPARKS && hot_beam)
-            explode_blastsparks_at(p);
+        // blastmote explosions
+        if (cloud->type == CLOUD_BLASTMOTES && hot_beam)
+            explode_blastmotes_at(p);
         return;
     }
 
@@ -5993,8 +5993,8 @@ const map<spell_type, explosion_sfx> spell_explosions = {
         "The roots erupt in riotous growth!",
         "creaking and crackling",
     } },
-    { SPELL_BLASTSPARK, {
-        "The cloud of blastsparks explodes!",
+    { SPELL_BLASTMOTE, {
+        "The cloud of blastmotes explodes!",
         "a concussive explosion",
     } },
 };

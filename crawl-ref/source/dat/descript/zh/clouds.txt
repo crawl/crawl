@@ -162,7 +162,7 @@ degeneration cloud
 一团由浓缩的衰退药水形成的云。
 冒险进入其中的生物将迅速失去力量、敏捷和智力。
 %%%%
-blastsparks cloud
+blastmotes cloud
 
 一团不稳定的爆炸火花云。
 当它们碰到明火或因有东西进入其中而被扰动时，它们就会爆炸。

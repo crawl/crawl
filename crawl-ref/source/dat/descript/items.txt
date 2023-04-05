@@ -220,10 +220,6 @@ book of lightning
 
 A book that fairly crackles with arcane power.
 %%%%
-book of maledictions
-
-A book of Hexes, describing spells to confound and befuddle.
-%%%%
 book of minor magic
 
 A spellbook containing a variety of simple but useful magical incantations.

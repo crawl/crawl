@@ -1013,7 +1013,9 @@ static const char* _book_type_name(int booktype)
     case BOOK_VAPOURS:                return "Vapours";
     case BOOK_NECROMANCY:             return "Necromancy";
     case BOOK_CALLINGS:               return "Callings";
+#if TAG_MAJOR_VERSION == 34
     case BOOK_MALEDICT:               return "Maledictions";
+#endif
     case BOOK_AIR:                    return "Air";
     case BOOK_SKY:                    return "the Sky";
     case BOOK_WARP:                   return "the Warp";

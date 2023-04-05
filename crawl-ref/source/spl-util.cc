@@ -1397,7 +1397,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
                 return "you have no flesh to rot.";
         }
         // fallthrough to cloud spells
-    case SPELL_BLASTSPARK:
+    case SPELL_BLASTMOTE:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_FREEZING_CLOUD:
     case SPELL_MEPHITIC_CLOUD:

@@ -9857,8 +9857,7 @@ ENDMAP
 NAME:    minmay_heptahexagon
 DEPTH:   D:12-, Depths
 ORIENT:  float
-ITEM:    book of debilitation / book of maledictions / book of hexes / \
-         book of misfortune
+ITEM:    book of debilitation / book of hexes / book of misfortune
 # randomize how open the hexagons are to each other
 SUBST:   M : xx+., N : +@, O : +++.
 # each hex other than the center either has monsters+loot, or nothing

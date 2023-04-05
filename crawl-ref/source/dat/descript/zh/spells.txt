@@ -760,7 +760,7 @@ Iskenderun's Mystic Blast spell
 引爆一个劈啪作响的毁灭性的能量球。
 爆炸会以物理力量冲击附近的所有怪物，那些受到伤害的还会被击退。
 %%%%
-Kindle Blastsparks spell
+Volatile Blastmotes spell
 
 在施法者周围产生一团不稳定的爆炸火花，当有东西进入其中或碰到明火时，
 就会爆炸。这个震荡性的爆炸，会对邻近生物造成冲击。

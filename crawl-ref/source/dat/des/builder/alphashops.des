@@ -127,7 +127,7 @@
        "longbow", "lightning rod", "book of lightning", "wand of light" }
 
       elseif s == "M" then i = { "manual of maces & flails",
-       "book of minor magic", "book of misfortune", "book of maledictions",
+       "book of minor magic", "book of misfortune",
        "morningstar", "mace", "potion of magic", "wand of mindburst",
        "ring of magical power", "amulet of magic regeneration", "potion of might",
        "potion of mutation", "scroll of magic mapping", "book of the moon" }

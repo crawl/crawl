@@ -518,7 +518,7 @@ LUAFN(debug_check_moncasts)
         SPELL_ENFEEBLE,
         SPELL_ANGUISH,
         SPELL_NECROTISE,
-        SPELL_BLASTSPARK,
+        SPELL_BLASTMOTE,
         SPELL_ROT,
         SPELL_MOMENTUM_STRIKE,
         SPELL_KISS_OF_DEATH,
