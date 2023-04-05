@@ -175,6 +175,12 @@ Rather than storm the room and get swarmed by monsters, you can also step back
 and wait (with <input>$cmd[CMD_WAIT]</input><localtiles> or by
 <input>clicking</input> on your character</localtiles>) for them to come to you.
 %%%%
+tutorial2 fungus
+
+Is this a dead end? No, just a fungus blocking the way. Fungi are harmless and
+die soon after being hit. Attack the fungus, wait for the way to be cleared and
+continue your exploration.
+%%%%
 tutorial2 resting_reminder
 
 Remember, you can rest up with <input>$cmd[CMD_REST]</input>.

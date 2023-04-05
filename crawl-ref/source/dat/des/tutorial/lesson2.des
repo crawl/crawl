@@ -31,11 +31,13 @@ KFEAT:   AE = +
 KFEAT:   n = iron_grate
 COLOUR:  deBFG = lightblue
 RTILE:   c = wall_vines
-FTILE:   dBFG = tutorial_pad
+FTILE:   dBFGH = tutorial_pad, 't34 = floor_lair
 ITEM:    quarterstaff mundane
-SHUFFLE: 34
+SHUFFLE: 56
 MONS:    training dummy hp:10 ; whip mundane
 MONS:    rat
+MONS:    rat
+MONS:    fungus
 MONS:    wyvern
 MONS:    giant cockroach
 MARKER:  d = lua:tutorial2.msg("pickup_weapon")
@@ -43,8 +45,9 @@ MARKER:  A = lua:tutorial2.msg("melee")
 MARKER:  B = lua:tutorial2.msg("resting")
 # TODO: Pad C and pad D were for food related lessons. What could go there?
 MARKER:  E = lua:tutorial2.msg("wait")
-MARKER:  F = lua:tutorial2.msg("compare_monster_desc")
-MARKER:  G = lua:tutorial2.msg("resting_reminder")
+MARKER:  F = lua:tutorial2.msg("fungus")
+MARKER:  G = lua:tutorial2.msg("compare_monster_desc")
+MARKER:  H = lua:tutorial2.msg("resting_reminder")
 MARKER:  } = lua:tutorial2.msg("downstairs")
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson2", \
                                  onclimb = "tutorial2.exit" }
@@ -57,27 +60,27 @@ epilogue{{
   end
 }}
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxx...xxxxxxxxxxxxx...xxx
-xxxxxx.2...xxxxxxxxxxx.....xx
-xxxxxx2.....E..2....+B.....xx
-xxxxxx.....xxxxxxxxxxx.....xx
-xxxxxxx2..xxxxxxxxxxxxx...xxx
-xxxxxxxx.xxxxxxxxxxxxxxx1xxxx
-xxxxxxxx.xxxxxxxxxxxxxxx.xxxx
-xcccccccFcccccccxxxxxxxx.xxxx
-xc3..n.....n..4cxxxxxxxxAxxxx
-xc...n.....n...cxxxxxxxx.xxxx
-xc...+.....+...cxxxxxxxxdxxxx
-xc+nnnnnnnnnnn+cxxxxxccc.cccx
-xc.............cxxxxxc.....cx
-xc.............cxxxxxc..{..cx
-xcccccccGcccccccxxxxxc.....cx
-xxxxxc.....cxxxxxxxxxcccccccx
-xxxxxc..}..cxxxxxxxxxxxxxxxxx
-xxxxxc.....cxxxxxxxxxxxxxxxxx
-xxxxxcccccccxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxtttttxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxtt'''txxxxxxxxxxxx...xxx
+xxxxxxxtttttt'3'''xxxxxxxxxxx.....xx
+xxxxxxttF''''3'''''E..2....+B.....xx
+xxxxxxt4ttttt'''''xxxxxxxxxxx.....xx
+xxxxxxtt'txxtt3''txxxxxxxxxxxx...xxx
+xxxxxxxt'txxxtttttxxxxxxxxxxxxx1xxxx
+xxxxxxxt'txxxxxxxxxxxxxxxxxxxxx.xxxx
+xcccccccGcccccccxxxxxxxxxxxxxxx.xxxx
+xc5..n.....n..6cxxxxxxxxxxxxxxxAxxxx
+xc...n.....n...cxxxxxxxxxxxxxxx.xxxx
+xc...+.....+...cxxxxxxxxxxxxxxxdxxxx
+xc+nnnnnnnnnnn+cxxxxxxxxxxxxccc.cccx
+xc.............cxxxxxxxxxxxxc.....cx
+xc.............cxxxxxxxxxxxxc..{..cx
+xcccccccHcccccccxxxxxxxxxxxxc.....cx
+xxxxxc.....cxxxxxxxxxxxxxxxxcccccccx
+xxxxxc..}..cxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxc.....cxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxcccccccxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 
