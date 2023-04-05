@@ -71,12 +71,23 @@ struct armour_def
     armflags_t          flags;
 };
 
+// Total weight 25 (multiply by 4 for %s).
 static const vector<ego_weight_tuple> BASIC_BODY_EGOS = {
     { SPARM_FIRE_RESISTANCE,   7 },
     { SPARM_COLD_RESISTANCE,   7 },
     { SPARM_POISON_RESISTANCE, 5 },
     { SPARM_WILLPOWER,         4 },
     { SPARM_POSITIVE_ENERGY,   2 },
+};
+
+// Total weight 100.
+static const vector<ego_weight_tuple> HEAVY_BODY_EGOS = {
+    { SPARM_FIRE_RESISTANCE,    26 },
+    { SPARM_COLD_RESISTANCE,    26 },
+    { SPARM_POISON_RESISTANCE,  19 },
+    { SPARM_WILLPOWER,          15 },
+    { SPARM_POSITIVE_ENERGY,    7 },
+    { SPARM_PONDEROUSNESS,      7 },
 };
 
 static const vector<ego_weight_tuple> SHIELD_EGOS = {
@@ -127,17 +138,10 @@ static const armour_def Armour_prop[] =
         EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 1000, BASIC_BODY_EGOS },
     { ARM_SCALE_MAIL,           "scale mail",             6, -100,   40,
         EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 1000, BASIC_BODY_EGOS },
-    { ARM_CHAIN_MAIL,           "chain mail",             8, -150,   45,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 1000, BASIC_BODY_EGOS },
+    { ARM_CHAIN_MAIL,           "chain mail",             8, -140,   45,
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 1000, HEAVY_BODY_EGOS },
     { ARM_PLATE_ARMOUR,         "plate armour",          10, -180,   230,
-        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, 1000, {
-            { SPARM_FIRE_RESISTANCE,    26 },
-            { SPARM_COLD_RESISTANCE,    26 },
-            { SPARM_POISON_RESISTANCE,  19 },
-            { SPARM_WILLPOWER,          15 },
-            { SPARM_POSITIVE_ENERGY,    7 },
-            { SPARM_PONDEROUSNESS,      7 },
-    }},
+        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, 1000, HEAVY_BODY_EGOS },
     { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -230,   800,
         EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false, 500 },
 
