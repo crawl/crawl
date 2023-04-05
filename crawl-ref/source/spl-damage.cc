@@ -1746,7 +1746,7 @@ void shillelagh(actor *wielder, coord_def where, int pow)
 
 dice_def scorch_damage(int pow, bool random)
 {
-    const int max_dam = 10 + (random ? div_rand_round(pow, 5) : pow / 5);
+    const int max_dam = 10 + (random ? div_rand_round(pow, 6) : pow / 6);
     return calc_dice(2, max_dam);
 }
 
