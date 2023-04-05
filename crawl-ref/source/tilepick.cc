@@ -4201,6 +4201,11 @@ int enchant_to_int(const item_def &item)
     if (is_random_artefact(item))
         return 4;
 
+    // Dragon scales and troll hides can't have egos.
+    // Only apply their special tiles to randarts.
+    if (armour_is_hide(item))
+        return 0;
+
     switch (item.flags & ISFLAG_COSMETIC_MASK)
     {
         default:
