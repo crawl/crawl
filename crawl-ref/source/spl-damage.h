@@ -68,8 +68,8 @@ dice_def arcjolt_damage(int pow, bool random);
 vector<coord_def> arcjolt_targets(const actor &agent, bool actual);
 bool mons_should_fire_plasma(int pow, const actor &agent);
 spret cast_plasma_beam(int pow, const actor &agent, bool fail);
-vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual,
-                                      bool include_intermediates);
+vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual);
+vector<coord_def> plasma_beam_paths(coord_def source, const vector<coord_def> &targets);
 dice_def base_fragmentation_damage(int pow, bool random);
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool quiet,

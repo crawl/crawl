@@ -2754,8 +2754,33 @@ static bool _plasma_targetable(const actor &agent, monster &m, bool actual)
     return actual || agent.can_see(m);
 }
 
-vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual,
-                                      bool include_intermediates)
+vector<coord_def> plasma_beam_paths(coord_def source, const vector<coord_def> &targets)
+{
+    set<coord_def> intermediates;
+    for (coord_def c : targets)
+    {
+        // any monster along the path could get hit, so we need to add them
+        // for targeter warnings
+        ray_def ray;
+        if (!find_ray(source, c, ray, opc_solid))
+            continue;
+
+        while (ray.advance())
+        {
+            intermediates.insert(ray.pos());
+
+            if (ray.pos() == c)
+                break;
+        }
+    }
+
+    vector<coord_def> paths;
+    for (coord_def c : intermediates)
+        paths.push_back(c);
+    return paths;
+}
+
+vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual)
 {
     const int range = spell_range(SPELL_PLASMA_BEAM, pow);
     int maxdist = 0;
@@ -2806,30 +2831,6 @@ vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual,
 
     for (actor *a : target_actors)
         targets.push_back(a->pos());
-
-    if (!include_intermediates)
-        return targets;
-
-    set<coord_def> intermediates;
-    for (actor *a : target_actors)
-    {
-        // any monster along the path could get hit, so we need to add them
-        // for targeter warnings
-        ray_def ray;
-        if (!find_ray(source, a->pos(), ray, opc_solid))
-            continue;
-
-        while (ray.advance())
-        {
-            intermediates.insert(ray.pos());
-
-            if (ray.pos() == a->pos())
-                break;
-        }
-    }
-
-    for (coord_def c : intermediates)
-        targets.push_back(c);
     return targets;
 }
 
@@ -2872,7 +2873,7 @@ static ai_action::goodness _fire_plasma_beam_at(const actor &agent, int pow,
 
 bool mons_should_fire_plasma(int pow, const actor &agent)
 {
-    vector<coord_def> targets = plasma_beam_targets(agent, pow, false, false);
+    vector<coord_def> targets = plasma_beam_targets(agent, pow, false);
     bool ever_good = false;
     for (auto target : targets)
     {
@@ -2887,16 +2888,19 @@ bool mons_should_fire_plasma(int pow, const actor &agent)
 
 spret cast_plasma_beam(int pow, const actor &agent, bool fail)
 {
-    if (agent.is_player()
-        && _warn_about_bad_targets(SPELL_PLASMA_BEAM,
-                                   plasma_beam_targets(agent, pow, false, true)))
+    if (agent.is_player())
     {
-        return spret::abort;
+        vector<coord_def> known_targs = plasma_beam_targets(agent, pow, false);
+        if (_warn_about_bad_targets(SPELL_PLASMA_BEAM,
+                                    plasma_beam_paths(you.pos(), known_targs)))
+        {
+            return spret::abort;
+        }
     }
 
     fail_check();
 
-    vector<coord_def> targets = plasma_beam_targets(agent, pow, true, false);
+    vector<coord_def> targets = plasma_beam_targets(agent, pow, true);
 
     if (targets.empty())
     {
