@@ -1993,6 +1993,11 @@ static bool _is_sealed_square(const coord_def &c)
     return true;
 }
 
+static void _recolour_wall(coord_def c, tileidx_t tile)
+{
+    tile_env.flv(c).wall_idx = store_tilename_get_index(tile_dngn_name(tile));
+}
+
 static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
 {
     dungeon_feature_type feat = env.grid(c);
@@ -2015,12 +2020,15 @@ static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
         tileidx_t idx = tile_dngn_coloured(TILE_WALL_ABYSS,
                                            cenv.rock_colour);
         tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
+        _recolour_wall(c, idx);
     }
     else if (feat == DNGN_FLOOR)
     {
         tileidx_t idx = tile_dngn_coloured(TILE_FLOOR_NERVES,
                                            floor);
         tile_env.flv(c).floor = idx + random2(tile_dngn_count(idx));
+        const string name = tile_dngn_name(idx);
+        tile_env.flv(c).floor_idx = store_tilename_get_index(name);
     }
     else if (feat == DNGN_STONE_WALL)
     {
@@ -2029,12 +2037,14 @@ static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
         tileidx_t idx = tile_dngn_coloured(TILE_DNGN_STONE_WALL,
                                            cenv.rock_colour);
         tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
+        _recolour_wall(c, idx);
     }
     else if (feat == DNGN_METAL_WALL)
     {
         tileidx_t idx = tile_dngn_coloured(TILE_DNGN_METAL_WALL,
                                            cenv.rock_colour);
         tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
+        _recolour_wall(c, idx);
     }
     else if (feat_is_tree(feat))
     {
