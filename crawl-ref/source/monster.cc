@@ -10,6 +10,7 @@
 #include <functional>
 #include <queue>
 
+#include "abyss.h" // splash_corruption
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
@@ -2770,6 +2771,7 @@ void monster::banish(const actor *agent, const string &, const int, bool force)
     for (adjacent_iterator ai(old_pos); ai; ++ai)
         if (!cell_is_solid(*ai) && !cloud_at(*ai) && coinflip())
             place_cloud(CLOUD_TLOC_ENERGY, *ai, 1 + random2(8), 0);
+    splash_corruption(old_pos);
 }
 
 bool monster::has_spells() const

@@ -433,6 +433,7 @@ void banished(const string &who, const int power)
     const int depth = _banished_depth(power);
 
     stop_delay(true);
+    splash_corruption(you.pos());
     run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);
     push_features_to_abyss();
     floor_transition(DNGN_ENTER_ABYSS, orig_terrain(you.pos()),
@@ -2321,6 +2322,17 @@ void lugonu_corrupt_level_monster(const monster &who)
     // Allow extra time for the flash to linger.
     scaled_delay(300);
 #endif
+}
+
+/// Splash decorative corruption around the given space.
+void splash_corruption(coord_def centre)
+{
+    corrupt_env cenv;
+    _corrupt_choose_colours(&cenv);
+    _corrupt_square_flavor(cenv, centre);
+    for (adjacent_iterator ai(centre); ai; ++ai)
+        if (in_bounds(*ai) && coinflip())
+            _corrupt_square_flavor(cenv, *ai);
 }
 
 static void _cleanup_temp_terrain_at(coord_def pos)
