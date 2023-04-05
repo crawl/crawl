@@ -364,8 +364,8 @@ jobs:
             source='crawl-ref/source/stone_soup-latest-win32-installer.exe'
             dest='dcss-$tag-win32-installer.exe'
           fi
-          echo "name=source::$source" >> $GITHUB_OUTPUT
-          echo "name=dest::$dest" >> $GITHUB_OUTPUT
+          echo "source=${source}" >> $GITHUB_OUTPUT
+          echo "dest=${dest}" >> $GITHUB_OUTPUT
       - name: Add build to release
         if: github.event.release.tag_name != null
         uses: svenstaro/upload-release-action@v2
@@ -577,7 +577,7 @@ jobs:
           url="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           message="${bold}${col}${red}Build failed${col}${bold} for ${col}${yellow}${branch}${col} @ $short_sha ${col}${magenta}${url}"
 
-          echo "name=message::${message}" >> $GITHUB_OUTPUT
+          echo "message=${message}" >> $GITHUB_OUTPUT
       - uses: rectalogic/notify-irc@v1
         with:
           server: irc.libera.chat
