@@ -6772,9 +6772,10 @@ ai_action::goodness bolt::good_to_fire() const
     if (foe_info.count == 0)
         return ai_action::neutral();
 
+    const int total_pow = foe_info.power + friend_info.power;
     // Only fire if they do acceptably low collateral damage.
     if (!friend_info.power
-        || foe_info.power >= div_round_up(foe_ratio * friend_info.power, 100))
+        || foe_info.power >= div_round_up(foe_ratio * total_pow, 100))
     {
         return ai_action::good();
     }
