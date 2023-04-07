@@ -196,10 +196,6 @@ book of lightning
 
 这本书上面的奥术能量在噼啪作响。
 %%%%
-book of maledictions
-
-一本关于妖术的书，描述着令敌人混乱、昏迷的咒语。
-%%%%
 book of minor magic
 
 这本魔法书中包含许多简单但实用的咒语。
@@ -467,7 +463,7 @@ eudemon blade
 %%%%
 eveningstar
 
-晨星球的对应物。一个有着配重的权杖，长柄，金属头上覆有致命的尖刺。
+晨星锤的对应物。一个有着配重的权杖，长柄，金属头上覆有致命的尖刺。
 %%%%
 everburning encyclopedia
 
