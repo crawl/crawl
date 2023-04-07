@@ -1573,6 +1573,8 @@ void print_stats_level()
 void draw_border()
 {
     textcolour(HUD_CAPTION_COLOUR);
+
+    CGOTOXY(1,1, GOTO_CRT);
     clrscr();
 
     textcolour(Options.status_caption_colour);
@@ -1609,8 +1611,8 @@ void draw_border()
 #ifndef USE_TILE_LOCAL
 void smallterm_warning()
 {
-    clrscr();
     CGOTOXY(1,1, GOTO_CRT);
+    clrscr();
     CPRINTF("Your terminal window is too small; please resize to at least %d,%d", MIN_COLS, MIN_LINES);
 }
 #endif
