@@ -834,7 +834,12 @@ skilled in archery.
 centaur warrior
 
 A muscular centaur, veteran of numerous battles, armed with well-made weapons
-and able to use them skilfully.
+and able to use them skillfully.
+%%%%
+cerulean imp
+
+A small, willful minor demon. Its wings, far larger than its scrawny body, were
+made to soar, and it lands only rarely and with the greatest reluctance.
 %%%%
 chaos spawn
 

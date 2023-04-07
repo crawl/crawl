@@ -626,6 +626,9 @@ enum monster_type                      // env.mons[].type
     MONS_UFETUBUS,
     MONS_IRON_IMP,
     MONS_SHADOW_IMP,
+#if TAG_MAJOR_VERSION > 34
+    MONS_CERULEAN_IMP,
+#endif
     MONS_RED_DEVIL,
 #if TAG_MAJOR_VERSION == 34
     MONS_ROTTING_DEVIL,
@@ -1186,6 +1189,7 @@ enum monster_type                      // env.mons[].type
     MONS_MALARIOUS_MERFOLK_AVATAR,
     MONS_SKYSHARK,
     MONS_SLEEPCAP,
+    MONS_CERULEAN_IMP,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
