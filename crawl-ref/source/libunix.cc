@@ -885,8 +885,6 @@ void console_startup()
     refresh();
     crawl_view.init_geometry();
 
-    set_mouse_enabled(false);
-
     // TODO: how does this relate to what tiles.resize does?
     ui::resize(crawl_view.termsz.x, crawl_view.termsz.y);
 
