@@ -708,7 +708,7 @@ static const struct spell_desc spelldata[] =
     spschool::summoning,
     spflag::unholy | spflag::selfench,
     2,
-    100,
+    50,
     -1, -1,
     0,
     TILEG_CALL_IMP,

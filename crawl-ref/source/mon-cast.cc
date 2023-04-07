@@ -5880,11 +5880,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_CALL_IMP:
         duration  = min(2 + mons->spell_hd(spell_cast) / 5, 6);
         create_monster(
-            mgen_data(random_choose_weighted(
-                        1, MONS_IRON_IMP,
-                        2, MONS_SHADOW_IMP,
-                        2, MONS_WHITE_IMP,
-                        4, MONS_CRIMSON_IMP),
+            mgen_data(MONS_CERULEAN_IMP,
                       SAME_ATTITUDE(mons), mons->pos(), mons->foe)
             .set_summoned(mons, duration, spell_cast, god));
         return;
