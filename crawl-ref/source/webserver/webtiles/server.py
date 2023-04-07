@@ -65,11 +65,20 @@ def load_version():
         _crawl_version = "unknown"
 
 
+def version_data():
+    return dict(
+        webtiles=_crawl_version,
+        tornado=tornado.version,
+        python="%d.%d.%d" % (sys.version_info[0], sys.version_info[1], sys.version_info[2]))
+
+
 def version():
-    return "Webtiles (%s) running with Tornado %s and Python %d.%d.%d" % (
-        _crawl_version,
-        tornado.version,
-        sys.version_info[0], sys.version_info[1], sys.version_info[2])
+    vdata = version_data()
+    # TODO convert to f string some day...
+    return "Webtiles (%s) running with Tornado %s and Python %s" % (
+        vdata["webtiles"],
+        vdata["tornado"],
+        vdata["python"])
 
 
 def err_exit(errmsg, exc_info=False):
@@ -193,6 +202,7 @@ def bind_server():
             (r"/socket", ws_handler.CrawlWebSocket),
             (r"/gamedata/([0-9a-f]*\/.*)", game_data_handler.GameDataHandler),
             (r"/status/lobby/", status.LobbyHandler),
+            (r"/status/version/", status.VersionHandler),
             ]
 
     try:
