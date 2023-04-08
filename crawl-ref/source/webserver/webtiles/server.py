@@ -205,18 +205,6 @@ def bind_server():
             (r"/status/version/", status.VersionHandler),
             ]
 
-    try:
-        # this is somewhat atrocious; the point is so that tornado slow
-        # callback logging actually shows the class name for whatever handler
-        # it is that causes a callback; Otherwise you just get the useless
-        # `RequestHandler._execute`. It would probably be better to explicitly
-        # override `_execute`, but that requires assuming asyncio tornado, and
-        # unfortunately I don't think we're quite there yet.
-        for p in handlers:
-            p[1]._execute.__qualname__ = "%s._execute" % (p[1].__qualname__)
-    except:
-        pass
-
     application = tornado.web.Application(handlers,
                                     gzip=config.get('use_gzip'), **settings)
 
