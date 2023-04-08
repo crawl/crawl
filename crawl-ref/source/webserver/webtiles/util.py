@@ -79,7 +79,7 @@ def open_and_write(filename, s):
             # is there a way of logging if the write thread gets bogged down?
             yield f.write(s)
         finally:
-            f.close()
+            yield f.close()
     else:
         with SlowWarning("Slow IO: write '%s'" % filename):
             with open(filename, "w") as f:
