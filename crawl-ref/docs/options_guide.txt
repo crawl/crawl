@@ -1664,7 +1664,8 @@ view_delay = 600
 reduce_animations = false
         If set to true, simplify some animations so that incremental steps are
         not drawn. For example, for casting a beam spell or firing a ranged
-        weapon, only the final beam path is shown.
+        weapon, only the final beam path is shown. Defaults to `true` for
+        webtiles games.
 
 use_animations = beam, range, hp, monster_in_sight, pickup, monster, player
 use_animations += branch_entry
