@@ -815,7 +815,7 @@ ENDMAP
 
 NAME:   nicolae_shop_wares_on_display
 TAGS:   transparent shop extra allow_dup
-DEPTHS: !D:1-3
+DEPTH: !D:1-3
 WEIGHT: 2
 KFEAT:  S = general shop
 MAP
