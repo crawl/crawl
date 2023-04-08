@@ -776,7 +776,7 @@ def run():
             pass
 
         if dgl_mode:
-            ws_handler.status_file_timeout()
+            ws_handler.status_file_timeout() # note: tornado coroutine
             auth.purge_login_tokens_timeout()
             ws_handler.start_reading_milestones()
 

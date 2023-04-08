@@ -61,6 +61,30 @@ try:
 except:
     _asyncio_available = False
 
+_aiofiles_available = False
+try:
+    import aiofiles
+    _aiofiles_available = True
+except:
+    pass
+
+
+@tornado.gen.coroutine
+def open_and_write(filename, s):
+    if _aiofiles_available:
+        try:
+            # jump through some hoops to not use async syntax, hopefully this
+            # will not really be necessary for much longer...
+            f = yield aiofiles.open(filename, mode='w').__aenter__()
+            # is there a way of logging if the write thread gets bogged down?
+            yield f.write(s)
+        finally:
+            f.close()
+    else:
+        with SlowWarning("Slow IO: write '%s'" % filename):
+            with open(filename, "w") as f:
+                f.write(s)
+
 
 def func_repr(func):
     # from asyncio.format_helps._format_callback, not used for rendering

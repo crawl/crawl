@@ -156,6 +156,7 @@ def global_announce(text):
 _dgl_dir_check = False
 
 
+@tornado.gen.coroutine
 def write_dgl_status_file():
     process_info = ["%s#%s#%s#0x0#%s#%s#" %
                             (socket.username, socket.game_id,
@@ -175,15 +176,14 @@ def write_dgl_status_file():
                 os.makedirs(status_dir)
                 logging.warning("Creating dgl status file location '%s'", status_dir)
             _dgl_dir_check = True
-        with util.SlowWarning("Slow IO: write '%s'" % status_target):
-            with open(status_target, "w") as f:
-                f.write("\n".join(process_info))
+        yield util.open_and_write(status_target, "\n".join(process_info))
     except (OSError, IOError) as e:
         logging.warning("Could not write dgl status file: %s", e)
 
 
+@tornado.gen.coroutine
 def status_file_timeout():
-    write_dgl_status_file()
+    yield write_dgl_status_file()
     IOLoop.current().add_timeout(time.time() + config.get('status_file_update_rate'),
                                  status_file_timeout)
 
