@@ -11,6 +11,9 @@ except:
     pass
 
 class GameDataHandler(tornado.web.StaticFileHandler):
+    # async def _execute(self, transforms, *args, **kwargs):
+    #     await tornado.web.StaticFileHandler._execute(self, transforms, *args, **kwargs)
+
     def initialize(self):
         if tornado.version_info[0] < 3:
             # ugly extreme backward compatibility hack; can hopefully be removed

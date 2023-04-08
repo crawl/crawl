@@ -23,6 +23,9 @@ from webtiles import auth, load_games, process_handler, userdb, config
 from webtiles import game_data_handler, util, ws_handler, status
 
 class MainHandler(tornado.web.RequestHandler):
+    # async def _execute(self, transforms, *args, **kwargs):
+    #     await tornado.web.RequestHandler._execute(self, transforms, *args, **kwargs)
+
     def get(self):
         host = self.request.host
         if self.request.protocol == "https" or self.request.headers.get("x-forwarded-proto") == "https":
@@ -39,7 +42,8 @@ class MainHandler(tornado.web.RequestHandler):
             if recovery_token_error:
                 logging.warning("Recovery token error from %s", self.request.remote_ip)
 
-        self.render("client.html", socket_server = protocol + host + "/socket",
+        with util.SlowWarning("Slow IO: render client.html"):
+            self.render("client.html", socket_server = protocol + host + "/socket",
                     username = None,
                     config = config,
                     reset_token = recovery_token, reset_token_error = recovery_token_error)
