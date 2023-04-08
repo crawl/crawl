@@ -2162,11 +2162,14 @@ void TilesFramework::_send_everything()
     json_open_object();
     json_write_string("msg", "ui-stack");
     json_open_array("items");
+    bool first = true;
     for (UIStackFrame &frame : m_menu_stack)
     {
         json_write_comma(); // noop immediately following open
-        if (frame.type == UIStackFrame::MENU)
+        if (frame.type == UIStackFrame::MENU) {
             frame.menu->webtiles_write_menu();
+            first = false;
+        }
         else if (frame.type == UIStackFrame::CRT)
         {
             json_open_object();
@@ -2175,16 +2178,19 @@ void TilesFramework::_send_everything()
             json_write_string("tag", frame.crt_tag);
             json_write_bool("ui-centred", frame.centred);
             json_close_object();
+            first = false;
         }
         else
         {
+            if (!first) json_write_comma();
+            bool innerFirst = true;
             for (const auto& json : frame.ui_json)
                 if (!json.empty())
                 {
+                    if (!innerFirst) json_write_comma();
                     m_msg_buf.append(json);
-                    json_write_comma();
+                    innerFirst = false;
                 }
-            continue;
         }
     }
     json_close_array();
