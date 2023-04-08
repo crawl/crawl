@@ -11,6 +11,7 @@ from email.mime.text import MIMEText
 
 import tornado.ioloop
 import tornado.template
+import tornado.gen
 
 from webtiles import config
 

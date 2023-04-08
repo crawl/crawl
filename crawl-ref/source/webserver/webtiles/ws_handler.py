@@ -13,6 +13,7 @@ import zlib
 import tornado.ioloop
 import tornado.template
 import tornado.websocket
+import tornado.gen
 from tornado.escape import json_decode
 from tornado.escape import json_encode
 from tornado.escape import to_unicode
