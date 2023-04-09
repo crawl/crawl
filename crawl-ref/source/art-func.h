@@ -35,12 +35,12 @@
 #include "fight.h"
 #include "fineff.h"        // For the Storm Queen's Shield
 #include "god-conduct.h"   // did_god_conduct
-#include "mgen-data.h"     // For Sceptre of Asmodeus evoke
+#include "mgen-data.h"     // For Sceptre of Asmodeus
 #include "melee-attack.h"  // For autumn katana
 #include "message.h"
 #include "monster.h"
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
-#include "mon-place.h"     // For Sceptre of Asmodeus evoke
+#include "mon-place.h"     // For Sceptre of Asmodeus
 #include "nearby-danger.h" // For Zhor
 #include "output.h"
 #include "player.h"
@@ -1629,6 +1629,8 @@ static void _POWER_GLOVES_unequip(item_def * /*item*/, bool *show_msgs)
         _equip_mpr(show_msgs, "The surge of magic dissipates.");
 }
 
+////////////////////////////////////////////////////
+
 static void _DREAMSHARD_NECKLACE_equip(item_def * /*item*/, bool *show_msgs,
                                       bool /*unmeld*/)
 {
@@ -1640,7 +1642,7 @@ static void _DREAMSHARD_NECKLACE_unequip(item_def * /* item */, bool * show_msgs
     _equip_mpr(show_msgs, "The world feels relentlessly logical and grey.");
 }
 
-//
+////////////////////////////////////////////////////
 
 static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
     actor* defender, bool /*mondied*/, int /*dam*/)
@@ -1776,5 +1778,41 @@ static void _VICTORY_world_reacts(item_def *item)
     {
         _reset_victory_stats(item);
         you.props.erase(VICTORY_CONDUCT_KEY);
+    }
+}
+
+////////////////////////////////////////////////////
+
+static void _ASMODEUS_melee_effects(item_def* /*weapon*/, actor* attacker,
+                                    actor* defender, bool /*mondied*/,
+                                    int /*dam*/)
+{
+    if (!attacker->is_player() || you.allies_forbidden())
+        return;
+
+    const monster* mon = defender->as_monster();
+    if (mons_is_firewood(*mon)
+        || mons_is_conjured(mon->type)
+        || mon->is_summoned())
+    {
+        return;
+    }
+
+    if (one_chance_in(10))
+    {
+        const monster_type demon = random_choose_weighted(
+                                       3, MONS_BALRUG,
+                                       2, MONS_HELLION,
+                                       1, MONS_BRIMSTONE_FIEND);
+
+        mgen_data mg(demon, BEH_FRIENDLY, you.pos(), MHITYOU,
+                     MG_FORCE_BEH | MG_AUTOFOE);
+        mg.set_summoned(&you, 4, SPELL_FIRE_SUMMON);
+
+        if (create_monster(mg))
+        {
+            mpr("The sceptre summons one of its terrible servants.");
+            did_god_conduct(DID_EVIL, 3);
+        }
     }
 }

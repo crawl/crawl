@@ -87,8 +87,8 @@ Dis.
 sceptre of Asmodeus
 
 A bright ruby sceptre, carrying some of the powers of the arch-fiend Asmodeus.
-It can be used to summon fiery demons from their infernal home to do the
-wielder's bidding, although their true loyalty lies only with Asmodeus himself.
+It may call forth fiery demons from their infernal home to do the wielder's
+bidding.
 %%%%
 faerie dragon scales
 

@@ -376,8 +376,6 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
             0, 0, 0, -1, {fail_basis::evo, 60, 2}, abflag::max_hp_drain },
         // TODO: any way to automatically derive these from the artefact name?
-        { ABIL_EVOKE_ASMODEUS, "Evoke the Sceptre of Asmodeus",
-            0, 0, 0, -1, {fail_basis::evo, 80, 3}, abflag::none },
         { ABIL_EVOKE_DISPATER, "Evoke Damnation",
             4, 100, 0, 6, {}, abflag::none },
         { ABIL_EVOKE_OLGREB, "Evoke the Staff of Olgreb",
@@ -1920,15 +1918,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
-    case ABIL_EVOKE_ASMODEUS:
-        if (you.allies_forbidden())
-        {
-            if (!quiet)
-                mpr("Nothing will answer your call!");
-            return false;
-        }
-        return true;
-
     case ABIL_GOZAG_POTION_PETITION:
         return gozag_setup_potion_petition(quiet);
 
@@ -2112,7 +2101,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
         return make_unique<targeter_maybe_radius>(&you, LOS_DEFAULT, LOS_RADIUS);
 
     // Summons:
-    case ABIL_EVOKE_ASMODEUS:
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
@@ -2409,32 +2397,6 @@ static void _cause_vampire_bat_form_stat_drain()
     lose_stat(STAT_DEX, VAMPIRE_BAT_FORM_STAT_DRAIN);
 }
 
-static void _evoke_sceptre_of_asmodeus()
-{
-    const monster_type mon = random_choose_weighted(
-                                   3, MONS_BALRUG,
-                                   2, MONS_HELLION,
-                                   1, MONS_BRIMSTONE_FIEND);
-
-    mgen_data mg(mon, BEH_CHARMED, you.pos(), MHITYOU,
-                 MG_FORCE_BEH, you.religion);
-    mg.set_summoned(&you, 0, 0);
-    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-    monster *m = create_monster(mg);
-
-    if (m)
-    {
-        mpr("The sceptre summons one of its terrible servants. It is charmed, for now...");
-
-        m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
-
-        did_god_conduct(DID_EVIL, 3);
-    }
-    else
-        mpr("The air shimmers briefly.");
-}
-
 static bool _evoke_orb_of_dispater(dist *target)
 {
     int power = you.skill(SK_EVOCATIONS, 8);
@@ -2621,11 +2583,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_EVOKE_BLINK:      // randarts
         return cast_blink(min(50, 1 + you.skill(SK_EVOCATIONS, 3)), fail);
-
-    case ABIL_EVOKE_ASMODEUS:
-        fail_check();
-        _evoke_sceptre_of_asmodeus();
-        break;
 
     case ABIL_EVOKE_DISPATER:
         if (!_evoke_orb_of_dispater(target))
@@ -3691,9 +3648,6 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_EVOKE_TURN_INVISIBLE:
         return you.evokable_invis()
                && !you.get_mutation_level(MUT_NO_ARTIFICE);
-    case ABIL_EVOKE_ASMODEUS:
-        return you.weapon()
-               && is_unrandom_artefact(*you.weapon(), UNRAND_ASMODEUS);
     case ABIL_EVOKE_DISPATER:
         return player_equip_unrand(UNRAND_DISPATER);
     case ABIL_EVOKE_OLGREB:
@@ -3749,7 +3703,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_CONVERT_TO_BEOGH,
             ABIL_EVOKE_BLINK,
             ABIL_EVOKE_TURN_INVISIBLE,
-            ABIL_EVOKE_ASMODEUS,
             ABIL_EVOKE_DISPATER,
             ABIL_EVOKE_OLGREB,
 #ifdef WIZARD

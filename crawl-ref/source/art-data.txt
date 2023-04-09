@@ -357,15 +357,14 @@ DESCRIP: +Damnation: It grants the ability to hurl damnation at the cost of heal
 
 NAME:    sceptre of Asmodeus
 APPEAR:  ruby sceptre
-OBJ:     OBJ_WEAPONS/WPN_STAFF
-PLUS:    +7
+OBJ:     OBJ_WEAPONS/WPN_EVENINGSTAR
+PLUS:    +13
 COLOUR:  ETC_BLOOD
 TILE:    spwpn_sceptre_of_asmodeus
 TILE_EQ: asmodeus
 BOOL:    evil, nogen
-DESCRIP: Wielding it grants the ability to summon fiery demons, with success rate depending
- on Evocations skill. Those summoned this way will remain friendly only for a
- limited time.
+DESCRIP: Fire Summon: It may summon demons of flame and damnation when striking
+ foes.
 
 # Randomised properties, fixed appearance.
 # Reserved for the Enchantress.
