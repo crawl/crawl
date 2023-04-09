@@ -931,7 +931,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
               { SPWPN_DISTORTION,      2 },
               { SPWPN_CHAOS,           1 }, },
         } },
-        { MONS_CERULEAN_IMP,  { { { WPN_SPEAR, 1 } } } },
+        { MONS_CERULEAN_IMP,  { { { WPN_SPEAR, 1 } }, {}, { { SPWPN_NORMAL, 1 } } } },
     };
 
     static const weapon_list ORC_KNIGHT_BOWS =
