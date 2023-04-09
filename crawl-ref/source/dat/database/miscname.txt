@@ -137,7 +137,7 @@ A smirking vizier told you that the Orb of Zot is just within this dungeon.
 
 If you return without finding the Orb of Zot, so far below, it's all over!
 
-It's a long, long way down to the Orb of Zot, but that shouldn't be any trouble.
+It's a long way down to the Orb of Zot, but that shouldn't be any trouble.
 %%%%
 # things that surround us on Halloween
 _halloween_things_
