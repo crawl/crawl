@@ -42,9 +42,9 @@ staff of Olgreb
 
 A staff which was once wielded by the mighty wizard Olgreb.
 %%%%
-staff of Wucad Mu
+crystal ball of Wucad Mu
 
-A crystal staff overflowing with magical energies.
+A perfect sphere of crystal, overflowing with magical energies.
 {{
     if you.race() == "Djinni" then
         return "It is utterly useless to Djinni."
@@ -677,9 +677,9 @@ A small wrinkle in the very fabric of reality, magically bound to a shaft by
 some mad acolyte of Lugonu. Its attacks can warp through nearby space at the
 wielder's command.
 %%%%
-staff of Battle
+sphere of Battle
 
-A staff encased in vividly coloured scales, wrought by a long-forgotten wizard.
+An orb encased in vividly coloured scales, wrought by a long-forgotten wizard.
 It was the mage Iskenderun's favourite playtoy.
 %%%%
 Cigotuvi's embrace

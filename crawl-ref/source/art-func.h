@@ -1407,7 +1407,7 @@ static void _ZHOR_world_reacts(item_def */*item*/)
 
 ////////////////////////////////////////////////////
 
-// XXX: Staff of Battle giving a boost to conjuration spells is hardcoded in
+// XXX: sphere of Battle giving a boost to conjuration spells is hardcoded in
 // player_spec_conj().
 
 static void _BATTLE_unequip(item_def */*item*/, bool */*show_msgs*/)
@@ -1424,16 +1424,6 @@ static void _BATTLE_world_reacts(item_def */*item*/)
         cast_battlesphere(&you, calc_spell_power(SPELL_BATTLESPHERE),
                           GOD_NO_GOD, false);
         did_god_conduct(DID_WIZARDLY_ITEM, 10);
-    }
-}
-
-static void _BATTLE_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                  actor* /*defender*/, bool /*mondied*/, int /*dam*/)
-{
-    if (attacker)
-    {
-        aim_battlesphere(attacker, SPELL_MAGIC_DART);
-        trigger_battlesphere(attacker);
     }
 }
 
@@ -1583,7 +1573,7 @@ static void _WUCAD_MU_equip(item_def */*item*/, bool *show_msgs,
 {
     if (you.has_mutation(MUT_HP_CASTING))
     {
-        _equip_mpr(show_msgs, "The staff is unable to connect with your "
+        _equip_mpr(show_msgs, "The crystal ball is unable to connect with your "
                               "magical essence.");
     }
 }

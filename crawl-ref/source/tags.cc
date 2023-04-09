@@ -4224,8 +4224,10 @@ static void _tag_read_you_items(reader &th)
                 you.melded.set(i, false);
                 continue;
             }
-            // and the staff of Dispater before it became an orb
-            if (is_unrandom_artefact(*item, UNRAND_DISPATER)
+            // and the staves of Dispater/Wucad Mu/Battle before orbification
+            if ((is_unrandom_artefact(*item, UNRAND_DISPATER)
+                 || is_unrandom_artefact(*item, UNRAND_WUCAD_MU)
+                 || is_unrandom_artefact(*item, UNRAND_BATTLE))
                 && i != EQ_SHIELD)
             {
                 you.equip[i] = -1;

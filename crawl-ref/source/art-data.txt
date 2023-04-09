@@ -265,15 +265,15 @@ TILE:    spwpn_staff_of_olgreb
 TILE_EQ: olgreb
 VALUE:   1000
 
-NAME:    staff of Wucad Mu
+NAME:    crystal ball of Wucad Mu
 INSCRIP: *channel
-OBJ:     OBJ_WEAPONS/WPN_STAFF
-PLUS:    +9
+OBJ:     OBJ_ARMOUR/ARM_ORB
 COLOUR:  ETC_MAGIC
-TILE:    spwpn_wucad_mu
-TILE_EQ: wucad_mu
+# TILE: XXX
+# TILE_EQ: XXX
 VALUE:   1000
-DESCRIP: *Channel:  It often returns the magic spent to cast spells, but lowers their success rate. It always returns the magic spent on miscasts.
+DESCRIP: *Channel:  It often returns the magic spent to cast spells, but lowers
+ their success rate. It always returns the magic spent on miscasts.
 
 NAME:    Vampire's Tooth
 OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE
@@ -1544,17 +1544,15 @@ DBRAND:   Reach+: It can reach especially far, and its reaching attacks ignore o
  creatures in the way.
 
 ENUM:     BATTLE
-NAME:     staff of Battle
-OBJ:      OBJ_WEAPONS/WPN_STAFF
-PLUS:     +0
+NAME:     sphere of Battle
+OBJ:      OBJ_ARMOUR/ARM_ORB
 COLOUR:   ETC_MAGIC
-TILE:     urand_staff_of_battle
-TILE_EQ:  battle_staff
+# TILE: XXX
+# TILE_EQ: XXX
 VALUE:    800
 DESCRIP:  It enhances your conjuration magic.
 +It summons a battlesphere in combat, with strength depending on Conjurations
  skill.
-+Its strikes trigger the battlesphere's blasts.
 
 ENUM:     EMBRACE
 NAME:     Cigotuvi's embrace
