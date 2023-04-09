@@ -7972,11 +7972,11 @@ ccc2.d.2ccc
 ccccccccccc
 ENDMAP
 
-NAME:   hellmonk_guarded_unrand_staff_of_battle
+NAME:   hellmonk_guarded_unrand_sphere_of_battle
 TAGS:   transparent
 DEPTH:  D:8-
 WEIGHT: 3
-ITEM:   staff_of_battle no_pickup
+ITEM:   sphere_of_battle no_pickup
 MONS:   tengu conjurer, tengu reaver
 : if you.depth() < 13 then
 SUBST:  D = 1.
