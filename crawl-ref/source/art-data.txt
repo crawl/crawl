@@ -618,9 +618,9 @@ PLUS:     +3
 COLOUR:   DARKGREY
 TILE:     urand_elemental
 TILE_EQ:  elemental_staff
-FIRE:     2
-COLD:     2
-AC:       5
+FIRE:     1
+COLD:     1
+AC:       3
 BOOL:     elec
 DBRAND:   If the wielder is skilled in Evocations, they can discharge powerful
  blasts of elemental energy when striking with it.
