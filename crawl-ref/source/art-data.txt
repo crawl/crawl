@@ -1394,20 +1394,25 @@ BRAND:    SPARM_ARCHMAGI
 FB_BRAND: SPWPN_NORMAL
 BOOL:     clarity
 
-ENUM:    MAJIN
-NAME:    Majin-Bo
-OBJ:     OBJ_WEAPONS/WPN_STAFF
+ENUM:     MAJIN
+NAME:     Majin-Bo
+OBJ:      OBJ_WEAPONS/WPN_STAFF
+TYPE:     bo
 FALLBACK: OBJ_WEAPONS/WPN_LAJATANG
-INSCRIP: spellvamp,
-PLUS:    +6
-COLOUR:  ETC_UNHOLY
-TILE:    spwpn_majin
-TILE_EQ: majin
-MP:      6
-INT:     6
-BRAND:   SPWPN_VAMPIRISM
-BOOL:    skip_ego
-DBRAND:  Spellvamp: It heals its wielder for a portion of the damage dealt when they wound a living foe with it or with a spell, but its wielder's spells cost health as well as magical power.
+INSCRIP:  spellvamp,
+PLUS:     +6
+BASE_ACC: -4
+BASE_DAM: +6
+COLOUR:   ETC_UNHOLY
+TILE:     spwpn_majin
+TILE_EQ:  majin
+MP:       6
+INT:      6
+BRAND:    SPWPN_VAMPIRISM
+BOOL:     skip_ego
+DBRAND:   Spellvamp: It heals its wielder for a portion of the damage dealt when
+ they wound a living foe with it or with a spell, but its wielder's spells cost
+ health as well as magical power.
 
 ENUM:    GYRE
 NAME:    pair of quick blades "Gyre" and "Gimble"
