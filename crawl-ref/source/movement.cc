@@ -564,7 +564,7 @@ bool prompt_dangerous_portal(dungeon_feature_type ftype)
     }
 }
 
-coord_def get_rampage_destination(coord_def move, monster* target)
+static coord_def _rampage_destination(coord_def move, monster* target)
 {
     if (!player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS))
         return you.pos() + move;
@@ -633,7 +633,7 @@ monster* get_rampage_target(coord_def move)
 
         // Do the more expensive fear/mesmerize checks last.
         // Messaging for these occurs in the movement code when relevant.
-        const coord_def dest = get_rampage_destination(move, mon);
+        const coord_def dest = _rampage_destination(move, mon);
         // Don't rampage if it would take us away from a beholder,
         // or toward a fearmonger.
         if (you.get_beholder(dest) || you.get_fearmonger(dest))
@@ -675,7 +675,7 @@ static spret _rampage_forward(coord_def move)
     if (!mon_target)
         return spret::fail;
 
-    const coord_def rampage_destination = get_rampage_destination(move, mon_target);
+    const coord_def rampage_destination = _rampage_destination(move, mon_target);
     const coord_def rampage_target = rampage_destination + move;
 
     // Will the second move be an attack?
