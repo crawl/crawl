@@ -3516,7 +3516,7 @@ COLOUR: c = white
 TILE:   c = wall_church
 FTILE: _.G1m+ = floor_limestone
 MONS:   angel god:zin dbname:zin_angel / \
-        angel god:zin dbname:zin_angel ; any weapon level:20 ego:holy_wrath ident:type / \
+        angel god:zin dbname:zin_angel ; spear ego:holy_wrath ident:type / \
         angel god:zin dbname:zin_angel ; long sword ego:holy_wrath ident:type / \
         angel god:zin dbname:zin_angel ; mace ego:holy_wrath ident:type
 : interest_check(_G)
