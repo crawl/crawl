@@ -325,7 +325,7 @@ bool melee_attack::handle_phase_dodged()
     if (defender->is_player())
         count_action(CACT_DODGE, DODGE_EVASION);
 
-    if (attacker != defender && adjacent(defender->pos(), attack_position)
+    if (attacker != defender
         && attacker->alive() && defender->can_see(*attacker)
         && !defender->cannot_act() && !defender->confused()
         && (!defender->is_player() || !attacker->as_monster()->neutral())
@@ -334,20 +334,23 @@ bool melee_attack::handle_phase_dodged()
         // FIXME: player's attack is -1, even for auxes
         && effective_attack_number <= 0)
     {
-        if (defender->is_player()
+        if (adjacent(defender->pos(), attack_position))
+        {
+            if (defender->is_player()
                 ? you.has_mutation(MUT_REFLEXIVE_HEADBUTT)
                 : mons_species(mons_base_type(*defender->as_monster()))
-                    == MONS_MINOTAUR)
-        {
-            do_minotaur_retaliation();
+                == MONS_MINOTAUR)
+            {
+                do_minotaur_retaliation();
+            }
+
+            // Retaliations can kill!
+            if (!attacker->alive())
+                return false;
+
+            if (defender->is_player() && player_equip_unrand(UNRAND_STARLIGHT))
+                do_starlight();
         }
-
-        // Retaliations can kill!
-        if (!attacker->alive())
-            return false;
-
-        if (defender->is_player() && player_equip_unrand(UNRAND_STARLIGHT))
-            do_starlight();
 
         maybe_riposte();
         // Retaliations can kill!
@@ -367,8 +370,13 @@ void melee_attack::maybe_riposte()
                     && player_equip_unrand(UNRAND_FENCERS)
                     && (!defender->weapon()
                         || is_melee_weapon(*defender->weapon()));
-    if (using_fencers && one_chance_in(3) && !is_riposte) // no ping-pong!
+    if (using_fencers
+        && !is_riposte // no ping-pong!
+        && one_chance_in(3)
+        && you.reach_range() >= grid_distance(you.pos(), attack_position))
+    {
         riposte();
+    }
 }
 
 void melee_attack::apply_black_mark_effects()
