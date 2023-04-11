@@ -39,9 +39,9 @@ staff of Olgreb
 
 强大的巫师奥格雷布曾用过的法杖。
 %%%%
-staff of Wucad Mu
+crystal ball of Wucad Mu
 
-一根满溢着魔力的水晶法杖。
+一个满溢着魔力的水晶球。
 
 {{
     if you.race() == "Djinni" then
@@ -80,8 +80,7 @@ orb of Dispater
 sceptre of Asmodeus
 
 一把明亮的红宝石节杖，带有魔王阿斯莫德的某些力量。
-持有者可以用它召唤、号令来自地狱巢穴的火系恶魔，
-尽管他们实际上只忠于阿斯莫德。
+持有者能凭借它召唤、号令来自地狱巢穴的火系恶魔。
 %%%%
 faerie dragon scales
 
@@ -603,9 +602,9 @@ demon trident "Rift"
 一些卢格努的疯狂侍僧神奇地将现实结构中的细小皱纹地绑在一根柄上。
 在持用者的支配下，它的攻击可以扭曲穿越附近的空间。
 %%%%
-staff of Battle
+sphere of Battle
 
-一个外面裹着艳丽的鳞片的法杖，由一个被遗忘已久的巫师制作。
+一个外面裹着艳丽的鳞片的水晶球，由一个被遗忘已久的巫师制作。
 这是法师伊斯肯德伦最喜欢的玩具。
 %%%%
 Cigotuvi's embrace
