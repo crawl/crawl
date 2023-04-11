@@ -73,6 +73,7 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_WATER        = 0x04000000ULL,
     TILE_FLAG_NEW_STAIR    = 0x08000000ULL,
     TILE_FLAG_NEW_TRANSPORTER = 0x10000000ULL,
+    TILE_FLAG_RAMPAGE      = 0x20000000ULL,
 
     // Tentacle overlay flags: direction and type.
     TILE_FLAG_TENTACLE_NW        = 0x020000000ULL,

@@ -5173,6 +5173,8 @@ player::player()
     normal_vision    = LOS_DEFAULT_RANGE;
     current_vision   = LOS_DEFAULT_RANGE;
 
+    rampage_hints.clear();
+
     real_time_ms     = chrono::milliseconds::zero();
     real_time_delta  = chrono::milliseconds::zero();
     num_turns        = 0;
@@ -6191,6 +6193,15 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
     AC += sanguine_armour_bonus();
 
     return AC / scale;
+}
+
+void player::refresh_rampage_hints()
+{
+    rampage_hints.clear();
+    if (you.rampaging())
+        for (coord_def delta : Compass)
+            if ((delta.x || delta.y) && get_rampage_target(delta))
+                you.rampage_hints.insert(you.pos() + delta);
 }
 
  /**

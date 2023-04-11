@@ -283,6 +283,8 @@ public:
     uint8_t normal_vision;        // how far the species gets to see
     uint8_t current_vision;       // current sight radius (cells)
 
+    set<coord_def> rampage_hints; // TODO: move this somewhere else
+
     int real_time() { return real_time_ms.count() / 1000; }
     chrono::milliseconds real_time_ms;       // real time played
     chrono::milliseconds real_time_delta;    // real time since last command
@@ -869,6 +871,9 @@ public:
     void be_agile(int pow);
 
     bool allies_forbidden();
+
+    // TODO: move this somewhere else
+    void refresh_rampage_hints();
 
     ////////////////////////////////////////////////////////////////
 
