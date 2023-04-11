@@ -919,7 +919,8 @@ bool actor::torpor_slowed() const
         const monster *mons = *ri;
         if (mons && mons->type == MONS_TORPOR_SNAIL
             && !is_sanctuary(mons->pos())
-            && !mons_aligned(mons, this))
+            && !mons_aligned(mons, this)
+            && !mons->props.exists(KIKU_WRETCH_KEY))
         {
             return true;
         }
