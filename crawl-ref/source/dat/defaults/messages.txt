@@ -58,7 +58,6 @@ msc += $warning:slides
 msc += $warning:settles down
 
 msc += lightcyan:LOW MAGIC WARNING
-msc += $warning:fails to return
 msc += $warning:no longer ripe
 msc += $warning:This .* contains the .* runes? of Zot
 msc += $warning:guards? the .* runes? of Zot
@@ -77,8 +76,6 @@ msc += $boring:shimmers and vanishes
 #
 msc += $boring:plain:miss(es)? (the|you|it)
 msc += $boring:but (do no|doesn't do any) damage
-msc += $boring:(prevent|prevents) you from hitting
-msc += $boring:nimbly evade
 msc += $boring:waved at by a branch
 msc += $boring:lunges up near
 
@@ -193,6 +190,3 @@ force_more_message += It is a scroll of identify
 force_more_message += You feel more experienced
 force_more_message += A flood of memories washes over you
 force_more_message += There's only one card left
-force_more_message += The deck only has .* cards
-force_more_message += The deck has exactly five cards
-force_more_message += You draw the first five cards
