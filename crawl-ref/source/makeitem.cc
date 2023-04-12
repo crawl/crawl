@@ -292,6 +292,9 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     if (type == WPN_QUICK_BLADE && brand == SPWPN_SPEED)
         return false;
 
+    if (is_demonic_weapon_type(type) && brand == SPWPN_HOLY_WRATH)
+        return false;
+
     switch ((brand_type)brand)
     {
     // Universal brands.
