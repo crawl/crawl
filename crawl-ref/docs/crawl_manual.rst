@@ -1979,8 +1979,9 @@ Gladiators
 
 Monks
   Monks have a head start with the divine. They start with only a simple weapon
-  of their choice, a potion of divine ambrosia, and a robe, but when they choose
-  a god for the first time, their spiritual training gives them a piety boost.
+  of their choice, a potion of divine ambrosia, a robe, and an orb of light to
+  guide them. However, when they worship a god for the first time, their
+  spiritual training gives them a piety boost.
 
 Hunters
   The Hunter is a type of fighter who specialises in missile weapons. A Hunter
