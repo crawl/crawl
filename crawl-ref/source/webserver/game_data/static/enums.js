@@ -181,7 +181,6 @@ define(function () {
     fg_flags.flags.NET          = 0x00400000;
     // 0x00800000 is used in the POISON 2-bit exclusive flags
     fg_flags.flags.WEB          = 0x01000000;
-    bg_flags.flags.RAMPAGE      = 0x02000000;
 
     // Three levels of poison in 2 bits.
     fg_flags.exclusive_flags.push({
@@ -248,11 +247,8 @@ define(function () {
     bg_flags.flags.KRAKEN_SE  = highbit;
     bg_flags.flags.KRAKEN_SW  = [0, 0x01];
 
-    // Eldritch tentacle overlays.
-    bg_flags.flags.ELDRITCH_NW = [0, 0x02];
-    bg_flags.flags.ELDRITCH_NE = [0, 0x04];
-    bg_flags.flags.ELDRITCH_SE = [0, 0x08];
-    bg_flags.flags.ELDRITCH_SW = [0, 0x10];
+    bg_flags.flags.RAMPAGE     = [0, 0x02];
+
     bg_flags.flags.LANDING     = [0, 0x200];
     bg_flags.flags.RAY_MULTI   = [0, 0x400];
     bg_flags.mask              = 0x0000FFFF;

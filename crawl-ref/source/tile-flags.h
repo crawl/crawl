@@ -23,7 +23,6 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_NET          = 0x00400000ULL,
     // 0x00800000ULL is used by TILE_FLAG_POISON lower in the file.
     TILE_FLAG_WEB          = 0x01000000ULL,
-    TILE_FLAG_RAMPAGE      = 0x02000000ULL,
     // Other icons were previously stored here. Lots of space now.
     // Different levels of poison are mutually exclusive, so we can encode them in 2 bits.
     TILE_FLAG_POISON_MASK  = 0x1000000000800000ULL,
@@ -85,13 +84,12 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_TENTACLE_STARSPAWN = 0x0800000000ULL,
     TILE_FLAG_TENTACLE_VINE      = 0x1000000000ULL,
 
-#if TAG_MAJOR_VERSION == 34
+    TILE_FLAG_RAMPAGE = 0x02000000000ULL,
+
     // Starspawn tentacle overlays. Obviated by the above.
-    TILE_FLAG_STARSPAWN_NW = 0x02000000000ULL,
-    TILE_FLAG_STARSPAWN_NE = 0x04000000000ULL,
-    TILE_FLAG_STARSPAWN_SE = 0x08000000000ULL,
-    TILE_FLAG_STARSPAWN_SW = 0x10000000000ULL,
-#endif
+    // 0x04000000000ULL was TILE_FLAG_STARSPAWN_NE
+    // 0x08000000000ULL was TILE_FLAG_STARSPAWN_SE
+    // 0x10000000000ULL was TILE_FLAG_STARSPAWN_SW
 
     //// General
 
