@@ -580,7 +580,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_PREVENT_TELEPORTATION, "It prevents most forms of teleportation.",
           false},
         { ARTP_ANGRY,  "It berserks you when you make melee attacks (%d% chance).", false},
-        { ARTP_CLARITY, "It protects you against confusion.", false},
+        { ARTP_CLARITY, "It protects you from confusion, rage, mesmerisation and fear.", false},
         { ARTP_CONTAM, "It causes magical contamination when unequipped.", false},
         { ARTP_RMSL, "It protects you from missiles.", false},
         { ARTP_REGENERATION, "It increases your rate of health regeneration.",

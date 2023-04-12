@@ -45,10 +45,6 @@ temporary regeneration.
 
 Your health has stopped regenerating due to the presence of nearby monsters.
 %%%%
-RMsl status
-
-You repel missiles, improving your chance to evade them.
-%%%%
 Touch status
 
 Your attacks deal no damage, but have a chance of confusing monsters that they
