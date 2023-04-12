@@ -1734,7 +1734,8 @@ static void _reset_victory_stats(item_def *item)
 
 static void _VICTORY_unequip(item_def *item, bool */*show_msgs*/)
 {
-    _reset_victory_stats(item);
+    if (!player_equip_unrand(UNRAND_VICTORY, true))
+        _reset_victory_stats(item);
 }
 
 #define VICTORY_STAT_CAP 7
@@ -1779,6 +1780,11 @@ static void _VICTORY_world_reacts(item_def *item)
         _reset_victory_stats(item);
         you.props.erase(VICTORY_CONDUCT_KEY);
     }
+}
+
+static void _VICTORY_equip(item_def *item, bool */*show_msgs*/, bool /*unmeld*/)
+{
+    _VICTORY_world_reacts(item);
 }
 
 ////////////////////////////////////////////////////

@@ -2978,9 +2978,10 @@ bool drink(item_def* potion)
         return false;
     }
 
-    if (player_equip_unrand(UNRAND_VICTORY))
+    if (player_equip_unrand(UNRAND_VICTORY, true)
+        && !you.props.exists(VICTORY_CONDUCT_KEY))
     {
-        item_def *item = you.slot_item(EQ_BODY_ARMOUR);
+        item_def *item = you.slot_item(EQ_BODY_ARMOUR, true);
         string unrand_prompt = make_stringf("Really quaff with monsters nearby "
                                             "while wearing %s?",
                                             item->name(DESC_THE, false, true,
@@ -3037,7 +3038,7 @@ bool drink(item_def* potion)
     }
 
     // Drinking with hostile visible mons nearby resets unrand "Victory" stats.
-    if (player_equip_unrand(UNRAND_VICTORY)
+    if (player_equip_unrand(UNRAND_VICTORY, true)
         && there_are_monsters_nearby(true, true, false))
     {
         you.props[VICTORY_CONDUCT_KEY] = true;
@@ -3771,9 +3772,10 @@ bool read(item_def* scroll, dist *target)
         }
     }
 
-    if (player_equip_unrand(UNRAND_VICTORY))
+    if (player_equip_unrand(UNRAND_VICTORY, true)
+        && !you.props.exists(VICTORY_CONDUCT_KEY))
     {
-        item_def *item = you.slot_item(EQ_BODY_ARMOUR);
+        item_def *item = you.slot_item(EQ_BODY_ARMOUR, true);
         string unrand_prompt = make_stringf("Really read with monsters nearby "
                                             "while wearing %s?",
                                             item->name(DESC_THE, false, true,
@@ -4093,8 +4095,9 @@ bool read(item_def* scroll, dist *target)
     }
 
     // Reading with hostile visible mons nearby resets unrand "Victory" stats.
-    if (player_equip_unrand(UNRAND_VICTORY)
-        && there_are_monsters_nearby(true, true, false))
+    if (player_equip_unrand(UNRAND_VICTORY, true)
+        && there_are_monsters_nearby(true, true, false)
+        && !cancel_scroll)
     {
         you.props[VICTORY_CONDUCT_KEY] = true;
     }
