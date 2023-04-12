@@ -245,7 +245,7 @@ static bool _can_shoot_with(const item_def *weapon)
 
 static bool _autofire_at(actor *defender)
 {
-    if (!_can_shoot_with(you.weapon()))
+    if (!_can_shoot_with(you.weapon()) || you.duration[DUR_CONFUSING_TOUCH])
         return false;
     dist t;
     t.target = defender->pos();
