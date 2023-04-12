@@ -181,6 +181,7 @@ define(function () {
     fg_flags.flags.NET          = 0x00400000;
     // 0x00800000 is used in the POISON 2-bit exclusive flags
     fg_flags.flags.WEB          = 0x01000000;
+    bg_flags.flags.RAMPAGE      = 0x02000000;
 
     // Three levels of poison in 2 bits.
     fg_flags.exclusive_flags.push({
@@ -240,7 +241,6 @@ define(function () {
     bg_flags.flags.WATER      = 0x04000000;
     bg_flags.flags.NEW_STAIR  = 0x08000000;
     bg_flags.flags.NEW_TRANSPORTER = 0x10000000;
-    bg_flags.flags.RAMPAGE    = 0x20000000;
 
     // Kraken tentacle overlays.
     bg_flags.flags.KRAKEN_NW  = 0x20000000;
