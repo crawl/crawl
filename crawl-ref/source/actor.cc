@@ -806,8 +806,12 @@ void actor::constriction_damage_defender(actor &defender, int duration)
          defender.name(DESC_PLAIN, true).c_str(),
          basedam, durdam, acdam, timescale_dam, infdam);
 
-    if (defender.is_monster() && defender.as_monster()->hit_points < 1)
+    if (defender.is_monster()
+        && defender.type != MONS_NO_MONSTER // already dead and reset
+        && defender.as_monster()->hit_points < 1)
+    {
         monster_die(*defender.as_monster(), this);
+    }
 }
 
 // Deal damage over time
