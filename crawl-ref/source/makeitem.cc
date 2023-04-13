@@ -1517,8 +1517,7 @@ static void _generate_misc_item(item_def& item, int force_type)
                                       MISC_LIGHTNING_ROD,
                                       MISC_BOX_OF_BEASTS,
                                       MISC_PHANTOM_MIRROR,
-                                      MISC_TIN_OF_TREMORSTONES,
-                                      MISC_CONDENSER_VANE,
+                                      (misc_item_type)item_for_set(ITEM_SET_AREA_MISCELLANY),
                                       MISC_XOMS_CHESSBOARD);
     }
 }
