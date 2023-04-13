@@ -2601,6 +2601,14 @@ bool should_render_current_regions = true;
 
 void UIRoot::render()
 {
+#ifndef USE_TILE_LOCAL
+    if (crawl_state.smallterm)
+    {
+        smallterm_warning();
+        return;
+    }
+#endif
+
     if (!needs_paint || in_headless_mode())
         return;
 
