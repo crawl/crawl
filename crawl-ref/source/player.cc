@@ -5168,6 +5168,7 @@ player::player()
     seen_armour.init(0);
     seen_misc.reset();
 
+    generated_misc.clear();
     octopus_king_rings = 0x00;
 
     normal_vision    = LOS_DEFAULT_RANGE;
