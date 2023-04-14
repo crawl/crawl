@@ -542,23 +542,26 @@ public:
     }
 };
 
-// XX this probably shouldn't use InvMenu, why does it?
-class DescMenu : public InvMenu
+namespace
 {
-public:
-    DescMenu()
-        : InvMenu(MF_SINGLESELECT | MF_ANYPRINTABLE
-                        | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE
-                        | MF_INIT_HOVER)
-    { }
-
-    // TODO: move more stuff into this class
-    bool skip_process_command(int) override
+    // XX this probably shouldn't use InvMenu, why does it?
+    class DescMenu : public InvMenu
     {
-        // override InvMenu behavior
-        return false;
-    }
-};
+    public:
+        DescMenu()
+            : InvMenu(MF_SINGLESELECT | MF_ANYPRINTABLE
+                            | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE
+                            | MF_INIT_HOVER)
+        { }
+
+        // TODO: move more stuff into this class
+        bool skip_process_command(int) override
+        {
+            // override InvMenu behavior
+            return false;
+        }
+    };
+}
 
 static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
                                      vector<item_def *> const &list_items,
