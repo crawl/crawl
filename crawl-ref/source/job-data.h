@@ -264,8 +264,7 @@ static const map<job_type, job_def> job_data =
     { },
     { "robe", "potion of ambrosia", "orb ego:light" },
     WCHOICE_PLAIN,
-    { { SK_FIGHTING, 3 }, { SK_WEAPON, 3 }, { SK_DODGING, 3 },
-      { SK_STEALTH, 2 }, },
+    { { SK_FIGHTING, 3 }, { SK_WEAPON, 3 }, { SK_DODGING, 3 } },
 } },
 
 { JOB_NECROMANCER, {
