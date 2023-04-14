@@ -299,6 +299,7 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
     pbolt.heard         = false;
     pbolt.reflections   = 0;
     pbolt.bounces       = 0;
+    pbolt.loudness      = 0;
 
     // Save range before overriding it
     const int old_range = pbolt.range;
