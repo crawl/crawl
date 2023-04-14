@@ -837,6 +837,9 @@ namespace arena
                 mprf("---- Turn #%d ----", turns);
 #endif
 
+                if (crawl_state.terminal_resized)
+                    show_fight_banner();
+
                 // Check the consistency of our book-keeping every 100 turns.
                 if ((turns++ % 100) == 0)
                     count_foes();
@@ -1019,8 +1022,6 @@ namespace arena
             virtual void _render() override {};
             virtual void _allocate_region() override {
                 // XX sometimes this gets called spuriously?
-                show_fight_banner();
-                viewwindow();
                 update_screen();
                 display_message_window();
             };
