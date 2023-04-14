@@ -3640,6 +3640,18 @@ static const struct spell_desc spelldata[] =
     TILEG_ERROR,
 },
 
+// Dummy spell for the Makhleb ability.
+{
+    SPELL_MINOR_DESTRUCTION, "Minor Destruction",
+    spschool::conjuration,
+    spflag::dir_or_target | spflag::chaotic | spflag::needs_tracer,
+    3,
+    0,
+    5, 5,
+    0,
+    TILEG_ERROR,
+},
+
 {
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,

@@ -2847,7 +2847,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             return spret::abort;
 
         fail_check();
-        beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
+        beam.origin_spell = SPELL_MINOR_DESTRUCTION;
 
         switch (random2(5))
         {
@@ -2880,7 +2880,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
         fail_check();
         {
-            beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
+            beam.origin_spell = SPELL_MAJOR_DESTRUCTION;
             zap_type ztype =
                 random_choose(ZAP_BOLT_OF_FIRE,
                               ZAP_LIGHTNING_BOLT,
