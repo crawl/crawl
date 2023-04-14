@@ -549,7 +549,7 @@ spret cast_chain_spell(spell_type spell_cast, int pow,
  *                     hence handle conducts on their own.
 */
 static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
-                                 bool god_conducts = true)
+                                 bool god_conducts = true, bool quiet = false)
 {
     ASSERT(mon.alive() || !god_conducts);
 
@@ -570,7 +570,7 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
     {
         behaviour_event(&mon, ME_WHACK, &you);
 
-        if (damage && you.can_see(mon))
+        if (damage && you.can_see(mon) && !quiet)
             print_wounds(mon);
     }
     // monster::hurt() wasn't called, so we do death cleanup.
@@ -1297,11 +1297,12 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool quiet,
                               const char **what, bool &hole)
 {
-    beam.glyph       = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.source_id   = caster->mid;
-    beam.thrower     = caster->is_player() ? KILL_YOU : KILL_MON;
-    beam.source      = you.pos();
-    beam.hit         = AUTOMATIC_HIT;
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.source_id    = caster->mid;
+    beam.thrower      = caster->is_player() ? KILL_YOU : KILL_MON;
+    beam.source       = you.pos();
+    beam.origin_spell = SPELL_LRD;
+    beam.hit          = AUTOMATIC_HIT;
 
     frag_effect effect = {};
     if (!_init_frag_effect(effect, *caster, target, what))
@@ -2118,15 +2119,15 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
 
     dprf("Dice: %dd%d; Damage: %d", dam_dice.num, dam_dice.size, damage);
 
-    mon->hurt(agent, damage);
+    if (agent && agent->is_player())
+        _player_hurt_monster(*mon, damage, BEAM_MMISSILE);
+    else
+        mon->hurt(agent, damage);
 
     if (mon->alive())
     {
-        behaviour_event(mon, ME_WHACK, agent);
-
         // Monster survived, remove any poison.
         mon->del_ench(ENCH_POISON, true); // suppress spam
-        print_wounds(*mon);
     }
 
     return 1;
@@ -2679,7 +2680,7 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
 
     bolt beam;
     beam.flavour = BEAM_ELECTRICITY;
-    beam.thrower = agent.is_player() ? KILL_YOU : KILL_MON;;
+    beam.thrower = agent.is_player() ? KILL_YOU : KILL_MON;
     beam.glyph      = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.colour     = LIGHTBLUE;
 #ifdef USE_TILE
@@ -2718,15 +2719,13 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
                                                              beam.flavour,
                                                              "arcjolt");
         if (post_resist_dam)
-            act->hurt(&agent, post_resist_dam);
-        act->expose_to_element(beam.flavour, post_resist_dam);
-        if (mon && act->alive())
         {
-            behaviour_event(mon, ME_WHACK, &agent);
-            if (post_resist_dam && you.can_see(*mon))
-                print_wounds(*mon);
+            if (agent.is_player())
+                _player_hurt_monster(*mon, post_resist_dam, beam.flavour);
+            else
+                act->hurt(&agent, post_resist_dam);
         }
-
+        act->expose_to_element(beam.flavour, post_resist_dam);
         noisy(spell_effect_noise(SPELL_ARCJOLT), t);
     }
     if (Options.use_animations & UA_BEAM)
@@ -3347,7 +3346,13 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
             if (on_cast && agent->is_player())
                 set_attack_conducts(conducts, *ai->as_monster());
 
-            ai->hurt(agent, dam, BEAM_POISON);
+            if (agent->is_player())
+            {
+                _player_hurt_monster(*ai->as_monster(), dam, BEAM_POISON,
+                                     false, true);
+            }
+            else
+                ai->hurt(agent, dam, BEAM_POISON);
 
             if (ai->alive())
             {
