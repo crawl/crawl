@@ -2553,13 +2553,9 @@ void UIRoot::resize(int w, int h)
     m_h = h;
     m_needs_layout = true;
 
-    // On console with the window size smaller than the minimum layout,
-    // enlarging the window will not cause any size reallocations, and the
-    // newly visible region of the terminal will not be filled.
-    // Fix: explicitly mark the entire screen as dirty on resize: it won't
-    // be strictly necessary for most resizes, but won't hurt.
 #ifndef USE_TILE_LOCAL
-    expose_region({0, 0, w, h});
+    cgotoxy(1, 1, GOTO_CRT);
+    clrscr();
 #endif
 }
 
