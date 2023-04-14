@@ -1540,7 +1540,20 @@ static void _generate_misc_item(item_def& item, int force_type, int item_level)
         return;
     }
     item.sub_type = typ;
-    you.generated_misc.insert(typ);
+    switch (typ)
+    {
+    case MISC_BOX_OF_BEASTS:
+    case MISC_LIGHTNING_ROD:
+    case MISC_PHIAL_OF_FLOODS:
+    case MISC_PHANTOM_MIRROR:
+    case MISC_XOMS_CHESSBOARD:
+    case MISC_TIN_OF_TREMORSTONES:
+    case MISC_CONDENSER_VANE:
+        you.generated_misc.insert(typ);
+        break;
+    default:
+        break;
+    }
 }
 
 /**
