@@ -526,7 +526,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
               { WPN_DEMON_TRIDENT,      1 },
               { WPN_MORNINGSTAR,        1 },
               { WPN_BROAD_AXE,          1 }, },
-            {}, {}, 1,
+            {}, { { SPWPN_SPECTRAL, 1 } }, 1,
         } },
         { MONS_AMAEMON, {
             { { WPN_DEMON_WHIP,       1 } },
