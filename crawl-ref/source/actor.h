@@ -376,6 +376,7 @@ public:
     CrawlHashTable props;
 
     int shield_blocks;                 // Count of shield blocks this round.
+    bool triggered_spectral;           // Triggered spectral weapon this round
 
     // Constriction stuff:
 

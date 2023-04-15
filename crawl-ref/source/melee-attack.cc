@@ -656,11 +656,11 @@ bool melee_attack::handle_phase_killed()
     return attack::handle_phase_killed();
 }
 
-static void _handle_spectral_brand(const actor &attacker, const actor &defender)
+static void _handle_spectral_brand(actor &attacker, const actor &defender)
 {
-    if (you.triggered_spectral || !defender.alive())
+    if (attacker.type == MONS_SPECTRAL_WEAPON || !defender.alive())
         return;
-    you.triggered_spectral = true;
+    attacker.triggered_spectral = true;
     spectral_weapon_fineff::schedule(attacker, defender);
 }
 
@@ -687,7 +687,7 @@ bool melee_attack::handle_phase_end()
         attacker->as_monster()->del_ench(ENCH_ROLLING);
     }
 
-    if (attacker->is_player() && defender)
+    if (defender)
     {
         if (damage_brand == SPWPN_SPECTRAL)
             _handle_spectral_brand(*attacker, *defender);

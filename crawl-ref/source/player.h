@@ -414,9 +414,6 @@ public:
     // If true, player has triggered a trap effect by exploring.
     bool trapped;
 
-    // Did the player trigger their spectral weapon this turn?
-    bool triggered_spectral;
-
     // TODO burn this API with fire
     bool wield_change;          // redraw weapon
     bool gear_change;           // redraw equip bar

@@ -2100,19 +2100,19 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
     if (owner)
         owner->props.erase(SPECTRAL_WEAPON_KEY);
 
-    if (!quiet)
-    {
-        if (you.can_see(*mons))
-        {
-            simple_monster_message(*mons, " fades away.",
-                                   MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
-        }
-        else if (owner && owner->is_player())
-            mpr("You feel your bond with your spectral weapon wane.");
-    }
+    if (!quiet && you.can_see(*mons))
+        simple_monster_message(*mons, " disappears.");
 
     if (!killed)
         monster_die(*mons, KILL_RESET, NON_MONSTER);
+}
+
+void check_spectral_weapon(actor &agent)
+{
+    if (!agent.triggered_spectral)
+        if (monster* sw = find_spectral_weapon(&agent))
+            end_spectral_weapon(sw, false, false);
+    agent.triggered_spectral = false;
 }
 
 static void _setup_infestation(bolt &beam, int pow)

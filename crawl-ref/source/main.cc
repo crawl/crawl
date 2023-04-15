@@ -2522,14 +2522,6 @@ static void _update_still_winds()
     end_still_winds();
 }
 
-static void _check_spectral_weapon()
-{
-    if (!you.triggered_spectral)
-        if (monster* sw = find_spectral_weapon(&you))
-            end_spectral_weapon(sw, false, true);
-    you.triggered_spectral = false;
-}
-
 void world_reacts()
 {
     // All markers should be activated at this point.
@@ -2574,7 +2566,7 @@ void world_reacts()
     _check_banished();
     _check_sanctuary();
     _check_trapped();
-    _check_spectral_weapon();
+    check_spectral_weapon(you);
 
     run_environment_effects();
 

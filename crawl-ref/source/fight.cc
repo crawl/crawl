@@ -463,6 +463,10 @@ stab_type find_stab_type(const actor *attacker,
     if (attacker && !attacker->can_see(defender))
         return STAB_NO_STAB;
 
+    // Can't stab these
+    if (def && def->type == MONS_SPECTRAL_WEAPON)
+        return STAB_NO_STAB;
+
     // sleeping
     if (defender.asleep())
         return STAB_SLEEPING;

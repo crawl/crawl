@@ -1701,6 +1701,7 @@ void handle_monster_move(monster* mons)
     }
 
     mons->shield_blocks = 0;
+    check_spectral_weapon(*mons);
 
     _mons_in_cloud(*mons);
     actor_apply_toxic_bog(mons);
