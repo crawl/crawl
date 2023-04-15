@@ -1407,9 +1407,6 @@ static void _ZHOR_world_reacts(item_def */*item*/)
 
 ////////////////////////////////////////////////////
 
-// XXX: sphere of Battle giving a boost to conjuration spells is hardcoded in
-// player_spec_conj().
-
 static void _BATTLE_unequip(item_def */*item*/, bool */*show_msgs*/)
 {
     end_battlesphere(find_battlesphere(&you), false);
@@ -1421,8 +1418,8 @@ static void _BATTLE_world_reacts(item_def */*item*/)
         && there_are_monsters_nearby(true, true, false)
         && stop_summoning_reason(MR_RES_POISON, M_FLIES).empty())
     {
-        cast_battlesphere(&you, calc_spell_power(SPELL_BATTLESPHERE),
-                          GOD_NO_GOD, false);
+        const int pow = div_rand_round(15 + you.skill(SK_CONJURATIONS, 15), 3);
+        cast_battlesphere(&you, pow, GOD_NO_GOD, false);
         did_god_conduct(DID_WIZARDLY_ITEM, 10);
     }
 }

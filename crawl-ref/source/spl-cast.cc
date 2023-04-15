@@ -560,6 +560,14 @@ static int _spell_enhancement(spell_type spell)
     if (you.form == transformation::shadow)
         enhanced -= 2;
 
+    if (player_equip_unrand(UNRAND_BATTLE))
+    {
+        if (vehumet_supports_spell(spell))
+            enhanced++;
+        else
+            enhanced--;
+    }
+
     enhanced += you.archmagi();
     enhanced += you.duration[DUR_BRILLIANCE] > 0
                 || player_equip_unrand(UNRAND_FOLLY);

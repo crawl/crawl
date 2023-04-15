@@ -1572,7 +1572,8 @@ COLOUR:   ETC_MAGIC
 # TILE: XXX
 # TILE_EQ: XXX
 VALUE:    800
-DESCRIP:  It enhances your conjuration magic.
+DESCRIP:  It enhances your destructive magic.
++It weakens your non-destructive magic.
 +It summons a battlesphere in combat, with strength depending on Conjurations
  skill.
 
