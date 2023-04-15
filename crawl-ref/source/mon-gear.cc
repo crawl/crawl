@@ -502,7 +502,10 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { 1, 2, 4 },
             { { SPWPN_CHAOS, 1 } } } },
         { MONS_JOSEPH, { { { WPN_QUARTERSTAFF, 1 } } } },
-        { MONS_SPRIGGAN_DRUID, { { { WPN_QUARTERSTAFF, 1 } } } },
+        { MONS_SPRIGGAN_DRUID, { { { WPN_QUARTERSTAFF, 1 } }, {}, {
+                { SPWPN_SPECTRAL, 1 },
+                { NUM_SPECIAL_WEAPONS, 5 }
+        } } },
         { MONS_BAI_SUZHEN, { { { WPN_QUARTERSTAFF, 1 } } } },
         { MONS_ORC,                     { ORC_WEAPONS } },
         { MONS_ORC_PRIEST,              { ORC_WEAPONS } },
@@ -926,6 +929,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
               { SPWPN_VENOM,          10 },
               { SPWPN_VAMPIRISM,       5 },
               { SPWPN_ANTIMAGIC,       5 },
+              { SPWPN_SPECTRAL,        5 },
               { SPWPN_PAIN,            4 },
               { SPWPN_HOLY_WRATH,      3 },
               { SPWPN_DISTORTION,      2 },
