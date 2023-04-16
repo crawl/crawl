@@ -27,6 +27,8 @@ int actor_to_death_source(const actor* agent);
 
 string morgue_name(string char_name, time_t when_crawl_got_even);
 
+int corrosion_chance(int sources);
+
 int outgoing_harm_amount(int levels);
 int incoming_harm_amount(int levels);
 

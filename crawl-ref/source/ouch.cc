@@ -713,15 +713,19 @@ static void _deteriorate(int dam)
     }
 }
 
+int corrosion_chance(int sources)
+{
+    return 3 * sources;
+}
+
 /**
  * Maybe corrode the player after taking damage if they're wearing *Corrode.
  **/
 static void _maybe_corrode()
 {
     int corrosion_sources = you.scan_artefacts(ARTP_CORRODE);
-    int degree = binomial(corrosion_sources, 3);
-    if (degree > 0)
-        you.corrode_equipment("Your corrosive artefact", degree);
+    if (x_chance_in_y(corrosion_chance(corrosion_sources), 100))
+        you.corrode_equipment("Your corrosive artefact");
 }
 
 /**
@@ -730,7 +734,7 @@ static void _maybe_corrode()
 static void _maybe_slow()
 {
     int slow_sources = you.scan_artefacts(ARTP_SLOW);
-    for (int degree = binomial(slow_sources, 1); degree > 0; degree--)
+    if (x_chance_in_y(slow_sources, 100))
         slow_player(10 + random2(5));
 }
 
