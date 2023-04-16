@@ -3293,7 +3293,7 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
         if (target.id != current
             || target.pos.x != -1 && target.pos != you.pos())
         {
-            if (!env.map_knowledge(target.pos).known())
+            if (in_bounds(target.pos) && !env.map_knowledge(target.pos).known())
                 mpr("You cannot automatically travel into the unknown.");
             else if (!maybe_traversable)
             {
