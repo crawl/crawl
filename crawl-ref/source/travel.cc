@@ -3293,17 +3293,22 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
         if (target.id != current
             || target.pos.x != -1 && target.pos != you.pos())
         {
-            if (!maybe_traversable)
+            if (!env.map_knowledge(target.pos).known())
+                mpr("You cannot automatically travel into the unknown.");
+            else if (!maybe_traversable)
             {
                 mprf("You cannot currently traverse %s.",
-                    feature_description_at(target.pos).c_str());
+                    feature_description_at(target.pos, false, DESC_A).c_str());
             }
             else if (!fail_reasons.empty())
                 mprf("Travel is blocked by %s.",
                      comma_separated_line(fail_reasons.begin(),
                                           fail_reasons.end()).c_str());
             else
-                // Mysterious failures and edge cases, good luck!
+                // You're in an edge case, good luck!
+                // - I think this is only when you can't find any path
+                // through the unknown, it would be nice if we could
+                // say a little more about the routing failure - eb
                 mpr("Sorry, I don't know how to get there.");
         }
     }
