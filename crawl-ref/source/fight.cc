@@ -794,7 +794,7 @@ bool force_player_cleave(coord_def target)
     if (!cleave_targets.empty())
     {
         // Rift is too funky and hence gets no special treatment.
-        const int range = you.reach_range() == REACH_TWO ? 2 : 1;
+        const int range = you.reach_range();
         targeter_cleave hitfunc(&you, target, range);
         if (stop_attack_prompt(hitfunc, "attack"))
             return true;
@@ -850,7 +850,9 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     if (attack_cleaves(attacker, which_attack))
     {
         const coord_def atk = attacker.pos();
-        const int cleave_radius = weap && weapon_reach(*weap) == REACH_TWO ? 2 : 1;
+        //If someone adds a funky reach which isn't just a number
+        //They will need to special case it here.
+        const int cleave_radius = weap ? weapon_reach(*weap) : 1;
 
         for (distance_iterator di(atk, true, true, cleave_radius); di; ++di)
         {
