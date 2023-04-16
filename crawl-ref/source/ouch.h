@@ -27,6 +27,9 @@ int actor_to_death_source(const actor* agent);
 
 string morgue_name(string char_name, time_t when_crawl_got_even);
 
+int outgoing_harm_amount(int levels);
+int incoming_harm_amount(int levels);
+
 void reset_damage_counters();
 void ouch(int dam, kill_method_type death_type, mid_t source = MID_NOBODY,
           const char *aux = nullptr, bool see_source = true,

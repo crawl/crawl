@@ -767,15 +767,25 @@ static void _wizard_restore_life()
 }
 #endif
 
+int outgoing_harm_amount(int levels)
+{
+    return 15 * (levels + 1);
+}
+
+int incoming_harm_amount(int levels)
+{
+    return 10 * (levels + 1);
+}
+
 static int _apply_extra_harm(int dam, mid_t source)
 {
     monster* damager = monster_by_mid(source);
     // +30% damage if opp has one level of harm, +45% with two
     if (damager && damager->extra_harm())
-        return dam * (100 + 15 * (damager->extra_harm() + 1)) / 100;
+        return dam * (100 + outgoing_harm_amount(damager->extra_harm())) / 100;
     // +20% damage if you have one level of harm, +30% with two
     if (you.extra_harm())
-        return dam * (10 + you.extra_harm() + 1) / 10;
+        return dam * (100 + incoming_harm_amount(you.extra_harm())) / 100;
 
     return dam;
 }

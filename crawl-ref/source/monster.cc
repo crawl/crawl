@@ -56,6 +56,7 @@
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mon-transit.h"
+#include "ouch.h"
 #include "religion.h"
 #include "spl-clouds.h" // explode_blastmotes_at
 #include "spl-monench.h"
@@ -4226,10 +4227,17 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         {
             // +30% damage if opp has one level of harm, +45% with two
             if (agent && agent->extra_harm())
-                amount = amount * (100 + 15 * (agent->extra_harm() + 1)) / 100;
+            {
+                amount = amount * (100
+                                   + outgoing_harm_amount(agent->extra_harm()))
+                         / 100;
+            }
             // +20% damage if you have one level of harm, +30% with two
             else if (extra_harm())
-                amount = amount * (10 + extra_harm() + 1) / 10;
+            {
+                amount = amount * (100 + incoming_harm_amount(extra_harm()))
+                         / 100;
+            }
         }
 
         // Apply damage multipliers for quad damage
