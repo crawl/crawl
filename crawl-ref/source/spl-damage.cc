@@ -4339,15 +4339,17 @@ static void _discharge_maxwells_coupling()
     god_conduct_trigger conducts[3];
     set_attack_conducts(conducts, *mon, you.can_see(*mon));
 
+    string attack_punctuation = attack_strength_punctuation(mon->hit_points);
+
     if (mon->type == MONS_ROYAL_JELLY && !mon->is_summoned())
     {
         // need to do this here, because react_to_damage is never called
         mprf("A cloud of jellies burst out of %s as the current"
-             " ripples through it!", mon->name(DESC_THE).c_str());
+             " ripples through it%s", mon->name(DESC_THE).c_str(), attack_punctuation.c_str());
         trj_spawn_fineff::schedule(&you, mon, mon->pos(), mon->hit_points);
     }
     else
-        mprf("The electricity discharges through %s!", mon->name(DESC_THE).c_str());
+        mprf("The electricity discharges through %s%s", mon->name(DESC_THE).c_str(), attack_punctuation.c_str());
 
     // XX the messaging and corpse logic here would be better handled in
     // monster_die, so that various special cases (e.g. dancing weapons in
