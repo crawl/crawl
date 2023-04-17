@@ -572,11 +572,6 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         // weapons already have slaying. feels weird on staves
         case ARTP_SLAYING:
             return item_class != OBJ_WEAPONS && item_class != OBJ_STAVES;
-        // prevent properties that barding-wearers already have
-        case ARTP_SEE_INVISIBLE:
-            return !item.is_type(OBJ_ARMOUR, ARM_BARDING);
-        case ARTP_RAMPAGING:
-            return non_swappable && !item.is_type(OBJ_ARMOUR, ARM_BARDING);
         // prevent properties that conflict with each other
         case ARTP_CORRODE:
             return !extant_props[ARTP_RCORR] && !intrinsic_proprt[ARTP_RCORR];
@@ -600,6 +595,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_REGENERATION:
         case ARTP_INVISIBLE:
         case ARTP_HARM:
+        case ARTP_RAMPAGING:
             // only on items that can't be quickly swapped
             return non_swappable;
         // prevent on armour (since it's swapped infrequently) and rings (since
