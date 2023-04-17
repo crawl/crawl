@@ -84,6 +84,7 @@ int prism_hd(int pow, bool random = true);
 
 monster* find_spectral_weapon(const actor* agent);
 void end_spectral_weapon(monster* mons, bool killed, bool quiet = false);
+void check_spectral_weapon(actor &agent);
 
 spret cast_infestation(int pow, bolt &beam, bool fail);
 

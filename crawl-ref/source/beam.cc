@@ -299,6 +299,7 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
     pbolt.heard         = false;
     pbolt.reflections   = 0;
     pbolt.bounces       = 0;
+    pbolt.loudness      = 0;
 
     // Save range before overriding it
     const int old_range = pbolt.range;
@@ -3189,13 +3190,13 @@ bool bolt::misses_player()
             {
                 if (shield && shield_reflects(*shield))
                 {
-                    mprf("Your %s reflects the %s!",
+                    mprf("Your %s blocks the %s... and reflects it back!",
                             shield->name(DESC_PLAIN).c_str(),
                             refl_name.c_str());
                 }
                 else
                 {
-                    mprf("The %s reflects off an invisible shield around you!",
+                    mprf("You block %s... and reflect it back!",
                             refl_name.c_str());
                 }
                 reflect();
@@ -4722,7 +4723,7 @@ bool bolt::attempt_block(monster* mon)
         {
             if (shield && shield_reflects(*shield))
             {
-                mprf("%s reflects the %s off %s %s!",
+                mprf("%s blocks the %s with %s %s... and reflects it back!",
                      mon->name(DESC_THE).c_str(),
                      name.c_str(),
                      mon->pronoun(PRONOUN_POSSESSIVE).c_str(),

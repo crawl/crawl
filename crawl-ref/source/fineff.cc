@@ -868,7 +868,7 @@ void spectral_weapon_fineff::fire()
                  chosen_pos,
                  atkr->mindex(),
                  MG_FORCE_BEH | MG_FORCE_PLACE);
-    mg.set_summoned(atkr, 1, 0);
+    mg.set_summoned(atkr, 0, 0);
     mg.props[TUKIMA_WEAPON] = *weapon;
     mg.props[TUKIMA_POWER] = 50;
 
@@ -878,9 +878,13 @@ void spectral_weapon_fineff::fire()
     if (!mons)
         return;
 
-    // We successfully made a new one! Kill off the old one.
+    // We successfully made a new one! Kill off the old one,
+    // and don't spam the player with a spawn message.
     if (sw)
+    {
+        mons->flags |= MF_WAS_IN_VIEW | MF_SEEN;
         end_spectral_weapon(sw, false, true);
+    }
 
     dprf("spawned at %d,%d", mons->pos().x, mons->pos().y);
 
@@ -888,6 +892,7 @@ void spectral_weapon_fineff::fire()
     melee_attk.attack();
 
     mons->summoner = atkr->mid;
+    mons->behaviour = BEH_SEEK; // for display
     atkr->props[SPECTRAL_WEAPON_KEY].get_int() = mons->mid;
 }
 

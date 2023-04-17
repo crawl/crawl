@@ -738,6 +738,7 @@ monster_threat_nasty THREAT_NASTY
 
 travel_exclusion TRAVEL_EXCLUSION_BG
 travel_exclusion_centre TRAVEL_EXCLUSION_CENTRE_BG
+
 effect/sanctuary SANCTUARY
 mold_small1 MOLD
 mold_small2

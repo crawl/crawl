@@ -18,6 +18,7 @@
 #include "kills.h"
 #include "level-state-type.h"
 #include "mon-util.h"
+#include "movement.h"
 #include "options.h"
 #include "pcg.h"
 #include "player.h"
@@ -1453,6 +1454,9 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 
     if (mc.flags & MAP_DISJUNCT)
         cell.disjunct = get_disjunct_phase(gc);
+
+    if (you.rampage_hints.count(gc) > 0)
+        cell.bg |= TILE_FLAG_RAMPAGE;
 
     if (Options.show_travel_trail)
     {

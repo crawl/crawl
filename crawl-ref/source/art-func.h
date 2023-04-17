@@ -35,12 +35,12 @@
 #include "fight.h"
 #include "fineff.h"        // For the Storm Queen's Shield
 #include "god-conduct.h"   // did_god_conduct
-#include "mgen-data.h"     // For Sceptre of Asmodeus evoke
+#include "mgen-data.h"     // For Sceptre of Asmodeus
 #include "melee-attack.h"  // For autumn katana
 #include "message.h"
 #include "monster.h"
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
-#include "mon-place.h"     // For Sceptre of Asmodeus evoke
+#include "mon-place.h"     // For Sceptre of Asmodeus
 #include "nearby-danger.h" // For Zhor
 #include "output.h"
 #include "player.h"
@@ -1407,9 +1407,6 @@ static void _ZHOR_world_reacts(item_def */*item*/)
 
 ////////////////////////////////////////////////////
 
-// XXX: Staff of Battle giving a boost to conjuration spells is hardcoded in
-// player_spec_conj().
-
 static void _BATTLE_unequip(item_def */*item*/, bool */*show_msgs*/)
 {
     end_battlesphere(find_battlesphere(&you), false);
@@ -1421,19 +1418,9 @@ static void _BATTLE_world_reacts(item_def */*item*/)
         && there_are_monsters_nearby(true, true, false)
         && stop_summoning_reason(MR_RES_POISON, M_FLIES).empty())
     {
-        cast_battlesphere(&you, calc_spell_power(SPELL_BATTLESPHERE),
-                          GOD_NO_GOD, false);
+        const int pow = div_rand_round(15 + you.skill(SK_CONJURATIONS, 15), 3);
+        cast_battlesphere(&you, pow, GOD_NO_GOD, false);
         did_god_conduct(DID_WIZARDLY_ITEM, 10);
-    }
-}
-
-static void _BATTLE_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                  actor* /*defender*/, bool /*mondied*/, int /*dam*/)
-{
-    if (attacker)
-    {
-        aim_battlesphere(attacker, SPELL_MAGIC_DART);
-        trigger_battlesphere(attacker);
     }
 }
 
@@ -1583,7 +1570,7 @@ static void _WUCAD_MU_equip(item_def */*item*/, bool *show_msgs,
 {
     if (you.has_mutation(MUT_HP_CASTING))
     {
-        _equip_mpr(show_msgs, "The staff is unable to connect with your "
+        _equip_mpr(show_msgs, "The crystal ball is unable to connect with your "
                               "magical essence.");
     }
 }
@@ -1639,6 +1626,8 @@ static void _POWER_GLOVES_unequip(item_def * /*item*/, bool *show_msgs)
         _equip_mpr(show_msgs, "The surge of magic dissipates.");
 }
 
+////////////////////////////////////////////////////
+
 static void _DREAMSHARD_NECKLACE_equip(item_def * /*item*/, bool *show_msgs,
                                       bool /*unmeld*/)
 {
@@ -1650,7 +1639,7 @@ static void _DREAMSHARD_NECKLACE_unequip(item_def * /* item */, bool * show_msgs
     _equip_mpr(show_msgs, "The world feels relentlessly logical and grey.");
 }
 
-//
+////////////////////////////////////////////////////
 
 static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
     actor* defender, bool /*mondied*/, int /*dam*/)
@@ -1742,7 +1731,8 @@ static void _reset_victory_stats(item_def *item)
 
 static void _VICTORY_unequip(item_def *item, bool */*show_msgs*/)
 {
-    _reset_victory_stats(item);
+    if (!player_equip_unrand(UNRAND_VICTORY, true))
+        _reset_victory_stats(item);
 }
 
 #define VICTORY_STAT_CAP 7
@@ -1786,5 +1776,46 @@ static void _VICTORY_world_reacts(item_def *item)
     {
         _reset_victory_stats(item);
         you.props.erase(VICTORY_CONDUCT_KEY);
+    }
+}
+
+static void _VICTORY_equip(item_def *item, bool */*show_msgs*/, bool /*unmeld*/)
+{
+    _VICTORY_world_reacts(item);
+}
+
+////////////////////////////////////////////////////
+
+static void _ASMODEUS_melee_effects(item_def* /*weapon*/, actor* attacker,
+                                    actor* defender, bool /*mondied*/,
+                                    int /*dam*/)
+{
+    if (!attacker->is_player() || you.allies_forbidden())
+        return;
+
+    const monster* mon = defender->as_monster();
+    if (mons_is_firewood(*mon)
+        || mons_is_conjured(mon->type)
+        || mon->is_summoned())
+    {
+        return;
+    }
+
+    if (one_chance_in(10))
+    {
+        const monster_type demon = random_choose_weighted(
+                                       3, MONS_BALRUG,
+                                       2, MONS_HELLION,
+                                       1, MONS_BRIMSTONE_FIEND);
+
+        mgen_data mg(demon, BEH_FRIENDLY, you.pos(), MHITYOU,
+                     MG_FORCE_BEH | MG_AUTOFOE);
+        mg.set_summoned(&you, 4, SPELL_FIRE_SUMMON);
+
+        if (create_monster(mg))
+        {
+            mpr("The sceptre summons one of its terrible servants.");
+            did_god_conduct(DID_EVIL, 3);
+        }
     }
 }

@@ -13,6 +13,7 @@ import zlib
 import tornado.ioloop
 import tornado.template
 import tornado.websocket
+import tornado.gen
 from tornado.escape import json_decode
 from tornado.escape import json_encode
 from tornado.escape import to_unicode
@@ -156,6 +157,7 @@ def global_announce(text):
 _dgl_dir_check = False
 
 
+@tornado.gen.coroutine
 def write_dgl_status_file():
     process_info = ["%s#%s#%s#0x0#%s#%s#" %
                             (socket.username, socket.game_id,
@@ -175,15 +177,14 @@ def write_dgl_status_file():
                 os.makedirs(status_dir)
                 logging.warning("Creating dgl status file location '%s'", status_dir)
             _dgl_dir_check = True
-        with util.SlowWarning("Slow IO: write '%s'" % status_target):
-            with open(status_target, "w") as f:
-                f.write("\n".join(process_info))
+        yield util.open_and_write(status_target, "\n".join(process_info))
     except (OSError, IOError) as e:
         logging.warning("Could not write dgl status file: %s", e)
 
 
+@tornado.gen.coroutine
 def status_file_timeout():
-    write_dgl_status_file()
+    yield write_dgl_status_file()
     IOLoop.current().add_timeout(time.time() + config.get('status_file_update_rate'),
                                  status_file_timeout)
 
@@ -307,7 +308,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.compressed_bytes_sent = 0
         self.uncompressed_bytes_sent = 0
         self.message_queue = []  # type: List[str]
-        self.failed_messages = 0
+        self.failed_messages = 0 # messages to webtiles
+        self.failed_on_messages = 0 # messages from webtiles
 
         self.subprotocol = None
 
@@ -1213,7 +1215,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 handler(**obj)
             elif self.process:
                 self.process.handle_input(message)
-            elif not self.watched_game and obj["msg"] != 'ui_state_sync':
+            elif (not self.watched_game
+                    and obj["msg"] != 'ui_state_sync'
+                    and obj["msg"] != 'key'):
                 # ui_state_sync can get queued by the js client just before
                 # shutdown, and have its sending delayed by enough that the
                 # process has stopped. I do not currently think there's a
@@ -1224,28 +1228,35 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.logger.warning("Didn't know how to handle msg (user %s): %s",
                                     self.username and self.username or "[Anon]",
                                     obj["msg"])
+            if self.failed_on_messages > 1:
+                self.logger.warning("%d more on_message errors...", self.failed_on_messages)
+            self.failed_on_messages = 0
         except OSError as e:
             # maybe should throw a custom exception from the socket call rather
             # than rely on these cases?
-            excerpt = message[:50] if len(message) > 50 else message
-            trunc = "..." if len(message) > 50 else ""
-            if e.errno == errno.EAGAIN or e.errno == errno.ENOBUFS:
-                # errno is different on mac vs linux, maybe also depending on
-                # python version
-                self.logger.warning(
-                    "Socket buffer full; skipping JSON message ('%r%s')!",
-                                excerpt, trunc)
-            else:
-                self.logger.warning(
-                                "Error while handling JSON message ('%r%s')!",
-                                excerpt, trunc,
-                                exc_info=True)
+            if self.failed_on_messages == 0:
+                excerpt = message[:50] if len(message) > 50 else message
+                trunc = "..." if len(message) > 50 else ""
+                if e.errno == errno.EAGAIN or e.errno == errno.ENOBUFS:
+                    # errno is different on mac vs linux, maybe also depending on
+                    # python version
+                    self.logger.warning(
+                        "Socket buffer full; skipping JSON message ('%r%s')!",
+                                    excerpt, trunc)
+                else:
+                    self.logger.warning(
+                                    "Error while handling JSON message ('%r%s')!",
+                                    excerpt, trunc,
+                                    exc_info=True)
+            self.failed_on_messages += 1
         except Exception:
-            excerpt = message[:50] if len(message) > 50 else message
-            trunc = "..." if len(message) > 50 else ""
-            self.logger.warning("Error while handling JSON message ('%r%s')!",
-                                excerpt, trunc,
-                                exc_info=True)
+            if self.failed_on_messages == 0:
+                excerpt = message[:50] if len(message) > 50 else message
+                trunc = "..." if len(message) > 50 else ""
+                self.logger.warning("Error while handling JSON message ('%r%s')!",
+                                    excerpt, trunc,
+                                    exc_info=True)
+            self.failed_on_messages += 1
 
     def _encode_for_send(self, msg, deflate):
         try:
@@ -1399,8 +1410,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             comp_ratio = 100 - 100 * (self.compressed_bytes_sent + self.uncompressed_bytes_sent) / self.total_message_bytes
             comp_ratio = round(comp_ratio, 2)
 
-        if self.failed_messages > 0:
-            failed_msg = ", %d failed messages" % self.failed_messages
+        if self.failed_messages > 0 or self.failed_on_messages > 0:
+            failed_msg = ", %d (client) + %d (process) failed messages" % (self.failed_messages, self.failed_on_messages)
         else:
             failed_msg = ""
 

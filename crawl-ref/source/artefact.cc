@@ -480,7 +480,9 @@ static void _add_randart_weapon_brand(const item_def &item,
     if (item_props[ARTP_BRAND] != SPWPN_NORMAL)
         return;
 
-    if (is_range_weapon(item))
+    if (is_blessed_weapon_type(item.sub_type))
+        item_props[ARTP_BRAND] = SPWPN_HOLY_WRATH;
+    else if (is_range_weapon(item))
     {
         item_props[ARTP_BRAND] = random_choose_weighted(
             2, SPWPN_SPEED,

@@ -193,6 +193,7 @@ static void _mark_solid_squares();
 vector<vault_placement> Temp_Vaults;
 static unique_creature_list temp_unique_creatures;
 static FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
+static set<misc_item_type> temp_generated_misc;
 
 const map_bitmask *Vault_Placement_Mask = nullptr;
 
@@ -300,8 +301,9 @@ bool builder(bool enable_random_maps)
     // TODO: why are these globals?
     // Save a copy of unique creatures for vetoes.
     temp_unique_creatures = you.unique_creatures;
-    // And unrands
+    // And unrands & misc items
     temp_unique_items = you.unique_items;
+    temp_generated_misc = you.generated_misc;
 
     unwind_bool levelgen(crawl_state.generating_level, true);
     rng::generator levelgen_rng(you.where_are_you);
@@ -343,6 +345,7 @@ bool builder(bool enable_random_maps)
                 get_uniq_map_names() = uniq_names;
                 you.unique_creatures = temp_unique_creatures;
                 you.unique_items = temp_unique_items;
+                you.generated_misc = temp_generated_misc;
 
                 // Because vault generation can be interrupted, this potentially
                 // leaves unlinked items kicking around, which triggers a lot
@@ -1479,6 +1482,7 @@ void dgn_reset_level(bool enable_random_maps)
 
     you.unique_creatures = temp_unique_creatures;
     you.unique_items = temp_unique_items;
+    you.generated_misc = temp_generated_misc;
 
 #ifdef DEBUG_STATISTICS
     _you_all_vault_list.clear();

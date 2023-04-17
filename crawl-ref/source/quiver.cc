@@ -607,7 +607,7 @@ namespace quiver
             unique_ptr<targeter> hitfunc;
             if (attack_cleaves(you, -1))
             {
-                const int range = reach_range == REACH_TWO ? 2 : 1;
+                const int range = reach_range;
                 hitfunc = make_unique<targeter_cleave>(&you, you.pos(), range);
             }
             else

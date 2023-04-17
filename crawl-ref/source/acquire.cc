@@ -1519,14 +1519,15 @@ static void _create_acquirement_item(item_def &item)
     // Now that we have a selection, mark any generated unrands as not having
     // been generated, so they go back in circulation. Exclude the selected
     // item from this, if it's an unrand.
-    for (auto aitem : acq_items)
+    for (item_def &aitem : acq_items)
     {
         if (is_unrandom_artefact(aitem)
             && (!is_unrandom_artefact(item)
                 || !is_unrandom_artefact(aitem, item.unrand_idx)))
         {
-            set_unique_item_status(aitem, UNIQ_NOT_EXISTS);
+            destroy_item(aitem, true);
         }
+        // TODO: if we allow misc acquirement, also destroy unchosen miscs
     }
 
     take_note(Note(NOTE_ACQUIRE_ITEM, 0, 0, item.name(DESC_A),

@@ -3606,8 +3606,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_SHAFT_SELF;
 
     // Evoking items.
-    case ABIL_EVOKE_ASMODEUS:
-        return TILEG_ABILITY_EVOKE_ASMODEUS;
     case ABIL_EVOKE_BLINK:
         return TILEG_ABILITY_BLINK;
     case ABIL_EVOKE_DISPATER:

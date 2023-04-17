@@ -292,6 +292,9 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     if (type == WPN_QUICK_BLADE && brand == SPWPN_SPEED)
         return false;
 
+    if (is_demonic_weapon_type(type) && brand == SPWPN_HOLY_WRATH)
+        return false;
+
     switch ((brand_type)brand)
     {
     // Universal brands.
@@ -1504,19 +1507,52 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     }
 }
 
-static void _generate_misc_item(item_def& item, int force_type)
+static misc_item_type _get_misc_item_type(int force_type)
 {
     if (force_type != OBJ_RANDOM)
-        item.sub_type = force_type;
-    else
     {
-        item.sub_type = random_choose(MISC_PHIAL_OF_FLOODS,
-                                      MISC_LIGHTNING_ROD,
-                                      MISC_BOX_OF_BEASTS,
-                                      MISC_PHANTOM_MIRROR,
-                                      MISC_TIN_OF_TREMORSTONES,
-                                      MISC_CONDENSER_VANE,
-                                      MISC_XOMS_CHESSBOARD);
+        if (you.generated_misc.count((misc_item_type)force_type))
+            return NUM_MISCELLANY;
+        return (misc_item_type)force_type;
+    }
+    set<misc_item_type> choices = {
+        MISC_PHIAL_OF_FLOODS,
+        MISC_LIGHTNING_ROD,
+        MISC_BOX_OF_BEASTS,
+        MISC_PHANTOM_MIRROR,
+        (misc_item_type)item_for_set(ITEM_SET_AREA_MISCELLANY),
+        MISC_XOMS_CHESSBOARD
+    };
+    for (auto it : you.generated_misc)
+        choices.erase(it);
+    if (choices.size())
+        return *random_iterator(choices);
+    return NUM_MISCELLANY;
+}
+
+static void _generate_misc_item(item_def& item, int force_type, int item_level)
+{
+    const auto typ = _get_misc_item_type(force_type);
+    if (typ == NUM_MISCELLANY)
+    {
+        item.base_type = OBJ_WANDS;
+        _generate_wand_item(item, OBJ_RANDOM, item_level);
+        return;
+    }
+    item.sub_type = typ;
+    switch (typ)
+    {
+    case MISC_BOX_OF_BEASTS:
+    case MISC_LIGHTNING_ROD:
+    case MISC_PHIAL_OF_FLOODS:
+    case MISC_PHANTOM_MIRROR:
+    case MISC_XOMS_CHESSBOARD:
+    case MISC_TIN_OF_TREMORSTONES:
+    case MISC_CONDENSER_VANE:
+        you.generated_misc.insert(typ);
+        break;
+    default:
+        break;
     }
 }
 
@@ -1795,7 +1831,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_MISCELLANY:
-        _generate_misc_item(item, force_type);
+        _generate_misc_item(item, force_type, item_level);
         break;
 
     // that is, everything turns to gold if not enumerated above, so ... {dlb}

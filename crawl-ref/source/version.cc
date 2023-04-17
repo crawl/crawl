@@ -22,7 +22,11 @@ namespace Version
     const rel_type ReleaseType = CRAWL_VERSION_RELEASE;
 }
 
-#if defined(__GNUC__) && defined(__VERSION__)
+#if defined(__clang__) && defined(__VERSION__)
+ #define COMPILER __VERSION__
+#elif defined(__clang__)
+ #define COMPILER "Clang (unknown version)"
+#elif defined(__GNUC__) && defined(__VERSION__)
  #define COMPILER "GCC " __VERSION__
 #elif defined(__GNUC__)
  #define COMPILER "GCC (unknown version)"

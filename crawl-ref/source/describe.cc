@@ -4517,8 +4517,9 @@ static const item_def* _weapon_for_attack(const monster_info& mi, int atk)
 
 static string _monster_attacks_description(const monster_info& mi)
 {
-    // Spectral weapons use the player's stats to attack, so displaying
+    // Spectral weapons use the wielder's stats to attack, so displaying
     // their 'monster' damage here is just misleading.
+    // TODO: display the right number without an awful hack
     if (mi.type == MONS_SPECTRAL_WEAPON)
         return "";
 

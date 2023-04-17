@@ -1219,8 +1219,6 @@ static bool _give_nemelex_gift(bool forced = false)
         simple_god_message(" deals you some cards!");
         mprf(MSGCH_GOD, "You now have %s.", deck_summary().c_str());
     }
-    else
-        simple_god_message(" goes to deal, but finds you have enough cards.");
     _inc_gift_timeout(5 + random2avg(9, 2));
     you.num_current_gifts[you.religion]++;
     you.num_total_gifts[you.religion]++;

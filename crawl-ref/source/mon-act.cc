@@ -1701,6 +1701,7 @@ void handle_monster_move(monster* mons)
     }
 
     mons->shield_blocks = 0;
+    check_spectral_weapon(*mons);
 
     _mons_in_cloud(*mons);
     actor_apply_toxic_bog(mons);
@@ -2130,7 +2131,7 @@ static void _torpor_snail_slow(monster* mons)
     // XXX: might be nice to refactor together with _ancient_zyme_sicken().
     // XXX: also with torpor_slowed().... so many duplicated checks :(
 
-    if (is_sanctuary(mons->pos()))
+    if (is_sanctuary(mons->pos()) || mons->props.exists(KIKU_WRETCH_KEY))
         return;
 
     if (!is_sanctuary(you.pos())

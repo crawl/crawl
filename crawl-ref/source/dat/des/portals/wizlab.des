@@ -7,7 +7,7 @@
 #          |or top-tier undead      |or random               |
 #--------------------------------------------------------------------
 #Wucad Mu  |hell effect "monks",    |potions of experience,  |9000
-#          |summoning OCS           |staff of Wucad Mu       |
+#          |summoning OCS           |crystal ball of Wucad Mu|
 #--------------------------------------------------------------------
 #Cigotuvi  |uglies, abominations,   |tmut potions / books,   |16000
 #          |lump shapeshifters      |scrolls of poison       |
@@ -1302,7 +1302,7 @@ TAGS:       no_rotate
 SUBST:      T = t.
 KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the \
                 hd:15 tile:mons_wucad_mu_statue
-KITEM:      8 = staff_of_wucad_mu
+KITEM:      8 = crystal_ball_of_wucad_mu
 COLOUR:     c = darkgrey
 COLOUR:     t = lightred / red w:3
 TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4

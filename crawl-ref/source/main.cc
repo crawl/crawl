@@ -2430,7 +2430,10 @@ static void _prep_input()
 
     you.redraw_status_lights = true;
     if (you.running == 0)
+    {
         you.quiver_action.set_needs_redraw();
+        you.refresh_rampage_hints();
+    }
     print_stats();
     update_screen();
 
@@ -2519,18 +2522,12 @@ static void _update_still_winds()
     end_still_winds();
 }
 
-static void _check_spectral_weapon()
-{
-    if (!you.triggered_spectral)
-        if (monster* sw = find_spectral_weapon(&you))
-            end_spectral_weapon(sw, false, true);
-    you.triggered_spectral = false;
-}
-
 void world_reacts()
 {
     // All markers should be activated at this point.
     ASSERT(!env.markers.need_activate());
+
+    you.rampage_hints.clear(); // only draw on your turn
 
     fire_final_effects();
 
@@ -2569,7 +2566,7 @@ void world_reacts()
     _check_banished();
     _check_sanctuary();
     _check_trapped();
-    _check_spectral_weapon();
+    check_spectral_weapon(you);
 
     run_environment_effects();
 

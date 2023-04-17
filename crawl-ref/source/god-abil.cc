@@ -15,6 +15,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
+#include "attack.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
 #include "branch.h"
@@ -5187,16 +5188,18 @@ spret uskayaw_grand_finale(bool fail)
 
     ASSERT(mons);
 
+    string attack_punctuation = attack_strength_punctuation(mons->hit_points);
+
     // kill the target
     if (mons->type == MONS_ROYAL_JELLY && !mons->is_summoned())
     {
         // need to do this here, because react_to_damage is never called
-        mprf("%s explodes violently into a cloud of jellies!",
-                                        mons->name(DESC_THE, false).c_str());
+        mprf("%s explodes violently into a cloud of jellies%s",
+                                        mons->name(DESC_THE, false).c_str(), attack_punctuation.c_str());
         trj_spawn_fineff::schedule(&you, mons, mons->pos(), mons->hit_points);
     }
     else
-        mprf("%s explodes violently!", mons->name(DESC_THE, false).c_str());
+        mprf("%s explodes violently%s", mons->name(DESC_THE, false).c_str(), attack_punctuation.c_str());
     mons->flags |= MF_EXPLODE_KILL;
     if (!mons->is_insubstantial())
     {

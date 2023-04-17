@@ -235,6 +235,7 @@ static unordered_set<int> _player_nonbook_spells =
     SPELL_SONIC_WAVE,
     // religion
     SPELL_SMITING,
+    SPELL_MINOR_DESTRUCTION,
     // Ds powers
     SPELL_HURL_DAMNATION,
     // Green Draconian breath
