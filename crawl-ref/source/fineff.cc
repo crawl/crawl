@@ -869,6 +869,7 @@ void spectral_weapon_fineff::fire()
                  atkr->mindex(),
                  MG_FORCE_BEH | MG_FORCE_PLACE);
     mg.set_summoned(atkr, 0, 0);
+    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
     mg.props[TUKIMA_WEAPON] = *weapon;
     mg.props[TUKIMA_POWER] = 50;
 
