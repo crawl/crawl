@@ -270,8 +270,8 @@ NAME:    crystal ball of Wucad Mu
 INSCRIP: *channel
 OBJ:     OBJ_ARMOUR/ARM_ORB
 COLOUR:  ETC_MAGIC
-# TILE: XXX
-# TILE_EQ: XXX
+TILE:    urand_wucad_mu
+TILE_EQ: orb_of_wucad_mu
 VALUE:   1000
 DESCRIP: *Channel:  It often returns the magic spent to cast spells, but lowers
  their success rate. It always returns the magic spent on miscasts.
@@ -1569,8 +1569,8 @@ ENUM:     BATTLE
 NAME:     sphere of Battle
 OBJ:      OBJ_ARMOUR/ARM_ORB
 COLOUR:   ETC_MAGIC
-# TILE: XXX
-# TILE_EQ: XXX
+TILE:     urand_battle
+TILE_EQ:  orb_of_battle
 VALUE:    800
 DESCRIP:  It enhances your destructive magic.
 +It weakens your non-destructive magic.

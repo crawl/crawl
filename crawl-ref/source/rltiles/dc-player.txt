@@ -860,6 +860,8 @@ orb3 ORB3 ORB_LAST
 
 ##unrand (or unique) shields
 orb_of_dispater ORB_OF_DISPATER
+orb_of_wucad_mu ORB_OF_WUCAD_MU
+orb_of_battle ORB_OF_BATTLE
 
 buckler_spriggan BUCKLER_SPRIGGAN
 buckler_warlock BUCKLER_WARLOCK
