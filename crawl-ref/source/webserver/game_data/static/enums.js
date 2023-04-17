@@ -247,7 +247,7 @@ define(function () {
     bg_flags.flags.KRAKEN_SE  = highbit;
     bg_flags.flags.KRAKEN_SW  = [0, 0x01];
 
-    bg_flags.flags.RAMPAGE     = [0, 0x02];
+    bg_flags.flags.RAMPAGE     = [0, 0x020];
 
     bg_flags.flags.LANDING     = [0, 0x200];
     bg_flags.flags.RAY_MULTI   = [0, 0x400];
