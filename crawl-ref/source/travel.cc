@@ -2969,7 +2969,7 @@ static int _find_transtravel_stair(const level_id &cur,
                                     level_id &closest_level,
                                     int &best_level_distance,
                                     coord_def &best_stair,
-                                    vector<string> &fail_reasons,
+                                    set<string> &fail_reasons,
                                     int search_depth = 0)
 {
     int local_distance = -1;
@@ -2983,7 +2983,7 @@ static int _find_transtravel_stair(const level_id &cur,
         // Are we in an exclude? If so, bail out. Unless it is just a stair exclusion.
         if (is_excluded(stair, li.get_excludes()) && !is_stair_exclusion(stair))
         {
-            fail_reasons.push_back("an exclusion on " + cur.describe());
+            fail_reasons.insert("an exclusion on " + cur.describe());
             return -1;
         }
 
@@ -3053,14 +3053,14 @@ static int _find_transtravel_stair(const level_id &cur,
     {
         if (stairs_destination_is_excluded(si))
         {
-            fail_reasons.push_back("an exclusion on " + si.destination.id.describe());
+            fail_reasons.insert("an exclusion on " + si.destination.id.describe());
             continue;
         }
 
         // Skip placeholders and excluded stairs.
         if (!si.can_travel() || is_excluded(si.position, li.get_excludes()))
         {
-            fail_reasons.push_back("an exclusion on " + cur.describe());
+            fail_reasons.insert("an exclusion on " + cur.describe());
             continue;
         }
 
@@ -3223,7 +3223,7 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
     travel_cache.clear_distances();
 
     fill_travel_point_distance(you.pos());
-    vector<string> fail_reasons;
+    set<string> fail_reasons;
 
     // either off-level, or traversable and on-level
     // TODO: actually check this when the square is off-level? The current
