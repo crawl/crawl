@@ -285,7 +285,7 @@ public:
     virtual int res_constrict() const = 0;
     virtual int willpower() const = 0;
     virtual int check_willpower(const actor* source, int power);
-    virtual bool no_tele(bool blink = false) const = 0;
+    virtual bool no_tele(bool blink = false, bool temp = true) const = 0;
     virtual int inaccuracy() const;
     int inaccuracy_penalty() const;
     virtual bool antimagic_susceptible() const = 0;

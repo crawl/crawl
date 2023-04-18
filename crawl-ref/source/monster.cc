@@ -3922,7 +3922,7 @@ int monster::willpower() const
     return u;
 }
 
-bool monster::no_tele(bool /*blinking*/) const
+bool monster::no_tele(bool /*blinking*/, bool /*temp*/) const
 {
     // Plants can't survive without roots, so it's either this or auto-kill.
     // Statues have pedestals so moving them is weird.

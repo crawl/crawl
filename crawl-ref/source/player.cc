@@ -6513,13 +6513,12 @@ int player_willpower(bool temp)
  * Is the player prevented from teleporting? If so, why?
  *
  * @param blinking      Are you blinking or teleporting?
+ * @param temp          Are you being prevented by a temporary effect?
  * @return              Why the player is prevented from teleporting, if they
  *                      are; else, the empty string.
  */
-string player::no_tele_reason(bool blinking) const
+string player::no_tele_reason(bool blinking, bool temp) const
 {
-    // XX add a temp parm; in absence of this, do the non-temp check first
-    // assumption: species is the only source of stasis
     if (stasis())
         return "Your stasis prevents you from teleporting.";
 
@@ -6536,13 +6535,13 @@ string player::no_tele_reason(bool blinking) const
 
     vector<string> problems;
 
-    if (duration[DUR_DIMENSION_ANCHOR])
+    if (temp && duration[DUR_DIMENSION_ANCHOR])
         problems.emplace_back("locked down by a dimension anchor");
 
-    if (duration[DUR_LOCKED_DOWN])
+    if (temp && duration[DUR_LOCKED_DOWN])
         problems.emplace_back("magically locked down");
 
-    if (form == transformation::tree)
+    if (temp && form == transformation::tree)
         problems.emplace_back("held in place by your roots");
 
     vector<const item_def *> notele_items;
@@ -6591,11 +6590,12 @@ string player::no_tele_reason(bool blinking) const
  * Is the player prevented from teleporting/blinking right now?
  *
  * @param blinking      Are you blinking or teleporting?
+ * @param temp          Are you being prevented by a temporary effect?
  * @return              Whether the player is prevented from teleportation.
  */
-bool player::no_tele(bool blinking) const
+bool player::no_tele(bool blinking, bool temp) const
 {
-    return !no_tele_reason(blinking).empty();
+    return !no_tele_reason(blinking, temp).empty();
 }
 
 bool player::racial_permanent_flight() const
