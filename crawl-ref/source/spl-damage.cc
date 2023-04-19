@@ -295,7 +295,9 @@ static bool _warn_about_bad_targets(spell_type spell, vector<coord_def> targets)
     for (coord_def p : targets)
     {
         const monster* mon = monster_at(p);
-        if (!mon || god_protects(&you, mon))
+        // XXX: maybe check for ioods/bspheres instead of all conjured mons..?
+        // feels a little bad to blow up a prism with a plasma beam, maybe?
+        if (!mon || god_protects(&you, mon) || mons_is_conjured(mon->type))
             continue;
         string adj, suffix;
         bool penance;
