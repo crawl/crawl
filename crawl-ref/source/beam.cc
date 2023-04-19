@@ -2483,25 +2483,26 @@ void bolt::affect_endpoint()
         const bool is_player = agent() && agent()->is_player();
         const int num = is_player ? div_rand_round(ench_power * 3, 20) + 3 + random2(7)
                                   : random_range(3, 12, 2);
-        const int dur = div_rand_round(ench_power * 4, 3) + 66;
+        const int dur = is_player ? ench_power + 20
+                                  : div_rand_round(ench_power * 4, 3) + 66;
         set<coord_def> splash_coords = create_feat_splash(pos(), is_player ? 2 : 1, num, dur);
         dprf(DIAG_BEAM, "Creating pool at %d,%d with %d tiles of water for %d auts.", pos().x, pos().y, num, dur);
 
         // Waterlog anything at the center, even if a pool wasn't generated there
         splash_coords.insert(pos());
 
-        if (is_player)
+        if (!is_player)
+            break;
+        for (const coord_def &coord : splash_coords)
         {
-            for (const coord_def &coord : splash_coords)
-            {
-                monster* mons = monster_at(coord);
-                if (mons && !mons->res_water_drowning())
-                {
-                    simple_monster_message(*mons, " is engulfed in water.");
-                    mons->add_ench(mon_enchant(ENCH_WATERLOGGED, 0, &you,
-                                                   random_range(dur, dur * 3 / 2) - 20 * coord.distance_from(pos())));
-                }
-            }
+            monster* mons = monster_at(coord);
+            if (!mons || mons->res_water_drowning())
+                continue;
+
+            simple_monster_message(*mons, " is engulfed in water.");
+            const int ench_dur = random_range(dur, dur * 3 / 2)
+                               - 20 * coord.distance_from(pos());
+            mons->add_ench(mon_enchant(ENCH_WATERLOGGED, 0, &you, ench_dur));
         }
         break;
     }
