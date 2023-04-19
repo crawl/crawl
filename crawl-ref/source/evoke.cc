@@ -498,7 +498,7 @@ static bool _phial_of_floods(dist *target)
 
     const int power = 10 + you.skill(SK_EVOCATIONS, 4);
     zappy(ZAP_PRIMAL_WAVE, power, false, beam);
-    beam.range = LOS_RADIUS;
+    beam.range = 5;
     beam.aimed_at_spot = true;
 
     // TODO: this needs a custom targeter
