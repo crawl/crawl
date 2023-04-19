@@ -2346,10 +2346,10 @@ static void _recharge_xp_evokers(int exp)
     FixedVector<item_def*, NUM_MISCELLANY> evokers(nullptr);
     list_charging_evokers(evokers);
 
-    int xp_factor = max(min((int)exp_needed(you.experience_level+1, 0) * 2 / 7,
-                             you.experience_level * 425),
-                        you.experience_level*4 + 30)
-                    / (3 + you.skill_rdiv(SK_EVOCATIONS, 2, 13));
+    const int xp_by_xl = exp_needed(you.experience_level+1, 0)
+                       - exp_needed(you.experience_level, 0);
+    const int skill_denom = 3 + you.skill_rdiv(SK_EVOCATIONS, 2, 13);
+    const int xp_factor = max(xp_by_xl / 5, 100) / skill_denom;
 
     for (int i = 0; i < NUM_MISCELLANY; ++i)
     {
