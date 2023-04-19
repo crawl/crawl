@@ -2392,6 +2392,17 @@ int bolt::get_cloud_size(bool min, bool max) const
     return 8 + random2(5);
 }
 
+static void _waterlog_mon(monster &mon, int ench_pow, int dist)
+{
+    if (mon.res_water_drowning() || mon.has_ench(ENCH_WATERLOGGED))
+        return;
+
+    simple_monster_message(mon, " is engulfed in water.");
+    const int min_dur = ench_pow + 20;
+    const int dur = random_range(min_dur, min_dur * 3 / 2) - 20 * dist;
+    mon.add_ench(mon_enchant(ENCH_WATERLOGGED, 0, &you, dur));
+}
+
 void bolt::affect_endpoint()
 {
     // hack: we use hit_verb to communicate whether a ranged
@@ -2483,8 +2494,7 @@ void bolt::affect_endpoint()
         const bool is_player = agent() && agent()->is_player();
         const int num = is_player ? div_rand_round(ench_power * 3, 20) + 3 + random2(7)
                                   : random_range(3, 12, 2);
-        const int dur = is_player ? ench_power + 20
-                                  : div_rand_round(ench_power * 4, 3) + 66;
+        const int dur = div_rand_round(ench_power * 4, 3) + 66;
         set<coord_def> splash_coords = create_feat_splash(pos(), is_player ? 2 : 1, num, dur);
         dprf(DIAG_BEAM, "Creating pool at %d,%d with %d tiles of water for %d auts.", pos().x, pos().y, num, dur);
 
@@ -2496,13 +2506,8 @@ void bolt::affect_endpoint()
         for (const coord_def &coord : splash_coords)
         {
             monster* mons = monster_at(coord);
-            if (!mons || mons->res_water_drowning())
-                continue;
-
-            simple_monster_message(*mons, " is engulfed in water.");
-            const int ench_dur = random_range(dur, dur * 3 / 2)
-                               - 20 * coord.distance_from(pos());
-            mons->add_ench(mon_enchant(ENCH_WATERLOGGED, 0, &you, ench_dur));
+            if (mons)
+                _waterlog_mon(*mons, ench_power, coord.distance_from(pos()));
         }
         break;
     }
@@ -4614,6 +4619,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         if (mon->add_ench(ench))
             simple_monster_message(*mon, " is blinded.");
     }
+
+    if (origin_spell == SPELL_PRIMAL_WAVE && agent() && agent()->is_player())
+        _waterlog_mon(*mon, ench_power, 0);
 }
 
 static int _knockback_dist(spell_type origin, int pow)
