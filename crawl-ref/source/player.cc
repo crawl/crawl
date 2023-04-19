@@ -6141,7 +6141,7 @@ int player::corrosion_amount() const
     if (duration[DUR_CORROSION])
         corrosion += you.props[CORROSION_KEY].get_int();
 
-    if (env.level_state & LSTATE_SLIMY_WALL)
+    if (you.on_current_level && env.level_state & LSTATE_SLIMY_WALL)
         corrosion += slime_wall_corrosion(&you);
 
     if (player_in_branch(BRANCH_DIS))
