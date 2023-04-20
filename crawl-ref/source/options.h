@@ -277,6 +277,9 @@ struct opt_parse_state
     }
 };
 
+/// This class is used to separate out general option handling (parsing,
+/// meta-state, include file loading, lua handling) from specific option field
+/// handling; the latter should be implemented on the subclass `game_options`.
 struct base_game_options
 {
     // actual game state goes in game_options, option parsing and state here
@@ -363,6 +366,10 @@ protected:
     void set_option_fragment(const string &s, bool prepend);
 };
 
+/// This class implements most of crawl's options as well as their state.
+/// (Parsing, option handling state, etc. is separated out into the superclass.)
+/// An instance with the current options is canonically available via the static
+/// `Options`.
 struct game_options : public base_game_options
 {
 public:
