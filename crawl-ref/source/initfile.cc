@@ -194,6 +194,48 @@ const vector<GameOption*> base_game_options::build_options_list()
     return options; // ignored by subclass...
 }
 
+// **Adding new options**
+//
+// The main place to put a new option is in the big vector of GameOption
+// objects initialized in this function. GameOption objects wrap member vars
+// on `game_options` objects, in one of two ways:
+//
+// * direct wrappers: e.g. a `BoolGameOption` object that corresponds directly
+//   to some member of `game_options`. Wrappers exist for various commonly
+//   used types, e.g. int, vector, regexes, etc.; see game-options.h for the
+//   full complement of wrapper classes available. Some of these are templated,
+//   for example, `ListGameOption` supports any class that has a constructor
+//   from string, and also accepts a pair of a type and a function that converts
+//   from string to that type.
+// * indirect wrappers: these use an `on_set` function to turn a string or list
+//   into some state that doesn't have a direct wrapper. For example, an option
+//   that is parsed into a list of strings as a `ListGameOption<string>`, with
+//   an `on_set` function that further converts the strings into a set of int
+//   values (this happens to be a case that doesn't have a wrapper class). An
+//   `on_set` function *should not* modify state outside of game_options
+//   (unless you really know what you're doing) -- these functions are called
+//   during initialization of `game_options` and so may overwrite each other
+//   if this sort of state is not modified with great care.
+//
+// Adding a class via a wrapper class in one of these ways will guarantee:
+// * orderly initialization, with defaults easily specifiable, and a generic
+//   reset function (if the defaults are specified with the constructor)
+// * standardized parsing, handling of case, etc without dealing with the parser
+//   directly; handling of options with multiple names
+// * generic code to set the option from a string, set from another option
+// * future support for option menus, generic option serialization code
+//
+// Nonetheless, if your option is too powerful to be contained in a GameOption
+// subclass, there are two more ways that options can be handled. The first
+// is the function `game_options::read_custom_option`, which currently deals
+// with (a) list options with very complicated handling, (b) options that are
+// indirect aliases to other options, and (c) options that support subkeys. If
+// at all possible, it is not recommended to add to this function. Third, some
+// options are handled entirely in lua using the `chk_lua_option` table in
+// `userbase.lua`. See for example `runrest_stop_message` and
+// `runrest_ignore_message`. Again, adding new options to this set is
+// dispreferred, and should at best be used only for features implemented
+// fully in lua code.
 const vector<GameOption*> game_options::build_options_list()
 {
     const bool USING_DGL =
@@ -3499,6 +3541,19 @@ void game_options::split_parse(const opt_parse_state &state,
     }
 }
 
+/// Parse an option line. Meta-fields are handled directly in this function,
+/// e.g. fields that deal with option parsing state, loading of other files,
+/// etc. This function calls out to `read_custom_option` and any options
+/// specified in the options list. Since the base class is never directly
+/// instantiated, this is always called in the context of
+/// `game_options::build_options_list`. This does *not* handle things like
+/// lua code, comments, etc (see `base_game_options::read_options`) -- at the
+/// point where this function is called we should have a valid options line.
+///
+/// @str a raw option line to parse
+/// @runscripts whether lua code should should be run or not. This is false on
+///             the initial options parse, and true on the "real" call when
+///             starting up a game.
 void base_game_options::read_option_line(const string &str, bool runscripts)
 {
     opt_parse_state state = parse_option_line(str);
@@ -3607,6 +3662,9 @@ bool base_game_options::read_custom_option(opt_parse_state &, bool)
 
 // Handle options that have custom parsing code
 // return true if we should stop processing the line
+//
+// Please don't add to this function if you can help it. See the comment
+// "Adding new options" in this file above `game_options::build_options_list()`.
 bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
 {
     const string key = state.key; // weak
