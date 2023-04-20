@@ -477,7 +477,7 @@ const vector<GameOption*> game_options::build_options_list()
             {"glowing", "artefact"},
             false,
             [this]() { update_explore_greedy_visit_conditions(); }),
-        new ListGameOption<string>(SIMPLE_NAME(travel_avoid_terrain), {}, false,
+        new ListGameOption<string>(ON_SET_NAME(travel_avoid_terrain), {}, false,
             [this]() { update_travel_terrain(); }),
         new BoolGameOption(SIMPLE_NAME(travel_one_unsafe_move), false),
         new BoolGameOption(SIMPLE_NAME(dump_on_save), true),
@@ -2958,12 +2958,29 @@ void game_options::do_kill_map(const string &from, const string &to)
         kill_map[ifrom] = ito;
 }
 
+// Given a dungeon feature description, returns the feature number. This is a
+// crude hack and currently recognises only (deep/shallow) water. (XXX)
+//
+// Returns -1 if the feature named is not recognised, else returns the feature
+// number (guaranteed to be 0-255).
+static int _get_feature_type(const string &feature)
+{
+    if (feature.find("deep water") != string::npos)
+        return DNGN_DEEP_WATER;
+    if (feature.find("shallow water") != string::npos)
+        return DNGN_SHALLOW_WATER;
+    return -1;
+}
+
 void game_options::update_travel_terrain()
 {
-    reset_travel_terrain();
-    for (const string &t : travel_avoid_terrain)
+    travel_avoid_terrain.init(0);
+    for (const string &t : travel_avoid_terrain_option)
     {
-        if (prevent_travel_to(t) < 0)
+        const int tfeat = _get_feature_type(t);
+        if (tfeat >= 0)
+            travel_avoid_terrain[tfeat] = 1;
+        else
             report_error("Unknown terrain type '%s'", t.c_str());
     }
 }

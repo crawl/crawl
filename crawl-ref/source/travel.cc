@@ -134,9 +134,6 @@ static uint8_t curr_waypoints[GXM][GYM];
 // FIXME: eliminate this. It's needed for RMODE_CONNECTIVITY.
 static bool ignore_player_traversability = false;
 
-// Map of terrain types that are forbidden.
-static FixedVector<int8_t,NUM_FEATURES> forbidden_terrain;
-
 static bool _is_valid_waypoint_pos(const level_pos &pos);
 
 // N.b. this #define only adds dprfs and so isn't very useful outside of a
@@ -264,7 +261,7 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
     if (!ignore_player_traversability)
     {
         // If the feature is in travel_avoid_terrain, respect that.
-        if (forbidden_terrain[grid])
+        if (Options.travel_avoid_terrain[grid])
             return false;
 
         // Swimmers and water-walkers get deep water.
@@ -583,35 +580,6 @@ void travel_init_new_level()
     travel_init_load_level();
 
     explore_stopped_pos.reset();
-}
-
-// Given a dungeon feature description, returns the feature number. This is a
-// crude hack and currently recognises only (deep/shallow) water. (XXX)
-//
-// Returns -1 if the feature named is not recognised, else returns the feature
-// number (guaranteed to be 0-255).
-static int _get_feature_type(const string &feature)
-{
-    if (feature.find("deep water") != string::npos)
-        return DNGN_DEEP_WATER;
-    if (feature.find("shallow water") != string::npos)
-        return DNGN_SHALLOW_WATER;
-    return -1;
-}
-
-// Given a feature description, prevents travel to locations of that feature
-// type.
-int prevent_travel_to(const string &feature)
-{
-    int feature_type = _get_feature_type(feature);
-    if (feature_type != -1)
-        forbidden_terrain[feature_type] = 1;
-    return feature_type;
-}
-
-void reset_travel_terrain()
-{
-    forbidden_terrain.init(0);
 }
 
 static bool _is_branch_stair(const coord_def& pos)

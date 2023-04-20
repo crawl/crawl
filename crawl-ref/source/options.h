@@ -586,7 +586,10 @@ public:
     int         explore_delay;  // How long to pause between explore moves
     int         rest_delay;     // How long to pause between rest moves
 
-    vector<string> travel_avoid_terrain;
+    vector<string> travel_avoid_terrain_option;
+    // Map of terrain types that are forbidden.
+    FixedVector<int8_t,NUM_FEATURES> travel_avoid_terrain;
+
 
     bool        show_travel_trail;
 
