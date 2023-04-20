@@ -2392,14 +2392,14 @@ int bolt::get_cloud_size(bool min, bool max) const
     return 8 + random2(5);
 }
 
-static void _waterlog_mon(monster &mon, int ench_pow, int dist)
+static void _waterlog_mon(monster &mon, int ench_pow)
 {
     if (mon.res_water_drowning() || mon.has_ench(ENCH_WATERLOGGED))
         return;
 
     simple_monster_message(mon, " is engulfed in water.");
     const int min_dur = ench_pow + 20;
-    const int dur = random_range(min_dur, min_dur * 3 / 2) - 20 * dist;
+    const int dur = random_range(min_dur, min_dur * 3 / 2);
     mon.add_ench(mon_enchant(ENCH_WATERLOGGED, 0, &you, dur));
 }
 
@@ -2507,7 +2507,7 @@ void bolt::affect_endpoint()
         {
             monster* mons = monster_at(coord);
             if (mons)
-                _waterlog_mon(*mons, ench_power, coord.distance_from(pos()));
+                _waterlog_mon(*mons, ench_power);
         }
         break;
     }
@@ -4621,7 +4621,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     }
 
     if (origin_spell == SPELL_PRIMAL_WAVE && agent() && agent()->is_player())
-        _waterlog_mon(*mon, ench_power, 0);
+        _waterlog_mon(*mon, ench_power);
 }
 
 static int _knockback_dist(spell_type origin, int pow)
