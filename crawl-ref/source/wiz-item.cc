@@ -1487,7 +1487,9 @@ static void _debug_rap_stats(FILE *ostat)
 #endif
         "ARTP_NOISE",
         "ARTP_PREVENT_SPELLCASTING",
+#if TAG_MAJOR_VERSION == 34
         "ARTP_CAUSE_TELEPORTATION",
+#endif
         "ARTP_PREVENT_TELEPORTATION",
         "ARTP_ANGRY",
 #if TAG_MAJOR_VERSION == 34

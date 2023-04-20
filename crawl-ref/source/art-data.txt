@@ -94,7 +94,6 @@
 # * rcorr:    Grants corrosion resistance.
 # * rmsl:     Passively repels missiles.
 # * rmut:     Grants mutation resistance.
-# * rnd_tele: Induces random teleportation.
 # * seeinv:   Lets wearer see invisible.
 # * skip_ego: The item's ego is skipped in its inscription and description, to
 #             be replaced by INSCRIP: and DBRAND: entries.

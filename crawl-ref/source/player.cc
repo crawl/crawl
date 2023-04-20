@@ -1119,15 +1119,7 @@ int get_teleportitis_level()
     if (you.stasis())
         return 0;
 
-    int tp = 0;
-
-    // artefacts
-    tp += 8 * you.scan_artefacts(ARTP_CAUSE_TELEPORTATION);
-
-    // mutations
-    tp += you.get_mutation_level(MUT_TELEPORT) * 6;
-
-    return tp;
+    return you.get_mutation_level(MUT_TELEPORT) * 6;
 }
 
 // Computes bonuses to regeneration from most sources. Does not handle

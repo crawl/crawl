@@ -63,7 +63,6 @@ my %field_type = (
     REGEN    => "num",
     RMSL     => "bool",
     RMUT     => "bool",
-    RND_TELE => "bool",
     SEEINV   => "bool",
     SKIP_EGO => "bool",
     SH       => "num",
@@ -527,12 +526,12 @@ my @art_order = (
     "flags",
 
 # start TAG_MAJOR_VERSION == 34
-    # Remove five copies of "unused", when
+    # Remove six copies of "unused", when
     # it is no longer the case that TAG_MAJOR_VERSION == 34
     "{", "BRAND", "AC", "EV", "STR", "INT", "DEX", "\n",
     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "WILL", "\n",
     "SEEINV", "INV", "FLY", "BLINK", "unused",  "NOISES", "\n",
-    "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "unused", "\n",
+    "NOSPELL", "unused", "NOTELEP", "ANGRY", "unused", "\n",
     "MUTATE", "unused", "SLAY", "unused", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
     "RMSL", "unused", "REGEN", "unused", "NO_UPGRADE", "RCORR", "\n",
@@ -544,7 +543,7 @@ my @art_order = (
 #     "{", "BRAND", "AC", "EV", "STR", "INT", "DEX", "\n",
 #     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "WILL", "\n",
 #     "SEEINV", "INV", "FLY", "BLINK", "NOISES", "\n",
-#     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "\n",
+#     "NOSPELL", "NOTELEP", "ANGRY", "\n",
 #     "MUTATE", "SLAY", "STEALTH", "MP", "\n",
 #     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
 #     "RMSL", "REGEN", "NO_UPGRADE", "RCORR", "\n",

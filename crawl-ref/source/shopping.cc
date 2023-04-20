@@ -144,9 +144,6 @@ int artefact_value(const item_def &item)
     if (prop[ARTP_ANGRY])
         ret -= 3;
 
-    if (prop[ARTP_CAUSE_TELEPORTATION])
-        ret -= 3;
-
     if (prop[ARTP_NOISE])
         ret -= 5;
 
