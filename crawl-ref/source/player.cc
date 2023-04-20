@@ -2144,13 +2144,11 @@ int player_armour_shield_spell_penalty()
 }
 
 /**
- * How many spell-success-chance-boosting ('wizardry') effects can the player
- * apply to the given spell?
+ * How many spell-success-boosting ('wizardry') effects does the player have?
  *
- * @param spell     The type of spell being cast.
- * @return          The number of relevant wizardry effects.
+ * @return    The number of wizardry effects.
  */
-int player_wizardry(spell_type /*spell*/)
+int player_wizardry()
 {
     return you.wearing(EQ_RINGS, RING_WIZARDRY)
            + (you.get_mutation_level(MUT_BIG_BRAIN) == 3 ? 1 : 0);
