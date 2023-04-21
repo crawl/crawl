@@ -55,6 +55,11 @@ public:
             on_set();
     }
     virtual void set_from(const GameOption *other) = 0;
+    void set_from(const GameOption &other)
+    {
+        return set_from(&other);
+    }
+
     virtual string loadFromString(const std::string &, rc_line_type);
     virtual string loadFromParseState(const opt_parse_state &state);
 

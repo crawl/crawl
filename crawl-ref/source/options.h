@@ -342,6 +342,7 @@ struct base_game_options
     bool was_included(const string &file) const;
     static string resolve_include(string including_file, string included_file,
                             const vector<string> *rcdirs = nullptr);
+    void set_from_defaults(const string &opt);
 
     void report_error(PRINTF(1, ));
 

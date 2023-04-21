@@ -310,8 +310,8 @@ options:
 the message "The crimson imp hits you!" will be displayed in red, while "The
 killer bee hits you!" will be displayed in cyan.
 
-0-e     Aliases and variables.
-------------------------------
+0-e     Aliases, variables, and other directives
+------------------------------------------------
 
 For long option names, you can define option aliases by doing:
     alias := long_option_name
@@ -336,6 +336,10 @@ that changing the variables defined in these files will only affect your own
 configuration file, as the default options will have already been loaded. If
 you want to change them, you will have to override the options themselves.
 
+To reset a value to its defaults, you can use:
+    default = option_name
+
+This won't work for certain options that have custom parsing.
 
 1-  Starting Screen.
 ====================
