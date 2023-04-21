@@ -3541,6 +3541,27 @@ void game_options::split_parse(const opt_parse_state &state,
     }
 }
 
+void base_game_options::set_from_defaults(const string &opt)
+{
+    // don't call this during the game_options constructor...
+    // more generally, on first call, the return of this function will be
+    // initialized to a fresh game_options object, but without any of the lua
+    // default code having been run. After this code is run, it is updated.
+    // So this function will only have complete behavior after that point.
+    game_options &defaults = get_default_options();
+
+    if (!defaults.count(opt))
+    {
+        report_error("Unknown option name for default: '%s'", opt.c_str());
+        return;
+    }
+
+    if (constants.count(opt))
+        constants.erase(opt);
+
+    (*this)[opt].set_from(defaults[opt]);
+}
+
 /// Parse an option line. Meta-fields are handled directly in this function,
 /// e.g. fields that deal with option parsing state, loading of other files,
 /// etc. This function calls out to `read_custom_option` and any options
@@ -3627,6 +3648,11 @@ void base_game_options::read_option_line(const string &str, bool runscripts)
     else if (state.key == "bindkey" && runscripts)
     {
         _bindkey(state.raw_field);
+        return;
+    }
+    else if (state.key == "default")
+    {
+        set_from_defaults(state.field);
         return;
     }
 
