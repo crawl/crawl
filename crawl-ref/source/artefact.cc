@@ -690,8 +690,8 @@ static const artefact_prop_data artp_data[] =
         nullptr, []() { return 1; }, 0, 0 },
 #if TAG_MAJOR_VERSION == 34
     { "*Tele", ARTP_VAL_BOOL,  0,   // ARTP_CAUSE_TELEPORTATION,
-#endif
         nullptr, []() { return 1; }, 0, 0 },
+#endif
     { "-Tele", ARTP_VAL_BOOL, 25,   // ARTP_PREVENT_TELEPORTATION,
         nullptr, []() { return 1; }, 0, 0 },
     { "*Rage", ARTP_VAL_POS, 30,    // ARTP_ANGRY,
