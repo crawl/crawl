@@ -2969,7 +2969,6 @@ static int _find_transtravel_stair(const level_id &cur,
                                     level_id &closest_level,
                                     int &best_level_distance,
                                     coord_def &best_stair,
-                                    set<string> &fail_reasons,
                                     int search_depth = 0)
 {
     int local_distance = -1;
@@ -2982,10 +2981,7 @@ static int _find_transtravel_stair(const level_id &cur,
     {
         // Are we in an exclude? If so, bail out. Unless it is just a stair exclusion.
         if (is_excluded(stair, li.get_excludes()) && !is_stair_exclusion(stair))
-        {
-            fail_reasons.insert("an exclusion on " + cur.describe());
             return -1;
-        }
 
         // If there's no target position on the target level, or we're on the
         // target, we're home.
@@ -3052,17 +3048,11 @@ static int _find_transtravel_stair(const level_id &cur,
     for (stair_info &si : stairs)
     {
         if (stairs_destination_is_excluded(si))
-        {
-            fail_reasons.insert("an exclusion on " + si.destination.id.describe());
             continue;
-        }
 
         // Skip placeholders and excluded stairs.
         if (!si.can_travel() || is_excluded(si.position, li.get_excludes()))
-        {
-            fail_reasons.insert("an exclusion on " + cur.describe());
             continue;
-        }
 
         int deltadist = li.distance_between(this_stair, &si);
 
@@ -3171,7 +3161,7 @@ static int _find_transtravel_stair(const level_id &cur,
                 _find_transtravel_stair(dest.id, target,
                                         dist2stair, dest.pos, closest_level,
                                         best_level_distance, best_stair,
-                                        fail_reasons, search_depth + 1);
+                                        search_depth + 1);
             if (newdist != -1
                 && (local_distance == -1 || local_distance > newdist))
             {
@@ -3223,7 +3213,6 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
     travel_cache.clear_distances();
 
     fill_travel_point_distance(you.pos());
-    set<string> fail_reasons;
 
     // either off-level, or traversable and on-level
     // TODO: actually check this when the square is off-level? The current
@@ -3236,7 +3225,7 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
     {
         _find_transtravel_stair(current, target,
                                 0, cur_stair, closest_level,
-                                best_level_distance, best_stair, fail_reasons);
+                                best_level_distance, best_stair);
         dprf("found stair at %d,%d", best_stair.x, best_stair.y);
     }
     // even without _find_transtravel_stair called, the values are initialized
@@ -3293,22 +3282,9 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
         if (target.id != current
             || target.pos.x != -1 && target.pos != you.pos())
         {
-            if (in_bounds(target.pos) && !env.map_knowledge(target.pos).known())
-                mpr("You cannot automatically travel into the unknown.");
-            else if (!maybe_traversable)
-            {
-                mprf("You cannot currently traverse %s.",
-                    feature_description_at(target.pos, false, DESC_A).c_str());
-            }
-            else if (!fail_reasons.empty())
-                mprf("Travel is blocked by %s.",
-                     comma_separated_line(fail_reasons.begin(),
-                                          fail_reasons.end()).c_str());
+            if (!maybe_traversable)
+                mpr("Sorry, I don't know how to traverse that place.");
             else
-                // You're in an edge case, good luck!
-                // - I think this is only when you can't find any path
-                // through the unknown, it would be nice if we could
-                // say a little more about the routing failure - eb
                 mpr("Sorry, I don't know how to get there.");
         }
     }
