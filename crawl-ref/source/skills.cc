@@ -549,7 +549,7 @@ bool skill_default_shown(skill_type sk)
     case SK_STEALTH:
     case SK_UNARMED_COMBAT:
     case SK_SPELLCASTING:
-        return true;
+        return !is_harmful_skill(sk);
     default:
         return false;
     }
