@@ -3005,6 +3005,23 @@ static void _tag_read_you(reader &th)
         // fixup_skills is called at the end of loading a character, in
         // _post_init
     }
+
+    // should be a check for MUT_INNATE_CASTER but I don't remember if muts
+    // have been unmarshalled here.
+    if (th.getMinorVersion() < TAG_MINOR_DJ_SPLIT && you.species == SP_DJINNI)
+    {
+        // Balance XP from spellcasting across all other skills.
+        cleanup_innate_magic_skills();
+        // Fix which skills are enabled. (Don't bother fixing autotraining %s,
+        // it'll all get balanced across skills anyway.)
+        for (skill_type sk = SK_FIRST_MAGIC_SCHOOL; sk <= SK_LAST_MAGIC; ++sk)
+        {
+            you.train[sk] = you.train[SK_SPELLCASTING];
+            you.train_alt[sk] = you.train_alt[SK_SPELLCASTING];
+        }
+        // Based on this, reset skill distribution percentages.
+        reset_training();
+    }
 #endif
 
     EAT_CANARY;

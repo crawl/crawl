@@ -376,7 +376,7 @@ static int _stepdown_spellpower(int power)
 
 static int _skill_power(spell_type spell)
 {
-    int power = 0;
+    int power = you.skill(SK_SPELLCASTING, 50);
 
     const spschools_type disciplines = get_spell_disciplines(spell);
     const int skillcount = count_bits(disciplines);
@@ -387,10 +387,6 @@ static int _skill_power(spell_type spell)
                 power += you.skill(spell_type2skill(bit), 200);
         power /= skillcount;
     }
-
-    // Innate casters use spellcasting for every spell school.
-    const int splcast_mult = you.has_mutation(MUT_INNATE_CASTER) ? 250 : 50;
-    power += you.skill(SK_SPELLCASTING, splcast_mult);
     return power;
 }
 

@@ -49,7 +49,8 @@
 #define MAX_COST_LIMIT           265
 #define MAX_SPENDING_LIMIT       265
 
-static int _train(skill_type exsk, int &max_exp, bool simu = false);
+static int _train(skill_type exsk, int &max_exp,
+                  bool simu = false, bool check_targets = true);
 static void _train_skills(int exp, const int cost, const bool simu);
 static int _training_target_skill_point_diff(skill_type exsk, int training_target);
 
@@ -218,6 +219,34 @@ float scaled_skill_cost(skill_type sk)
     return (float)next_level / baseline;
 }
 
+/// Ensure that all magic skills are at the same level, e.g. at game start or for save compat.
+void cleanup_innate_magic_skills()
+{
+    uint magic_xp = 0;
+    uint n_skills = 0;
+    for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; sk++)
+    {
+        if (is_useless_skill(sk))
+            continue;
+        magic_xp += you.skill_points[sk];
+        ++n_skills;
+    }
+    // Lossy, sorry.
+    const uint xp_per = magic_xp / n_skills;
+
+    int lvl = 0;
+    while (xp_per > skill_exp_needed(lvl + 1, SK_SPELLCASTING))
+        ++lvl;
+
+    for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; sk++)
+    {
+        if (is_useless_skill(sk))
+            continue;
+        you.skill_points[sk] = xp_per;
+        you.skills[sk] = lvl;
+    }
+}
+
 // Characters are actually granted skill points, not skill levels.
 // Here we take racial aptitudes into account in determining final
 // skill levels.
@@ -273,6 +302,9 @@ void reassess_starting_skills()
             you.skills[sk] = 1;
         }
     }
+
+    if (you.has_mutation(MUT_INNATE_CASTER))
+        cleanup_innate_magic_skills();
 }
 
 static void _change_skill_level(skill_type exsk, int n)
@@ -478,6 +510,24 @@ static void _check_abil_skills()
     }
 }
 
+/// Check to see if the player is a djinn with at least one magic skill
+/// un-hidden. If so, unhide all of them.
+static void _check_innate_magic_skills()
+{
+    if (!you.has_mutation(MUT_INNATE_CASTER))
+        return;
+
+    bool any_magic = false;
+    for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+        if (!is_removed_skill(sk) && !you.skills_to_hide.count(sk))
+            any_magic = true;
+    if (!any_magic)
+        return;
+
+    for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+        you.skills_to_hide.erase(sk);
+}
+
 string skill_names(const skill_set &skills)
 {
     return comma_separated_fn(begin(skills), end(skills), skill_name);
@@ -506,6 +556,7 @@ static void _check_skills_to_hide()
     _check_inventory_skills();
     _check_spell_skills();
     _check_abil_skills();
+    _check_innate_magic_skills();
 
     if (you.skills_to_hide.empty())
         return;
@@ -662,6 +713,21 @@ static void _scale_array(FixedVector<T, SIZE> &array, int scale, bool exact)
     ASSERT(scaled_total == scale);
 }
 
+static int _calc_skill_cost_level(int xp, int start)
+{
+    while (start < MAX_SKILL_COST_LEVEL
+           && xp >= (int) skill_cost_needed(start + 1))
+    {
+        ++start;
+    }
+    while (start > 0
+           && xp < (int) skill_cost_needed(start))
+    {
+        --start;
+    }
+    return start;
+}
+
 /*
  * Init the training array by scaling down the skill_points array to 100.
  * Used at game setup, when upgrading saves and when loading dump files.
@@ -742,6 +808,35 @@ bool check_selected_skills()
     return true;
 }
 
+/// Set all magic skills to the same training value.
+static void _balance_magic_training()
+{
+    // To minimize int rounding issues with manual training,
+    // scale up skill training numbers here. We'll scale em back down later.
+    for (int i = 0; i < NUM_SKILLS; ++i)
+        you.training[i] *= 100;
+
+    int n_skills = 0;
+    int train_total = 0;
+    for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+    {
+        if (is_removed_skill(sk))
+            continue;
+        n_skills++;
+        train_total += you.training[sk];
+    }
+    if (!train_total)
+        return;
+
+    ASSERT(n_skills > 0);
+    // Total training for all magic skills should be the base average,
+    // divided between each skill.
+    const int to_train = max(train_total / (n_skills * n_skills), 1);
+    for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+        if (!is_removed_skill(sk))
+            you.training[sk] = to_train;
+}
+
 /**
  * Reset the training array. Disabled skills are skipped.
  * In automatic mode, we use values from the exercise queue.
@@ -818,10 +913,14 @@ void reset_training()
             }
     }
 
-    _scale_array(you.training, 100, you.auto_training);
-    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+    if (you.has_mutation(MUT_INNATE_CASTER))
+        _balance_magic_training();
+
+    _scale_array(you.training, 100, !you.has_mutation(MUT_INNATE_CASTER));
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING)
+        || you.has_mutation(MUT_INNATE_CASTER))
     {
-        // we use the full set of skills to calculate gnoll percentages,
+        // we use the full set of skills to calculate gnoll/dj percentages,
         // but they don't actually get to train sacrificed skills.
         for (int i = 0; i < NUM_SKILLS; ++i)
             if (is_useless_skill((skill_type) i))
@@ -877,6 +976,117 @@ bool is_magic_skill(skill_type sk)
 
 int _gnoll_total_skill_cost();
 
+static int _magic_training()
+{
+    for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+        if (you.training[sk])
+            return you.training[sk];
+    return 0;
+}
+
+/// What is the skill you are currently training at the lowest non-zero percent?
+static uint _min_training_level()
+{
+    uint min = 10000;
+    for (skill_type i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+        if (you.training[i] && you.training[i] < min)
+            min = you.training[i];
+    return min;
+}
+
+static bool _is_sacrificed_skill(skill_type skill);
+
+/// If you want to raise each currently-trained skill by an amount
+/// proportionate to their training %s, how many points do you need total?
+static int _min_points_to_raise_all(int min_training)
+{
+    int points = 0;
+    for (skill_type i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+        if (you.training[i])
+            points += you.training[i] / min_training;
+
+    // If the player sacrificed a magic skill, if we're training any magic,
+    // waste skill point(s) on that skill.
+    const int magic_training = _magic_training();
+    if (magic_training)
+        for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+            if (_is_sacrificed_skill(sk))
+                points += magic_training / min_training;
+
+    return points;
+}
+
+/// Is your current `exp_available` enough to raise all of your skills
+/// proportionately to you.training?
+static bool _xp_available_for_skill_points(int points)
+{
+    int cost_level = you.skill_cost_level;
+    int cost = calc_skill_cost(cost_level);
+    int xp_needed = 0;
+    // XXX: could do this more efficiently
+    for (int i = 0; i < points; ++i)
+    {
+        xp_needed += cost;
+        if (xp_needed > you.exp_available)
+            return false;
+
+        const int total_xp = you.total_experience + xp_needed;
+        const int new_level = _calc_skill_cost_level(total_xp, cost_level);
+        if (new_level != cost_level)
+        {
+            cost_level = new_level;
+            cost = calc_skill_cost(cost_level);
+        }
+    }
+    return true;
+}
+
+/**
+ * Train Djinn skills such that the same amount of experience is put into all
+ * spellcasting skills. This means that we need to make sure we have enough
+ * xp to level *all* selected skills proportionate to you.training before we put
+ * xp into *any* skill.
+ */
+static void _train_with_innate_casting(bool simu)
+{
+    while (true) {
+        const int min = _min_training_level();
+        const int points = _min_points_to_raise_all(min);
+        if (!_xp_available_for_skill_points(points))
+            break;
+
+        // OK, we should be able to train everything.
+        for (int i = 0; i < NUM_SKILLS; ++i)
+        {
+            if (!you.training[i])
+                continue;
+            const int p = you.training[i] / min;
+            int xp = calc_skill_cost(you.skill_cost_level) * p;
+            // We don't want to disable training for magic skills midway.
+            // Finish training all skills and check targets afterward.
+            _train(static_cast<skill_type>(i), xp, simu, false);
+        }
+
+        // If the player sacrificed a magic skill, if we're training any magic,
+        // waste skill point(s) on that skill.
+        const int magic_training = _magic_training();
+        if (magic_training)
+        {
+            for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+            {
+                if (!_is_sacrificed_skill(sk))
+                    continue;
+                const int p = magic_training / min;
+                const int xp = calc_skill_cost(you.skill_cost_level) * p;
+                you.exp_available -= xp;
+                you.total_experience += xp;
+            }
+        }
+
+        check_training_targets();
+    }
+}
+
 void train_skills(bool simu)
 {
     int cost, exp;
@@ -895,6 +1105,8 @@ void train_skills(bool simu)
         }
         while (exp != you.exp_available);
     }
+    else if (you.has_mutation(MUT_INNATE_CASTER))
+        _train_with_innate_casting(simu);
     else
     {
         do
@@ -1112,8 +1324,10 @@ bool check_training_target(skill_type sk)
         bool base = you.skill(sk, 10, false, false) != you.skill(sk, 10);
         auto targ = you.training_targets[sk];
         you.training_targets[sk] = 0;
-        you.train[sk] = TRAINING_DISABLED;
-        you.train_alt[sk] = TRAINING_DISABLED;
+        if (you.has_mutation(MUT_INNATE_CASTER) && is_magic_skill(sk))
+            set_magic_training(TRAINING_DISABLED);
+        else
+            you.train_alt[sk] = you.train[sk] = TRAINING_DISABLED;
         mprf("%sraining target %d.%d for %s reached!",
             base ? "Base t" : "T", targ / 10, targ % 10, skill_name(sk));
         return true;
@@ -1137,21 +1351,6 @@ bool check_training_targets()
     if (change)
         reset_training();
     return change;
-}
-
-static int _calc_skill_cost_level(int xp, int start)
-{
-    while (start < MAX_SKILL_COST_LEVEL
-           && xp >= (int) skill_cost_needed(start + 1))
-    {
-        ++start;
-    }
-    while (start > 0
-           && xp < (int) skill_cost_needed(start))
-    {
-        --start;
-    }
-    return start;
 }
 
 void check_skill_cost_change()
@@ -1263,7 +1462,7 @@ static int _training_target_skill_point_diff(skill_type exsk, int training_targe
     return target_skill_point_diff;
 }
 
-static int _train(skill_type exsk, int &max_exp, bool simu)
+static int _train(skill_type exsk, int &max_exp, bool simu, bool check_targets)
 {
     // This will be added to you.skill_points[exsk];
     int skill_inc = 1;
@@ -1324,7 +1523,8 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
 
     if (!simu)
     {
-        check_training_targets();
+        if (check_targets)
+            check_training_targets();
         redraw_skill(exsk, old_best_skill, (you.skill(exsk, 10, true) > old_level));
     }
 
@@ -1989,10 +2189,8 @@ bool can_sacrifice_skill(mutation_type mut)
     return true;
 }
 
-bool is_useless_skill(skill_type skill)
+static bool _is_sacrificed_skill(skill_type skill)
 {
-    if (is_removed_skill(skill))
-        return true;
     auto mut = skill_sac_muts.find(skill);
     if (mut != skill_sac_muts.end() && you.has_mutation(mut->second))
         return true;
@@ -2004,8 +2202,14 @@ bool is_useless_skill(skill_type skill)
     {
         return true;
     }
+    return false;
+}
 
-    return species_apt(skill) == UNUSABLE_SKILL;
+bool is_useless_skill(skill_type skill)
+{
+    return is_removed_skill(skill)
+       || _is_sacrificed_skill(skill)
+       || species_apt(skill) == UNUSABLE_SKILL;
 }
 
 bool is_harmful_skill(skill_type skill)
@@ -2316,4 +2520,18 @@ bool can_enable_skill(skill_type sk, bool override)
        && you.skills[sk] < MAX_SKILL_LEVEL
        && !is_useless_skill(sk)
        && (override || (you.can_currently_train[sk] && !is_harmful_skill(sk)));
+}
+
+void set_training_status(skill_type sk, training_status st)
+{
+    if (you.has_mutation(MUT_INNATE_CASTER) && is_magic_skill(sk))
+        set_magic_training(st);
+    else
+        you.train[sk] = st;
+}
+
+void set_magic_training(training_status st)
+{
+    for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+        you.train[sk] = you.train_alt[sk] = st;
 }

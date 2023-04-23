@@ -3473,7 +3473,7 @@ void target_item(item_def &item)
     you.set_training_target(skill, target, true);
     // ensure that the skill is at least enabled
     if (you.train[skill] == TRAINING_DISABLED)
-        you.train[skill] = TRAINING_ENABLED;
+        set_training_status(skill, TRAINING_ENABLED);
     you.train_alt[skill] = you.train[skill];
     reset_training();
 }

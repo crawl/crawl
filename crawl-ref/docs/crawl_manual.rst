@@ -1697,9 +1697,9 @@ Djinn (Dj)
   through the air without need for legs or feet, they cannot wear boots.
 
   Djinn are middlingly competent at most forms of physical combat, but have
-  a particular aptitude for spellcasting. Their Spellcasting skill grants
-  the same level of spell success and power that other species need multiple
-  skills to reach.
+  a particular aptitude for spellcasting. Their aptitudes for all forms of
+  magic are phenomenal, though their unique relationship with magic means that
+  they cannot choose to train magic skills independently.
 
 Spriggans (Sp)
   Spriggans are small magical creatures distantly related to Elves. They love to

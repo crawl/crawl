@@ -321,7 +321,7 @@ def aptitudes(apts):
     for apt, val in apts.items():
         if apt not in ALL_APTITUDES and apt not in ('xp', 'hp', 'mp_mod', 'mr'):
             raise ValueError("Unknown aptitude (typo?): %s" % apt)
-        validate_int_range(val, apt, -10, 10)
+        validate_int_range(val, apt, -10, 20)
     return apts
 
 

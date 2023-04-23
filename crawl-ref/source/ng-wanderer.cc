@@ -222,9 +222,6 @@ static skill_type _wanderer_role_skill_select(bool defense)
 
     if (defense)
         skill = _apt_weighted_choice(defense_skills, defense_size);
-    // give Djinn some help since they only have one magic apt
-    else if (you.has_mutation(MUT_INNATE_CASTER) && coinflip())
-        skill = SK_SPELLCASTING;
     // reduce the chance of a spell felid a bit
     else if (you.has_mutation(MUT_NO_GRASPING) && one_chance_in(3))
         skill = _apt_weighted_choice(physical_skills, physical_size);
@@ -253,12 +250,7 @@ static void _setup_starting_skills(skill_type sk1, skill_type sk2,
         if (sk <= SK_LAST_MUNDANE)
             martial++;
         else if (sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC)
-        {
-            // handle Djinn
-            if (you.has_mutation(MUT_INNATE_CASTER))
-                sk = SK_SPELLCASTING;
             magical++;
-        }
         if (sk != SK_NONE)
         {
             you.skills[sk]++;
@@ -579,13 +571,6 @@ static vector<spell_type> _wanderer_good_equipment(skill_type & skill)
     if (skill == SK_FIGHTING)
         skill =  _apt_weighted_choice(combined_weapon_skills, total_weapons);
 
-    // handle Djinn
-    if (you.has_mutation(MUT_INNATE_CASTER) && skill == SK_SPELLCASTING)
-    {
-        skill = (skill_type)(SK_SPELLCASTING + random2(SK_LAST_MAGIC
-                    - SK_SPELLCASTING + 1));
-    }
-
     switch (skill)
     {
     case SK_MACES_FLAILS:
@@ -702,13 +687,6 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type & skill,
         && (skill == SK_STAVES || skill == SK_RANGED_WEAPONS))
     {
         skill = SK_FIGHTING;
-    }
-
-    // handle Djinn
-    if (you.has_mutation(MUT_INNATE_CASTER) && skill == SK_SPELLCASTING)
-    {
-        skill = (skill_type)(SK_SPELLCASTING + random2(SK_LAST_MAGIC
-                    - SK_SPELLCASTING + 1));
     }
 
     // Don't give a gift from the same skill twice; just default to

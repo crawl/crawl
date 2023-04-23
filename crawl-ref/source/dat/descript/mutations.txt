@@ -589,8 +589,7 @@ innate caster mutation
 You cannot learn spells from books. Instead, as you gain experience, spells
 of higher and higher level bubble up from your fiery heart. These spells are
 unpredictable and unaffected by your choice of god. You cannot train specific
-spell schools - the Spellcasting skill alone determines these spells' success
-rate and power.
+spell schools - you can either train all spell schools at once, or none.
 %%%%
 hp casting mutation
 

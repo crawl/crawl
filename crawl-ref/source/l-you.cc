@@ -1122,9 +1122,9 @@ LUAFN(you_train_skill)
     skill_type sk = str_to_skill_safe(luaL_checkstring(ls, 1));
     if (lua_gettop(ls) >= 2 && can_enable_skill(sk))
     {
-        you.train[sk] = min(max((training_status)luaL_safe_checkint(ls, 2),
+        set_training_status(sk, min(max((training_status)luaL_safe_checkint(ls, 2),
                                                  TRAINING_DISABLED),
-                                             TRAINING_FOCUSED);
+                                             TRAINING_FOCUSED));
         reset_training();
     }
 
