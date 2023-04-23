@@ -2720,6 +2720,19 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
                                         : check_your_resists(post_ac_dam,
                                                              beam.flavour,
                                                              "arcjolt");
+
+        if (act->is_player())
+        {
+            mprf("You are struck by an electric surge%s",
+                attack_strength_punctuation(post_resist_dam).c_str());
+        }
+        else
+        {
+            mprf("%s is struck by an electric surge%s",
+                    mon->name(DESC_THE).c_str(),
+                    attack_strength_punctuation(post_resist_dam).c_str());
+        }
+
         if (post_resist_dam)
         {
             if (agent.is_player())
