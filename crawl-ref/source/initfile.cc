@@ -272,6 +272,8 @@ const vector<GameOption*> game_options::build_options_list()
     vector<GameOption*> options = {
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
         new StringGameOption(NEWGAME_NAME(name), "", true),
+#else
+        new DisabledGameOption({"name"}),
 #endif
         new BoolGameOption(NEWGAME_NAME(fully_random), false),
         new StringGameOption(NEWGAME_NAME(arena_teams), ""),
@@ -717,7 +719,7 @@ const vector<GameOption*> game_options::build_options_list()
 #ifdef DGAMELAUNCH
         new DisabledGameOption(
             {"name_bypasses_menu", "restart_after_save", "newgame_after_quit",
-             "map_file_name", "morgue_dir"}),
+             "map_file_name", "morgue_dir", "type"}),
 #else
         new MultipleChoiceGameOption<game_type>(NEWGAME_NAME(type),
             GAME_TYPE_NORMAL,
