@@ -3088,9 +3088,9 @@ void game_options::update_explore_stop_conditions()
             conditions |= ES_PORTAL;
         else if (c == "altar" || c == "altars")
             conditions |= ES_ALTAR;
-        else if (c == "runed_door")
+        else if (c == "runed_door" || c == "runed_doors")
             conditions |= ES_RUNED_DOOR;
-        else if (c == "transporter")
+        else if (c == "transporter" || c == "transporters")
             conditions |= ES_TRANSPORTER;
         else if (c == "greedy_item" || c == "greedy_items")
             conditions |= ES_GREEDY_ITEM;
