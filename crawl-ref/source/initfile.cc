@@ -3161,7 +3161,7 @@ message_colour_mapping::message_colour_mapping(const string &s)
 
     if (cmap.size() != 2)
     {
-        mprf(MSGCH_ERROR, "Options error: Missing colour in message_colour line: '%s'", s.c_str());
+        mprf(MSGCH_ERROR, "Options error: Missing colour in message_colour setting: '%s'", s.c_str());
         return; // XX better error handling??
     }
 
@@ -3170,7 +3170,8 @@ message_colour_mapping::message_colour_mapping(const string &s)
         colour = MSGCOL_MUTED;
     else if (col < 0 || col >= NUM_TERM_COLOURS)
     {
-        mprf(MSGCH_ERROR, "Options error: Bad colour in message_colour line: '%s'", s.c_str());
+        mprf(MSGCH_ERROR, "Options error: Bad colour '%s' in message_colour setting: '%s'",
+            cmap[0].c_str(), s.c_str());
         return;
     }
     else

@@ -100,7 +100,15 @@ end
 function rr_add_message(s, v, mode)
     local channel, str = rr_split_channel(s)
     if channel == nil then
-        crawl.mpr("Bad channel name for runrest: '" .. s .. "'", "error")
+        local chi = string.find(s, ':')
+        if chi < 1 then
+            -- I think this shouldn't be reachable? channel should be -1 if
+            -- unset
+            crawl.mpr("Missing channel name for runrest: '" .. s .. "'", "error")
+        else
+            local chstr = string.sub(s, 1, chi - 1)
+            crawl.mpr("Bad channel name '" .. chstr .. "' for runrest: '" .. s .. "'", "error")
+        end
         return -- skip entirely
     end
     local filter = crawl.message_filter(str, channel)
