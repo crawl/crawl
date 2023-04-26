@@ -12,6 +12,7 @@
 #include "coord.h"
 #include "env.h"
 #include "l-defs.h"
+#include "losglobal.h"
 #include "map-knowledge.h"
 #include "mon-death.h"
 #include "player.h"
@@ -199,12 +200,7 @@ LUAFN(view_cell_see_cell)
 {
     PLAYERCOORDS(p1, 1, 2)
     PLAYERCOORDS(p2, 3, 4)
-    if (!map_bounds(p1) || !map_bounds(p2))
-    {
-        PLUARET(boolean, false);
-        return 1;
-    }
-    PLUARET(boolean, exists_ray(p1, p2, opc_excl));
+    PLUARET(boolean, cell_see_cell(p1, p2, LOS_DEFAULT));
     return 1;
 }
 
