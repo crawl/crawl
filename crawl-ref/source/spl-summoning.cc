@@ -913,7 +913,7 @@ spret cast_call_imp(int pow, god_type god, bool fail)
     if (monster *imp = create_monster(imp_data))
     {
         mpr("A tiny devil pulls itself out of the air.");
-        imp->weapon()->plus = div_rand_round(pow, 10) - 4;
+        imp->weapon()->plus = pow/10 - 4;
         _monster_greeting(imp, "_friendly_imp_greeting");
     }
     else
