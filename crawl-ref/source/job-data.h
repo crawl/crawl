@@ -180,7 +180,7 @@ static const map<job_type, job_def> job_data =
     {
         SPELL_FOXFIRE,
         SPELL_SCORCH,
-        SPELL_BLASTSPARK,
+        SPELL_BLASTMOTE,
         SPELL_INNER_FLAME,
         SPELL_FLAME_WAVE,
     },
@@ -262,10 +262,9 @@ static const map<job_type, job_def> job_data =
     { SP_METEORAN, SP_HILL_ORC, SP_TROLL, SP_ARMATAUR, SP_MERFOLK,
       SP_GARGOYLE, SP_DEMONSPAWN, },
     { },
-    { "robe", "potion of ambrosia" },
+    { "robe", "potion of ambrosia", "orb ego:light" },
     WCHOICE_PLAIN,
-    { { SK_FIGHTING, 3 }, { SK_WEAPON, 3 }, { SK_DODGING, 3 },
-      { SK_STEALTH, 2 }, },
+    { { SK_FIGHTING, 3 }, { SK_WEAPON, 3 }, { SK_DODGING, 3 } },
 } },
 
 { JOB_NECROMANCER, {

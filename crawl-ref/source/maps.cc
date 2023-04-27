@@ -892,9 +892,9 @@ bool map_selector::depth_selectable(const map_def &mapdef) const
 
 static bool _is_extra_compatible(maybe_bool want_extra, bool have_extra)
 {
-    return want_extra == MB_MAYBE
-           || (want_extra == MB_TRUE && have_extra)
-           || (want_extra == MB_FALSE && !have_extra);
+    return want_extra == maybe_bool::maybe
+           || (bool(want_extra) && have_extra)
+           || (bool(!want_extra) && !have_extra);
 }
 
 bool map_selector::accept(const map_def &mapdef) const
@@ -1613,7 +1613,7 @@ static weighted_map_names _find_random_vaults(
 
     map_count_t map_counts;
 
-    map_selector sel = map_selector::by_depth(place, wantmini, MB_MAYBE);
+    map_selector sel = map_selector::by_depth(place, wantmini, maybe_bool::maybe);
     sel.preserve_dummy = true;
 
     msg::suppress mx;

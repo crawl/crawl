@@ -63,6 +63,9 @@
  #include "windowmanager.h"
 #endif
 #include "ui.h"
+#ifdef __ANDROID__
+ #include "syscalls.h"
+#endif
 #include "version.h"
 
 using namespace ui;
@@ -71,8 +74,7 @@ static void _loading_message(string m)
 {
     mpr(m.c_str());
 #ifdef USE_TILE_LOCAL
-    if (!crawl_state.tiles_disabled && crawl_state.title_screen)
-        loading_screen_update_msg(m.c_str());
+    loading_screen_update_msg(m.c_str());
 #endif
 }
 
@@ -128,8 +130,7 @@ static void _initialize()
     // Draw the splash screen before the database gets initialised as that
     // may take awhile and it's better if the player can look at a pretty
     // screen while this happens.
-    if (!crawl_state.tiles_disabled && crawl_state.title_screen)
-        loading_screen_open();
+    loading_screen_open();
 #endif
 
     // Initialise internal databases.
@@ -152,8 +153,7 @@ static void _initialize()
         end(0);
 
 #ifdef USE_TILE_LOCAL
-    if (!crawl_state.tiles_disabled && crawl_state.title_screen)
-        loading_screen_close();
+    loading_screen_close();
 #endif
 
     you.game_seed = crawl_state.seed;
@@ -186,19 +186,20 @@ static void _initialize()
 #error "DEBUG must be defined if DEBUG_TESTS is defined"
 #endif
 
-#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
+#if !defined(DEBUG_DIAGNOSTICS) && !defined(DEBUG_TESTS)
+        if (!crawl_state.script)
+        {
+            end(1, false, "Non-debug Crawl cannot run tests. "
+                "Please use a debug build (defined FULLDEBUG, DEBUG_DIAGNOSTIC "
+                "or DEBUG_TESTS)");
+        }
+#endif
 #ifdef USE_TILE
         init_player_doll();
 #endif
         dgn_reset_level();
         crawl_state.show_more_prompt = false;
-        run_tests();
-        // doesn't return
-#else
-        end(1, false, "Non-debug Crawl cannot run tests. "
-            "Please use a debug build (defined FULLDEBUG, DEBUG_DIAGNOSTIC "
-            "or DEBUG_TESTS)");
-#endif
+        run_tests(); // noreturn
     }
 
     mpr(opening_screen().tostring().c_str());
@@ -373,6 +374,10 @@ static void _post_init(bool newc)
     if (you.prev_save_version != Version::Long)
         check_if_everything_is_identified();
 
+    // XX why is this run now in addition to a related call in load_level?
+    // (There this function is only called on level change, and instead
+    // we run travel_init_load_level; this function is just a call to
+    // travel_init_new_level, which from the comments shouldn't be run on load?)
     trackers_init_new_level();
 
     if (newc) // start a new game
@@ -410,7 +415,7 @@ struct game_modes_menu_item
     const char *description;
 };
 
-static const game_modes_menu_item entries[] =
+static const vector<game_modes_menu_item> entries =
 {
     {GAME_TYPE_NORMAL, "Dungeon Crawl",
         "Dungeon Crawl: The main game: full of monsters, items, "
@@ -433,7 +438,7 @@ static const game_modes_menu_item entries[] =
 
 static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
 {
-    for (unsigned int i = 0; i < ARRAYSZ(entries); ++i)
+    for (size_t i = 0; i < entries.size(); ++i)
     {
         const auto& entry = entries[i];
         auto label = make_shared<Text>();
@@ -600,7 +605,7 @@ public:
         auto mode_prompt = make_shared<Text>("Choices:");
         mode_prompt->set_margin_for_crt(0, 1, 1, 0);
         mode_prompt->set_margin_for_sdl(0, 0, 10, 0);
-        game_modes_menu = make_shared<OuterMenu>(true, 1, ARRAYSZ(entries));
+        game_modes_menu = make_shared<OuterMenu>(true, 1, entries.size());
         game_modes_menu->set_margin_for_sdl(0, 0, 10, 10);
         game_modes_menu->set_margin_for_crt(0, 0, 1, 0);
         game_modes_menu->descriptions = descriptions;
@@ -717,6 +722,7 @@ private:
     vector<player_save_info> chars;
     int num_saves;
     bool first_action = true;
+    int default_id = 0;
 
     bool on_button_focusin(const MenuButton& btn)
     {
@@ -792,6 +798,8 @@ void UIStartupMenu::on_show()
     if (selected_game_type >= NUM_GAME_TYPE)
         selected_game_type = GAME_TYPE_UNSPECIFIED;
 
+    default_id = defaults.type < NUM_GAME_TYPE ? defaults.type : 0;
+
     int id;
     if (selected_game_type != GAME_TYPE_UNSPECIFIED)
         id = selected_game_type;
@@ -800,12 +808,8 @@ void UIStartupMenu::on_show()
         // save game id is offset by NUM_GAME_TYPE
         id = NUM_GAME_TYPE + save;
     }
-    else if (defaults.type != NUM_GAME_TYPE)
-        id = defaults.type;
-    else if (!chars.empty())
-        id = NUM_GAME_TYPE + 0;
     else
-        id = 0;
+        id = default_id;
 
     if (auto focus = game_modes_menu->get_button_by_id(id))
         game_modes_menu->scroll_button_into_view(focus);
@@ -892,8 +896,10 @@ void UIStartupMenu::on_show()
         // game.
         int i = _find_save(chars, input_string);
         auto menu = i == -1 ? game_modes_menu : save_games_menu;
-        auto btn = menu->get_button(0, i == -1 ? 0 : i);
-        menu->scroll_button_into_view(btn);
+        auto btn = i == -1 ? menu->get_button_by_id(default_id)
+                           : menu->get_button(0, i);
+        if (btn)
+            menu->scroll_button_into_view(btn);
         return true;
     });
 }
@@ -959,8 +965,9 @@ static void _show_startup_menu(newgame_def& ng_choice,
 {
     unwind_bool no_more(crawl_state.show_more_prompt, false);
 
-#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
-    wm->show_keyboard();
+#if defined(USE_TILE_LOCAL) && defined(__ANDROID__)
+    jni_keyboard_control(false);
+    sleep(1); // wait for keyboard
 #elif defined(USE_TILE_WEB)
     tiles_crt_popup show_as_popup;
 #endif

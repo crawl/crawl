@@ -882,10 +882,10 @@ TAGS:   no_monster_gen patrolling
 DEPTH:  Dis:2-, !Dis:$
 ORIENT: encompass
 KMONS:  1 = executioner
-KMONS:  2} = dancing weapon ; executioner's axe good_item ego:vorpal | \
-        bardiche good_item ego:vorpal | battleaxe good_item ego:vorpal | \
-        great sword good_item ego:vorpal | lajatang good_item ego:vorpal | \
-        triple sword good_item ego:vorpal | glaive good_item ego:vorpal
+KMONS:  2} = dancing weapon ; executioner's axe good_item ego:heavy | \
+        bardiche good_item ego:heavy | battleaxe good_item ego:heavy | \
+        great sword good_item ego:heavy | lajatang good_item ego:heavy | \
+        triple sword good_item ego:heavy | glaive good_item ego:heavy
 # These monsters get items from their usual gear in mon-gear.cc, but a curated
 # list of the biggest slicing/chopping weapons in their given selection.
 # The ones with armour get the best armour on their list.
@@ -1124,6 +1124,61 @@ MAP
  .q!!'''!!v.
  ...!!v!!...
    .......
+ENDMAP
+
+# From the dcss channel on the roguelikes discord:
+# Ge0ff:   FR: a bowling-themed Dis vault with iron giants and a bunch of
+#          boulder beetles
+# ebering: @nicolae do you take commissions
+# Apparently I do.
+NAME:   nicolae_dis_bowling_alley
+TAGS:   transparent no_monster_gen
+DEPTH:  Dis:2-
+KMONS:  O = boulder beetle
+KMONS:  P = iron giant
+SUBST:  Q = OO.
+NSUBST: G = 1={ / G
+TILE:   G = dngn_statue_iron_golem
+: set_feature_name("granite_statue", "iron statue")
+MAP
+vvvvvvvvvvvvvvvv
+v.............Qv
+v.G........OP.Qv
+v...G.........Qv
+v.G...G....OP.vv
+v...G...G......@
+v.G...G....OP.vv
+v...G.........Qv
+v.G........OP.Qv
+v.............Qv
+vvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:    nicolae_dis_metal_lava_thing
+TAGS:    transparent
+DEPTH:   Dis:2-
+SHUFFLE: DEF, HJK, LMN, OPQ
+SUBST:   DHLO = ., EFJKMNPQ = l, 0 = .009, 9 = 9998
+: set_feature_name("granite_statue", "iron statue")
+TILE:    G = dngn_statue_iron
+MAP
+vlvlvlv...vlvlvlv
+l.....D...F.....l
+v.0.0.v.G.v.0.0.v
+l..G..D...F..G..l
+v.0.0.vEvEv.0.0.v
+l...............l
+vQvQv.......vHvHv
+....P.......J....
+..G.v...{...v.G..
+....P.......J....
+vOvOv.......vKvKv
+l...............l
+v.0.0.vMvMv.0.0.v
+l..G..N...L..G..l
+v.0.0.v.G.v.0.0.v
+l.....N...L.....l
+vlvlvlv...vlvlvlv
 ENDMAP
 
 default-depth:

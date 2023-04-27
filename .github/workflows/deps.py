@@ -68,7 +68,7 @@ def _packages_to_install(args: argparse.Namespace) -> Set[str]:
                 "libsdl2-dev",
                 "libfreetype6-dev",
                 "libpng-dev",
-                "ttf-dejavu-core",
+                "fonts-dejavu",
             ]
         )
     if "FULLDEBUG" in args.debug_opts:
@@ -81,6 +81,8 @@ def _packages_to_install(args: argparse.Namespace) -> Set[str]:
     if args.compiler == "clang":
         # dependencies for llvm.sh
         packages.update(["lsb-release", "wget", "software-properties-common"])
+    if args.appimage:
+        packages.add("libfuse2")
     if args.debian_packages:
         packages.update(["cowbuilder", "debhelper"])
     return packages

@@ -1,134 +1,99 @@
-# Games are stored in order. The order of games you define in these files will
-# be preserved, and the files will be loaded in sorted order.
-# %n in paths and urls is replaced by the current username.
-games:
-  # id must be unique for each game
-  - id: seeded-web-trunk
-    # The name for this game, displayed on the webtiles HTML interface
-    name: Custom seed
-    # Games are called with the following argv:
-    # [
-    #   $crawl_binary,
-    #   *$pre_options,
-    #   "-name", "%n",
-    #   "-rc", "$rcfile_path/%n.rc",
-    #   "-macro", "$macro_path/%n.macro",
-    #   "-morgue", "$morgue_path,"
-    #   *$options,
-    #   "-dir", "$dir_path"
-    #   "-webtiles-socket", "$socket_path/%n:$timestamp.sock",
-    #   "-await-connection"
-    # ]
-    # Relative to the server's CWD
+# see webserver/config.py for more documentation on how to define games and
+# templates, and how to use string templating. A game definition needs to
+# provide various paths that allow running the game, saving in the right
+# place, etc. The settings in here are designed for running the webserver
+# in the repository from the `source` directory.
+# Games are called with the following argv, which illustrates the bare minimum:
+# [
+#   $crawl_binary,
+#   *$pre_options,
+#   "-name", "%n",
+#   "-rc", "$rcfile_path/%n.rc",
+#   "-macro", "$macro_path/%n.macro",
+#   "-morgue", "$morgue_path,"
+#   *$options,
+#   "-dir", "$dir_path"
+#   "-webtiles-socket", "$socket_path/%n:$timestamp.sock",
+#   "-await-connection"
+# ]
+#
+# `socket_path` is used for communication between the webtiles server and DCSS
+# executable. If you change the CWD with a crawl_binary script, this path
+# will have to be absolute (so both the server and DCSS can find it).
+#
+# Any relative paths are relative to the directory that the server is run from.
+# The in-repo configuration uses lots of relative paths, but for a production
+# server you probably just want to avoid this. You can also, optionally, use
+# the `cwd` parameter to force a CWD to use as the relative path base.
+# For example official server configs, see branches in the dgamelaunch-config
+# repository.
+# Templating hints (see config.py): %v: version, %n: username
+
+templates:
+  - id: default # id must be unique for each template and game
     crawl_binary: ./crawl
-    # rcfile_path, macro_path, morgue_path, and socket_path, and dir_path use
-    # server's CWD for relative paths, unless your crawl_binary command changes
-    # the CWD (like dgamelaunch-config's crawl-*-launcher.sh scripts do).
     rcfile_path: ./rcs/
     macro_path: ./rcs/
     morgue_path: ./rcs/%n
-    # Sockets are placed in this directory and used for communication between
-    # the webtiles server and DCSS executable. If you change the CWD with a
-    # crawl_binary script, this path will have to be absolute (so both the
-    # server and DCSS can find it).
     socket_path: ./rcs
-    # # The DCSS "dir" is where save games plus logfile/milestones files are
-    # # written. If you don't specify this, the game uses a compile-time default,
-    # # which depends on your OS and compilation settings.
+    # # Optional: `dir_path` is where save games + logfile/milestones are written.
+    # # if not set, it uses local crawl system settings.
     # dir_path: .
-    # Directory where ttyrec files for active games are written to.
-    # Relative to the server's CWD.
     inprogress_path: ./rcs/running
-    # Directory where ttyrec files are stored for the individual user.
-    # Relative to the server's CWD.
     ttyrec_path: ./rcs/ttyrecs/%n
-    # Static content used by the game (eg spritesheets, game HTML). DCSS builds
-    # this as the web/ directory.
-    # Relative to the server's CWD.
     client_path: ./webserver/game_data/
-    # # The working directory to run crawl from. You shouldn't really need to set
-    # # this, unless you are trying to run the circa 2016 fork DCSS Circus Animals
-    # # on a real webtiles server, and dont want save games littering your
-    # # webserver directory.
-    # # NOTE: if you set this, all settings which are documented as "relative to
-    # # the server's CWD" will become relative to the path here instead. This path
-    # # itself is relative to the server's CWD, though.
-    # cwd: .
-    # The URL shown to users when they create a character dump (`#`) ingame. You
-    # can use %n in it, like a directory. If you don't specify one, the user
-    # isn't told where their dump was written -- but it's still written.
+
+    # # Optional: a (public) URL that will point to morgue files. Example: on
+    # # CAO, this is set to: "http://crawl.akrasiac.org/rawdata/%n/"
     morgue_url: None
-    # # The path to the game's "milestones" file. If you specify dir_path this can
-    # # be inferred automatically (since it's $dir_path/milestones), but otherwise
-    # # you should specify this explicitly. The milestones file is read to
-    # # populate the 'milestones' column in the HTML interface. If you don't
-    # # specify a milestones path, you'll just see nothing specified there.
-    # # (Note: DCSS writes both "milestones" and "milestones-seeded", we'll
-    # # automatically pick up both if you specify the former's path.)
+    # # By default, `milestone_path` is inferred based on `dir_path`.
     # milestone_path: ./rcs/milestones
-    # # Array of extra options to add to the start of the DCSS command. Prefer
-    # # using 'options' unless the ordering is critical.
+    # # Optional: an array of extra options to add to the start of the DCSS
+    # # command. Generally used for custom launcher scripts, consult the
+    # # documentation for such scripts.
     # pre_options: []
-    # Array of extra options to add to the DCSS command.
-    options:
-      - -seed
-    # # Map of extra environment variables to set when executing the DCSS command.
+    # # Optional: an array of extra options to add to the DCSS command. See
+    # examples below.
+    # options: []
+    # # Optional: Map of extra environment variables to set when executing crawl.
     # # All env vars from the webtiles server environment are automatically
     # # inherited.
     # env:
     #   LANG: en_US.UTF8
-    # show_save_info: set to True if the binary supports save info json
-    # and you want it to be queried each time the player enters the lobby.
-    # (With a lot of binaries, it isn't necessarily recommended yet to blanket
-    # enable this, as it can slow down a player's lobby loading.)
+    # # show_save_info: set to True if the binary supports save info json
+    # # and you want it to be queried each time the player enters the lobby.
+    # # (With a lot of binaries, it isn't necessarily recommended yet to blanket
+    # # enable this, as it can slow down a player's lobby loading.)
     show_save_info: True
-    # Is this game mode allowed for accounts with an account hold? Note:
-    # account holds use features for preventing bones file generation that
-    # may not be supported on older versions of crawl. If unset, this defaults
-    # to True.
+    # # Is this game mode allowed for accounts with an account hold? Note:
+    # # account holds use features for preventing bones file generation that
+    # # may not be supported on older versions of crawl. If unset, this defaults
+    # # to True.
     allowed_with_hold: True
-    # send_json_options is a legacy option. Always include this set to 'true'.
-    # (Or submit a PR to remove it.)
-    send_json_options: True
+  # this template doesn't specify a base template, and so inherits from
+  # `default` above
+  - id: trunk
+    version: trunk
+
+# Games are stored in order. The order of games you define in these files will
+# be preserved, and the files will be loaded in sorted order.
+games:
+  # id must be unique for each game
+  - id: dcss-web-trunk
+    template: trunk
+    name: Play %v # `name` is what is shown in the webtiles lobby
+  - id: seeded-web-trunk
+    template: trunk
+    name: Seeded
+    options:
+      - -seed
   - id: tut-web-trunk
+    template: trunk
     name: Tutorial
-    crawl_binary: ./crawl
-    rcfile_path: ./rcs/
-    macro_path: ./rcs/
-    morgue_path: ./rcs/%n
-    inprogress_path: ./rcs/running
-    ttyrec_path: ./rcs/ttyrecs/%n
-    socket_path: ./rcs
-    client_path: ./webserver/game_data/
-    # dir_path: .
-    # cwd: .
-    morgue_url: None
-    # milestone_path: ./rcs/milestones
-    show_save_info: True
-    allowed_with_hold: True
-    send_json_options: True
     options:
       - -tutorial
-    # env:
-    #   LANG: en_US.UTF8
   - id: sprint-web-trunk
-    name: Sprint
-    crawl_binary: ./crawl
-    rcfile_path: ./rcs/
-    macro_path: ./rcs/
-    morgue_path: ./rcs/%n
-    inprogress_path: ./rcs/running
-    ttyrec_path: ./rcs/ttyrecs/%n
-    socket_path: ./rcs
-    client_path: ./webserver/game_data/
-    # dir_path: .
-    # cwd: .
-    morgue_url: None
-    # milestone_path: ./rcs/milestones
-    show_save_info: True
-    allowed_with_hold: True
-    send_json_options: True
+    template: trunk
+    name: Sprint %v
     options:
       - -sprint
-    # env:
-    #   LANG: en_US.UTF8

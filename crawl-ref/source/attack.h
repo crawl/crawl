@@ -92,8 +92,7 @@ public:
     // To-hit is a function of attacker/defender, defined in sub-classes
     virtual int calc_to_hit(bool random);
     int calc_pre_roll_to_hit(bool random);
-    virtual int post_roll_to_hit_modifiers(int mhit, bool random,
-                                           bool /*aux*/ = false);
+    virtual int post_roll_to_hit_modifiers(int mhit, bool random);
 
     // Exact copies of their melee_attack predecessors
     string actor_name(const actor *a, description_level_type desc,
@@ -126,9 +125,10 @@ protected:
 
     /* Combat Calculations */
     virtual bool using_weapon() const = 0;
-    virtual int weapon_damage() = 0;
+    virtual int weapon_damage() const = 0;
+    int adjusted_weapon_damage() const;
     virtual int get_weapon_plus();
-    virtual int calc_base_unarmed_damage();
+    virtual int calc_base_unarmed_damage() const;
     virtual int calc_mon_to_hit_base() = 0;
     virtual int apply_damage_modifiers(int damage) = 0;
     virtual int calc_damage();
@@ -188,6 +188,7 @@ protected:
     virtual int  player_apply_slaying_bonuses(int damage, bool aux);
     virtual int  player_apply_final_multipliers(int damage,
                                                 bool /*aux*/ = false);
+    virtual int player_apply_postac_multipliers(int damage);
 
     virtual void player_exercise_combat_skills();
 
@@ -195,6 +196,9 @@ protected:
     virtual int  player_stab_weapon_bonus(int damage);
     virtual int  player_stab(int damage);
     virtual void player_stab_check();
+
+private:
+    actor &stat_source() const;
 };
 
 string attack_strength_punctuation(int dmg);

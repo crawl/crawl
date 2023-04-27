@@ -79,8 +79,8 @@ static const form_entry formdata[] =
     2, 0, 0, true, 10, true, 5,
     SPWPN_VENOM, LIGHTGREEN, "Fangs", ANIMAL_VERBS,
     FC_DEFAULT, FC_FORBID, FC_FORBID, false,
-    "hiss", -4, "front leg", "", "crawl onto", "flesh",
-    { {"venomous fangs", "You have poisonous fangs."},
+    "hiss", -4, "front pincers", "", "crawl onto", "flesh",
+    { {"venomous fangs", "You have venomous fangs."},
       {"", "You are tiny and dextrous."} // short-form "tiny" is automatically added
     }
 },

@@ -149,6 +149,7 @@ lajatang2
 lajatang3
 
 staff_mummy WPN_STAFF_MUMMY
+xmas-scythe WPN_XMAS_SCYTHE
 %rim 1
 
 
@@ -194,7 +195,7 @@ i-venom BRAND_VENOM
 i-protection BRAND_PROTECTION
 i-draining BRAND_DRAINING
 i-speed BRAND_SPEED
-i-vorpal BRAND_VORPAL
+i-heavy BRAND_HEAVY
 # start TAG_MAJOR_VERSION == 34
 i-flaming BRAND_FLAME
 i-freezing BRAND_FROST
@@ -388,15 +389,25 @@ animal_skin3
 
 troll_leather_armour ARM_TROLL_LEATHER_ARMOUR
 fire_dragon_armour ARM_FIRE_DRAGON_ARMOUR
+fire_dragon_armour_art
 ice_dragon_armour ARM_ICE_DRAGON_ARMOUR
+ice_dragon_armour_art
 steam_dragon_armour ARM_STEAM_DRAGON_ARMOUR
+steam_dragon_armour_art
 acid_dragon_armour ARM_ACID_DRAGON_ARMOUR
+acid_dragon_armour_art
 quicksilver_dragon_armour ARM_QUICKSILVER_DRAGON_ARMOUR
+quicksilver_dragon_armour_art
 storm_dragon_armour ARM_STORM_DRAGON_ARMOUR
+storm_dragon_armour_art
 shadow_dragon_armour ARM_SHADOW_DRAGON_ARMOUR
+shadow_dragon_armour_art
 gold_dragon_armour ARM_GOLD_DRAGON_ARMOUR
+gold_dragon_armour_art
 swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR
+swamp_dragon_armour_art
 pearl_dragon_armour ARM_PEARL_DRAGON_ARMOUR
+pearl_dragon_armour_art
 
 deep_troll_leather DEEP_TROLL_LEATHER
 iron_troll_leather IRON_TROLL_LEATHER
@@ -429,6 +440,10 @@ centaur_barding_red
 
 %rim 0
 orb ARM_ORB
+orb_randart1 ARM_ORB_ART_FIRST
+orb_randart2
+orb_randart3
+orb_randart4 ARM_ORB_ART_LAST
 
 buckler1 ARM_BUCKLER
 buckler2
@@ -459,6 +474,7 @@ elven_leather_helm THELM_CAP
 cap_jester THELM_CAP_JESTER
 hat_explorer THELM_HAT_EXPLORER
 hat_explorer2 THELM_HAT_EXPLORER2
+santa_hat THELM_HAT_SANTA
 
 %rim 0
 hat1 THELM_HAT THELM_HAT_FIRST
@@ -1022,6 +1038,15 @@ staff06
 staff07
 staff08
 staff09
+%rim 0
+staff-artefact1 STAFF_RANDART_OFFSET
+staff-artefact2
+staff-artefact3
+staff-artefact4
+staff-artefact5
+staff-artefact6
+staff-artefact7
+%rim 1
 
 # These must be in the same order as the enum in item-prop-enum.h!
 # start TAG_MAJOR_VERSION == 34

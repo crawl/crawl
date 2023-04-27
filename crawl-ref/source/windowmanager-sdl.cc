@@ -11,8 +11,6 @@
 # include <SDL.h>
 # include <SDL_image.h>
 # include <android/log.h>
-# include <GLES/gl.h>
-# include <signal.h>
 # include <SDL_mixer.h>
 #else
 # ifdef TARGET_COMPILER_VC
@@ -453,26 +451,23 @@ SDLWrapper::~SDLWrapper()
 
 int SDLWrapper::init(coord_def *m_windowsz)
 {
-#ifdef __ANDROID__
-    // Do SDL initialization
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER
-                 | SDL_INIT_NOPARACHUTE) != 0)
-#else
     // Do SDL initialization
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
-#endif
     {
         printf("Failed to initialise SDL: %s\n", SDL_GetError());
         return false;
     }
 
+    int cur_display;
+#ifdef __ANDROID__
+    cur_display = 0;
+#else
     // find the current display, based on the mouse position
     // TODO: probably want to allow configuring this?
     int mouse_x, mouse_y;
     SDL_GetGlobalMouseState(&mouse_x, &mouse_y);
 
     int displays = SDL_GetNumVideoDisplays();
-    int cur_display;
     for (cur_display = 0; cur_display < displays; cur_display++)
     {
         SDL_Rect bounds;
@@ -485,6 +480,7 @@ int SDLWrapper::init(coord_def *m_windowsz)
     }
     if (cur_display >= displays)
         cur_display = 0; // can this happen?
+#endif
 
     SDL_DisplayMode display_mode;
     SDL_GetDesktopDisplayMode(cur_display, &display_mode);
@@ -493,9 +489,13 @@ int SDLWrapper::init(coord_def *m_windowsz)
     _desktop_height = display_mode.h;
 
 #ifdef __ANDROID__
+    SDL_StartTextInput();
+    Options.game_scale = min(_desktop_width, _desktop_height)/1080+1;
     // Request OpenGL ES 1.0 context
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    SDL_SetHint(SDL_HINT_ANDROID_SEPARATE_MOUSE_AND_TOUCH, "1");
+    SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "1");
 #endif
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -514,12 +514,7 @@ int SDLWrapper::init(coord_def *m_windowsz)
     SDL_SetHint(SDL_HINT_VIDEO_HIGHDPI_DISABLED, "0");
 
 #ifdef USE_GLES
-#ifdef __ANDROID__
-    unsigned int flags = SDL_WINDOW_OPENGL
-                         | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
-#else
     unsigned int flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
-#endif
 #else
     unsigned int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
                          | SDL_WINDOW_ALLOW_HIGHDPI;
@@ -548,15 +543,16 @@ int SDLWrapper::init(coord_def *m_windowsz)
         y = (y > 0) ? y : _desktop_height + y;
         if (Options.tile_window_ratio > 0)
             x = min(x, y * Options.tile_window_ratio / 1000);
-#ifdef TOUCH_UI
-        // allow *much* smaller windows than default, primarily for testing
-        // touch_ui features in an x86 build
-        m_windowsz->x = x;
-        m_windowsz->y = y;
-#else
-        m_windowsz->x = max(MIN_SDL_WINDOW_SIZE_X, x);
-        m_windowsz->y = max(MIN_SDL_WINDOW_SIZE_Y, y);
-#endif
+        if (Options.tile_window_limit_size)
+        {
+            m_windowsz->x = max(MIN_SDL_WINDOW_SIZE_X, x);
+            m_windowsz->y = max(MIN_SDL_WINDOW_SIZE_Y, y);
+        }
+        else
+        {
+            m_windowsz->x = x;
+            m_windowsz->y = y;
+        }
 
 #ifdef TARGET_OS_WINDOWS
         set_window_placement(m_windowsz);
@@ -602,16 +598,13 @@ int SDLWrapper::init(coord_def *m_windowsz)
     m_windowsz->x = display_density.apply_game_scale(x);
     m_windowsz->y = display_density.apply_game_scale(y);
     init_hidpi();
-#ifdef __ANDROID__
-# ifndef TOUCH_UI
-    SDL_StartTextInput();
-# endif
-    __android_log_print(ANDROID_LOG_INFO, "Crawl", "Window manager initialised");
-#endif
 
     SDL_GL_GetDrawableSize(m_window, &x, &y);
-    SDL_SetWindowMinimumSize(m_window, MIN_SDL_WINDOW_SIZE_X,
-                             MIN_SDL_WINDOW_SIZE_Y);
+    if (Options.tile_window_limit_size)
+    {
+        SDL_SetWindowMinimumSize(m_window, MIN_SDL_WINDOW_SIZE_X,
+                                 MIN_SDL_WINDOW_SIZE_Y);
+    }
 
     SDL_EnableScreenSaver();
 
@@ -713,7 +706,7 @@ void SDLWrapper::set_window_placement(coord_def *m_windowsz)
                             - (tpos & TASKBAR_H ? tsize : 0)
                             - (tpos & TASKBAR_TOP ? 0 : title_bar)
                             - border);
-        sprintf(env_str, "SDL_VIDEO_WINDOW_POS=%d,%d", x, y);
+        snprintf(env_str, sizeof(env_str), "SDL_VIDEO_WINDOW_POS=%d,%d", x, y);
         putenv(env_str);
     }
     else
@@ -1139,11 +1132,6 @@ bool SDLWrapper::next_event_is(wm_event_type type)
     return count != 0;
 }
 
-void SDLWrapper::show_keyboard()
-{
-    SDL_StartTextInput(); // XXX: Intended for Android; harmless elsewhere?
-}
-
 bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
                               MipMapOptions mip_opt, unsigned int &orig_width,
                               unsigned int &orig_height, tex_proc_func proc,
@@ -1356,13 +1344,7 @@ SDL_Surface *SDLWrapper::load_image(const char *file) const
 
 void SDLWrapper::glDebug(const char* msg)
 {
-#ifdef __ANDROID__
-    int e = glGetError();
-    if (e > 0)
-       __android_log_print(ANDROID_LOG_INFO, "Crawl", "ERROR %x: %s", e, msg);
-#else
     UNUSED(msg);
-#endif
 }
 #endif // USE_SDL
 #endif // USE_TILE_LOCAL

@@ -181,11 +181,6 @@ Fireball spell
 
 Ten czar ciska kulę ognia która leci we wskazanie miejsce po czym wybucha.
 %%%%
-Flame Tongue spell
-
-Ten czar wyzwala parometrowy płomień. Jego długość zależy od mocy czaru, i dla
-początkujących czarodziei może dosięgnąć co najwyżej na długość ręki.
-%%%%
 Flight spell
 
 Ten czar daje rzucającemu zdolność lotu.

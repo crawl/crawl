@@ -255,6 +255,8 @@ static const vector<god_passive> god_passives[] =
     {
         { -1, passive_t::safe_distortion,
               "are NOW protected from distortion unwield effects" },
+        { -1, passive_t::wrath_banishment,
+              "GOD will NOW banish foes whenever another god meddles" },
         { -1, passive_t::map_rot_res_abyss,
               "remember the shape of the Abyss better" },
         {  5, passive_t::attract_abyssal_rune,
@@ -335,9 +337,9 @@ static const vector<god_passive> god_passives[] =
         {  0, passive_t::bondage_skill_boost,
               "get a skill boost from cursed items" },
         {  1, passive_t::identify_items, "sense the properties of items" },
-        {  1, passive_t::avoid_traps, "avoid traps" },
         {  2, passive_t::sinv, "are NOW clear of vision" },
         {  3, passive_t::clarity, "are NOW clear of mind" },
+        {  4, passive_t::avoid_traps, "avoid traps" },
     },
 
     // Dithmenos
@@ -580,7 +582,7 @@ void ash_check_bondage()
 
         // handles missing hand, octopode ring slots, finger necklace, species
         // armour restrictions, etc. Finger necklace slot counts.
-        if (you_can_wear(i) == MB_FALSE)
+        if (!you_can_wear(i))
             continue;
 
         // transformed away slots are still considered to be possibly bound
@@ -755,7 +757,7 @@ unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill)
 {
     unsigned int skill_points = 0;
     const int scale = 10;
-    const int skill_boost = scale * (you.skill_boost[sk] * 3 + 2) / 2;
+    const int skill_boost = scale * (you.skill_boost[sk] * 4 + 3) / 3;
 
     skill_points += skill_boost * (piety_rank() + 1) * max(scaled_skill, 1)
                     * species_apt_factor(sk) / scale;
@@ -765,7 +767,7 @@ unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill)
 int ash_skill_boost(skill_type sk, int scale)
 {
     // It gives a bonus to skill points. The formula is:
-    // ( curses * 3 / 2 + 1 ) * (piety_rank + 1) * skill_level
+    // ( curses * 4 / 3 + 1 ) * (piety_rank + 1) * skill_level
 
     unsigned int skill_points = you.skill_points[sk]
                   + get_crosstrain_points(sk)
@@ -1399,7 +1401,7 @@ static bool _wu_jian_lunge(coord_def old_pos, coord_def new_pos,
              number_of_attacks > 1 ? ", in a flurry of attacks" : "");
     }
 
-    count_action(CACT_INVOKE, ABIL_WU_JIAN_LUNGE);
+    count_action(CACT_ABIL, ABIL_WU_JIAN_LUNGE);
 
     for (int i = 0; i < number_of_attacks; i++)
     {
@@ -1467,7 +1469,7 @@ static bool _wu_jian_whirlwind(coord_def old_pos, coord_def new_pos,
                      ", with incredible momentum" : "");
         }
 
-        count_action(CACT_INVOKE, ABIL_WU_JIAN_WHIRLWIND);
+        count_action(CACT_ABIL, ABIL_WU_JIAN_WHIRLWIND);
 
         for (int i = 0; i < number_of_attacks; i++)
         {
@@ -1506,19 +1508,38 @@ static bool _wu_jian_trigger_martial_arts(coord_def old_pos,
     return attacked;
 }
 
-void wu_jian_wall_jump_effects()
+// Return a monster at pos which a wall jump could attack, nullptr if none.
+monster *wu_jian_wall_jump_monster_at(const coord_def &pos)
+{
+    monster *target = monster_at(pos);
+    if (target && target->alive() && _can_attack_martial(target))
+        return target;
+    return nullptr;
+}
+
+static vector<monster*> _wu_jian_wall_jump_monsters(const coord_def &pos)
 {
     vector<monster*> targets;
-    for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
-    {
-        monster* target = monster_at(*ai);
-        if (target && _can_attack_martial(target) && target->alive())
+    for (adjacent_iterator ai(pos, true); ai; ++ai)
+        if (monster *target = wu_jian_wall_jump_monster_at(*ai))
             targets.push_back(target);
+    return targets;
+}
 
+// Return true if wu_jian_wall_jump_effects() would attack a monster when
+// called with you.pos() as pos.
+bool wu_jian_wall_jump_triggers_attacks(const coord_def &pos)
+{
+    return !_wu_jian_wall_jump_monsters(pos).empty();
+}
+
+void wu_jian_wall_jump_effects()
+{
+    for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
         if (!cell_is_solid(*ai))
             check_place_cloud(CLOUD_DUST, *ai, 1 + random2(3) , &you, 0, -1);
-    }
 
+    vector<monster*> targets = _wu_jian_wall_jump_monsters(you.pos());
     for (auto target : targets)
     {
         if (!target->alive())

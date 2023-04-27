@@ -1,6 +1,6 @@
 #include <random>
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 #include "AppHdr.h"
 

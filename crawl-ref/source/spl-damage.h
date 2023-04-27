@@ -40,14 +40,15 @@ void sonic_damage(bool scream);
 bool mons_shatter(monster* caster, bool actual = true);
 void shillelagh(actor *wielder, coord_def where, int pow);
 spret cast_freeze(int pow, monster* mons, bool fail);
-dice_def freeze_damage(int pow);
+dice_def freeze_damage(int pow, bool random);
 spret cast_airstrike(int pow, coord_def target, bool fail);
 int airstrike_space_around(coord_def target, bool count_invis);
 dice_def base_airstrike_damage(int pow, bool random = false);
 string describe_airstrike_dam(dice_def dice);
+string describe_resonance_strike_dam(dice_def dice);
 spret cast_momentum_strike(int pow, coord_def target, bool fail);
 spret cast_shatter(int pow, bool fail);
-dice_def shatter_damage(int pow, monster *mons = nullptr);
+dice_def shatter_damage(int pow, monster *mons = nullptr, bool random = false);
 int terrain_shatter_chance(coord_def where, const actor &agent);
 spret cast_irradiate(int powc, actor &caster, bool fail);
 dice_def irradiate_damage(int powc, bool random = true);
@@ -63,9 +64,13 @@ spret cast_discharge(int pow, const actor &agent, bool fail = false,
                           bool prompt = true);
 int discharge_max_damage(int pow);
 spret cast_arcjolt(int pow, const actor &agent, bool fail);
-dice_def arcjolt_damage(int pow);
-vector<coord_def> arcjolt_targets(const actor &agent, int pow, bool actual);
-dice_def base_fragmentation_damage(int pow);
+dice_def arcjolt_damage(int pow, bool random);
+vector<coord_def> arcjolt_targets(const actor &agent, bool actual);
+bool mons_should_fire_plasma(int pow, const actor &agent);
+spret cast_plasma_beam(int pow, const actor &agent, bool fail);
+vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual);
+vector<coord_def> plasma_beam_paths(coord_def source, const vector<coord_def> &targets);
+dice_def base_fragmentation_damage(int pow, bool random);
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool quiet,
                               const char **what, bool &hole);

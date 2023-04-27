@@ -51,8 +51,7 @@ public:
     // Applies attack damage and other effects.
     bool attack();
     int calc_to_hit(bool random) override;
-    int post_roll_to_hit_modifiers(int mhit, bool random,
-                                   bool aux = false) override;
+    int post_roll_to_hit_modifiers(int mhit, bool random) override;
 
     static void chaos_affect_actor(actor *victim);
 
@@ -68,7 +67,7 @@ private:
 
     /* Combat Calculations */
     bool using_weapon() const override;
-    int weapon_damage() override;
+    int weapon_damage() const override;
     int calc_mon_to_hit_base() override;
     int apply_damage_modifiers(int damage) override;
     int calc_damage() override;
@@ -113,7 +112,7 @@ private:
     void do_starlight();
 
     /* Brand / Attack Effects */
-    bool do_knockback(bool trample = true);
+    bool do_knockback(bool slippery);
 
     /* Output methods */
     void set_attack_verb(int damage) override;
@@ -142,6 +141,7 @@ private:
 
     int  player_apply_misc_modifiers(int damage) override;
     int  player_apply_final_multipliers(int damage, bool aux = false) override;
+    int  player_apply_postac_multipliers(int damage) override;
 
     void player_exercise_combat_skills() override;
     bool player_monattk_hit_effects();

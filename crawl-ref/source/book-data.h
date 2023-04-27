@@ -70,12 +70,13 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Fire
     SPELL_FOXFIRE,
     SPELL_FIREBALL,
+    SPELL_PLASMA_BEAM,
     SPELL_STARBURST,
 },
 
 {   // Book of Ice
-    SPELL_FREEZING_CLOUD,
     SPELL_SIMULACRUM,
+    SPELL_OZOCUBUS_REFRIGERATION,
     SPELL_POLAR_VORTEX,
 },
 
@@ -86,9 +87,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Hexes
-    SPELL_INNER_FLAME,
+    SPELL_ANGUISH,
     SPELL_CAUSE_FEAR,
-    SPELL_DISCORD,
+    SPELL_ENFEEBLE,
 },
 
 {   // Young Poisoner's Handbook
@@ -98,10 +99,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Lightning
-    SPELL_DISCHARGE,
     SPELL_ELECTRIC_CHARGE,
-    SPELL_LIGHTNING_BOLT,
     SPELL_ARCJOLT,
+    SPELL_PLASMA_BEAM,
 },
 
 {   // Book of Death
@@ -111,6 +111,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Misfortune
+    SPELL_INNER_FLAME,
     SPELL_VIOLENT_UNRAVELLING,
     SPELL_ENFEEBLE,
 },
@@ -135,8 +136,8 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Vapours
     SPELL_POISONOUS_VAPOURS,
-    SPELL_ROT,
     SPELL_MEPHITIC_CLOUD,
+    SPELL_FREEZING_CLOUD,
 },
 
 {   // Book of Necromancy
@@ -151,10 +152,12 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SUMMON_GUARDIAN_GOLEM,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Book of Maledictions
     SPELL_ANGUISH,
     SPELL_ENFEEBLE,
 },
+#endif
 
 {   // Book of Air
     SPELL_SHOCK,
@@ -303,6 +306,7 @@ static const vector<spell_type> spellbook_templates[] =
 #endif
 
 { // Book of Spectacle
+    SPELL_BLASTMOTE,
     SPELL_DAZZLING_FLASH,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
     SPELL_STARBURST,
@@ -382,7 +386,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Blasting
-    SPELL_BLASTSPARK,
+    SPELL_BLASTMOTE,
     SPELL_FULMINANT_PRISM,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
     SPELL_LRD,
@@ -407,9 +411,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Storms
+    SPELL_DISCHARGE,
     SPELL_AIRSTRIKE,
     SPELL_SUMMON_LIGHTNING_SPIRE,
-    SPELL_LIGHTNING_BOLT,
 },
 
 { // Book of Weapons
@@ -456,8 +460,8 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Unrestrained Analects
     SPELL_OLGREBS_TOXIC_RADIANCE,
-    SPELL_OZOCUBUS_REFRIGERATION,
     SPELL_IGNITION,
+    SPELL_DISCORD,
 },
 
 { // Great Wizards, Vol. II
@@ -473,7 +477,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Trismegistus Codex
-    SPELL_BLASTSPARK,
+    SPELL_ROT,
     SPELL_IGNITE_POISON,
     SPELL_FREEZING_CLOUD,
 },

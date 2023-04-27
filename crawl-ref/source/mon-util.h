@@ -11,6 +11,7 @@
 #include "enum.h"
 #include "gender-type.h"
 #include "los-type.h"
+#include "mon-dam-level-type.h"
 #include "mon-enum.h"
 #include "mon-inv-type.h"
 #include "player.h"
@@ -220,6 +221,8 @@ mon_itemuse_type mons_itemuse(const monster& mon);
 bool mons_can_be_blinded(monster_type mc);
 bool mons_can_be_dazzled(monster_type mc);
 
+bool mons_resists_drowning(monster_type type, monster_type base);
+
 int get_shout_noise_level(const shout_type shout);
 shout_type mons_shouts(monster_type mclass, bool demon_shout = false);
 bool mons_can_shout(monster_type mclass);
@@ -388,7 +391,7 @@ bool mons_class_is_plant(monster_type mc);
 bool mons_class_is_draconic(monster_type mc);
 bool mons_is_plant(const monster& mon);
 bool mons_eats_items(const monster& mon);
-bool actor_is_susceptible_to_vampirism(const actor& act);
+bool actor_is_susceptible_to_vampirism(const actor& act, bool known = false);
 monster_type mons_genus(monster_type mc);
 monster_type mons_species(monster_type mc);
 monster_type draconian_subspecies(const monster& mon);
@@ -535,17 +538,6 @@ monster *choose_random_monster_on_level(
 
 int spell_freq_for_hd(int hd);
 void normalize_spell_freq(monster_spells &spells, int total_freq);
-
-enum mon_dam_level_type
-{
-    MDAM_OKAY,
-    MDAM_LIGHTLY_DAMAGED,
-    MDAM_MODERATELY_DAMAGED,
-    MDAM_HEAVILY_DAMAGED,
-    MDAM_SEVERELY_DAMAGED,
-    MDAM_ALMOST_DEAD,
-    MDAM_DEAD,
-};
 
 void print_wounds(const monster& mons);
 bool wounded_damaged(mon_holy_type holi);

@@ -230,12 +230,16 @@ source/.tx/config
 .metadata/
 
 # generated files for android
-icon.png
-/source/android-project/AndroidManifest.xml
-/source/android-project/assets
-/source/android-project/gen
-/source/android-project/libs
-/source/android-project/obj
+/source/android-project/.gradle/
+/source/android-project/.idea/
+/source/android-project/local.properties
+/source/android-project/app/.cxx/
+/source/android-project/app/build/
+/source/android-project/app/build.gradle
+/source/android-project/app/release/
+/source/android-project/app/src/main/assets/
+/source/android-project/build/
+/source/android-project/app/src/main/res/drawable/*.png
 
 # generated files for monster
 /source/util/monster/monster

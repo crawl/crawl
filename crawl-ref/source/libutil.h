@@ -202,7 +202,8 @@ typename M::mapped_type lookup(M &map, const typename M::key_type &key,
 }
 
 // Delete when we upgrade to C++14!
-#ifndef TARGET_COMPILER_VC
+// we don't compile pre c++11, and c++14 and up provide make_unique
+#if !defined(TARGET_COMPILER_VC) && (__cplusplus == 201103L)
 template<typename T, typename... Args>
 unique_ptr<T> make_unique(Args&&... args)
 {
@@ -307,5 +308,6 @@ private:
     static mouse_mode ms_current_mode;
 };
 
+void handle_hangup(int);
 void init_signals();
 void release_cli_signals();

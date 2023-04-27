@@ -2268,9 +2268,6 @@ static bool _allow_rebinding(int key, KeymapContext context)
         CASE_ESCAPE
         case CK_MOUSE_CLICK:
         case CK_MOUSE_B2:
-#ifdef TOUCH_UI
-        case CK_TOUCH_DUMMY:
-#endif
             return false;
         default:
             break;

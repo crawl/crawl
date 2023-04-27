@@ -7,6 +7,7 @@
 #include "cio.h"
 #include "describe.h"
 #include "env.h"
+#include "evoke.h"
 #include "tile-env.h"
 #include "invent.h"
 #include "item-name.h"
@@ -56,7 +57,7 @@ void InventoryRegion::pack_buffers()
                 tileidx_t t = tile_env.default_flavour.floor + i % num_floor;
                 m_buf.add_dngn_tile(t, x, y);
             }
-            else
+            else if (!tiles.is_using_small_layout())
                 m_buf.add_main_tile(TILE_ITEM_SLOT, x, y);
         }
     }
@@ -112,7 +113,7 @@ void InventoryRegion::pack_buffers()
             if (item.special)
                 m_buf.add_main_tile(item.special, x, y, 0, 0);
 
-            if (item.flag & TILEI_FLAG_INVALID)
+            if (item.flag & TILEI_FLAG_INVALID && !tiles.is_using_small_layout())
                 m_buf.add_icons_tile(TILEI_MESH, x, y);
         }
     }
@@ -148,12 +149,6 @@ int InventoryRegion::handle_mouse(wm_mouse_event &event)
     bool on_floor = m_items[item_idx].flag & TILEI_FLAG_FLOOR;
 
     ASSERT(idx >= 0);
-
-    if (tiles.is_using_small_layout())
-    {
-        // close the inventory tab after successfully clicking on an item
-        tiles.deactivate_tab();
-    }
 
     // TODO enne - this is all really only valid for the on-screen inventory
     // Do we subclass InventoryRegion for the onscreen and offscreen versions?
@@ -352,9 +347,9 @@ bool InventoryRegion::update_tip_text(string& tip)
             string tmp = "";
             if (equipped)
             {
-                if (wielded && !item_is_evokable(item))
+                if (wielded)
                 {
-                    if (type == OBJ_JEWELLERY || type == OBJ_ARMOUR
+                    if (type == OBJ_JEWELLERY || type == OBJ_ARMOUR // ???
                         || is_weapon(item))
                     {
                         type = OBJ_WEAPONS + EQUIP_OFFSET;
@@ -388,8 +383,11 @@ bool InventoryRegion::update_tip_text(string& tip)
                 }
                 break;
             case OBJ_MISCELLANY:
-                tmp += "Evoke (V)";
+            case OBJ_WANDS:
+                tmp += "Evoke (%)";
                 cmd.push_back(CMD_EVOKE);
+                if (wielded)
+                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;
             case OBJ_ARMOUR:
                 if (!you.has_mutation(MUT_NO_ARMOUR))
@@ -419,12 +417,6 @@ bool InventoryRegion::update_tip_text(string& tip)
                     if (wielded || you.can_wield(item))
                         _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", wielded);
                 }
-                break;
-            case OBJ_WANDS:
-                tmp += "Evoke (%)";
-                cmd.push_back(CMD_EVOKE);
-                if (wielded)
-                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;
             case OBJ_BOOKS:
                 if (item_type_known(item) && item_is_spellbook(item)
@@ -577,7 +569,7 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
         desc.quantity = -1;
 
     if (type == OBJ_WEAPONS || type == OBJ_MISSILES
-        || type == OBJ_ARMOUR
+        || type == OBJ_ARMOUR || item.base_type == OBJ_STAVES
 #if TAG_MAJOR_VERSION == 34
         || type == OBJ_RODS
 #endif
@@ -585,8 +577,6 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
     {
         desc.special = tileidx_known_brand(item);
     }
-    else if (type == OBJ_CORPSES)
-        desc.special = tileidx_corpse_brand(item);
 
     desc.flag = 0;
     if (item.cursed())
@@ -717,6 +707,15 @@ void InventoryRegion::update()
                 }
             }
         }
+        if (tiles.is_using_small_layout())
+        {
+            // Leave only one row of floor items for small layout
+            while ((int)m_items.size() < mx * (my-1))
+            {
+                InventoryTile desc;
+                m_items.push_back(desc);
+            }
+        }
     }
 
     // Then, as many ground items as we can fit.
@@ -754,14 +753,17 @@ void InventoryRegion::update()
         }
     } while (s);
 
-    while ((int)m_items.size() < mx * my)
-        // let's not do this for p2 either
+    if (!tiles.is_using_small_layout())
     {
-        InventoryTile desc;
-        desc.flag = TILEI_FLAG_FLOOR;
-        if (disable_all)
-            desc.flag |= TILEI_FLAG_INVALID;
-        m_items.push_back(desc);
+        while ((int)m_items.size() < mx * my)
+            // let's not do this for p2 either
+        {
+            InventoryTile desc;
+            desc.flag = TILEI_FLAG_FLOOR;
+            if (disable_all)
+                desc.flag |= TILEI_FLAG_INVALID;
+            m_items.push_back(desc);
+        }
     }
 }
 

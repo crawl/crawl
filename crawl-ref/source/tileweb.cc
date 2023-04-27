@@ -733,14 +733,14 @@ void TilesFramework::send_options()
     finish_message();
 }
 
-#define ZOOM_INC 10
+#define ZOOM_INC 0.1
 
-static void _set_option_int(string name, int value)
+static void _set_option_fixedp(string name, fixedp<int,100> value)
 {
     tiles.json_open_object();
     tiles.json_write_string("msg", "set_option");
     tiles.json_write_string("name", name);
-    tiles.json_write_int("value", value);
+    tiles.json_write_int("value", value.to_scaled());
     tiles.json_close_object();
     tiles.finish_message();
 }
@@ -749,17 +749,17 @@ void TilesFramework::zoom_dungeon(bool in)
 {
     if (m_ui_state == UI_VIEW_MAP)
     {
-        Options.tile_map_scale = min(300, max(20,
+        Options.tile_map_scale = min(3.0, max(0.2,
                     Options.tile_map_scale + (in ? ZOOM_INC : -ZOOM_INC)));
-        _set_option_int("tile_map_scale", Options.tile_map_scale);
-        dprf("Zooming map to %d", Options.tile_map_scale);
+        _set_option_fixedp("tile_map_scale", Options.tile_map_scale);
+        dprf("Zooming map to %g", (float) Options.tile_map_scale);
     }
     else
     {
         Options.tile_viewport_scale = min(300, max(20,
                     Options.tile_viewport_scale + (in ? ZOOM_INC : -ZOOM_INC)));
-        _set_option_int("tile_viewport_scale", Options.tile_viewport_scale);
-        dprf("Zooming to %d", Options.tile_viewport_scale);
+        _set_option_fixedp("tile_viewport_scale", Options.tile_viewport_scale);
+        dprf("Zooming to %g", (float) Options.tile_viewport_scale);
     }
     // calling redraw explicitly is not needed here: it triggers from a
     // listener on the webtiles side.
@@ -1065,10 +1065,14 @@ player_info::player_info()
  * @param force_full  If true, all properties will be updated in the json
  *                    regardless whether their values are the same as the
  *                    current info in m_current_player_info.
+ *
+ * Warning: `force_full` is only ever set to true when sending player info
+ * for spectators, and some details below make use of this semantics.
  */
 void TilesFramework::_send_player(bool force_full)
 {
     player_info& c = m_current_player_info;
+    const bool spectator = force_full;
     if (!c._state_ever_synced)
     {
         // force the initial sync to be full: otherwise the _update_blah
@@ -1088,6 +1092,7 @@ void TilesFramework::_send_player(bool force_full)
     _update_string(force_full, c.job_title, filtered_lang(player_title()),
                    "title");
     _update_int(force_full, c.wizard, you.wizard, "wizard");
+    _update_int(force_full, c.explore, you.explore, "explore");
     _update_string(force_full, c.species, species::name(you.species),
                    "species");
     string god = "";
@@ -1158,6 +1163,13 @@ void TilesFramework::_send_player(bool force_full)
     if (you.running == 0) // Don't update during running/resting
     {
         _update_int(force_full, c.elapsed_time, you.elapsed_time, "time");
+
+        // only send this for spectators; the javascript version of the time
+        // indicator works somewhat differently than the local version
+        // XX reconcile?
+        if (spectator)
+            tiles.json_write_int("time_last_input", you.elapsed_time_at_last_input);
+
         _update_int(force_full, c.num_turns, you.num_turns, "turn");
     }
 
@@ -1225,7 +1237,7 @@ void TilesFramework::_send_player(bool force_full)
         item_def item = get_item_known_info(you.inv[i]);
         if ((char)i == you.equip[EQ_WEAPON] && is_weapon(item) && you.corrosion_amount())
             item.plus -= 4 * you.corrosion_amount();
-        _send_item(c.inv[i], item, force_full);
+        _send_item(c.inv[i], item, c.inv_uselessness[i], force_full);
         json_close_object(true);
     }
     json_close_object(true);
@@ -1293,6 +1305,7 @@ static string _qty_field_name(const item_def &item)
 }
 
 void TilesFramework::_send_item(item_def& current, const item_def& next,
+                                bool& current_uselessness,
                                 bool force_full)
 {
     bool changed = false;
@@ -1349,6 +1362,9 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
     changed |= (current.special != next.special);
 
     // Derived stuff
+    changed |= _update_int(force_full, current_uselessness,
+                           is_useless_item(next, true), "useless");
+
     if (changed && defined)
     {
         string name = next.name(DESC_A, true, false, true);
@@ -1365,13 +1381,15 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
         json_write_string("qty_field", _qty_field_name(next));
 
         const string prefix = item_prefix(next);
-        const int prefcol = menu_colour(next.name(DESC_INVENTORY), prefix);
+        const int prefcol = menu_colour(next.name(DESC_INVENTORY), prefix, "inventory", false);
         if (force_full)
             json_write_int("col", macro_colour(prefcol));
         else
         {
             const string current_prefix = item_prefix(current);
-            const int current_prefcol = menu_colour(current.name(DESC_INVENTORY), current_prefix);
+            const int current_prefcol = menu_colour(
+                current.name(DESC_INVENTORY), current_prefix,
+                "inventory", false);
 
             if (current_prefcol != prefcol)
                 json_write_int("col", macro_colour(prefcol));
@@ -1854,6 +1872,8 @@ void TilesFramework::_send_map(bool force_full)
     json_write_string("msg", "map");
     json_treat_as_empty();
 
+    // cautionary note: this is used in heuristic ways in process_handler.py,
+    // see `_is_full_map_msg`
     if (force_full)
         json_write_bool("clear", true);
 
@@ -2113,6 +2133,9 @@ void TilesFramework::_send_messages()
  */
 void TilesFramework::_send_everything()
 {
+    // note: a player client will receive and process some of these messages,
+    // but not all. This function is currently never called except for
+    // spectators, and some of the semantics here reflect this.
     _send_version();
     send_options();
     _send_layout();

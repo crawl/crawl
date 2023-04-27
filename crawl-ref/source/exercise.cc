@@ -25,6 +25,8 @@ void practise_casting(spell_type spell, bool success)
     spschools_type disciplines = get_spell_disciplines(spell);
 
     int skillcount = count_bits(disciplines);
+    if (!skillcount)
+        return; // not a real spell (wizmode casting?)
 
     if (!success)
         skillcount += 4 + random2(10);

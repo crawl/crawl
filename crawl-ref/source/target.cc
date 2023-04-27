@@ -13,6 +13,7 @@
 #include "env.h"
 #include "fight.h"
 #include "god-abil.h"
+#include "god-passive.h"
 #include "items.h"
 #include "libutil.h"
 #include "los-def.h"
@@ -146,12 +147,12 @@ static bool _ok_charge_target(coord_def a)
 }
 
 targeter_charge::targeter_charge(const actor *act, int r)
+    : targeter(), range(r)
 {
     ASSERT(act);
     ASSERT(r > 0);
     agent = act;
-    range = r;
-    obeys_mesmerise = true;
+    obeys_mesmerise = true; // override superclass constructor
 }
 
 bool targeter_charge::valid_aim(coord_def a)
@@ -552,7 +553,8 @@ aff_type targeter_walljump::is_affected(coord_def loc)
     if (loc == wall_jump_landing_spot)
         return AFF_YES;
 
-    if (loc.distance_from(wall_jump_landing_spot) == 1 && monster_at(loc))
+    auto d = loc.distance_from(wall_jump_landing_spot);
+    if (d == 1 && wu_jian_wall_jump_monster_at(loc))
         return AFF_YES;
 
     return AFF_NO;
@@ -727,7 +729,11 @@ bool targeter_inner_flame::valid_aim(coord_def a)
 {
     if (!targeter_smite::valid_aim(a))
         return false;
-    return mons_inner_flame_immune_reason(monster_at(a)).empty();
+
+    if (!mons_inner_flame_immune_reason(monster_at(a)).empty())
+        return notify_fail(mons_inner_flame_immune_reason(monster_at(a)));
+
+    return true;
 }
 
 targeter_simulacrum::targeter_simulacrum(const actor* act, int r) :
@@ -739,7 +745,11 @@ bool targeter_simulacrum::valid_aim(coord_def a)
 {
     if (!targeter_smite::valid_aim(a))
         return false;
-    return mons_simulacrum_immune_reason(monster_at(a)).empty();
+
+    if (!mons_simulacrum_immune_reason(monster_at(a)).empty())
+        return notify_fail(mons_simulacrum_immune_reason(monster_at(a)));
+
+    return true;
 }
 
 targeter_unravelling::targeter_unravelling()
@@ -2132,4 +2142,29 @@ bool targeter_anguish::affects_monster(const monster_info& mon)
         && mon.willpower() != WILL_INVULN
         && !mons_atts_aligned(agent->temp_attitude(), mon.attitude)
         && !mon.is(MB_ANGUISH);
+}
+
+targeter_poisonous_vapours::targeter_poisonous_vapours(const actor* act, int r)
+    : targeter_smite(act, r, 0, 0, false, nullptr)
+{
+}
+
+bool targeter_poisonous_vapours::affects_monster(const monster_info& mon)
+{
+    return get_resist(mon.resists(), MR_RES_POISON) <= 0;
+}
+
+bool targeter_poisonous_vapours::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    const monster_info *mon = env.map_knowledge(a).monsterinfo();
+    if (mon && !affects_monster(*mon))
+    {
+        return notify_fail(mon->full_name(DESC_THE) + " cannot be affected by "
+                           "poisonous vapours.");
+    }
+
+    return true;
 }

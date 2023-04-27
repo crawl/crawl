@@ -36,11 +36,12 @@ enum class spflag
     unclean            = 0x00000200,      // counts as "unclean"
     chaotic            = 0x00000400,      // counts as "chaotic"
     hasty              = 0x00000800,      // counts as "hasty"
-                     //  0x00001000,
+    silent             = 0x00001000,      // makes no noise on cast
     escape             = 0x00002000,      // useful for running away
     recovery           = 0x00004000,      // healing or recovery spell
     area               = 0x00008000,      // area affect
-                     //  0x00010000,      // was SPFLAG_BATTLE
+    destructive        = 0x00010000,      // not a conjuration, but still
+                                          // supported by Vehumet/Battlesphere
     selfench           = 0x00020000,      // monsters use as selfench
     monster            = 0x00040000,      // monster-only spell
     needs_tracer       = 0x00080000,      // monster casting needs tracer
@@ -91,11 +92,9 @@ void surge_power_wand(const int mp_cost);
 
 int list_spells(bool toggle_with_I = true, bool viewing = false,
                 bool allow_preselect = true,
-                const string &title = "Your Spells");
+                const string &title = "cast");
 int raw_spell_fail(spell_type spell);
-int calc_spell_power(spell_type spell, bool apply_intel,
-                     bool fail_rate_chk = false, bool cap_power = true,
-                     int scale = 1);
+int calc_spell_power(spell_type spell);
 int calc_spell_range(spell_type spell, int power = 0, bool allow_bonus = true,
                      bool ignore_shadows = false);
 
@@ -135,7 +134,8 @@ int power_to_barcount(int power);
 
 int spell_power_percent(spell_type spell);
 string spell_power_string(spell_type spell);
-string spell_damage_string(spell_type spell, bool evoked = false);
+string spell_damage_string(spell_type spell, bool evoked = false, int pow = -1);
+string spell_max_damage_string(spell_type spell);
 int spell_acc(spell_type spell);
 string spell_range_string(spell_type spell);
 string range_string(int range, int maxrange, char32_t caster_char);

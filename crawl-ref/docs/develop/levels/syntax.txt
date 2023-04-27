@@ -550,7 +550,7 @@ ITEM:     (list of items, separated by comma)
           * "ego:ego_name", where "ego_name" is something like "running" or
             "fire_resistance", and so on; "none" can be used to prevent the
             item from getting an ego. The item must be fully specified, so
-            trying "any weapon ego:vorpal" or "any armour ego:positive_energy"
+            trying "any weapon ego:heavy" or "any armour ego:positive_energy"
             will result in an error. Trying to give an ego to something which
             can't accept an ego will also result in an error. The full lists
             are in the str_to_ego() function in mapdef.cc.
@@ -732,7 +732,7 @@ MONS:     (list of monsters)
           "mons_giant_bat" tile, but is otherwise identical to a rat.
           Obviously, this substitution of one monster onto another should
           never be used, but it can be useful for customised vault monsters
-          if an alternate tile exists. In ASCII mode, this will do nothing.
+          if an alternative tile exists. In ASCII mode, this will do nothing.
 
           You can set the monster's god using the "god:" specifier as
           follows:

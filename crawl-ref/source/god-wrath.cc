@@ -11,6 +11,7 @@
 #include <queue>
 #include <sstream>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "attitude-change.h"
@@ -403,6 +404,31 @@ static bool _cheibriados_retribution()
     }
 
     return true;
+}
+
+static void _banish_foes_nearby()
+{
+    vector<monster*> potential_banishees;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        monster *mon = *mi;
+        if (!mon
+            || mon->attitude != ATT_HOSTILE
+            || mons_is_conjured(mon->type)
+            || mons_is_firewood(*mon))
+        {
+            continue;
+        }
+        potential_banishees.push_back(mon);
+    }
+    if (potential_banishees.empty())
+        return;
+
+    simple_god_message(" does not welcome meddling.");
+    const int to_banish = roll_dice(2, 3);
+    shuffle_array(begin(potential_banishees), end(potential_banishees));
+    for (int i = 0; i < to_banish && i < (int)potential_banishees.size(); ++i)
+        potential_banishees[i]->banish(&you);
 }
 
 static void _spell_retribution(monster* avatar, spell_type spell, god_type god,
@@ -1084,14 +1110,12 @@ static spell_type _vehumet_wrath_type()
     const int severity = min(random_range(1 + you.experience_level / 5,
                                           1 + you.experience_level / 3),
                              9);
-    // Mostly player-castable conjurations with a couple of additions.
     switch (severity)
     {
         case 1:
             return random_choose(SPELL_MAGIC_DART,
                                  SPELL_STING,
-                                 SPELL_SHOCK,
-                                 SPELL_FLAME_TONGUE);
+                                 SPELL_SHOCK);
         case 2:
             return random_choose(SPELL_THROW_FLAME,
                                  SPELL_THROW_FROST);
@@ -1930,7 +1954,7 @@ static int _wu_jian_summon_weapons()
         const int subtype = random_choose(WPN_DIRE_FLAIL, WPN_QUARTERSTAFF,
                                           WPN_BROAD_AXE, WPN_GREAT_SWORD,
                                           WPN_RAPIER, WPN_GLAIVE);
-        const int ego = random_choose(SPWPN_VORPAL, SPWPN_FLAMING,
+        const int ego = random_choose(SPWPN_HEAVY, SPWPN_FLAMING,
                                       SPWPN_FREEZING, SPWPN_ELECTROCUTION,
                                       SPWPN_SPEED);
 
@@ -2185,8 +2209,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     {
     // One in ten chance that Xom might do something good...
     case GOD_XOM:
-        xom_acts(abs(you.piety - HALF_MAX_PIETY),
-                 frombool(one_chance_in(10)));
+        xom_acts(abs(you.piety - HALF_MAX_PIETY), one_chance_in(10));
         break;
     case GOD_SHINING_ONE:   do_more = _tso_retribution(); break;
     case GOD_ZIN:           do_more = _zin_retribution(); break;
@@ -2227,6 +2250,9 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
 #endif
         return false;
     }
+
+    if (have_passive(passive_t::wrath_banishment))
+        _banish_foes_nearby();
 
     if (no_bonus)
         return true;

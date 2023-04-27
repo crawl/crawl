@@ -310,13 +310,20 @@ static string mi_calc_major_healing(monster* mons)
 static string mi_calc_freeze_damage(monster* mons)
 {
     const int pow = mons_power_for_hd(SPELL_FREEZE, mons->get_hit_dice());
-    return dice_def_string(freeze_damage(pow));
+    return dice_def_string(freeze_damage(pow, false));
 }
 
 static string mi_calc_irradiate_damage(const monster &mon)
 {
     const int pow = mons_power_for_hd(SPELL_IRRADIATE, mon.get_hit_dice());
     return dice_def_string(irradiate_damage(pow));
+}
+
+static string mi_calc_resonance_strike_damage(monster* mons)
+{
+    const int pow = mons->spell_hd(SPELL_RESONANCE_STRIKE);
+    dice_def dice = resonance_strike_base_damage(pow);
+    return describe_resonance_strike_dam(dice);
 }
 
 /**
@@ -350,8 +357,7 @@ static string mons_human_readable_spell_damage_string(monster* monster,
             spell_beam.damage = waterstrike_damage(monster->spell_hd(sp));
             break;
         case SPELL_RESONANCE_STRIKE:
-            return dice_def_string(resonance_strike_base_damage(*monster))
-                   + "+"; // could clarify further?
+            return mi_calc_resonance_strike_damage(monster);
         case SPELL_IOOD:
             spell_beam.damage = mi_calc_iood_damage(monster);
             break;
@@ -1115,6 +1121,12 @@ int main(int argc, char* argv[])
                     break;
                 case AF_SPIDER:
                     monsterattacks += colour(YELLOW, "(summon spider)");
+                    break;
+                case AF_BLOODZERK:
+                    monsterattacks += colour(RED, "(bloodzerk)");
+                    break;
+                case AF_SLEEP:
+                    monsterattacks += colour(BLUE, "(sleep)");
                     break;
                 case AF_CRUSH:
                 case AF_PLAIN:

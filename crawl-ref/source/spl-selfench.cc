@@ -37,9 +37,9 @@ spret cast_deaths_door(int pow, bool fail)
     mprf(MSGCH_SOUND, "You seem to hear sand running through an hourglass...");
 
     you.set_duration(DUR_DEATHS_DOOR, 10 + random2avg(13, 3)
-                                       + (random2(pow) / 10));
+                                       + div_rand_round(random2(pow), 10));
 
-    const int hp = max(pow / 10, 1);
+    const int hp = max(div_rand_round(pow, 10), 1);
     you.attribute[ATTR_DEATHS_DOOR_HP] = hp;
     set_hp(hp);
 
@@ -143,7 +143,7 @@ int cast_selective_amnesia(const string &pre_msg)
     int slot;
 
     // Pick a spell to forget.
-    keyin = list_spells(false, false, false, "Forget which spell?");
+    keyin = list_spells(false, false, false, "forget");
     redraw_screen();
     update_screen();
 

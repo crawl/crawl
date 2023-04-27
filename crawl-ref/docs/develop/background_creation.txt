@@ -85,7 +85,7 @@ herd-watcher:
 
         // and just a couple skill points in stuff you might do around a field.
         { { SK_FIGHTING, 6 }, { SK_SUMMONING, 8 }, { SK_SPELLCASTING, 3 },
-          { SK_DODGING, 3 }, { SK_ARMOR, 4 } { SK_STEALTH, 1 }, },
+          { SK_DODGING, 3 }, { SK_ARMOUR, 4 } { SK_STEALTH, 1 }, },
     } },
 
 That looks like what I expect a shepherd to look like: lightly armed, lightly

@@ -632,7 +632,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             update_server_scroll_timeout = null;
         }
 
-        if (!menu) return;
+        if (!menu || menu.type == "crt")
+            return;
 
         update_visible_indices();
         comm.send_message("menu_scroll", {
@@ -860,7 +861,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     function handle_size_change()
     {
-        if (!menu) return;
+        if (!menu || menu.type == "crt")
+            return;
 
         if (menu.last_hovered > menu.items.length)
             menu.last_hovered = -1; // sanity check

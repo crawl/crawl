@@ -104,6 +104,7 @@ void find_connected_identical(const coord_def& d, set<coord_def>& out, bool know
 
 bool slime_wall_neighbour(const coord_def& c);
 int count_adjacent_slime_walls(const coord_def &pos);
+int slime_wall_corrosion(actor* act);
 void slime_wall_damage(actor* act, int delay);
 
 int count_adjacent_icy_walls(const coord_def &pos);

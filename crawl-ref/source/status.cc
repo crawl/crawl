@@ -165,7 +165,6 @@ static void _describe_poison(status_info& inf);
 static void _describe_transform(status_info& inf);
 static void _describe_stat_zero(status_info& inf, stat_type st);
 static void _describe_terrain(status_info& inf);
-static void _describe_missiles(status_info& inf);
 static void _describe_invisible(status_info& inf);
 static void _describe_zot(status_info& inf);
 
@@ -361,10 +360,6 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
     }
-
-    case STATUS_MISSILES:
-        _describe_missiles(inf);
-        break;
 
     case STATUS_INVISIBLE:
         _describe_invisible(inf);
@@ -971,17 +966,6 @@ static void _describe_terrain(status_info& inf)
         break;
     default:
         ;
-    }
-}
-
-static void _describe_missiles(status_info& inf)
-{
-    if (you.missile_repulsion())
-    {
-        inf.light_colour = WHITE;
-        inf.light_text   = "RMsl";
-        inf.short_text   = "repel missiles";
-        inf.long_text    = "You repel missiles.";
     }
 }
 

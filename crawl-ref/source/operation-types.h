@@ -14,10 +14,10 @@ enum operation_types
     OPER_ZAP      = 'Z',
     OPER_FIRE     = 'f',
     OPER_EVOKE    = 'v',
-    OPER_DESTROY  = 'D',
     OPER_QUIVER   = 'Q',
     OPER_ATTACK   = 'a',
-    OPER_BUTCHER  = 'c',
+    OPER_EQUIP    = 'e',
+    OPER_UNEQUIP  = 'u', // note: does not match current binding
     OPER_ANY      = 0,
     OPER_NONE     = -1, // could this be 0?
 };

@@ -18,9 +18,7 @@
 #include <string>
 
 #ifndef TARGET_OS_WINDOWS
-# ifndef __ANDROID__
-#  include <langinfo.h>
-# endif
+# include <langinfo.h>
 #endif
 #include <fcntl.h>
 #ifdef USE_UNIX_SIGNALS
@@ -256,18 +254,17 @@ static void _maybe_melt_armour()
 /**
  * How much horror does the player character feel in the current situation?
  *
- * (For Ru's MUT_COWARDICE.)
+ * (For Ru's `MUT_COWARDICE` and for the Sacred Labrys.)
  *
  * Penalties are based on the "scariness" (threat level) of monsters currently
  * visible.
  */
-static int _current_horror_level()
+int current_horror_level()
 {
     int horror_level = 0;
 
     for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
     {
-
         if (mons_aligned(*mi, &you)
             || !mons_is_threatening(**mi)
             || mons_is_tentacle_or_tentacle_segment(mi->type))
@@ -281,9 +278,6 @@ static int _current_horror_level()
         else if (threat_level == MTHRT_TOUGH)
             horror_level += 1;
     }
-    // Subtract one from the horror level so that you don't get a message
-    // when a single tough monster appears.
-    horror_level = max(0, horror_level - 1);
     return horror_level;
 }
 
@@ -325,7 +319,9 @@ static void _update_cowardice()
         return;
     }
 
-    const int horror_level = _current_horror_level();
+    // Subtract one from the horror level so that you don't get a message
+    // when a single tough monster appears.
+    const int horror_level = max(0, current_horror_level() - 1);
 
     if (horror_level <= 0)
     {
@@ -1013,9 +1009,6 @@ void player_reacts()
 
     actor_apply_toxic_bog(&you);
 
-    if (env.level_state & LSTATE_SLIMY_WALL)
-        slime_wall_damage(&you, you.time_taken);
-
     _decrement_durations();
 
     // Translocations and possibly other duration decrements can
@@ -1033,6 +1026,10 @@ void player_reacts()
 
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
+
+    // safety first: make absolutely sure that there's no mimic underfoot.
+    // (this can happen with e.g. apport.)
+    discover_mimic(you.pos());
 
     // Player stealth check.
     seen_monsters_react(stealth);

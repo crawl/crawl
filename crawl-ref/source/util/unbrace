@@ -85,6 +85,7 @@ sub rebrace($$$)
 
 for my $f (@files)
 {
+    next if $f =~ /catch_amalgamated\.cc/;
     open F, "<", $f or (print(STDERR "Can't read $f\n"), next);
     my $old = $_ = <F>;
     close F;

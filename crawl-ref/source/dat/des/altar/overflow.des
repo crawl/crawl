@@ -1133,9 +1133,9 @@ ENDMAP
 NAME:   nicolae_hepliaklqana_ecumenical_no_more
 TAGS:   temple_overflow_hepliaklqana temple_overflow_1 transparent decor
 TAGS:   uniq_altar_hepliaklqana
-WEIGHT: 5
+WEIGHT: 3
 KMONS:  WD = plant / nothing
-NSUBST: E = - / E, H = _ / - / E, E = E / . / EEE-.., P = 4=W / WDD / D
+NSUBST: E = - / E, H = _ / - / E, E = E / . / E., P = 4=W / WDD / D
 SUBST:  ' = '''., c = ccx
 KFEAT:  WS = W
 KFEAT:  _ = altar_hepliaklqana
@@ -2207,6 +2207,26 @@ MAP
 .......
 ENDMAP
 
+# Sky beasts normally generate on D:6-8, so they're within the D:3 out-of-depth
+# range (which goes down to D:6). You'll be fine.
+NAME:    nicolae_qazlal_beasts_of_the_sky
+TAGS:    temple_overflow_qazlal temple_overflow_1 transparent
+DEPTH:   D:3-8
+KMONS:   _ = sky beast
+KFEAT:   _ = altar_qazlal
+SHUFFLE: Pp, Qq
+SUBST:   PQ = x, pq = m
+MAP
+.........
+...Q.q...
+..P...p..
+.Q.....q.
+...._....
+.q.....Q.
+..p...P..
+...q.Q...
+.........
+ENDMAP
 
 # Ru overflow altar vaults ####################################################
 
@@ -4404,7 +4424,7 @@ TAGS:   temple_overflow_2 temple_overflow_zin temple_overflow_gozag
 TAGS:   no_item_gen no_monster_gen
 KFEAT:  _ = altar_zin
 KFEAT:  O = altar_gozag
-KITEM:  O = wand of digging charges:1
+KITEM:  O = wand of digging charges:1 no_pickup
 KFEAT:  m = iron_grate
 KPROP:  $ = no_tele_into
 KITEM:  $ = gold q:1 / gold q:2
@@ -4430,7 +4450,7 @@ COLOUR:  1- = red
 COLOUR:  2' = blue
 KFEAT:   D = altar_trog
 KFEAT:   E = altar_sif_muna
-: local egos = {["antimagic"] = 1, ["vorpal"] = 2, ["flaming"] = 2}
+: local egos = {["antimagic"] = 1, ["heavy"] = 2, ["flaming"] = 2}
 : if you.absdepth() <= 3 then
 {{
 local enchant = 2 + (crawl.one_chance_in(3) and 1 or 0)

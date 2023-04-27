@@ -20,6 +20,7 @@
 #include "env.h"
 #include "files.h"
 #include "hints.h"
+#include "initfile.h"
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
@@ -51,11 +52,11 @@ static const char *features[] =
 #endif
 
 #ifdef USE_TILE_LOCAL
-    "Tile support",
+    "Tiles support",
 #endif
 
 #ifdef USE_TILE_WEB
-    "Web Tile support",
+    "Webtiles support",
 #endif
 
 #ifdef WIZARD
@@ -85,7 +86,8 @@ static const char *features[] =
 
 static string _get_version_information()
 {
-    string result = string("This is <w>" CRAWL " ") + Version::Long + "</w>";
+    string result = string("This is <w>" CRAWL " ") + Version::Long
+        + " (" CRAWL_BUILD_NAME ")</w>";
     return result;
 }
 
@@ -111,6 +113,8 @@ static string _get_version_features()
         result += "\n\n";
     }
 
+    result += "Report bugs to: <w>" CRAWL_BUG_REPORT "</w>\n\n";
+
     result += "<w>Features</w>\n"
                  "--------\n";
 
@@ -120,6 +124,22 @@ static string _get_version_features()
         result += feature;
         result += "\n";
     }
+
+#ifdef DEBUG
+    // this might be useful on a regular build too?
+    result += "\n<w>Paths</w>\n"
+                   "-----";
+    result += make_stringf("\n<w>crawl_dir</w>: '%s'", SysEnv.crawl_dir.c_str());
+    if (!Options.crawl_dir_option.empty())
+        result += make_stringf(" (option '%s')", Options.crawl_dir_option.c_str());
+    result += make_stringf("\n<w>save_dir</w>:  '%s'", Options.save_dir.c_str());
+    if (!Options.save_dir_option.empty())
+        result += make_stringf(" (option '%s')", Options.save_dir_option.c_str());
+    result += make_stringf("\n<w>macro_dir</w>: '%s'", Options.macro_dir.c_str());
+    if (!Options.macro_dir_option.empty())
+        result += make_stringf(" (option '%s')", Options.macro_dir_option.c_str());
+    result += "\n";
+#endif
 
     return result;
 }
@@ -271,23 +291,23 @@ void list_armour()
                                        : "unknown")
              << " : ";
 
-        if (you_can_wear(i) == MB_FALSE)
+        if (!you_can_wear(i))
             estr << "    (unavailable)";
-        else if (you_can_wear(i, true) == MB_FALSE)
+        else if (!you_can_wear(i, true))
             estr << "    (currently unavailable)";
         else if (armour_id != -1)
         {
             estr << you.inv[armour_id].name(DESC_INVENTORY);
             colour = menu_colour(estr.str(), item_prefix(you.inv[armour_id]),
-                                 "equip");
+                                 "equip", false);
         }
-        else if (you_can_wear(i) == MB_MAYBE)
+        else if (you_can_wear(i) == maybe_bool::maybe)
             estr << "    (restricted)";
         else
             estr << "    none";
 
         if (colour == MSGCOL_BLACK)
-            colour = menu_colour(estr.str(), "", "equip");
+            colour = menu_colour(estr.str(), "", "equip", false);
 
         mprf(MSGCH_EQUIPMENT, colour, "%s", estr.str().c_str());
     }
@@ -324,19 +344,19 @@ void list_jewellery()
                                        : "unknown";
 
         string item;
-        if (you_can_wear(i, true) == MB_FALSE)
+        if (!you_can_wear(i, true))
             item = "    (currently unavailable)";
         else if (jewellery_id != -1)
         {
             item = you.inv[jewellery_id].name(DESC_INVENTORY);
             string prefix = item_prefix(you.inv[jewellery_id]);
-            colour = menu_colour(item, prefix, "equip");
+            colour = menu_colour(item, prefix, "equip", false);
         }
         else
             item = "    none";
 
         if (colour == MSGCOL_BLACK)
-            colour = menu_colour(item, "", "equip");
+            colour = menu_colour(item, "", "equip", false);
 
         item = chop_string(make_stringf("%-*s: %s",
                                         split ? cols > 96 ? 9 : 8 : 11,
@@ -731,7 +751,7 @@ static void _display_diag()
             "  `<w>best_effort_brighten_background</w>`: %d\n\n",
             (int) Options.allow_extended_colours,
             Options.allow_extended_colours ? " (overridden by TERM)" : "",
-            Options.bold_brightens_foreground == MB_FALSE ? 0 : 1,
+            (int) Options.bold_brightens_foreground.to_bool(true),
             (int) Options.blink_brightens_background,
             (int) Options.best_effort_brighten_foreground,
             (int) Options.best_effort_brighten_background);
@@ -750,7 +770,7 @@ static void _display_diag()
             // 80x25 when these diagnostics are shown
         }
     }
-    else if (!suppress_unix_stuff && Options.bold_brightens_foreground == MB_TRUE)
+    else if (!suppress_unix_stuff && bool(Options.bold_brightens_foreground))
         s += "Option `bold_brightens_foreground`: force\n\n";
 
 #ifndef USE_TILE_LOCAL
@@ -793,9 +813,20 @@ static void _add_formatted_help_menu(column_composer &cols)
         "aspect of Dungeon Crawl.\n"
 
         "<w>?</w>: List of commands\n"
-        "<w>^</w>: Quickstart Guide\n"
-        "<w>:</w>: Browse character notes\n"
-        "<w>#</w>: Browse character dump\n"
+        "<w>^</w>: Quickstart Guide");
+    if (!crawl_state.game_started)
+    {
+        cols.add_formatted(0,
+            "<darkgrey>:: Browse character notes</darkgrey>\n"
+            "<darkgrey>#: Browse character dump</darkgrey>", false);
+    }
+    else
+    {
+        cols.add_formatted(0,
+            "<w>:</w>: Browse character notes\n"
+            "<w>#</w>: Browse character dump", false);
+    }
+    cols.add_formatted(0,
         "<w>~</w>: Macros help\n"
         "<w>&</w>: Options help\n"
         "<w>%</w>: Table of aptitudes\n"
@@ -806,7 +837,21 @@ static void _add_formatted_help_menu(column_composer &cols)
 #endif
         "<w>V</w>: Version information\n"
         "<w>!</w>: Display diagnostics\n"
-        "<w>Home</w>: This screen\n");
+        "<w>Home</w>: This screen\n"
+#ifdef __ANDROID__
+        // XX is this the bet place for this? It should at least be duplicated
+        // in `??`.
+        "\n"
+        "<h>Android Controls\n"
+        "\n"
+        "<w>Back key</w>: Alias for escape\n"
+        "<w>Volume keys</w>: Zoom dungeon & map\n"
+        "Long press for right click.\n"
+        "Touch with two fingers for scrolling.\n"
+        "Toggle keyboard icon controls the\n"
+        "virtual keyboard visibility.\n"
+#endif
+        , false);
 
     // TODO: generate this from the manual somehow
     cols.add_formatted(
@@ -1082,6 +1127,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_PRIMARY_ATTACK, "attack with wielded item", 2);
     _add_command(cols, 1, CMD_EVOKE, "eVoke wand and miscellaneous item", 2);
 
+    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Equip or Unequip an item",
+                         { CMD_EQUIP, CMD_UNEQUIP });
     _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Wear or Take off armour",
                          { CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR });
     _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Put on or Remove jewellery",
@@ -1352,7 +1399,7 @@ public:
         process_key(key);
     };
 private:
-    bool process_key(int ch) override
+    maybe_bool process_key(int ch) override
     {
         int key = toalower(ch);
 
@@ -1366,9 +1413,18 @@ private:
         formatted_string header_text, help_text;
         switch (key)
         {
-            case CK_ESCAPE: case ':': case '#': case '/': case 'q': case 'v': case '!':
+            case ':':
+            case '#':
+                // disable these if there's no character to view
+                if (!crawl_state.game_started)
+                    return maybe_bool::maybe;
+                // falltrough
+            case CK_ESCAPE: case '/': case 'q': case 'v': case '!':
+                // exit the UI, these help screens are activated outside of
+                // the scroller popup
                 return false;
             default:
+                // try to process help section hotkeys
                 if (!(page = _get_help_section(key, header_text, help_text, scroll)))
                     break;
                 if (page != prev_page)

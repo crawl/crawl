@@ -492,15 +492,15 @@ direction_chooser::direction_chooser(dist& moves_,
     if (unrestricted)
     {
         needs_path = false;
-        behaviour->needs_path = MB_MAYBE;
+        behaviour->needs_path = maybe_bool::maybe;
     }
     else if (hitfunc)
     {
         needs_path = true;
-        behaviour->needs_path = MB_MAYBE; // TODO: can this be relaxed?
+        behaviour->needs_path = maybe_bool::maybe; // TODO: can this be relaxed?
     }
-    if (behaviour->needs_path != MB_MAYBE)
-        needs_path = tobool(behaviour->needs_path, true);
+    if (behaviour->needs_path.is_bool())
+        needs_path = bool(behaviour->needs_path);
 
     show_beam = !just_looking && needs_path;
     need_viewport_redraw = show_beam;
@@ -749,11 +749,15 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
     {
         target = coord_def(-1, -1);
         // HACK: quantity == 1: monsters, quantity == 2: items
+        // TODO: fix this, maybe better to just use dynamic cast?
         const int quant = sel.quantity;
         if (quant == 1)
         {
             // Get selected monster.
-            monster_info* m = static_cast<monster_info* >(sel.data);
+            const MonsterMenuEntry *mme = dynamic_cast<const MonsterMenuEntry *>(&sel);
+            ASSERT(mme);
+            monster_info* m = static_cast<monster_info* >(mme->data);
+            ASSERT(m);
 
 #ifdef USE_TILE
             // Highlight selected monster on the screen.
@@ -773,7 +777,10 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
         else if (quant == 2)
         {
             // Get selected item.
-            item_def* i = static_cast<item_def*>(sel.data);
+            const InvEntry *ie = dynamic_cast<const InvEntry *>(&sel);
+            ASSERT(ie);
+            item_def* i = static_cast<item_def*>(ie->data);
+            ASSERT(i);
             if (!describe_item(*i))
             {
                 target = coord_def(-1, -1);
@@ -782,6 +789,8 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
         }
         else
         {
+            const FeatureMenuEntry *fme = dynamic_cast<const FeatureMenuEntry *>(&sel);
+            ASSERT(fme);
             const int num = quant - 3;
             const int y = num % 100;
             const int x = (num - y)/100;
@@ -2293,9 +2302,9 @@ public:
                 ? CMD_NO_CMD
                 : m_dc.behaviour->get_command(key);
             // XX a bit ugly to do this here..
-            if (m_dc.behaviour->needs_path != MB_MAYBE)
+            if (m_dc.behaviour->needs_path.is_bool())
             {
-                m_dc.needs_path = tobool(m_dc.behaviour->needs_path, true);
+                m_dc.needs_path = bool(m_dc.behaviour->needs_path);
                 m_dc.show_beam = !m_dc.just_looking && m_dc.needs_path;
                 // XX code duplication
                 m_dc.have_beam = m_dc.show_beam
@@ -2621,7 +2630,7 @@ void get_square_desc(const coord_def &c, describe_info &inf)
 // Used for both in- and out-of-los cells.
 bool full_describe_square(const coord_def &c, bool cleanup)
 {
-    if (!in_bounds(c))
+    if (!map_bounds(c))
         return false;
     vector<monster_info> list_mons;
     vector<item_def *> list_items;
@@ -2802,12 +2811,6 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
     die("Unknown targeting mode!");
 }
 
-static bool _tobool(maybe_bool mb)
-{
-    ASSERT(mb != MB_MAYBE);
-    return mb == MB_TRUE;
-}
-
 static bool _find_monster(const coord_def& where, targ_mode_type mode,
                           bool need_path, int range, targeter *hitfunc)
 {
@@ -2816,8 +2819,8 @@ static bool _find_monster(const coord_def& where, targ_mode_type mode,
         // We could pass more info here.
         maybe_bool x = clua.callmbooleanfn("ch_target_monster", "dd",
                                            dp.x, dp.y);
-        if (x != MB_MAYBE)
-            return _tobool(x);
+        if (x.is_bool())
+            return bool(x);
     }
 
     // Target the player for friendly and general spells.
@@ -2856,8 +2859,8 @@ static bool _find_shadow_step_mons(const coord_def& where, targ_mode_type mode,
         // We could pass more info here.
         maybe_bool x = clua.callmbooleanfn("ch_target_shadow_step", "dd",
                                            dp.x, dp.y);
-        if (x != MB_MAYBE)
-            return _tobool(x);
+        if (x.is_bool())
+            return bool(x);
     }
 
     // Need a monster to attack; this checks that the monster is a valid target.
@@ -2882,8 +2885,8 @@ static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
         // We could pass more info here.
         maybe_bool x = clua.callmbooleanfn("ch_target_monster_expl", "dd",
                                            dp.x, dp.y);
-        if (x != MB_MAYBE)
-            return _tobool(x);
+        if (x.is_bool())
+            return bool(x);
     }
 
     if (!hitfunc->valid_aim(where))
@@ -4127,7 +4130,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 // targeting_behaviour
 
 targeting_behaviour::targeting_behaviour(bool look_around)
-    : just_looking(look_around), needs_path(MB_MAYBE)
+    : just_looking(look_around), needs_path(maybe_bool::maybe)
 {
 }
 

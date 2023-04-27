@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".DCSSLauncher">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/logoView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/app_name"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/logo" />
+
+            <Button
+                android:id="@+id/startButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/start_game"
+                android:theme="@style/ButtonColor2"/>
+
+            <Button
+                android:id="@+id/editInitFile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/edit_rc"/>
+
+            <Button
+                android:id="@+id/morgueButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/morgue"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginHorizontal="6dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:layout_marginRight="6dp"
+                    android:text="@string/keyboard"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/keyboardSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:background="@color/dark_green"
+                    android:popupBackground="@color/dark_green"
+                    android:spinnerMode="dropdown" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginHorizontal="6dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:layout_marginRight="6dp"
+                    android:text="@string/extra_keyboard"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/extraKeyboardSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:background="@color/dark_green"
+                    android:popupBackground="@color/dark_green"
+                    android:spinnerMode="dropdown" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginHorizontal="6dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:layout_marginRight="6dp"
+                    android:text="@string/keyboard_size"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/keyboardSize"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="number" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

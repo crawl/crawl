@@ -132,11 +132,16 @@ static int l_item_do_wield(lua_State *ls)
 
     UDATA_ITEM(item);
 
-    int slot = -1;
-    if (item && item->defined() && in_inventory(*item))
-        slot = item->link;
-    bool res = wield_weapon(true, slot);
-    lua_pushboolean(ls, res);
+    if (item)
+    {
+        int slot = -1;
+        if (item && item->defined() && in_inventory(*item))
+            slot = item->link;
+        lua_pushboolean(ls, wield_weapon(slot));
+    }
+    else
+        lua_pushboolean(ls, use_an_item(OPER_WIELD));
+
     return 1;
 }
 
@@ -177,7 +182,7 @@ static int l_item_do_puton(lua_State *ls)
     if (!item || !in_inventory(*item))
         return 0;
 
-    lua_pushboolean(ls, puton_ring(item->link));
+    lua_pushboolean(ls, puton_ring(*item));
     return 1;
 }
 
@@ -212,7 +217,7 @@ static int l_item_do_remove(lua_State *ls)
 
     bool result = false;
     if (eq == EQ_WEAPON)
-        result = wield_weapon(true, SLOT_BARE_HANDS);
+        result = wield_weapon(SLOT_BARE_HANDS);
     else if (eq >= EQ_FIRST_JEWELLERY && eq <= EQ_LAST_JEWELLERY)
         result = remove_ring(item->link);
     else
@@ -444,7 +449,7 @@ static int l_item_do_name_coloured(lua_State *ls)
     if (item)
     {
         string name   = _item_name(ls, item);
-        int    col    = menu_colour(name, item_prefix(*item));
+        int    col    = menu_colour(name, item_prefix(*item), "item", false);
         string colstr = colour_to_str(col);
 
         ostringstream out;

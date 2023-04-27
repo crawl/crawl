@@ -1,5 +1,12 @@
 #! /bin/sh
 
+# find a ttf file by exact name match (case insensitive). Tries font-config
+# scripts if available, and otherwise falls back on some hard-coded
+# directories. If the exact match isn't available at all, no output.
+
+# some hard-coded font directories to check. Note: if you are using
+# font-config with other directories, you don't need to edit this -- that case
+# is handled by the `fc-list` call below.
 FONTDIRS="/usr/share/fonts /usr/local/share/fonts /usr/*/lib/X11/fonts"
 
 name=$1
@@ -7,10 +14,23 @@ name=$1
 
 {
     {
-        fc-list | sed 's/: .*//' | grep -Fi "/$name"
+        # check font-config directories. This call should print out exactly
+        # matching filenames, and is prioritized by the `head` part of the
+        # call below; the outer find is pretty trivial for this case. (The
+        # -L may be necessary in some systems, though.) This part requires
+        # an exact match to $name (in contrast to, e.g., an fc-match call.)
+        # Also, the outer 2>/dev/null eliminates this call if fc-list isn't
+        # present at all.
+        fc-list -f "%{file}\n" | grep -Fi "/$name"
+
+        # as a backup, check the hard-coded directories above. This relies on
+        # the somewhat elaborate `find` call below to actually get a name
+        # matching $name. These dirs may be redundant with fontconfig dirs,
+        # but that is ok.
+        # XX is this necessary any more?
         for dir in $FONTDIRS; do
             [ -d "$dir" ] && echo "$dir"
         done
-    } | xargs -I% find % \( -type f -o -type l \) -iname "$name" -print \
+    } | xargs -I% find -L % \( -type f -o -type l \) -iname "$name" -print \
       | head -n1
 } 2>/dev/null

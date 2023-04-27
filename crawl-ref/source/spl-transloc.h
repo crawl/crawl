@@ -17,7 +17,9 @@ int frog_hop_range();
 spret frog_hop(bool fail, dist *target = nullptr);
 
 bool electric_charge_possible(bool allow_safe_monsters);
-spret electric_charge(int powc, bool fail);
+spret electric_charge(int powc, bool fail, const coord_def &target);
+bool find_charge_target(vector<coord_def> &target_path, int max_range,
+                                targeter *hitfunc, dist &target);
 string movement_impossible_reason();
 
 void you_teleport();

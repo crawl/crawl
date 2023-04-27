@@ -221,6 +221,42 @@ MAP
 ....xxxxxxx...@
 ENDMAP
 
+NAME:   nicolae_shoals_entry_flooding
+TAGS:   shoals_entry patrolling transparent
+WEIGHT: 5
+KMONS:  ON = water nymph
+KFEAT:  O = enter_shoals
+NSUBST: N = N``` / `
+SUBST:  x = x`, ` = W.
+MAP
+ .........
+...xx`xx...
+..xxx`xxx..
+.xxxWWWxxx.
+.xxWNNNWxx.
+.``WNONW``.
+.xxWNNNWxx.
+.xxxWWWxxx.
+..xxx`xxx..
+...xx`xx...
+ .........
+ENDMAP
+
+NAME:  nicolae_shoals_entry_roost
+TAGS:  shoals_entry patrolling transparent
+KMONS: OH = harpy
+KFEAT: O = enter_shoals
+SUBST: ` = .W, H = H..
+MAP
+```````
+`WWWWW`
+`WxHxW`
+`WHOHW`
+`WxHxW`
+`WWWWW`
+```````
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Decorative vaults.
@@ -680,6 +716,67 @@ cc..cc.....cc..cc
   cc.........cc
    ccc.....ccc
      ccccccc
+ENDMAP
+
+NAME:   nicolae_shoals_aurelia_aurita
+TAGS:   transparent no_tide
+DEPTH:  Shoals
+ORIENT: float
+KFEAT:  @ = W
+MAP
+@W     wwwwwww      @
+ WW  wwwwcccwwww   WW
+  W wwwwccWccwwwwWWW
+  WWwwwccWwWccwwWW
+  wWWWwcWwwwWcwwWww
+ wwwwWWccWwWccwWWwww
+ wwwwwWwcWwWcWWWwwww
+wwwcccWWwwwwWWwcccwww
+wwccWccWWWwwWwccWccww
+wccWwWWwwWWWWwWWwWccw
+wcWwwwwwwWWWwwwwwwWcw
+wccWwWWwWWWWwwWWwWccw
+wwccWccwWwwWWWccWccww
+wwwcccwWWwwwwWWcccwww
+ wwwwWWWcWwWcwWwwwww
+ wwwWWwccWwWccWWwwww
+  wwWwwcWwwwWcwWWWw
+   WWwwccWwWccwwwWW
+ WWWwwwwccWccwwww W
+WW   wwwwcccwwww  WW
+@      wwwwwww     W@
+ENDMAP
+
+NAME:    nicolae_shoals_gull_way
+TAGS:    transparent water_ok
+DEPTH:   Shoals
+SHUFFLE: DEFHJKLMN
+SUBST:   H : H`, J : J`, K : K`
+NSUBST:  D = + / c, E = + / c, F = + / c, H = + / c, J = + / c, K = + / c, \
+         P = 2=+ / 2=n / +c / nc / c, Q = + / n / +c / nc / c
+SUBST:   _ = _w, LMN = `
+KPROP:   +` = no_tide
+CLEAR:   _
+MAP
+cccPccccPcccPccc+cc
+c`````F```E```D```c
+c`````F```E```D```c
+P`````F```E```D```c
+c`````F```E```D```c
+c`````F```E```D```c
+cHHHHHcc+cccQcccQcc
+P`````c............ _______
+c`````Q.wwwwwwwwwwwwwwwwwww____
+cJJJJJc.wwwwwwwwwwwwwwwwwwwwwww____
+c`````Q.wwwwwwwwwwwwwwwwwww____
+P`````c............ _______
+cKKKKKcc+cccQcccQcc
+c`````L```M```N```c
+c`````L```M```N```c
+P`````L```M```N```c
+c`````L```M```N```c
+c`````L```M```N```c
+cccPccccPcccPccc+cc
 ENDMAP
 
 ###############################################################################
@@ -2244,6 +2341,171 @@ swwwwwwyyyywwwwwwww
 swwwwwwwwwwwwwwwww
 swwwwwwwwwwwwwwww
 swwwwwwwwwwwwww
+ENDMAP
+
+NAME:   nicolae_shoals_bring_sunscreen
+TAGS:   transparent water_ok no_tide
+DEPTH:  Shoals:2-
+KMONS:  D = sun demon
+KMONS:  M = sun moth
+SUBST:  { = {[(, x = cxx..., _ = _.
+NSUBST: S = M / 2=MDD / 2=D / 2=D. / .
+CLEAR: _
+MAP
+      _....._
+    _........._
+    ...S...S...
+   _..........._
+ _..S...xxx...S.._
+ ......xxcxx......
+_.......xxx......._
+..S..x.......x..S..
+....xxx.....xxx....
+....xcx..{..xcx....
+....xxx.....xxx....
+..S..x.......x..S..
+_.......xxx......._
+ ......xxcxx......
+ _..S...xxx...S.._
+   _..........._
+    ...S...S...
+    _........._
+      _....._
+ENDMAP
+
+NAME:   nicolae_shoals_offshore_bank_account
+TAGS:   water_ok no_pool_fixup transparent
+DEPTH:  Shoals
+ORIENT: west
+KITEM:  pr = $ w:80 / any jewellery
+KITEM:  q = $ w:50 / $ good_item w:30 / any jewellery good_item / \
+            any weapon good_item w:5 / any armour good_item w:5
+KITEM:  S = scroll of acquirement ident:all
+KMONS:  p = merfolk siren / nothing w:40
+KMONS:  qS = merfolk impaler / merfolk javelineer / merfolk aquamancer / \
+             merfolk avatar / nothing w:35
+KMONS:  r = water nymph
+KMONS:  s = merfolk impaler
+KFEAT:  ~ = open_sea
+KPROP:  =`pqrsS = no_tele_into
+KPROP:  =`pqrsS = no_tide
+KMASK:  =`pqrsS = opaque
+KMASK:  =`pqrsS = no_trap_gen
+KMASK:  =`pqrsS = no_monster_gen
+SUBST:  M = w_, N = wwW.
+NSUBST: q = S / q
+CLEAR:  _
+MAP
+      MwwM
+    MwwwwwwM
+  MwwwwwwwwwwM
+~wwwwwwwwwwwwwwM
+~wwwwwwwwwwwwwwwwM
+~wwwwwcwwwcwwwwwwww
+~wwwwcccccccwwwwwNN
+~wwwcccqqqcccwwwN...
+~wwwwcspppqcwwwN.....
+~wwww=`prpqcwwwN....@
+~wwwwcspppqcwwwN.....
+~wwwcccqqqcccwwwN...
+~wwwwcccccccwwwwwNN
+~wwwwwcwwwcwwwwwwww
+~wwwwwwwwwwwwwwwwM
+~wwwwwwwwwwwwwwM
+  MwwwwwwwwwwM
+    MwwwwwwM
+      MwwM
+ENDMAP
+
+NAME:   nicolae_shoals_deep_elves_summer_vacation
+TAGS:   water_ok transparent patrolling no_pool_fixup
+DEPTH:  Shoals
+ORIENT: float
+# Someone left their gear in the changing room.
+KITEM:  p = leather armour / ring mail / scale mail / chain mail, \
+             long sword / short sword / rapier / dagger, \
+             buckler / nothing w:20
+# Some people like having a little something to read or drink on the beach.
+KITEM:  12 = nothing w:30 / any book / any scroll / any potion
+# Deep elves have to bring the high-strength sunscreen. At least one potion
+# of resistance is guaranteed in the changing room.
+KITEM:  s = potion of resistance ident:all
+# 1/3 chance of rudely walking in on a deep elf changing.
+KMONS:  p = deep elf knight ; nothing / nothing w:20
+KMONS:  1 = deep elf pyromancer w:20 / deep elf zephyrmancer w:20 / \
+            deep elf archer / deep elf knight / \
+            deep elf archer band w:5 / deep elf knight band w:5
+KMONS:  2 = deep elf death mage / deep elf sorcerer / \
+            deep elf annihilator / deep elf demonologist
+NSUBST: 1 = 2 / 21 / 2=1 / 1...
+SUBST:  - = x., _ = w_, M = wW
+KPROP:  `Pps+ = no_tide
+KMASK:  `Pps+ = no_monster_gen
+CLEAR:  _
+MAP
+          __
+         www_
+         www_
+     xxxwwwww__
+    xxxxwwwwwww_
+   xx-MMwwwwwww_
+   xx-.Mwwwwwwww__
+  xxx-1MMwwwwwwwww_
+  xx-...MMMwwwwwww_
+ xxx-....1Mwwwwwwww__
+ xxx-.1...MMwwwwwwwww_
+ xxxx-.....MMMwwwwwww_
+  xxx-..1...1Mwwwwwwww__
+   xx-1......MMwwwwwwwww_
+    xx-...1...MMMwwwwwww_
+    xxx-.......1Mwwwwwwww__
+   xxxx-1....1..MMwwwwwwwww_
+  @xxx-....1...1.MMMwwwwwww_
+ @.xxx-..1........1Mwwwwwww
+@..xx-......1...1..MMwwww
+x...x-...--.......1.Mxxxx
+xx..xx..-xx-c+cc-..-xxxx
+xx-..-..xxxxc``cx--xxxx
+xxx-...-xxxxcspcxxxxxx
+ xxxx--xxxxxccccxxxx
+    xxxxxxxxxxxxxx
+        xxxxxxx
+ENDMAP
+
+NAME:    nicolae_shoals_songs
+TAGS:    no_pool_fixup water_ok
+DEPTH:   Shoals:2-
+KMONS:   M = merfolk siren
+KMONS:   N = merfolk avatar
+KMONS:   S = satyr
+KFEAT:   N = w
+SUBST:   ' = xx", " = WW., - = Www, ` = _x
+NSUBST:  N = N / w, < = { / [[< / ((< / <, p = M / 1=M. / 1=MS... / ., \
+         q = M / 1=M. / 1=MS... / ., r = S / 1=S. / 1=SM... / .
+SHUFFLE: {[(
+CLEAR:   _
+MAP
+        `x++x`
+       `xx''xx`
+       xx'rr'xx
+      `xxr..rxx`
+      xxx."".xxx
+    `xxx'"WW"'xxx`
+  `xxxxx'"WW"'xxxxx`
+ `xxxx''"W--W"''xxxx`
+`xx'p.""W-ww-W"".q'xx`
+xx'p."WW-wNNw-WW".q'xx
+xx'p."WW-wNNw-WW".q'xx
+`xx'p.""W-ww-W"".q'xx`
+ `xxxx''"W--W"''xxxx`
+  `xxxxx'"WW"'xxxxx`
+    `xxx'"WW"'xxx`
+      xxx."".xxx
+      `xx.<<.xx`
+       xx'<<'xx
+       `xx''xx`
+        `xxxx`
+         `xx`
 ENDMAP
 
 ###############################################################################

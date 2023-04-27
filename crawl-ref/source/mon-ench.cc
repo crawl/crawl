@@ -209,6 +209,10 @@ bool monster::add_ench(const mon_enchant &ench)
     {
         remove_summons();
     }
+
+    if (ench.ench == ENCH_PARALYSIS)
+        stop_directly_constricting_all();
+
     return true;
 }
 
@@ -1133,7 +1137,7 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
     return false;
 }
 
-bool monster::clear_far_engulf(bool force)
+bool monster::clear_far_engulf(bool force, bool /*moved*/)
 {
     if (you.duration[DUR_WATER_HOLD]
         && (mid_t) you.props[WATER_HOLDER_KEY].get_int() == mid)

@@ -7,10 +7,10 @@
 #          |or top-tier undead      |or random               |
 #--------------------------------------------------------------------
 #Wucad Mu  |hell effect "monks",    |potions of experience,  |9000
-#          |summoning OCS           |staff of Wucad Mu       |
+#          |summoning OCS           |crystal ball of Wucad Mu|
 #--------------------------------------------------------------------
 #Cigotuvi  |uglies, abominations,   |tmut potions / books,   |16000
-#          |lump shapeshifters      |scrolls of summoning    |
+#          |lump shapeshifters      |scrolls of poison       |
 #--------------------------------------------------------------------
 #Iskenderun|DE mages, iood statues, |books, books, books,    |22000
 #          |purple draconians       |robe of the archmagi    |
@@ -444,8 +444,11 @@ function wizlab_borgnjor_call_souls(data, triggerable, triggerer, marker, ev)
       if feat.is_solid(point.x, point.y) or not feat.has_solid_floor(point.x, point.y) then
       else
        local mon = dgn.create_monster(point.x, point.y, msp)
-       mon.set_prop("borgnjor", 1)
-       count = count + 1
+       -- this can still fail if there's already another monster here
+       if mon ~= nil then
+        mon.set_prop("borgnjor", 1)
+        count = count + 1
+       end
       end
     end
   end
@@ -864,7 +867,7 @@ KMONS:      | = ancient lich / dread lich / royal mummy w:20
 KITEM:      % = any scroll / any scroll q:2 w:3 / any scroll q:3 w:1
 :           kitem("* = " .. dgn.good_scrolls)
 KITEM:      | = scroll of acquirement q:1 ident:type / scroll of enchant weapon q:3 ident:type /\
-                scroll of blinking q:2 ident:type, any concealment scroll q:2 ident:type
+                scroll of blinking q:2 ident:type, scroll of fog q:2 ident:type
 :           elseif lrnd == 1 then
 KITEM:      % = any armour
 KITEM:      * = any good_item armour
@@ -1008,7 +1011,7 @@ ITEM:       potion of mutation q:1, potion of mutation
 ITEM:       any jewellery randart / w:5 hat_of_the_alchemist
 ITEM:       randbook disc:transmutation disc2:necromancy owner:Cigotuvi
 ITEM:       book of transfigurations / randbook disc:transmutation
-ITEM:       staff of death, scroll of summoning
+ITEM:       staff of death, scroll of poison
 SHUFFLE:    de / h~ / j|
 NSUBST:     de = 1:e / 1:f / *:d, g = 1:g / *:$, h = 1:h / 2:i / *:., j = 1:j / *:k
 SUBST:      4 = 4 5:2, " = 6:1 .:16, |~ = .
@@ -1302,7 +1305,7 @@ TAGS:       no_rotate
 SUBST:      T = t.
 KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the \
                 hd:15 tile:mons_wucad_mu_statue
-KITEM:      8 = staff_of_wucad_mu
+KITEM:      8 = crystal_ball_of_wucad_mu
 COLOUR:     c = darkgrey
 COLOUR:     t = lightred / red w:3
 TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
@@ -1432,15 +1435,15 @@ KMONS:   2 = deep elf knight w:5 ; boomerang ego:dispersal w:20 | boomerang w:5 
              rakshasa w:5 ; boomerang ego:dispersal w:20 | boomerang w:5 | nothing / \
              boggart ; boomerang ego:dispersal w:20 | boomerang w:5 | nothing /  \
              wizard ; boomerang ego:dispersal w:20 | boomerang w:5 | nothing
-KMONS:   3 = rakshasa w:5 ; whip ego:distortion | whip ego:vorpal w:6 | dagger \
-             ego:distortion | dagger ego:vorpal w:6 | spear ego:distortion | \
-             spear ego:vorpal w:6 . boomerang ego:dispersal / \
-             boggart w:5 ; whip ego:distortion | whip ego:vorpal w:6 | dagger \
-             ego:distortion | dagger ego:vorpal w:6 | spear ego:distortion | \
-             spear ego:vorpal w:6 . boomerang ego:dispersal / \
-             wizard ; whip ego:distortion | whip ego:vorpal w:6 | dagger \
-             ego:distortion | dagger ego:vorpal w:6 | spear ego:distortion | \
-             spear ego:vorpal w:6 . boomerang ego:dispersal . robe
+KMONS:   3 = rakshasa w:5 ; whip ego:distortion | whip ego:heavy w:6 | dagger \
+             ego:distortion | dagger ego:heavy w:6 | spear ego:distortion | \
+             spear ego:heavy w:6 . boomerang ego:dispersal / \
+             boggart w:5 ; whip ego:distortion | whip ego:heavy w:6 | dagger \
+             ego:distortion | dagger ego:heavy w:6 | spear ego:distortion | \
+             spear ego:heavy w:6 . boomerang ego:dispersal / \
+             wizard ; whip ego:distortion | whip ego:heavy w:6 | dagger \
+             ego:distortion | dagger ego:heavy w:6 | spear ego:distortion | \
+             spear ego:heavy w:6 . boomerang ego:dispersal . robe
 KMONS:   04 = large abomination w:15 / small abomination w:15 / unseen horror w:5 / \
               thrashing horror w:30 / skeleton w:30 / freezing wraith w:5 /  \
               hellwing / chaos spawn w:5 / orange demon / ice devil /  \
@@ -1471,7 +1474,7 @@ KITEM:   f = there-and-back book w:5 / book of displacement w:5 / \
              spells:passage_of_golubria
 KITEM:   g = ring of flight / potion of flight q:2 / \
              potion of haste w:5 / \
-             any concealment scroll / \
+             scroll of fog / \
              any potion w:1 / any scroll w:1
 KITEM:   h = pair of boots ego:flying w:8 / pair of boots ego:rampaging w:1 / \
              pair of boots ego:stealth w:8 / pair of boots w:3
@@ -1627,7 +1630,7 @@ MARKER:     ! = lua:fog_machine { \
 # complete the whole map. These along with the 'e' equipment item also help the
 # player complete the rest of the map.
 ITEM:       potion of haste / potion of resistance w:5 / any potion w:20 \
-            / scroll of silence w:5 / any concealment scroll w:5 / any scroll w:20
+            / scroll of silence w:5 / scroll of fog w:5 / any scroll w:20
 ITEM:       scarf ego:repulsion / book of vapours / condenser vane \
             / staff of air
 # Main loot, including some thematic items that are good even if you don't care

@@ -73,8 +73,8 @@ static void _place_tloc_cloud(const coord_def &origin)
 spret cast_disjunction(int pow, bool fail)
 {
     fail_check();
-    int rand = random_range(35, 45) + random2(pow / 12);
-    you.duration[DUR_DISJUNCTION] = min(90 + pow / 12,
+    int rand = random_range(35, 45) + random2(div_rand_round(pow, 12));
+    you.duration[DUR_DISJUNCTION] = min(90 + div_rand_round(pow, 12),
         max(you.duration[DUR_DISJUNCTION] + rand,
         30 + rand));
     disjunction_spell();
@@ -430,18 +430,22 @@ spret frog_hop(bool fail, dist *target)
     return spret::success; // TODO
 }
 
-static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
-                                targeter *hitfunc, dist *target)
+static vector<string> _desc_electric_charge_hit_chance(const monster_info& mi)
+{
+    melee_attack attk(&you, nullptr);
+    attk.charge_pow = 1; // to give the accuracy bonus
+    const int acc_pct = to_hit_pct(mi, attk, true);
+    return vector<string>{make_stringf("%d%% to hit", acc_pct)};
+}
+
+bool find_charge_target(vector<coord_def> &target_path, int max_range,
+                                targeter *hitfunc, dist &target)
 {
     // Check for unholy weapons, breadswinging, etc
     if (!wielded_weapon_check(you.weapon(), "charge"))
         return false;
 
-    const bool interactive = target && target->interactive;
-    dist targ_local;
-    if (!target)
-        target = &targ_local;
-
+    // TODO: move into generic spell targeting somehow?
     // TODO: can't this all be done within a single direction call?
     while (true)
     {
@@ -452,7 +456,8 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
         args.prefer_farthest = true;
         args.top_prompt = "Charge where?";
         args.hitfunc = hitfunc;
-        direction(*target, args);
+        args.get_desc_func = bind(_desc_electric_charge_hit_chance, placeholders::_1);
+        direction(target, args);
 
         // TODO: deduplicate with _find_cblink_target
         if (crawl_state.seen_hups)
@@ -461,61 +466,61 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
             return false;
         }
 
-        if (!target->isValid || target->target == you.pos())
+        if (!target.isValid || target.target == you.pos())
         {
             canned_msg(MSG_OK);
             return false;
         }
 
-        const monster* beholder = you.get_beholder(target->target);
+        const monster* beholder = you.get_beholder(target.target);
         if (beholder)
         {
             mprf("You cannot charge away from %s!",
                 beholder->name(DESC_THE, true).c_str());
-            if (interactive)
+            if (target.interactive)
                 continue;
             else
                 return false;
         }
 
-        const monster* fearmonger = you.get_fearmonger(target->target);
+        const monster* fearmonger = you.get_fearmonger(target.target);
         if (fearmonger)
         {
             mprf("You cannot charge closer to %s!",
                 fearmonger->name(DESC_THE, true).c_str());
-            if (interactive)
+            if (target.interactive)
                 continue;
             else
                 return false;
         }
 
-        if (!you.see_cell_no_trans(target->target))
+        if (!you.see_cell_no_trans(target.target))
         {
             clear_messages();
-            if (you.trans_wall_blocking(target->target))
+            if (you.trans_wall_blocking(target.target))
                 canned_msg(MSG_SOMETHING_IN_WAY);
             else
                 canned_msg(MSG_CANNOT_SEE);
-            if (interactive)
+            if (target.interactive)
                 continue;
             else
                 return false;
         }
 
-        if (grid_distance(you.pos(), target->target) > max_range)
+        if (grid_distance(you.pos(), target.target) > max_range)
         {
             mpr("That's out of range!"); // ! targeting
-            if (interactive)
+            if (target.interactive)
                 continue;
             else
                 return false;
         }
 
         ray_def ray;
-        if (!find_ray(you.pos(), target->target, ray, opc_solid))
+        if (!find_ray(you.pos(), target.target, ray, opc_solid))
         {
             mpr("You can't charge through that!");
-            if (interactive)
+            if (target.interactive)
                 continue;
             else
                 return false;
@@ -529,7 +534,7 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
         while (ray.advance())
         {
             target_path.push_back(ray.pos());
-            if (ray.pos() == target->target)
+            if (ray.pos() == target.target)
                 break;
         }
 
@@ -547,6 +552,17 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
         {
             mprf("You're already next to %s!",
                  target_mons->name(DESC_THE).c_str());
+            return false;
+        }
+
+        // adjacency check should ensure this...
+        ASSERT(target_path.size() >= 2);
+        const coord_def dest_pos = target_path.at(target_path.size() - 2);
+        monster* dest_mon = monster_at(dest_pos);
+        const bool invalid_dest = dest_mon && mons_class_is_stationary(dest_mon->type);
+        if (invalid_dest && you.can_see(*dest_mon))
+        {
+            mprf("%s is immovably fixed there.", dest_mon->name(DESC_THE).c_str());
             return false;
         }
 
@@ -570,7 +586,7 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
 
 static void _charge_cloud_trail(const coord_def pos)
 {
-    if (!apply_cloud_trail(pos))
+    if (!cell_is_solid(pos) && !apply_cloud_trail(pos))
         place_cloud(CLOUD_DUST, pos, 2 + random2(3), &you);
 }
 
@@ -626,28 +642,31 @@ static void _displace_charge_blocker(monster &mon)
  *                      therefore fail after selecting a target)
  * @return              Whether the charge succeeded, aborted, or was miscast.
  */
-spret electric_charge(int powc, bool fail)
+spret electric_charge(int powc, bool fail, const coord_def &target)
 {
     const coord_def initial_pos = you.pos();
 
     vector<coord_def> target_path;
     const int range = spell_range(SPELL_ELECTRIC_CHARGE, powc);
     targeter_charge tgt(&you, range);
-    dist target;
-    if (!_find_charge_target(target_path, range, &tgt, &target))
+    dist targ;
+    ASSERT(in_bounds(target));
+    targ.target = target;
+    targ.interactive = false; // target should already be provided
+
+    // re-run target finding non-interactively in order to get the full path
+    // again (ugh)
+    if (!find_charge_target(target_path, range, &tgt, targ))
         return spret::abort;
 
     const coord_def dest_pos = target_path.at(target_path.size() - 2);
     monster* dest_mon = monster_at(dest_pos);
-    const bool invalid_dest = dest_mon && mons_class_is_stationary(dest_mon->type);
-    if (invalid_dest && you.can_see(*dest_mon))
-    {
-        mprf("%s is immovably fixed there.", dest_mon->name(DESC_THE).c_str());
-        return spret::abort;
-    }
 
     fail_check();
 
+    // at this point it should be an invisible monster; visible monsters get
+    // filtered at the targeting stage
+    const bool invalid_dest = dest_mon && mons_class_is_stationary(dest_mon->type);
     if (invalid_dest)
     {
         mprf("%s is immovably fixed there.", dest_mon->name(DESC_THE).c_str());
@@ -673,14 +692,13 @@ spret electric_charge(int powc, bool fail)
     else
         mpr("You charge forward with an electric crackle!");
 
-    remove_water_hold();
-
     if (dest_mon)
         _displace_charge_blocker(*dest_mon);
 
     move_player_to_grid(dest_pos, true);
     noisy(4, you.pos());
     apply_barbs_damage();
+    you.clear_far_engulf(false, true);
     _charge_cloud_trail(orig_pos);
     for (auto it = target_path.begin(); it != target_path.end() - 2; ++it)
         _charge_cloud_trail(*it);
@@ -1113,7 +1131,9 @@ spret cast_portal_projectile(int pow, bool fail)
         mpr("You renew your portal.");
     // Calculate the accuracy bonus based on current spellpower.
     you.attribute[ATTR_PORTAL_PROJECTILE] = pow;
-    you.increase_duration(DUR_PORTAL_PROJECTILE, 3 + random2(pow / 2) + random2(pow / 5), 50);
+    int dur = 2 + random2(1 + div_rand_round(pow, 2))
+                + random2(1 + div_rand_round(pow, 5));
+    you.increase_duration(DUR_PORTAL_PROJECTILE, dur, 50);
     return spret::success;
 }
 
@@ -1440,7 +1460,7 @@ static int _disperse_monster(monster& mon, int pow)
 
     // Moving the monster may have killed it in apply_location_effects.
     if (mon.alive() && mon.check_willpower(&you, pow) <= 0)
-        mon.confuse(&you, 1 + random2avg(pow / 10, 2));
+        mon.confuse(&you, 1 + random2avg(1 + div_rand_round(pow, 10), 2));
 
     return true;
 }
@@ -1779,10 +1799,37 @@ spret blinkbolt(int power, bolt &beam, bool fail)
         return spret::abort;
     }
 
+    if (mons_aligned(mons, &you) || mons_is_firewood(*mons))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+
+    const monster* beholder = you.get_beholder(beam.target);
+    if (beholder)
+    {
+        mprf("You cannot blinkbolt away from %s!",
+            beholder->name(DESC_THE, true).c_str());
+        return spret::abort;
+    }
+
+    const monster* fearmonger = you.get_fearmonger(beam.target);
+    if (fearmonger)
+    {
+        mprf("You cannot blinkbolt closer to %s!",
+            fearmonger->name(DESC_THE, true).c_str());
+        return spret::abort;
+    }
+
     if (!player_tracer(ZAP_BLINKBOLT, power, beam))
         return spret::abort;
 
     fail_check();
+
+    // Storm Form is immune to constriction, but check for it anyway in
+    // case casting Blinkbolt becomes possible in some other way!
+    if (!you.attempt_escape(2))
+        return spret::success;
 
     beam.thrower = KILL_YOU_MISSILE;
     zappy(ZAP_BLINKBOLT, power, false, beam);

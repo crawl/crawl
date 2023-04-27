@@ -93,7 +93,7 @@ Dig ability
 %%%%
 Shaft Self ability
 
-把你送到往下一两层的随机位置，就像您跳进地洞陷阱一样。挖通地洞需要一些时间。
+把你送到往下一两层的随机位置，就像跳进地洞陷阱一样。挖通地洞需要一些时间。
 %%%%
 Evoke Blink ability
 
@@ -106,7 +106,7 @@ Evoke Berserk Rage ability
 %%%%
 Evoke Invisibility ability
 
-使用者隐形。隐形时会产生魔法污染，时间长了身体会发光，从而使隐形无效。
+使用者隐形。隐形时会造成魔法污染。污染程度高了身体会发光，从而使隐形无效。
 %%%%
 Evoke Thunderclouds ability
 
@@ -145,7 +145,7 @@ Sanctuary ability
 %%%%
 Cure All Mutations ability
 
-治愈你身体中所有的突变。仅能使用一次。
+治愈你体内所有变异。仅能使用一次。
 %%%%
 # 光明神
 Divine Shield ability
@@ -256,7 +256,7 @@ Greater Servant of Makhleb ability
 %%%%
 Channel Magic ability
 
-显着地提高使用者的魔力回复能力，持续时间随着祈祷技能的提升而增加。
+显著提高使用者的魔力回复能力，持续时间随着祈祷技能的提升而增加。
 %%%%
 Forget Spell ability
 
@@ -273,14 +273,14 @@ Berserk ability
 
 使用者进入狂暴状态。进入狂暴状态后，会暂时提升生命值、速度以及近战攻击力。
 不进行战斗，狂暴很快就会结束，但可以通过多次击杀而延长。
-狂暴时，除了移动和近战外，几乎其余所有的行为都会被阻止。
+狂暴时，除了移动和近战外，几乎无法进行其余所有行为。
 狂暴结束后，使用者将被减速，并在短时间内无法再次狂暴。
 %%%%
 Trog's Hand ability
 
 唤起强大的恢复能力，并能与其他来源的进行叠加，
 即使对那些无法自行恢复的物种也生效。
-当激活的时候，使用者还能被赋予显著的免受多种魔法的防护。
+它还会强化使用者的意志力，从而能抵御许多魔法效果。
 %%%%
 Brothers in Arms ability
 
@@ -319,16 +319,11 @@ Depart the Abyss ability
 
 离开深渊，回到你原来所在的地方。
 %%%%
-Bend Space ability
-
-扭曲空间结构，使用者立即位移一小段距离，
-其他相邻敌人也有可能会被位移到目的地。此能力无视普通的阻止位移的效果。
-%%%%
 Banish ability
 
-尝试将一只怪物放逐到深渊中。
-如果尝试成功，你会获得一些虔诚值和怪物的一半经验值。
-祈祷技能会让此能力更难被怪物抵抗。
+尝试将一只怪物放逐到深渊中。如果尝试成功，
+你会获得一些虔诚值和怪物的一半经验值。即使是能够抵抗的生物，
+也会因与深渊摩擦而招致有害变异并变得虚弱。祈祷技能会让此能力更难被怪物抵抗。
 %%%%
 Corrupt ability
 
@@ -356,7 +351,7 @@ Triple Draw ability
 %%%%
 Deal Four ability
 
-在通常抽一张牌的时间内，从一副牌中发出四张牌。
+在通常抽一张牌的时间内，从一副牌中打出四张牌。
 %%%%
 Stack Five ability
 
@@ -440,7 +435,7 @@ Slimify ability
 Oozemancy ability
 
 从你周围的地牢墙壁中召唤出酸性软泥，对敌人造成伤害，
-伤害取决于他们所相邻的受影响墙壁的数量。
+伤害取决于他们所相邻的黏性墙壁的数量。
 %%%%
 # 艾申扎利
 Curse Item ability
@@ -450,7 +445,7 @@ Curse Item ability
 %%%%
 Shatter The Chains ability
 
- 摧毁一个选定的诅咒装备，解除佩戴者的诅咒。
+摧毁一个选定的诅咒装备，解除佩戴者的诅咒。
 %%%%
 # 迪斯姆诺
 Shadow Step ability
@@ -552,7 +547,7 @@ Sacrifice Love ability
 Sacrifice Courage ability
 
 舍弃勇气，会让你恐惧危险的怪物。
-这些怪物会让您充满恐惧，这会削弱你的法术威力以及战斗中打击和伤害怪物的能力。
+这些怪物会让你充满恐惧，这会削弱你的法术威力以及战斗中打击和伤害怪物的能力。
 %%%%
 Sacrifice Arcana ability
 
@@ -718,14 +713,14 @@ Evoke the Sceptre of Asmodeus ability
 
 唤起阿斯莫德的力量，召唤地狱的火系恶魔。
 被召唤的恶魔只会在有限的时间内保持友好，在最终消失之前会变得敌对。
-该能力的强度与激活技能成正比，并且该能力仅在使用迪斯帕特的权杖时可用。
+该能力的强度与激活技能成正比，并且该能力仅在使用迪斯帕特的节杖时可用。
 %%%%
-Evoke the Staff of Dispater ability
+Evoke Damnation ability
 
 用天谴轰击一个目标敌人。这些邪恶的力量会伤害目标和附近的任何人，
 并且不被任何保护手段削弱，比如盔甲或抗性。
 但某些生物，通常是那些能够自己释放天遣的生物，完全不受天遣的伤害。
-该能力的强度与激活技能成正比，并且该能力仅在使用迪斯帕特的法杖时可用。
+该能力的强度与激活技能成正比。
 %%%%
 Evoke the Staff of Olgreb ability
 

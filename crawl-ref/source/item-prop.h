@@ -90,6 +90,8 @@ bool  is_hard_helmet(const item_def &item) PURE;
 
 // ego items:
 brand_type choose_weapon_brand(weapon_type wpn_type);
+special_armour_type choose_armour_ego(armour_type arm_type);
+bool item_always_has_ego(const item_def &item) PURE;
 bool set_item_ego_type(item_def &item, object_class_type item_type,
                        int ego_type);
 brand_type get_weapon_brand(const item_def &item) PURE;
@@ -243,6 +245,7 @@ const char *weapon_base_name(weapon_type subtype) IMMUTABLE;
 weapon_type name_nospace_to_weapon(string name_nospace);
 
 void initialise_item_sets();
+void force_item_set_choice(item_set_type typ, int sub_type);
 void populate_sets_by_obj_type();
 void mark_inventory_sets_unknown();
 void maybe_mark_set_known(object_class_type type, int sub_type);

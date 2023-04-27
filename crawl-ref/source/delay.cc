@@ -888,7 +888,7 @@ static maybe_bool _userdef_interrupt_activity(Delay* delay,
 {
     lua_State *ls = clua.state();
     if (!ls || ai == activity_interrupt::force)
-        return MB_TRUE;
+        return true;
 
     const char *interrupt_name = _activity_interrupt_name(ai);
 
@@ -900,21 +900,21 @@ static maybe_bool _userdef_interrupt_activity(Delay* delay,
         if (lua_isnil(ls, -1))
         {
             lua_pop(ls, 1);
-            return MB_FALSE;
+            return false;
         }
 
         bool stopact = lua_toboolean(ls, -1);
         lua_pop(ls, 1);
         if (stopact)
-            return MB_TRUE;
+            return true;
     }
 
     if (delay->is_macro() && clua.callbooleanfn(true, "c_interrupt_macro",
                                                 "sA", interrupt_name, &at))
     {
-        return MB_TRUE;
+        return true;
     }
-    return MB_MAYBE;
+    return maybe_bool::maybe;
 }
 
 // Returns true if the activity should be interrupted, false otherwise.
@@ -922,15 +922,9 @@ static bool _should_stop_activity(Delay* delay,
                                   activity_interrupt ai,
                                   const activity_interrupt_data &at)
 {
-    switch (_userdef_interrupt_activity(delay, ai, at))
-    {
-    case MB_TRUE:
-        return true;
-    case MB_FALSE:
-        return false;
-    case MB_MAYBE:
-        break;
-    }
+    const maybe_bool user_stop = _userdef_interrupt_activity(delay, ai, at);
+    if (user_stop.is_bool())
+        return user_stop.to_bool();
 
     // Don't interrupt player on monster's turn, they might wander off.
     if (you.turn_is_over
@@ -1298,7 +1292,9 @@ bool interrupt_activity(activity_interrupt ai,
     return false;
 }
 
-// Must match the order of activity_interrupt.h!
+// Must match the order of activity-interrupt-type.h!
+// Also, these names are used in `delay_X` options, so check the options doc
+// as well.
 static const char *activity_interrupt_names[] =
 {
     "force", "keypress", "full_hp", "full_mp", "ancestor_hp", "message",

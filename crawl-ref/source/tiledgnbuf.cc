@@ -392,10 +392,6 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
         {
             if (cell.is_sanctuary)
                 m_buf_feat.add(TILE_SANCTUARY, x, y);
-#if TAG_MAJOR_VERSION == 34
-            if (cell.heat_aura)
-                m_buf_feat.add(TILE_HEAT_AURA + cell.heat_aura - 1, x, y);
-#endif
             if (cell.is_silenced)
                 m_buf_feat.add(TILE_SILENCED, x, y);
             if (cell.halo == HALO_RANGE)
@@ -497,6 +493,7 @@ static map<tileidx_t, int> status_icon_sizes = {
     { TILEI_TELEPORTING,    9 },
     { TILEI_RESISTANCE,     8 },
     { TILEI_BRILLIANCE,     10 },
+    { TILEI_MALMUTATED,     8 },
 
     // These are in the bottom right, so don't need to shift.
     { TILEI_BERSERK,        FIXED_LOC_ICON },
@@ -611,7 +608,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(icon, x, y, -status_shift, 0);
         if (!size)
         {
-            dprf("unknown icon %llu", icon);
+            dprf("unknown icon %" PRIu64, icon);
             size = 7; // could maybe crash here?
         }
         status_shift += size;
@@ -627,6 +624,9 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
 
     if (bg & TILE_FLAG_MM_UNSEEN && (bg != TILE_FLAG_MM_UNSEEN || fg))
         m_buf_icons.add(TILEI_MAGIC_MAP_MESH, x, y);
+
+    if (bg & TILE_FLAG_RAMPAGE)
+        m_buf_icons.add(TILEI_RAMPAGE, x, y);
 
     // Don't let the "new stair" icon cover up any existing icons, but
     // draw it otherwise.

@@ -1,0 +1,405 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/keyboard_numeric"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:orientation="vertical"
+    android:baselineAligned="false"
+    android:visibility="invisible">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <Button
+            android:id="@+id/key_num_F1"
+            android:tag="131"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="F1"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_F2"
+            android:tag="132"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="F2"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_F3"
+            android:tag="133"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="F3"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_tilde"
+            android:tag="59,68"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="~"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_exclam"
+            android:tag="59,8"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="!"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_at"
+            android:tag="59,9"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="\@"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_hash"
+            android:tag="59,10"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="#"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_7"
+            android:tag="14"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text=" 7\u2196\ufe0e"
+            android:padding="0dp"
+            android:theme="@style/ButtonColor3"/>
+
+        <Button
+            android:id="@+id/key_num_8"
+            android:tag="15"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text=" 8\u2191\ufe0e"
+            android:padding="0dp"
+            android:theme="@style/ButtonColor3"/>
+
+        <Button
+            android:id="@+id/key_num_9"
+            android:tag="16"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text=" 9\u2197\ufe0e"
+            android:padding="0dp"
+            android:theme="@style/ButtonColor3"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <Button
+            android:id="@+id/key_num_F4"
+            android:tag="134"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="F4"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_F5"
+            android:tag="135"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="F5"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_F6"
+            android:tag="136"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="F6"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_dollar"
+            android:tag="59,11"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="$"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_percent"
+            android:tag="59,12"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="%"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_circum"
+            android:tag="59,13"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="^"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_amper"
+            android:tag="59,14"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="\u0026"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_4"
+            android:tag="11"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text=" 4\u2190\ufe0e"
+            android:padding="0dp"
+            android:theme="@style/ButtonColor3"/>
+
+        <Button
+            android:id="@+id/key_num_5"
+            android:tag="12"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="5"
+            android:padding="0dp"
+            android:theme="@style/ButtonColor3"/>
+
+        <Button
+            android:id="@+id/key_num_6"
+            android:tag="13"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text=" 6\u2192\ufe0e"
+            android:padding="0dp"
+            android:theme="@style/ButtonColor3"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <Button
+            android:id="@+id/key_num_F7"
+            android:tag="137"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="F7"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_F8"
+            android:tag="138"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="F8"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_F9"
+            android:tag="139"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="F9"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_aster"
+            android:tag="59,15"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="*"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_lparen"
+            android:tag="162"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="("
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_rparen"
+            android:tag="163"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text=")"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_lowline"
+            android:tag="59,69"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="_"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_1"
+            android:tag="8"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text=" 1\u2199\ufe0e"
+            android:padding="0dp"
+            android:theme="@style/ButtonColor3"/>
+
+        <Button
+            android:id="@+id/key_num_2"
+            android:tag="9"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text=" 2\u2193\ufe0e"
+            android:padding="0dp"
+            android:theme="@style/ButtonColor3"/>
+
+        <Button
+            android:id="@+id/key_num_3"
+            android:tag="10"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text=" 3\u2198\ufe0e"
+            android:padding="0dp"
+            android:theme="@style/ButtonColor3"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <Button
+            android:id="@+id/key_num_F10"
+            android:tag="140"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="F10"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_F11"
+            android:tag="141"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="F11"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_F12"
+            android:tag="142"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="F12"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_lt"
+            android:tag="59,55"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="\u003c"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_gt"
+            android:tag="59,56"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="\u003e"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_equal"
+            android:tag="70"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="="
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_quest"
+            android:tag="59,76"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1"
+            android:text="?"
+            android:padding="0dp"/>
+
+        <Button
+            android:id="@+id/key_num_0"
+            android:tag="7"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1.5"
+            android:text="0"
+            android:padding="0dp"
+            android:theme="@style/ButtonColor3"/>
+
+        <Button
+            android:id="@+id/key_abc"
+            android:tag="layout"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/key_height"
+            android:layout_weight="1.5"
+            android:text="abc"
+            android:padding="0dp"
+            android:theme="@style/ButtonColor1"/>
+
+    </LinearLayout>
+
+</LinearLayout>

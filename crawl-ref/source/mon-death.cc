@@ -399,7 +399,7 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
     item_colour(corpse);
 
     // Apply the gold aura effect to the player.
-    const int dur = corpse.quantity * 2;
+    const int dur = 6 + random2avg(14, 2);
     if (dur > you.duration[DUR_GOZAG_GOLD_AURA])
         you.set_duration(DUR_GOZAG_GOLD_AURA, dur);
 
@@ -1371,7 +1371,7 @@ static bool _animate_dead_reap(monster &mons)
     if (!you.duration[DUR_ANIMATE_DEAD])
         return false;
     const int pow = you.props[ANIMATE_DEAD_POWER_KEY].get_int();
-    if (!x_chance_in_y(150 + pow/2, 200))
+    if (!x_chance_in_y(150 + div_rand_round(pow, 2), 200))
         return false;
 
     _make_derived_undead(&mons, false, MONS_ZOMBIE, BEH_FRIENDLY,
@@ -1402,7 +1402,8 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
                               bool in_los, bool corpseworthy)
 {
     // This is a hostile effect, and monsters are dirty cheaters. Sorry!
-    if (mons.has_ench(ENCH_BOUND_SOUL))
+    if (mons.has_ench(ENCH_BOUND_SOUL)
+        && !have_passive(passive_t::goldify_corpses))
     {
         _make_derived_undead(&mons, quiet, MONS_SIMULACRUM,
                              SAME_ATTITUDE(&mons),
@@ -1542,11 +1543,6 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
 
     if (mons.is_holy())
         did_kill_conduct(DID_KILL_HOLY, mons);
-
-    // Fedhas shrooms cause confusion which leads to subsequent
-    // confusion kills, sometimes of the player's own plants
-    if (fedhas_protects(&mons) && killer != KILL_YOU_CONF)
-        did_kill_conduct(DID_KILL_PLANT, mons);
 
     // Cheibriados hates fast monsters.
     if (cheibriados_thinks_mons_is_fast(mons) && !mons.cannot_act())
@@ -2012,6 +2008,9 @@ item_def* monster_die(monster& mons, killer_type killer,
                 mpr("You feel a bit better.");
         }
     }
+
+    // Apply unrand effects.
+    unrand_death_effects(&mons, killer);
 
     switch (killer)
     {

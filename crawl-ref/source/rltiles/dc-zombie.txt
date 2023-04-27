@@ -27,6 +27,9 @@ zombie_hydra2
 zombie_hydra3
 zombie_hydra4
 zombie_hydra5
+zombie_dream_sheep MONS_ZOMBIE_DREAM_SHEEP
+zombie_skyshark MONS_ZOMBIE_SKYSHARK
+zombie_snail MONS_ZOMBIE_SNAIL
 %rim 1
 zombie_kraken_head MONS_ZOMBIE_KRAKEN
 zombie_drake MONS_ZOMBIE_DRAKE

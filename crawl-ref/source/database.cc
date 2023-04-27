@@ -85,7 +85,8 @@ static TextDB AllDBs[] =
             "commands.txt",
             "clouds.txt",
             "status.txt",
-            "mutations.txt", }),
+            "mutations.txt",
+            "passives.txt", }),
 
     TextDB("gamestart", "descript/",
           { "species.txt",

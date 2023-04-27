@@ -235,8 +235,11 @@ static unordered_set<int> _player_nonbook_spells =
     SPELL_SONIC_WAVE,
     // religion
     SPELL_SMITING,
+    SPELL_MINOR_DESTRUCTION,
     // Ds powers
     SPELL_HURL_DAMNATION,
+    // Green Draconian breath
+    SPELL_MEPHITIC_BREATH,
 };
 
 bool is_player_spell(spell_type which_spell)
@@ -277,6 +280,13 @@ static void _list_available_spells(spell_set &available_spells)
     // Handle Vehumet gifts
     for (auto gift : you.vehumet_gifts)
         available_spells.insert(gift);
+}
+
+static bool _spell_available_to_memorize(spell_type which_spell)
+{
+    spell_set available_spells;
+    _list_available_spells(available_spells);
+    return available_spells.count(which_spell) > 0;
 }
 
 bool player_has_available_spells()
@@ -1002,6 +1012,12 @@ static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
     if (player_spell_levels() < spell_levels_required(specspell) && !wizard)
     {
         mpr("You can't memorise that many levels of magic yet!");
+        return false;
+    }
+
+    if (!wizard && !_spell_available_to_memorize(specspell))
+    {
+        mpr("You haven't found that spell!");
         return false;
     }
 

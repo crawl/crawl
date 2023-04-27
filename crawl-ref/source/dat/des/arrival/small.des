@@ -3868,4 +3868,21 @@ MAP
 vvv+v+v+v+vvv
  .FFlFlFlFF.
  @.........@
+=======
+# The other upstair outside of the first room is so Delvers can still find
+# an exit even if they haven't found the wall of mimics.
+NAME:   nicolae_arrival_escape_room
+TAGS:   arrival no_monster_gen no_trap_gen no_item_gen
+ORIENT: float
+WEIGHT: 1
+KFEAT:  M = c mimic
+SUBST:  G : GT, [ : [(
+MAP
+cccccccc@@@cc
+cG...GcG...Gc
+c.....M.....c
+c{...>M..[..c
+c.....M.....c
+cG...GcG...Gc
+cccccccc@@@cc
 ENDMAP

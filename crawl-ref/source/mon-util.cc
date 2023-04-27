@@ -40,6 +40,7 @@
 #include "libutil.h"
 #include "mapmark.h"
 #include "message.h"
+#include "misc.h"
 #include "mgen-data.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
@@ -117,6 +118,8 @@ bool monster_inherently_flies(const monster &mons)
     // check both so spectral humans and zombified dragons both fly
     return monster_class_flies(mons.type)
         || monster_class_flies(mons_base_type(mons))
+        || mons_is_draconian_job(mons.type)
+            && monster_class_flies(draconian_subspecies(mons))
         || mons_is_ghost_demon(mons.type) && mons.ghost && mons.ghost->flies
         || mons.has_facet(BF_BAT);
 }
@@ -1032,17 +1035,26 @@ bool mons_eats_items(const monster& mon)
  * Undead actors and summoned, temporary, or ghostified monsters are all not
  * susceptible.
  * @param act The actor.
+ * @param only_known Only include information known to the player.
  * @returns True if the actor is susceptible to vampirism, false otherwise.
  */
-bool actor_is_susceptible_to_vampirism(const actor& act)
+bool actor_is_susceptible_to_vampirism(const actor& act, bool only_known)
 {
-    if (!(act.holiness() & (MH_NATURAL | MH_PLANT)) || act.is_summoned())
+    if (!(act.holiness() & (MH_NATURAL | MH_PLANT)))
         return false;
 
     if (act.is_player())
         return true;
 
     const monster *mon = act.as_monster();
+    // Don't leak phantom mirror info.
+    if (act.is_summoned() && (!only_known
+                              || !mon->has_ench(ENCH_PHANTOM_MIRROR)
+                              || mon->friendly()))
+    {
+        return false;
+    }
+
     // Don't allow HP draining from temporary monsters, spectralised monsters,
     // or firewood.
     return !mon->has_ench(ENCH_FAKE_ABJURATION)
@@ -1517,6 +1529,23 @@ bool mons_can_be_dazzled(monster_type mc)
     const mon_holy_type holiness = mons_class_holiness(mc);
     return !(holiness & (MH_UNDEAD | MH_NONLIVING | MH_PLANT))
         && mons_can_be_blinded(mc);
+}
+
+/**
+ * Can this type of monster survive in deep water?
+ *
+ * @param type  The monster type in question.
+ * @param base  The base type of the monster. (For e.g. draconians.)
+ * @return      Whether monsters of this type can survive falling into deep
+ *              water.
+ *
+ * XXX: Duplicates monster::res_water_drowning().
+ */
+bool mons_resists_drowning(monster_type type, monster_type base)
+{
+    const habitat_type ht = mons_habitat_type(type, base, true);
+
+    return mons_is_unbreathing(type) || ht == HT_WATER || ht == HT_AMPHIBIOUS;
 }
 
 char32_t mons_char(monster_type mc)
@@ -3586,25 +3615,7 @@ bool mons_should_fire(bolt &beam, bool ignore_good_idea)
             return false;
     }
 
-    // Use of foeRatio:
-    // The higher this number, the more monsters will _avoid_ collateral
-    // damage to their friends.
-    // Setting this to zero will in fact have all monsters ignore their
-    // friends when considering collateral damage.
-
-    // Quick check - did we in fact get any foes?
-    if (beam.foe_info.count == 0)
-        return false;
-
-    // If we hit no friends, fire away.
-    if (beam.friend_info.count == 0)
-        return true;
-
-    // Only fire if they do acceptably low collateral damage.
-    return beam.foe_info.power >=
-           div_round_up(beam.foe_ratio *
-                        (beam.foe_info.power + beam.friend_info.power),
-                        100);
+    return beam.good_to_fire() >= ai_action::good();
 }
 
 /**
@@ -3705,6 +3716,7 @@ bool mons_has_ranged_attack(const monster& mon)
 {
     return mons_has_ranged_spell(mon, true)
            || _mons_has_usable_ranged_weapon(&mon)
+           || mon.missiles()
            || mon.reach_range() != REACH_NONE
            || _mons_has_attack_wand(mon);
 }

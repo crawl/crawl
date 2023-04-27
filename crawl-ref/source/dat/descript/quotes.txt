@@ -244,6 +244,14 @@ A shaft
  horse splashes.”
     -J.B.S. Haldane, “On Being The Right Size”. March 1926.
 %%%%
+A shimmering altar of Xom
+
+the wise man bowed his head solemnly and spoke:
+ “theres actually zero difference between good & bad things.
+ you imbecile. you fucking moron”
+    -wint, @dril Twitter. June 1, 2014
+# https://twitter.com/dril/status/473265809079693312/
+%%%%
 A staircase leading out of the dungeon
 
 “We shall not cease from exploration
@@ -458,6 +466,13 @@ Cigotuvi's Monster
  wrinkled his cheeks.”
     -Mary Shelley, _Frankenstein_. 1818.
 %%%%
+cloak of the Thief
+
+“so long suckers! i rev up my motorcylce and create a huge cloud of smoke.
+ when the cloud dissipates im lying completely dead on the pavement”
+    -wint, @dril Twitter. July 26, 2016
+# https://twitter.com/dril/status/757914951868485632/
+%%%%
 Cloud Mage
 
 “And when
@@ -590,6 +605,14 @@ Frederick
  him.”
     -Mark Twain, _Autobiography of Mark Twain_. 1924.
 %%%%
+Frozen Ramparts spell
+
+”And as you cross the circle line
+ Well, the ice wall creaks behind
+ You're a rabbit on the run”
+
+    -Jethro Tull, “Skating Away (on the Thin Ice of a New Day)”.  1974.
+%%%%
 Geryon
 
 “Khrysaor, married to Kallirhoe, daughter of glorious Okeanos, was father to
@@ -599,6 +622,19 @@ Geryon
  crossed the stream of Okeanos and had killed Orthos and the oxherd Eurytion
  out in the gloomy meadow beyond fabulous Okeanos.”
     -Hesiod, _Theogony_, circa 700 BCE.
+%%%%
+Harold
+
+“One, you lock the target
+ Two, you bait the line
+ Three, you slowly spread the net
+ And four, you catch the man
+
+ You catch the man
+ You catch the man
+ I’m looking for this man to sell him to other men
+ To sell him to other men at ten times the price at least”
+    —Front 242, “Headhunter”
 %%%%
 Ilsuiw
 
@@ -771,7 +807,7 @@ shambling mangrove
 “There is unrest in the forest
  There is trouble with the trees
  For the maples want more sunlight
- And the oaks ignore their pleas
+ And the oaks ignore their pleas”
     -Rush, "The Trees". 1978.
 %%%%
 Shatter spell
@@ -1526,14 +1562,14 @@ fire dragon scales
 flail
 
 “Even after forcing their way, with great effort and loss, through this double
- defense, [the Germans] still found themselves at a disadvantage; for their
- armor scarce enabled them to contend on equal terms with the uncouth but
+ defence, [the Germans] still found themselves at a disadvantage; for their
+ armour scarce enabled them to contend on equal terms with the uncouth but
  formidable weapons of their adversaries. The Bohemians were armed with long
  iron flails, which they swung with prodigious force. They seldom failed to
  hit, and when they did so, the flail crashed through brazen helmet, skull and
  all.”
     -James A. Wylie, _The History of Protestantism_, vol. I, book 3, ch. 15
-     “Jon Huss and the Hussite Wars”. 1878.
+     “John Huss and the Hussite Wars”. 1878.
 %%%%
 flayed ghost
 
@@ -2097,7 +2133,21 @@ merfolk avatar
 %%%%
 merfolk impaler
 
-<merfolk>
+“Damn ye! Let Neptune strike ye dead, Winslow! HAAARK! Hark Triton, hark!
+ Bellow, bid our father the Sea King rise from the depths full foul in his fury!
+ Black waves teeming with salt-foam to smother this young mouth with pungent
+ slime, to choke ye, engorging your organs ‘til ye turn blue and bloated with
+ bilge and brine and can scream no more -- only when he, crowned in cockle
+ shells with slitherin’ tentacled tail and steaming beard take up his fell
+ be-finned arm, his coral-tine trident screeches banshee-like in the tempest and
+ plunges right through yer gullet, bursting ye -- a bulging bladder no more, but
+ a blasted bloody film now and nothing for the harpies and the souls of dead
+ sailors to  peck and claw and feed upon only to be lapped up and swallowed by
+ the infinite waters of the dread emperor himself -- forgotten to any man, to
+ any time, forgotten to any god or devil, forgotten even to the sea, for any
+ stuff or part of Winslow, even any scantling of your soul is Winslow no more,
+ but is now itself the sea!”
+    -Thomas Wake, _The Lighthouse_. 2019
 %%%%
 merfolk javelineer
 
@@ -2213,6 +2263,16 @@ nameless horror
  hideous, and it leaped straight out at Ged's face.”
     -Ursula K. Le Guin, _A Wizard Of Earthsea_. 1968.
 %%%%
+necromancer
+
+“Even now the intensity of his dread power can be felt
+ Weakening the body and saddening the heart
+ Ultimately they will become empty, mindless spectres
+ Stripped of will and soul
+ Only their thirst for freedom
+ Gives them hunger for vengeance...”
+    -Rush, “The Necromancer”. 1975.
+%%%%
 Necromutation spell
 
 “Don’t sing if you want to live long
@@ -2314,7 +2374,7 @@ orange demon
 Orb Guardian
 
 “X gon' give it to ya (what)
- F*** waitin' for you to get it on your own, X gon' deliver to ya
+ Fuck waitin' for you to get it on your own, X gon' deliver to ya
  Knock knock, open up the door, it's real
  With the non-stop pop-pop from stainless steel
  [...]
@@ -2773,7 +2833,17 @@ scroll
 %%%%
 scroll of acquirement
 
-<scroll>
+He had stopped trying to think. He just repeated his litany over and over:
+“I am an animal, you see that. I don’t have the words, they didn’t teach
+me the words. I don’t know how to think, the bastards didn’t let me learn
+how to think. But if you really are... all-powerful... all-knowing... then you
+figure it out! Look into my heart. I know that everything you need is in there.
+It has to be. I never sold my soul to anyone! It’s mine, it’s human! You
+take from me what it is I want... it just can’t be that I would want something
+bad! Damn it all, I can’t think of anything, except those words of his...
+‘HAPPINESS FOR EVERYBODY, FREE, AND NO ONE WILL GO AWAY UNSATISFIED!’”
+    -Arkady and Boris Strugatsky, “Roadside Picnic”. 1972.
+    trans. Antonina W. Bouis, 1977.
 %%%%
 scroll of amnesia
 
@@ -2787,6 +2857,19 @@ scroll of blinking
 scroll of brand weapon
 
 <scroll>
+%%%%
+scroll of butterflies
+
+“It used to be thought that the events that changed the world were things like
+ big bombs, maniac politicians, huge earthquakes, or vast population movements,
+ but it has now been realized that this is a very old-fashioned view held by
+ people totally out of touch with modern thought. The things that really change
+ the world, according to Chaos theory, are the tiny things. A butterfly flaps
+ its wings in the Amazonian jungle, and subsequently a storm ravages half of
+ Europe...”
+    -Neil Gaiman and Terry Pratchett, _Good Omens: The Nice And Accurate
+     Prophecies of Agnes Nutter, Witch_. 1990.
+
 %%%%
 scroll of enchant armour
 
@@ -2876,7 +2959,23 @@ scroll of summoning
 %%%%
 scroll of teleportation
 
-<scroll>
+“Eiris sazun idisi
+ sazun hera duoder
+ suma hapt heptidun
+ suma heri lezidun
+ suma clubodun
+ umbi cuoniouuidi
+ insprinc haptbandun
+ inuar uigandun
+
+ [Once sat women,
+ they sat here then there.
+ some fastened bonds,
+ some impeded an army,
+ some unraveled fetters:
+ Escape the bonds,
+ flee the enemy!]”
+    -First Merseburg incantation, trans. Patricia Giangrosso, 2001
 %%%%
 scroll of torment
 
@@ -3199,6 +3298,17 @@ Spellforged Servitor spell
 
 <spellforged servitor>
 %%%%
+sphinx
+
+“The Second Coming! Hardly are those words out
+ When a vast image out of Spiritus Mundi
+ Troubles my sight: somewhere in sands of the desert
+ A shape with lion body and the head of a man,
+ A gaze blank and pitiless as the sun,
+ Is moving its slow thighs, while all about it
+ Reel shadows of the indignant desert birds.”
+    -W. B. Yeats, "The Second Coming". 1920.
+%%%%
 staff
 
 “Bashō Osho said to his disciples, ‘If you have a staff, I will give you a
@@ -3454,7 +3564,7 @@ toenail golem
 
 “Gentle socks pamper them by day, and shoes cobbled of leather fortify them,
  but my toes hardly notice. All they're interested in is turning out
- toenails—semitransparent, flexible sheets of a hornlike material, as defense
+ toenails—semitransparent, flexible sheets of a hornlike material, as defence
  against—whom?”
     -Jorge Luis Borges, “Toenails”. 1960.
     trans. Andrew Hurley, 1998.

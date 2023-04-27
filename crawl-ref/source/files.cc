@@ -102,6 +102,7 @@
 
 #ifdef __ANDROID__
 #include <android/log.h>
+#define VERSIONED_CACHE_DIR
 #endif
 
 #ifndef F_OK // MSVC for example
@@ -423,8 +424,7 @@ static vector<string> _get_base_dirs()
         SysEnv.crawl_base + "../Resources/",
 #endif
 #ifdef __ANDROID__
-        ANDROID_ASSETS,
-        "/sdcard/Android/data/org.develz.crawl/files/",
+        ANDROID_ASSETS
 #endif
 #ifdef __HAIKU__
         std::string(path),
@@ -471,8 +471,8 @@ static vector<string> _get_base_dirs()
 /**
  * check if `d` is a complete crawl data directory.
  *
- * @return MB_TRUE if yes, otherwise no. Returns MB_FALSE if there are some
- * but not all data subfolders.
+ * @return true if yes; returns maybe if there are some
+ * but not all data subfolders; otherwise, false.
  */
 maybe_bool validate_data_dir(const string &d)
 {
@@ -491,7 +491,7 @@ maybe_bool validate_data_dir(const string &d)
     };
 
     if (!dir_exists(d))
-        return MB_FALSE;
+        return false;
 
     bool everything = true;
     bool something = false;
@@ -502,7 +502,7 @@ maybe_bool validate_data_dir(const string &d)
         else
             everything = false;
     }
-    return everything ? MB_TRUE : something ? MB_MAYBE : MB_FALSE;
+    return everything ? true : something ? maybe_bool::maybe : false;
 }
 
 void validate_basedirs()
@@ -516,9 +516,9 @@ void validate_basedirs()
     for (const string &d : bases)
     {
         maybe_bool status = validate_data_dir(d);
-        if (status == MB_FALSE)
+        if (!status)
             continue; // empty or non-existent, ignore
-        else if (status == MB_MAYBE)
+        else if (status == maybe_bool::maybe)
         {
             // give an error for this case because this incomplete data
             // directory will be checked before others, possibly leading
@@ -530,7 +530,7 @@ void validate_basedirs()
                             d.c_str());
             }
         }
-        else // MB_TRUE -- found a complete data directory
+        else // true -- found a complete data directory
         {
             if (!found)
                 mprf(MSGCH_PLAIN, "Data directory '%s' found.", d.c_str());
@@ -559,9 +559,6 @@ string datafile_path(string basename, bool croak_on_fail, bool test_base_path,
     for (const string &basedir : _get_base_dirs())
     {
         string name = basedir + basename;
-#ifdef __ANDROID__
-        __android_log_print(ANDROID_LOG_INFO,"Crawl","Looking for %s as '%s'",basename.c_str(),name.c_str());
-#endif
         if (thing_exists(name))
             return name;
     }
@@ -1152,7 +1149,6 @@ static bool _shaft_safely()
             || cloud_at(pos) // XXX: ignore if is_harmless_cloud?
             || monster_at(pos)
             || env.pgrid(pos) & FPROP_NO_TELE_INTO
-            || slime_wall_neighbour(pos)
             || _nonfriendly_nearby(pos))
         {
             continue;
@@ -1490,6 +1486,7 @@ static void _place_player(dungeon_feature_type stair_taken,
 }
 
 // Update the trackers after the player changed level.
+// note: also run on load for some reason in startup.cc
 void trackers_init_new_level()
 {
     travel_init_new_level();
@@ -2210,6 +2207,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         // Tell stash-tracker and travel that we've changed levels.
         trackers_init_new_level();
+        travel_cache.flush_invalid_waypoints();
         tile_new_level(just_created_level);
     }
     else if (load_mode == LOAD_RESTART_GAME)
@@ -2533,6 +2531,14 @@ void save_game(bool leave_game, const char *farewellmsg)
     // If just save, early out.
     if (!leave_game)
     {
+#ifdef __ANDROID__
+        // Save everything before pause
+        clua.save_persist();
+        if (crawl_state.unsaved_macros)
+            macro_save();
+        if (!you.entering_level)
+            save_level(level_id::current());
+#endif
         if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
         {
             you.save->commit();
@@ -2597,7 +2603,7 @@ static string _bones_permastore_file()
     // no matching permastore is in the player's bones file, but one exists in
     // the crawl distribution. Install it.
 
-    FILE *src = fopen(dist_full_path.c_str(), "rb");
+    FILE *src = fopen_u(dist_full_path.c_str(), "rb");
     if (!src)
     {
         mprf(MSGCH_ERROR, "Bones file exists but can't be opened: %s",

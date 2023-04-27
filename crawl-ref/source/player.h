@@ -65,6 +65,8 @@ static const int MAX_STAT_VALUE = 125;
 static const int REGEN_PIP = 80;
 /// The standard unit of WL; one level in %/@ screens
 static const int WL_PIP = 40;
+/// The cap for the player's Will, in units of WL\_PIP.
+static const int MAX_WILL_PIPS = 5;
 /// The standard unit of stealth; one level in %/@ screens
 static const int STEALTH_PIP = 50;
 
@@ -234,7 +236,9 @@ public:
     FixedVector<int, NUM_GODS> exp_docked_total; // XP-based wrath
 
     FixedArray<uint32_t, 6, MAX_SUBTYPES> item_description;
+    set<misc_item_type>                generated_misc;
     FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
+    uint8_t                            octopus_king_rings;
     unique_creature_list unique_creatures;
 
     KillMaster kills;
@@ -276,10 +280,11 @@ public:
     FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
     FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
     FixedBitVector<NUM_MISCELLANY>     seen_misc;
-    uint8_t                            octopus_king_rings;
 
     uint8_t normal_vision;        // how far the species gets to see
     uint8_t current_vision;       // current sight radius (cells)
+
+    set<coord_def> rampage_hints; // TODO: move this somewhere else
 
     int real_time() { return real_time_ms.count() / 1000; }
     chrono::milliseconds real_time_ms;       // real time played
@@ -408,9 +413,6 @@ public:
 
     // If true, player has triggered a trap effect by exploring.
     bool trapped;
-
-    // Did the player trigger their spectral weapon this turn?
-    bool triggered_spectral;
 
     // TODO burn this API with fire
     bool wield_change;          // redraw weapon
@@ -599,6 +601,7 @@ public:
     bool        submerged() const override;
     bool        floundering() const override;
     bool        extra_balanced() const override;
+    bool        slow_in_water() const;
     bool        shove(const char* feat_name = "") override;
     bool        can_pass_through_feat(dungeon_feature_type grid) const override;
     bool        can_burrow() const override;
@@ -730,7 +733,7 @@ public:
     void weaken(actor *attacker, int pow) override;
     bool heal(int amount) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
-    void splash_with_acid(actor *evildoer, int acid_strength) override;
+    void splash_with_acid(actor *evildoer) override;
     void acid_corrode(int acid_strength) override;
     bool corrode_equipment(const char* corrosion_source = "the acid",
                            int degree = 1) override;
@@ -774,8 +777,8 @@ public:
     bool res_petrify(bool temp = true) const override;
     int res_constrict() const override;
     int willpower() const override;
-    bool no_tele(bool blink = false) const override;
-    string no_tele_reason(bool blink = false) const;
+    bool no_tele(bool blink = false, bool temp = true) const override;
+    string no_tele_reason(bool blink = false, bool temp = true) const;
     bool antimagic_susceptible() const override;
 
     bool res_corr(bool allow_random = true, bool temp = true) const override;
@@ -838,7 +841,7 @@ public:
     int shield_bonus() const override;
     int shield_block_penalty() const override;
     int shield_bypass_ability(int tohit) const override;
-    void shield_block_succeeded() override;
+    void shield_block_succeeded(actor *attacker) override;
     bool missile_repulsion() const override;
 
     // Combat-related adjusted penalty calculation methods
@@ -856,7 +859,7 @@ public:
     bool can_do_shaft_ability(bool quiet = false) const;
     bool do_shaft_ability();
 
-    bool can_potion_heal();
+    bool can_potion_heal(bool temp=true);
     int scale_potion_healing(int healing_amount);
 
     void apply_location_effects(const coord_def &oldpos,
@@ -866,6 +869,9 @@ public:
     void be_agile(int pow);
 
     bool allies_forbidden();
+
+    // TODO: move this somewhere else
+    void refresh_rampage_hints();
 
     ////////////////////////////////////////////////////////////////
 
@@ -905,7 +911,7 @@ public:
 
     bool form_uses_xl() const;
 
-    bool clear_far_engulf(bool force = false) override;
+    bool clear_far_engulf(bool force = false, bool moved = false) override;
 
     int armour_class_with_one_sub(item_def sub) const;
 
@@ -993,7 +999,8 @@ int player_icemail_armour_class();
 int player_condensation_shield_class();
 int sanguine_armour_bonus();
 
-int player_wizardry(spell_type spell);
+int player_wizardry();
+int player_channeling();
 
 int player_prot_life(bool allow_random = true, bool temp = true,
                      bool items = true);
@@ -1147,7 +1154,8 @@ void dec_elixir_player(int delay);
 void dec_ambrosia_player(int delay);
 void dec_channel_player(int delay);
 void dec_frozen_ramparts(int delay);
-bool invis_allowed(bool quiet = false, string *fail_reason = nullptr);
+bool invis_allowed(bool quiet = false, string *fail_reason = nullptr,
+                                                        bool temp = true);
 bool flight_allowed(bool quiet = false, string *fail_reason = nullptr);
 void fly_player(int pow, bool already_flying = false);
 void float_player();

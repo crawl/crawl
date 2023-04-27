@@ -15,15 +15,15 @@ CMD_EXPLORE
 CMD_EXPLORE verbose
 
 自动探索当前楼层，并沿途收集物品。
-一旦有敌对怪物出现，或者遇到新物品或新地貌时，探索就会停止。
+一旦发现有敌对怪物，或是遇到新物品或新地标时，探索就会停止。
 %%%%
 CMD_INTERLEVEL_TRAVEL
 
-移动到其他楼层
+前往其他楼层
 %%%%
 CMD_INTERLEVEL_TRAVEL verbose
 
-自动移动到指定的楼层或分支。一旦有怪物出现，移动就会中断。
+自动前往指定的楼层或分支。一旦有怪物出现，移动就会中断。
 %%%%
 CMD_USE_ABILITY
 
@@ -31,11 +31,11 @@ CMD_USE_ABILITY
 %%%%
 CMD_SEARCH_STASHES
 
-搜索物品/地貌
+搜索物品/地标
 %%%%
 CMD_SEARCH_STASHES verbose
 
-搜索看到过的物品或地貌，并可以移动到它们的所在地。
+搜索看到过的物品或地标，并可以前往它们的所在地。
 %%%%
 CMD_REPLAY_MESSAGES
 
@@ -212,11 +212,11 @@ CMD_DISPLAY_MAP verbose
 %%%%
 CMD_MAP_GOTO_TARGET
 
-移动到光标处
+前往光标处
 %%%%
 CMD_MAP_GOTO_TARGET verbose
 
-前往现在光标所在位置。
+前往当前光标所在位置。
 %%%%
 CMD_MAP_EXPLORE
 
@@ -300,11 +300,11 @@ CMD_MAP_FIND_YOU verbose
 %%%%
 CMD_MAP_FIND_PORTAL
 
-寻找商店和传送门
+寻找商店和门户
 %%%%
 CMD_MAP_FIND_PORTAL verbose
 
-循环显示本层的商店或传送门。
+循环显示本层的商店或门户。
 %%%%
 CMD_MAP_FIND_TRAP
 
@@ -362,13 +362,13 @@ CMD_ZOOM_OUT verbose
 
 缩小地牢画面。
 %%%%
-CMD_SHOW_KEYBOARD
+CMD_TOGGLE_KEYBOARD
 
-显示快捷键
+切换键盘
 %%%%
 CMD_SHOW_KEYBOARD verbose
 
-Brings up the on-screen keyboard, if applicable.
+切换屏幕键盘的可见性。
 %%%%
 CMD_GAME_MENU
 

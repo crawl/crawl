@@ -2,6 +2,7 @@
 
 #include "sound.h"
 
+#include "files.h"
 #include "libutil.h"
 #include "options.h"
 #include "unicode.h"
@@ -65,7 +66,10 @@ sound_mapping check_sound_patterns(const string& message)
 void play_sound(sound_mapping sound_data)
 {
     if (!sound_data.soundfile.empty())
-        play_sound(sound_data.soundfile.c_str(), sound_data.interrupt_game);
+    {
+        const string sf_path = catpath(Options.sound_file_path, sound_data.soundfile);
+        play_sound(sf_path.c_str(), sound_data.interrupt_game);
+    }
 }
 
 // TODO: Make interrupt_game apply to any sound-playing method, not just SOUND_PLAY_COMMAND

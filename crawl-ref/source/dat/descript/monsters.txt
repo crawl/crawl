@@ -93,9 +93,9 @@ on to his ears with hooks?
 %%%%
 Dispater
 
-Greatest of the Lords of Hell, Dispater was born when first an iron sword drank
-mortal blood. They despise mortal vanities, the pursuit of ‘reason’ and
-‘beauty’ - the only art they enjoy is the art of war.
+Greatest and most ruthless of the Lords of Hell, Dispater was born when first an
+iron sword drank mortal blood. They despise mortal vanities, the pursuit of
+‘reason’ and ‘beauty’ - the only art they enjoy is the art of war.
 %%%%
 Dissolution
 
@@ -834,7 +834,12 @@ skilled in archery.
 centaur warrior
 
 A muscular centaur, veteran of numerous battles, armed with well-made weapons
-and able to use them skilfully.
+and able to use them skillfully.
+%%%%
+cerulean imp
+
+A small, willful minor demon. Its wings, far larger than its scrawny body, were
+made to soar, and it lands only rarely and with the greatest reluctance.
 %%%%
 chaos spawn
 
@@ -1021,8 +1026,9 @@ A human-like figure with an aura of power betraying its divine ancestry.
 %%%%
 demonic crawler
 
-A hellish insectoid creature with a long and bloated body, supported by dozens
-of short jointed legs and topped with an almost human head.
+A hellish insectoid creature, fueled by some infernal power that constantly
+regrows its chitinous segments. Nothing short of a lethal blow will stop it
+for long.
 %%%%
 demonspawn
 
@@ -1066,9 +1072,10 @@ An elemental spirit formed from smokeless fire.
 %%%%
 doom hound
 
-A demon lapdog of the queen of Tartarus, bound to hunt her enemies. Though it
-may appear alone, it has the terrible power to set creatures of nightmare on
-its victim's trails.
+A demon lapdog of the queen of Tartarus, bound to hunt her enemies. The first
+time a foe hears its howl, it will echo in their mind, calling nightmarish
+creatures to hunt them. Those who survive have the small consolation of being
+inoculated against that particular hound's howl.
 %%%%
 draconian
 
@@ -1549,7 +1556,7 @@ A green lizard with strong jaws and sharp teeth, prized for its flesh.
 imperial myrmidon
 
 A warrior initiated in the mysteries of a dying cult, dedicated to serve
-thrones long-fallen. Its blows strip away magical defenses, leaving its foes
+thrones long-fallen. Its blows strip away magical defences, leaving its foes
 vulnerable to even the simplest hexes.
 %%%%
 iron dragon
@@ -2298,6 +2305,17 @@ sky beast
 
 A strange aerial creature formed of clouds and tortured flesh that sparkles
 with electricity and, every so often, slips entirely from view.
+%%%%
+skyshark
+
+Skysharks cut through the air with a thoughtless ease. Just a taste of blood
+gives them an enraged strength, and further morsels drive them into a frenzy.
+%%%%
+sleepcap
+
+A surprisingly ambulatory mushroom. It wafts its spores over prey to send them
+into a deep sleep, making it simple for the fungus to kill and devour them.
+It can take months for its mycelia to fully infiltrate and digest victims.
 %%%%
 slime creature
 

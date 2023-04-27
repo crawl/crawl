@@ -42,11 +42,14 @@ staff of Olgreb
 
 A staff which was once wielded by the mighty wizard Olgreb.
 %%%%
-staff of Wucad Mu
+crystal ball of Wucad Mu
 
-A crystal staff overflowing with magical energies, which can be channeled by
-a skilled wielder to allow them to cast spells without exhausting any of their
-own magical energies — at the risk of damaging the user's mind.
+A perfect sphere of crystal, overflowing with magical energies.
+{{
+    if you.race() == "Djinni" then
+        return "It is utterly useless to Djinni."
+    end
+}}
 %%%%
 Vampire's Tooth
 
@@ -74,16 +77,18 @@ sword of Cerebov
 A twisted blade, covered in eerie flames. Its demonic power burns away at the
 very essence of those it is wielded against.
 %%%%
-staff of Dispater
+orb of Dispater
 
-A legendary staff, granting the power to unleash damnation — although not
-without draining the wielder's vitality in the process.
+An orb pulsing with unholy energies, granting the power to unleash damnation
+when held — although not without draining the wielder's vitality in the
+process. It carries with it some of the corrosive malice of the Iron City of
+Dis.
 %%%%
 sceptre of Asmodeus
 
 A bright ruby sceptre, carrying some of the powers of the arch-fiend Asmodeus.
-It can be used to summon fiery demons from their infernal home to do the
-wielder's bidding, although their true loyalty lies only with Asmodeus himself.
+It may call forth fiery demons from their infernal home to do the wielder's
+bidding.
 %%%%
 faerie dragon scales
 
@@ -123,6 +128,7 @@ dagger of Chilly Death
 A dagger made of one huge shard of sapphire. It covers opponents in ice,
 slowing down their movement somewhat.
 %%%%
+# TAG_MAJOR_VERSION == 34
 dagger "Morg"
 
 An ugly rusty dagger. Many years ago it was the property of a powerful mage
@@ -487,6 +493,12 @@ An axe with a powerful curse placed on it by one of the lords of Pandemonium,
 so that unsuspecting adventurers would unleash demons into this world. Beware,
 for it has ways of taking its wielder under its command...
 %%%%
+consecrated labrys
+
+An axe with a delicate blessing placed on it by one of the sacred Seraphim,
+so that worthy adventurers would rid this world of demons. Rejoice, for it has
+ways of bringing courage to its wielder in even the darkest places...
+%%%%
 lightning scales
 
 A set of armoured plates assembled to protect a creature with a long, scaly
@@ -647,8 +659,7 @@ huge body can wear it.
 warlock's mirror
 
 A handheld array of hexagonal mirrors, synthesized from a truly exotic
-substance and polished to a blinding sheen. It is capable of reflecting almost
-any attack.
+substance and polished to a blinding sheen.
 %%%%
 amulet of invisibility
 
@@ -666,9 +677,9 @@ A small wrinkle in the very fabric of reality, magically bound to a shaft by
 some mad acolyte of Lugonu. Its attacks can warp through nearby space at the
 wielder's command.
 %%%%
-staff of Battle
+sphere of Battle
 
-A staff encased in vividly coloured scales, wrought by a long-forgotten wizard.
+An orb encased in vividly coloured scales, wrought by a long-forgotten wizard.
 It was the mage Iskenderun's favourite playtoy.
 %%%%
 Cigotuvi's embrace
@@ -688,8 +699,8 @@ Mad Mage's Maulers
 
 A pair of gloves designed to carefully control and channel the flow of magic,
 later misused and mangled by the lunatic murderer-mages of the Fifth Circle.
-Their influence leaves the wearer of these gloves distracted by intrusive
-images, vividly aware of the death and destruction their hands could wreak.
+Their influence leaves the wearer utterly unable to cast spells - the wearer's
+magic is redirected to far bloodier purposes.
 %%%%
 dreamshard necklace
 
@@ -744,7 +755,7 @@ mountain peak, as protection against the mountain's near-constant avalanches,
 rockslides, and snowstorms. No force short of translocations magic will budge
 the wearer from their position.
 %%%%
-lochaber axe
+Lochaber axe
 
 This brutal weapon, long thought lost to history, combines the extended reach
 of a polearm with the cleaving sharpness of an axe. Ghosts of ancient warriors
@@ -756,3 +767,29 @@ An ascetic once took a sacred vow, forswearing use of magical tools and ownershi
 of everything but this pendant. Which god they made this vow to remains a point of
 bitter contention among the devout, but their pendant's power - and limitations -
 are irrefutable.
+%%%%
+slick slippers
+
+Crafted from the tanned, smooth hide of a Western Skyshark, these slippers are
+astonishingly comfortable. They lack the protective benefits of a good pair of
+boots, but they can get their wearers out of almost any bind.
+%%%%
+Force Lance
+
+A plain iron lance, imbued with supernatural gravitas via the artifice of the
+mage Gell. It strikes with a force many times stronger than that imparted by
+the wielder.
+%%%%
+toga "Victory"
+
+An ancient artefact of Okawaru, these woolen robes were lost when a former
+champion failed a duel. Its enchantments increase in power when the wearer
+emerges victorious from threatening combat, but resorting to the use of scrolls
+or potions for assistance causes them to fade away again.
+%%%%
+Storm Queen's Shield
+
+A disc of crackling metal, created by a woman whose cunning artifice and
+crafty politics once united a continent. Most of her surviving inventions are
+closely guarded by various royals, ostensible proof of their claim to be her
+true successor, but this early prototype slipped through their fingers.

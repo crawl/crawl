@@ -169,7 +169,7 @@ level-map
 <w>Ctrl-E</w>     : Erase all travel exclusions on the level.
 
 <h>Waypoints</h>
-<w>Ctrl-W</w>     : Set waypoint to current position.
+<w>w</w>          : Set waypoint to current position.
 <w>W</w>          : Cycle through all waypoints on the level.
 
 <h>Cycle through features</h>
@@ -201,7 +201,7 @@ interlevel-travel.branch.prompt
  Once you select a branch, you will be prompted for a depth in that
  branch (more help is available there).
 
- <w>Enter</w>  : Repeat last interlevel travel.
+ <w>Tab</w>    : Repeat last interlevel travel.
  <w>.</w>      : Travel to a level in the current branch.
  <w><<</w>      : Go up the nearest stairs.
  <w>></w>      : Go down the nearest stairs.

@@ -32,7 +32,7 @@ function general_item_setup(e)
           potion of berserk rage ident:all /\
           potion of mutation ident:all")
   e.kitem("? = scroll of blinking ident:all /\
-          scroll of identify ident:all / any concealment scroll ident:all /\
+          scroll of identify ident:all / scroll of fog ident:all /\
           scroll of fear ident:all / scroll of enchant weapon ident:all q:2 /\
           scroll of enchant armour ident:all q:2")
 end
@@ -226,16 +226,16 @@ KITEM:    e = rapier plus:2 ego:electrocution ident:all /\
            rapier plus:2 ego:distortion ident:all /\
            rapier plus:2 good_item ident:all, \
            war axe plus:3 ego:freezing ident:all /\
-           war axe plus:3 ego:vorpal ident:all /\
+           war axe plus:3 ego:heavy ident:all /\
            war axe plus:3 good_item ident:all w:5 /\
            broad axe plus:1 ego:freezing ident:all /\
-           broad axe plus:1 ego:vorpal ident:all /\
+           broad axe plus:1 ego:heavy ident:all /\
            broad axe plus:1 good_item ident:all w:5, \
            dire flail plus:2 ego:protection ident:all /\
-           dire flail plus:2 ego:vorpal ident:all /\
+           dire flail plus:2 ego:heavy ident:all /\
            dire flail plus:2 good_item ident:all w:5 /\
            morningstar plus:2 ego:protection ident:all /\
-           morningstar plus:2 ego:vorpal ident:all /\
+           morningstar plus:2 ego:heavy ident:all /\
            morningstar plus:2 good_item ident:all w:5, \
            halberd plus:2 ego:protection ident:all /\
            halberd plus:2 ego:venom ident:all /\
@@ -826,7 +826,7 @@ KITEM:    b = battleaxe plus:5 good_item ident:all /\
     great sword plus:5 randart ident:all w:5 /\
     lajatang plus:5 good_item ident:all /\
     lajatang plus:5 randart ident:all w:5 /\
-    longbow plus:5 ego:vorpal ident:all w:15 /\
+    longbow plus:5 ego:heavy ident:all w:15 /\
     triple crossbow plus:5 good_item ident:all w:15
 KITEM:    d = plate armour plus:6 ident:all /\
     plate armour plus:4 good_item ident:all /\

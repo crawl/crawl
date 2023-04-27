@@ -2598,8 +2598,8 @@ FTILE:   HJKLMNOPQRSTUYZcx-+_. = floor_limestone
 epilogue {{
 if not you.have_rune("demonic") then
     crawl.mpr("A powerful Pandemonium lord resides here.", "warning")
-    crawl.mpr("<yellow>It is willing to " ..
-              "make a deal for the demonic rune of Zot.</yellow>")
+    crawl.mpr("<yellow>A demonic rune of Zot can be found here... " ..
+              "for a price.</yellow>")
 end
 }}
 MAP
@@ -4102,10 +4102,11 @@ MONS:   angel
 MONS:   ophan
 MONS:   ophan
 MONS:   daeva
-#  8 was phoenix but they were removed.
+KMONS:  8 = pearl dragon
 KMONS:  9 = pearl dragon
 KMONS:  0 = apis
 KMONS:  A = apis
+KMONS:  E = apis
 KMONS:  B = daeva god:Zin
 KMONS:  Z = daeva god:Zin
 KMONS:  S = patrolling seraph
@@ -4118,10 +4119,11 @@ TILE:   v = dngn_metal_wall_white
 COLOUR: v& = white
 TILE:   GH = dngn_golden_statue
 FTILE:  _124SDcG|*'O = floor_limestone
-FTILE:  "E0 = floor_grass
-COLOUR: "0 = green
+FTILE:  "E80;$ = floor_grass
+COLOUR: "80;$ = green
 FTILE:  -ZBghi&v = floor_vault
-SUBST:  D& = +, '"- = ., H = G, C = c
+KPROP:  ;E80$ = no_tele_into
+SUBST:  D& = +, '"-; = ., H = G, C = c
 : set_feature_name("granite_statue", "golden statue")
 : set_feature_name("metal_wall", "silver wall")
 : set_random_mon_list("angel w:20 / cherub / ophan / daeva / apis w:20")
@@ -4134,19 +4136,19 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxCCCCCxxxxxxxxxxxxwwwwxxxxxxxxxwwwxxxwwwxxxxxxCCCCCCCCCCCCCCCCCxxxxxxxxxxx
 xxxxxxxC%%%CxxxxxxxxxxwwwwwwwwwxxxwwwxwwwwwwwwxxxxxxCCCCC.......CCCCCxxxxxxxxxxx
-xxxxxxxC%.%CxxxxxxxxxxwwwwwwwwwwwwxxxwwwwwwwwxxxxxxxC...+.{.[.(.+...Cxxxxxxxxxxx
+xxxxxxxC%.%CxxxxxxxxxxwwwwwwwwwwwwxxxwwwwwwwwxxxxxxxC...+..{.(..+...Cxxxxxxxxxxx
 xxxxxxCCC+CCCxxxxxx""""wwwwwwwwwwwwwwwwwwwwCCCCCCCCCC.CCC.......CCC.Cxxxxxxxxxxx
-xxxCCCC.....Cxxxx""0"""wwwwwwwwwww"wwwwwwww+........+.CCCCCC+CCCCCC.Cxxxxxxxxxxx
-xxxCddC.A...CCC"""""""""wwwwwwww""0"wwwwwwwCCCCCCCCCC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
-xxxCd.+9......+""0"www0"""wwwww""E""wwwwwwwxxxxxxxxxC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
-xxxCddC.A...CCCx""""ww"""""wwwww"""wwwwwwwxxxxxxxxxxC.C6CCCC+CCCC6C.Cxxxxxxxxxxx
-xxxCCCC.....Cxxxxx""""""""""wwwww""wwwwwxxxxxxxxxxxxC.CC.........CC.Cxxxxxxxxxxx
+xxxCCCC.....Cxxxx""0"""wwwwwwwwwww;wwwwwwww+........+.CCCCCC+CCCCCC.Cxxxxxxxxxxx
+xxxCddC.A...CCC"""""""""wwwwwwww;;;;wwwwwwwCCCCCCCCCC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
+xxxCd[+9......+""0"www0"""wwwww;;E;;wwwwwwwxxxxxxxxxC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
+xxxCddC.A...CCCx""""ww"""""wwwww;;;wwwwwwwxxxxxxxxxxC.C6CCCC+CCCC6C.Cxxxxxxxxxxx
+xxxCCCC.....Cxxxxx""""""""""wwwww;;wwwwwxxxxxxxxxxxxC.CC.........CC.Cxxxxxxxxxxx
 xxxxxxCCC+CCCxxxxx""0"""xx"""wwwwwwwwwwxxxxxxxxxxxxxC..+.C.C.C.C.+..Cxxxxxxxxxxx
-xxxxxxxCe.eCxxxxxxx""""xxxxxx""wwwwwwwxxxxxxxxxxxxxxCCCC.........CCCCxxxxxxxxxxx
+xxxxxxxCe.eCxxxxxxx""""xxxxxx"wwwwwwwwxxxxxxxxxxxxxxCCCC.........CCCCxxxxxxxxxxx
 xxxxxxxCeeeCxxxxxxxxx"xxxxxx""wwwwwwwxxxxxxxxxxxxxxxCCCCCCCC+CCCCCCCCxxxxxxxxxxx
 xxxxxxxCCCCCxxxxxxxxxxxxxxxx"wwwwwwwwww.xxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwxwwwww.xxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwww..xxxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx.wwwwwxwwwww.xxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx.wwwwwwwwww..xxxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx..wwwwwwwwwwww.xxxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
 xCCCCCCCCCCCxxxxxxxxxxx..wwwwxwwwwwww.xx..xxxxx..xxx..xxxxxC+Cx..xxxxxxxxxxxxxxx
 xCf63......Cxxxxxxx.....wwwwxxwwwww........xx..........xxxx........xxxxxxxxxxxxx
@@ -4191,13 +4193,13 @@ xxxxx.....vv------vvvvvvvvvvvvvv......xx....H.......H.....xxx.....xx..x..xxxxxxx
 xxxxx.....vv---------vBv-v-v-v-v.v...xxxx.......................xxxxx....xxxxxxx
 xxxxx.....vg-Z---vvv-&---------&......xxxx..................xxxxxxxxxxxx...x.Axx
 xxxxxx....vv---------vBv-v-v-v-v.v.....xxx.............xxxxxxxxxxxxxxxx........x
-xxxxxx....vv------vvvvvvvvvvvvvv...............xxxxxxxxxxxxxxx$$$xxxxx..xxxx...x
-xxxxxxx...vvi-----v-----iv........v......xxxxxxxxxxxxxxxxxxxx$.AAxxxxA.xxxx..xxx
-xxxxxxxx..vvv-Bv-----vvBiv.vv.........xxxxxxxxxxxxxx$$$$$xxxxxxA...xxxxxxx....xx
-xxxxxxxx...vvv----v-----iv.v......xxxxxxxxxxxxxxxxx$$$9$$$xxxxxx..x..xxx....x..x
-xxxxxxxx..v.vvvvvvvvvvvvvv....xxxxxxxxxxxxxxxxxxxxx$$$$$$..xxxxxxx........xxxxAx
-xxxxxxxxx..................xxxxxxxxxxxxxxxxxxxxxxxxx$$$.....xxxxxxx......xxxxxxx
-xxxxxxxxxxx..............xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx....wwxxx....xxxxxxxxxxx
+xxxxxx....vv------vvvvvvvvvvvvvv...............xxxxxxxxxxxxxxx.A.xxxxx..xxxx...x
+xxxxxxx...vvi-----v-----iv........v......xxxxxxxxxxxxxxxxxxxx.A..xxxxA.xxxx..xxx
+xxxxxxxx..vvv-Bv-----vvBiv.vv.........xxxxxxxxxxxxxx$$$$$xxxxxx.A..xxxxxxx....xx
+xxxxxxxx...vvv----v-----iv.v......xxxxxxxxxxxxxxxxx$$$8$$$xxxxxx..x..xxx....x..x
+xxxxxxxx..v.vvvvvvvvvvvvvv....xxxxxxxxxxxxxxxxxxxxx$$$$$$$$xxxxxxx........xxxxAx
+xxxxxxxxx..................xxxxxxxxxxxxxxxxxxxxxxxxx$$$$$;;;xxxxxxx......xxxxxxx
+xxxxxxxxxxx..............xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;;;;wwxxx....xxxxxxxxxxx
 xxxxxxxxxxxxx........xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

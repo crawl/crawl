@@ -15,6 +15,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
+#include "attack.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
 #include "branch.h"
@@ -1392,36 +1393,12 @@ void elyvilon_remove_divine_vigour()
 
 bool vehumet_supports_spell(spell_type spell)
 {
-    if (spell_typematch(spell, spschool::conjuration))
-        return true;
-
     // Conjurations work by conjuring up a chunk of short-lived matter and
     // propelling it towards the victim. This is the most popular way, but
     // by no means it has a monopoly for being destructive.
     // Vehumet loves all direct physical destruction.
-    if (spell == SPELL_SHATTER
-        || spell == SPELL_LRD
-        || spell == SPELL_SANDBLAST
-        || spell == SPELL_AIRSTRIKE
-        || spell == SPELL_POLAR_VORTEX
-        || spell == SPELL_FREEZE
-        || spell == SPELL_IGNITE_POISON
-        || spell == SPELL_OZOCUBUS_REFRIGERATION
-        || spell == SPELL_OLGREBS_TOXIC_RADIANCE
-        || spell == SPELL_VIOLENT_UNRAVELLING
-        || spell == SPELL_INNER_FLAME
-        || spell == SPELL_BLASTSPARK
-        || spell == SPELL_IGNITION
-        || spell == SPELL_FROZEN_RAMPARTS
-        || spell == SPELL_MAXWELLS_COUPLING
-        || spell == SPELL_NOXIOUS_BOG
-        || spell == SPELL_POISONOUS_VAPOURS
-        || spell == SPELL_SCORCH)
-    {
-        return true;
-    }
-
-    return false;
+    return spell_typematch(spell, spschool::conjuration)
+           || (get_spell_flags(spell) & spflag::destructive);
 }
 
 void trog_do_trogs_hand(int pow)
@@ -1848,23 +1825,6 @@ bool fedhas_passthrough(const monster_info* target)
                || target->attitude != ATT_HOSTILE);
 }
 
-static bool _lugonu_warp_monster(monster& mon)
-{
-    // XXX: should this ignore mon.no_tele(), as with the player?
-    if (mon.wont_attack() || mon.no_tele() || coinflip())
-        return false;
-
-    mon.blink();
-    return true;
-}
-
-void lugonu_bend_space()
-{
-    mpr("Space bends violently around you!");
-    uncontrolled_blink(true);
-    apply_monsters_around_square(_lugonu_warp_monster, you.pos());
-}
-
 void cheibriados_time_bend(int pow)
 {
     mpr("The flow of time bends around you.");
@@ -1982,6 +1942,17 @@ static void _run_time_step()
     while (--you.duration[DUR_TIME_STEP] > 0);
 }
 
+static void _cleanup_time_steps()
+{
+    you.duration[DUR_TIME_STEP] = 0;
+
+    // Noxious bog terrain gets cleaned up while stepped from time.
+    // That seems consistent with clouds, etc, so let's just make the duration
+    // match, rather than trying to persist the bog during time steps or
+    // regenerating it afterward.
+    you.duration[DUR_NOXIOUS_BOG] = 0;
+}
+
 // A low-duration step from time, allowing monsters to get closer
 // to the player safely.
 void cheibriados_temporal_distortion()
@@ -1998,7 +1969,7 @@ void cheibriados_temporal_distortion()
         you.los_noise_last_turn = 0;
     }
 
-    you.duration[DUR_TIME_STEP] = 0;
+    _cleanup_time_steps();
 
     mpr("You warp the flow of time around you!");
 }
@@ -2021,7 +1992,7 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
 #endif
 
     }
-    you.duration[DUR_TIME_STEP] = 0;
+    _cleanup_time_steps();
 
     flash_view(UA_PLAYER, 0);
     mpr("You return to the normal time flow.");
@@ -2243,9 +2214,9 @@ bool ashenzari_curse_item()
 
     item_def& item(you.inv[item_slot]);
 
-    if (!item_is_cursable(item))
+    if (!item_is_selected(item, OSEL_CURSABLE))
     {
-        mpr("You can't curse that!");
+        mprf(MSGCH_PROMPT, "You cannot curse that!");
         return false;
     }
 
@@ -2276,6 +2247,12 @@ bool ashenzari_uncurse_item()
         return false;
 
     item_def& item(you.inv[item_slot]);
+
+    if (!item_is_selected(item, OSEL_CURSED_WORN))
+    {
+        mprf(MSGCH_PROMPT, "You cannot uncurse and destroy that!");
+        return false;
+    }
 
     if (is_unrandom_artefact(item, UNRAND_FINGER_AMULET)
         && you.equip[EQ_RING_AMULET] != -1)
@@ -2476,6 +2453,9 @@ spret dithmenos_shadow_step(bool fail)
     }
 
     fail_check();
+
+    if (!you.attempt_escape(2))
+        return spret::success;
 
     const coord_def old_pos = you.pos();
     // XXX: This only ever fails if something's on the landing site;
@@ -3280,14 +3260,12 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     for (coord_def pos : affected)
         beam.draw(pos, false);
 
+    // When `quiet`, refresh the view after each complete draw pass. Add a bit
+    // of delay even for this, otherwise it goes by too quickly.
     if (quiet)
     {
-        // When `quiet`, refresh the view after each complete draw pass.
-        // why this call dance to refresh? I just copied it from bolt::draw
-        viewwindow(false);
-        update_screen();
-        scaled_delay(50); // add some delay per upheaval draw, otherwise it all
-                          // goes by too fast.
+        if (!Options.reduce_animations)
+            animation_delay(50, true);
     }
     else
     {
@@ -3480,7 +3458,9 @@ spret qazlal_disaster_area(bool fail)
         targets.erase(targets.begin() + which);
         weights.erase(weights.begin() + which);
     }
-    scaled_delay(200);
+    // possibly this delay should be slightly increased if reduce_animations is
+    // true?
+    animation_delay(200, Options.reduce_animations);
 
     return spret::success;
 }
@@ -4029,7 +4009,7 @@ static void _ru_expire_sacrifices()
         you.props[key].get_vector().clear();
     }
 
-    // Clear out stored sacrfiice values.
+    // Clear out stored sacrifice values.
     for (int i = 0; i < NUM_ABILITIES; ++i)
         you.sacrifice_piety[i] = 0;
 }
@@ -4553,7 +4533,7 @@ bool ru_reject_sacrifices(bool forced_rejection)
         return false;
     }
 
-    ru_reset_sacrifice_timer(false, true);
+    ru_reset_sacrifice_timer(false, forced_rejection);
     _ru_expire_sacrifices();
     simple_god_message(" will take longer to evaluate your readiness.");
     return true;
@@ -4607,7 +4587,11 @@ void ru_reset_sacrifice_timer(bool clear_timer, bool faith_penalty)
         }
     }
 
-    delay = div_rand_round((delay + added_delay) * (3 - you.faith()), 3);
+    // No faith reduction if this is due to abandoning Ru.
+    if (!you_worship(GOD_RU))
+        delay += added_delay;
+    else
+        delay = div_rand_round((delay + added_delay) * (3 - you.faith()), 3);
     if (crawl_state.game_is_sprint())
         delay /= SPRINT_MULTIPLIER;
 
@@ -5204,16 +5188,18 @@ spret uskayaw_grand_finale(bool fail)
 
     ASSERT(mons);
 
+    string attack_punctuation = attack_strength_punctuation(mons->hit_points);
+
     // kill the target
     if (mons->type == MONS_ROYAL_JELLY && !mons->is_summoned())
     {
         // need to do this here, because react_to_damage is never called
-        mprf("%s explodes violently into a cloud of jellies!",
-                                        mons->name(DESC_THE, false).c_str());
+        mprf("%s explodes violently into a cloud of jellies%s",
+                                        mons->name(DESC_THE, false).c_str(), attack_punctuation.c_str());
         trj_spawn_fineff::schedule(&you, mons, mons->pos(), mons->hit_points);
     }
     else
-        mprf("%s explodes violently!", mons->name(DESC_THE, false).c_str());
+        mprf("%s explodes violently%s", mons->name(DESC_THE, false).c_str(), attack_punctuation.c_str());
     mons->flags |= MF_EXPLODE_KILL;
     if (!mons->is_insubstantial())
     {
@@ -5433,7 +5419,8 @@ spret hepliaklqana_transference(bool fail)
 
     const bool victim_immovable
         = victim && (mons_is_tentacle_or_tentacle_segment(victim->type)
-                     || victim->is_stationary());
+                     || victim->is_stationary()
+                     || mons_is_projectile(victim->type));
     if (victim_visible && victim_immovable)
     {
         mpr("You can't transfer that.");
@@ -5671,7 +5658,9 @@ bool wu_jian_do_wall_jump(coord_def targ)
     auto wall_jump_direction = (you.pos() - targ).sgn();
     auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
                                    + wall_jump_direction);
-    if (!check_moveto(wall_jump_landing_spot, "wall jump"))
+    if ((wu_jian_wall_jump_triggers_attacks(wall_jump_landing_spot)
+         && !wielded_weapon_check(you.weapon())
+        || !check_moveto(wall_jump_landing_spot, "wall jump")))
     {
         you.turn_is_over = false;
         return false;
@@ -5680,7 +5669,7 @@ bool wu_jian_do_wall_jump(coord_def targ)
     auto initial_position = you.pos();
     move_player_to_grid(wall_jump_landing_spot, false);
     wu_jian_wall_jump_effects();
-    remove_water_hold();
+    you.clear_far_engulf(false, true);
 
     int wall_jump_modifier = (you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2
                                                                       : 1;

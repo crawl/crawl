@@ -19,9 +19,6 @@
 #include "tiles-build-specific.h"
 #include "unicode.h"
 #include "viewgeom.h"
-#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
-#include "windowmanager.h"
-#endif
 #ifdef USE_TILE_LOCAL
 #include "tilefont.h"
 #endif
@@ -198,7 +195,8 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
     case '8': return 'k';
     case '9': return 'u';
 
-# ifndef USE_TILE_LOCAL
+# if !defined(USE_TILE_LOCAL)
+    // equivalent to return keyin for the headless case
     default: return unixcurses_get_vi_key(keyin);
 # endif
 
@@ -710,11 +708,6 @@ int line_reader::read_line(bool clear_previous, bool reset_cursor)
     if (clear_previous)
         *buffer = 0;
 
-#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
-    if (wm)
-        wm->show_keyboard();
-#endif
-
 #ifdef USE_TILE_WEB
     tiles.redraw();
     tiles.json_open_object();
@@ -1095,11 +1088,6 @@ int fontbuf_line_reader::read_line(bool clear_previous, bool reset_cursor)
 
     if (clear_previous)
         *buffer = 0;
-
-#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
-    if (wm)
-        wm->show_keyboard();
-#endif
 
     cursor_control con(true);
 

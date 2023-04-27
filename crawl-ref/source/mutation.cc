@@ -81,11 +81,10 @@ enum class mutflag
     bad     = 1 << 1, // used by malmut etc
     jiyva   = 1 << 2, // jiyva-only muts
     qazlal  = 1 << 3, // qazlal wrath
-    xom     = 1 << 4, // xom being xom
 
-    last    = xom
+    last    = qazlal
 };
-DEF_BITFIELD(mutflags, mutflag, 4);
+DEF_BITFIELD(mutflags, mutflag, 3);
 COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::last);
 
 #include "mutation-data.h"
@@ -218,7 +217,6 @@ static int _mut_weight(const mutation_def &mut, mutflag use)
     {
         case mutflag::jiyva:
         case mutflag::qazlal:
-        case mutflag::xom:
             return 1;
         case mutflag::good:
         case mutflag::bad:
@@ -1343,6 +1341,11 @@ static bool _accept_mutation(mutation_type mutat, bool temp, bool ignore_weight)
     if (you.get_base_mutation_level(mutat) >= mdef.levels)
         return false;
 
+    // don't let random good mutations cause stat 0. Note: various code paths,
+    // including jiyva-specific muts, and innate muts, don't include this check!
+    if (_mut_has_use(mdef, mutflag::good) && mutation_causes_stat_zero(mutat))
+        return false;
+
     if (ignore_weight)
         return true;
 
@@ -1387,24 +1390,6 @@ bool is_slime_mutation(mutation_type mut)
     return _mut_has_use(mut_data[mut_index[mut]], mutflag::jiyva);
 }
 
-static mutation_type _get_random_xom_mutation()
-{
-    mutation_type mutat = NUM_MUTATIONS;
-
-    do
-    {
-        mutat = static_cast<mutation_type>(random2(NUM_MUTATIONS));
-
-        if (one_chance_in(1000))
-            return NUM_MUTATIONS;
-        else if (one_chance_in(5))
-            mutat = _get_mut_with_use(mutflag::xom);
-    }
-    while (!_accept_mutation(mutat, false, false));
-
-    return mutat;
-}
-
 static mutation_type _get_random_qazlal_mutation()
 {
     return _get_mut_with_use(mutflag::qazlal);
@@ -1421,6 +1406,10 @@ static mutation_type _get_random_mutation(mutation_type mutclass,
             // weight changes within categories - 60% good seems to be about
             // where things are right now
             mt = x_chance_in_y(3, 5) ? mutflag::good : mutflag::bad;
+            break;
+        case RANDOM_XOM_MUTATION:
+            // similar to random mutation, but slightly less likely to be good!
+            mt = coinflip() ? mutflag::good : mutflag::bad;
             break;
         case RANDOM_BAD_MUTATION:
         case RANDOM_CORRUPT_MUTATION:
@@ -2221,9 +2210,8 @@ mutation_type concretize_mut(mutation_type mut,
     case RANDOM_GOOD_MUTATION:
     case RANDOM_BAD_MUTATION:
     case RANDOM_CORRUPT_MUTATION:
-        return _get_random_mutation(mut, mutclass);
     case RANDOM_XOM_MUTATION:
-        return _get_random_xom_mutation();
+        return _get_random_mutation(mut, mutclass);
     case RANDOM_SLIME_MUTATION:
         return _get_random_slime_mutation();
     case RANDOM_QAZLAL_MUTATION:
@@ -2362,13 +2350,12 @@ static mutflag _mutflag_for_random_type(mutation_type mut_type)
     case RANDOM_BAD_MUTATION:
     case RANDOM_CORRUPT_MUTATION:
         return mutflag::bad;
-    case RANDOM_XOM_MUTATION:
-        return mutflag::xom;
     case RANDOM_SLIME_MUTATION:
         return mutflag::jiyva;
     case RANDOM_QAZLAL_MUTATION:
         return mutflag::qazlal;
     case RANDOM_MUTATION:
+    case RANDOM_XOM_MUTATION:
     default:
         return (mutflag)0;
     }

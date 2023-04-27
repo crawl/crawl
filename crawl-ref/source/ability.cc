@@ -265,6 +265,37 @@ struct ability_def
     {
         return flags & abflag::souls ? mp_cost / 2 : 0;
     }
+
+    int avg_piety_cost() const
+    {
+        if (!piety_cost)
+            return 0;
+        return piety_cost.base + piety_cost.add/2;
+    }
+
+    string piety_pips() const
+    {
+        const int pip_size = 5;
+        const int n_pips = (avg_piety_cost() + pip_size - 1) / pip_size;
+        string pips;
+        for (int i = 0; i < n_pips; i++)
+            pips += "-";
+        return pips;
+    }
+
+    string piety_desc() const
+    {
+        if (ability == ABIL_IGNIS_FIERY_ARMOUR
+            || ability == ABIL_IGNIS_FOXFIRE)
+        {
+            // It'd be misleading to describe these with a % of 'max piety',
+            // since Ignis's max piety is Special.
+            return "";
+        }
+        const int perc = max(avg_piety_cost() * 100 / 200, 1);
+        return make_stringf(" (about %d%% of your maximum possible piety)",
+                            perc);
+    }
 };
 
 static int _lookup_ability_slot(ability_type abil);
@@ -345,9 +376,7 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
             0, 0, 0, -1, {fail_basis::evo, 60, 2}, abflag::max_hp_drain },
         // TODO: any way to automatically derive these from the artefact name?
-        { ABIL_EVOKE_ASMODEUS, "Evoke the Sceptre of Asmodeus",
-            0, 0, 0, -1, {fail_basis::evo, 80, 3}, abflag::none },
-        { ABIL_EVOKE_DISPATER, "Evoke the Staff of Dispater",
+        { ABIL_EVOKE_DISPATER, "Evoke Damnation",
             4, 100, 0, 6, {}, abflag::none },
         { ABIL_EVOKE_OLGREB, "Evoke the Staff of Olgreb",
             4, 0, 0, -1, {}, abflag::none },
@@ -378,9 +407,9 @@ static vector<ability_def> &_get_ability_list()
 
         // Kikubaaqudgha
         { ABIL_KIKU_UNEARTH_WRETCHES, "Unearth Wretches",
-            3, 0, 4, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
+            3, 0, 5, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
         { ABIL_KIKU_TORMENT, "Torment",
-            4, 0, 8, -1, {fail_basis::invo, 60, 5, 20}, abflag::none },
+            4, 0, 6, -1, {fail_basis::invo, 60, 5, 20}, abflag::none },
         { ABIL_KIKU_GIFT_CAPSTONE_SPELLS, "Receive Forbidden Knowledge",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
         { ABIL_KIKU_BLESS_WEAPON, "Brand Weapon With Pain",
@@ -399,9 +428,9 @@ static vector<ability_def> &_get_ability_list()
 
         // Okawaru
         { ABIL_OKAWARU_HEROISM, "Heroism",
-            2, 0, 1, -1, {fail_basis::invo, 30, 6, 20}, abflag::none },
+            2, 0, 3, -1, {fail_basis::invo, 30, 6, 20}, abflag::none },
         { ABIL_OKAWARU_FINESSE, "Finesse",
-            5, 0, 3, -1, {fail_basis::invo, 60, 4, 25}, abflag::none },
+            5, 0, 5, -1, {fail_basis::invo, 60, 4, 25}, abflag::none },
         { ABIL_OKAWARU_DUEL, "Duel",
             7, 0, 10, LOS_MAX_RANGE, {fail_basis::invo, 80, 4, 20},
             abflag::target | abflag::not_self },
@@ -451,12 +480,9 @@ static vector<ability_def> &_get_ability_list()
         // Lugonu
         { ABIL_LUGONU_ABYSS_EXIT, "Depart the Abyss",
             1, 0, 10, -1, {fail_basis::invo, 30, 6, 20}, abflag::none },
-        { ABIL_LUGONU_BEND_SPACE, "Bend Space",
-            1, scaling_cost::fixed(2), 0, -1, {fail_basis::invo, 40, 5, 20},
-            abflag::none },
         { ABIL_LUGONU_BANISH, "Banish",
             4, 0, generic_cost::range(3, 4), LOS_MAX_RANGE,
-            {fail_basis::invo, 85, 7, 20}, abflag::none },
+            {fail_basis::invo, 65, 7, 20}, abflag::none },
         { ABIL_LUGONU_CORRUPT, "Corrupt",
             7, scaling_cost::fixed(5), 10, -1, {fail_basis::invo, 70, 4, 25},
             abflag::none },
@@ -871,8 +897,8 @@ const string make_cost_description(ability_type ability)
     if (hp_cost)
         ret += make_stringf(", %d HP", hp_cost);
 
-    if (abil.piety_cost || abil.flags & abflag::piety)
-        ret += ", Piety"; // randomised and exact amount hidden from player
+    if (abil.piety_cost)
+        ret += make_stringf(", Piety%s", abil.piety_pips().c_str());
 
     if (abil.flags & abflag::breath)
         ret += ", Breath";
@@ -892,7 +918,7 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::max_hp_drain
         && (ability != ABIL_EVOKE_TURN_INVISIBLE || _invis_causes_drain()))
     {
-        ret += ", Max HP drain";
+        ret += ", Drain";
     }
 
     if (abil.flags & abflag::curse)
@@ -935,14 +961,6 @@ const string make_cost_description(ability_type ability)
     return ret;
 }
 
-static string _get_piety_amount_str(int value)
-{
-    return value > 15 ? "extremely large" :
-           value > 10 ? "large" :
-           value > 5  ? "moderate" :
-                        "small";
-}
-
 static const string _detailed_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
@@ -964,17 +982,11 @@ static const string _detailed_cost_description(ability_type ability)
         ret << abil.get_hp_cost();
     }
 
-    if (abil.piety_cost || abil.flags & abflag::piety)
+    if (abil.piety_cost)
     {
         have_cost = true;
         ret << "\nPiety  : ";
-        if (abil.flags & abflag::piety)
-            ret << "variable";
-        else
-        {
-            int avgcost = abil.piety_cost.base + abil.piety_cost.add / 2;
-            ret << _get_piety_amount_str(avgcost);
-        }
+        ret << abil.piety_pips() << abil.piety_desc();
     }
 
     if (abil.flags & abflag::gold)
@@ -1343,11 +1355,7 @@ bool activate_ability()
             selected = -1;
     }
 
-#ifndef TOUCH_UI
     if (Options.ability_menu && selected == -1)
-#else
-    if (selected == -1)
-#endif
     {
         selected = choose_ability_menu(talents);
         if (selected == -1)
@@ -1357,7 +1365,6 @@ bool activate_ability()
             return false;
         }
     }
-#ifndef TOUCH_UI
     else
     {
         while (selected < 0)
@@ -1406,7 +1413,6 @@ bool activate_ability()
             }
         }
     }
-#endif
     return activate_talent(talents[selected]);
 }
 
@@ -1481,8 +1487,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     // dangerous.)
     if (abil.ability == ABIL_END_TRANSFORMATION)
     {
-        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos()))
-            && !you.duration[DUR_FLIGHT])
+        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
         {
             if (!quiet)
             {
@@ -1913,15 +1918,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
-    case ABIL_EVOKE_ASMODEUS:
-        if (you.allies_forbidden())
-        {
-            if (!quiet)
-                mpr("Nothing will answer your call!");
-            return false;
-        }
-        return true;
-
     case ABIL_GOZAG_POTION_PETITION:
         return gozag_setup_potion_petition(quiet);
 
@@ -2083,8 +2079,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
         return make_unique<targeter_multiposition>(&you, find_chaos_targets(true));
     case ABIL_ZIN_RECITE:
         return make_unique<targeter_multiposition>(&you, find_recite_targets());
-    case ABIL_LUGONU_BEND_SPACE:
-        return make_unique<targeter_multiposition>(&you, find_blink_targets());
     case ABIL_FEDHAS_WALL_OF_BRIARS:
         return make_unique<targeter_multiposition>(&you, find_briar_spaces(true), AFF_YES);
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
@@ -2107,7 +2101,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
         return make_unique<targeter_maybe_radius>(&you, LOS_DEFAULT, LOS_RADIUS);
 
     // Summons:
-    case ABIL_EVOKE_ASMODEUS:
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
@@ -2404,33 +2397,7 @@ static void _cause_vampire_bat_form_stat_drain()
     lose_stat(STAT_DEX, VAMPIRE_BAT_FORM_STAT_DRAIN);
 }
 
-static void _evoke_sceptre_of_asmodeus()
-{
-    const monster_type mon = random_choose_weighted(
-                                   3, MONS_BALRUG,
-                                   2, MONS_HELLION,
-                                   1, MONS_BRIMSTONE_FIEND);
-
-    mgen_data mg(mon, BEH_CHARMED, you.pos(), MHITYOU,
-                 MG_FORCE_BEH, you.religion);
-    mg.set_summoned(&you, 0, 0);
-    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-    monster *m = create_monster(mg);
-
-    if (m)
-    {
-        mpr("The sceptre summons one of its terrible servants. It is charmed, for now...");
-
-        m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
-
-        did_god_conduct(DID_EVIL, 3);
-    }
-    else
-        mpr("The air shimmers briefly.");
-}
-
-static bool _evoke_staff_of_dispater(dist *target)
+static bool _evoke_orb_of_dispater(dist *target)
 {
     int power = you.skill(SK_EVOCATIONS, 8);
 
@@ -2439,7 +2406,7 @@ static bool _evoke_staff_of_dispater(dist *target)
     {
         return false;
     }
-    mpr("You feel the staff feeding on your energy!");
+    mpr("You feel the orb feeding on your energy!");
     return true;
 }
 
@@ -2593,8 +2560,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     {
         spret result = spret::abort;
         int cooldown = 3 + random2(10) + random2(30 - you.experience_level);
-        if (abil.ability == ABIL_BREATHE_STEAM)
-            cooldown /= 2;
 
         static map<ability_type, string> breath_message =
         {
@@ -2619,13 +2584,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_EVOKE_BLINK:      // randarts
         return cast_blink(min(50, 1 + you.skill(SK_EVOCATIONS, 3)), fail);
 
-    case ABIL_EVOKE_ASMODEUS:
-        fail_check();
-        _evoke_sceptre_of_asmodeus();
-        break;
-
     case ABIL_EVOKE_DISPATER:
-        if (!_evoke_staff_of_dispater(target))
+        if (!_evoke_orb_of_dispater(target))
             return spret::abort;
         break;
 
@@ -2887,7 +2847,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             return spret::abort;
 
         fail_check();
-        beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
+        beam.origin_spell = SPELL_MINOR_DESTRUCTION;
 
         switch (random2(5))
         {
@@ -2920,7 +2880,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
         fail_check();
         {
-            beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
+            beam.origin_spell = SPELL_MAJOR_DESTRUCTION;
             zap_type ztype =
                 random_choose(ZAP_BOLT_OF_FIRE,
                               ZAP_LIGHTNING_BOLT,
@@ -3008,13 +2968,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             return spret::abort;
         fail_check();
         down_stairs(DNGN_EXIT_ABYSS);
-        break;
-
-    case ABIL_LUGONU_BEND_SPACE:
-        if (cancel_harmful_move(false))
-            return spret::abort;
-        fail_check();
-        lugonu_bend_space();
         break;
 
     case ABIL_LUGONU_BANISH:
@@ -3695,12 +3648,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_EVOKE_TURN_INVISIBLE:
         return you.evokable_invis()
                && !you.get_mutation_level(MUT_NO_ARTIFICE);
-    case ABIL_EVOKE_ASMODEUS:
-        return you.weapon()
-               && is_unrandom_artefact(*you.weapon(), UNRAND_ASMODEUS);
     case ABIL_EVOKE_DISPATER:
-        return you.weapon()
-               && is_unrandom_artefact(*you.weapon(), UNRAND_DISPATER);
+        return player_equip_unrand(UNRAND_DISPATER);
     case ABIL_EVOKE_OLGREB:
         return you.weapon()
                && is_unrandom_artefact(*you.weapon(), UNRAND_OLGREB);
@@ -3754,7 +3703,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_CONVERT_TO_BEOGH,
             ABIL_EVOKE_BLINK,
             ABIL_EVOKE_TURN_INVISIBLE,
-            ABIL_EVOKE_ASMODEUS,
             ABIL_EVOKE_DISPATER,
             ABIL_EVOKE_OLGREB,
 #ifdef WIZARD
@@ -3831,6 +3779,7 @@ int auto_assign_ability_slot(int slot)
     // check to see whether we've chosen an automatic label:
     for (auto& mapping : Options.auto_ability_letters)
     {
+        // `matches` has a validity check
         if (!mapping.first.matches(abilname))
             continue;
         for (char i : mapping.second)

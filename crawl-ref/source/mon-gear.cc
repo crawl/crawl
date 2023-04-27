@@ -17,6 +17,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h" // map_find
+#include "misc.h" // december_holidays
 #include "mon-place.h"
 #include "mpr.h"
 #include "randbook.h" // roxanne, roxanne...
@@ -388,7 +389,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     static const vector<pair<brand_type, int>> HELL_KNIGHT_BRANDS = // sum 45
     {   { SPWPN_FLAMING,        13 },
         { SPWPN_DRAINING,       4 },
-        { SPWPN_VORPAL,         4 },
+        { SPWPN_HEAVY,          4 },
         { SPWPN_DISTORTION,     2 },
         { SPWPN_PAIN,           2 },
         { NUM_SPECIAL_WEAPONS,  20 }, // 5/9 chance of brand
@@ -501,7 +502,10 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { 1, 2, 4 },
             { { SPWPN_CHAOS, 1 } } } },
         { MONS_JOSEPH, { { { WPN_QUARTERSTAFF, 1 } } } },
-        { MONS_SPRIGGAN_DRUID, { { { WPN_QUARTERSTAFF, 1 } } } },
+        { MONS_SPRIGGAN_DRUID, { { { WPN_QUARTERSTAFF, 1 } }, {}, {
+                { SPWPN_SPECTRAL, 1 },
+                { NUM_SPECIAL_WEAPONS, 5 }
+        } } },
         { MONS_BAI_SUZHEN, { { { WPN_QUARTERSTAFF, 1 } } } },
         { MONS_ORC,                     { ORC_WEAPONS } },
         { MONS_ORC_PRIEST,              { ORC_WEAPONS } },
@@ -525,7 +529,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
               { WPN_DEMON_TRIDENT,      1 },
               { WPN_MORNINGSTAR,        1 },
               { WPN_BROAD_AXE,          1 }, },
-            {}, {}, 1,
+            {}, { { SPWPN_SPECTRAL, 1 } }, 1,
         } },
         { MONS_AMAEMON, {
             { { WPN_DEMON_WHIP,       1 } },
@@ -853,7 +857,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
               { WPN_GREAT_SWORD,        1 }, },
             { 1, 0, 3 },
             { { SPWPN_DRAINING,      13 }, // total 45
-              { SPWPN_VORPAL,        7 },
+              { SPWPN_HEAVY,         7 },
               { SPWPN_FREEZING,      4 },
               { SPWPN_FLAMING,       4 },
               { SPWPN_PAIN,          2 },
@@ -920,16 +924,18 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { { SPWPN_NORMAL,         20 },
               { SPWPN_FLAMING,        20 },
               { SPWPN_FREEZING,       10 },
-              { SPWPN_VORPAL  ,       10 },
+              { SPWPN_HEAVY,          10 },
               { SPWPN_ELECTROCUTION,  10 },
               { SPWPN_VENOM,          10 },
               { SPWPN_VAMPIRISM,       5 },
               { SPWPN_ANTIMAGIC,       5 },
+              { SPWPN_SPECTRAL,        5 },
               { SPWPN_PAIN,            4 },
               { SPWPN_HOLY_WRATH,      3 },
               { SPWPN_DISTORTION,      2 },
               { SPWPN_CHAOS,           1 }, },
         } },
+        { MONS_CERULEAN_IMP,  { { { WPN_SPEAR, 1 } }, {}, { { SPWPN_NORMAL, 1 } } } },
     };
 
     static const weapon_list ORC_KNIGHT_BOWS =
@@ -1063,7 +1069,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         {
             item.base_type = OBJ_WEAPONS;
             item.sub_type = WPN_QUARTERSTAFF;
-            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_VORPAL);
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HEAVY);
         }
         item.flags |= ISFLAG_KNOW_TYPE;
         break;
@@ -1153,11 +1159,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         make_item_unrandart(item, UNRAND_CEREBOV);
         break;
 
-    case MONS_DISPATER:
-        force_item = true;
-        make_item_unrandart(item, UNRAND_DISPATER);
-        break;
-
     case MONS_ASMODEUS:
         force_item = true;
         make_item_unrandart(item, UNRAND_ASMODEUS);
@@ -1221,8 +1222,16 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     case MONS_SIGMUND:
     case MONS_REAPER:
         custom_name = "scythe";
-        floor_tile  = "wpn_scythe";
-        equip_tile  = "scythe";
+        if (type == MONS_SIGMUND && december_holidays())
+        {
+            floor_tile  = "wpn_xmas_scythe";
+            equip_tile  = "xmas_scythe";
+        }
+        else
+        {
+            floor_tile  = "wpn_scythe";
+            equip_tile  = "scythe";
+        }
         break;
 
     case MONS_ANCESTOR_HEXER:
@@ -1547,6 +1556,13 @@ static void _give_shield(monster* mon, int level)
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_KITE_SHIELD,
                               level * 2 + 1, 1);
         break;
+
+    case MONS_DISPATER:
+        shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_ORB, level);
+        if (shield)
+            make_item_unrandart(*shield, UNRAND_DISPATER);
+        break;
+
     case MONS_DAEVA:
     case MONS_MENNAS:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_TOWER_SHIELD,

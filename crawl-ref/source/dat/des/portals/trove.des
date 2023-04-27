@@ -100,16 +100,10 @@ function trove.get_trove_item(e, value, base_item)
   local prices = {
        {base="scroll", type="acquirement", quant=2},
        {base="scroll", type="fear", quant=2+d(3)+d(3)},
+       {base="scroll", type="fog", quant=2+d(3)+d(3)},
        {base="miscellaneous", type="rune of Zot", quant=3, name="slimy rune of Zot"},
        {base="miscellaneous", type="rune of Zot", quant=11, name="abyssal rune of Zot"},
        {base="miscellaneous", type="horn of Geryon"} }
-
-  if you.god() ~= "Okawaru"
-     or items.item_for_set("concealment scroll") ~= "butterflies" then
-    table.insert(prices,
-                 {base="scroll", type=items.item_for_set("concealment scroll"),
-                  quant=2+d(3)+d(3)})
-  end
 
   local wpn = {
        {base="weapon", type="demon whip", quant=2+d(3)+d(3)},
@@ -242,8 +236,8 @@ function trove.good_scroll (e)
              scroll of magic mapping w:8 / scroll of blinking /
              scroll of silence w:2 / scroll of acquirement w:1 /
              scroll of teleportation w:20 / scroll of vulnerability w:2 /
-             any concealment scroll w:8 / scroll of torment w:8 /
-             scroll of summoning w:1 ]])
+             scroll of fog w:8 / scroll of torment w:8 /
+             any ally scroll w:1 ]])
 end
 
 function trove.place_fog(e, type, strength)
@@ -923,8 +917,8 @@ NAME:    trove_misc_throne_room
 ORIENT:  encompass
 WEIGHT:  15
 TAGS:    no_item_gen no_monster_gen allow_dup
-ITEM:    manual of evocations, tin of tremorstones, lightning rod
-ITEM:    condenser vane, phial of floods, box of beasts, phantom mirror
+ITEM:    manual of evocations, lightning rod, piece from Xom's chessboard
+ITEM:    any area misc, phial of floods, box of beasts, phantom mirror
 ITEM:    acquire wand w:15 / acquire magical staff w:5
 SHUFFLE: efghij
 COLOUR:  x = blue
@@ -1200,4 +1194,217 @@ E...................x..c..cccc....ccc..E
 E...................xx.................E
 E..............................S.......E
 EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+ENDMAP
+
+# Generates 16 branded weapons. Half are "generic" brands, the other half are
+# more god-related brands.
+NAME:    nicolae_trove_branded_display_cases
+veto  {{ return crawl.game_started()
+           and (trove.weapon_skills() < trove.spell_skills()
+             or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
+           and not crawl.one_chance_in(3) }}
+ORIENT:  encompass
+TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe
+KITEM:   a = any weapon randart ego:electrocution / \
+             any useful weapon good_item ego:electrocution / \
+             any weapon ego:electrocution w:2
+KITEM:   p = any weapon randart ego:flaming / \
+             any useful weapon good_item ego:flaming / \
+             any weapon ego:flaming w:2
+KITEM:   q = any weapon randart ego:freezing / \
+             any useful weapon good_item ego:freezing / \
+             any weapon ego:freezing w:2
+KITEM:   r = any weapon randart ego:heavy / \
+             any useful weapon good_item ego:heavy / \
+             any weapon ego:heavy w:2
+KITEM:   s = any weapon randart ego:protection / \
+             any useful weapon good_item ego:protection / \
+             any weapon ego:protection w:2
+KITEM:   y = any weapon randart ego:spectral / \
+             any useful weapon good_item ego:spectral / \
+             any weapon ego:spectral w:2
+KITEM:   z = any weapon randart ego:venom / \
+             any useful weapon good_item ego:venom / \
+             any weapon ego:venom w:2
+# Brands that are god-related (i.e. either forbidden or chosen by a god)
+KITEM:   D = any weapon randart ego:antimagic / \
+             any useful weapon good_item ego:antimagic / \
+             any weapon ego:antimagic w:2
+KITEM:   E = any weapon randart ego:chaos / \
+             any useful weapon good_item ego:chaos / \
+             any weapon ego:chaos w:2
+KITEM:   F = any weapon randart ego:distortion / \
+             any useful weapon good_item ego:distortion / \
+             any weapon ego:distortion w:2
+KITEM:   H = any weapon randart ego:draining / \
+             any useful weapon good_item ego:draining / \
+             any weapon ego:draining w:2
+KITEM:   J = any weapon randart ego:holy_wrath / \
+             any useful weapon good_item ego:holy_wrath / \
+             any weapon ego:holy_wrath w:2
+KITEM:   K = any weapon randart ego:pain / \
+             any useful weapon good_item ego:pain / \
+             any weapon ego:pain w:2
+KITEM:   L = any weapon randart ego:speed / \
+             any useful weapon good_item ego:speed / \
+             any weapon ego:speed w:2
+KITEM:   M = any weapon randart ego:vampirism / \
+             any useful weapon good_item ego:vampirism / \
+             any weapon ego:vampirism w:2
+KFEAT:   + = closed_clear_door
+SHUFFLE: apDE, apqrsyz, DEFHJKLM
+: trove.setup_features(_G)
+MAP
+xxxxxxxxxxxxxxxxxx
+x................x
+x.....mmmmmm.....x
+x..G..mDDDDm..G..x
+x.....m++++m.....x
+x................x
+x.mmm........mmm.x
+x.mp+..G..<..+Em.x
+x.mp+........+Em.x
+x.mp+........+Em.x
+x.mp+..A..G..+Em.x
+x.mmm........mmm.x
+x................x
+x.....m++++m.....x
+x..G..maaaam..G..x
+x.....mmmmmm.....x
+x................x
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# Generates 10 bardings. Rather than use a ton of "no_species_XX" tags, which
+# would need to be maintained for every future new species, this just vetos on
+# player species, so only barding-wearing species will see it.
+NAME:    nicolae_trove_exclusive_bardings
+veto     {{ return crawl.game_started()
+           and you.race() ~= "Naga"
+           and you.race() ~= "Armataur"
+           and you.race() ~= "Palentonga" }}
+TAGS:    no_item_gen no_monster_gen allow_dup
+ORIENT:  encompass
+KITEM:   D = barding randart good_item / barding good_item / barding w:2
+SHUFFLE: TG
+: trove.setup_features(_G)
+MAP
+xxxxxxxxxxxxxxxxx
+xxxxxx.....xxxxxx
+xxxxxx..A..xxxxxx
+xxxxxx.....xxxxxx
+xxxxx...T...xxxxx
+xxxx.........xxxx
+xxD.....G.....Dxx
+xD.............Dx
+xD..T.G.T.G.T..Dx
+xD.............Dx
+xxD.....G.....Dxx
+xxxx.........xxxx
+xxxxx...T...xxxxx
+xxxxxx.....xxxxxx
+xxxxxx..<..xxxxxx
+xxxxxx.....xxxxxx
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 20 items of no particular item class.
+NAME:   nicolae_trove_general_collection
+TAGS:   no_item_gen no_monster_gen allow_dup
+ORIENT: encompass
+KITEM:  d = acquire any / any useful good_item / any w:2
+MAP
+xxxxxxxxxxxxxxxxxxxxxxx
+x.G.G.xdxdxdxdxdx.G.G.x
+x.....................x
+x.....xdxdxdxdxdx.....x
+x..A..xxxxxxxxxxx..<..x
+x.....xdxdxdxdxdx.....x
+x.....................x
+x.G.G.xdxdxdxdxdx.G.G.x
+xxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# Generates 18 items useful for an Octopode: hats, amulets, and of course rings.
+NAME:   nicolae_trove_octotrove
+TAGS:   no_item_gen no_monster_gen allow_dup no_pool_fixup
+ORIENT: encompass
+KITEM:  D = any useful amulet good_item / any randart amulet / any amulet w:2
+KITEM:  E = useful hat good_item / hat randart / hat w:2
+KITEM:  F = any useful ring good_item / any randart ring / any ring w:2
+KITEM:  S = buckler good_item / kite shield good_item / \
+            tower shield good_item / buckler randart / \
+            kite shield randart / tower shield randart / buckler w:2 / \
+            kite shield w:2 / tower shield w:2
+KFEAT:  ~ = open_sea
+: trove.setup_features(_G)
+: set_border_fill_type('open_sea')
+MAP
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwww...ww.EEE.wwF..wwwwwwwww~
+~wwwwwwwww.w.w.......www.wwwwwwwww~
+~wwwwwwwwwFw...SDDDS.....wwwwwwwww~
+~wwwwwwwwwwwww.......wwwwwwwwwwwww~
+~wwwwwwwwww....A...<......wwwwwwww~
+~wwwwwwww...ww.......wwww.wwwwwwww~
+~wwwwwwww.wwww.w...w...wF.wwwwwwww~
+~wwwwwwwwFwwww.w.w.www.wwwwwwwwwww~
+~wwwwwwwwwwF.w.w.w.www..wwwwwwwwww~
+~wwwwwwwwwww...w.w...ww.Fwwwwwwwww~
+~wwwwwwwwwwwwwww.www.wwwwwwwwwwwww~
+~wwwwwwwwwwwwF...wwF.wwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ENDMAP
+
+# Generates 20 auxiliary armours, and a diagram of where they go.
+NAME:   nicolae_trove_personal_accessories
+TAGS:   no_rotate no_vmirror no_item_gen no_monster_gen allow_dup \
+        no_species_fe no_species_op
+ORIENT: encompass
+KITEM:  P = helmet good_item w:40 / hat good_item w:40 / helmet / hat
+KITEM:  Q = pair of gloves good_item w:40 / pair of gloves
+KITEM:  R = pair of boots good_item w:40 / pair of boots
+KITEM:  S = buckler good_item w:40 / kite shield good_item w:40 / \
+            tower shield good_item w:40 / orb good_item w:40 / buckler / \
+            kite shield / tower shield / orb
+KITEM:  Z = cloak good_item w:160 / cloak w:40 / scarf w:50
+: trove.setup_features(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxPPxxxxxxxxx
+xxxxxxxxP..Pxxxxxxxx
+xxxxxxxx....xxxxxxxx
+xxxxxxxxx..xxxxxxxxx
+xxxxxxxxx++xxxxxxxxx
+xxxxxxxxZZZZxxxxxxxx
+xQQ....+....+....SSx
+xQQ....+....+....SSx
+xxxxxxxx++++xxxxxxxx
+xxxxxxxx....xxxxxxxx
+xxxxxxxx.A<.xxxxxxxx
+xxxxxxxx....xxxxxxxx
+xxxxxxxxx++xxxxxxxxx
+xxxxxxxxx..xxxxxxxxx
+xxxxxxxxx..xxxxxxxxx
+xxxxxxxxx..xxxxxxxxx
+xxxxxxxxx..xxxxxxxxx
+xxxxxxxx....xxxxxxxx
+xxxxxxxxRRRRxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx
 ENDMAP

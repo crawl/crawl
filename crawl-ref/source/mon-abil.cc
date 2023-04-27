@@ -1121,7 +1121,9 @@ void guardian_golem_bond(monster& mons)
 {
     for (monster_near_iterator mi(&mons, LOS_NO_TRANS); mi; ++mi)
     {
-        if (mons_aligned(&mons, *mi) && !mi->has_ench(ENCH_CHARM)
+        if (mons_aligned(&mons, *mi)
+            && !mi->has_ench(ENCH_CHARM)
+            && !mons_is_projectile(**mi)
             && *mi != &mons)
         {
             mi->add_ench(mon_enchant(ENCH_INJURY_BOND, 1, &mons, INFINITE_DURATION));

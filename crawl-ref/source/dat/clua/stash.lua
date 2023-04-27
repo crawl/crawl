@@ -17,7 +17,7 @@
 -- {god gift} for god gifts
 --
 -- Item annotations are always prefixed to the item name. For instance:
--- {artefact} the Staff of Wucad Mu
+-- {artefact} the crystal ball of Wucad Mu
 ---------------------------------------------------------------------------
 
 -- Annotate items for searches

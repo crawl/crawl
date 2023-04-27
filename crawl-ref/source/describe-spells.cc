@@ -381,7 +381,7 @@ static dice_def _spell_damage(spell_type spell, int hd)
     switch (spell)
     {
         case SPELL_FREEZE:
-            return freeze_damage(pow);
+            return freeze_damage(pow, false);
         case SPELL_WATERSTRIKE:
             return waterstrike_damage(hd);
         case SPELL_IOOD:
@@ -395,11 +395,13 @@ static dice_def _spell_damage(spell_type spell, int hd)
         case SPELL_ERUPTION:
             return eruption_damage();
         case SPELL_LRD:
-            return base_fragmentation_damage(pow);
+            return base_fragmentation_damage(pow, false);
         case SPELL_AIRSTRIKE:
             return base_airstrike_damage(pow);
         case SPELL_ARCJOLT:
-            return arcjolt_damage(pow);
+            return arcjolt_damage(pow, false);
+        case SPELL_RESONANCE_STRIKE:
+            return resonance_strike_base_damage(hd);
         default:
             break;
     }
@@ -505,13 +507,16 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
     if (spell == SPELL_SMITING)
         return "7-17"; // sigh
 
-
     const dice_def dam = _spell_damage(spell, hd);
     if (dam.num == 0 || dam.size == 0)
         return "";
-    string mult = "";
+
     if (spell == SPELL_AIRSTRIKE)
         return describe_airstrike_dam(dam);
+    if (spell == SPELL_RESONANCE_STRIKE)
+        return describe_resonance_strike_dam(dam);
+
+    string mult = "";
     if (spell == SPELL_MARSHLIGHT)
         mult = "2x";
     else if (spell == SPELL_CONJURE_BALL_LIGHTNING)

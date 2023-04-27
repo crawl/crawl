@@ -511,6 +511,9 @@ end
 
 chk_lua_option.autofight_stop = set_stop_level
 chk_lua_option.autofight_caught = set_af_caught
+chk_lua_option.autofight_fires = set_af_throw
+chk_lua_option.autofight_nomove_fires = set_af_throw_nomove
+-- the following two options are here for backwards compatibility
 chk_lua_option.autofight_throw = set_af_throw
 chk_lua_option.autofight_throw_nomove = set_af_throw_nomove
 chk_lua_option.autofight_fire_stop = set_af_fire_stop

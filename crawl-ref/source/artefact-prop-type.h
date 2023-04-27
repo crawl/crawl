@@ -4,6 +4,7 @@
 
 // Be sure to update artefact_prop_data[] in artefact.cc. Also,
 // _randart_propnames() in describe.cc, but order doesn't matter there.
+// Also util/art-data.pl.
 enum artefact_prop_type
 {
     ARTP_BRAND,
@@ -27,7 +28,9 @@ enum artefact_prop_type
 #endif
     ARTP_NOISE,
     ARTP_PREVENT_SPELLCASTING,
+#if TAG_MAJOR_VERSION == 34
     ARTP_CAUSE_TELEPORTATION,
+#endif
     ARTP_PREVENT_TELEPORTATION,
     ARTP_ANGRY,
 #if TAG_MAJOR_VERSION == 34

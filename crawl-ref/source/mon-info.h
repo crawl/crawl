@@ -5,6 +5,7 @@
 
 #include "enchant-type.h"
 #include "mon-util.h"
+#include "options.h"
 #include "tag-version.h"
 
 using std::vector;
@@ -232,6 +233,7 @@ struct monster_info_base
         int is_active;   ///< Whether this ballisto is active or not
     };
     int _colour;
+    int ghost_colour;
     mon_attitude_type attitude;
     mon_threat_level_type threat;
     mon_dam_level_type dam;
@@ -388,6 +390,7 @@ struct monster_info : public monster_info_base
     reach_type reach_range(bool items = true) const;
 
     size_type body_size() const;
+    bool net_immune() const;
 
     // These should be kept in sync with the actor equivalents
     // (Maybe unify somehow?)
@@ -429,7 +432,7 @@ protected:
 };
 
 // Colour should be between -1 and 15 inclusive!
-bool set_monster_list_colour(string key, int colour);
+bool set_monster_list_colour(monster_list_colour_type, int colour);
 void clear_monster_list_colours();
 
 void get_monster_info(vector<monster_info>& mons);

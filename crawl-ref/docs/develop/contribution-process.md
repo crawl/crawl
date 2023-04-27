@@ -27,8 +27,9 @@ turnaround time.
 Users with +v are members of the devteam and have commit access. Developers
 often discuss what they are working on on the channel and request comments
 before commits. Therefore the channel is logged to archive discussion and
-decisions made there. The archive can be found here:
+decisions made there. The archives can be found here:
 
+    http://crawl.akrasiac.org/logs/cheibriados/
     http://s-z.org/crawl-dev/
 
 ### Writing a proposal for gameplay-related contributions
@@ -66,11 +67,10 @@ If you're coding, then you'll want to read the setup process outlined in
 [docs/develop/git/quickstart.txt](/crawl-ref/docs/develop/git/quickstart.txt)
 as well as set up an IDE or editor to make your changes to the Crawl codebase.
 Crawl is coded primarily in C++, with Lua used for level layout and vault
-definitions as well as for some aspects of controlling the client. The WebTiles
-server is coded in python2 and uses the Tornado framework (version 2.3 to 3.x;
-modern Tornado will not work). The WebTiles browser client is written in
-JavaScript using the jQuery and other JS libraries. The local Tiles version uses
-the SDL2 graphics library.
+definitions as well as for some aspects of controlling the client. The
+WebTiles server is coded in python3 and uses the Tornado framework. The
+WebTiles browser client is written in JavaScript using the jQuery and other JS
+libraries. The local Tiles version uses the SDL2 graphics library.
 
 If you're doing tiles art, or splash screen art, then it's recommended to look
 at previous artwork and try to match the general style presented there. This is

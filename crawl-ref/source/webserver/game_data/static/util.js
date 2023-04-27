@@ -123,11 +123,21 @@ function () {
     }
 
     function init_canvas(element, w, h) {
-        var ratio = window.devicePixelRatio;
-        element.width = w;
-        element.height = h;
-        element.style.width = (w / ratio) + 'px';
-        element.style.height = (h / ratio) + 'px';
+        // in an ideal world, we might be able to just apply a scale by ratio
+        // here and be done with it. However, fractional pixel snapping is
+        // very dicey and varied across browsers. So the scale by ratio will
+        // mostly need to be manually applied when a canvas created by this
+        // function is used. Things might be simpler if this value consistently
+        // represented just the device vs logical pixel ratio, but aside from
+        // safari, it also factors in browser zoom.
+        const ratio = window.devicePixelRatio;
+        element.width = Math.floor(w * ratio);
+        element.height = Math.floor(h * ratio);
+        // var ctx = element.getContext('2d');
+        // ctx.resetTransform();
+        // ctx.scale(ratio, ratio);
+        element.style.width = w + 'px';
+        element.style.height = h + 'px';
     }
 
     function make_key(x, y) {

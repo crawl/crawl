@@ -733,6 +733,12 @@ void wizard_move_player_or_monster(const coord_def& where)
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
 
+    if (!in_bounds(where))
+    {
+        mpr("Cannot move out of bounds.");
+        return;
+    }
+
     static bool already_moving = false;
 
     if (already_moving)

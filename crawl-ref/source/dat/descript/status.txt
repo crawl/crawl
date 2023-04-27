@@ -7,11 +7,9 @@ Invis status
 
 You are invisible. Most enemies will be unable to see you and will suffer
 penalties to hit, though they may be able to guess at your general location.
-This causes magical contamination over time, and may cause dangerous levels of
-contamination if you were already contaminated before gaining this status. If
-the status is greyed out, it is active (and causing contamination) but
-ineffective for some reason (for example if you are glowing with contamination
-or standing in shallow water).
+If the status is greyed out, it is active but ineffective for some reason (for
+example if you are glowing with magical contamination or standing in shallow
+water).
 %%%%
 Tele status
 
@@ -46,10 +44,6 @@ temporary regeneration.
 -Regen status
 
 Your health has stopped regenerating due to the presence of nearby monsters.
-%%%%
-RMsl status
-
-You repel missiles, improving your chance to evade them.
 %%%%
 Touch status
 

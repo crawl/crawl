@@ -205,12 +205,15 @@ int mon_beat_sh_pct(int bypass, int sh)
 static bool _autoswitch_to_melee()
 {
     bool penance;
-    if (is_melee_weapon(*you.weapon())
-        && !needs_handle_warning(*you.weapon(), OPER_ATTACK, penance))
+    if (!you.weapon()
+        // don't autoswitch from a weapon that needs a warning
+        || is_melee_weapon(*you.weapon())
+            && !needs_handle_warning(*you.weapon(), OPER_ATTACK, penance))
     {
         return false;
     }
 
+    // don't autoswitch if a or b is not selected
     int item_slot;
     if (you.equip[EQ_WEAPON] == letter_to_index('a'))
         item_slot = letter_to_index('b');
@@ -219,6 +222,7 @@ static bool _autoswitch_to_melee()
     else
         return false;
 
+    // don't autoswitch to a weapon that needs a warning, or to a non-weapon
     if (!you.inv[item_slot].defined()
         || !is_melee_weapon(you.inv[item_slot])
         || needs_handle_warning(you.inv[item_slot], OPER_ATTACK, penance))
@@ -226,7 +230,8 @@ static bool _autoswitch_to_melee()
         return false;
     }
 
-    return wield_weapon(true, item_slot);
+    // auto_switch handles the item slots itself
+    return auto_wield();
 }
 
 static bool _can_shoot_with(const item_def *weapon)
@@ -240,7 +245,7 @@ static bool _can_shoot_with(const item_def *weapon)
 
 static bool _autofire_at(actor *defender)
 {
-    if (!_can_shoot_with(you.weapon()))
+    if (!_can_shoot_with(you.weapon()) || you.duration[DUR_CONFUSING_TOUCH])
         return false;
     dist t;
     t.target = defender->pos();
@@ -458,6 +463,10 @@ stab_type find_stab_type(const actor *attacker,
     if (attacker && !attacker->can_see(defender))
         return STAB_NO_STAB;
 
+    // Can't stab these
+    if (def && def->type == MONS_SPECTRAL_WEAPON)
+        return STAB_NO_STAB;
+
     // sleeping
     if (defender.asleep())
         return STAB_SLEEPING;
@@ -496,7 +505,8 @@ stab_type find_stab_type(const actor *attacker,
 
     // Distracted (but not batty); this only applies to players.
     if (attacker && attacker->is_player()
-        && def && def->foe != MHITYOU && !mons_is_batty(*def))
+        && def && def->foe != MHITYOU
+        && def->behaviour != BEH_BATTY)
     {
         return STAB_DISTRACTED;
     }
@@ -552,25 +562,13 @@ static inline int get_resistible_fraction(beam_type flavour)
 {
     switch (flavour)
     {
-    // Drowning damage from water is resistible by being a water thing, or
-    // otherwise asphyx resistant.
     case BEAM_WATER:
-        return 40;
-
-    // Assume ice storm and throw icicle are mostly solid.
     case BEAM_ICE:
-        return 40;
-
-    // 50/50 split of elec and sonic damage.
     case BEAM_THUNDER:
-        return 50;
-
     case BEAM_LAVA:
-        return 55;
-
+        return 50;
     case BEAM_POISON_ARROW:
         return 70;
-
     default:
         return 100;
     }
@@ -774,7 +772,8 @@ static bool _dont_harm(const actor &attacker, const actor &defender)
     if (attacker.is_player())
     {
         return defender.wont_attack()
-               || mons_attitude(*defender.as_monster()) == ATT_NEUTRAL;
+               || mons_attitude(*defender.as_monster()) == ATT_NEUTRAL
+                  && !defender.as_monster()->has_ench(ENCH_INSANE);
     }
 
     return false;
@@ -795,7 +794,7 @@ bool force_player_cleave(coord_def target)
     if (!cleave_targets.empty())
     {
         // Rift is too funky and hence gets no special treatment.
-        const int range = you.reach_range() == REACH_TWO ? 2 : 1;
+        const int range = you.reach_range();
         targeter_cleave hitfunc(&you, target, range);
         if (stop_attack_prompt(hitfunc, "attack"))
             return true;
@@ -851,7 +850,9 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     if (attack_cleaves(attacker, which_attack))
     {
         const coord_def atk = attacker.pos();
-        const int cleave_radius = weap && weapon_reach(*weap) == REACH_TWO ? 2 : 1;
+        //If someone adds a funky reach which isn't just a number
+        //They will need to special case it here.
+        const int cleave_radius = weap ? weapon_reach(*weap) : 1;
 
         for (distance_iterator di(atk, true, true, cleave_radius); di; ++di)
         {
@@ -968,25 +969,29 @@ int weapon_min_delay(const item_def &weapon, bool check_speed)
     if (is_crossbow(weapon) && min_delay < 10)
         min_delay = 10;
 
-    // ...and longbows...
-    if (weapon.sub_type == WPN_LONGBOW)
-        min_delay = 6;
-
     // ... and unless it would take more than skill 27 to get there.
     // Round up the reduction from skill, so that min delay is rounded down.
     min_delay = max(min_delay, base - (MAX_SKILL_LEVEL + 1)/2);
 
-    if (check_speed && get_weapon_brand(weapon) == SPWPN_SPEED)
-    {
-        min_delay *= 2;
-        min_delay /= 3;
-    }
+    if (check_speed)
+        min_delay = weapon_adjust_delay(weapon, min_delay, false);
 
     // never go faster than speed 3 (ie 3.33 attacks per round)
     if (min_delay < 3)
         min_delay = 3;
 
     return min_delay;
+}
+
+/// Adjust delay based on weapon brand.
+int weapon_adjust_delay(const item_def &weapon, int base, bool random)
+{
+    const brand_type brand = get_weapon_brand(weapon);
+    if (brand == SPWPN_SPEED)
+        return random ? div_rand_round(base * 2, 3) : (base * 2) / 3;
+    if (brand == SPWPN_HEAVY)
+        return random ? div_rand_round(base * 3, 2) : (base * 3) / 2;
+    return base;
 }
 
 int mons_weapon_damage_rating(const item_def &launcher)
@@ -1022,6 +1027,11 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
 
     if (mon->friendly())
     {
+        // There's not really any harm in attacking your own spectral weapon.
+        // It won't share damage, and it'll go away anyway.
+        if (mon->type == MONS_SPECTRAL_WEAPON)
+            return false;
+
         if (god_hates_attacking_friend(you.religion, *mon))
         {
             adj = "your ally ";
@@ -1214,10 +1224,12 @@ string stop_summoning_reason(resists_t resists, monclass_flags_t flags)
  * sight when OTR is active, regardless of how they entered LOS.
  *
  * @param resists   What does the summon resist?
+ * @param flags     What relevant flags does the summon have? (e.g. flight)
  * @param verb      The verb to be used in the prompt.
  * @return          True if the player wants to abort.
  */
-bool stop_summoning_prompt(resists_t resists, string verb)
+bool stop_summoning_prompt(resists_t resists, monclass_flags_t flags,
+                           string verb)
 {
     if (crawl_state.disables[DIS_CONFIRMATIONS]
         || crawl_state.which_god_acting() == GOD_XOM)
@@ -1225,8 +1237,7 @@ bool stop_summoning_prompt(resists_t resists, string verb)
         return false;
     }
 
-    // TODO: take flags as well (or a set of monster types..?)
-    const string noun = stop_summoning_reason(resists, M_NO_FLAGS);
+    const string noun = stop_summoning_reason(resists, flags);
     if (noun.empty())
         return false;
 
@@ -1338,6 +1349,15 @@ int throwing_base_damage_bonus(const item_def &proj)
     // Stones get half bonus; everything else gets full bonus.
     return div_rand_round(you.skill_rdiv(SK_THROWING)
                           * min(4, property(proj, PWPN_DAMAGE)), 4);
+}
+
+int brand_adjust_weapon_damage(int base_dam, int brand, bool random)
+{
+    if (brand != SPWPN_HEAVY)
+        return base_dam;
+    if (random)
+        return div_rand_round(base_dam * 9, 5);
+    return base_dam * 9 / 5;
 }
 
 int unarmed_base_damage()

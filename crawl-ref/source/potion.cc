@@ -11,6 +11,7 @@
 #include <cstring>
 #include <unordered_map>
 
+#include "art-enum.h"
 #include "cloud.h"
 #include "god-conduct.h"
 #include "god-passive.h"
@@ -46,7 +47,7 @@ PotionEffect::PotionEffect(const potion_type pot)
     : potion_name(potion_type_name(pot)), kind(pot)
 { }
 
-bool PotionEffect::can_quaff(string */*reason*/) const
+bool PotionEffect::can_quaff(string */*reason*/, bool /*temp*/) const
 {
     return true;
 }
@@ -82,11 +83,16 @@ public:
         static PotionCuring inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const override
+    bool can_quaff(string *reason = nullptr, bool temp = true) const override
     {
-        // cure status effects
+        // no species that can quaff at all have permanent restrictions for
+        // curing
+        if (!temp)
+            return true;
+
+        // cure status effects, allowed even in death's door
         if (you.duration[DUR_CONF]
-            || you.duration[DUR_POISONING])
+                    || you.duration[DUR_POISONING])
         {
             return true;
         }
@@ -94,10 +100,10 @@ public:
         if (you.duration[DUR_DEATHS_DOOR])
         {
             if (reason)
-                *reason = "You can't heal while in death's door.";
+                *reason = "You cannot heal while in death's door.";
             return false;
         }
-        if (!you.can_potion_heal())
+        if (!you.can_potion_heal(true) || temp && you.hp == you.hp_max)
         {
             if (reason)
                 *reason = "You have no ailments to cure.";
@@ -156,21 +162,28 @@ public:
         static PotionHealWounds inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const override
+    bool can_quaff(string *reason = nullptr, bool temp = true) const override
     {
-        if (!you.can_potion_heal())
+        // note: equip, i.e. vines, leads to temp uselessness. Should this act
+        // as permauselessness?
+        if (!you.can_potion_heal(temp))
         {
             if (reason)
-                *reason = "You cannot be healed by potions.";
+            {
+                if (!temp || !you.can_potion_heal(false))
+                    *reason = "You cannot be healed by potions.";
+                else
+                    *reason = "You cannot currently be healed by potions.";
+            }
             return false;
         }
-        if (you.duration[DUR_DEATHS_DOOR])
+        if (temp && you.duration[DUR_DEATHS_DOOR])
         {
             if (reason)
                 *reason = "You cannot heal while in death's door.";
             return false;
         }
-        if (you.hp == you.hp_max)
+        if (temp && you.hp == you.hp_max)
         {
             if (reason)
                 *reason = "Your health is already full.";
@@ -219,7 +232,7 @@ public:
         static PotionHaste inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const override
+    bool can_quaff(string *reason = nullptr, bool /* temp */ = true) const override
     {
         if (you.stasis())
         {
@@ -280,6 +293,25 @@ public:
         static PotionBrilliance inst; return inst;
     }
 
+    bool can_quaff(string *reason = nullptr, bool temp = true) const override
+    {
+        if (you_worship(GOD_TROG))
+        {
+            // technically can work under Trog, but it does nothing; so give
+            // an informative message instead.
+            if (reason)
+                *reason = "Trog doesn't allow you to cast spells!";
+            return false;
+        }
+        if (temp && player_equip_unrand(UNRAND_FOLLY))
+        {
+            if (reason)
+                *reason = "Your robe already provides the effects of brilliance.";
+            return false;
+        }
+        return true;
+    }
+
     bool effect(bool=true, int pow = 40, bool is_potion=true) const override
     {
         const bool were_brilliant = you.duration[DUR_BRILLIANCE] > 0;
@@ -302,6 +334,10 @@ public:
     {
         static PotionAttraction inst; return inst;
     }
+
+    // note on uselessness: this potion works by status, so should still be
+    // allowed with no monsters in LOS. Because it is marked as dangerous,
+    // it always prompts. XX maybe add info to the prompt?
 
     bool effect(bool=true, int pow = 40, bool is_potion=true) const override
     {
@@ -328,14 +364,20 @@ public:
         static PotionFlight inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const override
+    bool can_quaff(string *reason = nullptr, bool temp = true) const override
     {
-        if (!flight_allowed(true, reason))
+        if (you.permanent_flight(false))
         {
             if (reason)
-                *reason = "You cannot fly right now.";
+                *reason = "You can already fly.";
             return false;
         }
+        // temp flight inhibition; example: form prevents flight
+        if (temp && !flight_allowed(true, reason))
+            return false;
+
+        // other tempflight cases: allowed and adds time
+
         return true;
     }
 
@@ -357,23 +399,16 @@ public:
         static PotionCancellation inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const override
+    bool can_quaff(string *reason = nullptr, bool temp=true) const override
     {
-        if (!player_is_cancellable())
+        if (temp && !player_is_cancellable())
         {
             if (reason)
-                *reason = "Drinking this now will have no effect.";
+                *reason = "There is nothing to cancel.";
             return false;
         }
 
         return true;
-    }
-
-    bool quaff(bool was_known) const override {
-        if (was_known && !check_known_quaff())
-            return false;
-
-        return effect(was_known);
     }
 
     bool effect(bool=true, int=40, bool is_potion=true) const override
@@ -411,6 +446,8 @@ public:
             return true;
         }
 
+        // should be unreachable: nothing blocks intentional confusion. (If
+        // this ever changes, consider adding a `can_quaff`)
         mpr("You feel briefly invigorated.");
         return false;
     }
@@ -467,19 +504,29 @@ public:
         return true;
     }
 
-    bool can_quaff(string *reason = nullptr) const override
+    bool check_known_quaff() const override
     {
-        return invis_allowed(true, reason);
+        string reason;
+        // invis can be drunk while temp useless, if the player accepts at the
+        // prompt
+        if (!can_quaff(&reason, false))
+        {
+            mpr(reason);
+            return false;
+        }
+        if (!can_quaff(&reason, true)
+             && !yesno((reason + " Use anyway?").c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+        return true;
     }
 
-    bool quaff(bool was_known) const override
+    bool can_quaff(string *reason = nullptr, bool temp = true) const override
     {
-        // Let invis_allowed print the messages and possibly do a prompt.
-        if (was_known && !invis_allowed())
-            return false;
-
-        effect();
-        return true;
+        // quaffing invis
+        return invis_allowed(true, reason, temp);
     }
 };
 
@@ -545,17 +592,18 @@ public:
         static PotionMagic inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const override
+    bool can_quaff(string *reason = nullptr, bool temp = true) const override
     {
-        if (you.magic_points == you.max_magic_points)
+        if (you.has_mutation(MUT_HP_CASTING) || temp && !you.max_magic_points)
         {
             if (reason)
-            {
-                if (you.max_magic_points)
-                    *reason = "Your magic is already full.";
-                else
-                    *reason = "You have no magic to restore.";
-            }
+                *reason = "You have no magic to restore.";
+            return false;
+        }
+        else if (temp && you.magic_points == you.max_magic_points)
+        {
+            if (reason)
+                *reason = "Your magic is already full.";
             return false;
         }
         return true;
@@ -583,9 +631,9 @@ public:
         static PotionBerserk inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const override
+    bool can_quaff(string *reason = nullptr, bool temp = true) const override
     {
-        return you.can_go_berserk(true, true, true, reason);
+        return you.can_go_berserk(true, true, true, reason, temp);
     }
 
     bool effect(bool was_known = true, int = 40, bool=true) const override
@@ -622,9 +670,9 @@ public:
  *               to mutate
  * @returns true if the player is able to mutate right now, otherwise false.
  */
-static bool _can_mutate(string *reason)
+static bool _can_mutate(string *reason, bool temp)
 {
-    if (you.can_safely_mutate())
+    if (you.can_safely_mutate(temp))
         return true;
 
     if (reason)
@@ -666,9 +714,24 @@ public:
         static PotionLignify inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const override
+    bool can_quaff(string *reason = nullptr, bool temp = true) const override
     {
-        return transform(0, transformation::tree, false, true, reason);
+        if (you.is_lifeless_undead(temp))
+        {
+            if (reason)
+            {
+                if (!temp || you.is_lifeless_undead(false))
+                    *reason = "Your unliving flesh cannot be transformed in this way.";
+                else
+                    *reason = "You cannot currently transmute yourself.";
+            }
+            return false;
+        }
+        // transformation prevented for other reasons than lifeless undead.
+        // These should all be temp reasons (e.g. in an uncancellable form)...
+        if (temp)
+            return transform(0, transformation::tree, false, true, reason);
+        return true;
     }
 
     bool effect(bool was_known = true, int=40, bool is_potion=true) const override
@@ -727,12 +790,9 @@ public:
         static PotionMutation inst; return inst;
     }
 
-    bool can_quaff(string *reason = nullptr) const override
+    bool can_quaff(string *reason = nullptr, bool temp = true) const override
     {
-        if (!_can_mutate(reason))
-            return false;
-
-        return true;
+        return _can_mutate(reason, temp);
     }
 
     bool effect(bool = true, int = 40, bool is_potion= true) const override

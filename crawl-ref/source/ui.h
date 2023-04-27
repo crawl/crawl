@@ -34,6 +34,9 @@ struct wm_keyboard_event;
 
 namespace ui {
 
+command_type get_action(int keyin);
+bool key_exits_popup(int keyin, bool extended=false);
+
 struct SizeReq
 {
     int min, nat;

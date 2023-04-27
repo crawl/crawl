@@ -57,6 +57,7 @@ namespace species
     size_type size(species_type species, size_part_type psize = PSIZE_TORSO);
 
     string walking_verb(species_type sp);
+    string walking_title(species_type sp);
     string prayer_action(species_type species);
     string shout_verb(species_type sp, int screaminess, bool directed);
     string skin_name(species_type sp, bool adj=false);

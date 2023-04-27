@@ -236,7 +236,7 @@ void reassess_starting_skills()
 
         if (sk == SK_DODGING && you.skills[SK_ARMOUR]
             && (is_useless_skill(SK_ARMOUR)
-                || you_can_wear(EQ_BODY_ARMOUR) != MB_TRUE))
+                || you_can_wear(EQ_BODY_ARMOUR) != true))
         {
             // No one who can't wear mundane heavy armour should start with
             // the Armour skill -- D:1 dragon armour is too unlikely.
@@ -1850,7 +1850,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         { "genus", lowercase_string(species::name(species, species::SPNAME_GENUS)) },
         { "Genus_Short", species == SP_DEMIGOD ? "God" :
                            species::name(species, species::SPNAME_GENUS) },
-        { "Walker", species::walking_verb(species) + "er" },
+        { "Walker", species::walking_title(species) + "er" },
         { "Weight", _stk_weight(species) },
     };
 

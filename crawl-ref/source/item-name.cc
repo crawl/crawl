@@ -24,6 +24,7 @@
 #include "english.h"
 #include "env.h" // LSTATE_STILL_WINDS
 #include "errors.h" // sysfail
+#include "evoke.h"
 #include "god-item.h"
 #include "god-passive.h" // passive_t::want_curses, no_haste
 #include "invent.h"
@@ -38,6 +39,7 @@
 #include "options.h"
 #include "orb-type.h"
 #include "player.h"
+#include "potion.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
@@ -47,6 +49,7 @@
 #include "spl-goditem.h"
 #include "state.h"
 #include "stringutil.h"
+#include "syscalls.h"
 #include "tag-version.h"
 #include "throw.h"
 #include "transform.h"
@@ -101,8 +104,9 @@ static string _item_inscription(const item_def &item)
 
     if (const char *orig = _interesting_origin(item))
     {
-        if (Options.show_god_gift == MB_TRUE
-            || Options.show_god_gift == MB_MAYBE && !fully_identified(item))
+        if (bool(Options.show_god_gift)
+            || Options.show_god_gift == maybe_bool::maybe
+                && !fully_identified(item))
         {
             insparts.push_back(orig);
         }
@@ -403,7 +407,7 @@ static const char *weapon_brands_terse[] =
 #if TAG_MAJOR_VERSION == 34
     "obsolete", "obsolete",
 #endif
-    "venom", "protect", "drain", "speed", "vorpal",
+    "venom", "protect", "drain", "speed", "heavy",
 #if TAG_MAJOR_VERSION == 34
     "obsolete", "obsolete",
 #endif
@@ -415,7 +419,7 @@ static const char *weapon_brands_terse[] =
 #if TAG_MAJOR_VERSION == 34
     "evade", "confuse",
 #endif
-    "penet", "reap", "spect", "vorpal", "acid",
+    "penet", "reap", "spect", "num_special", "acid",
 #if TAG_MAJOR_VERSION > 34
     "confuse",
 #endif
@@ -430,7 +434,7 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION == 34
     "orc slaying", "dragon slaying",
 #endif
-    "venom", "protection", "draining", "speed", "vorpality",
+    "venom", "protection", "draining", "speed", "heavy",
 #if TAG_MAJOR_VERSION == 34
     "flame", "frost",
 #endif
@@ -442,7 +446,7 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION == 34
     "evasion", "confusion",
 #endif
-    "penetration", "reaping", "spectralizing", "vorpal", "acid",
+    "penetration", "reaping", "spectralizing", "num_special", "acid",
 #if TAG_MAJOR_VERSION > 34
     "confusion",
 #endif
@@ -457,7 +461,7 @@ static const char *weapon_brands_adj[] =
 #if TAG_MAJOR_VERSION == 34
     "orc-killing", "dragon-slaying",
 #endif
-    "venomous", "protective", "draining", "fast", "vorpal",
+    "venomous", "protective", "draining", "fast", "heavy",
 #if TAG_MAJOR_VERSION == 34
     "flaming", "freezing",
 #endif
@@ -469,7 +473,7 @@ static const char *weapon_brands_adj[] =
 #if TAG_MAJOR_VERSION == 34
     "evasive", "confusing",
 #endif
-    "penetrating", "reaping", "spectral", "vorpal", "acidic",
+    "penetrating", "reaping", "spectral", "num_special", "acidic",
 #if TAG_MAJOR_VERSION > 34
     "confusing",
 #endif
@@ -483,7 +487,7 @@ COMPILE_CHECK(ARRAYSZ(weapon_brands_verbose) == NUM_SPECIAL_WEAPONS);
 COMPILE_CHECK(ARRAYSZ(weapon_brands_adj) == NUM_SPECIAL_WEAPONS);
 
 static const set<brand_type> brand_prefers_adj =
-            { SPWPN_VAMPIRISM, SPWPN_ANTIMAGIC, SPWPN_VORPAL, SPWPN_SPECTRAL };
+            { SPWPN_VAMPIRISM, SPWPN_ANTIMAGIC, SPWPN_HEAVY, SPWPN_SPECTRAL };
 
 /**
  * What's the name of a type of weapon brand?
@@ -1009,7 +1013,9 @@ static const char* _book_type_name(int booktype)
     case BOOK_VAPOURS:                return "Vapours";
     case BOOK_NECROMANCY:             return "Necromancy";
     case BOOK_CALLINGS:               return "Callings";
+#if TAG_MAJOR_VERSION == 34
     case BOOK_MALEDICT:               return "Maledictions";
+#endif
     case BOOK_AIR:                    return "Air";
     case BOOK_SKY:                    return "the Sky";
     case BOOK_WARP:                   return "the Warp";
@@ -1232,7 +1238,7 @@ string ghost_brand_name(brand_type brand, monster_type mtype)
     const bool weapon = mtype != MONS_PANDEMONIUM_LORD;
     if (weapon)
     {
-        // n.b. vorpal only works if it is adjectival
+        // n.b. heavy only works if it is adjectival
         if (brand_prefers_adj.count(brand))
             return make_stringf("%s weapon", brand_type_adj(brand));
         else
@@ -1806,7 +1812,18 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (!terse && cursed())
             buff << "cursed ";
 
-        if (!know_type)
+
+        if (is_artefact(*this) && !dbname)
+        {
+            if (know_type)
+                buff << "staff of " << staff_type_name(item_typ);
+            // TODO: crop long artefact names when not controlled by webtiles
+            buff << get_artefact_name(*this, ident);
+            if (!know_type)
+                buff << "staff";
+
+
+        } else if (!know_type)
         {
             if (!basename)
             {
@@ -2472,7 +2489,7 @@ static string _random_consonant_set(size_t c)
  */
 static void _test_scroll_names(const string& fname)
 {
-    FILE *f = fopen(fname.c_str(), "w");
+    FILE *f = fopen_u(fname.c_str(), "w");
     if (!f)
         sysfail("can't write test output");
 
@@ -2499,7 +2516,7 @@ static void _test_scroll_names(const string& fname)
  */
 static void _test_jiyva_names(const string& fname)
 {
-    FILE *f = fopen(fname.c_str(), "w");
+    FILE *f = fopen_u(fname.c_str(), "w");
     if (!f)
         sysfail("can't write test output");
 
@@ -2586,9 +2603,10 @@ bool is_emergency_item(const item_def &item)
                 && !you.stasis();
         case POT_HEAL_WOUNDS:
             return you.can_potion_heal();
+        case POT_MAGIC:
+            return !you.has_mutation(MUT_HP_CASTING);
         case POT_CURING:
         case POT_RESISTANCE:
-        case POT_MAGIC:
             return true;
         default:
             return false;
@@ -2662,23 +2680,7 @@ bool is_bad_item(const item_def &item)
     switch (item.base_type)
     {
     case OBJ_SCROLLS:
-        switch (item.sub_type)
-        {
-#if TAG_MAJOR_VERSION == 34
-        case SCR_CURSE_ARMOUR:
-            if (you.has_mutation(MUT_NO_ARMOUR))
-                return false;
-        case SCR_CURSE_WEAPON:
-            if (you.has_mutation(MUT_NO_GRASPING))
-                return false;
-        case SCR_CURSE_JEWELLERY:
-            return !have_passive(passive_t::want_curses);
-#endif
-        case SCR_NOISE:
-            return true;
-        default:
-            return false;
-        }
+        return item.sub_type == SCR_NOISE;
     case OBJ_POTIONS:
         // Can't be bad if you can't use them.
         if (!you.can_drink(false))
@@ -2727,6 +2729,10 @@ bool is_bad_item(const item_def &item)
  */
 bool is_dangerous_item(const item_def &item, bool temp)
 {
+    // can't assume there is a sensible `you` for various checks here
+    if (crawl_state.game_is_arena())
+        return false;
+
     if (!item_type_known(item))
         return false;
 
@@ -2778,12 +2784,210 @@ bool is_dangerous_item(const item_def &item, bool temp)
     }
 }
 
-static bool _invisibility_is_useless(const bool temp)
+/**
+ * If the player has no items matching the given selector, give an appropriate
+ * response to print. Otherwise, if they do have such items, return the empty
+ * string.
+ */
+static string _no_items_reason(object_selector type, bool check_floor = false)
 {
-    // Always useless if you're a Meteoran or have a halo from TSO.
-    return you.backlit(temp)
-           || you.has_mutation(MUT_GLOWING)
-           || you.haloed() && will_have_passive(passive_t::halo);
+    if (!any_items_of_type(type, -1, check_floor))
+        return no_selectables_message(type);
+    return "";
+}
+
+static string _general_cannot_read_reason()
+{
+    // general checks
+    if (player_in_branch(BRANCH_GEHENNA))
+        return "You cannot see clearly; the smoke and ash is too thick!";
+
+    if (you.berserk())
+        return "You are too berserk!";
+
+    if (you.confused())
+        return "You are too confused!";
+
+    // no reading while threatened (Ru/random mutation)
+    if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS])
+        return "You cannot read scrolls in your current state!";
+
+    if (silenced(you.pos()))
+        return "Magic scrolls do not work when you're silenced!";
+
+    // water elementals
+    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+        return "You cannot read scrolls while unable to breathe!";
+
+    return "";
+}
+
+/**
+ * If the player is unable to (r)ead the item in the given slot, return the
+ * reason why. Otherwise (if they are able to read it), returns "", the empty
+ * string. If item is nullptr, do only general reading checks.
+ */
+string cannot_read_item_reason(const item_def *item, bool temp, bool ident)
+{
+    // convoluted ordering is because the general checks below need to go before
+    // the item id check, but non-temp messages go before general checks
+    if (item && item->base_type == OBJ_SCROLLS && item_type_known(*item))
+    {
+        // this function handles a few cases of perma-uselessness. For those,
+        // be sure to print the message first. (XX generalize)
+        switch (item->sub_type)
+        {
+        case SCR_AMNESIA:
+            if (you.has_mutation(MUT_INNATE_CASTER))
+                return "You don't have control over your spell memory.";
+            // XX possibly amnesia should be allowed to work under Trog, despite
+            // being marked useless..
+            if (you_worship(GOD_TROG))
+                return "Trog doesn't allow you to memorise spells!";
+            break;
+        case SCR_ENCHANT_WEAPON:
+        case SCR_BRAND_WEAPON:
+            if (you.has_mutation(MUT_NO_GRASPING))
+                return "There's no point in enhancing weapons you can't use!";
+            break;
+        case SCR_ENCHANT_ARMOUR:
+            if (you.has_mutation(MUT_NO_GRASPING))
+                return "There's no point in enchanting armour you can't use!";
+            break;
+
+        case SCR_IDENTIFY:
+            if (you.props.exists(IDENTIFIED_ALL_KEY))
+                return "There is nothing left to identify.";
+            if (have_passive(passive_t::identify_items))
+                return "You have no need of identification.";
+            break;
+
+        case SCR_SUMMONING:
+        case SCR_BUTTERFLIES:
+            if (you.allies_forbidden())
+                return "You cannot coerce anything to answer your summons.";
+            break;
+        case SCR_BLINKING:
+        case SCR_TELEPORTATION:
+            // XX code duplication with you.no_tele_reason
+            if (you.stasis())
+                return you.no_tele_reason(item->sub_type == SCR_BLINKING);
+            break;
+        default:
+            break;
+        }
+    }
+
+    if (temp)
+    {
+        const string gen = _general_cannot_read_reason();
+        if (gen.size())
+            return gen;
+    }
+
+    if (!item)
+        return "";
+
+    // item-specific checks
+
+    // still possible to use * at the `r` prompt. (Why do we allow this now?)
+    if (item->base_type != OBJ_SCROLLS)
+        return "You can't read that!";
+
+    // temp uselessness only below this check
+    if (!temp || (!ident && !item_type_known(*item)))
+        return "";
+
+    // don't waste the player's time reading known scrolls in situations where
+    // they'd be useless
+    switch (item->sub_type)
+    {
+        case SCR_BLINKING:
+        case SCR_TELEPORTATION:
+            // note: stasis handled separately above
+            return you.no_tele_reason(item->sub_type == SCR_BLINKING);
+
+        case SCR_AMNESIA:
+            if (you.spell_no == 0)
+                return "You have no spells to forget.";
+            return "";
+
+        case SCR_ENCHANT_ARMOUR:
+            return _no_items_reason(OSEL_ENCHANTABLE_ARMOUR, true);
+
+        case SCR_ENCHANT_WEAPON:
+            return _no_items_reason(OSEL_ENCHANTABLE_WEAPON, true);
+
+        case SCR_BRAND_WEAPON:
+            return _no_items_reason(OSEL_BRANDABLE_WEAPON, true);
+
+        case SCR_IDENTIFY:
+            return _no_items_reason(OSEL_UNIDENT, true);
+
+        case SCR_FOG:
+        case SCR_POISON:
+            if (env.level_state & LSTATE_STILL_WINDS)
+                return "The air is too still for clouds to form.";
+            return "";
+
+        case SCR_MAGIC_MAPPING:
+            if (!is_map_persistent())
+                return "This place cannot be mapped!";
+            return "";
+
+        default:
+            return "";
+    }
+}
+
+string cannot_drink_item_reason(const item_def *item, bool temp,
+                                bool use_check, bool ident)
+{
+    // general permanent reasons
+    if (!you.can_drink(false))
+        return "You can't drink.";
+
+    const bool valid = item && item->base_type == OBJ_POTIONS
+                            && (item_type_known(*item) || ident);
+    const potion_type ptyp = valid
+        ? static_cast<potion_type>(item->sub_type)
+        : NUM_POTIONS;
+    string r;
+
+    if (valid)
+    {
+        // For id'd potions, print temp=false message before temp=true messages
+        get_potion_effect(ptyp)->can_quaff(&r, false);
+        if (!r.empty())
+            return r;
+    }
+
+    // general temp reasons
+    if (temp)
+    {
+        if (!you.can_drink(true))
+            return "You cannot drink potions in your current state!";
+
+        if (you.berserk())
+            return "You are too berserk!";
+
+        if (player_in_branch(BRANCH_COCYTUS))
+            return "It's too cold; everything's frozen solid!";
+    }
+
+    if (item && item->base_type != OBJ_POTIONS)
+        return "You can't drink that!";
+
+    // !valid now means either no item, or unid'd item.
+    if (!temp || !valid)
+        return "";
+
+    // potion of invis can be used even if temp useless, a warning is printed
+    if (use_check && ptyp == POT_INVISIBILITY)
+        return "";
+
+    get_potion_effect(ptyp)->can_quaff(&r, true);
+    return r;
 }
 
 /**
@@ -2810,8 +3014,13 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     // During game startup, no item is useless. If someone re-glyphs an item
     // based on its uselessness, the glyph-to-item cache will use the useless
     // value even if your god or species can make use of it.
-    if (you.species == SP_UNKNOWN)
+    // similarly for arena: bugs will ensue if the game tries to check any of
+    // this
+    if (you.species == SP_UNKNOWN // is this really the best way to check this?
+        || crawl_state.game_is_arena())
+    {
         return false;
+    }
 
     // An ash item that is already being worn and is cursed, counts as useful
     // even if it would otherwise be useless.
@@ -2824,6 +3033,9 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         // if it's melded, just fall through. This might not be accurate in
         // all cases.
     }
+
+    if (temp && you.cannot_act())
+        return true;
 
     switch (item.base_type)
     {
@@ -2880,7 +3092,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
                        || you.get_mutation_level(MUT_DISTORTION_FIELD) == 3;
             case SPARM_INVISIBILITY:
                 return you.has_mutation(MUT_NO_ARTIFICE)
-                       || _invisibility_is_useless(temp);
+                       || !invis_allowed(true, nullptr, temp);
             default:
                 return false;
             }
@@ -2901,69 +3113,35 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return false;
 
     case OBJ_SCROLLS:
-        if (temp && silenced(you.pos()))
-            return true; // can't use scrolls while silenced
+    {
+        // general reasons: player is berserk, in gehenna, drowning, etc.
+        // even unid'd items count as useless under these circumstances
+        if (cannot_read_item_reason(nullptr, temp).size())
+            return true;
 
+        // otherwise, unid'd items can always be read
         if (!ident && !item_type_known(item))
             return false;
 
-        // A bad item is always useless.
+        // An (id'd) bad item is always useless.
         if (is_bad_item(item))
             return true;
 
-        switch (item.sub_type)
-        {
-        case SCR_TELEPORTATION:
-            return you.stasis()
-                   || crawl_state.game_is_sprint()
-                   || temp && player_in_branch(BRANCH_GAUNTLET);
-        case SCR_BLINKING:
-            return you.stasis();
-        case SCR_AMNESIA:
-            return you_worship(GOD_TROG) || you.has_mutation(MUT_INNATE_CASTER);
-#if TAG_MAJOR_VERSION == 34
-        case SCR_CURSE_WEAPON: // for non-Ashenzari, already handled
-        case SCR_CURSE_ARMOUR:
-#endif
-        case SCR_ENCHANT_WEAPON:
-        case SCR_ENCHANT_ARMOUR:
-        case SCR_BRAND_WEAPON:
-            return you.has_mutation(MUT_NO_GRASPING);
-        case SCR_SUMMONING:
-        case SCR_BUTTERFLIES:
-            return you.allies_forbidden();
-        case SCR_FOG:
-        case SCR_POISON:
-            return temp && (env.level_state & LSTATE_STILL_WINDS);
-        case SCR_IDENTIFY:
-            return you.props.exists(IDENTIFIED_ALL_KEY)
-                   || have_passive(passive_t::identify_items);
-        default:
-            return false;
-        }
+        const string reasons = cannot_read_item_reason(&item, temp, ident);
+        return reasons.size();
+    }
 
+    case OBJ_MISCELLANY:
     case OBJ_WANDS:
-        if (you.get_mutation_level(MUT_NO_ARTIFICE))
-            return true;
-
-#if TAG_MAJOR_VERSION == 34
-        if (is_known_empty_wand(item))
-            return true;
-#endif
-        if (!ident && !item_type_known(item))
-            return false;
-
-        if (item.sub_type == WAND_CHARMING)
-            return you.allies_forbidden();
-
-        return false;
+        return cannot_evoke_item_reason(&item, temp).size();
 
     case OBJ_POTIONS:
     {
-        // Mummies and liches can't use potions.
-        if (!you.can_drink(temp))
+        // general reasons: player is a mummy, player in cocytus, etc.
+        if (cannot_drink_item_reason(nullptr, temp).size())
             return true;
 
+        // always allow drinking unid'd potions if the player can drink at all
         if (!ident && !item_type_known(item))
             return false;
 
@@ -2971,33 +3149,13 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         if (is_bad_item(item))
             return true;
 
-        switch (item.sub_type)
-        {
-        case POT_BERSERK_RAGE:
-            return !you.can_go_berserk(true, true, true, nullptr, temp);
-        case POT_HASTE:
-            return you.stasis();
-        case POT_MUTATION:
-            return !you.can_safely_mutate(temp);
-        case POT_LIGNIFY:
-            return you.is_lifeless_undead(temp);
-        case POT_FLIGHT:
-            return you.permanent_flight();
-        case POT_HEAL_WOUNDS:
-            return !you.can_potion_heal();
-        case POT_INVISIBILITY:
-            return _invisibility_is_useless(temp);
-        case POT_BRILLIANCE:
-            return you_worship(GOD_TROG)
-                   || temp && player_equip_unrand(UNRAND_FOLLY);
-        case POT_MAGIC:
-            return you.has_mutation(MUT_HP_CASTING);
-        CASE_REMOVED_POTIONS(item.sub_type)
-        }
-
-        return false;
+        // specific reasons
+        return cannot_drink_item_reason(&item, temp, false, ident).size();
     }
     case OBJ_JEWELLERY:
+        if (temp && bool(!you_can_wear(get_item_slot(item))))
+            return true;
+
         if (!ident && !item_type_known(item))
             return false;
 
@@ -3077,36 +3235,6 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
     case OBJ_CORPSES:
         return true;
-
-    case OBJ_MISCELLANY:
-        switch (item.sub_type)
-        {
-#if TAG_MAJOR_VERSION == 34
-        case MISC_BUGGY_EBONY_CASKET:
-            return item_type_known(item);
-#endif
-        // These can always be used.
-#if TAG_MAJOR_VERSION == 34
-        case MISC_BUGGY_LANTERN_OF_SHADOWS:
-#endif
-        case MISC_ZIGGURAT:
-            return false;
-
-        // Purely summoning misc items don't work w/ sac love
-        case MISC_BOX_OF_BEASTS:
-        case MISC_HORN_OF_GERYON:
-        case MISC_PHANTOM_MIRROR:
-            return you.allies_forbidden()
-                   || you.get_mutation_level(MUT_NO_ARTIFICE);
-
-        case MISC_CONDENSER_VANE:
-            if (temp && (env.level_state & LSTATE_STILL_WINDS))
-                return true;
-            // Intentional fallthrough to check artifice
-
-        default:
-            return you.get_mutation_level(MUT_NO_ARTIFICE);
-        }
 
     case OBJ_BOOKS:
         if (you.has_mutation(MUT_INNATE_CASTER) && item.sub_type != BOOK_MANUAL)
@@ -3229,10 +3357,10 @@ string item_prefix(const item_def &item, bool temp)
  */
 string menu_colour_item_name(const item_def &item, description_level_type desc)
 {
-    const string cprf      = item_prefix(item);
+    const string cprf      = item_prefix(item, false);
     const string item_name = item.name(desc);
 
-    const int col = menu_colour(item_name, cprf, "pickup");
+    const int col = menu_colour(item_name, cprf, "pickup", false);
     if (col == -1)
         return item_name;
 
@@ -3269,6 +3397,8 @@ void init_item_name_cache()
             }
 
             int npluses = 0;
+            // this iterates through all skills for manuals, caching the
+            // resulting names. Weird.
             if (base_type == OBJ_BOOKS && sub_type == BOOK_MANUAL)
                 npluses = NUM_SKILLS;
 
@@ -3277,6 +3407,8 @@ void init_item_name_cache()
             item.sub_type = sub_type;
             for (int plus = 0; plus <= npluses; plus++)
             {
+                // strange logic: this seems to be designed to put both "Manual"
+                // and "Manual of fighting" in the cache for item.plus == 0
                 if (plus > 0)
                     item.plus = max(0, plus - 1);
                 string name = item.name(plus || item.base_type == OBJ_RUNES ? DESC_PLAIN : DESC_DBNAME,
@@ -3295,12 +3427,19 @@ void init_item_name_cache()
                                                                 name.c_str());
                     continue;
                 }
+                const bool removed = item_type_removed(base_type, sub_type)
+                    || base_type == OBJ_BOOKS && sub_type == BOOK_MANUAL
+                        && is_removed_skill(static_cast<skill_type>(item.plus));
 
                 if (!item_names_cache.count(name))
                 {
+                    // what would happen if we don't put removed items in the
+                    // item name cache?
                     item_names_cache[name] = { base_type, (uint8_t)sub_type,
                                                (int8_t)item.plus, 0 };
-                    if (g.ch)
+
+                    // only used for help lookup, skip removed items
+                    if (g.ch && !removed)
                         item_names_by_glyph_cache[g.ch].push_back(name);
                 }
             }

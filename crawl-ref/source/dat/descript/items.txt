@@ -220,10 +220,6 @@ book of lightning
 
 A book that fairly crackles with arcane power.
 %%%%
-book of maledictions
-
-A book of Hexes, describing spells to confound and befuddle.
-%%%%
 book of minor magic
 
 A spellbook containing a variety of simple but useful magical incantations.
@@ -439,10 +435,10 @@ condenser vane
 
 A magical device that condenses ambient energy into various destructive clouds.
 When evoked these clouds form around hostile monsters near the user. The
-lethality of these clouds increases with Evocations skill. At low power it will
-create noxious fumes, and as power increases this gives way to roaring flames,
-freezing vapours, and poisonous gas. At the highest tiers of power storm
-clouds, acidic fog and clouds of negative energy become available.
+quantity and lethality of these clouds increases with Evocations skill. At low
+power it will create noxious fumes, and as power increases this gives way to
+roaring flames, freezing vapours, and poisonous gas. At the highest tiers of
+power storm clouds, acidic fog and clouds of negative energy become available.
 %%%%
 corpse
 
@@ -1039,16 +1035,17 @@ A scroll that imbues a weapon with a random brand. Any existing brand will be
 replaced with a different one, and any brand forbidden by your current god will
 not be chosen. Artefacts cannot be branded in this way.
 
-Melee weapons will commonly be branded with the vorpal, flaming, freezing,
+Melee weapons will commonly be branded with the flaming, freezing, heavy,
 venom or protection brand, and rarely with the draining, electrocution,
 spectral, vampiric or chaos brand.
 
-Ranged weapons will commonly be branded with the vorpal, flaming, freezing or
-venom brand, and rarely with the electrocution or chaos brand.
+Ranged weapons will commonly be branded with the flaming, freezing, heavy or
+draining brand, and rarely with the electrocution or chaos brand.
 %%%%
 scroll of butterflies
 
-A scroll that surrounds its user with a flight of beautiful butterflies.
+A scroll that surrounds its user with a flight of beautiful butterflies, blowing
+back other creatures nearby with the flapping of their wings.
 %%%%
 scroll of enchant armour
 
@@ -1317,8 +1314,8 @@ A magical device which throws little puffs of flame.
 %%%%
 wand of iceblast
 
-A magical device which creates a loud explosion of ice shards, partially
-harming even creatures resistant to cold.
+A magical device which creates a loud explosion of ice shards, bypassing half
+of victims' resistance to cold.
 %%%%
 wand of light
 

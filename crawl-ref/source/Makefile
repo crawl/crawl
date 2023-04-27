@@ -65,7 +65,6 @@
 #
 #    LINUXDEPLOY   -- path to linuxdeploy tool, required for AppImage builds
 #    ANDROID       -- perform an Android build (see docs/develop/android.txt)
-#    TOUCH_UI      -- enable UI behaviour more compatible with touch-screens
 #
 # For various mac build tricks oriented at release builds see the various
 # mac-app-* targets as well as the crawl-universal target. (For normal dev
@@ -651,10 +650,9 @@ ifdef ANDROID
   COPY_FONTS = yes
   NO_PKGCONFIG=Y
   GLES=Y
-  TOUCH_UI=Y
   TILES=Y
   SOUND=Y
-  SAVEDIR="/sdcard/Android/data/org.develz.crawl/saves/"
+  SAVEDIR=
 else
 
 ifndef BUILD_LUA
@@ -744,10 +742,6 @@ ifdef TILES
 
 DEFINES_L += -DUSE_TILE
 DEFINES_L += -DUSE_TILE_LOCAL
-
-ifdef TOUCH_UI
-DEFINES_L += -DTOUCH_UI
-endif
 
 ifdef BUILD_SDL2
 INCLUDES_L += -isystem contrib/install/$(ARCH)/include/SDL2
@@ -866,6 +860,8 @@ endif
 # Unit tests
 ifneq (,$(filter catch2-tests,$(MAKECMDGOALS)))
 	COVERAGE=YesPlease
+	# current catch2 doesn't support c++11
+	STDFLAG = -std=c++14
 endif
 
 ifdef HURRY
@@ -1332,14 +1328,19 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
             froggy_goodgod_tengu_gold Cws_Minotauros nibiki_octopode \
             e_m_fields sastrei_chei anon_octopus_wizard arbituhhh_tesu \
             kaonedong_ignis_the_dying_flame kaonedong_menkaure_prince_of_dust \
-            philosopheropposite_palentonga_paladin gompami_kohu_xbow
+            philosopheropposite_palentonga_paladin gompami_kohu_xbow \
+            micah_c_ereshkigal SpinningBird_djinn_sears_gnolls benadryl_antaeus
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
               $(TITLEIMGS:%=webserver/static/title_%.png) \
-              $(TILEINFOJS:%=webserver/game_data/static/tileinfo-%.js)
+              $(TILEINFOJS:%=webserver/game_data/static/tileinfo-%.js) \
+              webserver/webtiles/version.txt
 
 $(TILEINFOJS:%=$(RLTILES)/tileinfo-%.js): build-rltiles
+
+webserver/webtiles/version.txt: .ver
+	@git describe $(MERGE_BASE) > webserver/webtiles/version.txt
 
 webserver/game_data/static/%.js: $(RLTILES)/%.js
 	$(QUIET_COPY)$(COPY) $< webserver/game_data/static/
@@ -1355,7 +1356,7 @@ endif
 
 GAME_OBJS=$(OBJECTS) main.o $(EXTRA_OBJECTS)
 MONSTER_OBJS=$(OBJECTS) util/monster/monster-main.o $(EXTRA_OBJECTS)
-CATCH2_TEST_OBJECTS = $(OBJECTS) $(TEST_OBJECTS) catch2-tests/test_main.o $(EXTRA_OBJECTS)
+CATCH2_TEST_OBJECTS = $(OBJECTS) $(TEST_OBJECTS) catch2-tests/catch_amalgamated.o catch2-tests/test_main.o $(EXTRA_OBJECTS)
 
 
 ifneq (,$(filter plug-and-play-tests,$(MAKECMDGOALS)))
@@ -1533,7 +1534,7 @@ endif
 ifdef ANDROID
   # during build, data goes in a different directory to when crawl runs!
   prefix_fp = ..
-  datadir_fp = android-project/assets
+  datadir_fp = android-project/app/src/main/assets
   savedir_fp =
   shareddir_fp =
 endif
@@ -1666,11 +1667,10 @@ clean-contrib:
 	+$(MAKE) -C contrib clean
 
 clean-android:
-ifneq ($(ANDROID),)
-	$(RM) -r $(datadir_fp)
-	+cd android-project && ant clean && ndk-build -$(MAKEFLAGS) clean \
-	 && remove AndroidManifest.xml
-endif
+	$(RM) -r android-project/app/src/main/assets
+	$(RM) android-project/app/src/main/res/drawable/*.png
+	$(RM) android-project/local.properties
+	$(RM) android-project/app/build.gradle
 
 distclean: clean clean-contrib clean-rltiles
 	$(RM) -r morgue saves
@@ -1885,7 +1885,7 @@ macro.o: cmd-name.h
 build-rltiles: .contrib-libs $(RLTILES)/dc-unrand.txt
 ifdef ANDROID
         # force submake to run properly
-	+$(MAKE) -C $(RLTILES) all ANDROID=1 TILES=1 V=1
+	+$(MAKE) -C $(RLTILES) all ANDROID=$(ANDROID) TILES=1 V=1
         # prove that tiles were generated properly
 	grep tile_info rltiles/*.cc| head
 else
@@ -2091,17 +2091,22 @@ mac-app-console: all
 # Building the Android package
 #
 
-android-project/AndroidManifest.xml: android-project/AndroidManifest.xml.in
-	sed "s/@CRAWL_VERSION@/${SRC_VERSION}/" <android-project/AndroidManifest.xml.in >android-project/AndroidManifest.xml
+NPROC := $(shell nproc)
 
-android: install-data .android-cflags android-project/AndroidManifest.xml
-ifeq ($(ANDROID),)
+android-project/app/build.gradle: android-project/app/build.gradle.in
+	sed -e "s/@ANDROID_VERSION@/${ANDROID}/" -e "s/@CRAWL_VERSION@/${SRC_VERSION}/" -e "s/@NPROC@/${NPROC}/" <android-project/app/build.gradle.in >android-project/app/build.gradle
+android-project/local.properties: android-project/local.properties.in
+	sed -e "s~@HOME@~${HOME}~" <android-project/local.properties.in >android-project/local.properties
+
+android: greet check-fonts docs install-data .android-cflags android-project/local.properties android-project/app/build.gradle
+ifneq ($(ANDROID),)
+	mkdir -p android-project/app/src/main/res/drawable
+	$(COPY) dat/tiles/logo.png android-project/app/src/main/res/drawable/logo.png
+	$(COPY) dat/tiles/stone_soup_icon-512x512.png android-project/app/src/main/res/drawable/icon.png
+else
 	@echo Please define ANDROID to use this build.
 	@exit 1
 endif
-	+cd android-project && ndk-build -$(MAKEFLAGS) && ant debug && \
-	cp bin/DungeonCrawlStoneSoup-debug.apk \
-	../../../crawl_tiles_android-$(SRC_VERSION).apk
 
 #############################################################################
 # Canned tests
@@ -2111,8 +2116,8 @@ test: test-test test-all
 nonwiztest: test-test test-nonwiz
 nondebugtest: test-all
 
-test-%: $(GAME) util/fake_pty builddb
-	util/fake_pty test/stress/run $*
+test-%: $(GAME) builddb util/fake_pty
+	test/stress/run $*
 	@echo "Finished: $*"
 
 util/fake_pty: util/fake_pty.c

@@ -90,7 +90,8 @@ class Menu;
 
 int menu_colour(const string &itemtext,
                 const string &prefix = "",
-                const string &tag = "");
+                const string &tag = "",
+                bool strict=true);
 
 const int MENU_ITEM_STOCK_COLOUR = LIGHTGREY;
 class MenuEntry
@@ -103,6 +104,7 @@ public:
     vector<int> hotkeys;
     MenuEntryLevel level;
     bool indent_no_hotkeys;
+    string preface_format;
     void *data;
     function<bool(const MenuEntry&)> on_select;
 
@@ -172,7 +174,7 @@ public:
     virtual string get_text() const;
     void wrap_text(int width=MIN_COLS);
 
-    virtual int highlight_colour() const
+    virtual int highlight_colour(bool /*unused in superclass*/ = false) const
     {
         return menu_colour(get_text(), "", tag);
     }
@@ -272,11 +274,12 @@ enum MenuFlag
     MF_SECONDARY_SCROLL = 0x02000,   ///< Secondary hotkeys scroll, rather than select
     MF_QUIET_SELECT     = 0x04000,   ///< No selection box and no count.
 
-    MF_USE_TWO_COLUMNS  = 0x08000,   ///< Only valid for tiles menus
+    MF_USE_TWO_COLUMNS  = 0x08000,   ///< Use two columns for long menus
     MF_UNCANCEL         = 0x10000,   ///< Menu is uncancellable
     MF_SPECIAL_MINUS    = 0x20000,   ///< '-' isn't PGUP or clear multiselect
     MF_ARROWS_SELECT    = 0x40000,   ///< arrow keys select, rather than scroll
     MF_SHOW_EMPTY       = 0x80000,   ///< don't auto-exit empty menus
+    MF_GRID_LAYOUT     = 0x100000,   ///< use a grid-style layout, filling by width first
 };
 
 class UIMenu;
@@ -325,6 +328,7 @@ public:
 
     void set_highlighter(MenuHighlighter *h);
     void set_title(MenuEntry *e, bool first = true, bool indent = false);
+    void set_title(const string &t, bool first = true, bool indent = false);
     void add_entry(MenuEntry *entry);
     void add_entry(unique_ptr<MenuEntry> entry)
     {
@@ -337,13 +341,16 @@ public:
         select_filter = filter;
     }
 
-    void update_menu(bool update_entries = false);
+    bool ui_is_initialized() const;
+
+    virtual void update_menu(bool update_entries = false);
     virtual void set_hovered(int index, bool force=false);
     bool set_scroll(int index);
     bool in_page(int index, bool strict=false) const;
     bool snap_in_page(int index);
-    int get_first_visible(bool skip_init_headers=false) const;
+    int get_first_visible(bool skip_init_headers=false, int col=-1) const;
     bool item_visible(int index);
+    MenuEntry *get_cur_title() const;
 
     virtual int getkey() const { return lastch; }
 
@@ -369,7 +376,7 @@ public:
 
     enum cycle  { CYCLE_NONE, CYCLE_TOGGLE, CYCLE_CYCLE } action_cycle;
     enum action { ACT_EXECUTE, ACT_EXAMINE, ACT_MISC, ACT_NUM } menu_action;
-    void cycle_hover(bool reverse=false);
+    void cycle_hover(bool reverse=false, bool preserve_row=false, bool preserve_col=false);
     virtual bool page_down();
     virtual bool line_down();
     virtual bool page_up();

@@ -37,7 +37,7 @@ const Branch branches[NUM_BRANCHES] =
       "Orcish Mines", "the Orcish Mines", "Orc",
       nullptr,
       BROWN, BROWN,
-      'O', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      'O', {}, branch_noise::normal, 6 },
 
     { BRANCH_ELF, BRANCH_ORC, 2, 2, 3, 15,
       brflag::dangerous_end,

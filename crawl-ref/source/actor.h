@@ -207,7 +207,7 @@ public:
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    bool slow_cold_blood = true) = 0;
     virtual void drain_stat(stat_type /*stat*/, int /*amount*/) { }
-    virtual void splash_with_acid(actor *evildoer, int acid_strength) = 0;
+    virtual void splash_with_acid(actor *evildoer) = 0;
     virtual void acid_corrode(int acid_strength) = 0;
     virtual bool corrode_equipment(const char* corrosion_source = "the acid",
                                    int degree = 1) = 0;
@@ -248,7 +248,7 @@ public:
     virtual int shield_bonus() const = 0;
     virtual int shield_block_penalty() const = 0;
     virtual int shield_bypass_ability(int tohit) const = 0;
-    virtual void shield_block_succeeded();
+    virtual void shield_block_succeeded(actor *attacker);
     virtual bool missile_repulsion() const = 0;
 
     // Combat-related virtual class methods
@@ -285,8 +285,9 @@ public:
     virtual int res_constrict() const = 0;
     virtual int willpower() const = 0;
     virtual int check_willpower(const actor* source, int power);
-    virtual bool no_tele(bool blink = false) const = 0;
+    virtual bool no_tele(bool blink = false, bool temp = true) const = 0;
     virtual int inaccuracy() const;
+    int inaccuracy_penalty() const;
     virtual bool antimagic_susceptible() const = 0;
 
     virtual bool res_corr(bool /*allow_random*/ = true, bool temp = true) const;
@@ -299,7 +300,7 @@ public:
     virtual int archmagi(bool items = true) const;
     virtual bool no_cast(bool items = true) const;
     virtual bool reflection(bool items = true) const;
-    virtual bool extra_harm(bool items = true) const;
+    virtual int extra_harm(bool items = true) const;
 
     virtual bool rmut_from_item() const;
     virtual bool evokable_invis() const;
@@ -375,6 +376,7 @@ public:
     CrawlHashTable props;
 
     int shield_blocks;                 // Count of shield blocks this round.
+    bool triggered_spectral;           // Triggered spectral weapon this round
 
     // Constriction stuff:
 
@@ -408,7 +410,7 @@ public:
     virtual bool has_usable_tentacle() const = 0;
     virtual int constriction_damage(constrict_type typ) const = 0;
     virtual bool constriction_does_damage(constrict_type typ) const;
-    virtual bool clear_far_engulf(bool force = false) = 0;
+    virtual bool clear_far_engulf(bool force = false, bool moved = false) = 0;
 
     // Be careful using this, as it doesn't keep the constrictor in sync.
     void clear_constricted();
@@ -418,6 +420,7 @@ public:
     string resist_margin_phrase(int margin) const;
 
     void collide(coord_def newpos, const actor *agent, int pow);
+    bool knockback(const actor &cause, int dist, int pow, string source_name);
 
     static const actor *ensure_valid_actor(const actor *act);
     static actor *ensure_valid_actor(actor *act);

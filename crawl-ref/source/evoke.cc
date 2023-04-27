@@ -75,12 +75,6 @@ static bool _evoke_horn_of_geryon()
 {
     bool created = false;
 
-    if (silenced(you.pos()))
-    {
-        mpr("You can't produce a sound!");
-        return false;
-    }
-
     mprf(MSGCH_SOUND, "You produce a hideous howling noise!");
     noisy(15, you.pos()); // same as hell effect noise
     did_god_conduct(DID_EVIL, 3);
@@ -99,7 +93,7 @@ static bool _evoke_horn_of_geryon()
 
         if (random2(adjusted_power) > 7)
             beh = BEH_FRIENDLY;
-        mgen_data mg(MONS_HELL_BEAST, beh, you.pos(), MHITYOU, MG_FORCE_BEH);
+        mgen_data mg(MONS_HELL_BEAST, beh, you.pos(), MHITYOU, MG_AUTOFOE);
         mg.set_summoned(&you, 3, SPELL_NO_SPELL);
         mg.set_prox(PROX_CLOSE_TO_PLAYER);
         mon = create_monster(mg);
@@ -180,10 +174,14 @@ int wand_mp_cost()
     return min(you.magic_points, cost);
 }
 
-int wand_power()
+int wand_power(spell_type wand_spell)
 {
+    const int cap = spell_power_cap(wand_spell);
+    if (cap == 0)
+        return -1;
     const int mp_cost = wand_mp_cost();
-    return (15 + you.skill(SK_EVOCATIONS, 7) / 2) * (mp_cost + 9) / 9;
+    const int pow = (15 + you.skill(SK_EVOCATIONS, 7) / 2) * (mp_cost + 9) / 9;
+    return min(pow, cap);
 }
 
 void zap_wand(int slot, dist *_target)
@@ -202,6 +200,8 @@ void zap_wand(int slot, dist *_target)
         item_slot = slot;
     else
     {
+        // TODO: move to UseItemMenu? This code path is currently unbound and
+        // it's unclear to me if anyone ever uses it
         item_slot = prompt_invent_item("Zap which item?",
                                        menu_type::invlist,
                                        OBJ_WANDS,
@@ -226,11 +226,11 @@ void zap_wand(int slot, dist *_target)
         you.wield_change = true;
 
     const int mp_cost = wand_mp_cost();
-    const int power = wand_power();
-    pay_mp(mp_cost);
-
     const spell_type spell =
         spell_in_wand(static_cast<wand_type>(wand.sub_type));
+    const int power = wand_power(spell);
+    pay_mp(mp_cost);
+
     if (spell == SPELL_FASTROOT)
         you.props[FASTROOT_POWER_KEY] = power; // we may cancel, but that's fine
 
@@ -279,11 +279,7 @@ string manual_skill_names(bool short_text)
             skills.insert(sk);
 
     if (short_text && skills.size() > 1)
-    {
-        char buf[40];
-        sprintf(buf, "%lu skills", (unsigned long) skills.size());
-        return string(buf);
-    }
+        return make_stringf("%d skills", static_cast<int>(skills.size()));
     else
         return skill_names(skills);
 }
@@ -324,7 +320,8 @@ static bool _box_of_beasts()
 static bool _make_zig(item_def &zig)
 {
     if (feat_is_critical(env.grid(you.pos()))
-        || player_in_branch(BRANCH_ARENA))
+        || player_in_branch(BRANCH_ARENA)
+        || is_temp_terrain(you.pos()))
     {
         mpr("You can't place a gateway to a ziggurat here.");
         return false;
@@ -384,12 +381,10 @@ void wind_blast(actor* agent, int pow, coord_def target)
 
     for (actor_near_iterator ai(agent->pos(), LOS_SOLID); ai; ++ai)
     {
-        if (ai->is_stationary()
-            || ai->pos().distance_from(agent->pos()) > radius
+        if (ai->pos().distance_from(agent->pos()) > radius
             || ai->pos() == agent->pos() // so it's never aimed_at_feet
             || !target.origin()
-               && _angle_between(agent->pos(), target, ai->pos()) > PI/4.0
-            || ai->resists_dislodge("being blown about by the wind"))
+               && _angle_between(agent->pos(), target, ai->pos()) > PI/4.0)
         {
             continue;
         }
@@ -408,79 +403,24 @@ void wind_blast(actor* agent, int pow, coord_def target)
     wind_beam.range           = LOS_RADIUS;
     wind_beam.is_tracer       = true;
 
-    map<actor *, coord_def> collisions;
+    if (agent->is_player())
+    {
+        // Nemelex card only.
+        if (pow > 120)
+            mpr("A mighty gale blasts forth from the card!");
+        else
+            mpr("A fierce wind blows from the card.");
+    }
 
-    bool player_affected = false;
-    vector<monster *> affected_monsters;
+    noisy(8, agent->pos());
 
     for (actor *act : act_list)
     {
-        wind_beam.target = act->pos();
-        wind_beam.fire();
-
-        int push = _gale_push_dist(agent, act, pow);
-        bool pushed = false;
-
-        for (unsigned int j = 0; j < wind_beam.path_taken.size() - 1 && push;
-             ++j)
+        // May have died to a previous collision.
+        if (act->alive())
         {
-            if (wind_beam.path_taken[j] == act->pos())
-            {
-                coord_def newpos = wind_beam.path_taken[j+1];
-                if (!actor_at(newpos) && !cell_is_solid(newpos)
-                    && act->can_pass_through(newpos)
-                    && act->is_habitable(newpos))
-                {
-                    act->move_to_pos(newpos);
-                    if (act->is_player())
-                        stop_delay(true);
-                    --push;
-                    pushed = true;
-                }
-                else //Try to find an alternate route to push
-                {
-                    bool success = false;
-                    for (adjacent_iterator di(newpos); di; ++di)
-                    {
-                        if (adjacent(*di, act->pos())
-                            && di->distance_from(agent->pos())
-                                == newpos.distance_from(agent->pos())
-                            && !actor_at(*di) && !cell_is_solid(*di)
-                            && act->can_pass_through(*di)
-                            && act->is_habitable(*di))
-                        {
-                            act->move_to_pos(*di);
-                            if (act->is_player())
-                                stop_delay(true);
-
-                            --push;
-                            pushed = true;
-
-                            // Adjust wind path for moved monster
-                            wind_beam.target = *di;
-                            wind_beam.fire();
-                            success = true;
-                            break;
-                        }
-                    }
-
-                    // If no luck, they slam into something.
-                    if (!success)
-                        collisions.insert(make_pair(act, newpos));
-                }
-            }
-        }
-
-        if (pushed)
-        {
-            if (act->is_monster())
-            {
-                act->as_monster()->speed_increment -= random2(6) + 4;
-                if (you.can_see(*act))
-                    affected_monsters.push_back(act->as_monster());
-            }
-            else
-                player_affected = true;
+            const int push = _gale_push_dist(agent, act, pow);
+            act->knockback(*agent, push, pow, "gust of wind");
         }
     }
 
@@ -547,63 +487,6 @@ void wind_blast(actor* agent, int pow, coord_def target)
             }
         }
     }
-
-    if (agent->is_player())
-    {
-        // Nemelex card only.
-        if (pow > 120)
-            mpr("A mighty gale blasts forth from the card!");
-        else
-            mpr("A fierce wind blows from the card.");
-    }
-
-    noisy(8, agent->pos());
-
-    if (player_affected)
-        mpr("You are blown backwards!");
-
-    if (!affected_monsters.empty())
-    {
-        counted_monster_list affected = counted_monster_list(affected_monsters);
-        const string message =
-            make_stringf("%s %s blown away by the wind.",
-                         affected.describe().c_str(),
-                         conjugate_verb("be", affected.count() > 1).c_str());
-        if (strwidth(message) < get_number_of_cols() - 2)
-            mpr(message);
-        else
-            mpr("The monsters around you are blown away!");
-    }
-
-    for (auto it : collisions)
-        if (it.first->alive())
-            it.first->collide(it.second, agent, pow);
-
-    bool did_disperse = false;
-    // Handle trap triggering, finally. A dispersal before we finish
-    // would lead to weird crashes and behavior in the preceeding.
-    for (auto m : affected_monsters)
-    {
-        if (!m->alive())
-            continue;
-        coord_def landing = m->pos();
-
-        // XXX: this doesn't properly fire lua position triggers
-        m->apply_location_effects(landing);
-
-        // Dispersal will fire the location effects for everything dispersed;
-        // it's still possible for something to get blown somewhere it needs
-        // a location effect and not subsequently dispersed but handling that
-        // is more trouble than this headache already is.
-        if (m->pos() != landing)
-        {
-            did_disperse = true;
-            break;
-        }
-    }
-
-    if (player_affected && !did_disperse)
-        you.apply_location_effects(you.pos());
 }
 
 static bool _phial_of_floods(dist *target)
@@ -615,7 +498,7 @@ static bool _phial_of_floods(dist *target)
 
     const int power = 10 + you.skill(SK_EVOCATIONS, 4);
     zappy(ZAP_PRIMAL_WAVE, power, false, beam);
-    beam.range = LOS_RADIUS;
+    beam.range = 5;
     beam.aimed_at_spot = true;
 
     // TODO: this needs a custom targeter
@@ -757,6 +640,27 @@ static coord_def _find_tremorstone_target(bool& see_targets)
             target = *ri;
     }
 
+    // It's possible to not find any targets at radius 3 if e.g. we're in fog.
+    if (!target.origin())
+        return target;
+
+    // Be very careless for this rare case.
+    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    {
+        if (ri->distance_from(you.pos()) == 2
+            && !cell_is_solid(*ri)
+            && one_chance_in(++ties))
+        {
+            target = *ri;
+        }
+    }
+
+    if (!target.origin())
+        return target;
+
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        if (!cell_is_solid(*ai) && one_chance_in(++ties))
+            target = *ai;
     return target;
 }
 
@@ -799,20 +703,7 @@ static int _tremorstone_count(int pow)
 static spret _tremorstone()
 {
     bool see_target;
-    bolt beam;
-
-    static const int RADIUS = 2;
-    static const int SPREAD = 1;
-    static const int RANGE = RADIUS + SPREAD;
-    const int pow = 15 + you.skill(SK_EVOCATIONS);
-    const int num_explosions = _tremorstone_count(pow);
-
-    beam.source_id  = MID_PLAYER;
-    beam.thrower    = KILL_YOU;
-    zappy(ZAP_TREMORSTONE, pow, false, beam);
-    beam.range = RANGE;
-    beam.ex_size = RADIUS;
-    beam.target = _find_tremorstone_target(see_target);
+    const coord_def center = _find_tremorstone_target(see_target);
 
     targeter_radius hitfunc(&you, LOS_NO_TRANS);
     auto vulnerable = [](const actor *act) -> bool
@@ -828,7 +719,20 @@ static spret _tremorstone()
     }
 
     mpr("The tremorstone explodes into fragments!");
-    const coord_def center = beam.target;
+
+    static const int RADIUS = 2;
+    static const int SPREAD = 1;
+    static const int RANGE = RADIUS + SPREAD;
+    const int pow = 15 + you.skill(SK_EVOCATIONS);
+    const int num_explosions = _tremorstone_count(pow);
+
+    bolt beam;
+    beam.source_id  = MID_PLAYER;
+    beam.thrower    = KILL_YOU;
+    zappy(ZAP_TREMORSTONE, pow, false, beam);
+    beam.range = RANGE;
+    beam.ex_size = RADIUS;
+    beam.target = center;
 
     for (int i = 0; i < num_explosions; i++)
     {
@@ -853,12 +757,6 @@ static const vector<random_pick_entry<cloud_type>> condenser_clouds =
 
 static spret _condenser()
 {
-    if (env.level_state & LSTATE_STILL_WINDS)
-    {
-        mpr("The air is too still to form clouds.");
-        return spret::abort;
-    }
-
     const int pow = 15 + you.skill(SK_EVOCATIONS, 7) / 2;
 
     random_picker<cloud_type, NUM_CLOUD_TYPES> cloud_picker;
@@ -883,7 +781,18 @@ static spret _condenser()
             if (!cell_is_solid(*ai) && you.see_cell(*ai) && !cloud_at(*ai)
                 && !(act && act->wont_attack()))
             {
-                target_cells.push_back(*ai);
+                bool targeted = false;
+                for (auto p : target_cells)
+                {
+                    if (*ai == p)
+                    {
+                        targeted = true;
+                        break;
+                    }
+                }
+
+                if (!targeted)
+                    target_cells.push_back(*ai);
             }
         }
     }
@@ -902,11 +811,25 @@ static spret _condenser()
         return spret::fail;
     }
 
+    if (is_good_god(you.religion) && cloud == CLOUD_NEGATIVE_ENERGY)
+    {
+        mprf("%s suppresses the foul vapours!", god_name(you.religion).c_str());
+        return spret::fail;
+    }
+
+    shuffle_array(target_cells);
+    bool did_something = false;
+
     for (auto p : target_cells)
     {
+        // Get at least one cloud, even at 0 power.
+        if (did_something && !x_chance_in_y(10 + pow, 120))
+            continue;
+
         const int cloud_power = 5
             + random2avg(12 + div_rand_round(pow * 3, 4), 3);
         place_cloud(cloud, p, cloud_power, &you);
+        did_something = true;
     }
 
     mprf("Clouds of %s condense around you!", cloud_type_name(cloud).c_str());
@@ -972,99 +895,143 @@ static bool _xoms_chessboard()
     return zapping(zap, power, beam, false) == spret::success;
 }
 
+static bool _player_has_zigfig()
+{
+    // does the player have a zigfig? used to override sac artiface
+    // a bit ugly...this thing could probably be goldified or converted to an
+    // ability trigger
+    for (const item_def &s : you.inv)
+        if (s.defined() && s.base_type == OBJ_MISCELLANY
+                                 && s.sub_type == MISC_ZIGGURAT)
+        {
+            return true;
+        }
+    return false;
+}
+
+/// Does the item only serve to produce summons or allies?
+static bool _evoke_ally_only(const item_def &item)
+{
+    if (item.base_type == OBJ_WANDS)
+        return item.sub_type == WAND_CHARMING;
+    else if (item.base_type == OBJ_MISCELLANY)
+    {
+        switch (item.sub_type)
+        {
+        case MISC_PHANTOM_MIRROR:
+        case MISC_HORN_OF_GERYON:
+        case MISC_BOX_OF_BEASTS:
+            return true;
+        default:
+            return false;
+        }
+    }
+    return false;
+}
+
+string cannot_evoke_item_reason(const item_def *item, bool temp)
+{
+    // id is not at issue here
+    if (temp && you.berserk())
+        return "You are too berserk!";
+
+    if (temp && you.confused())
+        return "You are too confused!";
+
+    // historically allowed under confusion/berserk, but why?
+    if (item && item->base_type == OBJ_MISCELLANY
+                                            && item->sub_type == MISC_ZIGGURAT
+        || !item && _player_has_zigfig())
+    {
+        // override sac artifice for zigfigs, including a general check
+        // TODO: zigfig has some terrain/level constraints that aren't handled
+        // here
+        return "";
+    }
+
+    if (you.get_mutation_level(MUT_NO_ARTIFICE))
+        return "You cannot evoke magical items.";
+
+    // all generic checks passed
+    if (!item)
+        return "";
+
+    // is this really necessary?
+    if (item_type_removed(item->base_type, item->sub_type))
+        return "Sorry, this item was removed!";
+    if (item->base_type != OBJ_WANDS && item->base_type != OBJ_MISCELLANY)
+        return "You can't evoke that!";
+
+#if TAG_MAJOR_VERSION == 34
+    if (is_known_empty_wand(*item))
+        return "This wand has no charges.";
+#endif
+
+    if (_evoke_ally_only(*item) && you.allies_forbidden())
+        return "That item cannot be used by those who cannot gain allies!";
+
+    if (temp
+        && item->base_type == OBJ_MISCELLANY
+        && item->sub_type == MISC_CONDENSER_VANE
+        && (env.level_state & LSTATE_STILL_WINDS))
+    {
+        return "The air is too still for clouds to form.";
+    }
+
+    if (temp
+        && item->base_type == OBJ_MISCELLANY
+        && item->sub_type == MISC_HORN_OF_GERYON
+        && silenced(you.pos()))
+    {
+        return "You can't produce a sound!";
+
+    }
+
+    if (temp && is_xp_evoker(*item) && evoker_charges(item->sub_type) <= 0)
+    {
+        // DESC_THE prints "The tin of tremorstones (inert) is presently inert."
+        return make_stringf("The %s is presently inert.",
+                                            item->name(DESC_DBNAME).c_str());
+    }
+
+    return "";
+}
+
+// for historical reasons, we have both item_is_evokable and evoke_check. They
+// are now both interfaces on cannot_evoke_item_reason.
+// TODO: unify the api?
+bool item_is_evokable(const item_def &item, bool msg)
+{
+    const string err = cannot_evoke_item_reason(&item, false);
+    if (!err.empty() && msg)
+        mpr(err);
+    return err.empty();
+}
 
 // Is there anything that would prevent a player from evoking?
 // If slot == -1, it asks this question in general.
-// If slot is a particular item, it asks this question for that item. This
-// wierdly does not check whether an item is actually evokable! (TODO)
+// If slot is a particular item, it asks this question for that item.
 bool evoke_check(int slot, bool quiet)
 {
     item_def *i = nullptr;
     if (slot >= 0 && slot < ENDOFPACK && you.inv[slot].defined())
         i = &you.inv[slot];
 
-    if (i && item_type_removed(i->base_type, i->sub_type))
-    {
-        if (!quiet)
-            mpr("Sorry, this item was removed!");
-        return false;
-    }
-
-    // is this supposed to be allowed under confusion?
-    if (i && i->base_type == OBJ_MISCELLANY && i->sub_type == MISC_ZIGGURAT)
-        return true;
-
-    if (!i)
-    {
-        // does the player have a zigfig? overrides sac artiface
-        // this is ugly...this thing should probably be goldified
-        for (const item_def &s : you.inv)
-            if (s.defined() && s.base_type == OBJ_MISCELLANY
-                                     && s.sub_type == MISC_ZIGGURAT)
-            {
-                return true;
-            }
-    }
-
-    if (you.get_mutation_level(MUT_NO_ARTIFICE))
-    {
-        if (!quiet)
-            mpr("You cannot evoke magical items.");
-        return false;
-    }
-
-    if (you.confused())
-    {
-        if (!quiet)
-            canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-
-    if (you.berserk())
-    {
-        if (!quiet)
-            canned_msg(MSG_TOO_BERSERK);
-        return false;
-    }
-
-    if (i && i->base_type == OBJ_WANDS && i->charges <= 0)
-    {
-        // I think this case should be obsolete? Maybe still could happen with
-        // an upgrade
-        if (!quiet)
-            mpr("This wand has no charges.");
-        return false;
-    }
-
-    if (i && is_xp_evoker(*i) && evoker_charges(i->sub_type) <= 0)
-    {
-        // DESC_THE prints "The tin of tremorstones (inert) is presently inert."
-        if (!quiet)
-            mprf("The %s is presently inert.", i->name(DESC_DBNAME).c_str());
-        return false;
-    }
-
-    return true;
+    // TODO: menu for zigfig under sac artiface
+    const string err = cannot_evoke_item_reason(i, true);
+    if (!err.empty() && !quiet)
+        mpr(err);
+    return err.empty();
 }
 
 bool evoke_item(int slot, dist *preselect)
 {
+    ASSERT_RANGE(slot, 0, ENDOFPACK);
     if (!evoke_check(slot))
         return false;
 
-    if (slot == -1)
-    {
-        slot = prompt_invent_item("Evoke which item? (* to show all)",
-                                   menu_type::invlist,
-                                   OSEL_EVOKABLE, OPER_EVOKE);
-
-        if (prompt_failed(slot))
-            return false;
-    }
-    else if (!check_warning_inscriptions(you.inv[slot], OPER_EVOKE))
+    if (!check_warning_inscriptions(you.inv[slot], OPER_EVOKE))
         return false;
-
-    ASSERT(slot >= 0);
 
 #ifdef ASSERTS // Used only by an assert
     const bool wielded = (you.equip[EQ_WEAPON] == slot);

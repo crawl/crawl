@@ -231,8 +231,7 @@ const vector<vector<god_power>> & get_all_god_powers()
         {   { 1, ABIL_LUGONU_ABYSS_EXIT,
                  "depart the Abyss",
                  "depart the Abyss at will" },
-            { 2, ABIL_LUGONU_BEND_SPACE, "bend space around yourself" },
-            { 3, ABIL_LUGONU_BANISH, "banish your foes" },
+            { 2, ABIL_LUGONU_BANISH, "banish your foes" },
             { 4, ABIL_LUGONU_CORRUPT, "corrupt the fabric of space" },
             { 5, ABIL_LUGONU_ABYSS_ENTER, "gate yourself to the Abyss" },
             { 7, ABIL_LUGONU_BLESS_WEAPON,
@@ -285,9 +284,6 @@ const vector<vector<god_power>> & get_all_god_powers()
         {   { 0, "Ashenzari warns you of distant threats and treasures.\n"
                  "Ashenzari reveals the structure of the dungeon to you.\n"
                  "Ashenzari shows you where magical portals lie." },
-            { 1, "Ashenzari will now protect you from malevolent surprises.",
-                 "Ashenzari no longer protects you from malevolent surprises.",
-                 "Ashenzari protects you from malevolent surprises." },
             { 1, "Ashenzari will now identify your possessions.",
                  "Ashenzari will no longer identify your possesions.",
                  "Ashenzari identifies your possessions." },
@@ -297,6 +293,10 @@ const vector<vector<god_power>> & get_all_god_powers()
             { 3, "Ashenzari will now keep your mind clear.",
                  "Ashenzari will no longer keep your mind clear.",
                  "Ashenzari keeps your mind clear." },
+            { 4, "Ashenzari will now protect you from malevolent surprises.",
+                 "Ashenzari no longer protects you from malevolent surprises.",
+                 "Ashenzari protects you from malevolent surprises." },
+
         },
 
         // Dithmenos
@@ -373,7 +373,9 @@ const vector<vector<god_power>> & get_all_god_powers()
             { 1, ABIL_HEPLIAKLQANA_IDENTITY, "remember your ancestor's identity" },
             { 3, ABIL_HEPLIAKLQANA_TRANSFERENCE, "swap creatures with your ancestor" },
             { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
-            { 5, "drain nearby creatures when transferring your ancestor"},
+            { 5, "You now drain nearby creatures when transferring your ancestor.",
+                 "You no longer drain nearby creatures when transferring your ancestor.",
+                 "You drain nearby creatures when transferring your ancestor." },
         },
 
         // Wu Jian
@@ -883,6 +885,12 @@ static void _inc_penance(god_type god, int val)
                 you.duration[DUR_SLIMIFY] = 0;
             if (you.duration[DUR_OOZEMANCY])
                 jiyva_end_oozemancy();
+            if (slime_wall_neighbour(you.pos()))
+            {
+                // lose slime wall immunity
+                you.wield_change = true;
+                you.redraw_armour_class = true;
+            }
         }
         else if (god == GOD_QAZLAL)
         {
@@ -1211,8 +1219,6 @@ static bool _give_nemelex_gift(bool forced = false)
         simple_god_message(" deals you some cards!");
         mprf(MSGCH_GOD, "You now have %s.", deck_summary().c_str());
     }
-    else
-        simple_god_message(" goes to deal, but finds you have enough cards.");
     _inc_gift_timeout(5 + random2avg(9, 2));
     you.num_current_gifts[you.religion]++;
     you.num_total_gifts[you.religion]++;
@@ -1564,6 +1570,7 @@ static bool _give_kiku_gift(bool forced)
         return false;
     }
 
+    vector<spell_type> spell_options;
     vector<spell_type> chosen_spells;
 
     // The first set should guarantee the player at least one ally spell, to
@@ -1571,29 +1578,30 @@ static bool _give_kiku_gift(bool forced)
     if (first_gift)
     {
         chosen_spells.push_back(SPELL_NECROTISE);
-        vector<spell_type> further_options = {SPELL_KISS_OF_DEATH,
-                                              SPELL_SUBLIMATION_OF_BLOOD,
-                                              SPELL_ROT,
-                                              SPELL_VAMPIRIC_DRAINING,
-                                              SPELL_ANGUISH,
-                                              SPELL_ANIMATE_DEAD};
-        shuffle_array(further_options);
-        for (spell_type spell : further_options)
-        {
-            if (spell_is_useless(spell, false))
-                continue;
-            chosen_spells.push_back(spell);
-            if (chosen_spells.size() >= 4)
-                break;
-        }
+        spell_options = {SPELL_KISS_OF_DEATH,
+                         SPELL_SUBLIMATION_OF_BLOOD,
+                         SPELL_ROT,
+                         SPELL_VAMPIRIC_DRAINING,
+                         SPELL_ANIMATE_DEAD};
     }
     else
     {
-        chosen_spells = {SPELL_DISPEL_UNDEAD,
+        spell_options = {SPELL_ANGUISH,
+                         SPELL_DISPEL_UNDEAD,
                          SPELL_AGONY,
                          SPELL_BORGNJORS_VILE_CLUTCH,
                          SPELL_DEATH_CHANNEL,
                          SPELL_SIMULACRUM};
+    }
+
+    shuffle_array(spell_options);
+    for (spell_type spell : spell_options)
+    {
+        if (spell_is_useless(spell, false))
+            continue;
+        chosen_spells.push_back(spell);
+        if (chosen_spells.size() >= 4)
+            break;
     }
 
     bool new_spell = false;
@@ -3196,12 +3204,18 @@ void excommunication(bool voluntary, god_type new_god)
         {
             you.duration[DUR_FIERY_ARMOUR] = 0;
             mpr("Your cloak of flame burns out.");
+            you.redraw_armour_class = true;
         }
         if (you.duration[DUR_RISING_FLAME])
         {
             you.duration[DUR_RISING_FLAME] = 0;
             mpr("Your rising flame fizzles out.");
         }
+        break;
+
+    case GOD_RU:
+        if (!you.props[AVAILABLE_SAC_KEY].get_vector().empty())
+            ru_reset_sacrifice_timer();
         break;
 
     default:
@@ -3620,13 +3634,14 @@ static void _set_initial_god_piety()
         // monk bonus...
         you.props[RU_SACRIFICE_PROGRESS_KEY] = 0;
         // offer the first sacrifice faster than normal
+        if (!you.props.exists(RU_SACRIFICE_DELAY_KEY))
         {
             int delay = 50;
             if (crawl_state.game_is_sprint())
                 delay /= SPRINT_MULTIPLIER;
             you.props[RU_SACRIFICE_DELAY_KEY] = delay;
+            you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
         }
-        you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
         break;
 
     case GOD_IGNIS:
@@ -3775,13 +3790,17 @@ static const map<god_type, function<void ()>> on_join = {
     }},
     { GOD_GOZAG, _join_gozag },
     { GOD_LUGONU, []() {
-        if (you.worshipped[GOD_LUGONU] == 0)
-            gain_piety(20, 1, false);  // allow instant access to first power
+        if (!player_in_branch(BRANCH_ABYSS)) return;
+        // If this is your first time with Lucy, jump straight to 2* for a big power boost.
+        // Otherwise, give just enough for 'exit the abyss'.
+        const int bonus = you.worshipped[GOD_LUGONU] ? 20 : 40;
+        gain_piety(bonus, 1, false);
     }},
     { GOD_OKAWARU, _join_okawaru },
     { GOD_RU, _join_ru },
     { GOD_TROG, join_trog_skills },
     { GOD_ZIN, _join_zin },
+    { GOD_JIYVA, []() { you.redraw_armour_class = true; /* slime wall immunity */ }}
 };
 
 void join_religion(god_type which_god)

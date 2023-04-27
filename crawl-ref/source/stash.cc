@@ -35,6 +35,7 @@
 #include "message.h"
 #include "notes.h"
 #include "output.h"
+#include "prompt.h"
 #include "religion.h"
 #include "spl-book.h"
 #include "state.h"
@@ -56,7 +57,7 @@ string userdef_annotate_item(const char *s, const item_def *item)
     lua_stack_cleaner cleaner(clua);
     clua_push_item(clua, const_cast<item_def*>(item));
     if (!clua.callfn(s, 1, 1) && !clua.error.empty())
-        mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+        ui::error(make_stringf("Lua error: %s", clua.error.c_str()));
     string ann;
     if (lua_isstring(clua, -1))
         ann = luaL_checkstring(clua, -1);
@@ -286,14 +287,18 @@ void Stash::update()
         if (!(si->flags & ISFLAG_UNOBTAINABLE))
             add_item(*si);
 
-        if (si->base_type == OBJ_STAVES || si->flags & ISFLAG_COSMETIC_MASK)
+        if ((si->base_type == OBJ_STAVES || si->flags & ISFLAG_COSMETIC_MASK)
+            && !is_useless_item(*si))
+        {
             glowing_item_on_square = true;
+        }
 
-        if (si->flags & ISFLAG_ARTEFACT_MASK)
+        if (si->flags & ISFLAG_ARTEFACT_MASK && !is_useless_item(*si))
             artefact_item_on_square = true;
     }
 
-    const bool stack_greed      =  static_cast<int>(items.size()) > 1
+    int current_size = items.size();
+    const bool stack_greed      =  current_size > 1
                                 && (Options.explore_greedy_visit & EG_STACK);
     const bool glowing_greed    =  glowing_item_on_square
                                 && (Options.explore_greedy_visit & EG_GLOWING);
@@ -302,7 +307,7 @@ void Stash::update()
 
     visited = pos == you.pos()
               || !(stack_greed || glowing_greed || artefact_greed)
-              || static_cast<int>(items.size()) == previous_size && visited;
+              || current_size <= previous_size && visited;
 }
 
 static bool _is_rottable(const item_def &item)
@@ -1200,6 +1205,13 @@ static bool _is_duplicate_for_search(stash_search_result l,
     return l.match == r.match;
 }
 
+// Filter out useless results in search_stashes
+static bool _is_useless_result(const stash_search_result res)
+{
+    return res.item.defined() && is_useless_item(res.item, false)
+           || feat_is_altar(res.feat)
+              && !player_can_join_god(feat_altar_god(res.feat), false);
+}
 
 // helper for search_stashes
 static bool _compare_by_distance(const stash_search_result& lhs,
@@ -1456,9 +1468,8 @@ void StashTracker::search_stashes(string search_term)
     }
 
     dedup_results.erase(remove_if(dedup_results.begin(), dedup_results.end(),
-        [](const stash_search_result res) {
-            return res.item.defined() && is_useless_item(res.item, false);
-        }), dedup_results.end());
+                                  _is_useless_result),
+                        dedup_results.end());
 
     bool sort_by_dist = true;
     bool filter_useless = true;
@@ -1790,7 +1801,7 @@ bool StashTracker::display_search_results(
         else if (res.item.defined())
         {
             const int itemcol = menu_colour(res.item.name(DESC_PLAIN).c_str(),
-                                            item_prefix(res.item), "pickup");
+                                        item_prefix(res.item, false), "pickup", false);
             if (itemcol != -1)
                 colour = itemcol;
         }
