@@ -93,7 +93,7 @@ static bool _evoke_horn_of_geryon()
 
         if (random2(adjusted_power) > 7)
             beh = BEH_FRIENDLY;
-        mgen_data mg(MONS_HELL_BEAST, beh, you.pos(), MHITYOU, MG_FORCE_BEH);
+        mgen_data mg(MONS_HELL_BEAST, beh, you.pos(), MHITYOU, MG_AUTOFOE);
         mg.set_summoned(&you, 3, SPELL_NO_SPELL);
         mg.set_prox(PROX_CLOSE_TO_PLAYER);
         mon = create_monster(mg);
