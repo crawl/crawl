@@ -2869,9 +2869,9 @@ bool item_is_jelly_edible(const item_def &item)
     if (is_artefact(item) || item_is_horn_of_geryon(item))
         return false;
 
-    // Don't eat zigfigs. (They're artefact-like, and Jiyvaites shouldn't worry
-    // about losing them.)
-    if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_ZIGGURAT)
+    // Don't eat zigfigs or elemental evokers. (They're artefact-like, and
+    // Jiyvaites shouldn't worry about losing them.)
+    if (item.base_type == OBJ_MISCELLANY)
         return false;
 
     // Don't eat mimics.
