@@ -201,32 +201,27 @@ bool try_recall(mid_t mid)
     // Either it's dead or off-level.
     if (!mons)
         return recall_offlevel_ally(mid);
-    else if (mons->alive())
+    if (!mons->alive())
+        return false;
+    // Don't recall monsters that are already close to the player
+    if (mons->pos().distance_from(you.pos()) < 3
+        && mons->see_cell_no_trans(you.pos()))
     {
-        // Don't recall monsters that are already close to the player
-        if (mons->pos().distance_from(you.pos()) < 3
-            && mons->see_cell_no_trans(you.pos()))
-        {
-            recall_orders(mons);
-            return false;
-        }
-        else
-        {
-            coord_def empty;
-            if (find_habitable_spot_near(you.pos(), mons_base_type(*mons), 3, false, empty)
-                && mons->move_to_pos(empty))
-            {
-                recall_orders(mons);
-                simple_monster_message(*mons, " is recalled.");
-                mons->apply_location_effects(mons->pos());
-                // mons may have been killed, shafted, etc,
-                // but they were still recalled!
-                return true;
-            }
-        }
+        recall_orders(mons);
+        return false;
     }
-
-    return false;
+    coord_def empty;
+    if (!find_habitable_spot_near(you.pos(), mons_base_type(*mons), 3, false, empty)
+        || !mons->move_to_pos(empty))
+    {
+        return false;
+    }
+    recall_orders(mons);
+    simple_monster_message(*mons, " is recalled.");
+    mons->apply_location_effects(mons->pos());
+    // mons may have been killed, shafted, etc,
+    // but they were still recalled!
+    return true;
 }
 
 // Attempt to recall a number of allies proportional to how much time
