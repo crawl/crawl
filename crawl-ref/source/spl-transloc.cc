@@ -587,7 +587,7 @@ bool find_charge_target(vector<coord_def> &target_path, int max_range,
 static void _charge_cloud_trail(const coord_def pos)
 {
     if (!cell_is_solid(pos) && !apply_cloud_trail(pos))
-        place_cloud(CLOUD_DUST, pos, 2 + random2(3), &you);
+        place_cloud(CLOUD_ELECTRICITY, pos, 2 + random2(3), &you);
 }
 
 string electric_charge_impossible_reason(bool allow_safe_monsters)
