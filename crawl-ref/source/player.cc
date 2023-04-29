@@ -7519,6 +7519,13 @@ bool player::can_do_shaft_ability(bool quiet) const
         return false;
     }
 
+    if (you.duration[DUR_LOCKED_DOWN]) // XXX: also DUR_NO_MOMENTUM?
+    {
+        if (!quiet)
+            mpr("You can't shaft yourself while stuck.");
+        return false;
+    }
+
     if (feat_is_shaftable(env.grid(pos())))
     {
         if (!is_valid_shaft_level(false))
