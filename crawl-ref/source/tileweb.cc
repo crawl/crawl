@@ -2181,8 +2181,8 @@ void TilesFramework::_send_everything()
             for (const auto& json : frame.ui_json)
                 if (!json.empty())
                 {
-                    m_msg_buf.append(json);
                     json_write_comma();
+                    m_msg_buf.append(json);
                 }
             continue;
         }
