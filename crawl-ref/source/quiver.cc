@@ -1150,7 +1150,7 @@ namespace quiver
             // ignores things like butterflies, so that autofight doesn't get
             // tripped up.
                             && (spell != SPELL_ELECTRIC_CHARGE
-                                || electric_charge_possible(false));
+                                || electric_charge_impossible_reason(false).empty());
             // this imposes excommunication colors
             if (!enabled_cache)
                 col_cache = COL_USELESS;

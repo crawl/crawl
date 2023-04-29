@@ -1473,8 +1473,9 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
                 return no_move_reason;
             if (you.no_tele(true))
                 return lowercase_first(you.no_tele_reason(true));
-            if (!electric_charge_possible(true))
-                return "you can't see anything to charge at.";
+            const string no_charge_reason = electric_charge_impossible_reason(true);
+            if (!no_charge_reason.empty())
+                return no_charge_reason;
         }
         break;
 
