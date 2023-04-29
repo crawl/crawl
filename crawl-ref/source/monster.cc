@@ -385,6 +385,8 @@ int monster::damage_type(int which_attack)
 
     if (!mweap)
     {
+        if (mons_species() == MONS_EXECUTIONER)
+            return DVORP_CHOPPING; // lore: whirling scythe blades
         const mon_attack_def atk = mons_attack_spec(*this, which_attack);
         return (atk.type == AT_CLAW)          ? DVORP_CLAWING :
                (atk.type == AT_TENTACLE_SLAP) ? DVORP_TENTACLE
