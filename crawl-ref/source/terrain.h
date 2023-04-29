@@ -118,6 +118,8 @@ bool feat_eliminates_items(dungeon_feature_type feat);
 // Terrain changed under 'pos', perform necessary effects.
 void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type feat = DNGN_UNSEEN,
+                             unsigned short flv_nfeat = 0,
+                             unsigned short flv_nfeat_idx = 0,
                              bool preserve_features = false,
                              bool preserve_items = false,
                              bool temporary = false,

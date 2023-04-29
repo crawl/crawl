@@ -280,6 +280,7 @@ enum tag_minor_version
     TAG_MINOR_WU_ABILITIES,        // Make Lunge and Whirlwind Abil, not Invok
     TAG_MINOR_MORE_WAYPOINTS,      // Increase the number of allowed waypoints.
     TAG_MINOR_GENERATED_MISC,      // Track generated misc item types.
+    TAG_MINOR_SAVE_TERRAIN_FLAVOUR, // Save flavour in terrain-change markers.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
