@@ -1909,8 +1909,6 @@ int update_monster_pane()
             textbackground(BLACK);
         }
 
-        assert_valid_cursor_pos();
-
         if (mons.empty())
             return -1;
 

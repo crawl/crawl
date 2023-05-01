@@ -1077,7 +1077,6 @@ static void _input()
                                       "repetition.");
         crawl_state.prev_cmd = CMD_NO_CMD;
         flush_prev_message();
-        getchm();
         return;
     }
 
