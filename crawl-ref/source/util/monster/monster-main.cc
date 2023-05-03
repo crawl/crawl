@@ -353,6 +353,8 @@ static string mons_human_readable_spell_damage_string(monster* monster,
             return "3x" + dice_def_string(ball_lightning_damage(mons_ball_lightning_hd(pow, false)));
         case SPELL_MARSHLIGHT:
             return "2x" + dice_def_string(zap_damage(ZAP_FOXFIRE, pow, true));
+        case SPELL_PLASMA_BEAM:
+            return "2x" + dice_def_string(zap_damage(ZAP_PLASMA, pow, true));
         case SPELL_WATERSTRIKE:
             spell_beam.damage = waterstrike_damage(monster->spell_hd(sp));
             break;
