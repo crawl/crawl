@@ -517,7 +517,7 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         return describe_resonance_strike_dam(dam);
 
     string mult = "";
-    if (spell == SPELL_MARSHLIGHT)
+    if (spell == SPELL_MARSHLIGHT || spell == SPELL_PLASMA_BEAM)
         mult = "2x";
     else if (spell == SPELL_CONJURE_BALL_LIGHTNING)
         mult = "3x";
