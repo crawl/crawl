@@ -2852,6 +2852,7 @@ static ai_action::goodness _fire_plasma_beam_at(const actor &agent, int pow,
                                                 coord_def target, bool tracer)
 {
     int range = grid_distance(agent.pos(), target);
+    const bool mon = agent.is_monster();
 
     // lightning beam
     bolt beam;
@@ -2860,13 +2861,13 @@ static ai_action::goodness _fire_plasma_beam_at(const actor &agent, int pow,
     beam.source       = agent.pos();
     beam.source_id    = agent.mid;
     beam.target       = target;
-    beam.thrower      = agent.is_player() ? KILL_YOU : KILL_MON;
-    beam.attitude     = agent.is_player() ? ATT_FRIENDLY : mons_attitude(*agent.as_monster());
+    beam.thrower      = mon ? KILL_MON : KILL_YOU;
+    beam.attitude     = mon ? mons_attitude(*agent.as_monster()) : ATT_FRIENDLY;
     beam.origin_spell = SPELL_PLASMA_BEAM;
     beam.draw_delay   = 5;
     beam.foe_ratio    = 80; // default
     beam.is_tracer    = tracer;
-    zappy(ZAP_LIGHTNING_BOLT, pow, false, beam);
+    zappy(ZAP_LIGHTNING_BOLT, pow, mon, beam);
     beam.fire();
     const ai_action::goodness fire_good = beam.good_to_fire();
 
@@ -2874,7 +2875,7 @@ static ai_action::goodness _fire_plasma_beam_at(const actor &agent, int pow,
     beam.flavour = BEAM_FIRE;
     beam.name    = "fiery plasma";
     beam.glyph   = dchar_glyph(DCHAR_FIRED_ZAP);
-    zappy(ZAP_PLASMA, pow, false, beam);
+    zappy(ZAP_PLASMA, pow, mon, beam);
     beam.fire();
     const ai_action::goodness light_good = beam.good_to_fire();
 
