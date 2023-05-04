@@ -1600,8 +1600,11 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
     if (channel == MSGCH_ERROR)
         interrupt_activity(activity_interrupt::force);
 
-    if (channel == MSGCH_PROMPT || channel == MSGCH_ERROR)
+    if (!crawl_state.parsing_rc
+        && (channel == MSGCH_PROMPT || channel == MSGCH_ERROR))
+    {
         set_more_autoclear(false);
+    }
 
     if (domore)
         more(true);
