@@ -2174,6 +2174,8 @@ void base_game_options::merge(const base_game_options &other)
 
 void read_init_file(bool runscripts)
 {
+    unwind_bool parsing_state(crawl_state.parsing_rc, true);
+
     Options.reset_options();
     // XX why didn't this clear first
     Options.reset_aliases(false);

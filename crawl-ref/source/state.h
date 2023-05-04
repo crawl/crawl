@@ -57,6 +57,7 @@ struct game_state
     bool game_started;      // Set to true when a game has started.
     bool saving_game;       // Set to true while in save_game.
     bool updating_scores;   // Set to true while updating hiscores.
+    bool parsing_rc;
 #ifndef USE_TILE_LOCAL
     bool smallterm;         // The terminal has been resized under the min view
                             // size, and errors need to be displayed

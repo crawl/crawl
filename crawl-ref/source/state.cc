@@ -33,6 +33,7 @@ game_state::game_state()
       need_save(false), save_after_turn(false),
       game_started(false), saving_game(false),
       updating_scores(false),
+      parsing_rc(false),
 #ifndef USE_TILE_LOCAL
       smallterm(false),
 #endif
