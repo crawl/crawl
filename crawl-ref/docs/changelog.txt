@@ -1,5 +1,13 @@
-Stone Soup 0.30-a0 (through 0.30-a0-985-g0638232e92)
+Stone Soup 0.30 (20230505)
 ---------------------------------------------------
+
+Highlights
+----------
+* New background: Reavers, spellswords with powerful but situational Conjurations.
+* Palentongas renamed and reworked into Armataurs.
+* A variety of exciting new spells for warriors and wizards alike.
+* Many new and reworked artefacts, both random and fixed.
+* Lugonu made more available and tempting to unfortunates cast into the Abyss.
 
 Branches, Environment
 ---------------------
@@ -24,6 +32,7 @@ Character
     slow down scroll reading.
   - Armataurs' aptitudes have been adjusted.
 * Background changes:
+  - Monks now start with an orb of light.
   - Warpers replace Gell's Gravitas with Vhi's Electric Charge.
   - Hedge Wizards have Conjure Flame replaced by Cigotuvi's Dreadful Rot.
   - Fire Elementalists have Conjure Flame replaced by Kindle Blastsparks.
@@ -74,13 +83,16 @@ Interface and Options
   - The Unequip menu (`c`) allows to unwield, take off, or remove any equipped
     item.
   - Tab toggles between equip and unequip.
+* Character overview ('%') screen:
+  - Displays much more information about items, moving niche statuses downward.
+  - No longer shows .s for low Stealth values.
 * Damage ratings are now shown via @, including those for unarmed combat.
+* An indicator is now displayed when movement would cause a Rampage.
 * Bumping a foe while holding a ranged weapon shoots instead of bashing.
 * The piety cost of divine invocations is now shown more clearly.
 * Spells' maximum damage is now displayed in their descriptions.
 * Unrands (pre-defined artefacts) have a distinct colour by default.
 * Almost all unrands with special behavior now have a corresponding inscription.
-* The % screen no longer shows .s for low Stealth values.
 * Many weapon brands now provide more quantitative damage information.
 * Up to 100 waypoints can now be placed (up from 10).
 * New show_blood option allows disabling blood spatters and bloody corpses.
@@ -90,37 +102,23 @@ Items
 * New brand: Heavy.
   - Heavy weapons have +80% base damage and +50% attack delay.
   - Both melee and ranged weapons can be Heavy.
-* New unrands:
-  - The Hermit's Pendant, an amulet of faith that sets the wearer's Invocations
-    skill to 14 and their Evocations skill to 0.
-  - The Consecrated Labrys, a holy axe with sInv, Flight, and an enchantment
-    that grows larger while more dangerous enemies are in view.
-  - The Slick Slippers, which make all damaging melee attacks trample their
-    wearer backward. They provide immunity to constriction, engulfing, etc.
-  - The Force Lance, a Heavy +5 lance (ala Wyrmbane) which has a 1/3 chance of
-    knocking back foes when landing a damaging blow.
-  - The Storm Queen's Shield, a +5 kite shield of rElec and flight which
-    fires electrical retaliation at those it blocks.
-  - The toga "Victory", a robe which gains AC, Int and Slay as the wearer
-    slays dangerous foes, but loses everything if they drink or read near foes.
-* Unrand changes:
-  - The Mad Mage's Maulers lose Int-3 and RegenMP, gain -Cast and MPVamp (gain
-    MP from damage dealt), and deal twice as much damage when spending MP.
-  - The Staff of Dispater is now an orb with +AC and *Corrode.
-  - The Ring of the Hare is now +10 (was +8).
-  - Majin-Bo is now one-handed.
-  - Sniper is now +27 and Heavy (was +9 and Vorpal).
-  - The Dark Maul is now Heavy (was Vorpal), and has its base stats adjusted.
-  - Other formerly Vorpal unrands have been adjusted individually.
-  - The Lochaber Axe now causes HP Drain on unequip.
+* Elemental evokers:
+  * Lightning rods now do 50% more damage.
+  * Elemental evokers now recharge faster in the early game and slower later.
+  * Each elemental evoker can now generate at most once in a given game.
+  * Jiyva jellies can no longer eat elemental evokers.
+  * Condensation Vanes and Tremorstones can no longer both generate in one game.
+  * Phials of floods have their range and effect duration reduced.
+* Shield penalties are now reduced by Str rather than by players' size.
 * Orb, scarf, and magical staff artefacts can now appear.
-* Orbs of energy and the Staff of Wucad Mu now give -Wiz in exchange for a
-  chance to refund MP when spells are cast, with no chance of backlash.
+* Orbs of energy now give -Wiz in exchange for a chance to refund MP when
+  spells are cast, with no chance of backlash.
 * Scrolls of butterflies now blow back nearby creatures and create many more
   butterflies. They now alternate with scrolls of summoning instead of fog.
 * Rings of evasion are now +5 (were +4).
 * All ranged weapons can now generate with electrocution, antimagic, and
   draining brands. Venom ranged weapons no longer appear.
+* Ranged weapons are now quieter.
 * The spectral brand now matches the player's accuracy and damage, the latter
   reduced by 30% (ala cleaving).
 * Throwing weapons now deal extra damage when they break.
@@ -128,9 +126,8 @@ Items
 * Evocable invisibilty and blink no longer have an MP cost.
 * Spells have been reshuffled between books, and a new Maxwell's Memoranda book
   has been added.
-* Condensation Vanes and Tremorstones can no longer both generate in one game.
 * Longbows, arbalests and hand crossbows have had their stats slightly tweaked.
-* Removed the 'vorpal' brand and the unrand Morg.
+* Removed the 'vorpal' brand.
 
 Monsters
 --------
@@ -146,6 +143,7 @@ Monsters
 * Walking Tomes are now unable to cast while silenced.
 * Ironbound Frosthearts' Creeping Frost spell is now fully resistable by rC.
 * Fleeing monsters will no longer avoid harmful clouds.
+* Monsters, notably Asterion, can now use spectral weapons.
 
 Spells
 ------
@@ -157,15 +155,16 @@ Spells
     place for some turns after a hit (and cannot be recast until this expires).
   - Cigotuvi's Dreadful Rot (L2 Necro/Air/Pois). Rots away the caster's flesh
     to create a cloud of deadly miasma on their tile.
-  - Kindle Blastsparks (L3 Fire/Air/Tloc). Creates an explosive cloud on the
+  - Volatile Blastmotes (L3 Fire/Tloc). Creates an explosive cloud on the
     caster's tile, usable as a land mine or tricky tool.
   - Vhi's Electric Charge (L3 Tloc/Air). Launches the caster at a nearby foe
     and launches a crackling melee attack, phasing through creatures en route.
   - Arcjolt (L5 Air/Conj). Electrocutes everything adjacent to the caster,
     everything adjacent to those creatures, etc, etc, in a chain.
-  - Plasma Beam (L5 Fire/Air): Fires a bolt of lightning and another bolt of
-    fire both at the most distant foe.
+  - Plasma Beam (L6 Fire/Air): Fires a bolt of lightning and another bolt of
+    fire, both at the most distant foe.
 * Hailstorm moved to L3 (from L4) and can now miss.
+* Call Imp now always and only calls a spear-wielding cerulean imp.
 * Manifold Assault moved to L4 (from L5) and does half as many attacks with
   UC as with a weapon.
 * Lesser Beckoning moved to L2 (from L3) and is now better at low power.
@@ -173,7 +172,7 @@ Spells
 * Ozocubu's Refrigeration's damage has been increased.
 * Slow no longer has bonus hex power.
 * Irradiate now only has a 50% chance of malmutating affected creatures.
-* The Simulacrum and Static Discharge spells have been weakened.
+* The Scorch, Simulacrum and Static Discharge spells have been weakened.
 * Removed: Conjure Flame, Corpse Rot and Lightning Bolt.
 
 Tiles and Other Art
@@ -185,6 +184,40 @@ Tiles and Other Art
 * New art for many monsters, including Prince Ribbit and X-shaped simulacra.
 * New art for many unrands, including the Elemental Staff and Wrath of Trog.
 * New holiday-exclusive tiles for Sigmund, ogres and hats.
+
+Unrands
+-------
+* New unrands:
+  - The Hermit's Pendant, an amulet of faith that sets the wearer's Invocations
+    skill to 14 and their Evocations skill to 0.
+  - The Consecrated Labrys, a holy axe with sInv, Flight, and an enchantment
+    that grows larger while more dangerous enemies are in view.
+  - The Slick Slippers, which make all damaging melee attacks trample their
+    wearer backward. They provide immunity to constriction, engulfing, etc.
+  - The Force Lance, a Heavy +5 lance (ala Wyrmbane) which has a 1/3 chance of
+    knocking back foes when landing a damaging blow.
+  - The Storm Queen's Shield, a +5 kite shield of rElec and flight which
+    fires electrical retaliation at those it blocks.
+  - The toga "Victory", a robe which gains AC, Int and Slay as the wearer
+    slays dangerous foes, but loses everything if they drink or read near foes.
+* Orbs:
+  - The Staff of Dispater is now an orb with +AC and *Corrode.
+  - The Staff of Battle is now an orb. It now enhances all destructive spells
+    (matching Vehumet's categorization), but de-enhances other spells.
+  - The Staff of Wucad Mu is now an orb, with double the MP refund chance of a
+    normal orb of energy.
+* Devorpalization:
+  - Sniper is now +27 and Heavy (was +9 and Vorpal).
+  - The Dark Maul is now Heavy (was Vorpal), and has its base stats adjusted.
+  - Other formerly Vorpal unrands have been adjusted individually.
+- The Mad Mage's Maulers lose Int-3 and RegenMP, gain -Cast and MPVamp (gain
+  MP from damage dealt), and deal twice as much damage when spending MP.
+- The Ring of the Hare is now +10 (was +8).
+- Majin-Bo is now one-handed and deals much more damage in melee.
+- The sceptre of Asmodeus is now an eveningstar that summons demons on-hit.
+- The Elemental Staff now provides weaker resistances.
+- The Lochaber Axe now causes HP Drain on unequip.
+- Removed Morg.
 
 Stone Soup 0.29.0 (20220825)
 ----------------------------
