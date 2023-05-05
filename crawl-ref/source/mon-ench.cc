@@ -508,13 +508,17 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         // Note: Invisible monsters are not forced to stay invisible, so
         // that they can properly have their invisibility removed just
         // before being polymorphed into a non-invisible monster.
-        if (you.see_cell(pos()) && !you.can_see_invisible() && !backlit()
+        if (you.see_cell(pos()) && !you.can_see_invisible()
             && !friendly())
         {
+            autotoggle_autopickup(false);
+
+            if (backlit() || has_ench(ENCH_SUBMERGED))
+                break;
+
             if (!quiet)
                 mprf("%s appears from thin air!", name(DESC_A, true).c_str());
 
-            autotoggle_autopickup(false);
             handle_seen_interrupt(this);
         }
         break;
