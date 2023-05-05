@@ -384,8 +384,8 @@ mset(with_props(spec_fn(function ()
   local f = 20 + you.zigs_completed() * 3
   local g = math.max(1, math.floor(you.depth() / 3) + you.zigs_completed() - 8)
   return "ophan w:20 / apis w:20 / cherub w:20 / angel w:20 / " ..
-		 "sun moth w:20 / holy swine w:" .. d .. " / " ..
-     "daeva w:" .. e ..  " / pearl dragon w:" .. f .. " / seraph w:" .. g
+         "sun moth w:20 / holy swine w:" .. d .. " / " ..
+         "daeva w:" .. e ..  " / pearl dragon w:" .. f .. " / seraph w:" .. g
 end), { weight = 2 }))
 
 mset(spec_fn(function ()
