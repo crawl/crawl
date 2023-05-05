@@ -494,12 +494,12 @@ mset_if(depth_ge(14), with_props(spec_fn(function ()
   local e = 50 - (you.depth() * 2)
   return "place:Coc:$ w:" .. d .. " / place:Dis:$ w:" .. d .. " / " ..
          "place:Geh:$ w:" .. d .. " / place:Tar:$ w:" .. d .. " / " ..
-		 "hell beast w:" .. e .." / greater demon w:5 / hellephant w:5 / " ..
-		 "balrug w:5 / cacodemon w:5 / blizzard demon w:5 / reaper w:5 / " ..
-		 "green death w:5 / tentacled monstrosity w:5 / hellion w:5 / " ..
-		 "tormentor w:5 / demonic crawler w:5 / soul eater w:5 / " ..
-		 "lorocyproca w:5 / curse skull w:3 / hell hog w:5 / " ..
-		 "simulacrum w:10 / spectral thing w:10"
+         "hell beast w:" .. e .." / greater demon w:5 / hellephant w:5 / " ..
+         "balrug w:5 / cacodemon w:5 / blizzard demon w:5 / reaper w:5 / " ..
+         "green death w:5 / tentacled monstrosity w:5 / hellion w:5 / " ..
+         "tormentor w:5 / demonic crawler w:5 / soul eater w:5 / " ..
+         "lorocyproca w:5 / curse skull w:3 / hell hog w:5 / " ..
+         "simulacrum w:10 / spectral thing w:10"
 end), { weight = 5 }))
 
 function ziggurat_monster_creators()
