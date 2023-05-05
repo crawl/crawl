@@ -35,7 +35,7 @@ Character
   - Monks now start with an orb of light.
   - Warpers replace Gell's Gravitas with Vhi's Electric Charge.
   - Hedge Wizards have Conjure Flame replaced by Cigotuvi's Dreadful Rot.
-  - Fire Elementalists have Conjure Flame replaced by Kindle Blastsparks.
+  - Fire Elementalists have Conjure Flame replaced by Volatile Blastmotes.
   - Ice Elementalists have Hailstorm replaced by Summon Ice Beast.
   - The 'Arcane Marksman' background has been renamed to 'Hexslinger'.
 * All players regenerate an extra 0.2 HP/turn.
