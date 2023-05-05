@@ -194,7 +194,7 @@ end
 -- Abyss, Gehenna, Cocytus, Dis, Tartarus,
 -- Fire, Ice, Air, Earth, Negative Energy, Holy, Chaos
 -- Giants, Dragons, Draconians, Archers, Conjurers
--- Pan, Lair Roulette
+-- Pan, Lair Roulette, Hell Roulette
 -- By using spec_fn to wrap monster-spec functions, monster weights
 -- are adjusted per-set, sometimes scaling by depth and always by zig completion.
 
@@ -487,6 +487,19 @@ mset_if(depth_ge(14), with_props(spec_fn(function ()
          "merfolk aquamancer w:6 / merfolk javelineer w:" .. e - 2 .. " / " ..
          "alligator snapping turtle w:6 / ghost moth w:" .. e - 2 .. " / " ..
          "emperor scorpion w:8 / moth of wrath w:4"
+end), { weight = 5 }))
+
+mset_if(depth_ge(14), with_props(spec_fn(function ()
+  local d = math.max(10, you.zigs_completed() * 2)
+  local e = 50 - (you.depth() * 2)
+  return "place:Coc:$ w:" .. d .. " / place:Dis:$ w:" .. d .. " / " ..
+         "place:Geh:$ w:" .. d .. " / place:Tar:$ w:" .. d .. " / " ..
+		 "hell beast w:" .. e .." / greater demon w:5 / hellephant w:5 / " ..
+		 "balrug w:5 / cacodemon w:5 / blizzard demon w:5 / reaper w:5 / " ..
+		 "green death w:5 / tentacled monstrosity w:5 / hellion w:5 / " ..
+		 "tormentor w:5 / demonic crawler w:5 / soul eater w:5 / " ..
+		 "lorocyproca w:5 / curse skull w:3 / hell hog w:5 / " ..
+		 "simulacrum w:10 / spectral thing w:10"
 end), { weight = 5 }))
 
 function ziggurat_monster_creators()
