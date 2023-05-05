@@ -548,7 +548,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                      name(DESC_THE, true).c_str());
             }
 
-            autotoggle_autopickup(friendly());
+            if(!friendly())
+            {
+                //turn off auto pickup
+                autotoggle_autopickup(true);
+            }
         }
         else
         {
