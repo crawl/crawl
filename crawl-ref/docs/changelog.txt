@@ -3,8 +3,10 @@ Stone Soup 0.30 (20230505)
 
 Highlights
 ----------
-* New background: Reavers, spellswords with powerful but situational Conjurations.
-* Palentongas renamed and reworked into Armataurs.
+* New background: Reavers, spellswords with powerful but situational
+  Conjurations.
+* Palentongas reworked into Armataurs, with innate rampage and an affinity
+  for potions.
 * A variety of exciting new spells for warriors and wizards alike.
 * Many new and reworked artefacts, both random and fixed.
 * Lugonu made more available and tempting to unfortunates cast into the Abyss.
@@ -38,18 +40,19 @@ Character
   - Fire Elementalists have Conjure Flame replaced by Volatile Blastmotes.
   - Ice Elementalists have Hailstorm replaced by Summon Ice Beast.
   - The 'Arcane Marksman' background has been renamed to 'Hexslinger'.
+  - Removed the Abyssal Knight background.
+* Miscellaneous species changes:
+  - Mummies gain innate Faith, giving them extra piety gain.
+  - Large species move at normal speed through shallow water.
+  - Formicids can now shaft themselves in the Tomb of the Ancients.
+  - Species size no longer affects SH.
+  - Pale draconians' breath is no longer usable twice as often as others'.
+* rF- and rC- are added to the 'bad mutations' pool.
 * All players regenerate an extra 0.2 HP/turn.
-* Mummies have innate Faith, giving them extra piety gain.
-* Large species move at normal speed through shallow water.
-* It is now possible to accumulate two levels of Harm.
-* Formicids can now shaft themselves in the Tomb of the Ancients.
+* Will is now capped at `+++++`.
+* It is now possible to stack two levels of Harm.
 * Reaching the end of the Zot clock now causes a smaller amount of permanent
   max HP loss (similar to Borgnjor's Revivication), rather than temp HP drain.
-* Species size no longer affects SH.
-* rF- and rC- are added to the 'bad mutations' pool.
-* Pale draconians' breath is no longer usable twice as often as others'.
-* Will is now capped at +++++.
-* Removed the Abyssal Knight background.
 
 Gods
 ----
@@ -96,6 +99,8 @@ Interface and Options
 * Many weapon brands now provide more quantitative damage information.
 * Up to 100 waypoints can now be placed (up from 10).
 * New show_blood option allows disabling blood spatters and bloody corpses.
+* Webtiles muting commands are reworked into a block mechanism; see `/help` in
+  webtiles chat for more details.
 
 Items
 -----
@@ -109,6 +114,9 @@ Items
   * Jiyva jellies can no longer eat elemental evokers.
   * Condensation Vanes and Tremorstones can no longer both generate in one game.
   * Phials of floods have their range and effect duration reduced.
+* Evocable invisibility and blink no longer have an MP cost.
+* Spells have been reshuffled between books, and a new Maxwell's Memoranda book
+  has been added.
 * Shield penalties are now reduced by Str rather than by players' size.
 * Orb, scarf, and magical staff artefacts can now appear.
 * Orbs of energy now give -Wiz in exchange for a chance to refund MP when
@@ -119,14 +127,11 @@ Items
 * All ranged weapons can now generate with electrocution, antimagic, and
   draining brands. Venom ranged weapons no longer appear.
 * Ranged weapons are now quieter.
+* Longbows, arbalests and hand crossbows have had their stats slightly tweaked.
+* Throwing weapons now deal extra damage when they break.
 * The spectral brand now matches the player's accuracy and damage, the latter
   reduced by 30% (ala cleaving).
-* Throwing weapons now deal extra damage when they break.
 * Short sword attack delay reduced.
-* Evocable invisibilty and blink no longer have an MP cost.
-* Spells have been reshuffled between books, and a new Maxwell's Memoranda book
-  has been added.
-* Longbows, arbalests and hand crossbows have had their stats slightly tweaked.
 * Removed the 'vorpal' brand.
 
 Monsters
@@ -219,7 +224,6 @@ Unrands
 - The Lochaber Axe now causes HP Drain on unequip.
 - Removed Morg.
 
-
 Stone Soup 0.29.1 (20220911)
 ---------------------------------------------------
 
@@ -227,7 +231,6 @@ Bugfix release
 --------------
 * 20+ bug and documentation fixes
 * Improvements to linux packaging support infrastructure
-
 
 Stone Soup 0.29.0 (20220825)
 ----------------------------
