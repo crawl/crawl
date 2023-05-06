@@ -2480,18 +2480,13 @@ string get_item_description(const item_def &item,
             {
                 description << "\n\n";
                 // slightly redundant with uselessness desc..
-                description << "Charges: "
-                            << evoker_charges(item.sub_type) << ". "
-                            << "Once "
-                            << (item.sub_type == MISC_LIGHTNING_ROD
-                                ? "all charges have been used"
-                                : "activated")
-                            << ", this device "
-                            << (!item_is_horn_of_geryon(item) ?
-                               "and all other devices of its kind are " : "is ")
-                            << "rendered temporarily inert. However, "
-                            << (!item_is_horn_of_geryon(item) ? "they recharge " : "it recharges ")
-                            << "as you gain experience.";
+                const int charges = evoker_charges(item.sub_type);
+                if (charges > 1)
+                    description << "Charges: " << charges << ". Once all charges have been used";
+                else
+                    description << "Once activated";
+                description << ", this device is rendered temporarily inert. "
+                            << "However, it recharges as you gain experience.";
             }
         }
 
