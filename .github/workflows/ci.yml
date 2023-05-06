@@ -194,11 +194,6 @@ jobs:
     name: Debian Packages ${{ matrix.arch }}
     runs-on: ubuntu-latest
     if: github.event.release.tag_name != null
-    strategy:
-      matrix:
-        arch:
-          - i386
-          - amd64
     steps:
       - uses: actions/checkout@v3
         with:
@@ -208,8 +203,10 @@ jobs:
         run: ./deps.py --build-opts TILES=1 --debian-packages
         working-directory: .github/workflows
       - run: sudo cp crawl-ref/docs/develop/release/pbuilderrc /etc/pbuilderrc
-      - name: Create chroot directory
-        run: sudo DEBFULLNAME=Crawl\ bot DEBEMAIL=bot@crawl.develz.org OS=debian DIST=oldstable ARCH=${{ matrix.arch }} cowbuilder --create --basepath /var/cache/pbuilder/oldstable-${{ matrix.arch }}.cow
+      - name: Create i386 chroot directory
+        run: sudo DEBFULLNAME=Crawl\ bot DEBEMAIL=bot@crawl.develz.org OS=debian DIST=oldstable ARCH=i386 cowbuilder --create --basepath /var/cache/pbuilder/oldstable-i386.cow
+      - name: Create amd64 chroot directory
+        run: sudo DEBFULLNAME=Crawl\ bot DEBEMAIL=bot@crawl.develz.org OS=debian DIST=oldstable ARCH=amd64 cowbuilder --create --basepath /var/cache/pbuilder/oldstable-amd64.cow
       - name: Build source packages
         run: make -j$(nproc) package-source
         working-directory: crawl-ref/source
@@ -223,19 +220,22 @@ jobs:
         working-directory: crawl-deb/crawl-${{ github.ref_name }}
       - name: Update changelog if needed
         run: .github/workflows/debian_changelog.py crawl-deb/crawl-${{ github.ref_name }}/debian/changelog ${{ github.ref_name }}
-      - name: Build the packages
-        run: sudo DEBFULLNAME=Crawl\ bot DEBEMAIL=bot@crawl.develz.org OS=debian DIST=oldstable ARCH=${{ matrix.arch }} pdebuild
+      - name: Build the i386 packages
+        run: sudo DEBFULLNAME=Crawl\ bot DEBEMAIL=bot@crawl.develz.org OS=debian DIST=oldstable ARCH=i386 pdebuild
         working-directory: crawl-deb/crawl-${{ github.ref_name }}
+      - name: Build the amd64 packages
+        run: sudo DEBFULLNAME=Crawl\ bot DEBEMAIL=bot@crawl.develz.org OS=debian DIST=oldstable ARCH=amd64 pdebuild
+        working-directory: crawl-deb/crawl-${{ github.ref_name }}
+      - name: Join the release files
+        run: tar Jcvf "${GITHUB_WORKSPACE}/debian.tar.xz" crawl*
+        working-directory: /var/cache/pbuilder/result
       - name: Add build to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref_name }}-debian
-          release_name: ${{ github.ref_name }} Debian packages
-          body: Debian packages for Dungeon Crawl Stone Soup ${{ github.ref_name }}.
-          file: /var/cache/pbuilder/result/crawl*
-          file_glob: true
-          overwrite: true # there are common packages in i386 and amd64
+          tag: ${{ github.ref }}
+          file: debian.tar.xz
+          asset_name: dcss-$tag-debian-all.tar.xz
 
   build_macos:
     permissions:
