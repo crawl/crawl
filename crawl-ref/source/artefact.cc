@@ -1523,18 +1523,26 @@ static bool _armour_ego_conflicts(artefact_properties_t &proprt)
 {
     switch (proprt[ARTP_BRAND])
     {
-    case SPARM_HARM:
-        return proprt[ARTP_HARM];
-    case SPARM_RESISTANCE:
-        return proprt[ARTP_FIRE] || proprt[ARTP_COLD];
+    // Opposite effect.
     case SPARM_LIGHT:
         return proprt[ARTP_INVISIBLE];
-    case SPARM_RAGE:
-        return proprt[ARTP_ANGRY];
     case SPARM_GUILE:
         return proprt[ARTP_WILLPOWER];
     case SPARM_ENERGY:
         return proprt[ARTP_PREVENT_SPELLCASTING];
+
+    // Duplicate effect.
+    case SPARM_RAMPAGING:
+        return proprt[ARTP_RAMPAGING];
+    case SPARM_HARM:
+        return proprt[ARTP_HARM];
+    case SPARM_RESISTANCE:
+        return proprt[ARTP_FIRE] || proprt[ARTP_COLD];
+    case SPARM_RAGE:
+        return proprt[ARTP_ANGRY];
+    case SPARM_INVISIBILITY:
+        return proprt[ARTP_INVISIBLE];
+
     default:
         return false;
     }
