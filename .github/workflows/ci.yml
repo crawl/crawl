@@ -24,6 +24,29 @@ jobs:
         run: util/unbrace -n
         working-directory: crawl-ref/source
 
+  build_source:
+    permissions:
+      contents: write #  for release creation (svenstaro/upload-release-action)
+
+    name: Source Packages ${{ matrix.arch }}
+    runs-on: ubuntu-latest
+    if: github.event.release.tag_name != null
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # all history
+          submodules: true
+      - name: Build source packages
+        run: make -j$(nproc) package-source
+        working-directory: crawl-ref/source
+      - name: Add build to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref }}
+          file: stone_soup-${{ github.ref_name }}*
+          file_glob: true
+
   build_linux:
     permissions:
       contents: read #  to fetch code (actions/checkout)
