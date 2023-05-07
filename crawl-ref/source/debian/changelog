@@ -3,6 +3,11 @@ crawl (2:0.30.0-1) unstable; urgency=low
   * New upstream release.
  -- gammafunk <gammafunk@gmail.com>  Fri, 05 May 2023 09:34:25 -0500
 
+crawl (2:0.29.1-1) unstable; urgency=low
+
+   * New upstream release.
+ -- advil <rawlins@gmail.com>  Sun, 11 Sep 2022 21:49:41 -0400
+
 crawl (2:0.29.0-1) unstable; urgency=low
 
   * New upstream release.
