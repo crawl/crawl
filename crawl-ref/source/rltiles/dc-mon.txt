@@ -228,6 +228,7 @@ sun_moth MONS_SUN_MOTH
 %sdir mon/aquatic
 %rim 0
 electric_eel MONS_ELECTRIC_EEL
+jellyfish MONS_JELLYFISH
 %rim 1
 
 %include dc-tentacles.txt

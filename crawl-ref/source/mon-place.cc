@@ -1854,6 +1854,9 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_ALLIGATOR,       { { 5, 0, []() {
         return !player_in_branch(BRANCH_LAIR); }},
                                   {{ BAND_ALLIGATOR, {1, 2} }}}},
+    { MONS_FORMLESS_JELLYFISH, { { 0, 0, []() {
+        return player_in_branch(BRANCH_SLIME); }},
+                                  {{ BAND_JELLYFISH, {1, 3} }}}},
     { MONS_POLYPHEMUS,      { {}, {{ BAND_POLYPHEMUS, {3, 6}, true }}}},
     { MONS_HARPY,           { {}, {{ BAND_HARPIES, {2, 5} }}}},
     { MONS_SALTLING,        { {}, {{ BAND_SALTLINGS, {2, 4} }}}},
@@ -2135,6 +2138,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_JIANGSHI,            {{{MONS_JIANGSHI, 1}}}},
     { BAND_LINDWURMS,           {{{MONS_LINDWURM, 1}}}},
     { BAND_ALLIGATOR,           {{{MONS_ALLIGATOR, 1}}}},
+    { BAND_JELLYFISH,           {{{MONS_FORMLESS_JELLYFISH, 1}}}},
     { BAND_DEATH_YAKS,          {{{MONS_DEATH_YAK, 1}}}},
     { BAND_GREEN_RATS,          {{{MONS_RIVER_RAT, 1}}}},
     { BAND_BLINK_FROGS,         {{{MONS_BLINK_FROG, 1}}}},

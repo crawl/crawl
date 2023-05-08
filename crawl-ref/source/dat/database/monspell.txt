@@ -801,6 +801,10 @@ Woodweal cast
 
 @The_monster@ touches a tree and draws upon its vitality.
 %%%%
+formless jellyfish cast
+
+@The_monster@ shimmers eerily.
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

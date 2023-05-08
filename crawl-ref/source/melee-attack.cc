@@ -2755,6 +2755,22 @@ void melee_attack::mons_apply_attack_flavour()
         }
         break;
 
+    case AF_MINIPARA:
+    {
+        // Doesn't affect the poison-immune.
+        if (defender->is_player() && you.duration[DUR_DIVINE_STAMINA] > 0)
+        {
+            mpr("Your divine stamina protects you from poison!");
+            break;
+        }
+        if (defender->res_poison() >= 3 || coinflip())
+            break;
+        if (defender->res_poison() > 0 && !one_chance_in(3))
+            break;
+        defender->paralyse(attacker, 1);
+        break;
+    }
+
     case AF_POISON_PARALYSE:
     {
         // Doesn't affect the poison-immune.

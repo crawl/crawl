@@ -1045,6 +1045,9 @@ int main(int argc, char* argv[])
                 case AF_MUTATE:
                     monsterattacks += colour(LIGHTGREEN, "(mutation)");
                     break;
+                case AF_MINIPARA:
+                    monsterattacks += colour(LIGHTRED, "(minipara)");
+                    break;
                 case AF_POISON_PARALYSE:
                     monsterattacks += colour(LIGHTRED, "(paralyse)");
                     break;

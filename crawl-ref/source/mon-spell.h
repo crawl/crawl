@@ -34,6 +34,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_BLINK_CLOSE,
+      {
+       { SPELL_BLINK_CLOSE, 67, MON_SPELL_MAGICAL },
+      }
+    },
+
     /* Orc warlords and cherubs. */
     {  MST_BATTLECRY,
       {
@@ -1265,12 +1271,6 @@ static const mon_spellbook mspell_list[] =
     {  MST_SHADOW,
       {
        { SPELL_INVISIBILITY, 33, MON_SPELL_NATURAL },
-      }
-    },
-
-    {  MST_PHANTASMAL_WARRIOR,
-      {
-       { SPELL_BLINK_CLOSE, 67, MON_SPELL_MAGICAL },
       }
     },
 
