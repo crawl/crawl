@@ -92,7 +92,6 @@ jobs:
         with:
           fetch-depth: 0 # all history
           submodules: true
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Set up Python 3.7
         uses: actions/setup-python@v4
         with:
