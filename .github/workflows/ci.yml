@@ -163,7 +163,6 @@ jobs:
         with:
           fetch-depth: 0 # all history
           submodules: false
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Install dependencies
         run: ./deps.py --build-opts "${{ matrix.build_opts }}" --appimage
         working-directory: .github/workflows
@@ -205,7 +204,6 @@ jobs:
         with:
           fetch-depth: 0 # all history
           submodules: false
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Install dependencies
         run: ./deps.py --build-opts TILES=1 --debian-packages
         working-directory: .github/workflows
@@ -271,7 +269,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # all history
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Checkout submodules
         shell: bash
         run: |
@@ -318,7 +315,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # all history
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Checkout submodules (for crosscompile)
         shell: bash
         run: |
@@ -384,7 +380,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # all history
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Set up Python 3.7
         uses: actions/setup-python@v4
         with:
@@ -477,7 +472,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # all history
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Set up Python 3.7
         uses: actions/setup-python@v4
         with:
@@ -520,7 +514,6 @@ jobs:
         with:
           fetch-depth: 0 # all history
           submodules: true
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Install dependencies
         run: ./deps.py --build-opts "${{ matrix.build_opts }}"
         working-directory: .github/workflows
