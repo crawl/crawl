@@ -907,6 +907,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_BOOKS,     BOOK_BATTLE },
     { OBJ_BOOKS,     BOOK_STONE },
     { OBJ_BOOKS,     BOOK_PAIN },
+    { OBJ_BOOKS,     BOOK_MALEDICT },
     { OBJ_RODS,      ROD_VENOM },
     { OBJ_RODS,      ROD_WARDING },
     { OBJ_RODS,      ROD_DESTRUCTION },
