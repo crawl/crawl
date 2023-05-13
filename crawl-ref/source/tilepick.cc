@@ -588,7 +588,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
                      feat == DNGN_ROCK_WALL ? env.rock_colour
                                             : 0; // meh
         }
-        else if (colour >= ETC_FIRST)
+        if (colour >= ETC_FIRST)
         {
             tileidx_t idx = (feat == DNGN_FLOOR) ? tile_env.flv(gc).floor :
                 (feat == DNGN_ROCK_WALL) ? tile_env.flv(gc).wall
@@ -604,11 +604,6 @@ tileidx_t tileidx_feature(const coord_def &gc)
             unsigned rc = real_colour(colour, gc);
             return tile_dngn_coloured(base, rc) + spec; // XXX
         }
-#ifdef USE_TILE
-        // There may be a change we haven't seen yet
-        else if (tile_env.bk_bg(gc))
-            return tile_env.bk_bg(gc);
-#endif
         return tileidx_feature_base(feat);
     }
 
