@@ -748,7 +748,7 @@ potion of experience
 
 一瓶非常罕见的极佳饮品，饮用时能给予经验。
 %%%%
-potion of flight
+potion of enlightenment
 
 这瓶药水会给饮用者巨大的浮力。
 %%%%

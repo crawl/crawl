@@ -584,7 +584,7 @@ potion of experience
 
 Une potion aussi rare que merveilleuse.
 %%%%
-potion of flight
+potion of enlightenment
 
 Une potion qui confère une grande flottabilité à celui qui la boit.
 %%%%

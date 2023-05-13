@@ -2311,7 +2311,7 @@ bool ring_has_stackable_effect(const item_def &item)
 static map<potion_type, item_rarity_type> _potion_rarity = {
     { POT_CURING,       RARITY_VERY_COMMON },
     { POT_HEAL_WOUNDS,  RARITY_COMMON },
-    { POT_FLIGHT,       RARITY_UNCOMMON },
+    { POT_ENLIGHTENMENT,       RARITY_UNCOMMON },
     { POT_HASTE,        RARITY_UNCOMMON },
     { POT_LIGNIFY,      RARITY_UNCOMMON },
     { POT_ATTRACTION,   RARITY_UNCOMMON },

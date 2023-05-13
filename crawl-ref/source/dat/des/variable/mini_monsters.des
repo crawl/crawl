@@ -1803,7 +1803,7 @@ NAME:   minmay_rotating_lava
 TAGS:   no_monster_gen transparent
 DEPTH:  D:10-
 MONS:   hell hound, hell knight band, hell knight
-ITEM:   potion of flight ident:type q:3
+ITEM:   potion of enlightenment ident:type q:3
 KMASK:  .123*< = opaque
 KPROP:  .123*< = no_tele_into
 KFEAT:  ' = floor

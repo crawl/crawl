@@ -353,38 +353,27 @@ public:
 };
 
 
-class PotionFlight : public PotionEffect
+class PotionEnlightenment : public PotionEffect
 {
 private:
-    PotionFlight() : PotionEffect(POT_FLIGHT) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionFlight);
+    PotionEnlightenment() : PotionEffect(POT_ENLIGHTENMENT) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionEnlightenment);
 public:
-    static const PotionFlight &instance()
+    static const PotionEnlightenment &instance()
     {
-        static PotionFlight inst; return inst;
-    }
-
-    bool can_quaff(string *reason = nullptr, bool temp = true) const override
-    {
-        if (you.permanent_flight(false))
-        {
-            if (reason)
-                *reason = "You can already fly.";
-            return false;
-        }
-        // temp flight inhibition; example: form prevents flight
-        if (temp && !flight_allowed(true, reason))
-            return false;
-
-        // other tempflight cases: allowed and adds time
-
-        return true;
+        static PotionEnlightenment inst; return inst;
     }
 
     bool effect(bool=true, int pow = 40, bool is_potion=true) const override
     {
         fly_player(_scale_effect(pow, is_potion));
-        return you.airborne();
+        // Try to sync up the flying and the enlightenment.
+        // ...sorry about this.
+        you.duration[DUR_ENLIGHTENED] = max(you.duration[DUR_FLIGHT],
+                                            max(you.duration[DUR_ENLIGHTENED],
+                                                _scale_effect(25 + random2(pow),
+                                                              is_potion)));
+        return true;
     }
 };
 
@@ -892,7 +881,7 @@ static const unordered_map<potion_type, const PotionEffect*, std::hash<int>> pot
     { POT_MIGHT, &PotionMight::instance(), },
     { POT_BRILLIANCE, &PotionBrilliance::instance(), },
     { POT_ATTRACTION, &PotionAttraction::instance(), },
-    { POT_FLIGHT, &PotionFlight::instance(), },
+    { POT_ENLIGHTENMENT, &PotionEnlightenment::instance(), },
     { POT_CANCELLATION, &PotionCancellation::instance(), },
     { POT_AMBROSIA, &PotionAmbrosia::instance(), },
     { POT_INVISIBILITY, &PotionInvisibility::instance(), },

@@ -6489,6 +6489,10 @@ int player_willpower(bool temp)
     if (you.form == transformation::lich && temp)
         rm += WL_PIP;
 
+    // In this moment, you are euphoric.
+    if (you.duration[DUR_ENLIGHTENED])
+        rm += WL_PIP;
+
     // Trog's Hand
     if (you.duration[DUR_TROGS_HAND] && temp)
         rm += WL_PIP * 2;

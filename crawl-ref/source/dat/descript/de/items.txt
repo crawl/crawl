@@ -407,7 +407,7 @@ potion of experience
 
 Ein wirklich wundervoller und sehr seltenes Getränk.
 %%%%
-potion of flight
+potion of enlightenment
 
 Ein Trank, welcher eine große Beschwingtheit, auf denjenigen der ihn trinkt,
 überträgt.

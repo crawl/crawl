@@ -363,7 +363,7 @@ KFEAT:    E = altar_zin / altar_elyvilon w:30
 MONS:     jackal, kobold, kobold brigand
 MONS:     rat w:15 / river rat w:7
 ITEM:     potion of curing ident:type / potion of heal wounds ident:type
-ITEM:     potion of flight ident:type
+ITEM:     potion of enlightenment ident:type
 SHUFFLE:  de
 SUBST:    1 = 1..., 2 = 2., 4 = 4.
 NSUBST:   3 = 1:3 / *:3.
@@ -935,7 +935,7 @@ MONS:     adder, river rat
 NSUBST:   ! = 36 = 1... / *:.
 SHUFFLE:  de
 ITEM:    any scroll
-ITEM:    potion of flight ident:type
+ITEM:    potion of enlightenment ident:type
 : item(dgn.aux_armour)
 : item(dgn.loot_potions)
 : item(dgn.loot_scrolls)
@@ -989,7 +989,7 @@ COLOUR: HJ = blue
 KFEAT:  GnHJ = w
 COLOUR: G = green
 COLOUR: s = cyan
-KITEM:  M = potion of flight q:4 ident:type
+KITEM:  M = potion of enlightenment q:4 ident:type
 KITEM:  N = scroll of teleportation q:2 ident:type
 : sewer_setup(_G)
 MAP

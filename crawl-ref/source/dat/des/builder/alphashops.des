@@ -96,7 +96,7 @@
        "everburning encyclopedia" }
 
       elseif s == "F" then i = { "book of fire", "book of flames", "flail",
-       "book of frost", "falchion", "fire dragon scales", "potion of flight",
+       "book of frost", "falchion", "fire dragon scales", "potion of enlightenment",
        "ring of fire", "scroll of fear", "staff of fire", "fen folio",
        "ring of flight", "scroll of fog", "wand of flame",
        "manual of fighting", "amulet of faith", "manual of fire magic" }

@@ -937,7 +937,7 @@ i-gain-strength POT_REMOVEME2
 i-gain-dexterity POT_REMOVEME3
 i-gain-intelligence POT_REMOVEME4
 # end TAG_MAJOR_VERSION
-i-flight POT_FLIGHT
+i-flight POT_ENLIGHTENMENT
 # start TAG_MAJOR_VERSION == 34
 i-poison POT_POISON
 i-slowing POT_SLOWING

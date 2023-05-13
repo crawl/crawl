@@ -370,7 +370,7 @@ potion of experience
 
 Prawdziwie cudowny napitek, który trwale zwiększa umiejętności pijącego.
 %%%%
-potion of flight
+potion of enlightenment
 
 Eliksir który daje zdolność lotu.
 %%%%

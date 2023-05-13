@@ -1111,7 +1111,7 @@ SHUFFLE: Aa/Bb
 SUBST: Aa = t, B = ..t, b = .
 KFEAT: S = general shop type:Island suffix:Escapes count:7 ; \
  scroll of blinking | scroll of teleportation w:15 | scroll of fog w:8 | \
- potion of flight | potion of invisibility w:8 | potion of haste w:3 | \
+ potion of enlightenment | potion of invisibility w:8 | potion of haste w:3 | \
  ring of flight w:5 | wand of digging w:4
 MAP
   wwwwwwwww

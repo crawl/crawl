@@ -316,7 +316,7 @@ potion of experience
 
 Поистине восхитительный и очень редкий напиток.
 %%%%
-potion of flight
+potion of enlightenment
 
 Зелье, придающее чрезвычайную лёгкость тому, кто его выпьет.
 %%%%

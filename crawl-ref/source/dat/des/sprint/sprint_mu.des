@@ -166,7 +166,7 @@ MONS: patrolling rat w:20 / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
       patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35
-KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
+KITEM: * = potion of enlightenment ident:all q:2 / potion of enlightenment q:1 / any potion, \
  potion of mutation ident:all q:2 / potion of mutation q:1 / any potion, \
  scroll of identify ident:all q:2/ scroll of identify q:1 / any scroll, \
  scroll of torment / scroll of poison / scroll of immolation, \
@@ -197,7 +197,7 @@ MONS: patrolling rat w:20 / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
       patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35
-KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
+KITEM: * = potion of enlightenment ident:all q:2 / potion of enlightenment q:1 / any potion, \
  potion of mutation ident:all q:2 / potion of mutation q:1 / any potion, \
  scroll of identify ident:all q:2 / scroll of identify q:1 / any scroll, \
  scroll of torment / scroll of poison / scroll of immolation, \
@@ -939,7 +939,7 @@ SUBST: f = f..
 NSUBST: . = 15:M / *:.
 KMONS: M = ugly thing / slime creature / glowing shapeshifter
 KITEM: % = silver rune of zot
-KITEM: " = ring of flight ident:all, potion of flight ident:all q:3, \
+KITEM: " = ring of flight ident:all, potion of enlightenment ident:all q:3, \
  scroll of acquirement q:1 ident:all, wand of digging / \
  any blast wand, acquire gold, ring of protection from fire ident:all
 

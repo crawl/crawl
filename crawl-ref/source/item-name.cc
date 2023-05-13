@@ -678,7 +678,7 @@ const char* potion_type_name(int potiontype)
     case POT_MIGHT:             return "might";
     case POT_ATTRACTION:        return "attraction";
     case POT_BRILLIANCE:        return "brilliance";
-    case POT_FLIGHT:            return "flight";
+    case POT_ENLIGHTENMENT:     return "enlightenment";
     case POT_CANCELLATION:      return "cancellation";
     case POT_AMBROSIA:          return "ambrosia";
     case POT_INVISIBILITY:      return "invisibility";

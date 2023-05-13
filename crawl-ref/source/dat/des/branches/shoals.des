@@ -1959,7 +1959,7 @@ kfeat("F = general shop name:" .. owner .. " type:Merfolk suffix:Magic ; \
 -- will be more than happy to help make arrangements. With an additional
 -- convenience fee, of course. (The scroll is for if you get stuck.)
 kfeat("J = general shop name:" .. owner .. " type:Visitors' suffix:Centre \
-      greed:100 count:2 use_all ; potion of flight q:1 | \
+      greed:100 count:2 use_all ; potion of enlightenment q:1 | \
       scroll of teleportation q:1" )
 }}
 KFEAT:   ~ = open_sea

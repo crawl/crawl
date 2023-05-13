@@ -811,3 +811,8 @@ Bog status
 You are creating a toxic bog in the nearby area, and are immune to its effects.
 You cannot sustain this transformation in areas out of your line of sight.
 %%%%
+Enlightened status
+
+You are in touch with a greater truth, increasing your resistance to effects
+which target your Willpower. Tragically, this epiphany won't last.
+%%%%

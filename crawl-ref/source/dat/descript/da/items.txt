@@ -457,7 +457,7 @@ potion of experience
 
 En virkeligt vidunderlig og særdeles sjælden drik.
 %%%%
-potion of flight
+potion of enlightenment
 
 En drik, som giver stor opdrift til den, der drikker den.
 %%%%

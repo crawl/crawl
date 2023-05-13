@@ -32,7 +32,7 @@ enum attribute_type
     ATTR_NOISES,
     ATTR_SHADOWS,              // Lantern of shadows effect.
     ATTR_UNUSED2,              // was ATTR_FRUIT_FOUND
-    ATTR_FLIGHT_UNCANCELLABLE, // Potion of flight is in effect.
+    ATTR_FLIGHT_UNCANCELLABLE, // Potion of enlightenment is in effect.
     ATTR_INVIS_UNCANCELLABLE,  // Spell/potion of invis is in effect.
 #endif
     ATTR_PERM_FLIGHT,          // Cache for flight from equipment

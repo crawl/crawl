@@ -379,7 +379,7 @@ potion of experience
 
 実に素晴らしく非常に貴重な飲み物だ。
 %%%%
-potion of flight
+potion of enlightenment
 
 これは水薬だ。これは飲んだ者に大きな浮力を与える。
 %%%%

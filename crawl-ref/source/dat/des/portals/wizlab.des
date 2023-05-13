@@ -1472,7 +1472,7 @@ KITEM:   f = there-and-back book w:5 / book of displacement w:5 / \
              randbook disc:translocation numspells:5 / \
              randbook disc:translocation owner:Golubria numspells:7 \
              spells:passage_of_golubria
-KITEM:   g = ring of flight / potion of flight q:2 / \
+KITEM:   g = ring of flight / potion of enlightenment q:2 / \
              potion of haste w:5 / \
              scroll of fog / \
              any potion w:1 / any scroll w:1
