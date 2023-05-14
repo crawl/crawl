@@ -587,15 +587,13 @@ bool actor::has_invalid_constrictor(bool move) const
 
     // Direct constriction (e.g. by nagas and octopode players or AT_CONSTRICT)
     // must happen between adjacent squares.
-    if (get_constrict_type() == CONSTRICT_MELEE)
+    const auto typ = get_constrict_type();
+    if (typ == CONSTRICT_MELEE)
         return !ignoring_player && !adjacent(attacker->pos(), pos());
 
     // Indirect constriction requires the defender not to move.
     return move
-        // Indirect constriction requires reachable ground.
-        || !feat_has_solid_floor(env.grid(pos()))
-        // Constriction doesn't work out of LOS.
-        || !ignoring_player && !attacker->see_cell(pos());
+        || typ == CONSTRICT_BVC && !feat_has_solid_floor(env.grid(pos()));
 }
 
 /**
@@ -695,7 +693,7 @@ bool actor::can_engulf(const actor &defender) const
 
 bool actor::can_constrict(const actor &defender, constrict_type typ) const
 {
-    if (defender.is_constricted())
+    if (defender.is_constricted() || defender.res_constrict() >= 3)
         return false;
 
     if (typ == CONSTRICT_MELEE)
@@ -704,10 +702,8 @@ bool actor::can_constrict(const actor &defender, constrict_type typ) const
             && (!is_constricting() || has_usable_tentacle());
     }
 
-    return can_see(defender)
-        && defender.res_constrict() < 3
-        // All current indrect forms of constriction require reachable ground.
-        && feat_has_solid_floor(env.grid(defender.pos()));
+    return typ != CONSTRICT_BVC
+           || feat_has_solid_floor(env.grid(defender.pos()));
 }
 
 #ifdef DEBUG_DIAGNOSTICS
