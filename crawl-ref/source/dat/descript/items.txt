@@ -1014,10 +1014,10 @@ A long sword with a wide, curved blade.
 %%%%
 scroll of acquirement
 
-A wonderful scroll which causes the creation of a valuable item, with
-the reader choosing from a small selection. The items offered will be
-often be a good match for the reader's skills; and if nothing
-recommends itself, the reader can always choose a heap of gold.
+A wonderful scroll which causes the creation of a valuable item, with the
+reader choosing from a small selection. The items offered will often be a
+good match for the reader's skills; and if nothing recommends itself, the
+reader can always choose a heap of gold.
 %%%%
 scroll of amnesia
 
