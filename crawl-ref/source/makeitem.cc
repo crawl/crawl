@@ -1728,17 +1728,17 @@ int items(bool allow_uniques,
     else
     {
         ASSERT(force_type == OBJ_RANDOM);
-        // Total weight: 1720
+        // Total weight: 1660
         item.base_type = random_choose_weighted(
                                     10, OBJ_STAVES,
                                     45, OBJ_JEWELLERY,
                                     45, OBJ_BOOKS,
                                     70, OBJ_WANDS,
-                                   210, OBJ_ARMOUR,
-                                   210, OBJ_WEAPONS,
-                                   210, OBJ_POTIONS,
+                                   212, OBJ_ARMOUR,
+                                   212, OBJ_WEAPONS,
+                                   176, OBJ_POTIONS,
                                    180, OBJ_MISSILES,
-                                   300, OBJ_SCROLLS,
+                                   270, OBJ_SCROLLS,
                                    440, OBJ_GOLD);
 
         // misc items placement wholly dependent upon current depth {dlb}:

@@ -1567,9 +1567,9 @@ static int _num_items_wanted(int absdepth0)
     if (branches[you.where_are_you].branch_flags & brflag::no_items)
         return 0;
     else if (absdepth0 > 5 && one_chance_in(500 - 5 * absdepth0))
-        return 9 + random2avg(84, 2); // rich level!
+        return 9 + random2avg(80, 2); // rich level!
     else
-        return 4 + roll_dice(3, 9);
+        return 3 + roll_dice(3, 9);
 }
 
 static int _mon_die_size()
