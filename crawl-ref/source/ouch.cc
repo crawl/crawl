@@ -907,15 +907,13 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     {
         // death's door protects against everything but falling into
         // water/lava, Zot, excessive rot, leaving the dungeon, or quitting.
-        if (you.duration[DUR_DEATHS_DOOR])
+        // Likewise, dreamshard protects you until the start of your next turn.
+        if (you.duration[DUR_DEATHS_DOOR] || you.props.exists(DREAMSHARD_KEY))
             return;
         // the dreamshard necklace protects from any fatal blow or death source
-        // that death's door would protect from, plus a chance of activating on
-        // hits for more than 80% of a player's remaining hitpoints
-        // (but doesn't activate while in death's door)
+        // that death's door would protect from.
         else if (player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE)
-                 && (dam >= you.hp
-                     || ((dam * 100) / you.hp) > 80 && coinflip()))
+                 && dam >= you.hp)
         {
             dreamshard_shatter();
             return;

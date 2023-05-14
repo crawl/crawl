@@ -700,6 +700,10 @@ later misused and mangled by the lunatic murderer-mages of the Fifth Circle.
 Their influence leaves the wearer utterly unable to cast spells - the wearer's
 magic is redirected to far bloodier purposes.
 %%%%
+dreamdust necklace
+
+A dull dusty mixture trapped within a cracked crystal on a thin silver chain.
+%%%%
 dreamshard necklace
 
 A beautiful rainbow of colour and motion trapped within a delicate crystal on a

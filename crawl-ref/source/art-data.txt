@@ -1616,15 +1616,14 @@ DESCRIP:  Infuse+∞:  It empowers its wearer's blows with all of their magic.
 +VampMP:    Blows struck in melee replenish the wearer's magic.
 
 NAME:     dreamshard necklace
-OBJ:      OBJ_JEWELLERY/AMU_NOTHING
+OBJ:      OBJ_JEWELLERY/AMU_ACROBAT
 COLOUR:   ETC_SILVER
 TILE:     urand_dreamshard
 INSCRIP:  *Dream
-BOOL:     drain, special
+BOOL:     special
 VALUE:    2000
-DESCRIP:  *Dream:    It shatters if its wearer takes lethal or near-lethal
- damage, preventing the blow and releasing protective dreams that heal and fight
- for the wearer.
+DESCRIP:  *Dream:    It absorbs a single lethal wound into itself, holding its
+ wearer just short of death and releasing dream-creatures to guard them.
 
 NAME:     Delatra's gloves
 OBJ:      OBJ_ARMOUR/ARM_GLOVES
@@ -1797,6 +1796,12 @@ BOOL:     elec, fly
 INSCRIP:  shock,
 DBRAND:   Shock:     When it blocks an attack, it may electrocute the attacker.
  This works even against foes who are a short distance away.
+
+NAME:     dreamdust necklace
+OBJ:      OBJ_JEWELLERY/AMU_ACROBAT
+COLOUR:   ETC_SILVER
+TILE:     urand_dreamdust
+BOOL:     special, nogen
 
 # This entry must always be last.
 ENUM:   DUMMY2

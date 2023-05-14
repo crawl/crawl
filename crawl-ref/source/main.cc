@@ -1063,6 +1063,9 @@ static void _input()
         update_screen();
     }
 
+    if (you.props.exists(DREAMSHARD_KEY))
+        you.props.erase(DREAMSHARD_KEY);
+
     apply_exp();
 
     // Unhandled things that should have caused death.
