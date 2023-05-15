@@ -770,6 +770,7 @@ bool faith_has_penalty()
     return !you.has_mutation(MUT_FAITH)
         && ignore_faith_reason().empty()
         && !you_worship(GOD_XOM)
+        && !you_worship(GOD_USKAYAW)
         && !you_worship(GOD_NO_GOD);
 }
 
