@@ -118,7 +118,8 @@ enum monclass_flag_type : uint64_t
     /// An ancestor granted by Hepliaklqana
     M_ANCESTOR          = BIT(35),
 
-                        //BIT(36), // was M_ALWAYS_CORPSE
+    /// Gets a special name, like the Hellbinder
+    M_ALWAYS_NAMED      = BIT(36),
 
     /// prefer ranged attacks over melee
     M_PREFER_RANGED     = BIT(37),

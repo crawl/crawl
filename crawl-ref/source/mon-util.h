@@ -230,6 +230,7 @@ bool mons_can_shout(monster_type mclass);
 bool mons_is_ghost_demon(monster_type mc);
 bool mons_is_unique(monster_type mc);
 bool mons_is_or_was_unique(const monster& mon);
+bool mons_is_specially_named(monster_type mc);
 bool mons_is_pghost(monster_type mc);
 bool mons_is_draconian_job(monster_type mc);
 bool mons_is_hepliaklqana_ancestor(monster_type mc);
