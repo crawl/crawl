@@ -610,6 +610,16 @@ static bool _valid_monster_generation_location(mgen_data &mg)
     return _valid_monster_generation_location(mg, mg.pos);
 }
 
+static void _inherit_kmap(monster &mon, const actor *summoner)
+{
+    if (!summoner)
+        return;
+    const monster* monsum = summoner->as_monster();
+    if (!monsum || !monsum->has_originating_map())
+        return;
+    mon.props[MAP_KEY] = monsum->originating_map();
+}
+
 monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 {
     rng::subgenerator monster_rng;
@@ -1337,6 +1347,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->mark_summoned(mg.abjuration_duration,
                            mg.summon_type != SPELL_TUKIMAS_DANCE,
                            mg.summon_type);
+        _inherit_kmap(*mon, mg.summoner);
 
         if (mg.summon_type > 0 && mg.summoner)
         {
