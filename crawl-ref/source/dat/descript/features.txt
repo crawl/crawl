@@ -224,7 +224,8 @@ walls.
 %%%%
 A slime covered rock wall
 
-A rock wall coated with bright green slime. It is acidic to the touch.
+A rock wall coated with bright green slime. It is acidic to the touch; just
+standing near it is enough to cause temporary corrosion.
 %%%%
 A metal wall
 

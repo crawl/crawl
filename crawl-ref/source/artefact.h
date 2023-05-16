@@ -17,6 +17,8 @@
 
 #define DAMNATION_BOLT_KEY "damnation_bolt"
 #define EMBRACE_ARMOUR_KEY "embrace_armour"
+#define VICTORY_STAT_KEY    "victory_stat"
+#define VICTORY_CONDUCT_KEY "victory_conduct"
 
 struct bolt;
 
@@ -74,6 +76,7 @@ struct unrandart_entry
                           actor* defender, bool mondied, int damage);
     setup_missile_type (*launch)(item_def* item, bolt* beam,
                                  string* ammo_name, bool* returning);
+    void (*death_effects)(item_def* item, monster* mons, killer_type killer);
 };
 
 bool is_known_artefact(const item_def &item);
@@ -155,3 +158,6 @@ int get_unrandart_num(const char *name);
 int extant_unrandart_by_exact_name(string name);
 
 void unrand_reacts();
+void unrand_death_effects(monster* mons, killer_type killer);
+
+bool item_type_can_be_artefact(object_class_type typ);

@@ -1772,6 +1772,11 @@ LUAFN(crawl_rng_wrap)
 
 LUAWRAP(crawl_clear_message_store, clear_message_store())
 
+/*** Whether the crawl process has seen a HUP or INT signal.
+ * @treturn int the number of hups seen
+ * @function seen_hups
+ */
+LUARET1(crawl_seen_hups, number, crawl_state.seen_hups)
 
 static const struct luaL_reg crawl_dlib[] =
 {
@@ -1790,6 +1795,7 @@ static const struct luaL_reg crawl_dlib[] =
 { "unavailable_god", _crawl_unavailable_god },
 { "rng_wrap", crawl_rng_wrap },
 { "clear_message_store", crawl_clear_message_store },
+{ "seen_hups", crawl_seen_hups },
 
 { nullptr, nullptr }
 };

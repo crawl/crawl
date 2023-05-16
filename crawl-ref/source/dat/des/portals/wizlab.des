@@ -7,7 +7,7 @@
 #          |or top-tier undead      |or random               |
 #--------------------------------------------------------------------
 #Wucad Mu  |hell effect "monks",    |potions of experience,  |9000
-#          |summoning OCS           |staff of Wucad Mu       |
+#          |summoning OCS           |crystal ball of Wucad Mu|
 #--------------------------------------------------------------------
 #Cigotuvi  |uglies, abominations,   |tmut potions / books,   |16000
 #          |lump shapeshifters      |scrolls of poison       |
@@ -444,8 +444,11 @@ function wizlab_borgnjor_call_souls(data, triggerable, triggerer, marker, ev)
       if feat.is_solid(point.x, point.y) or not feat.has_solid_floor(point.x, point.y) then
       else
        local mon = dgn.create_monster(point.x, point.y, msp)
-       mon.set_prop("borgnjor", 1)
-       count = count + 1
+       -- this can still fail if there's already another monster here
+       if mon ~= nil then
+        mon.set_prop("borgnjor", 1)
+        count = count + 1
+       end
       end
     end
   end
@@ -1302,7 +1305,7 @@ TAGS:       no_rotate
 SUBST:      T = t.
 KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the \
                 hd:15 tile:mons_wucad_mu_statue
-KITEM:      8 = staff_of_wucad_mu
+KITEM:      8 = crystal_ball_of_wucad_mu
 COLOUR:     c = darkgrey
 COLOUR:     t = lightred / red w:3
 TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4

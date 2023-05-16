@@ -1,9 +1,9 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/keyboard_upper"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerInParent="true"
-    android:background="#000000"
     android:orientation="vertical"
     android:baselineAligned="false"
     android:visibility="invisible">
@@ -67,8 +67,7 @@
             android:layout_weight="1"
             android:text=" Y\u2196\ufe0e"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint3"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor3"/>
 
         <Button
             android:id="@+id/key_U"
@@ -78,8 +77,7 @@
             android:layout_weight="1"
             android:text=" U\u2197\ufe0e"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint3"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor3"/>
 
         <Button
             android:id="@+id/key_I"
@@ -169,8 +167,7 @@
             android:layout_weight="1"
             android:text=" H\u2190\ufe0e"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint3"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor3"/>
 
         <Button
             android:id="@+id/key_J"
@@ -180,8 +177,7 @@
             android:layout_weight="1"
             android:text=" J\u2193\ufe0e"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint3"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor3"/>
 
         <Button
             android:id="@+id/key_K"
@@ -191,8 +187,7 @@
             android:layout_weight="1"
             android:text=" K\u2191\ufe0e"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint3"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor3"/>
 
         <Button
             android:id="@+id/key_L"
@@ -202,8 +197,7 @@
             android:layout_weight="1"
             android:text=" L\u2192\ufe0e"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint3"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor3"/>
 
         <Button
             android:id="@+id/key_equal"
@@ -230,8 +224,7 @@
             android:layout_weight="1"
             android:text="\u21b9"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint2"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor2"/>
 
         <Button
             android:id="@+id/key_Z"
@@ -277,8 +270,7 @@
             android:layout_weight="1"
             android:text=" B\u2199\ufe0e"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint3"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor3"/>
 
         <Button
             android:id="@+id/key_N"
@@ -288,8 +280,7 @@
             android:layout_weight="1"
             android:text=" N\u2198\ufe0e"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint3"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor3"/>
 
         <Button
             android:id="@+id/key_M"
@@ -335,8 +326,7 @@
             android:text="\u21e7"
             android:textStyle="bold"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint4"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor4"/>
 
         <Button
             android:id="@+id/key_ctrl_upper"
@@ -346,8 +336,7 @@
             android:layout_weight="1.5"
             android:text="Ctrl"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint1"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor1"/>
 
         <Button
             android:id="@+id/key_lt"
@@ -393,8 +382,7 @@
             android:layout_weight="1.5"
             android:text="\u02fd"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint2"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor2"/>
 
         <Button
             android:id="@+id/key_123_upper"
@@ -404,8 +392,7 @@
             android:layout_weight="1.5"
             android:text="123"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint1"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor1"/>
 
     </LinearLayout>
 

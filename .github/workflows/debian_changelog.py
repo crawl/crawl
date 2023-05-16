@@ -13,8 +13,6 @@ if __name__ == "__main__":
 
     filename = sys.argv[1]
     version = sys.argv[2]
-    if not re.compile("^\d+\.\d+\.\d+$").match(version):
-        sys.exit("Invalid version: {}".format(version))
 
     with open(filename, 'r', encoding='utf-8') as file:
         changelog = file.readlines()

@@ -517,6 +517,11 @@ static void _marshall_as_int(writer& th, const T& t)
     marshallInt(th, static_cast<int>(t));
 }
 
+static misc_item_type _unmarshall_misc_item_type(reader &th)
+{
+    return (misc_item_type)unmarshallInt(th);
+}
+
 template <typename data>
 void marshallSet(writer &th, const set<data> &s,
                  void (*marshall)(writer &, const data &))
@@ -1714,6 +1719,8 @@ static void _tag_construct_you(writer &th)
 
     marshallUByte(th, you.octopus_king_rings);
 
+    marshallSet(th, you.generated_misc, _marshall_as_int);
+
     marshallUnsigned(th, you.uncancel.size());
     for (const pair<uncancellable_type, int>& unc : you.uncancel)
     {
@@ -2554,6 +2561,24 @@ static void _fixup_species_mutations(mutation_type mut)
 
     you.innate_mutation[mut] = you.mutation[mut] = total;
 }
+
+#if TAG_MAJOR_VERSION == 34
+// Copy action counts from one action to another, keeping the sub-action the
+// same. Retain any counts which were already against the "new" action.
+static void _move_action_count(caction_type old_action, caction_type new_action,
+                               int subtype)
+{
+    pair<caction_type, int> oldkey(old_action, caction_compound(subtype)),
+        newkey(new_action, caction_compound(subtype));
+    if (!you.action_count.count(oldkey))
+        return;
+    if (!you.action_count.count(newkey))
+        you.action_count[newkey].init(0);
+    for (int i = 0; i < 27; i++)
+        you.action_count[newkey][i] += you.action_count[oldkey][i];
+    you.action_count.erase(oldkey);
+}
+#endif
 
 static void _tag_read_you(reader &th)
 {
@@ -3848,6 +3873,11 @@ static void _tag_read_you(reader &th)
     }
 
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_WU_ABILITIES)
+    {
+        _move_action_count(CACT_INVOKE, CACT_ABIL, ABIL_WU_JIAN_LUNGE);
+        _move_action_count(CACT_INVOKE, CACT_ABIL, ABIL_WU_JIAN_WHIRLWIND);
+    }
     if (th.getMinorVersion() >= TAG_MINOR_BRANCHES_LEFT) // 33:17 has it
     {
 #endif
@@ -3905,6 +3935,11 @@ static void _tag_read_you(reader &th)
     _unmarshall_constriction(th, &you);
 
     you.octopus_king_rings = unmarshallUByte(th);
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_GENERATED_MISC)
+#endif
+        unmarshallSet(th, you.generated_misc, _unmarshall_misc_item_type);
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_UNCANCELLABLES
@@ -4196,6 +4231,16 @@ static void _tag_read_you_items(reader &th)
             // likewise the boots of the Assassin before it became a hat
             if (is_unrandom_artefact(*item, UNRAND_HOOD_ASSASSIN)
                 && i != EQ_HELMET)
+            {
+                you.equip[i] = -1;
+                you.melded.set(i, false);
+                continue;
+            }
+            // and the staves of Dispater/Wucad Mu/Battle before orbification
+            if ((is_unrandom_artefact(*item, UNRAND_DISPATER)
+                 || is_unrandom_artefact(*item, UNRAND_WUCAD_MU)
+                 || is_unrandom_artefact(*item, UNRAND_BATTLE))
+                && i != EQ_SHIELD)
             {
                 you.equip[i] = -1;
                 you.melded.set(i, false);

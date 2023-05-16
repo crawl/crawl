@@ -221,7 +221,7 @@ static bool _abyss_place_map(const map_def *mdef)
 static bool _abyss_place_vault_tagged(const map_bitmask &abyss_genlevel_mask,
                                       const string &tag)
 {
-    const map_def *map = random_map_for_tag(tag, true, true, MB_FALSE);
+    const map_def *map = random_map_for_tag(tag, true, true, false);
     if (map)
     {
         unwind_vault_placement_mask vaultmask(&abyss_genlevel_mask);
@@ -406,7 +406,7 @@ static int _banished_depth(const int power)
     // Ancient Liches are sending you to A:5 and there's nothing
     // you can do about that.
     const int maxdepth = div_rand_round((power + 5), 6);
-    const int mindepth = (4 * power + 7) / 23;
+    const int mindepth = min(maxdepth, (4 * power + 7) / 23);
     const int bottom = brdepth[BRANCH_ABYSS];
     return min(bottom, max(1, random_range(mindepth, maxdepth)));
 }
@@ -433,6 +433,7 @@ void banished(const string &who, const int power)
     const int depth = _banished_depth(power);
 
     stop_delay(true);
+    splash_corruption(you.pos());
     run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);
     push_features_to_abyss();
     floor_transition(DNGN_ENTER_ABYSS, orig_terrain(you.pos()),
@@ -1992,6 +1993,11 @@ static bool _is_sealed_square(const coord_def &c)
     return true;
 }
 
+static void _recolour_wall(coord_def c, tileidx_t tile)
+{
+    tile_env.flv(c).wall_idx = store_tilename_get_index(tile_dngn_name(tile));
+}
+
 static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
 {
     dungeon_feature_type feat = env.grid(c);
@@ -2014,12 +2020,15 @@ static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
         tileidx_t idx = tile_dngn_coloured(TILE_WALL_ABYSS,
                                            cenv.rock_colour);
         tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
+        _recolour_wall(c, idx);
     }
     else if (feat == DNGN_FLOOR)
     {
         tileidx_t idx = tile_dngn_coloured(TILE_FLOOR_NERVES,
                                            floor);
         tile_env.flv(c).floor = idx + random2(tile_dngn_count(idx));
+        const string name = tile_dngn_name(idx);
+        tile_env.flv(c).floor_idx = store_tilename_get_index(name);
     }
     else if (feat == DNGN_STONE_WALL)
     {
@@ -2028,12 +2037,14 @@ static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
         tileidx_t idx = tile_dngn_coloured(TILE_DNGN_STONE_WALL,
                                            cenv.rock_colour);
         tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
+        _recolour_wall(c, idx);
     }
     else if (feat == DNGN_METAL_WALL)
     {
         tileidx_t idx = tile_dngn_coloured(TILE_DNGN_METAL_WALL,
                                            cenv.rock_colour);
         tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
+        _recolour_wall(c, idx);
     }
     else if (feat_is_tree(feat))
     {
@@ -2321,6 +2332,17 @@ void lugonu_corrupt_level_monster(const monster &who)
     // Allow extra time for the flash to linger.
     scaled_delay(300);
 #endif
+}
+
+/// Splash decorative corruption around the given space.
+void splash_corruption(coord_def centre)
+{
+    corrupt_env cenv;
+    _corrupt_choose_colours(&cenv);
+    _corrupt_square_flavor(cenv, centre);
+    for (adjacent_iterator ai(centre); ai; ++ai)
+        if (in_bounds(*ai) && coinflip())
+            _corrupt_square_flavor(cenv, *ai);
 }
 
 static void _cleanup_temp_terrain_at(coord_def pos)

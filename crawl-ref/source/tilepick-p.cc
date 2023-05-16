@@ -37,6 +37,12 @@ tileidx_t tilep_equ_weapon(const item_def &item)
 {
     if (item.base_type == OBJ_STAVES)
     {
+        if (is_artefact(item))
+        {
+            const int off = item.rnd %
+                            tile_player_count(TILEP_HAND1_STAFF_RANDART_OFFSET);
+            return TILEP_HAND1_STAFF_RANDART_OFFSET + off;
+        }
         int orig_special = you.item_description[IDESC_STAVES][item.sub_type];
         int desc = (orig_special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
         return TILEP_HAND1_STAFF_LARGE + desc;

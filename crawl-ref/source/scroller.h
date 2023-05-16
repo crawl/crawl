@@ -7,6 +7,7 @@
 
 #include "menu.h"
 #include "ui.h"
+#include "maybe-bool.h"
 
 enum FSFlag {
     FS_START_AT_END = 0x01,
@@ -59,7 +60,7 @@ protected:
 
     bool m_contents_dirty, m_scroll_dirty;
 
-    virtual bool process_key(int keyin);
+    virtual maybe_bool process_key(int keyin);
     shared_ptr<ui::Scroller> m_scroller;
 };
 

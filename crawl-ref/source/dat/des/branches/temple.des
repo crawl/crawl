@@ -3329,11 +3329,11 @@ SHUFFLE: CDEF
 SUBST:      C = B, E = G, DH<IJ = .
 NSUBST:     F = 1:{ / *:.
 : elseif altar_count == "14" then
-SUBST:      CDEF = B, CHIJ = ., < = {
+SUBST:      DEF = B, CHIJ = ., < = {
 : elseif altar_count == "18" then
-SUBST:      BDCEFH = ., IJ = B, < = {
-: elseif altar_count == "21" then
 SUBST:      BDCEFI = ., HJ = B, < = {
+: elseif altar_count == "21" then
+SUBST:      BDCEFH = ., IJ = B, < = {
 : end
 SUBST:   W : mvbG w:160
 # Chances for filled (1/6), absent (3/6),

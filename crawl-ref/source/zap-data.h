@@ -618,7 +618,7 @@ _mon_hex_zap(ZAP_TUKIMAS_DANCE, BEAM_TUKIMAS_DANCE, 100),
 },
 
 {
-    ZAP_BLASTSPARK,
+    ZAP_BLASTMOTE,
     "concussive blast",
     50,
     new calcdice_calculator<2, 20, 1, 3>,
@@ -1202,22 +1202,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
 
 // player spellpower is capped to 50 in spl-zap.cc:spell_zap_power.
 _mon_hex_zap(ZAP_HIBERNATION, BEAM_HIBERNATION),
-
-{
-    ZAP_FLAME_TONGUE,
-    "flame tongue",
-    25,
-    new dicedef_calculator<1, 8, 1, 4>,
-    new tohit_calculator<11, 1, 6>,
-    new dicedef_calculator<3, 3, 1, 12>,
-    new tohit_calculator<7, 1, 6>,
-    RED,
-    false,
-    BEAM_FIRE,
-    DCHAR_FIRED_BOLT,
-    false,
-    false,
-},
 
 {
     ZAP_SANDBLAST,
@@ -1805,6 +1789,22 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     NUM_DCHAR_TYPES,
     false,
     false,
+},
+
+{
+    ZAP_PLASMA,
+    "fiery plasma",
+    200,
+    new dicedef_calculator<1, 11, 3, 5>,
+    new tohit_calculator<7, 1, 40>,
+    new dicedef_calculator<3, 10, 1, 17>,
+    new tohit_calculator<16, 1, 40>,
+    RED,
+    false,
+    BEAM_FIRE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false
 },
 
 };

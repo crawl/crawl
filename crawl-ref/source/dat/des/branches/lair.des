@@ -1913,6 +1913,30 @@ ENDMAP
 ###############################################################################
 # Remaining non-grouped regular Lair vaults.
 
+NAME:   beargit_carnivore_pack
+ORIENT: float
+DEPTH:  Lair:2-
+KMONS:  1 = komodo dragon band
+KMONS:  2 = skyshark band
+KMONS:  3 = Grum, komodo dragon
+KMONS:  4 = Snorg, skyshark
+SUBST:  1 : 111122222234, 1 = 11., 2 = 2.
+NSUBST: 3 = 3 / ., 4 = 4 / ., . = ..`
+KPROP:  ` = bloody
+{{
+if crawl.coinflip() then
+    dgn.delayed_decay(_G, 'a', "dire elephant skeleton")
+else
+    dgn.delayed_decay(_G, 'a', "dire elephant corpse")
+end
+}}
+MAP
+.....
+..1..
+.1a1.
+.....
+ENDMAP
+
 # Rats! (Lemuel) [combined both Lair and D versions]
 NAME:    lemuel_ratsnest
 ORIENT:  northeast
@@ -3114,7 +3138,7 @@ TAGS:    no_pool_fixup no_wall_fixup no_monster_gen
 PLACE:   Lair:$
 ORIENT:  north
 # A necromancy-themed loot item behind the obsidian statue.
-ITEM:    morg w:1 / rapier ego:pain w:5 / rapier ego:draining w:5 \
+ITEM:    rapier ego:pain w:5 / rapier ego:draining w:5 \
          / quickblade ego:pain w:5 / quickblade ego:draining w:5 \
          / demon blade ego:draining / sword of zonguldruk w:1 \
          / great sword ego:draining / triple sword ego:draining \
@@ -3250,7 +3274,7 @@ KMONS:   2 = cane toad
 KMONS:   3 = vampire mosquito
 KMONS:   4 = blink frog
 KMONS:   5 = komodo dragon / hydra
-KMONS:   6 = patrolling tyrant leech
+KMONS:   6 = tyrant leech / skyshark w:5
 KMONS:   7 = electric eel
 KMONS:   8 = goliath frog
 KMONS:   p = plant
@@ -3471,7 +3495,8 @@ KITEM:   e = throwing net q:3 / rapier good_item / captain's cutlass w:2 \
 KMONS:   p = plant
 KMONS:   1 = hornet / wyvern / blink frog / cane toad / steam dragon
 KMONS:   2 = elephant / komodo dragon / polar bear / rime drake
-KMONS:   3 = snapping turtle / sea snake / manticore / wind drake / harpy
+KMONS:   3 = snapping turtle / sea snake / manticore / wind drake / harpy \
+         / skyshark
 KMONS:   4 = dire elephant / hydra / torpor snail
 KMONS:   5 = patrolling merfolk avatar
 KFEAT:   p12345de%*| = W

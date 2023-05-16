@@ -236,7 +236,7 @@ void reassess_starting_skills()
 
         if (sk == SK_DODGING && you.skills[SK_ARMOUR]
             && (is_useless_skill(SK_ARMOUR)
-                || you_can_wear(EQ_BODY_ARMOUR) != MB_TRUE))
+                || you_can_wear(EQ_BODY_ARMOUR) != true))
         {
             // No one who can't wear mundane heavy armour should start with
             // the Armour skill -- D:1 dragon armour is too unlikely.
@@ -549,7 +549,7 @@ bool skill_default_shown(skill_type sk)
     case SK_STEALTH:
     case SK_UNARMED_COMBAT:
     case SK_SPELLCASTING:
-        return true;
+        return !is_harmful_skill(sk);
     default:
         return false;
     }
@@ -1110,14 +1110,12 @@ bool check_training_target(skill_type sk)
     if (you.training_targets[sk] && target_met(sk))
     {
         bool base = you.skill(sk, 10, false, false) != you.skill(sk, 10);
-        mprf("%sraining target %d.%d for %s reached!",
-            base ? "Base t" : "T",
-            you.training_targets[sk] / 10,
-            you.training_targets[sk] % 10, skill_name(sk));
-
+        auto targ = you.training_targets[sk];
         you.training_targets[sk] = 0;
         you.train[sk] = TRAINING_DISABLED;
         you.train_alt[sk] = TRAINING_DISABLED;
+        mprf("%sraining target %d.%d for %s reached!",
+            base ? "Base t" : "T", targ / 10, targ % 10, skill_name(sk));
         return true;
     }
     return false;
@@ -1850,7 +1848,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         { "genus", lowercase_string(species::name(species, species::SPNAME_GENUS)) },
         { "Genus_Short", species == SP_DEMIGOD ? "God" :
                            species::name(species, species::SPNAME_GENUS) },
-        { "Walker", species::walking_verb(species) + "er" },
+        { "Walker", species::walking_title(species) + "er" },
         { "Weight", _stk_weight(species) },
     };
 

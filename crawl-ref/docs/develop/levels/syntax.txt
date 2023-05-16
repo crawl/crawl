@@ -732,7 +732,7 @@ MONS:     (list of monsters)
           "mons_giant_bat" tile, but is otherwise identical to a rat.
           Obviously, this substitution of one monster onto another should
           never be used, but it can be useful for customised vault monsters
-          if an alternate tile exists. In ASCII mode, this will do nothing.
+          if an alternative tile exists. In ASCII mode, this will do nothing.
 
           You can set the monster's god using the "god:" specifier as
           follows:

@@ -147,7 +147,9 @@ static equipment_type _acquirement_armour_slot(bool divine)
 
     return filtered_vector_select<equipment_type>(weights,
         [] (equipment_type etyp) {
-            return you_can_wear(etyp); // evading template nonsense
+            // return true if the player can wear at least something in this
+            // equipment type
+            return you_can_wear(etyp) != false;
         });
 }
 
@@ -169,7 +171,7 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
     switch (slot_type)
     {
         case EQ_CLOAK:
-            if (you_can_wear(EQ_CLOAK) == MB_TRUE)
+            if (you_can_wear(EQ_CLOAK))
                 return random_choose(ARM_CLOAK, ARM_SCARF);
             return ARM_SCARF;
         case EQ_GLOVES:
@@ -180,7 +182,7 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
             else
                 return ARM_BOOTS;
         case EQ_HELMET:
-            if (you_can_wear(EQ_HELMET) == MB_TRUE)
+            if (you_can_wear(EQ_HELMET))
                 return random_choose(ARM_HELMET, ARM_HAT);
             return ARM_HAT;
         case EQ_SHIELD:
@@ -316,7 +318,7 @@ static armour_type _useless_armour_type()
     // everyone has some kind of boot-slot item they can't wear, regardless
     // of what you_can_wear() claims
     for (auto &weight : weights)
-        if (you_can_wear(weight.first) == MB_TRUE && weight.first != EQ_BOOTS)
+        if (bool(you_can_wear(weight.first)) && weight.first != EQ_BOOTS)
             weight.second = 0;
 
     const equipment_type* slot_ptr = random_choose_weighted(weights);
@@ -326,13 +328,13 @@ static armour_type _useless_armour_type()
     {
         case EQ_BOOTS:
             // Boots-wearers get bardings, everyone else gets boots.
-            if (you_can_wear(EQ_BOOTS) == MB_TRUE)
+            if (you_can_wear(EQ_BOOTS))
                 return ARM_BARDING;
             return ARM_BOOTS;
         case EQ_GLOVES:
             return ARM_GLOVES;
         case EQ_HELMET:
-            if (you_can_wear(EQ_HELMET))
+            if (you_can_wear(EQ_HELMET) != false)
                 return ARM_HELMET;
             return random_choose(ARM_HELMET, ARM_HAT);
         case EQ_CLOAK:
@@ -353,7 +355,7 @@ static armour_type _useless_armour_type()
         }
         case EQ_BODY_ARMOUR:
             // only the rarest & most precious of unwearable armours for Xom
-            if (you_can_wear(EQ_BODY_ARMOUR))
+            if (you_can_wear(EQ_BODY_ARMOUR) != false)
                 return ARM_CRYSTAL_PLATE_ARMOUR;
             // arbitrary selection of [unwearable] dragon armours
             return random_choose(ARM_FIRE_DRAGON_ARMOUR,
@@ -778,8 +780,11 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
     COMPILE_CHECK(ARRAYSZ(_subtype_finders) == NUM_OBJECT_CLASSES);
     ASSERT(class_wanted != OBJ_RANDOM);
 
-    if (class_wanted == OBJ_ARMOUR && you.has_mutation(MUT_NO_ARMOUR))
+    if (class_wanted == OBJ_ARMOUR && you.has_mutation(MUT_NO_ARMOUR)
+        || class_wanted == OBJ_WEAPONS && you.has_mutation(MUT_NO_GRASPING))
+    {
         return OBJ_RANDOM;
+    }
 
     int type_wanted = OBJ_RANDOM;
 
@@ -1470,7 +1475,7 @@ class AcquireEntry : public InvEntry
         const colour_t keycol = LIGHTCYAN;
         const string keystr = colour_to_str(keycol);
         const string itemstr =
-            colour_to_str(menu_colour(text, item_prefix(*item), tag));
+            colour_to_str(menu_colour(text, item_prefix(*item), tag, false));
         const string gold_text = item->base_type == OBJ_GOLD
             ? make_stringf(" (you have %d gold)", you.gold) : "";
         return make_stringf(" <%s>%c %c </%s><%s>%s%s</%s>",
@@ -1514,14 +1519,15 @@ static void _create_acquirement_item(item_def &item)
     // Now that we have a selection, mark any generated unrands as not having
     // been generated, so they go back in circulation. Exclude the selected
     // item from this, if it's an unrand.
-    for (auto aitem : acq_items)
+    for (item_def &aitem : acq_items)
     {
         if (is_unrandom_artefact(aitem)
             && (!is_unrandom_artefact(item)
                 || !is_unrandom_artefact(aitem, item.unrand_idx)))
         {
-            set_unique_item_status(aitem, UNIQ_NOT_EXISTS);
+            destroy_item(aitem, true);
         }
+        // TODO: if we allow misc acquirement, also destroy unchosen miscs
     }
 
     take_note(Note(NOTE_ACQUIRE_ITEM, 0, 0, item.name(DESC_A),

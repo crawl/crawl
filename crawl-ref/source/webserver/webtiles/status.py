@@ -2,7 +2,7 @@ import tornado.web
 from tornado.escape import json_encode
 
 import webtiles
-from webtiles import config, ws_handler
+from webtiles import config, ws_handler, server
 
 class LobbyHandler(tornado.web.RequestHandler):
     def get(self):
@@ -42,3 +42,7 @@ class LobbyHandler(tornado.web.RequestHandler):
 
             games.append(game)
         self.write(json_encode(games))
+
+class VersionHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.write(json_encode(server.version_data()))

@@ -220,6 +220,7 @@ short_red SHORT_RED FIRST_NORM
 short_purple SHORT_PURPLE
 short_brown SHORT_BROWN
 short_brown2 SHORT_BROWN2
+short_blue SHORT_BLUE
 pj PJ
 middle_brown MIDDLE_BROWN
 middle_gray MIDDLE_GRAY
@@ -238,6 +239,7 @@ mesh_white MESH_WHITE
 mesh_blue MESH_BLUE LAST_NORM
 spider SPIDER
 seven_league_boots SEVEN_LEAGUE_BOOTS
+slippers SLIPPERS
 
 ## Mutations
 hooves HOOVES
@@ -537,12 +539,12 @@ glaive_of_prune GLAIVE_OF_PRUNE
 finisher FINISHER
 glaive_of_the_guard GLAIVE_OF_THE_GUARD
 wyrmbane WYRMBANE
+force_lance FORCE_LANCE
 rift RIFT
 lochaber_axe LOCHABER_AXE
 ## staves
 elemental_staff ELEMENTAL_STAFF
 asmodeus ASMODEUS
-dispater DISPATER
 olgreb OLGREB
 order ORDER
 battle_staff BATTLE_STAFF
@@ -550,6 +552,7 @@ battle_staff BATTLE_STAFF
 axe_trog AXE_TROG
 arga ARGA
 demon_axe DEMON_AXE
+holy_axe HOLY_AXE
 axe_of_woe AXE_OF_WOE
 frostbite FROSTBITE
 ## launchers
@@ -566,6 +569,7 @@ chilly_death CHILLY_DEATH
 crystal_spear CRYSTAL_SPEAR
 flaming_death FLAMING_DEATH
 # end TAG_MAJOR_VERSION
+skullcrusher SKULLCRUSHER
 
 %sdir player/hand1
 # blades
@@ -606,6 +610,8 @@ sword_three SWORD3
 sword_breaker SWORD_BREAKER
 sword_jag SWORD_JAG
 demonblade DEMON_BLADE
+demonblade
+randart_demon_blade
 enchantress_dagger ENCHANTRESS_DAGGER
 
 ## blunt
@@ -639,6 +645,8 @@ hammer_one HAMMER1
 hammer_two HAMMER2
 large_mace LARGE_MACE
 black_whip BLACK_WHIP
+black_whip
+randart_demon_whip
 sacred_scourge SACRED_SCOURGE
 sacred_scourge_two SACRED_SCOURGE2
 flail_stick FLAIL_STICK
@@ -666,6 +674,8 @@ halberd2
 pick_axe PICK_AXE
 trident TRIDENT
 trident_demon DEMON_TRIDENT
+trident_demon
+randart_demon_trident
 trident_elec TRIDENT_ELEC
 trident_two TRIDENT2
 trident_two2
@@ -716,6 +726,14 @@ staff_evil STAFF_EVIL
 staff_ring_blue STAFF_RING_BLUE
 staff_mummy STAFF_MUMMY
 staff_fork STAFF_FORK
+
+staff-artefact1 STAFF_RANDART_OFFSET
+staff-artefact2
+staff-artefact3
+staff-artefact4
+staff-artefact5
+staff-artefact6
+staff-artefact7
 
 # start TAG_MAJOR_VERSION == 34
 ## rods
@@ -841,6 +859,10 @@ orb2 ORB2
 orb3 ORB3 ORB_LAST
 
 ##unrand (or unique) shields
+orb_of_dispater ORB_OF_DISPATER
+orb_of_wucad_mu ORB_OF_WUCAD_MU
+orb_of_battle ORB_OF_BATTLE
+
 buckler_spriggan BUCKLER_SPRIGGAN
 buckler_warlock BUCKLER_WARLOCK
 
@@ -848,6 +870,7 @@ kite_shield_donald KITE_SHIELD_DONALD
 kite_shield_bullseye KITE_SHIELD_BULLSEYE
 kite_shield_gong KITE_SHIELD_GONG
 kite_shield_of_resistance KITE_SHIELD_OF_RESISTANCE
+kite_shield_storm_queen KITE_SHIELD_STORM_QUEEN
 
 tower_shield_of_ignorance TOWER_SHIELD_OF_IGNORANCE
 tower_shield_louise TOWER_SHIELD_LOUISE

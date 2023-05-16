@@ -7,6 +7,7 @@
 #include "cio.h"
 #include "describe.h"
 #include "env.h"
+#include "evoke.h"
 #include "tile-env.h"
 #include "invent.h"
 #include "item-name.h"
@@ -346,9 +347,9 @@ bool InventoryRegion::update_tip_text(string& tip)
             string tmp = "";
             if (equipped)
             {
-                if (wielded && !item_is_evokable(item))
+                if (wielded)
                 {
-                    if (type == OBJ_JEWELLERY || type == OBJ_ARMOUR
+                    if (type == OBJ_JEWELLERY || type == OBJ_ARMOUR // ???
                         || is_weapon(item))
                     {
                         type = OBJ_WEAPONS + EQUIP_OFFSET;
@@ -382,8 +383,11 @@ bool InventoryRegion::update_tip_text(string& tip)
                 }
                 break;
             case OBJ_MISCELLANY:
-                tmp += "Evoke (V)";
+            case OBJ_WANDS:
+                tmp += "Evoke (%)";
                 cmd.push_back(CMD_EVOKE);
+                if (wielded)
+                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;
             case OBJ_ARMOUR:
                 if (!you.has_mutation(MUT_NO_ARMOUR))
@@ -413,12 +417,6 @@ bool InventoryRegion::update_tip_text(string& tip)
                     if (wielded || you.can_wield(item))
                         _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", wielded);
                 }
-                break;
-            case OBJ_WANDS:
-                tmp += "Evoke (%)";
-                cmd.push_back(CMD_EVOKE);
-                if (wielded)
-                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;
             case OBJ_BOOKS:
                 if (item_type_known(item) && item_is_spellbook(item)
@@ -571,7 +569,7 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
         desc.quantity = -1;
 
     if (type == OBJ_WEAPONS || type == OBJ_MISSILES
-        || type == OBJ_ARMOUR
+        || type == OBJ_ARMOUR || item.base_type == OBJ_STAVES
 #if TAG_MAJOR_VERSION == 34
         || type == OBJ_RODS
 #endif
@@ -579,8 +577,6 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
     {
         desc.special = tileidx_known_brand(item);
     }
-    else if (type == OBJ_CORPSES)
-        desc.special = tileidx_corpse_brand(item);
 
     desc.flag = 0;
     if (item.cursed())

@@ -597,6 +597,14 @@ void miscast_effect(spell_type spell, int fail)
         if (spell_typematch(spell, bit))
             school_list.push_back(bit);
 
+    // only monster spells should lack schools altogether, and they should
+    // only be castable under wizmode
+    ASSERT(you.wizard && (get_spell_flags(spell) & spflag::monster)
+            || !school_list.empty());
+
+    if (school_list.empty())
+        return;
+
     spschool school = *random_iterator(school_list);
 
     if (school == spschool::necromancy

@@ -665,7 +665,7 @@ static const char *kill_method_names[] =
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration", "headbutt", "rolling",
     "mirror_damage", "spines", "frailty", "barbs", "being_thrown",
-    "collision", "zot", "constriction",
+    "collision", "zot", "constriction", "exploremode",
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
@@ -2032,6 +2032,19 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
     return desc;
 }
 
+static bool _very_boring_death_type(int death_type)
+{
+    switch (death_type)
+    {
+    case KILLED_BY_QUITTING:
+    case KILLED_BY_WIZMODE:
+    case KILLED_BY_EXPLORING:
+        return true;
+    default:
+        return false;
+    }
+}
+
 string scorefile_entry::death_place(death_desc_verbosity verbosity) const
 {
     bool verbose = (verbosity == DDV_VERBOSE);
@@ -2043,7 +2056,7 @@ string scorefile_entry::death_place(death_desc_verbosity verbosity) const
     if (verbosity == DDV_ONELINE || verbosity == DDV_TERSE)
         return " (" + level_id(branch, dlvl).describe() + ")";
 
-    if (verbose && death_type != KILLED_BY_QUITTING && death_type != KILLED_BY_WIZMODE)
+    if (verbose && !_very_boring_death_type(death_type))
         place += "...";
 
     // where did we die?
@@ -2339,6 +2352,10 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
     case KILLED_BY_WIZMODE:
         desc += terse? "wizmode" : "Entered wizard mode";
+        break;
+
+    case KILLED_BY_EXPLORING:
+        desc += terse? "exploremode" : "Entered explore mode";
         break;
 
     case KILLED_BY_DRAINING:
@@ -2729,8 +2746,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             else
                 desc = _append_sentence_delimiter(desc, ".");
         }
-        else if (death_type != KILLED_BY_QUITTING
-                 && death_type != KILLED_BY_WIZMODE)
+        else if (!_very_boring_death_type(death_type))
         {
             desc += _hiscore_newline_string();
 

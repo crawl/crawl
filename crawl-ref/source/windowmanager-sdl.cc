@@ -706,7 +706,7 @@ void SDLWrapper::set_window_placement(coord_def *m_windowsz)
                             - (tpos & TASKBAR_H ? tsize : 0)
                             - (tpos & TASKBAR_TOP ? 0 : title_bar)
                             - border);
-        sprintf(env_str, "SDL_VIDEO_WINDOW_POS=%d,%d", x, y);
+        snprintf(env_str, sizeof(env_str), "SDL_VIDEO_WINDOW_POS=%d,%d", x, y);
         putenv(env_str);
     }
     else

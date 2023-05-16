@@ -72,9 +72,10 @@ void setup_spore_explosion(bolt & beam, const monster& origin)
     beam.ex_size = 1;
 }
 
-dice_def ball_lightning_damage(int hd)
+dice_def ball_lightning_damage(int hd, bool random)
 {
-    return dice_def(3, 5 + div_rand_round(hd * 5, 4));
+    const int plus = random ? div_rand_round(hd * 5, 4) : hd * 5 / 4;
+    return dice_def(3, 5 + plus);
 }
 
 static void _setup_lightning_explosion(bolt & beam, const monster& origin)

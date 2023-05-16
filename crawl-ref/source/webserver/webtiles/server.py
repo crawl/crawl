@@ -16,12 +16,16 @@ import tornado.ioloop
 import tornado.template
 import tornado.web
 from tornado.ioloop import IOLoop
+# do not add tornado.platform here without changing do_chroot()
 
 import webtiles
 from webtiles import auth, load_games, process_handler, userdb, config
 from webtiles import game_data_handler, util, ws_handler, status
 
 class MainHandler(tornado.web.RequestHandler):
+    # async def _execute(self, transforms, *args, **kwargs):
+    #     await tornado.web.RequestHandler._execute(self, transforms, *args, **kwargs)
+
     def get(self):
         host = self.request.host
         if self.request.protocol == "https" or self.request.headers.get("x-forwarded-proto") == "https":
@@ -38,7 +42,8 @@ class MainHandler(tornado.web.RequestHandler):
             if recovery_token_error:
                 logging.warning("Recovery token error from %s", self.request.remote_ip)
 
-        self.render("client.html", socket_server = protocol + host + "/socket",
+        with util.SlowWarning("Slow IO: render client.html"):
+            self.render("client.html", socket_server = protocol + host + "/socket",
                     username = None,
                     config = config,
                     reset_token = recovery_token, reset_token_error = recovery_token_error)
@@ -64,11 +69,20 @@ def load_version():
         _crawl_version = "unknown"
 
 
+def version_data():
+    return dict(
+        webtiles=_crawl_version,
+        tornado=tornado.version,
+        python="%d.%d.%d" % (sys.version_info[0], sys.version_info[1], sys.version_info[2]))
+
+
 def version():
-    return "Webtiles (%s) running with Tornado %s and Python %d.%d.%d" % (
-        _crawl_version,
-        tornado.version,
-        sys.version_info[0], sys.version_info[1], sys.version_info[2])
+    vdata = version_data()
+    # TODO convert to f string some day...
+    return "Webtiles (%s) running with Tornado %s and Python %s" % (
+        vdata["webtiles"],
+        vdata["tornado"],
+        vdata["python"])
 
 
 def err_exit(errmsg, exc_info=False):
@@ -192,19 +206,8 @@ def bind_server():
             (r"/socket", ws_handler.CrawlWebSocket),
             (r"/gamedata/([0-9a-f]*\/.*)", game_data_handler.GameDataHandler),
             (r"/status/lobby/", status.LobbyHandler),
+            (r"/status/version/", status.VersionHandler),
             ]
-
-    try:
-        # this is somewhat atrocious; the point is so that tornado slow
-        # callback logging actually shows the class name for whatever handler
-        # it is that causes a callback; Otherwise you just get the useless
-        # `RequestHandler._execute`. It would probably be better to explicitly
-        # override `_execute`, but that requires assuming asyncio tornado, and
-        # unfortunately I don't think we're quite there yet.
-        for p in handlers:
-            p[1]._execute.__qualname__ = "%s._execute" % (p[1].__qualname__)
-    except:
-        pass
 
     application = tornado.web.Application(handlers,
                                     gzip=config.get('use_gzip'), **settings)
@@ -301,15 +304,18 @@ def monkeypatch_tornado24():
     IOLoop.current = staticmethod(IOLoop.instance)
 
 
-def ensure_tornado_current():
+def ensure_tornado_current(exit=True):
     try:
         tornado.ioloop.IOLoop.current()
     except AttributeError:
         monkeypatch_tornado24()
         tornado.ioloop.IOLoop.current()
-        logging.error(
-            "You are running a deprecated version of tornado; please update"
-            " to at least version 4.")
+        err = ("You are running a deprecated version of tornado; please update"
+               " to a current version.")
+        if exit:
+            sys.err(err)
+        else:
+            logging.error(err)
 
 
 def usr1_handler(signum, frame):
@@ -417,7 +423,7 @@ def reset_token_commands(args):
             if not user_info.email:
                 logging.warning("No email set for account '%s', use caution!" % username)
             print("Setting a password reset token on account '%s'." % username)
-            print("Email: %s\nMessage body to send to user:\n%s\n" % (username, msg))
+            print("Email: %s\nMessage body to send to user:\n%s\n" % (user_info.email, msg))
             return True
     return False
 
@@ -625,10 +631,28 @@ def parse_args_util():
     return result, help_fun
 
 
-def run_util():
-    args, help_fun = parse_args_util()
+def do_chroot():
     if config.get('chroot'):
         os.chroot(config.get('chroot'))
+        try:
+            # try to fail early, with an informative message, if this is not
+            # going to work
+            # the choice of tornado.platform is a bit heuristic, but it is
+            # currently where the webserver seems to fail on import after a chroot.
+            # If it is ever imported at the top of this file, something else would
+            # be needed.
+            import tornado.platform
+        except:
+            # no logging available yet
+            print("Error: can't import `tornado.platform` in chroot. Did you copy"
+                " the python library for this version of python into the chroot?",
+                file=sys.stderr)
+            raise
+
+
+def run_util():
+    args, help_fun = parse_args_util()
+    do_chroot()
 
     if config.source_file is None:
         sys.exit("No configuration provided!")
@@ -668,8 +692,7 @@ def run_util():
 # ../server.py in the official repository for an example.
 def run():
     args = parse_args_main()
-    if config.get('chroot'):
-        os.chroot(config.get('chroot'))
+    do_chroot()
 
     if config.source_file is None:
         # we could try to automatically figure this out from server_path, if
@@ -745,7 +768,7 @@ def run():
             pass
 
         if dgl_mode:
-            ws_handler.status_file_timeout()
+            ws_handler.status_file_timeout() # note: tornado coroutine
             auth.purge_login_tokens_timeout()
             ws_handler.start_reading_milestones()
 
@@ -768,6 +791,10 @@ def run():
     except:
         err_exit("Server startup failed!", exc_info=True)
     finally:
+        # warning: need to be careful what appears in this finally block, since
+        # it may be called by child processes on fork in terminal.py in the
+        # event of rare bad timing or bugs. (So any global state that may be
+        # used here should be reset in the child process...)
         remove_pidfile()
 
 

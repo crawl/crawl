@@ -104,6 +104,7 @@ void find_connected_identical(const coord_def& d, set<coord_def>& out, bool know
 
 bool slime_wall_neighbour(const coord_def& c);
 int count_adjacent_slime_walls(const coord_def &pos);
+int slime_wall_corrosion(actor* act);
 void slime_wall_damage(actor* act, int delay);
 
 int count_adjacent_icy_walls(const coord_def &pos);
@@ -117,6 +118,8 @@ bool feat_eliminates_items(dungeon_feature_type feat);
 // Terrain changed under 'pos', perform necessary effects.
 void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type feat = DNGN_UNSEEN,
+                             unsigned short flv_nfeat = 0,
+                             unsigned short flv_nfeat_idx = 0,
                              bool preserve_features = false,
                              bool preserve_items = false,
                              bool temporary = false,

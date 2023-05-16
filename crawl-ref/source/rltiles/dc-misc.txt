@@ -219,9 +219,14 @@ cloud_flame_trail1
 cloud_flame_trail2
 cloud_flame_trail3
 
+cloud_electricity_trail0 CLOUD_ELECTRICITY
+cloud_electricity_trail1
+cloud_electricity_trail2
+cloud_electricity_trail3
+
 cloud_degeneration CLOUD_DEGENERATION
 
-cloud_blastsparks0 CLOUD_BLASTSPARKS
+cloud_blastsparks0 CLOUD_BLASTMOTES
 cloud_blastsparks1
 cloud_blastsparks2
 

@@ -482,13 +482,13 @@ void TabbedRegion::set_small_layout(bool use_small_layout, const coord_def &wind
 
     if (m_tabs.size() == 0 || !use_small_layout)
     {
-        dx = 32;
-        dy = 32;
+        dx = Options.tile_sidebar_pixels;
+        dy = Options.tile_sidebar_pixels;
     }
     else
     {
         // original dx (32) * region height (240) / num tabs (7) / height of tab (20)
-        int scale = (32-1) * windowsz.y/num_tabs()/m_tabs[m_active].height -1;
+        int scale = (Options.tile_sidebar_pixels-1) * windowsz.y/num_tabs()/m_tabs[m_active].height -1;
         scale /= 2; // half size fits better
         dx = scale;
         dy = scale;

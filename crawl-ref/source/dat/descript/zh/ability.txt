@@ -93,7 +93,7 @@ Dig ability
 %%%%
 Shaft Self ability
 
-把你送到往下一两层的随机位置，就像您跳进地洞陷阱一样。挖通地洞需要一些时间。
+把你送到往下一两层的随机位置，就像跳进地洞陷阱一样。挖通地洞需要一些时间。
 %%%%
 Evoke Blink ability
 
@@ -106,7 +106,7 @@ Evoke Berserk Rage ability
 %%%%
 Evoke Invisibility ability
 
-使用者隐形。隐形时会产生魔法污染，时间长了身体会发光，从而使隐形无效。
+使用者隐形。隐形时会造成魔法污染。污染程度高了身体会发光，从而使隐形无效。
 %%%%
 Evoke Thunderclouds ability
 
@@ -145,7 +145,7 @@ Sanctuary ability
 %%%%
 Cure All Mutations ability
 
-治愈你身体中所有的突变。仅能使用一次。
+治愈你体内所有变异。仅能使用一次。
 %%%%
 # 光明神
 Divine Shield ability
@@ -280,7 +280,7 @@ Trog's Hand ability
 
 唤起强大的恢复能力，并能与其他来源的进行叠加，
 即使对那些无法自行恢复的物种也生效。
-当激活的时候，使用者还能被赋予显著的免受多种魔法的防护。
+它还会强化使用者的意志力，从而能抵御许多魔法效果。
 %%%%
 Brothers in Arms ability
 
@@ -351,7 +351,7 @@ Triple Draw ability
 %%%%
 Deal Four ability
 
-在通常抽一张牌的时间内，从一副牌中发出四张牌。
+在通常抽一张牌的时间内，从一副牌中打出四张牌。
 %%%%
 Stack Five ability
 
@@ -435,7 +435,7 @@ Slimify ability
 Oozemancy ability
 
 从你周围的地牢墙壁中召唤出酸性软泥，对敌人造成伤害，
-伤害取决于他们所相邻的受影响墙壁的数量。
+伤害取决于他们所相邻的黏性墙壁的数量。
 %%%%
 # 艾申扎利
 Curse Item ability
@@ -445,7 +445,7 @@ Curse Item ability
 %%%%
 Shatter The Chains ability
 
- 摧毁一个选定的诅咒装备，解除佩戴者的诅咒。
+摧毁一个选定的诅咒装备，解除佩戴者的诅咒。
 %%%%
 # 迪斯姆诺
 Shadow Step ability
@@ -464,18 +464,18 @@ Shadow Form ability
 # 哥萨戈
 Potion Petition ability
 
-向哥萨戈祈求给你出售一批药水的效用。哥萨戈会一次三张清单，价格不一。
+向哥萨戈祈求给你出售一批药水的效用。哥萨戈会一次给出三张清单，其价格不一。
 %%%%
 Call Merchant ability
 
-给商人提供资金，以帮助他们在你所在的位置开店。
-开店的成本会随通过这种方式开设的商店的数量增加而增加。
+资助商人在你那里开店。
+开店的成本会随以这种方式开设的商店的数量增加而增加。
 %%%%
 Bribe Branch ability
 
 给哥萨戈3000金币，将其散布给当前分支的所有居住者，前提是该分支有智慧生物。
-然后这些怪物可能对与你的战斗不感兴趣（越强大的生物被贿赂的机率越大），
-并有很小的可能会加入你的行列，尽管他们还是不会离开自己的分支。
+这些怪物可能会失去与你战斗的兴趣（越强大的生物被贿赂的几率越大），
+并有很小的几率会加入你的行列，尽管他们还是不会离开自己的分支。
 接受贿赂的敌人会降低剩余的贿赂资金；
 当其耗尽时，如果贿赂的敌人没能成为盟友，他们将变得冷漠。
 %%%%
@@ -547,7 +547,7 @@ Sacrifice Love ability
 Sacrifice Courage ability
 
 舍弃勇气，会让你恐惧危险的怪物。
-这些怪物会让您充满恐惧，这会削弱你的法术威力以及战斗中打击和伤害怪物的能力。
+这些怪物会让你充满恐惧，这会削弱你的法术威力以及战斗中打击和伤害怪物的能力。
 %%%%
 Sacrifice Arcana ability
 
@@ -715,12 +715,12 @@ Evoke the Sceptre of Asmodeus ability
 被召唤的恶魔只会在有限的时间内保持友好，在最终消失之前会变得敌对。
 该能力的强度与激活技能成正比，并且该能力仅在使用迪斯帕特的节杖时可用。
 %%%%
-Evoke the Staff of Dispater ability
+Evoke Damnation ability
 
 用天谴轰击一个目标敌人。这些邪恶的力量会伤害目标和附近的任何人，
 并且不被任何保护手段削弱，比如盔甲或抗性。
 但某些生物，通常是那些能够自己释放天遣的生物，完全不受天遣的伤害。
-该能力的强度与激活技能成正比，并且该能力仅在使用迪斯帕特的法杖时可用。
+该能力的强度与激活技能成正比。
 %%%%
 Evoke the Staff of Olgreb ability
 

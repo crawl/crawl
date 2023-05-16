@@ -732,7 +732,9 @@ KITEM:    B = plate armour mundane ident:all plus:5, \
               crystal plate armour mundane ident:all plus:5
 KITEM:    C = buckler mundane ident:all plus:3, \
               kite shield mundane ident:all plus:3, \
-              tower shield mundane ident:all plus:3
+              tower shield mundane ident:all plus:3, \
+              orb ego:guile, \
+              orb ego:mayhem
 KITEM:    D = broad axe mundane ident:all plus:5, \
               battleaxe mundane ident:all plus:5, \
               executioner's axe mundane ident:all plus:5

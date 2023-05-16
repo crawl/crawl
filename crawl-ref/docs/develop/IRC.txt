@@ -10,4 +10,5 @@ Request will result in an IRC message about the pull request.
 
 The IRC channel is logged publicly, old logs are available online:
 
+http://crawl.akrasiac.org/logs/cheibriados/
 http://s-z.org/crawl-dev/#

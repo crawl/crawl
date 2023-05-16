@@ -118,9 +118,9 @@ bool starcursed_merge_fineff::mergeable(const final_effect &fe) const
     return o && def == o->def;
 }
 
-bool shock_serpent_discharge_fineff::mergeable(const final_effect &fe) const
+bool shock_discharge_fineff::mergeable(const final_effect &fe) const
 {
-    const shock_serpent_discharge_fineff *o = dynamic_cast<const shock_serpent_discharge_fineff *>(&fe);
+    const shock_discharge_fineff *o = dynamic_cast<const shock_discharge_fineff *>(&fe);
     return o && def == o->def;
 }
 
@@ -195,10 +195,10 @@ void deferred_damage_fineff::merge(const final_effect &fe)
     damage += ddamfe->damage;
 }
 
-void shock_serpent_discharge_fineff::merge(const final_effect &fe)
+void shock_discharge_fineff::merge(const final_effect &fe)
 {
-    const shock_serpent_discharge_fineff *ssdfe =
-        dynamic_cast<const shock_serpent_discharge_fineff *>(&fe);
+    const shock_discharge_fineff *ssdfe =
+        dynamic_cast<const shock_discharge_fineff *>(&fe);
     power += ssdfe->power;
 }
 
@@ -508,7 +508,7 @@ void starcursed_merge_fineff::fire()
     }
 }
 
-void shock_serpent_discharge_fineff::fire()
+void shock_discharge_fineff::fire()
 {
     if (!oppressor.alive())
         return;
@@ -520,11 +520,12 @@ void shock_serpent_discharge_fineff::fire()
         return;
     }
 
-    const monster* serpent = defender() ? defender()->as_monster() : nullptr;
+    const actor *serpent = defender();
     if (serpent && you.can_see(*serpent))
     {
-        mprf("%s electric aura discharges%s, shocking %s!",
+        mprf("%s %s discharges%s, shocking %s!",
              serpent->name(DESC_ITS).c_str(),
+             shock_source.c_str(),
              power < 4 ? "" : " violently",
              oppressor.name(DESC_THE).c_str());
     }
@@ -539,8 +540,11 @@ void shock_serpent_discharge_fineff::fire()
     int amount = roll_dice(3, 4 + power * 3 / 2);
     amount = oppressor.apply_ac(oppressor.beam_resists(beam, amount, true),
                                 0, ac_type::half);
+    const string name = serpent && serpent->alive() ?
+                        serpent->name(DESC_A, true) :
+                        "a shock serpent"; // dubious
     oppressor.hurt(serpent, amount, beam.flavour, KILLED_BY_BEAM,
-                                        "a shock serpent", "electric aura");
+                   name.c_str(), shock_source.c_str());
     if (amount)
         oppressor.expose_to_element(beam.flavour, amount);
 }
@@ -812,6 +816,8 @@ void spectral_weapon_fineff::fire()
     monster* sw = find_spectral_weapon(atkr);
     if (sw)
     {
+        if (sw == defend)
+            return; // don't attack yourself. too silly.
         // Is it already in range?
         const reach_type sw_range = sw->reach_range();
         if (sw_range > REACH_NONE
@@ -862,7 +868,8 @@ void spectral_weapon_fineff::fire()
                  chosen_pos,
                  atkr->mindex(),
                  MG_FORCE_BEH | MG_FORCE_PLACE);
-    mg.set_summoned(atkr, 1, 0);
+    mg.set_summoned(atkr, 0, 0);
+    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
     mg.props[TUKIMA_WEAPON] = *weapon;
     mg.props[TUKIMA_POWER] = 50;
 
@@ -872,9 +879,13 @@ void spectral_weapon_fineff::fire()
     if (!mons)
         return;
 
-    // We successfully made a new one! Kill off the old one.
+    // We successfully made a new one! Kill off the old one,
+    // and don't spam the player with a spawn message.
     if (sw)
+    {
+        mons->flags |= MF_WAS_IN_VIEW | MF_SEEN;
         end_spectral_weapon(sw, false, true);
+    }
 
     dprf("spawned at %d,%d", mons->pos().x, mons->pos().y);
 
@@ -882,6 +893,7 @@ void spectral_weapon_fineff::fire()
     melee_attk.attack();
 
     mons->summoner = atkr->mid;
+    mons->behaviour = BEH_SEEK; // for display
     atkr->props[SPECTRAL_WEAPON_KEY].get_int() = mons->mid;
 }
 

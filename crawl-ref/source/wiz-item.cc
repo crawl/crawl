@@ -495,13 +495,6 @@ void wizard_tweak_object()
     }
 }
 
-// Returns whether an item of this type can be an artefact.
-static bool _item_type_can_be_artefact(int type)
-{
-    return type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY
-           || type == OBJ_BOOKS;
-}
-
 static bool _make_book_randart(item_def &book)
 {
     int type;
@@ -645,7 +638,7 @@ void wizard_make_object_randart()
         return;
     }
 
-    if (!_item_type_can_be_artefact(item.base_type))
+    if (!item_type_can_be_artefact(item.base_type))
     {
         mpr("That item cannot be turned into an artefact.");
         return;
@@ -1290,7 +1283,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 
     // Now output the sub types.
     char format_str[80];
-    sprintf(format_str, "%%%ds: %%6.2f\n", max_width);
+    snprintf(format_str, sizeof(format_str), "%%%ds: %%6.2f\n", max_width);
 
     for (int i = 0; i < 256; ++i)
     {
@@ -1494,7 +1487,9 @@ static void _debug_rap_stats(FILE *ostat)
 #endif
         "ARTP_NOISE",
         "ARTP_PREVENT_SPELLCASTING",
+#if TAG_MAJOR_VERSION == 34
         "ARTP_CAUSE_TELEPORTATION",
+#endif
         "ARTP_PREVENT_TELEPORTATION",
         "ARTP_ANGRY",
 #if TAG_MAJOR_VERSION == 34

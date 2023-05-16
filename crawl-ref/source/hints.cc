@@ -99,13 +99,8 @@ void init_hints_options()
     // Clear possible debug messages before messing
     // with messaging options.
     clear_messages(true);
-//     Options.clear_messages = true;
     Options.show_more  = true;
     Options.small_more = false;
-
-#ifdef USE_TILE
-    Options.tile_tag_pref = TAGPREF_TUTORIAL;
-#endif
 }
 
 void init_hints()
@@ -263,8 +258,7 @@ void pick_hints(newgame_def& choice)
     auto popup = make_shared<ui::Popup>(vbox);
 
     popup->on_keydown_event([&](const KeyEvent& ev) {
-        auto key = ev.key();
-        if (key == CK_MOUSE_CMD)
+        if (ui::key_exits_popup(ev.key(), false))
             return done = cancelled = true;
         return false;
     });

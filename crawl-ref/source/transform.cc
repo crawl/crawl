@@ -78,9 +78,9 @@ string Form::melding_description() const
     else if ((blocked_slots & EQF_PHYSICAL) == EQF_PHYSICAL)
         return "Your equipment is almost entirely melded.";
     else if ((blocked_slots & EQF_STATUE) == EQF_STATUE
-             && (you_can_wear(EQ_GLOVES, false)
-                 || you_can_wear(EQ_BOOTS, false)
-                 || you_can_wear(EQ_BODY_ARMOUR, false)))
+             && (you_can_wear(EQ_GLOVES, false) != false
+                 || you_can_wear(EQ_BOOTS, false) != false
+                 || you_can_wear(EQ_BODY_ARMOUR, false) != false))
     {
         return "Your equipment is partially melded.";
     }
@@ -1982,7 +1982,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
 
     // Update merfolk swimming for the form change.
     if (you.has_innate_mutation(MUT_MERTAIL))
-        merfolk_check_swimming(false);
+        merfolk_check_swimming(env.grid(you.pos()), false);
 
     // Update skill boosts for the current state of equipment melds
     // Must happen before the HP check!
@@ -2099,7 +2099,7 @@ void untransform(bool skip_move)
 
         // Update merfolk swimming for the form change.
         if (you.has_innate_mutation(MUT_MERTAIL))
-            merfolk_check_swimming(false);
+            merfolk_check_swimming(env.grid(you.pos()), false);
     }
 
 #ifdef USE_TILE
@@ -2157,9 +2157,10 @@ void emergency_untransform()
  * Idempotent, so can be called after position/transformation change without
  * redundantly checking conditions.
  *
- * @param stepped Whether the player is performing a normal walking move.
+ * @param old_grid The feature type that the player was previously on.
+ * @param stepped  Whether the player is performing a normal walking move.
  */
-void merfolk_check_swimming(bool stepped)
+void merfolk_check_swimming(dungeon_feature_type old_grid, bool stepped)
 {
     const dungeon_feature_type grid = env.grid(you.pos());
     if (you.ground_level()
@@ -2170,6 +2171,10 @@ void merfolk_check_swimming(bool stepped)
     }
     else
         merfolk_stop_swimming();
+
+    // Flying above water grants evasion, so redraw even if not transforming.
+    if (feat_is_water(grid) || feat_is_water(old_grid))
+        you.redraw_evasion = true;
 }
 
 void merfolk_start_swimming(bool stepped)

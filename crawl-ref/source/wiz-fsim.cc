@@ -147,7 +147,7 @@ static void _write_version(FILE * o)
 static void _write_matchup(FILE * o, monster &mon, bool defend, int iter_limit)
 {
     fprintf(o, "%s: %s %s vs. %s (%d rounds) (%s)\n",
-            defend ? "Defense" : "Attack",
+            defend ? "Defence" : "Attack",
             species::name(you.species).c_str(),
             get_job_name(you.char_class),
             mon.name(DESC_PLAIN, true).c_str(),
@@ -735,7 +735,7 @@ void wizard_fight_sim(bool double_scale)
     }
     else
     {
-        mprf(MSGCH_PROMPT, "(A)ttack or (D)efense?");
+        mprf(MSGCH_PROMPT, "(A)ttack or (D)efence?");
 
         switch (toalower(getch_ck()))
         {

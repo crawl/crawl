@@ -865,6 +865,17 @@ int count_adjacent_slime_walls(const coord_def &pos)
     return count;
 }
 
+int slime_wall_corrosion(actor* act)
+{
+    ASSERT(act);
+
+    if (actor_slime_wall_immune(act))
+        return 0;
+
+    return count_adjacent_slime_walls(act->pos());
+}
+
+// slime wall damage under Jiyva's oozemancy; this should only affect monsters
 void slime_wall_damage(actor* act, int delay)
 {
     ASSERT(act);
@@ -876,32 +887,17 @@ void slime_wall_damage(actor* act, int delay)
     if (!walls)
         return;
 
-    // Consider pulling out damage from splash_with_acid() into
-    // its own function and calling that.
     const int strength = div_rand_round(3 * walls * delay, BASELINE_DELAY);
-    const int base_dam = act->is_player() ? roll_dice(4, strength) : roll_dice(2, 4);
+    const int base_dam = roll_dice(2, strength);
     const int dam = resist_adjust_damage(act, BEAM_ACID, base_dam);
-    if (act->is_player())
+    if (dam > 0 && you.see_cell_no_trans(act->pos()))
     {
-        mprf("You are splashed with acid%s%s",
-             dam > 0 ? "" : " but take no damage",
-             attack_strength_punctuation(dam).c_str());
-        ouch(dam, KILLED_BY_ACID, MID_NOBODY);
-    }
-    else if (dam > 0 && you.see_cell_no_trans(act->pos()))
-    {
-        const actor *agent = you.duration[DUR_OOZEMANCY] ? &you : nullptr;
         const char *verb = act->is_icy() ? "melt" : "burn";
         mprf((walls > 1) ? "The walls %s %s!" : "The wall %ss %s!",
               verb, act->name(DESC_THE).c_str());
-        act->hurt(agent, dam, BEAM_ACID);
+        act->hurt(&you, dam, BEAM_ACID);
         if (act->alive())
-        {
-            if (agent)
-                behaviour_event(act->as_monster(), ME_WHACK, agent, agent->pos());
-            else
-                behaviour_event(act->as_monster(), ME_DISTURB, 0, act->pos());
-        }
+            behaviour_event(act->as_monster(), ME_WHACK, &you, you.pos());
     }
 }
 
@@ -1266,6 +1262,8 @@ static void _dgn_check_terrain_player(const coord_def pos)
  */
 void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type nfeat,
+                             unsigned short flv_nfeat,
+                             unsigned short flv_nfeat_idx,
                              bool preserve_features,
                              bool preserve_items,
                              bool temporary,
@@ -1296,9 +1294,8 @@ void dungeon_terrain_changed(const coord_def &pos,
             unnotice_feature(level_pos(level_id::current(), pos));
 
         env.grid(pos) = nfeat;
-        // Reset feature tile
-        tile_env.flv(pos).feat = 0;
-        tile_env.flv(pos).feat_idx = 0;
+        tile_env.flv(pos).feat = flv_nfeat;
+        tile_env.flv(pos).feat_idx = flv_nfeat_idx;
 
         if (is_notable_terrain(nfeat) && you.see_cell(pos))
             seen_notable_thing(nfeat, pos);
@@ -2024,6 +2021,7 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                          terrain_change_type type, int mid)
 {
     dungeon_feature_type old_feat = env.grid(pos);
+    tile_flavour old_flv = tile_env.flv(pos);
     for (map_marker *marker : env.markers.get_markers_at(pos))
     {
         if (marker->get_type() == MAT_TERRAIN_CHANGE)
@@ -2051,11 +2049,15 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                 // ensure that terrain change happens. Sometimes a terrain
                 // change marker can get stuck; this allows re-doing such
                 // cases. Also probably needed by the else case above.
-                dungeon_terrain_changed(pos, newfeat, false, true, true);
+                dungeon_terrain_changed(pos, newfeat, 0, 0, false, true, true);
                 return;
             }
             else
+            {
                 old_feat = tmarker->old_feature;
+                old_flv.feat = tmarker->flv_old_feature;
+                old_flv.feat_idx = tmarker->flv_old_feature_idx;
+            }
         }
     }
 
@@ -2065,11 +2067,12 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
         return;
 
     map_terrain_change_marker *marker =
-        new map_terrain_change_marker(pos, old_feat, newfeat, dur, type,
-                                      mid, env.grid_colours(pos));
+        new map_terrain_change_marker(pos, old_feat, newfeat, old_flv.feat,
+                                      old_flv.feat_idx, dur, type, mid,
+                                      env.grid_colours(pos));
     env.markers.add(marker);
     env.markers.clear_need_activate();
-    dungeon_terrain_changed(pos, newfeat, false, true, true);
+    dungeon_terrain_changed(pos, newfeat, 0, 0, false, true, true);
 }
 
 static bool _revert_terrain_to(coord_def pos, dungeon_feature_type feat)
@@ -2132,6 +2135,8 @@ static bool _revert_terrain_to(coord_def pos, dungeon_feature_type feat)
 bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
 {
     dungeon_feature_type newfeat = DNGN_UNSEEN;
+    unsigned short newfeat_flv = 0;
+    unsigned short newfeat_flv_idx = 0;
     int colour = BLACK;
 
     for (map_marker *marker : env.markers.get_markers_at(pos))
@@ -2147,6 +2152,10 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
                     colour = tmarker->colour;
                 if (!newfeat)
                     newfeat = tmarker->old_feature;
+                if (!newfeat_flv)
+                    newfeat_flv = tmarker->flv_old_feature;
+                if (!newfeat_flv_idx)
+                    newfeat_flv_idx = tmarker->flv_old_feature_idx;
                 env.markers.remove(tmarker);
             }
             else
@@ -2168,7 +2177,8 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
     {
         if (ctype == TERRAIN_CHANGE_BOG)
             env.map_knowledge(pos).set_feature(newfeat, colour);
-        dungeon_terrain_changed(pos, newfeat, false, true);
+        dungeon_terrain_changed(pos, newfeat, newfeat_flv, newfeat_flv_idx,
+                                false, true);
         env.grid_colours(pos) = colour;
         return true;
     }

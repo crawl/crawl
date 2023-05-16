@@ -100,7 +100,7 @@ bool melee_attack::bad_attempt()
 
     if (!cleave_targets.empty())
     {
-        const int range = you.reach_range() == REACH_TWO ? 2 : 1;
+        const int range = you.reach_range();
         targeter_cleave hitfunc(attacker, defender->pos(), range);
         return stop_attack_prompt(hitfunc, "attack");
     }
@@ -325,7 +325,7 @@ bool melee_attack::handle_phase_dodged()
     if (defender->is_player())
         count_action(CACT_DODGE, DODGE_EVASION);
 
-    if (attacker != defender && adjacent(defender->pos(), attack_position)
+    if (attacker != defender
         && attacker->alive() && defender->can_see(*attacker)
         && !defender->cannot_act() && !defender->confused()
         && (!defender->is_player() || !attacker->as_monster()->neutral())
@@ -334,20 +334,23 @@ bool melee_attack::handle_phase_dodged()
         // FIXME: player's attack is -1, even for auxes
         && effective_attack_number <= 0)
     {
-        if (defender->is_player()
+        if (adjacent(defender->pos(), attack_position))
+        {
+            if (defender->is_player()
                 ? you.has_mutation(MUT_REFLEXIVE_HEADBUTT)
                 : mons_species(mons_base_type(*defender->as_monster()))
-                    == MONS_MINOTAUR)
-        {
-            do_minotaur_retaliation();
+                == MONS_MINOTAUR)
+            {
+                do_minotaur_retaliation();
+            }
+
+            // Retaliations can kill!
+            if (!attacker->alive())
+                return false;
+
+            if (defender->is_player() && player_equip_unrand(UNRAND_STARLIGHT))
+                do_starlight();
         }
-
-        // Retaliations can kill!
-        if (!attacker->alive())
-            return false;
-
-        if (defender->is_player() && player_equip_unrand(UNRAND_STARLIGHT))
-            do_starlight();
 
         maybe_riposte();
         // Retaliations can kill!
@@ -367,8 +370,13 @@ void melee_attack::maybe_riposte()
                     && player_equip_unrand(UNRAND_FENCERS)
                     && (!defender->weapon()
                         || is_melee_weapon(*defender->weapon()));
-    if (using_fencers && one_chance_in(3) && !is_riposte) // no ping-pong!
+    if (using_fencers
+        && !is_riposte // no ping-pong!
+        && one_chance_in(3)
+        && you.reach_range() >= grid_distance(you.pos(), attack_position))
+    {
         riposte();
+    }
 }
 
 void melee_attack::apply_black_mark_effects()
@@ -648,11 +656,11 @@ bool melee_attack::handle_phase_killed()
     return attack::handle_phase_killed();
 }
 
-static void _handle_spectral_brand(const actor &attacker, const actor &defender)
+static void _handle_spectral_brand(actor &attacker, const actor &defender)
 {
-    if (you.triggered_spectral || !defender.alive())
+    if (attacker.type == MONS_SPECTRAL_WEAPON || !defender.alive())
         return;
-    you.triggered_spectral = true;
+    attacker.triggered_spectral = true;
     spectral_weapon_fineff::schedule(attacker, defender);
 }
 
@@ -679,7 +687,7 @@ bool melee_attack::handle_phase_end()
         attacker->as_monster()->del_ench(ENCH_ROLLING);
     }
 
-    if (attacker->is_player() && defender)
+    if (defender)
     {
         if (damage_brand == SPWPN_SPECTRAL)
             _handle_spectral_brand(*attacker, *defender);
@@ -1073,6 +1081,9 @@ public:
             return fang_damage + (random ? div_rand_round(hd, denom) : hd / denom);
         }
 
+        if (you.get_mutation_level(MUT_ACIDIC_BITE))
+            return fang_damage + (random ? roll_dice(2, 4) : 4);
+
         return fang_damage;
     }
 
@@ -1341,7 +1352,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             player_announce_aux_hit();
 
             if (damage_brand == SPWPN_ACID)
-                defender->splash_with_acid(&you, 3);
+                defender->acid_corrode(3);
 
             if (damage_brand == SPWPN_VENOM && coinflip())
                 poison_monster(defender->as_monster(), &you);
@@ -2481,9 +2492,17 @@ bool melee_attack::mons_attack_effects()
         return false;
     }
 
+    const bool slippery = defender->is_player()
+                          && adjacent(attacker->pos(), defender->pos())
+                          && !player_stair_delay() // feet otherwise occupied
+                          && player_equip_unrand(UNRAND_SLICK_SLIPPERS);
     // Don't trample while player is moving - either mean or nonsensical
-    if (attacker != defender && attk_flavour == AF_TRAMPLE && !crawl_state.player_moving)
-        do_knockback();
+    if (attacker != defender
+        && (attk_flavour == AF_TRAMPLE || slippery)
+        && !crawl_state.player_moving)
+    {
+        do_knockback(slippery);
+    }
 
     special_damage = 0;
     special_damage_message.clear();
@@ -2668,7 +2687,7 @@ void melee_attack::mons_apply_attack_flavour()
 
             if (defender_visible)
             {
-                mprf("%s %s engulfed in a cloud of spores!",
+                mprf("%s %s engulfed in a cloud of dizzying spores!",
                      defender->name(DESC_THE).c_str(),
                      defender->conj_verb("are").c_str());
             }
@@ -2754,7 +2773,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_REACH_TONGUE:
     case AF_ACID:
-        defender->splash_with_acid(attacker, 3);
+        defender->splash_with_acid(attacker);
         break;
 
     case AF_CORRODE:
@@ -3033,7 +3052,46 @@ void melee_attack::mons_apply_attack_flavour()
         }
         break;
     }
+    case AF_BLOODZERK:
+    {
+        if (!defender->can_bleed() || !attacker->can_go_berserk())
+            break;
 
+        monster* mon = attacker->as_monster();
+        if (mon->has_ench(ENCH_MIGHT))
+        {
+            mon->del_ench(ENCH_MIGHT, true);
+            mon->add_ench(mon_enchant(ENCH_BERSERK, 1, mon,
+                                      random_range(100, 200)));
+            simple_monster_message(*mon, " enters a blood-rage!");
+        }
+        else
+        {
+            mon->add_ench(mon_enchant(ENCH_MIGHT, 1, mon,
+                                      random_range(100, 200)));
+            simple_monster_message(*mon, " tastes blood and grows stronger!");
+        }
+        break;
+    }
+    case AF_SLEEP:
+        if (crawl_state.player_moving)
+            break; // looks too weird to fall asleep while still in motion
+        if (!coinflip())
+            break;
+        if (attk_type == AT_SPORE)
+        {
+            if (defender->is_unbreathing())
+                break;
+
+            if (defender_visible)
+            {
+                mprf("%s %s engulfed in a cloud of soporific spores!",
+                     defender->name(DESC_THE).c_str(),
+                     defender->conj_verb("are").c_str());
+            }
+        }
+        defender->put_to_sleep(attacker, attacker->get_experience_level() * 3);
+        break;
     }
 }
 
@@ -3332,7 +3390,7 @@ void melee_attack::riposte()
     attck.attack();
 }
 
-bool melee_attack::do_knockback(bool trample)
+bool melee_attack::do_knockback(bool slippery)
 {
     if (defender->is_stationary())
         return false; // don't even print a message
@@ -3345,7 +3403,7 @@ bool melee_attack::do_knockback(bool trample)
     const coord_def old_pos = defender->pos();
     const coord_def new_pos = old_pos + old_pos - attack_position;
 
-    if (!x_chance_in_y(size_diff + 3, 6)
+    if (!slippery && !x_chance_in_y(size_diff + 3, 6)
         // need a valid tile
         || !defender->is_habitable_feat(env.grid(new_pos))
         // don't trample anywhere the attacker can't follow
@@ -3366,7 +3424,7 @@ bool melee_attack::do_knockback(bool trample)
                      defender_name(false).c_str(),
                      defender->conj_verb("are").c_str());
             }
-            else
+            else if (!slippery)
             {
                 mprf("%s %s %s ground!",
                      defender_name(false).c_str(),
@@ -3382,7 +3440,9 @@ bool melee_attack::do_knockback(bool trample)
     {
         const bool can_stumble = !defender->airborne()
                                   && !defender->incapacitated();
-        const string verb = can_stumble ? "stumble" : "are shoved";
+        const string verb = slippery ? "slip" :
+                         can_stumble ? "stumble"
+                                     : "are shoved";
         mprf("%s %s backwards!",
              defender_name(false).c_str(),
              defender->conj_verb(verb).c_str());
@@ -3391,8 +3451,7 @@ bool melee_attack::do_knockback(bool trample)
     // Schedule following _before_ actually trampling -- if the defender
     // is a player, a shaft trap will unload the level. If trampling will
     // somehow fail, move attempt will be ignored.
-    if (trample)
-        trample_follow_fineff::schedule(attacker, old_pos);
+    trample_follow_fineff::schedule(attacker, old_pos);
 
     if (defender->is_player())
     {

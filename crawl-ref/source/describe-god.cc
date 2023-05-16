@@ -262,8 +262,8 @@ string god_title(god_type which_god, species_type which_species, int piety)
     {
         { "Adj", species::name(which_species, species::SPNAME_ADJ) },
         { "Genus", species::name(which_species, species::SPNAME_GENUS) },
-        { "Walking", species::walking_verb(which_species) + "ing" },
-        { "Walker", species::walking_verb(which_species) + "er" },
+        { "Walking", species::walking_title(which_species) + "ing" },
+        { "Walker", species::walking_title(which_species) + "er" },
     };
 
     return replace_keys(title, replacements);
@@ -1084,26 +1084,20 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
         _god_extra_description(which_god)
     };
 
-#ifdef USE_TILE_LOCAL
-# define MORE_PREFIX "[<w>!</w>/<w>^</w>" "|<w>Right-click</w>" "]: "
-#else
-# define MORE_PREFIX "[<w>!</w>/<w>^</w>" "]: "
-#endif
-
     int mores_index = descs[3].empty() ? 0 : 1;
     const char* mores[2][4] =
     {
         {
-            MORE_PREFIX "<w>Overview</w>|Powers|Wrath",
-            MORE_PREFIX "Overview|<w>Powers</w>|Wrath",
-            MORE_PREFIX "Overview|Powers|<w>Wrath</w>",
-            MORE_PREFIX "Overview|Powers|Wrath"
+            "[<w>!</w>]: <w>Overview</w>|Powers|Wrath",
+            "[<w>!</w>]: Overview|<w>Powers</w>|Wrath",
+            "[<w>!</w>]: Overview|Powers|<w>Wrath</w>",
+            "[<w>!</w>]: Overview|Powers|Wrath"
         },
         {
-            MORE_PREFIX "<w>Overview</w>|Powers|Wrath|Extra",
-            MORE_PREFIX "Overview|<w>Powers</w>|Wrath|Extra",
-            MORE_PREFIX "Overview|Powers|<w>Wrath</w>|Extra",
-            MORE_PREFIX "Overview|Powers|Wrath|<w>Extra</w>"
+            "[<w>!</w>]: <w>Overview</w>|Powers|Wrath|Extra",
+            "[<w>!</w>]: Overview|<w>Powers</w>|Wrath|Extra",
+            "[<w>!</w>]: Overview|Powers|<w>Wrath</w>|Extra",
+            "[<w>!</w>]: Overview|Powers|Wrath|<w>Extra</w>"
         }
     };
 
@@ -1206,7 +1200,7 @@ void describe_god(god_type which_god)
     bool done = false;
     popup->on_keydown_event([&](const KeyEvent& ev) {
         const auto key = ev.key();
-        if (key == '!' || key == CK_MOUSE_CMD || key == '^')
+        if (key == '!' || key == '^')
         {
             int n = (desc_sw->current() + 1) % desc_sw->num_children();
             desc_sw->current() = more_sw->current() = n;
@@ -1217,7 +1211,7 @@ void describe_god(god_type which_god)
 #endif
             return true;
         }
-        return done = !desc_sw->current_widget()->on_event(ev);
+        return done = ui::key_exits_popup(key, false);
     });
 
 #ifdef USE_TILE_WEB
@@ -1283,9 +1277,9 @@ bool describe_god_with_join(god_type which_god)
         const auto keyin = ev.key();
 
         // Always handle escape and pane-switching keys the same way
-        if (keyin == CK_ESCAPE)
+        if (ui::key_exits_popup(keyin, false))
             return done = true;
-        if (keyin == '!' || keyin == CK_MOUSE_CMD || keyin == '^')
+        if (keyin == '!' || keyin == '^')
         {
             int n = (desc_sw->current() + 1) % desc_sw->num_children();
             desc_sw->current() = n;
@@ -1306,8 +1300,8 @@ bool describe_god_with_join(god_type which_god)
         // Next, allow child widgets to handle scrolling keys
         // NOTE: these key exceptions are also specified in ui-layouts.js
         if (keyin != 'J' && keyin != CK_ENTER)
-        if (desc_sw->current_widget()->on_event(ev))
-            return true;
+            if (desc_sw->current_widget()->on_event(ev))
+                return true;
 
         if (step == ABANDON)
         {

@@ -1126,6 +1126,61 @@ MAP
    .......
 ENDMAP
 
+# From the dcss channel on the roguelikes discord:
+# Ge0ff:   FR: a bowling-themed Dis vault with iron giants and a bunch of
+#          boulder beetles
+# ebering: @nicolae do you take commissions
+# Apparently I do.
+NAME:   nicolae_dis_bowling_alley
+TAGS:   transparent no_monster_gen
+DEPTH:  Dis:2-
+KMONS:  O = boulder beetle
+KMONS:  P = iron giant
+SUBST:  Q = OO.
+NSUBST: G = 1={ / G
+TILE:   G = dngn_statue_iron_golem
+: set_feature_name("granite_statue", "iron statue")
+MAP
+vvvvvvvvvvvvvvvv
+v.............Qv
+v.G........OP.Qv
+v...G.........Qv
+v.G...G....OP.vv
+v...G...G......@
+v.G...G....OP.vv
+v...G.........Qv
+v.G........OP.Qv
+v.............Qv
+vvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:    nicolae_dis_metal_lava_thing
+TAGS:    transparent
+DEPTH:   Dis:2-
+SHUFFLE: DEF, HJK, LMN, OPQ
+SUBST:   DHLO = ., EFJKMNPQ = l, 0 = .009, 9 = 9998
+: set_feature_name("granite_statue", "iron statue")
+TILE:    G = dngn_statue_iron
+MAP
+vlvlvlv...vlvlvlv
+l.....D...F.....l
+v.0.0.v.G.v.0.0.v
+l..G..D...F..G..l
+v.0.0.vEvEv.0.0.v
+l...............l
+vQvQv.......vHvHv
+....P.......J....
+..G.v...{...v.G..
+....P.......J....
+vOvOv.......vKvKv
+l...............l
+v.0.0.vMvMv.0.0.v
+l..G..N...L..G..l
+v.0.0.v.G.v.0.0.v
+l.....N...L.....l
+vlvlvlv...vlvlvlv
+ENDMAP
+
 default-depth:
 ##############################################################################
 # Dispater's castle - subvaulted, with three main versions

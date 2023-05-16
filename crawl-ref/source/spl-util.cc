@@ -301,6 +301,7 @@ bool add_spell_to_memory(spell_type spell)
     bool overwrite = false;
     for (const auto &entry : Options.auto_spell_letters)
     {
+        // `matches` has a validity check
         if (!entry.first.matches(sname))
             continue;
         for (char ch : entry.second)
@@ -492,6 +493,7 @@ bool spell_is_direct_attack(spell_type spell)
         || spell == SPELL_SHATTER
         || spell == SPELL_DISCHARGE
         || spell == SPELL_ARCJOLT
+        || spell == SPELL_PLASMA_BEAM
         || spell == SPELL_CHAIN_LIGHTNING
         || spell == SPELL_DRAIN_LIFE
         || spell == SPELL_CHAIN_OF_CHAOS
@@ -1077,8 +1079,9 @@ int spell_effect_noise(spell_type spell)
         expl_size = 1;
         break;
 
-    case SPELL_LRD:
-        expl_size = 2; // Can reach 3 only with crystal walls, which are rare
+    case SPELL_LRD: // Can reach 3 only with crystal walls, which are rare
+    case SPELL_FULMINANT_PRISM: // Players usually want the full size explosion
+        expl_size = 2;
         break;
 
     // worst case scenario for these
@@ -1395,7 +1398,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
                 return "you have no flesh to rot.";
         }
         // fallthrough to cloud spells
-    case SPELL_BLASTSPARK:
+    case SPELL_BLASTMOTE:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_FREEZING_CLOUD:
     case SPELL_MEPHITIC_CLOUD:
@@ -1438,7 +1441,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_ANIMATE_ARMOUR:
-        if (you_can_wear(EQ_BODY_ARMOUR, temp) == MB_FALSE)
+        if (!you_can_wear(EQ_BODY_ARMOUR, temp))
             return "you cannot wear body armour.";
         if (temp && !you.slot_item(EQ_BODY_ARMOUR))
             return "you have no body armour to summon the spirit of.";
@@ -1459,13 +1462,20 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_ELECTRIC_CHARGE:
+        // XXX: this is a little redundant with you_no_tele_reason()
+        // but trying to sort out temp and so on is a mess
+        if (you.stasis())
+            return "your stasis prevents you from teleporting.";
         if (temp)
         {
             const string no_move_reason = movement_impossible_reason();
             if (!no_move_reason.empty())
                 return no_move_reason;
-            if (!electric_charge_possible(true))
-                return "you can't see anything to charge at.";
+            if (you.no_tele(true))
+                return lowercase_first(you.no_tele_reason(true));
+            const string no_charge_reason = electric_charge_impossible_reason(true);
+            if (!no_charge_reason.empty())
+                return no_charge_reason;
         }
         break;
 
@@ -1515,7 +1525,7 @@ bool spell_no_hostile_in_range(spell_type spell)
 
     const int range = calc_spell_range(spell, 0);
     const int minRange = get_dist_to_nearest_monster();
-    const int pow = calc_spell_power(spell, true, false, true);
+    const int pow = calc_spell_power(spell);
 
     switch (spell)
     {
@@ -1613,7 +1623,7 @@ bool spell_no_hostile_in_range(spell_type spell)
              == spret::abort;
 
     case SPELL_ARCJOLT:
-        for (coord_def t : arcjolt_targets(you, pow, false))
+        for (coord_def t : arcjolt_targets(you, false))
         {
             const monster *mon = monster_at(t);
             if (mon != nullptr && !mon->wont_attack())
@@ -1676,7 +1686,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     if (zap != NUM_ZAPS)
     {
         beam.thrower = KILL_YOU_MISSILE;
-        zappy(zap, calc_spell_power(spell, true, false, true), false,
+        zappy(zap, calc_spell_power(spell), false,
               beam);
         if (spell == SPELL_MEPHITIC_CLOUD)
             beam.damage = dice_def(1, 1); // so that foe_info is populated
@@ -1731,8 +1741,18 @@ bool spell_no_hostile_in_range(spell_type spell)
             else
                 tempbeam.fire();
 
-            if (tempbeam.foe_info.count > 0
-                || allow_friends && tempbeam.friend_info.count > 0)
+            int foes = tempbeam.foe_info.count;
+            int friends = tempbeam.friend_info.count;
+
+            // Need to check both beam flavours for Plasma Beam.
+            if (zap == ZAP_PLASMA)
+            {
+                tempbeam.flavour = BEAM_ELECTRICITY;
+                tempbeam.fire();
+                foes += tempbeam.foe_info.count;
+            }
+
+            if (foes > 0 || allow_friends && friends > 0)
             {
                 found = true;
                 break;
@@ -1936,6 +1956,7 @@ const set<spell_type> removed_spells =
     SPELL_EXCRUCIATING_WOUNDS,
     SPELL_CONJURE_FLAME,
     SPELL_CORPSE_ROT,
+    SPELL_FLAME_TONGUE,
 #endif
 };
 

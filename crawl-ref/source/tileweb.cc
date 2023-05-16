@@ -733,14 +733,14 @@ void TilesFramework::send_options()
     finish_message();
 }
 
-#define ZOOM_INC 10
+#define ZOOM_INC 0.1
 
-static void _set_option_int(string name, int value)
+static void _set_option_fixedp(string name, fixedp<int,100> value)
 {
     tiles.json_open_object();
     tiles.json_write_string("msg", "set_option");
     tiles.json_write_string("name", name);
-    tiles.json_write_int("value", value);
+    tiles.json_write_int("value", value.to_scaled());
     tiles.json_close_object();
     tiles.finish_message();
 }
@@ -749,17 +749,17 @@ void TilesFramework::zoom_dungeon(bool in)
 {
     if (m_ui_state == UI_VIEW_MAP)
     {
-        Options.tile_map_scale = min(300, max(20,
+        Options.tile_map_scale = min(3.0, max(0.2,
                     Options.tile_map_scale + (in ? ZOOM_INC : -ZOOM_INC)));
-        _set_option_int("tile_map_scale", Options.tile_map_scale);
-        dprf("Zooming map to %d", Options.tile_map_scale);
+        _set_option_fixedp("tile_map_scale", Options.tile_map_scale);
+        dprf("Zooming map to %g", (float) Options.tile_map_scale);
     }
     else
     {
         Options.tile_viewport_scale = min(300, max(20,
                     Options.tile_viewport_scale + (in ? ZOOM_INC : -ZOOM_INC)));
-        _set_option_int("tile_viewport_scale", Options.tile_viewport_scale);
-        dprf("Zooming to %d", Options.tile_viewport_scale);
+        _set_option_fixedp("tile_viewport_scale", Options.tile_viewport_scale);
+        dprf("Zooming to %g", (float) Options.tile_viewport_scale);
     }
     // calling redraw explicitly is not needed here: it triggers from a
     // listener on the webtiles side.
@@ -1092,6 +1092,7 @@ void TilesFramework::_send_player(bool force_full)
     _update_string(force_full, c.job_title, filtered_lang(player_title()),
                    "title");
     _update_int(force_full, c.wizard, you.wizard, "wizard");
+    _update_int(force_full, c.explore, you.explore, "explore");
     _update_string(force_full, c.species, species::name(you.species),
                    "species");
     string god = "";
@@ -1380,13 +1381,15 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
         json_write_string("qty_field", _qty_field_name(next));
 
         const string prefix = item_prefix(next);
-        const int prefcol = menu_colour(next.name(DESC_INVENTORY), prefix);
+        const int prefcol = menu_colour(next.name(DESC_INVENTORY), prefix, "inventory", false);
         if (force_full)
             json_write_int("col", macro_colour(prefcol));
         else
         {
             const string current_prefix = item_prefix(current);
-            const int current_prefcol = menu_colour(current.name(DESC_INVENTORY), current_prefix);
+            const int current_prefcol = menu_colour(
+                current.name(DESC_INVENTORY), current_prefix,
+                "inventory", false);
 
             if (current_prefcol != prefcol)
                 json_write_int("col", macro_colour(prefcol));
@@ -2178,8 +2181,8 @@ void TilesFramework::_send_everything()
             for (const auto& json : frame.ui_json)
                 if (!json.empty())
                 {
-                    m_msg_buf.append(json);
                     json_write_comma();
+                    m_msg_buf.append(json);
                 }
             continue;
         }

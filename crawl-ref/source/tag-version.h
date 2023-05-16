@@ -277,6 +277,10 @@ enum tag_minor_version
     TAG_MINOR_SPAWN_RATE,          // Remove the env.spawn_random_rate field.
     TAG_MINOR_REMOVE_AK,           // Remove Abyssal Knight.
     TAG_MINOR_BUTTERSUMMONS,       // Alternate ?butt with ?summ, not ?fog.
+    TAG_MINOR_WU_ABILITIES,        // Make Lunge and Whirlwind Abil, not Invok
+    TAG_MINOR_MORE_WAYPOINTS,      // Increase the number of allowed waypoints.
+    TAG_MINOR_GENERATED_MISC,      // Track generated misc item types.
+    TAG_MINOR_SAVE_TERRAIN_FLAVOUR, // Save flavour in terrain-change markers.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

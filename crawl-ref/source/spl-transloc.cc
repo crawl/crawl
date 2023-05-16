@@ -586,23 +586,37 @@ bool find_charge_target(vector<coord_def> &target_path, int max_range,
 
 static void _charge_cloud_trail(const coord_def pos)
 {
-    if (!apply_cloud_trail(pos))
-        place_cloud(CLOUD_DUST, pos, 2 + random2(3), &you);
+    if (!cell_is_solid(pos) && !apply_cloud_trail(pos))
+        place_cloud(CLOUD_ELECTRICITY, pos, 2 + random2(3), &you);
 }
 
-bool electric_charge_possible(bool allow_safe_monsters)
+string electric_charge_impossible_reason(bool allow_safe_monsters)
 {
     // General movement checks are handled elsewhere.
     targeter_charge tgt(&you, spell_range(SPELL_ELECTRIC_CHARGE, 0));
+    int nearby_mons = 0;
+    string example_reason = "";
     for (monster_near_iterator mi(&you); mi; ++mi)
     {
-        if (tgt.valid_aim(mi->pos())
-            && (allow_safe_monsters || !mons_is_safe(*mi, false) || mons_class_is_test(mi->type)))
+        ++nearby_mons;
+        if (!tgt.valid_aim(mi->pos()))
         {
-            return true;
+            example_reason = make_stringf("you can't charge at %s because %s",
+                                          mi->name(DESC_THE).c_str(),
+                                          tgt.why_not.c_str());
+        }
+        else if (allow_safe_monsters
+                 || !mons_is_safe(*mi, false)
+                 || mons_class_is_test(mi->type))
+        {
+            return "";
         }
     }
-    return false;
+    if (!nearby_mons)
+        return "you can't see anything to charge at.";
+    if (nearby_mons == 1)
+        return lowercase_string(example_reason);
+    return "there's one issue or another keeping you from charging at any nearby foe.";
 }
 
 string movement_impossible_reason()
@@ -692,14 +706,13 @@ spret electric_charge(int powc, bool fail, const coord_def &target)
     else
         mpr("You charge forward with an electric crackle!");
 
-    remove_water_hold();
-
     if (dest_mon)
         _displace_charge_blocker(*dest_mon);
 
     move_player_to_grid(dest_pos, true);
     noisy(4, you.pos());
     apply_barbs_damage();
+    you.clear_far_engulf(false, true);
     _charge_cloud_trail(orig_pos);
     for (auto it = target_path.begin(); it != target_path.end() - 2; ++it)
         _charge_cloud_trail(*it);
@@ -1800,10 +1813,37 @@ spret blinkbolt(int power, bolt &beam, bool fail)
         return spret::abort;
     }
 
+    if (mons_aligned(mons, &you) || mons_is_firewood(*mons))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+
+    const monster* beholder = you.get_beholder(beam.target);
+    if (beholder)
+    {
+        mprf("You cannot blinkbolt away from %s!",
+            beholder->name(DESC_THE, true).c_str());
+        return spret::abort;
+    }
+
+    const monster* fearmonger = you.get_fearmonger(beam.target);
+    if (fearmonger)
+    {
+        mprf("You cannot blinkbolt closer to %s!",
+            fearmonger->name(DESC_THE, true).c_str());
+        return spret::abort;
+    }
+
     if (!player_tracer(ZAP_BLINKBOLT, power, beam))
         return spret::abort;
 
     fail_check();
+
+    // Storm Form is immune to constriction, but check for it anyway in
+    // case casting Blinkbolt becomes possible in some other way!
+    if (!you.attempt_escape(2))
+        return spret::success;
 
     beam.thrower = KILL_YOU_MISSILE;
     zappy(ZAP_BLINKBOLT, power, false, beam);

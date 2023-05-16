@@ -447,7 +447,7 @@ static string _describe_monsters_from_species(const vector<details> &species)
         [] (const details &det)
         {
             string name = det.name;
-            if (mons_is_unique(det.mon->type))
+            if (mons_is_unique(det.mon->type) || mons_is_specially_named(det.mon->type))
                 return name;
             else if (det.count > 1 && det.genus)
             {

@@ -1,14 +1,18 @@
 %%%%
 tutorial intro
 
-你可以按下<input>$cmd[CMD_REPLAY_MESSAGES]</input>随时查看这条信息。另外，按下
-<input>Space</input>可以清除<cyan>--更多信息--</cyan> 提示。
+你可以按下<input>$cmd[CMD_REPLAY_MESSAGES]</input>随时查看所有消息。另外，
+按下<input>空格</input><localtiles>或鼠标<input>左击</input></localtiles>
+可以清除<cyan>--更多--</cyan> 信息。
 %%%%
+##############################################
+# 教程地图1：移动和探索   #
+##############################################
 tutorial1 start
 
-本课程中你将学习如何移动以及如何探索地城。
-你可以<localtiles>用<input>鼠标</input>单击某个你想去的地方来移动，或者
-</localtiles>使用<input>方向键</input>。
+这一课中你将学习如何移动以及如何探索楼层。
+你可以用<localtiles>你的<input>鼠标</input>点击某个地方，
+或</localtiles>用<input>方向键</input>进行移动。
 %%%%
 tutorial1 go_on
 
@@ -17,67 +21,66 @@ tutorial1 go_on
 tutorial1 diagonal
 
 :nowrap
-你可以使用<input>数字小键盘</input>（试试打开/关上Numlock）或者使用<input>方向键组合</input>。
+斜向移动的话，可以通过<input>数字键盘</input>（试着打开/关闭Numlock）
+<localtiles>，</localtiles> <console>或</console><input>vi键位</input><console>.</console><localtiles>，
+或是<input>鼠标</input>。</localtiles>
 
-  数字键：     <w>7 8 9</w>          方向键组合： <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
-                \|/                         \|/
-               <w>4</w>-<w>.</w>-<w>6</w>                       <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
-                /|\                         /|\
-               <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
-
-<localtiles>同样你可以使用 <input>鼠标点击</input>移动。</localtiles>
+  数字键盘：    <w>7 8 9</w>       vi键位：<w>   $cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w><localtiles>    鼠标：     <w>点击</w>地面</localtiles>
+               \|/                     \|/
+              <w>4</w>-<w>.</w>-<w>6</w> <w>                  $cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+               /|\                     /|\
+              <w>1 2 3</w> <w>                  $cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 %%%%
 tutorial1 shiftmove
 
-想要快速通过一个通道，可以按下 <input>Shift</input> +
-<input>数字键盘方向键</input>（试试打开/关上Numlock）
-或<input>方向组合键</input>。
+想要快速穿过通道，可以按下<input>Shift</input>
++<input>数字键盘</input>（试着打开/关闭Numlock）或<input>vi键位</input>。
 %%%%
 tutorial1 downstairs
 
-当你站在向下的楼梯口时，你可以按下 <input>$cmd[CMD_GO_DOWNSTAIRS]</input>
-<localtiles>或<input>Shift+左键</input> 点击你的人物 </localtiles>来进入下一层。
+当你站在向下的楼梯口时，
+你可以按下<input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles>
+或<input>左击</input>你的角色</localtiles>。
 %%%%
 tutorial1 levelmap
 
-什么情况？要搞清楚你在哪里，<tiles>请查看<w>小地图</w>，位于屏幕右侧。 </tiles>
-<localtiles>你可以用<input>鼠标右键点击</input>来仔细查看地图的一部分，也可以
-<input>左键点击</input>移动至那里。</localtiles><webtiles>你可以按下
-<input>$cmd[CMD_DISPLAY_MAP]</input>查看整个地图，移动鼠标浏览地图内容。按下
-<input>.</input> 或 <input>Enter</input>可以移动至你鼠标光标的位置。
-按下<input>Escape</input>返回正常游戏。 </webtiles>
-<console>你可以按下<input>$cmd[CMD_DISPLAY_MAP]</input> 查看整个地图，
-并移动鼠标浏览地图内容。按下<input>.</input> 或
-<input>Enter</input>可以移动至你鼠标光标的位置。按下 <input>Escape</input>
-返回游戏。</console>
+什么情况？要搞清楚你在哪里，<tiles>请查看位于屏幕右侧的<w>小地图</w>。
+</tiles><localtiles>你可以<input>鼠标右击</input> 仔细查看地图的一部分，
+也可以<input>左击</input>移至那里。
+</localtiles><webtiles>你可以</webtiles><nomouse>按下
+<input>$cmd[CMD_DISPLAY_MAP]</input>查看整个地图，移动光标浏览整个楼层。
+你也可以按下<input>.</input>或<input>Enter</input>前往光标位置。
+按下<input>Escape</input>返回正常游戏。</nomouse>
 %%%%
 tutorial1 autoexplore
 
-长时间手动探索地图会比较乏味，
-你也可以试试按下<input>$cmd[CMD_EXPLORE]</input>启动自动探索。
+长时间手动探索地图会比较乏味，你可能会希望将其自动进行。
+试着按下<input>$cmd[CMD_EXPLORE]</input><localtiles>，
+或点击“自动探索”，小地图下方的命令栏中的第一个按钮</localtiles>。
 %%%%
 tutorial1 exclusion
 
-有些危险的地方会以<w>禁止区域</w>标记。自动探索<localtiles>（包括
-<input>鼠标左键</input>！）</localtiles>不会移动至禁止区域，
-在走到禁止区域旁边时会自动停下来。
+有些危险的地方会被标记为<w>禁区</w>。
+自动行进<localtiles>（包含 <input>鼠标击键</input>！） </localtiles>
+不会将你带往禁区。而是会自动停下来。
 
-当然，自动探索可以让你安全地绕过危险地带移动，所以你大可以继续按
-<input>$cmd[CMD_EXPLORE]</input>。
+自动探索能让你安全地绕过禁区：
+所以，你大可以继续按<input>$cmd[CMD_EXPLORE]</input>。
 %%%%
 tutorial1 autoexplore_announce
 
-自动探索在遇到特殊设施或物品时会自动停下来。如果你想直接到达楼梯处，你可以
-<localtiles>
-<input>点击</input>它或者</localtiles>按下<input>$cmd[CMD_DISPLAY_MAP] <<
-Enter</input>。
+在第一次碰到物品或地牢地标时，比如这些楼梯，自动探索会停下来。
+如果要直接前往楼梯，可以<localtiles><input>点击</input> 它们；
+或是</localtiles>点击<input>$cmd[CMD_DISPLAY_MAP]</input>以查看地图概览，
+然后<input><<</input>将光标移动到最近楼梯，
+键入<input>Enter</input>开始前往。
 %%%%
 tutorial1 tutorial_end
 
 恭喜你！你已经成功完成了第一课教程！
 
-只要按下<input>$cmd[CMD_GO_UPSTAIRS]</input>
-<localtiles>或者<input>Shift+鼠标点击</input>你的角色</localtiles>从这些楼梯上去就可以退出教程。
+要结束此教程，只需按下<input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles>
+或<input>左击</input>你的角色</localtiles>，从这些楼梯上去。
 按大写<input>Y</input>确定。
 %%%%
 tutorial1 newlevel
@@ -88,8 +91,11 @@ tutorial1 newlevel
 %%%%
 tutorial1 door
 
-只要向门移动就可以打开这扇门。如果你想要把门关上，可以按
-<input>$cmd[CMD_CLOSE_DOOR]</input>。
+只要向门移动就可以打开这扇门。
+%%%%
+tutorial1 close_door
+
+关闭一扇门，请按<input>$cmd[CMD_CLOSE_DOOR]</input>。
 %%%%
 tutorial1 water
 
@@ -97,46 +103,52 @@ tutorial1 water
 %%%%
 tutorial1 upstairs
 
-当你站在一个向上的楼梯上时，你可以按 <input>$cmd[CMD_GO_UPSTAIRS]</input>
-<localtiles>或者<input>Shift-点击</input>你的角色 </localtiles>来返回上一层。
+当你站在一个向上的楼梯上时，
+你可以按<input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles>
+或<input>左击</input>你的角色</localtiles>进入上一层。
 %%%%
 tutorial1 exit
 
 :nowrap
-<yellow>移动指令</yellow>
-    数字键:       <w>7 8 9</w>              字母:    <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
-                   \|/                         \|/
-                  <w>4</w>-<w>.</w>-<w>6</w>                       <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
-                   /|\                         /|\
-                  <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+<yellow>移动命令</yellow>
+   数字键盘：    <w>7 8 9</w>           vi键位：    <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+                  \|/                         \|/
+                 <w>4</w>-<w>.</w>-<w>6</w>                       <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+                  /|\                         /|\
+                 <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+
   <input>Shift + 方向</input>让你在该方向上移动数个格子。<localtiles>
-  同样你可以使用<input>鼠标点击</input>移动。</localtiles>
+  你也可以通过<input>点击</input><w>小地图</w>的某个地方进行移动。</localtiles>
 
 <yellow>楼梯</yellow>
-  <input>$cmd[CMD_GO_UPSTAIRS]</input>  回到上一层
-  <input>$cmd[CMD_GO_DOWNSTAIRS]</input>  进入下一层
-  <input>$cmd[CMD_DISPLAY_MAP]></input>/<input>$cmd[CMD_DISPLAY_MAP]<<</input> 移动到最近的楼梯
+  <input>$cmd[CMD_GO_UPSTAIRS]</input> 回到上一层
+  <input>$cmd[CMD_GO_DOWNSTAIRS]</input> 进入下一层
+  <input>$cmd[CMD_DISPLAY_MAP]></input>/<input>$cmd[CMD_DISPLAY_MAP]<<</input> 前往最近的楼梯
 
 <yellow>门</yellow>
   向门移动即可打开门
-  <input>$cmd[CMD_CLOSE_DOOR]</input> 关上一个门
+  <input>$cmd[CMD_CLOSE_DOOR]</input>  关闭一扇门
 
-<yellow>快速移动</yellow><localtiles>
+<yellow>移动</yellow><localtiles>
   鼠标点击<w>小地图</w></localtiles><nomouse>
-  <input>$cmd[CMD_DISPLAY_MAP]</input>  进入本层的地图，按 <input>Enter</input>快速移动</nomouse>
-  <input>$cmd[CMD_EXPLORE]</input>  自动探索
+  <input>$cmd[CMD_DISPLAY_MAP]</input>进入本楼层地图，按<input>Enter</input></nomouse>进行移动
+  <input>$cmd[CMD_EXPLORE]</input> 自动探索
 
-                                 <cyan>按 <input>任意键</input> 退出...</cyan>
+                                 <cyan>按<input>任意键</input>清屏……</cyan>
 %%%%
+##############################################
+# 教程地图2：怪物和战斗        #
+##############################################
 tutorial2 start
 
-这一课将会教你有关怪物和格斗的内容。首先，我们需要一把武器！过去捡起地上那把。
+这一课将会教你有关怪物和格斗的内容。
+首先，我们需要一把武器！过去捡起地上那把。
 %%%%
 tutorial2 pickup_weapon
 
-按<input>$cmd[CMD_PICKUP]</input>或者<input>g</input>捡起武器，然后按
-<input>$cmd[CMD_WIELD_WEAPON]</input>装备上。
-<localtiles>你也可以在物品界面<input>点击</input>它。</localtiles>
+要捡起这把武器的话，<localtiles>可以在物品栏中点击它，然后再次点击它进行装备。
+捡起它也可以</localtiles>用<input>$cmd[CMD_PICKUP]</input>
+或<input>g</input>，装备它则用<input>$cmd[CMD_WIELD_WEAPON]</input>。
 %%%%
 tutorial2 melee
 
@@ -144,190 +156,215 @@ tutorial2 melee
 %%%%
 tutorial2 resting
 
-非常好！你可以通过按<input>$cmd[CMD_REST]</input>来休息以恢复损失的生命值。
-这将会使你休息并同时搜索周围，最多持续100回合，但会被一些特定的重要事件打断。
+非常好！你可以通过按<input>$cmd[CMD_REST]</input>
+<localtiles>，或点击小地图下方的命令栏中的“休息”按钮来休息以恢复损失的生命值</localtiles>。
+在身体痊愈前会一直休息，但如果发生重要事件，会被打断。
 %%%%
 tutorial2 wait
 
-与其冲进房间然后被一群怪物围攻，你不如退后几步，等待它们自己走过来。（按
-<input>$cmd[CMD_WAIT]</input>等待一回合）
+与其冲进房间然后被一群怪物围攻，不如退后几步，等待它们自己走过来。
+（按<input>$cmd[CMD_WAIT]</input><localtiles>
+或<input>点击</input>你的角色</localtiles>），他们就会走向你。
 %%%%
 tutorial2 resting_reminder
 
-记住，你可以按<input>$cmd[CMD_REST]</input>来休息以回复到满状态。
+记住，你可以按<input>$cmd[CMD_REST]</input>进行休息。
 %%%%
 tutorial2 compare_monster_desc
 
-:nowrap
-<localtiles>通过<input>鼠标指针悬停</input></localtiles><nomouse>按<input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]</input></nomouse>来查看这些怪物，并且比较它们的详细描述（<localtiles><input>鼠标右击</input></localtiles><nomouse><input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input></nomouse>），看看从哪个笼子通过才是最安全的。
+# 为清晰起见，在localtile中跳过键盘命令。
+查看这些怪物（<localtiles>通过 <input>鼠标悬停</input></localtiles><nomouse>按下<input>$cmd[CMD_LOOK_AROUND]</input>进入查看模式，
+并用<input>$cmd[CMD_TARGET_CYCLE_FORWARD]</input>循环切换周围怪物</nomouse>）
+并比较他们的描述（<localtiles>用 <input>鼠标右击</input></localtiles>
+<nomouse>按下<input>$cmd[CMD_TARGET_DESCRIBE]</input>在查看模式中选择他们</nomouse>）看看从哪个笼子通过才是最安全的。
 %%%%
 tutorial2 downstairs
 
-干得好！休息恢复满生命值之后按<input>$cmd[CMD_GO_DOWNSTAIRS]</input>进入下一层。
+干得好！休息恢复满生命值之后按<input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles>或<input>点击</input>你的角色</localtiles>进入下一层。
 %%%%
 tutorial2 newlevel
 
-记住：你可以按<input>$cmd[CMD_REPLAY_MESSAGES]</input>重新查看之前的提示信息。
+记住：你可以按<input>$cmd[CMD_REPLAY_MESSAGES]</input>来查看之前的提示信息。
 %%%%
-tutorial2 darts
+tutorial2 boomerangs
 
-现在，我们要讲远程攻击了！先按<input>$cmd[CMD_PICKUP]</input>
-<localtiles>或者<input>鼠标点击</input></localtiles>捡起飞镖然后继续。
+现在来试试远程攻击！
+通过按<input>$cmd[CMD_PICKUP]</input>或<input>g</input><localtiles>或<input>鼠标点击</input>，</localtiles>捡起这些回旋镖并继续。
 %%%%
 tutorial2 throwing
 
-你可以按<input>$cmd[CMD_FIRE]</input><localtiles>或者在物品栏[鼠标点击]它们
-</localtiles>来投掷飞镖。
-按<input>$cmd[CMD_TARGET_SELECT]</input>或者<input>Enter</input>来确定对自动选定的目标开火。
+要朝一个怪物投掷回旋镖，
+可以通过<input>$cmd[CMD_FIRE]</input><localtiles>
+或在物品栏中<input>点击</input>它们panel</localtiles>。
+要射向被自动瞄准的怪物，按<input>$cmd[CMD_TARGET_SELECT]</input>
+或<input>Enter</input>。你也可以跳过这个，
+按<input>shift-tab</input>或<input>p</input>，向最近的怪物射击。
 %%%%
 tutorial2 wield_bow
 
-捡起这把弓并且按<input>$cmd[CMD_WIELD_WEAPON]</input>
-<localtiles>或者<input>鼠标点击</input></localtiles>来装备上。
+通过按<input>$cmd[CMD_WIELD_WEAPON]</input><localtiles>或<input>鼠标点击</input></localtiles>捡起这把短弓。
 %%%%
 tutorial2 firing
 
-通过已装备的弓来射出箭的操作与投掷飞镖的操作一样：按
-<input>$cmd[CMD_FIRE]</input><localtiles>或<input>鼠标点击</input>。
-在瞄准的时候你可以按
-<input>$cmd[CMD_TARGET_CYCLE_FORWARD]</input>来选择其他的目标。
-这只蠕虫在岩浆后面无法对你造成任何威胁，但是那个人偶可以射击你，因此先搞定它。
-按 <input>$cmd[CMD_TARGET_SELECT]</input>或者<input>Enter</input>确定你的目标。
+# 修复：比较冗长，因为有选择目标的提示。
+用装备的短弓射箭的操作与投掷回旋镖的操作稍有不同。
+通过按<input>$cmd[CMD_PRIMARY_ATTACK]</input><localtiles>或<input>鼠标点击</input>
+</localtiles>。在瞄准时，你可以按<input>$cmd[CMD_TARGET_CYCLE_FORWARD]</input>选择其他目标。
+这只蠕虫在熔岩后面无法对你造成任何威胁，但是那个假人可以射击你，因此先搞定它。
+同样，按<input>$cmd[CMD_TARGET_SELECT]</input>或<input>Enter</input>确定你选择的目标。
 %%%%
 tutorial2 travel_reminder
 
-记住你可以按<input>$cmd[CMD_EXPLORE]</input>来自动探索。
+记住，你可以用<input>$cmd[CMD_EXPLORE]</input>自动探索。
 %%%%
 tutorial2 explore
 
-去找出口吧！记住你可以按<input>$cmd[CMD_EXPLORE]</input>自动探索。
+去找出口吧！记住，你可以用<input>$cmd[CMD_EXPLORE]</input>自动探索。
 %%%%
 tutorial2 tutorial_end
 
-恭喜你！你已经成功地从你的第一批敌人手中活下来了！
-只要从楼梯走下去就可以退出教程。
+恭喜你！你已经成功地从你的第一批怪物手中活下来了！
+只要从楼梯走下去就可以退出此教程。
 %%%%
 tutorial2 exit
 
 :nowrap
-<yellow>武器<console><cyan>)</cyan></console></yellow>
-  <input>$cmd[CMD_PICKUP]</input>  捡起物品
-  <input>$cmd[CMD_WIELD_WEAPON]</input>  装备一件武器<localtiles>
-  （ 你也可以在物品栏<input>点 击</input>武器。）</localtiles>
+<yellow>武器<console> <cyan>)</cyan></console></yellow>
+  <input>$cmd[CMD_PICKUP]</input> 捡起物品
+  <input>$cmd[CMD_WIELD_WEAPON]</input> 装备武器<localtiles>
+  你也可以在你的物品栏中<input>点击</input>武器进行装备。</localtiles>
+  <input>$cmd[CMD_QUIVER_ITEM]</input> 调整你的弹药
 
 <yellow>怪物</yellow><localtiles>
-  <input>鼠标指针悬停</input> 查看怪物
-  <input>右击</input> 查看怪物的详细介绍。</localtiles><nomouse>
-  <input>$cmd[CMD_LOOK_AROUND]</input>  查看怪物
-  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> 查看怪物的详细介绍</nomouse>
-  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</input> 向一个被自动瞄准的敌人发射弹药
-  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</input> 瞄准另一个敌人<localtiles>
-  你也可以<input>点击</input>另一个敌人并按<input>Enter</input>确定。</localtiles>
+  <input>鼠标悬停</input> 查看怪物
+  <input>右键</input>查看详细描述</localtiles><nomouse>
+  <input>$cmd[CMD_LOOK_AROUND]</input> 查看怪物
+  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> 查看详细描述</nomouse>
+  <input>$cmd[CMD_PRIMARY_ATTACK]</input> 用所持武器射击
+  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</input> 向一个被瞄准的怪物射出弹药
+  <input>shift-tab</input>, <input>p</input> 向一个最近的怪物发射弹药
+  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</input> 瞄准另一个怪物<localtiles>
+  你还可以通过<input>点击</input>它来发射飞弹，然后用<input>Enter</input>确认目标。</localtiles>
 
 <yellow>休息</yellow>
-  <input>$cmd[CMD_WAIT]</input>  等待、休息并搜索一个回合
-  <input>$cmd[CMD_REST]</input>  等待、休息并搜索最多100回合
+  <input>$cmd[CMD_WAIT]</input>  等待并休息一回合
+  <input>$cmd[CMD_REST]</input>  等待并休息100回合
 
-                                 <cyan>按<input>任意键</input>退出
+                                 <cyan>按<input>任意键</input>清屏……</cyan>
 %%%%
+#######################################
+# 教程地图3：物品 #
+#######################################
 tutorial3 start
 
-本课程中你将学到关于物品的事项，包括如何使用物品。
+这一课中你将学到关于物品的事项，包括如何使用物品。
 %%%%
 tutorial3 armour
 
-按<input>$cmd[CMD_PICKUP]</input>来捡起这双靴子，
-并按<input>$cmd[CMD_WEAR_ARMOUR]</input>来穿上它们。
-<localtiles>或者在物品栏内的图标上<input>鼠标点击</input>，也能收到同样的效果。
- </localtiles>
+按<input>$cmd[CMD_PICKUP]</input>捡起这双靴子，
+并按<input>$cmd[CMD_WEAR_ARMOUR]</input>穿上它。
+<localtiles>或者直接在物品栏上<input>鼠标点击</input>它。</localtiles>
 %%%%
 tutorial3 autopickup
 
-有些种类的物品<tiles>（周围有一个绿框的那种）</tiles
->会在你踩上去的时候自动拾取。
+某些种类的物品<tiles>，周围有一个绿框，</tiles>你在踩上时它能被自动拾取。
 %%%%
 tutorial3 scroll
 
 许多物品在你刚发现它们的时候都是未鉴定的。鉴定它们的方法之一就是使用它们。
 试试按<input>$cmd[CMD_READ]</input>
-<localtiles>或在物品栏内的图标上<input>鼠标点击</input>
-</localtiles>来阅读这张卷轴。
+<localtiles>或在物品栏中<input>鼠标点击</input>它</localtiles>来阅读这张卷轴。
 %%%%
 tutorial3 scroll_noautopickup
 
 在周围有怪物的时候，自动拾取不会生效。
-你可以现在就按<input>$cmd[CMD_PICKUP]</input>
-<localtiles>或<input>点击</input>你的角色</localtiles>来拾起它，
-或者你也可以先干掉附近的敌人然后再拾取它。
+你现在可以按<input>$cmd[CMD_PICKUP]</input><localtiles>
+或<input>点击</input>你的角色来拾取它，
+</localtiles>或者你也可以先干掉附近的敌人然后再拾取它。
 %%%%
 tutorial3 ego_weapon
 
-有<lightblue>符文</lightblue>或<lightblue>发光</lightblue
->词缀的物品要么有附加值，要么有特殊属性，也可能两个都有。
-你必须得按<input>$cmd[CMD_WIELD_WEAPON]</input>
-<localtiles>或在物品栏内的图标上<input>鼠标点击</input>
-</localtiles>来装备这把弯刀才能知道它的具体属性。
+如果一个物品的描述中含有<lightblue>符文</lightblue>或<lightblue>发光</lightblue>，
+那么它要么附有魔力，要么有特殊属性，也可能两个都有。
+一旦你走到这种物品上面，其属性就会向你揭示。
 %%%%
 tutorial3 inventory
 
-如果你想查阅新武器的描述，
-只要在物品栏（<input>$cmd[CMD_DISPLAY_INVENTORY]</input>）中找到并选中它即可。
-<localtiles>你也可以<input>鼠标悬停</input>或在物品栏内的图标上<input>右击</input>来收到同样效果</localtiles>。
-另外要注意的是，所有与物品有关的指令在物品描述界面同样有效。
+# 待办事项：应在携带物品的清单中加入教程消息以便查找武器。
+#       也许还应该有一个单独的教程来强调项目描述界面中的命令。
+如果你想查阅新武器的描述，只要在物品栏中找到并选中它（<input>$cmd[CMD_DISPLAY_INVENTORY]</input>）即可。
+<localtiles>你也可以在物品栏中<input>鼠标悬停</input>或<input>右击</input>它，实现同样效果。</localtiles>
+另外要注意的是，所有与物品有关的命令在物品描述界面同样有效。
+%%%%
+tutorial3 battle
+
+如果你成功使敌人中毒，有时最好后撤并让毒来完成剩下的工作。
+撤退时也别忘了治疗。
 %%%%
 tutorial3 downstairs
 
-战得漂亮！如果有必要，你可以按<input>$cmd[CMD_REST]</input>来休息一下，
-然后按<input>$cmd[CMD_GO_DOWNSTAIRS]</input>
-<localtiles>或<input>按住Shift点击</input>你的角色</localtiles>来走下楼梯。
+战得漂亮！如有必要，你可以按<input>$cmd[CMD_REST]</input>来休息一下，
+然后按<input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles>
+或<input>点击</input>你的角色</localtiles>走下楼梯。
 %%%%
 tutorial3 command_help
 
-如果这么多指令让你感觉有点头晕，
-你也可以在指令帮助（<input>$cmd[CMD_DISPLAY_COMMANDS]</input>）中查找各个指令。
- <localtiles>部分指令也可以通过点击屏幕右边的<w>指令面板</w>来实现。
-</localtiles>和以前一样，
-你可以按<input>$cmd[CMD_REPLAY_MESSAGES]</input>来查阅过去的信息。
+如果这么多命令让你感觉有点头晕，
+你也可以在命令帮助<input>$cmd[CMD_DISPLAY_COMMANDS]</input>中查找各个命令。
+<localtiles>部分命令也可以通过点击屏幕右边的<w>命令栏</w>来实现。</localtiles>
+和以前一样，你可以按<input>$cmd[CMD_REPLAY_MESSAGES]</input>来查阅过去信息。
+%%%%
+tutorial3 trap
+
+陷阱有很多恼人的效果，比如惊醒怪物或将你传送到险境之中。
+一些陷阱是永久的，显示为地图的一部分，
+但另一些陷阱会在探索新图块时被触发并在触发后消失。
+如果周围没有别的路，有时你不得不触发陷阱并处理后果。
 %%%%
 tutorial3 potion
 
-你可以按<input>$cmd[CMD_QUAFF]</input><localtiles>或<input>右键点击</input>
-</localtiles>来饮用一瓶药水。
+药水可以用来治疗或附加魔力，但有的效果则令人不快。
+你可以按<input>$cmd[CMD_QUAFF]</input><localtiles>
+或<input>鼠标点击</input>来饮用药水，</localtiles>以发现它的作用。
 %%%%
 tutorial3 artefact_armour
 
+# TODO：用真正的神器替换非随机神器。需要有一些防范
+#       措施，以规避能让教程偏离轨道的东西（诅咒、咒骂、、
+#       变异、可激活能力……）
 有<w>不寻常名字</w>的物品就是神器了。神器可能有各种特殊的属性。
-有些物品（例如这件披风）很有名，因此一开始就已经被鉴定；
-其他一些神器则是随机出现的，并且属性也是未知。
-试试按<input>$cmd[CMD_WEAR_ARMOUR]</input>
-<localtiles>或在物品栏中<input>鼠标点击 </input>来装备这件披风。
+一些独特的神器（如这件披风）总是能被鉴别出来，
+并且可能有着其他地方见不到的特殊属性！
+其他一些神器则是随机组合一些属性生成的，并且只有在走上去后才能被鉴别出来。
+试着按<input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles>
+或在物品栏中<input>鼠标点击</input>它来装备这件披风</localtiles>。
 %%%%
 tutorial3 wand_fire
 
-你可以按<input>$cmd[CMD_EVOKE]</input>来使用魔杖<localtiles>，
-也可以在物品栏中<input>鼠标点击</input></localtiles>。
+# 待办事项：魔杖的瞄准界面，可能需要一些相关帮助文本。
+你可以按<input>$cmd[CMD_EVOKE]</input><localtiles>
+或在物品栏中<input>鼠标点击</input>它来使用魔杖</localtiles>。
+%%%%
+tutorial3 wand_digging
+
+挖掘魔杖可以摧毁岩墙。
+通过<input>$cmd[CMD_LOOK_AROUND]][$cmd[CMD_TARGET_DESCRIBE]</input> <localtiles>
+或<input>鼠标悬停</input>/<input>右键</input> </localtiles>来查看墙壁类型。
 %%%%
 tutorial3 amulet
 
-你可以按<input>$cmd[CMD_WEAR_JEWELLERY]</input>
-<localtiles>或在物品栏内<input>鼠标点击</input></localtiles>来戴上一件首饰。
-有些首饰只要戴上就会自动鉴定，另一些则需要其他的鉴定方式。
-%%%%
-tutorial3 scroll_id
-
-鉴定未知物品的一条重要途径就是阅读鉴定卷轴。
-试试对你的护身符使用这张卷轴（按<input>$cmd[CMD_READ]</input>
-<localtiles>或在物品栏内[点击]</w>它</localtiles>，
-然后选择护身符对应的字母键<localtiles>或<input>点击</input>护身符</localtiles>。
+通过按<input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles>
+或在物品栏中<input>鼠标点击</input>首饰来佩戴它</localtiles>。
 %%%%
 tutorial3 drop
 
-这个护身符完全没用；你可以按<input>$cmd[CMD_DROP]</input><localtiles>
-或在物品栏内<input>按住Shift点击</input>它。
+如果你追随了一个神，这个护身符会非常强大，但现在，它是没用的。
+你要是想扔下它的话，可以用<input>$cmd[CMD_DROP]</input><localtiles>
+或在物品栏中<input>Shift-左键点击</input>它</localtiles>。
 %%%%
 tutorial3 gold
 
-金币可以用于在商店中购买物品。金币没有重量，而且不能丢弃。
+金币可以用于在商店中购买物品。它不占用库存空间，且无法丢弃。
 %%%%
 tutorial3 shop
 
@@ -335,118 +372,242 @@ tutorial3 shop
 %%%%
 tutorial3 enter_shop
 
-要进入这家商店，请按<input>$cmd[CMD_GO_UPSTAIRS]</input>
-<localtiles>或<input>按住Shift点击</input>你的角色</localtiles>。要想购买物品，
-请按它们对应的字母键选中它，按<input>回车</input>并按<input>y</input>es确定。
+# 待办事项： 除了如何进入商店外，其他一切都应该在购物界面上告知。
+要进入这家商店，请按<input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles>
+或<input>点击</input>你的角色</localtiles>。
+要购买物品，请按它们对应的字母键选中它，
+按<input>Enter</input>并按<input>y</input>es确定。
 你可以按<input>!</input>切换到描述模式。
 %%%%
 tutorial3 autoexplore_reminder
 
-记住，你可以按<input>$cmd[CMD_EXPLORE]</input>
-<localtiles>或<input>点击</input>
-<w>指令面板</w>上的自动探索图标</localtiles>来自动探索本楼层。
+记住，你可以按<input>$cmd[CMD_EXPLORE]</input><localtiles>或<input>点击</input><w>命令栏</w>上的自动探索图标来自动探索本楼层</localtiles>。
 %%%%
 tutorial3 go_shopping
 
+# 待办事项：应仅指示在此处开始搜索，并将其余指示放入搜索界面。此外，在查看此消息时，最好在命令栏中突出显示搜索按钮。
 你现在有钱去商店买东西啦！要想回到商店，最快捷的方法就是搜索它。
-按下<input>$cmd[CMD_SEARCH_STASHES]</input>然后输入“<w>商店</w>”。
-选中搜索到的结果，然后你就会向目标地点移动。
-<localtiles>你也可以<input>点击</input>指令面板上的搜索按钮，
-或者通过小地图来回到商店。</localtiles>
+按下<input>$cmd[CMD_SEARCH_STASHES]</input>，然后输入“<w>shop</w>”。
+选择一个结果前往它。<localtiles>
+你也可以<input>点击</input>命令栏上的搜索按钮，或者通过小地图来回到商店。</localtiles>
 %%%%
 tutorial3 optional_battle
 
-小心，前面有一场<lightred>困难的战斗</lightred>。
-你可以试试在战斗中使用你学到的知识，也可以尝试直奔那个小岛上的出口。不管怎么说，
-如果你还没在商店里买过东西，最好先去一下。
+小心，前面有<lightred>一场恶斗</lightred>。
+你可以试试在战斗中使用你学到的知识，也可以尝试直奔那座岛上的出口。
+不管怎么说，如果你还没买过东西，最好先去一下。
 %%%%
 tutorial3 tutorial_end
 
-干的好！走下这里的楼梯来退出教程。
+干得好！只要从楼梯走下去就可以退出此教程。
 %%%%
 tutorial3 exit
 
+# 一个囊括所有命令的界面。
 :nowrap
-<yellow>物品指令</yellow>
-  <input>$cmd[CMD_PICKUP]</input>捡起物品
-  <input>$cmd[CMD_WEAR_ARMOUR]</input> 穿上护甲
-  <input>$cmd[CMD_READ]</input>阅读卷轴
-  <input>$cmd[CMD_WIELD_WEAPON]</input>装备武器
-  <input>$cmd[CMD_QUAFF]</input>饮用药水
-  <input>$cmd[CMD_EVOKE]</input>使用魔杖
-  <input>$cmd[CMD_WEAR_JEWELLERY]</input>戴上首饰
-  <input>$cmd[CMD_REMOVE_JEWELLERY]</input>移除首饰
-  <input>$cmd[CMD_DROP]</input>丢弃物品
-  你也可以通过物品栏界面（<input>$cmd[CMD_DISPLAY_INVENTORY]</input>）来使用物品或查阅物品描述。<localtiles>
-  当然，你也可以<input>鼠标点击</input>。</localtiles>
+<yellow>Item commands</yellow>
+  <input>$cmd[CMD_PICKUP]</input> 捡起物品
+  <input>$cmd[CMD_WEAR_ARMOUR]</input>  穿上护甲
+  <input>$cmd[CMD_READ]</input>  阅读卷轴
+  <input>$cmd[CMD_WIELD_WEAPON]</input>  装备武器
+  <input>$cmd[CMD_QUAFF]</input>  饮用药水
+  <input>$cmd[CMD_EVOKE]</input> 使用魔杖
+  <input>$cmd[CMD_WEAR_JEWELLERY]</input>  佩戴首饰
+  <input>$cmd[CMD_REMOVE_JEWELLERY]</input>  取下首饰
+  <input>$cmd[CMD_DROP]</input>  丢弃物品
+  你也可以通过物品栏界面（<input>$cmd[CMD_DISPLAY_INVENTORY]</input>），使用物品
+  或查阅物品描述。
+  当然，你也可以用<input>鼠标点击</input>。</localtiles>
 
 <yellow>其他</yellow>
-  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> 查看指令帮助
-  <input>$cmd[CMD_RESISTS_SCREEN]</input>显示角色概况
-  <input>$cmd[CMD_USE_ABILITY]</input>使用异能
-  <input>$cmd[CMD_EXPLORE]</input>自动探索
-  <input>$cmd[CMD_SEARCH_STASHES]</input>搜索见过的物品/设施<localtiles>
-  上述指令中有很多都可以通过点击<w>指令面板</w>来下达。</localtiles>
+  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> 查看命令帮助
+  <input>$cmd[CMD_EXPLORE]</input>  自动探索
+  <input>$cmd[CMD_SEARCH_STASHES]</input> 搜索之前看到过的物品/地标<localtiles>
+  上述命令中有很多都可以通过点击<w>命令栏</w>来下达。</localtiles>
 
-                                 <cyan>按<w>任意键</w>清屏...</cyan>
+                                 <cyan>按<input>任意键</input>清屏……</cyan>
 %%%%
+##############################################
+# 教程地图4：魔法和施法     #
+##############################################
+tutorial4 start
+
+这一课中你将学习如何记忆以及释放法术。
+%%%%
+tutorial4 spellbook
+
+从法术库中记忆法术通过<input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles>
+或在记忆标签页中<input>点击</input>所选的法术贴图</localtiles>。
+当经验等级为1时，只有1级法术可供你使用。这会随你提升经验而改变。
+要获得新法术，需要捡到魔法书，法术才会被添入库中。
+%%%%
+tutorial4 spellcasting
+
+## 待办事项：一次有点长了。 分裂的想法：通过不给他们弹药，让假人不会反击，把休息的消息放在一更靠后的地方。
+##       贴图记忆：点击库存中的魔法书的操作可能更容易被掌握；可以留出记忆标签页，由玩家自己发现。
+你可以用<input>$cmd[CMD_CAST_SPELL]</input><localtiles>
+或<input>点击</input>法术贴图进行施法</localtiles>。
+按<input>$cmd[CMD_CAST_SPELL]?</input>获得你的法术列表。
+魔法如同弹药，会显示在弹药槽，
+你可以用<input>$cmd[CMD_QUIVER_ITEM]</input>查看预备的法术。
+使用<input>$cmd[CMD_FIRE]</input>或<input>shift-tab</input>投射当前预备的法术。
+
+一旦你的法力用尽了，撤退后可以通过<input>$cmd[CMD_REST]</input><localtiles>
+或<input>点击</input>命令栏中的休息图标进行休息和回复</localtiles>。
+%%%%
+tutorial4 ring_power
+
+通过按<input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles>
+或在物品栏中<input>点击</input>它，就能戴上这枚戒指</localtiles>，
+在休整后你将拥有全新的潜能。
+%%%%
+tutorial4 undead
+
+# 待办事项： 这更像是提示模式的东西。虽然不确定是否有任何坏处，但鼠标界面提示很好。
+与绝大多数怪物不同，丧尸和骷髅无法恢复健康。
+<localtiles>你可以尝试重施最后用的那个法术，
+通过对着那个怪物按<input>Ctrl+左键</input>。</localtiles>
+%%%%
+tutorial4 spell_success
+
+要查看你的法术熟练度，按<input>$cmd[CMD_DISPLAY_SPELLS]</input>
+<localtiles>或<input>鼠标悬停</input>在你记住法术上面</localtiles>。
+比较佩戴此戒指前后的法术失败率。
+%%%%
+tutorial4 mephitic_cloud
+
+臭云是个3级法术，因此你暂时无法记忆它。
+为了快速升级，这里有更多的训练假人，这次没有石头可扔。
+
+当经验等级到3时，你可以选择增强一个属性——通过<input>I</input>选择智力，
+这会对施法有帮助。
+%%%%
+tutorial4 meph_reminder
+
+不要忘记你的新的可用法术，
+通过按<input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles>
+或在记忆标签页中<input>点击</input>所选的法术贴图进行记忆</localtiles>！
+%%%%
+tutorial4 aiming_clouds
+
+当释放臭云时，有毒气体会覆盖一片区域，当你瞄准时，你会看到受影响的区域。
+设法将多个敌人捕在一片云中，以更有效地利用你的魔法。
+%%%%
+tutorial4 forget_spell
+
+获得经验并提高你的施法技能可以获得法术槽位。
+你也可以通过阅读失忆卷轴<w>忘记一个记过的法术</w>来给新的腾出位置。
+阅读那张卷轴（通过<input>$cmd[CMD_READ]</input><localtiles>或<input>点击</input>它</localtiles>），
+然后选择要遗忘的法术。只要你有可用的法术槽，
+你稍后可以从你的法术库中重新学习被遗忘的法术。
+%%%%
+tutorial4 memorise2
+
+遗忘旧法术腾出空间后，
+通过<input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles>
+或在记忆标签页中<input>点击</input>所选的法术贴图</localtiles>记忆这个新法术。
+然后试着用你的新法术召唤恶魔盟友！
+%%%%
+tutorial4 displace_allies
+
+你是否注意到，当你移向友方的位置时，会与其换位？
+此外，与友好生物换位也是个逃离战斗的好办法。
+%%%%
+tutorial4 order_allies
+
+设法让你的友方进行击杀！如有必要，
+可以通过<input>$cmd[CMD_SHOUT]</input>命令他们。在进入大门前，
+你可能需要通过<input>$cmd[CMD_WAIT]</input>来等待他们，直到你的友方赶上你。
+你的召唤物只会停留一段时间，所以不要等待太久，或是在开始战斗前才进行召唤。
+%%%%
+tutorial4 heavy_armour
+
+# 待办事项：将脱下拆分为单独的项目。
+重甲确实会妨碍施法。试着装备护甲、盾牌
+（通过<input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles>或<input>点击</input>它们</localtiles>），
+并通过<input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles>或<input>鼠标悬停</input>
+在你记住的法术</localtiles>上，来比较你的施法失败率。
+你可以通过<input>$cmd[CMD_REMOVE_ARMOUR]</input><localtiles>
+或<input>鼠标点击</input></localtiles>脱下防具。
+%%%%
+tutorial4 resting_reminder
+
+确保你在进入新区域前健康和魔法值是满的。
+如有必要，通过<input>$cmd[CMD_REST]</input><localtiles>或在命令栏中<input>鼠标点击</input>它</localtiles>。
+
+你一次只能用给定任何的法术召唤数量有限的盟友，所以尽量利用范围广的法术。
+例如，你召唤的小鬼是抗毒的，所以你与他们并肩作战时可以施放臭云，
+而不会伤害你的盟友。
+%%%%
+tutorial4 tutorial_end
+
+恭喜，你已经是真正的巫师了！只要从楼梯走下去就可以退出此教程。
+%%%%
+tutorial4 exit
+
+# 一个囊括所有命令的界面。
+:nowrap
+<yellow>施法命令</yellow>
+  <input>$cmd[CMD_MEMORISE_SPELL]</input>  学习新法术
+  <input>$cmd[CMD_DISPLAY_SPELLS]</input>  查看法术熟练度
+  <input>$cmd[CMD_CAST_SPELL]</input>  施法<localtiles>
+  你也可以通过<w>记忆标签页</w>学习新的法术。
+  你也可以通过<input>左键</input>记忆法术，
+通过<input>鼠标悬停</input>或<input>右键</input></localtiles>阅读描述和查看法术熟练度。
+  <input>$cmd[CMD_QUIVER_ITEM]</input> 调整你的弹药
+
+  <input>$cmd[CMD_REST]</input>  休息一百回合以回复健康和魔力
+  <input>$cmd[CMD_SHOUT]</input>  命令友军
+  <input>$cmd[CMD_REMOVE_ARMOUR]</input>  脱下防具
+
+                                 <cyan>按<input>任意键</input>清屏……</cyan>
+%%%%
+##############################################
+# 教程5：神和神的能力  #
+##############################################
 tutorial5 start
 
-在这一课中你将会学到有关神祗的知识，包括如何使用他们的力量。
+这一课中你将会学到有关神祗的知识，包括如何使用他们的力量。
 %%%%
 tutorial5 dungeon_overview
 
-塔洛格只是众神之一。在实际的游戏中，你可以按
-<input>$cmd[CMD_DISPLAY_OVERMAP]</input>
-<localtiles>或者点击命令栏中的<input>地城概览按钮</input>
-</localtiles>来查看所有已经发现的祭坛和其他有趣的事物的列表。
+前面是狂怒者特洛戈的祭坛！特洛戈只是众神之一。在实际游戏中，
+你可以通过<input>$cmd[CMD_DISPLAY_OVERMAP]</input><localtiles>
+或在命令栏中<input>点击地牢概览按钮</input></localtiles>
+来查看所有已经发现的祭坛和其他有趣的地标。
 %%%%
 tutorial5 altar
 
-你可以站在祭坛上按<input>$cmd[CMD_PRAY]</input>
-<localtiles>（或者点击<input>命令栏</input>或者
-<input>按住Shift点击</input>你的角色）</localtiles>来祈祷，
-这样你就可以知道这个神能给你什么好处，并且可以加入教会。
-如果你在宗教界面上按<input>!</input>
-<localtiles>或<input>右键点击</input>界面</localtiles>，
-你还可以看到更详细的说明。
+你可以在祭坛上用<input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles>
+（或<input>左击</input>你的角色）</localtiles>来祈祷，
+这样你就可以知道这个神能给你什么好处，然后可以选择皈依它。
+如果你在信仰界面按<input>!</input><localtiles>
+或<input>右键</input></localtiles>你还可以看到更详细的描述。
 
-输入大写的<input>Y</input>来确认你的选择。
+输入大写的<input>J</input>或<input>Enter</input>确认你的选择。
 %%%%
 tutorial5 religion
 
-按<input>$cmd[CMD_DISPLAY_RELIGION]</input>
-<localtiles>或点击命令栏里的<w>宗教按钮</w>
-也可以<input>按住Shift并右击</input>你的人物</localtiles>来查看一下你的信仰状态。
-和以前一样，按<input>!</input>
-<localtiles>或<input>右键点击</input>/localtiles>可以调出更详细的说明。
+通过<input>$cmd[CMD_DISPLAY_RELIGION]</input><localtiles>
+（或通过在命令栏中<w>信仰按钮</w>，或通过<input>Shift-右击</input>玩家贴图）
+</localtiles>来查看你的信仰状态。和以前一样，按<input>!</input><localtiles>
+或<input>右击</input></localtiles>可以调出你的神的更详细的描述。
 %%%%
 tutorial5 piety_on_kill
 
-有些神特别喜欢你以神之名杀死怪物。让屠杀开始吧！
-%%%%
-tutorial5 sacrificing
-
-在尸体上祈祷（按<input>$cmd[CMD_PRAY]</input>键<localtiles>或使用<w>命令栏</w>
-</localtiles>会将尸体献祭给塔洛格。试试吧！
-%%%%
-tutorial5 burn_book
-
-如果你按<input>$cmd[CMD_USE_ABILITY]</input><localtiles>或通过<w>命令栏</w>
-</localtiles>来烧掉那本书，塔洛格会很高兴的。有时候，你可能会想要先按
-<input>$cmd[CMD_WAIT]</input>来等待一会，
-等到有怪物踩到书上的时候再把它点燃。
+有些神特别喜欢你以祂的名义杀死怪物。让屠杀开始吧！
 %%%%
 tutorial5 berserk
 
-面对特别强大的敌人时，你可能需要按<input>$cmd[CMD_USE_ABILITY]</input>
-<localtiles>或通过<w>命令栏</w></localtiles>来使用塔洛格赐给你的狂暴能力。
+面对特别强大的敌人时，
+你可能需要通过<input>$cmd[CMD_USE_ABILITY]</input><localtiles>
+或通过<w>命令栏</w>来使用特洛戈赐予你的狂暴能力</w></localtiles>。
 %%%%
 tutorial5 exhaustion
 
-狂暴之后，你会感到筋疲力尽。在疲劳状态下，你无法再次狂暴，而且行动速度也会减慢。
-最好是按<input>$cmd[CMD_REST]</input><localtiles>（或通过<w>命令栏 </w>）
-</localtiles>来休息一会，等到精力恢复了再出发。
+狂暴会令人筋疲力尽。狂暴后，短时间内你无法再次狂暴，而且行动速度也会减慢。
+最好是通过<input>$cmd[CMD_REST]</input><localtiles>
+（或通过<w>命令栏</w>）</localtiles>来休息一会，等到精力恢复了再出发。
 %%%%
 tutorial5 berserk2
 
@@ -454,26 +615,27 @@ tutorial5 berserk2
 %%%%
 tutorial5 tutorial_end
 
-恭喜你！你已经通过了最后一个教学关，现在你可以开始玩正常模式了。祝你好运！
+恭喜你！你已经通过了最后一个教学关，现在你可以开始玩真正的游戏了。祝你好运！
 
-走下这里的楼梯就可以退出教程。
+从楼梯走下去就可以退出此教程。
 %%%%
 tutorial5 exit
 
+# 一个囊括所有命令的界面。
 :nowrap
-<yellow>宗教命令</yellow>
-  <input>$cmd[CMD_PRAY]</input>  在祭坛上祈祷以加入教会，或献祭尸体
-  <input>$cmd[CMD_USE_ABILITY]</input>  使用神能
+<yellow>信仰命令</yellow>
+  <input>$cmd[CMD_GO_DOWNSTAIRS]</input>  在祭坛上祈祷，以皈依一位神
+  <input>$cmd[CMD_USE_ABILITY]</input>  使用神的能力
   <input>$cmd[CMD_DISPLAY_RELIGION]</input>  查看你的信仰状况<localtiles>
-  在玩家人物上<input>右击</input>也可以调出宗教界面。</localtiles>
+  <input>右击</input>玩家贴图，也能调出信仰界面。</localtiles>
 
 <yellow>休息</yellow>
-  <input>$cmd[CMD_WAIT]</input>  等待、休息并搜索一回合
-  <input>$cmd[CMD_REST]</input>  长时间等待、休息并搜索，最多持续100回合
+  <input>$cmd[CMD_WAIT]</input>  等待并休息一回合
+  <input>$cmd[CMD_REST]</input>  等待并休息100回合
 
 <yellow>其他命令</yellow>
-  <input>$cmd[CMD_DISPLAY_OVERMAP]</input> 显示地城概览
-  <input>$cmd[CMD_DISPLAY_COMMANDS]/</input>  检查说明数据库
+  <input>$cmd[CMD_DISPLAY_OVERMAP]</input> 显示地牢概览
+  <input>$cmd[CMD_DISPLAY_COMMANDS]/</input>  搜索描述数据库
 
                                  <cyan>按<input>任意键</input>清屏……</cyan>
 %%%%

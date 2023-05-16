@@ -532,7 +532,7 @@ move_again:
                     simple_monster_message(*mons, (" blocks "
                         + mon.name(DESC_THE, true) + ".").c_str());
                 }
-                victim->shield_block_succeeded();
+                victim->shield_block_succeeded(&mon);
                 _iood_stop(mon);
                 return true;
             }
@@ -542,13 +542,13 @@ move_again:
             {
                 if (shield && shield_reflects(*shield))
                 {
-                    mprf("Your %s reflects %s!",
+                    mprf("Your %s blocks %s... and reflects it back!",
                          shield->name(DESC_PLAIN).c_str(),
                          mon.name(DESC_THE, true).c_str());
                 }
                 else // has reflection property not from shield
                 {
-                    mprf("%s reflects off an invisible shield around you!",
+                    mprf("You block %s... and reflect it back!",
                          mon.name(DESC_THE, true).c_str());
                 }
             }
@@ -558,7 +558,7 @@ move_again:
                 {
                     if (shield && shield_reflects(*shield))
                     {
-                        mprf("%s reflects %s off %s %s!",
+                        mprf("%s blocks %s with %s %s... and reflects it back!",
                              victim->name(DESC_THE, true).c_str(),
                              mon.name(DESC_THE, true).c_str(),
                              victim->pronoun(PRONOUN_POSSESSIVE).c_str(),
@@ -577,7 +577,7 @@ move_again:
                          mon.name(DESC_THE, true).c_str());
                 }
             }
-            victim->shield_block_succeeded();
+            victim->shield_block_succeeded(&mon);
 
             // mid_t is unsigned so won't fit in a plain int
             mon.props[IOOD_REFLECTOR] = (int64_t) victim->mid;

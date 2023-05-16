@@ -916,6 +916,14 @@ canvas {
     display: block;
 }
 
+.formatted-scroller > .header {
+    margin-bottom: 10px;
+}
+
+.formatted-scroller > .more {
+    margin-top: 15px;
+}
+
 .spellset ol {
     display: -webkit-box;
     display: -ms-flexbox;

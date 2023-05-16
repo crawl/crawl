@@ -118,8 +118,9 @@ Evoke Berserk Rage ability
 %%%%
 Evoke Invisibility ability
 
-Turns the user invisible. Turning invisible causes magical contamination and
-may eventually cause glowing, nullifying the invisibility.
+Turns the user invisible. Turning invisible in this way causes magical
+contamination. Reaching high levels of contamination will cause you to glow
+brightly, nullifying the invisibility.
 %%%%
 Evoke Thunderclouds ability
 
@@ -398,7 +399,7 @@ discarding the other two.
 %%%%
 Deal Four ability
 
-Deals four cards from a deck in the time it normally takes to draw a
+Plays four cards from a deck in the time it normally takes to draw a
 single card.
 %%%%
 Stack Five ability
@@ -493,7 +494,7 @@ corporeal undead monster hit into a neutral slime.
 Oozemancy ability
 
 Calls forth acidic ooze from the walls of the dungeon around you, damaging foes
-depending on the number of affected walls they remain adjacent to.
+depending on the number of slimy walls they remain adjacent to.
 %%%%
 # Ashenzari
 Curse Item ability
@@ -739,11 +740,11 @@ on Invocations skill.
 Ancestor Life: Knight ability
 
 Remembers your ancestor as a knight, a strong melee combatant with superior
-defenses. This choice is permanent and cannot be undone.
+defences. This choice is permanent and cannot be undone.
 %%%%
 Ancestor Life: Battlemage ability
 
-Remembers your ancestor as a battlemage, a warrior capable of relentless offense
+Remembers your ancestor as a battlemage, a warrior capable of relentless offence
 with both melee and conjurations. This choice is permanent and cannot be undone.
 %%%%
 Ancestor Life: Hexer ability
@@ -814,14 +815,13 @@ hostile before vanishing. The success of the ability scales with the Evocations
 skill, and this ability is available only while wielding the Sceptre of
 Asmodeus.
 %%%%
-Evoke the Staff of Dispater ability
+Evoke Damnation ability
 
 Blasts a targeted enemy with damnation. These unholy forces harm the victim and
 anyone adjacent, and are not affected by any means of protection, such as armour
 or resistances. However, certain creatures, usually those able to invoke
 damnation themselves, are entirely unscathed by damnation. The power of this
-ability scales with the Evocations skill, and this ability is available only
-while wielding the Staff of Dispater.
+ability scales with the Evocations skill.
 %%%%
 Evoke the Staff of Olgreb ability
 

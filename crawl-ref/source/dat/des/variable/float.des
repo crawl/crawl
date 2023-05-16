@@ -1538,6 +1538,136 @@ pp..F..pp   qq..H..qq   pp..F..pp
   ppPpp       qqQqq       ppPpp
 ENDMAP
 
+NAME:    nicolae_moon_pools
+TAGS:    transparent no_pool_fixup
+DEPTH:   D:8-, Depths
+ORIENT:  float
+KFEAT:   az`- = c
+SHUFFLE: `-, a`/z-
+COLOUR:  a` = white, z- = magenta
+TILE:    a` = dngn_stone_wall_white
+TILE:    z- = dngn_stone_dark
+CLEAR:   _
+MAP
+                   ........
+                   .wwwwww.
+                   .wwa`ww.
+                   .waaa`w.
+                   .waaa`w.
+     ........      .wwa`ww.      ........
+     .wwwwww.      .wwwwww.      .wwwwww.
+     .wwazww.      ........      .ww-aww.
+     .waa`zw.                    .w-aaaw.
+     .waa`zw.                    .w-aaaw.
+     .wwazww.                    .ww-aww.
+     .wwwwww.                    .wwwwww.
+     ........                    ........
+_
+_
+_
+_
+_
+_
+........                              ........
+.wwwwww.                              .wwwwww.
+.wwazww.                              .wwzaww.
+.wa`zzw.                              .wz-aaw.
+.wa`zzw.                              .wz-aaw.
+.wwazww.                              .wwzaww.
+.wwwwww.                              .wwwwww.
+........                              ........
+_
+_
+_
+_
+_
+_
+     ........                    ........
+     .wwwwww.                    .wwwwww.
+     .ww`zww.                    .wwzaww.
+     .w`zzzw.                    .wzz-aw.
+     .w`zzzw.                    .wzz-aw.
+     .ww`zww.      ........      .wwzaww.
+     .wwwwww.      .wwwwww.      .wwwwww.
+     ........      .wwz-ww.      ........
+                   .wzzz-w.
+                   .wzzz-w.
+                   .wwz-ww.
+                   .wwwwww.
+                   ........
+ENDMAP
+
+# https://www.youtube.com/watch?v=JbfhzlMk2eY
+NAME:     nicolae_hitomezashi
+TAGS:     transparent decor
+DEPTH:    D:8-, Depths
+ORIENT:   float
+SUBVAULT: D : nico_hito
+SUBVAULT: E : nico_hito
+SUBVAULT: F : nico_hito
+SUBVAULT: H : nico_hito
+SUBVAULT: J : nico_hito
+SUBVAULT: K : nico_hito
+SUBVAULT: L : nico_hito
+SUBVAULT: M : nico_hito
+SUBVAULT: N : nico_hito
+SUBVAULT: O : nico_hito
+SUBVAULT: P : nico_hito
+SUBVAULT: Q : nico_hito
+SUBVAULT: R : nico_hito
+SUBVAULT: S : nico_hito
+SUBVAULT: Z : nico_hito
+SUBVAULT: a : nico_hito
+SUBVAULT: p : nico_hito
+SUBVAULT: q : nico_hito
+MAP
+ DDD DDD DDD DDD DDD DDD DDD DDD
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+ EEE.EEE.EEE.EEE.EEE.EEE.EEE.EEE
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+ FFF.FFF.FFF.FFF.FFF.FFF.FFF.FFF
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+ HHH.HHH.HHH.HHH.HHH.HHH.HHH.HHH
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+ JJJ.JJJ.JJJ.JJJ.JJJ.JJJ.JJJ.JJJ
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+ KKK.KKK.KKK.KKK.KKK.KKK.KKK.KKK
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+ LLL.LLL.LLL.LLL.LLL.LLL.LLL.LLL
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+ MMM.MMM.MMM.MMM.MMM.MMM.MMM.MMM
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+ NNN NNN NNN NNN NNN NNN NNN NNN
+ENDMAP
+
+# The row subvaults at the edges of the main vault will each have one @ glyph,
+# so that each side will have one guaranteed connection. @ glyphs not at the
+# edge of the main subvault appear to be ignored, which conveniently means we
+# don't need separate subvaults for edge rows and interior rows.
+NAME:   nicolae_hito_row
+TAGS:   unrand allow_dup nico_hito
+DEPTH:  D:8-, Depths
+NSUBST: @ = @ / .
+MAP
+ccc .@. ccc .@. ccc .@. ccc .@.
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Themed threat vaults.
@@ -9727,8 +9857,7 @@ ENDMAP
 NAME:    minmay_heptahexagon
 DEPTH:   D:12-, Depths
 ORIENT:  float
-ITEM:    book of debilitation / book of maledictions / book of hexes / \
-         book of misfortune
+ITEM:    book of debilitation / book of hexes / book of misfortune
 # randomize how open the hexagons are to each other
 SUBST:   M : xx+., N : +@, O : +++.
 # each hex other than the center either has monsters+loot, or nothing
@@ -9905,7 +10034,7 @@ xx...x...xx
 x9xxx.xxx9x
 x.x|x.x|x.x
 x.x.x.x.x.x
-x.xx8x8xx.x
+x.xm8x8mx.x
 xx.xxxxx.xx
  @xx   xx@
 ENDMAP
@@ -11426,4 +11555,83 @@ cG----Gc
 ccc++ccc
 ..t..t..
  ..@@..
+ENDMAP
+
+NAME:   nicolae_fronds_of_death
+TAGS:   transparent
+DEPTH:  D:12-, Depths
+ORIENT: float
+SUBST:  0 = ....0009, 9 = .....99998, % = %%%%***|
+MAP
+ccccc                 ccccc
+cG%%ccc             ccc%%Gc
+c%..v9ccc         ccc9v..%c
+c%.8..+9ccc @@@ ccc9+..8.%c
+ccv...v.+9ccc.ccc9+.v...vcc
+ c9..9..x.+0c+c0+.x..9..9c
+ cc+v...v.x.+.+.x.v...v+cc
+  c9...0..x.x.x.x..0...9c
+  cc+xv...v0x.x0v...vx+cc
+   c9....0..x.x..0....9c
+   cc+xxv...v0v...vxx+cc
+    c0..0..0...0..0...c
+   @cc+xxxv.....vxxx+cc@
+   @.+....0..G..0....+.@
+   @cc+xxxv.....vxxx+cc@
+    c0..0..0...0..0..0c
+   cc+xxv...v0v...vxx+cc
+   c9....0..x.x..0....9c
+  cc+xv...v0x.x0v...vx+cc
+  c9...0..x.x.x.x..0...9c
+ cc+v...v.x.+.+.x.v...v+cc
+ c8..9..x.+.c+c.+.x..9..8c
+ccv...v.+9ccc.ccc9+.v...vcc
+c%.8..+9ccc @@@ ccc9+..8.%c
+c%..v8ccc         ccc8v..%c
+cG%%ccc             ccc%%Gc
+ccccc                 ccccc
+ENDMAP
+
+NAME:   nicolae_herringbone
+TAGS:   transparent
+DEPTH:  Depths
+ORIENT: float
+SUBST:  T = .U V:30 T:130, - = |**%%%$$$$, \
+        0 = .:50 0, 9 = .:50 9, 8 = .:50 8
+MAP
+      c           c           c
+     ccc         ccc         ccc
+    cc-cc       cc-cc       cc-cc
+   cc-..cc     cc-..cc     cc-..cc
+  cc-....cc   cc-....cc   cc-....cc
+ cc-.888..cc cc-.888..cc cc-.888..cc
+cc-..8T8...ccc-..8T8...ccc-..8T8...cc
+ cc..888....ccc..888....ccc..888....cc
+  cc......9..ccc......9..ccc......9..cc
+   cc....999..ccc....999..ccc....999..cc
+    cc..99T99..ccc..99T99..ccc..99T99..cc
+     cc..999..0.ccc..999..0.ccc..999..0.cc
+      cc..9..000.ccc..9..000.ccc..9..000.cc
+       cc...00000.ccc...00000.ccc...00000.cc
+        cc.000T000.ccc.000T000.ccc.000T000.cc
+       cc+c.00000.c+c+c.00000.c+c+c.00000.c+cc
+      cc.c+c.000.c+c.c+c.000.c+c.c+c.000.c+c.cc
+     cc...c+c.0.c+c.0.c+c.0.c+c.0.c+c.0.c+c.0.cc
+    cc..0..c+c.c+c.000.c+c.c+c.000.c+c.c+c.000.cc
+   cc..000..c+c+c.00000.c+c+c.00000.c+c+c.00000.cc
+  cc@.00T00..ccc.000T000.ccc.000T000.ccc.000T000.cc
+     @.000..ccc...00000.ccc...00000.ccc...00000.cc
+      @.0..ccc..9..000.ccc..9..000.ccc..9..000.cc
+       @..ccc..999..0.ccc..999..0.ccc..999..0.cc
+        @ccc..99T99..ccc..99T99..ccc..99T99..cc
+        ccc....999..ccc....999..ccc....999..cc
+        cc......9..ccc......9..ccc......9..cc
+       cc..888....ccc..888....ccc..888....cc
+      cc-..8T8...ccc-..8T8...ccc-..8T8...cc
+       cc-.888..cc cc-.888..cc cc-.888..cc
+        cc-....cc   cc-....cc   cc-....cc
+         cc-..cc     cc-..cc     cc-..cc
+          cc-cc       cc-cc       cc-cc
+           ccc         ccc         ccc
+            c           c           c
 ENDMAP

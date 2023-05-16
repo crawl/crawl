@@ -383,9 +383,6 @@ tier1_gauntlet_arenas = {
     liquid = "lava",
   },
   {
-    second = {mons = "shapeshifter", min = 1, max = 3},
-  },
-  {
     first  = {mons = "flying skull band", min = 1, max = 1},
     plant  = "withered",
   },
@@ -553,10 +550,6 @@ tier2_gauntlet_arenas = {
     second = {mons = "hellwing / shadow imp", min = 1, max = 3},
     liquid = "water",
     plant  = "withered",
-  },
-  {
-    first  = {mons = "glowing shapeshifter", min = 1, max = 1},
-    second = {mons = "shapeshifter", min = 2, max = 3},
   },
   {
     first  = {mons = "apocalypse crab", min = 1, max = 1},

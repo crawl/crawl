@@ -1229,6 +1229,77 @@ x<<xxxxxxxxxxxxxxxxxxcx
 x&&xxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# I'd apologize for this pun, but I'm not actually sorry.
+NAME:    nicolae_half_adder
+TAGS:    transparent patrolling
+DEPTH:   D:2-6
+KMONS:   1 = adder
+KFEAT:   !O = c
+SHUFFLE: pqrs/O!!O/!O!O/!!O!
+SUBST:   pqrs = O
+: nsubst( "1 = " .. you.depth() .. "=1 / 1=1. / ." )
+TILE:    ! = DNGN_TRANSPARENT_STONE_WHITE
+TILE:    O = DNGN_TRANSPARENT_STONE_DARKGRAY
+COLOUR:  ! = white
+COLOUR:  O = magenta
+MAP
+.....................
+..p.........c.c....1.
+.pppppppppppcpcc..r..
+..p.p.1..1..1.%ccrrr.
+.1...p....qqcqcc..r..
+....1.p..q.1c.c..1...
+.......pq............
+.......qp............
+....1.q..p.1cccc.1...
+.1...q....ppccccc.s..
+..q.q.1..1..1.%ccsss.
+.qqqqqqqqqqqccccc.s..
+..q.........cccc...1.
+.....................
+ENDMAP
+
+# A similar idea didn't cut it as a Swamp rune vault, so let's resurrect it as
+# a lower-Dungeon vault. The gimmick, of course, is that each room has
+# 27 hydra heads, just arranged on a different number of hydra bodies.
+# Only places if this game doesn't have Swamp. This way, there's no incentive
+# to dive down through D in the hopes of finding this vault before the Swamp
+# end is generated to keep the Lernaean Hydra from being generated in the
+# rune vault.
+NAME:   nicolae_hydra_factorization
+TAGS:   no_monster_gen no_trap_gen
+DEPTH:  D:12-
+veto {{
+   return crawl.game_started() and dgn.br_exists("Swamp")
+}}
+# The final loot is geared towards 6-8 pieces of good stuff, including a
+# guaranteed randart, because otherwise who would go in?
+KITEM:  | = nothing / |, nothing / |, |, |, |, |, gold good_item, \
+            any armour randart / any weapon randart / any jewellery randart
+KITEM:  * = *
+KITEM:  % = %
+KITEM:  $ = $
+KMONS:  P = one-headed hydra
+KMONS:  Q = three-headed hydra
+KMONS:  R = nine-headed hydra
+KMONS:  S = the Lernaean Hydra
+KFEAT:  $%*|PQRS` = . / W w:5
+KFEAT:  t = mangrove
+SUBST:  L = tp, M = tq, N = tr, O = ts
+NSUBST: p = 27:P / 7:$ / `, q = 9:Q / 5:% / `, r = 3:R / 3:* / `, s = S / `
+MAP
+ccccccccccc
+cpppppppppccccccccc
+cppLLpLLppcMqqqqqMccccccc
+cpLLLpLLLpcqMMqMMqcrNrNrccccc
+cpLLpppLLpcqMMMMMqcNrNrNcOsOccc
+=ppppLpppp=qqMtMqq=rNtNr=sss=|n@
+cpLLpppLLpcqMMMMMqcNrNrNcOsOccc
+cpLLLpLLLpcqMMqMMqcrNrNrccccc
+cppLLpLLppcMqqqqqMccccccc
+cpppppppppccccccccc
+ccccccccccc
+ENDMAP
 
 ###############################################################################
 #
@@ -2553,6 +2624,31 @@ MAP
  ...
 ENDMAP
 
+# Robin is capable of hurling Ijyb at the player, but sadly, instances where a
+# player was killed by a projectile Ijyb are few and far between. Here, we put
+# the two goblin uniques together to increase the chances of a lethal Ijyb toss.
+# Robin's band is reduced from its usual 10-12 to 5-6, to increase the chances
+# that Ijyb gets thrown instead of a non-unique goblin.
+NAME:   nicolae_goblin_pals
+DEPTH:  D:3-5
+TAGS:   transparent
+KMONS:  1 = Robin, goblin / hobgoblin
+KMONS:  2 = Ijyb, goblin / hobgoblin
+# The usual ratio of Robin's band is goblin w:30 / hobgoblin, but here it has
+# slightly more hobgoblins to compensate for the reduction in size.
+KMONS:  3 = goblin / hobgoblin
+NSUBST: ` = 5=3 / 3. / .
+MAP
+........
+........
+..````..
+..`1.`..
+..`.2`..
+..````..
+........
+........
+ENDMAP
+
 # A shopkeeper has learned why there are no NetHack-style shops in this dungeon.
 NAME:   nicolae_nh_ransacked_shop
 TAGS:   transparent patrolling no_item_gen
@@ -3778,6 +3874,25 @@ c...........c
 +.1.1.1.1.1.+
 cc..T.).T..cc
  ccccccccccc
+ENDMAP
+
+NAME:   hellmonk_no_cap
+TAGS:   transparent no_monster_gen
+DEPTH:  D:3-7
+MONS:   sleepcap
+ITEM:   hat / nothing
+NSUBST: - = 1:1 / 4 = 10.. / *:.
+SUBST:  c : cxt, + : +.
+MAP
+   c
+  ccc
+  cdc
+ cc-cc
+ c---c
+cc---cc
+c-----c
+c.....c
+cc+++cc
 ENDMAP
 
 ###################################################################
@@ -7857,11 +7972,11 @@ ccc2.d.2ccc
 ccccccccccc
 ENDMAP
 
-NAME:   hellmonk_guarded_unrand_staff_of_battle
+NAME:   hellmonk_guarded_unrand_sphere_of_battle
 TAGS:   transparent
 DEPTH:  D:8-
 WEIGHT: 3
-ITEM:   staff_of_battle no_pickup
+ITEM:   sphere_of_battle no_pickup
 MONS:   tengu conjurer, tengu reaver
 : if you.depth() < 13 then
 SUBST:  D = 1.
@@ -8543,7 +8658,7 @@ NAME:   dilly_guarded_unrand_morg
 TAGS:   no_monster_gen
 DEPTH:  D:2-9
 WEIGHT: 3
-ITEM:   morg no_pickup, w:30 book of necromancy / w:5 book of decay \
+ITEM:   dagger randart ego:pain ident:type no_pickup, w:30 book of necromancy / w:5 book of decay \
         / w:5 book of death
 KMONS:  p = withered plant
 MONS:   skeleton / zombie, spectral thing / simulacrum, necrophage, phantom

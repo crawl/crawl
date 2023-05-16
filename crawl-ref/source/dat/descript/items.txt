@@ -220,10 +220,6 @@ book of lightning
 
 A book that fairly crackles with arcane power.
 %%%%
-book of maledictions
-
-A book of Hexes, describing spells to confound and befuddle.
-%%%%
 book of minor magic
 
 A spellbook containing a variety of simple but useful magical incantations.
@@ -439,10 +435,10 @@ condenser vane
 
 A magical device that condenses ambient energy into various destructive clouds.
 When evoked these clouds form around hostile monsters near the user. The
-lethality of these clouds increases with Evocations skill. At low power it will
-create noxious fumes, and as power increases this gives way to roaring flames,
-freezing vapours, and poisonous gas. At the highest tiers of power storm
-clouds, acidic fog and clouds of negative energy become available.
+quantity and lethality of these clouds increases with Evocations skill. At low
+power it will create noxious fumes, and as power increases this gives way to
+roaring flames, freezing vapours, and poisonous gas. At the highest tiers of
+power storm clouds, acidic fog and clouds of negative energy become available.
 %%%%
 corpse
 
@@ -1018,10 +1014,10 @@ A long sword with a wide, curved blade.
 %%%%
 scroll of acquirement
 
-A wonderful scroll which causes the creation of a valuable item, with
-the reader choosing from a small selection. The items offered will be
-often be a good match for the reader's skills; and if nothing
-recommends itself, the reader can always choose a heap of gold.
+A wonderful scroll which causes the creation of a valuable item, with the
+reader choosing from a small selection. The items offered will often be a
+good match for the reader's skills; and if nothing recommends itself, the
+reader can always choose a heap of gold.
 %%%%
 scroll of amnesia
 
@@ -1048,7 +1044,8 @@ draining brand, and rarely with the electrocution or chaos brand.
 %%%%
 scroll of butterflies
 
-A scroll that surrounds its user with a flight of beautiful butterflies.
+A scroll that surrounds its user with a flight of beautiful butterflies, blowing
+back other creatures nearby with the flapping of their wings.
 %%%%
 scroll of enchant armour
 

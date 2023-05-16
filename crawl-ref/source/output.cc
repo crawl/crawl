@@ -35,6 +35,7 @@
 #include "misc.h"
 #include "mutation.h"
 #include "notes.h"
+#include "ouch.h"
 #include "player-equip.h"
 #include "player-stats.h"
 #include "prompt.h"
@@ -719,7 +720,7 @@ static void _print_stats_equip(int x, int y)
     textcolour(LIGHTGREY);
     for (equipment_type eqslot : e_order)
     {
-        if (you_can_wear(eqslot))
+        if (you_can_wear(eqslot) != false)
         {
             if (you.slot_item(eqslot))
             {
@@ -1083,7 +1084,7 @@ static int _wpn_name_colour()
         const item_def& wpn = *you.weapon();
 
         const string prefix = item_prefix(wpn);
-        const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix, "stats");
+        const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix, "stats", false);
         if (prefcol != -1)
             return prefcol;
         return LIGHTGREY;
@@ -1573,6 +1574,8 @@ void print_stats_level()
 void draw_border()
 {
     textcolour(HUD_CAPTION_COLOUR);
+
+    CGOTOXY(1,1, GOTO_CRT);
     clrscr();
 
     textcolour(Options.status_caption_colour);
@@ -1609,8 +1612,8 @@ void draw_border()
 #ifndef USE_TILE_LOCAL
 void smallterm_warning()
 {
-    clrscr();
     CGOTOXY(1,1, GOTO_CRT);
+    clrscr();
     CPRINTF("Your terminal window is too small; please resize to at least %d,%d", MIN_COLS, MIN_LINES);
 }
 #endif
@@ -1906,8 +1909,6 @@ int update_monster_pane()
             textbackground(BLACK);
         }
 
-        assert_valid_cursor_pos();
-
         if (mons.empty())
             return -1;
 
@@ -2073,7 +2074,7 @@ static void _print_overview_screen_equip(column_composer& cols,
         // leave space for all the ring slots
         if (species::arm_count(you.species) > 2
             && eqslot != EQ_WEAPON
-            && !you_can_wear(eqslot))
+            && bool(!you_can_wear(eqslot)))
         {
             continue;
         }
@@ -2084,20 +2085,20 @@ static void _print_overview_screen_equip(column_composer& cols,
             continue;
         }
 
-        if (eqslot == EQ_RING_AMULET && !you_can_wear(eqslot))
+        if (eqslot == EQ_RING_AMULET && bool(!you_can_wear(eqslot)))
             continue;
 
         const string slot_name_lwr = lowercase_string(equip_slot_to_name(eqslot));
 
         string str;
 
-        if (you.slot_item(eqslot))
+        if (you.slot_item(eqslot, true))
         {
             // The player has something equipped.
-            const item_def& item = *you.slot_item(eqslot);
+            const item_def& item = *you.slot_item(eqslot, true);
             const bool melded    = you.melded[eqslot];
             const string prefix = item_prefix(item);
-            const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix);
+            const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix, "resists", false);
             const int col = prefcol == -1 ? LIGHTGREY : prefcol;
 
             // Colour melded equipment dark grey.
@@ -2112,7 +2113,7 @@ static void _print_overview_screen_equip(column_composer& cols,
                      colname.c_str(),
                      melded ? "melded " : "",
                      chop_string(item.name(DESC_PLAIN, true),
-                                 melded ? sw - 43 : sw - 36, false).c_str(),
+                                 melded ? sw - 32 : sw - 25, false).c_str(),
                      colname.c_str());
             equip_chars.push_back(equip_char);
         }
@@ -2136,11 +2137,11 @@ static void _print_overview_screen_equip(column_composer& cols,
             str = "<darkgrey>(" + slot_name_lwr +
                                " currently unavailable)</darkgrey>";
         }
-        else if (you_can_wear(eqslot) == MB_MAYBE)
+        else if (you_can_wear(eqslot) == maybe_bool::maybe)
             str = "<darkgrey>(" + slot_name_lwr + " restricted)</darkgrey>";
-        else
+        else // maybe_bool::t
             str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
-        cols.add_formatted(2, str.c_str(), false);
+        cols.add_formatted(1, str.c_str(), false);
     }
 }
 
@@ -2508,8 +2509,9 @@ static string _resist_composer(const char * name, int spacing, int value,
 static vector<formatted_string> _get_overview_resistances(
     vector<char> &equip_chars, int sw)
 {
-    // 3 columns, splits at columns 20, 33
-    column_composer cols(3, 20, 33);
+    // Two columns, split at column 22.
+    column_composer cols(2, 22);
+
     // First column, resist name is up to 8 chars
     int cwidth = 8;
     string out;
@@ -2532,13 +2534,11 @@ static vector<formatted_string> _get_overview_resistances(
     const int rcorr = you.res_corr(false);
     out += _resist_composer("rCorr", cwidth, rcorr) + "\n";
 
-    const int rmuta = (you.rmut_from_item()
-                       || you.get_mutation_level(MUT_MUTATION_RESISTANCE) == 3);
-    if (rmuta)
-        out += _resist_composer("rMut", cwidth, rmuta) + "\n";
+    const int sinv = you.can_see_invisible();
+    out += _resist_composer("SInv", cwidth, sinv) + "\n";
 
     const int rmagi = player_willpower() / WL_PIP;
-    out += _resist_composer("Will", cwidth, rmagi, 5, true,
+    out += _resist_composer("Will", cwidth, rmagi, MAX_WILL_PIPS, true,
                             player_willpower() == WILL_INVULN) + "\n";
 
     out += _stealth_bar(cwidth, 20) + "\n";
@@ -2561,58 +2561,7 @@ static vector<formatted_string> _get_overview_resistances(
 
     cols.add_formatted(0, out, false);
 
-    // Second column, resist name is 9 chars
-    out.clear();
-    cwidth = 9;
-    const int rinvi = you.can_see_invisible();
-    out += _resist_composer("SeeInvis", cwidth, rinvi) + "\n";
-
-    const int faith = you.faith();
-    out += _resist_composer("Faith", cwidth, faith) + "\n";
-
-    const int rspir = you.spirit_shield();
-    out += _resist_composer("Spirit", cwidth, rspir) + "\n";
-
-    const int reflect = you.reflection();
-    out += _resist_composer("Reflect", cwidth, reflect) + "\n";
-
-    const int harm = you.extra_harm();
-    out += _resist_composer("Harm", cwidth, harm) + "\n";
-
-    const int rampage = you.rampaging();
-    const string rampage_name = you.has_mutation(MUT_ROLLPAGE) ? "Roll" :
-                                                                 "Rampage";
-    out += _resist_composer(rampage_name.c_str(), cwidth, rampage, 1, true,
-                            player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS))
-           + "\n";
-
-    const int archmagi = you.archmagi();
-    if (archmagi)
-        out += _resist_composer("Archmagi", cwidth, archmagi, archmagi) + "\n";
-
-    const int rclarity = you.clarity();
-    if (rclarity)
-        out += _resist_composer("Clarity", cwidth, rclarity) + "\n";
-
-    const int anger_rate = you.angry();
-    if (anger_rate && !you.stasis() && !rclarity && !you.is_lifeless_undead())
-        out += make_stringf("Rage     %d%%\n", anger_rate);
-
-    // Fo don't need a reminder that they can't teleport
-    if (!you.stasis())
-    {
-        if (you.no_tele())
-            out += _resist_composer("NoTele", cwidth, 1, 1, false) + "\n";
-        else if (get_teleportitis_level())
-            out += _resist_composer("Rnd*Tele", cwidth, 1, 1, false) + "\n";
-    }
-
-    const int no_cast = you.no_cast();
-    if (no_cast)
-        out += _resist_composer("NoCast", cwidth, 1, 1, false);
-
-    cols.add_formatted(1, out, false);
-
+    // Second column.
     _print_overview_screen_equip(cols, equip_chars, sw);
 
     return cols.formatted_lines();
@@ -2624,14 +2573,12 @@ public:
     overview_popup() {};
     vector<char> equip_chars;
 private:
-    bool process_key(int ch) override
+    maybe_bool process_key(int ch) override
     {
         if (find(equip_chars.begin(), equip_chars.end(), ch) != equip_chars.end())
         {
             item_def& item = you.inv[letter_to_index(ch)];
-            if (!describe_item(item))
-                return false;
-            return true;
+            return describe_item(item);
         }
         return formatted_scroller::process_key(ch);
     };
@@ -2697,12 +2644,127 @@ string dump_overview_screen()
     return text;
 }
 
+static string _extra_passive_effects()
+{
+    vector<string> passives;
+
+    // Fo don't need a reminder that they can't teleport
+    if (!you.stasis() && you.no_tele(false, false))
+        passives.emplace_back("no teleportation");
+
+    if (you.no_cast())
+        passives.emplace_back("no spellcasting");
+
+    const int anger = you.angry();
+    if (anger && !you.stasis() && !you.clarity() && !you.is_lifeless_undead())
+    {
+        passives.emplace_back(
+            make_stringf("random rage (%d%%)", anger).c_str());
+    }
+
+    const int corrode = you.scan_artefacts(ARTP_CORRODE);
+    if (corrode)
+    {
+        passives.emplace_back(
+            make_stringf("corrode self (%d%%)",
+                         corrosion_chance(corrode)).c_str());
+    }
+
+    const int slow = you.scan_artefacts(ARTP_SLOW);
+    if (you.scan_artefacts(ARTP_SLOW))
+    {
+        passives.emplace_back(
+            make_stringf("slow self (%d%%)", slow).c_str());
+    }
+
+    const int harm = you.extra_harm();
+    if (harm)
+    {
+        passives.emplace_back(
+            make_stringf("harm (+%d%% outgoing, +%d%% incoming)",
+                         outgoing_harm_amount(harm),
+                         incoming_harm_amount(harm)).c_str());
+    }
+
+    if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
+        passives.emplace_back("mayhem");
+
+    if (you.missile_repulsion())
+        passives.emplace_back("repel missiles");
+
+    if (you.reflection())
+        passives.emplace_back("reflection");
+
+    if (you.wearing(EQ_AMULET, AMU_ACROBAT))
+        passives.emplace_back("acrobat");
+
+    if (you.clarity())
+        passives.emplace_back("clarity");
+
+    if (you.rmut_from_item()
+        || you.get_mutation_level(MUT_MUTATION_RESISTANCE) == 3)
+    {
+        passives.emplace_back("resist mutation");
+    }
+
+    if (you.spirit_shield())
+        passives.emplace_back("guardian spirit");
+
+    if (you.rampaging())
+    {
+        const bool infinite = player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS);
+        const char *inf = Options.char_set == CSET_ASCII ? "+inf"
+                                                          : "+\u221e"; //"∞"
+        passives.emplace_back(
+            make_stringf("%s%s",
+                         you.has_mutation(MUT_ROLLPAGE) ? "roll" : "rampage",
+                         infinite ? inf : "").c_str());
+    }
+
+    if (you.faith())
+        passives.emplace_back("faith");
+
+    const int wizardry = player_wizardry();
+    if (wizardry)
+        passives.emplace_back(make_stringf("wizardry (x%d)", wizardry));
+
+    if (you.archmagi())
+        passives.emplace_back("archmagi");
+
+    const int channel = player_channeling();
+    if (channel)
+    {
+        passives.emplace_back(
+            make_stringf("channel magic (%d%%)", 20 * channel).c_str());
+    }
+
+    if (you.infusion_amount())
+    {
+        passives.emplace_back(
+            make_stringf("infuse magic (%d %s)",
+                         you.infusion_amount(),
+                         you.has_mutation(MUT_HP_CASTING) ? "HP"
+                                                          : "MP").c_str());
+    }
+
+    if (passives.empty())
+        return "no passive effects";
+    else
+        return comma_separated_line(passives.begin(), passives.end(),
+                                    ", ", ", ");
+
+}
+
 /// Creates rows of short descriptions for current status effects, mutations,
 /// and runes/Orbs of Zot.
-string _status_mut_rune_list(int sw)
+static string _status_mut_rune_list(int sw)
 {
+    // print passive information
+    string text = "<w>%:</w> ";
+    text += _extra_passive_effects();
+
     // print status information
-    string text = "<w>@:</w> ";
+    text += "\n<w>@:</w> ";
     vector<string> status;
 
     status_info inf;

@@ -513,13 +513,14 @@ miscast spells.
 ignite blood mutation
 
 Whenever you see blood spilled (yours or others'), it may ignite, bursting into
-a cloud of flame. Each level of this mutation makes this more likely.
+a cloud of flame. Each level of this mutation makes this more likely. This
+mutation also grants you immunity to clouds of flame.
 # XXX: also mention that this makes people more likely to bleed?
 %%%%
 corrupting presence mutation
 
 When you injure a foe, your presence may intensify the damage, corroding their
-weapons and defenses. The second level of this mutation makes matters even
+weapons and defences. The second level of this mutation makes matters even
 worse, adding a chance that your wretched victims may become mutated and
 deformed.
 %%%%
@@ -629,8 +630,7 @@ You are immune to petrification.
 %%%%
 cold-blooded mutation
 
-You are endothermic. When struck by a cold attack, you may be slowed until your
-blood warms again.
+When struck by a cold attack, you may be slowed until your blood warms again.
 %%%%
 stealthy paws mutation
 

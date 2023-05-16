@@ -236,67 +236,70 @@ static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
     return a_toughness > b_toughness;
 }
 
-class DescMenu : public Menu
+namespace
 {
-public:
-    DescMenu(int _flags, bool _toggleable_sort) : Menu(_flags, ""), sort_alpha(true),
-    toggleable_sort(_toggleable_sort)
+    class DescMenu : public Menu
     {
-        set_highlighter(nullptr);
-
-        if (_toggleable_sort)
-            toggle_sorting();
-
-        set_prompt();
-    }
-
-    bool sort_alpha;
-    bool toggleable_sort;
-
-    void set_prompt()
-    {
-        string prompt = "Describe which? ";
-
-        if (toggleable_sort)
+    public:
+        DescMenu(int _flags, bool _toggleable_sort) : Menu(_flags, ""),
+            sort_alpha(true), toggleable_sort(_toggleable_sort)
         {
+            set_highlighter(nullptr);
+
+            if (_toggleable_sort)
+                toggle_sorting();
+
+            set_prompt();
+        }
+
+        bool sort_alpha;
+        bool toggleable_sort;
+
+        void set_prompt()
+        {
+            string prompt = "Describe which? ";
+
+            if (toggleable_sort)
+            {
+                if (sort_alpha)
+                    prompt += "(CTRL-S to sort by monster toughness)";
+                else
+                    prompt += "(CTRL-S to sort by name)";
+            }
+            set_title(new MenuEntry(prompt, MEL_TITLE));
+        }
+
+        void sort()
+        {
+            if (!toggleable_sort)
+                return;
+
             if (sort_alpha)
-                prompt += "(CTRL-S to sort by monster toughness)";
+                ::sort(items.begin(), items.end(), _compare_mon_names);
             else
-                prompt += "(CTRL-S to sort by name)";
+                ::sort(items.begin(), items.end(), _compare_mon_toughness);
+
+            for (unsigned int i = 0, size = items.size(); i < size; i++)
+            {
+                const char letter = index_to_letter(i % 52);
+
+                items[i]->hotkeys.clear();
+                items[i]->add_hotkey(letter);
+            }
         }
-        set_title(new MenuEntry(prompt, MEL_TITLE));
-    }
 
-    void sort()
-    {
-        if (!toggleable_sort)
-            return;
-
-        if (sort_alpha)
-            ::sort(items.begin(), items.end(), _compare_mon_names);
-        else
-            ::sort(items.begin(), items.end(), _compare_mon_toughness);
-
-        for (unsigned int i = 0, size = items.size(); i < size; i++)
+        void toggle_sorting()
         {
-            const char letter = index_to_letter(i % 52);
+            if (!toggleable_sort)
+                return;
 
-            items[i]->hotkeys.clear();
-            items[i]->add_hotkey(letter);
+            sort_alpha = !sort_alpha;
+
+            sort();
+            set_prompt();
         }
-    }
-
-    void toggle_sorting()
-    {
-        if (!toggleable_sort)
-            return;
-
-        sort_alpha = !sort_alpha;
-
-        sort();
-        set_prompt();
-    }
-};
+    };
+}
 
 static vector<string> _get_desc_keys(string regex, db_find_filter filter)
 {
@@ -478,6 +481,10 @@ static bool _mutation_filter(string key, string /*body*/)
     return !strip_suffix(lowercase(key), " mutation");
 }
 
+static bool _passive_filter(string key, string /*body*/)
+{
+    return !strip_suffix(lowercase(key), " passive");
+}
 
 static void _recap_mon_keys(vector<string> &keys)
 {
@@ -846,26 +853,27 @@ static string _mons_desc_key(monster_type type)
 void LookupType::display_keys(vector<string> &key_list) const
 {
     DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
-                | MF_USE_TWO_COLUMNS | MF_ARROWS_SELECT,
+                | MF_USE_TWO_COLUMNS | MF_ARROWS_SELECT | MF_INIT_HOVER,
             toggleable_sort());
     desc_menu.set_tag("description");
 
     // XXX: ugh
     const bool doing_mons = type == "monster";
     vector<monster_info> monster_list(key_list.size());
+    int letter_i = 0;
     for (unsigned int i = 0, size = key_list.size(); i < size; i++)
     {
-        const char letter = index_to_letter(i % 52);
+        const char letter = index_to_letter(letter_i % 52);
         string &key = key_list[i];
         // XXX: double ugh
-        if (doing_mons)
-        {
-            desc_menu.add_entry(_monster_menu_gen(letter,
-                                                  key_to_menu_str(key),
-                                                  monster_list[i]));
-        }
-        else
-            desc_menu.add_entry(make_menu_entry(letter, key));
+        auto *entry = doing_mons
+            ? _monster_menu_gen(letter, key_to_menu_str(key), monster_list[i])
+            : make_menu_entry(letter, key);
+
+        if (!entry)
+            continue;
+        desc_menu.add_entry(entry);
+        letter_i++;
     }
 
     desc_menu.sort();
@@ -887,10 +895,6 @@ void LookupType::display_keys(vector<string> &key_list) const
         describe(key);
         return true;
     };
-
-    // for some reason DescMenu is an InvMenu, so we need to do something to
-    // prevent examine crashes. Just alias it to regular selection.
-    desc_menu.on_examine = desc_menu.on_single_selection;
 
     while (true)
     {
@@ -1118,7 +1122,10 @@ static int _describe_item(const string &key, const string &suffix,
     {
         const int unrand_idx = extant_unrandart_by_exact_name(item_name);
         if (!unrand_idx)
-            die("Unable to get item %s by name", key.c_str());
+        {
+            ui::error(make_stringf("Unable to get item '%s' by name", key.c_str()));
+            return 0;
+        }
         _make_item_fake_unrandart(item, unrand_idx);
     }
     describe_item_popup(item);
@@ -1150,20 +1157,18 @@ static int _describe_god(const string &key, const string &/*suffix*/,
     return 0; // no exact matches for gods, so output doesn't matter
 }
 
-static string _branch_entry_runes(branch_type br)
+static string _branch_transit_runes(branch_type br)
 {
+    if (br != BRANCH_VAULTS && br != BRANCH_ZOT)
+        return "";
+
     string desc;
-    const int num_runes = runes_for_branch(br);
-
-    if (num_runes > 0)
-    {
-        desc = make_stringf("\n\nThis %s can only be entered while carrying "
-                            "at least %d rune%s of Zot.",
-                            br == BRANCH_ZIGGURAT ? "portal" : "branch",
-                            num_runes, num_runes > 1 ? "s" : "");
-    }
-
-    return desc;
+    const bool exit = br == BRANCH_VAULTS;
+    const int num_runes = br == BRANCH_ZOT ? 3 : 1;
+    return make_stringf("\n\nThis branch can only be %sed while carrying at "
+                        "least %d rune%s of Zot.",
+                        exit ? "exit" : "enter",
+                        num_runes, num_runes > 1 ? "s" : "");
 }
 
 static string _branch_depth(branch_type br)
@@ -1252,7 +1257,7 @@ static int _describe_branch(const string &key, const string &suffix,
         info += "\n\n" + noise_desc;
 
     info += _branch_location(branch)
-            + _branch_entry_runes(branch)
+            + _branch_transit_runes(branch)
             + _branch_depth(branch)
             + _branch_subbranches(branch)
             + "\n\n"
@@ -1260,6 +1265,16 @@ static int _describe_branch(const string &key, const string &suffix,
 
     tile_def tile = tile_def(tileidx_branch(branch));
     return _describe_key(key, suffix, footer, info, &tile);
+}
+
+static int _describe_mutation(const string &key, const string &suffix,
+                              string /*footer*/)
+{
+    const string mutation_name = key.substr(0, key.size() - suffix.size());
+    const mutation_type mutation = mutation_from_name(mutation_name.c_str(),
+                                                      false);
+    describe_mutation(mutation);
+    return 0;
 }
 
 /// All types of ?/ queries the player can enter.
@@ -1294,12 +1309,15 @@ static const vector<LookupType> lookup_types = {
     LookupType('L', "cloud", nullptr, nullptr,
                nullptr, _get_cloud_keys, _cloud_menu_gen,
                _describe_cloud, lookup_type::db_suffix),
+    LookupType('P', "passive", nullptr, _passive_filter,
+               nullptr, nullptr, _simple_menu_gen,
+               _describe_generic, lookup_type::db_suffix),
     LookupType('T', "status", nullptr, _status_filter,
                nullptr, nullptr, _simple_menu_gen,
                _describe_generic, lookup_type::db_suffix),
     LookupType('U', "mutation", nullptr, _mutation_filter,
                nullptr, nullptr, _mut_menu_gen,
-               _describe_generic, lookup_type::db_suffix),
+               _describe_mutation, lookup_type::db_suffix),
 };
 
 /**

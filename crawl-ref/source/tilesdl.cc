@@ -70,14 +70,14 @@ static int _screen_sizes[4][8] =
 };
 #else
 // Extra values for viewport and map scale
+// width, height, map, crt, stat, msg, tip, lbl, view scale, map scale
 static int _screen_sizes[6][10] =
 {
-    {960, 960, 2, 18, 20, 18, 18, 18, 180, 130},
-    {800, 800, 2, 15, 17, 15, 15, 15, 150, 100},
-    {720, 720, 2, 13, 15, 13, 13, 13, 130, 80},
-    {640, 640, 1, 12, 14, 12, 12, 12, 120, 70},
-    {540, 540, 1, 10, 12, 10, 10, 10, 100, 50},
-    {480, 480, 1, 9, 11, 9, 9, 9, 90, 40}
+    {800, 800, 1, 15, 17, 17, 15, 15, 150, 100},
+    {720, 720, 1, 13, 15, 15, 13, 13, 130, 80},
+    {640, 640, 1, 12, 14, 14, 12, 12, 120, 70},
+    {540, 540, 1, 10, 12, 12, 10, 10, 100, 50},
+    {480, 480, 1, 9, 11, 11, 9, 9, 90, 40}
 };
 #endif
 
@@ -243,7 +243,7 @@ void TilesFramework::draw_doll_edit()
 void TilesFramework::set_map_display(const bool display)
 {
     m_map_mode_enabled = display;
-    if (!display && !tiles.is_using_small_layout())
+    if (!display && !tiles.is_using_small_layout() && m_region_tab)
         m_region_tab->activate_tab(TAB_ITEM);
     do_layout(); // recalculate the viewport setup for zoom levels
     redraw_screen(false);
@@ -261,13 +261,14 @@ void TilesFramework::do_map_display()
     do_layout(); // recalculate the viewport setup for zoom levels
     redraw_screen(false);
     update_screen();
-    if (!tiles.is_using_small_layout())
+    if (!tiles.is_using_small_layout() && m_region_tab)
         m_region_tab->activate_tab(TAB_NAVIGATION);
 }
 
 void TilesFramework::calculate_default_options()
 {
     // Find which set of _screen_sizes to use.
+    // TODO: this whole thing needs refactoring for code clarity
     int auto_size = 0;
     int num_screen_sizes = ARRAYSZ(_screen_sizes);
     do
@@ -277,7 +278,7 @@ void TilesFramework::calculate_default_options()
             && m_windowsz.y >= _screen_sizes[auto_size][1])
 #else
         int adjust_scale = 1;
-        if (Options.game_scale == min(m_windowsz.x, m_windowsz.y)/1080+1)
+        if (Options.game_scale == min(m_windowsz.x, m_windowsz.y)/960+1)
             adjust_scale = Options.game_scale;
         if (m_windowsz.x >= (_screen_sizes[auto_size][0]*adjust_scale)
             && m_windowsz.y >= (_screen_sizes[auto_size][1])*adjust_scale)
@@ -290,6 +291,7 @@ void TilesFramework::calculate_default_options()
 
     m_map_pixels = Options.tile_map_pixels;
     // Auto pick map and font sizes if option is zero.
+    // XX this macro is silly
 #define AUTO(x,y) (x = (x) ? (x) : _screen_sizes[auto_size][(y)])
     AUTO(m_map_pixels, 2);
     AUTO(Options.tile_font_crt_size, 3);
@@ -298,8 +300,10 @@ void TilesFramework::calculate_default_options()
     AUTO(Options.tile_font_tip_size, 6);
     AUTO(Options.tile_font_lbl_size, 7);
 # ifdef __ANDROID__
-    AUTO(Options.tile_viewport_scale, 8);
-    AUTO(Options.tile_map_scale, 9);
+    if (Options.tile_viewport_scale == 0)
+        Options.tile_viewport_scale = fixedp<int,100>::from_scaled(_screen_sizes[auto_size][8]);
+    if (Options.tile_map_scale == 0)
+        Options.tile_map_scale = fixedp<int,100>::from_scaled(_screen_sizes[auto_size][9]);
 # endif
 #undef AUTO
 
@@ -473,7 +477,8 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
 {
     m_active_layer = LAYER_NORMAL;
 
-    m_region_tile->load_dungeon(vbuf, gc);
+    if (m_region_tile)
+        m_region_tile->load_dungeon(vbuf, gc);
 
     if (m_region_map)
     {
@@ -499,6 +504,8 @@ void TilesFramework::load_dungeon(const coord_def &cen)
 
 bool TilesFramework::update_dpi()
 {
+    if (crawl_state.tiles_disabled)
+        return false;
     if (wm->init_hidpi())
     {
         reconfigure_fonts();
@@ -513,7 +520,8 @@ void TilesFramework::resize()
     calculate_default_options();
     do_layout();
     ui::resize(m_windowsz.x, m_windowsz.y);
-    wm->resize(m_windowsz);
+    if (wm)
+        wm->resize(m_windowsz);
 }
 
 void TilesFramework::resize_event(int w, int h)
@@ -803,21 +811,26 @@ void TilesFramework::do_layout()
      * XXX: don't layout unless we're in a game / arena
      * this is to prevent layout code from accessing `you` while it's invalid.
      */
-    if (!species::is_valid(you.species))
+    if (in_headless_mode()
+        || !species::is_valid(you.species))
     {
         /* HACK: some code called while loading the game calls mprf(), so even
          * if we're not ready to do an actual layout, we should still give the
          * message region a size, to prevent a crash. */
-        m_region_msg->place(0, 0, 0);
-        m_region_msg->resize_to_fit(10000, 10000);
+        if (m_region_msg)
+        {
+            m_region_msg->place(0, 0, 0);
+            m_region_msg->resize_to_fit(10000, 10000);
+        }
         return;
     }
 
     // View size in pixels is ((dx, dy) * crawl_view.viewsz)
-    const int scale = m_map_mode_enabled ? Options.tile_map_scale
-                                         : Options.tile_viewport_scale;
-    m_region_tile->dx = Options.tile_cell_pixels * scale / 100;
-    m_region_tile->dy = Options.tile_cell_pixels * scale / 100;
+    const fixedp<> scale = m_map_mode_enabled ? Options.tile_map_scale
+                                              : Options.tile_viewport_scale;
+    ASSERT(scale > 0.0);
+    m_region_tile->dx = static_cast<int>(Options.tile_cell_pixels * scale);
+    m_region_tile->dy = static_cast<int>(Options.tile_cell_pixels * scale);
 
     int message_y_divider = 0;
     int sidebar_pw;
@@ -997,36 +1010,35 @@ void TilesFramework::do_layout()
 
 bool TilesFramework::is_using_small_layout()
 {
-    if (Options.tile_use_small_layout == MB_MAYBE)
+    if (Options.tile_use_small_layout == maybe_bool::maybe)
 #ifndef __ANDROID__
         // Rough estimation of the minimum usable window size
-        //   - width > stats font size * 28 + msg font size * 30
-        //   - height > tabs area size (192) + stats font size * 14
+        //   - width > stats font width * 45 + msg font width * 45
+        //   - height > tabs area size (192) + stats font height * 11
         // Not using Options.tile_font_xxx_size because it's reset on new game
-        return m_windowsz.x < m_fonts[2].size*28+m_fonts[1].size*30 || m_windowsz.y < 192+m_fonts[2].size*14;
+        return m_windowsz.x < (int)(m_stat_font->char_width()*45+m_msg_font->char_width()*45)
+            || m_windowsz.y < (int)(192+m_stat_font->char_height()*11);
 #else
         return true;
 #endif
     else
-        return Options.tile_use_small_layout;
+        return bool(Options.tile_use_small_layout);
 }
 
-#define ZOOM_INC 10
+#define ZOOM_INC 0.1
 
 void TilesFramework::zoom_dungeon(bool in)
 {
 #if defined(USE_TILE_LOCAL)
-    int &current_scale = m_map_mode_enabled ?  Options.tile_map_scale
-                                            :  Options.tile_viewport_scale;
+    fixedp<> &current_scale = m_map_mode_enabled ?  Options.tile_map_scale
+                                                 :  Options.tile_viewport_scale;
     // max zoom relative to to tile size that keeps LOS in view
-    int max_zoom = 100 * m_windowsz.y / Options.tile_cell_pixels
+    fixedp<> max_zoom = m_windowsz.y / Options.tile_cell_pixels
                                       / ENV_SHOW_DIAMETER;
-    if (max_zoom % ZOOM_INC != 0)
-        max_zoom += ZOOM_INC - max_zoom % ZOOM_INC; // round up
-    current_scale = min(max_zoom, max(20,
+    current_scale = min(ceil(max_zoom), max(0.2,
                     current_scale + (in ? ZOOM_INC : -ZOOM_INC)));
     do_layout(); // recalculate the viewport setup
-    dprf("Zooming to %d", current_scale);
+    dprf("Zooming to %g", (float) current_scale);
     redraw_screen(false);
     update_screen();
 #endif
@@ -1164,6 +1176,8 @@ void TilesFramework::resize_inventory()
 void TilesFramework::layout_statcol()
 {
     bool use_small_layout = is_using_small_layout();
+    if (in_headless_mode())
+        return;
 
     for (tab_iterator it = m_tabs.begin(); it != m_tabs.end(); ++it)
     {
@@ -1324,6 +1338,8 @@ void TilesFramework::redraw()
     cprintf("\nredrawing tiles");
 #endif
     m_need_redraw = false;
+    if (in_headless_mode())
+        return;
 
     glmanager->reset_view_for_redraw();
 
@@ -1399,8 +1415,11 @@ void TilesFramework::update_minimap_bounds()
 
 void TilesFramework::update_tabs()
 {
-    if (Options.tile_show_items.empty() || crawl_state.game_is_arena())
+    if (Options.tile_show_items.empty() || crawl_state.game_is_arena()
+        || in_headless_mode())
+    {
         return;
+    }
 
     m_region_tab->update();
     for (tab_iterator it = m_tabs.begin(); it != m_tabs.end(); ++it)
@@ -1415,6 +1434,8 @@ void TilesFramework::toggle_inventory_display()
 
 void TilesFramework::place_cursor(cursor_type type, const coord_def &gc)
 {
+    if (in_headless_mode())
+        return;
     m_region_tile->place_cursor(type, gc);
 }
 
@@ -1425,12 +1446,16 @@ void TilesFramework::grid_to_screen(const coord_def &gc, coord_def *pc) const
 
 void TilesFramework::clear_text_tags(text_tag_type type)
 {
+    if (in_headless_mode())
+        return;
     m_region_tile->clear_text_tags(type);
 }
 
 void TilesFramework::add_text_tag(text_tag_type type, const string &tag,
                                   const coord_def &gc)
 {
+    if (in_headless_mode())
+        return;
     m_region_tile->add_text_tag(type, tag, gc);
 }
 
@@ -1463,6 +1488,8 @@ const coord_def &TilesFramework::get_cursor() const
 
 void TilesFramework::set_need_redraw(unsigned int min_tick_delay)
 {
+    if (in_headless_mode())
+        return;
     unsigned int ticks = (wm->get_ticks() - m_last_tick_redraw);
     if (min_tick_delay && ticks <= min_tick_delay)
         return;

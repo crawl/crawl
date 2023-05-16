@@ -10,12 +10,12 @@ public class DungeonCrawlStoneSoup extends SDLActivity {
     @Override
     protected String[] getLibraries() {
         return new String[] {
+                "c++_shared",
                 "SDL2",
                 "SDL2_image",
-                "SDL2_mixer",
                 "mikmod",
-                "c++_shared",
                 "smpeg2",
+                "SDL2_mixer",
                 "sqlite",
                 "lua",
                 "zlib",

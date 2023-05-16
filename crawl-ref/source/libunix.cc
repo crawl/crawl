@@ -34,6 +34,7 @@
 #include "colour.h"
 #include "cio.h"
 #include "crash.h"
+#include "libutil.h"
 #include "state.h"
 #include "tiles-build-specific.h"
 #include "unicode.h"
@@ -50,6 +51,14 @@ static struct termios game_term;
 
 #include <time.h>
 
+// replace definitions from curses.h; not needed outside this file
+#define HEADLESS_LINES 24
+#define HEADLESS_COLS 80
+
+// for some reason we use 1 indexing internally
+static int headless_x = 1;
+static int headless_y = 1;
+
 // Its best if curses comes at the end (name conflicts with Solaris). -- bwr
 #ifndef CURSES_INCLUDE_FILE
     #ifndef _XOPEN_SOURCE_EXTENDED
@@ -60,6 +69,10 @@ static struct termios game_term;
 #else
     #include CURSES_INCLUDE_FILE
 #endif
+
+static bool _headless_mode = false;
+bool in_headless_mode() { return _headless_mode; }
+void enter_headless_mode() { _headless_mode = true; }
 
 // Globals holding current text/backg. colours
 // Note that these are internal colours, *not* curses colors.
@@ -424,6 +437,8 @@ static void termio_init()
 void set_mouse_enabled(bool enabled)
 {
 #ifdef NCURSES_MOUSE_VERSION
+    if (_headless_mode)
+        return;
     const int mask = enabled ? ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION : 0;
     mmask_t oldmask = 0;
     mousemask(mask, &oldmask);
@@ -530,8 +545,54 @@ void set_getch_returns_resizes(bool rr)
     getch_returns_resizes = rr;
 }
 
+static int _headless_getchk()
+{
+#ifdef WATCHDOG
+    // If we have (or wait for) actual keyboard input, it's not an infinite
+    // loop.
+    watchdog();
+#endif
+
+    if (pending)
+    {
+        int c = pending;
+        pending = 0;
+        return c;
+    }
+
+
+#ifdef USE_TILE_WEB
+    wint_t c;
+    tiles.redraw();
+    tiles.await_input(c, true);
+
+    if (c != 0)
+        return c;
+#endif
+
+    return ESCAPE; // TODO: ??
+}
+
+static int _headless_getch_ck()
+{
+    int c;
+    do
+    {
+        c = _headless_getchk();
+        // TODO: release?
+        // XX this should possibly sleep
+    } while (
+             ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
+                 && !crawl_state.mouse_enabled));
+
+    return c;
+}
+
 int getch_ck()
 {
+    if (_headless_mode)
+        return _headless_getch_ck();
+
     while (true)
     {
         int c = _get_key_from_curses();
@@ -754,8 +815,27 @@ int unixcurses_get_vi_key(int keyin)
 #define KPADAPP "\033[?1051l\033[?1052l\033[?1060l\033[?1061h"
 #define KPADCUR "\033[?1051l\033[?1052l\033[?1060l\033[?1061l"
 
+static void _headless_startup()
+{
+    // override the default behavior for SIGINT set in libutil.cc:init_signals.
+    // TODO: windows ctrl-c? should be able to add a handler on top of
+    // libutil.cc:console_handler
+#if defined(USE_UNIX_SIGNALS) && defined(SIGINT)
+    signal(SIGINT, handle_hangup);
+#endif
+
+#ifdef USE_TILE_WEB
+    tiles.resize();
+#endif
+}
+
 void console_startup()
 {
+    if (_headless_mode)
+    {
+        _headless_startup();
+        return;
+    }
     termio_init();
 
 #ifdef CURSES_USE_KEYPAD
@@ -805,8 +885,6 @@ void console_startup()
     refresh();
     crawl_view.init_geometry();
 
-    set_mouse_enabled(false);
-
     // TODO: how does this relate to what tiles.resize does?
     ui::resize(crawl_view.termsz.x, crawl_view.termsz.y);
 
@@ -817,6 +895,9 @@ void console_startup()
 
 void console_shutdown()
 {
+    if (_headless_mode)
+        return;
+
     // resetty();
     endwin();
 
@@ -848,17 +929,36 @@ void cprintf(const char *format, ...)
     while (int s = utf8towc(&c, bp))
     {
         bp += s;
+        // headless check handled in putwch
         putwch(c);
     }
 }
 
 void putwch(char32_t chr)
 {
-    wchar_t c = chr;
-    if (!c)
-        c = ' ';
-    // TODO: recognize unsupported characters and try to transliterate
-    addnwstr(&c, 1);
+    wchar_t c = chr; // ??
+    if (_headless_mode)
+    {
+        // simulate cursor movement and wrapping
+        headless_x += c ? wcwidth(chr) : 0;
+        if (headless_x >= HEADLESS_COLS && headless_y >= HEADLESS_LINES)
+        {
+            headless_x = HEADLESS_COLS;
+            headless_y = HEADLESS_LINES;
+        }
+        else if (headless_x > HEADLESS_COLS)
+        {
+            headless_y++;
+            headless_x = headless_x - HEADLESS_COLS;
+        }
+    }
+    else
+    {
+        if (!c)
+            c = ' ';
+        // TODO: recognize unsupported characters and try to transliterate
+        addnwstr(&c, 1);
+    }
 
 #ifdef USE_TILE_WEB
     char32_t buf[2];
@@ -877,6 +977,7 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
         cgotoxy(x1, y1 + y);
         for (int x = 0; x < size.x; ++x)
         {
+            // headless check handled in putwch, which this calls
             put_colour_ch(cell->colour, cell->glyph);
             cell++;
         }
@@ -890,7 +991,7 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
 // C++ string class.  -- bwr
 void update_screen()
 {
-    // In objstat and similar modes, there might not be a screen to update.
+    // In objstat, headless, and similar modes, there might not be a screen to update.
     if (stdscr)
     {
         // Refreshing the default colors helps keep colors synced in ttyrecs.
@@ -905,9 +1006,12 @@ void update_screen()
 
 void clear_to_end_of_line()
 {
-    textcolour(LIGHTGREY);
-    textbackground(BLACK);
-    clrtoeol();
+    if (!_headless_mode)
+    {
+        textcolour(LIGHTGREY);
+        textbackground(BLACK);
+        clrtoeol(); // shouldn't move cursor pos
+    }
 
 #ifdef USE_TILE_WEB
     tiles.clear_to_end_of_line();
@@ -916,12 +1020,18 @@ void clear_to_end_of_line()
 
 int get_number_of_lines()
 {
-    return LINES;
+    if (_headless_mode)
+        return HEADLESS_LINES;
+    else
+        return LINES;
 }
 
 int get_number_of_cols()
 {
-    return COLS;
+    if (_headless_mode)
+        return HEADLESS_COLS;
+    else
+        return COLS;
 }
 
 int num_to_lines(int num)
@@ -949,6 +1059,13 @@ suppress_dgl_clrscr::~suppress_dgl_clrscr()
 
 void clrscr_sys()
 {
+    if (_headless_mode)
+    {
+        headless_x = 1;
+        headless_y = 1;
+        return;
+    }
+
     textcolour(LIGHTGREY);
     textbackground(BLACK);
     clear();
@@ -1022,7 +1139,7 @@ static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background)
         // curses typically uses WA_BOLD to give bright foreground colour,
         // but various termcaps may disagree
         if ((fg_curses & COLFLAG_CURSES_BRIGHTEN)
-            && (Options.bold_brightens_foreground != MB_FALSE
+            && (Options.bold_brightens_foreground != false
                 || Options.best_effort_brighten_foreground))
         {
             style.attr |= WA_BOLD;
@@ -1037,7 +1154,7 @@ static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background)
             style.attr |= WA_BLINK;
         }
     }
-    else if (Options.bold_brightens_foreground == MB_TRUE
+    else if (bool(Options.bold_brightens_foreground)
                 && (fg_curses & COLFLAG_CURSES_BRIGHTEN))
     {
         style.attr |= WA_BOLD;
@@ -1197,7 +1314,7 @@ lib_display_info::lib_display_info()
     term(termname()),
     fg_colors(
         (curs_can_use_extended_colors()
-                || Options.bold_brightens_foreground != MB_FALSE)
+                || Options.bold_brightens_foreground != false)
         ? 16 : 8),
     bg_colors(
         (curs_can_use_extended_colors() || Options.blink_brightens_background)
@@ -1248,7 +1365,7 @@ static void curs_adjust_color_pair_to_non_identical(short &fg, short &bg,
     // sets one of these options.
     if (!curs_can_use_extended_colors())
     {
-        if (Options.bold_brightens_foreground == MB_FALSE)
+        if (!Options.bold_brightens_foreground)
         {
             fg_to_compare = fg & ~COLFLAG_CURSES_BRIGHTEN;
             fg_default_to_compare = fg_default & ~COLFLAG_CURSES_BRIGHTEN;
@@ -1473,8 +1590,11 @@ static COLOURS curses_color_to_internal_colour(short col)
 
 void textcolour(int col)
 {
-    const auto style = curs_attr_fg(col);
-    attr_set(style.attr, style.color_pair, nullptr);
+    if (!_headless_mode)
+    {
+        const auto style = curs_attr_fg(col);
+        attr_set(style.attr, style.color_pair, nullptr);
+    }
 
 #ifdef USE_TILE_WEB
     tiles.textcolour(col);
@@ -1499,8 +1619,11 @@ COLOURS default_hover_colour()
 
 void textbackground(int col)
 {
-    const auto style = curs_attr_bg(col);
-    attr_set(style.attr, style.color_pair, nullptr);
+    if (!_headless_mode)
+    {
+        const auto style = curs_attr_bg(col);
+        attr_set(style.attr, style.color_pair, nullptr);
+    }
 
 #ifdef USE_TILE_WEB
     tiles.textbackground(col);
@@ -1509,7 +1632,13 @@ void textbackground(int col)
 
 void gotoxy_sys(int x, int y)
 {
-    move(y - 1, x - 1);
+    if (_headless_mode)
+    {
+        headless_x = x;
+        headless_y = y;
+    }
+    else
+        move(y - 1, x - 1);
 }
 
 static inline cchar_t character_at(int y, int x)
@@ -1629,7 +1758,7 @@ static curses_style flip_colour(curses_style style)
             // XX I don't *think* this logic should apply for
             // bold_brightens_foreground = force...
             if ((bg & COLFLAG_CURSES_BRIGHTEN)
-                && (Options.bold_brightens_foreground != MB_FALSE
+                && (Options.bold_brightens_foreground != false
                     || Options.best_effort_brighten_foreground))
             {
                 style.attr |= WA_BOLD;
@@ -1644,6 +1773,13 @@ static curses_style flip_colour(curses_style style)
 
 void fakecursorxy(int x, int y)
 {
+    if (_headless_mode)
+    {
+        gotoxy_sys(x, y);
+        set_cursor_region(GOTO_CRT);
+        return;
+    }
+
     int x_curses = x - 1;
     int y_curses = y - 1;
 
@@ -1658,12 +1794,18 @@ void fakecursorxy(int x, int y)
 
 int wherex()
 {
-    return getcurx(stdscr) + 1;
+    if (_headless_mode)
+        return headless_x;
+    else
+        return getcurx(stdscr) + 1;
 }
 
 int wherey()
 {
-    return getcury(stdscr) + 1;
+    if (_headless_mode)
+        return headless_y;
+    else
+        return getcury(stdscr) + 1;
 }
 
 void delay(unsigned int time)
@@ -1685,9 +1827,31 @@ void delay(unsigned int time)
         usleep(time * 1000);
 }
 
+static bool _headless_kbhit()
+{
+    // TODO: ??
+    if (pending)
+        return true;
+
+#ifdef USE_TILE_WEB
+    wint_t c;
+    bool result = tiles.await_input(c, false);
+
+    if (result && c != 0)
+        pending = c;
+
+    return result;
+#else
+    return false;
+#endif
+}
+
 /* This is Juho Snellman's modified kbhit, to work with macros */
 bool kbhit()
 {
+    if (_headless_mode)
+        return _headless_kbhit();
+
     if (pending)
         return true;
 

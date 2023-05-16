@@ -192,10 +192,8 @@ static void _give_job_spells(job_type job)
     if (you.has_mutation(MUT_INNATE_CASTER))
     {
         for (spell_type s : spells)
-        {
-            if (you.spell_no < MAX_DJINN_SPELLS)
+            if (you.spell_no < MAX_DJINN_SPELLS && !spell_is_useless(s, false))
                 add_spell_to_memory(s);
-        }
         return;
     }
 
@@ -233,7 +231,7 @@ void give_items_skills(const newgame_def& ng)
         you.religion = GOD_TROG;
         you.piety = 35;
 
-        if (you_can_wear(EQ_BODY_ARMOUR))
+        if (you_can_wear(EQ_BODY_ARMOUR) != false)
             you.skills[SK_ARMOUR] += 2;
         else
         {

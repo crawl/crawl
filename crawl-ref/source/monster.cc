@@ -5,10 +5,12 @@
 
 #include "AppHdr.h"
 
+#include <cmath>
 #include <algorithm>
 #include <functional>
 #include <queue>
 
+#include "abyss.h" // splash_corruption
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
@@ -54,8 +56,9 @@
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mon-transit.h"
+#include "ouch.h"
 #include "religion.h"
-#include "spl-clouds.h" // explode_blastsparks_at
+#include "spl-clouds.h" // explode_blastmotes_at
 #include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -382,6 +385,8 @@ int monster::damage_type(int which_attack)
 
     if (!mweap)
     {
+        if (mons_species() == MONS_EXECUTIONER)
+            return DVORP_CHOPPING; // lore: whirling scythe blades
         const mon_attack_def atk = mons_attack_spec(*this, which_attack);
         return (atk.type == AT_CLAW)          ? DVORP_CLAWING :
                (atk.type == AT_TENTACLE_SLAP) ? DVORP_TENTACLE
@@ -1998,7 +2003,7 @@ bool monster::pickup_item(item_def &item, bool msg, bool force)
 
 void monster::swap_weapons(maybe_bool maybe_msg)
 {
-    const bool msg = tobool(maybe_msg, observable());
+    const bool msg = maybe_msg.to_bool(observable());
 
     item_def *weap = mslot_item(MSLOT_WEAPON);
     item_def *alt  = mslot_item(MSLOT_ALT_WEAPON);
@@ -2769,6 +2774,7 @@ void monster::banish(const actor *agent, const string &, const int, bool force)
     for (adjacent_iterator ai(old_pos); ai; ++ai)
         if (!cell_is_solid(*ai) && !cloud_at(*ai) && coinflip())
             place_cloud(CLOUD_TLOC_ENERGY, *ai, 1 + random2(8), 0);
+    splash_corruption(old_pos);
 }
 
 bool monster::has_spells() const
@@ -2950,7 +2956,7 @@ int monster::off_level_regen_rate() const
     if (type == MONS_PARGHIT)
         return 2700; // whoosh
     if (type == MONS_DEMONIC_CRAWLER)
-        return 900; // zoom
+        return 600; // zoom
     if (mons_class_fast_regen(type) || type == MONS_PLAYER_GHOST)
         return 100;
     // Capped at 0.1 hp/turn.
@@ -3025,9 +3031,9 @@ int monster::shield_block_penalty() const
     return 4 * shield_blocks * shield_blocks;
 }
 
-void monster::shield_block_succeeded()
+void monster::shield_block_succeeded(actor *attacker)
 {
-    actor::shield_block_succeeded();
+    actor::shield_block_succeeded(attacker);
 
     ++shield_blocks;
 }
@@ -3195,6 +3201,9 @@ int monster::armour_class() const
         ac += jewellery_plus;
     }
 
+    // armour from artefacts
+    ac += scan_artefacts(ARTP_AC);
+
     // various enchantments
     if (has_ench(ENCH_IDEALISED))
         ac += 4 + get_hit_dice() / 3;
@@ -3301,6 +3310,9 @@ int monster::evasion(bool ignore_helpless, const actor* /*act*/) const
         ASSERT(abs(jewellery_plus) < 30); // sanity check
         ev += jewellery_plus;
     }
+
+    // evasion from artefacts
+    ev += scan_artefacts(ARTP_EVASION);
 
     if (has_ench(ENCH_AGILE))
         ev += AGILITY_BONUS;
@@ -3912,7 +3924,7 @@ int monster::willpower() const
     return u;
 }
 
-bool monster::no_tele(bool /*blinking*/) const
+bool monster::no_tele(bool /*blinking*/, bool /*temp*/) const
 {
     // Plants can't survive without roots, so it's either this or auto-kill.
     // Statues have pedestals so moving them is weird.
@@ -4142,7 +4154,7 @@ bool monster::corrode_equipment(const char* corrosion_source, int degree)
 /**
  * Attempts to apply corrosion to a monster.
  */
-void monster::splash_with_acid(actor* evildoer, int acid_strength)
+void monster::splash_with_acid(actor* evildoer)
 {
     // Splashing with acid shouldn't do anything to immune targets
     if (res_acid() == 3)
@@ -4157,7 +4169,7 @@ void monster::splash_with_acid(actor* evildoer, int acid_strength)
              attack_strength_punctuation(post_res_dam).c_str());
     }
 
-    acid_corrode(acid_strength);
+    acid_corrode(3);
 
     if (post_res_dam > 0)
         hurt(evildoer, post_res_dam, BEAM_ACID, KILLED_BY_ACID);
@@ -4212,15 +4224,22 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         else if (amount <= 0 && hit_points <= max_hit_points)
             return 0;
 
-        // Apply damage multipliers for scarf of harm
+        // Apply damage multipliers for harm
         if (amount != INSTANT_DEATH)
         {
-            // +30% damage when the opponent has harm
+            // +30% damage if opp has one level of harm, +45% with two
             if (agent && agent->extra_harm())
-                amount = amount * 13 / 10;
-            // +20% damage when self has harm
+            {
+                amount = amount * (100
+                                   + outgoing_harm_amount(agent->extra_harm()))
+                         / 100;
+            }
+            // +20% damage if you have one level of harm, +30% with two
             else if (extra_harm())
-                amount = amount * 6 / 5;
+            {
+                amount = amount * (100 + incoming_harm_amount(extra_harm()))
+                         / 100;
+            }
         }
 
         // Apply damage multipliers for quad damage
@@ -4256,6 +4275,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         if (agent && agent->is_player()
             && mons_class_gives_xp(type)
             && (temp_attitude() == ATT_HOSTILE || has_ench(ENCH_INSANE))
+            && type != MONS_NAMELESS // hack - no usk piety for miscasts
             && flavour != BEAM_SHARED_PAIN
             && flavour != BEAM_STICKY_FLAME
             && kill_type != KILLED_BY_POISON
@@ -4827,10 +4847,7 @@ int monster::foe_distance() const
                 : INFINITE_DISTANCE;
 }
 
-/**
- * Can the monster suffer ENCH_INSANE?
- */
-bool monster::can_go_frenzy() const
+bool monster::can_get_mad() const
 {
     if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
@@ -4846,8 +4863,15 @@ bool monster::can_go_frenzy() const
     if (berserk_or_insane() || has_ench(ENCH_FATIGUE))
         return false;
 
-    // If we have no melee attack, going berserk is pointless.
-    if (!mons_has_attacks(*this))
+    return true;
+}
+
+/**
+ * Can the monster suffer ENCH_INSANE?
+ */
+bool monster::can_go_frenzy() const
+{
+    if (!can_get_mad())
         return false;
 
     // These allies have a special loyalty
@@ -4863,7 +4887,8 @@ bool monster::can_go_frenzy() const
 bool monster::can_go_berserk() const
 {
     return bool(holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
-           && can_go_frenzy();
+           && mons_has_attacks(*this)
+           && can_get_mad();
 }
 
 bool monster::berserk() const
@@ -5253,8 +5278,8 @@ void monster::apply_location_effects(const coord_def &oldpos,
     }
 
     cloud_struct* cloud = cloud_at(pos());
-    if (cloud && cloud->type == CLOUD_BLASTSPARKS)
-        explode_blastsparks_at(pos()); // schedules a fineff, so won't kill
+    if (cloud && cloud->type == CLOUD_BLASTMOTES)
+        explode_blastmotes_at(pos()); // schedules a fineff, so won't kill
 
     // Monsters stepping on traps:
     trap_def* ptrap = trap_at(pos());
@@ -5699,9 +5724,9 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         {
             // we intentionally allow harming the oppressor in this case,
             // so need to cast off its constness
-            shock_serpent_discharge_fineff::schedule(this,
-                                                     const_cast<actor&>(*oppressor),
-                                                     pos(), pow);
+            shock_discharge_fineff::schedule(this,
+                                             const_cast<actor&>(*oppressor),
+                                             pos(), pow, "electric aura");
         }
     }
 
@@ -5766,6 +5791,16 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         check_place_cloud(CLOUD_FIRE, pos(), 3, actor_by_mid(i_f.source));
     }
 
+    const int corrode = corrosion_chance(scan_artefacts(ARTP_CORRODE));
+    if (res_acid() < 3 && x_chance_in_y(corrode, 100))
+    {
+        corrode_equipment(make_stringf("%s corrosive artefact",
+                                       name(DESC_ITS).c_str()).c_str());
+    }
+
+    const int slow = scan_artefacts(ARTP_SLOW);
+    if (x_chance_in_y(slow, 100))
+        do_slow_monster(*this, oppressor, (10 + random2(5)) * BASELINE_DELAY);
 
     if (mons_species() == MONS_BUSH
         && res_fire() < 0 && flavour == BEAM_FIRE

@@ -313,8 +313,8 @@ public:
                           bool ignore_transform = false,
                           bool quiet = true) const override;
 
-    void      wield_melee_weapon(maybe_bool msg = MB_MAYBE);
-    void      swap_weapons(maybe_bool msg = MB_MAYBE);
+    void      wield_melee_weapon(maybe_bool msg = maybe_bool::maybe);
+    void      swap_weapons(maybe_bool msg = maybe_bool::maybe);
     bool      pickup_item(item_def &item, bool msg, bool force);
     bool      drop_item(mon_inv_type eslot, bool msg);
     bool      unequip(item_def &item, bool msg, bool force = false);
@@ -352,6 +352,7 @@ public:
     void attacking(actor *other) override;
     bool can_go_frenzy() const;
     bool can_go_berserk() const override;
+    bool can_get_mad() const;
     bool go_berserk(bool intentional, bool potion = false) override;
     bool go_frenzy(actor *source);
     bool berserk() const override;
@@ -399,7 +400,7 @@ public:
     bool res_petrify(bool /*temp*/ = true) const override;
     int res_constrict() const override;
     int willpower() const override;
-    bool no_tele(bool blink = false) const override;
+    bool no_tele(bool blink = false, bool /*temp*/ = true) const override;
     bool res_corr(bool /*allow_random*/ = true, bool temp = true) const override;
     bool antimagic_susceptible() const override;
 
@@ -476,7 +477,7 @@ public:
     void slow_down(actor *, int str) override;
     void confuse(actor *, int strength) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
-    void splash_with_acid(actor *evildoer, int /*acid_strength*/) override;
+    void splash_with_acid(actor *evildoer) override;
     void acid_corrode(int /*acid_strength*/) override;
     bool corrode_equipment(const char* corrosion_source = "the acid",
                            int degree = 1) override;
@@ -510,7 +511,7 @@ public:
     bool    shielded() const override;
     int     shield_bonus() const override;
     int     shield_block_penalty() const override;
-    void    shield_block_succeeded() override;
+    void    shield_block_succeeded(actor *attacker) override;
     int     shield_bypass_ability(int tohit) const override;
     bool    missile_repulsion() const override;
 
@@ -558,7 +559,7 @@ public:
     int  spell_hd(spell_type spell = SPELL_NO_SPELL) const;
     void remove_summons(bool check_attitude = false);
 
-    bool clear_far_engulf(bool force = false) override;
+    bool clear_far_engulf(bool force = false, bool /*moved*/ = false) override;
     bool search_slots(function<bool (const mon_spell_slot &)> func) const;
 
     bool has_facet(int facet) const;

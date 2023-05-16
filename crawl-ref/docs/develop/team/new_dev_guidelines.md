@@ -15,8 +15,10 @@ the options about rebasing so you avoid making unnecessary merge commits.
 Most development discussion happens on IRC in the \#crawl-dev on Libera, so
 it's good to join and participate in that channel. Use the !tell command
 through Sequell to leave IRC messages to other team or community members you’re
-working with. The channel is also [*logged*](http://s-z.org/crawl-dev/#), if
-you’d like to read or search previous discussions.
+working with. The channel is also
+[*logged*](http://crawl.akrasiac.org/logs/cheibriados/), if you’d like to read
+or search previous discussions. Older discussions were logged
+[*here*](http://s-z.org/crawl-dev/#).
 
 Although nearly all changes are just discussed on IRC, larger projects can be
 written up in an email sent to the [*CRD mailing

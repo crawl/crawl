@@ -333,6 +333,19 @@ namespace species
         return verb ? verb : "Walk";
     }
 
+    /** For purposes of skill/god titles, what walking-like thing does this
+     *  species do?
+     *
+     *  @param sp what kind of species to look at
+     *  @returns a "word" to which "-er" or "-ing" can be appended.
+     */
+    string walking_title(species_type sp)
+    {
+        if (sp == SP_ARMATAUR)
+            return "Roll";
+        return walking_verb(sp);
+    }
+
     /**
      * What message should be printed when a character of the specified species
      * prays at an altar, if not in some form?
@@ -748,7 +761,7 @@ void change_species_to(species_type sp)
     // FIXME: this checks only for valid slots, not for suitability of the
     // item in question. This is enough to make assertions happy, though.
     for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
-        if (you_can_wear(static_cast<equipment_type>(i)) == MB_FALSE
+        if (bool(!you_can_wear(static_cast<equipment_type>(i)))
             && you.equip[i] != -1)
         {
             mprf("%s fall%s away.",

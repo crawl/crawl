@@ -358,6 +358,11 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     mr = mons_class_willpower(type, base_type);
     can_see_invis = mons_class_sees_invis(type, base_type);
 
+    if (mons_resists_drowning(type, base_type))
+        mb.set(MB_RES_DROWN);
+    if (!mons_can_be_blinded(type))
+        mb.set(MB_UNBLINDABLE);
+
     mitemuse = mons_class_itemuse(type);
 
     mbase_speed = mons_class_base_speed(type);
@@ -615,7 +620,7 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_DISTRACTED);
     if (m->liquefied_ground())
         mb.set(MB_SLOW_MOVEMENT);
-    if (!actor_is_susceptible_to_vampirism(*m))
+    if (!actor_is_susceptible_to_vampirism(*m, true))
         mb.set(MB_CANT_DRAIN);
     if (m->res_water_drowning())
         mb.set(MB_RES_DROWN);
@@ -689,7 +694,8 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->submerged())
         mb.set(MB_SUBMERGED);
 
-    if (m->type == MONS_DOOM_HOUND && !m->props.exists(DOOM_HOUND_HOWLED_KEY)
+    if (m->type == MONS_DOOM_HOUND
+        && (!m->props.exists(DOOM_HOUND_HOWLED_KEY) || !m->props[DOOM_HOUND_HOWLED_KEY])
         && !m->is_summoned())
     {
         mb.set(MB_READY_TO_HOWL);
@@ -1346,50 +1352,12 @@ string monster_info::pluralised_name(bool fullname) const
         return pluralise_monster(common_name());
 }
 
-enum _monster_list_colour_type
-{
-    _MLC_FRIENDLY, _MLC_NEUTRAL, _MLC_GOOD_NEUTRAL,
-    _MLC_TRIVIAL, _MLC_EASY, _MLC_TOUGH, _MLC_NASTY,
-    _NUM_MLC
-};
-
-static const char * const _monster_list_colour_names[_NUM_MLC] =
-{
-    "friendly", "neutral", "good_neutral",
-    "trivial", "easy", "tough", "nasty"
-};
-
-static int _monster_list_colours[_NUM_MLC] =
-{
-    GREEN, BROWN, BROWN,
-    DARKGREY, LIGHTGREY, YELLOW, LIGHTRED,
-};
-
-bool set_monster_list_colour(string key, int colour)
-{
-    for (int i = 0; i < _NUM_MLC; ++i)
-    {
-        if (key == _monster_list_colour_names[i])
-        {
-            _monster_list_colours[i] = colour;
-            return true;
-        }
-    }
-    return false;
-}
-
-void clear_monster_list_colours()
-{
-    for (int i = 0; i < _NUM_MLC; ++i)
-        _monster_list_colours[i] = -1;
-}
-
 void monster_info::to_string(int count, string& desc, int& desc_colour,
                              bool fullname, const char *adj,
                              bool verbose) const
 {
     ostringstream out;
-    _monster_list_colour_type colour_type = _NUM_MLC;
+    monster_list_colour_type colour_type = NUM_MLC;
 
     string full = count == 1 ? full_name() : pluralised_name(fullname);
 
@@ -1415,7 +1383,7 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
     switch (attitude)
     {
     case ATT_FRIENDLY:
-        colour_type = _MLC_FRIENDLY;
+        colour_type = MLC_FRIENDLY;
         break;
     case ATT_GOOD_NEUTRAL:
 #if TAG_MAJOR_VERSION == 34
@@ -1423,25 +1391,25 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
 #endif
         if (fellow_slime())
             out << " (fellow slime)";
-        colour_type = _MLC_GOOD_NEUTRAL;
+        colour_type = MLC_GOOD_NEUTRAL;
         break;
     case ATT_NEUTRAL:
-        colour_type = _MLC_NEUTRAL;
+        colour_type = MLC_NEUTRAL;
         break;
     case ATT_HOSTILE:
         switch (threat)
         {
-        case MTHRT_TRIVIAL: colour_type = _MLC_TRIVIAL; break;
-        case MTHRT_EASY:    colour_type = _MLC_EASY;    break;
-        case MTHRT_TOUGH:   colour_type = _MLC_TOUGH;   break;
-        case MTHRT_NASTY:   colour_type = _MLC_NASTY;   break;
+        case MTHRT_TRIVIAL: colour_type = MLC_TRIVIAL; break;
+        case MTHRT_EASY:    colour_type = MLC_EASY;    break;
+        case MTHRT_TOUGH:   colour_type = MLC_TOUGH;   break;
+        case MTHRT_NASTY:   colour_type = MLC_NASTY;   break;
         default:;
         }
         break;
     }
 
-    if (colour_type < _NUM_MLC)
-        desc_colour = _monster_list_colours[colour_type];
+    if (colour_type < NUM_MLC)
+        desc_colour = Options.monster_list_colours[colour_type];
 
     // We still need something, or we'd get the last entry's colour.
     if (desc_colour < 0)

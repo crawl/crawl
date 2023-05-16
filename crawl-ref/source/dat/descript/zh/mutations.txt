@@ -13,7 +13,7 @@ repulsion field mutation
 
 你被排斥力场围绕，这会提供少量闪避。
 这个变异每升一级会提供更多闪避。
-这种变异达到第三级也会使射向你的远程攻击的命中率减半。
+这个变异达到第三级也会使射向你的远程攻击的命中率减半。
 %%%%
 icy blue scales mutation
 
@@ -371,7 +371,7 @@ foul stench mutation
 
 敌人的近战攻击有时会让你发出一团恶臭的瘴气，
 卷入其中的怪物会变慢并受到严重毒害。
-这种变异还能让你对（任何来源的）瘴气免疫。
+这个变异还能让你对（任何来源的）瘴气免疫。
 %%%%
 passive freeze mutation
 
@@ -441,7 +441,7 @@ big brain mutation
 ignite blood mutation
 
 每当你看到（你的或他人的）飞溅的血液，它可能会燃烧，爆发成火焰云。
-这个变异每升一级，这种可能性就越大。
+这个变异每升一级，这种可能性就越大。这个变异还能让你免疫火焰云。
 # XXX: 还提到这会让人更容易流血吗？
 %%%%
 corrupting presence mutation
@@ -548,7 +548,7 @@ petrification resistance mutation
 %%%%
 cold-blooded mutation
 
-你是恒温的。当受到寒冷攻击时，你可能会变慢，直到你的血液再次变暖。
+当受到寒冷攻击时，你可能会变慢，直到你的血液再次变暖。
 %%%%
 stealthy paws mutation
 
@@ -740,7 +740,7 @@ cowardly mutation
 %%%%
 disrupted magic mutation
 
-你施法的失误机率会更高。这个舍弃每升一级，就更容易失误。
+你施法的失误机率会更高。这个舍弃每升一级，施法就越容易失误。
 %%%%
 unskilled mutation
 

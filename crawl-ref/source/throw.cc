@@ -51,6 +51,7 @@
 
 static shared_ptr<quiver::action> _fire_prompt_for_item();
 static int  _get_dart_chance(const int hd);
+static bool _thrown_object_destroyed(const item_def &item);
 
 bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
                            const item_def& projectile)
@@ -74,7 +75,7 @@ public:
         if (!targeted()
             || is_pproj_active() && action.affected_by_pproj())
         {
-            needs_path = MB_FALSE;
+            needs_path = false;
         }
     }
 
@@ -556,26 +557,22 @@ static void _throw_noise(actor* act, const item_def &ammo)
 
     const char* msg   = nullptr;
 
-    // XXX: move both sound levels & messages into item-prop.cc?
+    // XXX: move both messages into item-prop.cc?
     switch (launcher->sub_type)
     {
     case WPN_SLING:
-        msg   = "You hear a whirring sound.";
+        msg   = "You hear a sling whirr.";
         break;
     case WPN_SHORTBOW:
-        msg   = "You hear a twanging sound.";
-        break;
     case WPN_LONGBOW:
-        msg   = "You hear a loud twanging sound.";
+        msg   = "You hear a bow twang.";
         break;
     case WPN_HAND_CROSSBOW:
-        msg   = "You hear a quiet thunk.";
-        break;
     case WPN_ARBALEST:
-        msg   = "You hear a thunk.";
+        msg   = "You hear a crossbow thunk.";
         break;
     case WPN_TRIPLE_CROSSBOW:
-        msg   = "You hear a triplet of thunks.";
+        msg   = "You hear a triple crossbow go thunk-thunk-thunk.";
         break;
 
     default:
@@ -586,7 +583,7 @@ static void _throw_noise(actor* act, const item_def &ammo)
     if (act->is_player() || you.can_see(*act))
         msg = nullptr;
 
-    noisy(7, act->pos(), msg, act->mid);
+    noisy(5, act->pos(), msg, act->mid);
 }
 
 // throw_it - handles player throwing/firing only. Monster throwing is handled
@@ -603,7 +600,6 @@ void throw_it(quiver::action &a)
     const int ammo_slot = launcher ? -1 : a.get_item();
 
     bool returning   = false;    // Item can return to pack.
-    bool did_return  = false;    // Returning item actually does return to pack.
     const bool teleport = is_pproj_active();
 
     if (you.confused())
@@ -797,6 +793,8 @@ void throw_it(quiver::action &a)
     // when we walk over it.
     if (wepClass == OBJ_MISSILES || wepClass == OBJ_WEAPONS)
         item.flags |= ISFLAG_THROWN;
+    pbolt.item_mulches = !tossing && _thrown_object_destroyed(item);
+    pbolt.drop_item = !pbolt.item_mulches && !returning;
 
     pbolt.hit = teleport ? random2(1 + div_rand_round(you.attribute[ATTR_PORTAL_PROJECTILE], 4))
                          : 0;
@@ -807,8 +805,6 @@ void throw_it(quiver::action &a)
         pbolt.use_target_as_pos = true;
         pbolt.affect_cell();
         pbolt.affect_endpoint();
-        if (!did_return)
-            pbolt.drop_object(!tossing);
         // Costs 1 MP per shot.
         pay_mp(1);
         finalize_mp_cost();
@@ -818,14 +814,7 @@ void throw_it(quiver::action &a)
         if (crawl_state.game_is_hints())
             Hints.hints_throw_counter++;
 
-        pbolt.drop_item = !returning && !tossing;
         pbolt.fire();
-
-        // For returning ammo, check for mulching before the return step
-        if (tossing)
-            pbolt.drop_object(false); // never mulch
-        else if (returning && thrown_object_destroyed(&item))
-            returning = false;
     }
 
     if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
@@ -837,7 +826,7 @@ void throw_it(quiver::action &a)
     if (ammo_brand == SPMSL_FRENZY)
         did_god_conduct(DID_HASTY, 6 + random2(3), true);
 
-    if (returning)
+    if (returning && !pbolt.item_mulches)
     {
         // Fire beam in reverse.
         pbolt.setup_retrace();
@@ -956,21 +945,19 @@ bool mons_throw(monster* mons, bolt &beam, bool teleport)
     return true;
 }
 
-bool thrown_object_destroyed(item_def *item)
+static bool _thrown_object_destroyed(const item_def &item)
 {
-    ASSERT(item != nullptr);
-
-    if (item->base_type != OBJ_MISSILES)
+    if (item.base_type != OBJ_MISSILES)
         return false;
 
-    if (ammo_always_destroyed(*item))
+    if (ammo_always_destroyed(item))
         return true;
 
-    if (ammo_never_destroyed(*item))
+    if (ammo_never_destroyed(item))
         return false;
 
-    const int base_chance = ammo_type_destroy_chance(item->sub_type);
-    const int brand = get_ammo_brand(*item);
+    const int base_chance = ammo_type_destroy_chance(item.sub_type);
+    const int brand = get_ammo_brand(item);
 
     // Inflate by 2 to avoid rounding errors.
     const int mult = 2;

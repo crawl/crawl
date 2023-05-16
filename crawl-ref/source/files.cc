@@ -471,8 +471,8 @@ static vector<string> _get_base_dirs()
 /**
  * check if `d` is a complete crawl data directory.
  *
- * @return MB_TRUE if yes, otherwise no. Returns MB_FALSE if there are some
- * but not all data subfolders.
+ * @return true if yes; returns maybe if there are some
+ * but not all data subfolders; otherwise, false.
  */
 maybe_bool validate_data_dir(const string &d)
 {
@@ -491,7 +491,7 @@ maybe_bool validate_data_dir(const string &d)
     };
 
     if (!dir_exists(d))
-        return MB_FALSE;
+        return false;
 
     bool everything = true;
     bool something = false;
@@ -502,7 +502,7 @@ maybe_bool validate_data_dir(const string &d)
         else
             everything = false;
     }
-    return everything ? MB_TRUE : something ? MB_MAYBE : MB_FALSE;
+    return everything ? true : something ? maybe_bool::maybe : false;
 }
 
 void validate_basedirs()
@@ -516,9 +516,9 @@ void validate_basedirs()
     for (const string &d : bases)
     {
         maybe_bool status = validate_data_dir(d);
-        if (status == MB_FALSE)
+        if (!status)
             continue; // empty or non-existent, ignore
-        else if (status == MB_MAYBE)
+        else if (status == maybe_bool::maybe)
         {
             // give an error for this case because this incomplete data
             // directory will be checked before others, possibly leading
@@ -530,7 +530,7 @@ void validate_basedirs()
                             d.c_str());
             }
         }
-        else // MB_TRUE -- found a complete data directory
+        else // true -- found a complete data directory
         {
             if (!found)
                 mprf(MSGCH_PLAIN, "Data directory '%s' found.", d.c_str());
@@ -1149,7 +1149,6 @@ static bool _shaft_safely()
             || cloud_at(pos) // XXX: ignore if is_harmless_cloud?
             || monster_at(pos)
             || env.pgrid(pos) & FPROP_NO_TELE_INTO
-            || slime_wall_neighbour(pos)
             || _nonfriendly_nearby(pos))
         {
             continue;

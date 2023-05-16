@@ -67,7 +67,7 @@ defaults = {
     'server_socket_path': None,
     'watch_socket_dirs': False,
     'milestone_file': [],
-    'status_file_update_rate': 5,
+    'status_file_update_rate': 30,
     'lobby_update_rate': 2,
     'recording_term_size': (80, 24),
     'max_connections': 100,
@@ -99,6 +99,7 @@ defaults = {
     'bot_accounts': False,
     'wizard_accounts': False,
     'allow_anon_spectate': True,
+    'enable_ttyrecs': True,
 }
 
 

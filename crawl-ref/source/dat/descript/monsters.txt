@@ -93,9 +93,9 @@ on to his ears with hooks?
 %%%%
 Dispater
 
-Greatest of the Lords of Hell, Dispater was born when first an iron sword drank
-mortal blood. They despise mortal vanities, the pursuit of ‘reason’ and
-‘beauty’ - the only art they enjoy is the art of war.
+Greatest and most ruthless of the Lords of Hell, Dispater was born when first an
+iron sword drank mortal blood. They despise mortal vanities, the pursuit of
+‘reason’ and ‘beauty’ - the only art they enjoy is the art of war.
 %%%%
 Dissolution
 
@@ -834,7 +834,12 @@ skilled in archery.
 centaur warrior
 
 A muscular centaur, veteran of numerous battles, armed with well-made weapons
-and able to use them skilfully.
+and able to use them skillfully.
+%%%%
+cerulean imp
+
+A small, willful minor demon. Its wings, far larger than its scrawny body, were
+made to soar, and it lands only rarely and with the greatest reluctance.
 %%%%
 chaos spawn
 
@@ -1551,7 +1556,7 @@ A green lizard with strong jaws and sharp teeth, prized for its flesh.
 imperial myrmidon
 
 A warrior initiated in the mysteries of a dying cult, dedicated to serve
-thrones long-fallen. Its blows strip away magical defenses, leaving its foes
+thrones long-fallen. Its blows strip away magical defences, leaving its foes
 vulnerable to even the simplest hexes.
 %%%%
 iron dragon
@@ -2300,6 +2305,17 @@ sky beast
 
 A strange aerial creature formed of clouds and tortured flesh that sparkles
 with electricity and, every so often, slips entirely from view.
+%%%%
+skyshark
+
+Skysharks cut through the air with a thoughtless ease. Just a taste of blood
+gives them an enraged strength, and further morsels drive them into a frenzy.
+%%%%
+sleepcap
+
+A surprisingly ambulatory mushroom. It wafts its spores over prey to send them
+into a deep sleep, making it simple for the fungus to kill and devour them.
+It can take months for its mycelia to fully infiltrate and digest victims.
 %%%%
 slime creature
 

@@ -31,12 +31,43 @@ yellow_scales_1 MUT_YELLOW_SCALES
 yellow_scales_2
 yellow_scales_3
 
+strong_1 MUT_STRONG
+strong_2
+weak_1 MUT_WEAK
+weak_2
+agile_1 MUT_AGILE
+agile_2
+clumsy_1 MUT_CLUMSY
+clumsy_2
+clever_1 MUT_CLEVER
+clever_2
 big_brain_1 MUT_BIG_BRAIN
 big_brain_2
 big_brain_3
+dopey_1 MUT_DOPEY
+dopey_2
 robust_1 MUT_ROBUST
 robust_2
 robust_3
+
+coldres_1 MUT_COLD_RESISTANCE
+coldres_2
+coldres_3
+coldvuln_1 MUT_COLD_VULNERABILITY
+coldvuln_2
+coldvuln_3
+fireres_1 MUT_HEAT_RESISTANCE
+fireres_2
+fireres_3
+firevuln_1 MUT_HEAT_VULNERABILITY
+firevuln_2
+firevuln_3
+negares_1 MUT_NEGATIVE_ENERGY_RESISTANCE
+negares_2
+negares_3
+poisres MUT_POISON_RESISTANCE
+shockres MUT_SHOCK_RESISTANCE
+shockvuln MUT_SHOCK_VULNERABILITY
 
 fangs_1 MUT_FANGS
 fangs_2
@@ -54,3 +85,6 @@ passive_mapping_3
 
 clarity MUT_CLARITY
 acute_vision MUT_ACUTE_VISION
+mutres_1 MUT_MUTATION_RESISTANCE
+mutres_2
+mutres_3

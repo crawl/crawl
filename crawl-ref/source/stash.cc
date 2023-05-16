@@ -35,6 +35,7 @@
 #include "message.h"
 #include "notes.h"
 #include "output.h"
+#include "prompt.h"
 #include "religion.h"
 #include "spl-book.h"
 #include "state.h"
@@ -56,7 +57,7 @@ string userdef_annotate_item(const char *s, const item_def *item)
     lua_stack_cleaner cleaner(clua);
     clua_push_item(clua, const_cast<item_def*>(item));
     if (!clua.callfn(s, 1, 1) && !clua.error.empty())
-        mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+        ui::error(make_stringf("Lua error: %s", clua.error.c_str()));
     string ann;
     if (lua_isstring(clua, -1))
         ann = luaL_checkstring(clua, -1);
@@ -1800,7 +1801,7 @@ bool StashTracker::display_search_results(
         else if (res.item.defined())
         {
             const int itemcol = menu_colour(res.item.name(DESC_PLAIN).c_str(),
-                                        item_prefix(res.item, false), "pickup");
+                                        item_prefix(res.item, false), "pickup", false);
             if (itemcol != -1)
                 colour = itemcol;
         }

@@ -977,8 +977,8 @@ TAGS:   no_item_gen no_monster_gen no_rotate no_pool_fixup
 ORIENT: encompass
 WEIGHT: 5
 MONS:   rat, rat / river rat w:5
-KMONS:  G = merfolk siren hd:3 name:sickly name_adjective name_species
-KMONS:  H = merfolk avatar hd:3 name:malarious name_adjective name_species
+KMONS:  G = sickly merfolk siren
+KMONS:  H = malarious merfolk avatar
 KMONS:  hJ = frilled lizard / ball python / adder
 KMONS:  g = frilled lizard / ball python / giant cockroach / quokka
 SUBST:  1 = 1., 2 = 2., J = Jn, h = hW, g = gggW

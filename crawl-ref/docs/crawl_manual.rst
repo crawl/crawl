@@ -199,7 +199,7 @@ Your character's primary attributes are Strength, Intelligence and Dexterity:
 Strength
   Abbreviated to "Str". Increases your damage with melee weapons (except for long
   and short blades), with unarmed combat, and with throwing weapons. Reduces
-  penalties from wearing heavy armour.
+  penalties from wearing shields or heavy armour.
 
 Intelligence
   Abbreviated to "Int". Affects your odds of successfully casting spells and how
@@ -848,13 +848,12 @@ if you have low Strength.
 A shield normally increases neither your AC nor your evasion, but it lets you
 attempt to block melee attacks and some ranged attacks aimed at you. Wearing a
 shield (especially larger shields) slows your attacks, hampers your ability to
-cast spells, and lowers your evasion. Small species are more strongly affected
-by these penalties, and large species are less affected, but all species can
-reduce and eventually eliminate these penalties by mastering the Shields skill.
-You also obviously cannot wield a two-handed weapon while wearing a shield.
-Shields are most effective against the first attack on you each turn and become
-less useful for every one after that. There are three types: bucklers, kite
-shields, and tower shields, going from smallest to largest.
+cast spells, and lowers your evasion. Weaker characters are more affected by
+these penalties, but all characters can reduce and eventually eliminate these
+penalties by mastering the Shields skill. You also obviously cannot wield a
+two-handed weapon while wearing a shield. Shields are most effective against
+the first attack on you each turn, and become less useful for every one after
+that.
 
 Some magical armours have special powers. These powers are sometimes automatic,
 affecting you whenever you wear the armour, and sometimes must be activated with
@@ -1597,7 +1596,7 @@ Draconians (Dr)
   Most types of Draconians have breath weapons or special resistances.
   Draconians cannot wear body armour and advance very slowly in levels, but are
   reasonably good at all skills other than missile weapons, and they develop
-  natural physical defenses that compensate for the lack of body armour, without
+  natural physical defences that compensate for the lack of body armour, without
   needing to train their Armour skill at all. Still, each colour has its own
   strengths and some have complementary weaknesses, which sometimes requires a
   bit of flexibility on the part of the player. They are good general-purpose
@@ -1732,7 +1731,7 @@ Deep Elves (DE)
    in darkness underground. There, they developed their mental powers, evolving
    a natural gift for all forms of magic, and adapted physically to their new
    environment, becoming weaker and losing all colouration. They are poor at
-   melee combat and physical defense, although they are capable at using bows
+   melee combat and physical defence, although they are capable at using bows
    and other ranged weapons.
 
 Ogres (Og)
@@ -1979,8 +1978,9 @@ Gladiators
 
 Monks
   Monks have a head start with the divine. They start with only a simple weapon
-  of their choice, a potion of divine ambrosia, and a robe, but when they choose
-  a god for the first time, their spiritual training gives them a piety boost.
+  of their choice, a potion of divine ambrosia, a robe, and an orb of light to
+  guide them. However, when they worship a god for the first time, their
+  spiritual training gives them a piety boost.
 
 Hunters
   The Hunter is a type of fighter who specialises in missile weapons. A Hunter
@@ -2093,9 +2093,9 @@ Conjurers
 
 Summoners
   The Summoner specialises in calling creatures from this and other worlds to
-  give assistance. Although they can at first summon only very wimpy creatures,
+  give assistance. Although they can at first summon only very weak creatures,
   the more advanced summoning spells allow summoners to call on such powers as
-  elementals and demons.
+  hydras and dragons.
 
 Necromancers
   The Necromancer is a magician who specialises in the less pleasant side of
@@ -2602,6 +2602,12 @@ P
 R
   Remove jewellery.
 
+e
+  Equip actions (wield, wear, put on)
+
+c
+  Unequip actions (unwield, take off, remove)
+
 Item interaction (floor)
 ========================================
 
@@ -2637,9 +2643,6 @@ will deselect it (except for ',' and '-', obviously).
 
 ?
   Select all scrolls.
-
-:
-  Select all books.
 
 /
   Select all wands.

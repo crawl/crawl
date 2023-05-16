@@ -154,7 +154,7 @@ static void _monster_regenerate(monster* mons)
     if (mons->type == MONS_PARGHIT)
         mons->heal(27); // go whoosh
     else if (mons->type == MONS_DEMONIC_CRAWLER)
-        mons->heal(9); // go zoom
+        mons->heal(6); // go zoom
     else if (mons_class_fast_regen(mons->type)
         || mons->has_ench(ENCH_REGENERATION)
         || _mons_natural_regen_roll(mons))
@@ -1701,6 +1701,7 @@ void handle_monster_move(monster* mons)
     }
 
     mons->shield_blocks = 0;
+    check_spectral_weapon(*mons);
 
     _mons_in_cloud(*mons);
     actor_apply_toxic_bog(mons);
@@ -1708,7 +1709,7 @@ void handle_monster_move(monster* mons)
     if (!mons->alive())
         return;
 
-    if (env.level_state & LSTATE_SLIMY_WALL)
+    if (you.duration[DUR_OOZEMANCY] && (env.level_state & LSTATE_SLIMY_WALL))
         slime_wall_damage(mons, speed_to_duration(mons->speed));
 
     if (!mons->alive())
@@ -1886,7 +1887,8 @@ void handle_monster_move(monster* mons)
                     mons->foe = MHITYOU;
                     mons->target = you.pos();
 
-                    if (_handle_ru_melee_redirection(*mons, &new_target))
+                    if (mons_has_attacks(*mons, true)
+                        && _handle_ru_melee_redirection(*mons, &new_target))
                     {
                         mons->speed_increment -= non_move_energy;
                         DEBUG_ENERGY_USE("_handle_ru_redirection()");
@@ -2129,7 +2131,7 @@ static void _torpor_snail_slow(monster* mons)
     // XXX: might be nice to refactor together with _ancient_zyme_sicken().
     // XXX: also with torpor_slowed().... so many duplicated checks :(
 
-    if (is_sanctuary(mons->pos()))
+    if (is_sanctuary(mons->pos()) || mons->props.exists(KIKU_WRETCH_KEY))
         return;
 
     if (!is_sanctuary(you.pos())
@@ -3571,6 +3573,9 @@ static bool _monster_move(monster* mons)
 
         if (mons->has_ench(ENCH_ROLLING))
             place_cloud(CLOUD_DUST, mons->pos(), 2, mons);
+
+        if (mons->type == MONS_BALL_LIGHTNING)
+            place_cloud(CLOUD_ELECTRICITY, mons->pos(), random_range(2, 3), mons);
 
         if (mons->type == MONS_FOXFIRE)
             check_place_cloud(CLOUD_FLAME, mons->pos(), 2, mons);

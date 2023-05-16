@@ -71,7 +71,7 @@ LUAFN(l_spells_mana_cost)
 LUAFN(l_spells_range)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    PLUARET(number, spell_range(spell, calc_spell_power(spell, true)));
+    PLUARET(number, spell_range(spell, calc_spell_power(spell)));
 }
 
 /*** The maximum range of the spell.
@@ -112,7 +112,7 @@ LUAFN(l_spells_path)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
     zap_type zap = spell_to_zap(spell);
-    int power = calc_spell_power(spell, true);
+    int power = calc_spell_power(spell);
     int range = spell_range(spell, power);
     // return nil for non-zap or zero-range spells
     if (range <= 0 || zap >= NUM_ZAPS)
@@ -210,7 +210,7 @@ LUAFN(l_spells_power_perc)
 LUAFN(l_spells_power)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    PLUARET(number, power_to_barcount(calc_spell_power(spell, true)));
+    PLUARET(number, power_to_barcount(calc_spell_power(spell)));
 }
 
 /*** The maximum spellpower (in bars).

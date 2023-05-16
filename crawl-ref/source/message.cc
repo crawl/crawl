@@ -973,7 +973,7 @@ namespace msg
 {
     static bool suppress_messages = false;
     static unordered_set<tee *> current_message_tees;
-    static maybe_bool _msgs_to_stderr = MB_MAYBE;
+    static maybe_bool _msgs_to_stderr = maybe_bool::maybe;
 
     static bool _suppressed()
     {
@@ -983,9 +983,9 @@ namespace msg
     /**
      * RAII logic for controlling echoing to stderr.
      * @param f the new state:
-     *   MB_TRUE: always echo to stderr (mainly used for debugging)
-     *   MB_MAYBE: use default logic, based on mode, io state, etc
-     *   MB_FALSE: never echo to stderr (for suppressing error echoing during
+     *   true: always echo to stderr (mainly used for debugging)
+     *   maybe_bool::maybe: use default logic, based on mode, io state, etc
+     *   false: never echo to stderr (for suppressing error echoing during
      *             startup, e.g. for first-pass initfile processing)
      */
     force_stderr::force_stderr(maybe_bool f)
@@ -1002,11 +1002,10 @@ namespace msg
 
     bool uses_stderr(msg_channel_type channel)
     {
-        if (_msgs_to_stderr == MB_TRUE)
-            return true;
-        else if (_msgs_to_stderr == MB_FALSE)
-            return false;
-        // else, MB_MAYBE:
+        if (_msgs_to_stderr.is_bool())
+            return bool(_msgs_to_stderr);
+
+        // else, maybe_bool::maybe:
 
         if (channel == MSGCH_ERROR)
         {
@@ -1601,8 +1600,11 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
     if (channel == MSGCH_ERROR)
         interrupt_activity(activity_interrupt::force);
 
-    if (channel == MSGCH_PROMPT || channel == MSGCH_ERROR)
+    if (!crawl_state.parsing_rc
+        && (channel == MSGCH_PROMPT || channel == MSGCH_ERROR))
+    {
         set_more_autoclear(false);
+    }
 
     if (domore)
         more(true);
@@ -1672,11 +1674,14 @@ int msgwin_get_line(string prompt, char *buf, int len,
         vbox->add_child(input);
 
         popup->on_hotkey_event([&](const ui::KeyEvent& ev) {
-            switch (ev.key())
+            const int lastch = ev.key();
+            if (ui::key_exits_popup(lastch, false))
             {
-            CASE_ESCAPE
-                ret = CK_ESCAPE;
+                ret = CK_ESCAPE; // XX hardcoding
                 return done = true;
+            }
+            switch (lastch)
+            {
             case CK_ENTER:
                 ret = 0;
                 return done = true;
@@ -1829,7 +1834,7 @@ static msg_colour_type prepare_message(const string& imsg,
     {
         for (const message_colour_mapping &mcm : Options.message_colour_mappings)
         {
-            if (mcm.message.is_filtered(channel, imsg))
+            if (mcm.valid() && mcm.message.is_filtered(channel, imsg))
             {
                 colour = mcm.colour;
                 break;
@@ -1857,6 +1862,7 @@ void clear_messages(bool force)
 
     msgwin.got_input(); // Consider old messages as read.
 
+    // TODO: this doesn't seem to be implemented on webtiles?
     if (Options.clear_messages || force)
         msgwin.clear();
 

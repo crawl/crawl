@@ -13,6 +13,7 @@ import zlib
 import tornado.ioloop
 import tornado.template
 import tornado.websocket
+import tornado.gen
 from tornado.escape import json_decode
 from tornado.escape import json_encode
 from tornado.escape import to_unicode
@@ -38,7 +39,7 @@ def shutdown():
         socket.shutdown()
 
 def update_global_status():
-    write_dgl_status_file()
+    IOLoop.current().add_callback(write_dgl_status_file)
 
 # lobbies that need updating
 game_lobby_cache = set() # type: Set[CrawlProcessHandlerBase]
@@ -156,6 +157,7 @@ def global_announce(text):
 _dgl_dir_check = False
 
 
+@tornado.gen.coroutine
 def write_dgl_status_file():
     process_info = ["%s#%s#%s#0x0#%s#%s#" %
                             (socket.username, socket.game_id,
@@ -175,15 +177,14 @@ def write_dgl_status_file():
                 os.makedirs(status_dir)
                 logging.warning("Creating dgl status file location '%s'", status_dir)
             _dgl_dir_check = True
-        with util.SlowWarning("Slow IO: write '%s'" % status_target):
-            with open(status_target, "w") as f:
-                f.write("\n".join(process_info))
+        yield util.open_and_write(status_target, "\n".join(process_info))
     except (OSError, IOError) as e:
         logging.warning("Could not write dgl status file: %s", e)
 
 
+@tornado.gen.coroutine
 def status_file_timeout():
-    write_dgl_status_file()
+    yield write_dgl_status_file()
     IOLoop.current().add_timeout(time.time() + config.get('status_file_update_rate'),
                                  status_file_timeout)
 
@@ -307,7 +308,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.compressed_bytes_sent = 0
         self.uncompressed_bytes_sent = 0
         self.message_queue = []  # type: List[str]
-        self.failed_messages = 0
+        self.failed_messages = 0 # messages to webtiles
+        self.failed_on_messages = 0 # messages from webtiles
 
         self.subprotocol = None
 
@@ -589,6 +591,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def send_lobby_html(self):
         # Rerender Banner
         # TODO: don't really need to do this every time the lobby is loaded?
+        if self.ui is None:
+            # socket has been finish()ed, and the render_string call will raise.
+            # this probably only happens in async race conditions, so don't
+            # do anything further (and hope that the close happens properly
+            # elsewhere)
+            return
         banner_html = to_unicode(self.render_string("banner.html",
                                                     username = self.username))
         self.queue_message("html", id = "banner", content = banner_html)
@@ -740,7 +748,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 return
 
             self.send_message("game_started")
-            self.restore_mutelist()
+            self.restore_blocklist()
             self.process.handle_notification(self.process.username,
                             "'/help' to see available chat commands")
 
@@ -901,7 +909,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def forget_login_cookie(self, cookie):
         auth.forget_login_cookie(cookie)
 
-    def restore_mutelist(self):
+    def restore_blocklist(self):
         if not self.username:
             return
         receiver = None
@@ -913,16 +921,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if not receiver:
             return
 
-        db_string = userdb.get_mutelist(self.username)
+        db_string = userdb.get_blocklist(self.username)
         if db_string is None:
             db_string = ""
         # list constructor here is for forward compatibility with python 3.
-        muted = list([_f for _f in db_string.strip().split(' ') if _f])
-        receiver.restore_mutelist(self.username, muted)
+        blocked = list([_f for _f in db_string.strip().split(' ') if _f])
+        receiver.restore_blocklist(self.username, blocked)
 
-    def save_mutelist(self, muted):
-        db_string = " ".join(muted).strip()
-        userdb.set_mutelist(self.username, db_string)
+    def save_blocklist(self, blocked):
+        db_string = " ".join(blocked).strip()
+        userdb.set_blocklist(self.username, db_string)
 
     def is_admin(self):
         return self.username is not None and userdb.dgl_is_admin(self.user_flags)
@@ -975,9 +983,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return
 
         if self.username and self.account_restricted():
-            self.send_message("auth_error",
-                        reason="Account restricted; spectating unavailable")
-            self.go_lobby()
+            self.go_lobby(message="Your account is restricted; spectating unavailable")
             return
 
         if not self.username and not config.get('allow_anon_spectate'):
@@ -991,10 +997,19 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                  if process.username.lower() == username.lower()]
         if len(procs) >= 1:
             process = procs[0]
+            # has the spectatee blocked this user?
+            if process.is_blocked(self.username) and not self.is_admin():
+                self.send_message("auth_error",
+                            reason="Spectating this player is restricted.")
+                self.go_lobby()
+                return
             r = process.get_primary_receiver()
+            # the spectatee has a restricted account; you can only get to this
+            # by manually typing a url
             if r and r.account_restricted():
                 self.go_lobby()
                 return
+
             if self.watched_game:
                 if self.watched_game == process:
                     return
@@ -1021,7 +1036,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if receiver:
             if self.account_restricted():
                 self.send_message("chat",
-                        content='Account restricted; chat unavailable')
+                        content='Your account is restricted; chat unavailable')
                 return
             if self.username is None:
                 self.send_message("chat",
@@ -1057,7 +1072,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         if self.account_restricted():
             self.send_message("change_password_fail",
-                    reason="Account restricted; change password unavailable.")
+                    reason="Your account is restricted; change password unavailable.")
             return
 
         if not userdb.user_passwd_match(self.username, cur_password)[0]:
@@ -1087,7 +1102,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return
         if self.account_restricted():
             self.send_message("change_email_fail",
-                    reason="Account restricted; change email unavailable.")
+                    reason="Your account is restricted; change email unavailable.")
             return
         error = userdb.change_email(self.user_id, email)
         if error is None:
@@ -1131,9 +1146,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                  username, error)
             self.send_message("reset_password_fail", reason = error)
 
-    def go_lobby(self):
+    def go_lobby(self, message=None):
         if not config.get('dgl_mode'):
             return
+
+        if message:
+            # a bit hacky: puts the message above the login box / username
+            self.send_message("auth_error", reason=message)
+
         if self.is_running():
             self.process.stop()
 
@@ -1195,7 +1215,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 handler(**obj)
             elif self.process:
                 self.process.handle_input(message)
-            elif not self.watched_game and obj["msg"] != 'ui_state_sync':
+            elif (not self.watched_game
+                    and obj["msg"] != 'ui_state_sync'
+                    and obj["msg"] != 'key'):
                 # ui_state_sync can get queued by the js client just before
                 # shutdown, and have its sending delayed by enough that the
                 # process has stopped. I do not currently think there's a
@@ -1206,28 +1228,35 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.logger.warning("Didn't know how to handle msg (user %s): %s",
                                     self.username and self.username or "[Anon]",
                                     obj["msg"])
+            if self.failed_on_messages > 1:
+                self.logger.warning("%d more on_message errors...", self.failed_on_messages)
+            self.failed_on_messages = 0
         except OSError as e:
             # maybe should throw a custom exception from the socket call rather
             # than rely on these cases?
-            excerpt = message[:50] if len(message) > 50 else message
-            trunc = "..." if len(message) > 50 else ""
-            if e.errno == errno.EAGAIN or e.errno == errno.ENOBUFS:
-                # errno is different on mac vs linux, maybe also depending on
-                # python version
-                self.logger.warning(
-                    "Socket buffer full; skipping JSON message ('%r%s')!",
-                                excerpt, trunc)
-            else:
-                self.logger.warning(
-                                "Error while handling JSON message ('%r%s')!",
-                                excerpt, trunc,
-                                exc_info=True)
+            if self.failed_on_messages == 0:
+                excerpt = message[:50] if len(message) > 50 else message
+                trunc = "..." if len(message) > 50 else ""
+                if e.errno == errno.EAGAIN or e.errno == errno.ENOBUFS:
+                    # errno is different on mac vs linux, maybe also depending on
+                    # python version
+                    self.logger.warning(
+                        "Socket buffer full; skipping JSON message ('%r%s')!",
+                                    excerpt, trunc)
+                else:
+                    self.logger.warning(
+                                    "Error while handling JSON message ('%r%s')!",
+                                    excerpt, trunc,
+                                    exc_info=True)
+            self.failed_on_messages += 1
         except Exception:
-            excerpt = message[:50] if len(message) > 50 else message
-            trunc = "..." if len(message) > 50 else ""
-            self.logger.warning("Error while handling JSON message ('%r%s')!",
-                                excerpt, trunc,
-                                exc_info=True)
+            if self.failed_on_messages == 0:
+                excerpt = message[:50] if len(message) > 50 else message
+                trunc = "..." if len(message) > 50 else ""
+                self.logger.warning("Error while handling JSON message ('%r%s')!",
+                                    excerpt, trunc,
+                                    exc_info=True)
+            self.failed_on_messages += 1
 
     def _encode_for_send(self, msg, deflate):
         try:
@@ -1309,6 +1338,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             # true means that something was queued up to send, but it may be
             # async
             return True
+        except tornado.websocket.WebSocketClosedError as e:
+            if self.failed_messages == 0:
+                self.logger.warning("Connection closed during write_message")
+            self.failed_messages += 1
+            if self.ws_connection is not None:
+                self.ws_connection._abort()
         except:
             self.logger.warning("Exception trying to send message.", exc_info = True)
             self.failed_messages += 1
@@ -1375,8 +1410,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             comp_ratio = 100 - 100 * (self.compressed_bytes_sent + self.uncompressed_bytes_sent) / self.total_message_bytes
             comp_ratio = round(comp_ratio, 2)
 
-        if self.failed_messages > 0:
-            failed_msg = ", %d failed messages" % self.failed_messages
+        if self.failed_messages > 0 or self.failed_on_messages > 0:
+            failed_msg = ", %d (client) + %d (process) failed messages" % (self.failed_messages, self.failed_on_messages)
         else:
             failed_msg = ""
 

@@ -245,7 +245,7 @@ static bool _can_shoot_with(const item_def *weapon)
 
 static bool _autofire_at(actor *defender)
 {
-    if (!_can_shoot_with(you.weapon()))
+    if (!_can_shoot_with(you.weapon()) || you.duration[DUR_CONFUSING_TOUCH])
         return false;
     dist t;
     t.target = defender->pos();
@@ -461,6 +461,10 @@ stab_type find_stab_type(const actor *attacker,
         return STAB_NO_STAB;
 
     if (attacker && !attacker->can_see(defender))
+        return STAB_NO_STAB;
+
+    // Can't stab these
+    if (def && def->type == MONS_SPECTRAL_WEAPON)
         return STAB_NO_STAB;
 
     // sleeping
@@ -768,7 +772,8 @@ static bool _dont_harm(const actor &attacker, const actor &defender)
     if (attacker.is_player())
     {
         return defender.wont_attack()
-               || mons_attitude(*defender.as_monster()) == ATT_NEUTRAL;
+               || mons_attitude(*defender.as_monster()) == ATT_NEUTRAL
+                  && !defender.as_monster()->has_ench(ENCH_INSANE);
     }
 
     return false;
@@ -789,7 +794,7 @@ bool force_player_cleave(coord_def target)
     if (!cleave_targets.empty())
     {
         // Rift is too funky and hence gets no special treatment.
-        const int range = you.reach_range() == REACH_TWO ? 2 : 1;
+        const int range = you.reach_range();
         targeter_cleave hitfunc(&you, target, range);
         if (stop_attack_prompt(hitfunc, "attack"))
             return true;
@@ -845,7 +850,9 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     if (attack_cleaves(attacker, which_attack))
     {
         const coord_def atk = attacker.pos();
-        const int cleave_radius = weap && weapon_reach(*weap) == REACH_TWO ? 2 : 1;
+        //If someone adds a funky reach which isn't just a number
+        //They will need to special case it here.
+        const int cleave_radius = weap ? weapon_reach(*weap) : 1;
 
         for (distance_iterator di(atk, true, true, cleave_radius); di; ++di)
         {
@@ -961,10 +968,6 @@ int weapon_min_delay(const item_def &weapon, bool check_speed)
     // ...except crossbows...
     if (is_crossbow(weapon) && min_delay < 10)
         min_delay = 10;
-
-    // ...and longbows...
-    if (weapon.sub_type == WPN_LONGBOW)
-        min_delay = 6;
 
     // ... and unless it would take more than skill 27 to get there.
     // Round up the reduction from skill, so that min delay is rounded down.
@@ -1221,10 +1224,12 @@ string stop_summoning_reason(resists_t resists, monclass_flags_t flags)
  * sight when OTR is active, regardless of how they entered LOS.
  *
  * @param resists   What does the summon resist?
+ * @param flags     What relevant flags does the summon have? (e.g. flight)
  * @param verb      The verb to be used in the prompt.
  * @return          True if the player wants to abort.
  */
-bool stop_summoning_prompt(resists_t resists, string verb)
+bool stop_summoning_prompt(resists_t resists, monclass_flags_t flags,
+                           string verb)
 {
     if (crawl_state.disables[DIS_CONFIRMATIONS]
         || crawl_state.which_god_acting() == GOD_XOM)
@@ -1232,8 +1237,7 @@ bool stop_summoning_prompt(resists_t resists, string verb)
         return false;
     }
 
-    // TODO: take flags as well (or a set of monster types..?)
-    const string noun = stop_summoning_reason(resists, M_NO_FLAGS);
+    const string noun = stop_summoning_reason(resists, flags);
     if (noun.empty())
         return false;
 

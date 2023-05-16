@@ -803,9 +803,6 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 {
                     if (cell.sanctuary)
                         this.draw_dngn(dngn.SANCTUARY, x, y);
-                    // TAG_MAJOR_VERSION == 34
-                    if (cell.heat_aura)
-                        this.draw_dngn(dngn.HEAT_AURA + cell.heat_aura - 1, x, y);
                     if (cell.silenced)
                         this.draw_dngn(dngn.SILENCED, x, y);
                     if (cell.halo == enums.HALO_RANGE)
@@ -983,6 +980,9 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             if (bg.MM_UNSEEN && (bg.value || fg.value))
                 this.draw_icon(icons.MAGIC_MAP_MESH, x, y, undefined, undefined, img_scale);
 
+            if (bg.RAMPAGE)
+                this.draw_icon(icons.RAMPAGE, x, y, undefined, undefined, img_scale);
+
             // Don't let the "new stair" icon cover up any existing icons, but
             // draw it otherwise.
             if (bg.NEW_STAIR && status_shift == 0)
@@ -1092,6 +1092,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.FIRE_VULN:
                 case icons.RESISTANCE:
                 case icons.SIMULACRUM:
+                case icons.MALMUTATED:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 8;
                 case icons.RECALL:

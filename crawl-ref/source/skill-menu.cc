@@ -1796,11 +1796,9 @@ void skill_menu(int flag, int exp)
                     return true;
                 }
             // Fallthrough
-            case ' ':
-                // Space and escape exit in any mode.
-                if (skm.exit(false))
-                    return done = true;
             default:
+                if (ui::key_exits_popup(keyn, true) && skm.exit(false))
+                    return done = true;
                 // Don't exit from !experience on random keys.
                 if (!skm.is_set(SKMF_EXPERIENCE) && skm.exit(false))
                     return done = true;

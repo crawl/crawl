@@ -15,6 +15,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
+#include "attack.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
 #include "branch.h"
@@ -1392,36 +1393,12 @@ void elyvilon_remove_divine_vigour()
 
 bool vehumet_supports_spell(spell_type spell)
 {
-    if (spell_typematch(spell, spschool::conjuration))
-        return true;
-
     // Conjurations work by conjuring up a chunk of short-lived matter and
     // propelling it towards the victim. This is the most popular way, but
     // by no means it has a monopoly for being destructive.
     // Vehumet loves all direct physical destruction.
-    if (spell == SPELL_SHATTER
-        || spell == SPELL_LRD
-        || spell == SPELL_SANDBLAST
-        || spell == SPELL_AIRSTRIKE
-        || spell == SPELL_POLAR_VORTEX
-        || spell == SPELL_FREEZE
-        || spell == SPELL_IGNITE_POISON
-        || spell == SPELL_OZOCUBUS_REFRIGERATION
-        || spell == SPELL_OLGREBS_TOXIC_RADIANCE
-        || spell == SPELL_VIOLENT_UNRAVELLING
-        || spell == SPELL_INNER_FLAME
-        || spell == SPELL_BLASTSPARK
-        || spell == SPELL_IGNITION
-        || spell == SPELL_FROZEN_RAMPARTS
-        || spell == SPELL_MAXWELLS_COUPLING
-        || spell == SPELL_NOXIOUS_BOG
-        || spell == SPELL_POISONOUS_VAPOURS
-        || spell == SPELL_SCORCH)
-    {
-        return true;
-    }
-
-    return false;
+    return spell_typematch(spell, spschool::conjuration)
+           || (get_spell_flags(spell) & spflag::destructive);
 }
 
 void trog_do_trogs_hand(int pow)
@@ -2237,9 +2214,9 @@ bool ashenzari_curse_item()
 
     item_def& item(you.inv[item_slot]);
 
-    if (!item_is_cursable(item))
+    if (!item_is_selected(item, OSEL_CURSABLE))
     {
-        mpr("You can't curse that!");
+        mprf(MSGCH_PROMPT, "You cannot curse that!");
         return false;
     }
 
@@ -2270,6 +2247,12 @@ bool ashenzari_uncurse_item()
         return false;
 
     item_def& item(you.inv[item_slot]);
+
+    if (!item_is_selected(item, OSEL_CURSED_WORN))
+    {
+        mprf(MSGCH_PROMPT, "You cannot uncurse and destroy that!");
+        return false;
+    }
 
     if (is_unrandom_artefact(item, UNRAND_FINGER_AMULET)
         && you.equip[EQ_RING_AMULET] != -1)
@@ -2470,6 +2453,9 @@ spret dithmenos_shadow_step(bool fail)
     }
 
     fail_check();
+
+    if (!you.attempt_escape(2))
+        return spret::success;
 
     const coord_def old_pos = you.pos();
     // XXX: This only ever fails if something's on the landing site;
@@ -5202,16 +5188,18 @@ spret uskayaw_grand_finale(bool fail)
 
     ASSERT(mons);
 
+    string attack_punctuation = attack_strength_punctuation(mons->hit_points);
+
     // kill the target
     if (mons->type == MONS_ROYAL_JELLY && !mons->is_summoned())
     {
         // need to do this here, because react_to_damage is never called
-        mprf("%s explodes violently into a cloud of jellies!",
-                                        mons->name(DESC_THE, false).c_str());
+        mprf("%s explodes violently into a cloud of jellies%s",
+                                        mons->name(DESC_THE, false).c_str(), attack_punctuation.c_str());
         trj_spawn_fineff::schedule(&you, mons, mons->pos(), mons->hit_points);
     }
     else
-        mprf("%s explodes violently!", mons->name(DESC_THE, false).c_str());
+        mprf("%s explodes violently%s", mons->name(DESC_THE, false).c_str(), attack_punctuation.c_str());
     mons->flags |= MF_EXPLODE_KILL;
     if (!mons->is_insubstantial())
     {
@@ -5670,7 +5658,9 @@ bool wu_jian_do_wall_jump(coord_def targ)
     auto wall_jump_direction = (you.pos() - targ).sgn();
     auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
                                    + wall_jump_direction);
-    if (!check_moveto(wall_jump_landing_spot, "wall jump"))
+    if ((wu_jian_wall_jump_triggers_attacks(wall_jump_landing_spot)
+         && !wielded_weapon_check(you.weapon())
+        || !check_moveto(wall_jump_landing_spot, "wall jump")))
     {
         you.turn_is_over = false;
         return false;
@@ -5679,7 +5669,7 @@ bool wu_jian_do_wall_jump(coord_def targ)
     auto initial_position = you.pos();
     move_player_to_grid(wall_jump_landing_spot, false);
     wu_jian_wall_jump_effects();
-    remove_water_hold();
+    you.clear_far_engulf(false, true);
 
     int wall_jump_modifier = (you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2
                                                                       : 1;

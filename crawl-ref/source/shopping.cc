@@ -144,9 +144,6 @@ int artefact_value(const item_def &item)
     if (prop[ARTP_ANGRY])
         ret -= 3;
 
-    if (prop[ARTP_CAUSE_TELEPORTATION])
-        ret -= 3;
-
     if (prop[ARTP_NOISE])
         ret -= 5;
 
@@ -278,31 +275,26 @@ unsigned int item_value(item_def item, bool ident)
             {
             case SPMSL_NORMAL:
             default:
-                valued *= 10;
                 break;
 
             case SPMSL_CHAOS:
-                valued *= 40;
+            case SPMSL_CURARE:
+                valued *= 4;
                 break;
 
-            case SPMSL_CURARE:
             case SPMSL_BLINDING:
+            case SPMSL_FRENZY:
             case SPMSL_SILVER:
+            case SPMSL_DISPERSAL:
 #if TAG_MAJOR_VERSION == 34
             case SPMSL_PARALYSIS:
             case SPMSL_PENETRATION:
             case SPMSL_STEEL:
-#endif
-            case SPMSL_DISPERSAL:
-                valued *= 30;
-                break;
-
-#if TAG_MAJOR_VERSION == 34
             case SPMSL_FLAME:
             case SPMSL_FROST:
             case SPMSL_SLEEP:
             case SPMSL_CONFUSION:
-                valued *= 25;
+                valued *= 3;
                 break;
 #endif
 
@@ -313,12 +305,9 @@ unsigned int item_value(item_def item, bool ident)
             case SPMSL_SLOW:
             case SPMSL_SICKNESS:
 #endif
-            case SPMSL_FRENZY:
-                valued *= 20;
+                valued *= 2;
                 break;
             }
-
-            valued /= 10;
         }
         break;
 
@@ -720,18 +709,7 @@ bool is_worthless_consumable(const item_def &item)
         CASE_REMOVED_POTIONS(item.sub_type)
         }
     case OBJ_SCROLLS:
-        switch (item.sub_type)
-        {
-#if TAG_MAJOR_VERSION == 34
-        case SCR_CURSE_ARMOUR:
-        case SCR_CURSE_WEAPON:
-        case SCR_CURSE_JEWELLERY:
-#endif
-        case SCR_NOISE:
-            return true;
-        default:
-            return false;
-        }
+        return item.sub_type == SCR_NOISE;
 
     // Only consumables are worthless.
     default:
@@ -887,7 +865,7 @@ class ShopEntry : public InvEntry
                                                   YELLOW;
         const string keystr = colour_to_str(keycol);
         const string itemstr =
-            colour_to_str(menu_colour(text, item_prefix(*item, false), tag));
+            colour_to_str(menu_colour(text, item_prefix(*item, false), tag, false));
         return make_stringf(" <%s>%c %c </%s><%s>%4d gold   %s%s</%s>",
                             keystr.c_str(),
                             hotkeys[0],
@@ -1631,8 +1609,8 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
 
     if (!find_thing(item, pos).empty()) // TODO: this check isn't working?
     {
-        mprf(MSGCH_ERROR, "%s is already on the shopping list.",
-             item.name(DESC_THE).c_str());
+        ui::error(make_stringf("%s is already on the shopping list.",
+             item.name(DESC_THE).c_str()));
         return false;
     }
 
@@ -1701,8 +1679,8 @@ bool ShoppingList::del_thing(const item_def &item,
 
     if (indices.empty())
     {
-        mprf(MSGCH_ERROR, "%s isn't on shopping list, can't delete it.",
-             item.name(DESC_THE).c_str());
+        ui::error(make_stringf("%s isn't on shopping list, can't delete it.",
+             item.name(DESC_THE).c_str()));
         return false;
     }
 
@@ -1718,8 +1696,8 @@ bool ShoppingList::del_thing(string desc, const level_pos* _pos)
 
     if (indices.empty())
     {
-        mprf(MSGCH_ERROR, "%s isn't on shopping list, can't delete it.",
-             desc.c_str());
+        ui::error(make_stringf("%s isn't on shopping list, can't delete it.",
+             desc.c_str()));
         return false;
     }
 
@@ -2246,7 +2224,7 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
 
             const string colprf = item_prefix(item, false);
             const int col = menu_colour(item.name(DESC_A),
-                                        colprf, "shop");
+                                        colprf, "shop", false);
 
             vector<tile_def> item_tiles;
             get_tiles_for_item(item, item_tiles, true);
@@ -2336,8 +2314,7 @@ void ShoppingList::display(bool view_only)
             const int index = shopmenu.get_entry_index(&sel);
             if (index == -1)
             {
-                mprf(MSGCH_ERROR, "ERROR: Unable to delete thing from shopping list!");
-                more();
+                ui::error("ERROR: Unable to delete thing from shopping list!");
                 return true;
             }
 

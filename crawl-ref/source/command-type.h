@@ -311,6 +311,8 @@ enum command_type
     CMD_MENU_UP,      // move hover or menu scroll, depending on options
     CMD_MIN_MENU = CMD_MENU_UP,
     CMD_MENU_DOWN,
+    CMD_MENU_LEFT, // for multi-col menus, left/right move between columns, otherwise they cycle mode
+    CMD_MENU_RIGHT,
     CMD_MENU_LINE_UP, // move menu scroll no matter what
     CMD_MENU_LINE_DOWN,
     CMD_MENU_PAGE_UP,

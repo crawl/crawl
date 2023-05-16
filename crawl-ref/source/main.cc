@@ -259,7 +259,7 @@ int main(int argc, char *argv[])
 #endif
     // do this explicitly so that static initialization order woes can be
     // ignored.
-    msg::force_stderr echo(MB_MAYBE);
+    msg::force_stderr echo(maybe_bool::maybe);
 
     init_crash_handler();
 
@@ -305,7 +305,7 @@ int main(int argc, char *argv[])
 
         // TODO: would be simpler to just never echo? Do other builds really
         // need this outside of debugging contexts?
-        msg::force_stderr suppress_log_stderr(MB_FALSE);
+        msg::force_stderr suppress_log_stderr(false);
 #endif
         read_init_file();
     }
@@ -348,6 +348,7 @@ static void _reset_game()
     crawl_state.reset_game();
     clear_message_store();
     macro_clear_buffers();
+    crawl_state.show_more_prompt = true;
     the_lost_ones.clear();
     shopping_list = ShoppingList();
     you = player();
@@ -485,6 +486,17 @@ static void _show_commandline_options_help()
     string help;
 # define puts(x) (help += x, help += '\n')
 #endif
+    if (in_headless_mode())
+    {
+        // TODO: derive exact list from initfile.cc
+#ifdef USE_TILE_LOCAL
+        puts("Headless crawl tiles build: requires -objstat or -mapstat.");
+#else
+        puts("Headless crawl: requires -test, -script, -objstat, -builddb, or other similar parameter.");
+        puts("A single argument will be interpreted as a script name.");
+#endif
+        puts("");
+    }
 
     puts("Command line options:");
     puts("  -help                 prints this list of options");
@@ -538,8 +550,10 @@ static void _show_commandline_options_help()
     puts("  -test               run all test cases in test/ except test/big/");
     puts("  -test foo,bar       run only tests \"foo\" and \"bar\"");
     puts("  -test list          list available tests");
-    puts("  -script <name>      run script matching <name> in ./scripts");
 #endif
+    // XX should this really be advertised outside of debug builds?
+    puts("  -headless           force headless mode (no pty)");
+    puts("  -script <name>      run script matching <name> in ./scripts");
 #ifdef DEBUG_STATISTICS
 #ifndef DEBUG_DIAGNOSTICS
     puts("");
@@ -771,20 +785,6 @@ static void _start_running(int dir, int mode)
     {
         return;
     }
-
-    const coord_def next_pos = you.pos() + Compass[dir];
-
-    if (!have_passive(passive_t::slime_wall_immune)
-        && (dir == RDIR_REST || you.is_habitable_feat(env.grid(next_pos)))
-        && count_adjacent_slime_walls(next_pos))
-    {
-        mprf(MSGCH_WARN, "You're about to run into a slime covered wall!");
-        return;
-    }
-
-    string wall_jump_err;
-    if (wu_jian_can_wall_jump(next_pos, wall_jump_err))
-       return; // Do not wall jump while running.
 
     you.running.initialise(dir, mode);
 }
@@ -1077,7 +1077,6 @@ static void _input()
                                       "repetition.");
         crawl_state.prev_cmd = CMD_NO_CMD;
         flush_prev_message();
-        getchm();
         return;
     }
 
@@ -1292,7 +1291,6 @@ static void _input()
     _update_replay_state();
 
     crawl_state.clear_god_acting();
-
 }
 
 static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
@@ -1369,26 +1367,22 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
     }
 
     // Rune locks
-    int min_runes = 0;
-    for (branch_iterator it; it; ++it)
-    {
-        if (ftype != it->entry_stairs)
-            continue;
-
-        if (!you.level_visited(level_id(it->id, 1)))
+    switch (ftype) {
+    case DNGN_EXIT_VAULTS:
+        if (runes_in_pack() < 1)
         {
-            min_runes = runes_for_branch(it->id);
-            if (runes_in_pack() < min_runes)
-            {
-                if (min_runes == 1)
-                    mpr("You need a rune to enter this place.");
-                else
-                    mprf("You need at least %d runes to enter this place.",
-                         min_runes);
-                return false;
-            }
+            mpr("You need a rune to leave the Vaults.");
+            return false;
         }
-
+        break;
+    case DNGN_ENTER_ZOT:
+        if (runes_in_pack() < 3)
+        {
+            mpr("You need at least three runes to enter the Realm of Zot.");
+            return false;
+        }
+        break;
+    default:
         break;
     }
 
@@ -1522,6 +1516,17 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
                 canned_msg(MSG_OK);
                 return false;
             }
+        }
+    }
+
+    if (down && ygrd == DNGN_ENTER_VAULTS && !runes_in_pack())
+    {
+        if (!yes_or_no("You cannot leave the Vaults without holding a Rune of "
+                       "Zot, and the runes within are jealously guarded."
+                       " Continue?"))
+        {
+            canned_msg(MSG_OK);
+            return false;
         }
     }
 
@@ -2159,6 +2164,7 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_WEAR_ARMOUR:          use_an_item(OPER_WEAR);   break;
     case CMD_WEAR_JEWELLERY:       use_an_item(OPER_PUTON);  break;
     case CMD_WIELD_WEAPON:         use_an_item(OPER_WIELD);  break;
+    case CMD_EVOKE:                use_an_item(OPER_EVOKE);  break;
     case CMD_ZAP_WAND:             zap_wand();               break;
     case CMD_DROP:
         drop();
@@ -2166,11 +2172,6 @@ void process_command(command_type cmd, command_type prev_cmd)
 
     case CMD_DROP_LAST:
         drop_last();
-        break;
-
-    case CMD_EVOKE:
-        if (!evoke_item())
-            flush_input_buffer(FLUSH_ON_FAILURE);
         break;
 
     case CMD_PRIMARY_ATTACK:
@@ -2429,7 +2430,10 @@ static void _prep_input()
 
     you.redraw_status_lights = true;
     if (you.running == 0)
+    {
         you.quiver_action.set_needs_redraw();
+        you.refresh_rampage_hints();
+    }
     print_stats();
     update_screen();
 
@@ -2518,18 +2522,12 @@ static void _update_still_winds()
     end_still_winds();
 }
 
-static void _check_spectral_weapon()
-{
-    if (!you.triggered_spectral)
-        if (monster* sw = find_spectral_weapon(&you))
-            end_spectral_weapon(sw, false, true);
-    you.triggered_spectral = false;
-}
-
 void world_reacts()
 {
     // All markers should be activated at this point.
     ASSERT(!env.markers.need_activate());
+
+    you.rampage_hints.clear(); // only draw on your turn
 
     fire_final_effects();
 
@@ -2568,7 +2566,7 @@ void world_reacts()
     _check_banished();
     _check_sanctuary();
     _check_trapped();
-    _check_spectral_weapon();
+    check_spectral_weapon(you);
 
     run_environment_effects();
 
@@ -2804,8 +2802,11 @@ static void _do_wait_spells()
 
 static void _safe_move_player(coord_def move)
 {
-    if (!i_feel_safe(true))
+    if (!i_feel_safe(true)) {
+        // Clear out other queued up commands.
+        macro_clear_buffers();
         return;
+    }
     move_player_action(move);
 }
 

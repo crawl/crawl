@@ -14,6 +14,7 @@
 #include "item-status-flag-type.h"
 #include "known-items.h"
 #include "libutil.h"
+#include "options.h"
 #include "stringutil.h"
 #include "tag-version.h"
 #include "unicode.h"
@@ -22,12 +23,14 @@ class KnownMenu : public InvMenu
 {
 public:
     KnownMenu(bool show_unknown, bool _all_items_known)
-        : InvMenu(MF_QUIET_SELECT | MF_ALLOW_FORMATTING | MF_USE_TWO_COLUMNS
+        : InvMenu(MF_QUIET_SELECT | MF_ALLOW_FORMATTING
                     | ((show_unknown) ? MF_NOSELECT
                                       : MF_MULTISELECT | MF_ALLOW_FILTER)),
         all_items_known(_all_items_known)
     {
         set_type(menu_type::know);
+        if (!Options.single_column_item_menus)
+            set_flags(get_flags() | MF_USE_TWO_COLUMNS);
         set_more(); // force derived class get_keyhelp()
     }
 
@@ -80,6 +83,14 @@ protected:
         else
             num = -1;
 
+        if (ui::key_exits_popup(key))
+        {
+            if (resetting)
+                return true;
+            lastch = key;
+            return false;
+        }
+
         switch (key)
         {
         case ',':
@@ -95,10 +106,6 @@ protected:
         case '\\':
             if (all_items_known)
                 return true; // skip process_key for '-', it's confusing
-        case CK_ENTER:
-        CASE_ESCAPE
-            if (resetting)
-                return true;
             lastch = key;
             return false;
 

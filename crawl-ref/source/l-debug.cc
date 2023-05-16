@@ -518,11 +518,13 @@ LUAFN(debug_check_moncasts)
         SPELL_ENFEEBLE,
         SPELL_ANGUISH,
         SPELL_NECROTISE,
-        SPELL_BLASTSPARK,
+        SPELL_BLASTMOTE,
         SPELL_ROT,
         SPELL_MOMENTUM_STRIKE,
         SPELL_KISS_OF_DEATH,
         SPELL_ELECTRIC_CHARGE,
+        SPELL_MEPHITIC_BREATH,
+        SPELL_MINOR_DESTRUCTION,
     };
 
     for (int s = SPELL_FIRST_SPELL; s < NUM_SPELLS; s++)

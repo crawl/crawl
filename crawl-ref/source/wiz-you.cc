@@ -19,7 +19,6 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
-#include "misc.h" // frombool
 #include "mutation.h"
 #include "output.h"
 #include "playable.h"
@@ -584,8 +583,7 @@ void wizard_set_stats()
     you.base_stats[STAT_DEX] = debug_cap_stat(sdex);
     you.stat_loss.init(0);
     you.attribute[ATTR_STAT_LOSS_XP] = 0;
-    you.redraw_stats.init(true);
-    you.redraw_evasion = true;
+    notify_stat_change();
 }
 
 void wizard_edit_durations()
@@ -1002,8 +1000,8 @@ void wizard_xom_acts()
 
     if (specs[0] == '\0')
     {
-        const maybe_bool nice = you_worship(GOD_XOM) ? MB_MAYBE :
-                                frombool(coinflip());
+        const maybe_bool nice = you_worship(GOD_XOM) ? maybe_bool::maybe :
+                                coinflip();
         const xom_event_type result = xom_acts(severity, nice);
         dprf("Xom did '%s'.", xom_effect_to_name(result).c_str());
 #ifndef DEBUG_DIAGNOSTICS

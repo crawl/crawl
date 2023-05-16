@@ -138,6 +138,7 @@ map-knowledge.o \
 mapdef.o \
 mapmark.o \
 maps.o \
+maybe-bool.o \
 melee-attack.o \
 menu.o \
 message-stream.o \
@@ -395,6 +396,7 @@ externs.h.o \
 explore-greedy-options.h.o \
 fight.h.o \
 filter-enum.h.o \
+fixedp.h.o \
 fineff.h.o \
 flang-t.h.o \
 flush-reason-type.h.o \

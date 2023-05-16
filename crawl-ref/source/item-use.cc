@@ -74,11 +74,14 @@
 #include "view.h"
 #include "xom.h"
 
+static bool _equip_oper(operation_types oper);
+
 // The menu class for using items from either inv or floor.
 // Derivative of InvMenu
 
 class UseItemMenu : public InvMenu
 {
+    void reset(operation_types oper, const char* prompt_override=nullptr);
     bool init_modes();
     bool populate_list(bool check_only=false);
     void populate_menu();
@@ -87,6 +90,8 @@ class UseItemMenu : public InvMenu
     void clear() override;
     bool examine_index(int i) override;
     bool cycle_mode(bool forward) override;
+    void save_hover();
+    void restore_hover(bool preserve_pos);
     string get_keyhelp(bool scrollable) const override;
     bool skip_process_command(int keyin) override
     {
@@ -103,7 +108,6 @@ class UseItemMenu : public InvMenu
         return InvMenu::get_command(keyin);
     }
 
-
 public:
     UseItemMenu(operation_types oper, int selector, const char* prompt);
 
@@ -112,6 +116,8 @@ public:
     int item_type_filter;
     operation_types oper;
 
+    int saved_inv_item;
+    int saved_hover;
     int last_inv_pos;
 
     // XX these probably shouldn't be const...
@@ -127,6 +133,11 @@ public:
     bool show_unarmed() const
     {
         return oper == OPER_WIELD || oper == OPER_EQUIP;
+    }
+
+    bool show_floor() const
+    {
+        return oper != OPER_EVOKE;
     }
 
     bool allow_full_inv() const
@@ -153,19 +164,29 @@ static string _default_use_title(operation_types oper)
     switch (oper)
     {
     case OPER_EQUIP:
-        return "Equip which item?";
+        return Options.equip_unequip
+            ? "Equip or unequip which item?"
+            : "Equip which item?";
     case OPER_WIELD:
-        return "Wield which item (- for none)?";
+        return Options.equip_unequip
+            ? "Wield or unwield which item (- for none)?"
+            : "Wield which item (- for none)?";
     case OPER_WEAR:
-        return "Wear which item?";
+        return Options.equip_unequip
+            ? "Wear or take off which item?"
+            : "Wear which item?";
     case OPER_PUTON:
-        return "Put on which piece of jewellery?";
+        return Options.equip_unequip
+            ? "Put on or remove which piece of jewellery?"
+            : "Put on which piece of jewellery?";
     case OPER_QUAFF:
         if (you.has_mutation(MUT_LONG_TONGUE))
             return "Slurp which item?";
         return "Drink which item?";
     case OPER_READ:
         return "Read which item?";
+    case OPER_EVOKE:
+        return "Evoke which item?";
     case OPER_TAKEOFF:
         return "Take off which piece of armour?";
     case OPER_REMOVE:
@@ -188,6 +209,7 @@ static string _oper_name(operation_types oper)
     case OPER_PUTON: return "put on";
     case OPER_QUAFF: return "quaff";
     case OPER_READ:  return "read";
+    case OPER_EVOKE: return "evoke";
     case OPER_TAKEOFF: return "take off";
     case OPER_REMOVE:  return "remove";
     case OPER_UNEQUIP: return "unequip";
@@ -195,7 +217,6 @@ static string _oper_name(operation_types oper)
         return "buggy";
     }
 }
-
 
 static int _default_osel(operation_types oper)
 {
@@ -211,6 +232,8 @@ static int _default_osel(operation_types oper)
         return OBJ_POTIONS;
     case OPER_READ:
         return OBJ_SCROLLS;
+    case OPER_EVOKE:
+        return OSEL_EVOKABLE;
     case OPER_EQUIP:
         return OSEL_EQUIPABLE;
     case OPER_TAKEOFF:
@@ -231,7 +254,7 @@ static vector<operation_types> _oper_to_mode(operation_types o)
     static const vector<operation_types> removables
         = {OPER_UNEQUIP, OPER_TAKEOFF, OPER_REMOVE};
     static const vector<operation_types> usables
-        = {OPER_READ, OPER_QUAFF};
+        = {OPER_READ, OPER_QUAFF, OPER_EVOKE};
 
     // return a copy
     vector<operation_types> result;
@@ -251,14 +274,17 @@ bool UseItemMenu::init_modes()
     if (available_modes.empty())
         return false;
 
-    unwind_var<operation_types> cur_oper(oper);
-    unwind_var<int> cur_filter(item_type_filter);
+    {
+        unwind_var<operation_types> cur_oper(oper);
+        unwind_var<int> cur_filter(item_type_filter);
 
-    erase_if(available_modes, [this](operation_types o) {
-        oper = o;
-        item_type_filter = _default_osel(oper);
-        return !populate_list(true);
-    });
+        erase_if(available_modes, [cur_oper, this](operation_types o) {
+            oper = o;
+            item_type_filter = _default_osel(oper);
+            return !populate_list(true);
+        });
+    }
+
     if (available_modes.size() == 0)
         return false;
 
@@ -275,7 +301,20 @@ bool UseItemMenu::init_modes()
         });
     }
 
-    return available_modes.size() > 0;
+    if (available_modes.size() == 0)
+        return false;
+
+    // the originally requested oper did not survive (e.g. because there are no
+    // items that match it, or it was removed above); fall back on whatever is
+    // first. Except for the hardcoded case above, this should be equip/unequip.
+    if (_equip_oper(oper)
+        && find(available_modes.begin(), available_modes.end(), oper)
+                                                    == available_modes.end())
+    {
+        oper = available_modes[0];
+    }
+
+    return true;
 }
 
 bool UseItemMenu::cycle_mode(bool forward)
@@ -295,7 +334,7 @@ bool UseItemMenu::cycle_mode(bool forward)
 
     oper = *it;
 
-    auto starting_hover = last_hovered;
+    save_hover();
     item_type_filter = _default_osel(oper);
 
     // always reset display all on mode change
@@ -306,13 +345,7 @@ bool UseItemMenu::cycle_mode(bool forward)
     populate_menu();
     update_sections();
     set_title(_default_use_title(oper));
-    set_hovered(starting_hover);
-    // fixup hover in case headings have moved
-    if (last_hovered >= 0 && items[last_hovered]->level != MEL_ITEM)
-        if (is_set(MF_ARROWS_SELECT))
-            cycle_hover();
-        else
-            set_hovered(-1);
+    restore_hover(true);
     return true;
 }
 
@@ -326,31 +359,47 @@ public:
     }
 };
 
-UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_ANY,
-                                    const char* prompt=nullptr)
-    : InvMenu(MF_SINGLESELECT | MF_ARROWS_SELECT | MF_INIT_HOVER | MF_ALLOW_FORMATTING),
-                            display_all(false), is_inventory(true),
-      item_type_filter(item_type), oper(_oper), last_inv_pos(-1),
-      inv_header(nullptr), floor_header(nullptr)
+void UseItemMenu::reset(operation_types _oper, const char* prompt_override)
 {
-    set_tag("use_item");
-    set_highlighter(new TempUselessnessHighlighter()); // pointer managed by Menu
-    menu_action = ACT_EXECUTE;
-    if (prompt)
-        set_title(prompt);
+    oper = _oper;
+
+    display_all = false;
+
+    clear();
+    // init_modes may change oper
+    init_modes();
+    if (prompt_override)
+        set_title(prompt_override);
     else
         set_title(_default_use_title(oper));
     // see `item_is_selected` for more on what can be used for item_type.
     if (item_type_filter == OSEL_ANY)
         item_type_filter = _default_osel(oper);
 
-    init_modes();
     populate_list();
     populate_menu();
     // for wield in particular:
     // start hover on wielded item, if there is one, otherwise on -
     if (oper == OPER_WIELD && item_inv.size() > 0 && you.weapon())
         set_hovered(1);
+    update_title();
+    update_more();
+}
+
+UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_ANY,
+                                    const char* prompt=nullptr)
+    : InvMenu(MF_SINGLESELECT | MF_ARROWS_SELECT
+                | MF_INIT_HOVER | MF_ALLOW_FORMATTING),
+        display_all(false), is_inventory(true),
+        item_type_filter(item_type), oper(_oper), saved_inv_item(NON_ITEM),
+        saved_hover(-1), last_inv_pos(-1), inv_header(nullptr),
+        floor_header(nullptr)
+{
+    set_tag("use_item");
+    set_flags(get_flags() & ~MF_USE_TWO_COLUMNS);
+    set_highlighter(new TempUselessnessHighlighter()); // pointer managed by Menu
+    menu_action = ACT_EXECUTE;
+    reset(oper, prompt);
 }
 
 bool UseItemMenu::populate_list(bool check_only)
@@ -370,27 +419,30 @@ bool UseItemMenu::populate_list(bool check_only)
             item_inv.push_back(&item);
         }
     }
-    // Load floor items...
-    vector<const item_def*> floor = const_item_list_on_square(
+    if (show_floor())
+    {
+        // Load floor items...
+        vector<const item_def*> floor = const_item_list_on_square(
                                                 you.visible_igrd(you.pos()));
 
-    for (const auto *it : floor)
-    {
-        // ...only stuff that can go into your inventory though
-        if (!it->defined() || item_is_stationary(*it) || item_is_orb(*it)
-            || item_is_spellbook(*it) || it->base_type == OBJ_GOLD
-            || it->base_type == OBJ_RUNES)
+        for (const auto *it : floor)
         {
-            continue;
+            // ...only stuff that can go into your inventory though
+            if (!it->defined() || item_is_stationary(*it) || item_is_orb(*it)
+                || item_is_spellbook(*it) || it->base_type == OBJ_GOLD
+                || it->base_type == OBJ_RUNES)
+            {
+                continue;
+            }
+
+            // even with display_all, only show matching floor items.
+            if (!item_is_selected(*it, item_type_filter))
+                continue;
+
+            if (check_only)
+                return true;
+            item_floor.push_back(it);
         }
-
-        // even with display_all, only show matching floor items.
-        if (!item_is_selected(*it, item_type_filter))
-            continue;
-
-        if (check_only)
-            return true;
-        item_floor.push_back(it);
     }
 
     return !check_only && (item_inv.size() > 0 || item_floor.size() > 0);
@@ -399,7 +451,8 @@ bool UseItemMenu::populate_list(bool check_only)
 bool UseItemMenu::empty_check() const
 {
     // (if choosing weapons, then bare hands are always a possibility)
-    if (!show_unarmed() && !any_items_of_type(item_type_filter, -1, true))
+    if (!show_unarmed()
+        && !any_items_of_type(item_type_filter, -1, show_floor()))
     {
         mprf(MSGCH_PROMPT, "%s",
             no_selectables_message(item_type_filter).c_str());
@@ -510,7 +563,8 @@ static bool _enable_equip_check(operation_types o, MenuEntry *entry)
     auto ie = dynamic_cast<InvEntry *>(entry);
     if (o != OPER_EQUIP && o != OPER_WIELD && o != OPER_PUTON && o != OPER_WEAR)
         return true;
-    return !ie || !ie->item || !item_is_equipped(*(ie->item));
+    return !ie || !ie->item || !item_is_equipped(*(ie->item))
+           || (item_is_equipped(*(ie->item)) && Options.equip_unequip);
 }
 
 static bool _disable_item(const MenuEntry &)
@@ -519,9 +573,74 @@ static bool _disable_item(const MenuEntry &)
     return true;
 }
 
+static item_def *_entry_to_item(MenuEntry *me)
+{
+    if (!me)
+        return nullptr;
+    auto ie = dynamic_cast<InvEntry *>(me);
+    if (!ie)
+        return nullptr;
+    auto tgt = const_cast<item_def*>(ie->item);
+    return tgt;
+}
+
+void UseItemMenu::save_hover()
+{
+    // when switch modes, we want to keep hover on the currently selected item
+    // even if it moves around, or failing that, in a similar position in the
+    // menu. This code accomplishes that.
+    saved_hover = last_hovered;
+    if (last_hovered < 0)
+    {
+        saved_inv_item = NON_ITEM;
+        return;
+    }
+
+    auto tgt = _entry_to_item(items[last_hovered]);
+    if (!tgt || !in_inventory(*tgt))
+    {
+        saved_inv_item = NON_ITEM;
+        return;
+    }
+    saved_inv_item = tgt->link;
+}
+
+void UseItemMenu::restore_hover(bool preserve_pos)
+{
+    // if there is a saved hovered item, look for that first
+    if (saved_inv_item != NON_ITEM)
+        for (int i = 0; i < static_cast<int>(items.size()); i++)
+            if (auto tgt = _entry_to_item(items[i]))
+                if (tgt->link == saved_inv_item)
+                {
+                    set_hovered(i);
+                    saved_inv_item = NON_ITEM;
+                    saved_hover = -1;
+                    return;
+                }
+
+    // nothing found
+    saved_inv_item = NON_ITEM;
+    const bool use_hover = is_set(MF_ARROWS_SELECT);
+    if (!preserve_pos || !use_hover)
+        set_hovered(use_hover ? 0 : -1);
+    else
+    {
+        // if preserve_pos is set, try to keep an existing saved hover position
+        set_hovered(saved_hover);
+    }
+    saved_hover = -1;
+
+    // fixup hover in case headings have moved
+    if (last_hovered >= 0 && items[last_hovered]->level != MEL_ITEM)
+        cycle_hover();
+}
+
 void UseItemMenu::update_sections()
 {
-    // never disable the unwield button
+    // disable unarmed on equip menus if player is unarmed
+    if (show_unarmed() && !you.weapon())
+        items[0]->on_select = _disable_item;
     int i = show_unarmed() ? 1 : 0;
     for (; i <= last_inv_pos; i++)
         if (items[i]->level == MEL_ITEM)
@@ -578,12 +697,14 @@ void UseItemMenu::toggle_display_all()
     if (!allow_full_inv())
         return;
 
+    save_hover();
     clear();
     display_all = !display_all;
     populate_list();
     populate_menu();
     update_sections();
     update_more();
+    restore_hover(true);
 }
 
 void UseItemMenu::toggle_inv_or_floor()
@@ -642,8 +763,7 @@ bool UseItemMenu::examine_index(int i)
         return InvMenu::examine_index(i);
     else // floor item
     {
-        auto ie = dynamic_cast<InvEntry *>(items[i]);
-        auto desc_tgt = const_cast<item_def*>(ie->item);
+        auto desc_tgt = _entry_to_item(items[i]);
         ASSERT(desc_tgt);
         return describe_item(*desc_tgt, nullptr, false);
     }
@@ -652,34 +772,68 @@ bool UseItemMenu::examine_index(int i)
 string UseItemMenu::get_keyhelp(bool) const
 {
     string r;
-    if (oper == OPER_ANY)
-        return r; // `*` is disabled for identify, enchant
 
-    if (available_modes.size() > 1)
-    {
-        vector<string> mode_names;
-        for (const auto &o : available_modes)
-        {
-            string n = _oper_name(o);
-            if (o == oper)
-                n = "<w>" + n + "</w>";
-            mode_names.push_back(n);
-        }
-        r += menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE) + " "
-            + join_strings(mode_names.begin(), mode_names.end(), "|")
-            + "   ";
-    }
-
-    // TODO: show cycle mode information, once this feature is more baked
+    // XX the logic here is getting convoluted, if only these were widgets...
+    const string desc_key = is_set(MF_ARROWS_SELECT)
+                                    ? "[<w>?</w>] describe selected" : "";
+    string full;
+    string eu_modes;
+    string modes;
     if (allow_full_inv())
     {
-        r += "[<w>*</w>] ";
-        r += (display_all ? "show appropriate" : "show all");
+        full = "[<w>*</w>] ";
+        full += (display_all ? "show appropriate" : "show all");
     }
+    // OPER_ANY menus are identify, enchant, brand; they disable most of these
+    // key shortcuts
+    if (oper != OPER_ANY)
+    {
+        if (_equip_oper(oper))
+        {
+            eu_modes = "[<w>tab</w>] ";
+            eu_modes += (generalize_oper(oper) == OPER_EQUIP)
+                ? "<w>equip</w>|unequip  " : "equip|<w>unequip</w>  ";
+        }
 
-    return is_set(MF_ARROWS_SELECT)
-        ? pad_more_with(r, "[<w>?</w>] describe selected item")
-        : r;
+        if (available_modes.size() > 1)
+        {
+            vector<string> mode_names;
+            for (const auto &o : available_modes)
+            {
+                string n = _oper_name(o);
+                if (o == oper)
+                    n = "<w>" + n + "</w>";
+                mode_names.push_back(n);
+            }
+            modes = menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE) + " "
+                + join_strings(mode_names.begin(), mode_names.end(), "|")
+                + "   ";
+        }
+    }
+    if (eu_modes.size() && desc_key.size() && modes.size() && full.size())
+    {
+        // too much stuff to fit in one row
+        r = pad_more_with(full, desc_key) + "\n";
+        r += pad_more_with(modes, eu_modes);
+        return r;
+    }
+    else
+    {
+        // if both of these are shown, always keep them in a stable position
+        if (eu_modes.size() && desc_key.size())
+            r = pad_more_with("", desc_key);
+
+        // annoying: I cannot get more height changes to work correctly. So as
+        // a workaround, this will produce a two line more, potentially
+        // with one blank line (except on menus where mode never changes).
+        if (oper != OPER_ANY)
+            r += "\n";
+        r += modes + full;
+        if (eu_modes.size() && desc_key.size())
+            return pad_more_with(r, eu_modes); // desc_key on prev line
+        else // at most one of these is shown
+            return pad_more_with(r, desc_key.size() ? desc_key : eu_modes);
+    }
 }
 
 bool UseItemMenu::process_key(int key)
@@ -710,6 +864,24 @@ bool UseItemMenu::process_key(int key)
         lastch = ','; // XX don't use keycode for this
         return false;
     }
+    else if (key == CK_TAB && _equip_oper(oper))
+    {
+        item_type_filter = OSEL_ANY;
+        save_hover();
+        switch (oper)
+        {
+        case OPER_EQUIP:
+        case OPER_WIELD:   reset(OPER_UNEQUIP); break;
+        case OPER_WEAR:    reset(OPER_TAKEOFF); break;
+        case OPER_PUTON:   reset(OPER_REMOVE); break;
+        case OPER_UNEQUIP: reset(OPER_EQUIP); break;
+        case OPER_REMOVE:  reset(OPER_PUTON); break;
+        case OPER_TAKEOFF: reset(OPER_WEAR); break;
+        default: break;
+        }
+        restore_hover(false);
+        return true;
+    }
 
     return Menu::process_key(key);
 }
@@ -720,13 +892,15 @@ static operation_types _item_to_oper(item_def *target)
         return OPER_WIELD; // unwield
     switch (target->base_type)
     {
-    case OBJ_POTIONS:   return OPER_QUAFF;
-    case OBJ_SCROLLS:   return OPER_READ;
-    case OBJ_ARMOUR:    return OPER_WEAR;
+    case OBJ_WANDS:
+    case OBJ_MISCELLANY: return OPER_EVOKE;
+    case OBJ_POTIONS:    return OPER_QUAFF;
+    case OBJ_SCROLLS:    return OPER_READ;
+    case OBJ_ARMOUR:     return OPER_WEAR;
     case OBJ_WEAPONS:
-    case OBJ_STAVES:    return OPER_WIELD;
-    case OBJ_JEWELLERY: return OPER_PUTON;
-    default:            return OPER_NONE;
+    case OBJ_STAVES:     return OPER_WIELD;
+    case OBJ_JEWELLERY:  return OPER_PUTON;
+    default:             return OPER_NONE;
     }
 }
 
@@ -742,7 +916,12 @@ static operation_types _item_to_removal(item_def *target)
     case OBJ_JEWELLERY: return OPER_REMOVE;
     default:            return OPER_NONE;
     }
+}
 
+static bool _equip_oper(operation_types oper)
+{
+    const auto gen = generalize_oper(oper);
+    return gen == OPER_EQUIP || gen == OPER_UNEQUIP;
 }
 
 static bool _can_generically_use_armour(bool wear=true)
@@ -788,6 +967,9 @@ static bool _can_generically_use(operation_types oper)
     case OPER_READ:
         err = cannot_read_item_reason();
         break;
+    case OPER_EVOKE:
+        err = cannot_evoke_item_reason();
+        break;
     case OPER_WEAR:
         if (!_can_generically_use_armour())
             return false;
@@ -806,8 +988,7 @@ static bool _can_generically_use(operation_types oper)
             return false;
         }
         // can't differentiate between these two at this point
-        if (!you_can_wear(EQ_RINGS, true)
-            && !you_can_wear(EQ_AMULET, true))
+        if (!you_can_wear(EQ_RINGS, true) && !you_can_wear(EQ_AMULET, true))
         {
             mprf(MSGCH_PROMPT, "You can't %s jewellery in your present form.",
                 oper == OPER_PUTON ? "wear" : "remove");
@@ -835,6 +1016,7 @@ static bool _do_wear_armour(item_def *to_wear);
 
 static bool _unequip_item(item_def &i)
 {
+    ASSERT(i.defined());
     // wrapper for compatibility with old api that takes slots
     if (!in_inventory(i))
     {
@@ -845,6 +1027,19 @@ static bool _unequip_item(item_def &i)
         return remove_ring(i.link);
     else
         return takeoff_armour(i.link);
+}
+
+static bool _evoke_item(item_def &i)
+{
+    ASSERT(i.defined());
+    // wrapper for compatibility with old api that takes slots
+    if (!in_inventory(i))
+    {
+        mprf(MSGCH_PROMPT, "You aren't carrying that!");
+        return false;
+    }
+
+    return evoke_item(i.link);
 }
 
 static vector<equipment_type> _current_ring_types();
@@ -901,28 +1096,30 @@ bool use_an_item(operation_types oper, item_def *target)
     }
 
     if (!target)
-    {
         oper = use_an_item_menu(target, oper);
-        if (oper == OPER_EQUIP)
-            oper = _item_to_oper(target);
-        else if (oper == OPER_UNEQUIP)
-        {
-            oper = _item_to_removal(target);
-            if (oper == OPER_WIELD)
-                target = nullptr; // unwield
-        }
 
-        if (oper == OPER_NONE)
-            return false; // abort menu
+    if (oper == OPER_NONE)
+        return false; // abort menu
+
+    if (oper == OPER_EQUIP)
+        oper = _item_to_oper(target);
+    else if (oper == OPER_UNEQUIP)
+    {
+        oper = _item_to_removal(target);
+        if (oper == OPER_WIELD)
+            target = nullptr; // unwield
     }
+
     ASSERT(oper == OPER_WIELD || target);
-    // now we have an item and an oper: what to do with the item?
+    // now we have an item and a specific oper: what to do with the item?
     switch (oper)
     {
     case OPER_QUAFF:
         return drink(target);
     case OPER_READ:
         return read(target);
+    case OPER_EVOKE:
+        return _evoke_item(*target);
     case OPER_WIELD:
         return _do_wield_weapon(target);
     case OPER_WEAR:
@@ -1010,18 +1207,17 @@ operation_types use_an_item_menu(item_def *&target, operation_types oper, int it
             ASSERT(sel.size() == 1);
 
             choice_made = true;
-            auto ie = dynamic_cast<InvEntry *>(sel[0]);
-            tmp_tgt = const_cast<item_def*>(ie->item);
+            tmp_tgt = _entry_to_item(sel[0]);
         }
 
         redraw_screen();
         update_screen();
-        // For weapons, armour, and jewellery this is handled in wield_weapon,
-        // wear_armour, and _puton_item after selection
-        if (menu.oper != OPER_WIELD && menu.oper != OPER_WEAR
-            && menu.oper != OPER_PUTON
+
+        // equip cases are handled in followup calls
+        // TODO: cleanup
+        if (!_equip_oper(menu.oper)
             && choice_made && tmp_tgt
-            && !check_warning_inscriptions(*tmp_tgt, oper))
+            && !check_warning_inscriptions(*tmp_tgt, menu.oper))
         {
             choice_made = false;
         }
@@ -1034,14 +1230,13 @@ operation_types use_an_item_menu(item_def *&target, operation_types oper, int it
         }
         break;
     }
+
     if (choice_made)
         target = tmp_tgt;
 
     ASSERT(!choice_made || target || menu.show_unarmed());
-    if (choice_made)
-        return menu.oper;
-    else
-        return OPER_NONE;
+
+    return choice_made ? menu.oper : OPER_NONE;
 }
 
 static bool _safe_to_remove_or_wear(const item_def &item, const item_def
@@ -1311,7 +1506,12 @@ static bool _do_wield_weapon(item_def *to_wield, bool adjust_time_taken)
         {
             bool penance = false;
             // Can we safely unwield this item?
-            if (needs_handle_warning(*wpn, OPER_WIELD, penance))
+            if (!can_wield(wpn, true, false, true))
+                return false;
+            // XX possible code dup with `check_old_item_warning`?
+            if (needs_handle_warning(*wpn, OPER_WIELD, penance)
+                // check specifically for !u inscriptions:
+                || needs_handle_warning(*wpn, OPER_UNEQUIP, penance))
             {
                 string prompt =
                     "Really unwield " + wpn->name(DESC_INVENTORY) + "?";
@@ -1433,11 +1633,6 @@ static bool _do_wield_weapon(item_def *to_wield, bool adjust_time_taken)
 bool item_is_worn(int inv_slot)
 {
     return item_is_equipped(you.inv[inv_slot]);
-    // for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; ++i)
-    //     if (inv_slot == you.equip[i])
-    //         return true;
-
-    // return false;
 }
 
 /**
@@ -1888,6 +2083,9 @@ bool takeoff_armour(int item, bool noask)
 
     item_def& invitem = you.inv[item];
 
+    if (!noask && !check_warning_inscriptions(invitem, OPER_TAKEOFF))
+        return false;
+
     // It's possible to take this thing off, but if it would drop a stat
     // below 0, we should get confirmation.
     if (!noask && !_safe_to_remove_or_wear(invitem, true))
@@ -2198,7 +2396,7 @@ static bool _swap_rings(item_def& to_puton)
     for (auto eq : ring_types)
     {
         item_def* ring = you.slot_item(eq, true);
-        if (!you_can_wear(eq, true) || you.melded[eq])
+        if (bool(!you_can_wear(eq, true)) || you.melded[eq])
             melded++;
         else if (ring != nullptr)
         {
@@ -2383,7 +2581,8 @@ static bool _can_puton_ring(const item_def &item)
 {
     if (!_can_puton_jewellery(item))
         return false;
-    if (!you_can_wear(EQ_RINGS, true))
+    if (bool(!you_can_wear(EQ_RINGS, true))
+        && !player_equip_unrand(UNRAND_FINGER_AMULET))
     {
         mprf(MSGCH_PROMPT, "You can't wear that in your present form.");
         return false;
@@ -2394,7 +2593,7 @@ static bool _can_puton_ring(const item_def &item)
     int cursed = 0;
     for (auto eq : slots)
     {
-        if (!you_can_wear(eq, true) || you.melded[eq])
+        if (bool(!you_can_wear(eq, true)) || you.melded[eq])
         {
             melded++;
             continue;
@@ -2676,7 +2875,7 @@ bool remove_ring(int slot, bool announce, bool noask)
         return false;
     }
 
-    if (!check_warning_inscriptions(you.inv[you.equip[hand_used]],
+    if (!noask && !check_warning_inscriptions(you.inv[you.equip[hand_used]],
                                     OPER_REMOVE))
     {
         canned_msg(MSG_OK);
@@ -2779,6 +2978,24 @@ bool drink(item_def* potion)
         return false;
     }
 
+    if (player_equip_unrand(UNRAND_VICTORY, true)
+        && !you.props.exists(VICTORY_CONDUCT_KEY))
+    {
+        item_def *item = you.slot_item(EQ_BODY_ARMOUR, true);
+        string unrand_prompt = make_stringf("Really quaff with monsters nearby "
+                                            "while wearing %s?",
+                                            item->name(DESC_THE, false, true,
+                                                       false).c_str());
+
+        if (item->props[VICTORY_STAT_KEY].get_int() > 0
+            && there_are_monsters_nearby(true, true, false)
+            && !yesno(unrand_prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
     // The "> 1" part is to reduce the amount of times that Xom is
     // stimulated when you are a low-level 1 trying your first unknown
     // potions on monsters.
@@ -2798,6 +3015,12 @@ bool drink(item_def* potion)
     if (!quaff_potion(*potion))
         return false;
 
+    if (you.has_mutation(MUT_LONG_TONGUE))
+    {
+        mprf("You slurp down every last drop of the %s!",
+             potion->name(DESC_QUALNAME).c_str());
+    }
+
     if (!alreadyknown)
     {
         if (heal_on_id)
@@ -2812,6 +3035,13 @@ bool drink(item_def* potion)
             // a dangerous monster nearby...
             xom_is_stimulated(200);
         }
+    }
+
+    // Drinking with hostile visible mons nearby resets unrand "Victory" stats.
+    if (player_equip_unrand(UNRAND_VICTORY, true)
+        && there_are_monsters_nearby(true, true, false))
+    {
+        you.props[VICTORY_CONDUCT_KEY] = true;
     }
 
     // We'll need this later, after destroying the item.
@@ -3217,11 +3447,6 @@ static bool _is_cancellable_scroll(scroll_type scroll)
            || scroll == SCR_BLINKING
            || scroll == SCR_ENCHANT_ARMOUR
            || scroll == SCR_AMNESIA
-#if TAG_MAJOR_VERSION == 34
-           || scroll == SCR_CURSE_ARMOUR
-           || scroll == SCR_CURSE_JEWELLERY
-           || scroll == SCR_RECHARGING
-#endif
            || scroll == SCR_BRAND_WEAPON
            || scroll == SCR_ENCHANT_WEAPON
            || scroll == SCR_MAGIC_MAPPING
@@ -3547,6 +3772,24 @@ bool read(item_def* scroll, dist *target)
         }
     }
 
+    if (player_equip_unrand(UNRAND_VICTORY, true)
+        && !you.props.exists(VICTORY_CONDUCT_KEY))
+    {
+        item_def *item = you.slot_item(EQ_BODY_ARMOUR, true);
+        string unrand_prompt = make_stringf("Really read with monsters nearby "
+                                            "while wearing %s?",
+                                            item->name(DESC_THE, false, true,
+                                                       false).c_str());
+
+        if (item->props[VICTORY_STAT_KEY].get_int() > 0
+            && there_are_monsters_nearby(true, true, false)
+            && !yesno(unrand_prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
 
@@ -3727,7 +3970,14 @@ bool read(item_def* scroll, dist *target)
             // Do this here so it doesn't turn up in the ID menu.
             set_ident_type(*scroll, true);
         }
-        cancel_scroll = !_identify(alreadyknown, pre_succ_msg, link);
+        {
+            const int old_link = link;
+            cancel_scroll = !_identify(alreadyknown, pre_succ_msg, link);
+            // If we auto-swapped the ID'd item with the stack of ID scrolls,
+            // update the pointer to the new place in inventory for the ?ID.
+            if (link != old_link)
+                scroll = &you.inv[link];
+        }
         break;
 
     case SCR_ENCHANT_ARMOUR:
@@ -3819,9 +4069,6 @@ bool read(item_def* scroll, dist *target)
         && which_scroll != SCR_ENCHANT_WEAPON
         && which_scroll != SCR_IDENTIFY
         && which_scroll != SCR_ENCHANT_ARMOUR
-#if TAG_MAJOR_VERSION == 34
-        && which_scroll != SCR_RECHARGING
-#endif
         && which_scroll != SCR_AMNESIA
         && which_scroll != SCR_ACQUIREMENT)
     {
@@ -3845,6 +4092,14 @@ bool read(item_def* scroll, dist *target)
             // since there are no *really* bad scrolls, merely useless ones).
             xom_is_stimulated(bad_effect ? 100 : 50);
         }
+    }
+
+    // Reading with hostile visible mons nearby resets unrand "Victory" stats.
+    if (player_equip_unrand(UNRAND_VICTORY, true)
+        && there_are_monsters_nearby(true, true, false)
+        && !cancel_scroll)
+    {
+        you.props[VICTORY_CONDUCT_KEY] = true;
     }
 
     if (!alreadyknown)

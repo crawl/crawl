@@ -193,6 +193,7 @@ static void _mark_solid_squares();
 vector<vault_placement> Temp_Vaults;
 static unique_creature_list temp_unique_creatures;
 static FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
+static set<misc_item_type> temp_generated_misc;
 
 const map_bitmask *Vault_Placement_Mask = nullptr;
 
@@ -300,8 +301,9 @@ bool builder(bool enable_random_maps)
     // TODO: why are these globals?
     // Save a copy of unique creatures for vetoes.
     temp_unique_creatures = you.unique_creatures;
-    // And unrands
+    // And unrands & misc items
     temp_unique_items = you.unique_items;
+    temp_generated_misc = you.generated_misc;
 
     unwind_bool levelgen(crawl_state.generating_level, true);
     rng::generator levelgen_rng(you.where_are_you);
@@ -343,6 +345,7 @@ bool builder(bool enable_random_maps)
                 get_uniq_map_names() = uniq_names;
                 you.unique_creatures = temp_unique_creatures;
                 you.unique_items = temp_unique_items;
+                you.generated_misc = temp_generated_misc;
 
                 // Because vault generation can be interrupted, this potentially
                 // leaves unlinked items kicking around, which triggers a lot
@@ -1479,6 +1482,7 @@ void dgn_reset_level(bool enable_random_maps)
 
     you.unique_creatures = temp_unique_creatures;
     you.unique_items = temp_unique_items;
+    you.generated_misc = temp_generated_misc;
 
 #ifdef DEBUG_STATISTICS
     _you_all_vault_list.clear();
@@ -2931,10 +2935,10 @@ static bool _pan_level()
     if (which_demon >= 0)
     {
         vault = random_map_for_tag(pandemon_level_names[which_demon], false,
-                                   false, MB_FALSE);
+                                   false, false);
     }
     else
-        vault = random_map_in_depth(level_id::current(), false, MB_FALSE);
+        vault = random_map_in_depth(level_id::current(), false, false);
 
     // Every Pan level should have a primary vault.
     ASSERT(vault);
@@ -3026,10 +3030,10 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
 
     if (!vault)
         // Pick a normal map
-        vault = random_map_for_place(lid, minivault, MB_FALSE);
+        vault = random_map_for_place(lid, minivault, false);
 
     if (!vault && lid.branch == root_branch && lid.depth == 1)
-        vault = random_map_for_tag("arrival", false, false, MB_FALSE);
+        vault = random_map_for_tag("arrival", false, false, false);
 
     return vault;
 }
@@ -3401,7 +3405,7 @@ static void _place_chance_vaults()
                 const string fallback_tag =
                     "fallback_" + chance_tag.substr(7); // "chance_"
                 const map_def *fallback =
-                    random_map_for_tag(fallback_tag, true, false, MB_FALSE);
+                    random_map_for_tag(fallback_tag, true, false, false);
                 if (fallback)
                 {
                     dprf(DIAG_DNGN, "Found fallback vault %s for chance tag %s",
@@ -3459,7 +3463,7 @@ static bool _builder_normal()
     }
 
     if (use_random_maps)
-        vault = random_map_in_depth(level_id::current(), false, MB_FALSE);
+        vault = random_map_in_depth(level_id::current(), false, false);
 
     if (vault)
     {
@@ -3815,7 +3819,7 @@ static void _place_extra_vaults()
         if (!player_in_branch(BRANCH_DUNGEON) && use_random_maps)
         {
             const map_def *vault = random_map_in_depth(level_id::current(),
-                                                       false, MB_TRUE);
+                                                       false, true);
 
             // Encompass vaults can't be used as secondaries.
             if (!vault || vault->orient == MAP_ENCOMPASS)
@@ -4987,7 +4991,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
     if (mon->inv[MSLOT_WEAPON] == NON_ITEM
         && mon->inv[MSLOT_ALT_WEAPON] != NON_ITEM)
     {
-        mon->swap_weapons(MB_FALSE);
+        mon->swap_weapons(false);
     }
 }
 

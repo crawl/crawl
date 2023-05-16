@@ -60,6 +60,11 @@ LUARET1(you_turn_is_over, boolean, you.turn_is_over)
  * @function name
  */
 LUARET1(you_name, string, you.your_name.c_str())
+/*** Get name of player's species.
+ * @treturn string
+ * @function species
+ */
+LUARET1(you_species, string, species::name(you.species).c_str())
 /*** Get name of player's race.
  * @treturn string
  * @function race
@@ -1256,6 +1261,7 @@ static const struct luaL_reg you_clib[] =
     { "ability_table", l_you_abil_table },
     { "known_items" , you_known_items },
     { "name"        , you_name },
+    { "species"     , you_species },
     { "race"        , you_race },
     { "hand"        , you_hand },
     { "class"       , you_class },

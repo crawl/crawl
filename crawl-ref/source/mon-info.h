@@ -5,6 +5,7 @@
 
 #include "enchant-type.h"
 #include "mon-util.h"
+#include "options.h"
 #include "tag-version.h"
 
 using std::vector;
@@ -431,7 +432,7 @@ protected:
 };
 
 // Colour should be between -1 and 15 inclusive!
-bool set_monster_list_colour(string key, int colour);
+bool set_monster_list_colour(monster_list_colour_type, int colour);
 void clear_monster_list_colours();
 
 void get_monster_info(vector<monster_info>& mons);

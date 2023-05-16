@@ -18,6 +18,7 @@ cursor_red CURSOR2
 cursor_green CURSOR3
 tutorial_cursor TUTORIAL_CURSOR
 travel_exclusion DISABLED
+rampage_indicator RAMPAGE
 %sdir dngn/traps
 %alpha 128
 cobweb_none_0 TRAP_WEB
@@ -75,6 +76,7 @@ reflect REFLECTING
 teleporting TELEPORTING
 brill BRILLIANCE
 resist RESISTANCE
+malmutated MALMUTATED
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR
