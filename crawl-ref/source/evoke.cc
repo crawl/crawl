@@ -910,9 +910,9 @@ static bool _player_has_zigfig()
 }
 
 /// Does the item only serve to produce summons or allies?
-static bool _evoke_ally_only(const item_def &item)
+static bool _evoke_ally_only(const item_def &item, bool ident)
 {
-    if (item.base_type == OBJ_WANDS)
+    if (item.base_type == OBJ_WANDS && ident)
         return item.sub_type == WAND_CHARMING;
     else if (item.base_type == OBJ_MISCELLANY)
     {
@@ -929,7 +929,7 @@ static bool _evoke_ally_only(const item_def &item)
     return false;
 }
 
-string cannot_evoke_item_reason(const item_def *item, bool temp)
+string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
 {
     // id is not at issue here
     if (temp && you.berserk())
@@ -967,7 +967,7 @@ string cannot_evoke_item_reason(const item_def *item, bool temp)
         return "This wand has no charges.";
 #endif
 
-    if (_evoke_ally_only(*item) && you.allies_forbidden())
+    if (_evoke_ally_only(*item, ident) && you.allies_forbidden())
         return "That item cannot be used by those who cannot gain allies!";
 
     if (temp
