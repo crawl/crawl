@@ -3133,7 +3133,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
     case OBJ_MISCELLANY:
     case OBJ_WANDS:
-        return cannot_evoke_item_reason(&item, temp).size();
+        return cannot_evoke_item_reason(&item, temp, ident || item_type_known(item)).size();
 
     case OBJ_POTIONS:
     {
