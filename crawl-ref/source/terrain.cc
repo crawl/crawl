@@ -2187,7 +2187,7 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
         if (ctype == TERRAIN_CHANGE_BOG)
             env.map_knowledge(pos).set_feature(newfeat, colour);
         dungeon_terrain_changed(pos, newfeat, false, true, false, false,
-            newfeat_flv, newfeat_flv_idx);
+                                newfeat_flv, newfeat_flv_idx);
         env.grid_colours(pos) = colour;
         return true;
     }

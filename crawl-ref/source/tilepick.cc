@@ -569,7 +569,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
                         && feat != DNGN_PASSAGE_OF_GOLUBRIA
                         && feat != DNGN_MALIGN_GATEWAY
                         && feat != DNGN_BINDING_SIGIL
-                        && feat != DNGN_UNKNOWN_PORTAL;
+                        && feat != DNGN_UNKNOWN_PORTAL
+                        && feat != DNGN_TREE; // summon forest spell
     if (override && can_override)
         return override;
 
@@ -589,6 +590,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
         }
         // deliberate fall-through
     case DNGN_ROCK_WALL:
+    case DNGN_CLEAR_ROCK_WALL:
     case DNGN_STONE_WALL:
     case DNGN_CRYSTAL_WALL:
     case DNGN_PERMAROCK_WALL:
@@ -617,6 +619,16 @@ tileidx_t tileidx_feature(const coord_def &gc)
             unsigned rc = real_colour(colour, gc);
             return tile_dngn_coloured(base, rc) + spec; // XXX
         }
+        // If there's an unseen change here, the old (remembered) flavour is
+        // available in the terrain change marker
+        if (!you.see_cell(gc))
+            if (map_marker *mark = env.markers.find(gc, MAT_TERRAIN_CHANGE))
+            {
+                map_terrain_change_marker *marker =
+                    dynamic_cast<map_terrain_change_marker*>(mark);
+                if (marker->flv_old_feature)
+                    return marker->flv_old_feature;
+            }
         return tileidx_feature_base(feat);
     }
 
