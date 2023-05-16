@@ -1483,6 +1483,13 @@ bool mons_is_or_was_unique(const monster& mon)
               && mons_is_unique((monster_type) mon.props[ORIGINAL_TYPE_KEY].get_int());
 }
 
+/// This monster isn't a unique per se, but it gets a name anyway.
+/// E.g., the Hellbinder.
+bool mons_is_specially_named(monster_type mc)
+{
+    return mons_class_flag(mc, M_ALWAYS_NAMED);
+}
+
 /**
  * Is the given type one of Hepliaklqana's granted ancestors?
  *
