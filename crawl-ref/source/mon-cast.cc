@@ -2458,14 +2458,8 @@ static bool _near_visible_wall(const monster &caster, coord_def targ)
     if (!caster.see_cell_no_trans(targ))
         return false;
     for (adjacent_iterator ai(targ); ai; ++ai)
-    {
-        if (cell_is_solid(*ai)
-            && env.grid(*ai) != DNGN_MALIGN_GATEWAY
-            && caster.see_cell_no_trans(*ai))
-        {
+        if (feat_is_wall(env.grid(*ai)) && caster.see_cell_no_trans(*ai))
             return true;
-        }
-    }
     return false;
 }
 

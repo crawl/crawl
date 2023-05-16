@@ -395,10 +395,9 @@ undead will decompose if affected.
 %%%%
 Creeping Frost spell
 
-Calls forth freezing cold from the walls and other similarly solid terrain. Any
-enemies of the caster standing next to that terrain will be frozen and will find
-their movements slowed. Cold resistance will reduce damage, but not prevent
-the freezing effect.
+Calls forth freezing cold from the walls. Any enemies of the caster standing
+next to the walls will be frozen and will find their movements slowed. Cold
+resistance will reduce damage, but not prevent the freezing effect.
 %%%%
 Crystal Bolt spell
 
