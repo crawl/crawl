@@ -1600,7 +1600,7 @@ COLOUR:   ETC_ENCHANT
 INSCRIP:  Rampage+∞
 VALUE:    400
 DESCRIP:  Rampage+∞: When moving toward enemies, its wearer moves as far as
- possible.
+ possible, alerting their target en route.
 
 ENUM:     POWER_GLOVES
 NAME:     Mad Mage's Maulers

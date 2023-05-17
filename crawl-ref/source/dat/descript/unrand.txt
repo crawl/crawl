@@ -691,9 +691,7 @@ of the recently dead, protecting the wearer with a cocoon of carrion.
 seven-league boots
 
 An enchanted pair of boots which grant the ability to take strides of incredible
-length, as long as the wearer is advancing bravely towards their foes. They
-allow the wearer to engage in combat in a single step, although it becomes
-impossible to remain stealthy while taking such strides.
+length, as long as the wearer is advancing bravely towards their foes.
 %%%%
 Mad Mage's Maulers
 
