@@ -1370,11 +1370,11 @@ int golubria_fuzz_range()
     return orb_limits_translocation() ? 4 : 2;
 }
 
-bool golubria_valid_cell(coord_def p)
+bool golubria_valid_cell(coord_def p, bool just_check)
 {
     return in_bounds(p)
            && env.grid(p) == DNGN_FLOOR
-           && !monster_at(p)
+           && (!monster_at(p) || just_check && !you.can_see(*monster_at(p)))
            && cell_see_cell(you.pos(), p, LOS_NO_TRANS);
 }
 
