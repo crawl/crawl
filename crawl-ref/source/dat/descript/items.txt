@@ -892,8 +892,8 @@ willpower and magical modification of itself - it cannot be enchanted.
 %%%%
 quick blade
 
-A carefully wrought dagger which is preternaturally well-balanced, making it
-much easier for even inexperienced handlers to attack with it quickly.
+A dagger with an uncanny enchantment upon it, allowing it to strike twice
+for every blow its wielder makes.
 %%%%
 rapier
 
