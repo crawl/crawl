@@ -1262,12 +1262,12 @@ static void _dgn_check_terrain_player(const coord_def pos)
  */
 void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type nfeat,
-                             unsigned short flv_nfeat,
-                             unsigned short flv_nfeat_idx,
                              bool preserve_features,
                              bool preserve_items,
                              bool temporary,
-                             bool wizmode)
+                             bool wizmode,
+                             unsigned short flv_nfeat,
+                             unsigned short flv_nfeat_idx)
 {
     if (env.grid(pos) == nfeat)
         return;
@@ -2049,7 +2049,7 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                 // ensure that terrain change happens. Sometimes a terrain
                 // change marker can get stuck; this allows re-doing such
                 // cases. Also probably needed by the else case above.
-                dungeon_terrain_changed(pos, newfeat, 0, 0, false, true, true);
+                dungeon_terrain_changed(pos, newfeat, false, true, true);
                 return;
             }
             else
@@ -2072,7 +2072,7 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                                       env.grid_colours(pos));
     env.markers.add(marker);
     env.markers.clear_need_activate();
-    dungeon_terrain_changed(pos, newfeat, 0, 0, false, true, true);
+    dungeon_terrain_changed(pos, newfeat, false, true, true);
 }
 
 static bool _revert_terrain_to(coord_def pos, dungeon_feature_type feat)
@@ -2177,8 +2177,8 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
     {
         if (ctype == TERRAIN_CHANGE_BOG)
             env.map_knowledge(pos).set_feature(newfeat, colour);
-        dungeon_terrain_changed(pos, newfeat, newfeat_flv, newfeat_flv_idx,
-                                false, true);
+        dungeon_terrain_changed(pos, newfeat, false, true, false, false,
+            newfeat_flv, newfeat_flv_idx);
         env.grid_colours(pos) = colour;
         return true;
     }
