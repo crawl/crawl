@@ -668,6 +668,8 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
                 {
                     str = "         " + fss[j].tostring();
                     me = new MenuEntry(str, MEL_ITEM, 1);
+                    // Not using a MonsterMenuEntry since that would display the tile again.
+                    me->data = (void*)&mi;
                 }
 #endif
                 desc_menu.add_entry(me);
@@ -754,9 +756,7 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
         if (quant == 1)
         {
             // Get selected monster.
-            const MonsterMenuEntry *mme = dynamic_cast<const MonsterMenuEntry *>(&sel);
-            ASSERT(mme);
-            monster_info* m = static_cast<monster_info* >(mme->data);
+            const monster_info* m = static_cast<monster_info* >(sel.data);
             ASSERT(m);
 
 #ifdef USE_TILE
