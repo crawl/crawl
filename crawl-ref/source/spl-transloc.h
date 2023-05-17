@@ -38,7 +38,7 @@ string weapon_unprojectability_reason();
 struct bolt;
 spret cast_apportation(int pow, bolt& beam, bool fail);
 int golubria_fuzz_range();
-bool golubria_valid_cell(coord_def p);
+bool golubria_valid_cell(coord_def p, bool just_check = false);
 spret cast_golubrias_passage(int pow, const coord_def& where, bool fail);
 
 spret cast_dispersal(int pow, bool fail);
