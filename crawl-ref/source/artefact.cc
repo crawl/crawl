@@ -1934,4 +1934,16 @@ void artefact_fixup_props(item_def &item)
 
     if (props.exists(KNOWN_PROPS_KEY))
         artefact_pad_store_vector(props[KNOWN_PROPS_KEY], false);
+
+    // As of 0.30, it seems like there is some rare circumstance that can
+    // cause a Hepliaklqana ancestor's weapon to become a half-baked artefact -
+    // ISFLAG_RANDART set, but ARTEFACT_PROPS_KEY not. Until we understand
+    // what's happening, fix things here to salvage broken saves.
+    // (This seems to be related to
+    // https://crawl.develz.org/mantis/view.php?id=11756 - see also abyss.cc.
+    if ((item.flags & (ISFLAG_SUMMONED | ISFLAG_RANDART))
+        && !item.props.exists(ARTEFACT_PROPS_KEY))
+    {
+        item.flags &= ~ISFLAG_RANDART;
+    }
 }
