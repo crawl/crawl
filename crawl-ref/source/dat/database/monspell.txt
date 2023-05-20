@@ -647,15 +647,15 @@ Minor Healing dryad cast
 %%%%
 Battlecry satyr cast
 
-@The_monster@ plays a rousing melody on his pipes!
+@The_monster@ plays a rousing melody on its pipes!
 %%%%
 Cause Fear satyr cast
 
-@The_monster@ plays a frightful melody on his pipes!
+@The_monster@ plays a frightful melody on its pipes!
 %%%%
 Sleep satyr cast
 
-@The_monster@ plays a lulling melody on his pipes!
+@The_monster@ plays a lulling melody on its pipes!
 %%%%
 Sleep dream sheep cast
 
