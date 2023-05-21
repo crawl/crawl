@@ -741,7 +741,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_SHORTBOW,          "shortbow",            8,  2, 14,
         SK_RANGED_WEAPONS,   SIZE_LITTLE, NUM_SIZE_LEVELS, MI_ARROW,
         DAMV_NON_MELEE, 8, 10, 30, RANGED_BRANDS },
-    { WPN_ORCBOW,            "orcbow",             10, -3, 15,
+    { WPN_ORCBOW,            "orcbow",             11, -3, 15,
         SK_RANGED_WEAPONS,   SIZE_LITTLE, NUM_SIZE_LEVELS, MI_ARROW,
         DAMV_NON_MELEE, 8, 10, 35, RANGED_BRANDS },
     { WPN_ARBALEST,          "arbalest",           16, -2, 19,
