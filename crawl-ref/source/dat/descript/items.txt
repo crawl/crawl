@@ -734,6 +734,12 @@ orb of zot
 An invaluable artefact. Once you have escaped to the surface with it, your
 quest is complete.
 %%%%
+orcbow
+
+A recurved bow, crudely crafted from troll-bone and warg hair. The cave orcs'
+use of archery, so unlike their surface-dwelling cousins, shows the influence
+of their elvish allies.
+%%%%
 ozocubu's autobiography
 
 An astonishingly vain and self-aggrandizing work. The author claims credit

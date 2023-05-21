@@ -564,6 +564,7 @@ static void _throw_noise(actor* act, const item_def &ammo)
         msg   = "You hear a sling whirr.";
         break;
     case WPN_SHORTBOW:
+    case WPN_ORCBOW:
     case WPN_LONGBOW:
         msg   = "You hear a bow twang.";
         break;

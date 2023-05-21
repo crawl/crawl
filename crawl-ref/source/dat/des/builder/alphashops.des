@@ -135,7 +135,7 @@
       elseif s == "N" then i = { "book of necromancy",
        "necronomicon", "scroll of noise", "manual of necromancy" }
 
-      elseif s == "O" then i = { "ozocubu's autobiography" }
+      elseif s == "O" then i = { "orcbow", "ozocubu's autobiography" }
 
       elseif s == "P" then i = { "book of party tricks", "book of power",
        "pearl dragon scales", "phantom mirror", "phial of floods",

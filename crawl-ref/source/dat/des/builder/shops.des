@@ -1167,7 +1167,7 @@ KFEAT:  S = weapon shop type:Hydra suffix:Hut count:7 ; falchion ego:flaming | \
     long sword ego:flaming | scimitar ego:flaming | great sword ego:flaming | \
     hand axe ego:flaming | broad axe ego:flaming | war axe ego:flaming | \
     battleaxe ego:flaming | lajatang ego:flaming | halberd ego:flaming | \
-    glaive ego:flaming | hand crossbow ego:freezing | \
+    glaive ego:flaming | hand crossbow ego:freezing | orcbow ego:freezing | \
     arbalest ego:freezing | shortbow ego:freezing | longbow ego:freezing
 FTILE:  -1wP = floor_lair
 COLOUR: -1 = brown
@@ -1384,7 +1384,7 @@ KITEM:  E = throwing net q:1
 # The slightly-higher weights go to the better weapons, because I'm nice.
 KFEAT:  S = weapon shop type:Firing suffix:Range ; dart w:14 | \
         throwing net w:14 | boomerang  w:14 | javelin w:14 | large rock w:14 \
-        | sling | shortbow | longbow | hand crossbow | arbalest | \
+        | sling | shortbow | orcbow | longbow | hand crossbow | arbalest | \
         triple crossbow | manual of throwing w:1 | manual of ranged weapons w:1
 NSUBST: D = E / D
 SUBST:  ' = H .:25

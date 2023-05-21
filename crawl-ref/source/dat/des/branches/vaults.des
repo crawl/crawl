@@ -267,7 +267,7 @@ TAGS: vaults_entry no_pool_fixup no_monster_gen patrolling transparent
 ORIENT: north
 MONS: human ; arbalest q:10 . short sword | dagger . \
               leather armour w:5 | ring mail | scale mail / \
-      orc warrior ; arbalest q:10 . short sword | dagger . \
+      orc warrior ; orcbow q:10 . short sword | dagger . \
                     leather armour w:5 | ring mail | scale mail / \
       deep elf knight w:5 / deep elf archer w:5 / gargoyle / yaktaur
 MONS: vault guard / orc knight w:2

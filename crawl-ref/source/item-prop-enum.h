@@ -632,6 +632,9 @@ enum weapon_type
 #endif
 
     WPN_SHORTBOW,
+#if TAG_MAJOR_VERSION > 34
+    WPN_ORCBOW,
+#endif
     WPN_LONGBOW,
 
 #if TAG_MAJOR_VERSION > 34
@@ -677,6 +680,7 @@ enum weapon_type
     WPN_TRIPLE_CROSSBOW,
 
     WPN_CUTLASS,
+    WPN_ORCBOW,
 #endif
 
     NUM_WEAPONS,

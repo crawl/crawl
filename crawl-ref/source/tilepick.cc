@@ -1544,6 +1544,7 @@ static bool _bow_offset(const monster_info& mon)
     switch (mon.inv[MSLOT_WEAPON]->sub_type)
     {
     case WPN_SHORTBOW:
+    case WPN_ORCBOW:
     case WPN_LONGBOW:
     case WPN_ARBALEST:
         return false;
