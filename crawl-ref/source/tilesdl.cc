@@ -1035,7 +1035,7 @@ void TilesFramework::zoom_dungeon(bool in)
     // max zoom relative to to tile size that keeps LOS in view
     fixedp<> max_zoom = fixedp<>(m_windowsz.y) / Options.tile_cell_pixels
                                       / ENV_SHOW_DIAMETER;
-    current_scale = min(ceil(max_zoom), max(0.2,
+    current_scale = min(ceil(max_zoom*10)/10, max(0.2,
                     current_scale + (in ? ZOOM_INC : -ZOOM_INC)));
     do_layout(); // recalculate the viewport setup
     dprf("Zooming to %g", (float) current_scale);
