@@ -1877,6 +1877,66 @@ xxxxxxxx...x..x.--
 xx
 ENDMAP
 
+# a well guarded shop which sells orb and orb-related things
+NAME:   tekkud_shop_of_orbs
+TAGS:   no_monster_gen no_item_gen no_trap_gen patrolling
+TAGS:   vaults_hard vaults_orient_s
+DEPTH:  D:13-, Snake:2-, Elf:2-, Vaults, Crypt, Depths, Zot, !Zot:$
+WEIGHT: 1 (Zot), 3
+{{
+local shopname = util.random_from({"type:Orb suffix:Outfitters",
+   "type:Spherical suffix:Supermarket", "type:Round suffix:Resellers",
+   "type:Globular suffix:Garage"})
+local kstr = "S = general shop " .. shopname .. " count:6 ; " ..
+             "orb randart w:20 | orb w:5 | book of the spheres w:1 "
+
+if not you.unrands("sphere of Battle") then
+      kstr = kstr .. " | sphere of Battle w:2"
+end
+if not you.unrands("crystal ball of Wucad Mu") then
+      kstr = kstr .. " | crystal ball of Wucad Mu w:2"
+end
+
+kfeat(kstr)
+}}
+: if you.in_branch("D") then
+MONS:  orb spider, great orb of eyes / occultist w:5
+MONS:  tengu conjurer / boulder beetle w:5
+SUBST: + = =
+: elseif you.in_branch("Snake") then
+MONS:  nagaraja / naga sharpshooter, naga ritualist / salamander mystic
+MONS:  naga / salamander / mana viper w:5
+: elseif you.in_branch("Elf") then
+MONS:  deep elf high priest / deep elf sorcerer / \
+       deep elf elementalist / crystal guardian
+MONS:  deep elf knight / deep elf archer w:5
+MONS:  deep elf zephyrmancer / deep elf pyromancer
+: elseif you.in_branch("Vaults") then
+MONS:  lich / fire giant, crystal guardian
+MONS:  great orb of eyes / occultist w:5 / glowing shapeshifter w:1
+SUBST: + = .
+: elseif you.in_branch("Crypt") then
+MONS:  revenant / curse skull w:5 / lich
+MONS:  vampire knight / deep elf death mage, orb spider zombie / flying skull
+: elseif you.in_branch("Depths") then
+MONS:  glass eye / tengu reaver, lich / fire giant w:5
+MONS:  occultist w:5 / tengu conjurer / rakshasa w:5
+: else -- Zot
+MONS:  orb of fire, draconian scorcher, lich
+: end
+MAP
+   ccccc
+  ccccccc
+ ccc212ccc
+ccc.....ccc
+cc3.....3cc
+cc...S...cc
+cc3.....3cc
+ccc.....ccc
+ ccc...ccc
+  ccb+bcc
+ENDMAP
+
 ###############################################################################
 # <<3>> Multi
 #       Not tagged shop, and has no threats. Contain possibly multiple shops in
