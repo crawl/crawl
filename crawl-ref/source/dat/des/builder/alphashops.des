@@ -89,14 +89,14 @@
        "staff of death", "wand of digging", "dart", "book of dangerous friends",
        "book of displacement", "book of decay"}
 
-      elseif s == "E" then i = { "manual of evocations",
+      elseif s == "E" then i = { "manual of evocations", "potion of enlightenment",
        "eveningstar", "ring of evasion", "executioner's axe",
        "potion of experience q:1", "scroll of enchant armour", "staff of earth",
        "book of the earth", "scroll of enchant weapon", "manual of earth magic",
        "everburning encyclopedia" }
 
       elseif s == "F" then i = { "book of fire", "book of flames", "flail",
-       "book of frost", "falchion", "fire dragon scales", "potion of enlightenment",
+       "book of frost", "falchion", "fire dragon scales",
        "ring of fire", "scroll of fear", "staff of fire", "fen folio",
        "ring of flight", "scroll of fog", "wand of flame",
        "manual of fighting", "amulet of faith", "manual of fire magic" }
