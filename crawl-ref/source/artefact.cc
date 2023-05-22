@@ -1941,7 +1941,8 @@ void artefact_fixup_props(item_def &item)
     // what's happening, fix things here to salvage broken saves.
     // (This seems to be related to
     // https://crawl.develz.org/mantis/view.php?id=11756 - see also abyss.cc.
-    if ((item.flags & (ISFLAG_SUMMONED | ISFLAG_RANDART))
+    if (item.base_type == OBJ_WEAPONS
+        && (item.flags & (ISFLAG_SUMMONED | ISFLAG_RANDART))
         && !item.props.exists(ARTEFACT_PROPS_KEY))
     {
         item.flags &= ~ISFLAG_RANDART;
