@@ -2507,6 +2507,11 @@ potion of degeneration
  then certainly I am against it.”
     -Noah S. Sweat, Jr. “If By Whiskey”. 1952
 %%%%
+potion of enlightenment
+
+“Let go your earthly tether. Enter the void. Empty, and become wind.”
+    -_The Legend of Korra_. 2014
+%%%%
 potion of invisibility
 
 “I shall never forget that dawn, and the strange horror of seeing that my hands
