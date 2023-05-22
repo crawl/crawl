@@ -196,8 +196,8 @@ bool melee_attack::handle_phase_attempted()
     if (attacker->is_player())
     {
         // Set delay now that we know the attack won't be cancelled.
-        if (!is_riposte
-             && (wu_jian_attack == WU_JIAN_ATTACK_NONE))
+        if (!is_riposte && !is_multihit && !cleaving
+            && wu_jian_attack == WU_JIAN_ATTACK_NONE)
         {
             you.time_taken = you.attack_delay().roll();
         }
