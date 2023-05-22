@@ -1878,10 +1878,9 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
     {
         switch (best_skill)
         {
-        case SK_SUMMONINGS:
-            // retro goody-bag for decidedly non-goodies
-            if (is_evil_god(god))
+        case SK_SUMMONINGS:if (is_evil_god(god))
             {
+                // retro goody-bag for decidedly non-goodies
                 if (skill_rank == 4)
                     result = "Demonologist";
                 else if (skill_rank == 5)
@@ -1963,7 +1962,9 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_SPELLCASTING:
-            if (species == SP_OGRE)
+            if (species == SP_DJINNI && skill_rank == 5)
+                result = "Wishgranter";
+            else if (species == SP_OGRE)
                 result = "Ogre Mage";
             break;
 
@@ -1976,14 +1977,18 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         // For the below draconian titles, intentionally don't restrict
         // by drac colour to avoid frustrating players trying for these
         case SK_FIRE_MAGIC:
-            if (species::is_draconian(species) && skill_rank == 5)
+            if (species == SP_DJINNI && skill_rank == 5)
+                result = "Smokeless Flame";
+            else if (species::is_draconian(species) && skill_rank == 5)
                 result = "Fire Dragon";
             else if (species == SP_MUMMY && skill_rank == 5)
                 result = "Highly Combustible";
             break;
 
         case SK_ICE_MAGIC:
-            if (species::is_draconian(species) && skill_rank == 5)
+            if (species == SP_DJINNI && skill_rank == 5)
+                result = "Marid";
+            else if (species::is_draconian(species) && skill_rank == 5)
                 result = "Ice Dragon";
             break;
 
