@@ -51,9 +51,9 @@ void maybe_bool::test_cases()
     ASSERT(!static_cast<bool>(!maybe_bool::maybe));
     ASSERT(static_cast<bool>(!maybe_bool::f));
 
-    ASSERT(!y == n);
-    ASSERT(!n == y);
-    ASSERT(!m == m);
+    ASSERT((!y) == n);
+    ASSERT((!n) == y);
+    ASSERT((!m) == m);
 
     ASSERT((y && y) == y);
     ASSERT((y && m) == m);
