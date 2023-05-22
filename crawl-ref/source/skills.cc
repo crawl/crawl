@@ -1878,7 +1878,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
     {
         switch (best_skill)
         {
-        case SK_SUMMONINGS:if (is_evil_god(god))
+        case SK_SUMMONINGS:
+            if (is_evil_god(god))
             {
                 // retro goody-bag for decidedly non-goodies
                 if (skill_rank == 4)
