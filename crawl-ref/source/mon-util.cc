@@ -1684,6 +1684,11 @@ bool mons_class_is_animated_weapon(monster_type type)
     return type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON;
 }
 
+bool mons_class_is_remnant(monster_type mc)
+{
+    return !mons_class_flag(mc, M_REMNANT);
+}
+
 bool mons_class_is_animated_object(monster_type type)
 {
     return mons_class_is_animated_weapon(type)
@@ -2474,6 +2479,7 @@ int exper_value(const monster& mon, bool real, bool legacy)
             case SPELL_BANISHMENT:
             case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
             case SPELL_IRON_SHOT:
+            case SPELL_GORGONSHOT:
             case SPELL_IOOD:
             case SPELL_FIREBALL:
             case SPELL_AGONY_RANGE:

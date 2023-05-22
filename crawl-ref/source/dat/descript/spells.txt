@@ -685,6 +685,11 @@ Uses an ally's motivating essence to create a blast of negative energy,
 draining any living creature it engulfs. The being used to fuel the spell, no
 matter whether living or construct, is consumed and unmade in the process.
 %%%%
+Gorgonshot spell
+
+Hurls a block of gorgonstone at lethal speed. Slain victims turn to stone,
+briefly blocking the way before crumbling into dust.
+%%%%
 Throw Ally spell
 
 Throws a nearby ally at the monster's foe, doing minimal damage and landing the

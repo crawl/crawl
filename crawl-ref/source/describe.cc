@@ -5484,6 +5484,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     case MONS_BRIAR_PATCH: // death msg uses "crumbling"
     case MONS_PILLAR_OF_SALT:
+    case MONS_STONE_REMAINS:
         // XX why are these "quick" here but "slow" elsewhere??
         if (mi.is(MB_SLOWLY_DYING))
             inf.body << "\nIt is quickly crumbling away.\n";

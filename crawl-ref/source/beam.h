@@ -283,6 +283,7 @@ public:
 private:
     // for monsters
     void affect_monster(monster* m);
+    void kill_monster(monster &m);
     void handle_stop_attack_prompt(monster* mon);
     bool attempt_block(monster* mon);
     void update_hurt_or_helped(monster* mon);

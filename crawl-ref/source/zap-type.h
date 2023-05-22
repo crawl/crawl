@@ -127,5 +127,6 @@ enum zap_type
     ZAP_KISS_OF_DEATH,
     ZAP_MOMENTUM_STRIKE,
     ZAP_PLASMA,
+    ZAP_GORGONSHOT,
     NUM_ZAPS
 };

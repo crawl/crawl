@@ -513,6 +513,7 @@ roxanne MONS_ROXANNE
 pillar_of_salt MONS_PILLAR_OF_SALT
 block_of_ice MONS_BLOCK_OF_ICE
 block_of_ice2
+pillar_of_stone MONS_PILLAR_OF_STONE
 training_dummy MONS_TRAINING_DUMMY
 ice_statue MONS_ICE_STATUE
 obsidian_statue MONS_OBSIDIAN_STATUE

@@ -1559,6 +1559,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                 {
                     case MONS_PILLAR_OF_SALT:
                     case MONS_WITHERED_PLANT:
+                    case MONS_STONE_REMAINS:
                         mprf("%s crumbles away.", name(DESC_THE, false).c_str());
                         break;
                     case MONS_BLOCK_OF_ICE:

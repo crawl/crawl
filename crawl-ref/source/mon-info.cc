@@ -946,12 +946,8 @@ string monster_info::_core_name() const
         else
             nametype = base_type;
     }
-    else if (type == MONS_PILLAR_OF_SALT
-             || type == MONS_BLOCK_OF_ICE
-             || type == MONS_SENSED)
-    {
+    else if (mons_class_is_remnant(type) || type == MONS_SENSED)
         nametype = base_type;
-    }
 
     string s;
 
@@ -1095,8 +1091,7 @@ string monster_info::common_name(description_level_type desc) const
 
     if (_has_hydra_multi_attack(*this)
         && type != MONS_SENSED
-        && type != MONS_BLOCK_OF_ICE
-        && type != MONS_PILLAR_OF_SALT
+        && !mons_class_is_remnant(type)
         && mons_species(type) != MONS_SERPENT_OF_HELL)
     {
         ASSERT(num_heads > 0);
@@ -1162,6 +1157,8 @@ string monster_info::common_name(description_level_type desc) const
     case MONS_BLOCK_OF_ICE:
         ss << (nocore ? "" : " ") << "shaped block of ice";
         break;
+    case MONS_STONE_REMAINS:
+        ss << (nocore ? "" : " ") << "shaped pillar of stone";
     default:
         break;
     }

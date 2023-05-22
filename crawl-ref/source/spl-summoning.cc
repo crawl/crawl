@@ -1473,7 +1473,7 @@ static spell_type servitor_spells[] =
     // primary spells
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_IOOD,
-    SPELL_IRON_SHOT,
+    SPELL_GORGONSHOT,
     SPELL_BOLT_OF_COLD, // left in for frederick
     SPELL_PLASMA_BEAM, // maybe should be higher?
     SPELL_FIREBALL,

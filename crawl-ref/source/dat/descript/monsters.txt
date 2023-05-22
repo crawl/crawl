@@ -2027,6 +2027,10 @@ pillar of salt
 
 A pillar of salt shaped like a statue, but worked by no living hands.
 %%%%
+pillar of stone
+
+A pillar of stone shaped like a statue, but worked by no living hands.
+%%%%
 plant
 
 A plant that has adapted to grow in the unpleasant dungeon environment,

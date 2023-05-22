@@ -124,7 +124,7 @@ enum monclass_flag_type : uint64_t
     /// prefer ranged attacks over melee
     M_PREFER_RANGED     = BIT(37),
 
-                        //BIT(38), // was M_ARTIFICIAL
+    M_REMNANT           = BIT(38),
 
     /// can survive without breathing; immune to asphyxiation and Mephitic Cloud
     M_UNBREATHING       = BIT(39),
