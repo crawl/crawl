@@ -166,6 +166,9 @@ sling3
 shortbow1 WPN_SHORTBOW
 shortbow2
 shortbow3
+orcbow1 WPN_ORCBOW
+orcbow2
+orcbow3
 longbow1 WPN_LONGBOW
 longbow2
 longbow3
