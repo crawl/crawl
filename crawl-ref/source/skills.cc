@@ -222,8 +222,8 @@ float scaled_skill_cost(skill_type sk)
 /// Ensure that all magic skills are at the same level, e.g. at game start or for save compat.
 void cleanup_innate_magic_skills()
 {
-    uint magic_xp = 0;
-    uint n_skills = 0;
+    unsigned int magic_xp = 0;
+    unsigned int n_skills = 0;
     for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; sk++)
     {
         if (is_useless_skill(sk))
@@ -232,7 +232,7 @@ void cleanup_innate_magic_skills()
         ++n_skills;
     }
     // Lossy, sorry.
-    const uint xp_per = magic_xp / n_skills;
+    const unsigned int xp_per = magic_xp / n_skills;
 
     int lvl = 0;
     while (xp_per > skill_exp_needed(lvl + 1, SK_SPELLCASTING))
@@ -985,9 +985,9 @@ static int _magic_training()
 }
 
 /// What is the skill you are currently training at the lowest non-zero percent?
-static uint _min_training_level()
+static unsigned int _min_training_level()
 {
-    uint min = 10000;
+    unsigned int min = 10000;
     for (skill_type i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
         if (you.training[i] && you.training[i] < min)
             min = you.training[i];
