@@ -820,8 +820,11 @@ static void _balance_magic_training()
     int train_total = 0;
     for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
     {
-        if (is_removed_skill(sk))
+        if (is_removed_skill(sk) || you.skills[sk] >= MAX_SKILL_LEVEL)
+        {
+            you.training[sk] = 0;
             continue;
+        }
         n_skills++;
         train_total += you.training[sk];
     }
@@ -833,7 +836,7 @@ static void _balance_magic_training()
     // divided between each skill.
     const int to_train = max(train_total / (n_skills * n_skills), 1);
     for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
-        if (!is_removed_skill(sk))
+        if (!is_removed_skill(sk) && you.skills[sk] < MAX_SKILL_LEVEL)
             you.training[sk] = to_train;
 }
 
