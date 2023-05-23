@@ -868,6 +868,11 @@ The effect starts out with a radius depending on power, which will then shrink,
 eventually covering only the caster, before it times out. Maintaining the
 connection to the ground slows the caster's movement, even if they are flying.
 %%%%
+Leda's Unmaking spell
+
+Fires a blast of high-speed entropy. Slain victims dissolve into mud, slowing
+the movements and impairing the attacks of creatures stuck within.
+%%%%
 Lee's Rapid Deconstruction spell
 
 Fragments a wall or a suitably brittle visible monster into an explosion of

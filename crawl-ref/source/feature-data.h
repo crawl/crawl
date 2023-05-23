@@ -252,6 +252,13 @@ static feature_def feat_defs[] =
 },
 
 {
+    DNGN_MUD, "some mud", "mud",
+    DCHAR_SHALLOW_WAVY, NUM_DCHAR_TYPES,
+    COLOUR_IS(BROWN),
+    FFT_NONE, MF_FLOOR,
+},
+
+{
     DNGN_FLOOR, "floor", "floor",
     DCHAR_FLOOR, DCHAR_FLOOR_MAGIC,
     COLOUR_IS(ETC_FLOOR),

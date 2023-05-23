@@ -4467,42 +4467,110 @@ void bolt::enchantment_affect_monster(monster* mon)
     extra_range_used += range_used_on_hit();
 }
 
-void glaciate_freeze(monster* mon, killer_type englaciator,
-                             int kindex)
+static void _print_pre_death_message(const monster &mon, bool goldify,
+                                     spell_type origin_spell)
 {
-    ASSERT(mon);
-    const coord_def where = mon->pos();
-    const monster_type pillar_type = mons_species(mons_base_type(*mon));
-    const int hd = mon->get_experience_level();
+    if (mon.is_insubstantial())
+        return;
+    switch (origin_spell)
+    {
+    case SPELL_GLACIATE:
+        if (goldify)
+            simple_monster_message(mon, " shatters and turns to gold!");
+        else
+            simple_monster_message(mon, " is frozen into a solid block of ice!");
+        break;
+    case SPELL_UNMAKING:
+        if (goldify)
+            simple_monster_message(mon, " dissolves into a mush of mud and gold!");
+        else
+            simple_monster_message(mon, " dissolves into mud!");
+        break;
+    default:
+        break;
+    }
+}
 
-    bool goldify = mons_will_goldify(*mon);
-
-    if (goldify)
-        simple_monster_message(*mon, " shatters and turns to gold!");
-    else
-        simple_monster_message(*mon, " is frozen into a solid block of ice!");
-
-    // If the monster leaves a corpse when it dies, destroy the corpse.
-    item_def* corpse = monster_die(*mon, englaciator, kindex);
-    // Unless it was turned into gold, in which case don't make an ice statue.
-    if (goldify)
+static void _splash_mud(coord_def p, actor *agent, int dur)
+{
+    if (env.grid(p) != DNGN_FLOOR)
         return;
 
-    if (corpse)
-        destroy_item(corpse->index());
+    temp_change_terrain(p, DNGN_MUD, dur * BASELINE_DELAY,
+                        TERRAIN_CHANGE_FLOOD, // dubious
+                        agent ? agent->mid : MID_NOBODY);
+}
 
-    if (monster *pillar = create_monster(
-                        mgen_data(MONS_BLOCK_OF_ICE,
-                                  BEH_HOSTILE,
-                                  where,
-                                  MHITNOT,
-                                  MG_FORCE_PLACE).set_base(pillar_type),
-                                  false))
+void bolt::kill_monster(monster &mon)
+{
+    // Preserve name of the source monster if it winds up killing
+    // itself.
+    if (mon.mid == source_id && source_name.empty())
+        source_name = mon.name(DESC_A, true);
+
+    const coord_def where = mon.pos();
+    const monster_type species = mons_species(mons_base_type(mon));
+    const bool goldify = mons_will_goldify(mon);
+
+    _print_pre_death_message(mon, goldify, origin_spell);
+
+    int kindex = actor_to_death_source(agent());
+    // Prevent spore explosions killing plants from being registered
+    // as a Fedhas misconduct. Deaths can trigger the ally dying or
+    // plant dying conducts, but spore explosions shouldn't count
+    // for either of those.
+    //
+    // FIXME: Should be a better way of doing this. For now, we are
+    // just falsifying the death report... -cao
+    if (flavour == BEAM_SPORE && god_protects(&mon) && fedhas_protects(&mon))
     {
-        // Enemies with more HD leave longer-lasting blocks of ice.
-        int time_left = (random2(8) + hd) * BASELINE_DELAY;
-        mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
-        pillar->update_ench(temp_en);
+        if (mon.attitude == ATT_FRIENDLY)
+            mon.attitude = ATT_HOSTILE;
+        monster_die(mon, KILL_MON, kindex);
+        return;
+    }
+
+    killer_type ref_killer = thrower;
+    if (!YOU_KILL(thrower) && reflector == MID_PLAYER)
+    {
+        ref_killer = KILL_YOU_MISSILE;
+        kindex = YOU_FAULTLESS;
+    }
+
+    item_def *corpse = monster_die(mon, ref_killer, kindex);
+
+    switch (origin_spell)
+    {
+    case SPELL_UNMAKING:
+        if (corpse)
+            destroy_item(corpse->index());
+
+        _splash_mud(pos(), agent(), random_range(6,12));
+        for (adjacent_iterator ai(pos()); ai; ++ai)
+            if (coinflip())
+                _splash_mud(*ai, agent(), random_range(4,8));
+        break;
+    case SPELL_GLACIATE:
+    {
+        if (corpse)
+            destroy_item(corpse->index());
+
+        if (monster *pillar = create_monster(
+                                             mgen_data(MONS_BLOCK_OF_ICE,
+                                                       BEH_HOSTILE,
+                                                       where,
+                                                       MHITNOT,
+                                                       MG_FORCE_PLACE).set_base(species),
+                                             false))
+        {
+            const int time_left = random_range(7, 17) * BASELINE_DELAY;
+            mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
+            pillar->update_ench(temp_en);
+        }
+        break;
+    }
+    default:
+        break;
     }
 }
 
@@ -5028,44 +5096,7 @@ void bolt::affect_monster(monster* mon)
     // behaviour_event called from mon->hurt() above. If that happened, it
     // will have been cleaned up already (and is therefore invalid now).
     else if (!invalid_monster(mon))
-    {
-        // Preserve name of the source monster if it winds up killing
-        // itself.
-        if (mon->mid == source_id && source_name.empty())
-            source_name = mon->name(DESC_A, true);
-
-        int kindex = actor_to_death_source(agent());
-        if (origin_spell == SPELL_GLACIATE
-            && !mon->is_insubstantial()
-            && x_chance_in_y(3, 5))
-        {
-            // Includes monster_die as part of converting to block of ice.
-            glaciate_freeze(mon, thrower, kindex);
-        }
-        // Prevent spore explosions killing plants from being registered
-        // as a Fedhas misconduct. Deaths can trigger the ally dying or
-        // plant dying conducts, but spore explosions shouldn't count
-        // for either of those.
-        //
-        // FIXME: Should be a better way of doing this. For now, we are
-        // just falsifying the death report... -cao
-        else if (flavour == BEAM_SPORE && god_protects(mon) && fedhas_protects(mon))
-        {
-            if (mon->attitude == ATT_FRIENDLY)
-                mon->attitude = ATT_HOSTILE;
-            monster_die(*mon, KILL_MON, kindex);
-        }
-        else
-        {
-            killer_type ref_killer = thrower;
-            if (!YOU_KILL(thrower) && reflector == MID_PLAYER)
-            {
-                ref_killer = KILL_YOU_MISSILE;
-                kindex = YOU_FAULTLESS;
-            }
-            monster_die(*mon, ref_killer, kindex);
-        }
-    }
+        kill_monster(*mon);
 
     extra_range_used += range_used_on_hit();
 }

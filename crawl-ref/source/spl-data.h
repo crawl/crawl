@@ -843,12 +843,23 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_IRON_SHOT, "Iron Shot",
     spschool::conjuration | spschool::earth,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     6,
     200,
     4, 4,
     0,
     TILEG_IRON_SHOT,
+},
+
+{
+    SPELL_UNMAKING, "Leda's Unmaking",
+    spschool::conjuration | spschool::earth,
+    spflag::dir_or_target | spflag::needs_tracer,
+    6,
+    200,
+    4, 4,
+    0,
+    TILEG_IRON_SHOT, // XXX TODO
 },
 
 {

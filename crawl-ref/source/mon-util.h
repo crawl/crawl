@@ -316,6 +316,7 @@ monster_type mons_zombie_base(const monster& mon);
 bool mons_class_is_zombified(monster_type mc);
 bool mons_class_is_animated_weapon(monster_type type);
 bool mons_class_is_animated_object(monster_type type);
+bool mons_class_is_remnant(monster_type type);
 monster_type mons_base_type(const monster& mon);
 bool mons_class_can_leave_corpse(monster_type mc);
 bool mons_class_leaves_hide(monster_type mc);

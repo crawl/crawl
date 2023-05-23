@@ -1179,9 +1179,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mg.cls == MONS_GLOWING_SHAPESHIFTER)
         mon->add_ench(ENCH_GLOWING_SHAPESHIFTER);
 
-    if ((mg.cls == MONS_TOADSTOOL
-         || mg.cls == MONS_PILLAR_OF_SALT
-         || mg.cls == MONS_BLOCK_OF_ICE)
+    if ((mg.cls == MONS_TOADSTOOL || mons_class_is_remnant(mg.cls))
         && !mg.props.exists(MGEN_NO_AUTO_CRUMBLE))
     {
         // This enchantment is a timer that counts down until death.

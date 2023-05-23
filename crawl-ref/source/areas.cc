@@ -673,6 +673,9 @@ bool liquefied(const coord_def& p, bool check_actual)
     if (!map_bounds(p))
         return false;
 
+    if (env.grid(p) == DNGN_MUD)
+        return true;
+
     if (!_agrid_valid)
         _update_agrid();
 

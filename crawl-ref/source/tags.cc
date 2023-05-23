@@ -2413,6 +2413,9 @@ static spell_type _fixup_removed_spells(spell_type s)
         case SPELL_CONFUSE:
             return SPELL_CONFUSING_TOUCH;
 
+        case SPELL_IRON_SHOT:
+            return SPELL_UNMAKING;
+
         default:
             return s;
     }

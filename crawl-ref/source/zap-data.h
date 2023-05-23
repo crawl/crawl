@@ -897,6 +897,22 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
 },
 
 {
+    ZAP_UNMAKING,
+    "entropic shot",
+    200,
+    new calcdice_calculator<9, 13, 2, 3>,
+    new tohit_calculator<7, 1, 15>,
+    new dicedef_calculator<3, 8, 1, 9>,
+    new tohit_calculator<20, 1, 25>,
+    BROWN,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_MISSILE,
+    false,
+    false,
+},
+
+{
     ZAP_STONE_ARROW,
     "stone arrow",
     50,
