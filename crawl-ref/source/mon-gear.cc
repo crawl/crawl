@@ -672,9 +672,12 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { { { WPN_TRIDENT,          1 },
                 { WPN_SPEAR,            2 },
         } } },
-        { MONS_CENTAUR, { { { WPN_SHORTBOW, 1 } } } },
+        { MONS_CENTAUR,
+            { { { WPN_SHORTBOW,         1 },
+                { WPN_ORCBOW,           1 },
+        } } },
         { MONS_CENTAUR_WARRIOR,
-            { { { WPN_SHORTBOW,         2 },
+            { { { WPN_SHORTBOW,         1 },
                 { WPN_ORCBOW,           1 },
         } } },
         { MONS_FAUN,                    { FAUN_WEAPONS } },
@@ -967,7 +970,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
                 { WPN_ARBALEST,         1 },
                 { NUM_WEAPONS,          32 }
         } } },
-        { MONS_ORC,                     { { { WPN_ORCBOW, 1 }, { NUM_WEAPONS, 17 }} } },
         { MONS_TENGU_WARRIOR,
             { { { WPN_ARBALEST,                 1 },
                 { NUM_WEAPONS,                  8 }, // 1/9 chance of weap
