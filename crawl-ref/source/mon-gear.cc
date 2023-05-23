@@ -675,7 +675,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_CENTAUR, { { { WPN_SHORTBOW, 1 } } } },
         { MONS_CENTAUR_WARRIOR,
             { { { WPN_SHORTBOW,         2 },
-                { WPN_LONGBOW,          1 },
+                { WPN_ORCBOW,           1 },
         } } },
         { MONS_FAUN,                    { FAUN_WEAPONS } },
         { MONS_SATYR,                   { FAUN_WEAPONS } },
@@ -944,7 +944,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
 
     static const map<monster_type, mon_weapon_spec> secondary_weapon_specs = {
         { MONS_JOSEPH, { { { WPN_SLING, 1 } } } },
-        { MONS_DEEP_ELF_ARCHER, // XXX: merge w/centaur warrior primary?
+        { MONS_DEEP_ELF_ARCHER,
             { { { WPN_SHORTBOW,         3 },
                 { WPN_LONGBOW,          1 },
         } } },
