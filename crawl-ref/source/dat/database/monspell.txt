@@ -512,7 +512,7 @@ Rupert cast targeted
 %%%%
 Ensnare Arachne cast
 
-@The_monster@ points her staff @at@ @target@, shooting a stream of webbing.
+@The_monster@ points @possessive@ staff @at@ @target@, shooting a stream of webbing.
 
 @The_monster@'s staff shoots out a stream of webbing.
 %%%%
@@ -572,7 +572,7 @@ flayed ghost cast
 %%%%
 manticore cast
 
-@The_monster@ flicks its tail.
+@The_monster@ flicks @possessive@ tail.
 %%%%
 orange crystal statue cast
 
@@ -580,7 +580,7 @@ orange crystal statue cast
 %%%%
 orange crystal statue cast targeted
 
-@The_monster@ fixes its piercing gaze on @target@.
+@The_monster@ fixes @possessive@ piercing gaze on @target@.
 %%%%
 orb of fire cast
 
@@ -627,7 +627,7 @@ thrashing horror cast
 %%%%
 Airstrike wind drake cast
 
-@The_monster@ flaps its wings @at@ @target@.
+@The_monster@ flaps @possessive@ wings @at@ @target@.
 %%%%
 Wind Blast wind drake cast
 
@@ -647,15 +647,15 @@ Minor Healing dryad cast
 %%%%
 Battlecry satyr cast
 
-@The_monster@ plays a rousing melody on its pipes!
+@The_monster@ plays a rousing melody on @possessive@ pipes!
 %%%%
 Cause Fear satyr cast
 
-@The_monster@ plays a frightful melody on its pipes!
+@The_monster@ plays a frightful melody on @possessive@ pipes!
 %%%%
 Sleep satyr cast
 
-@The_monster@ plays a lulling melody on its pipes!
+@The_monster@ plays a lulling melody on @possessive@ pipes!
 %%%%
 Sleep dream sheep cast
 
