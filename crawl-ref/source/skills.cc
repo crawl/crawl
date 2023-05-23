@@ -984,10 +984,12 @@ static int _magic_training()
     return 0;
 }
 
+static const int NO_TRAINING = 10000;
+
 /// What is the skill you are currently training at the lowest non-zero percent?
 static unsigned int _min_training_level()
 {
-    unsigned int min = 10000;
+    unsigned int min = NO_TRAINING;
     for (skill_type i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
         if (you.training[i] && you.training[i] < min)
             min = you.training[i];
@@ -1051,6 +1053,9 @@ static void _train_with_innate_casting(bool simu)
 {
     while (true) {
         const int min = _min_training_level();
+        if (min == NO_TRAINING) // no skills set to train
+            return;
+
         const int points = _min_points_to_raise_all(min);
         if (!_xp_available_for_skill_points(points))
             break;
