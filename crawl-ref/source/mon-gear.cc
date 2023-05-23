@@ -938,9 +938,10 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_CERULEAN_IMP,  { { { WPN_SPEAR, 1 } }, {}, { { SPWPN_NORMAL, 1 } } } },
     };
 
-    static const weapon_list ORC_BOWS =
-    {   { WPN_ORCBOW,                   1 },
+    static const weapon_list ORC_KNIGHT_BOWS =
+    {   { WPN_ARBALEST,                 1 },
         { NUM_WEAPONS,                  8 }, }; // 1/9 chance of ranged weapon
+
 
     static const map<monster_type, mon_weapon_spec> secondary_weapon_specs = {
         { MONS_JOSEPH, { { { WPN_SLING, 1 } } } },
@@ -958,15 +959,18 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
                 { WPN_LONGBOW,          1 }
         } } },
         { MONS_VAULT_WARDEN,            { { { WPN_ARBALEST, 1 }, { NUM_WEAPONS, 8 }} } },
-        { MONS_ORC_WARLORD,             { ORC_BOWS } },
-        { MONS_SAINT_ROKA,              { ORC_BOWS } },
-        { MONS_ORC_KNIGHT,              { ORC_BOWS } },
-        { MONS_ORC_WARRIOR,             { ORC_BOWS } },
+        { MONS_ORC_WARLORD,             { ORC_KNIGHT_BOWS } },
+        { MONS_SAINT_ROKA,              { ORC_KNIGHT_BOWS } },
+        { MONS_ORC_KNIGHT,              { ORC_KNIGHT_BOWS } },
+        { MONS_ORC_WARRIOR,
+            { { { WPN_ORCBOW,           3 },
+                { WPN_ARBALEST,         1 },
+                { NUM_WEAPONS,          32 }
+        } } },
         { MONS_ORC,                     { { { WPN_ORCBOW, 1 }, { NUM_WEAPONS, 17 }} } },
         { MONS_TENGU_WARRIOR,
-            { { { WPN_ARBALEST,                 3 },
-                { WPN_LONGBOW,                  1 },
-                { NUM_WEAPONS,                  32 }, // 1/9 chance of weap
+            { { { WPN_ARBALEST,                 1 },
+                { NUM_WEAPONS,                  8 }, // 1/9 chance of weap
         } } },
         { MONS_VAULT_SENTINEL,
             { { { WPN_ARBALEST,                 19 },
