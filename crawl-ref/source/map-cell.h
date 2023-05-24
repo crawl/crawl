@@ -33,7 +33,6 @@
 #define MAP_UMBRAED        0x1000000
 #define MAP_QUAD_HALOED    0X4000000
 #define MAP_DISJUNCT       0X8000000
-#define MAP_DEPARTED_MON  0X10000000
 
 struct cloud_info
 {
@@ -126,7 +125,7 @@ struct map_cell
     void clear_data()
     {
         const uint32_t f = flags & (MAP_SEEN_FLAG | MAP_CHANGED_FLAG
-                                    | MAP_INVISIBLE_UPDATE | MAP_DEPARTED_MON);
+                                    | MAP_INVISIBLE_UPDATE);
         clear();
         flags = f;
     }

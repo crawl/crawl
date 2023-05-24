@@ -512,11 +512,8 @@ void show_update_at(const coord_def &gp, layers_type layers)
             monster* mons = monster_at(gp);
             if (mons && mons->alive())
                 _update_monster(mons);
-            else if (env.map_knowledge(gp).flags & (MAP_INVISIBLE_UPDATE
-                                                    | MAP_DEPARTED_MON))
-            {
+            else if (env.map_knowledge(gp).flags & MAP_INVISIBLE_UPDATE)
                 _mark_invisible_at(gp);
-            }
         }
 
         if (layers & LAYER_CLOUDS)
