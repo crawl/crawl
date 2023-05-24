@@ -2394,7 +2394,7 @@ int bolt::get_cloud_size(bool min, bool max) const
 
 static void _waterlog_mon(monster &mon, int ench_pow)
 {
-    if (mon.res_water_drowning() || mon.has_ench(ENCH_WATERLOGGED))
+    if (!mon.alive() || mon.res_water_drowning() || mon.has_ench(ENCH_WATERLOGGED))
         return;
 
     simple_monster_message(mon, " is engulfed in water.");
