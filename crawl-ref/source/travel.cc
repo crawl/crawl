@@ -62,6 +62,7 @@
 #include "unicode.h"
 #include "unwind.h"
 #include "view.h"
+#include "zot.h"
 
 enum IntertravelDestination
 {
@@ -3312,6 +3313,13 @@ void start_explore(bool grab_items)
 
     if (!i_feel_safe(true, true))
         return;
+
+    if ((bezotted() || you.has_mutation(MUT_SHORT_LIFESPAN))
+        && !yesno("Really rest while Zot is near?", false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
 
     you.running = (grab_items ? RMODE_EXPLORE_GREEDY : RMODE_EXPLORE);
 

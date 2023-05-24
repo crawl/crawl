@@ -1725,7 +1725,8 @@ static void _do_rest()
     }
 #endif
 
-    if (bezotted() && !yesno("Really rest while Zot is near?", false, 'n'))
+    if ((bezotted() || you.has_mutation(MUT_SHORT_LIFESPAN))
+        && !yesno("Really rest while Zot is near?", false, 'n'))
     {
         canned_msg(MSG_OK);
         return;
