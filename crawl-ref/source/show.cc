@@ -420,7 +420,7 @@ static void _handle_unseen_mons(monster* mons, uint32_t hash_ind)
  *
  * This function updates the map_knowledge grid with a monster_info if relevant.
  * If the monster is not currently visible to the player, the map knowledge will
- * be upated with a disturbance if necessary.
+ * be updated with a disturbance if necessary.
  * @param mons  The monster at the relevant location.
 **/
 static void _update_monster(monster* mons)

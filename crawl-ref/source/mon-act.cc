@@ -3240,7 +3240,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     // This appears to be the real one, ie where the movement occurs:
 
     // The monster gave a "comes into view" message and then immediately
-    // moved back out of view, leaing the player nothing to see, so give
+    // moved back out of view, leaving the player nothing to see, so give
     // this message to avoid confusion.
     else if (crawl_state.game_is_hints() && mons.flags & MF_WAS_IN_VIEW
              && !you.see_cell(f))
