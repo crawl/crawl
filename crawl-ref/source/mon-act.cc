@@ -372,7 +372,7 @@ static bool _ranged_ally_in_dir(monster* mon, coord_def p)
                 return false;
             }
 
-            // XXX: Sometimes the player wants llies in front of them to stay
+            // XXX: Sometimes the player wants allies in front of them to stay
             // out of LOF. However use of allies for cover is extremely common,
             // so it doesn't work well to always have allies move out of player
             // LOF. Until a better interface or method can be found to handle
