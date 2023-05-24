@@ -3242,10 +3242,12 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     // The monster gave a "comes into view" message and then immediately
     // moved back out of view, leaving the player nothing to see, so give
     // this message to avoid confusion.
-    else if (crawl_state.game_is_hints() && mons.flags & MF_WAS_IN_VIEW
-             && !you.see_cell(f))
+    else if (mons.flags & MF_WAS_IN_VIEW && !you.see_cell(f))
     {
-        learned_something_new(HINT_MONSTER_LEFT_LOS, mons.pos());
+        if (crawl_state.game_is_hints())
+            learned_something_new(HINT_MONSTER_LEFT_LOS, mons.pos());
+        if (you.see_cell(mons.pos()))
+            env.map_knowledge(mons.pos()).flags |= MAP_DEPARTED_MON;
     }
 
     // The seen context no longer applies if the monster is moving normally.

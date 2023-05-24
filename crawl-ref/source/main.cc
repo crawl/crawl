@@ -2549,6 +2549,8 @@ void world_reacts()
     update_monsters_in_view();
 
     reset_show_terrain();
+    for (rectangle_iterator ri(0); ri; ++ri)
+        env.map_knowledge(*ri).flags &= ~MAP_DEPARTED_MON;
 
     crawl_state.clear_mon_acting();
 
