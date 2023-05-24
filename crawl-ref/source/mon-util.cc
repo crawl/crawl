@@ -1686,7 +1686,7 @@ bool mons_class_is_animated_weapon(monster_type type)
 
 bool mons_class_is_remnant(monster_type mc)
 {
-    return !mons_class_flag(mc, M_REMNANT);
+    return mons_class_flag(mc, M_REMNANT);
 }
 
 bool mons_class_is_animated_object(monster_type type)
