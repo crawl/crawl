@@ -1179,17 +1179,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mg.cls == MONS_GLOWING_SHAPESHIFTER)
         mon->add_ench(ENCH_GLOWING_SHAPESHIFTER);
 
-    if ((mg.cls == MONS_TOADSTOOL || mons_class_is_remnant(mg.cls))
-        && !mg.props.exists(MGEN_NO_AUTO_CRUMBLE))
-    {
-        // This enchantment is a timer that counts down until death.
-        // It should last longer than the lifespan of a corpse, to avoid
-        // spawning mushrooms in the same place over and over. Aside
-        // from that, the value is slightly randomised to avoid
-        // simultaneous die-offs of mushroom rings.
-        mon->add_ench(ENCH_SLOWLY_DYING);
-    }
-
     if (mg.cls == MONS_TWISTER || mg.cls == MONS_DIAMOND_OBELISK)
     {
         mon->props[POLAR_VORTEX_KEY].get_int() = you.elapsed_time;

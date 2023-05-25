@@ -4565,7 +4565,7 @@ void bolt::kill_monster(monster &mon)
         {
             const int time_left = random_range(7, 17) * BASELINE_DELAY;
             mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
-            pillar->update_ench(temp_en);
+            pillar->add_ench(temp_en);
         }
         break;
     }

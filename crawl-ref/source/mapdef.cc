@@ -4208,7 +4208,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             MAYBE_COPY(MUTANT_BEAST_FACETS);
             MAYBE_COPY(MGEN_BLOB_SIZE);
             MAYBE_COPY(MGEN_NUM_HEADS);
-            MAYBE_COPY(MGEN_NO_AUTO_CRUMBLE);
 #undef MAYBE_COPY
         }
 
@@ -4470,7 +4469,6 @@ mons_spec mons_list::get_salt_spec(const string &name) const
 
     mons_spec spec(MONS_PILLAR_OF_SALT);
     spec.monbase = _fixup_mon_type(base_mon.type);
-    spec.props[MGEN_NO_AUTO_CRUMBLE] = true;
     return spec;
 }
 
