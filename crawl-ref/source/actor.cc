@@ -593,6 +593,8 @@ bool actor::has_invalid_constrictor(bool move) const
 
     // Indirect constriction requires the defender not to move.
     return move
+        // Constriction doesn't work out of LOS, to avoid sauciness.
+        || !ignoring_player && !attacker->see_cell(pos())
         || typ == CONSTRICT_BVC && !feat_has_solid_floor(env.grid(pos()));
 }
 
@@ -696,11 +698,15 @@ bool actor::can_constrict(const actor &defender, constrict_type typ) const
     if (defender.is_constricted() || defender.res_constrict() >= 3)
         return false;
 
+
     if (typ == CONSTRICT_MELEE)
     {
         return can_engulf(defender)
             && (!is_constricting() || has_usable_tentacle());
     }
+
+    if (!see_cell_no_trans(defender.pos()))
+        return false;
 
     return typ != CONSTRICT_BVC
            || feat_has_solid_floor(env.grid(defender.pos()));
