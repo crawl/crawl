@@ -128,6 +128,11 @@ bool bezotted()
     return bezotted_in(you.where_are_you);
 }
 
+bool should_fear_zot()
+{
+    return bezotted() || you.has_mutation(MUT_SHORT_LIFESPAN) && zot_clock_active();
+}
+
 // Decrease the zot clock when the player enters a new level.
 void decr_zot_clock(bool extra_life)
 {

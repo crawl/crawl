@@ -3314,8 +3314,7 @@ void start_explore(bool grab_items)
     if (!i_feel_safe(true, true))
         return;
 
-    if ((bezotted() || you.has_mutation(MUT_SHORT_LIFESPAN))
-        && !yesno("Really rest while Zot is near?", false, 'n'))
+    if (should_fear_zot() && !yesno("Really rest while Zot is near?", false, 'n'))
     {
         canned_msg(MSG_OK);
         return;
