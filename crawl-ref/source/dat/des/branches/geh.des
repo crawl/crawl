@@ -284,23 +284,6 @@ llll...lll
    lllll
 ENDMAP
 
-NAME:  nicolae_geh_backdraft
-TAGS:  transparent
-DEPTH: Geh
-KMONS: 12 = creeping inferno / lurking horror w:5
-KFEAT: 2 = } / > w:5
-KMASK: 12 = no_monster_gen
-MAP
-.......
-.c===c.
-.=111=.
-.=121=.
-.=111=.
-.c===c.
-.......
-ENDMAP
-
-
 NAME:   nicolae_geh_erupted_tower
 TAGS:   transparent patrolling
 DEPTH:  Geh, !Geh:$
