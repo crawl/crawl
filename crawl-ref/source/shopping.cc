@@ -844,6 +844,9 @@ class ShopMenu : public InvMenu
     level_pos pos;
     bool can_purchase;
 
+    int outside_items;
+    vector<int> bought_indices;
+
     int selected_cost(bool use_shopping_list=false) const;
 
     void init_entries();
@@ -938,6 +941,8 @@ ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase
     init_entries();
     resort();
 
+    outside_items = 0;
+    bought_indices = {};
     update_help();
 
     set_title("Welcome to " + shop_name(shop) + "! What would you "
@@ -1052,7 +1057,22 @@ void ShopMenu::update_help()
 
     m = pad_more_with(m, hyphenated_hotkey_letters(item_count(), 'A')
                                   + " put item on shopping list");
-    set_more(formatted_string::parse_string(top_line + m));
+
+
+    const string col = colour_to_str(channel_to_colour(MSGCH_PROMPT));
+    if (outside_items)
+    {
+        const formatted_string outside = formatted_string::parse_string(make_stringf(
+            "<%s>I'll put %s outside for you.</%s>\n",
+            col.c_str(),
+            bought_indices.size() == 1             ? "it" :
+      (int) bought_indices.size() == outside_items ? "them"
+                                                   : "some of them",
+            col.c_str()));
+        set_more(outside + formatted_string::parse_string(top_line + m));
+    }
+    else
+        set_more(formatted_string::parse_string(top_line + m));
 
     // set_more(formatted_string::parse_string(top_line
     //     + make_stringf(
@@ -1145,8 +1165,8 @@ void ShopMenu::purchase_selected()
          {
              return a->data > b->data;
          });
-    vector<int> bought_indices;
-    int outside_items = 0;
+    bought_indices = {};
+    outside_items = 0;
 
     // Store last_pickup in case we need to restore it.
     // Then clear it to fill with items purchased.
@@ -1185,23 +1205,7 @@ void ShopMenu::purchase_selected()
     init_entries();
     resort();
 
-    if (outside_items)
-    {
-        update_help();
-        const formatted_string next_more = more;
-        more = formatted_string::parse_string(make_stringf(
-            "<%s>I'll put %s outside for you.</%s>\n",
-            col.c_str(),
-            bought_indices.size() == 1             ? "it" :
-      (int) bought_indices.size() == outside_items ? "them"
-                                                   : "some of them",
-            col.c_str()));
-        more += next_more;
-        update_more();
-    }
-    else
-        update_help();
-
+    update_help();
     update_menu(true);
 }
 
@@ -1379,6 +1383,8 @@ bool ShopMenu::process_key(int keyin)
         // Update the footer to display the new $$$ info.
         update_help();
         update_menu(true);
+        // Next time, dismiss any message about leaving items outside.
+        outside_items = 0;
     }
     return ret;
 }
