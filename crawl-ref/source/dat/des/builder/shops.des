@@ -815,7 +815,7 @@ ENDMAP
 
 NAME:   nicolae_shop_wares_on_display
 TAGS:   transparent shop extra allow_dup
-DEPTH: !D:1-3
+DEPTH:  !D:1-3
 WEIGHT: 2
 KFEAT:  S = general shop
 MAP
@@ -824,6 +824,44 @@ x%%+S+%%x
 mmmm.mmmm
 .........
 @.......@
+ENDMAP
+
+# This merchant does not tolerate thieves. Fortunately, since players can't
+# steal from shops, you probably have nothing to worry about.
+NAME:   nicolae_shop_gibbet_a_chance
+TAGS:   shop extra transparent
+WEIGHT: 5
+KFEAT:  S = any shop
+KFEAT:  - = iron_grate
+KPROP:  DEFH = no_tele_into
+KMASK:  DEFH = no_monster_gen
+KMASK:  DEFH = no_item_gen
+KMASK:  DEFH = no_trap_gen
+KMASK:  DEFH = opaque
+{{
+-- The skellingtons are purely decorative, but also the only decorations, and
+-- unlike other kinds of vaults, it's likely that the player will come back to a
+-- shop after a long time on other levels. So, set them to be fully never_decay
+-- rather than using a delayed_decay trigger. That way, players don't come back
+-- to empty gibbets once they've gone and rounded up some cash.
+local skeletons = {"human", "elf", "orc", "ogre", "merfolk", "naga", "kobold",
+                   "gnoll", "minotaur", "spriggan", "troll", "felid",
+                   "draconian", "tengu", "demonspawn", "demigod"}
+kitem("D = never_decay " .. util.random_from(skeletons) .. " skeleton" )
+kitem("E = never_decay " .. util.random_from(skeletons) .. " skeleton" )
+kitem("F = never_decay " .. util.random_from(skeletons) .. " skeleton" )
+kitem("H = never_decay " .. util.random_from(skeletons) .. " skeleton" )
+}}
+MAP
+   .---
+   .-E-
+---.---
+-D-......
+---.S.---
+......-F-
+  ---.---
+  -H-.
+  ---.
 ENDMAP
 
 ###############################################################################
