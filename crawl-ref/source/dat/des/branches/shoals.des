@@ -2479,6 +2479,24 @@ xx'p."WW-wNNw-WW".q'xx
          `xx`
 ENDMAP
 
+# Sadly, there are currently no lobster-based monsters that can be used here, so
+# instead it will have to be turtles. They don't say "dad-a-chum", but they'll
+# still take some fingers off.
+NAME:   nicolae_shoals_the_drawing_of_the_three
+TAGS:   transparent
+DEPTH:  Shoals
+# No pistols, either, so it will have to be hand crossbows.
+KITEM:  r = hand crossbow
+KMONS:  1 = snapping turtle w:15 / alligator snapping turtle w:5
+NSUBST: . = 2=1 / 2=1. / 2=r / .
+MAP
+ .....
+.......
+.+.+.+.
+.......
+ .....
+ENDMAP
+
 ###############################################################################
 #
 # <<4>> Shoals ending vaults
