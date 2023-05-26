@@ -767,7 +767,7 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(ON_SET_NAME(tile_weapon_offsets), "reset", false,
             [this]() { set_tile_offsets(tile_weapon_offsets_option, false); }),
         new StringGameOption(ON_SET_NAME(tile_shield_offsets), "reset", false,
-            [this]() { set_tile_offsets(tile_weapon_offsets_option, true); }),
+            [this]() { set_tile_offsets(tile_shield_offsets_option, true); }),
         new StringGameOption(ON_SET_NAME(tile_tag_pref), "auto", false,
             [this]() { tile_tag_pref = _str_to_tag_pref(tile_tag_pref_option); }),
 
