@@ -259,7 +259,6 @@ static const vector<pop_entry> population[] =
 #endif
 
 { // Lair (OOD cap: 11)
-  {  0,  4, 4500, FLAT, MONS_NO_MONSTER }, // Roughly old D:1-4 chaff weight
   { -2,  4,  100, SEMI, MONS_BLACK_BEAR },
   { -2,  6,  310, SEMI, MONS_BASILISK },
   { -1,  3,   24, PEAK, MONS_SCORPION },
