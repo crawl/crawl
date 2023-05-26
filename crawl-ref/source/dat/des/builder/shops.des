@@ -1696,7 +1696,7 @@ ENDMAP
 NAME:   nicolae_shop_i_like_small_books_too
 TAGS:   transparent extra
 DEPTH:  D:4-, Depths, Elf, Snake
-KFEAT:  S = book shop type:Tiny suffix:Tomes count:20 ; \
+KFEAT:  S = book shop type:Tiny suffix:Tomes count:8 ; \
             any randbook numspells:1
 KFEAT:  p = c
 COLOUR: p : blue / red / magenta / lightgreen / lightred / lightmagenta / yellow
