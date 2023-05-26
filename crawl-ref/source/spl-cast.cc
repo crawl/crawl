@@ -376,8 +376,7 @@ static int _stepdown_spellpower(int power)
 
 static int _skill_power(spell_type spell)
 {
-    int power = you.skill(SK_SPELLCASTING, 50);
-
+    int power = 0;
     const spschools_type disciplines = get_spell_disciplines(spell);
     const int skillcount = count_bits(disciplines);
     if (skillcount)
@@ -387,7 +386,7 @@ static int _skill_power(spell_type spell)
                 power += you.skill(spell_type2skill(bit), 200);
         power /= skillcount;
     }
-    return power;
+    return power + you.skill(SK_SPELLCASTING, 50);
 }
 
 
