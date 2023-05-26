@@ -3786,14 +3786,12 @@ ENDMAP
 # tree of life.
 NAME:    pf_eden
 TAGS:    no_monster_gen
-DEPTH:   D:13-
+DEPTH:   Elf
 MONS:    patrolling cherub, patrolling dancing weapon ; great sword ego:flaming
 KMONS:   p = plant
-# TODO: this potion once was an apple, maybe just remove this with no apple
-# flavor possible?
-ITEM:    potion of ambrosia ident:type
+ITEM:    randbook title:Forbidden_Fruit owner:the_Tempter numspells:2 spells:summon_mana_viper&discord
 NSUBST:  1 = 2:1 / *:.
-NSUBST:  d = 2:d / *:.
+NSUBST:  d = 1:d / *:.
 SUBST:   3 = 33.
 RTILE:   x = wall_lair
 FTILE:   12p.dt@ = floor_lair
