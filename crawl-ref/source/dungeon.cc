@@ -4092,13 +4092,6 @@ static void _builder_monsters()
         if (place_monster(mg))
             success++;
     }
-    // 3 is the absolute minimum roll for `mon_wanted`, it's very weird from
-    // the player's perspective if we get such low numbers, but it can happen
-    // via rolling MONS_NO_MONSTER from the spawn tables.
-    // XX it might be better to retry, but that requires rebalancing of the
-    // spawn tables
-    if (success < min(mon_wanted, 3))
-        throw dgn_veto_exception("_builder_monsters: failed to generate enough monsters");
 
     if (!player_in_branch(BRANCH_CRYPT)) // No water creatures in the Crypt.
         _place_aquatic_monsters();
