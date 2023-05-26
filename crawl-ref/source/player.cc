@@ -7504,6 +7504,11 @@ bool player::do_shaft(bool check_terrain)
     {
         return false;
     }
+    if (you.species == SP_FORMICID)
+    {
+        mpr("Your tunneler's instincts keep you from falling into a shaft!");
+        return false;
+    }
 
     // Ensure altars, items, and shops discovered at the moment
     // the player gets shafted are correctly registered.
