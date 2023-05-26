@@ -1775,6 +1775,70 @@ xxxxxxxx...x..x.--
 xx
 ENDMAP
 
+# a well guarded shop which sells orb and orb-related things
+NAME:   tekkud_shop_of_orbs
+DEPTH:  Spider:3-, Snake:3-, Elf:2-, Crypt, Depths, Zot
+TAGS:   no_item_gen no_monster_gen no_trap_gen
+WEIGHT: 3
+{{
+local shopname = util.random_from({"type:Orb suffix:Outfitters",
+   "type:Spherical suffix:Supermarket", "type:Round suffix:Resellers",
+   "type:Globular suffix:Garage"})
+local kstr = "S = general shop " .. shopname .. " count:6 ; " ..
+             "orb randart w:20 | " ..
+             "orb w:5 | " ..
+             "book of the spheres w:1"
+
+if not you.unrands("sphere of Battle") then
+      kstr = kstr .. "|sphere of Battle w:2"
+end
+if not you.unrands("crystal ball of Wucad Mu") then
+      kstr = kstr .. "|crystal ball of Wucad Mu w:2"
+end
+
+kfeat(kstr)
+}}
+
+: if you.in_branch("Spider") then
+KMONS: O = emperor scorpion / broodmother
+KMONS: o = orb spider
+KMONS: i = redback / jumping spider / wolf spider / tarantella / culicivora
+KFEAT: .Ooi = web w:8 / floor w:12
+: elseif you.in_branch("Snake") then
+KMONS: O = nagaraja / naga ritualist / salamander mystic
+KMONS: o = naga sharpshooter / naga warrior w:5
+KMONS: i = naga / salamander
+: elseif you.in_branch("Elf") then
+KMONS: O = deep elf annihilator / deep elf blademaster / deep elf demonologist / deep elf sorcerer
+KMONS: o = deep elf knight / deep elf archer w:5
+KMONS: i = deep elf zephyrmancer / deep elf pyromancer
+: elseif you.in_branch("Crypt") then
+KMONS: O = deep elf death mage / curse skull w:5 / lich w:5
+KMONS: o = vampire knight / death knight
+KMONS: i = orb spider zombie / flying skull
+: elseif you.in_branch("Depths") then
+KMONS: O = glowing shapeshifter hd:25
+KMONS: o = glowing shapeshifter hd:15
+KMONS: i = shapeshifter hd:10
+# Zot
+: else
+KMONS: O = orb of fire
+KMONS: o = ball lightning
+KMONS: i = orb guardian
+: end
+: door_vault_setup(_G)
+MAP
+  ccccc
+ ccoOocc
+cc.....cc
+ci.....ic
+c...S...c
+ci.....ic
+cc.....cc
+ cc...cc
+  ccacc
+ENDMAP
+
 ###############################################################################
 # <<3>> Multi
 #       Not tagged shop, and has no threats. Contain possibly multiple shops in
@@ -1969,68 +2033,4 @@ MAP
 .....................
 .G..F..H..F..H..F..G.
 .....................
-ENDMAP
-
-# a well guarded shop which sells orb and orb-related things
-NAME:   tekkud_shop_of_orbs
-DEPTH:  Spider:3-, Snake:3-, Elf:2-, Crypt, Depths, Zot
-TAGS:   no_item_gen no_monster_gen no_trap_gen
-WEIGHT: 3
-{{
-local shopname = util.random_from({"type:Orb suffix:Outfitters",
-   "type:Spherical suffix:Supermarket", "type:Round suffix:Resellers",
-   "type:Globular suffix:Garage"})
-local kstr = "S = general shop " .. shopname .. " count:6 ; " ..
-             "orb randart w:20 | " ..
-             "orb w:5 | " ..
-             "book of the spheres w:1"
-
-if not you.unrands("sphere of Battle") then
-      kstr = kstr .. "|sphere of Battle w:2"
-end
-if not you.unrands("crystal ball of Wucad Mu") then
-      kstr = kstr .. "|crystal ball of Wucad Mu w:2"
-end
-
-kfeat(kstr)
-}}
-
-: if you.in_branch("Spider") then
-KMONS: O = emperor scorpion / broodmother
-KMONS: o = orb spider
-KMONS: i = redback / jumping spider / wolf spider / tarantella / culicivora
-KFEAT: .Ooi = web w:8 / floor w:12
-: elseif you.in_branch("Snake") then
-KMONS: O = nagaraja / naga ritualist / salamander mystic
-KMONS: o = naga sharpshooter / naga warrior w:5
-KMONS: i = naga / salamander
-: elseif you.in_branch("Elf") then
-KMONS: O = deep elf annihilator / deep elf blademaster / deep elf demonologist / deep elf sorcerer
-KMONS: o = deep elf knight / deep elf archer w:5
-KMONS: i = deep elf zephyrmancer / deep elf pyromancer
-: elseif you.in_branch("Crypt") then
-KMONS: O = deep elf death mage / curse skull w:5 / lich w:5
-KMONS: o = vampire knight / death knight
-KMONS: i = orb spider zombie / flying skull
-: elseif you.in_branch("Depths") then
-KMONS: O = glowing shapeshifter hd:25
-KMONS: o = glowing shapeshifter hd:15
-KMONS: i = shapeshifter hd:10
-# Zot
-: else
-KMONS: O = orb of fire
-KMONS: o = ball lightning
-KMONS: i = orb guardian
-: end
-: door_vault_setup(_G)
-MAP
-  ccccc
- ccoOocc
-cc.....cc
-ci.....ic
-c...S...c
-ci.....ic
-cc.....cc
- cc...cc
-  ccacc
 ENDMAP
