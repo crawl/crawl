@@ -559,7 +559,7 @@ monster_info::monster_info(const monster* m, int milev, bool force_real)
     if (!force_real)
     {
         const string btyp_key = make_stringf("%d", m->base_monster);
-        if (mons_is_draconian_job(type))
+        if (mons_is_draconian_job(type) || type == MONS_TIAMAT)
         {
             const string styp_key = make_stringf("%d", type);
             base_type = !force_real && job_mapping.exists(styp_key) ?
