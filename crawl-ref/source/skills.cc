@@ -2504,6 +2504,13 @@ void fixup_skills()
         }
         else if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
             you.train[sk] = TRAINING_ENABLED;
+        else if (you.has_mutation(MUT_INNATE_CASTER)
+                 && you.skills[sk] >= MAX_SKILL_LEVEL)
+        {
+            // XXX: is this the right place for this check? Should this be
+            // somewhere else..?
+            you.train[sk] = TRAINING_DISABLED;
+        }
         you.skill_points[sk] = min(you.skill_points[sk],
                                    skill_exp_needed(MAX_SKILL_LEVEL, sk));
         check_skill_level_change(sk);

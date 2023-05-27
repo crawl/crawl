@@ -985,16 +985,21 @@ void SkillMenu::cancel_help()
 bool SkillMenu::do_skill_enabled_check()
 {
     if (skills_being_trained())
+    {
+        dprf("ayyy");
         return true;
+    }
 
     if (trainable_skills())
     {
+        dprf("eyy");
         // Shouldn't happen, but crash rather than locking the player in the
         // menu. Training will be fixed up on load.
         ASSERT(!you.has_mutation(MUT_DISTRIBUTED_TRAINING));
         set_help("<lightred>You need to enable at least one skill.</lightred>");
         return false;
     }
+    dprf("oyyy");
     return true;
 }
 
