@@ -4542,7 +4542,7 @@ void bolt::kill_monster(monster &mon)
     switch (origin_spell)
     {
     case SPELL_UNMAKING:
-        if (corpse)
+        if (corpse && !goldify)
             destroy_item(corpse->index());
 
         _splash_mud(pos(), agent(), random_range(6,12));
