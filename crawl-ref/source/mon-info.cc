@@ -261,6 +261,11 @@ static void _build_mon_mapping()
     vector<monster_type> shuffled_mons = mapped_mons;
     shuffle_array(shuffled_mons);
 
+    vector<monster_type> base_dracs;
+    for (int i = MONS_FIRST_BASE_DRACONIAN; i <= MONS_LAST_BASE_DRACONIAN; i++)
+        if (!mons_is_removed((monster_type)i))
+            base_dracs.push_back((monster_type)i);
+
     CrawlHashTable &mon_mapping = you.props[CHAOS_MON_MAP].get_table();
     CrawlHashTable &job_mapping = you.props[CHAOS_JOB_MAP].get_table();
     for (int i = 0; i < (int)mapped_mons.size(); ++i)
@@ -274,11 +279,7 @@ static void _build_mon_mapping()
 
         const string skey = make_stringf("%d", sub);
         if (mons_is_draconian_job(sub) || sub == MONS_TIAMAT)
-        {
-            job_mapping[skey].get_int()
-                = random_range(MONS_FIRST_BASE_DRACONIAN,
-                               MONS_LAST_BASE_DRACONIAN);
-        }
+            job_mapping[skey].get_int() = (*random_iterator(base_dracs));
         else if (mons_class_is_remnant(sub))
         {
             job_mapping[skey].get_int()
