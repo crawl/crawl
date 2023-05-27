@@ -2512,7 +2512,8 @@ void fixup_skills()
     reset_training();
 
     if (you.exp_available >= 10 * calc_skill_cost(you.skill_cost_level)
-        && !you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+        && !you.has_mutation(MUT_DISTRIBUTED_TRAINING)
+        && !you.has_mutation(MUT_INNATE_CASTER))
     {
         skill_menu(SKMF_EXPERIENCE);
     }
