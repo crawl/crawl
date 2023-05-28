@@ -1072,7 +1072,9 @@ static void _train_with_innate_casting(bool simu)
             int xp = calc_skill_cost(you.skill_cost_level) * p;
             // We don't want to disable training for magic skills midway.
             // Finish training all skills and check targets afterward.
-            _train(static_cast<skill_type>(i), xp, simu, false);
+            const auto sk = static_cast<skill_type>(i);
+            _train(sk, xp, simu, false);
+            _level_up_check(sk, simu);
         }
 
         // If the player sacrificed a magic skill, if we're training any magic,
@@ -2504,13 +2506,6 @@ void fixup_skills()
         }
         else if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
             you.train[sk] = TRAINING_ENABLED;
-        else if (you.has_mutation(MUT_INNATE_CASTER)
-                 && you.skills[sk] >= MAX_SKILL_LEVEL)
-        {
-            // XXX: is this the right place for this check? Should this be
-            // somewhere else..?
-            you.train[sk] = TRAINING_DISABLED;
-        }
         you.skill_points[sk] = min(you.skill_points[sk],
                                    skill_exp_needed(MAX_SKILL_LEVEL, sk));
         check_skill_level_change(sk);
