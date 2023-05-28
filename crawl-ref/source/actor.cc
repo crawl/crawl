@@ -708,7 +708,7 @@ bool actor::can_constrict(const actor &defender, constrict_type typ) const
     if (!see_cell_no_trans(defender.pos()))
         return false;
 
-    return typ != CONSTRICT_BVC
+    return (typ != CONSTRICT_BVC && typ != CONSTRICT_ROOTS)
            || feat_has_solid_floor(env.grid(defender.pos()));
 }
 
