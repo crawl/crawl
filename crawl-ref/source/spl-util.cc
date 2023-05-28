@@ -1428,8 +1428,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_WEREBLOOD:
-        if (!you.can_bleed(temp))
+        if (you.undead_state(temp) == US_UNDEAD
+            || you.is_lifeless_undead(temp))
+        {
             return "you lack blood to transform.";
+        }
         break;
 
     case SPELL_NOXIOUS_BOG:
