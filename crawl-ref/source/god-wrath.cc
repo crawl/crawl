@@ -2049,10 +2049,10 @@ static bool _ignis_shaft()
 
     simple_god_message(" burns the ground from beneath your feet!", GOD_IGNIS);
 
-    // This way, if you're wearing the rDislodge boots, the other Ignis wrath
-    // effects won't become more prevalent, encouraging players to boot-swap
-    // while under Ignis wrath.
-    ASSERT(you.resists_dislodge("falling") || you.do_shaft());
+    // player::do_shaft() already checks resist_dislodge, but the message is a
+    // bit worse.
+    if (!you.resists_dislodge("falling"))
+        you.do_shaft();
     return true;
 }
 
