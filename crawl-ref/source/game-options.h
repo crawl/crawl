@@ -452,8 +452,12 @@ public:
             value.clear();
 
         vector<T> new_entries;
-        // XX a way to escape `,`?
-        for (const auto &part : split_string(",", field))
+        // note: this does *not* handle `\\` escapes right now (because they
+        // could also be relevant for subsplits). If your use case is likely
+        // to have this, you should handle it yourself somehow. (In some cases,
+        // e.g. where this is used for regex parsing, they should be left as-is
+        // in any case.)
+        for (const auto &part : split_string(",", field, true, false, -1, true))
         {
             if (part.empty())
                 continue;

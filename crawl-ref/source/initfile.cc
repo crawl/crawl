@@ -3139,27 +3139,31 @@ void game_options::update_explore_greedy_visit_conditions()
 message_filter::message_filter(const string &filter)
     : message_filter()
 {
-    string::size_type pos = filter.find(":");
-    if (pos && pos != string::npos)
+    vector<string> splits = split_string(":", filter, true, true, 1, true);
+    if (splits.size() > 1)
     {
-        string prefix = filter.substr(0, pos);
-        int ch = str_to_channel(prefix);
-        if (ch != -1 || prefix == "any")
+        // legacy behavior from before escaping `:` was implemented: if the
+        // prefix is not a valid channel, treat it as escaped rather than
+        // an error. This maybe should be removed for consistency, but would
+        // potentially break many rc files.
+        int ch = str_to_channel(splits[0]);
+        if (ch != -1 || splits[0] == "any")
         {
-            string s = filter.substr(pos + 1);
-            trim_string(s);
-            pattern = text_pattern(s, true);
+            pattern = text_pattern(splits[1], true);
             channel = ch;
             return;
         }
+        splits[0] += ":";
+        splits[0] += splits[1]; // reuse our escaping work
     }
-    pattern = text_pattern(filter, true);
+    pattern = text_pattern(splits[0], true);
 }
 
 message_colour_mapping::message_colour_mapping(const string &s)
     : message_colour_mapping()
 {
-    vector<string> cmap = split_string(":", s, true, true, 1);
+    // note: leave all other escape sequences (including `\\`) intact.
+    vector<string> cmap = split_string(":", s, true, true, 1, true);
 
     if (cmap.size() != 2)
     {
@@ -3185,7 +3189,7 @@ colour_mapping::colour_mapping(const string &s)
     : colour_mapping()
 {
     // Format is "tag:colour:pattern" or "colour:pattern" (default tag).
-    vector<string> subseg = split_string(":", s, false, false, 2);
+    vector<string> subseg = split_string(":", s, false, false, 2, true);
     string tagname, colname;
     if (subseg.size() < 2)
     {
@@ -3227,7 +3231,7 @@ static sound_mapping _interrupt_sound_mapping(const string &s)
 sound_mapping::sound_mapping(const string &s)
     : sound_mapping()
 {
-    string::size_type cpos = s.find(":", 0);
+    string::size_type cpos = s.find(":", 0); // TODO: allow escaping?
     if (cpos == string::npos)
     {
         mprf(MSGCH_ERROR, "Options error: invalid sound mapping '%s'", s.c_str());
@@ -3505,6 +3509,8 @@ static void _base_split_parse(const string &s,
 {
     // Lots of things use split parse, for some ^= and += should do different things,
     // for others they should not. Split parse just passes them along.
+    // this does not allow escaping `separator`, because it doesn't seem like
+    // any of the callers currently should need it
     const vector<string> defs = split_string(separator, s);
     if (prepend)
     {
@@ -3595,6 +3601,7 @@ void base_game_options::read_option_line(const string &str, bool runscripts)
     }
     else if (state.key == "opt" || state.key == "option")
     {
+        // does this need the ability to escape `,` for some reason?
         _base_split_parse(state.raw_field, ",",
                 [this](const string & s, bool b) { set_option_fragment(s, b); });
         return;

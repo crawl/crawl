@@ -238,13 +238,13 @@ static inline bool ends_with(const string &s, const string &suffix)
     return s.find(suffix, s.length() - suffix.length()) != string::npos;
 }
 
-// Splits string 's' on the separator 'sep'. If trim == true, trims each
-// segment. If accept_empties == true, accepts empty segments. If nsplits >= 0,
-// splits on the first nsplits occurrences of the separator, and stores the
-// remainder of the string as the last segment; negative values of nsplits
-// split on all occurrences of the separator.
 vector<string> split_string(const string &sep, string s, bool trim = true,
-                            bool accept_empties = false, int nsplits = -1);
+                            bool accept_empties = false, int nsplits = -1,
+                            bool ignore_escapes = false);
+
+set<size_t> find_escapes(const string &s);
+string deescape(string s, const set<size_t> &escapes);
+string deescape(string s);
 
 // time
 
