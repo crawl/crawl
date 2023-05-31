@@ -412,10 +412,7 @@ An axe with langets, spikes, a lengthed haft and a single-bladed crescent head.
 %%%%
 buckler
 
-A small piece of wood and metal, to be strapped on one arm for defence. It is
-cumbersome to wear, and slightly impedes the evasion, spellcasting ability, and
-attack speed of the wearer. These penalties will be reduced and eventually
-eliminated with increased Shields skill.
+A small piece of wood and metal, to be strapped on one arm for defence.
 %%%%
 chain mail
 
@@ -658,10 +655,7 @@ range.
 %%%%
 kite shield
 
-A piece of wood and metal, to be strapped on one arm for defence. It is
-cumbersome to wear, and impedes the evasion, spellcasting ability, and attack
-speed of the wearer. These penalties will be reduced and eventually eliminated
-with increased Shields skill.
+A piece of wood and metal, to be strapped on one arm for defence.
 %%%%
 lajatang
 
@@ -1242,10 +1236,7 @@ free, if they live long enough.
 %%%%
 tower shield
 
-A large piece of wood and metal, to be strapped on one arm for defence. It is
-cumbersome to wear, and greatly impedes the evasion, spellcasting ability, and
-attack speed of the wearer. These penalties will be reduced and eventually
-eliminated with increased Shields skill.
+A large piece of wood and metal, to be strapped on one arm for defence.
 %%%%
 tin of tremorstones
 
