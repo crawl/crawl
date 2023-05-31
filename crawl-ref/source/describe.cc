@@ -4571,10 +4571,14 @@ static string _monster_attacks_description(const monster_info& mi)
             make_stringf(" with %s weapon", mi.pronoun(PRONOUN_POSSESSIVE))
             : "";
 
+        int attk_mult = attack_count.second;
+        if (weapon_multihits(info.weapon))
+            attk_mult *= weapon_hits_per_swing(*info.weapon);
+
         const string count_desc =
-              attack_count.second == 1 ? "" :
-              attack_count.second == 2 ? " twice" :
-              " " + number_in_words(attack_count.second) + " times";
+              attk_mult == 1 ? "" :
+              attk_mult == 2 ? " twice" :
+              " " + number_in_words(attk_mult) + " times";
 
         // XXX: hack alert
         if (attack.flavour == AF_PURE_FIRE)
