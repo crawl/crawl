@@ -2204,7 +2204,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_DEMON,             { 0, 3 } },
     { SPELL_SUMMON_TZITZIMITL,        { 0, 3 } },
     { SPELL_SUMMON_HELL_SENTINEL,     { 0, 3 } },
-    { SPELL_CONJURE_LIVING_SPELLS,    { 0, 6 } },
+    { SPELL_CONJURE_LIVING_SPELLS,    { 0, 4 } },
     { SPELL_SHEZAS_DANCE,             { 0, 6 } },
 };
 
