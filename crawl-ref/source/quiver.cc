@@ -1865,6 +1865,7 @@ namespace quiver
             switch (you.inv[item_slot].sub_type)
             {
             case MISC_ZIGGURAT:     // non-damaging misc items
+            case MISC_SACK_OF_SPIDERS:
             case MISC_BOX_OF_BEASTS:
             case MISC_HORN_OF_GERYON:
             case MISC_QUAD_DAMAGE:

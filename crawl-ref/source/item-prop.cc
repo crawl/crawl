@@ -835,6 +835,8 @@ static const item_set_def item_sets[] =
     { "ally scroll",        OBJ_SCROLLS,    { SCR_SUMMONING, SCR_BUTTERFLIES } },
     { "area misc",          OBJ_MISCELLANY, { MISC_CONDENSER_VANE,
                                               MISC_TIN_OF_TREMORSTONES } },
+    { "ally misc",          OBJ_MISCELLANY, { MISC_BOX_OF_BEASTS,
+                                              MISC_SACK_OF_SPIDERS } },
 };
 COMPILE_CHECK(ARRAYSZ(item_sets) == NUM_ITEM_SET_TYPES);
 

@@ -2358,7 +2358,20 @@ static void _recharge_xp_evokers(int exp)
         if (!gained)
             continue;
 
-        if (evoker_max_charges(i) == 1)
+        if (i == MISC_SACK_OF_SPIDERS)
+        {
+            if (silenced(you.pos()))
+            {
+                mprf("%s twitches, refilled and ready to use.",
+                     evoker->name(DESC_YOUR).c_str());
+            }
+            else
+            {
+                mprf("You hear chittering from %s. It's ready.",
+                     evoker->name(DESC_YOUR).c_str());
+            }
+        }
+        else if (evoker_max_charges(i) == 1)
             mprf("%s has recharged.", evoker->name(DESC_YOUR).c_str());
         else
         {

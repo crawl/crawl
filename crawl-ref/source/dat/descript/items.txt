@@ -993,6 +993,11 @@ rune of zot
 
 A talisman which allows entry into the Realm of Zot.
 %%%%
+sack of spiders
+
+A woven silk bag. Opening it will cover the area with webs, spiders, and other
+skittering things. Evocations skill increases spider quality and webbing.
+%%%%
 sacred scourge
 
 A blessed weapon, woven by the saints in Heaven and hated by the unholy. It is

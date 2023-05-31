@@ -1510,16 +1510,7 @@ bool is_stackable_item(const item_def &item)
 #endif
             return true;
         case OBJ_MISCELLANY:
-            switch (item.sub_type)
-            {
-                case MISC_ZIGGURAT:
-#if TAG_MAJOR_VERSION == 34
-                case MISC_SACK_OF_SPIDERS:
-#endif
-                    return true;
-                default:
-                    break;
-            }
+            return item.sub_type == MISC_ZIGGURAT;
         default:
             break;
     }

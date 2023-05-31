@@ -1141,9 +1141,7 @@ misc_lantern MISC_LANTERN_OF_SHADOWS
 misc_horn MISC_HORN_OF_GERYON
 misc_box MISC_BOX_OF_BEASTS
 %rim 0
-# start TAG_MAJOR_VERSION == 34
 misc_sack MISC_SACK_OF_SPIDERS
-# end TAG_MAJOR_VERSION
 misc_phantom_mirror MISC_PHANTOM_MIRROR
 misc_zigfig MISC_ZIGGURAT
 misc_quad MISC_QUAD_DAMAGE

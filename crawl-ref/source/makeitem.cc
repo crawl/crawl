@@ -1518,7 +1518,7 @@ static misc_item_type _get_misc_item_type(int force_type)
     set<misc_item_type> choices = {
         MISC_PHIAL_OF_FLOODS,
         MISC_LIGHTNING_ROD,
-        MISC_BOX_OF_BEASTS,
+        (misc_item_type)item_for_set(ITEM_SET_ALLY_MISCELLANY),
         MISC_PHANTOM_MIRROR,
         (misc_item_type)item_for_set(ITEM_SET_AREA_MISCELLANY),
         MISC_XOMS_CHESSBOARD
@@ -1542,6 +1542,7 @@ static void _generate_misc_item(item_def& item, int force_type, int item_level)
     item.sub_type = typ;
     switch (typ)
     {
+    case MISC_SACK_OF_SPIDERS:
     case MISC_BOX_OF_BEASTS:
     case MISC_LIGHTNING_ROD:
     case MISC_PHIAL_OF_FLOODS:

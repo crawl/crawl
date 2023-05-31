@@ -317,6 +317,117 @@ static bool _box_of_beasts()
     return true;
 }
 
+// Generate webs on hostile monsters and trap them.
+static bool _place_webs()
+{
+    bool webbed = false;
+    const int evo_skill = you.skill(SK_EVOCATIONS);
+    // At 0 evo skill, this is about a 1/3 chance of webbing an
+    // adjacent enemy. At 27 skill, it's about an 9/10 chance.
+    const int web_skill_factor = 64 - evo_skill * 2;
+    const int max_range = LOS_DEFAULT_RANGE / 2 + 2;
+    for (monster_near_iterator mi(you.pos(), LOS_SOLID); mi; ++mi)
+    {
+        trap_def *trap = trap_at((*mi)->pos());
+        // Don't destroy non-web traps or try to trap monsters
+        // currently caught by something.
+        if (you.pos().distance_from((*mi)->pos()) > max_range
+            || (!trap && env.grid((*mi)->pos()) != DNGN_FLOOR)
+            || (trap && trap->type != TRAP_WEB)
+            || (*mi)->friendly()
+            || (*mi)->caught())
+        {
+            continue;
+        }
+
+        // web chance increases with proximity & evo skill
+        // code here uses double negatives; sorry! i blame the other guy
+        const int dist = you.pos().distance_from((*mi)->pos());
+        const int web_dist_factor = 100 * (dist - 1) / max_range;
+        const int web_chance = 100 - web_dist_factor - web_skill_factor;
+        if (!x_chance_in_y(web_chance, 100))
+            continue;
+
+        if (trap && trap->type == TRAP_WEB)
+            destroy_trap((*mi)->pos());
+
+        place_specific_trap((*mi)->pos(), TRAP_WEB, 1); // 1 ammo = temp
+        // Reveal the trap
+        env.grid((*mi)->pos()) = DNGN_TRAP_WEB;
+        trap = trap_at((*mi)->pos());
+        trap->trigger(**mi);
+        webbed = true;
+    }
+    return webbed;
+}
+
+static const vector<pop_entry> pop_spiders =
+{ // Sack of Spiders
+  // tier zero :(
+  {  0,  13,  200, FALL, MONS_SCORPION },
+  // tier one
+  {  0,  18,  100, PEAK, MONS_REDBACK },
+  {  0,  18,  100, PEAK, MONS_CULICIVORA },
+  // tier two
+  {  6,  13,  100, RISE, MONS_JUMPING_SPIDER },
+  { 14,  27,  100, FALL, MONS_JUMPING_SPIDER },
+  {  6,  13,  100, RISE, MONS_TARANTELLA },
+  { 14,  27,  100, FALL, MONS_TARANTELLA },
+  // tier three
+  { 13,  20,  100, RISE, MONS_WOLF_SPIDER },
+  { 13,  20,  100, RISE, MONS_STEELBARB_WORM },
+  { 21,  33,  100, FALL, MONS_WOLF_SPIDER },
+  { 21,  33,  100, FALL, MONS_STEELBARB_WORM },
+  // tier MAXX
+  { 18,  27,  100, RISE, MONS_DEMONIC_CRAWLER },
+  { 21,  27,  100, RISE, MONS_BROODMOTHER },
+};
+
+static bool _sack_of_spiders_veto_mon(monster_type mon)
+{
+   // Don't summon any beast that would anger your god.
+    return god_hates_monster(mon);
+}
+
+static bool _spill_out_spiders()
+{
+    const int evo_skill = you.skill(SK_EVOCATIONS);
+    const int n_mons = random_range(2, 3);
+    bool made_mons = false;
+    for (int n = 0; n < n_mons; n++)
+    {
+        // Invoke mon-pick with our custom list
+        monster_type mon = pick_monster_from(pop_spiders, evo_skill,
+                                             _sack_of_spiders_veto_mon);
+        mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
+        mg.set_summoned(&you, 3 + random2(4), 0);
+        if (create_monster(mg))
+            made_mons = true;
+    }
+    return made_mons;
+}
+
+static bool _sack_of_spiders()
+{
+    mpr("You reach into the sack...");
+
+    const bool made_mons = !you.allies_forbidden() && _spill_out_spiders();
+    if (made_mons)
+        mpr("...and things crawl out!");
+
+    const bool webbed = _place_webs();
+    if (!made_mons && !webbed)
+    {
+        mpr("...but nothing happens.");
+        return false;
+    }
+
+    if (!made_mons)
+        mpr("...but only cobwebs fall out.");
+    return true;
+}
+
+
 static bool _make_zig(item_def &zig)
 {
     if (feat_is_critical(env.grid(you.pos()))
@@ -1115,11 +1226,17 @@ bool evoke_item(int slot, dist *preselect)
             }
             break;
 
-#if TAG_MAJOR_VERSION == 34
         case MISC_SACK_OF_SPIDERS:
-            canned_msg(MSG_NOTHING_HAPPENS);
+            if (_sack_of_spiders())
+            {
+                expend_xp_evoker(item.sub_type);
+                if (!evoker_charges(item.sub_type))
+                    mpr("The sack is emptied!");
+                practise_evoking(1);
+            }
             return false;
 
+#if TAG_MAJOR_VERSION == 34
         case MISC_CRYSTAL_BALL_OF_ENERGY:
             canned_msg(MSG_NOTHING_HAPPENS);
             return false;

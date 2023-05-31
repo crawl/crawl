@@ -1918,7 +1918,7 @@ ITEM:    book of callings w:5 / book of the wilderness w:20 / grand grimoire w:5
 ITEM:    manual of summonings
 ITEM:    amulet of magic regeneration w:5 ident:type / \
             amulet of magic regeneration randart
-ITEM:    box of beasts
+ITEM:    any ally misc
 KITEM:   % = any, any / gold / nothing, any / nothing
 KITEM:   _ = any ally scroll ident:type , any ally scroll ident:type / nothing
 KFEAT:   _ = altar_sif_muna
@@ -8344,7 +8344,8 @@ NAME:   hellmonk_guarded_unrand_zhor
 TAGS:   transparent no_monster_gen
 DEPTH:  D:7-, Lair
 WEIGHT: 3
-ITEM:   skin_of_zhor no_pickup, box of beasts
+ITEM:   skin_of_zhor no_pickup, box of beasts w:100 /\
+        scroll of summoning ident:all q:3 w:1
 MONS:   rime drake, torpor snail, ice dragon
 NSUBST: d = d / 1
 SUBST:  e = e..

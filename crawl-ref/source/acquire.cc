@@ -653,6 +653,7 @@ static const vector<pair<misc_item_type, int> > _misc_base_weights()
     vector<pair<misc_item_type, int> > choices =
     {
         {MISC_BOX_OF_BEASTS,       (no_allies ? 0 : 20)},
+        {MISC_SACK_OF_SPIDERS,     (no_allies ? 0 : 20)},
         {MISC_PHANTOM_MIRROR,      (no_allies ? 0 : 20)},
         // Tremorstones are better for heavily armoured characters.
         {MISC_TIN_OF_TREMORSTONES, 5 + _skill_rdiv(SK_ARMOUR) / 3},
@@ -693,6 +694,7 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
     if (choice == nullptr)
     {
         return random_choose(MISC_BOX_OF_BEASTS,
+                             MISC_SACK_OF_SPIDERS,
                              MISC_PHANTOM_MIRROR,
                              MISC_TIN_OF_TREMORSTONES,
                              MISC_LIGHTNING_ROD,

@@ -154,8 +154,8 @@
        "potion of resistance", "robe", "ring mail", "book of rime" }
 
       elseif s == "S" then i = { "scarf", "scimitar", "short sword",
-       "scale mail", "book of storms", "book of the sky",
-       "ring of see invisible", "ring of slaying", "spear",
+       "scale mail", "book of storms", "book of the sky", "spear",
+       "ring of see invisible", "ring of slaying", "sack of spiders",
        "ring of strength", "manual of stealth", "scroll of summoning",
        "book of spatial translocations", "scroll of silence",
        "shortbow", "manual of staves", "steam dragon scales",

@@ -975,9 +975,7 @@ static string misc_type_name(int type)
 #endif
     case MISC_QUAD_DAMAGE:               return "quad damage";
     case MISC_PHIAL_OF_FLOODS:           return "phial of floods";
-#if TAG_MAJOR_VERSION == 34
-    case MISC_SACK_OF_SPIDERS:           return "removed sack of spiders";
-#endif
+    case MISC_SACK_OF_SPIDERS:           return "sack of spiders";
     case MISC_PHANTOM_MIRROR:            return "phantom mirror";
     case MISC_ZIGGURAT:                  return "figurine of a ziggurat";
     case MISC_XOMS_CHESSBOARD:           return "piece from Xom's chessboard";

@@ -5469,7 +5469,8 @@ void unmarshallItem(reader &th, item_def &item)
     if (th.getMinorVersion() < TAG_MINOR_REALLY_UNSTACK_EVOKERS
         && item.base_type == OBJ_MISCELLANY
         && (item.sub_type == MISC_PHANTOM_MIRROR
-            || item.sub_type == MISC_BOX_OF_BEASTS) )
+            || item.sub_type == MISC_BOX_OF_BEASTS
+            || item.sub_type == MISC_SACK_OF_SPIDERS) )
     {
         item.quantity = 1;
     }
