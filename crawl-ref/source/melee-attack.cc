@@ -702,7 +702,7 @@ bool melee_attack::handle_phase_end()
         attacker->as_monster()->del_ench(ENCH_ROLLING);
     }
 
-    if (defender)
+    if (defender && !is_multihit)
     {
         if (damage_brand == SPWPN_SPECTRAL)
             _handle_spectral_brand(*attacker, *defender);
