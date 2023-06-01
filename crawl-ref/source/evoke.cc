@@ -925,7 +925,7 @@ static spret _condenser()
     for (auto p : target_list)
     {
         // Get at least one cloud, even at 0 power.
-        if (did_something && !x_chance_in_y(10 + pow, 120))
+        if (did_something && !x_chance_in_y(50 + pow, 160))
             continue;
 
         const int cloud_power = 5
