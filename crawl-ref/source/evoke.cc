@@ -873,7 +873,7 @@ static spret _condenser()
     random_picker<cloud_type, NUM_CLOUD_TYPES> cloud_picker;
     cloud_type cloud = cloud_picker.pick(condenser_clouds, pow, CLOUD_NONE);
 
-    vector<coord_def> target_cells;
+    set<coord_def> target_cells;
     bool see_targets = false;
 
     for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
@@ -888,23 +888,11 @@ static spret _condenser()
 
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
         {
-            actor * act = actor_at(*ai);
-            if (!cell_is_solid(*ai) && you.see_cell(*ai) && !cloud_at(*ai)
-                && !(act && act->wont_attack()))
-            {
-                bool targeted = false;
-                for (auto p : target_cells)
-                {
-                    if (*ai == p)
-                    {
-                        targeted = true;
-                        break;
-                    }
-                }
-
-                if (!targeted)
-                    target_cells.push_back(*ai);
-            }
+            if (cell_is_solid(*ai) || !you.see_cell(*ai) || cloud_at(*ai))
+                continue;
+            const actor *act = actor_at(*ai);
+            if (!act || !act->wont_attack())
+                target_cells.insert(*ai);
         }
     }
 
@@ -928,10 +916,13 @@ static spret _condenser()
         return spret::fail;
     }
 
-    shuffle_array(target_cells);
+    vector<coord_def> target_list;
+    for (coord_def t : target_cells)
+        target_list.push_back(t);
+    shuffle_array(target_list);
     bool did_something = false;
 
-    for (auto p : target_cells)
+    for (auto p : target_list)
     {
         // Get at least one cloud, even at 0 power.
         if (did_something && !x_chance_in_y(10 + pow, 120))
