@@ -143,7 +143,7 @@ static const struct spell_desc spelldata[] =
     spflag::noisy | spflag::destructive,
     6,
     200,
-    3, 10, // capped at LOS
+    LOS_RADIUS, LOS_RADIUS,
     20,
     TILEG_PLASMA_BEAM,
 },
