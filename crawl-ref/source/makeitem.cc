@@ -248,7 +248,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
 }
 
 /**
- * The number of times to try finding a brand for a given item.
+ * The number of times to try finding a brand for a given weapon.
  *
  * Result may vary from call to call.
  */
@@ -256,8 +256,13 @@ static int _num_brand_tries(const item_def& item, int item_level)
 {
     if (item_level >= ISPEC_GIFT)
         return 5;
-    if (is_demonic(item) || x_chance_in_y(101 + item_level, 300))
+    if (is_demonic(item)
+        // Hand crossbows usually appear late, so encourage use.
+        || item.sub_type == WPN_HAND_CROSSBOW
+        || x_chance_in_y(101 + item_level, 300))
+    {
         return 1;
+    }
     return 0;
 }
 
@@ -465,7 +470,8 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         }
         item.plus -= 1 + random2(3);
     }
-    else if ((force_good || is_demonic(item) || forced_ego
+    else if ((force_good || is_demonic(item)
+              || item.sub_type == WPN_HAND_CROSSBOW || forced_ego
                     || x_chance_in_y(51 + item_level, 200))
                 && (!item.is_mundane() || force_good))
     {

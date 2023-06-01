@@ -731,7 +731,17 @@ static const weapon_def Weapon_prop[] =
         DAMV_NON_MELEE, 8, 10, 15, RANGED_BRANDS },
     { WPN_HAND_CROSSBOW,     "hand crossbow",      16,  3, 19,
         SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_LITTLE, MI_BOLT,
-        DAMV_NON_MELEE, 0, 10, 35, RANGED_BRANDS },
+        DAMV_NON_MELEE, 0, 10, 35, {
+            // Hand crossbows appear late, so encourage use by reducing
+            // SPWPN_NORMAL weight relative to other ranged weapons.
+            { SPWPN_NORMAL,        15 },
+            { SPWPN_FLAMING,       11 },
+            { SPWPN_FREEZING,      11 },
+            { SPWPN_HEAVY,         7 },
+            { SPWPN_DRAINING,      7 },
+            { SPWPN_ELECTROCUTION, 4 },
+            { SPWPN_ANTIMAGIC,     2 },
+        } },
 #if TAG_MAJOR_VERSION == 34
     { WPN_FUSTIBALUS,        "fustibalus",         10, -2, 16,
         SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_SMALL, MI_SLING_BULLET,
