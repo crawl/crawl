@@ -1265,6 +1265,7 @@ static const char* _aux_attack_names[] =
     "Bite",
     "Pseudopods",
     "Tentacles",
+    "Maw",
 };
 COMPILE_CHECK(ARRAYSZ(_aux_attack_names) == NUM_UNARMED_ATTACKS);
 

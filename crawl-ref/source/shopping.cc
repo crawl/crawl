@@ -652,6 +652,33 @@ unsigned int item_value(item_def item, bool ident)
         }
         break;
 
+    case OBJ_TALISMANS:
+        // These are all pretty arbitrary.
+        switch (item.sub_type)
+        {
+        case TALISMAN_DEATH:
+        case TALISMAN_STORM:
+            valued += 1200;
+            break;
+
+        case TALISMAN_DRAGON:
+        case TALISMAN_STATUE:
+            valued += 800;
+            break;
+
+        case TALISMAN_MAW:
+        case TALISMAN_SERPENT:
+        case TALISMAN_BLADE:
+            valued += 400;
+            break;
+
+        case TALISMAN_BEAST:
+        default:
+            valued += 200;
+            break;
+        }
+        break;
+
     case OBJ_BOOKS:
     {
         valued = 0;

@@ -35,7 +35,6 @@ TEST_CASE( "When setting book spell list", "[single-file]" ) {
             SPELL_SHOCK,
             SPELL_SANDBLAST,
             SPELL_FOXFIRE,
-            SPELL_BEASTLY_APPENDAGE,
             SPELL_STING,
         };
 

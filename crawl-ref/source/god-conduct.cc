@@ -1152,9 +1152,6 @@ bool god_punishes_spell(spell_type spell, god_type god)
     if (map_find(divine_peeves[god], DID_SPELL_CASTING))
         return true;
 
-    if (god_loathes_spell(spell, god))
-        return true;
-
     if (map_find(divine_peeves[god], DID_EVIL)
         && (is_evil_spell(spell) || you.spellcasting_unholy()))
     {

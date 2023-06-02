@@ -69,7 +69,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Fire
     SPELL_FOXFIRE,
-    SPELL_FIREBALL,
     SPELL_PLASMA_BEAM,
     SPELL_STARBURST,
 },
@@ -117,16 +116,15 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Changes
-    SPELL_BEASTLY_APPENDAGE,
     SPELL_WEREBLOOD,
-    SPELL_SPIDER_FORM,
+    SPELL_IRRADIATE,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Book of Transfigurations
     SPELL_IRRADIATE,
-    SPELL_BLADE_HANDS,
-    SPELL_DRAGON_FORM,
 },
+#endif
 
 {   // Fen Folio
     SPELL_SUMMON_FOREST,
@@ -165,10 +163,11 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_AIRSTRIKE,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Book of the Sky
-    SPELL_STORM_FORM,
     SPELL_MAXWELLS_COUPLING,
 },
+#endif
 
 {   // Book of the Warp
     SPELL_MANIFOLD_ASSAULT,
@@ -178,7 +177,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 #if TAG_MAJOR_VERSION == 34
 {   // Book of Envenomations
-    SPELL_SPIDER_FORM,
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_INTOXICATE,
 },
@@ -210,7 +208,6 @@ static const vector<spell_type> spellbook_templates[] =
 #if TAG_MAJOR_VERSION == 34
 {   // Book of Stone
     SPELL_LEDAS_LIQUEFACTION,
-    SPELL_STATUE_FORM,
 },
 
 {   // Book of Wizardry
@@ -252,7 +249,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of the Dragon
     SPELL_CAUSE_FEAR,
-    SPELL_DRAGON_FORM,
+    SPELL_FIREBALL,
     SPELL_DRAGON_CALL,
 },
 
@@ -264,7 +261,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Dreams
     SPELL_HIBERNATION,
-    SPELL_SPIDER_FORM,
     SPELL_ANGUISH,
 },
 
@@ -292,8 +288,8 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Necronomicon
+    SPELL_HAUNT,
     SPELL_BORGNJORS_REVIVIFICATION,
-    SPELL_NECROMUTATION,
     SPELL_DEATHS_DOOR,
 },
 
@@ -307,8 +303,8 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of Spectacle
     SPELL_BLASTMOTE,
     SPELL_DAZZLING_FLASH,
-    SPELL_ISKENDERUNS_MYSTIC_BLAST,
     SPELL_STARBURST,
+    SPELL_MAXWELLS_COUPLING,
 },
 
 { // Book of Winter
@@ -349,11 +345,12 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_TELEPORT_OTHER,
 },
 
+#if TAG_MAJOR_VERSION == 34
 { // Book of Rime
     SPELL_FROZEN_RAMPARTS,
-    SPELL_ICE_FORM,
     SPELL_SUMMON_ICE_BEAST,
 },
+#endif
 
 { // Everburning Encyclopedia
     SPELL_IGNITE_POISON,
@@ -365,7 +362,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_LRD,
     SPELL_UNMAKING,
-    SPELL_STATUE_FORM,
 },
 
 { // Ozocubu's Autobio
@@ -389,24 +385,22 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_BLASTMOTE,
     SPELL_FULMINANT_PRISM,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
-    SPELL_LRD,
 },
 
 { // Book of Iron
     SPELL_SUMMON_LIGHTNING_SPIRE,
     SPELL_ANIMATE_ARMOUR,
-    SPELL_BLADE_HANDS,
+    SPELL_LRD,
 },
 
 { // Inescapable Atlas
     SPELL_BLINK,
     SPELL_MANIFOLD_ASSAULT,
-    SPELL_STORM_FORM,
 },
 
 { // Book of the Tundra
     SPELL_HAILSTORM,
-    SPELL_ICE_FORM,
+    SPELL_SUMMON_ICE_BEAST,
     SPELL_SIMULACRUM,
 },
 
@@ -419,13 +413,13 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of Weapons
     SPELL_TUKIMAS_DANCE,
     SPELL_PORTAL_PROJECTILE,
-    SPELL_BLADE_HANDS,
+    SPELL_ISKENDERUNS_MYSTIC_BLAST,
 },
 
 { // Book of Sloth
+    SPELL_FROZEN_RAMPARTS,
     SPELL_PETRIFY,
     SPELL_ENGLACIATION,
-    SPELL_STATUE_FORM,
 },
 
 { // Book of Blood

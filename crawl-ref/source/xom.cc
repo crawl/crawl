@@ -478,45 +478,6 @@ static bool _teleportation_check()
     return !you.no_tele();
 }
 
-static bool _transformation_check(const spell_type spell)
-{
-    transformation tran = transformation::none;
-    switch (spell)
-    {
-    case SPELL_BEASTLY_APPENDAGE:
-        tran = transformation::appendage;
-        break;
-    case SPELL_SPIDER_FORM:
-        tran = transformation::spider;
-        break;
-    case SPELL_STATUE_FORM:
-        tran = transformation::statue;
-        break;
-    case SPELL_ICE_FORM:
-        tran = transformation::ice_beast;
-        break;
-    case SPELL_DRAGON_FORM:
-        tran = transformation::dragon;
-        break;
-    case SPELL_STORM_FORM:
-        tran = transformation::storm;
-        break;
-    case SPELL_NECROMUTATION:
-        tran = transformation::lich;
-        break;
-    default:
-        break;
-    }
-
-    if (tran == transformation::none)
-        return true;
-
-    // Check whether existing enchantments/transformations, cursed
-    // equipment or potential stat loss interfere with this
-    // transformation.
-    return transform(0, tran, true, true);
-}
-
 /// Try to choose a random player-castable spell.
 static spell_type _choose_random_spell(int sever)
 {
@@ -526,11 +487,8 @@ static spell_type _choose_random_spell(int sever)
     for (int i = 0; i < min(spellenum, (int)spell_list.size()); ++i)
     {
         const spell_type spell = spell_list[i];
-        if (!spell_is_useless(spell, true, true, true)
-             && _transformation_check(spell))
-        {
+        if (!spell_is_useless(spell, true, true, true))
             ok_spells.push_back(spell);
-        }
     }
 
     if (!ok_spells.size())
@@ -1967,16 +1925,6 @@ static void _xom_pseudo_miscast(int /*sever*/)
     {
         string str = "A monocle briefly appears over your ";
         str += random_choose("right", "left");
-        if (you.form == transformation::spider)
-        {
-            if (coinflip())
-                str += " primary";
-            else
-            {
-                str += random_choose(" front", " middle", " rear");
-                str += " secondary";
-            }
-        }
         str += " eye.";
         messages.push_back(str);
     }

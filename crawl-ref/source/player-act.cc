@@ -696,7 +696,7 @@ string player::arm_name(bool plural, bool *can_plural) const
     string str = species::arm_name(species);
 
     string adj;
-    if (form == transformation::lich)
+    if (form == transformation::death)
         adj = "bony";
     else if (form == transformation::shadow)
         adj = "shadowy";
@@ -893,8 +893,7 @@ bool player::antimagic_susceptible() const
 
 bool player::is_web_immune() const
 {
-    return form == transformation::spider
-        || is_insubstantial()
+    return is_insubstantial()
         || player_equip_unrand(UNRAND_SLICK_SLIPPERS);
 }
 

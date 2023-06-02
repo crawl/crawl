@@ -103,8 +103,8 @@ other Summonings spells in their library.
 %%%%
 Transmuter
 
-Transmuters learn spells to shift their form, making them powerful unarmed
-fighters.
+Transmuters use talismans to shift their form, making them powerful melee
+fighters (especially when unarmed) at the cost of armour.
 %%%%
 Venom Mage
 

@@ -2712,6 +2712,15 @@ static tileidx_t _tileidx_rune(const item_def &item)
     }
 }
 
+static tileidx_t _tileidx_talisman(const item_def &item)
+{
+    switch (item.sub_type)
+    {
+        // XXX TODO
+    default: return TILE_ERROR;
+    }
+}
+
 static tileidx_t _tileidx_misc(const item_def &item)
 {
     switch (item.sub_type)
@@ -2929,6 +2938,9 @@ tileidx_t tileidx_item(const item_def &item)
 
     case OBJ_MISCELLANY:
         return _tileidx_misc(item);
+
+    case OBJ_TALISMANS:
+        return _tileidx_talisman(item);
 
     case OBJ_RUNES:
         if (item.quantity <= 0)
@@ -3587,6 +3599,7 @@ tileidx_t tileidx_ability(const ability_type ability)
 
     // Others
     case ABIL_END_TRANSFORMATION:
+    case ABIL_BEGIN_UNTRANSFORM:
         return TILEG_ABILITY_END_TRANSFORMATION;
     case ABIL_STOP_RECALL:
         return TILEG_ABILITY_STOP_RECALL;

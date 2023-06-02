@@ -305,24 +305,6 @@ LUAFN(l_spells_god_hates)
     PLUARET(boolean, god_hates_spell(spell, god));
 }
 
-/*** Does our god loathe this spell?
- * Casting this will result in excommunication.
- * @tparam string name
- * @treturn boolean
- * @function god_loathes
- */
-LUAFN(l_spells_god_loathes)
-{
-    spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    god_type god = you.religion;
-    if (lua_gettop(ls) > 1)
-    {
-        const char *godname = luaL_checkstring(ls, 2);
-        god = str_to_god(godname);
-    }
-    PLUARET(boolean, god_loathes_spell(spell, god));
-}
-
 /*** Cast a spell at a target. If the target is not provided, enters interactive
  * targeting.
  *
@@ -393,7 +375,6 @@ static const struct luaL_reg spells_clib[] =
     { "targ_obj"      , l_spells_targ_obj },
     { "god_likes"     , l_spells_god_likes },
     { "god_hates"     , l_spells_god_hates },
-    { "god_loathes"   , l_spells_god_loathes },
     { "cast"          , l_spells_cast },
     { "describe"      , l_spells_describe },
     { nullptr, nullptr }

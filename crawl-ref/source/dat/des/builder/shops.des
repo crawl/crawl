@@ -1173,7 +1173,7 @@ COLOUR: m = magenta
 TILE: m = dngn_transparent_wall_magenta
 KFEAT: S = general shop type:Changing suffix:Room count:7 ; \
    potion of mutation | potion of lignification | book of changes w:5 | \
-   wand of polymorph | book of transfigurations w:5 | book of alchemy w:5 \
+   wand of polymorph | any talisman w:30 | book of alchemy w:5 \
    | randbook disc:transmutation w:5 | plutonium_sword w:1
 MARKER: F = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 50, \
    pow_max = 50, delay = 1, size = 1, walk_dist = 0, start_clouds = 1, \

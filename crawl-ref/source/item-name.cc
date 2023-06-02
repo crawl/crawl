@@ -987,6 +987,23 @@ static string misc_type_name(int type)
     }
 }
 
+static string talisman_type_name(int type)
+{
+    switch (type)
+    {
+    case TALISMAN_BEAST:    return "beast talisman";
+    case TALISMAN_MAW:      return "maw talisman";
+    case TALISMAN_SERPENT:  return "serpent talisman";
+    case TALISMAN_BLADE:    return "blade talisman";
+    case TALISMAN_STATUE:   return "granite talisman";
+    case TALISMAN_DRAGON:   return "dragon-blood talisman";
+    case TALISMAN_DEATH:    return "talisman of death";
+    case TALISMAN_STORM:    return "storm talisman";
+    default:
+        return "buggy talisman";
+    }
+}
+
 static const char* _book_type_name(int booktype)
 {
     switch (static_cast<book_type>(booktype))
@@ -1004,8 +1021,8 @@ static const char* _book_type_name(int booktype)
     case BOOK_DEATH:                  return "Death";
     case BOOK_MISFORTUNE:             return "Misfortune";
     case BOOK_CHANGES:                return "Changes";
-    case BOOK_TRANSFIGURATIONS:       return "Transfigurations";
 #if TAG_MAJOR_VERSION == 34
+    case BOOK_TRANSFIGURATIONS:       return "Transfigurations";
     case BOOK_BATTLE:                 return "Battle";
 #endif
     case BOOK_VAPOURS:                return "Vapours";
@@ -1015,7 +1032,9 @@ static const char* _book_type_name(int booktype)
     case BOOK_MALEDICT:               return "Maledictions";
 #endif
     case BOOK_AIR:                    return "Air";
+#if TAG_MAJOR_VERSION == 34
     case BOOK_SKY:                    return "the Sky";
+#endif
     case BOOK_WARP:                   return "the Warp";
 #if TAG_MAJOR_VERSION == 34
     case BOOK_ENVENOMATIONS:          return "Envenomations";
@@ -1048,8 +1067,8 @@ static const char* _book_type_name(int booktype)
 #endif
     case BOOK_DECAY:                  return "Decay";
     case BOOK_DISPLACEMENT:           return "Displacement";
-    case BOOK_RIME:                   return "Rime";
 #if TAG_MAJOR_VERSION == 34
+    case BOOK_RIME:                   return "Rime";
     case BOOK_STONE:                  return "Stone";
 #endif
     case BOOK_SENSES:                 return "the Senses";
@@ -1134,6 +1153,7 @@ const char *base_type_string(object_class_type type)
     case OBJ_CORPSES: return "corpse";
     case OBJ_GOLD: return "gold";
     case OBJ_RUNES: return "rune";
+    case OBJ_TALISMANS: return "talisman";
     default: return "";
     }
 }
@@ -1209,6 +1229,7 @@ string sub_type_string(const item_def &item, bool known)
     case OBJ_RODS:   return "removed rod";
 #endif
     case OBJ_MISCELLANY: return misc_type_name(sub_type);
+    case OBJ_TALISMANS: return talisman_type_name(sub_type);
     // these repeat as base_type_string
     case OBJ_ORBS: return "orb of Zot";
     case OBJ_CORPSES: return "corpse";
@@ -1788,6 +1809,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         break;
     }
 
+    case OBJ_TALISMANS:
+        // XXX TODO: support randarts..?
+        buff << talisman_type_name(item_typ);
+        break;
+
     case OBJ_BOOKS:
         if (is_random_artefact(*this) && !dbname && !basename)
         {
@@ -1951,6 +1977,7 @@ bool item_type_known(const item_def& item)
 
     switch (item.base_type)
     {
+    case OBJ_TALISMANS: // XXX TODO: support unknown randarts..?
     case OBJ_MISCELLANY:
     case OBJ_MISSILES:
     case OBJ_BOOKS:
@@ -3049,7 +3076,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
         if (you.undead_or_demonic() && is_holy_item(item, false))
         {
-            if (!temp && you.form == transformation::lich
+            if (!temp && you.form == transformation::death
                 && you.species != SP_DEMONSPAWN)
             {
                 return false;
@@ -3127,6 +3154,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return reasons.size();
     }
 
+    case OBJ_TALISMANS:
     case OBJ_MISCELLANY:
     case OBJ_WANDS:
         return cannot_evoke_item_reason(&item, temp, ident || item_type_known(item)).size();

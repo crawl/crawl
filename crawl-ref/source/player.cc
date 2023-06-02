@@ -1622,9 +1622,6 @@ int player_spec_death()
 
     sd += you.get_mutation_level(MUT_NECRO_ENHANCER);
 
-    if (you.form == transformation::lich)
-        sd++;
-
     sd += you.scan_artefacts(ARTP_ENHANCE_NECRO);
 
     return sd;
@@ -1935,11 +1932,13 @@ bool player_effectively_in_light_armour()
 // it just makes the character undead (with the benefits that implies). - bwr
 bool player_is_shapechanged()
 {
+    // TODO: move into data
     if (you.form == transformation::none
         || you.form == transformation::blade_hands
-        || you.form == transformation::lich
+        || you.form == transformation::death
         || you.form == transformation::shadow
-        || you.form == transformation::appendage)
+        || you.form == transformation::beast
+        || you.form == transformation::maw)
     {
         return false;
     }
@@ -2026,8 +2025,7 @@ static int _player_evasion_bonuses()
     if (you.get_mutation_level(MUT_SLOW_REFLEXES))
         evbonus -= you.get_mutation_level(MUT_SLOW_REFLEXES) * 5;
 
-    if (you.props.exists(AIRFORM_POWER_KEY))
-        evbonus += you.props[AIRFORM_POWER_KEY].get_int() / 10;
+    evbonus += get_form()->ev_bonus();
 
     if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         evbonus += you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int();
@@ -3540,6 +3538,8 @@ int slaying_bonus(bool throwing)
     if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         ret += you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int();
 
+    ret += get_form()->slay_bonus();
+
     return ret;
 }
 
@@ -3959,14 +3959,8 @@ int get_real_hp(bool trans, bool drained)
     hitp *= 100 + you.attribute[ATTR_DIVINE_VIGOUR] * 5;
     hitp /= 100;
 
-    // Some transformations give you extra hp.
     if (trans)
-        hitp = hitp * form_hp_mod() / 10;
-
-#if TAG_MAJOR_VERSION == 34
-    if (trans && player_equip_unrand(UNRAND_ETERNAL_TORMENT))
-        hitp = hitp * 4 / 5;
-#endif
+        hitp = get_form()->mult_hp(hitp);
 
     return max(1, hitp);
 }
@@ -6384,8 +6378,7 @@ bool player::res_water_drowning() const
 {
     return is_unbreathing()
            || species::can_swim(species) && !form_changed_physiology()
-           || you.species == SP_GREY_DRACONIAN && draconian_dragon_exception()
-           || form == transformation::ice_beast;
+           || you.species == SP_GREY_DRACONIAN && draconian_dragon_exception();
 }
 
 int player::res_poison(bool temp) const
@@ -6511,11 +6504,7 @@ int player_willpower(bool temp)
     // Mutations
     rm += WL_PIP * you.get_mutation_level(MUT_STRONG_WILLED);
     rm += WL_PIP * you.get_mutation_level(MUT_DEMONIC_WILL);
-    rm -= WL_PIP * you.get_mutation_level(MUT_WEAK_WILLED);
-
-    // transformations
-    if (you.form == transformation::lich && temp)
-        rm += WL_PIP;
+    rm -= WL_PIP * you.get_mutation_level(MUT_WEAK_WILLED);;
 
     // In this moment, you are euphoric.
     if (you.duration[DUR_ENLIGHTENED])
@@ -6680,7 +6669,7 @@ bool player::spellcasting_unholy() const
  */
 undead_state_type player::undead_state(bool temp) const
 {
-    if (temp && form == transformation::lich)
+    if (temp && form == transformation::death)
         return US_UNDEAD;
     return species::undead_type(species);
 }
@@ -7312,7 +7301,7 @@ bool player::can_bleed(bool temp) const
 
 bool player::can_drink(bool temp) const
 {
-    if (temp && (you.form == transformation::lich
+    if (temp && (you.form == transformation::death
                     || you.duration[DUR_NO_POTIONS]))
     {
         return false;
@@ -7374,7 +7363,7 @@ bool player::polymorph(int pow, bool allow_immobile)
         f = forms[random2(forms.size())];
 
         // need to do a dry run first, as Zin's protection has a random factor
-        if (transform(pow, f, true, true))
+        if (cant_transform_reason(f, true).empty())
             break;
 
         f = transformation::none;
@@ -7390,7 +7379,7 @@ bool player::polymorph(int pow, bool allow_immobile)
 
 bool player::is_icy() const
 {
-    return form == transformation::ice_beast;
+    return false;
 }
 
 bool player::is_fiery() const

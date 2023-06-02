@@ -79,7 +79,7 @@ T random_picker<T, max>::pick(const vector<random_pick_entry<T>>& weights, int l
         if ((totalrar -= valid[i].rarity) < 0)
             return valid[i].value;
 
-    die("random_pick roll out of range");
+        return none;
 }
 
 template <typename T, int max>

@@ -272,6 +272,9 @@ void get_class_hotkeys(const int type, vector<char> &glyphs)
         glyphs.push_back('\\');
         break;
 #endif
+    case OBJ_TALISMANS:
+        glyphs.push_back('%'); // dubious!
+        break;
     case OBJ_MISCELLANY:
         glyphs.push_back('}');
         break;
@@ -393,6 +396,7 @@ static bool _item_is_permadrop_candidate(const item_def &item)
     if (item_type_unknown(item))
         return false;
     return item.base_type == OBJ_MISCELLANY
+        || item.base_type == OBJ_TALISMANS
         || is_stackable_item(item)
         || item_type_has_ids(item.base_type);
 }
@@ -843,13 +847,14 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_WANDS,
     OBJ_SCROLLS,
     OBJ_POTIONS,
-    OBJ_BOOKS,
     OBJ_MISCELLANY,
+    OBJ_TALISMANS,
 #if TAG_MAJOR_VERSION == 34
     OBJ_FOOD,
 #endif
-    // These four can't actually be in your inventory.
+    // These five can't actually be in your inventory.
     OBJ_CORPSES,
+    OBJ_BOOKS,
     OBJ_RUNES,
     OBJ_ORBS,
     OBJ_GOLD);
@@ -1051,6 +1056,7 @@ const char *item_class_name(int type, bool terse)
         case OBJ_MISCELLANY: return "Miscellaneous";
         case OBJ_CORPSES:    return "Carrion";
         case OBJ_RUNES:      return "Runes of Zot";
+        case OBJ_TALISMANS:  return "Talismans";
         }
     }
     return "";
@@ -1762,7 +1768,9 @@ bool check_warning_inscriptions(const item_def& item,
             prompt += " while about to teleport";
         }
         prompt += "?";
-        if (penance)
+        if (god_despises_item(item))
+            prompt += " You'd be excommunicated if you did!";
+        else if (penance)
             prompt += " This could place you under penance!";
         return yesno(prompt.c_str(), false, 'n')
                && check_old_item_warning(item, oper);

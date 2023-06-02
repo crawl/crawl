@@ -462,13 +462,12 @@ Channel status
 
 You are channelling magical energy.
 %%%%
-Spider status
+Beast status
 
-You have been transformed into a venomous, spider-like creature. You become
-highly evasive and gain a poisonous bite, but gain vulnerability to poison.
+You have been transformed into a monstrous, furry were-beast. The ferocious
+energy pulsing through your limbs keeps you ready to kill.
 
-Any equipped weapons and armour are melded, and your success rate with spells
-is slightly reduced.
+Any gloves, cloaks, headgear and boots are melded.
 %%%%
 Blade status
 
@@ -478,6 +477,22 @@ damage significantly.
 Any equipped weapons are melded, and your success rate with spells is somewhat
 reduced.
 %%%%
+Snake status
+
+You have been transformed into a giant, cold-blooded anaconda, ready to wind
+your coils around foes and crush them to death.
+
+Any equipped weapons and armour are melded.
+%%%%
+Maw status
+
+Your midsection has transformed into a giant mouth, gnashing and ready to devour
+foes. The mouth may devour slain creatures, healing you to an extent increased
+by your Transmutations skill and the power of the creature eaten. Skill also
+increases the damage done by the maw.
+
+While transformed, any body armour is melded.
+%%%%
 Statue status
 
 You have been transformed into a slow but extremely robust stone statue.
@@ -486,14 +501,6 @@ Your stone body is immune to poison and miasma, and gains resistance to
 electricity and negative energy.
 
 Any equipped body armour, gloves and boots are melded.
-%%%%
-Ice status
-
-You have been transformed into a frozen ice-creature, light enough to float on
-water. You gain a freezing melee attack, and are incredibly resistant to cold
-and resistant to poison, but vulnerable to fire.
-
-Any equipped weapons and armour are melded.
 %%%%
 Dragon status
 
@@ -540,15 +547,14 @@ You gain the ability to launch yourself at foes as a lightning bolt.
 
 Any equipped weapons and armour are melded.
 %%%%
-Lich status
+Death status
 
-You have been transformed into a lich. You are resistant to cold and hostile
-enchantments and completely immune to poison, negative energy and torment for
-the duration of the transformation.
+You have been transformed into an undying offense against life itself.
 
-Your necromancy spells are increased in power, and you gain a draining melee
-attack. However, you are also vulnerable to holy damage and Dispel Undead,
-and are unable to consume potions.
+Foes struck by your hands or melee weapons are weakened, slowed, and drained,
+and you can heal themselves by tormenting foes nearby. You also resist cold and
+are immune to poison, miasma, negative energy, and torment. Unfortunately, you
+are vulnerable to holy damage and Dispel Undead, and cannot consume potions.
 %%%%
 Bat status
 

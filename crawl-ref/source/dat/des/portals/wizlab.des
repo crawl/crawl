@@ -1010,7 +1010,7 @@ ITEM:       potion of mutation
 ITEM:       potion of mutation q:1, potion of mutation
 ITEM:       any jewellery randart / w:5 hat_of_the_alchemist
 ITEM:       randbook disc:transmutation disc2:necromancy owner:Cigotuvi
-ITEM:       book of transfigurations / randbook disc:transmutation
+ITEM:       any talisman
 ITEM:       staff of death, scroll of poison
 SHUFFLE:    de / h~ / j|
 NSUBST:     de = 1:e / 1:f / *:d, g = 1:g / *:$, h = 1:h / 2:i / *:., j = 1:j / *:k

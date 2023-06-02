@@ -282,6 +282,7 @@ enum tag_minor_version
     TAG_MINOR_GENERATED_MISC,      // Track generated misc item types.
     TAG_MINOR_SAVE_TERRAIN_FLAVOUR, // Save flavour in terrain-change markers.
     TAG_MINOR_DJ_SPLIT,            // Make Djinn use all magic skills.
+    TAG_MINOR_TALISMANS,           // Add talismans and indefinite transforms.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

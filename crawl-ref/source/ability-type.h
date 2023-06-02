@@ -60,6 +60,10 @@ enum ability_type
 #endif
     // Storm Form
     ABIL_BLINKBOLT,
+    // Permaforms
+    ABIL_BEGIN_UNTRANSFORM,
+    // Death Form
+    ABIL_SIPHON_ESSENCE,
 
     // Evoking items.
 #if TAG_MAJOR_VERSION == 34

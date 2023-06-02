@@ -324,7 +324,7 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_CLOAK]   = 0;
         result.parts[TILEP_PART_SHADOW]  = 0;
         break;
-    case transformation::lich:
+    case transformation::death:
         switch (you.species)
         {
 #if TAG_MAJOR_VERSION == 34

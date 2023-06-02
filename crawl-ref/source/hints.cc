@@ -2487,8 +2487,8 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
     case DNGN_TRAP_WEB:
         ostr << "Some areas of the dungeon, such as the Spider Nest, may "
                 "be strewn with giant webs that may ensnare you for a short "
-                "time. Players in Spider Form can safely navigate the webs (as "
-                "can incorporeal entities and various oozes).";
+                "time. Insects, oozes and incorporeal entities can navigate "
+                "the webs safely.";
         Hints.hints_events[HINT_SEEN_WEB] = false;
         break;
 

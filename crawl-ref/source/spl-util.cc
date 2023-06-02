@@ -1273,23 +1273,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         break;
 
-    case SPELL_STATUE_FORM:
-        if (SP_GARGOYLE == you.species)
-            return "you're already a statue.";
-        // fallthrough to other forms
-
-    case SPELL_BEASTLY_APPENDAGE:
-    case SPELL_BLADE_HANDS:
-    case SPELL_DRAGON_FORM:
-    case SPELL_ICE_FORM:
-    case SPELL_STORM_FORM:
-    case SPELL_SPIDER_FORM:
-        if (you.undead_state(temp) == US_UNDEAD)
-            return "your undead flesh cannot be transformed.";
-        if (you.is_lifeless_undead(temp))
-            return "your current blood level is not sufficient.";
-        break;
-
     case SPELL_PORTAL_PROJECTILE:
         if (you.has_mutation(MUT_NO_GRASPING))
             return "this spell is useless without hands.";
@@ -1957,6 +1940,14 @@ const set<spell_type> removed_spells =
     SPELL_CONJURE_FLAME,
     SPELL_CORPSE_ROT,
     SPELL_FLAME_TONGUE,
+    SPELL_BEASTLY_APPENDAGE,
+    SPELL_SPIDER_FORM,
+    SPELL_ICE_FORM,
+    SPELL_BLADE_HANDS,
+    SPELL_STATUE_FORM,
+    SPELL_STORM_FORM,
+    SPELL_DRAGON_FORM,
+    SPELL_NECROMUTATION,
 #endif
 };
 

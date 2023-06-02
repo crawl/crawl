@@ -1394,11 +1394,6 @@ void pickup(bool partial_quantity)
 
     if (o == NON_ITEM)
         mpr("There are no items here.");
-    else if (you.form == transformation::ice_beast
-             && env.grid(you.pos()) == DNGN_DEEP_WATER)
-    {
-        mpr("You can't reach the bottom while floating on water.");
-    }
     else if (num_items == 1) // just one movable item?
     {
         // Get the link to the movable item in the pile.
@@ -3125,6 +3120,7 @@ static bool _interesting_explore_pickup(const item_def& item)
     case OBJ_JEWELLERY:
         return _item_different_than_inv(item, _similar_jewellery);
 
+    case OBJ_TALISMANS:
     case OBJ_MISCELLANY:
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
@@ -3284,6 +3280,7 @@ int get_max_subtype(object_class_type base_type)
         NUM_RODS,
 #endif
         NUM_RUNE_TYPES,
+        NUM_TALISMANS,
     };
     COMPILE_CHECK(ARRAYSZ(max_subtype) == NUM_OBJECT_CLASSES);
 
@@ -3816,6 +3813,35 @@ static colour_t _zigfig_colour()
            zigs >=  1 ? ETC_SHIMMER_BLUE :
                         ETC_BONE;
 }
+/**
+ * Assuming this item is a talisman, what colour is it?
+ */
+colour_t item_def::talisman_colour() const
+{
+    ASSERT(base_type == OBJ_TALISMANS);
+
+    switch (sub_type)
+    {
+    case TALISMAN_BEAST:
+        return YELLOW; // brown taken by staves
+    case TALISMAN_MAW:
+        return ETC_BLOOD;
+    case TALISMAN_SERPENT:
+        return ETC_POISON;
+    case TALISMAN_BLADE:
+        return ETC_IRON;
+    case TALISMAN_STATUE:
+        return ETC_EARTH;
+    case TALISMAN_DRAGON:
+        return ETC_FIRE;
+    case TALISMAN_DEATH:
+        return ETC_DARK;
+    case TALISMAN_STORM:
+        return ETC_ELECTRICITY;
+    default:
+        return LIGHTGREEN;
+    }
+}
 
 /**
  * Assuming this item is a misc (non-wand evocable) item, what colour is it?
@@ -3961,6 +3987,8 @@ colour_t item_def::get_colour() const
             return corpse_colour();
         case OBJ_MISCELLANY:
             return miscellany_colour();
+        case OBJ_TALISMANS:
+            return talisman_colour();
         case OBJ_GOLD:
             return YELLOW;
         case OBJ_RUNES:
@@ -4577,6 +4605,7 @@ item_def get_item_known_info(const item_def& item)
         ii.sub_type = item_type_known(item) ? item.sub_type : int{NUM_STAVES};
         ii.subtype_rnd = item.subtype_rnd;
         break;
+    case OBJ_TALISMANS:
     case OBJ_MISCELLANY:
     case OBJ_GOLD:
     case OBJ_ORBS:
@@ -4642,7 +4671,7 @@ object_class_type get_random_item_mimic_type()
 {
    return random_choose(OBJ_GOLD, OBJ_WEAPONS, OBJ_ARMOUR, OBJ_SCROLLS,
                         OBJ_POTIONS, OBJ_BOOKS, OBJ_STAVES,
-                        OBJ_MISCELLANY, OBJ_JEWELLERY);
+                        OBJ_MISCELLANY, OBJ_TALISMANS, OBJ_JEWELLERY);
 }
 
 /**

@@ -1108,8 +1108,7 @@ dgn.delayed_decay_extra(_G, "O", "octopode corpse",
 
 -- Felid Transmuter.
 dgn.delayed_decay_extra(_G, "P", "felid skeleton",
-    "randbook disc:transmutation / book of changes" ..
-    "    / book of transfigurations" ..
+    "maw talisman / blade talisman / serpent talisman" ..
     ", any jewellery good_item w:60 / manual of transmutations" ..
     "    / manual of unarmed combat / manual of fighting" ..
     ", any wand w:20 / any misc / gold / any scroll / any potion" ..

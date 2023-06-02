@@ -28,6 +28,7 @@
 #include "fight.h"
 #include "god-abil.h"
 #include "god-conduct.h"
+#include "god-item.h" // god_despises_item
 #include "god-passive.h"
 #include "invent.h"
 #include "item-prop.h"
@@ -1002,6 +1003,18 @@ static bool _xoms_chessboard()
     return zapping(zap, power, beam, false) == spret::success;
 }
 
+static bool _evoke_talisman(const item_def &talisman)
+{
+    const transformation trans = form_for_talisman(talisman);
+    if (!check_transform_into(trans) || !check_form_stat_safety(trans))
+        return false;
+
+    start_delay<TransformDelay>(trans);
+    if (god_despises_item(talisman))
+        excommunication();
+    return true;
+}
+
 static bool _player_has_zigfig()
 {
     // does the player have a zigfig? used to override sac artiface
@@ -1054,6 +1067,29 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
         // override sac artifice for zigfigs, including a general check
         // TODO: zigfig has some terrain/level constraints that aren't handled
         // here
+        return "";
+    }
+
+    if (item && item->base_type == OBJ_TALISMANS)
+    {
+        if (you.undead_state(temp) == US_UNDEAD)
+            return "your undead flesh cannot be transformed.";
+        if (you.is_lifeless_undead(temp))
+            return "your current blood level is not sufficient.";
+        const transformation trans = form_for_talisman(*item);
+        if (temp)
+        {
+            const string form_unreason = cant_transform_reason(trans);
+            if (!form_unreason.empty())
+                return lowercase_first(form_unreason);
+            // XXX support artefact talismans
+            if (you.default_form == trans)
+            {
+                if (you.form == trans)
+                    return "you've already entered this form.";
+                return "you'll re-enter this form once your current transformation ends.";
+            }
+        }
         return "";
     }
 
@@ -1148,6 +1184,10 @@ bool evoke_item(item_def& item, dist *preselect)
         return you.turn_is_over;
     }
 
+    case OBJ_TALISMANS:
+        did_work = _evoke_talisman(item);
+        break;
+
     case OBJ_MISCELLANY:
         ASSERT(in_inventory(item));
         did_work = true; // easier to do it this way for misc items
@@ -1156,18 +1196,10 @@ bool evoke_item(item_def& item, dist *preselect)
         {
 #if TAG_MAJOR_VERSION == 34
         case MISC_BOTTLED_EFREET:
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return false;
-
         case MISC_FAN_OF_GALES:
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return false;
-
         case MISC_LAMP_OF_FIRE:
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return false;
-
         case MISC_STONE_OF_TREMORS:
+        case MISC_CRYSTAL_BALL_OF_ENERGY:
             canned_msg(MSG_NOTHING_HAPPENS);
             return false;
 #endif
@@ -1211,12 +1243,6 @@ bool evoke_item(item_def& item, dist *preselect)
                 practise_evoking(1);
             }
             return false;
-
-#if TAG_MAJOR_VERSION == 34
-        case MISC_CRYSTAL_BALL_OF_ENERGY:
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return false;
-#endif
 
         case MISC_LIGHTNING_ROD:
             if (_lightning_rod(preselect))

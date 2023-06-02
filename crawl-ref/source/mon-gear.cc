@@ -105,25 +105,17 @@ static bool _should_give_unique_item(monster* mon)
     return mon->type != MONS_NATASHA || !mon->props.exists(FELID_REVIVES_KEY);
 }
 
-static void _give_book(monster* mon, int level)
+static void _give_talisman(monster* mon, int level)
 {
-    if (mon->type == MONS_ROXANNE)
-    {
-        // Statue form books, heh.
-        const int which_book = (one_chance_in(3) ? BOOK_SLOTH
-                                                 : BOOK_EARTH);
+    if (mon->type != MONS_ROXANNE)
+        return;
 
-        const int thing_created = items(false, OBJ_BOOKS, which_book, level);
+    const int thing_created = items(false, OBJ_TALISMANS,
+                                    TALISMAN_STATUE, level);
+    if (thing_created != NON_ITEM)
+        return;
 
-        if (thing_created == NON_ITEM)
-            return;
-
-        // Maybe give Roxanne a random book containing Statue Form instead.
-        if (coinflip())
-            make_book_roxanne_special(&env.item[thing_created]);
-
-        give_specific_item(mon, thing_created);
-    }
+    give_specific_item(mon, thing_created);
 }
 
 static void _give_wand(monster* mon, int level)
@@ -2232,7 +2224,7 @@ void give_item(monster *mons, int level_number, bool mons_summoned)
     ASSERT(level_number > -1); // debugging absdepth0 changes
 
     _give_gold(mons, level_number);
-    _give_book(mons, level_number);
+    _give_talisman(mons, level_number);
     _give_wand(mons, level_number);
     _give_potion(mons, level_number);
     _give_weapon(mons, level_number);

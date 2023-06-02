@@ -1762,7 +1762,6 @@ bool kiku_gift_capstone_spells()
     vector<spell_type> candidates = { SPELL_HAUNT,
                                       SPELL_BORGNJORS_REVIVIFICATION,
                                       SPELL_INFESTATION,
-                                      SPELL_NECROMUTATION,
                                       SPELL_DEATHS_DOOR };
 
     for (auto spell : candidates)

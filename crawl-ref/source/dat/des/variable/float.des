@@ -3884,7 +3884,7 @@ ENDMAP
 NAME:   minmay_shoctagon
 DEPTH:  D:12-, Elf, Depths
 ORIENT: float
-ITEM:   book of air / book of the sky / book of lightning / book of storms \
+ITEM:   book of air / book of lightning / book of storms \
         / manual of air magic / staff of air ident:all / lightning rod w:20 \
         / storm dragon scales w:5
 KITEM:  2 = arc blade / quick blade ego:electrocution randart ident:all \
@@ -3975,7 +3975,7 @@ ENDMAP
 NAME:   minmay_coctagon
 DEPTH:  D:10-, Elf, Depths
 ORIENT: float
-ITEM:   book of frost / book of ice / book of winter / book of rime \
+ITEM:   book of frost / book of ice / book of winter \
         / ozocubu's autobiography / book of the tundra / manual of ice magic \
         / wand of iceblast ident:all / staff of cold ident:all \
         / ring of ice ident:all / phial of floods / ice dragon scales w:5

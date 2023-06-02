@@ -922,6 +922,9 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_BOOKS,     BOOK_STONE },
     { OBJ_BOOKS,     BOOK_PAIN },
     { OBJ_BOOKS,     BOOK_MALEDICT },
+    { OBJ_BOOKS,     BOOK_SKY },
+    { OBJ_BOOKS,     BOOK_RIME },
+    { OBJ_BOOKS,     BOOK_TRANSFIGURATIONS },
     { OBJ_RODS,      ROD_VENOM },
     { OBJ_RODS,      ROD_WARDING },
     { OBJ_RODS,      ROD_DESTRUCTION },
@@ -1142,6 +1145,8 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_RUNES:
     case OBJ_GOLD:
     case OBJ_BOOKS:
+    case OBJ_MISCELLANY:
+    case OBJ_TALISMANS: // XXX TODO: support randarts?
 #if TAG_MAJOR_VERSION == 34
     case OBJ_FOOD:
     case OBJ_RODS:
@@ -1154,9 +1159,6 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_STAVES:
     case OBJ_JEWELLERY:
         flagset = ISFLAG_KNOW_TYPE;
-        break;
-    case OBJ_MISCELLANY:
-        flagset = 0;
         break;
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:

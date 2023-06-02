@@ -719,7 +719,15 @@ public:
         // transformation prevented for other reasons than lifeless undead.
         // These should all be temp reasons (e.g. in an uncancellable form)...
         if (temp)
-            return transform(0, transformation::tree, false, true, reason);
+        {
+            const string treason = cant_transform_reason(transformation::tree);
+            if (!treason.empty())
+            {
+                if (reason)
+                    *reason = treason;
+                return true;
+            }
+        }
         return true;
     }
 
