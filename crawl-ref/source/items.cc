@@ -173,9 +173,8 @@ void link_items()
 
 static bool _item_ok_to_clean(int item)
 {
-    // Never clean zigfigs, Orbs, or runes.
+    // Never clean misc items, Orbs, or runes.
     if (env.item[item].base_type == OBJ_MISCELLANY
-            && env.item[item].sub_type == MISC_ZIGGURAT
         || item_is_orb(env.item[item])
         || env.item[item].base_type == OBJ_RUNES)
     {
@@ -3819,8 +3818,7 @@ static colour_t _zigfig_colour()
 }
 
 /**
- * Assuming this item is a miscellaneous item (evocations item or a rune), what
- * colour is it?
+ * Assuming this item is a misc (non-wand evocable) item, what colour is it?
  */
 colour_t item_def::miscellany_colour() const
 {
@@ -3985,7 +3983,6 @@ bool item_type_has_unidentified(object_class_type base_type)
         || base_type == OBJ_POTIONS
         || base_type == OBJ_BOOKS
         || base_type == OBJ_STAVES
-        || base_type == OBJ_MISCELLANY
 #if TAG_MAJOR_VERSION == 34
         || base_type == OBJ_RODS
 #endif
@@ -4581,14 +4578,7 @@ item_def get_item_known_info(const item_def& item)
         ii.subtype_rnd = item.subtype_rnd;
         break;
     case OBJ_MISCELLANY:
-        if (item_type_known(item))
-            ii.sub_type = item.sub_type;
-        else
-            ii.sub_type = item.sub_type;
-        break;
     case OBJ_GOLD:
-        ii.sub_type = item.sub_type;
-        break;
     case OBJ_ORBS:
     case OBJ_RUNES:
     default:
