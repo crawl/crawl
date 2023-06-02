@@ -36,6 +36,7 @@ aptitudes:
   poison_magic: 6
   invocations: 9
   evocations: 8
+  shapeshifting: 6
 str: 7
 int: 7
 dex: 7
@@ -50,5 +51,5 @@ recommended_jobs:
   - JOB_REAVER
   - JOB_WARPER
   - JOB_HEXSLINGER
-  - JOB_TRANSMUTER
+  - JOB_SHAPESHIFTER
   - JOB_WANDERER

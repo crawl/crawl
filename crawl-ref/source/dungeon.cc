@@ -4798,7 +4798,8 @@ static object_class_type _superb_object_class()
             10, OBJ_JEWELLERY,
             10, OBJ_BOOKS,
             10, OBJ_STAVES,
-            10, OBJ_MISCELLANY);
+            10, OBJ_MISCELLANY,
+            1, OBJ_TALISMANS);
 }
 
 static int _concretize_level(int spec_level, int dgn_level)
@@ -6159,6 +6160,8 @@ object_class_type item_in_shop(shop_type shop_type)
         return OBJ_RANDOM;
 
     case SHOP_JEWELLERY:
+        if (one_chance_in(10))
+            return OBJ_TALISMANS;
         return OBJ_JEWELLERY;
 
     case SHOP_BOOK:

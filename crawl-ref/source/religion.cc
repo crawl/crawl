@@ -3298,7 +3298,7 @@ static bool _transformed_player_can_join_god(god_type which_god)
     if (which_god == GOD_ZIN && you.form != transformation::none)
         return false; // zin hates everything
 
-    if (is_good_god(which_god) && you.form == transformation::lich)
+    if (is_good_god(which_god) && you.form == transformation::death)
         return false;
 
     return true;
@@ -4128,22 +4128,8 @@ bool god_hates_spell(spell_type spell, god_type god, bool fake_spell)
 }
 
 /**
- * Will your god excommunicate you if you actually cast spell?
- *
- * @param spell         The spell to check against
- * @param god           The god to check against
- * @return              Whether the god loathes the spell
- */
-bool god_loathes_spell(spell_type spell, god_type god)
-{
-    if (spell == SPELL_NECROMUTATION && is_good_god(god))
-        return true;
-    return false;
-}
-
-/**
- * Checks to see if your god hates or loathes this spell,
- * or just hates spellcasting in general, and returns a warning string
+ * Checks to see if your god hates this spell (or spellcasting generally).
+ * Returns a warning string if so.
  *
  * @param spell         The spell to check against
  * @param god           The god to check against
@@ -4152,14 +4138,11 @@ bool god_loathes_spell(spell_type spell, god_type god)
  */
 string god_spell_warn_string(spell_type spell, god_type god)
 {
-    if (god_loathes_spell(spell, god))
-        return "Your god extremely despises this spell!";
-    else if (god_hates_spellcasting(god))
+    if (god_hates_spellcasting(god))
         return "Your god hates spellcasting!";
-    else if (god_hates_spell(spell, god))
+    if (god_hates_spell(spell, god))
         return "Your god hates this spell!";
-    else
-        return "";
+    return "";
 }
 
 bool god_protects_from_harm()

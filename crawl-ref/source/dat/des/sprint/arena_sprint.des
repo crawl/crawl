@@ -1029,7 +1029,7 @@ KFEAT:  { = {
 KFEAT:  C = scroll shop type:Identification suffix:Station count:17 greed:25 ; scroll of identify q:3
 KFEAT:  D = book shop type:Must-Have suffix:Magic greed:7 count:17 use_all ; \
             book of the wilderness | book of spatial translocations | book of hexes |\
-            book of death | book of the sky | book of displacement |\
+            book of death | book of displacement |\
             book of the earth | book of burglary | book of annihilations |\
             grand grimoire | necronomicon | book of power | book of chaos |\
             book of the moon | book of blasting | ozocubu's autobiography
@@ -1054,6 +1054,12 @@ KFEAT:  O = distillery shop type:Do-It-Yourself suffix:Clinic count:17 use_all g
             potion of curing q:4 | potion of curing q:4
 KFEAT:  I = antiques shop type:Jewellery count:17 greed:9 ; \
             any jewellery randart
+KFEAT:  J = general shop type:Miscellaneous suffix:Merchandise count:14 greed:15 use_all ; \
+            ring of poison resistance |\
+            ring of protection from fire | ring of protection from cold |\
+            ring of willpower | amulet of regeneration |\
+            amulet of reflection |\
+            ring of see invisible
 KFEAT:  K = antique armour shop count:17 use_all type:Advanced suffix:Armour greed:35 ; \
             pair of gloves randart | pair of gloves randart | pair of boots randart |\
             pair of boots randart | helmet randart | hat randart | buckler randart |\
@@ -1069,6 +1075,9 @@ KFEAT:  L = armour shop count:17 greed:12 type:Basic suffix:Armour use_all ; \
             mundane plate armour | mundane barding |\
             mundane cloak | mundane buckler |\
             mundane pair of gloves | mundane helmet
+KFEAT:  M = jewellery shop type:Timeless suffix:Talismans count:8 greed:7 use_all ; \
+            beast talisman | maw talisman | serpent talisman | blade talisman |\
+            dragon-blood talisman | granite talisman | storm talisman | talisman of death
 KFEAT:  N = weapon shop type:Staff suffix:Store count:9 use_all greed:30 ; \
             staff of fire | staff of air | staff of earth | staff of cold |\
             staff of poison | staff of death | staff of conjuration
@@ -1088,12 +1097,6 @@ KFEAT:  R = general shop type:Premium suffix:Goods use_all count:11 greed:20 ; \
             quad damage | quad damage | quad damage |\
             potion of heal wounds q:5 | potion of heal wounds q:5 |\
             potion of haste q:5 | potion of haste q:5
-KFEAT:  J = general shop type:Miscellaneous suffix:Merchandise count:14 greed:15 use_all ; \
-            ring of poison resistance |\
-            ring of protection from fire | ring of protection from cold |\
-            ring of willpower | amulet of regeneration |\
-            amulet of reflection |\
-            ring of see invisible
 SUBST:  b : cb
 TILE:   c = wall_marble
 KFEAT:  TUVWYZ!? = dry_fountain

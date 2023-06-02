@@ -28,6 +28,7 @@
 #include "fight.h"
 #include "god-abil.h"
 #include "god-conduct.h"
+#include "god-item.h" // god_despises_item
 #include "god-passive.h"
 #include "invent.h"
 #include "item-prop.h"
@@ -43,6 +44,7 @@
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "mutant-beast.h"
+#include "nearby-danger.h" // i_feel_safe
 #include "place.h"
 #include "player.h"
 #include "player-stats.h"
@@ -1002,18 +1004,31 @@ static bool _xoms_chessboard()
     return zapping(zap, power, beam, false) == spret::success;
 }
 
-static bool _player_has_zigfig()
+static transformation _form_for_talisman(const item_def &talisman)
 {
-    // does the player have a zigfig? used to override sac artiface
-    // a bit ugly...this thing could probably be goldified or converted to an
-    // ability trigger
-    for (const item_def &s : you.inv)
-        if (s.defined() && s.base_type == OBJ_MISCELLANY
-                                 && s.sub_type == MISC_ZIGGURAT)
-        {
-            return true;
-        }
-    return false;
+    const transformation trans = form_for_talisman(talisman);
+    if (trans == you.form)
+        return transformation::none;
+    return trans;
+}
+
+static bool _evoke_talisman(const item_def &talisman)
+{
+    const transformation trans = _form_for_talisman(talisman);
+    if (!check_transform_into(trans) || !check_form_stat_safety(trans))
+        return false;
+    if (!i_feel_safe(true) && !yesno("Still begin transforming?", true, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    count_action(CACT_FORM, (int)trans);
+    start_delay<TransformDelay>(trans);
+    if (god_despises_item(talisman))
+        excommunication();
+    you.turn_is_over = true;
+    return true;
 }
 
 /// Does the item only serve to produce summons or allies?
@@ -1046,10 +1061,12 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
     if (temp && you.confused())
         return "You are too confused!";
 
+    // all generic checks passed
+    if (!item)
+        return "";
+
     // historically allowed under confusion/berserk, but why?
-    if (item && item->base_type == OBJ_MISCELLANY
-                                            && item->sub_type == MISC_ZIGGURAT
-        || !item && _player_has_zigfig())
+    if (item->is_type(OBJ_MISCELLANY, MISC_ZIGGURAT))
     {
         // override sac artifice for zigfigs, including a general check
         // TODO: zigfig has some terrain/level constraints that aren't handled
@@ -1057,12 +1074,30 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
         return "";
     }
 
+    if (item->base_type == OBJ_TALISMANS)
+    {
+        // TODO: unify with cant_transform_reason
+        if (you.has_mutation(MUT_NO_FORMS))
+            return "You have sacrificed the ability to change form.";
+        if (you.undead_state(false) == US_UNDEAD)
+            return "your undead flesh cannot be transformed.";
+        if (temp && you.undead_state() == US_SEMI_UNDEAD && !you.vampire_alive)
+            return "your current blood level is not sufficient.";
+        const transformation trans = _form_for_talisman(*item);
+        if (temp)
+        {
+            const string form_unreason = cant_transform_reason(trans);
+            if (!form_unreason.empty())
+                return lowercase_first(form_unreason);
+            // TODO: add talisman artefacts
+            if (you.form != you.default_form)
+                return "you need to leave your temporary form first.";
+        }
+        return "";
+    }
+
     if (you.get_mutation_level(MUT_NO_ARTIFICE))
         return "You cannot evoke magical items.";
-
-    // all generic checks passed
-    if (!item)
-        return "";
 
     // is this really necessary?
     if (item_type_removed(item->base_type, item->sub_type))
@@ -1148,6 +1183,9 @@ bool evoke_item(item_def& item, dist *preselect)
         return you.turn_is_over;
     }
 
+    case OBJ_TALISMANS:
+        return _evoke_talisman(item);
+
     case OBJ_MISCELLANY:
         ASSERT(in_inventory(item));
         did_work = true; // easier to do it this way for misc items
@@ -1156,18 +1194,10 @@ bool evoke_item(item_def& item, dist *preselect)
         {
 #if TAG_MAJOR_VERSION == 34
         case MISC_BOTTLED_EFREET:
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return false;
-
         case MISC_FAN_OF_GALES:
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return false;
-
         case MISC_LAMP_OF_FIRE:
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return false;
-
         case MISC_STONE_OF_TREMORS:
+        case MISC_CRYSTAL_BALL_OF_ENERGY:
             canned_msg(MSG_NOTHING_HAPPENS);
             return false;
 #endif
@@ -1211,12 +1241,6 @@ bool evoke_item(item_def& item, dist *preselect)
                 practise_evoking(1);
             }
             return false;
-
-#if TAG_MAJOR_VERSION == 34
-        case MISC_CRYSTAL_BALL_OF_ENERGY:
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return false;
-#endif
 
         case MISC_LIGHTNING_ROD:
             if (_lightning_rod(preselect))

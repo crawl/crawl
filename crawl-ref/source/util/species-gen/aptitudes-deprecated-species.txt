@@ -32,6 +32,7 @@
     {SP_HIGH_ELF,        SK_POISON_MAGIC,   -2},
     {SP_HIGH_ELF,        SK_INVOCATIONS,     1},
     {SP_HIGH_ELF,        SK_EVOCATIONS,      0},
+    {SP_HIGH_ELF,        SK_SHAPESHIFTING,  -1},
     {SP_SLUDGE_ELF,      SK_FIGHTING,        1},
     {SP_SLUDGE_ELF,      SK_SHORT_BLADES,   -1},
     {SP_SLUDGE_ELF,      SK_LONG_BLADES,    -1},
@@ -65,6 +66,7 @@
     {SP_SLUDGE_ELF,      SK_POISON_MAGIC,    1},
     {SP_SLUDGE_ELF,      SK_INVOCATIONS,     1},
     {SP_SLUDGE_ELF,      SK_EVOCATIONS,      0},
+    {SP_SLUDGE_ELF,      SK_SHAPESHIFTING,   1},
     {SP_LAVA_ORC,        SK_FIGHTING,        2},
     {SP_LAVA_ORC,        SK_SHORT_BLADES,    0},
     {SP_LAVA_ORC,        SK_LONG_BLADES,     1},
@@ -98,4 +100,5 @@
     {SP_LAVA_ORC,        SK_POISON_MAGIC,   -1},
     {SP_LAVA_ORC,        SK_INVOCATIONS,     3},
     {SP_LAVA_ORC,        SK_EVOCATIONS,      0},
+    {SP_LAVA_ORC,        SK_SHAPESHIFTING,   1},
 #endif

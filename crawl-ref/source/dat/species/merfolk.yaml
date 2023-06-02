@@ -27,6 +27,7 @@ aptitudes:
   necromancy: -2
   translocations: -2
   transmutations: 3
+  shapeshifting: 1
   fire_magic: -3
   ice_magic: 1
   air_magic: -2
@@ -45,7 +46,7 @@ mutations:
 recommended_jobs:
   - JOB_GLADIATOR
   - JOB_BERSERKER
-  - JOB_TRANSMUTER
+  - JOB_SHAPESHIFTER
   - JOB_SUMMONER
   - JOB_ICE_ELEMENTALIST
   - JOB_VENOM_MAGE

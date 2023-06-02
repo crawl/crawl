@@ -12,11 +12,6 @@
 
 #define MAX_HYDRA_HEADS 20
 
-#define APPENDAGE_KEY "beastly_appendages"
-#define APPENDAGE_LEVEL 2
-
-#define AIRFORM_POWER_KEY "airform_power"
-
 enum form_capability
 {
     FC_DEFAULT,
@@ -85,6 +80,13 @@ public:
 
     int get_duration(int pow) const;
 
+    int get_level(int scale) const;
+
+    int mult_hp(int base_hp, bool force_talisman = false) const;
+
+    /// Is the player below the minimum skill for this form?
+    bool underskilled() const { return get_level(1) < min_skill; }
+
     /**
      * What monster corresponds to this form?
      *
@@ -133,7 +135,20 @@ public:
     /**
      * Base unarmed damage provided by the form.
      */
-    virtual int get_base_unarmed_damage() const { return base_unarmed_damage; }
+    virtual int get_base_unarmed_damage(bool /*random*/ = true,
+                                        bool /*max*/ = false) const
+    {
+        return base_unarmed_damage;
+    }
+
+    /// Damage done by a custom aux attack of this form.
+    virtual int get_aux_damage(bool /*random*/ = true,
+                               bool /*max*/ = false) const {
+        return 0;
+    }
+
+    /// Does this form care about skill for UC damage and accuracy, or only XL?
+    virtual bool get_unarmed_uses_skill() const { return unarmed_uses_skill; }
 
     /**
      * The brand of this form's unarmed attacks (SPWPN_FREEZING, etc).
@@ -142,7 +157,10 @@ public:
 
     virtual bool can_offhand_punch() const { return can_wield(); }
     virtual string get_uc_attack_name(string default_name) const;
-    virtual int get_ac_bonus() const;
+    virtual int slay_bonus(bool /*random*/ = true, bool /*max*/ = false) const { return 0; }
+    virtual int get_ac_bonus(bool max = false) const;
+    virtual int ev_bonus(bool /*max*/ = false) const { return 0; }
+    virtual int get_base_ac_penalty(int /*base*/) const { return 0; }
 
     bool enables_flight() const;
     bool forbids_flight() const;
@@ -154,7 +172,7 @@ public:
     string player_prayer_action() const;
     string melding_description() const;
 
-    vector<string> get_fakemuts(bool terse) const;
+    virtual vector<string> get_fakemuts(bool terse) const;
 
 public:
     /// Status light ("Foo"); "" for none
@@ -164,6 +182,11 @@ public:
 
     /// A struct representing the duration of the form, based on power etc
     const FormDuration duration;
+
+    /// The skill level below which the player gets HP penalties for using the form.
+    const int min_skill;
+    /// The skill level beyond which further skill provides no benefit.
+    const int max_skill;
 
     /// flat str bonus
     const int str_mod;
@@ -177,8 +200,6 @@ public:
     const int blocked_slots; // XX check enum size at compile time?
     /// size of the form
     const size_type size;
-    /// 10 * multiplier to hp/mhp (that is, 10 is base, 15 is 1.5x, etc)
-    const int hp_mod;
 
     /// can the player cast while in this form?
     const bool can_cast;
@@ -222,6 +243,9 @@ protected:
      */
     const int resists;
 
+    /// skill-based bonus to player AC; value at max skill
+    const int skill_ac;
+
     /// See Form::get_base_unarmed_damage().
     const int base_unarmed_damage;
 
@@ -242,8 +266,6 @@ private:
 
     /// flat bonus to player AC when in the form.
     const int flat_ac;
-    /// spellpower-based bonus to player AC; multiplied by power / 100
-    const int power_ac;
     /// experience level-based bonus to player AC; XL * xl_ac / 100
     const int xl_ac;
 
@@ -251,6 +273,8 @@ private:
     const brand_type uc_brand;
     /// the name of the uc 'weapon' in the HUD; "" uses species defaults.
     const string uc_attack;
+    /// See Form::get_unarmed_uses_skill().
+    bool unarmed_uses_skill;
 
     /// Altar prayer action; "" uses defaults. See Form::player_prayer_action()
     const string prayer_action;
@@ -258,9 +282,13 @@ private:
     /// See Form::get_equivalent_mons().
     const monster_type equivalent_mons;
 
+    /// 10 * multiplier to hp/mhp (that is, 10 is base, 15 is 1.5x, etc)
+    const int hp_mod;
+
     vector<pair<string,string>> fakemuts;
 };
 const Form* get_form(transformation form = you.form);
+const Form* cur_form(bool temp);
 
 enum undead_form_reason
 {
@@ -286,12 +314,15 @@ bool feat_dangerous_for_form(transformation which_trans,
 
 bool check_form_stat_safety(transformation new_form, bool quiet = false);
 
-bool transform(int pow, transformation which_trans,
-               bool involuntary = false, bool just_check = false,
-               string *fail_reason = nullptr);
+string cant_transform_reason(transformation which_trans, bool involuntary = false);
+bool check_transform_into(transformation which_trans, bool involuntary = false);
+bool transform(int pow, transformation which_trans, bool involuntary = false);
 
 // skip_move: don't make player re-enter current cell
 void untransform(bool skip_move = false);
+
+void set_form(transformation which_trans, int dur);
+void return_to_default_form();
 
 void remove_one_equip(equipment_type eq, bool meld = true,
                       bool mutation = false);
@@ -299,10 +330,8 @@ void unmeld_one_equip(equipment_type eq);
 
 monster_type transform_mons();
 string blade_parts(bool terse = false);
-void set_airform_power(int pow);
 const char* transform_name(transformation form = you.form);
 
-int form_hp_mod();
 void merfolk_check_swimming(dungeon_feature_type old_grid,
                             bool stepped = false);
 void merfolk_start_swimming(bool step = false);
@@ -310,3 +339,5 @@ void merfolk_stop_swimming();
 void vampire_update_transformations();
 int form_base_movespeed(transformation tran);
 bool draconian_dragon_exception();
+
+transformation form_for_talisman(const item_def &talisman);

@@ -705,6 +705,13 @@ public:
 
     bool can_quaff(string *reason = nullptr, bool temp = true) const override
     {
+        // TODO: unify with cant_transform_reason
+        if (you.has_mutation(MUT_NO_FORMS))
+        {
+            if (reason)
+                *reason = "You have sacrificed the ability to change form.";
+            return false;
+        }
         if (you.is_lifeless_undead(temp))
         {
             if (reason)
@@ -719,7 +726,15 @@ public:
         // transformation prevented for other reasons than lifeless undead.
         // These should all be temp reasons (e.g. in an uncancellable form)...
         if (temp)
-            return transform(0, transformation::tree, false, true, reason);
+        {
+            const string treason = cant_transform_reason(transformation::tree);
+            if (!treason.empty())
+            {
+                if (reason)
+                    *reason = treason;
+                return true;
+            }
+        }
         return true;
     }
 

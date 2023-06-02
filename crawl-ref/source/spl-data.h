@@ -919,17 +919,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SPIDER_FORM, "Spider Form",
-    spschool::transmutation | spschool::poison,
-    spflag::helpful | spflag::chaotic | spflag::utility,
-    3,
-    100,
-    -1, -1,
-    0,
-    TILEG_SPIDER_FORM,
-},
-
-{
     SPELL_MINDBURST, "Mindburst",
     spschool::conjuration,
     spflag::dir_or_target | spflag::not_self | spflag::needs_tracer
@@ -939,72 +928,6 @@ static const struct spell_desc spelldata[] =
     LOS_RADIUS, LOS_RADIUS,
     6,
     TILEG_GENERIC_MONSTER_SPELL,
-},
-
-{
-    SPELL_BLADE_HANDS, "Blade Hands",
-    spschool::transmutation,
-    spflag::helpful | spflag::chaotic | spflag::utility,
-    5,
-    200,
-    -1, -1,
-    0,
-    TILEG_BLADE_HANDS,
-},
-
-{
-    SPELL_STATUE_FORM, "Statue Form",
-    spschool::transmutation | spschool::earth,
-    spflag::helpful | spflag::chaotic | spflag::utility,
-    6,
-    150,
-    -1, -1,
-    0,
-    TILEG_STATUE_FORM,
-},
-
-{
-    SPELL_ICE_FORM, "Ice Form",
-    spschool::ice | spschool::transmutation,
-    spflag::helpful | spflag::chaotic | spflag::utility,
-    4,
-    100,
-    -1, -1,
-    0,
-    TILEG_ICE_FORM,
-},
-
-{
-    SPELL_STORM_FORM, "Storm Form",
-    spschool::transmutation | spschool::air,
-    spflag::helpful | spflag::chaotic | spflag::utility,
-    7,
-    200,
-    -1, -1,
-    0,
-    TILEG_STORM_FORM,
-},
-
-{
-    SPELL_DRAGON_FORM, "Dragon Form",
-    spschool::transmutation,
-    spflag::helpful | spflag::chaotic | spflag::utility,
-    7,
-    200,
-    -1, -1,
-    0,
-    TILEG_DRAGON_FORM,
-},
-
-{
-    SPELL_NECROMUTATION, "Necromutation",
-    spschool::transmutation | spschool::necromancy,
-    spflag::helpful | spflag::chaotic,
-    8,
-    200,
-    -1, -1,
-    0,
-    TILEG_NECROMUTATION,
 },
 
 {
@@ -2052,17 +1975,6 @@ static const struct spell_desc spelldata[] =
     LOS_RADIUS, LOS_RADIUS,
     0,
     TILEG_INNER_FLAME,
-},
-
-{
-    SPELL_BEASTLY_APPENDAGE, "Beastly Appendage",
-    spschool::transmutation,
-    spflag::helpful | spflag::chaotic,
-    1,
-    50,
-    -1, -1,
-    0,
-    TILEG_BEASTLY_APPENDAGE,
 },
 
 {
@@ -3767,6 +3679,14 @@ AXED_SPELL(SPELL_EXCRUCIATING_WOUNDS, "Excruciating Wounds")
 AXED_SPELL(SPELL_CONJURE_FLAME, "Conjure Flame")
 AXED_SPELL(SPELL_CORPSE_ROT, "Corpse Rot")
 AXED_SPELL(SPELL_FLAME_TONGUE, "Flame Tongue")
+AXED_SPELL(SPELL_BEASTLY_APPENDAGE, "Beastly Appendage")
+AXED_SPELL(SPELL_SPIDER_FORM, "Spider Form")
+AXED_SPELL(SPELL_ICE_FORM, "Ice Form")
+AXED_SPELL(SPELL_BLADE_HANDS, "Blade Hands")
+AXED_SPELL(SPELL_STATUE_FORM, "Statue Form")
+AXED_SPELL(SPELL_STORM_FORM, "Storm Form")
+AXED_SPELL(SPELL_DRAGON_FORM, "Dragon Form")
+AXED_SPELL(SPELL_NECROMUTATION, "Necromutation")
 #endif
 
 };

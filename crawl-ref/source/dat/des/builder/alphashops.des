@@ -68,9 +68,9 @@
        "manual of axes", "manual of armour", "wand of acid",
        "acid dragon scales", "potion of attraction", "book of armaments" }
 
-      elseif s == "B" then i = { "bardiche", "battleaxe",
+      elseif s == "B" then i = { "bardiche", "battleaxe", "beast talisman",
        "book of burglary", "box of beasts", "book of blasting",
-       "book of blood", "buckler", "boomerang",
+       "book of blood", "buckler", "boomerang", "blade talisman",
        "broad axe", "pair of boots", "potion of berserk rage",
        "potion of brilliance", "scroll of butterflies",
        "scroll of blinking", "scroll of brand weapon" }
@@ -83,7 +83,7 @@
        "potion of curing", "condenser vane", "wand of charming" }
 
       elseif s == "D" then i = { "book of death", "book of debilitation",
-       "book of dreams", "book of the dragon", "dagger",
+       "book of dreams", "book of the dragon", "dagger", "dragon-blood talisman",
        "demon blade", "demon trident", "demon whip", "dire flail",
        "double sword", "ring of dexterity", "manual of dodging",
        "staff of death", "wand of digging", "dart", "book of dangerous friends",
@@ -102,7 +102,7 @@
        "manual of fighting", "amulet of faith", "manual of fire magic" }
 
       elseif s == "G" then i = { "amulet of guardian spirit", "giant club",
-       "giant spiked club", "book of geomancy",
+       "giant spiked club", "book of geomancy", "granite talisman",
        "glaive", "gold dragon scales", "grand grimoire", "great mace",
        "great sword", "pair of gloves", "great wizards, vol. ii",
        "great wizards, vol. vii" }
@@ -127,7 +127,7 @@
        "longbow", "lightning rod", "book of lightning", "wand of light" }
 
       elseif s == "M" then i = { "manual of maces & flails",
-       "book of minor magic", "book of misfortune",
+       "book of minor magic", "book of misfortune", "maw talisman",
        "morningstar", "mace", "potion of magic", "wand of mindburst",
        "ring of magical power", "amulet of magic regeneration", "potion of might",
        "potion of mutation", "book of the moon" }
@@ -151,14 +151,14 @@
       elseif s == "R" then i = { "amulet of reflection",
        "manual of ranged weapons", "wand of roots", "scroll of revelation",
        "amulet of regeneration", "rapier", "ring of resist corrosion",
-       "potion of resistance", "robe", "ring mail", "book of rime" }
+       "potion of resistance", "robe", "ring mail" }
 
       elseif s == "S" then i = { "scarf", "scimitar", "short sword",
-       "scale mail", "book of storms", "book of the sky", "spear",
+       "scale mail", "spear", "serpent talisman", "storm talisman",
        "ring of see invisible", "ring of slaying", "sack of spiders",
        "ring of strength", "manual of stealth", "scroll of summoning",
-       "book of spatial translocations", "scroll of silence",
-       "shortbow", "manual of staves", "steam dragon scales",
+       "book of spatial translocations", "scroll of silence", "shortbow",
+       "manual of staves", "steam dragon scales", "manual of shapeshifting",
        "shadow dragon scales", "storm dragon scales", "swamp dragon scales",
        "manual of short blades", "manual of shields", "sling",
        "manual of spellcasting", "manual of summonings", "stone",
@@ -166,7 +166,7 @@
        "book of spectacle", "book of the spheres", "book of scorching" }
 
       elseif s == "T" then i = { "scroll of torment",
-       "book of transfigurations", "scroll of teleportation", "triple sword",
+       "scroll of teleportation", "triple sword", "talisman of death",
        "triple crossbow", "troll leather armour", "manual of throwing",
        "manual of translocations", "manual of transmutations",
        "trident", "throwing net", "tower shield", "tin of tremorstones",

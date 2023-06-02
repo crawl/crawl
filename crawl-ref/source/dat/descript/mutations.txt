@@ -825,8 +825,13 @@ one magical ring at a time.
 %%%%
 no stealth mutation
 
-Your have no Stealth. You will always alert monsters when they see you, and
+You have no Stealth. You will always alert monsters when they see you, and
 they will track you very effectively.
+%%%%
+no forms mutation
+
+You cannot voluntarily change forms, via talismans, potions, or any other means.
+You may still be involuntarily transformed by effects such as wands of polymorph.
 %%%%
 inability to use devices mutation
 

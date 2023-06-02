@@ -22,6 +22,7 @@
 #include "libutil.h" // map_find
 #include "mpr.h"
 #include "randbook.h"
+#include "random-pick.h" // talismans
 #include "skills.h" // is_removed_skill
 #include "spl-book.h"
 #include "state.h"
@@ -1516,6 +1517,64 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     }
 }
 
+/// For a given dungeon depth (or item level), how much weight should we give
+/// to each talisman?
+static const vector<random_pick_entry<talisman_type>> talisman_weights =
+{
+    // tier 0
+    {  0, 20,  95, FALL, TALISMAN_BEAST },
+    {  0, 35,   5, FLAT, TALISMAN_BEAST },
+    // tier 1
+    {  0, 27,  90, PEAK, TALISMAN_MAW },
+    {  0, 35,  10, FLAT, TALISMAN_MAW },
+    {  0, 27,  90, PEAK, TALISMAN_SERPENT },
+    {  0, 35,  10, FLAT, TALISMAN_SERPENT },
+    {  0, 27,  90, PEAK, TALISMAN_BLADE },
+    {  0, 35,  10, FLAT, TALISMAN_BLADE },
+    // tier 2
+    { 16, 27,  25, RISE, TALISMAN_STATUE },
+    { 28, 35,  25, FLAT, TALISMAN_STATUE },
+    {  0, 35,   5, FLAT, TALISMAN_STATUE },
+    {  8, 20,  25, RISE, TALISMAN_DRAGON },
+    { 21, 35,  25, FLAT, TALISMAN_DRAGON },
+    {  0, 35,   5, FLAT, TALISMAN_DRAGON },
+    // tier 3
+    { 20, 27,  25, RISE, TALISMAN_DEATH },
+    { 28, 35,  25, FLAT, TALISMAN_DEATH },
+    {  0, 35,   5, FLAT, TALISMAN_DEATH },
+    { 20, 27,  25, RISE, TALISMAN_STORM },
+    { 28, 35,  25, FLAT, TALISMAN_STORM },
+    {  0, 35,   5, FLAT, TALISMAN_STORM },
+};
+
+static void _generate_talisman_item(item_def& item, int force_type, int item_level)
+{
+    if (force_type != OBJ_RANDOM)
+    {
+        item.sub_type = force_type;
+        return;
+    }
+
+    int lvl = item_level;
+    switch (item_level) {
+    case ISPEC_DAMAGED:
+    case ISPEC_BAD:
+        lvl = 0;
+        break;
+    case ISPEC_RANDART:
+        // TODO: add talisman artefacts
+    case ISPEC_GIFT:
+    case ISPEC_GOOD_ITEM:
+        lvl = item_level + 10;
+        break;
+    }
+    if (lvl > 35) // roughly the bottom of the Hells
+        lvl = 35;
+
+    random_picker<talisman_type, NUM_TALISMANS * 3 /*ew*/> picker;
+    item.sub_type = picker.pick(talisman_weights, lvl, NUM_TALISMANS);
+}
+
 misc_item_type get_misc_item_type(int force_type, bool exclude)
 {
     if (force_type != OBJ_RANDOM)
@@ -1778,6 +1837,12 @@ int items(bool allow_uniques,
         {
             item.base_type = random_choose(OBJ_POTIONS, OBJ_SCROLLS);
         }
+
+        // Sorry. Trying to get a high enough weight of talismans early
+        // so that folks can upgrade, etc, without deluging players with
+        // them later.
+        if (one_chance_in(100) && !x_chance_in_y(item_level * 2, 100))
+            item.base_type = OBJ_TALISMANS;
     }
 
     ASSERT(force_type == OBJ_RANDOM
@@ -1855,6 +1920,10 @@ int items(bool allow_uniques,
     case OBJ_ORBS:              // always forced in current setup {dlb}
     case OBJ_RUNES:
         _generate_rune_item(item, force_type);
+        break;
+
+    case OBJ_TALISMANS:
+        _generate_talisman_item(item, force_type, item_level);
         break;
 
     case OBJ_MISCELLANY:

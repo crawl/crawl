@@ -19,6 +19,7 @@ aptitudes:
   dodging: -1
   spellcasting: -1
   hexes: -1
+  shapeshifting: -2
   invocations: 1
   # White Draconian specific
   fire_magic: -2

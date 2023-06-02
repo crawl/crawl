@@ -61,7 +61,8 @@ enum skill_type
     SK_LAST_MAGIC = SK_POISON_MAGIC,
     SK_INVOCATIONS,
     SK_EVOCATIONS,
-    SK_LAST_SKILL = SK_EVOCATIONS,
+    SK_SHAPESHIFTING,
+    SK_LAST_SKILL = SK_SHAPESHIFTING,
     NUM_SKILLS,                        // must remain last regular member
 
     SK_BLANK_LINE,                     // used for skill output

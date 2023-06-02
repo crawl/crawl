@@ -919,9 +919,9 @@ ITEM:   any potion
 ITEM:   young poisoner's handbook / book of changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
         randbook numspells:4 title:Nature \
-        spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
+        spells:summon_small_mammal&call_canine_familiar&hailstorm&summon_forest / \
         randbook numspells:4 title:Nature \
-        spells:beastly_appendage&sting&wereblood&spider_form
+        spells:sting&wereblood&hailstorm&summon_forest
 KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
 KITEM:  g = any potion q:2
 MONS:   plant, oklob sapling, ball python
@@ -971,9 +971,9 @@ ITEM:   any potion
 ITEM:   young poisoner's handbook / book of changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
         randbook numspells:4 title:Nature \
-        spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
+        spells:summon_small_mammal&call_canine_familiar&hailstorm&summon_forest / \
         randbook numspells:4 title:Nature \
-        spells:beastly_appendage&sting&wereblood&spider_form
+        spells:sting&wereblood&hailstorm&summon_forest
 KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
 KITEM:  g = any potion q:2 / any potion q:3
 MONS:   plant, oklob sapling, ball python

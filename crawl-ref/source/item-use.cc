@@ -135,11 +135,6 @@ public:
         return oper == OPER_WIELD || oper == OPER_EQUIP;
     }
 
-    bool show_floor() const
-    {
-        return oper != OPER_EVOKE;
-    }
-
     bool allow_full_inv() const
     {
         switch (oper)
@@ -419,30 +414,30 @@ bool UseItemMenu::populate_list(bool check_only)
             item_inv.push_back(&item);
         }
     }
-    if (show_floor())
+    // Load floor items...
+    vector<const item_def*> floor = const_item_list_on_square(
+                                            you.visible_igrd(you.pos()));
+
+    for (const auto *it : floor)
     {
-        // Load floor items...
-        vector<const item_def*> floor = const_item_list_on_square(
-                                                you.visible_igrd(you.pos()));
-
-        for (const auto *it : floor)
+        // ...only stuff that can go into your inventory though
+        if (!it->defined() || item_is_stationary(*it) || item_is_orb(*it)
+            || item_is_spellbook(*it) || it->base_type == OBJ_GOLD
+            || it->base_type == OBJ_RUNES)
         {
-            // ...only stuff that can go into your inventory though
-            if (!it->defined() || item_is_stationary(*it) || item_is_orb(*it)
-                || item_is_spellbook(*it) || it->base_type == OBJ_GOLD
-                || it->base_type == OBJ_RUNES)
-            {
-                continue;
-            }
-
-            // even with display_all, only show matching floor items.
-            if (!item_is_selected(*it, item_type_filter))
-                continue;
-
-            if (check_only)
-                return true;
-            item_floor.push_back(it);
+            continue;
         }
+        // No evoking wands, etc from the floor!
+        if (oper == OPER_EVOKE && it->base_type != OBJ_TALISMANS)
+            continue;
+
+        // even with display_all, only show matching floor items.
+        if (!item_is_selected(*it, item_type_filter))
+            continue;
+
+        if (check_only)
+            return true;
+        item_floor.push_back(it);
     }
 
     return !check_only && (item_inv.size() > 0 || item_floor.size() > 0);
@@ -451,14 +446,27 @@ bool UseItemMenu::populate_list(bool check_only)
 bool UseItemMenu::empty_check() const
 {
     // (if choosing weapons, then bare hands are always a possibility)
-    if (!show_unarmed()
-        && !any_items_of_type(item_type_filter, -1, show_floor()))
+    if (show_unarmed())
+        return false;
+    if (any_items_of_type(item_type_filter, -1, oper != OPER_EVOKE))
+        return false;
+    // Only talismans can be evoked from the floor.
+    if (oper == OPER_EVOKE)
     {
-        mprf(MSGCH_PROMPT, "%s",
-            no_selectables_message(item_type_filter).c_str());
-        return true;
+        auto floor_items = item_list_on_square(you.visible_igrd(you.pos()));
+        if (any_of(begin(floor_items), end(floor_items),
+              [=] (const item_def* item) -> bool
+              {
+                  return item->defined() && item->base_type == OBJ_TALISMANS;
+              }))
+        {
+            return false;
+        }
     }
-    return false;
+
+    mprf(MSGCH_PROMPT, "%s",
+        no_selectables_message(item_type_filter).c_str());
+    return true;
 }
 
 static void _note_tele_cancel(MenuEntry* entry)
@@ -893,6 +901,7 @@ static operation_types _item_to_oper(item_def *target)
     switch (target->base_type)
     {
     case OBJ_WANDS:
+    case OBJ_TALISMANS:
     case OBJ_MISCELLANY: return OPER_EVOKE;
     case OBJ_POTIONS:    return OPER_QUAFF;
     case OBJ_SCROLLS:    return OPER_READ;
@@ -1032,7 +1041,7 @@ static bool _unequip_item(item_def &i)
 static bool _evoke_item(item_def &i)
 {
     ASSERT(i.defined());
-    if (!in_inventory(i))
+    if (i.base_type != OBJ_TALISMANS && !in_inventory(i))
     {
         mprf(MSGCH_PROMPT, "You aren't carrying that!");
         return false;
@@ -1693,9 +1702,7 @@ static string _cant_wear_barding_reason(bool ignore_temporary)
  * @param verbose Whether to print a message about your inability to wear item.
  * @param ignore_temporary Whether to take into account forms/fishtail/2handers.
  *                         Note that no matter what this is set to, all
- *                         mutations will be taken into account, except for
- *                         ones from Beastly Appendage, which are only checked
- *                         if this is false.
+ *                         mutations will be taken into account.
  */
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 {
@@ -4204,6 +4211,7 @@ void tile_item_use(int idx)
     case OBJ_WEAPONS:
     case OBJ_STAVES:
     case OBJ_MISCELLANY:
+    case OBJ_TALISMANS:
     case OBJ_WANDS:
         // Wield any unwielded item of these types.
         // XX this case looks pretty outdated

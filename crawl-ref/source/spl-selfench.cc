@@ -61,8 +61,6 @@ spret ice_armour(int pow, bool fail)
 
     if (you.duration[DUR_ICY_ARMOUR])
         mpr("Your icy armour thickens.");
-    else if (you.form == transformation::ice_beast)
-        mpr("Your icy body feels more resilient.");
     else
         mpr("A film of ice covers your body!");
 
@@ -77,12 +75,9 @@ void fiery_armour()
 {
     if (you.duration[DUR_FIERY_ARMOUR])
         mpr("Your cloak of flame flares fiercely!");
-    else if (you.duration[DUR_ICY_ARMOUR]
-             || you.form == transformation::ice_beast
-             || player_icemail_armour_class())
+    else if (you.duration[DUR_ICY_ARMOUR] || player_icemail_armour_class())
     {
-        mprf("A sizzling cloak of flame settles atop your ic%s.",
-             you.form == transformation::ice_beast ? "e" : "y armour");
+        mprf("A sizzling cloak of flame settles atop your icy armour.");
         // TODO: add corresponding inverse message for casting ozo's etc
         // while DUR_FIERY_ARMOUR is active (maybe..?)
     }
@@ -232,18 +227,5 @@ spret cast_liquefaction(int pow, bool fail)
 
     you.increase_duration(DUR_LIQUEFYING, 10 + random2avg(pow, 2), 100);
     invalidate_agrid(true);
-    return spret::success;
-}
-
-spret cast_transform(int pow, transformation which_trans, bool fail)
-{
-    if (!transform(pow, which_trans, false, true)
-        || !check_form_stat_safety(which_trans))
-    {
-        return spret::abort;
-    }
-
-    fail_check();
-    transform(pow, which_trans);
     return spret::success;
 }

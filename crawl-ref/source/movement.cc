@@ -921,7 +921,7 @@ void move_player_action(coord_def move)
     // XX generalize?
     const string walkverb = you.airborne()                     ? "fly"
                           : you.swimming()                     ? "swim"
-                          : you.form == transformation::spider ? "crawl"
+                          : you.form == transformation::anaconda ? "slither"
                           : you.form != transformation::none   ? "walk" // XX
                           : walk_verb_to_present(lowercase_first(species::walking_verb(you.species)));
 

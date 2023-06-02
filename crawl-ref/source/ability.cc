@@ -48,7 +48,9 @@
 #include "maps.h"
 #include "menu.h"
 #include "message.h"
+#include "mon-behv.h"
 #include "mon-place.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "movement.h"
 #include "mutation.h"
@@ -363,6 +365,8 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {}, abflag::none }, // range special-cased
         { ABIL_BLINKBOLT, "Blinkbolt",
             0, 0, 0, LOS_MAX_RANGE, {}, abflag::none },
+        { ABIL_SIPHON_ESSENCE, "Siphon Essence",
+            20, 0, 0, -1, {}, abflag::none },
 #if TAG_MAJOR_VERSION == 34
         { ABIL_HEAL_WOUNDS, "Heal Wounds",
             0, 0, 0, -1, {fail_basis::xl, 45, 2}, abflag::none },
@@ -602,6 +606,8 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_RU_SACRIFICE_EYE, "Sacrifice an Eye",
             0, 0, 0, -1, {fail_basis::invo}, abflag::sacrifice },
         { ABIL_RU_SACRIFICE_RESISTANCE, "Sacrifice Resistance",
+            0, 0, 0, -1, {fail_basis::invo}, abflag::sacrifice },
+        { ABIL_RU_SACRIFICE_FORMS, "Sacrifice Forms",
             0, 0, 0, -1, {fail_basis::invo}, abflag::sacrifice },
         { ABIL_RU_REJECT_SACRIFICES, "Reject Sacrifices",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
@@ -1487,7 +1493,9 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     // dangerous.)
     if (abil.ability == ABIL_END_TRANSFORMATION)
     {
-        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
+        const auto form = abil.ability == ABIL_END_TRANSFORMATION ?
+                            you.default_form : transformation::none;
+        if (feat_dangerous_for_form(form, env.grid(you.pos())))
         {
             if (!quiet)
             {
@@ -1757,18 +1765,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
     }
 
-    case ABIL_DITHMENOS_SHADOW_FORM:
-    {
-        string reason;
-        if (!transform(0, transformation::shadow, false, true, &reason))
-        {
-            if (!quiet)
-                mpr(reason);
-            return false;
-        }
-        return true;
-    }
-
     case ABIL_RU_DRAW_OUT_POWER:
         if (you.duration[DUR_EXHAUSTED])
         {
@@ -1838,8 +1834,20 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 
     case ABIL_TRAN_BAT:
     {
-        string reason;
-        if (!transform(0, transformation::bat, false, true, &reason))
+        const string reason = cant_transform_reason(transformation::bat);
+        if (!reason.empty())
+        {
+            if (!quiet)
+                mpr(reason);
+            return false;
+        }
+        return true;
+    }
+
+    case ABIL_DITHMENOS_SHADOW_FORM:
+    {
+        const string reason = cant_transform_reason(transformation::shadow);
+        if (!reason.empty())
         {
             if (!quiet)
                 mpr(reason);
@@ -2027,14 +2035,12 @@ static bool _check_ability_dangerous(const ability_type ability,
 {
     if (ability == ABIL_TRAN_BAT)
         return !check_form_stat_safety(transformation::bat, quiet);
-    else if (ability == ABIL_END_TRANSFORMATION
-             && !feat_dangerous_for_form(transformation::none,
-                                         env.grid(you.pos())))
+    if (ability == ABIL_END_TRANSFORMATION
+        && !feat_dangerous_for_form(you.default_form, env.grid(you.pos())))
     {
-        return !check_form_stat_safety(transformation::bat, quiet);
+        return !check_form_stat_safety(you.default_form, quiet);
     }
-    else
-        return false;
+    return false;
 }
 
 bool check_ability_possible(const ability_type ability, bool quiet)
@@ -2085,6 +2091,8 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
         return make_unique<targeter_multiposition>(&you, find_elemental_targets());
     case ABIL_JIYVA_OOZEMANCY:
         return make_unique<targeter_walls>(&you, find_slimeable_walls());
+    case ABIL_SIPHON_ESSENCE:
+        return make_unique<targeter_siphon_essence>();
 
     // Full LOS:
     case ABIL_BREATHE_LIGHTNING: // Doesn't account for bounces/explosions
@@ -2423,6 +2431,67 @@ static bool _evoke_staff_of_olgreb(dist *target)
     return true;
 }
 
+static vector<monster*> _get_siphon_victims(bool known)
+{
+    vector<monster*> victims;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (grid_distance(you.pos(), mi->pos()) <= siphon_essence_range()
+            && siphon_essence_affects(**mi)
+            && (you.can_see(**mi) || !known))
+        {
+            victims.push_back(*mi);
+        }
+    }
+    return victims;
+}
+
+static spret _siphon_essence(bool fail)
+{
+    if (_get_siphon_victims(true).empty()
+        && !yesno("There are no victims visible. Siphon anyway?", true, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return spret::abort;
+    }
+
+    fail_check();
+
+    int damage = 0;
+    bool seen = false;
+    for (monster* mon : _get_siphon_victims(false))
+    {
+        const int dam = mon->hit_points / 2;
+        mon->hurt(&you, mon->hit_points/2, BEAM_TORMENT_DAMAGE /*dubious*/);
+        damage += dam;
+        if (damage && mon->observable())
+        {
+            simple_monster_message(*mon, " convulses!");
+            behaviour_event(mon, ME_ANNOY);
+            seen = true;
+        }
+    }
+
+    if (!damage)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
+    }
+
+    if (seen)
+        mpr("You feel stolen life flooding into you!");
+    else
+        mpr("You feel stolen life flooding into you from an unseen source!");
+
+    if (you.hp == you.hp_max)
+        return spret::success;
+
+    // no death's door check because death form is incompatible with doors
+    inc_hp(min(damage, 46 + get_form()->get_level(2))); // max 100
+    canned_msg(MSG_GAIN_HEALTH);
+    return spret::success;
+}
+
 /*
  * Use an ability.
  *
@@ -2488,22 +2557,16 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         else
             return spret::abort;
 
-
     case ABIL_BLINKBOLT:
+        if (!_can_blinkbolt(false))
+            return spret::abort;
         {
-            if (_can_blinkbolt(false))
-            {
-                int power = 0;
-                if (you.props.exists(AIRFORM_POWER_KEY))
-                    power = you.props[AIRFORM_POWER_KEY].get_int();
-                else
-                    return spret::abort;
-                return your_spells(SPELL_BLINKBOLT, power, false, nullptr, target);
-            }
-            else
-                return spret::abort;
+            const int power = get_form()->get_level(200) / 27;
+            return your_spells(SPELL_BLINKBOLT, power, false, nullptr, target);
         }
 
+    case ABIL_SIPHON_ESSENCE:
+        return _siphon_essence(fail);
 
     case ABIL_SPIT_POISON:      // Naga poison spit
     {
@@ -2613,7 +2676,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_END_TRANSFORMATION:
-        untransform();
+        return_to_default_form();
         break;
 
     // INVOCATIONS:
@@ -3196,6 +3259,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_RU_SACRIFICE_SKILL:
     case ABIL_RU_SACRIFICE_EYE:
     case ABIL_RU_SACRIFICE_RESISTANCE:
+    case ABIL_RU_SACRIFICE_FORMS:
         if (!ru_do_sacrifice(abil.ability))
             return spret::abort;
         break;
@@ -3628,6 +3692,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
                && species::dragon_form(you.species) == MONS_FIRE_DRAGON;
     case ABIL_BLINKBOLT:
         return you.form == transformation::storm;
+    case ABIL_SIPHON_ESSENCE:
+        return you.form == transformation::death;
     // mutations
     case ABIL_DAMNATION:
         return you.get_mutation_level(MUT_HURL_DAMNATION);
@@ -3635,7 +3701,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.get_mutation_level(MUT_WORD_OF_CHAOS)
                && (!silenced(you.pos()) || include_unusable);
     case ABIL_END_TRANSFORMATION:
-        return you.duration[DUR_TRANSFORMATION] && !you.transform_uncancellable;
+        return you.form != you.default_form && !you.transform_uncancellable;
     // TODO: other god abilities
     case ABIL_RENOUNCE_RELIGION:
         return !you_worship(GOD_NO_GOD);
@@ -3698,6 +3764,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_DAMNATION,
             ABIL_WORD_OF_CHAOS,
             ABIL_BLINKBOLT,
+            ABIL_SIPHON_ESSENCE,
             ABIL_END_TRANSFORMATION,
             ABIL_RENOUNCE_RELIGION,
             ABIL_CONVERT_TO_BEOGH,
@@ -3883,6 +3950,7 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_RU_SACRIFICE_SKILL:
     case ABIL_RU_SACRIFICE_EYE:
     case ABIL_RU_SACRIFICE_RESISTANCE:
+    case ABIL_RU_SACRIFICE_FORMS:
     case ABIL_RU_REJECT_SACRIFICES:
     case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
     case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:

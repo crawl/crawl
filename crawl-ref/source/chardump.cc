@@ -1232,6 +1232,8 @@ static string _describe_action(caction_type type)
 #endif
     case CACT_RIPOSTE:
         return "Riposte";
+    case CACT_FORM:
+        return "Form";
     default:
         return "Error";
     }
@@ -1265,6 +1267,7 @@ static const char* _aux_attack_names[] =
     "Bite",
     "Pseudopods",
     "Tentacles",
+    "Maw",
 };
 COMPILE_CHECK(ARRAYSZ(_aux_attack_names) == NUM_UNARMED_ATTACKS);
 
@@ -1375,6 +1378,8 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
         COMPILE_CHECK(ARRAYSZ(_stab_names) == NUM_STABS);
         ASSERT_RANGE(subtype, 1, NUM_STABS);
         return _stab_names[subtype];
+    case CACT_FORM:
+        return get_form((transformation)subtype)->short_name;
 #if TAG_MAJOR_VERSION == 34
     case CACT_EAT:
         return "Removed food";

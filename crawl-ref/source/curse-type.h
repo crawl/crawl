@@ -12,6 +12,6 @@ enum curse_type
     CURSE_SELF,
     CURSE_FORTITUDE,
     CURSE_CUNNING,
-    CURSE_EVOCATIONS,
+    CURSE_DEVICES,
     NUM_CURSES,
 };

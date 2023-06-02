@@ -626,7 +626,7 @@ void kirke_death_fineff::fire()
 
     // Revert the player last
     if (you.form == transformation::pig)
-        untransform();
+        return_to_default_form();
 }
 
 void rakshasa_clone_fineff::fire()

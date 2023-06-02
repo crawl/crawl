@@ -20,7 +20,6 @@
 #include "misc.h" // december_holidays
 #include "mon-place.h"
 #include "mpr.h"
-#include "randbook.h" // roxanne, roxanne...
 #include "religion.h" // upgrade_hepliaklqana_weapon
 #include "state.h"
 #include "tag-version.h"
@@ -105,25 +104,29 @@ static bool _should_give_unique_item(monster* mon)
     return mon->type != MONS_NATASHA || !mon->props.exists(FELID_REVIVES_KEY);
 }
 
-static void _give_book(monster* mon, int level)
+static talisman_type _talisman_for(monster_type mtyp)
 {
-    if (mon->type == MONS_ROXANNE)
+    switch (mtyp)
     {
-        // Statue form books, heh.
-        const int which_book = (one_chance_in(3) ? BOOK_SLOTH
-                                                 : BOOK_EARTH);
-
-        const int thing_created = items(false, OBJ_BOOKS, which_book, level);
-
-        if (thing_created == NON_ITEM)
-            return;
-
-        // Maybe give Roxanne a random book containing Statue Form instead.
-        if (coinflip())
-            make_book_roxanne_special(&env.item[thing_created]);
-
-        give_specific_item(mon, thing_created);
+    case MONS_RUPERT:
+        return TALISMAN_MAW; // good for shoutin'
+    case MONS_AIZUL:
+        return TALISMAN_SERPENT; // late, but so thematic!
+    case MONS_ROXANNE:
+        return TALISMAN_STATUE;
+    case MONS_SOJOBO:
+        return TALISMAN_STORM;
+    default:
+        break;
     }
+    return NUM_TALISMANS;
+}
+
+static void _give_talisman(monster* mon, int level)
+{
+    const talisman_type talisman = _talisman_for(mon->type);
+    if (talisman != NUM_TALISMANS)
+        give_specific_item(mon, items(false, OBJ_TALISMANS, talisman, level));
 }
 
 static void _give_wand(monster* mon, int level)
@@ -2232,7 +2235,7 @@ void give_item(monster *mons, int level_number, bool mons_summoned)
     ASSERT(level_number > -1); // debugging absdepth0 changes
 
     _give_gold(mons, level_number);
-    _give_book(mons, level_number);
+    _give_talisman(mons, level_number);
     _give_wand(mons, level_number);
     _give_potion(mons, level_number);
     _give_weapon(mons, level_number);

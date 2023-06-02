@@ -270,10 +270,10 @@ Willpower
 Size
   Different species have different sizes: Spriggans and Felids are very small;
   Kobolds are small; Ogres and Trolls are large; Nagas and Armataurs are large
-  with a medium torso; all other species are medium-sized. Many transmutations
-  will change your size. Size affects your evasion: the smaller your character,
-  the more evasive it is. On the other hand, characters of larger than medium
-  size do not suffer the usual attack penalties when standing in shallow water.
+  with a medium torso; all other species are medium-sized. Many talismans will
+  change your size. Size affects your evasion: the smaller your character, the
+  more evasive it is. On the other hand, characters of larger than medium size
+  do not suffer the usual attack penalties when standing in shallow water.
   Characters of smaller than medium size will have problems with some larger
   weapons. Very small characters and large characters are not able to use most
   types of armour. Players and monsters can only constrict foes of the same size
@@ -942,6 +942,17 @@ experience will have twice the usual effect when used for training that skill.
 Once a certain amount of bonus experience has been gained in this way, you will
 automatically discard the finished manual.
 
+î Talismans
+========================================
+
+Talismans allow their user to shift into a different form. Entering or leaving
+a form with a talisman requires a brief period of concentration, but otherwise,
+forms last until the user chooses to leave them.
+
+More powerful talismans require some amount of Shapeshifting skill, without which
+a user will find their maximum health reduced until they leave the form.
+Shapeshifting skill also increases other benefits provided by talismans' forms,
+though weaker talismans have a limit to how helpful skill can be.
 
 { Miscellaneous
 ========================================
@@ -1991,27 +2002,6 @@ Brigands
   daggers or darts. They start with a dagger, a robe and cloak, poisoned darts,
   and a few deadly and rare curare darts.
 
-Adventurer backgrounds
-======================
-
-Adventurers have varied and idiosyncratic skills that they have picked up in
-their travels.
-
-Artificers
-  Artificers have built, bought or burgled an assortment of magic wands to
-  help them through the early Dungeon. Wands have a limited number of uses,
-  though, so they'll want to upgrade from their club ASAP.
-
-Wanderers
-  Wanderers are "jacks-of-all-trades, masters of none". They start the game
-  with a random assortment of skills, items, and maybe spells.
-
-Delvers
-  Delvers have, through some mishap, found themselves several floors below the
-  surface of the Dungeon. They're equipped with a wide variety of magical escape
-  tools, and are well advised to use them to travel to earlier dungeon floors as
-  quickly as possible.
-
 Zealot backgrounds
 ==================
 
@@ -2035,18 +2025,38 @@ Cinder Acolytes
   it burns out, acolytes may need to abandon Ignis. They start with a robe,
   a choice of flaming weapons, and the spell Scorch.
 
+Adventurer backgrounds
+======================
+
+Adventurers have varied and idiosyncratic skills that they have picked up in
+their travels.
+
+Artificers
+  Artificers have built, bought or burgled an assortment of magic wands to
+  help them through the early Dungeon. Wands have a limited number of uses,
+  though, so they'll want to upgrade from their club ASAP.
+
+Shapeshifters
+  Shapeshifters use talismans to shift their body into different forms,
+  granting them uncanny power but making them unable to use some items.
+  They enter the dungeon with a beast talisman and a potion of lignification.
+
+Wanderers
+  Wanderers are "jacks-of-all-trades, masters of none". They start the game
+  with a random assortment of skills, items, and maybe spells.
+
+Delvers
+  Delvers have, through some mishap, found themselves several floors below the
+  surface of the Dungeon. They're equipped with a wide variety of magical escape
+  tools, and are well advised to use them to travel to earlier dungeon floors as
+  quickly as possible.
+
 Warrior-mage backgrounds
 ========================
 
 Warrior mages begin the game with a mix of physical combat and magic skills,
 though usually excel at neither. They start with a library of spells and
 (usually) some way of defending themselves.
-
-Transmuters
-  Transmuters specialise in transmutation magic, and can cause strange changes
-  in themselves and others. They deal damage primarily in unarmed combat, often
-  using transformations to enhance their defensive and offensive capabilities.
-  They also enter the dungeon with a potion of lignification.
 
 Warpers
   Warpers specialise in translocation magic, and are experts in travelling long

@@ -21,6 +21,7 @@ force_lance FORCE_LANCE
 fulminant_prism FULMINANT_PRISM
 searing_ray SEARING_RAY
 momentum_strike MOMENTUM_STRIKE
+irradiate IRRADIATE
 
 %sdir gui/spells/earth
 iron_shot IRON_SHOT
@@ -157,14 +158,6 @@ gravitas GRAVITAS
 manifold_assault MANIFOLD_ASSAULT
 electric_charge ELECTRIC_CHARGE
 
-%sdir gui/spells/transmutation
-blade_hands BLADE_HANDS
-beastly_appendage BEASTLY_APPENDAGE
-irradiate IRRADIATE
-storm_form STORM_FORM
-dragon_form DRAGON_FORM
-wereblood WEREBLOOD
-
 # item-based spells
 %sdir gui/spells/misc
 paralyse PARALYSE
@@ -173,6 +166,8 @@ cloud_cone CLOUD_CONE
 bolt_corrosive CORROSIVE_BOLT
 iceblast ICEBLAST
 bolt_energy ENERGY_BOLT
+# and wereblood
+wereblood WEREBLOOD
 
 # spells normally only used by monsters
 %back gui/spells/bg

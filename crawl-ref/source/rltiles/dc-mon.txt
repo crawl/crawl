@@ -1234,7 +1234,7 @@ misc/unseen PLAYER
 bat_form TRAN_BAT
 spider_form TRAN_SPIDER
 pig_form TRAN_PIG
-ice_form TRAN_ICE_BEAST
+anaconda_form TRAN_ANACONDA
 statue_form_humanoid TRAN_STATUE_HUMANOID
 %syn TRAN_STATUE_EQUIP_FIRST
 statue_form_palentonga TRAN_STATUE_ARMATAUR

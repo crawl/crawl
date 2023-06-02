@@ -20,6 +20,7 @@ aptitudes:
   hexes: 2
   translocations: -1
   transmutations: 1
+  shapeshifting: -1
   air_magic: -2
   earth_magic: 2
   poison_magic: 3

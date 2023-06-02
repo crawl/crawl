@@ -40,7 +40,6 @@
 #include "unique-item-status-type.h"
 
 #define ICY_ARMOUR_KEY "ozocubu's_armour_pow"
-#define TRANSFORM_POW_KEY "transform_pow"
 #define BARBS_MOVE_KEY "moved_with_barbs_status"
 #define HORROR_PENALTY_KEY "horror_penalty"
 #define POWERED_BY_DEATH_KEY "powered_by_death_strength"
@@ -174,6 +173,7 @@ public:
     // PC's symbol (usually @) and colour.
     monster_type symbol;
     transformation form;
+    transformation default_form;
 
     FixedVector< item_def, ENDOFPACK > inv;
     FixedBitVector<NUM_RUNE_TYPES> runes;
@@ -753,11 +753,11 @@ public:
 
     monster_type mons_species(bool zombie_base = false) const override;
 
-    mon_holy_type holiness(bool temp = true) const override;
+    mon_holy_type holiness(bool temp = true, bool incl_form = true) const override;
     bool undead_or_demonic(bool temp = true) const override;
     bool evil() const override;
     bool is_holy() const override;
-    bool is_nonliving(bool temp = true) const override;
+    bool is_nonliving(bool temp = true, bool incl_form = true) const override;
     int how_chaotic(bool check_spells_god) const override;
     bool is_unbreathing() const override;
     bool is_insubstantial() const override;
@@ -1053,7 +1053,7 @@ int get_teleportitis_level();
 
 int player_monster_detect_radius();
 
-int slaying_bonus(bool throwing = false);
+int slaying_bonus(bool throwing = false, bool random = true);
 
 unsigned int exp_needed(int lev, int exp_apt = -99);
 bool will_gain_life(int lev);

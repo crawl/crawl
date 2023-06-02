@@ -31,6 +31,7 @@
 #include "mapdef.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-death.h" // maybe_drop_monster_organ
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "religion.h"
@@ -596,13 +597,37 @@ bool melee_attack::handle_phase_hit()
     return true;
 }
 
+static void _inflict_deathly_blight(monster &m)
+{
+    if (m.holiness() & MH_NONLIVING
+        || mons_is_conjured(m.type)
+        || mons_is_tentacle_or_tentacle_segment(m.type))
+    {
+        return;
+    }
+
+    const int dur = random_range(3, 6) * BASELINE_DELAY;
+    if (!m.stasis() && !m.is_stationary())
+        m.add_ench(mon_enchant(ENCH_SLOW, 0, &you, dur));
+    if (mons_has_attacks(m))
+        m.add_ench(mon_enchant(ENCH_WEAK, 1, &you, dur));
+    m.add_ench(mon_enchant(ENCH_DRAINED, random_range(3, 5), &you, dur));
+    if (you.can_see(m))
+        simple_monster_message(m, " decays.");
+}
+
 bool melee_attack::handle_phase_damaged()
 {
     if (!attack::handle_phase_damaged())
         return false;
 
-    if (attacker->is_player() && player_equip_unrand(UNRAND_POWER_GLOVES))
-        inc_mp(div_rand_round(damage_done, 8));
+    if (attacker->is_player())
+    {
+        if (player_equip_unrand(UNRAND_POWER_GLOVES))
+            inc_mp(div_rand_round(damage_done, 8));
+        if (you.form == transformation::death && defender->alive() && defender->is_monster())
+            _inflict_deathly_blight(*(defender->as_monster()));
+    }
 
     return true;
 }
@@ -631,6 +656,104 @@ bool melee_attack::handle_phase_aux()
 }
 
 /**
+ * Devour a monster whole!
+ *
+ * @param defender  The monster in question.
+ */
+static void _devour(monster &victim)
+{
+    // Sometimes, one's eyes are larger than one's stomach-mouth.
+    const int size_delta = victim.body_size(PSIZE_BODY)
+                            - you.body_size(PSIZE_BODY);
+    mprf("You devour %s%s!",
+         size_delta <= 0 ? "" :
+         size_delta <= 1 ? "half of " :
+                           "a chunk of ",
+         victim.name(DESC_THE).c_str());
+
+    // give a clearer message for eating invisible things
+    if (!you.can_see(victim))
+    {
+        mprf("It tastes like %s.",
+             mons_type_name(mons_genus(victim.type), DESC_PLAIN).c_str());
+        // this could be the actual creature name, but it feels more
+        // 'flavourful' this way??
+    }
+    if (victim.has_ench(ENCH_STICKY_FLAME))
+        mprf("Spicy!");
+
+    // Devour the corpse.
+    victim.props[NEVER_CORPSE_KEY] = true;
+
+    // ... but still drop dragon scales, etc, if appropriate.
+    monster_type orig = victim.type;
+    if (victim.props.exists(ORIGINAL_TYPE_KEY))
+        orig = (monster_type) victim.props[ORIGINAL_TYPE_KEY].get_int();
+    maybe_drop_monster_organ(victim.type, orig, victim.pos());
+
+    // Healing.
+    if (you.duration[DUR_DEATHS_DOOR])
+        return;
+
+    const int xl = victim.get_experience_level();
+    const int xl_heal = xl + random2(xl);
+    const int scale = 100;
+    const int form_lvl = get_form()->get_level(scale);
+    const int form_heal = div_rand_round(form_lvl, scale) + random2(20); // max 40
+    const int healing = 1 + min(xl_heal, form_heal);
+    dprf("healing for %d", healing);
+
+    you.heal(healing);
+    calc_hp();
+    canned_msg(MSG_GAIN_HEALTH);
+}
+
+
+/**
+ * Possibly devour the defender whole.
+ *
+ * @param defender  The defender in question.
+ */
+static void _consider_devouring(monster &defender)
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    // Don't eat orcs, even heretics might be worth a miracle
+    if (you_worship(GOD_BEOGH)
+        && mons_genus(mons_species(defender.type)) == MONS_ORC)
+    {
+        return;
+    }
+
+    // can't eat enemies that leave no corpses...
+    if (!mons_class_can_leave_corpse(mons_species(defender.type))
+        || defender.is_summoned()
+        || defender.flags & MF_HARD_RESET
+        // the curse of midas...
+        || have_passive(passive_t::goldify_corpses))
+    {
+        return;
+    }
+
+    // shapeshifters are mutagenic.
+    // there's no real point to this now, but it is funny.
+    // should polymorphed enemies do the same?
+    if (defender.is_shapeshifter())
+    {
+        // handle this carefully, so the player knows what's going on
+        mprf("You spit out %s as %s %s & %s in your maw!",
+             defender.name(DESC_THE).c_str(),
+             defender.pronoun(PRONOUN_SUBJECTIVE).c_str(),
+             conjugate_verb("twist", defender.pronoun_plurality()).c_str(),
+             conjugate_verb("change", defender.pronoun_plurality()).c_str());
+        return;
+    }
+
+    // chow down.
+    _devour(defender);
+}
+
+/**
  * Handle effects that fire when the defender (the target of the attack) is
  * killed.
  *
@@ -638,6 +761,15 @@ bool melee_attack::handle_phase_aux()
  */
 bool melee_attack::handle_phase_killed()
 {
+    if (attacker->is_player()
+        && you.form == transformation::maw
+        && defender->is_monster() // better safe than sorry
+        && defender->type != MONS_NO_MONSTER // already reset
+        && adjacent(defender->pos(), attack_position))
+    {
+        _consider_devouring(*defender->as_monster());
+    }
+
     // Wyrmbane needs to be notified of deaths, including ones due to aux
     // attacks, but other users of melee_effects() don't want to possibly
     // be called twice. Adding another entry for a single artefact would
@@ -1165,6 +1297,16 @@ public:
     bool xl_based_chance() const override { return false; }
 };
 
+class AuxMaw: public AuxAttackType
+{
+public:
+    AuxMaw()
+    : AuxAttackType(0, 100, "bite") { };
+    int get_damage(bool random) const override {
+        return get_form()->get_aux_damage(random);
+    };
+};
+
 static const AuxConstrict   AUX_CONSTRICT = AuxConstrict();
 static const AuxKick        AUX_KICK = AuxKick();
 static const AuxPeck        AUX_PECK = AuxPeck();
@@ -1175,6 +1317,7 @@ static const AuxPunch       AUX_PUNCH = AuxPunch();
 static const AuxBite        AUX_BITE = AuxBite();
 static const AuxPseudopods  AUX_PSEUDOPODS = AuxPseudopods();
 static const AuxTentacles   AUX_TENTACLES = AuxTentacles();
+static const AuxMaw         AUX_MAW = AuxMaw();
 
 static const AuxAttackType* const aux_attack_types[] =
 {
@@ -1188,6 +1331,7 @@ static const AuxAttackType* const aux_attack_types[] =
     &AUX_BITE,
     &AUX_PSEUDOPODS,
     &AUX_TENTACLES,
+    &AUX_MAW,
 };
 
 
@@ -3579,7 +3723,8 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     case UNAT_CONSTRICT:
         return you.get_mutation_level(MUT_CONSTRICTING_TAIL) >= 2
                 || you.has_mutation(MUT_TENTACLE_ARMS)
-                    && you.has_usable_tentacle();
+                    && you.has_usable_tentacle()
+                || you.form == transformation::anaconda;
 
     case UNAT_KICK:
         return you.has_usable_hooves()
@@ -3615,6 +3760,9 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     case UNAT_TOUCH:
         return you.get_mutation_level(MUT_DEMONIC_TOUCH)
                && you.has_usable_offhand();
+
+    case UNAT_MAW:
+        return you.form == transformation::maw;
 
     default:
         return false;

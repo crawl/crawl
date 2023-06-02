@@ -30,6 +30,7 @@
 #include "state.h"
 #include "tag-version.h"
 #include "throw.h"
+#include "transform.h"
 
 #define MIN_START_STAT       3
 
@@ -532,6 +533,12 @@ static void _setup_generic(const newgame_def& ng,
             item.props["adjusted"] = true;
             auto_assign_item_slot(item);
         }
+    }
+
+    if (you.char_class == JOB_SHAPESHIFTER)
+    {
+        you.default_form = transformation::beast;
+        set_form(transformation::beast, 1); // hacky...
     }
 
     reassess_starting_skills();

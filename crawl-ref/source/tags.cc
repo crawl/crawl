@@ -1470,6 +1470,7 @@ static void _tag_construct_you(writer &th)
     marshallBoolean(th, you.fishtail);
     marshallBoolean(th, you.vampire_alive);
     _marshall_as_int(th, you.form);
+    _marshall_as_int(th, you.default_form);
     CANARY;
 
     // how many you.equip?
@@ -2510,8 +2511,16 @@ FixedVector<spell_type, MAX_KNOWN_SPELLS> unmarshall_player_spells(reader &th)
 #if TAG_MAJOR_VERSION == 34
         spells[i] = _fixup_removed_spells(spells[i]);
 #endif
-        if (spell_removed(spells[i]))
+        if (spell_removed(spells[i])
+#if TAG_MAJOR_VERSION == 34
+            // We'll clean up form spells much later, so that we can give out
+            // compensatory talismans.
+            && !spell_was_form(spells[i])
+#endif
+            )
+        {
             spells[i] = SPELL_NO_SPELL;
+        }
     }
 
     for (int i = MAX_KNOWN_SPELLS; i < count; ++i)
@@ -2671,9 +2680,16 @@ static void _tag_read_you(reader &th)
     // from lich form).
     if (you.form == transformation::none)
         you.transform_uncancellable = false;
-#else
-    ASSERT(you.form != transformation::none || !you.transform_uncancellable);
+
+    if (th.getMinorVersion() < TAG_MINOR_TALISMANS)
+        you.default_form = transformation::none;
+    else
 #endif
+        you.default_form = unmarshall_int_as<transformation>(th);
+    ASSERT_RANGE(static_cast<int>(you.default_form), 0, NUM_TRANSFORMS);
+    ASSERT(you.form != transformation::none || !you.transform_uncancellable);
+    ASSERT(you.form != transformation::none
+           || you.default_form == transformation::none);
     EAT_CANARY;
 
 #if TAG_MAJOR_VERSION == 34
@@ -2953,6 +2969,19 @@ static void _tag_read_you(reader &th)
             you.skill_manual_points[j] = 0;
 #endif
     }
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_SHAPESHIFTING)
+    {
+        you.skills[SK_SHAPESHIFTING]              = you.skills[SK_TRANSMUTATIONS];
+        you.train[SK_SHAPESHIFTING]               = you.train[SK_TRANSMUTATIONS];
+        you.train_alt[SK_SHAPESHIFTING]           = you.train_alt[SK_TRANSMUTATIONS];
+        you.training[SK_SHAPESHIFTING]            = you.training[SK_TRANSMUTATIONS];
+        you.skill_points[SK_SHAPESHIFTING]        = you.skill_points[SK_TRANSMUTATIONS];
+        you.skill_order[SK_SHAPESHIFTING]         = you.skill_order[SK_TRANSMUTATIONS] + 1;
+        you.training_targets[SK_SHAPESHIFTING]    = you.training_targets[SK_TRANSMUTATIONS];
+        you.skill_manual_points[SK_SHAPESHIFTING] = you.skill_manual_points[SK_TRANSMUTATIONS];
+    }
+#endif
 
     you.auto_training = unmarshallBoolean(th);
 
@@ -4161,6 +4190,25 @@ static void _tag_read_you(reader &th)
         && item_for_set(ITEM_SET_ALLY_SCROLLS) == SCR_FOG)
     {
         force_item_set_choice(ITEM_SET_ALLY_SCROLLS, SCR_SUMMONING);
+    }
+
+    const string APPENDAGE_KEY = "beastly_appendages";
+    if (you.props.exists(APPENDAGE_KEY))
+    {
+        for (auto mut : you.props[APPENDAGE_KEY].get_vector())
+        {
+            const mutation_type app = static_cast<mutation_type>(mut.get_int());
+            const int levels = you.get_base_mutation_level(app);
+            const int beast_lvl = app == MUT_TENTACLE_SPIKE ? 3 : 2;
+            const int innate_lvl = you.get_innate_mutation_level(app);
+            // Preserve extra mutation levels acquired after transforming.
+            const int extra = max(0, levels - innate_lvl - beast_lvl);
+            you.mutation[app] = innate_lvl + extra;
+        }
+        you.props.erase(APPENDAGE_KEY);
+        // This leaves you in a very silly beastly appendage
+        // state with no associated mutations. It's fine, it'll
+        // all clear up once the form ends.
     }
 #endif
 }

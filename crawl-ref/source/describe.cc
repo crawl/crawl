@@ -1068,10 +1068,11 @@ static int _item_training_target(const item_def &item)
     const int throw_dam = property(item, PWPN_DAMAGE);
     if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
         return weapon_min_delay_skill(item) * 10;
-    else if (item.base_type == OBJ_MISSILES && is_throwable(&you, item))
+    if (item.base_type == OBJ_MISSILES && is_throwable(&you, item))
         return (((10 + throw_dam / 2) - FASTEST_PLAYER_THROWING_SPEED) * 2) * 10;
-    else
-        return 0;
+    if (item.base_type == OBJ_TALISMANS)
+        return get_form(form_for_talisman(item))->min_skill * 10;
+    return 0;
 }
 
 /**
@@ -1083,16 +1084,17 @@ static skill_type _item_training_skill(const item_def &item)
 {
     if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
         return item_attack_skill(item);
-    else if (is_shield(item))
+    if (is_shield(item))
         return SK_SHIELDS; // shields are armour, so do shields before armour
-    else if (item.base_type == OBJ_ARMOUR)
+    if (item.base_type == OBJ_ARMOUR)
         return SK_ARMOUR;
-    else if (item.base_type == OBJ_MISSILES && is_throwable(&you, item))
+    if (item.base_type == OBJ_MISSILES && is_throwable(&you, item))
         return SK_THROWING;
-    else if (item_ever_evokable(item)) // not very accurate
+    if (item.base_type == OBJ_TALISMANS)
+        return SK_SHAPESHIFTING;
+    if (item_ever_evokable(item)) // not very accurate
         return SK_EVOCATIONS;
-    else
-        return SK_NONE;
+    return SK_NONE;
 }
 
 /**
@@ -1128,7 +1130,8 @@ static bool _is_below_training_target(const item_def &item, bool ignore_current)
  * @param show_target_button whether to show the button for setting a skill target.
  * @param scaled_target a target, scaled by 10, to use when describing the button.
  */
-static string _your_skill_desc(skill_type skill, bool show_target_button, int scaled_target)
+static string _your_skill_desc(skill_type skill, bool show_target_button,
+                               int scaled_target, string padding = "")
 {
     if (!crawl_state.need_save || skill == SK_NONE)
         return "";
@@ -1145,9 +1148,9 @@ static string _your_skill_desc(skill_type skill, bool show_target_button, int sc
     int you_skill_temp = you.skill(skill, 10);
     int you_skill = you.skill(skill, 10, false, false);
 
-    return make_stringf("Your %sskill: %d.%d%s",
+    return make_stringf("Your %sskill: %s%d.%d%s",
                             (you_skill_temp != you_skill ? "(base) " : ""),
-                            you_skill / 10, you_skill % 10,
+                            padding.c_str(), you_skill / 10, you_skill % 10,
                             target_button_desc.c_str());
 }
 
@@ -1305,7 +1308,7 @@ string damage_rating(const item_def *item)
     const int weapon_skill_mult = use_weapon_skill ? apply_weapon_skill(100, skill, false) : 100;
     const int skill_mult = apply_fighting_skill(weapon_skill_mult, false, false);
 
-    const int slaying = slaying_bonus(thrown);
+    const int slaying = slaying_bonus(thrown, false);
     const int ench = item && item_ident(*item, ISFLAG_KNOW_PLUSES) ? item->plus : 0;
     const int plusses = slaying + ench;
 
@@ -2162,6 +2165,128 @@ string describe_item_rarity(const item_def &item)
     }
 }
 
+static string _int_with_plus(int i)
+{
+    if (i < 0)
+        return make_stringf("%d", i);
+    return make_stringf("+%d", i);
+}
+
+static string _maybe_desc_prop(const char* name, int val, int max = -1)
+{
+    if (val == 0)
+        return "";
+    const int len_delta = strlen("Minimum skill") - strlen(name);
+    const string padding = len_delta > 0 ? string(len_delta, ' ') : "";
+    const string base = make_stringf("\n%s: %s%s",
+                        name,
+                        padding.c_str(),
+                        _int_with_plus(val).c_str());
+    if (max == val || max == -1)
+        return base;
+    return base + make_stringf(" (%s at max skill)",
+                               _int_with_plus(max).c_str());
+}
+
+static string _describe_talisman_form(const item_def &item)
+{
+    const transformation form_type = form_for_talisman(item);
+    const Form* form = get_form(form_type);
+    string description;
+    description += make_stringf("Minimum skill: %d", form->min_skill);
+    const bool below_target = _is_below_training_target(item, true);
+    if (below_target)
+        description += " (insufficient skill lowers this form's max HP)";
+    description += make_stringf("\nMaximum skill: %d\n", form->max_skill);
+    const int target_skill = _item_training_target(item);
+    const bool can_set_target = below_target && in_inventory(item)
+                                && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
+    description += _your_skill_desc(SK_SHAPESHIFTING, can_set_target,
+                                    target_skill, "   ");
+    if (below_target)
+        _append_skill_target_desc(description, SK_SHAPESHIFTING, target_skill);
+
+    // defenses
+    const int hp = form->mult_hp(100, true);
+    const int ac = form->get_ac_bonus();
+    const int ev = form->ev_bonus();
+    const int body_ac_loss_percent = form->get_base_ac_penalty(100);
+    const bool loses_body_ac = body_ac_loss_percent && you_can_wear(EQ_BODY_ARMOUR) != false;
+    if (below_target || hp != 100 || ac || ev || loses_body_ac)
+    {
+        description += "\n\nDefense:";
+        if (below_target || hp != 100)
+        {
+            description += make_stringf("\nHP:            %d%%", hp);
+            if (below_target)
+                description += " (reduced by your low skill)";
+        }
+        description += _maybe_desc_prop("Bonus AC", ac / 100,
+                                        form->get_ac_bonus(true) / 100);
+        description += _maybe_desc_prop("Bonus EV", ev, form->ev_bonus(true));
+
+        if (body_ac_loss_percent)
+        {
+            const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
+            const int base_ac = body_armour ? property(*body_armour, PARM_AC) : 0;
+            const int ac_penalty = form->get_base_ac_penalty(base_ac);
+            description += make_stringf("\nAC:           -%d (-%d%% of your body armour's %d base AC)",
+                                        ac_penalty, body_ac_loss_percent, base_ac);
+        }
+    }
+
+    // offense
+    description += "\n\nOffense:";
+    const int uc = form->get_base_unarmed_damage(false); // TODO: compare to your base form?
+                                                         // folks don't know nudists have 3
+    const int max_uc = form->get_base_unarmed_damage(false, true);
+    description += make_stringf("\nUC base dam.:  %d%s",
+                                uc, max_uc == uc ? "" : make_stringf(" (max %d)", max_uc).c_str());
+    description += _maybe_desc_prop("Slay", form->slay_bonus(false),
+                                    form->slay_bonus(false, true));
+    if (form_type == transformation::maw)
+    {
+        const int aux_dam = form->get_aux_damage(false);
+        const int max_aux_dam = form->get_aux_damage(true);
+        description += make_stringf("\nMaw Damage:    %d", aux_dam);
+        if (max_aux_dam != aux_dam)
+            description += make_stringf(" (max %d)", max_aux_dam);
+    }
+    if (form_type == transformation::statue)
+        description += "\nMelee damage:  +50%";
+    description += _maybe_desc_prop("Str", form->str_mod);
+    description += _maybe_desc_prop("Dex", form->dex_mod);
+
+    // TODO: describe UC acc bonus
+
+    // TODO: show resists (find an example of this elsewhere) (remember to include holiness)
+
+    // misc (not covered):
+    // cast penalty, uc brand, slots merged
+
+    return description;
+}
+
+static string _describe_talisman(const item_def &item, bool verbose)
+{
+    string description;
+
+    if (verbose && !is_useless_item(item))
+    {
+        description += "\n\nA period of sustained concentration is needed to "
+                       "enter or leave forms. To leave this form, evoke the "
+                       "talisman again.";
+        description += "\n\n" + _describe_talisman_form(item);
+    }
+
+    // Artefact properties.
+    string art_desc = _artefact_descrip(item);
+    if (!art_desc.empty())
+        description += "\n\n" + art_desc;
+
+    return description;
+}
+
 static string _describe_jewellery(const item_def &item, bool verbose)
 {
     string description;
@@ -2583,6 +2708,14 @@ string get_item_description(const item_def &item,
                         << " scroll.";
             need_extra_line = false;
         }
+        break;
+
+    case OBJ_TALISMANS:
+        desc = _describe_talisman(item, verbose);
+        if (desc.empty())
+            need_extra_line = false;
+        else
+            description << desc;
         break;
 
     case OBJ_ORBS:
@@ -3987,8 +4120,6 @@ static string _player_spell_desc(spell_type spell)
     {
         description << uppercase_first(god_name(you.religion))
                     << " frowns upon the use of this spell.\n";
-        if (god_loathes_spell(spell, you.religion))
-            description << "You'd be excommunicated if you dared to cast it!\n";
     }
     else if (god_likes_spell(spell, you.religion))
     {

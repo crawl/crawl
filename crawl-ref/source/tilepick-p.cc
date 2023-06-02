@@ -490,21 +490,23 @@ tileidx_t tileidx_player()
     switch (you.form)
     {
     // equipment-using forms are handled regularly
+    case transformation::beast:
+    case transformation::maw:
     case transformation::statue:
-    case transformation::lich:
+    case transformation::death:
     case transformation::tree:
     // (so is storm form)
     case transformation::storm:
         break;
     // animals
     case transformation::bat:       ch = TILEP_TRAN_BAT;       break;
-    case transformation::spider:    ch = TILEP_TRAN_SPIDER;    break;
-    case transformation::pig:       ch = TILEP_TRAN_PIG;       break;
 #if TAG_MAJOR_VERSION == 34
-    case transformation::porcupine: ch = TILEP_TRAN_PIG; break;
+    case transformation::spider:    ch = TILEP_TRAN_SPIDER;    break;
+    case transformation::porcupine:
 #endif
+    case transformation::pig:       ch = TILEP_TRAN_PIG;       break;
     // non-animals
-    case transformation::ice_beast: ch = TILEP_TRAN_ICE_BEAST; break;
+    case transformation::anaconda:  ch = TILEP_TRAN_ANACONDA; break;
     case transformation::wisp:      ch = TILEP_MONS_INSUBSTANTIAL_WISP; break;
 #if TAG_MAJOR_VERSION == 34
     case transformation::jelly:     ch = TILEP_MONS_JELLY;     break;
@@ -529,7 +531,6 @@ tileidx_t tileidx_player()
     }
     // no special tile
     case transformation::blade_hands:
-    case transformation::appendage:
     case transformation::none:
     default:
         break;
@@ -944,7 +945,7 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             break;
 
-        case JOB_TRANSMUTER:
+        case JOB_SHAPESHIFTER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_RAINBOW;
             parts[TILEP_PART_HAND1] = TILEP_HAND1_STAFF_RUBY;
             parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_MAGENTA_DIM;

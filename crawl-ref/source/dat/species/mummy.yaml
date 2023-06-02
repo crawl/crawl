@@ -27,6 +27,7 @@ aptitudes:
   summoning: -2
   translocations: -2
   transmutations: -2
+  shapeshifting: False
   fire_magic: -2
   ice_magic: -2
   air_magic: -2

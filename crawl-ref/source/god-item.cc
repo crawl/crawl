@@ -24,6 +24,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "potion-type.h"
+#include "religion.h"
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-util.h"
@@ -148,6 +149,8 @@ bool is_evil_item(const item_def& item, bool calc_unid)
         return item.sub_type == MISC_HORN_OF_GERYON;
     case OBJ_BOOKS:
         return _is_book_type(item, is_evil_spell);
+    case OBJ_TALISMANS:
+        return item.sub_type == TALISMAN_DEATH;
     default:
         return false;
     }
@@ -171,8 +174,6 @@ bool is_unclean_item(const item_def& item, bool calc_unid)
 
 bool is_chaotic_item(const item_def& item, bool calc_unid)
 {
-    bool retval = false;
-
     if (is_unrandom_artefact(item))
     {
         const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
@@ -194,31 +195,23 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
     switch (item.base_type)
     {
     case OBJ_MISSILES:
-        {
-        const int item_brand = get_ammo_brand(item);
-        retval = (item_brand == SPMSL_CHAOS);
-        }
-        break;
+        return get_ammo_brand(item) == SPMSL_CHAOS;
     case OBJ_WANDS:
-        retval = (item.sub_type == WAND_POLYMORPH);
-        break;
+        return item.sub_type == WAND_POLYMORPH;
     case OBJ_POTIONS:
-        retval = (item.sub_type == POT_MUTATION
+        return (item.sub_type == POT_MUTATION
                             && !have_passive(passive_t::cleanse_mut_potions))
                  || item.sub_type == POT_LIGNIFY;
-        break;
     case OBJ_BOOKS:
-        retval = _is_book_type(item, is_chaotic_spell);
-        break;
+        return _is_book_type(item, is_chaotic_spell);
     case OBJ_MISCELLANY:
-        retval = (item.sub_type == MISC_BOX_OF_BEASTS
-                  || item.sub_type == MISC_XOMS_CHESSBOARD);
-        break;
+        return item.sub_type == MISC_BOX_OF_BEASTS
+               || item.sub_type == MISC_XOMS_CHESSBOARD;
+    case OBJ_TALISMANS:
+        return true;
     default:
-        break;
+        return false;
     }
-
-    return retval;
 }
 
 static bool _is_potentially_hasty_item(const item_def& item)
@@ -399,6 +392,14 @@ vector<conduct_type> item_conducts(const item_def &item)
 bool god_hates_item(const item_def &item)
 {
     return god_hates_item_handling(item) != DID_NOTHING;
+}
+
+bool god_despises_item(const item_def &item)
+{
+    if (item.base_type != OBJ_TALISMANS)
+        return false;
+    return item.sub_type == TALISMAN_DEATH && is_good_god(you.religion)
+           || you.religion == GOD_ZIN;
 }
 
 /**

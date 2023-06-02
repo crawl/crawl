@@ -1114,13 +1114,6 @@ static bool _init_frag_player(frag_effect &effect)
         effect.colour     = mons_class_colour(player_mons(true));
         return true;
     }
-    if (you.form == transformation::ice_beast)
-    {
-        effect.name       = "icy blast";
-        effect.colour     = WHITE;
-        effect.damage     = frag_damage_type::ice;
-        return true;
-    }
     return false;
 }
 
@@ -1542,9 +1535,7 @@ static int _shatter_player_dice()
         return 1;
     if (you.petrified() || you.petrifying())
         return 6; // reduced later by petrification's damage reduction
-    else if (you.form == transformation::statue
-             || you.form == transformation::ice_beast
-             || you.species == SP_GARGOYLE)
+    else if (you.form == transformation::statue || you.species == SP_GARGOYLE)
         return 6;
     else if (you.airborne())
         return 1;
@@ -4489,4 +4480,15 @@ spret cast_noxious_bog(int pow, bool fail)
     mpr("You spew toxic sludge!");
 
     return spret::success;
+}
+
+int siphon_essence_range() { return 2; }
+
+bool siphon_essence_affects(const monster &m)
+{
+    return !m.wont_attack()
+        && !(m.holiness() & MH_NONLIVING)
+        && !mons_is_conjured(m.type) // redundant?
+        && !mons_is_tentacle_or_tentacle_segment(m.type); // dubious
+        // intentionally allowing firewood, i guess..?
 }

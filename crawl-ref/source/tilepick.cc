@@ -2712,6 +2712,15 @@ static tileidx_t _tileidx_rune(const item_def &item)
     }
 }
 
+static tileidx_t _tileidx_talisman(const item_def &item)
+{
+    switch (item.sub_type)
+    {
+        // XXX TODO
+    default: return TILE_ERROR;
+    }
+}
+
 static tileidx_t _tileidx_misc(const item_def &item)
 {
     switch (item.sub_type)
@@ -2929,6 +2938,9 @@ tileidx_t tileidx_item(const item_def &item)
 
     case OBJ_MISCELLANY:
         return _tileidx_misc(item);
+
+    case OBJ_TALISMANS:
+        return _tileidx_talisman(item);
 
     case OBJ_RUNES:
         if (item.quantity <= 0)
@@ -3357,6 +3369,7 @@ tileidx_t tileidx_skill(skill_type skill, int train)
     case SK_EARTH_MAGIC:    ch = TILEG_EARTH_MAGIC_ON; break;
     case SK_POISON_MAGIC:   ch = TILEG_POISON_MAGIC_ON; break;
     case SK_EVOCATIONS:     ch = TILEG_EVOCATIONS_ON; break;
+    case SK_SHAPESHIFTING:  ch = TILEG_SHAPESHIFTING_ON; break;
     case SK_INVOCATIONS:
         {
             switch (you.religion)
@@ -3830,6 +3843,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_RU_SACRIFICE_EYE;
     case ABIL_RU_SACRIFICE_RESISTANCE:
         return TILEG_ABILITY_RU_SACRIFICE_RESISTANCE;
+    case ABIL_RU_SACRIFICE_FORMS:
+        return TILEG_ABILITY_RU_SACRIFICE_FORMS;
     case ABIL_RU_REJECT_SACRIFICES:
         return TILEG_ABILITY_RU_REJECT_SACRIFICES;
     // Hepliaklqana
@@ -3999,8 +4014,8 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_VENOM_MAGE;
         case JOB_CHAOS_KNIGHT:
             return TILEG_JOB_CHAOS_KNIGHT;
-        case JOB_TRANSMUTER:
-            return TILEG_JOB_TRANSMUTER;
+        case JOB_SHAPESHIFTER:
+            return TILEG_JOB_SHAPESHIFTER;
         case JOB_MONK:
             return TILEG_JOB_MONK;
         case JOB_WARPER:

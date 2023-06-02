@@ -213,4 +213,5 @@ TEST_CASE("Test all_item_subtypes() does include items for each category",
     REQUIRE(all_item_subtypes(OBJ_MISCELLANY).size() > 0);
     REQUIRE(all_item_subtypes(OBJ_GOLD).size() > 0);
     REQUIRE(all_item_subtypes(OBJ_RUNES).size() > 0);
+    REQUIRE(all_item_subtypes(OBJ_TALISMANS).size() > 0);
 }

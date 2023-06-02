@@ -773,6 +773,7 @@ static const acquirement_subtype_finder _subtype_finders[] =
     0, // no rods
 #endif
     0, // no runes either
+    0, // no talismans... for now. TODO: add talisman acquirement
 };
 
 static int _find_acquirement_subtype(object_class_type &class_wanted,

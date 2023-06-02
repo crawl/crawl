@@ -318,21 +318,16 @@ static const map<job_type, job_def> job_data =
       { SK_STEALTH, 2 }, },
 } },
 
-{ JOB_TRANSMUTER, {
-    "Tm", "Transmuter",
-    2, 5, 5,
+{ JOB_SHAPESHIFTER, {
+    "Sh", "Shapeshifter",
+    7, 0, 5,
     { SP_NAGA, SP_MERFOLK, SP_BASE_DRACONIAN, SP_DEMIGOD, SP_DEMONSPAWN,
       SP_TROLL, SP_METEORAN, },
-    {
-        SPELL_BEASTLY_APPENDAGE,
-        SPELL_WEREBLOOD,
-        SPELL_SPIDER_FORM,
-        SPELL_ICE_FORM,
-    },
-    { "robe", "potion of lignification" },
+    { },
+    { "animal skin", "potion of lignification", "beast talisman" },
     WCHOICE_NONE,
-    { { SK_FIGHTING, 1 }, { SK_UNARMED_COMBAT, 3 }, { SK_DODGING, 2 },
-      { SK_SPELLCASTING, 2 }, { SK_TRANSMUTATIONS, 2 }, },
+    { { SK_FIGHTING, 2 }, { SK_UNARMED_COMBAT, 2 }, { SK_DODGING, 2 },
+      { SK_SHAPESHIFTING, 3 }, },
 } },
 
 { JOB_VENOM_MAGE, {

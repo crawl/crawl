@@ -33,6 +33,7 @@ aptitudes:
   necromancy: -2
   translocations: 0
   transmutations: -1
+  shapeshifting: -3
   fire_magic: -1
   ice_magic: -1
   air_magic: -1

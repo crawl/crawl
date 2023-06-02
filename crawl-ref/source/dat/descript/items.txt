@@ -8,7 +8,7 @@ corrosive slime flow off it like water.
 %%%%
 amulet of faith
 
-A talisman crafted to call the attention of the gods to its wearer. This divine
+A charm crafted to call the attention of the gods to its wearer. This divine
 attention makes it easier to please your god, but your god will also take more
 notice of your transgressions. The amulet will drain some of your divine favour
 when removed.
@@ -67,10 +67,31 @@ battleaxe
 
 A large war axe with a formidable double-sided head.
 %%%%
+beast talisman
+
+Transforms the user into a monstrous, furry were-beast, limbs pulsing with
+ferocious energy. Shapeshifting skill increases the killing power provided.
+While transformed, any gloves, cloaks, headgear and boots are melded.
+%%%%
+blade talisman
+
+{{
+    local hands = you.hand() .. "s"
+    return "Causes long, scythe-shaped blades to grow from the " ..
+           "user's " .. hands
+}}, and smaller fragments of metal to grow inside their body, deforming them
+and reducing the effectiveness of body armour. Shapeshifting skill mitigates
+and eventually eliminates the latter effect.
+
+While transformed, equipped weapons, shields, and gloves are melded, and
+casting spells becomes somewhat more difficult.
+%%%%
 book of air
 
-A primer on the elemental magics of Air. Particularly dedicated students have
-found themselves convinced of their own ability to fly, with tragic results.
+A primer on the elemental magics of Air. The great minotaur hero Vuxhurn, given
+a copy of this book while trapped atop the tower of a wizard with a particularly
+perverse sense of humor, used its pages to construct a rudimentary glider and
+soared to freedom.
 %%%%
 book of alchemy
 
@@ -125,10 +146,9 @@ schools.
 %%%%
 book of changes
 
-A student's primer to the magic arts of Transmutations, filled with lavish
-illustrations of spellcasting mistakes: half-wizard-half-spiders, blade noses,
-beaked tentacles where legs belong. The text is full of reassurances that these
-almost never happen.
+A student's primer to the magic arts of Transmutations. Contrary to common
+wisdom, the book has no ability to move, but it does have a nasty habit of
+disguising itself as other nearby objects.
 %%%%
 book of chaos
 
@@ -229,8 +249,8 @@ book of misfortune
 
 A spellbook dedicated to the art of inflicting creative calamities on one's
 foes. Superstitious wizards claim that the book itself actually absorbs ill
-fortune and carry it around as a talisman, but the effects of this seem
-subtle at best.
+fortune and carry it around as a good-luck charm, but the effects of this
+seem subtle at best.
 %%%%
 book of necromancy
 
@@ -246,12 +266,6 @@ book of power
 
 A book of powerful and destructive magic spells, rumbling and shuddering with
 barely-contained energies.
-%%%%
-book of rime
-
-A frost-gripped tome describing icy spells, somewhat abridged. The Vaults are
-said to hold the full text, but the guardians of that place guard their
-treasures jealously.
 %%%%
 book of scorching
 
@@ -327,19 +341,11 @@ A scholarly work, describing the senses used by living creatures to perceive the
 world around them. A handful of spells are included to demonstrate the principles
 being described.
 %%%%
-book of the sky
-
-A magical book containing powerful elemental spells of Air. The great minotaur
-hero Vuxhurn, given a copy of this book while trapped atop the tower of a
-wizard with a particularly perverse sense of humor, used its pages to construct
-a rudimentary glider and soared to freedom.
-%%%%
 book of the tundra
 
-A book written by peoples of a cold and inhospitable realm. It's exceptionally
-large, but that's because many thick furs hang from its spine. Most of the
-remaining pages are devoted to long, proud descriptions of how those furs were
-taken. Some of these stories include relevant spells, generally as an aside.
+A frost-gripped tome describing icy spells, somewhat abridged. The Vaults are
+said to hold the full text, but the guardians of that place guard their
+treasures jealously.
 %%%%
 book of the warp
 
@@ -353,12 +359,6 @@ A book describing spells requiring very close proximity to their target. The
 author seems to have had a low opinion of their wizardly peers, and spends much
 of the text describing the hygiene and social etiquette needed to enter close
 proximity to other sentient beings.
-%%%%
-book of transfigurations
-
-An advanced book of Transmutations spells. Contrary to common wisdom, the book
-has no ability to move, but it does have a nasty habit of disguising itself as
-other nearby objects.
 %%%%
 book of unlife
 
@@ -495,6 +495,41 @@ double sword
 
 A fearsome weapon with a forked, razor-sharp blade.
 %%%%
+dragon-blood talisman
+
+A vial of pure dragon-blood, crystallized over many years. {{
+    local desc = "Transforms the user into a mighty"
+
+    if you.race():find("Draconian") then
+        desc = desc .. " dragon"
+        if you.race() ~= "Grey Draconian" then
+            desc = desc .. ", increasing the power of any innate breath attacks"
+        end
+        if you.race() == "Red Draconian" then
+            desc = desc .. ". The user becomes highly resistant to fire " ..
+                           "and resistant to poison, but vulnerable to cold"
+        elseif you.race() == "White Draconian" then
+            desc = desc .. ". The user becomes highly resistant to cold " ..
+                           "and resistant to poison, but vulnerable to fire"
+        elseif you.race() == "Green Draconian" then
+            desc = desc .. " and retaining their innate colour"
+        else
+            desc = desc .. ". The user retains their innate colour, and " ..
+                           "becomes resistant to poison"
+        end
+    else
+        desc = desc .. ", fire-breathing dragon. The user becomes highly " ..
+                       "resistant to fire and resistant to poison, but " ..
+                       "vulnerable to cold"
+    end
+
+    desc = desc .. "."
+
+    return desc
+}} Shapeshifting skill increases damage from claws and armour from scales.
+
+While transformed, any equipped weapons and armour are melded.
+%%%%
 eggplant
 
 A rotten eggplant which you can throw at the Crawl developers. It's a bug if
@@ -565,6 +600,15 @@ and grants its wearer resistance to poison, fire and cold.
 gold piece
 
 A pile of glittering gold coins.
+%%%%
+granite talisman
+
+An rough-hewn stone icon. Transforms the user into a slow, stone statue. The
+caster's melee damage, both unarmed and with weapons, is substantially increased.
+The caster's stone body is immune to poison and miasma, and gains resistance to
+electricity and negative energy. Shapeshifting skill increases armour granted.
+
+While transformed, any equipped body armour, gloves and boots are melded.
 %%%%
 grand grimoire
 
@@ -707,6 +751,15 @@ maxwell's memoranda
 A loosely bound collection of the infamous Maxwell's schemes, diagrams and plans.
 Amidst messages written to and by his many minions, allies of convenience and
 hated rivals, a patient reader can discover spells of electrifying power.
+%%%%
+maw talisman
+
+Transforms the user's midsection into a giant mouth, gnashing and ready to devour
+foes. The mouth may devour slain creatures, healing the user to an extent increased
+by the user's Shapeshifting skill and the power of the creature eaten. Skill also
+increases the damage done by the maw.
+
+While transformed, any body armour is melded.
 %%%%
 morningstar
 
@@ -991,7 +1044,7 @@ spellcasting.
 %%%%
 rune of zot
 
-A talisman which allows entry into the Realm of Zot.
+A charm which allows entry into the Realm of Zot.
 %%%%
 sack of spiders
 
@@ -1142,6 +1195,13 @@ scythe
 A farm implement, usually only used by untrained mobs in combat. In practice,
 it's quite similar to a halberd.
 %%%%
+serpent talisman
+
+Transforms the user into a giant, cold-blooded anaconda, ready to wind their
+coils around foes and crush them to death. Shapeshifting skill increases the
+armour provided by the snake's scales. While transformed, any equipped weapons
+and armour are melded, and casting spells is much more difficult.
+%%%%
 shortbow
 
 A curved piece of wood and string, for shooting arrows.
@@ -1224,9 +1284,33 @@ storm dragon scales
 The scales of a lightning-breathing dragon. It is heavier than most dragon
 scale armours, and gives its wearer resistance to electrical discharges.
 %%%%
+storm talisman
+
+Lets the user walk through the air as a raging, lightning-filled tempest. The
+user's melee attacks electrified and strike all adjacent foes. The user also
+flies, gains immunity to poison and miasma, and resists electricity. They can
+launch themselves as a lightning bolt, blasting through everything in their
+way. The damage and evasion granted by storm form are highly dependent on the
+user's skill with Shapeshifting.
+
+While transformed, any equipped weapons and armour are melded.
+%%%%
 swamp dragon scales
 
 The scales of a swamp dragon. It confers resistance to poison on its wearer.
+%%%%
+talisman of death
+
+A lone finger-bone, infused with dark power through a sickening ritual. Transforms
+the user into an undying offense against life itself.
+
+Foes struck by user's melee weapons or hands are weakened, slowed, and drained,
+and they can heal themselves by tormenting foes nearby. (Shapeshifting skill
+increases the effectiveness of the latter.) The user also resists cold and is
+immune to poison, miasma, negative energy, and torment.
+
+The user also gains some of the more dubious benefits of having an undead body.
+They are vulnerable to holy damage and Dispel Undead, and cannot consume potions.
 %%%%
 there-and-back book
 

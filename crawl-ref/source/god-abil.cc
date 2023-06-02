@@ -91,6 +91,7 @@
  #include "rltiles/tiledef-main.h"
 #endif
 #include "timed-effects.h"
+#include "transform.h" // untransform
 #include "traps.h"
 #include "viewchar.h"
 #include "view.h"
@@ -1762,7 +1763,6 @@ bool kiku_gift_capstone_spells()
     vector<spell_type> candidates = { SPELL_HAUNT,
                                       SPELL_BORGNJORS_REVIVIFICATION,
                                       SPELL_INFESTATION,
-                                      SPELL_NECROMUTATION,
                                       SPELL_DEATHS_DOOR };
 
     for (auto spell : candidates)
@@ -2013,7 +2013,6 @@ static map<curse_type, curse_data> _ashenzari_curses =
             SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT },
     } },
     { CURSE_RANGED, {
-        // XXX: merge with evocations..?
         "Ranged Combat", "Range",
         { SK_RANGED_WEAPONS, SK_THROWING },
     } },
@@ -2045,9 +2044,9 @@ static map<curse_type, curse_data> _ashenzari_curses =
         "Cunning", "Cun",
         { SK_DODGING, SK_STEALTH },
     } },
-    { CURSE_EVOCATIONS, {
-        "Evocations", "Evo",
-        { SK_EVOCATIONS },
+    { CURSE_DEVICES, {
+        "Devices", "Dev",
+        { SK_EVOCATIONS, SK_SHAPESHIFTING },
     } },
 };
 
@@ -4230,8 +4229,9 @@ static void _ru_kill_skill(skill_type skill)
 
 static void _extra_sacrifice_code(ability_type sac)
 {
-    const sacrifice_def &sac_def = _get_sacrifice_def(sac);
-    if (sac_def.sacrifice == ABIL_RU_SACRIFICE_HAND)
+    switch (_get_sacrifice_def(sac).sacrifice)
+    {
+    case ABIL_RU_SACRIFICE_HAND:
     {
         auto ring_slots = species::ring_slots(you.species, true);
         equipment_type sac_ring_slot = species::sacrificial_arm(you.species);
@@ -4246,7 +4246,7 @@ static void _extra_sacrifice_code(ability_type sac)
         if (shield != nullptr)
         {
             mprf("You can no longer hold %s!",
-                shield->name(DESC_YOUR).c_str());
+                 shield->name(DESC_YOUR).c_str());
             unequip_item(EQ_SHIELD);
         }
 
@@ -4256,7 +4256,7 @@ static void _extra_sacrifice_code(ability_type sac)
             if (you.hands_reqd(*weapon) == HANDS_TWO)
             {
                 mprf("You can no longer hold %s!",
-                    weapon->name(DESC_YOUR).c_str());
+                     weapon->name(DESC_YOUR).c_str());
                 unequip_item(EQ_WEAPON);
             }
         }
@@ -4275,7 +4275,7 @@ static void _extra_sacrifice_code(ability_type sac)
             const bool can_keep = open_ring_slot != EQ_NONE;
 
             mprf("You can no longer wear %s!",
-                ring->name(DESC_YOUR).c_str());
+                 ring->name(DESC_YOUR).c_str());
             unequip_item(sac_ring_slot, true, can_keep);
             if (can_keep)
             {
@@ -4286,10 +4286,12 @@ static void _extra_sacrifice_code(ability_type sac)
                 equip_item(open_ring_slot, ring_inv_slot, false, true);
             }
         }
+        break;
     }
-    else if (sac_def.sacrifice == ABIL_RU_SACRIFICE_EXPERIENCE)
+    case ABIL_RU_SACRIFICE_EXPERIENCE:
         level_change();
-    else if (sac_def.sacrifice == ABIL_RU_SACRIFICE_SKILL)
+        break;
+    case ABIL_RU_SACRIFICE_SKILL:
     {
         uint8_t saved_skills[NUM_SKILLS];
         for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
@@ -4309,6 +4311,19 @@ static void _extra_sacrifice_code(ability_type sac)
 
         redraw_screen();
         update_screen();
+        break;
+    }
+    case ABIL_RU_SACRIFICE_FORMS:
+        if (you.form == transformation::none)
+            break;
+
+        you.default_form = transformation::none;
+        if (!you.transform_uncancellable)
+            untransform(); // XXX: maybe should warn the player pre-sac?
+
+        break;
+    default:
+        break;
     }
 }
 

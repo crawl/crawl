@@ -21,7 +21,7 @@ two other ways:
  +4  outstanding aptitude (learning twice as fast as at 0 aptitude)
  +5  exceptional aptitude
 
-There are four special values: HP, MP, Experience and Willpower:
+There are four special values: HP, MP, Experience and Willpower.
 - The HP value indicates the percentage of hit points gained per experience
   level, 100% being the Human standard.
 - The MP value indicates a fixed additive modifier to magic points.
@@ -39,23 +39,24 @@ Arm - Armour                 Fgt - Fighting              Spc - Spellcasting
 Ddg - Dodging                                            Coj - Conjurations
 Sth - Stealth                M&F - Maces & Flails        Hex - Hexes
 Shd - Shields                Axs - Axes                  Sum - Summonings
-                             Pla - Polearms              Nec - Necromancy
-Inv - Invocations            Stv - Staves                Trl - Translocations
-Evo - Evocations             UC  - Unarmed Combat        Trm - Transmutations
-Thr - Throwing
-                             SBl - Short Blades          Fir - Fire Magic
-HP  - hit points             LBl - Long Blades           Ice - Ice Magic
-MP  - magic points           Rng - Ranged Weapons        Air - Air Magic
-Exp - experience                                         Ear - Earth Magic
-WL  - willpower                                          Poi - Poison Magic
+Shp - Shapeshifting          Pla - Polearms              Nec - Necromancy
+                             Stv - Staves                Trl - Translocations
+Inv - Invocations            UC  - Unarmed Combat        Trm - Transmutations
+Evo - Evocations
+Thr - Throwing               SBl - Short Blades          Fir - Fire Magic
+                             LBl - Long Blades           Ice - Ice Magic
+HP  - hit points             Rng - Ranged Weapons        Air - Air Magic
+MP  - magic points                                       Ear - Earth Magic
+Exp - experience                                         Poi - Poison Magic
+WL  - willpower
 
 
-                 Arm Ddg Sth Shd     Inv Evo Thr    HP  MP Exp  WL
+                 Arm Ddg Sth Shd Shp     Inv Evo Thr    HP  MP Exp  WL
 ----------------------------------------------------------------------
 
 
                  Fgt     M&F Axs Pla Stv UC    SBl LBl Rng
-----------------------------------------------------------------------
+----------------------------------------------------------
 
 
                  Spc Coj Hex Sum Nec Trl Trm   Fir Ice Air Ear Poi

@@ -525,6 +525,37 @@ static void _try_to_respawn_ancestor()
                       ancestor); // ;)
 }
 
+static void _decrement_transform_duration(int delay)
+{
+    if (you.form == you.default_form)
+        return;
+
+    // FIXME: [ds] Remove this once we've ensured durations can never go < 0?
+    if (you.duration[DUR_TRANSFORMATION] <= 0
+        && you.form != transformation::none)
+    {
+        you.duration[DUR_TRANSFORMATION] = 1;
+    }
+    // Vampire bat transformations are permanent (until ended), unless they
+    // are uncancellable (polymorph wand on a full vampire).
+    if (you.get_mutation_level(MUT_VAMPIRISM) < 2
+        || you.form != transformation::bat
+        || you.transform_uncancellable)
+    {
+        if (form_can_fly()
+            || form_likes_water() && feat_is_water(env.grid(you.pos())))
+        {
+            // Disable emergency flight if it was active
+            you.props.erase(EMERGENCY_FLIGHT_KEY);
+        }
+        if (_decrement_a_duration(DUR_TRANSFORMATION, delay, nullptr, random2(3),
+                                  "Your transformation is almost over."))
+        {
+            return_to_default_form();
+        }
+    }
+}
+
 
 /**
  * Take a 'simple' duration, decrement it, and print messages as appropriate
@@ -543,7 +574,6 @@ static void _decrement_simple_duration(duration_type dur, int delay)
         duration_end_effect(dur);
     }
 }
-
 
 
 /**
@@ -575,32 +605,7 @@ static void _decrement_durations()
     if (you.duration[DUR_LIQUEFYING])
         invalidate_agrid();
 
-    // FIXME: [ds] Remove this once we've ensured durations can never go < 0?
-    if (you.duration[DUR_TRANSFORMATION] <= 0
-        && you.form != transformation::none)
-    {
-        you.duration[DUR_TRANSFORMATION] = 1;
-    }
-
-    // Vampire bat transformations are permanent (until ended), unless they
-    // are uncancellable (polymorph wand on a full vampire).
-    if (you.get_mutation_level(MUT_VAMPIRISM) < 2
-        || you.form != transformation::bat
-        || you.transform_uncancellable)
-    {
-        if (form_can_fly()
-            || form_likes_water() && feat_is_water(env.grid(you.pos())))
-        {
-            // Disable emergency flight if it was active
-            you.props.erase(EMERGENCY_FLIGHT_KEY);
-        }
-
-        if (_decrement_a_duration(DUR_TRANSFORMATION, delay, nullptr, random2(3),
-                                  "Your transformation is almost over."))
-        {
-            untransform();
-        }
-    }
+    _decrement_transform_duration(delay);
 
     if (you.attribute[ATTR_SWIFTNESS] >= 0)
     {
