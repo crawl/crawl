@@ -90,7 +90,14 @@ struct game_state
     vector<string> script_args;    // Arguments to scripts.
 
     bool throttle;
+
     bool bypassed_startup_menu;
+
+    /** The maximum total memory that the user-script Lua interpreter is
+     * allowed to allocate, in megabytes. This limit is enforced to prevent
+     * badly-written or malicious user scripts from consuming too much memory.
+     */
+    uint64_t clua_max_memory_mb;
 
     bool show_more_prompt;  // Set to false to disable --more-- prompts.
 

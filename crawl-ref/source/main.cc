@@ -521,6 +521,7 @@ static void _show_commandline_options_help()
     puts("  -no-throttle          disable throttling of user Lua scripts");
 #else
     puts("  -throttle             enable throttling of user Lua scripts");
+    puts("  -lua-max-memory       max memory in MB allowed for user Lua scripts");
     puts("  -seed <number>        specify a game seed to use when creating a new game");
 #endif
 

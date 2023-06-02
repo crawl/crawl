@@ -36,13 +36,6 @@ static inline double pow(int x, int y) { return std::pow((double)x, y); }
 static inline double pow(int x, double y) { return std::pow((double)x, y); }
 #endif
 
-/**
- * The maximum total memory that the user-script Lua interpreter is
- * allowed to allocate, in kilobytes. This limit is enforced to prevent
- * badly-written or malicious user scripts from consuming too much memory.
- */
-#define CLUA_MAX_MEMORY_USE (16 * 1024)
-
 // Uncomment to prevent Crawl from looking for a list of saves when
 // asking the player to enter a name. This can speed up startup
 // considerably if you have a lot of saves lying around.
