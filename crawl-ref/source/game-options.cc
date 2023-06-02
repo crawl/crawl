@@ -10,6 +10,31 @@
 #include "misc.h"
 #include "tiles-build-specific.h"
 
+static string _curses_attr_to_str(unsigned a)
+{
+    if (unsigned attr_only = (a & CHATTR_ATTRMASK))
+    {
+        switch (attr_only)
+        {
+        case CHATTR_HILITE:
+            // color is stored in high bits
+            return make_stringf("highlight:%s",
+                            colour_to_str((a & CHATTR_COLMASK) >> 8).c_str());
+        case CHATTR_STANDOUT: return "standout";
+        case CHATTR_BOLD: return "bold";
+        case CHATTR_BLINK: return "blink";
+        case CHATTR_UNDERLINE: return "underline";
+        case CHATTR_REVERSE: return "reverse";
+        case CHATTR_DIM: return "dim";
+        default:
+            mprf(MSGCH_ERROR, "Unknown curses attr %u", attr_only);
+            break;
+        }
+    }
+    // should be nothing in higher bits unless a low bit is set
+    return "none";
+}
+
 static unsigned _curses_attribute(const string &field, string &error)
 {
     if (field == "standout")               // probably reverses
@@ -36,7 +61,7 @@ static unsigned _curses_attribute(const string &field, string &error)
         error = make_stringf("Bad highlight string -- %s",
                              field.c_str());
     }
-    else if (field != "none")
+    else if (field != "none" && field != "normal")
         error = make_stringf("Bad colour -- %s", field.c_str());
     return CHATTR_NORMAL;
 }
@@ -107,6 +132,12 @@ string BoolGameOption::loadFromString(const string &field, rc_line_type ltyp)
     return GameOption::loadFromString(field, ltyp);
 }
 
+string ColourGameOption::str() const
+{
+    ASSERT(!elemental); // XXX - not handled, as no option uses it.
+    return colour_to_str(value);
+}
+
 string ColourGameOption::loadFromString(const string &field, rc_line_type ltyp)
 {
     const int col = str_to_colour(field, -1, true, elemental);
@@ -115,6 +146,11 @@ string ColourGameOption::loadFromString(const string &field, rc_line_type ltyp)
 
     value = col;
     return GameOption::loadFromString(field, ltyp);
+}
+
+string CursesGameOption::str() const
+{
+    return _curses_attr_to_str(value);
 }
 
 string CursesGameOption::loadFromString(const string &field, rc_line_type ltyp)
@@ -133,6 +169,12 @@ TileColGameOption::TileColGameOption(VColour &val, vector<string> _names,
                     string _default)
         : GameOption(_names), value(val),
           default_value(str_to_tile_colour(_default)) { }
+
+string TileColGameOption::str() const
+{
+    // XX reverse the standard color names in str_to_tile_colour
+    return make_stringf("#%02x%02x%02x", value.r, value.g, value.b);
+}
 
 string TileColGameOption::loadFromString(const string &field, rc_line_type ltyp)
 {
@@ -175,6 +217,15 @@ string StringGameOption::loadFromString(const string &field, rc_line_type ltyp)
 {
     value = field;
     return GameOption::loadFromString(field, ltyp);
+}
+
+string ColourThresholdOption::str() const
+{
+    auto f = [] (const colour_threshold &s)
+    {
+        return make_stringf("%d:%s", s.first, colour_to_str(s.second).c_str());
+    };
+    return comma_separated_fn(value.begin(), value.end(), f, ", ");
 }
 
 string ColourThresholdOption::loadFromString(const string &field,

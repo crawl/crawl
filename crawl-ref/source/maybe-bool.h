@@ -107,7 +107,7 @@ public:
     // of maybe_bool to bool comparisons as well
     friend inline bool operator== (const maybe_bool &b1, const maybe_bool &b2);
     friend inline bool operator!= (const maybe_bool &b1, const maybe_bool &b2);
-    // TODO: maybe > etc?
+    // TODO: maybe > etc? (`std::less` is implemented below)
 
     friend inline maybe_bool operator&& (const maybe_bool &b1, const maybe_bool &b2);
     friend inline maybe_bool operator|| (const maybe_bool &b1, const maybe_bool &b2);
@@ -146,3 +146,27 @@ inline maybe_bool operator! (const maybe_bool &b)
     return b == maybe_bool::maybe ? b
                                   : !(static_cast<bool>(b));
 }
+
+template<>
+struct std::hash<maybe_bool>
+{
+    std::size_t operator()(maybe_bool const& b) const noexcept
+    {
+        // most (all?) implementations for hash<bool> seem to use 1 and 0, so
+        // do that here
+        return b == maybe_bool::maybe ? 2 : b.to_bool() ? 1 : 0;
+    }
+};
+
+// this exists primarily so that `map<maybe_bool,T>` will work without an
+// explicit comparison parameter
+template<>
+struct std::less<maybe_bool> : binary_function <maybe_bool,maybe_bool,bool>
+{
+    bool operator() (const maybe_bool& x, const maybe_bool& y) const
+    {
+        // false < maybe < true
+        return (x == maybe_bool::maybe ? 1 : x.to_bool() ? 2 : 0)
+                        < (y == maybe_bool::maybe ? 1 : y.to_bool() ? 2 : 0);
+    }
+};

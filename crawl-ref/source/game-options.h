@@ -94,6 +94,8 @@ public:
         return set_from(&other);
     }
 
+    virtual string str() const = 0;
+
     virtual string loadFromString(const std::string &, rc_line_type);
     virtual string loadFromParseState(const opt_parse_state &state);
 
@@ -136,6 +138,7 @@ public:
         return dynamic_cast<const DisabledGameOption *>(other);
     }
 
+    string str() const override { return ""; } // or ASSERT?
     string loadFromString(const std::string &, rc_line_type) override
     {
         // not actually called in automatic code
@@ -158,6 +161,7 @@ public:
     OPT_RESET()
     OPT_SET_FROM(BoolGameOption)
 
+    string str() const override { return value ? "true" : "false"; }
     string loadFromString(const std::string &field, rc_line_type) override;
 
 private:
@@ -176,12 +180,13 @@ public:
     OPT_RESET()
     OPT_SET_FROM(ColourGameOption)
 
+    string str() const override;
     string loadFromString(const std::string &field, rc_line_type) override;
 
 private:
     unsigned &value;
     unsigned default_value;
-    bool elemental;
+    bool elemental; // seems to be unused -- remove?
 };
 
 class CursesGameOption : public GameOption
@@ -194,6 +199,7 @@ public:
     OPT_RESET()
     OPT_SET_FROM(CursesGameOption)
 
+    string str() const override;
     string loadFromString(const std::string &field, rc_line_type) override;
 
 private:
@@ -212,6 +218,7 @@ public:
     OPT_RESET()
     OPT_SET_FROM(IntGameOption)
 
+    string str() const override { return to_string(value); }
     string loadFromString(const std::string &field, rc_line_type) override;
 
 private:
@@ -233,6 +240,7 @@ public:
     OPT_RESET()
     OPT_SET_FROM(FixedpGameOption)
 
+    string str() const override { return value.str(); }
     string loadFromString(const std::string &field, rc_line_type) override;
 
 private:
@@ -251,6 +259,7 @@ public:
     OPT_RESET()
     OPT_SET_FROM(StringGameOption)
 
+    string str() const override { return value; }
     string loadFromString(const std::string &field, rc_line_type) override;
 
 private:
@@ -268,6 +277,7 @@ public:
     OPT_RESET()
     OPT_SET_FROM(TileColGameOption)
 
+    string str() const override;
     string loadFromString(const std::string &field, rc_line_type) override;
 
 private:
@@ -292,6 +302,7 @@ public:
     OPT_RESET()
     OPT_SET_FROM(ColourThresholdOption)
 
+    string str() const override;
     string loadFromString(const string &field, rc_line_type ltyp) override;
 
 private:
@@ -379,6 +390,11 @@ public:
         return V()(s);
     }
 
+    string str() const override
+    {
+        return "unimplemented";
+    }
+
     string loadFromString(const std::string &field, rc_line_type ltyp) override
     {
         if (ltyp == RCFILE_LINE_EQUALS)
@@ -419,14 +435,26 @@ class MultipleChoiceGameOption : public GameOption
 {
 public:
     MultipleChoiceGameOption(T &_val, vector<string> _names, T _default,
-                             map<string, T> _choices,
+                             vector<pair<string, T>> _choices,
                              bool _normalize_bools=false)
         : GameOption(_names), value(_val), default_value(_default),
-          choices(_choices), normalize_bools(_normalize_bools)
-    { }
+          choices(map<string, T>(_choices.begin(), _choices.end())),
+          normalize_bools(_normalize_bools)
+    {
+        for (auto c = _choices.begin(); c != _choices.end(); ++c)
+            if (rchoices.count(c->second) == 0) // treat first instance as canonical
+                rchoices[c->second] = c->first;
+    }
 
     OPT_RESET()
     OPT_SET_FROM(MultipleChoiceGameOption<T>)
+
+    string str() const override
+    {
+        const auto choice = rchoices.find(value);
+        ASSERT(choice != rchoices.end());
+        return choice->second;
+    }
 
     string loadFromString(const std::string &field, rc_line_type ltyp) override
     {
@@ -445,7 +473,7 @@ public:
         }
 
         const T *choice = map_find(choices, normalized);
-        if (choice == 0)
+        if (choice == nullptr)
         {
 
             string all_choices = comma_separated_fn(choices.begin(),
@@ -465,6 +493,7 @@ public:
 protected:
     T &value, default_value;
     map<string, T> choices;
+    map<T, string> rchoices;
     bool normalize_bools;
 };
 
@@ -479,8 +508,8 @@ public:
     MaybeBoolGameOption(maybe_bool &_val, vector<string> _names,
                 maybe_bool _default, vector<string> extra_maybe = {})
         : MultipleChoiceGameOption(_val, _names, _default,
-            {{"true", true},
-             {"false", false},
+            {{"true", maybe_bool::t},
+             {"false", maybe_bool::f},
              {"maybe", maybe_bool::maybe}},
             true)
     {
