@@ -224,7 +224,7 @@ public class SDLActivity extends AppCompatActivity {
             mClipboardHandler = new SDLClipboardHandler_Old();
         }
 
-        // CRAWK HACK: Custom keyboard (START)
+        // CRAWL HACK: Custom keyboard (START)
         Intent intent = getIntent();
         keyboardOption = intent.getIntExtra("keyboard", 0);
         Log.i(TAG, "Keyboard option: " + keyboardOption);
@@ -319,7 +319,7 @@ public class SDLActivity extends AppCompatActivity {
                 mSingleton.commandHandler.post(new ShowTextInputTask(left, top, right, bottom));
             }
         });
-        // CRAWK HACK: Custom keyboard (END)
+        // CRAWL HACK: Custom keyboard (END)
 
         // Get filename from "Open with" of another application
         if (intent != null && intent.getData() != null) {
@@ -1516,7 +1516,7 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
                     SDLActivity.onNativeMouse(MotionEvent.BUTTON_PRIMARY, action, event.getX(0), event.getY(0));
                     break;
 
-                // CRAWK HACK: Start scrolling
+                // CRAWL HACK: Start scrolling
                 //case MotionEvent.ACTION_POINTER_UP:
                 case MotionEvent.ACTION_POINTER_DOWN:
                     scrolling = true;
@@ -1542,7 +1542,7 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
                     break;
 
                 case MotionEvent.ACTION_CANCEL:
-                    // CRAWK HACK: Stop actions
+                    // CRAWL HACK: Stop actions
                     scrolling = false;
                     touchStart = 0L;
                     break;
