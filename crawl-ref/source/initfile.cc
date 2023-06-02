@@ -4538,6 +4538,7 @@ enum commandline_option_type
     CLO_NO_GDB, CLO_NOGDB,
     CLO_THROTTLE,
     CLO_NO_THROTTLE,
+    CLO_CLUA_MAX_MEMORY,
     CLO_PLAYABLE_JSON, // JSON metadata for species, jobs, combos.
     CLO_BRANCHES_JSON, // JSON metadata for branches.
     CLO_SAVE_JSON,
@@ -4593,7 +4594,8 @@ static const char *cmd_ops[] =
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
     "print-charset", "tutorial", "wizard", "explore", "no-save",
     "no-player-bones", "gdb", "no-gdb", "nogdb", "throttle", "no-throttle",
-    "playable-json", "branches-json", "save-json", "gametypes-json", "bones",
+    "lua-max-memory", "playable-json", "branches-json", "save-json",
+    "gametypes-json", "bones",
 #if defined(UNIX) || defined(USE_TILE_LOCAL)
     "headless",
 #endif
@@ -5888,6 +5890,15 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_NO_THROTTLE:
             crawl_state.throttle = false;
+            break;
+
+        case CLO_CLUA_MAX_MEMORY:
+            if (!next_is_param)
+                return false;
+
+            if (!sscanf(next_arg, "%" SCNu64, &crawl_state.clua_max_memory_mb))
+                return false;
+            nextUsed = true;
             break;
 
         case CLO_EXTRA_OPT_FIRST:
