@@ -58,10 +58,13 @@ L& remove_matching(L& lis, const E& entry)
 class GameOption
 {
 public:
-    GameOption(std::set<std::string> _names,
+    GameOption(vector<string> _names,
                bool _case_sensitive=false,
                function<void()> _on_set=nullptr)
-        : on_set(_on_set), names(_names), case_sensitive(_case_sensitive), loaded(false)
+        : on_set(_on_set),
+            canonical_name(_names.size() > 0 ? _names[0] : ""),
+            names(set<string>(_names.begin(), _names.end())),
+            case_sensitive(_case_sensitive), loaded(false)
     {
         // does on_set ever need to be called from here? for currently
         // relevant subclasses, default values are handled in reset(), not in
@@ -95,13 +98,14 @@ public:
     virtual string loadFromParseState(const opt_parse_state &state);
 
     const std::set<std::string> &getNames() const { return names; }
-    const std::string name() const { return *names.begin(); }
+    const std::string name() const { return canonical_name; }
 
     bool was_loaded() const { return loaded; }
 
     function<void()> on_set;
 
 protected:
+    string canonical_name;
     std::set<std::string> names;
     bool case_sensitive;
     bool loaded; // tracks whether the option has changed via loadFromString.
@@ -116,7 +120,7 @@ protected:
 class DisabledGameOption : public GameOption
 {
 public:
-    DisabledGameOption(std::set<std::string> _names)
+    DisabledGameOption(vector<string> _names)
         : GameOption(_names)
     {
     }
@@ -146,7 +150,7 @@ public:
 class BoolGameOption : public GameOption
 {
 public:
-    BoolGameOption(bool &val, std::set<std::string> _names,
+    BoolGameOption(bool &val, vector<string> _names,
                    bool _default,
                    function<void()> _on_set = nullptr)
         : GameOption(_names, false, _on_set), value(val), default_value(_default) { }
@@ -164,7 +168,7 @@ private:
 class ColourGameOption : public GameOption
 {
 public:
-    ColourGameOption(unsigned &val, std::set<std::string> _names,
+    ColourGameOption(unsigned &val, vector<string> _names,
                      unsigned _default, bool _elemental = false)
         : GameOption(_names), value(val), default_value(_default),
           elemental(_elemental) { }
@@ -183,7 +187,7 @@ private:
 class CursesGameOption : public GameOption
 {
 public:
-    CursesGameOption(unsigned &val, std::set<std::string> _names,
+    CursesGameOption(unsigned &val, vector<string> _names,
                      unsigned _default)
         : GameOption(_names), value(val), default_value(_default) { }
 
@@ -200,7 +204,7 @@ private:
 class IntGameOption : public GameOption
 {
 public:
-    IntGameOption(int &val, std::set<std::string> _names, int _default,
+    IntGameOption(int &val, vector<string> _names, int _default,
                   int min_val = INT_MIN, int max_val = INT_MAX)
         : GameOption(_names), value(val), default_value(_default),
           min_value(min_val), max_value(max_val) { }
@@ -219,7 +223,7 @@ private:
 class FixedpGameOption : public GameOption
 {
 public:
-    FixedpGameOption(fixedp<> &val, std::set<std::string> _names, fixedp<> _default,
+    FixedpGameOption(fixedp<> &val, vector<string> _names, fixedp<> _default,
                   fixedp<> min_val = numeric_limits<fixedp<>>::min(),
                   fixedp<> max_val = numeric_limits<fixedp<>>::max())
         : GameOption(_names), value(val), default_value(_default),
@@ -239,7 +243,7 @@ private:
 class StringGameOption : public GameOption
 {
 public:
-    StringGameOption(string &val, std::set<std::string> _names,
+    StringGameOption(string &val, vector<string> _names,
                      string _default, bool _case_sensitive=false,
                      function<void()> _on_set=nullptr)
         : GameOption(_names, _case_sensitive, _on_set), value(val), default_value(_default) { }
@@ -258,7 +262,7 @@ private:
 class TileColGameOption : public GameOption
 {
 public:
-    TileColGameOption(VColour &val, std::set<std::string> _names,
+    TileColGameOption(VColour &val, vector<string> _names,
                       string _default);
 
     OPT_RESET()
@@ -280,7 +284,7 @@ typedef function<bool(const colour_threshold &l, const colour_threshold &r)>
 class ColourThresholdOption : public GameOption
 {
 public:
-    ColourThresholdOption(colour_thresholds &val, std::set<std::string> _names,
+    ColourThresholdOption(colour_thresholds &val, vector<string> _names,
                           string _default, colour_ordering ordering_func)
         : GameOption(_names), value(val), ordering_function(ordering_func),
           default_value(parse_colour_thresholds(_default)) { }
@@ -339,7 +343,7 @@ template<typename T, typename U = T>
 class ListGameOption : public GameOption
 {
 public:
-    ListGameOption(vector<T> &list, std::set<std::string> _names,
+    ListGameOption(vector<T> &list, vector<string> _names,
                    vector<T> _default = {},
                    bool _case_sensitive = false,
                    function<void()> _on_set = nullptr)
@@ -414,7 +418,7 @@ template<typename T>
 class MultipleChoiceGameOption : public GameOption
 {
 public:
-    MultipleChoiceGameOption(T &_val, std::set<std::string> _names, T _default,
+    MultipleChoiceGameOption(T &_val, vector<string> _names, T _default,
                              map<string, T> _choices,
                              bool _normalize_bools=false)
         : GameOption(_names), value(_val), default_value(_default),
@@ -472,7 +476,7 @@ protected:
 class MaybeBoolGameOption : public MultipleChoiceGameOption<maybe_bool>
 {
 public:
-    MaybeBoolGameOption(maybe_bool &_val, std::set<std::string> _names,
+    MaybeBoolGameOption(maybe_bool &_val, vector<string> _names,
                 maybe_bool _default, vector<string> extra_maybe = {})
         : MultipleChoiceGameOption(_val, _names, _default,
             {{"true", true},

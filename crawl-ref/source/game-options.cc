@@ -129,7 +129,7 @@ string CursesGameOption::loadFromString(const string &field, rc_line_type ltyp)
 }
 
 #ifdef USE_TILE
-TileColGameOption::TileColGameOption(VColour &val, std::set<std::string> _names,
+TileColGameOption::TileColGameOption(VColour &val, vector<string> _names,
                     string _default)
         : GameOption(_names), value(val),
           default_value(str_to_tile_colour(_default)) { }
