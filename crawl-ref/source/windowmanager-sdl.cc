@@ -606,7 +606,11 @@ int SDLWrapper::init(coord_def *m_windowsz)
                                  MIN_SDL_WINDOW_SIZE_Y);
     }
 
+#ifndef __ANDROID__
     SDL_EnableScreenSaver();
+#else
+    SDL_DisableScreenSaver();
+#endif
 
     return true;
 }
