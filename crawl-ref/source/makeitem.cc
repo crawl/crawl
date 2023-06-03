@@ -1126,7 +1126,10 @@ bool is_high_tier_wand(int type)
     case WAND_CHARMING:
     case WAND_PARALYSIS:
     case WAND_ACID:
+    case WAND_LIGHT:
+    case WAND_QUICKSILVER:
     case WAND_ICEBLAST:
+    case WAND_ROOTS:
     case WAND_MINDBURST:
         return true;
     default:
