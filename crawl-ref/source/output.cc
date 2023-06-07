@@ -30,6 +30,7 @@
 #include "jobs.h"
 #include "lang-fake.h"
 #include "libutil.h"
+#include "macro.h" // command_to_string
 #include "menu.h"
 #include "message.h"
 #include "misc.h"
@@ -2807,7 +2808,7 @@ static string _status_mut_rune_list(int sw)
     if (!runes.empty())
     {
         text += make_stringf("\n<w>%s:</w> %d/%d rune%s: %s",
-                    stringize_glyph(get_item_symbol(SHOW_ITEM_MISCELLANY)).c_str(),
+                    command_to_string(CMD_DISPLAY_RUNES).c_str(),
                     (int)runes.size(), you.obtainable_runes,
                     you.obtainable_runes == 1 ? "" : "s",
                     comma_separated_line(runes.begin(), runes.end(),
