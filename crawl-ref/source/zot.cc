@@ -14,6 +14,7 @@
 #include "god-passive.h"
 #include "message.h"
 #include "notes.h" // NOTE_MESSAGE
+#include "options.h" // fear_zot
 #include "state.h"
 
 #if TAG_MAJOR_VERSION == 34
@@ -130,7 +131,10 @@ bool bezotted()
 
 bool should_fear_zot()
 {
-    return bezotted() || you.has_mutation(MUT_SHORT_LIFESPAN) && zot_clock_active();
+    return bezotted()
+        || you.has_mutation(MUT_SHORT_LIFESPAN)
+           && zot_clock_active()
+           && Options.fear_zot;
 }
 
 // Decrease the zot clock when the player enters a new level.
