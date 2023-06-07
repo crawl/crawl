@@ -447,7 +447,7 @@ void inc_inv_item_quantity(int obj, int amount)
 
     you.inv[obj].quantity += amount;
     if (you.inv[obj].quantity == amount) // not currently possible?
-        quiver::on_actions_changed(true);
+        quiver::on_actions_changed();
 }
 
 void inc_mitm_item_quantity(int obj, int amount)
@@ -2085,7 +2085,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
         taken_new_item(item.base_type);
 
     you.last_pickup[item.link] = quant_got;
-    quiver::on_actions_changed(true);
+    quiver::on_actions_changed();
     item_skills(item, you.skills_to_show);
 
     if (const item_def* newitem = auto_assign_item_slot(item))

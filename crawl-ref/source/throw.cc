@@ -441,7 +441,7 @@ void fire_item_no_quiver(dist *target)
     //   more general (though right now this generality is mostly unused).
     // * Ensure that the regular fire history isn't affected by this call.
     ammo_only_action_cycler q;
-    q.set(a, true);
+    q.set(a);
     if (target->needs_targeting())
         q.target();
     else
