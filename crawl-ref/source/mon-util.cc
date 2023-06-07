@@ -3918,10 +3918,13 @@ bool monster_senior(const monster& m1, const monster& m2, bool fleeing)
     // Let all related monsters (all demons are 'related') push past ones that
     // are weaker at all. Unrelated ones have to be quite a bit stronger, to
     // reduce excessive swapping and because HD correlates only weakly with
-    // monster strength.
+    // monster strength - but still give a small chance for slightly-higher
+    // HD monsters to swap, to discourage ratscumming.
+    const int hd1 = m1.get_hit_dice();
+    const int hd2 = m2.get_hit_dice();
     return related && fleeing
-           || related && m1.get_hit_dice() > m2.get_hit_dice()
-           || m1.get_hit_dice() > m2.get_hit_dice() + 5;
+           || related && hd1 > hd2
+           || hd1 > hd2 + min(5, random2(11));
 }
 
 bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
