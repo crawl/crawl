@@ -871,7 +871,6 @@ static spret _condenser()
     const int pow = 15 + you.skill(SK_EVOCATIONS, 7) / 2;
 
     random_picker<cloud_type, NUM_CLOUD_TYPES> cloud_picker;
-    cloud_type cloud = cloud_picker.pick(condenser_clouds, pow, CLOUD_NONE);
 
     set<coord_def> target_cells;
     bool see_targets = false;
@@ -910,20 +909,23 @@ static spret _condenser()
         return spret::fail;
     }
 
-    if (is_good_god(you.religion) && cloud == CLOUD_NEGATIVE_ENERGY)
-    {
-        mprf("%s suppresses the foul vapours!", god_name(you.religion).c_str());
-        return spret::fail;
-    }
-
     vector<coord_def> target_list;
     for (coord_def t : target_cells)
         target_list.push_back(t);
     shuffle_array(target_list);
     bool did_something = false;
+    bool suppressed = false;
 
     for (auto p : target_list)
     {
+        const cloud_type cloud = cloud_picker.pick(condenser_clouds, pow, CLOUD_NONE);
+
+        if (is_good_god(you.religion) && cloud == CLOUD_NEGATIVE_ENERGY)
+        {
+            suppressed = true;
+            continue;
+        }
+
         // Get at least one cloud, even at 0 power.
         if (did_something && !x_chance_in_y(50 + pow, 160))
             continue;
@@ -934,7 +936,10 @@ static spret _condenser()
         did_something = true;
     }
 
-    mprf("Clouds of %s condense around you!", cloud_type_name(cloud).c_str());
+    if (did_something)
+        mpr("Clouds condense from the air!");
+    else if (suppressed)
+        simple_god_message(" suppresses the foul vapours!");
 
     return spret::success;
 }
