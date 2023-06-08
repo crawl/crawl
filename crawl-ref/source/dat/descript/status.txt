@@ -820,3 +820,7 @@ Will+ status
 
 <Enlightened status>
 %%%%
+Reap status
+
+The dead are hopping! Living creatures you kill may rise as zombified servants.
+%%%%
