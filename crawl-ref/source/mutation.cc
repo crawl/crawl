@@ -1505,7 +1505,7 @@ static string _mut_blocks_item_reason(const item_def &item, mutation_type mut, i
     case EQ_BOOTS:
         if (mut == MUT_FLOAT)
             return "You have no feet!"; // or legs
-        if (level < 3)
+        if (level < 3 || item.sub_type == ARM_BARDING)
             break;
         if (mut == MUT_HOOVES)
             return "You can't wear boots with hooves!";
