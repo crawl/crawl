@@ -24,6 +24,7 @@ momentum_strike MOMENTUM_STRIKE
 
 %sdir gui/spells/earth
 iron_shot IRON_SHOT
+ledas_unmaking LEDAS_UNMAKING
 dig DIG
 lees_rapid_deconstruction LEES_RAPID_DECONSTRUCTION
 lehudibs_crystal_spear LEHUDIBS_CRYSTAL_SPEAR
@@ -57,7 +58,7 @@ bolt_of_fire BOLT_OF_FIRE
 bolt_of_magma BOLT_OF_MAGMA
 fire_storm FIRE_STORM
 fireball FIREBALL
-kindle_blastsparks BLASTMOTE
+volatile_blastmotes BLASTMOTE
 ignite_poison IGNITE_POISON
 sticky_flame STICKY_FLAME
 throw_flame THROW_FLAME

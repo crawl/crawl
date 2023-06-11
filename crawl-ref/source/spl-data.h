@@ -859,7 +859,7 @@ static const struct spell_desc spelldata[] =
     200,
     4, 4,
     0,
-    TILEG_IRON_SHOT, // XXX TODO
+    TILEG_LEDAS_UNMAKING,
 },
 
 {
