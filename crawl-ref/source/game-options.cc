@@ -12,6 +12,7 @@
 
 namespace options
 {
+    template<>
     std::string to_string(const std::string &e)
     {
         return e;

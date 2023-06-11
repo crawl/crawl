@@ -360,15 +360,11 @@ public:
 
     string str() const override
     {
-        // note: this might be cleaner if it used comma_separated_fn directly,
-        // but I ran into endless template errors trying to get that to work
-        // (for one thing, because to_string(string) is not templated; but
-        // trying to template that also ran into trouble).
-
-        vector<string> accum;
-        for (const auto &a : value)
-            accum.push_back(options::to_string(a));
-        return join_strings(accum.begin(), accum.end(), ", ");
+        // note: if insane template errors show up here, debugging may be
+        // easier if you convert this to procedural code and use join_strings
+        // instead
+        return comma_separated_fn(value.begin(), value.end(),
+            options::to_string<T>, ", ", ", ");
     }
 
     string loadFromString(const std::string &field, rc_line_type ltyp) override

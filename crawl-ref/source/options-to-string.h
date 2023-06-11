@@ -38,7 +38,7 @@ namespace options
         return e.str();
     }
 
-    // not a template specialization, but participates in overload resolution
+    template<>
     std::string to_string(const std::string &e);
 
     template<typename T>
