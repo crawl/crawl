@@ -22,12 +22,14 @@
 #include "mon-dam-level-type.h"
 #include "mpr.h"
 #include "newgame-def.h"
+#include "options-to-string.h"
 #include "pattern.h"
 #include "rc-line-type.h"
 #include "screen-mode.h"
 #include "skill-focus-mode.h"
 #include "slot-select-mode.h"
 #include "spell-type.h"
+#include "stringutil.h"
 #include "tag-pref.h"
 #include "travel-open-doors-type.h"
 #include "wizard-option-type.h"
@@ -57,9 +59,6 @@ enum monster_list_colour_type
 
 struct message_filter
 {
-    int             channel;        // Use -1 to match any channel.
-    text_pattern    pattern;        // Empty pattern matches any message
-
     message_filter()
         : channel(-1), pattern("")
     {
@@ -73,6 +72,7 @@ struct message_filter
     message_filter(const text_pattern &p) : channel(-1), pattern(p) { }
 
     message_filter(const string &s);
+    string str() const;
 
     bool operator== (const message_filter &mf) const
     {
@@ -86,6 +86,9 @@ struct message_filter
             return channel_match;
         return pattern.matches(s);
     }
+
+    int             channel;        // Use -1 to match any channel.
+    text_pattern    pattern;        // Empty pattern matches any message
 };
 
 struct sound_mapping
@@ -96,6 +99,7 @@ struct sound_mapping
     }
 
     sound_mapping(const string &s);
+    string str() const;
 
     text_pattern pattern;
     string       soundfile;
@@ -117,14 +121,16 @@ struct colour_mapping
     }
 
     colour_mapping(const string &s);
+    string str() const;
 
-    string tag;
-    text_pattern pattern;
-    colour_t colour;
     bool operator== (const colour_mapping &o) const
     {
         return tag == o.tag && pattern == o.pattern && colour == o.colour;
     }
+
+    string tag;
+    text_pattern pattern;
+    colour_t colour;
 };
 
 struct message_colour_mapping
@@ -139,16 +145,19 @@ struct message_colour_mapping
     {
     }
 
-    bool valid() const { return colour != MSGCOL_NONE; }
-
-    message_colour_mapping(const string &s);
-
-    message_filter message;
-    msg_colour_type colour;
     bool operator== (const message_colour_mapping &o) const
     {
         return message == o.message && colour == o.colour;
     }
+
+    bool valid() const { return colour != MSGCOL_NONE; }
+
+    message_colour_mapping(const string &s);
+    string str() const;
+
+    message_filter message;
+    msg_colour_type colour;
+
 };
 
 struct mlc_mapping
@@ -164,6 +173,7 @@ struct mlc_mapping
     }
 
     mlc_mapping(const string &s);
+    string str() const;
 
     bool operator== (const mlc_mapping &o) const
     {
@@ -178,6 +188,22 @@ struct mlc_mapping
 
     monster_list_colour_type category;
     int colour;
+};
+
+struct slot_mapping
+{
+    slot_mapping() { }
+
+    slot_mapping(const string &s);
+    string str() const;
+    bool valid() const { return letters.size() > 0; }
+    bool operator== (const slot_mapping &o) const
+    {
+        return pattern == o.pattern && letters == o.letters;
+    }
+
+    text_pattern pattern;
+    string letters;
 };
 
 struct flang_entry
@@ -585,9 +611,9 @@ public:
     vector<text_pattern> note_items;     // Objects to note
     // Skill levels to note
     FixedBitVector<MAX_SKILL_LEVEL + 1> note_skill_levels;
-    vector<pair<text_pattern, string>> auto_spell_letters;
-    vector<pair<text_pattern, string>> auto_item_letters;
-    vector<pair<text_pattern, string>> auto_ability_letters;
+    vector<slot_mapping> auto_spell_letters;
+    vector<slot_mapping> auto_item_letters;
+    vector<slot_mapping> auto_ability_letters;
 
     bool        pickup_thrown;  // Pickup thrown missiles
     int         travel_delay;   // How long to pause between travel moves

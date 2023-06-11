@@ -10,6 +10,14 @@
 #include "misc.h"
 #include "tiles-build-specific.h"
 
+namespace options
+{
+    std::string to_string(const std::string &e)
+    {
+        return e;
+    }
+}
+
 static string _curses_attr_to_str(unsigned a)
 {
     if (unsigned attr_only = (a & CHATTR_ATTRMASK))

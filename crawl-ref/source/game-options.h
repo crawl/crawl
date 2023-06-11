@@ -14,6 +14,7 @@
 #include "fixedp.h"
 #include "stringutil.h"
 #include "maybe-bool.h"
+#include "options-to-string.h"
 #include "rc-line-type.h"
 
 using std::vector;
@@ -349,7 +350,7 @@ struct OptFunctor
 
 // T must be convertible from a string, or a typename that does it must be
 // supplied. You can use OPTFUN above on a function to get something that will
-// work.
+// work. It also needs some way of converting to a string.
 template<typename T, typename U = T>
 class ListGameOption : public GameOption
 {
@@ -392,7 +393,15 @@ public:
 
     string str() const override
     {
-        return "unimplemented";
+        // note: this might be cleaner if it used comma_separated_fn directly,
+        // but I ran into endless template errors trying to get that to work
+        // (for one thing, because to_string(string) is not templated; but
+        // trying to template that also ran into trouble).
+
+        vector<string> accum;
+        for (const auto &a : value)
+            accum.push_back(options::to_string(a));
+        return join_strings(accum.begin(), accum.end(), ", ");
     }
 
     string loadFromString(const std::string &field, rc_line_type ltyp) override

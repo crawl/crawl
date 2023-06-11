@@ -302,9 +302,9 @@ bool add_spell_to_memory(spell_type spell)
     for (const auto &entry : Options.auto_spell_letters)
     {
         // `matches` has a validity check
-        if (!entry.first.matches(sname))
+        if (!entry.valid() && !entry.pattern.matches(sname))
             continue;
-        for (char ch : entry.second)
+        for (char ch : entry.letters)
         {
             if (ch == '+')
                 overwrite = true;
@@ -324,7 +324,7 @@ bool add_spell_to_memory(spell_type spell)
                     const string ename = lowercase_string(
                             spell_title(get_spell_by_letter(ch)));
                     // Don't overwrite a spell matched by the same rule.
-                    if (!entry.first.matches(ename))
+                    if (!entry.pattern.matches(ename))
                     {
                         letter_j = new_letter;
                         break;

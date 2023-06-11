@@ -3780,9 +3780,9 @@ int auto_assign_ability_slot(int slot)
     for (auto& mapping : Options.auto_ability_letters)
     {
         // `matches` has a validity check
-        if (!mapping.first.matches(abilname))
+        if (!mapping.valid() && !mapping.pattern.matches(abilname))
             continue;
-        for (char i : mapping.second)
+        for (char i : mapping.letters)
         {
             if (i == '+')
                 overwrite = true;
@@ -3806,7 +3806,7 @@ int auto_assign_ability_slot(int slot)
                 {
                     const string str = lowercase_string(ability_name(existing_ability));
                     // Don't overwrite an ability matched by the same rule.
-                    if (mapping.first.matches(str))
+                    if (mapping.pattern.matches(str))
                         continue;
                     you.ability_letter_table[slot] = abil_type;
                     swap_ability_slots(slot, index, true);

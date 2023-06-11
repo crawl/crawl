@@ -116,6 +116,8 @@ public:
         return pattern;
     }
 
+    const string &str() const { return tostring(); } // for options string conversion
+
 private:
     string pattern;
     mutable void *compiled_pattern;

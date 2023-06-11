@@ -2002,13 +2002,14 @@ item_def *auto_assign_item_slot(item_def& item)
     for (auto& mapping : Options.auto_item_letters)
     {
         // `matches` has a validity check
-        if (!mapping.first.matches(item.name(DESC_QUALNAME))
-            && !mapping.first.matches(item_prefix(item)
+        if (!mapping.valid()
+            && !mapping.pattern.matches(item.name(DESC_QUALNAME))
+            && !mapping.pattern.matches(item_prefix(item)
                                       + " " + item.name(DESC_A)))
         {
             continue;
         }
-        for (char i : mapping.second)
+        for (char i : mapping.letters)
         {
             if (i == '+')
                 overwrite = true;
@@ -2023,8 +2024,8 @@ item_def *auto_assign_item_slot(item_def& item)
                 // match the item already there.
                 if (!iitem.defined()
                     || overwrite
-                       && !mapping.first.matches(iitem.name(DESC_QUALNAME))
-                       && !mapping.first.matches(item_prefix(iitem)
+                       && !mapping.pattern.matches(iitem.name(DESC_QUALNAME))
+                       && !mapping.pattern.matches(item_prefix(iitem)
                                                  + " " + iitem.name(DESC_A)))
                 {
                     newslot = index;

@@ -128,7 +128,6 @@ static bool _force_allow_explore();
 
 static species_type _str_to_species(const string &str);
 static sound_mapping _interrupt_sound_mapping(const string &s);
-static pair<text_pattern,string> _slot_mapping(const string &s);
 
 #ifdef USE_TILE
 static tag_pref _str_to_tag_pref(const string &opt)
@@ -144,15 +143,22 @@ static tag_pref _str_to_tag_pref(const string &opt)
 }
 #endif
 
-static monster_list_colour_type _str_to_mlc(const string &s)
+static const vector<string> & _get_mlc_names()
 {
-    static const char * const _monster_list_colour_names[NUM_MLC] =
+    static const vector<string> mlc_names =
     {
         "friendly", "neutral", "good_neutral",
         "trivial", "easy", "tough", "nasty",
     };
+    ASSERT(mlc_names.size() == NUM_MLC);
+    return mlc_names;
+}
+
+static monster_list_colour_type _str_to_mlc(const string &s)
+{
+    const auto mlc_names = _get_mlc_names();
     for (int i = 0; i < NUM_MLC; ++i)
-        if (s == _monster_list_colour_names[i])
+        if (s == mlc_names[i])
             return static_cast<monster_list_colour_type>(i);
     return NUM_MLC;
 }
@@ -176,6 +182,15 @@ mlc_mapping::mlc_mapping(const string &s)
         mprf(MSGCH_ERROR, "Bad monster_list_colour key: %s\n",
                      thesplit[0].c_str());
     }
+}
+
+string mlc_mapping::str() const
+{
+    const auto mlc_names = _get_mlc_names();
+    ASSERT(category >= 0 && category < NUM_MLC); // XX will crash on default
+    return make_stringf("%s:%s",
+        colour < 0 ? "" : colour_to_str(colour).c_str(),
+        mlc_names[category].c_str());
 }
 
 static bool _first_less(const pair<int, int> &l, const pair<int, int> &r)
@@ -646,11 +661,11 @@ const vector<GameOption*> game_options::build_options_list()
             {"message_colour", "message_color"}, {}, true),
         new ListGameOption<colour_mapping>(menu_colour_mappings,
             {"menu_colour", "menu_color"}, {}, true),
-        new ListGameOption<pair<text_pattern,string>, OPTFUN(_slot_mapping)>(auto_item_letters,
+        new ListGameOption<slot_mapping>(auto_item_letters,
             {"item_slot"}, {}, true),
-        new ListGameOption<pair<text_pattern,string>, OPTFUN(_slot_mapping)>(auto_spell_letters,
+        new ListGameOption<slot_mapping>(auto_spell_letters,
             {"spell_slot"}, {}, true),
-        new ListGameOption<pair<text_pattern,string>, OPTFUN(_slot_mapping)>(auto_ability_letters,
+        new ListGameOption<slot_mapping>(auto_ability_letters,
             {"ability_slot"}, {}, true),
         new ListGameOption<mlc_mapping>(monster_list_colours_option,
             {"monster_list_colour", "monster_list_color"},
@@ -1102,23 +1117,6 @@ weapon_type str_to_weapon(const string &str)
     return name_nospace_to_weapon(str_nospace);
 }
 
-static string _weapon_to_str(weapon_type wpn_type)
-{
-    if (wpn_type >= 0 && wpn_type < NUM_WEAPONS)
-        return weapon_base_name(wpn_type);
-
-    switch (wpn_type)
-    {
-    case WPN_UNARMED:
-        return "claws";
-    case WPN_VIABLE:
-        return "viable";
-    case WPN_RANDOM:
-    default:
-        return "random";
-    }
-}
-
 // Summon types can be any of mon_summon_type (enum.h), or a relevant summoning
 // spell.
 int str_to_summon_type(const string &str)
@@ -1193,17 +1191,6 @@ string gametype_to_str(game_type type)
 }
 
 // XX move to species.cc?
-static string _species_to_str(species_type sp)
-{
-    if (sp == SP_RANDOM)
-        return "random";
-    else if (sp == SP_VIABLE)
-        return "viable";
-    else
-        return species::name(sp);
-}
-
-// XX move to species.cc?
 static species_type _str_to_species(const string &str)
 {
     if (str == "random")
@@ -1226,16 +1213,6 @@ static species_type _str_to_species(const string &str)
         mprf(MSGCH_ERROR, "Unknown species choice: %s\n", str.c_str());
 
     return ret;
-}
-
-static string _job_to_str(job_type job)
-{
-    if (job == JOB_RANDOM)
-        return "random";
-    else if (job == JOB_VIABLE)
-        return "viable";
-    else
-        return get_job_name(job);
 }
 
 job_type str_to_job(const string &str)
@@ -1261,6 +1238,49 @@ job_type str_to_job(const string &str)
         mprf(MSGCH_ERROR, "Unknown background choice: %s\n", str.c_str());
 
     return job;
+}
+
+namespace options
+{
+    template <>
+    string to_string(const species_type &sp)
+    {
+        if (sp == SP_RANDOM)
+            return "random";
+        else if (sp == SP_VIABLE)
+            return "viable";
+        else
+            return species::name(sp);
+    }
+
+    template <>
+    string to_string(const job_type &job)
+    {
+        if (job == JOB_RANDOM)
+            return "random";
+        else if (job == JOB_VIABLE)
+            return "viable";
+        else
+            return get_job_name(job);
+    }
+
+    template <>
+    string to_string(const weapon_type &wpn_type)
+    {
+        if (wpn_type >= 0 && wpn_type < NUM_WEAPONS)
+            return weapon_base_name(wpn_type);
+
+        switch (wpn_type)
+        {
+        case WPN_UNARMED:
+            return "claws";
+        case WPN_VIABLE:
+            return "viable";
+        case WPN_RANDOM:
+        default:
+            return "random";
+        }
+    }
 }
 
 // read a value which can be either a boolean (in which case return
@@ -2384,11 +2404,11 @@ void newgame_def::write_prefs(FILE *f) const
     fprintf(f, "name = %s\n", name.c_str());
 #endif
     if (species != SP_UNKNOWN)
-        fprintf(f, "species = %s\n", _species_to_str(species).c_str());
+        fprintf(f, "species = %s\n", options::to_string(species).c_str());
     if (job != JOB_UNKNOWN)
-        fprintf(f, "background = %s\n", _job_to_str(job).c_str());
+        fprintf(f, "background = %s\n", options::to_string(job).c_str());
     if (weapon != WPN_UNKNOWN)
-        fprintf(f, "weapon = %s\n", _weapon_to_str(weapon).c_str());
+        fprintf(f, "weapon = %s\n", options::to_string(weapon).c_str());
     if (seed != 0)
         fprintf(f, "game_seed = %" PRIu64 "\n", seed);
     fprintf(f, "fully_random = %s\n", fully_random ? "yes" : "no");
@@ -3160,6 +3180,13 @@ message_filter::message_filter(const string &filter)
     pattern = text_pattern(splits[0], true);
 }
 
+string message_filter::str() const
+{
+    return make_stringf("%s:%s",
+        channel_to_str(channel).c_str(),
+        options::to_string(pattern).c_str());
+}
+
 message_colour_mapping::message_colour_mapping(const string &s)
     : message_colour_mapping()
 {
@@ -3184,6 +3211,16 @@ message_colour_mapping::message_colour_mapping(const string &s)
     else
         colour = msg_colour(col);
     message = message_filter(cmap[1]);
+}
+
+string message_colour_mapping::str() const
+{
+    // no other special message colours are allowed(?)
+    ASSERT(colour == MSGCOL_MUTED || colour >= 0 && colour < MSGCOL_DEFAULT);
+    return make_stringf("%s:%s",
+        colour == MSGCOL_MUTED ? "mute"
+                        : colour_to_str(static_cast<colour_t>(colour)).c_str(),
+        message.str().c_str());
 }
 
 colour_mapping::colour_mapping(const string &s)
@@ -3222,6 +3259,14 @@ colour_mapping::colour_mapping(const string &s)
     colour = col;
 }
 
+string colour_mapping::str() const
+{
+    return make_stringf("%s:%s:%s",
+        tag.empty() ? "any" : tag.c_str(),
+        colour_to_str(colour).c_str(),
+        options::to_string(pattern).c_str());
+}
+
 static sound_mapping _interrupt_sound_mapping(const string &s)
 {
     sound_mapping m(s);
@@ -3255,16 +3300,30 @@ sound_mapping::sound_mapping(const string &s)
     soundfile = s.substr(cpos + 1);
 }
 
-static pair<text_pattern,string> _slot_mapping(const string &s)
+string sound_mapping::str() const
+{
+    return make_stringf("%s:%s",
+        options::to_string(pattern).c_str(), soundfile.c_str());
+}
+
+slot_mapping::slot_mapping(const string &s)
 {
     vector<string> thesplit = split_string(":", s, true, false, 1);
     if (thesplit.size() != 2)
     {
         mprf(MSGCH_ERROR, "Error parsing slot mapping: '%s'\n",
                             s.c_str());
-        return make_pair(text_pattern(), ""); // pattern is marked as invalid
+        return; // pattern is marked as invalid
     }
-    return make_pair(text_pattern(thesplit[0], true), thesplit[1]);
+    pattern = text_pattern(thesplit[0], true);
+    letters = thesplit[1];
+}
+
+string slot_mapping::str() const
+{
+    return make_stringf("%s:%s",
+        options::to_string(pattern).c_str(),
+        letters.c_str());
 }
 
 // Option syntax is:
