@@ -7392,7 +7392,7 @@ Ihr zahlt einen Zehnten von %d Gold.
 ##################
 %%%%
 the rancour of the Wu Jian Council
-die Verbitterung des Wu Jian Konzils
+die Verbitterung des Wu-Jian-Rates
 %%%%
 %s sends the divine host to punish you for your evil ways!
 %s schickt die göttliche Heerschar, um Euch für Eure bösen Taten zu bestrafen!

@@ -88,11 +88,11 @@ the Shining One
 der Glänzende
 %%%%
 the Wu Jian Council
-das Wu Jian Konzil
+der Wu-Jian-Rat
 %%%%
 # Wu Jian Council - short form
 The Council
-Das Konzil
+Der Rat
 %%%%
 a god
 ein Gott
@@ -190,7 +190,7 @@ Zins
 des Glänzenden
 %%%%
 {gen}the Wu Jian Council
-des Wu Jian Konzils
+des Wu-Jian-Rates
 %%%%
 {gen}a god
 eines Gottes
@@ -217,6 +217,9 @@ ihres Gottes
 %%%%
 {acc}the Shining One
 den Glänzenden
+%%%%
+{acc}the Wu Jian Council
+den Wu-Jian-Rat
 %%%%
 {acc}a god
 einen Gott
@@ -245,7 +248,7 @@ ihren Gott
 dem Glänzenden
 %%%%
 {dat}the Wu Jian Council
-dem Wu Jian Konzil
+dem Wu-Jian-Rat
 %%%%
 {dat}a god
 einem Gott
