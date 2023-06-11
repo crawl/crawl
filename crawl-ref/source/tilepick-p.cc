@@ -9,6 +9,7 @@
 #include "describe.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "player.h"
 #include "tile-flags.h"
 #include "tile-player-flag-cut.h"
@@ -457,8 +458,6 @@ tileidx_t tilep_equ_boots(const item_def &item)
     if (item.props.exists(WORN_TILE_KEY))
         return item.props[WORN_TILE_KEY].get_short();
 
-    int etype = enchant_to_int(item);
-
     if (is_unrandom_artefact(item))
     {
         const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
@@ -468,10 +467,11 @@ tileidx_t tilep_equ_boots(const item_def &item)
 
     if (item.sub_type == ARM_BARDING)
     {
-        if (you.species == SP_NAGA)
-            return TILEP_BOOTS_NAGA_BARDING + min(etype, 3);
-        // placeholder for armataur
-        return TILEP_BOOTS_CENTAUR_BARDING + min(etype, 3);
+        if (is_artefact(item))
+            return TILEP_BOOTS_BARDING_RANDART;
+        if (item.flags & ISFLAG_COSMETIC_MASK)
+            return TILEP_BOOTS_BARDING_EGO;
+        return TILEP_BOOTS_BARDING;
     }
 
     if (item.sub_type != ARM_BOOTS)

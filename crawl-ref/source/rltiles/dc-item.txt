@@ -427,17 +427,9 @@ scarf2_2
 scarf2_3
 scarf3
 
-%sdir item/armour/bardings
-naga_barding_blue ARM_BARDING
-naga_barding_metal
-naga_barding_magenta
-naga_barding_red
-# start TAG_MAJOR_VERSION == 34
-centaur_barding_blue ARM_CENTAUR_BARDING
-centaur_barding_metal
-centaur_barding_magenta
-centaur_barding_red
-# end TAG_MAJOR_VERSION
+barding1 ARM_BARDING
+barding2
+barding3
 
 %sdir item/armour/shields
 

@@ -2435,22 +2435,7 @@ void PlayerDoll::_pack_doll()
         p_order[7] = TILEP_PART_LEG;
     }
 
-    // Special case bardings from being cut off.
-    bool is_naga = (m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA
-                    || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA + 1);
-    if (m_save_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
-        && m_save_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED)
-    {
-        flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
-    }
-
-    bool is_ptng = (m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_ARMATAUR
-                    || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_ARMATAUR + 1);
-    if (m_save_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
-        && m_save_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
-    {
-        flags[TILEP_PART_BOOTS] = is_ptng ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
-    }
+    reveal_bardings(m_save_doll.parts, flags);
 
     for (int i = 0; i < TILEP_PART_MAX; ++i)
     {

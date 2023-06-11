@@ -2577,22 +2577,7 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
         p_order[7] = TILEP_PART_LEG;
     }
 
-    // Special case bardings from being cut off.
-    bool is_naga = (equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA
-                    || equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA + 1);
-    if (equip_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
-        && equip_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED)
-    {
-        flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
-    }
-
-    bool is_ptng = (equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_ARMATAUR
-                    || equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_ARMATAUR + 1);
-    if (equip_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
-        && equip_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
-    {
-        flags[TILEP_PART_BOOTS] = is_ptng ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
-    }
+    reveal_bardings(equip_doll.parts, flags);
 
     for (int i = 0; i < TILEP_PART_MAX; ++i)
     {

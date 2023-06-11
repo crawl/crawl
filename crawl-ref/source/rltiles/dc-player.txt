@@ -244,17 +244,10 @@ slippers SLIPPERS
 ## Mutations
 hooves HOOVES
 ## Bardings
-%rim 1
 %sdir player/barding
-naga_barding_blue NAGA_BARDING
-naga_barding_metal NAGA_BARDING_METAL
-naga_barding_magenta NAGA_BARDING_MAGENTA
-naga_barding_red NAGA_BARDING_RED
-centaur_barding_blue CENTAUR_BARDING
-centaur_barding_metal CENTAUR_BARDING_METAL
-centaur_barding_magenta CENTAUR_BARDING_MAGENTA
-centaur_barding_red CENTAUR_BARDING_RED
-%rim 0
+barding1 BARDING
+barding2 BARDING_EGO
+barding3 BARDING_RANDART
 lightning_scales LIGHTNING_SCALES
 black_knight BLACK_KNIGHT
 %end_ctg

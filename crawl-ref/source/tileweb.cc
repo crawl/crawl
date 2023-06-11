@@ -1465,26 +1465,7 @@ void TilesFramework::send_doll(const dolls_data &doll, bool submerged, bool ghos
         p_order[9] = TILEP_PART_CLOAK;
     }
 
-    // Special case bardings from being cut off.
-    const bool is_naga = is_player_tile(doll.parts[TILEP_PART_BASE],
-                                        TILEP_BASE_NAGA);
-
-    if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
-        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED
-        || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_LIGHTNING_SCALES)
-    {
-        flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
-    }
-
-    const bool is_ptng = is_player_tile(doll.parts[TILEP_PART_BASE],
-                                        TILEP_BASE_ARMATAUR);
-
-    if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
-        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED
-        || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_BLACK_KNIGHT)
-    {
-        flags[TILEP_PART_BOOTS] = is_ptng ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
-    }
+    reveal_bardings(doll.parts, flags);
 
     tiles.json_open_array("doll");
 
