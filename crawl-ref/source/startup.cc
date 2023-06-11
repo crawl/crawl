@@ -54,6 +54,7 @@
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tilepick.h"
+ #include "tilepick-p.h"
 #endif
 #include "tileview.h"
 #include "traps.h" // set_shafted
@@ -356,6 +357,8 @@ static void _post_init(bool newc)
     init_monster_symbols();
 
 #ifdef USE_TILE
+    if (newc)
+        randomize_doll_base();
     init_player_doll();
 
     tiles.resize();

@@ -692,6 +692,18 @@ void tilep_draconian_init(int sp, int level, tileidx_t *base, tileidx_t *wing)
         *wing = tile_player_part_start[TILEP_PART_DRCWING] + colour_offset;
 }
 
+static const string DOLL_BASE_KEY = "doll_base";
+
+void randomize_doll_base()
+{
+    const tileidx_t base = tilep_species_to_base_tile(you.species,
+                                                      you.experience_level);
+    const int count = tile_player_count(base);
+    const int rand_base = base + random2(count);
+    you.props[DOLL_BASE_KEY] = rand_base;
+
+}
+
 // Set default parts of each race: body + optional beard, hair, etc.
 // This function needs to be entirely deterministic.
 void tilep_race_default(int sp, int level, dolls_data *doll)
@@ -699,6 +711,8 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
     tileidx_t *parts = doll->parts;
 
     tileidx_t result = tilep_species_to_base_tile(sp, level);
+    if (level == you.experience_level && you.props.exists(DOLL_BASE_KEY))
+        result = you.props[DOLL_BASE_KEY].get_int();
     if (parts[TILEP_PART_BASE] != TILEP_SHOW_EQUIP)
         result = parts[TILEP_PART_BASE];
 

@@ -25,6 +25,7 @@ tileidx_t tileidx_player();
 bool is_player_tile(tileidx_t tile, tileidx_t base_tile);
 
 tileidx_t tilep_species_to_base_tile(int sp, int level);
+void randomize_doll_base();
 
 void tilep_draconian_init(int sp, int level, tileidx_t *base, tileidx_t *wing);
 void tilep_race_default(int sp, int level, dolls_data *doll);
