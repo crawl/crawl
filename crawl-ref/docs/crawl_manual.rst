@@ -1984,7 +1984,7 @@ Monks
 
 Hunters
   The Hunter is a type of fighter who specialises in missile weapons. A Hunter
-  starts with a shortbow, a scroll of immolation, and a set of leathers.
+  starts with a shortbow, a scroll of butterflies, and a set of leathers.
 
 Brigands
   A Brigand is a shady character who is especially good at killing, using
