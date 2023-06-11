@@ -315,43 +315,11 @@ private:
     colour_thresholds default_value;
 };
 
-// the following is overall a bit silly, but the point is to let you use an
-// arbitrary string -> T function as a typename in ListGameOption. There's
-// probably a much cleverer way to do it, but I didn't find it (at least not
-// for c++11).
-
-// https://stackoverflow.com/questions/41301536/get-function-return-type-in-template/41301717#41301717
-// wrap `funret(X)` with `decltype` (as below) to get the return type of an
-// arbitrary function X.
-template<typename R, typename... A>
-R funret(R(*)(A...));
-
-template<typename C, typename R, typename... A>
-R funret(R(C::*)(A...));
-
-// functor class for use in ListGameOption calls where a function does the
-// type conversion. Is there a way to do this passing a function directly
-// to the template?
-template <typename T, T F>
-struct OptFunctor
-{
-    decltype(funret(F)) operator() (const string &s) { return F(s); }
-};
-
-// syntactic sugar to simplify the template call.
-// in c++17 and on, the template could simply be `template <auto F>` instead.
-// Note that, at least in c++11, gcc (but not clang) chokes badly if there is
-// not an explicit `&` on the function used for OptFunctor. I believe clang
-// must be treating the function name as a pointer or ref automatically, and
-// gcc is not (based on the CI errors)? To keep incomprehensible errors from
-// being spat out for other people, I've just put the & in the macro for now.
-// Maybe there's a way of defining the functor template that heads this off.
-#define OPTFUN(a) OptFunctor<decltype(&a), &a>
-
-// T must be convertible from a string, or a typename that does it must be
-// supplied. You can use OPTFUN above on a function to get something that will
-// work. It also needs some way of converting to a string.
-template<typename T, typename U = T>
+// T must be convertible from a string via either a constructor or a
+// specialization of options::from_string. It also needs some way of converting
+// to a string, either via a ::str() function, or an options::to_string
+// specialization or overload.
+template<typename T>
 class ListGameOption : public GameOption
 {
 public:
@@ -365,30 +333,29 @@ public:
     }
 
     OPT_RESET()
-    typedef ListGameOption<T, U> SetFromType; // avoid commas in the macro
-    OPT_SET_FROM(ListGameOption::SetFromType)
+    OPT_SET_FROM(ListGameOption<T>)
 
     // template nonsense follows. We choose between these calls using SFINAE
-    // based on whether V is constructible from a string, or not. If not, V is
-    // assumed to be a functor (e.g. OptFunctor above) and called.
+    // based on whether V is constructible from a string, or not. If not, try
+    // to call an options::from_string variant.
     // other notes:
-    // * the `typename V = U` is present because SFINAE resolution will not
+    // * the `typename V = T` is present because SFINAE resolution will not
     //   trigger unless there is some kind of inference.
     // * the `bool` in the second one is in order to keep the two from having
     //   the same type signature, and believe it or not, is the right way to
     //   do this, at least in c++11.
-    template <typename V = U,
+    template <typename V = T,
         typename = typename std::enable_if<std::is_constructible<V, std::string>::value>::type>
     T element_from_string(const string &s)
     {
         return V(s);
     }
 
-    template <typename V = U,
+    template <typename V = T,
         typename std::enable_if<!std::is_constructible<V, std::string>::value, bool>::type = true>
     T element_from_string(const string &s)
     {
-        return V()(s);
+        return options::from_string<V>(s);
     }
 
     string str() const override

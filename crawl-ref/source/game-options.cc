@@ -16,6 +16,12 @@ namespace options
     {
         return e;
     }
+
+    template<>
+    string from_string(const std::string &s)
+    {
+        return s;
+    }
 }
 
 static string _curses_attr_to_str(unsigned a)

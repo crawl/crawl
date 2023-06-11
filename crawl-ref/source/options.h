@@ -321,6 +321,7 @@ struct base_game_options
     void read_options(LineInput &, bool runscripts,
                       bool clear_aliases = true);
     void read_option_line(const string &s, bool runscripts = false);
+    bool read_game_option(opt_parse_state &state);
     virtual bool read_custom_option(opt_parse_state &state, bool runscripts);
     opt_parse_state parse_option_line(const string &str);
 

@@ -21,7 +21,7 @@ The contents of this text are:
                 autopickup_starting_ammo, game_seed, pregen_dungeon,
                 suppress_startup_errors, map, fully_random, arena_teams
 2-  File System and Sound.
-                crawl_dir, morgue_dir, save_dir, macro_dir, sound, hold_sound,
+                crawl_dir, morgue_dir, save_dir, macro_dir, sound,
                 sound_file_path, one_SDL_sound_channel
 3-  Interface.
 3-a     Dropping and Picking up.
@@ -528,7 +528,7 @@ sounds_on = true
         (Requires "Sound support"; check your version info)
         If true, plays sound effects in various situations.
 
-sound ^= <regex>:<path to sound file>, <regex>:<path>,
+sound ^= <regex>:<path to sound file>:option, <regex>:<path>:option,
         (Ordered list option)
         Plays the sound file if a message contains regex. In case of
         multiple matching regexes, only the sound of the last regex
@@ -542,6 +542,10 @@ sound ^= <regex>:<path to sound file>, <regex>:<path>,
         play a sound whenever the fire prompt is opened. Check
         sound.h for a full listing of all these pre-defined regex
         strings.
+
+        The optional final `:option` has one value, "hold". If this
+        is set, the sound playing will interrupt the UI, otherwise
+        the sound will wait until the UI returns control to the player.
 
 sound_file_path = <path>
         When playing sounds (with the option above), the contents of

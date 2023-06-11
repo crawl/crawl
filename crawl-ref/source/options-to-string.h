@@ -40,4 +40,10 @@ namespace options
 
     // not a template specialization, but participates in overload resolution
     std::string to_string(const std::string &e);
+
+    template<typename T>
+    T from_string(const std::string &s) = delete;
+
+    template<>
+    string from_string(const std::string &s);
 }

@@ -126,9 +126,6 @@ static string _supported_language_listing();
 static bool _force_allow_wizard();
 static bool _force_allow_explore();
 
-static species_type _str_to_species(const string &str);
-static sound_mapping _interrupt_sound_mapping(const string &s);
-
 #ifdef USE_TILE
 static tag_pref _str_to_tag_pref(const string &opt)
 {
@@ -297,15 +294,15 @@ const vector<GameOption*> game_options::build_options_list()
                 game.allowed_jobs.clear();
                 game.allowed_weapons.clear();
             }),
-        new ListGameOption<species_type, OPTFUN(_str_to_species)>(
+        new ListGameOption<species_type>(
             game.allowed_species, {"species", "race"}, {}, true,
             [this]() { game.allowed_combos.clear(); }
             ),
-        new ListGameOption<job_type, OPTFUN(str_to_job)>(
+        new ListGameOption<job_type>(
             game.allowed_jobs, {"background", "job", "class"}, {}, true,
             [this]() { game.allowed_combos.clear(); }
             ),
-        new ListGameOption<weapon_type, OPTFUN(str_to_weapon)>(
+        new ListGameOption<weapon_type>(
             game.allowed_weapons, {"weapon"}, {}, true,
             [this]() { game.allowed_combos.clear(); }
             ),
@@ -691,11 +688,7 @@ const vector<GameOption*> game_options::build_options_list()
                         monster_list_colours[m.category] = m.colour;
             }),
 
-        // these use the same options variable, so their reset functions will
-        // interact if they are ever different:
         new ListGameOption<sound_mapping>(sound_mappings, {"sound"}, {}, true),
-        new ListGameOption<sound_mapping, OPTFUN(_interrupt_sound_mapping)>(
-            sound_mappings, {"hold_sound"}, {}, true),
 
         new ColourThresholdOption(hp_colour, {"hp_colour", "hp_color"},
                                   "70:yellow, 40:red", _first_greater),
@@ -1190,31 +1183,6 @@ string gametype_to_str(game_type type)
     }
 }
 
-// XX move to species.cc?
-static species_type _str_to_species(const string &str)
-{
-    if (str == "random")
-        return SP_RANDOM;
-    else if (str == "viable")
-        return SP_VIABLE;
-
-    species_type ret = SP_UNKNOWN;
-    if (str.length() == 2) // scan abbreviations
-        ret = species::from_abbrev(str.c_str());
-
-    // if we don't have a match, scan the full names
-    if (ret == SP_UNKNOWN && str.length() >= 2)
-        ret = species::from_str_loose(str, true);
-
-    if (!species::is_starting_species(ret))
-        ret = SP_UNKNOWN;
-
-    if (ret == SP_UNKNOWN)
-        mprf(MSGCH_ERROR, "Unknown species choice: %s\n", str.c_str());
-
-    return ret;
-}
-
 job_type str_to_job(const string &str)
 {
     if (str == "random")
@@ -1254,6 +1222,31 @@ namespace options
     }
 
     template <>
+    species_type from_string(const string &str)
+    {
+        if (str == "random")
+            return SP_RANDOM;
+        else if (str == "viable")
+            return SP_VIABLE;
+
+        species_type ret = SP_UNKNOWN;
+        if (str.length() == 2) // scan abbreviations
+            ret = species::from_abbrev(str.c_str());
+
+        // if we don't have a match, scan the full names
+        if (ret == SP_UNKNOWN && str.length() >= 2)
+            ret = species::from_str_loose(str, true);
+
+        if (!species::is_starting_species(ret))
+            ret = SP_UNKNOWN;
+
+        if (ret == SP_UNKNOWN)
+            mprf(MSGCH_ERROR, "Unknown species choice: %s\n", str.c_str());
+
+        return ret;
+    }
+
+    template <>
     string to_string(const job_type &job)
     {
         if (job == JOB_RANDOM)
@@ -1262,6 +1255,12 @@ namespace options
             return "viable";
         else
             return get_job_name(job);
+    }
+
+    template <>
+    job_type from_string(const string &str)
+    {
+        return str_to_job(str);
     }
 
     template <>
@@ -1280,6 +1279,12 @@ namespace options
         default:
             return "random";
         }
+    }
+
+    template <>
+    weapon_type from_string(const string &str)
+    {
+        return str_to_weapon(str);
     }
 }
 
@@ -3267,18 +3272,11 @@ string colour_mapping::str() const
         options::to_string(pattern).c_str());
 }
 
-static sound_mapping _interrupt_sound_mapping(const string &s)
-{
-    sound_mapping m(s);
-    m.interrupt_game = true;
-    return m;
-}
-
 sound_mapping::sound_mapping(const string &s)
     : sound_mapping()
 {
-    string::size_type cpos = s.find(":", 0); // TODO: allow escaping?
-    if (cpos == string::npos)
+    vector<string> seq = split_string(":", s, true, true, -1, true);
+    if (seq.size() < 2 || seq.size() > 3)
     {
         mprf(MSGCH_ERROR, "Options error: invalid sound mapping '%s'", s.c_str());
         return;
@@ -3295,9 +3293,19 @@ sound_mapping::sound_mapping(const string &s)
     }
 #endif
 
-    pattern = s.substr(0, cpos);
+    pattern = seq[0];
     // path resolution is handled when it's time to play the sound, not now
-    soundfile = s.substr(cpos + 1);
+    soundfile = seq[1];
+    if (seq[2].size() > 0)
+    {
+        if (seq[2] == "hold")
+            interrupt_game = true;
+        else if (!seq[2].empty())
+        {
+            mprf(MSGCH_ERROR, "Options error: unknown sound option '%s'",
+                seq[2].c_str());
+        }
+    }
 }
 
 string sound_mapping::str() const
@@ -3728,14 +3736,8 @@ void base_game_options::read_option_line(const string &str, bool runscripts)
         return;
     }
 
-    GameOption *const *option = map_find(options_by_name, state.key);
-    if (option)
-    {
-        const string error = (*option)->loadFromParseState(state);
-        if (!error.empty())
-            report_error("%s", error.c_str());
+    if (read_game_option(state))
         return;
-    }
 
     if (read_custom_option(state, runscripts))
         return;
@@ -3751,6 +3753,19 @@ void base_game_options::read_option_line(const string &str, bool runscripts)
             named_options[state.key] = state.raw_field;
         }
     }
+}
+
+bool base_game_options::read_game_option(opt_parse_state &state)
+{
+    GameOption *option = option_from_name(state.key);
+    if (option)
+    {
+        const string error = option->loadFromParseState(state);
+        if (!error.empty())
+            report_error("%s", error.c_str());
+        return true;
+    }
+    return false;
 }
 
 bool base_game_options::read_custom_option(opt_parse_state &, bool)
@@ -4154,6 +4169,14 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
                 dump_item_origins = IODS_EVERYTHING;
         }
         return true;
+    }
+    else if (key == "hold_sound")
+    {
+        // backwards compatibility, a bit hacky
+        state.key = "sound";
+        state.field += ":hold";
+        state.raw_field += ":hold";
+        return read_game_option(state);
     }
 #ifdef USE_TILE_WEB
     else if (key == "action_panel")
@@ -5789,10 +5812,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!rc_only)
             {
                 if (o == 2)
-                    Options.game.species = _str_to_species(string(next_arg));
+                    Options.game.species = options::from_string<species_type>(string(next_arg));
 
                 if (o == 3)
-                    Options.game.job = str_to_job(string(next_arg));
+                    Options.game.job = options::from_string<job_type>(string(next_arg));
             }
             nextUsed = true;
             break;
