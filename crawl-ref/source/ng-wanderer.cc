@@ -797,21 +797,19 @@ static void _wanderer_cover_equip_holes()
     }
 }
 
-static void _add_spells(vector<spell_type> &all_spells,
+static void _add_spells(set<spell_type> &all_spells,
                         const vector<spell_type> &new_spells)
 {
-    all_spells.insert(all_spells.end(), new_spells.begin(), new_spells.end());
+    all_spells.insert(new_spells.begin(), new_spells.end());
 }
 
-static void _handle_start_spells(const vector<spell_type> &spells)
+static void _handle_start_spells(const set<spell_type> &spells)
 {
     if (you.has_mutation(MUT_INNATE_CASTER))
     {
         for (spell_type s : spells)
-        {
             if (you.spell_no < MAX_DJINN_SPELLS)
                 add_spell_to_memory(s);
-        }
         return;
     }
 
@@ -854,7 +852,7 @@ void create_wanderer()
     // 1 last stage to fill any glaring equipment holes (no clothes,
     // etc.).
 
-    vector<spell_type> spells;
+    set<spell_type> spells;
     _add_spells(spells, _wanderer_good_equipment(gift_skill_1));
     gift_skills.insert(gift_skill_1);
 
