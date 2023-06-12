@@ -7155,7 +7155,8 @@ bool player::can_see_invisible() const
         // armour: (checks head armour only)
         || wearing_ego(EQ_HELMET, SPARM_SEE_INVISIBLE)
         // randart gear
-        || scan_artefacts(ARTP_SEE_INVISIBLE) > 0)
+        || scan_artefacts(ARTP_SEE_INVISIBLE) > 0
+        || you.wizard_vision)
     {
         return true;
     }

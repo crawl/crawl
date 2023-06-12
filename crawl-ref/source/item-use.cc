@@ -3896,7 +3896,12 @@ bool read(item_def* scroll, dist *target)
 
     case SCR_MAGIC_MAPPING:
         mpr(pre_succ_msg);
+        you.wizard_vision = true;
         magic_mapping(500, 100, false);
+        viewwindow(true);
+        update_screen();
+        more();
+        you.wizard_vision = false;
         break;
 
     case SCR_TORMENT:
