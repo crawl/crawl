@@ -325,6 +325,7 @@ bool mons_class_leaves_organ(monster_type mc);
 bool mons_is_zombified(const monster& mons);
 bool mons_class_can_be_zombified(monster_type mc);
 bool mons_can_be_zombified(const monster& mon);
+bool mons_class_can_be_spectralised(monster_type mc, bool divine = false);
 bool mons_can_be_spectralised(const monster& mon, bool divine = false);
 bool mons_class_can_use_stairs(monster_type mc);
 bool mons_class_can_use_transporter(monster_type mc);

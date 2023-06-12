@@ -1734,16 +1734,24 @@ bool mons_can_be_zombified(const monster& mon)
            && mons_has_attacks(mon, true);
 }
 
+bool mons_class_can_be_spectralised(monster_type mzc, bool divine)
+{
+    monster_type mc = mons_species(mzc);
+    ASSERT_smc();
+    return mons_class_holiness(mzc) & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
+        && mc != MONS_PANDEMONIUM_LORD
+        && (!divine || smc->attack[0].type != AT_NONE); // i.e. has_attack
+}
+
 // Does this monster have a soul that can be used for necromancy (Death
 // Channel, Simulacrum, Yredelemnul's Bind Soul)? For Bind Soul, allow
 // monsters with no attacks if they have some spells to use.
 bool mons_can_be_spectralised(const monster& mon, bool divine)
 {
-    return mon.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
+    return mons_class_can_be_spectralised(mon.type, divine)
            && !mon.is_summoned()
            && (!testbits(mon.flags, MF_NO_REWARD)
                || mon.props.exists(KIKU_WRETCH_KEY))
-           && mon.type != MONS_PANDEMONIUM_LORD
            && (mons_has_attacks(mon, true)
                || divine && mon.has_spells());
 }
