@@ -1167,11 +1167,11 @@ static string _skill_target_desc(skill_type skill, int scaled_target,
             (you.experience_level + (level_diff + 9) / 10) > 27
                                 ? "the equivalent of" : "about",
             level_diff / 10, level_diff % 10);
-/*    if (you.wizard)
+    if (you.wizard)
     {
         description += make_stringf("\n    (%d xp, %d skp)",
                                     diffs.experience, diffs.skill_points);
-    }*/
+    }
     return description;
 }
 
