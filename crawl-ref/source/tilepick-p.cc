@@ -712,7 +712,13 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
 
     tileidx_t result = tilep_species_to_base_tile(sp, level);
     if (level == you.experience_level && you.props.exists(DOLL_BASE_KEY))
-        result = you.props[DOLL_BASE_KEY].get_int();
+    {
+        const int rand_doll = you.props[DOLL_BASE_KEY].get_int();
+#if TAG_MAJOR_VERSION == 34
+        if (is_player_tile(rand_doll, result))
+#endif
+            result = rand_doll;
+    }
     if (parts[TILEP_PART_BASE] != TILEP_SHOW_EQUIP)
         result = parts[TILEP_PART_BASE];
 

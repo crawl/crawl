@@ -90,7 +90,7 @@ troll_m
 octopode1 OCTOPODE
 octopode2
 octopode3
-octopode4
+octopode4 OCTOPODE_SILLY
 octopode5
 %rim 0
 djinni_f DJINNI
@@ -156,13 +156,13 @@ gargoyle_brown_f
 %rim 0
 cat1 FELID
 cat2
-cat3
 cat4
 cat5
-cat6
 cat7
 cat8
 cat9
+cat3 FELID_SILLY
+cat6
 cat10
 %sdir player/base
 %end_ctg
