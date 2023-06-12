@@ -713,7 +713,7 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_POISON:             return "poison";
     case SCR_BUTTERFLIES:        return "butterflies";
     case SCR_BLINKING:           return "blinking";
-    case SCR_MAGIC_MAPPING:      return "magic mapping";
+    case SCR_REVELATION:         return "revelation";
     case SCR_FOG:                return "fog";
     case SCR_ACQUIREMENT:        return "acquirement";
     case SCR_BRAND_WEAPON:       return "brand weapon";
@@ -2928,7 +2928,7 @@ string cannot_read_item_reason(const item_def *item, bool temp, bool ident)
                 return "The air is too still for clouds to form.";
             return "";
 
-        case SCR_MAGIC_MAPPING:
+        case SCR_REVELATION:
             if (!is_map_persistent())
                 return "This place cannot be mapped!";
             return "";

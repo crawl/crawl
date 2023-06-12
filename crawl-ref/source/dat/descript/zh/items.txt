@@ -985,7 +985,7 @@ scroll of immolation
 
 这张卷轴使读者周围的生物体内充满强大且不稳定的炽炎。
 %%%%
-scroll of magic mapping
+scroll of revelation
 
 这张卷轴能向读者揭示其周围的环境。
 %%%%

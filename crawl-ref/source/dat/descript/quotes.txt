@@ -2922,7 +2922,7 @@ scroll of immolation
 
 <scroll>
 %%%%
-scroll of magic mapping
+scroll of revelation
 
 “‘What a useful thing a pocket-map is!’ I remarked.
  ‘That’s another thing we’ve learned from your Nation,’ said Mein Herr,

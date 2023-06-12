@@ -799,7 +799,7 @@ scroll of immolation
 Ce parchemin imprègne les créatures autour du lecteur d'un feu puissant et
 instable.
 %%%%
-scroll of magic mapping
+scroll of revelation
 
 Ce parchemin révèle les environs de celui qui le lit.
 %%%%

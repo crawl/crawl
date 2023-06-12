@@ -2350,7 +2350,7 @@ static map<scroll_type, item_rarity_type> _scroll_rarity = {
     { SCR_NOISE,          RARITY_UNCOMMON },
     { SCR_ENCHANT_ARMOUR, RARITY_UNCOMMON },
     { SCR_ENCHANT_WEAPON, RARITY_UNCOMMON },
-    { SCR_MAGIC_MAPPING,  RARITY_UNCOMMON },
+    { SCR_REVELATION,     RARITY_UNCOMMON },
     { SCR_FEAR,           RARITY_UNCOMMON },
     { SCR_FOG,            RARITY_UNCOMMON },
     { SCR_BLINKING,       RARITY_UNCOMMON },

@@ -532,7 +532,7 @@ scroll of immolation
 
 この巻物は読み手の周囲にいる者を不規則で強力な内なる炎に包む。
 %%%%
-scroll of magic mapping
+scroll of revelation
 
 この巻き物は読んだ者の周辺の地形を明らかにする。
 %%%%

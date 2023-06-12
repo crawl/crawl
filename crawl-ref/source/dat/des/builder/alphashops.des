@@ -130,7 +130,7 @@
        "book of minor magic", "book of misfortune",
        "morningstar", "mace", "potion of magic", "wand of mindburst",
        "ring of magical power", "amulet of magic regeneration", "potion of might",
-       "potion of mutation", "scroll of magic mapping", "book of the moon" }
+       "potion of mutation", "book of the moon" }
 
       elseif s == "N" then i = { "book of necromancy",
        "necronomicon", "scroll of noise", "manual of necromancy" }
@@ -149,7 +149,7 @@
        "quick blade" }
 
       elseif s == "R" then i = { "amulet of reflection",
-       "manual of ranged weapons", "wand of roots",
+       "manual of ranged weapons", "wand of roots", "scroll of revelation",
        "amulet of regeneration", "rapier", "ring of resist corrosion",
        "potion of resistance", "robe", "ring mail", "book of rime" }
 

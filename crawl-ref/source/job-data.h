@@ -250,7 +250,7 @@ static const map<job_type, job_def> job_data =
     4, 2, 6,
     { SP_FELID, SP_SPRIGGAN, SP_KOBOLD, SP_VAMPIRE, SP_GNOLL },
     { },
-    { "leather armour", "scroll of fog no_exclude", "scroll of magic mapping",
+    { "leather armour", "scroll of fog no_exclude", "scroll of revelation",
       "scroll of fear", "potion of haste", "wand of digging charges:3" },
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 3 }, { SK_DODGING, 2 }, { SK_STEALTH, 5 }, { SK_WEAPON, 2 }, },

@@ -624,7 +624,7 @@ scroll of immolation
 이 두루마리는 사용자의 주변에 있는 존재들에게 불안정하고 매우 강력한 잠재의
 불꽃을 심는다.
 %%%%
-scroll of magic mapping
+scroll of revelation
 
 이 두루마리를 읽으면 주변의 지형을 볼 수 있다.
 

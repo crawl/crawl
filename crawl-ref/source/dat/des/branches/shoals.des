@@ -1864,7 +1864,7 @@ ITEM:   gold good_item
 ITEM:   rapier good_item w:70 / captain's cutlass
 ITEM:   cloak / scarf / nothing
 ITEM:   pair of boots / pair of gloves / hat
-ITEM:   scroll of magic mapping / any scroll
+ITEM:   scroll of revelation / any scroll
 MONS:   shadow wraith
 NSUBST: ' = d / e / f / g / h / 1 / z / } / .
 SUBST:  } = }]), - = x_, x = x:70 c

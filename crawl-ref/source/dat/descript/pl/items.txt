@@ -543,7 +543,7 @@ scroll of immolation
 
 Ten zwój napełnia stworzenia wokół czytającego niestabilnym wewnętrznym ogniem.
 %%%%
-scroll of magic mapping
+scroll of revelation
 
 Ten zwój tworzy mapę poziomu lochów wokół czytającego.
 %%%%

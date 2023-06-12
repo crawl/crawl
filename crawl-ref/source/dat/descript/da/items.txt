@@ -673,7 +673,7 @@ scroll of immolation
 Den skriftrulle fylder væsener omkring læseren med en ustabil og kraftfuld
 indre flamme.
 %%%%
-scroll of magic mapping
+scroll of revelation
 
 Denne skriftrulle afslører læserens omgivelser.
 %%%%

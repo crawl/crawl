@@ -661,8 +661,8 @@ dgn.good_scrolls = [[
     w:22  scroll of blinking no_pickup q:2 /
     w:54  scroll of enchant armour no_pickup /
     w:22  scroll of enchant armour no_pickup q:2 /
-    w:45  scroll of magic mapping no_pickup /
-    w:20  scroll of magic mapping no_pickup q:2 /
+    w:45  scroll of revelation no_pickup /
+    w:20  scroll of revelation no_pickup q:2 /
     w:40  scroll of amnesia no_pickup /
     w:15  scroll of amnesia no_pickup q:2 /
     w:33  scroll of immolation no_pickup q:1 /
@@ -689,7 +689,7 @@ dgn.loot_scrolls = [[
     w:15  scroll of fear /
     w:10  scroll of blinking /
     w:10  any ally scroll /
-    w:8   scroll of magic mapping /
+    w:8   scroll of revelation /
     w:10  scroll of enchant weapon /
     w:10  scroll of enchant armour /
     w:5   scroll of brand weapon /

@@ -1087,12 +1087,6 @@ scroll of immolation
 A scroll that fills the creatures around the reader with an unstable and
 powerful inner flame.
 %%%%
-scroll of revelation
-
-A scroll that reveals its reader's surroundings. The layout of the current
-floor is fully mapped, and everything within a moderate radius, including
-both visible and invisible monsters, is momentarily shown.
-%%%%
 scroll of noise
 
 A prank scroll that creates a loud noise when read.
@@ -1101,6 +1095,12 @@ scroll of poison
 
 A scroll that fills the air with poison, covering every unoccupied space in
 sight with toxic fumes.
+%%%%
+scroll of revelation
+
+A scroll that reveals its reader's surroundings. The layout of the current
+floor is fully mapped, and everything within a moderate radius, including
+both visible and invisible monsters, is momentarily shown.
 %%%%
 scroll of silence
 

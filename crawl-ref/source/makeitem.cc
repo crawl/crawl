@@ -1253,7 +1253,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
 
             // These scrolls increase knowledge, so Xom considers them boring.
             if (agent == GOD_XOM
-                && (scr == SCR_IDENTIFY || scr == SCR_MAGIC_MAPPING))
+                && (scr == SCR_IDENTIFY || scr == SCR_REVELATION))
             {
                 continue;
             }

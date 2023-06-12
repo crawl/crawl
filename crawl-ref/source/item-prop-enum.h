@@ -421,7 +421,7 @@ enum scroll_type
 #endif
     SCR_IMMOLATION,
     SCR_BLINKING,
-    SCR_MAGIC_MAPPING,
+    SCR_REVELATION,
     SCR_FOG,
     SCR_ACQUIREMENT,
 #if TAG_MAJOR_VERSION == 34

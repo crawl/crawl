@@ -3449,7 +3449,7 @@ static bool _is_cancellable_scroll(scroll_type scroll)
            || scroll == SCR_AMNESIA
            || scroll == SCR_BRAND_WEAPON
            || scroll == SCR_ENCHANT_WEAPON
-           || scroll == SCR_MAGIC_MAPPING
+           || scroll == SCR_REVELATION
            || scroll == SCR_ACQUIREMENT
            || scroll == SCR_POISON;
 }
@@ -3894,7 +3894,7 @@ bool read(item_def* scroll, dist *target)
         break;
     }
 
-    case SCR_MAGIC_MAPPING:
+    case SCR_REVELATION:
         mpr(pre_succ_msg);
         you.wizard_vision = true;
         magic_mapping(500, 100, false);

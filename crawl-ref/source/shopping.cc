@@ -491,7 +491,7 @@ unsigned int item_value(item_def item, bool ident)
             case SCR_BLINKING:
             case SCR_ENCHANT_ARMOUR:
             case SCR_ENCHANT_WEAPON:
-            case SCR_MAGIC_MAPPING:
+            case SCR_REVELATION:
                 valued += 75;
                 break;
 

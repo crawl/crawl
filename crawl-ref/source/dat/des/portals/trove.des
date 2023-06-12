@@ -233,7 +233,7 @@ end
 function trove.good_scroll (e)
     e.item([[scroll of enchant weapon / scroll of brand weapon w:3 /
              scroll of enchant armour / scroll of immolation w:8 /
-             scroll of magic mapping w:8 / scroll of blinking /
+             scroll of revelation w:8 / scroll of blinking /
              scroll of silence w:2 / scroll of acquirement w:1 /
              scroll of teleportation w:20 / scroll of vulnerability w:2 /
              scroll of fog w:8 / scroll of torment w:8 /

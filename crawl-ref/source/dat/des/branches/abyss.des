@@ -958,7 +958,7 @@ MONS:    bone dragon / tentacled starspawn / starcursed mass / \
          glowing shapeshifter
 ITEM:    superb_item
 ITEM:    boomerang good_item q:10 / javelin good_item q:5, any magical staff
-ITEM:    scroll of magic mapping q:4 / scroll of noise q:4
+ITEM:    scroll of revelation q:4 / scroll of noise q:4
 ITEM:    ring mail randart / scale mail randart / chain mail randart w:20
 ITEM:    demon blade ego:chaos good_item ident:type / \
          demon trident ego:chaos good_item ident:type / \
