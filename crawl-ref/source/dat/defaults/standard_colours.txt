@@ -1,8 +1,6 @@
 ### standard colours to be used for menu and inventory colouring
 
 $forbidden    := red
-$preferred    := yellow
-$mutagenic    := magenta
 $dangerous    := magenta
 
 ### standard colours to be used for message highlighting
