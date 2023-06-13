@@ -1040,6 +1040,25 @@ the Slightly Bent
 
 the Storm King
 
+#pasta
+Ravioli
+
+Spaghetti
+
+Tortelloni
+
+Farfalle
+
+Rotini
+
+Vermicelli
+
+Macaroni
+
+w:1
+the Pastamancer
+
+
 %%%%
 _card_
 
