@@ -548,9 +548,13 @@ static void _STORM_QUEEN_melee_effects(item_def* /*item*/, actor* wearer,
 ///////////////////////////////////////////////////
 
 static void _DEMON_AXE_melee_effects(item_def* /*item*/, actor* attacker,
-                                     actor* /*defender*/, bool /*mondied*/,
+                                     actor* defender, bool /*mondied*/,
                                      int /*dam*/)
 {
+    const monster* mon = defender->as_monster();
+    if (mons_is_firewood(*mon) || mons_is_conjured(mon->type))
+        return;
+
     if (one_chance_in(10))
     {
         if (monster* mons = attacker->as_monster())
