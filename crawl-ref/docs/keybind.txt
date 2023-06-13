@@ -53,8 +53,9 @@ Q         CMD_QUIVER_ITEM
 
 Inventory management
 --------------------
+c         CMD_UNEQUIP
 d         CMD_DROP
-e         CMD_EAT
+e         CMD_EQUIP
 g, ,      CMD_PICKUP
 i         CMD_DISPLAY_INVENTORY
 q         CMD_QUAFF
@@ -76,7 +77,6 @@ W         CMD_WEAR_ARMOUR
 
 Dungeon interaction
 -------------------
-c         CMD_BUTCHER
 o         CMD_EXPLORE
 s, .      CMD_WAIT
 5         CMD_REST             (rest 100 turns)

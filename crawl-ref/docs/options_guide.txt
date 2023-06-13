@@ -2123,7 +2123,7 @@ additional_macro_file = path/to/filename
         Add an additional macro file to be loaded after macro.txt.
         You can have multiple additional_macro_file lines.
 
-bindkey = [^D] CMD_BUTCHER
+bindkey = [^D] CMD_CHARACTER_DUMP
         Change which key invokes which command at a lower level of
         operation than macros. Useful in that macros cannot (yet)
         invoke each other, but a macro can invoke a command whose
