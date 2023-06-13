@@ -606,7 +606,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
 
     if you.in_branch("Lair") then
         wall_type = 'x'
-        percent_thickness_2 = 50 + you.depth_fraction() * 150 -- 100% at Lair:2
+        percent_thickness_2 = 50 + you.depth_fraction() * 150 -- 100% at Lair:4
         percent_thickness_3 = 20 + you.depth_fraction() * 80  -- 100% at Lair:$
         percent_thickness_4 = 10 + you.depth_fraction() * 40
         percent_inner_new_wall = 0
@@ -833,11 +833,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
     end
 
     local iterations = math.floor(crawl.random_range(75, 125) * area_fraction)
-    if you.in_branch("Lair") then
-        spotty_map { boxy = crawl.coinflip(), iterations = iterations }
-    else
-        spotty_map { boxy = true, iterations = iterations }
-    end
+    spotty_map { boxy = true, iterations = iterations }
 
     theme.level_material(_G)
 }}
@@ -867,6 +863,9 @@ TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
     local iterations
     local boxy = false
     local connected = false
+    if dgn.is_ironman() then
+        connected = true
+    end
     if you.in_branch("orc") or you.in_branch("slime") then
         if you.at_branch_bottom() then
             iterations = 600 + crawl.random2(600)
