@@ -2142,15 +2142,6 @@ void untransform(bool skip_move)
         you.transform_uncancellable = false;
 }
 
-void emergency_untransform()
-{
-    mpr("You quickly transform back into your natural form.");
-    untransform(true); // We're already entering the water.
-
-    if (you.has_innate_mutation(MUT_MERTAIL))
-        merfolk_start_swimming(false);
-}
-
 /**
  * Update whether a merfolk should be swimming.
  *
