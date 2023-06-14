@@ -12423,7 +12423,7 @@ walk
 geht
 %%%%
 You %s carefully through %s.
-Ihr %s vorsichtig ducrh {acc}%s.
+Ihr %s vorsichtig durch {acc}%s.
 %%%%
 You can't dig through that.
 Das könnt Ihr nicht durchgraben.
