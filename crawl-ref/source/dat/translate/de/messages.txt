@@ -6408,8 +6408,11 @@ Apostates
 Anathema
 
 %%%%
+You finish reciting %s %d:%d.
+Ihr beendet die Rezitation von %s %d:%d.
+%%%%
 Finish your current sermon first, please.
-Beende bitte zuerst Eure aktuelle Predigt.
+Beendet bitte zuerst Eure aktuelle Predigt.
 %%%%
 You're not ready to recite again yet.
 Ihr seid noch nicht bereit, noch einmal zu rezitieren.
@@ -8646,15 +8649,6 @@ Das Führen dieses Gegenstandes würde {acc}%s auf Null oder weniger reduzieren.
 %%%%
 Wearing this item will reduce %s to zero or below.
 Das Tragen dieses Gegenstandes würde {acc}%s auf Null oder weniger reduzieren.
-%%%%
-your strength
-Eure Stärke
-%%%%
-your intelligence
-Eure Intelligenz
-%%%%
-your dexterity
-Eure Geschicklichkeit
 %%%%
 " Continue?"
 " Weitermachen?"
@@ -15818,16 +15812,17 @@ Der Raum verzieht sich in Euch!
 ##################
 %%%%
 Careful! %s
-Vorsicht!%s
+Vorsicht! %s
 %%%%
+# note: Petrification ends: Player reverts to flesh or equivalent.
 You turn to %s and can move again.
-Ihr dreht Euch zu%s um und kannst Euch wieder bewegen.
+Ihr werdet zu {dat}%s und kannst Euch wieder bewegen.
 %%%%
 Your limbs are stiffening.
 Eure Glieder versteifen sich.
 %%%%
 You feel less attractive to monsters.
-
+Ihr fühlt Euch weniger attraktiv für Monster.
 %%%%
 You can move again.
 Ihr könnt Euch wieder bewegen.
@@ -15842,7 +15837,7 @@ You reel with horror at the sight of these foes!
 Ihr taumelt vor Entsetzen beim Anblick dieser Feinde!
 %%%%
 You feel a twist of horror at the sight of this foe.
-Ihr fühlt eine Wendung des Grauens beim Anblick dieses Feindes.
+Beim Anblick dieses Feindes überkommt Euch ein Gefühl des Grauens.
 %%%%
 The grasping roots release their grip on you.
 Die greifenden Wurzeln lösen ihren Griff um Euch.
@@ -15850,71 +15845,62 @@ Die greifenden Wurzeln lösen ihren Griff um Euch.
 Your recitation is interrupted.
 Eure Rezitation wird unterbrochen.
 %%%%
-You finish reciting %s
-Ihr beendet das Rezitieren von %s
-%%%%
 %s emerges from the mists of memory!
 %s taucht aus den Nebeln der Erinnerung auf!
 %%%%
 Your icy armour evaporates.
-
+Eure eisige Rüstung verdampft.
 %%%%
 Your icy armour starts to melt.
-
+Eure eisige Rüstung beginnt zu schmelzen.
 %%%%
 Your transformation is almost over.
-
+Ihre Verwandlung ist fast beendet.
 %%%%
 You start to feel a little slower.
-
+Ihr fühlt Euch ein wenig langsamer.
 %%%%
 You no longer feel sluggish.
-
+Ihr fühlt Euch nicht mehr träge.
 %%%%
 You start to feel a little faster.
-
+Ihr fühlt Euch ein wenig schneller.
 %%%%
-Your %s has recovered.
-Eure %s hat sich erholt.
+%s has recovered.
+%s hat sich wieder erholt.
 %%%%
 You feel yourself speed up.
 Ihr fühlt Euch schneller.
 %%%%
 The winds around you start to calm down.
-
+Die Winde um Euch herum beginnen sich zu beruhigen.
 %%%%
 You are starting to lose your buoyancy.
-
+Ihr beginnt, euren Auftrieb zu verlieren.
 %%%%
 Your trail of clouds dissipates.
-
+Eure Wolkenspur löst sich auf.
 %%%%
-You %s the barbed spikes from your body.
-
+You rip and tear the barbed spikes from your body.
+Ihr reißt Euch die Stacheln von Eurem Körper.
 %%%%
-rip and tear
-
-%%%%
-carefully extract
-
+You carefully extract the barbed spikes from your body.
+Ihr zieht die Stacheln vorsichtig aus Eurem Körper.
 %%%%
 You float gracefully downwards.
 Ihr schwebt anmutig nach unten.
 %%%%
-Your %s attune%s to your body as you begin to regenerate more quickly.
-
+%s attune themselves to your body as you begin to regenerate more quickly.
+%s stellen sich auf Euren Körper ein, und Ihr beginnt, Euch schneller zu regenerieren.
 %%%%
-" themselves"
-
-%%%%
-s itself
-
+%s attunes itself to your body as you begin to regenerate more quickly.
+%s stellt sich auf Euren Körper ein, und Ihr beginnt, Euch schneller zu regenerieren.
 %%%%
 Your amulet attunes itself to your body and you begin to regenerate magic more quickly.
-
+Euer Amulett stellt sich auf Euren Körper ein und Ihr beginnt, Eure Magie schneller zu regenerieren.
 %%%%
 You %s as the wereblood boils in your veins!
-
+Ihr %s als das Werblut in euren Adern kocht!
 %%%%
 You feel strangely unstable.
 Ihr fühlt Euch seltsam instabil.
@@ -15978,8 +15964,8 @@ Eure göttliche Ausdauer schützt Euch vor dem Verlust von %s.
 You feel your %s returning.
 
 %%%%
-You have lost your %s.
-Ihr habt Eure %s verloren.
+You have lost %s.
+
 %%%%
 
 ##################
@@ -19203,9 +19189,6 @@ plain brown
 
 %%%%
 kneel at
-
-%%%%
-shout
 
 %%%%
 yell

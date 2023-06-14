@@ -327,9 +327,9 @@ void jiyva_stat_action()
 
 static const char* descs[NUM_STATS][NUM_STAT_DESCS] =
 {
-    { "strength", "weakened", "weaker", "stronger" },
-    { "intelligence", "dopey", "stupid", "clever" },
-    { "dexterity", "clumsy", "clumsy", "agile" }
+    { "strength", "your strength", "weakened", "weaker", "stronger" },
+    { "intelligence", "your intelligence", "dopey", "stupid", "clever" },
+    { "dexterity", "your dexterity", "clumsy", "clumsy", "agile" }
 };
 
 const char* stat_desc(stat_type stat, stat_desc_type desc)
@@ -639,7 +639,7 @@ static void _handle_stat_change(stat_type stat)
         // Time required for recovery once the stat is restored, randomised slightly.
         you.duration[stat_zero_duration(stat)] =
             (20 + random2(20)) * BASELINE_DELAY;
-        mprf(MSGCH_WARN, "You have lost your %s.", stat_desc(stat, SD_NAME));
+        mprf(MSGCH_WARN, "You have lost %s.", stat_desc(stat, SD_YOUR));
         take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Lost %s.",
             stat_desc(stat, SD_NAME)).c_str()), true);
         // 2 to 5 turns of paralysis (XXX: decremented right away?)

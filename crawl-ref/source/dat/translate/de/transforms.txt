@@ -8,6 +8,12 @@
 # Untransformed
 ################################
 
+%%%%
+# shout-equivalent (finite verb, as in "You @shout@.")
+shout
+schreit
+%%%%
+
 # hand
 %%%%
 hand

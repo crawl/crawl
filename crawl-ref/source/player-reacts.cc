@@ -56,6 +56,7 @@
 #include "item-use.h"
 #include "level-state-type.h"
 #include "libutil.h"
+#include "localise.h"
 #include "maps.h"
 #include "message.h"
 #include "mon-abil.h"
@@ -179,6 +180,7 @@ static void _decrement_petrification(int delay)
                                             "flesh" :
                                             get_form()->flesh_equivalent;
 
+        // locnote: Petrification ends: Player reverts to flesh or equivalent.
         mprf(MSGCH_DURATION, "You turn to %s and can move again.",
              flesh_equiv.c_str());
 
@@ -499,14 +501,13 @@ static void _handle_recitation(int step)
         ostringstream speech;
         speech << zin_recite_text(you.attribute[ATTR_RECITE_SEED],
                                   you.attribute[ATTR_RECITE_TYPE], -1);
-        speech << '.';
         if (one_chance_in(27))
         {
             const string closure = getSpeakString("recite_closure");
             if (!closure.empty())
-                speech << ' ' << closure;
+                speech << localise(" ") << closure;
         }
-        mprf(MSGCH_DURATION, "You finish reciting %s", speech.str().c_str());
+        mpr_nolocalise(MSGCH_DURATION, speech.str());
         you.set_duration(DUR_RECITE_COOLDOWN, 1 + random2(10) + random2(30));
     }
 }
@@ -645,7 +646,7 @@ static void _decrement_durations()
         if (you.stat(s) > 0
             && _decrement_a_duration(stat_zero_duration(s), delay))
         {
-            mprf(MSGCH_RECOVERY, "Your %s has recovered.", stat_desc(s, SD_NAME));
+            mprf(MSGCH_RECOVERY, "%s has recovered.", stat_desc(s, SD_YOUR));
             you.redraw_stats[s] = true;
             if (you.duration[DUR_SLOW] == 0)
                 mprf(MSGCH_DURATION, "You feel yourself speed up.");
@@ -782,8 +783,9 @@ static void _decrement_durations()
         && !you.asleep())
     {
         extract_manticore_spikes(
-            make_stringf("You %s the barbed spikes from your body.",
-                you.berserk() ? "rip and tear" : "carefully extract").c_str());
+            you.berserk()
+            ? "You rip and tear the barbed spikes from your body."
+            : "You carefully extract the barbed spikes from your body.");
     }
 
     if (!you.duration[DUR_ANCESTOR_DELAY]
@@ -847,11 +849,12 @@ static void _update_equipment_attunement_by_health()
                && armour_type_prop(arm.sub_type, ARMF_REGENERATION)
             || arm.is_type(OBJ_JEWELLERY, AMU_REGENERATION))
         {
-            eq_list.push_back(is_artefact(arm) ? get_artefact_name(arm) :
+            string name = (is_artefact(arm) ? get_artefact_name(arm) :
                 slot == EQ_AMULET ? "amulet" :
                 slot != EQ_BODY_ARMOUR ?
                     item_slot_name(static_cast<equipment_type>(slot)) :
                     "armour");
+            eq_list.push_back("your " + name);
 
             if (slot == EQ_GLOVES || slot == EQ_BOOTS)
                 plural = true;
@@ -864,8 +867,10 @@ static void _update_equipment_attunement_by_health()
 
     plural = plural || eq_list.size() > 1;
     string eq_str = comma_separated_line(eq_list.begin(), eq_list.end());
-    mprf("Your %s attune%s to your body as you begin to regenerate "
-         "more quickly.", eq_str.c_str(), plural ? " themselves" : "s itself");
+    mprf(plural
+         ? "%s attune themselves to your body as you begin to regenerate more quickly."
+         : "%s attunes itself to your body as you begin to regenerate more quickly.",
+         eq_str.c_str());
 }
 
 // Amulet of magic regeneration needs to be worn while at full magic before it

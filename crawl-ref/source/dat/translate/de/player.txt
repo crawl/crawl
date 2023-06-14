@@ -4,6 +4,31 @@
 #
 ###############################################################################
 
+#################################
+# Attributes
+#################################
+%%%%
+strength
+Stärke
+%%%%
+dexterity
+Geschicklichkeit
+%%%%
+intelligence
+Intelligenz
+%%%%
+
+%%%%
+your strength
+Eure Stärke
+%%%%
+your dexterity
+Eure Geschicklichkeit
+%%%%
+your intelligence
+Eure Intelligenz
+%%%%
+
 ##############################################
 # Player Backgrounds (aka Jobs)
 ##############################################

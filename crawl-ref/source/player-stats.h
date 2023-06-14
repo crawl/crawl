@@ -6,6 +6,7 @@
 enum stat_desc_type
 {
     SD_NAME,
+    SD_YOUR,
     SD_LOSS,
     SD_DECREASE,
     SD_INCREASE,

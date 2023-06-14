@@ -546,7 +546,6 @@ static const char * const smite_text[][2] =
  */
 string zin_recite_text(const int seed, const int prayertype, int step)
 {
-    // i18n: TODO: handle this
     // To have deterministic passages we extract portions of the seed.
     // We use trits: "digits" in the base-3 expansion of seed.
 
@@ -568,9 +567,8 @@ string zin_recite_text(const int seed, const int prayertype, int step)
                                 (prayertype == RECITE_HERETIC)  ?  "Apostates"    :
                                 (prayertype == RECITE_UNHOLY)   ?  "Anathema"     :
                                                                    "Bugginess";
-        ostringstream out;
-        out << bookname << ' ' << (chapter + 1) << ':' << (verse + 1);
-        return out.str();
+        return localise("You finish reciting %s %d:%d.",
+                        bookname.c_str(), chapter + 1, verse + 1);
     }
 
     // These mad-libs are deterministically derived from the verse number
@@ -589,22 +587,24 @@ string zin_recite_text(const int seed, const int prayertype, int step)
 
     string recite = book_of_zin[chapter][step-1];
 
+    // noloc section start (keys)
     const map<string, string> replacements =
     {
-        { "sinners", sinner_text[sinner_seed] }, // noloc
+        { "sinners", sinner_text[sinner_seed] },
 
         { "sin_adj",  sin_text[sin_seed][0] },
         { "sin_noun", sin_text[sin_seed][1] },
 
-        { "virtuous", virtue_text[virtue_seed][0] }, // noloc
-        { "virtue",   virtue_text[virtue_seed][1] }, // noloc
+        { "virtuous", virtue_text[virtue_seed][0] },
+        { "virtue",   virtue_text[virtue_seed][1] },
 
-        { "smite",   smite_text[smite_seed][0] }, // noloc
-        { "smitten", smite_text[smite_seed][1] }, // noloc
-        { "Smitten", uppercase_first(smite_text[smite_seed][1]) }, // noloc
+        { "smite",   smite_text[smite_seed][0] },
+        { "smitten", smite_text[smite_seed][1] },
+        { "Smitten", uppercase_first(smite_text[smite_seed][1]) },
     };
+    // noloc section end
 
-    return replace_keys(recite, replacements);
+    return localise(recite, replacements);
 }
 
 /** How vulnerable to RECITE_HERETIC is this monster?
