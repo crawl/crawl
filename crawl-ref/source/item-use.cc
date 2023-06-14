@@ -3810,9 +3810,10 @@ bool read(item_def* scroll, dist *target)
     // For cancellable scrolls leave printing this message to their
     // respective functions.
     const string pre_succ_msg =
-            make_stringf("As you%s read the %s, it crumbles to dust.",
+            make_stringf("As you%s read the %s, it %s.",
                          you.has_mutation(MUT_AWKWARD_TONGUE) ? " slowly" : "",
-                          scroll->name(DESC_QUALNAME).c_str());
+                          scroll->name(DESC_QUALNAME).c_str(),
+                         which_scroll == SCR_FOG ? "dissolves into smoke" : "crumbles to dust");
     if (!_is_cancellable_scroll(which_scroll))
     {
         mpr(pre_succ_msg);
@@ -3887,7 +3888,6 @@ bool read(item_def* scroll, dist *target)
 
     case SCR_FOG:
     {
-        mpr("The scroll dissolves into smoke.");
         auto smoke = random_smoke_type();
         big_cloud(smoke, &you, you.pos(), 50, 8 + random2(8));
         break;
