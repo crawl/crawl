@@ -69,19 +69,3 @@
 # Turn the shift-vi keys into safe move, instead of run.
 # include = safe_move_shift.txt
 
-##### Ancient versions ##############################################
-# If you're used to the interface of ancient versions of Crawl, you may
-# get back parts of it by uncommenting the following options:
-
-# include                 = 034_command_keys.txt
-
-# And to revert monster glyph and colouring changes:
-
-# include                 = 052_monster_glyphs.txt
-# include                 = 060_monster_glyphs.txt
-# include                 = 071_monster_glyphs.txt
-# include                 = 080_monster_glyphs.txt
-# include                 = 0.9_monster_glyphs.txt
-# include                 = 0.12_monster_glyphs.txt
-# include                 = 0.13_monster_glyphs.txt
-# include                 = 0.14_monster_glyphs.txt
