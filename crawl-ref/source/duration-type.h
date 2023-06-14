@@ -236,5 +236,6 @@ enum duration_type
 #endif
     DUR_NO_MOMENTUM,
     DUR_ENLIGHTENED,
+    DUR_SHROUD_TIMEOUT,
     NUM_DURATIONS
 };

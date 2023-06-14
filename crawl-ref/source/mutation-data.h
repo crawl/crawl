@@ -1352,6 +1352,14 @@ static const mutation_def mut_data[] =
   {"Your mouth feels dry.", "", ""},
 },
 
+{ MUT_SLIME_SHROUD, 0, 1, mutflag::good | mutflag::jiyva, true,
+  "slime shroud",
+
+  {"A fragile, slimy shroud covers you, deflecting attacks.", "", ""},
+  {"A thin film of slime covers your body.", "", ""},
+  {"Your film of slime dries up.", "", ""},
+},
+
 { MUT_ANTIMAGIC_BITE, 0, 1, mutflag::good, true,
   "antimagic bite",
 

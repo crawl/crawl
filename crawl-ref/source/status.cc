@@ -734,6 +734,16 @@ bool fill_status_info(int status, status_info& inf)
             _fill_inf_from_ddef(DUR_LOWERED_WL, inf);
         break;
 
+    case STATUS_SHROUD:
+        if (you.get_mutation_level(MUT_SLIME_SHROUD)
+                && !you.duration[DUR_SHROUD_TIMEOUT])
+        {
+            inf.light_colour = GREEN;
+            inf.light_text   = "Shroud";
+            inf.short_text   = "slimy shroud";
+        }
+        break;
+
     default:
         if (!found)
         {

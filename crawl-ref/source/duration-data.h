@@ -594,6 +594,11 @@ static const duration_def duration_data[] =
       "You are reanimating the dead.", D_DISPELLABLE | D_EXPIRES,
       {{ "Your reaping aura expires.", _end_animate_dead },
       { "Your reaping aura is weakening.", 1 }}, 6},
+    { DUR_SHROUD_TIMEOUT,
+      DARKGREY, "Shroud",
+      "shroud timeout", "shroud timeout",
+      "Your shroud of slime is broken and needs time to repair.", D_EXPIRES,
+      {{ "Your slime shroud regrows." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
