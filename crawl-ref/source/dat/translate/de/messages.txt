@@ -12410,18 +12410,6 @@ Ihr stößt an {acc}%s.
 This wall is too hard to dig through.
 Diese Wand ist zu schwer zum Durchgraben.
 %%%%
-fly
-fliegt
-%%%%
-swim
-schwimmt
-%%%%
-crawl
-kriecht
-%%%%
-walk
-geht
-%%%%
 You %s carefully through %s.
 Ihr %s vorsichtig durch {acc}%s.
 %%%%
@@ -15971,13 +15959,6 @@ Ihr habt {acc}%s verloren.
 ##################
 # player.h
 ##################
-%%%%
-ozocubu's_armour_pow
-
-%%%%
-step
-
-%%%%
 
 ##################
 # player.cc
@@ -18670,9 +18651,6 @@ this level
 
 %%%%
 No shout entry for default shout type '
-
-%%%%
-__NONE returned as shout for non-silent monster '
 
 %%%%
 You hear a strange noise.

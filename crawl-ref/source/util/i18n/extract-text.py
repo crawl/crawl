@@ -573,7 +573,7 @@ for filename in files:
             continue
 
         # ignore identifiers
-        if '_' in string and re.match(r'^[A-Za-z0-9_\- ]+$', string):
+        if '_' in string and re.match(r"^[A-Za-z0-9_\- ']+$", string):
             continue
         if 'Gozag bribe' in string or 'Gozag permabribe' in string:
             continue

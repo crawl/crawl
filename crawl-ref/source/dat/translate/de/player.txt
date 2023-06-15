@@ -5,6 +5,30 @@
 ###############################################################################
 
 #################################
+# Movement verbs
+#################################
+
+# These are finite verbs conjugated for "you".
+# NOTE: In German, we are using "Ihr" for "you", so we must conjugate accordingly.
+
+%%%%
+walk
+geht
+%%%%
+step
+tretet
+%%%%
+fly
+fliegt
+%%%%
+swim
+schwimmt
+%%%%
+crawl
+kriecht
+%%%%
+
+#################################
 # Attributes
 #################################
 %%%%
