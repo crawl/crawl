@@ -15911,61 +15911,61 @@ Ihr fühlt Euch seltsam instabil.
 ##################
 %%%%
 Your experience leads to an increase in your attributes!
-
+Eure Erfahrung führt zu einer Steigerung Eurer Eigenschaften!
 %%%%
 Your experience leads to a dramatic increase in your attributes!
-
+Eure Erfahrung führt zu einer dramatischen Steigerung Eurer Eigenschaften!
 %%%%
 Strength
-
+Stärke
 %%%%
 Intelligence
-
+Intelligenz
 %%%%
 Dexterity
-
+Geschicklichkeit
 %%%%
 Increase Attributes
-
+Attribute erhöhen
 %%%%
 " Increase:"
-
+" Erhöhen:"
 %%%%
 Your base attributes are Str %d, Int %d, Dex %d.
-Eure Basisattribute sind Str%d, Int%d, Dex%d.
+Eure Basisattribute sind Str %d, Int %d, Dex %d.
 %%%%
 "Increase (S)trength, (I)ntelligence, or (D)exterity? "
-
+"(S)tärke, (I)ntelligenz oder (G)eschicklichkeit erhöhen? "
 %%%%
 "Increase (s)trength, (i)ntelligence, or (d)exterity? "
-
+"(s)tärke, (i)ntelligenz oder (g)eschicklichkeit erhöhen? "
 %%%%
 Uppercase letters only, please.
-Bitte nur Großbuchstaben.
+Nur Großbuchstaben, bitte.
 %%%%
 Please choose an option below
-
+Bitte wählt unten eine Option aus
 %%%%
 %s's power touches on your attributes.
-
+Die Macht von %s berührt Eure Attribute.
 %%%%
 weaker
-
+swächer
 %%%%
 stronger
-
+stärker
 %%%%
 stupid
-
+dumm
 %%%%
 Your divine stamina protects you from %s loss.
-Eure göttliche Ausdauer schützt Euch vor dem Verlust von %s.
+Eure göttliche Ausdauer schützt Euch vor dem Verlust von {dat}%s.
 %%%%
-You feel your %s returning.
-
+You feel %s returning.
+Ihr spürt, wie %s zurückkehrt.
 %%%%
 You have lost %s.
-
+Ihr habt {acc}%s verloren.
 %%%%
 
 ##################

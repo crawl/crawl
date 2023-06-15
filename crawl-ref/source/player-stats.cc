@@ -220,14 +220,14 @@ bool attribute_increase()
         case 'i':
         case 'd':
 #ifdef TOUCH_UI
-            status->text = "Uppercase letters only, please.";
+            status->text = localise("Uppercase letters only, please.");
 #else
             mprf(MSGCH_PROMPT, "Uppercase letters only, please.");
 #endif
             break;
 #ifdef TOUCH_UI
         default:
-            status->text = "Please choose an option below"; // too naggy?
+            status->text = localise("Please choose an option below"); // too naggy?
 #endif
         }
     }
@@ -334,6 +334,8 @@ static const char* descs[NUM_STATS][NUM_STAT_DESCS] =
 
 const char* stat_desc(stat_type stat, stat_desc_type desc)
 {
+    if (stat < 0 || stat >= NUM_STATS)
+        die("invalid stat");
     return descs[stat][desc];
 }
 
@@ -514,21 +516,6 @@ static int _stat_modifier(stat_type stat, bool innate_only)
     }
 }
 
-static string _stat_name(stat_type stat)
-{
-    switch (stat)
-    {
-    case STAT_STR:
-        return "strength";
-    case STAT_INT:
-        return "intelligence";
-    case STAT_DEX:
-        return "dexterity";
-    default:
-        die("invalid stat");
-    }
-}
-
 int stat_loss_roll()
 {
     const int loss = 30 + random2(30);
@@ -550,7 +537,7 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force)
         if (you.duration[DUR_DIVINE_STAMINA] > 0)
         {
             mprf("Your divine stamina protects you from %s loss.",
-                 _stat_name(which_stat).c_str());
+                 stat_desc(which_stat, SD_NAME));
             return false;
         }
     }
@@ -607,8 +594,8 @@ bool restore_stat(stat_type which_stat, int stat_gain,
     if (!suppress_msg)
     {
         mprf(recovery ? MSGCH_RECOVERY : MSGCH_PLAIN,
-             "You feel your %s returning.",
-             _stat_name(which_stat).c_str());
+             "You feel %s returning.",
+             stat_desc(which_stat, SD_YOUR));
     }
 
     if (stat_gain == 0 || stat_gain > you.stat_loss[which_stat])
