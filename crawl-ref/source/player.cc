@@ -115,12 +115,9 @@ static void _moveto_maybe_repel_stairs()
     {
         const string stair_str = feature_description_at(you.pos(), false,
                                                         DESC_THE);
-        const string prep = feat_preposition(new_grid, true, &you);
-
         if (slide_feature_over(you.pos()))
         {
-            mprf("%s slides away as you move %s it!", stair_str.c_str(),
-                 prep.c_str());
+            mprf("%s slides away as you move towards it!", stair_str.c_str());
 
             if (player_in_a_dangerous_place() && one_chance_in(5))
                 xom_is_stimulated(25);
@@ -160,7 +157,7 @@ bool check_moveto_cloud(const coord_def& p, const string &move_verb,
 
         if (prompted)
             *prompted = true;
-        string prompt = make_stringf("Really %s into that cloud of %s?",
+        string prompt = localise("Really %s into that cloud of %s?",
                                      move_verb.c_str(),
                                      cloud_type_name(ctype).c_str());
         learned_something_new(HINT_CLOUD_WARNING);
@@ -190,7 +187,7 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb,
     if (trap->type == TRAP_ZOT && !trap->is_safe() && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
         string msg = "Do you really want to %s into the Zot trap?";
-        string prompt = make_stringf(msg.c_str(), move_verb.c_str());
+        string prompt = localise(msg.c_str(), move_verb.c_str());
 
         if (prompted)
             *prompted = true;
@@ -206,11 +203,12 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb,
 
         if (prompted)
             *prompted = true;
-        prompt = make_stringf("Really %s %s that %s?", move_verb.c_str(),
-                              (trap->type == TRAP_ALARM
-                               || trap->type == TRAP_PLATE) ? "onto"
-                              : "into",
-                              feature_description_at(p, false, DESC_BASENAME).c_str());
+        string the_trap = feature_description_at(p, false, DESC_THE);
+        if (trap->type == TRAP_ALARM || trap->type == TRAP_PLATE)
+            prompt = localise("Really %s onto %s?", move_verb, the_trap);
+        else
+            prompt = localise("Really %s into %s?", move_verb, the_trap);
+
         if (!yesno(prompt.c_str(), true, 'n'))
         {
             canned_msg(MSG_OK);
@@ -261,8 +259,7 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
         if (!msg.empty())
             prompt = msg + " ";
 
-        prompt += "Are you sure you want to " + move_verb
-                + " into a toxic bog?";
+        prompt += localise("Are you sure you want to %s into a toxic bog?", move_verb);
 
         if (!yesno(prompt.c_str(), false, 'n'))
         {
@@ -281,18 +278,23 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
         if (!msg.empty())
             prompt = msg + " ";
 
-        prompt += "Are you sure you want to " + move_verb;
+        if (env.grid(p) == DNGN_DEEP_WATER) {
+            if (you.ground_level())
+                prompt += localise("Are you sure you want to %s into deep water", move_verb);
+            else
+                prompt += localise("Are you sure you want to %s over deep water", move_verb);
+        }
+        else {
+            if (you.ground_level())
+                prompt += localise("Are you sure you want to %s into lava", move_verb);
+            else
+                prompt += localise("Are you sure you want to %s over lava", move_verb);
+        }
 
-        if (you.ground_level())
-            prompt += " into ";
-        else
-            prompt += " over ";
-
-        prompt += env.grid(p) == DNGN_DEEP_WATER ? "deep water" : "lava";
-
+        // i18n: Will this work for all languages, or do we need to expand further?
         prompt += need_expiration_warning(DUR_FLIGHT, p)
-            ? " while you are losing your buoyancy?"
-            : " while your transformation is expiring?";
+            ? localise(" while you are losing your buoyancy?")
+            : localise(" while your transformation is expiring?");
 
         if (!yesno(prompt.c_str(), false, 'n'))
         {
@@ -320,10 +322,14 @@ bool check_moveto_exclusions(const vector<coord_def> &areas,
     }
     if (count == 0)
         return true;
-    const string prompt = make_stringf((count == (int) areas.size() ?
-                    "Really %s into a travel-excluded area?" :
-                    "You might %s into a travel-excluded area, are you sure?"),
-                              move_verb.c_str());
+
+    string prompt;
+    if (count == (int)areas.size())
+        prompt = localise("Really %s into a travel-excluded area?", move_verb);
+    else {
+        prompt = localise("You might %s into a travel-excluded area, are you sure?",
+                          move_verb);
+    }
 
     if (prompted)
         *prompted = true;
@@ -482,15 +488,21 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                 {
                     if (new_grid == DNGN_TOXIC_BOG)
                     {
-                        mprf("You %s the toxic bog.",
-                                stepped ? "enter" : "fall into");
+                        if (stepped)
+                            mpr("You enter the toxic bog.");
+                        else
+                            mpr("You fall into the toxic bog.");
                     }
                     else
                     {
-                        mprf("You %s the %s water.",
-                             stepped ? "enter" : "fall into",
-                             new_grid == DNGN_SHALLOW_WATER ? "shallow"
-                             : "deep");
+                        if (stepped && new_grid == DNGN_SHALLOW_WATER)
+                            mpr("You enter the shallow water.");
+                        else if (stepped)
+                            mpr("You enter the deep water.");
+                        else if (new_grid == DNGN_SHALLOW_WATER)
+                            mpr("You fall into the shallow water.");
+                        else
+                            mpr("You fall into the deep water.");
                     }
                 }
 

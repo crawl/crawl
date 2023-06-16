@@ -1417,7 +1417,7 @@ You are electrocuted
 Ihr bekommt einen elektrischen Schlag
 %%%%
 Lightning courses through %s
-Blitzen fließt durch %s
+Blitzen fließt durch {acc}%s
 %%%%
 %s draws strength from your wounds!
 %s schöpft Kraft aus Euren Wunden!
@@ -6730,9 +6730,6 @@ With a roar of approval, the orcs welcome you as one of their own, and spare you
 
 %%%%
 Aiming: <white>Shadow Step</white>
-
-%%%%
-shadow step
 
 %%%%
 Something blocks your shadow step.
@@ -12410,8 +12407,11 @@ Ihr stößt an {acc}%s.
 This wall is too hard to dig through.
 Diese Wand ist zu schwer zum Durchgraben.
 %%%%
-You %s carefully through %s.
-Ihr %s vorsichtig durch {acc}%s.
+You %s carefully through the fungus.
+Ihr {verb-ihr}%s vorsichtig durch den Pilz.
+%%%%
+You %s carefully through the plants.
+Ihr {verb-ihr}%s vorsichtig durch die Pflanzen.
 %%%%
 You can't dig through that.
 Das könnt Ihr nicht durchgraben.
@@ -15964,107 +15964,107 @@ Ihr habt {acc}%s verloren.
 # player.cc
 ##################
 %%%%
-%s slides away as you move %s it!
-%s rutscht weg, als Ihr %s bewegt es!
+%s slides away as you move towards it!
+%s rutscht weg, als Ihr in die Nähe kommt!
 %%%%
 Really %s into that cloud of %s?
-
+Wirklich in die %2$s-Wolke %1$s?
 %%%%
 Do you really want to %s into the Zot trap?
-
+Wirklich in die Zot-Falle %s?
 %%%%
-Really %s %s that %s?
-
+Really %s onto %s?
+Wirklich auf {acc}%2$s %1$s?
 %%%%
-onto
-
-%%%%
-into
-
+Really %s into %s?
+Wirklich in {acc}%2$s %1$s?
 %%%%
 You cannot enter water in your current form.
-Ihr könnt in Eurer jetzigen Form nicht in Wasser eintreten.
+Ihr könnt in Eurer jetzigen Form nicht ins Wasser eintreten.
 %%%%
-"Are you sure you want to "
-
+Are you sure you want to %s into a toxic bog?
+Wirklich ins giftige Moor %s?
 %%%%
-" into a toxic bog?"
-
+Are you sure you want to %s into deep water
+Wirklich ins tiefe Wasser %s
 %%%%
-" into "
-
+Are you sure you want to %s over deep water
+Wirklich über tiefes Wasser %s
 %%%%
-" over "
-
+Are you sure you want to %s into lava
+Wirklich in die Lava %s
+%%%%
+Are you sure you want to %s over lava
+Wirklich über Lava %s
 %%%%
 " while you are losing your buoyancy?"
-
+, während Ihr Euren Auftrieb verliert?
 %%%%
 " while your transformation is expiring?"
-
+, während Eure Verwandlung abläuft?
 %%%%
 Really %s into a travel-excluded area?
-
+Wirklich in einen ausgeschlossenen Bereich %s?
 %%%%
 You might %s into a travel-excluded area, are you sure?
-
+Ihr könnt in einen ausgeschlossenen Bereich %s. Seid Ihr sicher?
 %%%%
 It's unwise to walk into this.
 Es ist unklug, darauf einzugehen.
 %%%%
 %s is held in a net!
-
+%s ist in einem Netz festgehalten!
 %%%%
 %s is caught in a web!
-
+%s ist in einem Spinnennetz festgehalten!
 %%%%
 %s is being constricted!
-
+%s wird abgeschnürt!
 %%%%
 %s cannot move out of your way!
-
+%s kann Euch nicht aus dem Weg gehen!
 %%%%
 Do you really want to swap %s into the Zot trap?
-
+Wollt Ihr wirklich {acc}%s in die Zot-Falle austauschen?
 %%%%
 %s cannot make way for you.
-
+%s kann Euch nicht Platz machen.
 %%%%
 Floosh!
-
+Husch!
 %%%%
 Splash!
-
+Platsch!
 %%%%
-You %s the toxic bog.
-Ihr %s das giftige Moor.
+You enter the toxic bog.
+Ihr tretet in den Giftsumpf ein.
 %%%%
-enter
-
+You fall into the toxic bog.
+Ihr fallt in den Giftsumpf.
 %%%%
-fall into
-
+You enter the shallow water.
+Ihr tretet ins seichte Wasser ein.
 %%%%
-You %s the %s water.
-Ihr %s das %s Wasser.
+You enter the deep water.
+Ihr tretet ins tiefe Wasser ein.
 %%%%
-shallow
-
+You fall into the shallow water.
+Ihr fallt ins seichte Wasser.
 %%%%
-deep
-
+You fall into the deep water.
+Ihr fallt ins tiefe Wasser.
 %%%%
 You sink to the bottom.
 Ihr versinkt zu Boden.
 %%%%
 Moving in this stuff is going to be slow.
-Das Bewegen in diesem Zeug wird langsam sein.
+Bewegen wird in diesem Zeug langsam sein.
 %%%%
 ...and don't expect to remain undetected.
-... und erwarte nicht, unentdeckt zu bleiben.
+...und erwartet nicht, unentdeckt zu bleiben.
 %%%%
 Don't expect to remain undetected while in the water.
-Erwarte nicht, im Wasser unentdeckt zu bleiben.
+Erwartet nicht, im Wasser unentdeckt zu bleiben.
 %%%%
 "Do you really want to go berserk while wielding "
 
@@ -22122,6 +22122,12 @@ inside
 
 %%%%
 around
+
+%%%%
+into
+
+%%%%
+onto
 
 %%%%
 under

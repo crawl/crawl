@@ -928,9 +928,10 @@ void move_player_action(coord_def move)
         if (!current || !fedhas_passthrough(current))
         {
             // Probably need a better message. -cao
-            mprf("You %s carefully through %s.", walkverb.c_str(),
-                 mons_genus(targ_monst->type) == MONS_FUNGUS ? "the fungus"
-                                                             : "the plants");
+            if (mons_genus(targ_monst->type) == MONS_FUNGUS)
+                mprf("You %s carefully through the fungus.", walkverb.c_str());
+            else
+                mprf("You %s carefully through the plants.", walkverb.c_str());
         }
         targ_monst = nullptr;
     }

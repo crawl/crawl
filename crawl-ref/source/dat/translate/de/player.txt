@@ -8,24 +8,94 @@
 # Movement verbs
 #################################
 
-# These are finite verbs conjugated for "you".
-# NOTE: In German, we are using "Ihr" for "you", so we must conjugate accordingly.
+# Infinitives
 
 %%%%
 walk
-geht
+gehen
 %%%%
 step
-tretet
+treten
 %%%%
 fly
-fliegt
+fliegen
 %%%%
 swim
-schwimmt
+schwimmen
 %%%%
 crawl
+kriechen
+%%%%
+# naga
+slither
+schlittern
+%%%%
+# octopode
+wriggle
+schlängeln
+%%%%
+# tengu
+glide
+gleiten
+%%%%
+# vine stalker
+# I'm assuming stalk means "move stealthily" in this context, but it could also mean "walk stiffly".
+stalk
+pirschen
+%%%%%
+passwall
+wandpassen
+%%%%
+shadow step
+schattenschreiten
+%%%%
+rampage
+randalieren
+%%%%
+
+# Finite verbs conjugated for "you".
+# NOTE: In German, we are using "Ihr" for "you", so we must conjugate accordingly.
+
+%%%%
+{verb-ihr}walk
+geht
+%%%%
+{verb-ihr}step
+tretet
+%%%%
+{verb-ihr}fly
+fliegt
+%%%%
+{verb-ihr}swim
+schwimmt
+%%%%
+{verb-ihr}crawl
 kriecht
+%%%%
+# naga
+{verb-ihr}slither
+schlittert
+%%%%
+# octopode
+{verb-ihr}wriggle
+schlängelt
+%%%%
+# tengu
+{verb-ihr}glide
+gleitet
+%%%%
+# vine stalker
+{verb-ihr}stalk
+pirschet
+%%%%%
+{verb-ihr}passwall
+wandpasst
+%%%%
+{verb-ihr}shadow step
+schattenschreitet
+%%%%
+{verb-ihr}rampage
+randaliert
 %%%%
 
 #################################
