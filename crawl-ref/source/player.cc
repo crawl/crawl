@@ -865,10 +865,10 @@ bool berserk_check_wielded_weapon()
         && (!is_melee_weapon(*wpn)
             || needs_handle_warning(*wpn, OPER_ATTACK, penance)))
     {
-        string prompt = "Do you really want to go berserk while wielding "
-                        + wpn->name(DESC_YOUR) + "?";
+        string prompt = localise("Do you really want to go berserk while wielding %s?",
+                                 wpn->name(DESC_YOUR));
         if (penance)
-            prompt += " This could place you under penance!";
+            prompt += localise(" This could place you under penance!");
 
         if (!yesno(prompt.c_str(), true, 'n'))
         {
@@ -2307,11 +2307,13 @@ static void _recharge_xp_evokers(int exp)
 
         if (evoker_max_charges(i) == 1)
             mprf("%s has recharged.", evoker->name(DESC_YOUR).c_str());
+        else if (gained == 1)
+            mprf("%s has regained 1 charge.", evoker->name(DESC_YOUR).c_str());
         else
         {
-            mprf("%s has regained %d charge%s.",
+            mprf("%s has regained %d charges.",
                  evoker->name(DESC_YOUR).c_str(),
-                 gained, gained > 1 ? "s" : "");
+                 gained);
         }
     }
 }
@@ -2527,7 +2529,7 @@ static void _gain_and_note_hp_mp()
     const int note_maxmp = get_real_mp(false);
 
     char buf[200];
-    sprintf(buf, "HP: %d/%d MP: %d/%d",
+    sprintf(buf, "HP: %d/%d MP: %d/%d", // noloc
             min(you.hp, note_maxhp), note_maxhp,
             min(you.magic_points, note_maxmp), note_maxmp);
     take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
@@ -2776,9 +2778,12 @@ void level_change(bool skip_attribute_increase)
 #ifdef USE_TILE
                     init_player_doll();
 #endif
+                    string color = species::scale_type(you.species);
+                    bool an = starts_with(article_a(color), "an ");
                     mprf(MSGCH_INTRINSIC_GAIN,
-                         "Your scales start taking on %s colour.",
-                         article_a(species::scale_type(you.species)).c_str());
+                         an ? "Your scales start taking on an %s colour."
+                            : "Your scales start taking on a %s colour.",
+                         color.c_str());
 
                     // Produce messages about skill increases/decreases. We
                     // restore one skill level at a time so that at most the
@@ -2789,10 +2794,17 @@ void level_change(bool skip_attribute_increase)
                         const int newapt = species_apt(sk, you.species);
                         if (oldapt != newapt)
                         {
-                            mprf(MSGCH_INTRINSIC_GAIN, "You learn %s %s%s.",
-                                 skill_name(sk),
-                                 abs(oldapt - newapt) > 1 ? "much " : "",
-                                 oldapt > newapt ? "slower" : "quicker");
+                            const char* msg = nullptr;
+                            if (newapt - oldapt == 1)
+                                msg = "You learn %s quicker.";
+                            else if (newapt > oldapt)
+                                msg = "You learn %s much quicker.";
+                            else if (oldapt - newapt == 1)
+                                msg = "You learn %s slower.";
+                            else
+                                msg = "You learn %s much slower.";
+
+                            mprf(MSGCH_INTRINSIC_GAIN, msg, skill_name(sk));
                         }
 
                         you.skills[sk] = saved_skills[sk];
@@ -3097,42 +3109,22 @@ bool dur_expiring(duration_type dur)
     return value <= duration_expire_point(dur);
 }
 
-static void _display_char_status(int value, const char *fmt, ...)
-{
-    va_list argp;
-    va_start(argp, fmt);
-
-    string msg = vmake_stringf(fmt, argp);
-
-    if (you.wizard)
-        mprf("%s (%d).", msg.c_str(), value);
-    else
-        mprf("%s.", msg.c_str());
-
-    va_end(argp);
-}
-
 static void _display_vampire_status()
 {
-    string msg = "At your current blood state you ";
     vector<const char *> attrib;
 
     if (!you.vampire_alive)
     {
-        attrib.push_back("are immune to poison");
-        attrib.push_back("significantly resist cold");
-        attrib.push_back("are immune to negative energy");
-        attrib.push_back("resist torment");
-        attrib.push_back("do not heal with monsters in sight.");
+        mpr("In your current blood state, you "
+            "are immune to poison, "
+            "significantly resist cold, "
+            "are immune to negative energy, "
+            "resist torment, "
+            "and do not heal with monsters in sight.");
     }
     else
-        attrib.push_back("heal quickly.");
+        mpr("In your current blood state, you heal quickly.");
 
-    if (!attrib.empty())
-    {
-        msg += comma_separated_line(attrib.begin(), attrib.end());
-        mpr(msg);
-    }
 }
 
 static void _display_movement_speed()
@@ -3148,27 +3140,29 @@ static void _display_movement_speed()
     const bool antiswift = (you.duration[DUR_SWIFTNESS] > 0
                             && you.attribute[ATTR_SWIFTNESS] < 0);
 
-    _display_char_status(move_cost, "Your %s speed is %s%s%s",
-          // order is important for these:
-          (swim)    ? "swimming" :
-          (water)   ? "wading" :
-          (fly)     ? "flying"
-                    : "movement",
+    if (!water && swift)
+        mpr("Your movement is aided by the wind.");
+    else if (!water && antiswift)
+        mpr("Your movement is hindered by the wind.");
 
-          (!water && swift) ? "aided by the wind" :
-          (!water && antiswift) ? "hindered by the wind" : "",
+    const char* fmt =
+        (swim)    ? "Your swimming speed is %s." :
+        (water)   ? "Your wading speed is %s." :
+        (fly)     ? "Your flying speed is %s."
+                  : "Your movement speed is %s.";
 
-          (!water && swift) ? ((move_cost >= 10) ? ", but still "
-                                                 : " and ") :
-          (!water && antiswift) ? ((move_cost <= 10) ? ", but still "
-                                                     : " and ")
-                            : "",
+    const char* speed =
+        (move_cost <   8) ? "very quick" :
+        (move_cost <  10) ? "quick" :
+        (move_cost == 10) ? "average" :
+        (move_cost <  13) ? "slow"
+                          : "very slow";
 
-          (move_cost <   8) ? "very quick" :
-          (move_cost <  10) ? "quick" :
-          (move_cost == 10) ? "average" :
-          (move_cost <  13) ? "slow"
-                            : "very slow");
+    string msg = localise(fmt, speed);
+    if (you.wizard)
+        msg += make_stringf(" (%d)", move_cost);
+
+    mpr_nolocalise(msg);
 }
 
 static void _display_tohit()
@@ -3244,7 +3238,7 @@ void display_char_status()
     }
     string cinfo = _constriction_description();
     if (!cinfo.empty())
-        mpr(cinfo);
+        mpr_nolocalise(cinfo);
 
     _display_movement_speed();
     _display_tohit();
@@ -4078,8 +4072,10 @@ bool confuse_player(int amount, bool quiet, bool force)
 
         if (!quiet)
         {
-            mprf(MSGCH_WARN, "You are %sconfused.",
-                 old_value > 0 ? "more " : "");
+            if (old_value <= 0)
+                mpr(MSGCH_WARN, "You are confused.");
+            else
+                mpr(MSGCH_WARN, "You are more confused.");
         }
 
         learned_something_new(HINT_YOU_ENCHANTED);
@@ -4132,11 +4128,10 @@ bool poison_player(int amount, string source, string source_aux, bool force)
     {
         if (poison_is_lethal() && !was_fatal)
             mprf(MSGCH_DANGER, "You are lethally poisoned!");
+        else if (old_value > 0)
+            mpr(MSGCH_WARN, "You are more poisoned.");
         else
-        {
-            mprf(MSGCH_WARN, "You are %spoisoned.",
-                old_value > 0 ? "more " : "");
-        }
+            mpr(MSGCH_WARN, "You are poisoned.");
 
         learned_something_new(HINT_YOU_POISON);
     }
@@ -4253,26 +4248,18 @@ void handle_player_poison(int delay)
             dmg = 0;
     }
 
-    msg_channel_type channel = MSGCH_PLAIN;
-    const char *adj = "";
-
-    if (dmg > 6)
-    {
-        channel = MSGCH_DANGER;
-        adj = "extremely ";
-    }
-    else if (dmg > 2)
-    {
-        channel = MSGCH_WARN;
-        adj = "very ";
-    }
-
     if (do_dmg && dmg > 0)
     {
         int oldhp = you.hp;
         ouch(dmg, KILLED_BY_POISON);
-        if (you.hp < oldhp)
-            mprf(channel, "You feel %ssick.", adj);
+        if (you.hp < oldhp) {
+            if (dmg > 6)
+                mpr(MSGCH_DANGER, "You feel extremely sick.");
+            else if (dmg > 2)
+                mpr(MSGCH_WARN, "You feel very sick.");
+            else
+                mpr(MSGCH_PLAIN, "You feel sick.");
+        }
     }
 
     // Now decrease the poison in our system
@@ -4675,32 +4662,30 @@ bool invis_allowed(bool quiet, string *fail_reason)
         bool divine = you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY)
                       || you.religion == GOD_SHINING_ONE;
         bool weapon = player_equip_unrand(UNRAND_EOS);
-        string reason;
 
         if (divine && weapon)
-            reason = "Your weapon and divine halo glow too brightly";
+            msg = "Your weapon and divine halo glow too brightly to become invisible.";
         else if (divine)
-            reason = "Your divine halo glows too radiantly";
+            msg = "Your divine halo glows too radiantly to become invisible.";
         else if (weapon)
-            reason = "Your weapon shines too brightly";
+            msg = "Your weapon shines too brightly to become invisible.";
         else
             die("haloed by an unknown source");
 
-        msg = reason + " to become invisible.";
         success = false;
     }
     else if (you.backlit())
     {
-        msg = "Invisibility will do you no good right now";
+        msg = "Invisibility will do you no good right now.";
+        string prompt = "Invisibility will do you no good right now; use anyway?";
         if (quiet)
             success = false;
-        else if (!quiet && !yesno((msg + "; use anyway?").c_str(), false, 'n'))
+        else if (!quiet && !yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
             success = false;
             quiet = true; // since we just said something
         }
-        msg += ".";
     }
 
     if (!success)
@@ -4757,8 +4742,12 @@ void fly_player(int pow, bool already_flying)
         return;
 
     bool standing = !you.airborne() && !already_flying;
-    if (!already_flying)
-        mprf(MSGCH_DURATION, "You feel %s buoyant.", standing ? "very" : "more");
+    if (!already_flying) {
+        if (standing)
+            mpr(MSGCH_DURATION, "You feel very buoyant.");
+        else
+            mpr(MSGCH_DURATION, "You feel more buoyant.");
+    }
 
     you.increase_duration(DUR_FLIGHT, 25 + random2(pow), 100);
 
@@ -4768,11 +4757,11 @@ void fly_player(int pow, bool already_flying)
 
 void enable_emergency_flight()
 {
-    mprf("You can't survive in this terrain! You fly above the %s, but the "
-         "process is draining.",
-         (env.grid(you.pos()) == DNGN_LAVA)       ? "lava" :
-         (env.grid(you.pos()) == DNGN_DEEP_WATER) ? "water"
-                                             : "buggy terrain");
+    mpr("You can't survive in this terrain!");
+    if (env.grid(you.pos()) == DNGN_LAVA)
+        mpr("You fly above the lava, but the process is very draining.");
+    else if (env.grid(you.pos()) == DNGN_DEEP_WATER)
+        mpr("You fly above the deep water, but the process is very draining.");
 
     you.props[EMERGENCY_FLIGHT_KEY] = true;
 }
@@ -5198,7 +5187,7 @@ string player_save_info::short_desc(bool use_qualifier) const
                     ? game_state::game_type_name_for(saved_game_type)
                     : "";
     if (!qualifier.empty())
-        desc << "[" << qualifier << "] ";
+        desc << "[" << localise(qualifier) << "] ";
 
     desc << name;
     desc << localise(", a level %d %s %s", experience_level,
@@ -5211,7 +5200,7 @@ string player_save_info::short_desc(bool use_qualifier) const
 
 #ifdef WIZARD
     if (wizard)
-        desc << " (WIZ)";
+        desc << localise(" (WIZ)");
 #endif
 
     return desc.str();
@@ -6298,68 +6287,69 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
     if (!blinking)
     {
         if (crawl_state.game_is_sprint())
-            return "Long-range teleportation is disallowed in Dungeon Sprint.";
+            return localise("Long-range teleportation is disallowed in Dungeon Sprint.");
         else if (player_in_branch(BRANCH_GAUNTLET))
-        {
-            return "A magic seal in the Gauntlet prevents long-range "
-                "teleports.";
-        }
+            return localise("A magic seal in the Gauntlet prevents long-range teleports.");
     }
 
     if (stasis())
-        return "Your stasis prevents you from teleporting.";
+        return localise("Your stasis prevents you from teleporting.");
 
     vector<string> problems;
 
     if (duration[DUR_DIMENSION_ANCHOR])
-        problems.emplace_back("locked down by a dimension anchor");
+        problems.emplace_back(localise("You are locked down by a dimension anchor."));
 
     if (duration[DUR_LOCKED_DOWN])
-        problems.emplace_back("magically locked down");
+        problems.emplace_back(localise("You are magically locked down."));
 
     if (form == transformation::tree)
-        problems.emplace_back("held in place by your roots");
+        problems.emplace_back(localise("You are held in place by your roots."));
 
     vector<const item_def *> notele_items;
     if (has_notele_item(calc_unid, &notele_items))
     {
         vector<string> worn_notele;
-        bool found_nonartefact = false;
 
         for (const auto item : notele_items)
         {
             if (item->base_type == OBJ_WEAPONS)
             {
-                problems.push_back(make_stringf("wielding %s",
+                problems.push_back(localise("You are wielding %s.",
                                                 item->name(DESC_A).c_str()));
             }
             else
                 worn_notele.push_back(item->name(DESC_A));
         }
 
-        if (worn_notele.size() > (problems.empty() ? 3 : 1))
+        if (worn_notele.size() > 1)
         {
             problems.push_back(
-                make_stringf("wearing %d %s preventing teleportation",
-                             worn_notele.size(),
-                             found_nonartefact ? "items": "artefacts"));
+                localise("You are wearing %d items preventing teleportation.",
+                         (int)worn_notele.size()));
         }
         else if (!worn_notele.empty())
         {
             problems.push_back(
-                make_stringf("wearing %s",
-                             comma_separated_line(worn_notele.begin(),
-                                                  worn_notele.end()).c_str()));
+                localise("You are wearing %s.", worn_notele[0]));
         }
     }
 
     if (problems.empty())
         return ""; // no problem
 
-    return make_stringf("You cannot %s because you are %s.",
-                        blinking ? "blink" : "teleport",
-                        comma_separated_line(problems.begin(),
-                                             problems.end()).c_str());
+    string msg;
+    if (blinking)
+        msg = localise("You cannot blink.");
+    else
+        msg = localise("You cannot teleport.");
+
+    for (const string& problem: problems) {
+        msg += localise(" ");
+        msg += problem;
+    }
+
+    return msg;
 }
 
 /**
@@ -7273,8 +7263,10 @@ bool player::can_do_shaft_ability(bool quiet) const
 {
     if (attribute[ATTR_HELD])
     {
-        if (!quiet)
+        if (!quiet) {
+            // locnote: %s = "held in a net/web"
             mprf("You can't shaft yourself while %s.", held_status());
+        }
         return false;
     }
 
@@ -7408,6 +7400,7 @@ bool player::attempt_escape(int attempts)
     if (escape_score
         >= roll_dice(5, 8 + div_rand_round(themonst->get_hit_dice(), 4)))
     {
+        // locnote: You escape <the monster's> grip.
         mprf("You escape %s grasp.", object.c_str());
 
         // Stun the monster to prevent it from constricting again right away.
@@ -7420,6 +7413,7 @@ bool player::attempt_escape(int attempts)
     }
     else
     {
+        // locnote: <The monster's> grasp...
         mprf("%s grasp on you weakens, but your attempt to escape fails.",
              object.c_str());
         turn_is_over = true;
@@ -7544,11 +7538,14 @@ static string _constriction_description()
     vector<string> c_name;
 
     const int num_free_tentacles = you.usable_tentacles();
-    if (num_free_tentacles)
+    if (num_free_tentacles == 1)
     {
-        cinfo += make_stringf("You have %d tentacle%s available for constriction.",
-                              num_free_tentacles,
-                              num_free_tentacles > 1 ? "s" : "");
+        cinfo += localise("You have 1 tentacle available for constriction.");
+    }
+    else if (num_free_tentacles > 1)
+    {
+        cinfo += localise("You have %d tentacles available for constriction.",
+                          num_free_tentacles);
     }
 
     if (you.is_directly_constricted())
@@ -7559,10 +7556,10 @@ static string _constriction_description()
         if (!cinfo.empty())
             cinfo += "\n";
 
-        cinfo += make_stringf("You are being %s by %s.",
-                              constrictor->constriction_does_damage(true) ?
-                                  "held" : "constricted",
-                              constrictor->name(DESC_A).c_str());
+        cinfo += localise(constrictor->constriction_does_damage(true)
+                            ? "You are being constricted by %s."
+                            : "You are being held by %s.",
+                          constrictor->name(DESC_A));
     }
 
     if (you.is_constricting())
@@ -7583,9 +7580,8 @@ static string _constriction_description()
             if (!cinfo.empty())
                 cinfo += "\n";
 
-            cinfo += "You are constricting ";
-            cinfo += comma_separated_line(c_name.begin(), c_name.end());
-            cinfo += ".";
+            cinfo += localise("You are constricting %s.",
+                              comma_separated_line(c_name.begin(), c_name.end()));
         }
     }
 
@@ -7695,12 +7691,13 @@ int player::scale_potion_healing(int healing_amount)
 
 void player_open_door(coord_def doorpos)
 {
-    // Finally, open the closed door!
+     // Finally, open the closed door!
     set<coord_def> all_door;
     find_connected_identical(doorpos, all_door);
     const char *adj, *noun;
     get_door_description(all_door.size(), &adj, &noun);
 
+    // i18n: TODO: Handle properties from .des files
     const string door_desc_adj  =
         env.markers.property_at(doorpos, MAT_ANY, "door_description_adjective");
     const string door_desc_noun =
@@ -7709,6 +7706,8 @@ void player_open_door(coord_def doorpos)
         adj = door_desc_adj.c_str();
     if (!door_desc_noun.empty())
         noun = door_desc_noun.c_str();
+
+    const string the_door = string("the ") + adj + noun;
 
     if (!you.confused())
     {
@@ -7719,7 +7718,7 @@ void player_open_door(coord_def doorpos)
 
         if (!door_open_prompt.empty())
         {
-            door_open_prompt += " (y/N)";
+            door_open_prompt += localise(" (y/N)");
             if (!yesno(door_open_prompt.c_str(), true, 'n', true, false))
             {
                 if (is_exclude_root(doorpos))
@@ -7741,8 +7740,8 @@ void player_open_door(coord_def doorpos)
 
         if (!ignore_exclude && is_exclude_root(doorpos))
         {
-            string prompt = make_stringf("This %s%s is marked as excluded! "
-                                         "Open it anyway?", adj, noun);
+            string prompt = localise("%s is marked as excluded! Open it anyway?",
+                                     the_door);
 
             if (!yesno(prompt.c_str(), true, 'n', true, false))
             {
@@ -7755,6 +7754,7 @@ void player_open_door(coord_def doorpos)
 
     const int skill = 8 + you.skill_rdiv(SK_STEALTH, 4, 3);
 
+    // i18n: TODO: Handle properties from .des files
     string berserk_open = env.markers.property_at(doorpos, MAT_ANY,
                                                   "door_berserk_verb_open");
     string berserk_adjective = env.markers.property_at(doorpos, MAT_ANY,
@@ -7777,7 +7777,7 @@ void player_open_door(coord_def doorpos)
                 mprf(berserk_open.c_str(), adj, noun);
             }
             else
-                mprf("The %s%s flies open!", adj, noun);
+                mprf("%s flies open!", the_door.c_str());
         }
         else
         {
@@ -7790,7 +7790,7 @@ void player_open_door(coord_def doorpos)
                 mprf(MSGCH_SOUND, berserk_open.c_str(), adj, noun);
             }
             else
-                mprf(MSGCH_SOUND, "The %s%s flies open with a bang!", adj, noun);
+                mprf(MSGCH_SOUND, "%s flies open with a bang!", the_door.c_str());
             noisy(15, you.pos());
         }
     }
@@ -7800,8 +7800,8 @@ void player_open_door(coord_def doorpos)
             mprf(MSGCH_SOUND, door_open_creak.c_str(), adj, noun);
         else
         {
-            mprf(MSGCH_SOUND, "As you open the %s%s, it creaks loudly!",
-                 adj, noun);
+             mprf(MSGCH_SOUND, "As you open %s, it creaks loudly!",
+                 the_door.c_str());
         }
         noisy(10, you.pos());
     }
@@ -8191,8 +8191,10 @@ bool player::immune_to_hex(const spell_type hex) const
 void player::be_agile(int pow)
 {
     const bool were_agile = you.duration[DUR_AGILITY] > 0;
-    mprf(MSGCH_DURATION, "You feel %sagile all of a sudden.",
-         were_agile ? "more " : "");
+    if (!were_agile)
+        mpr(MSGCH_DURATION, "You feel agile all of a sudden.");
+    else
+        mpr(MSGCH_DURATION, "You feel more agile all of a sudden.");
 
     you.increase_duration(DUR_AGILITY, 35 + random2(pow), 80);
     if (!were_agile)

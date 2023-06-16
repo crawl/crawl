@@ -16066,32 +16066,32 @@ Bewegen wird in diesem Zeug langsam sein.
 Don't expect to remain undetected while in the water.
 Erwartet nicht, im Wasser unentdeckt zu bleiben.
 %%%%
-"Do you really want to go berserk while wielding "
-
+Do you really want to go berserk while wielding %s?
+Wirklich berserken, während Ihr %s schwingt?
 %%%%
 %s has recharged.
-%s wurde aufgeladen.
+%s wird wieder aufgeladen.
 %%%%
-%s has regained %d charge%s.
-%s hat%d Ladung%s wiedererlangt.
+%s has regained 1 charge.
+%s hat 1 Ladung zurückerhalten.
+%%%%
+%s has regained %d charges.
+%s hat %d Ladungen zurückerhalten.
 %%%%
 Your life force feels restored.
 Eure Lebenskraft fühlt sich wiederhergestellt.
 %%%%
 Extra life!
-Extra Leben!
-%%%%
-HP: %d/%d MP: %d/%d
-
+Zusätzliches Leben!
 %%%%
 Your capacity for spells is full, and you lose access to an earlier spell.
-
+Eure Kapazität für Zaubersprüche ist voll, und Ihr verliert den Zugang zu einem früheren Zauberspruch.
 %%%%
 The power to cast %s wells up from within.
-
+Die Macht, %s zu wirken, quillt aus dem Inneren.
 %%%%
 Welcome back to level %d!
-
+Willkommen zurück auf Level %d!
 %%%%
 You have reached level 27, the final one!
 Ihr habt Level 27 erreicht, das letzte!
@@ -16105,83 +16105,68 @@ Ihr habt Level %d erreicht!
 Your skin feels tougher.
 Eure Haut fühlt sich härter an.
 %%%%
-Your scales start taking on %s colour.
-
+Your scales start taking on an %s colour.
+Ihre Schuppen nehmen eine %s Farbe an.
 %%%%
-You learn %s %s%s.
-Ihr lernt %s %s%s.
+Your scales start taking on a %s colour.
+Ihre Schuppen nehmen eine %s Farbe an.
 %%%%
-"much "
-
+You learn %s quicker.
+Ihr lernt {acc}%s schneller.
 %%%%
-slower
-
+You learn %s much quicker.
+Ihr lernt {acc}%s viel schneller.
 %%%%
-quicker
-
+You learn %s slower.
+Ihr lernt {acc}%s langsamer.
+%%%%
+You learn %s much slower.
+Ihr lernt {acc}%s viel langsamer.
 %%%%
 You feel monstrous as your demonic heritage exerts itself.
-
+Ihr fühlt Euch monströs, als Euer dämonisches Erbe zum Tragen kommt.
 %%%%
 Your demonic ancestry asserts itself...
-
+Eure dämonische Abstammung setzt sich durch...
 %%%%
 Your scales feel tougher.
 Eure Schuppen fühlen sich härter an.
 %%%%
-"At your current blood state you "
-
+In your current blood state, you are immune to poison, significantly resist cold, are immune to negative energy, resist torment, and do not heal with monsters in sight.
+In Eurem derzeitigen Blutzustand seid Ihr immun gegen Gift, habt einen hohen Widerstand gegen Kälte, seid immun gegen negative Energie, widersteht Qualen und heilt nicht, wenn Monster in Sicht sind.
 %%%%
-are immune to poison
-
+In your current blood state, you heal quickly.
+In Eurem jetzigen Blutzustand heilt Ihr schnell.
 %%%%
-significantly resist cold
-
+Your movement is aided by the wind.
+Eure Bewegung wird durch den Wind unterstützt.
 %%%%
-are immune to negative energy
-
+Your movement is hindered by the wind.
+Eure Bewegung wird durch den Wind behindert.
 %%%%
-resist torment
-
+Your swimming speed is %s.
+Eure Schwimmgeschwindigkeit ist %s.
 %%%%
-do not heal with monsters in sight.
-
+Your wading speed is %s.
+Eure Watgeschwindigkeit ist %s.
 %%%%
-heal quickly.
-
+Your flying speed is %s.
+Eure Fluggeschwindigkeit ist %s.
 %%%%
-Your %s speed is %s%s%s
-
-%%%%
-swimming
-
-%%%%
-wading
-
-%%%%
-movement
-
-%%%%
-aided by the wind
-
-%%%%
-hindered by the wind
-
-%%%%
-", but still "
-
+Your movement speed is %s.
+Eure Bewegungsgeschwindigkeit ist %s.
 %%%%
 average
-
+durchschnittlich
 %%%%
 Your attack delay is about %.1f%s%s.
-
+Eure Angriffsverzögerung beträgt etwa %.1f%s%s.
 %%%%
 " (and cannot be improved with additional weapon skill)"
-
+" (und kann nicht durch zusätzliche Waffenfertigkeit verbessert werden)"
 %%%%
 " (and is slowed by your insufficient shield skill)"
-
+" (und wird durch Eure unzureichende Schildfertigkeit verlangsamt)"
 %%%%
 You are illuminated by a large divine halo.
 Ihr werdet von einem großen göttlichen Heiligenschein beleuchtet.
@@ -16196,10 +16181,10 @@ An external divine halo illuminates you.
 Ein äußerer göttlicher Heiligenschein erleuchtet Euch.
 %%%%
 * * * LOW MAGIC WARNING * * *
-* * * LOW MAGIC WARNING * * *
+* * * WARNUNG: NIEDRIGE MAGIE * * *
 %%%%
 * * * LOW HITPOINT WARNING * * *
-* * * LOW HITPOINT WARNING * * *
+* * * WARNUNG: NIEDRIGE TREFFERPUNKTE * * *
 %%%%
 You cannot pay life while functionally dead.
 Ihr könnt kein Leben bezahlen, solange Ihr funktionell tot seid.
@@ -16214,34 +16199,34 @@ You don't have enough magic at the moment.
 Ihr habt im Moment nicht genug Magie.
 %%%%
 You are very lightly contaminated with residual magic.
-
+Ihr seid sehr leicht mit Restmagie kontaminiert.
 %%%%
 You are lightly contaminated with residual magic.
-
+Ihr seid leicht mit Restmagie kontaminiert.
 %%%%
 You are contaminated with residual magic.
-
+Ihr seid mit Restmagie kontaminiert.
 %%%%
 You are heavily infused with residual magic.
-
+Ihr seid stark mit Restmagie durchdrungen.
 %%%%
 You are practically glowing with residual magic!
-
+Ihr seid praktisch mit Restmagie glühend!
 %%%%
 Your entire body has taken on an eerie glow!
-
+Euer ganzer Körper hat ein unheimliches Leuchten angenommen!
 %%%%
 You are engulfed in a nimbus of crackling magics!
-
+Ihr werdet von einem Nimbus aus knisternder Magie umhüllt!
 %%%%
 Your magical contamination has completely faded away.
 Eure magische Verunreinigung ist vollständig verschwunden.
 %%%%
 You feel less contaminated with magical energies.
-
+Ihr fühlt euch weniger mit magischen Energien kontaminiert.
 %%%%
 You fade completely from view now that you are no longer glowing from magical contamination.
-
+Ihr verschwindet völlig aus dem Blickfeld, da Ihr nun nicht mehr durch magische Verseuchung glüht.
 %%%%
 You feel momentarily confused.
 Ihr fühlt Euch momentan verwirrt.
@@ -16249,23 +16234,26 @@ Ihr fühlt Euch momentan verwirrt.
 Your divine stamina protects you from confusion!
 Eure göttliche Ausdauer schützt Euch vor Verwirrung!
 %%%%
-You are %sconfused.
-Ihr seid %sconfused.
+You are more confused.
+Ihr seid mehr verwirrt.
 %%%%
 You are lethally poisoned!
 Ihr seid tödlich vergiftet!
 %%%%
-You are %spoisoned.
-Ihr seid%spoisoned.
+You are more poisoned.
+Ihr seid mehr vergiftet!
 %%%%
-"extremely "
-
+You are poisoned.
+Ihr seid vergiftet.
 %%%%
-"very "
-
+You feel extremely sick.
+Ihr fühlt Euch extrem krank.
 %%%%
-You feel %ssick.
-Ihr fühlt Euch %skrank.
+You feel very sick.
+Ihr fühlt Euch sehr krank.
+%%%%
+You feel sick.
+Ihr fühlt Euch krank.
 %%%%
 You are no longer poisoned.
 Ihr seid nicht länger vergiftet.
@@ -16312,29 +16300,26 @@ Ihr fühlt Euch weniger belebt.
 The frozen ramparts melt away.
 Die gefrorenen Wälle schmelzen weg.
 %%%%
-Your weapon and divine halo glow too brightly
-
+Your weapon and divine halo glow too brightly to become invisible.
+Eure Waffe und Euer göttlicher Heiligenschein leuchten zu hell, um unsichtbar zu werden.
 %%%%
-Your divine halo glows too radiantly
-
+Your divine halo glows too radiantly to become invisible.
+Euer göttlicher Heiligenschein leuchtet zu strahlend, um unsichtbar zu werden.
 %%%%
-Your weapon shines too brightly
-
+Your weapon shines too brightly to become invisible.
+Eure Waffe leuchtet zu hell, um unsichtbar zu werden.
 %%%%
-" to become invisible."
-
+Invisibility will do you no good right now.
+Unsichtbarkeit nützt Euch im Moment nichts.
 %%%%
-Invisibility will do you no good right now
-
-%%%%
-; use anyway?
-
+Invisibility will do you no good right now; use anyway?
+Unsichtbarkeit nützt Euch im Moment nichts; verwenden trotzdem?
 %%%%
 Your roots keep you in place.
-
+Eure Wurzeln halten Euch an Ort und Stelle.
 %%%%
 You can't fly in this form.
-
+In dieser Form könnt Ihr nicht fliegen.
 %%%%
 Your tail turns into legs as you fly out of the water.
 Euer Schwanz verwandelt sich in Beine, als Ihr aus dem Wasser fliegt.
@@ -16345,26 +16330,29 @@ Ihr fliegt leicht in die Luft.
 You fly up into the air.
 Ihr fliegt in die Luft.
 %%%%
-You feel %s buoyant.
-Ihr fühlt Euch %s lebhaft.
+You feel very buoyant.
+Ihr fühlt Euch sehr leichtgewichtig.
 %%%%
-very
-
+You feel more buoyant.
+Ihr fühlt Euch mehr leichtgewichtig.
 %%%%
-more
-
+You can't survive in this terrain!
+In diesem Terrain könnt Ihr nicht überleben!
 %%%%
-You can't survive in this terrain! You fly above the %s, but the process is draining.
-
+You fly above the lava, but the process is very draining.
+Ihr fliegt über die Lava, aber der Prozess ist sehr anstrengend.
+%%%%
+You fly above the deep water, but the process is very draining.
+Ihr fliegt über das tiefe Wasser, aber der Prozess ist sehr anstrengend.
 %%%%
 %s engulfing you falls away.
-
+%s fällt von Euch weg.
 %%%%
 You gasp with relief as air once again reaches your lungs.
-Ihr schnappt erleichtert nach Luft, als Luft wieder Eure Lunge erreicht.
+Ihr keucht erleichtert, als Luft wieder Eure Lunge erreicht.
 %%%%
 Your lungs strain for air!
-Eure Lungen belasten die Luft!
+Eure Lunge ringen nach Luft!
 %%%%
 , a level %d %s %s
 , Level %d %s %s
@@ -16373,52 +16361,52 @@ You resist the pull of the Abyss.
 Ihr widersteht dem Zug des Abgrunds.
 %%%%
 You wobble for a moment.
-Ihr wackelt für einen Moment.
+Ihr wackelt einen Moment.
 %%%%
 Long-range teleportation is disallowed in Dungeon Sprint.
-
+Teleportation über große Entfernungen ist im Dungeon-Sprint nicht erlaubt.
 %%%%
 A magic seal in the Gauntlet prevents long-range teleports.
-
+Ein magisches Siegel in der Spießrute verhindert Teleportationen über große Entfernungen.
 %%%%
-locked down by a dimension anchor
-
+You are locked down by a dimension anchor.
+Ihr seid durch einen Dimensionsanker festgehalten.
 %%%%
-magically locked down
-
+You are magically locked down.
+Ihr seid auf magische Weise festgehalten.
 %%%%
-held in place by your roots
-
+You are held in place by your roots.
+Ihr werdet von euren Wurzeln an Ort und Stelle gehalten.
 %%%%
-wielding %s
-{acc}%s führend
+You are wielding %s.
+Ihr schwingt %s.
 %%%%
-wearing %d %s preventing teleportation
-
+You are wearing %d items preventing teleportation.
+Ihr habt %d Gegenstände an, die die Teleportation verhindern.
 %%%%
-items
-
+You are wearing %s.
+Ihr habt {acc}%s an.
 %%%%
-artefacts
-
+You cannot blink.
+Ihr könnt nicht flimmern.
 %%%%
-You cannot %s because you are %s.
-
+You cannot teleport.
+Ihr könnt Euch nicht teleportieren.
 %%%%
 %s corrodes you!
-
+%s zersetzt Euch!
 %%%%
 You are splashed with acid
-
+Ihr werdet mit Säure bespritzt
 %%%%
 You are splashed with acid but take no damage.
-
+Ihr werdet mit Säure bespritzt, nehmt aber keinen Schaden.
 %%%%
 Your stasis prevents you from being paralysed.
-Eure Stase verhindert, dass Ihr gelähmt werdet.
+Eure Stase verhindert, dass Ihr paralysiert werdet.
 %%%%
 You shrug off the repeated paralysis!
-Ihr schüttelt die wiederholte Lähmung ab!
+Ihr schüttelt die wiederholte Paralyse ab!
 %%%%
 You suddenly lose the ability to move!
 Ihr verliert plötzlich die Fähigkeit Euch zu bewegen!
@@ -16462,32 +16450,35 @@ Ihr schlaft ein.
 You wake up.
 Ihr wacht auf.
 %%%%
+# note: %s = "held in a net/web"
 You can't shaft yourself while %s.
-Ihr könnt Euch nicht bewegen, während%s.
+Ihr könnt Euch nicht bewegen, während Ihr %s seid.
 %%%%
 You can't shaft yourself on this level.
 Ihr könnt Euch auf dieser Ebene nicht bewegen.
 %%%%
 You can't shaft yourself on this terrain.
-Ihr könnt Euch nicht auf diesem Terrain bewegen.
+Ihr könnt in diesem Terrain einen Schacht nicht machen.
 %%%%
 A shaft appears beneath you!
 Ein Schacht erscheint unter Euch!
 %%%%
 the roots'
-
+der Wurzeln
 %%%%
+# note: You escape <the monster's> grip.
 You escape %s grasp.
-Ihr entkommt {gen}%s Griff.
+Ihr entkommt dem Griff {gen}%s.
 %%%%
+# note: <The monster's> grasp...
 %s grasp on you weakens, but your attempt to escape fails.
-%s Griff nach Euch wird schwächer, aber Euer Fluchtversuch schlägt fehl.
+Der Griff {gen}%s um Euch wird schwächer, aber Euer Versuch zu entkommen scheitert.
 %%%%
 The mark upon you grows brighter.
 Das Mal auf Euch wird heller.
 %%%%
 A sentinel's mark forms upon you.
-Ein Wachpostenzeichen bildet sich auf Euch.
+Das Mal einer Wache bildet sich auf Euch.
 %%%%
 You feel your attacks grow feeble.
 Ihr fühlt, wie Eure Angriffe schwach werden.
@@ -16495,14 +16486,20 @@ Ihr fühlt, wie Eure Angriffe schwach werden.
 You feel as though you will be weak longer.
 Ihr habt das Gefühl, dass Ihr länger schwach bleiben werdet.
 %%%%
-You have %d tentacle%s available for constriction.
-
+You have 1 tentacle available for constriction.
+Ihr habt 1 Tentakel zum Einschnüren zur Verfügung.
 %%%%
-You are being %s by %s.
-
+You have %d tentacles available for constriction.
+Ihr habt %d Tentakel zum Einschnüren zur Verfügung.
 %%%%
-"You are constricting "
-
+You are being constricted by %s.
+Ihr werdet von {dat}%s eingeschnürt.
+%%%%
+You are being held by %s.
+Ihr werdet von {dat}%s festgehalten.
+%%%%
+You are constricting %s.
+Ihr schnürt {acc}%s ein.
 %%%%
 %s enhances the healing.
 %s verbessert die Heilung.
@@ -16517,22 +16514,22 @@ Your system partially rejects the healing.
 Euer System lehnt die Heilung teilweise ab.
 %%%%
 " (y/N)"
-
+" (j/N)"
 %%%%
 Put travel exclusion on door? (Y/n)
-
+Reiseausschluss an der Tür anbringen? (J/n)
 %%%%
-This %s%s is marked as excluded! Open it anyway?
-
+%s is marked as excluded! Open it anyway?
+%s ist als ausgeschlossen markiert! Trotzdem öffnen?
 %%%%
-The %s%s flies open!
-Die%s%s fliegen auf!
+%s flies open!
+%s fliegt auf!
 %%%%
-The %s%s flies open with a bang!
-Die%s%s fliegen mit einem Knall auf!
+%s flies open with a bang!
+%s fliegt mit einem Knall auf!
 %%%%
-As you open the %s%s, it creaks loudly!
-Als Ihr die %s%s öffnet, knarrt es laut!
+As you open %s, it creaks loudly!
+%s öffnet sich mit einem lauten Knarren!
 %%%%
 You reach down and open the %s%s.
 
@@ -16579,8 +16576,11 @@ Euer Blut erstarrt zu einer Rüstung.
 Your weapon exudes an aura of protection.
 Eure Waffe strahlt eine Aura des Schutzes aus.
 %%%%
-You feel %sagile all of a sudden.
-Ihr fühlt Euch plötzlich %sschlaff.
+You feel agile all of a sudden.
+Ihr fühlt Euch plötzlich agil.
+%%%%
+You feel more agile all of a sudden.
+Ihr fühlt Euch plötzlich mehr agil.
 %%%%
 
 ##################
@@ -20966,6 +20966,9 @@ walking
 hopping
 
 %%%%
+swimming
+
+%%%%
 slithering
 
 %%%%
@@ -22833,10 +22836,10 @@ Euer blutgefüllter Körper kann Eure Verwandlung nicht aufrechterhalten.
 ##################
 %%%%
 held in a net
-
+in einem Netz festgehalten
 %%%%
 caught in a web
-
+in einem Spinnennetz festgehalten
 %%%%
 The net bounces off something gigantic!
 Das Netz prallt von etwas Gigantischem ab!
@@ -23069,6 +23072,9 @@ Done exploring.
 Fertig erforscht.
 %%%%
 unvisited transporter
+
+%%%%
+items
 
 %%%%
 places
@@ -25110,6 +25116,9 @@ vibrate
 %%%%
 chaos upgrade
 
+%%%%
+You are %sconfused.
+Ihr seid %sconfused.
 %%%%
 " (+ monsters)"
 
