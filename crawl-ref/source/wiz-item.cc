@@ -1532,6 +1532,17 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_HARM",
         "ARTP_RAMPAGING",
         "ARTP_ARCHMAGI",
+        "ARTP_ENHANCE_CONJ",
+        "ARTP_ENHANCE_HEXES",
+        "ARTP_ENHANCE_SUMM",
+        "ARTP_ENHANCE_NECRO",
+        "ARTP_ENHANCE_TLOC",
+        "ARTP_ENHANCE_TMUT",
+        "ARTP_ENHANCE_FIRE",
+        "ARTP_ENHANCE_ICE",
+        "ARTP_ENHANCE_AIR",
+        "ARTP_ENHANCE_EARTH",
+        "ARTP_ENHANCE_POISON",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 

@@ -536,7 +536,9 @@ my @art_order = (
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
     "RMSL", "unused", "REGEN", "unused", "NO_UPGRADE", "RCORR", "\n",
     "RMUT", "unused", "CORRODE", "DRAIN", "SLOW", "FRAGILE", "\n",
-    "SH", "HARM", "RAMPAGE", "ARCHMAGI", "\n",
+    "SH", "HARM", "RAMPAGE", "ARCHMAGI", "ENH_CONJ", "ENH_HEXES", "\n",
+    "ENH_SUMM", "ENH_NECRO", "ENH_TLOC", "ENH_TMUT", "ENH_FIRE", "\n",
+    "ENH_ICE", "ENH_AIR", "ENH_EARTH", "ENH_POISON", "\n",
     "}",
 # end TAG_MAJOR_VERSION
 # start TAG_MAJOR_VERSION == 35
@@ -548,7 +550,9 @@ my @art_order = (
 #     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
 #     "RMSL", "REGEN", "NO_UPGRADE", "RCORR", "\n",
 #     "RMUT", "CORRODE", "DRAIN", "SLOW", "FRAGILE", "\n",
-#     "SH", "HARM", "RAMPAGE", "ARCHMAGI", "\n",
+#     "SH", "HARM", "RAMPAGE", "ARCHMAGI", "ENH_CONJ", "ENH_HEXES", "\n",
+#     "ENH_SUMM", "ENH_NECRO", "ENH_TLOC", "ENH_TMUT", "ENH_FIRE", "\n",
+#     "ENH_ICE", "ENH_AIR", "ENH_EARTH", "ENH_POISON", "\n",
 #     "}",
 # end TAG_MAJOR_VERSION
 

@@ -540,6 +540,12 @@ static int _spell_enhancement(spell_type spell)
     if (typeflags & spschool::necromancy)
         enhanced += player_spec_death();
 
+    if (typeflags & spschool::translocation)
+        enhanced += player_spec_tloc();
+
+    if (typeflags & spschool::transmutation)
+        enhanced += player_spec_tmut();
+
     if (typeflags & spschool::fire)
         enhanced += player_spec_fire();
 

@@ -344,7 +344,20 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_STEALTH,               prop_note::symbolic },
         { ARTP_CLARITY,               prop_note::plain },
         { ARTP_RMSL,                  prop_note::plain },
+
+        // spell enhancers
         { ARTP_ARCHMAGI,              prop_note::plain },
+        { ARTP_ENHANCE_CONJ,          prop_note::plain },
+        { ARTP_ENHANCE_HEXES,         prop_note::plain },
+        { ARTP_ENHANCE_SUMM,          prop_note::plain },
+        { ARTP_ENHANCE_NECRO,         prop_note::plain },
+        { ARTP_ENHANCE_TLOC,          prop_note::plain },
+        { ARTP_ENHANCE_TMUT,          prop_note::plain },
+        { ARTP_ENHANCE_FIRE,          prop_note::plain },
+        { ARTP_ENHANCE_ICE,           prop_note::plain },
+        { ARTP_ENHANCE_AIR,           prop_note::plain },
+        { ARTP_ENHANCE_EARTH,         prop_note::plain },
+        { ARTP_ENHANCE_POISON,        prop_note::plain },
     };
 
     const unrandart_entry *entry = nullptr;

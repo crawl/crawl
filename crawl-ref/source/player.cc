@@ -1618,15 +1618,14 @@ int player_spec_death()
 {
     int sd = 0;
 
-    // Staves
     sd += you.wearing(EQ_STAFF, STAFF_DEATH);
 
-    // species:
     sd += you.get_mutation_level(MUT_NECRO_ENHANCER);
 
-    // transformations:
     if (you.form == transformation::lich)
         sd++;
+
+    sd += you.scan_artefacts(ARTP_ENHANCE_NECRO);
 
     return sd;
 }
@@ -1635,11 +1634,11 @@ int player_spec_fire()
 {
     int sf = 0;
 
-    // staves:
     sf += you.wearing(EQ_STAFF, STAFF_FIRE);
 
-    // rings of fire:
     sf += you.wearing(EQ_RINGS, RING_FIRE);
+
+    sf += you.scan_artefacts(ARTP_ENHANCE_FIRE);
 
     if (player_equip_unrand(UNRAND_SALAMANDER))
         sf++;
@@ -1654,11 +1653,11 @@ int player_spec_cold()
 {
     int sc = 0;
 
-    // staves:
     sc += you.wearing(EQ_STAFF, STAFF_COLD);
 
-    // rings of ice:
     sc += you.wearing(EQ_RINGS, RING_ICE);
+
+    sc += you.scan_artefacts(ARTP_ENHANCE_ICE);
 
     if (player_equip_unrand(UNRAND_ELEMENTAL_STAFF))
         sc++;
@@ -1673,6 +1672,8 @@ int player_spec_earth()
     // Staves
     se += you.wearing(EQ_STAFF, STAFF_EARTH);
 
+    se += you.scan_artefacts(ARTP_ENHANCE_EARTH);
+
     if (player_equip_unrand(UNRAND_ELEMENTAL_STAFF))
         se++;
 
@@ -1685,6 +1686,8 @@ int player_spec_air()
 
     // Staves
     sa += you.wearing(EQ_STAFF, STAFF_AIR);
+
+    sa += you.scan_artefacts(ARTP_ENHANCE_AIR);
 
     if (player_equip_unrand(UNRAND_ELEMENTAL_STAFF))
         sa++;
@@ -1699,8 +1702,8 @@ int player_spec_conj()
 {
     int sc = 0;
 
-    // Staves
     sc += you.wearing(EQ_STAFF, STAFF_CONJURATION);
+    sc += you.scan_artefacts(ARTP_ENHANCE_CONJ);
 
     return sc;
 }
@@ -1711,26 +1714,38 @@ int player_spec_hex()
 
     // Demonspawn mutation
     sh += you.get_mutation_level(MUT_HEX_ENHANCER);
+    sh += you.scan_artefacts(ARTP_ENHANCE_HEXES);
 
     return sh;
 }
 
 int player_spec_summ()
 {
-    return 0;
+    return you.scan_artefacts(ARTP_ENHANCE_SUMM);
 }
 
 int player_spec_poison()
 {
     int sp = 0;
 
-    // Staves
     sp += you.wearing(EQ_STAFF, STAFF_POISON);
+
+    sp += you.scan_artefacts(ARTP_ENHANCE_POISON);
 
     if (player_equip_unrand(UNRAND_OLGREB))
         sp++;
 
     return sp;
+}
+
+int player_spec_tloc()
+{
+    return you.scan_artefacts(ARTP_ENHANCE_TLOC);
+}
+
+int player_spec_tmut()
+{
+    return you.scan_artefacts(ARTP_ENHANCE_TMUT);
 }
 
 // If temp is set to false, temporary sources of resistance won't be

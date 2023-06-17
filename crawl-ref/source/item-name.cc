@@ -1810,18 +1810,16 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (!terse && cursed())
             buff << "cursed ";
 
-
         if (is_artefact(*this) && !dbname)
         {
             if (know_type)
-                buff << "staff of " << staff_type_name(item_typ);
+                buff << "staff";
             // TODO: crop long artefact names when not controlled by webtiles
             buff << get_artefact_name(*this, ident);
             if (!know_type)
                 buff << "staff";
-
-
-        } else if (!know_type)
+        }
+        else if (!know_type)
         {
             if (!basename)
             {

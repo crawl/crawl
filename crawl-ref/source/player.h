@@ -1041,6 +1041,8 @@ int player_spec_fire();
 int player_spec_hex();
 int player_spec_poison();
 int player_spec_summ();
+int player_spec_tloc();
+int player_spec_tmut();
 
 int player_speed();
 
