@@ -20,6 +20,7 @@
 #include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "item-use.h"
+#include "localise.h"
 #include "message.h"
 #include "mutation.h"
 #include "nearby-danger.h"
@@ -87,7 +88,7 @@ public:
         if (you.duration[DUR_DEATHS_DOOR])
         {
             if (reason)
-                *reason = "You can't heal while in death's door.";
+                *reason = "You cannot heal while in death's door.";
             return false;
         }
         if (!you.can_potion_heal())
@@ -244,8 +245,10 @@ public:
     {
         const bool were_mighty = you.duration[DUR_MIGHT] > 0;
 
-        mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
-             were_mighty ? "mightier" : "very mighty");
+        if (!were_mighty)
+            mpr(MSGCH_DURATION, "You feel very mighty all of a sudden.");
+        else
+            mpr(MSGCH_DURATION, "You feel mightier all of a sudden.");
         you.increase_duration(DUR_MIGHT, 35 + random2(pow), 80);
         return true;
     }
@@ -266,8 +269,10 @@ public:
     {
         const bool were_brilliant = you.duration[DUR_BRILLIANCE] > 0;
 
-        mprf(MSGCH_DURATION, "You feel %sclever all of a sudden.",
-             were_brilliant ? "more " : "");
+        if (!were_brilliant)
+            mpr(MSGCH_DURATION, "You feel clever all of a sudden.");
+        else
+            mpr(MSGCH_DURATION, "You feel more clever all of a sudden.");
         you.increase_duration(DUR_BRILLIANCE, 35 + random2(pow), 80);
         return true;
     }
@@ -288,8 +293,10 @@ public:
     {
         const bool was_attractive = you.duration[DUR_ATTRACTIVE] > 0;
 
-        mprf(MSGCH_DURATION, "You feel %sattractive to monsters.",
-             was_attractive ? "more " : "");
+        if (!was_attractive)
+            mpr(MSGCH_DURATION, "You feel attractive to monsters.");
+        else
+            mpr(MSGCH_DURATION, "You feel more attractive to monsters.");
 
         you.increase_duration(DUR_ATTRACTIVE, 20 + random2(pow)/2);
         return true;
@@ -385,8 +392,10 @@ public:
         if (confuse_player(ambrosia_turns, false, true))
         {
             print_potion_heal_message();
-            mprf("You feel%s invigorated.",
-                 you.duration[DUR_AMBROSIA] ? " more" : "");
+            if (you.duration[DUR_AMBROSIA] == 0)
+                mpr("You feel invigorated.");
+            else
+                mpr("You feel more invigorated.");
             you.increase_duration(DUR_AMBROSIA, ambrosia_turns);
             return true;
         }
@@ -411,22 +420,33 @@ public:
     {
         if (you.backlit())
         {
+            const char* msg;
+            if (!you.duration[DUR_INVIS]) {
+                msg = "You become transparent, but the glow from %s "
+                      "prevents you from becoming completely invisible.";
+            }
+            else {
+                msg = "You become more transparent, but the glow from %s "
+                      "prevents you from becoming completely invisible.";
+            }
+
+            // locnote: The following are all causes of glowing to plug into the above messages
             vector<const char *> afflictions;
-            if (you.haloed() && !you.umbraed())
-                afflictions.push_back("halo");
+            if (you.haloed() && !you.umbraed()) {
+                if (you.halo_radius() == -1)
+                    afflictions.push_back("the halo");
+                else
+                    afflictions.push_back("your halo");
+            }
             if (player_severe_contamination())
-                afflictions.push_back("magical contamination");
+                afflictions.push_back("your magical contamination");
             if (you.duration[DUR_CORONA])
-                afflictions.push_back("corona");
+                afflictions.push_back("your corona");
             if (you.duration[DUR_LIQUID_FLAMES])
-                afflictions.push_back("liquid flames");
+                afflictions.push_back("the liquid flames");
             if (you.duration[DUR_QUAD_DAMAGE])
-                afflictions.push_back("!!!QUAD DAMAGE!!!");
-            mprf(MSGCH_DURATION,
-                 "You become %stransparent, but the glow from %s "
-                 "%s prevents you from becoming completely invisible.",
-                 you.duration[DUR_INVIS] ? "more " : "",
-                 you.haloed() && you.halo_radius() == -1 ? "the" : "your",
+                afflictions.push_back("your !!!QUAD DAMAGE!!!");
+            mprf(MSGCH_DURATION, msg,
                  comma_separated_line(afflictions.begin(),
                                       afflictions.end()).c_str());
         }
@@ -605,8 +625,10 @@ static bool _can_mutate(string *reason)
 
     if (reason)
     {
-        *reason = make_stringf("You cannot mutate%s.",
-                               you.can_safely_mutate(false) ? " at present" : "");
+        if (!you.can_safely_mutate(false))
+            *reason = "You cannot mutate.";
+        else
+            *reason = "You cannot mutate at present.";
     }
     return false;
 }
@@ -665,9 +687,9 @@ public:
             if (is_damaging_cloud(cloud, false)
                 // Tree form is immune to these two.
                 && cloud != CLOUD_MEPHITIC && cloud != CLOUD_POISON
-                && !yesno(make_stringf("Really become a tree while standing in "
-                                       "a cloud of %s?",
-                                       cloud_type_name(cloud).c_str()).c_str(),
+                && !yesno(localise("Really become a tree while standing in "
+                                   "a cloud of %s?",
+                                   cloud_type_name(cloud)).c_str(),
                           false, 'n'))
             {
                 canned_msg(MSG_OK);
@@ -745,12 +767,20 @@ public:
         if (was_known && !check_known_quaff())
             return false;
 
-        string msg = "Really drink that potion of mutation";
-        msg += you.rmut_from_item() ? " while resistant to mutation?" : "?";
+        string msg;
+        if (you.rmut_from_item()) {
+            msg = localise("Really drink that potion of mutation "
+                           "while resistant to mutation?");
+        }
+        else
+            msg = localise("Really drink that potion of mutation?");
+
         const bool zin_check = you_worship(GOD_ZIN)
                             && !have_passive(passive_t::cleanse_mut_potions);
-        if (zin_check)
-            msg += " Zin will disapprove.";
+        if (zin_check) {
+            msg += localise(" ");
+            msg += localise("Zin will disapprove.");
+        }
         if (was_known && (zin_check || you.rmut_from_item())
                       && !yesno(msg.c_str(), false, 'n'))
         {
@@ -839,7 +869,7 @@ bool quaff_potion(item_def &potion)
     {
         set_ident_flags(potion, ISFLAG_IDENT_MASK);
         set_ident_type(potion, true);
-        mprf("It was a %s.", potion.name(DESC_QUALNAME).c_str());
+        mprf("It was %s.", potion.name(DESC_A).c_str());
     }
 
     const potion_type ptyp = static_cast<potion_type>(potion.sub_type);

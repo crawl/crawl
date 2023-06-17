@@ -16596,11 +16596,11 @@ Ihr fühlt Euch plötzlich mehr agil.
 # potion.cc
 ##################
 %%%%
-You can't heal while in death's door.
-
+You cannot heal while in death's door.
+Ihr könnt nicht heilen, wenn Ihr an der Pforte des Todes steht.
 %%%%
 You have no ailments to cure.
-
+Ihr habt keine Erkrankungen zu heilen.
 %%%%
 You feel queasy.
 Ihr fühlt Euch mulmig.
@@ -16609,10 +16609,7 @@ That felt strangely inert.
 Das fühlte sich seltsam träge an.
 %%%%
 You cannot be healed by potions.
-
-%%%%
-You cannot heal while in death's door.
-
+Ihr könnt nicht durch Tränke geheilt werden.
 %%%%
 That seemed strangely inert.
 Das schien seltsam träge.
@@ -16620,23 +16617,26 @@ Das schien seltsam träge.
 You feel much better.
 Ihr fühlt Euch viel besser.
 %%%%
-You feel %s all of a sudden.
-Ihr fühlt Euch plötzlich %s.
+You feel very mighty all of a sudden.
+Ihr fühlt Euch plötzlich sehr mächtig.
 %%%%
-mightier
-
+You feel mightier all of a sudden.
+Ihr fühlt Euch plötzlich mächtiger.
 %%%%
-very mighty
-
+You feel clever all of a sudden.
+Ihr fühlt Euch plötzlich klug.
 %%%%
-You feel %sclever all of a sudden.
-Ihr fühlt Euch plötzlich %sklug.
+You feel more clever all of a sudden.
+Ihr fühlt Euch plötzlich klüger.
 %%%%
-You feel %sattractive to monsters.
-
+You feel attractive to monsters.
+Ihr fühlt Euch anziehend für Monster.
+%%%%
+You feel more attractive to monsters.
+Ihr fühlt Euch anziehender für Monster.
 %%%%
 You cannot fly right now.
-
+Ihr könnt im Moment nicht fliegen.
 %%%%
 You feel magically purged.
 Ihr fühlt Euch magisch gereinigt.
@@ -16644,35 +16644,45 @@ Ihr fühlt Euch magisch gereinigt.
 You feel slightly less contaminated with magical energies.
 Ihr fühlt Euch etwas weniger mit magischen Energien kontaminiert.
 %%%%
-You feel%s invigorated.
-Ihr fühlt Euch %sbelebt.
-%%%%
-" more"
-
+You feel more invigorated.
+Ihr fühlt Euch belebter.
 %%%%
 You feel briefly invigorated.
 Ihr fühlt Euch kurz belebt.
 %%%%
-halo
-
+You become transparent, but the glow from %s prevents you from becoming completely invisible.
+Ihr werdet durchsichtig, aber das Leuchten {gen}%s verhindert, dass Ihr völlig unsichtbar werdet.
 %%%%
-magical contamination
-
+You become more transparent, but the glow from %s prevents you from becoming completely invisible.
+Ihr werdet durchsichtiger, aber das Leuchten {gen}%s verhindert, dass Ihr völlig unsichtbar werdet.
 %%%%
-!!!QUAD DAMAGE!!!
-
+# note: The following are all causes of glowing to plug into the above messages
+the halo
+das Heiligenschein
 %%%%
-You become %stransparent, but the glow from %s %s prevents you from becoming completely invisible.
-
+your halo
+Euer Heiligenschein
+%%%%
+your magical contamination
+Eure magische Verseuchung
+%%%%
+your corona
+Eure Korona
+%%%%
+the liquid flames
+die flüssige Flammen
+%%%%
+your !!!QUAD DAMAGE!!!
+Eures !!!VIERFACH-SCHADENS!!!
 %%%%
 You fade into invisibility!
-
+Ihr verschwindet in die Unsichtbarkeit!
 %%%%
 You fade further into invisibility.
-
+Ihr verschwindet weiter in die Unsichtbarkeit!
 %%%%
 %s appreciates the memories.
-
+%s weiß die Erinnerungen zu schätzen.
 %%%%
 You feel more experienced!
 Ihr fühlt Euch erfahrener!
@@ -16681,13 +16691,13 @@ A flood of memories washes over you.
 Eine Flut von Erinnerungen überschwemmt Euch.
 %%%%
 Your magic is already full.
-
+Eure Magie ist bereits voll.
 %%%%
 You have no magic to restore.
-
+Ihr habt keine Magie, die Ihr wiederherstellen könnt.
 %%%%
 Magic washes over you without effect.
-
+Die Magie überspült Euch ohne Wirkung.
 %%%%
 Magic courses through your body.
 Magie fließt durch Euren Körper.
@@ -16695,32 +16705,35 @@ Magie fließt durch Euren Körper.
 You feel slightly irritated.
 Ihr fühlt Euch leicht irritiert.
 %%%%
+You cannot mutate.
+Ihr könnt nicht mutieren.
+%%%%
+You cannot mutate at present.
+Ihr könnt zur Zeit nicht mutieren.
+%%%%
 Really become a tree while standing in a cloud of %s?
-
+Wirklich ein Baum werden, während Ihr in einer Wolke von {dat}%s steht?
 %%%%
 You feel woody for a moment.
 Ihr fühlt Euch für einen Moment holzig.
 %%%%
 %s cleanses your potion of mutation!
-
+%s reinigt Euren Trank der Mutation!
 %%%%
 You feel extremely strange.
 Ihr fühlt Euch extrem seltsam.
 %%%%
-Really drink that potion of mutation
-
+Really drink that potion of mutation while resistant to mutation?
+Den Mutationstrank wirklich trinken, während Ihr gegen Mutation resistent seid?
 %%%%
-" while resistant to mutation?"
-
+Really drink that potion of mutation?
+Den Mutationstrank wirklich trinken?
 %%%%
-" Zin will disapprove."
-
+Zin will disapprove.
+Zin wird das missbilligen.
 %%%%
 There was something very wrong with that liquid.
 Mit dieser Flüssigkeit stimmte etwas nicht.
-%%%%
-It was a %s.
-Es war ein%s.
 %%%%
 
 ##################
