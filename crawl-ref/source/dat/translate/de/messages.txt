@@ -16531,44 +16531,53 @@ Reiseausschluss an der Tür anbringen? (J/n)
 As you open %s, it creaks loudly!
 %s öffnet sich mit einem lauten Knarren!
 %%%%
-You reach down and open the %s%s.
-
+You reach down and open %s.
+Ihr greift nach unten und öffnet {acc}%s.
 %%%%
-You open the %s%s.
-
+You open %s.
+Ihr öffnet {acc}%s.
 %%%%
-%sway
-
+Something is blocking %s!
+Etwas blockiert {acc}%s!
 %%%%
-Something is blocking the %s!
-Etwas blockiert die%s!
+There's a creature in %s!
+Es gibt eine Kreatur in {dat}%s!
 %%%%
-There's a creature in the %s!
-Es gibt eine Kreatur in den%s!
+There's something jamming %s.
+Es gibt etwas, das {acc}%s stört.
 %%%%
-There's something jamming the %s.
-Es gibt etwas, das die%s stört.
+There's a thick-headed creature in %s!
+Es gibt eine dickköpfige Kreatur in {dat}%s!
 %%%%
-There's a thick-headed creature in the %s!
-Es gibt eine dickköpfige Kreatur in den%s!
+You slam %s shut!
+Ihr knallt {acc}%s zu!
 %%%%
-, pushing everything out of the way
-
+You slam %s shut, pushing everything out of the way!
+Ihr knallt {acc}%s zu und schiebt damit alles aus dem Weg!
 %%%%
-You slam the %s%s shut%s!
-Ihr knallt die%s%s zu%s!
+You slam %s shut with a bang!
+Ihr schlagt {acc}%s mit einem Knall zu!
 %%%%
-You slam the %s%s shut with a bang%s!
-Ihr schlagt die%s%s mit einem Knall%s zu!
+You slam %s shut with a bang, pushing everything out of the way!
+Ihr schlagt {acc}%s mit einem Knall zu und schiebt damit alles aus dem Weg!
 %%%%
-As you close the %s%s%s, it creaks loudly!
-Wenn Ihr die %s%s%s schließt, knarrt es laut!
+As you close %s, it creaks loudly!
+Ihr schließt {acc}%s, und erzeugt damit ein lautes Knarren!
 %%%%
-You reach down and close the %s%s%s.
-Ihr greift nach unten und schließt die%s%s%s.
+As you close %s, pushing everything out of the way, it creaks loudly!
+Ihr schließt {acc}%s mit einem lauten Knarren und schiebt damit alles aus dem Weg!
 %%%%
-You close the %s%s%s.
-Ihr schließt die %s%s%s.
+You reach down and close %s.
+Ihr greift nach unten und schließt %s.
+%%%%
+You reach down and close %s, pushing everything out of the way.
+Ihr greift nach unten und schließt %s und schiebt damit alles aus dem Weg.
+%%%%
+You close %s.
+Ihr schließt %s.
+%%%%
+You close %s, pushing everything out of the way.
+Ihr schließt %s und schiebt damit alles aus dem Weg.
 %%%%
 Your blood congeals into armour.
 Euer Blut erstarrt zu einer Rüstung.

@@ -915,15 +915,15 @@ COLOUR:     W = green
 :           set_feature_name("floor", "pulsating floor")
 : lua_marker('+', props_marker {
 :           door_description_noun="fleshy orifice",
-:           door_berserk_verb_open="You part the %s%s",
+:           door_berserk_verb_open="You part %s",
 :           door_berserk_adjective="with a squelch!",
-:           door_berserk_verb_close="You squeeze the %s%s closed",
-:           door_noisy_verb_open="You part the %s%s with a squelch!",
-:           door_noisy_verb_close="You squeeze the %s%s closed with a squelch!",
-:           door_airborne_verb_open="You reach down and part the %s%s.",
-:           door_airborne_verb_close="You reach down and squeeze the %s%s closed.",
-:           door_verb_open="You part the %s%s.",
-:           door_verb_close="You squeeze the %s%s shut."
+:           door_berserk_verb_close="You squeeze %s closed",
+:           door_noisy_verb_open="You part %s with a squelch!",
+:           door_noisy_verb_close="You squeeze %s closed with a squelch!",
+:           door_airborne_verb_open="You reach down and part %s.",
+:           door_airborne_verb_close="You reach down and squeeze %s closed.",
+:           door_verb_open="You part %s.",
+:           door_verb_close="You squeeze %s shut."
 :           })
 :           wizlab_setup(_G)
 :           set_random_mon_list("large abomination / ugly thing / very ugly thing")

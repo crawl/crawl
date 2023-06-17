@@ -7697,7 +7697,6 @@ void player_open_door(coord_def doorpos)
     const char *adj, *noun;
     get_door_description(all_door.size(), &adj, &noun);
 
-    // i18n: TODO: Handle properties from .des files
     const string door_desc_adj  =
         env.markers.property_at(doorpos, MAT_ANY, "door_description_adjective");
     const string door_desc_noun =
@@ -7707,7 +7706,8 @@ void player_open_door(coord_def doorpos)
     if (!door_desc_noun.empty())
         noun = door_desc_noun.c_str();
 
-    const string the_door = string("the ") + adj + noun;
+    const string door_desc = string("the ") + adj + noun;
+    const char* the_door = door_desc.c_str();
 
     if (!you.confused())
     {
@@ -7718,7 +7718,7 @@ void player_open_door(coord_def doorpos)
 
         if (!door_open_prompt.empty())
         {
-            door_open_prompt += localise(" (y/N)");
+            door_open_prompt = localise(door_open_prompt) + localise(" (y/N)");
             if (!yesno(door_open_prompt.c_str(), true, 'n', true, false))
             {
                 if (is_exclude_root(doorpos))
@@ -7754,7 +7754,6 @@ void player_open_door(coord_def doorpos)
 
     const int skill = 8 + you.skill_rdiv(SK_STEALTH, 4, 3);
 
-    // i18n: TODO: Handle properties from .des files
     string berserk_open = env.markers.property_at(doorpos, MAT_ANY,
                                                   "door_berserk_verb_open");
     string berserk_adjective = env.markers.property_at(doorpos, MAT_ANY,
@@ -7777,7 +7776,7 @@ void player_open_door(coord_def doorpos)
                 mprf(berserk_open.c_str(), adj, noun);
             }
             else
-                mprf("%s flies open!", the_door.c_str());
+                mprf("%s flies open!", the_door);
         }
         else
         {
@@ -7790,7 +7789,7 @@ void player_open_door(coord_def doorpos)
                 mprf(MSGCH_SOUND, berserk_open.c_str(), adj, noun);
             }
             else
-                mprf(MSGCH_SOUND, "%s flies open with a bang!", the_door.c_str());
+                mprf(MSGCH_SOUND, "%s flies open with a bang!", the_door);
             noisy(15, you.pos());
         }
     }
@@ -7801,7 +7800,7 @@ void player_open_door(coord_def doorpos)
         else
         {
              mprf(MSGCH_SOUND, "As you open %s, it creaks loudly!",
-                 the_door.c_str());
+                 the_door);
         }
         noisy(10, you.pos());
     }
@@ -7813,17 +7812,17 @@ void player_open_door(coord_def doorpos)
             if (!door_airborne.empty())
                 verb = door_airborne.c_str();
             else
-                verb = "You reach down and open the %s%s.";
+                verb = "You reach down and open %s.";
         }
         else
         {
             if (!door_open_verb.empty())
                verb = door_open_verb.c_str();
             else
-               verb = "You open the %s%s.";
+               verb = "You open %s.";
         }
 
-        mprf(verb, adj, noun);
+        mprf(verb, the_door);
     }
 
     vector<coord_def> excludes;
@@ -7879,16 +7878,21 @@ void player_close_door(coord_def doorpos)
 
     const char *adj, *noun;
     get_door_description(all_door.size(), &adj, &noun);
-    const string waynoun_str = make_stringf("%sway", noun);
-    const char *waynoun = waynoun_str.c_str();
+    string waynoun_str = make_stringf("%sway", noun); // noloc
 
     if (!door_desc_adj.empty())
         adj = door_desc_adj.c_str();
     if (!door_desc_noun.empty())
     {
         noun = door_desc_noun.c_str();
-        waynoun = noun;
+        waynoun_str = noun;
     }
+
+    waynoun_str = "the " + waynoun_str;
+    const char *the_way = waynoun_str.c_str();
+
+    const string door_desc = string("the ") + adj + noun;
+    const char* the_door = door_desc.c_str();
 
     for (const coord_def& dc : all_door)
     {
@@ -7897,13 +7901,13 @@ void player_close_door(coord_def doorpos)
             const bool mons_unseen = !you.can_see(*mon);
             if (mons_unseen || mons_is_object(mon->type))
             {
-                mprf("Something is blocking the %s!", waynoun);
+                mprf("Something is blocking %s!", the_way);
                 // No free detection!
                 if (mons_unseen)
                     you.turn_is_over = true;
             }
             else
-                mprf("There's a creature in the %s!", waynoun);
+                mprf("There's a creature in %s!", the_way);
             return;
         }
 
@@ -7911,7 +7915,7 @@ void player_close_door(coord_def doorpos)
         {
             if (!has_push_spaces(dc, false, &door_vec))
             {
-                mprf("There's something jamming the %s.", waynoun);
+                mprf("There's something jamming %s.", the_way);
                 return;
             }
         }
@@ -7919,7 +7923,7 @@ void player_close_door(coord_def doorpos)
         // messaging with gateways will be inconsistent if this isn't last
         if (you.pos() == dc)
         {
-            mprf("There's a thick-headed creature in the %s!", waynoun);
+            mprf("There's a thick-headed creature in %s!", the_way);
             return;
         }
     }
@@ -7932,8 +7936,6 @@ void player_close_door(coord_def doorpos)
     // TODO: if only one thing moved, use that item's name
     // TODO: handle des-derived strings.  (Better yet, find a way to not have
     // format strings in des...)
-    const char *items_msg = items_moved ? ", pushing everything out of the way"
-                                        : "";
 
     const int skill = 8 + you.skill_rdiv(SK_STEALTH, 4, 3);
 
@@ -7944,10 +7946,14 @@ void player_close_door(coord_def doorpos)
             if (!berserk_close.empty())
             {
                 berserk_close += ".";
-                mprf(berserk_close.c_str(), adj, noun);
+                mprf(berserk_close.c_str(), the_door);
             }
-            else
-                mprf("You slam the %s%s shut%s!", adj, noun, items_msg);
+            else if (!items_moved)
+                mprf("You slam %s shut!", the_door);
+            else {
+                mprf("You slam %s shut, pushing everything out of the way!",
+                     the_door);
+            }
         }
         else
         {
@@ -7957,12 +7963,18 @@ void player_close_door(coord_def doorpos)
                     berserk_close += " " + berserk_adjective;
                 else
                     berserk_close += ".";
-                mprf(MSGCH_SOUND, berserk_close.c_str(), adj, noun);
+                mprf(MSGCH_SOUND, berserk_close.c_str(), the_door);
+            }
+            else if (!items_moved)
+            {
+                mprf(MSGCH_SOUND, "You slam %s shut with a bang!",
+                                  the_door);
             }
             else
             {
-                mprf(MSGCH_SOUND, "You slam the %s%s shut with a bang%s!",
-                                  adj, noun, items_msg);
+                mprf(MSGCH_SOUND,
+                     "You slam %s shut with a bang, pushing everything out of the way!",
+                     the_door);
             }
 
             noisy(15, you.pos());
@@ -7971,11 +7983,17 @@ void player_close_door(coord_def doorpos)
     else if (one_chance_in(skill) && !silenced(you.pos()))
     {
         if (!door_close_creak.empty())
-            mprf(MSGCH_SOUND, door_close_creak.c_str(), adj, noun);
+            mprf(MSGCH_SOUND, door_close_creak.c_str(), the_door);
+        else if (!items_moved)
+        {
+             mprf(MSGCH_SOUND, "As you close %s, it creaks loudly!",
+                              the_door);
+        }
         else
         {
-            mprf(MSGCH_SOUND, "As you close the %s%s%s, it creaks loudly!",
-                              adj, noun, items_msg);
+            mprf(MSGCH_SOUND,
+                 "As you close %s, pushing everything out of the way, it creaks loudly!",
+                 the_door);
         }
 
         noisy(10, you.pos());
@@ -7986,15 +8004,21 @@ void player_close_door(coord_def doorpos)
         {
             if (!door_airborne.empty())
                 mprf(door_airborne.c_str(), adj, noun);
-            else
-                mprf("You reach down and close the %s%s%s.", adj, noun, items_msg);
+            else if (!items_moved)
+                mprf("You reach down and close %s.", the_door);
+            else {
+                mprf("You reach down and close %s, pushing everything out of the way.",
+                     the_door);
+            }
         }
         else
         {
             if (!door_close_verb.empty())
                 mprf(door_close_verb.c_str(), adj, noun);
+            else if (!items_moved)
+                mprf("You close %s.", the_door);
             else
-                mprf("You close the %s%s%s.", adj, noun, items_msg);
+                mprf("You close %s, pushing everything out of the way.", the_door);
         }
     }
 
