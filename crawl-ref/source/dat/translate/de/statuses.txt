@@ -1076,16 +1076,16 @@ Ihr werdet gleich teleportieren.
 # Death's Door spell
 %%%%
 DDoor
-TTür
+PdTod
 %%%%
 in death's door
-an der Todestür
+an der Pforte des Todes
 %%%%
 deaths door
-Todestür
+Pforte des Todes
 %%%%
 You are standing in death's doorway.
-Ihr steht an der Todestür
+Ihr steht an der Pforte des Todes
 %%%%
 Your life is in your own hands again!
 Euer Leben liegt wieder in euren eigenen Händen!
@@ -1097,19 +1097,19 @@ Eure Zeit läuft schnell ab!
 # Death's Door spell cooldown
 %%%%
 -DDoor
--TTür
+-PdTod
 %%%%
 on death's door cooldown
-Abklingzeit an der Tür des Todes
+Abklingzeit an der Pfortes des Todes
 %%%%
 deaths door cooldown
-Abklingzeit der Todestür
+Abklingzeit der Pforte des Todes
 %%%%
 You are unable to enter death's door.
-Ihr seid nicht in der Lage, die Todestür zu betreten.
+Ihr seid nicht in der Lage, die Pforte des Todes zu betreten.
 %%%%
 You step away from death's doorway.
-Ihr tretet zurück von der Todestür.
+Ihr tretet zurück von der Pforte des Todes.
 %%%%
 
 # 4x damage

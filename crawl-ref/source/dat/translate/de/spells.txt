@@ -85,7 +85,7 @@ Teleport Other
 Anderen Teleportieren
 %%%%
 Death's Door
-Tür des Todes
+Pforte des Todes
 %%%%
 Mass Confusion
 Massenverwirrung
