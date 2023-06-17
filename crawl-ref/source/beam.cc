@@ -591,6 +591,11 @@ bool bolt::can_affect_actor(const actor *act) const
     // Blinkbolt doesn't hit its caster, since they are the bolt.
     if (origin_spell == SPELL_BLINKBOLT && act->mid == source_id)
         return false;
+    // Damnation doesn't blast the one firing.
+    else if (item
+            && item->props.exists(DAMNATION_BOLT_KEY)
+            && act->mid == source_id)
+        return false;
     auto cnt = hit_count.find(act->mid);
     if (cnt != hit_count.end() && cnt->second >= 2)
     {
@@ -2424,10 +2429,7 @@ void bolt::affect_endpoint()
     if (item && !is_tracer && was_missile)
     {
         ASSERT(item->defined());
-        // Hack: we use hit_verb to determine whether a ranged attack hit.
-        const bool damned = item->props.exists(DAMNATION_BOLT_KEY)
-                            && !hit_verb.empty(); // hack!
-        if (item->flags & ISFLAG_SUMMONED || item_mulches || damned)
+        if (item->flags & ISFLAG_SUMMONED || item_mulches)
             item_was_destroyed(*item);
         else if (drop_item)
             drop_object();
@@ -2580,8 +2582,6 @@ void bolt::drop_object()
         }
     }
 
-    if (item->props.exists(DAMNATION_BOLT_KEY))
-        item->props.erase(DAMNATION_BOLT_KEY);
     copy_item_to_grid(*item, pos(), 1);
 }
 
