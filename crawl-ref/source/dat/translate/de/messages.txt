@@ -16741,37 +16741,37 @@ Mit dieser Flüssigkeit stimmte etwas nicht.
 ##################
 %%%%
 "%s (Confirm with \"yes\".) "
-
+"%s (mit \"ja\" bestätigen.) "
 %%%%
-"Uppercase "
-
+Uppercase [Y]es or [N]o only, please.
+Bitte nur [J]a oder [N]ein in Großbuchstaben.
 %%%%
 [Y]es or [N]o only, please.
 Nur [J]a oder [N]ein, bitte.
 %%%%
 (y)es
-
+(j)a
 %%%%
 (Y)es
-
+(J)a
 %%%%
 /(a)ll
-
+/(a)lle
 %%%%
 /(A)ll
-
+/(A)lle
 %%%%
 /(n)o/(q)uit
-
+/(n)ein/(b)eenden
 %%%%
 /(N)o/(Q)uit
-
+/(N)ein/(B)eenden
 %%%%
 Choose uppercase [Y]es%s, [N]o, [Q]uit, or [A]ll!
-Wähle [J]a%s, [N]ein, [B]eenden, oder [A]lle in Großbuchstaben!
+Wählt [J]a%s, [N]ein, [B]eenden, oder [A]lle in Großbuchstaben!
 %%%%
 Choose [Y]es%s, [N]o, [Q]uit, or [A]ll!
-Wähle [J]a%s, [N]ein, [B]eenden, oder [A]lle!
+Wählt [J]a%s, [N]ein, [B]eenden, oder [A]lle!
 %%%%
 Uppercase [Y]es%s, [N]o or [Q]uit only, please.
 Nur [J]a%s, [N]ein oder [B]eenden in Großbuchstaben, bitte.

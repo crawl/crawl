@@ -159,8 +159,11 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
             bool upper = !allow_lowercase
                          && (tmp == localise_char('n') || tmp == localise_char('y')
                              || crawl_state.game_is_hints_tutorial());
-            const string pr = localise((upper ? "Uppercase " : "")
-                                       + string("[Y]es or [N]o only, please."));
+            string pr;
+            if (upper)
+                pr = "Uppercase [Y]es or [N]o only, please.";
+            else
+                pr = "[Y]es or [N]o only, please.";
             if (use_popup && status) // redundant, but will quiet a warning
                 status->text = pr;
             else
@@ -174,7 +177,7 @@ static string _list_alternative_yes(char yes1, char yes2, bool lowered = false,
 {
     string help = "";
     bool print_yes = false;
-    if (yes1 != localise_char('Y'))
+    if (yes1 != 'Y')
     {
         if (lowered)
             help += toalower(yes1);
@@ -183,7 +186,7 @@ static string _list_alternative_yes(char yes1, char yes2, bool lowered = false,
         print_yes = true;
     }
 
-    if (yes2 != localise_char('Y') && yes2 != yes1)
+    if (yes2 != 'Y' && yes2 != yes1)
     {
         if (print_yes)
             help += "/";
@@ -210,14 +213,14 @@ static string _list_allowed_keys(char yes1, char yes2, bool lowered = false,
                                  bool allow_all = false)
 {
     string result = " [";
-    result += (lowered ? "(y)es" : "(Y)es");
+    result += localise(lowered ? "(y)es" : "(Y)es");
     result += _list_alternative_yes(yes1, yes2, lowered);
     if (allow_all)
-        result += (lowered? "/(a)ll" : "/(A)ll");
-    result += (lowered ? "/(n)o/(q)uit" : "/(N)o/(Q)uit");
+        result += localise(lowered? "/(a)ll" : "/(A)ll");
+    result += localise(lowered ? "/(n)o/(q)uit" : "/(N)o/(Q)uit");
     result += "]";
 
-    return localise(result);
+    return result;
 }
 
 // Like yesno(), but returns 0 for no, 1 for yes, and -1 for quit.
