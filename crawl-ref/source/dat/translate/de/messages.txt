@@ -16737,14 +16737,6 @@ Mit dieser Flüssigkeit stimmte etwas nicht.
 %%%%
 
 ##################
-# precision-menu.cc
-##################
-%%%%
-unnamed object
-
-%%%%
-
-##################
 # prompt.cc
 ##################
 %%%%
