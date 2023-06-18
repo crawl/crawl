@@ -610,6 +610,17 @@ static string _randart_descrip(const item_def &item)
         { ARTP_RAMPAGING, "It bestows one free step when moving towards enemies.",
           false},
         { ARTP_ARCHMAGI, "It increases the power of your magical spells.", false},
+        { ARTP_ENHANCE_CONJ, "It increases the power of your Conjurations spells." },
+        { ARTP_ENHANCE_HEXES, "It increases the power of your Hexes spells." },
+        { ARTP_ENHANCE_SUMM, "It increases the power of your Summonings spells." },
+        { ARTP_ENHANCE_NECRO, "It increases the power of your Necromancy spells." },
+        { ARTP_ENHANCE_TLOC, "It increases the power of your Translocations spells." },
+        { ARTP_ENHANCE_TMUT, "It increases the power of your Transmutations spells." },
+        { ARTP_ENHANCE_FIRE, "It increases the power of your Fire spells." },
+        { ARTP_ENHANCE_ICE, "It increases the power of your Ice spells." },
+        { ARTP_ENHANCE_AIR, "It increases the power of your Air spells." },
+        { ARTP_ENHANCE_EARTH, "It increases the power of your Earth spells." },
+        { ARTP_ENHANCE_POISON, "It increases the power of your Poison spells." },
     };
 
     bool need_newline = false;
