@@ -1490,7 +1490,7 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
         break;
 
     case SK_RANGED_WEAPONS:
-        m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_BOW2;
+        m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_SHORTBOW;
         break;
 
 #if TAG_MAJOR_VERSION == 34

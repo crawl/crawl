@@ -632,6 +632,7 @@ morningstar MORNINGSTAR
 morningstar2
 eveningstar EVENINGSTAR
 eveningstar2
+eveningstar3
 hammer HAMMER
 hammer2
 hammer_one HAMMER1
@@ -762,8 +763,10 @@ axe_short AXE_SHORT
 ## launchers
 sling SLING
 bow BOW
-bow_two BOW2
-bow_three BOW3
+shortbow SHORTBOW
+orcbow1 ORCBOW
+orcbow1
+orcbow3
 great_bow GREAT_BOW
 storm_bow STORM_BOW
 hand_crossbow HAND_CROSSBOW
