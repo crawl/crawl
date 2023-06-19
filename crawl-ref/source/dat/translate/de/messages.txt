@@ -16869,13 +16869,13 @@ Aktivieren
 "Werfen: "
 %%%%
 "Confused toss (no damage): "
-"Verwirrtes Schmeißen (kein Schaden): "
+"Verwirrt schmeißen (kein Schaden): "
 %%%%
 "Confused fire: "
-"Verwirrtes Feuern: "
+"Verwirrt feuern: "
 %%%%
 "Confused throw: "
-"Verwirrtes Werfen: "
+"Verwirrt werfen: "
 %%%%
 1 bullet
 1 Geschoss
