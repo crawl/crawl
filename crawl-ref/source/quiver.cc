@@ -146,8 +146,10 @@ namespace quiver
             mpr("You are too injured to fight recklessly!");
         else if (af_mp_check)
         {
-            mprf("You are too depleted to draw on your %s recklessly!",
-                you.has_mutation(MUT_HP_CASTING) ? "health" : "mana");
+            if (you.has_mutation(MUT_HP_CASTING))
+                mpr("You are too depleted to draw on your health recklessly!");
+            else
+                mpr("You are too depleted to draw on your mana recklessly!");
         }
         return af_hp_check || af_mp_check;
     }
@@ -155,8 +157,7 @@ namespace quiver
     formatted_string action::quiver_description(bool short_desc) const
     {
         string desc = localise(short_desc ? "Empty" : "Nothing quivered");
-        desc = string("<darkgrey>") + desc + "</darkgrey>";
-        return formatted_string::parse_string(desc);
+        return formatted_string(desc, DARKGREY);
     }
 
     vector<tile_def> action::get_tiles() const
@@ -484,8 +485,12 @@ namespace quiver
 
             if (you.caught())
             {
-                if (target.needs_targeting())
-                    mprf("You cannot attack while %s.", held_status());
+                if (target.needs_targeting()) {
+                    if (get_trapping_net(you.pos(), true) != NON_ITEM)
+                        mpr("You cannot attack while held in a net.");
+                    else
+                        mpr("You cannot attack while caught in a web.");
+                }
                 else
                 {
                     // assume that if a target was explicitly supplied, it was
@@ -645,12 +650,10 @@ namespace quiver
 
                 if (success)
                     mpr("You reach to attack!");
+                else if (mons->observable())
+                    mprf("%s is in the way.", mons->name(DESC_THE).c_str());
                 else
-                {
-                    mprf("%s is in the way.",
-                         mons->observable() ? mons->name(DESC_THE).c_str()
-                                            : "Something you can't see");
-                }
+                    mpr("Something you can't see is in the way.");
             }
 
             if (mons == nullptr)
@@ -904,15 +907,26 @@ namespace quiver
             // XX abstract to quiver verb?
             if (!short_desc)
             {
-                string verb = you.confused() ? "confused " : "";
-                switch (projected)
-                {
-                    case launch_retval::FUMBLED:  verb += "toss (no damage)";  break;
-                    case launch_retval::LAUNCHED: verb += "fire";  break;
-                    case launch_retval::THROWN:   verb += "throw"; break;
-                    case launch_retval::BUGGY:    verb += "bug";   break;
+                string verb = "Bug: "; // noloc
+                if (!you.confused()) {
+                    switch (projected)
+                    {
+                        case launch_retval::FUMBLED:  verb = "Toss (no damage): ";  break;
+                        case launch_retval::LAUNCHED: verb = "Fire: ";  break;
+                        case launch_retval::THROWN:   verb = "Throw: "; break;
+                        case launch_retval::BUGGY: break;
+                    }
                 }
-                qdesc.cprintf("%s: ", uppercase_first(verb).c_str());
+                else {
+                    switch (projected)
+                    {
+                        case launch_retval::FUMBLED:  verb = "Confused toss (no damage): ";  break;
+                        case launch_retval::LAUNCHED: verb = "Confused fire: ";  break;
+                        case launch_retval::THROWN:   verb = "Confused throw: "; break;
+                        case launch_retval::BUGGY: break;
+                    }
+                }
+                qdesc.cprintf(localise(verb));
             }
 
             // TODO: I don't actually know what this prefix stuff is
@@ -929,8 +943,10 @@ namespace quiver
 
             if (short_desc && quiver.sub_type == MI_SLING_BULLET)
             {
-                qdesc.cprintf("%d bullet%s", quiver.quantity,
-                                quiver.quantity > 1 ? "s" : "");
+                if (quiver.quantity == 1)
+                    qdesc.cprintf(localise("1 bullet"));
+                else
+                    qdesc.cprintf(localise("%d bullets", quiver.quantity));
             }
             else
                 qdesc += quiver.name(DESC_PLAIN, true);
@@ -1260,17 +1276,20 @@ namespace quiver
 
             qdesc.textcolour(Options.status_caption_colour);
             if (wait_spell_active(spell))
-                qdesc.cprintf("Continue: ");
+                qdesc.cprintf(localise("Continue: "));
             else
-                qdesc.cprintf("Cast: ");
+                qdesc.cprintf(localise("Cast: "));
 
             qdesc.textcolour(quiver_color());
 
             // TODO: is showing the spell letter useful?
-            qdesc.cprintf("%s", spell == SPELL_MAXWELLS_COUPLING ?
-                                "Capacitive Coupling" : spell_title(spell));
+            if (spell == SPELL_MAXWELLS_COUPLING)
+                qdesc.cprintf(localise("Capacitive Coupling"));
+            else
+                qdesc.cprintf(localise(spell_title(spell)));
+
             if (spell == SPELL_SANDBLAST)
-                qdesc.cprintf(" (stones: %d)", sandblast_find_ammo().first);
+                qdesc.cprintf(localise(" (stones: %d)", sandblast_find_ammo().first));
 
             if (fail_severity(spell) > 0)
             {
@@ -1556,13 +1575,13 @@ namespace quiver
             formatted_string qdesc;
 
             qdesc.textcolour(Options.status_caption_colour);
-            qdesc.cprintf("Abil: ");
+            qdesc.cprintf(localise("Abil: "));
 
             qdesc.textcolour(quiver_color());
-            qdesc.cprintf("%s", ability_name(ability));
+            qdesc.cprintf(localise(ability_name(ability)));
 
             if (is_card_ability(ability))
-                qdesc.cprintf(" %s", nemelex_card_text(ability).c_str());
+                qdesc.cprintf(localise(nemelex_card_text(ability)));
 
             return qdesc;
         }
@@ -2031,6 +2050,7 @@ namespace quiver
         }
     };
 
+    // noloc section start
 
     void action::save(CrawlHashTable &save_target) const
     {
@@ -2054,6 +2074,8 @@ namespace quiver
     {
         save_target["type"] = "melee_action";
     }
+
+    // noloc section end
 
     static shared_ptr<action> _load_action(CrawlHashTable &source)
     {
@@ -2716,7 +2738,7 @@ namespace quiver
             {
                 if (!_quiver_inscription_ok(s->get_item()))
                 {
-                    const string prompt = make_stringf("Really quiver %s?",
+                    const string prompt = localise("Really quiver %s?",
                         you.inv[s->get_item()].name(DESC_INVENTORY).c_str());
                     if (!yesno(prompt.c_str(), true, 'n'))
                         return false;
@@ -2824,17 +2846,17 @@ namespace quiver
 
         virtual formatted_string calc_title() override
         {
-            string s = "Quiver which action? ";
+            string s = localise("Quiver which action? ");
             vector<string> extra_cmds;
 
             if (allow_empty)
-                extra_cmds.push_back("<w>-</w>: none");
+                extra_cmds.push_back(localise("<w>-</w>: none"));
             if (any_items)
-                extra_cmds.push_back("<w>*/%</w>: inventory");
+                extra_cmds.push_back(localise("<w>*/%</w>: inventory"));
             if (any_spells)
-                extra_cmds.push_back("<w>&</w>: spells");
+                extra_cmds.push_back(localise("<w>&</w>: spells"));
             if (any_abilities)
-                extra_cmds.push_back("<w>^</w>: abilities");
+                extra_cmds.push_back(localise("<w>^</w>: abilities"));
             if (extra_cmds.size())
                 s += "(" + join_strings(extra_cmds.begin(), extra_cmds.end(), ", ") + ")";
             return formatted_string::parse_string(s);
@@ -2981,8 +3003,10 @@ namespace quiver
         menu.set_title(new MenuEntry("", MEL_TITLE));
 
         menu_letter hotkey;
-        if (actions.size() == 0)
-            menu.set_more(formatted_string::parse_string("<lightred>No regular actions available to quiver.</lightred>"));
+        if (actions.size() == 0) {
+            string text = localise("No regular actions available to quiver.");
+            menu.set_more(formatted_string(text, LIGHTRED));
+        }
 
         for (const auto &a : actions)
         {
@@ -3210,9 +3234,11 @@ static bool _item_matches(const item_def &item, fire_type types,
     // of is_valid code...
     ASSERT(item.defined());
 
+    // noloc section start
     if (types & FIRE_INSCRIBED)
         if (item.inscription.find(manual ? "+F" : "+f", 0) != string::npos)
             return true;
+    // noloc section end
 
     if (item.base_type != OBJ_MISSILES)
         return false;

@@ -16785,25 +16785,22 @@ Nur [J]a%s, [N]ein oder [B]eenden, bitte.
 ##################
 %%%%
 You are too injured to fight recklessly!
-
+Ihr seid zu verletzt, um rücksichtslos zu kämpfen!
 %%%%
-You are too depleted to draw on your %s recklessly!
-
+You are too depleted to draw on your health recklessly!
+Ihr seid zu aufgebraucht, um leichtsinnig auf eure Gesundheit zurückzugreifen!
 %%%%
-health
-
-%%%%
-mana
-
+You are too depleted to draw on your mana recklessly!
+Ihr seid zu aufgebraucht, um leichtsinnig auf euer Mana zurückzugreifen!
 %%%%
 Empty
 Leer
 %%%%
 , <w>%</w> - select action
-
+, <w>%</w> - Aktion auswählen
 %%%%
 , <w>%</w> - select action, <w>%</w>/<w>%</w> - cycle
-
+, <w>%</w> - Aktion auswählen, <w>%</w>/<w>%</w> - durchwechseln
 %%%%
 slash
 
@@ -16824,19 +16821,22 @@ You nearly hit yourself!
 Ihr habt Euch fast geschlagen!
 %%%%
 You're too confused to aim your attacks!
-
+Ihr seid zu verwirrt, um Eure Angriffe zu zielen!
 %%%%
 You're too confused to attack without stumbling around!
 Ihr seid zu verwirrt, um anzugreifen, ohne herumzustolpern!
 %%%%
-You cannot attack while %s.
-Ihr könnt nicht angreifen, solange%s.
+You cannot attack while held in a net.
+Ihr könnt nicht angreifen, wenn ihr in einem Netz gefangen seid.
+%%%%
+You cannot attack while caught in a web.
+Ihr könnt nicht angreifen, wenn ihr in einem Spinnennetz gefangen seid.
 %%%%
 Your weapon can't reach that far!
-
+Ihre Waffe kann nicht so weit reichen!
 %%%%
 You attack %s.
-
+Ihr greift %s an.
 %%%%
 You could not reach far enough!
 Ihr konntet nicht weit genug kommen!
@@ -16847,8 +16847,8 @@ Ihr greift an, um anzugreifen!
 %s is in the way.
 %s ist im Weg.
 %%%%
-Something you can't see
-
+Something you can't see is in the way.
+Etwas, das Ihr nicht sehen könnt, ist im Weg.
 %%%%
 You swing at nothing.
 Ihr schwingt an nichts.
@@ -16857,85 +16857,91 @@ You attack empty space.
 Ihr greift den leeren Raum an.
 %%%%
 Activate
-
+Aktivieren
 %%%%
-toss (no damage)
-
+"Toss (no damage): "
+"Schmeißen (kein Schaden): "
 %%%%
-throw
-
+"Fire: "
+"Feuern: "
 %%%%
-%d bullet%s
-
+"Throw: "
+"Werfen: "
+%%%%
+"Confused toss (no damage): "
+"Verwirrtes Schmeißen (kein Schaden): "
+%%%%
+"Confused fire: "
+"Verwirrtes Feuern: "
+%%%%
+"Confused throw: "
+"Verwirrtes Werfen: "
+%%%%
+1 bullet
+1 Geschoss
+%%%%
+%d bullets
+%d Geschosse
 %%%%
 "Continue: "
-
+"Fortführen: "
 %%%%
 "Cast: "
-
+"Wirken: "
 %%%%
 Capacitive Coupling
-
+Kapazitive Kopplung
 %%%%
 " (stones: %d)"
-
+" (Steine: %d)"
 %%%%
 You can't see any hostile targets that would be affected.
-
+Ihr könnt keine feindlichen Ziele sehen, die davon betroffen wären.
 %%%%
 No targets found!
-
+Keine Ziele gefunden!
 %%%%
 "Abil: "
-
+"Fähig: "
 %%%%
 Drink
-
+Trinken
 %%%%
 Zap
-
-%%%%
-action
-
+Benutzen
 %%%%
 Quiver which item? (- for none, * to toggle full inventory)
-
+Welchen Gegenstand in den Köcher stecken? (- für keinen, * zum Umschalten des gesamten Inventars)
 %%%%
 Quiver which item? (* to toggle full inventory)
-
+Welchen Gegenstand in den Köcher stecken? (* zum Umschalten des gesamten Inventars)
 %%%%
 Clearing quiver.
-
+Köcher wird geleert.
 %%%%
 Select a spell to quiver
-
+Einen Zauberspruch für den Köcher wählen
 %%%%
 "Quiver which action? "
-
+"Welche Aktion in den Köcher stecken? "
 %%%%
 <w>-</w>: none
-
+<w>-</w>: keine
 %%%%
 <w>*/%</w>: inventory
-
+<w>*/%</w>: Inventar
 %%%%
 <w>&</w>: spells
-
+<w>&</w>: Zauber
 %%%%
 <w>^</w>: abilities
-
+<w>^</w>: Fähigkeiten
 %%%%
 You have nothing to quiver.
-
+Ihr habt nichts in den Köcher zu stecken.
 %%%%
-<lightred>No regular actions available to quiver.</lightred>
-
-%%%%
-+F
-
-%%%%
-+f
-
+No regular actions available to quiver.
+Keine regulären Aktionen für den Köcher verfügbar.
 %%%%
 
 ##################
@@ -22264,6 +22270,9 @@ Ihr %s%s %s.
 
 %%%%
 toss away
+
+%%%%
+throw
 
 %%%%
 " magically"
