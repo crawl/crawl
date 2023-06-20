@@ -946,7 +946,7 @@ a book of Cantrips
 {n}ein Buch der Schelmenstreiche
 %%%%
 a book of Party Tricks
-{n}ein Buch mit Partytricks
+{n}ein Buch der Partytricks
 %%%%
 a book of Debilitation
 {n}ein Buch der Entkräftung
@@ -1031,6 +1031,30 @@ a book of Chaos
 %%%%
 a book of the Hunter
 {n}ein Buch des Jägers
+%%%%
+a Necronomicon
+{n}ein Necronomicon
+%%%%
+a Grand Grimoire
+{n}ein Grand Grimoire
+%%%%
+an Everburning Encyclopedia
+eine ewig brennende Enzyklopädie
+%%%%
+a Young Poisoner's Handbook
+{n}ein Handbuch für junge Giftmörder
+%%%%
+a Fen Folio
+{n}ein Fenn-Folio
+%%%%
+an Inescapable Atlas
+ein unumgänglicher Atlas
+%%%%
+a There-And-Back Book
+{n}ein Hin-und-Zurück-Buch
+%%%%
+a Trismegistus Codex
+ein Trismegistus-Codex
 %%%%
 
 #################################

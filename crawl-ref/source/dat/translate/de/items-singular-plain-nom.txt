@@ -946,7 +946,7 @@ book of Cantrips
 Buch der Schelmenstreiche
 %%%%
 book of Party Tricks
-Buch mit Partytricks
+Buch der Partytricks
 %%%%
 book of Debilitation
 Buch der Entkräftung
@@ -1031,6 +1031,43 @@ Buch des Chaos
 %%%%
 book of the Hunter
 Buch des Jägers
+%%%%
+Necronomicon
+Necronomicon
+%%%%
+Grand Grimoire
+Grand Grimoire
+%%%%
+Everburning Encyclopedia
+ewig brennende Enzyklopädie
+%%%%
+Young Poisoner's Handbook
+Handbuch für junge Giftmörder
+%%%%
+Fen Folio
+Fenn-Folio
+%%%%
+Inescapable Atlas
+unumgänglicher Atlas
+%%%%
+There-And-Back Book
+Hin-und-Zurück-Buch
+%%%%
+Trismegistus Codex
+Trismegistus-Codex
+%%%%
+
+
+# these books only ever appear without an article
+%%%%
+Ozocubu's Autobiography
+Ozocubus Autobiografie
+%%%%
+Great Wizards, Vol. II
+Große Zauberer, Band II
+%%%%
+Great Wizards, Vol. VII
+Große Zauberer, Band VII
 %%%%
 
 #################################

@@ -1032,6 +1032,11 @@ das Buch des Chaos
 the book of the Hunter
 das Buch des Jägers
 %%%%
+# This book only ever appears with the definite article, even though it's not unique.
+# Also, the title is plural, even when it's a single item.
+the Unrestrained Analects
+{pl}die hemmungslosen Analekten
+%%%%
 
 #################################
 # Corpses
