@@ -366,6 +366,7 @@ namespace quiver
         string quiver_verb() const
         {
             const item_def *weapon = you.weapon();
+            const bool confused = you.confused();
 
             if (!weapon)
             {
@@ -374,14 +375,25 @@ namespace quiver
                 {
                     switch (form_verbs.medium)
                     {
-                        case FAV_BITE: return "bite";
-                        case FAV_CLAW: return "claw";
-                        case FAV_TOUCH: return "touch";
-                        case FAV_ENGULF: return "engulf";
-                        case FAV_RELEASE_SPORES_AT: return "release spores";
-                        case FAV_SLASH: return "slash";
-                        case FAV_SMACK: return "smack";
-                        default: return "hit";
+                        case FAV_BITE:
+                            return !confused ? "Bite: " : "Confused bite: ";
+                        case FAV_CLAW:
+                            return !confused ? "Claw: " : "Confused claw: ";
+                        case FAV_TOUCH:
+                            return !confused ? "Touch: " : "Confused touch: ";
+                        case FAV_ENGULF:
+                            // locnote: Wisp form attack
+                            return !confused ? "Engulf: " : "Confused engulf: ";
+                        case FAV_RELEASE_SPORES_AT:
+                            return !confused ? "Release spores: "
+                                             : "Confused release spores: ";
+                        case FAV_SLASH:
+                            return !confused ? "Slash: " : "Confused slash: ";
+                        case FAV_SMACK:
+                            // locnote: Tree form attack
+                            return !confused ? "Smack: ": "Confused smack: ";
+                        default:
+                            return !confused ? "Hit: " : "Confused hit: ";
                     }
                 }
                 else
@@ -391,20 +403,24 @@ namespace quiver
                     // melee_attack::set_attack_verb for the real thing.
                     const int dt = you.damage_type();
                     if (dt & DVORP_CLAWING || dt & DVORP_TENTACLE)
-                        return "attack";
+                        return !confused ? "Attack: ": "Confused attack: ";
                 }
-                return "punch";
+                return !confused ? "Punch: " : "Confused punch: ";
             }
 
             const launcher lt = _get_weapon_ammo_type(weapon);
-            if (lt != AMMO_THROW)
-                return lt == AMMO_SLING ? "fire" : "shoot";
+            if (lt != AMMO_THROW) {
+                if (lt == AMMO_SLING)
+                    return !confused ? "Fire: " : "Confused fire: ";
+                else
+                    return !confused ? "Shoot: " : "Confused shoot: ";
+            }
             else if (weapon_reach(*weapon) > REACH_NONE)
-                return "reach";
+                return !confused ? "Reach: " : "Confused reach: ";
             else if (attack_cleaves(you))
-                return "cleave";
+                return !confused ? "Cleave: " : "Confused cleave: ";
             else
-                return "hit"; // could use more subtype flavor Vs?
+                return !confused ? "Hit: " : "Confused hit: ";
         }
 
         formatted_string quiver_description(bool short_desc=false) const override
@@ -420,11 +436,9 @@ namespace quiver
 
             if (!short_desc)
             {
-                string verb = you.confused() ? "confused " : "";
-
-                verb += quiver_verb();
-                qdesc.cprintf("%s: %c) ", uppercase_first(verb).c_str(),
-                                weapon ? index_to_letter(weapon->link) : '-');
+                string desc = localise(quiver_verb());
+                desc += weapon ? index_to_letter(weapon->link) : '-';
+                qdesc += desc;
             }
 
             const string prefix = weapon ? item_prefix(*weapon) : "";
@@ -749,17 +763,17 @@ namespace quiver
             const item_def& quiver = you.inv[item_slot];
             ASSERT(quiver.link != NON_ITEM);
             qdesc.textcolour(Options.status_caption_colour);
-            qdesc.cprintf("%s: ", quiver_verb().c_str());
+            qdesc += localise(quiver_verb());
 
             qdesc.textcolour(quiver_color());
-            qdesc += quiver.name(DESC_PLAIN, true);
+            qdesc += localise(quiver.name(DESC_PLAIN, true));
 
             return qdesc;
         }
 
         // TODO: can get_fire_order be generalized?
 
-        virtual string quiver_verb() const { return "Activate"; }
+        virtual string quiver_verb() const { return "Activate: "; }
         virtual bool is_enabled() const override = 0;
         virtual void trigger(dist &) override = 0;
 
@@ -949,7 +963,7 @@ namespace quiver
                     qdesc.cprintf(localise("%d bullets", quiver.quantity));
             }
             else
-                qdesc += quiver.name(DESC_PLAIN, true);
+                qdesc += localise(quiver.name(DESC_PLAIN, true));
 
             return qdesc;
         }
@@ -1670,7 +1684,7 @@ namespace quiver
         {
             if (!is_valid())
                 return "Buggy";
-            return you.inv[item_slot].base_type == OBJ_POTIONS ? "Drink" : "Read";
+            return you.inv[item_slot].base_type == OBJ_POTIONS ? "Drink: " : "Read: ";
         }
 
         bool use_autofight_targeting() const override { return false; }
@@ -1794,7 +1808,8 @@ namespace quiver
 
         virtual string quiver_verb() const override
         {
-            return "Zap";
+            // locnote: evoke wand
+            return "Zap: ";
         }
 
         virtual vector<shared_ptr<action>> get_fire_order(
@@ -1883,7 +1898,7 @@ namespace quiver
 
         string quiver_verb() const override
         {
-            return "Evoke";
+            return "Evoke: ";
         }
 
         bool is_targeted() const override
@@ -2007,7 +2022,7 @@ namespace quiver
 
         string quiver_verb() const override
         {
-            return "Evoke";
+            return "Evoke: ";
         }
 
         void trigger(dist &t) override

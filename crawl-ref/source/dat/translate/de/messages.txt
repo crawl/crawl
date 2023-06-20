@@ -16802,20 +16802,91 @@ Leer
 , <w>%</w> - select action, <w>%</w>/<w>%</w> - cycle
 , <w>%</w> - Aktion auswählen, <w>%</w>/<w>%</w> - durchwechseln
 %%%%
-slash
-
+"Bite: "
+"Beißen: "
 %%%%
-smack
-
+"Confused bite: "
+"Verwirrt beißen: "
 %%%%
-shoot
-
+"Claw: "
+"Krallen: "
 %%%%
-reach
-
+"Confused claw: "
+"Verwirrt krallen: "
 %%%%
-"confused "
-
+"Touch: "
+"Berühren: "
+%%%%
+"Confused touch: "
+"Verwirrt berühren: "
+%%%%
+# note: Wisp form attack
+"Engulf: "
+"Verschlingen: "
+%%%%
+"Confused engulf: "
+"Verwirrt verschlingen: "
+%%%%
+"Release spores: "
+"Sporen freisetzen: "
+%%%%
+"Confused release spores: "
+"Sporen verwirrt freisetzen: "
+%%%%
+"Slash: "
+"Hauen: "
+%%%%
+"Confused slash: "
+"Verwirrt hauen: "
+%%%%
+# note: Tree form attack
+"Smack: "
+"Prügeln: "
+%%%%
+"Confused smack: "
+"Verwirrt prügeln: "
+%%%%
+"Hit: "
+"Schlagen: "
+%%%%
+"Confused hit: "
+"Verwirrt schlagen: "
+%%%%
+"Attack: "
+"Attackieren: "
+%%%%
+"Confused attack: "
+"Verwirrt attackieren: "
+%%%%
+"Punch: "
+"Boxen: "
+%%%%
+"Confused punch: "
+"Verwirrt boxen: "
+%%%%
+"Fire: "
+"Feuern: "
+%%%%
+"Confused fire: "
+"Verwirrt feuern: "
+%%%%
+"Shoot: "
+"Schießen: "
+%%%%
+"Confused shoot: "
+"Verwirrt schießen: "
+%%%%
+"Reach: "
+"Reichen: "
+%%%%
+"Confused reach: "
+"Verwirrt reichen: "
+%%%%
+"Cleave: "
+"Spalten: "
+%%%%
+"Confused cleave: "
+"Verwirrt spalten: "
 %%%%
 You nearly hit yourself!
 Ihr habt Euch fast geschlagen!
@@ -16856,23 +16927,17 @@ Ihr schwingt an nichts.
 You attack empty space.
 Ihr greift den leeren Raum an.
 %%%%
-Activate
-Aktivieren
+"Activate: "
+"Aktivierien: "
 %%%%
 "Toss (no damage): "
 "Schmeißen (kein Schaden): "
-%%%%
-"Fire: "
-"Feuern: "
 %%%%
 "Throw: "
 "Werfen: "
 %%%%
 "Confused toss (no damage): "
 "Verwirrt schmeißen (kein Schaden): "
-%%%%
-"Confused fire: "
-"Verwirrt feuern: "
 %%%%
 "Confused throw: "
 "Verwirrt werfen: "
@@ -16904,11 +16969,18 @@ Keine Ziele gefunden!
 "Abil: "
 "Fähig: "
 %%%%
-Drink
-Trinken
+"Drink: "
+"Trinken: "
 %%%%
-Zap
-Benutzen
+"Read: "
+"Lesen: "
+%%%%
+# note: evoke wand
+"Zap: "
+"Evozieren: "
+%%%%
+"Evoke: "
+"Evozieren: "
 %%%%
 Quiver which item? (- for none, * to toggle full inventory)
 Welchen Gegenstand in den Köcher stecken? (- für keinen, * zum Umschalten des gesamten Inventars)
@@ -22272,6 +22344,9 @@ Ihr %s%s %s.
 toss away
 
 %%%%
+shoot
+
+%%%%
 throw
 
 %%%%
@@ -23656,9 +23731,6 @@ Monster konnte nicht erstellt werden.
 %%%%
 Could not put monster adjacent to player.
 Das Monster konnte nicht neben den Spieler gestellt werden.
-%%%%
-"Attack: "
-"Attacke: "
 %%%%
 "Defend: "
 Verteidigen:
