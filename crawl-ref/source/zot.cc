@@ -89,7 +89,7 @@ int turns_until_zot()
 
 static int _zot_lifespan_div()
 {
-    return you.has_mutation(MUT_SHORT_LIFESPAN) ? 8 : 1;
+    return you.has_mutation(MUT_SHORT_LIFESPAN) ? 10 : 1;
 }
 
 // A scale from 0 to 3 of how much danger the player is in of
