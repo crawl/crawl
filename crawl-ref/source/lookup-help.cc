@@ -627,12 +627,21 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
 /**
  * Generate a ?/I menu entry. (ref. _simple_menu_gen()).
  */
-static MenuEntry* _item_menu_gen(char letter, const string &str, string &key)
+static MenuEntry* _item_menu_gen(char letter, const string& /*str*/, string &key)
 {
-    MenuEntry* me = _simple_menu_gen(letter, str, key);
     item_def item;
     item_kind kind = item_kind_by_name(key);
     get_item_by_name(&item, key.c_str(), kind.base_type);
+
+    string name = key;
+    if (kind.base_type == OBJ_BOOKS && kind.sub_type != BOOK_MANUAL) {
+        // i18n: spellbook titles must have the exact capitalization for translation to work
+        name = item.name(DESC_PLAIN, false, false, false);
+    }
+    name = uppercase_first(localise(name));
+    MenuEntry* me = new MenuEntry(name, MEL_ITEM, 1, letter);
+    me->data = &key;
+
     item_colour(item);
     tileidx_t idx = tileidx_item(get_item_known_info(item));
     tileidx_t base_item = tileidx_known_base_item(idx);
