@@ -1103,8 +1103,11 @@ error ROD_VENOM ROD_ID_LAST
 
 #OBJ_ORBS
 %sdir item/misc
-misc_orb ORB UNSEEN_ORB
-misc_orb2
+orb_of_zot1 ORB UNSEEN_ORB
+orb_of_zot2
+orb_of_zot3
+orb_of_zot4
+orb_of_zot5
 uncollected_orb UNCOLLECTED_ORB
 
 #OBJ_MISCELLANY

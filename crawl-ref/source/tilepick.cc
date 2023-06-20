@@ -2919,7 +2919,7 @@ tileidx_t tileidx_item(const item_def &item)
     case OBJ_ORBS:
         if (item.quantity <= 0)
             return TILE_UNCOLLECTED_ORB;
-        return TILE_ORB + ui_random(tile_main_count(TILE_ORB));
+        return TILE_ORB + (you.frame_no % tile_main_count(TILE_ORB));
 
     case OBJ_MISCELLANY:
         return _tileidx_misc(item);
