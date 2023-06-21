@@ -171,8 +171,9 @@ Rune
 #" of protection"
 #" des Schutzes"
 %%%%
-" of stealth"
-" der Heimlichkeit"
+# duplicate of manual suffix
+#" of stealth"
+#" der Heimlichkeit"
 %%%%
 " of resistance"
 " der Resistanz"
