@@ -41,6 +41,9 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
     // init launch type early, so we can use it later in the constructor
     launch_type = is_launched(attacker, weapon, *projectile);
 
+    // noloc section start
+    // (aux_source is used in notes and scorefile, which we leave in English)
+
     // [dshaligram] When changing bolt names here, you must edit
     // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
     if (attacker->is_player())
@@ -60,6 +63,7 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
                  (is_vowel(proj_name[0]) ? "n" : ""), proj_name.c_str(),
                  attacker->name(DESC_A).c_str());
     }
+    // noloc section end
 
     needs_message = defender_visible;
 
@@ -163,8 +167,9 @@ bool ranged_attack::handle_phase_attempted()
 bool ranged_attack::handle_phase_blocked()
 {
     ASSERT(!ignores_shield(false));
-    string punctuation = ".";
-    string verb = "block";
+
+    const string defndr = defender_name(false);
+    const string proj = projectile->name(DESC_THE);
 
     const bool reflected_by_shield = defender_shield
                                      && is_shield(*defender_shield)
@@ -172,39 +177,54 @@ bool ranged_attack::handle_phase_blocked()
     if (reflected_by_shield || defender->reflection())
     {
         reflected = true;
-        verb = "reflect";
         if (defender->observable())
         {
             if (reflected_by_shield)
             {
-                punctuation = " off " + defender->pronoun(PRONOUN_POSSESSIVE)
-                              + " " + defender_shield->name(DESC_PLAIN).c_str()
-                              + "!";
                 ident_reflector(defender_shield);
+                if (needs_message) {
+                    if (defender->is_player()) {
+                        string shld = defender_shield->name(DESC_YOUR);
+                        // locnote: You reflect <projectile> off <your shield>!
+                        mprf("You reflect %s off %s!", proj.c_str(), shld.c_str());
+                    }
+                    else {
+                        string shld = defender_shield->name(DESC_PLAIN);
+                        // locnote: <projectile> reflects off <monster's> <shield>!
+                        mprf("%s reflects off %s %s!", proj.c_str(), 
+                             def_name(DESC_ITS).c_str(), shld.c_str());
+                    }
+                }
             }
             else
             {
-                punctuation = " off an invisible shield around "
-                            + defender->pronoun(PRONOUN_OBJECTIVE) + "!";
-
                 item_def *amulet = defender->slot_item(EQ_AMULET, false);
                 if (amulet)
                    ident_reflector(amulet);
+
+                if (needs_message) {
+                    if (defender->is_player()) {
+                        mprf("%s reflects off an invisible shield around you!",
+                             proj.c_str());
+                    }
+                    else {
+                        mprf("%s reflects off an invisible shield around %s!",
+                             proj.c_str(), defndr.c_str());
+                    }
+                }
             }
         }
         else
-            punctuation = "!";
+            mprf("Something reflects %s!", proj.c_str());
     }
-    else
+    else {
         range_used = BEAM_STOP;
-
-    if (needs_message)
-    {
-        mprf("%s %s %s%s",
-             defender_name(false).c_str(),
-             defender->conj_verb(verb).c_str(),
-             projectile->name(DESC_THE).c_str(),
-             punctuation.c_str());
+        if (needs_message) {
+            if (defender->is_player())
+                mprf("You block %s.", proj.c_str());
+            else
+                mprf("%s blocks %s.", defndr.c_str(), proj.c_str());
+        }
     }
 
     return attack::handle_phase_blocked();
@@ -235,32 +255,40 @@ bool ranged_attack::handle_phase_dodged()
 
     if (needs_message)
     {
-        string proj = projectile->name(DESC_THE);
-        string dfndr = defender_name(false);
+        const string proj_name = projectile->name(DESC_THE);
+        const string dfndr_name = defender_name(false);
+
+        // just so we don't have to type .c_str() every time...
+        const char* proj = proj_name.c_str();
+        const char* dfndr = dfndr_name.c_str();
 
         if (ev_margin <= -20)
         {
-            do_3rd_person_message(proj, dfndr,
-                                  "%s completely misses you.",
-                                  "%s completely misses %s.");
+            if (defender->is_player())
+                mprf("%s completely misses you.", proj);
+            else
+                mprf("%s completely misses %s.", proj, dfndr);
         }
         else if (ev_margin <= -12)
         {
-            do_3rd_person_message(proj, dfndr,
-                                  "%s misses you.",
-                                  "%s misses %s.");
+            if (defender->is_player())
+                mprf("%s misses you.", proj);
+            else
+                mprf("%s misses %s.", proj, dfndr);
         }
         else if (ev_margin <= -6)
         {
-            do_3rd_person_message(proj, dfndr,
-                                  "%s closely misses you.",
-                                  "%s closely misses %s.");
+            if (defender->is_player())
+                mprf("%s closely misses you.", proj);
+            else
+                mprf("%s closely misses %s.", proj, dfndr);
         }
         else
         {
-            do_3rd_person_message(proj, dfndr,
-                                  "%s barely misses you.",
-                                  "%s barely misses %s.");
+            if (defender->is_player())
+                mprf("%s barely misses you.", proj);
+            else
+                mprf("%s barely misses %s.", proj, dfndr);
         }
     }
 
@@ -392,11 +420,30 @@ bool ranged_attack::ignores_shield(bool verbose)
     {
         if (verbose)
         {
-            mprf("%s pierces through %s %s!",
-                 projectile->name(DESC_THE).c_str(),
-                 apostrophise(defender_name(false)).c_str(),
-                 defender_shield ? defender_shield->name(DESC_PLAIN).c_str()
-                                 : "shielding");
+            string proj = projectile->name(DESC_THE);
+            string dfndr = apostrophise(defender_name(false));
+
+            if (defender_shield) {
+                if (defender->is_player()) {
+                    // locnote: <projectile> pierces through <your shield>!
+                    mprf("%s pierces through %s!", proj.c_str(),
+                        defender_shield->name(DESC_YOUR).c_str());
+                }
+                else {
+                    // locnote: <projectile> pierces through <monster's> <shield>!
+                    mprf("%s pierces through %s %s!", proj.c_str(), dfndr.c_str(),
+                        defender_shield->name(DESC_PLAIN).c_str());
+                }
+            }
+            else {
+                if (defender->is_player())
+                    mprf("%s pierces through your shielding!", proj.c_str());
+                else {
+                    // locnote: <projectile> pierces through <monster's> shielding!
+                    mprf("%s pierces through %s shielding!",
+                         proj.c_str(), dfndr.c_str());
+                }
+            }
         }
         return true;
     }
@@ -517,7 +564,7 @@ bool ranged_attack::dart_check(special_missile_type type)
             if (defender->is_monster())
             {
                 simple_monster_message(*defender->as_monster(),
-                                       "%s is unaffected.");
+                                       " is unaffected.");
             }
             else
                 canned_msg(MSG_YOU_UNAFFECTED);
@@ -757,21 +804,21 @@ bool ranged_attack::player_good_stab()
 
 string ranged_attack::get_hit_message()
 {
-    if (is_penetrating_attack())
-    {
-        return get_3rd_person_message(projectile->name(DESC_THE),
-                                      defender_name(false),
-                                      "%s pierces through you",
-                                      "$s pierces through %s");
+    string proj = projectile->name(DESC_THE);
+    if (defender->is_player()) {
+        if (is_penetrating_attack())
+            return localise("%s pierces through you", proj);
+        else
+            return localise("%s hits you", proj);
     }
-    else
-    {
-        return get_3rd_person_message(projectile->name(DESC_THE),
-                                      defender_name(false),
-                                      "%s hits you",
-                                      "%s hits %s");
+    else {
+        if (is_penetrating_attack())
+            return localise("%s pierces through %s", proj, def_name(DESC_THE));
+        else
+            return localise("%s hits %s", proj, def_name(DESC_THE));
     }
 }
+
 void ranged_attack::announce_hit()
 {
     if (!needs_message)

@@ -17020,23 +17020,31 @@ Keine regulären Aktionen für den Köcher verfügbar.
 # ranged-attack.cc
 ##################
 %%%%
-block
-
+# note: You reflect <projectile> off <your shield>!
+You reflect %s off %s!
+Ihr reflektiert {acc}%s mit {dat}%s!
 %%%%
-" off "
-
+# note: <projectile> reflects off <monster's> <shield>!
+%s reflects off %s %s!
+%s wird von %s {dat}%s reflektiert!
 %%%%
-" off an invisible shield around "
-
+Something reflects %s!
+Etwas reflektiert {acc}%s!
 %%%%
+# note: <projectile> pierces through <your shield>!
+%s pierces through %s!
+%s durchdringt {acc}%s!
+%%%%
+# note: <projectile> pierces through <monster's> <shield>!
 %s pierces through %s %s!
-
+%s durchdringt %s {acc}%s!
 %%%%
-shielding
-
+%s pierces through your shielding!
+%s durchdringt Eure Abschirmung!
 %%%%
-$s pierces through %s
-
+# note: <projectile> pierces through <monster's> shielding!
+%s pierces through %s shielding!
+%s durchdringt %s Abschirmung!
 %%%%
 
 ##################
