@@ -229,6 +229,105 @@ Rune
 %%%%
 
 #################################
+# Manual suffixes
+#################################
+# note: these names should match the skill names
+%%%%
+" of fighting"
+" des Kämpfen"
+%%%%
+" of short blades"
+" der Kurzklingen"
+%%%%
+" of long blades"
+" der Langklingen"
+%%%%
+" of axes"
+" der Äxte"
+%%%%
+" of maces & flails"
+" der Keulen & Flegeln"
+%%%%
+" of polearms"
+" der Stangenwaffen"
+%%%%
+" of staves"
+" der Stäbe"
+%%%%
+" of slings"
+" der Schleuder"
+%%%%
+" of bows"
+" der Bogen"
+%%%%
+" of crossbows"
+" der Armbrüste"
+%%%%
+" of throwing"
+" des Werfens"
+%%%%
+" of armour"
+" der Rüstung"
+%%%%
+" of dodging"
+" des Ausweichen"
+%%%%
+" of stealth"
+" der Heimlichkeit"
+%%%%
+" of shields"
+" der Schilde"
+%%%%
+" of unarmed combat"
+" des unbewaffneten Kampfes"
+%%%%
+" of evocations"
+" der Evokation"
+%%%%
+" of invocations"
+" der Anrufung"
+%%%%
+" of spellcasting"
+" des Zauberns"
+%%%%
+" of necromancy"
+" der Nekromantie"
+%%%%
+" of conjurations"
+" der Hervorrufung"
+%%%%
+" of hexes"
+" der Verhexung"
+%%%%
+" of charms"
+" der Bannzauber"
+%%%%
+" of summonings"
+" der Beschwörung"
+%%%%
+" of translocations"
+" der Translokation"
+%%%%
+" of transmutations"
+" der Verwandlung"
+%%%%
+" of fire magic"
+" der Feuermagie"
+%%%%
+" of ice magic"
+" der Eismagie"
+%%%%
+" of air magic"
+" der Luftmagie"
+%%%%
+" of earth magic"
+" der Erdmagie"
+%%%%
+" of poison magic"
+" der Giftmagie"
+%%%%
+
+#################################
 # Runes(terse form for char overview screen)
 #################################
 

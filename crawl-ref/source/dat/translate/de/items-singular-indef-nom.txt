@@ -857,9 +857,12 @@ ein {adj-er}%sStecken
 %%%%
 
 #################################
-# Spellbooks
+# Books
 #################################
 
+%%%%
+a manual
+{n}ein Handbuch
 %%%%
 a book of Minor Magic
 {n}ein Buch der kleinen Magie

@@ -857,9 +857,12 @@ der {adj-e}%sStecken
 %%%%
 
 #################################
-# Spellbooks
+# Books
 #################################
 
+%%%%
+the manual
+das Handbuch
 %%%%
 the book of Minor Magic
 das Buch der kleinen Magie

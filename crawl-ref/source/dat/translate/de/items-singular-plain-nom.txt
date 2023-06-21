@@ -857,9 +857,12 @@ Trank des Widerstands
 %%%%
 
 #################################
-# Spellbooks
+# Books
 #################################
 
+%%%%
+manual
+Handbuch
 %%%%
 book of Minor Magic
 Buch der kleinen Magie
