@@ -862,7 +862,7 @@ der {adj-e}%sStecken
 
 %%%%
 the manual
-das Handbuch
+das Manual
 %%%%
 the book of Minor Magic
 das Buch der kleinen Magie

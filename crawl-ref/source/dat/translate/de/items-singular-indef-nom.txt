@@ -862,7 +862,7 @@ ein {adj-er}%sStecken
 
 %%%%
 a manual
-{n}ein Handbuch
+{n}ein Manual
 %%%%
 a book of Minor Magic
 {n}ein Buch der kleinen Magie

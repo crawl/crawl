@@ -862,7 +862,7 @@ Trank des Widerstands
 
 %%%%
 manual
-Handbuch
+Manual
 %%%%
 book of Minor Magic
 Buch der kleinen Magie
