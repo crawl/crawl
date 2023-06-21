@@ -1838,7 +1838,7 @@ You are yanked forward by the %s.
 
 %%%%
 %s reflects off %s %s!
-
+%s wird von %s {dat}%s reflektiert!
 %%%%
 %s reflects off an invisible shield around %s!
 %s wird von einem unsichtbaren Schild um%s reflektiert!
@@ -17023,10 +17023,6 @@ Keine regulären Aktionen für den Köcher verfügbar.
 # note: You reflect <projectile> off <your shield>!
 You reflect %s off %s!
 Ihr reflektiert {acc}%s mit {dat}%s!
-%%%%
-# note: <projectile> reflects off <monster's> <shield>!
-%s reflects off %s %s!
-%s wird von %s {dat}%s reflektiert!
 %%%%
 Something reflects %s!
 Etwas reflektiert {acc}%s!
