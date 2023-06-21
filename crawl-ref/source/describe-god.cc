@@ -1100,6 +1100,10 @@ static formatted_string _describe_god_powers(god_type which_god)
             desc.textcolour(DARKGREY);
 
         string buf = power.general;
+        if (isupper(buf[0])) // Complete sentence given?
+            buf = localise(buf);
+        else
+            buf = localise("You can %s.", buf);
         const int desc_len = buf.size();
 
         string abil_cost = "(" + make_cost_description(power.abil) + ")";

@@ -181,6 +181,7 @@ protected:
 
 struct god_power
 {
+    god_type god;
     // 1-6 means it unlocks at that many stars of piety;
     // 0 means it is always available when worshipping the god;
     // -1 means it is available even under penance;
@@ -208,6 +209,7 @@ struct god_power
 
     god_power(int rank_, ability_type abil_, const char* gain_,
               const char* loss_ = "", const char* general_ = "") :
+              god(GOD_NO_GOD),
               rank{rank_}, abil{abil_}, gain{gain_},
               loss{*loss_ ? loss_ : gain_},
               general{*general_ ? general_ : gain_}
@@ -218,10 +220,11 @@ struct god_power
               god_power(rank_, ABIL_NON_ABILITY, gain_, loss_, general_)
     { }
 
-    void display(bool gaining) const;
+    void display(bool gaining, const char* fmt = "%s") const;
 };
 
 void set_god_ability_slots();
+const vector<vector<god_power>> & get_all_god_powers();
 vector<god_power> get_god_powers(god_type god);
 const god_power* god_power_from_ability(ability_type abil);
 bool god_power_usable(const god_power& power, bool ignore_piety=false, bool ignore_penance=false);

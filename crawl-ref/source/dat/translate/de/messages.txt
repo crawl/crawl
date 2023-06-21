@@ -3133,6 +3133,9 @@ Your ancestor manifests to aid you.
 You are protected from the effects of unwielding distortion weapons.
 
 %%%%
+You can %s.
+
+%%%%
 None.
 
 %%%%
@@ -17047,40 +17050,17 @@ Etwas reflektiert {acc}%s!
 # religion.cc
 ##################
 %%%%
-You can now recite Zin's Axioms of Law.
+# note: some of these are infinitive clauses to be plugged into "You can [now/no longer] %s."
+recite Zin's Axioms of Law
 
 %%%%
-You can no longer recite Zin's Axioms of Law.
+call upon Zin for vitalisation
 
 %%%%
-You can recite Zin's Axioms of Law.
+call upon Zin to imprison the lawless
 
 %%%%
-You can now call upon Zin for vitalisation.
-
-%%%%
-You can no longer call upon Zin for vitalisation.
-
-%%%%
-You can call upon Zin for vitalisation.
-
-%%%%
-You can now call upon Zin to imprison the lawless.
-
-%%%%
-You can no longer call upon Zin to imprison the lawless.
-
-%%%%
-You can call upon Zin to imprison the lawless.
-
-%%%%
-You can now call upon Zin to create a sanctuary.
-
-%%%%
-You can no longer call upon Zin to create a sanctuary.
-
-%%%%
-You can call upon Zin to create a sanctuary.
+call upon Zin to create a sanctuary
 
 %%%%
 Zin will now cleanse your potions of mutation.
@@ -17092,13 +17072,7 @@ Zin will no longer cleanse your potions of mutation.
 Zin will cleanse your potions of mutation.
 
 %%%%
-You can now donate money to Zin.
-
-%%%%
-You can no longer donate money to Zin.
-
-%%%%
-You can donate money to Zin.
+donate money to Zin
 
 %%%%
 You and your allies can now gain power from killing the unholy and evil.
@@ -17110,31 +17084,13 @@ You and your allies can no longer gain power from killing the unholy and evil.
 You and your allies can gain power from killing the unholy and evil.
 
 %%%%
-You can now call upon the Shining One for a divine shield.
+call upon the Shining One for a divine shield
 
 %%%%
-You can no longer call upon the Shining One for a divine shield.
+channel blasts of cleansing flame
 
 %%%%
-You can call upon the Shining One for a divine shield.
-
-%%%%
-You can now channel blasts of cleansing flame.
-
-%%%%
-You can no longer channel blasts of cleansing flame.
-
-%%%%
-You can channel blasts of cleansing flame.
-
-%%%%
-You can now summon a divine warrior.
-
-%%%%
-You can no longer summon a divine warrior.
-
-%%%%
-You can summon a divine warrior.
+summon a divine warrior
 
 %%%%
 The Shining One will bless your weapon with holy wrath... once.
@@ -17143,13 +17099,7 @@ The Shining One will bless your weapon with holy wrath... once.
 The Shining One is no longer ready to bless your weapon.
 
 %%%%
-You can now receive cadavers from Kikubaaqudgha.
-
-%%%%
-You can no longer receive cadavers from Kikubaaqudgha.
-
-%%%%
-You can receive cadavers from Kikubaaqudgha.
+receive cadavers from Kikubaaqudgha
 
 %%%%
 Kikubaaqudgha is now protecting you from necromantic miscasts and death curses.
@@ -17170,13 +17120,7 @@ Kikubaaqudgha will no longer protect you from unholy torment.
 Kikubaaqudgha protects you from unholy torment.
 
 %%%%
-You can now invoke torment by sacrificing a corpse.
-
-%%%%
-You can no longer invoke torment by sacrificing a corpse.
-
-%%%%
-You can invoke torment by sacrificing a corpse.
+invoke torment by sacrificing a corpse
 
 %%%%
 Kikubaaqudgha will grant you forbidden knowledge or bloody your weapon with pain... once.
@@ -17188,40 +17132,16 @@ Kikubaaqudgha is no longer ready to enhance your necromancy.
 Kikubaaqudgha will grant you forbidden knowledge.
 
 %%%%
-You can now animate remains.
+animate remains
 
 %%%%
-You can no longer animate remains.
+recall your undead slaves
 
 %%%%
-You can animate remains.
+mirror injuries on your foes
 
 %%%%
-You can now recall your undead slaves.
-
-%%%%
-You can no longer recall your undead slaves.
-
-%%%%
-You can recall your undead slaves.
-
-%%%%
-You can now mirror injuries on your foes.
-
-%%%%
-You can no longer mirror injuries on your foes.
-
-%%%%
-You can mirror injuries on your foes.
-
-%%%%
-You can now animate legions of the dead.
-
-%%%%
-You can no longer animate legions of the dead.
-
-%%%%
-You can animate legions of the dead.
+animate legions of the dead
 
 %%%%
 Yredelemnul will now gift you servants as you gain piety.
@@ -17233,31 +17153,13 @@ Yredelemnul will no longer gift you servants.
 Yredelemnul will gift you servants as you gain piety.
 
 %%%%
-You can now drain ambient life force.
+drain ambient life force
 
 %%%%
-You can no longer drain ambient life force.
+enslave living souls
 
 %%%%
-You can drain ambient life force.
-
-%%%%
-You can now enslave living souls.
-
-%%%%
-You can no longer enslave living souls.
-
-%%%%
-You can enslave living souls.
-
-%%%%
-You can now gain magical power from killing.
-
-%%%%
-You can no longer gain magical power from killing.
-
-%%%%
-You can gain magical power from killing.
+gain magical power from killing
 
 %%%%
 Vehumet is now aiding your destructive spells.
@@ -17278,13 +17180,7 @@ Vehumet will no longer extend the range of your destructive spells.
 Vehumet extends the range of your destructive spells.
 
 %%%%
-You can now gain great but temporary skills.
-
-%%%%
-You can no longer gain great but temporary skills.
-
-%%%%
-You can gain great but temporary skills.
+gain great but temporary skills
 
 %%%%
 Okawaru will now gift you ammunition as you gain piety.
@@ -17296,13 +17192,7 @@ Okawaru will no longer gift you ammunition.
 Okawaru will gift you ammunition as you gain piety.
 
 %%%%
-You can now speed up your combat.
-
-%%%%
-You can no longer speed up your combat.
-
-%%%%
-You can speed up your combat.
+speed up your combat
 
 %%%%
 Okawaru will now gift you equipment as you gain piety.
@@ -17314,76 +17204,31 @@ Okawaru will no longer gift you equipment.
 Okawaru will gift you equipment as you gain piety.
 
 %%%%
-You can now gain health from killing.
+gain health from killing
 
 %%%%
-You can no longer gain health from killing.
+harness Makhleb's destructive might
 
 %%%%
-You can gain health from killing.
+summon a lesser servant of Makhleb
 
 %%%%
-You can now harness Makhleb's destructive might.
+hurl Makhleb's greater destruction
 
 %%%%
-You can no longer harness Makhleb's destructive might.
+summon a greater servant of Makhleb
 
 %%%%
-You can harness Makhleb's destructive might.
+call upon Sif Muna for magical energy
 
 %%%%
-You can now summon a lesser servant of Makhleb.
+freely open your mind to new spells
 
 %%%%
-You can no longer summon a lesser servant of Makhleb.
+forget spells at will
 
 %%%%
-You can summon a lesser servant of Makhleb.
-
-%%%%
-You can now hurl Makhleb's greater destruction.
-
-%%%%
-You can no longer hurl Makhleb's greater destruction.
-
-%%%%
-You can hurl Makhleb's greater destruction.
-
-%%%%
-You can now summon a greater servant of Makhleb.
-
-%%%%
-You can no longer summon a greater servant of Makhleb.
-
-%%%%
-You can summon a greater servant of Makhleb.
-
-%%%%
-You can now call upon Sif Muna for magical energy.
-
-%%%%
-You can no longer call upon Sif Muna for magical energy.
-
-%%%%
-You can call upon Sif Muna for magical energy.
-
-%%%%
-You can now freely open your mind to new spells.
-
-%%%%
-You can no longer forget spells at will.
-
-%%%%
-You can freely open your mind to new spells.
-
-%%%%
-You can now call upon Sif Muna to cast any spell from your library.
-
-%%%%
-You can no longer call upon Sif Muna to cast any spell from your library.
-
-%%%%
-You can call upon Sif Muna to cast any spell from your library.
+call upon Sif Muna to cast any spell from your library
 
 %%%%
 Sif Muna will now gift you books as you gain piety.
@@ -17395,31 +17240,13 @@ Sif Muna will no longer gift you books.
 Sif Muna will gift you books as you gain piety.
 
 %%%%
-You can now go berserk at will.
+go berserk at will
 
 %%%%
-You can no longer go berserk at will.
+call upon Trog for regeneration and willpower
 
 %%%%
-You can go berserk at will.
-
-%%%%
-You can now call upon Trog for regeneration and willpower.
-
-%%%%
-You can no longer call upon Trog for regeneration and willpower.
-
-%%%%
-You can call upon Trog for regeneration and willpower.
-
-%%%%
-You can now call in reinforcements.
-
-%%%%
-You can no longer call in reinforcements.
-
-%%%%
-You can call in reinforcements.
+call in reinforcements
 
 %%%%
 Trog will now gift you melee weapons as you gain piety.
@@ -17431,13 +17258,7 @@ Trog will no longer gift you weapons.
 Trog will gift you melee weapons as you gain piety.
 
 %%%%
-You can now draw from decks of power.
-
-%%%%
-You can no longer draw from decks of power.
-
-%%%%
-You can draw from decks of power.
+draw from decks of power
 
 %%%%
 Nemelex will now gift you decks of power as you gain piety.
@@ -17449,31 +17270,16 @@ Nemelex will no longer gift you decks.
 Nemelex will gift you decks of power as you gain piety.
 
 %%%%
-You can now choose one out of three cards.
+choose one out of three cards
 
 %%%%
-You can no longer choose one out of three cards.
+deal four cards at a time
 
 %%%%
-You can choose one out of three cards.
+stack five cards from your decks
 
 %%%%
-You can now deal four cards at a time.
-
-%%%%
-You can no longer deal four cards at a time.
-
-%%%%
-You can deal four cards at a time.
-
-%%%%
-You can now stack five cards from your decks.
-
-%%%%
-You can no longer stack cards.
-
-%%%%
-You can stack five cards from your decks.
+stack cards
 
 %%%%
 provide lesser healing for yourself
@@ -17494,49 +17300,22 @@ call upon Elyvilon for divine vigour
 call on Elyvilon to save your life
 
 %%%%
-You can now depart the Abyss.
+depart the Abyss
 
 %%%%
-You can no longer depart the Abyss at will.
+depart the Abyss at will
 
 %%%%
-You can depart the Abyss.
+bend space around yourself
 
 %%%%
-You can now bend space around yourself.
+banish your foes
 
 %%%%
-You can no longer bend space around yourself.
+corrupt the fabric of space
 
 %%%%
-You can bend space around yourself.
-
-%%%%
-You can now banish your foes.
-
-%%%%
-You can no longer banish your foes.
-
-%%%%
-You can banish your foes.
-
-%%%%
-You can now corrupt the fabric of space.
-
-%%%%
-You can no longer corrupt the fabric of space.
-
-%%%%
-You can corrupt the fabric of space.
-
-%%%%
-You can now gate yourself to the Abyss.
-
-%%%%
-You can no longer gate yourself to the Abyss.
-
-%%%%
-You can gate yourself to the Abyss.
+gate yourself to the Abyss
 
 %%%%
 Lugonu will corrupt your weapon with distortion... once.
@@ -17545,64 +17324,22 @@ Lugonu will corrupt your weapon with distortion... once.
 Lugonu is no longer ready to corrupt your weapon.
 
 %%%%
-You can now smite your foes.
+smite your foes
 
 %%%%
-You can no longer smite your foes.
+gain orcish followers
 
 %%%%
-You can smite your foes.
+recall your orcish followers
 
 %%%%
-You can now gain orcish followers.
+give items to your followers
 
 %%%%
-You can no longer gain orcish followers.
+revive fallen orcs
 
 %%%%
-You can gain orcish followers.
-
-%%%%
-You can now recall your orcish followers.
-
-%%%%
-You can no longer recall your orcish followers.
-
-%%%%
-You can recall your orcish followers.
-
-%%%%
-You can now walk on water.
-
-%%%%
-You can no longer walk on water.
-
-%%%%
-You can now give items to your followers.
-
-%%%%
-You can no longer give items to your followers.
-
-%%%%
-You can give items to your followers.
-
-%%%%
-You can now revive fallen orcs.
-
-%%%%
-You can no longer revive fallen orcs.
-
-%%%%
-You can revive fallen orcs.
-
-%%%%
-You can now request a jelly.
-
-%%%%
-You can no longer request a jelly.
-
-%%%%
-You can request a jelly.
+request a jelly
 
 %%%%
 Jiyva will now mutate your body and modify your attributes as you gain piety.
@@ -17623,13 +17360,7 @@ Jiyva will no longer protect you from corrosive effects.
 Jiyva protects you from corrosive effects.
 
 %%%%
-You can now turn your foes to slime.
-
-%%%%
-You can no longer turn your foes to slime.
-
-%%%%
-You can turn your foes to slime.
+turn your foes to slime
 
 %%%%
 You may now expel jellies when seriously injured.
@@ -17641,58 +17372,22 @@ You will no longer expel jellies when injured.
 You may expel jellies when seriously injured.
 
 %%%%
-You can now call upon Jiyva to remove your harmful mutations.
+call upon Jiyva to remove your harmful mutations
 
 %%%%
-You can no longer call upon Jiyva to remove your harmful mutations.
+encircle yourself with summoned briar patches
 
 %%%%
-You can call upon Jiyva to remove your harmful mutations.
+grow a ballistomycete
 
 %%%%
-You can now encircle yourself with summoned briar patches.
+transform dungeon walls and trees into plant allies
 
 %%%%
-You can no longer encircle yourself with summoned briar patches.
+grow an oklob plant
 
 %%%%
-You can encircle yourself with summoned briar patches.
-
-%%%%
-You can now grow a ballistomycete.
-
-%%%%
-You can no longer grow a ballistomycete.
-
-%%%%
-You can grow a ballistomycete.
-
-%%%%
-You can now transform dungeon walls and trees into plant allies.
-
-%%%%
-You can no longer transform dungeon walls and trees into plant allies.
-
-%%%%
-You can transform dungeon walls and trees into plant allies.
-
-%%%%
-You can now grow an oklob plant.
-
-%%%%
-You can no longer grow an oklob plant.
-
-%%%%
-You can grow an oklob plant.
-
-%%%%
-You can now bend time to slow others.
-
-%%%%
-You can no longer bend time to slow others.
-
-%%%%
-You can bend time to slow others.
+bend time to slow others
 
 %%%%
 Cheibriados is now slowing the effects of poison on you.
@@ -17704,31 +17399,13 @@ Cheibriados will no longer slow the effects of poison on you.
 Cheibriados slows the effects of poison on you.
 
 %%%%
-You can now warp the flow of time around you.
+warp the flow of time around you
 
 %%%%
-You can no longer warp the flow of time around you.
+inflict damage on those overly hasty
 
 %%%%
-You can warp the flow of time around you.
-
-%%%%
-You can now inflict damage on those overly hasty.
-
-%%%%
-You can no longer inflict damage on those overly hasty.
-
-%%%%
-You can inflict damage on those overly hasty.
-
-%%%%
-You can now step out of the flow of time.
-
-%%%%
-You can no longer step out of the flow of time.
-
-%%%%
-You can step out of the flow of time.
+step out of the flow of time
 
 %%%%
 Ashenzari warns you of distant threats and treasures.
@@ -17773,13 +17450,7 @@ Ashenzari will no longer grant you astral sight.
 Ashenzari grants you astral sight.
 
 %%%%
-You can now step into the shadows of nearby creatures.
-
-%%%%
-You can no longer step into the shadows of nearby creatures.
-
-%%%%
-You can step into the shadows of nearby creatures.
+step into the shadows of nearby creatures
 
 %%%%
 You will now sometimes bleed smoke when heavily injured by enemies.
@@ -17800,13 +17471,7 @@ Your shadow no longer tangibly mimics your actions.
 Your shadow sometimes tangibly mimics your actions.
 
 %%%%
-You can now transform into a swirling mass of shadows.
-
-%%%%
-You can no longer transform into a swirling mass of shadows.
-
-%%%%
-You can transform into a swirling mass of shadows.
+transform into a swirling mass of shadows
 
 %%%%
 You have enough gold to petition Gozag for potion effects.
@@ -17848,22 +17513,10 @@ Your storm dissipates completely.
 You are surrounded by a storm.
 
 %%%%
-You can now call upon nature to destroy your foes.
+call upon nature to destroy your foes
 
 %%%%
-You can no longer call upon nature to destroy your foes.
-
-%%%%
-You can call upon nature to destroy your foes.
-
-%%%%
-You can now give life to nearby clouds.
-
-%%%%
-You can no longer give life to nearby clouds.
-
-%%%%
-You can give life to nearby clouds.
+give life to nearby clouds
 
 %%%%
 The storm surrounding you is now powerful enough to repel missiles.
@@ -17884,13 +17537,7 @@ You will no longer adapt resistances upon receiving elemental damage.
 You adapt resistances upon receiving elemental damage.
 
 %%%%
-You can now call upon nature's wrath in a wide area around you.
-
-%%%%
-You can no longer call upon nature's wrath in a wide area around you.
-
-%%%%
-You can call upon nature's wrath in a wide area around you.
+call upon nature's wrath in a wide area around you
 
 %%%%
 You now exude an aura of power that intimidates your foes.
@@ -17908,49 +17555,19 @@ Your aura of power no longer strikes those that harm you.
 Your aura of power can strike those that harm you.
 
 %%%%
-You can now heal your body and restore your magic.
+heal your body and restore your magic
 
 %%%%
-You can no longer heal your body and restore your magic.
+gather your power into a mighty leap
 
 %%%%
-You can heal your body and restore your magic.
+wreak a terrible wrath on your foes
 
 %%%%
-You can now gather your power into a mighty leap.
+stomp with the beat
 
 %%%%
-You can no longer gather your power into a mighty leap.
-
-%%%%
-You can gather your power into a mighty leap.
-
-%%%%
-You can now wreak a terrible wrath on your foes.
-
-%%%%
-You can no longer wreak a terrible wrath on your foes.
-
-%%%%
-You can wreak a terrible wrath on your foes.
-
-%%%%
-You can now stomp with the beat.
-
-%%%%
-You can no longer stomp with the beat.
-
-%%%%
-You can stomp with the beat.
-
-%%%%
-You can now pass through a line of other dancers.
-
-%%%%
-You can no longer pass through a line of other dancers.
-
-%%%%
-You can pass through a line of other dancers.
+pass through a line of other dancers
 
 %%%%
 Uskayaw will force your foes to helplessly watch your dance.
@@ -17965,100 +17582,49 @@ Uskayaw will force your foes to share their pain.
 Uskayaw will no longer force your foes to share their pain.
 
 %%%%
-You can now merge with and destroy a victim.
+merge with and destroy a victim
 
 %%%%
-You can no longer merge with and destroy a victim.
+recall your ancestor
 
 %%%%
-You can merge with and destroy a victim.
+remember your ancestor's identity
 
 %%%%
-You can now recall your ancestor.
+swap creatures with your ancestor
 
 %%%%
-You can no longer recall your ancestor.
+heal and protect your ancestor
 
 %%%%
-You can recall your ancestor.
+drain nearby creatures when transferring your ancestor
 
 %%%%
-You can now remember your ancestor's identity.
+perform damaging attacks by moving towards foes
 
 %%%%
-You can no longer remember your ancestor's identity.
+perform lunging strikes
 
 %%%%
-You can remember your ancestor's identity.
+lightly attack monsters by moving around them
 
 %%%%
-You can now swap creatures with your ancestor.You can no longer swap creatures with your ancestor.
+perform spinning attacks
 
 %%%%
-You can swap creatures with your ancestor.
+perform airborne attacks
 
 %%%%
-You can now heal and protect your ancestor.
+briefly move at supernatural speeds
 
 %%%%
-You can no longer heal and protect your ancestor.
+move at supernatural speeds
 
 %%%%
-You can heal and protect your ancestor.
+summon a storm of heavenly clouds to empower your attacks
 
 %%%%
-You can now drain nearby creatures when transferring your ancestor.
-
-%%%%
-You can no longer drain nearby creatures when transferring your ancestor.
-
-%%%%
-You can drain nearby creatures when transferring your ancestor.
-
-%%%%
-You can now perform damaging attacks by moving towards foes.
-
-%%%%
-You can no longer perform lunging strikes.
-
-%%%%
-You can perform damaging attacks by moving towards foes.
-
-%%%%
-You can now lightly attack monsters by moving around them.
-
-%%%%
-You can no longer perform spinning attacks.
-
-%%%%
-You can lightly attack monsters by moving around them.
-
-%%%%
-You can now perform airborne attacks.
-
-%%%%
-You can no longer perform airborne attacks.
-
-%%%%
-You can perform airborne attacks.
-
-%%%%
-You can now briefly move at supernatural speeds.
-
-%%%%
-You can no longer move at supernatural speeds.
-
-%%%%
-You can briefly move at supernatural speeds.
-
-%%%%
-You can now summon a storm of heavenly clouds to empower your attacks.
-
-%%%%
-You can no longer summon a storm of heavenly clouds.
-
-%%%%
-You can summon a storm of heavenly clouds to empower your attacks.
+summon a storm of heavenly clouds
 
 %%%%
 %s seems mollified and vanishes.
@@ -18220,6 +17786,9 @@ You feel%sguilty.
 %s forms a fragment of your life essence into the memory of your ancestor, %s!
 
 %%%%
+You can now %s.
+
+%%%%
 A divine halo surrounds you!
 Ein göttlicher Heiligenschein umgibt Euch!
 %%%%
@@ -18236,6 +17805,9 @@ You may now remember your ancestor's life.
 
 %%%%
 %s raises the support of your attributes.
+
+%%%%
+You can no longer %s.
 
 %%%%
 %s lowers the support of your attributes as your movement quickens.
