@@ -221,6 +221,30 @@ vector<map<string, string>> rings =
         {"acc", "den Ring \"Cuti\" {rF+ MR+ Ges+2}"},
         {"dat", "dem Ring \"Cuti\" {rF+ MR+ Ges+2}"},
     },
+    {
+        {"en", "ring of intelligence"},
+        {"nom", "Ring der Intelligenz"},
+        {"acc", "Ring der Intelligenz"},
+        {"dat", "Ring der Intelligenz"},
+    },
+    {
+        {"en", "ring of ice"},
+        {"nom", "Ring des Eises"},
+        {"acc", "Ring des Eises"},
+        {"dat", "Ring des Eises"},
+    },
+   {
+        {"en", "your ring of intelligence"},
+        {"nom", "Euer Ring der Intelligenz"},
+        {"acc", "Euren Ring der Intelligenz"},
+        {"dat", "Eurem Ring der Intelligenz"},
+    },
+    {
+        {"en", "your ring of ice"},
+        {"nom", "Euer Ring des Eises"},
+        {"acc", "Euren Ring des Eises"},
+        {"dat", "Eurem Ring des Eises"},
+    },
 };
 
 vector<map<string, string>> amulets =

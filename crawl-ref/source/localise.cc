@@ -878,17 +878,18 @@ static string _get_first_tag(const string& s)
     return s.substr(start, end - start + 1);
 }
 
-static string _localise_artefact_suffix(const string& s)
+static string _localise_item_suffix(const string& s)
 {
     if (s.empty())
         return s;
 
     // check if there's a specific translation for it
-    string loc = xlate(s);
-    if (loc != s)
+    string loc = xlate(s, false);
+    if (!loc.empty())
         return loc;
 
-    // otherwise translate "of" if present and quote the rest
+    // otherwise, assume artefact name
+    // translate "of" if present and quote the rest
     string fmt, arg;
     if (starts_with(s, " of "))
     {
@@ -1079,17 +1080,9 @@ static string _localise_item_name(const string& context, const string& item)
     if (!result.empty() && result != item)
         return result;
 
-    string suffix;
-    string base = _strip_suffix(item, suffix);
-
-    // try to translate base without suffix
-    result = cxlate(context, base, false);
-    if (!result.empty())
-        return result + _localise_string(context, suffix);
-
     string determiner;
     string owner;
-    base = _strip_determiner(base, determiner);
+    string base = _strip_determiner(item, determiner);
 
     if (ends_with(determiner,"'s"))
     {
@@ -1139,47 +1132,15 @@ static string _localise_item_name(const string& context, const string& item)
 
         bool space_with_adjective = true;
 
-        // first, try with suffix attached
-        if (!suffix.empty())
-        {
-            string branded_item = item_en + suffix;
-            result = _localise_possibly_counted_string(context, branded_item);
-
-            if (result.empty())
-            {
-                // try with space after adjective
-                branded_item = replace_first(branded_item, "%s", "%s ");
-                result = _localise_possibly_counted_string(context, branded_item);
-                if (!result.empty())
-                    space_with_adjective = false;
-            }
-        }
+        result = _localise_possibly_counted_string(context, item_en);
 
         if (result.empty())
         {
-            // now try without suffix attached
+            // try with space after adjective
+            item_en = replace_first(item_en, "%s", "%s ");
             result = _localise_possibly_counted_string(context, item_en);
-
-            if (result.empty())
-            {
-                // try with space after adjective
-                item_en = replace_first(item_en, "%s", "%s ");
-                result = _localise_possibly_counted_string(context, item_en);
-                if (!result.empty())
-                    space_with_adjective = false;
-            }
-
-            if (!result.empty() && !suffix.empty())
-            {
-                string loc_brand = cxlate(context, suffix, false);
-                if (!loc_brand.empty())
-                    result += loc_brand;
-                else
-                {
-                    // assume it's an artefact name
-                    result += _localise_artefact_suffix(suffix);
-                }
-            }
+            if (!result.empty())
+                space_with_adjective = false;
         }
 
         if (!result.empty())
@@ -1256,8 +1217,26 @@ static string _localise_item_name(const string& context, const string& item)
 
     }
 
+    string suffix;
+    base = _strip_suffix(item, suffix);
+    if (!suffix.empty()) {
+        // try to translate base without suffix
+        result = cxlate(context, base, false);
+        if (!result.empty())
+            result = _shift_context(result);
+        else
+            result = _localise_item_name(context, base);
+        if (!result.empty()) {
+            string suffix_result = _localise_item_suffix(suffix);
+            DEBUG("returning base+suffix: '%s' + '%s'",
+                result.c_str(), suffix_result.c_str());
+            result += suffix_result;
+            return result;
+        }
+    }
+
     // failed
-    return item;
+    return "";
 }
 
 // list separators, order is important - we want to get the longest possible
@@ -1632,8 +1611,16 @@ static string _localise_string(const string context, const string& value)
 
     // try treating it as an item name
     result = _localise_item_name(context, value);
+    if (!result.empty()) {
+        DEBUG("context='%s', value='%s': success as item name: %s",
+              context.c_str(), value.c_str(), result.c_str());
+        return result;
+    }
 
-    return result;
+    // failed
+    DEBUG("context='%s', value='%s': failed. returning original value",
+          context.c_str(), value.c_str());
+    return value;
 }
 
 static string _localise_string(const string& context, const LocalisationArg& arg)
