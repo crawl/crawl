@@ -165,6 +165,8 @@ level-map
 
 <h>Travel exclusions</h>
 <w>e</w>          : Create a travel exclusion, change its radius, or remove it.
+<w>R#</w>         : Create a travel exclusion with a specified radius or change
+             its radius to #, where # is a number from 1 to 8.
 <w>E</w>          : Cycle through travel exclusions.
 <w>Ctrl-E</w>     : Erase all travel exclusions on the level.
 

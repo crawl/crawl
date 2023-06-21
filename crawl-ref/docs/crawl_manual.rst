@@ -2774,6 +2774,10 @@ e
   Set travel exclusion. If an exclusion is already present, change size (from
   single square to full field of vision); after that, remove exclusion.
 
+R#
+  Set an exclusion with an arbitrary radius, where # is a number from 1 to 8.
+  If an exclusion is already present, change its radius to #.
+
 Ctrl-E
   Erase all travel exclusions at once.
 
