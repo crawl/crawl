@@ -1068,14 +1068,12 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
         state.feats->init();
         break;
 
-#ifdef WIZARD
     case CMD_MAP_EXCLUDE_RADIUS:
         set_exclude(state.lpos.pos, getchm() - '0');
 
         _reset_travel_colours(*state.features, state.on_level);
         state.feats->init();
         break;
-#endif
 
     case CMD_MAP_MOVE_DOWN_LEFT:
         state.lpos.pos += coord_def(-1, 1);
