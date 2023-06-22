@@ -17708,47 +17708,8 @@ Vehumet offers you knowledge of %s.
 %s remembers more old skills.
 
 %%%%
-# note: <ancestorr> remembers that <the weapon> was <a weapon of brand>
+# note: <ancestor> remembers that <the weapon> was <a weapon of brand>
 %s remembers that %s was %s.
-
-%%%%
-" the Shapeless"
-
-%%%%
-No God
-
-%%%%
-nameless
-
-%%%%
-Wu Jian
-
-%%%%
-an unknown god
-
-%%%%
-Yunchang
-
-%%%%
-Lu Zhishen
-
-%%%%
-Xiang Ba
-
-%%%%
-Ma Yunglu
-
-%%%%
-Hu Sanniang
-
-%%%%
-Gene Jian Bin
-
-%%%%
-Cai Fang
-
-%%%%
-FAKE GOD MONSTER
 
 %%%%
 You feel a little guilty.

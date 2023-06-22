@@ -102,6 +102,9 @@ Wu Jian
 The Council
 Der Rat
 %%%%
+an unknown god
+ein unbekannter Gott
+%%%%
 a god
 ein Gott
 %%%%
@@ -121,6 +124,30 @@ her god
 ihr Gott
 %%%%
 
+# Sifus (individual members of the Wu Jian Council)
+%%%%
+Yunchang
+Yunchang
+%%%%
+Lu Zhishen
+Lu Zhishen
+%%%%
+Xiang Ba
+Xiang Ba
+%%%%
+Ma Yunglu
+Ma Yunglu
+%%%%
+Hu Sanniang
+Hu Sanniang
+%%%%
+Gene Jian Bin
+Gene Jian Bin
+%%%%
+Cai Fang
+Cai Fang
+%%%%
+
 # long names
 # the others are currently in dat/database/de/gods.txt
 # These are only used in milestone notes (which are not translated) and as title on god description screen, so currently no need to decline
@@ -128,7 +155,6 @@ ihr Gott
 Jiyva %s the Shapeless
 Jiyva %s das Formlose
 %%%%
-
 
 ########################
 # God names - genitive
@@ -209,6 +235,9 @@ des Glänzenden
 {gen}the Wu Jian Council
 des Wu-Jian-Rates
 %%%%
+{gen}an unknown god
+eines unbekannten Gottes
+%%%%
 {gen}a god
 eines Gottes
 %%%%
@@ -238,6 +267,9 @@ den Glänzenden
 {acc}the Wu Jian Council
 den Wu-Jian-Rat
 %%%%
+{acc}an unknown god
+einen unbekannten Gott
+%%%%
 {acc}a god
 einen Gott
 %%%%
@@ -266,6 +298,9 @@ dem Glänzenden
 %%%%
 {dat}the Wu Jian Council
 dem Wu-Jian-Rat
+%%%%
+{dat}an unknown god
+einem unbekannten Gott
 %%%%
 {dat}a god
 einem Gott

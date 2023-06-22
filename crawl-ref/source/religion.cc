@@ -1998,7 +1998,7 @@ void upgrade_hepliaklqana_ancestor(bool quiet_force)
             string full_name = base_name + " of " + brand_type_name(brand, false);
             base_name = "the " + base_name;
             full_name = article_a(full_name);
-            // locnote: <ancestorr> remembers that <the weapon> was <a weapon of brand>
+            // locnote: <ancestor> remembers that <the weapon> was <a weapon of brand>
             mprf("%s remembers that %s was %s.",
                  ancestor->name(DESC_YOUR, true).c_str(),
                  base_name.c_str(),
@@ -2230,6 +2230,7 @@ bool do_god_gift(bool forced)
 
 string god_name(god_type which_god, bool long_name)
 {
+    // noloc section start
     if (which_god == GOD_JIYVA)
     {
         return god_name_jiyva(long_name) +
@@ -2248,6 +2249,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_NO_GOD:        return "No God";
     case GOD_RANDOM:        return "random";
     case GOD_NAMELESS:      return "nameless";
+    // noloc section end
     case GOD_ZIN:           return "Zin";
     case GOD_SHINING_ONE:   return "the Shining One";
     case GOD_KIKUBAAQUDGHA: return "Kikubaaqudgha";
@@ -2354,7 +2356,7 @@ void god_speaks(god_type god, const char *mesg)
     fake_mon.god        = god;
     fake_mon.set_position(you.pos());
     fake_mon.foe        = MHITYOU;
-    fake_mon.mname      = "FAKE GOD MONSTER";
+    fake_mon.mname      = "FAKE GOD MONSTER"; // noloc
 
     mprf(MSGCH_GOD, god, "%s", do_mon_str_replacements(mesg, fake_mon).c_str());
 
