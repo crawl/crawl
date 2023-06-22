@@ -539,9 +539,10 @@ jiyva11
 fedhas DNGN_ALTAR_FEDHAS
 cheibriados DNGN_ALTAR_CHEIBRIADOS
 ashenzari DNGN_ALTAR_ASHENZARI
-dithmenos DNGN_ALTAR_DITHMENOS
+dithmenos1 DNGN_ALTAR_DITHMENOS
 dithmenos2
 dithmenos3
+dithmenos4
 gozag0 DNGN_ALTAR_GOZAG
 gozag1
 gozag2
