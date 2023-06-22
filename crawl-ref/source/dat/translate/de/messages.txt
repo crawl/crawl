@@ -17663,9 +17663,6 @@ Eure Aura der Dunkelheit verschwindet.
 The storm surrounding you dissipates.
 Der Sturm, der Euch umgibt, löst sich auf.
 %%%%
-the anger of Yredelemnul
-
-%%%%
 %s deals you some cards!
 
 %%%%
@@ -17676,9 +17673,6 @@ Ihr habt jetzt%s.
 
 %%%%
 %s alters your body.
-
-%%%%
-Jiyva's grace
 
 %%%%
 %s grants you ammunition!
@@ -17696,7 +17690,7 @@ Jiyva's grace
 ...but nothing appears.
 
 %%%%
-" grants you @servant@!"
+Yredelemnul grants you @servant@!
 
 %%%%
 You feel as though nothing has changed.
@@ -17711,23 +17705,12 @@ Vehumet offers you knowledge of %s.
 " These spells will remain available as long as you worship Vehumet."
 
 %%%%
-" male "
+%s remembers more old skills.
 
 %%%%
-" female "
+# note: <ancestorr> remembers that <the weapon> was <a weapon of brand>
+%s remembers that %s was %s.
 
-%%%%
-name
-
-%%%%
-%s regains the memory of %s %s.
-%s gewinnt den Speicher von%s%s zurück.
-%%%%
-%s remembers more of %s old skill.
-%s erinnert sich mehr an%s alte Fruchtbarkeit.
-%%%%
-%s remembers %s %s %s.
-%s erinnert sich an%s%s%s.
 %%%%
 " the Shapeless"
 
@@ -17768,22 +17751,22 @@ Cai Fang
 FAKE GOD MONSTER
 
 %%%%
-You feel%sguilty.
+You feel a little guilty.
 
 %%%%
-" a little "
+You feel guilty.
 
 %%%%
-" very "
+You feel very guilty.
 
 %%%%
-" extremely "
+You feel extremely guilty.
 
 %%%%
 \"You will pay for your transgression, mortal!\"
 
 %%%%
-%s forms a fragment of your life essence into the memory of your ancestor, %s!
+%s forms a fragment of your life essence into the memory of your ancestor!
 
 %%%%
 You can now %s.
@@ -17849,8 +17832,8 @@ Ihr spürt den Verfall.
 All of your followers decide to abandon you.
 Alle Eure Anhänger beschließen, Euch zu verlassen.
 %%%%
-Your access to %s's decks is revoked.
-Euer Zugriff auf die Decks von%s wird widerrufen.
+Your access to Nemelex's decks is revoked.
+
 %%%%
 All of your fellow slimes turn on you.
 Alle Eure Mitschleime machen Euch an.
@@ -17957,13 +17940,10 @@ The service fee for joining is currently %d gold; you only have %d.
 %s refuses to forgive you so easily!
 
 %%%%
-by name
+Which god (by name)?
 
 %%%%
-"default "
-
-%%%%
-"Which god (%s)? "
+Which god (default %s)?
 
 %%%%
 Your god extremely despises this spell!
@@ -17973,6 +17953,9 @@ Your god hates spellcasting!
 
 %%%%
 Your god hates this spell!
+
+%%%%
+servant
 
 %%%%
 
@@ -18088,6 +18071,9 @@ type
 
 %%%%
 price
+
+%%%%
+name
 
 %%%%
 " <%s>%c%c%c%c</%s><%s>%4d gold   %s%s</%s>"

@@ -401,6 +401,13 @@ string replace_keys(const string &text, const map<string, string>& replacements)
         if (!value)
             return text;
 
+        // capitalise value if key is capitalised
+        string value2;
+        if (isupper(key[0])) {
+            value2 = uppercase_first(*value);
+            value = &value2;
+        }
+
         // allow nesting, but avoid infinite loops from circular refs
         if (nested_calls < 5 && value->find("@") != string::npos)
         {

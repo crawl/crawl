@@ -32,6 +32,7 @@ string walk_verb_to_present(string verb);
 
 string number_in_words(unsigned number);
 
+string article_the(const string &name, bool lowercase = true);
 string article_a(const string &name, bool lowercase = true);
 
 // Applies a description type to a name, but does not pluralise! You

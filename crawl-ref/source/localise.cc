@@ -1439,6 +1439,25 @@ static string _localise_ghost_name(const string& context, const string& value)
     return make_stringf(fmt.c_str(), name.c_str());
 }
 
+static string _localise_jiyva_long_name(const string& context, const string& value)
+{
+    if (!starts_with(value, "Jiyva J")) {
+        return "";
+    }
+
+    // extract the randomly-generated second name
+    vector<string> words = split_string(" ", value, true, false);
+    if (words.size() < 2)
+        return "";
+    string second_name = words[1];
+
+    string format = replace_first(value, second_name, "%s");
+    string result = cxlate(context, format, true);
+    result = replace_first(result, "%s", second_name);
+
+    return result;
+}
+
 static string _localise_monster_name(const string& context, const string& value)
 {
     DEBUG("context='%s', value='%s'", context.c_str(), value.c_str());
@@ -1575,6 +1594,11 @@ static string _localise_string(const string context, const string& value)
     // try treating as multiple sentences
     result = _localise_multiple_sentences(context, value);
     if (result != value)
+        return result;
+
+    // try treating as Jiyva long name
+    result = _localise_jiyva_long_name(context, value);
+    if (!result.empty())
         return result;
 
     // try treating as monster name

@@ -992,8 +992,10 @@ int yred_random_servants(unsigned int threshold, bool force_hostile)
                  you.pos(), MHITYOU);
     mg.set_summoned(!force_hostile ? &you : 0, 0, 0, GOD_YREDELEMNUL);
 
+    // noloc section start (just for morgue/scores)
     if (force_hostile)
         mg.non_actor_summoner = "the anger of Yredelemnul";
+    // noloc section end
 
     int created = 0;
     if (force_hostile)
@@ -1123,6 +1125,7 @@ static bool _jiyva_mutate()
 
     const int rand = random2(100);
 
+    // noloc section start
     if (rand < 5)
         return delete_mutation(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true);
     else if (rand < 30)
@@ -1133,6 +1136,7 @@ static bool _jiyva_mutate()
         return mutate(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true);
     else
         return mutate(RANDOM_GOOD_MUTATION, "Jiyva's grace", true, false, true);
+    // noloc section end
 }
 
 bool vehumet_is_offering(spell_type spell)
@@ -1483,7 +1487,7 @@ static bool _give_yred_gift(bool forced)
 
         if (yred_random_servants(threshold) != -1)
         {
-            delayed_monster_done(" grants you @servant@!",
+            delayed_monster_done("Yredelemnul grants you @servant@!",
                                  _delayed_gift_callback);
             success = true;
         }
@@ -1831,11 +1835,13 @@ int hepliaklqana_ally_hp()
  */
 static string _make_ancestor_name(gender_type gender)
 {
+    // noloc section start (lookup key)
     const string gender_name = gender == GENDER_MALE ? " male " :
                                gender == GENDER_FEMALE ? " female " : " ";
     const string suffix = gender_name + "name";
     const string name = getRandNameString("ancestor", suffix);
     return name.empty() ? make_name() : name;
+    // noloc section end
 }
 
 /// Setup when gaining a Hepliaklqana ancestor.
@@ -1882,10 +1888,9 @@ mgen_data hepliaklqana_ancestor_gen_data()
 /// Print a message for an ancestor's *something* being gained.
 static void _regain_memory(const monster &ancestor, string memory)
 {
-    mprf("%s regains the memory of %s %s.",
+    mprf("%s regains the memory of %s.",
          ancestor.name(DESC_YOUR, true).c_str(),
-         ancestor.pronoun(PRONOUN_POSSESSIVE, true).c_str(),
-         memory.c_str());
+         article_a(memory).c_str());
 }
 
 static string _item_ego_name(object_class_type base_type, int brand)
@@ -1902,7 +1907,7 @@ static string _item_ego_name(object_class_type base_type, int brand)
     }
     case OBJ_ARMOUR:
         // XXX: hack
-        return "reflection";
+        return "reflection"; // noloc
     default:
         die("unsupported object type");
     }
@@ -1962,9 +1967,8 @@ void upgrade_hepliaklqana_ancestor(bool quiet_force)
 
     if (!quiet_force)
     {
-        mprf("%s remembers more of %s old skill.",
-             ancestor->name(DESC_YOUR, true).c_str(),
-             ancestor->pronoun(PRONOUN_POSSESSIVE, true).c_str());
+        mprf("%s remembers more old skills.",
+             ancestor->name(DESC_YOUR, true).c_str());
     }
 
     set_ancestor_spells(*ancestor, !quiet_force);
@@ -1990,11 +1994,15 @@ void upgrade_hepliaklqana_ancestor(bool quiet_force)
         else if (brand != _hepliaklqana_weapon_brand(ancestor->type, old_hd)
                  && !quiet_force)
         {
-            mprf("%s remembers %s %s %s.",
+            string base_name = item_base_name(OBJ_WEAPONS, wpn);
+            string full_name = base_name + " of " + brand_type_name(brand, false);
+            base_name = "the " + base_name;
+            full_name = article_a(full_name);
+            // locnote: <ancestorr> remembers that <the weapon> was <a weapon of brand>
+            mprf("%s remembers that %s was %s.",
                  ancestor->name(DESC_YOUR, true).c_str(),
-                 ancestor->pronoun(PRONOUN_POSSESSIVE, true).c_str(),
-                 apostrophise(item_base_name(OBJ_WEAPONS, wpn)).c_str(),
-                 brand_type_name(brand, brand != SPWPN_DRAINING));
+                 base_name.c_str(),
+                 full_name.c_str());
         }
     }
     // but shields can't be lost, and *can* be gained (knight at hd 5)
@@ -2389,11 +2397,11 @@ void dock_piety(int piety_loss, int penance)
         if (last_piety_lecture != you.num_turns)
         {
             // output guilt message:
-            mprf("You feel%sguilty.",
-                 (piety_loss == 1) ? " a little " :
-                 (piety_loss <  5) ? " " :
-                 (piety_loss < 10) ? " very "
-                                   : " extremely ");
+            mprf("%s",
+                 (piety_loss == 1) ? "You feel a little guilty." :
+                 (piety_loss <  5) ? "You feel guilty." :
+                 (piety_loss < 10) ? "You feel very guilty."
+                                   : "You feel extremely guilty.");
         }
 
         last_piety_lecture = you.num_turns;
@@ -2525,9 +2533,8 @@ static void _gain_piety_point()
             // In exchange for your hp, you get an ancestor!
             const mgen_data mg = hepliaklqana_ancestor_gen_data();
             delayed_monster(mg);
-            simple_god_message(make_stringf(" forms a fragment of your life essence"
-                                            " into the memory of your ancestor, %s!",
-                                            mg.mname.c_str()).c_str());
+            simple_god_message(" forms a fragment of your life essence"
+                               " into the memory of your ancestor!");
         }
 
         for (const auto& power : get_god_powers(you.religion))
@@ -2760,17 +2767,15 @@ void lose_piety(int pgn)
     if (will_have_passive(passive_t::stat_boost)
         && chei_stat_boost(old_piety) > chei_stat_boost())
     {
-        string msg;
         if (have_passive(passive_t::slowed))
         {
-            msg = "%s lowers the support of your attributes "
-                  "as your movement quickens.";
+            simple_god_message(" lowers the support of your attributes"
+                               " as your movement quickens.");
         }
         else
         {
-            msg = "%s lowers the support of your attributes.";
+            simple_god_message(" lowers the support of your attributes.");
         }
-        simple_god_message(msg.c_str());
         notify_stat_change();
     }
 
@@ -3007,15 +3012,12 @@ void excommunication(bool voluntary, god_type new_god)
 
     if (god_hates_your_god(old_god, new_god))
     {
-        string msg;
         if (old_god == GOD_ZIN && is_chaotic_god(new_god))
-            msg = "%s does not appreciate desertion for chaos!";
+            simple_god_message(" does not appreciate desertion for chaos!", old_god);
         else if (is_good_god(old_god) && is_evil_god(new_god))
-            msg = "%s does not appreciate desertion for evil!";
+            simple_god_message(" does not appreciate desertion for evil!", old_god);
         else
-            msg = "%s does not appreciate desertion!";
-
-        simple_god_message(msg.c_str(), old_god);
+            simple_god_message(" does not appreciate desertion!", old_god);
     }
 
     if (had_halo)
@@ -3095,8 +3097,7 @@ void excommunication(bool voluntary, god_type new_god)
 
     case GOD_NEMELEX_XOBEH:
         reset_cards();
-        mprf(MSGCH_GOD, old_god, "Your access to %s's decks is revoked.",
-             god_name(old_god).c_str());
+        mprf(MSGCH_GOD, old_god, "Your access to Nemelex's decks is revoked.");
         break;
 
     case GOD_SHINING_ONE:
@@ -3419,7 +3420,7 @@ static void _god_welcome_handle_gear()
         if (item && god_hates_item(*item))
         {
             mprf(MSGCH_GOD, "%s warns you to remove %s.",
-                 uppercase_first(god_name(you.religion)).c_str(),
+                 god_name(you.religion).c_str(),
                  item->name(DESC_YOUR, false, false, false).c_str());
         }
     }
@@ -3993,9 +3994,12 @@ god_type choose_god(god_type def_god)
 {
     char specs[80];
 
-    string help = def_god == NUM_GODS ? "by name"
-                                      : "default " + god_name(def_god);
-    string prompt = make_stringf("Which god (%s)? ", help.c_str());
+    string prompt;
+    if (def_god == NUM_GODS)
+        prompt = localise("Which god (by name)?");
+    else
+        prompt = localise("Which god (default %s)?", god_name(def_god));
+    prompt += " ";
 
     if (msgwin_get_line(prompt, specs, sizeof(specs)) != 0)
         return NUM_GODS; // FIXME: distinguish cancellation from no match
@@ -4760,10 +4764,18 @@ static void _place_delayed_monsters()
             if (lastmon)
             {
                 ASSERT(placed > 0);
-                msg = replace_all(_delayed_success[0], "@servant@",
-                                  placed == 1
-                                      ? lastmon->name(DESC_A)
-                                      : pluralise(lastmon->name(DESC_PLAIN)));
+                msg = _delayed_success[0];
+
+                // Fake its coming from simple_god_message().
+                if (msg[0] == ' ' || msg[0] == '\'')
+                    msg = "@God@" + msg;
+
+                string god = god_name(mg.god);
+                string mon_name = placed == 1
+                             ? lastmon->name(DESC_A)
+                             : pluralise(lastmon->name(DESC_PLAIN));
+
+                msg = localise(msg, {{"God", god}, {"servant", mon_name}});
             }
             else
                 ASSERT(placed == 0);
@@ -4779,10 +4791,6 @@ static void _place_delayed_monsters()
                     (*cback)(mg, lastmon, placed);
                 continue;
             }
-
-            // Fake its coming from simple_god_message().
-            if (msg[0] == ' ' || msg[0] == '\'')
-                msg = uppercase_first(god_name(mg.god)) + msg;
 
             trim_string(msg);
 

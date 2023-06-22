@@ -39,6 +39,10 @@ Hepliaklqana
 Jiyva
 Jiyva
 %%%%
+# Jiyva has a randomly-generated second name
+Jiyva %s
+Jiyva %s
+%%%%
 Kikubaaqudgha
 Kikubaaqudgha
 %%%%
@@ -91,6 +95,10 @@ the Wu Jian Council
 der Wu-Jian-Rat
 %%%%
 # Wu Jian Council - short form
+Wu Jian
+Wu Jian
+%%%%
+# Wu Jian Council - another short form
 The Council
 Der Rat
 %%%%
@@ -112,6 +120,15 @@ sein Gott
 her god
 ihr Gott
 %%%%
+
+# long names
+# the others are currently in dat/database/de/gods.txt
+# These are only used in milestone notes (which are not translated) and as title on god description screen, so currently no need to decline
+%%%%
+Jiyva %s the Shapeless
+Jiyva %s das Formlose
+%%%%
+
 
 ########################
 # God names - genitive

@@ -505,6 +505,11 @@ string number_in_words(unsigned num)
     return _number_in_words(num, 0);
 }
 
+string article_the(const string &name, bool lowercase)
+{
+    return (lowercase ? "the " : "The ") + name;
+}
+
 // Naively prefix A/an to a noun.
 string article_a(const string &name, bool lowercase)
 {

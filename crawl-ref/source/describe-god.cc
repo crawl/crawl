@@ -1161,7 +1161,8 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
 {
     formatted_string topline;
     topline.textcolour(god_colour(which_god));
-    topline += formatted_string(uppercase_first(god_name(which_god, true)));
+    string name = localise(god_name(which_god, true));
+    topline += formatted_string(uppercase_first(name));
 
     auto vbox = make_shared<Box>(Widget::VERT);
     vbox->set_cross_alignment(Widget::STRETCH);
