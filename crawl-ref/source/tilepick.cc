@@ -1601,6 +1601,11 @@ tileidx_t tileidx_monster_base(int type, int mon_id, bool in_water, int colour,
         return tileidx_mon_clamp(ugly_tile, colour_offset);
     }
 
+    case MONS_BLINK_FROG:
+        if (!hash_with_seed(100, mon_id, you.frame_no))
+            return TILEP_MONS_BLINK_FROG_BLINKING;
+        break;
+
     case MONS_HYDRA:
         // Number of heads
         return tileidx_mon_clamp(TILEP_MONS_HYDRA, number - 1);
