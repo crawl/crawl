@@ -1385,7 +1385,7 @@ static void _try_make_staff_artefact(item_def& item, bool allow_uniques,
     if (force_randart
         // These odds are taken uncritically from _try_make_weapon_artifact.
         // We should probably revisit them.
-        || item_level > 0 && x_chance_in_y(101 + item_level * 3, 4000))
+        || item_level > 0 && x_chance_in_y(101 + item_level * 3, 8000))
     {
         make_item_randart(item);
     }
