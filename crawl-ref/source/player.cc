@@ -7171,7 +7171,7 @@ bool player::can_see_invisible() const
         || wearing_ego(EQ_HELMET, SPARM_SEE_INVISIBLE)
         // randart gear
         || scan_artefacts(ARTP_SEE_INVISIBLE) > 0
-        || you.wizard_vision)
+        || you.duration[DUR_REVELATION])
     {
         return true;
     }

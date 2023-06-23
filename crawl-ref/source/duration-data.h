@@ -657,6 +657,7 @@ static const duration_def duration_data[] =
           if (!you.duration[DUR_BRAINLESS] && !player_in_branch(BRANCH_GEHENNA))
               mprf(MSGCH_RECOVERY, "You can read scrolls again.");
       }}}},
+    { DUR_REVELATION, 0, "", "", "revelation", "", D_NO_FLAGS, {{""}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

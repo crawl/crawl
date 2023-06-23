@@ -3894,12 +3894,8 @@ bool read(item_def* scroll, dist *target)
     }
 
     case SCR_REVELATION:
-        you.wizard_vision = true;
         magic_mapping(500, 100, false);
-        viewwindow(true);
-        update_screen();
-        more();
-        you.wizard_vision = false;
+        you.duration[DUR_REVELATION] = you.time_taken + 1;
         break;
 
     case SCR_TORMENT:
@@ -4062,9 +4058,15 @@ bool read(item_def* scroll, dist *target)
             dec_inv_item_quantity(link, 1);
         else
             dec_mitm_item_quantity(scroll->index(), 1);
+
         count_action(CACT_USE, OBJ_SCROLLS);
+
         if (you.has_mutation(MUT_AWKWARD_TONGUE))
+        {
             you.time_taken = div_rand_round(you.time_taken * 3, 2);
+            if (which_scroll == SCR_REVELATION) // ew
+                you.duration[DUR_REVELATION] = you.time_taken + 1;
+        }
     }
 
     if (!alreadyknown
