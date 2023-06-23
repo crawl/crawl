@@ -4709,6 +4709,19 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         // lambdas could let us do it without even changing the signature?
     }
 
+    // Ew. We should really pass this in to items() somehow.
+    if (spec.props.exists(NO_EXCLUDE_KEY) && spec.base_type == OBJ_MISCELLANY)
+    {
+        rng::subgenerator item_rng;
+        item.base_type = OBJ_MISCELLANY;
+        const auto typ = get_misc_item_type(spec.sub_type, false);
+        item.sub_type = typ;
+        you.generated_misc.insert(typ);
+        item_colour(item);
+        item_set_appearance(item);
+        ASSERT(item.is_valid());
+    }
+
     // Wipe item origin to remove "this is a god gift!" from there,
     // unless we're dealing with a corpse.
     if (!spec.corpselike())
