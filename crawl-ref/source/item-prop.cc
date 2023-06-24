@@ -124,12 +124,11 @@ static const armour_def Armour_prop[] =
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, true, 333 },
     { ARM_ROBE,                 "robe",                   2,   0,     7,
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_LARGE, true, 1000, {
-            { SPARM_RESISTANCE,      1 },
             { SPARM_ARCHMAGI,        1 },
-            { SPARM_NORMAL,          2 },
             { SPARM_COLD_RESISTANCE, 2 },
             { SPARM_FIRE_RESISTANCE, 2 },
             { SPARM_POSITIVE_ENERGY, 2 },
+            { SPARM_NORMAL,          3 },
             { SPARM_WILLPOWER,       4 },
     }},
     { ARM_LEATHER_ARMOUR,       "leather armour",         3,  -40,   20,
