@@ -1789,7 +1789,9 @@ namespace quiver
             // to apply smart targeting behavior for iceblast; should have no
             // impact on other wands
             target.find_target = true;
-            if (autofight_check() || !do_inscription_check())
+            if (autofight_check())
+                return;
+            if (!check_warning_inscriptions(you.inv[item_slot], OPER_EVOKE))
                 return;
 
             evoke_item(item_slot, &target);

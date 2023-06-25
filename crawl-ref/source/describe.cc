@@ -3489,7 +3489,11 @@ static bool _do_action(item_def &item, const command_type action)
         drop_item(slot, item.quantity);
         break;
     case CMD_ADJUST_INVENTORY: adjust_item(slot);             break;
-    case CMD_EVOKE:            evoke_item(slot);              break;
+    case CMD_EVOKE:
+        if (!check_warning_inscriptions(you.inv[slot], OPER_EVOKE))
+            return true;
+        evoke_item(slot);
+        break;
     default:
         ui::error(make_stringf("illegal inventory cmd '%d'", action));
     }

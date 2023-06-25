@@ -1138,9 +1138,6 @@ bool evoke_item(int slot, dist *preselect)
     if (!evoke_check(slot))
         return false;
 
-    if (!check_warning_inscriptions(you.inv[slot], OPER_EVOKE))
-        return false;
-
 #ifdef ASSERTS // Used only by an assert
     const bool wielded = (you.equip[EQ_WEAPON] == slot);
 #endif /* DEBUG */
