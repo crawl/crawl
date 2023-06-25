@@ -4666,7 +4666,7 @@ KFEAT: m = lava mimic
 # We use a statue mimic to stop autoexplore before the player reaches the lava.
 KFEAT: G = granite_statue mimic
 # The gold pulls an unspoiled player next to the mimics.
-KITEM: $ = gold q:3
+KITEM: $ = gold q:3 no_pickup
 MAP
 xxxxx
 xl.lx
