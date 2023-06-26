@@ -174,7 +174,7 @@ static void _do_wizard_command(int wiz_command)
     case CONTROL('Y'): wizard_suppress(); break;
 
     case 'z': wizard_cast_spec_spell(); break;
-    // case 'Z': break;
+    case 'Z': wizard_unobtain_runes_and_orb(); break;
     // case CONTROL('Z'): break;
 
     case '!': wizard_memorise_spec_spell(); break;
@@ -502,6 +502,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>+</w>      make randart from item\n"
                        "<w>'</w>      list items\n"
                        "<w>J</w>      Jiyva off-level sacrifice\n"
+                       "<w>Z</w>      Unobtain runes and Orb of Zot\n"
                        "\n"
                        "<yellow>Debugging commands</yellow>\n"
                        "<w>f</w>      quick fight simulation\n"

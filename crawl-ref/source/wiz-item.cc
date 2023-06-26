@@ -11,6 +11,7 @@
 
 #include "acquire.h"
 #include "act-iter.h"
+#include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "cio.h"
@@ -1685,5 +1686,15 @@ void wizard_recharge_evokers()
         evoker_debt(dummy.sub_type) = 0;
     }
     mpr("Evokers recharged.");
+}
+
+void wizard_unobtain_runes_and_orb()
+{
+    you.runes.reset();
+
+    you.chapter = CHAPTER_ORB_HUNTING;
+    invalidate_agrid(true);
+
+    mpr("Unobtained all runes and the Orb of Zot.");
 }
 #endif
