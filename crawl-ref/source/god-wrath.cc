@@ -22,6 +22,7 @@
 #include "death-curse.h"
 #include "decks.h"
 #include "env.h"
+#include "fineff.h"
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-passive.h" // shadow_monster
@@ -431,7 +432,12 @@ void lucy_check_meddling()
     const int to_banish = roll_dice(2, 3);
     shuffle_array(begin(potential_banishees), end(potential_banishees));
     for (int i = 0; i < to_banish && i < (int)potential_banishees.size(); ++i)
-        potential_banishees[i]->banish(&you);
+    {
+        // We might have banished a summoner and poofed its summons, etc.
+        monster* mon = potential_banishees[i];
+        if (!invalid_monster(mon) && mon->alive())
+            mon->banish(&you);
+    }
 }
 
 static void _spell_retribution(monster* avatar, spell_type spell, god_type god,
@@ -2372,6 +2378,6 @@ void gozag_incite(monster *mon)
     {
         mon->add_ench(ENCH_GOZAG_INCITE);
         view_update_at(mon->pos());
-        lucy_check_meddling();
+        lugonu_meddle_fineff::schedule();
     }
 }

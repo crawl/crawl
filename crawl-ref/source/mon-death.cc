@@ -32,7 +32,6 @@
 #include "god-companions.h"
 #include "god-conduct.h"
 #include "god-passive.h" // passive_t::bless_followers, share_exp, convert_orcs
-#include "god-wrath.h" // lucy_check_meddling
 #include "hints.h"
 #include "hiscores.h"
 #include "item-name.h"
@@ -772,7 +771,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 
     god_speaks(god, msg.c_str());
 
-    lucy_check_meddling();
+    lugonu_meddle_fineff::schedule();
 
     return true;
 }

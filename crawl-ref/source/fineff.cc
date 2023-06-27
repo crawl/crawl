@@ -19,6 +19,7 @@
 #include "env.h"
 #include "fight.h"
 #include "god-abil.h"
+#include "god-wrath.h" // lucy_check_meddling
 #include "libutil.h"
 #include "losglobal.h"
 #include "melee-attack.h"
@@ -895,6 +896,10 @@ void spectral_weapon_fineff::fire()
     mons->summoner = atkr->mid;
     mons->behaviour = BEH_SEEK; // for display
     atkr->props[SPECTRAL_WEAPON_KEY].get_int() = mons->mid;
+}
+
+void lugonu_meddle_fineff::fire() {
+    lucy_check_meddling();
 }
 
 // Effects that occur after all other effects, even if the monster is dead.
