@@ -908,16 +908,6 @@ static int you_gold(lua_State *ls)
     PLUARET(number, you.gold);
 }
 
-/*** Can you eat chunks?
- * @treturn boolean
- * @function you_can_consume_corpses
- */
-static int you_can_consume_corpses(lua_State *ls)
-{
-    lua_pushboolean(ls, false);
-    return 1;
-}
-
 static int _you_have_rune(lua_State *ls)
 {
     int which_rune = NUM_RUNE_TYPES;
@@ -1347,8 +1337,6 @@ static const struct luaL_reg you_clib[] =
     { "constricting", you_constricting },
     { "status",       you_status },
     { "immune_to_hex", you_immune_to_hex },
-
-    { "can_consume_corpses",      you_can_consume_corpses },
 
     { "stop_activity", you_stop_activity },
     { "taking_stairs", you_taking_stairs },
