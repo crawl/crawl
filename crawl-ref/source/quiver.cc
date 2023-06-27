@@ -1796,7 +1796,7 @@ namespace quiver
             if (!check_warning_inscriptions(you.inv[item_slot], OPER_EVOKE))
                 return;
 
-            evoke_item(item_slot, &target);
+            evoke_item(you.inv[item_slot], &target);
 
             t = target; // copy back, in case they are different
         }

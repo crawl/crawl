@@ -1118,10 +1118,8 @@ bool item_ever_evokable(const item_def &item)
     return cannot_evoke_item_reason(&item, false).empty();
 }
 
-bool evoke_item(int slot, dist *preselect)
+bool evoke_item(item_def& item, dist *preselect)
 {
-    ASSERT_RANGE(slot, 0, ENDOFPACK);
-    item_def& item = you.inv[slot];
     if (!item_currently_evokable(&item))
         return false;
 
@@ -1131,12 +1129,14 @@ bool evoke_item(int slot, dist *preselect)
     switch (item.base_type)
     {
     case OBJ_WANDS:
-        zap_wand(slot, preselect);
+        ASSERT(in_inventory(item));
+        zap_wand(item.link, preselect);
         return true;
 
     case OBJ_WEAPONS:
     {
 #ifdef ASSERTS
+        ASSERT(in_inventory(item));
         const int equip = you.equip[EQ_WEAPON];
         ASSERT(equip != -1 && item.link == equip);
 #endif
@@ -1149,6 +1149,7 @@ bool evoke_item(int slot, dist *preselect)
     }
 
     case OBJ_MISCELLANY:
+        ASSERT(in_inventory(item));
         did_work = true; // easier to do it this way for misc items
 
         switch (item.sub_type)

@@ -3492,7 +3492,7 @@ static bool _do_action(item_def &item, const command_type action)
     case CMD_EVOKE:
         if (!check_warning_inscriptions(you.inv[slot], OPER_EVOKE))
             return true;
-        evoke_item(slot);
+        evoke_item(you.inv[slot]);
         break;
     default:
         ui::error(make_stringf("illegal inventory cmd '%d'", action));

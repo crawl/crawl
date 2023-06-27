@@ -1032,14 +1032,13 @@ static bool _unequip_item(item_def &i)
 static bool _evoke_item(item_def &i)
 {
     ASSERT(i.defined());
-    // wrapper for compatibility with old api that takes slots
     if (!in_inventory(i))
     {
         mprf(MSGCH_PROMPT, "You aren't carrying that!");
         return false;
     }
 
-    return evoke_item(i.link);
+    return evoke_item(i);
 }
 
 static vector<equipment_type> _current_ring_types();
@@ -4169,7 +4168,7 @@ void tile_item_use_secondary(int idx)
 
 void tile_item_use(int idx)
 {
-    const item_def item = you.inv[idx];
+    item_def &item = you.inv[idx];
 
     // Equipped?
     bool equipped = false;
@@ -4217,7 +4216,7 @@ void tile_item_use(int idx)
         if (item_ever_evokable(item))
         {
             if (check_warning_inscriptions(item, OPER_EVOKE))
-                evoke_item(idx);
+                evoke_item(item);
             return;
         }
         // Unwield wielded items.
