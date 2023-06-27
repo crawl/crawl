@@ -4214,7 +4214,7 @@ void tile_item_use(int idx)
             return;
         }
         // Evoke misc. items or wands.
-        if (item_is_evokable(item, false))
+        if (item_ever_evokable(item))
         {
             if (check_warning_inscriptions(item, OPER_EVOKE))
                 evoke_item(idx);

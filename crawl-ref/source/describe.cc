@@ -1089,7 +1089,7 @@ static skill_type _item_training_skill(const item_def &item)
         return SK_ARMOUR;
     else if (item.base_type == OBJ_MISSILES && is_throwable(&you, item))
         return SK_THROWING;
-    else if (item_is_evokable(item)) // not very accurate
+    else if (item_ever_evokable(item)) // not very accurate
         return SK_EVOCATIONS;
     else
         return SK_NONE;

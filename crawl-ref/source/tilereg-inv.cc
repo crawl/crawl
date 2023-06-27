@@ -218,7 +218,7 @@ static bool _can_use_item(const item_def &item, bool equipped)
     if (equipped && item.cursed())
     {
         // Evocable items (e.g. dispater staff) are still evocable when cursed.
-        if (item_is_evokable(item))
+        if (item_ever_evokable(item))
             return true;
 
         // You can't unwield/fire a wielded cursed weapon/staff

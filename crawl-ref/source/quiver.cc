@@ -1737,7 +1737,8 @@ namespace quiver
 
         bool is_enabled() const override
         {
-            return evoke_check(item_slot, true);
+            const item_def *item = item_slot == -1 ? nullptr : &you.inv[item_slot];
+            return cannot_evoke_item_reason(item).empty();
         }
 
         // n.b. implementing do_inscription_check for OPER_EVOKE is not needed
@@ -1782,7 +1783,8 @@ namespace quiver
 
             if (!is_enabled())
             {
-                evoke_check(item_slot); // for messaging
+                const item_def *item = item_slot == -1 ? nullptr : &you.inv[item_slot];
+                mpr(cannot_evoke_item_reason(item));
                 return;
             }
 
