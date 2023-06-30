@@ -245,6 +245,14 @@ Tiles and Other Art
 * Icons added for many mutations.
 * New Eustachio splash screen.
 
+Stone Soup 0.30.1 (20230630)
+---------------------------------------------------
+
+Bugfix release
+--------------
+* Fix zooming on local tiles
+* Many other bug and documentation fixes
+
 Stone Soup 0.30 (20230505)
 --------------------------
 
