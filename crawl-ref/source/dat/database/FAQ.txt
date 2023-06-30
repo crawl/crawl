@@ -342,7 +342,7 @@ A:idea
 
 A: If you'd like your idea to get in, your surest bet is to put it in a place
 where a developer can see it. One good place is the official forum, at
-https://crawl.develz.org/tavern/. If it catches the interest of at least one
+https://tavern.dcss.io/. If it catches the interest of at least one
 coder, chances are it'll' make it into the game.
 
 Note that your idea has a better chance of being accepted if you present the
