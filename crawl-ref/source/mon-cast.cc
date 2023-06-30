@@ -4736,8 +4736,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 
         if (mons_invuln_will(**mi)
             || mons_is_firewood(**mi)
-            || mons_atts_aligned(mi->attitude, mons->attitude)
-            || mons->has_ench(ENCH_HEXED))
+            || mons_atts_aligned(mi->temp_attitude(), mons->temp_attitude()))
         {
             continue;
         }
