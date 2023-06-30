@@ -442,6 +442,12 @@ void fill_doll_equipment(dolls_data &result)
                         + result.parts[TILEP_PART_BASE] - TILEP_BASE_FELID;
                 }
                 else if (is_player_tile(result.parts[TILEP_PART_BASE],
+                                        TILEP_BASE_FELID_SILLY))
+                {
+                    result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS_CAT_SILLY
+                        + result.parts[TILEP_PART_BASE] - TILEP_BASE_FELID_SILLY;
+                }
+                else if (is_player_tile(result.parts[TILEP_PART_BASE],
                                   TILEP_TRAN_STATUE_FELID))
                 {
                     result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS_CAT;

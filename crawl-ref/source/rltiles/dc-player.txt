@@ -153,6 +153,7 @@ gargoyle_red_f
 gargoyle_brown_m
 gargoyle_brown_f
 %sdir player/felids
+# These must match the felid horns tiles.
 %rim 0
 cat1 FELID
 cat2
@@ -1095,15 +1096,16 @@ horns1 HORNS1
 horns2 HORNS2
 horns3 HORNS3
 %sdir player/mutations
+# These must match the base felid tiles.
 cat1 HORNS_CAT
 cat2
-cat3
 cat4
 cat5
-cat6
 cat7
 cat8
 cat9
+cat3 HORNS_CAT_SILLY
+cat6
 cat10
 draconian1 HORNS_DRAC
 %sdir player/head
