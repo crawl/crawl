@@ -94,6 +94,18 @@ function ch_stash_search_annotate_item(it)
     end
   end
 
+  if it.class(true) == "potion" or it.class(true) == "scroll" then
+    local props = {
+      ["enlightenment"] = "Will+ flight Fly",
+      ["lignification"] = "rPois rTorment rDrown",
+      ["resistance"] = "rF+ rC+ rElec rPois rCorr",
+      ["revelation"] = "sInv"
+    }
+    if props[it.subtype()] then
+      annot = annot .. "{" .. props[it.subtype()] .. "} "
+    end
+  end
+
   if it.class(true) == "magical staff" and not it.artefact then
     annot = annot .. "{weapon} "
     local props = {
