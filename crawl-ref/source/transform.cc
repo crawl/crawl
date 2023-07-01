@@ -1048,7 +1048,9 @@ public:
 static const Form* forms[] =
 {
     &FormNone::instance(),
+#if TAG_MAJOR_VERSION == 34
     &FormSpider::instance(),
+#endif
     &FormBlade::instance(),
     &FormStatue::instance(),
 
@@ -1058,7 +1060,9 @@ static const Form* forms[] =
     &FormBat::instance(),
 
     &FormPig::instance(),
+#if TAG_MAJOR_VERSION == 34
     &FormAppendage::instance(),
+#endif
     &FormTree::instance(),
 #if TAG_MAJOR_VERSION == 34
     &FormPorcupine::instance(),
@@ -1177,7 +1181,8 @@ bool form_likes_water(transformation form)
 bool form_changed_physiology(transformation form)
 {
     return form != transformation::none
-        && form != transformation::appendage
+        && form != transformation::beast
+        && form != transformation::maw
         && form != transformation::blade_hands;
 }
 

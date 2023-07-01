@@ -1933,17 +1933,9 @@ bool player_effectively_in_light_armour()
 bool player_is_shapechanged()
 {
     // TODO: move into data
-    if (you.form == transformation::none
-        || you.form == transformation::blade_hands
-        || you.form == transformation::death
-        || you.form == transformation::shadow
-        || you.form == transformation::beast
-        || you.form == transformation::maw)
-    {
-        return false;
-    }
-
-    return true;
+    return form_changed_physiology(you.form)
+        && you.form != transformation::death
+        && you.form == transformation::shadow;
 }
 
 void update_acrobat_status()

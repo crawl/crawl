@@ -5,7 +5,9 @@
 enum class transformation
 {
     none,
+#if TAG_MAJOR_VERSION == 34
     spider,
+#endif
     blade_hands,
     statue,
     anaconda,
