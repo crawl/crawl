@@ -103,6 +103,9 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     if (feat_is_tree(feat) && env.forest_awoken_until)
         colour = ETC_AWOKEN_FOREST;
 
+    if (feat == DNGN_MUD)
+        colour = BROWN;
+
     if (feat == DNGN_FLOOR)
     {
         if (cell.flags & MAP_LIQUEFIED)
@@ -517,7 +520,7 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
 
         g = _get_item_override(*eitem);
 
-        if (feat_is_water(cell.feat()))
+        if (!feat_has_dry_floor(cell.feat()))
             g.col = _cell_feat_show_colour(cell, loc, coloured);
         else if (!g.col)
             g.col = eitem->get_colour();
