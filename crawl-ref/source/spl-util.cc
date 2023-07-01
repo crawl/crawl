@@ -1300,11 +1300,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (you.undead_state(temp))
             return "you're too dead.";
         break;
-    case SPELL_NECROMUTATION:
-        // only prohibited to actual undead, not lichformed players
-        if (you.undead_state(false))
-            return "you're too dead.";
-        break;
 
     case SPELL_OZOCUBUS_ARMOUR:
         if (temp && you.form == transformation::statue)
