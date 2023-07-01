@@ -101,7 +101,6 @@ static const vector<spell_type> _xom_random_spells =
     SPELL_CAUSE_FEAR,
     SPELL_INTOXICATE,
     SPELL_SUMMON_MANA_VIPER,
-    SPELL_STATUE_FORM,
     SPELL_SUMMON_CACTUS,
     SPELL_DISPERSAL,
     SPELL_ENGLACIATION,
@@ -112,7 +111,6 @@ static const vector<spell_type> _xom_random_spells =
     SPELL_DISJUNCTION,
     SPELL_SUMMON_HORRIBLE_THINGS,
     SPELL_SUMMON_DRAGON,
-    SPELL_NECROMUTATION,
     SPELL_CHAIN_OF_CHAOS
 };
 
