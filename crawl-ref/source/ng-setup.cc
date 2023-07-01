@@ -536,7 +536,10 @@ static void _setup_generic(const newgame_def& ng,
     }
 
     if (you.char_class == JOB_TRANSMUTER)
+    {
+        you.default_form = transformation::beast;
         set_form(transformation::beast, 1); // hacky...
+    }
 
     reassess_starting_skills();
     init_skill_order();
