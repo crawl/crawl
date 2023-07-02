@@ -153,7 +153,7 @@ static const form_entry formdata[] =
     21, 27, TALISMAN_DEATH,
     EQF_NONE, MR_RES_COLD | mrd(MR_RES_NEG, 3),
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
-    0, 0, 0, true, 0, true, 16,
+    0, 0, 0, true, 0, true, 9,
     SPWPN_DRAINING, MAGENTA, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_FORBID, true,
     "", 0, "", "", "", "bone",
