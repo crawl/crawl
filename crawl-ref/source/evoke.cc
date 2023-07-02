@@ -1072,9 +1072,9 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
 
     if (item && item->base_type == OBJ_TALISMANS)
     {
-        if (you.undead_state(temp) == US_UNDEAD)
+        if (you.undead_state(false) == US_UNDEAD)
             return "your undead flesh cannot be transformed.";
-        if (you.is_lifeless_undead(temp))
+        if (temp && you.undead_state() == US_SEMI_UNDEAD && !you.vampire_alive)
             return "your current blood level is not sufficient.";
         const transformation trans = form_for_talisman(*item);
         if (temp)
