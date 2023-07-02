@@ -365,17 +365,18 @@ static void _change_skill_level(skill_type exsk, int n)
 // Called whenever a skill is trained.
 void redraw_skill(skill_type exsk, skill_type old_best_skill, bool recalculate_order)
 {
-    if (exsk == SK_FIGHTING || exsk == SK_TRANSMUTATIONS)
+    const bool trained_form = exsk == SK_TRANSMUTATIONS && you.form != transformation::none;
+    if (exsk == SK_FIGHTING || trained_form)
         calc_hp(true, false);
 
     if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
         calc_mp();
 
-    if (exsk == SK_DODGING || exsk == SK_ARMOUR)
+    if (exsk == SK_DODGING || exsk == SK_ARMOUR || trained_form)
         you.redraw_evasion = true;
 
     if (exsk == SK_ARMOUR || exsk == SK_SHIELDS || exsk == SK_ICE_MAGIC
-        || exsk == SK_EARTH_MAGIC || you.duration[DUR_TRANSFORMATION] > 0)
+        || exsk == SK_EARTH_MAGIC || trained_form)
     {
         you.redraw_armour_class = true;
     }
