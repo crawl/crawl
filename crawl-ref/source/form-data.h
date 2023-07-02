@@ -125,7 +125,7 @@ static const form_entry formdata[] =
     9, 20, TALISMAN_SERPENT,
     EQF_PHYSICAL, MR_NO_FLAGS,
     DEFAULT_DURATION, 5, 0, SIZE_LARGE, 12,
-    8, 4, 0, false, 0, true, 12,
+    8, 4, 0, true, 30, true, 12,
     SPWPN_NORMAL, LIGHTGREY, "", { "hit", "lash", "body-slam", "crush" },
     FC_DEFAULT, FC_FORBID, FC_ENABLE, false,
     "", 0, "", "", "coil in front of", "flesh",

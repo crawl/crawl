@@ -1198,7 +1198,7 @@ serpent talisman
 
 Transforms the user into a giant, cold-blooded anaconda, ready to wind their
 coils around foes and crush them to death. While transformed, any equipped
-weapons and armour are melded.
+weapons and armour are melded, and casting spells is much more difficult.
 %%%%
 shortbow
 
