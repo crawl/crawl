@@ -26,7 +26,7 @@ aptitudes:
   conjurations: -1
   hexes: 4
   translocations: 4
-  transmutations: 1
+  transmutations: -1
   fire_magic: -1
   ice_magic: -1
   air_magic: -1

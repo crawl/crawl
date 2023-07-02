@@ -28,7 +28,7 @@ aptitudes:
   hexes: 4
   necromancy: 1
   translocations: -2
-  transmutations: 1
+  transmutations: -1
   fire_magic: -2
   poison_magic: -1
   invocations: -1

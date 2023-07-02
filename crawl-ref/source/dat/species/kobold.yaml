@@ -21,6 +21,7 @@ aptitudes:
   dodging: 2
   stealth: 4
   shields: -2
+  transmutations: -2
   invocations: 1
   evocations: 2
 

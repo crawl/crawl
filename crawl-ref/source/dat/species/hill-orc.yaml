@@ -24,7 +24,7 @@ aptitudes:
   unarmed_combat: 1
   spellcasting: -3
   translocations: -2
-  transmutations: -3
+  transmutations: -5
   fire_magic: 1
   ice_magic: -1
   air_magic: -2

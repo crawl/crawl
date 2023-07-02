@@ -19,6 +19,7 @@ aptitudes:
   dodging: -1
   spellcasting: -1
   hexes: -1
+  transmutations: -2
   invocations: 1
   # Black Draconian specific
   air_magic: 2
