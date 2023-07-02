@@ -944,12 +944,12 @@ public:
      */
     int get_base_unarmed_damage() const override
     {
-        return 2 + get_level(5) / 2;
+        return 8 + get_level(3) / 2;
     }
 
     int ev_bonus() const override
     {
-        return get_level(20) / 27;
+        return get_level(16) / 27;
     }
 
     bool can_offhand_punch() const override { return true; }
