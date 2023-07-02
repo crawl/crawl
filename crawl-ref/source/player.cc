@@ -3189,6 +3189,10 @@ bool dur_expiring(duration_type dur)
     if (value <= 0)
         return false;
 
+    // XXX: reconsider using DUR_TRANSFORM here
+    if (dur == DUR_TRANSFORMATION && you.form == you.default_form)
+        return false;
+
     return value <= duration_expire_point(dur);
 }
 
