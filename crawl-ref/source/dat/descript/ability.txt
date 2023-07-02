@@ -812,7 +812,7 @@ dealing electric damage to everything in their path and depositing the user
 at the bolt's end. After using this ability, you will be unable to use it
 again for a short time.
 %%%%
-Siphon Essence
+Siphon Essence ability
 
 Violently draws upon the vital essence of nearby foes, halving their
 remaining life and using it to heal the user. Transmutations skill increases
