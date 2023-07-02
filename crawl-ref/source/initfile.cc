@@ -984,6 +984,8 @@ object_class_type item_class_by_sym(char32_t c)
         return OBJ_ORBS;
     case '}':
         return OBJ_MISCELLANY;
+    case 'T':
+        return OBJ_TALISMANS;
     case '&':
     case 'X':
     case 'x':
