@@ -1716,7 +1716,7 @@ static void _on_enter_form(transformation which_trans)
 void set_form(transformation which_trans, int dur)
 {
     you.form = which_trans;
-    you.duration[DUR_TRANSFORMATION] = dur;
+    you.duration[DUR_TRANSFORMATION] = dur * BASELINE_DELAY;
     update_player_symbol();
 
     const int str_mod = get_form(which_trans)->str_mod;
