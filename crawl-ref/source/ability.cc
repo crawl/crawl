@@ -48,6 +48,7 @@
 #include "maps.h"
 #include "menu.h"
 #include "message.h"
+#include "mon-behv.h"
 #include "mon-place.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
@@ -2446,7 +2447,7 @@ static vector<monster*> _get_siphon_victims(bool known)
             && !mons_is_conjured(mi->type) // redundant?
             && !mons_is_tentacle_or_tentacle_segment(mi->type) // dubious
             // intentionally allowing firewood, i guess..?
-            && you.can_see(**mi) || !known)
+            && (you.can_see(**mi) || !known))
         {
             victims.push_back(*mi);
         }
@@ -2475,6 +2476,7 @@ static spret _siphon_essence(bool fail)
         if (damage && mon->observable())
         {
             simple_monster_message(*mon, " convulses!");
+            behaviour_event(mon, ME_ANNOY);
             seen = true;
         }
     }
