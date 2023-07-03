@@ -1015,8 +1015,8 @@ dgn.delayed_decay_extra(_G, "D", "dwarf skeleton",
 
  -- Minotaur hunter.
 dgn.delayed_decay_extra(_G, "E", "minotaur skeleton",
-    "shortbow good_item / longbow w:5 / arbalest good_item" ..
-    "    / triple crossbow w:5 / javelin good_item" ..
+    "shortbow good_item / orcbow good_item / arbalest good_item" ..
+    "    / longbow w:5 / triple crossbow w:5 / javelin good_item" ..
     ", leather armour good_item w:50 / ring mail good_item w:50" ..
     "    / " .. heavy_armour .. " / " .. medium_scales ..
     "    / " .. heavy_scales ..
@@ -1125,8 +1125,8 @@ dgn.delayed_decay_extra(_G, "Q", "kobold skeleton",
     "    / boomerang ego:dispersal" ..
     ", dagger good_item / short sword good_item / rapier good_item" ..
     "    / long sword good_item / double sword / demon blade" ..
-    "    / sling randart / hand crossbow good_item" ..
-    "    / shortbow randart / arbalest good_item / triple crossbow" ..
+    "    / sling randart / hand crossbow good_item / shortbow randart" ..
+    "    / orcbow randart / arbalest good_item / triple crossbow" ..
     "    / any armour good_item / nothing w:130" ..
     ", buckler good_item / kite shield good_item / " .. dgn.good_aux_armour ..
     "    / any wand w:20 / any misc / gold / any scroll / any potion" ..

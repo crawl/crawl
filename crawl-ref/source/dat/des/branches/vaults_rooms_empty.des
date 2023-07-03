@@ -1610,3 +1610,651 @@ x..           ..x
 .....x.....x.....
  ...xxx...xxx...
 ENDMAP
+
+NAME:    nicolae_vaults_apartment_1
+TAGS:    vaults_empty allow_dup
+SHUFFLE: pqrs
+SUBST:   p : pP., q : qQ., r : rR, s : sS
+NSUBST:  p = +. / x, q = +. / x, r = +. / x, s = +. / x, \
+         P = x / ., Q = x / ., R = x / ., S = x / .
+MAP
+...p...
+.(.p.(.
+...p...
+rrrxqqq
+...s...
+.(.s.(.
+...s...
+ENDMAP
+
+NAME:    nicolae_vaults_apartment_2
+TAGS:    vaults_empty allow_dup
+SHUFFLE: pqr
+SUBST:   p : pP., q : qQ., r : rR
+NSUBST:  p = +. / x, q = +. / x, r = +. / x, P = x / ., Q = x / ., R = x / .
+MAP
+    ...
+    .(.
+    ...
+    qqq
+...p...r...
+.(.p.(.r.(.
+...p...r...
+ENDMAP
+
+NAME:  nicolae_vaults_cochlea
+TAGS:  vaults_empty allow_dup
+SUBST: x = +:1 x:14, - = x
+MAP
+-.........
+-..-xxx-..
+-.-.....-.
+-.x..-..x.
+-.x.(.-.x.
+-.-...-.x.
+-..-x-..x.
+-.......-.
+.-xxxxx-..
+..........
+ENDMAP
+
+NAME: nicolae_vaults_diamond_1
+TAGS: vaults_empty allow_dup
+MAP
+  .
+ ...
+..(..
+ ...
+  .
+ENDMAP
+
+NAME: nicolae_vaults_diamond_2
+TAGS: vaults_empty allow_dup
+MAP
+    ..
+  ......
+...(..(...
+  ......
+    ..
+ENDMAP
+
+NAME: nicolae_vaults_double_plus_1
+TAGS: vaults_empty allow_dup
+MAP
+ . .
+.....
+ . .
+ENDMAP
+
+NAME: nicolae_vaults_double_plus_2
+TAGS: vaults_empty allow_dup
+MAP
+  ..  ..
+  ..  ..
+..(...(...
+...(...(..
+  ..  ..
+  ..  ..
+ENDMAP
+
+NAME: nicolae_vaults_double_plus_3
+TAGS: vaults_empty allow_dup
+MAP
+   ...   ...
+   .(.   .(.
+   ...   ...
+...............
+.(..(..(..(..(.
+...............
+   ...   ...
+   .(.   .(.
+   ...   ...
+ENDMAP
+
+NAME: nicolae_vaults_hexular_roomagon
+TAGS: vaults_empty allow_dup
+MAP
+    ...
+   x.(.x
+...+...+...
+.(.xx+xx.(.
+...+...+...
+x+xx.(.xx+x
+...+...+...
+.(.xx+xx.(.
+...+...+...
+   x.(.x
+    ...
+ENDMAP
+
+NAME: nicolae_vaults_house_1
+TAGS: vaults_empty allow_dup
+MAP
+  .
+ ...
+..(..
+.....
+ENDMAP
+
+NAME: nicolae_vaults_house_2
+TAGS: vaults_empty allow_dup
+MAP
+   .
+  ...
+ ..(..
+.......
+.(...(.
+.......
+ENDMAP
+
+NAME: nicolae_vaults_house_3
+TAGS: vaults_empty allow_dup
+MAP
+    .
+   ...
+  ..(..
+ .......
+.........
+....(....
+.(.....(.
+.........
+ENDMAP
+
+NAME:   nicolae_vaults_layer_cake_slice
+TAGS:   vaults_empty allow_dup
+NSUBST: D = + / x, E = + / x
+MAP
+.
+..
+x..
+xx..
+.xD..
+..DD..
+x..DD..
+xE..DD..
+.EE..xx..
+..xx..xx..
+ENDMAP
+
+NAME: nicolae_vaults_lightning_bolt
+TAGS: vaults_empty
+MAP
+            .
+           ...
+          ..(..
+..       .......
+ ...    .... ....
+  .... ....    ...
+   .......       ..
+    ..(..
+     ...
+      .
+ENDMAP
+
+NAME:  nicolae_vaults_octothorpe
+TAGS:  vaults_empty allow_dup
+MAP
+  ..  ..
+  ..  ..
+..(....(..
+...(..(...
+  ..  ..
+  ..  ..
+...(..(...
+..(....(..
+  ..  ..
+  ..  ..
+ENDMAP
+
+NAME: nicolae_vaults_offset_grid_hallway_1
+TAGS: vaults_empty allow_dup
+MAP
+  ..
+  ....
+ ..x....
+ ....x....
+..x....x....
+....x....x....
+  ....x....x..
+    ....x....
+      ....x..
+        ....
+          ..
+ENDMAP
+
+NAME: nicolae_vaults_offset_grid_hallway_2
+TAGS: vaults_empty allow_dup
+MAP
+                 ..
+              ..x..
+           ..x....
+        ..x....x..
+     ..x....x....
+  ..x....x....x..
+  ....x....x..
+ ..x....x..
+ ....x..
+..x..
+..
+ENDMAP
+
+NAME: nicolae_vaults_offset_grid_hallway_3
+TAGS: vaults_empty allow_dup
+MAP
+      ..
+   ..x....
+..x....x....
+....x....x....
+  ....x....x....
+    ....x....x....
+      ....x....x..
+        ....x..
+          ..
+ENDMAP
+
+NAME: nicolae_vaults_offset_grid_hallway_4
+TAGS: vaults_empty allow_dup
+MAP
+..
+....
+ x....
+ ..x....
+ ....x....
+  x....x....
+  ..x....x..
+  ....x....x
+    ....x....
+      ....x..
+        ....x
+          ....
+            ..
+ENDMAP
+
+NAME:  nicolae_vaults_oval_intersection
+TAGS:  vaults_empty allow_dup
+SUBST: D : .x, E : .x, F : .x
+MAP
+    ...
+   .....
+   ..(..
+ ..D...D..
+....E.E....
+..(..F..(..
+....E.E....
+ ..D...D..
+   ..(..
+   .....
+    ...
+ENDMAP
+
+NAME: nicolae_vaults_prndl
+TAGS: vaults_empty allow_dup
+MAP
+..  ..  ..
+..  ..  ..
+..  ..  ..
+..  ..  ..
+.(......(.
+...(..(...
+  ..  ..
+  ..  ..
+  ..  ..
+  ..  ..
+ENDMAP
+
+# Gotta keep 'em somewhere.
+NAME:   nicolae_vaults_storage_room_doors
+TAGS:   vaults_empty no_windows
+WEIGHT: 5
+SUBST: + = .+++
+:lua_marker('+', props_marker { connected_exclude="true" })
+MAP
++++...+++
++++...+++
++++++++++
+..+++++..
+..+++++..
+..+++++..
++++++++++
++++...+++
++++...+++
+ENDMAP
+
+# Gotta keep it somewhere.
+NAME:   nicolae_vaults_storage_room_glass
+TAGS:   vaults_empty vaults_orient_s no_windows
+WEIGHT: 5
+SUBST:  ' = n...
+MAP
+nnn''nnn
+nn'.''nn
+n''..'nn
+''...''n
+'.....'n
+''....''
+n''....'
+nn''....
+ENDMAP
+
+# Gotta keep 'em somewhere.
+NAME:   nicolae_vaults_storage_room_statues
+TAGS:   vaults_empty no_windows
+WEIGHT: 5
+SUBST:  ` = G....
+MAP
+`GGGGGG`
+.`GGG``.
+`.`G`...
+..`....`
+`..`.`G`
+``..`GGG
+GG`..`GG
+GG``...`
+ENDMAP
+
+# Gotta keep it somewhere. Unless the vat leaks.
+NAME:   nicolae_vaults_storage_room_water
+TAGS:   vaults_empty
+WEIGHT: 5
+: if crawl.one_chance_in( 5 ) then
+SUBST:  Nsw = W, q = W..
+: else
+SUBST:  qs = ., N = n
+: end
+KMASK:  w = opaque
+KPROP:  w = no_tele_into
+MAP
+...qqssqq
+..qssssss
+.qxxNxxsq
+..xwwwxqq
+..nwwwnq.
+..xwwwx.q
+..xxnxx..
+.........
+.........
+ENDMAP
+
+NAME:  nicolae_vaults_swerve
+TAGS:  vaults_empty vaults_orient_e vaults_orient_w
+MAP
+     ..
+    ....
+    ....
+   ......
+.....xx..      ...
+....xxxx..    ....
+.(..x..x..    ..(.
+...x....x..  .....
+xxxx....x......xxx
+xxx......x....xxxx
+.....  ..x....x...
+.(..    ..x..x..(.
+....    ..xxxx....
+...      ..xx.....
+         ......
+          ....
+          ....
+           ..
+ENDMAP
+
+NAME: nicolae_vaults_tangram_1
+TAGS: vaults_empty allow_dup
+MAP
+...
+.(.
+...
+  .
+  ..
+  ...
+  .(..
+  ........
+       .(.
+       ...
+ENDMAP
+
+NAME: nicolae_vaults_tangram_2
+TAGS: vaults_empty allow_dup
+MAP
+         ..
+        ....
+        ....
+         ..
+     .....
+    ..(..
+   ..(..
+  .....
+ ..
+....
+....
+ ..
+ENDMAP
+
+NAME: nicolae_vaults_tetromino_L_1
+TAGS: vaults_empty allow_dup
+MAP
+......
+......
+..
+..
+ENDMAP
+
+NAME: nicolae_vaults_tetromino_L_2
+TAGS: vaults_empty allow_dup
+MAP
+.........
+.(..(..(.
+.........
+...
+.(.
+...
+ENDMAP
+
+NAME: nicolae_vaults_tetromino_T_1
+TAGS: vaults_empty allow_dup
+MAP
+......
+......
+  ..
+  ..
+ENDMAP
+
+NAME: nicolae_vaults_tetromino_T_2
+TAGS: vaults_empty allow_dup
+MAP
+.........
+.(..(..(.
+.........
+   ...
+   .(.
+   ...
+ENDMAP
+
+NAME: nicolae_vaults_tetromino_Z_1
+TAGS: vaults_empty allow_dup
+MAP
+....
+....
+  ....
+  ....
+ENDMAP
+
+NAME: nicolae_vaults_tetromino_Z_2
+TAGS: vaults_empty allow_dup
+MAP
+......
+.(..(.
+......
+   ......
+   .(..(.
+   ......
+ENDMAP
+
+NAME: nicolae_vaults_trapezoid_1
+TAGS: vaults_empty allow_dup
+MAP
+  .....
+  ..(..
+ .......
+ .......
+..(.(.(..
+.........
+ENDMAP
+
+NAME: nicolae_vaults_trapezoid_2
+TAGS: vaults_empty allow_dup
+MAP
+   ...
+  ..(..
+  .....
+ ...(...
+ .(...(.
+.........
+ENDMAP
+
+NAME: nicolae_vaults_trapezoid_3
+TAGS: vaults_empty allow_dup
+MAP
+   ....
+   ....
+  ......
+  .(..(.
+ ........
+ ........
+..(....(..
+..........
+ENDMAP
+
+NAME: nicolae_vaults_trapezoid_4
+TAGS: vaults_empty allow_dup
+MAP
+  .....
+  .(.(.
+  .....
+ .......
+ .(.(.(.
+ .......
+.........
+.(.(.(.(.
+.........
+ENDMAP
+
+NAME:   nicolae_vaults_trapezoid_layered
+TAGS:   vaults_empty allow_dup
+NSUBST: x = + / +x / x
+MAP
+   .......
+   ...(...
+  .........
+  ..xx+xx..
+ ...+...+...
+ ..xx...xx..
+...+..(..+...
+...x.....x...
+ENDMAP
+
+NAME: nicolae_vaults_trapezoid_lopsided_1
+TAGS: vaults_empty allow_dup
+MAP
+  ....
+  ....
+ ..(..
+ ....
+..(..
+.....
+ENDMAP
+
+NAME: nicolae_vaults_trapezoid_lopsided_2
+TAGS: vaults_empty allow_dup
+MAP
+     .......
+     ....(..
+    ..(.....
+    .......
+   ..(..(..
+   ........
+  ..(.....
+  .....(..
+ ..(......
+ ........
+..(...(..
+.........
+ENDMAP
+
+NAME: nicolae_vaults_trapezoid_lopsided_3
+TAGS: vaults_empty allow_dup
+MAP
+  ...
+  ...
+ ....
+ ..(..
+......
+......
+ENDMAP
+
+NAME: nicolae_vaults_trapezoid_lopsided_4
+TAGS: vaults_empty allow_dup
+MAP
+     ....
+     ....
+    ..(..
+    ......
+   ..(.(..
+   .......
+  ..(......
+  ......(..
+ ..(.......
+ ...........
+..(......(..
+............
+ENDMAP
+
+NAME: nicolae_vaults_two_Ls
+TAGS: vaults_empty allow_dup
+MAP
+.. ......
+.. ......
+..  +  ..
+..  +  ..
+...... ..
+...... ..
+ENDMAP
+
+NAME: nicolae_vaults_variable_pillar_hall
+TAGS: vaults_empty allow_dup
+{{
+local i = crawl.random2(5) + 2
+for j = 1, i, 1 do
+   map("......")
+   map(".x..x.")
+end
+map("......")
+}}
+
+NAME:   nicolae_vaults_variable_pillar_hall_cross
+TAGS:   vaults_empty allow_dup luniq
+# Reduced weight, since it can get somewhat large and doesn't place stairs
+WEIGHT: 3
+{{
+local n = crawl.random2(4)
+local e = crawl.random2(4)
+local s = crawl.random2(4)
+local w = crawl.random2(4)
+local wspace = string.rep("  ", w)
+local wpillr = string.rep(".x", w)
+local wfloor = string.rep("..", w)
+local epillr = string.rep("x.", e)
+local efloor = string.rep("..", e)
+local pillr = wpillr .. ".x..x." .. epillr
+local floor = wfloor .. "......" .. efloor
+for j = 0, n, 1 do
+   map(wspace .. "......")
+   map(wspace .. ".x..x.")
+end
+map(floor); map(pillr); map(floor)
+map(floor); map(pillr); map(floor)
+for j = 0, s, 1 do
+   map(wspace .. ".x..x.")
+   map(wspace .. "......")
+end
+}}

@@ -150,7 +150,7 @@ disagree initially or continuously).
 In addition to play-testing, it’s good to watch players through WebTiles, via
 console ttyrecs, videos and other online recordings. Likewise, it can be useful
 to see what players think about certain features by reading online discussion
-on [*Tavern*](https://crawl.develz.org/tavern/), Reddit (see
+on [*Tavern*](https://tavern.dcss.io/), Reddit (see
 [*/r/dcss*](http://www.reddit.com/r/dcss/) and
 [*/r/roguelikes*](http://www.reddit.com/r/roguelikes/)), and other online
 discussion sites. However it’s important that player praise or criticism is

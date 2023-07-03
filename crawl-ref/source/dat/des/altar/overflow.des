@@ -2207,6 +2207,26 @@ MAP
 .......
 ENDMAP
 
+# Sky beasts normally generate on D:6-8, so they're within the D:3 out-of-depth
+# range (which goes down to D:6). You'll be fine.
+NAME:    nicolae_qazlal_beasts_of_the_sky
+TAGS:    temple_overflow_qazlal temple_overflow_1 transparent
+DEPTH:   D:3-8
+KMONS:   _ = sky beast
+KFEAT:   _ = altar_qazlal
+SHUFFLE: Pp, Qq
+SUBST:   PQ = x, pq = m
+MAP
+.........
+...Q.q...
+..P...p..
+.Q.....q.
+...._....
+.q.....Q.
+..p...P..
+...q.Q...
+.........
+ENDMAP
 
 # Ru overflow altar vaults ####################################################
 
@@ -4646,7 +4666,7 @@ KFEAT: m = lava mimic
 # We use a statue mimic to stop autoexplore before the player reaches the lava.
 KFEAT: G = granite_statue mimic
 # The gold pulls an unspoiled player next to the mimics.
-KITEM: $ = gold q:3
+KITEM: $ = gold q:3 no_pickup
 MAP
 xxxxx
 xl.lx

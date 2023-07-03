@@ -93,7 +93,7 @@ static bool _evoke_horn_of_geryon()
 
         if (random2(adjusted_power) > 7)
             beh = BEH_FRIENDLY;
-        mgen_data mg(MONS_HELL_BEAST, beh, you.pos(), MHITYOU, MG_FORCE_BEH);
+        mgen_data mg(MONS_HELL_BEAST, beh, you.pos(), MHITYOU, MG_AUTOFOE);
         mg.set_summoned(&you, 3, SPELL_NO_SPELL);
         mg.set_prox(PROX_CLOSE_TO_PLAYER);
         mon = create_monster(mg);
@@ -192,7 +192,7 @@ void zap_wand(int slot, dist *_target)
         return;
     }
 
-    if (!evoke_check(slot))
+    if (!item_currently_evokable(slot == -1 ? nullptr : &you.inv[slot]))
         return;
 
     int item_slot;
@@ -218,7 +218,7 @@ void zap_wand(int slot, dist *_target)
         return;
     }
 
-    if (!evoke_check(slot))
+    if (!item_currently_evokable(&wand))
         return;
 
     // If you happen to be wielding the wand, its display might change.
@@ -316,6 +316,117 @@ static bool _box_of_beasts()
 
     return true;
 }
+
+// Generate webs on hostile monsters and trap them.
+static bool _place_webs()
+{
+    bool webbed = false;
+    const int evo_skill = you.skill(SK_EVOCATIONS);
+    // At 0 evo skill, this is about a 1/3 chance of webbing an
+    // adjacent enemy. At 27 skill, it's about an 9/10 chance.
+    const int web_skill_factor = 64 - evo_skill * 2;
+    const int max_range = LOS_DEFAULT_RANGE / 2 + 2;
+    for (monster_near_iterator mi(you.pos(), LOS_SOLID); mi; ++mi)
+    {
+        trap_def *trap = trap_at((*mi)->pos());
+        // Don't destroy non-web traps or try to trap monsters
+        // currently caught by something.
+        if (you.pos().distance_from((*mi)->pos()) > max_range
+            || (!trap && env.grid((*mi)->pos()) != DNGN_FLOOR)
+            || (trap && trap->type != TRAP_WEB)
+            || (*mi)->friendly()
+            || (*mi)->caught())
+        {
+            continue;
+        }
+
+        // web chance increases with proximity & evo skill
+        // code here uses double negatives; sorry! i blame the other guy
+        const int dist = you.pos().distance_from((*mi)->pos());
+        const int web_dist_factor = 100 * (dist - 1) / max_range;
+        const int web_chance = 100 - web_dist_factor - web_skill_factor;
+        if (!x_chance_in_y(web_chance, 100))
+            continue;
+
+        if (trap && trap->type == TRAP_WEB)
+            destroy_trap((*mi)->pos());
+
+        place_specific_trap((*mi)->pos(), TRAP_WEB, 1); // 1 ammo = temp
+        // Reveal the trap
+        env.grid((*mi)->pos()) = DNGN_TRAP_WEB;
+        trap = trap_at((*mi)->pos());
+        trap->trigger(**mi);
+        webbed = true;
+    }
+    return webbed;
+}
+
+static const vector<pop_entry> pop_spiders =
+{ // Sack of Spiders
+  // tier zero :(
+  {  0,  13,  200, FALL, MONS_SCORPION },
+  // tier one
+  {  0,  18,  100, PEAK, MONS_REDBACK },
+  {  0,  18,  100, PEAK, MONS_CULICIVORA },
+  // tier two
+  {  6,  13,  100, RISE, MONS_JUMPING_SPIDER },
+  { 14,  27,  100, FALL, MONS_JUMPING_SPIDER },
+  {  6,  13,  100, RISE, MONS_TARANTELLA },
+  { 14,  27,  100, FALL, MONS_TARANTELLA },
+  // tier three
+  { 13,  20,  100, RISE, MONS_WOLF_SPIDER },
+  { 13,  20,  100, RISE, MONS_STEELBARB_WORM },
+  { 21,  33,  100, FALL, MONS_WOLF_SPIDER },
+  { 21,  33,  100, FALL, MONS_STEELBARB_WORM },
+  // tier MAXX
+  { 18,  27,  100, RISE, MONS_DEMONIC_CRAWLER },
+  { 21,  27,  100, RISE, MONS_BROODMOTHER },
+};
+
+static bool _sack_of_spiders_veto_mon(monster_type mon)
+{
+   // Don't summon any beast that would anger your god.
+    return god_hates_monster(mon);
+}
+
+static bool _spill_out_spiders()
+{
+    const int evo_skill = you.skill(SK_EVOCATIONS);
+    const int n_mons = random_range(2, 3);
+    bool made_mons = false;
+    for (int n = 0; n < n_mons; n++)
+    {
+        // Invoke mon-pick with our custom list
+        monster_type mon = pick_monster_from(pop_spiders, evo_skill,
+                                             _sack_of_spiders_veto_mon);
+        mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
+        mg.set_summoned(&you, 3 + random2(4), 0);
+        if (create_monster(mg))
+            made_mons = true;
+    }
+    return made_mons;
+}
+
+static bool _sack_of_spiders()
+{
+    mpr("You reach into the sack...");
+
+    const bool made_mons = !you.allies_forbidden() && _spill_out_spiders();
+    if (made_mons)
+        mpr("...and things crawl out!");
+
+    const bool webbed = _place_webs();
+    if (!made_mons && !webbed)
+    {
+        mpr("...but nothing happens.");
+        return false;
+    }
+
+    if (!made_mons)
+        mpr("...but only cobwebs fall out.");
+    return true;
+}
+
 
 static bool _make_zig(item_def &zig)
 {
@@ -498,7 +609,7 @@ static bool _phial_of_floods(dist *target)
 
     const int power = 10 + you.skill(SK_EVOCATIONS, 4);
     zappy(ZAP_PRIMAL_WAVE, power, false, beam);
-    beam.range = LOS_RADIUS;
+    beam.range = 5;
     beam.aimed_at_spot = true;
 
     // TODO: this needs a custom targeter
@@ -760,9 +871,8 @@ static spret _condenser()
     const int pow = 15 + you.skill(SK_EVOCATIONS, 7) / 2;
 
     random_picker<cloud_type, NUM_CLOUD_TYPES> cloud_picker;
-    cloud_type cloud = cloud_picker.pick(condenser_clouds, pow, CLOUD_NONE);
 
-    vector<coord_def> target_cells;
+    set<coord_def> target_cells;
     bool see_targets = false;
 
     for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
@@ -777,12 +887,11 @@ static spret _condenser()
 
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
         {
-            actor * act = actor_at(*ai);
-            if (!cell_is_solid(*ai) && you.see_cell(*ai) && !cloud_at(*ai)
-                && !(act && act->wont_attack()))
-            {
-                target_cells.push_back(*ai);
-            }
+            if (cell_is_solid(*ai) || !you.see_cell(*ai) || cloud_at(*ai))
+                continue;
+            const actor *act = actor_at(*ai);
+            if (!act || !act->wont_attack())
+                target_cells.insert(*ai);
         }
     }
 
@@ -800,20 +909,37 @@ static spret _condenser()
         return spret::fail;
     }
 
-    if (is_good_god(you.religion) && cloud == CLOUD_NEGATIVE_ENERGY)
-    {
-        mprf("%s suppresses the foul vapours!", god_name(you.religion).c_str());
-        return spret::fail;
-    }
+    vector<coord_def> target_list;
+    for (coord_def t : target_cells)
+        target_list.push_back(t);
+    shuffle_array(target_list);
+    bool did_something = false;
+    bool suppressed = false;
 
-    for (auto p : target_cells)
+    for (auto p : target_list)
     {
+        const cloud_type cloud = cloud_picker.pick(condenser_clouds, pow, CLOUD_NONE);
+
+        if (is_good_god(you.religion) && cloud == CLOUD_NEGATIVE_ENERGY)
+        {
+            suppressed = true;
+            continue;
+        }
+
+        // Get at least one cloud, even at 0 power.
+        if (did_something && !x_chance_in_y(50 + pow, 160))
+            continue;
+
         const int cloud_power = 5
             + random2avg(12 + div_rand_round(pow * 3, 4), 3);
         place_cloud(cloud, p, cloud_power, &you);
+        did_something = true;
     }
 
-    mprf("Clouds of %s condense around you!", cloud_type_name(cloud).c_str());
+    if (did_something)
+        mpr("Clouds condense from the air!");
+    else if (suppressed)
+        simple_god_message(" suppresses the foul vapours!");
 
     return spret::success;
 }
@@ -891,9 +1017,9 @@ static bool _player_has_zigfig()
 }
 
 /// Does the item only serve to produce summons or allies?
-static bool _evoke_ally_only(const item_def &item)
+static bool _evoke_ally_only(const item_def &item, bool ident)
 {
-    if (item.base_type == OBJ_WANDS)
+    if (item.base_type == OBJ_WANDS && ident)
         return item.sub_type == WAND_CHARMING;
     else if (item.base_type == OBJ_MISCELLANY)
     {
@@ -902,6 +1028,7 @@ static bool _evoke_ally_only(const item_def &item)
         case MISC_PHANTOM_MIRROR:
         case MISC_HORN_OF_GERYON:
         case MISC_BOX_OF_BEASTS:
+        case MISC_SACK_OF_SPIDERS:
             return true;
         default:
             return false;
@@ -910,7 +1037,7 @@ static bool _evoke_ally_only(const item_def &item)
     return false;
 }
 
-string cannot_evoke_item_reason(const item_def *item, bool temp)
+string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
 {
     // id is not at issue here
     if (temp && you.berserk())
@@ -948,7 +1075,7 @@ string cannot_evoke_item_reason(const item_def *item, bool temp)
         return "This wand has no charges.";
 #endif
 
-    if (_evoke_ally_only(*item) && you.allies_forbidden())
+    if (_evoke_ally_only(*item, ident) && you.allies_forbidden())
         return "That item cannot be used by those who cannot gain allies!";
 
     if (temp
@@ -978,49 +1105,22 @@ string cannot_evoke_item_reason(const item_def *item, bool temp)
     return "";
 }
 
-// for historical reasons, we have both item_is_evokable and evoke_check. They
-// are now both interfaces on cannot_evoke_item_reason.
-// TODO: unify the api?
-bool item_is_evokable(const item_def &item, bool msg)
+bool item_currently_evokable(const item_def *item)
 {
-    const string err = cannot_evoke_item_reason(&item, false);
-    if (!err.empty() && msg)
+    const string err = cannot_evoke_item_reason(item);
+    if (!err.empty())
         mpr(err);
     return err.empty();
 }
 
-// Is there anything that would prevent a player from evoking?
-// If slot == -1, it asks this question in general.
-// If slot is a particular item, it asks this question for that item.
-bool evoke_check(int slot, bool quiet)
+bool item_ever_evokable(const item_def &item)
 {
-    item_def *i = nullptr;
-    if (slot >= 0 && slot < ENDOFPACK && you.inv[slot].defined())
-        i = &you.inv[slot];
-
-    // TODO: menu for zigfig under sac artiface
-    const string err = cannot_evoke_item_reason(i, true);
-    if (!err.empty() && !quiet)
-        mpr(err);
-    return err.empty();
+    return cannot_evoke_item_reason(&item, false).empty();
 }
 
-bool evoke_item(int slot, dist *preselect)
+bool evoke_item(item_def& item, dist *preselect)
 {
-    ASSERT_RANGE(slot, 0, ENDOFPACK);
-    if (!evoke_check(slot))
-        return false;
-
-    if (!check_warning_inscriptions(you.inv[slot], OPER_EVOKE))
-        return false;
-
-#ifdef ASSERTS // Used only by an assert
-    const bool wielded = (you.equip[EQ_WEAPON] == slot);
-#endif /* DEBUG */
-
-    item_def& item = you.inv[slot];
-    // Also handles messages.
-    if (!item_is_evokable(item, true) || !evoke_check(slot))
+    if (!item_currently_evokable(&item))
         return false;
 
     bool did_work   = false;  // "Nothing happens" message
@@ -1029,12 +1129,17 @@ bool evoke_item(int slot, dist *preselect)
     switch (item.base_type)
     {
     case OBJ_WANDS:
-        zap_wand(slot, preselect);
+        ASSERT(in_inventory(item));
+        zap_wand(item.link, preselect);
         return true;
 
     case OBJ_WEAPONS:
     {
-        ASSERT(wielded);
+#ifdef ASSERTS
+        ASSERT(in_inventory(item));
+        const int equip = you.equip[EQ_WEAPON];
+        ASSERT(equip != -1 && item.link == equip);
+#endif
         dist targ_local;
         if (!preselect)
             preselect = &targ_local;
@@ -1044,6 +1149,7 @@ bool evoke_item(int slot, dist *preselect)
     }
 
     case OBJ_MISCELLANY:
+        ASSERT(in_inventory(item));
         did_work = true; // easier to do it this way for misc items
 
         switch (item.sub_type)
@@ -1096,11 +1202,17 @@ bool evoke_item(int slot, dist *preselect)
             }
             break;
 
-#if TAG_MAJOR_VERSION == 34
         case MISC_SACK_OF_SPIDERS:
-            canned_msg(MSG_NOTHING_HAPPENS);
+            if (_sack_of_spiders())
+            {
+                expend_xp_evoker(item.sub_type);
+                if (!evoker_charges(item.sub_type))
+                    mpr("The sack is emptied!");
+                practise_evoking(1);
+            }
             return false;
 
+#if TAG_MAJOR_VERSION == 34
         case MISC_CRYSTAL_BALL_OF_ENERGY:
             canned_msg(MSG_NOTHING_HAPPENS);
             return false;

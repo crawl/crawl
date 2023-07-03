@@ -4208,7 +4208,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             MAYBE_COPY(MUTANT_BEAST_FACETS);
             MAYBE_COPY(MGEN_BLOB_SIZE);
             MAYBE_COPY(MGEN_NUM_HEADS);
-            MAYBE_COPY(MGEN_NO_AUTO_CRUMBLE);
 #undef MAYBE_COPY
         }
 
@@ -4366,24 +4365,26 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
     if (base_monster.props.exists(MGEN_NUM_HEADS))
         spec.props[MGEN_NUM_HEADS] = base_monster.props[MGEN_NUM_HEADS];
 
-    const int zombie_size = mons_zombie_size(spec.monbase);
-    if (!zombie_size)
+    spec.type = zombie_montypes[mod];
+    switch (spec.type)
     {
-        spec.type = MONS_PROGRAM_BUG;
-        return;
-    }
-    if (mod == 1 && mons_class_flag(spec.monbase, M_NO_ZOMBIE))
-    {
-        spec.type = MONS_PROGRAM_BUG;
-        return;
-    }
-    if (mod == 2 && mons_class_flag(spec.monbase, M_NO_SKELETON))
-    {
-        spec.type = MONS_PROGRAM_BUG;
-        return;
+    case MONS_SIMULACRUM:
+    case MONS_SPECTRAL_THING:
+        if (mons_class_can_be_spectralised(spec.monbase))
+            return;
+        break;
+    case MONS_SKELETON:
+        if (!mons_skeleton(spec.monbase))
+            break;
+        // fallthrough to MONS_ZOMBIE
+    case MONS_ZOMBIE:
+    default:
+        if (mons_class_can_be_zombified(spec.monbase))
+            return;
+        break;
     }
 
-    spec.type = zombie_montypes[mod];
+    spec.type = MONS_PROGRAM_BUG;
 }
 
 mons_spec mons_list::get_hydra_spec(const string &name) const
@@ -4470,7 +4471,6 @@ mons_spec mons_list::get_salt_spec(const string &name) const
 
     mons_spec spec(MONS_PILLAR_OF_SALT);
     spec.monbase = _fixup_mon_type(base_mon.type);
-    spec.props[MGEN_NO_AUTO_CRUMBLE] = true;
     return spec;
 }
 
@@ -5621,6 +5621,13 @@ void item_list::parse_random_by_class(string c, item_spec &spec)
     {
         spec.base_type = OBJ_MISCELLANY;
         spec.sub_type = item_for_set(ITEM_SET_AREA_MISCELLANY);
+        return;
+    }
+
+    if (c == "ally misc")
+    {
+        spec.base_type = OBJ_MISCELLANY;
+        spec.sub_type = item_for_set(ITEM_SET_ALLY_MISCELLANY);
         return;
     }
 

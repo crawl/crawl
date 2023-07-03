@@ -166,7 +166,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of the Sky
-    SPELL_SUMMON_LIGHTNING_SPIRE,
     SPELL_STORM_FORM,
     SPELL_MAXWELLS_COUPLING,
 },
@@ -222,7 +221,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Power
     SPELL_BATTLESPHERE,
-    SPELL_IRON_SHOT,
+    SPELL_UNMAKING,
     SPELL_SPELLFORGED_SERVITOR,
 },
 
@@ -365,6 +364,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of Earth
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_LRD,
+    SPELL_UNMAKING,
     SPELL_STATUE_FORM,
 },
 
@@ -393,9 +393,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Iron
+    SPELL_SUMMON_LIGHTNING_SPIRE,
     SPELL_ANIMATE_ARMOUR,
     SPELL_BLADE_HANDS,
-    SPELL_IRON_SHOT,
 },
 
 { // Inescapable Atlas

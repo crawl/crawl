@@ -412,10 +412,7 @@ An axe with langets, spikes, a lengthed haft and a single-bladed crescent head.
 %%%%
 buckler
 
-A small piece of wood and metal, to be strapped on one arm for defence. It is
-cumbersome to wear, and slightly impedes the evasion, spellcasting ability, and
-attack speed of the wearer. These penalties will be reduced and eventually
-eliminated with increased Shields skill.
+A small piece of wood and metal, to be strapped on one arm for defence.
 %%%%
 chain mail
 
@@ -435,10 +432,10 @@ condenser vane
 
 A magical device that condenses ambient energy into various destructive clouds.
 When evoked these clouds form around hostile monsters near the user. The
-lethality of these clouds increases with Evocations skill. At low power it will
-create noxious fumes, and as power increases this gives way to roaring flames,
-freezing vapours, and poisonous gas. At the highest tiers of power storm
-clouds, acidic fog and clouds of negative energy become available.
+quantity and lethality of these clouds increases with Evocations skill. At low
+power it will create noxious fumes, and as power increases this gives way to
+roaring flames, freezing vapours, and poisonous gas. At the highest tiers of
+power storm clouds, acidic fog and clouds of negative energy become available.
 %%%%
 corpse
 
@@ -658,10 +655,7 @@ range.
 %%%%
 kite shield
 
-A piece of wood and metal, to be strapped on one arm for defence. It is
-cumbersome to wear, and impedes the evasion, spellcasting ability, and attack
-speed of the wearer. These penalties will be reduced and eventually eliminated
-with increased Shields skill.
+A piece of wood and metal, to be strapped on one arm for defence.
 %%%%
 lajatang
 
@@ -733,6 +727,12 @@ orb of zot
 
 An invaluable artefact. Once you have escaped to the surface with it, your
 quest is complete.
+%%%%
+orcbow
+
+A recurved bow, crudely crafted from troll-bone and warg hair. The cave orcs'
+use of archery, so unlike their surface-dwelling cousins, shows the influence
+of their elvish allies.
 %%%%
 ozocubu's autobiography
 
@@ -819,13 +819,14 @@ potion of degeneration
 
 A noxious concoction which reduces strength, intelligence and dexterity.
 %%%%
+potion of enlightenment
+
+A potion which uplifts both the body and mind of its drinkers, lifting them
+from the ground and increasing their Will to resist the world's temptations.
+%%%%
 potion of experience
 
 A truly wonderful and very rare drink, which grants experience when consumed.
-%%%%
-potion of flight
-
-A potion which confers great buoyancy on one who consumes it.
 %%%%
 potion of haste
 
@@ -844,9 +845,9 @@ potion of lignification
 
 A potion which transforms the imbiber into an animated tree with branches
 capable of holding weapons. Such a tree has minimal evasion but increased
-health and natural armour, and is resistant to poison and immune to torment.
-However, it is rooted in place while the transformation lasts, and cannot
-teleport.
+health and natural armour, and is resistant to poison, and immune to torment and
+drowning. However, it is rooted in place while the transformation lasts, and
+cannot teleport.
 %%%%
 potion of magic
 
@@ -892,8 +893,8 @@ willpower and magical modification of itself - it cannot be enchanted.
 %%%%
 quick blade
 
-A carefully wrought dagger which is preternaturally well-balanced, making it
-much easier for even inexperienced handlers to attack with it quickly.
+A dagger with an uncanny enchantment upon it, allowing it to strike twice
+for every blow its wielder makes.
 %%%%
 rapier
 
@@ -992,6 +993,11 @@ rune of zot
 
 A talisman which allows entry into the Realm of Zot.
 %%%%
+sack of spiders
+
+A woven silk bag. Opening it will cover the area with webs, spiders, and other
+skittering things. Evocations skill increases spider quality and webbing.
+%%%%
 sacred scourge
 
 A blessed weapon, woven by the saints in Heaven and hated by the unholy. It is
@@ -1014,10 +1020,10 @@ A long sword with a wide, curved blade.
 %%%%
 scroll of acquirement
 
-A wonderful scroll which causes the creation of a valuable item, with
-the reader choosing from a small selection. The items offered will be
-often be a good match for the reader's skills; and if nothing
-recommends itself, the reader can always choose a heap of gold.
+A wonderful scroll which causes the creation of a valuable item, with the
+reader choosing from a small selection. The items offered will often be a
+good match for the reader's skills; and if nothing recommends itself, the
+reader can always choose a heap of gold.
 %%%%
 scroll of amnesia
 
@@ -1081,10 +1087,6 @@ scroll of immolation
 A scroll that fills the creatures around the reader with an unstable and
 powerful inner flame.
 %%%%
-scroll of magic mapping
-
-A scroll that reveals the surroundings of the one who reads it.
-%%%%
 scroll of noise
 
 A prank scroll that creates a loud noise when read.
@@ -1093,6 +1095,12 @@ scroll of poison
 
 A scroll that fills the air with poison, covering every unoccupied space in
 sight with toxic fumes.
+%%%%
+scroll of revelation
+
+A scroll that reveals its reader's surroundings. The layout of the current
+floor is fully mapped, and everything within a moderate radius, including
+both visible and invisible monsters, is momentarily shown.
 %%%%
 scroll of silence
 
@@ -1235,10 +1243,7 @@ free, if they live long enough.
 %%%%
 tower shield
 
-A large piece of wood and metal, to be strapped on one arm for defence. It is
-cumbersome to wear, and greatly impedes the evasion, spellcasting ability, and
-attack speed of the wearer. These penalties will be reduced and eventually
-eliminated with increased Shields skill.
+A large piece of wood and metal, to be strapped on one arm for defence.
 %%%%
 tin of tremorstones
 

@@ -214,6 +214,8 @@ public:
     map_terrain_change_marker (const coord_def& pos = coord_def(0, 0),
                     dungeon_feature_type oldfeat = DNGN_FLOOR,
                     dungeon_feature_type newfeat = DNGN_FLOOR,
+                    unsigned short flv_oldfeat = 0,
+                    unsigned short flv_oldfeat_idx = 0,
                     int dur = 0, terrain_change_type type = TERRAIN_CHANGE_GENERIC,
                     int mnum = 0, int oldcol = BLACK);
 
@@ -229,6 +231,8 @@ public:
     int mon_num;
     dungeon_feature_type old_feature;
     dungeon_feature_type new_feature;
+    unsigned short flv_old_feature;
+    unsigned short flv_old_feature_idx;
     terrain_change_type  change_type;
     int colour;
 };

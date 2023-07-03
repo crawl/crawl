@@ -863,17 +863,16 @@ F. Publishing your changes
 
 If you feel that your additions really add something to the game and
 would like to make them available to the general public, you can post
-them (in the form of a diff file, or in plain text) as a feature
-request on our Mantis tracker [2] or in the Tavern forum [3].
+them as a pull request on github [2], or discuss them in our Tavern forum [3].
 
 
 .. [1] http://crawl.develz.org/wordpress/
    The official Dungeon Crawl Stone Soup homepage, always linking
    to the latest release.
 
-.. [2] http://crawl.develz.org/mantis/main_page.php
-   The Mantis bug tracker.
+.. [2] https://github.com/crawl/crawl/pulls
+   Our pull requests on github.
 
-.. [3] https://crawl.develz.org/tavern/
-   If you're looking for help you're probably most interested in the
-   Contributions and Coding subfora.
+.. [3] https://tavern.dcss.io/
+   The official DCSS forum. You may find it helpful to discuss new features in
+   the Game Design Discussion category here.

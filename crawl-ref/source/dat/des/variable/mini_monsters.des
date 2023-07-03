@@ -1803,7 +1803,7 @@ NAME:   minmay_rotating_lava
 TAGS:   no_monster_gen transparent
 DEPTH:  D:10-
 MONS:   hell hound, hell knight band, hell knight
-ITEM:   potion of flight ident:type q:3
+ITEM:   potion of enlightenment ident:type q:3
 KMASK:  .123*< = opaque
 KPROP:  .123*< = no_tele_into
 KFEAT:  ' = floor
@@ -1918,7 +1918,7 @@ ITEM:    book of callings w:5 / book of the wilderness w:20 / grand grimoire w:5
 ITEM:    manual of summonings
 ITEM:    amulet of magic regeneration w:5 ident:type / \
             amulet of magic regeneration randart
-ITEM:    box of beasts
+ITEM:    any ally misc
 KITEM:   % = any, any / gold / nothing, any / nothing
 KITEM:   _ = any ally scroll ident:type , any ally scroll ident:type / nothing
 KFEAT:   _ = altar_sif_muna
@@ -3901,14 +3901,12 @@ ENDMAP
 # tree of life.
 NAME:    pf_eden
 TAGS:    no_monster_gen
-DEPTH:   D:13-
+DEPTH:   Elf
 MONS:    patrolling cherub, patrolling dancing weapon ; great sword ego:flaming
 KMONS:   p = plant
-# TODO: this potion once was an apple, maybe just remove this with no apple
-# flavor possible?
-ITEM:    potion of ambrosia ident:type
+ITEM:    randbook title:Forbidden_Fruit owner:the_Tempter numspells:2 spells:summon_mana_viper&discord
 NSUBST:  1 = 2:1 / *:.
-NSUBST:  d = 2:d / *:.
+NSUBST:  d = 1:d / *:.
 SUBST:   3 = 33.
 RTILE:   x = wall_lair
 FTILE:   12p.dt@ = floor_lair
@@ -8116,11 +8114,11 @@ ccc2.d.2ccc
 ccccccccccc
 ENDMAP
 
-NAME:   hellmonk_guarded_unrand_staff_of_battle
+NAME:   hellmonk_guarded_unrand_sphere_of_battle
 TAGS:   transparent
 DEPTH:  D:8-
 WEIGHT: 3
-ITEM:   staff_of_battle no_pickup
+ITEM:   sphere_of_battle no_pickup
 MONS:   tengu conjurer, tengu reaver
 : if you.depth() < 13 then
 SUBST:  D = 1.
@@ -8490,7 +8488,8 @@ NAME:   hellmonk_guarded_unrand_zhor
 TAGS:   transparent no_monster_gen
 DEPTH:  D:7-, Lair
 WEIGHT: 3
-ITEM:   skin_of_zhor no_pickup, box of beasts
+ITEM:   skin_of_zhor no_pickup, box of beasts w:100 /\
+        scroll of summoning ident:all q:3 w:1
 MONS:   rime drake, torpor snail, ice dragon
 NSUBST: d = d / 1
 SUBST:  e = e..

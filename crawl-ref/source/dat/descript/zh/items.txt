@@ -120,7 +120,7 @@ book of changes
 book of chaos
 
 一本能让施法者周围一片混乱的魔法书。
-不清楚为什么会有人写这样的东西，但它就在这里。
+不清楚为什么会有人写这样的东西，但它就是在这里。
 %%%%
 book of conjurations
 
@@ -158,7 +158,7 @@ book of dreams
 %%%%
 book of fire
 
-这本包含火系魔法学派的高级咒语的书，窃于灯神的秘密学院。
+这本窃于灯神的秘密学院的书，包含火系魔法学派的高级咒语。
 %%%%
 book of fixed level
 
@@ -195,10 +195,6 @@ book of iron
 book of lightning
 
 这本书上面的奥术能量在噼啪作响。
-%%%%
-book of maledictions
-
-一本关于妖术的书，描述着令敌人混乱、昏迷的咒语。
 %%%%
 book of minor magic
 
@@ -393,7 +389,7 @@ condenser vane
 
 这个魔法装置，可以将周围的能量凝结成各种具有破坏性的云。
 当激活时，生成的云会环绕使用者附近的敌人。
-这些云的杀伤力会随激活技能的提高而提高。
+这些云的数量和杀伤力会随激活技能的提高而提高。
 当能量低时，它会生成毒烟，当能量增加时，会生成咆哮的火焰、冰汽和毒气。
 当能量达到最高级别时，会生成强大的风暴、酸雾和负能量云。
 %%%%
@@ -467,7 +463,7 @@ eudemon blade
 %%%%
 eveningstar
 
-晨星球的对应物。一个有着配重的权杖，长柄，金属头上覆有致命的尖刺。
+晨星锤的对应物。一个有着配重的权杖，长柄，金属头上覆有致命的尖刺。
 %%%%
 everburning encyclopedia
 
@@ -752,7 +748,7 @@ potion of experience
 
 一瓶非常罕见的极佳饮品，饮用时能给予经验。
 %%%%
-potion of flight
+potion of enlightenment
 
 这瓶药水会给饮用者巨大的浮力。
 %%%%
@@ -989,7 +985,7 @@ scroll of immolation
 
 这张卷轴使读者周围的生物体内充满强大且不稳定的炽炎。
 %%%%
-scroll of magic mapping
+scroll of revelation
 
 这张卷轴能向读者揭示其周围的环境。
 %%%%

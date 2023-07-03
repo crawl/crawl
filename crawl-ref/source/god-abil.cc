@@ -15,6 +15,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
+#include "attack.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
 #include "branch.h"
@@ -1224,7 +1225,7 @@ static void _zin_saltify(monster* mon)
         // Enemies with more HD leave longer-lasting pillars of salt.
         int time_left = (random2(8) + hd) * BASELINE_DELAY;
         mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
-        pillar->update_ench(temp_en);
+        pillar->add_ench(temp_en);
     }
 }
 
@@ -2486,6 +2487,7 @@ static potion_type _gozag_potion_list[][4] =
     { POT_HASTE, POT_HEAL_WOUNDS, NUM_POTIONS, NUM_POTIONS },
     { POT_HASTE, POT_BRILLIANCE, NUM_POTIONS, NUM_POTIONS },
     { POT_HASTE, POT_RESISTANCE, NUM_POTIONS, NUM_POTIONS },
+    { POT_HASTE, POT_ENLIGHTENMENT, NUM_POTIONS, NUM_POTIONS },
     { POT_BRILLIANCE, POT_MAGIC, NUM_POTIONS, NUM_POTIONS },
     { POT_INVISIBILITY, POT_MIGHT, NUM_POTIONS, NUM_POTIONS },
     { POT_HEAL_WOUNDS, POT_CURING, POT_MAGIC, NUM_POTIONS },
@@ -2495,6 +2497,7 @@ static potion_type _gozag_potion_list[][4] =
     { POT_RESISTANCE, POT_MIGHT, NUM_POTIONS, NUM_POTIONS },
     { POT_RESISTANCE, POT_MIGHT, POT_HASTE, NUM_POTIONS },
     { POT_RESISTANCE, POT_INVISIBILITY, NUM_POTIONS, NUM_POTIONS },
+    { POT_RESISTANCE, POT_ENLIGHTENMENT, NUM_POTIONS, NUM_POTIONS },
     { POT_LIGNIFY, POT_MIGHT, POT_RESISTANCE, NUM_POTIONS },
 };
 
@@ -5187,16 +5190,18 @@ spret uskayaw_grand_finale(bool fail)
 
     ASSERT(mons);
 
+    string attack_punctuation = attack_strength_punctuation(mons->hit_points);
+
     // kill the target
     if (mons->type == MONS_ROYAL_JELLY && !mons->is_summoned())
     {
         // need to do this here, because react_to_damage is never called
-        mprf("%s explodes violently into a cloud of jellies!",
-                                        mons->name(DESC_THE, false).c_str());
+        mprf("%s explodes violently into a cloud of jellies%s",
+                                        mons->name(DESC_THE, false).c_str(), attack_punctuation.c_str());
         trj_spawn_fineff::schedule(&you, mons, mons->pos(), mons->hit_points);
     }
     else
-        mprf("%s explodes violently!", mons->name(DESC_THE, false).c_str());
+        mprf("%s explodes violently%s", mons->name(DESC_THE, false).c_str(), attack_punctuation.c_str());
     mons->flags |= MF_EXPLODE_KILL;
     if (!mons->is_insubstantial())
     {

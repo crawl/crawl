@@ -228,6 +228,7 @@ sun_moth MONS_SUN_MOTH
 %sdir mon/aquatic
 %rim 0
 electric_eel MONS_ELECTRIC_EEL
+jellyfish MONS_JELLYFISH
 %rim 1
 
 %include dc-tentacles.txt
@@ -248,6 +249,7 @@ prince_ribbit MONS_PRINCE_RIBBIT
 bullfrog MONS_BULLFROG
 %rim 0
 blink_frog MONS_BLINK_FROG
+blinking_frog MONS_BLINK_FROG_BLINKING
 goliath_frog MONS_GOLIATH_FROG
 cane_toad MONS_CANE_TOAD
 

@@ -301,6 +301,7 @@ bool add_spell_to_memory(spell_type spell)
     bool overwrite = false;
     for (const auto &entry : Options.auto_spell_letters)
     {
+        // `matches` has a validity check
         if (!entry.first.matches(sname))
             continue;
         for (char ch : entry.second)
@@ -1461,13 +1462,20 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_ELECTRIC_CHARGE:
+        // XXX: this is a little redundant with you_no_tele_reason()
+        // but trying to sort out temp and so on is a mess
+        if (you.stasis())
+            return "your stasis prevents you from teleporting.";
         if (temp)
         {
             const string no_move_reason = movement_impossible_reason();
             if (!no_move_reason.empty())
                 return no_move_reason;
-            if (!electric_charge_possible(true))
-                return "you can't see anything to charge at.";
+            if (you.no_tele(true))
+                return lowercase_first(you.no_tele_reason(true));
+            const string no_charge_reason = electric_charge_impossible_reason(true);
+            if (!no_charge_reason.empty())
+                return no_charge_reason;
         }
         break;
 

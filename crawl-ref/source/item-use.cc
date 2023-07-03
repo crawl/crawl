@@ -1032,14 +1032,13 @@ static bool _unequip_item(item_def &i)
 static bool _evoke_item(item_def &i)
 {
     ASSERT(i.defined());
-    // wrapper for compatibility with old api that takes slots
     if (!in_inventory(i))
     {
         mprf(MSGCH_PROMPT, "You aren't carrying that!");
         return false;
     }
 
-    return evoke_item(i.link);
+    return evoke_item(i);
 }
 
 static vector<equipment_type> _current_ring_types();
@@ -2978,9 +2977,10 @@ bool drink(item_def* potion)
         return false;
     }
 
-    if (player_equip_unrand(UNRAND_VICTORY))
+    if (player_equip_unrand(UNRAND_VICTORY, true)
+        && !you.props.exists(VICTORY_CONDUCT_KEY))
     {
-        item_def *item = you.slot_item(EQ_BODY_ARMOUR);
+        item_def *item = you.slot_item(EQ_BODY_ARMOUR, true);
         string unrand_prompt = make_stringf("Really quaff with monsters nearby "
                                             "while wearing %s?",
                                             item->name(DESC_THE, false, true,
@@ -3037,7 +3037,7 @@ bool drink(item_def* potion)
     }
 
     // Drinking with hostile visible mons nearby resets unrand "Victory" stats.
-    if (player_equip_unrand(UNRAND_VICTORY)
+    if (player_equip_unrand(UNRAND_VICTORY, true)
         && there_are_monsters_nearby(true, true, false))
     {
         you.props[VICTORY_CONDUCT_KEY] = true;
@@ -3448,7 +3448,6 @@ static bool _is_cancellable_scroll(scroll_type scroll)
            || scroll == SCR_AMNESIA
            || scroll == SCR_BRAND_WEAPON
            || scroll == SCR_ENCHANT_WEAPON
-           || scroll == SCR_MAGIC_MAPPING
            || scroll == SCR_ACQUIREMENT
            || scroll == SCR_POISON;
 }
@@ -3771,9 +3770,10 @@ bool read(item_def* scroll, dist *target)
         }
     }
 
-    if (player_equip_unrand(UNRAND_VICTORY))
+    if (player_equip_unrand(UNRAND_VICTORY, true)
+        && !you.props.exists(VICTORY_CONDUCT_KEY))
     {
-        item_def *item = you.slot_item(EQ_BODY_ARMOUR);
+        item_def *item = you.slot_item(EQ_BODY_ARMOUR, true);
         string unrand_prompt = make_stringf("Really read with monsters nearby "
                                             "while wearing %s?",
                                             item->name(DESC_THE, false, true,
@@ -3809,9 +3809,10 @@ bool read(item_def* scroll, dist *target)
     // For cancellable scrolls leave printing this message to their
     // respective functions.
     const string pre_succ_msg =
-            make_stringf("As you%s read the %s, it crumbles to dust.",
+            make_stringf("As you%s read the %s, it %s.",
                          you.has_mutation(MUT_AWKWARD_TONGUE) ? " slowly" : "",
-                          scroll->name(DESC_QUALNAME).c_str());
+                          scroll->name(DESC_QUALNAME).c_str(),
+                         which_scroll == SCR_FOG ? "dissolves into smoke" : "crumbles to dust");
     if (!_is_cancellable_scroll(which_scroll))
     {
         mpr(pre_succ_msg);
@@ -3886,15 +3887,14 @@ bool read(item_def* scroll, dist *target)
 
     case SCR_FOG:
     {
-        mpr("The scroll dissolves into smoke.");
         auto smoke = random_smoke_type();
         big_cloud(smoke, &you, you.pos(), 50, 8 + random2(8));
         break;
     }
 
-    case SCR_MAGIC_MAPPING:
-        mpr(pre_succ_msg);
+    case SCR_REVELATION:
         magic_mapping(500, 100, false);
+        you.duration[DUR_REVELATION] = you.time_taken + 1;
         break;
 
     case SCR_TORMENT:
@@ -4057,9 +4057,15 @@ bool read(item_def* scroll, dist *target)
             dec_inv_item_quantity(link, 1);
         else
             dec_mitm_item_quantity(scroll->index(), 1);
+
         count_action(CACT_USE, OBJ_SCROLLS);
+
         if (you.has_mutation(MUT_AWKWARD_TONGUE))
+        {
             you.time_taken = div_rand_round(you.time_taken * 3, 2);
+            if (which_scroll == SCR_REVELATION) // ew
+                you.duration[DUR_REVELATION] = you.time_taken + 1;
+        }
     }
 
     if (!alreadyknown
@@ -4093,8 +4099,9 @@ bool read(item_def* scroll, dist *target)
     }
 
     // Reading with hostile visible mons nearby resets unrand "Victory" stats.
-    if (player_equip_unrand(UNRAND_VICTORY)
-        && there_are_monsters_nearby(true, true, false))
+    if (player_equip_unrand(UNRAND_VICTORY, true)
+        && there_are_monsters_nearby(true, true, false)
+        && !cancel_scroll)
     {
         you.props[VICTORY_CONDUCT_KEY] = true;
     }
@@ -4161,7 +4168,7 @@ void tile_item_use_secondary(int idx)
 
 void tile_item_use(int idx)
 {
-    const item_def item = you.inv[idx];
+    item_def &item = you.inv[idx];
 
     // Equipped?
     bool equipped = false;
@@ -4206,9 +4213,10 @@ void tile_item_use(int idx)
             return;
         }
         // Evoke misc. items or wands.
-        if (item_is_evokable(item, false))
+        if (item_ever_evokable(item))
         {
-            evoke_item(idx);
+            if (check_warning_inscriptions(item, OPER_EVOKE))
+                evoke_item(item);
             return;
         }
         // Unwield wielded items.

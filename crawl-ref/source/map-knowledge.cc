@@ -331,10 +331,12 @@ bool map_cell::update_cloud_state()
 }
 
 /**
- * Find the known map bounds as a pair of coordinates. Returns (-1,-1) x (-1,-1)
- * if the map is not known at all (this state shouldn't arise during normal
- * gameplay, but may arise in weird limiting cases, like during levelgen or
- * in tests).
+ * Find the known map bounds as a pair of coordinates. This is a minimal
+ * bounding box containing all areas of the map known by the player.
+ * @return A pair of coord_defs. This is { (-1,-1), (-1,-1) } if the map is not
+ *         known at all (this state shouldn't arise during normal gameplay, but
+ *         may arise in weird limiting cases, like during levelgen or in
+ *         tests).
  */
 std::pair<coord_def, coord_def> known_map_bounds() {
     int min_x = GXM, max_x = 0, min_y = 0, max_y = 0;
@@ -364,4 +366,16 @@ std::pair<coord_def, coord_def> known_map_bounds() {
         min_x = max_x = min_y = max_y = -1;
 
     return std::make_pair(coord_def(min_x, min_y), coord_def(max_x, max_y));
+}
+
+/**
+ * Are the given coordinates in the minimal bounding box of the known map?
+ * @param p A coord_def to test.
+ * @return True if p is in the bounding box, false otherwise.
+ */
+bool in_known_map_bounds(const coord_def& p)
+{
+    std::pair<coord_def, coord_def> b = known_map_bounds();
+    return p.x >= b.first.x && p.y >= b.first.y
+        && p.x <= b.second.x && p.y <= b.second.y;
 }

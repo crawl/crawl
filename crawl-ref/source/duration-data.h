@@ -403,6 +403,11 @@ static const duration_def duration_data[] =
       "immotile", "",
       "You are unable to move around.", D_DISPELLABLE,
       {{ "You are no longer robbed of momentum." }}},
+    { DUR_ENLIGHTENED,
+      BLUE, "Will+",
+      "enlightened", "",
+      "You are enlightened. (Will+)", D_DISPELLABLE,
+      {{ "Your enlightenment fades." }}},
     { DUR_TOXIC_RADIANCE,
       MAGENTA, "Toxic",
       "radiating poison", "toxic radiance",
@@ -581,7 +586,7 @@ static const duration_def duration_data[] =
     { DUR_BLINK_COOLDOWN,
       YELLOW, "-Blink",
       "on blink cooldown", "blink cooldown",
-      "You are unable to blink.", D_NO_FLAGS,
+      "You are unable to blink.", D_DISPELLABLE,
       {{ "You feel stable enough to blink again."}}},
     { DUR_ANIMATE_DEAD,
       MAGENTA, "Reap",
@@ -652,6 +657,7 @@ static const duration_def duration_data[] =
           if (!you.duration[DUR_BRAINLESS] && !player_in_branch(BRANCH_GEHENNA))
               mprf(MSGCH_RECOVERY, "You can read scrolls again.");
       }}}},
+    { DUR_REVELATION, 0, "", "", "revelation", "", D_NO_FLAGS, {{""}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

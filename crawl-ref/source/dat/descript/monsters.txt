@@ -1292,6 +1292,12 @@ formicid
 
 A sentient ant that walks upright and is competent at digging.
 %%%%
+formless jellyfish
+
+A gelatinous assemblage of tentacles and venom, leaving a glistening trail
+as it slides along. Surely such a mockery of life could not be natural..?
+# And yet, MH_NATURAL it is :)
+%%%%
 foxfire
 
 A thin wisp of flaming swamp gas. It will burn anything that ventures too

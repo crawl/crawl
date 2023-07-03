@@ -52,6 +52,7 @@
 #define PARALYSED_BY_KEY "paralysed_by"
 #define PETRIFIED_BY_KEY "petrified_by"
 #define FROZEN_RAMPARTS_KEY "frozen_ramparts_position"
+#define DREAMSHARD_KEY "dreamshard"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -236,7 +237,9 @@ public:
     FixedVector<int, NUM_GODS> exp_docked_total; // XP-based wrath
 
     FixedArray<uint32_t, 6, MAX_SUBTYPES> item_description;
+    set<misc_item_type>                generated_misc;
     FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
+    uint8_t                            octopus_king_rings;
     unique_creature_list unique_creatures;
 
     KillMaster kills;
@@ -278,10 +281,11 @@ public:
     FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
     FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
     FixedBitVector<NUM_MISCELLANY>     seen_misc;
-    uint8_t                            octopus_king_rings;
 
     uint8_t normal_vision;        // how far the species gets to see
     uint8_t current_vision;       // current sight radius (cells)
+
+    set<coord_def> rampage_hints; // TODO: move this somewhere else
 
     int real_time() { return real_time_ms.count() / 1000; }
     chrono::milliseconds real_time_ms;       // real time played
@@ -410,9 +414,6 @@ public:
 
     // If true, player has triggered a trap effect by exploring.
     bool trapped;
-
-    // Did the player trigger their spectral weapon this turn?
-    bool triggered_spectral;
 
     // TODO burn this API with fire
     bool wield_change;          // redraw weapon
@@ -777,8 +778,8 @@ public:
     bool res_petrify(bool temp = true) const override;
     int res_constrict() const override;
     int willpower() const override;
-    bool no_tele(bool blink = false) const override;
-    string no_tele_reason(bool blink = false) const;
+    bool no_tele(bool blink = false, bool temp = true) const override;
+    string no_tele_reason(bool blink = false, bool temp = true) const;
     bool antimagic_susceptible() const override;
 
     bool res_corr(bool allow_random = true, bool temp = true) const override;
@@ -869,6 +870,9 @@ public:
     void be_agile(int pow);
 
     bool allies_forbidden();
+
+    // TODO: move this somewhere else
+    void refresh_rampage_hints();
 
     ////////////////////////////////////////////////////////////////
 
@@ -996,7 +1000,7 @@ int player_icemail_armour_class();
 int player_condensation_shield_class();
 int sanguine_armour_bonus();
 
-int player_wizardry(spell_type spell);
+int player_wizardry();
 int player_channeling();
 
 int player_prot_life(bool allow_random = true, bool temp = true,
@@ -1037,6 +1041,8 @@ int player_spec_fire();
 int player_spec_hex();
 int player_spec_poison();
 int player_spec_summ();
+int player_spec_tloc();
+int player_spec_tmut();
 
 int player_speed();
 

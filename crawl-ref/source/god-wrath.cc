@@ -22,6 +22,7 @@
 #include "death-curse.h"
 #include "decks.h"
 #include "env.h"
+#include "fineff.h"
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-passive.h" // shadow_monster
@@ -406,8 +407,11 @@ static bool _cheibriados_retribution()
     return true;
 }
 
-static void _banish_foes_nearby()
+void lucy_check_meddling()
 {
+    if (!have_passive(passive_t::wrath_banishment))
+        return;
+
     vector<monster*> potential_banishees;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
@@ -428,7 +432,12 @@ static void _banish_foes_nearby()
     const int to_banish = roll_dice(2, 3);
     shuffle_array(begin(potential_banishees), end(potential_banishees));
     for (int i = 0; i < to_banish && i < (int)potential_banishees.size(); ++i)
-        potential_banishees[i]->banish(&you);
+    {
+        // We might have banished a summoner and poofed its summons, etc.
+        monster* mon = potential_banishees[i];
+        if (!invalid_monster(mon) && mon->alive())
+            mon->banish(&you);
+    }
 }
 
 static void _spell_retribution(monster* avatar, spell_type spell, god_type god,
@@ -2046,10 +2055,10 @@ static bool _ignis_shaft()
 
     simple_god_message(" burns the ground from beneath your feet!", GOD_IGNIS);
 
-    // This way, if you're wearing the rDislodge boots, the other Ignis wrath
-    // effects won't become more prevalent, encouraging players to boot-swap
-    // while under Ignis wrath.
-    ASSERT(you.resists_dislodge("falling") || you.do_shaft());
+    // player::do_shaft() already checks resist_dislodge, but the message is a
+    // bit worse.
+    if (!you.resists_dislodge("falling"))
+        you.do_shaft();
     return true;
 }
 
@@ -2251,8 +2260,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
         return false;
     }
 
-    if (have_passive(passive_t::wrath_banishment))
-        _banish_foes_nearby();
+    lucy_check_meddling();
 
     if (no_bonus)
         return true;
@@ -2370,5 +2378,6 @@ void gozag_incite(monster *mon)
     {
         mon->add_ench(ENCH_GOZAG_INCITE);
         view_update_at(mon->pos());
+        lugonu_meddle_fineff::schedule();
     }
 }

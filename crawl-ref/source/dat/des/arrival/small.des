@@ -2043,9 +2043,9 @@ NAME:    onia_arrival_mini_maze
 TAGS:    arrival
 WEIGHT:  5
 ORIENT:  float
-ITEM:    nothing w:20 / stone
+ITEM:    nothing / stone
 SHUFFLE: Aa, Bb, Cc, Ee, Ff
-MONS:    w:30 nothing / w:10 plant / w:5 fungus / w:10 rat
+MONS:    nothing / rat
 SUBST:   A=x, B=x, C=x, E=x, F=x, a=., b=., c=., e=., f=.
 SUBST:   X = xxxxxxxxxxxxxxxxx+
 NSUBST:  { = 1:{ / *:.
@@ -2069,20 +2069,18 @@ NAME:    onia_arrival_mini_maze_b
 TAGS:    arrival
 WEIGHT:  5
 ORIENT:  float
-ITEM:    nothing w:50 / stone
 SHUFFLE: AB
 SUBST:   A : x , B = +., X = x+
-MONS:    w:30 nothing / w:10 plant / w:3 fungus / w:1 worm
 NSUBST:  { = 1:{ / *:.
 MAP
 xxxxxxxxx@xxxxxxx
 x.......A.B.....x
 x.xxxxxBxxxAxxx.x
-x.xd1........dx.x
+x.xd.........dx.x
 x.xxxxxxxxxxx1x.x
 x.x...B.......x.x
 x.x.x.x.xxxxxAx.x
-x...x.x...1dx...x
+x...x.x....dx...x
 xxxxx.xxxxxxxx.xx
 x...............x
 x.xx.xxX.Xxx.xx.x

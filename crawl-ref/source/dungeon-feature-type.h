@@ -67,6 +67,7 @@ enum dungeon_feature_type
 
     DNGN_SHALLOW_WATER,
 #if TAG_MAJOR_VERSION > 34
+    DNGN_MUD,                         // Leda's Unmaking
     DNGN_TOXIC_BOG,                   // Eringya's Noxious Bog
 #endif
 
@@ -349,6 +350,7 @@ enum dungeon_feature_type
     DNGN_EXIT_COCYTUS,
     DNGN_EXIT_TARTARUS,
     DNGN_RUNELIGHT,
+    DNGN_MUD,
 #endif
 
     NUM_FEATURES

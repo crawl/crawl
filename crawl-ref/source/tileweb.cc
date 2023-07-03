@@ -733,14 +733,14 @@ void TilesFramework::send_options()
     finish_message();
 }
 
-#define ZOOM_INC 10
+#define ZOOM_INC 0.1
 
-static void _set_option_int(string name, int value)
+static void _set_option_fixedp(string name, fixedp<int,100> value)
 {
     tiles.json_open_object();
     tiles.json_write_string("msg", "set_option");
     tiles.json_write_string("name", name);
-    tiles.json_write_int("value", value);
+    tiles.json_write_int("value", value.to_scaled());
     tiles.json_close_object();
     tiles.finish_message();
 }
@@ -749,17 +749,17 @@ void TilesFramework::zoom_dungeon(bool in)
 {
     if (m_ui_state == UI_VIEW_MAP)
     {
-        Options.tile_map_scale = min(300, max(20,
+        Options.tile_map_scale = min(3.0, max(0.2,
                     Options.tile_map_scale + (in ? ZOOM_INC : -ZOOM_INC)));
-        _set_option_int("tile_map_scale", Options.tile_map_scale);
-        dprf("Zooming map to %d", Options.tile_map_scale);
+        _set_option_fixedp("tile_map_scale", Options.tile_map_scale);
+        dprf("Zooming map to %g", (float) Options.tile_map_scale);
     }
     else
     {
         Options.tile_viewport_scale = min(300, max(20,
                     Options.tile_viewport_scale + (in ? ZOOM_INC : -ZOOM_INC)));
-        _set_option_int("tile_viewport_scale", Options.tile_viewport_scale);
-        dprf("Zooming to %d", Options.tile_viewport_scale);
+        _set_option_fixedp("tile_viewport_scale", Options.tile_viewport_scale);
+        dprf("Zooming to %g", (float) Options.tile_viewport_scale);
     }
     // calling redraw explicitly is not needed here: it triggers from a
     // listener on the webtiles side.
@@ -1465,26 +1465,7 @@ void TilesFramework::send_doll(const dolls_data &doll, bool submerged, bool ghos
         p_order[9] = TILEP_PART_CLOAK;
     }
 
-    // Special case bardings from being cut off.
-    const bool is_naga = is_player_tile(doll.parts[TILEP_PART_BASE],
-                                        TILEP_BASE_NAGA);
-
-    if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
-        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED
-        || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_LIGHTNING_SCALES)
-    {
-        flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
-    }
-
-    const bool is_ptng = is_player_tile(doll.parts[TILEP_PART_BASE],
-                                        TILEP_BASE_ARMATAUR);
-
-    if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
-        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED
-        || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_BLACK_KNIGHT)
-    {
-        flags[TILEP_PART_BOOTS] = is_ptng ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
-    }
+    reveal_bardings(doll.parts, flags);
 
     tiles.json_open_array("doll");
 
@@ -2181,8 +2162,8 @@ void TilesFramework::_send_everything()
             for (const auto& json : frame.ui_json)
                 if (!json.empty())
                 {
-                    m_msg_buf.append(json);
                     json_write_comma();
+                    m_msg_buf.append(json);
                 }
             continue;
         }

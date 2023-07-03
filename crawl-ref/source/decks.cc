@@ -293,6 +293,7 @@ bool gift_cards()
 {
     const int deal = random_range(MIN_GIFT_CARDS, MAX_GIFT_CARDS);
     bool dealt_cards = false;
+    set<deck_type> sufficiency;
 
     for (int i = 0; i < deal; i++)
     {
@@ -300,11 +301,26 @@ bool gift_cards()
                                         3, DECK_OF_DESTRUCTION,
                                         1, DECK_OF_SUMMONING,
                                         1, DECK_OF_ESCAPE);
-        if (deck_cards(choice) < all_decks[choice].deck_max)
+        if (deck_cards(choice) >= all_decks[choice].deck_max)
         {
-            you.props[deck_name(choice)]++;
-            dealt_cards = true;
+            sufficiency.insert(choice);
+            continue;
         }
+        you.props[deck_name(choice)]++;
+        dealt_cards = true;
+    }
+    if (!dealt_cards)
+    {
+        vector<string> deck_names;
+        for (deck_type deck : sufficiency)
+        {
+            const deck_type_data *deck_data = map_find(all_decks, deck);
+            deck_names.push_back(deck_data ? deck_data->name : "bugginess");
+        }
+        mprf(MSGCH_GOD, you.religion,
+             "%s goes to deal, but finds you have enough %s cards.",
+             god_name(you.religion).c_str(),
+             join_strings(deck_names.begin(), deck_names.end(), " and ").c_str());
     }
 
     return dealt_cards;

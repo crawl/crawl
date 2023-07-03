@@ -56,6 +56,7 @@
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mon-transit.h"
+#include "ouch.h"
 #include "religion.h"
 #include "spl-clouds.h" // explode_blastmotes_at
 #include "spl-monench.h"
@@ -384,6 +385,8 @@ int monster::damage_type(int which_attack)
 
     if (!mweap)
     {
+        if (mons_species() == MONS_EXECUTIONER)
+            return DVORP_CHOPPING; // lore: whirling scythe blades
         const mon_attack_def atk = mons_attack_spec(*this, which_attack);
         return (atk.type == AT_CLAW)          ? DVORP_CLAWING :
                (atk.type == AT_TENTACLE_SLAP) ? DVORP_TENTACLE
@@ -3921,7 +3924,7 @@ int monster::willpower() const
     return u;
 }
 
-bool monster::no_tele(bool /*blinking*/) const
+bool monster::no_tele(bool /*blinking*/, bool /*temp*/) const
 {
     // Plants can't survive without roots, so it's either this or auto-kill.
     // Statues have pedestals so moving them is weird.
@@ -4226,10 +4229,17 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         {
             // +30% damage if opp has one level of harm, +45% with two
             if (agent && agent->extra_harm())
-                amount = amount * (100 + 15 * (agent->extra_harm() + 1)) / 100;
+            {
+                amount = amount * (100
+                                   + outgoing_harm_amount(agent->extra_harm()))
+                         / 100;
+            }
             // +20% damage if you have one level of harm, +30% with two
             else if (extra_harm())
-                amount = amount * (10 + extra_harm() + 1) / 10;
+            {
+                amount = amount * (100 + incoming_harm_amount(extra_harm()))
+                         / 100;
+            }
         }
 
         // Apply damage multipliers for quad damage
@@ -5781,6 +5791,16 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         check_place_cloud(CLOUD_FIRE, pos(), 3, actor_by_mid(i_f.source));
     }
 
+    const int corrode = corrosion_chance(scan_artefacts(ARTP_CORRODE));
+    if (res_acid() < 3 && x_chance_in_y(corrode, 100))
+    {
+        corrode_equipment(make_stringf("%s corrosive artefact",
+                                       name(DESC_ITS).c_str()).c_str());
+    }
+
+    const int slow = scan_artefacts(ARTP_SLOW);
+    if (x_chance_in_y(slow, 100))
+        do_slow_monster(*this, oppressor, (10 + random2(5)) * BASELINE_DELAY);
 
     if (mons_species() == MONS_BUSH
         && res_fire() < 0 && flavour == BEAM_FIRE

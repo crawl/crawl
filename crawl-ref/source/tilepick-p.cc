@@ -9,6 +9,7 @@
 #include "describe.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "player.h"
 #include "tile-flags.h"
 #include "tile-player-flag-cut.h"
@@ -234,7 +235,10 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         tile = TILEP_HAND1_SLING;
         break;
     case WPN_SHORTBOW:
-        tile = TILEP_HAND1_BOW2;
+        tile = TILEP_HAND1_SHORTBOW;
+        break;
+    case WPN_ORCBOW:
+        tile = TILEP_HAND1_ORCBOW;
         break;
     case WPN_HAND_CROSSBOW:
         tile = TILEP_HAND1_HAND_CROSSBOW;
@@ -251,7 +255,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         break;
 #endif
     case WPN_LONGBOW:
-        tile = TILEP_HAND1_BOW3;
+        tile = TILEP_HAND1_ORCBOW;
         break;
 
     default: tile = 0;
@@ -456,8 +460,6 @@ tileidx_t tilep_equ_boots(const item_def &item)
     if (item.props.exists(WORN_TILE_KEY))
         return item.props[WORN_TILE_KEY].get_short();
 
-    int etype = enchant_to_int(item);
-
     if (is_unrandom_artefact(item))
     {
         const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
@@ -467,10 +469,11 @@ tileidx_t tilep_equ_boots(const item_def &item)
 
     if (item.sub_type == ARM_BARDING)
     {
-        if (you.species == SP_NAGA)
-            return TILEP_BOOTS_NAGA_BARDING + min(etype, 3);
-        // placeholder for armataur
-        return TILEP_BOOTS_CENTAUR_BARDING + min(etype, 3);
+        if (is_artefact(item))
+            return TILEP_BOOTS_BARDING_RANDART;
+        if (item.flags & ISFLAG_COSMETIC_MASK)
+            return TILEP_BOOTS_BARDING_EGO;
+        return TILEP_BOOTS_BARDING;
     }
 
     if (item.sub_type != ARM_BOOTS)
@@ -691,6 +694,18 @@ void tilep_draconian_init(int sp, int level, tileidx_t *base, tileidx_t *wing)
         *wing = tile_player_part_start[TILEP_PART_DRCWING] + colour_offset;
 }
 
+static const string DOLL_BASE_KEY = "doll_base";
+
+void randomize_doll_base()
+{
+    const tileidx_t base = tilep_species_to_base_tile(you.species,
+                                                      you.experience_level);
+    const int count = tile_player_count(base);
+    const int rand_base = base + random2(count);
+    you.props[DOLL_BASE_KEY] = rand_base;
+
+}
+
 // Set default parts of each race: body + optional beard, hair, etc.
 // This function needs to be entirely deterministic.
 void tilep_race_default(int sp, int level, dolls_data *doll)
@@ -698,6 +713,14 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
     tileidx_t *parts = doll->parts;
 
     tileidx_t result = tilep_species_to_base_tile(sp, level);
+    if (level == you.experience_level && you.props.exists(DOLL_BASE_KEY))
+    {
+        const int rand_doll = you.props[DOLL_BASE_KEY].get_int();
+#if TAG_MAJOR_VERSION == 34
+        if (is_player_tile(rand_doll, result))
+#endif
+            result = rand_doll;
+    }
     if (parts[TILEP_PART_BASE] != TILEP_SHOW_EQUIP)
         result = parts[TILEP_PART_BASE];
 

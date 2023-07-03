@@ -173,9 +173,8 @@ void link_items()
 
 static bool _item_ok_to_clean(int item)
 {
-    // Never clean zigfigs, Orbs, or runes.
+    // Never clean misc items, Orbs, or runes.
     if (env.item[item].base_type == OBJ_MISCELLANY
-            && env.item[item].sub_type == MISC_ZIGGURAT
         || item_is_orb(env.item[item])
         || env.item[item].base_type == OBJ_RUNES)
     {
@@ -448,7 +447,7 @@ void inc_inv_item_quantity(int obj, int amount)
 
     you.inv[obj].quantity += amount;
     if (you.inv[obj].quantity == amount) // not currently possible?
-        quiver::on_actions_changed(true);
+        quiver::on_actions_changed();
 }
 
 void inc_mitm_item_quantity(int obj, int amount)
@@ -647,6 +646,8 @@ void destroy_item(item_def &item, bool never_created)
     {
         if (is_unrandom_artefact(item))
             set_unique_item_status(item, UNIQ_NOT_EXISTS);
+        if (item.base_type == OBJ_MISCELLANY)
+            you.generated_misc.erase((misc_item_type)item.sub_type);
     }
 
     item.clear();
@@ -1508,16 +1509,7 @@ bool is_stackable_item(const item_def &item)
 #endif
             return true;
         case OBJ_MISCELLANY:
-            switch (item.sub_type)
-            {
-                case MISC_ZIGGURAT:
-#if TAG_MAJOR_VERSION == 34
-                case MISC_SACK_OF_SPIDERS:
-#endif
-                    return true;
-                default:
-                    break;
-            }
+            return item.sub_type == MISC_ZIGGURAT;
         default:
             break;
     }
@@ -2009,6 +2001,7 @@ item_def *auto_assign_item_slot(item_def& item)
     // check to see whether we've chosen an automatic label:
     for (auto& mapping : Options.auto_item_letters)
     {
+        // `matches` has a validity check
         if (!mapping.first.matches(item.name(DESC_QUALNAME))
             && !mapping.first.matches(item_prefix(item)
                                       + " " + item.name(DESC_A)))
@@ -2092,7 +2085,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
         taken_new_item(item.base_type);
 
     you.last_pickup[item.link] = quant_got;
-    quiver::on_actions_changed(true);
+    quiver::on_actions_changed();
     item_skills(item, you.skills_to_show);
 
     if (const item_def* newitem = auto_assign_item_slot(item))
@@ -3825,8 +3818,7 @@ static colour_t _zigfig_colour()
 }
 
 /**
- * Assuming this item is a miscellaneous item (evocations item or a rune), what
- * colour is it?
+ * Assuming this item is a misc (non-wand evocable) item, what colour is it?
  */
 colour_t item_def::miscellany_colour() const
 {
@@ -3858,11 +3850,11 @@ colour_t item_def::miscellany_colour() const
 #endif
         case MISC_HORN_OF_GERYON:
             return LIGHTRED;
+        case MISC_SACK_OF_SPIDERS:
+            return WHITE;
 #if TAG_MAJOR_VERSION == 34
         case MISC_LAMP_OF_FIRE:
             return YELLOW;
-        case MISC_SACK_OF_SPIDERS:
-            return WHITE;
         case MISC_BUGGY_LANTERN_OF_SHADOWS:
         case MISC_BUGGY_EBONY_CASKET:
             return DARKGREY;
@@ -3991,7 +3983,6 @@ bool item_type_has_unidentified(object_class_type base_type)
         || base_type == OBJ_POTIONS
         || base_type == OBJ_BOOKS
         || base_type == OBJ_STAVES
-        || base_type == OBJ_MISCELLANY
 #if TAG_MAJOR_VERSION == 34
         || base_type == OBJ_RODS
 #endif
@@ -4587,14 +4578,7 @@ item_def get_item_known_info(const item_def& item)
         ii.subtype_rnd = item.subtype_rnd;
         break;
     case OBJ_MISCELLANY:
-        if (item_type_known(item))
-            ii.sub_type = item.sub_type;
-        else
-            ii.sub_type = item.sub_type;
-        break;
     case OBJ_GOLD:
-        ii.sub_type = item.sub_type;
-        break;
     case OBJ_ORBS:
     case OBJ_RUNES:
     default:

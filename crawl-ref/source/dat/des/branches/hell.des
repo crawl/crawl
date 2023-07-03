@@ -700,7 +700,7 @@ WEIGHT: 2
   -- up to two generic randarts/randbooks, as well as magic stuff and
   -- assorted weapons, including demon weapons
   local hellinv = util.random_subset( { "scroll of blinking q:10",
-    "scroll of magic mapping q:10", "scroll of silence q:10",
+    "scroll of revelation q:10", "scroll of silence q:10",
     "any ally scroll q:10", "scroll of teleportation q:10",
     "potion of brilliance q:10",
     "potion of cancellation q:10", "potion of curing q:10",

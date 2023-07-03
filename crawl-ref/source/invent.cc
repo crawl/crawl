@@ -736,7 +736,7 @@ bool sort_item_identified(const InvEntry *a)
 bool sort_item_charged(const InvEntry *a)
 {
     return a->item->base_type != OBJ_WANDS
-           || !item_is_evokable(*(a->item));
+           || !item_ever_evokable(*(a->item));
 }
 
 static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,
@@ -1140,7 +1140,7 @@ bool item_is_selected(const item_def &i, int selector)
         return item_is_wieldable(i);
 
     case OSEL_EVOKABLE:
-        return item_is_evokable(i);
+        return item_ever_evokable(i);
 
     case OSEL_ENCHANTABLE_ARMOUR:
         return is_enchantable_armour(i, true);

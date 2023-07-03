@@ -143,7 +143,7 @@ static const struct spell_desc spelldata[] =
     spflag::noisy | spflag::destructive,
     6,
     200,
-    3, 10, // capped at LOS
+    LOS_RADIUS, LOS_RADIUS,
     20,
     TILEG_PLASMA_BEAM,
 },
@@ -843,12 +843,23 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_IRON_SHOT, "Iron Shot",
     spschool::conjuration | spschool::earth,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     6,
     200,
     4, 4,
     0,
     TILEG_IRON_SHOT,
+},
+
+{
+    SPELL_UNMAKING, "Leda's Unmaking",
+    spschool::conjuration | spschool::earth,
+    spflag::dir_or_target | spflag::needs_tracer,
+    6,
+    200,
+    4, 4,
+    0,
+    TILEG_LEDAS_UNMAKING,
 },
 
 {
@@ -3636,6 +3647,18 @@ static const struct spell_desc spelldata[] =
     5,
     0,
     6, 6,
+    0,
+    TILEG_ERROR,
+},
+
+// Dummy spell for the Makhleb ability.
+{
+    SPELL_MINOR_DESTRUCTION, "Minor Destruction",
+    spschool::conjuration,
+    spflag::dir_or_target | spflag::chaotic | spflag::needs_tracer,
+    3,
+    0,
+    5, 5,
     0,
     TILEG_ERROR,
 },

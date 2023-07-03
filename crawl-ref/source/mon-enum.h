@@ -143,6 +143,7 @@ enum attack_flavour
     AF_RIFT,
     AF_BLOODZERK,
     AF_SLEEP,
+    AF_MINIPARA,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or

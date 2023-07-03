@@ -913,7 +913,7 @@ spret cast_call_imp(int pow, god_type god, bool fail)
     if (monster *imp = create_monster(imp_data))
     {
         mpr("A tiny devil pulls itself out of the air.");
-        imp->weapon()->plus = div_rand_round(pow, 10) - 4;
+        imp->weapon()->plus = pow/10 - 4;
         _monster_greeting(imp, "_friendly_imp_greeting");
     }
     else
@@ -1473,7 +1473,7 @@ static spell_type servitor_spells[] =
     // primary spells
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_IOOD,
-    SPELL_IRON_SHOT,
+    SPELL_UNMAKING,
     SPELL_BOLT_OF_COLD, // left in for frederick
     SPELL_PLASMA_BEAM, // maybe should be higher?
     SPELL_FIREBALL,
@@ -2100,19 +2100,19 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
     if (owner)
         owner->props.erase(SPECTRAL_WEAPON_KEY);
 
-    if (!quiet)
-    {
-        if (you.can_see(*mons))
-        {
-            simple_monster_message(*mons, " fades away.",
-                                   MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
-        }
-        else if (owner && owner->is_player())
-            mpr("You feel your bond with your spectral weapon wane.");
-    }
+    if (!quiet && you.can_see(*mons))
+        simple_monster_message(*mons, " disappears.");
 
     if (!killed)
         monster_die(*mons, KILL_RESET, NON_MONSTER);
+}
+
+void check_spectral_weapon(actor &agent)
+{
+    if (!agent.triggered_spectral)
+        if (monster* sw = find_spectral_weapon(&agent))
+            end_spectral_weapon(sw, false, false);
+    agent.triggered_spectral = false;
 }
 
 static void _setup_infestation(bolt &beam, int pow)
@@ -2204,7 +2204,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_DEMON,             { 0, 3 } },
     { SPELL_SUMMON_TZITZIMITL,        { 0, 3 } },
     { SPELL_SUMMON_HELL_SENTINEL,     { 0, 3 } },
-    { SPELL_CONJURE_LIVING_SPELLS,    { 0, 6 } },
+    { SPELL_CONJURE_LIVING_SPELLS,    { 0, 4 } },
     { SPELL_SHEZAS_DANCE,             { 0, 6 } },
 };
 

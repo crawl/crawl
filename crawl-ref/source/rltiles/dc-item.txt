@@ -166,6 +166,9 @@ sling3
 shortbow1 WPN_SHORTBOW
 shortbow2
 shortbow3
+orcbow1 WPN_ORCBOW
+orcbow2
+orcbow3
 longbow1 WPN_LONGBOW
 longbow2
 longbow3
@@ -424,17 +427,9 @@ scarf2_2
 scarf2_3
 scarf3
 
-%sdir item/armour/bardings
-naga_barding_blue ARM_BARDING
-naga_barding_metal
-naga_barding_magenta
-naga_barding_red
-# start TAG_MAJOR_VERSION == 34
-centaur_barding_blue ARM_CENTAUR_BARDING
-centaur_barding_metal
-centaur_barding_magenta
-centaur_barding_red
-# end TAG_MAJOR_VERSION
+barding1 ARM_BARDING
+barding2
+barding3
 
 %sdir item/armour/shields
 
@@ -704,7 +699,7 @@ i-immolation SCR_IMMOLATION
 %back scroll-purple
 i-blinking SCR_BLINKING
 %back scroll-yellow
-i-magic_mapping SCR_MAGIC_MAPPING
+i-magic_mapping SCR_REVELATION
 %back scroll-blue
 i-fog SCR_FOG
 %back scroll-cyan
@@ -937,7 +932,7 @@ i-gain-strength POT_REMOVEME2
 i-gain-dexterity POT_REMOVEME3
 i-gain-intelligence POT_REMOVEME4
 # end TAG_MAJOR_VERSION
-i-flight POT_FLIGHT
+i-flight POT_ENLIGHTENMENT
 # start TAG_MAJOR_VERSION == 34
 i-poison POT_POISON
 i-slowing POT_SLOWING
@@ -1108,8 +1103,11 @@ error ROD_VENOM ROD_ID_LAST
 
 #OBJ_ORBS
 %sdir item/misc
-misc_orb ORB UNSEEN_ORB
-misc_orb2
+orb_of_zot1 ORB UNSEEN_ORB
+orb_of_zot2
+orb_of_zot3
+orb_of_zot4
+orb_of_zot5
 uncollected_orb UNCOLLECTED_ORB
 
 #OBJ_MISCELLANY
@@ -1138,9 +1136,7 @@ misc_lantern MISC_LANTERN_OF_SHADOWS
 misc_horn MISC_HORN_OF_GERYON
 misc_box MISC_BOX_OF_BEASTS
 %rim 0
-# start TAG_MAJOR_VERSION == 34
 misc_sack MISC_SACK_OF_SPIDERS
-# end TAG_MAJOR_VERSION
 misc_phantom_mirror MISC_PHANTOM_MIRROR
 misc_zigfig MISC_ZIGGURAT
 misc_quad MISC_QUAD_DAMAGE

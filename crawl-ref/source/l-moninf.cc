@@ -127,8 +127,9 @@ MIRET1(number, base_type, base_type)
  */
 MIRET1(number, number, number)
 /*** Does this monster have a ranged attack we know about?
- * This refers to ranged weapons. Ranged spells and abilities are not included
- * in this check.
+ * A monster is considered to have a ranged attack if it has any of the
+ * following: a reach attack, a throwable missile, a launcher weapon, an
+ * attack wand, or an attack spell with a range greater than 1.
  * @treturn boolean
  * @function has_ranged_attack
  */

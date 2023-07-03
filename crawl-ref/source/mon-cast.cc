@@ -1359,6 +1359,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_STICKY_FLAME_RANGE:
     case SPELL_STING:
     case SPELL_IRON_SHOT:
+    case SPELL_UNMAKING:
     case SPELL_STONE_ARROW:
     case SPELL_FORCE_LANCE:
     case SPELL_CORROSIVE_BOLT:
@@ -2458,14 +2459,8 @@ static bool _near_visible_wall(const monster &caster, coord_def targ)
     if (!caster.see_cell_no_trans(targ))
         return false;
     for (adjacent_iterator ai(targ); ai; ++ai)
-    {
-        if (cell_is_solid(*ai)
-            && env.grid(*ai) != DNGN_MALIGN_GATEWAY
-            && caster.see_cell_no_trans(*ai))
-        {
+        if (feat_is_wall(env.grid(*ai)) && caster.see_cell_no_trans(*ai))
             return true;
-        }
-    }
     return false;
 }
 
@@ -4741,8 +4736,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 
         if (mons_invuln_will(**mi)
             || mons_is_firewood(**mi)
-            || mons_atts_aligned(mi->attitude, mons->attitude)
-            || mons->has_ench(ENCH_HEXED))
+            || mons_atts_aligned(mi->temp_attitude(), mons->temp_attitude()))
         {
             continue;
         }

@@ -874,7 +874,7 @@ TAGS:    no_item_gen no_monster_gen transparent
 DEPTH:   Orc
 KMONS:   1 = orc high priest / orc sorcerer
 KMONS:   2 = orc knight
-KMONS:   3 = orc warrior / orc ; arbalest . spear | hand axe | mace
+KMONS:   3 = orc warrior / orc ; orcbow . spear | hand axe | mace
 KMONS:   4 = orc priest / orc / nothing
 KMONS:   5 = orc wizard / nothing
 KMONS:   6 = ogre / two-headed ogre / troll / deep troll / ogre mage / nothing
@@ -1478,9 +1478,9 @@ NAME:    st_orc_rangers
 TAGS:    no_rotate no_item_gen no_monster_gen no_pool_fixup transparent
 PLACE:   Orc:$
 ORIENT:  float
-MONS:    orc warrior w:1 ; arbalest . halberd | war axe | morningstar /\
-         orc w:10 ; arbalest . trident | hand axe | mace
-MONS:    orc warrior ; arbalest . glaive | broad axe | battleaxe | great mace
+MONS:    orc warrior w:1 ; orcbow . halberd | war axe | morningstar /\
+         orc w:10 ; orcbow . trident | hand axe | mace
+MONS:    orc warrior ; orcbow . glaive | broad axe | battleaxe | great mace
 MONS:    orc knight ; arbalest . glaive | broad axe | great mace
 MONS:    orc warrior
 MONS:    centaur w:20 / centaur warrior w:1 / nothing w:21

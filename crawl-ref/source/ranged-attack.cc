@@ -162,28 +162,23 @@ bool ranged_attack::handle_phase_blocked()
 {
     ASSERT(!ignores_shield(false));
     string punctuation = ".";
-    string verb = "block";
 
     if (defender->reflection())
     {
         reflected = true;
-        verb = "reflect";
         if (defender->observable())
         {
             if (defender_shield && shield_reflects(*defender_shield))
             {
-                punctuation = " off " + defender->pronoun(PRONOUN_POSSESSIVE)
-                              + " " + defender_shield->name(DESC_PLAIN).c_str()
-                              + "!";
+                punctuation = " with " + defender->pronoun(PRONOUN_POSSESSIVE)
+                              + " " + defender_shield->name(DESC_PLAIN).c_str();
             }
             else
-            {
-                punctuation = " off an invisible shield around "
-                            + defender->pronoun(PRONOUN_OBJECTIVE) + "!";
-            }
+                punctuation = " with an invisible shield";
         }
-        else
-            punctuation = "!";
+
+        punctuation += make_stringf("... and %s it back!",
+                                    defender->conj_verb("reflect").c_str());
     }
     else
         range_used = BEAM_STOP;
@@ -192,7 +187,7 @@ bool ranged_attack::handle_phase_blocked()
     {
         mprf("%s %s %s%s",
              defender_name(false).c_str(),
-             defender->conj_verb(verb).c_str(),
+             defender->conj_verb("block").c_str(),
              projectile->name(DESC_THE).c_str(),
              punctuation.c_str());
     }

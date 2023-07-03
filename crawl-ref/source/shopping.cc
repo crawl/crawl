@@ -144,9 +144,6 @@ int artefact_value(const item_def &item)
     if (prop[ARTP_ANGRY])
         ret -= 3;
 
-    if (prop[ARTP_CAUSE_TELEPORTATION])
-        ret -= 3;
-
     if (prop[ARTP_NOISE])
         ret -= 5;
 
@@ -449,6 +446,7 @@ unsigned int item_value(item_def item, bool ident)
 
             case POT_BERSERK_RAGE:
             case POT_HEAL_WOUNDS:
+            case POT_ENLIGHTENMENT:
                 valued += 50;
                 break;
 
@@ -460,7 +458,6 @@ unsigned int item_value(item_def item, bool ident)
             case POT_CURING:
             case POT_LIGNIFY:
             case POT_ATTRACTION:
-            case POT_FLIGHT:
                 valued += 30;
                 break;
 
@@ -494,7 +491,7 @@ unsigned int item_value(item_def item, bool ident)
             case SCR_BLINKING:
             case SCR_ENCHANT_ARMOUR:
             case SCR_ENCHANT_WEAPON:
-            case SCR_MAGIC_MAPPING:
+            case SCR_REVELATION:
                 valued += 75;
                 break;
 
@@ -639,6 +636,7 @@ unsigned int item_value(item_def item, bool ident)
         case MISC_PHIAL_OF_FLOODS:
         case MISC_TIN_OF_TREMORSTONES:
         case MISC_BOX_OF_BEASTS:
+        case MISC_SACK_OF_SPIDERS:
         case MISC_CONDENSER_VANE:
         case MISC_PHANTOM_MIRROR:
             valued += 400;

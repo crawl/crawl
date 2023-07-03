@@ -678,7 +678,7 @@ const char* potion_type_name(int potiontype)
     case POT_MIGHT:             return "might";
     case POT_ATTRACTION:        return "attraction";
     case POT_BRILLIANCE:        return "brilliance";
-    case POT_FLIGHT:            return "flight";
+    case POT_ENLIGHTENMENT:     return "enlightenment";
     case POT_CANCELLATION:      return "cancellation";
     case POT_AMBROSIA:          return "ambrosia";
     case POT_INVISIBILITY:      return "invisibility";
@@ -713,7 +713,7 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_POISON:             return "poison";
     case SCR_BUTTERFLIES:        return "butterflies";
     case SCR_BLINKING:           return "blinking";
-    case SCR_MAGIC_MAPPING:      return "magic mapping";
+    case SCR_REVELATION:         return "revelation";
     case SCR_FOG:                return "fog";
     case SCR_ACQUIREMENT:        return "acquirement";
     case SCR_BRAND_WEAPON:       return "brand weapon";
@@ -975,9 +975,7 @@ static string misc_type_name(int type)
 #endif
     case MISC_QUAD_DAMAGE:               return "quad damage";
     case MISC_PHIAL_OF_FLOODS:           return "phial of floods";
-#if TAG_MAJOR_VERSION == 34
-    case MISC_SACK_OF_SPIDERS:           return "removed sack of spiders";
-#endif
+    case MISC_SACK_OF_SPIDERS:           return "sack of spiders";
     case MISC_PHANTOM_MIRROR:            return "phantom mirror";
     case MISC_ZIGGURAT:                  return "figurine of a ziggurat";
     case MISC_XOMS_CHESSBOARD:           return "piece from Xom's chessboard";
@@ -1812,18 +1810,16 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (!terse && cursed())
             buff << "cursed ";
 
-
         if (is_artefact(*this) && !dbname)
         {
             if (know_type)
-                buff << "staff of " << staff_type_name(item_typ);
+                buff << "staff";
             // TODO: crop long artefact names when not controlled by webtiles
             buff << get_artefact_name(*this, ident);
             if (!know_type)
                 buff << "staff";
-
-
-        } else if (!know_type)
+        }
+        else if (!know_type)
         {
             if (!basename)
             {
@@ -2930,7 +2926,7 @@ string cannot_read_item_reason(const item_def *item, bool temp, bool ident)
                 return "The air is too still for clouds to form.";
             return "";
 
-        case SCR_MAGIC_MAPPING:
+        case SCR_REVELATION:
             if (!is_map_persistent())
                 return "This place cannot be mapped!";
             return "";
@@ -3133,7 +3129,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
     case OBJ_MISCELLANY:
     case OBJ_WANDS:
-        return cannot_evoke_item_reason(&item, temp).size();
+        return cannot_evoke_item_reason(&item, temp, ident || item_type_known(item)).size();
 
     case OBJ_POTIONS:
     {

@@ -54,6 +54,7 @@
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tilepick.h"
+ #include "tilepick-p.h"
 #endif
 #include "tileview.h"
 #include "traps.h" // set_shafted
@@ -356,6 +357,8 @@ static void _post_init(bool newc)
     init_monster_symbols();
 
 #ifdef USE_TILE
+    if (newc)
+        randomize_doll_base();
     init_player_doll();
 
     tiles.resize();
@@ -415,7 +418,7 @@ struct game_modes_menu_item
     const char *description;
 };
 
-static const game_modes_menu_item entries[] =
+static const vector<game_modes_menu_item> entries =
 {
     {GAME_TYPE_NORMAL, "Dungeon Crawl",
         "Dungeon Crawl: The main game: full of monsters, items, "
@@ -438,7 +441,7 @@ static const game_modes_menu_item entries[] =
 
 static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
 {
-    for (unsigned int i = 0; i < ARRAYSZ(entries); ++i)
+    for (size_t i = 0; i < entries.size(); ++i)
     {
         const auto& entry = entries[i];
         auto label = make_shared<Text>();
@@ -605,7 +608,7 @@ public:
         auto mode_prompt = make_shared<Text>("Choices:");
         mode_prompt->set_margin_for_crt(0, 1, 1, 0);
         mode_prompt->set_margin_for_sdl(0, 0, 10, 0);
-        game_modes_menu = make_shared<OuterMenu>(true, 1, ARRAYSZ(entries));
+        game_modes_menu = make_shared<OuterMenu>(true, 1, entries.size());
         game_modes_menu->set_margin_for_sdl(0, 0, 10, 10);
         game_modes_menu->set_margin_for_crt(0, 0, 1, 0);
         game_modes_menu->descriptions = descriptions;
@@ -722,6 +725,7 @@ private:
     vector<player_save_info> chars;
     int num_saves;
     bool first_action = true;
+    int default_id = 0;
 
     bool on_button_focusin(const MenuButton& btn)
     {
@@ -797,6 +801,8 @@ void UIStartupMenu::on_show()
     if (selected_game_type >= NUM_GAME_TYPE)
         selected_game_type = GAME_TYPE_UNSPECIFIED;
 
+    default_id = defaults.type < NUM_GAME_TYPE ? defaults.type : 0;
+
     int id;
     if (selected_game_type != GAME_TYPE_UNSPECIFIED)
         id = selected_game_type;
@@ -805,12 +811,8 @@ void UIStartupMenu::on_show()
         // save game id is offset by NUM_GAME_TYPE
         id = NUM_GAME_TYPE + save;
     }
-    else if (defaults.type != NUM_GAME_TYPE)
-        id = defaults.type;
-    else if (!chars.empty())
-        id = NUM_GAME_TYPE + 0;
     else
-        id = 0;
+        id = default_id;
 
     if (auto focus = game_modes_menu->get_button_by_id(id))
         game_modes_menu->scroll_button_into_view(focus);
@@ -897,8 +899,10 @@ void UIStartupMenu::on_show()
         // game.
         int i = _find_save(chars, input_string);
         auto menu = i == -1 ? game_modes_menu : save_games_menu;
-        auto btn = menu->get_button(0, i == -1 ? 0 : i);
-        menu->scroll_button_into_view(btn);
+        auto btn = i == -1 ? menu->get_button_by_id(default_id)
+                           : menu->get_button(0, i);
+        if (btn)
+            menu->scroll_button_into_view(btn);
         return true;
     });
 }

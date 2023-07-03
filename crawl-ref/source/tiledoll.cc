@@ -442,6 +442,12 @@ void fill_doll_equipment(dolls_data &result)
                         + result.parts[TILEP_PART_BASE] - TILEP_BASE_FELID;
                 }
                 else if (is_player_tile(result.parts[TILEP_PART_BASE],
+                                        TILEP_BASE_FELID_SILLY))
+                {
+                    result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS_CAT_SILLY
+                        + result.parts[TILEP_PART_BASE] - TILEP_BASE_FELID_SILLY;
+                }
+                else if (is_player_tile(result.parts[TILEP_PART_BASE],
                                   TILEP_TRAN_STATUE_FELID))
                 {
                     result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS_CAT;
@@ -568,6 +574,16 @@ void save_doll_file(writer &dollf)
     dollf.write(fbuf, strlen(fbuf));
 }
 
+void reveal_bardings(tileidx_t *parts, int (&flags)[TILEP_PART_MAX])
+{
+    const tileidx_t base = parts[TILEP_PART_BASE];
+    if (is_player_tile(base, TILEP_BASE_NAGA)
+        || is_player_tile(base, TILEP_BASE_ARMATAUR))
+    {
+        flags[TILEP_PART_BOOTS] = TILEP_FLAG_NORMAL;
+    }
+}
+
 #ifdef USE_TILE_LOCAL
 void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
                    int x, int y, bool submerged, bool ghost)
@@ -615,26 +631,7 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
         p_order[9] = TILEP_PART_CLOAK;
     }
 
-    // Special case bardings from being cut off.
-    const bool is_naga = is_player_tile(doll.parts[TILEP_PART_BASE],
-                                        TILEP_BASE_NAGA);
-
-    if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
-        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED
-        || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_LIGHTNING_SCALES)
-    {
-        flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
-    }
-
-    const bool is_ptng = is_player_tile(doll.parts[TILEP_PART_BASE],
-                                        TILEP_BASE_ARMATAUR);
-
-    if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
-        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED
-        || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_BLACK_KNIGHT)
-    {
-        flags[TILEP_PART_BOOTS] = is_ptng ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
-    }
+    reveal_bardings(doll.parts, flags);
 
     // Set up mcache data based on equipment. We don't need this lookup if both
     // pairs of offsets are defined in Options.

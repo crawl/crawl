@@ -11,6 +11,7 @@
 
 #include "acquire.h"
 #include "act-iter.h"
+#include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "cio.h"
@@ -1487,7 +1488,9 @@ static void _debug_rap_stats(FILE *ostat)
 #endif
         "ARTP_NOISE",
         "ARTP_PREVENT_SPELLCASTING",
+#if TAG_MAJOR_VERSION == 34
         "ARTP_CAUSE_TELEPORTATION",
+#endif
         "ARTP_PREVENT_TELEPORTATION",
         "ARTP_ANGRY",
 #if TAG_MAJOR_VERSION == 34
@@ -1530,6 +1533,17 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_HARM",
         "ARTP_RAMPAGING",
         "ARTP_ARCHMAGI",
+        "ARTP_ENHANCE_CONJ",
+        "ARTP_ENHANCE_HEXES",
+        "ARTP_ENHANCE_SUMM",
+        "ARTP_ENHANCE_NECRO",
+        "ARTP_ENHANCE_TLOC",
+        "ARTP_ENHANCE_TMUT",
+        "ARTP_ENHANCE_FIRE",
+        "ARTP_ENHANCE_ICE",
+        "ARTP_ENHANCE_AIR",
+        "ARTP_ENHANCE_EARTH",
+        "ARTP_ENHANCE_POISON",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 
@@ -1672,5 +1686,15 @@ void wizard_recharge_evokers()
         evoker_debt(dummy.sub_type) = 0;
     }
     mpr("Evokers recharged.");
+}
+
+void wizard_unobtain_runes_and_orb()
+{
+    you.runes.reset();
+
+    you.chapter = CHAPTER_ORB_HUNTING;
+    invalidate_agrid(true);
+
+    mpr("Unobtained all runes and the Orb of Zot.");
 }
 #endif

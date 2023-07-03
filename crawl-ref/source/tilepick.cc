@@ -227,6 +227,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_OPEN_SEA;
     case DNGN_TOXIC_BOG:
         return TILE_DNGN_TOXIC_BOG;
+    case DNGN_MUD:
+        return TILE_LIQUEFACTION;
     case DNGN_FLOOR:
         return TILE_FLOOR_NORMAL;
     case DNGN_ENDLESS_SALT:
@@ -1210,9 +1212,10 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_QUADRUPED_WINGED:
         return TILEP_MONS_SIMULACRUM_QUADRUPED_LARGE;
     case TILEP_MONS_ZOMBIE_BAT:
-    case TILEP_MONS_ZOMBIE_BIRD: /* no bird simulacrum tile */
-    case TILEP_MONS_ZOMBIE_HARPY:
+    case TILEP_MONS_ZOMBIE_HARPY: // much less dangerous than shrikes
         return TILEP_MONS_SIMULACRUM_BAT;
+    case TILEP_MONS_ZOMBIE_BIRD:
+        return TILEP_MONS_SIMULACRUM_SHRIKE;
     case TILEP_MONS_ZOMBIE_BEE:
     case TILEP_MONS_ZOMBIE_MELIAI:
     case TILEP_MONS_ZOMBIE_HORNET:
@@ -1544,6 +1547,7 @@ static bool _bow_offset(const monster_info& mon)
     switch (mon.inv[MSLOT_WEAPON]->sub_type)
     {
     case WPN_SHORTBOW:
+    case WPN_ORCBOW:
     case WPN_LONGBOW:
     case WPN_ARBALEST:
         return false;
@@ -1596,6 +1600,11 @@ tileidx_t tileidx_monster_base(int type, int mon_id, bool in_water, int colour,
         int colour_offset = ugly_thing_colour_offset(colour);
         return tileidx_mon_clamp(ugly_tile, colour_offset);
     }
+
+    case MONS_BLINK_FROG:
+        if (!hash_with_seed(100, mon_id, you.frame_no))
+            return TILEP_MONS_BLINK_FROG_BLINKING;
+        break;
 
     case MONS_HYDRA:
         // Number of heads
@@ -2349,6 +2358,7 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
 #endif
     case WPN_SLING:                 return TILE_WPN_SLING;
     case WPN_SHORTBOW:              return TILE_WPN_SHORTBOW;
+    case WPN_ORCBOW:                return TILE_WPN_ORCBOW;
     case WPN_HAND_CROSSBOW:         return TILE_WPN_HAND_CROSSBOW;
     case WPN_ARBALEST:              return TILE_WPN_ARBALEST;
     case WPN_TRIPLE_CROSSBOW:       return TILE_WPN_TRIPLE_CROSSBOW;
@@ -2754,10 +2764,8 @@ static tileidx_t _tileidx_misc(const item_def &item)
         return evoker_charges(item.sub_type) ? TILE_MISC_LIGHTNING_ROD
                                              : TILE_MISC_LIGHTNING_ROD_INERT;
 
-#if TAG_MAJOR_VERSION == 34
     case MISC_SACK_OF_SPIDERS:
         return TILE_MISC_SACK_OF_SPIDERS;
-#endif
 
     // Default for summary menus
     case NUM_MISCELLANY:
@@ -2917,7 +2925,7 @@ tileidx_t tileidx_item(const item_def &item)
     case OBJ_ORBS:
         if (item.quantity <= 0)
             return TILE_UNCOLLECTED_ORB;
-        return TILE_ORB + ui_random(tile_main_count(TILE_ORB));
+        return TILE_ORB + (you.frame_no % tile_main_count(TILE_ORB));
 
     case OBJ_MISCELLANY:
         return _tileidx_misc(item);
@@ -3206,7 +3214,9 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case BROWN:
         if (bolt.name == "blast of sand")
             return TILE_BOLT_SANDBLAST;
-        else if (bolt.name == "klown pie")
+        if (bolt.name == "entropic shot")
+            return TILE_BOLT_IRON_SHOT + dir;
+        if (bolt.name == "klown pie")
             return TILE_BOLT_PIE + dir;
         break;
 
@@ -3606,8 +3616,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_SHAFT_SELF;
 
     // Evoking items.
-    case ABIL_EVOKE_ASMODEUS:
-        return TILEG_ABILITY_EVOKE_ASMODEUS;
     case ABIL_EVOKE_BLINK:
         return TILEG_ABILITY_BLINK;
     case ABIL_EVOKE_DISPATER:

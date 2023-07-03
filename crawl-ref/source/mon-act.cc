@@ -372,7 +372,7 @@ static bool _ranged_ally_in_dir(monster* mon, coord_def p)
                 return false;
             }
 
-            // XXX: Sometimes the player wants llies in front of them to stay
+            // XXX: Sometimes the player wants allies in front of them to stay
             // out of LOF. However use of allies for cover is extremely common,
             // so it doesn't work well to always have allies move out of player
             // LOF. Until a better interface or method can be found to handle
@@ -1701,6 +1701,7 @@ void handle_monster_move(monster* mons)
     }
 
     mons->shield_blocks = 0;
+    check_spectral_weapon(*mons);
 
     _mons_in_cloud(*mons);
     actor_apply_toxic_bog(mons);
@@ -2130,7 +2131,7 @@ static void _torpor_snail_slow(monster* mons)
     // XXX: might be nice to refactor together with _ancient_zyme_sicken().
     // XXX: also with torpor_slowed().... so many duplicated checks :(
 
-    if (is_sanctuary(mons->pos()))
+    if (is_sanctuary(mons->pos()) || mons->props.exists(KIKU_WRETCH_KEY))
         return;
 
     if (!is_sanctuary(you.pos())
@@ -3239,7 +3240,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     // This appears to be the real one, ie where the movement occurs:
 
     // The monster gave a "comes into view" message and then immediately
-    // moved back out of view, leaing the player nothing to see, so give
+    // moved back out of view, leaving the player nothing to see, so give
     // this message to avoid confusion.
     else if (crawl_state.game_is_hints() && mons.flags & MF_WAS_IN_VIEW
              && !you.see_cell(f))

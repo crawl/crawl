@@ -62,7 +62,9 @@ uint8_t is_waypoint(const coord_def &p);
 command_type direction_to_command(int x, int y);
 bool is_resting();
 void explore_pickup_event(int did_pickup, int tried_pickup);
-bool feat_is_traversable_now(dungeon_feature_type feat, bool try_fallback = false);
+bool feat_is_traversable_now(dungeon_feature_type feat,
+                             bool try_fallback = false,
+                             bool assume_flight = false);
 bool feat_is_traversable(dungeon_feature_type feat, bool try_fallback = false);
 bool is_travelsafe_square(const coord_def& c,
                                   bool ignore_hostile = false,
@@ -101,7 +103,8 @@ void start_travel(const coord_def& p);
 
 command_type travel();
 
-void prevent_travel_to(const string &dungeon_feature_name);
+int prevent_travel_to(const string &dungeon_feature_name);
+void reset_travel_terrain();
 
 // Sort dungeon features as appropriate.
 int level_distance(level_id first, level_id second);

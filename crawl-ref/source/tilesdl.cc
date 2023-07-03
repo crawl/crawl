@@ -70,6 +70,7 @@ static int _screen_sizes[4][8] =
 };
 #else
 // Extra values for viewport and map scale
+// width, height, map, crt, stat, msg, tip, lbl, view scale, map scale
 static int _screen_sizes[6][10] =
 {
     {800, 800, 1, 15, 17, 17, 15, 15, 150, 100},
@@ -267,6 +268,7 @@ void TilesFramework::do_map_display()
 void TilesFramework::calculate_default_options()
 {
     // Find which set of _screen_sizes to use.
+    // TODO: this whole thing needs refactoring for code clarity
     int auto_size = 0;
     int num_screen_sizes = ARRAYSZ(_screen_sizes);
     do
@@ -289,6 +291,7 @@ void TilesFramework::calculate_default_options()
 
     m_map_pixels = Options.tile_map_pixels;
     // Auto pick map and font sizes if option is zero.
+    // XX this macro is silly
 #define AUTO(x,y) (x = (x) ? (x) : _screen_sizes[auto_size][(y)])
     AUTO(m_map_pixels, 2);
     AUTO(Options.tile_font_crt_size, 3);
@@ -297,8 +300,10 @@ void TilesFramework::calculate_default_options()
     AUTO(Options.tile_font_tip_size, 6);
     AUTO(Options.tile_font_lbl_size, 7);
 # ifdef __ANDROID__
-    AUTO(Options.tile_viewport_scale, 8);
-    AUTO(Options.tile_map_scale, 9);
+    if (Options.tile_viewport_scale == 0)
+        Options.tile_viewport_scale = fixedp<int,100>::from_scaled(_screen_sizes[auto_size][8]);
+    if (Options.tile_map_scale == 0)
+        Options.tile_map_scale = fixedp<int,100>::from_scaled(_screen_sizes[auto_size][9]);
 # endif
 #undef AUTO
 
@@ -821,10 +826,11 @@ void TilesFramework::do_layout()
     }
 
     // View size in pixels is ((dx, dy) * crawl_view.viewsz)
-    const int scale = m_map_mode_enabled ? Options.tile_map_scale
-                                         : Options.tile_viewport_scale;
-    m_region_tile->dx = Options.tile_cell_pixels * scale / 100;
-    m_region_tile->dy = Options.tile_cell_pixels * scale / 100;
+    const fixedp<> scale = m_map_mode_enabled ? Options.tile_map_scale
+                                              : Options.tile_viewport_scale;
+    ASSERT(scale > 0.0);
+    m_region_tile->dx = static_cast<int>(Options.tile_cell_pixels * scale);
+    m_region_tile->dy = static_cast<int>(Options.tile_cell_pixels * scale);
 
     int message_y_divider = 0;
     int sidebar_pw;
@@ -1019,22 +1025,22 @@ bool TilesFramework::is_using_small_layout()
         return bool(Options.tile_use_small_layout);
 }
 
-#define ZOOM_INC 10
+#define ZOOM_INC 0.1
 
 void TilesFramework::zoom_dungeon(bool in)
 {
 #if defined(USE_TILE_LOCAL)
-    int &current_scale = m_map_mode_enabled ?  Options.tile_map_scale
-                                            :  Options.tile_viewport_scale;
+    fixedp<> &current_scale = m_map_mode_enabled ?  Options.tile_map_scale
+                                                 :  Options.tile_viewport_scale;
+    fixedp<> orig = current_scale;
     // max zoom relative to to tile size that keeps LOS in view
-    int max_zoom = 100 * m_windowsz.y / Options.tile_cell_pixels
+    fixedp<> max_zoom = fixedp<>(m_windowsz.y) / Options.tile_cell_pixels
                                       / ENV_SHOW_DIAMETER;
-    if (max_zoom % ZOOM_INC != 0)
-        max_zoom += ZOOM_INC - max_zoom % ZOOM_INC; // round up
-    current_scale = min(max_zoom, max(20,
+    current_scale = min(ceil(max_zoom*10)/10, max(0.2,
                     current_scale + (in ? ZOOM_INC : -ZOOM_INC)));
     do_layout(); // recalculate the viewport setup
-    dprf("Zooming to %d", current_scale);
+    if (current_scale != orig)
+        mprf(MSGCH_PROMPT, "Zooming to %.2f", (float) current_scale);
     redraw_screen(false);
     update_screen();
 #endif

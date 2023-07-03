@@ -391,6 +391,7 @@ void decrease_sanctuary_radius()
     // Special case for time-out of sanctuary.
     if (!size)
     {
+        // XX why doesn't this update env.sanctuary_pos to -1,-1?
         _remove_sanctuary_property(env.sanctuary_pos);
         if (you.see_cell(env.sanctuary_pos))
             mprf(MSGCH_DURATION, "The sanctuary disappears.");
@@ -672,6 +673,9 @@ bool liquefied(const coord_def& p, bool check_actual)
 {
     if (!map_bounds(p))
         return false;
+
+    if (env.grid(p) == DNGN_MUD)
+        return true;
 
     if (!_agrid_valid)
         _update_agrid();

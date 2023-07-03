@@ -15,11 +15,11 @@ The contents of this text are:
 0-d     List options.
 0-e     Aliases and variables.
 1-  Starting Screen.
-                name, remember_name, weapon, species, background, combo,
+                name, type, remember_name, weapon, species, background, combo,
                 restart_after_game, restart_after_save, newgame_after_quit,
                 name_bypasses_menu, default_manual_training,
                 autopickup_starting_ammo, game_seed, pregen_dungeon,
-                suppress_startup_errors
+                suppress_startup_errors, map, fully_random, arena_teams
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound, hold_sound,
                 sound_file_path, one_SDL_sound_channel
@@ -51,7 +51,7 @@ The contents of this text are:
                 tc_forbidden, runrest_ignore_message, runrest_stop_message,
                 interrupt_<delay>, delay_safe_poison, runrest_ignore_monster,
                 rest_wait_both, rest_wait_ancestor, rest_wait_percent,
-                explore_auto_rest, auto_exclude, travel_open_doors
+                explore_auto_rest, auto_exclude, travel_open_doors, fear_zot
 3-g     Command Enhancements.
                 auto_switch, easy_unequip, equip_unequip, jewellery_prompt,
                 easy_confirm, simple_targeting, force_spell_targeter,
@@ -275,8 +275,6 @@ get overwritten to facilitate the explanations. This concerns the following
 options, and their enforced setting for tutorial games are as follows:
    clear_messages      = true
    weapon              = hand axe, for Berserkers in hints mode
-and, for Tiles,
-   tile_tag_pref       = tutorial
 
 0-d     List options.
 ---------------------
@@ -312,8 +310,8 @@ options:
 the message "The crimson imp hits you!" will be displayed in red, while "The
 killer bee hits you!" will be displayed in cyan.
 
-0-e     Aliases and variables.
-------------------------------
+0-e     Aliases, variables, and other directives
+------------------------------------------------
 
 For long option names, you can define option aliases by doing:
     alias := long_option_name
@@ -338,6 +336,10 @@ that changing the variables defined in these files will only affect your own
 configuration file, as the default options will have already been loaded. If
 you want to change them, you will have to override the options themselves.
 
+To reset a value to its defaults, you can use:
+    default = option_name
+
+This won't work for certain options that have custom parsing.
 
 1-  Starting Screen.
 ====================
@@ -347,7 +349,15 @@ game of Crawl, and/or configure the start of the game from a file or the
 command line.
 
 name = Delilah
-        If set, that's the name all your Crawl characters will get.
+        If set, that's the name all your Crawl characters will get. Setting
+        this will bypass the main menu by default; see `name_bypasses_menu`.
+
+type = normal
+        Choose a game type. Valid values are "normal", "seeded", "tutorial",
+        "arena", "sprint", and "hints". If explicitly set (not just left to
+        the default), this sets the default game type at the main menu. If
+        the main menu is bypassed (e.g. by setting `name`), this option can
+        be used to determine the game type.
 
 remember_name = true
         Crawl remembers the options (species, background etc.) you used
@@ -467,6 +477,24 @@ suppress_startup_errors = false
         The main menu will contain a warning of errors regardless of this
         setting, and it does not affect what happens with errors detected as a
         character is loaded.
+
+map = ""
+        This can be used to choose a sprint map. If set in an rc file, this
+        value skips the sprint map selection submenu. Valid options are:
+        dungeon_sprint_1, the_violet_keep_of_menkaure, dungeon_sprint_mu,
+        dungeon_sprint_fedhas, sprint_v, arena_sprint, pitsprint, meatsprint,
+        and linesprint.
+
+fully_random = false
+        Set to true to choose a combo randomly. If either species or job is
+        set to `viable`, this will choose a combo from "recommended"
+        characters, otherwise, it will choose combos entirely randomly. When
+        set, the character selection menus are replaced with a prompt that
+        offers you a combo, and allows you to accept or reroll.
+
+arena_teams = ""
+        Set to preselect teams in arena mode. When set, arena mode goes directly
+        to the competition.
 
 2-  File System.
 ================
@@ -830,12 +858,11 @@ rest_delay = 0 (defaults to -1 for online servers)
 
 travel_avoid_terrain = (shallow water | deep water)
         Prevent travel from routing through shallow water. By default,
-        this option is disabled. For merfolk and/or characters with
+        no terrain is avoided. For merfolk and/or characters with
         permanent flight,
              travel_avoid_terrain = shallow water, deep water
         will prevent travel or explore from going through any water.
-        This option is not a true list option; in particular, it is not
-        possible to reset the option or to remove terrain types.
+        This option supports list syntax.
 
 explore_greedy = true
         Greedy explore travels to items that are eligible for
@@ -995,11 +1022,21 @@ runrest_stop_message ^= <regex>, <regex>, ...
 interrupt_<delay> += <activity_interrupt_type>, <activity_interrupt_type>, ...
         (List option)
         Use this option to not interrupt a delayed action on a certain trigger.
-        To find the name of a delay type, look for the name() function in
-        delay.h. The list of interruption types is in activity_interrupt_names.
         For example, use
             interrupt_travel -= sense_monster
         to not interrupt autotravel when a monster is sensed but not seen.
+
+        Possible delay types are: armour_on, armour_off, ascending_stairs,
+        descending_stairs, drop_item, exsanguinate, jewellery_on, macro,
+        macro_process_key, memorise, multidrop, passwall, rest, revivify,
+        run, shaft_self, travel. (These are derived from the `name()`
+        functions in delay.h.)
+
+        Possible interrupt types are: ancestor_hp, force, full_hp, full_mp,
+        hp_loss, hit_monster, keypress, message, mimic, monster,
+        monster_attack, stat, sense_monster, teleport. (These are derived
+        from the `activity_interrupt_names` array in delay.cc.)
+
 
 delay_safe_poison = <% of hp>:<% of mhp>
         Poison damage will be ignored if it is projected to drop your hp
@@ -1041,6 +1078,10 @@ rest_wait_percent = 100
 explore_auto_rest = true
         If true, auto-explore waits until your HP and MP are both at
         rest_wait_percent before moving. This is always disabled for Meteorans.
+
+fear_zot = false
+        If true, Meteorans will be prompted before resting or auto-exploring
+        if the Zot clock is active.
 
 auto_exclude += <monster name>, <monster name>, ...
         (List option)
@@ -1498,7 +1539,9 @@ status_caption_colour = brown
 enemy_hp_colour = green green brown brown magenta red
         Colours enemy health appropriately in the monster pane. The
         colourings correspond to full health, lightly wounded, moderately
-        wounded, heavily wounded, severely wounded, and almost dead.
+        wounded, heavily wounded, severely wounded, and almost dead. In
+        addition to colour names, "default" can be used in this list, and
+        omitted colour slots will be set to the default.
 
 clear_messages = false
         Setting this option to true will cause messages to cleared
@@ -1641,7 +1684,7 @@ monster_list_colour += trivial:darkgrey, easy:lightgrey, tough:yellow,
                        nasty:lightred
         (List option)
         Change the colours used to display monster names in the monster list.
-        Valid keys, and their default colours, are:
+        Valid keys, and their initial colours, are:
 
            Monster attitudes:
              friendly       - green
@@ -1654,8 +1697,9 @@ monster_list_colour += trivial:darkgrey, easy:lightgrey, tough:yellow,
              tough          - yellow
              nasty          - lightred
 
-         Removing a key with -= currently has the same effect as setting its
-         colour to lightgrey.
+        If a category is unset or has a missing colour, its colour defaults to
+        lightgrey. For removal with `-=`, the category name can be used alone,
+        and will clear any mapping for that category (setting it to lightgrey).
 
 view_delay = 600
         Controls the speed of animations from, e.g., ranged and magical
@@ -2079,7 +2123,7 @@ additional_macro_file = path/to/filename
         Add an additional macro file to be loaded after macro.txt.
         You can have multiple additional_macro_file lines.
 
-bindkey = [^D] CMD_BUTCHER
+bindkey = [^D] CMD_CHARACTER_DUMP
         Change which key invokes which command at a lower level of
         operation than macros. Useful in that macros cannot (yet)
         invoke each other, but a macro can invoke a command whose
@@ -2201,14 +2245,18 @@ tile_tooltip_ms = 500
         deactivate the tooltips entirely.
 
 tile_tag_pref = (none| named | enemy | tutorial )
-        This option defaults to "enemy" normally and "tutorial" in tutorial
-        modes. This setting determines which monsters receive text tag
-            none     - turns off all tags.
+        This setting determines which monsters receive a text tag in the local
+        tiles dungeon view.
+            auto     - choses depending on game mode
+            none     - turns off all tags
+            all      - shows tags for all enemies
             named    - shows names of all named monsters, ally or enemy
             enemy    - shows names of named enemy monsters
             tutorial - shows names of all monsters not yet killed this game
                        and of named enemy monsters
-        Examples for named monsters are uniques and ghosts.
+        Examples of "named monsters" are uniques and ghosts. In auto mode,
+        regular games use "enemy", arena mode uses "named", and tutorial/hints
+        modes use "tutorial".
 
 tile_window_height = -90
 tile_window_width  = -90
@@ -2447,7 +2495,7 @@ tile_shield_offsets = (<x>,<y> | reset)
         used to swap locations of weapon and shield.
 
         Using the value "reset" will clear any previously defined offset, which
-        is using for in-game tile changes via lua.
+        is useful for in-game tile changes via lua.
 
 tile_grinch = false
         When set, disables custom holiday tiles (e.g. Santa hats).
@@ -2741,7 +2789,9 @@ feature -= <regex> , <regex>
         where <regex> is a regular expression describing a dungeon
         feature. This regex should match the description when using the
         'x' command. In case the regex matches several descriptions, all
-        such features are affected.
+        such features are affected. The set of possible features in a
+        given version of crawl can be found by searching for `.*` in the
+        lookup feature menu (`?/f`).
 
         The list in {...} specifies the appearance of the dungeon
         feature(s), and should be self-explanatory. <symbol> can be used
@@ -2789,7 +2839,10 @@ mon_glyph += <monster name or symbol> : (<colour> <glyph> | <monster name>) ,
 mon_glyph -= <monster name or symbol>
         (List option)
         The mon_glyph option allows you to customise the symbol and
-        colour used to display a monster.
+        colour used to display a monster. The full list of default glyphs
+        can be most reliably found by looking at the source code (mon-data.h),
+        but glyph information can be checked in the lookup monster menu
+        (`?/m`), as can the list of monsters.
 
         You can customise symbols based on monster names or their
         existing symbols. For instance, if you want to put elves on E

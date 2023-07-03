@@ -587,22 +587,36 @@ bool find_charge_target(vector<coord_def> &target_path, int max_range,
 static void _charge_cloud_trail(const coord_def pos)
 {
     if (!cell_is_solid(pos) && !apply_cloud_trail(pos))
-        place_cloud(CLOUD_DUST, pos, 2 + random2(3), &you);
+        place_cloud(CLOUD_ELECTRICITY, pos, 2 + random2(3), &you);
 }
 
-bool electric_charge_possible(bool allow_safe_monsters)
+string electric_charge_impossible_reason(bool allow_safe_monsters)
 {
     // General movement checks are handled elsewhere.
     targeter_charge tgt(&you, spell_range(SPELL_ELECTRIC_CHARGE, 0));
+    int nearby_mons = 0;
+    string example_reason = "";
     for (monster_near_iterator mi(&you); mi; ++mi)
     {
-        if (tgt.valid_aim(mi->pos())
-            && (allow_safe_monsters || !mons_is_safe(*mi, false) || mons_class_is_test(mi->type)))
+        ++nearby_mons;
+        if (!tgt.valid_aim(mi->pos()))
         {
-            return true;
+            example_reason = make_stringf("you can't charge at %s because %s",
+                                          mi->name(DESC_THE).c_str(),
+                                          tgt.why_not.c_str());
+        }
+        else if (allow_safe_monsters
+                 || !mons_is_safe(*mi, false)
+                 || mons_class_is_test(mi->type))
+        {
+            return "";
         }
     }
-    return false;
+    if (!nearby_mons)
+        return "you can't see anything to charge at.";
+    if (nearby_mons == 1)
+        return lowercase_string(example_reason);
+    return "there's one issue or another keeping you from charging at any nearby foe.";
 }
 
 string movement_impossible_reason()
@@ -1356,11 +1370,11 @@ int golubria_fuzz_range()
     return orb_limits_translocation() ? 4 : 2;
 }
 
-bool golubria_valid_cell(coord_def p)
+bool golubria_valid_cell(coord_def p, bool just_check)
 {
     return in_bounds(p)
            && env.grid(p) == DNGN_FLOOR
-           && !monster_at(p)
+           && (!monster_at(p) || just_check && !you.can_see(*monster_at(p)))
            && cell_see_cell(you.pos(), p, LOS_NO_TRANS);
 }
 

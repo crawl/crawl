@@ -222,9 +222,6 @@ static skill_type _wanderer_role_skill_select(bool defense)
 
     if (defense)
         skill = _apt_weighted_choice(defense_skills, defense_size);
-    // give Djinn some help since they only have one magic apt
-    else if (you.has_mutation(MUT_INNATE_CASTER) && coinflip())
-        skill = SK_SPELLCASTING;
     // reduce the chance of a spell felid a bit
     else if (you.has_mutation(MUT_NO_GRASPING) && one_chance_in(3))
         skill = _apt_weighted_choice(physical_skills, physical_size);
@@ -253,12 +250,7 @@ static void _setup_starting_skills(skill_type sk1, skill_type sk2,
         if (sk <= SK_LAST_MUNDANE)
             martial++;
         else if (sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC)
-        {
-            // handle Djinn
-            if (you.has_mutation(MUT_INNATE_CASTER))
-                sk = SK_SPELLCASTING;
             magical++;
-        }
         if (sk != SK_NONE)
         {
             you.skills[sk]++;
@@ -490,8 +482,10 @@ static void _wanderer_random_evokable()
     {
         const auto area_evoker_type =
             (misc_item_type)item_for_set(ITEM_SET_AREA_MISCELLANY);
+        const auto ally_evoker_type =
+            (misc_item_type)item_for_set(ITEM_SET_ALLY_MISCELLANY);
         misc_item_type selected_evoker =
-              random_choose(MISC_BOX_OF_BEASTS, MISC_PHIAL_OF_FLOODS,
+              random_choose(ally_evoker_type, MISC_PHIAL_OF_FLOODS,
                             MISC_PHANTOM_MIRROR, area_evoker_type,
                             MISC_LIGHTNING_ROD);
 
@@ -578,13 +572,6 @@ static vector<spell_type> _wanderer_good_equipment(skill_type & skill)
     // Normalise the input type.
     if (skill == SK_FIGHTING)
         skill =  _apt_weighted_choice(combined_weapon_skills, total_weapons);
-
-    // handle Djinn
-    if (you.has_mutation(MUT_INNATE_CASTER) && skill == SK_SPELLCASTING)
-    {
-        skill = (skill_type)(SK_SPELLCASTING + random2(SK_LAST_MAGIC
-                    - SK_SPELLCASTING + 1));
-    }
 
     switch (skill)
     {
@@ -704,13 +691,6 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type & skill,
         skill = SK_FIGHTING;
     }
 
-    // handle Djinn
-    if (you.has_mutation(MUT_INNATE_CASTER) && skill == SK_SPELLCASTING)
-    {
-        skill = (skill_type)(SK_SPELLCASTING + random2(SK_LAST_MAGIC
-                    - SK_SPELLCASTING + 1));
-    }
-
     // Don't give a gift from the same skill twice; just default to
     // a decent consumable
     if (gift_skills.count(skill))
@@ -817,21 +797,19 @@ static void _wanderer_cover_equip_holes()
     }
 }
 
-static void _add_spells(vector<spell_type> &all_spells,
+static void _add_spells(set<spell_type> &all_spells,
                         const vector<spell_type> &new_spells)
 {
-    all_spells.insert(all_spells.end(), new_spells.begin(), new_spells.end());
+    all_spells.insert(new_spells.begin(), new_spells.end());
 }
 
-static void _handle_start_spells(const vector<spell_type> &spells)
+static void _handle_start_spells(const set<spell_type> &spells)
 {
     if (you.has_mutation(MUT_INNATE_CASTER))
     {
         for (spell_type s : spells)
-        {
             if (you.spell_no < MAX_DJINN_SPELLS)
                 add_spell_to_memory(s);
-        }
         return;
     }
 
@@ -874,7 +852,7 @@ void create_wanderer()
     // 1 last stage to fill any glaring equipment holes (no clothes,
     // etc.).
 
-    vector<spell_type> spells;
+    set<spell_type> spells;
     _add_spells(spells, _wanderer_good_equipment(gift_skill_1));
     gift_skills.insert(gift_skill_1);
 

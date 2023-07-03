@@ -1119,15 +1119,7 @@ int get_teleportitis_level()
     if (you.stasis())
         return 0;
 
-    int tp = 0;
-
-    // artefacts
-    tp += 8 * you.scan_artefacts(ARTP_CAUSE_TELEPORTATION);
-
-    // mutations
-    tp += you.get_mutation_level(MUT_TELEPORT) * 6;
-
-    return tp;
+    return you.get_mutation_level(MUT_TELEPORT) * 6;
 }
 
 // Computes bonuses to regeneration from most sources. Does not handle
@@ -1626,15 +1618,14 @@ int player_spec_death()
 {
     int sd = 0;
 
-    // Staves
     sd += you.wearing(EQ_STAFF, STAFF_DEATH);
 
-    // species:
     sd += you.get_mutation_level(MUT_NECRO_ENHANCER);
 
-    // transformations:
     if (you.form == transformation::lich)
         sd++;
+
+    sd += you.scan_artefacts(ARTP_ENHANCE_NECRO);
 
     return sd;
 }
@@ -1643,11 +1634,11 @@ int player_spec_fire()
 {
     int sf = 0;
 
-    // staves:
     sf += you.wearing(EQ_STAFF, STAFF_FIRE);
 
-    // rings of fire:
     sf += you.wearing(EQ_RINGS, RING_FIRE);
+
+    sf += you.scan_artefacts(ARTP_ENHANCE_FIRE);
 
     if (player_equip_unrand(UNRAND_SALAMANDER))
         sf++;
@@ -1662,11 +1653,11 @@ int player_spec_cold()
 {
     int sc = 0;
 
-    // staves:
     sc += you.wearing(EQ_STAFF, STAFF_COLD);
 
-    // rings of ice:
     sc += you.wearing(EQ_RINGS, RING_ICE);
+
+    sc += you.scan_artefacts(ARTP_ENHANCE_ICE);
 
     if (player_equip_unrand(UNRAND_ELEMENTAL_STAFF))
         sc++;
@@ -1681,6 +1672,8 @@ int player_spec_earth()
     // Staves
     se += you.wearing(EQ_STAFF, STAFF_EARTH);
 
+    se += you.scan_artefacts(ARTP_ENHANCE_EARTH);
+
     if (player_equip_unrand(UNRAND_ELEMENTAL_STAFF))
         se++;
 
@@ -1693,6 +1686,8 @@ int player_spec_air()
 
     // Staves
     sa += you.wearing(EQ_STAFF, STAFF_AIR);
+
+    sa += you.scan_artefacts(ARTP_ENHANCE_AIR);
 
     if (player_equip_unrand(UNRAND_ELEMENTAL_STAFF))
         sa++;
@@ -1707,11 +1702,8 @@ int player_spec_conj()
 {
     int sc = 0;
 
-    // Staves
     sc += you.wearing(EQ_STAFF, STAFF_CONJURATION);
-
-    if (player_equip_unrand(UNRAND_BATTLE))
-        sc++;
+    sc += you.scan_artefacts(ARTP_ENHANCE_CONJ);
 
     return sc;
 }
@@ -1722,26 +1714,38 @@ int player_spec_hex()
 
     // Demonspawn mutation
     sh += you.get_mutation_level(MUT_HEX_ENHANCER);
+    sh += you.scan_artefacts(ARTP_ENHANCE_HEXES);
 
     return sh;
 }
 
 int player_spec_summ()
 {
-    return 0;
+    return you.scan_artefacts(ARTP_ENHANCE_SUMM);
 }
 
 int player_spec_poison()
 {
     int sp = 0;
 
-    // Staves
     sp += you.wearing(EQ_STAFF, STAFF_POISON);
+
+    sp += you.scan_artefacts(ARTP_ENHANCE_POISON);
 
     if (player_equip_unrand(UNRAND_OLGREB))
         sp++;
 
     return sp;
+}
+
+int player_spec_tloc()
+{
+    return you.scan_artefacts(ARTP_ENHANCE_TLOC);
+}
+
+int player_spec_tmut()
+{
+    return you.scan_artefacts(ARTP_ENHANCE_TMUT);
 }
 
 // If temp is set to false, temporary sources of resistance won't be
@@ -1965,8 +1969,9 @@ static int _player_evasion_size_factor(bool base = false)
     return 2 * (SIZE_MEDIUM - size);
 }
 
-// Determines racial shield penalties (formicids get a bonus compared to
-// other medium-sized races)
+// Determines racial shield preferences for acquirement. (Formicids get a
+// bonus for larger shields compared to other medium-sized races).
+// TODO: rethink this
 int player_shield_racial_factor()
 {
     return you.has_mutation(MUT_QUADRUMANOUS) ? -2 // Same as trolls, etc.
@@ -2147,13 +2152,11 @@ int player_armour_shield_spell_penalty()
 }
 
 /**
- * How many spell-success-chance-boosting ('wizardry') effects can the player
- * apply to the given spell?
+ * How many spell-success-boosting ('wizardry') effects does the player have?
  *
- * @param spell     The type of spell being cast.
- * @return          The number of relevant wizardry effects.
+ * @return    The number of wizardry effects.
  */
-int player_wizardry(spell_type /*spell*/)
+int player_wizardry()
 {
     return you.wearing(EQ_RINGS, RING_WIZARDRY)
            + (you.get_mutation_level(MUT_BIG_BRAIN) == 3 ? 1 : 0);
@@ -2349,10 +2352,10 @@ static void _recharge_xp_evokers(int exp)
     FixedVector<item_def*, NUM_MISCELLANY> evokers(nullptr);
     list_charging_evokers(evokers);
 
-    int xp_factor = max(min((int)exp_needed(you.experience_level+1, 0) * 2 / 7,
-                             you.experience_level * 425),
-                        you.experience_level*4 + 30)
-                    / (3 + you.skill_rdiv(SK_EVOCATIONS, 2, 13));
+    const int xp_by_xl = exp_needed(you.experience_level+1, 0)
+                       - exp_needed(you.experience_level, 0);
+    const int skill_denom = 3 + you.skill_rdiv(SK_EVOCATIONS, 2, 13);
+    const int xp_factor = max(xp_by_xl / 5, 100) / skill_denom;
 
     for (int i = 0; i < NUM_MISCELLANY; ++i)
     {
@@ -2370,7 +2373,20 @@ static void _recharge_xp_evokers(int exp)
         if (!gained)
             continue;
 
-        if (evoker_max_charges(i) == 1)
+        if (i == MISC_SACK_OF_SPIDERS)
+        {
+            if (silenced(you.pos()))
+            {
+                mprf("%s twitches, refilled and ready to use.",
+                     evoker->name(DESC_YOUR).c_str());
+            }
+            else
+            {
+                mprf("You hear chittering from %s. It's ready.",
+                     evoker->name(DESC_YOUR).c_str());
+            }
+        }
+        else if (evoker_max_charges(i) == 1)
             mprf("%s has recharged.", evoker->name(DESC_YOUR).c_str());
         else
         {
@@ -5168,10 +5184,13 @@ player::player()
     seen_armour.init(0);
     seen_misc.reset();
 
+    generated_misc.clear();
     octopus_king_rings = 0x00;
 
     normal_vision    = LOS_DEFAULT_RANGE;
     current_vision   = LOS_DEFAULT_RANGE;
+
+    rampage_hints.clear();
 
     real_time_ms     = chrono::milliseconds::zero();
     real_time_delta  = chrono::milliseconds::zero();
@@ -5748,7 +5767,7 @@ int player::adjusted_shield_penalty(int scale) const
     const int base_shield_penalty = -property(*shield_l, PARM_EVASION) / 10;
     return 2 * base_shield_penalty * base_shield_penalty
            * (270 - skill(SK_SHIELDS, 10)) * scale
-           / (5 * (20 - 3 * player_shield_racial_factor())) / 270;
+           / (25 + 5 * strength()) / 270;
 }
 
 /**
@@ -6141,7 +6160,7 @@ int player::corrosion_amount() const
     if (duration[DUR_CORROSION])
         corrosion += you.props[CORROSION_KEY].get_int();
 
-    if (env.level_state & LSTATE_SLIMY_WALL)
+    if (you.on_current_level && env.level_state & LSTATE_SLIMY_WALL)
         corrosion += slime_wall_corrosion(&you);
 
     if (player_in_branch(BRANCH_DIS))
@@ -6191,6 +6210,15 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
     AC += sanguine_armour_bonus();
 
     return AC / scale;
+}
+
+void player::refresh_rampage_hints()
+{
+    rampage_hints.clear();
+    if (you.rampaging())
+        for (coord_def delta : Compass)
+            if ((delta.x || delta.y) && get_rampage_target(delta))
+                you.rampage_hints.insert(you.pos() + delta);
 }
 
  /**
@@ -6489,6 +6517,10 @@ int player_willpower(bool temp)
     if (you.form == transformation::lich && temp)
         rm += WL_PIP;
 
+    // In this moment, you are euphoric.
+    if (you.duration[DUR_ENLIGHTENED])
+        rm += WL_PIP;
+
     // Trog's Hand
     if (you.duration[DUR_TROGS_HAND] && temp)
         rm += WL_PIP * 2;
@@ -6514,13 +6546,12 @@ int player_willpower(bool temp)
  * Is the player prevented from teleporting? If so, why?
  *
  * @param blinking      Are you blinking or teleporting?
+ * @param temp          Are you being prevented by a temporary effect?
  * @return              Why the player is prevented from teleporting, if they
  *                      are; else, the empty string.
  */
-string player::no_tele_reason(bool blinking) const
+string player::no_tele_reason(bool blinking, bool temp) const
 {
-    // XX add a temp parm; in absence of this, do the non-temp check first
-    // assumption: species is the only source of stasis
     if (stasis())
         return "Your stasis prevents you from teleporting.";
 
@@ -6537,13 +6568,13 @@ string player::no_tele_reason(bool blinking) const
 
     vector<string> problems;
 
-    if (duration[DUR_DIMENSION_ANCHOR])
+    if (temp && duration[DUR_DIMENSION_ANCHOR])
         problems.emplace_back("locked down by a dimension anchor");
 
-    if (duration[DUR_LOCKED_DOWN])
+    if (temp && duration[DUR_LOCKED_DOWN])
         problems.emplace_back("magically locked down");
 
-    if (form == transformation::tree)
+    if (temp && form == transformation::tree)
         problems.emplace_back("held in place by your roots");
 
     vector<const item_def *> notele_items;
@@ -6592,11 +6623,12 @@ string player::no_tele_reason(bool blinking) const
  * Is the player prevented from teleporting/blinking right now?
  *
  * @param blinking      Are you blinking or teleporting?
+ * @param temp          Are you being prevented by a temporary effect?
  * @return              Whether the player is prevented from teleportation.
  */
-bool player::no_tele(bool blinking) const
+bool player::no_tele(bool blinking, bool temp) const
 {
-    return !no_tele_reason(blinking).empty();
+    return !no_tele_reason(blinking, temp).empty();
 }
 
 bool player::racial_permanent_flight() const
@@ -7138,7 +7170,8 @@ bool player::can_see_invisible() const
         // armour: (checks head armour only)
         || wearing_ego(EQ_HELMET, SPARM_SEE_INVISIBLE)
         // randart gear
-        || scan_artefacts(ARTP_SEE_INVISIBLE) > 0)
+        || scan_artefacts(ARTP_SEE_INVISIBLE) > 0
+        || you.duration[DUR_REVELATION])
     {
         return true;
     }
@@ -7500,6 +7533,11 @@ bool player::do_shaft(bool check_terrain)
     {
         return false;
     }
+    if (you.species == SP_FORMICID)
+    {
+        mpr("Your tunneler's instincts keep you from falling into a shaft!");
+        return false;
+    }
 
     // Ensure altars, items, and shops discovered at the moment
     // the player gets shafted are correctly registered.
@@ -7516,6 +7554,13 @@ bool player::can_do_shaft_ability(bool quiet) const
     {
         if (!quiet)
             mprf("You can't shaft yourself while %s.", held_status());
+        return false;
+    }
+
+    if (you.duration[DUR_LOCKED_DOWN]) // XXX: also DUR_NO_MOMENTUM?
+    {
+        if (!quiet)
+            mpr("You can't shaft yourself while stuck.");
         return false;
     }
 

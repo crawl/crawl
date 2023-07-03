@@ -713,15 +713,19 @@ static void _deteriorate(int dam)
     }
 }
 
+int corrosion_chance(int sources)
+{
+    return 3 * sources;
+}
+
 /**
  * Maybe corrode the player after taking damage if they're wearing *Corrode.
  **/
 static void _maybe_corrode()
 {
     int corrosion_sources = you.scan_artefacts(ARTP_CORRODE);
-    int degree = binomial(corrosion_sources, 3);
-    if (degree > 0)
-        you.corrode_equipment("Your corrosive artefact", degree);
+    if (x_chance_in_y(corrosion_chance(corrosion_sources), 100))
+        you.corrode_equipment("Your corrosive artefact");
 }
 
 /**
@@ -730,7 +734,7 @@ static void _maybe_corrode()
 static void _maybe_slow()
 {
     int slow_sources = you.scan_artefacts(ARTP_SLOW);
-    for (int degree = binomial(slow_sources, 1); degree > 0; degree--)
+    if (x_chance_in_y(slow_sources, 100))
         slow_player(10 + random2(5));
 }
 
@@ -767,15 +771,25 @@ static void _wizard_restore_life()
 }
 #endif
 
+int outgoing_harm_amount(int levels)
+{
+    return 15 * (levels + 1);
+}
+
+int incoming_harm_amount(int levels)
+{
+    return 10 * (levels + 1);
+}
+
 static int _apply_extra_harm(int dam, mid_t source)
 {
     monster* damager = monster_by_mid(source);
     // +30% damage if opp has one level of harm, +45% with two
     if (damager && damager->extra_harm())
-        return dam * (100 + 15 * (damager->extra_harm() + 1)) / 100;
+        return dam * (100 + outgoing_harm_amount(damager->extra_harm())) / 100;
     // +20% damage if you have one level of harm, +30% with two
     if (you.extra_harm())
-        return dam * (10 + you.extra_harm() + 1) / 10;
+        return dam * (100 + incoming_harm_amount(you.extra_harm())) / 100;
 
     return dam;
 }
@@ -893,15 +907,13 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     {
         // death's door protects against everything but falling into
         // water/lava, Zot, excessive rot, leaving the dungeon, or quitting.
-        if (you.duration[DUR_DEATHS_DOOR])
+        // Likewise, dreamshard protects you until the start of your next turn.
+        if (you.duration[DUR_DEATHS_DOOR] || you.props.exists(DREAMSHARD_KEY))
             return;
         // the dreamshard necklace protects from any fatal blow or death source
-        // that death's door would protect from, plus a chance of activating on
-        // hits for more than 80% of a player's remaining hitpoints
-        // (but doesn't activate while in death's door)
+        // that death's door would protect from.
         else if (player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE)
-                 && (dam >= you.hp
-                     || ((dam * 100) / you.hp) > 80 && coinflip()))
+                 && dam >= you.hp)
         {
             dreamshard_shatter();
             return;

@@ -13,6 +13,8 @@ Major changes:
 - Major revamp of game definitions, with the aim of supporting most of the
   dgl-config templating techniques (in slightly different ways) directly in
   the webserver. (This revamp is backwards compatible.)
+- The previous tileschat mutelist feature is converted to block rather than
+  just mute.
 - Improvements to account and community management features.
 - Performance improvements, focusing on blocking I/O and related issues.
 - **Breaking change**: Python 2 (soft-deprecated in 0.25 in 2020, fully
@@ -29,6 +31,12 @@ New features:
       stable games, and then instantiating them with just a version)
     * Reload on HUP fully supports game removals and additions, and has better
       caching.
+- Per-player block features: the previous muting features are converted to
+  instead allow players to block others from tileschat. As part of this,
+  players may block spectating entirely (`/block [all]`) and block anonymous
+  spectating (`/block [anon]`). A new chat command, `/kick`, allows players
+  to (only within a game session, not saved across game sessions) kick a
+  spectator for a set amount of time (in minutes).
 - Username ban management. See documentation in `config.py` for examples, but
   this can be set via the config option `banned`, and if the file
   `banned_players.yml` exists, the server will try to load a list of bad
@@ -39,7 +47,7 @@ New features:
 - The webserver now loads configuration from `config.yml` if it exists, after
   loading `config.py`. When running in live-debug mode, it will also try
   `debug-config.yml`. Neither of these files are version controlled.
-- New options:
+- New server options:
     * Option `allow_anon_spectate`: allows disabling anonymous spectating at a
       server level.
     * Option `load_logging_rate`: if set to a number `n` other than 0, logs a
@@ -51,10 +59,14 @@ New features:
       a warning is logged. Default: `0.250`. (Overlaps with callback logging.)
     * Option `milestone_interval`: allow configuring how often milestone tailing
       happens (applicable only to older game versions).
+    * Option `enable_ttyrecs`: lets ttyrec saving be disabled at the server
+      level, rather than per game version.
 - Admin panel updates. This panel now shows socket stats (including lobby), and
   version info about the webserver
 - A RESTful lobby endpoint: `/status/lobby/` now provides lobby state directly.
   See https://github.com/crawl/crawl/commit/f932412b2a00 for motivation.
+- A RESTful version endpoint: `/status/version/` provides server version
+  information. (Not yet game version information.)
 
 Fixes, improvements, changes:
 - The webserver will now attempt to impose a `UNIQUE` constraint on the
@@ -66,7 +78,7 @@ Fixes, improvements, changes:
   appear to have distinct passwords). This warning is safe to ignore in the
   short term, but fixing this will result in a speedup for database access,
   possibly substantial depending on the database age and size.
-- Fixes to blocking and blocking handling
+- Fixes to blocking calls and blocking call handling
     * Fixed a major source of blocking/freezes on Tornado 6, when players manage
       to fill the UDS socket buffer with key input.
     * Improvements when a game ends with many spectators (previously this
@@ -74,7 +86,8 @@ Fixes, improvements, changes:
     * Various other (less major) sources of I/O bound blocking
     * Improvements to logging of blocking calls and blocking I/O (see new
       options related to this)
-- Many logging improvements; IP is more consistently shown
+- Many logging improvements; IP is more consistently shown, some error spam is
+  reduced.
 - Password recovery tokens now expire by default in 12 hours, not 1 hour; this
   time is now configurable via `recovery_token_lifetime`
 - A bug that was preventing change email/password dialogues from proceeding was
@@ -82,6 +95,7 @@ Fixes, improvements, changes:
 - The option `games_config_dir` is now deprecated (and is treated as a bool
   for backwards compatibility)
 - Improvements to game config validation and error reporting on startup
+- Experimental support for asynchronous file IO, via the `aiofiles` package.
 
 ## [0.29.0] - Shooting Stars - 2022-08-23
 

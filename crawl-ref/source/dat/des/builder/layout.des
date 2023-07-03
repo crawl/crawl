@@ -833,7 +833,11 @@ TAGS:   no_rotate no_vmirror no_hmirror
     end
 
     local iterations = math.floor(crawl.random_range(75, 125) * area_fraction)
-    spotty_map { boxy = true, iterations = iterations }
+    if you.in_branch("Lair") then
+        spotty_map { boxy = crawl.coinflip(), iterations = iterations }
+    else
+        spotty_map { boxy = true, iterations = iterations }
+    end
 
     theme.level_material(_G)
 }}

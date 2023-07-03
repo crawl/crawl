@@ -17,7 +17,7 @@
 -- {god gift} for god gifts
 --
 -- Item annotations are always prefixed to the item name. For instance:
--- {artefact} the Staff of Wucad Mu
+-- {artefact} the crystal ball of Wucad Mu
 ---------------------------------------------------------------------------
 
 -- Annotate items for searches
@@ -91,6 +91,18 @@ function ch_stash_search_annotate_item(it)
         annot = annot .. "{flight} "
       end
       annot = annot .. "{" .. it.ego_type_terse .. "} "
+    end
+  end
+
+  if it.class(true) == "potion" or it.class(true) == "scroll" then
+    local props = {
+      ["enlightenment"] = "Will+ flight Fly",
+      ["lignification"] = "rPois rTorment rDrown",
+      ["resistance"] = "rF+ rC+ rElec rPois rCorr",
+      ["revelation"] = "sInv"
+    }
+    if props[it.subtype()] then
+      annot = annot .. "{" .. props[it.subtype()] .. "} "
     end
   end
 

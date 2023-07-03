@@ -49,6 +49,8 @@ static void _choose_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
                                  const newgame_def& defaults);
 static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
                           const newgame_def& defaults);
+static void _mark_fully_random(newgame_def& ng, newgame_def& ng_choice,
+                               bool viable);
 
 #ifdef USE_TILE_LOCAL
 #  define STARTUP_HIGHLIGHT_NORMAL LIGHTGRAY
@@ -419,6 +421,12 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
         }
     }
 #endif
+    if (Options.game.fully_random)
+    {
+        // maybe the option values themselves should be true|false|viable?
+        _mark_fully_random(ng, choice,
+            defaults.species == SP_VIABLE || defaults.job == JOB_VIABLE);
+    }
 
     while (true)
     {

@@ -69,7 +69,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    cleaving(is_cleaving), is_riposte(false), is_projected(false), charge_pow(0),
+    cleaving(is_cleaving), is_multihit(false),
+    is_riposte(false), is_projected(false), charge_pow(0),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1)
 {
@@ -100,7 +101,7 @@ bool melee_attack::bad_attempt()
 
     if (!cleave_targets.empty())
     {
-        const int range = you.reach_range() == REACH_TWO ? 2 : 1;
+        const int range = you.reach_range();
         targeter_cleave hitfunc(attacker, defender->pos(), range);
         return stop_attack_prompt(hitfunc, "attack");
     }
@@ -195,8 +196,8 @@ bool melee_attack::handle_phase_attempted()
     if (attacker->is_player())
     {
         // Set delay now that we know the attack won't be cancelled.
-        if (!is_riposte
-             && (wu_jian_attack == WU_JIAN_ATTACK_NONE))
+        if (!is_riposte && !is_multihit && !cleaving
+            && wu_jian_attack == WU_JIAN_ATTACK_NONE)
         {
             you.time_taken = you.attack_delay().roll();
         }
@@ -325,7 +326,7 @@ bool melee_attack::handle_phase_dodged()
     if (defender->is_player())
         count_action(CACT_DODGE, DODGE_EVASION);
 
-    if (attacker != defender && adjacent(defender->pos(), attack_position)
+    if (attacker != defender
         && attacker->alive() && defender->can_see(*attacker)
         && !defender->cannot_act() && !defender->confused()
         && (!defender->is_player() || !attacker->as_monster()->neutral())
@@ -334,20 +335,23 @@ bool melee_attack::handle_phase_dodged()
         // FIXME: player's attack is -1, even for auxes
         && effective_attack_number <= 0)
     {
-        if (defender->is_player()
+        if (adjacent(defender->pos(), attack_position))
+        {
+            if (defender->is_player()
                 ? you.has_mutation(MUT_REFLEXIVE_HEADBUTT)
                 : mons_species(mons_base_type(*defender->as_monster()))
-                    == MONS_MINOTAUR)
-        {
-            do_minotaur_retaliation();
+                == MONS_MINOTAUR)
+            {
+                do_minotaur_retaliation();
+            }
+
+            // Retaliations can kill!
+            if (!attacker->alive())
+                return false;
+
+            if (defender->is_player() && player_equip_unrand(UNRAND_STARLIGHT))
+                do_starlight();
         }
-
-        // Retaliations can kill!
-        if (!attacker->alive())
-            return false;
-
-        if (defender->is_player() && player_equip_unrand(UNRAND_STARLIGHT))
-            do_starlight();
 
         maybe_riposte();
         // Retaliations can kill!
@@ -367,8 +371,13 @@ void melee_attack::maybe_riposte()
                     && player_equip_unrand(UNRAND_FENCERS)
                     && (!defender->weapon()
                         || is_melee_weapon(*defender->weapon()));
-    if (using_fencers && one_chance_in(3) && !is_riposte) // no ping-pong!
+    if (using_fencers
+        && !is_riposte // no ping-pong!
+        && one_chance_in(3)
+        && you.reach_range() >= grid_distance(you.pos(), attack_position))
+    {
         riposte();
+    }
 }
 
 void melee_attack::apply_black_mark_effects()
@@ -613,14 +622,9 @@ bool melee_attack::handle_phase_aux()
             player_aux_unarmed();
         }
 
-        // Don't print wounds after the first attack with Gyre/Gimble.
-        // DUR_CLEAVE and Gyre/Gimble interact poorly together at the moment,
-        // so don't try to skip print_wounds in that case.
-        if (!(weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE)
-              && !you.duration[DUR_CLEAVE]))
-        {
+        // Don't print wounds after the first attack with quick blades.
+        if (!weapon_multihits(weapon))
             print_wounds(*defender->as_monster());
-        }
     }
 
     return true;
@@ -648,21 +652,40 @@ bool melee_attack::handle_phase_killed()
     return attack::handle_phase_killed();
 }
 
-static void _handle_spectral_brand(const actor &attacker, const actor &defender)
+static void _handle_spectral_brand(actor &attacker, const actor &defender)
 {
-    if (you.triggered_spectral || !defender.alive())
+    if (attacker.type == MONS_SPECTRAL_WEAPON || !defender.alive())
         return;
-    you.triggered_spectral = true;
+    attacker.triggered_spectral = true;
     spectral_weapon_fineff::schedule(attacker, defender);
 }
 
 bool melee_attack::handle_phase_end()
 {
-    if (!cleave_targets.empty() && !simu)
+    if (!is_multihit && weapon_multihits(weapon))
     {
-        attack_cleave_targets(*attacker, cleave_targets, attack_number,
+        const int hits_per_targ = weapon_hits_per_swing(*weapon);
+        list<actor*> extra_hits;
+        for (int i = 1; i < hits_per_targ; i++)
+            extra_hits.push_back(defender);
+        // effective_attack_number will be wrong for a monster that
+        // does a cleaving multi-hit attack. God help us.
+        attack_multiple_targets(*attacker, extra_hits, attack_number,
+                                effective_attack_number, wu_jian_attack,
+                                is_projected, false);
+        if (attacker->is_player())
+            print_wounds(*defender->as_monster());
+    }
+
+    if (!cleave_targets.empty() && !simu
+        // WJC AOEs mayn't cleave.
+        && wu_jian_attack != WU_JIAN_ATTACK_WHIRLWIND
+        && wu_jian_attack != WU_JIAN_ATTACK_WALL_JUMP
+        && wu_jian_attack != WU_JIAN_ATTACK_TRIGGERED_AUX)
+    {
+        attack_multiple_targets(*attacker, cleave_targets, attack_number,
                               effective_attack_number, wu_jian_attack,
-                              is_projected);
+                              is_projected, true);
     }
 
     // Check for passive mutation effects.
@@ -679,7 +702,7 @@ bool melee_attack::handle_phase_end()
         attacker->as_monster()->del_ench(ENCH_ROLLING);
     }
 
-    if (attacker->is_player() && defender)
+    if (defender && !is_multihit)
     {
         if (damage_brand == SPWPN_SPECTRAL)
             _handle_spectral_brand(*attacker, *defender);
@@ -723,8 +746,9 @@ bool melee_attack::attack()
     if (weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE))
     {
         saved_gyre_name = get_artefact_name(*weapon);
-        set_artefact_name(*weapon, cleaving ? "quick blade \"Gimble\""
-                                            : "quick blade \"Gyre\"");
+        const bool gimble = effective_attack_number % 2;
+        set_artefact_name(*weapon, gimble ? "quick blade \"Gimble\""
+                                          : "quick blade \"Gyre\"");
     }
 
     // Restore gyre's name before we return. We cannot use an unwind_var here
@@ -2731,6 +2755,22 @@ void melee_attack::mons_apply_attack_flavour()
         }
         break;
 
+    case AF_MINIPARA:
+    {
+        // Doesn't affect the poison-immune.
+        if (defender->is_player() && you.duration[DUR_DIVINE_STAMINA] > 0)
+        {
+            mpr("Your divine stamina protects you from poison!");
+            break;
+        }
+        if (defender->res_poison() >= 3 || coinflip())
+            break;
+        if (defender->res_poison() > 0 && !one_chance_in(3))
+            break;
+        defender->paralyse(attacker, 1);
+        break;
+    }
+
     case AF_POISON_PARALYSE:
     {
         // Doesn't affect the poison-immune.
@@ -3462,17 +3502,9 @@ bool melee_attack::do_knockback(bool slippery)
  */
 void melee_attack::cleave_setup()
 {
-    // Don't cleave on a self-attack attack.
-    if (attacker->pos() == defender->pos())
+    // Don't cleave on a self-attack attack, or on Manifold Assault.
+    if (attacker->pos() == defender->pos() || is_projected)
         return;
-
-    // Allow Gyre & Gimble to 'cleave' when projected, but not other attacks.
-    if (is_projected)
-    {
-        if (weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE))
-            cleave_targets.push_back(defender);
-        return;
-    }
 
     // We need to get the list of the remaining potential targets now because
     // if the main target dies, its position will be lost.
@@ -3485,8 +3517,6 @@ void melee_attack::cleave_setup()
 // cleave damage modifier for additional attacks: 70% of base damage
 int melee_attack::cleave_damage_mod(int dam)
 {
-    if (weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE))
-        return dam;
     return div_rand_round(dam * 7, 10);
 }
 
