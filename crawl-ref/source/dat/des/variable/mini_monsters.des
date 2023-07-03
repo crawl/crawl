@@ -3213,6 +3213,121 @@ xxxcccxcccxcccxxx
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:   nicolae_demonic_statue_gallery
+TAGS:   transparent
+DEPTH:  D:9-12
+KMONS:  5 = lesser demon
+KMONS:  4 = common demon
+NSUBST: D = 2=4 / 2=45 / 2=5 / .5
+MAP
+ ccGl@lGcc
+ccGl...lGcc
+cGl..D..lGc
+Gl.D.l.D.lG
+l...lGl...l
+@.DlGcGlD.@
+l...lGl...l
+Gl.D.l.D.lG
+cGl..D..lGc
+ccGl...lGcc
+ ccGl@lGcc
+ENDMAP
+
+# It's mostly ufetubi. It's fine. You'll be fine.
+NAME:    nicolae_fort_ynox
+TAGS:    transparent no_pool_fixup
+DEPTH:   D:9-12
+KMONS:   }])> = ynoxinul
+KMONS:   5 = ufetubus
+KFEAT:   - = iron_grate
+KFEAT:   } = }
+KFEAT:   ] = ]
+KFEAT:   ) = )
+KFEAT:   > = >
+SHUFFLE: }])>>
+SUBST:   ` = 5...
+MAP
+    .........
+   ..wwwwwww..
+  ..wwv---vww..
+ ..wwvv}])vvww..
+..wwvv.....vvww..
+.wwvv..```..vvww.
+.wvv..`````..vvw.
+.w-$.```````.$-w.
+.w-$.```G```.$-w.
+.w-$.```````.$-w.
+.wvv..`````..vvw.
+.wwvv..```..vvww.
+..wwvv.....vvww..
+ ..wwvv...vvww..
+  ..wwv+++vww..
+   ..ww...ww..
+    .........
+ENDMAP
+
+NAME:    nicolae_neqoxec_dot_bat
+TAGS:    transparent
+DEPTH:   D:9-12
+KMONS:   3 = neqoxec
+KMONS:   4 = chaos spawn / hellwing / ice devil / orange demon / red devil / \
+             rust devil
+NSUBST:  3 = 2=3 / 4
+SUBST:   4 = 44., % = %%%*
+MAP
+           cccccc
+         cccccccccc
+       cccc......cccc
+  cc@@ccc..........ccc@@cc
+ cc...cc....cccc....cc...cc
+ cc..cc...cccccccc...cc..cc
+cc...cc..ccc%..%ccc..cc...cc
+cc..cc.......3.3.cc.......cc
+cc..cc.....3......cc......cc
+cc..cccccc...GG.3.cccccc..cc
+cc..cccccc.3.GG...cccccc..cc
+cc......cc......3.....cc..cc
+cc.......cc.3.3.......cc..cc
+cc...cc..ccc%..%ccc..cc...cc
+ cc..cc...cccccccc...cc..cc
+ cc...cc....cccc....cc...cc
+  cc@@ccc..........ccc@@cc
+       cccc......cccc
+         cccccccccc
+           cccccc
+ENDMAP
+
+# oh nice you can put ' in vault names
+NAME:   nicolae_where_there's_smoke
+TAGS:   transparent
+DEPTH:  D:9-12
+KITEM:  2 = % / nothing
+KITEM:  3 = *
+KMONS:  2 = nothing / hellwing / red devil / rust devil
+KMONS:  3 = patrolling smoke demon
+KFEAT:  - = iron_grate
+NSUBST: ` = . / c, c = 2:. / 3:.c / c
+SUBST:  Cc = cccc-l, L = ll.
+MAP
+    .........
+  .............
+ ......cLc......
+ ....LL`c`LL....
+....Lccc.cccL....
+...LcCL.2.LCcL...
+...LcLLL.LLLcL...
+..c`c.L...L.c`c..
+..Lc.2..3..2.cL..
+..c`c.L...L.c`c..
+...LcLLL.LLLcL...
+...LcCL.2.LCcL...
+....Lccc.cccL....
+ ....LL`c`LL....
+ ......cLc......
+  .............
+    .........
+ENDMAP
+
 ################################################################################
 #
 # <<5>> Stationary shooters: statues, oklobs, fog generators.
@@ -7134,6 +7249,35 @@ ccc............ccc
 cccc'''cccc'''cccc
 cccccFccccccFccccc
 cccc   cccc   cccc
+ENDMAP
+
+# So named because the layout started as a doodle in my notebook.
+NAME:  nicolae_doodle_vault
+TAGS:  transparent
+DEPTH: D:8-
+KITEM: * = * w:30 / |
+KMONS: * = 9 w:30 / 8
+SUBST: 0 = .000, % = .%%%
+MAP
+  xx@xxxxxxxxx@xx
+  x......x......x
+xxx.xxxx.x.xxxx.xxx
+x...x....x....x...x
+@.xxx.x.xxx.x.xxx.@
+x.x..0x0...0x0..x.x
+x.x.xxxxx.xxxxx.x.x
+x.x..0x*%.%*x0..x.x
+x...x.x%xxx%x.x...x
+xxxxx...xxx...xxxxx
+x...x.x%xxx%x.x...x
+x.x..0x*%.%*x0..x.x
+x.x.xxxxx.xxxxx.x.x
+x.x..0x0...0x0..x.x
+@.xxx.x.xxx.x.xxx.@
+x...x....x....x...x
+xxx.xxxx.x.xxxx.xxx
+  x......x......x
+  xx@xxxxxxxxx@xx
 ENDMAP
 
 ################################################################

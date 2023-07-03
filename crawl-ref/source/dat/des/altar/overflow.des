@@ -4982,6 +4982,29 @@ MAP
 ...............
 ENDMAP
 
+# Technically, you can also prove your dedication by burning a teleport scroll
+# instead of dropping down a level, which I guess is also acceptable.
+NAME:   nicolae_overflow_prove_your_dedication
+TAGS:   temple_overflow_generic_1 transparent
+DEPTH:  !D:$, !Depths:$
+KFEAT:  F : G w:20 / T / U
+KMASK:  `E>FB = opaque
+KMASK:  `E>FB = no_monster_gen
+KMASK:  `E>FB = no_item_gen
+KPROP:  `E>FB = no_tele_into
+SUBST:  G : GGTU
+MARKER: D = lua:transp_loc("nico_of_prove")
+MARKER: E = lua:transp_dest_loc("nico_of_prove")
+MAP
+...........
+.GcccncccG.
+..cF```Fc..
+.DnE`>`Bn.@
+..cF```Fc..
+.GcccncccG.
+...........
+ENDMAP
+
 NAME:   amethyst_overflow_temple_binary
 TAGS:   temple_overflow_generic_2 transparent
 SUBST:  p : .:15 c:10 g:3 n:2
@@ -5395,6 +5418,24 @@ cc.p.cc
 c..p..c
 cB...Bc
 ccc@ccc
+ENDMAP
+
+NAME:   nicolae_overflow_macrodata_refinement
+TAGS:   temple_overflow_generic_4 transparent
+COLOUR: n = white
+COLOUR: . = green
+TILE:   n = dngn_transparent_stone_white
+FTILE:  .Bcn = floor_pebble_green
+MAP
+.........
+....bn...
+..B.bnB..
+.nnnbn...
+.bbbnbbb.
+...nbnnn.
+..Bnb.B..
+...nb....
+.........
 ENDMAP
 
 NAME:   minmay_overflow_temple_star_hex

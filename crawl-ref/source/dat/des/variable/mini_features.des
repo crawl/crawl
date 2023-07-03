@@ -3283,6 +3283,57 @@ mbbm.mbbm
 mmmm@mmmm
 ENDMAP
 
+NAME:    nicolae_houndstooth_variations
+TAGS:    transparent
+DEPTH:   D, Depths
+SHUFFLE: DEFH/JKLM/NOPQ/RSZ`, DJNR/EKOS/FLPZ/HMQ`
+SUBST:   DEJKPQZ` = x, FHLMNORS = .
+MAP
+xxxxDEFHxxxxDEFHxxxxDEFH
+xxxxJKLMxxxxJKLMxxxxJKLM
+xxxxNOPQxxxxNOPQxxxxNOPQ
+xxxxRSZ`xxxxRSZ`xxxxRSZ`
+DJNR....DJNR....DJNR....
+EKOS....EKOS....EKOS....
+FLPZ....FLPZ....FLPZ....
+HxQ`....HxQ`....HxQ`....
+xxxxDEFHxxxxDEFHxxxxDEFH
+xxxxJKLMxxxxJKLMxxxxJKLM
+xxxxNOPQxxxxNOPQxxxxNOPQ
+xxxxRSZ`xxxxRSZ`xxxxRSZ`
+DJNR....DJNR....DJNR....
+EKOS....EKOS....EKOS....
+FLPZ....FLPZ....FLPZ....
+HxQ`....HxQ`....HxQ`....
+xxxxDEFHxxxxDEFHxxxxDEFH
+xxxxJKLMxxxxJKLMxxxxJKLM
+xxxxNOPQxxxxNOPQxxxxNOPQ
+xxxxRSZ`xxxxRSZ`xxxxRSZ`
+DJNR....DJNR....DJNR....
+EKOS....EKOS....EKOS....
+FLPZ....FLPZ....FLPZ....
+HxQ`....HxQ`....HxQ`....
+ENDMAP
+
+NAME:  nicolae_twisty_statue_hallways
+TAGS:  transparent decor
+DEPTH: D, Depths, Snake, Elf
+MAP
+    xxxxx
+ @..x.x.x..@
+ ....x.x....
+ ..G.xGx.G..
+xx...x.x...xx
+x.xxx.x.xxx.x
+xx.G.xxx.G.xx
+x.xxx.x.xxx.x
+xx...x.x...xx
+ ..G.xGx.G..
+ ....x.x....
+ @..x.x.x..@
+    xxxxx
+ENDMAP
+
 NAME:    nicolae_the_louvre
 TAGS:    transparent decor
 DEPTH:   D, Depths, Pan
