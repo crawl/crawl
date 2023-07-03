@@ -37,7 +37,7 @@ decisions made there. The archives can be found here:
 For proposals that would have a significant impact on gameplay, it's good to
 get feedback and discussion from experienced crawl players. One place to start
 is the [Game Design Discussion
-board](https://crawl.develz.org/tavern/viewforum.php?f=8) (GDD) on the official
+board](https://tavern.dcss.io/c/back-room/gdd/9) (GDD) on the official
 Tavern forums. Please follow the GDD discussion guidelines posted at the top of
 that forum.
 
