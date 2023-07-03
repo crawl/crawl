@@ -20,7 +20,6 @@
 #include "misc.h" // december_holidays
 #include "mon-place.h"
 #include "mpr.h"
-#include "randbook.h" // roxanne, roxanne...
 #include "religion.h" // upgrade_hepliaklqana_weapon
 #include "state.h"
 #include "tag-version.h"
@@ -110,12 +109,8 @@ static void _give_talisman(monster* mon, int level)
     if (mon->type != MONS_ROXANNE)
         return;
 
-    const int thing_created = items(false, OBJ_TALISMANS,
-                                    TALISMAN_STATUE, level);
-    if (thing_created != NON_ITEM)
-        return;
-
-    give_specific_item(mon, thing_created);
+    give_specific_item(mon, items(false, OBJ_TALISMANS,
+                                  TALISMAN_STATUE, level));
 }
 
 static void _give_wand(monster* mon, int level)
