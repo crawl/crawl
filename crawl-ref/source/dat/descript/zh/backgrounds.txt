@@ -61,7 +61,7 @@ Hedge Wizard
 %%%%
 Hunter
 
-猎手带有短弓、轻甲和一张献祭卷轴。
+猎手带有短弓、轻甲和一张蝴蝶卷轴。
 %%%%
 Hexslinger
 
