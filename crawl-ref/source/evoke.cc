@@ -1017,6 +1017,7 @@ static bool _evoke_talisman(const item_def &talisman)
     if (!check_transform_into(trans) || !check_form_stat_safety(trans))
         return false;
 
+    count_action(CACT_FORM, (int)trans);
     start_delay<TransformDelay>(trans);
     if (god_despises_item(talisman))
         excommunication();
