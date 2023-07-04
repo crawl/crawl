@@ -1433,7 +1433,7 @@ static bool _flying_in_new_form(transformation which_trans)
         return false;
 
     // sources of permanent flight besides equipment
-    if (you.permanent_flight(false))
+    if (you.racial_permanent_flight())
         return true;
 
     // not airborne right now (XX does this handle emergency flight correctly?)

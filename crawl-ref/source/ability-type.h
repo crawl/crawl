@@ -60,8 +60,11 @@ enum ability_type
 #endif
     // Storm Form
     ABIL_BLINKBOLT,
+#if TAG_MAJOR_VERSION == 34
+    // XXX TODO remove this before merging
     // Permaforms
     ABIL_BEGIN_UNTRANSFORM,
+#endif
     // Death Form
     ABIL_SIPHON_ESSENCE,
 

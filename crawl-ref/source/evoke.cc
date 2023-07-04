@@ -1003,9 +1003,17 @@ static bool _xoms_chessboard()
     return zapping(zap, power, beam, false) == spret::success;
 }
 
-static bool _evoke_talisman(const item_def &talisman)
+static transformation _form_for_talisman(const item_def &talisman)
 {
     const transformation trans = form_for_talisman(talisman);
+    if (trans == you.form)
+        return transformation::none;
+    return trans;
+}
+
+static bool _evoke_talisman(const item_def &talisman)
+{
+    const transformation trans = _form_for_talisman(talisman);
     if (!check_transform_into(trans) || !check_form_stat_safety(trans))
         return false;
 
@@ -1076,19 +1084,15 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
             return "your undead flesh cannot be transformed.";
         if (temp && you.undead_state() == US_SEMI_UNDEAD && !you.vampire_alive)
             return "your current blood level is not sufficient.";
-        const transformation trans = form_for_talisman(*item);
+        const transformation trans = _form_for_talisman(*item);
         if (temp)
         {
             const string form_unreason = cant_transform_reason(trans);
             if (!form_unreason.empty())
                 return lowercase_first(form_unreason);
             // XXX support artefact talismans
-            if (you.default_form == trans)
-            {
-                if (you.form == trans)
-                    return "you've already entered this form.";
-                return "you'll re-enter this form once your current transformation ends.";
-            }
+            if (you.form != you.default_form)
+                return "you need to leave your temporary form first.";
         }
         return "";
     }

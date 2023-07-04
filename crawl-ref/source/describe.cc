@@ -2243,7 +2243,8 @@ static string _describe_talisman(const item_def &item, bool verbose)
     if (verbose && !is_useless_item(item))
     {
         description += "\n\nA period of sustained concentration is needed to "
-                       "enter or leave forms.";
+                       "enter or leave forms. To leave this form, evoke the "
+                       "talisman again.";
         description += "\n\n" + _describe_talisman_form(item);
     }
 
