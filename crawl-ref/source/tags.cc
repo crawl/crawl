@@ -2300,7 +2300,7 @@ static const char* old_gods[]=
 };
 
 player_save_info tag_read_char_info(reader &th, uint8_t /*format*/,
-                                    uint8_t major, uint8_t minor)
+                                    uint8_t major, uint32_t minor)
 {
     player_save_info r;
     // Important: the beginning of this chunk is read in
@@ -2358,12 +2358,6 @@ player_save_info tag_read_char_info(reader &th, uint8_t /*format*/,
         r.explore = unmarshallBoolean(th);
 
     return r;
-}
-
-void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
-{
-    player_save_info s = tag_read_char_info(th, format, major, minor);
-    you.init_from_save_info(s);
 }
 
 #if TAG_MAJOR_VERSION == 34
