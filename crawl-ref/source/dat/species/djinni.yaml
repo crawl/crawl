@@ -52,7 +52,7 @@ fake_mutations:
   - short: sickness immunity
 recommended_jobs:
   - JOB_GLADIATOR
-  - JOB_TRANSMUTER
+  - JOB_SHAPESHIFTER
   - JOB_HEDGE_WIZARD
   - JOB_FIRE_ELEMENTALIST
   - JOB_ICE_ELEMENTALIST

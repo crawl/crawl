@@ -945,7 +945,7 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             break;
 
-        case JOB_TRANSMUTER:
+        case JOB_SHAPESHIFTER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_RAINBOW;
             parts[TILEP_PART_HAND1] = TILEP_HAND1_STAFF_RUBY;
             parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_MAGENTA_DIM;

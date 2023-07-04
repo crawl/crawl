@@ -101,9 +101,9 @@ Summoner
 Summoners are able to cast Summon Small Mammal from the start, and begin with
 other Summonings spells in their library.
 %%%%
-Transmuter
+Shapeshifter
 
-Transmuters use talismans to shift their form, making them powerful melee
+Shapeshifters use talismans to shift their form, making them powerful melee
 fighters (especially when unarmed) at the cost of armour.
 %%%%
 Venom Mage

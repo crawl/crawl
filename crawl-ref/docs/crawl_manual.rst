@@ -2036,8 +2036,8 @@ Artificers
   help them through the early Dungeon. Wands have a limited number of uses,
   though, so they'll want to upgrade from their club ASAP.
 
-Transmuters
-  Transmuters use talismans to shift their body into different forms,
+Shapeshifters
+  Shapeshifters use talismans to shift their body into different forms,
   granting them uncanny power but making them unable to use some items.
   They enter the dungeon with a beast talisman and a potion of lignification.
 

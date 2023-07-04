@@ -1106,10 +1106,10 @@ dgn.delayed_decay_extra(_G, "O", "octopode corpse",
     "    / kite shield good_item / tower shield good_item / any wand w:20" ..
     "    / any misc / gold / any scroll / any potion / nothing w:180")
 
--- Felid Transmuter.
+-- Felid Shapeshifter.
 dgn.delayed_decay_extra(_G, "P", "felid skeleton",
     "maw talisman / blade talisman / serpent talisman" ..
-    ", any jewellery good_item w:60 / manual of transmutations" ..
+    ", any jewellery good_item w:60 / manual of shapeshifting" ..
     "    / manual of unarmed combat / manual of fighting" ..
     ", any wand w:20 / any misc / gold / any scroll / any potion" ..
     "    / nothing w:60" ..

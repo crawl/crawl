@@ -36,7 +36,7 @@ fake_mutations:
   - long: You cannot wear most types of armour.
     short: almost no armour
 recommended_jobs:
-  - JOB_TRANSMUTER
+  - JOB_SHAPESHIFTER
   - JOB_HEDGE_WIZARD
   - JOB_CONJURER
   - JOB_BRIGAND

@@ -318,8 +318,8 @@ static const map<job_type, job_def> job_data =
       { SK_STEALTH, 2 }, },
 } },
 
-{ JOB_TRANSMUTER, {
-    "Tm", "Transmuter",
+{ JOB_SHAPESHIFTER, {
+    "Sh", "Shapeshifter",
     7, 0, 5,
     { SP_NAGA, SP_MERFOLK, SP_BASE_DRACONIAN, SP_DEMIGOD, SP_DEMONSPAWN,
       SP_TROLL, SP_METEORAN, },
