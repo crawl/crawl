@@ -296,16 +296,15 @@ int Form::get_ac_bonus() const
 
 int Form::mult_hp(int base_hp) const
 {
-    const int scale = 100; // scale == 100 blows out an int32
+    const int scale = 100;
     const int lvl = get_level(scale);
-    const int base_mult = hp_mod * base_hp;
     // Only penalize if you're in a talisman form with insufficient skill.
-    if (lvl/scale >= min_skill || you.default_form != you.form)
-        return base_mult / 10;
-    // 75% penalty at 0 skill, 0 penalty at min skill, quadratic curve
-    const int single_penalty = 3 * base_mult * lvl / (min_skill * scale);
-    const int double_penalty = single_penalty * lvl / (min_skill * scale);
-    return (base_mult + double_penalty) / (4 * 10);
+    const int shortfall = min_skill * scale - lvl;
+    if (shortfall <= 0 || you.default_form != you.form)
+        return hp_mod * base_hp / 10;
+    // -10% hp per skill level short, down to -70%
+    const int penalty = min(shortfall, 7 * scale);
+    return base_hp * hp_mod * (10 * scale - penalty) / (scale * 10 * 10);
 }
 
 /**
