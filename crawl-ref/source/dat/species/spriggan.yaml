@@ -26,7 +26,8 @@ aptitudes:
   summoning: -2
   necromancy: -1
   translocations: 4
-  transmutations: 1
+  transmutations: 3
+  shapeshifting: 1
   fire_magic: -2
   ice_magic: -2
   air_magic: -1

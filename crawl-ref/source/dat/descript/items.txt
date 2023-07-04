@@ -8,7 +8,7 @@ corrosive slime flow off it like water.
 %%%%
 amulet of faith
 
-A charm crafted to call the attention of the gods to its wearer. This divine
+A charm crafted to call the attention of the gods to its wearer. This divine
 attention makes it easier to please your god, but your god will also take more
 notice of your transgressions. The amulet will drain some of your divine favour
 when removed.
@@ -144,10 +144,9 @@ schools.
 %%%%
 book of changes
 
-A student's primer to the magic arts of Transmutations, filled with lavish
-illustrations of spellcasting mistakes: half-wizard-half-spiders, blade noses,
-beaked tentacles where legs belong. The text is full of reassurances that these
-almost never happen.
+A student's primer to the magic arts of Transmutations. Contrary to common
+wisdom, the book has no ability to move, but it does have a nasty habit of
+disguising itself as other nearby objects.
 %%%%
 book of chaos
 

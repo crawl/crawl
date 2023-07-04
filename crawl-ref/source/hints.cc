@@ -751,6 +751,7 @@ void hints_gained_new_skill(skill_type skill)
     case SK_EVOCATIONS:
     case SK_DODGING:
     case SK_SHIELDS:
+    case SK_SHAPESHIFTING:
     case SK_THROWING:
     case SK_SPELLCASTING:
     {

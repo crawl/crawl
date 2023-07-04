@@ -17,7 +17,7 @@ aptitudes:
   dodging: -1
   spellcasting: -1
   hexes: -1
-  transmutations: -2
+  shapeshifting: -2
   invocations: 1
 str: 10
 int: 8

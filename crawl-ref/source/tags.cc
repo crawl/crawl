@@ -2921,6 +2921,20 @@ static void _tag_read_you(reader &th)
     ASSERT(count <= NUM_SKILLS);
     for (int j = 0; j < count; ++j)
     {
+#if TAG_MAJOR_VERSION == 34
+        if (j == SK_SHAPESHIFTING && th.getMinorVersion() < TAG_MINOR_SHAPESHIFTING)
+        {
+            you.skills[SK_SHAPESHIFTING]              = you.skills[SK_TRANSMUTATIONS];
+            you.train[SK_SHAPESHIFTING]               = you.train[SK_TRANSMUTATIONS];
+            you.train_alt[SK_SHAPESHIFTING]           = you.train_alt[SK_TRANSMUTATIONS];
+            you.training[SK_SHAPESHIFTING]            = you.training[SK_TRANSMUTATIONS];
+            you.skill_points[SK_SHAPESHIFTING]        = you.skill_points[SK_TRANSMUTATIONS];
+            you.skill_order[SK_SHAPESHIFTING]         = you.skill_order[SK_TRANSMUTATIONS] + 1;
+            you.training_targets[SK_SHAPESHIFTING]    = you.training_targets[SK_TRANSMUTATIONS];
+            you.skill_manual_points[SK_SHAPESHIFTING] = you.skill_manual_points[SK_TRANSMUTATIONS];
+            continue;
+        }
+#endif
         you.skills[j]          = unmarshallUByte(th);
         ASSERT(you.skills[j] <= 27 || you.wizard);
 

@@ -2012,7 +2012,6 @@ static map<curse_type, curse_data> _ashenzari_curses =
             SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT },
     } },
     { CURSE_RANGED, {
-        // XXX: merge with evocations..?
         "Ranged Combat", "Range",
         { SK_RANGED_WEAPONS, SK_THROWING },
     } },
@@ -2044,9 +2043,9 @@ static map<curse_type, curse_data> _ashenzari_curses =
         "Cunning", "Cun",
         { SK_DODGING, SK_STEALTH },
     } },
-    { CURSE_EVOCATIONS, {
-        "Evocations", "Evo",
-        { SK_EVOCATIONS },
+    { CURSE_DEVICES, {
+        "Devices", "Dev",
+        { SK_EVOCATIONS, SK_SHAPESHIFTING },
     } },
 };
 

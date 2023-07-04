@@ -28,9 +28,10 @@ aptitudes:
   summoning: 11
   necromancy: 11
   translocations: 11
-  transmutations: 9
+  transmutations: 11
   dodging: 1
   stealth: -1
+  shapeshifting: -3
 str: 7
 int: 9
 dex: 8

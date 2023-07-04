@@ -17,7 +17,7 @@ aptitudes:
   throwing: -1
   armour: False
   dodging: -1
-  transmutations: -2
+  shapeshifting: -2
   invocations: 1
   # Purple Draconian specific
   spellcasting: 1

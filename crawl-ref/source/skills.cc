@@ -105,7 +105,7 @@ static const char *skill_titles[NUM_SKILLS][7] =
     {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Worldbinder",    "Planerender",  "Summ"},
     {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "@Genus_Short@ of Death", "Necr"},
     {"Translocations", "Grasshopper",   "Placeless @Genus@", "Blinker",       "Portalist",      "Plane @Walker@", "Tloc"},
-    {"Transmutations", "Changer",       "Transmogrifier",  "Alchemist",       "Malleable",      "Shapeless @Genus@", "Tmut"},
+    {"Transmutations", "Destabilizer",  "Alchemist",       "Transmogrifier",  "Entropist",      "Reality Shaper", "Tmut"},
 
     {"Fire Magic",     "Firebug",       "Arsonist",        "Scorcher",        "Pyromancer",     "Infernalist",  "Fire"},
     {"Ice Magic",      "Chiller",       "Frost Mage",      "Gelid",           "Cryomancer",     "Englaciator",  "Ice"},
@@ -118,6 +118,7 @@ static const char *skill_titles[NUM_SKILLS][7] =
     // or, in U's case, invocations skill.
     {"Invocations",    "Unbeliever",    "Agnostic",        "Dissident",       "Heretic",        "Apostate",     "Invo"},
     {"Evocations",     "Charlatan",     "Prestidigitator", "Fetichist",       "Evocator",       "Talismancer",  "Evo"},
+    {"Shapeshifting",  "Changeling",    "Mimic",           "Metamorph",       "Skinwalker",     "Shapeless @Genus@", "Shft"},
 };
 
 static const char *martial_arts_titles[6] =
@@ -358,14 +359,14 @@ static void _change_skill_level(skill_type exsk, int n)
 
     // calc_hp() has to be called here because it currently doesn't work
     // right if you.skills[] hasn't been updated yet.
-    if (exsk == SK_FIGHTING || exsk == SK_TRANSMUTATIONS)
+    if (exsk == SK_FIGHTING || exsk == SK_SHAPESHIFTING)
         calc_hp(true, false);
 }
 
 // Called whenever a skill is trained.
 void redraw_skill(skill_type exsk, skill_type old_best_skill, bool recalculate_order)
 {
-    const bool trained_form = exsk == SK_TRANSMUTATIONS && you.form != transformation::none;
+    const bool trained_form = exsk == SK_SHAPESHIFTING && you.form != transformation::none;
     if (exsk == SK_FIGHTING || trained_form)
         calc_hp(true, false);
 

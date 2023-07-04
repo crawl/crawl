@@ -189,15 +189,14 @@ in these schools.
 %%%%
 Transmutations
 
-Transmutations deal with changing shapes. Transmutations skill enables the
-use of magical talismans to change oneself into other forms. Greater skill
-allows one to use more powerful forms without gravely damaging one's health,
-in addition to various form-specific perks.
+Transmutations reshape the world. Spells in this school can twist objects and
+creatures into different shapes, turn one material into another, or even
+unweave the fabric of magic itself. 
 
-Being skilled in Transmutations also increases the success rate and spell power
-of spells in this school. Many spells belong to a combination of several
-schools, in which case spellcasting success and power will depend on the
-average skill in these schools.
+Being skilled in Transmutations increases the success rate and spell power of
+spells in this school. Many spells belong to a combination of several schools,
+in which case spellcasting success and power will depend on the average skill
+in these schools.
 %%%%
 Fire Magic
 
@@ -271,4 +270,11 @@ Evocations
 
 Evocations skill affects your ability to use magical items like wands and other
 uncommon objects, increasing the power or success rate of such items.
+%%%%
+Shapeshifting
+
+Shapeshifting enables the use of magical talismans to change oneself into other
+forms. Sufficient skill allows one to use more powerful forms without gravely
+damaging one's health. Being skilled in Shapeshifting also makes most forms
+somewhat stronger, in ways which vary between forms.
 %%%%

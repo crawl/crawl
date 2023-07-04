@@ -1321,7 +1321,7 @@ begin to form again as normal.
 %%%%
 Sting spell
 
-Briefly transforms one of the caster's limbs into a long insectoid stinger,
+Briefly transforms a nearby rock or torch into a long insectoid stinger,
 which lashes out at the target. The stinger's impact will always poison a
 susceptible target. Even resistant targets have a chance to be poisoned and
 immune monsters will be damaged by the physical impact of the stinger.

@@ -154,11 +154,11 @@
        "potion of resistance", "robe", "ring mail" }
 
       elseif s == "S" then i = { "scarf", "scimitar", "short sword",
-       "scale mail", "book of storms", "spear", "serpent talisman",
+       "scale mail", "spear", "serpent talisman", "storm talisman",
        "ring of see invisible", "ring of slaying", "sack of spiders",
        "ring of strength", "manual of stealth", "scroll of summoning",
-       "book of spatial translocations", "scroll of silence", "storm talisman",
-       "shortbow", "manual of staves", "steam dragon scales",
+       "book of spatial translocations", "scroll of silence", "shortbow",
+       "manual of staves", "steam dragon scales", "manual of shapeshifting",
        "shadow dragon scales", "storm dragon scales", "swamp dragon scales",
        "manual of short blades", "manual of shields", "sling",
        "manual of spellcasting", "manual of summonings", "stone",

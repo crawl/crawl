@@ -3369,6 +3369,7 @@ tileidx_t tileidx_skill(skill_type skill, int train)
     case SK_EARTH_MAGIC:    ch = TILEG_EARTH_MAGIC_ON; break;
     case SK_POISON_MAGIC:   ch = TILEG_POISON_MAGIC_ON; break;
     case SK_EVOCATIONS:     ch = TILEG_EVOCATIONS_ON; break;
+    case SK_SHAPESHIFTING:  ch = TILEG_SHAPESHIFTING_ON; break;
     case SK_INVOCATIONS:
         {
             switch (you.religion)

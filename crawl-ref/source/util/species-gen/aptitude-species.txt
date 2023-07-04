@@ -27,6 +27,7 @@
     {{{enum}, SK_POISON_MAGIC,   {poison_magic}}},
     {{{enum}, SK_INVOCATIONS,    {invocations}}},
     {{{enum}, SK_EVOCATIONS,     {evocations}}},
+    {{{enum}, SK_SHAPESHIFTING,  {shapeshifting}}},
 #if TAG_MAJOR_VERSION == 34
     {{{enum}, SK_STABBING,       UNUSABLE_SKILL}},
     {{{enum}, SK_TRAPS,          UNUSABLE_SKILL}},

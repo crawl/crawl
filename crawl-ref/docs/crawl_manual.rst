@@ -270,10 +270,10 @@ Willpower
 Size
   Different species have different sizes: Spriggans and Felids are very small;
   Kobolds are small; Ogres and Trolls are large; Nagas and Armataurs are large
-  with a medium torso; all other species are medium-sized. Many transmutations
-  will change your size. Size affects your evasion: the smaller your character,
-  the more evasive it is. On the other hand, characters of larger than medium
-  size do not suffer the usual attack penalties when standing in shallow water.
+  with a medium torso; all other species are medium-sized. Many talismans will
+  change your size. Size affects your evasion: the smaller your character, the
+  more evasive it is. On the other hand, characters of larger than medium size
+  do not suffer the usual attack penalties when standing in shallow water.
   Characters of smaller than medium size will have problems with some larger
   weapons. Very small characters and large characters are not able to use most
   types of armour. Players and monsters can only constrict foes of the same size
@@ -942,6 +942,17 @@ experience will have twice the usual effect when used for training that skill.
 Once a certain amount of bonus experience has been gained in this way, you will
 automatically discard the finished manual.
 
+î Talismans
+========================================
+
+Talismans allow their user to shift into a different form. Entering or leaving
+a form with a talisman requires a brief period of concentration, but otherwise,
+forms last until the user chooses to leave them.
+
+More powerful talismans require some amount of Shapeshifting skill, without which
+a user will find their maximum health reduced until they leave the form.
+Shapeshifting skill also increases other benefits provided by talismans' forms,
+though weaker talismans have a limit to how helpful skill can be.
 
 { Miscellaneous
 ========================================
@@ -2026,10 +2037,9 @@ Artificers
   though, so they'll want to upgrade from their club ASAP.
 
 Transmuters
-  Transmuters specialise in transmutation magic. Using talismans, they can
-  transmute their body into different forms, granting them uncanny power but
-  making them unable to use some items. They also enter the dungeon with a
-  potion of lignification.
+  Transmuters use talismans to shift their body into different forms,
+  granting them uncanny power but making them unable to use some items.
+  They enter the dungeon with a beast talisman and a potion of lignification.
 
 Wanderers
   Wanderers are "jacks-of-all-trades, masters of none". They start the game

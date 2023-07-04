@@ -28,7 +28,7 @@ aptitudes:
   summoning: 6
   necromancy: 6
   translocations: 6
-  transmutations: 4
+  transmutations: 6
   fire_magic: 6
   ice_magic: 6
   air_magic: 6
@@ -36,6 +36,7 @@ aptitudes:
   poison_magic: 6
   invocations: 9
   evocations: 8
+  shapeshifting: 6
 str: 7
 int: 7
 dex: 7

@@ -1091,7 +1091,7 @@ static skill_type _item_training_skill(const item_def &item)
     if (item.base_type == OBJ_MISSILES && is_throwable(&you, item))
         return SK_THROWING;
     if (item.base_type == OBJ_TALISMANS)
-        return SK_TRANSMUTATIONS;
+        return SK_SHAPESHIFTING;
     if (item_ever_evokable(item)) // not very accurate
         return SK_EVOCATIONS;
     return SK_NONE;
@@ -2197,10 +2197,10 @@ static string _describe_talisman_form(const item_def &item)
     const int target_skill = _item_training_target(item);
     const bool can_set_target = below_target && in_inventory(item)
                                 && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
-    description += _your_skill_desc(SK_TRANSMUTATIONS, can_set_target,
+    description += _your_skill_desc(SK_SHAPESHIFTING, can_set_target,
                                     target_skill, "   ");
     if (below_target)
-        _append_skill_target_desc(description, SK_TRANSMUTATIONS, target_skill);
+        _append_skill_target_desc(description, SK_SHAPESHIFTING, target_skill);
 
     // defenses
     const int hp = form->mult_hp(100);

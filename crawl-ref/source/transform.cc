@@ -227,7 +227,7 @@ int Form::get_duration(int pow) const
  */
 int Form::get_level(int scale) const
 {
-    return min(you.skill(SK_TRANSMUTATIONS, scale), max_skill * scale);
+    return min(you.skill(SK_SHAPESHIFTING, scale), max_skill * scale);
 }
 
 /**
