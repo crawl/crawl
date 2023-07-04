@@ -6633,7 +6633,9 @@ bool player::permanent_flight(bool include_equip) const
         return false;
 
     return include_equip && attribute[ATTR_PERM_FLIGHT] // equipment
-        || racial_permanent_flight();                   // species muts
+        || racial_permanent_flight()                 // species muts
+        || get_form()->enables_flight()
+           && get_form(you.default_form)->enables_flight();
 }
 
 /**
