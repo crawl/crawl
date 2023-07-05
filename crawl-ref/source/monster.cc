@@ -6425,6 +6425,8 @@ bool monster::angered_by_attacks() const
 {
     return !has_ench(ENCH_INSANE)
             && !mons_is_avatar(type)
+            && !mons_class_is_zombified(type)
+            && type != MONS_BOUND_SOUL
             && type != MONS_SPELLFORGED_SERVITOR
             && !mons_is_conjured(type)
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
