@@ -7909,10 +7909,7 @@ bool player::form_uses_xl() const
     // users of one particular [non-]weapon be effective for this
     // unintentional form while others can just run or die. I believe this
     // should apply to more forms, too.  [1KB]
-    return form == transformation::wisp || form == transformation::fungus
-        || form == transformation::pig
-        || form == transformation::bat
-                        && you.get_mutation_level(MUT_VAMPIRISM) < 2;
+    return !get_form()->get_unarmed_uses_skill();
 }
 
 bool player::wear_barding() const

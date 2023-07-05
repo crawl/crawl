@@ -131,6 +131,7 @@ Form::Form(const form_entry &fe)
       can_fly(fe.can_fly), can_swim(fe.can_swim),
       flat_ac(fe.flat_ac), xl_ac(fe.xl_ac),
       uc_brand(fe.uc_brand), uc_attack(fe.uc_attack),
+      unarmed_uses_skill(fe.unarmed_uses_skill),
       prayer_action(fe.prayer_action), equivalent_mons(fe.equivalent_mons),
       hp_mod(fe.hp_mod), fakemuts(fe.fakemuts)
 { }
@@ -807,6 +808,11 @@ public:
     monster_type get_equivalent_mons() const override
     {
         return you.has_mutation(MUT_VAMPIRISM) ? MONS_VAMPIRE_BAT : MONS_BAT;
+    }
+
+    /// Does this form care about skill for UC damage and accuracy, or only XL?
+    bool get_unarmed_uses_skill() const override {
+        return you.get_mutation_level(MUT_VAMPIRISM) >= 2;
     }
 
     /**
