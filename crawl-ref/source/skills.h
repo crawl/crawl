@@ -156,7 +156,7 @@ static const skill_type skill_display_order[] =
 
     SK_BLANK_LINE,
 
-    SK_ARMOUR, SK_DODGING, SK_SHIELDS, SK_SHAPESHIFTING, SK_STEALTH,
+    SK_ARMOUR, SK_DODGING, SK_SHIELDS, SK_STEALTH, SK_THROWING,
 
     SK_COLUMN_BREAK, SK_TITLE,
 
@@ -170,7 +170,7 @@ static const skill_type skill_display_order[] =
 
     SK_BLANK_LINE,
 
-    SK_INVOCATIONS, SK_EVOCATIONS, SK_THROWING,
+    SK_INVOCATIONS, SK_EVOCATIONS, SK_SHAPESHIFTING,
 
     SK_COLUMN_BREAK,
 };
