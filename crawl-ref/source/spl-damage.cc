@@ -4106,6 +4106,11 @@ spret cast_imb(int pow, bool fail)
     return spret::success;
 }
 
+dice_def toxic_bog_damage()
+{
+    return dice_def(4, 6);
+}
+
 void actor_apply_toxic_bog(actor * act)
 {
     if (env.grid(act->pos()) != DNGN_TOXIC_BOG)
@@ -4136,7 +4141,7 @@ void actor_apply_toxic_bog(actor * act)
         }
     }
 
-    const int base_damage = dice_def(4, 6).roll();
+    const int base_damage = toxic_bog_damage().roll();
     const int damage = resist_adjust_damage(act, BEAM_POISON_ARROW, base_damage);
     const int resist = base_damage - damage;
 

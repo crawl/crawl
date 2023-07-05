@@ -121,6 +121,7 @@ void end_flame_wave();
 
 spret cast_imb(int pow, bool fail);
 
+dice_def toxic_bog_damage();
 void actor_apply_toxic_bog(actor *act);
 
 vector<coord_def> find_ramparts_walls();

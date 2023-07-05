@@ -2781,6 +2781,8 @@ static dice_def _spell_damage(spell_type spell, int power)
             return arcjolt_damage(power, false);
         case SPELL_POLAR_VORTEX:
             return polar_vortex_dice(power, false);
+        case SPELL_NOXIOUS_BOG:
+            return toxic_bog_damage();
         default:
             break;
     }
