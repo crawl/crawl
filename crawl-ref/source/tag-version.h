@@ -285,6 +285,7 @@ enum tag_minor_version
     TAG_MINOR_TALISMANS,           // Add talismans and indefinite transforms.
     TAG_MINOR_SHAPESHIFTING,       // Add Shapeshifting skill.
                                    // XXX TODO: merge this into TAG_MINOR_TALISMANS before merging!
+    TAG_MINOR_SHAPESHIFTING2,      // Fix shapeshifting save compat. XXX TODO as above
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
