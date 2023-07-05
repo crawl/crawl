@@ -191,7 +191,7 @@ Transmutations
 
 Transmutations reshape the world. Spells in this school can twist objects and
 creatures into different shapes, turn one material into another, or even
-unweave the fabric of magic itself. 
+unweave the fabric of magic itself.
 
 Being skilled in Transmutations increases the success rate and spell power of
 spells in this school. Many spells belong to a combination of several schools,
