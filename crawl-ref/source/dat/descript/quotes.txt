@@ -299,6 +299,12 @@ acid dragon scales
 
 <steam dragon scales>
 %%%%
+adder
+
+ADDER, n. A species of snake. So called from its habit of adding funeral outlays
+to the other expenses of living.
+    -Ambrose Bierce, _The Devil's Dictionary_, 1906.
+%%%%
 Agony spell
 
 “Unbearable, isn't it? The suffering of strangers, the agony of friends. There
@@ -548,6 +554,14 @@ Dowan
 “Skill and grace, the twin brother and sister, are dancing playfully on your
  finger tips.”
     -Rabindranath Tagore, _Chitra_, Act I, Scene iv. 1914.
+%%%%
+Duel ability
+
+DUEL, n. A formal ceremony preliminary to the reconciliation of two enemies.
+Great skill is necessary to its satisfactory observance; if awkwardly
+performed the most unexpected and deplorable consequences sometimes ensue.
+A long time ago, a man lost his life in a duel.
+    -Ambrose Bierce, _The Devil's Dictionary_, 1906.
 %%%%
 Duvessa
 
