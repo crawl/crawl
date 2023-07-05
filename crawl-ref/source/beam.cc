@@ -6355,6 +6355,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
         || feat_is_tree(dngn_feat)
            && (!feat_is_flammable(dngn_feat)
                || !can_burn_trees()
+               || have_passive(passive_t::shoot_through_plants) // would be nice to message
                || env.markers.property_at(loc, MAT_ANY, "veto_destroy") == "veto")
         || feat_is_closed_door(dngn_feat))
     {
