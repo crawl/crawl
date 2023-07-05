@@ -470,11 +470,8 @@ void revive()
     you.attribute[ATTR_DIVINE_VIGOUR] = 0;
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
     you.attribute[ATTR_DIVINE_SHIELD] = 0;
-    if (you.form != transformation::none)
-    {
-        you.default_form = transformation::none;
-        untransform(true);
-    }
+    if (you.form != you.default_form)
+        return_to_default_form();
     you.clear_beholders();
     you.clear_fearmongers();
     you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
