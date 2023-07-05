@@ -661,7 +661,14 @@ bool melee_attack::handle_phase_aux()
  */
 static void _devour(monster &victim)
 {
-    mprf("You devour %s!", victim.name(DESC_THE).c_str());
+    // Sometimes, one's eyes are larger than one's stomach-mouth.
+    const int size_delta = victim.body_size(PSIZE_BODY)
+                            - you.body_size(PSIZE_BODY);
+    mprf("You devour %s%s!",
+         size_delta <= 0 ? "" :
+         size_delta <= 1 ? "half of " :
+                           "a chunk of ",
+         victim.name(DESC_THE).c_str());
 
     // give a clearer message for eating invisible things
     if (!you.can_see(victim))
@@ -716,9 +723,7 @@ static void _consider_devouring(monster &defender)
         || defender.is_summoned()
         || defender.flags & MF_HARD_RESET
         // the curse of midas...
-        || have_passive(passive_t::goldify_corpses)
-        // Sometimes, one's eyes are larger than one's stomach-mouth.
-        || defender.body_size(PSIZE_BODY) > you.body_size(PSIZE_BODY) + 1)
+        || have_passive(passive_t::goldify_corpses))
     {
         return;
     }
