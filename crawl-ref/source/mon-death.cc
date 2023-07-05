@@ -413,9 +413,9 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
     you.redraw_title = true;
 }
 
-static void _create_monster_hide(const item_def &corpse, bool silent)
+static void _create_monster_hide(monster_type mtyp, monster_type montype,
+                                 coord_def pos, bool silent)
 {
-    const monster_type mtyp = corpse.mon_type;
     const armour_type type = hide_for_monster(mons_species(mtyp));
     ASSERT(type != NUM_ARMOURS);
 
@@ -426,8 +426,6 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
         return;
     item_def& item = env.item[o];
 
-    const monster_type montype =
-        static_cast<monster_type>(corpse.orig_monnum);
     if (!invalid_monster_type(montype) && mons_is_unique(montype))
         item.inscription = mons_type_name(montype, DESC_PLAIN);
 
@@ -456,7 +454,6 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
     if (bonus_plus)
         item.plus += random_range(*bonus_plus * 2/3, *bonus_plus * 3/2);
 
-    const coord_def pos = item_pos(corpse);
     if (pos.origin())
     {
         set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -481,14 +478,13 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
     set_ident_flags(item, ISFLAG_IDENT_MASK);
 }
 
-static void _create_monster_wand(const item_def &corpse, bool silent)
+static void _create_monster_wand(monster_type mtyp, coord_def pos, bool silent)
 {
-    const coord_def pos = item_pos(corpse);
     if (pos.origin())
         return;
 
     int w = items(false, OBJ_WANDS, OBJ_RANDOM,
-                  mons_class_hit_dice(corpse.mon_type));
+                  mons_class_hit_dice(mtyp));
 
     if (w == NON_ITEM)
         return;
@@ -500,21 +496,22 @@ static void _create_monster_wand(const item_def &corpse, bool silent)
     if (you.see_cell(pos) && !silent && !feat_eliminates_items(env.grid(pos)))
     {
         mprf("%s bone magically twists into %s.",
-             mons_type_name(corpse.mon_type, DESC_A).c_str(),
+             mons_type_name(mtyp, DESC_A).c_str(),
              item.name(DESC_A).c_str());
     }
 
     set_ident_flags(item, ISFLAG_IDENT_MASK);
 }
 
-static void _maybe_drop_monster_organ(const item_def &corpse, bool silent)
+void maybe_drop_monster_organ(monster_type mon, monster_type orig,
+                              coord_def pos, bool silent)
 {
-    if (mons_class_leaves_hide(corpse.mon_type) && !one_chance_in(3))
-        _create_monster_hide(corpse, silent);
+    if (mons_class_leaves_hide(mon) && !one_chance_in(3))
+        _create_monster_hide(mon, orig, pos, silent);
 
     // corpse RNG is enough for these right now
-    if (mons_class_leaves_wand(corpse.mon_type))
-        _create_monster_wand(corpse, silent);
+    if (mons_class_leaves_wand(mon))
+        _create_monster_wand(mon, pos, silent);
 }
 
 /**
@@ -2564,7 +2561,9 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (corpse->base_type == OBJ_CORPSES // not gold
             && !mons.props.exists(KIKU_WRETCH_KEY))
         {
-            _maybe_drop_monster_organ(*corpse, silent);
+            const monster_type orig = static_cast<monster_type>(corpse->orig_monnum);
+            maybe_drop_monster_organ(corpse->mon_type, orig,
+                                     item_pos(*corpse), silent);
         }
     }
 

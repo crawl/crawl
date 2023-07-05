@@ -31,6 +31,7 @@
 #include "mapdef.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-death.h" // maybe_drop_monster_organ
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "religion.h"
@@ -683,6 +684,12 @@ static void _devour(monster &victim)
 
     // Devour the corpse.
     victim.props[NEVER_CORPSE_KEY] = true;
+
+    // ... but still drop dragon scales, etc, if appropriate.
+    monster_type orig = victim.type;
+    if (victim.props.exists(ORIGINAL_TYPE_KEY))
+        orig = (monster_type) victim.props[ORIGINAL_TYPE_KEY].get_int();
+    maybe_drop_monster_organ(victim.type, orig, victim.pos());
 
     // Healing.
     if (you.duration[DUR_DEATHS_DOOR])
