@@ -1024,20 +1024,6 @@ static bool _evoke_talisman(const item_def &talisman)
     return true;
 }
 
-static bool _player_has_zigfig()
-{
-    // does the player have a zigfig? used to override sac artiface
-    // a bit ugly...this thing could probably be goldified or converted to an
-    // ability trigger
-    for (const item_def &s : you.inv)
-        if (s.defined() && s.base_type == OBJ_MISCELLANY
-                                 && s.sub_type == MISC_ZIGGURAT)
-        {
-            return true;
-        }
-    return false;
-}
-
 /// Does the item only serve to produce summons or allies?
 static bool _evoke_ally_only(const item_def &item, bool ident)
 {
@@ -1068,10 +1054,12 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
     if (temp && you.confused())
         return "You are too confused!";
 
+    // all generic checks passed
+    if (!item)
+        return "";
+
     // historically allowed under confusion/berserk, but why?
-    if (item && item->base_type == OBJ_MISCELLANY
-                                            && item->sub_type == MISC_ZIGGURAT
-        || !item && _player_has_zigfig())
+    if (item->is_type(OBJ_MISCELLANY, MISC_ZIGGURAT))
     {
         // override sac artifice for zigfigs, including a general check
         // TODO: zigfig has some terrain/level constraints that aren't handled
@@ -1079,7 +1067,7 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
         return "";
     }
 
-    if (item && item->base_type == OBJ_TALISMANS)
+    if (item->base_type == OBJ_TALISMANS)
     {
         if (you.undead_state(false) == US_UNDEAD)
             return "your undead flesh cannot be transformed.";
@@ -1100,10 +1088,6 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
 
     if (you.get_mutation_level(MUT_NO_ARTIFICE))
         return "You cannot evoke magical items.";
-
-    // all generic checks passed
-    if (!item)
-        return "";
 
     // is this really necessary?
     if (item_type_removed(item->base_type, item->sub_type))

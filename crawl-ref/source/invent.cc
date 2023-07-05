@@ -527,6 +527,8 @@ string no_selectables_message(int item_selector)
     case OSEL_LAUNCHING:
         return "You aren't carrying any items that might be thrown or fired.";
     case OSEL_EVOKABLE:
+        if (you.get_mutation_level(MUT_NO_ARTIFICE)) // iffy
+            return "You cannot evoke magical items.";
         return "You aren't carrying any items that you can evoke.";
     case OSEL_CURSED_WORN:
         return "None of your equipped items are cursed.";
