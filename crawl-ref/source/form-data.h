@@ -347,7 +347,7 @@ static const form_entry formdata[] =
     0, 13, TALISMAN_BEAST,
     EQF_AUXES, MR_NO_FLAGS,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
-    0, 0, 0, true, 0, true, 5,
+    0, 0, 0, true, 0, true, 4,
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true,
     "", 0, "", "", "", "",

@@ -973,7 +973,7 @@ public:
     static const FormBeast &instance() { static FormBeast inst; return inst; }
     int slay_bonus() const override
     {
-        return 2 + get_level(6) / max_skill;
+        return 1 + get_level(5) / max_skill;
     }
 };
 
