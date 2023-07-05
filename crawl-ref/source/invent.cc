@@ -846,11 +846,11 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_RODS,
 #endif
     OBJ_JEWELLERY,
+    OBJ_TALISMANS,
     OBJ_WANDS,
     OBJ_SCROLLS,
     OBJ_POTIONS,
     OBJ_MISCELLANY,
-    OBJ_TALISMANS,
 #if TAG_MAJOR_VERSION == 34
     OBJ_FOOD,
 #endif
