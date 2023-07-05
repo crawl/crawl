@@ -29,7 +29,6 @@ aptitudes:
   necromancy: -2
   translocations: -3
   transmutations: -3
-  shapeshifting: -5
   fire_magic: -3
   ice_magic: -3
   air_magic: -4
@@ -37,6 +36,7 @@ aptitudes:
   poison_magic: -3
   invocations: -1
   evocations: -3
+  shapeshifting: -2
 size: large
 str: 15
 int: 4
