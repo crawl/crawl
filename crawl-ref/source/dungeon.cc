@@ -4798,8 +4798,8 @@ static object_class_type _superb_object_class()
             10, OBJ_JEWELLERY,
             10, OBJ_BOOKS,
             10, OBJ_STAVES,
-            5, OBJ_MISCELLANY,
-            5, OBJ_TALISMANS);
+            10, OBJ_MISCELLANY,
+            1, OBJ_TALISMANS);
 }
 
 static int _concretize_level(int spec_level, int dgn_level)

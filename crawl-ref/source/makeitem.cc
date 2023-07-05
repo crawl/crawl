@@ -1841,7 +1841,7 @@ int items(bool allow_uniques,
         // Sorry. Trying to get a high enough weight of talismans early
         // so that folks can upgrade, etc, without deluging players with
         // them later.
-        if (one_chance_in(100) && !x_chance_in_y(item_level, 100))
+        if (one_chance_in(100) && !x_chance_in_y(item_level * 2, 100))
             item.base_type = OBJ_TALISMANS;
     }
 
