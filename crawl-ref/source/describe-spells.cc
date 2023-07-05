@@ -402,6 +402,8 @@ static dice_def _spell_damage(spell_type spell, int hd)
             return arcjolt_damage(pow, false);
         case SPELL_RESONANCE_STRIKE:
             return resonance_strike_base_damage(hd);
+        case SPELL_POLAR_VORTEX:
+            return polar_vortex_dice(pow, false);
         default:
             break;
     }

@@ -363,6 +363,8 @@ static string mons_human_readable_spell_damage_string(monster* monster,
         case SPELL_IOOD:
             spell_beam.damage = mi_calc_iood_damage(monster);
             break;
+        case SPELL_POLAR_VORTEX:
+            return dice_def_string(polar_vortex_dice(pow, true)) + "*";
         case SPELL_IRRADIATE:
             return mi_calc_irradiate_damage(*monster);
         case SPELL_VAMPIRIC_DRAINING:

@@ -237,6 +237,13 @@ static int _age_needed(int r)
     return sqr(r) * 7 / 5;
 }
 
+dice_def polar_vortex_dice(int pow, bool random)
+{
+    if (random)
+        return dice_def(12, div_rand_round(pow, 15));
+    return dice_def(12, pow / 15);
+}
+
 void polar_vortex_damage(actor *caster, int dur)
 {
     if (!dur)
@@ -374,7 +381,7 @@ void polar_vortex_damage(actor *caster, int dur)
                             || !victim->is_monster()
                             || !god_protects(caster, victim->as_monster(), true)))
                     {
-                        const int base_dmg = div_rand_round(roll_dice(12, rpow), 15);
+                        const int base_dmg = polar_vortex_dice(rpow, true).roll();
                         const int post_res_dmg
                             = resist_adjust_damage(victim, BEAM_ICE, base_dmg);
                         const int post_ac_dmg
