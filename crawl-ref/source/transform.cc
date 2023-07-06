@@ -605,7 +605,9 @@ public:
         const int scale = 100;
         const int lvl = max(get_level(scale), min_skill * scale);
         const int shortfall = max(0, max_skill * scale - lvl);
-        return shortfall * base / ((max_skill - min_skill) * scale);
+        const int div = (max_skill - min_skill) * scale;
+        // Round up.
+        return (shortfall * base + div - 1) / div;
     }
 
     bool can_offhand_punch() const override { return true; }
