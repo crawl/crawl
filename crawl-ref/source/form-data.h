@@ -128,7 +128,7 @@ static const form_entry formdata[] =
     DEFAULT_DURATION, 5, 0, SIZE_LARGE, 12,
     8, 4, 0, true, 30, true, 12, true,
     SPWPN_NORMAL, LIGHTGREY, "", { "hit", "lash", "body-slam", "crush" },
-    FC_DEFAULT, FC_FORBID, FC_ENABLE, false,
+    FC_DEFAULT, FC_ENABLE, FC_ENABLE, false,
     "", 0, "", "", "coil in front of", "flesh",
     { { "constrict", "You have a powerful constriction melee attack."} }
 },
