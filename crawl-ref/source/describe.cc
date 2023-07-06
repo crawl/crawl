@@ -2228,7 +2228,6 @@ static string _describe_talisman_form(const item_def &item)
                 const int base_ac = property(*body_armour, PARM_AC);
                 description += make_stringf(" (-%d from your body armour's base of %d)",
                                             form->get_base_ac_penalty(base_ac), base_ac);
-
             }
         }
     }
