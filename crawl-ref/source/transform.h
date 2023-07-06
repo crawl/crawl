@@ -150,6 +150,7 @@ public:
     virtual int slay_bonus() const { return 0; }
     virtual int get_ac_bonus() const;
     virtual int ev_bonus() const { return 0; }
+    virtual int get_base_ac_penalty(int /*base*/) const { return 0; }
 
     bool enables_flight() const;
     bool forbids_flight() const;

@@ -597,11 +597,15 @@ public:
     }
 
     /**
-     * Find the player's base unarmed damage in this form.
+     * How much AC do you lose from body armour from being in this form?
+     * 100% at `min_skill` or below, 0% at `max_skill` or above.
      */
-    int get_base_unarmed_damage() const override
+    int get_base_ac_penalty(int base) const override
     {
-        return 18 + get_level(1) / 2;
+        const int scale = 100;
+        const int lvl = max(get_level(scale), min_skill * scale);
+        const int shortfall = max(0, max_skill * scale - lvl);
+        return shortfall * base / ((max_skill - min_skill) * scale);
     }
 
     bool can_offhand_punch() const override { return true; }

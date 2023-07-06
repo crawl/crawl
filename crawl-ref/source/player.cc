@@ -5866,14 +5866,13 @@ int player::base_ac_from(const item_def &armour, int scale) const
 
     // The deformed don't fit into body armour very well.
     // (This includes nagas and armataurs.)
-    if (get_armour_slot(armour) == EQ_BODY_ARMOUR
-            && (get_mutation_level(MUT_DEFORMED)
-                || get_mutation_level(MUT_PSEUDOPODS)))
-    {
-        return AC - base / 2;
-    }
+    if (get_armour_slot(armour) != EQ_BODY_ARMOUR)
+        return AC;
 
-    return AC;
+    int penalty = get_form()->get_base_ac_penalty(base);
+    if (get_mutation_level(MUT_DEFORMED) || get_mutation_level(MUT_PSEUDOPODS))
+        penalty += base / 2; // Should we double this if you have both?
+    return max(0, AC - penalty);
 }
 
 /**

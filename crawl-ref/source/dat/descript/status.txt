@@ -471,11 +471,15 @@ Any gloves, cloaks, headgear and boots are melded.
 %%%%
 Blade status
 
-Long, scythe-shaped blades have grown from your hands, increasing your melee
-damage significantly.
+{{
+    local hands = you.hand() .. "s"
+    return "Long, scythe-shaped blades have grown from your " .. hands
+}}, and smaller fragments of metal have grown inside your body, deforming you
+and reducing the effectiveness of body armour. Shapeshifting skill mitigates
+and eventually eliminates the latter effect.
 
-Any equipped weapons are melded, and your success rate with spells is somewhat
-reduced.
+Any equipped weapons, shields, and gloves are melded, and your success rate
+with spells is somewhat reduced.
 %%%%
 Snake status
 
