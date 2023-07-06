@@ -310,9 +310,7 @@ enum misc_item_type
     MISC_QUAD_DAMAGE, // Sprint only
 
     MISC_PHIAL_OF_FLOODS,
-#if TAG_MAJOR_VERSION == 34
     MISC_SACK_OF_SPIDERS,
-#endif
     MISC_ZIGGURAT,
 
     MISC_PHANTOM_MIRROR,
@@ -342,9 +340,7 @@ const vector<misc_item_type> misc_types =
 #endif
     MISC_LIGHTNING_ROD, MISC_PHIAL_OF_FLOODS,
     MISC_QUAD_DAMAGE,
-#if TAG_MAJOR_VERSION == 34
     MISC_SACK_OF_SPIDERS,
-#endif
     MISC_PHANTOM_MIRROR,
     MISC_XOMS_CHESSBOARD,
     MISC_ZIGGURAT,
@@ -425,7 +421,7 @@ enum scroll_type
 #endif
     SCR_IMMOLATION,
     SCR_BLINKING,
-    SCR_MAGIC_MAPPING,
+    SCR_REVELATION,
     SCR_FOG,
     SCR_ACQUIREMENT,
 #if TAG_MAJOR_VERSION == 34
@@ -632,6 +628,9 @@ enum weapon_type
 #endif
 
     WPN_SHORTBOW,
+#if TAG_MAJOR_VERSION > 34
+    WPN_ORCBOW,
+#endif
     WPN_LONGBOW,
 
 #if TAG_MAJOR_VERSION > 34
@@ -677,6 +676,7 @@ enum weapon_type
     WPN_TRIPLE_CROSSBOW,
 
     WPN_CUTLASS,
+    WPN_ORCBOW,
 #endif
 
     NUM_WEAPONS,
@@ -809,5 +809,6 @@ enum item_set_type
     ITEM_SET_BLAST_WANDS,
     ITEM_SET_ALLY_SCROLLS,
     ITEM_SET_AREA_MISCELLANY,
+    ITEM_SET_ALLY_MISCELLANY,
     NUM_ITEM_SET_TYPES
 };

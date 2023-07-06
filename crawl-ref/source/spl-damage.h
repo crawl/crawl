@@ -66,8 +66,10 @@ int discharge_max_damage(int pow);
 spret cast_arcjolt(int pow, const actor &agent, bool fail);
 dice_def arcjolt_damage(int pow, bool random);
 vector<coord_def> arcjolt_targets(const actor &agent, bool actual);
+bool mons_should_fire_plasma(int pow, const actor &agent);
 spret cast_plasma_beam(int pow, const actor &agent, bool fail);
 vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual);
+vector<coord_def> plasma_beam_paths(coord_def source, const vector<coord_def> &targets);
 dice_def base_fragmentation_damage(int pow, bool random);
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool quiet,
@@ -76,6 +78,7 @@ spret cast_fragmentation(int powc, const actor *caster,
                               const coord_def target, bool fail);
 spret cast_polar_vortex(int powc, bool fail);
 void polar_vortex_damage(actor *caster, int dur);
+dice_def polar_vortex_dice(int pow, bool random);
 void cancel_polar_vortex(bool tloc = false);
 coord_def get_thunderbolt_last_aim(actor *caster);
 spret cast_thunderbolt(actor *caster, int pow, coord_def aim,
@@ -118,6 +121,7 @@ void end_flame_wave();
 
 spret cast_imb(int pow, bool fail);
 
+dice_def toxic_bog_damage();
 void actor_apply_toxic_bog(actor *act);
 
 vector<coord_def> find_ramparts_walls();

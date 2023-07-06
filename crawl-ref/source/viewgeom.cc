@@ -389,41 +389,13 @@ void crawl_view_geometry::init_geometry()
 #ifndef USE_TILE_LOCAL
     const bool smallterm = termsz.x < MIN_COLS || termsz.y < MIN_LINES;
     crawl_state.smallterm = smallterm;
-    if (crawl_state.need_save)
-    {
-        // if the game has already started, just fake the terminal size.
-        // this can cause weird glitches, would be more elegant to actually
-        // crop this. (But is it worth it?) crawl_state.smallterm should mostly
-        // prevent drawing if this comes into play.
-        termsz.x = max(termsz.x, MIN_COLS);
-        termsz.y = max(termsz.y, MIN_LINES);
-    }
+    termsz.x = max(termsz.x, MIN_COLS);
+    termsz.y = max(termsz.y, MIN_LINES);
 #endif
     hudsz  = coord_def(HUD_WIDTH, HUD_HEIGHT);
 
     const _inline_layout lay_inline(termsz, hudsz);
     const _mlist_col_layout lay_mlist(termsz, hudsz);
-
-#ifndef USE_TILE_LOCAL
-    if (!crawl_state.need_save)
-    {
-        if (smallterm)
-        {
-            end(1, false, "Terminal too small (%d,%d); need at least (%d,%d)",
-                termsz.x, termsz.y, MIN_COLS, MIN_LINES);
-        }
-        else if (!lay_inline.valid)
-        {
-            const int x_left = lay_inline.leftover_x();
-            const int y_left = lay_inline.leftover_y();
-
-            end(1, false, "Terminal too small (%d,%d); layout needs (%d,%d)",
-                termsz.x, termsz.y,
-                x_left < 0 ? termsz.x - x_left : MIN_COLS,
-                y_left < 0 ? termsz.y - y_left : MIN_LINES);
-        }
-    }
-#endif
 
     const _layout* winner = &lay_inline;
     if (Options.mlist_allow_alternate_layout

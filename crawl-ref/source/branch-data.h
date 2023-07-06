@@ -63,7 +63,7 @@ const Branch branches[NUM_BRANCHES] =
       "Lair", "the Lair of Beasts", "Lair",
       nullptr,
       GREEN, BROWN,
-      'L', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      'L', {}, branch_noise::normal, 8 },
 
     { BRANCH_SWAMP, BRANCH_LAIR, 2, 3, 4, 15,
       brflag::dangerous_end | brflag::spotty,

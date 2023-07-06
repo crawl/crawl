@@ -227,6 +227,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_OPEN_SEA;
     case DNGN_TOXIC_BOG:
         return TILE_DNGN_TOXIC_BOG;
+    case DNGN_MUD:
+        return TILE_LIQUEFACTION;
     case DNGN_FLOOR:
         return TILE_FLOOR_NORMAL;
     case DNGN_ENDLESS_SALT:
@@ -1060,6 +1062,7 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_ADDER:
     case TILEP_MONS_ZOMBIE_WORM:
     case TILEP_MONS_ZOMBIE_LINDWURM:
+    case TILEP_MONS_ZOMBIE_SNAIL:
         return TILEP_MONS_SPECTRAL_SNAKE;
     case TILEP_MONS_ZOMBIE_LIZARD:
         return TILEP_MONS_SPECTRAL_LIZARD;
@@ -1145,6 +1148,7 @@ static tileidx_t _zombie_tile_to_bound_soul(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_DRAKE:
     case TILEP_MONS_ZOMBIE_WYVERN:
     case TILEP_MONS_ZOMBIE_KRAKEN:
+    case TILEP_MONS_ZOMBIE_SNAIL:
         return TILEP_MONS_BOUND_ANIMAL;
     case TILEP_MONS_ZOMBIE_UGLY_THING:
     case TILEP_MONS_ZOMBIE_BEE:
@@ -1208,9 +1212,10 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_QUADRUPED_WINGED:
         return TILEP_MONS_SIMULACRUM_QUADRUPED_LARGE;
     case TILEP_MONS_ZOMBIE_BAT:
-    case TILEP_MONS_ZOMBIE_BIRD: /* no bird simulacrum tile */
-    case TILEP_MONS_ZOMBIE_HARPY:
+    case TILEP_MONS_ZOMBIE_HARPY: // much less dangerous than shrikes
         return TILEP_MONS_SIMULACRUM_BAT;
+    case TILEP_MONS_ZOMBIE_BIRD:
+        return TILEP_MONS_SIMULACRUM_SHRIKE;
     case TILEP_MONS_ZOMBIE_BEE:
     case TILEP_MONS_ZOMBIE_MELIAI:
     case TILEP_MONS_ZOMBIE_HORNET:
@@ -1233,6 +1238,7 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_ADDER:
     case TILEP_MONS_ZOMBIE_WORM:
     case TILEP_MONS_ZOMBIE_LINDWURM:
+    case TILEP_MONS_ZOMBIE_SNAIL:
         return TILEP_MONS_SIMULACRUM_SNAKE;
     case TILEP_MONS_ZOMBIE_LIZARD:
         return TILEP_MONS_SIMULACRUM_LIZARD;
@@ -1334,6 +1340,7 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_ADDER:
     case TILEP_MONS_ZOMBIE_WORM:
     case TILEP_MONS_ZOMBIE_LINDWURM:
+    case TILEP_MONS_ZOMBIE_SNAIL: // but they have no skeletons...
         return TILEP_MONS_SKELETON_SNAKE;
     case TILEP_MONS_ZOMBIE_DRAGON:
     case TILEP_MONS_ZOMBIE_IRON_DRAGON:
@@ -1444,14 +1451,15 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
         { MONS_ELF,                     TILEP_MONS_ZOMBIE_ELF },
         { MONS_FAUN,                    TILEP_MONS_ZOMBIE_FAUN },
         { MONS_SATYR,                   TILEP_MONS_ZOMBIE_FAUN },
-        { MONS_GUARDIAN_SERPENT,        TILEP_MONS_ZOMBIE_GUARDIAN_SERPENT, },
-        { MONS_MERFOLK,                 TILEP_MONS_ZOMBIE_MERFOLK, },
-        { MONS_MINOTAUR,                TILEP_MONS_ZOMBIE_MINOTAUR, },
-        { MONS_SALAMANDER,              TILEP_MONS_ZOMBIE_SALAMANDER, },
-        { MONS_SPRIGGAN,                TILEP_MONS_ZOMBIE_SPRIGGAN, },
-        { MONS_YAKTAUR,                 TILEP_MONS_ZOMBIE_YAKTAUR, },
-        { MONS_YAK,                     TILEP_MONS_ZOMBIE_YAK, },
-        { MONS_BEAR,                    TILEP_MONS_ZOMBIE_BEAR, },
+        { MONS_GUARDIAN_SERPENT,        TILEP_MONS_ZOMBIE_GUARDIAN_SERPENT },
+        { MONS_MERFOLK,                 TILEP_MONS_ZOMBIE_MERFOLK },
+        { MONS_MINOTAUR,                TILEP_MONS_ZOMBIE_MINOTAUR },
+        { MONS_SALAMANDER,              TILEP_MONS_ZOMBIE_SALAMANDER },
+        { MONS_SPRIGGAN,                TILEP_MONS_ZOMBIE_SPRIGGAN },
+        { MONS_YAKTAUR,                 TILEP_MONS_ZOMBIE_YAKTAUR },
+        { MONS_YAK,                     TILEP_MONS_ZOMBIE_YAK },
+        { MONS_BEAR,                    TILEP_MONS_ZOMBIE_BEAR },
+        { MONS_ELEPHANT_SLUG,           TILEP_MONS_ZOMBIE_SNAIL },
     };
 
     struct shape_size_tiles
@@ -1539,6 +1547,7 @@ static bool _bow_offset(const monster_info& mon)
     switch (mon.inv[MSLOT_WEAPON]->sub_type)
     {
     case WPN_SHORTBOW:
+    case WPN_ORCBOW:
     case WPN_LONGBOW:
     case WPN_ARBALEST:
         return false;
@@ -1591,6 +1600,11 @@ tileidx_t tileidx_monster_base(int type, int mon_id, bool in_water, int colour,
         int colour_offset = ugly_thing_colour_offset(colour);
         return tileidx_mon_clamp(ugly_tile, colour_offset);
     }
+
+    case MONS_BLINK_FROG:
+        if (!hash_with_seed(100, mon_id, you.frame_no))
+            return TILEP_MONS_BLINK_FROG_BLINKING;
+        break;
 
     case MONS_HYDRA:
         // Number of heads
@@ -1930,6 +1944,11 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             }
             return TILEP_MONS_SIGMUND_SCYTHELESS;
         }
+
+        case MONS_OGRE:
+            if (today_is_serious())
+                return TILEP_MONS_SWAMP_OGRE;
+            return base;
 
         case MONS_NESSOS:
         {
@@ -2339,6 +2358,7 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
 #endif
     case WPN_SLING:                 return TILE_WPN_SLING;
     case WPN_SHORTBOW:              return TILE_WPN_SHORTBOW;
+    case WPN_ORCBOW:                return TILE_WPN_ORCBOW;
     case WPN_HAND_CROSSBOW:         return TILE_WPN_HAND_CROSSBOW;
     case WPN_ARBALEST:              return TILE_WPN_ARBALEST;
     case WPN_TRIPLE_CROSSBOW:       return TILE_WPN_TRIPLE_CROSSBOW;
@@ -2744,10 +2764,8 @@ static tileidx_t _tileidx_misc(const item_def &item)
         return evoker_charges(item.sub_type) ? TILE_MISC_LIGHTNING_ROD
                                              : TILE_MISC_LIGHTNING_ROD_INERT;
 
-#if TAG_MAJOR_VERSION == 34
     case MISC_SACK_OF_SPIDERS:
         return TILE_MISC_SACK_OF_SPIDERS;
-#endif
 
     // Default for summary menus
     case NUM_MISCELLANY:
@@ -2881,6 +2899,12 @@ tileidx_t tileidx_item(const item_def &item)
                + rnd % tile_main_count(TILE_BOOK_OFFSET);
 
     case OBJ_STAVES:
+        if (is_artefact(item))
+        {
+            const int off = rnd % tile_main_count(TILE_STAFF_RANDART_OFFSET);
+            return TILE_STAFF_RANDART_OFFSET + off;
+        }
+
         if (item.flags & ISFLAG_KNOW_TYPE)
             return TILE_STAFF_ID_FIRST + type;
 
@@ -2901,7 +2925,7 @@ tileidx_t tileidx_item(const item_def &item)
     case OBJ_ORBS:
         if (item.quantity <= 0)
             return TILE_UNCOLLECTED_ORB;
-        return TILE_ORB + ui_random(tile_main_count(TILE_ORB));
+        return TILE_ORB + (you.frame_no % tile_main_count(TILE_ORB));
 
     case OBJ_MISCELLANY:
         return _tileidx_misc(item);
@@ -3190,7 +3214,9 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case BROWN:
         if (bolt.name == "blast of sand")
             return TILE_BOLT_SANDBLAST;
-        else if (bolt.name == "klown pie")
+        if (bolt.name == "entropic shot")
+            return TILE_BOLT_IRON_SHOT + dir;
+        if (bolt.name == "klown pie")
             return TILE_BOLT_PIE + dir;
         break;
 
@@ -3590,8 +3616,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_SHAFT_SELF;
 
     // Evoking items.
-    case ABIL_EVOKE_ASMODEUS:
-        return TILEG_ABILITY_EVOKE_ASMODEUS;
     case ABIL_EVOKE_BLINK:
         return TILEG_ABILITY_BLINK;
     case ABIL_EVOKE_DISPATER:
@@ -4084,20 +4108,23 @@ tileidx_t tileidx_known_brand(const item_def &item)
     if (!item_type_known(item))
         return 0;
 
-    if (item.base_type == OBJ_WEAPONS)
+    switch (item.base_type)
     {
-        const int brand = get_weapon_brand(item);
-        if (brand != SPWPN_NORMAL)
-            return TILE_BRAND_WEP_FIRST + get_weapon_brand(item) - 1;
-    }
-    else if (item.base_type == OBJ_ARMOUR)
-    {
-        const int brand = get_armour_ego_type(item);
-        if (brand != SPARM_NORMAL)
-            return TILE_BRAND_ARM_FIRST + get_armour_ego_type(item) - 1;
-    }
-    else if (item.base_type == OBJ_MISSILES)
-    {
+    case OBJ_WEAPONS:
+        {
+            const int brand = get_weapon_brand(item);
+            if (brand != SPWPN_NORMAL)
+                return TILE_BRAND_WEP_FIRST + get_weapon_brand(item) - 1;
+            break;
+        }
+    case OBJ_ARMOUR:
+        {
+            const int brand = get_armour_ego_type(item);
+            if (brand != SPARM_NORMAL)
+                return TILE_BRAND_ARM_FIRST + get_armour_ego_type(item) - 1;
+            break;
+        }
+    case OBJ_MISSILES:
         switch (get_ammo_brand(item))
         {
 #if TAG_MAJOR_VERSION == 34
@@ -4143,22 +4170,19 @@ tileidx_t tileidx_known_brand(const item_def &item)
         default:
             break;
         }
-    }
-#if TAG_MAJOR_VERSION == 34
-    else if (item.base_type == OBJ_RODS)
-    {
+        break;
+    case OBJ_STAVES:
+        if (is_random_artefact(item)) // normal staff brands handled elsewhere
+            return TILE_STAFF_ID_FIRST + item.sub_type;
+        break;
+    #if TAG_MAJOR_VERSION == 34
+    case OBJ_RODS:
         // Technically not a brand, but still handled here
         return TILE_ROD_ID_FIRST + item.sub_type;
+    #endif
+    default:
+        break;
     }
-#endif
-    return 0;
-}
-
-tileidx_t tileidx_corpse_brand(const item_def &item)
-{
-    if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
-        return 0;
-
     return 0;
 }
 
@@ -4184,6 +4208,11 @@ int enchant_to_int(const item_def &item)
 {
     if (is_random_artefact(item))
         return 4;
+
+    // Dragon scales and troll hides can't have egos.
+    // Only apply their special tiles to randarts.
+    if (armour_is_hide(item))
+        return 0;
 
     switch (item.flags & ISFLAG_COSMETIC_MASK)
     {
@@ -4211,7 +4240,7 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
 
     const int etype = enchant_to_int(item);
 
-    // XXX: only helmets, hats, robes and boots have variants, but it would be nice
+    // XXX: only helmets, hats, orbs, robes and boots have variants, but it would be nice
     // if this weren't hardcoded.
     if (tile == TILE_THELM_HAT)
     {
@@ -4250,6 +4279,9 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
         }
         return tile;
     }
+
+    if (tile == TILE_ARM_ORB && etype == 4)
+        return _modrng(item.rnd, TILE_ARM_ORB_ART_FIRST, TILE_ARM_ORB_ART_LAST);
 
     if (tile == TILE_ARM_ROBE)
     {

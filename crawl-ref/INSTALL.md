@@ -436,8 +436,8 @@ Troubleshooting tips:
 - Use "Rebuild Solution" to make sure all files are rewritten
 - Make sure all projects use `/MD` (or `/MDd` for the debug version)
 - Make sure the appropriate (`/MD` or `/MDd`) CRT libraries are included for
-  SDL, crawl, and tilegen
-  (https://msdn.microsoft.com/en-us/library/abx4dbyh.aspx)
+  SDL, crawl, and
+  [tilegen](https://msdn.microsoft.com/en-us/library/abx4dbyh.aspx).
 - Make sure `libpng.dll`, `SDL2.dll`, and `SDL2_image.dll` are in
   `crawl-ref/source` after building the `Contribs` solution. These are copied
   post-build from their original location in
@@ -549,7 +549,7 @@ automatically if flex/bison is not available.
 ### Code Coverage
 
 Code coverage requires some more package to be installed. See
-[testing.md](crawl-ref/docs/develop/testing.md) for more info.
+[testing.md](docs/develop/testing.md) for more info.
 
 ### Lua
 

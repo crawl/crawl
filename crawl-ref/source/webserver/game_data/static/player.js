@@ -325,7 +325,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
     function update_stats_pane()
     {
         $("#stats_titleline").text(player.name + " " + player.title);
-        $("#stats_wizmode").text(player.wizard ? "*WIZARD*" : "");
+        $("#stats_wizmode").text(player.wizard ? "*WIZARD*" : player.explore ? "*EXPLORE*" : "");
 
         // Setup species
         // TODO: Move to a proper initialisation task
@@ -539,7 +539,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
                 quiver_item: -1,
                 unarmed_attack: "",
                 pos: {x: 0, y: 0},
-                wizard: 0,
+                wizard: 0, explore: 0,
                 depth: 0, place: "",
                 contam: 0,
                 noise: 0,

@@ -15,8 +15,10 @@ the options about rebasing so you avoid making unnecessary merge commits.
 Most development discussion happens on IRC in the \#crawl-dev on Libera, so
 it's good to join and participate in that channel. Use the !tell command
 through Sequell to leave IRC messages to other team or community members you’re
-working with. The channel is also [*logged*](http://s-z.org/crawl-dev/#), if
-you’d like to read or search previous discussions.
+working with. The channel is also
+[*logged*](http://crawl.akrasiac.org/logs/cheibriados/), if you’d like to read
+or search previous discussions. Older discussions were logged
+[*here*](http://s-z.org/crawl-dev/#).
 
 Although nearly all changes are just discussed on IRC, larger projects can be
 written up in an email sent to the [*CRD mailing
@@ -148,7 +150,7 @@ disagree initially or continuously).
 In addition to play-testing, it’s good to watch players through WebTiles, via
 console ttyrecs, videos and other online recordings. Likewise, it can be useful
 to see what players think about certain features by reading online discussion
-on [*Tavern*](https://crawl.develz.org/tavern/), Reddit (see
+on [*Tavern*](https://tavern.dcss.io/), Reddit (see
 [*/r/dcss*](http://www.reddit.com/r/dcss/) and
 [*/r/roguelikes*](http://www.reddit.com/r/roguelikes/)), and other online
 discussion sites. However it’s important that player praise or criticism is

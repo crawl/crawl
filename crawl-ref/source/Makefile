@@ -1329,7 +1329,7 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
             e_m_fields sastrei_chei anon_octopus_wizard arbituhhh_tesu \
             kaonedong_ignis_the_dying_flame kaonedong_menkaure_prince_of_dust \
             philosopheropposite_palentonga_paladin gompami_kohu_xbow \
-            micah_c_ereshkigal SpinningBird_djinn_sears_gnolls
+            micah_c_ereshkigal SpinningBird_djinn_sears_gnolls benadryl_antaeus
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
@@ -1668,7 +1668,9 @@ clean-contrib:
 
 clean-android:
 	$(RM) -r android-project/app/src/main/assets
-	+cd android-project && rm -f local.properties && rm -f app/build.gradle
+	$(RM) android-project/app/src/main/res/drawable/*.png
+	$(RM) android-project/local.properties
+	$(RM) android-project/app/build.gradle
 
 distclean: clean clean-contrib clean-rltiles
 	$(RM) -r morgue saves
@@ -1883,7 +1885,7 @@ macro.o: cmd-name.h
 build-rltiles: .contrib-libs $(RLTILES)/dc-unrand.txt
 ifdef ANDROID
         # force submake to run properly
-	+$(MAKE) -C $(RLTILES) all ANDROID=1 TILES=1 V=1
+	+$(MAKE) -C $(RLTILES) all ANDROID=$(ANDROID) TILES=1 V=1
         # prove that tiles were generated properly
 	grep tile_info rltiles/*.cc| head
 else
@@ -2092,12 +2094,16 @@ mac-app-console: all
 NPROC := $(shell nproc)
 
 android-project/app/build.gradle: android-project/app/build.gradle.in
-	sed -e "s/@CRAWL_VERSION@/${SRC_VERSION}/" -e "s/@NPROC@/${NPROC}/" <android-project/app/build.gradle.in >android-project/app/build.gradle
+	sed -e "s/@ANDROID_VERSION@/${ANDROID}/" -e "s/@CRAWL_VERSION@/${SRC_VERSION}/" -e "s/@NPROC@/${NPROC}/" <android-project/app/build.gradle.in >android-project/app/build.gradle
 android-project/local.properties: android-project/local.properties.in
 	sed -e "s~@HOME@~${HOME}~" <android-project/local.properties.in >android-project/local.properties
 
 android: greet check-fonts docs install-data .android-cflags android-project/local.properties android-project/app/build.gradle
-ifeq ($(ANDROID),)
+ifneq ($(ANDROID),)
+	mkdir -p android-project/app/src/main/res/drawable
+	$(COPY) dat/tiles/logo.png android-project/app/src/main/res/drawable/logo.png
+	$(COPY) dat/tiles/stone_soup_icon-512x512.png android-project/app/src/main/res/drawable/icon.png
+else
 	@echo Please define ANDROID to use this build.
 	@exit 1
 endif

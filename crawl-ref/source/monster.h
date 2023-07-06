@@ -400,7 +400,7 @@ public:
     bool res_petrify(bool /*temp*/ = true) const override;
     int res_constrict() const override;
     int willpower() const override;
-    bool no_tele(bool blink = false) const override;
+    bool no_tele(bool blink = false, bool /*temp*/ = true) const override;
     bool res_corr(bool /*allow_random*/ = true, bool temp = true) const override;
     bool antimagic_susceptible() const override;
 

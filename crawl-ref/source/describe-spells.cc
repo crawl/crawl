@@ -402,6 +402,8 @@ static dice_def _spell_damage(spell_type spell, int hd)
             return arcjolt_damage(pow, false);
         case SPELL_RESONANCE_STRIKE:
             return resonance_strike_base_damage(hd);
+        case SPELL_POLAR_VORTEX:
+            return polar_vortex_dice(pow, false);
         default:
             break;
     }
@@ -517,7 +519,7 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         return describe_resonance_strike_dam(dam);
 
     string mult = "";
-    if (spell == SPELL_MARSHLIGHT)
+    if (spell == SPELL_MARSHLIGHT || spell == SPELL_PLASMA_BEAM)
         mult = "2x";
     else if (spell == SPELL_CONJURE_BALL_LIGHTNING)
         mult = "3x";

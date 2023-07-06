@@ -1292,7 +1292,9 @@ bool interrupt_activity(activity_interrupt ai,
     return false;
 }
 
-// Must match the order of activity_interrupt.h!
+// Must match the order of activity-interrupt-type.h!
+// Also, these names are used in `delay_X` options, so check the options doc
+// as well.
 static const char *activity_interrupt_names[] =
 {
     "force", "keypress", "full_hp", "full_mp", "ancestor_hp", "message",

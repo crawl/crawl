@@ -24,6 +24,31 @@ jobs:
         run: util/unbrace -n
         working-directory: crawl-ref/source
 
+  build_source:
+    permissions:
+      contents: write #  for release creation (svenstaro/upload-release-action)
+
+    name: Source Packages ${{ matrix.arch }}
+    runs-on: ubuntu-latest
+    if: github.event.release.tag_name != null
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # all history
+          submodules: true
+      - name: Fix tags for release # work around https://github.com/actions/checkout/issues/882
+        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/* # will break on a lightweight tag
+      - name: Build source packages
+        run: make -j$(nproc) package-source
+        working-directory: crawl-ref/source
+      - name: Add build to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref }}
+          file: stone_soup-${{ github.ref_name }}*
+          file_glob: true
+
   build_linux:
     permissions:
       contents: read #  to fetch code (actions/checkout)
@@ -92,7 +117,9 @@ jobs:
         with:
           fetch-depth: 0 # all history
           submodules: true
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - name: Fix tags for release # work around https://github.com/actions/checkout/issues/882
+        if: github.event.release.tag_name != null
+        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/* # will break on a lightweight tag
       - name: Set up Python 3.7
         uses: actions/setup-python@v4
         with:
@@ -164,7 +191,8 @@ jobs:
         with:
           fetch-depth: 0 # all history
           submodules: false
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - name: Fix tags for release # work around https://github.com/actions/checkout/issues/882
+        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/* # will break on a lightweight tag
       - name: Install dependencies
         run: ./deps.py --build-opts "${{ matrix.build_opts }}" --appimage
         working-directory: .github/workflows
@@ -196,23 +224,21 @@ jobs:
     name: Debian Packages ${{ matrix.arch }}
     runs-on: ubuntu-latest
     if: github.event.release.tag_name != null
-    strategy:
-      matrix:
-        arch:
-          - i386
-          - amd64
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # all history
           submodules: false
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - name: Fix tags for release # work around https://github.com/actions/checkout/issues/882
+        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/* # will break on a lightweight tag
       - name: Install dependencies
         run: ./deps.py --build-opts TILES=1 --debian-packages
         working-directory: .github/workflows
       - run: sudo cp crawl-ref/docs/develop/release/pbuilderrc /etc/pbuilderrc
-      - name: Create chroot directory
-        run: sudo DEBFULLNAME=Crawl\ bot DEBEMAIL=bot@crawl.develz.org OS=debian DIST=oldstable ARCH=${{ matrix.arch }} cowbuilder --create --basepath /var/cache/pbuilder/oldstable-${{ matrix.arch }}.cow
+      - name: Create i386 chroot directory
+        run: sudo DEBFULLNAME=Crawl\ bot DEBEMAIL=bot@crawl.develz.org OS=debian DIST=oldstable ARCH=i386 cowbuilder --create --basepath /var/cache/pbuilder/oldstable-i386.cow
+      - name: Create amd64 chroot directory
+        run: sudo DEBFULLNAME=Crawl\ bot DEBEMAIL=bot@crawl.develz.org OS=debian DIST=oldstable ARCH=amd64 cowbuilder --create --basepath /var/cache/pbuilder/oldstable-amd64.cow
       - name: Build source packages
         run: make -j$(nproc) package-source
         working-directory: crawl-ref/source
@@ -226,19 +252,22 @@ jobs:
         working-directory: crawl-deb/crawl-${{ github.ref_name }}
       - name: Update changelog if needed
         run: .github/workflows/debian_changelog.py crawl-deb/crawl-${{ github.ref_name }}/debian/changelog ${{ github.ref_name }}
-      - name: Build the packages
-        run: sudo DEBFULLNAME=Crawl\ bot DEBEMAIL=bot@crawl.develz.org OS=debian DIST=oldstable ARCH=${{ matrix.arch }} pdebuild
+      - name: Build the i386 packages
+        run: sudo DEBFULLNAME=Crawl\ bot DEBEMAIL=bot@crawl.develz.org OS=debian DIST=oldstable ARCH=i386 pdebuild
         working-directory: crawl-deb/crawl-${{ github.ref_name }}
+      - name: Build the amd64 packages
+        run: sudo DEBFULLNAME=Crawl\ bot DEBEMAIL=bot@crawl.develz.org OS=debian DIST=oldstable ARCH=amd64 pdebuild
+        working-directory: crawl-deb/crawl-${{ github.ref_name }}
+      - name: Join the release files
+        run: tar Jcvf "${GITHUB_WORKSPACE}/debian.tar.xz" crawl*
+        working-directory: /var/cache/pbuilder/result
       - name: Add build to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref_name }}-debian
-          release_name: ${{ github.ref_name }} Debian packages
-          body: Debian packages for Dungeon Crawl Stone Soup ${{ github.ref_name }}.
-          file: /var/cache/pbuilder/result/crawl*
-          file_glob: true
-          overwrite: true # there are common packages in i386 and amd64
+          tag: ${{ github.ref }}
+          file: debian.tar.xz
+          asset_name: dcss-$tag-debian-all.tar.xz
 
   build_macos:
     permissions:
@@ -272,7 +301,9 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # all history
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - name: Fix tags for release # work around https://github.com/actions/checkout/issues/882
+        if: github.event.release.tag_name != null
+        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/* # will break on a lightweight tag
       - name: Checkout submodules
         shell: bash
         run: |
@@ -319,7 +350,9 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # all history
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - name: Fix tags for release # work around https://github.com/actions/checkout/issues/882
+        if: github.event.release.tag_name != null
+        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/* # will break on a lightweight tag
       - name: Checkout submodules (for crosscompile)
         shell: bash
         run: |
@@ -364,8 +397,8 @@ jobs:
             source='crawl-ref/source/stone_soup-latest-win32-installer.exe'
             dest='dcss-$tag-win32-installer.exe'
           fi
-          echo "name=source::$source" >> $GITHUB_OUTPUT
-          echo "name=dest::$dest" >> $GITHUB_OUTPUT
+          echo "source=${source}" >> $GITHUB_OUTPUT
+          echo "dest=${dest}" >> $GITHUB_OUTPUT
       - name: Add build to release
         if: github.event.release.tag_name != null
         uses: svenstaro/upload-release-action@v2
@@ -385,7 +418,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # all history
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Set up Python 3.7
         uses: actions/setup-python@v4
         with:
@@ -478,7 +510,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # all history
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Set up Python 3.7
         uses: actions/setup-python@v4
         with:
@@ -521,7 +552,9 @@ jobs:
         with:
           fetch-depth: 0 # all history
           submodules: true
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - name: Fix tags for release # work around https://github.com/actions/checkout/issues/882
+        if: github.event.release.tag_name != null
+        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/* # will break on a lightweight tag
       - name: Install dependencies
         run: ./deps.py --build-opts "${{ matrix.build_opts }}"
         working-directory: .github/workflows
@@ -577,7 +610,7 @@ jobs:
           url="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           message="${bold}${col}${red}Build failed${col}${bold} for ${col}${yellow}${branch}${col} @ $short_sha ${col}${magenta}${url}"
 
-          echo "name=message::${message}" >> $GITHUB_OUTPUT
+          echo "message=${message}" >> $GITHUB_OUTPUT
       - uses: rectalogic/notify-irc@v1
         with:
           server: irc.libera.chat

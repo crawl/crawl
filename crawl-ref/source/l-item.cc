@@ -449,7 +449,7 @@ static int l_item_do_name_coloured(lua_State *ls)
     if (item)
     {
         string name   = _item_name(ls, item);
-        int    col    = menu_colour(name, item_prefix(*item));
+        int    col    = menu_colour(name, item_prefix(*item), "item", false);
         string colstr = colour_to_str(col);
 
         ostringstream out;
@@ -1407,20 +1407,32 @@ static int l_item_get_items_at(lua_State *ls)
     s.y = luaL_safe_checkint(ls, 2);
     coord_def p = player2grid(s);
 
-    if (!query_map_knowledge(false, p, [](const map_cell& cell) {
-          return cell.item() && cell.item()->defined();
-        }))
-    {
+    if (!map_bounds(p))
         return 0;
-    }
+
+    const auto item = env.map_knowledge(p).item();
+    // XXX: Sensed items like those from Gnoll's strong nose mutation aren't
+    // fully defined. These currently shouldn't be returned to clua, since many
+    // methods like :name() don't work properly. Ideally they would have a
+    // valid representation we could return.
+    if (!item || !item->defined())
+        return 0;
 
     lua_newtable(ls);
 
     const vector<item_def> items = item_list_in_stash(p);
     int index = 0;
-    for (const auto &item : items)
+    for (const auto &it : items)
     {
-        _clua_push_item_temp(ls, item);
+        _clua_push_item_temp(ls, it);
+        lua_rawseti(ls, -2, ++index);
+    }
+
+    // The item is defined in our map knowledge, but not in our stash, hence
+    // it's a sensed item like the Abyssal rune.
+    if (!index)
+    {
+        _clua_push_item_temp(ls, *item);
         lua_rawseti(ls, -2, ++index);
     }
 

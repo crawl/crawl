@@ -542,23 +542,26 @@ public:
     }
 };
 
-// XX this probably shouldn't use InvMenu, why does it?
-class DescMenu : public InvMenu
+namespace
 {
-public:
-    DescMenu()
-        : InvMenu(MF_SINGLESELECT | MF_ANYPRINTABLE
-                        | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE
-                        | MF_INIT_HOVER)
-    { }
-
-    // TODO: move more stuff into this class
-    bool skip_process_command(int) override
+    // XX this probably shouldn't use InvMenu, why does it?
+    class DescMenu : public InvMenu
     {
-        // override InvMenu behavior
-        return false;
-    }
-};
+    public:
+        DescMenu()
+            : InvMenu(MF_SINGLESELECT | MF_ANYPRINTABLE
+                            | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE
+                            | MF_INIT_HOVER)
+        { }
+
+        // TODO: move more stuff into this class
+        bool skip_process_command(int) override
+        {
+            // override InvMenu behavior
+            return false;
+        }
+    };
+}
 
 static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
                                      vector<item_def *> const &list_items,
@@ -668,6 +671,8 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
                 {
                     str = "         " + fss[j].tostring();
                     me = new MenuEntry(str, MEL_ITEM, 1);
+                    // Not using a MonsterMenuEntry since that would display the tile again.
+                    me->data = (void*)&mi;
                 }
 #endif
                 desc_menu.add_entry(me);
@@ -754,9 +759,7 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
         if (quant == 1)
         {
             // Get selected monster.
-            const MonsterMenuEntry *mme = dynamic_cast<const MonsterMenuEntry *>(&sel);
-            ASSERT(mme);
-            monster_info* m = static_cast<monster_info* >(mme->data);
+            const monster_info* m = static_cast<monster_info* >(sel.data);
             ASSERT(m);
 
 #ifdef USE_TILE

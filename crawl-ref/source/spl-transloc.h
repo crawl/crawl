@@ -16,7 +16,7 @@ void wizard_blink();
 int frog_hop_range();
 spret frog_hop(bool fail, dist *target = nullptr);
 
-bool electric_charge_possible(bool allow_safe_monsters);
+string electric_charge_impossible_reason(bool allow_safe_monsters);
 spret electric_charge(int powc, bool fail, const coord_def &target);
 bool find_charge_target(vector<coord_def> &target_path, int max_range,
                                 targeter *hitfunc, dist &target);
@@ -38,7 +38,7 @@ string weapon_unprojectability_reason();
 struct bolt;
 spret cast_apportation(int pow, bolt& beam, bool fail);
 int golubria_fuzz_range();
-bool golubria_valid_cell(coord_def p);
+bool golubria_valid_cell(coord_def p, bool just_check = false);
 spret cast_golubrias_passage(int pow, const coord_def& where, bool fail);
 
 spret cast_dispersal(int pow, bool fail);

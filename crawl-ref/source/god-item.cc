@@ -96,8 +96,6 @@ bool is_potentially_evil_item(const item_def& item, bool calc_unid)
             return true;
         }
         break;
-    case OBJ_MISCELLANY:
-        return item.sub_type == MISC_CONDENSER_VANE;
     default:
         break;
     }
@@ -132,7 +130,8 @@ bool is_evil_item(const item_def& item, bool calc_unid)
             return item_brand == SPWPN_DRAINING
                    || item_brand == SPWPN_PAIN
                    || item_brand == SPWPN_VAMPIRISM
-                   || item_brand == SPWPN_REAPING;
+                   || item_brand == SPWPN_REAPING
+                   || item_brand == SPWPN_DISTORTION;
         }
     }
 
@@ -185,7 +184,8 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
     if (item.base_type == OBJ_WEAPONS
         && (calc_unid || item_brand_known(item)))
     {
-        return get_weapon_brand(item) == SPWPN_CHAOS;
+        const brand_type brand = get_weapon_brand(item);
+        return brand == SPWPN_CHAOS || brand == SPWPN_DISTORTION;
     }
 
     if (!calc_unid && !item_type_known(item))
@@ -302,6 +302,7 @@ bool is_wizardly_item(const item_def& item, bool calc_unid)
     }
 
     if (is_unrandom_artefact(item, UNRAND_WUCAD_MU)
+        || is_unrandom_artefact(item, UNRAND_MAGE)
         || is_unrandom_artefact(item, UNRAND_MAJIN)
         || is_unrandom_artefact(item, UNRAND_BATTLE)
         || is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF)

@@ -2435,22 +2435,7 @@ void PlayerDoll::_pack_doll()
         p_order[7] = TILEP_PART_LEG;
     }
 
-    // Special case bardings from being cut off.
-    bool is_naga = (m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA
-                    || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA + 1);
-    if (m_save_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
-        && m_save_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED)
-    {
-        flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
-    }
-
-    bool is_ptng = (m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_ARMATAUR
-                    || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_ARMATAUR + 1);
-    if (m_save_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
-        && m_save_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
-    {
-        flags[TILEP_PART_BOOTS] = is_ptng ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
-    }
+    reveal_bardings(m_save_doll.parts, flags);
 
     for (int i = 0; i < TILEP_PART_MAX; ++i)
     {
@@ -2553,13 +2538,9 @@ void UIRoot::resize(int w, int h)
     m_h = h;
     m_needs_layout = true;
 
-    // On console with the window size smaller than the minimum layout,
-    // enlarging the window will not cause any size reallocations, and the
-    // newly visible region of the terminal will not be filled.
-    // Fix: explicitly mark the entire screen as dirty on resize: it won't
-    // be strictly necessary for most resizes, but won't hurt.
 #ifndef USE_TILE_LOCAL
-    expose_region({0, 0, w, h});
+    cgotoxy(1, 1, GOTO_CRT);
+    clrscr();
 #endif
 }
 
@@ -2601,6 +2582,14 @@ bool should_render_current_regions = true;
 
 void UIRoot::render()
 {
+#ifndef USE_TILE_LOCAL
+    if (crawl_state.smallterm)
+    {
+        smallterm_warning();
+        return;
+    }
+#endif
+
     if (!needs_paint || in_headless_mode())
         return;
 

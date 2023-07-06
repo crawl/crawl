@@ -1803,7 +1803,7 @@ NAME:   minmay_rotating_lava
 TAGS:   no_monster_gen transparent
 DEPTH:  D:10-
 MONS:   hell hound, hell knight band, hell knight
-ITEM:   potion of flight ident:type q:3
+ITEM:   potion of enlightenment ident:type q:3
 KMASK:  .123*< = opaque
 KPROP:  .123*< = no_tele_into
 KFEAT:  ' = floor
@@ -1918,7 +1918,7 @@ ITEM:    book of callings w:5 / book of the wilderness w:20 / grand grimoire w:5
 ITEM:    manual of summonings
 ITEM:    amulet of magic regeneration w:5 ident:type / \
             amulet of magic regeneration randart
-ITEM:    box of beasts
+ITEM:    any ally misc
 KITEM:   % = any, any / gold / nothing, any / nothing
 KITEM:   _ = any ally scroll ident:type , any ally scroll ident:type / nothing
 KFEAT:   _ = altar_sif_muna
@@ -3213,6 +3213,121 @@ xxxcccxcccxcccxxx
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:   nicolae_demonic_statue_gallery
+TAGS:   transparent
+DEPTH:  D:9-12
+KMONS:  5 = lesser demon
+KMONS:  4 = common demon
+NSUBST: D = 2=4 / 2=45 / 2=5 / .5
+MAP
+ ccGl@lGcc
+ccGl...lGcc
+cGl..D..lGc
+Gl.D.l.D.lG
+l...lGl...l
+@.DlGcGlD.@
+l...lGl...l
+Gl.D.l.D.lG
+cGl..D..lGc
+ccGl...lGcc
+ ccGl@lGcc
+ENDMAP
+
+# It's mostly ufetubi. It's fine. You'll be fine.
+NAME:    nicolae_fort_ynox
+TAGS:    transparent no_pool_fixup
+DEPTH:   D:9-12
+KMONS:   }])> = ynoxinul
+KMONS:   5 = ufetubus
+KFEAT:   - = iron_grate
+KFEAT:   } = }
+KFEAT:   ] = ]
+KFEAT:   ) = )
+KFEAT:   > = >
+SHUFFLE: }])>>
+SUBST:   ` = 5...
+MAP
+    .........
+   ..wwwwwww..
+  ..wwv---vww..
+ ..wwvv}])vvww..
+..wwvv.....vvww..
+.wwvv..```..vvww.
+.wvv..`````..vvw.
+.w-$.```````.$-w.
+.w-$.```G```.$-w.
+.w-$.```````.$-w.
+.wvv..`````..vvw.
+.wwvv..```..vvww.
+..wwvv.....vvww..
+ ..wwvv...vvww..
+  ..wwv+++vww..
+   ..ww...ww..
+    .........
+ENDMAP
+
+NAME:    nicolae_neqoxec_dot_bat
+TAGS:    transparent
+DEPTH:   D:9-12
+KMONS:   3 = neqoxec
+KMONS:   4 = chaos spawn / hellwing / ice devil / orange demon / red devil / \
+             rust devil
+NSUBST:  3 = 2=3 / 4
+SUBST:   4 = 44., % = %%%*
+MAP
+           cccccc
+         cccccccccc
+       cccc......cccc
+  cc@@ccc..........ccc@@cc
+ cc...cc....cccc....cc...cc
+ cc..cc...cccccccc...cc..cc
+cc...cc..ccc%..%ccc..cc...cc
+cc..cc.......3.3.cc.......cc
+cc..cc.....3......cc......cc
+cc..cccccc...GG.3.cccccc..cc
+cc..cccccc.3.GG...cccccc..cc
+cc......cc......3.....cc..cc
+cc.......cc.3.3.......cc..cc
+cc...cc..ccc%..%ccc..cc...cc
+ cc..cc...cccccccc...cc..cc
+ cc...cc....cccc....cc...cc
+  cc@@ccc..........ccc@@cc
+       cccc......cccc
+         cccccccccc
+           cccccc
+ENDMAP
+
+# oh nice you can put ' in vault names
+NAME:   nicolae_where_there's_smoke
+TAGS:   transparent
+DEPTH:  D:9-12
+KITEM:  2 = % / nothing
+KITEM:  3 = *
+KMONS:  2 = nothing / hellwing / red devil / rust devil
+KMONS:  3 = patrolling smoke demon
+KFEAT:  - = iron_grate
+NSUBST: ` = . / c, c = 2:. / 3:.c / c
+SUBST:  Cc = cccc-l, L = ll.
+MAP
+    .........
+  .............
+ ......cLc......
+ ....LL`c`LL....
+....Lccc.cccL....
+...LcCL.2.LCcL...
+...LcLLL.LLLcL...
+..c`c.L...L.c`c..
+..Lc.2..3..2.cL..
+..c`c.L...L.c`c..
+...LcLLL.LLLcL...
+...LcCL.2.LCcL...
+....Lccc.cccL....
+ ....LL`c`LL....
+ ......cLc......
+  .............
+    .........
+ENDMAP
+
 ################################################################################
 #
 # <<5>> Stationary shooters: statues, oklobs, fog generators.
@@ -3786,14 +3901,12 @@ ENDMAP
 # tree of life.
 NAME:    pf_eden
 TAGS:    no_monster_gen
-DEPTH:   D:13-
+DEPTH:   Elf
 MONS:    patrolling cherub, patrolling dancing weapon ; great sword ego:flaming
 KMONS:   p = plant
-# TODO: this potion once was an apple, maybe just remove this with no apple
-# flavor possible?
-ITEM:    potion of ambrosia ident:type
+ITEM:    randbook title:Forbidden_Fruit owner:the_Tempter numspells:2 spells:summon_mana_viper&discord
 NSUBST:  1 = 2:1 / *:.
-NSUBST:  d = 2:d / *:.
+NSUBST:  d = 1:d / *:.
 SUBST:   3 = 33.
 RTILE:   x = wall_lair
 FTILE:   12p.dt@ = floor_lair
@@ -7138,6 +7251,35 @@ cccccFccccccFccccc
 cccc   cccc   cccc
 ENDMAP
 
+# So named because the layout started as a doodle in my notebook.
+NAME:  nicolae_doodle_vault
+TAGS:  transparent
+DEPTH: D:8-
+KITEM: * = * w:30 / |
+KMONS: * = 9 w:30 / 8
+SUBST: 0 = .000, % = .%%%
+MAP
+  xx@xxxxxxxxx@xx
+  x......x......x
+xxx.xxxx.x.xxxx.xxx
+x...x....x....x...x
+@.xxx.x.xxx.x.xxx.@
+x.x..0x0...0x0..x.x
+x.x.xxxxx.xxxxx.x.x
+x.x..0x*%.%*x0..x.x
+x...x.x%xxx%x.x...x
+xxxxx...xxx...xxxxx
+x...x.x%xxx%x.x...x
+x.x..0x*%.%*x0..x.x
+x.x.xxxxx.xxxxx.x.x
+x.x..0x0...0x0..x.x
+@.xxx.x.xxx.x.xxx.@
+x...x....x....x...x
+xxx.xxxx.x.xxxx.xxx
+  x......x......x
+  xx@xxxxxxxxx@xx
+ENDMAP
+
 ################################################################
 #
 # <<8>> Minivaults with monsters guarding a thematic item.
@@ -7972,11 +8114,11 @@ ccc2.d.2ccc
 ccccccccccc
 ENDMAP
 
-NAME:   hellmonk_guarded_unrand_staff_of_battle
+NAME:   hellmonk_guarded_unrand_sphere_of_battle
 TAGS:   transparent
 DEPTH:  D:8-
 WEIGHT: 3
-ITEM:   staff_of_battle no_pickup
+ITEM:   sphere_of_battle no_pickup
 MONS:   tengu conjurer, tengu reaver
 : if you.depth() < 13 then
 SUBST:  D = 1.
@@ -8346,7 +8488,8 @@ NAME:   hellmonk_guarded_unrand_zhor
 TAGS:   transparent no_monster_gen
 DEPTH:  D:7-, Lair
 WEIGHT: 3
-ITEM:   skin_of_zhor no_pickup, box of beasts
+ITEM:   skin_of_zhor no_pickup, box of beasts w:100 /\
+        scroll of summoning ident:all q:3 w:1
 MONS:   rime drake, torpor snail, ice dragon
 NSUBST: d = d / 1
 SUBST:  e = e..

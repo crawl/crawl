@@ -90,7 +90,8 @@ class Menu;
 
 int menu_colour(const string &itemtext,
                 const string &prefix = "",
-                const string &tag = "");
+                const string &tag = "",
+                bool strict=true);
 
 const int MENU_ITEM_STOCK_COLOUR = LIGHTGREY;
 class MenuEntry

@@ -137,6 +137,10 @@ bool target_met(skill_type sk, unsigned int target);
 bool check_training_target(skill_type sk);
 bool check_training_targets();
 
+void set_training_status(skill_type sk, training_status st);
+void set_magic_training(training_status st);
+void cleanup_innate_magic_skills();
+
 static const skill_type skill_display_order[] =
 {
     SK_TITLE,

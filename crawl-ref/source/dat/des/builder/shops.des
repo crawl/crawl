@@ -92,7 +92,7 @@ ENDMAP
 
 NAME:   shop
 TAGS:   allow_dup extra shop transparent
-WEIGHT: 100
+WEIGHT: 270
 KFEAT:  O = any shop
 MAP
 O
@@ -229,7 +229,6 @@ ENDMAP
 
 NAME: nicolae_shop_window_shopping
 TAGS: allow_dup extra shop transparent
-WEIGHT: 5
 KFEAT: O = any shop
 MAP
 xxm.
@@ -500,6 +499,371 @@ x-----x
 xx...xx
 ENDMAP
 
+NAME:    nicolae_book_shop_shelving
+TAGS:    transparent shop extra allow_dup
+WEIGHT:  5
+KFEAT:   S = book shop
+SHUFFLE: DE
+SUBST:   D = c, E = .
+TILE:    c = wall_studio
+# Console players won't get to enjoy the bookshelf tiles. As consolation,
+# I'm reusing the color scheme from nicolae_shop_i_like_big_books.
+COLOUR: c : blue / red / magenta / lightgreen / lightred / lightmagenta / yellow
+MAP
+EDcDE
+D.E.D
+cESEc
+D.E.D
+EDcDE
+ENDMAP
+
+NAME:  nicolae_shop_back_alley_shop
+TAGS:  transparent extra shop allow_dup
+KFEAT: S = any shop
+KFEAT: - = iron_grate
+MAP
+xxxxxxx
+@.....@
+xx.xxxx
+xx.xS.x
+xx.x-.x
+xx....x
+xxxxxxx
+ENDMAP
+
+NAME:   nicolae_shop_dealshenge
+TAGS:   transparent extra shop allow_dup
+WEIGHT: 3
+KFEAT:  S = antiques shop / antique weapon shop / antique armour shop
+MAP
+.A.
+ASA
+.A.
+ENDMAP
+
+NAME:   nicolae_shop_drivethru
+TAGS:   extra shop
+WEIGHT: 5
+KFEAT:  S = any shop
+MARKER: D = lua:transp_loc("nico_drivethru_in")
+MARKER: E = lua:transp_dest_loc("nico_drivethru_in")
+MARKER: F = lua:transp_loc("nico_drivethru_out")
+MARKER: H = lua:transp_dest_loc("nico_drivethru_out")
+MAP
+xxxxxxxxxxxxx
+xxxcccccccxxx
+...n.....n...
+@.DnE.S.FnH.@
+...n.....n...
+xxxcccccccxxx
+xxxxxxxxxxxxx
+ENDMAP
+
+NAME:    nicolae_shop_gaudy_bauble
+TAGS:    transparent extra shop allow_dup
+WEIGHT:  5
+KFEAT:   S = jewellery shop
+: if crawl.coinflip() then
+SHUFFLE: DF
+SUBST:   FH = .
+SHUFFLE: DEJ
+SUBST:   D : v, E : b, J : bv
+: else
+SHUFFLE: EF
+SUBST:   FJ = .
+SHUFFLE: DEH
+SUBST:   D : v, E : b, H : bv
+: end
+SHUFFLE: bv
+MAP
+.......
+.DEFED.
+.EHJHE.
+.FJSJF.
+.EHJHE.
+.DEFED.
+.......
+ENDMAP
+
+NAME:    nicolae_shop_getting_attention
+TAGS:    transparent extra shop allow_dup
+WEIGHT:  3
+KFEAT:   S = any shop
+SHUFFLE: pqrs
+MARKER:  p = lua:fog_machine { cloud_type = "black smoke", \
+                pow_min = 5, pow_max = 5, delay_min = 50, delay_max = 80, \
+                size = 1, walk_dist = 1, spread_rate = 10 }
+MARKER:  q = lua:fog_machine { cloud_type = "grey smoke", \
+                pow_min = 5, pow_max = 5, delay_min = 50, delay_max = 80, \
+                size = 1, walk_dist = 1, spread_rate = 10 }
+MARKER:  r = lua:fog_machine { cloud_type = "blue smoke", \
+                pow_min = 5, pow_max = 5, delay_min = 50, delay_max = 80, \
+                size = 1, walk_dist = 1, spread_rate = 10 }
+MARKER:  s = lua:fog_machine { cloud_type = "purple smoke", \
+                pow_min = 5, pow_max = 5, delay_min = 50, delay_max = 80, \
+                size = 1, walk_dist = 1, spread_rate = 10 }
+MAP
+.....
+.p.q.
+..S..
+.s.r.
+.....
+ENDMAP
+
+# Q: Why are there strange fluids leaking from your potions shop?
+# A: Don't worry about it. Are you going to buy something or not?
+NAME:   nicolae_shop_industrial_runoff
+TAGS:   transparent shop extra allow_dup no_pool_fixup
+WEIGHT: 5
+KFEAT:  S = distillery shop
+NSUBST: W = W / w / Ww
+COLOUR: W = lightgreen / cyan w:5
+COLOUR: w = green / blue w:5
+MAP
+.....
+.WWW.
+.WSW.
+.WWW.
+.....
+ENDMAP
+
+NAME:  nicolae_shop_just_a_little_nook
+TAGS:  transparent extra shop allow_dup
+KFEAT: S = any shop
+MAP
+xxxxx
+xcccx
+xcScx
+@...@
+ENDMAP
+
+NAME:    nicolae_shop_mannequins
+TAGS:    extra shop transparent
+WEIGHT:  5
+KMONS:   p = dancing weapon ; rapier | triple sword | executioner's axe | \
+               great mace | bardiche | lajatang | triple crossbow | \
+               demon blade | demon trident | demon whip | quick blade | \
+               giant club | giant spiked club
+KMONS:   q = animated armour ; plate armour | crystal plate armour | \
+               pearl dragon scales | shadow dragon scales | \
+               storm dragon scales | gold dragon scales
+KMONS:   r = walking crystal tome / walking divine tome / \
+             walking earthen tome / walking frostbound tome
+KFEAT:   P = weapon shop
+KFEAT:   Q = armour shop
+KFEAT:   R = book shop
+KMASK:   pqr` = opaque
+KMASK:   pqr` = no_trap_gen
+KMASK:   pqr` = no_item_gen
+KMASK:   pqr` = no_monster_gen
+KPROP:   pqr` = no_tele_into
+SHUFFLE: Pp/Qq/Rr
+MAP
+.........
+.nnn.nnn.
+.n`n.n`n.
+.npnPnpn.
+.n`n.n`n.
+.nnn.nnn.
+.........
+ENDMAP
+
+# Trying out new ways to generate a variable-size vault. This particular
+# approach is deeply cursed and I can't encourage anyone else to try it.
+# ...but it does work.
+NAME:  nicolae_shop_peninsula
+TAGS:  no_pool_fixup shop extra allow_dup
+KFEAT: S = any shop
+{{
+local i = crawl.random2(6) + 2
+for j = 1, i, 1 do
+   map("w@w")
+end
+map("wSw")
+map("www")
+subst("w : wwwwttl")
+}}
+
+NAME:  nicolae_shop_pleasant_corner_grove
+TAGS:  transparent shop extra allow_dup
+KFEAT: S = any shop
+KFEAT: D = demonic_tree
+SUBST: t : t:35 D:1
+MAP
+xxxx
+xS.t
+x...
+xt.@
+ENDMAP
+
+NAME:   nicolae_shop_real_fake_doors
+TAGS:   transparent extra shop
+KFEAT:  S = any shop
+SUBST:  G : GTt m:5 U:5
+:lua_marker('+', props_marker { connected_exclude="true" })
+MAP
+ .......
+...x+x...
+..Gx+xG..
+.xxx+xxx.
+.+++S+++.
+.xxx+xxx.
+..Gx+xG..
+...x+x...
+ .......
+ENDMAP
+
+NAME:   nicolae_shop_rolled_up
+TAGS:   transparent extra shop allow_dup
+WEIGHT: 5
+KFEAT:  S = scroll shop
+MAP
+.........
+.c.ccccc.
+.c.c...c.
+.c.c.c.c.
+.c.cSc.c.
+.c.ccc.c.
+.c.....c.
+.ccccccc.
+.........
+ENDMAP
+
+NAME:    nicolae_shop_rolling_square
+TAGS:    transparent extra shop allow_dup
+KFEAT:   S = any shop
+SHUFFLE: DEF, HJ
+SUBST:   D = +, EF = c, c : cbv, H = ., J : T., T = TTTTV
+MAP
+    cDc
+  cEc.F
+cFc...cc
+D..HJH.E
+cc.JSJ.cc
+ E.HJH..D
+ cc...cFc
+  F.cEc
+  cDc
+ENDMAP
+
+NAME:   nicolae_shop_scrapyard
+TAGS:   transparent extra shop allow_dup
+WEIGHT: 2
+: if crawl.coinflip() then
+KITEM:  s = dagger damaged ego:none / falchion damaged ego:none / \
+            hand axe damaged ego:none / club damaged ego:none / \
+            spear damaged ego:none / sling damaged ego:none
+KFEAT:  S = weapon shop / antique weapon shop w:5
+: else
+KITEM:  s = robe damaged ego:none / leather armour damaged ego:none / \
+            ring mail damaged ego:none / buckler damaged ego:none / \
+            helmet damaged ego:none w:2 / hat damaged ego:none w:2 / \
+            pair of boots damaged ego:none w:2 / cloak damaged ego:none w:2 / \
+            pair of gloves damaged ego:none w:2
+KFEAT:  S = armour shop / antique armour shop w:5
+: end
+MAP
+.....
+.s.s.
+..S..
+.s.s.
+.....
+ENDMAP
+
+NAME:   nicolae_shop_tiny_glass
+TAGS:   transparent extra shop allow_dup
+KFEAT:  S = any shop
+KFEAT:  + = closed_clear_door
+NSUBST: m = + / m
+MAP
+mmm
+mSm
+mmm
+ENDMAP
+
+NAME:  nicolae_shop_tiny_real_fake_doors
+TAGS:  transparent extra shop allow_dup
+KFEAT: S = any shop
+: lua_marker('+', props_marker { connected_exclude="true" })
+MAP
++++
++S+
++++
+ENDMAP
+
+NAME:  nicolae_shop_tiny_statue_garden
+TAGS:  transparent allow_dup extra shop
+KFEAT: S = any shop
+# 5% chance of an enterprising orc leaving the mines to start a business out
+# in the rest of the Dungeon.
+SUBST: G : G:19 I:1
+MAP
+G.G
+.S.
+G.G
+ENDMAP
+
+NAME:   nicolae_shop_tiny_waterfront
+TAGS:   allow_dup no_pool_fixup transparent extra shop
+KFEAT:  S = any shop
+NSUBST: w = @ / w
+MAP
+www
+wSw
+www
+ENDMAP
+
+NAME:   nicolae_shop_wares_on_display
+TAGS:   transparent shop extra allow_dup
+DEPTH:  !D:1-3
+WEIGHT: 2
+KFEAT:  S = general shop
+MAP
+xxxxxxxxx
+x%%+S+%%x
+mmmm.mmmm
+.........
+@.......@
+ENDMAP
+
+# This merchant does not tolerate thieves. Fortunately, since players can't
+# steal from shops, you probably have nothing to worry about.
+NAME:   nicolae_shop_gibbet_a_chance
+TAGS:   shop extra transparent
+WEIGHT: 5
+KFEAT:  S = any shop
+KFEAT:  - = iron_grate
+KPROP:  DEFH = no_tele_into
+KMASK:  DEFH = no_monster_gen
+KMASK:  DEFH = no_item_gen
+KMASK:  DEFH = no_trap_gen
+KMASK:  DEFH = opaque
+{{
+-- The skellingtons are purely decorative, but also the only decorations, and
+-- unlike other kinds of vaults, it's likely that the player will come back to a
+-- shop after a long time on other levels. So, set them to be fully never_decay
+-- rather than using a delayed_decay trigger. That way, players don't come back
+-- to empty gibbets once they've gone and rounded up some cash.
+local skeletons = {"human", "elf", "orc", "ogre", "merfolk", "naga", "kobold",
+                   "gnoll", "minotaur", "spriggan", "troll", "felid",
+                   "draconian", "tengu", "demonspawn", "demigod"}
+kitem("D = never_decay " .. util.random_from(skeletons) .. " skeleton" )
+kitem("E = never_decay " .. util.random_from(skeletons) .. " skeleton" )
+kitem("F = never_decay " .. util.random_from(skeletons) .. " skeleton" )
+kitem("H = never_decay " .. util.random_from(skeletons) .. " skeleton" )
+}}
+MAP
+   .---
+   .-E-
+---.---
+-D-......
+---.S.---
+......-F-
+  ---.---
+  -H-.
+  ---.
+ENDMAP
+
 ###############################################################################
 # <<2>> Themed.
 #       Not tagged shop, but still contains one. Can have threats, and can have
@@ -763,8 +1127,9 @@ WEIGHT: 1
 SHUFFLE: -m
 SUBST: - = .
 KFEAT: m = iron_grate
-KFEAT: S = antiques shop type:Antique suffix:Artefacts count:6 ; \
-   any weapon randart | any armour randart | any jewellery randart w:4
+KFEAT: S = antiques shop type:Antique suffix:Artefacts count:8 ; \
+   any weapon randart | any armour randart | any jewellery randart w:4 | \
+   any magical staff randart w:4
 MAP
 .......
 .-vmv-.
@@ -784,7 +1149,7 @@ SHUFFLE: Aa/Bb
 SUBST: Aa = t, B = ..t, b = .
 KFEAT: S = general shop type:Island suffix:Escapes count:7 ; \
  scroll of blinking | scroll of teleportation w:15 | scroll of fog w:8 | \
- potion of flight | potion of invisibility w:8 | potion of haste w:3 | \
+ potion of enlightenment | potion of invisibility w:8 | potion of haste w:3 | \
  ring of flight w:5 | wand of digging w:4
 MAP
   wwwwwwwww
@@ -840,7 +1205,7 @@ KFEAT:  S = weapon shop type:Hydra suffix:Hut count:7 ; falchion ego:flaming | \
     long sword ego:flaming | scimitar ego:flaming | great sword ego:flaming | \
     hand axe ego:flaming | broad axe ego:flaming | war axe ego:flaming | \
     battleaxe ego:flaming | lajatang ego:flaming | halberd ego:flaming | \
-    glaive ego:flaming | hand crossbow ego:freezing | \
+    glaive ego:flaming | hand crossbow ego:freezing | orcbow ego:freezing | \
     arbalest ego:freezing | shortbow ego:freezing | longbow ego:freezing
 FTILE:  -1wP = floor_lair
 COLOUR: -1 = brown
@@ -1057,7 +1422,7 @@ KITEM:  E = throwing net q:1
 # The slightly-higher weights go to the better weapons, because I'm nice.
 KFEAT:  S = weapon shop type:Firing suffix:Range ; dart w:14 | \
         throwing net w:14 | boomerang  w:14 | javelin w:14 | large rock w:14 \
-        | sling | shortbow | longbow | hand crossbow | arbalest | \
+        | sling | shortbow | orcbow | longbow | hand crossbow | arbalest | \
         triple crossbow | manual of throwing w:1 | manual of ranged weapons w:1
 NSUBST: D = E / D
 SUBST:  ' = H .:25
@@ -1366,6 +1731,23 @@ MAP
 ...........
 ENDMAP
 
+NAME:   nicolae_shop_i_like_small_books_too
+TAGS:   transparent extra
+DEPTH:  D:4-, Depths, Elf, Snake
+KFEAT:  S = book shop type:Tiny suffix:Tomes count:8 ; \
+            any randbook numspells:1
+KFEAT:  p = c
+COLOUR: p : blue / red / magenta / lightgreen / lightred / lightmagenta / yellow
+MAP
+.......
+.ppppp.
+..cccp.
+...Scp.
+..cccp.
+.ppppp.
+.......
+ENDMAP
+
 NAME:  nicolae_shop_vocational
 TAGS:  transparent
 DEPTH: D, Depths, Orc, Elf, Shoals, Snake, Vaults
@@ -1377,6 +1759,58 @@ MAP
 ...S...
 .T...T.
 .......
+ENDMAP
+
+# Featuring everybody's favorite sketchy Mesopotamian copper merchant.
+# Sells metal goods, which may or may not actually be fine. Only half the items
+# will have the damaged tag, so it's still possible to get something good, and
+# even the damaged goods can still have egos. But it's an antique store, so you
+# can't tell which items are good and which aren't.
+# Layout inspired by the map here:
+# https://en.wikipedia.org/wiki/Complaint_tablet_to_Ea-nasir
+NAME:   nicolae_ea-nasir_strikes_again
+TAGS:   transparent extra
+DEPTH:  D:4-10
+WEIGHT: 2
+{{
+-- Rather than writing the whole list out myself, I'll make lua do it.
+local metal_goods = {"ring mail", "scale mail", "chain mail", "plate armour",
+   "buckler", "kite shield", "tower shield", "helmet", "rapier", "war axe",
+   "short sword", "scimitar", "great sword", "broad axe", "battleaxe", "glaive",
+   "morningstar", "dire flail", "great mace", "trident", "arbalest", "bardiche",
+   "executioner's axe", "eveningstar", "lajatang", "hand crossbow",
+   "triple crossbow"}
+local inventory = {}
+for _, good in ipairs(metal_goods) do
+   table.insert(inventory, good .. " damaged w:13")
+   table.insert(inventory, good)
+   table.insert(inventory, good .. " good_item w:3")
+end
+kfeat("E = antiques shop name:Ea-nāṣir type:Fine_Metal suffix:Goods ; " ..
+   util.join(" | ", inventory))
+}}
+# The scrolls represent the complaint tablets, many of which were found in
+# the bottom-left room, with the rest throughout the house. Scroll count odds:
+# 2 ~ 19.75%, 3 ~ 39.51%, 4 ~ 29.63%, 5 ~ 9.88%, 6 ~ 1.23%
+KITEM:  S = any scroll
+NSUBST: ` = 2=S / 2=S.. / ., . = 2=S.. / .
+SUBST:  - = ., { = {[(
+MAP
+         xxxxxxx
+         x-------@
+         x----xxx-
+  x    xxxxxx+x.+-
+ -xxxxxx...x..x.x-
+ @-----+...x..xxx-
+xxxxxxxx...x..x.--
+ x``x..xx+xxx+xxx-
+ x``+..x.......x.-
+ x``x..+...E...xx-
+ x``x..x.......x.--
+ x``x..xx+xxx+xxxxx
+ x``x..x...x.....{x
+ xxxxxxxxxxxxxxxxxx
+xx
 ENDMAP
 
 ###############################################################################
@@ -1530,4 +1964,47 @@ wwwwwwwww-wwwwwwwww
     xt.......tx
     xtttttttttx
     xxxxxxxxxxx
+ENDMAP
+
+# 3 shops, on different "floors"
+NAME:  nicolae_shop_distant_corner_stores
+TAGS:  transparent luniq_floating_shops extra
+DEPTH: D:4-, !D:$, Depths:2-, !Depths:$
+KFEAT: Ss = any shop
+KMASK: {[()]}T`s = opaque
+SUBST: { = {[(, } = }])
+MAP
+ccccc.
+cT``n..
+c`{`n...
+c``sn..G.
+cnnnn.....
+.....S.....
+ .....nnnnc
+  .G..ns``c
+   ...n`}`c
+    ..n``Tc
+     .ccccc
+ENDMAP
+
+# 25% chance of 4 shops, 50% chance of 5, 25% of 6
+NAME:    nicolae_shop_national_dungeon_mall
+TAGS:    transparent no_pool_fixup luniq_floating_shops extra
+DEPTH:   D:5-, Depths
+WEIGHT:  2
+KFEAT:   S = any shop
+SHUFFLE: DE, FH
+SUBST:   DF = S, EH = T, T = T:16 U:1 V:1
+COLOUR:  . = green
+FTILE:   ._GSTUV = floor_grass
+MAP
+.....................
+.G..D..E..D..E..D..G.
+.....................
+.G.WWWWWWWWWWWWWWW.G.
+...wwwwwwwwwwwwwww...
+.G.WWWWWWWWWWWWWWW.G.
+.....................
+.G..F..H..F..H..F..G.
+.....................
 ENDMAP

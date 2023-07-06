@@ -343,7 +343,7 @@ static void _populate_armour_intrinsic_artps(const armour_type arm,
     proprt[ARTP_REGENERATION] += armour_type_prop(arm, ARMF_REGENERATION);
 }
 
-static map<stave_type, artefact_prop_type> staff_artps = {
+static map<stave_type, artefact_prop_type> staff_resist_artps = {
     { STAFF_FIRE,   ARTP_FIRE },
     { STAFF_COLD,   ARTP_COLD },
     { STAFF_POISON, ARTP_POISON },
@@ -352,10 +352,23 @@ static map<stave_type, artefact_prop_type> staff_artps = {
     // nothing for conj or earth
 };
 
+static map<stave_type, artefact_prop_type> staff_enhancer_artps = {
+    { STAFF_FIRE,           ARTP_ENHANCE_FIRE },
+    { STAFF_COLD,           ARTP_ENHANCE_ICE },
+    { STAFF_POISON,         ARTP_ENHANCE_POISON },
+    { STAFF_DEATH,          ARTP_ENHANCE_NECRO },
+    { STAFF_AIR,            ARTP_ENHANCE_AIR },
+    { STAFF_CONJURATION,    ARTP_ENHANCE_CONJ },
+    { STAFF_EARTH,          ARTP_ENHANCE_EARTH },
+};
+
 static void _populate_staff_intrinsic_artps(stave_type staff,
                                             artefact_properties_t &proprt)
 {
-    artefact_prop_type *prop = map_find(staff_artps, staff);
+    artefact_prop_type *prop = map_find(staff_resist_artps, staff);
+    if (prop)
+        proprt[*prop] = 1;
+    prop = map_find(staff_enhancer_artps, staff);
     if (prop)
         proprt[*prop] = 1;
 }
@@ -480,7 +493,9 @@ static void _add_randart_weapon_brand(const item_def &item,
     if (item_props[ARTP_BRAND] != SPWPN_NORMAL)
         return;
 
-    if (is_range_weapon(item))
+    if (is_blessed_weapon_type(item.sub_type))
+        item_props[ARTP_BRAND] = SPWPN_HOLY_WRATH;
+    else if (is_range_weapon(item))
     {
         item_props[ARTP_BRAND] = random_choose_weighted(
             2, SPWPN_SPEED,
@@ -570,11 +585,6 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         // weapons already have slaying. feels weird on staves
         case ARTP_SLAYING:
             return item_class != OBJ_WEAPONS && item_class != OBJ_STAVES;
-        // prevent properties that barding-wearers already have
-        case ARTP_SEE_INVISIBLE:
-            return !item.is_type(OBJ_ARMOUR, ARM_BARDING);
-        case ARTP_RAMPAGING:
-            return non_swappable && !item.is_type(OBJ_ARMOUR, ARM_BARDING);
         // prevent properties that conflict with each other
         case ARTP_CORRODE:
             return !extant_props[ARTP_RCORR] && !intrinsic_proprt[ARTP_RCORR];
@@ -598,6 +608,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_REGENERATION:
         case ARTP_INVISIBLE:
         case ARTP_HARM:
+        case ARTP_RAMPAGING:
             // only on items that can't be quickly swapped
             return non_swappable;
         // prevent on armour (since it's swapped infrequently) and rings (since
@@ -608,6 +619,20 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
                        || jewellery_is_amulet(item));
         case ARTP_ARCHMAGI:
             return item.is_type(OBJ_ARMOUR, ARM_ROBE);
+        case ARTP_ENHANCE_CONJ:
+        case ARTP_ENHANCE_HEXES:
+        case ARTP_ENHANCE_SUMM:
+        case ARTP_ENHANCE_NECRO:
+        case ARTP_ENHANCE_TLOC:
+        case ARTP_ENHANCE_TMUT:
+        case ARTP_ENHANCE_FIRE:
+        case ARTP_ENHANCE_ICE:
+        case ARTP_ENHANCE_AIR:
+        case ARTP_ENHANCE_EARTH:
+        case ARTP_ENHANCE_POISON:
+            // Maybe we should allow these for robes, too?
+            // And hats? And orbs? And gloves and cloaks and scarves?
+            return item.base_type == OBJ_STAVES;
         default:
             return true;
     }
@@ -690,8 +715,10 @@ static const artefact_prop_data artp_data[] =
         nullptr, []() { return 2; }, 0, 0 },
     { "-Cast", ARTP_VAL_BOOL, 25,   // ARTP_PREVENT_SPELLCASTING,
         nullptr, []() { return 1; }, 0, 0 },
+#if TAG_MAJOR_VERSION == 34
     { "*Tele", ARTP_VAL_BOOL,  0,   // ARTP_CAUSE_TELEPORTATION,
         nullptr, []() { return 1; }, 0, 0 },
+#endif
     { "-Tele", ARTP_VAL_BOOL, 25,   // ARTP_PREVENT_TELEPORTATION,
         nullptr, []() { return 1; }, 0, 0 },
     { "*Rage", ARTP_VAL_POS, 30,    // ARTP_ANGRY,
@@ -751,6 +778,28 @@ static const artefact_prop_data artp_data[] =
     { "Rampage", ARTP_VAL_BOOL, 25, // ARTP_RAMPAGING,
         []() {return 1;}, nullptr, 0, 0},
     { "Archmagi", ARTP_VAL_BOOL, 25, // ARTP_ARCHMAGI,
+        []() {return 1;}, nullptr, 0, 0},
+    { "Conj", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_CONJ,
+        []() {return 1;}, nullptr, 0, 0},
+    { "Hexes", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_HEXES,
+        []() {return 1;}, nullptr, 0, 0},
+    { "Summ", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_SUMM,
+        []() {return 1;}, nullptr, 0, 0},
+    { "Necro", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_NECRO,
+        []() {return 1;}, nullptr, 0, 0},
+    { "Tloc", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_TLOC,
+        []() {return 1;}, nullptr, 0, 0},
+    { "Tmut", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_TMUT,
+        []() {return 1;}, nullptr, 0, 0},
+    { "Fire", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_FIRE,
+        []() {return 1;}, nullptr, 0, 0},
+    { "Ice", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_ICE,
+        []() {return 1;}, nullptr, 0, 0},
+    { "Air", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_AIR,
+        []() {return 1;}, nullptr, 0, 0},
+    { "Earth", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_EARTH,
+        []() {return 1;}, nullptr, 0, 0},
+    { "Poison", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_POISON,
         []() {return 1;}, nullptr, 0, 0},
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
@@ -1170,10 +1219,10 @@ static bool _pick_db_name(const item_def &item)
     {
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
+    case OBJ_STAVES:
         return coinflip();
     case OBJ_JEWELLERY:
         return one_chance_in(5);
-    case OBJ_STAVES: // "the staff of cold of Circular Reasoning" looks bad
     default:
         return false;
     }
@@ -1523,18 +1572,26 @@ static bool _armour_ego_conflicts(artefact_properties_t &proprt)
 {
     switch (proprt[ARTP_BRAND])
     {
-    case SPARM_HARM:
-        return proprt[ARTP_HARM];
-    case SPARM_RESISTANCE:
-        return proprt[ARTP_FIRE] || proprt[ARTP_COLD];
+    // Opposite effect.
     case SPARM_LIGHT:
         return proprt[ARTP_INVISIBLE];
-    case SPARM_RAGE:
-        return proprt[ARTP_ANGRY];
     case SPARM_GUILE:
         return proprt[ARTP_WILLPOWER];
     case SPARM_ENERGY:
         return proprt[ARTP_PREVENT_SPELLCASTING];
+
+    // Duplicate effect.
+    case SPARM_RAMPAGING:
+        return proprt[ARTP_RAMPAGING];
+    case SPARM_HARM:
+        return proprt[ARTP_HARM];
+    case SPARM_RESISTANCE:
+        return proprt[ARTP_FIRE] || proprt[ARTP_COLD];
+    case SPARM_RAGE:
+        return proprt[ARTP_ANGRY];
+    case SPARM_INVISIBILITY:
+        return proprt[ARTP_INVISIBLE];
+
     default:
         return false;
     }
@@ -1926,4 +1983,17 @@ void artefact_fixup_props(item_def &item)
 
     if (props.exists(KNOWN_PROPS_KEY))
         artefact_pad_store_vector(props[KNOWN_PROPS_KEY], false);
+
+    // As of 0.30, it seems like there is some rare circumstance that can
+    // cause a Hepliaklqana ancestor's weapon to become a half-baked artefact -
+    // ISFLAG_RANDART set, but ARTEFACT_PROPS_KEY not. Until we understand
+    // what's happening, fix things here to salvage broken saves.
+    // (This seems to be related to
+    // https://crawl.develz.org/mantis/view.php?id=11756 - see also abyss.cc.
+    if (item.base_type == OBJ_WEAPONS
+        && (item.flags & (ISFLAG_SUMMONED | ISFLAG_RANDART))
+        && !item.props.exists(ARTEFACT_PROPS_KEY))
+    {
+        item.flags &= ~ISFLAG_RANDART;
+    }
 }

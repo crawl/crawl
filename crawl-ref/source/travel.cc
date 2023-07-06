@@ -62,6 +62,7 @@
 #include "unicode.h"
 #include "unwind.h"
 #include "view.h"
+#include "zot.h"
 
 enum IntertravelDestination
 {
@@ -133,9 +134,6 @@ static uint8_t curr_waypoints[GXM][GYM];
 // If true, feat_is_traversable_now() returns the same as feat_is_traversable().
 // FIXME: eliminate this. It's needed for RMODE_CONNECTIVITY.
 static bool ignore_player_traversability = false;
-
-// Map of terrain types that are forbidden.
-static FixedVector<int8_t,NUM_FEATURES> forbidden_terrain;
 
 static bool _is_valid_waypoint_pos(const level_pos &pos);
 
@@ -259,12 +257,13 @@ bool is_unknown_transporter(const coord_def &p)
 
 // Returns true if the character can cross this dungeon feature, and
 // the player hasn't requested that travel avoid the feature.
-bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
+bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback,
+                             bool assume_flight)
 {
     if (!ignore_player_traversability)
     {
         // If the feature is in travel_avoid_terrain, respect that.
-        if (forbidden_terrain[grid])
+        if (Options.travel_avoid_terrain[grid])
             return false;
 
         // Swimmers and water-walkers get deep water.
@@ -282,7 +281,7 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
         if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA
             || grid == DNGN_TOXIC_BOG)
         {
-            return you.permanent_flight();
+            return assume_flight || you.permanent_flight();
         }
     }
 
@@ -583,29 +582,6 @@ void travel_init_new_level()
     travel_init_load_level();
 
     explore_stopped_pos.reset();
-}
-
-// Given a dungeon feature description, returns the feature number. This is a
-// crude hack and currently recognises only (deep/shallow) water. (XXX)
-//
-// Returns -1 if the feature named is not recognised, else returns the feature
-// number (guaranteed to be 0-255).
-static int _get_feature_type(const string &feature)
-{
-    if (feature.find("deep water") != string::npos)
-        return DNGN_DEEP_WATER;
-    if (feature.find("shallow water") != string::npos)
-        return DNGN_SHALLOW_WATER;
-    return -1;
-}
-
-// Given a feature description, prevents travel to locations of that feature
-// type.
-void prevent_travel_to(const string &feature)
-{
-    int feature_type = _get_feature_type(feature);
-    if (feature_type != -1)
-        forbidden_terrain[feature_type] = 1;
 }
 
 static bool _is_branch_stair(const coord_def& pos)
@@ -3337,6 +3313,12 @@ void start_explore(bool grab_items)
 
     if (!i_feel_safe(true, true))
         return;
+
+    if (should_fear_zot() && !yesno("Really explore while Zot is near?", false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
 
     you.running = (grab_items ? RMODE_EXPLORE_GREEDY : RMODE_EXPLORE);
 

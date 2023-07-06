@@ -105,6 +105,7 @@
     Beargit
     Bill Beher
     Alexander Beisig
+    benadryl
     biasface
     bjobae
     Stu Black
@@ -214,7 +215,6 @@
     ICC
     Icy Lich
     Ilyak
-    Implojin
     Matthew Ince
     Mitsuhiro Itakura
     Jeekaroose
@@ -433,6 +433,7 @@ The Dungeon Crawl Stone Soup development team is:
     Brendan Hickey
     Aidan Holm
     Pete Hurst
+    Implojin
     Eino Keskitalo
     Vsevolod Kozlov
     Janne Lahdenperä
@@ -444,6 +445,7 @@ The Dungeon Crawl Stone Soup development team is:
     Alan Malloy
     Shmuale Mark
     John McCartney
+    Félix Medrano
     Steve Melenchuk
     Neil Middleton
     Seve Monahan

@@ -441,7 +441,7 @@ void fire_item_no_quiver(dist *target)
     //   more general (though right now this generality is mostly unused).
     // * Ensure that the regular fire history isn't affected by this call.
     ammo_only_action_cycler q;
-    q.set(a, true);
+    q.set(a);
     if (target->needs_targeting())
         q.target();
     else
@@ -557,26 +557,23 @@ static void _throw_noise(actor* act, const item_def &ammo)
 
     const char* msg   = nullptr;
 
-    // XXX: move both sound levels & messages into item-prop.cc?
+    // XXX: move both messages into item-prop.cc?
     switch (launcher->sub_type)
     {
     case WPN_SLING:
-        msg   = "You hear a whirring sound.";
+        msg   = "You hear a sling whirr.";
         break;
     case WPN_SHORTBOW:
-        msg   = "You hear a twanging sound.";
-        break;
+    case WPN_ORCBOW:
     case WPN_LONGBOW:
-        msg   = "You hear a loud twanging sound.";
+        msg   = "You hear a bow twang.";
         break;
     case WPN_HAND_CROSSBOW:
-        msg   = "You hear a quiet thunk.";
-        break;
     case WPN_ARBALEST:
-        msg   = "You hear a thunk.";
+        msg   = "You hear a crossbow thunk.";
         break;
     case WPN_TRIPLE_CROSSBOW:
-        msg   = "You hear a triplet of thunks.";
+        msg   = "You hear a triple crossbow go thunk-thunk-thunk.";
         break;
 
     default:
@@ -587,7 +584,7 @@ static void _throw_noise(actor* act, const item_def &ammo)
     if (act->is_player() || you.can_see(*act))
         msg = nullptr;
 
-    noisy(7, act->pos(), msg, act->mid);
+    noisy(5, act->pos(), msg, act->mid);
 }
 
 // throw_it - handles player throwing/firing only. Monster throwing is handled

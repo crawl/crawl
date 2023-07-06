@@ -193,6 +193,7 @@ static void _mark_solid_squares();
 vector<vault_placement> Temp_Vaults;
 static unique_creature_list temp_unique_creatures;
 static FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
+static set<misc_item_type> temp_generated_misc;
 
 const map_bitmask *Vault_Placement_Mask = nullptr;
 
@@ -300,8 +301,9 @@ bool builder(bool enable_random_maps)
     // TODO: why are these globals?
     // Save a copy of unique creatures for vetoes.
     temp_unique_creatures = you.unique_creatures;
-    // And unrands
+    // And unrands & misc items
     temp_unique_items = you.unique_items;
+    temp_generated_misc = you.generated_misc;
 
     unwind_bool levelgen(crawl_state.generating_level, true);
     rng::generator levelgen_rng(you.where_are_you);
@@ -343,6 +345,7 @@ bool builder(bool enable_random_maps)
                 get_uniq_map_names() = uniq_names;
                 you.unique_creatures = temp_unique_creatures;
                 you.unique_items = temp_unique_items;
+                you.generated_misc = temp_generated_misc;
 
                 // Because vault generation can be interrupted, this potentially
                 // leaves unlinked items kicking around, which triggers a lot
@@ -1479,6 +1482,7 @@ void dgn_reset_level(bool enable_random_maps)
 
     you.unique_creatures = temp_unique_creatures;
     you.unique_items = temp_unique_items;
+    you.generated_misc = temp_generated_misc;
 
 #ifdef DEBUG_STATISTICS
     _you_all_vault_list.clear();
@@ -1563,13 +1567,18 @@ static int _num_items_wanted(int absdepth0)
     if (branches[you.where_are_you].branch_flags & brflag::no_items)
         return 0;
     else if (absdepth0 > 5 && one_chance_in(500 - 5 * absdepth0))
-        return 9 + random2avg(84, 2); // rich level!
+        return 9 + random2avg(80, 2); // rich level!
     else
-        return 4 + roll_dice(3, 9);
+        return 3 + roll_dice(3, 9);
 }
 
 static int _mon_die_size()
 {
+    // This is a very goofy hack to maintain historical populations.
+    // TODO: remove this!
+    if (you.where_are_you == BRANCH_LAIR && you.depth == 5)
+        return DEFAULT_MON_DIE_SIZE;
+
     const int size = branches[you.where_are_you].mon_die_size;
     if (you.where_are_you != BRANCH_DUNGEON)
         return size;
@@ -4088,13 +4097,6 @@ static void _builder_monsters()
         if (place_monster(mg))
             success++;
     }
-    // 3 is the absolute minimum roll for `mon_wanted`, it's very weird from
-    // the player's perspective if we get such low numbers, but it can happen
-    // via rolling MONS_NO_MONSTER from the spawn tables.
-    // XX it might be better to retry, but that requires rebalancing of the
-    // spawn tables
-    if (success < min(mon_wanted, 3))
-        throw dgn_veto_exception("_builder_monsters: failed to generate enough monsters");
 
     if (!player_in_branch(BRANCH_CRYPT)) // No water creatures in the Crypt.
         _place_aquatic_monsters();
@@ -4705,6 +4707,19 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         // XXX: changing the signature of build_themed_book()'s get_discipline
         // would allow us to roll much of this ^ into that. possibly clever
         // lambdas could let us do it without even changing the signature?
+    }
+
+    // Ew. We should really pass this in to items() somehow.
+    if (spec.props.exists(NO_EXCLUDE_KEY) && spec.base_type == OBJ_MISCELLANY)
+    {
+        rng::subgenerator item_rng;
+        item.base_type = OBJ_MISCELLANY;
+        const auto typ = get_misc_item_type(spec.sub_type, false);
+        item.sub_type = typ;
+        you.generated_misc.insert(typ);
+        item_colour(item);
+        item_set_appearance(item);
+        ASSERT(item.is_valid());
     }
 
     // Wipe item origin to remove "this is a god gift!" from there,

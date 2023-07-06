@@ -517,6 +517,11 @@ static void _marshall_as_int(writer& th, const T& t)
     marshallInt(th, static_cast<int>(t));
 }
 
+static misc_item_type _unmarshall_misc_item_type(reader &th)
+{
+    return (misc_item_type)unmarshallInt(th);
+}
+
 template <typename data>
 void marshallSet(writer &th, const set<data> &s,
                  void (*marshall)(writer &, const data &))
@@ -1714,6 +1719,8 @@ static void _tag_construct_you(writer &th)
 
     marshallUByte(th, you.octopus_king_rings);
 
+    marshallSet(th, you.generated_misc, _marshall_as_int);
+
     marshallUnsigned(th, you.uncancel.size());
     for (const pair<uncancellable_type, int>& unc : you.uncancel)
     {
@@ -2293,7 +2300,7 @@ static const char* old_gods[]=
 };
 
 player_save_info tag_read_char_info(reader &th, uint8_t /*format*/,
-                                    uint8_t major, uint8_t minor)
+                                    uint8_t major, uint32_t minor)
 {
     player_save_info r;
     // Important: the beginning of this chunk is read in
@@ -2353,12 +2360,6 @@ player_save_info tag_read_char_info(reader &th, uint8_t /*format*/,
     return r;
 }
 
-void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
-{
-    player_save_info s = tag_read_char_info(th, format, major, minor);
-    you.init_from_save_info(s);
-}
-
 #if TAG_MAJOR_VERSION == 34
 static void _cap_mutation_at(mutation_type mut, int cap)
 {
@@ -2405,6 +2406,9 @@ static spell_type _fixup_removed_spells(spell_type s)
 
         case SPELL_CONFUSE:
             return SPELL_CONFUSING_TOUCH;
+
+        case SPELL_IRON_SHOT:
+            return SPELL_UNMAKING;
 
         default:
             return s;
@@ -2997,6 +3001,23 @@ static void _tag_read_you(reader &th)
                                                           you.training_targets[SK_SLINGS]));
         // fixup_skills is called at the end of loading a character, in
         // _post_init
+    }
+
+    // should be a check for MUT_INNATE_CASTER but I don't remember if muts
+    // have been unmarshalled here.
+    if (th.getMinorVersion() < TAG_MINOR_DJ_SPLIT && you.species == SP_DJINNI)
+    {
+        // Balance XP from spellcasting across all other skills.
+        cleanup_innate_magic_skills();
+        // Fix which skills are enabled. (Don't bother fixing autotraining %s,
+        // it'll all get balanced across skills anyway.)
+        for (skill_type sk = SK_FIRST_MAGIC_SCHOOL; sk <= SK_LAST_MAGIC; ++sk)
+        {
+            you.train[sk] = you.train[SK_SPELLCASTING];
+            you.train_alt[sk] = you.train_alt[SK_SPELLCASTING];
+        }
+        // Based on this, reset skill distribution percentages.
+        reset_training();
     }
 #endif
 
@@ -3930,6 +3951,11 @@ static void _tag_read_you(reader &th)
     you.octopus_king_rings = unmarshallUByte(th);
 
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_GENERATED_MISC)
+#endif
+        unmarshallSet(th, you.generated_misc, _unmarshall_misc_item_type);
+
+#if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_UNCANCELLABLES
         && th.getMinorVersion() != TAG_MINOR_0_11)
     {
@@ -4224,8 +4250,10 @@ static void _tag_read_you_items(reader &th)
                 you.melded.set(i, false);
                 continue;
             }
-            // and the staff of Dispater before it became an orb
-            if (is_unrandom_artefact(*item, UNRAND_DISPATER)
+            // and the staves of Dispater/Wucad Mu/Battle before orbification
+            if ((is_unrandom_artefact(*item, UNRAND_DISPATER)
+                 || is_unrandom_artefact(*item, UNRAND_WUCAD_MU)
+                 || is_unrandom_artefact(*item, UNRAND_BATTLE))
                 && i != EQ_SHIELD)
             {
                 you.equip[i] = -1;
@@ -5435,7 +5463,8 @@ void unmarshallItem(reader &th, item_def &item)
     if (th.getMinorVersion() < TAG_MINOR_REALLY_UNSTACK_EVOKERS
         && item.base_type == OBJ_MISCELLANY
         && (item.sub_type == MISC_PHANTOM_MIRROR
-            || item.sub_type == MISC_BOX_OF_BEASTS) )
+            || item.sub_type == MISC_BOX_OF_BEASTS
+            || item.sub_type == MISC_SACK_OF_SPIDERS) )
     {
         item.quantity = 1;
     }

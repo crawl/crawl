@@ -49,3 +49,4 @@ void reautomap_level();
  * @return pair of {topleft coord, bottomright coord} of bbox.
  */
 std::pair<coord_def, coord_def> known_map_bounds();
+bool in_known_map_bounds(const coord_def& p);

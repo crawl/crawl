@@ -502,4 +502,17 @@ protected:
     }
 };
 
+class lugonu_meddle_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &) const override { return true; };
+    void fire() override;
+
+    static void schedule() {
+        final_effect::schedule(new lugonu_meddle_fineff());
+    }
+protected:
+    lugonu_meddle_fineff() : final_effect(nullptr, nullptr, coord_def()) { }
+};
+
 void fire_final_effects();

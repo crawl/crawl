@@ -90,7 +90,7 @@ troll_m
 octopode1 OCTOPODE
 octopode2
 octopode3
-octopode4
+octopode4 OCTOPODE_SILLY
 octopode5
 %rim 0
 djinni_f DJINNI
@@ -153,16 +153,17 @@ gargoyle_red_f
 gargoyle_brown_m
 gargoyle_brown_f
 %sdir player/felids
+# These must match the felid horns tiles.
 %rim 0
 cat1 FELID
 cat2
-cat3
 cat4
 cat5
-cat6
 cat7
 cat8
 cat9
+cat3 FELID_SILLY
+cat6
 cat10
 %sdir player/base
 %end_ctg
@@ -244,17 +245,10 @@ slippers SLIPPERS
 ## Mutations
 hooves HOOVES
 ## Bardings
-%rim 1
 %sdir player/barding
-naga_barding_blue NAGA_BARDING
-naga_barding_metal NAGA_BARDING_METAL
-naga_barding_magenta NAGA_BARDING_MAGENTA
-naga_barding_red NAGA_BARDING_RED
-centaur_barding_blue CENTAUR_BARDING
-centaur_barding_metal CENTAUR_BARDING_METAL
-centaur_barding_magenta CENTAUR_BARDING_MAGENTA
-centaur_barding_red CENTAUR_BARDING_RED
-%rim 0
+barding1 BARDING
+barding2 BARDING_EGO
+barding3 BARDING_RANDART
 lightning_scales LIGHTNING_SCALES
 black_knight BLACK_KNIGHT
 %end_ctg
@@ -610,6 +604,8 @@ sword_three SWORD3
 sword_breaker SWORD_BREAKER
 sword_jag SWORD_JAG
 demonblade DEMON_BLADE
+demonblade
+randart_demon_blade
 enchantress_dagger ENCHANTRESS_DAGGER
 
 ## blunt
@@ -637,12 +633,15 @@ morningstar MORNINGSTAR
 morningstar2
 eveningstar EVENINGSTAR
 eveningstar2
+eveningstar3
 hammer HAMMER
 hammer2
 hammer_one HAMMER1
 hammer_two HAMMER2
 large_mace LARGE_MACE
 black_whip BLACK_WHIP
+black_whip
+randart_demon_whip
 sacred_scourge SACRED_SCOURGE
 sacred_scourge_two SACRED_SCOURGE2
 flail_stick FLAIL_STICK
@@ -670,6 +669,8 @@ halberd2
 pick_axe PICK_AXE
 trident TRIDENT
 trident_demon DEMON_TRIDENT
+trident_demon
+randart_demon_trident
 trident_elec TRIDENT_ELEC
 trident_two TRIDENT2
 trident_two2
@@ -721,6 +722,14 @@ staff_ring_blue STAFF_RING_BLUE
 staff_mummy STAFF_MUMMY
 staff_fork STAFF_FORK
 
+staff-artefact1 STAFF_RANDART_OFFSET
+staff-artefact2
+staff-artefact3
+staff-artefact4
+staff-artefact5
+staff-artefact6
+staff-artefact7
+
 # start TAG_MAJOR_VERSION == 34
 ## rods
 # These 10 rods correspond to the same order as item/rod/
@@ -755,8 +764,10 @@ axe_short AXE_SHORT
 ## launchers
 sling SLING
 bow BOW
-bow_two BOW2
-bow_three BOW3
+shortbow SHORTBOW
+orcbow1 ORCBOW
+orcbow1
+orcbow3
 great_bow GREAT_BOW
 storm_bow STORM_BOW
 hand_crossbow HAND_CROSSBOW
@@ -846,6 +857,8 @@ orb3 ORB3 ORB_LAST
 
 ##unrand (or unique) shields
 orb_of_dispater ORB_OF_DISPATER
+orb_of_wucad_mu ORB_OF_WUCAD_MU
+orb_of_battle ORB_OF_BATTLE
 
 buckler_spriggan BUCKLER_SPRIGGAN
 buckler_warlock BUCKLER_WARLOCK
@@ -1083,15 +1096,16 @@ horns1 HORNS1
 horns2 HORNS2
 horns3 HORNS3
 %sdir player/mutations
+# These must match the base felid tiles.
 cat1 HORNS_CAT
 cat2
-cat3
 cat4
 cat5
-cat6
 cat7
 cat8
 cat9
+cat3 HORNS_CAT_SILLY
+cat6
 cat10
 draconian1 HORNS_DRAC
 %sdir player/head

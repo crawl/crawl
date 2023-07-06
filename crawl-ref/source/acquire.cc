@@ -653,6 +653,7 @@ static const vector<pair<misc_item_type, int> > _misc_base_weights()
     vector<pair<misc_item_type, int> > choices =
     {
         {MISC_BOX_OF_BEASTS,       (no_allies ? 0 : 20)},
+        {MISC_SACK_OF_SPIDERS,     (no_allies ? 0 : 20)},
         {MISC_PHANTOM_MIRROR,      (no_allies ? 0 : 20)},
         // Tremorstones are better for heavily armoured characters.
         {MISC_TIN_OF_TREMORSTONES, 5 + _skill_rdiv(SK_ARMOUR) / 3},
@@ -693,6 +694,7 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
     if (choice == nullptr)
     {
         return random_choose(MISC_BOX_OF_BEASTS,
+                             MISC_SACK_OF_SPIDERS,
                              MISC_PHANTOM_MIRROR,
                              MISC_TIN_OF_TREMORSTONES,
                              MISC_LIGHTNING_ROD,
@@ -1475,7 +1477,7 @@ class AcquireEntry : public InvEntry
         const colour_t keycol = LIGHTCYAN;
         const string keystr = colour_to_str(keycol);
         const string itemstr =
-            colour_to_str(menu_colour(text, item_prefix(*item), tag));
+            colour_to_str(menu_colour(text, item_prefix(*item), tag, false));
         const string gold_text = item->base_type == OBJ_GOLD
             ? make_stringf(" (you have %d gold)", you.gold) : "";
         return make_stringf(" <%s>%c %c </%s><%s>%s%s</%s>",
@@ -1519,14 +1521,15 @@ static void _create_acquirement_item(item_def &item)
     // Now that we have a selection, mark any generated unrands as not having
     // been generated, so they go back in circulation. Exclude the selected
     // item from this, if it's an unrand.
-    for (auto aitem : acq_items)
+    for (item_def &aitem : acq_items)
     {
         if (is_unrandom_artefact(aitem)
             && (!is_unrandom_artefact(item)
                 || !is_unrandom_artefact(aitem, item.unrand_idx)))
         {
-            set_unique_item_status(aitem, UNIQ_NOT_EXISTS);
+            destroy_item(aitem, true);
         }
+        // TODO: if we allow misc acquirement, also destroy unchosen miscs
     }
 
     take_note(Note(NOTE_ACQUIRE_ITEM, 0, 0, item.name(DESC_A),

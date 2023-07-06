@@ -2577,22 +2577,7 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
         p_order[7] = TILEP_PART_LEG;
     }
 
-    // Special case bardings from being cut off.
-    bool is_naga = (equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA
-                    || equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA + 1);
-    if (equip_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
-        && equip_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED)
-    {
-        flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
-    }
-
-    bool is_ptng = (equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_ARMATAUR
-                    || equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_ARMATAUR + 1);
-    if (equip_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
-        && equip_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
-    {
-        flags[TILEP_PART_BOOTS] = is_ptng ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
-    }
+    reveal_bardings(equip_doll.parts, flags);
 
     for (int i = 0; i < TILEP_PART_MAX; ++i)
     {
@@ -3477,14 +3462,16 @@ void Menu::webtiles_write_item(const MenuEntry* me) const
 // Menu colouring
 //
 
-int menu_colour(const string &text, const string &prefix, const string &tag)
+int menu_colour(const string &text, const string &prefix, const string &tag, bool strict)
 {
     const string tmp_text = prefix + text;
 
     for (const colour_mapping &cm : Options.menu_colour_mappings)
     {
-        if ((cm.tag.empty() || cm.tag == "any" || cm.tag == tag
-               || cm.tag == "inventory" && tag == "pickup")
+        const bool match_any = !strict &&
+            (cm.tag.empty() || cm.tag == "item" || cm.tag == "any");
+        if ((match_any
+                || cm.tag == tag || cm.tag == "inventory" && tag == "pickup")
             && cm.pattern.matches(tmp_text))
         {
             return cm.colour;

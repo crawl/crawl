@@ -34,6 +34,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_BLINK_CLOSE,
+      {
+       { SPELL_BLINK_CLOSE, 67, MON_SPELL_MAGICAL },
+      }
+    },
+
     /* Orc warlords and cherubs. */
     {  MST_BATTLECRY,
       {
@@ -82,7 +88,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_LIGHTNING_BOLT, 11, MON_SPELL_WIZARD },
        { SPELL_POISON_ARROW, 11, MON_SPELL_WIZARD },
-       { SPELL_IRON_SHOT, 11, MON_SPELL_WIZARD },
+       { SPELL_UNMAKING, 11, MON_SPELL_WIZARD },
        { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 11, MON_SPELL_WIZARD },
        { SPELL_BLINK, 22, MON_SPELL_WIZARD },
       }
@@ -686,7 +692,7 @@ static const mon_spellbook mspell_list[] =
     // ('z') Corporeal semi-humanoid undead.
     {  MST_ANCIENT_CHAMPION,
       {
-       { SPELL_IRON_SHOT, 21, MON_SPELL_WIZARD },
+       { SPELL_UNMAKING, 21, MON_SPELL_WIZARD },
        { SPELL_HASTE, 21, MON_SPELL_WIZARD },
       }
     },
@@ -1268,12 +1274,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_PHANTASMAL_WARRIOR,
-      {
-       { SPELL_BLINK_CLOSE, 67, MON_SPELL_MAGICAL },
-      }
-    },
-
     {  MST_EIDOLON,
       {
        { SPELL_BOLT_OF_DRAINING, 21, MON_SPELL_MAGICAL },
@@ -1364,7 +1364,7 @@ static const mon_spellbook mspell_list[] =
     // ('3') Common demons.
     {  MST_YNOXINUL,
       {
-       { SPELL_IRON_SHOT, 19, MON_SPELL_MAGICAL },
+       { SPELL_UNMAKING, 19, MON_SPELL_MAGICAL },
        { SPELL_SUMMON_UFETUBUS, 38, MON_SPELL_MAGICAL },
       }
     },
@@ -1674,7 +1674,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_LRD, 16, MON_SPELL_WIZARD },
        { SPELL_GRASPING_ROOTS, 16, MON_SPELL_WIZARD },
-       { SPELL_IRON_SHOT, 16, MON_SPELL_WIZARD },
+       { SPELL_UNMAKING, 16, MON_SPELL_WIZARD },
        { SPELL_PETRIFY, 16, MON_SPELL_WIZARD },
        { SPELL_DIG, 16, MON_SPELL_WIZARD },
       }
@@ -1999,7 +1999,7 @@ static const mon_spellbook mspell_list[] =
     { MST_ROXANNE,
       {
        { SPELL_BOLT_OF_MAGMA, 13, MON_SPELL_WIZARD },
-       { SPELL_IRON_SHOT, 13, MON_SPELL_WIZARD },
+       { SPELL_UNMAKING, 13, MON_SPELL_WIZARD },
        { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 13, MON_SPELL_WIZARD },
        { SPELL_BLINK_OTHER_CLOSE, 13, MON_SPELL_WIZARD },
       }
@@ -2094,7 +2094,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_FRANCES,
       {
        { SPELL_THROW_ICICLE, 12, MON_SPELL_WIZARD },
-       { SPELL_IRON_SHOT, 12, MON_SPELL_WIZARD },
+       { SPELL_UNMAKING, 12, MON_SPELL_WIZARD },
        { SPELL_SUMMON_DEMON, 20, MON_SPELL_WIZARD },
        { SPELL_HASTE, 20, MON_SPELL_WIZARD },
       }
@@ -2168,7 +2168,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_FORCE_LANCE, 12, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
-       { SPELL_IRON_SHOT, 12, MON_SPELL_WIZARD },
+       { SPELL_UNMAKING, 12, MON_SPELL_WIZARD },
        { SPELL_SPELLFORGED_SERVITOR, 24, MON_SPELL_WIZARD },
       }
     },

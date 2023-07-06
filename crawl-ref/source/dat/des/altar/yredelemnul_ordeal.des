@@ -29,7 +29,7 @@ end
 }}
 
 NAME:   dk_yredelemnul_ordeal
-TAGS:   temple_overflow_yredelemnul temple_overflow_1
+TAGS:   temple_overflow_yredelemnul temple_overflow_1 no_monster_gen
 MONS:   goblin zombie / kobold zombie / human zombie / jackal zombie, \
         goblin skeleton / kobold skeleton / human skeleton / jackal skeleton
 # Uses a neutral human to make the player feel extra evil. Neutral also means

@@ -14,6 +14,7 @@
 #include "god-passive.h"
 #include "message.h"
 #include "notes.h" // NOTE_MESSAGE
+#include "options.h" // fear_zot
 #include "state.h"
 
 #if TAG_MAJOR_VERSION == 34
@@ -128,6 +129,14 @@ bool bezotted()
     return bezotted_in(you.where_are_you);
 }
 
+bool should_fear_zot()
+{
+    return bezotted()
+        || you.has_mutation(MUT_SHORT_LIFESPAN)
+           && zot_clock_active()
+           && Options.fear_zot;
+}
+
 // Decrease the zot clock when the player enters a new level.
 void decr_zot_clock(bool extra_life)
 {
@@ -179,8 +188,9 @@ void incr_zot_clock()
         mpr("Zot's power touches on you...");
         // Take the note before decrementing max HP, so the notes have the
         // cause before the effect.
-        take_note(Note(NOTE_MESSAGE, 0, 0, "Touched by the power of Zot."));
-        dec_max_hp(min(3 + you.hp_max / 6, you.hp_max - 1));
+        const int loss = min(3 + you.hp_max / 6, you.hp_max - 1);
+        take_note(Note(NOTE_ZOT_TOUCHED, you.hp_max, you.hp_max - loss));
+        dec_max_hp(loss);
         interrupt_activity(activity_interrupt::force);
 
         set_turns_until_zot(you.has_mutation(MUT_SHORT_LIFESPAN) ? 200 : 1000);

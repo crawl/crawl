@@ -248,7 +248,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
 }
 
 /**
- * The number of times to try finding a brand for a given item.
+ * The number of times to try finding a brand for a given weapon.
  *
  * Result may vary from call to call.
  */
@@ -256,8 +256,13 @@ static int _num_brand_tries(const item_def& item, int item_level)
 {
     if (item_level >= ISPEC_GIFT)
         return 5;
-    if (is_demonic(item) || x_chance_in_y(101 + item_level, 300))
+    if (is_demonic(item)
+        // Hand crossbows usually appear late, so encourage use.
+        || item.sub_type == WPN_HAND_CROSSBOW
+        || x_chance_in_y(101 + item_level, 300))
+    {
         return 1;
+    }
     return 0;
 }
 
@@ -290,6 +295,9 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
         return true;
 
     if (type == WPN_QUICK_BLADE && brand == SPWPN_SPEED)
+        return false;
+
+    if (is_demonic_weapon_type(type) && brand == SPWPN_HOLY_WRATH)
         return false;
 
     switch ((brand_type)brand)
@@ -462,7 +470,8 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         }
         item.plus -= 1 + random2(3);
     }
-    else if ((force_good || is_demonic(item) || forced_ego
+    else if ((force_good || is_demonic(item)
+              || item.sub_type == WPN_HAND_CROSSBOW || forced_ego
                     || x_chance_in_y(51 + item_level, 200))
                 && (!item.is_mundane() || force_good))
     {
@@ -1117,7 +1126,10 @@ bool is_high_tier_wand(int type)
     case WAND_CHARMING:
     case WAND_PARALYSIS:
     case WAND_ACID:
+    case WAND_LIGHT:
+    case WAND_QUICKSILVER:
     case WAND_ICEBLAST:
+    case WAND_ROOTS:
     case WAND_MINDBURST:
         return true;
     default:
@@ -1241,7 +1253,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
 
             // These scrolls increase knowledge, so Xom considers them boring.
             if (agent == GOD_XOM
-                && (scr == SCR_IDENTIFY || scr == SCR_MAGIC_MAPPING))
+                && (scr == SCR_IDENTIFY || scr == SCR_REVELATION))
             {
                 continue;
             }
@@ -1373,7 +1385,7 @@ static void _try_make_staff_artefact(item_def& item, bool allow_uniques,
     if (force_randart
         // These odds are taken uncritically from _try_make_weapon_artifact.
         // We should probably revisit them.
-        || item_level > 0 && x_chance_in_y(101 + item_level * 3, 4000))
+        || item_level > 0 && x_chance_in_y(101 + item_level * 3, 8000))
     {
         make_item_randart(item);
     }
@@ -1504,19 +1516,70 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     }
 }
 
-static void _generate_misc_item(item_def& item, int force_type)
+misc_item_type get_misc_item_type(int force_type, bool exclude)
 {
     if (force_type != OBJ_RANDOM)
-        item.sub_type = force_type;
+    {
+        if (exclude && you.generated_misc.count((misc_item_type)force_type))
+            return NUM_MISCELLANY;
+        return (misc_item_type)force_type;
+    }
+    set<misc_item_type> choices;
+    if (exclude)
+    {
+        choices = {
+            MISC_PHIAL_OF_FLOODS,
+            MISC_LIGHTNING_ROD,
+            (misc_item_type)item_for_set(ITEM_SET_ALLY_MISCELLANY),
+            MISC_PHANTOM_MIRROR,
+            (misc_item_type)item_for_set(ITEM_SET_AREA_MISCELLANY),
+            MISC_XOMS_CHESSBOARD
+        };
+        for (auto it : you.generated_misc)
+            choices.erase(it);
+    }
     else
     {
-        item.sub_type = random_choose(MISC_PHIAL_OF_FLOODS,
-                                      MISC_LIGHTNING_ROD,
-                                      MISC_BOX_OF_BEASTS,
-                                      MISC_PHANTOM_MIRROR,
-                                      MISC_TIN_OF_TREMORSTONES,
-                                      MISC_CONDENSER_VANE,
-                                      MISC_XOMS_CHESSBOARD);
+        choices = {
+            MISC_PHIAL_OF_FLOODS,
+            MISC_LIGHTNING_ROD,
+            MISC_BOX_OF_BEASTS,
+            MISC_SACK_OF_SPIDERS,
+            MISC_PHANTOM_MIRROR,
+            MISC_CONDENSER_VANE,
+            MISC_TIN_OF_TREMORSTONES,
+            MISC_XOMS_CHESSBOARD
+        };
+    }
+    if (choices.size())
+        return *random_iterator(choices);
+    return NUM_MISCELLANY;
+}
+
+static void _generate_misc_item(item_def& item, int force_type, int item_level)
+{
+    const auto typ = get_misc_item_type(force_type);
+    if (typ == NUM_MISCELLANY)
+    {
+        item.base_type = OBJ_WANDS;
+        _generate_wand_item(item, OBJ_RANDOM, item_level);
+        return;
+    }
+    item.sub_type = typ;
+    switch (typ)
+    {
+    case MISC_SACK_OF_SPIDERS:
+    case MISC_BOX_OF_BEASTS:
+    case MISC_LIGHTNING_ROD:
+    case MISC_PHIAL_OF_FLOODS:
+    case MISC_PHANTOM_MIRROR:
+    case MISC_XOMS_CHESSBOARD:
+    case MISC_TIN_OF_TREMORSTONES:
+    case MISC_CONDENSER_VANE:
+        you.generated_misc.insert(typ);
+        break;
+    default:
+        break;
     }
 }
 
@@ -1692,17 +1755,17 @@ int items(bool allow_uniques,
     else
     {
         ASSERT(force_type == OBJ_RANDOM);
-        // Total weight: 1720
+        // Total weight: 1660
         item.base_type = random_choose_weighted(
                                     10, OBJ_STAVES,
                                     45, OBJ_JEWELLERY,
                                     45, OBJ_BOOKS,
                                     70, OBJ_WANDS,
-                                   210, OBJ_ARMOUR,
-                                   210, OBJ_WEAPONS,
-                                   210, OBJ_POTIONS,
+                                   212, OBJ_ARMOUR,
+                                   212, OBJ_WEAPONS,
+                                   176, OBJ_POTIONS,
                                    180, OBJ_MISSILES,
-                                   300, OBJ_SCROLLS,
+                                   270, OBJ_SCROLLS,
                                    440, OBJ_GOLD);
 
         // misc items placement wholly dependent upon current depth {dlb}:
@@ -1795,7 +1858,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_MISCELLANY:
-        _generate_misc_item(item, force_type);
+        _generate_misc_item(item, force_type, item_level);
         break;
 
     // that is, everything turns to gold if not enumerated above, so ... {dlb}

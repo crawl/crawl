@@ -3169,7 +3169,7 @@ static bool _restore_game(const string& filename)
 
     if (you.save->has_chunk(CHUNK("kil", "kills")))
     {
-        reader inf(you.save, CHUNK("kil", "kills"),minorVersion);
+        reader inf(you.save, CHUNK("kil", "kills"), minorVersion);
         you.kills.load(inf);
     }
 

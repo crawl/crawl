@@ -893,32 +893,6 @@ spret cast_summon_guardian_golem(int pow, god_type god, bool fail)
 }
 
 /**
- * Choose a type of imp to summon with Call Imp.
- *
- * @return      An appropriate imp type.
- */
-static monster_type _get_imp_type()
-{
-    if (x_chance_in_y(5, 18))
-        return MONS_WHITE_IMP;
-
-    // 3/13 * 13/18 = 1/6 chance of one of these two.
-    if (x_chance_in_y(3, 13))
-        return one_chance_in(3) ? MONS_IRON_IMP : MONS_SHADOW_IMP;
-
-    // 5/9 chance of getting, regrettably, a crimson imp.
-    return MONS_CRIMSON_IMP;
-}
-
-static map<monster_type, const char*> _imp_summon_messages = {
-    { MONS_WHITE_IMP,
-        "A beastly little devil appears in a puff of frigid air." },
-    { MONS_IRON_IMP, "A metallic apparition takes form in the air." },
-    { MONS_SHADOW_IMP, "A shadowy apparition takes form in the air." },
-    { MONS_CRIMSON_IMP, "A beastly little devil appears in a puff of flame." },
-};
-
-/**
  * Cast the spell Call Imp, summoning a friendly imp nearby.
  *
  * @param pow   The spellpower at which the spell is being cast.
@@ -928,19 +902,18 @@ static map<monster_type, const char*> _imp_summon_messages = {
  */
 spret cast_call_imp(int pow, god_type god, bool fail)
 {
-    if (stop_summoning_prompt(MR_RES_POISON))
+    if (stop_summoning_prompt(MR_RES_POISON, M_FLIES))
         return spret::abort;
 
     fail_check();
 
-    const monster_type imp_type = _get_imp_type();
-
     const int dur = min(2 + div_rand_round(random2(1 + pow), 5), 6);
 
-    mgen_data imp_data = _pal_data(imp_type, dur, god, SPELL_CALL_IMP);
+    mgen_data imp_data = _pal_data(MONS_CERULEAN_IMP, dur, god, SPELL_CALL_IMP);
     if (monster *imp = create_monster(imp_data))
     {
-        mpr(_imp_summon_messages[imp_type]);
+        mpr("A tiny devil pulls itself out of the air.");
+        imp->weapon()->plus = pow/10 - 4;
         _monster_greeting(imp, "_friendly_imp_greeting");
     }
     else
@@ -1500,9 +1473,9 @@ static spell_type servitor_spells[] =
     // primary spells
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_IOOD,
-    SPELL_IRON_SHOT,
+    SPELL_UNMAKING,
     SPELL_BOLT_OF_COLD, // left in for frederick
-    SPELL_LIGHTNING_BOLT,
+    SPELL_PLASMA_BEAM, // maybe should be higher?
     SPELL_FIREBALL,
     SPELL_ARCJOLT,
     SPELL_STONE_ARROW,
@@ -2127,19 +2100,19 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
     if (owner)
         owner->props.erase(SPECTRAL_WEAPON_KEY);
 
-    if (!quiet)
-    {
-        if (you.can_see(*mons))
-        {
-            simple_monster_message(*mons, " fades away.",
-                                   MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
-        }
-        else if (owner && owner->is_player())
-            mpr("You feel your bond with your spectral weapon wane.");
-    }
+    if (!quiet && you.can_see(*mons))
+        simple_monster_message(*mons, " disappears.");
 
     if (!killed)
         monster_die(*mons, KILL_RESET, NON_MONSTER);
+}
+
+void check_spectral_weapon(actor &agent)
+{
+    if (!agent.triggered_spectral)
+        if (monster* sw = find_spectral_weapon(&agent))
+            end_spectral_weapon(sw, false, false);
+    agent.triggered_spectral = false;
 }
 
 static void _setup_infestation(bolt &beam, int pow)
@@ -2231,7 +2204,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_DEMON,             { 0, 3 } },
     { SPELL_SUMMON_TZITZIMITL,        { 0, 3 } },
     { SPELL_SUMMON_HELL_SENTINEL,     { 0, 3 } },
-    { SPELL_CONJURE_LIVING_SPELLS,    { 0, 6 } },
+    { SPELL_CONJURE_LIVING_SPELLS,    { 0, 4 } },
     { SPELL_SHEZAS_DANCE,             { 0, 6 } },
 };
 

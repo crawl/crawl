@@ -343,7 +343,7 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
         fail_reduce = fail_reduce * 2 / 3;
     }
 
-    const int wizardry = player_wizardry(spell);
+    const int wizardry = player_wizardry();
 
     if (wizardry > 0)
       fail_reduce = fail_reduce * 6 / (7 + wizardry);
@@ -377,7 +377,6 @@ static int _stepdown_spellpower(int power)
 static int _skill_power(spell_type spell)
 {
     int power = 0;
-
     const spschools_type disciplines = get_spell_disciplines(spell);
     const int skillcount = count_bits(disciplines);
     if (skillcount)
@@ -387,11 +386,7 @@ static int _skill_power(spell_type spell)
                 power += you.skill(spell_type2skill(bit), 200);
         power /= skillcount;
     }
-
-    // Innate casters use spellcasting for every spell school.
-    const int splcast_mult = you.has_mutation(MUT_INNATE_CASTER) ? 250 : 50;
-    power += you.skill(SK_SPELLCASTING, splcast_mult);
-    return power;
+    return power + you.skill(SK_SPELLCASTING, 50);
 }
 
 
@@ -467,6 +462,8 @@ int raw_spell_fail(spell_type spell)
     chance2 -= 2 * you.get_mutation_level(MUT_SUBDUED_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_WILD_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_ANTI_WIZARDRY);
+    if (player_channeling())
+        chance2 += 10;
 
     chance2 += you.duration[DUR_VERTIGO] ? 7 : 0;
 
@@ -543,6 +540,12 @@ static int _spell_enhancement(spell_type spell)
     if (typeflags & spschool::necromancy)
         enhanced += player_spec_death();
 
+    if (typeflags & spschool::translocation)
+        enhanced += player_spec_tloc();
+
+    if (typeflags & spschool::transmutation)
+        enhanced += player_spec_tmut();
+
     if (typeflags & spschool::fire)
         enhanced += player_spec_fire();
 
@@ -557,6 +560,14 @@ static int _spell_enhancement(spell_type spell)
 
     if (you.form == transformation::shadow)
         enhanced -= 2;
+
+    if (player_equip_unrand(UNRAND_BATTLE))
+    {
+        if (vehumet_supports_spell(spell))
+            enhanced++;
+        else
+            enhanced--;
+    }
 
     enhanced += you.archmagi();
     enhanced += you.duration[DUR_BRILLIANCE] > 0
@@ -687,44 +698,22 @@ void do_cast_spell_cmd(bool force)
         flush_input_buffer(FLUSH_ON_FAILURE);
 }
 
-static void _handle_channeling(int cost)
+static void _handle_channeling(int cost, spret cast_result)
 {
-    if (you.has_mutation(MUT_HP_CASTING))
+    if (you.has_mutation(MUT_HP_CASTING) || cast_result == spret::abort)
         return;
 
-    const int sources = 3 * player_equip_unrand(UNRAND_WUCAD_MU)
-                        + 2 * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_ENERGY);
-
-    if (!x_chance_in_y(sources * you.skill(SK_EVOCATIONS), 108))
+    const int sources = player_channeling();
+    if (!sources)
         return;
 
+    // Miscasts always get refunded, successes only sometimes do.
+    if (cast_result != spret::fail && !x_chance_in_y(sources, 5))
+        return;
+
+    mpr("Magical energy flows into your mind!");
+    inc_mp(cost, true);
     did_god_conduct(DID_WIZARDLY_ITEM, 10);
-
-    const int skillcheck = 3 + you.skill(SK_EVOCATIONS) - cost;
-
-    if (skillcheck <= 1)
-    {
-        mprf(MSGCH_WARN, "You lack the skill to channel this much energy!");
-        return;
-    }
-
-    // The chance of backfiring goes down with evo skill and up with cost.
-    if (!one_chance_in(max(skillcheck, 1)))
-    {
-        mpr("Magical energy flows into your mind!");
-        inc_mp(cost, true);
-        return;
-    }
-
-    mpr(random_choose("Weird images run through your mind.",
-                      "Your head hurts.",
-                      "You feel a strange surge of energy.",
-                      "You feel uncomfortable."));
-
-    you.increase_duration(DUR_NO_CAST, 4 + random2(4));
-
-    if (coinflip())
-        lose_stat(STAT_INT, 1 + random2avg(5, 2));
 }
 
 /**
@@ -970,9 +959,9 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     }
 
     practise_casting(spell, cast_result == spret::success);
+    _handle_channeling(cost, cast_result);
     if (cast_result == spret::success)
     {
-        _handle_channeling(cost);
         if (player_equip_unrand(UNRAND_MAJIN) && one_chance_in(500))
             _majin_speak(spell);
         did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
@@ -1266,7 +1255,12 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_ARCJOLT:
         return make_unique<targeter_multiposition>(&you, arcjolt_targets(you, false));
     case SPELL_PLASMA_BEAM:
-        return make_unique<targeter_multiposition>(&you, plasma_beam_targets(you, pow, false));
+    {
+        auto plasma_targets = plasma_beam_targets(you, pow, false);
+        auto plasma_paths = plasma_beam_paths(you.pos(), plasma_targets);
+        const aff_type a = plasma_targets.size() == 1 ? AFF_YES : AFF_MAYBE;
+        return make_unique<targeter_multiposition>(&you, plasma_paths, a);
+    }
     case SPELL_CHAIN_LIGHTNING:
         return make_unique<targeter_chain_lightning>();
     case SPELL_MAXWELLS_COUPLING:
@@ -1307,7 +1301,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_ROT:
     case SPELL_SUBLIMATION_OF_BLOOD:
     case SPELL_BORGNJORS_REVIVIFICATION:
-    case SPELL_BLASTSPARK:
+    case SPELL_BLASTMOTE:
     case SPELL_PORTAL_PROJECTILE:
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
 
@@ -1512,6 +1506,16 @@ vector<string> desc_beam_hit_chance(const monster_info& mi, targeter* hitfunc)
     if (!beam_hitf)
         return vector<string>{};
     return _desc_hit_chance(mi, beam_hitf->beam.hit, beam_hitf->beam.pierce);
+}
+
+static vector<string> _desc_plasma_hit_chance(const monster_info& mi, int powc)
+{
+    bolt beam;
+    zappy(spell_to_zap(SPELL_PLASMA_BEAM), powc, false, beam);
+    const int hit_pct = _to_hit_pct(mi, beam.hit, beam.pierce);
+    if (hit_pct == -1)
+        return vector<string>{};
+    return vector<string>{make_stringf("2x%d%% to hit", hit_pct)};
 }
 
 static vector<string> _desc_intoxicate_chance(const monster_info& mi,
@@ -1798,6 +1802,8 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
             return bind(_desc_insubstantial, placeholders::_1, "immune to roots");
         case SPELL_STICKY_FLAME:
             return bind(_desc_insubstantial, placeholders::_1, "unstickable");
+        case SPELL_PLASMA_BEAM:
+            return bind(_desc_plasma_hit_chance, placeholders::_1, powc);
         default:
             break;
     }
@@ -2437,8 +2443,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_BLINK:
         return cast_blink(powc, fail);
 
-    case SPELL_BLASTSPARK:
-        return kindle_blastsparks(powc, fail);
+    case SPELL_BLASTMOTE:
+        return kindle_blastmotes(powc, fail);
 
     case SPELL_PASSWALL:
         return cast_passwall(beam.target, powc, fail);
@@ -2773,6 +2779,10 @@ static dice_def _spell_damage(spell_type spell, int power)
             return base_fragmentation_damage(power, false);
         case SPELL_ARCJOLT:
             return arcjolt_damage(power, false);
+        case SPELL_POLAR_VORTEX:
+            return polar_vortex_dice(power, false);
+        case SPELL_NOXIOUS_BOG:
+            return toxic_bog_damage();
         default:
             break;
     }
@@ -2839,7 +2849,7 @@ string spell_damage_string(spell_type spell, bool evoked, int pow)
             break;
     }
     const string dam_str = make_stringf("%s%dd%d", mult.c_str(), dam.num, dam.size);
-    if (spell == SPELL_LRD || spell == SPELL_SHATTER)
+    if (spell == SPELL_LRD || spell == SPELL_SHATTER || spell == SPELL_POLAR_VORTEX)
         return dam_str + "*"; // many special cases of more/less damage
     return dam_str;
 }

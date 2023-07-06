@@ -180,7 +180,7 @@ static const map<job_type, job_def> job_data =
     {
         SPELL_FOXFIRE,
         SPELL_SCORCH,
-        SPELL_BLASTSPARK,
+        SPELL_BLASTMOTE,
         SPELL_INNER_FLAME,
         SPELL_FLAME_WAVE,
     },
@@ -203,7 +203,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_HEXSLINGER, {
     "Hs", "Hexslinger",
-    2, 5, 5,
+    0, 5, 7,
     { SP_FORMICID, SP_DEEP_ELF, SP_KOBOLD, SP_SPRIGGAN, SP_GNOLL },
     {
         SPELL_SLOW,
@@ -222,7 +222,7 @@ static const map<job_type, job_def> job_data =
     3, 1, 8,
     { SP_HILL_ORC, SP_MINOTAUR, SP_GNOLL, SP_KOBOLD, SP_SPRIGGAN, },
     { },
-    { "leather armour", "scroll of immolation", "shortbow" },
+    { "leather armour", "scroll of butterflies no_exclude", "shortbow" },
     WCHOICE_NONE,
     { { SK_FIGHTING, 2 }, { SK_DODGING, 2 }, { SK_STEALTH, 1 },
       { SK_WEAPON, 4 }, },
@@ -250,7 +250,7 @@ static const map<job_type, job_def> job_data =
     4, 2, 6,
     { SP_FELID, SP_SPRIGGAN, SP_KOBOLD, SP_VAMPIRE, SP_GNOLL },
     { },
-    { "leather armour", "scroll of fog no_exclude", "scroll of magic mapping",
+    { "leather armour", "scroll of fog no_exclude", "scroll of revelation",
       "scroll of fear", "potion of haste", "wand of digging charges:3" },
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 3 }, { SK_DODGING, 2 }, { SK_STEALTH, 5 }, { SK_WEAPON, 2 }, },
@@ -262,10 +262,9 @@ static const map<job_type, job_def> job_data =
     { SP_METEORAN, SP_HILL_ORC, SP_TROLL, SP_ARMATAUR, SP_MERFOLK,
       SP_GARGOYLE, SP_DEMONSPAWN, },
     { },
-    { "robe", "potion of ambrosia" },
+    { "robe", "potion of ambrosia", "orb ego:light" },
     WCHOICE_PLAIN,
-    { { SK_FIGHTING, 3 }, { SK_WEAPON, 3 }, { SK_DODGING, 3 },
-      { SK_STEALTH, 2 }, },
+    { { SK_FIGHTING, 3 }, { SK_WEAPON, 3 }, { SK_DODGING, 3 } },
 } },
 
 { JOB_NECROMANCER, {

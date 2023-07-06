@@ -443,7 +443,7 @@ potion of experience
 매우 희귀하고 굉장한 물약이다. 마시면 머릿속에 자신이 겪어보지 못했던 희귀한
 경험들이 들어온다.
 %%%%
-potion of flight
+potion of enlightenment
 
 복용한 이에게 대단한 부양력을 주는 포션
 %%%%
@@ -624,7 +624,7 @@ scroll of immolation
 이 두루마리는 사용자의 주변에 있는 존재들에게 불안정하고 매우 강력한 잠재의
 불꽃을 심는다.
 %%%%
-scroll of magic mapping
+scroll of revelation
 
 이 두루마리를 읽으면 주변의 지형을 볼 수 있다.
 

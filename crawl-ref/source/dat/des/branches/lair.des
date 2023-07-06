@@ -1270,15 +1270,15 @@ NAME:    grunt_forest_large_clearings
 TAGS:    transparent no_pool_fixup
 DEPTH:   Lair
 WEIGHT:  15
+KMONS:   p = plant / bush
 MONS:    wolf, black bear / polar bear, spriggan / centaur w:4
+KMONS:   4 = spriggan rider / faun w:4
 KMONS:   9 = 9
-KMONS:   * = spriggan rider / faun w:4
-KMONS:   P = plant / bush
-KITEM:   9* = *
-KFEAT:   9 = W
-SHUFFLE: wW'"-_9 / ''GG''* / '''0''% / `````1G
-SUBST:   t = t.., '. = 1:49 .:405, W = WW., "w = wwwW
-NSUBST:  2 = 3:1 / 2:2 / 1:3 / *:.
+KITEM:   94 = *
+KFEAT:   94 = W
+SHUFFLE: wW'"-9 / ''GG'4 / '''0'% / ````1G
+SUBST:   t = t.., '. = p:49 .:405, W = WW., "w = wwwW
+NSUBST:  1 = 3=1 / 2=2 / 3 / .
 MAP
       tt@@@tt
     ttt.....ttt
@@ -1287,12 +1287,12 @@ MAP
  ttwww..........tt
  t..www..'.......t
 tt...w"w....'....tt
-t.....ww-._.......t
-@......-.W-_......@
+t.....ww-.-.......t
+@......-.W--......@
 @....'..W9W..'....@
-@......_-W.-......@
-t.....'._.-ww.....t
-tt.........w"w...tt
+@......--W.-......@
+t.......-.-ww.....t
+tt....'....w"w...tt
  t.......'..www..t
  tt..........wwwtt
   t...........wwt

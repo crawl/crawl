@@ -14,13 +14,6 @@
 #include "travel.h"
 #include "map-knowledge.h"
 
-static bool _in_map_bounds(const coord_def& p)
-{
-    std::pair<coord_def, coord_def> b = known_map_bounds();
-    return p.x >= b.first.x && p.y >= b.first.y
-        && p.x <= b.second.x && p.y <= b.second.y;
-}
-
 /*** Set an exclusion.
  * Uses player-centered coordinates
  * @tparam int x
@@ -34,7 +27,7 @@ LUAFN(l_set_exclude)
     s.x = luaL_safe_checkint(ls, 1);
     s.y = luaL_safe_checkint(ls, 2);
     const coord_def p = player2grid(s);
-    if (!_in_map_bounds(p))
+    if (!in_known_map_bounds(p))
         return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
     // XXX: dedup w/_get_full_exclusion_radius()?
     int r = LOS_RADIUS;
@@ -56,7 +49,7 @@ LUAFN(l_del_exclude)
     s.x = luaL_safe_checkint(ls, 1);
     s.y = luaL_safe_checkint(ls, 2);
     const coord_def p = player2grid(s);
-    if (!_in_map_bounds(p))
+    if (!in_known_map_bounds(p))
         return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
     del_exclude(p);
     return 0;
@@ -75,22 +68,28 @@ LUAFN(l_is_excluded)
     s.x = luaL_safe_checkint(ls, 1);
     s.y = luaL_safe_checkint(ls, 2);
     const coord_def p = player2grid(s);
-    if (!_in_map_bounds(p))
+    if (!in_known_map_bounds(p))
         return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
     PLUARET(boolean, is_excluded(p));
     return 1;
 }
 
-/*** Can we get across this without swimming or flying?
+/*** Can we move onto this feature? Considers player properties like
+ * amphibiousness and permanent (but not temporary) flight, and also considers
+ * travel_avoid_terrain.
  * @tparam string featurename
+ * @tparam boolean assume_flight If true, assume the player has permanent
+ *                               flight.
  * @treturn boolean
  * @function feature_traversable
  */
 LUAFN(l_feature_is_traversable)
 {
     const string &name = luaL_checkstring(ls, 1);
+    const bool assume_flight = lua_isboolean(ls, 1) ? lua_toboolean(ls, 1)
+                                                    : false;
     const dungeon_feature_type feat = dungeon_feature_by_name(name);
-    PLUARET(boolean, feat_is_traversable_now(feat));
+    PLUARET(boolean, feat_is_traversable_now(feat, false, assume_flight));
 }
 
 /*** Is this feature solid?
@@ -156,7 +155,7 @@ LUAFN(l_set_waypoint)
     s.x = luaL_safe_checkint(ls, 2);
     s.y = luaL_safe_checkint(ls, 3);
     const coord_def p = player2grid(s);
-    if (!_in_map_bounds(p))
+    if (!in_known_map_bounds(p))
         return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
     travel_cache.set_waypoint(waynum, p.x, p.y);
     return 0;
@@ -185,7 +184,7 @@ LUAFN(l_set_travel_trail)
     s.x = luaL_safe_checkint(ls, 1);
     s.y = luaL_safe_checkint(ls, 2);
     const coord_def p = player2grid(s);
-    if (!_in_map_bounds(p))
+    if (!in_known_map_bounds(p))
         return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
     env.travel_trail.push_back(p);
     return 0;

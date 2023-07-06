@@ -71,6 +71,8 @@ InvEntry::InvEntry(const item_def &i)
     : MenuEntry("", MEL_ITEM), item(&i), _has_star(false)
 {
     indent_no_hotkeys = true;
+    // This gets the inventory coloring rules to apply by default:
+    tag = "inventory";
 
     // Data is an inherited void *. When using InvEntry in menus
     // use the const item in this class whenever possible
@@ -106,9 +108,7 @@ InvEntry::InvEntry(const item_def &i)
 
 int InvEntry::highlight_colour(bool temp) const
 {
-    // XX this hardcodes the tag "inventory", but is used by all sorts of
-    // subclasses that aren't inv.
-    return menu_colour(get_text(), item_prefix(*item, temp), "inventory");
+    return menu_colour(get_text(), item_prefix(*item, temp), tag, false);
 }
 
 const string &InvEntry::get_basename() const
@@ -632,19 +632,13 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
         }
     }
     if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_MISSILES
-        || item.base_type == OBJ_ARMOUR
+        || item.base_type == OBJ_ARMOUR || item.base_type == OBJ_STAVES
 #if TAG_MAJOR_VERSION == 34
         || item.base_type == OBJ_RODS
 #endif
        )
     {
         tileidx_t brand = tileidx_known_brand(item);
-        if (brand)
-            tileset.emplace_back(brand);
-    }
-    else if (item.base_type == OBJ_CORPSES)
-    {
-        tileidx_t brand = tileidx_corpse_brand(item);
         if (brand)
             tileset.emplace_back(brand);
     }
@@ -742,7 +736,7 @@ bool sort_item_identified(const InvEntry *a)
 bool sort_item_charged(const InvEntry *a)
 {
     return a->item->base_type != OBJ_WANDS
-           || !item_is_evokable(*(a->item));
+           || !item_ever_evokable(*(a->item));
 }
 
 static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,
@@ -1146,7 +1140,7 @@ bool item_is_selected(const item_def &i, int selector)
         return item_is_wieldable(i);
 
     case OSEL_EVOKABLE:
-        return item_is_evokable(i);
+        return item_ever_evokable(i);
 
     case OSEL_ENCHANTABLE_ARMOUR:
         return is_enchantable_armour(i, true);

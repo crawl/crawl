@@ -378,6 +378,9 @@ string Note::describe(bool when, bool where, bool what) const
           case NOTE_FOUND_UNRAND:
             result << "Found " << name;
             break;
+        case NOTE_ZOT_TOUCHED:
+            result << "Touched by the power of Zot (MHP " << first << " -> " << second << ")";
+            break;
         default:
             result << "Buggy note description: unknown note type";
             break;

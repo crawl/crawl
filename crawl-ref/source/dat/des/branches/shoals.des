@@ -1864,7 +1864,7 @@ ITEM:   gold good_item
 ITEM:   rapier good_item w:70 / captain's cutlass
 ITEM:   cloak / scarf / nothing
 ITEM:   pair of boots / pair of gloves / hat
-ITEM:   scroll of magic mapping / any scroll
+ITEM:   scroll of revelation / any scroll
 MONS:   shadow wraith
 NSUBST: ' = d / e / f / g / h / 1 / z / } / .
 SUBST:  } = }]), - = x_, x = x:70 c
@@ -1959,7 +1959,7 @@ kfeat("F = general shop name:" .. owner .. " type:Merfolk suffix:Magic ; \
 -- will be more than happy to help make arrangements. With an additional
 -- convenience fee, of course. (The scroll is for if you get stuck.)
 kfeat("J = general shop name:" .. owner .. " type:Visitors' suffix:Centre \
-      greed:100 count:2 use_all ; potion of flight q:1 | \
+      greed:100 count:2 use_all ; potion of enlightenment q:1 | \
       scroll of teleportation q:1" )
 }}
 KFEAT:   ~ = open_sea
@@ -2477,6 +2477,24 @@ xx'p."WW-wNNw-WW".q'xx
        `xx''xx`
         `xxxx`
          `xx`
+ENDMAP
+
+# Sadly, there are currently no lobster-based monsters that can be used here, so
+# instead it will have to be turtles. They don't say "dad-a-chum", but they'll
+# still take some fingers off.
+NAME:   nicolae_shoals_the_drawing_of_the_three
+TAGS:   transparent
+DEPTH:  Shoals
+# No pistols, either, so it will have to be hand crossbows.
+KITEM:  r = hand crossbow
+KMONS:  1 = snapping turtle w:15 / alligator snapping turtle w:5
+NSUBST: . = 2=1 / 2=1. / 2=r / .
+MAP
+ .....
+.......
+.+.+.+.
+.......
+ .....
 ENDMAP
 
 ###############################################################################

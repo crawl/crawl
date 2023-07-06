@@ -25,6 +25,7 @@
 #include "end.h"
 #include "errors.h"
 #include "files.h"
+#include "fixedp.h"
 #include "item-name.h"
 #include "jobs.h"
 #include "libutil.h"
@@ -204,6 +205,7 @@ void run_tests()
         _run_test("mon-bands", debug_bands);
         _run_test("xom-data", validate_xom_events);
         _run_test("maybe-bool", maybe_bool::test_cases);
+        _run_test("fixedp", fixedp<>::test_cases);
     }
 #else
     ASSERT(crawl_state.script);

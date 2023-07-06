@@ -27,8 +27,9 @@ turnaround time.
 Users with +v are members of the devteam and have commit access. Developers
 often discuss what they are working on on the channel and request comments
 before commits. Therefore the channel is logged to archive discussion and
-decisions made there. The archive can be found here:
+decisions made there. The archives can be found here:
 
+    http://crawl.akrasiac.org/logs/cheibriados/
     http://s-z.org/crawl-dev/
 
 ### Writing a proposal for gameplay-related contributions
@@ -36,7 +37,7 @@ decisions made there. The archive can be found here:
 For proposals that would have a significant impact on gameplay, it's good to
 get feedback and discussion from experienced crawl players. One place to start
 is the [Game Design Discussion
-board](https://crawl.develz.org/tavern/viewforum.php?f=8) (GDD) on the official
+board](https://tavern.dcss.io/c/back-room/gdd/9) (GDD) on the official
 Tavern forums. Please follow the GDD discussion guidelines posted at the top of
 that forum.
 

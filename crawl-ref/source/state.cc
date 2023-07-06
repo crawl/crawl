@@ -33,6 +33,7 @@ game_state::game_state()
       need_save(false), save_after_turn(false),
       game_started(false), saving_game(false),
       updating_scores(false),
+      parsing_rc(false),
 #ifndef USE_TILE_LOCAL
       smallterm(false),
 #endif
@@ -49,6 +50,7 @@ game_state::game_state()
       throttle(false),
       bypassed_startup_menu(false),
 #endif
+      clua_max_memory_mb(16),
       show_more_prompt(true), terminal_resize_handler(nullptr),
       terminal_resize_check(nullptr), doing_prev_cmd_again(false),
       prev_cmd(CMD_NO_CMD), repeat_cmd(CMD_NO_CMD),

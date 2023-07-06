@@ -1926,25 +1926,29 @@ ENDMAP
 # Lions and Tigers and Bears, oh my! (or at least bears)
 #
 NAME:   lemuel_bear_cage
+TAGS:   no_monster_gen no_item_gen
 ORIENT: float
-DEPTH:  D:7-
-MONS:   black bear / polar bear
-MONS:   wyvern / manticore w:3
-MONS:   yak / dream sheep w:5 / death yak w:3
-MONS:   hound / wolf w:5 / hog
-SUBST:  1 = 1:30 2 3 4 .
+DEPTH:  D:7-11
+MONS:   black bear, polar bear, wolf, hog, yak, wyvern, manticore
+KMONS:  D = dream sheep
+KMONS:  E = death yak
+: if you.depth() < 9 then
+SUBST:  D = 1:30 2 3 4:5 5 6 7:5 D:5 E:5 .
+: else
+SUBST:  D = 1 2:30 3:5 4:5 5:5 6:5 7 D E .
+: end
 MAP
-cccccccccc
-c.1.1.1.1c
-c1.1.1.1.c
-c.1.1.1.1c
-c1.1.1.1.c
-c.1.1.1.1c
-cnn====nnc
-..........
-@........@
-..........
-xxxxxxxxxx
+ccccccccc
+c|D*D*D|c
+cD%D%D%Dc
+c.D.D.D.c
+cD.D.D.Dc
+c.D.D.D.c
+cnn===nnc
+.........
+@.......@
+.........
+xxxxxxxxx
 ENDMAP
 
 ##############################################################################
@@ -9857,8 +9861,7 @@ ENDMAP
 NAME:    minmay_heptahexagon
 DEPTH:   D:12-, Depths
 ORIENT:  float
-ITEM:    book of debilitation / book of maledictions / book of hexes / \
-         book of misfortune
+ITEM:    book of debilitation / book of hexes / book of misfortune
 # randomize how open the hexagons are to each other
 SUBST:   M : xx+., N : +@, O : +++.
 # each hex other than the center either has monsters+loot, or nothing

@@ -133,9 +133,12 @@ string KillMaster::kill_info() const
         if (catkills[i].empty())
             continue;
 
-        categories++;
         vector<kill_exp> kills;
         int count = catkills[i].get_kills(kills);
+        if (count == 0) // filtered out firewood
+            continue;
+
+        categories++;
         grandtotal += count;
 
         add_kill_info(killtext,
@@ -300,6 +303,8 @@ int Kills::get_kills(vector<kill_exp> &all_kills) const
     for (const auto &entry : kills)
     {
         const kill_monster_desc &md = entry.first;
+        if (mons_class_is_firewood(md.monnum))
+            continue;
         const kill_def &k = entry.second;
         all_kills.emplace_back(k, md);
         count += k.kills;

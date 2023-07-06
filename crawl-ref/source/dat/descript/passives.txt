@@ -1,0 +1,84 @@
+%%%%
+no teleportation passive
+
+You cannot teleport or blink.
+%%%%
+no spellcasting passive
+
+You cannot cast spells.
+%%%%
+random rage passive
+
+You have a chance of going berserk when you make a melee attack.
+%%%%
+corrode self passive
+
+You have a chance of being corroded when you take damage.
+%%%%
+slow self passive
+
+You have a chance of being slowed when you take damage.
+%%%%
+harm passive
+
+Any damage you deal or take is increased.
+%%%%
+mayhem passive
+
+You have a chance of causing visible monsters to go into a frenzy when you kill
+a foe.
+%%%%
+repel missiles passive
+
+You repel missiles, improving your chance to evade them.
+%%%%
+reflection passive
+
+You reflect any successfully blocked ranged attacks back towards the attacker.
+%%%%
+acrobat passive
+
+Your evasion is increased while moving and waiting.
+%%%%
+clarity passive
+
+You are protected from involuntary confusion, rage, fear and mesmerisation.
+%%%%
+resist mutation passive
+
+You are partially protected from mutation.
+%%%%
+guardian spirit passive
+
+Any damage you take is divided between your reserves of health and magic.
+%%%%
+rampage passive
+
+You take an additional free step when moving towards enemies.
+%%%%
+roll passive
+
+<rampage passive>
+%%%%
+faith passive
+
+You gain divine favour quickly, and greater notice is taken of any religious
+transgressions you make.
+%%%%
+wizardry passive
+
+Your spell success rate is improved.
+%%%%
+archmagi passive
+
+Your spell power is increased.
+%%%%
+channel magic passive
+
+You have a chance of regaining the magic spent when successfully casting a
+spell, and always regain the magic spent when you miscast a spell.
+%%%%
+infuse magic passive
+
+You spend magic each time you make a melee attack, empowering your blows.
+%%%%

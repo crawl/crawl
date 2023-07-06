@@ -1,12 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Dungeon Crawl Stone Soup</string>
-    <style name="CrawlTheme" parent="@android:style/Theme.Holo.NoActionBar.Fullscreen">
-        <item name="android:textSize">16dp</item>
+    <style name="CrawlTheme" parent="@style/Theme.AppCompat.NoActionBar">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="colorButtonNormal">@color/gray</item>
+        <item name="android:windowAnimationStyle">@style/CrawlActivityAnimation</item>
+    </style>
+    <style name="CrawlActivityAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_out_left</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_in_left</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
+    </style>
+    <style name="ButtonColor1" parent="CrawlTheme">
+        <item name="colorButtonNormal">@color/light_purple</item>
+    </style>
+    <style name="ButtonColor2" parent="CrawlTheme">
+        <item name="colorButtonNormal">@color/light_green</item>
+    </style>
+    <style name="ButtonColor3" parent="CrawlTheme">
+        <item name="colorButtonNormal">@color/dark_green</item>
+    </style>
+    <style name="ButtonColor4" parent="CrawlTheme">
+        <item name="colorButtonNormal">@color/dark_purple</item>
     </style>
     <dimen name="key_height">40dp</dimen>
-    <color name="key_tint1">#8d42dc</color>
-    <color name="key_tint2">#268868</color>
-    <color name="key_tint3">#0c3941</color>
-    <color name="key_tint4">#490f57</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="gray">#404040</color>
+    <color name="light_purple">#8d42dc</color>
+    <color name="dark_purple">#490f57</color>
+    <color name="light_green">#268868</color>
+    <color name="dark_green">#0c3941</color>
+    <color name="error">#ff0000</color>
 </resources>

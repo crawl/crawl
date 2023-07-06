@@ -299,6 +299,12 @@ acid dragon scales
 
 <steam dragon scales>
 %%%%
+adder
+
+ADDER, n. A species of snake. So called from its habit of adding funeral outlays
+to the other expenses of living.
+    -Ambrose Bierce, _The Devil's Dictionary_, 1906.
+%%%%
 Agony spell
 
 “Unbearable, isn't it? The suffering of strangers, the agony of friends. There
@@ -549,6 +555,14 @@ Dowan
  finger tips.”
     -Rabindranath Tagore, _Chitra_, Act I, Scene iv. 1914.
 %%%%
+Duel ability
+
+DUEL, n. A formal ceremony preliminary to the reconciliation of two enemies.
+Great skill is necessary to its satisfactory observance; if awkwardly
+performed the most unexpected and deplorable consequences sometimes ensue.
+A long time ago, a man lost his life in a duel.
+    -Ambrose Bierce, _The Devil's Dictionary_, 1906.
+%%%%
 Duvessa
 
 “Twin children: the Girl, she was plain;
@@ -622,6 +636,19 @@ Geryon
  crossed the stream of Okeanos and had killed Orthos and the oxherd Eurytion
  out in the gloomy meadow beyond fabulous Okeanos.”
     -Hesiod, _Theogony_, circa 700 BCE.
+%%%%
+Harold
+
+“One, you lock the target
+ Two, you bait the line
+ Three, you slowly spread the net
+ And four, you catch the man
+
+ You catch the man
+ You catch the man
+ I’m looking for this man to sell him to other men
+ To sell him to other men at ten times the price at least”
+    —Front 242, “Headhunter”
 %%%%
 Ilsuiw
 
@@ -1570,6 +1597,16 @@ flying skull
  abhorr'd in my imagination it is! My gorge rises at it.”
     -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, V, 1. 1603
 %%%%
+formless jellyfish
+
+“From this story it is evident that in former times the jellyfish once had a
+shell and bones something like a tortoise, but, ever since the Dragon King's
+sentence was carried out on the ancestor of the jelly fishes, his descendants
+have all been soft and boneless just as you see them to-day thrown up by the
+waves high upon the shores of Japan.”
+    -“The Jellyfish and the Monkey”, adapted by Yei Theodora Ozaki, _Young
+     Folk's Treasury_, vol. II. 1909.
+%%%%
 frozen axe "Frostbite"
 
 “Revenge is a dish best served cold.”
@@ -2484,6 +2521,11 @@ potion of degeneration
  then certainly I am against it.”
     -Noah S. Sweat, Jr. “If By Whiskey”. 1952
 %%%%
+potion of enlightenment
+
+“Let go your earthly tether. Enter the void. Empty, and become wind.”
+    -_The Legend of Korra_. 2014
+%%%%
 potion of invisibility
 
 “I shall never forget that dawn, and the strange horror of seeing that my hands
@@ -2894,7 +2936,7 @@ scroll of immolation
 
 <scroll>
 %%%%
-scroll of magic mapping
+scroll of revelation
 
 “‘What a useful thing a pocket-map is!’ I remarked.
  ‘That’s another thing we’ve learned from your Nation,’ said Mein Herr,

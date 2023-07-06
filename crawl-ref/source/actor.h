@@ -285,8 +285,9 @@ public:
     virtual int res_constrict() const = 0;
     virtual int willpower() const = 0;
     virtual int check_willpower(const actor* source, int power);
-    virtual bool no_tele(bool blink = false) const = 0;
+    virtual bool no_tele(bool blink = false, bool temp = true) const = 0;
     virtual int inaccuracy() const;
+    int inaccuracy_penalty() const;
     virtual bool antimagic_susceptible() const = 0;
 
     virtual bool res_corr(bool /*allow_random*/ = true, bool temp = true) const;
@@ -375,6 +376,7 @@ public:
     CrawlHashTable props;
 
     int shield_blocks;                 // Count of shield blocks this round.
+    bool triggered_spectral;           // Triggered spectral weapon this round
 
     // Constriction stuff:
 

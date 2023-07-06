@@ -20,6 +20,7 @@
 #include "env.h"
 #include "files.h"
 #include "hints.h"
+#include "initfile.h"
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
@@ -123,6 +124,22 @@ static string _get_version_features()
         result += feature;
         result += "\n";
     }
+
+#ifdef DEBUG
+    // this might be useful on a regular build too?
+    result += "\n<w>Paths</w>\n"
+                   "-----";
+    result += make_stringf("\n<w>crawl_dir</w>: '%s'", SysEnv.crawl_dir.c_str());
+    if (!Options.crawl_dir_option.empty())
+        result += make_stringf(" (option '%s')", Options.crawl_dir_option.c_str());
+    result += make_stringf("\n<w>save_dir</w>:  '%s'", Options.save_dir.c_str());
+    if (!Options.save_dir_option.empty())
+        result += make_stringf(" (option '%s')", Options.save_dir_option.c_str());
+    result += make_stringf("\n<w>macro_dir</w>: '%s'", Options.macro_dir.c_str());
+    if (!Options.macro_dir_option.empty())
+        result += make_stringf(" (option '%s')", Options.macro_dir_option.c_str());
+    result += "\n";
+#endif
 
     return result;
 }
@@ -282,7 +299,7 @@ void list_armour()
         {
             estr << you.inv[armour_id].name(DESC_INVENTORY);
             colour = menu_colour(estr.str(), item_prefix(you.inv[armour_id]),
-                                 "equip");
+                                 "equip", false);
         }
         else if (you_can_wear(i) == maybe_bool::maybe)
             estr << "    (restricted)";
@@ -290,7 +307,7 @@ void list_armour()
             estr << "    none";
 
         if (colour == MSGCOL_BLACK)
-            colour = menu_colour(estr.str(), "", "equip");
+            colour = menu_colour(estr.str(), "", "equip", false);
 
         mprf(MSGCH_EQUIPMENT, colour, "%s", estr.str().c_str());
     }
@@ -333,13 +350,13 @@ void list_jewellery()
         {
             item = you.inv[jewellery_id].name(DESC_INVENTORY);
             string prefix = item_prefix(you.inv[jewellery_id]);
-            colour = menu_colour(item, prefix, "equip");
+            colour = menu_colour(item, prefix, "equip", false);
         }
         else
             item = "    none";
 
         if (colour == MSGCOL_BLACK)
-            colour = menu_colour(item, "", "equip");
+            colour = menu_colour(item, "", "equip", false);
 
         item = chop_string(make_stringf("%-*s: %s",
                                         split ? cols > 96 ? 9 : 8 : 11,

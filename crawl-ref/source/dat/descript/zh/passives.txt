@@ -1,0 +1,82 @@
+%%%%
+no teleportation passive
+
+你无法传送或闪现。
+%%%%
+no spellcasting passive
+
+你无法施放法术。
+%%%%
+random rage passive
+
+当你近战攻击时，你有可能变得狂暴。
+%%%%
+corrode self passive
+
+当你受到伤害时，你有可能会被腐蚀。
+%%%%
+slow self passive
+
+当你受到伤害时，你有可能会变慢。
+%%%%
+harm passive
+
+你造成的和承受的伤害都有所增加。
+%%%%
+mayhem passive
+
+当你杀死敌人时，有可能会让看得见的怪物变得疯狂。
+%%%%
+repel missiles passive
+
+你驱逐了飞弹，提升了躲开它们的机率。
+%%%%
+reflection passive
+
+你将被格挡的远程攻击，返给攻击者。
+%%%%
+acrobat passive
+
+当你移动和等待时，你的闪避有所提升。
+%%%%
+clarity passive
+
+你受到保护，不会不由自主地混乱、狂暴、畏惧和迷惑。
+%%%%
+resist mutation passive
+
+你能抵抗部分变异。
+%%%%
+guardian spirit passive
+
+你受到的任何伤害，都会被生命和魔力储备分摊承受。
+%%%%
+rampage passive
+
+当你向敌人移动时，你会获得额外的一个自由步。
+%%%%
+roll passive
+
+<rampage passive>
+%%%%
+faith passive
+
+神很快会眷顾你，但也会更容易察觉到你在信仰上的冒犯行为。
+%%%%
+wizardry passive
+
+你的法术成功率有所提升。
+%%%%
+archmagi passive
+
+你的法力有所提升。
+%%%%
+channel magic passive
+
+当你成功施法时，有可能重新获得施法时所消耗的魔力；
+当你施法失败时，总是能重新获得所消耗的魔力。
+%%%%
+infuse magic passive
+
+你每次近战攻击时都会消耗魔力，让你的攻击更有力量。
+%%%%

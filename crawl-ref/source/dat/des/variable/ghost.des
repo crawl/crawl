@@ -2627,7 +2627,7 @@ NAME:   hellmonk_ghost_big_iron
 TAGS:   vaults_orient_s
 DEPTH:  D:8-13, Elf, Vaults, !Vaults:$, Crypt, Depths, Zot
 ORIENT: float
-ITEM:   randbook disc:earth spells:iron_shot, javelin q:1
+ITEM:   book of iron, javelin q:1
 KMONS:  O = player ghost
 KMONS:  p = plant
 KMONS:  - = bush

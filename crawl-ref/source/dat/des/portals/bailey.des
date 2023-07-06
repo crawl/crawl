@@ -492,7 +492,7 @@ ORIENT:  encompass
 TAGS:    bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
 #
 ITEM:    any good_item
-ITEM:    potion of flight ident:type
+ITEM:    potion of enlightenment ident:type
 ITEM:    ring of flight ident:type
 ITEM:    pair of boots ego:flying ident:type
 SUBST:   e : eeef, g:eg

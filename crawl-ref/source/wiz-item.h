@@ -19,3 +19,4 @@ void wizard_identify_all_items();
 void wizard_unidentify_all_items();
 void debug_item_statistics();
 void wizard_recharge_evokers();
+void wizard_unobtain_runes_and_orb();

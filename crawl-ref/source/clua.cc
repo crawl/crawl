@@ -1102,7 +1102,9 @@ static void *_clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize)
     CLua *cl = static_cast<CLua *>(ud);
     cl->memory_used += nsize - osize;
 
-    if (nsize > osize && cl->memory_used >= CLUA_MAX_MEMORY_USE * 1024
+    if (nsize > osize
+        && cl->memory_used >= static_cast<long>(crawl_state.clua_max_memory_mb)
+            * 1024 * 1024
         && cl->mixed_call_depth)
     {
         return nullptr;

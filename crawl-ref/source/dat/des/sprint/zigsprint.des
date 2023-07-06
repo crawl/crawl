@@ -756,6 +756,7 @@ KITEM:    J = hand crossbow mundane ident:all plus:5, \
               arbalest mundane ident:all plus:5, \
               triple crossbow mundane ident:all plus:5, \
               shortbow mundane ident:all plus:5, \
+              orcbow mundane ident:all plus:5, \
               longbow mundane ident:all plus:5, \
               sling mundane ident:all plus:5
 KITEM:    K = potion of curing q:9 ident:all, \

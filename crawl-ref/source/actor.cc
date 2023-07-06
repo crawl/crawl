@@ -205,10 +205,17 @@ void actor::shield_block_succeeded(actor *attacker)
     }
 }
 
+/// How many levels of penalties does this actor have from inaccuracy-conferring effects?
 int actor::inaccuracy() const
 {
     const item_def *amu = slot_item(EQ_AMULET);
     return amu && is_unrandom_artefact(*amu, UNRAND_AIR);
+}
+
+/// How great are the penalties to this actor's to-hit from any inaccuracy effects they have?
+int actor::inaccuracy_penalty() const
+{
+    return inaccuracy() * 5;
 }
 
 bool actor::res_corr(bool /*allow_random*/, bool temp) const
@@ -580,15 +587,15 @@ bool actor::has_invalid_constrictor(bool move) const
 
     // Direct constriction (e.g. by nagas and octopode players or AT_CONSTRICT)
     // must happen between adjacent squares.
-    if (get_constrict_type() == CONSTRICT_MELEE)
+    const auto typ = get_constrict_type();
+    if (typ == CONSTRICT_MELEE)
         return !ignoring_player && !adjacent(attacker->pos(), pos());
 
     // Indirect constriction requires the defender not to move.
     return move
-        // Indirect constriction requires reachable ground.
-        || !feat_has_solid_floor(env.grid(pos()))
-        // Constriction doesn't work out of LOS.
-        || !ignoring_player && !attacker->see_cell(pos());
+        // Constriction doesn't work out of LOS, to avoid sauciness.
+        || !ignoring_player && !attacker->see_cell(pos())
+        || typ == CONSTRICT_BVC && !feat_has_solid_floor(env.grid(pos()));
 }
 
 /**
@@ -688,8 +695,9 @@ bool actor::can_engulf(const actor &defender) const
 
 bool actor::can_constrict(const actor &defender, constrict_type typ) const
 {
-    if (defender.is_constricted())
+    if (defender.is_constricted() || defender.res_constrict() >= 3)
         return false;
+
 
     if (typ == CONSTRICT_MELEE)
     {
@@ -697,10 +705,11 @@ bool actor::can_constrict(const actor &defender, constrict_type typ) const
             && (!is_constricting() || has_usable_tentacle());
     }
 
-    return can_see(defender)
-        && defender.res_constrict() < 3
-        // All current indrect forms of constriction require reachable ground.
-        && feat_has_solid_floor(env.grid(defender.pos()));
+    if (!see_cell_no_trans(defender.pos()))
+        return false;
+
+    return typ != CONSTRICT_BVC
+           || feat_has_solid_floor(env.grid(defender.pos()));
 }
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -799,8 +808,12 @@ void actor::constriction_damage_defender(actor &defender, int duration)
          defender.name(DESC_PLAIN, true).c_str(),
          basedam, durdam, acdam, timescale_dam, infdam);
 
-    if (defender.is_monster() && defender.as_monster()->hit_points < 1)
+    if (defender.is_monster()
+        && defender.type != MONS_NO_MONSTER // already dead and reset
+        && defender.as_monster()->hit_points < 1)
+    {
         monster_die(*defender.as_monster(), this);
+    }
 }
 
 // Deal damage over time
@@ -912,7 +925,8 @@ bool actor::torpor_slowed() const
         const monster *mons = *ri;
         if (mons && mons->type == MONS_TORPOR_SNAIL
             && !is_sanctuary(mons->pos())
-            && !mons_aligned(mons, this))
+            && !mons_aligned(mons, this)
+            && !mons->props.exists(KIKU_WRETCH_KEY))
         {
             return true;
         }

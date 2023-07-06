@@ -228,6 +228,7 @@ sun_moth MONS_SUN_MOTH
 %sdir mon/aquatic
 %rim 0
 electric_eel MONS_ELECTRIC_EEL
+jellyfish MONS_JELLYFISH
 %rim 1
 
 %include dc-tentacles.txt
@@ -248,12 +249,11 @@ prince_ribbit MONS_PRINCE_RIBBIT
 bullfrog MONS_BULLFROG
 %rim 0
 blink_frog MONS_BLINK_FROG
+blinking_frog MONS_BLINK_FROG_BLINKING
 goliath_frog MONS_GOLIATH_FROG
-%rim 1
 cane_toad MONS_CANE_TOAD
 
 ## Snakes ('S')
-%rim 0
 ball_python MONS_BALL_PYTHON
 adder MONS_ADDER
 black_mamba MONS_BLACK_MAMBA
@@ -399,6 +399,7 @@ hellwing MONS_HELLWING
 
 # type '5' demons
 crimson_imp MONS_CRIMSON_IMP
+cerulean_imp MONS_CERULEAN_IMP
 %rim 0
 lemure MONS_LEMURE
 quasit MONS_QUASIT
@@ -902,6 +903,7 @@ lodul MONS_LODUL
 ogre MONS_OGRE
 two_headed_ogre MONS_TWO_HEADED_OGRE
 %rim 0
+swamp_ogre MONS_SWAMP_OGRE
 ogre_mage MONS_OGRE_MAGE
 ironbound_thunderhulk MONS_IRONBOUND_THUNDERHULK
 %rim 1

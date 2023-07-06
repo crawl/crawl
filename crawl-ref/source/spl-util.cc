@@ -301,6 +301,7 @@ bool add_spell_to_memory(spell_type spell)
     bool overwrite = false;
     for (const auto &entry : Options.auto_spell_letters)
     {
+        // `matches` has a validity check
         if (!entry.first.matches(sname))
             continue;
         for (char ch : entry.second)
@@ -1397,7 +1398,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
                 return "you have no flesh to rot.";
         }
         // fallthrough to cloud spells
-    case SPELL_BLASTSPARK:
+    case SPELL_BLASTMOTE:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_FREEZING_CLOUD:
     case SPELL_MEPHITIC_CLOUD:
@@ -1461,13 +1462,20 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_ELECTRIC_CHARGE:
+        // XXX: this is a little redundant with you_no_tele_reason()
+        // but trying to sort out temp and so on is a mess
+        if (you.stasis())
+            return "your stasis prevents you from teleporting.";
         if (temp)
         {
             const string no_move_reason = movement_impossible_reason();
             if (!no_move_reason.empty())
                 return no_move_reason;
-            if (!electric_charge_possible(true))
-                return "you can't see anything to charge at.";
+            if (you.no_tele(true))
+                return lowercase_first(you.no_tele_reason(true));
+            const string no_charge_reason = electric_charge_impossible_reason(true);
+            if (!no_charge_reason.empty())
+                return no_charge_reason;
         }
         break;
 
@@ -1733,8 +1741,18 @@ bool spell_no_hostile_in_range(spell_type spell)
             else
                 tempbeam.fire();
 
-            if (tempbeam.foe_info.count > 0
-                || allow_friends && tempbeam.friend_info.count > 0)
+            int foes = tempbeam.foe_info.count;
+            int friends = tempbeam.friend_info.count;
+
+            // Need to check both beam flavours for Plasma Beam.
+            if (zap == ZAP_PLASMA)
+            {
+                tempbeam.flavour = BEAM_ELECTRICITY;
+                tempbeam.fire();
+                foes += tempbeam.foe_info.count;
+            }
+
+            if (foes > 0 || allow_friends && friends > 0)
             {
                 found = true;
                 break;

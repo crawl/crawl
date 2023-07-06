@@ -696,6 +696,7 @@ void update_level(int elapsedTime)
 
     if (env.sanctuary_time)
     {
+        // XX this doesn't guarantee that the final FPROP will be removed?
         if (turns >= env.sanctuary_time)
             remove_sanctuary();
         else

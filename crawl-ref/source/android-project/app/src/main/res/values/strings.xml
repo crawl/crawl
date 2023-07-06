@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dungeon Crawl Stone Soup</string>
+    <string name="start_game">Start Game</string>
+    <string name="edit_rc">Edit Init File</string>
+    <string name="morgue">Morgue Files</string>
+    <string name="rc_hint">Enter your custom configuration here.</string>
+    <string name="help">Options Guide</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="back">Back</string>
+    <string name="sort_by">Sort By</string>
+    <string name="download">Download</string>
+    <string name="download_ok">Download complete</string>
+    <string name="download_error">Download failed</string>
+    <string name="keyboard">Keyboard</string>
+    <string name="extra_keyboard">Extra directional pad</string>
+    <string name="keyboard_size">Keyboard size</string>
+    <string-array name="sort_options">
+        <item>Name asc.</item>
+        <item>Name desc.</item>
+        <item>Date asc.</item>
+        <item>Date desc.</item>
+    </string-array>
+    <string-array name="keyboard_options">
+        <item>Classic keyboard</item>
+        <item>Transparent keyboard</item>
+        <item>Android keyboard</item>
+        <item>No keyboard</item>
+    </string-array>
+    <string-array name="extra_keyboard_options">
+        <item>Disabled</item>
+        <item>Top left</item>
+        <item>Top right</item>
+        <item>Bottom left</item>
+        <item>Bottom right</item>
+    </string-array>
+</resources>

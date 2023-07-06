@@ -38,6 +38,9 @@ server_path = os.path.dirname(os.path.abspath(__file__))
 # is disabled, and opening webtiles loads the game main menu. (default: True)
 # dgl_mode = False
 
+# to enable ttyrec writing at the server level:
+# enable_ttyrecs = False
+
 bind_nonsecure = True # Set to false to only use SSL
 bind_address = ""
 bind_port = 8080
@@ -209,7 +212,7 @@ dgl_status_file = "./rcs/status"
 # (This setting can be a string or list of strings.)
 # milestone_file = ["./milestones"]
 
-# status_file_update_rate = 5
+# status_file_update_rate = 30
 # lobby_update_rate = 2
 
 # recording_term_size = (80, 24)

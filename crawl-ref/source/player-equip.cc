@@ -693,10 +693,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                 {
                     monster *spectral_weapon = find_spectral_weapon(&you);
                     if (spectral_weapon)
-                    {
-                        mpr("Your spectral weapon disappears.");
-                        end_spectral_weapon(spectral_weapon, false, true);
-                    }
+                        end_spectral_weapon(spectral_weapon, false, false);
                 }
                 break;
 

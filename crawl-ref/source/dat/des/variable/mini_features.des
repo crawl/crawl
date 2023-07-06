@@ -3283,6 +3283,130 @@ mbbm.mbbm
 mmmm@mmmm
 ENDMAP
 
+NAME:    nicolae_houndstooth_variations
+TAGS:    transparent
+DEPTH:   D, Depths
+SHUFFLE: DEFH/JKLM/NOPQ/RSZ`, DJNR/EKOS/FLPZ/HMQ`
+SUBST:   DEJKPQZ` = x, FHLMNORS = .
+MAP
+xxxxDEFHxxxxDEFHxxxxDEFH
+xxxxJKLMxxxxJKLMxxxxJKLM
+xxxxNOPQxxxxNOPQxxxxNOPQ
+xxxxRSZ`xxxxRSZ`xxxxRSZ`
+DJNR....DJNR....DJNR....
+EKOS....EKOS....EKOS....
+FLPZ....FLPZ....FLPZ....
+HxQ`....HxQ`....HxQ`....
+xxxxDEFHxxxxDEFHxxxxDEFH
+xxxxJKLMxxxxJKLMxxxxJKLM
+xxxxNOPQxxxxNOPQxxxxNOPQ
+xxxxRSZ`xxxxRSZ`xxxxRSZ`
+DJNR....DJNR....DJNR....
+EKOS....EKOS....EKOS....
+FLPZ....FLPZ....FLPZ....
+HxQ`....HxQ`....HxQ`....
+xxxxDEFHxxxxDEFHxxxxDEFH
+xxxxJKLMxxxxJKLMxxxxJKLM
+xxxxNOPQxxxxNOPQxxxxNOPQ
+xxxxRSZ`xxxxRSZ`xxxxRSZ`
+DJNR....DJNR....DJNR....
+EKOS....EKOS....EKOS....
+FLPZ....FLPZ....FLPZ....
+HxQ`....HxQ`....HxQ`....
+ENDMAP
+
+NAME:  nicolae_twisty_statue_hallways
+TAGS:  transparent decor
+DEPTH: D, Depths, Snake, Elf
+MAP
+    xxxxx
+ @..x.x.x..@
+ ....x.x....
+ ..G.xGx.G..
+xx...x.x...xx
+x.xxx.x.xxx.x
+xx.G.xxx.G.xx
+x.xxx.x.xxx.x
+xx...x.x...xx
+ ..G.xGx.G..
+ ....x.x....
+ @..x.x.x..@
+    xxxxx
+ENDMAP
+
+NAME:    nicolae_the_louvre
+TAGS:    transparent decor
+DEPTH:   D, Depths, Pan
+SHUFFLE: vm
+MAP
+        .....
+       .......
+      ....v....
+     ....v.v....
+    ....v.m.v....
+   ....v.v.v.v....
+  ....v.m.v.m.v....
+ ....v.v.v.v.v.v....
+....v.m.v.m.v.m.v....
+...v.v.v.v.v.v.v.v...
+..v.m.v.m.v.m.v.m.v..
+...v.v.v.v.v.v.v.v...
+....v.m.v.m.v.m.v....
+ ....v.v.v.v.v.v....
+  ....v.m.v.m.v....
+   ....v.v.v.v....
+    ....v.m.v....
+     ....v.v....
+      ....v....
+       .......
+        .....
+ENDMAP
+
+# So named because the empty space in the subvaults kind of looks like letters.
+NAME:  nicolae_letterblocks
+TAGS:  transparent
+DEPTH: D:4-, Depths, Elf, Snake, Crypt
+: local glifz = "DEFHJKLMNOPQRSZapqrsyz-'`"
+: for i = 1, string.len(glifz), 1 do
+:    subvault(string.sub(glifz, i, i) .. " : nico_letterblock")
+: end
+MAP
+        DDD
+        DDD
+        DDDEEE
+      KKKccEEE
+      KKKccEEEFFF
+      KKKLLLccFFF
+    PPPccLLLccFFFHHH
+    PPPccLLLMMMccHHH
+    PPPQQQccMMMccHHHJJJ
+  aaaccQQQccMMMNNNccJJJ
+  aaaccQQQRRRccNNNccJJJ
+  aaapppccRRRccNNNOOO
+yyyccpppccRRRSSSccOOO
+yyyccpppqqqccSSSccOOO
+yyyzzzccqqqccSSSZZZ
+   zzzccqqqrrrccZZZ
+   zzz---ccrrrccZZZ
+      ---ccrrrsss
+      ---'''ccsss
+         '''ccsss
+         '''```
+            ```
+            ```
+ENDMAP
+
+NAME:    nicolae_letter_subblock
+TAGS:    unrand transparent nico_letterblock allow_dup
+DEPTH:   D:4-, Depths, Elf, Snake, Crypt
+SHUFFLE: DEF/-''/'--/'--/'--/'--/'-'
+SUBST:   D- : c, EF' = .
+MAP
+...
+DED
+.F.
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items

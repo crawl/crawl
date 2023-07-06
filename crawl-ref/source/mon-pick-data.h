@@ -259,7 +259,6 @@ static const vector<pop_entry> population[] =
 #endif
 
 { // Lair (OOD cap: 11)
-  {  0,  4, 4500, FLAT, MONS_NO_MONSTER }, // Roughly old D:1-4 chaff weight
   { -2,  4,  100, SEMI, MONS_BLACK_BEAR },
   { -2,  6,  310, SEMI, MONS_BASILISK },
   { -1,  3,   24, PEAK, MONS_SCORPION },
@@ -371,6 +370,7 @@ static const vector<pop_entry> population[] =
   {  1,  7,  135, PEAK, MONS_MERFOLK_JAVELINEER },
   {  1,  7,  110, PEAK, MONS_ALLIGATOR_SNAPPING_TURTLE },
   {  2,  4,  190, SEMI, MONS_SATYR },
+  {  3,  7,   30, PEAK, MONS_FORMLESS_JELLYFISH },
 },
 
 { // Snake Pit
@@ -454,6 +454,7 @@ static const vector<pop_entry> population[] =
   {  1,  5,  515, FLAT, MONS_QUICKSILVER_OOZE },
   {  1,  5,  515, FLAT, MONS_SHINING_EYE },
   {  1,  5,  200, FLAT, MONS_GOLDEN_EYE },
+  {  1,  5,  200, FLAT, MONS_FORMLESS_JELLYFISH },
   {  1,  8,  300, SEMI, MONS_EYE_OF_DEVASTATION },
   {  1,  8,  390, SEMI, MONS_GREAT_ORB_OF_EYES },
   {  2,  5,  100, RISE, MONS_GLOWING_ORANGE_BRAIN },
@@ -491,8 +492,8 @@ static const vector<pop_entry> population[] =
   {  1,  4,  325, RISE, MONS_GREAT_ORB_OF_EYES },
   {  1,  4,   50, FLAT, MONS_GLOWING_ORANGE_BRAIN },
   {  1,  4,   50, RISE, MONS_GLOWING_ORANGE_BRAIN },
-  {  1,  4,  150, FLAT, MONS_VERY_UGLY_THING },
-  {  1,  4,  100, RISE, MONS_VERY_UGLY_THING },
+  {  1,  4,  150, FLAT, MONS_FORMLESS_JELLYFISH },
+  {  1,  4,  100, RISE, MONS_FORMLESS_JELLYFISH },
   {  1,  4,  350, FLAT, MONS_WIZARD },
   {  1,  4,  350, RISE, MONS_WIZARD },
   {  1,  4,   75, FLAT, MONS_NECROMANCER },

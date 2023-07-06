@@ -45,10 +45,6 @@ temporary regeneration.
 
 Your health has stopped regenerating due to the presence of nearby monsters.
 %%%%
-RMsl status
-
-You repel missiles, improving your chance to evade them.
-%%%%
 Touch status
 
 Your attacks deal no damage, but have a chance of confusing monsters that they
@@ -593,7 +589,7 @@ Tree status
 
 You have been transformed into a tree and are rooted to the ground, unable to
 move or teleport. You have minimal evasion but increased health and natural
-armour, and are resistant to poison and immune to torment.
+armour, and are resistant to poison, and immune to torment and drowning.
 
 Any equipped cloak, helmet, gloves, boots and body armour are melded.
 %%%%
@@ -814,4 +810,17 @@ Bog status
 
 You are creating a toxic bog in the nearby area, and are immune to its effects.
 You cannot sustain this transformation in areas out of your line of sight.
+%%%%
+Enlightened status
+
+You are in touch with a greater truth, increasing your resistance to effects
+which target your Willpower. Tragically, this epiphany won't last.
+%%%%
+Will+ status
+
+<Enlightened status>
+%%%%
+Reap status
+
+The dead are hopping! Living creatures you kill may rise as zombified servants.
 %%%%
