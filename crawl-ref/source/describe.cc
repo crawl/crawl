@@ -2206,7 +2206,8 @@ static string _describe_talisman_form(const item_def &item)
     const int hp = form->mult_hp(100);
     const int ac = form->get_ac_bonus();
     const int ev = form->ev_bonus();
-    const int body_ac_loss_percent = form->get_base_ac_penalty(100);
+    const int body_ac_loss_percent = you_can_wear(EQ_BODY_ARMOUR) != false
+                                     && form->get_base_ac_penalty(100);
     if (below_target || hp != 100 || ac || ev || body_ac_loss_percent)
     {
         description += "\n\nDefense:";
