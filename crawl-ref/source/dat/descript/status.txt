@@ -492,7 +492,7 @@ Maw status
 
 Your midsection has transformed into a giant mouth, gnashing and ready to devour
 foes. The mouth may devour slain creatures, healing you to an extent increased
-by your Transmutations skill and the power of the creature eaten. Skill also
+by your Shapeshifting skill and the power of the creature eaten. Skill also
 increases the damage done by the maw.
 
 While transformed, any body armour is melded.
