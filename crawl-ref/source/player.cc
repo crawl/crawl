@@ -3952,6 +3952,7 @@ int get_real_hp(bool trans, bool drained)
             hitp = hitp * 3 / 2;
     }
 
+    // TODO: should this also be in an if (trans) block?
     hitp *= 100 + you.attribute[ATTR_DIVINE_VIGOUR] * 5;
     hitp /= 100;
 
