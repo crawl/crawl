@@ -3397,7 +3397,7 @@ yyyzzzccqqqccSSSZZZ
 ENDMAP
 
 NAME:    nicolae_letter_subblock
-TAGS:    unrand transparent nico_letterblock allow_dup
+TAGS:    unrand transparent nico_letterblock allow_dup no_dump
 DEPTH:   D:4-, Depths, Elf, Snake, Crypt
 SHUFFLE: DEF/-''/'--/'--/'--/'--/'-'
 SUBST:   D- : c, EF' = .
