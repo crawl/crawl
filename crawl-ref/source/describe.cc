@@ -2206,7 +2206,8 @@ static string _describe_talisman_form(const item_def &item)
     const int hp = form->mult_hp(100);
     const int ac = form->get_ac_bonus();
     const int ev = form->ev_bonus();
-    if (below_target || hp != 100 || ac || ev)
+    const int base_ac_penalty = form->get_base_ac_penalty(100);
+    if (below_target || hp != 100 || ac || ev || base_ac_penalty)
     {
         description += "\n\nDefense:";
         if (below_target || hp != 100)
@@ -2217,6 +2218,19 @@ static string _describe_talisman_form(const item_def &item)
         }
         description += _maybe_desc_prop("Bonus AC", ac / 100);
         description += _maybe_desc_prop("Bonus EV", ev);
+
+        if (base_ac_penalty)
+        {
+            description += make_stringf("\nBase Body AC:  -%d%%", base_ac_penalty);
+            const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
+            if (body_armour)
+            {
+                const int base_ac = property(*body_armour, PARM_AC);
+                description += make_stringf(" (-%d from your body armour's base of %d)",
+                                            form->get_base_ac_penalty(base_ac), base_ac);
+
+            }
+        }
     }
 
     // offense
