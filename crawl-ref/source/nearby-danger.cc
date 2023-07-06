@@ -490,7 +490,7 @@ void revive()
 
     // TODO: this doesn't seem to call any duration end effects?
     for (int dur = 0; dur < NUM_DURATIONS; dur++)
-        if (dur != DUR_PIETY_POOL)
+        if (dur != DUR_PIETY_POOL && dur != DUR_TRANSFORMATION)
             you.duration[dur] = 0;
 
     update_vision_range(); // in case you had darkness cast before
