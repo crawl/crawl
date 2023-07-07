@@ -2206,9 +2206,9 @@ static string _describe_talisman_form(const item_def &item)
     const int hp = form->mult_hp(100);
     const int ac = form->get_ac_bonus();
     const int ev = form->ev_bonus();
-    const int body_ac_loss_percent = you_can_wear(EQ_BODY_ARMOUR) != false
-                                     && form->get_base_ac_penalty(100);
-    if (below_target || hp != 100 || ac || ev || body_ac_loss_percent)
+    const int body_ac_loss_percent = form->get_base_ac_penalty(100);
+    const bool loses_body_ac = body_ac_loss_percent && you_can_wear(EQ_BODY_ARMOUR) != false;
+    if (below_target || hp != 100 || ac || ev || loses_body_ac)
     {
         description += "\n\nDefense:";
         if (below_target || hp != 100)
@@ -2225,7 +2225,7 @@ static string _describe_talisman_form(const item_def &item)
             const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
             const int base_ac = body_armour ? property(*body_armour, PARM_AC) : 0;
             const int ac_penalty = form->get_base_ac_penalty(base_ac);
-            description += make_stringf("\nAC:             -%d (-%d%% of your body armour's %d base AC)",
+            description += make_stringf("\nAC:           -%d (-%d%% of your body armour's %d base AC)",
                                         ac_penalty, body_ac_loss_percent, base_ac);
         }
     }
