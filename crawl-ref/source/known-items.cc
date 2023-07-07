@@ -476,7 +476,8 @@ void check_item_knowledge(bool unknown_items)
     sort(items_food.begin(), items_food.end(), _identified_item_names);
 #endif
     sort(items_misc.begin(), items_misc.end(), _identified_item_names);
-    sort(items_talismans.begin(), items_talismans.end(), _identified_item_names);
+    // Intentionally don't sort talismans so that they're ordered by tier instead.
+    // (This is dubious!)
 
     KnownMenu menu(unknown_items, all_items_known);
     string stitle;
