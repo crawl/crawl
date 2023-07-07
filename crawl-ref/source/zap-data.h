@@ -85,8 +85,9 @@ static const zap_info zap_data[] =
     ZAP_ENERGY_BOLT,
     "bolt of energy",
     200,
-    nullptr,
-    nullptr,
+    // Only used for Makh's targeter.
+    new dicedef_calculator<3, 20, 0, 1>,
+    new tohit_calculator<15, 1, 30>,
     new dicedef_calculator<3, 20, 0, 1>,
     new tohit_calculator<15, 1, 30>,
     YELLOW,
