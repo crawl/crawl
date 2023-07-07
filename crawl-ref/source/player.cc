@@ -1935,7 +1935,7 @@ bool player_is_shapechanged()
     // TODO: move into data
     return form_changed_physiology(you.form)
         && you.form != transformation::death
-        && you.form == transformation::shadow;
+        && you.form != transformation::shadow;
 }
 
 void update_acrobat_status()
