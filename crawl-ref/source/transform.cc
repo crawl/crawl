@@ -721,7 +721,7 @@ public:
     int get_ac_bonus() const override
     {
         if (species::is_draconian(you.species))
-            return 800 + get_level(skill_ac * 100) / max_skill;
+            return 1000 + get_level(skill_ac * 100) / max_skill;
         return Form::get_ac_bonus();
     }
 
