@@ -714,7 +714,7 @@ class TransformDelay : public Delay
     void finish() override;
 public:
     TransformDelay(transformation f) :
-                   Delay(5), form(f)
+                   Delay(3), form(f)
     { }
 
     bool try_interrupt(bool force = false) override;
