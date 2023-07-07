@@ -13,9 +13,9 @@ both speak to the training she underwent. Underestimate her at your peril!
 Aizul
 
 Once the primary guardian serpent of a legendary treasure hoard, she was
-disgraced after thieves looted it while she slept. She now slithers about the
-dungeon, seeking vengeance against all would-be looters. She is an accomplished
-spellcaster, but no more deadly in melee combat than others of her kind.
+disgraced after thieves looted it while she slept. She seeks to make up for her
+failure by protecting the only treasure the villains overlooked, a single
+precious talisman.
 %%%%
 Amaemon
 
@@ -454,7 +454,8 @@ after a catastrophic mishap with a magical talisman.
 %%%%
 Rupert
 
-A human whose savage roars bring terror to all those who hear them.
+A human whose savage roars bring terror to all those who hear them. Perhaps he
+holds some talisman that lends supernatural force to his bellows?
 %%%%
 Saint Roka
 
@@ -477,6 +478,8 @@ that is, easy meals — it attracts.
 Sojobo
 
 Queen of the tengu, with legendary skill in swordsmanship, tactics, and magic.
+Storytellers claim she once trapped a raging tempest in a bottle and kept it
+as a talisman.
 %%%%
 Sonja
 

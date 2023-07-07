@@ -104,13 +104,29 @@ static bool _should_give_unique_item(monster* mon)
     return mon->type != MONS_NATASHA || !mon->props.exists(FELID_REVIVES_KEY);
 }
 
+static talisman_type _talisman_for(monster_type mtyp)
+{
+    switch (mtyp)
+    {
+    case MONS_RUPERT:
+        return TALISMAN_MAW; // good for shoutin'
+    case MONS_AIZUL:
+        return TALISMAN_SERPENT; // late, but so thematic!
+    case MONS_ROXANNE:
+        return TALISMAN_STATUE;
+    case MONS_SOJOBO:
+        return TALISMAN_STORM;
+    default:
+        break;
+    }
+    return NUM_TALISMANS;
+}
+
 static void _give_talisman(monster* mon, int level)
 {
-    if (mon->type != MONS_ROXANNE)
-        return;
-
-    give_specific_item(mon, items(false, OBJ_TALISMANS,
-                                  TALISMAN_STATUE, level));
+    const talisman_type talisman = _talisman_for(mon->type);
+    if (talisman != NUM_TALISMANS)
+        give_specific_item(mon, items(false, OBJ_TALISMANS, talisman, level));
 }
 
 static void _give_wand(monster* mon, int level)
