@@ -728,8 +728,10 @@ public:
     /**
      * Find the player's base unarmed damage in this form.
      */
-    int get_base_unarmed_damage() const override
+    int get_base_unarmed_damage(bool random) const override
     {
+        if (random)
+            return 22 + div_rand_round(get_level(2), 3);
         return 22 + get_level(2) / 3;
     }
 
@@ -953,8 +955,10 @@ public:
     /**
      * Find the player's base unarmed damage in this form.
      */
-    int get_base_unarmed_damage() const override
+    int get_base_unarmed_damage(bool random) const override
     {
+        if (random)
+            return 8 + div_rand_round(get_level(3), 2);
         return 8 + get_level(3) / 2;
     }
 
@@ -983,8 +987,10 @@ private:
     DISALLOW_COPY_AND_ASSIGN(FormBeast);
 public:
     static const FormBeast &instance() { static FormBeast inst; return inst; }
-    int slay_bonus() const override
+    int slay_bonus(bool random) const override
     {
+        if (random)
+            return 1 + div_rand_round(get_level(5), max_skill);
         return 1 + get_level(5) / max_skill;
     }
 };
@@ -1007,52 +1013,6 @@ private:
     DISALLOW_COPY_AND_ASSIGN(FormHydra);
 public:
     static const FormHydra &instance() { static FormHydra inst; return inst; }
-
-    /**
-     * Get a string describing the form you're turning into.
-     */
-    string get_transform_description() const override
-    {
-        const auto heads = you.heads();
-        const string headstr = (heads < 11 ? number_in_words(heads)
-                                           : to_string(heads))
-                             + "-headed hydra.";
-        return article_a(headstr);
-    }
-
-    /**
-     * @ description
-     */
-    string get_description(bool past_tense) const override
-    {
-        return make_stringf("You %s %s",
-                            past_tense ? "were" : "are",
-                            get_transform_description().c_str());
-    }
-
-    /**
-     * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
-     */
-    string get_uc_attack_name(string /*default_name*/) const override
-    {
-        return make_stringf("Bite (x%d)", you.heads());
-    }
-
-    /**
-     * Find the player's base unarmed damage in this form.
-     */
-    int get_base_unarmed_damage() const override
-    {
-        // 3 damage per head for 1-10
-        const int normal_heads_damage = min(you.heads(), 10) * 3;
-        // 3/2 damage per head for 11-20 (they get in each-other's way)
-            // (and also a 62-base-damage form scares me)
-        const int too_many_heads_damage = max(0, you.heads() - 10)
-                                            * 3 / 2;
-        // 2-47 (though more like 14-32 in practical ranges...)
-        return 2 + normal_heads_damage + too_many_heads_damage;
-    }
-
 };
 #endif
 
