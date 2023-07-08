@@ -705,6 +705,13 @@ public:
 
     bool can_quaff(string *reason = nullptr, bool temp = true) const override
     {
+        // TODO: unify with cant_transform_reason
+        if (you.has_mutation(MUT_NO_FORMS))
+        {
+            if (reason)
+                *reason = "You have sacrificed the ability to change form.";
+            return false;
+        }
         if (you.is_lifeless_undead(temp))
         {
             if (reason)

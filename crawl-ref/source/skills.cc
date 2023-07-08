@@ -2197,6 +2197,7 @@ static map<skill_type, mutation_type> skill_sac_muts = {
     { SK_ARMOUR,         MUT_NO_ARMOUR_SKILL },
     { SK_EVOCATIONS,     MUT_NO_ARTIFICE },
     { SK_STEALTH,        MUT_NO_STEALTH },
+    { SK_SHAPESHIFTING,  MUT_NO_FORMS },
 };
 
 bool can_sacrifice_skill(mutation_type mut)

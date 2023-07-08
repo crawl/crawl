@@ -2167,6 +2167,15 @@ static const mutation_def mut_data[] =
   {"You no longer feel sensitive to extremes of temperature", "", ""},
 },
 
+
+{ MUT_NO_FORMS, 0, 1, mutflag::bad, false,
+  "no forms",
+
+  {"You cannot voluntarily change form.", "", ""},
+  {"You can no longer voluntarily change form.", "", ""},
+  {"You can once more change form.", "", ""},
+},
+
 { MUT_NO_REGENERATION, 0, 1, mutflag::bad, false,
   "no regeneration",
 

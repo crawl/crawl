@@ -611,6 +611,8 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {fail_basis::invo}, abflag::sacrifice },
         { ABIL_RU_SACRIFICE_RESISTANCE, "Sacrifice Resistance",
             0, 0, 0, -1, {fail_basis::invo}, abflag::sacrifice },
+        { ABIL_RU_SACRIFICE_FORMS, "Sacrifice Forms",
+            0, 0, 0, -1, {fail_basis::invo}, abflag::sacrifice },
         { ABIL_RU_REJECT_SACRIFICES, "Reject Sacrifices",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
 
@@ -3263,6 +3265,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_RU_SACRIFICE_SKILL:
     case ABIL_RU_SACRIFICE_EYE:
     case ABIL_RU_SACRIFICE_RESISTANCE:
+    case ABIL_RU_SACRIFICE_FORMS:
         if (!ru_do_sacrifice(abil.ability))
             return spret::abort;
         break;
@@ -3953,6 +3956,7 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_RU_SACRIFICE_SKILL:
     case ABIL_RU_SACRIFICE_EYE:
     case ABIL_RU_SACRIFICE_RESISTANCE:
+    case ABIL_RU_SACRIFICE_FORMS:
     case ABIL_RU_REJECT_SACRIFICES:
     case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
     case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:

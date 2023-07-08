@@ -196,4 +196,14 @@ static const sacrifice_def sac_data[] =
   nullptr,
   nullptr,
 },
+
+{ ABIL_RU_SACRIFICE_FORMS, MUT_NO_FORMS,
+  "sacrifice your ability to change forms",
+  "sacrificed forms",
+
+  15,
+  SK_SHAPESHIFTING,
+  nullptr,
+  nullptr,
+},
 };

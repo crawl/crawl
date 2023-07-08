@@ -611,6 +611,11 @@ Sacrifice Stealth ability
 Sacrifices stealth, causing you to always be noticed by foes and preventing
 you from having any ranks in the Stealth skill.
 %%%%
+Sacrifice Forms ability
+
+Sacrifices forms, preventing you from voluntarily changing your form and from
+having any ranks in the Shapeshifting skill.
+%%%%
 Sacrifice Artifice ability
 
 Sacrifices the ability to evoke any magical items, and prevents you from having

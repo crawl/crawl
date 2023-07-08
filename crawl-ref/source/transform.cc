@@ -1554,6 +1554,9 @@ undead_form_reason lifeless_prevents_form(transformation which_trans,
  */
 string cant_transform_reason(transformation which_trans, bool involuntary)
 {
+    if (!involuntary && you.has_mutation(MUT_NO_FORMS))
+        return "You have sacrificed the ability to change form!";
+
     if (you.transform_uncancellable)
         return "You are stuck in your current form!";
 

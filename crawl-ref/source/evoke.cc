@@ -1069,6 +1069,9 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
 
     if (item->base_type == OBJ_TALISMANS)
     {
+        // TODO: unify with cant_transform_reason
+        if (you.has_mutation(MUT_NO_FORMS))
+            return "You have sacrificed the ability to change form.";
         if (you.undead_state(false) == US_UNDEAD)
             return "your undead flesh cannot be transformed.";
         if (temp && you.undead_state() == US_SEMI_UNDEAD && !you.vampire_alive)

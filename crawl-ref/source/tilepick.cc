@@ -3843,6 +3843,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_RU_SACRIFICE_EYE;
     case ABIL_RU_SACRIFICE_RESISTANCE:
         return TILEG_ABILITY_RU_SACRIFICE_RESISTANCE;
+    case ABIL_RU_SACRIFICE_FORMS:
+        return TILEG_ABILITY_RU_SACRIFICE_FORMS;
     case ABIL_RU_REJECT_SACRIFICES:
         return TILEG_ABILITY_RU_REJECT_SACRIFICES;
     // Hepliaklqana

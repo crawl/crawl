@@ -959,7 +959,7 @@ void wizard_transform()
     you.transform_uncancellable = false;
     if (you.default_form == you.form && you.form != transformation::none)
         you.default_form = form;
-    if (!transform(200, form) && you.form != form)
+    if (!transform(200, form, true) && you.form != form)
         mpr("Transformation failed.");
 }
 
