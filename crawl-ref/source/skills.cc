@@ -1948,6 +1948,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Holy Roller";
             else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
                 result = "Forbidden One";
+            else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_USKAYAW)
+                result = "Necrodancer";
             else if (species == SP_VINE_STALKER && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
                 result = "Black Lotus";
             else if (species == SP_GARGOYLE && skill_rank == 5 && god == GOD_JIYVA)
