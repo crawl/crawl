@@ -2234,6 +2234,8 @@ static string _describe_talisman_form(const item_def &item)
     description += "\n\nOffense:";
     description += make_stringf("\nUC base dam.:  %d", form->get_base_unarmed_damage(false));
     description += _maybe_desc_prop("Slay", form->slay_bonus(false));
+    if (form_type == transformation::maw)
+        description += make_stringf("\nMaw Damage:    %d", form->get_aux_damage(false));
     description += _maybe_desc_prop("Str", form->str_mod);
     description += _maybe_desc_prop("Dex", form->dex_mod);
 

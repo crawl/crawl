@@ -1002,6 +1002,14 @@ private:
     DISALLOW_COPY_AND_ASSIGN(FormMaw);
 public:
     static const FormMaw &instance() { static FormMaw inst; return inst; }
+
+    int get_aux_damage(bool random) const override
+    {
+        const int base = 7;
+        if (random)
+            return base + div_rand_round(get_level(100), 100);
+        return base + get_level(1);
+    }
 };
 
 #if TAG_MAJOR_VERSION == 34
