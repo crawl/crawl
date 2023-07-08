@@ -968,13 +968,9 @@ static void _show_startup_menu(newgame_def& ng_choice,
 {
     unwind_bool no_more(crawl_state.show_more_prompt, false);
 
-#if defined(USE_TILE_LOCAL) && defined(__ANDROID__)
-    jni_keyboard_control(false);
-    sleep(1); // wait for keyboard
-#elif defined(USE_TILE_WEB)
+#ifdef USE_TILE_WEB
     tiles_crt_popup show_as_popup;
 #endif
-
 
     auto startup_ui = make_shared<UIStartupMenu>(ng_choice, defaults);
     auto popup = make_shared<ui::Popup>(startup_ui);
@@ -1033,6 +1029,12 @@ bool startup_step()
     if (!SysEnv.crawl_name.empty())
         choice.name = SysEnv.crawl_name;
 
+#ifdef __ANDROID__
+    // Request the Android virtual keyboard. Waiting for the SDLActivity to be
+    // resized avoids some display bugs.
+    jni_keyboard_control(false);
+    sleep(1);
+#endif
 
 #ifndef DGAMELAUNCH
 
