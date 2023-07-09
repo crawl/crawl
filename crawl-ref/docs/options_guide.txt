@@ -162,6 +162,7 @@ The contents of this text are:
                 background_colour, foreground_colour, use_fake_cursor
 
 6-  Lua.
+                lua_max_memory
 6-a     Including lua files.
 6-b     Executing inline lua.
 6-c     Conditional options.
@@ -3095,6 +3096,9 @@ use_fake_cursor = true
 
 6-  Lua.
 ========
+
+lua_max_memory = 16
+        Max memory in MB allowed for user Lua scripts.
 
 6-a  Including lua files.
 -------------------------

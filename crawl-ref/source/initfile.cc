@@ -3607,6 +3607,15 @@ void base_game_options::read_option_line(const string &str, bool runscripts)
                 [this](const string & s, bool b) { set_option_fragment(s, b); });
         return;
     }
+    else if (state.key == "lua_max_memory")
+    {
+#ifdef DGAMELAUNCH
+        report_error("Option 'lua_max_memory' is disabled in this build.", state.field.c_str());
+#else
+        if (!sscanf(state.field.c_str(), "%" SCNu64, &crawl_state.clua_max_memory_mb))
+            report_error("Couldn't parse integer option lua_max_memory: \"%s\"", state.field.c_str());
+#endif
+    }
     else if (state.key == "lua_file")
     {
 #ifdef CLUA_BINDINGS
