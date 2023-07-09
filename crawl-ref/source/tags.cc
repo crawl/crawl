@@ -2511,9 +2511,13 @@ FixedVector<spell_type, MAX_KNOWN_SPELLS> unmarshall_player_spells(reader &th)
 #if TAG_MAJOR_VERSION == 34
         spells[i] = _fixup_removed_spells(spells[i]);
 #endif
-        // We'll clean up form spells much later, so that we can give out
-        // compensatory talismans.
-        if (spell_removed(spells[i]) && !spell_was_form(spells[i]))
+        if (spell_removed(spells[i])
+#if TAG_MAJOR_VERSION == 34
+            // We'll clean up form spells much later, so that we can give out
+            // compensatory talismans.
+            && !spell_was_form(spells[i])
+#endif
+            )
             spells[i] = SPELL_NO_SPELL;
     }
 
