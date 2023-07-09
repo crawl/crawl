@@ -990,8 +990,8 @@ public:
     int slay_bonus(bool random) const override
     {
         if (random)
-            return 1 + div_rand_round(get_level(5), max_skill);
-        return 1 + get_level(5) / max_skill;
+            return 1 + div_rand_round(get_level(6), max_skill);
+        return 1 + get_level(6) / max_skill;
     }
 };
 

@@ -345,10 +345,10 @@ static const form_entry formdata[] =
 {
     transformation::beast, MONS_WOLF, "Beast", "beast-form", "beast",
     "a hulking beast.",
-    0, 13, TALISMAN_BEAST,
+    0, 10, TALISMAN_BEAST,
     EQF_AUXES, MR_NO_FLAGS,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
-    0, 0, 0, true, 0, true, 4, true,
+    0, 0, 0, true, 0, true, 3, true,
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true,
     "", 0, "", "", "", "",
