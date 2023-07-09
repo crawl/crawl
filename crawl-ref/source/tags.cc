@@ -4183,6 +4183,25 @@ static void _tag_read_you(reader &th)
     {
         force_item_set_choice(ITEM_SET_ALLY_SCROLLS, SCR_SUMMONING);
     }
+
+    const string APPENDAGE_KEY = "beastly_appendages";
+    if (you.props.exists(APPENDAGE_KEY))
+    {
+        for (auto mut : you.props[APPENDAGE_KEY].get_vector())
+        {
+            const mutation_type app = static_cast<mutation_type>(mut.get_int());
+            const int levels = you.get_base_mutation_level(app);
+            const int beast_lvl = app == MUT_TENTACLE_SPIKE ? 3 : 2;
+            const int innate_lvl = you.get_innate_mutation_level(app);
+            // Preserve extra mutation levels acquired after transforming.
+            const int extra = max(0, levels - innate_lvl - beast_lvl);
+            you.mutation[app] = innate_lvl + extra;
+        }
+        you.props.erase(APPENDAGE_KEY);
+        // This leaves you in a very silly beastly appendage
+        // state with no associated mutations. It's fine, it'll
+        // all clear up once the form ends.
+    }
 #endif
 }
 
