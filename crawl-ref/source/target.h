@@ -273,6 +273,13 @@ public:
     aff_type is_affected(coord_def loc) override;
 };
 
+class targeter_siphon_essence : public targeter_radius
+{
+public:
+    targeter_siphon_essence();
+    aff_type is_affected(coord_def loc) override;
+};
+
 class targeter_thunderbolt : public targeter
 {
 public:

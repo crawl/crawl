@@ -2095,6 +2095,8 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
         return make_unique<targeter_multiposition>(&you, find_elemental_targets());
     case ABIL_JIYVA_OOZEMANCY:
         return make_unique<targeter_walls>(&you, find_slimeable_walls());
+    case ABIL_SIPHON_ESSENCE:
+        return make_unique<targeter_siphon_essence>();
 
     // Full LOS:
     case ABIL_BREATHE_LIGHTNING: // Doesn't account for bounces/explosions
@@ -2438,12 +2440,8 @@ static vector<monster*> _get_siphon_victims(bool known)
     vector<monster*> victims;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (grid_distance(you.pos(), mi->pos()) <= 2
-            && !mi->wont_attack()
-            && !(mi->holiness() & MH_NONLIVING)
-            && !mons_is_conjured(mi->type) // redundant?
-            && !mons_is_tentacle_or_tentacle_segment(mi->type) // dubious
-            // intentionally allowing firewood, i guess..?
+        if (grid_distance(you.pos(), mi->pos()) <= siphon_essence_range()
+            && siphon_essence_affects(**mi)
             && (you.can_see(**mi) || !known))
         {
             victims.push_back(*mi);
