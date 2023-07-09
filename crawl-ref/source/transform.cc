@@ -1747,12 +1747,9 @@ static void _enter_form(int pow, transformation which_trans)
     _on_enter_form(which_trans);
 
     // Stop constricting if we can no longer constrict. If any size-changing
-    // transformations were to allow constriction, we would have to check
-    // relative sizes as well. Likewise, if any transformations were to allow
-    // normally non-constricting players to constrict, this would need to
-    // be changed.
-    // XXX TODO: sort this out for anacondas
-    if (!form_keeps_mutations(which_trans))
+    // transformations that are smaller than the largest player race were to
+    // allow constriction, we would have to check relative sizes as well.
+    if (!form_keeps_mutations(which_trans) && which_trans != transformation::anaconda)
         you.stop_directly_constricting_all(false);
 
     // Stop being constricted if we are now too large, or are now immune.
@@ -1822,7 +1819,7 @@ static void _enter_form(int pow, transformation which_trans)
  * If the player is already in that form, attempt to refresh its duration and
  * power.
  *
- * @param pow               Thw power of the transformation (equivalent to
+ * @param pow               The power of the transformation (equivalent to
  *                          spellpower of form spells)
  * @param which_trans       The form which the player should become.
  * @param involuntary       Checks for inscription warnings are skipped, and
@@ -1975,6 +1972,10 @@ void untransform(bool skip_move)
         if (you.body_size(PSIZE_BODY) > constrictor->body_size(PSIZE_BODY))
             you.stop_being_constricted();
     }
+
+    // Stop constricting if we can't anymore. This is a little fragile.
+    if (you.get_mutation_level(MUT_CONSTRICTING_TAIL) < 2 && !you.has_usable_tentacle())
+        you.stop_directly_constricting_all(false);
 
     you.turn_is_over = true;
     if (you.transform_uncancellable)
