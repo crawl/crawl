@@ -1746,11 +1746,11 @@ static void _enter_form(int pow, transformation which_trans)
 
     _on_enter_form(which_trans);
 
-    // Stop constricting if we can no longer constrict. If any size-changing
-    // transformations that are smaller than the largest player race were to
-    // allow constriction, we would have to check relative sizes as well.
-    if (!form_keeps_mutations(which_trans) && which_trans != transformation::anaconda)
-        you.stop_directly_constricting_all(false);
+    // Stop constricting, if appropriate. In principle, we could be switching
+    // from one form that allows constricting to another, but that seems too
+    // rare to justify the complexity. The confusion of changing forms makes
+    // you lose your grip, or something.
+    you.stop_directly_constricting_all(false);
 
     // Stop being constricted if we are now too large, or are now immune.
     if (you.get_constrict_type() == CONSTRICT_MELEE)
@@ -1972,10 +1972,6 @@ void untransform(bool skip_move)
         if (you.body_size(PSIZE_BODY) > constrictor->body_size(PSIZE_BODY))
             you.stop_being_constricted();
     }
-
-    // Stop constricting if we can't anymore. This is a little fragile.
-    if (you.get_mutation_level(MUT_CONSTRICTING_TAIL) < 2 && !you.has_usable_tentacle())
-        you.stop_directly_constricting_all(false);
 
     you.turn_is_over = true;
     if (you.transform_uncancellable)
