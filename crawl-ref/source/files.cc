@@ -2004,6 +2004,32 @@ static void _rescue_player_from_wall()
     }
 }
 
+#if TAG_MAJOR_VERSION == 34
+static void _fixup_transmuters()
+{
+    vector<pair<spell_type, talisman_type>> forms = {
+        { SPELL_BEASTLY_APPENDAGE, TALISMAN_BEAST },
+        { SPELL_SPIDER_FORM,       TALISMAN_SERPENT },
+        { SPELL_ICE_FORM,          TALISMAN_SERPENT },
+        { SPELL_BLADE_HANDS,       TALISMAN_BLADE },
+        { SPELL_STATUE_FORM,       TALISMAN_STATUE },
+        { SPELL_DRAGON_FORM,       TALISMAN_DRAGON },
+        { SPELL_STORM_FORM,        TALISMAN_STORM },
+        { SPELL_NECROMUTATION,     TALISMAN_DEATH },
+    };
+    for (auto &p : forms) {
+        if (!you.has_spell(p.first))
+            continue;
+        int obj = items(false, OBJ_TALISMANS, p.second, 0);
+        if (obj == NON_ITEM)
+            continue;
+        // Funny but tragic if the player is over red or blue lava.
+        move_item_to_grid(&obj, you.pos(), true);
+        del_spell_from_memory(p.first);
+    }
+}
+#endif
+
 /**
  * Load the current level.
  *
@@ -2409,6 +2435,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         }
         you.props.erase("zig-fixup");
     }
+
+    if (load_mode == LOAD_RESTART_GAME)
+        _fixup_transmuters();
 #endif
 
     return just_created_level;

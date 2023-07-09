@@ -1951,6 +1951,24 @@ bool spell_removed(spell_type spell)
     return removed_spells.count(spell) != 0;
 }
 
+#if TAG_MAJOR_VERSION == 34
+set<spell_type> form_spells = {
+    SPELL_BEASTLY_APPENDAGE,
+    SPELL_SPIDER_FORM,
+    SPELL_ICE_FORM,
+    SPELL_BLADE_HANDS,
+    SPELL_STATUE_FORM,
+    SPELL_STORM_FORM,
+    SPELL_DRAGON_FORM,
+    SPELL_NECROMUTATION,
+};
+
+bool spell_was_form(spell_type spell)
+{
+    return form_spells.count(spell);
+}
+#endif
+
 void end_wait_spells(bool quiet)
 {
     end_searing_ray();
