@@ -1856,7 +1856,8 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
             shop          (shop menus)
             stash         (the results from Ctrl-F)
             description   (the \ screen)
-            stats         (wielded/quivered items on the main screen stats panel)
+            stats         (wielded/quivered items on the main screen stats
+                           panel)
             resists       (items on the % screen)
 
         Possible non-item-related values are as follows; these require an
@@ -1893,7 +1894,8 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
 
         When looking for menu_colour matches, these prefixes are treated as if
         they are prepended to the actual item name, for example:
-            identified evil_item forbidden misc a piece from Xom's chessboard (15/15)
+            identified evil_item forbidden misc a piece from Xom's
+            chessboard (15/15)
 
         The same prefixes can also be used for highlighting prompts pertaining
         to items matching the description, or to define autopickup_exceptions.
