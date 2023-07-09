@@ -800,7 +800,7 @@ KITEM:    T = storm_bow ident:all, \
               plutonium_sword ident:all, \
               devastator ident:all, \
               firestarter ident:all
-KITEM:    S = lightning rod ident:all
+KITEM:    S = beast talisman, maw talisman, blade talisman, serpent talisman
 KFEAT:    ^ = granite_statue
 KFEAT:    & = granite_statue
 COLOUR:   & = magenta
