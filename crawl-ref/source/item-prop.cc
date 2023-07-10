@@ -2037,6 +2037,9 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
             skills.insert(SK_EVOCATIONS);
     }
 
+    if (item.base_type == OBJ_TALISMANS)
+        skills.insert(SK_SHAPESHIFTING);
+
     // Weapons and staves allow training as long as your species can wield them.
     if (!you.could_wield(item, true, true))
         return !skills.empty();
