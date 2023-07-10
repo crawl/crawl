@@ -3377,7 +3377,7 @@ void monster::suicide(int hp_target)
     hit_points = hp_target;
 }
 
-mon_holy_type monster::holiness(bool /*temp*/) const
+mon_holy_type monster::holiness(bool /*temp*/, bool /*incl_form*/) const
 {
     // zombie kraken tentacles
     if (testbits(flags, MF_FAKE_UNDEAD))
@@ -3418,7 +3418,7 @@ bool monster::is_holy() const
     return bool(holiness() & MH_HOLY) || is_priest() && is_good_god(god);
 }
 
-bool monster::is_nonliving(bool /*temp*/) const
+bool monster::is_nonliving(bool /*temp*/, bool /*incl_form*/) const
 {
     return bool(holiness() & MH_NONLIVING);
 }

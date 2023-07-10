@@ -281,6 +281,7 @@ private:
     vector<pair<string,string>> fakemuts;
 };
 const Form* get_form(transformation form = you.form);
+const Form* cur_form(bool temp);
 
 enum undead_form_reason
 {

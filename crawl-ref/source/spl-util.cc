@@ -1371,7 +1371,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     case SPELL_ROT:
         {
-            const mon_holy_type holiness = you.holiness(temp);
+            const mon_holy_type holiness = you.holiness(temp, false);
             if (holiness != MH_NATURAL && holiness != MH_UNDEAD)
                 return "you have no flesh to rot.";
         }

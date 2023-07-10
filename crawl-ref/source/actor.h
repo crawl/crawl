@@ -258,11 +258,11 @@ public:
 
     virtual monster_type mons_species(bool zombie_base = false) const = 0;
 
-    virtual mon_holy_type holiness(bool temp = true) const = 0;
+    virtual mon_holy_type holiness(bool temp = true, bool incl_form = true) const = 0;
     virtual bool undead_or_demonic(bool temp = true) const = 0;
     virtual bool holy_wrath_susceptible() const;
     virtual bool is_holy() const = 0;
-    virtual bool is_nonliving(bool temp = true) const = 0;
+    virtual bool is_nonliving(bool temp = true, bool incl_form = true) const = 0;
     virtual bool evil() const;
     virtual int  how_chaotic(bool check_spells_god = false) const = 0;
     virtual bool is_unbreathing() const = 0;

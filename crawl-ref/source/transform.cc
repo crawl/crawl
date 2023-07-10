@@ -1069,6 +1069,13 @@ const Form* get_form(transformation xform)
     return forms[form];
 }
 
+const Form* cur_form(bool temp)
+{
+    if (temp)
+        return get_form();
+    return get_form(you.default_form);
+}
+
 
 /**
  * Get the wizmode name of a form.

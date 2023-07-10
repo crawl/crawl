@@ -1783,7 +1783,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
 
     // Already immune.
-    if (you.is_nonliving(false) && mutat == MUT_POISON_RESISTANCE)
+    if (you.is_nonliving(false, false) && mutat == MUT_POISON_RESISTANCE)
         return true;
 
     // We can't use is_useless_skill() here, since species that can still wear

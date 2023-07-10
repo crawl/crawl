@@ -772,6 +772,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     // sense to instead return false?)
     ASSERT(eq != EQ_NONE);
 
+    // TODO: maybe use cur_form(temp)?
     if (temp && !get_form()->slot_available(eq))
         return false;
 
@@ -1332,9 +1333,9 @@ int player_res_fire(bool allow_random, bool temp, bool items)
 
         if (you.duration[DUR_QAZLAL_FIRE_RES])
             rf++;
-
-        rf += get_form()->res_fire();
     }
+
+    rf += cur_form(temp)->res_fire();
 
     if (have_passive(passive_t::resist_fire))
         ++rf;
@@ -1385,12 +1386,12 @@ int player_res_cold(bool allow_random, bool temp, bool items)
         if (you.duration[DUR_QAZLAL_COLD_RES])
             rc++;
 
-        rc += get_form()->res_cold();
-
         // XX temp?
         if (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive)
             rc += 2;
     }
+
+    rc += cur_form(temp)->res_cold();
 
     if (items)
     {
@@ -1450,12 +1451,12 @@ bool player::res_corr(bool allow_random, bool temp) const
             return true;
         }
 
-        if (get_form()->res_acid())
-            return true;
-
         if (you.duration[DUR_RESISTANCE])
             return true;
     }
+
+    if (cur_form(temp)->res_acid())
+        return true;
 
     if (have_passive(passive_t::resist_corrosion))
         return true;
@@ -1508,16 +1509,15 @@ int player_res_electricity(bool allow_random, bool temp, bool items)
     re += you.get_mutation_level(MUT_SHOCK_RESISTANCE, temp);
     re -= you.get_mutation_level(MUT_SHOCK_VULNERABILITY, temp);
 
+    if (cur_form(temp)->res_elec())
+        re++;
+
     if (temp)
     {
         if (you.duration[DUR_RESISTANCE])
             re++;
 
         if (you.duration[DUR_QAZLAL_ELEC_RES])
-            re++;
-
-        // transformations:
-        if (get_form()->res_elec())
             re++;
     }
 
@@ -1538,9 +1538,10 @@ bool player_kiku_res_torment()
 // If temp is set to false, temporary sources or resistance won't be counted.
 int player_res_poison(bool allow_random, bool temp, bool items)
 {
+    const int form_rp = cur_form(temp)->res_pois();
     if (you.is_nonliving(temp)
         || you.is_lifeless_undead(temp)
-        || temp && get_form()->res_pois() == 3
+        || form_rp == 3
         || items && player_equip_unrand(UNRAND_OLGREB)
         || temp && you.duration[DUR_DIVINE_STAMINA])
     {
@@ -1580,28 +1581,21 @@ int player_res_poison(bool allow_random, bool temp, bool items)
     rp += you.get_mutation_level(MUT_POISON_RESISTANCE, temp);
     rp += you.get_mutation_level(MUT_SLIMY_GREEN_SCALES, temp) == 3 ? 1 : 0;
 
-    if (temp)
-    {
-        // potions/cards:
-        if (you.duration[DUR_RESISTANCE])
-            rp++;
+    if (temp && you.duration[DUR_RESISTANCE])
+        rp++;
 
-        if (get_form()->res_pois() > 0)
-            rp++;
-    }
+    if (form_rp > 0)
+        rp += form_rp;
 
     // Cap rPois at + before vulnerability effects are applied
     // (so carrying multiple rPois effects is never useful)
     rp = min(1, rp);
 
-    if (temp)
-    {
-        if (get_form()->res_pois() < 0)
-            rp--;
+    if (form_rp < 0)
+        rp += form_rp; // actually a subtraction
 
-        if (you.duration[DUR_POISON_VULN])
-            rp--;
-    }
+    if (temp && you.duration[DUR_POISON_VULN])
+        rp--;
 
     // don't allow rPois--, etc.
     rp = max(-1, rp);
@@ -1766,14 +1760,11 @@ int player_prot_life(bool allow_random, bool temp, bool items)
             pl++;
     }
 
-    if (temp)
-    {
-        pl += get_form()->res_neg();
+    pl += cur_form(temp)->res_neg();
 
-        // completely stoned, unlike statue which has some life force
-        if (you.petrified())
-            pl += 3;
-    }
+    // completely stoned, unlike statue which has some life force
+    if (temp && you.petrified())
+        pl += 3;
 
     if (items)
     {
@@ -6263,11 +6254,11 @@ bool player::heal(int amount)
  * Stays up to date with god for evil/unholy
  * Nonliving (statues, etc), undead, or alive.
  *
- * @param temp      Whether to consider temporary effects: forms,
- *                  petrification...
+ * @param temp      Whether to consider temporary effects.
+ * @param incl_forms Whether to take the player's current form into account.
  * @return          The player's holiness category.
  */
-mon_holy_type player::holiness(bool temp) const
+mon_holy_type player::holiness(bool temp, bool incl_form) const
 {
     mon_holy_type holi;
 
@@ -6280,14 +6271,21 @@ mon_holy_type player::holiness(bool temp) const
     else
         holi = MH_NATURAL;
 
-    // Petrification takes precedence over base holiness and lich form
-    if (temp && (form == transformation::statue
-                 || form == transformation::wisp
-                 || form == transformation::storm
-                 || petrified()))
+    if (incl_form)
     {
-        holi = MH_NONLIVING;
+        // TODO: move this into data
+        const transformation f = temp ? form : default_form;
+        if (f == transformation::statue
+             || f == transformation::wisp
+             || f == transformation::storm)
+        {
+            holi = MH_NONLIVING;
+        }
     }
+
+    // Petrification takes precedence over base holiness and lich form
+    if (temp && petrified())
+        holi = MH_NONLIVING;
 
     // possible XXX: Monsters get evil/unholy bits set on spell selection
     //  should players?
@@ -6314,9 +6312,9 @@ bool player::is_holy() const
     return bool(holiness() & MH_HOLY) || is_good_god(religion);
 }
 
-bool player::is_nonliving(bool temp) const
+bool player::is_nonliving(bool temp, bool incl_form) const
 {
-    return bool(holiness(temp) & MH_NONLIVING);
+    return bool(holiness(temp, incl_form) & MH_NONLIVING);
 }
 
 // This is a stub. Check is used only for silver damage. Worship of chaotic
@@ -6387,8 +6385,8 @@ bool player::res_miasma(bool temp) const
 {
     if (has_mutation(MUT_FOUL_STENCH)
         || is_nonliving(temp)
-        || temp && (get_form()->res_miasma()
-                    || you.props.exists(MIASMA_IMMUNE_KEY)))
+        || cur_form(temp)->res_miasma()
+        || temp && you.props.exists(MIASMA_IMMUNE_KEY))
     {
         return true;
     }
@@ -6450,7 +6448,7 @@ bool player::res_polar_vortex() const
 bool player::res_petrify(bool temp) const
 {
     return get_mutation_level(MUT_PETRIFICATION_RESISTANCE)
-           || temp && get_form()->res_petrify();
+           || cur_form(temp)->res_petrify();
 }
 
 int player::res_constrict() const
