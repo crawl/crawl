@@ -964,7 +964,7 @@ public:
 
     int ev_bonus() const override
     {
-        return get_level(16) / 27;
+        return get_level(1);
     }
 
     bool can_offhand_punch() const override { return true; }

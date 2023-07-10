@@ -332,7 +332,7 @@ static const form_entry formdata[] =
     21, 27, TALISMAN_STORM,
     EQF_PHYSICAL, MR_RES_ELEC | MR_RES_PETRIFY | MR_RES_STICKY_FLAME,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
-    10, 20, 0, true, 0, true, -1, true,
+    10, 10, 0, true, 0, true, -1, true,
     SPWPN_ELECTROCUTION, LIGHTCYAN, "", { "hit", "buffet", "batter", "blast" },
     FC_ENABLE, FC_DEFAULT, FC_FORBID, false,
     "bellow", 0, "", "", "place yourself before", "air",
