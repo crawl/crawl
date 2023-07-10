@@ -841,8 +841,8 @@ const vector<GameOption*> game_options::build_options_list()
 # ifndef __ANDROID__
         new IntGameOption(SIMPLE_NAME(game_scale), 1, 1, 8),
 # else
-        // I'm not entirely sure why this is disabled, but mark it as disabled
-        // so that android users get feedback if they do try to use it
+        // Android ignores this option and auto-sets the game_scale based on
+        // resolution (see TilesFramework::calculate_default_options)
         new DisabledGameOption({"game_scale"}),
 # endif
         new IntGameOption(SIMPLE_NAME(tile_key_repeat_delay), 200, 0, INT_MAX),
