@@ -1562,7 +1562,7 @@ static void _generate_talisman_item(item_def& item, int force_type, int item_lev
         lvl = 0;
         break;
     case ISPEC_RANDART:
-        // XXX TODO randarts
+        // TODO: add talisman artefacts
     case ISPEC_GIFT:
     case ISPEC_GOOD_ITEM:
         lvl = item_level + 10;

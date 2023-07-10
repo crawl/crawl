@@ -1089,7 +1089,7 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
             const string form_unreason = cant_transform_reason(trans);
             if (!form_unreason.empty())
                 return lowercase_first(form_unreason);
-            // XXX support artefact talismans
+            // TODO: add talisman artefacts
             if (you.form != you.default_form)
                 return "you need to leave your temporary form first.";
         }

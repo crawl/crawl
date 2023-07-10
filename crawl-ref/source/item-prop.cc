@@ -1146,7 +1146,7 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_GOLD:
     case OBJ_BOOKS:
     case OBJ_MISCELLANY:
-    case OBJ_TALISMANS: // XXX TODO: support randarts?
+    case OBJ_TALISMANS: // TODO: add talisman artefacts
 #if TAG_MAJOR_VERSION == 34
     case OBJ_FOOD:
     case OBJ_RODS:

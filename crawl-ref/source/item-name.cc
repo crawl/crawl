@@ -1810,7 +1810,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     }
 
     case OBJ_TALISMANS:
-        // XXX TODO: support randarts..?
+        // TODO: add talisman artefacts
         buff << talisman_type_name(item_typ);
         break;
 
@@ -1977,7 +1977,7 @@ bool item_type_known(const item_def& item)
 
     switch (item.base_type)
     {
-    case OBJ_TALISMANS: // XXX TODO: support unknown randarts..?
+    case OBJ_TALISMANS: // TODO: add talisman artefacts
     case OBJ_MISCELLANY:
     case OBJ_MISSILES:
     case OBJ_BOOKS:

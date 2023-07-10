@@ -354,7 +354,7 @@ static bool _item_tracks_artefact(item_base_type base_type)
     case ITEM_ARMOUR:
     case ITEM_JEWELLERY:
     case ITEM_SPELLBOOKS:
-        // XXX TODO talismans
+        // TODO: add talisman artefacts
         return true;
     default:
         return false;
