@@ -1990,10 +1990,7 @@ void return_to_default_form()
     if (you.default_form == transformation::none)
         untransform();
     else
-    {
-        untransform(true);
         transform(0, you.default_form, true);
-    }
     ASSERT(you.form == you.default_form);
 }
 
