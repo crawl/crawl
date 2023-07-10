@@ -22,7 +22,7 @@ sagetoj.
 Chaos Knight
 
 Ĥaosaj Kavaliroj estas ludiloj de la neantaŭvidebla Xom. Ili ankaŭ estas 
-submetita al la konstante ŝangaĝas humerojn de la dio.
+submetita al la konstante ŝanĝiĝas humerojn de la dio.
 %%%%
 Cinder Acolyte
 
@@ -65,7 +65,7 @@ pluraj ĵetretoj.
 %%%%
 Hedge Wizard
 
-Heĝsorĉistoj lernas plurajn negravjn magiojn, tio ebligas ilin dorspiki aŭ 
+Heĝsorĉistoj lernas plurajn negravajn magiojn, tio ebligas ilin dorspiki aŭ 
 eskapi ties frenezigitaj kontraŭuloj.
 %%%%
 Hunter
@@ -74,7 +74,7 @@ Hunter
 %%%%
 Hexslinger
 
-Malbonĵetantoj kunportas ŝtoneĵetilon, kaj uzas Malbonmagion por 
+Malbonĵetantoj kunportas ŝtonĵetilon, kaj uzas Malbonmagion por 
 fari siajn kontraŭulojn pli vundebla per malproksimaj atakoj
 %%%%
 Ice Elementalist
@@ -85,7 +85,7 @@ sorĉaro estas tre multfaceta.
 Monk
 
 Monaĥoj komencas kun malluksa batalilo de sia elekto, sfero de lumo, kaj pocio 
-de dia ambrozio, ankaŭ ili gajnas kelkan piecon de sia unue adorita dio.
+de dia ambrozio, ankaŭ ili gajnas kelkajn piecon de sia unue adorita dio.
 %%%%
 Necromancer
 

@@ -25,11 +25,11 @@ Tiom damaĝo, kiom vi kaŭzi aŭ ricevi estas pliigita.
 %%%%
 mayhem passive
 
-Vi havas ŝancon frenzenigi videblajn monstrojn, kiam vi mortigas kontraŭulon.
+Vi havas ŝancon frenezigi videblajn monstrojn, kiam vi mortigas kontraŭulon.
 %%%%
 repel missiles passive
 
-Repelante projektilojn, vi pliigas vian ŝanĉon eviti ilin.
+Vi repelas pafaĵon, kio pliigas vian ŝanĉon eviti ilin.
 %%%%
 reflection passive
 
@@ -47,9 +47,9 @@ resist mutation passive
 
 Vi estas parte sekura kontraŭ mutaciiĝi.
 %%%%
-guadrian spirit passive
+guardian spirit passive
 
-Tiom damaĝo, kiom vi ricevi estas dividata inter viajn reservojn de sano kaj 
+Tiom damaĝo, kiom vi ricevi estas dividata inter viajn rezervojn de sano kaj 
 manao
 %%%%
 rampage passive

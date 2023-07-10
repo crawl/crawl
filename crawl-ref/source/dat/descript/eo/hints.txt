@@ -19,13 +19,13 @@ vi
 
 La aluda reĝimo helpos vin ludi Crawl sen dokumentado. Se vi ankoraŭ ne, vi 
 eble volus provi la lernilon. Ankaŭ se vi sentas vin fascinitan, tiam tio estas 
-pli informo en la sevkvaj doseiroj de la docs/ dosierujo (ĉiuj ankaŭ povas esti 
+pli informo en la sekvaj dosieroj de la docs/ dosierujo (ĉiuj ankaŭ povas esti 
 leginta ene la ludo):
   <lightblue>quickstart.txt</lightblue>     — Tre mallonga gvidilo pri Crawl.
   <lightblue>crawl_manual.txt</lightblue>   — Tiu enhavas ĉiujn detalojn pri 
  magio, specioj, kapabloj, ktp.
   <lightblue>options_guide.txt</lightblue>  — La fasado de Crawl estas tre 
-agordebla. Tiu dosiero priskribas ĉiujn la opiciojn.
+agordebla. Tiu dosiero priskribas ĉiujn la opciojn.
 
 Feliĉan Crawl-adon!
 %%%%
