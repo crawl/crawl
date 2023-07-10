@@ -148,15 +148,18 @@ static const skill_type skill_display_order[] =
 
     SK_BLANK_LINE,
 
-    SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT,
+    // Strength skills.
+    SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT, SK_THROWING,
 
     SK_BLANK_LINE,
 
+    // Dex skills.
     SK_SHORT_BLADES, SK_LONG_BLADES, SK_RANGED_WEAPONS,
 
     SK_BLANK_LINE,
 
-    SK_ARMOUR, SK_DODGING, SK_SHIELDS, SK_STEALTH, SK_THROWING,
+    // 'Defensive' skills.
+    SK_ARMOUR, SK_DODGING, SK_SHIELDS, SK_STEALTH,
 
     SK_COLUMN_BREAK, SK_TITLE,
 
@@ -170,6 +173,7 @@ static const skill_type skill_display_order[] =
 
     SK_BLANK_LINE,
 
+    // Supernatural but nonmagical skills.
     SK_INVOCATIONS, SK_EVOCATIONS, SK_SHAPESHIFTING,
 
     SK_COLUMN_BREAK,
