@@ -115,19 +115,20 @@ The contents of this text are:
                 tile_excl_centre_col, tile_window_col, tile_update_rate,
                 tile_runrest_rate, tile_key_repeat_delay, tile_tooltip_ms,
                 tile_tag_pref, tile_window_width, tile_window_height,
+                tile_window_ratio, tile_window_limit_size, game_scale,
                 tile_map_pixels, tile_viewport_scale, tile_map_scale,
                 tile_cell_pixels, tile_sidebar_pixels, tile_filter_scaling,
                 tile_force_overlay, tile_overlay_col,
                 tile_overlay_alpha_percent, tile_full_screen,
-                tile_font_crt_file, tile_font_stat_file, tile_font_msg_file,
-                tile_font_tip_file, tile_font_lbl_file, tile_font_crt_family,
-                tile_font_stat_family, tile_font_msg_family,
-                tile_font_lbl_family, tile_font_crt_size, tile_font_stat_size,
-                tile_font_msg_size, tile_font_tip_size, tile_font_lbl_size,
-                tile_font_ft_light, glyph_mode_font, glyph_mode_font_size,
-                tile_show_minihealthbar, tile_show_minimagicbar,
-                tile_show_demon_tier, tile_water_anim, tile_misc_anim,
-                tile_realtime_anim, tile_show_player_species,
+                tile_use_small_layout, tile_font_crt_file, tile_font_stat_file,
+                tile_font_msg_file, tile_font_tip_file, tile_font_lbl_file,
+                tile_font_crt_family, tile_font_stat_family,
+                tile_font_msg_family, tile_font_lbl_family, tile_font_crt_size,
+                tile_font_stat_size, tile_font_msg_size, tile_font_tip_size,
+                tile_font_lbl_size, tile_font_ft_light, glyph_mode_font,
+                glyph_mode_font_size, tile_show_minihealthbar,
+                tile_show_minimagicbar, tile_show_demon_tier, tile_water_anim,
+                tile_misc_anim, tile_realtime_anim, tile_show_player_species,
                 tile_show_threat_levels, tile_layout_priority,
                 tile_display_mode, tile_level_map_hide_messages,
                 tile_level_map_hide_sidebar, tile_player_tile,
@@ -1855,7 +1856,8 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
             shop          (shop menus)
             stash         (the results from Ctrl-F)
             description   (the \ screen)
-            stats         (wielded/quivered items on the main screen stats panel)
+            stats         (wielded/quivered items on the main screen stats
+                           panel)
             resists       (items on the % screen)
 
         Possible non-item-related values are as follows; these require an
@@ -1892,7 +1894,8 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
 
         When looking for menu_colour matches, these prefixes are treated as if
         they are prepended to the actual item name, for example:
-            identified evil_item forbidden misc a piece from Xom's chessboard (15/15)
+            identified evil_item forbidden misc a piece from Xom's
+            chessboard (15/15)
 
         The same prefixes can also be used for highlighting prompts pertaining
         to items matching the description, or to define autopickup_exceptions.
@@ -2258,8 +2261,8 @@ tile_tag_pref = (none| named | enemy | tutorial )
         regular games use "enemy", arena mode uses "named", and tutorial/hints
         modes use "tutorial".
 
-tile_window_height = -90
 tile_window_width  = -90
+tile_window_height = -90
         Options for setting the width and height of the window, in pixels. When
         positive, these set the window size directly. When set to 0, the window
         is auto-sized. When set to a negative number, these values will be
@@ -2939,6 +2942,7 @@ language = <two-letter language code>
         da: Danish
         de: German
         el: Greek
+        eo: Esperanto
         es: Spanish
         fi: Finnish
         fr: French
