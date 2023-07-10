@@ -44,6 +44,7 @@
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "mutant-beast.h"
+#include "nearby-danger.h" // i_feel_safe
 #include "place.h"
 #include "player.h"
 #include "player-stats.h"
@@ -1016,11 +1017,17 @@ static bool _evoke_talisman(const item_def &talisman)
     const transformation trans = _form_for_talisman(talisman);
     if (!check_transform_into(trans) || !check_form_stat_safety(trans))
         return false;
+    if (!i_feel_safe(true) && !yesno("Still begin transforming?", true, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
 
     count_action(CACT_FORM, (int)trans);
     start_delay<TransformDelay>(trans);
     if (god_despises_item(talisman))
         excommunication();
+    you.turn_is_over = true;
     return true;
 }
 
@@ -1177,8 +1184,7 @@ bool evoke_item(item_def& item, dist *preselect)
     }
 
     case OBJ_TALISMANS:
-        did_work = _evoke_talisman(item);
-        break;
+        return _evoke_talisman(item);
 
     case OBJ_MISCELLANY:
         ASSERT(in_inventory(item));
