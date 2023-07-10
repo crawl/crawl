@@ -2518,7 +2518,9 @@ FixedVector<spell_type, MAX_KNOWN_SPELLS> unmarshall_player_spells(reader &th)
             && !spell_was_form(spells[i])
 #endif
             )
+        {
             spells[i] = SPELL_NO_SPELL;
+        }
     }
 
     for (int i = MAX_KNOWN_SPELLS; i < count; ++i)
