@@ -3513,7 +3513,7 @@ unsigned int exp_needed(int lev, int exp_apt)
 }
 
 // returns bonuses from rings of slaying, etc.
-int slaying_bonus(bool throwing)
+int slaying_bonus(bool throwing, bool random)
 {
     int ret = 0;
 
@@ -3534,7 +3534,7 @@ int slaying_bonus(bool throwing)
     if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         ret += you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int();
 
-    ret += get_form()->slay_bonus();
+    ret += get_form()->slay_bonus(random);
 
     return ret;
 }
