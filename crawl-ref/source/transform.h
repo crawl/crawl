@@ -166,6 +166,7 @@ public:
     virtual bool can_offhand_punch() const { return can_wield(); }
     virtual string get_uc_attack_name(string default_name) const;
     virtual int slay_bonus(bool /*random*/ = true, bool /*max*/ = false) const { return 0; }
+    virtual int contam_dam(bool /*random*/ = true, bool /*max*/ = false) const { return 0; }
     virtual int get_ac_bonus(bool max = false) const;
     virtual int ev_bonus(bool /*max*/ = false) const { return 0; }
     virtual int get_base_ac_penalty(int /*base*/) const { return 0; }

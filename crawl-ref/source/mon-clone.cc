@@ -105,6 +105,7 @@ static void _mons_summon_monster_illusion(monster* caster,
         // Discard unsuitable enchantments.
         clone->del_ench(ENCH_CHARM);
         clone->del_ench(ENCH_STICKY_FLAME);
+        clone->del_ench(ENCH_CONTAM);
         clone->del_ench(ENCH_CORONA);
         clone->del_ench(ENCH_SILVER_CORONA);
         clone->del_ench(ENCH_HEXED);

@@ -66,6 +66,7 @@ const enchant_type dispellable_enchantments[] =
     ENCH_ANTIMAGIC,
     ENCH_ANGUISH,
     ENCH_SIMULACRUM,
+    ENCH_CONTAM,
 };
 
 bool player_is_debuffable();

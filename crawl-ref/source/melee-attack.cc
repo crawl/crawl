@@ -449,6 +449,38 @@ void melee_attack::do_ooze_engulf()
     }
 }
 
+
+static void _apply_flux_contam(monster &m)
+{
+    const mon_enchant old_glow = m.get_ench(ENCH_CONTAM);
+
+    if (old_glow.degree >= 2)
+    {
+        const int max_dam = get_form()->contam_dam();
+        const int dam = random2(max_dam);
+        string msg = make_stringf(" shudders as magic cascades through %s%s",
+                                  m.pronoun(PRONOUN_OBJECTIVE).c_str(),
+                                  attack_strength_punctuation(dam).c_str());
+        dprf("done %d (max %d)", dam, max_dam);
+        simple_monster_message(m, msg.c_str());
+        if (dam)
+        {
+            m.hurt(&you, dam, BEAM_MMISSILE, KILLED_BY_BEAM /*eh*/);
+            if (!m.alive())
+                return;
+        }
+        m.malmutate("");
+        m.del_ench(ENCH_CONTAM, true);
+        return;
+    }
+
+    m.add_ench(mon_enchant(ENCH_CONTAM, 1, &you));
+    if (!old_glow.degree)
+        simple_monster_message(m, " begins to glow.");
+    else
+        simple_monster_message(m, " glows dangerously bright.");
+}
+
 /* An attack has been determined to have hit something
  *
  * Handles to-hit effects for both attackers and defenders,
@@ -553,6 +585,10 @@ bool melee_attack::handle_phase_hit()
 
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
+
+    // Apply flux form's sfx.
+    if (defender->alive() && defender->is_monster())
+        _apply_flux_contam(*(defender->as_monster()));
 
     // Fireworks when using Serpent's Lash to kill.
     if (!defender->alive()
@@ -1658,8 +1694,11 @@ int melee_attack::player_apply_postac_multipliers(int damage)
 {
     // Statue form's damage modifier is designed to exactly compensate for
     // the slowed speed; therefore, it needs to apply after AC.
+    // Flux form's modifier is the inverse of statue form's.
     if (you.form == transformation::statue)
         damage = div_rand_round(damage * 3, 2);
+    else if (you.form == transformation::flux)
+        damage = div_rand_round(damage * 2, 3);
 
     return damage;
 }

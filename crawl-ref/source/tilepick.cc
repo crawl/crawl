@@ -2246,6 +2246,8 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_TELEPORTING, TILEI_TELEPORTING },
     { MB_EMPOWERED_SPELLS, TILEI_BRILLIANCE },
     { MB_RESISTANCE, TILEI_RESISTANCE },
+    { MB_CONTAM_LIGHT, TILEI_GLOW_LIGHT },
+    { MB_CONTAM_HEAVY, TILEI_GLOW_HEAVY },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -2727,6 +2729,7 @@ static tileidx_t _tileidx_talisman(const item_def &item)
     case TALISMAN_DRAGON:   return TILE_TALISMAN_DRAGON;
     case TALISMAN_STORM:    return TILE_TALISMAN_STORM;
     case TALISMAN_DEATH:    return TILE_TALISMAN_DEATH;
+    case TALISMAN_FLUX:
     default: return TILE_ERROR;
     }
 }

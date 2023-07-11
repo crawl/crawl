@@ -675,6 +675,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         behaviour_event(this, ME_EVAL);
         break;
 
+    case ENCH_CONTAM:
     case ENCH_CORONA:
     case ENCH_SILVER_CORONA:
     if (!quiet)
@@ -1371,6 +1372,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_PETRIFIED:
     case ENCH_SICK:
     case ENCH_CORONA:
+    case ENCH_CONTAM:
     case ENCH_ABJ:
     case ENCH_CHARM:
     case ENCH_SLEEP_WARY:
@@ -2094,7 +2096,7 @@ static const char *enchant_names[] =
     "vile_clutch", "waterlogged", "ring_of_flames",
     "ring_chaos", "ring_mutation", "ring_fog", "ring_ice", "ring_neg",
     "ring_acid", "ring_miasma", "concentrate_venom", "fire_champion",
-    "anguished", "simulacra", "necrotizing",
+    "anguished", "simulacra", "necrotizing", "glowing",
     "buggy", // NUM_ENCHANTMENTS
 };
 
@@ -2273,6 +2275,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_HELD:
         cturn = 120 / _mod_speed(25, mons->speed);
         break;
+    case ENCH_CONTAM: // TODO: maybe faster
     case ENCH_POISON:
         cturn = 1000 * deg / _mod_speed(125, mons->speed);
         break;

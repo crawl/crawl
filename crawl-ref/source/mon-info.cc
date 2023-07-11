@@ -178,6 +178,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
             return MB_MORE_POISONED;
         else
             return MB_MAX_POISONED;
+    case ENCH_CONTAM:
+        return mons.get_ench(ench).degree == 1 ? MB_CONTAM_LIGHT : MB_CONTAM_HEAVY;
     case ENCH_SHORT_LIVED:
     case ENCH_SLOWLY_DYING:
         if (mons.type == MONS_WITHERED_PLANT)

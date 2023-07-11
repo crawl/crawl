@@ -491,6 +491,7 @@ tileidx_t tileidx_player()
     {
     // equipment-using forms are handled regularly
     case transformation::beast:
+    case transformation::flux:
     case transformation::maw:
     case transformation::statue:
     case transformation::death:

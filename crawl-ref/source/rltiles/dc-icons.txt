@@ -77,6 +77,8 @@ teleporting TELEPORTING
 brill BRILLIANCE
 resist RESISTANCE
 malmutated MALMUTATED
+glow_light GLOW_LIGHT
+glow_heavy GLOW_HEAVY
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

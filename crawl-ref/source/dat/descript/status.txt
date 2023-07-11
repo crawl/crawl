@@ -469,6 +469,14 @@ energy pulsing through your limbs keeps you ready to kill.
 
 Any gloves, cloaks, headgear and boots are melded.
 %%%%
+Flux status
+
+You are unstable at a fundamental level. You inflict dangerous levels of
+magical contamination on foes with each touch. Sufficient contamination
+causes a highly localized meltdown, dealing enormous damage. Your instability
+also makes you harder to hit, but renders you unable to use weapons or shields,
+and reduces your melee damage as your limbs sometimes destabilize mid-swing.
+%%%%
 Blade status
 
 {{

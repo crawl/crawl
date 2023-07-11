@@ -2890,7 +2890,7 @@ bool monster::asleep() const
 bool monster::backlit(bool self_halo, bool /*temp*/) const
 {
     if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME)
-        || has_ench(ENCH_SILVER_CORONA))
+        || has_ench(ENCH_SILVER_CORONA) || has_ench(ENCH_CONTAM))
     {
         return true;
     }

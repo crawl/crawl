@@ -324,7 +324,7 @@ static const map<job_type, job_def> job_data =
     { SP_NAGA, SP_MERFOLK, SP_BASE_DRACONIAN, SP_DEMIGOD, SP_DEMONSPAWN,
       SP_TROLL, SP_METEORAN, },
     { },
-    { "animal skin", "potion of lignification", "beast talisman" },
+    { "animal skin", "potion of lignification", "beast talisman", "flux talisman" },
     WCHOICE_NONE,
     { { SK_FIGHTING, 1 }, { SK_UNARMED_COMBAT, 3 }, { SK_DODGING, 2 },
       { SK_SHAPESHIFTING, 3 }, },

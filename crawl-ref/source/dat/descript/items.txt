@@ -585,6 +585,16 @@ flail
 
 A mace with a short chain connecting the head to the haft.
 %%%%
+flux talisman
+
+A canister holding an ominously glowing substance. Its user becomes unstable at
+a fundamental level, inflicting dangerous levels of magical contamination on
+foes with each touch. Sufficient contamination causes a highly localized meltdown,
+dealing enormous damage which increases with the user's Shapeshifting skill.
+The user's instability also makes them harder to hit, but renders them unable to
+use weapons or shields, and reduces their melee damage as their limbs sometimes
+destabilize mid-swing.
+%%%%
 giant club
 
 A giant lump of wood.

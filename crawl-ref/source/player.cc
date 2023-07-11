@@ -4767,7 +4767,7 @@ bool invis_allowed(bool quiet, string *fail_reason, bool temp)
     string msg;
     bool success = true;
 
-    if (you.has_mutation(MUT_GLOWING))
+    if (you.backlit(false, false))
     {
         msg = "Your body glows too brightly to become invisible.";
         success = false;
@@ -7203,7 +7203,8 @@ bool player::backlit(bool self_halo, bool temp) const
                     || duration[DUR_QUAD_DAMAGE]
                     || !umbraed() && haloed()
                        && (self_halo || halo_radius() == -1))
-           || you.has_mutation(MUT_GLOWING);
+           || you.has_mutation(MUT_GLOWING)
+           || you.form == transformation::flux;
 }
 
 bool player::umbra() const

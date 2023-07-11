@@ -470,6 +470,8 @@ public:
                 afflictions.push_back("!!!QUAD DAMAGE!!!");
             if (you.has_mutation(MUT_GLOWING))
                 afflictions.push_back("body"); // all flesh is a curse...
+            if (you.form == transformation::flux)
+                afflictions.push_back("form");
             mprf(MSGCH_DURATION,
                  "You become %stransparent, but the glow from %s "
                  "%s prevents you from becoming completely invisible.",

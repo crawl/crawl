@@ -2040,7 +2040,7 @@ Artificers
 Shapeshifters
   Shapeshifters use talismans to shift their body into different forms,
   granting them uncanny power but making them unable to use some items.
-  They enter the dungeon with a beast talisman and a potion of lignification.
+  They enter the dungeon with two talismans and a potion of lignification.
 
 Wanderers
   Wanderers are "jacks-of-all-trades, masters of none". They start the game

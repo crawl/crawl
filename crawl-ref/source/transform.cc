@@ -596,6 +596,25 @@ public:
 };
 #endif
 
+class FormFlux : public Form
+{
+private:
+    FormFlux() : Form(transformation::flux) { }
+    DISALLOW_COPY_AND_ASSIGN(FormFlux);
+public:
+    static const FormFlux &instance() { static FormFlux inst; return inst; }
+
+    int contam_dam(bool random = true, bool max = false) const override
+    {
+        return divided_scaling(FormScaling().Base(30).Scaling(30), random, max, 100);
+    }
+
+    int ev_bonus(bool max) const override
+    {
+        return scaling_value(FormScaling().Base(5).Scaling(5), false, max);
+    }
+};
+
 class FormBlade : public Form
 {
 private:
@@ -1028,7 +1047,7 @@ public:
     static const FormBeast &instance() { static FormBeast inst; return inst; }
     int slay_bonus(bool random, bool max) const override
     {
-        return divided_scaling(FormScaling().Scaling(7), random, max, 100);
+        return divided_scaling(FormScaling().Scaling(4), random, max, 100);
     }
 
     vector<string> get_fakemuts(bool terse) const override {
@@ -1102,6 +1121,7 @@ static const Form* forms[] =
     &FormStorm::instance(),
     &FormBeast::instance(),
     &FormMaw::instance(),
+    &FormFlux::instance(),
 };
 
 const Form* get_form(transformation xform)

@@ -340,7 +340,7 @@ static const form_entry formdata[] =
 {
     transformation::beast, MONS_WOLF, "Beast", "beast-form", "beast",
     "a hulking beast.",
-    0, 10, TALISMAN_BEAST,
+    0, 5, TALISMAN_BEAST,
     EQF_AUXES, MR_NO_FLAGS,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
     {}, true, {},
@@ -361,7 +361,21 @@ static const form_entry formdata[] =
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true,
     "shout twice", 0, "", "", "", "",
     { { "devouring maw", "Your midsection houses a second, enormous mouth." },}
-}
+},
+
+{
+    transformation::flux, MONS_UGLY_THING, "Flux", "flux-form", "flux",
+    "something dangerously unstable.",
+    5, 13, TALISMAN_FLUX,
+    SLOTF(EQ_WEAPON) | SLOTF(EQ_SHIELD), MR_NO_FLAGS,
+    DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
+    {}, true, {},
+    SPWPN_NORMAL, CYAN, "", DEFAULT_VERBS,
+    FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true,
+    "", 0, "", "", "", "",
+    { { "glow", "You glow with magical radiation, making you easy to see and hit." },
+      { "contaminating", "Foes you strike become dangerously contaminated with magical radiation." } }
+},
 
 };
 COMPILE_CHECK(ARRAYSZ(formdata) == NUM_TRANSFORMS);
