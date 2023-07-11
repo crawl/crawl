@@ -2172,22 +2172,26 @@ static string _int_with_plus(int i)
     return make_stringf("+%d", i);
 }
 
-static string _maybe_desc_prop(const char* name, int val)
+static string _maybe_desc_prop(const char* name, int val, int max = -1)
 {
     if (val == 0)
         return "";
     const int len_delta = strlen("Minimum skill") - strlen(name);
     const string padding = len_delta > 0 ? string(len_delta, ' ') : "";
-    return make_stringf("\n%s: %s%s",
+    const string base = make_stringf("\n%s: %s%s",
                         name,
                         padding.c_str(),
                         _int_with_plus(val).c_str());
+    if (max == val || max == -1)
+        return base;
+    return base + make_stringf(" (%s at max skill)",
+                               _int_with_plus(max).c_str());
 }
 
 static string _describe_talisman_form(const item_def &item)
 {
     const transformation form_type = form_for_talisman(item);
-    const auto form = get_form(form_type);
+    const Form* form = get_form(form_type);
     string description;
     description += make_stringf("Minimum skill: %d", form->min_skill);
     const bool below_target = _is_below_training_target(item, true);
@@ -2217,8 +2221,9 @@ static string _describe_talisman_form(const item_def &item)
             if (below_target)
                 description += " (reduced by your low skill)";
         }
-        description += _maybe_desc_prop("Bonus AC", ac / 100);
-        description += _maybe_desc_prop("Bonus EV", ev);
+        description += _maybe_desc_prop("Bonus AC", ac / 100,
+                                        form->get_ac_bonus(true) / 100);
+        description += _maybe_desc_prop("Bonus EV", ev, form->ev_bonus(true));
 
         if (body_ac_loss_percent)
         {
@@ -2232,15 +2237,29 @@ static string _describe_talisman_form(const item_def &item)
 
     // offense
     description += "\n\nOffense:";
-    description += make_stringf("\nUC base dam.:  %d", form->get_base_unarmed_damage(false));
-    description += _maybe_desc_prop("Slay", form->slay_bonus(false));
+    const int uc = form->get_base_unarmed_damage(false); // TODO: compare to your base form?
+                                                         // folks don't know nudists have 3
+    const int max_uc = form->get_base_unarmed_damage(false, true);
+    description += make_stringf("\nUC base dam.:  %d%s",
+                                uc, max_uc == uc ? "" : make_stringf(" (max %d)", max_uc).c_str());
+    description += _maybe_desc_prop("Slay", form->slay_bonus(false),
+                                    form->slay_bonus(false, true));
     if (form_type == transformation::maw)
-        description += make_stringf("\nMaw Damage:    %d", form->get_aux_damage(false));
+    {
+        const int aux_dam = form->get_aux_damage(false);
+        const int max_aux_dam = form->get_aux_damage(true);
+        description += make_stringf("\nMaw Damage:    %d", aux_dam);
+        if (max_aux_dam != aux_dam)
+            description += make_stringf(" (max %d)", max_aux_dam);
+    }
+    if (form_type == transformation::statue)
+        description += "\nMelee damage:  +50%";
     description += _maybe_desc_prop("Str", form->str_mod);
     description += _maybe_desc_prop("Dex", form->dex_mod);
 
-    // TODO: display values at max power?
-    // TODO: show resists (find an example of this elsewhere)
+    // TODO: describe UC acc bonus
+
+    // TODO: show resists (find an example of this elsewhere) (remember to include holiness)
 
     // misc (not covered):
     // cast penalty, uc brand, slots merged

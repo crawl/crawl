@@ -288,11 +288,14 @@ string Form::get_untransform_message() const
  *          allow for pseudo-decimal flexibility (& to match
  *          player::armour_class())
  */
-int Form::get_ac_bonus() const
+int Form::get_ac_bonus(bool max) const
 {
-    return flat_ac * 100
-           + (max_skill ? get_level(skill_ac * 100) / max_skill : 0)
-           + xl_ac * you.experience_level;
+    const int bonus = flat_ac * 100 + xl_ac * you.experience_level;
+    if (!max_skill)
+        return bonus;
+    if (max)
+        return bonus + skill_ac * 100;
+    return bonus + get_level(skill_ac * 100) / max_skill;
 }
 
 int Form::mult_hp(int base_hp) const
@@ -718,21 +721,26 @@ public:
      * The AC bonus of the form, multiplied by 100 to match
      * player::armour_class().
      */
-    int get_ac_bonus() const override
+    int get_ac_bonus(bool max) const override
     {
         if (species::is_draconian(you.species))
+        {
+            if (max)
+                return 1000 + skill_ac * 100;
             return 1000 + get_level(skill_ac * 100) / max_skill;
+        }
         return Form::get_ac_bonus();
     }
 
     /**
      * Find the player's base unarmed damage in this form.
      */
-    int get_base_unarmed_damage(bool random) const override
+    int get_base_unarmed_damage(bool random, bool max) const override
     {
+        const int lvl = max ? max_skill * 2 : get_level(2);
         if (random)
-            return 22 + div_rand_round(get_level(2), 3);
-        return 22 + get_level(2) / 3;
+            return 22 + div_rand_round(lvl, 3);
+        return 22 + lvl / 3;
     }
 
     /**
@@ -955,16 +963,17 @@ public:
     /**
      * Find the player's base unarmed damage in this form.
      */
-    int get_base_unarmed_damage(bool random) const override
+    int get_base_unarmed_damage(bool random, bool max) const override
     {
+        const int lvl = max ? max_skill * 3 : get_level(3);
         if (random)
-            return 8 + div_rand_round(get_level(3), 2);
-        return 8 + get_level(3) / 2;
+            return 8 + div_rand_round(lvl, 2);
+        return 8 + lvl / 2;
     }
 
-    int ev_bonus() const override
+    int ev_bonus(bool max) const override
     {
-        return get_level(1);
+        return max ? max_skill : get_level(1);
     }
 
     bool can_offhand_punch() const override { return true; }
@@ -987,11 +996,12 @@ private:
     DISALLOW_COPY_AND_ASSIGN(FormBeast);
 public:
     static const FormBeast &instance() { static FormBeast inst; return inst; }
-    int slay_bonus(bool random) const override
+    int slay_bonus(bool random, bool max) const override
     {
+        const int lvl = max ? max_skill * 7 : get_level(7);
         if (random)
-            return div_rand_round(get_level(7), max_skill);
-        return get_level(7) / max_skill;
+            return div_rand_round(lvl, max_skill);
+        return lvl / max_skill;
     }
 
     vector<string> get_fakemuts(bool terse) const override {
@@ -999,7 +1009,7 @@ public:
             make_stringf(terse ?
                          "beast (slay +%d)" :
                          "Your limbs bulge with bestial killing power. (Slay +%d)",
-                         slay_bonus(false))
+                         slay_bonus(false, false))
         };
     }
 };
@@ -1012,12 +1022,14 @@ private:
 public:
     static const FormMaw &instance() { static FormMaw inst; return inst; }
 
-    int get_aux_damage(bool random) const override
+    int get_aux_damage(bool random, bool max) const override
     {
+        const int scale = 100;
+        const int lvl = max ? max_skill * scale : get_level(scale);
         const int base = 7;
         if (random)
-            return base + div_rand_round(get_level(100), 100);
-        return base + get_level(1);
+            return base + div_rand_round(lvl, scale);
+        return base + lvl / scale;
     }
 };
 

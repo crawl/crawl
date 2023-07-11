@@ -135,10 +135,17 @@ public:
     /**
      * Base unarmed damage provided by the form.
      */
-    virtual int get_base_unarmed_damage(bool /*random*/ = true) const { return base_unarmed_damage; }
+    virtual int get_base_unarmed_damage(bool /*random*/ = true,
+                                        bool /*max*/ = false) const
+    {
+        return base_unarmed_damage;
+    }
 
     /// Damage done by a custom aux attack of this form.
-    virtual int get_aux_damage(bool /*random*/) const { return 0; }
+    virtual int get_aux_damage(bool /*random*/ = true,
+                               bool /*max*/ = false) const {
+        return 0;
+    }
 
     /// Does this form care about skill for UC damage and accuracy, or only XL?
     virtual bool get_unarmed_uses_skill() const { return unarmed_uses_skill; }
@@ -150,9 +157,9 @@ public:
 
     virtual bool can_offhand_punch() const { return can_wield(); }
     virtual string get_uc_attack_name(string default_name) const;
-    virtual int slay_bonus(bool /*random*/ = true) const { return 0; }
-    virtual int get_ac_bonus() const;
-    virtual int ev_bonus() const { return 0; }
+    virtual int slay_bonus(bool /*random*/ = true, bool /*max*/ = false) const { return 0; }
+    virtual int get_ac_bonus(bool max = false) const;
+    virtual int ev_bonus(bool /*max*/ = false) const { return 0; }
     virtual int get_base_ac_penalty(int /*base*/) const { return 0; }
 
     bool enables_flight() const;
