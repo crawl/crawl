@@ -993,6 +993,15 @@ public:
             return div_rand_round(get_level(7), max_skill);
         return get_level(7) / max_skill;
     }
+
+    vector<string> get_fakemuts(bool terse) const override {
+        return {
+            make_stringf(terse ?
+                         "beast (slay +%d)" :
+                         "Your limbs bulge with bestial killing power. (Slay +%d)",
+                         slay_bonus(false))
+        };
+    }
 };
 
 class FormMaw : public Form

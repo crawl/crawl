@@ -165,7 +165,7 @@ public:
     string player_prayer_action() const;
     string melding_description() const;
 
-    vector<string> get_fakemuts(bool terse) const;
+    virtual vector<string> get_fakemuts(bool terse) const;
 
 public:
     /// Status light ("Foo"); "" for none
