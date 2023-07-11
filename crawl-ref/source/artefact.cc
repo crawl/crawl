@@ -1199,6 +1199,8 @@ static string _get_artefact_type(const item_def &item, bool appear = false)
         if (get_item_slot(item) == EQ_BODY_ARMOUR)
             return "body armour";
         return "armour";
+    case OBJ_ORBS:
+        return "orb";
     case OBJ_JEWELLERY:
         // Distinguish between amulets and rings only in appearance.
         if (!appear)
