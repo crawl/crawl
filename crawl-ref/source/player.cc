@@ -2166,8 +2166,9 @@ static int _sh_from_shield(const item_def &item)
 
     shield += item.plus * 200;
 
-    shield += you.skill(SK_SHIELDS, 38)
-            + min(you.skill(SK_SHIELDS, 38), 3 * 38);
+    shield += you.skill(SK_SHIELDS, 38);
+
+    shield += 3 * 38;
 
     shield += you.dex() * 38 * (base_shield + 13) / 26;
     return shield;
