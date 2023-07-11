@@ -24,7 +24,7 @@ altaj rezervoj de sano kaj manao.
 Demonspawn
 
 Demonidoj estas duondemono-duonhomo. Ili akiras fortajn demonajn mutaciojn dum 
-ili kreskas.
+ilia kreskado.
 %%%%
 Djinni
 
@@ -64,9 +64,9 @@ kapabloj, sed anstataŭ ili malrapide gajnas sperton en ĉiuj kapabloj.
 Hill Orc
 
 Monetorkoj spertas pri miksbatalo, kaj ofte, estas provadantoj de ataka magio. 
-Nur ili povas kredas la Orkan dion Beogh.
+Nur ili povas kredas je la Orkan dion Beogh.
 %%%%
-Humans
+Human
 
 Homoj atingas rapide nivelojn kaj havas egalajn kapablemecojn por plej multaj 
 kapabloj.
@@ -79,7 +79,7 @@ estas tre malfortika, sed ili poste lernos flugi.
 Kobold
 
 Koboldoj estas agordita al la ombroj, kaj konsekvence nur povas vidi aŭ vidiĝi 
-proksime. Ili estas mallarga, iom malfortika, kaj ĝenerale talenta.
+proksime. Ili estas malgranda, iom malfortika, kaj ĝenerale talenta.
 %%%%
 Merfolk
 
@@ -135,4 +135,4 @@ Vine Stalker
 Malfortika simbiozanto estas Grimpantoj, kiuj ne povas resaniĝas per pocioij. 
 Ilia manaaj rezervoj ensorbas damaĝo, kaj ili portas mordon, ke restarigas 
 manao.
-%%%
+%%%%

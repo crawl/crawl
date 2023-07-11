@@ -1,0 +1,120 @@
+%%%%
+__(_suffix_examine
+
+Ĝi estas ensorĉita por danci tra la aero kaj ataki per sia mem povo.
+%%%%
+# Uniques
+Agnes
+
+Tiu sprigo estas aĝigita kaj erodita per jaroj da vojaĝo for la arbaroj kaj 
+marĉoj, kiuj loĝigas ŝian genton. Ŝiaj elektita armilo kaj miriganta rapideco 
+ambaŭ montras ŝian faritan ekzercadon.
+%%%%
+# Non-unique monsters
+acid blob
+
+Malgranda bulo el malsana pustulfaranta haŭta karno, kiu gutas korodan ŝlimon
+el la buŝon.
+%%%%
+adder
+
+Ofta ublieta serpento, kiu estas speco de troglodita reptilo ofte trovata en 
+subteranaj spacoj.
+%%%%
+air elemental
+
+Spirito elprenas de elementa aerplano. Ĝi ekzistas en ĉi tiu universo kiel 
+fulmkraĉanta spirito, senmovigante kontraŭulojn kun ĝia krakantaj ekbriloj.
+%%%%
+alligator
+
+Perfortema krokodilulo kun grandaj pincantaj mandibloj plenaj je akraj dentoj.
+%%%%
+alligator snapping turtle
+
+Malordinare granda kaj danĝera pinctestudo. Simile al ĝia eta parenco, ĝi povas 
+etendi por mordi de malproksime.
+%%%%
+anaconda
+
+Grandega serpento, kiu movas kun maltrankviliga rapideco. Ĝi mortigas per ne 
+veneno, sed per ĉirkaŭpremegas sian ĉasĵo.
+%%%%
+ancestor
+
+Duonhoma kreaĵo de memoreto, ŝvebas tra la aero. Kvankam ĝia formo eble iomete 
+ŝanĝiĝis kaj nur malmulto da sia trajtoj aspektas, tamen ĝi iel ŝajnas aspekti 
+kiel militisto el distanca estinteco. La memoro kaj la rememoriganto batalis 
+koncerte, ambaŭ elbas pafi plu la alio.
+%%%%
+ancient champion
+
+Nekompreneble antikva skeleto. Centoj da ora sigelo enskribita sur ĝiaj ostoj,
+kaj pulsas kun terura malsankta potenco.
+%%%%
+ancient lich
+
+Liĉo, kiu jam ekzistante dum nenombreblaj jarcentoj, kreskis al preskaŭ 
+neimagebla potenco per studi de malluma magio.
+%%%%
+ancient zyme
+
+Kunvenpunkto de konsciaj kancero kaj malsano, kiu eble eltenas sin sole per 
+malamo. Ĝia naturo malsanigas ĉiun proksiman vivulon. 
+%%%%
+angel
+
+Dia militisto por la Brilulo. Ĝi estas altega flugila figuro de supernatura 
+beleco kaj estas aŭreolata de brila blanka lumo.
+%%%%
+animated armour
+
+La ŝvito kaj laborado de ties armilfaristo, prilaborante ledon kaj ŝtelon, 
+enhavigis spiriton en ties korpo kaj unikan fajreron en ĉiu kiraso, 
+ŝultrplatarmaĵo, kaj antaŭbrakarmaĵo. Lerta sorĉisto povas amasigi tiujn 
+fajrerojn kune, por farigi sian armaĵon pli perforte ŝirma ol kutima armaĵo.
+%%%%
+apis
+
+Trankvila, sankta virbovo de Elyvilon
+%%%%
+azure jelly
+
+Treege malvarma bulo de brile blua ĉelplasmo, kiu aperigas en la ĉirkaŭa aero 
+prujnerojn.
+%%%%
+ball lightning
+
+Rapida sfero de flagretanta elektra energio. Ĝi eksplodos je la plej malgranda 
+perturbo.
+%%%%
+ball python
+
+Serpento malgranda, kiu povas aldoni sian mordon per ĉirkaŭpremegi malgrandajn
+bestojn.
+%%%%s
+ballistomycete
+
+Kovrita de buloj kaj bulkovritaj rizomkreskaĵoj, ruĝeta fungo, kiu bone kreskas 
+en la malseka, malluma, subetera oblieto. Kiam ĝi sentas minacon, la 
+ballistomycete-o eble dissemas mortan kaj ŝveban sporon, kiu eksplodos ĉe sia 
+viktimoj.
+%%%%
+ballistomycete spore
+
+Rapida gasplena ŝveba sporo dissemata de ballistomycete-o, kiam ĝi sentas 
+minacon. Post la atingo de ties kontraŭulo, la sporo eksplodos, kio damaĝas ion 
+ajn kaptitan en la eksplodo kaj plu konfuzas vivaĵoj.
+%%%%
+barachi
+
+Amfibia duonhomo kun tre malbela konduto.
+%%%%
+basilisk
+
+Kresta lacerto mezgranda kun abomena ŝtoniganta rigardo
+%%%%
+bat
+Granda vesperto griza, kiu kvankam estas herbovora, tamen estas tre perfortema. 
+Ĝi estas miopa, do si uzas eĥolokalizadon por navigaciado.
+%%%%
