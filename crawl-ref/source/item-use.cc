@@ -3069,22 +3069,17 @@ bool drink(item_def* potion)
 }
 
 // XXX: there's probably a nicer way of doing this.
+// Conducts, maybe?
 bool god_hates_brand(const int brand)
 {
-    if (is_good_god(you.religion)
-        && (brand == SPWPN_DRAINING
-            || brand == SPWPN_VAMPIRISM
-            || brand == SPWPN_CHAOS
-            || brand == SPWPN_PAIN))
-    {
+    if (is_good_god(you.religion) && is_evil_brand(brand))
         return true;
-    }
 
-    if (you_worship(GOD_CHEIBRIADOS) && (brand == SPWPN_CHAOS
-                                         || brand == SPWPN_SPEED))
-    {
+    if (you_worship(GOD_ZIN) && is_chaotic_brand(brand))
         return true;
-    }
+
+    if (you_worship(GOD_CHEIBRIADOS) && is_hasty_brand(brand))
+        return true;
 
     if (you_worship(GOD_YREDELEMNUL) && brand == SPWPN_HOLY_WRATH)
         return true;

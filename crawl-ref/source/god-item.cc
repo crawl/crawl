@@ -104,6 +104,31 @@ bool is_potentially_evil_item(const item_def& item, bool calc_unid)
     return false;
 }
 
+bool is_evil_brand(int brand)
+{
+    switch (brand)
+    {
+    case SPWPN_DRAINING:
+    case SPWPN_PAIN:
+    case SPWPN_VAMPIRISM:
+    case SPWPN_REAPING:
+    case SPWPN_DISTORTION:
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool is_chaotic_brand(int brand)
+{
+    return brand == SPWPN_CHAOS || brand == SPWPN_DISTORTION;
+}
+
+bool is_hasty_brand(int brand)
+{
+    return brand == SPWPN_CHAOS || brand == SPWPN_SPEED;
+}
+
 /**
  * Do good gods always hate use of this item?
  *
@@ -126,14 +151,7 @@ bool is_evil_item(const item_def& item, bool calc_unid)
         if (is_demonic(item))
             return true;
         if (calc_unid || item_brand_known(item))
-        {
-            const int item_brand = get_weapon_brand(item);
-            return item_brand == SPWPN_DRAINING
-                   || item_brand == SPWPN_PAIN
-                   || item_brand == SPWPN_VAMPIRISM
-                   || item_brand == SPWPN_REAPING
-                   || item_brand == SPWPN_DISTORTION;
-        }
+            return is_evil_brand(get_weapon_brand(item));
     }
 
     if (!calc_unid && !item_type_known(item))
@@ -185,8 +203,7 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
     if (item.base_type == OBJ_WEAPONS
         && (calc_unid || item_brand_known(item)))
     {
-        const brand_type brand = get_weapon_brand(item);
-        return brand == SPWPN_CHAOS || brand == SPWPN_DISTORTION;
+        return is_chaotic_brand(get_weapon_brand(item));
     }
 
     if (!calc_unid && !item_type_known(item))
