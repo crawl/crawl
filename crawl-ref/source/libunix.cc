@@ -629,8 +629,7 @@ int getch_ck()
         }
 #endif
 
-        // TODO: what else should be added to this?
-        switch (c)
+        switch (-c)
         {
         case 127:
         // 127 is ASCII DEL, which some terminals (all mac, some linux) use for
@@ -641,35 +640,53 @@ int getch_ck()
         // reliably does get mapped to KEY_DC by ncurses. Some background:
         //     https://invisible-island.net/xterm/xterm.faq.html#xterm_erase
         // (I've never found documentation for the mac situation.)
-        case -KEY_BACKSPACE: return CK_BKSP;
-        case -KEY_DC:    return CK_DELETE;
-        case -KEY_HOME:  return CK_HOME;
-        case -KEY_PPAGE: return CK_PGUP;
-        case -KEY_END:   return CK_END;
-        case -KEY_NPAGE: return CK_PGDN;
-        case -KEY_UP:    return CK_UP;
-        case -KEY_DOWN:  return CK_DOWN;
-        case -KEY_LEFT:  return CK_LEFT;
-        case -KEY_RIGHT: return CK_RIGHT;
+        case KEY_BACKSPACE: return CK_BKSP;
+        case KEY_IC:        return CK_INSERT;
+        case KEY_DC:        return CK_DELETE;
+        case KEY_HOME:      return CK_HOME;
+        case KEY_END:       return CK_END;
+        case KEY_PPAGE:     return CK_PGUP;
+        case KEY_NPAGE:     return CK_PGDN;
+        case KEY_UP:        return CK_UP;
+        case KEY_DOWN:      return CK_DOWN;
+        case KEY_LEFT:      return CK_LEFT;
+        case KEY_RIGHT:     return CK_RIGHT;
+        case KEY_BEG:       return CK_CLEAR;
+
+        case KEY_BTAB:      return CK_SHIFT_TAB;
+        case KEY_SDC:       return CK_SHIFT_DELETE;
+        case KEY_SHOME:     return CK_SHIFT_HOME;
+        case KEY_SEND:      return CK_SHIFT_END;
+        case KEY_SPREVIOUS: return CK_SHIFT_PGUP;
+        case KEY_SNEXT:     return CK_SHIFT_PGDN;
+        case KEY_SR:        return CK_SHIFT_UP;
+        case KEY_SF:        return CK_SHIFT_DOWN;
+        case KEY_SLEFT:     return CK_SHIFT_LEFT;
+        case KEY_SRIGHT:    return CK_SHIFT_RIGHT;
+
+        case KEY_A1:        return CK_NUMPAD_7;
+        case KEY_A3:        return CK_NUMPAD_9;
+        case KEY_B2:        return CK_NUMPAD_5;
+        case KEY_C1:        return CK_NUMPAD_1;
+        case KEY_C3:        return CK_NUMPAD_3;
+
 #ifdef KEY_RESIZE
-        case -KEY_RESIZE: return CK_RESIZE;
-#endif
-        case -KEY_BTAB:  return CK_SHIFT_TAB;
-        case -KEY_SDC:   return CK_SHIFT_DELETE;
-#ifdef TARGET_OS_MACOSX
-        // not sure what's up with this, no ncurses constant? defining it only
-        // for mac to be cautious
-        case -515:       return CK_CTRL_DELETE;
+        case KEY_RESIZE:    return CK_RESIZE;
 #endif
 
-        // may or may not be defined depending on the terminal. Escape codes
-        // are the xterm convention, other terminals may do different things
-        // and ncurses may or may not handle them correctly.
-        case -KEY_SR:    return CK_SHIFT_UP;     // \033[1;2A
-        case -KEY_SLEFT: return CK_SHIFT_LEFT;   // \033[1;2D
-        case -KEY_SRIGHT: return CK_SHIFT_RIGHT; // \033[1;2C
-        case -KEY_SF:    return CK_SHIFT_DOWN;   // \033[1;2B
-        default:         return c;
+        // Undocumented ncurses control keycodes, here be dragons!!!
+        case 515:           return CK_CTRL_DELETE; // Mac
+        case 526:           return CK_CTRL_DELETE; // Linux
+        case 542:           return CK_CTRL_HOME;
+        case 537:           return CK_CTRL_END;
+        case 562:           return CK_CTRL_PGUP;
+        case 557:           return CK_CTRL_PGDN;
+        case 573:           return CK_CTRL_UP;
+        case 532:           return CK_CTRL_DOWN;
+        case 552:           return CK_CTRL_LEFT;
+        case 567:           return CK_CTRL_RIGHT;
+
+        default:            return c;
         }
     }
 }
@@ -733,7 +750,7 @@ static void unixcurses_defkeys()
     define_key("\033Oo", 1012); // / (may conflict with the above define?)
     define_key("\033OX", 1021); // =, at least on mac console
 
-#ifdef TARGET_OS_MACOSX
+# ifdef TARGET_OS_MACOSX
     // force some mappings for function keys that work on mac Terminal.app with
     // the default TERM value.
 
@@ -753,61 +770,10 @@ static void unixcurses_defkeys()
     check_define_key("\033b", -(CK_LEFT + CK_ALT_BASE));
     check_define_key("\033f", -(CK_RIGHT + CK_ALT_BASE));
     // (sadly, only left and right have modifiers by default on Terminal.app)
-#endif
+# endif
 #undef check_define_key
 
-    // variants. Ugly curses won't allow us to return the same code...
-    // TODO: the above comment seems to be wrong for current ncurses?
-    define_key("\033[1~", 1031); // Home
-    define_key("\033[4~", 1034); // End
-    define_key("\033[E",  1040); // center arrow
 #endif
-}
-
-int unixcurses_get_vi_key(int keyin)
-{
-    switch (-keyin)
-    {
-    // TODO: should use cio.h constants, but I'm too scared to change this
-    // function
-    // -1001..-1009: passed without change
-    case 1031: return -1007;
-    case 1034: return -1001;
-    case 1040: return -1005;
-
-    case KEY_HOME:   return -1007;
-    case KEY_END:    return -1001;
-    case KEY_DOWN:   return -1002;
-    case KEY_UP:     return -1008;
-    case KEY_LEFT:   return -1004;
-    case KEY_RIGHT:  return -1006;
-    case KEY_NPAGE:  return -1003;
-    case KEY_PPAGE:  return -1009;
-    case KEY_A1:     return -1007;
-    case KEY_A3:     return -1009;
-    case KEY_B2:     return -1005;
-    case KEY_C1:     return -1001;
-    case KEY_C3:     return -1003;
-    case KEY_SHOME:  return 'Y';
-    case KEY_SEND:   return 'B';
-    case KEY_SLEFT:  return 'H';
-    case KEY_SRIGHT: return 'L';
-    case KEY_BTAB:   return CK_SHIFT_TAB;
-    case KEY_BACKSPACE:
-        // If terminfo's entry for backspace (kbs) is ctrl-h, curses
-        // generates KEY_BACKSPACE for the ctrl-h key. Work around that by
-        // converting back to CK_BKSP.
-        // Note that this mangling occurs entirely on the machine Crawl runs
-        // on (and even within crawl's process) rather than where the user's
-        // terminal is, so this check is reliable.
-        static char kbskey[] = "kbs"; // tigetstr wants a non-const pointer :(
-        static const char * const kbs = tigetstr(kbskey);
-        static const int bskey = (kbs && kbs != (const char *) -1
-                                      && kbs == string("\010")) ? CK_BKSP
-                                                                : KEY_BACKSPACE;
-        return bskey;
-    }
-    return keyin;
 }
 
 // Certain terminals support vt100 keypad application mode only after some
@@ -862,13 +828,13 @@ void console_startup()
 #ifdef CURSES_USE_KEYPAD
     keypad(stdscr, TRUE);
 
-#ifdef CURSES_SET_ESCDELAY
-#ifdef NCURSES_REENTRANT
+# ifdef CURSES_SET_ESCDELAY
+#  ifdef NCURSES_REENTRANT
     set_escdelay(CURSES_SET_ESCDELAY);
-#else
+#  else
     ESCDELAY = CURSES_SET_ESCDELAY;
-#endif
-#endif
+#  endif
+# endif
 #endif
 
     meta(stdscr, TRUE);

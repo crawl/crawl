@@ -28,15 +28,16 @@
 // they work?
 static keycode_type _numpad2vi(keycode_type key)
 {
-#if defined(UNIX) && !defined(USE_TILE_LOCAL)
-    key = unixcurses_get_vi_key(key);
-#endif
     switch (key)
     {
-    case CK_UP:    key = 'k'; break;
-    case CK_DOWN:  key = 'j'; break;
-    case CK_LEFT:  key = 'h'; break;
-    case CK_RIGHT: key = 'l'; break;
+    case CK_HOME:        key = 'y'; break;
+    case CK_END:         key = 'b'; break;
+    case CK_PGUP:        key = 'u'; break;
+    case CK_PGDN:        key = 'n'; break;
+    case CK_UP:          key = 'k'; break;
+    case CK_DOWN:        key = 'j'; break;
+    case CK_LEFT:        key = 'h'; break;
+    case CK_RIGHT:       key = 'l'; break;
 #if defined(UNIX)
     case CK_NUMPAD_1:    key = 'b'; break;
     case CK_NUMPAD_2:    key = 'j'; break;
@@ -194,12 +195,6 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
     case '7': return 'y';
     case '8': return 'k';
     case '9': return 'u';
-
-# if !defined(USE_TILE_LOCAL)
-    // equivalent to return keyin for the headless case
-    default: return unixcurses_get_vi_key(keyin);
-# endif
-
 #else
     case '1': return 'B';
     case '2': return 'J';
