@@ -77,7 +77,7 @@ blade talisman
 
 {{
     local hands = you.hand() .. "s"
-    return "Causes long, scythe-shaped blades to grow from the " ..
+    return "Causes long, needle-thin blades to grow from the " ..
            "user's " .. hands
 }}, and smaller fragments of metal to grow inside their body, deforming them
 and reducing the effectiveness of body armour. Shapeshifting skill mitigates

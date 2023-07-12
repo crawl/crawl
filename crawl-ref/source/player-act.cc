@@ -237,7 +237,7 @@ int player::damage_type(int)
     if (const item_def* wp = weapon())
         return get_vorpal_type(*wp);
     else if (form == transformation::blade_hands)
-        return DVORP_SLICING;
+        return DAMV_PIERCING;
     else if (has_usable_claws())
         return DVORP_CLAWING;
     else if (has_usable_tentacles())
