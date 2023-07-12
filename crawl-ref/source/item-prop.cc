@@ -2017,9 +2017,11 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     }
 
     // Jewellery with evokable abilities, wands and similar unwielded
-    // evokers allow training.
+    // evokers allow training. (Talismans don't use evo.)
     // XX why are gives_ability cases broken up like this
-    if (item_ever_evokable(item)
+    if (item.base_type == OBJ_TALISMANS)
+        skills.insert(SK_SHAPESHIFTING);
+    else if (item_ever_evokable(item) && !item.is_type(OBJ_MISCELLANY, MISC_ZIGGURAT)
         || item.base_type == OBJ_JEWELLERY && gives_ability(item)
         || staff_uses_evocations(item)
         || item.base_type == OBJ_WEAPONS && gives_ability(item))
@@ -2038,8 +2040,6 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
             skills.insert(SK_EVOCATIONS);
     }
 
-    if (item.base_type == OBJ_TALISMANS)
-        skills.insert(SK_SHAPESHIFTING);
 
     // Weapons and staves allow training as long as your species can wield them.
     if (!you.could_wield(item, true, true))
