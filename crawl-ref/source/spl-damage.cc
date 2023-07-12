@@ -45,6 +45,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-clouds.h" // big_cloud
 #include "spl-goditem.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -4366,17 +4367,21 @@ static void _discharge_maxwells_coupling()
     // XX the messaging and corpse logic here would be better handled in
     // monster_die, so that various special cases (e.g. dancing weapons in
     // the abyss) can get clear but non-redundant handling
+    const coord_def pos = mon->pos();
     const bool goldify = mons_will_goldify(*mon);
     if (goldify)
         simple_monster_message(*mon, " vaporises and condenses as gold!");
     else
+    {
         simple_monster_message(*mon, " vaporises in an electric haze!");
+        big_cloud(CLOUD_ELECTRICITY, &you, pos, random_range(4, 8), random_range(8, 12));
+    }
 
-    const coord_def pos = mon->pos();
     item_def* corpse = monster_die(*mon, KILL_YOU,
                                     actor_to_death_source(&you));
     if (corpse && !goldify)
         destroy_item(corpse->index());
+
 
     noisy(spell_effect_noise(SPELL_MAXWELLS_COUPLING), pos, you.mid);
 }
