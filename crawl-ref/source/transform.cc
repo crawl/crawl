@@ -731,7 +731,7 @@ public:
                 return 1000 + skill_ac * 100;
             return 1000 + get_level(skill_ac * 100) / max_skill;
         }
-        return Form::get_ac_bonus();
+        return Form::get_ac_bonus(max);
     }
 
     /**
