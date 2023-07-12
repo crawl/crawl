@@ -16,6 +16,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "describe.h"
+#include "english.h" // number_in_words
 #include "evoke.h"
 #include "god-passive.h"
 #include "invent.h"
@@ -3138,6 +3139,27 @@ int evoker_charges(int evoker_type)
 void expend_xp_evoker(int evoker_type)
 {
     evoker_debt(evoker_type) += evoker_charge_xp_debt(evoker_type);
+}
+
+static string _xp_evoker_recharge_msg(const item_def &evoker, int gained, bool silenced)
+{
+    const evoker_data* edata = map_find(xp_evoker_data,
+                                        static_cast<misc_item_type>(evoker.sub_type));
+    ASSERT(edata);
+    const string msg = silenced ? edata->recharge_msg.silent : edata->recharge_msg.noisy;
+    if (!msg.empty())
+        return msg;
+    if (edata->max_charges == 1)
+        return "%s has recharged.";
+    return make_stringf("%%s has regained %s charge%s.",
+                        number_in_words(gained).c_str(),
+                        gained > 1 ? "s" : "");
+}
+
+void print_xp_evoker_recharge(const item_def &evoker, int gained, bool silenced)
+{
+    mprf(_xp_evoker_recharge_msg(evoker, gained, silenced).c_str(),
+         evoker.name(DESC_YOUR).c_str());
 }
 
 /// witchcraft. copied from mon-util.h's get_resist

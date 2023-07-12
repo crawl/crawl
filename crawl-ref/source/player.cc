@@ -2352,30 +2352,8 @@ static void _recharge_xp_evokers(int exp)
         const int old_charges = evoker_charges(i);
         debt = max(0, debt - div_rand_round(exp, xp_factor));
         const int gained = evoker_charges(i) - old_charges;
-        if (!gained)
-            continue;
-
-        if (i == MISC_SACK_OF_SPIDERS)
-        {
-            if (silenced(you.pos()))
-            {
-                mprf("%s twitches, refilled and ready to use.",
-                     evoker->name(DESC_YOUR).c_str());
-            }
-            else
-            {
-                mprf("You hear chittering from %s. It's ready.",
-                     evoker->name(DESC_YOUR).c_str());
-            }
-        }
-        else if (evoker_max_charges(i) == 1)
-            mprf("%s has recharged.", evoker->name(DESC_YOUR).c_str());
-        else
-        {
-            mprf("%s has regained %s charge%s.",
-                 evoker->name(DESC_YOUR).c_str(),
-                 number_in_words(gained).c_str(), gained > 1 ? "s" : "");
-        }
+        if (gained)
+            print_xp_evoker_recharge(*evoker, gained, silenced(you.pos()));
     }
 }
 

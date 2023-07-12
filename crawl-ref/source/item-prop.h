@@ -197,6 +197,7 @@ void expend_xp_evoker(int evoker_type);
 int evoker_charge_xp_debt(int evoker_type);
 int evoker_charges(int evoker_type);
 int evoker_max_charges(int evoker_type);
+void print_xp_evoker_recharge(const item_def &evoker, int gained, bool silenced);
 
 // ring functions:
 bool jewellery_type_has_plusses(int jewel_type) PURE;
