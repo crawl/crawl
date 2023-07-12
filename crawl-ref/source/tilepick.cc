@@ -3600,6 +3600,7 @@ tileidx_t tileidx_ability(const ability_type ability)
 
     // Others
     case ABIL_END_TRANSFORMATION:
+    case ABIL_BEGIN_UNTRANSFORM:
         return TILEG_ABILITY_END_TRANSFORMATION;
     case ABIL_STOP_RECALL:
         return TILEG_ABILITY_STOP_RECALL;

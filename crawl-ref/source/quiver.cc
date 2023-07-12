@@ -1354,6 +1354,7 @@ namespace quiver
         switch (a)
         {
         case ABIL_END_TRANSFORMATION:
+        case ABIL_BEGIN_UNTRANSFORM:
         case ABIL_EXSANGUINATE:
         case ABIL_TSO_BLESS_WEAPON:
         case ABIL_KIKU_BLESS_WEAPON:

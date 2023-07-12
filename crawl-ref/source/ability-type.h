@@ -62,6 +62,10 @@ enum ability_type
     ABIL_BLINKBOLT,
     // Death Form
     ABIL_SIPHON_ESSENCE,
+    // Talismans
+    ABIL_BEGIN_UNTRANSFORM,
+
+    // Note: this is getting dangerously close to ABIL_EVOKE_BERSERK! be careful
 
     // Evoking items.
 #if TAG_MAJOR_VERSION == 34
