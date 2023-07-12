@@ -780,6 +780,8 @@ monster_info::monster_info(const monster* m, int milev)
                 new item_def(get_item_known_info(env.item[m->inv[i]])));
             if (i == MSLOT_MISSILE && inv[i]->sub_type != MI_THROWING_NET)
                 inv[i]->quantity = 1;
+            if (i == MSLOT_WAND)
+                inv[i]->charges = 0;
         }
     }
 

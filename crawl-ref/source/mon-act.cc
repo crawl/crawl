@@ -494,20 +494,6 @@ static bool _mons_can_cast_dig(const monster* mons, bool random)
             && !(mons->is_silenced() && flags & MON_SPELL_SILENCE_MASK);
 }
 
-static bool _mons_can_zap_dig(const monster* mons)
-{
-    return mons->foe != MHITNOT
-           && !mons->asleep()
-           && !mons->confused() // they don't get here anyway
-           && !mons->berserk_or_insane()
-           && !mons->submerged()
-           && mons_itemuse(*mons) >= MONUSE_STARTING_EQUIPMENT
-           && mons->inv[MSLOT_WAND] != NON_ITEM
-           && env.item[mons->inv[MSLOT_WAND]].is_type(OBJ_WANDS, WAND_DIGGING)
-           && mons->likes_wand(env.item[mons->inv[MSLOT_WAND]])
-           && env.item[mons->inv[MSLOT_WAND]].charges > 0;
-}
-
 static void _set_mons_move_dir(const monster* mons,
                                coord_def* dir, coord_def* delta)
 {
@@ -1062,28 +1048,14 @@ static bool _handle_scroll(monster& mons)
     return read;
 }
 
-static void _mons_fire_wand(monster& mons, item_def &wand, bolt &beem,
-                            bool was_visible)
+static void _mons_fire_wand(monster& mons, spell_type mzap, bolt &beem)
 {
     if (!simple_monster_message(mons, " zaps a wand."))
     {
         if (!silenced(you.pos()))
             mprf(MSGCH_SOUND, "You hear a zap.");
     }
-
-    // charge expenditure {dlb}
-    wand.charges--;
-    const spell_type mzap =
-        spell_in_wand(static_cast<wand_type>(wand.sub_type));
-
     mons_cast(&mons, beem, mzap, MON_SPELL_EVOKE, false);
-
-    if (was_visible && wand.charges <= 0)
-        mprf("The now-empty wand crumbles to dust.");
-
-    if (wand.charges <= 0)
-        dec_mitm_item_quantity(wand.index(), 1);
-
     mons.lose_energy(EUT_ITEM);
 }
 
@@ -1137,13 +1109,11 @@ static bool _handle_wand(monster& mons)
     beem.aux_source =
         wand->name(DESC_QUALNAME, false, true, false, false);
     fire_tracer(&mons, beem);
-    if (mons_should_fire(beem))
-    {
-        _mons_fire_wand(mons, *wand, beem, you.see_cell(mons.pos()));
-        return true;
-    }
+    if (!mons_should_fire(beem))
+        return false;
 
-    return false;
+    _mons_fire_wand(mons, mzap, beem);
+    return true;
 }
 
 bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
@@ -2829,8 +2799,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     if (_check_damaging_walls(mons, targ))
         return false;
 
-    const bool digs = _mons_can_cast_dig(mons, false)
-                      || _mons_can_zap_dig(mons);
+    const bool digs = _mons_can_cast_dig(mons, false);
     if ((target_grid == DNGN_ROCK_WALL || target_grid == DNGN_CLEAR_ROCK_WALL)
            && (mons->can_burrow() || digs)
         || mons->type == MONS_SPATIAL_MAELSTROM
@@ -3444,8 +3413,7 @@ static bool _monster_move(monster* mons)
 
     const bool burrows = mons->can_burrow();
     const bool flattens_trees = mons_flattens_trees(*mons);
-    const bool digs = _mons_can_cast_dig(mons, false)
-                      || _mons_can_zap_dig(mons);
+    const bool digs = _mons_can_cast_dig(mons, false);
     // Take care of Dissolution burrowing, lerny, etc
     if (burrows || flattens_trees || digs)
     {
@@ -3461,17 +3429,6 @@ static bool _monster_move(monster* mons)
                 beem.target = mons->pos() + mmov;
                 mons_cast(mons, beem, SPELL_DIG,
                           mons->spell_slot_flags(SPELL_DIG));
-            }
-            else if (_mons_can_zap_dig(mons))
-            {
-                ASSERT(mons->mslot_item(MSLOT_WAND));
-                item_def &wand = *mons->mslot_item(MSLOT_WAND);
-                setup_mons_cast(mons, beem, SPELL_DIG, true);
-                beem.target = mons->pos() + mmov;
-                _mons_fire_wand(*mons, wand, beem, you.can_see(*mons));
-
-                //_setup_wand_beam(beem, *mons, wand);
-                //_mons_fire_wand(*mons, wand, beem, you.can_see(*mons), false);
             }
             else
                 simple_monster_message(*mons, " falters for a moment.");

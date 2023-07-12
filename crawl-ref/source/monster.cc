@@ -780,6 +780,8 @@ bool monster::can_use_missile(const item_def &item) const
 bool monster::likes_wand(const item_def &item) const
 {
     ASSERT(item.base_type == OBJ_WANDS);
+    if (item.sub_type == WAND_DIGGING)
+        return false; // Avoid very silly abuses.
     // kind of a hack
     // assumptions:
     // bad wands are value 32, so won't be used past hd 6
