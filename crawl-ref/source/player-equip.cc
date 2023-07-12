@@ -533,7 +533,12 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 case SPWPN_PAIN:
                 {
                     const string your_arm = you.arm_name(false);
-                    if (you.skill(SK_NECROMANCY) == 0)
+                    if (you_worship(GOD_TROG))
+                    {
+                        mprf(MSGCH_GOD, "Trog suppresses %s necromantic effect.",
+                             apostrophise(item_name).c_str());
+                    }
+                    else if (you.skill(SK_NECROMANCY) == 0)
                         mpr("You have a feeling of ineptitude.");
                     else if (you.skill(SK_NECROMANCY) <= 6)
                     {

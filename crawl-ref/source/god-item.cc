@@ -305,8 +305,7 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
 bool is_wizardly_item(const item_def& item, bool calc_unid)
 {
     if ((calc_unid || item_brand_known(item))
-        && (get_weapon_brand(item) == SPWPN_PAIN
-           || get_armour_ego_type(item) == SPARM_ENERGY))
+        && get_armour_ego_type(item) == SPARM_ENERGY)
     {
         return true;
     }

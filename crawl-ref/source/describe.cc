@@ -1239,6 +1239,10 @@ static string _desc_attack_delay(const item_def &item)
 static string _describe_brand(brand_type brand)
 {
     switch (brand) {
+    case SPWPN_PAIN:
+        if (you_worship(GOD_TROG))
+            return "";
+        // fallthrough to description
     case SPWPN_ACID:
     case SPWPN_CHAOS:
     case SPWPN_DISTORTION:
@@ -1246,7 +1250,6 @@ static string _describe_brand(brand_type brand)
     case SPWPN_ELECTROCUTION:
     case SPWPN_FLAMING:
     case SPWPN_FREEZING:
-    case SPWPN_PAIN:
     case SPWPN_VENOM:
     {
         const string brand_name = uppercase_first(brand_type_name(brand, true));
@@ -1582,6 +1585,8 @@ static string _describe_weapon_brand(const item_def &item)
         {
             string desc = "In the hands of one skilled in necromantic "
                  "magic, it inflicts extra damage on living creatures.";
+            if (you_worship(GOD_TROG))
+                return desc + " Trog prevents you from unleashing this effect.";
             if (!is_useless_skill(SK_NECROMANCY))
                 return desc;
             return desc + " Your inability to study Necromancy prevents "

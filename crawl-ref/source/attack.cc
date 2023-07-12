@@ -1451,7 +1451,8 @@ bool attack::apply_damage_brand(const char *what)
         break;
     }
     case SPWPN_PAIN:
-        pain_affects_defender();
+        if (!you_worship(GOD_TROG))
+            pain_affects_defender();
         break;
 
     case SPWPN_DISTORTION:
