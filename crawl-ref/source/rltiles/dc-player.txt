@@ -1110,6 +1110,7 @@ cat8
 cat9
 cat10
 draconian1 HORNS_DRAC
+statue_form_felid_horns HORNS_CAT_STATUE
 %sdir player/head
 
 ## Doll editor tiles, but not randomly picked
