@@ -72,13 +72,8 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
 
     if (is_evil_god(which_god) && brand == SPWPN_HOLY_WRATH)
         return false;
-    else if (is_good_god(which_god)
-             && (brand == SPWPN_DRAINING
-                 || brand == SPWPN_PAIN
-                 || brand == SPWPN_VAMPIRISM
-                 || brand == SPWPN_REAPING
-                 || brand == SPWPN_CHAOS
-                 || is_demonic(item)))
+    if (is_good_god(which_god)
+        && (is_evil_brand(brand) || is_demonic(item)))
     {
         return false;
     }
