@@ -30,8 +30,10 @@ An amulet with no special properties.
 %%%%
 amulet of reflection
 
-An amulet which exerts a force that blocks some incoming attacks, and can even
-reflect any blocked ranged attacks back towards the attacker.
+An amulet which improves its wearer's ability to shield against attacks. If
+no shield is worn, the force the amulet emits can serve as a weak shield on
+its own. Regardless, any ranged attacks the wearer blocks will be reflected
+back toward the attacker.
 %%%%
 amulet of regeneration
 
