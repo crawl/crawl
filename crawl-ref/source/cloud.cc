@@ -1878,3 +1878,17 @@ void surround_actor_with_cloud(const actor* a, cloud_type cloud)
         place_cloud(cloud, *ai, 2 + random2(6), a);
     }
 }
+
+bool cloud_is_removed(cloud_type cloud)
+{
+    switch (cloud)
+    {
+#if TAG_MAJOR_VERSION == 34
+    case CLOUD_GLOOM:
+    case CLOUD_EMBERS:
+        return true;
+#endif
+    default:
+        return false;
+    }
+}
