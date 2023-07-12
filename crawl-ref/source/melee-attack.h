@@ -26,8 +26,6 @@ enum unarmed_attack_type
     NUM_UNARMED_ATTACKS,
 };
 
-const int UC_FORM_TO_HIT_BONUS = 5;
-
 class melee_attack : public attack
 {
 public:

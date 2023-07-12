@@ -2392,14 +2392,7 @@ int melee_attack::post_roll_to_hit_modifiers(int mhit, bool random)
 
     // Electric charges feel bad when they miss, so make them miss less often.
     if (charge_pow > 0)
-        modifiers += 5; // matching UC form to-hit bonuses
-
-    if (attacker->is_player() && !weapon && get_form()->unarmed_hit_bonus)
-    {
-        // TODO: Review this later (transformations getting extra hit
-        // almost across the board seems bad) - Cryp71c
-        modifiers += UC_FORM_TO_HIT_BONUS;
-    }
+        modifiers += 5;
 
     return modifiers;
 }

@@ -206,8 +206,6 @@ public:
     /// increase to spell fail rate (value is weird - see raw_spell_fail())
     const int spellcasting_penalty;
 
-    /// acc bonus when using UC in form
-    const int unarmed_hit_bonus;
     /// colour of 'weapon' in UI
     const int uc_colour;
     /// a set of verbs to use based on damage done, when using UC in this form
