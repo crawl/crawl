@@ -116,7 +116,7 @@ Form::Form(const form_entry &fe)
       min_skill(fe.min_skill), max_skill(fe.max_skill),
       str_mod(fe.str_mod), dex_mod(fe.dex_mod),
       blocked_slots(fe.blocked_slots), size(fe.size),
-      can_cast(fe.can_cast), spellcasting_penalty(fe.spellcasting_penalty),
+      can_cast(fe.can_cast),
       uc_colour(fe.uc_colour), uc_attack_verbs(fe.uc_attack_verbs),
       can_bleed(fe.can_bleed),
       keeps_mutations(fe.keeps_mutations),

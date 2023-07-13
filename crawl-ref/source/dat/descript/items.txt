@@ -1202,7 +1202,7 @@ serpent talisman
 Transforms the user into a giant, cold-blooded anaconda, ready to wind their
 coils around foes and crush them to death. Shapeshifting skill increases the
 armour provided by the snake's scales. While transformed, any equipped weapons
-and armour are melded, and casting spells is much more difficult.
+and armour are melded.
 %%%%
 shortbow
 

@@ -203,8 +203,6 @@ public:
 
     /// can the player cast while in this form?
     const bool can_cast;
-    /// increase to spell fail rate (value is weird - see raw_spell_fail())
-    const int spellcasting_penalty;
 
     /// colour of 'weapon' in UI
     const int uc_colour;

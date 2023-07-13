@@ -768,7 +768,7 @@ static vector<string> _get_form_fakemuts(bool terse)
 
     // bad stuff
     if (!terse
-        && (form->spellcasting_penalty > 0
+        && (you.form == transformation::blade_hands
             || you.form == transformation::shadow)) // hard-coded effect
     {
         result.push_back(_badmut("Your spellcasting is less reliable in this form."));

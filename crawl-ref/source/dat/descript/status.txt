@@ -486,7 +486,7 @@ Snake status
 You have been transformed into a giant, cold-blooded anaconda, ready to wind
 your coils around foes and crush them to death.
 
-Any equipped weapons and armour are melded, and casting spells is much harder.
+Any equipped weapons and armour are melded.
 %%%%
 Maw status
 
