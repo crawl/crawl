@@ -556,9 +556,10 @@ Death status
 You have been transformed into an undying offense against life itself.
 
 Foes struck by your hands or melee weapons are weakened, slowed, and drained,
-and you can heal themselves by tormenting foes nearby. You also resist cold and
-are immune to poison, miasma, negative energy, and torment. Unfortunately, you
-are vulnerable to holy damage and Dispel Undead, and cannot consume potions.
+and you can heal themselves by tormenting foes nearby. You also resist cold,
+have enhanced willpower, and are immune to poison, miasma, negative energy,
+and torment. Unfortunately, you are vulnerable to holy damage and Dispel
+Undead, and cannot consume potions.
 %%%%
 Bat status
 

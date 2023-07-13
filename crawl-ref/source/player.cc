@@ -6478,7 +6478,13 @@ int player_willpower(bool temp)
     // Mutations
     rm += WL_PIP * you.get_mutation_level(MUT_STRONG_WILLED);
     rm += WL_PIP * you.get_mutation_level(MUT_DEMONIC_WILL);
-    rm -= WL_PIP * you.get_mutation_level(MUT_WEAK_WILLED);;
+    rm -= WL_PIP * you.get_mutation_level(MUT_WEAK_WILLED);
+
+    if (you.form == transformation::death &&
+        (temp || you.default_form == transformation::death))
+    {
+        rm += WL_PIP;
+    }
 
     // In this moment, you are euphoric.
     if (you.duration[DUR_ENLIGHTENED])
