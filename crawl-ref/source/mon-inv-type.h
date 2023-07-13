@@ -23,7 +23,9 @@ enum mon_inv_type           // env.mons[].inv[]
     MSLOT_LAST_VISIBLE_SLOT = MSLOT_MISCELLANY,
 
     MSLOT_POTION,
+#if TAG_MAJOR_VERSION == 34
     MSLOT_SCROLL,
+#endif
     MSLOT_GOLD,
     NUM_MONSTER_SLOTS
 };

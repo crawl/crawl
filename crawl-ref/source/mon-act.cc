@@ -997,57 +997,6 @@ static bool _handle_reaching(monster& mons)
     return ret;
 }
 
-static bool _handle_scroll(monster& mons)
-{
-    item_def* scroll = mons.mslot_item(MSLOT_SCROLL);
-
-    // Yes, there is a logic to this ordering {dlb}:
-    if (mons.asleep()
-        || mons_is_confused(mons)
-        || mons.submerged()
-        || !scroll
-        || mons.has_ench(ENCH_BLIND)
-        || !one_chance_in(3)
-        || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
-        || mons.is_silenced()
-        || scroll->base_type != OBJ_SCROLLS)
-    {
-        return false;
-    }
-
-    bool read        = false;
-    bool was_visible = you.can_see(mons);
-    const int scroll_type = scroll->sub_type;
-
-    if (scroll_type == SCR_SUMMONING && mons.can_see(you))
-    {
-        simple_monster_message(mons, " reads a scroll.");
-        mprf("Wisps of shadow swirl around %s.", mons.name(DESC_THE).c_str());
-        read = true;
-        int count = roll_dice(2, 2);
-        for (int i = 0; i < count; ++i)
-        {
-            create_monster(
-                mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE((&mons)),
-                          mons.pos(), mons.foe)
-                .set_summoned(&mons, 3, MON_SUMM_SCROLL));
-        }
-    }
-
-    if (read)
-    {
-        if (dec_mitm_item_quantity(mons.inv[MSLOT_SCROLL], 1))
-            mons.inv[MSLOT_SCROLL] = NON_ITEM;
-
-        if (was_visible)
-            _update_item_knowledge(OBJ_SCROLLS, scroll_type);
-
-        mons.lose_energy(EUT_ITEM);
-    }
-
-    return read;
-}
-
 static void _mons_fire_wand(monster& mons, spell_type mzap, bolt &beem)
 {
     if (!simple_monster_message(mons, " zaps a wand."))
@@ -1523,12 +1472,6 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
         if (_handle_potion(mons))
         {
             DEBUG_ENERGY_USE_REF("_handle_potion()");
-            return true;
-        }
-
-        if (_handle_scroll(mons))
-        {
-            DEBUG_ENERGY_USE_REF("_handle_scroll()");
             return true;
         }
     }

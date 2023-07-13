@@ -1050,9 +1050,9 @@ KMONS:   3 = guardian mummy ; randart hand crossbow ego:chaos / \
              guardian mummy ; randart hand crossbow / \
              guardian mummy ; randart longbow / \
              guardian mummy ; randart arbalest
-KMONS:   5 = guardian mummy ; any beam wand | any ally scroll
+KMONS:   5 = guardian mummy ; any beam wand
 KMONS:   7 = guardian mummy ; randart ring mail | randart scale mail | \
-             randart chain mail | randart robe . any ally scroll
+             randart chain mail | randart robe
 KMONS:   2468 = killer klown
 KMONS:   _ = ghost moth
 KMONS:   90 = moth of wrath / butterfly w:30
