@@ -176,22 +176,6 @@ static void _give_wand(monster* mon, int level)
     give_specific_item(mon, idx);
 }
 
-static void _give_potion(monster* mon, int level)
-{
-    if (mons_is_unique(mon->type) && one_chance_in(4)
-                && _should_give_unique_item(mon))
-    {
-        const int thing_created = items(false, OBJ_POTIONS, OBJ_RANDOM,
-                                        level);
-
-        if (thing_created == NON_ITEM)
-            return;
-
-        env.item[thing_created].flags = 0;
-        give_specific_item(mon, thing_created);
-    }
-}
-
 static item_def* make_item_for_monster(
     monster* mons,
     object_class_type base,
@@ -2237,7 +2221,6 @@ void give_item(monster *mons, int level_number, bool mons_summoned)
     _give_gold(mons, level_number);
     _give_talisman(mons, level_number);
     _give_wand(mons, level_number);
-    _give_potion(mons, level_number);
     _give_weapon(mons, level_number);
     _give_ammo(mons, level_number, mons_summoned);
     _give_armour(mons, 1 + level_number / 2);

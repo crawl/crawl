@@ -4057,8 +4057,6 @@ mon_inv_type item_to_mslot(const item_def &item)
         return MSLOT_JEWELLERY;
     case OBJ_WANDS:
         return MSLOT_WAND;
-    case OBJ_POTIONS:
-        return MSLOT_POTION;
     case OBJ_BOOKS:
     case OBJ_TALISMANS:
     case OBJ_MISCELLANY:

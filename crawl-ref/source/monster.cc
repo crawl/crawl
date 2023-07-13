@@ -1943,13 +1943,6 @@ bool monster::pickup_wand(item_def &item, bool msg, bool force)
         return false;
 }
 
-bool monster::pickup_potion(item_def &item, bool msg, bool force)
-{
-    if (!can_drink() && !force)
-        return false;
-    return pickup(item, MSLOT_POTION, msg);
-}
-
 bool monster::pickup_gold(item_def &item, bool msg)
 {
     return pickup(item, MSLOT_GOLD, msg);
@@ -1986,8 +1979,6 @@ bool monster::pickup_item(item_def &item, bool msg, bool force)
         return pickup_missile(item, msg, force);
     case OBJ_WANDS:
         return pickup_wand(item, msg, force);
-    case OBJ_POTIONS:
-        return pickup_potion(item, msg, force);
     case OBJ_BOOKS:
     case OBJ_TALISMANS:
     case OBJ_MISCELLANY:

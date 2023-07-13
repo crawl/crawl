@@ -1281,11 +1281,10 @@ NSUBST:  123 = 2=.
 MONS:    gargoyle ; quarterstaff good_item \
          / molten gargoyle w:5 ; quarterstaff good_item
 MONS:   kobold brigand ; dagger ego:draining good_item . wand of paralysis \
-             . dart ego:atropa . potion of haste \
+             . dart ego:atropa \
          / spriggan ; dagger ego:draining good_item . robe good_item . buckler \
-             . wand of paralysis . potion of haste \
-         / vampire ; dagger ego:draining good_item . robe good_item \
-             . potion of haste
+             . wand of paralysis \
+         / vampire ; dagger ego:draining good_item . robe good_item
 MONS:    orc warrior ; flail good_item . kite shield . chain mail good_item \
          / gnoll sergeant ; flail good_item . kite shield \
              . chain mail good_item \
@@ -1295,42 +1294,37 @@ MONS:    orc warrior ; flail good_item . kite shield . chain mail good_item \
 NSUBST:  123 = 1=.
 # For D:13- and Depths, we generate all three ancestor monsters.
 :     else
-MONS:    ogre mage; lajatang ego:freezing . potion of haste \
-         / molten gargoyle ; lajatang ego:flaming . potion of haste
+MONS:    ogre mage; lajatang ego:freezing \
+         / molten gargoyle ; lajatang ego:flaming
 MONS:    spriggan ; dagger ego:draining good_item . robe good_item \
-             . buckler good_item . wand of paralysis . potion of haste \
+             . buckler good_item . wand of paralysis \
          / vampire ; dagger ego:draining good_item . robe good_item \
-             . buckler . wand of paralysis . potion of haste
+             . buckler . wand of paralysis
 MONS:    orc knight; broad axe ego:flaming . chain mail good_item \
-             . tower shield ego:reflection . potion of haste \
+             . tower shield ego:reflection \
          / tengu warrior ; broad axe ego:flaming . chain mail good_item \
-             . tower shield ego:reflection . potion of haste \
+             . tower shield ego:reflection \
          / naga warrior ; broad axe ego:flaming . chain mail good_item \
-             . tower shield ego:reflection . potion of haste \
+             . tower shield ego:reflection \
          / skeletal warrior ; broad axe ego:flaming . chain mail good_item \
-             . tower shield ego:reflection . potion of haste
+             . tower shield ego:reflection
 :     end
 # Depths
 : else
 MONS:    tengu reaver ; lajatang ego:freezing good_item \
-             | lajatang ego:freezing randart . scale mail . potion of haste \
-             . potion of haste \
+             | lajatang ego:freezing randart . scale mail \
          / ancient champion ; lajatang ego:freezing good_item \
              | lajatang ego:freezing randart . scale mail
 MONS:    vampire knight; quick blade ego:antimagic . buckler good_item \
-             . shadow dragon scales good_item . potion of haste \
-             . potion of haste \
+             . shadow dragon scales good_item \
          / spriggan defender; quick blade ego:antimagic w:20 \
              . robe good_item . buckler good_item . wand of paralysis \
-             . potion of haste . potion of haste
 MONS:    minotaur ; broad axe ego:speed good_item \
              | broad axe ego:speed randart | arga w:1 . plate armour good_item \
-             . tower shield ego:reflection good_item . potion of haste \
-             . potion of haste \
+             . tower shield ego:reflection good_item \
          / orc warlord ; broad axe ego:speed good_item \
              | broad axe ego:speed randart | arga w:1 . plate armour good_item \
-             . tower shield ego:reflection good_item . potion of haste \
-             . potion of haste
+             . tower shield ego:reflection good_itemq
 : end
 KFEAT:   _ = altar_hepliaklqana
 KFEAT:   - = altar_ecumenical
@@ -4066,36 +4060,6 @@ xccc--;__CCCx
 xxxXXX+CCCxxx
   xxx...xxx
     x.@.x
-ENDMAP
-
-# If the berserker scares you, use the escape hatch.
-NAME:   grunt_temple_overflow_bloody_war
-TAGS:   temple_overflow_2 temple_overflow_okawaru temple_overflow_trog
-TAGS:   patrolling transparent
-WEIGHT: 5
-KFEAT:  A = altar_okawaru
-KFEAT:  B = altar_trog
-KPROP:  . = bloody / nothing
-: if you.absdepth() < 8 then
-MONS:   gnoll ; club | spear | nothing . potion of berserk rage / \
-        orc ; club | hand axe | short sword . \
-              leather armour | nothing . potion of berserk rage
-: else
-MONS:   orc warrior ; club | hand axe | short sword . \
-                      leather armour | ring mail . \
-                      potion of berserk rage
-: end
-MAP
-xxxxxxx
-xxxxxxx
-xxA.Bxx
-xx.1.xx
-xx...xx
-xx...xx
-xx...xx
-xx...xx
-xxx+xxx
-  .@<
 ENDMAP
 
 NAME:    grunt_temple_overflow_magic_moments
