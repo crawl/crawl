@@ -820,7 +820,7 @@ again for a short time.
 Siphon Essence ability
 
 Violently draws upon the vital essence of nearby foes, halving their
-remaining life and using it to heal the user. Transmutations skill increases
+remaining life and using it to heal the user. Shapeshifting skill increases
 the healing received.
 
 This effect applies to anything living, undead, demonic or angelic - anything
