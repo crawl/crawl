@@ -56,7 +56,7 @@ WL  - willpower
 
 
                  Fgt     M&F Axs Pla Stv UC    SBl LBl Rng
-----------------------------------------------------------
+----------------------------------------------------------------------
 
 
                  Spc Coj Hex Sum Nec Trl Trm   Fir Ice Air Ear Poi
