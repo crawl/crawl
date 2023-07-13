@@ -27,11 +27,11 @@ of more ordinary instruments of chaos.
 glaive of Prune
 
 The glaive of Prune carries a terrible and insidious curse. Unless its wielder
-maintains firm self-control, they are doomed to succumb, undergoing a horrifying
-(albeit temporary) transformation. This is normally trivial to resist, but
-incapacitated wielders are certain to succumb, finding themselves nightmarishly
-purple, squishy, and delicious. They can take comfort in learning that it's
-surprisingly hard to injure a giant prune.
+maintains firm self-control, they are doomed undergo a horrifying (albeit
+temporary) transformation. This is normally trivial to resist, but incapacitated
+wielders are certain to succumb, finding themselves nightmarishly purple, squishy,
+and delicious. They can take comfort in learning that it's surprisingly hard to
+injure a giant prune.
 %%%%
 sword of Power
 
