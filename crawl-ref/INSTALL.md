@@ -122,7 +122,6 @@ Dependencies](#packaged-dependencies) above):
 * sqlite
 * zlib
 * pcre
-* zlib
 * freetype (tiles builds only)
 * DejaVu fonts (tiles builds only)
 * SDL2 (tiles builds only)
