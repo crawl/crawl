@@ -1106,7 +1106,7 @@ Spells
   more powerful, arcing between visible foes for massive damage that partially
   ignores AC and rElec.
 * Tornado has been renamed to Polar Vortex. It is now a Level 9 Ice spell, and
-  its damage has been increased by 33% but is partially resistable by rC.
+  its damage has been increased by 33% but is partially resistible by rC.
 * Other spell level adjustments:
   - Ozocubu's Refrigeration is now level 7 (from 6).
   - Freezing Cloud is now level 5 (from 6).
@@ -1246,7 +1246,7 @@ Items
 * Bardings are merged into a single item type.
 * Staves of earth deal higher damage, but with the shrapnel effect of being
   affected 3 times by AC.
-* Staves of conjuration deal bonus irresistable damage that checks AC.
+* Staves of conjuration deal bonus irresistible damage that checks AC.
 * The full contents of item piles are revealed on sight.
 * Potions of stabbing, wands of clouds, and staves of energy, summoning, and
   wizardry are removed.
@@ -1522,7 +1522,7 @@ Items
   - Maxwell's Etheric Cage has been removed.
 * Phial of floods now applies a silencing "waterlogged" debuff to all monsters
   in the flooded area and no longer summons water elementals.
-* Staves of poison now do resistable poison damage on hit like other staves
+* Staves of poison now do resistible poison damage on hit like other staves
   instead of just having a chance to poison.
 * Distortion branded weapons no longer teleport foes.
 * Distortion unwield effects no longer cause a translocations miscast. Instead,
@@ -1656,10 +1656,10 @@ Spells
     + Force Lance is removed.
   - Poison spells poison things or perform some kind of alchemy
     + Sting is now a range 3 Poison/Transmutations spell using the same
-      partly-resistable beam type previously used by Poison Arrow.
+      partly-resistible beam type previously used by Poison Arrow.
     + New L6 Poison/Transmutations spell Eringya's Noxious Bog that creates a
       temporary toxic bog trail as the player moves. The bog terrain applies
-      the same partly-resistable damage flavor as Sting as well as the
+      the same partly-resistible damage flavor as Sting as well as the
       movement and combat penalties of shallow water.
     + Removed spells: Venom Bolt, Poison Arrow
     + As a result of these changes, Venom Mages now put starting skill in
@@ -1686,7 +1686,7 @@ Spells
   - Summoning: durably summon a nameless horror (new monster).
   - Translocation: dimension anchor.
   - Transmutation: extra contamination for the player, malmutate a monster.
-  - Conjuration: irresistable AC-ignoring damage.
+  - Conjuration: irresistible AC-ignoring damage.
   - Elemental schools: school flavored damage (Earth uses fragmentation
     damage).
 * The Deflect Missiles spell has been removed.
@@ -2771,7 +2771,7 @@ Monsters
 * Battlecry has been simplified, affecting all monsters of the same genus.
 * Blood Saints's Legendary Destruction now casts two spells at a time.
 * Necromancers gain Bind Soul, reviving slain monsters as simulacrula.
-* Ghostly Fireball is now completely resistable by rN and causes draining.
+* Ghostly Fireball is now completely resistible by rN and causes draining.
 * Obsidian statues can Mesmerise.
 * Wizards and Ogre Mages have split up and re-arranged their many spell sets
   to arrive at three sets each, with minimal overlap.
@@ -4098,7 +4098,7 @@ Stone Soup 0.14.1 (20140428)
 ----------------------------
 * Several crash fixes.
 * Fire dragons correctly grant bonus Dithmenos piety.
-* Ranged attacks from invisibile monsters correctly turn off autopickup.
+* Ranged attacks from invisible monsters correctly turn off autopickup.
 * Good gods punish the player properly for negative energy clouds.
 * Natasha no longer revives after being pacified, and does not get a new
   item when reviving.
@@ -5197,7 +5197,7 @@ Stone Soup 0.11.2 (20130125)
 * Handle forcibly closing the game a bit better (save corruption, crashes,
   possible cheating).
 * No more false annotations in the Abyss.
-* Octopodes can't grow claws on their non-existant hands anymore.
+* Octopodes can't grow claws on their non-existent hands anymore.
 * Tile games did not always draw overlays properly.
 * Invocation based titles were wrong on the high scores list.
 * A number of other misc fixes.
