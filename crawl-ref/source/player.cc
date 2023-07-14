@@ -5434,10 +5434,7 @@ bool player::in_liquid() const
 
 bool player::can_swim(bool permanently) const
 {
-    return (species::can_swim(species)
-            || body_size(PSIZE_BODY) >= SIZE_GIANT
-            || !permanently)
-                && form_can_swim();
+    return cur_form(!permanently)->player_can_swim();
 }
 
 /// Can the player do a passing imitation of a notorious Palestinian?
