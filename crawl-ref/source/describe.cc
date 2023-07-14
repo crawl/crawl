@@ -2252,7 +2252,7 @@ static string _describe_talisman_form(const item_def &item)
     if (form_type == transformation::maw)
     {
         const int aux_dam = form->get_aux_damage(false);
-        const int max_aux_dam = form->get_aux_damage(true);
+        const int max_aux_dam = form->get_aux_damage(false, true);
         description += make_stringf("\nMaw Damage:    %d", aux_dam);
         if (max_aux_dam != aux_dam)
             description += make_stringf(" (max %d)", max_aux_dam);
