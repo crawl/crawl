@@ -586,22 +586,22 @@ font](http://www.yohng.com/software/terminalvector.html)
 
 When compiling, you may run into the following errors: 
 
-    `cat: util/release_ver: No such file or directory`
-    `Can't get version information: `git describe` failed (no git, 
-    no repository, or shallow clone), and util/release_ver doesn't exist.`
+* `cat: util/release_ver: No such file or directory` or
+* ```Can't get version information: `git describe` failed (no git, 
+no repository, or shallow clone), and util/release_ver doesn't exist.```
 
-        `release_ver` is a text file that simply gives a title to the 
-        "release" (it may not exist because it is automatically generated 
-        from Git tags, which are not automatically included if you have 
-        forked the repository).
-        The easiest solution is to create the file yourself, with text along 
-        the lines of `0.31-a0`. You may instead add the original master 
-        repository as a remote copy and then copy its tags:
-    
-        ```sh
-        git remote add upstream https://github.com/crawl/crawl/
-        git fetch --tags upstream
-        ```
+  * `release_ver` is a text file that simply gives a title to the 
+   "release" (it may not exist because it is automatically generated 
+   from Git tags, which are not automatically included if you have 
+   forked the repository).
+   The easiest solution is to create the file yourself, with text along 
+   the lines of `0.31-a0`. You may instead add the original master 
+   repository as a remote copy and then copy its tags:
+     
+       ```sh
+       git remote add upstream https://github.com/crawl/crawl/
+       git fetch --tags upstream
+       ```
 
 ## Getting Help
 
