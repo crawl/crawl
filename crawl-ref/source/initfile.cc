@@ -4429,7 +4429,7 @@ void get_system_environment()
     // The player's name
     SysEnv.crawl_name = check_string(getenv("CRAWL_NAME"));
 
-    // The directory which contians init.txt, macro.txt, morgue.txt
+    // The directory which contains init.txt, macro.txt, morgue.txt
     // This should end with the appropriate path delimiter.
     SysEnv.crawl_dir = check_string(getenv("CRAWL_DIR"));
 
@@ -4973,7 +4973,7 @@ static void _bones_ls(const string &filename, const string name_match,
         count++;
         if (long_output)
         {
-            // TOOD: line wrapping, some elements of this aren't meaningful at
+            // TODO: line wrapping, some elements of this aren't meaningful at
             // the command line
             describe_info inf;
             m.set_ghost(g);

@@ -136,7 +136,7 @@ bool TilesFramework::fonts_initialized()
 static void _init_consoles()
 {
 #ifdef TARGET_OS_WINDOWS
-    // Windows has an annoying habbit of disconnecting GUI apps from
+    // Windows has an annoying habit of disconnecting GUI apps from
     // consoles at startup, and insisting that console apps start with
     // consoles.
     //

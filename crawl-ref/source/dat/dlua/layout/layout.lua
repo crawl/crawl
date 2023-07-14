@@ -41,7 +41,7 @@ end
 -- Returns: An array containing the areas. If there is no
 --          primary vault, the array will contain one area
 --          bounded by x1, y1, x2, and y2. If the primary
---          vault covers evrything (e.g. an encompass vault) the
+--          vault covers everything (e.g. an encompass vault) the
 --          array will contain zero areas. Otherwise, the array
 --          will contain 1 or more areas composing a
 --          non-overlapping subset of the area bounded by x1,

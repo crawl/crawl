@@ -1844,7 +1844,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
     else if (mons.type == MONS_FOXFIRE)
     {
-        // Foxfires are unkillable, they either dissapate by timing out
+        // Foxfires are unkillable, they either dissipate by timing out
         // or hit something.
         silent = true;
     }

@@ -18,7 +18,7 @@
 -- parameters, can be used to achieve different effects.
 --
 -- Fog machines can be "chained" together (activated at the same time) by using
--- the convenience function "chained_fog_machine" with the normal paramaters
+-- the convenience function "chained_fog_machine" with the normal parameters
 -- which are accepted by "fog_machine".
 --
 -- Marker parameters:
@@ -309,7 +309,7 @@ end
 --      turns before to trigger the message before the fog machine is
 --      fired. If only see_message is provided, the message will only
 --      be printed if the player can see the fog machine. If only
---      cantsee_mesage is provided, the message will be displayed
+--      cantsee_message is provided, the message will be displayed
 --      regardless. In combination, the message will be different
 --      depending on whether or not the player can see the marker. By
 --      default, the message will be displaying using the "warning"

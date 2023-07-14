@@ -597,7 +597,7 @@ namespace Catch {
             elem = trim(elem);
         }
 
-        // Insert the default reporter if user hasn't asked for a specfic one
+        // Insert the default reporter if user hasn't asked for a specific one
         if ( m_data.reporterSpecifications.empty() ) {
             m_data.reporterSpecifications.push_back( {
 #if defined( CATCH_CONFIG_DEFAULT_REPORTER )
@@ -8764,7 +8764,7 @@ namespace Catch {
             static_cast<void>(
                 assertionStats.assertionResult.getExpandedExpression() );
         }
-        if ( m_shouldStoreSuccesfulAssertions &&
+        if ( m_shouldStoreSuccessfulAssertions &&
              assertionStats.assertionResult.isOk() ) {
             static_cast<void>(
                 assertionStats.assertionResult.getExpandedExpression() );
@@ -9240,7 +9240,7 @@ namespace Catch {
         {
             m_preferences.shouldRedirectStdOut = true;
             m_preferences.shouldReportAllAssertions = true;
-            m_shouldStoreSuccesfulAssertions = false;
+            m_shouldStoreSuccessfulAssertions = false;
         }
 
     std::string JunitReporter::getDescription() {

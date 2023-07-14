@@ -524,7 +524,7 @@ function iter.invent_iterator:next()
   return point
 end
 
---- Check an item agains the iterator's filter
+--- Check an item against the iterator's filter
 -- @param item
 -- @return either the item or filter(item) if rv is asked for
 function iter.invent_iterator:check_filter(item)

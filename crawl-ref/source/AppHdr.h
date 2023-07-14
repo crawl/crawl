@@ -42,7 +42,7 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 //
 // #define DISABLE_SAVEGAME_LISTS
 
-// Uncomment to let valgrind debug unitialized uses of global classes
+// Uncomment to let valgrind debug initialized uses of global classes
 // (you, env, clua, dlua, crawl_state).
 //
 // #define DEBUG_GLOBALS

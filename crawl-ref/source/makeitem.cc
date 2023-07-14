@@ -894,7 +894,7 @@ static int _armour_plus_threshold(equipment_type armour_type)
 static armour_type _get_random_armour_type(int item_level)
 {
 
-    // Dummy value for initilization, always changed by the conditional
+    // Dummy value for initialization, always changed by the conditional
     // (and not changing it would trigger an ASSERT)
     armour_type armtype = NUM_ARMOURS;
 
@@ -1643,7 +1643,7 @@ static void _generate_misc_item(item_def& item, int force_type, int item_level)
 }
 
 /**
- * Alter the inputed item to have no "plusses" (mostly weapon/armour enchantment)
+ * Alter the inputted item to have no "plusses" (mostly weapon/armour enchantment)
  *
  * @param[in,out] item_slot The item slot of the item to remove "plusses" from.
  */

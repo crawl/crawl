@@ -435,7 +435,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
     if (!mon->alive())
         return;
 
-    // Ball lightning dissapates harmlessly out of LOS
+    // Ball lightning dissipates harmlessly out of LOS
     if (mon->type == MONS_BALL_LIGHTNING && mon->summoner == MID_PLAYER)
     {
         monster_die(*mon, KILL_RESET, NON_MONSTER);
@@ -471,7 +471,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
         else
         {
             // handle expiration messages if the player was quick
-            // doing it this way so the mesages are kept consistent with
+            // doing it this way so the messages are kept consistent with
             // corresponding non-yred derived undead
             mon_enchant abj(ENCH_FAKE_ABJURATION, 0, 0, 1);
             mon->add_ench(abj);

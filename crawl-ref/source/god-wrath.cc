@@ -1267,7 +1267,7 @@ static void _jiyva_transform()
         you.transform_uncancellable = true;
 }
 /**
- * Make Jiyva contaminate tha player.
+ * Make Jiyva contaminate that player.
  */
 static void _jiyva_contaminate()
 {

@@ -4452,7 +4452,7 @@ mons_spec mons_list::get_slime_spec(const string &name) const
 
 /**
  * Build a monster specification for a specified pillar of salt. The pillar of
- * salt won't crumble over time, since that seems unuseful for any version of
+ * salt won't crumble over time, since that seems useful for any version of
  * this function.
  *
  * @param name      The description of the pillar of salt; e.g.
@@ -4484,7 +4484,7 @@ mons_spec mons_list::get_salt_spec(const string &name) const
 //    yellow draconian or draconian knight - the monster specified.
 //
 // Others:
-//    any draconian => any random draconain
+//    any draconian => any random draconian
 //    any base draconian => any unspecialised coloured draconian.
 //    any nonbase draconian => any specialised coloured draconian.
 //    any <colour> draconian => any draconian of the colour.

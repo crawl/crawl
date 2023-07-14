@@ -335,7 +335,7 @@ not guaranteed. Also, there is only one go at a portal vault - if you
 leave, it's gone for good. You can apply special rules to a portal vault,
 like enforcing maprot.
 
-Portal vaults can be particulary thematic, using specialised monster
+Portal vaults can be particularly thematic, using specialised monster
 sets, fitting loot, coloured dungeon features etc. Avoid death traps; it
 is no fun to enter a vault, being unable to leave and be killed outright.
 In order to provide fun and reduce spoiler effects, randomise. For portal

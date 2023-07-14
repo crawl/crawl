@@ -1210,7 +1210,7 @@ void do_annotate()
             annotate_level(lid);
             return;
         case ID_UP:
-            // level_id() is the error vallue of find_up_level(lid)
+            // level_id() is the error value of find_up_level(lid)
             if (find_up_level(lid) == level_id())
                 mpr("There is no level above you.");
             else

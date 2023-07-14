@@ -125,7 +125,7 @@ Enum find_earliest_match(const string &spec, Enum begin, Enum end,
  * @tparam F A callable type that takes whatever Z points to, and
  *     returns a string or null-terminated char *.
  * @tparam G A callable type that takes whatever Z points to, and
- *     returns some type that is explicitly convertable to bool
+ *     returns some type that is explicitly convertible to bool
  *
  * @param start An iterator to the beginning of the range of elements to
  *     consider.
@@ -143,7 +143,7 @@ Enum find_earliest_match(const string &spec, Enum begin, Enum end,
  *     of elements in the range.
  *
  * @return A string containing the stringifications of all the elements
- *     for which filter returns true, with andc separating the last two
+ *     for which filter returns true, with and separating the last two
  *     elements and comma separating the other elements. If the range is
  *     empty, returns the empty string.
  */

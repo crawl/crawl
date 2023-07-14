@@ -2614,7 +2614,7 @@ MAP
 ENDMAP
 
 ##############################################################################
-#The maze will allways contain an exit to the rest of D:1, the player won't be
+#The maze will always contain an exit to the rest of D:1, the player won't be
 #forced to D:2.
 NAME:    co_arrival_random_square_maze
 TAGS:    arrival

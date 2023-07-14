@@ -1616,7 +1616,7 @@ bool AcquireMenu::examine_index(int i)
     ASSERT(i >= 0 && i < static_cast<int>(items.size()));
     // Use a copy to set flags that make the description better
     // See the similar code in shopping.cc for details about const
-    // hygene
+    // hygiene
     item_def &item = *static_cast<item_def*>(items[i]->data);
 
     item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
@@ -1646,7 +1646,7 @@ static item_def _acquirement_item_def(object_class_type item_type)
         // We make a copy of the item def, but we don't keep the real item.
         item = env.item[item_index];
         set_ident_flags(item,
-                // Act as if we've recieved this item already to prevent notes.
+                // Act as if we've received this item already to prevent notes.
                 ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
         destroy_item(item_index);
     }

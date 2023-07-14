@@ -28,7 +28,7 @@ private:
 /**
  * @class random_rectangle_iterator
  * Iterator over coordinates in a rectangular region in a
- * random order. This interator does not favour any given
+ * random order. This iterator does not favour any given
  * direction, but is slower than rectangle_iterator.
  *
  * When this iterator has returned all elements, it will just

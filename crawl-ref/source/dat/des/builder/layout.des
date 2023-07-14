@@ -1462,7 +1462,7 @@ TAGS:   no_rotate no_hmirror no_vmirror
 {{
   -- information for rooms of different sizes
 
-  local GLPYH_BY_RADIUS =
+  local GLYPH_BY_RADIUS =
     { [4] = { [0] = "c", "-", ".", ".", ":" },
       [5] = { [0] = "c", "-", ".", ".", ":", ":" },
       [6] = { [0] = "c", "c", "-", ".", ".", ":", ":" },
@@ -1524,7 +1524,7 @@ TAGS:   no_rotate no_hmirror no_vmirror
         local y = center_y + dy
         local abs_sum = math.abs(dx) + math.abs(dy)
         if (abs_sum <= radius) then
-          local new_glyph = GLPYH_BY_RADIUS[radius][abs_sum]
+          local new_glyph = GLYPH_BY_RADIUS[radius][abs_sum]
           if (GLYPH_PRIORITY[new_glyph] <
               GLYPH_PRIORITY[mapgrd[x][y]]) then
             mapgrd[x][y] = new_glyph

@@ -113,7 +113,7 @@ static void _pick_float_exits(vault_placement &place,
                               vector<coord_def> &targets);
 static bool _feat_is_wall_floor_liquid(dungeon_feature_type);
 static bool _connect_spotty(const coord_def& from,
-                            bool (*overwriteable)(dungeon_feature_type) = nullptr);
+                            bool (*overwritable)(dungeon_feature_type) = nullptr);
 static bool _connect_vault_exit(const coord_def& exit);
 
 // VAULT FUNCTIONS
@@ -1140,7 +1140,7 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
                 && (fill_small_zones <= 0 || zone_size <= fill_small_zones))
             {
                 // Don't fill in areas connected to vaults.
-                // We want vaults to be accessible; if the area is disconneted
+                // We want vaults to be accessible; if the area is disconnected
                 // from the rest of the level, this will cause the level to be
                 // vetoed later on.
                 bool veto = false;
@@ -1216,7 +1216,7 @@ static void _fill_small_disconnected_zones()
 {
     // debugging tip: change the feature to something like lava that will be
     // very noticeable.
-    // TODO: make even more agressive, up to ~25?
+    // TODO: make even more aggressive, up to ~25?
     _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_ROCK_WALL,
                                        _dgn_square_is_passable,
                                        _dgn_square_is_boring,
@@ -5733,10 +5733,10 @@ vector<coord_def> dgn_join_the_dots_pathfind(const coord_def &from,
 
 bool join_the_dots(const coord_def &from, const coord_def &to,
                    uint32_t mapmask,
-                   bool (*overwriteable)(dungeon_feature_type))
+                   bool (*overwritable)(dungeon_feature_type))
 {
-    if (!overwriteable)
-        overwriteable = _feat_is_wall_floor_liquid;
+    if (!overwritable)
+        overwritable = _feat_is_wall_floor_liquid;
 
     const vector<coord_def> path =
         dgn_join_the_dots_pathfind(from, to, mapmask);
@@ -5744,7 +5744,7 @@ bool join_the_dots(const coord_def &from, const coord_def &to,
     for (auto c : path)
     {
         auto feat = env.grid(c);
-        if (!map_masked(c, mapmask) && overwriteable(feat))
+        if (!map_masked(c, mapmask) && overwritable(feat))
         {
             env.grid(c) = DNGN_FLOOR;
             dgn_height_set_at(c);
@@ -6203,14 +6203,14 @@ static bool _feat_is_wall_floor_liquid(dungeon_feature_type feat)
 // It might be better to aim for a more open connection -- currently
 // it stops pretty much as soon as connectivity is attained.
 static set<coord_def> _dgn_spotty_connect_path(const coord_def& from,
-            bool (*overwriteable)(dungeon_feature_type))
+            bool (*overwritable)(dungeon_feature_type))
 {
     set<coord_def> flatten;
     set<coord_def> border;
     bool success = false;
 
-    if (!overwriteable)
-        overwriteable = _feat_is_wall_floor_liquid;
+    if (!overwritable)
+        overwritable = _feat_is_wall_floor_liquid;
 
     for (adjacent_iterator ai(from); ai; ++ai)
         if (!map_masked(*ai, MMT_VAULT) && _spotty_seed_ok(*ai))
@@ -6232,7 +6232,7 @@ static set<coord_def> _dgn_spotty_connect_path(const coord_def& from,
             if (env.grid(*ai) == DNGN_FLOOR)
                 success = true; // Through, but let's remove the others, too.
 
-            if (!overwriteable(env.grid(*ai)) || flatten.count(*ai))
+            if (!overwritable(env.grid(*ai)) || flatten.count(*ai))
                 continue;
 
             flatten.insert(*ai);
@@ -6255,10 +6255,10 @@ static set<coord_def> _dgn_spotty_connect_path(const coord_def& from,
 }
 
 static bool _connect_spotty(const coord_def& from,
-                            bool (*overwriteable)(dungeon_feature_type))
+                            bool (*overwritable)(dungeon_feature_type))
 {
     const set<coord_def> spotty_path =
-        _dgn_spotty_connect_path(from, overwriteable);
+        _dgn_spotty_connect_path(from, overwritable);
 
     if (!spotty_path.empty())
     {

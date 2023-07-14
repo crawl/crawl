@@ -124,7 +124,7 @@ static bool _coords(lua_State *ls, map_lines &lines,
     return x1 + border <= x2 - border && y1 + border <= y2 - border;
 }
 
-// Check if a given coordiante is valid for lines.
+// Check if a given coordinate is valid for lines.
 static bool _valid_coord(lua_State *ls, map_lines &lines, int x, int y, bool error = true)
 {
     if (x < 0 || x >= lines.width())

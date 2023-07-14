@@ -1544,7 +1544,7 @@ Hill Orcs (HO)
   convert to Beogh even without an altar whenever an orc priest is in sight.
 
 Minotaurs (Mi)
-  The Minotaurs are a species of hybrids, posessing human bodies with bovine
+  The Minotaurs are a species of hybrids, possessing human bodies with bovine
   heads. They delve into the Dungeon because of their instinctive love of
   twisting passageways.
 

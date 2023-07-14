@@ -236,7 +236,7 @@ static bool _autoswitch_to_melee()
 
 static bool _can_shoot_with(const item_def *weapon)
 {
-    // TOOD: dedup elsewhere.
+    // TODO: dedup elsewhere.
     return weapon
         && is_range_weapon(*weapon)
         && !you.attribute[ATTR_HELD]

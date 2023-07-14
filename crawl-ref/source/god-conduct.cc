@@ -120,7 +120,7 @@ static void _handle_piety_penance(int piety_change, int piety_denom,
 }
 
 /**
- * Whether good gods that you folow are offended by you attacking a specific
+ * Whether good gods that you follow are offended by you attacking a specific
  * holy monster.
  *
  * @param victim    The holy in question. (May be nullptr.)
@@ -564,7 +564,7 @@ static int _piety_bonus_for_holiness(mon_holy_type holiness)
  * @param god_is_good   Whether this is a good god.
  *                      (They don't scale piety with XL in the same way...?)
  * @param special       A special-case function.
- * @return              An appropropriate like_response.
+ * @return              An appropriate like_response.
  */
 static like_response _on_kill(const char* desc, mon_holy_type holiness,
                               bool god_is_good = false,

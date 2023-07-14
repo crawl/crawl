@@ -780,7 +780,7 @@ static void _setup_heal_other(bolt &beam, const monster &caster, int)
  *
  * @param targeter     A function that finds a target for the given spell.
  *                      Expected to return an out-of-bounds coord on failure.
- * @return              A function that initializes a fake targetting beam.
+ * @return              A function that initializes a fake targeting beam.
  */
 static function<void(bolt&, const monster&, int)>
     _target_beam_setup(function<coord_def(const monster&)> targeter)
@@ -788,7 +788,7 @@ static function<void(bolt&, const monster&, int)>
     return [targeter](bolt& beam, const monster& caster, int)
     {
         _setup_fake_beam(beam, caster);
-        // Your shadow keeps your targetting.
+        // Your shadow keeps your targeting.
         if (mons_is_player_shadow(caster))
             return;
         beam.target = targeter(caster);
@@ -3565,7 +3565,7 @@ static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
                                           int power)
 {
     _setup_ghostly_beam(beam, power, 5);
-    // Future-proofing: your shadow keeps your targetting.
+    // Future-proofing: your shadow keeps your targeting.
     if (mons_is_player_shadow(caster))
         return;
 
@@ -3932,8 +3932,8 @@ static monster_spells _find_usable_spells(monster &mons)
  *
  * @param mons            The monster casting the spell. XXX: should be const
  * @param beem[in,out]    A targeting beam. Has a very few params already set.
- *                        (from setup_targetting_beam())
- * @param spell           The spell to be targetted and cast.
+ *                        (from setup_targeting_beam())
+ * @param spell           The spell to be targeted and cast.
  * @param ignore_good_idea  Whether to ignore most targeting constraints (ru)
  */
 static bool _target_and_justify_spell(monster &mons,
@@ -3983,7 +3983,7 @@ static bool _target_and_justify_spell(monster &mons,
  *                      TODO: should be const (requires _ms_low_hitpoint_cast
                         param to be const)
  * @param orig_beem[in,out]     A beam. Has a very few params already set.
- *                              (from setup_targetting_beam())
+ *                              (from setup_targeting_beam())
  *                              TODO: split out targeting into another func
  * @param hspell_pass   A list of valid spells to consider casting.
  * @param ignore_good_idea      Whether to be almost completely indiscriminate
@@ -4053,7 +4053,7 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
         }
 
         // if we didn't roll a spell, don't make another attempt; bail.
-        // (only give multiple attempts for targetting issues.)
+        // (only give multiple attempts for targeting issues.)
         if (chosen_slot.spell == SPELL_NO_SPELL)
             return chosen_slot;
 
@@ -4102,7 +4102,7 @@ bool handle_mon_spell(monster* mons)
     if (!hspell_pass.size())
         return false;
 
-    bolt beem = setup_targetting_beam(*mons);
+    bolt beem = setup_targeting_beam(*mons);
 
     bool ignore_good_idea = false;
     if (does_ru_wanna_redirect(*mons))

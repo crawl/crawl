@@ -510,7 +510,7 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
 
         mprf(MSGCH_DGL_MESSAGE, "%s", m.c_str());
         // The following two lines are a magic incantation to get this mprf
-        // to actually render without waiting on player inout
+        // to actually render without waiting on player input
         flush_prev_message();
         c = CK_REDRAW;
     }

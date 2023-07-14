@@ -929,11 +929,11 @@ static int crawl_split(lua_State *ls)
 
 /*** Compare two strings in a locale-independent way.
  * Lua's built in comparison operations for strings are dependent on locale,
- * which isn't always desireable. This is just a wrapper on
+ * which isn't always desirable. This is just a wrapper on
  * std::basic_string::compare.
  *
  * @tparam string s1 the first string.
- * @tparam string s2 the second sring.
+ * @tparam string s2 the second string.
  * @treturn number -1 if s1 < s2, 1 if s2 < s1, 0 if s1 == s2.
  * @function string_compare
  */
@@ -1687,7 +1687,7 @@ LUAFN(_crawl_unavailable_god)
 /*** Divine voices.
  * @within dlua
  * @tparam string Name of a current crawl god.
- * @tparam string Speach
+ * @tparam string Speech
  * @function god_speaks
  */
 LUAFN(_crawl_god_speaks)

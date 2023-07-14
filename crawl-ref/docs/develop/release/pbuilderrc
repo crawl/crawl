@@ -1,7 +1,7 @@
 # pbuilder defaults; edit /etc/pbuilderrc to override these and see
 # pbuilderrc.5 for documentation
 
-## set e.g. ARCH=i386 to make the i386 packges on an amd64 system
+## set e.g. ARCH=i386 to make the i386 packages on an amd64 system
 : ${ARCH:="$(dpkg --print-architecture)"}
 ##
 . /etc/lsb-release

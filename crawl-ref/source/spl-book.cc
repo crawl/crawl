@@ -586,7 +586,7 @@ private:
                 "   [<w>?</w>] help"; // XX hardcoded for this menu
 
         if (search_text.size())
-            return pad_more_with(desc.str(), "[<w>Esc</w>] clear"); // esc is harcoded for this case
+            return pad_more_with(desc.str(), "[<w>Esc</w>] clear"); // esc is hardcoded for this case
         else
             return pad_more_with_esc(desc.str());
     }

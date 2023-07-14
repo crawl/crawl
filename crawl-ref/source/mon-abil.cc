@@ -997,7 +997,7 @@ bool mon_special_ability(monster* mons)
             actor *foe = mons->get_foe();
             if (foe && mons->can_see(*foe))
             {
-                bolt beem = setup_targetting_beam(*mons);
+                bolt beem = setup_targeting_beam(*mons);
                 beem.target = foe->pos();
                 setup_mons_cast(mons, beem, SPELL_THORN_VOLLEY);
 

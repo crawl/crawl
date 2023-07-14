@@ -682,7 +682,7 @@ bool mons_speaks(monster* mons)
     {
         string key = "'";
 
-        // Database keys are case-insensitve.
+        // Database keys are case-insensitive.
         if (isaupper(mons_base_char(mons->type)))
             key += "cap-";
 

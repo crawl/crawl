@@ -199,7 +199,7 @@ void package::load_traces()
         trace_chunk(entry.second);
 
 #ifdef COSTLY_ASSERTS
-    // any inconsitency in the save is guaranteed to be already found
+    // any inconsistency in the save is guaranteed to be already found
     // by this time -- this checks only for internal bugs
     fsck();
 #endif

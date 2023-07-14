@@ -34,7 +34,7 @@ seed *should* fully determine a dungeon, but this mapping is quite delicate.
 
 ## 2. Breaking seed mappings
 
-The following changes (which are often desireable changes) can break the seed
+The following changes (which are often desirable changes) can break the seed
 to dungeon mappings, in some way:
 
 * adding or removing a vault
@@ -257,7 +257,7 @@ different compilers or build options (or OSs, perhaps) lead to different
 choices. The biggest example is the ordering of random calls in arithmetic
 expressions, discussed in section 4.1, so this is definitely the first thing
 to look for. The #crawl-dev population on Libera IRC in aggregate has pretty
-detailed knowledge of the C++ specs, so if you aren't sure whether somethig in
+detailed knowledge of the C++ specs, so if you aren't sure whether something in
 particular is defined, this is a good place to ask.
 
 Before opening the VM, however, if what you are seeing is a difference between

@@ -5931,7 +5931,7 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
 
 #ifdef USE_TILE_WEB
     // the spell list is delimited so that we can later replace this substring
-    // with a placeholder marker; remove the delimeters for console display
+    // with a placeholder marker; remove the delimiters for console display
     desc = formatted_string::parse_string(
         replace_all(
             replace_all(raw_desc, SPELL_LIST_BEGIN, ""),

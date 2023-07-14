@@ -291,7 +291,7 @@ class GameConfig(MutableMapping):
         t = self.get_defaults()
         while isinstance(t, GameConfig) and t.template:
             if t.id in seen:
-                logging.error("Loop in tempate dependencies from game %s: %s", self.id, t.id)
+                logging.error("Loop in template dependencies from game %s: %s", self.id, t.id)
                 return False
             seen.add(t.id)
             t = t.get_defaults()

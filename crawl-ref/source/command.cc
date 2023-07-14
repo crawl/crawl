@@ -1424,7 +1424,7 @@ private:
                 // disable these if there's no character to view
                 if (!crawl_state.game_started)
                     return maybe_bool::maybe;
-                // falltrough
+                // fallthrough
             case CK_ESCAPE: case '/': case 'q': case 'v': case '!':
                 // exit the UI, these help screens are activated outside of
                 // the scroller popup

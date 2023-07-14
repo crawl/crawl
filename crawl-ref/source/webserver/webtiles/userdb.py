@@ -219,7 +219,7 @@ def flag_description(flags):
     if (flags & DGLACCT_ACCOUNT_HOLD):
         s.append("hold")
     else:
-        # account is in a wierd state if it has these set...
+        # account is in a weird state if it has these set...
         if (flags & DGLACCT_PASSWD_LOCK):
             s.append("passwd lock")
         if (flags & DGLACCT_EMAIL_LOCK):

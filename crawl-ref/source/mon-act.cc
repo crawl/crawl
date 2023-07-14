@@ -1426,7 +1426,7 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
 
     if (friendly_or_near)
     {
-        bolt beem = setup_targetting_beam(mons);
+        bolt beem = setup_targeting_beam(mons);
         if (handle_throw(&mons, beem, false, false))
         {
             DEBUG_ENERGY_USE_REF("_handle_throw()");

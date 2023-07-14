@@ -134,7 +134,7 @@ for my $f (@files)
     /rebrace($1,$2,$3)/egsmx if $add_braces;
 
     # return is not a function, eliminate totally enclosing parentheses.
-    # This part handles parenthese-less payloads.
+    # This part handles parentheses-less payloads.
     while (/^( *)return \(([^()]+)\);/sm)
     {
         # Done this roundabout way to properly unindent multiline blocks.

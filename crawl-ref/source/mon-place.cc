@@ -2078,7 +2078,7 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
 }
 
 /// a weighted list of possible monsters for a given band slot.
-typedef vector<pair<monster_type, int>> member_possibilites;
+typedef vector<pair<monster_type, int>> member_possibilities;
 
 /**
  * For each band type, a list of weighted lists of monsters that can appear
@@ -2097,7 +2097,7 @@ typedef vector<pair<monster_type, int>> member_possibilites;
  * the third, fourth, etc monsters will either be MONS_C or MONS_D with equal
  * likelihood.
  */
-static const map<band_type, vector<member_possibilites>> band_membership = {
+static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_HOGS,                {{{MONS_HOG, 1}}}},
     { BAND_YAKS,                {{{MONS_YAK, 1}}}},
     { BAND_FAUNS,               {{{MONS_FAUN, 1}}}},

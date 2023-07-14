@@ -3502,7 +3502,7 @@ KMONS:   5 = patrolling merfolk avatar
 KFEAT:   p12345de%*| = W
 NSUBST:  % = 2=d / 2=d% / e / %%*|
 # Open up squares on the fixed portions of the temple walls, on the outer
-# colums, and in the inner room.
+# columns, and in the inner room.
 SUBST:   c = c:20 .:1 W:1, a = ccc-, q = cccc'
 # Each wall has a 50% chance of being broken open
 SHUFFLE: DEFHJ / uuyzz

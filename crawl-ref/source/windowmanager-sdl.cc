@@ -264,7 +264,7 @@ static int _translate_keysym(SDL_Keysym &keysym)
 
 #ifdef TARGET_OS_WINDOWS
     // AltGr looks like right alt + left ctrl on Windows. Let the input
-    // method geneate a TextInput event rather than trying to handle it
+    // method generate a TextInput event rather than trying to handle it
     // as a KeyDown.
     if (testbits(keysym.mod, KMOD_RALT | KMOD_LCTRL))
         return 0;
