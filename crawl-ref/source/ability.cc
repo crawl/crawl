@@ -54,6 +54,7 @@
 #include "mon-util.h"
 #include "movement.h"
 #include "mutation.h"
+#include "nearby-danger.h" // i_feel_safe
 #include "notes.h"
 #include "options.h"
 #include "output.h"
@@ -2689,6 +2690,11 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_BEGIN_UNTRANSFORM:
+        if (!i_feel_safe(true) && !yesno("Still begin untransforming?", true, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return spret::abort;
+        }
         start_delay<TransformDelay>(transformation::none);
         break;
 
