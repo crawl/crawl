@@ -2107,7 +2107,7 @@ ENDMAP
 
 ###############################################################################
 
-NAME:    regret_index_dithmenos_brocken_genspenst
+NAME:    regret_index_dithmenos_broken_genspenst
 TAGS:    no_monster_gen no_item_gen no_rotate patrolling
 DEPTH:   Depths, !Depths:$
 ORIENT:  south

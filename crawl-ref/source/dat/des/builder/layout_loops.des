@@ -600,7 +600,7 @@ end
 #  .......   ...x...      NO
 #  .......   .xxxxx.              CENTER
 #  .......   .xxxxx.   OUTLINE
-#  .......   .xxxxx.              GLPYH
+#  .......   .xxxxx.              GLYPH
 #  .......   ...x...     FORM
 #    ...       ...                 FORM
 #
@@ -608,7 +608,7 @@ end
 #   .....     .xxx.       NO
 #  .......   ..xxx..              CENTER
 #  .......   .xxxxx.   OUTLINE
-#  .......   ..xxx..              GLPYH
+#  .......   ..xxx..              GLYPH
 #   .....     .xxx.      FORM
 #   .....     .....                FORM
 #
