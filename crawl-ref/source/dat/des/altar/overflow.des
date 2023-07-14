@@ -1318,7 +1318,7 @@ MONS:    tengu reaver ; lajatang ego:freezing good_item \
 MONS:    vampire knight; quick blade ego:antimagic . buckler good_item \
              . shadow dragon scales good_item \
          / spriggan defender; quick blade ego:antimagic w:20 \
-             . robe good_item . buckler good_item . wand of paralysis \
+             . robe good_item . buckler good_item . wand of paralysis
 MONS:    minotaur ; broad axe ego:speed good_item \
              | broad axe ego:speed randart | arga w:1 . plate armour good_item \
              . tower shield ego:reflection good_item \
