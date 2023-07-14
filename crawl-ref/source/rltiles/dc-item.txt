@@ -1173,6 +1173,18 @@ rune_demonic_5
 rune_demonic_6
 rune_elven RUNE_ELVEN
 
+#OBJ_TALISMANS
+%sdir item/talisman
+%rim 0
+beast TALISMAN_BEAST
+snake TALISMAN_SNAKE
+maw TALISMAN_MAW
+blade TALISMAN_BLADE
+statue TALISMAN_STATUE
+dragon TALISMAN_DRAGON
+storm TALISMAN_STORM
+death TALISMAN_DEATH
+
 %sdir item/misc/uncollected_runes
 generic MISC_UNCOLLECTED_RUNE_OF_ZOT
 rune_tartarus UNCOLLECTED_RUNE_TARTARUS

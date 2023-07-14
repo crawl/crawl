@@ -2716,7 +2716,14 @@ static tileidx_t _tileidx_talisman(const item_def &item)
 {
     switch (item.sub_type)
     {
-        // XXX TODO
+    case TALISMAN_BEAST:    return TILE_TALISMAN_BEAST;
+    case TALISMAN_SERPENT:  return TILE_TALISMAN_SNAKE;
+    case TALISMAN_MAW:      return TILE_TALISMAN_MAW;
+    case TALISMAN_BLADE:    return TILE_TALISMAN_BLADE;
+    case TALISMAN_STATUE:   return TILE_TALISMAN_STATUE;
+    case TALISMAN_DRAGON:   return TILE_TALISMAN_DRAGON;
+    case TALISMAN_STORM:    return TILE_TALISMAN_STORM;
+    case TALISMAN_DEATH:    return TILE_TALISMAN_DEATH;
     default: return TILE_ERROR;
     }
 }
