@@ -4102,7 +4102,7 @@ bool handle_mon_spell(monster* mons)
     if (!hspell_pass.size())
         return false;
 
-    bolt beem = setup_targetting_beam(*mons);
+    bolt beem = setup_targeting_beam(*mons);
 
     bool ignore_good_idea = false;
     if (does_ru_wanna_redirect(*mons))

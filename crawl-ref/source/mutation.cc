@@ -1622,7 +1622,7 @@ static int _handle_conflicting_mutations(mutation_type mutation,
                     }
 
                 default:
-                    die("bad mutation conflict resulution");
+                    die("bad mutation conflict resolution");
                 }
             }
         }

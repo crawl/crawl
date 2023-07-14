@@ -111,7 +111,7 @@ function hyper.rooms.make_room(options,generator)
     profiler.push("AnalyseRoomInternal")
   end
 
-  if generator.analyse_interal then
+  if generator.analyse_internal then
     hyper.usage.analyse_grid_usage(room.grid,options)
   end
 

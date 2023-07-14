@@ -6888,7 +6888,7 @@ int omnireflect_chance_denom(int SH)
 }
 
 /// Set up a beam aiming from the given monster to their target.
-bolt setup_targetting_beam(const monster &mons)
+bolt setup_targeting_beam(const monster &mons)
 {
     bolt beem;
 

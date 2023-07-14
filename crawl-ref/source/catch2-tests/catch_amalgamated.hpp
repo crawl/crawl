@@ -11879,8 +11879,8 @@ namespace Catch {
         void skipTest(TestCaseInfo const&) override {}
 
     protected:
-        //! Should the cumulative base store the assertion expansion for succesful assertions?
-        bool m_shouldStoreSuccesfulAssertions = true;
+        //! Should the cumulative base store the assertion expansion for successful assertions?
+        bool m_shouldStoreSuccessfulAssertions = true;
         //! Should the cumulative base store the assertion expansion for failed assertions?
         bool m_shouldStoreFailedAssertions = true;
 
@@ -12296,7 +12296,7 @@ namespace Catch {
         , xml(m_stream) {
             m_preferences.shouldRedirectStdOut = true;
             m_preferences.shouldReportAllAssertions = true;
-            m_shouldStoreSuccesfulAssertions = false;
+            m_shouldStoreSuccessfulAssertions = false;
         }
 
         ~SonarQubeReporter() override = default;

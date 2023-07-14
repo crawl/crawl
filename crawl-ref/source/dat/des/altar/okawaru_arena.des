@@ -3,7 +3,7 @@
 
 # Typo below
 {{
-function callback.oka_start_challange(data, triggerable, triggerer, marker, ev)
+function callback.oka_start_challenge(data, triggerable, triggerer, marker, ev)
   -- Open the cages.
   for slave in iter.slave_iterator("cage_doors", 1) do
     dgn.terrain_changed(slave.x, slave.y, "floor", false)
@@ -98,7 +98,7 @@ COLOUR: -Lv = cyan
 local tlos_door = TriggerableFunction:new{
   func="callback.oka_populate_cages", repeated=true }
 local tlos_altar = TriggerableFunction:new{
-  func="callback.oka_start_challange" }
+  func="callback.oka_start_challenge" }
 local tmonsters_death = TriggerableFunction:new{
   func="callback.oka_monsters_death",
   repeated=true,

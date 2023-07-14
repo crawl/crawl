@@ -1864,10 +1864,10 @@ static int _slouch_damage(monster *mon)
                          : mon->type == MONS_JIANGSHI ? 90
                                                       : 1;
 
-    const int player_numer = BASELINE_DELAY * BASELINE_DELAY * BASELINE_DELAY;
+    const int player_number = BASELINE_DELAY * BASELINE_DELAY * BASELINE_DELAY;
     return 4 * (mon->speed * BASELINE_DELAY * jerk_num
                            / mon->action_energy(EUT_MOVE) / jerk_denom
-                - player_numer / player_movement_speed() / player_speed());
+                - player_number / player_movement_speed() / player_speed());
 }
 
 static bool _slouchable(coord_def where)

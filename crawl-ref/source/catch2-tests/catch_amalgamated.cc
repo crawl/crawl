@@ -8764,7 +8764,7 @@ namespace Catch {
             static_cast<void>(
                 assertionStats.assertionResult.getExpandedExpression() );
         }
-        if ( m_shouldStoreSuccesfulAssertions &&
+        if ( m_shouldStoreSuccessfulAssertions &&
              assertionStats.assertionResult.isOk() ) {
             static_cast<void>(
                 assertionStats.assertionResult.getExpandedExpression() );
@@ -9240,7 +9240,7 @@ namespace Catch {
         {
             m_preferences.shouldRedirectStdOut = true;
             m_preferences.shouldReportAllAssertions = true;
-            m_shouldStoreSuccesfulAssertions = false;
+            m_shouldStoreSuccessfulAssertions = false;
         }
 
     std::string JunitReporter::getDescription() {

@@ -3488,7 +3488,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BAD_TORMENT, { "torment", _xom_torment, 23}},
     { XOM_BAD_CHAOS_CLOUD, { "chaos cloud", _xom_chaos_cloud, 20}},
     { XOM_BAD_BANISHMENT, { "banishment", _xom_banishment, 50}},
-    { XOM_BAD_PSEUDO_BANISHMENT, {"psuedo-banishment", _xom_pseudo_banishment,
+    { XOM_BAD_PSEUDO_BANISHMENT, {"pseudo-banishment", _xom_pseudo_banishment,
                                   10}},
 };
 

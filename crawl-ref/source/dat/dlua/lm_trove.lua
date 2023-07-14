@@ -166,7 +166,7 @@ function TroveMarker:debug_diag (marker)
     self:search_for_item(marker, nil, items.inventory(), true)
   end
 
-  if crawl.yesno("Run diagonstic on floor?", true, "n") then
+  if crawl.yesno("Run diagnostic on floor?", true, "n") then
     local _x, _y = marker:pos()
     self:search_for_item(marker, nil, dgn.items_at(_x, _y), true)
   end
