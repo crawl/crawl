@@ -1935,7 +1935,7 @@ fire_order  = launcher, throwing, inscribed, spell, evokable, ability
 
         'launcher' refers to firing a wielded ranged weapon (i.e. crossbow,
         bow, sling). 'throwing' refers to all throwing ammo. Specific throwing
-        ammo types can be refered to by name ('javelin', 'boomerang', 'stone',
+        ammo types can be referred to by name ('javelin', 'boomerang', 'stone',
         'rock', 'net', 'dart'), but order of these only affects order internal
         to throwing ammo types; 'inscribed' can also be used to control the
         order of ammo that has been inscribed with "+f". See the "Inscriptions"
@@ -2342,7 +2342,7 @@ tile_overlay_alpha_percent = 40
         Transparency value for the message window overlay background, as when
         tile_force_overlay is set to true. Setting this option to 0 will cause
         the message window to only display text without any background. And
-        setting this option to 100 will force an opaque backgroud to the
+        setting this option to 100 will force an opaque background to the
         message window.
 
 tile_full_screen = auto
@@ -2510,7 +2510,7 @@ tile_web_mouse_control = true
 
 tile_web_mobile_input_helper = auto
         This option controls an optional auxiliary input field in the WebTiles
-        interface that can be focused to enable the vitual keyboard on mobile
+        interface that can be focused to enable the virtual keyboard on mobile
         devices. When set to true or false, the field is manually enabled or
         disabled. When set to auto, the field is only shown on devices with
         a touch screen.
@@ -2993,7 +2993,7 @@ dos_use_background_intensity = false
 5-c     Unix.
 -------------
 allow_extended_colours = true
-        Atempt to use more than the eight basic terminal colours for crawl's
+        Attempt to use more than the eight basic terminal colours for crawl's
         bright colours. Most modern terminals should use this setting. If
         successful, this puts console into 16-color mode.
 

@@ -1687,7 +1687,7 @@ LUAFN(_crawl_unavailable_god)
 /*** Divine voices.
  * @within dlua
  * @tparam string Name of a current crawl god.
- * @tparam string Speach
+ * @tparam string Speech
  * @function god_speaks
  */
 LUAFN(_crawl_god_speaks)

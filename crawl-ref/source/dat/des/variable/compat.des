@@ -92,7 +92,7 @@ function teleporter_serial_action_fn
   my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
                                                 data.teleport_spot)
 
-  -- third parameter is whether to teleport whatever is on the reciving pad
+  -- third parameter is whether to teleport whatever is on the receiving pad
   if you.teleport_to(my_slaves[1].x, my_slaves[1].y, false) then
     crawl.mpr("Your surroundings suddenly seem different!")
   else

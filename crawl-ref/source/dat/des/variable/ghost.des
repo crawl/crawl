@@ -41,7 +41,7 @@ end
 function wrathful_weapon(class, quality)
     local egos
     -- Only the egos Trog gifts, using equal weights for good_item but giving
-    -- the more desireable antimagic brand for randarts, which are trying to be
+    -- the more desirable antimagic brand for randarts, which are trying to be
     -- better quality.
     if quality == "good_item" then
         egos = {["antimagic"] = 10, ["heavy"] = 10, ["flaming"] = 10}

@@ -143,10 +143,10 @@ Monsters
     enraged on drawing blood - first becoming Mighty, then Berserk!
 * Demonic Crawlers lose the Warning Cry ability and elemental resistances in
   exchange for higher damage and very fast regeneration.
-* Doom Hounds' Howl is now resistable by Will.
+* Doom Hounds' Howl is now resistible by Will.
 * Many monsters do somewhat less damage.
 * Walking Tomes are now unable to cast while silenced.
-* Ironbound Frosthearts' Creeping Frost spell is now fully resistable by rC.
+* Ironbound Frosthearts' Creeping Frost spell is now fully resistible by rC.
 * Fleeing monsters will no longer avoid harmful clouds.
 * Monsters, notably Asterion, can now use spectral weapons.
 
@@ -431,7 +431,7 @@ Spells
   - Animate Dead reworked: for a duration after being cast, the dead have a
     power-dependent chance of rising as allied zombies. The zombies are
     permanent until the player leaves the level or re-casts Animate Dead.
-  - Simulacrum is now a smite-targeted spell that gives an irresistable status.
+  - Simulacrum is now a smite-targeted spell that gives an irresistible status.
     Monsters that die with this status spawn a power-dependent number of
     simulacra.
   - Corpse Rot is now Level 4 Necromancy/Poison/Air. For a duration after being
@@ -747,7 +747,7 @@ Monsters
 * Demonic and holy monsters are now susceptible to fear, berserk, alistairs
   intoxication, and ballistomycete spores.
 * Monsters have a chance to break a door permanently when opening it. This
-  chance is higher if the mosnter is berserk.
+  chance is higher if the monster is berserk.
 * Classed draconians have a fixed colour per job.
 * When Dowan dies Duvessa goes berserk permanently; when Duvessa dies Dowan
   gains haste permanently.
