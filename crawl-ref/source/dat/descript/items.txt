@@ -83,7 +83,8 @@ blade talisman
            "user's " .. hands
 }}, and smaller fragments of metal to grow inside their body, deforming them
 and reducing the effectiveness of body armour. Shapeshifting skill mitigates
-and eventually eliminates the latter effect.
+and eventually eliminates the latter effect, as well as increasing damage
+dealt.
 
 While transformed, equipped weapons, shields, and gloves are melded, and
 casting spells becomes somewhat more difficult.

@@ -617,6 +617,20 @@ public:
     bool can_offhand_punch() const override { return true; }
 
     /**
+     * Find the player's base unarmed damage in this form.
+     */
+    int get_base_unarmed_damage(bool random, bool get_max) const override
+    {
+        const int scale = 100;
+        const int lvl = get_max ? max_skill * scale : get_level(scale);
+        const int over_min = max(0, lvl - min_skill * scale);
+        const int denom = (max_skill - min_skill) * scale;
+        if (random)
+            return 16 + div_rand_round(over_min * 4, denom);
+        return 16 + over_min * 4 / denom;
+    }
+
+    /**
      * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
      */
     string get_uc_attack_name(string /*default_name*/) const override
