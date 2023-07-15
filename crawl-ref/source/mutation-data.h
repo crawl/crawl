@@ -188,6 +188,8 @@ static const mutation_def mut_data[] =
   {"Your demonic guardian is gone.",
    "Your demonic guardian is weakened.",
    "Your demonic guardian is weakened."},
+
+  TILEG_MUT_DEMONIC_GUARDIAN,
 },
 
 { MUT_SHOCK_RESISTANCE, 2, 1, mutflag::good, true,
@@ -222,6 +224,8 @@ static const mutation_def mut_data[] =
   {"Your rate of healing slows.",
    "Your rate of healing slows.",
    "Your rate of healing slows."},
+
+  TILEG_MUT_REGENERATION,
 },
 
 { MUT_INHIBITED_REGENERATION, 3, 1, mutflag::bad, false,
@@ -232,6 +236,8 @@ static const mutation_def mut_data[] =
   {"Your regeneration stops near monsters.", "", ""},
 
   {"You begin to regenerate regardless of the presence of monsters.", "", ""},
+
+  TILEG_MUT_INHIBITED_REGENERATION,
 },
 #if TAG_MAJOR_VERSION == 34
 
@@ -1087,6 +1093,9 @@ static const mutation_def mut_data[] =
    "Your wands become infused with your menacing aura."},
 
   {"","",""},
+
+
+  TILEG_MUT_DEMONIC_MAGIC,
 },
 
 { MUT_FORLORN, 0, 1, mutflag::bad, false,
@@ -1133,6 +1142,8 @@ static const mutation_def mut_data[] =
   {"An icy envelope takes form around you.",
    "Your icy envelope grows thicker.", ""},
   {"", "", ""},
+
+  TILEG_MUT_ICEMAIL,
 },
 
 { MUT_CONDENSATION_SHIELD, 0, 1, mutflag::good, false,
@@ -1141,6 +1152,8 @@ static const mutation_def mut_data[] =
   {"A meltable shield of frost defends you. (SH +", "", ""},
   {"Frost condenses into a shield before you.","", ""},
   {"", "", ""},
+
+  TILEG_MUT_CONDENSATION_SHIELD,
 },
 #if TAG_MAJOR_VERSION == 34
 
@@ -1167,6 +1180,8 @@ static const mutation_def mut_data[] =
   {"A frigid envelope surrounds you and freezes all who hurt you.", "", ""},
   {"Your skin feels very cold.", "", ""},
   {"Your skin warms up.", "", ""},
+
+  TILEG_MUT_PASSIVE_FREEZE,
 },
 
 { MUT_NIGHTSTALKER, 0, 3, mutflag::good, false,
@@ -1215,6 +1230,8 @@ static const mutation_def mut_data[] =
   {"Your control of surrounding life forces is gone.",
    "Your control of surrounding life forces weakens.",
    "Your control of surrounding life forces weakens."},
+
+  TILEG_MUT_POWERED_BY_DEATH,
 },
 
 { MUT_POWERED_BY_PAIN, 0, 3, mutflag::good, false,
@@ -1229,6 +1246,8 @@ static const mutation_def mut_data[] =
    "You feel completely energised by your suffering."},
 
   {"", "", ""},
+
+  TILEG_MUT_POWERED_BY_PAIN,
 },
 
 { MUT_AUGMENTATION, 0, 3, mutflag::good, false,
@@ -1251,6 +1270,8 @@ static const mutation_def mut_data[] =
   {"When hurt, damage is shared between your health and your magic reserves.", "", ""},
   {"You feel your magical essence form a protective shroud around your flesh.", "", ""},
   {"", "", ""},
+
+  TILEG_MUT_MANA_SHIELD,
 },
 
 { MUT_MANA_REGENERATION, 0, 1, mutflag::good, false,
@@ -1259,6 +1280,8 @@ static const mutation_def mut_data[] =
   {"You regenerate magic rapidly.", "", ""},
   {"Your magic begins to regenerate rapidly.", "", ""},
   {"", "", ""},
+
+  TILEG_MUT_MANA_REGENERATION,
 },
 
 { MUT_MANA_LINK, 0, 1, mutflag::good, false,
@@ -1267,6 +1290,8 @@ static const mutation_def mut_data[] =
   {"When low on magic, you restore magic in place of health.", "", ""},
   {"You feel your life force and your magical essence meld.", "", ""},
   {"", "", ""},
+
+  TILEG_MUT_MANA_LINK,
 },
 
 // Jiyva only mutations. (MUT_GELATINOUS_BODY is also used by Op)
@@ -1667,6 +1692,8 @@ static const mutation_def mut_data[] =
    "Your blood runs red-hot!",
    "Your blood burns even hotter!"},
   {"", "", ""},
+
+  TILEG_MUT_IGNITE_BLOOD,
 },
 
 { MUT_FOUL_STENCH, 0, 3, mutflag::good, false,
@@ -1682,6 +1709,8 @@ static const mutation_def mut_data[] =
   },
 
   {"", "", ""},
+
+  TILEG_MUT_FOUL_STENCH,
 },
 
 { MUT_TENDRILS, 0, 1, mutflag::good | mutflag::jiyva, true,
