@@ -1324,7 +1324,7 @@ MONS:    minotaur ; broad axe ego:speed good_item \
              . tower shield ego:reflection good_item \
          / orc warlord ; broad axe ego:speed good_item \
              | broad axe ego:speed randart | arga w:1 . plate armour good_item \
-             . tower shield ego:reflection good_itemq
+             . tower shield ego:reflection good_item
 : end
 KFEAT:   _ = altar_hepliaklqana
 KFEAT:   - = altar_ecumenical
