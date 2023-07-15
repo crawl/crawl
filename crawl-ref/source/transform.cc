@@ -1733,6 +1733,14 @@ static void _on_enter_form(transformation which_trans)
             mpr("You feel less conspicuous.");
         break;
 
+    case transformation::maw:
+        if (have_passive(passive_t::goldify_corpses))
+        {
+            mprf(MSGCH_WARN, "Gozag's golden gift will leave your new mouth "
+                             "with nothing to eat.");
+        }
+        break;
+
     default:
         break;
     }

@@ -728,7 +728,9 @@ static void _consider_devouring(monster &defender)
     // can't eat enemies that leave no corpses...
     if (!mons_class_can_leave_corpse(mons_species(defender.type))
         || defender.is_summoned()
-        || defender.flags & MF_HARD_RESET)
+        || defender.flags & MF_HARD_RESET
+        // the curse of midas...
+        || have_passive(passive_t::goldify_corpses))
     {
         return;
     }
@@ -744,17 +746,6 @@ static void _consider_devouring(monster &defender)
              defender.pronoun(PRONOUN_SUBJECTIVE).c_str(),
              conjugate_verb("twist", defender.pronoun_plurality()).c_str(),
              conjugate_verb("change", defender.pronoun_plurality()).c_str());
-        return;
-    }
-
-    // the curse of midas...
-    // elliptic suggests we should remove this. i have no opinion.
-    if (have_passive(passive_t::goldify_corpses))
-    {
-        mprf("You spit out %s as %s turns to gold.%s",
-             defender.name(DESC_THE).c_str(),
-             defender.pronoun(PRONOUN_SUBJECTIVE).c_str(),
-             one_chance_in(20) ? " You chip a tooth!" : "");
         return;
     }
 
