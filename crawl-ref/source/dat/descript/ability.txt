@@ -620,6 +620,10 @@ Sacrifice Artifice ability
 
 Sacrifices the ability to evoke any magical items, and prevents you from having
 any ranks in the Evocations skill.
+
+This includes wands and most items evoked with <input>$cmd[CMD_EVOKE]</input>,
+excepting reaching weapons, talismans, and ziggurat figurines. This also renders
+magical staves much less effective in melee.
 %%%%
 Sacrifice Love ability
 

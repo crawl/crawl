@@ -836,8 +836,9 @@ You may still be involuntarily transformed by effects such as wands of polymorph
 inability to use devices mutation
 
 You cannot use magical devices. This includes wands and most items evoked with
-<input>$cmd[CMD_EVOKE]</input>, excepting reaching weapons and ziggurat
-figurines. This also renders magical staves much less effective in melee.
+<input>$cmd[CMD_EVOKE]</input>, excepting reaching weapons, talismans, and
+ziggurat figurines. This also renders magical staves much less effective in
+melee.
 %%%%
 hated by all mutation
 
