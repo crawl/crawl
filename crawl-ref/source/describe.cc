@@ -2193,7 +2193,7 @@ static string _maybe_desc_prop(const char* name, int val, int max = -1)
                                _int_with_plus(max).c_str());
 }
 
-static string _describe_talisman_form(const item_def &item)
+static string _describe_talisman_form(const item_def &item, bool monster)
 {
     const transformation form_type = form_for_talisman(item);
     const Form* form = get_form(form_type);
@@ -2219,7 +2219,8 @@ static string _describe_talisman_form(const item_def &item)
     const bool loses_body_ac = body_ac_loss_percent && you_can_wear(EQ_BODY_ARMOUR) != false;
     if (below_target || hp != 100 || ac || ev || loses_body_ac)
     {
-        description += "\n\nDefense:";
+        if (!monster)
+            description += "\n\nDefense:";
         if (below_target || hp != 100)
         {
             description += make_stringf("\nHP:            %d%%", hp);
@@ -2241,7 +2242,8 @@ static string _describe_talisman_form(const item_def &item)
     }
 
     // offense
-    description += "\n\nOffense:";
+    if (!monster)
+        description += "\n\nOffense:";
     const int uc = form->get_base_unarmed_damage(false); // TODO: compare to your base form?
                                                          // folks don't know nudists have 3
     const int max_uc = form->get_base_unarmed_damage(false, true);
@@ -2272,16 +2274,19 @@ static string _describe_talisman_form(const item_def &item)
     return description;
 }
 
-static string _describe_talisman(const item_def &item, bool verbose)
+static string _describe_talisman(const item_def &item, bool verbose, bool monster)
 {
     string description;
 
     if (verbose && !is_useless_item(item))
     {
-        description += "\n\nA period of sustained concentration is needed to "
-                       "enter or leave forms. To leave this form, evoke the "
-                       "talisman again.";
-        description += "\n\n" + _describe_talisman_form(item);
+        if (!monster)
+        {
+            description += "\n\nA period of sustained concentration is needed to "
+                           "enter or leave forms. To leave this form, evoke the "
+                           "talisman again.";
+        }
+        description += "\n\n" + _describe_talisman_form(item, monster);
     }
 
     // Artefact properties.
@@ -2716,7 +2721,7 @@ string get_item_description(const item_def &item,
         break;
 
     case OBJ_TALISMANS:
-        desc = _describe_talisman(item, verbose);
+        desc = _describe_talisman(item, verbose, mode == IDM_MONSTER);
         if (desc.empty())
             need_extra_line = false;
         else
