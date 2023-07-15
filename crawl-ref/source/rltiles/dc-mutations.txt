@@ -1,121 +1,123 @@
+%parts_ctg MUT
 %sdir gui/mutations
 
-blue_scales_1 MUT_ICY_BLUE_SCALES
+blue_scales_1 ICY_BLUE_SCALES
 blue_scales_2
 blue_scales_3
-brown_scales_1 MUT_RUGGED_BROWN_SCALES
+brown_scales_1 RUGGED_BROWN_SCALES
 brown_scales_2
 brown_scales_3
-green_scales_1 MUT_SLIMY_GREEN_SCALES
+green_scales_1 SLIMY_GREEN_SCALES
 green_scales_2
 green_scales_3
-iridescent_scales_1 MUT_IRIDESCENT_SCALES
+iridescent_scales_1 IRIDESCENT_SCALES
 iridescent_scales_2
 iridescent_scales_3
-large_bone_plates_1 MUT_LARGE_BONE_PLATES
+large_bone_plates_1 LARGE_BONE_PLATES
 large_bone_plates_2
 large_bone_plates_3
-metallic_scales_1 MUT_THIN_METALLIC_SCALES
+metallic_scales_1 THIN_METALLIC_SCALES
 metallic_scales_2
 metallic_scales_3
-red_scales_1 MUT_MOLTEN_SCALES
+red_scales_1 MOLTEN_SCALES
 red_scales_2
 red_scales_3
-sharp_scales_1 MUT_SHARP_SCALES
+sharp_scales_1 SHARP_SCALES
 sharp_scales_2
 sharp_scales_3
-thin_skeletal_structure_1 MUT_THIN_SKELETAL_STRUCTURE
+thin_skeletal_structure_1 THIN_SKELETAL_STRUCTURE
 thin_skeletal_structure_2
 thin_skeletal_structure_3
-yellow_scales_1 MUT_YELLOW_SCALES
+yellow_scales_1 YELLOW_SCALES
 yellow_scales_2
 yellow_scales_3
 
-strong_1 MUT_STRONG
+strong_1 STRONG
 strong_2
-weak_1 MUT_WEAK
+weak_1 WEAK
 weak_2
-agile_1 MUT_AGILE
+agile_1 AGILE
 agile_2
-clumsy_1 MUT_CLUMSY
+clumsy_1 CLUMSY
 clumsy_2
-clever_1 MUT_CLEVER
+clever_1 CLEVER
 clever_2
-big_brain_1 MUT_BIG_BRAIN
+big_brain_1 BIG_BRAIN
 big_brain_2
 big_brain_3
-dopey_1 MUT_DOPEY
+dopey_1 DOPEY
 dopey_2
-robust_1 MUT_ROBUST
+robust_1 ROBUST
 robust_2
 robust_3
 
-cold_res_1 MUT_COLD_RESISTANCE
+cold_res_1 COLD_RESISTANCE
 cold_res_2
 cold_res_3
-cold_vuln_1 MUT_COLD_VULNERABILITY
+cold_vuln_1 COLD_VULNERABILITY
 cold_vuln_2
 cold_vuln_3
-fire_res_1 MUT_HEAT_RESISTANCE
+fire_res_1 HEAT_RESISTANCE
 fire_res_2
 fire_res_3
-fire_vuln_1 MUT_HEAT_VULNERABILITY
+fire_vuln_1 HEAT_VULNERABILITY
 fire_vuln_2
 fire_vuln_3
-negative_res_1 MUT_NEGATIVE_ENERGY_RESISTANCE
+negative_res_1 NEGATIVE_ENERGY_RESISTANCE
 negative_res_2
 negative_res_3
-poison_res MUT_POISON_RESISTANCE
-elec_res MUT_SHOCK_RESISTANCE
-elec_vuln MUT_SHOCK_VULNERABILITY
+poison_res POISON_RESISTANCE
+elec_res SHOCK_RESISTANCE
+elec_vuln SHOCK_VULNERABILITY
 
-fangs_1 MUT_FANGS
+fangs_1 FANGS
 fangs_2
 fangs_3
-horns_1 MUT_HORNS
+horns_1 HORNS
 horns_2
 horns_3
-antennae_1 MUT_ANTENNAE
+antennae_1 ANTENNAE
 antennae_2
 antennae_3
 
-passive_mapping_1 MUT_PASSIVE_MAPPING
+passive_mapping_1 PASSIVE_MAPPING
 passive_mapping_2
 passive_mapping_3
 
-clarity MUT_CLARITY
-acute_vision MUT_ACUTE_VISION
-mutres_1 MUT_MUTATION_RESISTANCE
+clarity CLARITY
+acute_vision ACUTE_VISION
+mutres_1 MUTATION_RESISTANCE
 mutres_2
 mutres_3
-passive_freeze MUT_PASSIVE_FREEZE
-regeneration_1 MUT_REGENERATION
+passive_freeze PASSIVE_FREEZE
+regeneration_1 REGENERATION
 regeneration_2
 regeneration_3
 
-icemail_1 MUT_ICEMAIL
+icemail_1 ICEMAIL
 icemail_2
-condensation_shield MUT_CONDENSATION_SHIELD
-ignite_blood_1 MUT_IGNITE_BLOOD
+condensation_shield CONDENSATION_SHIELD
+ignite_blood_1 IGNITE_BLOOD
 ignite_blood_2
 ignite_blood_3
-demonic_guardian_1 MUT_DEMONIC_GUARDIAN
+demonic_guardian_1 DEMONIC_GUARDIAN
 demonic_guardian_2
 demonic_guardian_3
-demonic_magic_1 MUT_DEMONIC_MAGIC
+demonic_magic_1 DEMONIC_MAGIC
 demonic_magic_2
 demonic_magic_3
-foul_stench_1 MUT_FOUL_STENCH
+foul_stench_1 FOUL_STENCH
 foul_stench_2
 foul_stench_3
-mana_link MUT_MANA_LINK
-mana_regeneration MUT_MANA_REGENERATION
-mana_shield MUT_MANA_SHIELD
-powered_by_pain_1 MUT_POWERED_BY_PAIN
+mana_link MANA_LINK
+mana_regeneration MANA_REGENERATION
+mana_shield MANA_SHIELD
+powered_by_pain_1 POWERED_BY_PAIN
 powered_by_pain_2
 powered_by_pain_3
-powered_by_death_1 MUT_POWERED_BY_DEATH
+powered_by_death_1 POWERED_BY_DEATH
 powered_by_death_3
 powered_by_death_3
 
-inhibited_regeneration MUT_INHIBITED_REGENERATION
+inhibited_regeneration INHIBITED_REGENERATION
+%end_ctg
