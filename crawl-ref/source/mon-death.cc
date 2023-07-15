@@ -1356,9 +1356,9 @@ static bool _mons_reaped(actor &killer, monster& victim)
     return true;
 }
 
-static void _yred_reap(monster &mons, bool expl)
+static void _yred_reap(monster &mons, bool uncorpsed)
 {
-    monster_type which_z = !expl && mons_can_be_zombified(mons) ? MONS_ZOMBIE :
+    monster_type which_z = !uncorpsed && mons_can_be_zombified(mons) ? MONS_ZOMBIE :
                            MONS_SPECTRAL_THING;
 
     _make_derived_undead(&mons, false, which_z, BEH_FRIENDLY,
@@ -1397,7 +1397,7 @@ static bool _reaping(monster &mons)
     return _mons_reaped(*killer, mons);
 }
 
-static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
+static bool _apply_necromancy(monster &mons, bool quiet, bool corpse_gone,
                               bool in_los, bool corpseworthy)
 {
     // This is a hostile effect, and monsters are dirty cheaters. Sorry!
@@ -1425,7 +1425,7 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
     if (in_los && have_passive(passive_t::reaping))
     {
         if (yred_reap_chance())
-            _yred_reap(mons, exploded);
+            _yred_reap(mons, corpse_gone);
         return true;
     }
 
@@ -1436,17 +1436,13 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
         return true;
     }
 
-    if (!exploded
-        && in_los
-        && !have_passive(passive_t::goldify_corpses)
-        && (_animate_dead_reap(mons) || _reaping(mons)))
-    {
-        return true;
-    }
+    if (corpse_gone || have_passive(passive_t::goldify_corpses))
+        return false;
 
-    if (!exploded
-        && !have_passive(passive_t::goldify_corpses)
-        && mons.has_ench(ENCH_NECROTISE))
+    if (in_los && (_animate_dead_reap(mons) || _reaping(mons)))
+        return true;
+
+    if (mons.has_ench(ENCH_NECROTISE))
     {
         _make_derived_undead(&mons, quiet, MONS_SKELETON,
                                  BEH_FRIENDLY,
@@ -2433,6 +2429,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         const bool in_los = you.see_cell(mons.pos());
         const bool wretch = mons.props.exists(KIKU_WRETCH_KEY);
         const bool corpseworthy = gives_player_xp || wretch;
+        const bool corpse_gone = exploded || mons.props.exists(NEVER_CORPSE_KEY);
 
         // no doubling up with death channel and yred.
         // otherwise, death channel can work with other corpse-consuming spells.
@@ -2447,7 +2444,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                                  static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
         }
 
-        corpse_consumed = _apply_necromancy(mons, !death_message, exploded,
+        corpse_consumed = _apply_necromancy(mons, !death_message, corpse_gone,
                                             in_los, corpseworthy);
     }
 
