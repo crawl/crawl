@@ -1762,6 +1762,7 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
     case OBJ_JEWELLERY:
     case OBJ_BOOKS:
     case OBJ_STAVES:
+    case OBJ_TALISMANS:
         // Only these are really interchangeable.
         break;
     case OBJ_MISCELLANY:
