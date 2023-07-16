@@ -200,8 +200,10 @@ static const int conflict[][3] =
     { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY,     -1},
     { MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY,    -1},
     { MUT_STRONG_WILLED,       MUT_WEAK_WILLED,            -1},
+#if TAG_MAJOR_VERSION == 34
     { MUT_NO_REGENERATION,     MUT_INHIBITED_REGENERATION, -1},
     { MUT_NO_REGENERATION,     MUT_REGENERATION,           -1},
+#endif
     { MUT_HP_CASTING,          MUT_HIGH_MAGIC,             -1},
     { MUT_HP_CASTING,          MUT_LOW_MAGIC,              -1},
 };
