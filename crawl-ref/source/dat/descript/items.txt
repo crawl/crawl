@@ -1307,10 +1307,10 @@ talisman of death
 A lone finger-bone, infused with dark power through a sickening ritual. Transforms
 the user into an undying offense against life itself.
 
-Foes struck by user's melee weapons or hands are weakened, slowed, and drained,
-and they can heal themselves by tormenting foes nearby. (Shapeshifting skill
-increases the effectiveness of the latter.) The user also resists cold, has
-enhanced willpower, and is immune to poison, miasma, negative energy, and torment.
+Foes struck by user's melee weapons or hands are weakened, slowed, and drained.
+The user can also heal themself by tormenting foes nearby; Shapeshifting skill
+increases the amount healed. Further, the user resists cold, has enhanced
+willpower, and is immune to poison, miasma, negative energy, and torment.
 
 The user also gains some of the more dubious benefits of having an undead body.
 They are vulnerable to holy damage and Dispel Undead, and cannot consume potions.
