@@ -125,10 +125,9 @@ Form::Form(const form_entry &fe)
       hand_name(fe.hand_name), foot_name(fe.foot_name),
       flesh_equivalent(fe.flesh_equivalent),
       long_name(fe.long_name), description(fe.description),
-      resists(fe.resists), skill_ac(fe.skill_ac),
+      resists(fe.resists), ac(fe.ac),
       base_unarmed_damage(fe.base_unarmed_damage),
       can_fly(fe.can_fly), can_swim(fe.can_swim),
-      flat_ac(fe.flat_ac), xl_ac(fe.xl_ac),
       uc_brand(fe.uc_brand), uc_attack(fe.uc_attack),
       unarmed_uses_skill(fe.unarmed_uses_skill),
       prayer_action(fe.prayer_action), equivalent_mons(fe.equivalent_mons),
@@ -277,6 +276,20 @@ string Form::get_untransform_message() const
     return "Your transformation has ended.";
 }
 
+int Form::scaling_value(const FormScaling &sc, bool random,
+                        bool get_max, int scale) const
+{
+    if (sc.xl_based)
+        return (sc.base + sc.scaling * you.experience_level) * scale;
+
+    const int lvl = get_max ? max_skill * scale : get_level(scale);
+    const int over_min = max(0, lvl - min_skill * scale);
+    const int denom = max_skill - min_skill;
+    if (random)
+        return sc.base * scale + div_rand_round(over_min * sc.scaling, denom);
+    return sc.base * scale + over_min * sc.scaling / denom;
+}
+
 /**
  * What AC bonus does the player get while in this form?
  *
@@ -289,12 +302,7 @@ string Form::get_untransform_message() const
  */
 int Form::get_ac_bonus(bool max) const
 {
-    const int bonus = flat_ac * 100 + xl_ac * you.experience_level;
-    if (!max_skill)
-        return bonus;
-    if (max)
-        return bonus + skill_ac * 100;
-    return bonus + get_level(skill_ac * 100) / max_skill;
+    return scaling_value(ac, false, max, 100);
 }
 
 /// `force_talisman` means to calculate HP as if we were in a talisman form (i.e. with penalties with insufficient Shapeshifting skill),
@@ -764,13 +772,10 @@ public:
      */
     int get_ac_bonus(bool max) const override
     {
-        if (species::is_draconian(you.species))
-        {
-            if (max)
-                return 1000 + skill_ac * 100;
-            return 1000 + get_level(skill_ac * 100) / max_skill;
-        }
-        return Form::get_ac_bonus(max);
+        const int normal = Form::get_ac_bonus(max);
+        if (!species::is_draconian(you.species))
+            return normal;
+        return normal + (10 - ac.base) * 100;
     }
 
     /**
