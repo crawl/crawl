@@ -134,7 +134,7 @@ static const form_entry formdata[] =
 {
     transformation::dragon, MONS_PROGRAM_BUG, "Dragon", "dragon-form", "dragon",
     "a fearsome dragon!",
-    17, 27, TALISMAN_DRAGON,
+    15, 23, TALISMAN_DRAGON,
     EQF_PHYSICAL, MR_RES_POISON,
     DEFAULT_DURATION, 10, 0, SIZE_GIANT, 15,
     14, 4, 0, true, 32, true,
