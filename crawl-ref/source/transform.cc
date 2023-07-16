@@ -1765,6 +1765,7 @@ static void _on_enter_form(transformation which_trans)
 
 void set_form(transformation which_trans, int dur)
 {
+    const transformation old_form = you.form;
     you.form = which_trans;
     you.duration[DUR_TRANSFORMATION] = dur * BASELINE_DELAY;
     update_player_symbol();
@@ -1778,7 +1779,18 @@ void set_form(transformation which_trans, int dur)
     if (dex_mod)
         notify_stat_change(STAT_DEX, dex_mod, true);
 
-    calc_hp(true);
+    // Don't scale HP when going from nudity to a talisman form
+    // or vice versa. This is to discourage regenerating in a -90%
+    // underskilled talisman form and scaling back up to full, or
+    // leaving a +HP form to regen.
+    // Do scale HP when entering or leaving eg tree form, regardless
+    // of whether you're going from a talisman form or not.
+    const bool leaving_default = you.default_form == old_form
+                                 && which_trans == transformation::none;
+    const bool entering_default = you.default_form == which_trans
+                                 && old_form == transformation::none;
+    const bool scale_hp = !entering_default && !leaving_default;
+    calc_hp(scale_hp);
 
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;

@@ -888,6 +888,13 @@ bool TransformDelay::invalidated()
 
 void TransformDelay::finish()
 {
+    if (form == transformation::none)
+    {
+        untransform();
+        you.default_form = transformation::none;
+        return;
+    }
+
     you.default_form = form;
     return_to_default_form();
 }
