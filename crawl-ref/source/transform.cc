@@ -126,7 +126,7 @@ Form::Form(const form_entry &fe)
       flesh_equivalent(fe.flesh_equivalent),
       long_name(fe.long_name), description(fe.description),
       resists(fe.resists), ac(fe.ac),
-      base_unarmed_damage(fe.base_unarmed_damage),
+      unarmed_bonus_dam(fe.unarmed_bonus_dam),
       can_fly(fe.can_fly), can_swim(fe.can_swim),
       uc_brand(fe.uc_brand), uc_attack(fe.uc_attack),
       unarmed_uses_skill(fe.unarmed_uses_skill),
@@ -290,6 +290,15 @@ int Form::scaling_value(const FormScaling &sc, bool random,
     return sc.base * scale + over_min * sc.scaling / denom;
 }
 
+int Form::divided_scaling(const FormScaling &sc, bool random,
+                          bool get_max, int scale) const
+{
+    const int scaled_val = scaling_value(sc, random, get_max, scale);
+    if (random)
+        return div_rand_round(scaled_val, scale);
+    return scaled_val / scale;
+}
+
 /**
  * What AC bonus does the player get while in this form?
  *
@@ -303,6 +312,12 @@ int Form::scaling_value(const FormScaling &sc, bool random,
 int Form::get_ac_bonus(bool max) const
 {
     return scaling_value(ac, false, max, 100);
+}
+
+int Form::get_base_unarmed_damage(bool random, bool max) const
+{
+    // All forms start with base 3 UC damage.
+    return 3 + divided_scaling(unarmed_bonus_dam, random, max, 100);
 }
 
 /// `force_talisman` means to calculate HP as if we were in a talisman form (i.e. with penalties with insufficient Shapeshifting skill),
@@ -644,20 +659,6 @@ public:
     bool can_offhand_punch() const override { return true; }
 
     /**
-     * Find the player's base unarmed damage in this form.
-     */
-    int get_base_unarmed_damage(bool random, bool get_max) const override
-    {
-        const int scale = 100;
-        const int lvl = get_max ? max_skill * scale : get_level(scale);
-        const int over_min = max(0, lvl - min_skill * scale);
-        const int denom = (max_skill - min_skill) * scale;
-        if (random)
-            return 14 + div_rand_round(over_min * 4, denom);
-        return 14 + over_min * 4 / denom;
-    }
-
-    /**
      * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
      */
     string get_uc_attack_name(string /*default_name*/) const override
@@ -777,19 +778,6 @@ public:
             return normal;
         return normal + (10 - ac.base) * 100;
     }
-
-    /**
-     * Find the player's base unarmed damage in this form.
-     */
-    int get_base_unarmed_damage(bool random, bool max) const override
-    {
-        const int scale = 100;
-        const int lvl = max ? max_skill * scale : get_level(scale);
-        if (random)
-            return 3 + div_rand_round(lvl, scale);
-        return 3 + lvl / scale;
-    }
-
     /**
      * How many levels of resistance against fire does this form provide?
      */
@@ -1006,18 +994,6 @@ private:
     DISALLOW_COPY_AND_ASSIGN(FormStorm);
 public:
     static const FormStorm &instance() { static FormStorm inst; return inst; }
-
-    /**
-     * Find the player's base unarmed damage in this form.
-     */
-    int get_base_unarmed_damage(bool random, bool max) const override
-    {
-        const int scale = 100;
-        const int lvl = max ? max_skill * scale : get_level(scale);
-        if (random)
-            return 8 + div_rand_round(lvl, scale);
-        return 8 + lvl / scale;
-    }
 
     int ev_bonus(bool max) const override
     {

@@ -147,11 +147,7 @@ public:
     /**
      * Base unarmed damage provided by the form.
      */
-    virtual int get_base_unarmed_damage(bool /*random*/ = true,
-                                        bool /*max*/ = false) const
-    {
-        return base_unarmed_damage;
-    }
+    int get_base_unarmed_damage(bool random = true, bool max = false) const;
 
     /// Damage done by a custom aux attack of this form.
     virtual int get_aux_damage(bool /*random*/ = true,
@@ -257,10 +253,14 @@ protected:
     const FormScaling ac;
 
     /// See Form::get_base_unarmed_damage().
-    const int base_unarmed_damage;
+    const FormScaling unarmed_bonus_dam;
 
+    /// Calculate the given FormScaling for this form, multiplied by scale.
     int scaling_value(const FormScaling &sc, bool random,
                       bool max = false, int scale = 1) const;
+    /// Calculate the given FormScaling for this form, with math internally multiplied by scale.
+    int divided_scaling(const FormScaling &sc, bool random,
+                        bool max = false, int scale = 1) const;
 
 private:
     bool all_blocked(int slotflags) const;
