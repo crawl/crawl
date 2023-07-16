@@ -2656,6 +2656,12 @@ static string _extra_passive_effects()
     if (you.no_cast())
         passives.emplace_back("no spellcasting");
 
+    if (you.inaccuracy())
+    {
+        passives.emplace_back(
+            make_stringf("inaccuracy (-%d)", you.inaccuracy_penalty()).c_str());
+    }
+
     const int anger = you.angry();
     if (anger && !you.stasis() && !you.clarity() && !you.is_lifeless_undead())
     {
