@@ -994,7 +994,7 @@ void floor_transition(dungeon_feature_type how,
 
     // Warn Formicids if they cannot shaft here
     if (player_has_ability(ABIL_SHAFT_SELF, true)
-                                && !is_valid_shaft_level())
+                                && !is_valid_shaft_level(false))
     {
         mpr("Beware, you cannot shaft yourself on this level.");
     }
