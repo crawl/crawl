@@ -307,8 +307,8 @@ int Form::mult_hp(int base_hp, bool force_talisman) const
     const int shortfall = min_skill * scale - lvl;
     if (shortfall <= 0 || you.default_form != you.form && !force_talisman)
         return hp_mod * base_hp / 10;
-    // -10% hp per skill level short, down to -70%
-    const int penalty = min(shortfall, 7 * scale);
+    // -10% hp per skill level short, down to -90%
+    const int penalty = min(shortfall, 9 * scale);
     return base_hp * hp_mod * (10 * scale - penalty) / (scale * 10 * 10);
 }
 
