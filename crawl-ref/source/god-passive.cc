@@ -17,6 +17,7 @@
 #include "env.h"
 #include "fight.h"
 #include "files.h"
+#include "fineff.h"
 #include "fprop.h"
 #include "god-abil.h"
 #include "god-prayer.h"
@@ -1270,6 +1271,7 @@ static void _wu_jian_trigger_serpents_lash(const coord_def& old_pos,
         you.attribute[ATTR_SERPENTS_LASH] -= wall_jump ? 2 : 1;
         you.redraw_status_lights = true;
         update_turn_count();
+        fire_final_effects();
     }
 
     if (you.attribute[ATTR_SERPENTS_LASH] == 0)
