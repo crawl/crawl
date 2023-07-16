@@ -749,6 +749,9 @@ static void _consider_devouring(monster &defender)
         return;
     }
 
+    if (coinflip())
+        return;
+
     // chow down.
     _devour(defender);
 }

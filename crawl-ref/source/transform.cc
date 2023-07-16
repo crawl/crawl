@@ -626,8 +626,8 @@ public:
         const int over_min = max(0, lvl - min_skill * scale);
         const int denom = (max_skill - min_skill) * scale;
         if (random)
-            return 16 + div_rand_round(over_min * 4, denom);
-        return 16 + over_min * 4 / denom;
+            return 14 + div_rand_round(over_min * 4, denom);
+        return 14 + over_min * 4 / denom;
     }
 
     /**
@@ -752,10 +752,11 @@ public:
      */
     int get_base_unarmed_damage(bool random, bool max) const override
     {
-        const int lvl = max ? max_skill * 2 : get_level(2);
+        const int scale = 100;
+        const int lvl = max ? max_skill * scale : get_level(scale);
         if (random)
-            return 22 + div_rand_round(lvl, 3);
-        return 22 + lvl / 3;
+            return 3 + div_rand_round(lvl, scale);
+        return 3 + lvl / scale;
     }
 
     /**
@@ -980,10 +981,11 @@ public:
      */
     int get_base_unarmed_damage(bool random, bool max) const override
     {
-        const int lvl = max ? max_skill * 3 : get_level(3);
+        const int scale = 100;
+        const int lvl = max ? max_skill * scale : get_level(scale);
         if (random)
-            return 8 + div_rand_round(lvl, 2);
-        return 8 + lvl / 2;
+            return 8 + div_rand_round(lvl, scale);
+        return 8 + lvl / scale;
     }
 
     int ev_bonus(bool max) const override
