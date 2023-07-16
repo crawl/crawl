@@ -1778,7 +1778,7 @@ void set_form(transformation which_trans, int dur)
     if (dex_mod)
         notify_stat_change(STAT_DEX, dex_mod, true);
 
-    calc_hp(true, false);
+    calc_hp(true);
 
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;

@@ -2558,7 +2558,7 @@ static void _gain_and_note_hp_mp()
     const int old_maxmp = you.max_magic_points;
 
     // recalculate for game
-    calc_hp(true, false);
+    calc_hp(true);
     calc_mp();
 
     set_mp(old_maxmp > 0 ? old_mp * you.max_magic_points / old_maxmp
@@ -2588,7 +2588,7 @@ static bool _should_stop_resting(int cur, int max, bool check_opts=true)
 /**
  * Calculate max HP changes and scale current HP accordingly.
  */
-void calc_hp(bool scale, bool set)
+void calc_hp(bool scale)
 {
     // Rounding must be down or Deep Dwarves would abuse certain values.
     // We can reduce errors by a factor of 100 by using partial hp we have.
@@ -2609,8 +2609,6 @@ void calc_hp(bool scale, bool set)
         set_hp(min(hp / 100, you.hp_max));
         you.hit_points_regeneration = hp % 100;
     }
-    if (set)
-        you.hp = you.hp_max;
 
     you.hp = min(you.hp, you.hp_max);
 
@@ -8361,7 +8359,7 @@ void player_end_berserk()
     slow_player(dur);
 
     //Un-apply Berserk's +50% Current/Max HP
-    calc_hp(true, false);
+    calc_hp(true);
 
     learned_something_new(HINT_POSTBERSERK);
     Hints.hints_events[HINT_YOU_ENCHANTED] = hints_slow;
