@@ -1294,7 +1294,7 @@ scale armours, and gives its wearer resistance to electrical discharges.
 storm talisman
 
 Lightning trapped, impossibly, in a bottle. Lets the user walk through the air
-as a raging, lightning-filled tempest. The user's melee attacks electrified
+as a raging, lightning-filled tempest. The user's melee attacks are electrified
 and strike all adjacent foes. The user also flies, gains immunity to poison
 and miasma, and resists electricity. They can launch themselves as a lightning
 bolt, blasting through everything in their way. The damage and evasion granted
