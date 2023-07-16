@@ -1125,8 +1125,9 @@ artefacts cannot be enchanted at all.
 %%%%
 scroll of fear
 
-A scroll that causes great fear in those who see the one who reads it, even if
-the reader is invisible. Allies of the reader will remain unaffected.
+A scroll that causes great fear in nearby foes, causing them to flee until
+attacked, cornered, or enough time has passed.
+
 Non-living, undead and plant monsters cannot be feared, and berserk or frenzied
 monsters are also immune.
 %%%%
