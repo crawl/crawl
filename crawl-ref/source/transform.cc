@@ -997,7 +997,7 @@ public:
 
     int ev_bonus(bool max) const override
     {
-        return max ? max_skill : get_level(1);
+        return scaling_value(FormScaling().Base(20).Scaling(7), false, max);
     }
 
     bool can_offhand_punch() const override { return true; }
@@ -1022,10 +1022,7 @@ public:
     static const FormBeast &instance() { static FormBeast inst; return inst; }
     int slay_bonus(bool random, bool max) const override
     {
-        const int lvl = max ? max_skill * 7 : get_level(7);
-        if (random)
-            return div_rand_round(lvl, max_skill);
-        return lvl / max_skill;
+        return divided_scaling(FormScaling().Scaling(7), random, max, 100);
     }
 
     vector<string> get_fakemuts(bool terse) const override {
@@ -1048,12 +1045,7 @@ public:
 
     int get_aux_damage(bool random, bool max) const override
     {
-        const int scale = 100;
-        const int lvl = max ? max_skill * scale : get_level(scale);
-        const int base = 7;
-        if (random)
-            return base + div_rand_round(lvl, scale);
-        return base + lvl / scale;
+        return divided_scaling(FormScaling().Base(7).Scaling(11), random, max, 100);
     }
 };
 
