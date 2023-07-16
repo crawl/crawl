@@ -671,9 +671,8 @@ bool player_in_connected_branch()
 
 bool player_likes_water(bool permanently)
 {
-    return !permanently && you.can_water_walk()
-           || (species::likes_water(you.species) || !permanently)
-               && form_likes_water();
+    return cur_form(!permanently)->player_likes_water()
+           || !permanently && you.can_water_walk();
 }
 
 /**

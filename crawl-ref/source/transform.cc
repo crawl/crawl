@@ -475,6 +475,25 @@ bool Form::player_can_swim() const
 }
 
 /**
+ * Can the player survive in deep water when in the given form?
+ *
+ * Doesn't count flight or beogh water-walking.
+ *
+ * @return          Whether the player won't be killed when entering deep water
+ *                  in that form.
+ */
+bool Form::player_likes_water() const
+{
+    // Grey dracs can't swim, so can't statue form merfolk/octopodes
+    // -- yet they can still survive in water.
+    if (species::likes_water(you.species) && permits_liking_water())
+        return true;
+
+    // otherwise, you gotta swim to survive!
+    return player_can_swim();
+}
+
+/**
  * Are all of the given equipment slots blocked while in this form?
  *
  * @param slotflags     A set of flags, corresponding to the union of
@@ -689,6 +708,13 @@ public:
         // there's special casing in base_hand_name to get "fists"
         string hand = you.base_hand_name(true, true);
         return make_stringf("Stone %s", hand.c_str());
+    }
+
+    bool permits_liking_water() const override
+    {
+        // Statue form amphib species are still OK in water, despite
+        // not being able to swim.
+        return true;
     }
 };
 
@@ -1160,7 +1186,6 @@ bool form_can_fly(transformation form)
     return get_form(form)->player_can_fly();
 }
 
-
 /**
  * Can the player swim, if in this form?
  *
@@ -1188,17 +1213,7 @@ bool form_can_swim(transformation form)
  */
 bool form_likes_water(transformation form)
 {
-    // Grey dracs can't swim, so can't statue form merfolk/octopodes
-    // -- yet they can still survive in water.
-    if (species::likes_water(you.species)
-        && (form == transformation::statue
-            || !get_form(form)->forbids_swimming()))
-    {
-        return true;
-    }
-
-    // otherwise, you gotta swim to survive!
-    return form_can_swim(form);
+    return get_form(form)->player_likes_water();
 }
 
 // Used to mark transformations which override species intrinsics.
