@@ -3835,7 +3835,7 @@ colour_t item_def::talisman_colour() const
     case TALISMAN_DRAGON:
         return ETC_FIRE;
     case TALISMAN_DEATH:
-        return ETC_DARK;
+        return MAGENTA;
     case TALISMAN_STORM:
         return ETC_ELECTRICITY;
     default:
