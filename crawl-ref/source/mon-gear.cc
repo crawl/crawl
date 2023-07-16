@@ -109,13 +109,21 @@ static talisman_type _talisman_for(monster_type mtyp)
     switch (mtyp)
     {
     case MONS_RUPERT:
-        return TALISMAN_MAW; // good for shoutin'
+        if (coinflip())
+            return TALISMAN_MAW; // good for shoutin'
+        break;
     case MONS_AIZUL:
         return TALISMAN_SERPENT; // late, but so thematic!
     case MONS_ROXANNE:
         return TALISMAN_STATUE;
     case MONS_SOJOBO:
-        return TALISMAN_STORM;
+        if (coinflip())
+            return TALISMAN_STORM;
+        break;
+    case MONS_BAI_SUZHEN:
+        if (coinflip())
+            return TALISMAN_DRAGON;
+        break;
     default:
         break;
     }
