@@ -217,15 +217,6 @@ public:
 
     void apply_enchantments();
 
-    bool can_drink() const;
-    bool can_drink_potion(potion_type ptype) const;
-    bool should_drink_potion(potion_type ptype) const;
-    bool drink_potion_effect(potion_type pot_eff, bool card = false);
-
-    bool can_evoke_jewellery(jewellery_type jtype) const;
-    bool should_evoke_jewellery(jewellery_type jtype) const;
-    bool evoke_jewellery_effect(jewellery_type jtype);
-
     void timeout_enchantments(int levels);
 
     bool is_travelling() const;
