@@ -146,11 +146,7 @@ static bool _do_build_level()
             if (item.defined())
                 objstat_record_item(item);
 
-    {
-        unwind_bool wiz(you.wizard, true);
-        magic_mapping(1000, 100, true, true, false,
-                      coord_def(GXM/2, GYM/2));
-    }
+    magic_mapping(1000, 100, true, true, false, true, coord_def(GXM/2, GYM/2));
 
     // Dump the map of any disconnected level if this CLO is set.
     if (_is_disconnected_level() && crawl_state.map_stat_dump_disconnect)

@@ -424,7 +424,7 @@ void wizard_map_level()
     }
 
     mpr("Mapping level.");
-    magic_mapping(1000, 100, true, true);
+    magic_mapping(1000, 100, true, true, false, true);
 
     for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
     {

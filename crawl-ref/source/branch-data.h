@@ -24,7 +24,7 @@ const Branch branches[NUM_BRANCHES] =
       'D', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE /*unused*/ },
 
     { BRANCH_TEMPLE, BRANCH_DUNGEON, 4, 7, 1, 5,
-      brflag::no_items,
+      brflag::no_items | brflag::fully_map,
       DNGN_ENTER_TEMPLE, DNGN_EXIT_TEMPLE, NUM_FEATURES,
       "Temple", "the Ecumenical Temple", "Temple",
       nullptr,

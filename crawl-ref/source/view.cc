@@ -15,6 +15,7 @@
 
 #include "act-iter.h"
 #include "artefact.h"
+#include "branch.h"
 #include "cio.h"
 #include "cloud.h"
 #include "clua.h"
@@ -683,7 +684,7 @@ static colour_t _feat_default_map_colour(dungeon_feature_type feat)
 
 // Returns true if it succeeded.
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
-                   bool force, bool deterministic,
+                   bool force, bool deterministic, bool full_info,
                    coord_def origin)
 {
     if (!force && !is_map_persistent())
@@ -693,8 +694,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
         return false;
     }
-
-    const bool wizard_map = (you.wizard && map_radius == 1000);
 
     if (map_radius < 5)
         map_radius = 5;
@@ -715,7 +714,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
          ri; ++ri)
     {
         coord_def pos = *ri;
-        if (!wizard_map)
+        if (!full_info)
         {
             int threshold = proportion;
 
@@ -754,7 +753,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         const bool already_mapped = knowledge.mapped()
                             && knowledge.feat() != DNGN_UNSEEN;
 
-        if (!wizard_map && (knowledge.seen() || already_mapped))
+        if (!full_info && (knowledge.seen() || already_mapped))
             continue;
 
         const dungeon_feature_type feat = env.grid(pos);
@@ -777,7 +776,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
         if (open)
         {
-            if (wizard_map)
+            if (full_info)
             {
                 knowledge.set_feature(feat, _feat_default_map_colour(feat),
                     feat_is_trap(env.grid(pos)) ? get_trap_type(pos)
@@ -794,7 +793,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             if (emphasise(pos))
                 knowledge.flags |= MAP_EMPHASIZE;
 
-            if (wizard_map)
+            if (full_info)
             {
                 if (is_notable_terrain(feat))
                     seen_notable_thing(feat, pos);
@@ -1088,13 +1087,14 @@ static update_flags player_view_update_at(const coord_def &gc)
     if (!(env.pgrid(gc) & FPROP_SEEN_OR_NOEXP))
     {
         if (!crawl_state.game_is_arena()
+            && !(branches[you.where_are_you].branch_flags & brflag::fully_map)
             && you.has_mutation(MUT_EXPLORE_REGEN))
         {
             _do_explore_healing();
         }
         if (!crawl_state.game_is_arena()
             && cell_triggers_conduct(gc)
-            && !player_in_branch(BRANCH_TEMPLE)
+            && !(branches[you.where_are_you].branch_flags & brflag::fully_map)
             && !(player_in_branch(BRANCH_SLIME) && you_worship(GOD_JIYVA)))
         {
             did_god_conduct(DID_EXPLORATION, 2500);
