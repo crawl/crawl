@@ -693,8 +693,7 @@ from death in a burst of unholy flame.
 %%%%
 black bear
 
-A small black bear. Like all ursines, it will become enraged if badly hurt or
-frightened.
+A small black bear. Like all ursines, it will become enraged if badly hurt.
 %%%%
 black draconian
 
@@ -2045,7 +2044,7 @@ its path.
 polar bear
 
 A bear covered in glistening white fur, habituated to cold conditions. Like all
-ursines, it will become enraged if badly hurt or frightened.
+ursines, it will become enraged if badly hurt.
 %%%%
 profane servitor
 
