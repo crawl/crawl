@@ -3230,8 +3230,11 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return player_prot_life(false, temp, false) == 3;
 
         case AMU_REGENERATION:
-            return you.get_mutation_level(MUT_NO_REGENERATION) > 0
-                   || (temp
+            return
+#if TAG_MAJOR_VERSION == 34
+                   you.get_mutation_level(MUT_NO_REGENERATION) > 0 ||
+#endif
+                     (temp
                        && (you.get_mutation_level(MUT_INHIBITED_REGENERATION) > 0
                            || you.has_mutation(MUT_VAMPIRISM))
                        && regeneration_is_inhibited());

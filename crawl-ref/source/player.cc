@@ -3981,10 +3981,11 @@ int get_real_mp(bool include_items)
 /// Does the player currently regenerate hp? Used for resting.
 bool player_regenerates_hp()
 {
-    if (you.has_mutation(MUT_NO_REGENERATION) || regeneration_is_inhibited())
-        return false;
-
-    return true;
+    return !regeneration_is_inhibited()
+#if TAG_MAJOR_VERSION == 34
+    && !you.has_mutation(MUT_NO_REGENERATION)
+#endif
+    ;
 }
 
 bool player_regenerates_mp()

@@ -1051,12 +1051,14 @@ static void _equip_regeneration_item(const item_def &item)
                                          ? "armour"
                                          : item_slot_name(eq_slot);
 
+#if TAG_MAJOR_VERSION == 34
     if (you.get_mutation_level(MUT_NO_REGENERATION))
     {
         mprf("The %s feel%s cold and inert.", item_name.c_str(),
              plural ? "" : "s");
         return;
     }
+#endif
     if (you.hp == you.hp_max)
     {
         mprf("The %s throb%s to your uninjured body.", item_name.c_str(),

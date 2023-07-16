@@ -2205,6 +2205,7 @@ static const mutation_def mut_data[] =
   {"You can once more change form.", "", ""},
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_NO_REGENERATION, 0, 1, mutflag::bad, false,
   "no regeneration",
 
@@ -2212,6 +2213,7 @@ static const mutation_def mut_data[] =
   {"You stop regenerating.", "", ""},
   {"You start regenerating.", "", ""},
 },
+#endif
 
 { MUT_STRONG_NOSE, 0, 1, mutflag::good, false,
   "strong nose",

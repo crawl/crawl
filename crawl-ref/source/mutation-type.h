@@ -234,7 +234,9 @@ enum mutation_type
     MUT_SANGUINE_ARMOUR,
 #endif
     MUT_HOP,
+#if TAG_MAJOR_VERSION == 34
     MUT_NO_REGENERATION,
+#endif
     MUT_STRONG_NOSE,
 #if TAG_MAJOR_VERSION == 34
     MUT_ACID_RESISTANCE,
