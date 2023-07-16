@@ -1957,6 +1957,15 @@ void untransform(bool skip_move)
 
     set_form(transformation::none, 0);
 
+    const int str_mod = get_form(old_form)->str_mod;
+    const int dex_mod = get_form(old_form)->dex_mod;
+
+    if (str_mod)
+        notify_stat_change(STAT_STR, -str_mod, true);
+
+    if (dex_mod)
+        notify_stat_change(STAT_DEX, -dex_mod, true);
+
     // If you're a mer in water, boots stay melded even after the form ends.
     if (you.fishtail)
     {
