@@ -670,9 +670,10 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:   bailey_axe_minmay_hex_keep
+NAME:   bailey_minmay_hex_keep
 ORIENT: encompass
-TAGS:   bailey_axe no_item_gen no_monster_gen
+TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword
+TAGS:   no_item_gen no_monster_gen
 # Loot consists of 8 good potions and scrolls in the last outer room, with a
 # lot of gold and especially good items in the (very dangerous) center room.
 #
@@ -681,12 +682,12 @@ TAGS:   bailey_axe no_item_gen no_monster_gen
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
 ITEM:   potion of experience ident:type q:1 /\
         scroll of acquirement ident:type q:1
-: easy_axe_fighter(_G)
-: hard_axe_fighter(_G)
-: orc_warlord_with_axe(_G)
-: bailey_setup(_G)
+: popcorn_foe(_G,"any","any","rare","any")
+: hard_foe(_G,"any","rare","any")
+: boss_foe(_G,"any","any",nil,"any")
 SUBST:  I = t., 1 = 11.
 NSUBST: 2 = 3:2 / *=2.
+: bailey_setup(_G)
 MAP
 ttttttttttttttttttttttttttttttttttttt
 ttttttttttttttttttttttttttttttttttttt
