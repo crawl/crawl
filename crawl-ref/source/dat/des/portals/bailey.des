@@ -467,11 +467,9 @@ ORIENT: encompass
 {{
   local btype = dgn.persist.bailey_type
   if not btype then -- Wizmode
-    if crawl.coinflip() then
-      btype = "bailey_axe"
-    else
-      btype = "bailey_polearm"
-    end
+    btypes = {"bailey_axe", "bailey_polearm",
+              "bailey_mace","bailey_sword"}
+    btype = btypes[crawl.random2(4)]
   end
   if crawl.game_started() then
     local map = dgn.map_by_tag(btype)
