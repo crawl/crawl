@@ -56,6 +56,27 @@ function bailey_portal_polearm(e)
   bailey_portal(e, 'polearm')
 end
 
+function bailey_portal_mace(e)
+  bailey_portal(e, 'mace')
+end
+
+function bailey_portal_sword(e)
+  bailey_portal(e, 'sword')
+end
+
+function bailey_portal_random(e)
+  local rnd = crawl.random_range(0,3)
+  if rnd == 0 then
+    bailey_portal_axe(e)
+  elseif rnd == 1 then
+    bailey_portal_polearm(e)
+  elseif rnd == 2 then
+    bailey_portal_mace(e)
+  elseif rnd == 3 then
+    bailey_portal_sword(e)
+  end
+end
+
 -- colours
 function bailey_setup(e)
   e.kfeat("< = exit_bailey")
