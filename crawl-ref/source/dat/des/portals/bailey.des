@@ -229,6 +229,46 @@ function boss_foe(e, species, melee, ranged, armour)
 	foe(e, popcorn_equipment, speceis, melee, ranged, armour)
 end
 
+-- around entry portal
+
+function entry_decor(e)
+  local weapons = {}
+  weapons.bailey_axe = "hand axe / war axe"
+  weapons.bailey_polearm = "spear / trident / halberd"
+  weapons.bailey_mace = "mace / whip / flail"
+  weapons.bailey_sword = "falchion / long sword"
+  e.item(weapons[dgn.persist.bailey_type])
+end
+
+function entry_guard(e, ranged)
+	local species = {"w:40 goblin ; ", "kobold ; ", "hobgoblin ; ", 
+						  "gnoll ; ", "orc ; "}
+	local melee = popcorn_equipment(dgn.persist.bailey_type).weapon
+	-- the following ensures that all guards have the same ranged	
+	if ranged then
+		if crawl.random2(3) <= 1 then
+			ranged = " . boomerang"
+		else:
+			ranged = " . sling"
+		end
+	else
+		ranged = ""
+	end 
+   for i, monster_name in ipairs(species) do
+		species[i] = species[i] .. melee
+		species[i] = species[i] .. ranged
+	end
+	e.mons(table.concat(species, " / ")
+end
+
+function entry_guard_melee(e)
+	entry_guard(e, false)
+end
+
+function entry_guard_ranged(e)
+	entry_guard(e, true)
+end
+
 }}
 
 # Basic bailey entries ##########################################
