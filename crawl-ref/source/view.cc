@@ -799,6 +799,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                     seen_notable_thing(feat, pos);
 
                 set_terrain_seen(pos);
+                StashTrack.add_stash(pos);
+                show_update_at(pos);
 #ifdef USE_TILE
                 tile_wizmap_terrain(pos);
 #endif
