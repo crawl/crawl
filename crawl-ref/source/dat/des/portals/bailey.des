@@ -603,9 +603,10 @@ ENDMAP
 #
 # Loots consists of six good items and some flight gear.
 #
-NAME:    bailey_axe_4
+NAME:    bailey_river
 ORIENT:  encompass
-TAGS:    bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
+TAGS:    bailey_axe bailey_polearm bailey_mace bailey_sword 
+TAGS:    no_rotate no_item_gen no_monster_gen no_pool_fixup
 #
 ITEM:    any good_item
 ITEM:    potion of enlightenment ident:type
@@ -628,14 +629,11 @@ SUBST:   ? = c.
 SUBST:   N = nc
 SUBST:   H = W.
 SUBST:   ~ = W
-# the following KMONS duplicates monster 1 from kobold_axe_returning
 KFEAT:   ( = exit_bailey
-KMONS:   ( = generate_awake kobold ; boomerang ident:type q:2 | \
-                                     boomerang ident:type q:1
-#
-: kobold_axe_returning(_G)
-: easy_axe_fighter(_G)
-: hard_axe_fighter(_G)
+KMONS:   ( = generate_awake kobold ; boomerang
+: popcorn_foe(_G,{"kobold"},nil,"boomerang",nil)
+: popcorn_foe(_G,"any","any","rare","any")
+: hard_foe(_G,"any",nil,"any")
 SUBST:   1 = 1., ^ = ^^.
 NSUBST:  2 = 1:3 / *=223.
 #
