@@ -492,15 +492,25 @@ ENDMAP
 # Bailey 2.
 #
 # Apart from weapons and armours left by the monsters, there are about 10
-# potions useful in battle. If those monsters drink them first, of course...
-# this used to be an axe map; it's polearm now and has been renamed accordingly
-NAME:   bailey_polearm_nasty_gnolls
+# potions useful in battle. Originally an axe bailey, then a polearm one,
+# and now for all four weapon types
+NAME:   bailey_nasty_gnolls
 ORIENT: encompass
-TAGS:   bailey_polearm no_rotate
-: orc_with_polearm(_G)
-MONS:   gnoll ; halberd ego:draining | halberd ego:electrocution ident:type
-MONS:   orc warrior ; halberd ego:electrocution ident:type . plate armour /\
-        orc knight ; halberd
+TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword
+TAGS:   no_rotate
+: local weapon = {}
+: weapon.bailey_axe = "war axe"
+: weapon.bailey_polearm = "halberd"
+: weapon.bailey_mace = "morningstar"
+: weapon.bailey_sword = "scimitar"
+: weapon = weapon[dng.persist.dungeon_type]
+: local drain = string.gsub("W ego:draining | ","W",weapon) 
+: local elec = string.gsub("W ego:electrocution ident:type","W",weapon) 
+: popcorn_foe(_G,"any","any",nil,"any")
+: warrior_foe(_G,{"gnoll"},drain .. elec,nil,"any")
+: warrior_foe(_G,{"orc warrior"},elec,nil,"plate armor")
+: knight_foe(_G,("orc knight"},weapon,nil,"plate armor")
+SUBST: 3 = 34
 NSUBST: d = 1:ddde / *:d, 1 = 5:1 / *=1., 2 = 5:2 / *=2.
 : item(dgn.loot_potions)
 ITEM:   potion of experience ident:type q:1 /\
