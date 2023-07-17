@@ -542,16 +542,18 @@ ENDMAP
 
 ############################################################################
 # Another actual bailey. Six good items plus two stacks of specialty darts.
-NAME:   bailey_axe_3
+# Originally an axe bailey, now for four weaon types.
+NAME:   bailey_so_many_kobolds
 ORIENT: encompass
-TAGS:   bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
+TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword 
+TAGS:   no_rotate no_item_gen no_monster_gen no_pool_fixup
 SUBST:  v : ccv
 ITEM:   any good_item
 ITEM:   dart ego:atropa q:4 / dart ego:datura q:4
 KFEAT:  _ = altar_trog / altar_okawaru / altar_makhleb
-: kobold_axe_returning(_G)
-MONS: kobold brigand ; war axe . dart ego:poisoned | dart ego:curare w:5
-: hard_axe_fighter(_G)
+: popcorn_foe(_G,{"kobold"},nil,"boomerang",nil)
+: warrior_foe(_G,{"kobold brigand"),"any", "dart ego:poisoned | dart ego:curare w:5", "any")
+: hard_foe(_G,"any","any","rare","any")
 SUBST:  2 = 2.
 NSUBST: 1 = 3:2 / *=1., 3 = 1:3 / *=3..
 : bailey_setup(_G)
