@@ -2979,23 +2979,26 @@ bool Menu::snap_in_page(int index)
 
     const int vpy = m_ui.scroller->get_scroll();
 
-    if (y2 >= vpy + vph)
+#ifdef USE_TILE_LOCAL
+    // on local tiles, when scrolling longer menus, the scroller will apply a
+    // shade to the edge of the scroller. Compensate for this for non-end menu
+    // items.
+    const int shade = (index > 0 || index < static_cast<int>(items.size()) - 1)
+        ? UI_SCROLLER_SHADE_SIZE / 2 : 0;
+#else
+    const int shade = 0;
+#endif
+
+    // the = for these is to apply the local tiles shade adjustment if necessary
+    if (y1 <= vpy)
     {
         // scroll up
-        m_ui.scroller->set_scroll(y2 - vph
-#ifdef USE_TILE_LOCAL
-            + UI_SCROLLER_SHADE_SIZE / 2
-#endif
-            );
+        m_ui.scroller->set_scroll(y1 - shade);
     }
-    else if (y1 < vpy)
+    else if (y2 >= vpy + vph)
     {
         // scroll down
-        m_ui.scroller->set_scroll(y1
-#ifdef USE_TILE_LOCAL
-            - UI_SCROLLER_SHADE_SIZE / 2
-#endif
-            );
+        m_ui.scroller->set_scroll(y2 - vph + shade);
     }
     else
         return false; // already in page
