@@ -808,15 +808,16 @@ ENDMAP
 # Loot is only three items, which have a good chance of being selected by
 # hand, including useful manuals.
 #
-NAME:   bailey_polearm_2
+NAME:   bailey_donjon
 ORIENT: encompass
-TAGS:   bailey_polearm no_rotate no_pool_fixup no_monster_gen
-MONS:   orc warrior w:5 ; arbalest  . ring mail | scale mail / \
-        orc ; arbalest . ring mail | scale mail
-: orc_with_polearm(_G)
-: orc_warrior_with_polearm(_G)
-: orc_knight_with_polearm(_G)
-MONS:   orc knight
+TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword 
+TAGS:   no_rotate no_pool_fixup no_monster_gen
+MONS:   orc warrior w:5 ; orcbow | arblest w:1 . ring mail | scale mail / \
+        orc ; orcbow . ring mail | scale mail
+: popcorn_foe(_G,{"orc"},"any","rare","any")
+: warrior_foe(_G,{"orc"},"any",nil,"any")
+: knight_foe(_G,{"orc"},"any",nil,"any")
+: knight_foe(_G,{"orc"},"any","rare","any")
 SUBST:  1 = 111., 2 = 233.
 NSUBST: 4 = 1:4 / *=433322..
 SUBST:  W : W..
