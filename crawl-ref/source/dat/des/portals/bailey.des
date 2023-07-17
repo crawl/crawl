@@ -161,6 +161,74 @@ function boss_equipment(bailey_type)
 	return equipment
 end
 
+-- general foe function
+
+function foe(e, equipment_fn, species, weapon, ranged, armour)
+	local default_equipment = equipment_fn(dgn.persist.bailey_type)
+	if species = "any" then
+		species = default_equipment.species
+	end
+	if weapon = "any" then
+		weapon = default_equipment.weapon
+	end
+	if ranged = "any" then
+		ranged = default_equipent.ranged.any
+	elseif ranged = "rare" then
+		ranged = default_equipment.ranged.rare
+	end
+	if armour = "any" then
+		armour = default_equipment.armour
+	end
+	local equipment = {}
+   for i, monster_name in ipairs(species) do
+		if melee then
+			 table.insert(equipment, melee)
+		end
+		if ranged then
+			 table.insert(equipment,ranged)
+		end
+		if armour then
+			 table.insert(equipment,armour)
+		end
+		if equipment != {} then
+			species[i] = species[i] .. " ; "
+			species[i] = species[i] .. table.concat(equipment, " . ")
+		end	
+		equipment = {}
+	end
+	e.mons(table.concat(species, " / "))
+end
+
+-- tiered foe functions. Place these in the vault header where one would place MONS
+-- species must be a table of strings, or "any"
+-- weapon must be a string, or "any", or nil
+-- ranged must be a string, or "any", or "rare", or nil
+-- armour must be a string, or "any", or nil
+
+function popcorn_foe(e, species, melee, ranged, armour)
+	foe(e, popcorn_equipment, speceis, melee, ranged, armour)
+end
+
+function warrior_foe(e, species, melee, ranged, armour)
+	foe(e, popcorn_equipment, speceis, melee, ranged, armour)
+end
+
+function knight_foe(e, species, melee, ranged, armour)
+	foe(e, popcorn_equipment, speceis, melee, ranged, armour)
+end
+
+function hard_foe(e, melee, ranged, armour)
+	if crawl.coinflip() then
+		warrior_foe(e, "any", melee, ranged, armour)
+	else
+		knight_foe(e, "any", melee, ranged, armour)
+	end
+end
+
+function boss_foe(e, species, melee, ranged, armour)
+	foe(e, popcorn_equipment, speceis, melee, ranged, armour)
+end
+
 }}
 
 # Basic bailey entries ##########################################
