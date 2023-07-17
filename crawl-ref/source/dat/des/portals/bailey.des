@@ -1,4 +1,4 @@
-##############################################################################
+################################################################################
 #
 # Bailey! (Zaba and dpeg)
 #
@@ -7,7 +7,7 @@
 #
 # Currently, the depth is fixed at D:7-10
 #
-##############################################################################
+################################################################################
 
 {{
 function bailey_portal(e, ptype)
@@ -240,11 +240,18 @@ function entry_decor(e)
   e.item(weapons[dgn.persist.bailey_type])
 end
 
-function entry_guard(e, ranged)
-	local species = {"w:40 goblin ; ", "kobold ; ", "hobgoblin ; ", 
-						  "gnoll ; ", "orc ; "}
-	local melee = popcorn_equipment(dgn.persist.bailey_type).weapon
-	-- the following ensures that all guards have the same ranged	
+function entry_guards(e, ranged, species)
+	-- for flavor all guards will be the same species and have the same gear
+	if species == "any" then
+		possible_species = {"goblin", "kobold", "hobgoblin", "gnoll", "orc"}
+		species = species[crawl.random2(5)]
+	end
+	local melee = {}
+   melee.bailey_axe = "hand axe"
+   melee.bailey_polearm = "spear"
+   melee.bailey_mace = "mace"
+   melee.bailey_sword = "falchion"
+   melee = melee[dng.persist.dungeon_type]
 	if ranged then
 		if crawl.random2(3) <= 1 then
 			ranged = " . boomerang"
@@ -254,18 +261,14 @@ function entry_guard(e, ranged)
 	else
 		ranged = ""
 	end 
-   for i, monster_name in ipairs(species) do
-		species[i] = species[i] .. melee
-		species[i] = species[i] .. ranged
-	end
-	e.mons(table.concat(species, " / ")
+	e.mons(species .. " ; " .. melee .. ranged)
 end
 
-function entry_guard_melee(e)
-	entry_guard(e, false)
+function entry_guards_melee(e,species)
+	entry_guard(e, false, species)
 end
 
-function entry_guard_ranged(e)
+function entry_guards_ranged(e, species)
 	entry_guard(e, true)
 end
 
@@ -278,25 +281,15 @@ NAME: enter_bailey_1
 TAGS: transparent
 WEIGHT: 1
 : local rnd = crawl.random2(2)
-: if rnd == 0 then
-:   bailey_portal_axe(_G)
-: elseif rnd == 1 then
-:   bailey_portal_polearm(_G)
-: end
+: bailey_portal_random(_G)
 MAP
 O
 ENDMAP
 
 NAME: enter_bailey_2
 TAGS: transparent
-: local rnd = crawl.random2(2)
-: if rnd == 0 then
-ITEM: hand axe
-:   bailey_portal_axe(_G)
-: elseif rnd == 1 then
-ITEM: halberd / spear
-:   bailey_portal_polearm(_G)
-: end
+: bailey_portal_random(_G)
+: entry_decor(_G)
 MAP
 .....
 ..d..
@@ -307,14 +300,8 @@ ENDMAP
 
 NAME: enter_bailey_3
 TAGS: transparent
-: local rnd = crawl.random2(2)
-: if rnd == 0 then
-MONS: goblin ; hand axe
-:   bailey_portal_axe(_G)
-: elseif rnd == 1 then
-MONS: goblin ; spear
-:   bailey_portal_polearm(_G)
-: end
+: bailey_portal_random(_G)
+: entry_guards_melee(_G,"any")
 KMASK: wW = no_monster_gen
 MAP
 .........
@@ -331,21 +318,10 @@ ENDMAP
 NAME:   enter_bailey_4
 TAGS:   transparent
 WEIGHT: 5
-: local rnd = crawl.random2(2)
-: if rnd == 0 then
-MONS:   goblin ; hand axe / hobgoblin ; hand axe / orc ; hand axe
-MONS:   goblin ; boomerang ident:type q:2 | \
-                 boomerang ident:type q:1 / \
-        hobgoblin ; boomerang ident:type q:2 | \
-                    boomerang ident:type q:1 / \
-        orc ; boomerang ident:type q:2 | \
-              boomerang ident:type q:1
+: bailey_portal_random(_G)
+: entry_guards_melee(_G,"any")
+: entry_guards_ranged(_G,"any")
 SUBST: 1 = 122
-:   bailey_portal_axe(_G)
-: elseif rnd == 1 then
-MONS:   goblin ; spear / hobgoblin ; spear / orc ; spear
-:   bailey_portal_polearm(_G)
-: end
 KMASK: wW = no_monster_gen
 MAP
 ...........
@@ -361,14 +337,11 @@ ENDMAP
 
 NAME: enter_bailey_5
 TAGS: transparent no_pool_fixup
-: local rnd = crawl.random2(2)
-: if rnd == 0 then
-MONS: goblin ; boomerang ident:type q:2 | \
-               boomerang ident:type q:1
-:   bailey_portal_axe(_G)
-: elseif rnd == 1 then
-MONS: goblin ; spear
-:   bailey_portal_polearm(_G)
+: bailey_portal_random(_G)
+: if dgn.persist.bailey_type == "bailey_polearm" then
+:   entry_guards_melee(_G,"any")
+: else
+:   entry_guards_ranged(_G,"any")
 : end
 SHUFFLE: ABCD
 SUBST: A : W, BCD : wW
@@ -416,14 +389,8 @@ ENDMAP
 # They were just having a party.
 NAME:   enter_bailey_7
 WEIGHT: 3
-: local rnd = crawl.random2(2)
-: if rnd == 0 then
-MONS:   gnoll ; hand axe / goblin ; hand axe
-:   bailey_portal_axe(_G)
-: elseif rnd == 1 then
-MONS:   gnoll ; spear / goblin ; spear
-:   bailey_portal_polearm(_G)
-: end
+: bailey_portal_random(_G)
+: entry_guards_melee(_G,"gnoll")
 SUBST:  . = ...;!
 COLOUR: ; = red
 KITEM:  ! = potion of degeneration q:2 ident:type
@@ -468,16 +435,9 @@ ENDMAP
 NAME: lightli_bailey_entry_fortress
 TAGS: transparent
 WEIGHT: 1
-: local rnd = crawl.random2(2)
-: if rnd == 0 then
-MONS: orc ; boomerang ident:type q:1 | \
-            boomerang ident:type q:2 . hand axe
-MONS: gnoll ; hand axe / goblin ; hand axe
-:   bailey_portal_axe(_G)
-: elseif rnd == 1 then
-MONS: orc ; spear, gnoll ; spear / goblin ; spear
-:   bailey_portal_polearm(_G)
-: end
+: bailey_portal_random(_G)
+: entry_guards_ranged(_G,"orc")
+: entry_guards_melee(_G,"gnoll")
 KMASK: W = no_monster_gen
 MAP
 WWWWWWWWWWWWWWW
