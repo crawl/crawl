@@ -1304,10 +1304,11 @@ class AuxMaw: public AuxAttackType
 {
 public:
     AuxMaw()
-    : AuxAttackType(0, 100, "bite") { };
+    : AuxAttackType(0, 50, "bite") { };
     int get_damage(bool random) const override {
         return get_form()->get_aux_damage(random);
     };
+    bool xl_based_chance() const override { return false; }
 };
 
 static const AuxConstrict   AUX_CONSTRICT = AuxConstrict();
