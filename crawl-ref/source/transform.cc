@@ -281,6 +281,8 @@ int Form::scaling_value(const FormScaling &sc, bool random,
 {
     if (sc.xl_based)
         return (sc.base + sc.scaling * you.experience_level) * scale;
+    if (max_skill == min_skill)
+        return sc.base;
 
     const int lvl = get_max ? max_skill * scale : get_level(scale);
     const int over_min = max(0, lvl - min_skill * scale);
