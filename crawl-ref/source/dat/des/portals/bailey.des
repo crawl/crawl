@@ -878,9 +878,10 @@ ENDMAP
 # Loot comes in three stages: money, potions, scrolls. No special weapons and
 # armours.
 #
-NAME:   bailey_polearm_5
+NAME:   bailey_infantry
 ORIENT: encompass
-TAGS:   bailey_polearm no_item_gen no_monster_gen
+TAGS:   bailey_axe bailey_polearm bailey_mace bailey_axe
+TAGS:   no_item_gen no_monster_gen
 ITEM:   potion of experience ident:type q:1
 : item(dgn.loot_potions)
 ITEM:   scroll of brand weapon ident:type w:5 / \
@@ -898,9 +899,9 @@ NSUBST: ! = 1:deee / *:e
 NSUBST: ? = 1:fffg / *:g
 MONS:   orc warrior ; spear w:5 | trident w:5 | halberd | hand axe | war axe /\
         orc w:110   ; spear w:5 | trident w:5 | halberd | hand axe | war axe
-: orc_with_polearm(_G)
-: orc_warrior_with_polearm(_G)
-: orc_knight_with_polearm(_G)
+: popcorn_foe(_G,{"orc"},"any","rare","any")
+: warrior_foe(_G,{"orc"},"any","rare","any")
+: knight_foe(_G,{"orc"},"any","rare","any")
 : bailey_setup(_G)
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccccccccccc
