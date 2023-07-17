@@ -753,14 +753,15 @@ ENDMAP
 # armour and another piece of good additional armour. Apart from what the
 # orcs leave lying around.
 #
-NAME:   bailey_polearm_1
+NAME:   bailey_star_fortress
 ORIENT: encompass
-TAGS:   bailey_polearm no_rotate no_pool_fixup no_monster_gen
+TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword
+TAGS:   no_rotate no_pool_fixup no_monster_gen
 NSUBST: D = 1:+ / *:c
 NSUBST: E = 1:+ / *:c
-: orc_with_polearm(_G)
-: orc_warrior_with_polearm(_G)
-: orc_knight_with_polearm(_G)
+: popcorn_foe(_G,"any","any","rare","any")
+: warrior_foe(_G,"any","any","rare","any")
+: knight_foe(_G,"any","any",nil,"any")
 SUBST:  2 = 22223..
 SUBST:  1 = 1 2:1 .
 ITEM:   good_item crystal plate armour / good_item plate armour w:20 /\
@@ -771,6 +772,7 @@ ITEM:   good_item cloak / good_item pair of gloves /\
         good_item helmet / good_item pair of boots /\
         good_item tower shield / good_item kite shield
 : bailey_setup(_G)
+MAP
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xA<xxxxxxxxxx.........xxxxxxxxxxxxx
