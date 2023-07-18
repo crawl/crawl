@@ -1107,23 +1107,24 @@ xxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxx
                   xxxxx
 ENDMAP
 
-# same loot as minmay_hex_keep, and a similar warlord fight
+ same loot as minmay_hex_keep, and a similar warlord fight
 # slightly more of the loot is outside of the warlord's room
 # the warlord fight is a little easier, and the outer fights are harder
-NAME:   bailey_axe_bossmonster_kennysheep
+NAME:   bailey_bossmonster_kennysheep
 ORIENT: encompass
-TAGS:   bailey_axe no_item_gen no_monster_gen no_pool_fixup
+TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 ITEM:   potion of experience ident:type q:1 / \
             scroll of acquirement ident:type q:1
-: easy_axe_fighter(_G)
-: kobold_axe_returning(_G)
-: hard_axe_fighter(_G)
-: orc_warlord_with_axe(_G)
-: bailey_setup(_G)
+: popcorn_foe(_G,"any","any","rare","any")
+: popcorn_foe(_G,{"kobold","goblin"},"any","boomerang","any")
+: hard_foe(_G,"any","rare","any")
+: boss_foe(_G,"any","any",nil","any")
 SUBST:  1 = 1.., 2 = 22.
 NSUBST: 3 = 2:3 / * = 3.
 NSUBST: e = 1:e / *:d
+: bailey_setup(_G)
 MAP
       ccccc         ccccc
      ccd$1cc       cc1$dcc
