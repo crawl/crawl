@@ -337,12 +337,14 @@ ENDMAP
 
 NAME: enter_bailey_5
 TAGS: transparent no_pool_fixup
-: bailey_portal_random(_G)
-: if dgn.persist.bailey_type == "bailey_polearm" then
-:   entry_guards_melee(_G,"any")
-: else
-:   entry_guards_ranged(_G,"any")
-: end
+{{
+bailey_portal_random(_G)
+if dgn.persist.bailey_type == "bailey_polearm" then
+  entry_guards_melee(_G,"any")
+else
+  entry_guards_ranged(_G,"any")
+end
+}}
 SHUFFLE: ABCD
 SUBST: A : W, BCD : wW
 KMASK: wW = no_monster_gen
@@ -496,14 +498,16 @@ NAME:   bailey_nasty_gnolls
 ORIENT: encompass
 TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword
 TAGS:   no_rotate
-: local weapon = {}
-: weapon.bailey_axe = "war axe"
-: weapon.bailey_polearm = "halberd"
-: weapon.bailey_mace = "morningstar"
-: weapon.bailey_sword = "scimitar"
-: weapon = weapon[dng.persist.dungeon_type]
-: local drain = string.gsub("W ego:draining | ","W",weapon) 
-: local elec = string.gsub("W ego:electrocution ident:type","W",weapon) 
+{{
+local weapon = {}
+weapon.bailey_axe = "war axe"
+weapon.bailey_polearm = "halberd"
+weapon.bailey_mace = "morningstar"
+weapon.bailey_sword = "scimitar"
+weapon = weapon[dng.persist.dungeon_type]
+local drain = string.gsub("W ego:draining | ","W",weapon) 
+local elec = string.gsub("W ego:electrocution ident:type","W",weapon) 
+}}
 : popcorn_foe(_G,"any","any",nil,"any")
 : warrior_foe(_G,{"gnoll"},drain .. elec,nil,"any")
 : warrior_foe(_G,{"orc warrior"},elec,nil,"plate armor")
@@ -1292,12 +1296,14 @@ ORIENT: encompass
 TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
-: local weapon = {}
-: weapon.bailey_axe = {"hand axe ego:heavy | war axe", "broad axe"}
-: weapon.bailey_polearm = {"spear ego:heavy | halberd", "glaive"}
-: weapon.bailey_mace = {"mace ego:heavy | morningstar", "dire flail"}
-: weapon.bailey_sword = {"falchion ego:heavy | scimitar", "great sword"}
-: weapon = weapon[dng.persist.dungeon_type]
+{{
+local weapon = {}
+weapon.bailey_axe = {"hand axe ego:heavy | war axe", "broad axe"}
+weapon.bailey_polearm = {"spear ego:heavy | halberd", "glaive"}
+weapon.bailey_mace = {"mace ego:heavy | morningstar", "dire flail"}
+weapon.bailey_sword = {"falchion ego:heavy | scimitar", "great sword"}
+weapon = weapon[dng.persist.dungeon_type]
+}}
 : popcorn_foe(_G,"any","any","rare","any")
 : warrior_foe(_G,{"human"},weapon[0],"rare","any")
 : knight_foe(_G,{"vault guard"},weapon[1],nil,"any")
