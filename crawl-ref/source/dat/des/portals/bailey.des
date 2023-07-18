@@ -971,16 +971,13 @@ ccwwwwwwww;3;.;3.wwwwwwwwccc_____________.......$c
 ENDMAP
 
 #6 items and two gold piles for murdering a bunch of gnolls
-NAME:   bailey_polearm_gnolls_kennysheep
+NAME:   bailey_gnolls_kennysheep
 ORIENT: encompass
-TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup
-MONS:   gnoll ; spear | trident | halberd . \
-            ring mail | scale mail | chain mail . \
-            throwing net | nothing
-MONS:   gnoll sergeant ; halberd | glaive | bardiche w:1 . \
-            chain mail w:20 | plate armour | crystal plate armour w:1
-MONS:   gnoll bouda ; spear | trident | halberd . \
-            ring mail | scale mail
+TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
+: popcorn_foe(_G,{"gnoll"},"any","throwing net | nothing","any")
+: knight_foe(_G,{"gnoll sergeant"),"any","rare","any")
+: warrior_foe(_G,{"gnoll bouda"},"any","rare","any")
 MONS:   hound, wolf
 KMONS:  R = grum, gnoll sergeant ; halberd . plate armour
 ITEM:   any good_item
