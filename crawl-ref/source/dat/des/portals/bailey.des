@@ -1218,17 +1218,16 @@ ENDMAP
 # vampire castle
 # total of 9 items, which may be good potions, good armour, or superb item.
 # The vampires themselves will have some good weapons as well.
-NAME:    bailey_polearm_vampire_castle_hellmonk
+NAME:    bailey_vampire_castle_hellmonk
 ORIENT:  encompass
-TAGS:    bailey_polearm no_item_gen no_monster_gen no_pool_fixup
+TAGS:    bailey_axe bailey_polearm bailey_mace bailey_sword
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
 :item(dgn.loot_potions)
 ITEM:    any armour good_item
 MONS:    wolf zombie, vampire bat
-MONS:    orc zombie ; spear, orc warrior zombie ; trident | halberd
+: popcorn_foe(_G,{"orc zombie","gnoll zombie"}, "any", nil, nil)
 MONS:    gargoyle
-MONS:    vampire ; halberd ego:vampirism w:15 | glaive ego:vampirism w:3 \
-             | bardiche ego:vampirism w:1 \
-             . scale mail | chain mail
+: knight_foe(_G,{"vampire"},"any",nil,"any")
 NSUBST:  d = 2=d / 2=e / | /  dde|, f = f / f..
 NSUBST:  ; = 20=t. / ., - = 4=G / 12=1. / .
 NSUBST:  2 = 5=2 / 2., 3 = 6=3 / 3..., 4 = 3=4 / 4., 5 = 5 / G
