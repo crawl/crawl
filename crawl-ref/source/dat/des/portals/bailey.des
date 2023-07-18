@@ -921,8 +921,8 @@ ENDMAP
 NAME:   bailey_polearm_flooded_kennysheep
 ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup patrolling
-: orc_with_polearm(_G)
-: orc_warrior_with_polearm(_G)
+: popcorn_foe(_G,{"orc"},"spear | trident w:5","rare","any")
+: warrior_foe(_G,{"orc warrior"},"halberd | trident w:5","rare","any")
 MONS:   centaur ; javelin ident:type q:2 | \
             javelin ident:type q:3 . spear | trident | halberd . \
             ring mail | scale mail | chain mail
