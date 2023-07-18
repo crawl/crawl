@@ -64,6 +64,18 @@ public:
     const int max;
 };
 
+class FormScaling {
+public:
+    FormScaling() : base(0), scaling(0), xl_based(false) {}
+    FormScaling& Base(int b) { base = b; return *this; }
+    FormScaling& Scaling(int s) { scaling = s; return *this; }
+    FormScaling& XLBased() { xl_based = true; return *this; }
+
+    int base;      // value at 0 XL/skill (as applicable)
+    int scaling;   // value added to base at max XL/skill
+    bool xl_based; // if false, scale on Shapeshifting skill
+};
+
 struct form_entry; // defined in form-data.h (private)
 class Form
 {
@@ -135,11 +147,7 @@ public:
     /**
      * Base unarmed damage provided by the form.
      */
-    virtual int get_base_unarmed_damage(bool /*random*/ = true,
-                                        bool /*max*/ = false) const
-    {
-        return base_unarmed_damage;
-    }
+    int get_base_unarmed_damage(bool random = true, bool max = false) const;
 
     /// Damage done by a custom aux attack of this form.
     virtual int get_aux_damage(bool /*random*/ = true,
@@ -165,9 +173,11 @@ public:
     bool enables_flight() const;
     bool forbids_flight() const;
     bool forbids_swimming() const;
+    virtual bool permits_liking_water() const { return !forbids_swimming(); }
 
     bool player_can_fly() const;
     bool player_can_swim() const;
+    bool player_likes_water() const;
 
     string player_prayer_action() const;
     string melding_description() const;
@@ -239,11 +249,18 @@ protected:
      */
     const int resists;
 
-    /// skill-based bonus to player AC; value at max skill
-    const int skill_ac;
+    /// bonuses to AC when in this form, potentially scaling with skill or XL
+    const FormScaling ac;
 
     /// See Form::get_base_unarmed_damage().
-    const int base_unarmed_damage;
+    const FormScaling unarmed_bonus_dam;
+
+    /// Calculate the given FormScaling for this form, multiplied by scale.
+    int scaling_value(const FormScaling &sc, bool random,
+                      bool max = false, int scale = 1) const;
+    /// Calculate the given FormScaling for this form, with math internally multiplied by scale.
+    int divided_scaling(const FormScaling &sc, bool random,
+                        bool max = false, int scale = 1) const;
 
 private:
     bool all_blocked(int slotflags) const;
@@ -259,11 +276,6 @@ private:
      * ability to swim (traverse deep water).
      */
     const form_capability can_swim;
-
-    /// flat bonus to player AC when in the form.
-    const int flat_ac;
-    /// experience level-based bonus to player AC; XL * xl_ac / 100
-    const int xl_ac;
 
     /// See Form::get_uc_brand().
     const brand_type uc_brand;

@@ -158,13 +158,73 @@ Circus Animal
 Monkey's Uncle
 
 #classical mythical animals
+Centaur
+
 Cockatrice
+
+Chimera
 
 Dragon
 
 Griffon
 
+Hecatoncheires
+
+Hippogriff
+
 Kraken
+
+Skiapode
+
+Unicorn
+
+# Iapon
+
+Akabeko
+
+Baku
+
+Byakko
+
+Ikuchi
+
+Kappa
+
+Kitsune
+
+Kodama
+
+Oni
+
+Shishi
+
+Tsukumogami
+
+# Brasilia
+
+Curupira
+
+Mpinguari
+
+# Unlikely hybrids
+
+Giraffatuar
+
+Mertaur
+
+Merwolf
+
+Platytaur
+
+Rhinotaur
+
+Taurataur
+
+Treeataur
+
+Wereyak
+
+Zebrataur
 
 # modern mythical animals
 Chupacabra

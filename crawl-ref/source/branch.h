@@ -27,6 +27,8 @@ enum class brflag
     dangerous_end       = (1 << 4), // bottom level is more dangerous than normal
     spotty              = (1 << 5), // Connect vaults with more open paths, not hallways.
     no_shafts           = (1 << 6), // Don't generate random shafts.
+    fully_map           = (1 << 7), // Fully map floors on entry, no explore
+                                    // traps, piety or healing.
 };
 DEF_BITFIELD(branch_flags_t, brflag);
 

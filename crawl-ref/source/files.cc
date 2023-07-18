@@ -2351,6 +2351,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         you.attribute[ATTR_ABYSS_ENTOURAGE] = 0;
         gozag_detect_level_gold(true);
+        if (branches[you.where_are_you].branch_flags & brflag::fully_map)
+            magic_mapping(500, 100, true, false, false, true);
     }
 
 
@@ -2399,11 +2401,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
             xom_new_level_noise_or_stealth();
     }
 
-    if (just_created_level && (load_mode == LOAD_ENTER_LEVEL
-                               || load_mode == LOAD_START_GAME))
-    {
+    if (just_created_level && make_changes)
         decr_zot_clock();
-    }
 
     // Initialize halos, etc.
     invalidate_agrid(true);

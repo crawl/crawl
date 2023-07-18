@@ -100,7 +100,7 @@ static void _automap_from(int x, int y, int mutated)
         magic_mapping(8 * mutated,
                       godly ? 25 + you.piety / 8 : 25,
                       true, godly,
-                      true, coord_def(x,y));
+                      true, false, coord_def(x,y));
     }
 }
 

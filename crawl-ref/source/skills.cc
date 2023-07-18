@@ -360,7 +360,7 @@ static void _change_skill_level(skill_type exsk, int n)
     // calc_hp() has to be called here because it currently doesn't work
     // right if you.skills[] hasn't been updated yet.
     if (exsk == SK_FIGHTING || exsk == SK_SHAPESHIFTING)
-        calc_hp(true, false);
+        calc_hp(true);
 }
 
 // Called whenever a skill is trained.
@@ -368,7 +368,7 @@ void redraw_skill(skill_type exsk, skill_type old_best_skill, bool recalculate_o
 {
     const bool trained_form = exsk == SK_SHAPESHIFTING && you.form != transformation::none;
     if (exsk == SK_FIGHTING || trained_form)
-        calc_hp(true, false);
+        calc_hp(true);
 
     if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
         calc_mp();

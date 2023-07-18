@@ -109,9 +109,6 @@ bool show_type::is_cleanable_monster() const
 
 static void _update_feat_at(const coord_def &gp)
 {
-    if (!you.see_cell(gp))
-        return;
-
     dungeon_feature_type feat = env.grid(gp);
     unsigned colour = env.grid_colours(gp);
     trap_type trap = TRAP_UNASSIGNED;

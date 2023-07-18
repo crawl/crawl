@@ -71,12 +71,14 @@ A large war axe with a formidable double-sided head.
 %%%%
 beast talisman
 
-Transforms the user into a monstrous, furry were-beast, limbs pulsing with
-ferocious energy. Shapeshifting skill increases the killing power provided.
-While transformed, any gloves, cloaks, headgear and boots are melded.
+A large patch of fur around a shining, gold-glowing eye. Transforms the user
+into a monstrous, furry were-beast, limbs pulsing with murderous energy.
+Shapeshifting skill increases the killing power provided. While transformed,
+any gloves, cloaks, headgear and boots are melded.
 %%%%
 blade talisman
 
+A jagged cluster of blades, almost impossible to grasp without injury.
 {{
     local hands = you.hand() .. "s"
     return "Causes long, needle-thin blades to grow from the " ..
@@ -606,10 +608,10 @@ A pile of glittering gold coins.
 %%%%
 granite talisman
 
-An rough-hewn stone icon. Transforms the user into a slow, stone statue. The
-caster's melee damage, both unarmed and with weapons, is substantially increased.
-The caster's stone body is immune to poison and miasma, and gains resistance to
-electricity and negative energy. Shapeshifting skill increases armour granted.
+A heavy stone icon, bearing the countenance of some long-forgotten king or god.
+Transforms the user into a slow, stone statue. The caster's stone body is
+immune to poison and miasma, and gains resistance to electricity and negative
+energy. Shapeshifting skill increases armour granted.
 
 While transformed, any equipped body armour, gloves and boots are melded.
 %%%%
@@ -757,6 +759,7 @@ hated rivals, a patient reader can discover spells of electrifying power.
 %%%%
 maw talisman
 
+A miniature, desiccated head of some ferocious and hopefully extinct creature.
 Transforms the user's midsection into a giant mouth, gnashing and ready to devour
 foes. The mouth may devour slain creatures, healing the user to an extent increased
 by the user's Shapeshifting skill and the power of the creature eaten. Skill also
@@ -1201,10 +1204,10 @@ it's quite similar to a halberd.
 %%%%
 serpent talisman
 
-Transforms the user into a giant, cold-blooded anaconda, ready to wind their
-coils around foes and crush them to death. Shapeshifting skill increases the
-armour provided by the snake's scales. While transformed, any equipped weapons
-and armour are melded.
+A jade serpent coiled around a nagaraja's name-day egg. Transforms the user
+into a giant, cold-blooded anaconda, ready to wind their coils around foes and
+crush them to death. Shapeshifting skill increases the armour provided by the
+snake's scales. While transformed, any equipped weapons and armour are melded.
 %%%%
 shortbow
 
@@ -1290,12 +1293,12 @@ scale armours, and gives its wearer resistance to electrical discharges.
 %%%%
 storm talisman
 
-Lets the user walk through the air as a raging, lightning-filled tempest. The
-user's melee attacks electrified and strike all adjacent foes. The user also
-flies, gains immunity to poison and miasma, and resists electricity. They can
-launch themselves as a lightning bolt, blasting through everything in their
-way. The damage and evasion granted by storm form are highly dependent on the
-user's skill with Shapeshifting.
+Lightning trapped, impossibly, in a bottle. Lets the user walk through the air
+as a raging, lightning-filled tempest. The user's melee attacks are electrified
+and strike all adjacent foes. The user also flies, gains immunity to poison
+and miasma, and resists electricity. They can launch themselves as a lightning
+bolt, blasting through everything in their way. The damage and evasion granted
+by storm form are highly dependent on the user's skill with Shapeshifting.
 
 While transformed, any equipped weapons and armour are melded.
 %%%%
@@ -1305,8 +1308,8 @@ The scales of a swamp dragon. It confers resistance to poison on its wearer.
 %%%%
 talisman of death
 
-A lone finger-bone, infused with dark power through a sickening ritual. Transforms
-the user into an undying offense against life itself.
+A grey-black vessel, infused with dark power through a sickening ritual.
+Transforms the user into an undying offense against life itself.
 
 Foes struck by user's melee weapons or hands are weakened, slowed, and drained.
 The user can also heal themself by tormenting foes nearby; Shapeshifting skill

@@ -3805,7 +3805,7 @@ VISUAL:@The_monster@ seems overcome with grief.
 
 @The_monster@ screams, "No! Oh no!"
 
-@The_monster@'s eyes darken. "You have made a black mistake."
+@The_monster@'s eyes darken. "You have made a grave mistake."
 %%%%
 Dowan_Duvessa_dies_invisible
 
