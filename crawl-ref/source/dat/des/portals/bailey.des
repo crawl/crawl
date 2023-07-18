@@ -1163,14 +1163,15 @@ ENDMAP
 
 # orcs are holding an elf hostage... but their prisoner isn't happy to see you.
 # 6 gold piles, 4 good potions/scrolls, 4 good armours / superb items
-NAME:   bailey_polearm_elven_captive_hellmonk
+NAME:   bailey_elven_captive_hellmonk
 ORIENT: encompass
-TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup
+TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 ITEM:   any armour good_item no_pickup
-: orc_with_polearm(_G)
-: orc_warrior_with_polearm(_G)
-: orc_knight_with_polearm(_G)
+: popcorn_foe(_G,"any","any","rare","any")
+: warrior_foe(_G,"any","any","rare","any")
+: knight_foe(_G,"any","any","rare","any")
 MONS: deep elf pyromancer / deep elf zephyrmancer w:5
 SUBST:  1 = 1...
 NSUBST: d = 2:$ / 4:d / * = e|
