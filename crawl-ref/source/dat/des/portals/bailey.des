@@ -1027,18 +1027,14 @@ ENDMAP
 # loot is 4 of each: weapons, armour, and potions/scrolls
 # 1 of each is a guaranteed good item
 # along with 1 guaranteed acquirement scroll and 3 gold piles in the bastions
-NAME:   bailey_axe_of_yendor_kennysheep
+NAME:   bailey_of_yendor_kennysheep
 ORIENT: encompass
-TAGS:   bailey_axe no_item_gen no_monster_gen no_pool_fixup
-: easy_axe_fighter(_G)
-: hard_axe_fighter(_G)
-KMONS:  3 = orc sorcerer ; war axe | broad axe w:2 | battleaxe w:1 . \
-            ring mail | scale mail  / \
-        orc high priest ; war axe | broad axe w:2 | battleaxe w:1 . \
-            ring mail | scale mail / \
-        kobold demonologist w:20 ; war axe | broad axe w:2 | battleaxe w:1 . \
-            ring mail | scale mail
-KMONS:  4 = electric eel
+TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword 
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
+: popcorn_foe(_G,"any","any","rare","any")
+: hard_foe(_G,"any","rare","any")
+: warrior_foe(_G,{"orc sorcerer","orc high priest","kobold demonologist"},"any",nil,"any")
+MONS:  electric eel
 KITEM:  d = any weapon
 KITEM:  D = any weapon good_item
 KITEM:  e = any armour
