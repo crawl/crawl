@@ -1402,7 +1402,7 @@ xxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # Who said hidden doors were removed, anyway?
-NAME:    trove_less_simple
+NAME:    pf_trove_less_simple
 WEIGHT:  5
 ORIENT:  encompass
 TAGS:    no_item_gen no_monster_gen allow_dup
