@@ -1400,3 +1400,34 @@ xxxxxxxx....xxxxxxxx
 xxxxxxxxRRRRxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+# Who said hidden doors were removed, anyway?
+NAME:    trove_less_simple
+WEIGHT:  5
+ORIENT:  encompass
+TAGS:    no_item_gen no_monster_gen allow_dup
+# Loot: 16 items.
+ITEM:   any useful good_item
+ITEM:   acquire jewellery / any useful good_item
+ITEM:   acquire weapon / acquire armour / any useful good_item
+ITEM:   gold q:1
+KITEM:  D = stone mimic
+KITEM:  E = wand of flame mimic / potion of degeneration mimic / scroll of noise mimic
+KITEM:  F = any weapon damaged ident:all mimic / any armour damaged ident:all mimic
+KFEAT:  X = rock_wall mimic
+: trove.setup_features(_G)
+MAP
+xxxxxxxxx
+xDDDgX+.x
+xFEEDxx.x
+xEFEDxx.x
+xDEFDxx.x
+xx++xxxgx
+xx..xxxXxxxx
+xx..xxx+xx<x
+xx..xxxdefdx
+x....xxefedx
+x.<A.xxfeedx
+x....xxddddx
+xxxxxxxxxxxx
+ENDMAP
