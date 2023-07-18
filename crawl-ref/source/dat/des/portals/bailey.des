@@ -2,7 +2,7 @@
 #
 # Bailey! (Zaba and dpeg)
 #
-# A small portal vault fixated on nasty weapons. (Axes and polearms by now.)
+# A small portal vault fixated on nasty weapons.
 # Castle like layout, with inner bailey and moat. Medieval warfare themed.
 #
 # Currently, the depth is fixed at D:7-10
@@ -85,11 +85,15 @@ end
 -- In order to avoid repeating the lengthy monster definitions:
 
 -- these functions define default equipemnt strings, in five tiers
--- axes: A: hand axe, B: war axe, C: war axe D: broad axe | battleaxe, E: executioner's axe
+-- axes: A: hand axe, B: war axe, C: war axe D: broad axe | battleaxe,
+--       E: executioner's axe
 -- polearms: A: spear, B: trident, C: halberd D: glaive, E: bardiche
--- maces: A: whip | mace, B: flail, C: morningstar, D: dire flail | great mace E: eveingstar
--- swords: A: falchion, B: long sword, C: scimitar, D: great sword, E: double sword | triple sword
--- ranged: A: stone | boomerang, B: sling, C: shortbow, D: orcbow | javelin, E: longbow | arbalest
+-- maces: A: whip | mace, B: flail, C: morningstar, D: dire flail | great mace 
+--        E: eveningstar
+-- swords: A: falchion, B: long sword, C: scimitar, D: great sword, 
+--         E: double sword | triple sword
+-- ranged: A: stone | boomerang, B: sling, C: shortbow, D: orcbow | javelin, 
+--         E: longbow | arbalest
 -- armour A: leather, B: ring, C: scale | chain, D: plate, E: crystal plate
 
 function popcorn_equipment(bailey_type)
@@ -117,13 +121,15 @@ function warrior_equipment(bailey_type)
 	local weapons = {}
 	weapons.bailey_axe = "war axe w:60 | battleaxe w:1 | broad axe w:1"
 	weapons.bailey_polearm = "trident w:50 | halberd | glaive w:2"
-   weapons.bailey_mace =  "flail w:50 | morningstar | dire flail w:1 | great mace w:1"
+   weapons.bailey_mace =  "flail w:50 | morningstar | dire flail w:1"
+                          .. " | great mace w:1"
 	weapons.bailey_sword = "long sword w:50 | scimitar | great sword w:2"
 	equipment.weapons = weapons[bailey_type]
 	eqipment.ranged = {}	
 	equipment.ranged.any = "sling w:50 | shortbow | orcbow w:1 | javelin w:1"
 	equipment.ranged.rare = "nothing w:350 | " .. equipment.ranged.any
-	equipment.armour = "ring mail | scale mail w:5 | chain mail w:5 | plate mail w:5"
+	equipment.armour = "ring mail | scale mail w:5 | chain mail w:5"
+	                   .. " | plate mail w:5"
 	return equipment
 end
 
@@ -149,10 +155,14 @@ function boss_equipment(bailey_type)
 	local equipment = {}
 	equipment.species = "orc warlord"
 	local weapons = {}
-	weapons.bailey_axe = "broad axe good_item | battleaxe good_item | executioner's axe good_item w:2"
+	weapons.bailey_axe = "broad axe good_item | battleaxe good_item"
+	                     .. " | executioner's axe good_item w:2"
 	weapons.bailey_polearm = "glaive good_item | bardiche good_item w:1"
-   weapons.bailey_mace =  "dire flail good_item | great mace good_item | eveningstar good_item w:2"
-	weapons.bailey_sword = "great sword good_item w:20 | double sword good_item w:1 | triple_sword good_item w:1"
+   weapons.bailey_mace =  "dire flail good_item | great mace good_item"
+                          .. " | eveningstar good_item w:2"
+	weapons.bailey_sword = "great sword good_item w:20"
+	                       .. " | double sword good_item w:1:
+	                       .. " | triple_sword good_item w:1"
 	equipment.weapons = weapons[bailey_type]
 	equipment.ranged = {}	
 	equipment.ranged.any = "orcbow | javelin | longbow w:1 | arbalest w:1"
@@ -199,7 +209,8 @@ function foe(e, equipment_fn, species, weapon, ranged, armour)
 	e.mons(table.concat(species, " / "))
 end
 
--- tiered foe functions. Place these in the vault header where one would place MONS
+-- tiered foe functions. 
+-- Place these in the vault header where one would place MONS
 -- species must be a table of strings, or "any"
 -- weapon must be a string, or "any", or nil
 -- ranged must be a string, or "any", or "rare", or nil
@@ -492,19 +503,18 @@ ENDMAP
 # Bailey 2.
 #
 # Apart from weapons and armours left by the monsters, there are about 10
-# potions useful in battle. Originally an axe bailey, then a polearm one,
-# and now for all four weapon types
+# potions useful in battle.
 NAME:   bailey_nasty_gnolls
 ORIENT: encompass
 TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword
 TAGS:   no_rotate
 {{
-local weapon = {}
-weapon.bailey_axe = "war axe"
-weapon.bailey_polearm = "halberd"
-weapon.bailey_mace = "morningstar"
-weapon.bailey_sword = "scimitar"
-weapon = weapon[dng.persist.dungeon_type]
+local weapons = {}
+weapons.bailey_axe = "war axe"
+weapons.bailey_polearm = "halberd"
+weapons.bailey_mace = "morningstar"
+weapons.bailey_sword = "scimitar"
+weapon = weapons[dng.persist.dungeon_type]
 local drain = string.gsub("W ego:draining | ","W",weapon) 
 local elec = string.gsub("W ego:electrocution ident:type","W",weapon) 
 }}
@@ -544,7 +554,6 @@ ENDMAP
 
 ############################################################################
 # Another actual bailey. Six good items plus two stacks of specialty darts.
-# Originally an axe bailey, now for four weaon types.
 NAME:   bailey_so_many_kobolds
 ORIENT: encompass
 TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword 
@@ -554,7 +563,8 @@ ITEM:   any good_item
 ITEM:   dart ego:atropa q:4 / dart ego:datura q:4
 KFEAT:  _ = altar_trog / altar_okawaru / altar_makhleb
 : popcorn_foe(_G,{"kobold"},nil,"boomerang",nil)
-: warrior_foe(_G,{"kobold brigand"),"any", "dart ego:poisoned | dart ego:curare w:5", "any")
+: local dart_string = "dart ego:poisoned | dart ego:curare w:5"
+: warrior_foe(_G,{"kobold brigand"),"any", dart_string, "any")
 : hard_foe(_G,"any","any","rare","any")
 SUBST:  2 = 2.
 NSUBST: 1 = 3:2 / *=1., 3 = 1:3 / *=3..
@@ -744,15 +754,7 @@ ttttttttttttttttttttttttttttttttttttt
 ttttttttttttttttttttttttttttttttttttt
 ENDMAP
 
-##############
-#            #
-#  POLEARMS  #
-#            #
-##############
-
 ############################################################################
-# A polearm bailey.
-#
 # Loot consists of three items, among them one piece of good heavy body
 # armour and another piece of good additional armour. Apart from what the
 # orcs leave lying around.
@@ -1037,7 +1039,8 @@ TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 : popcorn_foe(_G,"any","any","rare","any")
 : hard_foe(_G,"any","rare","any")
-: warrior_foe(_G,{"orc sorcerer","orc high priest","kobold demonologist"},"any",nil,"any")
+:local warriors = {"orc sorcerer","orc high priest","kobold demonologist"} 
+: warrior_foe(_G,warriors,"any",nil,"any")
 MONS:  electric eel
 KITEM:  d = any weapon
 KITEM:  D = any weapon good_item
@@ -1290,7 +1293,7 @@ ENDMAP
 # Prince Ribbit's fortress
 # If Prince Ribbit has already generated, his attendants have recovered the
 # wrong frog by mistake. Whoops!
-# Nine items, mostly consumables. Guaranteed broad axes from the vault guards.
+# Nine items, mostly consumables. Guaranteed nice weapons from the vault guards.
 NAME:   bailey_froggy_fort_hellmonk
 ORIENT: encompass
 TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword
@@ -1300,7 +1303,7 @@ TAGS:   no_item_gen no_monster_gen no_pool_fixup
 local weapon = {}
 weapon.bailey_axe = {"hand axe ego:heavy | war axe", "broad axe"}
 weapon.bailey_polearm = {"spear ego:heavy | halberd", "glaive"}
-weapon.bailey_mace = {"mace ego:heavy | morningstar", "dire flail"}
+weapon.bailey_mace = {"mace ego:heavy | morningstar", "great mace"}
 weapon.bailey_sword = {"falchion ego:heavy | scimitar", "great sword"}
 weapon = weapon[dng.persist.dungeon_type]
 }}
