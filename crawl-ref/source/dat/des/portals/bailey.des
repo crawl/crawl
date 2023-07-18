@@ -1287,13 +1287,20 @@ ENDMAP
 # If Prince Ribbit has already generated, his attendants have recovered the
 # wrong frog by mistake. Whoops!
 # Nine items, mostly consumables. Guaranteed broad axes from the vault guards.
-NAME:   bailey_axe_froggy_fort_hellmonk
+NAME:   bailey_froggy_fort_hellmonk
 ORIENT: encompass
-TAGS:   bailey_axe no_item_gen no_monster_gen no_pool_fixup
+TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
-: easy_axe_fighter(_G)
-MONS:   human ; hand axe ego:heavy | war axe . scale mail | ring mail
-MONS:   vault guard ; broad axe . chain mail | plate armour
+: local weapon = {}
+: weapon.bailey_axe = {"hand axe ego:heavy | war axe", "broad axe"}
+: weapon.bailey_polearm = {"spear ego:heavy | halberd", "glaive"}
+: weapon.bailey_mace = {"mace ego:heavy | morningstar", "dire flail"}
+: weapon.bailey_sword = {"falchion ego:heavy | scimitar", "great sword"}
+: weapon = weapon[dng.persist.dungeon_type]
+: popcorn_foe(_G,"any","any","rare","any")
+: warrior_foe(_G,{"human"},weapon[0],"rare","any")
+: knight_foe(_G,{"vault guard"},weapon[1],nil,"any")
 KMONS:  4 = bullfrog
 KMONS:  5 = prince ribbit, blink frog / cane toad w:1
 KFEAT:  4 = shallow_water
