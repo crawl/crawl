@@ -107,7 +107,7 @@ function popcorn_equipment(bailey_type)
    weapons.bailey_mace =  "whip w:25 | mace w:25 | flail | marningstar w:2"
 	weapons.bailey_sword = "falchion w:50 | long sword | scimitar w:2"
 	equipment.weapons = weapons[bailey_type]
-	eqipment.ranged = {}	
+	equipment.ranged = {}	
 	equipment.ranged.any = "stone w:25 | boomerang w:25 | sling | shortbow w:2"
 	equipment.ranged.rare = "nothing w:350 | " .. equipment.ranged.any
 	equipment.armour = "leather armour | ring mail | scale mail w:5"
@@ -125,11 +125,11 @@ function warrior_equipment(bailey_type)
                           .. " | great mace w:1"
 	weapons.bailey_sword = "long sword w:50 | scimitar | great sword w:2"
 	equipment.weapons = weapons[bailey_type]
-	eqipment.ranged = {}	
+	equipment.ranged = {}	
 	equipment.ranged.any = "sling w:50 | shortbow | orcbow w:1 | javelin w:1"
 	equipment.ranged.rare = "nothing w:350 | " .. equipment.ranged.any
 	equipment.armour = "ring mail | scale mail w:5 | chain mail w:5"
-	                   .. " | plate mail w:5"
+	                   .. " | plate armour w:5"
 	return equipment
 end
 
@@ -146,7 +146,7 @@ function knight_equipment(bailey_type)
 	equipment.ranged = {}	
 	equipment.ranged.any = "shortbow w:20 | orcbow w:5 | javelin w:5"
 	equipment.ranged.rare = "nothing w:350 | " .. equipment.ranged.any
-	equipment.armour = "scale mail | chain mail | plate mail"
+	equipment.armour = "scale mail | chain mail | plate armour"
 	return equipment
 end
 
@@ -161,13 +161,13 @@ function boss_equipment(bailey_type)
    weapons.bailey_mace =  "dire flail good_item | great mace good_item"
                           .. " | eveningstar good_item w:2"
 	weapons.bailey_sword = "great sword good_item w:20"
-	                       .. " | double sword good_item w:1:
+	                       .. " | double sword good_item w:1"
 	                       .. " | triple_sword good_item w:1"
 	equipment.weapons = weapons[bailey_type]
 	equipment.ranged = {}	
 	equipment.ranged.any = "orcbow | javelin | longbow w:1 | arbalest w:1"
 	equipment.ranged.rare = "nothing w:350 | " .. equipment.ranged.any
-	equipment.armour = "plate mail | crystal plate mail w:1"
+	equipment.armour = "plate armour | crystal plate armour w:1"
 	return equipment
 end
 
@@ -175,32 +175,32 @@ end
 
 function foe(e, equipment_fn, species, weapon, ranged, armour)
 	local default_equipment = equipment_fn(dgn.persist.bailey_type)
-	if species = "any" then
+	if species == "any" then
 		species = default_equipment.species
 	end
-	if weapon = "any" then
+	if weapon == "any" then
 		weapon = default_equipment.weapon
 	end
-	if ranged = "any" then
-		ranged = default_equipent.ranged.any
-	elseif ranged = "rare" then
+	if ranged == "any" then
+		ranged = default_equipment.ranged.any
+	elseif ranged == "rare" then
 		ranged = default_equipment.ranged.rare
 	end
-	if armour = "any" then
+	if armour == "any" then
 		armour = default_equipment.armour
 	end
 	local equipment = {}
    for i, monster_name in ipairs(species) do
-		if melee then
+		if melee ~= nil then
 			 table.insert(equipment, melee)
 		end
-		if ranged then
+		if ranged ~= nil then
 			 table.insert(equipment,ranged)
 		end
-		if armour then
+		if armour ~= nil then
 			 table.insert(equipment,armour)
 		end
-		if equipment != {} then
+		if equipment ~= {} then
 			species[i] = species[i] .. " ; "
 			species[i] = species[i] .. table.concat(equipment, " . ")
 		end	
@@ -217,15 +217,15 @@ end
 -- armour must be a string, or "any", or nil
 
 function popcorn_foe(e, species, melee, ranged, armour)
-	foe(e, popcorn_equipment, speceis, melee, ranged, armour)
+	foe(e, popcorn_equipment, species, melee, ranged, armour)
 end
 
 function warrior_foe(e, species, melee, ranged, armour)
-	foe(e, popcorn_equipment, speceis, melee, ranged, armour)
+	foe(e, warrior_equipment, species, melee, ranged, armour)
 end
 
 function knight_foe(e, species, melee, ranged, armour)
-	foe(e, popcorn_equipment, speceis, melee, ranged, armour)
+	foe(e, knight_equipment, species, melee, ranged, armour)
 end
 
 function hard_foe(e, melee, ranged, armour)
@@ -237,7 +237,7 @@ function hard_foe(e, melee, ranged, armour)
 end
 
 function boss_foe(e, species, melee, ranged, armour)
-	foe(e, popcorn_equipment, speceis, melee, ranged, armour)
+	foe(e, boss_equipment, speceis, melee, ranged, armour)
 end
 
 -- around entry portal
@@ -257,30 +257,30 @@ function entry_guards(e, ranged, species)
 		possible_species = {"goblin", "kobold", "hobgoblin", "gnoll", "orc"}
 		species = species[crawl.random2(5)]
 	end
-	local melee = {}
-   melee.bailey_axe = "hand axe"
-   melee.bailey_polearm = "spear"
-   melee.bailey_mace = "mace"
-   melee.bailey_sword = "falchion"
-   melee = melee[dng.persist.dungeon_type]
+	local weapons = {}
+   weapons.bailey_axe = "hand axe"
+   weapons.bailey_polearm = "spear"
+   weapons.bailey_mace = "mace"
+   weapons.bailey_sword = "falchion"
+   local melee = weapons[dgn.persist.bailey_type]
 	if ranged then
 		if crawl.random2(3) <= 1 then
 			ranged = " . boomerang"
-		else:
+		else
 			ranged = " . sling"
 		end
 	else
 		ranged = ""
 	end 
-	e.mons(species .. " ; " .. melee .. ranged)
+--	e.mons(species .. " ; " .. melee .. ranged)
 end
 
 function entry_guards_melee(e,species)
-	entry_guard(e, false, species)
+	entry_guards(e, false, species)
 end
 
 function entry_guards_ranged(e, species)
-	entry_guard(e, true)
+	entry_guards(e, true)
 end
 
 }}
@@ -493,12 +493,6 @@ ORIENT: encompass
 MAP
 ENDMAP
 
-##########
-#        #
-#  AXES  #
-#        #
-##########
-
 ############################################################################
 # Bailey 2.
 #
@@ -514,14 +508,14 @@ weapons.bailey_axe = "war axe"
 weapons.bailey_polearm = "halberd"
 weapons.bailey_mace = "morningstar"
 weapons.bailey_sword = "scimitar"
-weapon = weapons[dng.persist.dungeon_type]
+local weapon = weapons[dgn.persist.bailey_type]
 local drain = string.gsub("W ego:draining | ","W",weapon) 
 local elec = string.gsub("W ego:electrocution ident:type","W",weapon) 
 }}
 : popcorn_foe(_G,"any","any",nil,"any")
 : warrior_foe(_G,{"gnoll"},drain .. elec,nil,"any")
-: warrior_foe(_G,{"orc warrior"},elec,nil,"plate armor")
-: knight_foe(_G,("orc knight"},weapon,nil,"plate armor")
+: warrior_foe(_G,{"orc warrior"},elec,nil,"plate armour")
+: knight_foe(_G,{"orc knight"},weapon,nil,"plate armour")
 SUBST: 3 = 34
 NSUBST: d = 1:ddde / *:d, 1 = 5:1 / *=1., 2 = 5:2 / *=2.
 : item(dgn.loot_potions)
@@ -564,7 +558,7 @@ ITEM:   dart ego:atropa q:4 / dart ego:datura q:4
 KFEAT:  _ = altar_trog / altar_okawaru / altar_makhleb
 : popcorn_foe(_G,{"kobold"},nil,"boomerang",nil)
 : local dart_string = "dart ego:poisoned | dart ego:curare w:5"
-: warrior_foe(_G,{"kobold brigand"),"any", dart_string, "any")
+: warrior_foe(_G,{"kobold brigand"},"any", dart_string, "any")
 : hard_foe(_G,"any","any","rare","any")
 SUBST:  2 = 2.
 NSUBST: 1 = 3:2 / *=1., 3 = 1:3 / *=3..
@@ -1305,7 +1299,7 @@ weapon.bailey_axe = {"hand axe ego:heavy | war axe", "broad axe"}
 weapon.bailey_polearm = {"spear ego:heavy | halberd", "glaive"}
 weapon.bailey_mace = {"mace ego:heavy | morningstar", "great mace"}
 weapon.bailey_sword = {"falchion ego:heavy | scimitar", "great sword"}
-weapon = weapon[dng.persist.dungeon_type]
+weapon = weapon[dgn.persist.bailey_type]
 }}
 : popcorn_foe(_G,"any","any","rare","any")
 : warrior_foe(_G,{"human"},weapon[0],"rare","any")
