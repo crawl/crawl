@@ -117,7 +117,7 @@ end
 function warrior_equipment(bailey_type)
    -- Tier B w:50, Tier C, Tier D w:2
 	local equipment = {}
-	equipment.species = "orc warrior | gnoll sergeant w:3"
+	equipment.species = {"orc warrior","w:3 gnoll sergeant"}
 	local weapons = {}
 	weapons.bailey_axe = "war axe w:60 | battleaxe w:1 | broad axe w:1"
 	weapons.bailey_polearm = "trident w:50 | halberd | glaive w:2"
@@ -136,7 +136,7 @@ end
 function knight_equipment(bailey_type)
 	-- Tier C w:20, Tier D 
 	local equipment = {}
-	equipment.species = "orc knight"
+	equipment.species = {"orc knight"}
 	local weapons = {}
 	weapons.bailey_axe = "war axe w:20 | broad axe w:5 | battleaxe w:5"
 	weapons.bailey_polearm = "halberd w:20 | glaive"
@@ -153,7 +153,7 @@ end
 function boss_equipment(bailey_type)
 	-- Tier C, Tier D w:1
 	local equipment = {}
-	equipment.species = "orc warlord"
+	equipment.species = {"orc warlord"}
 	local weapons = {}
 	weapons.bailey_axe = "broad axe good_item | battleaxe good_item"
 	                     .. " | executioner's axe good_item w:2"
@@ -237,7 +237,11 @@ function hard_foe(e, melee, ranged, armour)
 end
 
 function boss_foe(e, species, melee, ranged, armour)
+<<<<<<< HEAD
+	foe(e, boss_equipment, species, melee, ranged, armour)
+=======
 	foe(e, boss_equipment, speceis, melee, ranged, armour)
+>>>>>>> four_weapon_type_bailey
 end
 
 -- around entry portal
@@ -559,7 +563,11 @@ KFEAT:  _ = altar_trog / altar_okawaru / altar_makhleb
 : popcorn_foe(_G,{"kobold"},nil,"boomerang",nil)
 : local dart_string = "dart ego:poisoned | dart ego:curare w:5"
 : warrior_foe(_G,{"kobold brigand"},"any", dart_string, "any")
+<<<<<<< HEAD
+: hard_foe(_G,"any","rare","any")
+=======
 : hard_foe(_G,"any","any","rare","any")
+>>>>>>> four_weapon_type_bailey
 SUBST:  2 = 2.
 NSUBST: 1 = 3:2 / *=1., 3 = 1:3 / *=3..
 : bailey_setup(_G)
@@ -812,7 +820,7 @@ NAME:   bailey_donjon
 ORIENT: encompass
 TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword 
 TAGS:   no_rotate no_pool_fixup no_monster_gen
-MONS:   orc warrior w:5 ; orcbow | arblest w:1 . ring mail | scale mail / \
+MONS:   orc warrior w:5 ; orcbow | arbalest w:1 . ring mail | scale mail / \
         orc ; orcbow . ring mail | scale mail
 : popcorn_foe(_G,{"orc"},"any","rare","any")
 : warrior_foe(_G,{"orc"},"any",nil,"any")
@@ -976,7 +984,7 @@ ORIENT: encompass
 TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 : popcorn_foe(_G,{"gnoll"},"any","throwing net | nothing","any")
-: knight_foe(_G,{"gnoll sergeant"),"any","rare","any")
+: knight_foe(_G,{"gnoll sergeant"},"any","rare","any")
 : warrior_foe(_G,{"gnoll bouda"},"any","rare","any")
 MONS:   hound, wolf
 KMONS:  R = grum, gnoll sergeant ; halberd . plate armour
@@ -1108,7 +1116,7 @@ xxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxx
                   xxxxx
 ENDMAP
 
- same loot as minmay_hex_keep, and a similar warlord fight
+# same loot as minmay_hex_keep, and a similar warlord fight
 # slightly more of the loot is outside of the warlord's room
 # the warlord fight is a little easier, and the outer fights are harder
 NAME:   bailey_bossmonster_kennysheep
@@ -1121,7 +1129,7 @@ ITEM:   potion of experience ident:type q:1 / \
 : popcorn_foe(_G,"any","any","rare","any")
 : popcorn_foe(_G,{"kobold","goblin"},"any","boomerang","any")
 : hard_foe(_G,"any","rare","any")
-: boss_foe(_G,"any","any",nil","any")
+: boss_foe(_G,"any","any",nil,"any")
 SUBST:  1 = 1.., 2 = 22.
 NSUBST: 3 = 2:3 / * = 3.
 NSUBST: e = 1:e / *:d
