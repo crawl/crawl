@@ -102,7 +102,7 @@ function popcorn_equipment(bailey_type)
 	equipment.species = {"w:2 kobold", "w:3 goblin", 
 				            "w:4 hobgoblin", "gnoll", "orc"}
 	local weapons = {}	
-	weapons.bailey_axe = "hand axe w:50 | war axe | broad axe w:2"
+	weapons.bailey_axe = "hand axe w:50 | war axe w:12"
 	weapons.bailey_polearm = "spear w:50 | trident | halberd w:2"
    weapons.bailey_mace =  "whip w:25 | mace w:25 | flail | marningstar w:2"
 	weapons.bailey_sword = "falchion w:50 | long sword | scimitar w:2"
