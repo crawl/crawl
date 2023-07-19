@@ -1138,7 +1138,7 @@ bool is_high_tier_wand(int type)
     }
 }
 
-static void _generate_wand_item(item_def& item, int force_type, int item_level)
+void generate_wand_item(item_def& item, int force_type, int item_level)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
@@ -1621,7 +1621,7 @@ static void _generate_misc_item(item_def& item, int force_type, int item_level)
     if (typ == NUM_MISCELLANY)
     {
         item.base_type = OBJ_WANDS;
-        _generate_wand_item(item, OBJ_RANDOM, item_level);
+        generate_wand_item(item, OBJ_RANDOM, item_level);
         return;
     }
     item.sub_type = typ;
@@ -1891,7 +1891,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_WANDS:
-        _generate_wand_item(item, force_type, item_level);
+        generate_wand_item(item, force_type, item_level);
         break;
 
     case OBJ_POTIONS:
