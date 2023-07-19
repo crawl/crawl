@@ -93,7 +93,7 @@ static const form_entry formdata[] =
 {
     transformation::blade_hands, MONS_PLAYER, "Blade", "", "blade",
     "",
-    9, 20, TALISMAN_BLADE,
+    9, 18, TALISMAN_BLADE,
     EQF_HANDS, MR_NO_FLAGS,
     FormDuration(10, PS_SINGLE, 100), 0, 0, SIZE_CHARACTER, 10,
     {}, true, FormScaling().Base(12).Scaling(4), true,
@@ -119,7 +119,7 @@ static const form_entry formdata[] =
 {
     transformation::anaconda, MONS_ANACONDA, "Anaconda", "snake-form", "snake",
     "an enormous anaconda.",
-    9, 20, TALISMAN_SERPENT,
+    9, 18, TALISMAN_SERPENT,
     EQF_PHYSICAL, MR_NO_FLAGS,
     DEFAULT_DURATION, 5, 0, SIZE_LARGE, 12,
     FormScaling().Base(9).Scaling(3), true, FormScaling().Base(7), true,
@@ -354,7 +354,7 @@ static const form_entry formdata[] =
 {
     transformation::maw, MONS_PUTRID_MOUTH, "Maw", "maw-form", "maw",
     "a creature with a mouth for a stomach.",
-    9, 20, TALISMAN_MAW,
+    9, 18, TALISMAN_MAW,
     SLOTF(EQ_BODY_ARMOUR), MR_NO_FLAGS,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
     {}, true, FormScaling().Base(2), true,
