@@ -1052,7 +1052,7 @@ public:
 
     int get_aux_damage(bool random, bool max) const override
     {
-        return divided_scaling(FormScaling().Base(7).Scaling(11), random, max, 100);
+        return divided_scaling(FormScaling().Base(16).Scaling(11), random, max, 100);
     }
 };
 
