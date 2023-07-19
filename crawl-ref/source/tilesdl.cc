@@ -57,15 +57,13 @@
 // Default Screen Settings
 // width, height, map, crt, stat, msg, tip, lbl
 #ifndef __ANDROID__
-static int _screen_sizes[5][8] =
+static int _screen_sizes[4][8] =
 {
-    // Default (HD+)
-    {1600, 900, 3, 19, 20, 18, 19, 18},
-    // Old default (sub-XGA)
+    // Default
     {1024, 700, 3, 15, 16, 14, 15, 14},
     // Eee PC 900+
     {1024, 600, 2, 14, 14, 12, 13, 12},
-    // Small screen (SVGA)
+    // Small screen
     {800, 600, 2, 14, 11, 12, 13, 12},
     // Eee PC
     {800, 480, 2, 13, 12, 10, 13, 11}
