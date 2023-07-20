@@ -570,7 +570,6 @@ int get_item_property(const item_def &item, artefact_prop_type prop)
         default:
             return 0; //TODO implement
     }
-
 }
 
 void artefact_desc_properties(const item_def &item,
