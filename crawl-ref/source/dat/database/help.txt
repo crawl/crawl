@@ -159,7 +159,7 @@ level-map
 <w>[</w> or <w>]</w>     : Examine the next higher or lower level.
              (Moves cursor to the staircase destination if a known staircase is
              highlighted.)
-<w>G</w>          : Go to another level by branch and depth.
+<w>G</w>          : View another level by choosing a branch and depth.
 <w>o</w>          : Move the cursor to the next autoexplore target.
 <w>{</w> or <w>}</w>     : Zoom out or in (tiles only).
 
