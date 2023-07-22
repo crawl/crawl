@@ -7468,6 +7468,76 @@ xxx.xxxx.x.xxxx.xxx
   xx@xxxxxxxxx@xx
 ENDMAP
 
+# Places an early-ish talisman with corresponding monsters and scenery
+NAME:  hellmonk_talismancer
+TAGS:  transparent no_item_gen patrolling
+DEPTH: D:12-, Lair:2-, Orc:1
+: local r = 0
+: if you.branch() == "Lair" then
+:   r = crawl.random_range(1, 4)
+: elseif you.branch() == "Orc" then
+:   r = crawl.random_range(3, 6)
+: else
+:   r = crawl.random_range(1, 8)
+: end
+: if r == 1 then
+MONS:   eight-headed hydra / goliath frog
+ITEM:   maw talisman / maw talisman randart w:1
+SUBST:  " : ., . = . %:1
+:   dgn.delayed_decay(_G, '%', 'yak skeleton')
+: elseif r == 2 then
+MONS:   anaconda
+KMONS:  " = water moccasin
+ITEM:   serpent talisman / serpent talisman randart w:1
+KFEAT:  "' = shallow_water
+NSUBST: " = 1:" / 1:' / * = "'
+SUBST:  2 = .
+: elseif r == 3 then
+MONS:   fire dragon, lindwurm
+KITEM:  d = dragon-blood talisman / dragon-blood talisman randart w:1
+SUBST:  '" = l
+: elseif r == 4 then
+KMONS:  12 = boulder beetle
+KITEM:  d = granite talisman / granite talisman randart w:1
+SUBST:  " = G
+: elseif r == 5 then
+MONS:   dancing weapon ; rapier | scimitar | great sword | \
+                         quick blade w:1 | triple sword w:1 | double sword w:1
+ITEM:   blade talisman / blade talisman randart w:1
+KITEM:  " = damaged long sword / damaged falchion
+SUBST:  x = v, 2 = .
+: elseif r == 6 then
+MONS:   reaper, soul eater
+KITEM:  d = talisman of death / talisman of death randart w:1
+SUBST:  " = G
+TILE:   G = dngn_gravestone
+:   set_feature_name("granite_statue", "a gravestone")
+: elseif r >= 7 then
+MONS:   air elemental
+KMONS:  2" = raiju
+KITEM:  d = storm talisman / storm talisman randart w:1
+SUBST:  " = "...
+MARKER: d = lua:fog_machine {cloud_type = "thin mist", \
+             pow_min = 5, pow_max = 12, delay_min = 28, delay_max = 42, \
+             size = 2, spread_rate = 2, start_clouds = 1 }
+: else
+SUBST: 1d'" = .
+: end
+SUBST: x : xcc
+MAP
+xxxxxxxxxxx
+xxxxxxxxxxx
+xx"'xxx'"xx
+xx'..1..'xx
+xxx..2..xxx
+xxxx.d.xxxx
+xxx.....xxx
+xx'.....'xx
+xx"'x+x'"xx
+xxxxx.xxxxx
+xxxx+++xxxx
+ENDMAP
+
 ################################################################
 #
 # <<8>> Minivaults with monsters guarding a thematic item.
