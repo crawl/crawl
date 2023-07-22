@@ -11,260 +11,299 @@
 
 {{
 function bailey_portal(e, ptype)
-  local timeout_turns = crawl.random_range(600, 800)
+    local timeout_turns = crawl.random_range(600, 800)
 
-  local messager =
-    timed_msg {
-      initmsg = { "You hear the roar of battle.",
-                  "There is an entrance to a bailey on this level. "
-                  .. "Hurry and find it before the portal closes forever!" },
-      finalmsg = "$F{The} has been lowered almost to the ground.",
+    local messager =
+        timed_msg {initmsg = { "You hear the roar of battle.",
+                               "There is an entrance to a bailey "
+                               .. "on this level. Hurry and find it "
+                               .. "before the portal closes forever!" },
+                   finalmsg = "$F{The} has been lowered almost to the ground.",
+                   verb = 'creaking',
+                   noisemaker = 'portcullis',
+                   ranges = {
+                             { 5000, 'faint ' },    { 4000, '' },
+                             { 2500, 'steady ' }, { 1500, 'quick ' },
+                             { 0, 'loud ' }
+                   }
+        }
 
-      verb = 'creaking',
-      noisemaker = 'portcullis',
-        ranges = {
-          { 5000, 'faint ' },  { 4000, '' },
-          { 2500, 'steady ' }, { 1500, 'quick ' },
-          { 0, 'loud ' }
-      }
-    }
+    dgn.persist.bailey_type = "bailey_" .. ptype
 
-  dgn.persist.bailey_type = "bailey_" .. ptype
+    e.lua_marker('O',
+                 timed_marker {
+                               disappear = "The portal closes with a thud.",
+                               entity = 'portcullis',
+                               bailey_type = ptype,
+                               turns = timeout_turns,
+                               single_timed = true,
+                               floor = "stone_arch",
+                               feat_tile = "dngn_portal_bailey_gone",
+                               msg = messager 
+                 }
+    )
+    e.tags("uniq_bailey chance_bailey")
+    e.chance(1000)
 
-  e.lua_marker('O',
-      timed_marker {
-        disappear = "The portal closes with a thud.",
-        entity = 'portcullis',
-        bailey_type = ptype,
-        turns = timeout_turns,
-        single_timed = true,
-        floor = "stone_arch",
-        feat_tile = "dngn_portal_bailey_gone",
-        msg = messager })
-  e.tags("uniq_bailey chance_bailey")
-  e.chance(1000)
-
-  e.kfeat("O = enter_bailey")
-  e.tile("c = wall_stone_smooth")
+    e.kfeat("O = enter_bailey")
+    e.tile("c = wall_stone_smooth")
 end
 
 function bailey_portal_axe(e)
-  bailey_portal(e, 'axe')
+    bailey_portal(e, 'axe')
 end
 
 function bailey_portal_polearm(e)
-  bailey_portal(e, 'polearm')
+    bailey_portal(e, 'polearm')
 end
 
 function bailey_portal_mace(e)
-  bailey_portal(e, 'mace')
+    bailey_portal(e, 'mace')
 end
 
 function bailey_portal_sword(e)
-  bailey_portal(e, 'sword')
+    bailey_portal(e, 'sword')
 end
 
 function bailey_portal_random(e)
-  local rnd = crawl.random_range(0,3)
-  if rnd == 0 then
-    bailey_portal_axe(e)
-  elseif rnd == 1 then
-    bailey_portal_polearm(e)
-  elseif rnd == 2 then
-    bailey_portal_mace(e)
-  elseif rnd == 3 then
-    bailey_portal_sword(e)
-  end
+    local rnd = crawl.random_range(0,3)
+    if rnd == 0 then
+        bailey_portal_axe(e)
+    elseif rnd == 1 then
+        bailey_portal_polearm(e)
+    elseif rnd == 2 then
+        bailey_portal_mace(e)
+    elseif rnd == 3 then
+        bailey_portal_sword(e)
+    end
 end
 
 -- colours
 function bailey_setup(e)
-  e.kfeat("< = exit_bailey")
+    e.kfeat("< = exit_bailey")
 end
 
 -- In order to avoid repeating the lengthy monster definitions:
 
--- these functions define default equipemnt strings, in five tiers
--- axes: A: hand axe, B: war axe, C: war axe D: broad axe | battleaxe,
---       E: executioner's axe
--- polearms: A: spear, B: trident, C: halberd D: glaive, E: bardiche
--- maces: A: whip | mace, B: flail, C: morningstar, D: dire flail | great mace 
---        E: eveningstar
--- swords: A: falchion, B: long sword, C: scimitar, D: great sword, 
---         E: double sword | triple sword
--- ranged: A: stone | boomerang, B: sling, C: shortbow, D: orcbow | javelin, 
---         E: longbow | arbalest
--- armour A: leather, B: ring, C: scale | chain, D: plate, E: crystal plate
+--[[
+These functions define default equipemnt strings, in five tiers
+No demon weapons in Baileys.
+axes: A: hand axe, B: war axe, C: war axe D: broad axe | battleaxe,
+      E: executioner's axe
+polearms: A: spear, B: trident, C: halberd D: glaive, E: bardiche
+maces: A: whip | mace, B: flail, C: morningstar, D: dire flail | great mace
+       E: eveningstar
+swords: A: falchion, B: long sword, C: scimitar, D: great sword,
+        E: double sword | triple sword
+ranged: A: stone | boomerang, B: sling, C: shortbow, D: orcbow | javelin,
+        E: longbow | arbalest
+armour: A: leather, B: ring, C: scale | chain, D: plate, E: crystal plate
+--]]
 
 function popcorn_equipment(bailey_type)
-   -- Tier A w:50, Tier B, Tier C w:2
-	local equipment = { species = {"w:2 kobold", "w:3 goblin", 
-				       "w:4 hobgoblin", "gnoll", "orc"},
-		            armour = "leather armour | ring mail | scale mail w:5",
-			    ranged = { any = "stone w:25 | boomerang w:25 | sling | shortbow w:2"}
-	local weapons = { bailey_axe = "hand axe w:50 | war axe w:12",
-			  bailey_polearm = "spear w:50 | trident | halberd w:2",
-			  bailey_mace =  "whip w:25 | mace w:25 | flail | marningstar w:2",
-			  bailey_sword = "falchion w:50 | long sword | scimitar w:2" }
-	equipment.weapons = weapons[bailey_type]
-	equipment.ranged.rare = "nothing w:350 | " .. equipment.ranged.any
-	return equipment
+    -- Tier A w:50, Tier B, Tier C w:2
+    local equipment = { species = {"w:2 kobold", "w:3 goblin",
+                                   "w:4 hobgoblin", "gnoll", "orc"
+                        },
+                        armour = "leather armour | ring mail | scale mail w:5",
+                        ranged = { any = "stone w:25 | boomerang w:25 | "
+                                         .. "sling | shortbow w:2"
+                        }
+    }
+    local weapons = {bailey_axe = "hand axe w:50 | war axe w:12",
+                     bailey_polearm = "spear w:50 | trident | halberd w:2",
+                     bailey_mace =    "whip w:25 | mace w:25 | flail | "
+                                      .. "morningstar w:2",
+                     bailey_sword = "falchion w:50 | long sword | scimitar w:2"
+    }
+    equipment.weapons = weapons[bailey_type]
+    equipment.ranged.rare = "nothing w:350 | " .. equipment.ranged.any
+    return equipment
 end
 
 function warrior_equipment(bailey_type)
-   -- Tier B w:50, Tier C, Tier D w:2
-	local equipment = { species = {"orc warrior","w:3 gnoll sergeant"},
-		            armour = "ring mail | scale mail w:5 | chain mail w:5 | plate armour w:5",
-			    ranged = { any = "sling w:50 | shortbow | orcbow w:1 | javelin w:1"}
-	local weapons = { bailey_axe =  "war axe w:60 | battleaxe w:1 | broad axe w:1",
-			  bailey_polearm = "trident w:50 | halberd | glaive w:2",
-			  bailey_mace =  "flail w:50 | morningstar | dire flail w:1  great mace w:1",
-			  bailey_sword =  "long sword w:50 | scimitar | great sword w:2" }
-	equipment.weapons = weapons[bailey_type]
-	equipment.ranged.rare = "nothing w:350 | " .. equipment.ranged.any
-	return equipment
+    -- Tier B w:50, Tier C, Tier D w:2
+    local equipment = { species = {"orc warrior",
+                                   "w:3 gnoll sergeant"
+                        },
+                        armour = "ring mail | scale mail w:5 | "
+                                  .. "chain mail w:5 | plate armour w:5",
+                        ranged = {
+                                 any = "sling w:50 | shortbow | orcbow w:1 | "
+                                       .. "javelin w:1"
+                        }
+    }
+    local weapons = { bailey_axe = "war axe w:60 | battleaxe w:1 | "
+                                   .. "broad axe w:1",
+                      bailey_polearm = "trident w:50 | halberd | glaive w:2",
+                      bailey_mace = "flail w:50 | morningstar | "
+                                    .. "dire flail w:1 | great mace w:1",
+                      bailey_sword = "long sword w:50 | scimitar | "
+                                     .. "great sword w:2"
+    }
+    equipment.weapons = weapons[bailey_type]
+    equipment.ranged.rare = "nothing w:350 | " .. equipment.ranged.any
+    return equipment
 end
 
 function knight_equipment(bailey_type)
-	-- Tier C w:20, Tier D 
-	local equipment = { species = {"orc knight"},
-		            armour =  "scale mail | chain mail | plate armour",
-			    ranged = { any =  "shortbow w:20 | orcbow w:5 | javelin w:5" }
-	local weapons = { bailey_axe = "war axe w:20 | broad axe w:5 | battleaxe w:5",
-			  bailey_polearm =  "halberd w:20 | glaive",
-			  bailey_mace =   "morningstar w:20 | dire flail w:5 | great mace w:5",
-			  bailey_sword =  "scimitar w:20 | great sword" }
-	equipment.weapons = weapons[bailey_type]
-	equipment.ranged.rare = "nothing w:350 | " .. equipment.ranged.any
-	return equipment
+    -- Tier C w:20, Tier D
+    local equipment = { species = { "orc knight"
+                        },
+                        armour =    "scale mail | chain mail | plate armour",
+                        ranged = { any = "shortbow w:20 | orcbow w:5 | "
+                                         .. "javelin w:5"
+                        }
+    local weapons = { bailey_axe = "war axe w:20 | broad axe w:5 | "
+                                   .. "battleaxe w:5",
+                      bailey_polearm = "halberd w:20 | glaive",
+                      bailey_mace = "morningstar w:20 | dire flail w:5 | "
+                                    .. "great mace w:5",
+                      bailey_sword = "scimitar w:20 | great sword"
+    }
+    equipment.weapons = weapons[bailey_type]
+    equipment.ranged.rare = "nothing w:350 | " .. equipment.ranged.any
+    return equipment
 end
 
 function boss_equipment(bailey_type)
-	-- Tier D, Tier E w:1
-	local equipment = { species = {"orc warlord"},
-		            armour =  "plate armour | crystal plate armour w:1",
-			    ranged = { any = "orcbow | javelin | longbow w:1 | arbalest w:1" }
-	local weapons = { bailey_axe =  "broad axe good_item | battleaxe good_item | executioner's axe good_item w:2",
-			  bailey_polearm = "glaive good_item | bardiche good_item w:1",
-			  bailey_mace =   "dire flail good_item | great mace good_item | eveningstar good_item w:2",
-			  bailey_sword =  "great sword good_item w:20 | double sword good_item w:1 | triple_sword good_item w:1"}
-	equipment.weapons = weapons[bailey_type]
-	equipment.ranged.rare = "nothing w:350 | " .. equipment.ranged.any
-	return equipment
+    -- Tier D, Tier E w:1
+    local equipment = { species = { "orc warlord"
+                        },
+                        armour = "plate armour | crystal plate armour w:1",
+                        ranged = { any = "orcbow | javelin | longbow w:1 | "
+                                         .. "arbalest w:1"
+                        }
+    local weapons = { bailey_axe = "broad axe good_item | "
+                                   .. "battleaxe good_item | 
+                                   .. "executioner's axe good_item w:2",
+                      bailey_polearm = "glaive good_item | "
+                                       .. "bardiche good_item w:1",
+                      bailey_mace = "dire flail good_item | "
+                                    .. "great mace good_item | "
+                                    .. "eveningstar good_item w:2",
+                      bailey_sword = "great sword good_item w:20 | "
+                                     .. "double sword good_item w:1 | "
+                                     .. "triple_sword good_item w:1"
+    }
+    equipment.weapons = weapons[bailey_type]
+    equipment.ranged.rare = "nothing w:350 | " .. equipment.ranged.any
+    return equipment
 end
 
 -- general foe function
 
 function foe(e, equipment_fn, species, weapon, ranged, armour)
-	local default_equipment = equipment_fn(dgn.persist.bailey_type)
-	if species == "any" then
-		species = default_equipment.species
-	end
-	if weapon == "any" then
-		weapon = default_equipment.weapon
-	end
-	if ranged == "any" then
-		ranged = default_equipment.ranged.any
-	elseif ranged == "rare" then
-		ranged = default_equipment.ranged.rare
-	end
-	if armour == "any" then
-		armour = default_equipment.armour
-	end
-	local equipment = {}
-   for i, monster_name in ipairs(species) do
-		if melee ~= nil then
-			 table.insert(equipment, melee)
-		end
-		if ranged ~= nil then
-			 table.insert(equipment,ranged)
-		end
-		if armour ~= nil then
-			 table.insert(equipment,armour)
-		end
-		if equipment ~= {} then
-			species[i] = species[i] .. " ; "
-			species[i] = species[i] .. table.concat(equipment, " . ")
-		end	
-		equipment = {}
-	end
-	e.mons(table.concat(species, " / "))
+    local default_equipment = equipment_fn(dgn.persist.bailey_type)
+    if species == "any" then
+        species = default_equipment.species
+    end
+    if weapon == "any" then
+        weapon = default_equipment.weapon
+    end
+    if ranged == "any" then
+        ranged = default_equipment.ranged.any
+    elseif ranged == "rare" then
+        ranged = default_equipment.ranged.rare
+    end
+    if armour == "any" then
+        armour = default_equipment.armour
+    end
+    local equipment = {}
+    for i, monster_name in ipairs(species) do
+        if melee ~= nil then
+            table.insert(equipment, melee)
+        end
+        if ranged ~= nil then
+            table.insert(equipment,ranged)
+        end
+        if armour ~= nil then
+            table.insert(equipment,armour)
+        end
+        if equipment ~= {} then
+            species[i] = species[i] .. " ; "
+            species[i] = species[i] .. table.concat(equipment, " . ")
+        end
+        equipment = {}
+    end
+    e.mons(table.concat(species, " / "))
 end
 
--- tiered foe functions. 
--- Place these in the vault header where one would place MONS
--- species must be a table of strings, or "any"
--- weapon must be a string, or "any", or nil
--- ranged must be a string, or "any", or "rare", or nil
--- armour must be a string, or "any", or nil
+--[[
+Tiered foe functions.
+Place these in the vault header where one would place MONS
+species must be a table of strings, or "any"
+weapon must be a string, or "any", or nil
+ranged must be a string, or "any", or "rare", or nil
+armour must be a string, or "any", or nil
+--]]
 
 function popcorn_foe(e, species, melee, ranged, armour)
-	foe(e, popcorn_equipment, species, melee, ranged, armour)
+    foe(e, popcorn_equipment, species, melee, ranged, armour)
 end
 
 function warrior_foe(e, species, melee, ranged, armour)
-	foe(e, warrior_equipment, species, melee, ranged, armour)
+    foe(e, warrior_equipment, species, melee, ranged, armour)
 end
 
 function knight_foe(e, species, melee, ranged, armour)
-	foe(e, knight_equipment, species, melee, ranged, armour)
+    foe(e, knight_equipment, species, melee, ranged, armour)
 end
 
 function hard_foe(e, melee, ranged, armour)
-	if crawl.coinflip() then
-		warrior_foe(e, "any", melee, ranged, armour)
-	else
-		knight_foe(e, "any", melee, ranged, armour)
-	end
+    if crawl.coinflip() then
+        warrior_foe(e, "any", melee, ranged, armour)
+    else
+        knight_foe(e, "any", melee, ranged, armour)
+    end
 end
 
 function boss_foe(e, species, melee, ranged, armour)
-<<<<<<< HEAD
-	foe(e, boss_equipment, species, melee, ranged, armour)
-=======
-	foe(e, boss_equipment, speceis, melee, ranged, armour)
->>>>>>> four_weapon_type_bailey
+    foe(e, boss_equipment, species, melee, ranged, armour)
 end
 
 -- around entry portal
 
 function entry_decor(e)
-  local weapons = { bailey_axe = "hand axe / war axe",
-		    bailey_polearm = "spear / trident / halberd",
- 		    bailey_mace = "mace / whip / flail",
-  		    bailey_sword = "falchion / long sword" }
-  e.item(weapons[dgn.persist.bailey_type])
+    local weapons = { bailey_axe = "hand axe / war axe",
+                      bailey_polearm = "spear / trident",
+                      bailey_mace = "mace / whip / flail",
+                      bailey_sword = "falchion / long sword"
+    }
+    e.item(weapons[dgn.persist.bailey_type])
 end
 
 function entry_guards(e, ranged, species)
-	-- for flavor all guards will be the same species and have the same gear
-	if species == "any" then
-		possible_species = {"goblin", "kobold", "hobgoblin", "gnoll", "orc"}
-		species = species[crawl.random2(5)]
-	end
- local weapons = { bailey_axe = "hand axe",
-		    bailey_polearm = "spear",
- 		    bailey_mace = "mace / whip",
-  		    bailey_sword = "falchion" }
-   local melee = weapons[dgn.persist.bailey_type]
-	if ranged then
-		if crawl.random2(3) <= 1 then
-			ranged = " . boomerang"
-		else
-			ranged = " . sling"
-		end
-	else
-		ranged = ""
-	end 
---	e.mons(species .. " ; " .. melee .. ranged)
+    -- for flavor all guards will be the same species and have the same gear
+    if species == "any" then
+        possible_species = {"goblin", "kobold", "hobgoblin", "gnoll", "orc"
+        }
+        species = species[crawl.random2(5)]
+    end
+    local weapons = { bailey_axe = "hand axe",
+                      bailey_polearm = "spear",
+                      bailey_mace = "mace / whip",
+                      bailey_sword = "falchion" 
+    }
+    local melee = weapons[dgn.persist.bailey_type]
+    if ranged then
+       if crawl.random2(3) <= 1 then
+           ranged = " . boomerang"
+       else
+           ranged = " . sling"
+       end
+    else
+       ranged = ""
+    end
+    e.mons(species .. " ; " .. melee .. ranged)
 end
 
 function entry_guards_melee(e,species)
-	entry_guards(e, false, species)
+    entry_guards(e, false, species)
 end
 
 function entry_guards_ranged(e, species)
-	entry_guards(e, true)
+    entry_guards(e, true)
 end
 
 }}
@@ -335,9 +374,9 @@ TAGS: transparent no_pool_fixup
 {{
 bailey_portal_random(_G)
 if dgn.persist.bailey_type == "bailey_polearm" then
-  entry_guards_melee(_G,"any")
+    entry_guards_melee(_G,"any")
 else
-  entry_guards_ranged(_G,"any")
+    entry_guards_ranged(_G,"any")
 end
 }}
 SHUFFLE: ABCD
@@ -363,13 +402,13 @@ KMASK:  d = no_monster_gen
 KPROP:  d = no_tele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-:   set_feature_name("granite_statue", "granite statue wielding a mighty axe")
-    TILE: G = dngn_statue_axe
-:   bailey_portal_axe(_G)
+:     set_feature_name("granite_statue", "granite statue wielding a mighty axe")
+      TILE: G = dngn_statue_axe
+:     bailey_portal_axe(_G)
 : elseif rnd == 1 then
-:   set_feature_name("granite_statue", "granite statue wielding a fearsome trident")
-    TILE: G = dngn_statue_polearm
-:   bailey_portal_polearm(_G)
+:     set_feature_name("granite_statue", "granite statue wielding a fearsome trident")
+      TILE: G = dngn_statue_polearm
+:     bailey_portal_polearm(_G)
 : end
 MAP
 .....G.....
@@ -411,13 +450,13 @@ KMASK:  d = no_monster_gen
 KPROP:  d = no_tele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-:   set_feature_name("granite_statue", "granite statue wielding a mighty axe")
-    TILE: G = dngn_statue_axe
-:   bailey_portal_axe(_G)
+:     set_feature_name("granite_statue", "granite statue wielding a mighty axe")
+      TILE: G = dngn_statue_axe
+:     bailey_portal_axe(_G)
 : elseif rnd == 1 then
-:   set_feature_name("granite_statue", "granite statue wielding a fearsome trident")
-    TILE: G = dngn_statue_polearm
-:   bailey_portal_polearm(_G)
+:     set_feature_name("granite_statue", "granite statue wielding a fearsome trident")
+      TILE: G = dngn_statue_polearm
+:     bailey_portal_polearm(_G)
 : end
 MAP
  xxxxxxxxxxx
@@ -462,17 +501,18 @@ TAGS:   allow_dup
 PLACE:  Bailey
 ORIENT: encompass
 {{
-  local btype = dgn.persist.bailey_type
-  if not btype then -- Wizmode
+local btype = dgn.persist.bailey_type
+if not btype then -- Wizmode
     btypes = {"bailey_axe", "bailey_polearm",
-              "bailey_mace","bailey_sword"}
+              "bailey_mace","bailey_sword"
+    }
     btype = btypes[crawl.random2(4)]
-  end
-  if crawl.game_started() then
+end
+if crawl.game_started() then
     local map = dgn.map_by_tag(btype)
     assert(map, "Couldn't find a map for " .. btype)
     dgn.place_map(map, false, false)
-  end
+end
 }}
 MAP
 ENDMAP
@@ -487,13 +527,13 @@ ORIENT: encompass
 TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword
 TAGS:   no_rotate
 {{
- local weapons = { bailey_axe = "war axe",
-		    bailey_polearm = "halberd",
- 		    bailey_mace = "morningstar",
-  		    bailey_sword = "scimitar" }
+local weapons = { bailey_axe = "war axe",
+                  bailey_polearm = "halberd",
+                  bailey_mace = "morningstar",
+                  bailey_sword = "scimitar" }
 local weapon = weapons[dgn.persist.bailey_type]
-local drain = string.gsub("W ego:draining | ","W",weapon) 
-local elec = string.gsub("W ego:electrocution ident:type","W",weapon) 
+local drain = string.gsub("W ego:draining | ","W",weapon)
+local elec = string.gsub("W ego:electrocution ident:type","W",weapon)
 }}
 : popcorn_foe(_G,"any","any",nil,"any")
 : warrior_foe(_G,{"gnoll"},drain .. elec,nil,"any")
@@ -533,7 +573,7 @@ ENDMAP
 # Another actual bailey. Six good items plus two stacks of specialty darts.
 NAME:   bailey_so_many_kobolds
 ORIENT: encompass
-TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword 
+TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword
 TAGS:   no_rotate no_item_gen no_monster_gen no_pool_fixup
 SUBST:  v : ccv
 ITEM:   any good_item
@@ -542,11 +582,7 @@ KFEAT:  _ = altar_trog / altar_okawaru / altar_makhleb
 : popcorn_foe(_G,{"kobold"},nil,"boomerang",nil)
 : local dart_string = "dart ego:poisoned | dart ego:curare w:5"
 : warrior_foe(_G,{"kobold brigand"},"any", dart_string, "any")
-<<<<<<< HEAD
 : hard_foe(_G,"any","rare","any")
-=======
-: hard_foe(_G,"any","any","rare","any")
->>>>>>> four_weapon_type_bailey
 SUBST:  2 = 2.
 NSUBST: 1 = 3:2 / *=1., 3 = 1:3 / *=3..
 : bailey_setup(_G)
@@ -598,7 +634,7 @@ ENDMAP
 #
 NAME:    bailey_river
 ORIENT:  encompass
-TAGS:    bailey_axe bailey_polearm bailey_mace bailey_sword 
+TAGS:    bailey_axe bailey_polearm bailey_mace bailey_sword
 TAGS:    no_rotate no_item_gen no_monster_gen no_pool_fixup
 #
 ITEM:    any good_item
@@ -797,7 +833,7 @@ ENDMAP
 #
 NAME:   bailey_donjon
 ORIENT: encompass
-TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword 
+TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword
 TAGS:   no_rotate no_pool_fixup no_monster_gen
 MONS:   orc warrior w:5 ; orcbow | arbalest w:1 . ring mail | scale mail / \
         orc ; orcbow . ring mail | scale mail
@@ -1016,11 +1052,11 @@ ENDMAP
 # along with 1 guaranteed acquirement scroll and 3 gold piles in the bastions
 NAME:   bailey_of_yendor_kennysheep
 ORIENT: encompass
-TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword 
+TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 : popcorn_foe(_G,"any","any","rare","any")
 : hard_foe(_G,"any","rare","any")
-: local warriors = {"orc sorcerer","orc high priest","kobold demonologist"} 
+: local warriors = {"orc sorcerer","orc high priest","kobold demonologist"}
 : warrior_foe(_G,warriors,"any",nil,"any")
 MONS:  electric eel
 KITEM:  d = any weapon
@@ -1104,7 +1140,7 @@ TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 ITEM:   potion of experience ident:type q:1 / \
-            scroll of acquirement ident:type q:1
+        scroll of acquirement ident:type q:1
 : popcorn_foe(_G,"any","any","rare","any")
 : popcorn_foe(_G,{"kobold","goblin"},"any","boomerang","any")
 : hard_foe(_G,"any","rare","any")
@@ -1281,10 +1317,17 @@ TAGS:   bailey_axe bailey_polearm bailey_mace bailey_sword
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 {{
- local weapons = { bailey_axe = {"hand axe ego:heavy | war axe", "broad axe"},
-		    bailey_polearm = {"spear ego:heavy | halberd", "glaive"},
- 		    bailey_mace = {"mace ego:heavy | morningstar", "great mace"},
-  		    bailey_sword =  {"falchion ego:heavy | scimitar", "great sword"} }
+local weapons = { bailey_axe = {"hand axe ego:heavy | war axe", 
+                                "broad axe"
+                  },
+                  bailey_polearm = {"spear ego:heavy | halberd", "glaive"},
+                  bailey_mace = {"mace ego:heavy | morningstar", 
+                                 "great mace"
+                  },
+                  bailey_sword =  {"falchion ego:heavy | scimitar",
+                                   "great sword"
+                  }
+}
 local weapon = weapons[dgn.persist.bailey_type]
 }}
 : popcorn_foe(_G,"any","any","rare","any")
