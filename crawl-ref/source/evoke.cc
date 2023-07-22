@@ -1076,23 +1076,14 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
 
     if (item->base_type == OBJ_TALISMANS)
     {
-        // TODO: unify with cant_transform_reason
-        if (you.has_mutation(MUT_NO_FORMS))
-            return "You have sacrificed the ability to change form.";
-        if (you.undead_state(false) == US_UNDEAD)
-            return "your undead flesh cannot be transformed.";
-        if (temp && you.undead_state() == US_SEMI_UNDEAD && !you.vampire_alive)
-            return "your current blood level is not sufficient.";
         const transformation trans = _form_for_talisman(*item);
-        if (temp)
-        {
-            const string form_unreason = cant_transform_reason(trans);
-            if (!form_unreason.empty())
-                return lowercase_first(form_unreason);
-            // TODO: add talisman artefacts
-            if (you.form != you.default_form)
-                return "you need to leave your temporary form first.";
-        }
+        const string form_unreason = cant_transform_reason(trans, false, temp);
+        if (!form_unreason.empty())
+            return lowercase_first(form_unreason);
+
+        // TODO: add talisman artefacts
+        if (you.form != you.default_form)
+            return "you need to leave your temporary form first.";
         return "";
     }
 

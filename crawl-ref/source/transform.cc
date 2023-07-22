@@ -129,7 +129,6 @@ Form::Form(const form_entry &fe)
       unarmed_bonus_dam(fe.unarmed_bonus_dam),
       can_fly(fe.can_fly), can_swim(fe.can_swim),
       uc_brand(fe.uc_brand), uc_attack(fe.uc_attack),
-      unarmed_uses_skill(fe.unarmed_uses_skill),
       prayer_action(fe.prayer_action), equivalent_mons(fe.equivalent_mons),
       hp_mod(fe.hp_mod), fakemuts(fe.fakemuts)
 { }
@@ -783,7 +782,7 @@ public:
         const int normal = Form::get_ac_bonus(max);
         if (!species::is_draconian(you.species))
             return normal;
-        return normal + (10 - ac.base) * 100;
+        return normal + (12 - ac.base) * 100;
     }
     /**
      * How many levels of resistance against fire does this form provide?
@@ -1052,7 +1051,7 @@ public:
 
     int get_aux_damage(bool random, bool max) const override
     {
-        return divided_scaling(FormScaling().Base(7).Scaling(11), random, max, 100);
+        return divided_scaling(FormScaling().Base(16).Scaling(11), random, max, 100);
     }
 };
 
@@ -1562,15 +1561,16 @@ static int _transform_duration(transformation which_trans, int pow)
  * @param which_trans   The tranformation which the player is undergoing
  *                      (default you.form).
  * @param involuntary   Whether the transformation is involuntary or not.
+ * @param temp                   Whether to factor in temporary limits, e.g. wrong blood level.
  * @return              UFR_GOOD if the player is not blocked from entering the
  *                      given form by their undead race; UFR_TOO_ALIVE if the
  *                      player is too satiated as a vampire; UFR_TOO_DEAD if
  *                      the player is too dead (or too thirsty as a vampire).
  */
 undead_form_reason lifeless_prevents_form(transformation which_trans,
-                                          bool involuntary)
+                                          bool involuntary, bool temp)
 {
-    if (!you.undead_state(false))
+    if (!you.undead_state(false)) // intentionally don't pass temp in here
         return UFR_GOOD; // not undead!
 
     if (which_trans == transformation::none)
@@ -1590,20 +1590,31 @@ undead_form_reason lifeless_prevents_form(transformation which_trans,
         if (involuntary)
             return UFR_TOO_DEAD; // but not as a forced polymorph effect
 
-        return !you.vampire_alive ? UFR_GOOD : UFR_TOO_ALIVE;
+        return !you.vampire_alive || !temp ? UFR_GOOD : UFR_TOO_ALIVE;
     }
 
     // other forms can only be entered when alive
-    return you.vampire_alive ? UFR_GOOD : UFR_TOO_DEAD;
+    return you.vampire_alive || !temp ? UFR_GOOD : UFR_TOO_DEAD;
 }
 
 /**
  * Is the player unable to enter the given form? If so, why?
  */
-string cant_transform_reason(transformation which_trans, bool involuntary)
+string cant_transform_reason(transformation which_trans,
+                             bool involuntary, bool temp)
 {
     if (!involuntary && you.has_mutation(MUT_NO_FORMS))
         return "You have sacrificed the ability to change form!";
+
+    // the undead cannot enter most forms.
+    if (lifeless_prevents_form(which_trans, involuntary, temp) == UFR_TOO_DEAD)
+        return "Your unliving flesh cannot be transformed in this way.";
+
+    if (SP_GARGOYLE == you.species && which_trans == transformation::statue)
+        return "You're already a statue.";
+
+    if (!temp)
+        return "";
 
     if (you.transform_uncancellable)
         return "You are stuck in your current form!";
@@ -1615,18 +1626,8 @@ string cant_transform_reason(transformation which_trans, bool involuntary)
                             feat == DNGN_DEEP_WATER ? "drown" : "burn");
     }
 
-    if (you.form == which_trans)
-        return "";
-
-    // the undead cannot enter most forms.
-    if (lifeless_prevents_form(which_trans, involuntary) == UFR_TOO_DEAD)
-        return "Your unliving flesh cannot be transformed in this way.";
-
     if (which_trans == transformation::death && you.duration[DUR_DEATHS_DOOR])
         return "You cannot mock death while in death's door.";
-
-    if (SP_GARGOYLE == you.species && which_trans == transformation::statue)
-        return "You're already a statue.";
 
     return "";
 }

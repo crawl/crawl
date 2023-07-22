@@ -156,7 +156,7 @@ public:
     }
 
     /// Does this form care about skill for UC damage and accuracy, or only XL?
-    virtual bool get_unarmed_uses_skill() const { return unarmed_uses_skill; }
+    virtual bool get_unarmed_uses_skill() const { return !unarmed_bonus_dam.xl_based; }
 
     /**
      * The brand of this form's unarmed attacks (SPWPN_FREEZING, etc).
@@ -281,8 +281,6 @@ private:
     const brand_type uc_brand;
     /// the name of the uc 'weapon' in the HUD; "" uses species defaults.
     const string uc_attack;
-    /// See Form::get_unarmed_uses_skill().
-    bool unarmed_uses_skill;
 
     /// Altar prayer action; "" uses defaults. See Form::player_prayer_action()
     const string prayer_action;
@@ -305,7 +303,8 @@ enum undead_form_reason
     UFR_TOO_ALIVE = 1,
 };
 undead_form_reason lifeless_prevents_form(transformation form = you.form,
-                                          bool involuntary = false);
+                                          bool involuntary = false,
+                                          bool temp = true);
 
 bool form_can_wield(transformation form = you.form);
 bool form_can_wear(transformation form = you.form);
@@ -322,7 +321,8 @@ bool feat_dangerous_for_form(transformation which_trans,
 
 bool check_form_stat_safety(transformation new_form, bool quiet = false);
 
-string cant_transform_reason(transformation which_trans, bool involuntary = false);
+string cant_transform_reason(transformation which_trans, bool involuntary = false,
+                             bool temp = true);
 bool check_transform_into(transformation which_trans, bool involuntary = false);
 bool transform(int pow, transformation which_trans, bool involuntary = false);
 

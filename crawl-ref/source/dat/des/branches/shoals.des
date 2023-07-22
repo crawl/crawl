@@ -1684,10 +1684,8 @@ xndnx
 ENDMAP
 
 NAME:   nicolae_shoals_abyss_on_the_beach
-TAGS:   transparent
-KPROP:  =aDPQ'_ = no_tide
-KITEM:  _ = *
-KITEM:  P = |
+TAGS:   transparent no_monster_gen no_item_gen
+KPROP:  =*|1P_' = no_tide
 KMONS:  p = plant
 KMONS:  1P_ = thrashing horror / wretched star / chaos spawn / zombie / \
               small abomination / large abomination / ancient zyme / neqoxec / \
@@ -1699,7 +1697,7 @@ KFEAT:  _ = altar_lugonu
 KFEAT:  q = x
 NSUBST: 2 = 2 / 2=2.
 SUBST:  z = wx, M = w., . = p...., 1 = 1', a = q:80 c:40 D:20 vb'
-FTILE:  =aD1P'_ = floor_nerves
+FTILE:  =*|1P_'D = floor_nerves
 TILE:   q = wall_abyss
 MAP
    wwwwwwwww
@@ -1707,8 +1705,8 @@ MAP
  wwwzzzzzzzwww
 wwwzxxxxxxxzwww
 wwzxxaaaaaxxzww
-wwzxaa1P1aaxzww
-wwzxa1'1'1axzww
+wwzxaa*P*aaxzww
+wwzxa11|11axzww
 wwzxa1'_'1axzww
 MMzxa1'''1axzMM
 .MMxaa'''aaxMM.

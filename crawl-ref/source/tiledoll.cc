@@ -410,10 +410,18 @@ void fill_doll_equipment(dolls_data &result)
     if (result.parts[TILEP_PART_BODY] == TILEP_SHOW_EQUIP)
     {
         const int item = you.melded[EQ_BODY_ARMOUR] ? -1 : you.equip[EQ_BODY_ARMOUR];
-        if (item == -1)
-            result.parts[TILEP_PART_BODY] = 0;
-        else
+        if (item != -1)
             result.parts[TILEP_PART_BODY] = tilep_equ_armour(you.inv[item]);
+        else if (you.form == transformation::maw
+                 // non-body-armour wearing species would need this tile to go elswhere
+                 && !species::bans_eq(you.species, EQ_BODY_ARMOUR))
+        {
+            const auto maw = TILEP_BODY_MAW_FORM;
+            const int count = tile_player_count(maw);
+            result.parts[TILEP_PART_BODY] = maw + you.frame_no % count;
+        }
+        else
+            result.parts[TILEP_PART_BODY] = 0;
     }
     // Cloak.
     if (result.parts[TILEP_PART_CLOAK] == TILEP_SHOW_EQUIP)

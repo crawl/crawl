@@ -462,6 +462,11 @@ orange_crystal ORANGE_CRYSTAL
 vines VINES
 kryias KRYIAS
 talos TALOS
+
+%sdir player/transform
+maw_form0 MAW_FORM
+maw_form1
+
 %end_ctg
 
 ### Arms
@@ -1109,6 +1114,7 @@ cat6
 cat10
 draconian1 HORNS_DRAC
 statue_form_felid_horns HORNS_CAT_STATUE
+
 %sdir player/head
 
 ## Doll editor tiles, but not randomly picked

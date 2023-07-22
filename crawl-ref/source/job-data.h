@@ -326,7 +326,7 @@ static const map<job_type, job_def> job_data =
     { },
     { "animal skin", "potion of lignification", "beast talisman" },
     WCHOICE_NONE,
-    { { SK_FIGHTING, 2 }, { SK_UNARMED_COMBAT, 2 }, { SK_DODGING, 2 },
+    { { SK_FIGHTING, 1 }, { SK_UNARMED_COMBAT, 3 }, { SK_DODGING, 2 },
       { SK_SHAPESHIFTING, 3 }, },
 } },
 

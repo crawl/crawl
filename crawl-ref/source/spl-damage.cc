@@ -2621,10 +2621,10 @@ vector<coord_def> arcjolt_targets(const actor &agent, bool actual)
     to_check.push_back(agent.pos());
     seen.insert(agent.pos());
 
-    for (adjacent_iterator ai(agent.pos()); ai; ++ai)
+    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
     {
-        to_check.push_back(*ai);
-        seen.insert(*ai);
+        to_check.push_back(*ri);
+        seen.insert(*ri);
     }
 
     while (!to_check.empty())
@@ -2636,12 +2636,14 @@ vector<coord_def> arcjolt_targets(const actor &agent, bool actual)
             const bool seen_act = act && (actual || agent.can_see(*act));
             if (!seen_act
                 || act == &agent
-                || act->res_elec() >= 3
-                || act->is_monster()
-                   && mons_is_projectile(*act->as_monster()))
+                || act->res_elec() >= 3)
             {
                 continue;
             }
+
+            const monster* mon = act->as_monster();
+            if (mon && (mons_is_projectile(*mon) || god_protects(&agent, mon)))
+                continue;
 
             targets.push_back(p);
 
@@ -2701,9 +2703,6 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
             continue;
 
         monster* mon = act->as_monster();
-        if (mon && god_protects(&agent, mon, false))
-            continue;
-
         const int rolled_dam = arcjolt_damage(pow, true).roll();
         const int post_ac_dam = max(0, act->apply_ac(rolled_dam, 0,
                                                      ac_type::half));

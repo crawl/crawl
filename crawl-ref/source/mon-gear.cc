@@ -163,6 +163,13 @@ static void _give_wand(monster* mon, int level)
         return;
 
     item_def& wand = env.item[idx];
+    // Ugly hack: monsters can't use digging wands, so swap em out.
+    while (wand.sub_type == WAND_DIGGING)
+    {
+        dprf("rerolling");
+        generate_wand_item(wand, OBJ_RANDOM, level);
+        item_colour(wand);
+    }
 
     const char* rejection_reason =
         (no_high_tier && is_high_tier_wand(wand.sub_type)) ? "high tier" :

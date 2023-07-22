@@ -705,37 +705,14 @@ public:
 
     bool can_quaff(string *reason = nullptr, bool temp = true) const override
     {
-        // TODO: unify with cant_transform_reason
-        if (you.has_mutation(MUT_NO_FORMS))
-        {
-            if (reason)
-                *reason = "You have sacrificed the ability to change form.";
-            return false;
-        }
-        if (you.is_lifeless_undead(temp))
-        {
-            if (reason)
-            {
-                if (!temp || you.is_lifeless_undead(false))
-                    *reason = "Your unliving flesh cannot be transformed in this way.";
-                else
-                    *reason = "You cannot currently transmute yourself.";
-            }
-            return false;
-        }
-        // transformation prevented for other reasons than lifeless undead.
-        // These should all be temp reasons (e.g. in an uncancellable form)...
-        if (temp)
-        {
-            const string treason = cant_transform_reason(transformation::tree);
-            if (!treason.empty())
-            {
-                if (reason)
-                    *reason = treason;
-                return true;
-            }
-        }
-        return true;
+        const string treason = cant_transform_reason(transformation::tree,
+                                                     false, temp);
+        if (treason.empty())
+            return true;
+
+        if (reason)
+            *reason = treason;
+        return false;
     }
 
     bool effect(bool was_known = true, int=40, bool is_potion=true) const override
