@@ -40,8 +40,8 @@ spret cast_dreadful_rot(int pow, bool fail)
 
     fail_check();
 
-    const int min_dur = 4;
-    const int max_dur = 7 + div_rand_round(pow, 10);
+    const int min_dur = 6;
+    const int max_dur = 9 + div_rand_round(pow, 10);
     you.props[MIASMA_IMMUNE_KEY] = true;
     place_cloud(CLOUD_MIASMA, you.pos(), random_range(min_dur, max_dur), &you);
     mpr("A part of your flesh rots into a cloud of miasma!");
