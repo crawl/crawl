@@ -103,9 +103,12 @@ LUAFN(l_spells_min_range)
  * @tparam int y coordinate to aim at, in player coordinates
  * @tparam int x coordinate of spell source, in player coordinates (default=0)
  * @tparam int y coordinate of spell source, in player coordinates (default=0)
- * @treturn table|nil a table of {x,y} of the path the spell will take, in player coordinates.
-     Nil is returned if the spell does not follow a path (eg., smite-targeted spells)
-     or if the spell has zero range.
+ * @tparam boolean[opt=false] if true, have the spell aim at the target; if
+ *                            false, shoot past it.
+ * @treturn table|nil a table of {x,y} of the path the spell will take, in
+ *                    player coordinates.
+ * Nil is returned if the spell does not follow a path (eg. smite-targeted
+ * spells) or if the spell has zero range.
  * @function path
  */
 LUAFN(l_spells_path)
@@ -144,6 +147,8 @@ LUAFN(l_spells_path)
     beam.foe_info.dont_stop = true;
     beam.ex_size = 0;
     beam.aimed_at_spot = true;
+    if (lua_isboolean(ls, 6))
+        beam.aimed_at_spot = lua_toboolean(ls, 6);
     beam.path_taken.clear();
     beam.fire();
 
