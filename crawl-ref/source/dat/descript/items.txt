@@ -609,7 +609,7 @@ A pile of glittering gold coins.
 granite talisman
 
 A heavy stone icon, bearing the countenance of some long-forgotten king or god.
-Transforms the user into a slow, stone statue. The caster's stone body is
+Transforms the user into a slow, stone statue. The user's stone body is
 immune to poison and miasma, and gains resistance to electricity and negative
 energy. Shapeshifting skill increases armour granted.
 
