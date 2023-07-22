@@ -116,6 +116,10 @@ End Transformation ability
 
 恢复到正常形态。
 %%%%
+Begin Untransformation ability
+
+开始将你变回你的原生形态。这需要花一小段时间来集中精力。
+%%%%
 # 辛
 Recite ability
 
@@ -535,9 +539,16 @@ Sacrifice Stealth ability
 
 舍弃潜行，使你总能被敌人注意到，并让你的潜行技能无法达到任何等级。
 %%%%
+Sacrifice Forms ability
+
+舍弃形态，你无法自行改变形态，也无法在变身技能上达到任何等级。
+%%%%
 Sacrifice Artifice ability
 
 舍弃激活魔法物品的能力，并让你的激活技能无法达到任何等级。
+这包括魔杖和其他需要用到激活技能的物品——
+但这*不会*影响获得的武器、符咒和金字塔雕像。
+这也使得法杖在近战时的效果大大降低。
 %%%%
 Sacrifice Love ability
 
@@ -721,6 +732,14 @@ Evoke Damnation ability
 并且不被任何保护手段削弱，比如盔甲或抗性。
 但某些生物，通常是那些能够自己释放天遣的生物，完全不受天遣的伤害。
 该能力的强度与激活技能成正比。
+%%%%
+Siphon Essence ability
+
+猛烈地吸取附近敌人的生命精华，并将其剩余生命值的一半用来治疗使用者。
+提升变身技能可以增加治疗效果。
+
+它对任何生物、亡灵、恶魔或天使生效——任何曾经活着或试图活着的东西。
+友方不受此影响。
 %%%%
 Evoke the Staff of Olgreb ability
 
