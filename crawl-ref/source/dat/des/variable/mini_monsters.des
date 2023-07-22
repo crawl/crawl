@@ -7280,6 +7280,71 @@ xxx.xxxx.x.xxxx.xxx
   xx@xxxxxxxxx@xx
 ENDMAP
 
+# Places a talisman with a corresponding monster and scenery
+NAME:  hellmonk_talismancer
+TAGS:  transparent
+DEPTH: D:12-, Lair:2-, Orc:1
+: local r = crawl.random2(7)
+: if r == 0 then
+MONS: reaper
+KMONS: d = soul eater
+KITEM: d = talisman of death
+SUBST: " = G
+TILE: G = dngn_gravestone
+: elseif r == 1 then
+MONS: fire dragon
+KMONS: d = lindwurm
+KITEM: d = dragon-blood talisman
+KFEAT: "' = lava
+: elseif r == 2 then
+MONS: anaconda
+KMONS: " = water moccasin / nothing
+ITEM: serpent talisman
+KFEAT: "' = shallow_water
+: elseif r == 3 then
+MONS: boulder beetle
+KMONS: d = boulder beetle
+KITEM: d = granite talisman
+SUBST: " = G
+: elseif r == 4 then
+MONS: nine-headed hydra / goliath frog
+ITEM: maw talisman
+SUBST: "':.
+SUBST: . = h:1 .
+: elseif r == 5 then
+MONS: dancing weapon ; great sword | scimitar /\
+      dancing weapon w:1 ; triple sword | double sword | quick blade
+ITEM: blade talisman
+KITEM: " = damaged long sword / damaged falchion
+SUBST: x:v
+: elseif r == 6 then
+MONS: air elemental
+KMONS: j = raiju
+KMONS: " = raiju
+KITEM: j = storm talisman
+SUBST: " = "...
+SUBST: d = j
+: else
+MONS: nothing
+ITEM: nothing
+: end
+SUBST: x:xcc
+: dgn.delayed_decay(_G, 'h', 'yak skeleton')
+MARKER: j = lua:fog_machine {cloud_type = "thin mist", \
+             pow_min = 5, pow_max = 12, delay_min = 28, delay_max = 42, \
+             size = 2, spread_rate = 2, start_clouds = 1 }
+MAP
+xxxxxxxxx
+x"'xxx'"x
+x'..1..'x
+xx.....xx
+xxx.d.xxx
+xx.....xx
+x'.....'x
+x"'x.x'"x
+xxxx@xxxx
+ENDMAP
+
 ################################################################
 #
 # <<8>> Minivaults with monsters guarding a thematic item.
