@@ -47,14 +47,11 @@ void tutorial_init_hint(const char* hintstr)
         Hints.hints_events[hint] = true;
 }
 
+// noreturn, but tutorial_msg doesn't guarantee it
 void tutorial_death_message()
 {
     canned_msg(MSG_YOU_DIE);
-    mpr_nojoin(MSGCH_TUTORIAL,
-               "In Crawl, death is a sad but common occurrence. "
-               "Note that there's usually something you could have done to "
-               "survive, for example by using some kind of item, running away, "
-               "resting between fights, or by avoiding combat entirely. "
-               "Keep trying, eventually you'll prevail!");
     more();
+ 
+    tutorial_msg("tutorial death", true);
 }

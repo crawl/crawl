@@ -11,7 +11,8 @@ namespace ui
 {
     int error(string err, string title="Error!", bool force_popup=false);
     int message(string msg,
-        string title="", string prompt="<cyan>Hit any key to continue...</cyan>");
+        string title="", string prompt="<cyan>Hit any key to continue...</cyan>",
+        bool format_msg=false);
 }
 
 bool yes_or_no(PRINTF(0, ));

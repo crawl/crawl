@@ -1129,7 +1129,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         if (!non_death)
             tutorial_death_message();
 
-        screen_end_game("");
+        // only quitting can lead to this?
+        screen_end_game("", game_exit::quit);
     }
 
     // Okay, so you're dead.

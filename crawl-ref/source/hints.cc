@@ -2865,8 +2865,10 @@ void tutorial_msg(const char *key, bool end)
     _replace_static_tags(text);
     text = untag_tiles_console(text);
 
+    // n.b. leaving the dungeon counts as "winning" here (and pops up the
+    // tutorial summary)
     if (end)
-        screen_end_game(text);
+        screen_end_game(text, you.hp <= 0 ? game_exit::death : game_exit::win);
 
     // "\n" to preserve indented parts, the rest is unwrapped, or split into
     // paragraphs by "\n\n", split_string() will ignore the empty line.

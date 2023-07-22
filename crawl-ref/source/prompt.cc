@@ -67,9 +67,11 @@ namespace ui
     // Convenience wrapper for `message_scroller`.
     // somewhat general popup code for short messages. This accepts color
     // formatting for the optional `title` and `prompt`, but not `msg`.
-    int message(string msg, string title, string prompt)
+    int message(string msg, string title, string prompt, bool format_msg)
     {
-        message_scroller ms(replace_all(msg, "<", "<<"), // XX probably ok to relax?
+        // XX could this just always accept a format string msg?
+        message_scroller ms(
+            format_msg ? msg : replace_all(msg, "<", "<<"),
             title, prompt);
         ms.show();
         return ms.get_lastch();

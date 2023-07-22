@@ -1271,7 +1271,6 @@ static int crawl_get_command(lua_State *ls)
     return 1;
 }
 
-LUAWRAP(crawl_endgame, screen_end_game(luaL_checkstring(ls, 1)))
 LUAWRAP(crawl_tutorial_skill, set_tutorial_skill(luaL_checkstring(ls, 1), luaL_safe_checkint(ls, 2)))
 LUAWRAP(crawl_tutorial_hint, tutorial_init_hint(luaL_checkstring(ls, 1)))
 LUAWRAP(crawl_print_hint, print_hint(luaL_checkstring(ls, 1), luaL_optstring(ls, 2, ""), luaL_optstring(ls, 3, "")))
@@ -1507,7 +1506,6 @@ static const struct luaL_reg crawl_clib[] =
     { "is_webtiles",        crawl_is_webtiles },
     { "err_trace",          crawl_err_trace },
     { "get_command",        crawl_get_command },
-    { "endgame",            crawl_endgame },
     { "tutorial_msg",       crawl_tutorial_msg },
     { "dump_char",          crawl_dump_char },
 #ifdef WIZARD

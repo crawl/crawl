@@ -215,7 +215,7 @@ void delete_files()
     you.save = 0;
 }
 
-NORETURN void screen_end_game(string text)
+NORETURN void screen_end_game(string text, game_exit exit)
 {
 #ifdef USE_TILE_WEB
     tiles.send_exit_reason("quit");
@@ -224,9 +224,9 @@ NORETURN void screen_end_game(string text)
     delete_files();
 
     if (!text.empty())
-        ui::message(text);
+        ui::message(text, "", "<cyan>Hit any key to exit...</cyan>", true);
 
-    game_ended(game_exit::abort); // TODO: is this the right exit condition?
+    game_ended(exit); // TODO: is this the right exit condition?
 }
 
 static game_exit _kill_method_to_exit(kill_method_type kill)
