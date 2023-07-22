@@ -684,13 +684,6 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
         if (p == TILEP_PART_SHADOW && (submerged || ghost))
             continue;
 
-        int ymax = TILE_Y;
-
-        if (flags[p] == TILEP_FLAG_CUT_CENTAUR
-            || flags[p] == TILEP_FLAG_CUT_NAGA)
-        {
-            ymax = 18;
-        }
         int ofs_x = 0, ofs_y = 0;
         if ((p == TILEP_PART_HAND1 && you.slot_item(EQ_WEAPON)
              || p == TILEP_PART_HAND2 && you.slot_item(EQ_SHIELD))
@@ -700,6 +693,7 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
             ofs_y = dinfo[draw_info_count - dind - 1].ofs_y;
             ++dind;
         }
+        const int ymax = flags[p] == TILEP_FLAG_CUT_BOTTOM ? 18 : TILE_Y;
         buf.add(doll.parts[p], x, y, i, submerged, ghost, ofs_x, ofs_y, ymax);
     }
 }

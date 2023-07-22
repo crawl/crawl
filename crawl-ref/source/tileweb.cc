@@ -1479,14 +1479,7 @@ void TilesFramework::send_doll(const dolls_data &doll, bool submerged, bool ghos
         if (p == TILEP_PART_SHADOW && (submerged || ghost))
             continue;
 
-        int ymax = TILE_Y;
-
-        if (flags[p] == TILEP_FLAG_CUT_CENTAUR
-            || flags[p] == TILEP_FLAG_CUT_NAGA)
-        {
-            ymax = 18;
-        }
-
+        const int ymax = flags[p] == TILEP_FLAG_CUT_BOTTOM ? 18 : TILE_Y;
         tiles.json_write_comma();
         tiles.write_message("[%u,%d]", (unsigned int) doll.parts[p], ymax);
     }

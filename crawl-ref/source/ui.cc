@@ -2446,14 +2446,7 @@ void PlayerDoll::_pack_doll()
 
         ASSERT_RANGE(idx, TILE_MAIN_MAX, TILEP_PLAYER_MAX);
 
-        int ymax = TILE_Y;
-
-        if (flags[p] == TILEP_FLAG_CUT_CENTAUR
-            || flags[p] == TILEP_FLAG_CUT_NAGA)
-        {
-            ymax = 18;
-        }
-
+        const int ymax = flags[p] == TILEP_FLAG_CUT_BOTTOM ? 18 : TILE_Y;
         m_tiles.emplace_back(idx, ymax);
     }
 }
