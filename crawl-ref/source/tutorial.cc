@@ -52,6 +52,6 @@ void tutorial_death_message()
 {
     canned_msg(MSG_YOU_DIE);
     more();
- 
+
     tutorial_msg("tutorial death", true);
 }
