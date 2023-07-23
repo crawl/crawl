@@ -2497,7 +2497,9 @@ static spret _siphon_essence(bool fail)
         return spret::success;
 
     // no death's door check because death form is incompatible with doors
-    inc_hp(min(damage, 46 + get_form()->get_level(2))); // max 100
+    const int skillcap = 19 + get_form()->get_level(3);
+    const int healing = div_rand_round(min(damage, skillcap), 2); // max 50
+    inc_hp(healing);
     canned_msg(MSG_GAIN_HEALTH);
     return spret::success;
 }
