@@ -367,7 +367,7 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_BLINKBOLT, "Blinkbolt",
             0, 0, 0, LOS_MAX_RANGE, {}, abflag::none },
         { ABIL_SIPHON_ESSENCE, "Siphon Essence",
-            20, 0, 0, -1, {}, abflag::none },
+            20, 0, 0, -1, {}, abflag::exhaustion },
 #if TAG_MAJOR_VERSION == 34
         { ABIL_HEAL_WOUNDS, "Heal Wounds",
             0, 0, 0, -1, {fail_basis::xl, 45, 2}, abflag::none },
