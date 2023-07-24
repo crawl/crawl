@@ -149,7 +149,7 @@ function trove.get_trove_item(e, value, base_item)
   end
 
   local stasis_tolls = {
-       {base="scroll", type="blinking", quant=2+d(3)+d(3)},
+       {base="scroll", type="blinking", quant=1+d(2)+d(2)},
        {base="scroll", type="teleportation", quant=10+d(4)+d(4)} }
 
   if you.race() ~= "Formicid" then
