@@ -2029,6 +2029,15 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     case ABIL_DIG:
         return form_keeps_mutations();
 
+    case ABIL_SIPHON_ESSENCE:
+        if (you.duration[DUR_EXHAUSTED])
+        {
+            if (!quiet)
+                mpr("You're too exhausted to siphon the essence of your foes.");
+            return false;
+        }
+        return true;
+
     default:
         return true;
     }
@@ -2481,6 +2490,8 @@ static spret _siphon_essence(bool fail)
             seen = true;
         }
     }
+
+    you.increase_duration(DUR_EXHAUSTED, 12 + random2(5));
 
     if (!damage)
     {
