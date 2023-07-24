@@ -367,7 +367,7 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_BLINKBOLT, "Blinkbolt",
             0, 0, 0, LOS_MAX_RANGE, {}, abflag::none },
         { ABIL_SIPHON_ESSENCE, "Siphon Essence",
-            20, 0, 0, -1, {}, abflag::exhaustion },
+            20, 0, 0, -1, {}, abflag::none },
 #if TAG_MAJOR_VERSION == 34
         { ABIL_HEAL_WOUNDS, "Heal Wounds",
             0, 0, 0, -1, {fail_basis::xl, 45, 2}, abflag::none },
@@ -2030,7 +2030,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return form_keeps_mutations();
 
     case ABIL_SIPHON_ESSENCE:
-        if (you.duration[DUR_EXHAUSTED])
+        if (you.duration[DUR_SIPHON_COOLDOWN])
         {
             if (!quiet)
                 mpr("You're too exhausted to siphon the essence of your foes.");
@@ -2491,7 +2491,7 @@ static spret _siphon_essence(bool fail)
         }
     }
 
-    you.increase_duration(DUR_EXHAUSTED, 12 + random2(5));
+    you.increase_duration(DUR_SIPHON_COOLDOWN, 12 + random2(5));
 
     if (!damage)
     {

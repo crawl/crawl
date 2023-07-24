@@ -825,7 +825,8 @@ Siphon Essence ability
 
 Violently draws upon the vital essence of nearby foes, halving their
 remaining life and using it to heal the user. Shapeshifting skill increases
-the healing received.
+the healing received. After using this ability, you will be unable to use it
+again for a short time.
 
 This effect applies to anything living, undead, demonic or angelic - anything
 which ever lived or sought to. Allies are unaffected.
