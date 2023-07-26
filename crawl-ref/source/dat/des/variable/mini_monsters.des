@@ -1272,29 +1272,30 @@ DEPTH:  D:12-
 veto {{
    return crawl.game_started() and dgn.br_exists("Swamp")
 }}
-# The final loot is geared towards 6-8 pieces of good stuff, including a
-# guaranteed randart, because otherwise who would go in?
-KITEM:  | = nothing / |, nothing / |, |, |, |, |, gold good_item, \
-            any armour randart / any weapon randart / any jewellery randart
+# The final loot is geared towards 6-9 pieces of good stuff, including a
+# guaranteed randart or two, because otherwise who would go in?
 KITEM:  * = *
 KITEM:  % = %
 KITEM:  $ = $
+KITEM:  s = | w:70 / gold good_item
+KITEM:  S- = any armour randart / any weapon randart / any jewellery randart
 KMONS:  P = one-headed hydra
 KMONS:  Q = three-headed hydra
 KMONS:  R = nine-headed hydra
 KMONS:  S = the Lernaean Hydra
-KFEAT:  $%*|PQRS` = . / W w:5
+KFEAT:  $%*|PQRS`s- = . / W w:5
 KFEAT:  t = mangrove
+NSUBST: O = s / O
 SUBST:  L = tp, M = tq, N = tr, O = ts
-NSUBST: p = 27:P / 7:$ / `, q = 9:Q / 5:% / `, r = 3:R / 3:* / `, s = S / `
+NSUBST: p = 27:P / 7:$ / `, q = 9:Q / 5:% / `, r = 3:R / 3:* / `, s = S / - / s
 MAP
 ccccccccccc
 cpppppppppccccccccc
 cppLLpLLppcMqqqqqMccccccc
 cpLLLpLLLpcqMMqMMqcrNrNrccccc
-cpLLpppLLpcqMMMMMqcNrNrNcOsOccc
-=ppppLpppp=qqMtMqq=rNtNr=sss=|n@
-cpLLpppLLpcqMMMMMqcNrNrNcOsOccc
+cpLLpppLLpcqMMMMMqcNrNrNcOsOc
+=ppppLpppp=qqMtMqq=rNtNr=sssn@
+cpLLpppLLpcqMMMMMqcNrNrNcOsOc
 cpLLLpLLLpcqMMqMMqcrNrNrccccc
 cppLLpLLppcMqqqqqMccccccc
 cpppppppppccccccccc
