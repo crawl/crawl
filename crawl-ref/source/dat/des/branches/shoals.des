@@ -1884,7 +1884,6 @@ TAGS:   no_pool_fixup no_trap_gen water_ok
 DEPTH:  Shoals, !Shoals:$
 ORIENT: northwest
 KPROP:  123DL*n'} = no_tide
-KITEM:  L = phantom mirror
 KMONS:  K = kraken
 # Two glyphs for merfolk: 1 gets no_tide (inside), M doesn't (outside)
 KMONS:  1M = merfolk / nothing w:2
@@ -1895,6 +1894,9 @@ KFEAT:  ~ = open_sea
 KFEAT:  D = closed_clear_door
 KFEAT:  R = runed_clear_door
 KFEAT:  K = w
+KPROP:  L = no_tele_into
+KMASK:  L = no_item_gen
+KMASK:  L = no_monster_gen
 FTILE:  123DRL*n'} = floor_limestone
 SUBST:  } = }]), * = **|
 NSUBST: . = Q / *=% M:30 .:150, ' = Q / '
@@ -1914,7 +1916,7 @@ MAP
 ~www.n''''''12'n.wwwwww
 ~www.n11'nnn''1n.wwwwww
 ~www.n11'nLn'2*n.wwwwww
-~www.n'''nnR21*n.wwwwww
+~www.n'''nnn21*n.wwwwww
 ~www.n'21''232*n.wwwwww
 ~www.nn12'212*nn.wwwwww
 ~www..nn'1***nn..wwwwww
