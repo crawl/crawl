@@ -1424,16 +1424,12 @@ ENDMAP
 
 ###############################################################################
 # Collapsing caverns! These don't actually have flame clouds. Wow!
-# idea by dpeg, execution by due. One entrance will close when you enter the
-# portal, leaving you with 7 to discover. Quickly, now!
+# idea by dpeg, original execution by due, reworked by hellmonk.
+# Inner passages close over time, requiring the player to brave the harder outer
+# section if they want all the loot, but nothing is ever permanently cut off.
 #
-# XXX: A less craggy layout with more space per-chamber would better
-#      accommodate actually randomizing where the bosses and extra loot is.
-#      The teleport limits are also not communicated at all, but is a
-#      necessary evil to prevent optimal teleportation abuse-
-#      what should be done here?
-NAME:   volcano_caves
-TAGS:   no_item_gen no_monster_gen no_rotate
+NAME:   hellmonk_volcano_collapse
+TAGS:   no_item_gen no_monster_gen
 ORIENT: encompass
 WEIGHT: 10
 {{
@@ -1455,33 +1451,47 @@ collapse_marker:add_triggerer(DgnTriggerer:new {
 })
 
 }}
-SUBST: Y = c., Z = c'
+SUBST: Z = c., 4 = 332.
 SUBST: * = ddeeffgg$
 : fiery_guardians(_G)
 : lua_marker("M", Triggerable.synchronized_markers(collapse_marker))
 : volcano_setup(_G)
-KPROP: 'defg$123< = no_tele_into
-# There are eight chambers, six with two items and one monster,
-# and two with four items + bosses.
 MAP
-       cccc ccc
-     ccc''cccZcccccc
-    cccZccc<**'1ccZZccc
-    c''<ZZcc''ZccZ1''cc
-    ccc1**ZcZ'cc'**<cccc
-   cc'ccZ''ccMc'ZZ'ccZZcc
-  ccZ<ZccZ'MY.cMccccZ1<'c
- ccZ121ZcccY...ccM''**ccc
-ccZ'****ccY....Y.cccccc
-cZ'''''ccY..A<....ccZZccc
-ccZ'''''M.....YcccM'**1Zcc
- cccZ'cccMY..YMc1ccZ'**<3c
-   cccc''ccYccc'Z'cccZZccc
-    ccZ''ZccccZ'**'Zcccc
-   ccZ**'1<''cccZZ<Zcc
-    ccZ'Z'Zccc cccMcc
-     cccc'cc     ccc
-      ccccc
+  lllllllllllllllllllllllll
+ lllllllllllllllllllllllllll
+llllllllllllllllllllllllllllll
+llll.......4......llllllllllll
+llll.cccc...........lllllllllll
+lll..cZZcccccccZZ.....llllllllll
+lll.ccZ<ZZ.ccZccc..4..llllllllll
+lll.=*2....M.ZZ.=...........llll
+lll.=*1..ZZc..Z.=...........llll
+lll.cc**ccccZ...cccccccccc..llll
+lll..cccc<ccc...cc..Z<Z.Zc...lll
+lll....c2..Zc.1..M...1..*=...lll
+lll.4..c*..Zc....cZZ...Z*=...lll
+lll....=*..cc...Zccccccccc...lll
+lll....=*..M...ZZc..ZZc.....llll
+llll...c*..c.c...M...*=.....llll
+llll...c11cccc...cc.1*=..4..llll
+llll...cZZcZ.M.1..cZ<ccc...lllll
+lllll..cccc..c..Zccccc*=...lllll
+lllll...cZ...cZ..cZ.Z.*=...lllll
+lllll..cc..Zccc..M..1.cc...lllll
+lllll4.=*1ZccZZ1.cccZ<c....lllll
+lllll..=*<Zc..Z.Zc.ccccc....llll
+lllll..cccccc......M..Zcc...llll
+lllll..ccc..M......c<1.Zcc...lll
+lllll..cZ<..c.....ZccZ..Zc..4lll
+lllll..cZ.1ZccZ.A<..ccZ**c...lll
+llllll.ccc**ccc.....ccc==c...lll
+llllll...c==cccZ..Zcc.......llll
+llllll.......ccc.Zcc........llll
+llllll....4...ccccc....4....llll
+ llllllll................llllll
+  llllllllllllllllllllllllllll
+   llllllllllllllllllllllllll
+     llllllllllllllllllllll
 ENDMAP
 ###############################################################################
 
