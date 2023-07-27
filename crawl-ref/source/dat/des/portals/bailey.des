@@ -19,21 +19,21 @@ function bailey_portal(e, ptype)
                                .. "on this level. Hurry and find it "
                                .. "before the portal closes forever!" },
                    finalmsg = "$F{The} has been lowered almost to the ground.",
-                   verb = 'creaking',
-                   noisemaker = 'portcullis',
+                   verb = "creaking",
+                   noisemaker = "portcullis",
                    ranges = {
-                             { 5000, 'faint ' },    { 4000, '' },
-                             { 2500, 'steady ' }, { 1500, 'quick ' },
-                             { 0, 'loud ' }
+                             { 5000, "faint " },    { 4000, "" },
+                             { 2500, "steady " }, { 1500, "quick " },
+                             { 0, "loud " }
                    }
         }
 
     dgn.persist.bailey_type = "bailey_" .. ptype
 
-    e.lua_marker('O',
+    e.lua_marker("O",
                  timed_marker {
                                disappear = "The portal closes with a thud.",
-                               entity = 'portcullis',
+                               entity = "portcullis",
                                bailey_type = ptype,
                                turns = timeout_turns,
                                single_timed = true,
@@ -50,23 +50,23 @@ function bailey_portal(e, ptype)
 end
 
 function bailey_portal_axe(e)
-    bailey_portal(e, 'axe')
+    bailey_portal(e, "axe")
 end
 
 function bailey_portal_polearm(e)
-    bailey_portal(e, 'polearm')
+    bailey_portal(e, "polearm")
 end
 
 function bailey_portal_mace(e)
-    bailey_portal(e, 'mace')
+    bailey_portal(e, "mace")
 end
 
 function bailey_portal_sword(e)
-    bailey_portal(e, 'sword')
+    bailey_portal(e, "sword")
 end
 
 function bailey_portal_random(e)
-    local bailey_types = {'axe', 'polearm', 'mace', 'sword'}}
+    local bailey_types = {"axe", "polearm", "mace", "sword"}}
     bailey_portal(e, util.random_from(bailey_types))
 end
 
@@ -92,22 +92,22 @@ ranged: A: stone | boomerang, B: sling, C: shortbow, D: orcbow | javelin,
 armour: A: leather, B: ring, C: scale | chain, D: plate, E: crystal plate
 --]]
 
-local melee_weapon = {'popcorn' = {'axe' = {['hand axe'] = 50, ['war axe'] = 12},
-                                   'polearm' = {['spear'] = 50, ['trident'] = 10, ['halberd'] = 2},
-                                   'mace' = {['mace'] = 30, ['whip'] = 20, ['flail'] = 10, ['morningstar'] = 2},
-                                   'sword' = {'falchion'] = 50, ['long sword'] = 10, ['scimitar'] = 2},
-                      'warrior' = {'axe' = {['war axe'] = 60, ['broad axe'] = 1, ['battleaxe'] = 1},
-                                   'polearm' = {['trident'] = 50, ['halberd'] = 10, ['glaive'] = 2},
-                                   'mace' = {['flail'] = 50, ['morningstar'] = 10, ['great mace'] = 1, ['dire flail'] = 1},
-                                   'sword' = {'long sword'] = 50, ['scimitar'] = 10, ['great sword'] = 2},
-                      'knight' =  {'axe' = {['war axe'] = 20, ['broad axe'] = 5, ['battleaxe'] = 5},
-                                   'polearm' = {['halberd'] = 20, ['glaive'] = 10},
-                                   'mace' = {['morningstar'] = 20, ['great mace'] = 5, ['dire flail'] = 5},
-                                   'sword' = {['scimitar'] = 20, ['great sword'] = 10},
-                      'boss' =    {'axe' = {['broad axe'] = 5, ['battleaxe'] = 5, ['executioner's axe"] = 1},
-                                   'polearm' = {['glaive'] = 10, ['bardiche'] = 1},
-                                   'mace' = {['great mace'] = 5, ['dire flail'] = 5, ['eveningstar'] = 1},
-                                   'sword' = {'great sword'] = 20, ['double sword'] = 1, ['triple sword'] = 1}
+local melee_weapon = {"popcorn" = {"axe" = {["hand axe"] = 50, ["war axe"] = 12},
+                                   "polearm" = {["spear"] = 50, ["trident"] = 10, ["halberd"] = 2},
+                                   "mace" = {["mace"] = 30, ["whip"] = 20, ["flail"] = 10, ["morningstar"] = 2},
+                                   "sword" = {"falchion"] = 50, ["long sword"] = 10, ["scimitar"] = 2},
+                      "warrior" = {"axe" = {["war axe"] = 60, ["broad axe"] = 1, ["battleaxe"] = 1},
+                                   "polearm" = {["trident"] = 50, ["halberd"] = 10, ["glaive"] = 2},
+                                   "mace" = {["flail"] = 50, ["morningstar"] = 10, ["great mace"] = 1, ["dire flail"] = 1},
+                                   "sword" = {"long sword"] = 50, ["scimitar"] = 10, ["great sword"] = 2},
+                      "knight" =  {"axe" = {["war axe"] = 20, ["broad axe"] = 5, ["battleaxe"] = 5},
+                                   "polearm" = {["halberd"] = 20, ["glaive"] = 10},
+                                   "mace" = {["morningstar"] = 20, ["great mace"] = 5, ["dire flail"] = 5},
+                                   "sword" = {["scimitar"] = 20, ["great sword"] = 10},
+                      "boss" =    {"axe" = {["broad axe"] = 5, ["battleaxe"] = 5, ["executioner's axe"] = 1},
+                                   "polearm" = {["glaive"] = 10, ["bardiche"] = 1},
+                                   "mace" = {["great mace"] = 5, ["dire flail"] = 5, ["eveningstar"] = 1},
+                                   "sword" = {"great sword"] = 20, ["double sword"] = 1, ["triple sword"] = 1}
                       }
 
 
@@ -521,7 +521,7 @@ if not btype then -- Wizmode
 end
 if crawl.game_started() then
     local map = dgn.map_by_tag(btype)
-    assert(map, "Couldn't find a map for " .. btype)
+    assert(map, "Couldn"t find a map for " .. btype)
     dgn.place_map(map, false, false)
 end
 }}
@@ -858,7 +858,7 @@ SUBST:  W : W..
 SUBST:  X = I G C
 KFEAT:  C = altar_beogh
 ITEM:   manual of armour / manual of fighting / manual of shields /\
-        good_item bardiche / good_item executioner's axe /\
+        good_item bardiche / good_item executioner"s axe /\
         good_item triple sword / good_item arbalest / good_item triple crossbow
 ITEM:   potion of experience ident:type q:1 / \
         scroll of acquirement ident:type q:1 /\
@@ -966,7 +966,7 @@ NSUBST: ! = 12=11. / *:.
 NSUBST: 3 = 8:3 / * = 3..
 SUBST:  / = 12
 KITEM:  d = manual of armour / manual of fighting / manual of shields /\
-            good_item bardiche / good_item executioner's axe /\
+            good_item bardiche / good_item executioner"s axe /\
             good_item triple sword
 KITEM:  e = potion of experience ident:type q:1 / \
             scroll of acquirement ident:type q:1 / \
@@ -1015,8 +1015,8 @@ TAGS:   no_item_gen no_monster_gen no_pool_fixup
 MONS:   hound, wolf
 KMONS:  R = grum, gnoll sergeant ; halberd . plate armour
 ITEM:   any good_item
-FTILE:  4't = floor_grass
-KFEAT:  ' = floor
+FTILE:  4"t = floor_grass
+KFEAT:  " = floor
 NSUBST: _ = 40 = 1... / *:., 2 = 4:2 / * = 2., 3 = 4:3 / * = 3.
 NSUBST: R = 1:R22 / *:2, 5 = 2:5 / * = 5..
 SUBST:  d = dd|
@@ -1025,10 +1025,10 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xtttttttttttttttttttttttttx
 xttttwwwwwwwwwwwwwwwwwttttx
-xtttww'''''''''''''''wwtttx
-xtttw'''''''''''''''''wtttx
-xtttw''ccccc_3_ccccc''wtttx
-xtttw'cc___c___c___cc'wtttx
+xtttww"""""""""""""""wwtttx
+xtttw"""""""""""""""""wtttx
+xtttw""ccccc_3_ccccc""wtttx
+xtttw"cc___c___c___cc"wtttx
 xtttwcc____+___+____ccwtttx
 xtttwc_____c___c_____cwtttx
 xtttwcG____cc+cc3___Gcwtttx
@@ -1042,14 +1042,14 @@ xtttwc__55cc___cc55__cwtttx
 xtttwcG5255cc+cc5525Gcwtttx
 xtttwc2353Rc___cR3532cwtttx
 xtttwccccc+c___c+cccccwtttx
-xtttw'cddd.c___c.dddc'wtttx
-xtttw'cccccc+++cccccc'wtttx
-xtttw''''''41.14''''''wtttx
-xtttww''''''...''''''wwtttx
+xtttw"cddd.c___c.dddc"wtttx
+xtttw"cccccc+++cccccc"wtttx
+xtttw""""""41.14""""""wtttx
+xtttww""""""...""""""wwtttx
 xttttwwwwwww...wwwwwwwttttx
-xttttt''''''...''''''tttttx
-xttttttt''''...''''tttttttx
-xtttttttt'''...'ttttttttttx
+xttttt""""""...""""""tttttx
+xttttttt""""...""""tttttttx
+xtttttttt"""..."ttttttttttx
 xttttttttttt.A.tttttttttttx
 xtttttttttttt.ttttttttttttx
 xtttttttttttt.ttttttttttttx
@@ -1057,7 +1057,7 @@ xtttttttttttt<ttttttttttttx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# loosely based on nethack's castle
+# loosely based on nethack"s castle
 # loot is 4 of each: weapons, armour, and potions/scrolls
 # 1 of each is a guaranteed good item
 # along with 1 guaranteed acquirement scroll and 3 gold piles in the bastions
@@ -1143,7 +1143,7 @@ xxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxx
 ENDMAP
 
 # same loot as minmay_hex_keep, and a similar warlord fight
-# slightly more of the loot is outside of the warlord's room
+# slightly more of the loot is outside of the warlord"s room
 # the warlord fight is a little easier, and the outer fights are harder
 NAME:   bailey_bossmonster_kennysheep
 ORIENT: encompass
@@ -1196,7 +1196,7 @@ tttttttttttttt.<.tttttttttttttt
 ttttttttttttttttttttttttttttttt
 ENDMAP
 
-# orcs are holding an elf hostage... but their prisoner isn't happy to see you.
+# orcs are holding an elf hostage... but their prisoner isn"t happy to see you.
 # 6 gold piles, 4 good potions/scrolls, 4 good armours / superb items
 NAME:   bailey_elven_captive_hellmonk
 ORIENT: encompass
@@ -1270,7 +1270,7 @@ NSUBST:  ! = 6 / G
 SHUFFLE: A<
 TILE:    t = dngn_tree_dead, G = dngn_gravestone
 COLOUR:  t = w:5 lightgrey / w:5 darkgrey / brown
-: dgn.delayed_decay(_G, 'f', 'orc skeleton')
+: dgn.delayed_decay(_G, "f", "orc skeleton")
 : set_feature_name("tree", "dead tree")
 : set_feature_name("granite_statue", "a gravestone")
 : bailey_setup(_G)
@@ -1318,7 +1318,7 @@ ttx....x..x....xttttttttt
      xxxxxxxx
 ENDMAP
 
-# Prince Ribbit's fortress
+# Prince Ribbit"s fortress
 # If Prince Ribbit has already generated, his attendants have recovered the
 # wrong frog by mistake. Whoops!
 # Nine items, mostly consumables. Guaranteed nice weapons from the vault guards.
@@ -1406,7 +1406,7 @@ MONS:   two-headed ogre ; halberd | glaive w:3 | bardiche w:1 . \
 KMONS:  D = steam dragon / acid dragon w:3
 KFEAT:  D = deep_water
 SUBST:  ! = t:20 x c:3, - = t c:30 x
-NSUBST: ' = 20 = 1... / 2 = 2... / *:.
+NSUBST: " = 20 = 1... / 2 = 2... / *:.
 NSUBST: " = 1:2 / 12 = 2... / *:., 3 = 1:3 / *:.
 NSUBST:  d = 1:e / * = ddddddde
 FTILE:  ;tA< = floor_grass
@@ -1415,20 +1415,20 @@ MAP
       ccccccccc
      ccccccccccc
     ccc"""""""ccc
-   ccc''"""""''ccc
-  ccc'''"WWW"'''ccc
- ccc''----W----''ccc
-ccc''--"""""""--''ccc
-cc''--""ttttt""--''cc
-cc''-""ttdddtt""-''cc
-cc''-""!ddwdd!""-''cc
-cc''-""!dwDwd!""-''cc
-cc''-""!..w..!""-''cc
-cc''-""tt...tt""-''cc
-cc''--""t!W!t""--''cc
-ccc''--3"""""3--''cc
-  cc''--""3""--''cc
-   cc''-------''cc
+   ccc"""""""""ccc
+  ccc""""WWW""""ccc
+ ccc""----W----""ccc
+ccc""--"""""""--""ccc
+cc""--""ttttt""--""cc
+cc""-""ttdddtt""-""cc
+cc""-""!ddwdd!""-""cc
+cc""-""!dwDwd!""-""cc
+cc""-""!..w..!""-""cc
+cc""-""tt...tt""-""cc
+cc""--""t!W!t""--""cc
+ccc""--3"""""3--""cc
+  cc""--""3""--""cc
+   cc""-------""cc
     cc.........cc
      cc.......cc
       ccWWWWWcc
