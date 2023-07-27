@@ -92,6 +92,25 @@ ranged: A: stone | boomerang, B: sling, C: shortbow, D: orcbow | javelin,
 armour: A: leather, B: ring, C: scale | chain, D: plate, E: crystal plate
 --]]
 
+local melee_weapon = {'popcorn' = {'axe' = {['hand axe'] = 50, ['war axe'] = 12},
+                                   'polearm' = {['spear'] = 50, ['trident'] = 10, ['halberd'] = 2},
+                                   'mace' = {['mace'] = 30, ['whip'] = 20, ['flail'] = 10, ['morningstar'] = 2},
+                                   'sword' = {'falchion'] = 50, ['long sword'] = 10, ['scimitar'] = 2},
+                      'warrior' = {'axe' = {['war axe'] = 60, ['broad axe'] = 1, ['battleaxe'] = 1},
+                                   'polearm' = {['trident'] = 50, ['halberd'] = 10, ['glaive'] = 2},
+                                   'mace' = {['flail'] = 50, ['morningstar'] = 10, ['great mace'] = 1, ['dire flail'] = 1},
+                                   'sword' = {'long sword'] = 50, ['scimitar'] = 10, ['great sword'] = 2},
+                      'knight' =  {'axe' = {['war axe'] = 20, ['broad axe'] = 5, ['battleaxe'] = 5},
+                                   'polearm' = {['halberd'] = 20, ['glaive'] = 10},
+                                   'mace' = {['morningstar'] = 20, ['great mace'] = 5, ['dire flail'] = 5},
+                                   'sword' = {['scimitar'] = 20, ['great sword'] = 10},
+                      'boss' =    {'axe' = {['broad axe'] = 5, ['battleaxe'] = 5, ['executioner's axe"] = 1},
+                                   'polearm' = {['glaive'] = 10, ['bardiche'] = 1},
+                                   'mace' = {['great mace'] = 5, ['dire flail'] = 5, ['eveningstar'] = 1},
+                                   'sword' = {'great sword'] = 20, ['double sword'] = 1, ['triple sword'] = 1}
+                      }
+
+
 function popcorn_equipment(bailey_type)
     -- Tier A w:50, Tier B, Tier C w:2
     local equipment = { species = {"w:2 kobold", "w:3 goblin",
