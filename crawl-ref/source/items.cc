@@ -1832,6 +1832,14 @@ void add_held_books_to_library()
     }
 }
 
+static bool _got_all_pan_runes()
+{
+    for (int rune = RUNE_DEMONIC; rune <= RUNE_GLOORX_VLOQ; ++rune)
+        if (!you.runes[rune])
+            return false;
+    return true;
+}
+
 /**
  * Place a rune into the player's inventory.
  *
@@ -1858,7 +1866,11 @@ static void _get_rune(const item_def& it, bool quiet)
                  nrunes);
         }
         else if (nrunes > 1)
+        {
+            if (player_in_branch(BRANCH_PANDEMONIUM) && _got_all_pan_runes())
+                mprf("You've emptied out Pandemonium! Nothing left here but demons.");
             mprf("You now have %d runes.", nrunes);
+        }
 
         mpr("Press } to see all the runes you have collected.");
     }
