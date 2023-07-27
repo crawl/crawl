@@ -613,7 +613,7 @@ static void _inflict_deathly_blight(monster &m)
     if (mons_has_attacks(m))
         worked = m.add_ench(mon_enchant(ENCH_WEAK, 1, &you, dur)) || worked;
     if (m.holiness() & (MH_NATURAL | MH_PLANT))
-        worked = m.add_ench(mon_enchant(ENCH_DRAINED, random_range(3, 5), &you, dur)) || worked;
+        worked = m.add_ench(mon_enchant(ENCH_DRAINED, 2, &you, dur)) || worked;
     if (worked && you.can_see(m))
         simple_monster_message(m, " decays.");
 }
