@@ -607,12 +607,14 @@ static void _inflict_deathly_blight(monster &m)
     }
 
     const int dur = random_range(3, 6) * BASELINE_DELAY;
+    bool worked = false;
     if (!m.stasis() && !m.is_stationary())
-        m.add_ench(mon_enchant(ENCH_SLOW, 0, &you, dur));
+        worked = m.add_ench(mon_enchant(ENCH_SLOW, 0, &you, dur)) || worked;
     if (mons_has_attacks(m))
-        m.add_ench(mon_enchant(ENCH_WEAK, 1, &you, dur));
-    m.add_ench(mon_enchant(ENCH_DRAINED, random_range(3, 5), &you, dur));
-    if (you.can_see(m))
+        worked = m.add_ench(mon_enchant(ENCH_WEAK, 1, &you, dur)) || worked;
+    if (m.holiness() & (MH_NATURAL | MH_PLANT))
+        worked = m.add_ench(mon_enchant(ENCH_DRAINED, random_range(3, 5), &you, dur)) || worked;
+    if (worked && you.can_see(m))
         simple_monster_message(m, " decays.");
 }
 
