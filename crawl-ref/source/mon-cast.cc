@@ -1906,8 +1906,8 @@ static void _print_battlecry_announcement(const monster& chief,
                                           spell_type spell_cast)
 {
     // Disabling detailed frenzy announcement because it's so spammy.
-    const msg_channel_type channel = chief.friendly() ? MSGCH_MONSTER_ENCHANT
-                                                      : MSGCH_FRIEND_ENCHANT;
+    const msg_channel_type channel = chief.friendly() ? MSGCH_FRIEND_ENCHANT
+                                                      : MSGCH_MONSTER_ENCHANT;
 
     if (seen_affected.size() == 1)
     {
