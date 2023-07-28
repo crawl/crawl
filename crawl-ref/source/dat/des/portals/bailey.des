@@ -97,7 +97,9 @@ knight:  Tier B w:20, Tier C
 boss:    Tire D, Tier E w:1
 --]]
 
-foe_melee.popcorn = {}
+local foe_melee = {"popcorn" = {}, "warrior" = {},
+                   "knight" = {}, "boss" = {}
+                  }
 foe_melee.popcorn.bailey_axe = {
     {"item" = "hand axe", "weight" = 50},
     {"item" = "war axe", "weight" = 12}
@@ -119,7 +121,6 @@ foe_melee.popcorn.bailey_sword = {
     {"item" = "scimitar", "weight" = 2}
 }
 
-foe_melee.warrior = {}
 foe_melee.warrior.bailey_axe = {
     {"item" = "war axe", "weight" = 60},
     {"item" = "broad axe", "weight" = 1},
@@ -142,7 +143,6 @@ foe_melee.warrior.bailey_sword = {
     {"item" = "great sword", "weight" = 2}
 }
 
-foe_melee.knight = {}
 foe_melee.knight.bailey_axe = {
     {"item" = "war axe", "weight" = 20},
     {"item" = "broad axe", "weight" = 5},
@@ -162,7 +162,6 @@ foe_melee.knight.bailey_sword = {
     {"item" = "great sword", "weight" = 10}
 }
 
-for_melee.boss = {}
 foe_melee.boss.bailey_axe = {
     {"item" = "broad axe good_item", "weight" = 5},
     {"item" = "battleaxe good_item", "weight" = 5},
@@ -184,29 +183,30 @@ foe_melee.boss.bailey_sword = {
 }
 
 local foe_ranged = {}
-local foe_ranged.popcorn = {
+foe_ranged.popcorn = {
     {"item" = "stone", "weight" = 25},
     {"item" = "boomerang", "weight" = 25},
     {"item" = "sling", "weight" = 10},
     {"item" = "shortbow", "weight" = 2},
 }
-local foe_ranged.warrior = {
+foe_ranged.warrior = {
     {"item" = "sling", "weight" = 50},
     {"item" = "shortbow", "weight" = 10},
     {"item" = "orcbow", "weight" = 1},
     {"item" = "javelin", "weight" = 1},
 }
-local foe_ranged.knight = {
+foe_ranged.knight = {
     {"item" = "shortbow", "weight" = 20},
     {"item" = "orcbow", "weight" = 5},
     {"item" = "javelin", "weight" = 5}
 }
-local foe_ranged.boss = {
+foe_ranged.boss = {
     {"item" = "orcbow", "weight" = 10},
     {"item" = "javelin", "weight" = 10},
     {"item" = "longbow", "weight" = 1},
     {"item" = "arbalest", "weight" = 1},
 }
+foe_ranged.any.popcorn = .
 
 local foe_armour = {}
 local foe_armour.popcorn = {
