@@ -66,7 +66,7 @@ function bailey_portal_sword(e)
 end
 
 function bailey_portal_random(e)
-    local bailey_types = {"axe", "polearm", "mace", "sword"}}
+    local bailey_types = {"axe", "polearm", "mace", "sword"}
     bailey_portal(e, util.random_from(bailey_types))
 end
 
@@ -78,7 +78,7 @@ end
 -- In order to avoid repeating the lengthy monster definitions:
 
 --[[
-These functions define default equipemnt strings, in five tiers
+These functions define default equipment strings, in five tiers
 No demon weapons in Baileys.
 axes: A: hand axe, B: war axe, C: war axe D: broad axe | battleaxe,
       E: executioner's axe
@@ -97,151 +97,154 @@ knight:  Tier B w:20, Tier C
 boss:    Tire D, Tier E w:1
 --]]
 
-local foe_melee = {"popcorn" = {}, "warrior" = {},
-                   "knight" = {}, "boss" = {}
+local foe_melee = {["popcorn"] = {}, ["warrior"] = {},
+                   ["knight"] = {}, ["boss"] = {}
                   }
 foe_melee.popcorn.bailey_axe = {
-    {"item" = "hand axe", "weight" = 50},
-    {"item" = "war axe", "weight" = 12}
+    {["item"] = "hand axe", ["weight"] = 50},
+    {["item"] = "war axe", ["weight"] = 12}
 }
 foe_melee.popcorn.bailey_polearm = {
-    {"item" = "spear", "weight" = 50},
-    {"item" = "trident", "weight" = 10},
-    {"item" = "halberd", "weight" = 2}
+    {["item"] = "spear", ["weight"] = 50},
+    {["item"] = "trident", ["weight"] = 10},
+    {["item"] = "halberd", ["weight"] = 2}
 }
 foe_melee.popcorn.bailey_mace = {
-    {"item" = "mace", "weight" = 30},
-    {"item" = "whip", "weight" = 20},
-    {"item" = "flail", "weight" = 10},
-    {"item" = "morningstar", "weight" = 2}
+    {["item"] = "mace", ["weight"] = 30},
+    {["item"] = "whip", ["weight"] = 20},
+    {["item"] = "flail", ["weight"] = 10},
+    {["item"] = "morningstar", ["weight"] = 2}
 }
 foe_melee.popcorn.bailey_sword = {
-    {"item" = "falchion", "weight" = 50},
-    {"item" = "long sword", "weight" = 10},
-    {"item" = "scimitar", "weight" = 2}
+    {["item"] = "falchion", ["weight"] = 50},
+    {["item"] = "long sword", ["weight"] = 10},
+    {["item"] = "scimitar", ["weight"] = 2}
 }
 
 foe_melee.warrior.bailey_axe = {
-    {"item" = "war axe", "weight" = 60},
-    {"item" = "broad axe", "weight" = 1},
-    {"item" = "battleaxe", "weight" = 1}
+    {["item"] = "war axe", ["weight"] = 60},
+    {["item"] = "broad axe", ["weight"] = 1},
+    {["item"] = "battleaxe", ["weight"] = 1}
 }
 foe_melee.warrior.bailey_polearm = {
-    {"item" = "trident", "weight" = 50},
-    {"item" = "halberd", "weight" = 10},
-    {"item" = "glaive", "weight" = 2}
+    {["item"] = "trident", ["weight"] = 50},
+    {["item"] = "halberd", ["weight"] = 10},
+    {["item"] = "glaive", ["weight"] = 2}
 }
 foe_melee.warrior.bailey_mace = {
-    {"item" = "flail", "weight" = 50},
-    {"item" = "morningstar", "weight" = 10},
-    {"item" = "dire flail", "weight" = 1},
-    {"item" = "great mace", "weight" = 1}
+    {["item"] = "flail", ["weight"] = 50},
+    {["item"] = "morningstar", ["weight"] = 10},
+    {["item"] = "dire flail", ["weight"] = 1},
+    {["item"] = "great mace", ["weight"] = 1}
 }
 foe_melee.warrior.bailey_sword = {
-    {"item" = "long sword", "weight" = 50},
-    {"item" = "scimitar", "weight" = 10},
-    {"item" = "great sword", "weight" = 2}
+    {["item"] = "long sword", ["weight"] = 50},
+    {["item"] = "scimitar", ["weight"] = 10},
+    {["item"] = "great sword", ["weight"] = 2}
 }
 
 foe_melee.knight.bailey_axe = {
-    {"item" = "war axe", "weight" = 20},
-    {"item" = "broad axe", "weight" = 5},
-    {"item" = "battleaxe", "weight" = 5},
+    {["item"] = "war axe", ["weight"] = 20},
+    {["item"] = "broad axe", ["weight"] = 5},
+    {["item"] = "battleaxe", ["weight"] = 5},
 }
 foe_melee.knight.bailey_polearm = {
-    {"item" = "halberd", "weight" = 20},
-    {"item" = "glaive", "weight" = 2}
+    {["item"] = "halberd", ["weight"] = 20},
+    {["item"] = "glaive", ["weight"] = 2}
 }
 foe_melee.knight.bailey_mace = {
-    {"item" = "morningstar", "weight" = 20},
-    {"item" = "dire flail", "weight" = 5},
-    {"item" = "great mace", "weight" = 5}
+    {["item"] = "morningstar", ["weight"] = 20},
+    {["item"] = "dire flail", ["weight"] = 5},
+    {["item"] = "great mace", ["weight"] = 5}
 }
 foe_melee.knight.bailey_sword = {
-    {"item" = "scimitar", "weight" = 20},
-    {"item" = "great sword", "weight" = 10}
+    {["item"] = "scimitar", ["weight"] = 20},
+    {["item"] = "great sword", ["weight"] = 10}
 }
 
 foe_melee.boss.bailey_axe = {
-    {"item" = "broad axe good_item", "weight" = 5},
-    {"item" = "battleaxe good_item", "weight" = 5},
-    {"item" = "executioner's axe good_item", "weight" = 1}
+    {["item"] = "broad axe good_item", ["weight"] = 5},
+    {["item"] = "battleaxe good_item", ["weight"] = 5},
+    {["item"] = "executioner's axe good_item", ["weight"] = 1}
 }
 foe_melee.boss.bailey_polearm = {
-    {"item" = "glaive good_item", "weight" = 10},
-    {"item" = "bardiche good_item", "weight" = 1}
+    {["item"] = "glaive good_item", ["weight"] = 10},
+    {["item"] = "bardiche good_item", ["weight"] = 1}
 }
 foe_melee.boss.bailey_mace = {
-    {"item" = "dire flail good_item", "weight" = 5},
-    {"item" = "great mace good_item", "weight" = 5},
-    {"item" = "eveningstar good_item", "weight" = 1}
+    {["item"] = "dire flail good_item", ["weight"] = 5},
+    {["item"] = "great mace good_item", ["weight"] = 5},
+    {["item"] = "eveningstar good_item", ["weight"] = 1}
 }
 foe_melee.boss.bailey_sword = {
-    {"item" = "great sword good_item", "weight" = 20},
-    {"item" = "double sword good_item", "weight" = 1},
-    {"item" = "triple_sword good_item", "weight" = 1}
+    {["item"] = "great sword good_item", ["weight"] = 20},
+    {["item"] = "double sword good_item", ["weight"] = 1},
+    {["item"] = "triple_sword good_item", ["weight"] = 1}
 }
 
-local foe_ranged = {}
+local foe_ranged = {["popcorn"] = {}, ["warrior"] = {},
+                    ["knight"] = {}, ["boss"] = {}
+                   }
 foe_ranged.popcorn = {
-    {"item" = "stone", "weight" = 25},
-    {"item" = "boomerang", "weight" = 25},
-    {"item" = "sling", "weight" = 10},
-    {"item" = "shortbow", "weight" = 2},
+    {["item"] = "stone", ["weight"] = 25},
+    {["item"] = "boomerang", ["weight"] = 25},
+    {["item"] = "sling", ["weight"] = 10},
+    {["item"] = "shortbow", ["weight"] = 2},
 }
 foe_ranged.warrior = {
-    {"item" = "sling", "weight" = 50},
-    {"item" = "shortbow", "weight" = 10},
-    {"item" = "orcbow", "weight" = 1},
-    {"item" = "javelin", "weight" = 1},
+    {["item"] = "sling", ["weight"] = 50},
+    {["item"] = "shortbow", ["weight"] = 10},
+    {["item"] = "orcbow", ["weight"] = 1},
+    {["item"] = "javelin", ["weight"] = 1},
 }
 foe_ranged.knight = {
-    {"item" = "shortbow", "weight" = 20},
-    {"item" = "orcbow", "weight" = 5},
-    {"item" = "javelin", "weight" = 5}
+    {["item"] = "shortbow", ["weight"] = 20},
+    {["item"] = "orcbow", ["weight"] = 5},
+    {["item"] = "javelin", ["weight"] = 5}
 }
 foe_ranged.boss = {
-    {"item" = "orcbow", "weight" = 10},
-    {"item" = "javelin", "weight" = 10},
-    {"item" = "longbow", "weight" = 1},
-    {"item" = "arbalest", "weight" = 1},
+    {["item"] = "orcbow", ["weight"] = 10},
+    {["item"] = "javelin", ["weight"] = 10},
+    {["item"] = "longbow", ["weight"] = 1},
+    {["item"] = "arbalest", ["weight"] = 1},
 }
-foe_ranged.any.popcorn = .
 
-local foe_armour = {}
-local foe_armour.popcorn = {
-    {"item" = "leather armour", "weight" = 50},
-    {"item" = "ring mail", "weight" = 10},
-    {"item" = "scale mail", "weight" = 1},
-    {"item" = "chain mail", "weight" = 1},
+local foe_armour = {["popcorn"] = {}, ["warrior"] = {},
+                    ["knight"] = {}, ["boss"] = {}
+                   }
+foe_armour.popcorn = {
+    {["item"] = "leather armour", ["weight"] = 50},
+    {["item"] = "ring mail", ["weight"] = 10},
+    {["item"] = "scale mail", ["weight"] = 1},
+    {["item"] = "chain mail", ["weight"] = 1},
 }
-local foe_armour.warrior = {
-    {"item" = "ring mail", "weight" = 50},
-    {"item" = "scale mail", "weight" = 5},
-    {"item" = "chain mail", "weight" = 5},
-    {"item" = "plate armour", "weight" = 1},
+foe_armour.warrior = {
+    {["item"] = "ring mail", ["weight"] = 50},
+    {["item"] = "scale mail", ["weight"] = 5},
+    {["item"] = "chain mail", ["weight"] = 5},
+    {["item"] = "plate armour", ["weight"] = 1},
 }
-local foe_armour.knight = {
-    {"item" = "scale mail", "weight" = 10},
-    {"item" = "chain mail", "weight" = 10},
-    {"item" = "plate armour", "weight" = 10}
+foe_armour.knight = {
+    {["item"] = "scale mail", ["weight"] = 10},
+    {["item"] = "chain mail", ["weight"] = 10},
+    {["item"] = "plate armour", ["weight"] = 10}
 }
-local foe_armour.boss = {
-    {"item" = "plate armour", "weight" = 10},
-    {"item" = "crystal plate armour", "weight" = 1},
+foe_armour.boss = {
+    {["item"] = "plate armour", ["weight"] = 10},
+    {["item"] = "crystal plate armour", ["weight"] = 1},
 }
 
 local foe_species = {}
-local foe_species.popcorn = {"kobold w:6", "goblin" w:5", "hobgoblin w:4",
-                             "orc w:3", "gnoll w:2:
-                            }
-local foe_species.warrior = {"orc warrior", "gnoll sergeant w:3"}
-local foe_species.knight = {"orc knight"}
-local foe_species.boss = {"orc warlord"}
+foe_species.popcorn = {"kobold w:6", "goblin w:5", "hobgoblin w:4",
+                       "orc w:3", "gnoll w:2"
+                      }
+foe_species.warrior = {"orc warrior", "gnoll sergeant w:3"}
+foe_species.knight = {"orc knight"}
+foe_species.boss = {"orc warlord"}
 
 -- general foe function used in place of MONS
 
-function choose(weighted_table}
+function choose(weighted_table)
     return util.random_weighted_from("weight", weighted_table)
 end
 
@@ -254,7 +257,7 @@ function foe(e, foe_tier, species, melee, ranged, armour)
         melee = choose(foe_melee[foe_tier][weapon_type])
     end
     if ranged == "any" or ranged == "rare" and crawl.one_chance_in(10) then
-        ranged = choose(foe_ranged.any.[foe_tier])
+        ranged = choose(foe_ranged[foe_tier])
     else
         ranged = nil
     end
