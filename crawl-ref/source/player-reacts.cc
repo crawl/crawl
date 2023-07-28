@@ -167,19 +167,22 @@ static bool _decrement_a_duration(duration_type dur, int delay,
 
 static void _decrement_petrification(int delay)
 {
-    if (_decrement_a_duration(DUR_PETRIFIED, delay) && !you.paralysed())
+    if (_decrement_a_duration(DUR_PETRIFIED, delay))
     {
-        you.redraw_armour_class = true;
-        you.redraw_evasion = true;
-        // implicit assumption: all races that can be petrified are made of
-        // flesh when not petrified. (Unfortunately, species::skin_name doesn't
-        // really work here..)
-        const string flesh_equiv = get_form()->flesh_equivalent.empty() ?
-                                            "flesh" :
-                                            get_form()->flesh_equivalent;
+        if (!you.paralysed())
+        {
+            you.redraw_armour_class = true;
+            you.redraw_evasion = true;
+            // implicit assumption: all races that can be petrified are made of
+            // flesh when not petrified. (Unfortunately, species::skin_name
+            // doesn't really work here..)
+            const string flesh_equiv = get_form()->flesh_equivalent.empty() ?
+                                                "flesh" :
+                                                get_form()->flesh_equivalent;
 
-        mprf(MSGCH_DURATION, "You turn to %s and can move again.",
-             flesh_equiv.c_str());
+            mprf(MSGCH_DURATION, "You turn to %s and can move again.",
+                flesh_equiv.c_str());
+        }
 
         if (you.props.exists(PETRIFIED_BY_KEY))
             you.props.erase(PETRIFIED_BY_KEY);
@@ -192,11 +195,6 @@ static void _decrement_petrification(int delay)
         if ((dur -= delay) <= 0)
         {
             dur = 0;
-            // If we'd kill the player when active flight stops, this will
-            // need to pass the killer. Unlike monsters, almost all flight is
-            // magical, inluding tengu, as there's no flapping of wings. Should
-            // we be nasty to dragon and bat forms?  For now, let's not instakill
-            // them even if it's inconsistent.
             you.fully_petrify();
         }
         else if (dur < 15 && old_dur >= 15)
@@ -222,13 +220,25 @@ static void _decrement_paralysis(int delay)
     {
         _decrement_a_duration(DUR_PARALYSIS, delay);
 
-        if (!you.duration[DUR_PARALYSIS] && !you.petrified())
+        if (!you.duration[DUR_PARALYSIS])
         {
-            mprf(MSGCH_DURATION, "You can move again.");
-            you.redraw_armour_class = true;
-            you.redraw_evasion = true;
             you.duration[DUR_PARALYSIS_IMMUNITY] = roll_dice(1, 3)
             * BASELINE_DELAY;
+
+            if (!you.petrified())
+            {
+                mprf(MSGCH_DURATION, "You can move again.");
+                you.redraw_armour_class = true;
+                you.redraw_evasion = true;
+            }
+            else
+            {
+                // don't allow chain disabling the player forever; extend their
+                // paralysis immunity until they can actually act again
+                you.duration[DUR_PARALYSIS_IMMUNITY]
+                += you.duration[DUR_PETRIFIED];
+            }
+
             if (you.props.exists(PARALYSED_BY_KEY))
                 you.props.erase(PARALYSED_BY_KEY);
         }
