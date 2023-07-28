@@ -331,13 +331,13 @@ end
 function entry_guards(e, ranged, species)
     -- for flavor all guards will be the same species and have the same gear
     if species == "any" then
-        possible_species = {"goblin", "kobold", "hobgoblin", "gnoll", "orc"
+        local possible_species = {"goblin", "kobold", "hobgoblin", "gnoll", "orc"
                            }
         species = util.random_from(possible_species)
     end
     local weapons = { bailey_axe = "hand axe",
                       bailey_polearm = "spear",
-                      bailey_mace = "mace / whip",
+                      bailey_mace = "mace | whip",
                       bailey_sword = "falchion" 
     }
     local melee = weapons[dgn.persist.bailey_type]
@@ -353,12 +353,12 @@ function entry_guards(e, ranged, species)
     e.mons(species .. " ; " .. melee .. ranged)
 end
 
-function entry_guards_melee(e,species)
+function entry_guards_melee(e, species)
     entry_guards(e, false, species)
 end
 
 function entry_guards_ranged(e, species)
-    entry_guards(e, true)
+    entry_guards(e, true, species)
 end
 
 }}
