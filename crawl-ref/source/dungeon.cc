@@ -1140,7 +1140,7 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
                 && (fill_small_zones <= 0 || zone_size <= fill_small_zones))
             {
                 // Don't fill in areas connected to vaults.
-                // We want vaults to be accessible; if the area is disconneted
+                // We want vaults to be accessible; if the area is disconnected
                 // from the rest of the level, this will cause the level to be
                 // vetoed later on.
                 bool veto = false;
@@ -1216,7 +1216,7 @@ static void _fill_small_disconnected_zones()
 {
     // debugging tip: change the feature to something like lava that will be
     // very noticeable.
-    // TODO: make even more agressive, up to ~25?
+    // TODO: make even more aggressive, up to ~25?
     _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_ROCK_WALL,
                                        _dgn_square_is_passable,
                                        _dgn_square_is_boring,

@@ -484,7 +484,7 @@ function TroveMarker:item_with_lowest_pluses(marker, pname, dry_run, items)
       titem = it
       titem_p1 = titem.pluses()
       --crawl.mpr("Picking " .. titem.name() ..
-      --          " instead (lesser pluses instad)")
+      --          " instead (lesser pluses instead)")
       --crawl.mpr("This item p1: " .. titem_p1 .. ")
     elseif this_p1 == item.plus1 then
       titem = it

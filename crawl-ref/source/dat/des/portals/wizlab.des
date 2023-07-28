@@ -1463,7 +1463,7 @@ KMONS:   6 = executioner w:5 / balrug w:5 / cacodemon / shadow demon / hellion w
              starcursed mass w:30 / apocalypse crab w:20
 KMONS:   7 = eldritch tentacle
 KMONS:   8 = obsidian statue
-# Translocations items, abyss escape aides, shrouds, and an immeadiate aide.
+# Translocations items, abyss escape aides, shrouds, and an immediate aide.
 KITEM:   d = scroll of blinking / scroll of teleportation q:3 w:15 / \
              any scroll w:1
 KITEM:   e = any ring

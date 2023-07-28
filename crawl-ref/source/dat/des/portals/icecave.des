@@ -390,7 +390,7 @@ function ice_cave_magic_loot(e, glyphs)
 end
 
 --[[
-Define some common loot items using six KITEM statments on the supplied glyphs.
+Define some common loot items using six KITEM statements on the supplied glyphs.
 The first three are armour, the next two are weapons, and that last is magical
 items. See comments for ice_cave_armour_loot, ice_cave_weapon_loot, and
 ice_cave_magic_loot for details.

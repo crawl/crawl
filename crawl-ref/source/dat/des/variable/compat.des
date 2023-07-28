@@ -1,4 +1,4 @@
-# DES-related lua only needed for save compatability.
+# DES-related lua only needed for save compatibility.
 # Please remove the code in this file when the next line is false.
 # TAG_MAJOR_VERSION == 34
 {{

@@ -590,7 +590,7 @@ static void _init_spells()
     objstat_spells.insert(NUM_SPELLS);
 }
 
-// Initialize field data that needs non-default intialization (i.e. to
+// Initialize field data that needs non-default initialization (i.e. to
 // something other than zero). Handling this in one pass creates a lot of
 // potentially unused entries, but it's better than trying to guard against
 // default initialization everywhere. For the rest of the fields, it's fine to
@@ -799,7 +799,7 @@ void objstat_record_item(const item_def &item)
     const objstat_item objs_item(item);
 
     // Just in case, don't count mimics as items; these are converted
-    // explicitely in mg_do_build_level().
+    // explicitly in mg_do_build_level().
     if (item.flags & ISFLAG_MIMIC || objs_item.base_type == ITEM_IGNORE)
         return;
 

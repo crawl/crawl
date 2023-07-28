@@ -146,7 +146,7 @@ static int l_item_do_wield(lua_State *ls)
 }
 
 /*** Wield this item.
- * @treturn boolean successfuly wielded
+ * @treturn boolean successfully wielded
  * @function wield
  */
 IDEFN(wield, do_wield)
@@ -167,7 +167,7 @@ static int l_item_do_wear(lua_State *ls)
 }
 
 /*** Wear this item (as armour).
- * @treturn boolean successfuly worn
+ * @treturn boolean successfully worn
  * @function wear
  */
 IDEFN(wear, do_wear)
@@ -187,7 +187,7 @@ static int l_item_do_puton(lua_State *ls)
 }
 
 /*** Put this item on (as jewellry).
- * @treturn boolean successfuly put on
+ * @treturn boolean successfully put on
  * @function puton
  */
 IDEFN(puton, do_puton)
@@ -1329,7 +1329,7 @@ static int l_item_pickup(lua_State *ls)
 /*** Get the Item in a given equipment slot.
  * Takes either a slot name or a slot number.
  * @tparam string|int where
- * @treturn Item|nil returns nil for nothing equiped or invalid slot
+ * @treturn Item|nil returns nil for nothing equipped or invalid slot
  * @function equipped_at
  */
 static int l_item_equipped_at(lua_State *ls)

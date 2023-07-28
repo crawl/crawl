@@ -431,7 +431,7 @@ bool find_merfolk_avatar_water_target(monster* mon)
     return false;
 }
 
-// Returns true if further handling neeeded.
+// Returns true if further handling needed.
 static bool _handle_monster_travelling(monster* mon)
 {
 #ifdef DEBUG_PATHFIND
@@ -654,7 +654,7 @@ static bool _choose_random_patrol_target_grid(monster* mon)
     }
 
     return count_grids;
-}// Returns true if further handling neeeded.
+}// Returns true if further handling needed.
 static bool _handle_monster_patrolling(monster* mon)
 {
     if (!_choose_random_patrol_target_grid(mon))

@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Vertex buffer implementaions
+ * @brief Vertex buffer implementations
 **/
 
 #include "AppHdr.h"

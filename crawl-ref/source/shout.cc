@@ -41,7 +41,7 @@ static void _actor_apply_noise(actor *act,
                                const coord_def &apparent_source,
                                int noise_intensity_millis);
 
-/// By default, what databse lookup key corresponds to each shout type?
+/// By default, what database lookup key corresponds to each shout type?
 static const map<shout_type, string> default_msg_keys = {
     { S_SILENT,         "" },
     { S_SHOUT,          "__SHOUT" },
@@ -178,7 +178,7 @@ void monster_shout(monster* mons, int shout)
         // same glyph/symbol
         string glyph_key = "'";
 
-        // Database keys are case-insensitve.
+        // Database keys are case-insensitive.
         if (isaupper(mchar))
             glyph_key += "cap-";
 
@@ -565,7 +565,7 @@ static bool _allies_can_see(const monster &mon)
  * Issue the order specified by the given key.
  *
  * @param keyn              The key the player just pressed.
- * @param mons_targd[out]   Who the player's allies should be targetting as a
+ * @param mons_targd[out]   Who the player's allies should be targeting as a
  *                          result of this command.
  * @return                  Whether a command actually executed (and the value
  *                          of mons_targd should be used).

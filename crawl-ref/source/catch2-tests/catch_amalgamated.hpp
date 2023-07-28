@@ -1560,7 +1560,7 @@ namespace Catch {
         //! Called with test cases that are skipped due to the test run aborting
         virtual void skipTest( TestCaseInfo const& testInfo ) = 0;
 
-        //! Called if a fatal error (signal/structured exception) occured
+        //! Called if a fatal error (signal/structured exception) occurred
         virtual void fatalErrorEncountered( StringRef error ) = 0;
 
         //! Writes out information about provided reporters using reporter-specific format
@@ -9150,7 +9150,7 @@ namespace TestCaseTracking {
 
         //! Returns true if tracker run to completion (successfully or not)
         virtual bool isComplete() const = 0;
-        //! Returns true if tracker run to completion succesfully
+        //! Returns true if tracker run to completion successfully
         bool isSuccessfullyCompleted() const;
         //! Returns true if tracker has started but hasn't been completed
         bool isOpen() const;
@@ -11809,7 +11809,7 @@ namespace Catch {
      * even if they are later unused (e.g. because the deriving reporter does
      * not report successful assertions, or because the deriving reporter does
      * not use assertion expansion at all). Derived classes can use two
-     * customization points, `m_shouldStoreSuccesfulAssertions` and
+     * customization points, `m_shouldStoreSuccessfulAssertions` and
      * `m_shouldStoreFailedAssertions`, to disable the expansion and gain extra
      * performance. **Accessing the assertion expansions if it wasn't stored is
      * UB.**

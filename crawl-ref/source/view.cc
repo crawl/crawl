@@ -1053,7 +1053,7 @@ static update_flags player_view_update_at(const coord_def &gc)
     maybe_remove_autoexclusion(gc);
     update_flags ret;
 
-    // Set excludes in a radius of 1 around harmful clouds genereated
+    // Set excludes in a radius of 1 around harmful clouds generated
     // by neither monsters nor the player.
     const cloud_struct* cloud = cloud_at(gc);
     if (cloud && !crawl_state.game_is_arena())

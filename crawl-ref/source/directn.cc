@@ -1097,7 +1097,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
         result = mons_target->pos();
         return true;
     }
-    // If the previous targetted position is at all useful, use it.
+    // If the previous targeted position is at all useful, use it.
     if (!Options.simple_targeting && hitfunc && !prefer_farthest
         && _find_monster_expl(you.prev_grd_targ, mode, needs_path,
                               range, hitfunc, AFF_YES, AFF_MULTIPLE))
@@ -1135,7 +1135,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     }
 
     // This is used for three things:
-    // * For all LRD targetting
+    // * For all LRD targeting
     // * To aim explosions so they try to miss you
     // * To hit monsters in LOS that are outside of normal range, but
     //   inside explosion/cloud range

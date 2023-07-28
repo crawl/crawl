@@ -552,7 +552,7 @@ end
 --
 -- * monster_dies: Waits for a monster to die. Needs the parameter
 --       "target", who's value is the name of the monster who's death
---       we're wating for, or "any" for any monster. Doesn't matter where
+--       we're waiting for, or "any" for any monster. Doesn't matter where
 --       the triggerable/marker is placed.
 --
 -- * feat_change: Waits for a cell's feature to change. Accepts the

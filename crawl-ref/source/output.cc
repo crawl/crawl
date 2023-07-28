@@ -837,7 +837,7 @@ static void _print_stats_noise(int x, int y)
     // intentional non-reset: after it has started drawing, we always redraw
     // noise. There's not a lot of cost to this, and the logic for detecting
     // if/when silenced status has changed is extremely annoying. So
-    // you.redraw_noise is esentially only used to keep the noise bar from
+    // you.redraw_noise is essentially only used to keep the noise bar from
     // drawing while the game is starting up. (If someone can figure out how
     // to correctly detect all the silence special cases, feel free to add that
     // in and I will see if you succeeded -advil.)

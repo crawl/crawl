@@ -1773,7 +1773,7 @@ namespace quiver
             }
         }
 
-        // TOOD: uses_mp for wand mp mutation? Because this mut no longer forces
+        // TODO: uses_mp for wand mp mutation? Because this mut no longer forces
         // mp use, the result is somewhat weird
 
         void trigger(dist &t) override
@@ -2436,7 +2436,7 @@ namespace quiver
     /**
      * Return an action corresponding to an ability.
      *
-     * @abil the abilty to use
+     * @abil the ability to use
      * @return the resulting action. May be invalid.
      */
     shared_ptr<action> ability_to_action(ability_type abil)

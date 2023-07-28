@@ -534,7 +534,7 @@ void wizard_value_item()
 /**
  * Generate every unrand (including removed ones).
  *
- * @param override_unique if true, will generate unrands that have alread
+ * @param override_unique if true, will generate unrands that have already
  * placed in the game. If false, will generate fallback randarts for any
  * unrands that have already placed.
  */

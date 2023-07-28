@@ -258,7 +258,7 @@ bool is_random_artefact(const item_def &item)
  *  @param item The item to be checked.
  *  @param which The unrand enum to be checked against (default 0).
  *  @returns true if item is an unrand, and if which is not 0, if it is the unrand
- *           specfied by enum in which.
+ *           specified by enum in which.
  */
 bool is_unrandom_artefact(const item_def &item, int which)
 {

@@ -1,6 +1,6 @@
 ##############################################################################
 # mini_features.des: This is the place for minivaults without monsters.
-#           So all vaults in this file should have neiter ORIENT nor MONS or
+#           So all vaults in this file should have neither ORIENT nor MONS or
 #           KMONS lines. Exceptions are made for vaults which generally have
 #           no monsters or are supposed to look as if they had no monsters.
 #

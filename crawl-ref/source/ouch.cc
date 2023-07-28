@@ -968,7 +968,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             drain_mp(mp);
 
             // Wake players who took fatal damage exactly equal to current HP,
-            // but had it reduced below fatal threshhold by spirit shield.
+            // but had it reduced below fatal threshold by spirit shield.
             if (dam < you.hp)
                 you.check_awaken(500);
 

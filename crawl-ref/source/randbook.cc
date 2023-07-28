@@ -897,7 +897,7 @@ static bool _completely_random_books(int agent)
     return agent == GOD_XOM || agent == GOD_NO_GOD;
 }
 
-/// How desireable is the given spell for inclusion in an acquired randbook?
+/// How desirable is the given spell for inclusion in an acquired randbook?
 static int _randbook_spell_weight(spell_type spell, int agent)
 {
     if (_completely_random_books(agent))

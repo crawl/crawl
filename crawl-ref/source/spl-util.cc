@@ -250,7 +250,7 @@ int get_spell_slot_by_letter(char letter)
 static int _get_spell_slot(spell_type spell)
 {
     // you.spells is a FixedVector of spells in some arbitrary order. It
-    // doesn't corespond to letters.
+    // doesn't correspond to letters.
     auto i = find(begin(you.spells), end(you.spells), spell);
     return i == end(you.spells) ? -1 : i - begin(you.spells);
 }
@@ -1650,7 +1650,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     if (testbits(flags, spflag::helpful))
         return false;
 
-    // For chosing default targets and prompting we don't treat Inner Flame as
+    // For choosing default targets and prompting we don't treat Inner Flame as
     // neutral, since the seeping flames trigger conducts and harm the monster
     // before it explodes.
     const bool allow_friends = testbits(flags, spflag::neutral)

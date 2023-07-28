@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Fight simualtion wizard functions.
+ * @brief Fight simulation wizard functions.
 **/
 
 #include "AppHdr.h"
@@ -434,7 +434,7 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
         fd.player.time_taken += time_taken;
         if (did_hit)
             fd.monster.hits++;
-        // did player succesfully do some kind of retaliatory damage?
+        // did player successfully do some kind of retaliatory damage?
         // TODO check for damage-less hits
         if (mon.max_hit_points > mon.hit_points)
             fd.player.hits++;

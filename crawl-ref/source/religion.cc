@@ -983,11 +983,11 @@ static void _inc_gift_timeout(int val)
 }
 
 // These are sorted in order of power.
-// monsteres here come from genera: n, z, V and W
+// monsters here come from genera: n, z, V and W
 // - Vampire mages are excluded because they worship scholarly Kiku
 // - M genus is all Kiku's domain
 // - Curse *, putrid mouths, and bloated husks left out as they might
-//   do too much collatoral damage
+//   do too much collateral damage
 static monster_type _yred_servants[] =
 {
     MONS_WIGHT, MONS_NECROPHAGE, MONS_SHADOW, MONS_PHANTOM, MONS_WRAITH,

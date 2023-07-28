@@ -219,7 +219,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
             hide_settings();
         });
 
-        // Triggering this function on keyup might be too agressive,
+        // Triggering this function on keyup might be too aggressive,
         // but at least the player doesn't have to press Enter to confirm changes
         $("#action-panel-settings input[type=radio],input[type=number]")
             .on("change keyup", function (e) {

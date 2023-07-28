@@ -1,7 +1,7 @@
 --- Entry points crawl uses for calling into lua.
 --
 -- Crawl contacts clua through hooks. Hooks can be interacted with either by
--- altering a hook table, defining certian functions, or the interface
+-- altering a hook table, defining certain functions, or the interface
 -- functions described here.
 --
 -- *Note:* This is not a real module. All names described here are in the
@@ -50,7 +50,7 @@ chk_lua_option          = { }
 -- A list of functions which get called when saving. They are expected to
 -- return strings of lua that will be executed on load. Data saved with this
 -- method is associated with the character save and will be lost on death.
--- For permanet storage see @{c_persist}.
+-- For permanent storage see @{c_persist}.
 -- @table chk_lua_save
 chk_lua_save            = { }
 
@@ -199,7 +199,7 @@ end
 -- This variable can be set by lua before the user is shown the
 -- "Activate which ability?" prompt. If set to a valid ability letter that
 -- ability will be activated without prompting the user. Otherwise the ability
--- prompt proceedes as normal.
+-- prompt proceeds as normal.
 --
 -- This value is cleared after every ability activation.
 --

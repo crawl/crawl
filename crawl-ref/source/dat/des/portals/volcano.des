@@ -1428,7 +1428,7 @@ ENDMAP
 # portal, leaving you with 7 to discover. Quickly, now!
 #
 # XXX: A less craggy layout with more space per-chamber would better
-#      accomodate actually randomizing where the bosses and extra loot is.
+#      accommodate actually randomizing where the bosses and extra loot is.
 #      The teleport limits are also not communicated at all, but is a
 #      necessary evil to prevent optimal teleportation abuse-
 #      what should be done here?

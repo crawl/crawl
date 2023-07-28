@@ -274,7 +274,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
         if (type == MONS_FLAYED_GHOST)
         {
-            // temporarly change our attitude back (XXX: scary code...)
+            // temporarily change our attitude back (XXX: scary code...)
             unwind_var<mon_enchant_list> enchants(enchantments, mon_enchant_list{});
             unwind_var<FixedBitVector<NUM_ENCHANTMENTS>> ecache(ench_cache, {});
             end_flayed_effect(this);

@@ -1149,7 +1149,7 @@ bool use_an_item(operation_types oper, item_def *target)
  * This function generates a menu containing type_expect items based on the
  * object_class_type to be acted on by another function. First it will list
  * items in inventory, then items on the floor. If the prompt is cancelled,
- * false is returned. If something is successfully choosen, then true is
+ * false is returned. If something is successfully chosen, then true is
  * returned, and at function exit the parameter target points to the object the
  * player chose or to nullptr if the player chose to wield bare hands (this is
  * only possible if oper is OPER_WIELD).
@@ -2080,7 +2080,7 @@ static bool _can_takeoff_armour(int item)
 bool takeoff_armour(int item, bool noask)
 {
     ASSERT_RANGE(item, 0, ENDOFPACK);
-    // We want to check non-item depedent stuff before prompting for the actual item
+    // We want to check non-item dependent stuff before prompting for the actual item
     if (!_can_generically_use_armour(false))
         return false;
 

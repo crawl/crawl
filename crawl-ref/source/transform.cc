@@ -1558,7 +1558,7 @@ static int _transform_duration(transformation which_trans, int pow)
  * All undead can enter shadow form; vampires also can enter batform, and, when
  * full, other forms (excepting lichform).
  *
- * @param which_trans   The tranformation which the player is undergoing
+ * @param which_trans   The transformation which the player is undergoing
  *                      (default you.form).
  * @param involuntary   Whether the transformation is involuntary or not.
  * @param temp                   Whether to factor in temporary limits, e.g. wrong blood level.

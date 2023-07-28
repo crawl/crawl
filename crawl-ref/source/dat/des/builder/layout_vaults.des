@@ -254,7 +254,7 @@ TAGS: no_hmirror no_vmirror chance_vaults uniq_vaults_maze layout_type_vaults
 MAP
 ENDMAP
 
-# Snakey maze consitently struggles to place rooms. Set to weight zero for now.
+# Snakey maze consistently struggles to place rooms. Set to weight zero for now.
 NAME: layout_vaults_maze_snakey
 DEPTH: Vaults
 WEIGHT: 10

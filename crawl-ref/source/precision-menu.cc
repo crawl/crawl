@@ -1313,7 +1313,7 @@ void MenuFreeform::render()
 }
 
 /**
- * Handle all the dirtyness here that the MenuItems themselves do not handle
+ * Handle all the dirtiness here that the MenuItems themselves do not handle
  */
 void MenuFreeform::_place_items()
 {

@@ -25,8 +25,8 @@ end
 function initialise_ziggurat(z, portal)
   -- Any given ziggurat will use the same builder for all its levels,
   -- and the same colours for outer walls. Before choosing the builder,
-  -- we specify a global excentricity. If zig_exc=0, then the ellipses
-  -- will be circles etc. It is not the actual excentricity but some
+  -- we specify a global eccentricity. If zig_exc=0, then the ellipses
+  -- will be circles etc. It is not the actual eccentricity but some
   -- value between 0 and 100. For deformed ellipses and rectangles, make
   -- sure that the map is wider than it is high for the sake of ASCII.
 

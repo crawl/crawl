@@ -45,7 +45,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
 
   local depth_fraction = you.depth_fraction()
 
-  -- some paramters
+  -- some parameters
   local rooms_across = 5
   local room_spacing = 13
   local offset_max = 1
@@ -183,7 +183,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
 
   local depth_fraction = you.depth_fraction()
 
-  -- some paramters
+  -- some parameters
   local rooms_across = 7
   local room_spacing = 9
   local offset_max = 1

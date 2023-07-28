@@ -1232,7 +1232,7 @@ bool ShopMenu::examine_index(int i)
     ASSERT(i < static_cast<int>(items.size()));
     // A hack to make the description more useful.
     // The default copy constructor is non-const for item_def,
-    // so we need this violation of const hygene to tweak the flags
+    // so we need this violation of const hygiene to tweak the flags
     // to make the description more useful. The flags are copied by
     // value by the default copy constructor so this is safe.
     item_def& item(*const_cast<item_def*>(dynamic_cast<ShopEntry*>(
@@ -2063,7 +2063,7 @@ void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
         || crawl_state.obj_stat_gen
         || crawl_state.test)
     {
-        return; // Shopping list is unitialized and uneeded.
+        return; // Shopping list is initialized and unneeded.
     }
 
     const level_pos src(level_id::current(), _src);

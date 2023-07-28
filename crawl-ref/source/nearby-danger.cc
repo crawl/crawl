@@ -44,7 +44,7 @@ static bool _mons_has_path_to_player(const monster* mon)
         return true;
 
     // Non-adjacent non-tentacle stationary monsters are only threatening
-    // because of any ranged attack they might posess, which is handled
+    // because of any ranged attack they might possess, which is handled
     // elsewhere in the safety checks. Presently all stationary monsters
     // have a ranged attack, but if a melee stationary monster is introduced
     // this will fail. Don't add a melee stationary monster it's not a good
