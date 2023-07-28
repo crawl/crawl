@@ -218,21 +218,29 @@ static void _decrement_paralysis(int delay)
 {
     _decrement_a_duration(DUR_PARALYSIS_IMMUNITY, delay);
 
-    if (you.duration[DUR_PARALYSIS])
-    {
-        _decrement_a_duration(DUR_PARALYSIS, delay);
+    if (!you.duration[DUR_PARALYSIS])
+        return;
 
-        if (!you.duration[DUR_PARALYSIS] && !you.petrified())
-        {
-            mprf(MSGCH_DURATION, "You can move again.");
-            you.redraw_armour_class = true;
-            you.redraw_evasion = true;
-            you.duration[DUR_PARALYSIS_IMMUNITY] = roll_dice(1, 3)
-            * BASELINE_DELAY;
-            if (you.props.exists(PARALYSED_BY_KEY))
-                you.props.erase(PARALYSED_BY_KEY);
-        }
+    _decrement_a_duration(DUR_PARALYSIS, delay);
+
+    if (you.duration[DUR_PARALYSIS])
+        return;
+
+    if (you.props.exists(PARALYSED_BY_KEY))
+        you.props.erase(PARALYSED_BY_KEY);
+
+    const int immunity = roll_dice(1, 3) * BASELINE_DELAY;
+    you.duration[DUR_PARALYSIS_IMMUNITY] = immunity;
+    if (you.petrified())
+    {
+        // no chain paralysis + petrification combos!
+        you.duration[DUR_PARALYSIS_IMMUNITY] += you.duration[DUR_PETRIFIED];
+        return;
     }
+
+    mprf(MSGCH_DURATION, "You can move again.");
+    you.redraw_armour_class = true;
+    you.redraw_evasion = true;
 }
 
 /**
