@@ -256,24 +256,21 @@ function choose(weighted_table}
     return util.random_weighted_from("weight", weighted_table)
 end
 
-function foe(e, foe_type, species, melee, ranged, armour)
+function foe(e, foe_tier, species, melee, ranged, armour)
     local weapon_type = dgn.persist.bailey_type
     if species == "any" then
-        species = util.random_weighted_from("weight", foe_species).species
+        species = choose(foe_species[foe_tier])
     end
-    if weapon == "any" then
-        weapon = dgn.random_item_def(melee_weapons[foe_type][weapon_type])
-        if foe_type == "boss" then
-            weapon = weapon .. " good_item"
-        end
+    if melee == "any" then
+        melee = choose(foe_melee[foe_tier][weapon_type])
     end
     if ranged == "any" then
-        ranged = default_equipment.ranged.any
+        ranged = choose(foe_ranged[foe_tier].any)
     elseif ranged == "rare" then
-        ranged = default_equipment.ranged.rare
+        ranged = choose(foe_ranged[foe_tier].rare)
     end
     if armour == "any" then
-        armour = default_equipment.armour
+        armour = choose(foe_armour[foe_tier])
     end
     local equipment = {}
     for i, monster_name in ipairs(species) do
