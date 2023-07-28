@@ -183,19 +183,30 @@ foe_melee.boss.bailey_sword = {
     {"item" = "triple_sword good_item", "weight" = 1}
 }
 
-local ranged_weapon = {"popcorn" = {["stone"] = 25, ["boomerang"] = 25,
-                                    ["sling"] = 10, ["shortbow"] = 2
-                                   },
-                       "warrior" = {["sling"] = 50, ["shortbow"] = 10,
-                                    ["orcbow"] = 1, ["javelin"] = 1
-                                   },
-                       'knight' = {["shortbow"] = 20, ["orcbow"] = 5,
-                                   ["javelin"] = 5
-                                  },
-                       "boss" = {["orcbow"] = 10, ["javelin"] = 10,
-                                 ["longbow"] = 1, ["arbalest"] = 1
-                                }
-                      }
+local foe_ranged = {}
+local foe_ranged.popcorn = {
+    {"item" = "stone", "weight" = 25},
+    {"item" = "boomerang", "weight" = 25},
+    {"item" = "sling", "weight" = 10},
+    {"item" = "shortbow", "weight" = 2},
+}
+local foe_ranged.warrior = {
+    {"item" = "sling", "weight" = 50},
+    {"item" = "shortbow", "weight" = 10},
+    {"item" = "orcbow", "weight" = 1},
+    {"item" = "javelin", "weight" = 1},
+}
+local foe_ranged.knight = {
+    {"item" = "shortbow", "weight" = 20},
+    {"item" = "orcbow", "weight" = 5},
+    {"item" = "javelin", "weight" = 5}
+}
+local foe_ranged.boss = {
+    {"item" = "orcbow", "weight" = 10},
+    {"item" = "javelin", "weight" = 10},
+    {"item" = "longbow", "weight" = 1},
+    {"item" = "arbalest", "weight" = 1},
+}
 
 local body_armour = {"popcorn" = {["leather"] = 50, ["ring mail"] = 10,
                                   ["scale mail"] = 1, ["chain mail"] = 1
