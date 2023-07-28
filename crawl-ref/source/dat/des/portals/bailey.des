@@ -250,7 +250,11 @@ local foe_species.boss = {
     {"item" = "orc warlord", "weight" = 10},
 }
 
--- general foe function
+-- general foe function used in place of MONS
+
+function choose(weighted_table}
+    return util.random_weighted_from("weight", weighted_table)
+end
 
 function foe(e, foe_type, species, melee, ranged, armour)
     local weapon_type = dgn.persist.bailey_type
