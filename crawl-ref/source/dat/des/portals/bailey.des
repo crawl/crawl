@@ -96,74 +96,92 @@ warrior: Tier B w:50, Tier C, Tier D w:2
 knight:  Tier B w:20, Tier C
 boss:    Tire D, Tier E w:1
 --]]
-local melee_weapon = {"popcorn" = {"axe" = {["hand axe"] = 50,
-                                            ["war axe"] = 12
-                                           },
-                                   "polearm" = {["spear"] = 50,
-                                                ["trident"] = 10,
-                                                ["halberd"] = 2
-                                               },
-                                   "mace" = {["mace"] = 30,
-                                             ["whip"] = 20,
-                                             ["flail"] = 10,
-                                             ["morningstar"] = 2
-                                               },
-                                   "sword" = {["falchion"] = 50,
-                                              ["long sword"] = 10,
-                                              ["scimitar"] = 2
-                                             }
-                                  },
-                      "warrior" = {"axe" = {["war axe"] = 60,
-                                            ["broad axe"] = 1,
-                                            ["battleaxe"] = 1
-                                           },
-                                   "polearm" = {["trident"] = 50,
-                                                ["halberd"] = 10,
-                                                ["glaive"] = 2
-                                               },
-                                   "mace" = {["flail"] = 50,
-                                             ["morningstar"] = 10,
-                                             ["great mace"] = 1,
-                                             ["dire flail"] = 1
-                                            },
-                                   "sword" = {["long sword"] = 50,
-                                              ["scimitar"] = 10,
-                                              ["great sword"] = 2
-                                             }
-                                  },
-                      "knight" = {"axe" = {["war axe"] = 20,
-                                           ["broad axe"] = 5,
-                                           ["battleaxe"] = 5
-                                          },
-                                  "polearm" = {["halberd"] = 20,
-                                               ["glaive"] = 10
-                                              },
-                                  "mace" = {["morningstar"] = 20,
-                                            ["great mace"] = 5,
-                                            ["dire flail"] = 5
-                                           },
-                                  "sword" = {["scimitar"] = 20,
-                                             ["great sword"] = 10
-                                            }
-                                 }, 
 
-                      "boss" = {"axe" = {["broad axe good_item"] = 5,
-                                         ["battleaxe good_item"] = 5,
-                                         ["executioner's axe good_item"] = 1
-                                        },
-                                "polearm" = {["glaive good_item"] = 10,
-                                             ["bardiche good_item"] = 1
-                                            },
-                                "mace" = {["great mace good_item"] = 5,
-                                          ["dire flail good_item"] = 5,
-                                          ["eveningstar good_item"] = 1
-                                         },
-                                "sword" = {["great sword good_item"] = 20,
-                                           ["double sword good_item"] = 1,
-                                           ["triple sword good_item"] = 1
-                                          }
-                               }
-                      }
+foe_melee.popcorn = {}
+foe_melee.popcorn.bailey_axe = {
+    {"item" = "hand axe", "weight" = 50},
+    {"item" = "war axe", "weight" = 12}
+}
+foe_melee.popcorn.bailey_polearm = {
+    {"item" = "spear", "weight" = 50},
+    {"item" = "trident", "weight" = 10},
+    {"item" = "halberd", "weight" = 2}
+}
+foe_melee.popcorn.bailey_mace = {
+    {"item" = "mace", "weight" = 30},
+    {"item" = "whip", "weight" = 20},
+    {"item" = "flail", "weight" = 10},
+    {"item" = "morningstar", "weight" = 2}
+}
+foe_melee.popcorn.bailey_sword = {
+    {"item" = "falchion", "weight" = 50},
+    {"item" = "long sword", "weight" = 10},
+    {"item" = "scimitar", "weight" = 2}
+}
+
+foe_melee.warrior = {}
+foe_melee.warrior.bailey_axe = {
+    {"item" = "war axe", "weight" = 60},
+    {"item" = "broad axe", "weight" = 1},
+    {"item" = "battleaxe", "weight" = 1}
+}
+foe_melee.warrior.bailey_polearm = {
+    {"item" = "trident", "weight" = 50},
+    {"item" = "halberd", "weight" = 10},
+    {"item" = "glaive", "weight" = 2}
+}
+foe_melee.warrior.bailey_mace = {
+    {"item" = "flail", "weight" = 50},
+    {"item" = "morningstar", "weight" = 10},
+    {"item" = "dire flail", "weight" = 1},
+    {"item" = "great mace", "weight" = 1}
+}
+foe_melee.warrior.bailey_sword = {
+    {"item" = "long sword", "weight" = 50},
+    {"item" = "scimitar", "weight" = 10},
+    {"item" = "great sword", "weight" = 2}
+}
+
+foe_melee.knight = {}
+foe_melee.knight.bailey_axe = {
+    {"item" = "war axe", "weight" = 20},
+    {"item" = "broad axe", "weight" = 5},
+    {"item" = "battleaxe", "weight" = 5},
+}
+foe_melee.knight.bailey_polearm = {
+    {"item" = "halberd", "weight" = 20},
+    {"item" = "glaive", "weight" = 2}
+}
+foe_melee.knight.bailey_mace = {
+    {"item" = "morningstar", "weight" = 20},
+    {"item" = "dire flail", "weight" = 5},
+    {"item" = "great mace", "weight" = 5}
+}
+foe_melee.knight.bailey_sword = {
+    {"item" = "scimitar", "weight" = 20},
+    {"item" = "great sword", "weight" = 10}
+}
+
+for_melee.boss = {}
+foe_melee.boss.bailey_axe = {
+    {"item" = "broad axe good_item", "weight" = 5},
+    {"item" = "battleaxe good_item", "weight" = 5},
+    {"item" = "executioner's axe good_item", "weight" = 1}
+}
+foe_melee.boss.bailey_polearm = {
+    {"item" = "glaive good_item", "weight" = 10},
+    {"item" = "bardiche good_item", "weight" = 1}
+}
+foe_melee.boss.bailey_mace = {
+    {"item" = "dire flail good_item", "weight" = 5},
+    {"item" = "great mace good_item", "weight" = 5},
+    {"item" = "eveningstar good_item", "weight" = 1}
+}
+foe_melee.boss.bailey_sword = {
+    {"item" = "great sword good_item", "weight" = 20},
+    {"item" = "double sword good_item", "weight" = 1},
+    {"item" = "triple_sword good_item", "weight" = 1}
+}
 
 local ranged_weapon = {"popcorn" = {["stone"] = 25, ["boomerang"] = 25,
                                     ["sling"] = 10, ["shortbow"] = 2
@@ -174,47 +192,52 @@ local ranged_weapon = {"popcorn" = {["stone"] = 25, ["boomerang"] = 25,
                        'knight' = {["shortbow"] = 20, ["orcbow"] = 5,
                                    ["javelin"] = 5
                                   },
-                       'boss' = {["orcbow"] = 10, ["javelin"] = 10,
+                       "boss" = {["orcbow"] = 10, ["javelin"] = 10,
                                  ["longbow"] = 1, ["arbalest"] = 1
                                 }
                       }
 
-local armour = {"popcorn" = {["leather"] = 50, ["ring mail"] = 10,
-                             ["scale mail"] = 1, ["chain mail"] = 1
-                            },
-                "warrior" = {["ring mail"] = 50, ["scale mail"] = 5,
-                             ["chain mail"] = 5, ["plate armour"] = 2
-                            },
-                "knight" = {["scale mail"] = 10, ["chain mail"] = 10,
-                            ["plate armour"] = 5
-                           },
-                "boss" = {["plate armour"] = 10,
-                          ["crystal plate armour"] = 1
-                         }
-               }
+local body_armour = {"popcorn" = {["leather"] = 50, ["ring mail"] = 10,
+                                  ["scale mail"] = 1, ["chain mail"] = 1
+                                 },
+                     "warrior" = {["ring mail"] = 50, ["scale mail"] = 5,
+                                  ["chain mail"] = 5, ["plate armour"] = 2
+                                 },
+                     "knight" = {["scale mail"] = 10, ["chain mail"] = 10,
+                                 ["plate armour"] = 5
+                                },
+                     "boss" = {["plate armour"] = 10,
+                               ["crystal plate armour"] = 1
+                              }
+                    }
 
-local species = {"popcorn" = {["kobold"] = 2, ["goblin"] = 3, 
-                              ["hobgoblin"] = 4, ["gnoll"] = 5,
-                              ["orc"] = 6
-                             },
-                 "warrior" = {["gnoll sergeant"] = 3,
-                              ["orc warrior"] = 10
-                             },
-                 "knight" = {["orc knight"] = 1
-                            },
-                 "boss" = {["orc warlord"] = 1
-                          }
-                }
+local foe_species = {"popcorn" = {{"weight" = 2, "species" = "kobold"},
+                                  {"weight" = 3, "species" = "goblin"},
+                                  {"weight" = 4, "species" = "hobgoblin"},
+                                  {"weight" = 5, "species" = "gnoll"},
+                                  {"weight" = 6, "species" = "orc"},
+                                 },
+                     "warrior" = {{"weight" = 3, "species" = "gnoll sergeant"},
+                                  {"weight" = 10, "species" = "orc warrior}
+                                 },
+                     "knight" = {{"weight" = 1, "species" = "orc knight"}
+                                },
+                     "boss" = {{"weight" = 1, "species" = "orc warlord"}
+                              }
+                    }
 
 -- general foe function
 
-function foe(e, equipment_fn, species, weapon, ranged, armour)
-    local default_equipment = equipment_fn(dgn.persist.bailey_type)
+function foe(e, foe_type, species, melee, ranged, armour)
+    local weapon_type = dgn.persist.bailey_type
     if species == "any" then
-        species = default_equipment.species
+        species = util.random_weighted_from("weight", foe_species).species
     end
     if weapon == "any" then
-        weapon = default_equipment.weapon
+        weapon = dgn.random_item_def(melee_weapons[foe_type][weapon_type])
+        if foe_type == "boss" then
+            weapon = weapon .. " good_item"
+        end
     end
     if ranged == "any" then
         ranged = default_equipment.ranged.any
