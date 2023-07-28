@@ -208,20 +208,51 @@ local foe_ranged.boss = {
     {"item" = "arbalest", "weight" = 1},
 }
 
-local body_armour = {"popcorn" = {["leather"] = 50, ["ring mail"] = 10,
-                                  ["scale mail"] = 1, ["chain mail"] = 1
-                                 },
-                     "warrior" = {["ring mail"] = 50, ["scale mail"] = 5,
-                                  ["chain mail"] = 5, ["plate armour"] = 2
-                                 },
-                     "knight" = {["scale mail"] = 10, ["chain mail"] = 10,
-                                 ["plate armour"] = 5
-                                },
-                     "boss" = {["plate armour"] = 10,
-                               ["crystal plate armour"] = 1
-                              }
-                    }
+local foe_armour = {}
+local foe_armour.popcorn = {
+    {"item" = "leather armour", "weight" = 50},
+    {"item" = "ring mail", "weight" = 10},
+    {"item" = "scale mail", "weight" = 1},
+    {"item" = "chain mail", "weight" = 1},
+}
+local foe_armour.warrior = {
+    {"item" = "ring mail", "weight" = 50},
+    {"item" = "scale mail", "weight" = 5},
+    {"item" = "chain mail", "weight" = 5},
+    {"item" = "plate armour", "weight" = 1},
+}
+local foe_armour.knight = {
+    {"item" = "scale mail", "weight" = 10},
+    {"item" = "chain mail", "weight" = 10},
+    {"item" = "plate armour", "weight" = 10}
+}
+local foe_armour.boss = {
+    {"item" = "plate armour", "weight" = 10},
+    {"item" = "crystal plate armour", "weight" = 1},
+}
 
+local foe_species = {}
+local foe_armour.popcorn = {
+    {"item" = "leather armour", "weight" = 50},
+    {"item" = "ring mail", "weight" = 10},
+    {"item" = "scale mail", "weight" = 1},
+    {"item" = "chain mail", "weight" = 1},
+}
+local foe_armour.warrior = {
+    {"item" = "ring mail", "weight" = 50},
+    {"item" = "scale mail", "weight" = 5},
+    {"item" = "chain mail", "weight" = 5},
+    {"item" = "plate armour", "weight" = 1},
+}
+local foe_ranged.knight = {
+    {"item" = "scale mail", "weight" = 10},
+    {"item" = "chain mail", "weight" = 10},
+    {"item" = "plate armour", "weight" = 10}
+}
+local foe_ranged.boss = {
+    {"item" = "plate armour", "weight" = 10},
+    {"item" = "crystal plate armour", "weight" = 1},
+}
 local foe_species = {"popcorn" = {{"weight" = 2, "species" = "kobold"},
                                   {"weight" = 3, "species" = "goblin"},
                                   {"weight" = 4, "species" = "hobgoblin"},
