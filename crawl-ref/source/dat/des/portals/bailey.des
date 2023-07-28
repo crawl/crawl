@@ -264,10 +264,10 @@ function foe(e, foe_tier, species, melee, ranged, armour)
     if melee == "any" then
         melee = choose(foe_melee[foe_tier][weapon_type])
     end
-    if ranged == "any" then
-        ranged = choose(foe_ranged[foe_tier].any)
-    elseif ranged == "rare" then
-        ranged = choose(foe_ranged[foe_tier].rare)
+    if ranged == "any" or ranged == "rare" and crawl.one_chance_in(10) then
+        ranged = choose(foe_ranged.any.[foe_tier])
+    else
+        ranged = nil
     end
     if armour == "any" then
         armour = choose(foe_armour[foe_tier])
