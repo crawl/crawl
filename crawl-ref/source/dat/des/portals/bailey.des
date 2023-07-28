@@ -232,41 +232,23 @@ local foe_armour.boss = {
 }
 
 local foe_species = {}
-local foe_armour.popcorn = {
-    {"item" = "leather armour", "weight" = 50},
-    {"item" = "ring mail", "weight" = 10},
-    {"item" = "scale mail", "weight" = 1},
-    {"item" = "chain mail", "weight" = 1},
+local foe_species.popcorn = {
+    {"item" = "kobold", "weight" = 6},
+    {"item" = "goblin", "weight" = 5},
+    {"item" = "hobgoblin", "weight" = 4},
+    {"item" = "orc", "weight" = 3},
+    {"item" = "gnoll", weight = 2}
 }
-local foe_armour.warrior = {
-    {"item" = "ring mail", "weight" = 50},
-    {"item" = "scale mail", "weight" = 5},
-    {"item" = "chain mail", "weight" = 5},
-    {"item" = "plate armour", "weight" = 1},
+local foe_species.warrior = {
+    {"item" = "orc warrior", "weight" = 10},
+    {"item" = "gnoll sergeant", "weight" = 3}
 }
-local foe_ranged.knight = {
-    {"item" = "scale mail", "weight" = 10},
-    {"item" = "chain mail", "weight" = 10},
-    {"item" = "plate armour", "weight" = 10}
+local foe_species.knight = {
+    {"item" = "orc knight", "weight" = 10}
 }
-local foe_ranged.boss = {
-    {"item" = "plate armour", "weight" = 10},
-    {"item" = "crystal plate armour", "weight" = 1},
+local foe_species.boss = {
+    {"item" = "orc warlord", "weight" = 10},
 }
-local foe_species = {"popcorn" = {{"weight" = 2, "species" = "kobold"},
-                                  {"weight" = 3, "species" = "goblin"},
-                                  {"weight" = 4, "species" = "hobgoblin"},
-                                  {"weight" = 5, "species" = "gnoll"},
-                                  {"weight" = 6, "species" = "orc"},
-                                 },
-                     "warrior" = {{"weight" = 3, "species" = "gnoll sergeant"},
-                                  {"weight" = 10, "species" = "orc warrior}
-                                 },
-                     "knight" = {{"weight" = 1, "species" = "orc knight"}
-                                },
-                     "boss" = {{"weight" = 1, "species" = "orc warlord"}
-                              }
-                    }
 
 -- general foe function
 
