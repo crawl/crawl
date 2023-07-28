@@ -232,23 +232,12 @@ local foe_armour.boss = {
 }
 
 local foe_species = {}
-local foe_species.popcorn = {
-    {"item" = "kobold", "weight" = 6},
-    {"item" = "goblin", "weight" = 5},
-    {"item" = "hobgoblin", "weight" = 4},
-    {"item" = "orc", "weight" = 3},
-    {"item" = "gnoll", weight = 2}
-}
-local foe_species.warrior = {
-    {"item" = "orc warrior", "weight" = 10},
-    {"item" = "gnoll sergeant", "weight" = 3}
-}
-local foe_species.knight = {
-    {"item" = "orc knight", "weight" = 10}
-}
-local foe_species.boss = {
-    {"item" = "orc warlord", "weight" = 10},
-}
+local foe_species.popcorn = {"kobold w:6", "goblin" w:5", "hobgoblin w:4",
+                             "orc w:3", "gnoll w:2:
+                            }
+local foe_species.warrior = {"orc warrior", "gnoll sergeant w:3"}
+local foe_species.knight = {"orc knight"}
+local foe_species.boss = {"orc warlord"}
 
 -- general foe function used in place of MONS
 
@@ -302,15 +291,15 @@ armour must be a string, or "any", or nil
 --]]
 
 function popcorn_foe(e, species, melee, ranged, armour)
-    foe(e, popcorn_equipment, species, melee, ranged, armour)
+    foe(e, "popcorn", species, melee, ranged, armour)
 end
 
 function warrior_foe(e, species, melee, ranged, armour)
-    foe(e, warrior_equipment, species, melee, ranged, armour)
+    foe(e, "warrior", species, melee, ranged, armour)
 end
 
 function knight_foe(e, species, melee, ranged, armour)
-    foe(e, knight_equipment, species, melee, ranged, armour)
+    foe(e, "knight", species, melee, ranged, armour)
 end
 
 function hard_foe(e, melee, ranged, armour)
@@ -322,7 +311,7 @@ function hard_foe(e, melee, ranged, armour)
 end
 
 function boss_foe(e, species, melee, ranged, armour)
-    foe(e, boss_equipment, species, melee, ranged, armour)
+    foe(e, "boss", species, melee, ranged, armour)
 end
 
 -- around entry portal
