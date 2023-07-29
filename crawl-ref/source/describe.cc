@@ -5308,6 +5308,21 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
                << _get_threat_desc(mi.threat) << ".\n";
     }
 
+    if (mi.has_unusual_items())
+    {
+        const vector<string> unusual_items = mi.get_unusual_items();
+
+        result << uppercase_first(pronoun) << " ";
+        (!mons_class_is_animated_weapon(mi.type) ?
+            result << conjugate_verb("have", plural)
+                   << " an unusual item: "
+                   << comma_separated_line(unusual_items.begin(),
+                                           unusual_items.end()) :
+            result << conjugate_verb("are", plural)
+                   << " an unusual item")
+               << ".\n";
+    }
+
     if (!resist_descriptions.empty())
     {
         result << uppercase_first(pronoun) << " "

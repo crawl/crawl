@@ -30,12 +30,13 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_MORE_POISON  = 0x1000000000000000ULL,
     TILE_FLAG_MAX_POISON   = 0x1000000000800000ULL,
 
-    // 4 mutually exclusive flags for threat level.
+    // 5 mutually exclusive flags for threat level.
     TILE_FLAG_THREAT_MASK  = 0xE000000000000000ULL,
     TILE_FLAG_TRIVIAL      = 0x2000000000000000ULL,
     TILE_FLAG_EASY         = 0x4000000000000000ULL,
     TILE_FLAG_TOUGH        = 0x6000000000000000ULL,
     TILE_FLAG_NASTY        = 0x8000000000000000ULL,
+    TILE_FLAG_UNUSUAL      = 0xE000000000000000ULL,
 
     // MDAM has 5 possibilities, so uses 3 bits.
     TILE_FLAG_MDAM_MASK    = 0x1C0000000ULL,

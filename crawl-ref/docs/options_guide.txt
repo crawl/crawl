@@ -32,9 +32,9 @@ The contents of this text are:
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour
 3-c     Dungeon View Item and Monster Highlighting.
-                friend_highlight, neutral_highlight, stab_highlight,
-                may_stab_highlight, heap_highlight, feature_item_highlight,
-                trap_item_highlight
+                friend_highlight, neutral_highlight, unusual_highlight,
+                stab_highlight, may_stab_highlight, heap_highlight,
+                feature_item_highlight, trap_item_highlight
 3-d     Level Map Functions.
                 level_map_cursor_step
 3-e     Viewport Display Options.
@@ -75,13 +75,13 @@ The contents of this text are:
                 msg_min_height, msg_max_height, msg_webtiles_height,
                 messages_at_top, msg_condense_repeats, msg_condense_short,
                 show_travel_trail, skill_focus, default_show_all_skills,
-                monster_list_colour, view_delay, use_animations,
-                darken_beyond_range, show_blood, force_more_message,
-                flash_screen_message, cloud_status, always_show_zot,
-                action_panel, action_panel_filter,
-                action_panel_show_unidentified, action_panel_scale,
-                action_panel_orientation, action_panel_font_family,
-                action_panel_font_size
+                monster_list_colour, view_delay, reduce_animations,
+                use_animations, unusual_monster_items, darken_beyond_range,
+                show_blood, force_more_message, flash_screen_message,
+                cloud_status, always_show_zot, action_panel,
+                action_panel_filter, action_panel_show_unidentified,
+                action_panel_scale, action_panel_orientation,
+                action_panel_font_family, action_panel_font_size
 3-i     Colours (messages and menus).
                 menu_colour, message_colour
 3-j     Quivers, firing, and ammo.
@@ -718,6 +718,15 @@ neutral_highlight = hi:lightgrey
         a neutral monster's path, and to avoid accidentally killing it.
         The default setting shows neutrals with a dark grey background. Since
         there are no darkgrey monster glyphs anymore, this works fine.
+
+unusual_highlight = hi:magenta
+        Highlight hostile monsters carrying unusual items. Useful to show if a
+        monster should be handled with care because it has an atypical item,
+        such as a wand or a distortion weapon.
+
+        This is used in conjunction with the unusual_monster_items option:
+        unusual_monster_items determines which items will cause a monster to be
+        highlighted.
 
 stab_highlight = hi:blue
         This option highlights monsters that are fully unaware of the player
@@ -1682,7 +1691,7 @@ default_show_all_skills = false
 
 monster_list_colour = friendly:green, neutral:brown, good_neutral:brown
 monster_list_colour += trivial:darkgrey, easy:lightgrey, tough:yellow,
-                       nasty:lightred
+                       nasty:lightred, unusual:lightmagenta
         (List option)
         Change the colours used to display monster names in the monster list.
         Valid keys, and their initial colours, are:
@@ -1697,6 +1706,7 @@ monster_list_colour += trivial:darkgrey, easy:lightgrey, tough:yellow,
              easy           - lightgrey
              tough          - yellow
              nasty          - lightred
+             unusual        - lightmagenta
 
         If a category is unset or has a missing colour, its colour defaults to
         lightgrey. For removal with `-=`, the category name can be used alone,
@@ -1739,6 +1749,29 @@ use_animations += branch_entry
                              ability or casts a spell.
           branch_entry     - Animations that run when you enter a new branch.
                              Currently only the Abyss and Zot have animations.
+
+unusual_monster_items += <regex>, <regex>, ...
+        (List option)
+        Monsters whose inventory items match a regex in this comma-separated
+        list will display with unusual threat level. E.g.
+             unusual_monster_items = vulnerable,artefact,wand
+             unusual_monster_items += heavy,vamp,disto,chaos,spect
+             unusual_monster_items += curare,atropa,throwing net,dispersal
+             unusual_monster_items += large rock,javelin,silver
+             unusual_monster_items += \+([4-9]|[1-9][0-9])
+        The item descriptions matched against are the short item names that
+        ordinarily display when a monster is examined with 'xv'.
+
+        This option accepts two special keywords: "artefact" and "vulnerable".
+
+        If any regex matches "artefact", all artefacts will be highlighted.
+        If any regex matches "vulnerable", all weapon brands to which the player
+        is especially vulnerable will be dynamically highlighted, e.g.
+        holy wrath will highlight if the player is currently undead or demonic.
+
+        This option determines which monsters will be regarded as "unusual" for
+        the options tile_show_threat_levels (tiles only), monster_list_colour,
+        and unusual_highlight (console only).
 
 darken_beyond_range = true
         If set to true, everything beyond range when targeting will be
@@ -2426,10 +2459,13 @@ tile_show_player_species = false
         If enabled, displays the player using the monster tile for her species,
         instead of using the normal doll and showing equipment.
 
-tile_show_threat_levels = nasty
+tile_show_threat_levels = nasty, unusual
         This option controls which monsters will be highlighted with their
-        threat level. Valid levels include: trivial, easy, tough, nasty.
-        You can specify multiple levels at once, or 'none'.
+        threat level. Valid levels include: trivial, easy, tough, nasty,
+        unusual. You can specify multiple levels at once, or 'none'.
+
+        When 'unusual' is specified, the option unusual_monster_items will
+        determine which items cause a monster to highlight as unusual.
 
 tile_layout_priority = minimap, inventory, command, spell, monster
         (Ordered list option)

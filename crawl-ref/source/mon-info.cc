@@ -1395,6 +1395,11 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
         colour_type = MLC_NEUTRAL;
         break;
     case ATT_HOSTILE:
+        if (has_unusual_items())
+        {
+            colour_type = MLC_UNUSUAL;
+            break;
+        }
         switch (threat)
         {
         case MTHRT_TRIVIAL: colour_type = MLC_TRIVIAL; break;
@@ -1650,6 +1655,39 @@ bool monster_info::fellow_slime() const {
     return attitude == ATT_GOOD_NEUTRAL
         && have_passive(passive_t::neutral_slimes)
         && mons_class_is_slime(type);
+}
+
+vector<string> monster_info::get_unusual_items() const
+{
+    vector<string> names;
+    const auto &patterns = Options.unusual_monster_items;
+
+    for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
+    {
+        if (!inv[i])
+            continue;
+
+        const item_def* item = inv[i].get();
+        const string name = item->name(DESC_A, false, false, true, false);
+        const brand_type brand = get_weapon_brand(*item);
+
+        if (any_of(begin(patterns), end(patterns),
+                   [&](const text_pattern &p) -> bool
+                   { return p.matches(name)
+                            || p.matches("artefact") && is_artefact(*item)
+                            || p.matches("vulnerable")
+                               && you.is_brand_vulnerable(brand); }))
+        {
+            names.push_back(name);
+        }
+    }
+
+    return names;
+}
+
+bool monster_info::has_unusual_items() const
+{
+    return attitude == ATT_HOSTILE && !get_unusual_items().empty();
 }
 
 // Only checks for spells from preset monster spellbooks.
