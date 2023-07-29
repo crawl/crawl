@@ -595,7 +595,7 @@ bool actor::has_invalid_constrictor(bool move) const
     return move
         // Constriction doesn't work out of LOS, to avoid sauciness.
         || !ignoring_player && !attacker->see_cell(pos())
-        || typ == CONSTRICT_BVC && !feat_has_solid_floor(env.grid(pos()));
+        || !feat_has_solid_floor(env.grid(pos()));
 }
 
 /**
@@ -708,8 +708,7 @@ bool actor::can_constrict(const actor &defender, constrict_type typ) const
     if (!see_cell_no_trans(defender.pos()))
         return false;
 
-    return typ != CONSTRICT_BVC
-           || feat_has_solid_floor(env.grid(defender.pos()));
+    return feat_has_solid_floor(env.grid(defender.pos()));
 }
 
 #ifdef DEBUG_DIAGNOSTICS
