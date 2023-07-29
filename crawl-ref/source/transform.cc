@@ -1651,7 +1651,7 @@ bool check_transform_into(transformation which_trans, bool involuntary)
     {
         item_def nil_item;
         nil_item.link = -1;
-        if (check_old_item_warning(nil_item, OPER_WIELD, true))
+        if (!check_old_item_warning(nil_item, OPER_WIELD, true))
         {
             canned_msg(MSG_OK);
             return false;
