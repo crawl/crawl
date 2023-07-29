@@ -1821,7 +1821,23 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     BEAM_FIRE,
     DCHAR_FIRED_ZAP,
     true,
-    false
+    false,
+},
+
+{
+    ZAP_PLASMA_LIGHTNING, // please keep damage dice identical to ZAP_PLASMA
+    "bolt of lightning",
+    200,
+    new dicedef_calculator<1, 10, 11, 20>,
+    new tohit_calculator<7, 1, 40>,
+    new dicedef_calculator<3, 10, 1, 17>,
+    new tohit_calculator<16, 1, 40>,
+    LIGHTCYAN,
+    false,
+    BEAM_ELECTRICITY,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
 },
 
 };
