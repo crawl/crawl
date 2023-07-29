@@ -251,7 +251,7 @@ end
 function foe(e, foe_tier, species, melee, ranged, armour)
     local weapon_type = dgn.persist.bailey_type
     if species == "any" then
-        species = choose(foe_species[foe_tier])
+        species = foe_species[foe_tier]
     end
     if melee == "any" then
         melee = choose(foe_melee[foe_tier][weapon_type])
@@ -265,6 +265,7 @@ function foe(e, foe_tier, species, melee, ranged, armour)
         armour = choose(foe_armour[foe_tier])
     end
     local equipment = {}
+    local output = {}
     for i, monster_name in ipairs(species) do
         if melee ~= nil then
             table.insert(equipment, melee)
@@ -276,12 +277,15 @@ function foe(e, foe_tier, species, melee, ranged, armour)
             table.insert(equipment,armour)
         end
         if equipment ~= {} then
-            species[i] = species[i] .. " ; "
-            species[i] = species[i] .. table.concat(equipment, " . ")
+            local monster_text =  monster_name .. " ; "
+                                  .. table.concat(equipment, " . ") 
+            table.insert(output,monster_text)
+        else
+            table.insert(output,monster_name)            
         end
         equipment = {}
     end
-    e.mons(table.concat(species, " / "))
+    e.mons(table.concat(output, " / "))
 end
 
 --[[
@@ -565,7 +569,7 @@ if not btype then -- Wizmode
 end
 if crawl.game_started() then
     local map = dgn.map_by_tag(btype)
-    assert(map, "Couldn"t find a map for " .. btype)
+    assert(map, "Couldn't find a map for " .. btype)
     dgn.place_map(map, false, false)
 end
 }}
