@@ -710,6 +710,7 @@ adventures, how they are displayed, and what commands there are to use them:
 "        amulets        (use 'P'ut on and 'R'emove)
 \|       staves         (use 'w'ield)
 :        spellbooks     (use 'M'emorise and 'z'ap, 'Q' to quiver)
+◎        talismans      (use 'V' to evoke)
 }        miscellaneous  (use 'V' to evoke, 'Q' to quiver)
 $        gold           (use 'g' to pick up)
 =======  =============  ================================================
@@ -942,7 +943,7 @@ experience will have twice the usual effect when used for training that skill.
 Once a certain amount of bonus experience has been gained in this way, you will
 automatically discard the finished manual.
 
-î Talismans
+◎ Talismans
 ========================================
 
 Talismans allow their user to shift into a different form. Entering or leaving
