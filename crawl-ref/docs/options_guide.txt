@@ -1754,11 +1754,10 @@ unusual_monster_items += <regex>, <regex>, ...
         (List option)
         Monsters whose inventory items match a regex in this comma-separated
         list will display with unusual threat level. E.g.
-             unusual_monster_items = vulnerable,artefact,wand
-             unusual_monster_items += vamp,disto,chaos,spect
-             unusual_monster_items += curare,atropa,throwing net,dispersal
-             unusual_monster_items += large rock,javelin,silver
-             unusual_monster_items += \+([4-9]|[1-9][0-9])
+           unusual_monster_items = vulnerable,artefact,wand
+           unusual_monster_items += vamp,disto,chaos,spect
+           unusual_monster_items += curare,atropa,throwing net,dispersal,javelin
+           unusual_monster_items += \+([4-9]|[1-9][0-9])
         The item descriptions matched against are the short item names that
         ordinarily display when a monster is examined with 'xv'.
 
