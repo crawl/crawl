@@ -1048,7 +1048,7 @@ static const string _detailed_cost_description(ability_type ability)
     if (abil.flags & abflag::max_hp_drain
         && (ability != ABIL_EVOKE_TURN_INVISIBLE || _invis_causes_drain()))
     {
-        ret << "\nThis ability will temporarily drain your maximum hit points when used";
+        ret << "\nThis ability will temporarily drain your maximum health when used";
         if (ability == ABIL_EVOKE_TURN_INVISIBLE)
             ret << ", even unsuccessfully";
         ret << ".";

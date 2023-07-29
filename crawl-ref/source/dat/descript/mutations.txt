@@ -787,7 +787,7 @@ favor with your chosen god more quickly.
 devour on kill mutation
 
 When you kill living creatures you have a chance to devour their life force
-and restore hit points.
+and restore health.
 %%%%
 roll mutation
 

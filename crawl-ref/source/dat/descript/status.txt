@@ -94,7 +94,7 @@ is only a warning, and no mutation or loss of stealth will occur from it.
 %%%%
 Drain status
 
-Your maximum hit points have been temporarily drained by negative energy. This
+Your maximum health has been temporarily drained by negative energy. This
 status will not wear off by waiting, but will gradually expire as you gain
 experience.
 %%%%

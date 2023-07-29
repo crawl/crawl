@@ -102,7 +102,7 @@ species-dependent:
 
 Major:
 
-- The amount of hit points you get each level
+- The amount of health you get each level
 - Your rate of skill advancement
 - Your initial primary attributes (this also depends on background)
 - Various special abilities, powers and limitations
@@ -168,14 +168,14 @@ numbers. These describe different aspects of the character.
 Health
   A measure of life force. Synonymous with hit points and sometimes abbreviated
   as HP. You die if your health drops to zero or less (although you can die in
-  other ways, too). The main screen shows both your current and maximum hit
-  points. Usually, you regain hit points slowly over time. Pressing '5' or
-  Shift-Num-5 lets you wait for a longer period.
+  other ways, too). The main screen shows both your current and maximum health.
+  Usually, you regain health slowly over time. Pressing '5' or Shift-Num-5 lets
+  you wait for a longer period.
 
 Magic
   A measure of magic or other intrinsic power. This is used primarily for
   spellcasting, but is sometimes also used for the evoking and invoking of many
-  other special abilities. They are displayed in the same way as hit points;
+  other special abilities. They are displayed in the same way as health;
   nothing bad happens if these drop to zero, except, of course, that you can't
   cast any spells. Resting also restores your reserves of magic.
 
@@ -228,7 +228,7 @@ through the dungeon is displayed.
 
 Experience Level
   Abbreviated to "XL". Starting characters have experience level 1; the highest
-  possible level is 27. Gaining a level nets additional hit and magic points,
+  possible level is 27. Gaining a level nets additional health and magic points,
   and will grant spell slots and sometimes primary attributes.
 
 Place
@@ -348,8 +348,8 @@ firing.
 Resting
 ========================================
 
-If you press '5', you will rest until your hit points or magic return to full.
-You can rest for just one turn by pressing '.' or 's'.
+If you press '5', you will rest until your health or magic return to full. You
+can rest for just one turn by pressing '.' or 's'.
 
 Resting stops if a monster appears or if you are otherwise interrupted.
 
@@ -564,7 +564,7 @@ E. Experience and skills
 
 When you kill monsters, you gain experience points (XP). When you get enough XP,
 you gain an experience level, making your character more powerful. As they gain
-levels, characters gain more hit points, magic points, and spell levels.
+levels, characters gain more health, magic, and spell levels.
 
 Additionally, the experience you gain is used to train your skills. These skills
 represent proficiency with all areas of endeavour an ambitious adventurer might
@@ -882,7 +882,7 @@ magic) with the 'r' command.
 
 While scrolls tend to affect your equipment or your environment, most potions
 affect your character in some way. The most common type is the simple curing
-potion, which restores some hit points and cures many ailments, but there are
+potion, which restores some health and cures many ailments, but there are
 many other varieties of potions to be found. Potions can be quaffed (drunk) with
 the 'q' command.
 
@@ -949,8 +949,8 @@ Talismans allow their user to shift into a different form. Entering or leaving
 a form with a talisman requires a brief period of concentration, but otherwise,
 forms last until the user chooses to leave them.
 
-More powerful talismans require some amount of Shapeshifting skill, without which
-a user will find their maximum health reduced until they leave the form.
+More powerful talismans require some amount of Shapeshifting skill, without
+which a user will find their maximum health reduced until they leave the form.
 Shapeshifting skill also increases other benefits provided by talismans' forms,
 though weaker talismans have a limit to how helpful skill can be.
 
@@ -2145,12 +2145,13 @@ help menu using '?%', and during character choice with '%'.
 Fighting skills
 ========================================
 
-Fighting is the basic skill used in ranged and melee combat, and applies no matter
-which weapon your character is wielding (if any). Fighting is also the skill
-that determines the number of hit points your character gets as they increase in
-levels (note that this is calculated so that you don't get a long run advantage
-by starting out with a high Fighting skill). Unlike the specific weapon skill,
-Fighting does not change the speed with which you make your attacks.
+Fighting is the basic skill used in ranged and melee combat, and applies no
+matter which weapon your character is wielding (if any). Fighting is also the
+skill that determines the amount of health your character gains as they
+increase in levels (note that this is calculated so that you don't get a long
+run advantage by starting out with a high Fighting skill). Unlike the specific
+weapon skill, Fighting does not change the speed with which you make your
+attacks.
 
 Weapon skills affect your ability to fight with specific melee weapons. Weapon
 skills include:
@@ -2213,9 +2214,9 @@ Magic skills
 ========================================
 
 Spellcasting is the basic skill for magic use. It affects your reserves of
-magical energy (Magic) in the same way that Fighting affects your hit points:
-every time you increase the Spellcasting skill you gain some magic points, and
-you gain a spell level every time you reach a skill level divisible by 0.5.
+magical energy (Magic) in the same way that Fighting affects your health: every
+time you increase the Spellcasting skill you gain some magic points, and you
+gain a spell level every time you reach a skill level divisible by 0.5.
 Spellcasting also helps with the power and success rate of your spells, but to
 a lesser extent than the more specialised magical skills.
 
