@@ -277,6 +277,8 @@ static bool _is_mon_equipment_worth_listing(const monster_info &mi)
         return true;
     if (mi.inv[MSLOT_WAND])
         return true;
+    if (mi.has_unusual_items())
+        return true;
 
     return _is_item_worth_listing(mi.inv[MSLOT_SHIELD])
         || _is_item_worth_listing(mi.inv[MSLOT_ARMOUR])

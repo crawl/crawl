@@ -837,6 +837,8 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                             this.draw_dngn(dngn.THREAT_TOUGH, x, y);
                         else if (fg.NASTY)
                             this.draw_dngn(dngn.THREAT_NASTY, x, y);
+                        else if (fg.UNUSUAL)
+                            this.draw_dngn(dngn.THREAT_UNUSUAL, x, y);
 
                         if (cell.highlighted_summoner)
                             this.draw_dngn(dngn.HALO_SUMMONER, x, y);

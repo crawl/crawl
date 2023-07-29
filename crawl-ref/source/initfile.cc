@@ -149,7 +149,7 @@ static monster_list_colour_type _str_to_mlc(const string &s)
     static const char * const _monster_list_colour_names[NUM_MLC] =
     {
         "friendly", "neutral", "good_neutral",
-        "trivial", "easy", "tough", "nasty",
+        "trivial", "easy", "tough", "nasty", "unusual",
     };
     for (int i = 0; i < NUM_MLC; ++i)
         if (s == _monster_list_colour_names[i])
@@ -542,6 +542,9 @@ const vector<GameOption*> game_options::build_options_list()
             false
 #endif
             ),
+
+        new ListGameOption<text_pattern>(SIMPLE_NAME(unusual_monster_items), {}, true),
+
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs), false),
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs_all), false),
         new BoolGameOption(SIMPLE_NAME(arena_list_eq), false),
@@ -570,6 +573,8 @@ const vector<GameOption*> game_options::build_options_list()
                              CHATTR_HILITE | (GREEN << 8)),
         new CursesGameOption(SIMPLE_NAME(neutral_highlight),
                              CHATTR_HILITE | (LIGHTGREY << 8)),
+        new CursesGameOption(SIMPLE_NAME(unusual_highlight),
+                             CHATTR_HILITE | (MAGENTA << 8)),
         new CursesGameOption(SIMPLE_NAME(stab_highlight),
                              CHATTR_HILITE | (BLUE << 8)),
         new CursesGameOption(SIMPLE_NAME(may_stab_highlight),
@@ -660,7 +665,8 @@ const vector<GameOption*> game_options::build_options_list()
              {MLC_TRIVIAL, DARKGREY},
              {MLC_EASY, LIGHTGREY},
              {MLC_TOUGH, YELLOW},
-             {MLC_NASTY, LIGHTRED}
+             {MLC_NASTY, LIGHTRED},
+             {MLC_UNUSUAL, LIGHTMAGENTA}
             },
             false,
             [this]()
@@ -781,7 +787,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(tile_show_minimagicbar), true),
         new BoolGameOption(SIMPLE_NAME(tile_show_demon_tier), false),
         new BoolGameOption(SIMPLE_NAME(tile_grinch), false),
-        new StringGameOption(SIMPLE_NAME(tile_show_threat_levels), "nasty"),
+        new StringGameOption(SIMPLE_NAME(tile_show_threat_levels), "nasty, unusual"),
         new StringGameOption(SIMPLE_NAME(tile_show_items), "!?/=([)}:|"),
         // disabled by default due to performance issues
         new BoolGameOption(SIMPLE_NAME(tile_water_anim), !USING_WEB_TILES),
@@ -2568,6 +2574,7 @@ void game_options::reset_aliases(bool clear)
     // Backwards compatibility:
     Options.add_alias("friend_brand", "friend_highlight");
     Options.add_alias("neutral_brand", "neutral_highlight");
+    Options.add_alias("unusual_brand", "unusual_highlight");
     Options.add_alias("stab_brand", "stab_highlight");
     Options.add_alias("may_stab_brand", "may_stab_highlight");
     Options.add_alias("heap_brand", "heap_highlight");

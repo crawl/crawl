@@ -416,6 +416,9 @@ struct monster_info : public monster_info_base
 
     bool fellow_slime() const;
 
+    vector<string> get_unusual_items() const;
+    bool has_unusual_items() const;
+
     bool has_spells() const;
     bool antimagic_susceptible() const;
     int spell_hd(spell_type spell = SPELL_NO_SPELL) const;

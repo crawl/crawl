@@ -190,13 +190,14 @@ define(function () {
         MAX_POISON  : [0x00800000, 0x10000000]
     });
 
-    // Threat level has 4 possibilities, so uses 3 bits.
+    // 5 mutually exclusive flags for threat level.
     fg_flags.exclusive_flags.push({
         mask       : [0, 0x60000000 | highbit],
         TRIVIAL    : [0, 0x20000000],
         EASY       : [0, 0x40000000],
         TOUGH      : [0, 0x60000000],
-        NASTY      : [0, highbit]
+        NASTY      : [0, highbit],
+        UNUSUAL    : [0, 0x60000000 | highbit],
     });
 
     // MDAM has 5 possibilities, so uses 3 bits.

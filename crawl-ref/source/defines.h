@@ -234,6 +234,7 @@ typedef uint8_t colour_t;
 
 #define COLFLAG_FRIENDLY_MONSTER         0x0100
 #define COLFLAG_NEUTRAL_MONSTER          0x0200
+#define COLFLAG_UNUSUAL_MASK             0x0300
 #define COLFLAG_WILLSTAB                 0x0400
 #define COLFLAG_MAYSTAB                  0x0800
 #define COLFLAG_ITEM_HEAP                0x1000

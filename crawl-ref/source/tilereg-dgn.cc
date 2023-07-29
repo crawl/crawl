@@ -118,7 +118,9 @@ void DungeonRegion::pack_cursor(cursor_type type, unsigned int tile)
 // XX code duplication
 static unsigned _get_highlight(int col)
 {
-    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_highlight :
+    return ((col & COLFLAG_UNUSUAL_MASK) == COLFLAG_UNUSUAL_MASK) ?
+                                              Options.unusual_highlight :
+           (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_highlight :
            (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_highlight :
            (col & COLFLAG_ITEM_HEAP)        ? Options.heap_highlight :
            (col & COLFLAG_WILLSTAB)         ? Options.stab_highlight :
