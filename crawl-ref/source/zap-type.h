@@ -128,5 +128,6 @@ enum zap_type
     ZAP_MOMENTUM_STRIKE,
     ZAP_PLASMA,
     ZAP_UNMAKING,
+    ZAP_PLASMA_LIGHTNING,
     NUM_ZAPS
 };
