@@ -21,6 +21,6 @@ action_panel_filter += acquirement,amnesia,brand,enchant,identify,noise,torment
 
 # These items cause monsters to display with unusual threat highlighting:
 unusual_monster_items = vulnerable,artefact,wand
-unusual_monster_items += vamp,disto,chaos,spect
+unusual_monster_items += disto,chaos,spect
 unusual_monster_items += curare,atropa,throwing net,dispersal,javelin
 unusual_monster_items += \+([4-9]|[1-9][0-9])
