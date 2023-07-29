@@ -303,6 +303,11 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 }
             }
         }
+        else if (base_type == OBJ_TALISMANS
+                 && you.form == form_for_talisman(*this))
+        {
+                buff << " (active)";
+        }
         else if (you.quiver_action.item_is_quivered(*this))
             buff << " (quivered)";
     }
