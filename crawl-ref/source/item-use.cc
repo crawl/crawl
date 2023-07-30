@@ -1685,7 +1685,7 @@ static string _cant_wear_barding_reason(bool ignore_temporary)
     if (!you.wear_barding())
         return "You can't wear that!";
 
-    if (!ignore_temporary && player_is_shapechanged())
+    if (!ignore_temporary && !get_form()->slot_available(EQ_BOOTS))
         return "You can wear that only in your normal form.";
 
     return "";
