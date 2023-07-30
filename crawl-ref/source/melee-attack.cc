@@ -2720,7 +2720,6 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_FIRE:
-    case AF_BIG_FIRE:
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_FIRE,

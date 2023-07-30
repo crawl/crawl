@@ -779,17 +779,6 @@ static bool _dont_harm(const actor &attacker, const actor &defender)
     return false;
 }
 
-static bool _monster_has_reachcleave(const actor &attacker)
-{
-    if (attacker.is_monster()
-        && attacker.as_monster()->has_attack_flavour(AF_BIG_FIRE))
-    {
-        return true;
-    }
-
-    return false;
-}
-
 /**
  * Force cleave attacks. Used for melee actions that don't have targets, e.g.
  * attacking empty space (otherwise, cleaving is handled in melee_attack).
@@ -825,9 +814,6 @@ bool attack_cleaves(const actor &attacker, int which_attack)
     {
         return true;
     }
-
-    if (_monster_has_reachcleave(attacker))
-        return true;
 
     const item_def* weap = attacker.weapon(which_attack);
     return weap && weapon_cleaves(*weap);
@@ -878,10 +864,9 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
 
     const item_def* weap = attacker.weapon(which_attack);
     const coord_def atk = attacker.pos();
-    // If someone adds a funky reach which isn't just a number
-    // They will need to special case it here.
-    const int cleave_radius = _monster_has_reachcleave(attacker)
-                || (weap && weapon_reach(*weap) == REACH_TWO) ? 2 : 1;
+    //If someone adds a funky reach which isn't just a number
+    //They will need to special case it here.
+    const int cleave_radius = weap ? weapon_reach(*weap) : 1;
 
     for (distance_iterator di(atk, true, true, cleave_radius); di; ++di)
     {
@@ -911,8 +896,7 @@ void attack_multiple_targets(actor &attacker, list<actor*> &targets,
     if (!attacker.alive())
         return;
     const item_def* weap = attacker.weapon(attack_number);
-    const bool reaching = _monster_has_reachcleave(attacker)
-                          || (weap && weapon_reach(*weap) > REACH_NONE);
+    const bool reaching = weap && weapon_reach(*weap) > REACH_NONE;
     while (attacker.alive() && !targets.empty())
     {
         actor* def = targets.front();
