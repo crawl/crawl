@@ -937,7 +937,7 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
 #endif
                    ;
         case CLOUD_MEPHITIC:
-            return act.res_poison() > 0;
+            return act.res_poison() > 0 || act.clarity();
         case CLOUD_POISON:
             return act.res_poison() > 0;
         case CLOUD_STEAM:
