@@ -3767,7 +3767,7 @@ ENDMAP
 NAME:   hangedman_incinerator
 TAGS:   no_item_gen no_monster_gen
 DEPTH:  D:8-14
-MONS:   fire bat, lava snake, fire vortex, hell hound
+MONS:   fire bat, lava snake, fire elemental, hell hound
 NSUBST: ' = 4:' / *:.
 MARKER: ' = lua:fog_machine { cloud_type = "flame", pow_min = 25, \
             pow_max = 75, delay = 50, size = 1, walk_dist = 0, excl_rad = 0 }
@@ -3775,9 +3775,9 @@ KPROP:  l = no_cloud_gen
 MAP
 xxxxxxxxx
 xl.1xx23x
-x1l'3x|2x
+x1l''x|2x
 x.l''4xxx
-x.ll''3xx
+x.ll'''xx
 x.lll''1x
 x'.llll.x
 x.'...1lx

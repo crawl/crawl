@@ -959,10 +959,8 @@ MONS:    patrolling asmodeus, brimstone fiend, brimstone fiend
 MONS:    searing wretch, balrug, hellion, fire giant
 KMONS:   8 = searing wretch / stoker w:1 / hell hog
 KMONS:   9 = salamander tyrant
-NSUBST:  l = 10:R / 25:V / *:l
-SUBST:   R = RRV
+NSUBST:  l = 7:R / *:l
 KMONS:   R = patrolling stoker
-KMONS:   V = fire vortex
 : serpent_of_hell_setup(_G)
 SUBST:   4 = 444499566-
 COLOUR:  c = lightred
@@ -970,7 +968,7 @@ COLOUR:  G = red
 FTILE:   1234569D%$*|Ovcn+- = floor_pebble_red
 TILE:    n = dngn_transparent_stone_red
 SUBST:   - = .
-KFEAT:   RV = lava
+KFEAT:   R = lava
 KFEAT:   L = endless_lava
 : set_border_fill_type("endless_lava")
 : geh_setup(_G)
@@ -1206,7 +1204,7 @@ NAME:    geh_hangedman
 ORIENT:  encompass
 MONS:    patrolling Asmodeus, brimstone fiend, balrug
 MONS:    hellion, fire giant, salamander tyrant, hell hog
-KMONS:   y = creeping inferno / fire vortex w:30
+KMONS:   y = creeping inferno / nothing w:30
 KMONS:   Y = molten gargoyle
 KMONS:   zZ = searing wretch / hellephant / stoker w:2
 KITEM:   $ = $ no_pickup

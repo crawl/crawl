@@ -1045,14 +1045,14 @@ ENDMAP
 # Lava "aerie".
 #
 # It doesn't look much like an aerie these days, but it still has some of
-# the "aerie"-ish effects: flame clouds, flame elementals, lava and vortices!
+# the "aerie"-ish effects: flame clouds, flame elementals and lava!
 NAME:   volcano_aerie
 TAGS:   no_item_gen no_monster_gen
 ORIENT: encompass
 WEIGHT: 20
 MONS:   lindwurm, efreet
 MONS:   molten gargoyle / earth elemental w:8 / toenail golem w:2
-MONS:   fire elemental / fire vortex w:8
+MONS:   fire elemental / nothing w:5
 KFEAT:  K = l
 NSUBST: R = 2:1 / * = ll'
 NSUBST: Y = 2:2 / 1:24 / 7:4 / 6:J / *:.
