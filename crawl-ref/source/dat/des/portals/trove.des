@@ -909,9 +909,9 @@ NAME:    trove_misc_throne_room
 ORIENT:  encompass
 WEIGHT:  15
 TAGS:    no_item_gen no_monster_gen allow_dup
-ITEM:    manual of evocations, lightning rod, piece from Xom's chessboard
+ITEM:    manual of evocations, lightning rod, acquire magical staff
 ITEM:    any area misc, phial of floods, any ally misc, phantom mirror
-ITEM:    acquire wand w:15 / acquire magical staff w:5
+ITEM:    acquire wand
 SHUFFLE: efghij
 COLOUR:  x = blue
 COLOUR:  ' = yellow

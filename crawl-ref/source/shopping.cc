@@ -646,7 +646,6 @@ unsigned int item_value(item_def item, bool ident)
             valued += 300;
             break;
 
-        case MISC_XOMS_CHESSBOARD:
         default:
             valued += 200;
         }

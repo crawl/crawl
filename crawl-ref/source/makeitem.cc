@@ -1589,8 +1589,7 @@ misc_item_type get_misc_item_type(int force_type, bool exclude)
             MISC_LIGHTNING_ROD,
             (misc_item_type)item_for_set(ITEM_SET_ALLY_MISCELLANY),
             MISC_PHANTOM_MIRROR,
-            (misc_item_type)item_for_set(ITEM_SET_AREA_MISCELLANY),
-            MISC_XOMS_CHESSBOARD
+            (misc_item_type)item_for_set(ITEM_SET_AREA_MISCELLANY)
         };
         for (auto it : you.generated_misc)
             choices.erase(it);
@@ -1605,7 +1604,6 @@ misc_item_type get_misc_item_type(int force_type, bool exclude)
             MISC_PHANTOM_MIRROR,
             MISC_CONDENSER_VANE,
             MISC_TIN_OF_TREMORSTONES,
-            MISC_XOMS_CHESSBOARD
         };
     }
     if (choices.size())
@@ -1630,7 +1628,6 @@ static void _generate_misc_item(item_def& item, int force_type, int item_level)
     case MISC_LIGHTNING_ROD:
     case MISC_PHIAL_OF_FLOODS:
     case MISC_PHANTOM_MIRROR:
-    case MISC_XOMS_CHESSBOARD:
     case MISC_TIN_OF_TREMORSTONES:
     case MISC_CONDENSER_VANE:
         you.generated_misc.insert(typ);

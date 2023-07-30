@@ -222,8 +222,7 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
     case OBJ_BOOKS:
         return _is_book_type(item, is_chaotic_spell);
     case OBJ_MISCELLANY:
-        return item.sub_type == MISC_BOX_OF_BEASTS
-               || item.sub_type == MISC_XOMS_CHESSBOARD;
+        return item.sub_type == MISC_BOX_OF_BEASTS;
     case OBJ_TALISMANS:
         return true;
     default:
@@ -251,10 +250,6 @@ static bool _is_potentially_hasty_item(const item_def& item)
         if (item_brand == SPMSL_CHAOS || item_brand == SPMSL_FRENZY)
             return true;
         }
-        break;
-    case OBJ_MISCELLANY:
-        if (item.sub_type == MISC_XOMS_CHESSBOARD)
-            return true;
         break;
     default:
         break;

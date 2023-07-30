@@ -182,7 +182,7 @@
        "war axe", "ring of willpower", "book of winter", "book of weapons",
        "book of the wilderness" }
 
-      elseif s == "X" then i = { "piece from xom's chessboard" }
+      elseif s == "X" then i = { "any" }
 
       elseif s == "Y" then i = { "young poisoner's handbook" }
 

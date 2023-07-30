@@ -3856,29 +3856,6 @@ MAP
 ...........
 ENDMAP
 
-NAME:    hellmonk_bongcloud_opening
-TAGS:    no_item_gen no_monster_gen no_trap_gen no_hmirror no_vmirror no_rotate
-TAGS:    decor extra transparent
-DEPTH:   D:5-, Depths, Orc, Elf
-ITEM:    piece from Xom's chessboard
-KFEAT:   H = G
-COLOUR:  d' = white
-COLOUR:  - = brown
-FTILE:   Gd' = floor_pebble_white
-FTILE:   H- = floor_pebble_brown
-MAP
-..........
-.GHGHGHGH.
-.HGHG-GHG.
-.'-'-'-'-.
-.-'-'H'-'.
-.'-'-G-'-.
-.-'-'-'-'.
-.GHGHdHGH.
-.HGHG-GHG.
-..........
-ENDMAP
-
 NAME: nicolae_benzene_ring
 DEPTH: D:6-, Depths
 NSUBST: d = d / .

@@ -3901,8 +3901,10 @@ colour_t item_def::miscellany_colour() const
             return BROWN;
         case MISC_CONDENSER_VANE:
             return WHITE;
+#if TAG_MAJOR_VERSION == 34
         case MISC_XOMS_CHESSBOARD:
             return ETC_RANDOM;
+#endif
         case MISC_QUAD_DAMAGE:
             return ETC_DARK;
         case MISC_ZIGGURAT:

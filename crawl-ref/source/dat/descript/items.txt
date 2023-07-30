@@ -830,15 +830,6 @@ engulfed by the wave need air to breathe, they'll be unable to cast spells until
 they recover. The strength of the torrent and the duration of the flooding
 increase with Evocations skill.
 %%%%
-piece from Xom's chessboard
-
-A shimmering multi-coloured chesspiece belonging to Xom, god of chaos. When
-moved a glimmer of chaos from some cosmic game is imposed upon the battlefield.
-This glimmer afflicts a random foe with one of the following: haste,
-invisibility, might, corona, slow, paralyse, confuse, malmutate, petrify, or
-sleep. The strength of the effect (positive or negative) is increased with
-Evocations skill.
-%%%%
 plate armour
 
 A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate

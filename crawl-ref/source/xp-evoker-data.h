@@ -38,5 +38,4 @@ static const unordered_map<misc_item_type, evoker_data, std::hash<int>> xp_evoke
           "%s twitches, refilled and ready to use.", },
     }},
     { MISC_CONDENSER_VANE, { "condenser_debt", 10, 1 } },
-    { MISC_XOMS_CHESSBOARD, { "chess_debt", 2, 15 } },
 };

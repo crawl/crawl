@@ -983,7 +983,9 @@ static string misc_type_name(int type)
     case MISC_SACK_OF_SPIDERS:           return "sack of spiders";
     case MISC_PHANTOM_MIRROR:            return "phantom mirror";
     case MISC_ZIGGURAT:                  return "figurine of a ziggurat";
-    case MISC_XOMS_CHESSBOARD:           return "piece from Xom's chessboard";
+#if TAG_MAJOR_VERSION == 34
+    case MISC_XOMS_CHESSBOARD:           return "removed chess piece";
+#endif
     case MISC_TIN_OF_TREMORSTONES:       return "tin of tremorstones";
     case MISC_CONDENSER_VANE:            return "condenser vane";
 

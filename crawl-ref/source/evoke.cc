@@ -946,64 +946,6 @@ static spret _condenser()
     return spret::success;
 }
 
-static bool _xoms_chessboard()
-{
-    vector<monster *> targets;
-    bool see_target = false;
-
-    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
-    {
-        if (mi->friendly() || mi->neutral() && !mi->has_ench(ENCH_INSANE))
-            continue;
-        if (mons_is_firewood(**mi))
-            continue;
-        if (you.can_see(**mi))
-            see_target = true;
-
-        targets.emplace_back(*mi);
-    }
-
-    if (!see_target
-        && !yesno("You can't see anything. Try to make a move anyway?",
-                  true, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-
-    const int power = 15 + you.skill(SK_EVOCATIONS, 7) / 2;
-
-    mpr("You make a move on Xom's chessboard...");
-
-    if (targets.empty())
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return true;
-    }
-
-    bolt beam;
-    const monster * target = *random_iterator(targets);
-    beam.source = target->pos();
-    beam.target = target->pos();
-    beam.set_agent(&you);
-
-    // List of possible effects. Mostly debuffs, a few buffs to keep it
-    // exciting
-    zap_type zap = random_choose_weighted(5, ZAP_HASTE,
-                                          5, ZAP_INVISIBILITY,
-                                          5, ZAP_MIGHT,
-                                          10, ZAP_CORONA,
-                                          15, ZAP_SLOW,
-                                          15, ZAP_MALMUTATE,
-                                          15, ZAP_PETRIFY,
-                                          10, ZAP_PARALYSE,
-                                          10, ZAP_CONFUSE,
-                                          10, ZAP_SLEEP);
-    beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
-
-    return zapping(zap, power, beam, false) == spret::success;
-}
-
 static transformation _form_for_talisman(const item_def &talisman)
 {
     const transformation trans = form_for_talisman(talisman);
@@ -1308,18 +1250,6 @@ bool evoke_item(item_def& item, dist *preselect)
                     practise_evoking(1);
                     break;
             }
-            break;
-
-        case MISC_XOMS_CHESSBOARD:
-            if (_xoms_chessboard())
-            {
-                expend_xp_evoker(item.sub_type);
-                if (!evoker_charges(item.sub_type))
-                    mpr("The chess piece greys!");
-                practise_evoking(1);
-            }
-            else
-                return false;
             break;
 
         default:

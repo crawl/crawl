@@ -3219,7 +3219,6 @@ ENDMAP
 NAME:    xom_butterflies
 TAGS:    temple_overflow_1 temple_overflow_xom transparent patrolling
 KFEAT:   _ = altar_xom
-KITEM:   _ = piece from Xom's chessboard
 COLOUR:  . = random
 NSUBST:  . = 2: 1/ *: .
 MONS:    butterfly
