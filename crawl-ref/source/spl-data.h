@@ -2944,17 +2944,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_AWAKEN_EARTH, "Awaken Earth",
-    spschool::summoning | spschool::earth,
-    spflag::monster | spflag::target,
-    7,
-    0,
-    LOS_RADIUS, LOS_RADIUS,
-    0,
-    TILEG_GENERIC_MONSTER_SPELL,
-},
-
-{
     SPELL_AURA_OF_BRILLIANCE, "Aura of Brilliance",
     spschool::conjuration,
     spflag::area | spflag::monster,
@@ -3687,6 +3676,7 @@ AXED_SPELL(SPELL_STATUE_FORM, "Statue Form")
 AXED_SPELL(SPELL_STORM_FORM, "Storm Form")
 AXED_SPELL(SPELL_DRAGON_FORM, "Dragon Form")
 AXED_SPELL(SPELL_NECROMUTATION, "Necromutation")
+AXED_SPELL(SPELL_AWAKEN_EARTH, "Awaken Earth")
 #endif
 
 };

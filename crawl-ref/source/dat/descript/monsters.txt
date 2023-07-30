@@ -978,8 +978,7 @@ demonic forces and the creatures of the Abyss.
 deep elf elementalist
 
 A deep elf commanding the primal forces of the universe. It is renowned for its
-ability to dig out and pin down even the most elusive foes with powerful,
-unavoidable magic.
+ability to pin down even the most elusive foes with powerful, unavoidable magic.
 %%%%
 deep elf high priest
 

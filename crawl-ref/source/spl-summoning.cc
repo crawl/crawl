@@ -2198,7 +2198,6 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_SCARABS,           { 0, 8 } },
     { SPELL_SUMMON_HOLIES,            { 0, 4 } },
     { SPELL_SUMMON_EXECUTIONERS,      { 0, 3 } },
-    { SPELL_AWAKEN_EARTH,             { 0, 9 } },
     { SPELL_GREATER_SERVANT_MAKHLEB,  { 0, 1 } },
     { SPELL_SUMMON_GREATER_DEMON,     { 0, 3 } },
     { SPELL_SUMMON_DEMON,             { 0, 3 } },

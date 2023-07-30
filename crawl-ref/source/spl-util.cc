@@ -1943,6 +1943,7 @@ const set<spell_type> removed_spells =
     SPELL_STORM_FORM,
     SPELL_DRAGON_FORM,
     SPELL_NECROMUTATION,
+    SPELL_AWAKEN_EARTH,
 #endif
 };
 

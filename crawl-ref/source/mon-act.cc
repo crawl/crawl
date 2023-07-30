@@ -1393,11 +1393,7 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
     if (friendly_or_near
         || mons.type == MONS_TEST_SPAWNER
         // Slime creatures can split when offscreen.
-        || mons.type == MONS_SLIME_CREATURE
-        // Let monsters who have Awaken Earth use it off-screen.
-        // :( -- pf
-        || mons.has_spell(SPELL_AWAKEN_EARTH)
-        )
+        || mons.type == MONS_SLIME_CREATURE)
     {
         // [ds] Special abilities shouldn't overwhelm
         // spellcasting in monsters that have both. This aims

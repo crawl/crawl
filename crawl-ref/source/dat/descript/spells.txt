@@ -77,11 +77,6 @@ Sings a powerfully haunting song; in addition to making nearby victims
 unwilling to move away from the singer, it calls forth drowned souls from
 any nearby bodies of deep water.
 %%%%
-Awaken Earth spell
-
-Animates some rock walls adjacent to a target – including the target itself if
-it is a rock wall – to create some earth elementals.
-%%%%
 Awaken Forest spell
 
 Gives some limited motility to nearby trees, allowing them to sway their
