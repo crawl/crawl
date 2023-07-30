@@ -201,7 +201,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your ability to change forms",
   "sacrificed forms",
 
-  15,
+  7,
   SK_SHAPESHIFTING,
   nullptr,
   nullptr,
