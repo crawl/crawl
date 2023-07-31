@@ -6333,7 +6333,7 @@ bool player::is_brand_vulnerable(const brand_type brand) const
     case SPWPN_ELECTROCUTION:
         return you.res_elec() < 1;
     case SPWPN_VENOM:
-        return you.res_poison() < 3;
+        return you.res_poison() < 1;
     case SPWPN_DRAINING:
     case SPWPN_PAIN:
         return you.res_negative_energy() < 1;
