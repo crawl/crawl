@@ -2018,7 +2018,7 @@ Chaos Knights
   The Chaos Knight is a plaything of Xom, subject to the god's constantly
   changing moods. Xom is a very unpredictable (and possibly psychotic) entity
   who rewards or punishes according to whim. They begin with a lightly enchanted
-  leather armour, a simple weapon of their choice, and one of Xom's toys.
+  leather armour, a simple weapon of their choice, and a scroll of butterflies.
 
 Cinder Acolytes
   Cinder Acolytes serve Ignis, the Dying Flame, who grants them incredible

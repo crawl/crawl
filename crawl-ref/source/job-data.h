@@ -93,7 +93,7 @@ static const map<job_type, job_def> job_data =
     { SP_HILL_ORC, SP_TROLL, SP_GNOLL, SP_MERFOLK, SP_MINOTAUR,
       SP_BASE_DRACONIAN, SP_DEMONSPAWN, },
     { },
-    { "leather armour plus:2" },
+    { "leather armour plus:2", "scroll of butterflies no_exclude" },
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 3 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 },
       { SK_WEAPON, 3 } },
