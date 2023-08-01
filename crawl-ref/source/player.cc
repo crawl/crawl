@@ -6327,7 +6327,9 @@ bool player::is_brand_vulnerable(const brand_type brand) const
     case SPWPN_FLAMING:
         return you.res_fire() < 0;
     case SPWPN_FREEZING:
-        return you.res_cold() < 0;
+        return (you.get_mutation_level(MUT_COLD_BLOODED)
+                || you.form == transformation::anaconda) ? you.res_cold() < 1
+                                                         : you.res_cold() < 0;
     case SPWPN_HOLY_WRATH:
         return you.holy_wrath_susceptible();
     case SPWPN_ELECTROCUTION:
