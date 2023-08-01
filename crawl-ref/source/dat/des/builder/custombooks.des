@@ -22,6 +22,8 @@ DEPTH:  D:4-, Depths, Elf, Snake
 -- The "randbook title:" part of the item def is left out here to help shorten
 -- the lines below 80 characters.
 local books = {
+"Amateur_Aromatherapy numspells:4 spells:mephitic_cloud&eringya's_noxious_bog&"
+  .. "cigotuvi's_dreadful_rot&poisonous_cloud",
 "Aperture_Sorcery numspells:4 spells:portal_projectile&passage_of_golubria&"
   .. "malign_gateway&death's_door",
 "Apprentice_Sorcery owner:Jessica numspells:4 spells:necrotise&slow&blink&"
