@@ -1673,10 +1673,7 @@ vector<string> monster_info::get_unusual_items() const
 
         if (any_of(begin(patterns), end(patterns),
                    [&](const text_pattern &p) -> bool
-                   { return p.matches(name)
-                            || p.matches("artefact") && is_artefact(*item)
-                            || p.matches("vulnerable")
-                               && you.is_brand_vulnerable(brand); }))
+                   { return p.matches(name); }))
         {
             names.push_back(name);
         }

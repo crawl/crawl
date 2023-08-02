@@ -1754,20 +1754,12 @@ unusual_monster_items += <regex>, <regex>, ...
         (List option)
         Monsters whose inventory items match a regex in this comma-separated
         list will display with unusual threat level. E.g.
-            unusual_monster_items = vulnerable,artefact,wand
-            unusual_monster_items += disto,chaos,spect
+            unusual_monster_items =  wand
+            unusual_monster_items += disto,chaos
             unusual_monster_items += curare,atropa,datura,dispersal
-            unusual_monster_items += throwing net,javelin
-            unusual_monster_items += \+([4-9]|[1-9][0-9])
+            unusual_monster_items += throwing net
         The item descriptions matched against are the short item names that
         ordinarily display when a monster is examined with 'xv'.
-
-        This option accepts two special keywords: "artefact" and "vulnerable".
-
-        If any regex matches "artefact", all artefacts will be highlighted.
-        If any regex matches "vulnerable", all weapon brands to which the player
-        is especially vulnerable will be dynamically highlighted, e.g.
-        holy wrath will highlight if the player is currently undead or demonic.
 
         This option determines which monsters will be regarded as "unusual" for
         the options tile_show_threat_levels (tiles only), monster_list_colour,

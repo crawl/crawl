@@ -6318,48 +6318,6 @@ bool player::is_insubstantial() const
         || form == transformation::storm;
 }
 
-// For purpose of unusual threat highlighting, do we consider the player to be
-// particularly vulnerable to a resistible weapon brand? Somewhat arbitrary.
-bool player::is_brand_vulnerable(const brand_type brand) const
-{
-    switch (brand)
-    {
-    case SPWPN_FLAMING:
-        return you.res_fire() < 0;
-    case SPWPN_FREEZING:
-        return (you.get_mutation_level(MUT_COLD_BLOODED)
-                || you.form == transformation::anaconda) ? you.res_cold() < 1
-                                                         : you.res_cold() < 0;
-    case SPWPN_HOLY_WRATH:
-        return you.holy_wrath_susceptible();
-    case SPWPN_ELECTROCUTION:
-        return you.res_elec() < 1;
-    case SPWPN_VENOM:
-        return you.res_poison() < 1;
-    case SPWPN_DRAINING:
-    case SPWPN_PAIN:
-        return you.res_negative_energy() < 1;
-    case SPWPN_ANTIMAGIC:
-        return !you.has_mutation(MUT_HP_CASTING);
-    case SPWPN_ACID:
-        return you.res_acid() < 1;
-    // The rest are irresistible, so are never considered 'vulnerable'.
-    // If in future more brands have become resistible, please update this.
-    case SPWPN_NORMAL:
-    case SPWPN_PROTECTION:
-    case SPWPN_SPEED:
-    case SPWPN_HEAVY:
-    case SPWPN_VAMPIRISM:
-    case SPWPN_DISTORTION:
-    case SPWPN_CHAOS:
-    case SPWPN_PENETRATION:
-    case SPWPN_REAPING:
-    case SPWPN_SPECTRAL:
-    default:
-        return false;
-    }
-}
-
 int player::res_acid() const
 {
     return player_res_acid();
