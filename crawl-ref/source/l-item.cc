@@ -1595,6 +1595,34 @@ LUAFN(l_item_for_set)
     return 1;
 }
 
+static bool _item_pickable(object_class_type base, int sub)
+{
+    if (base == OBJ_MISCELLANY
+        && you.generated_misc.count((misc_item_type)sub))
+    {
+        return false;
+    }
+    return !item_excluded_from_set(base, sub);
+}
+
+LUAFN(l_item_pickable)
+{
+    ASSERT_DLUA;
+
+    const string &specifier = luaL_checkstring(ls, 1);
+    item_list il;
+    item_spec parsed_spec;
+    if (!il.parse_single_spec(parsed_spec, specifier))
+    {
+        luaL_error(ls, make_stringf("Invalid item spec '%s'.",
+                                    specifier.c_str()).c_str());
+        return 0;
+    }
+    lua_pushboolean(ls, _item_pickable(parsed_spec.base_type,
+                                       parsed_spec.sub_type));
+    return 1;
+}
+
 
 struct ItemAccessor
 {
@@ -1697,6 +1725,7 @@ static const struct luaL_reg item_lib[] =
 
     { "excluded_from_set", l_item_excluded_from_set },
     { "item_for_set",      l_item_for_set },
+    { "pickable",          l_item_pickable },
     { nullptr, nullptr },
 };
 
