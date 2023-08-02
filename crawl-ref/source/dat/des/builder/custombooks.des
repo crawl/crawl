@@ -41,7 +41,7 @@ local books = {
   .. "chain_lightning",
 "Elementary_Elements numspells:8 spells:foxfire&freeze&sandblast&shock&"
   .. "ensorcelled_hibernation&passwall&scorch&static_discharge",
-"Elemental_Confusion numspells:2 polar_vortex&
+"Elemental_Confusion numspells:2 spells:polar_vortex&"
   .. "maxwell's_capacitive_coupling",
 "Enchanting_Elements numspells:4 spells:inner_flame&leda's_liquefaction&"
  .. "metabolic_englaciation&silence",
@@ -115,7 +115,7 @@ local books = {
   .. "chain_lightning&ozocubu's_armour&lehudib's_crystal_spear&animate_dead&"
   .. "enfeeble",
 "Servitor_Tips_and_Tricks numspells:6 spells:plasma_beam&fireball&arcjolt&"
-  .. "ledas's_unmaking&orb_of_destruction&lehudib's_crystal_spear",
+  .. "leda's_unmaking&orb_of_destruction&lehudib's_crystal_spear",
 "Standing_By numspells:8 spells:freeze&kiss_of_death&static_discharge&"
   .. "vampiric_draining&dispel_undead&sticky_flame&agony&irradiate",
 "Terraforming numspells:7 spells:frozen_ramparts&leda's_liquefaction&"
