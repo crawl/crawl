@@ -3250,13 +3250,13 @@ static int &_item_set_choice(item_set_type typ)
 /// Some items are guaranteed to only generate in some games, and are
 /// mutually exclusive with other items within their set. Determine which
 /// will be generated in this game.
-void initialise_item_sets()
+void initialise_item_sets(bool reset)
 {
     for (int i = 0; i < NUM_ITEM_SET_TYPES; ++i)
     {
         const item_set_type iset = (item_set_type)i;
 #if TAG_MAJOR_VERSION == 34
-        if (you.props.exists(_item_set_key(iset)))
+        if (!reset && you.props.exists(_item_set_key(iset)))
             continue;
 #endif
         const vector<int> &subtypes = item_sets[i].subtypes;

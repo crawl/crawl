@@ -14,6 +14,7 @@
 #include "dungeon.h"
 #include "env.h"
 #include "initfile.h"
+#include "item-prop.h" // initialise_item_sets
 #include "libutil.h"
 #include "maps.h"
 #include "message.h"
@@ -255,6 +256,8 @@ bool mapstat_build_levels()
         you.uniq_map_tags_abyss.clear();
         you.uniq_map_names_abyss.clear();
         you.unique_creatures.reset();
+        you.generated_misc.clear();
+        initialise_item_sets(true);
         initialise_branch_depths();
         init_level_connectivity();
         if (!_build_dungeon())
