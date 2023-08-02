@@ -1669,7 +1669,6 @@ vector<string> monster_info::get_unusual_items() const
 
         const item_def* item = inv[i].get();
         const string name = item->name(DESC_A, false, false, true, false);
-        const brand_type brand = get_weapon_brand(*item);
 
         if (any_of(begin(patterns), end(patterns),
                    [&](const text_pattern &p) -> bool

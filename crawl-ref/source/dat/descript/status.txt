@@ -480,7 +480,7 @@ and reducing the effectiveness of body armour.
 Any equipped weapons, shields, and gloves are melded, and your success rate
 with spells is somewhat reduced.
 %%%%
-Snake status
+Anaconda status
 
 You have been transformed into a giant, cold-blooded anaconda, ready to wind
 your coils around foes and crush them to death.
