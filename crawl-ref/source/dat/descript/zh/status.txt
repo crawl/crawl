@@ -429,7 +429,7 @@ Blade status
 
 装备的武器、盾牌和手套都会被融合，你的施法成功率也有所降低。
 %%%%
-Snake status
+Anaconda status
 
 你变成了一只巨大的、决意将敌人缠绕、挤压至死的冷血森蚺。
 
