@@ -212,15 +212,6 @@ static bool _build_dungeon()
     {
         you.where_are_you = lid.branch;
         you.depth = lid.depth;
-
-#if TAG_MAJOR_VERSION == 34
-        // An unholy hack, FIXME!
-        if (!brentry[BRANCH_FOREST].is_valid()
-            && lid.branch == BRANCH_FOREST && lid.depth == 5)
-        {
-            you.unique_creatures.set(MONS_THE_ENCHANTRESS, false);
-        }
-#endif
         if (!_do_build_level())
             return false;
     }
