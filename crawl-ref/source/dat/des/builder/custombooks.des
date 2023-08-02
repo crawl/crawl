@@ -113,7 +113,7 @@ local books = {
 "Self-Indulgence owner:Encalio numspells:7 spells:necrotise&ignite_poison&"
   .. "chain_lightning&ozocubu's_armour&lehudib's_crystal_spear&animate_dead&"
   .. "enfeeble",
-"Servitor_Owner's_Manual numspells:6 spells:plasma_beam&fireball&arcjolt&"
+"Servitor_Tips_and_Tricks numspells:6 spells:plasma_beam&fireball&arcjolt&"
   .. "ledas's_unmaking&orb_of_destruction&lehudib's_crystal_spear",
 "Standing_By numspells:8 spells:freeze&kiss_of_death&static_discharge&"
   .. "vampiric_draining&dispel_undead&sticky_flame&agony&irradiate",
