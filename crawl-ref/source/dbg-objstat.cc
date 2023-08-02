@@ -298,52 +298,31 @@ static object_class_type _item_orig_base_type(item_base_type base_type)
 
 static string _item_class_name(item_base_type base_type)
 {
-    string name;
     switch (base_type)
     {
     case ITEM_WEAPONS:
-        name = "Weapons";
-        break;
+        return "Weapons";
     case ITEM_SPELLBOOKS:
-        name = "Spellbooks";
-        break;
+        return "Spellbooks";
     case ITEM_MANUALS:
-        name = "Manuals";
-        break;
+        return "Manuals";
     default:
-        name = item_class_name(_item_orig_base_type(base_type));
+        return item_class_name(_item_orig_base_type(base_type));
     }
-    return name;
 }
 
 static int _item_orig_sub_type(item_base_type base_type, int sub_type)
 {
-    int type;
-    switch (base_type)
-    {
-    case ITEM_MANUALS:
-        type = BOOK_MANUAL;
-        break;
-    default:
-        type = sub_type;
-        break;
-    }
-    return type;
+    if (base_type == ITEM_MANUALS)
+        return BOOK_MANUAL;
+    return sub_type;
 }
 
 static int _item_max_sub_type(item_base_type base_type)
 {
-    int num = 0;
-    switch (base_type)
-    {
-    case ITEM_MANUALS:
-        num = NUM_SKILLS;
-        break;
-    default:
-        num = get_max_subtype(_item_orig_base_type(base_type));
-        break;
-    }
-    return num;
+    if (base_type == ITEM_MANUALS)
+        return NUM_SKILLS;
+    return get_max_subtype(_item_orig_base_type(base_type));
 }
 
 static bool _item_tracks_artefact(item_base_type base_type)
@@ -369,7 +348,6 @@ static bool _item_tracks_plus(item_base_type base_type)
     case ITEM_ARMOUR:
     case ITEM_JEWELLERY:
     case ITEM_WANDS:
-    case ITEM_MISCELLANY:
         return true;
     default:
         return false;
@@ -404,13 +382,7 @@ static bool _item_tracks_monster(item_base_type base_type)
 
 static bool _item_tracks_shop(item_base_type base_type)
 {
-    switch (base_type)
-    {
-    case ITEM_GOLD:
-        return false;
-    default:
-        return true;
-    }
+    return base_type != ITEM_GOLD;
 }
 
 static item_def _dummy_item(item_base_type base_type, int sub_type,
@@ -460,47 +432,34 @@ static string _brand_name(item_base_type base_type, int sub_type, int brand)
 
 static string _item_name(item_base_type base_type, int sub_type)
 {
-    string name = "";
-    description_level_type desc_type = DESC_DBNAME;
-
-    // These types need special handling, otherwise we use the original
-    // item_def name.
     if (sub_type == _item_max_sub_type(base_type))
-        name = "All " + _item_class_name(base_type);
-    else if (base_type == ITEM_SPELLBOOKS)
+        return "All " + _item_class_name(base_type);
+    if (base_type == ITEM_SPELLBOOKS)
     {
-        int orig_type = _item_orig_sub_type(base_type, sub_type);
+        const int orig_type = _item_orig_sub_type(base_type, sub_type);
         if (orig_type == BOOK_RANDART_LEVEL)
-            name = "Level Artefact Book";
-        else if (orig_type == BOOK_RANDART_LEVEL)
-            name = "Theme Artefact Book";
+            return "Level Artefact Book";
+        if (orig_type == BOOK_RANDART_LEVEL)
+            return "Theme Artefact Book";
     }
-    else if (base_type == ITEM_MANUALS)
-        desc_type = DESC_QUALNAME;
 
-    if (name.empty())
-    {
-        const item_def item = _dummy_item(base_type, sub_type);
-        name = item.name(desc_type, true, true);
-    }
-    return name;
+    const item_def item = _dummy_item(base_type, sub_type);
+    auto desc_type = DESC_DBNAME;
+    if (base_type == ITEM_MANUALS)
+        desc_type = DESC_QUALNAME;
+    return item.name(desc_type, true, true);
 }
 
 static string _level_name(const level_id &lev)
 {
-    string name;
     if (lev.branch == NUM_BRANCHES)
-        name = "AllLevels";
-    else if (lev.depth == -1 || brdepth[lev.branch] == 1)
-        name = lev.describe(false, false);
-    else if (brdepth[lev.branch] < 10)
-        name = lev.describe(false, true);
-    else
-    {
-        name = make_stringf("%s:%02d", lev.describe(false, false).c_str(),
-                            lev.depth);
-    }
-    return name;
+        return "AllLevels";
+    if (lev.depth == -1 || brdepth[lev.branch] == 1)
+        return lev.describe(false, false);
+    if (brdepth[lev.branch] < 10)
+        return lev.describe(false, true);
+    return make_stringf("%s:%02d", lev.describe(false, false).c_str(),
+                        lev.depth);
 }
 
 objstat_item::objstat_item(const item_def &item)
