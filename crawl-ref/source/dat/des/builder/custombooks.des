@@ -32,7 +32,6 @@ local books = {
 "Basic_Undead_Handling numspells:2 spells:animate_dead&dispel_undead",
 "Beguiling owner:Ashenzari numspells:5 spells:momentum_strike&dazzling_flash&"
   .. "portal_projectile&fulminant_prism&iskenderun's_mystic_blast",
-"Closer_Than_Before numspells:3 spells:agony&confusing_touch&dispel_undead",
 "Crowd_Control numspells:3 spells:gell's_gravitas&arcjolt&ignition",
 "Curse_Words numspells:5 spells:slow&anguish&silence&enfeeble&discord",
 "Earth_from_Core_to_Peak numspells:8 spells:sandblast&passwall&stone_arrow&"
@@ -51,6 +50,8 @@ local books = {
 "Feline_Knowledge owner:Natasha numspells:3 spells:magic_dart&slow&call_imp",
 "Gerundive_Groundings numspells:5 spells:lesser_beckoning&vampiric_draining&"
   .. "yara's_violent_unravelling&leda's_unmaking&maxwell's_capacitive_coupling",
+"Getting_Closer_Than_Before numspells:3 spells:agony&confusing_touch&"
+  .. "dispel_undead",
 "Hitting_the_Bricks numspells:4 spells:blink&passwall&swiftness&"
   .. "passage_of_golubria",
 "Honourable_Companions owner:Okawaru numspells:5 spells:foxfire&"
