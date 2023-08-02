@@ -22,6 +22,8 @@ DEPTH:  D:4-, Depths, Elf, Snake
 -- The "randbook title:" part of the item def is left out here to help shorten
 -- the lines below 80 characters.
 local books = {
+"Amateur_Aromatherapy numspells:4 spells:mephitic_cloud&eringya's_noxious_bog&"
+  .. "cigotuvi's_dreadful_rot&poisonous_vapours",
 "Aperture_Sorcery numspells:4 spells:portal_projectile&passage_of_golubria&"
   .. "malign_gateway&death's_door",
 "Apprentice_Sorcery owner:Jessica numspells:4 spells:necrotise&slow&blink&"
@@ -39,6 +41,8 @@ local books = {
   .. "chain_lightning",
 "Elementary_Elements numspells:8 spells:foxfire&freeze&sandblast&shock&"
   .. "ensorcelled_hibernation&passwall&scorch&static_discharge",
+"Elemental_Confusion numspells:2 spells:polar_vortex&"
+  .. "maxwell's_capacitive_coupling",
 "Enchanting_Elements numspells:4 spells:inner_flame&leda's_liquefaction&"
  .. "metabolic_englaciation&silence",
 "Endless_Yammering numspells:1 spells:discord",
@@ -46,6 +50,8 @@ local books = {
 "Feline_Knowledge owner:Natasha numspells:3 spells:magic_dart&slow&call_imp",
 "Gerundive_Groundings numspells:5 spells:lesser_beckoning&vampiric_draining&"
   .. "yara's_violent_unravelling&leda's_unmaking&maxwell's_capacitive_coupling",
+"Getting_Closer_Than_Before numspells:3 spells:agony&confusing_touch&"
+  .. "dispel_undead",
 "Hitting_the_Bricks numspells:4 spells:blink&passwall&swiftness&"
   .. "passage_of_golubria",
 "Honourable_Companions owner:Okawaru numspells:5 spells:foxfire&"
@@ -90,6 +96,8 @@ local books = {
   .. "dazzling_flash&olgreb's_toxic_radiance",
 "Patience numspells:3 spells:searing_ray&flame_wave&"
   .. "maxwell's_capacitive_coupling",
+"Peace_and_Solitude numspells:4 spells:dispersal&disjunction&"
+  .. "silence&teleport_other",
 "Perplexing_Participles numspells:4 spells:searing_ray&confusing_touch&"
   .. "dazzling_flash&freezing_cloud",
 "Pondering owner:Gastronok numspells:4 spells:slow&summon_small_mammal&"
@@ -106,6 +114,8 @@ local books = {
 "Self-Indulgence owner:Encalio numspells:7 spells:necrotise&ignite_poison&"
   .. "chain_lightning&ozocubu's_armour&lehudib's_crystal_spear&animate_dead&"
   .. "enfeeble",
+"Servitor_Tips_and_Tricks numspells:6 spells:plasma_beam&fireball&arcjolt&"
+  .. "leda's_unmaking&orb_of_destruction&lehudib's_crystal_spear",
 "Standing_By numspells:8 spells:freeze&kiss_of_death&static_discharge&"
   .. "vampiric_draining&dispel_undead&sticky_flame&agony&irradiate",
 "Terraforming numspells:7 spells:frozen_ramparts&leda's_liquefaction&"
