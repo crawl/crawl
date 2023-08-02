@@ -1823,7 +1823,7 @@ int items(bool allow_uniques,
                                    440, OBJ_GOLD);
 
         // misc items placement wholly dependent upon current depth {dlb}:
-        if (item_level > 7 && x_chance_in_y(21 + item_level, 5000))
+        if (item_level > 7 && x_chance_in_y(11 + item_level, 9000))
             item.base_type = OBJ_MISCELLANY;
 
         if (item_level < 7
