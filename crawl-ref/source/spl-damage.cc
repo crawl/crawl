@@ -2625,7 +2625,7 @@ vector<coord_def> arcjolt_targets(const actor &agent, bool actual)
     to_check.push_back(agent.pos());
     seen.insert(agent.pos());
 
-    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    for (radius_iterator ri(agent.pos(), 2, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
     {
         to_check.push_back(*ri);
         seen.insert(*ri);
