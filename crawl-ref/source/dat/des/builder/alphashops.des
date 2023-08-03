@@ -69,7 +69,7 @@
        "acid dragon scales", "potion of attraction", "book of armaments" }
 
       elseif s == "B" then i = { "bardiche", "battleaxe", "beast talisman",
-       "book of burglary", "box of beasts", "book of blasting",
+       "book of burglary", "book of blasting",
        "book of blood", "buckler", "boomerang", "blade talisman",
        "broad axe", "pair of boots", "potion of berserk rage",
        "potion of brilliance", "scroll of butterflies",
@@ -80,7 +80,7 @@
        "chain mail", "cloak", "crystal plate armour", "potion of cancellation",
        "staff of cold", "staff of conjuration", "book of callings",
        "book of chaos", "manual of conjurations",
-       "potion of curing", "condenser vane", "wand of charming" }
+       "potion of curing", "wand of charming" }
 
       elseif s == "D" then i = { "book of death", "book of debilitation",
        "book of dreams", "book of the dragon", "dagger", "dragon-blood talisman",
@@ -124,7 +124,7 @@
 
       elseif s == "L" then i = { "manual of long blades", "large rock",
        "leather armour", "long sword", "potion of lignification", "lajatang",
-       "longbow", "lightning rod", "book of lightning", "wand of light" }
+       "longbow",  "book of lightning", "wand of light" }
 
       elseif s == "M" then i = { "manual of maces & flails",
        "book of minor magic", "book of misfortune", "maw talisman",
@@ -138,7 +138,7 @@
       elseif s == "O" then i = { "orcbow", "ozocubu's autobiography" }
 
       elseif s == "P" then i = { "book of party tricks", "book of power",
-       "pearl dragon scales", "phantom mirror", "phial of floods",
+       "pearl dragon scales",
        "plate armour", "ring of poison resistance", "manual of polearms",
        "wand of polymorph", "ring of positive energy", "ring of protection",
        "manual of poison magic", "wand of paralysis",
@@ -155,7 +155,7 @@
 
       elseif s == "S" then i = { "scarf", "scimitar", "short sword",
        "scale mail", "spear", "serpent talisman", "storm talisman",
-       "ring of see invisible", "ring of slaying", "sack of spiders",
+       "ring of see invisible", "ring of slaying",
        "ring of strength", "manual of stealth", "scroll of summoning",
        "book of spatial translocations", "scroll of silence", "shortbow",
        "manual of staves", "steam dragon scales", "manual of shapeshifting",
@@ -169,7 +169,7 @@
        "scroll of teleportation", "triple sword", "talisman of death",
        "triple crossbow", "troll leather armour", "manual of throwing",
        "manual of translocations", "manual of transmutations",
-       "trident", "throwing net", "tower shield", "tin of tremorstones",
+       "trident", "throwing net", "tower shield",
        "book of the tundra", "book of touch", "there-and-back book",
        "trismegistus codex"}
 
