@@ -7484,17 +7484,17 @@ int player::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
     return check_your_resists(hurted, beam.flavour, source, &beam, doEffects);
 }
 
-bool player::shaftable(bool check_terrain) const
+bool player::shaftable() const
 {
     return is_valid_shaft_level()
-        && (!check_terrain || feat_is_shaftable(env.grid(pos())));
+        && feat_is_shaftable(env.grid(pos()));
 }
 
 // Used for falling into traps and other bad effects, but is a slightly
 // different effect from the player invokable ability.
-bool player::do_shaft(bool check_terrain)
+bool player::do_shaft()
 {
-    if (!shaftable(check_terrain)
+    if (!shaftable()
         || resists_dislodge("falling into an unexpected shaft"))
     {
         return false;
