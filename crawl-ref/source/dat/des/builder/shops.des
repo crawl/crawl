@@ -1559,7 +1559,6 @@ WEIGHT: 3
 DEPTH:  D:8-, Orc, Elf, Depths
 {{
 local count = crawl.roll_dice(2, 3) + 5
-local name = "A" .. string.sub(string.lower(crawl.make_name()), 2)
 
 --Weights of equally rare weapons are divided by two for types with
 --two alliterative egos
