@@ -1598,7 +1598,7 @@ protected:
 
 formatted_string StashSearchMenu::calc_title()
 {
-    const int num_matches = items.size();
+    const int num_matches = item_count(false);
     const int num_alt_matches = title->quantity;
     formatted_string fs;
     fs.textcolour(title->colour);

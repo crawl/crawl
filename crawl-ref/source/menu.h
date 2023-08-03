@@ -358,7 +358,7 @@ public:
     virtual vector<MenuEntry *> show(bool reuse_selections = false);
     vector<MenuEntry *> selected_entries() const;
 
-    size_t item_count() const    { return items.size(); }
+    size_t item_count(bool include_headers=true) const;
 
     // Get entry index, skipping quantity 0 entries. Returns -1 if not found.
     int get_entry_index(const MenuEntry *e) const;

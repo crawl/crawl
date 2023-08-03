@@ -2671,6 +2671,21 @@ void Menu::select_index(int index, int qty)
     }
 }
 
+size_t Menu::item_count(bool include_headers) const
+{
+    size_t count = items.size();
+    if (!include_headers)
+    {
+        for (const auto &item : items)
+            if (item->level != MEL_ITEM)
+            {
+                ASSERT(count > 0);
+                count--;
+            }
+    }
+    return count;
+}
+
 int Menu::get_entry_index(const MenuEntry *e) const
 {
     int index = 0;
