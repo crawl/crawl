@@ -1275,27 +1275,31 @@ KFEAT:    G = C / net trap / antique armour shop / altar_zin
 
           It's possible to customise shops further than simply specifying the
           type of shop to place. There are a number of options, which are
-          enumerated below:
+          enumerated below. The `name`, `type`, and `suffix` fields all support
+          substitution of underscores for spaces; see "suffix" below for an
+          example.
 
             use_all:    If true, and items have been specified, all items
                         specified will be placed in the shop, without using
                         random selection to determine a number of items from
                         the list.
             name:       If provided, this is apostrophised and becomes the
-                        shop-keeper's name. For example, name:Ploog would
+                        shop-keeper's name. For example, `name:Ploog` would
                         result in "Ploog's <X shop>".
             type:       If provided, this is used as the "type" name for the
-                        shop. For example, type:Wand would result in "X's Wand
+                        shop. For example, `type:Wand` would result in "X's Wand
                         shop". Please note: this is *not* the type of shop,
                         simply the name. Setting this will not change the
                         content of the shop. You will still need to specify the
-                        type in the definition, i.e., "antique armour shop".
+                        type in the definition, i.e., `antique armour shop`.
             suffix:     If provided, this is used instead of "Emporium",
                         "Shop", etc, in the shop name. For example,
-                        suffix:Bazaar results in "X's x Bazaar".
+                        `suffix:Bazaar` results in "X's x Bazaar". An example
+                        with underscores: `suffix: Thing_Parlour` would
+                        result in "X's x Thing Parlour".
             count:      If specified, this restricts the number of items placed
-                        in the shop to this number. For example, "any shop
-                        count:1" results in a single shop with a single item in
+                        in the shop to this number. For example, `any shop
+                        count:1` results in a single shop with a single item in
                         it.
             greed:      If specified, this increases the cost of items for sale
                         in the shop. Someone should fill the algorithm here!
