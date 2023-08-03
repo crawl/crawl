@@ -1559,7 +1559,8 @@ WEIGHT: 3
 DEPTH:  D:8-, Orc, Elf, Depths
 {{
 local count = crawl.roll_dice(2, 3) + 5
-
+local name = "A" ..
+  string.sub(string.lower(string.gsub(crawl.make_name(), " ", "")), 2)
 --Weights of equally rare weapons are divided by two for types with
 --two alliterative egos
 local weaponnames = {"dagger", "short sword", "falchion", "scimitar",
@@ -1570,7 +1571,7 @@ local weaponnames = {"dagger", "short sword", "falchion", "scimitar",
                     "spear", "halberd", "demon trident w:3"}
 local egos = {"chaos", "draining", "distortion", "electrocution", "flaming",
               "freezing", "heavy", "speed", "spectral"}
-local kstr = "S = general shop name:Allisandre type:Alliterative " ..
+local kstr = "S = general shop name:" .. name .. " type:Alliterative " ..
              "suffix:Armaments count:" .. count .. " ; " ..
              "halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:speed | " ..
              "halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:spectral"
