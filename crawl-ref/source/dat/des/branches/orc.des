@@ -1380,6 +1380,31 @@ x1...1...1x
 xxx..@..xxx
 ENDMAP
 
+NAME:   mainiacjoe_minedec_watcher_in_the_water
+TAGS:   transparent extra no_pool_fixup luniq_staircase
+DEPTH:  Orc, !Orc:$
+WEIGHT: 5
+MONS:   fungus
+KMONS:  K = kraken
+KFEAT:  K = w
+SUBST:  d = dd., 1 = 1., X = x., } = })]
+: dgn.delayed_decay(_G, 'd', 'orc skeleton')
+MAP
+    xxxxxxxx
+   xx111nccx
+  .x11..nwcxx
+  .x1..dnwccx
+..11.Xd.nnwcx
+..1.1X.d.nwcx
+@..11x.}.nKn@
+..1.1X.d.nwcx
+..11.Xd.nnwcx
+  .x1..dnwccx
+  .x11..nwcx
+   xx111nccx
+    xxxxxxxx
+ENDMAP
+
 ############################################################################
 # Orc endings.
 #

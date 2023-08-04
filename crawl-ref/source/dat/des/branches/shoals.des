@@ -255,6 +255,28 @@ MAP
 ```````
 ENDMAP
 
+NAME:    mainiacjoe_shoals_entry_four_pools
+TAGS:    shoals_entry transparent
+KMONS:   P = plant
+KMONS:   1 = merfolk
+KMONS:   2 = merfolk siren / manticore / harpy / cyclops
+KITEM:   $ = gold q:1
+KFEAT:   @P12$ = W
+KFEAT:   O = enter_shoals
+SHUFFLE: 12
+NSUBST:  2 = 1:2 / *:W
+MAP
+xxxxx@xxxxx
+xWW1xWx1WWx
+xWWWxWxWWWx
+xPxxxWxxxPx
+x$WWWPWWW$x
+xPxxxWxxxPx
+xWWWxWxWWWx
+xWW1xWxOWWx
+xxxxx@xxxxx
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Decorative vaults.
