@@ -2063,8 +2063,8 @@ Warpers
   Warpers specialise in translocation magic, and are experts in travelling long
   distances and positioning themselves precisely and use this to their advantage
   in melee or missile combat. They start with a scroll of blinking, a selection
-  of translocation spells, some dispersal boomerangs, a simple weapon of their
-  choice, and leather armour.
+  of translocation spells, some dispersal darts, a simple weapon of their choice,
+  and leather armour.
 
 Hexslinger
   Hexslingers use debilitating spells to assist their ranged attacks. They
