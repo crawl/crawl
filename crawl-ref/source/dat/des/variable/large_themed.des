@@ -2403,7 +2403,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   dreamdust_labyrinth
-TAGS:   no_monster_gen no_trap_gen
+TAGS:   no_monster_gen no_trap_gen uniq_faux_labyrinth
 ORIENT: northeast
 DEPTH:  D:11-, Lair
 WEIGHT: 5

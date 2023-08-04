@@ -2672,6 +2672,84 @@ xcccccccx
 xxxxxxxxx
 ENDMAP
 
+NAME:    mainiacjoe_okawaru_digging_arena
+TAGS:    no_monster_gen no_item_gen transparent patrolling
+DEPTH:   D:11-
+WEIGHT:  5
+MONS:    human, tengu warrior, tengu reaver
+MONS:    two-headed ogre, ettin, vampire, vampire knight
+KMONS:   8 = gargoyle
+KMONS:   9 = war gargoyle
+KFEAT:   C = altar_okawaru
+ITEM:    any armour / animal skin w:5, any weapon / boomerang q:1 w:5
+ITEM:    manual of fighting / manual of armour / \
+         manual of dodging / manual of shields / manual of stealth
+ITEM:    ring mail randart / scale mail randart / chain mail randart / \
+         plate armour randart / kite shield randart / tower shield randart
+ITEM:    manual of maces & flails / manual of axes / manual of polearms / \
+         manual of staves / manual of short blades / manual of long blades / \
+         manual of ranged weapons / manual of throwing
+ITEM:    great mace randart / battleaxe randart / glaive randart / \
+         lajatang randart / rapier randart / great sword randart
+KITEM:   C = wand of digging charges:1
+SHUFFLE: 23 / 45 / 67 / 89, fi / gh
+FTILE:   `"C23456789defghixn+ = floor_sand
+KMASK:   13579defghi = opaque
+KPROP:   13579defghi = no_tele_into
+MAP
+   vvvvvvvvv
+   v1111111vv
+   vnnnnnnnnvvv
+   v```v`2`n33v
+  .+```v```nddv
+ ..+```+``2nddvv
+ ..v```+```nddfv
+@..v```+``Cxxxxv
+ ..v```+```neeiv
+ ..+```+``4neevv
+  .+```v```neev
+   v```v`4`n55v
+   vnnnnnnnnvvv
+   v1111111vv
+   vvvvvvvvv
+ENDMAP
+
+NAME:   mainiacjoe_labyrinth_nostalgia
+TAGS:   no_monster_gen no_item_gen patrolling uniq_faux_labyrinth
+DEPTH:  D:11-
+WEIGHT: 5
+MONS:   basilisk / gargoyle / shadow, generate_awake minotaur
+KFEAT:  < = <
+KITEM:  < = |, *, %
+KFEAT:  X = rock_wall
+TILE:   X = wall_lab_rock
+TILE:   c = wall_lab_stone
+TILE:   v = wall_lab_metal
+FTILE:  `12| = floor_gauntlet
+MAP
+xxxxxxxxxxxxxxxxxx@xx
+xXXXXXXcccccvvvvvvnvx
+xX```X```````````v<vx
+xX`X`X`ccc`cvvvv`v2vx
+xX`X`X`c```c```v`v`vx
+xX`X`XXc`ccc`v`v`v`vx
+xX`X`````c```v`v`v`vx
+xX`XXXXccc`cvv`v`v`vx
+xX`X```c```c```v`v`vx
+xX`X`XXc`ccc`ccc`c`cx
+xX`X```````c`c```c`cx
+xX`XXXXccc`c`c`ccc`cx
+xX```````c`c`c`c```cx
+xX`XXXXc`c```c`c`cccx
+xX`X`````X`X`X`X```Xx
+xXXX`XXXXX`X`X`XXX`Xx
+xX```X`````X`X`````Xx
+xX`XXX`XXXXX`X`XXX`Xx
+xX```````X11`X`````Xx
+xXXXXXXXXX1XXXXXXXXXx
+xxxxxxxxxx=xxxxxxxxxx
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead
