@@ -218,9 +218,9 @@ and either gift may only be received once.
 Receive Forbidden Knowledge ability
 
 Grants you knowledge of the most powerful and sinister Necromancy spells:
-Haunt, Borgnjor's Revivification, Infestation, Necromutation, and Death's Door.
-You must choose between this gift or that of branding a weapon with pain, and
-either gift may only be received once.
+Haunt, Borgnjor's Revivification, Infestation, and Death's Door. You must choose
+between this gift or that of branding a weapon with pain, and either gift may
+only be received once.
 %%%%
 # Yredelemnul
 Recall Undead Harvest ability
