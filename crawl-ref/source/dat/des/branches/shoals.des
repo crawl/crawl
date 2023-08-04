@@ -257,6 +257,33 @@ MAP
 ```````
 ENDMAP
 
+NAME:   mainiacjoe_shoals_entry_four_pools
+TAGS:   shoals_entry transparent
+NSUBST: O = 1:O / *:W
+SUBST:  W = WWP
+KMONS:  P = plant
+KMONS:  1 = merfolk
+KMONS:  2 = sea snake
+KMONS:  3 = merfolk siren
+KMONS:  4 = snapping turtle
+KMONS:  5 = cyclops
+NSUBST: 1 = 1:2 / *:1
+SUBST:  2 = 2345
+KFEAT:  @P12345 = shallow_water
+KFEAT:  O = enter_shoals
+MAP
+xxxxx@xxxxx
+xWW1xWx1WWx
+xWWOxWxOWWx
+xWxxxWxxxWx
+xWWWWWWWWWx
+xWxxxWxxxWx
+xWWOxWxOWWx
+xWW1xWx1WWx
+xxxxx@xxxxx
+ENDMAP
+
+
 ###############################################################################
 #
 # <<2>> Decorative vaults.
