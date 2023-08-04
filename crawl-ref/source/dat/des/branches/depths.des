@@ -227,3 +227,34 @@ cA--Ac   cA--Ac
 cA--Ac   cA--Ac
 cB@@Bc   cB@@Bc
 ENDMAP
+
+NAME:    mainiacjoe_depths_entry_scary_arena
+TAGS:    transparent patrolling
+FTILE:   ` = floor_sand
+MONS:    human
+MONS:    caustic shrike, pearl dragon, juggernaut, shard shrike
+SHUFFLE: 2345
+# spending a dig charge is a greater hurdle to impulsiveness than a runed door
+KFEAT:   I = iron_grate
+ITEM:    potion of experience ident:type
+ITEM:    scroll of acquirement ident:type
+SHUFFLE: ddee
+: depths_entry(_G)
+MAP
+ cccccccc
+ c111111c
+ cmmmmmmcccc
+ c``````Id.c
+.c``````I2.c
+.+``````ccccc
+.+``````c...c
+@+``````+.O.c
+.+``````c...c
+.+``````ccccc
+.c``````I3.c
+ c``````Ie.c
+ cmmmmmmcccc
+ c111111c
+ cccccccc
+ENDMAP
+
