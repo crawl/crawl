@@ -620,15 +620,16 @@ FALLBACK: OBJ_WEAPONS/WPN_LAJATANG
 FB_BRAND: SPWPN_FREEZING
 PLUS:     +3
 COLOUR:   DARKGREY
+INSCRIP:  ele,
 TILE:     urand_elemental
 TILE_EQ:  elemental_staff
 FIRE:     1
 COLD:     1
 AC:       3
 BOOL:     elec
-DBRAND:   If the wielder is skilled in Evocations, they can discharge powerful
+DBRAND:   Ele:       It enhances your fire, ice, earth and air
+ magic. If skilled in Evocations, you can discharge powerful
  blasts of elemental energy when striking with it.
-DESCRIP:  It enhances your fire, ice, earth and air magic.
 
 NAME:     heavy crossbow "Sniper"
 OBJ:      OBJ_WEAPONS/WPN_TRIPLE_CROSSBOW
