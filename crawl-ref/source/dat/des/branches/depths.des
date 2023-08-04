@@ -258,3 +258,34 @@ MAP
  cccccccc
 ENDMAP
 
+NAME:  mainiacjoe_depths_entry_labyrinth_nostalgia
+MONS:  minotaur
+KFEAT: P = rock_wall
+TILE:  P = wall_lab_rock
+TILE:  c = wall_lab_stone
+TILE:  v = wall_lab_metal
+FTILE: `1| = floor_gauntlet
+: depths_entry(_G)
+MAP
+xxxxxxxxxxxxxxxxxx@xx
+xPPPPPPcccccvvvvvvnvx
+xP```P```````````vOvx
+xP`P`P`ccc`cvvvv`v|vx
+xP`P`P`c```c```v`v1vx
+xP`P`PPc`ccc`v`v`v`vx
+xP`P`````c```v`v`v`vx
+xP`PPPPccc`cvv`v`v`vx
+xP`P```c```c```v`v`vx
+xP`P`PPc`ccc`ccc`c`cx
+xP`P```````c`c```c`cx
+xP`PPPPccc`c`c`ccc`cx
+xP```````c`c`c`c```cx
+xP`PPPPc`c```c`c`cccx
+xP`P`````P`P`P`P```Px
+xPPP`PPPPP`P`P`P`P`Px
+xP```P`````P`P`P`P`Px 
+xP`PPP`PPPPP`P`PPP`Px
+xP```````P```P`````Px
+xPPPPPPPPP`PPPPPPPPPx
+xxxxxxxxxx@xxxxxxxxxx
+ENDMAP
