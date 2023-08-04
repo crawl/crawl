@@ -273,7 +273,7 @@ void get_class_hotkeys(const int type, vector<char> &glyphs)
         break;
 #endif
     case OBJ_TALISMANS:
-        glyphs.push_back('%'); // dubious!
+        glyphs.push_back('%');
         break;
     case OBJ_MISCELLANY:
         glyphs.push_back('}');
