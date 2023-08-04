@@ -283,6 +283,30 @@ xWW1xWx1WWx
 xxxxx@xxxxx
 ENDMAP
 
+NAME:   mainiacjoe_shoals_entry_watcher_in_the_water
+TAGS:   shoals_entry transparent
+TAGS:   no_pool_fixup
+MONS:   plant
+SUBST:  1 = .11
+SUBST:  P = 1
+KMONS:  K = kraken
+KFEAT:  K = deep_water
+KFEAT:  O = enter_shoals
+MAP
+    xxxxx
+   xx111xx
+  .x111..x
+  .x11...xx
+..1P11....x
+..1P11...wx
+@.1P11.O.Kn@
+..1P11...wx
+..1P11....x
+  .x11...xx
+  .x111..x
+   xx111xx
+    xxxxx
+ENDMAP
 
 ###############################################################################
 #
