@@ -340,6 +340,55 @@ MAP
 ...........
 ENDMAP
 
+NAME: mainiacjoe_sewer_entry_somewhere_in_here_1
+NSUBST: P = 1:@ / *:x
+NSUBST: Q = 1:@ / *:x
+NSUBST: O = 1:O / 6:M / *:W
+: if crawl.coinflip() then
+KMONS:  M = frilled lizard / rat / giant cockroach / ball python / \
+            river rat w:2 / worm w:3 / adder w:4
+: else
+NSUBST: M = 1:M / */W
+KMONS:  M = iguana
+: end
+KFEAT:  @M = shallow_water
+: sewer_portal(_G)
+MAP
+ PPPPPPP
+xxWxWxWxx
+xWxOxOxWx
+xxOxOxOxx
+xWxOxOxWx
+xxOxOxOxx
+xWxOxOxWx
+xxWxWxWxx
+ QQQQQQQ
+ENDMAP
+
+NAME: mainiacjoe_sewer_entry_somewhere_in_here_2
+NSUBST: @ = 1:@ / 1:x
+NSUBST: O = 1:O / *:W
+: if crawl.coinflip() then
+KMONS:  M = frilled lizard / rat / giant cockroach / ball python / \
+            river rat w:2 / worm w:3 / adder w:4
+: else
+NSUBST: M = 1:M / *:W
+KMONS:  M = iguana
+: end
+KFEAT:  @M = shallow_water
+: sewer_portal(_G)
+MAP
+xxxxx@xxx
+xOxOxWxOx
+xWxWxWxWx
+xxWMxMWxx
+xMxxMxxMx
+xxWMxMWxx
+xWxWxWxWx
+xOxWxOxOx
+xxx@xxxxx
+ENDMAP
+
 # The actual portal vaults #####################################
 # Currently, the total weight is 180
 default-depth: Sewer
