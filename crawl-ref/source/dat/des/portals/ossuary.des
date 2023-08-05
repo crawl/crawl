@@ -201,6 +201,25 @@ xc'O'A'O'cx
    xxxxx
 ENDMAP
 
+NAME: mainiacjoe_ossuary_entry_find_the_door
+SUBST: 1 = 1122.
+SUBST: 3 = 12..
+MONS:  zombie, skeleton
+: ossuary_portal(_G)
+MAP
+   .....
+  .x+x+x.
+ ..x.x1x..
+.xxx.xxxxx.
+.+1x3.3x1+.
+.xxx.O.xxx.
+.+1x3.3x1+.
+.xxxxxxxxx.
+ ..x1x1x..
+  .x+x+x.
+   .....
+ENDMAP
+
 NAME: nicolae_ossuary_entry_giza
 TAGS: transparent
 NSUBST: M = 1:O / *:z
@@ -308,7 +327,7 @@ MAP
 .xx`````xx.
 ..x`H`H`x..
  .xxxxxxx.
-  .......  
+  .......
 ENDMAP
 
 
