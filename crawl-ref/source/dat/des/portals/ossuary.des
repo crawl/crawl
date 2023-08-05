@@ -287,6 +287,31 @@ Gcc'ccG
    @
 ENDMAP
 
+NAME:   mainiacjoe_ossuary_entry_dusty_tomb
+TAGS:   no_monster_gen no_item_gen
+NSUBST: ` = 10:` / *:.
+KFEAT:  ` = web
+TILE:   G = dngn_sarcophagus_pedestal_right
+: set_feature_name("granite_statue", "sarcophagus")
+KFEAT:  H = granite_statue
+TILE:   H = dngn_sarcophagus_pedestal_left
+: set_feature_name("granite_statue", "sarcophagus")
+: ossuary_portal(_G)
+MAP
+  .......
+ .xxxxxxx.
+..x`G`G`x..
+.xx`````xx.
+.x``G`G``x.
+.+``````Ox.
+.x``H`H``x.
+.xx`````xx.
+..x`H`H`x..
+ .xxxxxxx.
+  .......  
+ENDMAP
+
+
 NAME: chequers_ossuary_entry_cave
 TAGS: transparent
 : ossuary_portal(_G)
