@@ -1285,7 +1285,7 @@ BOOL:     nogen, no_upgrade
 
 NAME:     moon troll leather armour
 OBJ:      OBJ_ARMOUR/ARM_TROLL_LEATHER_ARMOUR
-PLUS:     +4
+PLUS:     +5
 COLOUR:   ETC_SHIMMER_BLUE
 BRAND:    SPARM_SPIRIT_SHIELD
 TILE:     urand_moon_troll_leather_armour

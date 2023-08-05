@@ -150,7 +150,7 @@ static const armour_def Armour_prop[] =
        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 0, {},
        ARMF_REGENERATION, },
 #endif
-    { ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",  4,  -40,    150,
+    { ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",  3,  -40,    150,
        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 50, {},
        ARMF_REGENERATION },
 
