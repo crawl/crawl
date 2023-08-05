@@ -2343,7 +2343,7 @@ static bool _monster_eat_item(monster* mons)
 
         if (quant >= si->quantity)
             item_was_destroyed(*si);
-        dec_mitm_item_quantity(si.index(), quant);
+        dec_mitm_item_quantity(si.index(), quant, false);
     }
 
     if (eaten > 0)

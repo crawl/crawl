@@ -937,7 +937,7 @@ bool mons_throw(monster* mons, bolt &beam, bool teleport)
     else
         beam.fire();
 
-    if (beam.drop_item && dec_mitm_item_quantity(mons->inv[MSLOT_MISSILE], 1))
+    if (beam.drop_item && dec_mitm_item_quantity(mons->inv[MSLOT_MISSILE], 1, false))
         mons->inv[MSLOT_MISSILE] = NON_ITEM;
 
     if (beam.special_explosion != nullptr)

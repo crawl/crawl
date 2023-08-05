@@ -419,7 +419,7 @@ bool dec_inv_item_quantity(int obj, int amount)
 // Reduce quantity of a monster/grid item, do cleanup if item goes away.
 //
 // Returns true if stack of items no longer exists.
-bool dec_mitm_item_quantity(int obj, int amount)
+bool dec_mitm_item_quantity(int obj, int amount, bool player_action)
 {
     item_def &item = env.item[obj];
     if (amount > item.quantity)
@@ -428,11 +428,14 @@ bool dec_mitm_item_quantity(int obj, int amount)
     if (item.quantity == amount)
     {
         destroy_item(obj);
-        // If we're repeating a command, the repetitions used up the
-        // item stack being repeated on, so stop rather than move onto
-        // the next stack.
-        crawl_state.cancel_cmd_repeat();
-        crawl_state.cancel_cmd_again();
+        if (player_action)
+        {
+            // If we're repeating a command, the repetitions used up the
+            // item stack being repeated on, so stop rather than move onto
+            // the next stack.
+            crawl_state.cancel_cmd_repeat();
+            crawl_state.cancel_cmd_again();
+        }
         return true;
     }
 

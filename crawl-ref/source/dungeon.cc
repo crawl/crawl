@@ -6080,7 +6080,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
         set_ident_flags(item, ISFLAG_IDENT_MASK);
 
     // Now move it into the shop!
-    dec_mitm_item_quantity(item_index, item.quantity);
+    dec_mitm_item_quantity(item_index, item.quantity, false);
     item.pos = shop.pos;
     item.link = ITEM_IN_SHOP;
     shop.stock.push_back(item);
