@@ -259,27 +259,31 @@ ENDMAP
 
 NAME:   mainiacjoe_shoals_entry_four_pools
 TAGS:   shoals_entry transparent
-NSUBST: O = 1:O / *:W
-SUBST:  W = WWP
+NSUBST: O = 1:O / *:M
 KMONS:  P = plant
 KMONS:  1 = merfolk
 KMONS:  2 = sea snake
 KMONS:  3 = merfolk siren
-KMONS:  4 = snapping turtle
+KMONS:  4 = harpy
 KMONS:  5 = cyclops
-NSUBST: 1 = 1:2 / *:1
+: if crawl.coinflip() then
+NSUBST: M = 1:2 / *:W
 SUBST:  2 = 2345
+: else
+SUBST:  M = 1
+:end
+SUBST:  W = WWP
 KFEAT:  @P12345 = shallow_water
 KFEAT:  O = enter_shoals
 MAP
 xxxxx@xxxxx
-xWW1xWx1WWx
+xWWWxWxWWWx
 xWWOxWxOWWx
 xWxxxWxxxWx
 xWWWWWWWWWx
 xWxxxWxxxWx
 xWWOxWxOWWx
-xWW1xWx1WWx
+xWWWxWxWWWx
 xxxxx@xxxxx
 ENDMAP
 
