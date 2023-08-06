@@ -1316,7 +1316,8 @@ void tilep_print_parts(char *fbuf, const dolls_data &doll)
 bool player_uses_monster_tile()
 {
     return Options.tile_use_monster != MONS_0
-            || you.duration[DUR_EXECUTION];
+            || you.duration[DUR_EXECUTION]
+            || (you.may_pruneify() && you.cannot_act());
 }
 
 #endif

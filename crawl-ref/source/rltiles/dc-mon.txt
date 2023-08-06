@@ -1420,7 +1420,7 @@ unseen_monster MCACHE_START
 todo TODO
 error ERROR
 
-# Old monster tiles for use with the tile_player_tile option.
+# Old and weird monster tiles for use with the tile_player_tile option.
 %sdir mon/player
 giaggostuono MONS_GIAGGOSTUONO
 jormungandr MONS_JORMUNGANDR
@@ -1431,7 +1431,7 @@ old-serpent-dis MONS_OLD_SERPENT_DIS
 old-serpent-geh MONS_OLD_SERPENT_GEH
 old-serpent-tar MONS_OLD_SERPENT_TAR
 orb_guardian_fetus MONS_ORB_GUARDIAN_FETUS
-polymoth MONS_POLYMOTH
+prune MONS_PRUNE
 %rim 0
 jack_o_lantern MONS_JACK_O_LANTERN
 gastronaut MONS_GASTRONAUT

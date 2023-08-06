@@ -2450,6 +2450,9 @@ tileidx_t tileidx_player_mons()
     if (you.duration[DUR_EXECUTION])
         return TILEP_MONS_EXECUTIONER;
 
+    if (you.may_pruneify() && you.cannot_act())
+        return TILEP_MONS_PRUNE;
+
     monster_type mons;
     if (Options.tile_player_tile)
         return Options.tile_player_tile;
