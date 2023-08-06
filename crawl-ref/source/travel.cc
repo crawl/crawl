@@ -2167,6 +2167,7 @@ public:
                                                    : _is_known_branch);
 
         populate_menu();
+        tag = "travel";
     }
 
     void set_waypoint_result(int waypoint)
