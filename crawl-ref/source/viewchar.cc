@@ -80,7 +80,7 @@ static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
          '|', // rod
 #endif
         // talisman .. amulet
-         '%', '}',  '%',  '%',  '$',  '"',
+         '|', '}',  '%',  '%',  '$',  '"',
         // cloud .. tree
          '0', '0', '0', '0', '7',
 #if TAG_MAJOR_VERSION == 34
