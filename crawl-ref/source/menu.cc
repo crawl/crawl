@@ -1971,7 +1971,7 @@ bool Menu::process_key(int keyin)
     }
 
     if (f_keyfilter)
-        keyin = (*f_keyfilter)(keyin);
+        keyin = f_keyfilter(keyin);
     keyin = pre_process(keyin);
 
 #ifdef USE_TILE_WEB

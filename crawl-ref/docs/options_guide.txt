@@ -1186,6 +1186,11 @@ allow_self_target = prompt
         effect on area-effect spells, such as Mephitic Cloud, where you are
         always a valid target.
 
+prompt_menu = true (tiles default), false (console default)
+        Always show prompt menus as popups if possible, rather than in the
+        message pane. This currently applies to Y/N prompts, and to the `G`o
+        menu.
+
 ability_menu = true
         Always show the full-screen 'a'bility menu. If false, 'a' prompts
         in the message area, and the menu can be seen with '?' or '*'.

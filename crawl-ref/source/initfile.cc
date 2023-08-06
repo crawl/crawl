@@ -488,6 +488,15 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(use_fake_player_cursor), true),
         new BoolGameOption(SIMPLE_NAME(show_player_species), false),
         new BoolGameOption(SIMPLE_NAME(use_modifier_prefix_keys), true),
+        new BoolGameOption(SIMPLE_NAME(prompt_menu),
+#ifdef USE_TILE_LOCAL
+            true
+#elif defined (USE_TILE_WEB)
+            tiles.is_controlled_from_web()
+#else
+            false
+#endif
+            ),
         new BoolGameOption(SIMPLE_NAME(ability_menu), true),
         new BoolGameOption(SIMPLE_NAME(spell_menu), false),
         new BoolGameOption(SIMPLE_NAME(easy_floor_use), false),

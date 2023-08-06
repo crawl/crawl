@@ -703,6 +703,7 @@ public:
 
     int         pickup_menu_limit;  // Over this number of items, menu for
                                     // pickup
+    bool        prompt_menu;        // yesno prompt uses a menu popup
     bool        ability_menu;       // 'a'bility starts with a full-screen menu
     bool        spell_menu;         // 'z' starts with a full-screen menu
     bool        easy_floor_use;     // , selects the floor item if there's 1

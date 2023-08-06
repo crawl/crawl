@@ -366,10 +366,9 @@ public:
     virtual int item_colour(const MenuEntry *me) const;
 
     typedef string (*selitem_tfn)(const vector<MenuEntry*> *sel);
-    typedef int (*keyfilter_tfn)(int keyin);
 
     selitem_tfn      f_selitem;
-    keyfilter_tfn    f_keyfilter;
+    function<int(int)> f_keyfilter;
     function<bool(const MenuEntry&)> on_single_selection;
     function<bool(const MenuEntry&)> on_examine;
     function<bool()> on_show;

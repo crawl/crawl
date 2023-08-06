@@ -142,20 +142,46 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
 
     string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
 
-    bool use_popup = !crawl_state.need_save || ui::has_layout();
+    bool use_popup = !crawl_state.need_save // not in game, no message pane
+        || ui::has_layout() // already in a popup; no choice but to use another one
+        || Options.prompt_menu; // options want us to use a popup
     use_popup = use_popup && str && allow_popup;
 
     // MF_ANYPRINTABLE is here because we are running a loop manually
     // XX don't do this
     int flags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING;
-    if (allow_lowercase && use_popup) // why not for uppercase?
+    if (use_popup)
         flags |= MF_ARROWS_SELECT;
-    Menu pop(flags, "", KMC_CONFIRM);
-    MenuEntry *status = nullptr;
+    Menu pop(flags, "prompt", KMC_CONFIRM);
+
+    bool enter_defaults = false;
+
+    // don't require the caller to match case with their other settings
+    if (default_answer)
+    {
+        default_answer = toupper_safe(default_answer);
+        // if arrow selection is disabled, enter/space activates the default
+        // XX what about space with arrow selection? by default this scrolls
+        enter_defaults = use_popup && !pop.is_set(MF_ARROWS_SELECT);
+
+        if (enter_defaults || !use_popup)
+        {
+            // XX a less hacky way, perhaps one that doesn't refer to specific
+            // keycodes. (CMD_MENU_DEFAULT?)
+            pop.f_keyfilter = [default_answer](int keyin)
+                {
+                    // XX space for the default doesn't work in a webtiles
+                    // popup
+                    if (keyin == ' ' || keyin == '\r' || keyin == '\n')
+                        keyin = default_answer;
+                    return keyin;
+                };
+        }
+
+    }
 
     if (use_popup)
     {
-        status = new MenuEntry("", MEL_SUBTITLE);
         MenuEntry * const y_me = new MenuEntry("Yes", MEL_ITEM, 1, 'Y');
         y_me->add_hotkey('y');
         MenuEntry * const n_me = new MenuEntry("No", MEL_ITEM, 1, 'N');
@@ -168,17 +194,27 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
         MenuEntry *question = new MenuEntry(prompt, MEL_TITLE);
         question->wrap_text();
         pop.set_title(question);
-        pop.add_entry(status);
         pop.add_entry(y_me);
         pop.add_entry(n_me);
         if (ask_always)
             pop.add_entry(a_me);
-        if (allow_lowercase && default_answer == 'y' || default_answer == 'Y')
+        if (default_answer == 'Y')
             pop.set_hovered(1);
-        else if (allow_lowercase && default_answer == 'n' || default_answer == 'N')
+        else if (default_answer == 'N')
             pop.set_hovered(2);
-        else if (ask_always && (allow_lowercase && default_answer == 'a' || default_answer == 'A'))
+        else if (ask_always && default_answer == 'A')
             pop.set_hovered(3);
+        else
+            enter_defaults = false; // no valid default
+
+        if (enter_defaults)
+        {
+            pop.set_more(make_stringf("<white>[enter]</white>: %s",
+                default_answer == 'Y' ? "Yes"
+                : default_answer == 'N' ? "No"
+                : (ask_always && default_answer == 'A') ? "Always"
+                : "bugs"));
+        }
     }
     mouse_control mc(MOUSE_MODE_YESNO);
     while (true)
@@ -206,6 +242,8 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
                     mprf(MSGCH_PROMPT, "%s", prompt.c_str());
 
                 tmp = ui::getch(KMC_CONFIRM);
+                if (pop.f_keyfilter)
+                    tmp = pop.f_keyfilter(tmp);
             }
         }
 
@@ -219,15 +257,11 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
         if (map && map->find(tmp) != map->end())
             tmp = map->find(tmp)->second;
 
-        if (default_answer
-            && (tmp == ' ' || key_is_escape(tmp) // XX don't check specific keys for popup
-                || tmp == '\r' || tmp == '\n' || crawl_state.seen_hups))
-        {
+        // XX is the esc case always right for use_popup = true?
+        if (default_answer && (key_is_escape(tmp) || crawl_state.seen_hups))
             tmp = default_answer;
-        }
 
         if (Options.easy_confirm == easy_confirm_type::all
-            || tmp == default_answer
             || Options.easy_confirm == easy_confirm_type::safe
                && allow_lowercase)
         {
@@ -249,15 +283,13 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
                          && (tmp == 'n' || tmp == 'y'
                              || (ask_always && tmp == 'a')
                              || crawl_state.game_is_hints_tutorial());
-            // XX this message is wrong if allow_lowercase is false but the
-            // default has been provided as lowercase
-            const string pr = make_stringf("%s%s only, please.",
+            const string pr = make_stringf("<lightred>%s%s only, please.</lightred>",
                                            upper ? "Uppercase " : "",
                                            ask_always ?
                                                "[Y]es, [N]o, or [A]lways" :
                                                "[Y]es or [N]o");
-            if (use_popup && status) // redundant, but will quiet a warning
-                status->text = pr;
+            if (use_popup)
+                pop.set_more(pr); // replaces keyhint if it's there
             else
                 mprf(MSGCH_PROMPT, "%s", pr.c_str());
         }
@@ -462,7 +494,8 @@ vector<MenuEntry *> PromptMenu::show(bool reuse_selections)
     update_columns();
     // handle rounding properly:
     const int rows = (items.size() + columns - 1) / columns;
-    in_prompt_mode = !ui::has_layout() && rows < static_cast<int>(msgwin_lines());
+    in_prompt_mode = !Options.prompt_menu
+            && !ui::has_layout() && rows < static_cast<int>(msgwin_lines());
     // Allow an extra row for the prompt:
     if (in_prompt_mode)
         return show_in_msgpane();
