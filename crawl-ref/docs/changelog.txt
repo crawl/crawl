@@ -1,5 +1,118 @@
+Stone Soup 0.31-a0 (through 0.31-a0-478-g4fd37da4f0)
+----------------------------------------------------
+
+Artefacts
+---------
+* The dreamshard necklace now has Acrobat, but only restores the player to 1 HP
+  when they'd otherwise die, rather than healing 50-100% of their max HP.
+* Artefact staves can now enhance other schools of magic, even those which
+  don't have corresponding base enhancer staff types.
+
+Branches, Environment
+---------------------
+* The Slime Pits now have many new endings, instead of one fixed ending.
+* The Ecumenical Temple is now fully mapped on entry.
+
+Character
+---------
+* New skill: Shapeshifting, used for talismans.
+* New background: Shapeshifter, replacing Transmuter. Shapeshifters enter the
+  dungeon with a beast talisman, a potion of lignification, and an animal skin.
+* Djinn now use all magic skills, instead of only Spellcasting. Djinn can
+  only choose to train all magic skills or none.
+* Unarmed combat is now more accurate for players.
+* Players no longer get an accuracy bonus from being in certain forms.
+* Formicids can no longer be involuntarily shafted.
+* Hunters and Chaos Knights now start with scrolls of butterflies instead
+  of immolation and xom's chesspieces, respectively.
+
+Gods
+----
+* Nemelex's Deal Four ability now costs more piety.
+* Trog now disables pain brand instead of becoming angry at it.
+* The good gods now hate distortion-branded weapons.
+
+Interface and Options
+---------------------
+* Monsters with unusual items (e.g. distortion) are now highlit in purple
+  by default.
+* For many list options, commas can now be escaped with backslash.
+* Polar Vortex and Noxious Bog damage is now displayed.
+* Meteorans can now choose to be warned before exploring or resting.
+
+Items
+-----
+* New item type: talismans.
+  - When used, talismans transform the player into a corresponding form.
+    This transformation lasts until the player chooses to end it.
+    It takes five turns to use a talisman.
+  - Shapeshifting skill increases the power of talismans' forms. Insufficient
+    Shapeshifting skill reduces the player's maximum HP while in a form.
+    Different forms have different min and max Shapeshifting skills.
+  - Beast talisman: starting talisman for Shapeshifters. Gives +Slay
+    but melds aux armour.
+  - Serpent talisman: transforms the player into a constricting anaconda.
+  - Maw talisman: melds the body slot, transforming it into a devouring maw.
+    Launches auxiliary chomp attacks and heals the player by devouring foes.
+  - Blade talisman: gives the player blade hands and also a blade body,
+    reducing AC from body armour at lower Shapeshifting skill.
+  - Statue talisman: turns the player into a slow-moving, durable statue.
+  - Dragon-blood talisman: turns the player into a fire-breathing dragon.
+  - Storm talisman: turns the player into living lightning.
+  - Talisman of death: turns the player into an undead abomination, blighting
+    foes on hit and tormenting them to heal.
+* New item: sack of spiders, an XP-charged evoker which webs foes and
+  summons creepy-crawlies. Alternates with boxes of beasts.
+* Potions of flight replaced with enlightenment, which also give Will+.
+* Scrolls of magic mapping replaced with revelation, which also give X-ray
+  vision and sInv for one turn.
+* New weapon: orcbow, between a shortbow and an arbalest in strength.
+* Ranged weapons' damage, delay and accuracy have been adjusted.
+* Boomerangs of dispersal have been replaced with darts.
+* Quick blades now hit twice for every swing, with a higher attack delay.
+* Condenser vanes are now more effective at low power.
+* Reaching weapons will no longer fail to reach over spectral weapons.
+* Troll leather armour now has slightly less base AC.
+* Removed books: Sky, Rime and Transfigurations.
+* Removed: silver boomerangs and xom's chesspieces.
+
+Monsters
+--------
+* New unique: Norris, a death cultist who surfs into battle with a gang
+  of skysharks.
+* New monster: formless jellyfish, which constricts and stings to inflict
+  single-turn paralysis.
+* Monsters no longer use up charges when zapping wands.
+* Monsters can no longer use scrolls or potions.
+* Deep Elf Elementalists now cast LRD instead of Awaken Earth.
+* Allied undead no longer become angry when damaged.
+
+Spells
+------
+* Iron Shot replaced with Leda's Unmaking, which liquifies slain foes.
+* Plasma Beam no longer has limited range, but does 10% less damage.
+* Arcjolt now initially arcs to foes within two tiles of the caster.
+* Borgnjor's Vile Clutch (and Fastroot) now work on invisible enemies.
+* Borgnjor's Vile Clutch does less damage.
+* Removed: Beastly Appendage, Spider Form, Ice Form, Blade Hands, Statue
+  Form, Dragon Form, Storm Form, Necromutation.
+
+Tiles and Other Art
+-------------------
+* Player body variants are randomized at the start of each game.
+* New art for Eos, Sniper, Starlight, Dragonskin, Ratskin and the Thief.
+* New art for all bardings.
+* New art for Volatile Blastmotes (spell icon and clouds).
+* New art for short sword and eveningstar artefacts.
+* New art for the Orb of Zot.
+* New art for blink frogs, ancient lichen and shrike simulacrae.
+* New art for Dithmenos's altar.
+* New Dragon Form art.
+* Icons added for many mutations.
+* New Eustachio splash screen.
+
 Stone Soup 0.30 (20230505)
----------------------------------------------------
+--------------------------
 
 Highlights
 ----------
