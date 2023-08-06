@@ -327,32 +327,6 @@ Restlessness
 the Doldrums
 
 %%%%
-_mental_illness_armour_
-Agoraphobia
-
-Catatonia
-
-Claustrophobia
-
-Depression
-
-Dyspraxia
-
-Hysteria
-
-Kleptomania
-
-Masochism
-
-Melancholy
-
-Mental Paralysis
-
-Narcissism
-
-Paranoia
-
-%%%%
 _good_or_divine_
 
 # good things

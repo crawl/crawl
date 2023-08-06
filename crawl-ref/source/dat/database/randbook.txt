@@ -217,9 +217,6 @@ w:4
 
 w:2
 @_power_name_@
-
-w:2
-@_mental_illness_weapon_@
 %%%%
 _book_plant_animal_
 
@@ -266,9 +263,6 @@ w:3
 
 w:3
 @_discomfort_weapon_@
-
-w:3
-@_mental_illness_weapon_@
 %%%%
 _book_adjective_
 
