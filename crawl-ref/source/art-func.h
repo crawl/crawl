@@ -829,7 +829,7 @@ static void _WOE_melee_effects(item_def* /*weapon*/, actor* attacker,
     {
     case 0: verb = "cleave", adv = " in twain"; break;
     case 1: verb = "pulverise", adv = " into a thin bloody mist"; break;
-    case 2: verb = "hew", adv = " savagely"; break;
+    case 2: verb = "hew", adv = " violently"; break;
     case 3: verb = "fatally mangle", adv = ""; break;
     case 4: verb = "dissect", adv = " like a pig carcass"; break;
     case 5: verb = "chop", adv = " into pieces"; break;
