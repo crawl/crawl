@@ -1708,14 +1708,6 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     // the proper stats from it.
     define_zombie(mon, mon->type, MONS_BOUND_SOUL);
 
-    // If the original monster has been levelled up, its HD might be different
-    // from its class HD, in which case its HP should be rerolled to match.
-    if (mon->get_experience_level() != orig.get_experience_level())
-    {
-        mon->set_hit_dice(max(orig.get_experience_level(), 1));
-        roll_zombie_hp(mon);
-    }
-
     mon->flags |= MF_NO_REWARD;
 
     // If the original monster type has melee abilities, make sure
