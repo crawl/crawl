@@ -298,6 +298,53 @@ t.t.ttt
   t.t
 ENDMAP
 
+NAME:   mainiacjoe_swamp_entry_lozenge_pond
+TAGS:   swamp_entry transparent no_monster_gen
+KMONS:  M = swamp dragon / alligator / goliath frog
+KMONS:  N = hornet / cane toad / swamp drake
+KMONS:  P = plant
+KFEAT:  MNP = shallow_water
+KFEAT:  O = enter_swamp
+NSUBST: Q = 5:P / *:W
+MARKER: O = lua:fog_machine { \
+             pow_min = 8, pow_max = 12, delay = 25, \
+             size = 2, walk_dist = 1, spread_rate= 33 }
+MAP
+  @....t
+  .....ttt
+  .ttttWWt
+  tttPPPWtt
+ tttQQQPt..
+tttQQQQPt..
+tttWWQQtt..
+ttMWWWttt..
+ttONtttt..@
+ttttttt
+tttttt
+ENDMAP
+
+NAME:   mainiacjoe_swamp_entry_angry_trees
+TAGS:   swamp_entry transparent patrolling
+MONS:   spriggan druid, bullfrog w:5 / hornet / cane toad
+KFEAT:  O = enter_swamp
+NSUBST: S = 1:1 / *:T, T = 1:1 / 2:2 / 1:2tt / 16:t / *:.
+MARKER: O = lua:fog_machine { \
+             pow_min = 8, pow_max = 12, delay = 25, \
+             size = 2, walk_dist = 1, spread_rate= 33 }
+MAP
+tttttttttt@
+ttTTTTttT.t
+tTT..TTTT.t
+tT.TT.TT.Tt
+t.TTTT..TTt
+t.TTTTTTTtt
+tS..T..TTtt
+tSSS.SS.SSt
+tttSSSSS.St
+ttttSO...St
+ttttttttttt
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Decorative vaults.
