@@ -364,7 +364,7 @@ static const form_entry formdata[] =
 },
 
 {
-    transformation::flux, MONS_UGLY_THING, "Flux", "flux-form", "flux",
+    transformation::flux, MONS_RADROACH, "Flux", "flux-form", "flux",
     "something dangerously unstable.",
     5, 13, TALISMAN_FLUX,
     SLOTF(EQ_WEAPON) | SLOTF(EQ_SHIELD), MR_NO_FLAGS,
