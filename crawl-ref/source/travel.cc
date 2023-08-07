@@ -2166,8 +2166,21 @@ public:
             (prompt_flags & TPF_SHOW_PORTALS_ONLY) ? _is_disconnected_branch
                                                    : _is_known_branch);
 
-        populate_menu();
         tag = "travel";
+        if ((prompt_flags & TPF_REMEMBER_TARGET) && !trans_travel_dest.empty())
+            def_target = level_target;
+
+        populate_menu();
+    }
+
+    bool has_default_target() const
+    {
+        // weirdness: for historical reasons, we use this static string to
+        // indicate validity. Sometimes only a branch is set on the travel
+        // dest? I'm not entirely sure what's going on here.
+        return (prompt_flags & TPF_REMEMBER_TARGET)
+            && !trans_travel_dest.empty()
+            && def_target.id.branch >= 0;
     }
 
     void set_waypoint_result(int waypoint)
@@ -2192,12 +2205,12 @@ public:
                     segs.emplace_back("* - list waypoints");
             }
 
-            if (!trans_travel_dest.empty()
-                                    && (prompt_flags & TPF_REMEMBER_TARGET))
+            if (has_default_target())
             {
-                segs.push_back(make_stringf(
-                        (in_prompt_mode ? "Enter - %s" : "Tab - %s"),
-                        trans_travel_dest.c_str()));
+                segs.push_back(make_stringf("%s - %s",
+                        (in_prompt_mode || !is_set(MF_ARROWS_SELECT))
+                            ? "Tab/Enter" : "Tab",
+                        _get_trans_travel_dest(def_target).c_str()));
             }
 
             segs.emplace_back("? - help");
@@ -2213,6 +2226,7 @@ public:
     {
         clear();
         refresh_prompt();
+        int def_choice = -1;
 
         if (waypoint_list)
         {
@@ -2249,9 +2263,13 @@ public:
                 if (shortcut != branches[br].travel_shortcut)
                     br_entry->add_hotkey(shortcut);
                 add_entry(br_entry);
+                if (has_default_target() && def_target.id.branch == br)
+                    def_choice = items.size() - 1;
             }
         }
         update_menu(true);
+        if (def_choice >= 0)
+            set_hovered(def_choice);
     }
 
     vector<MenuEntry *> show_in_msgpane() override
@@ -2278,12 +2296,11 @@ public:
             result = ID_ALTAR;
             return false;
         case '\n': case '\r':
-            if (ui_is_initialized())
-                break; // awkwardness: this shortcut doesn't work in menu form
+            if (ui_is_initialized() && is_set(MF_ARROWS_SELECT))
+                break; // awkwardness: this shortcut doesn't work in normal menu form
         case '\t':
-            if (prompt_flags & TPF_REMEMBER_TARGET)
+            if (has_default_target())
             {
-                // awkwardness: this shortcut doesn't work in menu form
                 result = ID_REPEAT;
                 return false;
             }
@@ -2351,6 +2368,8 @@ public:
     int result;
     int prompt_flags;
     bool waypoint_list;
+    level_pos def_target;
+    string def_target_name;
     vector<branch_type> prompt_branches;
 };
 
@@ -2694,7 +2713,7 @@ static level_pos _travel_depth_munge(int munge_method, const string &s,
     return result;
 }
 
-static level_pos _prompt_travel_depth(const level_id &id)
+static level_pos _prompt_travel_depth(const level_id &id, bool remember_targ)
 {
     level_pos target = level_pos(id);
 
@@ -2702,7 +2721,15 @@ static level_pos _prompt_travel_depth(const level_id &id)
     if (single_level_branch(target.id.branch))
         return level_pos(level_id(target.id.branch, 1));
 
-    target.id.depth = _get_nearest_level_depth(target.id.branch);
+    // if there's a previous target, and we are going to that branch again,
+    // use the previous target depth as the default
+    if (level_target.id.is_valid() && remember_targ
+        && level_target.id.branch == target.id.branch)
+    {
+        target.id.depth = level_target.id.depth;
+    }
+    else // otherwise, use the nearest level
+        target.id.depth = _get_nearest_level_depth(target.id.branch);
     while (true)
     {
         clear_messages();
@@ -2769,7 +2796,7 @@ level_pos prompt_translevel_target(int prompt_flags, string& dest_name)
     target.id.branch = static_cast<branch_type>(branch);
 
     // User's chosen a branch, so now we ask for a level.
-    target = _prompt_travel_depth(target.id);
+    target = _prompt_travel_depth(target.id, remember_targ);
 
     if (target.id.depth < 1
         || target.id.depth > brdepth[target.id.branch])
