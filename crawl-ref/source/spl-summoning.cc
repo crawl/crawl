@@ -2172,6 +2172,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_HAUNT,                    { 8, 8 } },
     { SPELL_SUMMON_CACTUS,            { 1, 1 } },
     // Monster-only spells
+    { SPELL_SUMMON_BUTTERFLIES,       { 0, 27 } },
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
     { SPELL_SUMMON_SPIDERS,           { 0, 5 } },
     { SPELL_SUMMON_UFETUBUS,          { 0, 8 } },

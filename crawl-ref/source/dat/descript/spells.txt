@@ -1351,11 +1351,17 @@ Summon Air Elementals spell
 
 Summons one or more air elementals.
 %%%%
+<<<<<<< HEAD
 Summon Cactus Giant spell
 
 Summons a warrior from a particularly prickly tribe. Foes that strike these
 giants in melee are in for a painful surprise! When cast at a higher power,
 older, more robust warriors will answer the call.
+=======
+Summon Butterflies spell
+
+Creates a shower of colourful butterflies. How pretty!
+>>>>>>> parent of 1fcefbe3cb... Remove Summon Butterflies
 %%%%
 Summon Demon spell
 

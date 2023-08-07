@@ -1673,6 +1673,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CHAIN_LIGHTNING:    // the only user is reckless
     case SPELL_CHAIN_OF_CHAOS:
     case SPELL_SUMMON_EYEBALLS:
+    case SPELL_SUMMON_BUTTERFLIES:
     case SPELL_CALL_TIDE:
     case SPELL_INK_CLOUD:
     case SPELL_SILENCE:
@@ -6089,6 +6090,17 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
             create_monster(
                 mgen_data(mon, SAME_ATTITUDE(mons), mons->pos(), mons->foe)
+                .set_summoned(mons, duration, spell_cast, god));
+        }
+        return;
+
+    case SPELL_SUMMON_BUTTERFLIES:
+        duration = min(2 + mons->spell_hd(spell_cast) / 5, 6);
+        for (int i = 0; i < 10; ++i)
+        {
+            create_monster(
+                mgen_data(MONS_BUTTERFLY, SAME_ATTITUDE(mons),
+                          mons->pos(), mons->foe)
                 .set_summoned(mons, duration, spell_cast, god));
         }
         return;

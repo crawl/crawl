@@ -93,6 +93,7 @@ static bool _action_is_bad(xom_event_type action)
 // selected.
 static const vector<spell_type> _xom_random_spells =
 {
+    SPELL_SUMMON_BUTTERFLIES,
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_CALL_CANINE_FAMILIAR,
     SPELL_OLGREBS_TOXIC_RADIANCE,
@@ -1509,27 +1510,6 @@ static void _xom_place_altars()
     }
 }
 
-static void _xom_summon_butterflies()
-{
-    bool success = false;
-    const int how_many = random_range(10, 20);
-
-    for (int i = 0; i < how_many; ++i)
-    {
-        mgen_data mg(MONS_BUTTERFLY, BEH_FRIENDLY, you.pos(), MHITYOU,
-                     MG_FORCE_BEH);
-        mg.set_summoned(&you, 3, MON_SUMM_AID, GOD_XOM);
-        if (create_monster(mg))
-            success = true;
-    }
-
-    if (success)
-    {
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
-                       "scenery: summon butterflies"), true);
-        god_speaks(GOD_XOM, _get_xom_speech("scenery").c_str());
-    }
-}
 /// Mess with nearby terrain features, more-or-less harmlessly.
 static void _xom_change_scenery(int /*sever*/)
 {
@@ -1537,10 +1517,7 @@ static void _xom_change_scenery(int /*sever*/)
 
     if (candidates.empty())
     {
-        if (coinflip())
-            _xom_place_altars();
-        else
-            _xom_summon_butterflies();
+        _xom_place_altars();
         return;
     }
 
