@@ -1719,6 +1719,7 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
             mon->spells.push_back(slot);
     if (mon->spells.size())
         mon->props[CUSTOM_SPELLS_KEY] = true;
+    mon->props[KNOWN_MAX_HP_KEY] = mons_avg_hp(orig.type);
 
     name_zombie(*mon, orig);
 
