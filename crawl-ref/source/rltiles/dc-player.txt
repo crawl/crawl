@@ -34,7 +34,7 @@ gnoll3_m
 gnoll3_f
 gnoll4_m
 gnoll4_f
-gnome_f
+gnome_f GNOME
 gnome_m
 halfling_m HALFLING
 halfling_f
