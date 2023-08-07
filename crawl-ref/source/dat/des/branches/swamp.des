@@ -320,6 +320,28 @@ tOMttt..@
 tttt
 ENDMAP
 
+NAME:   mainiacjoe_swamp_entry_angry_trees
+TAGS:   swamp_entry transparent patrolling
+NSUBST: T = 3:1 / 20:t / *:.
+KMONS:  1 = spriggan druid / dryad
+KFEAT:  O = enter_swamp
+MARKER: O = lua:fog_machine { \
+             pow_min = 8, pow_max = 12, delay = 25, \
+             size = 2, walk_dist = 1, spread_rate= 33 }
+MAP
+tttttttttt@
+tTTTTTTTT.t
+tTT..TTTT.t
+tT.TT.TT.Tt
+t.TTTT..TTt
+t.TTTTTTTTt
+tT..T..TTTt
+tTTT.TT.TTt
+tTTTTTTT.Tt
+tTTTTO...Tt
+ttttttttttt
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Decorative vaults.
