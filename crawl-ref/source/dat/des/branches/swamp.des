@@ -301,7 +301,7 @@ ENDMAP
 NAME:   mainiacjoe_swamp_entry_lozenge_pond
 TAGS:   swamp_entry transparent no_monster_gen
 KMONS:  M = swamp dragon / alligator / goliath frog w:5 / bunyip w:5
-NSUBST: Q = 5:W / *:W 
+NSUBST: Q = 5:W / *:W
 KMONS:  P = plant
 KFEAT:  MP = shallow_water
 KFEAT:  O = enter_swamp
