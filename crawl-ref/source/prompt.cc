@@ -482,21 +482,26 @@ void PromptMenu::update_menu(bool update_entries)
     Menu::update_menu(update_entries);
 }
 
-vector<MenuEntry *> PromptMenu::show(bool reuse_selections)
+bool PromptMenu::fits_in_mpane() const
 {
-    // if the menu items fit in the msgpane, and there is no currently
-    // running ui layout, show it in the message pane. Otherwise, use a
-    // popup.
-    // XX Right now, if this starts in msgpane mode, it'll stay in msgpane
-    // mode. There's no need for this right now, but it wouldn't be too hard
-    // to refactor this so that the menu automatically switched to popup
-    // mode if the menu list changes and increases the size of the menu.
-    update_columns();
+    // check is relative to current column settings...
     // handle rounding properly:
     const int rows = (items.size() + columns - 1) / columns;
-    in_prompt_mode = !Options.prompt_menu
-            && !ui::has_layout() && rows < static_cast<int>(msgwin_lines());
-    // Allow an extra row for the prompt:
+    return rows < static_cast<int>(msgwin_lines());
+}
+
+vector<MenuEntry *> PromptMenu::show(bool reuse_selections)
+{
+    // if options allow, the menu items fit in the msgpane, and there is no
+    // currently running ui layout, show it in the message pane. Otherwise,
+    // use a popup. Prompting in the message pain is more classic, and is the
+    // default on console, but the popup is more consistent and is otherwise
+    // the default. (This is all a bit janky, but message pain prompts
+    // historically are way more janky than this; and I don't want to remove
+    // them because of their classic feel.)
+    update_columns();
+    in_prompt_mode = !Options.prompt_menu && !ui::has_layout() && fits_in_mpane();
+
     if (in_prompt_mode)
         return show_in_msgpane();
     else
@@ -510,6 +515,13 @@ vector<MenuEntry *> PromptMenu::show_in_msgpane()
     build_prompt_menu(); // could just rebuild it on every loop...
     while (true)
     {
+        if (!fits_in_mpane())
+        {
+            // build_prompt_menu updates the column widths, so if the menu
+            // gets updated by process_key, this may trigger on successive
+            // loops. Once we are in menu mode, no going back to prompt mode.
+            return Menu::show();
+        }
         msgwin_clear_temporary();
         const auto *t_entry = get_cur_title();
         // currently ignores entry color for the title, assuming that the

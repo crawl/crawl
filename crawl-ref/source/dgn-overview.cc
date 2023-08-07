@@ -722,6 +722,7 @@ static void _process_command(const char keypress)
         case '_':
             if (!altars_present.empty())
             {
+                // XX fix this
                 macro_sendkeys_end_add_expanded('_');
                 do_interlevel_travel();
             }

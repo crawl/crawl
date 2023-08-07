@@ -58,6 +58,8 @@ public:
     void update_columns();
     void build_prompt_menu();
 
+    bool fits_in_mpane() const;
+
 protected:
     vector<formatted_string> menu_text;
     int columns;
