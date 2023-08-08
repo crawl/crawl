@@ -53,6 +53,15 @@ bool SkillTextTileItem::handle_mouse(const wm_mouse_event& me)
         skm.select(sk, 'A');
         return true;
     }
+    else if (me.event == wm_mouse_event::PRESS
+        && me.button == wm_mouse_event::RIGHT)
+    {
+        skill_type sk = skill_type(get_id());
+        if (is_invalid_skill(sk))
+            return false;
+        describe_skill(sk);
+        return true;
+    }
     else
         return false;
 }
