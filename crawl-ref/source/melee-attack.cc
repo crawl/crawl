@@ -587,7 +587,7 @@ bool melee_attack::handle_phase_hit()
     apply_damage_brand();
 
     // Apply flux form's sfx.
-    if (you.form == transformation::flux && defender->alive() && defender->is_monster())
+    if (attacker->is_player() && you.form == transformation::flux && defender->alive() && defender->is_monster())
         _apply_flux_contam(*(defender->as_monster()));
 
     // Fireworks when using Serpent's Lash to kill.
