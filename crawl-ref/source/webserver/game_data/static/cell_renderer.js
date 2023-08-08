@@ -1116,6 +1116,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                     return 10;
                 case icons.CONSTRICTED:
                 case icons.VILE_CLUTCH:
+                case icons.PAIN_BOND:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 11;
             }
