@@ -19,10 +19,10 @@ aptitudes:
   staves: 2
   ranged weapons: 1
   throwing: 2
-  armour: 2
-  dodging: 2
+  armour: 1
+  dodging: 1
   stealth: -2
-  shields: 2
+  shields: 1
   unarmed_combat: 2
   spellcasting: 2
   conjurations: 2

@@ -7203,8 +7203,8 @@ bool player::backlit(bool self_halo, bool temp) const
                     || duration[DUR_QUAD_DAMAGE]
                     || !umbraed() && haloed()
                        && (self_halo || halo_radius() == -1))
-           || you.has_mutation(MUT_GLOWING)
-           || you.form == transformation::flux;
+           || self_halo && (you.has_mutation(MUT_GLOWING)
+                            || you.form == transformation::flux);
 }
 
 bool player::umbra() const
