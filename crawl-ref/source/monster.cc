@@ -2889,7 +2889,7 @@ bool monster::asleep() const
 
 bool monster::sleepwalking() const
 {
-    return asleep() && (has_ench(ENCH_CONFUSION) || type == MONS_JEREMIAH);
+    return asleep() && has_ench(ENCH_CONFUSION);
 }
 
 bool monster::backlit(bool self_halo, bool /*temp*/) const
