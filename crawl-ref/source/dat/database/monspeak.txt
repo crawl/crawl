@@ -4801,6 +4801,8 @@ VISUAL:@The_monster@'s eyes momentarily flash bright red.
 
 VISUAL:@The_monster@ yawns.
 
+VISUAL:@The_monster@ trails rainbows from @possessive@ fingertips.
+
 # hope you didn't tukima it!
 VISUAL:@The_monster@ looks at @possessive@ weapon with confusion.
 %%%%
@@ -4827,6 +4829,8 @@ _Jeremiah_rare_
 @The_monster@ wails, "It wants to be free! It wants to enslave everyone!"
 
 @The_monster@ asks @foe@, "Where did this glaive come from? Is it yours?"
+
+@The_monster@ giggles, "Dreams, dreams, come out to play!"
 
 VISUAL:@The_monster@ pinches @reflexive@.
 ## END Jeremiah ##

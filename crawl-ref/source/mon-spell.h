@@ -1827,7 +1827,6 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BLINK_RANGE, 20, MON_SPELL_NATURAL },
        { SPELL_SMITING, 30, MON_SPELL_PRIEST },
-       { SPELL_SUMMON_BUTTERFLIES, 30, MON_SPELL_PRIEST },
       }
     },
 

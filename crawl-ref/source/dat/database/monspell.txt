@@ -557,17 +557,6 @@ VISUAL:@The_monster@ throws @possessive@ arms up pleadingly.
 
 @The_monster@ shouts, "O dreadful one, destroy my foe!"
 %%%%
-Summon Butterflies Jeremiah cast
-
-VISUAL:@The_monster@ trails rainbows from @possessive@ fingertips.
-
-@The_monster@ giggles, "Dreams, dreams, come out to play!"
-
-VISUAL:@The_monster@ weakens the barrier between dreams and reality.
-
-w:3
-@The_monster@ asks, "Pretty ones, flutter-friends, will you visit us?"
-%%%%
 ########################################################################
 # Individual monsters
 ########################################################################
