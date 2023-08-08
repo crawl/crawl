@@ -503,6 +503,12 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { { { WPN_GLAIVE,            2 },
                 { WPN_BARDICHE,          1 },
         }, { 1, 4, 9 }, { { SPWPN_DRAINING, 1 } } } },
+        { MONS_JEREMIAH,
+            { { { WPN_GLAIVE,            1 },
+        }, { 1, 2, 4 }, {
+            { SPWPN_DRAINING,  9 },
+            { SPWPN_VAMPIRISM, 1 },
+        } } },
         { MONS_CRAZY_YIUF,
             { { { WPN_QUARTERSTAFF, 1 } },
             { 1, 2, 4 },
@@ -2053,6 +2059,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_SERVANT_OF_WHISPERS:
     case MONS_RAGGED_HIEROPHANT:
     case MONS_FENSTRIDER_WITCH:
+    case MONS_JEREMIAH:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
         break;

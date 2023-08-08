@@ -3569,7 +3569,7 @@ static vector<string> _get_monster_behaviour_vector(const monster_info& mi)
 
     if ((mi.is(MB_SLEEPING) || mi.is(MB_DORMANT)))
     {
-        if (mi.is(MB_CONFUSED))
+        if (mi.sleepwalking)
             descs.emplace_back("sleepwalking");
         else if (mons_class_flag(mi.type, M_CONFUSED))
             descs.emplace_back("drifting");
@@ -3647,7 +3647,7 @@ static string _get_monster_desc(const monster_info& mi)
     {
         text += pronoun + " "
                 + conjugate_verb("appear", mi.pronoun_plurality()) + " to be "
-                + (mi.is(MB_CONFUSED) ? "sleepwalking" : "resting") + ".\n";
+                + (mi.sleepwalking ? "sleepwalking" : "resting") + ".\n";
     }
     // Applies to both friendlies and hostiles
     else if (mi.is(MB_FLEEING))

@@ -545,6 +545,29 @@ unseen Vv cast
 
 You hear the sound of rock striking rock.
 %%%%
+Smiting Jeremiah cast
+
+@The_monster@ lets out a twisted cry.
+
+@The_monster@ mumbles a slurred invocation.
+
+VISUAL:@The_monster@ throws @possessive@ arms up pleadingly.
+
+@The_monster@ cries, "Fearful master, protect me!"
+
+@The_monster@ shouts, "O dreadful one, destroy my foe!"
+%%%%
+Summon Butterflies Jeremiah cast
+
+VISUAL:@The_monster@ trails rainbows from @possessive@ fingertips.
+
+@The_monster@ giggles, "Dreams, dreams, come out to play!"
+
+VISUAL:@The_monster@ weakens the barrier between dreams and reality.
+
+w:3
+@The_monster@ asks, "Pretty ones, flutter-friends, will you visit us?"
+%%%%
 ########################################################################
 # Individual monsters
 ########################################################################

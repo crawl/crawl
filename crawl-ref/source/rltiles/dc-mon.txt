@@ -244,6 +244,7 @@ boulder_beetle_rolling2
 ## Frogs ('F')
 %sdir mon/unique
 prince_ribbit MONS_PRINCE_RIBBIT
+jeremiah MONS_JEREMIAH
 %rim 1
 %sdir mon/animals
 bullfrog MONS_BULLFROG

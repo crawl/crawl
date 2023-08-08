@@ -262,6 +262,7 @@ struct monster_info_base
     mon_attack_def attack[MAX_NUM_ATTACKS];
     bool can_go_frenzy;
     bool can_feel_fear;
+    bool sleepwalking;
 
     uint32_t client_id;
 };
