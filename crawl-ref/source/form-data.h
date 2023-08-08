@@ -340,7 +340,7 @@ static const form_entry formdata[] =
 {
     transformation::beast, MONS_WOLF, "Beast", "beast-form", "beast",
     "a hulking beast.",
-    0, 5, TALISMAN_BEAST,
+    0, 6, TALISMAN_BEAST,
     EQF_AUXES, MR_NO_FLAGS,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
     {}, true, {},
@@ -366,7 +366,7 @@ static const form_entry formdata[] =
 {
     transformation::flux, MONS_RADROACH, "Flux", "flux-form", "flux",
     "something dangerously unstable.",
-    5, 13, TALISMAN_FLUX,
+    6, 13, TALISMAN_FLUX,
     SLOTF(EQ_WEAPON) | SLOTF(EQ_SHIELD), MR_NO_FLAGS,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
     {}, true, {},
