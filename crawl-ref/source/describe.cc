@@ -726,7 +726,7 @@ static const int MAX_ARTP_NAME_LEN = 10;
 static string _padded_artp_name(artefact_prop_type prop, int val)
 {
     // XX it would be nice to use a dynamic pad, but annoyingly, the constant
-    // is used separately for egos. Also, spacing is hardcoded for unrands...
+    // is used separately for egos.
     return make_stringf("%-*s", MAX_ARTP_NAME_LEN + 1,
         (_randart_prop_abbrev(prop, val) + ":").c_str());
 }
@@ -745,10 +745,26 @@ static string _randart_descrip(const item_def &item)
     if (item.base_type == OBJ_JEWELLERY
         && (item_ident(item, ISFLAG_KNOW_TYPE)))
     {
-        const char* type = _jewellery_base_ability_description(item.sub_type);
-        if (*type)
+        // why are these specially hardcoded
+        const char* type = jewellery_base_ability_string(item.sub_type);
+        const char* desc = _jewellery_base_ability_description(item.sub_type);
+        if (*desc)
         {
-            description += type;
+            if (*type)
+            {
+                // XX a custom ego description isn't well handled here. The
+                // main case of this is Vitality
+                description += make_stringf("%-*s %s",
+                    MAX_ARTP_NAME_LEN + 1,
+                    (string(type) + ":").c_str(),
+                    desc);
+            }
+            else
+            {
+                // if this case happens, the formatting can get mixed with
+                // DBRANDS in weird ways
+                description += desc;
+            }
             need_newline = true;
         }
     }
@@ -823,6 +839,30 @@ static string _randart_descrip(const item_def &item)
 }
 #undef known_proprt
 
+static string _format_dbrand(string dbrand)
+{
+    vector<string> out;
+
+    vector<string> lines = split_string("\n", dbrand);
+    for (const auto &l : lines)
+    {
+        vector<string> brand = split_string(":", l, true, false, 1);
+        if (brand.size() == 0)
+            continue;
+        if (brand.size() == 1)
+            out.push_back(brand[0]);
+        else
+        {
+            // XX this padding technique breaks with wide chars, e.g. Will-∞
+            out.push_back(make_stringf("%-*s %s",
+                    MAX_ARTP_NAME_LEN + 1,
+                    (brand[0] + ":").c_str(),
+                    brand[1].c_str()));
+        }
+    }
+    return join_strings(out.begin(), out.end(), "\n");
+}
+
 // If item is an unrandart with a DESCRIP field, return its contents.
 // Otherwise, return "".
 static string _artefact_descrip(const item_def &item)
@@ -840,16 +880,16 @@ static string _artefact_descrip(const item_def &item)
             && item.base_type != OBJ_WEAPONS
             && item.base_type != OBJ_STAVES)
         {
-            out << entry->dbrand;
+            out << _format_dbrand(entry->dbrand);
             need_newline = true;
         }
         if (entry->descrip)
         {
-            out << (need_newline ? "\n\n" : "") << entry->descrip;
+            out << (need_newline ? "\n" : "") << _format_dbrand(entry->descrip);
             need_newline = true;
         }
         if (!_randart_descrip(item).empty())
-            out << (need_newline ? "\n\n" : "") << _randart_descrip(item);
+            out << (need_newline ? "\n" : "") << _randart_descrip(item);
     }
     else
         out << _randart_descrip(item);
@@ -1570,7 +1610,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
         const brand_type brand = get_weapon_brand(item);
         string brand_name = uppercase_first(brand_type_name(brand, true));
         // Hack to match artefact prop formatting.
-        description += make_stringf("\n\n%*s %s",
+        description += make_stringf("\n\n%-*s %s",
                                     MAX_ARTP_NAME_LEN + 1,
                                     (brand_name + ":").c_str(),
                                     brand_desc.c_str());
@@ -1579,7 +1619,13 @@ static void _append_weapon_stats(string &description, const item_def &item)
     {
         auto entry = get_unrand_entry(item.unrand_idx);
         if (entry->dbrand)
-            description += string("\n") + (brand_desc.empty() ? "\n" : "") + entry->dbrand;
+        {
+            description += make_stringf("\n%s%s",
+                (brand_desc.empty() ? "\n" : ""),
+                _format_dbrand(entry->dbrand).c_str());
+        }
+        // XX spacing following brand and dbrand for randarts/unrands is a bit
+        // inconsistent with other object types
     }
 }
 
@@ -1632,6 +1678,30 @@ static string _category_string(const item_def &item)
     description +=
         make_stringf(" '%s' category. ",
                      skill == SK_FIGHTING ? "buggy" : skill_name(skill));
+
+    switch (item_attack_skill(item))
+    {
+    case SK_POLEARMS:
+        description += "It has an extended reach (target with [<white>v</white>]). ";
+        break;
+    case SK_AXES:
+        description += "It hits all enemies adjacent to the wielder";
+        if (!is_unrandom_artefact(item, UNRAND_WOE))
+            description += ", dealing less damage to those not targeted";
+        description += ". ";
+        break;
+    case SK_SHORT_BLADES:
+        {
+            description += make_stringf(
+                "It is%s good for stabbing helpless or unaware enemies. ",
+                (item.sub_type == WPN_DAGGER) ? "extremely" : "");
+
+        }
+        break;
+    default:
+        break;
+    }
+
     return description;
 }
 
@@ -1749,32 +1819,6 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
         _append_weapon_stats(description, item);
     }
 
-    if (verbose && !is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
-    {
-        switch (item_attack_skill(item))
-        {
-        case SK_POLEARMS:
-            description += "\n\nIt can be evoked to extend its reach.";
-            break;
-        case SK_AXES:
-            description += "\n\nIt hits all enemies adjacent to the wielder";
-            if (!is_unrandom_artefact(item, UNRAND_WOE))
-                description += ", dealing less damage to those not targeted";
-            description += ".";
-            break;
-        case SK_SHORT_BLADES:
-            {
-                string adj = (item.sub_type == WPN_DAGGER) ? "extremely"
-                                                           : "particularly";
-                description += "\n\nIt is " + adj + " good for stabbing"
-                               " helpless or unaware enemies.";
-            }
-            break;
-        default:
-            break;
-        }
-    }
-
     // ident known & no brand but still glowing
     // TODO: deduplicate this with the code in item-name.cc
     if (verbose
@@ -1795,6 +1839,8 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
     if (verbose)
     {
         description += "\n\n" + _category_string(item);
+
+
 
         // XX this is shown for felids, does that actually make sense?
         description += _handedness_string(item);
@@ -2106,9 +2152,8 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
 {
     string description;
 
-    description.reserve(300);
-
-    if (verbose)
+    // orbs skip this entirely
+    if (verbose && !(item.base_type == OBJ_ARMOUR && item.sub_type == ARM_ORB))
     {
         if (!monster && is_shield(item))
         {
@@ -2133,8 +2178,6 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
             if (is_unrandom_artefact(item, UNRAND_WARLOCK_MIRROR))
                 description += _warlock_mirror_reflect_desc();
         }
-        else if (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_ORB)
-            ;
         else
         {
             const int evp = property(item, PARM_EVASION);
@@ -2161,7 +2204,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
     if (is_unrandom_artefact(item))
         entry = get_unrand_entry(item.unrand_idx);
     const bool skip_ego = is_unrandom_artefact(item)
-                          && entry && entry->flags & UNRAND_FLAG_SKIP_EGO;
+                          && entry && (entry->flags & UNRAND_FLAG_SKIP_EGO);
 
     // Only give a description for armour with a known ego.
     if (ego != SPARM_NORMAL && item_type_known(item) && verbose && !skip_ego)
@@ -2173,10 +2216,8 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
             // Make this match the formatting in _randart_descrip,
             // since instead of the item being named something like
             // 'cloak of invisiblity', it's 'the cloak of the Snail (+Inv, ...)'
-            string name = string(armour_ego_name(item, true));
-            name = chop_string(name, MAX_ARTP_NAME_LEN - 1, false) + ":";
-            name.append(MAX_ARTP_NAME_LEN - name.length(), ' ');
-            description += name;
+            string name = string(armour_ego_name(item, true)) + ":";
+            description += make_stringf("%-*s", MAX_ARTP_NAME_LEN + 1, name.c_str());
         }
         else
             description += "'Of " + string(armour_ego_name(item, false)) + "': ";

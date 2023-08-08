@@ -109,13 +109,14 @@
 #
 # The description of a power can be split across more than one line. The
 # subsequent lines should be just below the first one, and should start with
-# a space (with no header name).
+# a space (with no header name). A power with a short name followed by a `:`
+# will be automatically indented on the item description screen.
 #
 # If there are multiple powers, subsequent powers can be added with a +.
 #
 # Example:
-# DESCRIP: It enhances your template magic.
-# + It gives you a regex malus.
+# DESCRIP: Perl: It enhances your regex magic.
+# + Python: It gives you a bracketing malus.
 
 # DBRAND: Description of a brand which is specific to this artefact.
 #
@@ -252,11 +253,11 @@ DBRAND:  Lifebolt:  It occasionally discharges a powerful but inaccurate bolt
 
 NAME:    staff of Olgreb
 INSCRIP: rPois∞
-DESCRIP: It enhances your poison magic.
-+It grants immunity to poison.
-+It can be activated via the 'a'bility menu to radiate toxic energy, with
+DESCRIP: Radiate: It can be activated via the 'a'bility menu to radiate toxic energy, with
  effectiveness depending on Evocations skill.
-DBRAND: If the wielder is skilled in Evocations, they can envenom those struck
++Pois: It enhances your poison magic.
++rPois∞: It grants immunity to poison.
+DBRAND: Envenom: If the wielder is skilled in Evocations, they can envenom those struck
  by it, dealing poison damage which bypasses armour.
 OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +9
@@ -1572,10 +1573,10 @@ COLOUR:   ETC_MAGIC
 TILE:     urand_battle
 TILE_EQ:  orb_of_battle
 VALUE:    800
-DESCRIP:  It enhances your destructive magic.
-+It weakens your non-destructive magic.
-+It summons a battlesphere in combat, with strength depending on Conjurations
- skill.
+DESCRIP: Battle: It summons a battlesphere in combat, with strength
+ depending on Conjurations skill.
++Destructive: It enhances your destructive magic, and weakens non-destructive
+ magic.
 
 ENUM:     EMBRACE
 NAME:     Cigotuvi's embrace
