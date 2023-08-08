@@ -2711,9 +2711,13 @@ static level_pos _prompt_travel_depth(const level_id &id, bool remember_targ)
     }
     else // otherwise, use the nearest level
         target.id.depth = _get_nearest_level_depth(target.id.branch);
+
+    clear_messages();
+    msgwin_temporary_mode temp;
+
     while (true)
     {
-        clear_messages();
+        msgwin_clear_temporary();
         mprf(MSGCH_PROMPT, "What level of %s? "
              "(default %s, ? - help) ",
              branches[target.id.branch].longname,

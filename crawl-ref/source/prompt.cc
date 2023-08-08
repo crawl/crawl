@@ -65,8 +65,7 @@ namespace ui
     };
 
     // Convenience wrapper for `message_scroller`.
-    // somewhat general popup code for short messages. This accepts color
-    // formatting for the optional `title` and `prompt`, but not `msg`.
+    // somewhat general popup code for short messages.
     int message(string msg, string title, string prompt, bool format_msg)
     {
         // XX could this just always accept a format string msg?
