@@ -545,6 +545,18 @@ unseen Vv cast
 
 You hear the sound of rock striking rock.
 %%%%
+Smiting Jeremiah cast
+
+@The_monster@ lets out a twisted cry.
+
+@The_monster@ mumbles a slurred invocation.
+
+VISUAL:@The_monster@ throws @possessive@ arms up pleadingly.
+
+@The_monster@ cries, "Fearful master, protect me!"
+
+@The_monster@ shouts, "O dreadful one, destroy my foe!"
+%%%%
 ########################################################################
 # Individual monsters
 ########################################################################

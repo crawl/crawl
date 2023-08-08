@@ -458,6 +458,37 @@ static bool _mon_on_interesting_grid(monster* mon)
     }
 }
 
+static void _passively_summon_butterfly(const monster &summoner)
+{
+    auto mg = mgen_data(MONS_BUTTERFLY, SAME_ATTITUDE(&summoner),
+                        summoner.pos(), summoner.foe);
+    mg.set_summoned(&summoner, 1, MON_SUMM_BUTTERFLIES);
+    monster *butt = create_monster(mg);
+    if (!butt)
+        return;
+
+    // Prefer to summon adj to the summoner and closer to the foe,
+    // if one exists. (Otherwise, they tend to be too irrelevant.)
+    const actor* foe = summoner.get_foe();
+    if (!foe || !summoner.see_cell_no_trans(foe->pos()))
+        return;
+
+    int closest_dist = 10000;
+    coord_def closest_pos = butt->pos();
+    for (adjacent_iterator ai(summoner.pos()); ai; ++ai)
+    {
+        if (actor_at(*ai) || cell_is_solid(*ai))
+            continue;
+        const int dist = grid_distance(*ai, foe->pos());
+        if (dist < closest_dist)
+        {
+            closest_dist = dist;
+            closest_pos = *ai;
+        }
+    }
+    butt->move_to_pos(closest_pos);
+}
+
 // If a hostile monster finds itself on a grid of an "interesting" feature,
 // while unoccupied, it will remain in that area, and try to return to it
 // if it left it for fighting, seeking etc.
@@ -1568,6 +1599,10 @@ void handle_monster_move(monster* mons)
 
     if (mons->type == MONS_TIAMAT && one_chance_in(3))
         draconian_change_colour(mons);
+
+    if (mons->type == MONS_JEREMIAH && !mons->asleep())
+        for (int i = 0; i < 2; i++)
+            _passively_summon_butterfly(*mons);
 
     _monster_regenerate(mons);
 

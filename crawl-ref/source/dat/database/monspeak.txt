@@ -4773,6 +4773,68 @@ _Jessica_rare_
 @The_monster@ shouts @at_foe@, "You are a ghastly nuisance!"
 ## END Jessica ##
 %%%%
+############ JEREMIAH ### A dreamer trapped in a nightmare.
+Jeremiah
+
+@_Jeremiah_common_@
+
+w:3
+@_Jeremiah_rare_@
+%%%%
+_Jeremiah_common_
+
+@The_monster@ says, "Oh, this is an awfully strange dream."
+
+@The_monster@ asks, "Am I dreaming? Is this real?"
+
+@The_monster@ shouts, "Stop it! Stop making me do this!"
+
+@The_monster@ says @to_foe@, "I don't want to hurt you. Just - go! Run!"
+
+@The_monster@ asks, "Where am I? Why are you fighting me?"
+
+@The_monster@ whispers, "I obey. I obey. I obey."
+
+VISUAL:@The_monster@'s eyes close briefly, then snap open.
+
+VISUAL:@The_monster@'s eyes momentarily flash bright red.
+
+VISUAL:@The_monster@ yawns.
+
+VISUAL:@The_monster@ trails rainbows from @possessive@ fingertips.
+
+# hope you didn't tukima it!
+VISUAL:@The_monster@ looks at @possessive@ weapon with confusion.
+%%%%
+_Jeremiah_rare_
+
+@The_monster@ howls, "Why can't I wake up?"
+
+@The_monster@ wails, "Just end it! Let me go!"
+
+@The_monster@ sobs, "I don't want it. Make it stop! Make it stop!"
+
+@The_monster@ says, "Oh, this must be a dream. This is totally unrealistic."
+
+@The_monster@ says, "Oh, what beautiful sparkles and rainbows everywhere!"
+
+@The_monster@ asks @foe@, "Have you seen the dreamshard? I... I need it..."
+
+@The_monster@ whispers, "Once you die, everything will be fine. It promises."
+
+@The_monster@ says, "Time for a nap after this, I think."
+
+@The_monster@ asks @foe@, "Would you mind waking me up? Thanks muchly."
+
+@The_monster@ wails, "It wants to be free! It wants to enslave everyone!"
+
+@The_monster@ asks @foe@, "Where did this glaive come from? Is it yours?"
+
+@The_monster@ giggles, "Dreams, dreams, come out to play!"
+
+VISUAL:@The_monster@ pinches @reflexive@.
+## END Jeremiah ##
+%%%%
 ############ JORGRUN ### A dwarven earth elementalist.
 Jorgrun
 

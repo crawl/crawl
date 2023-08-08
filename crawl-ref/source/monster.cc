@@ -2887,6 +2887,11 @@ bool monster::asleep() const
     return behaviour == BEH_SLEEP;
 }
 
+bool monster::sleepwalking() const
+{
+    return asleep() && (has_ench(ENCH_CONFUSION) || type == MONS_JEREMIAH);
+}
+
 bool monster::backlit(bool self_halo, bool /*temp*/) const
 {
     if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME)
@@ -6174,7 +6179,9 @@ int monster::dragon_level() const
 /// Is this monster's Blink ability themed as a 'jump'?
 bool monster::is_jumpy() const
 {
-    return type == MONS_JUMPING_SPIDER || type == MONS_BOULDER_BEETLE;
+    return type == MONS_JUMPING_SPIDER
+        || type == MONS_BOULDER_BEETLE
+        || mons_species() == MONS_BARACHI;
 }
 
 // HD for spellcasting purposes.
