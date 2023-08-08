@@ -450,10 +450,6 @@ umiejętności w Magii Ziemi. Działa to tylko na mniej więcej normalne żywe
 ciało, i koliduje z większością przemian. Z jednym wyjątkiem: w formie statuy,
 ten czar jest bardziej efektywny.
 %%%%
-Summon Butterflies spell
-
-Ten czar przyzywa rój kolorowych motyli. Piękne, ale czy przydatne?
-%%%%
 Summon Horrible Things spell
 
 Ten czar otwiera portal do Otchłani, przyzywając jedno lub więcej z

@@ -690,10 +690,6 @@ Summon Air Elementals spell
 
 この呪文は一体または複数の大気の精霊を召喚する。
 %%%%
-Summon Butterflies spell
-
-この呪文はカラフルな蝶の群れを作り出す。なんて綺麗なんだろう！
-%%%%
 Summon Earth Elementals spell
 
 この呪文は一体または複数の大地の精霊を召喚する。

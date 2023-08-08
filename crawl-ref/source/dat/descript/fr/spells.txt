@@ -751,10 +751,6 @@ Summon Air Elementals spell
 
 Ce sort invoque un ou plusieurs élémentaires d'air.
 %%%%
-Summon Butterflies spell
-
-Ce sort créé une pluie de papillons. Comme c'est joli !
-%%%%
 Summon Earth Elementals spell
 
 Ce sort invoque un ou plusieurs élémentaires de terre.

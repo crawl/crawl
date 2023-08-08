@@ -87,7 +87,6 @@ static spell_type search_order_summon[] =
     SPELL_SUMMON_HORRIBLE_THINGS,
     SPELL_SUMMON_EYEBALLS,
     SPELL_SUMMON_VERMIN, // funny
-    SPELL_SUMMON_BUTTERFLIES, // funny
 };
 
 // Pan lord misc spell list.

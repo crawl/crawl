@@ -688,10 +688,6 @@ Summon Air Elementals spell
 
 이 마법은 하나 이상의 바람의 정령을 소환시킨다.
 %%%%
-Summon Butterflies spell
-
-이 주문은 현란한 나비 떼를 소환한다. 정말 아름다운 광경을 볼 수 있다!
-%%%%
 Summon Earth Elementals spell
 
 이 마법은 하나 이상의 대지 정령을 소환시킨다.

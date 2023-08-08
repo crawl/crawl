@@ -1269,10 +1269,6 @@ Summon Holies spell
 
 召唤圣战士来帮助施法者。
 %%%%
-Summon Butterflies spell
-
-这道法术召唤出一群五颜六色的蝴蝶。真好看呀！
-%%%%
 Summon Horrible Things spell
 
 打开一扇通往深渊的大门，并从那个恐怖领域中召唤一个或多个可怕的憎恶。
