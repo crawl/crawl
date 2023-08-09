@@ -2182,6 +2182,7 @@ public:
         case Mode::altars:
             return !(prompt_flags & TPF_SHOW_ALL_BRANCHES) && seen_altars();
         }
+        return false;
     }
 
     bool has_default_target() const

@@ -466,6 +466,7 @@ static string _randart_prop_abbrev(artefact_prop_type prop, int val)
     case prop_note::plain: // e.g. rPois or SInv
         return artp_name(prop);
     }
+    return "buggy";
 }
 
 static vector<string> _randart_propnames(const item_def& item,
