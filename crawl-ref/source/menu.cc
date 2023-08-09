@@ -2150,6 +2150,8 @@ int Menu::get_first_visible(bool skip_init_headers, int col) const
             return i;
         }
     }
+    // returns 0 on empty menu -- callers should guard for this if relevant
+    // (XX -1 might be better? but callers currently assume non-negative...)
     return items.size();
 }
 
@@ -3099,11 +3101,11 @@ bool Menu::page_up()
 bool Menu::line_down()
 {
     // check if we are already at the end.
-    // (why is this necessary?)
-    if (items.size() && in_page(static_cast<int>(items.size()) - 1, true))
+    if (items.empty() || in_page(static_cast<int>(items.size()) - 1, true))
         return false;
 
     int index = get_first_visible();
+
     int first_vis_y;
     m_ui.menu->get_item_region(index, &first_vis_y, nullptr);
 
