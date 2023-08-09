@@ -1211,10 +1211,12 @@ bool form_likes_water(transformation form)
 }
 
 // Used to mark transformations which override species intrinsics.
+// TODO: time to dataify this.
 bool form_changed_physiology(transformation form)
 {
     return form != transformation::none
         && form != transformation::beast
+        && form != transformation::flux
         && form != transformation::maw
         && form != transformation::blade_hands;
 }
