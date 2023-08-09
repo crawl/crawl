@@ -440,6 +440,10 @@ NAME:   uniq_zenata
 DEPTH:  Vaults:1-4, Elf, Crypt
 : place_unique(_G, "Zenata")
 
+NAME:   uniq_djrael
+DEPTH:  Zot
+: place_unique(_G, "Djrael")
+
 NAME:   uniq_cerebov
 DEPTH:  Pan
 CHANCE: 25%

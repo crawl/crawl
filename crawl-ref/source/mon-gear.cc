@@ -708,6 +708,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_EFREET,                  EFREET_WSPEC },
         { MONS_ERICA,                   EFREET_WSPEC },
         { MONS_AZRAEL,                  EFREET_WSPEC },
+        { MONS_DJRAEL,                  EFREET_WSPEC },
         { MONS_ANGEL, {
             { { WPN_WHIP,               3 },
               { WPN_SACRED_SCOURGE,     1 }, },
