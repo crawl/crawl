@@ -1945,7 +1945,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK, 29, MON_SPELL_MAGICAL },
       }
     },
-    
+
     {  MST_DJRAEL,
       {
        { SPELL_SLOW, 10, MON_SPELL_VOCAL },
