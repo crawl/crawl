@@ -1946,7 +1946,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_DJRAEL,
+    {  MST_AISHA,
       {
        { SPELL_SLOW, 10, MON_SPELL_VOCAL },
        { SPELL_BLINK, 10, MON_SPELL_VOCAL },

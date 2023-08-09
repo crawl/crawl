@@ -5177,7 +5177,7 @@ void normalize_spell_freq(monster_spells &spells, int total_freq)
 
 bool mons_likes_abjuring(monster_type type)
 {
-    return type != MONS_DJRAEL;
+    return type != MONS_AISHA;
 }
 
 /// Rounded to player-visible approximations, how hurt is this monster?

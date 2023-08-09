@@ -7,6 +7,10 @@ Agnes title
 
 Agnes the Wanderer
 %%%%
+Aisha title
+
+Aisha the Illimitable
+%%%%
 Aizul title
 
 Aizul the Neglectful Guardian
@@ -62,10 +66,6 @@ Dispater, Lord of the Iron City
 Dissolution title
 
 Dissolution, High Priest of Jiyva
-%%%%
-Djrael title
-
-Djrael the Boundless Brain
 %%%%
 Donald title
 
