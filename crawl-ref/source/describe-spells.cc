@@ -135,6 +135,16 @@ static string _booktype_header(mon_spell_slot_flag type, bool pronoun_plural)
                         vulnerabilities.c_str());
 }
 
+
+// Does the monster have a spell that allows them to cast Abjuration?
+static bool _mons_gets_abjuration(vector<mon_spell_slot> &book_slots)
+{
+    for (const auto& slot : book_slots)
+        if (get_spell_flags(slot.spell) & spflag::mons_abjure)
+            return true;
+    return false;
+}
+
 /**
  * Append all spells of a given type that a given monster may know to the
  * provided vector.
@@ -163,17 +173,12 @@ static void _monster_spellbooks(const monster_info &mi,
         " " +
         _booktype_header(type, mi.pronoun_plurality());
 
-    // Does the monster have a spell that allows them to cast Abjuration?
-    bool mons_abjure = false;
-
     for (const auto& slot : book_slots)
     {
         const spell_type spell = slot.spell;
         if (!spell_is_soh_breath(spell))
         {
             output_book.spells.emplace_back(spell);
-            if (get_spell_flags(spell) & spflag::mons_abjure)
-                mons_abjure = true;
             continue;
         }
 
@@ -183,7 +188,7 @@ static void _monster_spellbooks(const monster_info &mi,
             output_book.spells.emplace_back(breath);
     }
 
-    if (mons_abjure)
+    if (mons_likes_abjuring(mi.type) && _mons_gets_abjuration(book_slots))
         output_book.spells.emplace_back(SPELL_ABJURATION);
 
     all_books.emplace_back(output_book);

@@ -5488,8 +5488,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     // Maybe cast abjuration instead of certain summoning spells.
-    if (mons->can_see(you) &&
-        get_spell_flags(spell_cast) & spflag::mons_abjure && one_chance_in(3)
+    if (mons->can_see(you)
+        && mons_likes_abjuring(mons->type)
+        && get_spell_flags(spell_cast) & spflag::mons_abjure
+        && one_chance_in(3)
         && ai_action::is_viable(_mons_will_abjure(*mons)))
     {
         mons_cast(mons, pbolt, SPELL_ABJURATION, slot_flags, do_noise);

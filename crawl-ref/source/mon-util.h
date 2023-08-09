@@ -541,6 +541,7 @@ monster *choose_random_monster_on_level(
 
 int spell_freq_for_hd(int hd);
 void normalize_spell_freq(monster_spells &spells, int total_freq);
+bool mons_likes_abjuring(monster_type typ);
 
 void print_wounds(const monster& mons);
 bool wounded_damaged(mon_holy_type holi);
