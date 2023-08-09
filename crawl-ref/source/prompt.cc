@@ -519,6 +519,7 @@ vector<MenuEntry *> PromptMenu::show_in_msgpane()
             // build_prompt_menu updates the column widths, so if the menu
             // gets updated by process_key, this may trigger on successive
             // loops. Once we are in menu mode, no going back to prompt mode.
+            in_prompt_mode = false;
             return Menu::show();
         }
         msgwin_clear_temporary();
