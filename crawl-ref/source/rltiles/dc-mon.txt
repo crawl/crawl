@@ -434,7 +434,7 @@ mara MONS_MARA
 rakshasa MONS_RAKSHASA
 %sdir mon/unique
 azrael MONS_AZRAEL
-djrael MONS_DJRAEL
+djrael MONS_AISHA
 %sdir mon/demons
 efreet MONS_EFREET
 %rim 0
