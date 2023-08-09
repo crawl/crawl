@@ -80,6 +80,7 @@ malmutated MALMUTATED
 glow_light GLOW_LIGHT
 glow_heavy GLOW_HEAVY
 pain_bond PAIN_BOND
+paralysed PARALYSED
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

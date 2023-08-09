@@ -2126,7 +2126,9 @@ tileidx_t tileidx_monster(const monster_info& mons)
             break;
         }
 
-    if (mons.is(MB_FLEEING))
+    if (mons.is(MB_PARALYSED))
+        ch |= TILE_FLAG_PARALYSED;
+    else if (mons.is(MB_FLEEING))
         ch |= TILE_FLAG_FLEEING;
     else if (mons.is(MB_STABBABLE) || mons.is(MB_SLEEPING)
              || mons.is(MB_DORMANT))

@@ -15,20 +15,21 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_S_UNDER      = 0x00040000ULL,
     TILE_FLAG_FLYING       = 0x00080000ULL,
 
-    // 3 mutually exclusive flags for behaviour.
-    TILE_FLAG_BEH_MASK     = 0x00300000ULL,
+    // 4 mutually exclusive flags for behaviour.
+    TILE_FLAG_BEH_MASK     = 0x00700000ULL,
     TILE_FLAG_STAB         = 0x00100000ULL,
     TILE_FLAG_MAY_STAB     = 0x00200000ULL,
     TILE_FLAG_FLEEING      = 0x00300000ULL,
-    TILE_FLAG_NET          = 0x00400000ULL,
-    // 0x00800000ULL is used by TILE_FLAG_POISON lower in the file.
+    TILE_FLAG_PARALYSED    = 0x00400000ULL,
+
+    TILE_FLAG_NET          = 0x00800000ULL,
     TILE_FLAG_WEB          = 0x01000000ULL,
     // Other icons were previously stored here. Lots of space now.
     // Different levels of poison are mutually exclusive, so we can encode them in 2 bits.
-    TILE_FLAG_POISON_MASK  = 0x1000000000800000ULL,
-    TILE_FLAG_POISON       = 0x0000000000800000ULL,
+    TILE_FLAG_POISON_MASK  = 0x1800000000000000ULL,
+    TILE_FLAG_POISON       = 0x0800000000000000ULL,
     TILE_FLAG_MORE_POISON  = 0x1000000000000000ULL,
-    TILE_FLAG_MAX_POISON   = 0x1000000000800000ULL,
+    TILE_FLAG_MAX_POISON   = 0x1800000000000000ULL,
 
     // 5 mutually exclusive flags for threat level.
     TILE_FLAG_THREAT_MASK  = 0xE000000000000000ULL,

@@ -936,7 +936,12 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.NEUTRAL, x, y, undefined, undefined, img_scale);
 
             var status_shift = 0;
-            if (fg.STAB)
+            if (fg.PARALYSED)
+            {
+                this.draw_icon(icons.PARALYSED, x, y, undefined, undefined, img_scale);
+                status_shift += 12;
+            }
+            else if (fg.STAB)
             {
                 this.draw_icon(icons.STAB_BRAND, x, y, undefined, undefined, img_scale);
                 status_shift += 12;

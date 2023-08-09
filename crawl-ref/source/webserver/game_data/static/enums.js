@@ -170,24 +170,24 @@ define(function () {
     fg_flags.flags.S_UNDER = 0x00040000;
     fg_flags.flags.FLYING  = 0x00080000;
 
-    // 3 mutually exclusive flags for behaviour.
+    // 4 mutually exclusive flags for behaviour.
     fg_flags.exclusive_flags.push({
-        mask       : 0x00300000,
+        mask       : 0x00700000,
         STAB       : 0x00100000,
         MAY_STAB   : 0x00200000,
         FLEEING    : 0x00300000,
+        PARALYSED  : 0x00400000,
     });
 
-    fg_flags.flags.NET          = 0x00400000;
-    // 0x00800000 is used in the POISON 2-bit exclusive flags
+    fg_flags.flags.NET          = 0x00800000;
     fg_flags.flags.WEB          = 0x01000000;
 
     // Three levels of poison in 2 bits.
     fg_flags.exclusive_flags.push({
-        mask        : [0x00800000, 0x10000000],
-        POISON      : [0x00800000, 0],
+        mask        : [0, 0x18000000],
+        POISON      : [0, 0x08000000],
         MORE_POISON : [0, 0x10000000],
-        MAX_POISON  : [0x00800000, 0x10000000]
+        MAX_POISON  : [0, 0x18000000]
     });
 
     // 5 mutually exclusive flags for threat level.
