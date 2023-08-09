@@ -1636,6 +1636,45 @@ _player_ghost_rare_
 #######################################
 # Unique monsters
 #######################################
+############ AISHA ### Ancient and arrogant djinni.
+Aisha
+
+@_Aisha_common_@
+
+w:3
+@_Aisha_rare_@
+%%%%
+_Aisha_common_
+
+@The_monster@ says @to_foe@, "I've mastered all twenty-seven schools of magic!"
+
+@The_monster@ says @to_foe@, "I've schooled a thousand whelps brighter than you."
+
+@The_monster@ says @to_foe@, "I've forgotten more sorcery than you'll ever know."
+
+VISUAL:@The_monster@ shoots flame from @possessive@ thumb.
+
+VISUAL:@The_monster@ does a flashy trick with a sphere of pure magic.
+
+VISUAL:@The_monster@ pulses a series of exotic colours as a show of dominance.
+
+%%%%
+_Aisha_rare_
+
+@The_monster@ muses, "I must be getting rusty. Normally this fight would be over by now."
+
+@The_monster@ says @to_foe@, "I'll remember you for a hundred years, as the weakest fool I've ever fought."
+
+@The_monster@ says @to_foe@, "I'll put your ashes in a nice urn, labeled BIG IDIOT."
+
+@The_monster@ says @to_foe@, "At the Collegium, you'd burn out in an instant."
+
+VISUAL:@The_monster@ pulls out a cigarillo and puffs, instantly incinerating it.
+
+@The_monster@ says @to_foe@, "With the way you've been fighting, I'm surprised you've made it this far."
+
+@The_monster@ shouts @at_foe@, "I feel a new spell welling up from within! Ha, got you, didn't I?"
+%%%%
 ############ AIZUL ### Renegade guardian serpent whose vault was raided.
 Aizul
 
