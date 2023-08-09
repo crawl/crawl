@@ -339,24 +339,13 @@ static bool _list_spells_doublecolumn(const item_def* const source_item)
  *                      either in original order or column-major order, the
  *                      latter in the case of a double-column layout.
  */
-vector<pair<spell_type,char>> map_chars_to_spells(const spellset &spells,
-                                       const item_def* const source_item)
+vector<pair<spell_type,char>> map_chars_to_spells(const spellset &spells)
 {
     char next_ch = 'a';
     const vector<spell_type> flat_spells = _spellset_contents(spells);
     vector<pair<spell_type,char>> ret;
-    if (!_list_spells_doublecolumn(source_item))
-    {
-        for (auto spell : flat_spells)
-            ret.emplace_back(pair<spell_type,char>(spell, next_ch++));
-    }
-    else
-    {
-        for (size_t i = 0; i < flat_spells.size(); i += 2)
-            ret.emplace_back(pair<spell_type,char>(flat_spells[i], next_ch++));
-        for (size_t i = 1; i < flat_spells.size(); i += 2)
-            ret.emplace_back(pair<spell_type,char>(flat_spells[i], next_ch++));
-    }
+    for (auto spell : flat_spells)
+        ret.emplace_back(pair<spell_type,char>(spell, next_ch++));
     return ret;
 }
 
@@ -660,7 +649,7 @@ void describe_spellset(const spellset &spells,
                        formatted_string &description,
                        const monster_info *mon_owner)
 {
-    auto spell_map = map_chars_to_spells(spells, source_item);
+    auto spell_map = map_chars_to_spells(spells);
     for (auto book : spells)
         _describe_book(book, spell_map, source_item, description, mon_owner);
 }
@@ -716,7 +705,7 @@ void write_spellset(const spellset &spells,
                        const item_def* const source_item,
                        const monster_info *mon_owner)
 {
-    auto spell_map = map_chars_to_spells(spells, source_item);
+    auto spell_map = map_chars_to_spells(spells);
     tiles.json_open_array("spellset");
     for (auto book : spells)
         _write_book(book, spell_map, source_item, mon_owner);
