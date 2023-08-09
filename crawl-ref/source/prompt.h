@@ -43,7 +43,7 @@ class PromptMenu : public Menu
 public:
     PromptMenu(int _flags = MF_SINGLESELECT | MF_ARROWS_SELECT
                             | MF_INIT_HOVER | MF_GRID_LAYOUT)
-        : Menu(_flags), columns(0), col_width(0)
+        : Menu(_flags), columns(0), col_width(0), in_prompt_mode(false)
     {
         // no other mode is supported
         ASSERT(is_set(MF_SINGLESELECT));
