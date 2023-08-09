@@ -139,7 +139,7 @@ static const form_entry formdata[] =
     FC_ENABLE, FC_FORBID, FC_ENABLE, false,
     "roar", 6, "foreclaw", "", "bow your head before", "flesh",
     { { "dragon claw", "You have a powerful clawing attack." },
-      { "dragon scales", "Your giant scaled body is strong and resiliant, but less evasive." },
+      { "dragon scales", "Your giant scaled body is strong and resilient, but less evasive." },
     }
 },
 
