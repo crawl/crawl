@@ -504,6 +504,7 @@ public:
     int         colour[16];      // macro fg colours to other colours
     unsigned    background_colour; // select default background colour
     unsigned    foreground_colour; // select default foreground colour
+    bool        use_terminal_default_colours; // inherit default colors from terminal
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
     vector<string> use_animations_option;
     use_animations_type use_animations; // which animations to show

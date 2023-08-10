@@ -575,6 +575,7 @@ const vector<GameOption*> game_options::build_options_list()
         new ColourGameOption(SIMPLE_NAME(status_caption_colour), BROWN),
         new ColourGameOption(SIMPLE_NAME(background_colour), BLACK),
         new ColourGameOption(SIMPLE_NAME(foreground_colour), LIGHTGREY),
+        new BoolGameOption(SIMPLE_NAME(use_terminal_default_colours), false),
         new StringGameOption(enemy_hp_colour_option,
             {"enemy_hp_colour", "enemy_hp_color"}, "default", false,
             [this]() { update_enemy_hp_colour(); }),
