@@ -1830,6 +1830,18 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    // ('G') Organs.
+    {  MST_MORIORBY,
+      {
+       { SPELL_PARALYSIS_GAZE, 15, MON_SPELL_MAGICAL | MON_SPELL_INSTANT },
+       { SPELL_CONFUSION_GAZE, 15, MON_SPELL_MAGICAL | MON_SPELL_INSTANT },
+       { SPELL_BLINK, 15, MON_SPELL_MAGICAL },
+       { SPELL_ENERGY_BOLT, 15, MON_SPELL_MAGICAL },
+       { SPELL_MALMUTATE, 15, MON_SPELL_MAGICAL },
+       { SPELL_DIG, 15, MON_SPELL_MAGICAL },
+      }
+    },
+
     // ('H') Hybrids.
     {  MST_ARACHNE,
       {

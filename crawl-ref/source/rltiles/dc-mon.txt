@@ -750,6 +750,8 @@ eye_of_devastation MONS_EYE_OF_DEVASTATION
 golden_eye MONS_GOLDEN_EYE
 %sdir mon/holy
 ophan MONS_OPHAN
+%sdir mon/unique
+moriorby MONS_MORIORBY
 
 ## Hybrids ('H')
 %sdir mon/animals

@@ -1994,6 +1994,12 @@ int make_mons_armour(monster_type type, int level)
         }
         break;
 
+    case MONS_MORIORBY:
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_HAT;
+        item.plus = 1 + coinflip();
+        break;
+
     case MONS_MAURICE:
     case MONS_CRAZY_YIUF:
         item.base_type = OBJ_ARMOUR;
