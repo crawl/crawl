@@ -7717,12 +7717,18 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
 
     case SPELL_POISONOUS_CLOUD:
     case SPELL_FREEZING_CLOUD:
-    case SPELL_MEPHITIC_CLOUD:
-    case SPELL_NOXIOUS_CLOUD:
     case SPELL_SPECTRAL_CLOUD:
     case SPELL_FLAMING_CLOUD:
     case SPELL_CHAOS_BREATH:
         return ai_action::good_or_impossible(!no_clouds);
+
+    case SPELL_NOXIOUS_CLOUD:
+    case SPELL_MEPHITIC_CLOUD:
+        ASSERT(foe);
+        if (foe->res_poison(false) >= 1)
+            return ai_action::bad();
+        return ai_action::good_or_impossible(!no_clouds);
+
 
     case SPELL_ROLL:
     {
