@@ -16,7 +16,7 @@ SHUFFLE: {[(
 SUBST:   [( = .
 SUBST:   c : cx
 TILE:    c = wall_stone_smooth
-FTILE:   . = floor_cobble_blood
+FTILE:   .{0$+ = floor_cobble_blood
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xcccccccxxxxxxxxxxxxxxxxxxxcccccccx
