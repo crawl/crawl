@@ -164,7 +164,7 @@ bool monster::add_ench(const mon_enchant &ench)
     if (ench.ench == ENCH_NONE)
         return false;
 
-    if (ench.ench == ENCH_FEAR && !can_feel_fear(true))
+    if (ench.ench == ENCH_FEAR && !can_feel_fear())
         return false;
 
     if (ench.ench == ENCH_BLIND && !mons_can_be_blinded(type))

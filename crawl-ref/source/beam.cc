@@ -1737,7 +1737,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
         if (mons->friendly())
             return true;
 
-        if (!mons->can_feel_fear(true))
+        if (!mons->can_feel_fear())
         {
             if (simple_monster_message(*mons, " is unaffected."))
                 *did_msg = true;

@@ -219,7 +219,7 @@ public:
     virtual void check_awaken(int disturbance) = 0;
     virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
                              string source = "") = 0;
-    virtual bool can_feel_fear(bool include_unknown) const = 0;
+    virtual bool can_feel_fear() const = 0;
 
     virtual int  skill(skill_type sk, int scale = 1, bool real = false,
                        bool temp = true) const = 0;
