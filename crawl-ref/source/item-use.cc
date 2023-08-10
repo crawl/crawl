@@ -3895,7 +3895,7 @@ bool read(item_def* scroll, dist *target)
     }
 
     case SCR_REVELATION:
-        magic_mapping(500, 100, false, false, false, false, false);
+        magic_mapping(GDM, 100, false, false, false, false, false);
         you.duration[DUR_REVELATION] = you.time_taken + 1;
         break;
 

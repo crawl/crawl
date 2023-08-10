@@ -92,12 +92,13 @@ void clear_map_or_travel_trail()
     }
 }
 
-static void _automap_from(int x, int y, int mutated)
+static void _automap_from(int x, int y, int level)
 {
-    if (mutated)
+    if (level)
     {
+
         const bool godly = have_passive(passive_t::auto_map);
-        magic_mapping(8 * mutated,
+        magic_mapping(LOS_MAX_RANGE * level,
                       godly ? 25 + you.piety / 8 : 25,
                       true, godly, true, false, true,
                       coord_def(x,y));

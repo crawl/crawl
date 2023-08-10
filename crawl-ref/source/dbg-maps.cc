@@ -147,7 +147,7 @@ static bool _do_build_level()
             if (item.defined())
                 objstat_record_item(item);
 
-    magic_mapping(1000, 100, true, true, false, true, false,
+    magic_mapping(GDM, 100, true, true, false, true, false,
                   coord_def(GXM/2, GYM/2));
 
     // Dump the map of any disconnected level if this CLO is set.
