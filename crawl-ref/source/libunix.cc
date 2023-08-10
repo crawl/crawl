@@ -316,6 +316,18 @@ static short translate_colour(COLOURS col);
  */
 static void write_char_at(int y, int x, const cchar_t &ch);
 
+/**
+ * @brief Terminal default aware version of pair_safe.
+ *
+ * @param pair
+ *   Pair identifier
+ * @param f
+ *   Foreground colour
+ * @param b
+ *   Background colour
+ */
+static void init_pair_safe(short pair, short f, short b);
+
 static bool cursor_is_enabled = true;
 
 static unsigned int convert_to_curses_style(int chattr)
@@ -397,6 +409,12 @@ static short translate_colour(COLOURS col)
  */
 static void setup_colour_pairs()
 {
+    // The init_pair routine accepts negative values of foreground and
+    // background color to support the use_default_colors extension, but only
+    // if that routine has been first invoked.
+    if (Options.use_terminal_default_colours)
+        use_default_colors();
+
     // Only generate pairs which we may need.
     short num_colors = curs_palette_size();
 
@@ -406,7 +424,7 @@ static void setup_colour_pairs()
         {
             short pair = curs_calc_pair_safe(j, i, COLOR_WHITE, COLOR_BLACK);
             if (pair > 0)
-                init_pair(pair, j, i);
+                init_pair_safe(pair, j, i);
         }
     }
 }
@@ -1508,7 +1526,9 @@ static void curs_set_default_colors()
     }
 
     // Assume new default colors.
-    if (curs_palette_size() == 0)
+    if (Options.use_terminal_default_colours)
+        default_colors_loaded = OK;
+    else if (curs_palette_size() == 0)
         default_colors_loaded = use_default_colors();
     else
     {
@@ -1536,7 +1556,7 @@ static void curs_set_default_colors()
         default_bg_prev_curses, COLOR_WHITE, COLOR_BLACK);
     if (prev_default_pair != 0)
     {
-        init_pair(prev_default_pair, default_fg_prev_curses,
+        init_pair_safe(prev_default_pair, default_fg_prev_curses,
             default_bg_prev_curses);
     }
 
@@ -1545,7 +1565,7 @@ static void curs_set_default_colors()
         COLOR_BLACK, translate_colour(default_fg),
         translate_colour(default_bg));
     if (new_default_default_pair != 0)
-        init_pair(new_default_default_pair, COLOR_WHITE, COLOR_BLACK);
+        init_pair_safe(new_default_default_pair, COLOR_WHITE, COLOR_BLACK);
 }
 
 // see declaration
@@ -1681,6 +1701,18 @@ static void write_char_at(int y, int x, const cchar_t &ch)
 
     attr_set(attr, color_pair, nullptr);
     mvadd_wchnstr(y, x, &ch, 1);
+}
+
+static void init_pair_safe(short pair, short f, short b)
+{
+    if (Options.use_terminal_default_colours)
+    {
+        short _f = (f == COLOR_WHITE) ? -1 : f;
+        short _b = (b == COLOR_BLACK) ? -1 : b;
+        init_pair(pair, _f, _b);
+    }
+    else
+        init_pair(pair, f, b);
 }
 
 // see declaration
