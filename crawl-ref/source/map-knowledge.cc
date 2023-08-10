@@ -99,8 +99,8 @@ static void _automap_from(int x, int y, int mutated)
         const bool godly = have_passive(passive_t::auto_map);
         magic_mapping(8 * mutated,
                       godly ? 25 + you.piety / 8 : 25,
-                      true, godly,
-                      true, false, coord_def(x,y));
+                      true, godly, true, false, true,
+                      coord_def(x,y));
     }
 }
 

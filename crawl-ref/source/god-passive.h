@@ -32,6 +32,9 @@ enum class passive_t
     /// You have (improved) automatic mapping.
     auto_map,
 
+    /// You reveal the layout of the nearby dungeon.
+    scrying,
+
     /// You detect the threat level of monsters.
     detect_montier,
 
@@ -278,6 +281,7 @@ monster_type ash_monster_tier(const monster *mon);
 unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill);
 int ash_skill_boost(skill_type sk, int scale);
 bool ash_has_skill_boost(skill_type sk);
+void ash_scrying();
 void gozag_detect_level_gold(bool count);
 int qazlal_sh_boost(int piety = you.piety);
 int tso_sh_boost();

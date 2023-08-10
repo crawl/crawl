@@ -332,7 +332,7 @@ static const vector<god_passive> god_passives[] =
     {
         { -1, passive_t::want_curses, "prefer cursed items" },
         {  0, passive_t::detect_portals, "sense portals" },
-        {  0, passive_t::auto_map, "have improved mapping abilities" },
+        {  0, passive_t::auto_map, "sense the layout of the dungeon" },
         {  0, passive_t::detect_montier, "sense threats" },
         {  0, passive_t::detect_items, "sense items" },
         {  0, passive_t::bondage_skill_boost,
@@ -341,6 +341,8 @@ static const vector<god_passive> god_passives[] =
         {  2, passive_t::sinv, "are NOW clear of vision" },
         {  3, passive_t::clarity, "are NOW clear of mind" },
         {  4, passive_t::avoid_traps, "avoid traps" },
+        {  4, passive_t::scrying,
+              "fully reveal the layout of the nearby dungeon" },
     },
 
     // Dithmenos
@@ -781,6 +783,15 @@ int ash_skill_boost(skill_type sk, int scale)
     level = level * scale + get_skill_progress(sk, level, skill_points, scale);
 
     return min(level, MAX_SKILL_LEVEL * scale);
+}
+
+void ash_scrying()
+{
+    if (have_passive(passive_t::scrying))
+    {
+        magic_mapping(LOS_MAX_RANGE, 100, true, true, false, false, false,
+                      you.pos());
+    }
 }
 
 void gozag_detect_level_gold(bool count)

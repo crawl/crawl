@@ -1054,6 +1054,8 @@ void player_reacts()
         xom_tick();
     else if (you_worship(GOD_QAZLAL))
         qazlal_storm_clouds();
+    else if (you_worship(GOD_ASHENZARI))
+        ash_scrying();
 
     if (you.props[EMERGENCY_FLIGHT_KEY].get_bool())
         _handle_emergency_flight();

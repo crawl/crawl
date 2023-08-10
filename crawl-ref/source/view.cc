@@ -687,7 +687,7 @@ static colour_t _feat_default_map_colour(dungeon_feature_type feat)
 // Returns true if it succeeded.
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force, bool deterministic, bool full_info,
-                   coord_def origin)
+                   bool range_falloff, coord_def origin)
 {
     if (!force && !is_map_persistent())
     {
@@ -716,7 +716,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
          ri; ++ri)
     {
         coord_def pos = *ri;
-        if (!full_info)
+        if (range_falloff)
         {
             int threshold = proportion;
 

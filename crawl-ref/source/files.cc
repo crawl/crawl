@@ -2352,7 +2352,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         you.attribute[ATTR_ABYSS_ENTOURAGE] = 0;
         gozag_detect_level_gold(true);
         if (branches[you.where_are_you].branch_flags & brflag::fully_map)
-            magic_mapping(500, 100, true, false, false, true);
+            magic_mapping(500, 100, true, false, false, true, false);
     }
 
 
