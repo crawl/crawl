@@ -355,7 +355,7 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
             "It lets you blink.",
             prop_note::plain },
         { ARTP_NOISE,
-            "It may make noises in combat.",
+            "It may make a loud noise when swung.",
             prop_note::plain },
         { ARTP_PREVENT_SPELLCASTING,
             "It prevents spellcasting.",
