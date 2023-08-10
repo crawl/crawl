@@ -460,6 +460,10 @@ static bool _mon_on_interesting_grid(monster* mon)
 
 static void _passively_summon_butterfly(const monster &summoner)
 {
+    const actor* foe = summoner.get_foe();
+    if (!foe || !summoner.see_cell_no_trans(foe->pos()))
+        return;
+
     auto mg = mgen_data(MONS_BUTTERFLY, SAME_ATTITUDE(&summoner),
                         summoner.pos(), summoner.foe);
     mg.set_summoned(&summoner, 1, MON_SUMM_BUTTERFLIES);
@@ -469,10 +473,6 @@ static void _passively_summon_butterfly(const monster &summoner)
 
     // Prefer to summon adj to the summoner and closer to the foe,
     // if one exists. (Otherwise, they tend to be too irrelevant.)
-    const actor* foe = summoner.get_foe();
-    if (!foe || !summoner.see_cell_no_trans(foe->pos()))
-        return;
-
     int closest_dist = 10000;
     coord_def closest_pos = butt->pos();
     for (adjacent_iterator ai(summoner.pos()); ai; ++ai)
