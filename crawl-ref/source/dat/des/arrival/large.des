@@ -1201,3 +1201,37 @@ xxx'''........................'''''x
       xxxxxxxxxx......xxxxxxxxx
           xxxxxxxx++xxxxxxx
 ENDMAP
+
+# 25 x 25
+NAME:   orjb1_clovarrival
+TAGS:   arrival transparent no_monster_gen no_trap_gen
+ORIENT: float
+MONS:   bush
+FTILE:  _1Wt = floor_grass
+MAP
+.......tttt...tttt
+......t____t.t____t
+.....t______t______t
+.....t_____________t
+.....t_____________t
+..tttWt____11_____tWttt
+.t___tWt__1111___tWt___t
+t_____tWt1111111tWt_____t
+t______tWt11111tWt______t
+t______1tWt111tWt1______t
+t______11tWtttWt111_____t
+.t____1111tWWWt11111___t
+..t__11111tW{Wt11111__t
+.t___11111tWWWt1111____t
+t_____111tWtttWt11______t
+t______1tWt111tWt1______t
+t______tWt11111tWt______t
+t_____tWt1111111tWt_____t
+.t___tWt__1111___tWt___t
+..tttWt____11_____tWttt
+.....t_____________t
+.....t_____________t
+.....t______t______t
+......t____t.t____t
+.......tttt...tttt
+ENDMAP
