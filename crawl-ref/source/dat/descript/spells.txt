@@ -224,8 +224,8 @@ or nearly adjacent cannot be struck by this.
 Call Imp spell
 
 Calls forth a minor demon from the pits of Hell, equipped with a spear with
-which to jab at the caster's enemies. The quality of the imp's weaponry and
-the longevity of its service increase with spell power.
+which to jab at the caster's enemies. The quality of the imp's weaponry rises
+with spell power.
 %%%%
 Call Lost Soul spell
 
