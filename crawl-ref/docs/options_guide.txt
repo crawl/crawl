@@ -51,7 +51,9 @@ The contents of this text are:
                 tc_forbidden, runrest_ignore_message, runrest_stop_message,
                 interrupt_<delay>, delay_safe_poison, runrest_ignore_monster,
                 rest_wait_both, rest_wait_ancestor, rest_wait_percent,
-                explore_auto_rest, auto_exclude, travel_open_doors, fear_zot
+                explore_auto_rest, 
+                explore_auto_rest_status, explore_auto_rest_status_set, 
+                auto_exclude, travel_open_doors, fear_zot
 3-g     Command Enhancements.
                 auto_switch, easy_unequip, equip_unequip, jewellery_prompt,
                 easy_confirm, simple_targeting, force_spell_targeter,
@@ -1088,6 +1090,20 @@ rest_wait_percent = 100
 explore_auto_rest = true
         If true, auto-explore waits until your HP and MP are both at
         rest_wait_percent before moving. This is always disabled for Meteorans.
+
+explore_auto_rest_status_set = (none | all_neg_status | all_cooldowns | all)
+        Set explore_auto_rest to all statuses of that type. If anything else 
+        is given, defaults to none.
+                none            =   
+                all_neg_status  =   all temporary negative statuses
+                all_cooldowns   =   all temporary cooldowns
+                all             =   both all_neg_status and all_cooldowns
+        
+
+explore_auto_rest_status += <status name>, <cooldown name>, <duration name>...
+        (List option)
+        Auto-explore waits until all statuses, durations, and cooldowns in list 
+        are finished before moving. 
 
 fear_zot = false
         If true, Meteorans will be prompted before resting or auto-exploring

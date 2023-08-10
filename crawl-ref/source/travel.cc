@@ -53,6 +53,7 @@
 #include "religion.h"
 #include "stairs.h"
 #include "state.h"
+#include "status.h"
 #include "stringutil.h"
 #include "tag-version.h"
 #include "terrain.h"
@@ -1087,6 +1088,20 @@ command_type travel()
     {
         if (Options.explore_auto_rest && !you.is_sufficiently_rested())
             return CMD_WAIT;
+
+        for (unsigned int i = 0; i < Options.explore_auto_rest_status.size(); ++i)
+        {
+            duration_type type = Options.explore_auto_rest_status[i];
+
+            // Cant check DUR_TRANSFORMATION because it can be infinite
+            // If it is swiftness, check if it is antiswift before returning CMD_WAIT
+            if (you.duration[type] > 0
+                && type != DUR_TRANSFORMATION
+                && (type != DUR_SWIFTNESS || you.attribute[ATTR_SWIFTNESS] < 0))
+            {
+                return CMD_WAIT;
+            }
+        }
 
         // Exploring.
         if (env.grid(you.pos()) == DNGN_ENTER_SHOP

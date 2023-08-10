@@ -9,6 +9,7 @@
 #include "activity-interrupt-type.h"
 #include "char-set-type.h"
 #include "confirm-prompt-type.h"
+#include "duration-type.h"
 #include "easy-confirm-type.h"
 #include "explore-greedy-options.h"
 #include "feature.h"
@@ -672,6 +673,13 @@ public:
     // Wait for rest wait percent HP and MP before exploring.
     bool        explore_auto_rest;
 
+    // Sets explore_auto_rest_status for all durations with associated type.
+    string explore_auto_rest_status_set;
+
+    // explore_auto_rest_status is for which temporary statuses and cooldowns
+    // to wait for before exploring
+    vector<duration_type> explore_auto_rest_status;
+
     // Prompt Meteorans before exploring or resting.
     bool        fear_zot;
 
@@ -933,6 +941,7 @@ private:
 
     void update_explore_stop_conditions();
     void update_explore_greedy_visit_conditions();
+    void set_explore_auto_rest_status(const string &field);
     void update_use_animations();
     void update_travel_terrain();
 

@@ -35,6 +35,7 @@
 #include "describe.h"
 #include "directn.h"
 #include "dlua.h"
+#include "duration-data.h"
 #include "end.h"
 #include "errors.h"
 #include "explore-greedy-options.h"
@@ -63,6 +64,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
+#include "status.h"
 #include "stringutil.h"
 #include "syscalls.h"
 #include "tags.h"
@@ -127,6 +129,7 @@ static bool _force_allow_wizard();
 static bool _force_allow_explore();
 
 static species_type _str_to_species(const string &str);
+static duration_type _str_to_duration(const string &str);
 static sound_mapping _interrupt_sound_mapping(const string &s);
 static pair<text_pattern,string> _slot_mapping(const string &s);
 
@@ -515,6 +518,10 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(dos_use_background_intensity), true),
         new BoolGameOption(SIMPLE_NAME(explore_greedy), true),
         new BoolGameOption(SIMPLE_NAME(explore_auto_rest), true),
+        new StringGameOption(SIMPLE_NAME(explore_auto_rest_status_set), "none", false,
+            [this]() { set_explore_auto_rest_status(explore_auto_rest_status_set); }),
+        new ListGameOption<duration_type, OPTFUN(_str_to_duration)>(
+            SIMPLE_NAME(explore_auto_rest_status)),
         new BoolGameOption(SIMPLE_NAME(fear_zot), false),
         new BoolGameOption(SIMPLE_NAME(travel_key_stop), true),
         new ListGameOption<string>(ON_SET_NAME(explore_stop),
@@ -1134,6 +1141,30 @@ static string _weapon_to_str(weapon_type wpn_type)
     default:
         return "random";
     }
+}
+
+/**
+ * Interpret a crawlrc entry as a duration type.
+ *
+ * @param str   The value of the crawlrc entry.
+ * @return      The duration the string refers to, or NUM_DURATIONS if invalid
+ */
+static duration_type _str_to_duration(const string &str)
+{
+    string str_nospace = str;
+    remove_whitespace(str_nospace);
+    // convert -swiftness since it is special type of duration
+    if (str == "-swiftness")
+        return DUR_SWIFTNESS;
+
+    duration_type dur = duration_by_name(str);
+
+    // Don't allow checking DUR_TRANSFORMATION since it can be infinite unlike other durations
+    if (dur == DUR_TRANSFORMATION) {
+        return NUM_DURATIONS;
+    }
+
+    return dur;
 }
 
 // Summon types can be any of mon_summon_type (enum.h), or a relevant summoning
@@ -3155,6 +3186,18 @@ void game_options::update_explore_greedy_visit_conditions()
             report_error("Unknown greedy visit condition '%s'", c.c_str());
     }
     explore_greedy_visit = conditions;
+}
+
+void game_options::set_explore_auto_rest_status(const string &field)
+{
+    if (field == "all_cooldowns")
+        explore_auto_rest_status = all_duration_with_flag(D_COOLDOWN);
+    else if (field == "all_neg_status")
+        explore_auto_rest_status = all_duration_with_flag(D_NEGATIVE);
+    else if (field == "all")
+        explore_auto_rest_status = all_duration_with_flag(D_COOLDOWN | D_NEGATIVE);
+    else
+        explore_auto_rest_status = {};
 }
 
 message_filter::message_filter(const string &filter)
