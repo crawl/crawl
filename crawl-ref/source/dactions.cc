@@ -309,7 +309,7 @@ static void _apply_daction(daction_type act)
                 item.freshness = 1; // thoroughly rotten
         break;
     case DACT_GOLD_ON_TOP:
-        gozag_detect_level_gold(false);
+        gozag_move_level_gold_to_top();
         break;
     case DACT_REMOVE_GOZAG_SHOPS:
     {

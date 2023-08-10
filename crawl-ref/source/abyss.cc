@@ -1561,7 +1561,7 @@ static void abyss_area_shift()
     check_map_validity();
     // TODO: should dactions be rerun at this point instead? That would cover
     // this particular case...
-    gozag_detect_level_gold(false);
+    gozag_move_level_gold_to_top();
     _update_abyssal_map_knowledge();
 }
 
@@ -1760,7 +1760,7 @@ void abyss_teleport(bool wizard_tele)
     stop_delay(true);
     forget_map(false);
     clear_excludes();
-    gozag_detect_level_gold(false);
+    gozag_move_level_gold_to_top();
     auto &vault_list =  you.vault_list[level_id::current()];
 #ifdef DEBUG
     vault_list.push_back("[tele]");

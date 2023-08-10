@@ -359,7 +359,6 @@ static const vector<god_passive> god_passives[] =
 
     // Gozag
     {
-        { -1, passive_t::detect_gold, "detect gold" },
         {  0, passive_t::goldify_corpses,
               "GOD NOW turns all corpses to gold" },
         {  0, passive_t::gold_aura, "have a gold aura" },
@@ -794,10 +793,32 @@ void ash_scrying()
     }
 }
 
-void gozag_detect_level_gold(bool count)
+void gozag_move_level_gold_to_top()
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+        gozag_move_gold_to_top(*ri);
+}
+
+void gozag_move_gold_to_top(const coord_def p)
+{
+    if (you_worship(GOD_GOZAG))
+    {
+        for (int gold = env.igrid(p); gold != NON_ITEM;
+             gold = env.item[gold].link)
+        {
+            if (env.item[gold].base_type == OBJ_GOLD)
+            {
+                unlink_item(gold);
+                move_item_to_grid(&gold, p, true);
+                break;
+            }
+        }
+    }
+}
+
+void gozag_count_level_gold()
 {
     ASSERT(you.on_current_level);
-    vector<item_def *> gold_piles;
     vector<coord_def> gold_places;
     int gold = 0;
     for (rectangle_iterator ri(0); ri; ++ri)
@@ -807,38 +828,17 @@ void gozag_detect_level_gold(bool count)
             if (j->base_type == OBJ_GOLD && !(j->flags & ISFLAG_UNOBTAINABLE))
             {
                 gold += j->quantity;
-                gold_piles.push_back(&(*j));
                 gold_places.push_back(*ri);
             }
         }
     }
 
-    if (!player_in_branch(BRANCH_ABYSS) && count)
+    if (!player_in_branch(BRANCH_ABYSS))
         you.attribute[ATTR_GOLD_GENERATED] += gold;
 
-    if (have_passive(passive_t::detect_gold))
-    {
-        for (unsigned int i = 0; i < gold_places.size(); i++)
-        {
-            int dummy = gold_piles[i]->index();
-            coord_def &pos = gold_places[i];
-            unlink_item(dummy);
-            move_item_to_grid(&dummy, pos, true);
-            if ((!env.map_knowledge(pos).item()
-                 || env.map_knowledge(pos).item()->base_type != OBJ_GOLD
-                 && you.visible_igrd(pos) != NON_ITEM))
-            {
-                env.map_knowledge(pos).set_item(
-                        get_item_known_info(*gold_piles[i]),
-                        !!env.map_knowledge(pos).item());
-                env.map_knowledge(pos).flags |= MAP_DETECTED_ITEM;
-#ifdef USE_TILE
-                // force an update for gold generated during Abyss shifts
-                tiles.update_minimap(pos);
-#endif
-            }
-        }
-    }
+    if (you_worship(GOD_GOZAG))
+        for (auto pos : gold_places)
+            gozag_move_gold_to_top(pos);
 }
 
 int qazlal_sh_boost(int piety)
