@@ -2549,8 +2549,8 @@ NSUBST: . = 20=0. / .
 TILE:   G = dngn_statue_dragon
 MAP
               ccccc
-             cc2O2cc
-            ccG.1.Gcc
+             cc1O1cc
+            ccG.2.Gcc
             cc..c..cc
            cc...c...cc
            cc..ccc..cc
