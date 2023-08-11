@@ -282,7 +282,6 @@ const vector<vector<god_power>> & get_all_god_powers()
 
         // Ashenzari
         {   { 0, "Ashenzari warns you of distant threats and treasures.\n"
-                 "Ashenzari reveals the structure of the dungeon to you.\n"
                  "Ashenzari shows you where magical portals lie." },
             { 1, "Ashenzari will now identify your possessions.",
                  "Ashenzari will no longer identify your possesions.",
@@ -296,8 +295,8 @@ const vector<vector<god_power>> & get_all_god_powers()
             { 4, "Ashenzari will now protect you from malevolent surprises.",
                  "Ashenzari no longer protects you from malevolent surprises.",
                  "Ashenzari protects you from malevolent surprises." },
-            { 4, "Ashenzari fully reveals the structure of the nearby dungeon.",
-                 "Ashenzari no longer fully reveals the structure of the nearby dungeon." },
+            { 4, "Ashenzari reveals the structure of the nearby dungeon.",
+                 "Ashenzari no longer reveals the structure of the nearby dungeon." },
         },
 
         // Dithmenos

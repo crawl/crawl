@@ -332,7 +332,6 @@ static const vector<god_passive> god_passives[] =
     {
         { -1, passive_t::want_curses, "prefer cursed items" },
         {  0, passive_t::detect_portals, "sense portals" },
-        {  0, passive_t::auto_map, "sense the layout of the dungeon" },
         {  0, passive_t::detect_montier, "sense threats" },
         {  0, passive_t::detect_items, "sense items" },
         {  0, passive_t::bondage_skill_boost,
@@ -342,7 +341,7 @@ static const vector<god_passive> god_passives[] =
         {  3, passive_t::clarity, "are NOW clear of mind" },
         {  4, passive_t::avoid_traps, "avoid traps" },
         {  4, passive_t::scrying,
-              "fully reveal the layout of the nearby dungeon" },
+              "reveal the structure of the nearby dungeon" },
     },
 
     // Dithmenos

@@ -29,9 +29,6 @@ enum class passive_t
     /// You identity items on sight, including monster equipment.
     identify_items,
 
-    /// You have (improved) automatic mapping.
-    auto_map,
-
     /// You reveal the layout of the nearby dungeon.
     scrying,
 
