@@ -7382,12 +7382,12 @@ bool player::asleep() const
     return duration[DUR_SLEEP];
 }
 
-bool player::can_feel_fear() const
+bool player::can_feel_fear(bool include_unknown) const
 {
     // XXX: monsters are immune to fear when berserking.
     // should players also be?
     return you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
-           && !you.clarity();
+           && (!include_unknown || !you.clarity());
 }
 
 bool player::can_throw_large_rocks() const

@@ -2981,7 +2981,7 @@ bool monster::pacified() const
     return attitude == ATT_NEUTRAL && testbits(flags, MF_PACIFIED);
 }
 
-bool monster::can_feel_fear() const
+bool monster::can_feel_fear(bool /*include_unknown*/) const
 {
     return (holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
            && !berserk_or_insane();

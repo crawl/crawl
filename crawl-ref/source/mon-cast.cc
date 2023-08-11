@@ -4553,7 +4553,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
         && !mons->wont_attack()
         && !you.afraid_of(mons))
     {
-        if (!you.can_feel_fear())
+        if (!you.can_feel_fear(false))
         {
             if (actual)
                 canned_msg(MSG_YOU_UNAFFECTED);
@@ -4563,7 +4563,9 @@ static int _mons_cause_fear(monster* mons, bool actual)
         else
         {
             const int res_margin = you.check_willpower(mons, pow);
-            if (res_margin > 0)
+            if (!you.can_feel_fear(true))
+                canned_msg(MSG_YOU_UNAFFECTED);
+            else if (res_margin > 0)
                 mprf("You%s", you.resist_margin_phrase(res_margin).c_str());
             else if (you.add_fearmonger(mons))
             {
