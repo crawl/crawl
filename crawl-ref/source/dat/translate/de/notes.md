@@ -23,6 +23,21 @@
 
 ## Specific Terms
 
+Many words have a very specific meaning in the context of DCSS that may not match common usage, or at least not include all possible meanings in common usage:
+
+- invoke - use a god-given ability (i.e. call forth divine power or call on a god to do something)
+- evoke - use an ability granted by an item (i.e call forth the power of an item)
+- summon - call forth a demon/being/animal
+- conjure - call forth something inanimate like fire, energy, etc. (NOT demons, etc. In common usage, one can conjure a demon/spirit, but not in DCSS.)
+- torment vs. agony - these are two different spells. Agony does moderate amount of damage. Torment halves current HP.
+- blink - short-range teleport
+- strength vs. might vs. power - strength is a player attribute like dexterity and intelligence. It affects damage dealt, but also lowers the effect of armour encumbrance. Might is a temporary status effect that increases damage dealt. Power normally means the strength of a magic spell.
+- berserk vs. frenzy vs. rage vs. rampage - Berserk is a status affect/ability that makes a player/monster faster and stronger, but because they're in wild, unthinking state, they cannot do things like read or cast spells. Frenzy is similar to berserk, but only for monsters. It also makes them unable to distinguish friend from foe. Rage is a property of items that causes a player to go berserk. Rampage is a property of items that makes the player rush towards enemies. It does not put them in a berserk/frenzied state.
+- wizard - a generalist mage
+- conjurer - In common usage, a synonym for wizard, but in DCSS, specifically a mage specialising in conjuration (see above)
+- enchanter - In common usage, a synonym for wizard, but in DCSS, specifically a mage specialising in hexes, which debuff enemies (slow, etc.). There is also an enemy called the Enchantress (feminine form of enchanter), who casts those kinds of spells.
+- shapeshifter/shifter - a shapeshifter changes their shape. A (draconian) shifter moves players/monsters around with magic.
+
 The German word Stab means both staff and wand. One can distinguish Zauberstab (magic wand/staff) from Kampfstab (fighting staff), but how do you distinguish a magical staff from a magic wand? Seems like Harry Potter's wand is a Zauberstab, but so is Gandalf's staff. [5] uses Stecken for magical staves.
 
 [5] has might = Stärke, but that means strength, so I went for Macht.  

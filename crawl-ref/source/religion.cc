@@ -1439,7 +1439,7 @@ static bool _give_trog_oka_gift(bool forced)
         simple_god_message(" grants you armour!");
         break;
     default:
-        simple_god_message(" grants you bugs!");
+        simple_god_message(" grants you bugs!"); // noloc (bug)
         break;
     }
 
@@ -4777,7 +4777,9 @@ static void _place_delayed_monsters()
                              ? lastmon->name(DESC_A)
                              : pluralise(lastmon->name(DESC_PLAIN));
 
-                msg = localise(msg, {{"God", god}, {"servant", mon_name}});
+                map<string, string> params = 
+                    {{"God", god}, {"servant", mon_name}}; // noloc
+                msg = localise(msg, params);
             }
             else
                 ASSERT(placed == 0);

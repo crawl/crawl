@@ -1440,7 +1440,7 @@ Blitzen fließt durch {acc}%s
 
 %%%%
 %s's voice booms out, "Who do you think you are?"
-
+Die Stimme von {dat}%s donnert: "Für wen hältst du dich?"
 %%%%
 One of your followers decides to abandon you.
 
@@ -7051,7 +7051,7 @@ You spring back to your original position.
 Ihr springt zurück zu Eurer ursprünglichen Position.
 %%%%
 You can't make this choice while your ancestor is elsewhere.
-Ihr könnt diese Wahl nicht treffen, solange Euer Vorfahr woanders ist.
+Ihr könnt diese Wahl nicht treffen, solange Euer Ahne woanders ist.
 %%%%
 Are you sure you want to remember your ancestor as %s?
 
@@ -7060,7 +7060,7 @@ It is so.
 
 %%%%
 You have no ancestor to preserve!
-Ihr habt keinen Vorfahren zu bewahren!
+Ihr habt keinen Ahnen zu bewahren!
 %%%%
 %s is not nearby!
 %s ist nicht in der Nähe!
@@ -17052,586 +17052,586 @@ Etwas reflektiert {acc}%s!
 %%%%
 # note: some of these are infinitive clauses to be plugged into "You can [now/no longer] %s."
 recite Zin's Axioms of Law
-
+Zins Axiome des Rechts rezitieren
 %%%%
 call upon Zin for vitalisation
-
+Zin um Belebung anrufen
 %%%%
 call upon Zin to imprison the lawless
-
+Zin anrufen, um die Gesetzlosen zu inhaftieren
 %%%%
 call upon Zin to create a sanctuary
-
+Zin anrufen, um ein Heiligtum zu schaffen
 %%%%
 Zin will now cleanse your potions of mutation.
-
+Zin wird nun Eure Tränke der Mutation reinigen.
 %%%%
 Zin will no longer cleanse your potions of mutation.
-
+Zin wird Eure Tränke nicht mehr von Mutation reinigen.
 %%%%
 Zin will cleanse your potions of mutation.
-
+Zin wird Eure Tränke von Mutation reinigen.
 %%%%
 donate money to Zin
-
+Geld an Zin spenden
 %%%%
 You and your allies can now gain power from killing the unholy and evil.
-
+Ihr und Eure Verbündeten können nun Macht durch das Töten von Unheiligen und Bösen erlangen.
 %%%%
 You and your allies can no longer gain power from killing the unholy and evil.
-
+Ihr und Eure Verbündeten können keine Macht mehr durch das Töten des Unheiligen und Bösen erlangen.
 %%%%
 You and your allies can gain power from killing the unholy and evil.
-
+Ihr und Eure Verbündeten können Macht durch das Töten des Unheiligen und Bösen erlangen.
 %%%%
 call upon the Shining One for a divine shield
-
+den Glänzenden um einen göttlichen Schild anrufen
 %%%%
 channel blasts of cleansing flame
-
+Strahlen der reinigenden Flamme hervorrufen
 %%%%
 summon a divine warrior
-
+einen göttlichen Krieger beschwören
 %%%%
 The Shining One will bless your weapon with holy wrath... once.
-
+Der Glänzende wird Eure Waffe mit heiligem Zorn segnen... einmal.
 %%%%
 The Shining One is no longer ready to bless your weapon.
-
+Der Glänzende ist nicht mehr bereit, Eure Waffe zu segnen.
 %%%%
 receive cadavers from Kikubaaqudgha
-
+Kadaver von Kikubaaqudgha erhalten
 %%%%
 Kikubaaqudgha is now protecting you from necromantic miscasts and death curses.
-
+Kikubaaqudgha schützt Euch jetzt vor nekromantischen Fehlsprechen und Todesflüchen.
 %%%%
 Kikubaaqudgha will no longer protect you from necromantic miscasts or death curses.
-
+Kikubaaqudgha schützt Euch nicht mehr vor nekromantischen Fehlsprechen oder Todesflüchen.
 %%%%
 Kikubaaqudgha protects you from necromantic miscasts and death curses.
-
+Kikubaaqudgha schützt Euch vor nekromantischen Fehlsprechen und Todesflüchen.
 %%%%
 Kikubaaqudgha is now protecting you from unholy torment.
-
+Kikubaaqudgha schützt Euch jetzt vor unheiliger Qual.
 %%%%
 Kikubaaqudgha will no longer protect you from unholy torment.
-
+Kikubaaqudgha wird Euch nicht länger vor unheiliger Qual schützen.
 %%%%
 Kikubaaqudgha protects you from unholy torment.
-
+Kikubaaqudgha schützt Euch vor unheiliger Qual.
 %%%%
 invoke torment by sacrificing a corpse
-
+Qual durch das Opfern einer Leiche heraufbeschwören
 %%%%
 Kikubaaqudgha will grant you forbidden knowledge or bloody your weapon with pain... once.
-
+Kikubaaqudgha wird Euch verbotenes Wissen gewähren oder Eure Waffe mit Schmerzen bluten lassen... einmal.
 %%%%
 Kikubaaqudgha is no longer ready to enhance your necromancy.
-
+Kikubaaqudgha ist nicht mehr bereit, Eure Nekromantie zu verbessern.
 %%%%
 Kikubaaqudgha will grant you forbidden knowledge.
-
+Kikubaaqudgha wird Euch verbotenes Wissen gewähren.
 %%%%
 animate remains
-
+Überreste beleben
 %%%%
 recall your undead slaves
-
+Eure untoten Sklaven zurückrufen
 %%%%
 mirror injuries on your foes
-
+Verletzungen auf Eure Feinde spiegeln
 %%%%
 animate legions of the dead
-
+Legionen von Toten beleben
 %%%%
 Yredelemnul will now gift you servants as you gain piety.
-
+Yredelemnul wird Euch jetzt Diener schenken, als Ihr Frömmigkeit erlangt.
 %%%%
 Yredelemnul will no longer gift you servants.
-
+Yredelemnul wird euch keine Diener mehr schenken.
 %%%%
 Yredelemnul will gift you servants as you gain piety.
-
+Yredelemnul wird euch Diener schenken, als Ihr Frömmigkeit erlangt.
 %%%%
 drain ambient life force
-
+Lebenskraft der Umgebung entziehen
 %%%%
 enslave living souls
-
+lebende Seelen versklaven
 %%%%
 gain magical power from killing
-
+magische Kraft durch Töten erhalten
 %%%%
 Vehumet is now aiding your destructive spells.
-
+Vehumet unterstützt jetzt Eure zerstörerischen Zaubersprüche.
 %%%%
 Vehumet will no longer aid your destructive spells.
-
+Vehumet unterstützt Eure zerstörerischen Zaubersprüche nicht mehr.
 %%%%
 Vehumet aids your destructive spells.
-
+Vehumet unterstützt Eure zerstörerischen Zaubersprüche.
 %%%%
 Vehumet is now extending the range of your destructive spells.
-
+Vehumet erhöht nun die Reichweite Eurer zerstörerischen Zaubersprüche.
 %%%%
 Vehumet will no longer extend the range of your destructive spells.
-
+Vehumet erhöht nicht mehr die Reichweite Eurer zerstörerischen Zaubersprüche.
 %%%%
 Vehumet extends the range of your destructive spells.
-
+Vehumet vergrößert die Reichweite Eurer zerstörerischen Zaubersprüche.
 %%%%
 gain great but temporary skills
-
+großartige, aber vorübergehende Fähigkeiten erhalten
 %%%%
 Okawaru will now gift you ammunition as you gain piety.
-
+Okawaru schenkt Euch jetzt Munition, als Ihr Frömmigkeit erlangt.
 %%%%
 Okawaru will no longer gift you ammunition.
-
+Okawaru wird Euch keine Munition mehr schenken.
 %%%%
 Okawaru will gift you ammunition as you gain piety.
-
+Okawaru wird Euch Munition schenken, als Ihr Frömmigkeit erlangt.
 %%%%
 speed up your combat
-
+Euren Kampf beschleunigen
 %%%%
 Okawaru will now gift you equipment as you gain piety.
-
+Okawaru schenkt euch nun Ausrüstung, als Ihr Frömmigkeit erlangt.
 %%%%
 Okawaru will no longer gift you equipment.
-
+Okawaru wird Euch keine Ausrüstung mehr schenken.
 %%%%
 Okawaru will gift you equipment as you gain piety.
-
+Okawaru schenkt euch Ausrüstung, als Ihr Frömmigkeit erlangt.
 %%%%
 gain health from killing
-
+Gesundheit durch Töten erhalten
 %%%%
 harness Makhleb's destructive might
-
+Euch Makhlebs zerstörerische Macht zunutze machen
 %%%%
 summon a lesser servant of Makhleb
-
+einen geringeren Diener Makhlebs herbeirufen
 %%%%
 hurl Makhleb's greater destruction
-
+Makhlebs größere Zerstörung schleudern
 %%%%
 summon a greater servant of Makhleb
-
+einen größeren Diener Makhlebs herbeirufen
 %%%%
 call upon Sif Muna for magical energy
-
+Sif Muna für magische Energie anrufen
 %%%%
 freely open your mind to new spells
-
+Euren Geist frei für neue Zaubersprüche öffnen
 %%%%
 forget spells at will
-
+Zaubersprüche nach Belieben vergessen
 %%%%
 call upon Sif Muna to cast any spell from your library
-
+Sif Muna anrufen, um einen beliebigen Zauber aus Eurer Bibliothek zu wirken
 %%%%
 Sif Muna will now gift you books as you gain piety.
-
+Sif Muna wird Euch nun Bücher schenken, als Ihr Frömmigkeit erlangt.
 %%%%
 Sif Muna will no longer gift you books.
-
+Sif Muna wird Euch keine Bücher mehr schenken.
 %%%%
 Sif Muna will gift you books as you gain piety.
-
+Sif Muna wird euch Bücher schenken, als Ihr Frömmigkeit erlangt.
 %%%%
 go berserk at will
-
+nach Belieben in den Berserker gehen
 %%%%
 call upon Trog for regeneration and willpower
-
+Trog um Regeneration und Willenskraft anrufen
 %%%%
 call in reinforcements
-
+Verstärkung herbeirufen
 %%%%
 Trog will now gift you melee weapons as you gain piety.
-
+Trog wird Euch jetzt Nahkampfwaffen schenken, als Ihr Frömmigkeit erlangt.
 %%%%
 Trog will no longer gift you weapons.
-
+Trog wird Euch keine Waffen mehr schenken.
 %%%%
 Trog will gift you melee weapons as you gain piety.
-
+Trog wird Euch Nahkampfwaffen schenken, als Ihr Frömmigkeit erlangt.
 %%%%
 draw from decks of power
-
+aus Decks der Macht ziehen
 %%%%
 Nemelex will now gift you decks of power as you gain piety.
-
+Nemelex wird euch jetzt Decks der Macht schenken, als Ihr Frömmigkeit erlangt.
 %%%%
 Nemelex will no longer gift you decks.
-
+Nemelex wird euch keine Decks mehr schenken.
 %%%%
 Nemelex will gift you decks of power as you gain piety.
-
+Nemelex wird Euch Decks der Macht schenken, als Ihr Frömmigkeit erlangst.
 %%%%
 choose one out of three cards
-
+eine von drei Karten auswählen
 %%%%
 deal four cards at a time
-
+vier Karten auf einmal ausgeben
 %%%%
 stack five cards from your decks
-
+fünf Karten aus Euren Decks stapeln
 %%%%
 stack cards
-
+Karten stapeln
 %%%%
 provide lesser healing for yourself
-
+Euch in geringerem Maße heilen
 %%%%
 heal and attempt to pacify others
-
+heilen und versuchen, andere zu besänftigen
 %%%%
 purify yourself
-
+sich selbst zu läutern
 %%%%
 provide greater healing for yourself
-
+Euch größere Heilung verschaffen
 %%%%
 call upon Elyvilon for divine vigour
-
+Elyvilon um göttliche Vitalität anrufen
 %%%%
 call on Elyvilon to save your life
-
+Elyvilon anrufen, um Euer Leben zu retten
 %%%%
 depart the Abyss
-
+den Abgrund verlassen
 %%%%
 depart the Abyss at will
-
+den Abgrund nach Belieben veralassen
 %%%%
 bend space around yourself
-
+den Raum um Euch herum krümmen
 %%%%
 banish your foes
-
+Eure Feinde verbannen
 %%%%
 corrupt the fabric of space
-
+die Struktur des Raums korrumpieren
 %%%%
 gate yourself to the Abyss
-
+den Abgrund betreten
 %%%%
 Lugonu will corrupt your weapon with distortion... once.
-
+Lugonu wird Eure Waffe mit Verzerrung korrumpieren... einmal.
 %%%%
 Lugonu is no longer ready to corrupt your weapon.
-
+Lugonu ist nicht mehr bereit, Eure Waffe zu korrumpieren.
 %%%%
 smite your foes
-
+Eure Feinde zerschlagen
 %%%%
 gain orcish followers
-
+orkische Gefolgsleute gewinnen
 %%%%
 recall your orcish followers
-
+Eure orkischen Gefolgsleute zurückrufen
 %%%%
 give items to your followers
-
+Euren Gefolgsleuten Gegenstände geben
 %%%%
 revive fallen orcs
-
+Gefallene Orks wiederbeleben
 %%%%
 request a jelly
-
+ein Gelee anfordern
 %%%%
 Jiyva will now mutate your body and modify your attributes as you gain piety.
-
+Jiyva wird nun Euren Körper mutieren und Eure Attribute verändern, als Ihr Frömmigkeit erlangt.
 %%%%
 Jiyva will no longer mutate your body and modify your attributes.
-
+Jiyva wird Euren Körper nicht mehr mutieren und Eure Attribute modifizieren.
 %%%%
 Jiyva will mutate your body and modify your attributes as you gain piety.
-
+Jiyva wird Euren Körper mutieren und Eure Attribute verändern, als Ihr Frömmigkeit erlangt.
 %%%%
 Jiyva is now protecting you from corrosive effects.
-
+Jiyva schützt Euch jetzt vor korrosiven Effekten.
 %%%%
 Jiyva will no longer protect you from corrosive effects.
-
+Jiyva schützt Euch nicht mehr vor korrosiven Effekten.
 %%%%
 Jiyva protects you from corrosive effects.
-
+Jiyva schützt Euch vor korrosiven Effekten.
 %%%%
 turn your foes to slime
-
+Eure Feinde in Schleim verandeln
 %%%%
 You may now expel jellies when seriously injured.
-
+Ihr könnt jetzt Gelees ausstoßen, wenn Ihr schwer verletzt werdet.
 %%%%
 You will no longer expel jellies when injured.
-
+Ihr stoßt keine Gelees mehr aus, wenn Ihr verletzt werdet.
 %%%%
 You may expel jellies when seriously injured.
-
+Ihr könnt Gelees ausstoßen, wenn Ihr schwer verletzt werdet.
 %%%%
 call upon Jiyva to remove your harmful mutations
-
+Jiyva anrufen, um Eure schädlichen Mutationen zu entfernen
 %%%%
 encircle yourself with summoned briar patches
-
+Euch mit beschworenen Dornensträuchern umgeben
 %%%%
 grow a ballistomycete
-
+einen Ballistomyceten züchten
 %%%%
 transform dungeon walls and trees into plant allies
-
+Wände und Bäume in pflanzliche Verbündete verwandeln
 %%%%
 grow an oklob plant
-
+eine Oklob-Pflanze wachsen lassen
 %%%%
 bend time to slow others
-
+die Zeit verbiegen, um andere zu verlangsamen
 %%%%
 Cheibriados is now slowing the effects of poison on you.
-
+Cheibriados verlangsamt jetzt die Auswirkungen von Gift auf Euch.
 %%%%
 Cheibriados will no longer slow the effects of poison on you.
-
+Cheibriados verlangsamt nicht länger die Auswirkungen von Gift auf Euch.
 %%%%
 Cheibriados slows the effects of poison on you.
-
+Cheibriados verlangsamt die Auswirkungen von Gift auf Euch.
 %%%%
 warp the flow of time around you
-
+den Fluss der Zeit um Euch herum verzerren
 %%%%
 inflict damage on those overly hasty
-
+denjenigen, die zu hastig sind, Schaden zufügen
 %%%%
 step out of the flow of time
-
+Aus dem Fluss der Zeit heraustreten
 %%%%
 Ashenzari warns you of distant threats and treasures.
-
+Aschenzari warnt Euch vor fernen Bedrohungen und Schätzen.
 %%%%
 Ashenzari reveals the structure of the dungeon to you.
-
+Aschenzari offenbart Euch die Struktur des Verlieses.
 %%%%
 Ashenzari shows you where magical portals lie.
-
+Aschenzari zeigt Euch, wo magische Portale liegen.
 %%%%
 Ashenzari prevents you from stumbling into unseen traps.
-
+Aschenzari verhindert, dass Ihr in unsichtbare Fallen stolpert.
 %%%%
 Ashenzari identifies your possessions.
-
+Aschenzari identifiziert Eure Besitztümer.
 %%%%
 Ashenzari will now reveal the unseen.
-
+Eschenzari enthüllt jetzt das Unsichtbare.
 %%%%
 Ashenzari will no longer reveal the unseen.
-
+Aschenzari enthüllt nicht mehr das Unsichtbare.
 %%%%
 Ashenzari reveals the unseen.
-
+Aschenzari enthüllt das Unsichtbare.
 %%%%
 Ashenzari will now keep your mind clear.
-
+Aschenzari wird nun Euren Geist klar halten.
 %%%%
 Ashenzari will no longer keep your mind clear.
-
+Aschenzari wird Euren Geist nicht länger klar halten.
 %%%%
 Ashenzari keeps your mind clear.
-
+Aschenzari hält Euren Geist klar.
 %%%%
 Ashenzari will now grant you astral sight.
-
+Aschenzari gewährt Euch jetzt astrale Sicht.
 %%%%
 Ashenzari will no longer grant you astral sight.
-
+Aschenzari gewährt Euch keine astrale Sicht mehr.
 %%%%
 Ashenzari grants you astral sight.
-
+Aschenzari gewährt Euch astrale Sicht.
 %%%%
 step into the shadows of nearby creatures
-
+In die Schatten von Kreaturen in der Nähe treten
 %%%%
 You will now sometimes bleed smoke when heavily injured by enemies.
-
+Ihr blutet jetzt manchmal Rauch, wenn Ihr von Feinden schwer verletzt werdet.
 %%%%
 You will no longer bleed smoke.
-
+Ihr blutet keinen Rauch mehr.
 %%%%
 You sometimes bleed smoke when heavily injured by enemies.
-
+Ihr blutet manchmal Rauch, wenn Ihr von Feinden schwer verletzt würdet.
 %%%%
 Your shadow now sometimes tangibly mimics your actions.
-
+Euer Schatten ahmt jetzt manchmal Eure Handlungen spürbar nach.
 %%%%
 Your shadow no longer tangibly mimics your actions.
-
+Euer Schatten ahmt Eure Handlungen nicht mehr spürbar nach.
 %%%%
 Your shadow sometimes tangibly mimics your actions.
-
+Euer Schatten ahmt Eure Handlungen manchmal spürbar nach.
 %%%%
 transform into a swirling mass of shadows
-
+in eine wirbelnde Masse aus Schatten verwandeln
 %%%%
 You have enough gold to petition Gozag for potion effects.
-
+Ihr habt genug Gold, um Gozag um Zaubertrank-Effekte zu bitten.
 %%%%
 You no longer have enough gold to petition Gozag for potion effects.
-
+Ihr habt nicht mehr genug Gold, um Gozag um Zaubertrank-Effekte zu bitten.
 %%%%
 You can petition Gozag for potion effects.
-
+Ihr könnt Gozag um Zaubertrank-Effekte bitten.
 %%%%
 You have enough gold to fund merchants seeking to open stores in the dungeon.
-
+Ihr habt genug Gold, um Händler zu finanzieren, die im Dungeon Läden eröffnen wollen.
 %%%%
 You no longer have enough gold to fund merchants seeking to open stores in the dungeon.
-
+Ihr habt nicht mehr genug Gold, um Händler zu finanzieren, die im Kerker Läden eröffnen wollen.
 %%%%
 You can fund merchants seeking to open stores in the dungeon.
-
+Ihr könnt Händler finanzieren, die im Kerker Läden eröffnen wollen.
 %%%%
 You have enough gold to bribe branches to halt enemies' attacks and recruit allies.
-
+Ihr habt genug Gold, um Zweige zu bestechen, um Angriffe von Feinden zu stoppen und Verbündete zu rekrutieren.
 %%%%
 You no longer have enough gold to bribe branches to halt enemies' attacks and recruit allies.
-
+Ihr habt nicht mehr genug Gold, um Zweige zu bestechen, um Angriffe von Feinden aufzuhalten und Verbündete zu rekrutieren.
 %%%%
 You can bribe branches to halt enemies' attacks and recruit allies.
-
+Ihr könnt Zweige bestechen, um Angriffe von Feinden aufzuhalten und Verbündete zu rekrutieren.
 %%%%
 Qazlal grants you and your divine allies immunity to clouds.
-
+Qazlal gewährt Euch und Euren göttlichen Verbündeten Immunität gegen Wolken.
 %%%%
 You are now surrounded by a storm.
-
+Ihr seid nun von einem Sturm umgeben.
 %%%%
 Your storm dissipates completely.
-
+Euer Sturm löst sich vollständig auf.
 %%%%
 You are surrounded by a storm.
-
+Ihr seid von einem Sturm umgeben.
 %%%%
 call upon nature to destroy your foes
-
+die Natur anrufen, um Eure Feinde zu vernichten
 %%%%
 give life to nearby clouds
-
+die Wolken in der Nähe zum Leben erwecken
 %%%%
 The storm surrounding you is now powerful enough to repel missiles.
-
+Der Sturm, der Euch umgibt, ist jetzt stark genug, um Geschosse abzuwehren.
 %%%%
 The storm surrounding you is now too weak to repel missiles.
-
+Der Sturm, der Euch umgibt, ist jetzt zu schwach, um Geschosse abzuwehren.
 %%%%
 The storm surrounding you is powerful enough to repel missiles.
-
+Der Sturm um Euch herum ist stark genug, um Geschosse abzuwehren.
 %%%%
 You will now adapt resistances upon receiving elemental damage.
-
+Ihr passt jetzt Eure Resistenzen an, wenn Ihr Elementarschaden erleidet.
 %%%%
 You will no longer adapt resistances upon receiving elemental damage.
-
+Ihr passt Eure Resistenzen nicht mehr an, wenn Ihr Elementarschaden erleidet.
 %%%%
 You adapt resistances upon receiving elemental damage.
-
+Ihr passt Eure Resistenzen an, wenn Ihr Elementarschaden erleidet.
 %%%%
 call upon nature's wrath in a wide area around you
-
+den Zorn der Natur in einem weiten Bereich um Euch herum anrufen
 %%%%
 You now exude an aura of power that intimidates your foes.
-
+Ihr strahlt jetzt eine Aura der Macht aus, die Eure Feinde einschüchtert.
 %%%%
 You no longer exude an aura of power that intimidates your foes.
-
+Ihr strahlt keine Aura der Macht mehr aus, die Eure Feinde einschüchtert.
 %%%%
 Your aura of power can now strike those that harm you.
-
+Eure Aura der Macht kann jetzt diejenigen treffen, die Euch schaden.
 %%%%
 Your aura of power no longer strikes those that harm you.
-
+Eure Aura der Macht trifft nicht mehr diejenigen, die Euch schaden.
 %%%%
 Your aura of power can strike those that harm you.
-
+Eure Aura der Macht kann diejenigen treffen, die Euch schaden.
 %%%%
 heal your body and restore your magic
-
+Euren Körper heilen und Eure Magie wiederherstellen
 %%%%
 gather your power into a mighty leap
-
+Eure Kraft in einem mächtigen Sprung einsammeln
 %%%%
 wreak a terrible wrath on your foes
-
+einen schrecklichen Zorn auf Eure Feinde anrichten
 %%%%
 stomp with the beat
-
+mit dem Beat stampfen
 %%%%
 pass through a line of other dancers
-
+durch eine Reihe anderer Tänzer passieren
 %%%%
 Uskayaw will force your foes to helplessly watch your dance.
-
+Uskayaw wird Eure Feinde zwingen, Eurem Tanz hilflos zuzusehen.
 %%%%
 Uskayaw will no longer force your foes to helplessly watch your dance.
-
+Uskayaw zwingt Eure Feinde nicht länger, Eurem Tanz hilflos zuzusehen.
 %%%%
 Uskayaw will force your foes to share their pain.
-
+Uskayaw wird Eure Feinde zwingen, ihren Schmerz zu teilen.
 %%%%
 Uskayaw will no longer force your foes to share their pain.
-
+Uskayaw wird Eure Feinde nicht mehr zwingen, ihren Schmerz zu teilen.
 %%%%
 merge with and destroy a victim
-
+mit einem Opfer verschmelzen und es zerstören
 %%%%
 recall your ancestor
-
+Euch an Euren Ahnen erinnern
 %%%%
 remember your ancestor's identity
-
+Euch an die Identität Eures Ahnen erinnern
 %%%%
 swap creatures with your ancestor
-
+Kreaturen mit Eurem Ahnen austauschen
 %%%%
 heal and protect your ancestor
-
+Euren Ahnen heilen und schützen
 %%%%
 drain nearby creatures when transferring your ancestor
-
+Kreaturen in der Nähe ausbluten lassen, wenn Ihr Euren Ahnen transferierst
 %%%%
 perform damaging attacks by moving towards foes
-
+schädliche Angriffe ausführen, indem Ihr Euch auf Feinde zubewegst
 %%%%
 perform lunging strikes
-
+Ausfallende Schläge ausführen
 %%%%
 lightly attack monsters by moving around them
-
+Monster leicht angreifen, indem Ihr Euch um sie herum bewegst
 %%%%
 perform spinning attacks
-
+Wirbelangriffe ausführen
 %%%%
 perform airborne attacks
-
+Angriffe aus der Luft ausführen
 %%%%
 briefly move at supernatural speeds
-
+Euch kurzzeitig mit übernatürlicher Geschwindigkeit bewegen
 %%%%
 move at supernatural speeds
-
+Euch mit übernatürlicher Geschwindigkeit bewegen
 %%%%
 summon a storm of heavenly clouds to empower your attacks
-
+einen Sturm aus himmlischen Wolken beschwören, um Eure Angriffe zu verstärken
 %%%%
 summon a storm of heavenly clouds
-
+einen Sturm himmlischer Wolken beschwören
 %%%%
 %s seems mollified and vanishes.
-
+%s scheint besänftigt und verschwindet.
 %%%%
 %s seems mollified.
-
+%s scheint besänftigt zu sein.
 %%%%
 Your divine halo returns!
 Euer göttlicher Heiligenschein kehrt zurück!
@@ -17640,98 +17640,95 @@ Your aura of darkness returns!
 Eure Aura der Dunkelheit kehrt zurück!
 %%%%
 Your vision regains its divine sight.
-Eure Vision gewinnt ihr göttliches Sehvermögen zurück.
+Eure Vision gewinnt ihren göttlichen Anblick zurück.
 %%%%
 %s restores the support of your attributes.
-
+%s stellt die Unterstützung Eurer Attribute wieder her.
 %%%%
 A storm instantly forms around you!
-Ein Sturm bildet sich sofort um Euch!
+Sofort bildet sich ein Sturm um Euch herum!
 %%%%
 Your full life essence returns.
 Eure volle Lebensessenz kehrt zurück.
 %%%%
 Your water-walking will last only until you reach solid ground.
-Euer Wasserwandern wird nur so lange dauern, bis Ihr festen Boden erreicht.
+Eure Wasserwanderung dauert nur so lange, bis Ihr festen Boden erreicht.
 %%%%
 Your divine halo fades away.
-Euer göttlicher Heiligenschein verschwindet.
+Euer göttlicher Heiligenschein verblasst.
 %%%%
 Your aura of darkness fades away.
-Eure Aura der Dunkelheit verschwindet.
+Eure Aura der Dunkelheit verblasst.
 %%%%
 The storm surrounding you dissipates.
 Der Sturm, der Euch umgibt, löst sich auf.
 %%%%
 %s deals you some cards!
-
+%s gibt Euch einige Karten!
 %%%%
 You now have %s.
-Ihr habt jetzt%s.
+Ihr habt jetzt {acc}%s.
 %%%%
 %s goes to deal, but finds you have enough cards.
-
+%s will Karten ausgeben, stellt aber fest, dass Ihr genug Karten habt.
 %%%%
 %s alters your body.
-
+%s verändert Euren Körper.
 %%%%
 %s grants you ammunition!
-
+%s gewährt Euch Munition!
 %%%%
 %s grants you a weapon!
-
+%s gewährt Euch eine Waffe!
 %%%%
 %s grants you armour!
-
-%%%%
-%s grants you bugs!
-
+%s gewährt Euch eine Rüstung!
 %%%%
 ...but nothing appears.
-
+...aber nichts erscheint.
 %%%%
 Yredelemnul grants you @servant@!
-
+Yredelemnul gewährt Euch {acc}@servant@!
 %%%%
 You feel as though nothing has changed.
-Ihr habt das Gefühl, als hätte sich nichts geändert.
+Ihr habt das Gefühl, als hätte sich nichts verändert.
 %%%%
 %s grants you a gift!
 %s gewährt Euch ein Geschenk!
 %%%%
 Vehumet offers you knowledge of %s.
-
+Vehumet bietet Euch Wissen über {acc}%s.
 %%%%
 " These spells will remain available as long as you worship Vehumet."
-
+" Diese Zauber bleiben verfügbar, solange Ihr Vehumet verehrt."
 %%%%
 %s remembers more old skills.
-
+%s erinnert sich an weitere alte Fertigkeiten.
 %%%%
 # note: <ancestor> remembers that <the weapon> was <a weapon of brand>
 %s remembers that %s was %s.
-
+%s erinnert sich daran, dass %s %s war.
 %%%%
 You feel a little guilty.
-
+Ihr fühlt Euch ein wenig schuldig.
 %%%%
 You feel guilty.
-
+Ihr fühlt Euch schuldig.
 %%%%
 You feel very guilty.
-
+Ihr fühlt Euch sehr schuldig.
 %%%%
 You feel extremely guilty.
-
+Ihr fühlt Euch extrem schuldig.
 %%%%
 \"You will pay for your transgression, mortal!\"
-
+\"Du wirst für deine Übertretung bezahlen, Sterblicher!\"
 %%%%
 %s forms a fragment of your life essence into the memory of your ancestor!
-
+%s formt ein Fragment Eurer Lebensessenz in die Erinnerung Eures Ahnen!
 %%%%
 You can now %s.
-
+Ihr könnt jetzt %s.
 %%%%
 A divine halo surrounds you!
 Ein göttlicher Heiligenschein umgibt Euch!
@@ -17740,184 +17737,181 @@ You are shrouded in an aura of darkness!
 Ihr seid in eine Aura der Dunkelheit gehüllt!
 %%%%
 %s will now unseal the treasures of the Slime Pits.
-
+%s wird nun die Schätze der Schleimgruben entsiegeln.
 %%%%
 You may now remember your ancestor's life.
-
+Ihr könnt Euch jetzt an das Leben Eures Ahnen erinnern.
 %%%%
 %s raises the support of your attributes as your movement slows.
-
+%s erhöht die Unterstützung Eurer Attribute, als sich Eure Bewegung verlangsamt.
 %%%%
 %s raises the support of your attributes.
-
+%s erhöht die Unterstützung Eurer Attribute.
 %%%%
 You can no longer %s.
-
+Ihr könnt nicht mehr %s.
 %%%%
 %s lowers the support of your attributes as your movement quickens.
-
+%s senkt die Unterstützung Eurer Attribute, als sich Eure Bewegung beschleunigt.
 %%%%
 %s lowers the support of your attributes.
-
+%s senkt die Unterstützung Eurer Attribute.
 %%%%
 %s protects your plant from harm.
-
+%s schützt Eure Pflanze vor Schaden.
 %%%%
 %s protects a plant from harm.
-
+%s schützt eine Pflanze vor Schaden.
 %%%%
 %s avoids your attack.
-
+%s weicht Eurem Angriff aus.
 %%%%
 Your curses shatter.
-
+Eure Flüche zerbrechen.
 %%%%
 You have lost your religion!
 Ihr habt Eure Religion verloren!
 %%%%
 %s does not appreciate desertion for chaos!
-
+%s schätzt kein Verlassen für das Chaos!
 %%%%
 %s does not appreciate desertion for evil!
-
+%s schätzt kein Verlassen für das Böse!
 %%%%
 %s does not appreciate desertion!
-
+%s schätzt kein Verlassen!
 %%%%
 You sense decay.
 Ihr spürt den Verfall.
 %%%%
 %s reclaims all of your granted undead slaves!
-
+%s fordert alle Eure gewährten untoten Sklaven zurück!
 %%%%
 All of your followers decide to abandon you.
-Alle Eure Anhänger beschließen, Euch zu verlassen.
+Alle Eure Gefolgsleute beschließen, Euch zu verlassen.
 %%%%
 Your access to Nemelex's decks is revoked.
-
+Euer Zugang zu Nemelex' Decks wird Euch entzogen.
 %%%%
 All of your fellow slimes turn on you.
-Alle Eure Mitschleime machen Euch an.
+Alle Eure Mitschleime wenden sich gegen Euch.
 %%%%
 The plants of the dungeon turn on you.
-Die Pflanzen des Verlieses machen Euch an.
+Die Pflanzen des Kerkers wenden sich gegen Euch.
 %%%%
 Your funded stores close, unable to pay their debts without your funds.
-
+Die von Euch finanzierten Läden schließen, weil sie ihre Schulden ohne Euer Gold nicht bezahlen können.
 %%%%
 Your storm instantly dissipates.
-Euer Sturm löst sich sofort auf.
+Euer Sturm löst sich augenblicklich auf.
 %%%%
 %s continues to slow your movements.
-
+%s verlangsamt weiterhin Eure Bewegungen.
 %%%%
 <lightgrey>Your body disappears without a glow.</lightgrey>
-
+<lightgrey>Euer Körper verschwindet, ohne zu leuchten.</lightgrey>
 %%%%
 Your body glows slightly and disappears.
-
+Euer Körper leuchtet leicht und verschwindet.
 %%%%
 <white>Your body glows with a rainbow of weird colours and disappears.</white>
-
+<white>Euer Körper leuchtet in einem Regenbogen aus seltsamen Farben und verschwindet.</white>
 %%%%
 <lightgrey>Your body disappears without additional glow.</lightgrey>
-
+<lightgrey>Euer Körper verschwindet ohne zusätzliches Glühen.</lightgrey>
 %%%%
 Your body glows slightly brighter and disappears.
-
+Euer Körper leuchtet etwas heller und verschwindet.
 %%%%
 Your amulet flashes!
 Euer Amulett blinkt!
 %%%%
 %s warns you to remove %s.
-%s warnt Euch, %s zu entfernen.
+%s warnt Euch, {acc}%s zu entfernen.
 %%%%
 %s says: Farewell. Go and aid the meek with %s.
-
+%s sagt: Lebe wohl. Geh und hilf den Sanftmütigen mit {dat}%s.
 %%%%
 %s says: Farewell. Go and vanquish evil with %s.
-
+%s sagt: Lebe wohl. Geh und besiege das Böse mit {dat}%s.
 %%%%
 %s says: Farewell. Go and enforce order with %s.
-
+%s sagt: Lebe wohl. Geh und sorge für Ordnung mit {dat}%s.
 %%%%
 Your evil deeds will not go unpunished!
-
+Deine bösen Taten werden nicht ungestraft bleiben!
 %%%%
 You will pay for your evil ways, mortal!
-
+Du wirst für deine bösen Taten büßen, Sterblicher!
 %%%%
 You will suffer for embracing such chaos!
-
+Du wirst leiden, weil du dich dem Chaos hingegeben hast!
 %%%%
 You will suffer for embracing such evil!
-
+Du wirst dafür leiden, dass du dich dem Bösen verschrieben hast!
 %%%%
 %s says: %s
-
+%s sagt: %s
 %%%%
 You pay a service fee of %d gold.
-Ihr bezahlt eine Servicegebühr von%d Gold.
+Ihr zahlt eine Bearbeitungsgebühr von %d Gold.
 %%%%
 %s waives the service fee.
-
+%s erlässt Euch die Gebühr.
 %%%%
 %s grants you a jelly!
-
+%s gewährt Euch ein Gelee!
 %%%%
 %s begins to support your attributes as your movement slows.
-
+%s beginnt, Eure Attribute zu unterstützen, als sich Eure Bewegung verlangsamt.
 %%%%
 The plants of the dungeon cease their hostilities.
-
+Die Pflanzen des Dungeons stellen ihre Feindseligkeiten ein.
 %%%%
 %s welcomes you back!
-
+%s heißt Euch wieder willkommen!
 %%%%
 %s welcomes you!
-
+%s heißt Euch willkommen!
 %%%%
 You bow before the missionary of Beogh.
 Ihr verneigt Euch vor dem Missionar von Beogh.
 %%%%
 %s does not accept service from beggars like you!
-
+%s nimmt keine Dienste von Bettlern wie Euch an!
 %%%%
 The service fee for joining is currently %d gold; you have none.
-
+Die Gebühr für den Beitritt beträgt derzeit %d Gold; Ihr habt kein Gold.
 %%%%
 The service fee for joining is currently %d gold; you only have %d.
-
+Die Gebühr für den Beitritt beträgt derzeit %d Gold, Ihr habt nur %d.
 %%%%
 %s does not accept worship from the loveless!
-
+%s nimmt keine Anbetung von Lieblosen an!
 %%%%
 %s says: How dare you approach in such a loathsome form!
-
+%s sagt: Wie kannst du es wagen, dich in solch einer abscheulichen Form zu nähern!
 %%%%
 %s does not accept worship from those such as you!
-
+%s nimmt keine Anbetung von solchen wie Euch an!
 %%%%
 %s refuses to forgive you so easily!
-
+%s weigert sich, Euch so leicht zu vergeben!
 %%%%
 Which god (by name)?
-
+Welchen Gott (mit Namen)?
 %%%%
 Which god (default %s)?
-
+Welchen Gott (defaultmäßig %s)?
 %%%%
 Your god extremely despises this spell!
-
+Euer Gott verabscheut diesen Zauberspruch zutiefst!
 %%%%
 Your god hates spellcasting!
-
+Euer Gott hasst Zaubern!
 %%%%
 Your god hates this spell!
-
-%%%%
-servant
-
+Euer Gott hasst diesen Zauberspruch!
 %%%%
 
 ##################
