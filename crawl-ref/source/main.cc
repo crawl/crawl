@@ -1479,7 +1479,8 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
         return false;
     }
 
-    if (!down && player_in_branch(BRANCH_ZOT) && you.depth == 5
+    if (!down && player_in_branch(BRANCH_ZOT)
+        && you.depth == brdepth[BRANCH_ZOT]
         && you.chapter == CHAPTER_ANGERED_PANDEMONIUM)
     {
         if (!yesno("Really leave the Orb behind?", false, 'n'))
