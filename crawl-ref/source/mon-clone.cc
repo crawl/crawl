@@ -226,7 +226,8 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
     if (mons_is_unique(mon->type)
         || mons_is_ghost_demon(mon->type)
         || mon->is_named()
-        || mon->type == MONS_BATTLESPHERE)
+        || mons_is_conjured(mon->type)
+        || mons_is_tentacle_or_tentacle_segment(mon->type))
     {
         return false;
     }
@@ -248,11 +249,6 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
         if (!square_found)
             return false;
     }
-
-    // Is the monster carrying an artefact?
-    for (mon_inv_iterator ii(const_cast<monster &>(*mon)); ii; ++ii)
-        if (is_artefact(*ii))
-            return false;
 
     return true;
 }

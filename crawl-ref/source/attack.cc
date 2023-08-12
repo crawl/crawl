@@ -590,7 +590,7 @@ static const vector<chaos_effect> chaos_effects = {
         BEAM_NONE, [](attack &attack) {
             actor &defender = *attack.defender;
             ASSERT(defender.is_monster());
-            monster *clone = clone_mons(defender.as_monster(), true);
+            monster *clone = clone_mons(defender.as_monster());
             if (!clone)
                 return false;
 
@@ -602,6 +602,8 @@ static const vector<chaos_effect> chaos_effects = {
             // The player shouldn't get new permanent followers from cloning.
             if (clone->attitude == ATT_FRIENDLY && !clone->is_summoned())
                 clone->mark_summoned(6, true, MON_SUMM_CLONE);
+            else
+                clone->flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
             // Monsters being cloned is interesting.
             xom_is_stimulated(clone->friendly() ? 12 : 25);
