@@ -1020,23 +1020,20 @@ MAP
 ENDMAP
 
 NAME:    nicolae_shoals_mertower
-FHEIGHT: ;'b123 = 40
-KPROP:   ;'b123 = no_tide
-KMONS:   1 = merfolk
-KMONS:   2 = merfolk impaler / nothing w:4
-KMONS:   3 = merfolk javelineer / nothing w:4
-KFEAT:   ' = W
-KFEAT:   ;23 = w
-KFEAT:   b = .
+TAGS:    patrolling no_monster_gen
+KPROP:   a+-12 = no_tide
+ITEM:    tower shield good_item / tower shield randart / superb_item w:20
+MONS:    merfolk, merfolk impaler / merfolk javelineer w:5
+SUBST:   - = -:110 1 2:5
 MAP
   wwwwwwww
- wwwxxxxxww
- wwxx;22xxw
-.b1x';;;3xw
-.bb+';;;3xw
-.b1x';;;3xw
- wwxx;22xxw
- wwwxxxxxww
+ wwwxxmxxww
+ wwxx-2-xxw
+.a1x--*--xw
+.aa+--d-2mw
+.a1x--*--xw
+ wwxx-2-xxw
+ wwwxxmxxww
   wwwwwwww
 ENDMAP
 
