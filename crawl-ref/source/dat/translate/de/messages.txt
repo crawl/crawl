@@ -6856,25 +6856,25 @@ Nature churns violently around you!
 Die Natur wirbelt heftig um Euch herum!
 %%%%
 %s believes you are ready to make a new sacrifice.
-
+%s glaubt, dass Ihr bereit seid, ein neues Opfer zu bringen.
 %%%%
 This is an incredible sacrifice.
-
+Dies ist ein unglaubliches Opfer.
 %%%%
 This is a major sacrifice.
-
+Dies ist ein großes Opfer.
 %%%%
 This is a significant sacrifice.
-
+Dies ist ein bedeutendes Opfer.
 %%%%
 This is a modest sacrifice.
-
+Dies ist ein bescheidenes Opfer.
 %%%%
 This is a trivial sacrifice.
-
+Dies ist ein unbedeutendes Opfer.
 %%%%
 Do you really want to make this sacrifice?
-
+Wollt Ihr dieses Opfer wirklich bringen?
 %%%%
 You can no longer hold %s!
 Ihr könnt%s nicht länger halten!
@@ -6898,10 +6898,7 @@ You put %s back on the other side!
 
 %%%%
 Piety after sacrifice: %s
-
-%%%%
-%sand %s
-
+Frommigkeit nach dem Opfer: %s
 %%%%
 %s indicates that your awakening is complete.
 
@@ -7172,7 +7169,7 @@ You feel like a meek peon again.
 # god-blessing.cc
 ##################
 
-##################
+##################god-abil
 # god-companions.cc
 ##################
 %%%%
@@ -17922,97 +17919,97 @@ Ru asks you to corrupt yourself such that: %s.
 Ru fordert Euch auf, Euch so zu korrumpieren, dass: %s.
 %%%%
 sacrificed purity
-
+opferte Reinheit
 %%%%
 Ru asks you to sacrifice your ability to read while threatened.
 Ru fordert Euch auf, Eure Fähigkeit zu lesen während Ihr bedroht werden, zu opfern.
 %%%%
 sacrificed words
-
+opferte Wörter
 %%%%
 Ru asks you to sacrifice your ability to drink while threatened.
 Ru fordert Euch auf, Eure Fähigkeit zu trinken während Ihr bedroht werden, zu opfern.
 %%%%
 sacrificed drink
-
+opferte Trinken
 %%%%
 sacrificed essence
-
+opferte Essenz
 %%%%
 sacrificed health
-
+opferte Gesundheit
 %%%%
 Ru asks you to sacrifice your ability to go unnoticed.
 Ru fordert Euch auf, Eure Fähigkeit unbemerkt zu bleiben, zu opfern.
 %%%%
 sacrificed stealth
-
+opferte Geheimlichkeit
 %%%%
 Ru asks you to sacrifice all use of magical tools.
 Ru fordert Euch auf, Eure Fähigkeit magische Gegenstände zu nutzen, zu opfern.
 %%%%
 sacrificed evocations
-
+opferte Evozieren
 %%%%
 Ru asks you to sacrifice your ability to be loved.
 Ru fordert Euch auf, Eure Fähigkeit beliebt zu werden, zu opfern.
 %%%%
 sacrificed love
-
+opferte Liebe
 %%%%
 Ru asks you to sacrifice your courage.
 Ru fordert Euch auf, Euren Mut zu opfern.
 %%%%
 sacrificed courage
-
+opferte Mut
 %%%%
 Ru asks you to sacrifice all use of: %s.
 Ru fordert Euch auf zu opfern, die Verwendung von: %s.
 %%%%
 sacrificed arcana
-
+opferte Arkana
 %%%%
 Ru asks you to sacrifice your Dodging skill.
 Ru fordert Euch auf, Eure Ausweichensfähigkeit, zu opfern.
 %%%%
 sacrificed dodging
-
+opferte Ausweichen
 %%%%
 Ru asks you to sacrifice your Armour skill.
 Ru fordert Euch auf, Eure Rüstungsfähigkeit zu opfern.
 %%%%
 sacrificed armour
-
+opferte Rüstung
 %%%%
 Ru asks you to sacrifice %s.
 Ru fordert Euch auf, %s zu opfern.
 %%%%
 sacrificed a hand
-
+opferte eine Hand
 %%%%
 Ru asks you to sacrifice your experiences.
 Ru fordert Euch auf, Eure Erfahrungen zu opfern.
 %%%%
 sacrificed experience
-
+opferte Erfahrung
 %%%%
 Ru asks you to sacrifice your skill.
 Ru fordert Euch auf, Eure Begabungen zu opfern.
 %%%%
 sacrificed skill
-
+opferte Fertigkeit
 %%%%
 Ru asks you to sacrifice an eye.
 Ru fordert Euch auf, ein Auge zu opfern.
 %%%%
 sacrificed an eye
-
+opferte ein Auge
 %%%%
 Ru asks you to sacrifice your resistance to extreme temperatures.
-Ru fordert Euch auf, Eure Widerstandsfähigkeit gegen extreme Temperaturen zu opfern.
+Ru fordert Euch auf, Eure Resistenz gegen extreme Temperaturen zu opfern.
 %%%%
 sacrificed resistance
-
+opferte Resistenz
 %%%%
 
 ##################
