@@ -1371,7 +1371,8 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
     }
 
     // Rune locks
-    switch (ftype) {
+    switch (ftype)
+    {
     case DNGN_EXIT_VAULTS:
         if (runes_in_pack() < 1)
         {
