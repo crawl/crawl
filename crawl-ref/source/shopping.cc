@@ -639,11 +639,8 @@ unsigned int item_value(item_def item, bool ident)
         case MISC_SACK_OF_SPIDERS:
         case MISC_CONDENSER_VANE:
         case MISC_PHANTOM_MIRROR:
-            valued += 400;
-            break;
-
         case MISC_LIGHTNING_ROD:
-            valued += 300;
+            valued += 400;
             break;
 
         default:
