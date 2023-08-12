@@ -821,6 +821,7 @@ static bool _purchase(shop_struct& shop, const level_pos& pos, int index)
 
 static string _hyphenated_letters(int how_many, char first)
 {
+    // noloc section start
     string s = "<w>";
     s += first;
     s += "</w>";
@@ -831,6 +832,7 @@ static string _hyphenated_letters(int how_many, char first)
         s += "</w>";
     }
     return s;
+    // noloc section end
 }
 
 enum shopping_order
@@ -907,7 +909,10 @@ class ShopEntry : public InvEntry
         const string keystr = colour_to_str(keycol);
         const string itemstr =
             colour_to_str(menu_colour(text, item_prefix(*item), tag));
-        return make_stringf(" <%s>%c%c%c%c</%s><%s>%4d gold   %s%s</%s>",
+        const string coststr = localise("%4d gold", cost);
+        const string unknown = localise(shop_item_unknown(*item) ? " (unknown)" : "");
+        // noloc section start
+        return make_stringf(" <%s>%c%c%c%c</%s><%s>%s   %s%s</%s>",
                             keystr.c_str(),
                             hotkeys[0],
                             need_cursor ? '[' : ' ',
@@ -915,10 +920,11 @@ class ShopEntry : public InvEntry
                             need_cursor ? ']' : ' ',
                             keystr.c_str(),
                             itemstr.c_str(),
-                            cost,
-                            text.c_str(),
-                            shop_item_unknown(*item) ? " (unknown)" : "",
+                            coststr.c_str(),
+                            localise(text).c_str(),
+                            unknown.c_str(),
                             itemstr.c_str());
+        // noloc section end
     }
 
     virtual void select(int qty = -1) override
@@ -954,8 +960,8 @@ ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase
 
     update_help();
 
-    set_title("Welcome to " + shop_name(shop) + "! What would you "
-              "like to do?");
+    set_title(localise("Welcome to %s! What would you like to do?",
+                       shop_name(shop)));
 }
 
 void ShopMenu::init_entries()
@@ -980,25 +986,37 @@ int ShopMenu::selected_cost() const
 
 void ShopMenu::update_help()
 {
-    string top_line = make_stringf("<yellow>You have %d gold piece%s.",
-                                   you.gold,
-                                   you.gold != 1 ? "s" : "");
+    string top_line = "<yellow>";
+    if (you.gold == 1)
+        top_line += localise("You have 1 gold piece.");
+    else
+        top_line += localise("You have %d gold pieces.", you.gold);
     const int total_cost = selected_cost();
     if (total_cost > you.gold)
     {
+        int diff = total_cost - you.gold;
         top_line += "<lightred>";
-        top_line +=
-            make_stringf(" You are short %d gold piece%s for the purchase.",
-                         total_cost - you.gold,
-                         (total_cost - you.gold != 1) ? "s" : "");
+        top_line += localise(" ");
+        if (diff == 1)
+            top_line += localise("You are short 1 gold piece for the purchase.");
+        else
+        {
+            top_line += localise("You are short %d gold pieces for the purchase.",
+                                 diff);
+        }
         top_line += "</lightred>";
     }
     else if (total_cost)
     {
-        top_line +=
-            make_stringf(" After the purchase, you will have %d gold piece%s.",
-                         you.gold - total_cost,
-                         (you.gold - total_cost != 1) ? "s" : "");
+        int left = you.gold - total_cost;
+        top_line += localise(" ");
+        if (left == 1)
+            top_line += localise("After the purchase, you will have 1 gold piece.");
+        else
+        {
+            top_line +=
+                localise("After the purchase, you will have %d gold pieces.", left);
+        }
     }
     top_line += "</yellow>";
 
@@ -1007,29 +1025,47 @@ void ShopMenu::update_help()
     int top_line_width = strwidth(formatted_string::parse_string(top_line).tostring());
     top_line += string(max(0, 80 - top_line_width), ' ') + '\n';
 
-    set_more(formatted_string::parse_string(top_line + make_stringf(
-        //You have 0 gold pieces.
-        //[Esc/R-Click] exit  [!] buy|examine items  [a-i] select item for purchase
-        //[/] sort (default)  [Enter] make purchase  [A-I] put item on shopping list
+    //You have 0 gold pieces.
+    //[Esc/R-Click] exit  [!] buy|examine items  [a-i] select item for purchase
+    //[/] sort (default)  [Enter] make purchase  [A-I] put item on shopping list
+    string line2;
+    // first field is 18 printable characters, but we also have to account for formatting chars
 #if defined(USE_TILE) && !defined(TOUCH_UI)
-        "[<w>Esc</w>/<w>R-Click</w>] exit  "
+    line2 = pad_string(localise("[<w>Esc</w>/<w>R-Click</w>] exit"), 18 + 14);
 #else
-        //               "/R-Click"
-        "[<w>Esc</w>] exit          "
+    line2 = pad_string(localise("[<w>Esc</w>] exit"), 18 + 7);
 #endif
-        "%s  [%s] %s\n"
-        "[<w>/</w>] sort (%s)%s  %s  [%s] put item on shopping list",
-        !can_purchase ? " " " "  "  " "       "  "          " :
-        menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>buy</w>|examine items" :
-                                     "[<w>!</w>] buy|<w>examine</w> items",
-        _hyphenated_letters(item_count(), 'a').c_str(),
-        menu_action == ACT_EXECUTE ? "select item for purchase" : "examine item",
-        shopping_order_names[order],
-        // strwidth("default")
-        string(7 - strwidth(shopping_order_names[order]), ' ').c_str(),
-        !can_purchase ? " " "     "  "               " :
-                        "[<w>Enter</w>] make purchase",
-        _hyphenated_letters(item_count(), 'A').c_str())));
+    line2 += "  ";
+    // 2nd field is 21 printable characters
+    if (!can_purchase)
+        line2 += pad_string("", 21);
+    else if (menu_action == ACT_EXECUTE)
+        line2 += localise("[<w>!</w>] <w>buy</w>|examine items");
+    else
+        line2 += localise("[<w>!</w>] <w>buy</w>|examine items");
+    // 3rd field
+    line2 += make_stringf("  [%s] ", // noloc
+                          _hyphenated_letters(item_count(), 'a').c_str());
+    // 4th field
+    if (menu_action == ACT_EXECUTE)
+        line2 += localise("select item for purchase");
+    else
+        line2 += localise("examine item");
+    line2 += "\n";
+
+    string line3 = localise("[<w>/</w>] sort");
+    line3 += " ";
+    line3 += pad_string(localise("(%s)", shopping_order_names[order]), 9);
+    line3 += "  ";
+    if (!can_purchase)
+        line3 += pad_string("", 21);
+    else
+        line3 += pad_string(localise("[<w>Enter</w>] make purchase"), 21 + 7);
+    line3 += make_stringf("  [%s] ", // noloc
+                          _hyphenated_letters(item_count(), 'A').c_str());
+    line3 += localise("put item on shopping list");
+
+    set_more(formatted_string::parse_string(top_line + line2 + line3));
 }
 
 void ShopMenu::purchase_selected()
@@ -1059,19 +1095,25 @@ void ShopMenu::purchase_selected()
     if (cost > you.gold)
     {
         more = formatted_string::parse_string(make_stringf(
-                   "<%s>You don't have enough money.</%s>\n",
+                   "<%s>%s</%s>\n", // noloc
                    col.c_str(),
+                   localise("You don't have enough money.").c_str(),
                    col.c_str()));
         more += old_more;
         update_more();
         return;
     }
+
+    string text = localise(
+        buying_from_list
+            ? "Purchase items in shopping list for %d gold? (%s/N)"
+            : "Purchase items for %d gold? (%s/N)",
+        cost, Options.easy_confirm == easy_confirm_type::none ? "Y" : "y");
+
     more = formatted_string::parse_string(make_stringf(
-               "<%s>Purchase items%s for %d gold? (%s/N)</%s>\n",
+               "<%s>%s</%s>\n", // noloc
                col.c_str(),
-               buying_from_list ? " in shopping list" : "",
-               cost,
-               Options.easy_confirm == easy_confirm_type::none ? "Y" : "y",
+               text.c_str(),
                col.c_str()));
     more += old_more;
     update_more();
@@ -1130,12 +1172,17 @@ void ShopMenu::purchase_selected()
     {
         update_help();
         const formatted_string next_more = more;
+        string outside;
+        if (bought_indices.size() == 1)
+            outside = localise("I'll put it outside for you.");
+        if ((int)bought_indices.size() == outside_items)
+            outside = localise("I'll put them outside for you.");
+        else
+            outside = localise("I'll put some of them outside for you.");
         more = formatted_string::parse_string(make_stringf(
-            "<%s>I'll put %s outside for you.</%s>\n",
+            "<%s>%s</%s>\n", // noloc
             col.c_str(),
-            bought_indices.size() == 1             ? "it" :
-      (int) bought_indices.size() == outside_items ? "them"
-                                                   : "some of them",
+            outside.c_str(),
             col.c_str()));
         more += next_more;
         update_more();
@@ -1521,6 +1568,11 @@ shop_type str_to_shoptype(const string &s)
         if (s == shop_types[i])
             return static_cast<shop_type>(i);
 
+    // i18n: for non-English wizmode
+    for (size_t i = 0; i < ARRAYSZ(shop_types); ++i)
+        if (s == localise(shop_types[i]))
+            return static_cast<shop_type>(i);
+
     return SHOP_UNASSIGNED;
 }
 
@@ -1794,7 +1846,7 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
             thing[REPLACE_PROMPTED_KEY] = (bool) true;
 
             string prompt =
-                make_stringf("Shopping list: replace %dgp %s with cheaper "
+                    localise("Shopping list: replace %dgp %s with cheaper "
                              "one? (Y/n)", list_cost,
                              describe_thing(thing).c_str());
 
@@ -1814,7 +1866,7 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
                 continue;
             thing[REMOVE_PROMPTED_KEY] = (bool) true;
 
-            string prompt = make_stringf("Shopping list: remove %s? (Y/n)",
+            string prompt = localise("Shopping list: remove %s? (Y/n)",
                                          describe_thing(thing, DESC_A).c_str());
 
             if (yesno(prompt.c_str(), true, 'y', false))
@@ -2077,34 +2129,40 @@ formatted_string ShoppingListMenu::calc_title()
     formatted_string fs;
     const int total_cost = you.props[SHOPPING_LIST_COST_KEY];
 
-    fs.textcolour(title->colour);
-    fs.cprintf("%d %s%s, total cost %d gp",
-                title->quantity, title->text.c_str(),
-                title->quantity > 1 ? "s" : "",
-                total_cost);
+    string text;
+    if (title->quantity == 1)
+        text = localise("1 item, total cost %d gp", total_cost);
+    else
+        text = localise("%d items, total cost %d gp", title->quantity, total_cost);
 
-    string s = "<lightgrey>  [<w>a-z</w>] ";
+    fs.textcolour(title->colour);
+    fs.cprintf(text);
+
+    string s = "<lightgrey>  [<w>a-z</w>] "; // noloc
 
     if (view_only)
     {
-        fs += formatted_string::parse_string(s + "<w>examine</w>");
+        s += localise("<w>examine</w>");
+        fs += formatted_string::parse_string(s);
         return fs;
     }
 
     switch (menu_action)
     {
     case ACT_EXECUTE:
-        s += "<w>travel</w>|examine|delete";
+        s += localise("<w>travel</w>|examine|delete");
         break;
     case ACT_EXAMINE:
-        s += "travel|<w>examine</w>|delete";
+        s += localise("travel|<w>examine</w>|delete");
         break;
     default:
-        s += "travel|examine|<w>delete</w>";
+        s += localise("travel|examine|<w>delete</w>");
         break;
     }
 
-    s += "  [<w>?</w>/<w>!</w>] change action</lightgrey>";
+    s += "  ";
+    s += localise("[<w>?</w>/<w>!</w>] change action");
+    s += "</lightgrey>";
     fs += formatted_string::parse_string(s);
     return fs;
 }
@@ -2136,12 +2194,12 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
 
         const string etitle =
             make_stringf(
-                "%*s%5d gold  %s%s",
+                "%*s %s  %s%s", // noloc
                 longest,
                 describe_thing_pos(thing).c_str(),
-                cost,
-                name_thing(thing, DESC_A).c_str(),
-                unknown ? " (unknown)" : "");
+                localise("%4d gold", cost).c_str(),
+                localise(name_thing(thing, DESC_A)).c_str(),
+                unknown ? localise(" (unknown)").c_str() : "");
 
         MenuEntry *me = new MenuEntry(etitle, MEL_ITEM, 1, hotkey);
         me->data = &thing;
@@ -2187,7 +2245,8 @@ void ShoppingList::display(bool view_only)
     mtitle->quantity = list->size();
     shopmenu.set_title(mtitle);
 
-    string more_str = make_stringf("<yellow>You have %d gp</yellow>", you.gold);
+    string more_str = localise("You have %d gp", you.gold);
+    more_str = make_stringf("<yellow>%s</yellow>", more_str.c_str()); // noloc
     shopmenu.set_more(formatted_string::parse_string(more_str));
 
     shopmenu.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE
@@ -2210,7 +2269,7 @@ void ShoppingList::display(bool view_only)
             if (cost > you.gold)
             {
                 string prompt =
-                   make_stringf("You cannot afford %s; travel there "
+                       localise("You cannot afford %s; travel there "
                                 "anyway? (y/N)",
                                 describe_thing(*thing, DESC_A).c_str());
                 clrscr();
@@ -2232,7 +2291,7 @@ void ShoppingList::display(bool view_only)
             else // not an item, so we only stored a description.
             {
                 // HACK: Assume it's some kind of portal vault.
-                const string info = make_stringf(
+                const string info = localise(
                              "%s with an entry fee of %d gold pieces.",
                              describe_thing(*thing, DESC_A).c_str(),
                              (int) thing_cost(*thing));
@@ -2429,13 +2488,13 @@ string ShoppingList::name_thing(const CrawlHashTable& thing,
 string ShoppingList::describe_thing(const CrawlHashTable& thing,
                                     description_level_type descrip)
 {
-    string desc = name_thing(thing, descrip) + " on ";
+    string desc = name_thing(thing, descrip);
 
     const level_pos pos = thing_pos(thing);
     if (pos.id == level_id::current())
-        desc += "this level";
+        desc += localise(" on this level");
     else
-        desc += pos.id.describe();
+        desc += localise(" on %s", pos.id.describe());
 
     return desc;
 }

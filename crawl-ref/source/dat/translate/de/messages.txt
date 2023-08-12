@@ -646,19 +646,19 @@ Xom kichert.
 " (Ihr habt %d Gold)"
 %%%%
 Choose an item to acquire.
-Wählt einen Gegenstand zu erwerben.
+Wählt einen Artikel zu erwerben.
 %%%%
 [<w>!</w>] <w>acquire</w>|examine items
-[<w>!</w>] Gegenstände <w>erwerben</w>|examinieren
+[<w>!</w>] Artikel <w>erwerben</w>|prüfen
 %%%%
 [<w>!</w>] acquire|<w>examine</w> items
-[<w>!</w>] Gegenstände erwerben|<w>examinieren</w>
+[<w>!</w>] Artikel erwerben|<w>prüfen</w>
 %%%%
 select item for acquirement
 Gegenstand erwerben
 %%%%
 examine item
-Gegenstand examinieren
+Artikel prüfen
 %%%%
 [Esc/R-Click] exit
 [Esc/R-Click] abbrechen
@@ -5123,7 +5123,7 @@ There is %s here.
 Es gibt {acc}%s hier.
 %%%%
 There is an entrance to %s here.
-
+Hier gibt es einen Eingang zu {dat}%s.
 %%%%
 Beware, the minotaur awaits!
 Vorsicht, der Minotaurus wartet!
@@ -7169,7 +7169,7 @@ You feel like a meek peon again.
 # god-blessing.cc
 ##################
 
-##################god-abil
+##################
 # god-companions.cc
 ##################
 %%%%
@@ -18016,80 +18016,74 @@ opferte Resistenz
 # shopping.cc
 ##################
 %%%%
--<w>
-
-%%%%
 type
-
+Art
 %%%%
 price
-
+Preis
 %%%%
 name
-
+Name
 %%%%
-" <%s>%c%c%c%c</%s><%s>%4d gold   %s%s</%s>"
-
+%4d gold
+%4d Gold
 %%%%
 " (unknown)"
-
+" (unbekannt)"
 %%%%
-"Welcome to "
-
+Welcome to %s! What would you like to do?
+Willkommen bei %s! Was wollt Ihr machen?
 %%%%
-! What would you like to do?
-
+You are short 1 gold piece for the purchase.
+Euch fehlt 1 Goldstück für den Kauf.
 %%%%
-<yellow>You have %d gold piece%s.
-
+You are short %d gold pieces for the purchase.
+Euch fehlt %d Goldstücke für den Kauf.
 %%%%
-" You are short %d gold piece%s for the purchase."
-
+After the purchase, you will have 1 gold piece.
+Nach dem Kauf werdet Ihr 1 Goldstück haben.
 %%%%
-" After the purchase, you will have %d gold piece%s."
-
+After the purchase, you will have %d gold pieces.
+Nach dem Kauf werdet Ihr %d Goldstücke haben.
 %%%%
-"[<w>Esc</w>/<w>R-Click</w>] exit  "
-
+[<w>Esc</w>/<w>R-Click</w>] exit
+[<w>Esc</w>/<w>R-Klick</w>] abbrechen
 %%%%
-"[<w>Esc</w>] exit          "
-
-%%%%
-[<w>/</w>] sort (%s)%s  %s  [%s] put item on shopping list
-
+[<w>Esc</w>] exit
+[<w>Esc</w>] abbrechen
 %%%%
 [<w>!</w>] <w>buy</w>|examine items
-
-%%%%
-[<w>!</w>] buy|<w>examine</w> items
-
+[<w>!</w>] Artikel <w>kaufen</w>|prüfen
 %%%%
 select item for purchase
-
+Artikel für Kauf wählen
+%%%%
+[<w>/</w>] sort
+[<w>/</w>] sortieren
 %%%%
 [<w>Enter</w>] make purchase
-
+[<w>Enter</w>] Kauf tätigen
 %%%%
-<%s>You don't have enough money.</%s>
-
+put item on shopping list
+Artikel auf Einkaufsliste setzen
 %%%%
-<%s>Purchase items%s for %d gold? (%s/N)</%s>
-
+You don't have enough money.
+Ihr habt nicht genug Geld.
 %%%%
-" in shopping list"
-
+Purchase items in shopping list for %d gold? (%s/N)
+Die Artikel in der Einkaufsliste für %d Gold kaufen? (%s/N)
 %%%%
-<%s>I'll put %s outside for you.</%s>
-
+Purchase items for %d gold? (%s/N)
+Die Artikel für %d Gold kaufen? (%s/N)
 %%%%
-it
-
+I'll put it outside for you.
+Ich bringe den Artikel für Euch nach draußen.
 %%%%
-them
-
+I'll put them outside for you.
+Ich bringe sie für Euch nach draußen.
 %%%%
-some of them
-
+I'll put some of them outside for you.
+Ich bringe einige davon für Euch nach draußen.
 %%%%
 %s appears to be closed.
 %s scheint geschlossen zu sein.
@@ -18125,31 +18119,31 @@ General Store
 
 %%%%
 antique weapon
-
+antike waffe
 %%%%
 antique armour
-
+antike rüstung
 %%%%
 antiques
-
+antiquitäten
 %%%%
 distillery
-
+brennerei
 %%%%
 general
-
+gemischtwaren
 %%%%
 "Available shop types: "
-
+"Verfügbare Ladentypen: "
 %%%%
 Shopping list: replace %dgp %s with cheaper one? (Y/n)
-
+Einkaufsliste: {acc}%2$s für %1$d Gold durch billigeren Artikel ersetzen? (J/n)
 %%%%
 Shopping list: remove %s? (Y/n)
-
+Einkaufsliste: {acc}%s entfernen? (J/n)
 %%%%
 Shopping list: removing %s
-Einkaufsliste:%s entfernen
+Einkaufsliste: %s wird entfernt
 %%%%
 buy
 
@@ -18157,47 +18151,44 @@ buy
 "You now have enough gold to "
 
 %%%%
-%d %s%s, total cost %d gp
-
+1 item, total cost %d gp
+1 Artikel, Gesamtkosten %d Gold
 %%%%
-"<lightgrey>  [<w>a-z</w>] "
-
+%d items, total cost %d gp
+%d Artikel, Gesamtkosten %d Gold
 %%%%
 <w>examine</w>
-
+<w>prüfen</w>
 %%%%
 <w>travel</w>|examine|delete
-
+<w>anreisen</w>|prüfen|löschen
 %%%%
 travel|<w>examine</w>|delete
-
+anreisen|<w>prüfen</w>|löschen
 %%%%
 travel|examine|<w>delete</w>
-
+anreisen|prüfen|<w>löschen</w>
 %%%%
-"  [<w>?</w>/<w>!</w>] change action</lightgrey>"
-
+[<w>?</w>/<w>!</w>] change action
+[<w>?</w>/<w>!</w>] Aktion ändern
 %%%%
-%*s%5d gold  %s%s
-
-%%%%
-<yellow>You have %d gp</yellow>
-
+You have %d gp
+Ihr habt %d Gold
 %%%%
 You cannot afford %s; travel there anyway? (y/N)
-
+Ihr könnt euch {acc}%s nicht leisten; trotzdem dorthin reisen? (j/N)
 %%%%
 %s with an entry fee of %d gold pieces.
-
+%s mit einer Eintrittsgebühr von %d Goldstücken.
 %%%%
 Your shopping list is now empty.
 Eure Einkaufsliste ist jetzt leer.
 %%%%
-" on "
-
+" on this level"
+" auf dieser Ebene"
 %%%%
-this level
-
+" on %s"
+" auf {dat}%s"
 %%%%
 
 ##################
@@ -21274,7 +21265,7 @@ Welcome back to %s!
 Willkommen zurück bei%s!
 %%%%
 Welcome to %s!
-Willkommen bei%s!
+Willkommen bei %s!
 %%%%
 Zot already knows this place too well. Descend or flee this branch!
 
@@ -22656,6 +22647,12 @@ an item
 
 %%%%
 some items
+
+%%%%
+it
+
+%%%%
+them
 
 %%%%
 "Could not "
