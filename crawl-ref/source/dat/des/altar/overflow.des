@@ -4313,27 +4313,27 @@ TAGS:    temple_overflow_2 temple_overflow_xom temple_overflow_hepliaklqana
     los_marker:add_triggerer(DgnTriggerer:new {
       type="player_los"})
 
-    lua_marker('1', los_marker)
+    lua_marker('D', los_marker)
 }}
-KMONS:   2 = spectral ugly thing
+KMONS:   1 = spectral ugly thing
 KFEAT:   A = altar_xom
 KFEAT:   B = altar_hepliaklqana
 SHUFFLE: AB
 SUBST:   G = G...
-KPROP:   12' = no_tele_into
-KMASK:   12' = no_item_gen
-KMASK:   12' = no_trap_gen
+KPROP:   1D' = no_tele_into
+KMASK:   1D' = no_item_gen
+KMASK:   1D' = no_trap_gen
 KMASK:   ' = no_monster_gen
 # TODO: this fog machine doesn't do much, is it supposed to spread?
-MARKER:  2 = lua:fog_machine { cloud_type = "thin mist", \
+MARKER:  1 = lua:fog_machine { cloud_type = "thin mist", \
              pow_min = 100, pow_max = 100, delay = 1, \
              size = 1, walk_dist = 0, start_clouds = 1 }
 MAP
 cccccc
 ccb'bccccc
-cb2n1bc.+.
+cb1nDbc.+.
 c'nnnnc.c.
-cb1nA...cc
+cbDnA...cc
 ccbn.G.bc
 cccc..Bcc
  c...bcc
