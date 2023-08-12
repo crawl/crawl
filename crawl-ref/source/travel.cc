@@ -3282,7 +3282,38 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
             || target.pos.x != -1 && target.pos != you.pos())
         {
             if (!maybe_traversable)
+            {
+                // check if there is a spot adjacent to the place that is reachable
+                coord_def closest_alt = you.pos();
+                int closest_alt_dist = INT_MAX;
+                for (int dir = 0; dir < 8; dir++)
+                {
+                    coord_def test = target.pos + Compass[dir];
+                    const int dist = travel_point_distance[test.x][test.y];
+
+                    // check if you are right next to the target
+                    if (test == you.pos()) {
+                        closest_alt = test;
+                        closest_alt_dist = 0;
+                    }
+                    else if (dist > 0 // checks if this square is traversable
+                            && dist < closest_alt_dist)
+                    {
+                        closest_alt = test;
+                        closest_alt_dist = dist;
+                    }
+                }
+                if (closest_alt != you.pos())
+                {
+                    if (yesno("Try to go next to it instead?", true, 'n', false, false)) {
+                        level_pos new_target = target;
+                        new_target.pos = closest_alt;
+                        return _find_transtravel_square(new_target, verbose);
+                    }
+                    canned_msg(MSG_OK);
+                }
                 mpr("Sorry, I don't know how to traverse that place.");
+            }
             else
                 mpr("Sorry, I don't know how to get there.");
         }
