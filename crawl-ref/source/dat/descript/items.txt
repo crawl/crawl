@@ -88,8 +88,7 @@ and reducing the effectiveness of body armour. Shapeshifting skill mitigates
 and eventually eliminates the latter effect, as well as increasing damage
 dealt.
 
-While transformed, equipped weapons, shields, and gloves are melded, and
-casting spells becomes somewhat more difficult.
+While transformed, equipped weapons, shields, and gloves are melded.
 %%%%
 book of air
 

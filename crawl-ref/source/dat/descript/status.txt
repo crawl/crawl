@@ -485,8 +485,7 @@ Blade status
 }}, and smaller fragments of metal have grown inside your body, deforming you
 and reducing the effectiveness of body armour.
 
-Any equipped weapons, shields, and gloves are melded, and your success rate
-with spells is somewhat reduced.
+Any equipped weapons, shields, and gloves are melded.
 %%%%
 Anaconda status
 

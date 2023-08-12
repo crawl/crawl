@@ -458,8 +458,6 @@ int raw_spell_fail(spell_type spell)
     int chance2 = max((((chance + 426) * chance + 82670) * chance + 7245398)
                       / 262144, 0);
 
-    if (you.form == transformation::blade_hands)
-        chance2 += 20;
     chance2 -= 2 * you.get_mutation_level(MUT_SUBDUED_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_WILD_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_ANTI_WIZARDRY);
