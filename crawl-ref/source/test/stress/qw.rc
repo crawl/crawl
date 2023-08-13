@@ -3382,7 +3382,7 @@ end
 
 function recall()
   if you.god() == "Yredelemnul" then
-    use_ability("Recall Undead Slaves", "", true)
+    use_ability("Recall Undead Harvest", "", true)
   else
     use_ability("Recall Orcish Followers", "", true)
   end
