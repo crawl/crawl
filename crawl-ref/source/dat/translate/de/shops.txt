@@ -1,0 +1,134 @@
+###############################################################################
+#
+# Translations for shop names
+#
+###############################################################################
+
+###################################################################
+# These shop types are invariable, apart from the owner's name
+###################################################################
+
+%%%%
+@Owner@'s General Store
+@Owner@s Krämerei
+%%%%
+@Owner@'s Distillery
+@Owner@s Brennerei
+%%%%
+@Owner@'s Assorted Antiques
+@Owner@s Diverse Antiquitäten
+%%%%
+{dat}@Owner@'s Assorted Antiques
+@Owner@s Diversen Antiquitäten
+%%%%
+
+###################################################################
+# These shop types can be called Shop, Shoppe, Boutique or Emporium
+###################################################################
+
+%%%%
+@Owner@'s Weapon Shop
+@Owner@s Waffenladen
+%%%%
+@Owner@'s Antique Weapon Shop
+@Owner@s Laden für antike Waffen
+%%%%
+@Owner@'s Armour Shop
+@Owner@'s Rüstungsladen
+%%%%
+@Owner@'s Antique Armour Shop
+@Owner@s Laden für antike Rüstungen
+%%%%
+@Owner@'s Jewellery Shop
+@Owner@s Schmuckladen
+%%%%
+@Owner@'s Magic Scroll Shop
+@Owner@s Laden für magische Schriftrollen
+%%%%
+@Owner@'s Book Shop
+@Owner@s Buchladen
+%%%%
+@Owner@'s Gadget Shop
+@Owner@s Gadget-Laden
+%%%%
+
+
+%%%%
+@Owner@'s Weapon Shoppe
+@Owner@s Waffenhandlung
+%%%%
+@Owner@'s Antique Weapon Shoppe
+@Owner@s Antike-Waffen-Handlung
+%%%%
+@Owner@'s Armour Shoppe
+@Owner@s Rüstungshandlung
+%%%%
+@Owner@'s Antique Armour Shoppe
+@Owner@s Antike-Rüstungen-Handlung
+%%%%
+@Owner@'s Jewellery Shoppe
+@Owner@s Schmuckhandlung
+%%%%
+@Owner@'s Magic Scroll Shoppe
+@Owner@s Schriftrollenhandlung
+%%%%
+@Owner@'s Book Shoppe
+@Owner@s Buchhandlung
+%%%%
+@Owner@'s Gadget Shoppe
+@Owner@s Gadgethandlung
+%%%%
+
+
+%%%%
+@Owner@'s Weapon Boutique
+@Owner@s Waffenboutique
+%%%%
+@Owner@'s Antique Weapon Boutique
+@Owner@s Antike-Waffen-Boutique
+%%%%
+@Owner@'s Armour Boutique
+@Owner@s Rüstungsboutique
+%%%%
+@Owner@'s Antique Armour Boutique
+@Owner@s Antike-Rüstungen-Boutique
+%%%%
+@Owner@'s Jewellery Boutique
+@Owner@s Schmuckboutique
+%%%%
+@Owner@'s Magic Scroll Boutique
+@Owner@s Schriftrolleboutique
+%%%%
+@Owner@'s Book Boutique
+@Owner@s Buch-Boutique
+%%%%
+@Owner@'s Gadget Boutique
+@Owner@s Gadget-Boutique
+%%%%
+
+%%%%
+@Owner@'s Weapon Emporium
+@Owner@s Waffenemporium
+%%%%
+@Owner@'s Antique Weapon Emporium
+@Owner@s Antike-Waffen-Emporium
+%%%%
+@Owner@'s Armour Emporium
+@Owner@s Rüstungsemporium
+%%%%
+@Owner@'s Antique Armour Emporium
+@Owner@s Antike-Rüstungen-Emporium
+%%%%
+@Owner@'s Jewellery Emporium
+@Owner@s Schmuckemporium
+%%%%
+@Owner@'s Magic Scroll Emporium
+@Owner@s Schriftrollenemporium
+%%%%
+@Owner@'s Book Emporium
+@Owner@s Buch-Emporium
+%%%%
+@Owner@'s Gadget Emporium
+@Owner@s Gadget-Emporium
+%%%%
+

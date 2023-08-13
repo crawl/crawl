@@ -6762,18 +6762,6 @@ Kein Händler ist bereit, an diesen Ort zu kommen.
 You need to be standing on open floor to call a merchant.
 Ihr müsst auf offenem Boden stehen, um einen Händler anzurufen.
 %%%%
-Shoppe
-
-%%%%
-Boutique
-
-%%%%
-Emporium
-
-%%%%
-Shop
-
-%%%%
 "  [%c] %5d gold - %s %s %s"
 
 %%%%
@@ -18032,7 +18020,7 @@ Name
 " (unbekannt)"
 %%%%
 Welcome to %s! What would you like to do?
-Willkommen bei %s! Was wollt Ihr machen?
+Willkommen bei {dat}%s! Was wollt Ihr machen?
 %%%%
 You are short 1 gold piece for the purchase.
 Euch fehlt 1 Goldstück für den Kauf.
@@ -18093,30 +18081,6 @@ Danke, dass Ihr bei {dat}%s eingekauft habt!
 %%%%
 You can access your shopping list by pressing '$'.
 Ihr könnt auf Ihre Einkaufsliste zugreifen, indem Ihr auf '$' drückt.
-%%%%
-Antique Weapon
-
-%%%%
-Antique Armour
-
-%%%%
-Weapon
-Waffe
-%%%%
-Book
-
-%%%%
-Magic Scroll
-
-%%%%
-Assorted Antiques
-
-%%%%
-Distillery
-
-%%%%
-General Store
-
 %%%%
 antique weapon
 antike waffe
@@ -21265,7 +21229,7 @@ Welcome back to %s!
 Willkommen zurück bei%s!
 %%%%
 Welcome to %s!
-Willkommen bei %s!
+Willkommen bei {dat}%s!
 %%%%
 Zot already knows this place too well. Descend or flee this branch!
 

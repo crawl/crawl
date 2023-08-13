@@ -1420,6 +1420,8 @@ shop_struct *shop_at(const coord_def& where)
     return &it->second;
 }
 
+// noloc section start (special handling)
+
 string shop_type_name(shop_type type)
 {
     switch (type)
@@ -1470,6 +1472,8 @@ static const char *_shop_type_suffix(shop_type type, const coord_def &where)
     };
     return suffixnames[(where.x + where.y) % ARRAYSZ(suffixnames)];
 }
+
+// noloc section end (special handling)
 
 string shop_name(const shop_struct& shop)
 {

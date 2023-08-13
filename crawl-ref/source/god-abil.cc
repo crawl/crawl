@@ -2937,11 +2937,13 @@ static void _setup_gozag_shop(int index, vector<shop_type> &valid_shops)
     const bool need_suffix = type != SHOP_GENERAL
                              && type != SHOP_GENERAL_ANTIQUE
                              && type != SHOP_DISTILLERY;
+    // noloc section start (special handling)
     you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, index)].get_string()
                                     = need_suffix
                                       ? random_choose("Shoppe", "Boutique",
                                                       "Emporium", "Shop")
                                       : "";
+    // noloc section end
 
     you.props[make_stringf(GOZAG_SHOP_COST_KEY, index)].get_int()
         = gozag_price_for_shop();

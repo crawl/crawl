@@ -1420,6 +1420,46 @@ static string _localise_multiple_sentences(const string& context, const string& 
     return result;
 }
 
+static string _localise_shop_name(const string& context, const string& value)
+{
+    static const string suffixes[] =
+    {
+        "Shoppe", "Boutique", "Emporium", "Shop", 
+        "General Store", "Distillery", "Assorted Antiques"
+    };
+
+    bool is_shop_name = false;
+    for (const string& suffix: suffixes)
+    {
+        if (ends_with(value, suffix))
+        {
+            is_shop_name = true;
+            break;
+        }
+    }
+    if (!is_shop_name)
+        return "";
+
+    // extract owner name
+    size_t pos = value.find("'s ");
+    if (pos == string::npos)
+        return "";
+    string owner = value.substr(0, pos);
+
+    // parameterize owner name
+    string shop_name = replace_first(value, owner, "@Owner@");
+
+    // translate parameterized shop name
+    shop_name = cxlate(context, shop_name, false);
+    if (shop_name.empty())
+        return "";
+    
+    // put owner name back
+    shop_name = replace_first(shop_name, "@Owner@", owner);
+
+    return shop_name;
+}
+
 // localise ghost/illusion name
 static string _localise_ghost_name(const string& context, const string& value)
 {
@@ -1594,6 +1634,11 @@ static string _localise_string(const string context, const string& value)
     // try treating as multiple sentences
     result = _localise_multiple_sentences(context, value);
     if (result != value)
+        return result;
+
+    // try treating as a shop name
+    result = _localise_shop_name(context, value);
+    if (!result.empty())
         return result;
 
     // try treating as Jiyva long name
