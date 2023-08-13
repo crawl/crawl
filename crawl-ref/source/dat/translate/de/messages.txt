@@ -17100,13 +17100,13 @@ receive cadavers from Kikubaaqudgha
 Kadaver von Kikubaaqudgha erhalten
 %%%%
 Kikubaaqudgha is now protecting you from necromantic miscasts and death curses.
-Kikubaaqudgha schützt Euch jetzt vor nekromantischen Fehlsprechen und Todesflüchen.
+Kikubaaqudgha schützt Euch jetzt vor nekromantischen Fehlzauber und Todesflüchen.
 %%%%
 Kikubaaqudgha will no longer protect you from necromantic miscasts or death curses.
-Kikubaaqudgha schützt Euch nicht mehr vor nekromantischen Fehlsprechen oder Todesflüchen.
+Kikubaaqudgha schützt Euch nicht mehr vor nekromantischen Fehlzauber oder Todesflüchen.
 %%%%
 Kikubaaqudgha protects you from necromantic miscasts and death curses.
-Kikubaaqudgha schützt Euch vor nekromantischen Fehlsprechen und Todesflüchen.
+Kikubaaqudgha schützt Euch vor nekromantischen Fehlzauber und Todesflüchen.
 %%%%
 Kikubaaqudgha is now protecting you from unholy torment.
 Kikubaaqudgha schützt Euch jetzt vor unheiliger Qual.
@@ -20255,7 +20255,7 @@ The air has a green tinge for a moment
 
 %%%%
 %s protects you from your miscast necromantic spell!
-
+%s schützt Euch vor Eurem nekromatischen Fehlzauber!
 %%%%
 "miscasting "
 
