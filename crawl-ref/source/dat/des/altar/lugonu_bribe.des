@@ -12,7 +12,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
     return
   end
 
-  local m = dgn.find_marker_positions_by_prop("slave_name", "altar")[1]
+  local m = dgn.find_marker_positions_by_prop("replica_name", "altar")[1]
   if m ~= nil then
     local x, y = m:xy()
 
@@ -66,7 +66,7 @@ NAME:   tgw_lugonu_bribe
 TAGS:   transparent
 DEPTH:  D:12-, Depths
 KFEAT:  _ = altar_lugonu
-MARKER: _ = lua:portal_desc {slave_name="altar"}
+MARKER: _ = lua:portal_desc {replica_name="altar"}
 
 {{
 local tm = TriggerableFunction:new{

@@ -68,7 +68,7 @@ function arena_sprint_spawn_enemies(data)
                 if dude then
                     if dude.experience > 0 then
                         -- Plants, fungi, etc, don't count
-                        dude.set_prop("arena_slave", 1)
+                        dude.set_prop("arena_replica", 1)
                         data.num_spawned = data.num_spawned + 1
                     end
                     dude.beh = mons.behaviour("wander")
@@ -782,7 +782,7 @@ function thing_do_arena(data, triggerable, triggerer, marker, ev)
     -- Count kills
     if triggerer.type == "monster_dies" and not data.between_rounds then
         local mons = dgn.mons_from_mid(ev:arg1())
-        if mons.has_prop("arena_slave") then
+        if mons.has_prop("arena_replica") then
             data.num_killed = data.num_killed + 1
         elseif mons.has_prop("boss_mons") then
             data.num_killed = data.round_enemies
@@ -948,7 +948,7 @@ LROCKTILE:  wall_hall
     arena_marker:add_triggerer(DgnTriggerer:new {
         type = "monster_dies",
         -- Note: target is "any", but we don't do anything unless it has
-        -- the "arena_slave" or "boss_mons" property
+        -- the "arena_replica" or "boss_mons" property
         target = "any"
     })
 

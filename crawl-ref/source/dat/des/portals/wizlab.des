@@ -1218,7 +1218,7 @@ local wizard_appear_marker = TriggerableFunction:new {
     data = { awoke = false },
     func = "wizlab_zonguldrok_awaken_wizard",
     repeated = true,
-    props = {listen_to_slaves = true, only_at_slave = true }
+    props = {listen_to_replicas = true, only_at_replica = true }
     }
 
 wizard_appear_marker:add_triggerer(DgnTriggerer:new {
@@ -1335,8 +1335,8 @@ dgn.persist.wucad_mu_died = false
 local function trigfn (spot)
   return Triggerable.synchronized_markers(function_at_spot(
             "wizlab_wucad_msgfn",
-            { spot=spot, trig = false}, true, { only_at_slave = true,
-              listen_to_slaves = true }))
+            { spot=spot, trig = false}, true, { only_at_replica = true,
+              listen_to_replicas = true }))
 end
 
 lua_marker('1', trigfn(1))

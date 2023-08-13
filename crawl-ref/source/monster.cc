@@ -6133,7 +6133,7 @@ bool monster::is_illusion() const
 {
     return type == MONS_PLAYER_ILLUSION
            || has_ench(ENCH_PHANTOM_MIRROR)
-           || props.exists(CLONE_SLAVE_KEY);
+           || props.exists(CLONE_REPLICA_KEY);
 }
 
 bool monster::is_divine_companion() const

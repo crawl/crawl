@@ -95,7 +95,7 @@ static bool _dismiss_dead()
             || !mon.friendly()
             || mon.type != MONS_ZOMBIE
             || mon.is_summoned()
-            || is_yred_undead_slave(mon))
+            || is_yred_undead_follower(mon))
         {
             continue;
         }

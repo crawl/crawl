@@ -60,24 +60,24 @@ function get_overflow_altar_count(e)
 end
 
 function callback.vampire_church_blood(data, triggerable, triggerer, marker, ev)
-  local slaves = dgn.find_marker_positions_by_prop("slave_name", "vampire_church_blood")
+  local replicas = dgn.find_marker_positions_by_prop("replica_name", "vampire_church_blood")
   crawl.god_speaks("Kikubaaqudgha", "As you approach the altar, the fountains"
                                  .. " begin to flow with blood!")
-  for i, slave in ipairs(slaves) do
-    dgn.terrain_changed(slave.x, slave.y, "fountain_blood", false)
+  for i, replica in ipairs(replicas) do
+    dgn.terrain_changed(replica.x, replica.y, "fountain_blood", false)
   end
 end
 
 function callback.hep_ancestral_shrine_los(data, triggerable, triggerer, marker, ev)
   if not dgn.persist.hep_ancestral_shrine_reborn and you.god() == "Hepliaklqana" then
     local trees = dgn.find_marker_positions_by_prop("dead_tree", 1)
-    for i, slave in ipairs(trees) do
-      dgn.tile_feat_changed(slave.x, slave.y, "DNGN_TREE")
+    for i, replica in ipairs(trees) do
+      dgn.tile_feat_changed(replica.x, replica.y, "DNGN_TREE")
     end
     dgn.reset_feature_name_for(trees[1].x, trees[1].y, "tree")
     local slime = dgn.find_marker_positions_by_prop("green_water", 1)
-    for i, slave in ipairs(slime) do
-      dgn.colour_at(slave.x, slave.y, "blue")
+    for i, replica in ipairs(slime) do
+      dgn.colour_at(replica.x, replica.y, "blue")
     end
     crawl.god_speaks("Hepliaklqana", "Let the past return from memory!")
     dgn.persist.hep_ancestral_shrine_reborn = true
@@ -1477,7 +1477,7 @@ local trig_marker = TriggerableFunction:new {
 }
 trig_marker:add_triggerer(DgnTriggerer:new { type = "player_move" })
 lua_marker("A", trig_marker)
-lua_marker("V", portal_desc { slave_name = "vampire_church_blood" })
+lua_marker("V", portal_desc { replica_name = "vampire_church_blood" })
 }}
 : interest_check(_G)
 MAP

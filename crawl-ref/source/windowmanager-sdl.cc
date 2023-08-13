@@ -910,7 +910,7 @@ int SDLWrapper::send_textinput(wm_event *event)
         // but not for key combinations like ctrl-f (no 'f' text event is sent).
         // this is relevant only for ctrl-- and ctrl-= bindings at the moment,
         // and I'm somewhat nervous about blocking genuine text entry via the alt
-        // key, so for the moment this only blacklists text events with ctrl held
+        // key, so for the moment this only blocklists text events with ctrl held
         bool nontext_modifier_held = wm->get_mod_state() & TILES_MOD_CTRL;
 
         bool should_suppress = prev_keycode && _key_suppresses_textinput(prev_keycode) == wc;

@@ -463,7 +463,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
 
     // Yred & animate dead zombies crumble on floor change
     if (mon->friendly()
-        && (is_yred_undead_slave(*mon) && !mons_bound_soul(*mon)
+        && (is_yred_undead_follower(*mon) && !mons_bound_soul(*mon)
             || mon->props.exists(ANIMATE_DEAD_KEY)))
     {
         if (turns > 2)

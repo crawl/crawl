@@ -338,7 +338,7 @@ lobby_url = None
 # TODO: set_blocking_log_threshold is deprecated in tornado 5+...
 # Ideally, test out these settings carefully in a non-production setting
 # before enabling this, as there's a bunch of ways for this to go wrong and you
-# don't want to get your SMTP server blacklisted.
+# don't want to get your SMTP server blocklisted.
 smtp_host = "localhost"
 smtp_port = 25
 smtp_use_ssl = False

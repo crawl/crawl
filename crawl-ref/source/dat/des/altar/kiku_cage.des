@@ -23,7 +23,7 @@ function callback.tgw_kikubaaqudgha_kill_human(data, triggerable,
     return
   end
 
-  local m = dgn.find_marker_positions_by_prop("slave_name", "zombie")[1]
+  local m = dgn.find_marker_positions_by_prop("replica_name", "zombie")[1]
   if m ~= nil then
     local _x, _y = m:xy()
 
@@ -39,7 +39,7 @@ end
 
 function callback.tgw_kikubaaqudgha_zombify(data, triggerable,
                                             triggerer, marker, ev)
-  local pt = dgn.find_marker_positions_by_prop("slave_name", "zombie")
+  local pt = dgn.find_marker_positions_by_prop("replica_name", "zombie")
   if #pt == 0 then
     return
   end
@@ -69,12 +69,12 @@ lua_marker('_', tm)
 {{
 local tm = TriggerableFunction:new{
   func="callback.tgw_kikubaaqudgha_zombify", repeated=false}
-tm:add_triggerer(DgnTriggerer:new{type="monster_dies", target="dslave"})
+tm:add_triggerer(DgnTriggerer:new{type="monster_dies", target="dreplica"})
 lua_marker('_', tm)
 }}
 
-MARKER: h = lua:portal_desc {slave_name="zombie"}
-MARKER: h = lua:MonPropsMarker:new{dslave="dslave"}
+MARKER: h = lua:portal_desc {replica_name="zombie"}
+MARKER: h = lua:MonPropsMarker:new{dreplica="dreplica"}
 KFEAT:  h = .
 KMONS:  h = generate_awake Human never_corpse hp:12 ; nothing
 KPROP:  h = no_tele_into

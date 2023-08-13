@@ -24,12 +24,12 @@ function callback.ldierk_geyser(data, triggerable, triggerer, marker, ev)
   data.times_called = data.times_called+1
 
   if data.action == "add" then
-    local slaves = dgn.find_marker_positions_by_prop("fountain",1)
+    local replicas = dgn.find_marker_positions_by_prop("fountain",1)
 
-    local slave = slaves[crawl.random2(#slaves) + 1]
+    local replica = replicas[crawl.random2(#replicas) + 1]
 
-    local x = slave.x
-    local y = slave.y
+    local x = replica.x
+    local y = replica.y
 
     local ftype = "fountain_blue"
     if (crawl.one_chance_in(10)) then

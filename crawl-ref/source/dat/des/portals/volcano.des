@@ -309,12 +309,12 @@ function volcano_overflow_convert_lava(data, triggerable,
 
   data.lava_phase = data.lava_phase + 1
   local lp = data.lava_phase
-  local my_slaves = {}
+  local my_replicas = {}
 
   -- So we don't have to duplicate code too much.
-  local function convert_slaves_to_lava (mslaves, opposite)
+  local function convert_replicas_to_lava (mreplicas, opposite)
    local yp = dgn.point(you.pos())
-    for _, pos in ipairs(mslaves) do
+    for _, pos in ipairs(mreplicas) do
       if pos ~= yp then
         if opposite then
           dgn.terrain_changed(pos.x, pos.y, "floor", false)
@@ -328,38 +328,38 @@ function volcano_overflow_convert_lava(data, triggerable,
   if lp == 1 then
     crawl.mpr("The ground shudders ominously.", "warning")
   elseif lp == 2 then
-    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 2)
+    my_replicas = dgn.find_marker_positions_by_prop("lava_phase", 2)
     crawl.mpr("In the distance, the volcano explodes with a roar! Lava spreads "
                .. "onto the path.", "warning")
-    convert_slaves_to_lava(my_slaves)
+    convert_replicas_to_lava(my_replicas)
   elseif lp == 3 then
     crawl.mpr("The air is thick with the scent of sulphur.", "warning")
   elseif lp == 4 then
-    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 4)
+    my_replicas = dgn.find_marker_positions_by_prop("lava_phase", 4)
     crawl.mpr("There is another distant roar. More lava overflows!", "warning")
-    convert_slaves_to_lava(my_slaves)
+    convert_replicas_to_lava(my_replicas)
   elseif lp == 5 then
     crawl.mpr("The ground moves violently!", "warning")
   elseif lp == 6 then
-    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 6)
+    my_replicas = dgn.find_marker_positions_by_prop("lava_phase", 6)
     crawl.mpr("The volcano erupts again! A thin layer of lava overflows to " ..
               "fill the cavern.", "warning")
-    convert_slaves_to_lava(my_slaves)
+    convert_replicas_to_lava(my_replicas)
   elseif lp == 7 then
-    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 6)
+    my_replicas = dgn.find_marker_positions_by_prop("lava_phase", 6)
     crawl.mpr("The ground shudders. Some of the lava has hardened enough to walk " ..
               "over!", "warning")
-    convert_slaves_to_lava(my_slaves, true)
+    convert_replicas_to_lava(my_replicas, true)
   elseif lp == 8 then
-    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 4)
+    my_replicas = dgn.find_marker_positions_by_prop("lava_phase", 4)
     crawl.mpr("The ground shudders. Some of the lava has hardened enough to walk " ..
               "over!", "warning")
-    convert_slaves_to_lava(my_slaves, true)
+    convert_replicas_to_lava(my_replicas, true)
   elseif lp == 9 then
-    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 2)
+    my_replicas = dgn.find_marker_positions_by_prop("lava_phase", 2)
     crawl.mpr("The ground shudders. Some of the lava has hardened enough to walk " ..
               "over!", "warning")
-    convert_slaves_to_lava(my_slaves, true)
+    convert_replicas_to_lava(my_replicas, true)
   end
 end
 
@@ -1443,7 +1443,7 @@ local collapse_marker = TriggerableFunction:new (
     repeated=true,
     props = {
       -- Only collapse one doorway at a time, randomly.
-      single_random_slave="true"
+      single_random_replica="true"
     }
   }
 )

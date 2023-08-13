@@ -7,7 +7,7 @@ function callback.acq_on_sight_trig(data, triggerable, triggerer, marker, ev)
     return
  end
 
-  local m = dgn.find_marker_positions_by_prop("slave_name", data.slave_name)[1]
+  local m = dgn.find_marker_positions_by_prop("replica_name", data.replica_name)[1]
   if m ~= nil then
     local x, y = m:xy()
 
@@ -24,7 +24,7 @@ function callback.acq_on_sight_trig(data, triggerable, triggerer, marker, ev)
       end
     end
   else
-    crawl.mpr("marker ["..data.slave_name.."] not found")
+    crawl.mpr("marker ["..data.replica_name.."] not found")
   end
 end
 
@@ -36,11 +36,11 @@ function acq_on_sight(e, glyph, type)
   local tm = TriggerableFunction:new{
     func="callback.acq_on_sight_trig",
     repeated=true,
-    data={triggered=false, acq_type=type, slave_name=m_name} }
+    data={triggered=false, acq_type=type, replica_name=m_name} }
   tm:add_triggerer(DgnTriggerer:new{type="player_los"})
   e.lua_marker(glyph, tm)
   e.lua_marker(glyph, function()
-    return portal_desc {slave_name=m_name}
+    return portal_desc {replica_name=m_name}
   end)
 end
 

@@ -609,7 +609,7 @@ static string _milestone_kill_verb(killer_type killer)
 {
     return killer == KILL_BANISHED ? "banished" :
            killer == KILL_PACIFIED ? "pacified" :
-           killer == KILL_CHARMD ? "enslaved" :
+           killer == KILL_CHARMD ? "charmed" :
            killer == KILL_SLIMIFIED ? "slimified" : "killed";
 }
 
@@ -662,7 +662,7 @@ static bool _is_pet_kill(killer_type killer, int i)
         return false;
 
     const monster* m = &env.mons[i];
-    if (m->friendly()) // This includes enslaved monsters.
+    if (m->friendly()) // This includes charmed monsters.
         return true;
 
     // Check if the monster was confused by you or a friendly, which
@@ -1142,7 +1142,7 @@ static string _killer_type_name(killer_type killer)
     case KILL_PACIFIED:
         return "pacified";
     case KILL_CHARMD:
-        return "enslaved";
+        return "charmed";
     case KILL_SLIMIFIED:
         return "slimified";
     }
@@ -2337,7 +2337,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
         else if (mons_is_mons_class(&mons, MONS_PIKEL))
         {
-            // His slaves don't care if he's dead or not, just whether or not
+            // His band doesn't care if he's dead or not, just whether or not
             // he goes away.
             pikel_band_neutralise();
         }
@@ -2975,7 +2975,7 @@ bool mons_is_mons_class(const monster* mons, monster_type type)
  * Perform neutralisation for members of Pikel's band upon Pikel's 'death'.
  *
  * This neutralisation occurs in multiple instances: when Pikel is neutralised,
- * enslaved, when Pikel dies, when Pikel is banished.
+ * charmed, when Pikel dies, when Pikel is banished.
  * It is handled by a daction (as a fineff) to preserve across levels.
  **/
 void pikel_band_neutralise()

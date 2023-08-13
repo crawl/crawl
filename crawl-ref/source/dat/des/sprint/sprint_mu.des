@@ -1461,7 +1461,7 @@ local mons_gen_marker = TriggerableFunction:new {
     },
     func = "sprint_mu_zot_mons_gen",
     repeated = true,
-    props = {listen_to_slaves = true, only_at_slave = true }
+    props = {listen_to_replicas = true, only_at_replica = true }
     }
 mons_gen_marker:add_triggerer(DgnTriggerer:new {
     type = "player_move" })

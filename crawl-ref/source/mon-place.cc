@@ -818,7 +818,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
             if (mon->type == MONS_PIKEL)
             {
-                // Don't give XP for the slaves to discourage hunting. Pikel
+                // Don't give XP for the band to discourage hunting. Pikel
                 // has an artificially large XP modifier to compensate for
                 // this.
                 member->flags |= MF_NO_REWARD;

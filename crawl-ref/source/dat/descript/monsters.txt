@@ -2012,7 +2012,7 @@ is different, with its own set of strengths and weaknesses.
 %%%%
 peacekeeper
 
-A four-legged humanoid construct, tasked with recapturing escaped slaves and
+A four-legged humanoid construct, tasked with recapturing escaped prisoners and
 punishing heretics. Long after the fall of the empire it once served, it
 continues to enforce imperial law, knowing no jurisdiction.
 %%%%

@@ -176,7 +176,7 @@ end
 
 function FogMachine:do_trigger(triggerer, marker, ev)
   -- Override do_trigger for things that we want to do only once if
-  -- there's multiple markers slaved to this one.
+  -- there's multiple replica markers to this one.
   if triggerer.type == "turn" then
     self.buildup_turns = self.buildup_turns + ev:ticks()
 
@@ -200,7 +200,7 @@ function FogMachine:do_trigger(triggerer, marker, ev)
     triggerer.listener_only = false
   end
 
-  -- This will call on_trigger() for all the slaves.
+  -- This will call on_trigger() for all the replicas.
   FogMachine.super.do_trigger(self, triggerer, marker, ev)
 end
 

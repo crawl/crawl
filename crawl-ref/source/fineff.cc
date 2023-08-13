@@ -342,7 +342,7 @@ void trj_spawn_fineff::fire()
         ? attitude_creation_behavior(trj->as_monster()->attitude)
         : BEH_HOSTILE;
 
-    // No permanent friendly jellies from an enslaved TRJ.
+    // No permanent friendly jellies from a charmed TRJ.
     if (spawn_beh == BEH_FRIENDLY && !crawl_state.game_is_arena())
         return;
 

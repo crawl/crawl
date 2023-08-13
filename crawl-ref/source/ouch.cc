@@ -885,7 +885,7 @@ static void _god_death_message(kill_method_type death_type, const actor *killer)
 
     case GOD_YREDELEMNUL:
         if (you.undead_state() != US_ALIVE)
-            simple_god_message(" claims you as an undead slave.");
+            mprf(MSGCH_GOD, "You join the legions of the undead harvest.");
         else if (death_type != KILLED_BY_DISINT
               && death_type != KILLED_BY_LAVA)
         {

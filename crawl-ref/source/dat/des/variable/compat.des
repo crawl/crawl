@@ -53,7 +53,7 @@ function callback.grunt_zot_stairs_roulette_spawn_doors(data, triggerable,
 
   dgn.persist.grunt_zot_stairs_roulette_doors_spawned = true
 
-  for p in iter.slave_iterator("hidden_door", 1) do
+  for p in iter.replica_iterator("hidden_door", 1) do
     dgn.terrain_changed(p.x, p.y, "clear_stone_wall", false)
   end
 end
@@ -71,15 +71,15 @@ function callback.grunt_zot_stairs_roulette_door_open(data, triggerable,
   data.triggered = true
 
   crawl.mpr("Several panes of glass retract into the floor.")
-  for p in iter.slave_iterator("hidden_door", 1) do
+  for p in iter.replica_iterator("hidden_door", 1) do
     dgn.terrain_changed(p.x, p.y, "floor", false)
   end
 end
 
 function callback.grunt_zot_stairs_roulette_teleport(data, triggerable,
                                                      triggerer, marker, ev)
-  slave = dgn.find_marker_positions_by_prop("dest", data.dest)
-  if you.teleport_to(slave[1].x, slave[1].y) then
+  replica = dgn.find_marker_positions_by_prop("dest", data.dest)
+  if you.teleport_to(replica[1].x, replica[1].y) then
       crawl.mpr("Your surroundings suddenly seem different.")
   else
       crawl.mpr("There is a strange hissing noise.")
@@ -89,11 +89,11 @@ end
 function teleporter_serial_action_fn
                       (data, triggerable, triggerer, marker, ev)
   local position = dgn.point(marker:pos())
-  my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
-                                                data.teleport_spot)
+  my_replicas = dgn.find_marker_positions_by_prop("teleport_spot",
+                                                  data.teleport_spot)
 
   -- third parameter is whether to teleport whatever is on the receiving pad
-  if you.teleport_to(my_slaves[1].x, my_slaves[1].y, false) then
+  if you.teleport_to(my_replicas[1].x, my_replicas[1].y, false) then
     crawl.mpr("Your surroundings suddenly seem different!")
   else
     crawl.mpr("There is a strange hissing noise.")
@@ -109,9 +109,9 @@ function callback.xom_item_pickup(data, triggerable, triggerer, marker, ev)
 end
 
 function callback.amethyst_srp_altar(data, triggerable, triggerer, marker, ev)
-  local slaves = dgn.find_marker_positions_by_prop("teleport_spot",
-                                                   data.teleport_spot)
-  you.teleport_to(slaves[1].x, slaves[1].y)
+  local replicas = dgn.find_marker_positions_by_prop("teleport_spot",
+                                                     data.teleport_spot)
+  you.teleport_to(replicas[1].x, replicas[1].y)
   crawl.mpr("Your surroundings suddenly seem different.")
 end
 
@@ -125,14 +125,14 @@ function callback.ancient_champions_mu_skele_death(data, triggerable,
     return
   end
 
-  local function get_slave (slavenum)
-    local myslaves = dgn.find_marker_positions_by_prop("skele_slave", slavenum)
-    return myslaves[1]
+  local function get_replica (replicanum)
+    local myreplicas = dgn.find_marker_positions_by_prop("skele_replica", replicanum)
+    return myreplicas[1]
   end
 
-  local wall_pos = get_slave(data.skele_number)
+  local wall_pos = get_replica(data.skele_number)
   if wall_pos == nil then
-    crawl.mpr("Couldn't find a slave!")
+    crawl.mpr("Couldn't find a replica!")
   end
 
   dgn.terrain_changed(wall_pos.x, wall_pos.y, "floor", false)
@@ -185,8 +185,8 @@ function callback.beogh_trap_stepped(data, triggerable, triggerer, marker, ev)
     dgn.grid(x, y, "floor")
   else
     crawl.god_speaks("Beogh", "Beogh's servants are called upon to defend the altar!")
-    for slave in iter.slave_iterator("bridge", 1) do
-      dgn.terrain_changed(slave.x, slave.y, "floor", false)
+    for replica in iter.replica_iterator("bridge", 1) do
+      dgn.terrain_changed(replica.x, replica.y, "floor", false)
     end
     dgn.grid(x, y, "floor")
   end
@@ -209,29 +209,29 @@ function callback.grunt_nemelex_gamble_start(data,triggerable,triggerer,marker,e
         return
     end
     dgn.persist.grunt_nemelex_gamble_triggered = true
-    slave = dgn.find_marker_positions_by_prop("start_tele", 1)
-    dgn.terrain_changed(slave[1].x, slave[1].y, "floor", false)
+    replica = dgn.find_marker_positions_by_prop("start_tele", 1)
+    dgn.terrain_changed(replica[1].x, replica[1].y, "floor", false)
     if crawl.coinflip() then
-        slave = dgn.find_marker_positions_by_prop("prize", 1)
-        you.teleport_to(slave[1].x, slave[1].y)
+        replica = dgn.find_marker_positions_by_prop("prize", 1)
+        you.teleport_to(replica[1].x, replica[1].y)
         crawl.god_speaks("Nemelex Xobeh", "Nemelex Xobeh says, \"You win!\"")
     else
-        slave = dgn.find_marker_positions_by_prop("peril", 1)
-        you.teleport_to(slave[1].x, slave[1].y)
+        replica = dgn.find_marker_positions_by_prop("peril", 1)
+        you.teleport_to(replica[1].x, replica[1].y)
         crawl.god_speaks("Nemelex Xobeh", "Nemelex Xobeh says, \"You lose!\"")
     end
     crawl.mpr("Your surroundings suddenly seem different.")
 end
 
 function callback.grunt_nemelex_gamble_finish1(data,triggerable,triggerer,marker,ev)
-    slave = dgn.find_marker_positions_by_prop("exit", 1)
-    you.teleport_to(slave[1].x, slave[1].y)
+    replica = dgn.find_marker_positions_by_prop("exit", 1)
+    you.teleport_to(replica[1].x, replica[1].y)
     crawl.mpr("Your surroundings suddenly seem different.")
 end
 
 function callback.grunt_nemelex_gamble_finish2(data,triggerable,triggerer,marker,ev)
-    slave = dgn.find_marker_positions_by_prop("exit", 1)
-    you.teleport_to(slave[1].x, slave[1].y)
+    replica = dgn.find_marker_positions_by_prop("exit", 1)
+    you.teleport_to(replica[1].x, replica[1].y)
     crawl.mpr("Your surroundings suddenly seem different.")
 end
 
@@ -247,43 +247,43 @@ function callback.grunt_nemelex_gamble_expire(data,triggerable,triggerer,marker,
         return
     end
     dgn.persist.grunt_nemelex_gamble_triggered = true
-    slave = dgn.find_marker_positions_by_prop("start_tele", 1)
-    dgn.terrain_changed(slave[1].x, slave[1].y, "floor", false)
-    if (you.see_cell(slave[1].x, slave[1].y)) then
+    replica = dgn.find_marker_positions_by_prop("start_tele", 1)
+    dgn.terrain_changed(replica[1].x, replica[1].y, "floor", false)
+    if (you.see_cell(replica[1].x, replica[1].y)) then
         crawl.mpr("<white>The teleporter glows with a rainbow of weird colours and disappears.</white>")
     end
 end
 
--- Find the slave of the teleporter and move to it.
+-- Find the replica of the teleporter and move to it.
 function teleporter_vault_action_fn(data, triggerable, triggerer, marker, ev)
     local position = dgn.point(marker:pos())
-    my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
-                                                  data.teleport_spot)
+    my_replicas = dgn.find_marker_positions_by_prop("teleport_spot",
+                                                    data.teleport_spot)
 
-    if you.teleport_to(my_slaves[1].x, my_slaves[1].y, true) then
+    if you.teleport_to(my_replicas[1].x, my_replicas[1].y, true) then
         crawl.mpr("Your surroundings suddenly seem different!")
     else
         crawl.mpr("There is a strange hissing noise.")
     end
 end
 
--- Find the slave of the teleporter and move to it.
+-- Find the replica of the teleporter and move to it.
 function callback.ice_cave_statue_garden_teleporter(data, triggerable,
                                                      triggerer, marker, ev)
   local position = dgn.point(marker:pos())
-  my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
+  my_replicas = dgn.find_marker_positions_by_prop("teleport_spot",
     data.teleport_spot)
 
-  you.teleport_to(my_slaves[1].x, my_slaves[1].y)
+  you.teleport_to(my_replicas[1].x, my_replicas[1].y)
   crawl.mpr("Your surroundings suddenly seem different!")
 end
 
 function teleporter_golubria_switch_fn(data, triggerable, triggerer, marker, ev)
   local position = dgn.point(marker:pos())
-  my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
+  my_replicas = dgn.find_marker_positions_by_prop("teleport_spot",
                                                 data.teleport_spot)
 
-  if you.teleport_to(my_slaves[1].x, my_slaves[1].y, true) then
+  if you.teleport_to(my_replicas[1].x, my_replicas[1].y, true) then
     crawl.mpr("Your surroundings suddenly seem different!")
   else
     crawl.mpr("There is a strange hissing noise.")

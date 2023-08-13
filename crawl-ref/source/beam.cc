@@ -4284,8 +4284,8 @@ void bolt::handle_stop_attack_prompt(monster* mon)
         beam_cancelled = true;
         finish_beam();
     }
-    // Handle enslaving monsters when a nasty dur is up: give a prompt for
-    // attempting to enslave monsters that might be affected.
+    // Handle charming monsters when a nasty dur is up: give a prompt for
+    // attempting to charm monsters that might be affected.
     else if (flavour == BEAM_CHARM)
     {
         monclass_flags_t flags = monster_info(mon).airborne() ? M_FLIES
@@ -5712,7 +5712,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
         // Being a puppet on magic strings is a nasty thing.
         // Mindless creatures shouldn't probably mind, but because of complex
-        // behaviour of enslaved neutrals, let's disallow that for now.
+        // behaviour of charmed neutrals, let's disallow that for now.
         mon->attitude = ATT_HOSTILE;
 
         // XXX: Another hackish thing for Pikel's band neutrality.

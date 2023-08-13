@@ -1053,7 +1053,7 @@ static void _calculate_yred_piety()
 
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!is_yred_undead_slave(**mi) || mi->is_summoned()
+        if (!is_yred_undead_follower(**mi) || mi->is_summoned()
             || mons_is_tentacle_or_tentacle_segment(mi->type))
         {
             continue;
@@ -1101,29 +1101,29 @@ bool yred_reap_chance()
 }
 
 // When under penance or after removing faith,
-// Yredelemnulites can lose many nearby undead slaves.
+// Yredelemnulites can lose many nearby undead followers.
 bool yred_reclaim_souls(bool all)
 {
     int num_reclaim = 0;
-    int num_slaves = 0;
+    int num_followers = 0;
 
     // no hiding them in a closet to take of faith halfway through a level
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!is_yred_undead_slave(**mi) || mi->is_summoned()
+        if (!is_yred_undead_follower(**mi) || mi->is_summoned()
             || mons_is_tentacle_or_tentacle_segment(mi->type)
             || mons_bound_soul(**mi))
         {
             continue;
         }
 
-        num_slaves++;
+        num_followers++;
         const int hd = mi->get_hit_dice();
 
         // the player gets to keep a few, particularly weaklings,
         // but always loses at least one
         if (!all && num_reclaim > 0
-            && (one_chance_in(num_slaves) || random2(20) < hd))
+            && (one_chance_in(num_followers) || random2(20) < hd))
         {
             continue;
         }
@@ -1135,9 +1135,9 @@ bool yred_reclaim_souls(bool all)
 
     if (num_reclaim > 0)
     {
-        if (num_reclaim == 1 && num_slaves > 1)
+        if (num_reclaim == 1 && num_followers > 1)
             simple_god_message(" reclaims one of your reaped souls!", GOD_YREDELEMNUL);
-        else if (num_reclaim == num_slaves)
+        else if (num_reclaim == num_followers)
             simple_god_message(" reclaims your reaped souls!", GOD_YREDELEMNUL);
         else
             simple_god_message(" reclaims some of your reaped souls!", GOD_YREDELEMNUL);
@@ -1154,7 +1154,7 @@ bool pay_yred_souls(unsigned int how_many, bool just_check)
     unsigned int seen = 0;
     for (monster_near_iterator mi(you.pos(), LOS_DEFAULT); mi; ++mi)
     {
-        if (!is_yred_undead_slave(**mi) || mi->is_summoned()
+        if (!is_yred_undead_follower(**mi) || mi->is_summoned()
             || mons_is_tentacle_or_tentacle_segment(mi->type)
             || mons_bound_soul(**mi))
         {
@@ -1709,7 +1709,7 @@ bool mons_is_god_gift(const monster& mon, god_type god)
     return (mon.flags & MF_GOD_GIFT) && mon.god == god;
 }
 
-bool is_yred_undead_slave(const monster& mon)
+bool is_yred_undead_follower(const monster& mon)
 {
     return mon.alive() && mon.holiness() & MH_UNDEAD
            && mon.attitude == ATT_FRIENDLY
@@ -1738,7 +1738,7 @@ static bool _is_plant_follower(const monster* mon)
 bool is_follower(const monster& mon)
 {
     if (you_worship(GOD_YREDELEMNUL))
-        return is_yred_undead_slave(mon);
+        return is_yred_undead_follower(mon);
     else if (will_have_passive(passive_t::convert_orcs))
         return is_orcish_follower(mon);
     else if (you_worship(GOD_JIYVA))
@@ -3014,7 +3014,7 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_YREDELEMNUL:
         yred_reclaim_souls(true);
         for (monster_iterator mi; mi; ++mi)
-            if (is_yred_undead_slave(**mi))
+            if (is_yred_undead_follower(**mi))
                 monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
         remove_all_companions(GOD_YREDELEMNUL);
         add_daction(DACT_OLD_CHARMD_SOULS_POOF);

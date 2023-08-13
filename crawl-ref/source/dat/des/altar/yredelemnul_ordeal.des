@@ -15,10 +15,10 @@ end
 function callback.dk_yredelemnul_ordeal(data, triggerable, triggerer, marker, ev)
   crawl.god_speaks("Yredelemnul", "Yredelemnul welcomes your deed!")
 
-  for slave in iter.slave_iterator("floor", 1) do
-      if not dgn.is_passable(slave.x,slave.y) then
-        dgn.terrain_changed(slave.x, slave.y, "floor", false)
-        dgn.place_cloud(slave.x, slave.y, "foul pestilence", crawl.random2(15) + 5)
+  for replica in iter.replica_iterator("floor", 1) do
+      if not dgn.is_passable(replica.x,replica.y) then
+        dgn.terrain_changed(replica.x, replica.y, "floor", false)
+        dgn.place_cloud(replica.x, replica.y, "foul pestilence", crawl.random2(15) + 5)
       else
         crawl.mpr("You feel a numb sensation.")
         return
@@ -35,8 +35,8 @@ MONS:   goblin zombie / kobold zombie / human zombie / jackal zombie, \
 # Uses a neutral human to make the player feel extra evil. Neutral also means
 # good gods will get mad if you choose to obey Yred.
 KMONS:  h = generate_awake human att:neutral
-MARKER: h = lua:portal_desc {slave_name="victim"}
-MARKER: h = lua:MonPropsMarker:new{yslave="yslave"}
+MARKER: h = lua:portal_desc {replica_name="victim"}
+MARKER: h = lua:MonPropsMarker:new{yreplica="yreplica"}
 KFEAT:  h = .
 KFEAT:  _ = altar_yredelemnul
 KFEAT:  d = .
@@ -52,7 +52,7 @@ tlos:add_triggerer(DgnTriggerer:new{type="player_los"})
 
 local tm = TriggerableFunction:new{
   func="callback.dk_yredelemnul_ordeal", repeated=false}
-tm:add_triggerer(DgnTriggerer:new{type="monster_dies", target="yslave"})
+tm:add_triggerer(DgnTriggerer:new{type="monster_dies", target="yreplica"})
 
 lua_marker('h', tlos)
 lua_marker('_', tm)

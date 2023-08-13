@@ -284,6 +284,7 @@ enum tag_minor_version
     TAG_MINOR_DJ_SPLIT,            // Make Djinn use all magic skills.
     TAG_MINOR_TALISMANS,           // Add talismans and indefinite transforms.
     TAG_MINOR_SHAPESHIFTING,       // Add Shapeshifting skill.
+    TAG_MINOR_LANGUAGE_FIX,        // Remove some outdated language.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
