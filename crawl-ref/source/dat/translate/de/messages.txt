@@ -18231,16 +18231,16 @@ You are unable to make a sound!
 Ihr könnt kein Geräusch machen!
 %%%%
 You %s your recitation at %s!
-Ihr %s Eure Rezitation {dat}%s entgegen.
+Ihr {verb-ihr}%s Eure Rezitation {dat}%s entgegen.
 %%%%
 You %s at %s!
-Ihr %s {acc}%s an.
+Ihr {verb-ihr}%s {acc}%s an.
 %%%%
 You %s wildly!
-Ihr %s wie wild!
+Ihr {verb-ihr}%s wie wild!
 %%%%
 You %s for attention!
-Ihr %s nach Aufmerksamkeit!
+Ihr {verb-ihr}%s nach Aufmerksamkeit!
 %%%%
 
 ##################
@@ -18666,36 +18666,6 @@ plain brown
 
 %%%%
 kneel at
-
-%%%%
-yell
-
-%%%%
-scream
-
-%%%%
-meow
-
-%%%%
-yowl
-
-%%%%
-caterwaul
-
-%%%%
-croak
-
-%%%%
-ribbit
-
-%%%%
-bark
-
-%%%%
-screech
-
-%%%%
-growl
 
 %%%%
 scales

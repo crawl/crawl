@@ -8,11 +8,119 @@
 # Untransformed
 ################################
 
-%%%%
 # shout-equivalent (finite verb, as in "You @shout@.")
+
+# standard
+%%%%
 shout
 schreit
 %%%%
+yell
+schreit
+%%%%
+scream
+schreit
+%%%%
+
+# felid
+%%%%
+meow
+miaut
+%%%%
+yowl
+jault
+%%%%
+caterwaul
+maunzt
+%%%%
+hiss
+zischt
+%%%%
+
+# gnoll (doglike)
+%%%%
+bark
+bellt
+%%%%
+# context needed to avoid collision with howl status
+{verb-ihr}howl
+heult
+%%%%
+screech
+kreischt
+%%%%
+growl
+knurrt
+%%%%
+
+# barachi (froglike)
+%%%%
+croak
+krächzt
+%%%%
+ribbit
+quakt
+%%%%
+bellow
+brüllt
+%%%%
+
+# shout-equivalent as noun with indefinite article
+
+# standard
+%%%%
+a shout
+ein Schrei
+%%%%
+a yell
+ein Schrei
+%%%%
+a scream
+ein Schrei
+%%%%
+
+# felid
+%%%%
+a meow
+{n}ein Miauen
+%%%%
+a yowl
+{n}ein Jaulen
+%%%%
+a caterwaul
+{n}ein Maunzen
+%%%%
+a hiss
+{n}ein Zischen
+%%%%
+
+# gnoll (doglike)
+%%%%
+a bark
+{n}ein Bellen
+%%%%
+a howl
+{n}ein Heulen
+%%%%
+a screech
+{n}ein Kreischen
+%%%%
+a growl
+{n}ein Knurren
+%%%%
+
+# barachi (froglike)
+%%%%
+a croak
+{n}ein Krächzen
+%%%%
+a ribbit
+{n}ein Quaken
+%%%%
+a bellow
+{n}ein Brüllen
+%%%%
+
 
 # hand
 %%%%
@@ -119,8 +227,13 @@ Fangs
 Giftzähne
 %%%%
 # shout-equivalent
-hiss
-zischt
+# same as felid
+#hiss
+#zischt
+%%%%
+# shout-equivalent as noun
+#a hiss
+#{n}ein Zischen
 %%%%
 # hand-equivalent
 front leg
@@ -362,6 +475,10 @@ Zähne und Krallen
 roar
 brüllt
 %%%%
+# shout-equivalent as noun
+a roar
+{n}ein Gebrüll
+%%%%
 # hand-equivalent
 foreclaw
 Vorderkralle
@@ -467,6 +584,10 @@ Zähne
 squeak
 quietscht
 %%%%
+# shout-equivalent as noun
+a squeak
+{n}ein Quietschen
+%%%%
 # altar action
 You perch on the altar of %s.
 Ihr hockt Euch auf dem Altar von {acc}%s.
@@ -495,6 +616,10 @@ ein dreckiges Schwein
 # shout-equivalent
 squeal
 kreischt
+%%%%
+# shout-equivalent as noun
+a squeal
+{n}ein Kreischen
 %%%%
 # hand-equivalent
 front trotter
@@ -583,6 +708,10 @@ Branches
 # shout-equivalent
 creak
 ächzt
+%%%%
+# shout-equivalent as noun
+a creak
+{n}ein Knarren
 %%%%
 # hand-equivalent
 branch
@@ -678,6 +807,10 @@ Neblige Ranken
 whoosh
 rauscht
 %%%%
+# shout-equivalent as noun
+a whoosh
+{n}ein Rauschen
+%%%%
 # hand
 misty tendril
 Nebelranke
@@ -762,6 +895,11 @@ Sporen
 # shout
 sporulate
 sporuliert
+%%%%
+# shout-equivalent as noun
+# should be "a sporulation", but code just puts indefinite article in front of verb
+a sporulate
+eine Sporulation
 %%%%
 # hand
 hypha
@@ -884,8 +1022,10 @@ ein blitzvolles Unwetter!
 Storm fists
 Blitzfäuste
 %%%%
-bellow
-brüllt
+# shout-equivalent
+# duplicate of barachi
+#bellow
+#brüllt
 %%%%
 Your stormy fists strike out in all directions at once.
 Eure Blitzfäuste schlagen in alle Richtungen gleichzeitig aus.
