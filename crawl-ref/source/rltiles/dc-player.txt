@@ -88,10 +88,10 @@ meteoran_m
 troll_f TROLL
 troll_m
 octopode1 OCTOPODE
-octopode2
-octopode3
-octopode4 OCTOPODE_SILLY
-octopode5
+octopode2 OCTOPODE_BLUE
+octopode3 OCTOPODE_BROWN
+octopode4 OCTOPODE_REALISTIC
+octopode5 OCTOPODE_SILLY
 %rim 0
 djinni_f DJINNI
 djinni_m
