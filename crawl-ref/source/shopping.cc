@@ -2093,12 +2093,18 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
             string desc;
 
             if (thing.exists(SHOPPING_THING_VERB_KEY))
-                desc += thing[SHOPPING_THING_VERB_KEY].get_string();
+            {
+                desc = thing[SHOPPING_THING_VERB_KEY].get_string();
+                desc += " %s";
+            }
             else
-                desc = "buy";
-            desc += " ";
+            {
+                // locnote: You now have enough gold to...
+                desc = "buy %s";
+            }
 
-            desc += describe_thing(thing, DESC_A);
+            desc = make_stringf(desc.c_str(), 
+                                describe_thing(thing, DESC_A).c_str());
 
             descs.push_back(desc);
         }
@@ -2496,9 +2502,9 @@ string ShoppingList::describe_thing(const CrawlHashTable& thing,
 
     const level_pos pos = thing_pos(thing);
     if (pos.id == level_id::current())
-        desc += localise(" on this level");
+        desc += " on this level";
     else
-        desc += localise(" on %s", pos.id.describe());
+        desc += make_stringf(" on %s", pos.id.describe().c_str());
 
     return desc;
 }

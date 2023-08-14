@@ -18109,11 +18109,12 @@ Einkaufsliste: {acc}%s entfernen? (J/n)
 Shopping list: removing %s
 Einkaufsliste: %s wird entfernt
 %%%%
-buy
-
+# note: You now have enough gold to...
+buy %s
+{acc}%s zu kaufen
 %%%%
 "You now have enough gold to "
-
+"Ihr habt jetzt genügend Gold um "
 %%%%
 1 item, total cost %d gp
 1 Artikel, Gesamtkosten %d Gold

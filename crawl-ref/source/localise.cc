@@ -1562,6 +1562,25 @@ static string _localise_location(const string& context, const string& value)
     return "";
 }
 
+static string _localise_thing_in_location(const string& context, const string& value)
+{
+    size_t pos = value.find(" on ");
+    if (pos == string::npos)
+        return "";
+
+    string thing = value.substr(0, pos);
+    thing = _localise_string(context, thing);
+
+    string location = value.substr(pos);
+    if (starts_with(location, " on this"))
+        location = xlate(location);
+    else
+        location = localise(" on %s", location.substr(4));
+
+    // will this work for all languages?
+    return thing + location;
+}
+
 // localise a string
 static string _localise_string(const string context, const string& value)
 {
@@ -1621,8 +1640,19 @@ static string _localise_string(const string context, const string& value)
         return result;
     }
 
+    if (starts_with(value, "buy "))
+    {
+        string item = value.substr(4);
+        return localise("buy %s", item);
+    }
+
     // handle strings like "on level 3 of the dungeon"
     result = _localise_location(context, value);
+    if (!result.empty())
+        return result;
+
+    // handle strings like "a +0 short sword on level 3 of the dungeon"
+    result = _localise_thing_in_location(context, value);
     if (!result.empty())
         return result;
 
