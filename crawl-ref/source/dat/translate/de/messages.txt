@@ -10045,28 +10045,28 @@ Die Flamme kauterisiert die Wunde!
 %s wächst noch zwei!
 %%%%
 You rip %s last head off!
-Ihr reißt den letzten Kopf {gen}%s ab!
+Ihr reißt den letzten Kopf %s ab!
 %%%%
 You chop %s last head off!
-Ihr schneidet den letzten Kopf {gen}%s ab!
+Ihr schneidet den letzten Kopf %s ab!
 %%%%
 %s rips %s last head off!
-%s reißt den letzten Kopf {gen}%s ab!
+%s reißt den letzten Kopf %s ab!
 %%%%
 %s chops %s last head off!
-%s schneidet den letzten Kopf {gen}%s ab!
+%s schneidet den letzten Kopf %s ab!
 %%%%
 You rip one of %s heads off!
-Ihr reißt einen der Köpfe {gen}%s ab!
+Ihr reißt einen der Köpfe %s ab!
 %%%%
 You chop one of %s heads off!
-Ihr schneidet einen der Köpfe {gen}%s ab!
+Ihr schneidet einen der Köpfe %s ab!
 %%%%
 %s rips one of %s heads off!
-%s reißt einen der Köpfe {gen}%s ab!
+%s reißt einen der Köpfe %s ab!
 %%%%
 %s chops one of %s heads off!
-%s schneidet einen der Köpfe {gen}%s ab!
+%s schneidet einen der Köpfe %s ab!
 %%%%
 %s burns!
 %s brennt!
