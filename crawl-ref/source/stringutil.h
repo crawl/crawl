@@ -61,6 +61,9 @@ int count_occurrences(const string &text, const string &searchfor);
 // check if text contains the string in searchfor
 bool contains(const string &text, const string &searchfor);
 
+bool is_all_digits(const string& s);
+bool is_all_alphas(const string& s);
+
 string &trim_string(string &str);
 string &trim_string_left(string &str);
 string &trim_string_right(string &str);

@@ -1559,6 +1559,17 @@ static string _localise_location(const string& context, const string& value)
             return result;
         }
     }
+
+    // handle string like "Orc:2"
+    size_t pos = value.find(':');
+    if (pos != string::npos && pos != 0 && pos < value.length()-1)
+    {
+        string branch = value.substr(0, pos);
+        string level = value.substr(pos + 1);
+        if (is_all_alphas(branch) && is_all_digits(level))
+            return cxlate("branch_abbrev", branch, true) + ":" + level;
+    }
+
     return "";
 }
 

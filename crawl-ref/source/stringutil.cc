@@ -467,6 +467,34 @@ bool contains(const string &text, const string &s)
     return !s.empty() && text.find(s) != string::npos;
 }
 
+bool is_all_digits(const string& s)
+{
+    if (s.empty())
+        return false;
+
+    for (char c: s)
+    {
+        if (!isdigit(c))
+            return false;
+    }
+
+    return true;
+}
+
+bool is_all_alphas(const string& s)
+{
+    if (s.empty())
+        return false;
+
+    for (char c: s)
+    {
+        if (!isalpha(c))
+            return false;
+    }
+
+    return true;
+}
+
 // also used with macros
 string &trim_string(string &str)
 {
