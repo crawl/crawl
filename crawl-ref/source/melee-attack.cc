@@ -884,6 +884,15 @@ bool melee_attack::handle_phase_end()
             _handle_spectral_brand(*attacker, *defender);
     }
 
+    // Dead but not yet reset, most likely due to an attack flavour that
+    // destroys the attacker on-hit.
+    if (attacker->is_monster()
+        && attacker->as_monster()->type != MONS_NO_MONSTER
+        && attacker->as_monster()->hit_points < 1)
+    {
+        monster_die(*attacker->as_monster(), KILL_MISC, NON_MONSTER);
+    }
+
     return attack::handle_phase_end();
 }
 
