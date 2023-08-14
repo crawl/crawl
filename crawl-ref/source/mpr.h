@@ -103,7 +103,8 @@ void do_message_print(msg_channel_type channel, int param, bool cap,
 void mpr(const string &text);
 void mpr(msg_channel_type channel, const string &text);
 void mpr(msg_channel_type channel, int param, const string &text);
-void mpr_nojoin(msg_channel_type channel, string text);
+void mpr_nojoin(const string& text);
+void mpr_nojoin(msg_channel_type channel, const string& text);
 
 // message print without localisation (translation)
 void mpr_nolocalise(const string& text);

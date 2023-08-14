@@ -23,6 +23,7 @@
 #include "item-status-flag-type.h"
 #include "jobs.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -40,6 +41,8 @@ static noise_grid _noise_grid;
 static void _actor_apply_noise(actor *act,
                                const coord_def &apparent_source,
                                int noise_intensity_millis);
+
+// noloc section start (lookup keys and diagnotic messages)
 
 /// By default, what databse lookup key corresponds to each shout type?
 static const map<shout_type, string> default_msg_keys = {
@@ -145,7 +148,6 @@ bool monster_attempt_shout(monster &mon)
  */
 void monster_shout(monster* mons, int shout)
 {
-    // noloc section start (keys)
     shout_type s_type = static_cast<shout_type>(shout);
     mon_acting mact(mons);
 
@@ -187,7 +189,6 @@ void monster_shout(monster* mons, int shout)
         if (message.empty() || message == "__DEFAULT")
             message = getShoutString(default_msg_key, suffix);
     }
-    // noloc section end
 
     if (default_msg_key == "__BUGGY")
     {
@@ -261,6 +262,8 @@ void monster_shout(monster* mons, int shout)
     if (crawl_state.game_is_hints() && (heard || you.can_see(*mons)))
         learned_something_new(HINT_MONSTER_SHOUT, mons->pos());
 }
+
+// noloc section end (lookup keys and diagnotic messages)
 
 bool check_awaken(monster* mons, int stealth)
 {
@@ -389,23 +392,23 @@ void item_noise(const item_def &item, actor &act, string msg, int loudness)
 
     // Replace weapon references. Can't use DESC_THE because that includes
     // pluses etc. and we want just the basename.
-    msg = replace_all(msg, "@The_weapon@", "The @weapon@");
-    msg = replace_all(msg, "@the_weapon@", "the @weapon@");
-    msg = replace_all(msg, "@Your_weapon@", "Your @weapon@");
-    msg = replace_all(msg, "@your_weapon@", "your @weapon@");
-    msg = replace_all(msg, "@weapon@", item.name(DESC_BASENAME));
+    string weapon = item.name(DESC_BASENAME);
+    msg = replace_all(msg, "@The_weapon@", localise("The " + weapon));
+    msg = replace_all(msg, "@the_weapon@", localise("the " + weapon));
+    msg = replace_all(msg, "@Your_weapon@", localise("Your " + weapon));
+    msg = replace_all(msg, "@your_weapon@", localise("your " + weapon));
+    msg = replace_all(msg, "@weapon@", localise(weapon));
 
     // replace references to player name and god
     msg = replace_all(msg, "@player_name@", you.your_name);
-    msg = replace_all(msg, "@player_god@",
-                      you_worship(GOD_NO_GOD) ? "atheism"
-                      : god_name(you.religion, coinflip()));
-    msg = replace_all(msg, "@player_genus@",
-                species::name(you.species, species::SPNAME_GENUS));
-    msg = replace_all(msg, "@a_player_genus@",
-                article_a(species::name(you.species, species::SPNAME_GENUS)));
-    msg = replace_all(msg, "@player_genus_plural@",
-                pluralise(species::name(you.species, species::SPNAME_GENUS)));
+    string god = you_worship(GOD_NO_GOD) ? "atheism"
+                 : god_name(you.religion, coinflip());
+    msg = replace_all(msg, "@player_god@", localise(god));
+
+    string genus = species::name(you.species, species::SPNAME_GENUS);
+    msg = replace_all(msg, "@player_genus@", localise(genus));
+    msg = replace_all(msg, "@a_player_genus@", localise(article_a(genus)));
+    msg = replace_all(msg, "@player_genus_plural@", localise(pluralise(genus)));
 
     msg = maybe_pick_random_substring(msg);
     msg = maybe_capitalise_substring(msg);
@@ -523,24 +526,30 @@ static int _issue_orders_prompt()
     {
         string cap_shout = you.shout_verb(false);
         cap_shout[0] = toupper_safe(cap_shout[0]);
+        // locnote: press t to shout
         mprf(" t - %s!", cap_shout.c_str());
     }
 
     if (!you.berserk() && !you.confused())
     {
-        string previous;
+        bool previous = false;
         if (_can_target_prev())
         {
             const monster* target = &env.mons[you.prev_targ];
             if (target->alive() && you.can_see(*target))
-                previous = "   p - Attack previous target.";
+                previous = true;
         }
 
-        mprf("Orders for allies: a - Attack new target.%s", previous.c_str());
-        mpr("                   r - Retreat!             s - Stop attacking.");
-        mpr("                   g - Guard the area.      f - Follow me.");
+        // locnote: All these orders can be given to one or multiple allies
+        mpr_nojoin(" Orders for allies:");
+        if (!previous)
+           mpr_nojoin("  a - Attack new target.");
+        else
+           mpr_nojoin("  a - Attack new target.   p - Attack previous target.");
+        mpr_nojoin("  r - Retreat!             s - Stop attacking.");
+        mpr_nojoin("  g - Guard the area.      f - Follow me.");
     }
-    mpr(" Anything else - Cancel.");
+    mpr_nojoin(" Anything else - Cancel.");
 
     flush_prev_message(); // buffer doesn't get flushed otherwise
 
@@ -729,15 +738,18 @@ void yell(const actor* mon)
         {
             if (you.paralysed() || you.duration[DUR_WATER_HOLD])
             {
+                // locnote: %s = shout/howl/hiss/etc. depending on species/form
                 mprf("You feel a strong urge to %s, but "
                      "you are unable to make a sound!",
                      shout_verb.c_str());
             }
             else
             {
-                mprf("You feel a %s rip itself from your throat, "
+                string shout_noun = article_a(shout_verb);
+                // locnote: %s = a shout/howl/hiss/etc. depending on species/form
+                mprf("You feel %s rip itself from your throat, "
                      "but you make no sound!",
-                     shout_verb.c_str());
+                     shout_noun.c_str());
             }
         }
         else
@@ -748,16 +760,25 @@ void yell(const actor* mon)
 
     if (mon)
     {
-        mprf("You %s%s at %s!",
-             shout_verb.c_str(),
-             you.duration[DUR_RECITE] ? " your recitation" : "",
-             mon->name(DESC_THE).c_str());
+        if (you.duration[DUR_RECITE])
+        {
+            mprf("You %s your recitation at %s!",
+                 shout_verb.c_str(),
+                 mon->name(DESC_THE).c_str());
+        }
+        else
+        {
+            mprf("You %s at %s!",
+                 shout_verb.c_str(),
+                 mon->name(DESC_THE).c_str());
+        }
     }
     else
     {
-        mprf(MSGCH_SOUND, "You %s%s!",
-             shout_verb.c_str(),
-             you.berserk() ? " wildly" : " for attention");
+        if (you.berserk())
+            mprf(MSGCH_SOUND, "You %s wildly!", shout_verb.c_str());
+        else
+            mprf(MSGCH_SOUND, "You %s for attention!", shout_verb.c_str());
     }
 
     noisy(noise_level, you.pos());

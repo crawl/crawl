@@ -57,7 +57,12 @@ void mpr(msg_channel_type channel, int param, const string &text)
     _mpr(text_locl, text, channel, param);
 }
 
-void mpr_nojoin(msg_channel_type channel, string text)
+void mpr_nojoin(const string& text)
+{
+    mpr_nojoin(MSGCH_PLAIN, text);
+}
+
+void mpr_nojoin(msg_channel_type channel, const string& text)
 {
     string text_locl = localise(text);
     _mpr(text_locl, text, channel, 0, true);

@@ -18160,68 +18160,55 @@ Eure Einkaufsliste ist jetzt leer.
 # shout.cc
 ##################
 %%%%
-" player ghost"
-
-%%%%
-No shout entry for default shout type '
-
-%%%%
 You hear a strange noise.
-
-%%%%
-The @weapon@
-
-%%%%
-the @weapon@
-
-%%%%
-Your @weapon@
-
-%%%%
-your @weapon@
-
+Ihr hört ein seltsames Geräusch.
 %%%%
 atheism
-
+Atheismus
 %%%%
 What are your orders?
 Was sind Eure Befehle?
 %%%%
+# note: press t to shout
 " t - %s!"
-t -%s!
+" t - %s!"
 %%%%
-"   p - Attack previous target."
-
+# note: All these orders can be given to one or multiple allies
+" Orders for allies:"
+" Befehle für Verbündete:"
 %%%%
-Orders for allies: a - Attack new target.%s
-Befehle für Verbündete: a - Neues Ziel angreifen.%s
+"  a - Attack new target."
+"  a - Neues Ziel angreifen."
 %%%%
-"                   r - Retreat!             s - Stop attacking."
-r - Rückzug! s - Hör auf anzugreifen.
+"  a - Attack new target.   p - Attack previous target."
+"  a - Neues Ziel angreifen.  p - Vorheriges Ziel angreifen."
 %%%%
-"                   g - Guard the area.      f - Follow me."
-g - Bewache den Bereich. f - Folge mir.
+"  r - Retreat!             s - Stop attacking."
+"  r - Rückzug!               s - Angriff halten."
+%%%%
+"  g - Guard the area.      f - Follow me."
+"  g - Den Bereich bewachen   f - Mir folgen."
 %%%%
 " Anything else - Cancel."
-Alles andere - Abbrechen.
+" Alles andere - Abbrechen."
 %%%%
 Follow me!
-Folge mir!
+Mir folgen!
 %%%%
 Stop fighting!
 Aufhören zu kämpfen!
 %%%%
 Guard this area!
-Bewache diesen Bereich!
+Diesen Bereich bewachen!
 %%%%
 An ally attacking under your orders might violate sanctuary; order anyway?
-
+Ein Angriff durch einen Verbündeten könnte das Heiligtum verletzen; trotzdem befehlen?
 %%%%
 Gang up on whom?
-
+Gegen wen?
 %%%%
 Retreat in which direction?
-
+Rückzug in welche Richtung?
 %%%%
 Fall back!
 Zurückfallen!
@@ -18232,29 +18219,28 @@ Ihr seid zu wütend, um Befehle zu erteilen, und Ihr könnt nicht schreien!
 Attack!
 Attacke!
 %%%%
+# note: %s = shout/howl/hiss/etc. depending on species/form
 You feel a strong urge to %s, but you are unable to make a sound!
-
+Ihr verspürt einen starken Drang zu %s, aber Ihr könnt kein Geräusch machen!
 %%%%
-You feel a %s rip itself from your throat, but you make no sound!
-
+# note: %s = a shout/howl/hiss/etc. depending on species/form
+You feel %s rip itself from your throat, but you make no sound!
+Ihr spürt, wie %s sich aus Eurer Kehle reißt, aber Ihr gebt keinen Laut von Euch!
 %%%%
 You are unable to make a sound!
 Ihr könnt kein Geräusch machen!
 %%%%
-You %s%s at %s!
-Ihr %s%s an {dat}%s!
+You %s your recitation at %s!
+Ihr %s Eure Rezitation {dat}%s entgegen.
 %%%%
-" your recitation"
-
+You %s at %s!
+Ihr %s {acc}%s an.
 %%%%
-You %s%s!
-Ihr %s%s!
+You %s wildly!
+Ihr %s wie wild!
 %%%%
-" wildly"
-
-%%%%
-" for attention"
-
+You %s for attention!
+Ihr %s nach Aufmerksamkeit!
 %%%%
 
 ##################
