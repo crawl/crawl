@@ -1565,7 +1565,7 @@ static string _localise_location(const string& context, const string& value)
 static string _localise_thing_in_location(const string& context, const string& value)
 {
     size_t pos = value.find(" on ");
-    if (pos == string::npos)
+    if (pos == string::npos || pos == 0)
         return "";
 
     string thing = value.substr(0, pos);
