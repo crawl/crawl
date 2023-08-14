@@ -558,7 +558,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
                         && feat != DNGN_FLOOR
                         && feat != DNGN_UNSEEN
                         && feat != DNGN_PASSAGE_OF_GOLUBRIA
-                        && feat != DNGN_MALIGN_GATEWAY;
+                        && feat != DNGN_MALIGN_GATEWAY
+                        && feat != DNGN_UNKNOWN_PORTAL;
     if (override && can_override)
         return override;
 
