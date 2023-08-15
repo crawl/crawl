@@ -258,6 +258,87 @@ ihres Gottes
 %%%%
 
 ########################
+# God names - genitive as translation of English posessive
+# This is used on skills menu when God is boosting skills
+########################
+%%%%
+Ashenzari's
+Aschenzaris
+%%%%
+Beogh's
+Beoghs
+%%%%
+Cheibriados's
+Cheibriados'
+%%%%
+Dithmenos's
+Dithmenos'
+%%%%
+Elyvilon's
+Elyvilons
+%%%%
+Fedhas's
+Fedhas'
+%%%%
+Gozag's
+Gozags
+%%%%
+Hepliaklqana's
+Hepliaklqanas
+%%%%
+Jiyva's
+Jiyvas
+%%%%
+Kikubaaqudgha's
+Kikubaaqudghas
+%%%%
+Lugonu's
+Lugonus
+%%%%
+Makhleb's
+Makhlebs
+%%%%
+Nemelex Xobeh's
+Nemelex Xobehs
+%%%%
+Okawaru's
+Okawarus
+%%%%
+Qazlal's
+Qazlals
+%%%%
+Ru's
+Rus
+%%%%
+Sif Muna's
+Sif Munas
+%%%%
+Trog's
+Trogs
+%%%%
+Uskayaw's
+Uskayaws
+%%%%
+Vehumet's
+Vehumets
+%%%%
+Xom's
+Xoms
+%%%%
+Yredelemnul's
+Yredelemnuls
+%%%%
+Zin's
+Zins
+%%%%
+the Shining One's
+des Glänzenden
+%%%%
+the Wu Jian Council's
+des Wu-Jian-Rates
+%%%%
+
+########################
 # God names - accusative
 ########################
 %%%%

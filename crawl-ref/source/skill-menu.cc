@@ -18,6 +18,7 @@
 #include "evoke.h"
 #include "god-passive.h" // passive_t::bondage_skill_boost
 #include "hints.h"
+#include "localise.h"
 #include "options.h"
 #include "output.h"
 #include "religion.h"
@@ -211,8 +212,9 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
         m_name->allow_highlight(false);
     }
 
+    string skill_str = localise(skill_name(m_sk));
     m_name->set_text(make_stringf("%s %-15s", get_prefix().c_str(),
-                                skill_name(m_sk)));
+                                skill_str.c_str()));
     m_name->set_fg_colour(get_colour());
 #ifdef USE_TILE_LOCAL
     if (is_set(SKMF_SKILL_ICONS))
@@ -300,6 +302,7 @@ string SkillMenuEntry::get_prefix()
 
 void SkillMenuEntry::set_aptitude()
 {
+    // noloc section start
     string text = "<white>";
 
     const bool manual = you.skill_manual_points[m_sk] > 0;
@@ -319,6 +322,7 @@ void SkillMenuEntry::set_aptitude()
     }
 
     m_aptitude->set_text(text);
+    // noloc section end
 }
 
 void SkillMenuEntry::set_level()
@@ -334,7 +338,7 @@ void SkillMenuEntry::set_level()
     if (mastered())
         m_level->set_text(to_string(level / 10));
     else
-        m_level->set_text(make_stringf("%4.1f", level / 10.0));
+        m_level->set_text(localise("%4.1f", level / 10.0));
     m_level->set_fg_colour(get_colour());
 }
 
@@ -349,14 +353,14 @@ void SkillMenuEntry::set_new_level()
         new_level = you.skill(m_sk, 10, real);
         m_progress->set_fg_colour(CYAN);
         if (you.training[m_sk])
-            m_progress->set_text(make_stringf("> %4.1f", new_level / 10.0));
+            m_progress->set_text(localise("> %4.1f", new_level / 10.0));
         else
             m_progress->set_text(string(PROGRESS_SIZE, ' '));
         return;
     }
 
     if (is_selectable())
-        m_progress->set_text(make_stringf("> %4.1f", new_level / 10.0));
+        m_progress->set_text(localise("> %4.1f", new_level / 10.0));
     else
         m_progress->set_text("");
 
@@ -409,15 +413,15 @@ void SkillMenuEntry::set_targets()
 void SkillMenuEntry::set_title()
 {
     m_name->allow_highlight(false);
-    m_name->set_text("     Skill");
-    m_level->set_text("Level");
+    m_name->set_text("     " + localise("Skill"));
+    m_level->set_text(localise("Level"));
 
     m_name->set_fg_colour(BLUE);
     m_level->set_fg_colour(BLUE);
     m_progress->set_fg_colour(BLUE);
 
     if (is_set(SKMF_APTITUDE))
-        m_aptitude->set_text("<blue>Apt </blue>");
+        m_aptitude->set_text("<blue>" + localise("Apt") + "</blue>");
 
     switch (skm.get_state(SKM_VIEW))
     {
@@ -429,6 +433,7 @@ void SkillMenuEntry::set_title()
     case SKM_VIEW_NEW_LEVEL: m_progress->set_text("> New"); break;
     default: die("Invalid view state.");
     }
+    m_progress->set_text(localise(m_progress->get_text()));
 }
 
 void SkillMenuEntry::set_training()
@@ -456,7 +461,7 @@ void SkillMenuEntry::set_cost()
     auto ratio = scaled_skill_cost(m_sk);
     // Don't let the displayed number go greater than 4 characters
     if (ratio > 0)
-        m_progress->set_text(make_stringf("%4.*f", ratio < 100 ? 1 : 0, ratio));
+        m_progress->set_text(localise(ratio < 100 ? "%4.1f" : "%4.0f", ratio));
 }
 
 SkillMenuSwitch::SkillMenuSwitch(string name, int hotkey) : m_name(name)
@@ -496,28 +501,34 @@ static bool _any_crosstrained()
 
 string SkillMenuSwitch::get_help()
 {
+    string result;
     switch (m_state)
     {
     case SKM_MODE_AUTO:
-        return "In automatic mode, skills are trained as you use them.";
+        result = "In automatic mode, skills are trained as you use them.";
+        return localise(result);
     case SKM_MODE_MANUAL:
-        return "In manual mode, experience is spread evenly across all "
+        result = "In manual mode, experience is spread evenly across all "
                 "activated skills.";
+        return localise(result);
     case SKM_DO_PRACTISE:
         if (skm.is_set(SKMF_SIMPLE))
             return hints_skills_info();
         else
-            return "Press the letter of a skill to choose whether you want to "
+        {
+            result = "Press the letter of a skill to choose whether you want to "
                    "practise it. Skills marked with '<darkgrey>-</darkgrey>' "
                    "will not be trained.";
+            return localise(result);
+        }
     case SKM_DO_FOCUS:
-        return "Press the letter of a skill to cycle between "
+        result = "Press the letter of a skill to cycle between "
                "<darkgrey>disabled</darkgrey> (<darkgrey>-</darkgrey>), "
                "enabled (+) and <white>focused</white> (<white>*</white>). "
                "Focused skills train twice as fast relative to others.";
+        return localise(result);
     case SKM_LEVEL_ENHANCED:
     {
-        string result;
         if (skm.is_set(SKMF_ENHANCED))
         {
             vector<string> causes;
@@ -527,14 +538,17 @@ string SkillMenuSwitch::get_help()
             if (!you.skill_boost.empty()
                 && have_passive(passive_t::bondage_skill_boost))
             {
-                causes.push_back(apostrophise(god_name(you.religion))
-                                 + " power");
+                causes.push_back("@god_possessive@ power");
             }
             if (_any_crosstrained())
                 causes.push_back("cross-training");
-            result = "Skills enhanced by "
-                     + comma_separated_line(causes.begin(), causes.end())
-                     + " are in <green>green</green>.";
+
+            // locnote: %s = comma-separated list containing any of Heroism, <god>'s power, cross-training
+            string fmt = "Skills enhanced by %s are in <green>green</green>.";
+            string cause_str = comma_separated_line(causes.begin(), causes.end());
+            result = localise(fmt, cause_str);
+            string god_poss = apostrophise(god_name(you.religion));
+            result = replace_all(result, "@god_possessive@", localise(god_poss));
         }
 
         if (skm.is_set(SKMF_REDUCED))
@@ -545,9 +559,10 @@ string SkillMenuSwitch::get_help()
 
             if (!result.empty())
                 result += "\n";
-            result += "Skills reduced by "
-                      + comma_separated_line(causes.begin(), causes.end())
-                      + " are in <magenta>magenta</magenta>.";
+            // locnote: %s = in theory a comma-separated list, but in practice always "Ashenzari's anger"
+            string fmt = "Skills reduced by %s are in <magenta>magenta</magenta>.";
+            string cause_str = comma_separated_line(causes.begin(), causes.end());
+            result += localise(fmt, cause_str);
         }
 
         if (!result.empty())
@@ -557,31 +572,29 @@ string SkillMenuSwitch::get_help()
         if (skm.is_set(SKMF_SIMPLE))
             return hints_skill_training_info();
         else
-            return "The percentage of incoming experience used"
-                   " to train each skill is in <brown>brown</brown>.\n";
+            return localise (
+                "The percentage of incoming experience used"
+                " to train each skill is in <brown>brown</brown>.\n"
+            );
     case SKM_VIEW_TARGETS:
         if (skm.is_set(SKMF_SIMPLE))
             return hints_skill_targets_info();
         else
-            return "The current training targets, if any.\n";
+            return localise("The current training targets, if any.\n");
     case SKM_VIEW_PROGRESS:
-        return "The percentage of the progress done before reaching next "
-               "level is in <cyan>cyan</cyan>.\n";
+        result = "The percentage of the progress done before reaching next "
+                 "level is in <cyan>cyan</cyan>.\n";
+        return localise(result);
     case SKM_VIEW_COST:
     {
         if (skm.is_set(SKMF_SIMPLE))
             return hints_skill_costs_info();
 
-        string result =
+        result =
                "The relative cost of raising each skill is in "
-               "<cyan>cyan</cyan>";
-        if (skm.is_set(SKMF_MANUAL))
-        {
-            result += " (or <lightred>red</lightred> if enhanced by a "
-                      "manual)";
-        }
-        result += ".\n";
-        return result;
+               "<cyan>cyan</cyan>"
+               " (or <lightred>red</lightred> if enhanced by a manual).\n";
+        return localise(result);
     }
     default: return "";
     }
@@ -652,6 +665,7 @@ bool SkillMenuSwitch::toggle()
 
 void SkillMenuSwitch::update()
 {
+    // noloc section start
     if (m_states.size() <= 1)
     {
         set_text("");
@@ -661,19 +675,26 @@ void SkillMenuSwitch::update()
     const vector<int> hotkeys = get_hotkeys();
     ASSERT(hotkeys.size());
     string text = make_stringf(" [<yellow>%c</yellow>] ", hotkeys[0]);
+    string states;
     for (auto it = m_states.begin(); it != m_states.end(); ++it)
     {
         if (it != m_states.begin())
-            text += '|';
+            states += '|';
 
         const string col = (*it == m_state) ? "white" : "darkgrey";
-        text += make_stringf("<%s>%s</%s>", col.c_str(), get_name(*it).c_str(),
-                             col.c_str());
+        const string state = localise_contextual("menu-state", get_name(*it));
+        states += make_stringf("<%s>%s</%s>", col.c_str(), state.c_str(),
+                               col.c_str());
     }
+    // noloc section end
     if (m_name.empty())
-        text += "  ";
+        text += states;
     else
-        text += make_stringf(" %s  ", m_name.c_str());
+    {
+        map<string, string> params = {{"states", states}, {"setting", m_name}};
+        text += localise("@states@ @setting@", params);
+    }
+    text += "  ";
     set_text(text);
 }
 
@@ -765,7 +786,7 @@ void SkillMenu::init(int flag, int region_height)
     m_max_coord.y = region_height + 1;
 #endif
 
-    m_ff->init(m_min_coord, m_max_coord, "freeform");
+    m_ff->init(m_min_coord, m_max_coord, "freeform"); // noloc
     attach_object(m_ff);
     set_active_object(m_ff);
 
@@ -807,7 +828,7 @@ void SkillMenu::init(int flag, int region_height)
         refresh_display();
 
     m_highlighter = new BoxMenuHighlighter(this);
-    m_highlighter->init(coord_def(-1,-1), coord_def(-1,-1), "highlighter");
+    m_highlighter->init(coord_def(-1,-1), coord_def(-1,-1), "highlighter"); // noloc
     attach_object(m_highlighter);
 
     m_ff->set_visible(true);
@@ -818,11 +839,7 @@ void SkillMenu::init(int flag, int region_height)
 
 static string _format_skill_target(int target)
 {
-    // Use locale-sensitive decimal marker for consistency with other parts of
-    // this menu.
-    std::lconv *locale_data = std::localeconv();
-    return make_stringf("%d%s%d", target / 10,
-                            locale_data->decimal_point, target % 10);
+    return localise("%.1f", target / 10.0f);
 }
 
 static keyfun_action _keyfun_target_input(int &ch)
@@ -861,7 +878,7 @@ int SkillMenu::read_skill_target(skill_type sk)
     progress->set_highlight_colour(RED);
 
     // for webtiles dialog input
-    progress->set_prompt(make_stringf("Enter a skill target for %s: ",
+    progress->set_prompt(localise("Enter a skill target for %s: ",
                                             skill_name(sk)));
     progress->set_tag("skill_target");
 
@@ -958,7 +975,8 @@ bool SkillMenu::do_skill_enabled_check()
         // Shouldn't happen, but crash rather than locking the player in the
         // menu. Training will be fixed up on load.
         ASSERT(!you.has_mutation(MUT_DISTRIBUTED_TRAINING));
-        set_help("<lightred>You need to enable at least one skill.</lightred>");
+        string msg = localise("You need to enable at least one skill.");
+        set_help("<lightred>" + msg + "</lightred>");
         return false;
     }
     return true;
@@ -1075,9 +1093,11 @@ void SkillMenu::help()
         if (is_set(SKMF_SIMPLE))
             text = hints_skills_description_info();
         else
-            text = "Press the letter of a skill to read its description.\n"
+            text = localise(
+                   "Press the letter of a skill to read its description.\n"
                    "Press <w>?</w> for a general explanation"
-                   " of skilling and the various toggles.";
+                   " of skilling and the various toggles."
+            );
         set_help(text);
     }
     else
@@ -1345,33 +1365,39 @@ void SkillMenu::refresh_button_row()
 {
     if (is_set(SKMF_SPECIAL))
         return;
-    const string helpstring = "[<yellow>?</yellow>] ";
-    const string azstring = "[<yellow>a</yellow>-<yellow>z</yellow>] ";
+    const string helpstring = "[<yellow>?</yellow>] "; // noloc
+    const string azstring = "[<yellow>a</yellow>-<yellow>z</yellow>] "; // noloc
 
-    string legend = is_set(SKMF_SIMPLE) ? "Skill descriptions" : "Help";
+    string legend = localise(is_set(SKMF_SIMPLE) ? "Skill descriptions" : "Help");
     string midlegend = "";
     string clearlegend = "";
     if (is_set(SKMF_HELP))
     {
-        legend = is_set(SKMF_SIMPLE) ? "Return to skill selection"
-                 : "<w>Help</w>";
-        midlegend = azstring + "skill descriptions";
+        legend = is_set(SKMF_SIMPLE) ? localise("Return to skill selection")
+                                     : localise("<w>Help</w>");
+        midlegend = azstring + localise("skill descriptions");
     }
     else if (!is_set(SKMF_SIMPLE) && get_state(SKM_VIEW) == SKM_VIEW_TARGETS)
     {
         if (is_set(SKMF_SET_TARGET))
         {
-            midlegend = azstring + "set skill target";
-            clearlegend = "[<yellow>-</yellow>] clear selected target";
+            midlegend = azstring + localise("set skill target");
+            clearlegend = "[<yellow>-</yellow>] "; // noloc 
+            clearlegend += localise("clear selected target");
         }
         else
         {
-            midlegend = "[<yellow>=</yellow>] set a skill target";
-            clearlegend = "[<yellow>-</yellow>] clear all targets";
+            midlegend = "[<yellow>=</yellow>] "; // noloc
+            midlegend += localise("set a skill target");
+            clearlegend = "[<yellow>-</yellow>] "; // noloc 
+            clearlegend += localise("clear all targets");
         }
     }
     else if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING)) // SKM_VIEW_TARGETS unavailable for Gn
-        midlegend = "[<yellow>=</yellow>] set a skill target";
+    {
+        midlegend = "[<yellow>=</yellow>] "; // noloc
+        midlegend += localise("set a skill target");
+    }
 
     m_help_button->set_text(helpstring + legend);
     m_middle_button->set_text(midlegend);
@@ -1419,12 +1445,15 @@ void SkillMenu::set_default_help()
             text = m_switches[SKM_VIEW]->get_help();
 
         if (get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED)
-            text += m_switches[SKM_LEVEL]->get_help() + " ";
+            text += m_switches[SKM_LEVEL]->get_help();
         else
-            text += "The species aptitude is in <white>white</white>. ";
+            text += localise("The species aptitude is in <white>white</white>.");
 
         if (is_set(SKMF_MANUAL))
-            text += "Bonus from skill manuals is in <lightred>red</lightred>. ";
+        {
+            text += localise(" ");
+            text += localise("Bonus from skill manuals is in <lightred>red</lightred>.");
+        }
     }
 
     m_help->set_text(text);
@@ -1530,7 +1559,7 @@ void SkillMenu::set_title()
             "Select the skills to train.";
     }
 
-    m_title->set_text(t);
+    m_title->set_text(localise(t));
 }
 
 void SkillMenu::shift_bottom_down()

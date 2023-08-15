@@ -585,7 +585,7 @@ Ability - do what?
 
 %%%%
 Cost
-
+Preis
 %%%%
 Failure
 Versagen
@@ -3248,9 +3248,6 @@ This monster has the following natural abilities%s:
 %%%%
 Type
 Art
-%%%%
-Level
-Stufe
 %%%%
 Known
 Bekannt
@@ -9248,9 +9245,6 @@ Standard
 %%%%
 menu
 Menü
-%%%%
-level
-Ebene
 %%%%
 targeting
 Abzielen
@@ -18247,197 +18241,97 @@ Ihr {verb-ihr}%s nach Aufmerksamkeit!
 # skill-menu.cc
 ##################
 %%%%
-<lightred>+4</lightred>
-
-%%%%
-"     Skill"
-
-%%%%
-<blue>Apt </blue>
-
-%%%%
-Train
-
-%%%%
-Target
-
-%%%%
-Progr
-
-%%%%
-Points
-
-%%%%
-> New
-
-%%%%
 In automatic mode, skills are trained as you use them.
-
+Im automatischen Modus werden die Skills trainiert, während Ihr sie benutzt.
 %%%%
 In manual mode, experience is spread evenly across all activated skills.
-
+Im manuellen Modus ist die Erfahrung gleichmäßig auf alle aktivierten Skills verteilt.
 %%%%
 Press the letter of a skill to choose whether you want to practise it. Skills marked with '<darkgrey>-</darkgrey>' will not be trained.
-
+Den Buchstaben eines Skills drücken, um auszuwählen, ob er trainiert wird. Skills, die mit '<dunkelgrau>-</dunkelgrau>' markiert sind, werden nicht trainiert.
 %%%%
 Press the letter of a skill to cycle between <darkgrey>disabled</darkgrey> (<darkgrey>-</darkgrey>), enabled (+) and <white>focused</white> (<white>*</white>). Focused skills train twice as fast relative to others.
-
+Den Buchstaben eines Skills drücken, um zwischen <darkgrey>deaktiviert</darkgrey> (<darkgrey>-</darkgrey>), aktiviert (+) und <white>fokussiert</white> (<white>*</white>) zu wechseln. Fokussierte Skills trainieren im Vergleich zu anderen doppelt so schnell.
 %%%%
-" power"
-
+@god_possessive@ power
+@god_possessive@ Macht
 %%%%
 cross-training
-
+Cross-Skilling
 %%%%
-"Skills enhanced by "
-
-%%%%
-" are in <green>green</green>."
-
+# note: %s = comma-separated list containing any of Heroism, <god>'s power, cross-training
+Skills enhanced by %s are in <green>green</green>.
+Durch {acc}%s verbesserte Skills sind <green>grün</green>.
 %%%%
 Ashenzari's anger
-
+Aschenzaris Zorn
 %%%%
-"Skills reduced by "
-
-%%%%
-" are in <magenta>magenta</magenta>."
-
+# note: %s = in theory a comma-separated list, but in practice always "Ashenzari's anger"
+Skills reduced by %s are in <magenta>magenta</magenta>.
+Durch {acc}%s reduzierte Skills sind <magenta>magenta</magenta>.
 %%%%
 The percentage of incoming experience used to train each skill is in <brown>brown</brown>.
-
+Der Prozentsatz der eingehenden Erfahrung, der für das Training jedes Skills verwendet wird, ist <brown>braun</brown>.
 %%%%
 The current training targets, if any.
-
+Die aktuellen Trainingsziele, falls vorhanden.
 %%%%
 The percentage of the progress done before reaching next level is in <cyan>cyan</cyan>.
-
+Der Prozentsatz des Fortschritts vor Erreichen des nächsten Levels ist <cyan>cyan</cyan>.
 %%%%
-The relative cost of raising each skill is in <cyan>cyan</cyan>
-
-%%%%
-" (or <lightred>red</lightred> if enhanced by a manual)"
-
-%%%%
-auto
-
-%%%%
-train
-
-%%%%
-focus
-
-%%%%
-useful
-
-%%%%
-all
-
-%%%%
-modified
-
-%%%%
-enhanced
-
-%%%%
-reduced
-
-%%%%
-base
-
-%%%%
-training
-
-%%%%
-targets
-
-%%%%
-progress
-
-%%%%
-points
-
-%%%%
-new level
-
-%%%%
-cost
-
-%%%%
-" [<yellow>%c</yellow>] "
-
-%%%%
-darkgrey
-
-%%%%
-freeform
-
-%%%%
-highlighter
-
+The relative cost of raising each skill is in <cyan>cyan</cyan> (or <lightred>red</lightred> if enhanced by a manual).
+Die relativen Kosten für die Verbesserung jedes Skills sind <cyan>cyan</cyan> (oder <lightred>rot</lightred>, wenn sie durch ein Handbuch verbessert wird).
 %%%%
 "Enter a skill target for %s: "
-
+"Ein Trainingsziel für %s eingeben: "
 %%%%
-<lightred>You need to enable at least one skill.</lightred>
-
+You need to enable at least one skill.
+Ihr müsst mindestens einen Skill aktivieren.
 %%%%
 Press the letter of a skill to read its description.
-
+Den Buchstaben eines Skills drücken, um seine Beschreibung zu lesen.
 %%%%
 Press <w>?</w> for a general explanation of skilling and the various toggles.
-
-%%%%
-mode
-
-%%%%
-skills
-
-%%%%
-"[<yellow>?</yellow>] "
-
-%%%%
-"[<yellow>a</yellow>-<yellow>z</yellow>] "
-
+<w>?</w> drücken für eine allgemeine Erklärung des Skillings und der verschiedenen Umschaltmöglichkeiten.
 %%%%
 Skill descriptions
-
+Beschreibungen der Skills
 %%%%
 Help
-
+Hilfe
 %%%%
 Return to skill selection
-
+Zurück zur Auswahl der Skills
 %%%%
 <w>Help</w>
-
+<w>Hilfe</w>
 %%%%
 skill descriptions
-
+Beschreibungen der Skills
 %%%%
 set skill target
-
+Trainingsziel festlegen
 %%%%
-[<yellow>-</yellow>] clear selected target
-
+clear selected target
+ausgewähltes Ziel löschen
 %%%%
-[<yellow>=</yellow>] set a skill target
-
+set a skill target
+Trainingsziel festlegen
 %%%%
-[<yellow>-</yellow>] clear all targets
-
+clear all targets
+alle Ziele löschen
 %%%%
 Select the skills you want to be trained. The chosen skills will be raised to the level shown in <cyan>cyan</cyan>.
-
+Die Skills auswählen, die Ihr trainieren wollt. Die gewählten Skills werden auf die in <cyan>cyan</cyan> angegebene Stufe angehoben.
 %%%%
-"The species aptitude is in <white>white</white>. "
-
+The species aptitude is in <white>white</white>.
+Die Speziesbegebung ist <white>weiß</white>.
 %%%%
-"Bonus from skill manuals is in <lightred>red</lightred>. "
-
+Bonus from skill manuals is in <lightred>red</lightred>.
+Der Bonus von Manuals ist <lightred>rot</lightred>.
 %%%%
 You have quaffed a potion of experience. Select the skills to train.
-
+Ihr habt einen Trank der Erfahrung getrunken. Skills für Training auswählen.
 %%%%
 You feel omnipotent.
 Ihr fühlt Euch allmächtig.
@@ -18974,6 +18868,9 @@ will probably split
 
 %%%%
 "will become "
+
+%%%%
+darkgrey
 
 %%%%
 w
@@ -23740,7 +23637,7 @@ Trainieren ...
 
 %%%%
 %s %s to skill level %.1f.
-%s %s bis Fertigkeitsstufe %.1f.
+%s %s bis Skill-Level %.1f.
 %%%%
 Increased
 

@@ -351,6 +351,10 @@ for filename in files:
                 if '"' not in line:
                     continue
 
+            # we don't want to extract the context key used with localise_contextual()
+            if 'localise_contextual' in line:
+                line = re.sub(r'localise_contextual *\(.*,', 'localise_contextual(dummy,', line)
+
 
             if not extract:
                 # if we get here then we are not in lazy mode

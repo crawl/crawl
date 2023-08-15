@@ -1450,3 +1450,123 @@ Verschiedenes
 Other Items
 Andere Gegenstände
 %%%%
+
+##############################################
+# Skills menu
+##############################################
+
+# Column headings
+
+%%%%
+Skill
+Skill
+%%%%
+# Here, this means skill level, but it's also used on the spell menu for spell level
+Level
+Level
+%%%%
+# aptitude
+Apt
+Beg
+%%%%
+Train
+Train
+%%%%
+Target
+Ziel
+%%%%
+Progr
+Progr
+%%%%
+Points
+Punkte
+%%%%
+> New
+> Neu
+%%%%
+
+
+%%%%
+# a string like "auto|manual mode", where "auto|manual" are the states and "mode" is the setting
+# For romance languages the order would probably be reversed
+@states@ @setting@
+@states@ @setting@
+%%%%
+
+# "auto|manual mode"
+%%%%
+auto
+auto
+%%%%
+# must disambiguate from the item called manual
+{menu-state}manual
+manueller
+%%%%
+%%%%
+mode
+Modus
+%%%%
+
+# "useful|all skills"
+%%%%
+useful
+nützliche
+%%%%
+all
+alle
+%%%%
+%%%%
+skills
+Skills
+%%%%
+
+# "modified|reduced|enhanced|base level"
+%%%%
+modified
+modifizierte
+%%%%
+enhanced
+verbessertes
+%%%%
+reduced
+reduziertes
+%%%%
+base
+Grund-
+%%%%
+# Here, this means skill level, but the same string is used in a macros sub-menu for dungeon level
+level
+Level
+%%%%
+
+# "training|cost|progress|targets|points"
+%%%%
+training
+Training
+%%%%
+cost
+Preis
+%%%%
+targets
+Ziele
+%%%%
+progress
+Progress
+%%%%
+points
+Punkte
+%%%%
+# this is apparently also an option, but not sure when it is shown
+new level
+neues Level
+%%%%
+
+# not sure exactly where these are used
+%%%%
+train
+trainen
+%%%%
+focus
+fokussieren
+%%%%
+
