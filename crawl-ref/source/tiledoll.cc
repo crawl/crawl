@@ -428,7 +428,9 @@ void fill_doll_equipment(dolls_data &result)
             result.parts[TILEP_PART_BODY] = tilep_equ_armour(you.inv[item]);
         else if (you.form == transformation::maw
                  // non-body-armour wearing species would need this tile to go elswhere
-                 && !species::bans_eq(you.species, EQ_BODY_ARMOUR))
+                 // except for draconians
+                 && (!species::bans_eq(you.species, EQ_BODY_ARMOUR)
+                    || species::is_draconian(you.species)))
         {
             const auto maw = TILEP_BODY_MAW_FORM;
             const int count = tile_player_count(maw);
