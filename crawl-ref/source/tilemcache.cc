@@ -408,10 +408,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = 2;
         *ofs_y = 0;
         break;
-    case TILEP_MONS_JEREMIAH:
-        *ofs_x = 3;
-        *ofs_y = 0;
-        break;
     case TILEP_MONS_YAKTAUR_CAPTAIN_MELEE:
         *ofs_x = 4;
         *ofs_y = 0;
@@ -433,6 +429,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_PSYCHE:
     case TILEP_MONS_DUVESSA:
     case TILEP_MONS_DUVESSA_1:
+    case TILEP_MONS_JEREMIAH:
         *ofs_x = 0;
         *ofs_y = -1;
         break;
@@ -929,7 +926,6 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_OCTOPODE:
     case TILEP_MONS_CHERUB:
     case TILEP_MONS_MENNAS:
-    case TILEP_MONS_JEREMIAH:
         *ofs_x = 0;
         *ofs_y = 0;
         break;
@@ -1145,6 +1141,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         break;
 
     case TILEP_MONS_WRETCHED_STAR:
+    case TILEP_MONS_JEREMIAH:
         *ofs_x = 1;
         *ofs_y = -4;
         break;
