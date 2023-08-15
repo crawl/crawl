@@ -4540,10 +4540,10 @@ string ru_sac_text(ability_type sac)
     const string school_names
         = comma_separated_fn(sacrifice_muts.begin(), sacrifice_muts.end(),
                 [](CrawlStoreValue mut) {
-                    return _arcane_mutation_to_school_abbr(AS_MUT(mut));
+                    return localise(_arcane_mutation_to_school_abbr(AS_MUT(mut)));
                 }, "/", "/");
 
-    return localise(" (%s)", school_names);
+    return make_stringf(" (%s)", school_names.c_str());
 }
 
 static int _ru_get_sac_piety_gain(ability_type sac)

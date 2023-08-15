@@ -5,7 +5,7 @@
 ###############################################################################
 
 ##################
-# Long form
+# Canonical names
 ##################
 
 %%%%
@@ -83,6 +83,9 @@ Bannzauber
 Summonings
 Beschwörung
 %%%%
+Necromancy
+Nekromantie
+%%%%
 Translocations
 Translokation
 %%%%
@@ -106,7 +109,7 @@ Giftmagie
 %%%%
 
 ##################
-# Short form
+# So-called long names (which are sometimes short)
 ##################
 
 %%%%
@@ -139,9 +142,61 @@ Eis
 %%%%
 
 ##################
-# Really short form
+# Short names (where different to long name)
+# Used in Ru sacrifice text and spell menu
 ##################
 
+%%%%
+Fgt
+Kmpf
+%%%%
+SBl
+Kkl
+%%%%
+LBl
+Lkl
+%%%%
+Axs
+Äxt
+%%%%
+M&F
+K&F
+%%%%
+Pla
+Sta
+%%%%
+Stv
+Stb
+%%%%
+Slg
+Schl
+%%%%
+Bws
+Bog
+%%%%
+Crb
+Armb
+%%%%
+Thr
+Wrf
+%%%%
+Arm
+Rst
+%%%%
+Ddg
+Ausw
+%%%%
+Sth
+Heim
+%%%%
+Shd
+Schd
+%%%%
+UC
+Unb
+%%%%
+Spc
+Zau
 %%%%
 Conj
 Herv
@@ -163,5 +218,11 @@ Gift
 %%%%
 Erth
 Erde
+%%%%
+Invo
+Anrf
+%%%%
+Evo
+Evo
 %%%%
 

@@ -2149,6 +2149,10 @@ der Phalangit
 the @Adj@ Porcupine
 das {adj-e}@Adj@ Stachelschwein
 %%%%
+# palentonga
+the Prickly Pangolin
+der Stachelige Pangolin
+%%%%
 
 # Staves
 %%%%
@@ -2584,6 +2588,14 @@ der Ringkämpfer
 the @Weight@ Champion
 der @Weight@-Champion
 %%%%
+# Djinni
+the Weightless Champion
+der Schwerelose Champion
+%%%%
+# mummy
+the Pharaoh
+der Pharao
+%%%%
 
 # Weight classes
 %%%%
@@ -2667,6 +2679,62 @@ der Oger-Magier
 %%%%
 la Petite Mort
 la Petite Mort
+%%%%
+the Swordfish
+der Schwertfisch
+%%%%
+the Rolling Thunder
+der Rollende Donner
+%%%%
+the Holy Roller
+der Heilige Roller
+%%%%
+the Forbidden One
+der Verbotene
+%%%%
+the Black Lotus
+der Schwarze Lotus
+%%%%
+the Rockslime
+der Felsenschleim
+%%%%
+the God-Hated
+der Gottgehaßte
+%%%%
+the Wallbreaker
+der Wandbrecher
+%%%%
+the Highly Combustible
+der Leicht Brennbare
+%%%%
+the Teletunneler
+der Teletunneler
+%%%%
+# vine stalker skilled in necromancy
+# The corpse flower is called Titanwurz in German, but then the joke is lost
+the Corpseflower
+die Leichenblume
+%%%%
+
+# draconian titles
+%%%%
+the Fire Dragon
+der Feuerdrache
+%%%%
+the Ice Dragon
+der Eisdrache
+%%%%
+the Iron Dragon
+der Eisendrache
+%%%%
+the Storm Dragon
+der Sturmdrache
+%%%%
+the Swamp Dragon
+der Sumpfdrache
+%%%%
+the Faerie Dragon
+der Feedrache
 %%%%
 
 ##############################################
@@ -2783,6 +2851,10 @@ Phalangit
 %%%%
 @Adj@ Porcupine
 {adj-es}@Adj@ Stachelschwein
+%%%%
+# palentonga
+Prickly Pangolin
+Stacheliger Pangolin
 %%%%
 
 # Staves
@@ -3223,6 +3295,14 @@ Ringkämpfer
 @Weight@ Champion
 @Weight@-Champion
 %%%%
+# Djinni
+Weightless Champion
+Schwereloser Champion
+%%%%
+# mummy
+Pharaoh
+Pharao
+%%%%
 
 # Unarmed (martial arts)
 %%%%
@@ -3286,6 +3366,62 @@ Oger-Magier
 %%%%
 Petite Mort
 Petite Mort
+%%%%
+Swordfish
+Schwertfisch
+%%%%
+Rolling Thunder
+Rollender Donner
+%%%%
+Holy Roller
+Heiliger Roller
+%%%%
+Forbidden One
+Verbotener
+%%%%
+Black Lotus
+Schwarzer Lotus
+%%%%
+Rockslime
+Felsenschleim
+%%%%
+God-Hated
+Gottgehaßter
+%%%%
+Wallbreaker
+Wandbrecher
+%%%%
+Highly Combustible
+Leicht Brennbarer
+%%%%
+Teletunneler
+Teletunneler
+%%%%
+# vine stalker skilled in necromancy
+# The corpse flower is called Titanwurz in German, but then the joke is lost
+Corpseflower
+Leichenblume
+%%%%
+
+# draconian titles
+%%%%
+Fire Dragon
+Feuerdrache
+%%%%
+Ice Dragon
+Eisdrache
+%%%%
+Iron Dragon
+Eisendrache
+%%%%
+Storm Dragon
+Sturmdrache
+%%%%
+Swamp Dragon
+Sumpfdrache
+%%%%
+Faerie Dragon
+Feedrache
 %%%%
 
 # Charms (obsolete)

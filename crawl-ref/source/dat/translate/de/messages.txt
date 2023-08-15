@@ -6684,9 +6684,6 @@ Cunning
 Cun
 
 %%%%
-Evo
-
-%%%%
 Ashenzari invites you to partake of a vision and a curse%s.
 
 %%%%
@@ -18341,170 +18338,56 @@ Ihr fühlt Euch allmächtig.
 # skills.cc
 ##################
 %%%%
-Fgt
-
-%%%%
-SBl
-
-%%%%
-LBl
-
-%%%%
-Axs
-
-%%%%
-M&F
-
-%%%%
-Pla
-
-%%%%
-Stv
-
-%%%%
-Slg
-
-%%%%
-Bws
-
-%%%%
-Crb
-
-%%%%
-Thr
-
-%%%%
-Arm
-
-%%%%
-Ddg
-
-%%%%
-Sth
-
-%%%%
-Shd
-
-%%%%
-UC
-
-%%%%
-Spc
-
-%%%%
-Necromancy
-
-%%%%
-Invo
-
-%%%%
 You have mastered %s!
 Ihr habt %s gemeistert!
 %%%%
-Your %s%s skill %s to level %d!
-Eure %s%s Fertigkeit %s auf Level %d!
+Your base %s skill increases to level %d!
+Euer %s-Basis-Skill %s steigt auf Level %d!
 %%%%
-"base "
-
+Your base %s skill decreases to level %d!
+Euer %s-Basis-Skill sinkt auf Level %d!
 %%%%
-Your %s%s skill %s %d levels and is now at level %d!
-
+Your %s skill increases to level %d!
+Euer %s-Skill steigt auf Level %d!
 %%%%
-gained
-
+Your %s skill decreases to level %d!
+Euer %s-Skill sinkt auf Level %d!
 %%%%
-lost
-
+Your base %s skill gained %d levels and is now at level %d!
+Euer %s-Basis-Skill gewinnt %d Levels und ist jetzt auf Level %d!
+%%%%
+Your base %s skill lost %d levels and is now at level %d!
+Euer %s-Basis-Skill verliert %d Levels und ist jetzt auf Level %d!
+%%%%
+Your %s skill gained %d levels and is now at level %d!
+Euer %s-Skill gewinnt %d Levels und ist jetzt auf Level %d!
+%%%%
+Your %s skill lost %d levels and is now at level %d!
+Euer %s-Skill verliert %d Levels und ist jetzt auf Level %d!
 %%%%
 You cannot train any new skills!
-Ihr könnt keine neuen Fertigkeiten trainieren!
+Ihr könnt keine neuen Skills trainieren!
 %%%%
 You need to enable at least one skill for training.
-Ihr müsst mindestens eine Fertigkeit für das Training aktivieren.
+Ihr müsst mindestens einen Skill für das Training aktivieren.
 %%%%
-%sraining target %d.%d for %s reached!
-%sraining Ziel%d.%d für%s erreicht!
+Base training target %.1f for %s reached!
+Basis-Skill Trainingsziel %.1f für {acc}%s erreicht!
 %%%%
-Base t
-
-%%%%
-T
-
+Training target %.1f for %s reached!
+Trainingsziel %.1f für {acc}%s erreicht!
 %%%%
 You have finished your manual of %s and toss it away.
-Ihr habt Euer Handbuch von%s beendet und es weggeworfen.
+Ihr habt Euer Manual von {dat}%s zu Ende gelesen und wirft es weg.
 %%%%
 You can't set training targets!
-
+Ihr könnt euch keine Trainingsziele setzen!
 %%%%
 Clearing the skill training target for %s.
-Löschen des Fertigkeit-Trainingsziels für %s.
+Das Trainingsziels für {acc}%s wird gelöscht.
 %%%%
 Setting a skill training target for %s at %d.%d.
-Festlegen eines Fertigkeitstrainingsziels für %s bei %d,%d.
-%%%%
-Prickly Pangolin
-
-%%%%
-Pharaoh
-
-%%%%
-Weightless Champion
-
-%%%%
-Swordfish
-
-%%%%
-Rolling Thunder
-
-%%%%
-Holy Roller
-
-%%%%
-Forbidden One
-
-%%%%
-Black Lotus
-
-%%%%
-Rockslime
-
-%%%%
-God-Hated
-
-%%%%
-Wallbreaker
-
-%%%%
-Fire Dragon
-
-%%%%
-Highly Combustible
-
-%%%%
-Ice Dragon
-
-%%%%
-Iron Dragon
-
-%%%%
-Storm Dragon
-
-%%%%
-Swamp Dragon
-
-%%%%
-Faerie Dragon
-
-%%%%
-Teletunneler
-
-%%%%
-Corpseflower
-
-%%%%
-" %c Level %.*f%s %s"
-
+Trainingsziel für {acc}%s auf %d,%d festgelegt.
 %%%%
 
 ##################

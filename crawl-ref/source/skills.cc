@@ -287,19 +287,53 @@ static void _change_skill_level(skill_type exsk, int n)
         mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
     else if (abs(n) == 1 && you.num_turns)
     {
-        mprf(MSGCH_INTRINSIC_GAIN, "Your %s%s skill %s to level %d!",
-             specify_base ? "base " : "",
-             skill_name(exsk), (n > 0) ? "increases" : "decreases",
-             you.skills[exsk]);
+        if (specify_base && n > 0)
+        {
+            mprf(MSGCH_INTRINSIC_GAIN, "Your base %s skill increases to level %d!",
+                                       skill_name(exsk), you.skills[exsk]);
+        }
+        else if (specify_base)
+        {
+            mprf(MSGCH_INTRINSIC_GAIN, "Your base %s skill decreases to level %d!",
+                                       skill_name(exsk), you.skills[exsk]);
+        }
+        else if (n > 0)
+        {
+            mprf(MSGCH_INTRINSIC_GAIN, "Your %s skill increases to level %d!",
+                                       skill_name(exsk), you.skills[exsk]);
+        }
+        else
+        {
+            mprf(MSGCH_INTRINSIC_GAIN, "Your %s skill decreases to level %d!",
+                                       skill_name(exsk), you.skills[exsk]);
+        }
     }
     else if (you.num_turns)
     {
-        mprf(MSGCH_INTRINSIC_GAIN, "Your %s%s skill %s %d levels and is now "
-             "at level %d!",
-             specify_base ? "base " : "",
-             skill_name(exsk),
-             (n > 0) ? "gained" : "lost",
-             abs(n), you.skills[exsk]);
+        if (specify_base && n > 0)
+        {
+            mprf(MSGCH_INTRINSIC_GAIN,
+                 "Your base %s skill gained %d levels and is now at level %d!",
+                 skill_name(exsk), abs(n), you.skills[exsk]);
+        }
+        else if (specify_base)
+        {
+            mprf(MSGCH_INTRINSIC_GAIN,
+                 "Your base %s skill lost %d levels and is now at level %d!",
+                 skill_name(exsk), abs(n), you.skills[exsk]);
+        }
+        else if (n > 0)
+        {
+            mprf(MSGCH_INTRINSIC_GAIN,
+                 "Your %s skill gained %d levels and is now at level %d!",
+                 skill_name(exsk), abs(n), you.skills[exsk]);
+        }
+        else
+        {
+            mprf(MSGCH_INTRINSIC_GAIN,
+                 "Your %s skill lost %d levels and is now at level %d!",
+                 skill_name(exsk), abs(n), you.skills[exsk]);
+        }
     }
 
     if (you.skills[exsk] == n && n > 0)
@@ -714,7 +748,7 @@ bool check_selected_skills()
     // Calling a user lua function here to allow enabling skills without user
     // prompt (much like the callback auto_experience for the case of potion of
     // experience).
-    if (clua.callbooleanfn(false, "skill_training_needed", nullptr))
+    if (clua.callbooleanfn(false, "skill_training_needed", nullptr)) // noloc
     {
         // did the callback do anything?
         if (skills_being_trained())
@@ -1106,10 +1140,16 @@ bool check_training_target(skill_type sk)
     if (you.training_targets[sk] && target_met(sk))
     {
         bool base = you.skill(sk, 10, false, false) != you.skill(sk, 10);
-        mprf("%sraining target %d.%d for %s reached!",
-            base ? "Base t" : "T",
-            you.training_targets[sk] / 10,
-            you.training_targets[sk] % 10, skill_name(sk));
+        if (base)
+        {
+            mprf("Base training target %.1f for %s reached!",
+                 you.training_targets[sk] / 10.0, skill_name(sk));
+        }
+        else
+        {
+            mprf("Training target %.1f for %s reached!",
+                 you.training_targets[sk] / 10.0, skill_name(sk));
+        }
 
         you.training_targets[sk] = 0;
         you.train[sk] = TRAINING_DISABLED;
@@ -2166,6 +2206,7 @@ bool compare_skills(skill_type sk1, skill_type sk2)
 
 void dump_skills(string &text)
 {
+    // noloc section start
     for (uint8_t i = 0; i < NUM_SKILLS; i++)
     {
         int real = you.skill((skill_type)i, 10, true);
@@ -2188,6 +2229,7 @@ void dump_skills(string &text)
                                  skill_name(static_cast<skill_type>(i)));
         }
     }
+    // noloc section end
 }
 
 skill_state::skill_state() :
