@@ -2336,7 +2336,7 @@ static string _int_with_plus(int i)
 
 static string _maybe_desc_prop(const char* name, int val, int max = -1)
 {
-    if (val == 0)
+    if (val == 0 && max <= 0)
         return "";
     const int len_delta = strlen("Minimum skill") - strlen(name);
     const string padding = len_delta > 0 ? string(len_delta, ' ') : "";
