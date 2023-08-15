@@ -89,7 +89,7 @@ Ihr seid mesmerisiert.
 
 # Glowing (due to magical contamination)
 %%%%
-glowing
+{status}glowing
 glühend
 %%%%
 You are glowing.
