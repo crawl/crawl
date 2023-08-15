@@ -1233,6 +1233,7 @@ misc/unseen PLAYER
 ## Transformations
 %sdir player/transform
 bat_form TRAN_BAT
+beast_form TRAN_BEAST
 spider_form TRAN_SPIDER
 pig_form TRAN_PIG
 anaconda_form TRAN_ANACONDA

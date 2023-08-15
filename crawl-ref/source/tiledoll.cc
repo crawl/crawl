@@ -287,6 +287,20 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_LEG]     = 0;
         result.parts[TILEP_PART_SHADOW]  = 0;
         break;
+    case transformation::beast:
+        switch (you.species)
+        {
+        case SP_ARMATAUR:
+        case SP_NAGA:
+        case SP_FELID:
+        case SP_OCTOPODE:
+        case SP_DJINNI:  break;
+        default:
+            result.parts[TILEP_PART_BASE] = TILEP_TRAN_BEAST;
+            result.parts[TILEP_PART_LEG]     = 0;
+            break;
+        }
+        break;
     case transformation::statue:
         tileidx_t ch;
         switch (you.species)
