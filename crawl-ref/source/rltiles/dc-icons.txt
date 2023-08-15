@@ -72,7 +72,6 @@ simulacrum SIMULACRUM
 still_winds STILL_WINDS
 waterlogged WATERLOGGED
 weakened WEAKENED
-reflect REFLECTING
 teleporting TELEPORTING
 brill BRILLIANCE
 resist RESISTANCE

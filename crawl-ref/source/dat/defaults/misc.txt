@@ -24,3 +24,4 @@ unusual_monster_items  = wand
 unusual_monster_items += disto,chaos
 unusual_monster_items += curare,atropa,datura,dispersal
 unusual_monster_items += throwing net
+unusual_monster_items += reflect

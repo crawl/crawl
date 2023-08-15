@@ -491,7 +491,6 @@ static map<tileidx_t, int> status_icon_sizes = {
     { TILEI_CONC_VENOM,     7 },
     { TILEI_REPEL_MISSILES, 10 },
     { TILEI_INJURY_BOND,    10 },
-    { TILEI_REFLECTING,     9 },
     { TILEI_TELEPORTING,    9 },
     { TILEI_RESISTANCE,     8 },
     { TILEI_BRILLIANCE,     10 },
