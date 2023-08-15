@@ -18391,23 +18391,6 @@ Trainingsziel für {acc}%s auf %d,%d festgelegt.
 %%%%
 
 ##################
-# sound.h
-##################
-%%%%
-PICKUP
-
-%%%%
-Sound support (Windows Multimedia API)
-
-%%%%
-Sound support (External command)
-
-%%%%
-Sound support (SDL_mixer)
-
-%%%%
-
-##################
 # species-groups.h
 ##################
 
