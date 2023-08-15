@@ -550,6 +550,16 @@ static string _localise_counted_string(const string& context, const string& valu
     return _localise_counted_string(context, singular, plural, count);
 }
 
+/// localise a floating point number stored as string
+static string _localise_float(const string& value)
+{
+    string decimal_point = xlate("DECIMAL_POINT", false);
+    if (decimal_point == "")
+        return value;
+
+    return replace_all_of(value, ".,", decimal_point);
+}
+
 // localise counted string when you only have the plural
 // does NOT fall back to English
 static string _localise_possibly_counted_string(const string& context, const string& value)
@@ -1942,11 +1952,13 @@ static string _build_string(const vector<LocalisationArg>& args, bool translate)
                 else {
                     if (*type == typeid(long double))
                     {
-                        ss << make_stringf(fmt_spec.c_str(), arg.longDoubleVal);
+                        string val = make_stringf(fmt_spec.c_str(), arg.longDoubleVal);
+                        ss << _localise_float(val);
                     }
                     else if (*type == typeid(double))
                     {
-                        ss << make_stringf(fmt_spec.c_str(), arg.doubleVal);
+                        string val = make_stringf(fmt_spec.c_str(), arg.doubleVal);
+                        ss << _localise_float(val);
                     }
                     else if (*type == typeid(long long) || *type == typeid(unsigned long long))
                     {
