@@ -27,6 +27,7 @@
 #include "invent.h"
 #include "item-prop.h"
 #include "libutil.h"
+#include "localise.h"
 #include "message.h"
 #include "output.h"
 #include "prompt.h"
@@ -40,11 +41,15 @@
 #include "transform.h"
 #include "unicode.h"
 
+// noloc section start (keys)
+
 #define RANDART_BOOK_TYPE_KEY  "randart_book_type"
 #define RANDART_BOOK_LEVEL_KEY "randart_book_level"
 
 #define RANDART_BOOK_TYPE_LEVEL "level"
 #define RANDART_BOOK_TYPE_THEME "theme"
+
+// noloc section end
 
 struct sortable_spell
 {
@@ -54,7 +59,7 @@ struct sortable_spell
                 fail_rate_colour(failure_rate_colour(s)),
                 level(spell_levels_required(s)),
                 difficulty(spell_difficulty(s)),
-                name(spell_title(s)),
+                name(localise(spell_title(s))),
                 school(spell_schools_string(s))
     {
     }
@@ -429,8 +434,8 @@ bool library_add_spells(vector<spell_type> spells)
     {
         vector<string> spellnames(new_spells.size());
         transform(new_spells.begin(), new_spells.end(), spellnames.begin(), spell_title);
-        mprf("You add the spell%s %s to your library.",
-             spellnames.size() > 1 ? "s" : "",
+        mprf(spellnames.size() > 1 ? "You add the spells %s to your library."
+                                   : "You add the spell %s to your library.",
              comma_separated_line(spellnames.begin(),
                                   spellnames.end()).c_str());
         return true;
@@ -517,14 +522,30 @@ public:
 protected:
     virtual formatted_string calc_title() override
     {
-        return formatted_string::parse_string(
-                    make_stringf("<w>Spells %s                 Type                          %sLevel",
-                        current_action == action::cast ? "(Cast)    "
-                        : current_action == action::memorise ? "(Memorise)"
-                        : current_action == action::describe ? "(Describe)"
-                        : current_action == action::hide ? "(Hide)    "
-                        : "(Show)    ",
-                        you.divine_exegesis ? "" : "Failure  "));
+        string action_name;
+        if (current_action == action::cast)
+            action_name = "Cast";
+        else if (current_action == action::memorise)
+            action_name = "Memorise";
+        else if (current_action == action::describe)
+            action_name = "Describe";
+        else if (current_action == action::hide)
+            action_name = "Hide";
+        else
+            action_name = "Show";
+        
+        string text = localise("Spells");
+        text += make_stringf(" (%s)", localise(action_name).c_str());
+        text = chop_string(text, 34, true);
+
+        text += chop_string(localise("Type"), 30, true);
+
+        if (!you.divine_exegesis)
+            text += chop_string(localise("Failure"), 9, true);
+
+        text += localise("Level");
+
+        return formatted_string(text, WHITE);
     }
 
 private:
@@ -543,7 +564,8 @@ private:
         if (search_text.size())
         {
             // TODO: couldn't figure out how to do this in pure c++
-            const string match_text = make_stringf("Matches: '<w>%.20s</w>'",
+            string match_text = localise("Matches:");
+            match_text += make_stringf(" '<w>%.20s</w>'", // noloc
                             replace_all(search_text, "<", "<<").c_str());
             int escaped_count = (int) std::count(search_text.begin(),
                                                     search_text.end(), '<');
@@ -555,27 +577,31 @@ private:
             desc << std::setw(36) << "";
         if (hidden_count)
         {
-            desc << std::right << std::setw(hidden_count == 1 ? 3 : 2)
-                 << hidden_count
-                 << (hidden_count > 1 ? " spells" : " spell")
-                 << " hidden";
+            if (hidden_count == 1)
+                desc << " " << localise("1 spell hidden");
+            else
+                desc << localise("%d spells hidden", hidden_count);
         }
         desc << "\n";
 
-        const string act = you.divine_exegesis ? "Cast" : "Memorise";
+        const string act = localise(you.divine_exegesis ? "Cast" : "Memorise");
         // line 2
-        desc << "[<yellow>?</yellow>] help                "
-                "[<yellow>Ctrl-f</yellow>] search      "
-                "[<yellow>!</yellow>] ";
+        desc << "[<yellow>?</yellow>] " // noloc
+             << chop_string(localise("help"), 20)
+             << "[<yellow>" // noloc
+             << localise("Ctrl-F") 
+             << "</yellow>] " // noloc
+             << chop_string(localise("search"), 12)
+             << "[<yellow>!</yellow>] "; // noloc
         desc << ( current_action == action::cast
-                            ? "<w>Cast</w>|Describe|Hide|Show"
+                            ? localise("<w>Cast</w>|Describe|Hide|Show")
                  : current_action == action::memorise
-                            ? "<w>Memorise</w>|Describe|Hide|Show"
+                            ? localise("<w>Memorise</w>|Describe|Hide|Show")
                  : current_action == action::describe
-                            ? act + "|<w>Describe</w>|Hide|Show"
+                            ? act + localise("|<w>Describe</w>|Hide|Show")
                  : current_action == action::hide
-                            ? act + "|Describe|<w>Hide</w>|Show"
-                 : act + "|Describe|Hide|<w>Show</w>");
+                            ? act + localise("|Describe|<w>Hide</w>|Show")
+                 : act + localise("|Describe|Hide|<w>Show</w>"));
 
         set_more(formatted_string::parse_string(desc.str()));
     }
@@ -616,8 +642,9 @@ private:
         case CONTROL('F'):
         {
             char linebuf[80] = "";
+            const string prompt = localise("Search for what? (regex) ");
             const bool validline = title_prompt(linebuf, sizeof linebuf,
-                                                "Search for what? (regex) ");
+                                                prompt.c_str());
             string old_search = search_text;
             if (validline)
                 search_text = linebuf;
@@ -706,12 +733,9 @@ private:
             desc << "<" << colour_to_str(colour) << ">";
 
             desc << left;
-            desc << chop_string(spell.name, 30);
-            desc << spell.school;
+            desc << chop_string(spell.name, 29) + " ";
+            desc << chop_string(spell.school, 29) + " ";
 
-            int so_far = strwidth(desc.str()) - (colour_to_str(colour).length()+2);
-            if (so_far < 60)
-                desc << string(60 - so_far, ' ');
             desc << "</" << colour_to_str(colour) << ">";
 
             if (!you.divine_exegesis)
@@ -755,16 +779,24 @@ public:
 
         if (you.divine_exegesis)
         {
-            spell_levels_str = make_stringf(
-                "<lightgreen>Select a spell to cast with Divine Exegesis: %d MP available</lightgreen>",
-                you.magic_points);
+            spell_levels_str = "<lightgreen>"; // noloc
+            spell_levels_str += localise(
+                "Select a spell to cast with Divine Exegesis: %d MP available",
+                you.magic_points
+            );
+            spell_levels_str += "</lightgreen>"; // noloc
         }
         else
         {
-            spell_levels_str = make_stringf("<lightgreen>%d spell level%s"
-                        "</lightgreen>", player_spell_levels(),
-                        (player_spell_levels() > 1 || player_spell_levels() == 0)
-                                                    ? "s left" : " left ");
+            spell_levels_str = "<lightgreen>"; // noloc
+            if (player_spell_levels() == 1)
+                spell_levels_str += localise("1 spell level left");
+            else
+            {
+                spell_levels_str += 
+                    localise("%d spell levels left", player_spell_levels());
+            }
+            spell_levels_str += "</lightgreen>"; // noloc
             if (player_spell_levels() < 9)
                 spell_levels_str += " ";
         }
@@ -965,6 +997,7 @@ bool learn_spell(spell_type specspell, bool wizard, bool interactive)
             mprf(MSGCH_WARN, "This spell is impossible to cast!");
         else if (severity > 0)
         {
+            // locnote: first %s = dangerous, very dangerous, etc.; second %s = ! or .
             mprf(MSGCH_WARN, "This spell is %s to cast%s",
                              fail_severity_adjs[severity],
                              severity > 1 ? "!" : ".");
@@ -974,9 +1007,10 @@ bool learn_spell(spell_type specspell, bool wizard, bool interactive)
     if (interactive)
     {
         const string prompt = make_stringf(
-                 "Memorise %s, consuming %d spell level%s and leaving %d?",
+                 spell_levels_required(specspell) == 1
+                 ? "Memorise %s, consuming %d spell level and leaving %d?"
+                 : "Memorise %s, consuming %d spell levels and leaving %d?",
                  spell_title(specspell), spell_levels_required(specspell),
-                 spell_levels_required(specspell) != 1 ? "s" : "",
                  player_spell_levels() - spell_levels_required(specspell));
 
         if (!yesno(prompt.c_str(), true, 'n', false))

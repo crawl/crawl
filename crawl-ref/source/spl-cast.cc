@@ -2796,7 +2796,7 @@ string spell_schools_string(spell_type spell)
         {
             if (already)
                 desc += "/";
-            desc += spelltype_long_name(bit);
+            desc += localise(spelltype_long_name(bit));
             already = true;
         }
     }

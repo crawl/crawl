@@ -18415,98 +18415,83 @@ Ihr kniet vor dem Altar von {dat}%s.
 # spl-book.cc
 ##################
 %%%%
-theme
-
-%%%%
 You need no library to learn spells.
-
+Ihr braucht keine Bibliothek, um Zaubersprüche zu lernen.
 %%%%
 Your library has no spells.
 Eure Bibliothek hat keine Zauber.
 %%%%
 You already know all available spells.
-
+Ihr kennt bereits alle verfügbaren Zaubersprüche.
 %%%%
 You cannot currently memorise any of the available spells because you cannot use those schools of magic.
-
+Ihr könnt derzeit keinen der verfügbaren Zaubersprüche memorieren, weil Ihr diese Magieschulen nicht benutzen könnt.
 %%%%
 You cannot memorise any of the available spells.
-
+Ihr könnt derzeit keinen der verfügbaren Zaubersprüche memorieren.
 %%%%
 You can't memorise any new spells for an unknown reason; please file a bug report.
-
+Ihr könnt aus einem unbekannten Grund keine neuen Zaubersprüche memorieren; bitte erstattet einen Fehlerbericht.
 %%%%
-You add the spell%s %s to your library.
-Ihr fügt den Zauber%s %s in Eure Bibliothek ein.
+You add the spells %s to your library.
+Ihr fügt die Zaubersprüche %s zu Eurer Bibliothek hinzu.
 %%%%
-<w>Spells %s                 Type                          %sLevel
-
+You add the spell %s to your library.
+Ihr fügt den Zauberspruch %s zu Eurer Bibliothek hinzu.
 %%%%
-"(Cast)    "
-
+Hide
+Verstecken
 %%%%
-(Memorise)
-
+Show
+Zeigen
 %%%%
-(Describe)
-
+Matches:
+Entspricht:
 %%%%
-"(Hide)    "
-
+1 spell hidden
+1 Zauber versteckt
 %%%%
-"(Show)    "
-
+%d spells hidden
+%d Zauber versteckt
 %%%%
-"Failure  "
-
+help
+Hilfe
 %%%%
-Matches: '<w>%.20s</w>'
-
-%%%%
-" spells"
-
-%%%%
-" hidden"
-
-%%%%
-"[<yellow>?</yellow>] help                [<yellow>Ctrl-f</yellow>] search      [<yellow>!</yellow>] "
-
+search
+suchen
 %%%%
 <w>Cast</w>|Describe|Hide|Show
-
+<w>Wirken</w>|Beschreiben|Verstecken|Zeigen
 %%%%
 <w>Memorise</w>|Describe|Hide|Show
-
+<w>Memorieren</w>|Beschreiben|Verstecken|Zeigen
 %%%%
 |<w>Describe</w>|Hide|Show
-
+|<w>Beschreiben</w>|Verstecken|Zeigen
 %%%%
 |Describe|<w>Hide</w>|Show
-
+|Beschreiben|<w>Verstecken</w>|Zeigen
 %%%%
 |Describe|Hide|<w>Show</w>
-
+|Beschreiben|Verstecken|<w>Zeigen</w>
 %%%%
 "Search for what? (regex) "
-
+"Wonach suchen? (regex) "
 %%%%
-<lightgreen>Select a spell to cast with Divine Exegesis: %d MP available</lightgreen>
-
+Select a spell to cast with Divine Exegesis: %d MP available
+Einen Zauber wählen, mit Göttlicher Exegese zu wirken : %d Mana verfügbar
 %%%%
-<lightgreen>%d spell level%s</lightgreen>
-
+1 spell level left
+1 Zauberpunkt übrig
 %%%%
-s left
-
-%%%%
-" left "
-
+%d spell levels left
+%d Zauberpunkte übrig
 %%%%
 Your brain is not functional enough to learn spells.
 Euer Gehirn ist nicht funktionsfähig genug, um Zauber zu lernen.
 %%%%
 Sorry, this spell is gone!
-Entschuldigung, dieser Zauber ist weg!
+Sorry, dieser Zauber ist weg!
 %%%%
 You already know that spell!
 Ihr kennt diesen Zauber schon!
@@ -18515,19 +18500,23 @@ Your head is already too full of spells!
 Euer Kopf ist schon zu voller Zauber!
 %%%%
 You're too inexperienced to learn that spell!
-Ihr seid zu unerfahren, um diesen Zauber zu lernen!
+Ihr seid zu unerfahren, diesen Zauber zu lernen!
 %%%%
 You can't memorise that many levels of magic yet!
-Ihr könnt Euch noch nicht so viele magische Ebenen merken!
+Ihr habt noch nicht genügend Zauberpunkte!
 %%%%
 This spell is impossible to cast!
 Dieser Zauber ist unmöglich zu wirken!
 %%%%
+# note: first %s = dangerous, very dangerous, etc.; second %s = ! or .
 This spell is %s to cast%s
-Dieser Zauber ist%s, um%s zu wirken.
+Dieser Zauber ist %s zu wirken%s
 %%%%
-Memorise %s, consuming %d spell level%s and leaving %d?
-
+Memorise %s, consuming %d spell level and leaving %d?
+%s memorieren, dabei %d Zauberpunkte verbrauchen und %d lassen?
+%%%%
+Memorise %s, consuming %d spell levels and leaving %d?
+%s memorieren, dabei %d Zauberpunkte verbrauchen und %d lassen?
 %%%%
 You don't know of any spells!
 Ihr kennt keine Zauber!
