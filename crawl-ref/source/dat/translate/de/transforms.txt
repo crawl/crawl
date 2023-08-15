@@ -202,6 +202,41 @@ your shield tentacle
 Euer Schildtentakel
 %%%%
 
+# skin
+%%%%
+scales
+Schuppen
+%%%%
+feathers
+Federn
+%%%%
+fur
+Fell
+%%%%
+bandages
+Bandagen
+%%%%
+skin
+Haut
+%%%%
+
+# your skin
+%%%%
+your scales
+Eure Schuppen
+%%%%
+your feathers
+Eure Federn
+%%%%
+your fur
+{n}Euer Fell
+%%%%
+your bandages
+Eure Bandagen
+%%%%
+your skin
+Eure Haut
+%%%%
 
 ################################
 # Spider-form

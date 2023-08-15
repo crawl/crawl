@@ -25,6 +25,7 @@
 #include "externs.h"
 #include "god-passive.h"
 #include "killer-type.h"
+#include "localise.h"
 #include "message.h"
 #include "monster.h"
 #include "mon-death.h"
@@ -131,8 +132,10 @@ static void _curse_message(actor& target, actor* /*source*/,
         messages.push_back("Your bandages flutter.");
     else
     {
-        messages.push_back(make_stringf("Your %s prickle%s.",
-                        skin.c_str(), ends_with(skin, "s") ? "" : "s"));
+        if (ends_with(skin, "s"))
+            messages.push_back("%s prickle.");
+        else
+            messages.push_back("%s prickles.");
     }
 
     if (!silenced(you.pos()))
@@ -141,7 +144,15 @@ static void _curse_message(actor& target, actor* /*source*/,
     if (species::has_bones(you.species))
         messages.push_back("Your bones ache.");
 
-    mpr(*random_iterator(messages));
+    auto msg = random_iterator(messages);
+
+    if (contains(*msg, "%s"))
+    {
+        const string your_skin = "your " + skin;
+        mprf(msg->c_str(), your_skin.c_str());
+    }
+    else
+        mpr(*msg);
 }
 
 /** Table of possible curse effects

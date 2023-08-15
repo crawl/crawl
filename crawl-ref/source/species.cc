@@ -341,7 +341,7 @@ namespace species
     string prayer_action(species_type species)
     {
       auto action = get_species_def(species).altar_action;
-      return action ? action : "kneel at";
+      return action ? action : "You kneel at the altar of %s.";
     }
 
     static const string shout_verbs[] = {"shout", "yell", "scream"};
@@ -397,7 +397,7 @@ namespace species
         else if (species == SP_MUMMY)
             return adj ? "bandage-wrapped " : "bandages";
         else
-            return adj ? "fleshy" : "skin";
+            return adj ? "fleshy " : "skin";
     }
 
     string arm_name(species_type species)
@@ -756,9 +756,11 @@ void change_species_to(species_type sp)
         if (you_can_wear(static_cast<equipment_type>(i)) == MB_FALSE
             && you.equip[i] != -1)
         {
-            mprf("%s fall%s away.",
-                 you.inv[you.equip[i]].name(DESC_YOUR).c_str(),
-                 you.inv[you.equip[i]].quantity > 1 ? "" : "s");
+            const string your_equip = you.inv[you.equip[i]].name(DESC_YOUR);
+            if (you.inv[you.equip[i]].quantity > 1)
+                mprf("%s fall away.", your_equip.c_str());
+            else
+                mprf("%s falls away.", your_equip.c_str());
             // Unwear items without the usual processing.
             you.equip[i] = -1;
             you.melded.set(i, false);

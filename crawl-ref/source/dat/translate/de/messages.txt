@@ -2330,10 +2330,10 @@ You smell decay.
 Your bandages flutter.
 Eure Bandagen flattern.
 %%%%
-Your %s prickle%s.
+%s prickle.
 
 %%%%
-s
+%s prickles.
 
 %%%%
 You hear strange and distant voices.
@@ -7886,6 +7886,9 @@ these
 
 %%%%
 this
+
+%%%%
+s
 
 %%%%
 ". You'll "
@@ -18398,56 +18401,14 @@ Trainingsziel für {acc}%s auf %d,%d festgelegt.
 # species.cc
 ##################
 %%%%
-fiery red
-
+You kneel at the altar of %s.
+Ihr kniet vor dem Altar von {dat}%s.
 %%%%
-icy white
-
+%s fall away.
+%s fallen weg.
 %%%%
-lurid green
-
-%%%%
-golden yellow
-
-%%%%
-dull iron-grey
-
-%%%%
-glossy black
-
-%%%%
-rich purple
-
-%%%%
-pale cyan-grey
-
-%%%%
-plain brown
-
-%%%%
-kneel at
-
-%%%%
-scales
-
-%%%%
-feathers
-
-%%%%
-fur
-
-%%%%
-bandages
-
-%%%%
-fleshy
-
-%%%%
-skin
-
-%%%%
-%s fall%s away.
-%s fallen%s weg.
+%s falls away.
+%s fällt weg.
 %%%%
 
 ##################

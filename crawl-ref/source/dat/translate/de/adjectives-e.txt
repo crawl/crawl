@@ -386,6 +386,38 @@
 %%%%
 
 ################################
+# player draconian scale colours
+################################
+%%%%
+fiery red
+feurig rote
+%%%%
+icy white
+eisweiße
+%%%%
+lurid green
+grellgrüne
+%%%%
+golden yellow
+goldgelbe
+%%%%
+dull iron-grey
+matte eisengraue
+%%%%
+glossy black
+glänzend schwarze
+%%%%
+rich purple
+dunkelviolette
+%%%%
+pale cyan-grey
+blasse cyan-graue
+%%%%
+plain brown
+einfarbig braune
+%%%%
+
+################################
 # monsters
 ################################
 %%%%
