@@ -18307,13 +18307,13 @@ skill descriptions
 Beschreibungen der Skills
 %%%%
 set skill target
-Trainingsziel festlegen
+Ziel festlegen
 %%%%
 clear selected target
-ausgewähltes Ziel löschen
+Ziel löschen
 %%%%
 set a skill target
-Trainingsziel festlegen
+Ziel festlegen
 %%%%
 clear all targets
 alle Ziele löschen
