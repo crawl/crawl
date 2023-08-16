@@ -759,12 +759,8 @@ static vector<string> _get_form_fakemuts(bool terse)
     }
 
     // bad stuff
-    if (!terse
-        && (you.form == transformation::blade_hands
-            || you.form == transformation::shadow)) // hard-coded effect
-    {
+    if (!terse && you.form == transformation::shadow) // hard-coded effect
         result.push_back(_badmut("Your spellcasting is less reliable in this form."));
-    }
 
     // XX say something about AC? Best would be to compare it to AC without
     // the form, but I'm not sure if that's possible
