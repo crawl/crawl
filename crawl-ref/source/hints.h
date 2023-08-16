@@ -137,7 +137,9 @@ enum hints_event_type
 #endif
     HINT_SEEN_WEB,
     HINT_MALEVOLENCE,
+#if TAG_MAJOR_VERSION == 34
     HINT_OPPORTUNITY_ATTACK,
+#endif
     HINT_EVENTS_NUM
 };
 
