@@ -20,6 +20,7 @@
 14. http://prd.5footstep.de/
 15. http://www.baldurs-gate.ch/bg2/
 16. http://www.knight.privat.t-online.de/KnightsBG2Kits.html
+17. https://media.wizards.com/2023/downloads/dnd/SRD_CC_v5.1_DE.pdf
 
 ## Specific Terms
 
@@ -94,6 +95,23 @@ Eleionoma - German plural is Eleionomai - ref: https://de.wikipedia.org/wiki/Ele
 
 Blink - in [5] translated as Flimmern.
       - in [6] translated as Blinzeln: https://de.classic.wowhead.com/search?q=blinzeln
+
+Some specific terms from the German D&D System Reference Document [17]:
+spell = Zauber
+cantrip = Zaubertick (simple spell)
+spell level = Zaubergrad
+spell slot = Zauberplatz (in D&D, these are used up when you cast spells, and are replenished by resting)
+cast spell = einen Zauber wirken
+(spell) range = Reichweite
+casting time = Zeitaufwand
+(spell) duration = Wirkungsdauer
+area of effect = Wirkungsbereich
+abjuration = Bannzauber
+skill = fertigkeit
+experience points = Erfahrungspunkte
+hit dice = Trefferwürfel
+manual = Handbuch
+potion = Trank
 
 ## Adjectives
 
