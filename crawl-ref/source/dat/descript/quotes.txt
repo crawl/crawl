@@ -3102,6 +3102,15 @@ shapeshifter
     -Homer, _The Odyssey_, IV, 602-14.
      trans. George Chapman, 1857.
 %%%%
+shillelagh "Devastator"
+
+“‘Hurrah! my boys,’ says I, my shillelagh I let fly.
+ Some Galway boys were by, they saw I was a hobbling;
+ Then with a loud ‘hurrah!’ they joined me in the fray.
+ Faugh-a-ballagh! Clear the way! for the rocky road to Dublin!”
+
+    -D.K. Gavan, _Rocky Road to Dublin_. 19th Century.
+%%%%
 shortbow
 
 “You are the bows from which your children as living arrows are sent forth.”
