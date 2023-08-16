@@ -215,6 +215,35 @@ static void _clear_constriction_data()
         you.stop_being_constricted();
 }
 
+static void _mark_potential_pursuers(coord_def new_pos)
+{
+    if (you.attribute[ATTR_SERPENTS_LASH]           // too fast!
+        || wu_jian_move_triggers_attacks(new_pos)   // too cool!
+        || crawl_state.game_is_tutorial())          // too new!
+    {
+        return;
+    }
+
+    const coord_def orig_pos = you.pos();
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        if (!one_chance_in(20))
+            continue;
+        // Only trigger swiftness for monsters you're moving away from.
+        if (grid_distance(new_pos, *ri) <= grid_distance(orig_pos, *ri))
+            continue;
+        monster* mon = monster_at(*ri);
+        // No, there is no logic to this ordering (pf):
+        if (!mon || !mon->can_see(you))
+            continue;
+        actor* foe = mon->get_foe();
+        if (!foe || !foe->is_player())
+            continue;
+
+        crawl_state.potential_pursuers.insert(mon);
+    }
+}
+
 bool apply_cloud_trail(const coord_def old_pos)
 {
     if (you.duration[DUR_CLOUD_TRAIL])
@@ -680,7 +709,7 @@ static spret _rampage_forward(coord_def move)
 
     // First, apply any necessary pre-move effects:
     _clear_constriction_data();
-    // (But not opportunity attacks - messy codewise, and no design benefit.)
+    _mark_potential_pursuers(rampage_destination);
 
     // stepped = true, we're flavouring this as movement, not a blink.
     move_player_to_grid(rampage_destination, true);
@@ -1062,6 +1091,7 @@ void move_player_action(coord_def move)
         if (you.pos() != targ && targ_pass)
         {
             _clear_constriction_data();
+            _mark_potential_pursuers(targ);
             move_player_to_grid(targ, true);
             apply_barbs_damage();
             remove_ice_movement();

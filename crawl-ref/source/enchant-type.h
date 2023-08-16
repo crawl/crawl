@@ -204,6 +204,7 @@ enum enchant_type
     ENCH_SIMULACRUM,
     ENCH_NECROTISE,
     ENCH_CONTAM,
+    ENCH_PURSUING,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

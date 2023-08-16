@@ -501,6 +501,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_SWIFT:
+    case ENCH_PURSUING:
         if (!quiet)
         {
             if (type == MONS_ALLIGATOR)
@@ -1365,6 +1366,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SLOW:
     case ENCH_HASTE:
     case ENCH_SWIFT:
+    case ENCH_PURSUING:
     case ENCH_MIGHT:
     case ENCH_FEAR:
     case ENCH_PARALYSIS:
@@ -2096,7 +2098,7 @@ static const char *enchant_names[] =
     "vile_clutch", "waterlogged", "ring_of_flames",
     "ring_chaos", "ring_mutation", "ring_fog", "ring_ice", "ring_neg",
     "ring_acid", "ring_miasma", "concentrate_venom", "fire_champion",
-    "anguished", "simulacra", "necrotizing", "glowing",
+    "anguished", "simulacra", "necrotizing", "glowing", "pursuing",
     "buggy", // NUM_ENCHANTMENTS
 };
 
@@ -2228,6 +2230,11 @@ int mon_enchant::calc_duration(const monster* mons,
     // monster HD via modded_speed(). Use _mod_speed instead!
     switch (ench)
     {
+    case ENCH_PURSUING:
+        // This is a bit more than enough for a monster to catch up to
+        // the player from a full 8 tiles away (Ba LOS) and maybe get
+        // in an extra hit, assuming they start at the same speed and
+        // the player keeps running away for a full 40ish turns.
     case ENCH_SWIFT:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;

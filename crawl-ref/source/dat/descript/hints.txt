@@ -538,6 +538,12 @@ dungeon may randomly cause bad things to happen to you. When this happens,
 pause, think carefully, and be ready to use consumables or abilities. Fight to
 survive!"
 %%%%
+HINT_HOT_PURSUIT
+
+When you move away from an enemy, they have a small chance of entering hot pursuit,
+covering ground faster for some time thereafter. Repositioning and retreating is
+often still good, but keep an eye out!
+%%%%
 HINT_YOU_ENCHANTED
 
 Enchantments of all types can befall you temporarily.
