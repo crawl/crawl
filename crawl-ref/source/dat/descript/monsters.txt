@@ -1388,8 +1388,9 @@ it earned its rank.
 %%%%
 goblin
 
-A short, ugly and unfriendly humanoid: squat, broad, flat-nosed,
-sallow-skinned, with a wide mouth and pistachio-shaped eyes.
+A short, impatient and unfriendly humanoid. Goblins first appeared only a few
+years ago, but are now remarkably numerous. Sadly, no number of raucous goblin
+parties will put them in a welcoming mood toward adventurers.
 %%%%
 golden dragon
 
@@ -1504,9 +1505,8 @@ ready with debilitating spells and deadly knifework.
 %%%%
 hobgoblin
 
-A larger and even uglier goblin, with an even worse temper to match. Many
-foolish young adventurers have underestimated the danger of crossing a
-hobgoblin and paid for it with their lives.
+A larger and even ruder goblin. Hobgoblins are perfectly capable of wielding
+weapons, but most prefer to beat their opponents to death with their bare hands.
 %%%%
 hog
 
@@ -1962,7 +1962,7 @@ spinnerets. It seems to want to keep its distance.
 %%%%
 orc
 
-An peculiar subterranean creature, thought to be a distant relative of the
+A peculiar subterranean creature, thought to be a distant relative of the
 human, or the pig, or perhaps the platypus. Orcs love groups, in which they
 gather for whatever worrying activities orcs enjoy.
 %%%%
@@ -3070,7 +3070,7 @@ ice bat
 
 An undead creature in the shape of a bat, made of ice.
 %%%%
-kamikaze kobold
+flame-cult kobold
 
 A kobold that has been enchanted to explode in a blaze of fire.
 %%%%

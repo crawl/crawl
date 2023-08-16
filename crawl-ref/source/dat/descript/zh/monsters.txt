@@ -2766,7 +2766,7 @@ ice bat
 
 一个蝙蝠形的亡灵生物，它的身体是由冰构成的。
 %%%%
-kamikaze kobold
+flame-cult kobold
 
 这个狗头人被附了魔法，在火焰中会爆炸。
 %%%%
