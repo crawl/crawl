@@ -1852,8 +1852,7 @@ int player_movement_speed(bool check_terrain)
         mv /= 10;
     }
 
-    if (you.duration[DUR_SWIFTNESS] > 0 && (!check_terrain
-                                            || !you.in_liquid()))
+    if (you.duration[DUR_SWIFTNESS] > 0)
     {
         if (you.attribute[ATTR_SWIFTNESS] > 0)
           mv = div_rand_round(3*mv, 4);
@@ -3221,12 +3220,12 @@ static void _display_movement_speed()
           (fly)     ? "flying"
                     : "movement",
 
-          (!water && swift) ? "aided by the wind" :
-          (!water && antiswift) ? "hindered by the wind" : "",
+          (swift) ? "aided by the wind" :
+          (antiswift) ? "hindered by the wind" : "",
 
-          (!water && swift) ? ((move_cost >= 10) ? ", but still "
+          (swift) ? ((move_cost >= 10) ? ", but still "
                                                  : " and ") :
-          (!water && antiswift) ? ((move_cost <= 10) ? ", but still "
+          (antiswift) ? ((move_cost <= 10) ? ", but still "
                                                      : " and ")
                             : "",
 

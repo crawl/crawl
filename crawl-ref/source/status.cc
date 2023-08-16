@@ -229,8 +229,6 @@ bool fill_status_info(int status, status_info& inf)
             inf.short_text   = "sluggish";
             inf.long_text    = "You are moving sluggishly.";
         }
-        if (you.in_liquid())
-            inf.light_colour = DARKGREY;
         break;
 
     case STATUS_ZOT:

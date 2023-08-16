@@ -111,13 +111,6 @@ spret cast_swiftness(int power, bool fail)
 {
     fail_check();
 
-    if (you.in_liquid())
-    {
-        // Hint that the player won't be faster until they leave the liquid.
-        mprf("The %s foams!", you.in_water() ? "water"
-                                             : "liquid ground");
-    }
-
     you.set_duration(DUR_SWIFTNESS, 12 + random2(power)/2, 30,
                      "You feel quick.");
     you.attribute[ATTR_SWIFTNESS] = you.duration[DUR_SWIFTNESS];
