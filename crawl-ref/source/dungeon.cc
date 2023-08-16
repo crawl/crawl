@@ -4766,7 +4766,14 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
     if (props.exists(IDENT_KEY))
         item.flags |= props[IDENT_KEY].get_int();
     if (props.exists(UNOBTAINABLE_KEY))
+    {
         item.flags |= ISFLAG_UNOBTAINABLE;
+        if (is_unrandom_artefact(item) || is_xp_evoker(item))
+        {
+            destroy_item(item, true);
+            return false;
+        }
+    }
 
     if (props.exists(NO_PICKUP_KEY))
         item.flags |= ISFLAG_NO_PICKUP;
