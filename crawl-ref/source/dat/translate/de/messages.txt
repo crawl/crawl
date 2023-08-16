@@ -18446,10 +18446,10 @@ Select a spell to cast with Divine Exegesis: %d MP available
 Einen Zauber wählen, mit Göttlicher Exegese zu wirken : %d Mana verfügbar
 %%%%
 1 spell level left
-1 Zauberpunkt übrig
+1 Zauberplatz übrig
 %%%%
 %d spell levels left
-%d Zauberpunkte übrig
+%d Zauberplätze übrig
 %%%%
 Your brain is not functional enough to learn spells.
 Euer Gehirn ist nicht funktionsfähig genug, um Zauber zu lernen.
@@ -18467,7 +18467,7 @@ You're too inexperienced to learn that spell!
 Ihr seid zu unerfahren, diesen Zauber zu lernen!
 %%%%
 You can't memorise that many levels of magic yet!
-Ihr habt noch nicht genügend Zauberpunkte!
+Ihr habt noch nicht genügend Zauberplätze!
 %%%%
 This spell is impossible to cast!
 Dieser Zauber ist unmöglich zu wirken!
@@ -18477,10 +18477,10 @@ This spell is %s to cast%s
 Dieser Zauber ist %s zu wirken%s
 %%%%
 Memorise %s, consuming %d spell level and leaving %d?
-%s memorieren, dabei %d Zauberpunkte verbrauchen und %d lassen?
+%s memorieren, dabei %d Zauberplätze verbrauchen und %d lassen?
 %%%%
 Memorise %s, consuming %d spell levels and leaving %d?
-%s memorieren, dabei %d Zauberpunkte verbrauchen und %d lassen?
+%s memorieren, dabei %d Zauberplätze verbrauchen und %d lassen?
 %%%%
 You don't know of any spells!
 Ihr kennt keine Zauber!
