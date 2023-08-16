@@ -151,7 +151,7 @@ void seen_monsters_react(int stealth)
         if (!mi->visible_to(&you))
             continue;
 
-        if (!mi->has_ench(ENCH_INSANE) && mi->can_see(you))
+        if (!mi->has_ench(ENCH_FRENZIED) && mi->can_see(you))
         {
             // Trigger Duvessa & Dowan upgrades
             if (mi->props.exists(ELVEN_ENERGIZE_KEY))

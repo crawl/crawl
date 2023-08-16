@@ -55,7 +55,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_SILVER_CORONA,   MB_GLOWING },
     { ENCH_SLOW,            MB_SLOWED },
     { ENCH_SICK,            MB_SICK },
-    { ENCH_INSANE,          MB_INSANE },
+    { ENCH_FRENZIED,          MB_FRENZIED },
     { ENCH_HASTE,           MB_HASTED },
     { ENCH_MIGHT,           MB_STRONG },
     { ENCH_CONFUSION,       MB_CONFUSED },

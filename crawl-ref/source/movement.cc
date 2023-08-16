@@ -1003,7 +1003,7 @@ void move_player_action(coord_def move)
             }
         }
         else if (targ_monst->temp_attitude() == ATT_NEUTRAL
-                 && !targ_monst->has_ench(ENCH_INSANE)
+                 && !targ_monst->has_ench(ENCH_FRENZIED)
                  && !you.confused()
                  && targ_monst->visible_to(&you))
         {

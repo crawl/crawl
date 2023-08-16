@@ -619,7 +619,7 @@ void monster::timeout_enchantments(int levels)
                 lose_ench_levels(entry.second, levels);
             break;
 
-        case ENCH_INSANE:
+        case ENCH_FRENZIED:
         case ENCH_BERSERK:
         case ENCH_INNER_FLAME:
         case ENCH_ROLLING:

@@ -234,7 +234,7 @@ void monster::ensure_has_client_id()
 
 mon_attitude_type monster::temp_attitude() const
 {
-    if (has_ench(ENCH_INSANE))
+    if (has_ench(ENCH_FRENZIED))
         return ATT_NEUTRAL;
 
     if (has_ench(ENCH_HEXED))
@@ -2636,7 +2636,7 @@ bool monster::go_frenzy(actor *source)
 
     const int duration = 16 + random2avg(13, 2);
 
-    add_ench(mon_enchant(ENCH_INSANE, 0, source, duration * BASELINE_DELAY));
+    add_ench(mon_enchant(ENCH_FRENZIED, 0, source, duration * BASELINE_DELAY));
     add_ench(mon_enchant(ENCH_HASTE, 0, source, duration * BASELINE_DELAY));
     add_ench(mon_enchant(ENCH_MIGHT, 0, source, duration * BASELINE_DELAY));
 
@@ -2984,7 +2984,7 @@ bool monster::pacified() const
 bool monster::can_feel_fear(bool /*include_unknown*/) const
 {
     return (holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
-           && !berserk_or_insane();
+           && !berserk_or_frenzied();
 }
 
 /**
@@ -4266,7 +4266,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         // Damage over time effects are excluded for similar reasons.
         if (agent && agent->is_player()
             && mons_class_gives_xp(type)
-            && (temp_attitude() == ATT_HOSTILE || has_ench(ENCH_INSANE))
+            && (temp_attitude() == ATT_HOSTILE || has_ench(ENCH_FRENZIED))
             && type != MONS_NAMELESS // hack - no usk piety for miscasts
             && flavour != BEAM_SHARED_PAIN
             && flavour != BEAM_STICKY_FLAME
@@ -4852,14 +4852,14 @@ bool monster::can_get_mad() const
     if (paralysed() || petrified() || petrifying())
         return false;
 
-    if (berserk_or_insane() || has_ench(ENCH_FATIGUE))
+    if (berserk_or_frenzied() || has_ench(ENCH_FATIGUE))
         return false;
 
     return true;
 }
 
 /**
- * Can the monster suffer ENCH_INSANE?
+ * Can the monster suffer ENCH_FRENZIED?
  */
 bool monster::can_go_frenzy() const
 {
@@ -4889,9 +4889,9 @@ bool monster::berserk() const
 }
 
 // XXX: this function could use a better name
-bool monster::berserk_or_insane() const
+bool monster::berserk_or_frenzied() const
 {
-    return berserk() || has_ench(ENCH_INSANE);
+    return berserk() || has_ench(ENCH_FRENZIED);
 }
 
 bool monster::needs_berserk(bool check_spells, bool ignore_distance) const
@@ -6251,7 +6251,7 @@ bool monster::has_facet(int facet) const
 /// If the player attacks this monster, will it become hostile?
 bool monster::angered_by_attacks() const
 {
-    return !has_ench(ENCH_INSANE)
+    return !has_ench(ENCH_FRENZIED)
             && !mons_is_avatar(type)
             && !mons_class_is_zombified(type)
             && type != MONS_BOUND_SOUL

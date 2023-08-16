@@ -341,7 +341,7 @@ static void _swim_or_move_energy(monster& mon)
 
 static bool _unfriendly_or_impaired(const monster& mon)
 {
-    return !mon.wont_attack() || mon.has_ench(ENCH_INSANE) || mon.confused();
+    return !mon.wont_attack() || mon.has_ench(ENCH_FRENZIED) || mon.confused();
 }
 
 // Check up to eight grids in the given direction for whether there's a
@@ -507,7 +507,7 @@ static void _maybe_set_patrol_route(monster* mons)
 static bool _mons_can_cast_dig(const monster* mons, bool random)
 {
     if (mons->foe == MHITNOT || !mons->has_spell(SPELL_DIG) || mons->confused()
-        || mons->berserk_or_insane())
+        || mons->berserk_or_frenzied())
     {
         return false;
     }
@@ -635,7 +635,7 @@ static void _handle_movement(monster* mons)
             // scared.
             if (mons->is_nonliving()
                 || mons->berserk()
-                || mons->has_ench(ENCH_INSANE)
+                || mons->has_ench(ENCH_FRENZIED)
                 || x_chance_in_y(2, 5))
             {
                 mons_stop_fleeing_from_sanctuary(*mons);
@@ -708,7 +708,7 @@ static void _handle_movement(monster* mons)
         && mons_intel(*mons) > I_BRAINLESS
         && coinflip()
         && !mons_is_confused(*mons) && !mons->caught()
-        && !mons->berserk_or_insane())
+        && !mons->berserk_or_frenzied())
     {
         _fill_good_move(mons, &good_move);
         good_move_filled = true;
@@ -951,7 +951,7 @@ static bool _handle_reaching(monster& mons)
         || is_sanctuary(mons.pos())
         || is_sanctuary(foe->pos())
         || mons.submerged()
-        || (mons_aligned(&mons, foe) && !mons.has_ench(ENCH_INSANE))
+        || (mons_aligned(&mons, foe) && !mons.has_ench(ENCH_FRENZIED))
         || mons_is_fleeing(mons)
         || mons.pacified())
     {
@@ -1403,7 +1403,7 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
 
     // Berserking monsters are limited to running up and
     // hitting their foes.
-    if (mons.berserk_or_insane())
+    if (mons.berserk_or_frenzied())
     {
         if (_handle_reaching(mons))
         {
@@ -1809,7 +1809,7 @@ void handle_monster_move(monster* mons)
             && targ != mons
             && mons->behaviour != BEH_WITHDRAW
             && (!(mons_aligned(mons, targ) || targ->type == MONS_FOXFIRE)
-                || mons->has_ench(ENCH_INSANE))
+                || mons->has_ench(ENCH_FRENZIED))
             && monster_can_hit_monster(mons, targ))
         {
             // Maybe they can swap places?
@@ -2816,14 +2816,14 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
 
         if ((mons_aligned(mons, targmonster)
              || targmonster->type == MONS_FOXFIRE)
-            && !mons->has_ench(ENCH_INSANE)
+            && !mons->has_ench(ENCH_FRENZIED)
             && !_mons_can_displace(mons, targmonster))
         {
             return false;
         }
         // Prefer to move past enemies instead of hit them, if we're retreating
         else if ((!mons_aligned(mons, targmonster)
-                  || mons->has_ench(ENCH_INSANE))
+                  || mons->has_ench(ENCH_FRENZIED))
                  && mons->behaviour == BEH_WITHDRAW)
         {
             return false;
@@ -3177,7 +3177,7 @@ static bool _monster_move(monster* mons)
         mprf(MSGCH_TALK_VISUAL, "%s rages.", mons->name(DESC_THE).c_str());
     // Look, this is silly.
     if (one_chance_in(5)
-        && mons->has_ench(ENCH_INSANE)
+        && mons->has_ench(ENCH_FRENZIED)
         && get_shout_noise_level(mons_shouts(mons->type)))
     {
         monster_attempt_shout(*mons);
@@ -3216,7 +3216,7 @@ static bool _monster_move(monster* mons)
                                                : moves[random2(moves.size())];
 
         const monster* mon2 = monster_at(newpos);
-        if (!mons->has_ench(ENCH_INSANE)
+        if (!mons->has_ench(ENCH_FRENZIED)
             && (newpos == you.pos() && mons->wont_attack()
                 || (mon2 && mons->wont_attack() == mon2->wont_attack())))
         {
@@ -3399,7 +3399,7 @@ static bool _monster_move(monster* mons)
         if (monster* targ = monster_at(mons->pos() + mmov))
         {
             if ((mons_aligned(mons, targ) || targ->type == MONS_FOXFIRE)
-                && !(mons->has_ench(ENCH_INSANE)
+                && !(mons->has_ench(ENCH_FRENZIED)
                      || mons->confused()))
             {
                 ret = _monster_swaps_places(mons, mmov);

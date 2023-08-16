@@ -451,7 +451,7 @@ bool mons_speaks(monster* mons)
         }
 
         // Berserk monsters just want your hide.
-        if (mons->berserk_or_insane())
+        if (mons->berserk_or_frenzied())
             return false;
 
         // Rolling beetles shouldn't twitch antennae

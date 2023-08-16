@@ -57,7 +57,7 @@ enum enchant_type
 #endif
     ENCH_SWIFT,
     ENCH_TIDE,
-    ENCH_INSANE,         // Berserk + changed attitude.
+    ENCH_FRENZIED,         // Berserk + changed attitude.
     ENCH_SILENCE,
     ENCH_AWAKEN_FOREST,
     ENCH_EXPLODING,

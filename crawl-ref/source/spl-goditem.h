@@ -61,7 +61,7 @@ const enchant_type dispellable_enchantments[] =
     ENCH_CONCENTRATE_VENOM,
     ENCH_MIRROR_DAMAGE,
     ENCH_BLIND,
-    ENCH_INSANE,
+    ENCH_FRENZIED,
     ENCH_DAZED,
     ENCH_ANTIMAGIC,
     ENCH_ANGUISH,

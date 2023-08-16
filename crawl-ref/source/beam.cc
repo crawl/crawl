@@ -1744,7 +1744,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
             return true;
         }
         break;
-    case ENCH_INSANE:
+    case ENCH_FRENZIED:
         if (!mons->can_go_frenzy())
         {
             if (simple_monster_message(*mons, " is unaffected."))
@@ -1812,8 +1812,8 @@ spret mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
         if (resisted)
             continue;
 
-        if ((wh_enchant == ENCH_INSANE && mi->go_frenzy(&you))
-            || (wh_enchant != ENCH_INSANE
+        if ((wh_enchant == ENCH_FRENZIED && mi->go_frenzy(&you))
+            || (wh_enchant != ENCH_FRENZIED
                 && mi->add_ench(mon_enchant(wh_enchant, 0, &you))))
         {
             // Do messaging.
@@ -1837,7 +1837,7 @@ spret mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
     if (!did_msg)
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    if (wh_enchant == ENCH_INSANE)
+    if (wh_enchant == ENCH_FRENZIED)
         did_god_conduct(DID_HASTY, 8, true);
 
     return spret::success;
@@ -5596,7 +5596,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_BERSERK:
-        if (!mon->berserk_or_insane())
+        if (!mon->berserk_or_frenzied())
         {
             // currently from potion, hence voluntary
             mon->go_berserk(true);

@@ -366,7 +366,7 @@ static bool _disabled_merge(monster* thing)
            || mons_is_fleeing(*thing)
            || mons_is_confused(*thing)
            || thing->paralysed()
-           || thing->has_ench(ENCH_INSANE);
+           || thing->has_ench(ENCH_FRENZIED);
 }
 
 // See if there are any appropriate adjacent slime creatures for 'thing'

@@ -1007,7 +1007,7 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monster &mon,
             _first_attack_was_friendly.insert(mid);
         }
     }
-    else if (mon.neutral() && !mon.has_ench(ENCH_INSANE))
+    else if (mon.neutral() && !mon.has_ench(ENCH_FRENZIED))
         conduct[0].set(DID_ATTACK_NEUTRAL, 5, known, &mon);
 
     // Penance value is handled by remove_sanctuary().

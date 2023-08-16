@@ -1813,9 +1813,9 @@ body.
 %%%%
 moth of wrath
 
-A moth known for its ability to inspire insane rages by touching its foes, or
-merely gazing at its friends. For some inexplicable reason, it was eradicated
-from the surface centuries ago.
+A moth known for its ability to inspire rage by touching its foes, or merely
+gazing at its friends. For some inexplicable reason, it was eradicated from
+the surface centuries ago.
 %%%%
 mummy
 
@@ -1962,13 +1962,13 @@ spinnerets. It seems to want to keep its distance.
 %%%%
 orc
 
-An ugly subterranean creature combining the worst features of humans, pigs and
-several other unpleasant creatures. It tends to run in packs or mobs, and
-delights in outbursts of insane violence.
+An peculiar subterranean creature, thought to be a distant relative of the
+human, or the pig, or perhaps the platypus. Orcs love groups, in which they
+gather for whatever worrying activities orcs enjoy.
 %%%%
 orc high priest
 
-An exalted servant of the orc god Beogh and a master of many black rites, to
+An exalted servant of the orc god Beogh and a master of many foul rites, to
 whose aid Beogh will even send beings from the netherworld.
 %%%%
 orc knight

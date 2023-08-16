@@ -2792,7 +2792,7 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
         return true;
     case TARG_HOSTILE:
         return mons_attitude(*mon) == ATT_HOSTILE
-            || mon->has_ench(ENCH_INSANE);
+            || mon->has_ench(ENCH_FRENZIED);
     case TARG_FRIEND:
         return mon->friendly();
     case TARG_INJURED_FRIEND:
@@ -3608,7 +3608,7 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
         descs.emplace_back("fellow slime");
     else if (mi.attitude == ATT_GOOD_NEUTRAL)
         descs.emplace_back("peaceful");
-    else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_INSANE))
+    else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_FRENZIED))
     {
         // don't differentiate between permanent or not
         descs.emplace_back("indifferent");
@@ -3673,7 +3673,7 @@ static string _get_monster_desc(const monster_info& mi)
         text += pronoun + " " + conjugate_verb("seem", mi.pronoun_plurality())
                 + " to be peaceful towards you.\n";
     }
-    else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_INSANE))
+    else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_FRENZIED))
     {
         // don't differentiate between permanent or not
         text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
@@ -3792,7 +3792,7 @@ string get_monster_equipment_desc(const monster_info& mi,
                 attributes.emplace_back("friendly");
             else if (mi.attitude == ATT_GOOD_NEUTRAL)
                 attributes.emplace_back("peaceful");
-            else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_INSANE))
+            else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_FRENZIED))
                 attributes.emplace_back("neutral");
             _append_container(attributes, mi.attributes());
 

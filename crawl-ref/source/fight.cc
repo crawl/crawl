@@ -287,7 +287,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         // Friendly and good neutral monsters won't attack unless confused.
         if (attacker->as_monster()->wont_attack()
             && !mons_is_confused(*attacker->as_monster())
-            && !attacker->as_monster()->has_ench(ENCH_INSANE))
+            && !attacker->as_monster()->has_ench(ENCH_FRENZIED))
         {
             return false;
         }
@@ -773,7 +773,7 @@ static bool _dont_harm(const actor &attacker, const actor &defender)
     {
         return defender.wont_attack()
                || mons_attitude(*defender.as_monster()) == ATT_NEUTRAL
-                  && !defender.as_monster()->has_ench(ENCH_INSANE);
+                  && !defender.as_monster()->has_ench(ENCH_FRENZIED);
     }
 
     return false;
@@ -1044,7 +1044,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
         return true;
     }
 
-    if (mon->neutral() && is_good_god(you.religion) && !mon->has_ench(ENCH_INSANE))
+    if (mon->neutral() && is_good_god(you.religion) && !mon->has_ench(ENCH_FRENZIED))
     {
         adj += "neutral ";
         if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON))

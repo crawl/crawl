@@ -449,7 +449,7 @@ static bool _follows_orders(monster* mon)
 {
     return mon->friendly()
            && mon->type != MONS_BALLISTOMYCETE_SPORE
-           && !mon->berserk_or_insane()
+           && !mon->berserk_or_frenzied()
            && !mons_is_conjured(mon->type)
            && !mon->has_ench(ENCH_HAUNTING);
 }

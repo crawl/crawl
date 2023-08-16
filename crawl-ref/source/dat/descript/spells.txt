@@ -412,7 +412,7 @@ Banishment.
 %%%%
 Discord spell
 
-Drives nearby creatures into an insane frenzy, causing them to mercilessly
+Drives nearby creatures into an wild frenzy, causing them to mercilessly
 attack anything and everything nearby with great strength and speed.
 %%%%
 Disjunction spell

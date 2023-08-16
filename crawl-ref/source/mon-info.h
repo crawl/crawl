@@ -56,7 +56,7 @@ enum monster_info_flags
     MB_OLD_ENSLAVED,
 #endif
     MB_SWIFT,
-    MB_INSANE,
+    MB_FRENZIED,
     MB_SILENCING,
     MB_MESMERIZING,
 #if TAG_MAJOR_VERSION == 34

@@ -49,7 +49,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_BRILLIANCE_AURA, "brilliance aura", "brilliance aura", "brilliance auras"},
     { MB_VORTEX, "vortex", "surrounded by a freezing vortex", "vortices"},
     { MB_VORTEX_COOLDOWN, "gusty", "surrounded by restless winds", "gusty"},
-    { MB_INSANE, "insane", "frenzied and insane", "insane"},
+    { MB_FRENZIED, "frenzied", "frenzied and wild", "frenzied"},
     { MB_FEAR_INSPIRING, "scary", "inspiring fear", "scary"},
     { MB_WORD_OF_RECALL, "chanting recall", "chanting recall", "chanting recall"},
     { MB_REPEL_MSL, "repels missiles", "repelling missiles", "repel missiles"},

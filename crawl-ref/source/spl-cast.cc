@@ -2363,7 +2363,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_intoxicate(powc, fail);
 
     case SPELL_DISCORD:
-        return mass_enchantment(ENCH_INSANE, powc, fail);
+        return mass_enchantment(ENCH_FRENZIED, powc, fail);
 
     case SPELL_ENGLACIATION:
         return cast_englaciation(powc, fail);

@@ -1982,7 +1982,7 @@ static bool _battle_cry(const monster& chief, spell_type spell_cast,
             continue;
 
         // no buffing confused/paralysed mons
-        if (mons->berserk_or_insane()
+        if (mons->berserk_or_frenzied()
             || mons->confused()
             || mons->cannot_act())
         {
@@ -4010,7 +4010,7 @@ bool handle_mon_spell(monster* mons)
     // slot spells {blue}
     if (mons->asleep()
         || mons->submerged()
-        || mons->berserk_or_insane()
+        || mons->berserk_or_frenzied()
         || mons_is_confused(*mons, false)
         || !mons->has_spells())
     {

@@ -668,10 +668,10 @@ static bool _is_pet_kill(killer_type killer, int i)
     // Check if the monster was confused by you or a friendly, which
     // makes casualties to this monster collateral kills.
     const mon_enchant me = m->get_ench(ENCH_CONFUSION);
-    const mon_enchant me2 = m->get_ench(ENCH_INSANE);
+    const mon_enchant me2 = m->get_ench(ENCH_FRENZIED);
     return me.ench == ENCH_CONFUSION
            && (me.who == KC_YOU || me.who == KC_FRIENDLY)
-           || me2.ench == ENCH_INSANE
+           || me2.ench == ENCH_FRENZIED
               && (me2.who == KC_YOU || me2.who == KC_FRIENDLY);
 }
 
@@ -3124,7 +3124,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     // is intended to cover the slimify case, we don't want to pacify the other
     // if a slimified twin dies.
     if (twin->neutral()
-        && !twin->has_ench(ENCH_INSANE)
+        && !twin->has_ench(ENCH_FRENZIED)
         && !is_fellow_slime(*twin))
     {
         elven_twins_pacify(twin);
@@ -3208,7 +3208,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     }
 
     // Finally give them new energy
-    if (mons->can_see(you) && !mons->has_ench(ENCH_INSANE))
+    if (mons->can_see(you) && !mons->has_ench(ENCH_FRENZIED))
         elven_twin_energize(mons);
     else
         mons->props[ELVEN_ENERGIZE_KEY] = true;
@@ -3281,7 +3281,7 @@ void elven_twins_unpacify(monster* twin)
         return;
 
     // Don't consider already un-neutralised monsters or slimified twins.
-    if (!mons->neutral() || mons->has_ench(ENCH_INSANE)
+    if (!mons->neutral() || mons->has_ench(ENCH_FRENZIED)
         || is_fellow_slime(*mons))
     {
         return;
@@ -3336,7 +3336,7 @@ void mons_felid_revive(monster* mons)
     monster *newmons =
         create_monster(
             mgen_data(type, (mons->has_ench(ENCH_CHARM)
-                             || mons->has_ench(ENCH_INSANE) ? BEH_HOSTILE
+                             || mons->has_ench(ENCH_FRENZIED) ? BEH_HOSTILE
                              : SAME_ATTITUDE(mons)), revive_place, mons->foe));
 
     if (newmons)

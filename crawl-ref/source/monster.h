@@ -347,7 +347,7 @@ public:
     bool go_berserk(bool intentional, bool potion = false) override;
     bool go_frenzy(actor *source);
     bool berserk() const override;
-    bool berserk_or_insane() const;
+    bool berserk_or_frenzied() const;
     bool can_mutate() const override;
     bool can_safely_mutate(bool temp = true) const override;
     bool can_polymorph() const override;

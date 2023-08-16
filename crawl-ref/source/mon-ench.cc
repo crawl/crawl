@@ -226,7 +226,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         scale_hp(3, 2);
         // deliberate fall-through
 
-    case ENCH_INSANE:
+    case ENCH_FRENZIED:
         if (has_ench(ENCH_SUBMERGED))
             del_ench(ENCH_SUBMERGED);
 
@@ -477,11 +477,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         shoals_release_tide(this);
         break;
 
-    case ENCH_INSANE:
+    case ENCH_FRENZIED:
         if (mons_is_elven_twin(this))
         {
             monster* twin = mons_find_elven_twin_of(this);
-            if (twin && !twin->has_ench(ENCH_INSANE))
+            if (twin && !twin->has_ench(ENCH_FRENZIED))
                 attitude = twin->attitude;
             else
                 attitude = ATT_HOSTILE;
@@ -559,7 +559,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_FEAR:
     {
         string msg;
-        if (is_nonliving() || berserk_or_insane())
+        if (is_nonliving() || berserk_or_frenzied())
         {
             // This should only happen because of fleeing sanctuary
             msg = " stops retreating.";
@@ -1334,10 +1334,10 @@ void monster::apply_enchantment(const mon_enchant &me)
     enchant_type en = me.ench;
     switch (me.ench)
     {
-    case ENCH_INSANE:
+    case ENCH_FRENZIED:
         if (decay_enchantment(en))
         {
-            simple_monster_message(*this, " is no longer in an insane frenzy.");
+            simple_monster_message(*this, " is no longer in an wild frenzy.");
             const int duration = random_range(70, 130);
             add_ench(mon_enchant(ENCH_FATIGUE, 0, 0, duration));
             add_ench(mon_enchant(ENCH_SLOW, 0, 0, duration));
@@ -1631,7 +1631,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             add_ench(ENCH_SEVERED);
 
             // Severed tentacles immediately become "hostile" to everyone
-            // (or insane)
+            // (or frenzied)
             attitude = ATT_NEUTRAL;
             mons_att_changed(this);
             if (!crawl_state.game_is_arena())
@@ -2008,7 +2008,7 @@ static const char *enchant_names[] =
     "slouch",
 #endif
     "swift", "tide",
-    "insane", "silenced", "awaken_forest", "exploding",
+    "frenzied", "silenced", "awaken_forest", "exploding",
 #if TAG_MAJOR_VERSION == 34
     "bleeding",
 #endif

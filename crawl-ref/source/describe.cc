@@ -1905,7 +1905,7 @@ static string _describe_ammo(const item_def &item)
             break;
         case SPMSL_FRENZY:
             description += "It is tipped with a substance that sends those it "
-                           "hits into a mindless rage, attacking friend and "
+                           "hits into a mindless frenzy, attacking friend and "
                            "foe alike.\n\n"
                            "The chance of successfully applying its effect "
                            "increases with Throwing and Stealth skill.";
@@ -6001,13 +6001,13 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     {
         string att = comma_separated_line(attitude.begin(), attitude.end(),
                                           "; ", "; ");
-        if (mons.has_ench(ENCH_INSANE))
-            inf.body << "; frenzied and insane (otherwise " << att << ")";
+        if (mons.has_ench(ENCH_FRENZIED))
+            inf.body << "; frenzied and wild (otherwise " << att << ")";
         else
             inf.body << "; " << att;
     }
-    else if (mons.has_ench(ENCH_INSANE))
-        inf.body << "; frenzied and insane";
+    else if (mons.has_ench(ENCH_FRENZIED))
+        inf.body << "; frenzied and wild";
 
     inf.body << "\n\nHas holiness: ";
     inf.body << holiness_description(mi.holi);
