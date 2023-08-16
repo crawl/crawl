@@ -1191,9 +1191,9 @@ Anlegen
 Remove
 Abnehmen
 %%%%
-# memorise (learn) a spell
+# memorise a spell
 Memorise
-Erlernen
+Memorieren
 %%%%
 Read
 Lesen
@@ -1568,5 +1568,87 @@ trainen
 %%%%
 focus
 fokussieren
+%%%%
+
+##############################################
+# Spell casting/library menus
+##############################################
+
+# headings
+%%%%
+Power
+Kraft
+%%%%
+Damage
+Schaden
+%%%%
+Range
+Weite
+%%%%
+Noise
+Lärm
+%%%%
+
+# values for the noise column
+%%%%
+Silent
+Lautlos
+%%%%
+Almost silent
+Fast Lautlos
+%%%%
+Quiet
+Leise
+%%%%
+A bit loud
+Etwas Laut
+%%%%
+Loud
+Laut
+%%%%
+Very loud
+Sehr Laut
+%%%%
+Extremely loud
+Extrem Laut
+%%%%
+Deafening
+Betäubend
+%%%%
+
+# N/A = not applicable. Used in various columns.
+%%%%
+N/A
+N.Z.
+%%%%
+
+# actions
+%%%%
+Hide
+Ausblenden
+%%%%
+Show
+Zeigen
+%%%%
+help
+Hilfe
+%%%%
+search
+suchen
+%%%%
+<w>Cast</w>|Describe|Hide|Show
+<w>Wirken</w>|Beschreiben|Ausblenden|Zeigen
+%%%%
+<w>Memorise</w>|Describe|Hide|Show
+<w>Memorieren</w>|Beschreiben|Ausblenden|Zeigen
+%%%%
+|<w>Describe</w>|Hide|Show
+|<w>Beschreiben</w>|Ausblenden|Zeigen
+%%%%
+|Describe|<w>Hide</w>|Show
+|Beschreiben|<w>Ausblenden</w>|Zeigen
+%%%%
+|Describe|Hide|<w>Show</w>
+|Beschreiben|Ausblenden|<w>Zeigen</w>
 %%%%
 

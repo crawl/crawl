@@ -2200,7 +2200,7 @@ static map<curse_type, curse_data> _ashenzari_curses =
             SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT },
     } },
     { CURSE_RANGED, {
-        "Ranged Combat", "Range",
+        "Ranged Combat", "Rngd",
         { SK_SLINGS, SK_BOWS, SK_CROSSBOWS, SK_THROWING },
     } },
     { CURSE_ELEMENTS, {

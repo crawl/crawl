@@ -90,16 +90,18 @@ void surge_power(const int enhanced)
 {
     if (enhanced)               // one way or the other {dlb}
     {
-        const string modifier = (enhanced  < -2) ? "extraordinarily" :
-                                (enhanced == -2) ? "extremely" :
-                                (enhanced ==  2) ? "strong" :
-                                (enhanced  >  2) ? "huge"
-                                                 : "";
-        mprf("You feel %s %s",
-             !modifier.length() ? "a"
-                                : article_a(modifier).c_str(),
-             (enhanced < 0) ? "numb sensation."
-                            : "surge of power!");
+        if (enhanced > 2)
+            mpr("You feel a huge surge of power!");
+        else if (enhanced == 2)
+            mpr("You feel a strong surge of power!");
+        else if (enhanced > 0)
+            mpr("You feel a surge of power!");
+        else if (enhanced  < -2)
+            mpr("You feel an extraordinarily numb sensation.");
+        else if (enhanced == -2)
+            mpr("You feel an extremely numb sensation.");
+        else
+            mpr("You feel a numb sensation.");
     }
 }
 
@@ -108,9 +110,10 @@ void surge_power_wand(const int mp_cost)
     if (mp_cost)
     {
         const bool slight = mp_cost < 3;
-        mprf("You feel a %ssurge of power%s",
-             slight ? "slight " : "",
-             slight ? "."      : "!");
+        if (slight)
+            mpr("You feel a slight surge of power.");
+        else
+            mpr("You feel a surge of power.");
     }
 }
 
@@ -156,10 +159,12 @@ static string _spell_extra_description(spell_type spell, bool viewing)
 
     // spell power, spell range, noise
     const string rangestring = spell_range_string(spell);
-    const string damagestring = spell_damage_string(spell);
+    string damagestring = spell_damage_string(spell);
+    if (damagestring.empty())
+        damagestring = localise("N/A");
 
     desc << chop_string(spell_power_string(spell), 10)
-         << chop_string(damagestring.length() ? damagestring : "N/A", 10)
+         << chop_string(damagestring, 10)
          << chop_string(rangestring, 10)
          << chop_string(spell_noise_string(spell, 10), 14);
 
@@ -179,28 +184,36 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
 
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
             | MF_NO_WRAP_ROWS | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
-    string titlestring = localise("%-34.34s", title);
     {
+        string titlestring = chop_string(localise(title), 34);
+        string text = titlestring;
+        text += chop_string(localise("Type"), 30);
+        text += chop_string(localise("Failure"), 9);
+        text += localise("Level");
+        string alt_text = titlestring;
+        alt_text += chop_string(localise("Power"), 10);
+        alt_text += chop_string(localise("Damage"), 10);
+        alt_text += chop_string(localise("Range"), 10);
+        alt_text += localise("Noise");
         ToggleableMenuEntry* me =
-            new ToggleableMenuEntry(
-                titlestring + "Type                          Failure  Level",
-                titlestring + "Power     Damage    Range     Noise ",
-                MEL_TITLE);
+            new ToggleableMenuEntry(text, alt_text, MEL_TITLE);
         spell_menu.set_title(me, true, true);
     }
     spell_menu.set_highlighter(nullptr);
     spell_menu.set_tag("spell");
     spell_menu.add_toggle_key('!');
 
-    string more_str = "Press '<w>!</w>' ";
+    string more_str;
     if (toggle_with_I)
     {
         spell_menu.add_toggle_key('I');
-        more_str += "or '<w>I</w>' ";
+        more_str = localise("Press '<w>!</w>' or '<w>I</w>' to toggle spell view.");
     }
+    else
+        more_str = localise("Press '<w>!</w>' to toggle spell view.");
+
     if (!viewing)
         spell_menu.menu_action = Menu::ACT_EXECUTE;
-    more_str += "to toggle spell view.";
     spell_menu.set_more(formatted_string::parse_string(more_str));
 
     // If there's only a single spell in the offered spell list,
@@ -710,7 +723,7 @@ static void _majin_speak(spell_type spell)
 
     const int level = spell_difficulty(spell);
     const bool weak = level <= 4;
-    const string lookup = weak ? "majin-bo cast weak" : "majin-bo cast";
+    const string lookup = weak ? "majin-bo cast weak" : "majin-bo cast"; // noloc (keys)
     string msg = localise("A voice whispers, \"%s\"",
                           LocalisationArg(getSpeakString(lookup), false));
     mpr_nolocalise(MSGCH_TALK, msg);
@@ -1059,7 +1072,7 @@ static void _try_monster_cast(spell_type spell, int /*powc*/,
 
     mpr("Invalid player spell, attempting to cast it as monster spell.");
 
-    mon->mname      = "Dummy Monster";
+    mon->mname      = "Dummy Monster"; // noloc
     mon->type       = MONS_HUMAN;
     mon->behaviour  = BEH_SEEK;
     mon->attitude   = ATT_FRIENDLY;
@@ -1126,7 +1139,7 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
             if (!action.matches(name))
                 continue;
 
-            string prompt = "Really cast " + string(name) + "?";
+            string prompt = localise("Really cast %s?", name);
             if (!yesno(prompt.c_str(), false, 'n'))
             {
                 canned_msg(MSG_OK);
@@ -1150,13 +1163,14 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
             return true;
         }
 
-        string prompt = make_stringf("The spell is %s to cast "
-                                     "(%s risk of failure)%s",
+        // locnote: params: 1 = dangerous/very dangerous/etc, 2 = <failure rate>, 3 = !/. 
+        string prompt = localise("The spell is %s to cast "
+                                     "(%s risk of failure)%s"
+                                     " Continue anyway?",
                                      fail_severity_adjs[severity],
                                      failure_rate.c_str(),
                                      severity > 1 ? "!" : ".");
 
-        prompt = make_stringf("%s Continue anyway?", prompt.c_str());
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
@@ -1524,28 +1538,28 @@ static vector<string> _desc_hit_chance(const monster_info& mi, targeter* hitfunc
     const int hit_pct = _to_hit_pct(mi, acc, beam_hitf->beam.pierce);
     if (hit_pct == -1)
         return vector<string>{};
-    return vector<string>{make_stringf("%d%% to hit", hit_pct)};
+    return vector<string>{localise("%d%% to hit", hit_pct)};
 }
 
 static vector<string> _desc_intoxicate_chance(const monster_info& mi,
                                               targeter* hitfunc, int pow)
 {
     if (hitfunc && !hitfunc->affects_monster(mi))
-        return vector<string>{"not susceptible"};
+        return vector<string>{localise("not susceptible")};
 
     int conf_pct = 40 + pow / 3;
 
     if (get_resist(mi.resists(), MR_RES_POISON) >= 1)
         conf_pct =  conf_pct / 3;
 
-    return vector<string>{make_stringf("chance to confuse: %d%%", conf_pct)};
+    return vector<string>{localise("chance to confuse: %d%%", conf_pct)};
 }
 
 static vector<string> _desc_englaciate_chance(const monster_info& mi,
                                               targeter* hitfunc, int pow)
 {
     if (hitfunc && !hitfunc->affects_monster(mi))
-        return vector<string>{"not susceptible"};
+        return vector<string>{localise("not susceptible")};
 
     const int outcomes = pow * pow * pow;
     const int target   = 3 * mi.hd - 2;
@@ -1568,36 +1582,36 @@ static vector<string> _desc_englaciate_chance(const monster_info& mi,
     else
         fail_pct = 100;
 
-    return vector<string>{make_stringf("chance to slow: %d%%", 100 - fail_pct)};
+    return vector<string>{localise("chance to slow: %d%%", 100 - fail_pct)};
 }
 
 static vector<string> _desc_dazzle_chance(const monster_info& mi, int pow)
 {
     if (!mons_can_be_dazzled(mi.type))
-        return vector<string>{"not susceptible"};
+        return vector<string>{localise("not susceptible")};
 
     const int numerator = dazzle_chance_numerator(mi.hd);
     const int denom = dazzle_chance_denom(pow);
     const int dazzle_pct = max(100 * numerator / denom, 0);
 
-    return vector<string>{make_stringf("chance to dazzle: %d%%", dazzle_pct)};
+    return vector<string>{localise("chance to dazzle: %d%%", dazzle_pct)};
 }
 
 static vector<string> _desc_meph_chance(const monster_info& mi)
 {
     if (get_resist(mi.resists(), MR_RES_POISON) >= 1)
-        return vector<string>{"not susceptible"};
+        return vector<string>{localise("not susceptible")};
 
     int pct_chance = 2;
     if (mi.hd < MEPH_HD_CAP)
         pct_chance = 100 - (100 * mi.hd / MEPH_HD_CAP);
-    return vector<string>{make_stringf("chance to affect: %d%%", pct_chance)};
+    return vector<string>{localise("chance to affect: %d%%", pct_chance)};
 }
 
 static vector<string> _desc_vampiric_draining_valid(const monster_info& mi)
 {
     if (mi.mb.get(MB_CANT_DRAIN))
-        return vector<string>{"not susceptible"};
+        return vector<string>{localise("not susceptible")};
 
     return vector<string>{};
 }
@@ -1606,13 +1620,13 @@ static vector<string> _desc_dispersal_chance(const monster_info& mi, int pow)
 {
     const int wl = mi.willpower();
     if (mons_class_is_stationary(mi.type))
-        return vector<string>{"stationary"};
+        return vector<string>{localise("stationary")};
 
     if (wl == WILL_INVULN)
-        return vector<string>{"will blink"};
+        return vector<string>{localise("will blink")};
 
     const int success = hex_success_chance(wl, pow, 100);
-    return vector<string>{make_stringf("chance to teleport: %d%%", success)};
+    return vector<string>{localise("chance to teleport: %d%%", success)};
 }
 
 static string _mon_threat_string(const CrawlStoreValue &mon_store)
@@ -1626,7 +1640,7 @@ static string _mon_threat_string(const CrawlStoreValue &mon_store)
     monster_info(&dummy).to_string(1, desc, col, true, nullptr, false);
     const string col_name = colour_to_str(col);
 
-    return "<" + col_name + ">" + article_a(desc) + "</" + col_name + ">";
+    return "<" + col_name + ">" + localise(article_a(desc)) + "</" + col_name + ">";
 }
 
 // Include success chance in targeter for spells checking monster WL.
@@ -1636,34 +1650,34 @@ vector<string> desc_wl_success_chance(const monster_info& mi, int pow,
     targeter_beam* beam_hitf = dynamic_cast<targeter_beam*>(hitfunc);
     const int wl = mi.willpower();
     if (wl == WILL_INVULN)
-        return vector<string>{"infinite will"};
+        return vector<string>{localise("infinite will")};
     if (hitfunc && !hitfunc->affects_monster(mi))
-        return vector<string>{"not susceptible"};
+        return vector<string>{localise("not susceptible")};
     vector<string> descs;
     if (beam_hitf && beam_hitf->beam.flavour == BEAM_POLYMORPH)
     {
         // Polymorph has a special effect on ugly things and shapeshifters that
         // does not require passing an WL check.
         if (mi.type == MONS_UGLY_THING || mi.type == MONS_VERY_UGLY_THING)
-            return vector<string>{"will change colour"};
+            return vector<string>{localise("will change colour")};
         if (mi.is(MB_SHAPESHIFTER))
-            return vector<string>{"will change shape"};
+            return vector<string>{localise("will change shape")};
         if (mi.type == MONS_SLIME_CREATURE && mi.slime_size > 1)
-            descs.push_back("will probably split");
+            descs.push_back(localise("will probably split"));
 
         // list out the normal poly set
         if (!mi.props.exists(POLY_SET_KEY))
-            return vector<string>{"not susceptible"};
+            return vector<string>{localise("not susceptible")};
         const CrawlVector &set = mi.props[POLY_SET_KEY].get_vector();
         if (set.size() <= 0)
-            return vector<string>{"not susceptible"};
-        descs.push_back("will become "
-                        + comma_separated_fn(set.begin(), set.end(),
-                                             _mon_threat_string, ", or "));
+            return vector<string>{localise("not susceptible")};
+        descs.push_back(localise("will become %s",
+                                 comma_separated_fn(set.begin(), set.end(),
+                                             _mon_threat_string, ", or ")));
     }
 
     const int success = hex_success_chance(wl, pow, 100);
-    descs.push_back(make_stringf("chance to affect: %d%%", success));
+    descs.push_back(localise("chance to affect: %d%%", success));
 
     return descs;
 }
@@ -1842,15 +1856,20 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
         // `true` on fourth param skips MP check and a few others that have
         // already been carried out
         const bool useless = spell_is_useless(spell, true, false, true);
-        const char *spell_title_color = useless ? "darkgrey" : "w";
-        const string verb = wait_spell_active(spell)
-            ? "<lightred>Restarting spell</lightred>"
-            : is_targeted ? "Aiming" : "Casting";
-        string title = make_stringf("%s: <%s>%s</%s>", verb.c_str(),
-                    spell_title_color, spell_title(spell), spell_title_color);
+        const char *spell_title_color = useless ? "darkgrey" : "w"; // noloc
+        string verb;
+        if (wait_spell_active(spell))
+            verb = "<lightred>" + localise("Restarting spell") + "</lightred>";
+        else if (is_targeted)
+            verb = localise("Aiming");
+        else
+            verb = localise("Casting");
+        string spl_title = localise(spell_title(spell));
+        string title = make_stringf("%s: <%s>%s</%s>", verb.c_str(), // noloc
+                    spell_title_color, spl_title.c_str(), spell_title_color);
         if (allow_fail)
         {
-            title += make_stringf(" <lightgrey>(%s)</lightgrey>",
+            title += make_stringf(" <lightgrey>(%s)</lightgrey>", // noloc
                 _spell_failure_rate_description(spell).c_str());
         }
 
@@ -2542,12 +2561,13 @@ string spell_failure_rate_string(spell_type spell)
 static string _spell_failure_rate_description(spell_type spell)
 {
     const string failure = failure_rate_to_string(raw_spell_fail(spell));
-    const char *severity_adj = fail_severity_adjs[fail_severity(spell)];
+    const string adj = localise(fail_severity_adjs[fail_severity(spell)]);
     const string colour = colour_to_str(failure_rate_colour(spell));
     const char *col = colour.c_str();
+    const string text = localise("risk of failure");
 
-    return make_stringf("<%s>%s</%s>; <%s>%s</%s> risk of failure",
-            col, severity_adj, col, col, failure.c_str(), col);
+    return make_stringf("<%s>%s</%s>; <%s>%s</%s> %s",
+            col, adj.c_str(), col, col, failure.c_str(), col, text.c_str());
 }
 
 string spell_noise_string(spell_type spell, int chop_wiz_display_width)
@@ -2577,8 +2597,9 @@ string spell_noise_string(spell_type spell, int chop_wiz_display_width)
     const int breakpoints[] = { 1, 2, 4, 8, 15, 20, 30 };
     COMPILE_CHECK(ARRAYSZ(noise_descriptions) == 1 + ARRAYSZ(breakpoints));
 
-    const char* desc = noise_descriptions[breakpoint_rank(noise, breakpoints,
+    string desc = noise_descriptions[breakpoint_rank(noise, breakpoints,
                                                 ARRAYSZ(breakpoints))];
+    desc = localise(desc);
 
 #ifdef WIZARD
     if (you.wizard)
@@ -2591,7 +2612,7 @@ string spell_noise_string(spell_type spell, int chop_wiz_display_width)
             return shortdesc.str();
         }
         else
-            return make_stringf("%s (%d)", desc, noise);
+            return make_stringf("%s (%d)", desc.c_str(), noise);
     }
     else
 #endif
@@ -2622,7 +2643,7 @@ static string _wizard_spell_power_numeric_string(spell_type spell)
 {
     const int cap = spell_power_cap(spell);
     if (cap == 0)
-        return "N/A";
+        return localise("N/A");
     const int power = min(calc_spell_power(spell, true, false, false), cap);
     return make_stringf("%d (%d)", power, cap);
 }
@@ -2664,6 +2685,7 @@ static dice_def _spell_damage(spell_type spell, bool evoked)
 
 string spell_damage_string(spell_type spell, bool evoked)
 {
+    // noloc section start
     switch (spell)
     {
         case SPELL_MAXWELLS_COUPLING:
@@ -2694,6 +2716,7 @@ string spell_damage_string(spell_type spell, bool evoked)
     if (spell == SPELL_LRD || spell == SPELL_SHATTER)
         return dam_str + "*"; // many special cases of more/less damage
     return dam_str;
+    // noloc section end
 }
 
 int spell_acc(spell_type spell)
@@ -2730,7 +2753,7 @@ string spell_power_string(spell_type spell)
 
     const int percent = spell_power_percent(spell);
     if (percent < 0)
-        return "N/A";
+        return localise("N/A");
     else
         return make_stringf("%d%%", percent);
 }

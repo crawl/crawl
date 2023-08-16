@@ -903,9 +903,6 @@ vs
 Round %d of %d
 Runde %d von %d
 %%%%
-arena miscast
-
-%%%%
 Cancelled contest at user request
 
 %%%%
@@ -1082,9 +1079,6 @@ Das Licht kehrt in Eure Umgebung zurück.
 Mutagenic energy flows through the plutonium sword!
 Mutagene Energie fließt durch das Plutoniumschwert!
 %%%%
-the plutonium sword
-
-%%%%
 You cleave %s in twain.
 
 %%%%
@@ -1219,9 +1213,6 @@ Die Lichtbogenklinge knistert.
 %%%%
 You hear the crackle of electricity.
 Ihr hört das Knistern der Elektrizität.
-%%%%
-the demon whip "Spellbinder"
-
 %%%%
 You are filled with an inner flame.
 Ihr seid mit einer inneren Flamme gefüllt.
@@ -6639,7 +6630,7 @@ Melee
 Ranged Combat
 
 %%%%
-Range
+Rngd
 
 %%%%
 Elements
@@ -18439,41 +18430,14 @@ Ihr fügt die Zaubersprüche %s zu Eurer Bibliothek hinzu.
 You add the spell %s to your library.
 Ihr fügt den Zauberspruch %s zu Eurer Bibliothek hinzu.
 %%%%
-Hide
-Verstecken
-%%%%
-Show
-Zeigen
-%%%%
 Matches:
 Entspricht:
 %%%%
 1 spell hidden
-1 Zauber versteckt
+1 Zauber ausgeblendet
 %%%%
 %d spells hidden
-%d Zauber versteckt
-%%%%
-help
-Hilfe
-%%%%
-search
-suchen
-%%%%
-<w>Cast</w>|Describe|Hide|Show
-<w>Wirken</w>|Beschreiben|Verstecken|Zeigen
-%%%%
-<w>Memorise</w>|Describe|Hide|Show
-<w>Memorieren</w>|Beschreiben|Verstecken|Zeigen
-%%%%
-|<w>Describe</w>|Hide|Show
-|<w>Beschreiben</w>|Verstecken|Zeigen
-%%%%
-|Describe|<w>Hide</w>|Show
-|Beschreiben|<w>Verstecken</w>|Zeigen
-%%%%
-|Describe|Hide|<w>Show</w>
-|Beschreiben|Verstecken|<w>Zeigen</w>
+%d Zauber ausgeblendet
 %%%%
 "Search for what? (regex) "
 "Wonach suchen? (regex) "
@@ -18530,47 +18494,35 @@ Ihr kennt keine Zauber!
 # spl-cast.cc
 ##################
 %%%%
-extraordinarily
-
+You feel a huge surge of power!
+Ihr spürt einen gewaltigen Energieschub!
 %%%%
-extremely
-
+You feel a strong surge of power!
+Ihr spürt einen starken Energieschub!
 %%%%
-huge
-
+You feel a surge of power!
+Ihr spürt einen Energieschub!
 %%%%
-You feel %s %s
-Ihr fühlt%s%s
+You feel an extraordinarily numb sensation.
+Ihr spürt ein außerordentlich taubes Gefühl.
 %%%%
-numb sensation.
-
+You feel an extremely numb sensation.
+Ihr spürt ein extrem taubes Gefühl.
 %%%%
-surge of power!
-
+You feel a numb sensation.
+Ihr spürt ein taubes Gefühl.
 %%%%
-You feel a %ssurge of power%s
-Ihr fühlt einen %sMachtanstieg%s
+You feel a slight surge of power.
+Ihr spürt einen leichten Energieschub.
 %%%%
-"slight "
-
+You feel a surge of power.
+Ihr spürt einen Energieschub.
 %%%%
-N/A
-n.z.
+Press '<w>!</w>' or '<w>I</w>' to toggle spell view.
+'<w>!</w>' oder '<w>I</w>' drücken, um die Sicht umzuschalten.
 %%%%
-Type                          Failure  Level
-
-%%%%
-"Power     Damage    Range     Noise "
-
-%%%%
-"Press '<w>!</w>' "
-
-%%%%
-"or '<w>I</w>' "
-
-%%%%
-to toggle spell view.
-
+Press '<w>!</w>' to toggle spell view.
+'<w>!</w>' drücken, um die Sicht umzuschalten.
 %%%%
 You cannot cast spells while unable to breathe!
 Ihr könnt keine Zauber wirken, solange Ihr nicht atmen könnt!
@@ -18602,179 +18554,126 @@ Ihr fühlt Euch unwohl.
 Magical energy flows into your mind!
 Magische Energie fließt in Euren Geist!
 %%%%
-majin-bo cast weak
-
-%%%%
-majin-bo cast
-
-%%%%
 "Cast which spell? (? or * to list) "
 "Welchen Zauber wirken? (? oder * auflisten) "
 %%%%
 Casting: <w>%s</w> <lightgrey>(%s)</lightgrey>
-Casting: <w>%s</w> <lightgrey>(%s)</lightgrey>
+Wirken: <w>%s</w> <lightgrey>(%s)</lightgrey>
 %%%%
 Confirm with . or Enter, or press ? or * to list all spells.
-
+Mit . oder Enter bestätigen, oder ? oder * drücken, um alle Zauber aufzulisten.
 %%%%
 You can't see any susceptible monsters within range! (Use <w>Z</w> to cast anyway.)
-
+Ihr könnt keine anfälligen Monster in Reichweite sehen! ()
 %%%%
 Casting this spell will cause instant excommunication! Really cast?
-
+Das Wirken dieses Zaubers führt zur sofortigen Exkommunizierung! Wirklich wirken?
 %%%%
 Casting this spell will place you under penance. Really cast?
-
+Das Wirken dieses Zaubers führt zur Buße! Wirklich wirken?
 %%%%
 Your control over your magic is sapped.
-Eure Kontrolle über Eure Magie ist geschwächt.
+Eure Kontrolle über Eure Magie ist ausgelaugt.
 %%%%
 Couldn't try casting monster spell because you're on top of a monster.
-
+Konnte nicht versuchen, einen Monsterzauber zu wirken, weil Ihr auf einem Monster steht.
 %%%%
 Couldn't try casting monster spell because there is no empty monster slot.
-
+Konnte nicht versuchen, einen Monsterzauber zu wirken, weil es keinen leeren Monsterslot gibt.
 %%%%
 Invalid player spell, attempting to cast it as monster spell.
 Ungültiger Spielerzauber. Wird als Monsterzauber probiert.
 %%%%
-Dummy Monster
-
-%%%%
-"Really cast "
-
+Really cast %s?
+Wirklich %s wirken?
 %%%%
 It is impossible to cast this spell (100%% risk of failure)!
-
+Es ist unmöglich, diesen Zauber zu wirken (100% Risiko des Scheiterns)!
 %%%%
-The spell is %s to cast (%s risk of failure)%s
-
-%%%%
-%s Continue anyway?
-
+# note: params: 1 = dangerous/very dangerous/etc, 2 = <failure rate>, 3 = !/.
+The spell is %s to cast (%s risk of failure)%s Continue anyway?
+Das Wirken diesen Zauber ist %s (%s Risiko des Scheiterns)%s Wirklich wirken?
 %%%%
 %d%% to hit
-
+%d%% Trefferchance
 %%%%
 chance to confuse: %d%%
-
+Chance zu verwirren: %d%%
 %%%%
 chance to slow: %d%%
-
+Chance zu verlangsamen: %d%%
 %%%%
 chance to dazzle: %d%%
-
+Chance zu blenden: %d%%
 %%%%
 chance to affect: %d%%
-
+Chance auf Wirkung: %d%%
 %%%%
 will blink
-
+wird blinken
 %%%%
 chance to teleport: %d%%
-
+Chance zu teleportieren: %d%%
 %%%%
 will change colour
-
+wird die Farbe ändern
 %%%%
 will change shape
-
+wird dir Form ändern
 %%%%
 will probably split
-
+wird wahrscheinlich spalten
 %%%%
-"will become "
-
+will become %s
+wird %s werden
 %%%%
-darkgrey
-
-%%%%
-w
-
-%%%%
-<lightred>Restarting spell</lightred>
-
+Restarting spell
+Zauber wird neu angefangen
 %%%%
 Aiming
-
+Zielen
 %%%%
 Casting
-
-%%%%
-" <lightgrey>(%s)</lightgrey>"
-
+Wirken
 %%%%
 Sorry, this spell works on others only.
-Entschuldigung, dieser Zauber funktioniert nur bei anderen.
+Sorry, dieser Zauber funktioniert nur bei anderen.
 %%%%
 You feel a surge of divine spite.
-
+Ihr spürt eine Welle göttlicher Bosheit.
 %%%%
 %s does not allow the disloyal to dabble in death!
-
-%%%%
-the malice of Kikubaaqudgha
-
+%s erlaubt es den Untreuen nicht, mit dem Tod zu dilettieren!
 %%%%
 %s does not allow the disloyal to dabble in destruction!
-
-%%%%
-the malice of Vehumet
-
+%s erlaubt den Untreuen nicht, mit der Zerstörung zu dilettieren!
 %%%%
 You miscast %s.
-Ihr habt %s falsch besetzt.
+Ihr habt %s falsch gewirkt.
 %%%%
 safe
-
+sicher
 %%%%
 mildly dangerous
-
+leicht gefährlich
 %%%%
 dangerous
-
+gefährlich
 %%%%
 quite dangerous
-
+ziemlich gefährlich
 %%%%
 extremely dangerous
-
+extrem gefährlich
 %%%%
 potentially lethal
-
+potenziell tödlich
 %%%%
-<%s>%s</%s>; <%s>%s</%s> risk of failure
-
-%%%%
-Silent
-
-%%%%
-Almost silent
-
-%%%%
-Quiet
-
-%%%%
-A bit loud
-
-%%%%
-Loud
-
-%%%%
-Very loud
-
-%%%%
-Extremely loud
-
-%%%%
-Deafening
-
-%%%%
-%s%dd%d
-
+risk of failure
+Risiko des Scheiterns
 %%%%
 Malevolent energies surge around you.
-
+Bösartige Energien strömen um Euch herum.
 %%%%
 
 ##################
@@ -19890,9 +19789,6 @@ The air has a green tinge for a moment
 %%%%
 %s protects you from your miscast necromantic spell!
 %s schützt Euch vor Eurem nekromatischen Fehlzauber!
-%%%%
-"miscasting "
-
 %%%%
 
 ##################
@@ -22533,6 +22429,9 @@ Select layers to display:
 |<%s>monster (w)eapons</%s>|<%s>monster (h)ealth</%s>
 
 %%%%
+darkgrey
+
+%%%%
 Press 'a' to toggle all layers. Press any other key to exit.
 
 %%%%
@@ -23365,9 +23264,6 @@ Die Zauberstufe kann höchstens 9 betragen.
 %%%%
 Key pressed, interrupting miscast testing.
 Taste gedrückt, um Fehlbesetzungstests zu unterbrechen.
-%%%%
-testing miscast
-
 %%%%
 
 ##################

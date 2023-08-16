@@ -405,6 +405,7 @@ for filename in files:
                 if re.search(r'\bouch\s*\(', line) or re.search(r'\bhurt\s*\(', line) \
                    or re.search(r'\bparalyse\s*\(', line) \
                    or re.search(r'\bpetrify\s*\(', line) \
+                   or re.search(r'\bmiscast_effect\s*\(', line) \
                    or 'aux_source' in line:
                     continue
 
