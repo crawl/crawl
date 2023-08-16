@@ -133,8 +133,6 @@ struct game_state
 
     bool invisible_targeting;
 
-    bool player_moving;
-
     // Area beyond which view should be darkened,  0 = disabled.
     targeter *darken_range;
 

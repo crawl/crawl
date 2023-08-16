@@ -3025,15 +3025,6 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     return false;
 }
 
-void launch_opportunity_attack(monster& mons)
-{
-    monster *ru_target = nullptr;
-    if (_handle_ru_melee_redirection(mons, &ru_target))
-        return;
-    _melee_attack_player(mons, ru_target);
-    learned_something_new(HINT_OPPORTUNITY_ATTACK);
-}
-
 static bool _do_move_monster(monster& mons, const coord_def& delta)
 {
     const coord_def f = mons.pos() + delta;
