@@ -827,7 +827,7 @@ bool weapon_cleaves(const item_def &weap)
 
 int weapon_hits_per_swing(const item_def &weap)
 {
-    if (weap.sub_type != WPN_QUICK_BLADE)
+    if (!weap.is_type(OBJ_WEAPONS, WPN_QUICK_BLADE))
         return 1;
     if (is_unrandom_artefact(weap, UNRAND_GYRE))
         return 4;
