@@ -719,6 +719,11 @@ public:
 
     bool effect(bool was_known = true, int=40, bool is_potion=true) const override
     {
+        if (you.form == transformation::death) // Gozag potion petition
+        {
+            mpr("You're too dead to put down roots!");
+            return false;
+        }
         return transform(_scale_effect(30, is_potion), transformation::tree, !was_known);
     }
 
