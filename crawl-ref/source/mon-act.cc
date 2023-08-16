@@ -3172,29 +3172,15 @@ static bool _monster_move(monster* mons)
     const habitat_type habitat = mons_primary_habitat(*mons);
     bool deep_water_available = false;
 
-    // Berserking monsters make a lot of racket.
-    if (mons->berserk_or_insane())
+    // TODO: move the above logic out of move code.
+    if (one_chance_in(10) && you.can_see(*mons) && mons->berserk())
+        mprf(MSGCH_TALK_VISUAL, "%s rages.", mons->name(DESC_THE).c_str());
+    // Look, this is silly.
+    if (one_chance_in(5)
+        && mons->has_ench(ENCH_INSANE)
+        && get_shout_noise_level(mons_shouts(mons->type)))
     {
-        int noise_level = get_shout_noise_level(mons_shouts(mons->type));
-        if (noise_level > 0)
-        {
-            if (you.can_see(*mons) && mons->berserk())
-            {
-                if (one_chance_in(10))
-                {
-                    mprf(MSGCH_TALK_VISUAL, "%s rages.",
-                         mons->name(DESC_THE).c_str());
-                }
-                noisy(noise_level, mons->pos(), mons->mid);
-            }
-            else if (one_chance_in(5))
-                monster_attempt_shout(*mons);
-            else
-            {
-                // Just be noisy without messaging the player.
-                noisy(noise_level, mons->pos(), mons->mid);
-            }
-        }
+        monster_attempt_shout(*mons);
     }
 
     // If a water (or lava) monster is currently flopping around on land, it
