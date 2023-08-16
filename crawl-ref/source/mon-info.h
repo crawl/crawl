@@ -216,6 +216,7 @@ enum monster_info_flags
     MB_TELEPORTING,
     MB_CONTAM_LIGHT,
     MB_CONTAM_HEAVY,
+    MB_PURSUING,
     NUM_MB_FLAGS
 };
 

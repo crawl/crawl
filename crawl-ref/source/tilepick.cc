@@ -2225,6 +2225,7 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_INFESTATION, TILEI_INFESTED },
     { MB_CORROSION, TILEI_CORRODED },
     { MB_SWIFT, TILEI_SWIFT },
+    { MB_PURSUING, TILEI_SWIFT }, // ew
     { MB_VILE_CLUTCH, TILEI_VILE_CLUTCH },
     { MB_GRASPING_ROOTS, TILEI_CONSTRICTED }, // XXX placeholder
     { MB_POSSESSABLE, TILEI_POSSESSABLE },

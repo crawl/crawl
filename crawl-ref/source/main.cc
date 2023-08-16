@@ -1066,6 +1066,7 @@ static void _input()
 
     if (you.props.exists(DREAMSHARD_KEY))
         you.props.erase(DREAMSHARD_KEY);
+    crawl_state.potential_pursuers.clear();
 
     apply_exp();
 

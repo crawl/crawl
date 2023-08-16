@@ -3025,8 +3025,38 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     return false;
 }
 
+static void _maybe_pursue_quickly(monster &mons, coord_def orig_pos)
+{
+    if (!mons.alive() // barbs!
+        || !crawl_state.potential_pursuers.count(&mons)
+        || mons.wont_attack()
+        || mons.confused()
+        || mons_is_fleeing(mons)
+        || !mons.can_see(you)
+        || mons.has_ench(ENCH_PURSUING))
+    {
+        return;
+    }
+
+
+    // Only trigger swiftness for monsters moving toward you, not doing tricky
+    // M_MAINTAIN_RANGE nonsense or wandering around a lake or what have you.
+    if (grid_distance(mons.pos(), you.pos()) > grid_distance(orig_pos, you.pos()))
+        return;
+
+    // If the monster forgot about you between your turn and its, move on.
+    actor* foe = mons.get_foe();
+    if (!foe || !foe->is_player())
+        return;
+
+    if (you.can_see(mons))
+        simple_monster_message(mons, " puts on a burst of speed as it pursues you!");
+    mons.add_ench(ENCH_PURSUING);
+}
+
 static bool _do_move_monster(monster& mons, const coord_def& delta)
 {
+    const coord_def orig_pos = mons.pos();
     const coord_def f = mons.pos() + delta;
 
     if (!in_bounds(f))
@@ -3150,6 +3180,9 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
 
     _handle_manticore_barbs(mons);
 
+    // Turn on the gas before we use up move energy, so that pillar-dancing
+    // players can maybe get bapped if they get unlucky.
+    _maybe_pursue_quickly(mons, orig_pos);
     _swim_or_move_energy(mons);
 
     return true;

@@ -139,6 +139,9 @@ struct game_state
     // Monsters to highlight on the screen, 0 = disabled.
     vector<monster *> *flash_monsters;
 
+    // monsters which saw the player retreating.
+    set<monster*> potential_pursuers;
+
     // Any changes to macros that need to be changed?
     bool unsaved_macros;
 
