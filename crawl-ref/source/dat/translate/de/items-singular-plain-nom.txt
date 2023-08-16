@@ -862,7 +862,7 @@ Trank des Widerstands
 
 %%%%
 manual
-Manual
+Handbuch
 %%%%
 book of Minor Magic
 Buch der kleinen Magie
@@ -1045,7 +1045,8 @@ Everburning Encyclopedia
 ewig brennende Enzyklopädie
 %%%%
 Young Poisoner's Handbook
-Handbuch für junge Giftmörder
+# don't use Handbuch because that's the word we used for Manual
+Leitfaden für junge Giftmörder
 %%%%
 Fen Folio
 Fenn-Folio

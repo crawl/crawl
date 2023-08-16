@@ -18319,7 +18319,7 @@ The species aptitude is in <white>white</white>.
 Die Speziesbegebung ist <white>weiß</white>.
 %%%%
 Bonus from skill manuals is in <lightred>red</lightred>.
-Der Bonus von Manuals ist <lightred>rot</lightred>.
+Der Bonus von Handbüchern ist <lightred>rot</lightred>.
 %%%%
 You have quaffed a potion of experience. Select the skills to train.
 Ihr habt einen Trank der Erfahrung getrunken. Skills für Training auswählen.
@@ -18372,7 +18372,7 @@ Training target %.1f for %s reached!
 Trainingsziel %.1f für {acc}%s erreicht!
 %%%%
 You have finished your manual of %s and toss it away.
-Ihr habt Euer Manual von {dat}%s zu Ende gelesen und wirft es weg.
+Ihr habt Eueren Handbuch von {dat}%s zu Ende gelesen und wirft es weg.
 %%%%
 You can't set training targets!
 Ihr könnt euch keine Trainingsziele setzen!

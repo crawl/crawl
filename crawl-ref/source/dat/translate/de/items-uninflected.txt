@@ -547,7 +547,7 @@ spellbooks
 Zauberbücher
 %%%%
 manuals
-Manuals
+Handbücher
 %%%%
 runes
 Runen

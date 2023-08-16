@@ -862,7 +862,7 @@ ein {adj-er}%sStecken
 
 %%%%
 a manual
-{n}ein Manual
+{n}ein Handbuch
 %%%%
 a book of Minor Magic
 {n}ein Buch der kleinen Magie
@@ -1045,7 +1045,8 @@ an Everburning Encyclopedia
 eine ewig brennende Enzyklopädie
 %%%%
 a Young Poisoner's Handbook
-{n}ein Handbuch für junge Giftmörder
+# don't use Handbuch because that's the word we used for Manual
+{n}einen Leitfaden für junge Giftmörder
 %%%%
 a Fen Folio
 {n}ein Fenn-Folio
