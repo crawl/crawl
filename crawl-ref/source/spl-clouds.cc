@@ -236,7 +236,12 @@ spret corpse_rot(actor* caster, bool actual)
 
     // Abort the spell for players; monsters and wrath fail silently
     if (saw_rot)
-        mprf("You %s decay.", you.can_smell() ? "smell" : "sense");
+    {
+        if (you.can_smell())
+            mpr("You smell decay.");
+        else
+            mpr("You sense decay.");
+    }
     else if (!caster || caster->is_player())
         return spret::abort;
 
@@ -271,6 +276,6 @@ void holy_flames(monster* caster, actor* defender)
             mpr("Blessed fire suddenly surrounds you!");
         else
             simple_monster_message(*defender->as_monster(),
-                                   "%s is surrounded by blessed fire!");
+                                   " is surrounded by blessed fire!");
     }
 }

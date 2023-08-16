@@ -2316,7 +2316,7 @@ Something just walked over your grave. No, really!
 
 %%%%
 You smell decay.
-
+Ihr riecht die Verwesung.
 %%%%
 Your bandages flutter.
 Eure Bandagen flattern.
@@ -17752,7 +17752,7 @@ Ihr habt Eure Religion verloren!
 %s schätzt kein Verlassen!
 %%%%
 You sense decay.
-Ihr spürt den Verfall.
+Ihr spürt die Verwesung.
 %%%%
 %s reclaims all of your granted undead slaves!
 %s fordert alle Eure gewährten untoten Sklaven zurück!
@@ -18687,31 +18687,22 @@ The fire blazes with new energy!
 Das Feuer lodert mit neuer Energie!
 %%%%
 The fire begins to smoulder!
-
+Das Feuer beginnt zu schwelen!
 %%%%
 That is beyond the maximum range.
 Das ist jenseits der maximalen Reichweite.
 %%%%
 You can't place clouds on %s.
-Ihr könnt keine Wolken auf%s platzieren.
+Ihr könnt keine Wolken auf {acc}%s platzieren.
 %%%%
 That kind of cloud doesn't exist!
 Diese Art von Wolke gibt es nicht!
-%%%%
-You %s decay.
-Ihr %s Verwesung.
-%%%%
-smell
-
-%%%%
-sense
-
 %%%%
 Blessed fire suddenly surrounds you!
 Gesegnetes Feuer umgibt Euch plötzlich!
 %%%%
 %s is surrounded by blessed fire!
-
+%s ist von gesegnetem Feuer umgeben!
 %%%%
 
 ##################
