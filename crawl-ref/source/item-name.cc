@@ -2750,24 +2750,6 @@ bool is_bad_item(const item_def &item)
             return false;
         CASE_REMOVED_POTIONS(item.sub_type);
         }
-    case OBJ_JEWELLERY:
-        // Potentially useful. TODO: check the properties.
-        if (is_artefact(item))
-            return false;
-
-        switch (item.sub_type)
-        {
-        case RING_EVASION:
-        case RING_PROTECTION:
-        case RING_STRENGTH:
-        case RING_DEXTERITY:
-        case RING_INTELLIGENCE:
-        case RING_SLAYING:
-            return item_ident(item, ISFLAG_KNOW_PLUSES) && item.plus <= 0;
-        default:
-            return false;
-        }
-
     default:
         return false;
     }
