@@ -124,7 +124,7 @@ static const form_entry formdata[] =
     FormScaling().Base(9).Scaling(6), true, FormScaling().Base(7),
     SPWPN_NORMAL, LIGHTGREY, "", { "hit", "lash", "body-slam", "crush" },
     FC_DEFAULT, FC_ENABLE, FC_ENABLE, false,
-    "", 0, "", "", "coil in front of", "flesh",
+    "hiss", -2, "", "", "coil in front of", "flesh",
     { { "constrict", "You have a powerful constriction melee attack."} }
 },
 
