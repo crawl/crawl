@@ -5,7 +5,7 @@
 ###############################################################################
 
 #################################
-# full names
+# full names - definite article
 #################################
 
 %%%%
@@ -103,6 +103,10 @@ der Feuerball
 %%%%
 the bolt of lightning
 der Blitzschlag
+%%%%
+# not sure of the difference between thunderbolt and bolt of lightning, but both exist in the code
+the thunderbolt
+der Donnerkeil
 %%%%
 the bolt of poison
 der Giftblitz
@@ -285,6 +289,381 @@ der Scheiterhaufen des geisterhaften Feuers
 the fiery explosion
 die feurige Explosion
 %%%%
+the arc of chaos
+der Lichtbogen des Chaos
+%%%
+# Englaciate - freezes the whole area
+the great icy blast
+der große eisige Stoß
+%%%%
+
+# Fragments created by Lee's Rapid Deconstruction
+%%%%
+# from stone/rock walls or stone enemies
+the blast of rock fragments
+die Explosion von Steinsplittern
+%%%%
+the blast of petrified fragments
+die Explosion von Steinsplittern
+%%%%
+# fragments from a monster made of ice
+the icy blast
+die Explosion des Eises
+%%%%
+the blast of toenail fragments
+die Explosion von Zehennagelsplittern
+%%%%
+the blast of metal fragments
+die Explosion von Metallsplittern
+%%%%
+the blast of crystal shards
+die Explosion von Kristallscherben
+%%%%
+the blast of orange crystal shards
+die Explosion von orangen Kristallscherben
+%%%%
+the blast of salt crystal shards
+die Explosion von Salzkristallscherben
+%%%%
+the blast of obsidian shards
+die Explosion von Obsidianscherben
+%%%%
+the blast of sapphire shards
+die Explosion von Saphirscherben
+%%%%
+the blast of bone shards
+die Explosion von Knochensplittern
+%%%%
+
+#################################
+# full names - indefinite article
+#################################
+
+%%%%
+a noxious blast
+ein schädlicher Strahl
+%%%%
+a blast of poison
+ein Giftstrahl
+%%%%
+a bolt of energy
+ein Energiestrahl
+%%%%
+a spray of metal splinters
+eine Gischt der Metallsplitter
+%%%%
+a spray of wooden splinters
+eine Gischt der Holzsplitter
+%%%%
+a burst of rock shards
+eine Gischt der Steinsplitter
+%%%%
+a volley of thorns
+eine Dornensalve
+%%%%
+a volley of spikes
+eine Salve der Stacheln
+%%%%
+a toxic sludge
+ein giftiger Schlamm
+%%%%
+a damnation
+eine Verdammnis
+%%%%
+a foul vapour
+ein fauliger Dunst
+%%%%
+# this blasts outwards from the player in all directions
+a blast of cleansing flame
+eine Wolken der reinigenden Flamme
+%%%%
+# this creates a single straight line of clouds
+a blast of calcifying dust
+ein Strahl des verkalkenden Staubs
+%%%%
+a ghostly fireball
+ein geisterhafter Feuerball
+%%%%
+a flash freeze
+{n}ein Blitzgefrieren
+%%%%
+a glob of lava
+ein Lavaklumpen
+%%%%
+# chaos crab area effect
+a blast of chaos
+ein Chaosstrahl
+%%%%
+# fire breath (beam), flame clouds (area)
+a blast of flame
+eine Wolke der Flammen
+%%%%
+a blast of cold
+eine Wolke des Frostes
+%%%%
+# searing breath (beam), similar to fire breath
+a searing blast
+eine sengende Wolke
+%%%%
+a bolt of electricity
+ein Elektrizitätbolzen
+%%%%
+a puff of flame
+ein Flammenhauch
+%%%%
+a puff of frost
+ein Frosthauch
+%%%%
+a stinking cloud
+eine stinkende Wolke
+%%%%
+a magic dart
+ein magischer Pfeil
+%%%%
+a bolt of fire
+ein Feuerbolzen
+%%%%
+a bolt of cold
+ein Frostbolzen
+%%%%
+a torrent of water
+ein Wasserschwall
+%%%%
+a fireball
+ein Feuerball
+%%%%
+a bolt of lightning
+ein Blitzschlag
+%%%%
+a thunderbolt
+ein Donnerkeil
+%%%%
+a bolt of poison
+ein Giftblitz
+%%%%
+a bolt of negative energy
+ein Bolzen der negativen Energie
+%%%%
+a crystal spear
+ein Kristallspeer
+%%%%
+a sticky flame
+eine klebrige Flamme
+%%%%
+# a physical stinger on the caster's limb
+a sting
+ein Stachel
+%%%%
+a iron shot
+ein Eisenschuss
+%%%%
+a stone arrow
+ein Steinpfeil
+%%%%
+# Shock spell (electricity)
+a zap
+{n}ein Zappen
+%%%%
+a stunning burst
+eine betäubende Explosion
+%%%%
+a orb of electricity
+eine Elektrizitätskugel
+%%%%
+a splash of poison
+ein Giftspritzer
+%%%%
+a fiery breath
+ein feuriger Atem
+%%%%
+a freezing breath
+ein eisiger Atem
+%%%%
+a glob of acid
+ein Säureklumpen
+%%%%
+a poison gas
+{n}ein Giftgas
+%%%%
+a bolt of dispelling energy
+ein Blitz der vertreibenden Energie
+%%%%
+a splash of acid
+ein Säurespritzer
+%%%%
+a agony
+eine Qualen
+%%%%
+a ball of steam
+eine Dampfkugel
+%%%%
+a shard of ice
+ein Eissplitter
+%%%%
+a flame tongue
+eine Flammenzunge
+%%%%
+a blast of sand
+ein Sandstrahl
+%%%%
+a bolt of magma
+ein Magmabolzen
+%%%%
+a poison arrow
+ein Giftpfeil
+%%%%
+a blast of choking fumes
+eine Explosion der erstickenden Dämpfe
+%%%%
+a lance of force
+eine Lanze der Kraft
+%%%%
+a searing ray
+ein sengender Strahl
+%%%%
+a crystal bolt
+ein Kristallbolzen
+%%%%
+a bolt of acid
+ein Säurebolzen
+%%%%
+a unravelling
+eine Aufdröseln
+%%%%
+a iceblast
+ein Eisblitz
+%%%%
+a slug dart
+ein Schneckenpfeil
+%%%%
+a living lightning
+ein lebender Blitz
+%%%%
+a freezing blast
+ein Gefrierstrahl
+%%%%
+a harpoon shot
+ein Harpunenschuss
+%%%%
+a beckoning
+eine Lockung
+%%%%
+a great blast of fire
+ein großer Feuerstoß
+%%%%
+a malmutate
+{n}ein Malmutat
+%%%%
+a refrigeration
+eine Kühlung
+%%%%
+a drain life
+eine Lebensentziehung
+%%%%
+a sonic wave
+eine Schallwelle
+%%%%
+a klown pie
+eine Klowntorte
+%%%%
+# duplicate of monster
+#the foxfire
+#das Fuchsfeuer
+%%%%
+a hail
+ein Hagel
+%%%%
+a mystic blast
+eine mystische Explosion
+%%%%
+a chilling breath
+ein kühlender Atem
+%%%%
+a porkalator
+ein Verschweiner
+%%%%
+a stream of webbing
+ein Strom Spinnennetz
+%%%%
+# duplicate of cloud
+#the spectral mist
+#
+%%%%
+a shadow bolt
+ein Schattenbolzen
+%%%%
+a shadow shard
+ein Schattensplitter
+%%%%
+a vile air
+eine widerliche Luft
+%%%%
+a flame surge
+eine Flammenwoge
+%%%%
+a explosion of spores
+eine Explosion der Sporen
+%%%%
+a blast of lightning
+ein Einschlag des Blitzes
+%%%%
+a blast of energy
+ein Einschlag der Energie
+%%%%
+a blast of putrescent gases
+ein Einschlag faulender Gase
+%%%%
+a pyre of ghostly fire
+ein Scheiterhaufen des geisterhaften Feuers
+%%%%
+a fiery explosion
+eine feurige Explosion
+%%%%
+a arc of chaos
+ein Lichtbogen des Chaos
+%%%%
+# Englaciate - freezes the whole area
+a great icy blast
+ein großer eisiger Stoß
+%%%%
+
+# Fragments created by Lee's Rapid Deconstruction
+%%%%
+# from stone/rock walls or stone enemies
+a blast of rock fragments
+eine Explosion von Steinsplittern
+%%%%
+a blast of petrified fragments
+eine Explosion von Steinsplittern
+%%%%
+# fragments from a monster made of ice
+a icy blast
+eine Explosion des Eises
+%%%%
+a blast of toenail fragments
+eine Explosion von Zehennagelsplittern
+%%%%
+a blast of metal fragments
+eine Explosion von Metallsplittern
+%%%%
+a blast of crystal shards
+eine Explosion von Kristallscherben
+%%%%
+a blast of orange crystal shards
+eine Explosion von orangen Kristallscherben
+%%%%
+a blast of salt crystal shards
+eine Explosion von Salzkristallscherben
+%%%%
+a blast of obsidian shards
+eine Explosion von Obsidianscherben
+%%%%
+a blast of sapphire shards
+eine Explosion von Saphirscherben
+%%%%
+a blast of bone shards
+eine Explosion von Knochensplittern
+%%%%
 
 #################################
 # full names without article
@@ -385,6 +764,9 @@ Feuerball
 %%%%
 bolt of lightning
 Blitzschlag
+%%%%
+thunderbolt
+Donnerkeil
 %%%%
 bolt of poison
 Giftblitz
@@ -567,6 +949,51 @@ Scheiterhaufen des geisterhaften Feuers
 %%%%
 fiery explosion
 feurige Explosion
+%%%%
+arc of chaos
+Lichtbogen des Chaos
+%%%%
+# Englaciate - freezes the whole area
+great icy blast
+großer eisiger Stoß
+%%%%
+
+# Fragments created by Lee's Rapid Deconstruction
+%%%%
+# from stone/rock walls or stone enemies
+blast of rock fragments
+Explosion von Steinsplittern
+%%%%
+blast of petrified fragments
+Explosion von Steinsplittern
+%%%%
+# fragments from a monster made of ice
+icy blast
+Explosion des Eises
+%%%%
+blast of toenail fragments
+Explosion von Zehennagelsplittern
+%%%%
+blast of metal fragments
+Explosion von Metallsplittern
+%%%%
+blast of crystal shards
+Explosion von Kristallscherben
+%%%%
+blast of orange crystal shards
+Explosion von orangen Kristallscherben
+%%%%
+blast of salt crystal shards
+Explosion von Salzkristallscherben
+%%%%
+blast of obsidian shards
+Explosion von Obsidianscherben
+%%%%
+blast of sapphire shards
+Explosion von Saphirscherben
+%%%%
+blast of bone shards
+Explosion von Knochensplittern
 %%%%
 
 #################################

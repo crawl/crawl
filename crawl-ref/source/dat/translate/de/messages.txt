@@ -425,9 +425,6 @@ Ihr zieht Eure Mandibeln zurück.
 Are you sure you want to shaft yourself?
 
 %%%%
-spit at
-
-%%%%
 You spit a glob of acid.
 
 %%%%
@@ -1501,6 +1498,7 @@ You hear a mighty clap of thunder!
 Animating this weapon would place you under penance. Really cast this spell?
 
 %%%%
+# note: param = "a/an <beam name>"
 %s appears from out of thin air!
 %s erscheint aus der Luft!
 %%%%
@@ -1549,6 +1547,7 @@ Your line of fire to %s is blocked by %s. Continue anyway?
 Your line of fire to the targeted %s is blocked by %s. Continue anyway?
 
 %%%%
+# note: param = "a/an <beam name>"
 %s appears from out of your range of vision.
 %s erscheint außerhalb Eurer Sichtweite.
 %%%%
@@ -1660,6 +1659,7 @@ Ihr hört ein zischendes Geräusch!
 That beam is likely to hit you. Continue anyway?
 
 %%%%
+# note: <your shield> reflects <the beam>!
 %s reflects %s!
 
 %%%%
@@ -5415,9 +5415,6 @@ You reflect %s with the mirror!
 You can't see anything, release a tremorstone anyway?
 
 %%%%
-release a tremorstone
-
-%%%%
 The tremorstone explodes into fragments!
 Der Tremorstein explodiert in Fragmente!
 %%%%
@@ -5546,9 +5543,6 @@ Really attack while wielding nothing?
 %%%%
 This could place you under penance!
 Dies könnte Euch unter Buße stellen!
-%%%%
-attack
-
 %%%%
 , despite your sanctuary
 
@@ -11084,7 +11078,7 @@ The air twists around and strikes you
 
 %%%%
 The air twists around and strikes %s%s
-
+Die Luft wirbelt herum und trifft auf {acc}%s%s
 %%%%
 Something feeds on your intellect!
 Etwas ernährt sich von Eurem Intellekt!
@@ -18710,22 +18704,20 @@ Gesegnetes Feuer umgibt Euch plötzlich!
 ##################
 %%%%
 You can't place the storm on %s.
-Ihr könnt den Sturm nicht auf %s setzen.
+Ihr könnt den Sturm nicht auf {acc}%s setzen.
 %%%%
 You call forth a pillar of damnation!
 Ihr ruft eine Säule der Verdammnis hervor!
 %%%%
-" (and %lu other bad targets)"
-
+Chain Lightning might hit %s. Cast it anyway?
+Kettenblitz könnte {acc}%s treffen. Trotzdem wirken?
 %%%%
-Chain Lightning might hit %s%s. Cast it anyway?
-
+Chain Lightning might hit %s (and %d other bad targets). Cast it anyway?
+Kettenblitz könnte {acc}%s (und %d andere falsche Ziele) treffen. Trotzdem wirken?
 %%%%
+# note: ...from <monster's> <hand>
 Lightning arcs from %s %s!
-
-%%%%
-arc of chaos
-
+Ein Blitz schießt aus %s {dat}%s.
 %%%%
 The %s grounds out.
 Die %s begründen.
@@ -18733,134 +18725,106 @@ Die %s begründen.
 A swirling arc of seething chaos appears!
 Ein wirbelnder Bogen brodelnden Chaos erscheint!
 %%%%
-The %s arcs out of your line of sight!
-Die %s-Bögen befinden sich außerhalb Ihrer Sichtlinie!
+The arc of chaos arcs out of your line of sight!
+Der Lichtbogen des Chaos springt außer Sicht.
 %%%%
-The %s suddenly appears!
-Das%s erscheint plötzlich!
+The arc of chaos suddenly appears!
+Der Lichtbogen des Chaos erscheint plötzlich.
 %%%%
-be
-
+%s are %s.
+%s werden %s.
 %%%%
 The monsters around %s are %s!
-Die Monster um%s sind%s!
+Die Monster um {acc}%s herum werden %s!
+%%%%
+The monsters around you are %s!
+Die Monster um dich herum werden %s!
 %%%%
 The heat is drained from your surroundings.
-
+Die Wärme wird der Umgebung entzogen.
 %%%%
 Something drains the heat from around you.
-
+Irgendetwas entzieht der Umgebung die Wärme.
 %%%%
 %s drains the heat from the surrounding environment!
-
+%s entzieht der Umgebung die Wärme.
 %%%%
 The ambient heat is drained!
-
+Die Umgebungswärme wird entzogen!
 %%%%
+# note: verb for the prompt "Really refrigerate?"
 refrigerate
-
+kühlen
 %%%%
 You draw life from your surroundings.
-
+Ihr zieht Leben aus Eurer Umgebung.
 %%%%
 Something draws the life force from your surroundings.
-
+Etwas zieht Leben aus Eurer Umgebung.
 %%%%
 %s draws from the surrounding life force!
-
+%s zieht aus der umgebenden Lebenskraft!
 %%%%
 The surrounding life force dissipates!
-
+Die umgebende Lebenskraft löst sich auf!
 %%%%
 drained of life
-
+ausgelaugt vom Leben
 %%%%
+# note: sonic wave
 You send a blast of sound all around you.
-
+Ihr setzt eine Schallwelle aus.
 %%%%
 Something sends a blast of sound all around you.
-
+Etwas setzt eine Schallwelle aus.
 %%%%
 %s sends a blast of sound all around you!
-
+%s setzt eine Schallwelle aus.
 %%%%
 Sound blasts the surrounding area!
-
+Die Umgebung wird beschallt!
 %%%%
-blasted
-
+blasted with sound
+beschallt
 %%%%
 You feel very cold.
 Ihr fühlt Euch sehr kalt.
 %%%%
 You freeze %s but do no damage.
-
+Ihr friert {acc}%s ein, richtet aber keinen Schaden an.
 %%%%
-The air twists around and strikes %s%s%s
-
+The air twists around and strikes %s but does no damage.
+Die Luft wirbelt herum und trifft auf {acc}, richtet aber keinen Schaden an.
 %%%%
-" but does no damage"
-
+# note: Things that can shatter
+the wall
+die Wand
 %%%%
-blast of rock fragments
-
+the stone idol
+das steinerne Idol
 %%%%
-blast of petrified fragments
-
+the petrified wood
+das versteinerte Holz
 %%%%
-icy blast
-
+the stone door frame
+der steinerne Türrahmen
 %%%%
-toenail
-
-%%%%
-salt crystal
-
-%%%%
-rock
-
-%%%%
-metal
-
-%%%%
-crystal
-
-%%%%
-orange crystal
-
-%%%%
-blast of %s %s
-
-%%%%
-shards
-
-%%%%
-blast of bone shards
-
-%%%%
-stone idol
-
-%%%%
-petrified wood
-
-%%%%
-stone door frame
-
-%%%%
-stone arch
-
+the stone arch
+der Steinbogen
 %%%%
 You can't deconstruct that!
 Das könnt Ihr nicht dekonstruieren!
 %%%%
-The %s shatters!
-Das%s zerbricht!
+%s shatters!
+%s zerbricht!
 %%%%
+# note: param = damage-based punctuation
 You shatter%s
-
+Ihr zerbricht%s
 %%%%
+# note: params = the monster, damage-based punctuation
 %s shatters%s
-
+%s zerbricht%s
 %%%%
 A door shatters!
 Eine Tür zerbricht!
@@ -18874,41 +18838,38 @@ Der Kerker zittert!
 The dungeon rumbles!
 Der Kerker rumpelt!
 %%%%
-You shudder from the earth-shattering force
-Ihr schaudert vor der erderschütternden Kraft
+You shudder from the earth-shattering force%s
+Ihr schaudert vor der erderschütternden Kraft%s
 %%%%
-You shudder
-
+You shudder%s
+Ihr schaudert%s
 %%%%
 The dungeon shakes around %s!
-Der Dungeon wackelt um%s!
+Der Dungeon wackelt um %s!
 %%%%
 The dungeon rumbles around %s!
-Der Dungeon rumpelt um%s!
+Der Dungeon rumpelt um %s!
 %%%%
-%s shudder%s.
-
+%s shudder.
+%s schaudern.
 %%%%
 There is a shattering impact!
 Es gibt einen erschütternden Aufprall!
 %%%%
 %s is blasted with magical radiation%s
-
-%%%%
-irradiate
-
+%s wird mit magischer Strahlung bestrahlt%s
 %%%%
 You erupt in a fountain of uncontrolled magic!
-Ihr bricht in einem Brunnen unkontrollierter Magie aus!
+Ihr brecht in einem Brunnen unkontrollierter Magie aus!
 %%%%
 %s erupts in a fountain of uncontrolled magic!
-
+%s bricht in einem Brunnen unkontrollierter Magie aus!
 %%%%
-%s seems to burn from within
-%s scheint innerhalb von%s zu brenn
+%s seems to burn from within%s
+%s scheint von innen zu brennen%s
 %%%%
 You feel like your blood is boiling!
-Ihr habt das Gefühl, Euer Blut kocht!
+Ihr habt das Gefühl, dass Euer Blut kocht!
 %%%%
 The poison in your system burns terribly!
 Das Gift in Eurem System brennt schrecklich!
@@ -18916,47 +18877,42 @@ Das Gift in Eurem System brennt schrecklich!
 The poison in your system burns!
 Das Gift in Eurem System brennt!
 %%%%
-"You are standing "
-
-%%%%
-"in a cloud of "
-
-%%%%
-! Ignite poison anyway?
-
+You are standing in a cloud of %s! Ignite poison anyway?
+Ihr steht in einer Wolke aus {dat}%s! Trotzdem Gift entzünden?
 %%%%
 You might harm nearby allies! Ignite poison anyway?
-
+Ihr könntet Verbündete in der Nähe verletzen! Trotzdem Gift entzünden?
 %%%%
-%s %s the poison in %s surroundings!
-%s%s das Gift in%s Umgebung!
+You ignite the poison in your surroundings!
+Ihr entzündet das Gift in Eurer Umgebung!
 %%%%
-ignite
-
+%s ignites the poison in the surroundings!
+%s entzündet das Gift in der Umgebung!
 %%%%
 The air bursts into flame!
 Die Luft geht in Flammen auf!
 %%%%
 static discharge
-
+statische Entladung
 %%%%
-You are struck by an arc of lightning
-Ihr werdet von einem Blitz getroffen
+# note: param = damage-based punctuation
+You are struck by an arc of lightning%s
+Ihr werdet von einem Blitzstrahl getroffen%s
 %%%%
 %s is struck by an arc of lightning%s
-
+%s wird von einem Blitzstrahl getroffen%s
 %%%%
 The lightning grounds out.
-Der Blitz fällt aus.
+Der Blitz wird geerdet
 %%%%
 The air crackles with electrical energy.
 Die Luft knistert vor elektrischer Energie.
 %%%%
 Some blue arcs ground themselves harmlessly.
-
+Einige blaue Lichtbogen erden sich harmlos.
 %%%%
 A blue arc grounds itself harmlessly.
-
+Ein blauer Lichtbogen erdet sich harmlos.
 %%%%
 You don't have any stones to cast with.
 Ihr habt keine Steine ​​zum Werfen.
@@ -18964,56 +18920,78 @@ Ihr habt keine Steine ​​zum Werfen.
 You now have no stones remaining.
 Ihr habt jetzt keine Steine ​​mehr.
 %%%%
-thunderbolt
-
-%%%%
 The trees move their gnarly branches around.
-
+Die Bäume bewegen ihre knorrigen Äste hin und her.
 %%%%
 You feel roots moving beneath the ground.
-
+Ihr spürt, wie sich die Wurzeln unter dem Boden bewegen.
 %%%%
 Branches wave dangerously above you.
-
+Die Äste schwingen gefährlich über Euch.
 %%%%
 Trunks creak and shift.
-
+Die Stämme knarren und verschieben sich.
 %%%%
 Tree limbs sway around you.
-
+Die Äste der Bäume schwingen um Euch herum.
 %%%%
-@foe@ @is@ waved at by a branch
-
+You are waved at by a branch.
+Ein Ast winkt Euch zu.
 %%%%
-A tree reaches out but misses @foe@
-
+A tree reaches out but misses you.
+Ein Baum streckt seinen Ast aus, aber verfehlt Euch.
 %%%%
-A root lunges up near @foe@
-
+A root lunges up near you.
+Eine Wurzel ragt in Eurer Nähe.
 %%%%
-@foe@ @is@ scraped by a branch
-
+@foe@ is waved at by a branch.
+@foe@ wird von einem Ast zugewunken.
 %%%%
-A tree reaches out and scrapes @foe@
-
+A tree reaches out but misses @foe@.
+Ein Baum streckt seinen Ast aus, aber verfehlt {acc}@foe@.
 %%%%
-A root barely touches @foe@ from below
-
+A root lunges up near @foe@.
+Eine Wurzel ragt in der Nähe {gen}@foe@.
 %%%%
-@foe@ @is@ hit by a branch
-
+You are scraped by a branch.
+Ihr werdet von einem Ast gekratzt.
+%%%%
+A tree reaches out and scrapes you.
+Ein Baum streckt seinen Ast aus, und kratzt Euch.
+%%%%
+A root barely touches you from below.
+Eine Wurzel berührt Euch kaum von unten.
+%%%%
+@foe@ is scraped by a branch.
+@foe@ wird von einem Ast gekratzt.
+%%%%
+A tree reaches out and scrapes @foe@.
+Ein Baum streckt seinen Ast aus, und kratzt {acc}@foe@.
+%%%%
+A root barely touches @foe@ from below.
+Eine Wurzel berührt @foe@ kaum von unten.
+%%%%
+# note: these are intentionally without final punctuation
+You are hit by a branch
+Ihr werdet von einem Ast getroffen
+%%%%
+A tree reaches out and hits you
+Ein Baum streckt seinen Ast aus, und schlägt Euch.
+%%%%
+A root smacks you from below
+Eine Wurzel erschlägt Euch von unten
+%%%%
+@foe@ is hit by a branch
+@foe@ wird von einem Ast getroffen
 %%%%
 A tree reaches out and hits @foe@
-
+Ein Baum streckt seinen Ast aus, und schlägt {acc}@foe@.
 %%%%
 A root smacks @foe@ from below
-
-%%%%
-dazzle
-
+Eine Wurzel erschlägt {acc}@foe@ von unten
 %%%%
 %s is dazzled.
-
+%s wird geblendet.
 %%%%
 You begin to radiate toxic energy.
 Ihr fangt an, giftige Energie auszustrahlen.
@@ -19022,16 +19000,16 @@ Your toxic radiance grows in intensity.
 Eure giftige Ausstrahlung nimmt an Intensität zu.
 %%%%
 %s begins to radiate toxic energy.
-
+%s fängt an, giftige Energie auszustrahlen.
 %%%%
 %s cannot be affected by poisonous vapours!
-
+%s kann nicht von giftigen Dämpfen betroffen sein!
 %%%%
 Poisonous vapours surround %s!
-Giftige Dämpfe umgeben%s!
+Giftige Dämpfe umgeben {acc}%s!
 %%%%
 (Press <w>%</w> to maintain the ray.)
-
+(<w>%</w> drücken, um den Strahl zu erhalten.)
 %%%%
 Without enough magic to sustain it, your searing ray dissipates.
 Ohne genug Magie, um es aufrechtzuerhalten, löst sich Euer sengender Strahl auf.
@@ -19042,35 +19020,23 @@ Ihr hört auf, Euren sengenden Strahl zu kanalisieren.
 You finish channeling your searing ray.
 Ihr seid damit fertig, Euren sengenden Strahl zu kanalisieren.
 %%%%
-glaciate
-
+You conjure a mighty blast of ice!
+Ihr zaubert einen mächtigen Eisstoß!
 %%%%
-great icy blast
-
-%%%%
-%s %s a mighty blast of ice!
-%s%s eine mächtige Explosion von Eis!
-%%%%
-conjure
-
-%%%%
-hailstorm
-
+%s conjures a mighty blast of ice!
+%s zaubert einen mächtigen Eisstoß!
 %%%%
 A cannonade of hail descends around you!
 Eine Kanonade von Hagel steigt um Euch herab!
 %%%%
-blast
-
-%%%%
 You erupt in a blast of force!
-Ihr braucht in einer Explosion von Gewalt aus!
+Ihr brecht in einer Explosion von Gewalt aus!
 %%%%
-You fester in the toxic bog
-Ihr eitert im giftigen Moor
+You fester in the toxic bog%s
+Ihr eitert im giftigen Moor%s
 %%%%
-%s festers in the toxic bog
-%s eitert im giftigen Moor
+%s festers in the toxic bog%s
+%s eitert im giftigen Moor%s
 %%%%
 There are no walls around you to affect.
 Es gibt keine Mauern um Euch herum, die beeinflusst werden könnten.
@@ -19079,37 +19045,37 @@ The walls around you are covered in ice.
 Die Wände um Euch herum sind mit Eis bedeckt.
 %%%%
 You begin accumulating electric charge.
-
+Ihr beginnt, elektrische Ladung zu akkumulieren.
 %%%%
 (Press <w>%</w> to continue charging.)
-
+(<w>%</w> drücken, um den Ladevorgang fortzusetzen.)
 %%%%
 Your charge dissipates without a target.
-
+Eure Ladung löst sich ohne Ziel auf.
 %%%%
-A cloud of jellies burst out of %s as the current ripples through it!
-
+A cloud of jellies burst out of the Royal Jelly as the current ripples through it!
+Eine Wolke von Gelees platzt aus dem Gelée Royale, als der Strom es durchfließt!
 %%%%
 The electricity discharges through %s!
-
+Der Strom entlädt sich durch {acc}%s!
 %%%%
 %s vaporises and condenses as gold!
-
+%s verdampft und kondensiert als Gold!
 %%%%
 %s vaporises in an electric haze!
-
+%s verdampft in einem elektrischen Dunst!
 %%%%
 You feel charge building up...
-
+Ihr spürt, wie sich die Ladung aufbaut...
 %%%%
 The insufficient charge dissipates harmlessly.
-
+Die unzureichende Ladung verpufft harmlos.
 %%%%
 There are no places for you to create a bog.
-
+Es gibt keine Stellen, ein Moor anzulegen.
 %%%%
 You spew toxic sludge!
-
+Ihr spuckt Giftschlamm!
 %%%%
 
 ##################
@@ -20128,6 +20094,9 @@ Ihr könnt das Prisma nicht auf eine Kreatur legen.
 %s %s a prism of explosive energy!
 %s%s ein Prisma explosiver Energie!
 %%%%
+conjure
+
+%%%%
 A prism of explosive energy appears from nowhere!
 Ein Prisma explosiver Energie erscheint aus dem Nichts!
 %%%%
@@ -20568,9 +20537,6 @@ you have no body armour to summon the spirit of.
 ##################
 # spl-vortex.cc
 ##################
-%%%%
-make a polar vortex
-
 %%%%
 A great freezing vortex %s.
 
@@ -22110,6 +22076,9 @@ someone's
 %%%%
 %s hits %s%s!
 %s trifft%s%s!
+%%%%
+" but does no damage"
+, richtet aber keinen Schaden an.
 %%%%
 You stumble into a teleport trap!
 

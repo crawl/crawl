@@ -112,6 +112,7 @@ experience points = Erfahrungspunkte
 hit dice = Trefferwürfel
 manual = Handbuch
 potion = Trank
+breath weapon = Odemwaffe
 
 ## Adjectives
 
@@ -191,4 +192,8 @@ So in practice, the -e ending will be most common, but -en, -er and -es are also
 We're unlikely to ever use the -em ending.
 For this reason, I've made the form with the -e ending the default (i.e. no msgctxt).
 
+To do list:
+- generate toggle list like "Cast|<w>Describe</w>|Hide|Show", so we don't have to give translations for every possible state
+- remove add_attack_strength_punct/attack_strength_message - this can be handled within localise()
+- revisit attack_stop_prompt - currently we are ignoring the verb parameter
 

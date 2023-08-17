@@ -295,12 +295,19 @@ static bool _warn_about_chain_lightning()
     string adj, suffix;
     bool penance;
     bad_attack(ex_mon, adj, suffix, penance, you.pos());
-    const string and_more = bad_targets.size() > 1 ?
-            make_stringf(" (and %lu other bad targets)",
-                         bad_targets.size() - 1) : "";
-    const string prompt = make_stringf("Chain Lightning might hit %s%s. Cast it anyway?",
-                                       ex_mon->name(DESC_THE).c_str(),
-                                       and_more.c_str());
+
+    string prompt;
+    if (bad_targets.size() == 1)
+    {
+        prompt = localise("Chain Lightning might hit %s. Cast it anyway?",
+                          ex_mon->name(DESC_THE));
+    }
+    else
+    {
+        prompt = localise("Chain Lightning might hit %s "
+                          "(and %d other bad targets). Cast it anyway?",
+                          ex_mon->name(DESC_THE), (int)bad_targets.size() - 1);
+    }
     if (!yesno(prompt.c_str(), false, 'n'))
     {
         canned_msg(MSG_OK);
@@ -328,6 +335,7 @@ spret cast_chain_lightning(int pow, const actor &caster, bool fail)
 
     if (you.can_see(caster))
     {
+        // locnote: ...from <monster's> <hand>
         mprf("Lightning arcs from %s %s!",
              apostrophise(caster.name(DESC_PLAIN)).c_str(),
              caster.hand_name(true).c_str());
@@ -481,9 +489,9 @@ spret cast_chain_spell(spell_type spell_cast, int pow,
         first = false;
 
         if (see_source && !see_targ)
-            mprf("The %s arcs out of your line of sight!", beam.name.c_str());
+            mprf("The arc of chaos arcs out of your line of sight!");
         else if (!see_source && see_targ)
-            mprf("The %s suddenly appears!", beam.name.c_str());
+            mprf("The arc of chaos suddenly appears!");
 
         beam.source = source;
         beam.target = target;
@@ -588,19 +596,26 @@ static void _los_spell_pre_damage_monsters(const actor* agent,
     {
         counted_monster_list mons_list =
             counted_monster_list(seen_monsters);
-        const string message = make_stringf("%s %s %s.",
-                mons_list.describe(DESC_THE).c_str(),
-                conjugate_verb("be", mons_list.count() > 1).c_str(), verb);
+        const string monsters = mons_list.describe(DESC_THE);
+        string message;
+        if (mons_list.count() == 1)
+            message = localise("%s is %s.", monsters, verb);
+        else
+            message = localise("%s are %s.", monsters, verb);
         if (strwidth(message) < get_number_of_cols() - 2)
-            mpr(message);
+            mpr_nolocalise(message);
         else
         {
             // Exclamation mark to suggest that a lot of creatures were
             // affected.
-            mprf("The monsters around %s are %s!",
-                agent && agent->is_monster() && you.can_see(*agent)
-                ? agent->as_monster()->name(DESC_THE).c_str()
-                : "you", verb);
+            if (agent && agent->is_monster() && you.can_see(*agent))
+            {
+                mprf("The monsters around %s are %s!",
+                     agent->as_monster()->name(DESC_THE).c_str(),
+                     verb);
+            }
+            else
+                mprf("The monsters around you are %s!", verb);
         }
     }
 }
@@ -704,6 +719,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
                            " environment!";
             mons_invis_msg = "The ambient heat is drained!";
             verb = "frozen";
+            // locnote: verb for the prompt "Really refrigerate?"
             prompt_verb = "refrigerate";
             vulnerable = [](const actor *caster, const actor *act) {
                 return act != caster
@@ -725,11 +741,12 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             break;
 
         case SPELL_SONIC_WAVE:
+            // locnote: sonic wave
             player_msg = "You send a blast of sound all around you.";
             global_msg = "Something sends a blast of sound all around you.";
             mons_vis_msg = "%s sends a blast of sound all around you!";
             mons_invis_msg = "Sound blasts the surrounding area!";
-            verb = "blasted";
+            verb = "blasted with sound";
             // prompt_verb = "sing" The singing sword prompts in melee-attack
             vulnerable = [](const actor *caster, const actor *act) {
                 return act != caster
@@ -990,10 +1007,17 @@ spret cast_airstrike(int pow, const dist &beam, bool fail)
     hurted = mons->apply_ac(mons->beam_resists(pbeam, hurted, false));
     dprf("preac: %d, postac: %d", preac, hurted);
 
-    mprf("The air twists around and strikes %s%s%s",
-         mons->name(DESC_THE).c_str(),
-         hurted ? "" : " but does no damage",
-         attack_strength_punctuation(hurted).c_str());
+    if (hurted)
+    {
+        mprf("The air twists around and strikes %s%s",
+             mons->name(DESC_THE).c_str(),
+             attack_strength_punctuation(hurted).c_str());
+    }
+    else
+    {
+        mprf("The air twists around and strikes %s but does no damage.",
+             mons->name(DESC_THE).c_str());
+    }
     _player_hurt_monster(*mons, hurted, pbeam.flavour);
 
     if (mons->alive())
@@ -1063,27 +1087,32 @@ struct monster_frag
 };
 
 static const map<monster_type, monster_frag> fraggable_monsters = {
-    { MONS_TOENAIL_GOLEM,     { "toenail", RED } },
+    { MONS_TOENAIL_GOLEM,     { "blast of toenail fragments", RED } },
     // I made saltlings not have a big crystal explosion for balance reasons -
     // there are so many of them, it seems wrong to have them be so harmful to
     // their own allies. This could be wrong!
-    { MONS_SALTLING,          { "salt crystal", WHITE } },
-    { MONS_EARTH_ELEMENTAL,   { "rock", BROWN } },
-    { MONS_ROCKSLIME,         { "rock", BROWN } },
-    { MONS_USHABTI,           { "rock", BROWN } },
-    { MONS_STATUE,            { "rock", BROWN } },
-    { MONS_GARGOYLE,          { "rock", BROWN } },
-    { MONS_IRON_ELEMENTAL,    { "metal", CYAN, frag_damage_type::metal } },
-    { MONS_IRON_GOLEM,        { "metal", CYAN, frag_damage_type::metal } },
-    { MONS_PEACEKEEPER,       { "metal", CYAN, frag_damage_type::metal } },
-    { MONS_WAR_GARGOYLE,      { "metal", CYAN, frag_damage_type::metal } },
-    { MONS_CRYSTAL_GUARDIAN,  { "crystal", DARKGREY,
+    { MONS_SALTLING,          { "blast of salt crystal shards", WHITE } },
+    { MONS_EARTH_ELEMENTAL,   { "blast of rock fragments", BROWN } },
+    { MONS_ROCKSLIME,         { "blast of rock fragments", BROWN } },
+    { MONS_USHABTI,           { "blast of rock fragments", BROWN } },
+    { MONS_STATUE,            { "blast of rock fragments", BROWN } },
+    { MONS_GARGOYLE,          { "blast of rock fragments", BROWN } },
+    { MONS_IRON_ELEMENTAL,    { "blast of metal fragments", CYAN,
+                                frag_damage_type::metal } },
+    { MONS_IRON_GOLEM,        { "blast of metal fragments", CYAN, 
+                                frag_damage_type::metal } },
+    { MONS_PEACEKEEPER,       { "blast of metal fragments", CYAN,
+                                frag_damage_type::metal } },
+    { MONS_WAR_GARGOYLE,      { "blast of metal fragments", CYAN,
+                                frag_damage_type::metal } },
+    { MONS_CRYSTAL_GUARDIAN,  { "blast of crystal shards", DARKGREY,
                                 frag_damage_type::crystal } },
-    { MONS_ORANGE_STATUE,     { "orange crystal", LIGHTRED,
+    { MONS_ORANGE_STATUE,     { "blast of orange crystal shards", LIGHTRED,
                                 frag_damage_type::crystal } },
-    { MONS_OBSIDIAN_STATUE,   { "obsidian", GREEN,
+    { MONS_OBSIDIAN_STATUE,   { "blast of obsidian shards", GREEN,
                                 frag_damage_type::crystal } },
-    { MONS_ROXANNE,           { "sapphire", BLUE, frag_damage_type::crystal } },
+    { MONS_ROXANNE,           { "blast of sapphire shards", BLUE,
+                                frag_damage_type::crystal } },
 };
 
 // Initializes the provided frag_effect with the appropriate Lee's Rapid
@@ -1096,9 +1125,7 @@ static bool _init_frag_monster(frag_effect &effect, const monster &mon)
     {
         const monster_frag &frag = frag_f->second;
         effect.damage = frag.damage;
-        const bool crystal = frag.damage == frag_damage_type::crystal;
-        effect.name = make_stringf("blast of %s %s", frag.type,
-                                   crystal ? "shards" : "fragments");
+        effect.name = frag.type;
         effect.colour = frag.colour;
         return true;
     }
@@ -1136,30 +1163,33 @@ struct feature_frag
 };
 
 static const map<dungeon_feature_type, feature_frag> fraggable_terrain = {
+    // locnote: Things that can shatter
     // Stone and rock terrain
-    { DNGN_ROCK_WALL, { "rock", "wall" } },
-    { DNGN_SLIMY_WALL, { "rock", "wall" } },
-    { DNGN_STONE_WALL, { "rock", "wall" } },
-    { DNGN_CLEAR_ROCK_WALL, { "rock", "wall" } },
-    { DNGN_CLEAR_STONE_WALL, { "rock", "wall" } },
-    { DNGN_ORCISH_IDOL, { "rock", "stone idol" } },
-    { DNGN_GRANITE_STATUE, { "rock", "statue" } },
-    { DNGN_PETRIFIED_TREE, { "rock", "petrified wood" } },
+    { DNGN_ROCK_WALL, { "blast of rock fragments", "the wall" } },
+    { DNGN_SLIMY_WALL, { "blast of rock fragments", "the wall" } },
+    { DNGN_STONE_WALL, { "blast of rock fragments", "the wall" } },
+    { DNGN_CLEAR_ROCK_WALL, { "blast of rock fragments", "the wall" } },
+    { DNGN_CLEAR_STONE_WALL, { "blast of rock fragments", "the wall" } },
+    { DNGN_ORCISH_IDOL, { "blast of rock fragments", "the stone idol" } },
+    { DNGN_GRANITE_STATUE, { "blast of rock fragments", "the statue" } },
+    { DNGN_PETRIFIED_TREE, { "blast of rock fragments", "the petrified wood" } },
     // Stone arches and doors
-    { DNGN_OPEN_DOOR, { "rock", "stone door frame" } },
-    { DNGN_OPEN_CLEAR_DOOR, { "rock", "stone door frame" } },
-    { DNGN_CLOSED_DOOR, { "rock", "stone door frame" } },
-    { DNGN_CLOSED_CLEAR_DOOR, { "rock", "stone door frame" } },
-    { DNGN_RUNED_DOOR, { "rock", "stone door frame" } },
-    { DNGN_RUNED_CLEAR_DOOR, { "rock", "stone door frame" } },
-    { DNGN_SEALED_DOOR, { "rock", "stone door frame" } },
-    { DNGN_SEALED_CLEAR_DOOR, { "rock", "stone door frame" } },
-    { DNGN_STONE_ARCH, { "rock", "stone arch" } },
+    { DNGN_OPEN_DOOR, { "blast of rock fragments", "the stone door frame" } },
+    { DNGN_OPEN_CLEAR_DOOR, { "blast of rock fragments", "the stone door frame" } },
+    { DNGN_CLOSED_DOOR, { "blast of rock fragments", "the stone door frame" } },
+    { DNGN_CLOSED_CLEAR_DOOR, { "blast of rock fragments", "the stone door frame" } },
+    { DNGN_RUNED_DOOR, { "blast of rock fragments", "the stone door frame" } },
+    { DNGN_RUNED_CLEAR_DOOR, { "blast of rock fragments", "the stone door frame" } },
+    { DNGN_SEALED_DOOR, { "blast of rock fragments", "the stone door frame" } },
+    { DNGN_SEALED_CLEAR_DOOR, { "blast of rock fragments", "the stone door frame" } },
+    { DNGN_STONE_ARCH, { "blast of rock fragments", "the stone arch" } },
     // Metal -- small but nasty explosion
-    { DNGN_METAL_WALL, { "metal", "metal wall", frag_damage_type::metal } },
-    { DNGN_GRATE, { "metal", "iron grate", frag_damage_type::metal } },
+    { DNGN_METAL_WALL, { "blast of metal fragments", "the metal wall",
+                         frag_damage_type::metal } },
+    { DNGN_GRATE, { "blast of metal fragments", "the iron grate",
+                    frag_damage_type::metal } },
     // Crystal -- large & nasty explosion
-    { DNGN_CRYSTAL_WALL, { "crystal", "crystal wall",
+    { DNGN_CRYSTAL_WALL, { "blast of crystal shards", "the crystal wall",
                            frag_damage_type::crystal } },
 };
 
@@ -1177,9 +1207,7 @@ static bool _init_frag_grid(frag_effect &effect,
     const feature_frag &frag = frag_f->second;
 
     effect.damage = frag.damage;
-    const bool crystal = frag.damage == frag_damage_type::crystal;
-    effect.name = make_stringf("blast of %s %s", frag.type,
-                               crystal ? "shards" : "fragments");
+    effect.name = frag.type;
     if (what)
         *what = frag.what;
 
@@ -1311,11 +1339,12 @@ spret cast_fragmentation(int pow, const actor *caster,
     if (what != nullptr) // Terrain explodes.
     {
         if (you.see_cell(target))
-            mprf("The %s shatters!", what);
+            mprf("%s shatters!", what);
     }
     else if (target == you.pos()) // You explode.
     {
         const int dam = beam.damage.roll();
+        // locnote: param = damage-based punctuation
         mprf("You shatter%s", attack_strength_punctuation(dam).c_str());
 
         ouch(dam, KILLED_BY_BEAM, caster->mid,
@@ -1333,6 +1362,7 @@ spret cast_fragmentation(int pow, const actor *caster,
         const int dam = beam.damage.roll();
         if (you.see_cell(target))
         {
+            // locnote: params = the monster, damage-based punctuation
             mprf("%s shatters%s", mon->name(DESC_THE).c_str(),
                  attack_strength_punctuation(dam).c_str());
         }
@@ -1544,10 +1574,9 @@ static int _shatter_player(int pow, actor *wielder, bool devastator = false)
 
     if (damage > 0)
     {
-        string msg = damage > 15
-                     ? "You shudder from the earth-shattering force"
-                     : "You shudder";
-        attack_strength_message(msg, damage, true);
+        mprf(damage > 15 ? "You shudder from the earth-shattering force%s"
+                        : "You shudder%s",
+             attack_strength_punctuation(damage).c_str());
         if (devastator)
             ouch(damage, KILLED_BY_MONSTER, wielder->mid);
         else
@@ -1652,12 +1681,14 @@ void shillelagh(actor *wielder, coord_def where, int pow)
     }
     if (!affected_monsters.empty())
     {
-        const string message =
-            make_stringf("%s shudder%s.",
-                         affected_monsters.describe().c_str(),
-                         affected_monsters.count() == 1? "s" : "");
+        string monsters = affected_monsters.describe();
+        string message;
+        if (affected_monsters.count() == 1)
+            message = localise("%s shudders.", monsters.c_str());
+        else
+            message = localise("%s shudder.", monsters.c_str());
         if (strwidth(message) < get_number_of_cols() - 2)
-            mpr(message);
+            mpr_nolocalise(message);
         else
             mpr("There is a shattering impact!");
     }
@@ -1927,9 +1958,9 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
 
     if (you.see_cell(mon->pos()))
     {
-        string msg = localise("%s seems to burn from within",
-                              mon->name(DESC_THE));
-        attack_strength_message(msg, damage, false);
+        mprf("%s seems to burn from within%s",
+             mon->name(DESC_THE).c_str(),
+             attack_strength_punctuation(damage).c_str());
     }
 
     dprf("Dice: %dd%d; Damage: %d", dam_dice.num, dam_dice.size, damage);
@@ -2032,17 +2063,16 @@ static int _ignite_ally_harm(const coord_def &where)
  */
 static bool maybe_abort_ignite()
 {
-    string prompt = "You are standing ";
-
     // XXX XXX XXX major code duplication (ChrisOelmueller)
     if (const cloud_struct* cloud = cloud_at(you.pos()))
     {
         if ((cloud->type == CLOUD_MEPHITIC || cloud->type == CLOUD_POISON)
             && !actor_cloud_immune(you, CLOUD_FIRE))
         {
-            prompt += "in a cloud of ";
-            prompt += cloud->cloud_name(true);
-            prompt += "! Ignite poison anyway?";
+            string prompt = localise(
+                "You are standing in a cloud of %s! Ignite poison anyway?",
+                cloud->cloud_name(true));
+
             if (!yesno(prompt.c_str(), false, 'n'))
                 return true;
         }
@@ -2135,9 +2165,13 @@ spret cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
             : UA_MONSTER,
         RED, 100, &hitfunc);
 
-    mprf("%s %s the poison in %s surroundings!", agent->name(DESC_THE).c_str(),
-         agent->conj_verb("ignite").c_str(),
-         agent->pronoun(PRONOUN_POSSESSIVE).c_str());
+    if (agent->is_player())
+        mprf("You ignite the poison in your surroundings!");
+    else
+    {
+        mprf("%s ignites the poison in the surroundings!",
+             agent->name(DESC_THE).c_str());
+    }
 
     // this could conceivably cause crashes if the player dies midway through
     // maybe split it up...?
@@ -2311,8 +2345,9 @@ static int _discharge_monsters(const coord_def &where, int pow,
         dprf("You: static discharge damage: %d", damage);
         damage = check_your_resists(damage, BEAM_ELECTRICITY,
                                     "static discharge");
-        attack_strength_message("You are struck by an arc of lightning",
-                                damage, true);
+        // locnote: param = damage-based punctuation
+        mprf("You are struck by an arc of lightning%s",
+             attack_strength_punctuation(damage).c_str());
         ouch(damage, KILLED_BY_BEAM, agent.mid, "by static electricity", true,
              agent.is_player() ? "you" : agent.name(DESC_A).c_str());
         if (damage > 0)
@@ -2653,37 +2688,68 @@ void forest_damage(const actor *mon)
 
                 if (!apply_chunked_AC(1, foe->evasion(ev_ignore::none, mon)))
                 {
-                    msg = random_choose(
-                            "@foe@ @is@ waved at by a branch",
-                            "A tree reaches out but misses @foe@",
-                            "A root lunges up near @foe@");
+                    if (foe->is_player())
+                    {
+                        msg = random_choose(
+                                "You are waved at by a branch.",
+                                "A tree reaches out but misses you.",
+                                "A root lunges up near you.");
+                    }
+                    else
+                    {
+                        msg = random_choose(
+                                "@foe@ is waved at by a branch.",
+                                "A tree reaches out but misses @foe@.",
+                                "A root lunges up near @foe@.");
+                    }
                 }
                 else if (!(dmg = foe->apply_ac(hd + random2(hd), hd * 2 - 1,
                                                ac_type::proportional)))
                 {
-                    msg = random_choose(
-                            "@foe@ @is@ scraped by a branch",
-                            "A tree reaches out and scrapes @foe@",
-                            "A root barely touches @foe@ from below");
+                    if (foe->is_player())
+                    {
+                        msg = random_choose(
+                                "You are scraped by a branch.",
+                                "A tree reaches out and scrapes you.",
+                                "A root barely touches you from below.");
+                    }
+                    else
+                    {
+                        msg = random_choose(
+                                "@foe@ is scraped by a branch.",
+                                "A tree reaches out and scrapes @foe@.",
+                                "A root barely touches @foe@ from below.");
+                    }
                     if (foe->is_monster())
                         behaviour_event(foe->as_monster(), ME_WHACK);
                 }
                 else
                 {
-                    msg = random_choose(
-                        "@foe@ @is@ hit by a branch",
-                        "A tree reaches out and hits @foe@",
-                        "A root smacks @foe@ from below");
+                    if (foe->is_player())
+                    {
+                        // locnote: these are intentionally without final punctuation
+                        msg = random_choose(
+                            "You are hit by a branch",
+                            "A tree reaches out and hits you",
+                            "A root smacks you from below");
+                    }
+                    else 
+                    {
+                        msg = random_choose(
+                            "@foe@ is hit by a branch",
+                            "A tree reaches out and hits @foe@",
+                            "A root smacks @foe@ from below");
+                    }
                     if (foe->is_monster())
                         behaviour_event(foe->as_monster(), ME_WHACK);
                 }
 
-                msg = replace_all(replace_all(msg,
-                    "@foe@", foe->name(DESC_THE)),
-                    "@is@", foe->conj_verb("be"));
-                msg = add_attack_strength_punct(msg, dmg, false);
                 if (you.see_cell(foe->pos()))
-                    mpr(msg);
+                {
+                    msg = localise(msg, {{"foe", foe->name(DESC_THE)}}); // noloc
+                    msg = add_attack_strength_punct(msg, dmg, false);
+                    mpr_nolocalise(msg);
+                }
 
                 if (dmg <= 0)
                     break;
@@ -2835,7 +2901,7 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
     {
         monster* mon_agent = agent->as_monster();
         simple_monster_message(*mon_agent,
-                               "%s begins to radiate toxic energy.");
+                               " begins to radiate toxic energy.");
 
         mon_agent->add_ench(mon_enchant(ENCH_TOXIC_RADIANCE, 1, mon_agent,
                                         (4 + random2avg(pow/15, 2)) * BASELINE_DELAY));
@@ -3156,11 +3222,12 @@ spret cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
         scaled_delay(100);
     }
 
-    if (you.can_see(*caster) || caster->is_player())
+    if (caster->is_player())
+        mpr("You conjure a mighty blast of ice!");
+    else if (you.can_see(*caster))
     {
-        mprf("%s %s a mighty blast of ice!",
-             caster->name(DESC_THE).c_str(),
-             caster->conj_verb("conjure").c_str());
+        mprf("%s conjures a mighty blast of ice!",
+             caster->name(DESC_THE).c_str());
     }
 
     beam.glyph = 0;
@@ -3466,15 +3533,15 @@ void actor_apply_toxic_bog(actor * act)
 
     if (player && final_damage > 0)
     {
-        attack_strength_message("You fester in the toxic bog",
-                                final_damage, true);
+        mprf("You fester in the toxic bog%s",
+                attack_strength_punctuation(final_damage).c_str());
     }
     else if (final_damage > 0)
     {
         behaviour_event(mons, ME_DISTURB, 0, act->pos());
-        string msg = localise("%s festers in the toxic bog",
-                              mons->name(DESC_THE));
-        attack_strength_message(msg, final_damage, false);
+        mprf("%s festers in the toxic bog%s",
+                mons->name(DESC_THE).c_str(),
+                attack_strength_punctuation(final_damage).c_str());
     }
 
     if (final_damage > 0 && resist > 0)
@@ -3678,8 +3745,8 @@ static void _discharge_maxwells_coupling()
     if (mon->type == MONS_ROYAL_JELLY && !mon->is_summoned())
     {
         // need to do this here, because react_to_damage is never called
-        mprf("A cloud of jellies burst out of %s as the current"
-             " ripples through it!", mon->name(DESC_THE).c_str());
+        mprf("A cloud of jellies burst out of the Royal Jelly as the current"
+             " ripples through it!");
         trj_spawn_fineff::schedule(&you, mon, mon->pos(), mon->hit_points);
     }
     else

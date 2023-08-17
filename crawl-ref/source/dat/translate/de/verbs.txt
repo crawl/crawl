@@ -1,0 +1,50 @@
+###############################################################################
+#
+# Translations for verbs
+#
+###############################################################################
+
+#################################
+# Verbs plugged into prompt "Really <verb> [near] <monster>?"
+#################################
+%%%%
+attack
+angreifen
+%%%%
+blast
+sprengen
+%%%%
+dazzle
+blenden
+%%%%
+glaciate
+vereisen
+%%%%
+hailstorm
+Hagelsturm wirken
+%%%%
+# disambiguate from ego
+{verb-inf}harm
+beschädigen
+%%%%
+irradiate
+bestrahlen
+%%%%
+make a polar vortex
+einen Polarwirbel erschaffen
+%%%%
+# disambiguate from noun
+{verb-inf}poison
+vergiften
+%%%%
+release a tremorstone
+einen Bebenstein freigeben
+%%%%
+spit at
+spucken auf
+%%%%
+# must disambiguate from beam name
+{verb-inf}zap
+zappen
+%%%%
+
