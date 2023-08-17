@@ -22,6 +22,7 @@
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
+#include "localise.h"
 #include "los.h"
 #include "mapdef.h"
 #include "mapmark.h"
@@ -102,11 +103,7 @@ string unpacifiable_reason(const monster_info& mi)
 
     if (mi.is(MB_SLEEPING)) // not aware of what is happening
     {
-        return make_stringf("You cannot pacify this monster while %s %s "
-                            "sleeping!",
-                            mi.pronoun(PRONOUN_SUBJECTIVE),
-                            conjugate_verb("are",
-                                           mi.pronoun_plurality()).c_str());
+        return "You cannot pacify this monster while it is sleeping!";
     }
 
     // pacifiable, maybe!
@@ -320,9 +317,9 @@ static vector<string> _desc_pacify_chance(const monster_info& mi, const int pow)
     {
         const int success = _pacify_chance(mi, pow, 100);
         if (success == 0)
-            descs.push_back(make_stringf("chance to pacify: <<1%%"));
+            descs.push_back(localise("chance to pacify: <<1%%"));
         else
-            descs.push_back(make_stringf("chance to pacify: %d%%", success));
+            descs.push_back(localise("chance to pacify: %d%%", success));
     }
     return descs;
 }
@@ -435,6 +432,7 @@ bool player_is_cancellable()
  */
 string describe_player_cancellation()
 {
+    // locnote: the following are plugged into "...you will no longer be %s."
     vector<string> effects;
 
     // Try to clarify it doesn't remove all contam?
@@ -1057,9 +1055,13 @@ void holy_word(int pow, holy_word_source_type source, const coord_def& where,
 {
     if (!silent && attacker)
     {
-        mprf("%s %s a Word of immense power!",
-             attacker->name(DESC_THE).c_str(),
-             attacker->conj_verb("speak").c_str());
+        if (attacker->is_player())
+            mpr("You speak a Word of immense power!");
+        else
+        {
+            mprf("%s speaks a Word of immense power!",
+                 attacker->name(DESC_THE).c_str());
+        }
     }
 
     for (radius_iterator ri(where, LOS_SOLID, true); ri; ++ri)

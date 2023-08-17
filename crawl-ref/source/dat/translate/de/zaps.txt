@@ -296,6 +296,9 @@ der Lichtbogen des Chaos
 the great icy blast
 der große eisige Stoß
 %%%%
+the golden flame
+die goldene Flamme
+%%%
 
 # Fragments created by Lee's Rapid Deconstruction
 %%%%
@@ -626,6 +629,9 @@ ein Lichtbogen des Chaos
 a great icy blast
 ein großer eisiger Stoß
 %%%%
+a golden flame
+eine goldene Flamme
+%%%
 
 # Fragments created by Lee's Rapid Deconstruction
 %%%%
@@ -957,6 +963,9 @@ Lichtbogen des Chaos
 great icy blast
 großer eisiger Stoß
 %%%%
+golden flame
+goldene Flamme
+%%%
 
 # Fragments created by Lee's Rapid Deconstruction
 %%%%

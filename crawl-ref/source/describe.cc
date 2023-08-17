@@ -2290,8 +2290,9 @@ string get_item_description(const item_def &item, bool verbose,
             {
                 if (player_is_cancellable())
                 {
-                    description << "\n\nIf you drink this now, you will no longer be " <<
-                        describe_player_cancellation() << ".";
+                    description << "\n\n"
+                                << localise("If you drink this now, you will no longer be %s.",
+                                            describe_player_cancellation());
                 }
                 else
                     description << "\n\nDrinking this now will have no effect.";

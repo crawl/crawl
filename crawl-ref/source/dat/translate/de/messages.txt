@@ -1498,7 +1498,6 @@ You hear a mighty clap of thunder!
 Animating this weapon would place you under penance. Really cast this spell?
 
 %%%%
-# note: param = "a/an <beam name>"
 %s appears from out of thin air!
 %s erscheint aus der Luft!
 %%%%
@@ -1547,7 +1546,6 @@ Your line of fire to %s is blocked by %s. Continue anyway?
 Your line of fire to the targeted %s is blocked by %s. Continue anyway?
 
 %%%%
-# note: param = "a/an <beam name>"
 %s appears from out of your range of vision.
 %s erscheint außerhalb Eurer Sichtweite.
 %%%%
@@ -1659,7 +1657,6 @@ Ihr hört ein zischendes Geräusch!
 That beam is likely to hit you. Continue anyway?
 
 %%%%
-# note: <your shield> reflects <the beam>!
 %s reflects %s!
 
 %%%%
@@ -4139,7 +4136,7 @@ Once activated, this device and all other devices of its kind are rendered tempo
 " The device is presently inert."
 
 %%%%
-"If you drink this now, you will no longer be "
+If you drink this now, you will no longer be %s.
 
 %%%%
 Drinking this now will have no effect.
@@ -19083,49 +19080,50 @@ Ihr spuckt Giftschlamm!
 ##################
 %%%%
 You cannot pacify this monster!
-
+Ihr könnt dieses Monster nicht pazifizieren!
 %%%%
-You cannot pacify this monster while %s %s sleeping!
-
+You cannot pacify this monster while it is sleeping!
+Ihr könnt dieses Monster nicht pazifizieren, während es schläft!
 %%%%
 %s would be completely unfazed by your meagre offer of peace.
-%s wäre völlig unbeeindruckt von Ihrem mageren Friedensangebot.
+%s wäre völlig unbeeindruckt von Eurem mageren Friedensangebot.
 %%%%
 The light of Elyvilon fails to reach %s.
-Das Licht von Elyvilon erreicht%s nicht.
+Das Licht von Elyvilon erreicht {acc}%s nicht.
 %%%%
 The light of Elyvilon almost touches upon %s.
-Das Licht von Elyvilon berührt fast%s.
+Das Licht von Elyvilon berührt fast {acc}%s.
 %%%%
 %s turns neutral.
-
+%s wird neutral.
 %%%%
 You heal %s.
 Ihr heilt %s.
 %%%%
 %s is completely healed.
-
+%s wird vollständig geheilt.
 %%%%
 mindless
-
+hirnlos
 %%%%
 uninterested
-
+uninteressiert
 %%%%
 chance to pacify: <<1%%
-
+Pazifizierungschance: <<1%%
 %%%%
 chance to pacify: %d%%
-
+Pazifizierungschance: %d%%
 %%%%
 Heal
-
+Heilen
 %%%%
+# note: the following are plugged into "...you will no longer be %s."
 as magically contaminated
-
+so magisch kontaminiert
 %%%%
 transformed
-
+verwandelt
 %%%%
 You feel strangely stable.
 Ihr fühlt Euch seltsam stabil.
@@ -19137,49 +19135,49 @@ Your magical effects are unravelling.
 Eure magischen Effekte lösen sich auf.
 %%%%
 %s's magical effects unravel!
-
+{gen}%s magische Effekte entwirren sich!
 %%%%
 You briefly glimpse something next to %s.
-Ihr seht kurz etwas neben%s.
+Ihr seht kurz etwas neben {dat}%s.
 %%%%
 You need more space to imprison %s.
-
+Ihr braucht mehr Platz, um {acc}%s einzusperren.
 %%%%
 Zin imprisons %s with walls of pure silver!
-Zin sperrt%s mit Wänden aus reinem Silber ein!
+Zin sperrt {acc}%s mit Wänden aus reinem Silber ein!
 %%%%
 You smite %s!
-Ihr schlagt %s!
+Ihr schlagt {acc}%s!
 %%%%
 You are blasted by holy energy!
-Ihr werdet von heiliger Energie gesprengt!
+Ihr werdet von heiliger Energie gestoßen!
 %%%%
 Zin's holy word
-
+Zins heiliges Wort
 %%%%
 the Shining One's holy word
-
+des Glänzendens heiliges Wort
 %%%%
 the Torment card
-
+die Karte der Qual
 %%%%
 %s is blasted by Zin's holy word!
-
+%s wird von Zins heiligem Wort geschlagen!
 %%%%
 %s convulses!
-
+%s konvulsiert!
 %%%%
-%s %s a Word of immense power!
-%s%s ein Wort von immenser Kraft!
+You speak a Word of immense power!
+Ihr sprecht ein Wort von immenser Macht!
 %%%%
-speak
-
+%s speaks a Word of immense power!
+%s spricht ein Wort von immenser Macht!
 %%%%
 %s shields you from torment!
-
+%s schirmt Euch vor Qual ab!
 %%%%
 %s partially shields you from torment!
-
+%s schirmt Euch teilweise vor Qual ab!
 %%%%
 You feel a surge of unholy energy.
 Ihr fühlt eine Welle unheiliger Energie.
@@ -19188,22 +19186,19 @@ Your body is wracked with pain!
 Euer Körper ist von Schmerz geplagt!
 %%%%
 Xom's torment
-
+Xoms Qual
 %%%%
 Kikubaaqudgha's torment
-
+Kikubaaqudghas Qual
 %%%%
 an exploding lurking horror
-
+ein explodierendes lauerndes Grauen
 %%%%
 by torment
-
+durch die Qual
 %%%%
 Something is bathed in an unholy light!
 Etwas ist in ein unheiliges Licht getaucht!
-%%%%
-golden flame
-
 %%%%
 
 ##################
