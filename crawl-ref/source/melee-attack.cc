@@ -787,7 +787,7 @@ static void _consider_devouring(monster &defender)
         return;
     }
 
-    if (coinflip())
+    if (one_chance_in(3))
         return;
 
     // chow down.
