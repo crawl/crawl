@@ -796,7 +796,7 @@ public:
         const int normal = Form::get_ac_bonus(max);
         if (!species::is_draconian(you.species))
             return normal;
-        return normal + (12 - ac.base) * 100;
+        return normal - 600;
     }
     /**
      * How many levels of resistance against fire does this form provide?
