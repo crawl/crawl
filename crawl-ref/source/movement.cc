@@ -227,7 +227,7 @@ static void _mark_potential_pursuers(coord_def new_pos)
     const coord_def orig_pos = you.pos();
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
-        if (!one_chance_in(20))
+        if (!one_chance_in(10))
             continue;
         // Only trigger swiftness for monsters you're moving away from.
         if (grid_distance(new_pos, *ri) <= grid_distance(orig_pos, *ri))

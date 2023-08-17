@@ -2230,11 +2230,6 @@ int mon_enchant::calc_duration(const monster* mons,
     // monster HD via modded_speed(). Use _mod_speed instead!
     switch (ench)
     {
-    case ENCH_PURSUING:
-        // This is a bit more than enough for a monster to catch up to
-        // the player from a full 8 tiles away (Ba LOS) and maybe get
-        // in an extra hit, assuming they start at the same speed and
-        // the player keeps running away for a full 40ish turns.
     case ENCH_SWIFT:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;
@@ -2248,6 +2243,11 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_BOUND_SOUL:
     case ENCH_ANGUISH:
         cturn = 1000 / _mod_speed(25, mons->speed);
+        break;
+    case ENCH_PURSUING:
+        // This is about 20 turns, or enough time for a same-speed monster to
+        // get four space closer before it expires.
+        cturn = 500 / _mod_speed(25, mons->speed);
         break;
     case ENCH_LIQUEFYING:
     case ENCH_SILENCE:

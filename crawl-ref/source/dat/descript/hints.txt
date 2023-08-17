@@ -540,7 +540,7 @@ survive!"
 %%%%
 HINT_HOT_PURSUIT
 
-When you move away from an enemy, they have a small chance of entering hot pursuit,
+When you move away from an enemy, they have a 1/3 chance of entering hot pursuit,
 covering ground faster for some time thereafter. Repositioning and retreating is
 often still good, but keep an eye out!
 %%%%
