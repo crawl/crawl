@@ -3033,7 +3033,7 @@ static void _maybe_pursue_quickly(monster &mons, coord_def orig_pos)
         || mons.confused()
         || mons_is_fleeing(mons)
         || !mons.can_see(you)
-        || mons.has_ench(ENCH_SWIFT))
+        || mons.has_ench(ENCH_PURSUING))
     {
         return;
     }
