@@ -1351,7 +1351,7 @@ class AuxMaw: public AuxAttackType
 {
 public:
     AuxMaw()
-    : AuxAttackType(0, 50, "bite") { };
+    : AuxAttackType(0, 75, "bite") { };
     int get_damage(bool random) const override {
         return get_form()->get_aux_damage(random);
     };
