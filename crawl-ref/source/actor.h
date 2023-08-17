@@ -308,7 +308,7 @@ public:
     // Return an int so we know whether an item is the sole source.
     virtual int equip_flight() const;
     virtual int spirit_shield(bool items = true) const;
-    virtual bool rampaging(bool items = true) const;
+    virtual bool rampaging() const;
 
     virtual bool is_banished() const = 0;
     virtual bool is_web_immune() const = 0;

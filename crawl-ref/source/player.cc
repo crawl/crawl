@@ -5390,6 +5390,14 @@ bool player::airborne() const
         || get_form()->enables_flight();
 }
 
+bool player::rampaging() const
+{
+    return !you_worship(GOD_WU_JIAN)
+        && (player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS)
+            || you.has_mutation(MUT_ROLLPAGE)
+            || actor::rampaging());
+}
+
 bool player::is_banished() const
 {
     return banished;

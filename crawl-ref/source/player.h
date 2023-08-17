@@ -506,6 +506,7 @@ public:
     bool can_swim(bool permanently = false) const;
     bool can_water_walk() const;
     int visible_igrd(const coord_def&) const;
+    bool rampaging() const override;
     bool is_banished() const override;
     bool is_sufficiently_rested(bool starting=false) const; // Up to rest_wait_percent HP and MP.
     bool is_web_immune() const override;
