@@ -6225,7 +6225,7 @@ __NONE
 %%%%
 _Roxanne_medium_
 
-@The_monster@ asks @foe,@ "Could you be a darling and pick up those spellbooks for me?"
+@The_monster@ asks @foe,@ "Could you be a darling and pick up this talisman for me?"
 
 @The_monster@ asks @foe,@ "Say, could you scratch my back for me?"
 
@@ -6243,7 +6243,7 @@ _Roxanne_rare_
 
 @The_monster@ says @to_foe@, "A mighty warrior you might be, a mason you are not!"
 
-@The_monster@ says @to_foe@, "They said I was crazy for my new spells... Turns out they were right."
+@The_monster@ says @to_foe@, "They said I was crazy for my new talisman... Turns out they were right."
 %%%%
 Roxanne blink_other_closer
 
