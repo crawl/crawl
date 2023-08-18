@@ -3025,21 +3025,20 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     return false;
 }
 
-static void _maybe_pursue_quickly(monster &mons, coord_def orig_pos)
+static void _maybe_randomize_energy(monster &mons, coord_def orig_pos)
 {
     if (!mons.alive() // barbs!
         || !crawl_state.potential_pursuers.count(&mons)
         || mons.wont_attack()
         || mons_is_confused(mons, true)
         || mons_is_fleeing(mons)
-        || !mons.can_see(you)
-        || mons.has_ench(ENCH_PURSUING))
+        || !mons.can_see(you))
     {
         return;
     }
 
 
-    // Only trigger swiftness for monsters moving toward you, not doing tricky
+    // Only randomize energy for monsters moving toward you, not doing tricky
     // M_MAINTAIN_RANGE nonsense or wandering around a lake or what have you.
     if (grid_distance(mons.pos(), you.pos()) > grid_distance(orig_pos, you.pos()))
         return;
@@ -3049,15 +3048,8 @@ static void _maybe_pursue_quickly(monster &mons, coord_def orig_pos)
     if (!foe || !foe->is_player())
         return;
 
-    if (you.can_see(mons))
-    {
-        const string msg = make_stringf(
-            " puts on a burst of speed as %s %s you!",
-            mons.pronoun(PRONOUN_SUBJECTIVE).c_str(),
-            conjugate_verb("pursue", mons.pronoun_plurality()).c_str());
-        simple_monster_message(mons, msg.c_str());
-    }
-    mons.add_ench(ENCH_PURSUING);
+    // Randomize energy.
+    mons.speed_increment += random2(3) - 1;
 }
 
 static bool _do_move_monster(monster& mons, const coord_def& delta)
@@ -3186,10 +3178,10 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
 
     _handle_manticore_barbs(mons);
 
-    // Turn on the gas before we use up move energy, so that pillar-dancing
-    // players can maybe get bapped if they get unlucky.
-    _maybe_pursue_quickly(mons, orig_pos);
     _swim_or_move_energy(mons);
+
+    // Randomize move energy for monsters pursuing the player.
+    _maybe_randomize_energy(mons, orig_pos);
 
     return true;
 }
