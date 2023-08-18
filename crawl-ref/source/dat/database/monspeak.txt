@@ -2067,6 +2067,12 @@ friendly Boris unsummoned
 @Boris unsummoned@
 ## END Boris ##
 %%%%
+Boris triumphant
+
+@The_monster@ says, "And that's the last I'll see of you."
+
+@The_monster@ says, "I'd like to see you come back from this one."
+%%%%
 ############ CHUCK ### An avid rock collector.
 Chuck
 
@@ -3727,6 +3733,12 @@ __NONE
 w:1
 @The_monster@ says, "Banished to the Abyss. I hate that."
 %%%%
+Donald triumphant
+
+@The_monster@ says, "I won. I... don't hate that."
+
+@The_monster@ says, "Well, maybe you weren't so bad after all."
+%%%%
 ############ DOWAN ### A vain elf caster, twin brother of Duvessa
 twin_died Dowan
 
@@ -3987,6 +3999,14 @@ w:1
 w:1
 @The_monster@ whines, "My parents never had time for me!"
 %%%%
+Edmund triumphant
+
+@The_monster@ says, "That'll show my brother!"
+
+@The_monster@ says, "I'd like to see a scythe do that!"
+
+@The_monster@ whines, "They better pay attention to me now!"
+%%%%
 ############ ERICA ### A wild tempered adventuress
 Erica
 
@@ -4019,6 +4039,10 @@ _Erica_rare_
 @The_monster@ screams @at_foe@, "You'll never get it!"
 
 @The_monster@ screams @at_foe@, "Coming here was suicide! For you!"
+%%%%
+Erica triumphant
+
+@The_monster@ begins laughing uncontrollably.
 ## END Erica ##
 %%%%
 ############ EROLCHA ### A vicious ogre capable of casting
@@ -4218,6 +4242,16 @@ w:5
 
 @The_monster@ eyes @foe@ carefully. "They told me only worthy opponents would get this far."
 %%%%
+Frederick triumphant
+
+@The_monster@ scoffs, "You didn't have a chance."
+
+@The_monster@ sighs, "Someday I'll have a real challenge."
+
+@The_monster@ says, "What a chore."
+
+@The_monster@ says, "You don't even know how to die right."
+%%%%
 ############ FANNAR ### A cold-hearted elven sorcerer
 Fannar
 
@@ -4289,6 +4323,14 @@ VISUAL:@The_monster@'s eyestalks wobble, almost dislodging @possessive@ wizard h
 
 @The_monster@ gurgles, "I bet you'll be tasty."
 %%%%
+Gastronok triumphant
+
+@The_monster@ gurgles, "Time to dig in!"
+
+@The_monster@ gurgles, "About time. I'm starving!"
+
+@The_monster@ gurgles, "Let's see if you taste as good as that wizard did."
+%%%%
 ############ GRINDER ### An inefficient ex-torturer
 Grinder
 
@@ -4334,6 +4376,10 @@ _Grinder_rare_
 @The_monster@ says, "Make like a tree!"
 
 VISUAL:@The_monster@ rolls @possessive@ eyes.
+%%%%
+Grinder triumphant
+
+@The_monster@ says, "Now the real fun starts!"
 %%%%
 ############ GRUM ### A war dog-breeding gnoll
 Grum
@@ -4559,6 +4605,16 @@ w:2
 
 w:1
 @The_monster@ falls down, and clutches @possessive@ wounds. "But I was going to get a @_Harold_retirement_plan_@..."
+%%%%
+Harold triumphant
+
+@The_monster@ says, "Can't wait to tell my little ones about this."
+
+@The_monster@ says, "Time to retire."
+
+@The_monster@ sighs, "Finally, I can get that @_Harold_retirement_plan_@ and settle down."
+
+@The_monster@ sighs, "Nothing for old @the_monster@ but @_Harold_ret_hobby_@ after this."
 %%%%
 # Giving Harold some retirement options...
 _Harold_retirement_plan_
@@ -4833,6 +4889,16 @@ _Jeremiah_rare_
 @The_monster@ giggles, "Dreams, dreams, come out to play!"
 
 VISUAL:@The_monster@ pinches @reflexive@.
+%%%%
+Jeremiah triumphant
+
+@The_monster@ asks, "What happened? Did... did you die?"
+
+@The_monster@ wails, "I didn't mean to kill anyone! I'm not a murderer!"
+
+@The_monster@ asks, "Is it over? Can I wake up now?"
+
+@The_monster@ says, "O terrible one, your will is done."
 ## END Jeremiah ##
 %%%%
 ############ JORGRUN ### A dwarven earth elementalist.
@@ -4921,6 +4987,10 @@ Jory killed
 silent Jory killed
 
 VISUAL:@The_monster@ momentarily stares at you in horror, before exploding into a cloud of blood!
+%%%%
+Jory triumphant
+
+@The_monster@ screams, "Yes, yes!"
 %%%%
 ############ JOSEPH ### Hired to kill you
 Joseph
@@ -5578,6 +5648,12 @@ confused Natasha killed
 confused Natasha permanently killed
 
 @Natasha permanently killed@
+%%%%
+Natasha triumphant
+
+VISUAL:@The_monster@ curls up and begins to purr.
+
+VISUAL:@The_monster@ begins licking @possessive@ fur clean.
 %%%%
 ############ ROBIN ### A hobgoblin with a plan.
 Robin
