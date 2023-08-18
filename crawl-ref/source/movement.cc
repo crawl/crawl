@@ -1160,7 +1160,7 @@ void move_player_action(coord_def move)
             // Check nothing weird happened during opportunity attacks.
             if (!you.pending_revival)
             {
-	        _mark_potential_pursuers(targ);
+                _mark_potential_pursuers(targ);
                 move_player_to_grid(targ, true);
                 apply_barbs_damage();
                 remove_ice_movement();
