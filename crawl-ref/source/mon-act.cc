@@ -3050,7 +3050,11 @@ static void _maybe_pursue_quickly(monster &mons, coord_def orig_pos)
         return;
 
     if (you.can_see(mons))
-        simple_monster_message(mons, " puts on a burst of speed as it pursues you!");
+    {
+        const string msg = make_stringf(" puts on a burst of speed as %s pursues you!",
+                                        mons.pronoun(PRONOUN_SUBJECTIVE).c_str());
+        simple_monster_message(mons, msg.c_str());
+    }
     mons.add_ench(ENCH_PURSUING);
 }
 
