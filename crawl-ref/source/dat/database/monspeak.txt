@@ -6355,6 +6355,10 @@ w:5
 
 w:5
 @_Saint Roka rival_@
+%%%%
+Saint Roka triumphant
+
+@The_monster@ roars, "Praise to Beogh!"
 ## END Saint Roka ##
 %%%%
 ############ SIGMUND ### Mad old wizard
@@ -6479,6 +6483,9 @@ _Sojobo_rare_
 
 @The_monster@ sneers @at_foe@, "There are one thousand and one flaws in your strategy!"
 
+w:2
+@The_monster@ says, "Like a bolt from the blue, I'll bring death to you."
+
 %%%%
 _Sojobo_advice_
 
@@ -6506,6 +6513,12 @@ _Sojobo_advice_
 @The_monster@ says @to_foe@, "Appear where you are not expected."
 
 @The_monster@ says @to_foe@, "Ponder and deliberate before you make a move."
+%%%%
+Sojobo victorious
+
+@The_monster@ says, "The outcome was never in doubt."
+
+@The_monster@ says, "Just as planned."
 ## END Sojobo
 %%%%
 ############ SONJA ### female kobold assassin
@@ -6527,6 +6540,8 @@ VISUAL:@The_monster@ twirls @possessive@ cape.
 VISUAL:@The_monster@ bows elegantly.
 
 VISUAL:@The_monster@ plants @possessive@ feet in a plie.
+
+@The_monster@ says, "Join me in the dance of death."
 %%%%
 _Sonja_rare_
 
@@ -6540,6 +6555,14 @@ w:1
 @The_monster@ shouts @at_foe@, "Some dancing partner you are!"
 
 @The_monster@ says @to_foe@, "Someone hired me to kill you, but I'm not supposed to say who."
+%%%%
+Sonja victorious
+
+VISUAL:@The_monster@ takes a bow.
+
+VISUAL:@The_monster@ applauds @reflexive@.
+
+@The_monster@ says, "Show's over."
 ## END Sonja ##
 %%%%
 ############ TERENCE ### A fighter who likes to kill
@@ -6581,7 +6604,14 @@ _Terence_rare_
 @The_monster@ says @to_foe@, "Did you write a will? You should..."
 
 @The_monster@ says @to_foe@, "Time to say good-bye..."
+%%%%
+Terence victorious
 
+@The_monster@ says, "Rest in peace."
+
+@The_monster@ says, "That felt goooood."
+
+@The_monster@ says, "Time to find some more victims."
 ## END Terence ###
 %%%%
 ##################### A coarse and lanky orc. Urug lost her eye in a fight with a harpy,
@@ -6653,8 +6683,6 @@ Urug triumphant
 @The_monster@ screams, "Revenge at last!"
 
 @The_monster@ says, "One more harpy dead."
-
-@The_monster@ says, "Wait, you're not a harpy. You tricked me!"
 ## END Urug ##
 %%%%
 ############ VASHNIA ### An elite marksnaga
