@@ -3030,7 +3030,7 @@ static void _maybe_pursue_quickly(monster &mons, coord_def orig_pos)
     if (!mons.alive() // barbs!
         || !crawl_state.potential_pursuers.count(&mons)
         || mons.wont_attack()
-        || mons.confused()
+        || mons_is_confused(mons, true)
         || mons_is_fleeing(mons)
         || !mons.can_see(you)
         || mons.has_ench(ENCH_PURSUING))
