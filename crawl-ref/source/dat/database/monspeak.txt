@@ -5697,6 +5697,14 @@ _Robin_rare_
 w:2
 @The_monster@ says, "We wiped out the hill dwarves - you're next!"
 %%%%
+Robin triumphant
+
+@The_monster@ lets out a smug laugh.
+
+@The_monster@ calls out, "Let's celebrate! Time for a feast!"
+
+@The_monster@ says, "And that's why I'm the boss."
+%%%%
 ############ NELLIE ### An escaped circus (h)elephant.
 Nellie
 
@@ -5899,6 +5907,14 @@ whispers
 
 ## END Norris ##
 %%%%
+Norris triumphant
+
+@The_monster@ says, "Ooh, I'm jealous!"
+
+@The_monster@ says, "Enjoy eternity."
+
+@The_monster@ says, "I'll see you on the other side, friend."
+%%%%
 ############ Pikel ######## A big kobold trading souls of the damned
 Pikel
 
@@ -5965,7 +5981,12 @@ VISUAL:@The_monster@ scowls and wipes @possessive@ hands on @possessive@ robe.
 
 w:1
 @The_monster@ says, "Word to the wise: Murray's a real chatterbox."
+%%%%
+Pikel triumphant
 
+@The_monster@ says, "Another soul for the market."
+
+@The_monster@ says, "See you in Hell!"
 %%%%
 ############ POLYPHEMUS ### The King of the Cyclopes from Homer's Odyssey!
 # (A cyclops watching over a herd of yaks.)
@@ -6010,6 +6031,10 @@ __NONE
 
 w:1
 @The_monster@ bellows, "You've tricked me!"
+%%%%
+Polyphemus triumphant
+
+@The_monster@ says, "You're nobody."
 ## END Polyphemus ##
 %%%%
 ############ PRINCE RIBBIT ### Prince turned into frog
