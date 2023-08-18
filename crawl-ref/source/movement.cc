@@ -290,12 +290,18 @@ static void _trigger_opportunity_attacks(coord_def new_pos)
         if (!foe || !foe->is_player())
             continue;
 
+        // Don't randomize movement energy for monsters that got an
+        // opportunity attack this turn.
+        crawl_state.potential_pursuers.erase(mon);
+
         simple_monster_message(*mon, " attacks as you move away!");
         const int old_energy = mon->speed_increment;
         launch_opportunity_attack(*mon);
-        // Refund up to 10 energy (1 turn) from the attack.
-        // Thus, only slow attacking monsters use energy for these.
-        mon->speed_increment = min(mon->speed_increment + 10, old_energy);
+        // Refund most of the energy from the attack - for normal attack
+        // speed monsters, it will cost 0 energy 1/2 of the time and
+        // 1 energy 1/2 of the time.
+        // Only slow-attacking monsters will spend more than 1 energy.
+        mon->speed_increment = min(mon->speed_increment + 10, old_energy - random2(2));
 
         if (you.pending_revival || you.pos() != orig_pos)
             return;
@@ -1147,6 +1153,9 @@ void move_player_action(coord_def move)
         if (you.pos() != targ && targ_pass)
         {
             _clear_constriction_data();
+            // Make a list of pursuers before triggering opportunity attacks
+            // so that we can remove any monster that did one.
+            _mark_potential_pursuers(targ);
             _trigger_opportunity_attacks(targ);
             // Check nothing weird happened during opportunity attacks.
             if (!you.pending_revival)
