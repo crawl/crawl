@@ -26,6 +26,7 @@
 #include "chardump.h"
 #include "cloud.h"
 #include "colour.h"
+#include "database.h"
 #include "delay.h"
 #include "dgn-event.h"
 #include "end.h"
@@ -44,6 +45,7 @@
 #include "mgen-data.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "mon-speak.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "nearby-danger.h"
@@ -838,6 +840,124 @@ static bool _is_damage_threatening (int damage_fraction_of_hp, int mut_level)
                 || random2(100) > hp_fraction);
 }
 
+/// Let Sigmund crow in triumph.
+static void _triumphant_mons_speech(actor *killer)
+{
+    if (!killer || !killer->alive())
+        return;
+
+    monster* mon = killer->as_monster();
+    if (mon && !mon->wont_attack())
+        mons_speaks(mon);  // They killed you and they meant to.
+}
+
+static void _god_death_message(kill_method_type death_type, const actor *killer)
+{
+    xom_death_message(death_type);
+
+    switch (you.religion)
+    {
+    case GOD_FEDHAS:
+        simple_god_message(" appreciates your contribution to the "
+                           "ecosystem.");
+        break;
+
+    case GOD_NEMELEX_XOBEH:
+        nemelex_death_message();
+        break;
+
+    case GOD_KIKUBAAQUDGHA:
+    {
+        const mon_holy_type holi = you.holiness();
+
+        if (holi & (MH_NONLIVING | MH_UNDEAD))
+        {
+            simple_god_message(" rasps: \"You have failed me! "
+                               "Welcome... oblivion!\"");
+        }
+        else
+        {
+            simple_god_message(" rasps: \"You have failed me! "
+                               "Welcome... death!\"");
+        }
+        break;
+    }
+
+    case GOD_YREDELEMNUL:
+        if (you.undead_state() != US_ALIVE)
+            simple_god_message(" claims you as an undead slave.");
+        else if (death_type != KILLED_BY_DISINT
+              && death_type != KILLED_BY_LAVA)
+        {
+            mprf(MSGCH_GOD, "Your body rises from the dead as a mindless "
+                 "zombie.");
+        }
+        // No message if you're not undead and your corpse is lost.
+        break;
+
+    case GOD_BEOGH:
+        if (killer && killer->is_monster() && killer->deity() == GOD_BEOGH)
+        {
+            const string msg = " appreciates "
+                + killer->name(DESC_ITS)
+                + " killing of a heretic priest.";
+            simple_god_message(msg.c_str());
+        }
+        break;
+
+#if TAG_MAJOR_VERSION == 34
+    case GOD_PAKELLAS:
+    {
+        const string result = getSpeakString("Pakellas death");
+        god_speaks(GOD_PAKELLAS, result.c_str());
+        break;
+    }
+#endif
+
+    default:
+        if (will_have_passive(passive_t::goldify_corpses)
+            && death_type != KILLED_BY_DISINT
+            && death_type != KILLED_BY_LAVA)
+        {
+            mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
+        }
+        // Doesn't depend on Okawaru worship - you can still lose the duel
+        // after abandoning.
+        if (killer && killer->props.exists(OKAWARU_DUEL_TARGET_KEY))
+        {
+            const string msg = " crowns "
+                + killer->name(DESC_THE, true)
+                + " victorious!";
+            simple_god_message(msg.c_str(), GOD_OKAWARU);
+        }
+        break;
+    }
+}
+
+static void _print_endgame_messages(scorefile_entry &se)
+{
+    const kill_method_type death_type = (kill_method_type) se.get_death_type();
+    const bool non_death = death_type == KILLED_BY_QUITTING
+                        || death_type == KILLED_BY_WINNING
+                        || death_type == KILLED_BY_LEAVING;
+    if (non_death)
+        return;
+
+
+    canned_msg(MSG_YOU_DIE);
+
+    actor* killer = se.killer();
+    _triumphant_mons_speech(killer);
+    _god_death_message(death_type, killer);
+
+    flush_prev_message();
+    viewwindow(); // don't do for leaving/winning characters
+    update_screen();
+
+    if (crawl_state.game_is_hints())
+        hints_death_screen();
+}
+
 /** Hurt the player. Isn't it fun?
  *
  *  @param dam How much damage -- may be INSTANT_DEATH.
@@ -1162,7 +1282,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     // Prevent bogus notes.
     activate_notes(false);
-
+    _print_endgame_messages(se);
     end_game(se);
 }
 

@@ -6336,6 +6336,10 @@ _Sigmund_rare_
 @The_monster@ whispers @to_foe@, "You'll know eternity soon."
 
 VISUAL:@The_monster@ smiles chillingly.
+%%%%
+Sigmund triumphant
+
+VISUAL:@The_monster@ begins carving another notch in @possessive@ scythe.
 ## END Sigmund ##
 %%%%
 
