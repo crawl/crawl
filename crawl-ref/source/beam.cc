@@ -4264,7 +4264,10 @@ void bolt::handle_stop_attack_prompt(monster* mon)
     // If prompts for overshooting the target are disabled, instead
     // just let the caller know that there was something there. They
     // should be responsible and keep the player from shooting friends.
-    if (passed_target && !overshoot_prompt && you.can_see(*mon))
+    // (We skip this for explosions, since stopping at our target is not
+    // guaranteed to spare allies behind the target)
+    if (passed_target && !overshoot_prompt && you.can_see(*mon)
+       && !is_explosion)
     {
         string adj, suffix;
         bool penance;
