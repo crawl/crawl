@@ -772,7 +772,7 @@ static const artefact_prop_data artp_data[] =
         []() {return 1;}, nullptr, 0, 0},
     { "Rampage", ARTP_VAL_BOOL, 25, // ARTP_RAMPAGING,
         []() {return 1;}, nullptr, 0, 0},
-    { "Archmagi", ARTP_VAL_BOOL, 25, // ARTP_ARCHMAGI,
+    { "Archmagi", ARTP_VAL_BOOL, 40, // ARTP_ARCHMAGI,
         []() {return 1;}, nullptr, 0, 0},
     { "Conj", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_CONJ,
         []() {return 1;}, nullptr, 0, 0},
