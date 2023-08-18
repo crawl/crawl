@@ -6647,6 +6647,14 @@ VISUAL:@The_monster@ winks @at_foe@... or blinks.
 @The_monster@ screams @at_foe@, "You are already dead."
 
 @The_monster@ mutters, "Sometimes I wonder if they all really are harpies."
+%%%%
+Urug triumphant
+
+@The_monster@ screams, "Revenge at last!"
+
+@The_monster@ says, "One more harpy dead."
+
+@The_monster@ says, "Wait, you're not a harpy. You tricked me!"
 ## END Urug ##
 %%%%
 ############ VASHNIA ### An elite marksnaga
@@ -6705,6 +6713,14 @@ _Vashnia_nonnaga_
 @The_monster@ says @to_foe@, "We do not look kindly on intruders!"
 
 @The_monster@ says to @possessive@ squad, "Do not let the @foe_genus@ escape!"
+%%%%
+Vashnia triumphant
+
+@The_monster@ says, "Headshot."
+
+@The_monster@ says, "Intruder eliminated."
+
+@The_monster@ says, "All clear. Let's check for more."
 ## END Vashnia ##
 %%%%
 ############ XTAHUA ### An ancient fire dragon
@@ -6742,6 +6758,16 @@ _Xtahua_rare_
 @The_monster@ roars @at_foe@, "I HOPE YOU'RE TASTY!"
 
 @The_monster@ roars, "BAH! BLOODY ADVENTURERS." @player_only@
+%%%%
+Xtahua triumphant
+
+@The_monster@ roars in triumph.
+
+VISUAL:@The_monster@ belches a long, triumphant arc of flame.
+
+@The_monster@ growls, "COMING HERE WAS YOUR LAST MISTAKE."
+
+@The_monster@ rumbles, "TIME FOR A NIBBLE."
 ## END Xtahua ##
 %%%%
 ############ ZENATA ### A cultist of constructs
@@ -6756,9 +6782,9 @@ _Zenata_common_
 
 VISUAL:@The_monster@ polishes a blade.
 
-Strange mechanisms whir as @The_monster@ focuses on @foe@.
+Strange mechanisms whir as @the_monster@ focuses on @foe@.
 
-VISUAL:A stray blade cuts @The_monster@'s own flesh. She ignores it.
+VISUAL:A stray blade cuts @the_monster@'s own flesh. She ignores it.
 
 # A Deepness in the Sky, more or less
 @The_monster@ howls @at_foe@, "I'll flense you until there's nothing left!"
@@ -6781,6 +6807,12 @@ _Zenata_rare_
 @The_monster@ mutters, "I can hear her whispering... but she's dead. She's dead!"
 
 @The_monster@ says, "I'll bring them back. Then they'll show me... everything..."
+%%%%
+Zenata triumphant
+
+@The_monster@ says, "Just more dross for the fire."
+
+@The_monster@ says, "Let's see what's inside you."
 %%%%
 ##########################################
 # Specific non-unique monsters
