@@ -63,6 +63,7 @@ game_state::game_state()
       tiles_disabled(false),
       title_screen(true),
       invisible_targeting(false),
+      player_moving(false),
       darken_range(nullptr), unsaved_macros(false), disables(),
       minor_version(-1), save_rcs_version(),
       nonempty_buffer_flush_errors(false),

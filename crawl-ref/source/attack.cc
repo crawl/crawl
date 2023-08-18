@@ -479,10 +479,14 @@ bool attack::distortion_affects_defender()
         NONE
     };
 
+    // Don't banish or blink the player during aoops, for sanity.
+    const int banish_weight = crawl_state.player_moving ? 0 : 5;
+    const int blink_weight = crawl_state.player_moving ? 0 : 20;
+
     const disto_effect choice = random_choose_weighted(35, SMALL_DMG,
                                                        25, BIG_DMG,
-                                                       5, BANISH,
-                                                       20, BLINK,
+                                                       banish_weight, BANISH,
+                                                       blink_weight, BLINK,
                                                        15,  NONE);
 
     if (simu && !(choice == SMALL_DMG || choice == BIG_DMG))

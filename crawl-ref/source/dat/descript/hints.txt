@@ -538,11 +538,11 @@ dungeon may randomly cause bad things to happen to you. When this happens,
 pause, think carefully, and be ready to use consumables or abilities. Fight to
 survive!"
 %%%%
-HINT_HOT_PURSUIT
+HINT_OPPORTUNITY_ATTACK
 
-When you move away from an enemy, they have a small chance of entering hot pursuit,
-covering ground faster for some time thereafter. Repositioning and retreating is
-often still good, but keep an eye out!
+When you move away from an enemy, they have a small (1/3) chance of taking
+advantage and launching a free attack. Repositioning and retreating is often
+still good, but keep an eye out for those extra attacks.
 %%%%
 HINT_YOU_ENCHANTED
 

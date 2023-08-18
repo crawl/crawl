@@ -2863,6 +2863,9 @@ monster* create_monster(mgen_data mg, bool fail_msg)
 {
     ASSERT(in_bounds(mg.pos)); // otherwise it's a guaranteed fail
 
+    if (crawl_state.player_moving)
+        return nullptr; // monster might end up on player's tile - too scary
+
     const monster_type montype = fixup_zombie_type(mg.cls, mg.base_type);
 
     monster *summd = 0;

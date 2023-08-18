@@ -2705,7 +2705,8 @@ bool melee_attack::mons_attack_effects()
                           && player_equip_unrand(UNRAND_SLICK_SLIPPERS);
     // Don't trample while player is moving - either mean or nonsensical
     if (attacker != defender
-        && (attk_flavour == AF_TRAMPLE || slippery))
+        && (attk_flavour == AF_TRAMPLE || slippery)
+        && !crawl_state.player_moving)
     {
         do_knockback(slippery);
     }
@@ -2871,12 +2872,12 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_BLINK:
         // blinking can kill, delay the call
-        if (one_chance_in(3))
+        if (one_chance_in(3) && !crawl_state.player_moving)
             blink_fineff::schedule(attacker);
         break;
 
     case AF_BLINK_WITH:
-        if (coinflip())
+        if (coinflip() && !crawl_state.player_moving)
             blink_fineff::schedule(attacker, defender);
         break;
 
@@ -3090,11 +3091,13 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ENSNARE:
-        if (one_chance_in(3))
+        if (!crawl_state.player_moving && one_chance_in(3))
             ensnare(defender);
         break;
 
     case AF_CRUSH:
+        if (crawl_state.player_moving)
+            break; // Won't work while player is moving
         if (needs_message)
         {
             mprf("%s %s %s.",
@@ -3109,7 +3112,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ENGULF:
-        if (x_chance_in_y(2, 3)
+        if (!crawl_state.player_moving  // Won't work while player is moving
+            && x_chance_in_y(2, 3)
             && attacker->can_engulf(*defender))
         {
             const bool watery = attacker->type != MONS_QUICKSILVER_OOZE;
@@ -3293,6 +3297,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
     }
     case AF_SLEEP:
+        if (crawl_state.player_moving)
+            break; // looks too weird to fall asleep while still in motion
         if (!coinflip())
             break;
         if (attk_type == AT_SPORE)

@@ -137,7 +137,7 @@ enum hints_event_type
 #endif
     HINT_SEEN_WEB,
     HINT_MALEVOLENCE,
-    HINT_HOT_PURSUIT,
+    HINT_OPPORTUNITY_ATTACK,
     HINT_EVENTS_NUM
 };
 
