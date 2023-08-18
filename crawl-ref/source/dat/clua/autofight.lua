@@ -302,7 +302,7 @@ local function is_candidate_for_attack(x,y)
     return false
   end
   if m:attitude() == ATT_HOSTILE
-      or m:attitude() == ATT_NEUTRAL and m:is("insane") then
+      or m:attitude() == ATT_NEUTRAL and m:is("frenzied") then
     return true
   end
   return false
