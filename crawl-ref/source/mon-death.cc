@@ -1350,7 +1350,7 @@ static bool _mons_reaped(actor &killer, monster& victim)
         beh = SAME_ATTITUDE(mon);
     }
 
-    _make_derived_undead(&victim, true, MONS_ZOMBIE, beh,
+    _make_derived_undead(&victim, false, MONS_ZOMBIE, beh,
                          SPELL_NO_SPELL, GOD_NO_GOD);
 
     return true;
