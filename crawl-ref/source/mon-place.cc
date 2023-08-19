@@ -1384,7 +1384,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
            || mg.foe == MHITYOU || mg.foe == MHITNOT);
     mon->foe = mg.foe;
 
-    // noloc section start (blame is not localised at the moment)
+    // noloc section start (blame is localised with special handling)
     string blame_prefix;
 
     if (mg.flags & MG_BAND_MINION)

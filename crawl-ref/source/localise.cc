@@ -1473,8 +1473,8 @@ static string _localise_shop_name(const string& context, const string& value)
 // localise ghost/illusion name
 static string _localise_ghost_name(const string& context, const string& value)
 {
-    const string ghost_suffix = "'s ghost";
-    const string illusion_suffix = "'s illusion";
+    static const string ghost_suffix = "'s ghost";
+    static const string illusion_suffix = "'s illusion";
     string suffix;
 
     if (ends_with(value, ghost_suffix))
@@ -1487,6 +1487,22 @@ static string _localise_ghost_name(const string& context, const string& value)
     string name = value.substr(0, value.length() - suffix.length());
     string fmt = cxlate(context, string("%s") + suffix);
     return make_stringf(fmt.c_str(), name.c_str());
+}
+
+/// localise pan lord name
+static string _localise_pan_lord_name(const string& context, const string& value)
+{
+    static const string suffix = " the pandemonium lord";
+
+    size_t pos = value.find(suffix);
+    if (pos == string::npos || pos == 0)
+        return "";
+
+    string name = value.substr(0, pos);
+    string fmt = string("%s") + value.substr(pos);
+    fmt = cxlate(context, fmt, true);
+
+    return replace_first(fmt, "%s", name);
 }
 
 static string _localise_jiyva_long_name(const string& context, const string& value)
@@ -1513,6 +1529,10 @@ static string _localise_monster_name(const string& context, const string& value)
     DEBUG("context='%s', value='%s'", context.c_str(), value.c_str());
 
     string result = _localise_ghost_name(context, value);
+    if (!result.empty())
+        return result;
+
+    result = _localise_pan_lord_name(context, value);
     if (!result.empty())
         return result;
 

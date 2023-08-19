@@ -536,18 +536,19 @@ void show_hiscore_table()
 }
 
 // Trying to supply an appropriate verb for the attack type. -- bwr
-static const char *_range_type_verb(const char *const aux)
+static string _range_type_phrase(const char *const aux, bool self)
 {
     if (strncmp(aux, "Shot ", 5) == 0)                // launched
-        return "shot";
+        return self? "shot by themself" : "shot by %s";
     else if (aux[0] == 0                                // unknown
              || strncmp(aux, "Hit ", 4) == 0          // thrown
              || strncmp(aux, "volley ", 7) == 0)      // manticore spikes
     {
-        return "hit from afar";
+        return "hit from afar by %s";
     }
 
-    return "blasted";                                 // spells, wands
+    // spells, wands
+    return self ? "blasted by themself" : "blasted by %s";
 }
 
 string hiscores_format_single(const scorefile_entry &se)
@@ -571,11 +572,26 @@ static string _hiscore_date_string(time_t time)
 {
     struct tm *date = TIME_FN(&time);
 
+    // noloc section start
     const char *mons[12] = { "Jan", "Feb", "Mar", "Apr", "May", "June",
                              "July", "Aug", "Sept", "Oct", "Nov", "Dec" };
 
-    return make_stringf("%s %d, %d", mons[date->tm_mon], date->tm_mday,
-                                     date->tm_year + 1900);
+    int day = date->tm_mday;
+    int month = date->tm_mon + 1;
+    int year = date->tm_year + 1900;
+
+    map<string, string> params =
+    {
+        { "d", make_stringf("%d", day) },
+        { "dd", make_stringf("%02d", day) },
+        { "mm", make_stringf("%02d", month) },
+        { "mon", mons[month-1] },
+        { "yy", make_stringf("%02d", year % 100) },
+        { "yyyy", make_stringf("%d", year) },
+    };
+    // noloc section end
+
+    return localise(" on @mon@ @d@, @yyyy@", params);
 }
 
 static string _hiscore_newline_string()
@@ -652,6 +668,8 @@ static void _hs_write(FILE *scores, scorefile_entry &se)
     fprintf(scores, "%s", se.raw_string().c_str());
 }
 
+// noloc section start (these strings never displayed)
+
 static const char *kill_method_names[] =
 {
     "mon", "pois", "cloud", "beam", "lava", "water",
@@ -665,6 +683,8 @@ static const char *kill_method_names[] =
     "mirror_damage", "spines", "frailty", "barbs", "being_thrown",
     "collision", "zot", "constriction",
 };
+
+// noloc section end
 
 static const char *_kill_method_name(kill_method_type kmt)
 {
@@ -877,6 +897,7 @@ enum old_job_type
 
 static const char* _job_name(int job)
 {
+    // noloc section start (obsolete jobs)
     switch (job)
     {
     case OLD_JOB_THIEF:
@@ -898,12 +919,14 @@ static const char* _job_name(int job)
     case OLD_JOB_SKALD:
         return "Skald";
     }
+    // noloc section end
 
     return get_job_name(static_cast<job_type>(job));
 }
 
 static const char* _job_abbrev(int job)
 {
+    // noloc section start (obsolete jobs)
     switch (job)
     {
     case OLD_JOB_THIEF:
@@ -925,6 +948,7 @@ static const char* _job_abbrev(int job)
     case OLD_JOB_SKALD:
         return "Sk";
     }
+    // noloc section end
 
     return get_job_abbrev(static_cast<job_type>(job));
 }
@@ -959,6 +983,7 @@ enum old_species_type
 
 static string _species_name(int race)
 {
+    // noloc section start (obsolete races)
     switch (race)
     {
     case OLD_SP_ELF: return "Elf";
@@ -971,6 +996,7 @@ static string _species_name(int race)
     case OLD_SP_DJINNI: return "Djinni";
     case OLD_SP_LAVA_ORC: return "Lava Orc";
     }
+    // noloc section end
 
     // Guard against an ASSERT in get_species_def; it's really bad if the game
     // crashes at this point while trying to clean up a dead/quit player.
@@ -983,6 +1009,7 @@ static string _species_name(int race)
 
 static const char* _species_abbrev(int race)
 {
+    // noloc section start (obsolete races)
     switch (race)
     {
     case OLD_SP_ELF: return "El";
@@ -995,6 +1022,7 @@ static const char* _species_abbrev(int race)
     case OLD_SP_DJINNI: return "Dj";
     case OLD_SP_LAVA_ORC: return "LO";
     }
+    // noloc section end
 
     // see note in _species_name: don't ASSERT in get_species_def.
     if (race < 0 || race >= NUM_SPECIES)
@@ -1120,7 +1148,7 @@ void scorefile_entry::set_base_xlog_fields() const
     if (crawl_state.game_is_sprint())
     {
         /* XXX: hmmm, something better here? */
-        score_version += "-sprint.1";
+        score_version += "-sprint.1"; // noloc
     }
     fields->add_field("v", "%s", Version::Short);
     fields->add_field("vlong", "%s", Version::Long);
@@ -1325,6 +1353,87 @@ static bool _strip_to(string &str, const char *infix)
     return false;
 }
 
+/// split a string like "summoned by an orc" into "summoned by %s" and "orc"
+static void _deconstruct_summoner_phrase(const string &s, string& phrase, string &noun)
+{
+    // find where the noun starts
+    size_t pos = s.find(" by the rage of ");
+    if (pos != string::npos)
+        pos += strlen(" by the rage of ");
+    else
+    {   
+        pos = s.find(" by ");
+        if (pos == string::npos)
+            pos = s.find(" to ");
+        if (pos != string::npos)
+            pos += 4;
+    }
+
+    if (pos == string::npos)
+        phrase = s;
+    else
+    {
+        phrase = s.substr(0, pos) + "%s";
+        noun = s.substr(pos);
+    }
+}
+
+/**
+ * @brief Deconstruct a shooter string
+ * 
+ * Examples:
+ * 
+ * Input: "Hit by a javelin thrown by a merfolk"
+ * phrase = "Hit by %s thrown by %s"
+ * missile = "a javelin"
+ * shooter = "a merfolk"
+ *
+ * Input: "Shot with an arrow by a centaur"
+ * phrase = "Shot with %s thrown by %s"
+ * missile = "an arrow"
+ * shooter = "a centaur"
+ */
+static void _deconstruct_shooter_phrase(const string &s, string& phrase, string &missile, string& shooter)
+{
+    // noloc section start
+    static const string hit_by = "Hit by ";
+    static const string thrown_by = " thrown by ";
+    static const string shot_with = "Shot with ";
+    static const string by = " by ";
+    // noloc section end
+
+    if (starts_with(s, hit_by))
+    {
+        size_t pos = s.find(thrown_by);
+        if (pos == string::npos)
+            return;
+        
+        missile = s.substr(hit_by.length(), pos - hit_by.length());
+        shooter = s.substr(pos + thrown_by.length());
+
+    }
+    else if (starts_with(s, shot_with))
+    {
+        size_t pos = s.find("by");
+        if (pos == string::npos)
+            return;
+        
+        missile = s.substr(shot_with.length(), pos - shot_with.length());
+        shooter = s.substr(pos + by.length());
+    }
+
+    if (missile.empty() && shooter.empty())
+    {
+        phrase = s;
+    }
+    else
+    {
+        // it worked!
+        phrase = replace_first(s, missile, "%s");
+        phrase = replace_first(phrase, shooter, "%s");
+    }
+}
+
 void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
                                        int dtype, const char *aux,
                                        const char *dsrc_name)
@@ -1416,7 +1525,10 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             death_source_name += " (glowing shapeshifter)";
 
         if (mons->type == MONS_PANDEMONIUM_LORD)
-            death_source_name += " the pandemonium lord";
+        {
+            death_source_name = make_stringf("%s the pandemonium lord",
+                                             death_source_name.c_str());
+        }
 
         if (mons->has_ench(ENCH_PHANTOM_MIRROR))
             death_source_name += " (illusionary)";
@@ -1809,8 +1921,8 @@ string scorefile_entry::game_time(death_desc_verbosity verbosity) const
 
     if (verbosity == DDV_VERBOSE)
     {
-        line += make_stringf("The game lasted %s (%d turns).",
-                             make_time_string(real_time).c_str(), num_turns);
+        line += localise("The game lasted %s (%d turns).",
+                         make_time_string(real_time).c_str(), num_turns);
 
         line += _hiscore_newline_string();
     }
@@ -1835,8 +1947,10 @@ string scorefile_entry::death_source_desc() const
 
 string scorefile_entry::damage_string(bool terse) const
 {
-    return make_stringf("(%d%s)", damage,
-                        terse? "" : " damage");
+    if (terse)
+        return make_stringf("(%d)", damage);
+    else
+        return localise("(%d damage)", damage);
 }
 
 string scorefile_entry::strip_article_a(const string &s) const
@@ -1850,11 +1964,13 @@ string scorefile_entry::strip_article_a(const string &s) const
 
 string scorefile_entry::terse_missile_name() const
 {
+    // noloc section start
     const string pre_post[][2] =
     {
         { "Shot with ", " by " },
         { "Hit by ",     " thrown by " }
     };
+    // noloc section end
     const string &aux = auxkilldata;
     string missile;
 
@@ -1882,7 +1998,7 @@ string scorefile_entry::terse_missile_cause() const
 {
     const string &aux = auxkilldata;
 
-    string monster_prefix = " by ";
+    string monster_prefix = " by "; // noloc (search string)
     // We're looking for Shot with a%s %s by %s/ Hit by a%s %s thrown by %s
     string::size_type by = aux.rfind(monster_prefix);
     if (by == string::npos)
@@ -1955,44 +2071,59 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
 
     bool verbose = verbosity == DDV_VERBOSE;
 
-    string desc;
+    string desc = make_stringf("%8d %s ", points, name.c_str()); // noloc
     // Please excuse the following bit of mess in the name of flavour ;)
     if (verbose)
     {
-        desc = make_stringf("%8d %s the %s (level %d",
-                  points, name.c_str(), title.c_str(), lvl);
+        desc += localise("the " + title);
     }
     else
     {
-        desc = make_stringf("%8d %s the %s %s (level %d",
-                  points, name.c_str(),
-                  _species_name(race).c_str(),
-                  _job_name(job), lvl);
+        string character = string("the %s ") + _job_name(job); // noloc
+        desc += localise(character, _species_name(race));
     }
+    desc += " ";
 
     if (final_max_max_hp > 0)  // as the other two may be negative
     {
-        desc += make_stringf(", %d/%d", final_hp, final_max_hp);
-
         if (final_max_hp < final_max_max_hp)
-            desc += make_stringf(" (%d)", final_max_max_hp);
-
-        desc += " HPs";
+            desc += localise("(level %d, %d/%d (%d) HPs)", lvl, final_hp, final_max_hp, final_max_max_hp);
+        else
+            desc += localise("(level %d, %d/%d HPs)", lvl, final_hp, final_max_hp);
     }
+    else
+        desc += localise("(level %d)");
 
-    desc += wiz_mode ? ") *WIZ*" : explore_mode ? ") *EXPLORE*" : ")";
+    if (wiz_mode)
+    {
+        desc += " ";
+        desc += localise("*WIZ*");
+    }
+    else if (explore_mode)
+    {
+        desc += " ";
+        desc += localise("*EXPLORE*");
+    }
     desc += _hiscore_newline_string();
 
     if (verbose)
     {
-        string srace = _species_name(race);
-        desc += make_stringf("Began as a%s %s %s",
-                 is_vowel(srace[0]) ? "n" : "",
-                 srace.c_str(),
-                 _job_name(job));
+        if (localisation_active())
+        {
+            string fmt = localise("Began as %s");
+            string srace = _species_name(race);
+            string character = string("a %s ") + _job_name(job); // noloc
+            character = localise(character, srace);
+            desc += make_stringf(fmt.c_str(), character.c_str());
+        }
+        else
+        {
+            string srace = article_a(_species_name(race));
+            desc += make_stringf("Began as %s %s", // noloc
+                                 srace.c_str(), _job_name(job));
+        }
 
         ASSERT(birth_time);
-        desc += " on ";
         desc += _hiscore_date_string(birth_time);
         // TODO: show seed here?
 
@@ -2005,8 +2136,10 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         {
             if (god == GOD_XOM)
             {
-                desc += make_stringf("Was a %sPlaything of Xom.",
-                                    (lvl >= 20) ? "Favourite " : "");
+                if (lvl >= 20)
+                    desc += localise("Was a Favourite Plaything of Xom.");
+                else
+                    desc += localise("Was a Plaything of Xom.");
 
                 desc += _hiscore_newline_string();
             }
@@ -2014,7 +2147,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
             {
                 // Not exactly the same as the religion screen, but
                 // good enough to fill this slot for now.
-                desc += make_stringf("Was %s of %s%s",
+                desc += localise("Was %s of %s%s.",
                              (piety >= piety_breakpoint(5)) ? "the Champion" :
                              (piety >= piety_breakpoint(4)) ? "a High Priest" :
                              (piety >= piety_breakpoint(3)) ? "an Elder" :
@@ -2023,7 +2156,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
                              (piety >= piety_breakpoint(0)) ? "a Follower"
                                                             : "an Initiate",
                           god_name(god).c_str(),
-                             (penance > 0) ? " (penitent)." : ".");
+                             (penance > 0) ? " (penitent)" : "");
 
                 desc += _hiscore_newline_string();
             }
@@ -2048,7 +2181,7 @@ string scorefile_entry::death_place(death_desc_verbosity verbosity) const
         place += "...";
 
     // where did we die?
-    place += " " + prep_branch_level_name(level_id(branch, dlvl));
+    place += " " + localise(prep_branch_level_name(level_id(branch, dlvl)));
 
     if (!mapdesc.empty())
         place += make_stringf(" (%s)", mapdesc.c_str());
@@ -2056,7 +2189,6 @@ string scorefile_entry::death_place(death_desc_verbosity verbosity) const
     if (verbose && death_time
         && !_hiscore_same_day(birth_time, death_time))
     {
-        place += " on ";
         place += _hiscore_date_string(death_time);
     }
 
@@ -2092,14 +2224,12 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
     {
     case KILLED_BY_MONSTER:
         if (terse)
-            desc += death_source_desc();
+            desc += localise(death_source_desc());
         else if (oneline)
-            desc += "slain by " + death_source_desc();
+            desc += localise("slain by %s", death_source_desc());
         else
         {
-            desc += damage_verb();
-            desc += " by ";
-            desc += death_source_desc();
+            desc += localise("%s by %s", damage_verb(), death_source_desc());
         }
 
         // put the damage on the weapon line if there is one
@@ -2109,25 +2239,25 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
     case KILLED_BY_HEADBUTT:
         if (terse)
-            desc += apostrophise(death_source_desc()) + " headbutt";
+            desc += localise("%s headbutt", apostrophise(death_source_desc()));
         else
-            desc += "Headbutted by " + death_source_desc();
+            desc += localise("Headbutted by %s", death_source_desc());
         needs_damage = true;
         break;
 
     case KILLED_BY_ROLLING:
         if (terse)
-            desc += "squashed by " + death_source_desc();
+            desc += localise("squashed by %s", death_source_desc());
         else
-            desc += "Rolled over by " + death_source_desc();
+            desc += localise("Rolled over by %s", death_source_desc());
         needs_damage = true;
         break;
 
     case KILLED_BY_SPINES:
         if (terse)
-            desc += apostrophise(death_source_desc()) + " spines";
+            desc += localise("%s spines", apostrophise(death_source_desc()));
         else
-            desc += "Impaled on " + apostrophise(death_source_desc()) + " spines" ;
+            desc += localise("Impaled on %s spines", apostrophise(death_source_desc()));
         needs_damage = true;
         break;
 
@@ -2135,44 +2265,59 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (death_source_name.empty() || terse)
         {
             if (!terse)
-                desc += "Succumbed to poison";
+                desc += localise("Succumbed to poison");
             else if (!death_source_name.empty())
-                desc += "poisoned by " + death_source_name;
+                desc += localise("poisoned by %s", death_source_name);
             else
-                desc += "poison";
+                desc += localise("poison");
             if (!auxkilldata.empty())
-                desc += " (" + auxkilldata + ")";
+                desc += " (" + localise(auxkilldata) + ")";
         }
         else if (auxkilldata.empty()
                  && death_source_name.find("poison") != string::npos)
         {
-            desc += "Succumbed to " + death_source_name;
+            desc += localise("Succumbed to %s", death_source_name);
+        }
+        else if (death_source_name == "you")
+        {
+            if (auxkilldata.empty())
+                desc += localise("Succumbed to their own poison");
+            else
+                desc += localise("Succumbed to their own %s", auxkilldata);
         }
         else
         {
-            desc += "Succumbed to " + ((death_source_name == "you")
-                      ? "their own" : apostrophise(death_source_name)) + " "
-                    + (auxkilldata.empty()? "poison" : auxkilldata);
+            string whose = apostrophise(death_source_name);
+            if (auxkilldata.empty())
+                desc += localise("Succumbed to %s poison", whose);
+            else
+                desc += localise("Succumbed to %s %s", whose, auxkilldata);
         }
         break;
 
     case KILLED_BY_CLOUD:
         ASSERT(!auxkilldata.empty()); // there are no nameless clouds
         if (terse)
-            if (death_source_name.empty())
-                desc += "cloud of " + auxkilldata;
-            else
-                desc += "cloud of " +auxkilldata + " [" +
-                        death_source_name == "you" ? "self" : death_source_name
-                        + "]";
+        {
+            desc += localise("cloud of %s", auxkilldata);
+            if (!death_source_name.empty())
+            {
+                string source;
+                if (death_source_name == "you")
+                    source = localise("self");
+                else
+                    source = localise(death_source_name);
+                desc += " [" + source + "]";
+            }
+        }
         else
         {
-            desc += make_stringf("Engulfed by %s%s %s",
-                death_source_name.empty() ? "a" :
-                  death_source_name == "you" ? "their own" :
-                  apostrophise(death_source_name).c_str(),
-                death_source_name.empty() ? " cloud of" : "",
-                auxkilldata.c_str());
+            if (death_source_name.empty())
+                desc += localise("Engulfed by a cloud of %s", auxkilldata);
+            else if (death_source_name == "you")
+                desc += localise("Engulfed by their own cloud of %s", auxkilldata);
+            else
+                desc += localise("Engulfed by %s", auxkilldata);
         }
         needs_damage = true;
         break;
@@ -2181,10 +2326,9 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (oneline || semiverbose)
         {
             // keeping this short to leave room for the deep elf spellcasters:
-            desc += make_stringf("%s by ",
-                      _range_type_verb(auxkilldata.c_str()));
-            desc += (death_source_name == "you") ? "themself"
-                                                 : death_source_desc();
+            bool self = (death_source_name == "you");
+            string phrase = _range_type_phrase(auxkilldata.c_str(), self);
+            desc += localise(phrase, death_source_desc());
 
             if (semiverbose)
             {
@@ -2193,31 +2337,37 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
                     beam = terse_beam_cause();
                 trim_string(beam);
                 if (!beam.empty())
-                    desc += make_stringf(" (%s)", beam.c_str());
+                    desc += localise(" (%s)", beam);
             }
         }
         else if (isupper(auxkilldata[0]))  // already made (ie shot arrows)
         {
             // If terse we have to parse the information from the string.
             // Darn it to heck.
-            desc += terse? terse_missile_cause() : auxkilldata;
+            if (terse)
+                desc += localise(terse_missile_cause());
+            else
+            {
+                string phrase, projectile, shooter;
+                _deconstruct_shooter_phrase(auxkilldata, phrase, projectile, shooter);
+                desc += localise(phrase, projectile, shooter);
+            }
             needs_damage = true;
         }
         else if (verbose && starts_with(auxkilldata, "by "))
         {
             // "by" is used for priest attacks where the effect is indirect
             // in verbose format we have another line for the monster
+            string aux = auxkilldata.substr(3);
             if (death_source_name == "you")
             {
                 needs_damage = true;
-                desc += make_stringf("Killed by their own %s",
-                         auxkilldata.substr(3).c_str());
+                desc += localise("Killed by their own %s", aux);
             }
             else
             {
                 needs_called_by_monster_line = true;
-                desc += make_stringf("Killed %s",
-                          auxkilldata.c_str());
+                desc += localise("Killed by %s", aux);
             }
         }
         else
@@ -2225,14 +2375,19 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             // Note: This is also used for the "by" cases in non-verbose
             //       mode since listing the monster is more imporatant.
             if (semiverbose)
-                desc += "Killed by ";
+            {
+                if (death_source_name == "you")
+                    desc += localise("Killed by themself");
+                else
+                    desc += localise("Killed by %s", death_source_desc());
+            }
             else if (!terse)
-                desc += "Killed from afar by ";
-
-            if (death_source_name == "you")
-                desc += "themself";
-            else
-                desc += death_source_desc();
+            {
+                if (death_source_name == "you")
+                    desc += localise("Killed from afar by themself");
+                else
+                    desc += localise("Killed from afar by %s", death_source_desc());
+            }
 
             if (!auxkilldata.empty())
                 needs_beam_cause_line = true;
@@ -2243,16 +2398,16 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
     case KILLED_BY_LAVA:
         if (terse)
-            desc += "lava";
+            desc += localise("lava");
         else
         {
             if (starts_with(species::skin_name(
                         static_cast<species_type>(race)), "bandage"))
             {
-                desc += "Turned to ash by lava";
+                desc += localise("Turned to ash by lava");
             }
             else
-                desc += "Took a swim in molten lava";
+                desc += localise("Took a swim in molten lava");
         }
         break;
 
@@ -2260,136 +2415,147 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (species::is_undead(static_cast<species_type>(race)))
         {
             if (terse)
-                desc = "fell apart";
+                desc = localise("fell apart");
             else if (starts_with(species::skin_name(
                         static_cast<species_type>(race)), "bandage"))
             {
-                desc = "Soaked and fell apart";
+                desc = localise("Soaked and fell apart");
             }
             else
-                desc = "Sank and fell apart";
+                desc = localise("Sank and fell apart");
         }
         else
         {
             if (!death_source_name.empty())
             {
-                desc += terse? "drowned by " : "Drowned by ";
-                desc += death_source_name;
+                if (terse)
+                    desc += localise("drowned by %s", death_source_name);
+                else
+                    desc += localise("Drowned by %s", death_source_name);
                 needs_damage = true;
             }
             else
-                desc += terse? "drowned" : "Drowned";
+                desc += localise(terse? "drowned" : "Drowned");
         }
         break;
 
     case KILLED_BY_STUPIDITY:
         if (terse)
-            desc += "stupidity";
+            desc += localise("stupidity");
         else if (race >= 0 && // not a removed race
                  (species::is_undead(static_cast<species_type>(race))
                   || species::is_nonliving(static_cast<species_type>(race))))
         {
-            desc += "Forgot to exist";
+            desc += localise("Forgot to exist");
         }
         else
-            desc += "Forgot to breathe";
+            desc += localise("Forgot to breathe");
         break;
 
     case KILLED_BY_WEAKNESS:
-        desc += terse? "collapsed" : "Collapsed under their own weight";
+        if (terse)
+            desc += localise("collapsed");
+        else
+            desc += localise("Collapsed under their own weight");
         break;
 
     case KILLED_BY_CLUMSINESS:
-        desc += terse? "clumsiness" : "Slipped on a banana peel";
+        desc += localise(terse? "clumsiness" : "Slipped on a banana peel");
         break;
 
     case KILLED_BY_TRAP:
         if (terse)
-            desc += auxkilldata.c_str();
+            desc += localise(auxkilldata);
         else
-        {
-            desc += make_stringf("Killed by triggering %s",
-                                 auxkilldata.c_str());
-        }
+            desc += localise("Killed by triggering %s", auxkilldata);
         needs_damage = true;
         break;
 
     case KILLED_BY_LEAVING:
         if (terse)
-            desc += "left";
+            desc += localise("left");
         else
         {
             if (num_runes > 0)
-                desc += "Got out of the dungeon";
+                desc += localise("Got out of the dungeon");
             else if (species::is_undead(static_cast<species_type>(race)))
-                desc += "Safely got out of the dungeon";
+                desc += localise("Safely got out of the dungeon");
             else
-                desc += "Got out of the dungeon alive";
+                desc += localise("Got out of the dungeon alive");
         }
         break;
 
     case KILLED_BY_WINNING:
-        desc += terse? "escaped" : "Escaped with the Orb";
+        desc += localise(terse? "escaped" : "Escaped with the Orb");
         if (num_runes < 1)
             desc += "!";
         break;
 
     case KILLED_BY_QUITTING:
-        desc += terse? "quit" : "Quit the game";
+        desc += localise(terse? "quit" : "Quit the game");
         break;
 
     case KILLED_BY_WIZMODE:
-        desc += terse? "wizmode" : "Entered wizard mode";
+        desc += localise(terse? "wizmode" : "Entered wizard mode");
         break;
 
     case KILLED_BY_DRAINING:
         if (terse)
-            desc += "drained";
+            desc += localise("drained");
         else
         {
-            desc += "Drained of all life";
             if (!death_source_desc().empty())
             {
-                desc += " by " + death_source_desc();
+                desc += localise("Drained of all life by %s", death_source_desc());
 
                 if (!auxkilldata.empty())
                     needs_beam_cause_line = true;
             }
             else if (!auxkilldata.empty())
-                desc += " by " + auxkilldata;
+                desc += localise("Drained of all life by %s", auxkilldata);
+            else
+                desc += localise("Drained of all life");
         }
         break;
 
     case KILLED_BY_STARVATION:
-        desc += terse? "starvation" : "Starved to death";
+        desc += localise(terse? "starvation" : "Starved to death");
         break;
 
     case KILLED_BY_FREEZING:    // Freeze, Fridge spells
-        desc += terse? "frozen" : "Frozen to death";
-        if (!terse && !death_source_desc().empty())
-            desc += " by " + death_source_desc();
+        if (terse)
+            desc += localise("frozen");
+        else if (death_source_desc().empty())
+            desc += localise("Frozen to death");
+        else
+            desc += localise("Frozen to death by %s", death_source_desc());
         needs_damage = true;
         break;
 
     case KILLED_BY_BURNING:     // sticky flame
         if (terse)
-            desc += "burnt";
+            desc += localise("burnt");
         else if (!death_source_desc().empty())
         {
-            desc += "Incinerated by " + death_source_desc();
+            desc += localise("Incinerated by %s", death_source_desc());
 
             if (!auxkilldata.empty())
                 needs_beam_cause_line = true;
         }
         else
-            desc += "Burnt to a crisp";
+            desc += localise("Burnt to a crisp");
 
         needs_damage = true;
         break;
 
     case KILLED_BY_WILD_MAGIC:
         if (auxkilldata.empty())
-            desc += terse? "wild magic" : "Killed by wild magic";
+        {
+            if (terse)
+                desc += localise("wild magic"); // noloc (duplicate of mutation name)
+            else
+                desc += localise("Killed by wild magic");
+        }
         else
         {
             if (terse)
@@ -2397,9 +2563,10 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             else
             {
                 // A lot of sources for this case... some have "by" already.
-                desc += make_stringf("Killed %s%s",
-                          (auxkilldata.find("by ") != 0) ? "by " : "",
-                          auxkilldata.c_str());
+                string aux = auxkilldata;
+                if (starts_with(auxkilldata, "by "))
+                    aux = auxkilldata.substr(4);
+                desc += localise("Killed by %s", aux);
             }
         }
 
@@ -2408,31 +2575,31 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
     case KILLED_BY_XOM:
         if (terse)
-            desc += "xom";
+            desc += localise("xom");
+        else if (auxkilldata.empty())
+            desc += localise("Killed for Xom's enjoyment");
         else
-            desc += auxkilldata.empty() ? "Killed for Xom's enjoyment"
-                                        : "Killed by " + auxkilldata;
+            desc += localise("Killed by %s", auxkilldata);
         needs_damage = true;
         break;
 
     case KILLED_BY_ROTTING:
-        desc += terse? "rotting" : "Rotted away";
+        desc += localise(terse? "rotting" : "Rotted away");
         if (!auxkilldata.empty())
-            desc += " (" + auxkilldata + ")";
+            desc += " (" + localise(auxkilldata) + ")";
         if (!death_source_desc().empty())
-            desc += " (" + death_source_desc() + ")";
+            desc += " (" + localise(death_source_desc()) + ")";
         break;
 
     case KILLED_BY_TARGETING:
         if (terse)
-            desc += "shot self";
+            desc += localise("shot self");
+        else if (auxkilldata.empty())
+            desc += localise("Killed themself with bad targeting");
         else
         {
-            desc += "Killed themself with ";
-            if (auxkilldata.empty())
-                desc += "bad targeting";
-            else
-                desc += "a badly aimed " + auxkilldata;
+                desc += localise("Killed themself with a badly aimed %s",
+                                 auxkilldata);
         }
         needs_damage = true;
         break;
@@ -2440,21 +2607,19 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
     case KILLED_BY_REFLECTION:
         needs_damage = true;
         if (terse)
-            desc += "reflected bolt";
+            desc += localise("reflected bolt");
         else
         {
-            desc += "Killed by a reflected ";
             if (auxkilldata.empty())
-                desc += "bolt";
+                desc += localise("Killed by a reflected bolt");
             else
-                desc += auxkilldata;
+                desc += localise("Killed by a reflected %s", auxkilldata);
 
             if (!death_source_name.empty() && !oneline && !semiverbose)
             {
                 desc += "\n";
                 desc += "             ";
-                desc += "... reflected by ";
-                desc += death_source_name;
+                desc += localise("... reflected by %s", death_source_name);
                 needs_damage = false;
             }
         }
@@ -2462,28 +2627,29 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
     case KILLED_BY_BOUNCE:
         if (terse)
-            desc += "bounced beam";
+            desc += localise("bounced beam");
         else
         {
-            desc += "Killed themself with a bounced ";
             if (auxkilldata.empty())
-                desc += "beam";
+                desc += localise("Killed themself with a bounced beam");
             else
-                desc += auxkilldata;
+                desc += localise("Killed themself with a bounced %s", auxkilldata);
         }
         needs_damage = true;
         break;
 
     case KILLED_BY_SELF_AIMED:
         if (terse)
-            desc += "suicidal targeting";
+            desc += localise("suicidal targeting");
         else
         {
-            desc += "Shot themself with ";
             if (auxkilldata.empty())
-                desc += "a beam";
+                desc += localise("Shot themself with a beam");
             else
-                desc += article_a(auxkilldata, true);
+            {
+                desc += localise("Shot themself with %s",
+                                 article_a(auxkilldata, true));
+            }
         }
         needs_damage = true;
         break;
@@ -2492,79 +2658,93 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (terse)
         {
             if (death_source_name.empty())
-                desc += "spore";
+                desc += localise("spore");
             else
-                desc += death_source_name;
+                desc += localise(death_source_name);
         }
         else
         {
-            desc += "Killed by an exploding ";
             if (death_source_name.empty())
-                desc += "spore";
+                desc += localise("Killed by an exploding spore");
             else
-                desc += death_source_name;
+                desc += localise("Killed by an exploding %s", death_source_name);
         }
         needs_damage = true;
         break;
 
     case KILLED_BY_TSO_SMITING:
-        desc += terse? "smitten by Shining One" : "Smitten by the Shining One";
+        if (terse)
+            desc += localise("smitten by Shining One");
+        else
+            desc += localise("Smitten by the Shining One");
         needs_damage = true;
         break;
 
     case KILLED_BY_BEOGH_SMITING:
-        desc += terse? "smitten by Beogh" : "Smitten by Beogh";
+        if (terse)
+            desc += localise("smitten by Beogh");
+        else
+            desc += localise("Smitten by Beogh");
         needs_damage = true;
         break;
 
     case KILLED_BY_PETRIFICATION:
-        desc += terse? "petrified" : "Turned to stone";
+        desc += localise(terse? "petrified" : "Turned to stone");
         break;
 
     case KILLED_BY_SOMETHING:
         if (!auxkilldata.empty())
-            desc += (terse ? "" : "Killed by ") + auxkilldata;
+        {
+            if (terse)
+                desc += localise(auxkilldata);
+            else
+                desc += localise("Killed by %s", auxkilldata);
+        }
         else
-            desc += terse? "died" : "Died";
+            desc += localise(terse? "died" : "Died");
         needs_damage = true;
         break;
 
     case KILLED_BY_FALLING_DOWN_STAIRS:
-        desc += terse? "fell downstairs" : "Fell down a flight of stairs";
+        if (terse)
+            desc += localise("fell downstairs");
+        else
+            desc += localise("Fell down a flight of stairs");
         needs_damage = true;
         break;
 
     case KILLED_BY_FALLING_THROUGH_GATE:
-        desc += terse? "fell through a gate" : "Fell down through a gate";
+        if (terse)
+            desc += localise("fell through a gate");
+        else
+            desc += localise("Fell down through a gate");
         needs_damage = true;
         break;
 
     case KILLED_BY_ACID:
         if (terse)
-            desc += "acid";
+            desc += localise("acid");
         else if (!death_source_desc().empty())
         {
-            desc += "Splashed by "
-                    + apostrophise(death_source_desc())
-                    + " acid";
+            desc += localise("Splashed by %s acid",
+                             apostrophise(death_source_desc()));
         }
         else
-            desc += "Splashed with acid";
+            desc += localise("Splashed with acid");
         needs_damage = true;
         break;
 
     case KILLED_BY_CURARE:
-        desc += terse? "asphyx" : "Asphyxiated";
+        desc += localise(terse? "asphyx" : "Asphyxiated");
         break;
 
     case KILLED_BY_DIVINE_WRATH:
         if (terse)
-            desc += "divine wrath";
+            desc += localise("divine wrath");
         else
         {
-            desc += "Killed by ";
             if (auxkilldata.empty())
-                desc += "divine wrath";
+                desc += localise("Killed by divine wrath");
             else
             {
                 // Lugonu's touch or "the <retribution> of <deity>";
@@ -2575,7 +2755,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
                     desc += is_vowel(auxkilldata[0]) ? "an " : "a ";
                 }
 
-                desc += auxkilldata;
+                desc += localise("Killed by %s", auxkilldata);
             }
         }
         needs_damage = true;
@@ -2585,13 +2765,13 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
     case KILLED_BY_DISINT:
         if (terse)
-            desc += "disintegration";
+            desc += localise("disintegration");
         else
         {
             if (death_source_name == "you")
-                desc += "Blew themself up";
+                desc += localise("Blew themself up");
             else
-                desc += "Blown up by " + death_source_desc();
+                desc += localise("Blown up by %s", death_source_desc());
             needs_beam_cause_line = true;
         }
 
@@ -2599,51 +2779,60 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_MIRROR_DAMAGE:
-        desc += terse ? "mirror damage" : "Killed by mirror damage";
+        desc += localise(terse ? "mirror damage" : "Killed by mirror damage");
         needs_damage = true;
         break;
 
     case KILLED_BY_FRAILTY:
-        desc += terse ? "frailty" : "Became unviable by " + auxkilldata;
+        if (terse)
+            desc += localise("frailty");
+        else
+            desc += localise("Became unviable by %s", auxkilldata);
         break;
 
     case KILLED_BY_BARBS:
-        desc += terse ? "barbs" : "Succumbed to barbed spike wounds";
+        desc += localise(terse ? "barbs" : "Succumbed to barbed spike wounds");
         break;
 
     case KILLED_BY_BEING_THROWN:
         if (terse)
-            desc += apostrophise(death_source_desc()) + " throw";
+            desc += localise("%s throw", apostrophise(death_source_desc()));
         else
-            desc += "Thrown by " + death_source_desc();
+            desc += localise("Thrown by %s", death_source_desc());
         needs_damage = true;
         break;
 
     case KILLED_BY_COLLISION:
         if (terse)
-            desc += auxkilldata + " collision";
+            desc += localise("%s collision", auxkilldata);
         else
         {
-            desc += "Collided with " + auxkilldata;
+            desc += localise("Collided with %s", auxkilldata);
             needs_called_by_monster_line = true;
         }
         needs_damage = true;
         break;
 
     case KILLED_BY_ZOT:
-        desc += terse ? "Zot" : "Tarried too long and was consumed by Zot";
+        if (terse)
+            desc += localise("Zot");
+        else
+            desc += localise("Tarried too long and was consumed by Zot");
         break;
 
     case KILLED_BY_CONSTRICTION:
         if (terse)
-            desc += "constriction";
+            desc += localise("constriction");
         else
-            desc += "Constricted to death by " + death_source_desc();
+            desc += localise("Constricted to death by %s", death_source_desc());
         needs_damage = true;
         break;
 
     default:
-        desc += terse? "program bug" : "Nibbled to death by software bugs";
+        if (terse)
+            desc += localise("program bug");
+        else
+            desc += localise("Nibbled to death by software bugs");
         break;
     }                           // end switch
 
@@ -2655,15 +2844,14 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (terse || oneline)
         {
             desc += " (";
-            desc += auxkilldata;
+            desc += localise(auxkilldata);
             desc += ")";
         }
         else
         {
             desc += "\n";
             desc += "             ";
-            desc += "... caused by ";
-            desc += auxkilldata;
+            desc += localise("... caused by %s", auxkilldata);
         }
         break;
 
@@ -2680,16 +2868,16 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (death_type == KILLED_BY_MONSTER && !auxkilldata.empty())
         {
             desc += "/";
-            desc += strip_article_a(auxkilldata);
+            desc += localise(strip_article_a(auxkilldata));
             needs_damage = true;
         }
         else if (needs_beam_cause_line)
-            desc += "/" + terse_beam_cause();
+            desc += "/" + localise(terse_beam_cause());
         else if (needs_called_by_monster_line)
             desc += death_source_name;
 
         if (!killerpath.empty())
-            desc += "[" + indirectkiller + "]";
+            desc += "[" + localise(indirectkiller) + "]";
 
         if (needs_damage && damage > 0)
             desc += " " + damage_string(true);
@@ -2712,15 +2900,20 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 desc += _hiscore_newline_string();
 
-                desc += make_stringf("... %s %d rune%s",
-                         (death_type == KILLED_BY_WINNING) ? "and" : "with",
-                          num_runes, (num_runes > 1) ? "s" : "");
+                if (death_type == KILLED_BY_WINNING)
+                    desc += localise("... and %d runes", num_runes);
+                else
+                {
+                    if (num_runes == 1)
+                        desc += localise("... with 1 rune");
+                    else
+                        desc += localise("... with %d runes", num_runes);
+                }
 
                 if (!semiverbose
                     && death_time > 0
                     && !_hiscore_same_day(birth_time, death_time))
                 {
-                    desc += " on ";
                     desc += _hiscore_date_string(death_time);
                 }
 
@@ -2739,40 +2932,45 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 if (!semiverbose)
                 {
-                    desc += make_stringf("... wielding %s",
-                             auxkilldata.c_str());
+                    desc += localise("... wielding %s", auxkilldata);
                     needs_damage = true;
                     desc += _hiscore_newline_string();
                 }
                 else
-                    desc += make_stringf(" (%s)", auxkilldata.c_str());
+                    desc += localise(" (%s)", auxkilldata);
             }
             else if (needs_beam_cause_line)
             {
                 if (!semiverbose)
                 {
-                    desc += auxkilldata == "damnation" ? "... with " :
-                         auxkilldata == "creeping frost" ? "... by " :
-                            (is_vowel(auxkilldata[0])) ? "... with an "
-                                                       : "... with a ";
-                    desc += auxkilldata;
+                    if (auxkilldata == "damnation")
+                        desc += localise("... with damnation");
+                    else if (auxkilldata == "creeping frost")
+                        desc += localise("... by creeping frost");
+                    else
+                    {
+                        string aux = article_a(auxkilldata);
+                        desc += localise("... with %s", aux);
+                    }
                     desc += _hiscore_newline_string();
                     needs_damage = true;
                 }
                 else if (death_type == KILLED_BY_DRAINING
                          || death_type == KILLED_BY_BURNING)
                 {
-                    desc += make_stringf(" (%s)", auxkilldata.c_str());
+                    desc += localise(" (%s)", auxkilldata);
                 }
             }
             else if (needs_called_by_monster_line)
             {
-                desc += make_stringf("... %s by %s",
-                         death_type == KILLED_BY_COLLISION ? "caused" :
-                         auxkilldata == "by angry trees"   ? "awakened" :
-                         auxkilldata == "by Freeze"        ? "generated"
-                                                           : "invoked",
-                         death_source_name.c_str());
+                if (death_type == KILLED_BY_COLLISION)
+                    desc += localise("... caused by %s", death_source_name);
+                else if (auxkilldata == "by angry trees")
+                    desc += localise("... awakened by %s", death_source_name);
+                else if(auxkilldata == "by Freeze")
+                    desc += localise("... generated by %s", death_source_name);
+                else
+                    desc += localise("... invoked by %s", death_source_name);
                 desc += _hiscore_newline_string();
                 needs_damage = true;
             }
@@ -2783,13 +2981,18 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
                 for (const auto &sumname : summoners)
                 {
+                    string phrase, noun;
+                    _deconstruct_summoner_phrase(sumname, phrase, noun);
+                    string sumphrase = localise(phrase, noun);
+
                     if (!semiverbose)
                     {
-                        desc += "... " + sumname;
+                        desc += localise("... ");
+                        desc += sumphrase;
                         desc += _hiscore_newline_string();
                     }
                     else
-                        desc += " (" + sumname;
+                        desc += " (" + sumphrase;
                 }
 
                 if (semiverbose)
@@ -2806,22 +3009,24 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
                 if (you.duration[DUR_PARALYSIS])
                 {
-                    desc += "... while paralysed";
                     if (you.props.exists(PARALYSED_BY_KEY))
                     {
-                        desc += " by "
-                                + you.props[PARALYSED_BY_KEY].get_string();
+                        desc += localise("... while paralysed by %s",
+                                         you.props[PARALYSED_BY_KEY].get_string());
                     }
+                    else
+                        desc += localise("... while paralysed");
                     desc += _hiscore_newline_string();
                 }
                 else if (you.duration[DUR_PETRIFIED])
                 {
-                    desc += "... while petrified";
                     if (you.props.exists(PETRIFIED_BY_KEY))
                     {
-                        desc += " by "
-                                + you.props[PETRIFIED_BY_KEY].get_string();
+                        desc += localise("... while petrified by %s",
+                                         you.props[PETRIFIED_BY_KEY].get_string());
                     }
+                    else
+                        desc += localise("... while petrified");
                     desc += _hiscore_newline_string();
                 }
 
@@ -2846,8 +3051,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
     if (death_type == KILLED_BY_DEATH_EXPLOSION && !terse && !auxkilldata.empty())
     {
-        desc += "... ";
-        desc += auxkilldata;
+        desc += localise("... %s", auxkilldata);
         desc += "\n";
         desc += "             ";
     }

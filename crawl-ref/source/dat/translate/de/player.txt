@@ -375,6 +375,83 @@ der %s Wanderer
 %%%%
 
 ##############################################
+# "a <species> <background>"
+##############################################
+%%%%
+a %s Fighter
+ein %s Kämpfer
+%%%%
+a %s Gladiator
+ein %s Gladiator
+%%%%
+a %s Monk
+ein %s Mönch
+%%%%
+a %s Hunter
+ein %s Jäger
+%%%%
+a %s Berserker
+ein %s Berserker
+%%%%
+a %s Brigand
+ein %s Brigant
+%%%%
+a %s Abyssal Knight
+ein %s Abgrundritter
+%%%%
+a %s Chaos Knight
+ein %s Chaosritter
+%%%%
+a %s Enchanter
+ein %s Verzauberer
+%%%%
+a %s Transmuter
+ein %s Verwandler
+%%%%
+a %s Arcane Marksman
+ein %s Arkane Scharfschütze
+%%%%
+a %s Warper
+ein %s Warper
+%%%%
+a %s Hedge Wizard
+ein %s Heckenzauberer
+%%%%
+a %s Conjurer
+ein %s Beschwörer
+%%%%
+a %s Summoner
+ein %s Herbeirufer
+%%%%
+a %s Necromancer
+ein %s Nekromant
+%%%%
+a %s Fire Elementalist
+ein %s Feuermagier
+%%%%
+a %s Ice Elementalist
+ein %s Eismagier
+%%%%
+a %s Air Elementalist
+ein %s Luftmagier
+%%%%
+a %s Earth Elementalist
+ein %s Erdmagier
+%%%%
+a %s Venom Mage
+ein %s Giftmagier
+%%%%
+a %s Artificer
+ein %s Artificer
+%%%%
+a %s Delver
+ein %s Gräber
+%%%%
+a %s Wanderer
+ein %s Wanderer
+%%%%
+
+##############################################
 # "a <rank> <species> <background>"
 # Normally used for player ghosts
 ##############################################

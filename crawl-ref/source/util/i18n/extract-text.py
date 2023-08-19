@@ -172,7 +172,7 @@ SPECIAL_FILES = [
 # as opposed to extracting all strings unless we have a reason to ignore them.
 LAZY_FILES = [
     'dgn-overview.cc', 'end.cc', 'files.cc','fineff.cc', 'god-passive.cc', 
-    'god-prayer.cc', 'hiscores.cc', 'macro.cc', 'main.cc'
+    'god-prayer.cc', 'macro.cc', 'main.cc'
 ]
 
 IGNORE_STRINGS = [
@@ -348,13 +348,12 @@ for filename in files:
             if re.search(r'\bget[a-zA-Z]*String', line):
                 line = re.sub(r'\b(get[a-zA-Z]*String) *\(.*\)', r'\1()', line)
 
-                if '"' not in line:
-                    continue
-
             # we don't want to extract the context key used with localise_contextual()
             if 'localise_contextual' in line:
                 line = re.sub(r'localise_contextual *\(.*,', 'localise_contextual(dummy,', line)
 
+            if '"' not in line:
+                continue
 
             if not extract:
                 # if we get here then we are not in lazy mode
@@ -383,8 +382,16 @@ for filename in files:
                 if 'AXED' in line:
                     continue
 
-                # ignore file open (will have file name and mode as strings)
-                if re.search(r'\bfopen(_u)? *\(', line):
+                # ignore file operations (any strings will be paths/filenames/modes)
+                if 'fopen' in line or '_hs_open' in line or 'lk_open' in line:
+                    continue
+                if 'catpath' in line:
+                    continue
+
+                # internal scorefile stuff that is never displayed
+                if 'add_field' in line or 'str_field' in line or 'int_field' in line:
+                    continue
+                if 'death_source_flags' in line:
                     continue
 
                 # ignore lua code
@@ -441,12 +448,14 @@ for filename in files:
                 if re.search(r'compare_item', line):
                     continue
 
-                # just a find or compare
+                # find or compare
                 if re.search(r'\bstrstr\s*\(', line):
                     continue
                 if 'search_stashes' in line:
                     continue
                 if re.search(r'\bstrn?i?cmp\b', line):
+                    continue
+                if '_strip_to' in line:
                     continue
 
                 if re.search(r'\bstrlen\s*\(', line):

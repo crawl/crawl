@@ -153,7 +153,8 @@ Eure Bewegung ist auf diesem flüssigen Boden verlangsamt.
 
 # Augmentation mutation
 %%%%
-Aug
+# must disambiguate from month abbreviation
+{status}Aug
 Aug
 %%%%
 
@@ -1181,7 +1182,8 @@ Spiegel
 mirroring injuries
 spiegelt Verletzungen
 %%%%
-mirror damage
+# disambiguate from death source (hiscores)
+{status}mirror damage
 Schäden spiegeln
 %%%%
 You mirror injuries.

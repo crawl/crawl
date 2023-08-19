@@ -8211,8 +8211,8 @@ Konnte Highscoresdatei nicht trunkieren
 ERROR: failure writing to the logfile.
 FEHLER: Fehler beim Schreiben in die Protokolldatei.
 %%%%
-Dungeon Crawl Stone Soup: High Scores
-Dungeon Crawl Stone Soup: Highscores
+No scores.
+Keine Spielstände.
 %%%%
 No high scores yet...
 Noch keine Highscores...
@@ -14946,9 +14946,6 @@ Die Schatten werden wieder mutiger.
 %%%%
 any
 jede
-%%%%
-xom
-xom
 %%%%
 good
 gut
@@ -23034,13 +23031,7 @@ land
 Which monster?
 Welches Monster?
 %%%%
-E
-
-%%%%
 M
-
-%%%%
-W
 
 %%%%
 P

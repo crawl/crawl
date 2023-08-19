@@ -41,9 +41,6 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
     // init launch type early, so we can use it later in the constructor
     launch_type = is_launched(attacker, weapon, *projectile);
 
-    // noloc section start
-    // (aux_source is used in notes and scorefile, which we leave in English)
-
     // [dshaligram] When changing bolt names here, you must edit
     // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
     if (attacker->is_player())
@@ -53,17 +50,16 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
     }
     else if (launch_type == launch_retval::LAUNCHED)
     {
-        aux_source = make_stringf("Shot with a%s %s by %s",
-                 (is_vowel(proj_name[0]) ? "n" : ""), proj_name.c_str(),
+        aux_source = make_stringf("Shot with %s by %s",
+                 article_a(proj_name).c_str(),
                  attacker->name(DESC_A).c_str());
     }
     else
     {
-        aux_source = make_stringf("Hit by a%s %s thrown by %s",
-                 (is_vowel(proj_name[0]) ? "n" : ""), proj_name.c_str(),
+        aux_source = make_stringf("Hit by %s thrown by %s",
+                 article_a(proj_name).c_str(),
                  attacker->name(DESC_A).c_str());
     }
-    // noloc section end
 
     needs_message = defender_visible;
 

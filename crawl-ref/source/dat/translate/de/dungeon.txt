@@ -405,8 +405,20 @@ auf Ebene %d der Tiefen
 on level %d of the Vestibule of Hell
 auf Ebene %d des Vestibüls der Hölle
 %%%%
+on level %d of Tartarus
+auf Ebene %d von Tartarus
+%%%%
+on level %d of Gehenna
+auf Ebene %d von Gehenna
+%%%%
+on level %d of Cocytus
+auf Ebene %d von Kokytus
+%%%%
 on level %d of the Iron City of Dis
 auf Ebene %d der Eisernen Stadt von Dis
+%%%%
+on level %d of Pandemonium
+auf Ebene %d von Pandämonium
 %%%%
 on level %d of the Realm of Zot
 auf Ebene %d des Reiches von Zot
@@ -416,6 +428,10 @@ auf Ebene %d des Abgrunds
 %%%%
 on level %d of a ziggurat
 auf Ebene %d einer Zikkurat
+%%%%
+# should be "in a sewer", but for some reason, we get this in hiscores
+on level %d of a sewer
+auf Ebene %d eines Sieles
 %%%%
 
 ##############################################
