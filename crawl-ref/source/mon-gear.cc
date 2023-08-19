@@ -1584,7 +1584,13 @@ static void _give_shield(monster* mon, int level)
         break;
 
     case MONS_JEREMIAH:
-        make_item_for_monster(mon, OBJ_ARMOUR, ARM_ORB, level);
+        shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_ORB, level);
+        if (shield)
+        {
+            // Light is good-coded and Wrath is too vicious.
+            const auto ego = random_choose(SPARM_MAYHEM, SPARM_ENERGY, SPARM_GUILE);
+            set_item_ego_type(*shield, OBJ_ARMOUR, ego);
+        }
         break;
 
     case MONS_DAEVA:
