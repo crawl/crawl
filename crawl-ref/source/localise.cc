@@ -474,6 +474,28 @@ static void _resolve_escapes(string& str)
 }
 
 /*
+ * Does it start with an id letter (e.g. "a - a +0 short sword")
+ */
+static bool _starts_with_menu_id(const string& s)
+{
+    if (s.length() < 4)
+        return false;
+
+    return (isalpha(s[0]) && s.substr(1,3) == " - ");
+}
+
+static string _strip_menu_id(const string& s, string& id)
+{
+    if (_starts_with_menu_id(s))
+    {
+        id = s.substr(0, 4);
+        return s.substr(4);
+    }
+    else
+        return s;
+}
+
+/*
  * Does it start with a count (number followed by space)
  */
 static bool _starts_with_count(const string& s)
@@ -1654,6 +1676,13 @@ static string _localise_string(const string context, const string& value)
         return _shift_context(result);
     }
 
+    if (_starts_with_menu_id(value))
+    {
+        string id;
+        string rest = _strip_menu_id(value, id);
+        return id + _localise_string(context, rest);
+    }
+
     // if value is a list separator and we didn't get a hit from cxlate(),
     // then there's no point wasting any more time - just use the English one
     if (is_list_separator(value))
@@ -1722,13 +1751,7 @@ static string _localise_string(const string context, const string& value)
     if (!result.empty())
         return result;
 
-    if (regex_search(value, regex("^[a-zA-Z] - ")))
-    {
-        // has an inventory letter at the front
-        string inv_letter = value.substr(0, 4);
-        return inv_letter + _localise_string(context, value.substr(4));
-    }
-    else if (value[0] == '[')
+    if (value[0] == '[')
     {
         // has an annotation at the front
         size_t pos = value.find("] ");
