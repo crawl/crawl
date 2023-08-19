@@ -1050,7 +1050,6 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_SPELL_MISCAST:
     case HINT_CLOUD_WARNING:
     case HINT_SKILL_RAISE:
-    case HINT_OPPORTUNITY_ATTACK:
         return true;
     default:
         return false;

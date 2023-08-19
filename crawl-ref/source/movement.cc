@@ -242,72 +242,6 @@ static void _mark_potential_pursuers(coord_def new_pos)
     }
 }
 
-static void _trigger_opportunity_attacks(coord_def new_pos)
-{
-    if (you.attribute[ATTR_SERPENTS_LASH]          // too fast!
-        || wu_jian_move_triggers_attacks(new_pos)  // too cool!
-        || is_sanctuary(you.pos())                 // Zin protects!
-        || is_sanctuary(new_pos))                  // .. very generously.
-    {
-        return;
-    }
-
-    unwind_bool moving(crawl_state.player_moving, true);
-
-    const coord_def orig_pos = you.pos();
-    for (adjacent_iterator ai(orig_pos); ai; ++ai)
-    {
-        if (adjacent(*ai, new_pos))
-            continue;
-        monster* mon = monster_at(*ai);
-        // No, there is no logic to this ordering (pf):
-        if (!mon
-            || mon->wont_attack()
-            || !mons_has_attacks(*mon)
-            || mon->confused()
-            || mon->incapacitated()
-            || mons_is_fleeing(*mon)
-            || mon->is_constricted() && (mon->constricted_by != MID_PLAYER
-                                         || mon->get_constrict_type() != CONSTRICT_MELEE)
-            || !mon->can_see(you)
-            // only let monsters attack if they might follow you
-            || !mon->may_have_action_energy() || mon->is_stationary()
-            // if you're swapping with a pal or moving off a fedhas plant,
-            // you can't be followed, so no aoops
-            || monster_at(you.pos())
-            // Zin protects!
-            || is_sanctuary(mon->pos())
-            // creates some weird bugs
-            || mons_self_destructs(*mon)
-            // monsters that are slower than you mayn't attack
-            || mon->outpaced_by_player()
-            || !one_chance_in(3))
-        {
-            continue;
-        }
-
-        actor* foe = mon->get_foe();
-        if (!foe || !foe->is_player())
-            continue;
-
-        // Don't randomize movement energy for monsters that got an
-        // opportunity attack this turn.
-        crawl_state.potential_pursuers.erase(mon);
-
-        simple_monster_message(*mon, " attacks as you move away!");
-        const int old_energy = mon->speed_increment;
-        launch_opportunity_attack(*mon);
-        // Refund most of the energy from the attack - for normal attack
-        // speed monsters, it will cost 0 energy 1/2 of the time and
-        // 1 energy 1/2 of the time.
-        // Only slow-attacking monsters will spend more than 1 energy.
-        mon->speed_increment = min(mon->speed_increment + 10, old_energy - random2(2));
-
-        if (you.pending_revival || you.pos() != orig_pos)
-            return;
-    }
-}
-
 bool apply_cloud_trail(const coord_def old_pos)
 {
     if (you.duration[DUR_CLOUD_TRAIL])
@@ -1142,9 +1076,6 @@ void move_player_action(coord_def move)
         else if (!running)
             clear_travel_trail();
 
-        // Calculate time_taken before checking opportunity attacks so that
-        // we can guess whether monsters will be able to follow you (& hence
-        // trigger opp attacks).
         _apply_move_time_taken();
 
         coord_def old_pos = you.pos();
@@ -1153,20 +1084,12 @@ void move_player_action(coord_def move)
         if (you.pos() != targ && targ_pass)
         {
             _clear_constriction_data();
-            // Make a list of pursuers before triggering opportunity attacks
-            // so that we can remove any monster that did one.
             _mark_potential_pursuers(targ);
-            _trigger_opportunity_attacks(targ);
-            // Check nothing weird happened during opportunity attacks.
-            if (!you.pending_revival)
-            {
-                _mark_potential_pursuers(targ);
-                move_player_to_grid(targ, true);
-                apply_barbs_damage();
-                remove_ice_movement();
-                you.clear_far_engulf(false, true);
-                apply_cloud_trail(old_pos);
-            }
+            move_player_to_grid(targ, true);
+            apply_barbs_damage();
+            remove_ice_movement();
+            you.clear_far_engulf(false, true);
+            apply_cloud_trail(old_pos);
         }
 
         // Now it is safe to apply the swappee's location effects and add
