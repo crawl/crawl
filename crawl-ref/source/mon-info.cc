@@ -603,6 +603,8 @@ monster_info::monster_info(const monster* m, int milev)
     can_go_frenzy = m->can_go_frenzy();
     can_feel_fear = m->can_feel_fear(false);
     sleepwalking = m->sleepwalking();
+    backlit = m->backlit(false);
+    umbraed = m->umbra();
 
     // Not an MB_ because it's rare.
     if (m->cloud_immune())
@@ -885,16 +887,10 @@ string monster_info::get_max_hp_desc() const
  */
 int monster_info::lighting_modifiers() const
 {
-    // Lighting effects.
-    if (is(MB_GLOWING)       // corona, silver corona (!)
-        || is(MB_BURNING)    // sticky flame
-        || is(MB_HALOED))
-    {
+    if (backlit)
         return BACKLIGHT_TO_HIT_BONUS;
-    }
-    if (is(MB_UMBRAED) && !you.nightvision())
+    if (umbraed && !you.nightvision())
         return UMBRA_TO_HIT_MALUS;
-
     return 0;
 }
 

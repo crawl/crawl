@@ -264,6 +264,8 @@ struct monster_info_base
     bool can_go_frenzy;
     bool can_feel_fear;
     bool sleepwalking;
+    bool backlit;
+    bool umbraed;
 
     uint32_t client_id;
 };
