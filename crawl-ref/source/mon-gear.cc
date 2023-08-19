@@ -504,7 +504,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
                 { WPN_BARDICHE,          1 },
         }, { 1, 4, 9 }, { { SPWPN_DRAINING, 1 } } } },
         { MONS_JEREMIAH,
-            { { { WPN_GLAIVE,            1 },
+            { { { WPN_TRIDENT,            1 },
         }, { 1, 2, 4 }, {
             { SPWPN_DRAINING,  9 },
             { SPWPN_VAMPIRISM, 1 },
@@ -1581,6 +1581,10 @@ static void _give_shield(monster* mon, int level)
         shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_ORB, level);
         if (shield)
             make_item_unrandart(*shield, UNRAND_DISPATER);
+        break;
+
+    case MONS_JEREMIAH:
+        make_item_for_monster(mon, OBJ_ARMOUR, ARM_ORB, level);
         break;
 
     case MONS_DAEVA:

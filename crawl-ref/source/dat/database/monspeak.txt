@@ -4859,6 +4859,9 @@ VISUAL:@The_monster@ yawns.
 
 VISUAL:@The_monster@ trails rainbows from @possessive@ fingertips.
 
+# hope they didn't drop it!
+VISUAL:@The_monster@ gazes at @possessive@ orb, transfixed.
+
 # hope you didn't tukima it!
 VISUAL:@The_monster@ looks at @possessive@ weapon with confusion.
 %%%%

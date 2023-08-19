@@ -1346,7 +1346,8 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
             return wtype == WPN_DEMON_WHIP;
 
         // Donald kept dropping his shield. I hate that.
-        if (mons->type == MONS_DONALD)
+        // Jerry: I gotta have my orb!
+        if (mons->type == MONS_DONALD || mons->type == MONS_JEREMIAH)
             return mons->hands_reqd(weapon) == HANDS_ONE;
 
         // What kind of assassin would forget her dagger somewhere else?
