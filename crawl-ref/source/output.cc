@@ -1220,7 +1220,8 @@ static void _draw_wizmode_flag(const string& word)
 static void _redraw_title()
 {
     const unsigned int WIDTH = crawl_view.hudsz.x;
-    string title = you.your_name + " " + filtered_lang(player_title());
+    string title = you.your_name + " " +
+                   filtered_lang(localise_player_title(player_title()));
     const bool small_layout =
 #ifdef USE_TILE_LOCAL
                               tiles.is_using_small_layout();
@@ -1246,7 +1247,8 @@ static void _redraw_title()
                                            name_len - (in_len - WIDTH) - 1);
             }
 
-            title = trimmed_name + ", " + filtered_lang(player_title(false));
+            title = trimmed_name + ", " + 
+                    filtered_lang(localise_player_title(player_title(false)));
         }
     }
 
@@ -2054,7 +2056,7 @@ static void _print_overview_screen_equip(column_composer& cols,
 
 static string _overview_screen_title(int sw)
 {
-    string title = localise(" %s ", player_title());
+    string title = " " + localise_player_title(player_title()) + " ";
 
     string species_job = localise("(%s %s)",
                                       species::name(you.species).c_str(),

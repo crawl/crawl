@@ -21,6 +21,7 @@ using namespace std;
 
 #include "localise.h"
 #include "xlate.h"
+#include "skills.h"
 #include "stringutil.h"
 #include "unicode.h"
 #include "english.h"
@@ -727,7 +728,7 @@ static string _localise_annotation(const string& s)
             result += ",";
         result += _localise_annotation_element(token);
     }
-    
+
     return result;
 }
 
@@ -902,7 +903,7 @@ static string _get_first_tag(const string& s)
     size_t start = s.find('<');
     if (start == string::npos || start == s.length() - 1)
         return "";
-    
+
     size_t end = s.find('>', start + 1);
     if (end == string::npos)
         return "";
@@ -1456,7 +1457,7 @@ static string _localise_shop_name(const string& context, const string& value)
 {
     static const string suffixes[] =
     {
-        "Shoppe", "Boutique", "Emporium", "Shop", 
+        "Shoppe", "Boutique", "Emporium", "Shop",
         "General Store", "Distillery", "Assorted Antiques"
     };
 
@@ -1485,7 +1486,7 @@ static string _localise_shop_name(const string& context, const string& value)
     shop_name = cxlate(context, shop_name, false);
     if (shop_name.empty())
         return "";
-    
+
     // put owner name back
     shop_name = replace_first(shop_name, "@Owner@", owner);
 
@@ -2190,7 +2191,7 @@ string localise(const string& text_in, const map<string, string>& params, bool l
         return "";
 
     _context = "";
-    string text;   
+    string text;
     if (!localise_text || !localisation_active())
     {
         text = text_in;
@@ -2285,4 +2286,67 @@ string localise_contextual(const string& context, const string& text_en)
         return text_en;
     else
         return _localise_string(context, text_en);
+}
+
+/**
+ * Localise a player title
+ *
+ * We can't localise at point of generation because we need the English version
+ * to be stored in the scores file, so we have to deconstruct after the fact.
+ */
+string localise_player_title(const string& text)
+{
+    if (text.empty() || !localisation_active())
+        return text;
+
+    // try simple translation first
+    string result = xlate(text, false);
+    if (!result.empty())
+        return result;
+
+    string determiner;
+    string title;
+    if (starts_with(text, "the "))
+    {
+        determiner = text.substr(0, 4);
+        title = text.substr(4);
+    }
+    else
+        title = text;
+
+    vector<string> vtitles;
+    get_variable_player_titles(vtitles);
+
+    for (const string& vtitle: vtitles)
+    {
+        size_t param_start = vtitle.find('@');
+        size_t param_end = vtitle.rfind('@');
+        if (param_start == string::npos || param_start == param_end)
+            continue;
+
+        string param = vtitle.substr(param_start, param_end - param_start);
+
+        string rest;
+        if (param_start == 0)
+        {
+            // param is at start
+            rest = vtitle.substr(param_end+1);
+            if (!ends_with(title, rest))
+                continue;
+        }
+        else if (param_end == vtitle.length() - 1)
+        {
+            // param is at end
+            rest = vtitle.substr(0, param_start);
+            if (!starts_with(title, rest))
+                continue;
+        }
+
+        string param_name = param.substr(1, param.length()-2);
+        string param_val = replace_first(title, rest, "");
+        map<string, string> params = { { param_name, param_val } };
+        return localise(determiner + vtitle, params);
+    }
+
+    return text;
 }

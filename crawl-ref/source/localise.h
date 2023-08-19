@@ -107,3 +107,7 @@ string localise(const string& text, const map<string, string>& params,
  */
 string localise_contextual(const string& context, const string& text_en);
 
+/**
+ * Localise a player title
+ */
+string localise_player_title(const string& text);

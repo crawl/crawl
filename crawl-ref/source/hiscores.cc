@@ -2075,7 +2075,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
     // Please excuse the following bit of mess in the name of flavour ;)
     if (verbose)
     {
-        desc += localise("the " + title);
+        desc += localise_player_title("the " + title);
     }
     else
     {
