@@ -718,9 +718,14 @@ scorefile_entry::scorefile_entry(int dam, mid_t dsource, int dtype,
 {
     reset();
 
+    // we want the scores to be stored in English, so...
+    pause_localisation();
+
     init_death_cause(dam, dsource, dtype, aux, dsource_name);
     if (!death_cause_only)
         init(dt);
+
+    unpause_localisation();
 }
 
 scorefile_entry::scorefile_entry()
