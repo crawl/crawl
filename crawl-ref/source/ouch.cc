@@ -39,6 +39,7 @@
 #include "invent.h"
 #include "item-prop.h"
 #include "libutil.h"
+#include "localise.h"
 #include "message.h"
 #include "mgen-data.h"
 #include "mon-death.h"
@@ -1004,6 +1005,9 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
             _xom_checks_damage(death_type, dam, source);
 
+            // pause localisation becuase notes should be in English
+            pause_localisation();
+
             // for note taking
             string damage_desc;
             if (!see_source)
@@ -1017,6 +1021,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
             take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max,
                            damage_desc.c_str()));
+
+            unpause_localisation();
 
             _deteriorate(dam);
             _yred_mirrors_injury(dam, source);
@@ -1099,8 +1105,11 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     {
         if (crawl_state.test || you.wizard || you.suppress_wizard || (you.explore && !you.lives))
         {
+            // pause localisation becuase notes should be in English
+            pause_localisation();
             const string death_desc
                 = se.death_description(scorefile_entry::DDV_VERBOSE);
+            unpause_localisation();
 
             dprf("Damage: %d; Hit points: %d", dam, you.hp);
 
@@ -1126,12 +1135,17 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     }
 
     // Okay, so you're dead.
+    pause_localisation();
     take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
                     se.death_description(scorefile_entry::DDV_NORMAL).c_str()),
               true);
+    unpause_localisation();
+
     if (you.lives && !non_death)
     {
+        pause_localisation();
         mark_milestone("death", lowercase_first(se.long_kill_message()).c_str());
+        unpause_localisation();
 
         you.deaths++;
         you.lives--;
