@@ -614,8 +614,25 @@ vector<stash_search_result> ShopInfo::matches_search(
 
     no_notes nx;
 
-    const string shoptitle = shop_name(shop) + (shop.stock.empty() ? "*" : "");
-    if (search.matches(shoptitle + " " + prefix + " {shop}"))
+    string name = shop_name(shop);
+    string empty_mark = (shop.stock.empty() ? "*" : "");
+    string shoptitle = name + empty_mark;
+    bool matched = search.matches(shoptitle + " " + prefix + " {shop}");
+
+    if (localisation_active())
+    {
+        // overwrite English shop name with name in active language
+        shoptitle = localise(name) + empty_mark;
+        if (!matched)
+        {
+            const string full_spec = shoptitle + " " + localise(prefix) +
+                                     localise(" {shop}");
+            if (search.matches(full_spec))
+                matched = true;
+        }
+    }
+
+    if (matched)
     {
         stash_search_result res;
         res.match = shoptitle;
@@ -625,7 +642,8 @@ vector<stash_search_result> ShopInfo::matches_search(
         res.pos.pos = shop.pos;
         results.push_back(res);
         // if the player is just searching for shops, don't show contents
-        if (search.matches(prefix + " {shop}")
+        if ((search.matches(prefix + " {shop}") ||
+             search.matches(localise(prefix) + localise(" {shop}")))
             && search.tostring() != "." && search.tostring() != "..")
         {
             return results;
