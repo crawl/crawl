@@ -4125,6 +4125,12 @@ VISUAL:@The_monster@ twirls @possessive@ moustache.
 @The_monster@ calls on the powers of shadow!
 
 @The_monster@ brags, "I can call spirits from the vasty deep."
+%%%%
+Eustachio triumphant
+
+VISUAL:@The_monster@ twirls @possessive@ moustache.
+
+@The_monster@ says, "Such is the fate of all honourless rascals."
 ## END Eustachio ##
 %%%%
 ############ FRANCES ### A warrior who bested a Pandemonium Lord
