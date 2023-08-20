@@ -7,6 +7,7 @@
 #include "act-iter.h"
 #include "god-passive.h"
 #include "tag-version.h"
+#include "timed-effects.h"
 
 static void _end_invis()
 {
@@ -663,6 +664,7 @@ static const duration_def duration_data[] =
               mprf(MSGCH_RECOVERY, "You can read scrolls again.");
       }}}},
     { DUR_REVELATION, 0, "", "", "revelation", "", D_NO_FLAGS, {{""}}},
+    { DUR_BINDING_SIGIL_WARNING, 0, "", "", "", "", D_EXPIRES, {{"", maybe_show_binding_sigil_duration_warning}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

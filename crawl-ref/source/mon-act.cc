@@ -261,11 +261,12 @@ static bool _swap_monsters(monster& mover, monster& moved)
 
     // If the target monster is constricted it is stuck
     // and not eligible to be swapped with
-    if (moved.is_constricted())
+    if (moved.is_constricted() || moved.has_ench(ENCH_BOUND))
     {
-        dprf("%s fails to swap with %s, constricted.",
+        dprf("%s fails to swap with %s, %s.",
             mover.name(DESC_THE).c_str(),
-            moved.name(DESC_THE).c_str());
+            moved.name(DESC_THE).c_str(),
+            moved.is_constricted() ? "constricted" : "bound in place");
             return false;
     }
 
@@ -2591,6 +2592,7 @@ static bool _mons_can_displace(const monster* mpusher,
     if (mons_is_confused(*mpusher) || mons_is_confused(*mpushee)
         || mpusher->cannot_act() || mpusher->is_stationary()
         || mpusher->is_constricted() || mpushee->is_constricted()
+        || mpusher->has_ench(ENCH_BOUND) || mpushee->has_ench(ENCH_BOUND)
         || (!_same_tentacle_parts(mpusher, mpushee)
            && (mpushee->cannot_act() || mpushee->is_stationary()))
         || mpusher->asleep() || mpushee->caught())
@@ -3146,6 +3148,11 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
             return true;
         }
     }
+
+    // We should have handled all cases of a monster attempting to attack instead of *just* move, so it should fine to simply silently
+    // stand in place here.
+    if (mons.has_ench(ENCH_BOUND))
+        return false;
 
     ASSERT(!cell_is_runed(f)); // should be checked in mons_can_traverse
 

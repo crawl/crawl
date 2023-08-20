@@ -951,6 +951,35 @@ void timeout_tombs(int duration)
     }
 }
 
+void maybe_show_binding_sigil_duration_warning()
+{
+    for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
+    {
+        map_terrain_change_marker *marker =
+                dynamic_cast<map_terrain_change_marker*>(mark);
+        if (marker->change_type == TERRAIN_CHANGE_BINDING_SIGIL &&
+            you.see_cell(marker->pos))
+        {
+            mprf(MSGCH_DURATION, "Your binding sigil wavers.");
+        }
+    }
+}
+
+void timeout_binding_sigils()
+{
+    for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
+    {
+        map_terrain_change_marker *marker =
+                dynamic_cast<map_terrain_change_marker*>(mark);
+        if (marker->change_type == TERRAIN_CHANGE_BINDING_SIGIL)
+        {
+            revert_terrain_change(marker->pos, TERRAIN_CHANGE_BINDING_SIGIL);
+            if (you.see_cell(marker->pos))
+                mprf(MSGCH_DURATION, "Your binding sigil disappears.");
+        }
+    }
+}
+
 void timeout_terrain_changes(int duration, bool force)
 {
     if (!duration && !force)

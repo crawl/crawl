@@ -1194,6 +1194,16 @@ Shock spell
 
 Throws a bouncing bolt of electricity. It bypasses half of defenders' armour.
 %%%%
+Sigil of Binding spell
+
+Inscribes a pair of magical sigils on the floor nearby which will prevent
+anyone who steps onto them (including the caster themselves) from taking another
+step until the spell wears off. Flying creatures are unaffected and especially
+powerful foes may break free more quickly.
+
+Only one set of sigils can be maintained at a time and attempting to fly over
+your own sigil will immediately disrupt its magic and render it harmless.
+%%%%
 Silence spell
 
 Eliminates all sound near the caster. This makes reading scrolls, casting

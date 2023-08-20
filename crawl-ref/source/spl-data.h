@@ -3540,6 +3540,17 @@ static const struct spell_desc spelldata[] =
     TILEG_KISS_OF_DEATH,
 },
 
+{
+    SPELL_SIGIL_OF_BINDING, "Sigil of Binding",
+    spschool::hexes,
+    spflag::none,
+    3,
+    100,
+    -1, -1,
+    0,
+    TILEG_ERROR,
+},
+
 // Not an actual spell - dummy entry for (player) Green Draconian breath.
 {
     SPELL_MEPHITIC_BREATH, "Mephitic Breath",

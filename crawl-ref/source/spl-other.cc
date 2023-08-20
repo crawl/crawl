@@ -23,6 +23,7 @@
 #include "religion.h"
 #include "spl-util.h"
 #include "terrain.h"
+#include "timed-effects.h"
 
 spret cast_sublimation_of_blood(int pow, bool fail)
 {
@@ -522,4 +523,128 @@ spret cast_intoxicate(int pow, bool fail, bool tracer)
     }
 
     return spret::success;
+}
+
+spret cast_sigil_of_binding(int pow, bool fail, bool tracer)
+{
+    fail_check();
+
+    // Fill list of viable locations to create the sigil (keeping separate lists
+    // for distance 1 and 2)
+    vector<coord_def> sigil_pos_d1;
+    vector<coord_def> sigil_pos_d2;
+    for (radius_iterator ri(you.pos(), 2, C_SQUARE); ri; ++ri)
+    {
+        if (you.see_cell(*ri) && env.grid(*ri) == DNGN_FLOOR
+            && (!actor_at(*ri) || (actor_at(*ri) && tracer && !you.can_see(*actor_at(*ri)))))
+        {
+            if (grid_distance(you.pos(), *ri) == 1)
+                sigil_pos_d1.push_back(*ri);
+            else
+                sigil_pos_d2.push_back(*ri);
+        }
+    }
+
+    // Remove any old sigil that may still be active
+    if (!tracer)
+        timeout_binding_sigils();
+
+    // If the player knows there are no valid places for a sigil, abort. But if invisible monsters are standing on the
+    // only valid locations, we will need to simply fail at cast time.
+    if (sigil_pos_d1.empty() && sigil_pos_d2.empty())
+    {
+        if (tracer)
+        {
+            mpr("This is no room nearby to place a sigil!");
+            return spret::abort;
+        }
+        else
+        {
+            mpr("Your attempt to inscribe a sigil of binding fails!");
+            return spret::fail;
+        }
+    }
+
+    int dur = random_range(5 + div_rand_round(pow, 4), 8 + div_rand_round(pow, 2)) * BASELINE_DELAY;
+    // Now select a random spot for each range and put the sigil there - attempting
+    // to favor placing the sigils in two positions are are non-adjacent.
+    shuffle_array(sigil_pos_d1);
+    shuffle_array(sigil_pos_d2);
+
+    if (!sigil_pos_d1.empty())
+    {
+        temp_change_terrain(sigil_pos_d1[0], DNGN_BINDING_SIGIL, dur,
+                            TERRAIN_CHANGE_BINDING_SIGIL, you.mid);
+    }
+
+    bool non_adj_found = false;
+    for (unsigned int i = 0; i < sigil_pos_d2.size(); ++i)
+    {
+        // Skip adjacent grids on first pass
+        if (grid_distance(sigil_pos_d1[0], sigil_pos_d2[i]) <= 1)
+            continue;
+
+        temp_change_terrain(sigil_pos_d2[i], DNGN_BINDING_SIGIL, dur,
+                            TERRAIN_CHANGE_BINDING_SIGIL, you.mid);
+        non_adj_found = true;
+        break;
+    }
+
+    // If we couldn't find a non-adjacent position to put the second sigil, just
+    // take any viable space instead.
+    if (!non_adj_found)
+    {
+        temp_change_terrain(sigil_pos_d2[0], DNGN_BINDING_SIGIL, dur,
+                            TERRAIN_CHANGE_BINDING_SIGIL, you.mid);
+    }
+
+    if (!sigil_pos_d1.empty() && !sigil_pos_d2.empty())
+        mpr("You inscribe a pair of binding sigils nearby!");
+    else
+        mpr("You inscribe a binding sigil nearby!");
+
+    // Schedule a duration warning exactly 2 turns before our sigils expire.
+    you.set_duration(DUR_BINDING_SIGIL_WARNING, (dur / BASELINE_DELAY) - 2);
+    return spret::success;
+}
+
+void trigger_binding_sigil(actor& actor)
+{
+    if (actor.is_player())
+    {
+        if (actor.airborne())
+        {
+            mpr("Your binding sigil unravels as you pass over it.");
+            revert_terrain_change(actor.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
+        }
+        else
+        {
+            mpr("You step onto the binding sigil and are held in place!");
+
+            // Player self-bind duration does *not* scale with spellpower, so the
+            // spell can never get 'worse' in any way from training it.
+            you.increase_duration(DUR_LOCKED_DOWN, random_range(2, 4));
+            revert_terrain_change(actor.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
+        }
+    }
+    else
+    {
+        monster* m = actor.as_monster();
+        if (m->airborne())
+            simple_monster_message(*m, " passes harmlessly over your binding sigil.");
+        else
+        {
+            int pow = calc_spell_power(SPELL_SIGIL_OF_BINDING);
+            int dur = max(2, random_range(4 + pow / 12, 8 + pow / 6)
+                          - div_rand_round(m->get_hit_dice(), 4)) * BASELINE_DELAY;
+
+            if (m->body_size() == SIZE_GIANT)
+                dur /= 2;
+
+            if (m->add_ench(mon_enchant(ENCH_BOUND, 0, &you, dur)))
+                simple_monster_message(*m, " steps onto your binding sigil and is bound in place!", MSGCH_FRIEND_SPELL);
+
+            revert_terrain_change(actor.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
+        }
+    }
 }

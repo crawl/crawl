@@ -351,6 +351,7 @@ enum dungeon_feature_type
     DNGN_EXIT_TARTARUS,
     DNGN_RUNELIGHT,
     DNGN_MUD,
+    DNGN_BINDING_SIGIL,
 #endif
 
     NUM_FEATURES

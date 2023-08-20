@@ -72,6 +72,7 @@
 #include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
+#include "spl-other.h"
 #include "spl-util.h"
 #include "sprint.h"
 #include "stairs.h"
@@ -569,6 +570,9 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         trap_def* ptrap = trap_at(you.pos());
         if (ptrap)
             ptrap->trigger(you);
+
+        if (env.grid(you.pos()) == DNGN_BINDING_SIGIL)
+            trigger_binding_sigil(you);
     }
 
     if (stepped)

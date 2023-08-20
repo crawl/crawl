@@ -536,6 +536,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_UNKNOWN_ALTAR;
     case DNGN_UNKNOWN_PORTAL:
         return TILE_DNGN_UNKNOWN_PORTAL;
+    case DNGN_BINDING_SIGIL:
+        return TILE_SIGIL_RHOMBUS;
     default:
         return TILE_DNGN_ERROR;
     }
@@ -558,7 +560,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
                         && feat != DNGN_FLOOR
                         && feat != DNGN_UNSEEN
                         && feat != DNGN_PASSAGE_OF_GOLUBRIA
-                        && feat != DNGN_MALIGN_GATEWAY;
+                        && feat != DNGN_MALIGN_GATEWAY
+                        && feat != DNGN_BINDING_SIGIL;
     if (override && can_override)
         return override;
 
@@ -2251,6 +2254,7 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_CONTAM_LIGHT, TILEI_GLOW_LIGHT },
     { MB_CONTAM_HEAVY, TILEI_GLOW_HEAVY },
     { MB_PAIN_BOND, TILEI_PAIN_BOND },
+    { MB_BOUND, TILEI_CONSTRICTED},     // XXX: Terrible placeholder, since this doesn't do damage. Replace as soon as possible.
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
