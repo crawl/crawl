@@ -879,6 +879,20 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
         return false;
 }
 
+// Returns true if the player can wear at least some kind of armour.
+// False for species that can't ever armour, and in extreme Octopode cases.
+bool player_can_use_armour()
+{
+    if (you.has_mutation(MUT_NO_ARMOUR))
+        return false;
+
+    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
+        if (you_can_wear(static_cast<equipment_type>(i)) != false)
+            return true;
+
+    return false;
+}
+
 bool player_has_feet(bool temp, bool include_mutations)
 {
     if (you.has_innate_mutation(MUT_CONSTRICTING_TAIL)

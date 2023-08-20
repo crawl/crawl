@@ -16,6 +16,7 @@
 
 #include "abyss.h"
 #include "act-iter.h"
+#include "acquire.h"
 #include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
@@ -441,6 +442,11 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_OKAWARU_DUEL, "Duel",
             7, 0, 10, LOS_MAX_RANGE, {fail_basis::invo, 80, 4, 20},
             abflag::target | abflag::not_self },
+        { ABIL_OKAWARU_GIFT_WEAPON, "Receive Weapon",
+            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
+        { ABIL_OKAWARU_GIFT_ARMOUR, "Receive Armour",
+            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
+
 
         // Makhleb
         { ABIL_MAKHLEB_MINOR_DESTRUCTION, "Minor Destruction",
@@ -1101,6 +1107,19 @@ ability_type fixup_ability(ability_type ability)
         else
             return ability;
 
+    case ABIL_OKAWARU_GIFT_ARMOUR:
+        if (you.props.exists(OKAWARU_ARMOUR_GIFTED_KEY)
+            || !player_can_use_armour())
+        {
+            return ABIL_NON_ABILITY;
+        }
+        else
+            return ability;
+
+    case ABIL_OKAWARU_GIFT_WEAPON:
+        if (you.props.exists(OKAWARU_WEAPON_GIFTED_KEY))
+            return ABIL_NON_ABILITY;
+        // fall through
     case ABIL_TSO_BLESS_WEAPON:
     case ABIL_KIKU_BLESS_WEAPON:
     case ABIL_LUGONU_BLESS_WEAPON:
@@ -1670,6 +1689,16 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         {
             if (!quiet)
                 mpr("You are already engaged in single combat!");
+            return false;
+        }
+        return true;
+
+    case ABIL_OKAWARU_GIFT_WEAPON:
+    case ABIL_OKAWARU_GIFT_ARMOUR:
+        if (feat_eliminates_items(env.grid(you.pos())))
+        {
+            if (!quiet)
+                mpr("Any gift you received here would fall and be lost!");
             return false;
         }
         return true;
@@ -2932,6 +2961,16 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_OKAWARU_DUEL:
         return okawaru_duel(beam.target, fail);
 
+    case ABIL_OKAWARU_GIFT_WEAPON:
+        if (!okawaru_gift_weapon())
+            return spret::abort;
+        break;
+
+    case ABIL_OKAWARU_GIFT_ARMOUR:
+        if (!okawaru_gift_armour())
+            return spret::abort;
+        break;
+
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
     {
         int power = you.skill(SK_INVOCATIONS, 1)
@@ -3967,7 +4006,11 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_TSO_BLESS_WEAPON:
     case ABIL_KIKU_BLESS_WEAPON:
     case ABIL_LUGONU_BLESS_WEAPON:
+    case ABIL_OKAWARU_GIFT_WEAPON:
         first_slot = letter_to_index('W');
+        break;
+    case ABIL_OKAWARU_GIFT_ARMOUR:
+        first_slot = letter_to_index('E');
         break;
     case ABIL_CONVERT_TO_BEOGH:
         first_slot = letter_to_index('Y');

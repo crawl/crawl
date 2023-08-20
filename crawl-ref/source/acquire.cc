@@ -21,6 +21,7 @@
 #include "colour.h"
 #include "describe.h"
 #include "dungeon.h"
+#include "god-abil.h"
 #include "god-item.h"
 #include "god-passive.h"
 #include "item-name.h"
@@ -518,7 +519,7 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/, int agen
         if (two_handed && you.get_mutation_level(MUT_MISSING_HAND))
             continue;
 
-        // For non-Trog/Okawaru acquirements, give a boost to high-end items.
+        // For non-Trog acquirements, give a boost to high-end items.
         if (!divine && !is_range_weapon(item_considered))
         {
             if (acqweight < 500)
@@ -785,11 +786,8 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
     COMPILE_CHECK(ARRAYSZ(_subtype_finders) == NUM_OBJECT_CLASSES);
     ASSERT(class_wanted != OBJ_RANDOM);
 
-    if (class_wanted == OBJ_ARMOUR && you.has_mutation(MUT_NO_ARMOUR)
-        || class_wanted == OBJ_WEAPONS && you.has_mutation(MUT_NO_GRASPING)
-        || you.species == SP_OCTOPODE && class_wanted == OBJ_ARMOUR
-           && you.has_mutation(MUT_MISSING_HAND)
-           && bool(!you_can_wear(EQ_HELMET)))
+    if (class_wanted == OBJ_ARMOUR && !player_can_use_armour()
+        || class_wanted == OBJ_WEAPONS && you.has_mutation(MUT_NO_GRASPING))
     {
         return OBJ_RANDOM;
     }
@@ -1232,7 +1230,7 @@ int acquirement_create_item(object_class_type class_wanted,
 {
     ASSERT(class_wanted != OBJ_RANDOM);
 
-    const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM
+    const bool divine = (agent == GOD_XOM
                          || agent == GOD_TROG
 #if TAG_MAJOR_VERSION == 34
                          || agent == GOD_PAKELLAS
@@ -1469,13 +1467,14 @@ class AcquireMenu : public InvMenu
     friend class AcquireEntry;
 
     CrawlVector &acq_items;
+    string items_key;
 
     void init_entries();
     string get_keyhelp(bool unused) const override;
     bool examine_index(int i) override;
     bool skip_process_command(int keyin) override;
 public:
-    AcquireMenu(CrawlVector &aitems);
+    AcquireMenu(CrawlVector &aitems, string ikey);
 };
 
 class AcquireEntry : public InvEntry
@@ -1506,10 +1505,11 @@ public:
     }
 };
 
-AcquireMenu::AcquireMenu(CrawlVector &aitems)
+AcquireMenu::AcquireMenu(CrawlVector &aitems, string ikey)
     : InvMenu(MF_SINGLESELECT | MF_QUIET_SELECT
               | MF_ALLOW_FORMATTING | MF_INIT_HOVER),
-      acq_items(aitems)
+      acq_items(aitems),
+      items_key(ikey)
 {
     menu_action = ACT_EXECUTE;
     action_cycle = CYCLE_TOGGLE;
@@ -1522,9 +1522,9 @@ AcquireMenu::AcquireMenu(CrawlVector &aitems)
     set_title("Choose an item to acquire.");
 }
 
-static void _create_acquirement_item(item_def &item)
+static void _create_acquirement_item(item_def &item, string items_key)
 {
-    auto &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
+    auto &acq_items = you.props[items_key].get_vector();
 
     // Now that we have a selection, mark any generated unrands as not having
     // been generated, so they go back in circulation. Exclude the selected
@@ -1552,12 +1552,13 @@ static void _create_acquirement_item(item_def &item)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     acq_items.clear();
-    you.props.erase(ACQUIRE_ITEMS_KEY);
+    you.props.erase(items_key);
 }
 
 void AcquireMenu::init_entries()
 {
     menu_letter ckey = 'a';
+    string key = items_key;
     for (item_def& item : acq_items)
     {
         auto newentry = make_unique<AcquireEntry>(item);
@@ -1566,7 +1567,7 @@ void AcquireMenu::init_entries()
         add_entry(move(newentry));
     }
 
-    on_single_selection = [this](const MenuEntry& item)
+    on_single_selection = [this, key](const MenuEntry& item)
     {
         // update the more with a y/n prompt
         update_more();
@@ -1579,7 +1580,7 @@ void AcquireMenu::init_entries()
         }
 
         item_def &acq_item = *static_cast<item_def*>(item.data);
-        _create_acquirement_item(acq_item);
+        _create_acquirement_item(acq_item, key);
 
         return false;
     };
@@ -1640,11 +1641,13 @@ bool AcquireMenu::skip_process_command(int keyin)
     return Menu::skip_process_command(keyin);
 }
 
-static item_def _acquirement_item_def(object_class_type item_type)
+static item_def _acquirement_item_def(object_class_type item_type,
+                                      bool divine = false)
 {
     item_def item;
 
-    const int item_index = acquirement_create_item(item_type, AQ_SCROLL, true);
+    const int item_index = acquirement_create_item(item_type,
+        divine ? (int)you.religion : (int)AQ_SCROLL, true);
 
     if (item_index != NON_ITEM)
     {
@@ -1715,7 +1718,7 @@ void make_acquirement_items()
     // Gold is guaranteed.
     auto gold_item = _acquirement_item_def(OBJ_GOLD);
     if (gold_item.defined())
-            acq_items.push_back(gold_item);
+        acq_items.push_back(gold_item);
 }
 
 /*
@@ -1745,12 +1748,77 @@ bool acquirement_menu()
     }
     else if (index >= 1 && index <= acq_items.size())
     {
-        _create_acquirement_item(acq_items[index - 1]);
+        _create_acquirement_item(acq_items[index - 1], ACQUIRE_ITEMS_KEY);
         return true;
     }
 
-    AcquireMenu acq_menu(acq_items);
+    AcquireMenu acq_menu(acq_items, ACQUIRE_ITEMS_KEY);
     acq_menu.show();
 
     return !you.props.exists(ACQUIRE_ITEMS_KEY);
+}
+
+static void _make_okawaru_gifts(object_class_type gift_type)
+{
+    ASSERT(gift_type == OBJ_WEAPONS || gift_type == OBJ_ARMOUR);
+
+    const string key = gift_type == OBJ_WEAPONS ? OKAWARU_WEAPONS_KEY
+                                                : OKAWARU_ARMOUR_KEY;
+    CrawlVector &acq_items = you.props[key].get_vector();
+    acq_items.empty();
+
+    while (acq_items.size() < 4)
+    {
+        auto item = _acquirement_item_def(gift_type, true);
+        if (item.defined())
+            acq_items.push_back(item);
+    }
+}
+
+bool okawaru_gift_weapon()
+{
+    ASSERT(!you.props.exists(OKAWARU_WEAPON_GIFTED_KEY));
+
+    if (!you.props.exists(OKAWARU_WEAPONS_KEY))
+        _make_okawaru_gifts(OBJ_WEAPONS);
+
+    auto &acq_items = you.props[OKAWARU_WEAPONS_KEY].get_vector();
+
+    simple_god_message(" offers you a choice of weapons!");
+
+    AcquireMenu acq_menu(acq_items, OKAWARU_WEAPONS_KEY);
+    acq_menu.show();
+
+    // Nothing selected yet.
+    if (you.props.exists(OKAWARU_WEAPONS_KEY))
+        return false;
+
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
+    you.props[OKAWARU_WEAPON_GIFTED_KEY] = true;
+
+    return true;
+}
+
+bool okawaru_gift_armour()
+{
+    ASSERT(!you.props.exists(OKAWARU_ARMOUR_GIFTED_KEY));
+
+    if (!you.props.exists(OKAWARU_ARMOUR_KEY))
+        _make_okawaru_gifts(OBJ_ARMOUR);
+
+    auto &acq_items = you.props[OKAWARU_ARMOUR_KEY].get_vector();
+
+    simple_god_message(" offers you a choice of armour!");
+
+    AcquireMenu acq_menu(acq_items, OKAWARU_ARMOUR_KEY);
+    acq_menu.show();
+
+    // Nothing selected yet.
+    if (you.props.exists(OKAWARU_ARMOUR_KEY))
+        return false;
+
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
+    you.props[OKAWARU_ARMOUR_GIFTED_KEY] = true;
+
+    return true;
 }

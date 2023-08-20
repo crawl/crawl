@@ -1370,6 +1370,8 @@ namespace quiver
         case ABIL_STOP_RECALL:
         case ABIL_RENOUNCE_RELIGION:
         case ABIL_CONVERT_TO_BEOGH:
+        case ABIL_OKAWARU_GIFT_WEAPON:
+        case ABIL_OKAWARU_GIFT_ARMOUR:
         // high price zone
         case ABIL_ZIN_DONATE_GOLD:
         // not entirely pseudo, but doesn't make a lot of sense to quiver:

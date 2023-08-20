@@ -166,9 +166,12 @@ const vector<vector<god_power>> & get_all_god_powers()
                  "Okawaru will gift you throwing weapons as you gain piety." },
             { 4, ABIL_OKAWARU_FINESSE, "speed up your combat" },
             { 5, ABIL_OKAWARU_DUEL, "enter into single combat with a foe"},
-            { 5, "Okawaru will now gift you equipment as you gain piety.",
-                 "Okawaru will no longer gift you equipment.",
-                 "Okawaru will gift you equipment as you gain piety." },
+            { 6, ABIL_OKAWARU_GIFT_WEAPON,
+                 "Okawaru will grant you a choice of weapons... once.",
+                 "Okawaru is no longer ready to gift you weaponry." },
+            { 6, ABIL_OKAWARU_GIFT_ARMOUR,
+                 "Okawaru will grant you a choice of armour... once.",
+                 "Okawaru is no longer ready to gift you armour." },
         },
 
         // Makhleb
@@ -1399,30 +1402,21 @@ static bool _give_trog_oka_gift(bool forced)
 
     // No use for anything below. (No guarantees this will work right if these
     // mutations can ever appear separately.)
-    if (you.has_mutation(MUT_NO_GRASPING) && you.has_mutation(MUT_NO_ARMOUR))
+    if (you.has_mutation(MUT_NO_GRASPING))
         return false;
 
-    const bool want_equipment = forced
-                                || (you.piety >= piety_breakpoint(4)
-                                    && random2(you.piety) > 120
-                                    && one_chance_in(4));
-    // Oka can gift throwing weapons, but if equipment is successful, we choose
-    // equipment unless the gift was forced by wizard mode. In that case,
-    // throwing weapons, other weapons, and armour all get equal weight below.
+    const bool want_weapons = you_worship(GOD_TROG)
+                              && (forced || you.piety >= piety_breakpoint(4)
+                                            && random2(you.piety) > 120
+                                            && one_chance_in(4));
     const bool want_missiles = you_worship(GOD_OKAWARU)
-                               && (forced
-                                   || !want_equipment && _want_missile_gift());
+                               && (forced || _want_missile_gift());
     object_class_type gift_type;
 
-    if (you_worship(GOD_TROG) && want_equipment)
+    if (want_weapons)
         gift_type = OBJ_WEAPONS;
-    else if (you_worship(GOD_OKAWARU) && (want_equipment || want_missiles))
-    {
-        gift_type = random_choose_weighted(
-                want_equipment, OBJ_WEAPONS,
-                want_equipment, OBJ_ARMOUR,
-                want_missiles,  OBJ_MISSILES);
-    }
+    else if (want_missiles)
+        gift_type = OBJ_MISSILES;
     else
         return false;
 
@@ -1433,9 +1427,6 @@ static bool _give_trog_oka_gift(bool forced)
         break;
     case OBJ_WEAPONS:
         simple_god_message(" grants you a weapon!");
-        break;
-    case OBJ_ARMOUR:
-        simple_god_message(" grants you armour!");
         break;
     default:
         simple_god_message(" grants you bugs!");
@@ -1453,12 +1444,8 @@ static bool _give_trog_oka_gift(bool forced)
     switch (gift_type)
     {
     case OBJ_MISSILES:
-        _inc_gift_timeout(4 + roll_dice(2, 4));
+        _inc_gift_timeout(6 + random2avg(10, 2));
         break;
-    case OBJ_ARMOUR:
-        if (you_worship(GOD_OKAWARU) && gift_type == OBJ_ARMOUR)
-            _inc_gift_timeout(30 + random2avg(15, 2));
-        // intentionally fallthrough to OBJ_WEAPONS
     case OBJ_WEAPONS:
         _inc_gift_timeout(30 + random2avg(19, 2));
         break;
