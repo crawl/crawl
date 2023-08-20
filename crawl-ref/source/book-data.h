@@ -243,6 +243,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Debilitation
     SPELL_SLOW,
+    SPELL_SIGIL_OF_BINDING,
     SPELL_VAMPIRIC_DRAINING,
     SPELL_CONFUSING_TOUCH,
 },
@@ -477,6 +478,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of the Hunter
+    SPELL_SIGIL_OF_BINDING,
     SPELL_CALL_CANINE_FAMILIAR,
     SPELL_PORTAL_PROJECTILE,
     SPELL_LEDAS_LIQUEFACTION,

@@ -1018,6 +1018,13 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " no longer looks unusually toxic.");
         break;
 
+    case ENCH_BOUND:
+        if (!quiet)
+            simple_monster_message(*this, "'s lost momentum returns to it!");
+        add_ench(mon_enchant(ENCH_SWIFT, 1, &you, props[BINDING_SIGIL_DURATION_KEY].get_int()));
+        props.erase(BINDING_SIGIL_DURATION_KEY);
+        break;
+        
     default:
         break;
     }
@@ -1421,6 +1428,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SIMULACRUM:
     case ENCH_NECROTISE:
     case ENCH_CONCENTRATE_VENOM:
+    case ENCH_BOUND:
         decay_enchantment(en);
         break;
 
@@ -2099,6 +2107,7 @@ static const char *enchant_names[] =
     "ring_chaos", "ring_mutation", "ring_fog", "ring_ice", "ring_neg",
     "ring_acid", "ring_miasma", "concentrate_venom", "fire_champion",
     "anguished", "simulacra", "necrotizing", "glowing", "pursuing",
+    "bound",
     "buggy", // NUM_ENCHANTMENTS
 };
 

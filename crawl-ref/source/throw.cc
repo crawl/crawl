@@ -73,11 +73,11 @@ public:
     {
         set_prompt();
         need_redraw = false; // XX simplify
-        if (!targeted()
-            || is_pproj_active() && action.affected_by_pproj())
-        {
-            needs_path = false;
-        }
+-       if (!targeted()
+-            || is_pproj_active() && action.affected_by_pproj())
+-       {
+             needs_path = false;
+-       }
     }
 
     // targeting_behaviour API
