@@ -1339,7 +1339,7 @@ of Ashenzari
 ##################
 %%%%
 Space bends around you
-Der Raum biegt sich um Euch herum
+Der Raum krümmt sich um Euch herum
 %%%%
 Space bends around %s
 Der Raum biegt sich um {acc}%s herum
@@ -2340,10 +2340,10 @@ Something is bathed in an unholy light.
 
 %%%%
 Pain shoots through your body
-
+Schmerz schießt durch Euren Körper
 %%%%
 @The_monster@ convulses with pain
-
+@The_monster@ krampft vor Schmerz
 %%%%
 Something is bathed in an unholy light
 
@@ -6589,7 +6589,7 @@ Space bends sharply around you!
 
 %%%%
 Space bends around you!
-
+Der Raum krümmt sich um Euch herum!
 %%%%
 The flow of time bends around you.
 Der Fluss der Zeit biegt sich um Euch.
@@ -16349,7 +16349,7 @@ You are wearing %s.
 Ihr habt {acc}%s an.
 %%%%
 You cannot blink.
-Ihr könnt nicht flimmern.
+Ihr könnt nicht blinzeln.
 %%%%
 You cannot teleport.
 Ihr könnt Euch nicht teleportieren.
@@ -18598,7 +18598,7 @@ chance to affect: %d%%
 Chance auf Wirkung: %d%%
 %%%%
 will blink
-wird blinken
+wird blinzeln
 %%%%
 chance to teleport: %d%%
 Chance zu teleportieren: %d%%
@@ -19202,542 +19202,575 @@ Etwas ist in ein unheiliges Licht getaucht!
 # spl-miscast.cc
 ##################
 %%%%
-Sparks fly from your @hands@
-
+Sparks fly from @your_hand@
+Funken fliegen aus {dat}@your_hand@
+%%%%
+Sparks fly from @your_hands@
+Funken fliegen aus {dat}@your_hands@
 %%%%
 The air around you crackles with energy
-
+Die Luft um Euch herum knistert vor Energie
 %%%%
 You feel a strange surge of energy
-
+Ihr spürt einen seltsamen Energieschub
 %%%%
 Strange energies run through your body
-
+Seltsame Energien durchströmen Euren Körper
 %%%%
 A wave of violent energy washes through your body
-
+Eine Welle heftiger Energie durchspült Euren Körper
 %%%%
 Energy rips through your body
-
+Energie reißt durch Euren Körper
 %%%%
 You are caught in a violent explosion
-
+Ihr werdet von einer gewaltigen Explosion erfasst
 %%%%
 You are blasted with magical energy
-
+Ihr werdet von magischer Energie durchflutet
 %%%%
 Sparks fly from @the_monster@'s @hands@
-
+Funken fliegen aus {gen}@the_monster@ @hands@
 %%%%
 The air around @the_monster@ crackles with energy
-
+Die Luft um {acc}@the_monster@ knistert vor Energie
 %%%%
 @The_monster@ emits a flash of light
-
+@The_monster@ sendet einen Lichtblitz aus
 %%%%
 @The_monster@ lurches violently
-
+@The_monster@ taumelt heftig
 %%%%
 @The_monster@ jerks violently
-
+@The_monster@ ruckt heftig
 %%%%
 @The_monster@ is caught in a violent explosion
-
+@The_monster@ wird von einer heftigen Explosion erfasst
 %%%%
 @The_monster@ is blasted with magical energy
-
+@The_monster@ wird von magischer Energie durchflutet
 %%%%
 A violent explosion happens from out of thin air
-
+Eine gewaltige Explosion kommt aus dem Nichts
 %%%%
 There is a sudden explosion of magical energy
-
+Es gibt eine plötzliche Explosion von magischer Energie
 %%%%
 You feel off-balance for a moment
-
+Ihr fühlt Euch für einen Moment aus dem Gleichgewicht gebracht
 %%%%
 Multicoloured lights dance before your eyes
-
+Mehrfarbige Lichter tanzen vor Euren Augen
 %%%%
 You feel a bit tired
-
+Ihr fühlt Euch ein wenig müde
 %%%%
 The light around you dims momentarily
-
+Das Licht um Euch herum verdunkelt sich für einen Moment
 %%%%
 You hear an indistinct dissonance whispering inside your mind
-
+Ihr hört eine undeutliche Dissonanz in Eurem Kopf flüstern
 %%%%
 Waves of light ripple over your body
-
+Wellen von Licht kräuseln sich über Euren Körper
 %%%%
 You feel enfeebled
-
+Ihr fühlt Euch geschwächt
 %%%%
 Magic surges out from your body
-
+Magie strömt aus Eurem Körper
 %%%%
 @The_monster@ looks off-balance for a moment
-
+@The_monster@ scheint für einen Moment aus dem Gleichgewicht zu sein
 %%%%
 Multicoloured lights dance around @the_monster@
-
+Vielfarbige Lichter tanzen um {acc}@the_monster@ herum
 %%%%
 @The_monster@ looks sleepy for a second
-
+@The_monster@ sieht für einen Moment schläfrig aus
 %%%%
 The light around @the_monster@ dims momentarily
-
+Das Licht um {acc}@the_monster@ wird kurzzeitig schwächer
 %%%%
 @The_monster@ twitches
-
+@The_monster@ zuckt
 %%%%
 @The_monster@'s body glows momentarily
-
+Der Körper {gen}@the_monster@ leuchtet kurzzeitig
+%%%%
+@The_monster@ glows momentarily
+@The_monster@ leuchtet kurzzeitig
 %%%%
 Waves of light ripple over @the_monster@'s body
-
+Lichtwellen ziehen über den Körper {gen}@the_monster@
+%%%%
+Waves of light ripple over @the_monster@
+Wellen des Lichts ziehen über {acc}@the_monster@
 %%%%
 Magic surges out from @the_monster@
-
+Magie strömt aus {dat}@the_monster@
 %%%%
 Multicoloured lights dance in the air
-
+Mehrfarbige Lichter tanzen in der Luft
 %%%%
 A patch of light dims momentarily
-
+Ein Lichtfleck verdunkelt Euch für einen Moment
 %%%%
 Magic surges out from thin air
-
+Magie strömt aus der dünnen Luft
 %%%%
 A fistful of eyes flickers past your view
-
+Eine Handvoll Augen flackert an Eurem Blick vorbei
 %%%%
 Distant voices call out in your mind
-
+Ferne Stimmen rufen in Eurem Geist
 %%%%
 Something forms from out of thin air
-
+Etwas formt sich aus der dünnen Luft
 %%%%
 A chorus of moans calls out in your mind
-
+Ein Chor von Stöhnen ertönt in Eurem Geist
 %%%%
 Desperate hands claw out at you
-
+Verzweifelte Hände krallen sich nach Euch
 %%%%
 Desperate hands claw out at @the_monster@
-
+Verzweifelte Hände krallen sich nach {dat}@the_monster@
 %%%%
 Desperate hands claw out at random
-
+Verzweifelte Hände krallen sich willkürlich heraus
 %%%%
 You hear strange and distant voices
-
+Ihr hört fremde und ferne Stimmen
 %%%%
 The world around you seems to dim momentarily
-
+Die Welt um Euch herum scheint sich für einen Moment zu verdunkeln
 %%%%
 You shiver with cold
-
+Ihr zittert vor Kälte
 %%%%
 You sense a malignant aura
-
+Ihr spürt eine bösartige Aura
 %%%%
 You feel very uncomfortable
-
+Ihr fühlt Euch sehr unbehaglich
 %%%%
 You feel horribly lethargic
-
+Ihr fühlt Euch schrecklich lethargisch
 %%%%
 Your flesh rots away
-
+Euer Fleisch verrottet
 %%%%
 Flickering shadows surround you
-
+Flackernde Schatten umgeben Euch
 %%%%
 You are engulfed in negative energy
-
+Ihr seid von negativer Energie umhüllt
 %%%%
 You convulse helplessly as pain tears through your body
-
+Ihr zuckt hilflos zusammen, während der Schmerz Euren Körper zerreißt
 %%%%
 @The_monster@ twitches violently
-
+@The_monster@ zuckt heftig
 %%%%
 @The_monster@ pauses, visibly distraught
-
+@The_monster@ hält inne, sichtlich verzweifelt
 %%%%
 @The_monster@ seems to dim momentarily
-
+@The_monster@ scheint kurzzeitig zu erlöschen
 %%%%
 @The_monster@ shivers with cold
-
+@The_monster@ zittert vor Kälte
 %%%%
 @The_monster@ is briefly tinged with black
-
+@The_monster@ ist kurz schwarz gefärbt
 %%%%
 @The_monster@ scowls horribly
-
+@The_monster@ grinst entsetzlich
 %%%%
 @The_monster@ looks incredibly listless
-
+@The_monster@ sieht unglaublich lustlos aus
 %%%%
 @The_monster@ rots away
-
+@The_monster@ verrottet
 %%%%
 Flickering shadows surround @the_monster@
-
+Flackernde Schatten umgeben {acc}@the_monster@
 %%%%
 @The_monster@ is engulfed in negative energy
-
+@The_monster@ ist von negativer Energie umhüllt
 %%%%
 @The_monster@ convulses helplessly with pain
-
+@The_monster@ zuckt hilflos vor Schmerz
 %%%%
 @The_monster@ seems frightened for a moment
-
+@The_monster@ scheint für einen Moment zu erschrecken
 %%%%
 The air has a black tinge for a moment
-
+Die Luft hat für einen Moment einen schwarzen Schimmer
 %%%%
 Shadows flicker in the thin air
-
+Schatten flackern in der dünnen Luft
 %%%%
 You catch a glimpse of the back of your own head
-
+Ihr erhascht einen Blick auf Euren eigenen Hinterkopf
 %%%%
 You feel a wrenching sensation
-
+Ihr fühlt ein ziehendes Gefühl
 %%%%
 The floor and the ceiling briefly switch places
-
+Der Boden und die Decke tauschen kurz den Platz
 %%%%
 You spin around
-
+Ihr dreht Euch
 %%%%
 The world appears momentarily distorted
-
+Die Welt erscheint für einen Moment verzerrt
 %%%%
 You are caught in a field of spatial distortion
-
+Ihr seid in einem Feld räumlicher Verzerrung gefangen
 %%%%
 Space twists in upon itself
-
+Der Raum verdreht sich in sich selbst
 %%%%
 Space warps crazily around you
-
+Der Raum verformt sich verrückt um Euch herum
 %%%%
 @The_monster@ jerks violently for a moment
-
+@The_monster@ ruckt einen Moment lang heftig
 %%%%
 @The_monster@ spins around
-
+@The_monster@ wirbelt herum
 %%%%
 @The_monster@ appears momentarily distorted
-
+@The_monster@ erscheint kurzzeitig verzerrt
 %%%%
 @The_monster@ scowls
-
+@The_monster@ finster dreinschaut
 %%%%
 @The_monster@ is caught in a field of spatial distortion
-
+@The_monster@ ist in einem Feld räumlicher Verzerrung gefangen
 %%%%
 Space bends around @the_monster@
-
+Der Raum krümmt Euch um {acc}@the_monster@
 %%%%
 Space warps around @the_monster@
-
+Der Raum verzieht Euch um {acc}@the_monster@ herum
 %%%%
 Space warps crazily around @the_monster@
-
+Der Raum verzieht Euch wie verrückt um {acc}@the_monster@ herum
 %%%%
 The air around something crackles with energy
-
+Die Luft um etwas knistert vor Energie
 %%%%
 A piece of empty space twists and distorts
-
+Ein Stück leerer Raum verdreht und verzerrt Euch
 %%%%
 A rift temporarily opens in the fabric of space
-
+Ein Riss öffnet sich vorübergehend in der Struktur des Raums
 %%%%
 Your body is twisted painfully
-
+Euer Körper ist schmerzhaft verdreht
 %%%%
 Your limbs ache and wobble like jelly
-
+Eure Glieder schmerzen und wackeln wie Gelee
 %%%%
 Your body is flooded with distortional energies
-
+Euer Körper wird von verzerrten Energien durchflutet
 %%%%
 You feel very strange
-
+Ihr fühlt Euch sehr seltsam
 %%%%
 There is a strange surge of energy around @the_monster@
-
+Eine seltsame Energiewelle umgibt {acc}@the_monster@
 %%%%
 @The_monster@'s body twists unnaturally
-
+Der Körper {gen}@the_monster@ verdreht sich unnatürlich
+%%%%
+@The_monster@ twists unnaturally
+@The_monster@ verdreht sich unnatürlich
 %%%%
 @The_monster@'s body twists and writhes
-
+Der Körper {gen}@the_monster@ verdreht und windet sich
+%%%%
+@The_monster@ twists and writhes
+@The_monster@ windet und krümmt sich
 %%%%
 @The_monster@'s body is flooded with distortional energies
-
+Der Körper {gen}@the_monster@ wird von verzerrten Energien durchflutet
+%%%%
+@The_monster@ is flooded with distortional energies
+@The_monster@ wird von verzerrten Energien durchflutet
 %%%%
 The thin air crackles with energy
-
+Die dünne Luft knistert vor Energie
 %%%%
 Waves of light ripple in the air
-
+Wellen von Licht kräuseln sich in der Luft
 %%%%
 The air around you burns with energy
-
+Die Luft um Euch herum brennt vor Energie
 %%%%
 Heat runs through your body
-
+Hitze läuft durch Euren Körper
 %%%%
 You feel uncomfortably hot
-
+Ihr fühlt Euch unangenehm heiß
 %%%%
-Fire whirls out from your @hands@
-
+Fire whirls out from @your_hand@
+Feuer wirbelt aus @your_hand@ heraus
+%%%%
+Fire whirls out from @your_hands@
+Feuer wirbelt aus @your_hands@ heraus
 %%%%
 Flames sear your flesh
-
+Flammen versengen Euer Fleisch
 %%%%
 You are blasted with fire
-
+Ihr werdet von Feuer durchbohrt
 %%%%
 You are caught in a fiery explosion
-
+Ihr werdet von einer feurigen Explosion erfasst
 %%%%
 You are blasted with searing flames
-
+Ihr werdet von sengenden Flammen verbrannt
 %%%%
 There is a sudden and violent explosion of flames
-
+Es gibt eine plötzliche und heftige Explosion von Flammen
 %%%%
 The air around @the_monster@ burns with energy
-
+Die Luft um {ac}@the_monster@ brennt vor Energie
 %%%%
 Dim flames ripple over @the_monster@'s body
-
+Dumpfe Flammen züngeln über {gen}@the_monster@ Körper
+%%%%
+Dim flames ripple over @the_monster@
+Dumpfe Flammen kräuseln sich über {acc}@the_monster@
 %%%%
 Fire whirls out @the_monster@'s @hands@
-
+Feuer wirbelt aus {gen}@the_monster@ @hands@
 %%%%
 Flames sear @the_monster@
-
+Flammen versengen {acc}@the_monster@
 %%%%
 @The_monster@ is blasted with fire
-
+@The_monster@ wird mit Feuer beschossen
 %%%%
 @The_monster@ is caught in a fiery explosion
-
+@The_monster@ wird von einer feurigen Explosion erfasst
 %%%%
 @The_monster@ is blasted with searing flames
-
+@The_monster@ wird von sengenden Flammen durchbohrt
 %%%%
 Fire whirls out of nowhere
-
+Feuer wirbelt aus dem Nichts
 %%%%
 A flame briefly burns in thin air
-
+Eine Flamme brennt kurz in dünner Luft
 %%%%
 Fire explodes from out of thin air
-
+Feuer explodiert aus dem Nichts
 %%%%
 A large flame burns hotly for a moment in the thin air
-
+Eine große Flamme brennt einen Moment lang heiß in der dünnen Luft
 %%%%
 A chill runs through your body
-
+Ein Schauer durchfährt Euren Körper
 %%%%
-Your @hands@ feel@hand_conj@ numb with cold
-
+@Your_hand@ feels numb with cold
+@Your_hand@ fühlt sich taub an vor Kälte
+%%%%
+@Your_hands@ feel numb with cold
+@Your_hands@ fühlen sich taub an vor Kälte
 %%%%
 You feel uncomfortably cold
-
+Ihr fühlt Euch unbehaglich kalt
 %%%%
 Frost covers your body
-
+Frost bedeckt Euren Körper
 %%%%
 You feel extremely cold
-
+Ihr fühlt Euch extrem kalt
 %%%%
 You are covered in a thin layer of ice
-
+Ihr seid mit einer dünnen Eisschicht bedeckt
 %%%%
 Heat is drained from your body
-
+Eurem Körper wird die Wärme entzogen
 %%%%
 You are caught in an explosion of ice and frost
-
+Ihr seid gefangen in einer Explosion aus Eis und Frost
 %%%%
 You are encased in ice
-
+Ihr seid in Eis gehüllt
 %%%%
 Frost covers @the_monster@'s body
-
+Frost bedeckt {gen}@the_monster@ Körper
+%%%%
+Frost covers @the_monster@
+Frost bedeckt {acc}@the_monster@
 %%%%
 @The_monster@ shivers
-
+@The_monster@ zittert
 %%%%
 @The_monster@ is covered in a thin layer of ice
-
+@The_monster@ ist von einer dünnen Eisschicht bedeckt
 %%%%
 Heat is drained from @the_monster@
-
+Wärme wird {dat}@the_monster@ entzogen
 %%%%
 @The_monster@ is caught in an explosion of ice and frost
-
+@The_monster@ ist gefangen in einer Explosion aus Eis und Frost
 %%%%
 @The_monster@ is encased in ice
-
+@The_monster@ ist in Eis gehüllt
 %%%%
 Wisps of condensation drift in the air
-
+Kondenswasserfetzen treiben in der Luft
 %%%%
 Ice and frost explode from out of thin air
-
+Eis und Frost explodieren aus dünner Luft
 %%%%
 An unseen figure is encased in ice
-
+Eine unsichtbare Gestalt ist in Eis gehüllt
 %%%%
 Sparks of electricity dance around you
-
+Funken von Elektrizität tanzen um Euch herum
 %%%%
 You are blasted with air
-
+Ihr werdet von Luft durchströmt
 %%%%
 There is a short, sharp shower of sparks
-
+Es gibt einen kurzen, scharfen Funkenregen
 %%%%
 The wind whips around you
-
+Der Wind peitscht um Euch herum
 %%%%
 You feel a sudden electric shock
-
+Ihr spürt einen plötzlichen elektrischen Schlag
 %%%%
 Electricity courses through your body
-
+Elektrizität fließt durch Euren Körper
 %%%%
 You are caught in an explosion of electrical discharges
-
+Ihr werdet von einer Explosion elektrischer Entladungen erfasst
 %%%%
 @The_monster@ bobs in the air for a moment
-
+@The_monster@ schwebt einen Moment lang in der Luft
 %%%%
 Sparks of electricity dance between @the_monster@'s @hands@
-
+Elektrische Funken tanzen zwischen {gen}@the_monster@ @hands@
 %%%%
 @The_monster@ is blasted with air
-
+@The_monster@ wird mit Luft zugeblasen
 %%%%
 @The_monster@ is briefly showered in sparks
-
+@The_monster@ wird kurz mit Funken überschüttet
 %%%%
 The wind whips around @the_monster@
-
+Der Wind peitscht um {acc}@the_monster@
 %%%%
 @The_monster@ is jolted
-
+@The_monster@ wird durchgerüttelt
 %%%%
 @The_monster@ is caught in an explosion of electrical discharges
-
+@The_monster@ wird von einer Explosion elektrischer Entladungen erfasst
 %%%%
 @The_monster@ is struck by twisting air
-
+@The_monster@ wird von einer Luftverwirbelung getroffen
 %%%%
 The wind whips
-
+Der Wind peitscht
 %%%%
 Something invisible sparkles with electricity
-
+Etwas Unsichtbares funkelt mit Elektrizität
 %%%%
 Electrical discharges explode from out of thin air
-
+Elektrische Entladungen explodieren wie aus dem Nichts
 %%%%
 The air madly twists around a spot
-
+Die Luft dreht sich wie verrückt um einen Punkt
 %%%%
-Sand pours from your @hands@
-
+Sand pours from @your_hand@
+Sand ergießt sich aus {dat}@your_hand@
+%%%%
+Sand pours from @your_hands@
+Sand ergießt sich aus {dat}@your_hands@
 %%%%
 You feel a surge of energy from the ground
-
+Ihr spürt einen Energiestoß aus dem Boden
 %%%%
 The floor shifts beneath you alarmingly
-
+Der Boden unter Euch bewegt sich bedrohlich
 %%%%
 You are hit by flying rocks
-
+Ihr werdet von fliegenden Steinen getroffen
 %%%%
 You are blasted with sand
-
+Ihr werdet mit Sand besprengt
 %%%%
 Rocks fall onto you out of nowhere
-
+Felsen fallen aus dem Nichts auf Euch
 %%%%
 You are caught in an explosion of flying shrapnel
-
+Ihr werdet von einer Explosion umherfliegender Schrapnells erfasst
 %%%%
 Sand pours from @the_monster@'s @hands@
-
+Sand ergießt sich aus aus {gen}@the_monster@ @hands@
 %%%%
 @The_monster@ is hit by flying rocks
-
+@The_monster@ wird von fliegenden Steinen getroffen
 %%%%
 @The_monster@ is blasted with sand
-
+@The_monster@ wird mit Sand gestrahlt
 %%%%
 Rocks fall onto @the_monster@ out of nowhere
-
+Aus dem Nichts fallen Steine auf {acc}@the_monster@
 %%%%
 @The_monster@ is caught in an explosion of flying shrapnel
-
+@The_monster@ wird von einer Explosion fliegender Schrapnelle erfasst
 %%%%
 Flying rocks appear out of thin air
-
+Fliegende Steine erscheinen aus dem Nichts
 %%%%
 A miniature sandstorm briefly appears
-
+Ein Miniatur-Sandsturm erscheint kurz
 %%%%
 Rocks fall out of nowhere
-
+Steine fallen aus dem Nichts
 %%%%
 Flying shrapnel explodes from thin air
-
+Fliegende Schrapnelle explodieren aus dem Nichts
 %%%%
 You feel odd
-
+Ihr fühlt Euch seltsam
 %%%%
 You feel rather nauseous for a moment
-
+Ihr fühlt Euch für einen Moment ziemlich übel
 %%%%
 You feel incredibly sick
-
+Ihr fühlt Euch unglaublich krank
 %%%%
 @The_monster@ looks faint for a moment
-
+@The_monster@ sieht für einen Moment schwach aus
 %%%%
 @The_monster@ has an odd expression for a moment
-
+@The_monster@ hat für einen Moment einen merkwürdigen Gesichtsausdruck
 %%%%
 @The_monster@ is briefly tinged with green
-
+@The_monster@ ist kurz grün gefärbt
 %%%%
 @The_monster@ looks rather nauseous for a moment
-
+@The_monster@ sieht für einen Moment ziemlich übel aus
 %%%%
 @The_monster@ looks incredibly sick
-
+@The_monster@ sieht unglaublich krank aus
 %%%%
 The air has a green tinge for a moment
-
+Die Luft hat für einen Moment einen grünen Schimmer
 %%%%
 %s protects you from your miscast necromantic spell!
-%s schützt Euch vor Eurem nekromatischen Fehlzauber!
+%s schützt Euch vor Eurem misslungenen nekromantischen Zauber!
 %%%%
 
 ##################

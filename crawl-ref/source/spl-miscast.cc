@@ -11,6 +11,7 @@
 #include "beam-type.h"
 #include "fight.h"
 #include "god-passive.h"
+#include "localise.h"
 #include "message.h"
 #include "mgen-data.h"
 #include "monster.h"
@@ -35,6 +36,7 @@ struct miscast_datum
 
 static void _do_msg(actor& target, miscast_datum effect, int dam)
 {
+    // noloc section start
     if (!you.see_cell(target.pos()))
         return;
     string msg;
@@ -46,24 +48,35 @@ static void _do_msg(actor& target, miscast_datum effect, int dam)
     else
         msg = *random_iterator(effect.monster_unseen_messages);
 
-    bool plural;
+    bool can_plural;
+    string hand = target.hand_name(false, &can_plural);
+    string hands = target.hand_name(true);
 
-    msg = replace_all(msg, "@hand@",  target.hand_name(false, &plural));
-    msg = replace_all(msg, "@hands@", target.hand_name(true));
-
-    if (plural)
+    if (can_plural)
         msg = replace_all(msg, "@hand_conj@", "");
     else
+    {
         msg = replace_all(msg, "@hand_conj@", "s");
+        msg = replace_all(msg, "@hands@", "@hand@");
+    }
 
     if (target.is_monster())
     {
-        msg = do_mon_str_replacements(msg, *target.as_monster(), S_SILENT);
         if (!mons_has_body(*target.as_monster()))
             msg = replace_all(msg, "'s body", "");
+        msg = do_mon_str_replacements(msg, *target.as_monster(), S_SILENT);
+    }
+    else
+    {
+        map<string, string> params = {
+            { "hand", hand },
+            { "hands", hands },
+        };
+        msg = localise(msg, params);
     }
 
-    attack_strength_message(msg, dam, true);
+    attack_strength_message(msg, dam, false);
+    // noloc section end
 }
 
 static void _ouch(actor& target, actor * source, miscast_source_info mc_info, int dam, beam_type flavour, string cause)

@@ -194,6 +194,12 @@ int main()
     msg = localise("You found it @in_location@", {{"in_location", "in a volcano"}});
     show_result (msg, "Ihr habt diesen Gegenstand in einem Vulkan gefunden");
 
+    msg = localise("Sparks fly from your @hands@", {{"hands", "hands"}});
+    show_result (msg, "Funken fliegen aus Euren Händen");
+
+    msg = localise("Sparks fly from your @hands@", {{"hands", "hand"}});
+    show_result (msg, "Funken fliegen aus Eurer Hand");
+
     you.position = coord_def(10, 10);
     env.grid.init(DNGN_FLOOR);
     env.pgrid.init(FPROP_NONE);

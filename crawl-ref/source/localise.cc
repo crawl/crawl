@@ -2181,29 +2181,85 @@ int localise_char(char ch)
 }
 
 /**
+ * @brief Fix some stuff that only works in English
+ */
+static void _fix_parameters(string& text, map<string, string>& params)
+{
+    if (contains(text, "your @") || contains(text, "Your @"))
+    {
+        // make sure hand number is right (because player may have sacrificed one to Ru)
+        if (contains(text, "your @hands@") || contains(text, "Your @hands@"))
+        {
+            const string* hands = map_find(params, "hands");
+            if (hands != nullptr && !hands->empty())
+            {
+                if (!ends_with(*hands, "s") && !ends_with(*hands, "ae"))
+                {
+                    // actually singular
+                    text = replace_all(text, "@hands@", "@hand@");
+                    params["hand"] = *hands;
+                }
+            }
+        }
+
+        // Translation of "your" may vary depending on grammatical gender/case,
+        // so we need to make the parameter @your_foo@ instead of your @foo@.
+        while (true)
+        {
+            size_t pos = text.find("your @");
+            if (pos == string::npos)
+                pos = text.find("Your @");
+            if (pos == string::npos)
+                break;
+
+            string your = (text[pos] == 'Y' ? "Your" : "your");
+
+            size_t start = pos + strlen("your @");
+            size_t end = text.find('@', start);
+            if (end != string::npos)
+            {
+                string param_name = text.substr(start, end-start);
+                auto iter = params.find(param_name);
+                if (iter != params.end()) {
+                    string param_value = iter->second;
+
+                    param_name = your + "_" + param_name;
+                    param_value = your + " " + param_value;
+                    params[param_name] = param_value;
+                }
+            }
+
+            text = replace_first(text, your + " @", "@" + your + "_");
+        }
+    }
+}
+
+/**
  * Localise a string with embedded @foo@ style parameters
  */
-string localise(const string& text_in, const map<string, string>& params, bool localise_text)
+string localise(const string& text_in, const map<string, string>& params_in, bool localise_text)
 {
     static int nested_calls = 0;
 
     if (text_in.empty())
         return "";
+    
+    string english = replace_keys(text_in, params_in);
+    if (!localisation_active())
+        return english;
+    
+    // check if there's a translation for the completed English string
+    string result = xlate(english, false);
+    if (!result.empty())
+        return result;
 
     _context = "";
-    string text;
-    if (!localise_text || !localisation_active())
+    string text = text_in;
+    map<string, string> params = params_in;
+    if (localise_text)
     {
-        text = text_in;
-    }
-    else
-    {
-        text  = xlate(text_in, false);
-        if (text.empty())
-        {
-            // try to translate completed English string
-            return xlate(replace_keys(text_in, params));
-        }
+        _fix_parameters(text, params);
+        text  = xlate(text, true);
     }
 
     size_t at = 0;

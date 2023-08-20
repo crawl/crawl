@@ -554,7 +554,18 @@ for filename in files:
                     for ss in substrings:
                         strings.append(ss)
                 else:
+                    if 'our @hand' in string:
+                        # create strings for one and two hands (coz Ru)
+                        string = string.replace('your @hand', '@your_hand')
+                        string = string.replace('Your @hand', '@Your_hand')
+                        string2 = string.replace('hands@', 'hand@')
+                        string2 = string2.replace('@hand_conj@', 's')
+                        string = string.replace('@hand_conj@', '')
+                        strings.append(string2)
                     strings.append(string)
+                    if filename == 'spl-miscast.cc' and "'s body" in string:
+                        # string is also used with that substring for monsters that don't have a body
+                        strings.append(string.replace("'s body", ""))
             
 
     # filter out strings we want to ignore

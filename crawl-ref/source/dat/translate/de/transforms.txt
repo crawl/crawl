@@ -134,7 +134,7 @@ your hand
 Eure Hand
 %%%%
 your hands
-Eure Hände
+{pl}Eure Hände
 %%%%
 your weapon hand
 Eure Waffenhand
@@ -155,7 +155,7 @@ your claw
 Eure Kralle
 %%%%
 your claws
-Eure Krallen
+{pl}Eure Krallen
 %%%%
 your weapon claw
 Eure Waffenkralle
@@ -176,7 +176,7 @@ your paw
 Eure Pfote
 %%%%
 your paws
-Eure Pfoten
+{pl}Eure Pfoten
 %%%%
 
 # tentacle (octopode)
@@ -193,7 +193,7 @@ Tentakel
 #Euer Tentakel
 %%%%
 your tentacles
-Eure Tentakel
+{pl}Eure Tentakel
 %%%%
 your weapon tentacle
 Euer Waffententakel
@@ -223,16 +223,16 @@ Haut
 # your skin
 %%%%
 your scales
-Eure Schuppen
+{pl}Eure Schuppen
 %%%%
 your feathers
-Eure Federn
+{pl}Eure Federn
 %%%%
 your fur
 {n}Euer Fell
 %%%%
 your bandages
-Eure Bandagen
+{pl}Eure Bandagen
 %%%%
 your skin
 Eure Haut
@@ -281,7 +281,7 @@ your front leg
 Euer Vorderbein
 %%%%
 your front legs
-Eure Vorderbeine
+{pl}Eure Vorderbeine
 %%%%
 your weapon front leg
 Euer Waffenvorderbein
@@ -354,7 +354,7 @@ your scythe-like blade
 Eure sensenartige Klinge
 %%%%
 your scythe-like blades
-Eure sensenartige Klingen
+{pl}Eure sensenartige Klingen
 %%%%
 your weapon scythe-like blade
 Eure sensenartige Waffenklinge
@@ -459,7 +459,7 @@ your front paw
 Eure Vorderpfote
 %%%%
 your front paws
-Eure Vorderpfoten
+{pl}Eure Vorderpfoten
 %%%%
 your weapon front paw
 Eure Waffenvorderpfote
@@ -525,7 +525,7 @@ your foreclaw
 Eure Vorderkralle
 %%%%
 your foreclaws
-Eure Vorderkrallen
+{pl}Eure Vorderkrallen
 %%%%
 your weapon foreclaw
 Eure Waffenvorderkralle
@@ -667,7 +667,7 @@ your front trotter
 Euer Vorderfuß
 %%%%
 your front trotters
-Eure Vorderfüße
+{pl}Eure Vorderfüße
 %%%%
 your weapon front trotter
 Euer Waffenvorderfuß
@@ -759,7 +759,7 @@ your branch
 Euer Zweig
 %%%%
 your branches
-Eure Zweige
+{pl}Eure Zweige
 %%%%
 your weapon branch
 Euer Waffenzweig
@@ -857,7 +857,7 @@ your misty tendril
 Eure Nebelranke
 %%%%
 your misty tendrils
-Eure Nebelranken
+{pl}Eure Nebelranken
 %%%%
 your weapon misty tendril
 Eure Waffennebelranke
@@ -947,7 +947,7 @@ your hypha
 Eure Hyphe
 %%%%
 your hyphae
-Eure Hyphen
+{pl}Eure Hyphen
 %%%%
 your weapon hypha
 Eure Waffenhyphe
