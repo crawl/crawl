@@ -206,16 +206,16 @@ static const map<job_type, job_def> job_data =
     0, 5, 7,
     { SP_FORMICID, SP_DEEP_ELF, SP_KOBOLD, SP_SPRIGGAN, SP_GNOLL },
     {
-        SPELL_SIGIL_OF_BINDING,
         SPELL_JINXBITE,
+        SPELL_SIGIL_OF_BINDING,
         SPELL_INNER_FLAME,
-        SPELL_PORTAL_PROJECTILE,
         SPELL_CAUSE_FEAR,
+        SPELL_DIMENSIONAL_BULLSEYE,
     },
     { "robe", "scroll of poison", "sling plus:1" },
     WCHOICE_NONE,
     { { SK_FIGHTING, 1 }, { SK_DODGING, 2 }, { SK_SPELLCASTING, 1 },
-      { SK_HEXES, 3 }, { SK_WEAPON, 2 }, },
+      { SK_FIRE_MAGIC, 1}, { SK_HEXES, 3 }, { SK_WEAPON, 2 }, },
 } },
 
 { JOB_HUNTER, {
