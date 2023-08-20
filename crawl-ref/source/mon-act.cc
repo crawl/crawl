@@ -2121,6 +2121,10 @@ static void _post_monster_move(monster* mons)
             mons->behaviour = BEH_SEEK;
     }
 
+    // Don't let monsters launch pursuit attacks on their second move
+    // after the player's turn.
+    crawl_state.potential_pursuers.erase(mons);
+
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
         monster_die(*mons, KILL_MISC, NON_MONSTER);
 }
