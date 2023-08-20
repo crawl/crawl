@@ -1136,18 +1136,37 @@ void you_teleport_now(bool wizard_tele, bool teleportitis, string reason)
     }
 }
 
-spret cast_portal_projectile(int pow, bool fail)
+spret cast_dimensional_bullseye(int pow, monster *target, bool fail)
 {
+    if (target == nullptr || target->submerged() || !you.can_see(*target))
+    {
+        canned_msg(MSG_NOTHING_THERE);
+        // You cannot place a bullseye on invisible enemies anyway, so just abort
+        return spret::abort;
+    }
+
+    if (stop_attack_prompt(target, false, you.pos()))
+        return spret::abort;
+
     fail_check();
-    if (!you.duration[DUR_PORTAL_PROJECTILE])
-        mpr("You begin teleporting projectiles to their destination.");
-    else
-        mpr("You renew your portal.");
-    // Calculate the accuracy bonus based on current spellpower.
-    you.attribute[ATTR_PORTAL_PROJECTILE] = pow;
-    int dur = 2 + random2(1 + div_rand_round(pow, 2))
-                + random2(1 + div_rand_round(pow, 5));
-    you.increase_duration(DUR_PORTAL_PROJECTILE, dur, 50);
+
+    // We can only have a bullseye on one target a time, so remove the old one if it's still active
+    if (you.props.exists(BULLSEYE_TARGET_KEY))
+    {
+        monster* old_targ = monster_by_mid(you.props[BULLSEYE_TARGET_KEY].get_int());
+
+        if (old_targ)
+            old_targ->del_ench(ENCH_BULLSEYE_TARGET);
+    }
+
+    mprf("You create a dimensional link between your ranged weaponry and %s.", target->name(DESC_THE).c_str());
+
+    // So we can automatically end the status if the target dies or becomes friendly
+    target->add_ench(ENCH_BULLSEYE_TARGET);
+
+    you.props[BULLSEYE_TARGET_KEY].get_int() = target->mid;
+    int dur = random_range(5 + div_rand_round(pow, 5), 7 + div_rand_round(pow, 4));
+    you.set_duration(DUR_DIMENSIONAL_BULLSEYE, dur);
     return spret::success;
 }
 

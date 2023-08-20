@@ -49,6 +49,18 @@ static void _redraw_armour()
     you.redraw_armour_class = true;
 }
 
+static void _end_bullseye()
+{
+    if (you.props.exists(BULLSEYE_TARGET_KEY))
+    {
+        monster* targ = monster_by_mid(you.props[BULLSEYE_TARGET_KEY].get_int());
+        if (targ)
+            targ->del_ench(ENCH_BULLSEYE_TARGET);
+
+        you.props.erase(BULLSEYE_TARGET_KEY);
+    }
+}
+
 // properties of the duration.
 enum duration_flags : uint32_t
 {
@@ -431,12 +443,11 @@ static const duration_def duration_data[] =
       "frozen", "",
       "You are partly encased in ice.", D_DISPELLABLE,
       {{ "The ice encasing you melts away." }, {}, true }},
-    { DUR_PORTAL_PROJECTILE,
-      LIGHTBLUE, "PProj",
-      "portalling projectiles", "portal projectile",
-      "You are teleporting projectiles to their destination.", D_DISPELLABLE,
-      {{ "You are no longer teleporting projectiles to their destination.",
-         []() { you.attribute[ATTR_PORTAL_PROJECTILE] = 0; }}}},
+    { DUR_DIMENSIONAL_BULLSEYE,
+      LIGHTBLUE, "Bullseye",
+      "portalling projectiles", "bullseye",
+      "You are teleporting projectiles at a target.", D_DISPELLABLE,
+      {{ "Your dimensional bullseye dissipates.", _end_bullseye}}},
     { DUR_FORESTED,
       GREEN, "Forest",
       "forested", "",

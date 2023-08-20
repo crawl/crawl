@@ -2,7 +2,7 @@
 
 #include "attack.h"
 
-const int PPROJ_TO_HIT_DIV = 8;
+const int BULLSEYE_TO_HIT_DIV = 6;
 
 class ranged_attack : public attack
 {

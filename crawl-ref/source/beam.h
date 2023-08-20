@@ -176,6 +176,8 @@ private:
     bool can_see_invis = false;
     bool nightvision = false;
 
+    bool can_trigger_bullseye = false;
+
 public:
     bool is_enchantment() const; // no block/dodge, use willpower
     void set_target(const dist &targ);

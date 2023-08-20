@@ -1202,7 +1202,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_PORTAL_PROJECTILE, "Portal Projectile",
     spschool::translocation | spschool::hexes,
-    spflag::none,
+    spflag::monster,
     3,
     50,
     -1, -1,
@@ -3549,6 +3549,17 @@ static const struct spell_desc spelldata[] =
     -1, -1,
     0,
     TILEG_ERROR,
+},
+
+{
+    SPELL_DIMENSIONAL_BULLSEYE, "Dimensional Bullseye",
+    spschool::translocation | spschool::hexes,
+    spflag::target | spflag::not_self,
+    4,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_PORTAL_PROJECTILE,
 },
 
 // Not an actual spell - dummy entry for (player) Green Draconian breath.

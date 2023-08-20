@@ -280,6 +280,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             end_flayed_effect(this);
         }
         del_ench(ENCH_STILL_WINDS);
+        del_ench(ENCH_BULLSEYE_TARGET);
 
         if (is_patrolling())
         {
@@ -1024,7 +1025,16 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         add_ench(mon_enchant(ENCH_SWIFT, 1, &you, props[BINDING_SIGIL_DURATION_KEY].get_int()));
         props.erase(BINDING_SIGIL_DURATION_KEY);
         break;
-        
+
+    case ENCH_BULLSEYE_TARGET:
+        // We check that this is the 'real' target before removing the status
+        // from the player on death, since the status can be transiently created
+        // on cloned monsters and silently removing it shouldn't end the status
+        // on the original.
+        if (static_cast<unsigned int>(you.props[BULLSEYE_TARGET_KEY].get_int()) == mid)
+            you.set_duration(DUR_DIMENSIONAL_BULLSEYE, 0);
+        break;
+
     default:
         break;
     }
@@ -2107,7 +2117,7 @@ static const char *enchant_names[] =
     "ring_chaos", "ring_mutation", "ring_fog", "ring_ice", "ring_neg",
     "ring_acid", "ring_miasma", "concentrate_venom", "fire_champion",
     "anguished", "simulacra", "necrotizing", "glowing", "pursuing",
-    "bound",
+    "bound", "bullseye_target",
     "buggy", // NUM_ENCHANTMENTS
 };
 

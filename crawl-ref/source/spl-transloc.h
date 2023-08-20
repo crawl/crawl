@@ -32,7 +32,7 @@ bool you_teleport_to(const coord_def where,
 bool cell_vetoes_teleport(coord_def cell, bool check_monsters = true,
                           bool wizard_tele = false);
 
-spret cast_portal_projectile(int pow, bool fail);
+spret cast_dimensional_bullseye(int pow, monster *target, bool fail);
 
 spret cast_manifold_assault(int pow, bool fail, bool real = true);
 string weapon_unprojectability_reason();

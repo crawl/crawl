@@ -36,7 +36,7 @@ bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
                            const item_def& projectile);
 bool fire_warn_if_impossible(bool silent, item_def *weapon);
 shared_ptr<quiver::action> get_ammo_to_shoot(int item, dist &target, bool teleport = false);
-bool is_pproj_active();
+bool is_bullseye_active();
 void untargeted_fire(quiver::action &a);
 void fire_item_no_quiver(dist *target=nullptr);
 

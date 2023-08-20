@@ -1273,7 +1273,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         break;
 
-    case SPELL_PORTAL_PROJECTILE:
+    case SPELL_DIMENSIONAL_BULLSEYE:
         if (you.has_mutation(MUT_NO_GRASPING))
             return "this spell is useless without hands.";
         break;

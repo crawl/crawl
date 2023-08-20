@@ -413,7 +413,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Book of Weapons
     SPELL_TUKIMAS_DANCE,
-    SPELL_PORTAL_PROJECTILE,
+    SPELL_DIMENSIONAL_BULLSEYE,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
 },
 
@@ -480,7 +480,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of the Hunter
     SPELL_SIGIL_OF_BINDING,
     SPELL_CALL_CANINE_FAMILIAR,
-    SPELL_PORTAL_PROJECTILE,
+    SPELL_DIMENSIONAL_BULLSEYE,
     SPELL_LEDAS_LIQUEFACTION,
 },
 

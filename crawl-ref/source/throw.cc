@@ -73,11 +73,8 @@ public:
     {
         set_prompt();
         need_redraw = false; // XX simplify
--       if (!targeted()
--            || is_pproj_active() && action.affected_by_pproj())
--       {
-             needs_path = false;
--       }
+        if (!targeted())
+            needs_path = false;
     }
 
     // targeting_behaviour API
@@ -207,7 +204,7 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
     if (!targeted() || !item || item->base_type != OBJ_MISSILES)
         return descs;
 
-    ranged_attack attk(&you, nullptr, item, is_pproj_active());
+    ranged_attack attk(&you, nullptr, item, false);
     descs.emplace_back(make_stringf("%d%% to hit", to_hit_pct(mi, attk, false)));
 
     if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
@@ -367,10 +364,10 @@ bool fire_warn_if_impossible(bool silent, item_def *weapon)
     return false;
 }
 
-// Portal Projectile requires MP per shot.
-bool is_pproj_active()
+// Dimensional Bullseye requires MP per shot.
+bool is_bullseye_active()
 {
-    return !you.confused() && you.duration[DUR_PORTAL_PROJECTILE]
+    return !you.confused() && you.duration[DUR_DIMENSIONAL_BULLSEYE]
            && enough_mp(1, true, false);
 }
 
@@ -670,7 +667,7 @@ void throw_it(quiver::action &a)
     const int ammo_slot = launcher ? -1 : a.get_item();
 
     bool returning   = false;    // Item can return to pack.
-    const bool teleport = is_pproj_active();
+    const bool teleport = is_bullseye_active();
 
     if (you.confused())
     {

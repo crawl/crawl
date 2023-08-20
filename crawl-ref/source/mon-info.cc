@@ -128,6 +128,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_SIMULACRUM,      MB_SIMULACRUM },
     { ENCH_TP,              MB_TELEPORTING },
     { ENCH_BOUND,           MB_BOUND },
+    { ENCH_BULLSEYE_TARGET, MB_BULLSEYE_TARGET},
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
