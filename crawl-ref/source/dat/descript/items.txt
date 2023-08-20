@@ -1313,8 +1313,8 @@ A grey-black vessel, infused with dark power through a sickening ritual.
 Transforms the user into an undying offense against life itself.
 
 Foes struck by user's melee weapons or hands are weakened, slowed, and drained.
-The user can also heal themself by tormenting foes nearby; Shapeshifting skill
-increases the amount healed. Further, the user resists cold, has enhanced
+The user can also heal themself by tormenting living foes nearby; Shapeshifting
+skill increases the amount healed. Further, the user resists cold, has enhanced
 willpower, and is immune to poison, miasma, negative energy, and torment.
 
 The user also gains some of the more dubious benefits of having an undead body.

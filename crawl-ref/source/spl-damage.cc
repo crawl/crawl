@@ -4495,7 +4495,7 @@ int siphon_essence_range() { return 2; }
 bool siphon_essence_affects(const monster &m)
 {
     return !m.wont_attack()
-        && !(m.holiness() & MH_NONLIVING)
+        && !m.res_torment()
         && !mons_is_conjured(m.type) // redundant?
         && !mons_is_tentacle_or_tentacle_segment(m.type); // dubious
         // intentionally allowing firewood, i guess..?
