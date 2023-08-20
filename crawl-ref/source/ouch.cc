@@ -741,6 +741,32 @@ static void _maybe_slow()
         slow_player(10 + random2(5));
 }
 
+/**
+ * Maybe disable scrolls after taking damage if the player has MUT_READ_SAFETY.
+ **/
+static void _maybe_disable_scrolls()
+{
+    int mut_level = you.get_mutation_level(MUT_READ_SAFETY);
+    if (mut_level && !you.duration[DUR_NO_SCROLLS] && x_chance_in_y(mut_level, 100))
+    {
+        mpr("You feel threatened and lose the ability to read scrolls!");
+        you.increase_duration(DUR_NO_SCROLLS, 10 + random2(5));
+    }
+}
+
+/**
+ * Maybe disable potions after taking damage if the player has MUT_DRINK_SAFETY.
+ **/
+static void _maybe_disable_potions()
+{
+    int mut_level = you.get_mutation_level(MUT_DRINK_SAFETY);
+    if (mut_level && !you.duration[DUR_NO_POTIONS] && x_chance_in_y(mut_level, 100))
+    {
+        mpr("You feel threatened and lose the ability to drink potions!");
+        you.increase_duration(DUR_NO_POTIONS, 10 + random2(5));
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -823,22 +849,6 @@ int do_shave_damage(int dam)
     return dam;
 }
 #endif
-
-// Determine what's threatening for purposes of no drink and no scroll mutation.
-// The statuses are guaranteed not to happen if the incoming damage is less
-// than 12/5% max hp and if the remaining hp is higher than 50/80% based on the
-// mutation tier. Otherwise, they scale up with damage taken and with lower
-// health, becoming certain at 50/20% max health damage.
-static bool _is_damage_threatening (int damage_fraction_of_hp, int mut_level)
-{
-    const int hp_fraction = you.hp * 100 / you.hp_max;
-    const int safe_damage_fraction = mut_level == 1 ? 12 : 5;
-    const int scary_damage_fraction = mut_level == 1 ? 50 : 20;
-    return damage_fraction_of_hp > safe_damage_fraction
-            && hp_fraction <= 100 - scary_damage_fraction + safe_damage_fraction
-            && (damage_fraction_of_hp + random2(scary_damage_fraction) >= scary_damage_fraction
-                || random2(100) > hp_fraction);
-}
 
 /// Let Sigmund crow in triumph.
 static void _triumphant_mons_speech(actor *killer)
@@ -1041,37 +1051,6 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         }
     }
 
-    if (dam > 0 && death_type != KILLED_BY_POISON)
-    {
-        int damage_fraction_of_hp = dam * 100 / you.hp_max;
-
-        // Check _is_damage_threatening separately for read and drink so they
-        // don't always trigger in unison when you have both.
-        if (you.get_mutation_level(MUT_READ_SAFETY))
-        {
-            if (_is_damage_threatening(damage_fraction_of_hp,
-                                       you.get_mutation_level(MUT_READ_SAFETY)))
-            {
-                if (!you.duration[DUR_NO_SCROLLS])
-                    mpr("You feel threatened and lose the ability to read scrolls!");
-
-                you.increase_duration(DUR_NO_SCROLLS, 1 + random2(dam), 30);
-            }
-        }
-
-        if (you.get_mutation_level(MUT_DRINK_SAFETY))
-        {
-            if (_is_damage_threatening(damage_fraction_of_hp,
-                                       you.get_mutation_level(MUT_DRINK_SAFETY)))
-            {
-                if (!you.duration[DUR_NO_POTIONS])
-                    mpr("You feel threatened and lose the ability to drink potions!");
-
-                you.increase_duration(DUR_NO_POTIONS, 1 + random2(dam), 30);
-            }
-        }
-    }
-
     if (dam != INSTANT_DEATH)
     {
         if (you.spirit_shield() && death_type != KILLED_BY_POISON
@@ -1158,6 +1137,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             {
                 _maybe_corrode();
                 _maybe_slow();
+                _maybe_disable_scrolls();
+                _maybe_disable_potions();
             }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);

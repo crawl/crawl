@@ -808,14 +808,12 @@ encoded on magical scrolls. As such, scrolls take you half again as long to read
 inability to drink after injury mutation
 
 When you are harmed, there is a chance that you will become temporarily unable
-to drink potions. The greater the mutation level, damage done and the closer
-you are to death, the greater the odds.
+to drink potions. Each level of this mutation increases this chance by 1%.
 %%%%
 inability to read after injury mutation
 
 When you are harmed, there is a chance that you will become temporarily unable
-to read. The greater the mutation level, damage done and the closer you are to
-death, the greater the odds.
+to read scrolls. Each level of this mutation increases this chance by 1%.
 %%%%
 missing a hand mutation
 
