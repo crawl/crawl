@@ -2255,6 +2255,7 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_CONTAM_HEAVY, TILEI_GLOW_HEAVY },
     { MB_PAIN_BOND, TILEI_PAIN_BOND },
     { MB_BOUND, TILEI_CONSTRICTED},     // XXX: Terrible placeholder, since this doesn't do damage. Replace as soon as possible.
+    { MB_BULLSEYE_TARGET, TILEI_IDEALISED} // XXX: Another terrible placeholder, but at least it's unambiguous.
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)

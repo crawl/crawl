@@ -266,13 +266,14 @@ local function get_monster_info(dx,dy,no_move)
   info.injury = m:damage_level()
   info.threat = m:threat()
   info.orc_priest_wizard = (name == "orc priest" or name == "orc wizard") and 1 or 0
+  info.bullseye_target = (info.attack_type == AF_FIRE and m:status("targeted by your dimensional bullseye")) and -1 or 0
   return info
 end
 
 local function compare_monster_info(m1, m2)
   flag_order = autofight_flag_order
   if flag_order == nil then
-    flag_order = {"can_attack", "safe", "distance", "constricting_you", "very_stabbable", "injury", "threat", "orc_priest_wizard"}
+    flag_order = {"bullseye_target", "can_attack", "safe", "distance", "constricting_you", "very_stabbable", "injury", "threat", "orc_priest_wizard"}
   end
   for i,flag in ipairs(flag_order) do
     if m1[flag] > m2[flag] then

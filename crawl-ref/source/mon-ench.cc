@@ -280,6 +280,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             end_flayed_effect(this);
         }
         del_ench(ENCH_STILL_WINDS);
+        del_ench(ENCH_BULLSEYE_TARGET);
 
         if (is_patrolling())
         {
@@ -1022,7 +1023,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet)
             simple_monster_message(*this, " is no longer bound in place.");
         break;
-        
+
+    case ENCH_BULLSEYE_TARGET:
+        you.set_duration(DUR_DIMENSIONAL_BULLSEYE, 0);
+        break;
+
     default:
         break;
     }
@@ -2105,7 +2110,7 @@ static const char *enchant_names[] =
     "ring_chaos", "ring_mutation", "ring_fog", "ring_ice", "ring_neg",
     "ring_acid", "ring_miasma", "concentrate_venom", "fire_champion",
     "anguished", "simulacra", "necrotizing", "glowing", "pursuing",
-    "bound",
+    "bound", "bullseye_target",
     "buggy", // NUM_ENCHANTMENTS
 };
 

@@ -410,6 +410,16 @@ Blocks any translocations attempted by the affected target, be they voluntary
 or not. This includes even some cross-plane effects, although notably not
 Banishment.
 %%%%
+Dimensional Bullseye spell
+
+Weaves a subtle dimensional link between the caster's weaponry and a target
+of their choice. While this link is active, all projectiles thrown or fired by
+the caster will unerringly teleport to that target at the end of their original
+arc - provided they were initially aimed at something else entirely.
+
+Maintaining this link is tiring and each projectile fired while the spell is
+active will drain a small amount of the caster's magic.
+%%%%
 Discord spell
 
 Drives nearby creatures into an wild frenzy, causing them to mercilessly

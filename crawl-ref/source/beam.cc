@@ -2410,6 +2410,22 @@ static void _waterlog_mon(monster &mon, int ench_pow)
 
 void bolt::affect_endpoint()
 {
+    // Test if this shot should trigger Dimensional Bullseye
+    bool use_bullseye = false;
+    if (was_missile && agent()->is_player() && you.duration[DUR_DIMENSIONAL_BULLSEYE]
+        && !special_explosion)
+    {
+        monster* bullseye_targ = monster_by_mid(you.props[BULLSEYE_TARGET_KEY].get_int());
+
+        // This is a valid shot if it was aimed at SOMETHING and that something
+        // did not include the bullseye target (but you can still see it)
+        if (!hit_count.empty() && hit_count[bullseye_targ->mid] == 0
+            && you.can_see(*bullseye_targ))
+        {
+            use_bullseye = true;
+        }
+    }
+
     // hack: we use hit_verb to communicate whether a ranged
     // attack hit. (And ranged attacks should only explode if
     // they hit the target, to avoid silliness with . targeting.)
@@ -2431,7 +2447,9 @@ void bolt::affect_endpoint()
         ASSERT(item->defined());
         if (item->flags & ISFLAG_SUMMONED || item_mulches)
             item_was_destroyed(*item);
-        else if (drop_item)
+        // Dimensional bullseye should make objects drop at the bullseye target
+        // instead of the end of the ray
+        else if (drop_item && !use_bullseye)
             drop_object();
     }
 
@@ -2482,6 +2500,27 @@ void bolt::affect_endpoint()
 
     if (cloud != CLOUD_NONE)
         big_cloud(cloud, agent(), pos(), get_cloud_pow(), get_cloud_size());
+
+    if (use_bullseye)
+    {
+        monster* bullseye_targ = monster_by_mid(you.props[BULLSEYE_TARGET_KEY].get_int());
+        mpr("Your projectile teleports!");
+        use_target_as_pos = true;
+        target = bullseye_targ->pos();
+        affect_monster(bullseye_targ);
+        if (drop_item)
+        {
+            // This is a little hacky, but the idea is to make the beam think we only
+            // aimed at our bullseye target before dropping the item (so it will appear
+            // beneath them). I think this should work fine?
+            drop_object();
+        }
+
+        // We pay the per-shot mp cost here, so that it activates only on shots
+        // that fully trigger bullseye
+        pay_mp(1);
+        finalize_mp_cost();
+    }
 
     // you like special cases, right?
     switch (origin_spell)
@@ -2550,6 +2589,7 @@ void bolt::affect_endpoint()
     case SPELL_SEARING_BREATH:
         if (!path_taken.empty())
             place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
+        break;
 
     default:
         break;

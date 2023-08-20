@@ -762,6 +762,12 @@ void floor_transition(dungeon_feature_type how,
         jiyva_end_oozemancy();
     if (you.duration[DUR_NOXIOUS_BOG])
         you.duration[DUR_NOXIOUS_BOG] = 0;
+    if (you.duration[DUR_DIMENSIONAL_BULLSEYE])
+    {
+        monster* targ = monster_by_mid(you.props[BULLSEYE_TARGET_KEY].get_int());
+        if (targ)
+            targ->del_ench(ENCH_BULLSEYE_TARGET);
+    }
 
     // Fire level-leaving trigger.
     leaving_level_now(how);

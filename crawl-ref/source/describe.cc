@@ -5099,7 +5099,7 @@ void describe_to_hit(const monster_info& mi, ostringstream &result,
         // TODO: handle throwing to-hit somehow?
         item_def fake_proj;
         populate_fake_projectile(*weapon, fake_proj);
-        ranged_attack attk(&you, nullptr, &fake_proj, is_pproj_active());
+        ranged_attack attk(&you, nullptr, &fake_proj, false);
         acc_pct = to_hit_pct(mi, attk, false);
     }
 

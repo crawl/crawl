@@ -218,6 +218,7 @@ enum monster_info_flags
     MB_CONTAM_HEAVY,
     MB_PURSUING,
     MB_BOUND,
+    MB_BULLSEYE_TARGET,
     NUM_MB_FLAGS
 };
 

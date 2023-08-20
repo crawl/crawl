@@ -649,9 +649,9 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
-    case DUR_PORTAL_PROJECTILE:
+    case DUR_DIMENSIONAL_BULLSEYE:
     {
-        if (!is_pproj_active())
+        if (!is_bullseye_active())
             inf.light_colour = DARKGREY;
         break;
     }

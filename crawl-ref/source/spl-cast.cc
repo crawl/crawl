@@ -1208,6 +1208,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_AIRSTRIKE:
         return make_unique<targeter_airstrike>();
     case SPELL_MOMENTUM_STRIKE:
+    case SPELL_DIMENSIONAL_BULLSEYE:
         return make_unique<targeter_smite>(&you, range);
     case SPELL_FULMINANT_PRISM:
         return make_unique<targeter_smite>(&you, range, 0, 2);
@@ -1287,7 +1288,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SUBLIMATION_OF_BLOOD:
     case SPELL_BORGNJORS_REVIVIFICATION:
     case SPELL_BLASTMOTE:
-    case SPELL_PORTAL_PROJECTILE:
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
 
     // LOS radius:
@@ -2387,8 +2387,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_WEREBLOOD:
         return cast_wereblood(powc, fail);
 
-    case SPELL_PORTAL_PROJECTILE:
-        return cast_portal_projectile(powc, fail);
+    case SPELL_DIMENSIONAL_BULLSEYE:
+        return cast_dimensional_bullseye(powc, monster_at(target), fail);
 
     // other
     case SPELL_BORGNJORS_REVIVIFICATION:

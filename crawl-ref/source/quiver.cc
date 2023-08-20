@@ -354,7 +354,7 @@ namespace quiver
 
         bool uses_mp() const override
         {
-            return is_pproj_active();
+            return is_bullseye_active();
         }
 
         bool affected_by_pproj() const override
@@ -908,7 +908,7 @@ namespace quiver
 
         bool uses_mp() const override
         {
-            return is_pproj_active();
+            return is_bullseye_active();
         }
 
         bool affected_by_pproj() const override

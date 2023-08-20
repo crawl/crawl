@@ -75,8 +75,8 @@ int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random)
     {
         modifiers +=
             (attacker->is_player())
-            ? maybe_random_div(you.attribute[ATTR_PORTAL_PROJECTILE],
-                               PPROJ_TO_HIT_DIV, random)
+            ? maybe_random_div(calc_spell_power(SPELL_DIMENSIONAL_BULLSEYE),
+                               BULLSEYE_TO_HIT_DIV, random)
             : attacker->as_monster()->get_hit_dice() * 3 / 2;
     }
 
