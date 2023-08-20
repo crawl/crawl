@@ -99,7 +99,7 @@ const vector<vector<god_power>> & get_all_god_powers()
 
         // Zin
         {   { 1, ABIL_ZIN_RECITE, "recite Zin's Axioms of Law" },
-            { 2, ABIL_ZIN_VITALISATION, "call upon Zin for vitalisation" },
+            { 2, ABIL_ZIN_RITE_OF_SALT, "do ritual of salt for recovery" },
             { 3, ABIL_ZIN_IMPRISON, "call upon Zin to imprison the lawless" },
             { 5, ABIL_ZIN_SANCTUARY, "call upon Zin to create a sanctuary" },
             { 6, "Zin will now cleanse your potions of mutation.",
@@ -863,8 +863,8 @@ static void _inc_penance(god_type god, int val)
         }
         else if (god == GOD_ZIN)
         {
-            if (you.duration[DUR_DIVINE_STAMINA])
-                zin_remove_divine_stamina();
+            if (you.props.exists(ZIN_RITE_OF_SALT_KEY))
+                you.props.erase(ZIN_RITE_OF_SALT_KEY);
             if (env.sanctuary_time)
                 remove_sanctuary();
         }
@@ -3072,8 +3072,8 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_ZIN:
-        if (you.duration[DUR_DIVINE_STAMINA])
-            zin_remove_divine_stamina();
+        if (you.props.exists(ZIN_RITE_OF_SALT_KEY))
+            you.props.erase(ZIN_RITE_OF_SALT_KEY);
 
         if (env.sanctuary_time)
             remove_sanctuary();

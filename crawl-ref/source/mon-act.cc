@@ -1963,7 +1963,6 @@ static void _ancient_zyme_sicken(monster* mons)
     if (!is_sanctuary(you.pos())
         && !mons->wont_attack()
         && !you.res_miasma()
-        && !you.duration[DUR_DIVINE_STAMINA]
         && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
     {
         if (!you.duration[DUR_SICKNESS])

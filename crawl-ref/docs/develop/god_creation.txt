@@ -211,7 +211,7 @@ defining out our powers for the ^ screen:
 
             // Zin
             { { 1, ABIL_ZIN_RECITE, "recite Zin's Axioms of Law" },
-              { 2, ABIL_ZIN_VITALISATION, "call upon Zin for vitalisation" },
+              { 2, ABIL_ZIN_RITE_OF_SALT, "do ritual of salt for recovery" },
               { 3, ABIL_ZIN_IMPRISON, "call upon Zin to imprison the lawless" },
               { 5, ABIL_ZIN_SANCTUARY, "call upon Zin to create a sanctuary" },
               {-1, ABIL_ZIN_DONATE_GOLD, "donate money to Zin" },

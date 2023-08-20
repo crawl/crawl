@@ -17,6 +17,8 @@
 
 class dist;
 
+#define ZIN_RITE_OF_SALT_KEY "zin_rite_of_salt_time"
+
 #define BEOGH_RANGE_WPN_GIFT_KEY "given beogh range weapon"
 #define BEOGH_MELEE_WPN_GIFT_KEY "given beogh melee weapon"
 #define BEOGH_ARM_GIFT_KEY "given beogh armour"
@@ -90,8 +92,10 @@ recite_eligibility zin_check_recite_to_single_monster(const monster *mon,
 int zin_check_recite_to_monsters(bool quiet = false);
 bool zin_recite_to_single_monster(const coord_def& where);
 int zin_recite_power();
-bool zin_vitalisation();
-void zin_remove_divine_stamina();
+bool zin_rite_of_salt();
+void zin_handle_rite_of_salt();
+void zin_remove_rite_of_salt();
+void zin_finish_rite_of_salt();
 spret zin_imprison(const coord_def& target, bool fail);
 void zin_sanctuary();
 

@@ -315,9 +315,6 @@ static int _strength_modifier(bool innate_only)
 
     if (!innate_only)
     {
-        if (you.duration[DUR_DIVINE_STAMINA])
-            result += you.attribute[ATTR_DIVINE_STAMINA];
-
         result += chei_stat_boost();
 
         // ego items of strength
@@ -345,9 +342,6 @@ static int _int_modifier(bool innate_only)
 
     if (!innate_only)
     {
-        if (you.duration[DUR_DIVINE_STAMINA])
-            result += you.attribute[ATTR_DIVINE_STAMINA];
-
         result += chei_stat_boost();
 
         // ego items of intelligence
@@ -372,9 +366,6 @@ static int _dex_modifier(bool innate_only)
 
     if (!innate_only)
     {
-        if (you.duration[DUR_DIVINE_STAMINA])
-            result += you.attribute[ATTR_DIVINE_STAMINA];
-
         result += chei_stat_boost();
 
         // ego items of dexterity
@@ -463,16 +454,6 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force)
 
     if (which_stat == STAT_RANDOM)
         which_stat = static_cast<stat_type>(random2(NUM_STATS));
-
-    if (!force)
-    {
-        if (you.duration[DUR_DIVINE_STAMINA] > 0)
-        {
-            mprf("Your divine stamina protects you from %s loss.",
-                 _stat_name(which_stat).c_str());
-            return false;
-        }
-    }
 
     mprf(MSGCH_WARN, "You feel %s.", stat_desc(which_stat, SD_LOSS));
 

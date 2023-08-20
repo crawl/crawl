@@ -392,7 +392,7 @@ static vector<ability_def> &_get_ability_list()
         // Zin
         { ABIL_ZIN_RECITE, "Recite",
             0, 0, 0, -1, {fail_basis::invo, 30, 6, 20}, abflag::none },
-        { ABIL_ZIN_VITALISATION, "Vitalisation",
+        { ABIL_ZIN_RITE_OF_SALT, "Rite of salt",
             2, 0, 1, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
         { ABIL_ZIN_IMPRISON, "Imprison",
             5, 0, 4, LOS_MAX_RANGE, {fail_basis::invo, 60, 5, 20},
@@ -2148,7 +2148,7 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_EVOKE_TURN_INVISIBLE:
     case ABIL_END_TRANSFORMATION:
     case ABIL_BEGIN_UNTRANSFORM:
-    case ABIL_ZIN_VITALISATION:
+    case ABIL_ZIN_RITE_OF_SALT:
     case ABIL_TSO_DIVINE_SHIELD:
     case ABIL_YRED_RECALL_UNDEAD_HARVEST:
     case ABIL_OKAWARU_HEROISM:
@@ -2730,9 +2730,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         }
         break;
     }
-    case ABIL_ZIN_VITALISATION:
+    case ABIL_ZIN_RITE_OF_SALT:
         fail_check();
-        zin_vitalisation();
+        zin_rite_of_salt();
         break;
 
     case ABIL_ZIN_IMPRISON:

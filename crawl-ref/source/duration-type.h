@@ -38,7 +38,6 @@ enum duration_type
 #endif
     DUR_PIETY_POOL,             // distribute piety over time
     DUR_DIVINE_VIGOUR,          // duration of Ely's Divine Vigour
-    DUR_DIVINE_STAMINA,         // duration of Zin's Divine Stamina
     DUR_DIVINE_SHIELD,          // duration of TSO's Divine Shield
 #if TAG_MAJOR_VERSION == 34
     DUR_REGENERATION,

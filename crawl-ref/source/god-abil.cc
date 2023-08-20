@@ -1230,31 +1230,100 @@ static void _zin_saltify(monster* mon)
     }
 }
 
-bool zin_vitalisation()
+bool zin_rite_of_salt()
 {
-    simple_god_message(" grants you divine stamina.");
+    mpr("You start a ritual of salt.");
+    string msg = "(Press <w>%</w> to continue ritual.)";
+    insert_commands(msg, { CMD_WAIT });
+    mpr(msg);
 
-    // Add divine stamina.
-    const int stamina_amt =
-        max(1, you.skill_rdiv(SK_INVOCATIONS, 1, 3));
-    you.attribute[ATTR_DIVINE_STAMINA] = stamina_amt;
-    you.set_duration(DUR_DIVINE_STAMINA, 60 + roll_dice(2, 10));
-
-    notify_stat_change(STAT_STR, stamina_amt, true);
-    notify_stat_change(STAT_INT, stamina_amt, true);
-    notify_stat_change(STAT_DEX, stamina_amt, true);
-
+    you.props[ZIN_RITE_OF_SALT_KEY] = 
+        - (30 + div_rand_round(random2((27 - you.skill(SK_INVOCATIONS)) * 300), 200));
     return true;
 }
 
-void zin_remove_divine_stamina()
+void zin_handle_rite_of_salt()
 {
-    mprf(MSGCH_DURATION, "Your divine stamina fades away.");
-    notify_stat_change(STAT_STR, -you.attribute[ATTR_DIVINE_STAMINA], true);
-    notify_stat_change(STAT_INT, -you.attribute[ATTR_DIVINE_STAMINA], true);
-    notify_stat_change(STAT_DEX, -you.attribute[ATTR_DIVINE_STAMINA], true);
-    you.duration[DUR_DIVINE_STAMINA] = 0;
-    you.attribute[ATTR_DIVINE_STAMINA] = 0;
+    if (!you.props.exists(ZIN_RITE_OF_SALT_KEY))
+        return;
+
+    int ritual_remaining = you.props[ZIN_RITE_OF_SALT_KEY].get_int();
+
+    if (ritual_remaining < 0)
+    {
+        mpr("You feel recovered with salt...");
+        you.props[ZIN_RITE_OF_SALT_KEY] = - (ritual_remaining
+                                            + you.time_taken);
+        return;
+    }
+
+    if (crawl_state.prev_cmd != CMD_WAIT)
+    {
+        zin_remove_rite_of_salt();
+        return;
+    }
+
+    if (ritual_remaining <= you.time_taken)
+    {
+        you.time_taken = ritual_remaining;
+        you.props.erase(ZIN_RITE_OF_SALT_KEY);
+        zin_finish_rite_of_salt();
+        return;
+    }
+
+    you.props[ZIN_RITE_OF_SALT_KEY] = ritual_remaining
+                                      - you.time_taken;
+    mpr("You feel recovered with salt...");
+}
+
+void zin_remove_rite_of_salt()
+{
+    if (!you.props.exists(ZIN_RITE_OF_SALT_KEY))
+        return;
+    mpr("The rite has been suspended.");
+    you.props.erase(ZIN_RITE_OF_SALT_KEY);
+}
+
+void zin_finish_rite_of_salt()
+{
+    mpr("You finish a ritual of salt.");
+    int evil_place = 2;
+    if (player_in_branch(BRANCH_ORC)
+        ||player_in_branch(BRANCH_SLIME)
+        ||player_in_branch(BRANCH_ABYSS)
+        ||player_in_branch(BRANCH_OSSUARY)
+        )
+        evil_place = 3;
+    if (player_in_branch(BRANCH_CRYPT)
+        ||player_in_branch(BRANCH_TOMB)
+        ||player_in_branch(BRANCH_VESTIBULE)
+        ||player_in_branch(BRANCH_DIS)
+        ||player_in_branch(BRANCH_GEHENNA)
+        ||player_in_branch(BRANCH_COCYTUS)
+        ||player_in_branch(BRANCH_TARTARUS)
+        )
+        evil_place = 4;
+
+    // Replace some terrain with salt.
+    // TO DO : change blood to salt
+    for (radius_iterator ri(you.pos(),
+                            evil_place-1, C_SQUARE);
+         ri; ++ri)
+        {
+            coord_def pos = *ri;
+            if (!feat_is_wall(env.grid(*ri)))
+            {
+                env.pgrid(pos) |= FPROP_BLOODY;
+            }
+        }
+
+    //TO DO : change pseudo heal.
+    int hp_inc = div_rand_round(you.skill(SK_INVOCATIONS), 24);
+    hp_inc += roll_dice(div_rand_round(you.skill(SK_INVOCATIONS), 20), 6);
+    inc_hp(hp_inc*evil_place);
+    int mp_inc = div_rand_round(you.skill(SK_INVOCATIONS), 12);
+    mp_inc += roll_dice(div_rand_round(you.skill(SK_INVOCATIONS), 10), 4);
+    inc_mp(mp_inc*evil_place);
 }
 
 spret zin_imprison(const coord_def& target, bool fail)

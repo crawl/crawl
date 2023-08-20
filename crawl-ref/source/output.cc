@@ -997,10 +997,6 @@ static short _get_stat_colour(stat_type stat)
         if (you.stat(stat) <= entry.first)
             return entry.second;
 
-    // Stat is magically increased.
-    if (you.duration[DUR_DIVINE_STAMINA])
-        return LIGHTBLUE;  // no end of effect warning
-
     // Stat is degenerated.
     if (you.stat_loss[stat] > 0)
         return YELLOW;
