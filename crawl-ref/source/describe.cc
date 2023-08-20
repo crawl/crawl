@@ -1753,7 +1753,7 @@ static string _describe_weapon_brand(const item_def &item)
         return "It sometimes drains living victims (1/2 chance). This deals "
                "an additional one-quarter of any damage that pierces "
                "defenders' armour as well as a flat 2-4 damage, and also "
-               "weakens them slightly. A truly terrible weapon...";
+               "weakens them slightly.";
     case SPWPN_SPEED:
         return "Attacks with this weapon are significantly faster.";
     case SPWPN_HEAVY:
