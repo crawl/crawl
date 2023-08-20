@@ -19781,13 +19781,13 @@ You radiate an aura of cold.
 Ihr strahlt eine Aura der Kälte aus.
 %%%%
 %s is outlined in light.
-
+%s ist mit Licht umrandet.
 %%%%
 %s glows brighter for a moment.
-
+%s glüht einen Moment lang heller.
 %%%%
 %s glows brighter.
-
+%s glüht heller.
 %%%%
 
 ##################
