@@ -669,14 +669,16 @@ Zu Tode geknabbert durch Software-Bugs
 ... invoked by %s
 ... beschworen von {dat}%s
 %%%%
+# %s could be a monster or a thing
 ... while paralysed by %s
-... während der Lähmung durch %s
+... während der Lähmung von {dat}%s
 %%%%
 ... while paralysed
 ... während er gelähmt ist
 %%%%
+# %s is always a monster
 ... while petrified by %s
-... während der Versteinerung durch %s
+... während der Versteinerung von {dat}%s
 %%%%
 ... while petrified
 ... während der Versteinerung
@@ -776,5 +778,13 @@ statische Elektrizität
 %%%%
 " (illusionary)"
 " (illusionär)"
+%%%%
+
+########################
+# Sources of paraysis
+########################
+%%%%
+Death's Door abortion
+ein Fehlschlag der Pforte des Todes
 %%%%
 

@@ -19842,13 +19842,13 @@ Die Welt dreht sich um Euch!
 ##################
 %%%%
 You stand defiantly in death's doorway!
-Ihr steht trotzig in der Tür des Todes!
+Ihr steht trotzig in der Pforte des Todes!
 %%%%
 You seem to hear sand running through an hourglass...
 Ihr scheint Sand durch eine Sanduhr laufen zu hören ...
 %%%%
 Your icy armour melts away.
-Eure eisige Rüstung schmilzt dahin.
+Eure eisige Rüstung schmilzt.
 %%%%
 Your icy armour thickens.
 Eure eisige Rüstung verdickt sich.
@@ -19865,29 +19865,29 @@ Euer Körper wird auf erstaunlich schmerzhafte Weise geheilt.
 Your life is in your own hands once again.
 Euer Leben ist wieder in Euren eigenen Händen.
 %%%%
-Death's Door abortion
-
+The water foams!
+Das Wasser schäumt!
 %%%%
-The %s foams!
-Die %s Schäume!
-%%%%
-liquid ground
-
+The liquid ground foams!
+Der flüssige Boden schäumt!
 %%%%
 Forget which spell?
-
+Wlechen Zauber vergessen?
 %%%%
-Forget %s, freeing %d spell level%s for a total of %d?%s
-
+Forget %s, freeing 1 spell level for a total of %d?
+%s vergessen, und damit 1 Zauberplatz freimachen für insgesamt %d frei?
 %%%%
-" This spell is not in your library!"
-
+Forget %s, freeing %d spell levels for a total of %d?
+%s vergessen, und damit %d Zauberplätze freimachen für insgesamt %d frei?
+%%%%
+This spell is not in your library!
+Dieser Zauberspruch ist nicht in Eurer Bibliothek!
 %%%%
 Your blood is freshly infused with primal strength!
-
+Euer Blut wird mit Urkraft frisch durchtränkt!
 %%%%
 Your blood is infused with primal strength.
-
+Euer Blut wird mit Urkraft durchtränkt!
 %%%%
 A profound silence engulfs you.
 Eine tiefe Stille verschlingt Euch.
