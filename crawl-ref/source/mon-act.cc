@@ -307,9 +307,9 @@ static bool _swap_monsters(monster& mover, monster& moved)
     _handle_manticore_barbs(mover);
     _handle_manticore_barbs(moved);
 
-    if (moved.type == MONS_FOXFIRE)
+    if (mons_is_chaser(moved.type))
     {
-        mprf(MSGCH_GOD, "By Zin's power the foxfire is contained!");
+        mprf(MSGCH_GOD, "By Zin's power %s is contained!", moved.name(DESC_THE).c_str());
         monster_die(moved, KILL_DISMISSED, NON_MONSTER, true);
     }
 
@@ -1291,15 +1291,15 @@ static void _pre_monster_move(monster& mons)
         }
     }
 
-    // Dissipate player ball lightnings and foxfires
+    // Dissipate player ball lightnings and chasers
     // that have left the player's sight
     // (monsters are allowed to 'cheat', as with orb of destruction)
-    if ((mons.type == MONS_BALL_LIGHTNING || mons.type == MONS_FOXFIRE)
+    if ((mons.type == MONS_BALL_LIGHTNING || mons_is_chaser(mons))
         && mons.summoner == MID_PLAYER
         && !cell_see_cell(you.pos(), mons.pos(), LOS_NO_TRANS))
     {
-        if (mons.type == MONS_FOXFIRE)
-            check_place_cloud(CLOUD_FLAME, mons.pos(), 2, &mons);
+        if (mons_is_chaser(mons))
+            check_place_cloud(chaser_trail_type(mons), mons.pos(), 2, &mons);
         monster_die(mons, KILL_RESET, NON_MONSTER);
         return;
     }
@@ -1567,7 +1567,7 @@ void handle_monster_move(monster* mons)
         return;
     }
 
-    if (mons->type == MONS_FOXFIRE)
+    if (mons_is_chaser(mons->type))
     {
         if (mons->steps_remaining == 0)
         {
@@ -1809,7 +1809,7 @@ void handle_monster_move(monster* mons)
         if (targ
             && targ != mons
             && mons->behaviour != BEH_WITHDRAW
-            && (!(mons_aligned(mons, targ) || targ->type == MONS_FOXFIRE)
+            && (!(mons_aligned(mons, targ) || mons_is_chaser(targ->type))
                 || mons->has_ench(ENCH_FRENZIED))
             && monster_can_hit_monster(mons, targ))
         {
@@ -2574,8 +2574,8 @@ static bool _mons_can_displace(const monster* mpusher,
     if (invalid_monster_index(ipushee))
         return false;
 
-    // Foxfires can always be pushed
-    if (mpushee->type == MONS_FOXFIRE)
+    // Chasers can always be pushed
+    if (mons_is_chaser(mpushee->type))
         return !mons_aligned(mpushee, mpusher); // But allies won't do it
 
     if (!mpushee->has_action_energy()
@@ -3021,10 +3021,10 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     _handle_manticore_barbs(*mon);
     _handle_manticore_barbs(*m2);
 
-    // Pushing past a foxfire gets you burned regardless of alignment
-    if (m2->type == MONS_FOXFIRE)
+    // Pushing past a chaser gets you touched regardless of alignment
+    if (mons_is_chaser(m2->type))
     {
-        foxfire_attack(m2, mon);
+        chaser_attack(m2, mon);
         monster_die(*m2, KILL_DISMISSED, NON_MONSTER, true);
     }
 
@@ -3218,7 +3218,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     // The seen context no longer applies if the monster is moving normally.
     mons.seen_context = SC_NONE;
 
-    if (mons.type == MONS_FOXFIRE)
+    if (mons_is_chaser(mons))
         --mons.steps_remaining;
 
     _escape_water_hold(mons);
@@ -3488,7 +3488,7 @@ static bool _monster_move(monster* mons)
         // Check for attacking another monster.
         if (monster* targ = monster_at(mons->pos() + mmov))
         {
-            if ((mons_aligned(mons, targ) || targ->type == MONS_FOXFIRE)
+            if ((mons_aligned(mons, targ) || mons_is_chaser(targ->type))
                 && !(mons->has_ench(ENCH_FRENZIED)
                      || mons->confused()))
             {

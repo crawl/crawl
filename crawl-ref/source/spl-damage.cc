@@ -3918,31 +3918,31 @@ spret cast_starburst(int pow, bool fail, bool tracer)
     return spret::success;
 }
 
-void foxfire_attack(const monster *foxfire, const actor *target)
+void chaser_attack(const monster *chaser, const actor *target)
 {
-    actor * summoner = actor_by_mid(foxfire->summoner);
+    actor * summoner = actor_by_mid(chaser->summoner);
     if (!summoner || !summoner->alive())
     {
         // perish as your master once did
         return;
     }
 
-    // Don't allow foxfires that have wandered off to attack before dissapating
-    if (summoner && !(summoner->can_see(*foxfire)
+    // Don't allow chasers that have wandered off to attack before dissapating
+    if (summoner && !(summoner->can_see(*chaser)
                       && summoner->see_cell(target->pos())))
     {
         return;
     }
 
     bolt beam;
-    beam.thrower = (foxfire && foxfire->friendly()) ? KILL_YOU :
-                   (foxfire)                       ? KILL_MON
+    beam.thrower = (chaser && chaser->friendly()) ? KILL_YOU :
+                   (chaser)                       ? KILL_MON
                                                   : KILL_MISC;
     beam.range       = 1;
-    beam.source      = foxfire->pos();
-    beam.source_id   = foxfire->summoner;
+    beam.source      = chaser->pos();
+    beam.source_id   = chaser->summoner;
     beam.source_name = summoner->name(DESC_PLAIN, true);
-    zappy(ZAP_FOXFIRE, foxfire->get_hit_dice(), !foxfire->friendly(), beam);
+    zappy(ZAP_FOXFIRE, chaser->get_hit_dice(), !chaser->friendly(), beam);
     beam.aux_source  = beam.name;
     beam.target      = target->pos();
     beam.fire();

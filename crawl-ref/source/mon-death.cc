@@ -1827,7 +1827,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     else if (mons.type == MONS_FIRE_VORTEX
              || mons.type == MONS_SPATIAL_VORTEX
              || mons.type == MONS_TWISTER
-             || (mons.type == MONS_FOXFIRE && mons.steps_remaining == 0))
+             || (mons_is_chaser(mons.type) && mons.steps_remaining == 0))
     {
         if (!silent && !mons_reset && !was_banished)
         {
@@ -1845,9 +1845,9 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (killer == KILL_RESET)
             killer = KILL_DISMISSED;
     }
-    else if (mons.type == MONS_FOXFIRE)
+    else if (mons_is_chaser(mons))
     {
-        // Foxfires are unkillable, they either dissipate by timing out
+        // Chasers are unkillable, they either dissipate by timing out
         // or hit something.
         silent = true;
     }

@@ -1478,7 +1478,7 @@ bool summon_can_attack(const monster* mons, const coord_def &p)
 
     if (!mons->friendly()
         // XXX: can we merge foxfire in?
-        || _mons_attacks_outside_los(*mons) && mons->type != MONS_FOXFIRE)
+        || _mons_attacks_outside_los(*mons) && !mons_is_chaser(mons->type))
     {
         return true;
     }

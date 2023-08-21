@@ -928,8 +928,8 @@ bool mon_special_ability(monster* mons)
         if (mons->attitude == ATT_HOSTILE
             && grid_distance(you.pos(), mons->pos()) == 1)
         {
-            foxfire_attack(mons, &you);
-            check_place_cloud(CLOUD_FLAME, mons->pos(), 2, mons);
+            chaser_attack(mons, &you);
+            check_place_cloud(chaser_trail_type(*mons), mons->pos(), 2, mons);
             mons->suicide();
             used = true;
             break;
@@ -946,7 +946,7 @@ bool mon_special_ability(monster* mons)
 
             if (!cell_is_solid(targ->pos()))
             {
-                foxfire_attack(mons, *targ);
+                chaser_attack(mons, *targ);
                 mons->suicide();
                 used = true;
                 break;

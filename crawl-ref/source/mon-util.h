@@ -432,6 +432,10 @@ bool mons_is_sensed(monster_type mc);
 bool mons_allows_beogh(const monster& mon);
 bool mons_allows_beogh_now(const monster& mon);
 
+bool mons_is_chaser(monster_type mc);
+bool mons_is_chaser(const monster& mon);
+cloud_type chaser_trail_type(const monster& mon);
+
 bool invalid_monster(const monster* mon);
 bool invalid_monster_type(monster_type mt);
 bool invalid_monster_index(int i);
