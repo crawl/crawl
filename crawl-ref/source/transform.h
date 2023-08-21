@@ -10,8 +10,6 @@
 #include "enum.h"
 #include "player.h"
 
-#define MAX_HYDRA_HEADS 20
-
 enum form_capability
 {
     FC_DEFAULT,
