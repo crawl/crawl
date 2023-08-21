@@ -250,10 +250,10 @@ static void _OLGREB_unequip(item_def */*item*/, bool *show_msgs)
 // Based on melee_attack::staff_damage(), but using only evocations skill.
 static int _calc_olgreb_damage(actor* attacker, actor* defender)
 {
-    int base_dam = 0;
-    if (x_chance_in_y(attacker->skill(SK_EVOCATIONS, 100), 1000))
-        base_dam = random2(attacker->skill(SK_EVOCATIONS, 150) / 80);
+    if (!x_chance_in_y(attacker->skill(SK_EVOCATIONS, 100), 1000))
+        return 0;
 
+    const int base_dam = random2(attacker->skill(SK_EVOCATIONS, 150) / 80);
     return resist_adjust_damage(defender, BEAM_POISON_ARROW, base_dam);
 }
 
