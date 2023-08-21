@@ -2411,14 +2411,6 @@ static string _describe_talisman_form(const item_def &item, bool monster)
                                 uc, max_uc == uc ? "" : make_stringf(" (max %d)", max_uc).c_str());
     description += _maybe_desc_prop("Slay", form->slay_bonus(false),
                                     form->slay_bonus(false, true));
-    if (form_type == transformation::maw)
-    {
-        const int aux_dam = form->get_aux_damage(false);
-        const int max_aux_dam = form->get_aux_damage(false, true);
-        description += make_stringf("\nMaw Damage:    %d", aux_dam);
-        if (max_aux_dam != aux_dam)
-            description += make_stringf(" (max %d)", max_aux_dam);
-    }
     if (form_type == transformation::statue)
         description += "\nMelee damage:  +50%";
     if (form_type == transformation::flux)
@@ -2433,12 +2425,19 @@ static string _describe_talisman_form(const item_def &item, bool monster)
     description += _maybe_desc_prop("Str", form->str_mod);
     description += _maybe_desc_prop("Dex", form->dex_mod);
 
-    // TODO: describe UC acc bonus
+    if (form_type == transformation::maw)
+    {
+        const int aux_dam = form->get_aux_damage(false);
+        const int max_aux_dam = form->get_aux_damage(false, true);
+        description += "\n\nMaw attack:" + aux_attack_desc(UNAT_MAW, aux_dam);
+        if (max_aux_dam != aux_dam)
+            description += make_stringf(" (max %d)", max_aux_dam);
+    }
 
     // TODO: show resists (find an example of this elsewhere) (remember to include holiness)
 
     // misc (not covered):
-    // cast penalty, uc brand, slots merged
+    // uc brand, slots merged
 
     return description;
 }

@@ -3753,7 +3753,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
        return false;
     }
 
-    // XXX: dedup with aux_attack_desc()
+    // XXX: dedup with mut_aux_attack_desc()
     switch (atk)
     {
     case UNAT_CONSTRICT:
@@ -3936,7 +3936,7 @@ bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
            && mons_has_blood(mon->type);
 }
 
-string aux_attack_desc(mutation_type mut)
+string mut_aux_attack_desc(mutation_type mut)
 {
     // XXX: dedup with _extra_aux_attack()
     switch (mut)
@@ -3970,9 +3970,8 @@ string aux_attack_desc(mutation_type mut)
     }
 }
 
-string AuxAttackType::describe() const
+static string _desc_aux(int chance, int to_hit, int dam)
 {
-    const int to_hit = aux_to_hit();
     string to_hit_pips = "";
     // Each pip is 10 to-hit. Since to-hit is rolled before we compare it to
     // defender evasion, for these pips to be comparable to monster EV pips,
@@ -3985,8 +3984,23 @@ string AuxAttackType::describe() const
     }
     return make_stringf("\nTrigger chance:  %d%%\n"
                           "Accuracy:        %s\n"
-                          "Base damage:     %d\n\n",
-                        get_chance(),
+                          "Base damage:     %d",
+                        chance,
                         to_hit_pips.c_str(),
-                        get_damage(false));
+                        dam);
+}
+
+string aux_attack_desc(unarmed_attack_type unat, int force_damage)
+{
+    const unsigned long idx = unat - UNAT_FIRST_ATTACK;
+    ASSERT_RANGE(idx, 0, ARRAYSZ(aux_attack_types));
+    const AuxAttackType* const aux = aux_attack_types[idx];
+    const int dam = force_damage == -1 ? aux->get_damage(false) : force_damage;
+    // lazily assume chance and to hit don't vary in/out of forms
+    return _desc_aux(aux->get_chance(), aux_to_hit(), dam);
+}
+
+string AuxAttackType::describe() const
+{
+    return _desc_aux(get_chance(), aux_to_hit(), get_damage(false)) + "\n\n";
 }
