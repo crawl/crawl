@@ -3067,7 +3067,7 @@ static void _launch_opportunity_attack(monster& mons)
 
 static void _maybe_launch_opportunity_attack(monster &mon, coord_def orig_pos)
 {
-    if (!crawl_state.potential_pursuers.count(&mon))
+    if (!mon.alive() || !crawl_state.potential_pursuers.count(&mon))
         return;
 
     const int new_dist = grid_distance(you.pos(), mon.pos());
