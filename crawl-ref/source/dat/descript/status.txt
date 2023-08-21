@@ -510,7 +510,7 @@ Statue status
 You have been transformed into a slow but extremely robust stone statue.
 Your melee damage, both unarmed and with weapons, is substantially increased.
 Your stone body is immune to poison and miasma, and gains resistance to
-electricity and negative energy.
+electricity, negative energy and torment.
 
 Any equipped body armour, gloves and boots are melded.
 %%%%
