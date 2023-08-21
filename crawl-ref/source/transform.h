@@ -10,7 +10,8 @@
 #include "enum.h"
 #include "player.h"
 
-#define MAX_HYDRA_HEADS 20
+#define DRAGON_CLAWS 3
+#define DRAGON_FANGS 5
 
 enum form_capability
 {

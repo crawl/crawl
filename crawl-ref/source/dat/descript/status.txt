@@ -510,7 +510,7 @@ Statue status
 You have been transformed into a slow but extremely robust stone statue.
 Your melee damage, both unarmed and with weapons, is substantially increased.
 Your stone body is immune to poison and miasma, and gains resistance to
-electricity and negative energy.
+electricity, negative energy and torment.
 
 Any equipped body armour, gloves and boots are melded.
 %%%%
@@ -554,8 +554,9 @@ Storm status
 
 You have been transformed into a lightning-filled tempest. Your melee attacks
 are strengthened and electrified, and strike all adjacent foes. You gain flight,
-increased evasion, immunity to poison and miasma, and resistance to electricity.
-You gain the ability to launch yourself at foes as a lightning bolt.
+increased evasion, immunity to poison, miasma, petrification, and constriction,
+and resistance to electricity. You gain the ability to launch yourself at foes
+as a lightning bolt.
 
 Any equipped weapons and armour are melded.
 %%%%
@@ -564,10 +565,10 @@ Death status
 You have been transformed into an undying offense against life itself.
 
 Foes struck by your hands or melee weapons are weakened, slowed, and drained,
-and you can heal themselves by tormenting foes nearby. You also resist cold,
-have enhanced willpower, and are immune to poison, miasma, negative energy,
-and torment. Unfortunately, you are vulnerable to holy damage and Dispel
-Undead, and cannot consume potions.
+and you can heal themselves by tormenting living foes nearby. You also resist
+cold, have enhanced willpower, and are immune to poison, miasma, negative
+energy, and torment. Unfortunately, you are vulnerable to holy damage and
+Dispel Undead, and cannot consume potions.
 %%%%
 Bat status
 

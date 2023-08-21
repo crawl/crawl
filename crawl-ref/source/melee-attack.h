@@ -167,4 +167,5 @@ private:
     bool can_reach();
 };
 
-string aux_attack_desc(mutation_type mut);
+string aux_attack_desc(unarmed_attack_type unat, int force_damage = -1);
+string mut_aux_attack_desc(mutation_type mut);

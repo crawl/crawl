@@ -592,11 +592,11 @@ Sacrifices purity of body or mind, causing a single mutation.
 %%%%
 Sacrifice Words ability
 
-Sacrifices the ability to use magical scrolls after being badly injured.
+Sacrifices the ability to use magical scrolls after being injured.
 %%%%
 Sacrifice Drink ability
 
-Sacrifices the ability to drink potions after being badly injured.
+Sacrifices the ability to drink potions after being injured.
 %%%%
 Sacrifice Essence ability
 
@@ -823,13 +823,9 @@ again for a short time.
 %%%%
 Siphon Essence ability
 
-Violently draws upon the vital essence of nearby foes, halving their
-remaining life and using it to heal the user. Shapeshifting skill increases
-the healing received. After using this ability, you will be unable to use it
-again for a short time.
-
-This effect applies to anything living, undead, demonic or angelic - anything
-which ever lived or sought to. Allies are unaffected.
+Torment nearby living foes, halving their health. The pain inflicted heals
+the user to an extent determined by Shapeshifting skill. After using this
+ability, you will be unable to use it again for a short time.
 %%%%
 Evoke the Sceptre of Asmodeus ability
 

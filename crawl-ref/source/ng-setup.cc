@@ -492,6 +492,8 @@ static void _setup_generic(const newgame_def& ng,
     give_items_skills(ng);
 
     roll_demonspawn_mutations();
+    if (you.has_mutation(MUT_MULTILIVED))
+        you.lives = 1;
 
     if (crawl_state.game_is_sprint())
         _give_bonus_items();

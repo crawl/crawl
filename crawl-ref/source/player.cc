@@ -2535,7 +2535,7 @@ bool will_gain_life(int lev)
     if (lev < you.attribute[ATTR_LIFE_GAINED] - 2)
         return false;
 
-    return you.lives + you.deaths < (lev - 1) / 3;
+    return you.lives - 1 + you.deaths < (lev - 1) / 3;
 }
 
 static void _felid_extra_life()
@@ -6927,7 +6927,7 @@ int player::has_claws(bool allow_tran) const
     {
         // these transformations bring claws with them
         if (form == transformation::dragon)
-            return 3;
+            return DRAGON_CLAWS;
 
         // blade hands override claws
         if (form == transformation::blade_hands)
@@ -6973,12 +6973,8 @@ bool player::has_usable_hooves(bool allow_tran) const
 
 int player::has_fangs(bool allow_tran) const
 {
-    if (allow_tran)
-    {
-        // these transformations bring fangs with them
-        if (form == transformation::dragon)
-            return 5;
-    }
+    if (allow_tran && form == transformation::dragon)
+        return DRAGON_FANGS;
 
     return get_mutation_level(MUT_FANGS, allow_tran);
 }

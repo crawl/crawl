@@ -2120,6 +2120,10 @@ static void _post_monster_move(monster* mons)
             mons->behaviour = BEH_SEEK;
     }
 
+    // Don't let monsters launch pursuit attacks on their second move
+    // after the player's turn.
+    crawl_state.potential_pursuers.erase(mons);
+
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
         monster_die(*mons, KILL_MISC, NON_MONSTER);
 }
@@ -3062,7 +3066,7 @@ static void _launch_opportunity_attack(monster& mons)
 
 static void _maybe_launch_opportunity_attack(monster &mon, coord_def orig_pos)
 {
-    if (!crawl_state.potential_pursuers.count(&mon))
+    if (!mon.alive() || !crawl_state.potential_pursuers.count(&mon))
         return;
 
     const int new_dist = grid_distance(you.pos(), mon.pos());

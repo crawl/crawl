@@ -1436,7 +1436,7 @@ TYPE:    pair of quick blades
 COLOUR:  ETC_ENCHANT
 TILE:    urand_gyre
 TILE_EQ: gyre
-PLUS:    12
+PLUS:    10
 BRAND:   SPWPN_PROTECTION
 FB_BRAND: SPWPN_FREEZING
 

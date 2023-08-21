@@ -31,7 +31,7 @@
 #include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
-#include "melee-attack.h" // aux_attack_desc
+#include "melee-attack.h" // mut_aux_attack_desc
 #include "menu.h"
 #include "message.h"
 #include "mon-place.h"
@@ -2510,7 +2510,7 @@ string get_mutation_desc(mutation_type mut)
     if (lookup.empty()) // Nothing found?
         desc << mutation_desc(mut, -1, false) << "\n";
 
-    desc << aux_attack_desc(mut);
+    desc << mut_aux_attack_desc(mut);
 
     // TODO: consider adding other fun facts here
         // _get_mutation_def(mut).form_based

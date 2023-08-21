@@ -458,9 +458,7 @@ bool bring_to_safety()
 // This includes ALL afflictions, unlike wizard/Xom revive.
 void revive()
 {
-    adjust_level(-1);
-    // Allow a spare after two levels (we just lost one); the exact value
-    // doesn't matter here.
+    // Allow a spare after a few levels; the exact value doesn't matter here.
     you.attribute[ATTR_LIFE_GAINED] = 0;
 
     you.magic_contamination = 0;
@@ -508,6 +506,7 @@ void revive()
         you.lives = 0;
         mpr("You are too frail to live.");
         // possible only with an extreme abuse of Borgnjor's
+        // might be impossible now that felids don't level down on death?
         ouch(INSTANT_DEATH, KILLED_BY_DRAINING);
     }
 

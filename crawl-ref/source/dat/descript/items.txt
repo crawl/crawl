@@ -620,8 +620,8 @@ granite talisman
 
 A heavy stone icon, bearing the countenance of some long-forgotten king or god.
 Transforms the user into a slow, stone statue. The user's stone body is
-immune to poison and miasma, and gains resistance to electricity and negative
-energy. Shapeshifting skill increases armour granted.
+immune to poison and miasma, and gains resistance to electricity, negative
+energy, and torment. Shapeshifting skill increases armour granted.
 
 While transformed, any equipped body armour, gloves and boots are melded.
 %%%%
@@ -1296,10 +1296,10 @@ storm talisman
 
 Lightning trapped, impossibly, in a bottle. Lets the user walk through the air
 as a raging, lightning-filled tempest. The user's melee attacks are electrified
-and strike all adjacent foes. The user also flies, gains immunity to poison
-and miasma, and resists electricity. They can launch themselves as a lightning
-bolt, blasting through everything in their way. The damage and evasion granted
-by storm form are highly dependent on the user's skill with Shapeshifting.
+and strike all adjacent foes. The user also flies, gains immunity to poison,
+miasma, petrification, constriction, and sticky flame, and also resists
+electricity. They can launch themselves as a lightning bolt, blasting through
+everything in their way.
 
 While transformed, any equipped weapons and armour are melded.
 %%%%
@@ -1313,8 +1313,8 @@ A grey-black vessel, infused with dark power through a sickening ritual.
 Transforms the user into an undying offense against life itself.
 
 Foes struck by user's melee weapons or hands are weakened, slowed, and drained.
-The user can also heal themself by tormenting foes nearby; Shapeshifting skill
-increases the amount healed. Further, the user resists cold, has enhanced
+The user can also heal themself by tormenting living foes nearby; Shapeshifting
+skill increases the amount healed. Further, the user resists cold, has enhanced
 willpower, and is immune to poison, miasma, negative energy, and torment.
 
 The user also gains some of the more dubious benefits of having an undead body.

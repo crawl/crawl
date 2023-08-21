@@ -2258,10 +2258,11 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         you.time_taken = div_rand_round(you.time_taken * 3, 4);
 
-        dprf("arrival time: %d", you.time_taken);
-
         if (just_created_level)
             run_map_epilogues();
+
+        // no cross-level pursuits
+        crawl_state.potential_pursuers.clear();
     }
 
     // Save the created/updated level out to disk:
