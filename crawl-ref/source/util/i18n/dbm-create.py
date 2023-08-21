@@ -14,16 +14,19 @@ import sys
 # Main
 #####################################
 
-if len(sys.argv) != 3:
-    sys.stderr.write("Usage: make-dbm.py <keyfile> <valuefile>\n")
+if len(sys.argv) < 3 or len(sys.argv) > 4:
+    sys.stderr.write("Usage: dbm-create.py <keyfile> <valuefile> [<output file>]\n")
     sys.exit(1)
 
 keyfile_name = sys.argv[1]
 valuefile_name = sys.argv[2]
+outfile_name = "dbm.txt"
+if len(sys.argv) > 3:
+    outfile_name = sys.argv[3]
 
 keyfile = open(keyfile_name)
 valuefile = open(valuefile_name)
-outfile = open("dbm.txt", "w")
+outfile = open(outfile_name, "w")
 
 line1 = keyfile.readline()
 line2 = valuefile.readline()
@@ -41,4 +44,6 @@ while line1 and line2:
     # read next line
     line1 = keyfile.readline()
     line2 = valuefile.readline()
-    
+
+# close final entry
+outfile.write("%%%%\n");
