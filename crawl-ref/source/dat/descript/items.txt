@@ -1296,10 +1296,10 @@ storm talisman
 
 Lightning trapped, impossibly, in a bottle. Lets the user walk through the air
 as a raging, lightning-filled tempest. The user's melee attacks are electrified
-and strike all adjacent foes. The user also flies, gains immunity to poison
-and miasma, and resists electricity. They can launch themselves as a lightning
-bolt, blasting through everything in their way. The damage and evasion granted
-by storm form are highly dependent on the user's skill with Shapeshifting.
+and strike all adjacent foes. The user also flies, gains immunity to poison,
+miasma, petrification, constriction, and sticky flame, and also resists
+electricity. They can launch themselves as a lightning bolt, blasting through
+everything in their way.
 
 While transformed, any equipped weapons and armour are melded.
 %%%%

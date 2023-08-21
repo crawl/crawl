@@ -554,8 +554,9 @@ Storm status
 
 You have been transformed into a lightning-filled tempest. Your melee attacks
 are strengthened and electrified, and strike all adjacent foes. You gain flight,
-increased evasion, immunity to poison and miasma, and resistance to electricity.
-You gain the ability to launch yourself at foes as a lightning bolt.
+increased evasion, immunity to poison, miasma, petrification, and constriction,
+and resistance to electricity. You gain the ability to launch yourself at foes
+as a lightning bolt.
 
 Any equipped weapons and armour are melded.
 %%%%
