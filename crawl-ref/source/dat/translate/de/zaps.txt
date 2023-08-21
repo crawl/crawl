@@ -291,14 +291,14 @@ die feurige Explosion
 %%%%
 the arc of chaos
 der Lichtbogen des Chaos
-%%%
+%%%%
 # Englaciate - freezes the whole area
 the great icy blast
 der große eisige Stoß
 %%%%
 the golden flame
 die goldene Flamme
-%%%
+%%%%
 
 # Fragments created by Lee's Rapid Deconstruction
 %%%%
@@ -631,7 +631,7 @@ ein großer eisiger Stoß
 %%%%
 a golden flame
 eine goldene Flamme
-%%%
+%%%%
 
 # Fragments created by Lee's Rapid Deconstruction
 %%%%
@@ -965,7 +965,7 @@ großer eisiger Stoß
 %%%%
 golden flame
 goldene Flamme
-%%%
+%%%%
 
 # Fragments created by Lee's Rapid Deconstruction
 %%%%

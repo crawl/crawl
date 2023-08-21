@@ -19827,9 +19827,6 @@ Ihr spürt ein tiefes Gewässer jenseits des Felsens.
 You sense an intense heat on the other side of the rock.
 Ihr spürt eine intensive Hitze jenseits des Felsens.
 %%%%
-passwall
-passwänden
-%%%%
 %s looks rather confused.
 %s sieht ziemlich verwirrt aus.
 %%%%
