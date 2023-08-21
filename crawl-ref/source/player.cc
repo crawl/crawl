@@ -257,7 +257,7 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
             *prompted = true;
 
         if (!msg.empty())
-            prompt = msg + " ";
+            prompt = localise(msg) + localise(" ");
 
         prompt += localise("Are you sure you want to %s into a toxic bog?", move_verb);
 
@@ -276,7 +276,7 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
             *prompted = true;
 
         if (!msg.empty())
-            prompt = msg + " ";
+            prompt = localise(msg) + localise(" ");
 
         if (env.grid(p) == DNGN_DEEP_WATER) {
             if (you.ground_level())

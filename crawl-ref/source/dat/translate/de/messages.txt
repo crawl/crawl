@@ -6924,9 +6924,6 @@ Ihr könnt nicht ins Meer springen!
 You can't leap into the sea of lava!
 Ihr könnt nicht ins Lavameer springen!
 %%%%
-leap
-
-%%%%
 Something unexpectedly blocked you, preventing you from leaping!
 Etwas hat Euch unerwartet blockiert und Euch daran gehindert zu springen!
 %%%%
@@ -6955,9 +6952,6 @@ You stomp with the beat, sending a shockwave through the revellers around you!
 
 %%%%
 You can't repeat Line Pass.
-
-%%%%
-line pass
 
 %%%%
 Aiming: <white>Line Pass</white>
@@ -6998,9 +6992,6 @@ Das große Finale wegen HUP absagen.
 %%%%
 You can't perceive a target there!
 Ihr könnt dort kein Ziel wahrnehmen!
-%%%%
-move
-
 %%%%
 %s explodes violently into a cloud of jellies!
 %s explodiert heftig in eine Wolke aus Gelees!
@@ -7046,9 +7037,6 @@ You can't transfer your ancestor with %s.
 %%%%
 You can't transfer that.
 Das könnt Ihr nicht übertragen.
-%%%%
-transfer
-
 %%%%
 %s can't be transferred there.
 
@@ -7099,9 +7087,6 @@ You have no room to wall jump there; something you can't see is in the way.
 
 %%%%
 You have no room to wall jump there.
-
-%%%%
-wall jump
 
 %%%%
 You can't repeat a wall jump.
@@ -15929,34 +15914,34 @@ Ihr habt {acc}%s verloren.
 %s rutscht weg, als Ihr in die Nähe kommt!
 %%%%
 Really %s into that cloud of %s?
-Wirklich in die %2$s-Wolke %1$s?
+Wirklich in die %2$s-Wolke {verb-inf}%1$s?
 %%%%
 Do you really want to %s into the Zot trap?
-Wirklich in die Zot-Falle %s?
+Wirklich in die Zot-Falle {verb-inf}%s?
 %%%%
 Really %s onto %s?
-Wirklich auf {acc}%2$s %1$s?
+Wirklich auf {acc}%2$s {verb-inf}%1$s?
 %%%%
 Really %s into %s?
-Wirklich in {acc}%2$s %1$s?
+Wirklich in {acc}%2$s {verb-inf}%1$s?
 %%%%
 You cannot enter water in your current form.
 Ihr könnt in Eurer jetzigen Form nicht ins Wasser eintreten.
 %%%%
 Are you sure you want to %s into a toxic bog?
-Wirklich ins giftige Moor %s?
+Wirklich ins giftige Moor {verb-inf}%s?
 %%%%
 Are you sure you want to %s into deep water
-Wirklich ins tiefe Wasser %s
+Wirklich ins tiefe Wasser {verb-inf}%s
 %%%%
 Are you sure you want to %s over deep water
-Wirklich über tiefes Wasser %s
+Wirklich über tiefes Wasser {verb-inf}%s
 %%%%
 Are you sure you want to %s into lava
-Wirklich in die Lava %s
+Wirklich in die Lava {verb-inf}%s
 %%%%
 Are you sure you want to %s over lava
-Wirklich über Lava %s
+Wirklich über Lava {verb-inf}%s
 %%%%
 " while you are losing your buoyancy?"
 , während Ihr Euren Auftrieb verliert?
@@ -15965,10 +15950,10 @@ Wirklich über Lava %s
 , während Eure Verwandlung abläuft?
 %%%%
 Really %s into a travel-excluded area?
-Wirklich in einen ausgeschlossenen Bereich %s?
+Wirklich in einen ausgeschlossenen Bereich {verb-inf}%s?
 %%%%
 You might %s into a travel-excluded area, are you sure?
-Ihr könnt in einen ausgeschlossenen Bereich %s. Seid Ihr sicher?
+Ihr könnt in einen ausgeschlossenen Bereich {verb-inf}%s. Seid Ihr sicher?
 %%%%
 It's unwise to walk into this.
 Es ist unklug, darauf einzugehen.
@@ -19822,31 +19807,31 @@ You finish recalling your allies.
 Ihr beendet die Erinnerung an Eure Verbündeten.
 %%%%
 Please select a wall.
-
+Bitte eine Wand auswählen.
 %%%%
 There is no adjacent passable wall in that direction.
-
+In dieser Richtung gibt es keine angrenzende begehbare Wand.
 %%%%
 This rock feels extremely deep.
-
+Dieser Felsen fühlt sich extrem tief an.
 %%%%
 You sense an overwhelming volume of rock.
-
+Ihr spürt ein überwältigendes Volumen an Gestein.
 %%%%
 Something is blocking your path through the rock.
-
+Etwas versperrt Euch den Weg durch den Felsen.
 %%%%
 You sense a deep body of water on the other side of the rock.
-
+Ihr spürt ein tiefes Gewässer jenseits des Felsens.
 %%%%
 You sense an intense heat on the other side of the rock.
-
+Ihr spürt eine intensive Hitze jenseits des Felsens.
 %%%%
 passwall
-
+passwänden
 %%%%
 %s looks rather confused.
-
+%s sieht ziemlich verwirrt aus.
 %%%%
 You attempt to intoxicate your foes!
 Ihr versucht Eure Feinde zu berauschen!
@@ -20248,9 +20233,6 @@ You can't roll through that!
 
 %%%%
 You're already next to %s!
-
-%%%%
-charge
 
 %%%%
 There's nothing you can charge at!
