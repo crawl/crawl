@@ -2396,6 +2396,9 @@ static string _describe_talisman_form(const item_def &item, bool monster)
             description += make_stringf("\nAC:           -%d (-%d%% of your body armour's %d base AC)",
                                         ac_penalty, body_ac_loss_percent, base_ac);
         }
+
+        if (form->size != SIZE_CHARACTER)
+            description += "\nSize:          " + uppercase_first(get_size_adj(form->size));
     }
 
     // offense
