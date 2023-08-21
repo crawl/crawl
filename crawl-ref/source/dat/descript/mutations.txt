@@ -652,10 +652,9 @@ gore your attacker with your horns.
 multi-lived mutation
 
 Every third experience level, you gain an extra life. If you are slain while
-you still have a life remaining, you will reappear on another part of the
-current floor, losing an experience level in the process. You can continue to
-gain extra lives even once you reach the maximum experience level, but you
-can't have more than two extra lives in reserve at any given time.
+you still have a life remaining, you will reappear elsewhere on the current
+floor. You can continue to gain extra lives even once you reach the maximum
+experience level, but you can't have more than two extra lives at a time.
 %%%%
 distributed training mutation
 

@@ -1876,8 +1876,8 @@ Felids (Fe)
   Spriggans. Felids advance in levels very slowly. They are skilled with many
   forms of magic, though less so with raw elemental magic.
 
-  Felids gain extra lives as they increase in levels. Upon death, they will be
-  resurrected in a safe place, losing an experience level in the process.
+  Felids start with an extra life, and gain more as they increase in levels.
+  Upon death, they will be resurrected in a safe place.
 
 Barachim (Ba)
   Barachim are an amphibious humanoid species, spawned at the dawn of time as
