@@ -651,34 +651,33 @@ bool ranged_attack::apply_missile_brand()
         chaos_affects_defender();
         break;
     case SPMSL_DISPERSAL:
-        if (damage_done > 0)
+    {
+        if (defender->no_tele())
         {
-            if (defender->no_tele())
-            {
-                if (defender->is_player())
-                    canned_msg(MSG_STRANGE_STASIS);
-            }
-            else
-            {
-                coord_def pos, pos2;
-                const bool no_sanct = defender->kill_alignment() == KC_OTHER;
-                if (random_near_space(defender, defender->pos(), pos, false,
-                                      no_sanct)
-                    && random_near_space(defender, defender->pos(), pos2, false,
-                                         no_sanct))
-                {
-                    const coord_def from = attacker->pos();
-                    if (grid_distance(pos2, from) > grid_distance(pos, from))
-                        pos = pos2;
-
-                    if (defender->is_player())
-                        defender->blink_to(pos);
-                    else
-                        defender->as_monster()->blink_to(pos, false, false);
-                }
-            }
+            if (defender->is_player())
+                canned_msg(MSG_STRANGE_STASIS);
+            break;
         }
+
+        coord_def pos, pos2;
+        const bool no_sanct = defender->kill_alignment() == KC_OTHER;
+        if (!random_near_space(defender, defender->pos(), pos, false,
+                               no_sanct)
+            || !random_near_space(defender, defender->pos(), pos2, false,
+                                  no_sanct))
+        {
+            break;
+        }
+        const coord_def from = attacker->pos();
+        if (grid_distance(pos2, from) > grid_distance(pos, from))
+            pos = pos2;
+
+        if (defender->is_player())
+            defender->blink_to(pos);
+        else
+            defender->as_monster()->blink_to(pos, false, false);
         break;
+    }
     case SPMSL_SILVER:
         special_damage = max(1 + random2(damage_done) / 3,
                              silver_damages_victim(defender, damage_done,
