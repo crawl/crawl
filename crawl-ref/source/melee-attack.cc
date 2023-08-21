@@ -1222,7 +1222,9 @@ public:
 
     int get_damage(bool random) const override
     {
-        const int base_dam = damage + you.skill_rdiv(SK_UNARMED_COMBAT, 1, 2);
+        // This is duplicated by _describe_talisman_form.
+        const int base_dam = damage + (random ? you.skill_rdiv(SK_UNARMED_COMBAT, 1, 2)
+                                              : you.skill(SK_UNARMED_COMBAT) / 2);
 
         if (you.form == transformation::blade_hands)
             return base_dam + 6;
@@ -1270,6 +1272,7 @@ public:
 
     int get_damage(bool random) const override
     {
+        // duplicated in _describe_talisman_form
         const int fang_damage = damage + you.has_usable_fangs() * 2;
 
         if (you.get_mutation_level(MUT_ANTIMAGIC_BITE))
