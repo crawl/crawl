@@ -38,6 +38,7 @@ aptitudes:
   poison_magic: 2
   invocations: 3
   evocations: 2
+  shapeshifting: 1
 str: 9
 int: 9
 dex: 9

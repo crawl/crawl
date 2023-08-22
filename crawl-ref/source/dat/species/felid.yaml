@@ -27,7 +27,7 @@ aptitudes:
   hexes: 4
   translocations: 4
   transmutations: 1
-  shapeshifting: -1
+  shapeshifting: 0
   fire_magic: -1
   ice_magic: -1
   air_magic: -1

@@ -36,7 +36,7 @@ aptitudes:
   poison_magic: -3
   invocations: -1
   evocations: -3
-  shapeshifting: -2
+  shapeshifting: -1
 size: large
 str: 15
 int: 4

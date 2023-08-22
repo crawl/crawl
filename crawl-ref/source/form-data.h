@@ -92,7 +92,7 @@ static const form_entry formdata[] =
 {
     transformation::blade_hands, MONS_PLAYER, "Blade", "", "blade",
     "",
-    9, 18, TALISMAN_BLADE,
+    10, 19, TALISMAN_BLADE,
     EQF_HANDS, MR_NO_FLAGS,
     FormDuration(10, PS_SINGLE, 100), 0, 0, SIZE_CHARACTER, 10,
     {}, true, FormScaling().Base(12).Scaling(8),
@@ -104,7 +104,7 @@ static const form_entry formdata[] =
 {
     transformation::statue, MONS_STATUE, "Statue", "statue-form", "statue",
     "a stone statue.",
-    15, 23, TALISMAN_STATUE,
+    16, 25, TALISMAN_STATUE,
     EQF_STATUE, MR_RES_ELEC | MR_RES_NEG | MR_RES_PETRIFY,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 13,
     FormScaling().Base(27).Scaling(11), true, FormScaling().Base(9),
@@ -118,7 +118,7 @@ static const form_entry formdata[] =
 {
     transformation::anaconda, MONS_ANACONDA, "Anaconda", "snake-form", "snake",
     "an enormous anaconda.",
-    9, 18, TALISMAN_SERPENT,
+    10, 19, TALISMAN_SERPENT,
     EQF_PHYSICAL, MR_NO_FLAGS,
     DEFAULT_DURATION, 5, 0, SIZE_LARGE, 12,
     FormScaling().Base(9).Scaling(6), true, FormScaling().Base(7),
@@ -131,7 +131,7 @@ static const form_entry formdata[] =
 {
     transformation::dragon, MONS_PROGRAM_BUG, "Dragon", "dragon-form", "dragon",
     "a fearsome dragon!",
-    15, 23, TALISMAN_DRAGON,
+    16, 25, TALISMAN_DRAGON,
     EQF_PHYSICAL, MR_RES_POISON,
     DEFAULT_DURATION, 10, 0, SIZE_GIANT, 15,
     FormScaling().Base(12).Scaling(6), true, FormScaling().Base(15).Scaling(9),
@@ -146,7 +146,7 @@ static const form_entry formdata[] =
 {
     transformation::death, MONS_ANCIENT_CHAMPION, "Death", "death-form", "death",
     "an undying horror.",
-    21, 27, TALISMAN_DEATH,
+    23, 27, TALISMAN_DEATH,
     EQF_NONE, MR_RES_COLD | mrd(MR_RES_NEG, 3),
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
     {}, true, FormScaling().Base(6),
@@ -324,10 +324,10 @@ static const form_entry formdata[] =
 {
     transformation::storm, MONS_TWISTER, "Storm", "storm-form", "storm",
     "a lightning-filled tempest!",
-    21, 27, TALISMAN_STORM,
+    23, 27, TALISMAN_STORM,
     EQF_PHYSICAL, MR_RES_ELEC | MR_RES_PETRIFY | MR_RES_STICKY_FLAME,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
-    FormScaling().Base(15).Scaling(3), true, FormScaling().Base(26).Scaling(6),
+    FormScaling().Base(12).Scaling(3), true, FormScaling().Base(24).Scaling(6),
     SPWPN_ELECTROCUTION, LIGHTCYAN, "", { "hit", "buffet", "batter", "blast" },
     FC_ENABLE, FC_DEFAULT, FC_FORBID, false,
     "bellow", 0, "", "", "place yourself before", "air",
@@ -340,7 +340,7 @@ static const form_entry formdata[] =
 {
     transformation::beast, MONS_WOLF, "Beast", "beast-form", "beast",
     "a hulking beast.",
-    0, 6, TALISMAN_BEAST,
+    0, 7, TALISMAN_BEAST,
     EQF_AUXES, MR_NO_FLAGS,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
     {}, true, {},
@@ -353,7 +353,7 @@ static const form_entry formdata[] =
 {
     transformation::maw, MONS_PUTRID_MOUTH, "Maw", "maw-form", "maw",
     "a creature with a mouth for a stomach.",
-    9, 18, TALISMAN_MAW,
+    10, 19, TALISMAN_MAW,
     SLOTF(EQ_BODY_ARMOUR), MR_NO_FLAGS,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
     {}, true, FormScaling().Base(2),
@@ -366,7 +366,7 @@ static const form_entry formdata[] =
 {
     transformation::flux, MONS_RADROACH, "Flux", "flux-form", "flux",
     "something dangerously unstable.",
-    6, 13, TALISMAN_FLUX,
+    7, 14, TALISMAN_FLUX,
     SLOTF(EQ_WEAPON) | SLOTF(EQ_SHIELD), MR_NO_FLAGS,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
     {}, true, {},

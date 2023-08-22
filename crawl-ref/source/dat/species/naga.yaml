@@ -19,7 +19,7 @@ aptitudes:
   shields: -1
   spellcasting: -1
   poison_magic: 3
-  shapeshifting: -2
+  shapeshifting: -1
   invocations: 1
 size: large
 str: 10

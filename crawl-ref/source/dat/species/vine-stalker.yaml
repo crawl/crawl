@@ -22,7 +22,7 @@ aptitudes:
   dodging: -2
   stealth: 3
   shields: -1
-  shapeshifting: -2
+  shapeshifting: -1
   evocations: -1
 str: 10
 int: 8
