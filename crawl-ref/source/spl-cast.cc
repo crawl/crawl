@@ -2461,6 +2461,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return cast_imb(powc, fail);
 
+    case SPELL_JINXBITE:
+        return cast_jinxbite(powc, fail);
+
     case SPELL_SIGIL_OF_BINDING:
         return cast_sigil_of_binding(powc, fail, false);
 

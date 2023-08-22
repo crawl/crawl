@@ -869,7 +869,7 @@ bool mons_is_projectile(const monster& mon)
 
 bool mons_is_chaser(monster_type mc)
 {
-    return (mc == MONS_FOXFIRE);
+    return (mc == MONS_FOXFIRE || mc == MONS_JINXSPRITE);
 }
 
 bool mons_is_chaser(const monster& mon)
@@ -879,7 +879,10 @@ bool mons_is_chaser(const monster& mon)
 
 cloud_type chaser_trail_type(const monster& mon)
 {
-    return CLOUD_FLAME;
+    if (mon.type == MONS_JINXSPRITE)
+        return CLOUD_MAGIC_TRAIL;
+    else
+        return CLOUD_FLAME;
 }
 
 // Conjuration or Hexes. Summoning and Necromancy make the monster a creature

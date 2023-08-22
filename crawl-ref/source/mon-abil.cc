@@ -922,6 +922,7 @@ bool mon_special_ability(monster* mons)
         break;
 
     case MONS_FOXFIRE:
+    case MONS_JINXSPRITE:
         if (is_sanctuary(mons->pos()))
             break;
 
@@ -935,18 +936,22 @@ bool mon_special_ability(monster* mons)
             break;
         }
 
-        for (monster_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
+        for (fair_adjacent_iterator ai(mons->pos()); ai; ++ai)
         {
-            if (mons_aligned(mons, *targ) || mons_is_firewood(**targ)
-                || grid_distance(mons->pos(), targ->pos()) > 1
-                || !you.see_cell(targ->pos()))
+            monster* targ = monster_at(*ai);
+
+            // Foxfires will detonate when adjacent to any viable hostile.
+            // Jinxsprites prefer to move to their specific foe.
+            if (!targ || mons_aligned(mons, targ) || mons_is_firewood(*targ)
+                || !you.see_cell(targ->pos())
+                || mclass == MONS_JINXSPRITE && mons->get_foe() != targ)
             {
                 continue;
             }
 
             if (!cell_is_solid(targ->pos()))
             {
-                chaser_attack(mons, *targ);
+                chaser_attack(mons, targ);
                 mons->suicide();
                 used = true;
                 break;

@@ -161,6 +161,7 @@ protected:
     brand_type random_chaos_brand();
     void drain_defender();
     void drain_defender_speed();
+    void maybe_trigger_jinxbite(string source_name);
 
     virtual int inflict_damage(int dam, beam_type flavour = NUM_BEAMS,
                                bool clean = false);

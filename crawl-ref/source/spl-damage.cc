@@ -3918,7 +3918,65 @@ spret cast_starburst(int pow, bool fail, bool tracer)
     return spret::success;
 }
 
-void chaser_attack(const monster *chaser, const actor *target)
+static void _print_jinxsprite_message(const monster& victim)
+{
+    string msg;
+
+    // This is *extremely* ripe ground for varied comical messages. Tie a snake's tail
+    // in a knot, unravel a mummy's bandages, tell Edmund he'll never be as scary as his brother.
+
+    if (mon_shape_is_humanoid(get_mon_shape(victim.type)) && victim.inv[MSLOT_WEAPON] != NON_ITEM
+        && coinflip())
+    {
+        msg = make_stringf("bonks %s with %s.",
+                        victim.name(DESC_THE).c_str(),
+                        env.item[victim.inv[MSLOT_WEAPON]].name(DESC_ITS).c_str());
+    }
+    else if (coinflip())
+    {
+        msg = make_stringf("makes %s trip over %s own %s.",
+                        victim.name(DESC_THE).c_str(),
+                        victim.pronoun(PRONOUN_POSSESSIVE).c_str(),
+                        victim.foot_name(true).c_str());
+    }
+    else
+    {
+        msg = make_stringf("smacks %s with %s own %s.",
+                        victim.name(DESC_THE).c_str(),
+                        victim.pronoun(PRONOUN_POSSESSIVE).c_str(),
+                        victim.hand_name(false).c_str());
+    }
+
+    if (you.can_see(victim))
+        mprf("The jinxsprite %s", msg.c_str());
+}
+
+static void _do_jinxsprite_hit(actor *target, int pow)
+{
+    int dmg = roll_dice(2, pow);
+
+    if (target->is_monster())
+    {
+        monster* mons = target->as_monster();
+        _print_jinxsprite_message(*mons);
+        _player_hurt_monster(*target->as_monster(), dmg, BEAM_MAGIC);
+
+        // The slow application ignores Will, since Will was already checked to
+        // spawn the sprite in the first place. Yes, it may not have been the
+        // victim's own will, but sprites do what they want.
+        if (mons->alive() && mons->willpower() != WILL_INVULN)
+        {
+            if (coinflip())
+                mons->add_ench(ENCH_WEAK);
+            else
+                mons->add_ench(ENCH_SLOW);
+
+            simple_monster_message(*mons, " reels.");
+        }
+    }
+}
+
+void chaser_attack(const monster *chaser, actor *target)
 {
     actor * summoner = actor_by_mid(chaser->summoner);
     if (!summoner || !summoner->alive())
@@ -3942,10 +4000,21 @@ void chaser_attack(const monster *chaser, const actor *target)
     beam.source      = chaser->pos();
     beam.source_id   = chaser->summoner;
     beam.source_name = summoner->name(DESC_PLAIN, true);
-    zappy(ZAP_FOXFIRE, chaser->get_hit_dice(), !chaser->friendly(), beam);
     beam.aux_source  = beam.name;
     beam.target      = target->pos();
-    beam.fire();
+
+    switch(chaser->type)
+    {
+        case MONS_JINXSPRITE:
+            _do_jinxsprite_hit(target, chaser->get_hit_dice());
+            break;
+
+        default:
+        case MONS_FOXFIRE:
+            zappy(ZAP_FOXFIRE, chaser->get_hit_dice(), !chaser->friendly(), beam);
+            beam.fire();
+            break;
+    }
 }
 
 /**

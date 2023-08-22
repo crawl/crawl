@@ -327,6 +327,8 @@ bool melee_attack::handle_phase_dodged()
     if (defender->is_player())
         count_action(CACT_DODGE, DODGE_EVASION);
 
+    maybe_trigger_jinxbite(weapon ? weapon->name(DESC_YOUR) : you.hand_name(true));
+
     if (attacker != defender
         && attacker->alive() && defender->can_see(*attacker)
         && !defender->cannot_act() && !defender->confused()
@@ -569,18 +571,23 @@ bool melee_attack::handle_phase_hit()
             beogh_follower_convert(defender->as_monster(), true);
         }
     }
-    else if (needs_message)
+    else
     {
-        attack_verb = attacker->is_player()
-                      ? attack_verb
-                      : attacker->conj_verb(mons_attack_verb());
+        if (needs_message)
+        {
+            attack_verb = attacker->is_player()
+                                    ? attack_verb
+                                    : attacker->conj_verb(mons_attack_verb());
 
-        // TODO: Clean this up if possible, checking atype for do / does is ugly
-        mprf("%s %s %s but %s no damage.",
-             attacker->name(DESC_THE).c_str(),
-             attack_verb.c_str(),
-             defender_name(true).c_str(),
-             attacker->is_player() ? "do" : "does");
+            // TODO: Clean this up if possible, checking atype for do / does is ugly
+            mprf("%s %s %s but %s no damage.",
+                attacker->name(DESC_THE).c_str(),
+                attack_verb.c_str(),
+                defender_name(true).c_str(),
+                attacker->is_player() ? "do" : "does");
+        }
+
+        maybe_trigger_jinxbite(weapon ? weapon->name(DESC_YOUR) : you.hand_name(true));
     }
 
     // Check for weapon brand & inflict that damage too

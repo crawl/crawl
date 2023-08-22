@@ -1642,6 +1642,13 @@ A vampiric thrall bound into servitude by esoteric rituals. Though its rigid
 limbs give it an awkward gait, it moves with surprising speed, leaping upon its
 victims and leeching away their life essence with its vicious claws.
 %%%%
+jinxsprite
+
+A flickering wisp of playful malice, dancing through the air like a leaf in a
+hurricane. They are elusive, vexatious, and nearly impossible to harm; as soon
+as they reach out to touch someone, they vanish back where they came from,
+leaving their victims reeling in their wake.
+%%%%
 jorogumo
 
 A spider spirit that takes the appearance of a human. It weaves deadly magics to

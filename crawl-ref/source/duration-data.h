@@ -611,6 +611,10 @@ static const duration_def duration_data[] =
       "on siphon cooldown", "siphon cooldown",
       "You are unable to siphon essence.", D_NO_FLAGS,
       {{ "You are ready to siphon essence again." }}},
+    { DUR_JINXBITE, LIGHTBLUE, "Jinx",
+      "jinxed", "jinxbite",
+      "Your weapon is surrounded by jinxing sprites.", D_DISPELLABLE | D_EXPIRES,
+      {{ "The jinxing sprites lose interest in you." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

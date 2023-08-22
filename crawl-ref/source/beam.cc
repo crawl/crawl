@@ -6899,7 +6899,8 @@ bool always_shoot_through_monster(const actor *originator, const monster &victim
 {
     return mons_is_projectile(victim)
         || (mons_is_avatar(victim.type)
-            && originator && mons_aligned(originator, &victim));
+            && originator && mons_aligned(originator, &victim))
+        || victim.type == MONS_JINXSPRITE;
 }
 
 // Can a particular beam go through a particular monster?

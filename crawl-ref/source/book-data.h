@@ -232,6 +232,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Party Tricks
     SPELL_APPORTATION,
     SPELL_INTOXICATE,
+    SPELL_JINXBITE
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -262,6 +263,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Dreams
+    SPELL_JINXBITE,
     SPELL_HIBERNATION,
     SPELL_ANGUISH,
 },

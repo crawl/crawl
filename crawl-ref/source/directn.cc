@@ -47,6 +47,7 @@
 #include "prompt.h"
 #include "showsymb.h"
 #include "spl-goditem.h"
+#include "spl-summoning.h"
 #include "stash.h"
 #include "state.h"
 #include "stringutil.h"
@@ -3600,6 +3601,15 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
     {
         descs.emplace_back(make_stringf("chance to confuse on hit: %d%%",
                                         melee_confuse_chance(mi.hd)));
+    }
+
+    if (you.duration[DUR_JINXBITE])
+    {
+        const int pow = get_jinxsprite_summon_power(you);
+        const int wl = you.wearing_ego(EQ_ALL_ARMOUR, SPARM_GUILE) ?
+            guile_adjust_willpower(mi.willpower()) : mi.willpower();
+        descs.emplace_back(make_stringf("chance to call a sprite on attack: %d%%",
+            hex_success_chance(wl, pow, 100)));
     }
 
     if (mi.attitude == ATT_FRIENDLY)
