@@ -58,6 +58,7 @@
 #include "target.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "tilepick.h"
 #include "timed-effects.h"
 #include "unwind.h"
 #include "viewchar.h"

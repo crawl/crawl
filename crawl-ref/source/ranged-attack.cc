@@ -192,6 +192,8 @@ bool ranged_attack::handle_phase_blocked()
              punctuation.c_str());
     }
 
+    maybe_trigger_jinxbite();
+
     return attack::handle_phase_blocked();
 }
 
@@ -226,6 +228,8 @@ bool ranged_attack::handle_phase_dodged()
              defender_name(false).c_str(),
              attack_strength_punctuation(damage_done).c_str());
     }
+
+    maybe_trigger_jinxbite();
 
     return true;
 }
@@ -293,14 +297,19 @@ bool ranged_attack::handle_phase_hit()
                 range_used = BEAM_STOP;
             }
         }
-        else if (needs_message)
+        else
         {
-            mprf("%s %s %s%s but does no damage.",
-                 projectile->name(DESC_THE).c_str(),
-                 attack_verb.c_str(),
-                 defender->name(DESC_THE).c_str(),
-                 mulch_bonus() ? " and shatters," : "");
+            if (needs_message)
+            {
+                mprf("%s %s %s%s but does no damage.",
+                    projectile->name(DESC_THE).c_str(),
+                    attack_verb.c_str(),
+                    defender->name(DESC_THE).c_str(),
+                    mulch_bonus() ? " and shatters," : "");
+            }
         }
+
+        maybe_trigger_jinxbite();
     }
 
     if ((using_weapon() || throwing())

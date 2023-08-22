@@ -6,6 +6,7 @@
 
 #include "act-iter.h"
 #include "god-passive.h"
+#include "spl-selfench.h"
 #include "tag-version.h"
 #include "timed-effects.h"
 
@@ -58,6 +59,15 @@ static void _end_bullseye()
             targ->del_ench(ENCH_BULLSEYE_TARGET);
 
         you.props.erase(BULLSEYE_TARGET_KEY);
+    }
+}
+
+static void _maybe_expire_jinxbite()
+{
+    if (!jinxbite_targets_available())
+    {
+        mprf(MSGCH_DURATION, "The sprites lose interest in your situation.");
+        you.duration[DUR_JINXBITE] = 0;
     }
 }
 
@@ -600,6 +610,10 @@ static const duration_def duration_data[] =
       "on siphon cooldown", "siphon cooldown",
       "You are unable to siphon essence.", D_NO_FLAGS,
       {{ "You are ready to siphon essence again." }}},
+    { DUR_JINXBITE, LIGHTBLUE, "Jinx",
+      "jinxed", "jinxbite",
+      "You are surrounded by jinxing sprites.", D_DISPELLABLE | D_EXPIRES,
+      {{ "The jinxing sprites lose interest in you." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -665,6 +679,7 @@ static const duration_def duration_data[] =
       }}}},
     { DUR_REVELATION, 0, "", "", "revelation", "", D_NO_FLAGS, {{""}}},
     { DUR_BINDING_SIGIL_WARNING, 0, "", "", "", "", D_EXPIRES, {{"", maybe_show_binding_sigil_duration_warning}}},
+    { DUR_JINXBITE_LOST_INTEREST, 0, "", "", "", "", D_EXPIRES, {{"", _maybe_expire_jinxbite}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

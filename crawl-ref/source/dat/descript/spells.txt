@@ -781,6 +781,19 @@ Iskenderun's Mystic Blast spell
 Detonates a crackling sphere of destructive energy. The explosion will hit all
 nearby monsters with physical force, knocking them back if damage is done.
 %%%%
+Jinxbite spell
+
+Beckons tiny trickster spirits to join in the caster's fight and turn their
+attention against the caster's enemies. So long as they remain interested, any
+attack the caster makes against an enemy whose willpower this spell can overcome
+will suffer minor irresistable damage and draining from the sprites' playful
+malice.
+
+Fae assistance is fickle, however; they cannot be beckoned unless a susceptible
+victim is visible and will depart rapidly once no more remain. And even the mere
+act of inviting them will leave the caster more succeptible to hostile
+enchantments for a time.
+%%%%
 Volatile Blastmotes spell
 
 Brings forth a cloud of volatile blastmotes around the caster, which explode

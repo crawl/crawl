@@ -3541,6 +3541,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_JINXBITE, "Jinxbite",
+    spschool::hexes,
+    spflag::neutral | spflag::selfench,
+    2,
+    50,
+    -1, -1,
+    0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_SIGIL_OF_BINDING, "Sigil of Binding",
     spschool::hexes,
     spflag::none,

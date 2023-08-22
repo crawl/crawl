@@ -230,6 +230,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Party Tricks
     SPELL_APPORTATION,
+    SPELL_JINXBITE,
     SPELL_INTOXICATE,
 },
 
@@ -261,6 +262,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Dreams
+    SPELL_JINXBITE,
     SPELL_HIBERNATION,
     SPELL_ANGUISH,
 },

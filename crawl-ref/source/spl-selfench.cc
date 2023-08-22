@@ -9,6 +9,7 @@
 
 #include <cmath>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
 #include "coordit.h" // radius_iterator
@@ -220,5 +221,41 @@ spret cast_liquefaction(int pow, bool fail)
 
     you.increase_duration(DUR_LIQUEFYING, 10 + random2avg(pow, 2), 100);
     invalidate_agrid(true);
+    return spret::success;
+}
+
+// Is there at least one valid hostile thing in sight?
+bool jinxbite_targets_available()
+{
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mons_is_threatening(**mi) && !mi->wont_attack()
+            && mi->willpower() != WILL_INVULN)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+spret cast_jinxbite(int pow, bool fail)
+{
+    if (!jinxbite_targets_available())
+    {
+        mpr("There is nobody nearby that the sprites are interested in.");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    mprf("You beckon %s vexing sprites to accompany your attacks.",
+         you.duration[DUR_JINXBITE] ? "more" : "some");
+
+    int dur = random_range(9, 15) + div_rand_round(pow, 4);
+
+    you.increase_duration(DUR_JINXBITE, dur);
+    you.increase_duration(DUR_LOWERED_WL, dur * 2, 0, "You feel your willpower being sapped.");
+
     return spret::success;
 }

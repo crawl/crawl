@@ -37,6 +37,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
+#include "spl-damage.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
@@ -81,6 +82,8 @@ bool attack::handle_phase_blocked()
 
     if (attacker->is_player())
         behaviour_event(defender->as_monster(), ME_WHACK, attacker);
+
+    maybe_trigger_jinxbite();
 
     return true;
 }
@@ -1731,4 +1734,15 @@ actor &attack::stat_source() const
     if (!summoner || !summoner->alive())
         return *attacker;
     return *summoner;
+}
+
+// Attempt to trigger jinxbite, if it is active for the attacker.
+void attack::maybe_trigger_jinxbite()
+{
+    if (attacker->is_player() && you.duration[DUR_JINXBITE]
+        && defender->alive()
+        && !defender->wont_attack() && defender->willpower() != WILL_INVULN)
+    {
+        attempt_jinxbite_hit(*attacker, *defender);
+    }
 }
