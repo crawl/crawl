@@ -1222,7 +1222,6 @@ public:
 
     int get_damage(bool random) const override
     {
-        // This is duplicated by _describe_talisman_form.
         const int base_dam = damage + (random ? you.skill_rdiv(SK_UNARMED_COMBAT, 1, 2)
                                               : you.skill(SK_UNARMED_COMBAT) / 2);
 

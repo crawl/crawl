@@ -2425,7 +2425,6 @@ static string _describe_talisman_form(const item_def &item, bool monster)
     description += _maybe_desc_prop("Str", form->str_mod);
     description += _maybe_desc_prop("Dex", form->dex_mod);
 
-    // plausibly should show flux's offhand but, eh
     if (form_type == transformation::maw)
     {
         const int aux_dam = form->get_aux_damage(false);
@@ -2434,18 +2433,9 @@ static string _describe_talisman_form(const item_def &item, bool monster)
         if (max_aux_dam != aux_dam)
             description += make_stringf(" (max %d)", max_aux_dam);
     }
-    else if (form_type == transformation::blade_hands)
-    {
-        // Duplicates AuxPunch:
-        const int offhand_dam = 5 + 6 + you.skill(SK_UNARMED_COMBAT) / 2;
-        description += "\n\nSecond blade:" + aux_attack_desc(UNAT_PUNCH, offhand_dam);
-    }
     else if (form_type == transformation::dragon)
     {
-        // These are all dubious and that's fine.
-        // Duplicates AuxPunch:
-        const int claw_dam = 5 + you.skill(SK_UNARMED_COMBAT) / 2 + DRAGON_CLAWS * 3;
-        description += "\n\nClaw:" + aux_attack_desc(UNAT_PUNCH, claw_dam);
+        // These are both dubious and that's fine.
         // Duplicates AuxBite:
         description += "\n\nBite:" + aux_attack_desc(UNAT_BITE, 1 + DRAGON_FANGS * 2);
         // Wrong if the player doesn't have muts melded and is e.g. an At:
