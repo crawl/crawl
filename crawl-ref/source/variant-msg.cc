@@ -60,12 +60,12 @@ const string& get_variant_template(variant_msg_type msg_id, msg_variant_type var
     ostringstream os;
     if (msg_id == VMSG_NONE)
     {
-        os << "ERROR: Attempt to use VMSG_NONE"; // noloc
+        os << "ERROR: Attempt to use VMSG_NONE"; // @noloc
     }
     else
     {
-        os << "ERROR: Undefined variant message (" // noloc
-           << msg_id << ", " << variant << ")";   // noloc
+        os << "ERROR: Undefined variant message (" // @noloc
+           << msg_id << ", " << variant << ")";   // @noloc
     }
 
     // return value is reference, so object referred to must be persistent

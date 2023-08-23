@@ -112,13 +112,13 @@ static const char *_god_blessing_description(god_type god)
     switch (god)
     {
     case GOD_SHINING_ONE:
-        return "blessed by the Shining One"; // noloc (milestone)
+        return "blessed by the Shining One"; // @noloc (milestone)
     case GOD_LUGONU:
-        return "corrupted by Lugonu"; // noloc (milestone)
+        return "corrupted by Lugonu"; // @noloc (milestone)
     case GOD_KIKUBAAQUDGHA:
-        return "bloodied by Kikubaaqudgha"; // noloc (milestone)
+        return "bloodied by Kikubaaqudgha"; // @noloc (milestone)
     default:
-        return "touched by the gods"; // noloc (milestone)
+        return "touched by the gods"; // @noloc (milestone)
     }
 }
 
@@ -587,7 +587,7 @@ string zin_recite_text(const int seed, const int prayertype, int step)
 
     string recite = book_of_zin[chapter][step-1];
 
-    // noloc section start (keys)
+    // @noloc section start (keys)
     const map<string, string> replacements =
     {
         { "sinners", sinner_text[sinner_seed] },
@@ -602,7 +602,7 @@ string zin_recite_text(const int seed, const int prayertype, int step)
         { "smitten", smite_text[smite_seed][1] },
         { "Smitten", uppercase_first(smite_text[smite_seed][1]) },
     };
-    // noloc section end
+    // @noloc section end
 
     return localise(recite, replacements);
 }
@@ -1257,7 +1257,7 @@ bool zin_remove_all_mutations()
     you.one_time_ability_used.set(GOD_ZIN);
     take_note(Note(NOTE_GOD_GIFT, you.religion));
     simple_god_message(" draws all chaos from your body!");
-    delete_all_mutations("Zin's power"); // noloc
+    delete_all_mutations("Zin's power"); // @noloc
     return true;
 }
 
@@ -2937,13 +2937,13 @@ static void _setup_gozag_shop(int index, vector<shop_type> &valid_shops)
     const bool need_suffix = type != SHOP_GENERAL
                              && type != SHOP_GENERAL_ANTIQUE
                              && type != SHOP_DISTILLERY;
-    // noloc section start (special handling)
+    // @noloc section start (special handling)
     you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, index)].get_string()
                                     = need_suffix
                                       ? random_choose("Shoppe", "Boutique",
                                                       "Emporium", "Shop")
                                       : "";
-    // noloc section end
+    // @noloc section end
 
     you.props[make_stringf(GOZAG_SHOP_COST_KEY, index)].get_int()
         = gozag_price_for_shop();
@@ -3021,13 +3021,13 @@ static string _gozag_shop_spec(int index)
     string suffix = replace_all(
                                 you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY,
                                                        index)]
-                                .get_string(), " ", "_"); // noloc
+                                .get_string(), " ", "_"); // @noloc
     if (!suffix.empty())
-        suffix = " suffix:" + suffix; // noloc
+        suffix = " suffix:" + suffix; // @noloc
 
-    return make_stringf("%s shop name:%s%s gozag", // noloc
+    return make_stringf("%s shop name:%s%s gozag", // @noloc
                         shoptype_to_str(type),
-                        replace_all(name, " ", "_").c_str(), // noloc
+                        replace_all(name, " ", "_").c_str(), // @noloc
                         suffix.c_str());
 
 }
@@ -4600,7 +4600,7 @@ bool ru_do_sacrifice(ability_type sac)
             you.props[sac_def.sacrifice_vector].get_vector();
         num_sacrifices = sacrifice_muts.size();
 
-        // noloc section start
+        // @noloc section start
         for (int i = 0; i < num_sacrifices; i++)
         {
             mut = AS_MUT(sacrifice_muts[i]);
@@ -4625,7 +4625,7 @@ bool ru_do_sacrifice(ability_type sac)
         offer_text = localise(sac_def.sacrifice_text, sac_text);
         mile_text = make_stringf("%s: %s.", sac_def.milestone_text,
             sac_text.c_str());
-        // noloc section end
+        // @noloc section end
    }
     else
     {
@@ -5473,7 +5473,7 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_choice)
     god_speaks(you.religion, "It is so.");
     take_note(Note(NOTE_ANCESTOR_TYPE, 0, 0, ancestor_type_name));
     const string mile_text
-        = make_stringf("remembered their ancestor %s as %s.", //noloc
+        = make_stringf("remembered their ancestor %s as %s.", //@noloc
                        hepliaklqana_ally_name().c_str(),
                        ancestor_type_name.c_str());
     mark_milestone("ancestor.class", mile_text);

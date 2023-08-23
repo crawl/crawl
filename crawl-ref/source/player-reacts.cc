@@ -180,7 +180,7 @@ static void _decrement_petrification(int delay)
                                             "flesh" :
                                             get_form()->flesh_equivalent;
 
-        // locnote: Petrification ends: Player reverts to flesh or equivalent.
+        // @locnote: Petrification ends: Player reverts to flesh or equivalent.
         mprf(MSGCH_DURATION, "You turn to %s and can move again.",
              flesh_equiv.c_str());
 

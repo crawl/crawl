@@ -1047,9 +1047,9 @@ static const char* _book_type_name(int booktype)
     case BOOK_TOUCH:                  return "book of Touch";
     case BOOK_CHAOS:                  return "book of Chaos";
     case BOOK_HUNTER:                 return "book of the Hunter";
-    case BOOK_RANDART_LEVEL:          return "book of Fixed Level"; // noloc
-    case BOOK_RANDART_THEME:          return "book of Fixed Theme"; // noloc
-    default:                          return "book of Bugginess"; // noloc
+    case BOOK_RANDART_LEVEL:          return "book of Fixed Level"; // @noloc
+    case BOOK_RANDART_THEME:          return "book of Fixed Theme"; // @noloc
+    default:                          return "book of Bugginess"; // @noloc
     }
 }
 
@@ -1142,7 +1142,7 @@ string sub_type_string(const item_def &item, bool known)
             {
             if (!known)
                 return "manual";
-            string bookname = "manual of "; // noloc
+            string bookname = "manual of "; // @noloc
             bookname += skill_name(static_cast<skill_type>(item.plus));
             return bookname;
             }
@@ -2403,24 +2403,24 @@ static string _random_consonant_set(size_t c)
 
     static const string consonant_sets[] = {
         // 0-13: start, middle
-        "kl", "gr", "cl", "cr", "fr", // noloc
-        "pr", "tr", "tw", "br", "pl", // noloc
-        "bl", "str", "shr", "thr",    // noloc
+        "kl", "gr", "cl", "cr", "fr", // @noloc
+        "pr", "tr", "tw", "br", "pl", // @noloc
+        "bl", "str", "shr", "thr",    // @noloc
         // 14-26: start, middle, end
-        "sm", "sh", "ch", "th", "ph", // noloc
-        "pn", "kh", "gh", "mn", "ps", // noloc
-        "st", "sk", "sch",            // noloc
+        "sm", "sh", "ch", "th", "ph", // @noloc
+        "pn", "kh", "gh", "mn", "ps", // @noloc
+        "st", "sk", "sch",            // @noloc
         // 27-55: middle, end
-        "ts", "cs", "xt", "nt", "ll", // noloc
-        "rr", "ss", "wk", "wn", "ng", // noloc
-        "cw", "mp", "ck", "nk", "dd", // noloc
-        "tt", "bb", "pp", "nn", "mm", // noloc
-        "kk", "gg", "ff", "pt", "tz", // noloc
-        "dgh", "rgh", "rph", "rch",   // noloc
+        "ts", "cs", "xt", "nt", "ll", // @noloc
+        "rr", "ss", "wk", "wn", "ng", // @noloc
+        "cw", "mp", "ck", "nk", "dd", // @noloc
+        "tt", "bb", "pp", "nn", "mm", // @noloc
+        "kk", "gg", "ff", "pt", "tz", // @noloc
+        "dgh", "rgh", "rph", "rch",   // @noloc
         // 56-66: middle only
-        "cz", "xk", "zx", "xz", "cv", // noloc
-        "vv", "nl", "rh", "dw", "nw", // noloc
-        "khl",                        // noloc
+        "cz", "xk", "zx", "xz", "cv", // @noloc
+        "vv", "nl", "rh", "dw", "nw", // @noloc
+        "khl",                        // @noloc
     };
     COMPILE_CHECK(ARRAYSZ(consonant_sets) == RCS_END);
 

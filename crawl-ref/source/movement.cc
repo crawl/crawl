@@ -718,7 +718,7 @@ static spret _rampage_forward(coord_def move)
     const monster* current = monster_at(you.pos());
     if (fedhas_move && (!current || !fedhas_passthrough(current)))
     {
-        // locnote: through the fungus or through the plants
+        // @locnote: through the fungus or through the plants
         mprf(enhanced ? "You stride quickly through %s towards %s!"
                       : "You rampage quickly through %s towards %s!",
              mons_genus(mons->type) == MONS_FUNGUS ? "the fungus" : "the plants",

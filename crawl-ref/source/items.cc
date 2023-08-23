@@ -558,8 +558,8 @@ void unlink_item(int dest)
                 return;
             }
         }
-        mprf(MSGCH_ERROR, "Item %s claims to be held by monster %s, but " // noloc
-                          "it isn't in the monster's inventory.", // noloc
+        mprf(MSGCH_ERROR, "Item %s claims to be held by monster %s, but " // @noloc
+                          "it isn't in the monster's inventory.", // @noloc
              env.item[dest].name(DESC_PLAIN, false, true).c_str(),
              mons->name(DESC_PLAIN, true).c_str());
         // Don't return so the debugging code can take a look at it.
@@ -860,9 +860,9 @@ string item_message(vector<const item_def *> const &items)
                     out_string += "</" + colour + ">";
                 switch (specialness)
                 {
-                case 2: colour = "yellow";   break; // artefact - noloc
-                case 1: colour = "white";    break; // glowing/runed - noloc
-                case 0: colour = "darkgrey"; break; // mundane - noloc
+                case 2: colour = "yellow";   break; // artefact - @noloc
+                case 1: colour = "white";    break; // glowing/runed - @noloc
+                case 0: colour = "darkgrey"; break; // mundane - @noloc
                 }
                 if (!colour.empty())
                     out_string += "<" + colour + ">";
@@ -1146,7 +1146,7 @@ void origin_acquired(item_def &item, int agent)
 
 static string _milestone_rune(const item_def &item)
 {
-    return string("found ") + item.name(DESC_A) + "."; // noloc
+    return string("found ") + item.name(DESC_A) + "."; // @noloc
 }
 
 static void _milestone_check(const item_def &item)
@@ -1298,7 +1298,7 @@ string origin_desc(const item_def &item, bool localize)
                 break;
 #if TAG_MAJOR_VERSION == 34
             case AQ_CARD_GENIE:
-                desc = "You drew the Genie @in_location@"; // noloc (removed in 0.15)
+                desc = "You drew the Genie @in_location@"; // @noloc (removed in 0.15)
                 break;
 #endif
             case AQ_WIZMODE:
@@ -1863,7 +1863,7 @@ static void _get_book(item_def& it)
 
     if (you.skill_manual_points[sk])
     {
-        // locnote: pick up manual
+        // @locnote: pick up manual
         mprf("You pick up another %s and continue studying.", it.name(DESC_PLAIN).c_str());
     }
     else
@@ -1901,7 +1901,7 @@ static void _get_rune(const item_def& it, bool quiet)
     if (!quiet)
     {
         flash_view_delay(UA_PICKUP, rune_colour(it.sub_type), 300);
-        // locnote: pick up rune
+        // @locnote: pick up rune
         mprf("You pick up %s and feel its power.",
              rune_short_name(it.sub_type).c_str());
         int nrunes = runes_in_pack();
@@ -2550,7 +2550,7 @@ bool drop_item(int item_dropped, int quant_drop)
     {
         if (!Options.easy_unequip)
         {
-            // locnote: ring/amulet
+            // @locnote: ring/amulet
             mpr("You will have to take that off first.");
         }
         else if (remove_ring(item_dropped, true))
@@ -2956,14 +2956,14 @@ static bool _is_option_autopickup(const item_def &item, bool ignore_force)
     // the special-cased gold here is because this call can become very heavy
     // for gozag players under extreme circumstances
     const string iname = item.base_type == OBJ_GOLD
-                                                ? "{gold}" // noloc
+                                                ? "{gold}" // @noloc
                                                 : _autopickup_item_name(item);
 
     maybe_bool res = clua.callmaybefn("ch_force_autopickup", "is",
                                       &item, iname.c_str());
     if (!clua.error.empty())
     {
-        mprf(MSGCH_ERROR, "ch_force_autopickup failed: %s", // noloc
+        mprf(MSGCH_ERROR, "ch_force_autopickup failed: %s", // @noloc
              clua.error.c_str());
     }
 
@@ -4148,7 +4148,7 @@ static void _rune_from_specs(const char* _specs, item_def &item)
         string line;
         for (int i = 0; i < NUM_RUNE_TYPES; i++)
         {
-            line += localise("[%c] %s ", i + 'a', rune_type_name(i)); // noloc
+            line += localise("[%c] %s ", i + 'a', rune_type_name(i)); // @noloc
             if (i % 5 == 4 || i == NUM_RUNE_TYPES - 1)
             {
                 mpr_nolocalise(MSGCH_PROMPT, line);

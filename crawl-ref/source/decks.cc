@@ -319,7 +319,7 @@ string deck_summary()
     {
         int cards = deck_cards((deck_type) i);
         const deck_type_data *deck_data = map_find(all_decks, (deck_type) i);
-        const string name = deck_data ? deck_data->name : "bugginess"; // noloc
+        const string name = deck_data ? deck_data->name : "bugginess"; // @noloc
         if (cards)
         {
             if (cards == 1)
@@ -936,7 +936,7 @@ bool draw_three()
             for (int i = 0; i < draws.size(); ++i)
             {
                 msg::streams(MSGCH_PROMPT)
-                    << msg::nocap << (static_cast<char>(i + 'a')) << " - " // noloc
+                    << msg::nocap << (static_cast<char>(i + 'a')) << " - " // @noloc
                     << card_name((card_type)draws[i].get_int()) << endl;
             }
             need_prompt_redraw = false;
@@ -1622,7 +1622,7 @@ static void _wild_magic_card(int power)
             miscast_effect(*mons, &you,
                            {miscast_source::deck}, type,
                            3 * (power_level + 1), random2(70),
-                           "a card of wild magic"); // noloc
+                           "a card of wild magic"); // @noloc
 
             num_affected++;
         }
@@ -1752,7 +1752,7 @@ string deck_name(deck_type deck)
     if (deck == DECK_STACK)
         return "stacked deck";
     const deck_type_data *deck_data = map_find(all_decks, deck);
-    const string name = deck_data ? deck_data->name : "bugginess"; // noloc
+    const string name = deck_data ? deck_data->name : "bugginess"; // @noloc
     return "deck of " + name;
 }
 

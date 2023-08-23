@@ -669,7 +669,7 @@ static bool _check_tukima_validity(const actor *target)
 
         if (target_is_player)
         {
-            // locnote: Tukima's dance fail messages
+            // @locnote: Tukima's dance fail messages
             mpr(you.hand_act("%s twitches.", "%s twitch."));
         }
         else
@@ -680,12 +680,12 @@ static bool _check_tukima_validity(const actor *target)
             const string owner = apostrophise(target->name(DESC_THE));
             if (plural)
             {
-                // locnote: <the monster's> <hands> twitch.
+                // @locnote: <the monster's> <hands> twitch.
                 mprf("%s %s twitch.", owner.c_str(), hand.c_str());
             }
             else
             {
-                // locnote: <the monster's> <hand> twitches.
+                // @locnote: <the monster's> <hand> twitches.
                 mprf("%s %s twitches.", owner.c_str(), hand.c_str());
             }
         }
@@ -1002,7 +1002,7 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
         if (!friendly)
         {
             mpr(charmed ? "You don't feel so good about this..."
-                        // locnote: it = demon
+                        // @locnote: it = demon
                         : "It doesn't seem very happy.");
         }
         else if (mon == MONS_CRIMSON_IMP || mon == MONS_WHITE_IMP
@@ -1468,7 +1468,7 @@ static void _display_undead_motions(int motions)
 {
     vector<const char *> motions_list;
 
-    // noloc section start
+    // @noloc section start
     // Check bitfield from _raise_remains for types of corpse(s) being animated.
     if (motions & DEAD_ARE_WALKING)
         motions_list.push_back("walking");
@@ -1482,17 +1482,17 @@ static void _display_undead_motions(int motions)
         motions_list.push_back("slithering");
     if (motions & DEAD_ARE_CRAWLING)
         motions_list.push_back("crawling");
-    // noloc section end
+    // @noloc section end
 
     // Prevents the message from getting too long and spammy.
     if (motions_list.size() > 3 || localisation_active())
         mpr("The dead have arisen!");
     else
     {
-        // noloc section start
+        // @noloc section start
         mprf("The dead are %s!", comma_separated_line(motions_list.begin(),
              motions_list.end()).c_str());
-        // noloc section end
+        // @noloc section end
     }
 }
 
@@ -2906,7 +2906,7 @@ static void _overgrow_wall(const coord_def &pos)
 
     if (monster_at(pos))
     {
-        // locnote: Fedhas overgrow ability
+        // @locnote: Fedhas overgrow ability
         mprf("Something unseen blocks growth in %s.", what.c_str());
         return;
     }

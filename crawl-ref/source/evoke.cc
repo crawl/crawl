@@ -1141,7 +1141,7 @@ bool evoke_check(int slot, bool quiet)
         // DESC_THE prints "The tin of tremorstones (inert) is presently inert."
         if (!quiet)
         {
-            string name = "the " + i->name(DESC_DBNAME); // noloc
+            string name = "the " + i->name(DESC_DBNAME); // @noloc
             mprf("%s is presently inert.", name.c_str());
         }
         return false;

@@ -244,7 +244,7 @@ for filename in files:
                 continue
 
             # remove comment
-            if '//' in line and not re.search(r'// *(localise|locnote)', line):
+            if '//' in line and not re.search(r'// *@?(localise|locnote)', line):
                 line = strip_line_comment(line)
 
             line = line.strip()

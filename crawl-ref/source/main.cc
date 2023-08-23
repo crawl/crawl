@@ -706,7 +706,7 @@ static string _welcome_spam_suffix()
 static void _announce_goal_message()
 {
     const string type = _welcome_spam_suffix();
-    mprf(MSGCH_PLAIN, "<yellow>%s</yellow>", // noloc
+    mprf(MSGCH_PLAIN, "<yellow>%s</yellow>", // @noloc
          getMiscString("welcome_spam" + type).c_str());
 }
 

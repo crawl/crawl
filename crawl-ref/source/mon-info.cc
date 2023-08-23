@@ -44,10 +44,10 @@
 #endif
 #include "traps.h"
 
-// noloc section start
+// @noloc section start
 #define SPELL_HD_KEY "spell_hd"
 #define NIGHTVISION_KEY "nightvision"
-// noloc section end
+// @noloc section end
 
 /// Simple 1:1 mappings between monster enchantments & info flags.
 static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
@@ -465,10 +465,10 @@ monster_info::monster_info(const monster* m, int milev)
     // Translate references to tentacles into just their locations
     if (mons_is_tentacle_or_tentacle_segment(type))
     {
-        // noloc section start
+        // @noloc section start
         _translate_tentacle_ref(*this, m, "inwards");
         _translate_tentacle_ref(*this, m, "outwards");
-        // noloc section end
+        // @noloc section end
     }
 
     base_type = m->base_monster;
@@ -975,10 +975,10 @@ string monster_info::_core_name() const
             break;
 
         case MONS_PLAYER_GHOST:
-            s = apostrophise(mname) + " ghost"; // noloc
+            s = apostrophise(mname) + " ghost"; // @noloc
             break;
         case MONS_PLAYER_ILLUSION:
-            s = apostrophise(mname) + " illusion"; // noloc
+            s = apostrophise(mname) + " illusion"; // @noloc
             break;
         case MONS_PANDEMONIUM_LORD:
             s = mname;
@@ -1051,7 +1051,7 @@ string monster_info::common_name(description_level_type desc) const
         else
             ss << std::to_string(num_heads);
 
-        ss << "-headed "; // noloc
+        ss << "-headed "; // @noloc
     }
 
     if (type == MONS_MUTANT_BEAST && !is(MB_NAME_REPLACE))
@@ -1061,7 +1061,7 @@ string monster_info::common_name(description_level_type desc) const
         ss << _mutant_beast_tier_name(tier) << " ";
         for (auto facet : props[MUTANT_BEAST_FACETS].get_vector())
             ss << _mutant_beast_facet(facet.get_int()); // no space between
-        ss << " beast"; // noloc
+        ss << " beast"; // @noloc
     }
 
     if (!nocore)
@@ -1113,7 +1113,7 @@ string monster_info::common_name(description_level_type desc) const
         // If momentarily in original form, don't display "shaped
         // shifter".
         if (mons_genus(type) != MONS_SHAPESHIFTER)
-            ss << " shaped shifter"; // noloc
+            ss << " shaped shifter"; // @noloc
     }
 
     string s;
@@ -1310,13 +1310,13 @@ enum _monster_list_colour_type
     _NUM_MLC
 };
 
-// noloc section start (internal identifiers only)
+// @noloc section start (internal identifiers only)
 static const char * const _monster_list_colour_names[_NUM_MLC] =
 {
     "friendly", "neutral", "good_neutral", "strict_neutral",
     "trivial", "easy", "tough", "nasty"
 };
-// noloc section end
+// @noloc section end
 
 static int _monster_list_colours[_NUM_MLC] =
 {
@@ -1560,7 +1560,7 @@ string monster_info::speed_description() const
         return "fast";
 
     // This only ever displays through Lua.
-    return "normal"; // noloc
+    return "normal"; // @noloc
 }
 
 bool monster_info::wields_two_weapons() const

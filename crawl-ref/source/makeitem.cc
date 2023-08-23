@@ -51,7 +51,7 @@ int create_item_named(string name, coord_def pos, string *error)
     if (item != NON_ITEM)
         link_items();
     else if (error)
-        *error = "Failed to create item '" + name + "'"; // noloc
+        *error = "Failed to create item '" + name + "'"; // @noloc
 
     return item;
 }

@@ -158,7 +158,7 @@ void UseItemMenu::populate_menu()
     // Entry for unarmed
     if (item_type_filter == OSEL_WIELD)
     {
-        string hands_title = " -   "; // noloc (key to press, not punctuation)
+        string hands_title = " -   "; // @noloc (key to press, not punctuation)
         hands_title += localise("unarmed");
         MenuEntry *hands = new MenuEntry (hands_title, MEL_ITEM);
         add_entry(hands);
@@ -3207,7 +3207,7 @@ void read(item_def* scroll, dist *target)
     const scroll_type which_scroll = static_cast<scroll_type>(scroll->sub_type);
 
     // NOTE: can't use DESC_THE because we'll get the count if it's part of a stack
-    string scroll_name = "the " + scroll->name(DESC_QUALNAME); // noloc
+    string scroll_name = "the " + scroll->name(DESC_QUALNAME); // @noloc
 
     // Handle player cancels before we waste time
     if (item_type_known(*scroll))
@@ -3563,7 +3563,7 @@ void read(item_def* scroll, dist *target)
         && which_scroll != SCR_ACQUIREMENT)
     {
         // can't use DESC_A becaue we will get the stack count
-        string a_scroll = "a " + scroll->name(DESC_QUALNAME); // noloc
+        string a_scroll = "a " + scroll->name(DESC_QUALNAME); // @noloc
         
         if (scroll->quantity < prev_quantity)
             mprf("It was %s.", a_scroll.c_str());

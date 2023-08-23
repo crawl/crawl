@@ -15,13 +15,13 @@
 // Vestibule of Hell" or "on level 3 of the Dungeon".
 string prep_branch_level_name(level_id id)
 {
-    // noloc section start
+    // @noloc section start
     string place = id.describe(true, true);
     if (!place.empty() && place != "Pandemonium")
         place[0] = tolower_safe(place[0]);
     return place.find("level") == 0 ? "on " + place
                                     : "in " + place;
-    // noloc section end
+    // @noloc section end
 }
 
 bool single_level_branch(branch_type branch)

@@ -448,8 +448,8 @@ static void _SINGING_SWORD_melee_effects(item_def* weapon, actor* attacker,
     if (!x_chance_in_y(6, (tier == 1) ? 24: (tier == 2) ? 16: 12))
         return;
 
-    const char *tenname[] =  {"silenced", "no_tension", "low_tension", // noloc
-                              "high_tension", "SCREAM"}; // noloc
+    const char *tenname[] =  {"silenced", "no_tension", "low_tension", // @noloc
+                              "high_tension", "SCREAM"}; // @noloc
     const string key = tenname[tier];
     string msg = getSpeakString("singing sword " + key);
 

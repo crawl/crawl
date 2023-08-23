@@ -30,7 +30,7 @@ public:
         {
             InvEntry *ie = new InvEntry(*item);
             if (tag == "pickup")
-                ie->tag = "pickup"; // noloc
+                ie->tag = "pickup"; // @noloc
             // If there's no hotkey, provide one.
             if (ie->hotkeys[0] == ' ')
                 ie->hotkeys[0] = ckey++;
@@ -45,7 +45,7 @@ public:
 protected:
     string help_key() const override
     {
-        return "known-menu"; // noloc
+        return "known-menu"; // @noloc
     }
 
     bool process_key(int key) override
@@ -134,7 +134,7 @@ public:
             name = "runes";
         else if (item->sub_type == get_max_subtype(item->base_type))
         {
-            name = "unknown " // noloc
+            name = "unknown " // @noloc
                    + lowercase_string(item_class_name(item->base_type));
         }
         else if (item->base_type == OBJ_JEWELLERY)

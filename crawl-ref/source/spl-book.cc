@@ -41,7 +41,7 @@
 #include "transform.h"
 #include "unicode.h"
 
-// noloc section start (keys)
+// @noloc section start (keys)
 
 #define RANDART_BOOK_TYPE_KEY  "randart_book_type"
 #define RANDART_BOOK_LEVEL_KEY "randart_book_level"
@@ -49,7 +49,7 @@
 #define RANDART_BOOK_TYPE_LEVEL "level"
 #define RANDART_BOOK_TYPE_THEME "theme"
 
-// noloc section end
+// @noloc section end
 
 struct sortable_spell
 {
@@ -565,7 +565,7 @@ private:
         {
             // TODO: couldn't figure out how to do this in pure c++
             string match_text = localise("Matches:");
-            match_text += make_stringf(" '<w>%.20s</w>'", // noloc
+            match_text += make_stringf(" '<w>%.20s</w>'", // @noloc
                             replace_all(search_text, "<", "<<").c_str());
             int escaped_count = (int) std::count(search_text.begin(),
                                                     search_text.end(), '<');
@@ -586,13 +586,13 @@ private:
 
         const string act = localise(you.divine_exegesis ? "Cast" : "Memorise");
         // line 2
-        desc << "[<yellow>?</yellow>] " // noloc
+        desc << "[<yellow>?</yellow>] " // @noloc
              << chop_string(localise("help"), 20)
-             << "[<yellow>" // noloc
+             << "[<yellow>" // @noloc
              << localise("Ctrl-F") 
-             << "</yellow>] " // noloc
+             << "</yellow>] " // @noloc
              << chop_string(localise("search"), 12)
-             << "[<yellow>!</yellow>] "; // noloc
+             << "[<yellow>!</yellow>] "; // @noloc
         desc << ( current_action == action::cast
                             ? localise("<w>Cast</w>|Describe|Hide|Show")
                  : current_action == action::memorise
@@ -779,16 +779,16 @@ public:
 
         if (you.divine_exegesis)
         {
-            spell_levels_str = "<lightgreen>"; // noloc
+            spell_levels_str = "<lightgreen>"; // @noloc
             spell_levels_str += localise(
                 "Select a spell to cast with Divine Exegesis: %d MP available",
                 you.magic_points
             );
-            spell_levels_str += "</lightgreen>"; // noloc
+            spell_levels_str += "</lightgreen>"; // @noloc
         }
         else
         {
-            spell_levels_str = "<lightgreen>"; // noloc
+            spell_levels_str = "<lightgreen>"; // @noloc
             if (player_spell_levels() == 1)
                 spell_levels_str += localise("1 spell level left");
             else
@@ -796,7 +796,7 @@ public:
                 spell_levels_str += 
                     localise("%d spell levels left", player_spell_levels());
             }
-            spell_levels_str += "</lightgreen>"; // noloc
+            spell_levels_str += "</lightgreen>"; // @noloc
             if (player_spell_levels() < 9)
                 spell_levels_str += " ";
         }
@@ -997,7 +997,7 @@ bool learn_spell(spell_type specspell, bool wizard, bool interactive)
             mprf(MSGCH_WARN, "This spell is impossible to cast!");
         else if (severity > 0)
         {
-            // locnote: first %s = dangerous, very dangerous, etc.; second %s = ! or .
+            // @locnote: first %s = dangerous, very dangerous, etc.; second %s = ! or .
             mprf(MSGCH_WARN, "This spell is %s to cast%s",
                              fail_severity_adjs[severity],
                              severity > 1 ? "!" : ".");

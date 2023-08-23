@@ -43,7 +43,7 @@ static int _pushline(lua_State *ls, int firstline)
     char buffer[16384];
     char *b = buffer;
     size_t l;
-    string prompt = firstline ? "> " : ". "; // noloc
+    string prompt = firstline ? "> " : ". "; // @noloc
     if (crawl_state.seen_hups || msgwin_get_line_autohist(prompt, buffer, sizeof(buffer)))
         return 0;
     l = strlen(b);
@@ -98,7 +98,7 @@ static int _report(lua_State *ls, int status)
     {
         const char *msg = lua_tostring(ls, -1);
         if (msg == nullptr)
-            msg = "(error object is not a string)";  // noloc (debug msg)
+            msg = "(error object is not a string)";  // @noloc (debug msg)
         mprf(MSGCH_ERROR, "%s", msg);
         lua_pop(ls, 1);
     }

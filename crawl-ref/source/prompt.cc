@@ -55,7 +55,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
         interrupt_activity(activity_interrupt::force);
 
     // Allow players to answer prompts via clua.
-    maybe_bool res = clua.callmaybefn("c_answer_prompt", "s", str); // noloc
+    maybe_bool res = clua.callmaybefn("c_answer_prompt", "s", str); // @noloc
     if (res == MB_TRUE)
         return true;
     if (res == MB_FALSE)

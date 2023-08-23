@@ -192,7 +192,7 @@ static bool _is_soh(string name)
 static string _soh_name(monster_type m_type)
 {
     branch_type b = serpent_of_hell_branch(m_type);
-    return string("the Serpent of Hell (") + branches[b].longname + ")"; // noloc
+    return string("the Serpent of Hell (") + branches[b].longname + ")"; // @noloc
 }
 
 static monster_type _mon_by_name(string name)
@@ -501,7 +501,7 @@ static void _recap_spell_keys(vector<string> &keys)
         // first, strip " spell"
         const string key_name = keys[i].substr(0, keys[i].length() - 6);
         // then get the real name
-        keys[i] = make_stringf("%s spell", // noloc
+        keys[i] = make_stringf("%s spell", // @noloc
                                spell_title(spell_by_name(key_name)));
     }
 }
@@ -517,7 +517,7 @@ static void _recap_ability_keys(vector<string> &keys)
     {
         strip_suffix(key, "ability");
         // get the real name
-        key = make_stringf("%s ability", // noloc
+        key = make_stringf("%s ability", // @noloc
                            ability_name(ability_by_name(key)));
     }
 }
@@ -528,7 +528,7 @@ static void _recap_feat_keys(vector<string> &keys)
     {
         dungeon_feature_type type = feat_by_desc(keys[i]);
         if (type == DNGN_ENTER_SHOP)
-            keys[i] = "A shop"; // noloc
+            keys[i] = "A shop"; // @noloc
         else
             keys[i] = feature_description(type, NUM_TRAPS, "", DESC_A);
     }
@@ -605,13 +605,13 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
     if (colour == BLACK)
         colour = LIGHTGREY;
 
-    string prefix = "(<"; // noloc
+    string prefix = "(<"; // @noloc
     prefix += colour_to_str(colour);
-    prefix += ">"; // noloc
+    prefix += ">"; // @noloc
     prefix += stringize_glyph(mons_char(m_type));
-    prefix += "</"; // noloc
+    prefix += "</"; // @noloc
     prefix += colour_to_str(colour);
-    prefix += ">) "; // noloc
+    prefix += ">) "; // @noloc
 
     const string title = prefix + name;
 #else
@@ -1205,12 +1205,12 @@ static string _branch_location(branch_type br)
         if (min == max)
         {
             if (branches[parent].numlevels == 1)
-                place = "in "; // noloc
+                place = "in "; // @noloc
             else
-                desc = make_stringf("on level %d of ", min); // noloc
+                desc = make_stringf("on level %d of ", min); // @noloc
         }
         else
-            place = make_stringf("between levels %d and %d of ", min, max); // noloc
+            place = make_stringf("between levels %d and %d of ", min, max); // @noloc
         place += branches[parent].longname;
 
         desc += "\n\n";

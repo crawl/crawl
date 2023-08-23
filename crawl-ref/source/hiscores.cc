@@ -572,7 +572,7 @@ static string _hiscore_date_string(time_t time)
 {
     struct tm *date = TIME_FN(&time);
 
-    // noloc section start
+    // @noloc section start
     const char *mons[12] = { "Jan", "Feb", "Mar", "Apr", "May", "June",
                              "July", "Aug", "Sept", "Oct", "Nov", "Dec" };
 
@@ -589,7 +589,7 @@ static string _hiscore_date_string(time_t time)
         { "yy", make_stringf("%02d", year % 100) },
         { "yyyy", make_stringf("%d", year) },
     };
-    // noloc section end
+    // @noloc section end
 
     return localise(" on @mon@ @d@, @yyyy@", params);
 }
@@ -668,7 +668,7 @@ static void _hs_write(FILE *scores, scorefile_entry &se)
     fprintf(scores, "%s", se.raw_string().c_str());
 }
 
-// noloc section start (these strings never displayed)
+// @noloc section start (these strings never displayed)
 
 static const char *kill_method_names[] =
 {
@@ -684,7 +684,7 @@ static const char *kill_method_names[] =
     "collision", "zot", "constriction",
 };
 
-// noloc section end
+// @noloc section end
 
 static const char *_kill_method_name(kill_method_type kmt)
 {
@@ -902,7 +902,7 @@ enum old_job_type
 
 static const char* _job_name(int job)
 {
-    // noloc section start (obsolete jobs)
+    // @noloc section start (obsolete jobs)
     switch (job)
     {
     case OLD_JOB_THIEF:
@@ -924,14 +924,14 @@ static const char* _job_name(int job)
     case OLD_JOB_SKALD:
         return "Skald";
     }
-    // noloc section end
+    // @noloc section end
 
     return get_job_name(static_cast<job_type>(job));
 }
 
 static const char* _job_abbrev(int job)
 {
-    // noloc section start (obsolete jobs)
+    // @noloc section start (obsolete jobs)
     switch (job)
     {
     case OLD_JOB_THIEF:
@@ -953,7 +953,7 @@ static const char* _job_abbrev(int job)
     case OLD_JOB_SKALD:
         return "Sk";
     }
-    // noloc section end
+    // @noloc section end
 
     return get_job_abbrev(static_cast<job_type>(job));
 }
@@ -988,7 +988,7 @@ enum old_species_type
 
 static string _species_name(int race)
 {
-    // noloc section start (obsolete races)
+    // @noloc section start (obsolete races)
     switch (race)
     {
     case OLD_SP_ELF: return "Elf";
@@ -1001,7 +1001,7 @@ static string _species_name(int race)
     case OLD_SP_DJINNI: return "Djinni";
     case OLD_SP_LAVA_ORC: return "Lava Orc";
     }
-    // noloc section end
+    // @noloc section end
 
     // Guard against an ASSERT in get_species_def; it's really bad if the game
     // crashes at this point while trying to clean up a dead/quit player.
@@ -1014,7 +1014,7 @@ static string _species_name(int race)
 
 static const char* _species_abbrev(int race)
 {
-    // noloc section start (obsolete races)
+    // @noloc section start (obsolete races)
     switch (race)
     {
     case OLD_SP_ELF: return "El";
@@ -1027,7 +1027,7 @@ static const char* _species_abbrev(int race)
     case OLD_SP_DJINNI: return "Dj";
     case OLD_SP_LAVA_ORC: return "LO";
     }
-    // noloc section end
+    // @noloc section end
 
     // see note in _species_name: don't ASSERT in get_species_def.
     if (race < 0 || race >= NUM_SPECIES)
@@ -1153,7 +1153,7 @@ void scorefile_entry::set_base_xlog_fields() const
     if (crawl_state.game_is_sprint())
     {
         /* XXX: hmmm, something better here? */
-        score_version += "-sprint.1"; // noloc
+        score_version += "-sprint.1"; // @noloc
     }
     fields->add_field("v", "%s", Version::Short);
     fields->add_field("vlong", "%s", Version::Long);
@@ -1400,12 +1400,12 @@ static void _deconstruct_summoner_phrase(const string &s, string& phrase, string
  */
 static void _deconstruct_shooter_phrase(const string &s, string& phrase, string &missile, string& shooter)
 {
-    // noloc section start
+    // @noloc section start
     static const string hit_by = "Hit by ";
     static const string thrown_by = " thrown by ";
     static const string shot_with = "Shot with ";
     static const string by = " by ";
-    // noloc section end
+    // @noloc section end
 
     if (starts_with(s, hit_by))
     {
@@ -1969,13 +1969,13 @@ string scorefile_entry::strip_article_a(const string &s) const
 
 string scorefile_entry::terse_missile_name() const
 {
-    // noloc section start
+    // @noloc section start
     const string pre_post[][2] =
     {
         { "Shot with ", " by " },
         { "Hit by ",     " thrown by " }
     };
-    // noloc section end
+    // @noloc section end
     const string &aux = auxkilldata;
     string missile;
 
@@ -2003,7 +2003,7 @@ string scorefile_entry::terse_missile_cause() const
 {
     const string &aux = auxkilldata;
 
-    string monster_prefix = " by "; // noloc (search string)
+    string monster_prefix = " by "; // @noloc (search string)
     // We're looking for Shot with a%s %s by %s/ Hit by a%s %s thrown by %s
     string::size_type by = aux.rfind(monster_prefix);
     if (by == string::npos)
@@ -2076,7 +2076,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
 
     bool verbose = verbosity == DDV_VERBOSE;
 
-    string desc = make_stringf("%8d %s ", points, name.c_str()); // noloc
+    string desc = make_stringf("%8d %s ", points, name.c_str()); // @noloc
     // Please excuse the following bit of mess in the name of flavour ;)
     if (verbose)
     {
@@ -2084,7 +2084,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
     }
     else
     {
-        string character = string("the %s ") + _job_name(job); // noloc
+        string character = string("the %s ") + _job_name(job); // @noloc
         desc += localise(character, _species_name(race));
     }
     desc += " ";
@@ -2117,14 +2117,14 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         {
             string fmt = localise("Began as %s");
             string srace = _species_name(race);
-            string character = string("a %s ") + _job_name(job); // noloc
+            string character = string("a %s ") + _job_name(job); // @noloc
             character = localise(character, srace);
             desc += make_stringf(fmt.c_str(), character.c_str());
         }
         else
         {
             string srace = article_a(_species_name(race));
-            desc += make_stringf("Began as %s %s", // noloc
+            desc += make_stringf("Began as %s %s", // @noloc
                                  srace.c_str(), _job_name(job));
         }
 
@@ -2557,7 +2557,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (auxkilldata.empty())
         {
             if (terse)
-                desc += localise("wild magic"); // noloc (duplicate of mutation name)
+                desc += localise("wild magic"); // @noloc (duplicate of mutation name)
             else
                 desc += localise("Killed by wild magic");
         }

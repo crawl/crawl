@@ -723,7 +723,7 @@ static void _majin_speak(spell_type spell)
 
     const int level = spell_difficulty(spell);
     const bool weak = level <= 4;
-    const string lookup = weak ? "majin-bo cast weak" : "majin-bo cast"; // noloc (keys)
+    const string lookup = weak ? "majin-bo cast weak" : "majin-bo cast"; // @noloc (keys)
     string msg = localise("A voice whispers, \"%s\"",
                           LocalisationArg(getSpeakString(lookup), false));
     mpr_nolocalise(MSGCH_TALK, msg);
@@ -1072,7 +1072,7 @@ static void _try_monster_cast(spell_type spell, int /*powc*/,
 
     mpr("Invalid player spell, attempting to cast it as monster spell.");
 
-    mon->mname      = "Dummy Monster"; // noloc
+    mon->mname      = "Dummy Monster"; // @noloc
     mon->type       = MONS_HUMAN;
     mon->behaviour  = BEH_SEEK;
     mon->attitude   = ATT_FRIENDLY;
@@ -1163,7 +1163,7 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
             return true;
         }
 
-        // locnote: params: 1 = dangerous/very dangerous/etc, 2 = <failure rate>, 3 = !/. 
+        // @locnote: params: 1 = dangerous/very dangerous/etc, 2 = <failure rate>, 3 = !/. 
         string prompt = localise("The spell is %s to cast "
                                      "(%s risk of failure)%s"
                                      " Continue anyway?",
@@ -1856,7 +1856,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
         // `true` on fourth param skips MP check and a few others that have
         // already been carried out
         const bool useless = spell_is_useless(spell, true, false, true);
-        const char *spell_title_color = useless ? "darkgrey" : "w"; // noloc
+        const char *spell_title_color = useless ? "darkgrey" : "w"; // @noloc
         string verb;
         if (wait_spell_active(spell))
             verb = "<lightred>" + localise("Restarting spell") + "</lightred>";
@@ -1865,11 +1865,11 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
         else
             verb = localise("Casting");
         string spl_title = localise(spell_title(spell));
-        string title = make_stringf("%s: <%s>%s</%s>", verb.c_str(), // noloc
+        string title = make_stringf("%s: <%s>%s</%s>", verb.c_str(), // @noloc
                     spell_title_color, spl_title.c_str(), spell_title_color);
         if (allow_fail)
         {
-            title += make_stringf(" <lightgrey>(%s)</lightgrey>", // noloc
+            title += make_stringf(" <lightgrey>(%s)</lightgrey>", // @noloc
                 _spell_failure_rate_description(spell).c_str());
         }
 
@@ -2685,7 +2685,7 @@ static dice_def _spell_damage(spell_type spell, bool evoked)
 
 string spell_damage_string(spell_type spell, bool evoked)
 {
-    // noloc section start
+    // @noloc section start
     switch (spell)
     {
         case SPELL_MAXWELLS_COUPLING:
@@ -2716,7 +2716,7 @@ string spell_damage_string(spell_type spell, bool evoked)
     if (spell == SPELL_LRD || spell == SPELL_SHATTER)
         return dam_str + "*"; // many special cases of more/less damage
     return dam_str;
-    // noloc section end
+    // @noloc section end
 }
 
 int spell_acc(spell_type spell)

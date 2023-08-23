@@ -86,7 +86,7 @@ static brand_type _hepliaklqana_weapon_brand(monster_type mc, int HD);
 static armour_type _hepliaklqana_shield_type(monster_type mc, int HD);
 static special_armour_type _hepliaklqana_shield_ego(int HD);
 
-// locnote: some of these are infinitive clauses to be plugged into "You can [now/no longer] %s."
+// @locnote: some of these are infinitive clauses to be plugged into "You can [now/no longer] %s."
 const vector<vector<god_power>> & get_all_god_powers()
 {
     static vector<vector<god_power>> god_powers =
@@ -992,10 +992,10 @@ int yred_random_servants(unsigned int threshold, bool force_hostile)
                  you.pos(), MHITYOU);
     mg.set_summoned(!force_hostile ? &you : 0, 0, 0, GOD_YREDELEMNUL);
 
-    // noloc section start (just for morgue/scores)
+    // @noloc section start (just for morgue/scores)
     if (force_hostile)
         mg.non_actor_summoner = "the anger of Yredelemnul";
-    // noloc section end
+    // @noloc section end
 
     int created = 0;
     if (force_hostile)
@@ -1125,7 +1125,7 @@ static bool _jiyva_mutate()
 
     const int rand = random2(100);
 
-    // noloc section start
+    // @noloc section start
     if (rand < 5)
         return delete_mutation(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true);
     else if (rand < 30)
@@ -1136,7 +1136,7 @@ static bool _jiyva_mutate()
         return mutate(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true);
     else
         return mutate(RANDOM_GOOD_MUTATION, "Jiyva's grace", true, false, true);
-    // noloc section end
+    // @noloc section end
 }
 
 bool vehumet_is_offering(spell_type spell)
@@ -1439,7 +1439,7 @@ static bool _give_trog_oka_gift(bool forced)
         simple_god_message(" grants you armour!");
         break;
     default:
-        simple_god_message(" grants you bugs!"); // noloc (bug)
+        simple_god_message(" grants you bugs!"); // @noloc (bug)
         break;
     }
 
@@ -1835,13 +1835,13 @@ int hepliaklqana_ally_hp()
  */
 static string _make_ancestor_name(gender_type gender)
 {
-    // noloc section start (lookup key)
+    // @noloc section start (lookup key)
     const string gender_name = gender == GENDER_MALE ? " male " :
                                gender == GENDER_FEMALE ? " female " : " ";
     const string suffix = gender_name + "name";
     const string name = getRandNameString("ancestor", suffix);
     return name.empty() ? make_name() : name;
-    // noloc section end
+    // @noloc section end
 }
 
 /// Setup when gaining a Hepliaklqana ancestor.
@@ -1907,7 +1907,7 @@ static string _item_ego_name(object_class_type base_type, int brand)
     }
     case OBJ_ARMOUR:
         // XXX: hack
-        return "reflection"; // noloc
+        return "reflection"; // @noloc
     default:
         die("unsupported object type");
     }
@@ -1998,7 +1998,7 @@ void upgrade_hepliaklqana_ancestor(bool quiet_force)
             string full_name = base_name + " of " + brand_type_name(brand, false);
             base_name = "the " + base_name;
             full_name = article_a(full_name);
-            // locnote: <ancestor> remembers that <the weapon> was <a weapon of brand>
+            // @locnote: <ancestor> remembers that <the weapon> was <a weapon of brand>
             mprf("%s remembers that %s was %s.",
                  ancestor->name(DESC_YOUR, true).c_str(),
                  base_name.c_str(),
@@ -2230,7 +2230,7 @@ bool do_god_gift(bool forced)
 
 string god_name(god_type which_god, bool long_name)
 {
-    // noloc section start
+    // @noloc section start
     if (which_god == GOD_JIYVA)
     {
         return god_name_jiyva(long_name) +
@@ -2249,7 +2249,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_NO_GOD:        return "No God";
     case GOD_RANDOM:        return "random";
     case GOD_NAMELESS:      return "nameless";
-    // noloc section end
+    // @noloc section end
     case GOD_ZIN:           return "Zin";
     case GOD_SHINING_ONE:   return "the Shining One";
     case GOD_KIKUBAAQUDGHA: return "Kikubaaqudgha";
@@ -2356,7 +2356,7 @@ void god_speaks(god_type god, const char *mesg)
     fake_mon.god        = god;
     fake_mon.set_position(you.pos());
     fake_mon.foe        = MHITYOU;
-    fake_mon.mname      = "FAKE GOD MONSTER"; // noloc
+    fake_mon.mname      = "FAKE GOD MONSTER"; // @noloc
 
     mprf(MSGCH_GOD, god, "%s", do_mon_str_replacements(mesg, fake_mon).c_str());
 
@@ -3555,7 +3555,7 @@ static void _transfer_good_god_piety()
         else if (old_god == GOD_ZIN)
             msg = "%s says: Farewell. Go and enforce order with %s.";
         else
-            msg = "%s says: Farewell. Go and become a bug with %s."; // noloc (bug)
+            msg = "%s says: Farewell. Go and become a bug with %s."; // @noloc (bug)
 
         // Some feedback that piety moved over.
         msg = localise(msg, god_speaker(old_god), god_name(you.religion));
@@ -3589,7 +3589,7 @@ static string _good_god_wrath_message(god_type good_god)
             else
                 return "You will suffer for embracing such evil!";
         default:
-            return "You will be buggily punished for this!"; // noloc
+            return "You will be buggily punished for this!"; // @noloc
     }
 }
 
@@ -4778,7 +4778,7 @@ static void _place_delayed_monsters()
                              : pluralise(lastmon->name(DESC_PLAIN));
 
                 map<string, string> params = 
-                    {{"God", god}, {"servant", mon_name}}; // noloc
+                    {{"God", god}, {"servant", mon_name}}; // @noloc
                 msg = localise(msg, params);
             }
             else

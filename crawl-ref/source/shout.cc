@@ -42,7 +42,7 @@ static void _actor_apply_noise(actor *act,
                                const coord_def &apparent_source,
                                int noise_intensity_millis);
 
-// noloc section start (lookup keys and diagnotic messages)
+// @noloc section start (lookup keys and diagnotic messages)
 
 /// By default, what databse lookup key corresponds to each shout type?
 static const map<shout_type, string> default_msg_keys = {
@@ -263,7 +263,7 @@ void monster_shout(monster* mons, int shout)
         learned_something_new(HINT_MONSTER_SHOUT, mons->pos());
 }
 
-// noloc section end (lookup keys and diagnotic messages)
+// @noloc section end (lookup keys and diagnotic messages)
 
 bool check_awaken(monster* mons, int stealth)
 {
@@ -526,7 +526,7 @@ static int _issue_orders_prompt()
     {
         string cap_shout = you.shout_verb(false);
         cap_shout[0] = toupper_safe(cap_shout[0]);
-        // locnote: press t to shout
+        // @locnote: press t to shout
         mprf(" t - %s!", cap_shout.c_str());
     }
 
@@ -540,7 +540,7 @@ static int _issue_orders_prompt()
                 previous = true;
         }
 
-        // locnote: All these orders can be given to one or multiple allies
+        // @locnote: All these orders can be given to one or multiple allies
         mpr_nojoin(" Orders for allies:");
         if (!previous)
            mpr_nojoin("  a - Attack new target.");
@@ -738,7 +738,7 @@ void yell(const actor* mon)
         {
             if (you.paralysed() || you.duration[DUR_WATER_HOLD])
             {
-                // locnote: %s = shout/howl/hiss/etc. depending on species/form
+                // @locnote: %s = shout/howl/hiss/etc. depending on species/form
                 mprf("You feel a strong urge to %s, but "
                      "you are unable to make a sound!",
                      shout_verb.c_str());
@@ -746,7 +746,7 @@ void yell(const actor* mon)
             else
             {
                 string shout_noun = article_a(shout_verb);
-                // locnote: %s = a shout/howl/hiss/etc. depending on species/form
+                // @locnote: %s = a shout/howl/hiss/etc. depending on species/form
                 mprf("You feel %s rip itself from your throat, "
                      "but you make no sound!",
                      shout_noun.c_str());

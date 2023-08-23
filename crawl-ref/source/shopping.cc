@@ -821,7 +821,7 @@ static bool _purchase(shop_struct& shop, const level_pos& pos, int index)
 
 static string _hyphenated_letters(int how_many, char first)
 {
-    // noloc section start
+    // @noloc section start
     string s = "<w>";
     s += first;
     s += "</w>";
@@ -832,7 +832,7 @@ static string _hyphenated_letters(int how_many, char first)
         s += "</w>";
     }
     return s;
-    // noloc section end
+    // @noloc section end
 }
 
 enum shopping_order
@@ -911,7 +911,7 @@ class ShopEntry : public InvEntry
             colour_to_str(menu_colour(text, item_prefix(*item), tag));
         const string coststr = localise("%4d gold", cost);
         const string unknown = localise(shop_item_unknown(*item) ? " (unknown)" : "");
-        // noloc section start
+        // @noloc section start
         return make_stringf(" <%s>%c%c%c%c</%s><%s>%s   %s%s</%s>",
                             keystr.c_str(),
                             hotkeys[0],
@@ -924,7 +924,7 @@ class ShopEntry : public InvEntry
                             localise(text).c_str(),
                             unknown.c_str(),
                             itemstr.c_str());
-        // noloc section end
+        // @noloc section end
     }
 
     virtual void select(int qty = -1) override
@@ -1044,7 +1044,7 @@ void ShopMenu::update_help()
     else
         line2 += localise("[<w>!</w>] <w>buy</w>|examine items");
     // 3rd field
-    line2 += make_stringf("  [%s] ", // noloc
+    line2 += make_stringf("  [%s] ", // @noloc
                           _hyphenated_letters(item_count(), 'a').c_str());
     // 4th field
     if (menu_action == ACT_EXECUTE)
@@ -1061,7 +1061,7 @@ void ShopMenu::update_help()
         line3 += pad_string("", 21);
     else
         line3 += pad_string(localise("[<w>Enter</w>] make purchase"), 21 + 7);
-    line3 += make_stringf("  [%s] ", // noloc
+    line3 += make_stringf("  [%s] ", // @noloc
                           _hyphenated_letters(item_count(), 'A').c_str());
     line3 += localise("put item on shopping list");
 
@@ -1095,7 +1095,7 @@ void ShopMenu::purchase_selected()
     if (cost > you.gold)
     {
         more = formatted_string::parse_string(make_stringf(
-                   "<%s>%s</%s>\n", // noloc
+                   "<%s>%s</%s>\n", // @noloc
                    col.c_str(),
                    localise("You don't have enough money.").c_str(),
                    col.c_str()));
@@ -1111,7 +1111,7 @@ void ShopMenu::purchase_selected()
         cost, Options.easy_confirm == easy_confirm_type::none ? "Y" : "y");
 
     more = formatted_string::parse_string(make_stringf(
-               "<%s>%s</%s>\n", // noloc
+               "<%s>%s</%s>\n", // @noloc
                col.c_str(),
                text.c_str(),
                col.c_str()));
@@ -1180,7 +1180,7 @@ void ShopMenu::purchase_selected()
         else
             outside = localise("I'll put some of them outside for you.");
         more = formatted_string::parse_string(make_stringf(
-            "<%s>%s</%s>\n", // noloc
+            "<%s>%s</%s>\n", // @noloc
             col.c_str(),
             outside.c_str(),
             col.c_str()));
@@ -1420,7 +1420,7 @@ shop_struct *shop_at(const coord_def& where)
     return &it->second;
 }
 
-// noloc section start (special handling)
+// @noloc section start (special handling)
 
 string shop_type_name(shop_type type)
 {
@@ -1473,7 +1473,7 @@ static const char *_shop_type_suffix(shop_type type, const coord_def &where)
     return suffixnames[(where.x + where.y) % ARRAYSZ(suffixnames)];
 }
 
-// noloc section end (special handling)
+// @noloc section end (special handling)
 
 string shop_name(const shop_struct& shop)
 {
@@ -2099,7 +2099,7 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
             }
             else
             {
-                // locnote: You now have enough gold to...
+                // @locnote: You now have enough gold to...
                 desc = "buy %s";
             }
 
@@ -2148,7 +2148,7 @@ formatted_string ShoppingListMenu::calc_title()
     fs.textcolour(title->colour);
     fs.cprintf(text);
 
-    string s = "<lightgrey>  [<w>a-z</w>] "; // noloc
+    string s = "<lightgrey>  [<w>a-z</w>] "; // @noloc
 
     if (view_only)
     {
@@ -2204,7 +2204,7 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
 
         const string etitle =
             make_stringf(
-                "%*s %s  %s%s", // noloc
+                "%*s %s  %s%s", // @noloc
                 longest,
                 describe_thing_pos(thing).c_str(),
                 localise("%4d gold", cost).c_str(),
@@ -2256,7 +2256,7 @@ void ShoppingList::display(bool view_only)
     shopmenu.set_title(mtitle);
 
     string more_str = localise("You have %d gp", you.gold);
-    more_str = make_stringf("<yellow>%s</yellow>", more_str.c_str()); // noloc
+    more_str = make_stringf("<yellow>%s</yellow>", more_str.c_str()); // @noloc
     shopmenu.set_more(formatted_string::parse_string(more_str));
 
     shopmenu.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE

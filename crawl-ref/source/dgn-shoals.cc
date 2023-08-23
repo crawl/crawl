@@ -25,9 +25,9 @@
 #include "traps.h"
 #include "view.h"
 
-static const char *PROPS_SHOALS_TIDE_KEY = "shoals-tide-height"; // noloc
-static const char *PROPS_SHOALS_TIDE_VEL = "shoals-tide-velocity"; // noloc
-static const char *PROPS_SHOALS_TIDE_UPDATE_TIME = "shoals-tide-update-time"; // noloc
+static const char *PROPS_SHOALS_TIDE_KEY = "shoals-tide-height"; // @noloc
+static const char *PROPS_SHOALS_TIDE_VEL = "shoals-tide-velocity"; // @noloc
+static const char *PROPS_SHOALS_TIDE_UPDATE_TIME = "shoals-tide-update-time"; // @noloc
 
 static dgn_island_plan _shoals_islands;
 
@@ -654,7 +654,7 @@ void dgn_build_shoals_level()
 {
         // TODO: Attach this information to the vault name string
         //       instead of the build method string.
-    env.level_build_method += make_stringf(" [depth %d]", you.depth); // noloc
+    env.level_build_method += make_stringf(" [depth %d]", you.depth); // @noloc
 
     const int shoals_depth = you.depth - 1;
     dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, DNGN_OPEN_SEA,

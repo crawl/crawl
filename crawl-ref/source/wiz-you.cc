@@ -904,7 +904,7 @@ void wizard_transform()
             if (tr == transformation::jelly || tr == transformation::porcupine)
                 continue;
 #endif
-            line += make_stringf("[%c] %s ", i + 'a', transform_name(tr)); // noloc
+            line += make_stringf("[%c] %s ", i + 'a', transform_name(tr)); // @noloc
             if (i % 5 == 4 || i == NUM_TRANSFORMS - 1)
             {
                 mprf(MSGCH_PROMPT, "%s", line.c_str());

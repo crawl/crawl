@@ -895,7 +895,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
         time(&now);
         struct tm * timeinfo = localtime(&now);
         char timebuf[9];
-        strftime(timebuf, sizeof(timebuf), "%Y%m%d", timeinfo); // noloc
+        strftime(timebuf, sizeof(timebuf), "%Y%m%d", timeinfo); // @noloc
         seed_input->set_text(string(timebuf));
         ui::set_focused_widget(seed_input.get());
         return true;
@@ -1188,7 +1188,7 @@ public:
 
         descriptions = make_shared<Switcher>();
 
-        // noloc section start
+        // @noloc section start
         m_main_items = make_shared<OuterMenu>(true, 3, 20);
         m_main_items->menu_id = m_choice_type == C_JOB ?
             "background-main" : "species-main";
@@ -1250,7 +1250,7 @@ public:
             default:
                 return false;
             }
-            // noloc section end
+            // @noloc section end
         });
     };
 

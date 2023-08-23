@@ -432,7 +432,7 @@ bool player_is_cancellable()
  */
 string describe_player_cancellation()
 {
-    // locnote: the following are plugged into "...you will no longer be %s."
+    // @locnote: the following are plugged into "...you will no longer be %s."
     vector<string> effects;
 
     // Try to clarify it doesn't remove all contam?

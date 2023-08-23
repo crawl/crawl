@@ -345,7 +345,7 @@ void lose_level()
     calc_mp();
 
     char buf[200];
-    sprintf(buf, "HP: %d/%d MP: %d/%d", // noloc
+    sprintf(buf, "HP: %d/%d MP: %d/%d", // @noloc
             you.hp, you.hp_max, you.magic_points, you.max_magic_points);
     take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 
@@ -1011,7 +1011,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             // for note taking
             string damage_desc;
             if (!see_source)
-                damage_desc = make_stringf("something (%d)", dam); // noloc
+                damage_desc = make_stringf("something (%d)", dam); // @noloc
             else
             {
                 damage_desc = scorefile_entry(dam, source,
@@ -1174,7 +1174,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
 string morgue_name(string char_name, time_t when_crawl_got_even)
 {
-    // noloc section start
+    // @noloc section start
     string name = "morgue-" + char_name;
 
     string time = make_file_time(when_crawl_got_even);
@@ -1182,7 +1182,7 @@ string morgue_name(string char_name, time_t when_crawl_got_even)
         name += "-" + time;
 
     return name;
-    // noloc section end
+    // @noloc section end
 }
 
 int actor_to_death_source(const actor* agent)

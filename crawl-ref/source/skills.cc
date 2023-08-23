@@ -748,7 +748,7 @@ bool check_selected_skills()
     // Calling a user lua function here to allow enabling skills without user
     // prompt (much like the callback auto_experience for the case of potion of
     // experience).
-    if (clua.callbooleanfn(false, "skill_training_needed", nullptr)) // noloc
+    if (clua.callbooleanfn(false, "skill_training_needed", nullptr)) // @noloc
     {
         // did the callback do anything?
         if (skills_being_trained())
@@ -2218,7 +2218,7 @@ bool compare_skills(skill_type sk1, skill_type sk2)
 
 void dump_skills(string &text)
 {
-    // noloc section start
+    // @noloc section start
     for (uint8_t i = 0; i < NUM_SKILLS; i++)
     {
         int real = you.skill((skill_type)i, 10, true);
@@ -2241,7 +2241,7 @@ void dump_skills(string &text)
                                  skill_name(static_cast<skill_type>(i)));
         }
     }
-    // noloc section end
+    // @noloc section end
 }
 
 skill_state::skill_state() :

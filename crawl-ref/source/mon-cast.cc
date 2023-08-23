@@ -1928,7 +1928,7 @@ static void _print_battlecry_announcement(const monster& chief,
                                 { return m->type != first_type; });
     monster_type group_type = generic ? mons_genus(chief.type) : first_type;
 
-    string ally_desc = chief.friendly() ? "your " : "the "; // noloc
+    string ally_desc = chief.friendly() ? "your " : "the "; // @noloc
     ally_desc +=  pluralise_monster(mons_type_name(group_type, DESC_PLAIN));
     mprf(channel, "%s go into a battle-frenzy!", ally_desc.c_str());
 }
@@ -6568,7 +6568,7 @@ static void _speech_keys(vector<string>& key_list,
                          spell_type spell, mon_spell_slot_flags slot_flags,
                          bool targeted)
 {
-    const string cast_str = " cast"; // noloc
+    const string cast_str = " cast"; // @noloc
 
     // Can't use copy-initialization 'wizard = slot_flags & ...' here,
     // because the bitfield-to-bool conversion is not implicit.
@@ -6651,7 +6651,7 @@ static void _speech_keys(vector<string>& key_list,
         // For targeted spells, try with the targeted suffix first.
         for (unsigned int i = key_list.size() - 1; i >= num_spell_keys; i--)
         {
-            string str = key_list[i] + " targeted"; // noloc
+            string str = key_list[i] + " targeted"; // @noloc
             key_list.insert(key_list.begin() + i, str);
         }
 
@@ -6670,9 +6670,9 @@ static string _speech_message(const monster &mon,
 {
     string prefix;
     if (silent)
-        prefix = "silent "; // noloc
+        prefix = "silent "; // @noloc
     else if (unseen)
-        prefix = "unseen "; // noloc
+        prefix = "unseen "; // @noloc
 
     string msg;
     for (const string &key : key_list)
@@ -6715,7 +6715,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
                                 const monster* mons, const bolt& pbolt,
                                 bool gestured)
 {
-    // noloc section start
+    // @noloc section start
     targ_prep = "at";
     target    = "nothing";
 
@@ -6886,7 +6886,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
     // rather than "past".
     if (gestured || target == "nothing")
         targ_prep = "at";
-    // noloc section end
+    // @noloc section end
 
     // "throws whatever at something" is better than "at nothing"
     if (target == "nothing")
@@ -6927,7 +6927,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
                           || msg.find("Point") != string::npos
                           || msg.find(" point") != string::npos;
 
-    // noloc section start
+    // @noloc section start
     string targ_prep = "at";
     string target    = "NO_TARGET";
 
@@ -6941,7 +6941,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
         beam_name = "INVALID BEAM";
     else
         beam_name = pbolt.get_short_name();
-    // noloc section end
+    // @noloc section end
 
     // do first round of param substitution
     map<string, string> params;
@@ -7142,7 +7142,7 @@ static void _throw_ally_to(const monster &thrower, monster &throwee,
     throwee.apply_location_effects(old_pos);
     throwee.check_redraw(old_pos);
 
-    const string killed_by = make_stringf("Hit by %s thrown by %s", // noloc
+    const string killed_by = make_stringf("Hit by %s thrown by %s", // @noloc
                                           throwee.name(DESC_A, true).c_str(),
                                           thrower.name(DESC_PLAIN, true).c_str());
     const int dam = foe->apply_ac(random2(thrower.get_hit_dice() * 2));

@@ -70,7 +70,7 @@ string actor_name(const actor *a, description_level_type desc,
                   bool actor_visible)
 {
     if (!a)
-        return "null"; // bug, noloc
+        return "null"; // bug, @noloc
     return actor_visible ? a->name(desc) : anon_name(desc);
 }
 
@@ -82,7 +82,7 @@ string actor_pronoun(const actor *a, pronoun_type pron,
                      bool actor_visible)
 {
     if (!a)
-        return "null"; // bug, noloc
+        return "null"; // bug, @noloc
     return actor_visible ? a->pronoun(pron) : anon_pronoun(pron);
 }
 
@@ -162,7 +162,7 @@ string get_any_person_message(variant_msg_type msg_id,
     string msg;
     if (starts_with(temp, "ERROR"))
     {
-        msg = temp + ", subj=\"" + subj + "\", obj=\"" + obj + "\""; // noloc
+        msg = temp + ", subj=\"" + subj + "\", obj=\"" + obj + "\""; // @noloc
         return msg;
     }
 
@@ -274,7 +274,7 @@ string get_3rd_person_message(const string& subject, const string& object,
 
     if (subject == "you")
     {
-        msg += " (bug: 2nd person subject unexpected here)"; // noloc
+        msg += " (bug: 2nd person subject unexpected here)"; // @noloc
     }
 
     return msg;
@@ -300,7 +300,7 @@ string get_3rd_person_message(const actor* subject, bool subject_seen,
     if (subject && subject == object)
     {
         // reflexive (acting on self) - we didn't expect that here
-        msg += " (bug: reflexive unexpected here)"; // noloc
+        msg += " (bug: reflexive unexpected here)"; // @noloc
     }
 
     return msg;

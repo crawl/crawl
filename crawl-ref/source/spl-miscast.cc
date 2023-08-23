@@ -36,7 +36,7 @@ struct miscast_datum
 
 static void _do_msg(actor& target, miscast_datum effect, int dam)
 {
-    // noloc section start
+    // @noloc section start
     if (!you.see_cell(target.pos()))
         return;
     string msg;
@@ -76,7 +76,7 @@ static void _do_msg(actor& target, miscast_datum effect, int dam)
     }
 
     attack_strength_message(msg, dam, false);
-    // noloc section end
+    // @noloc section end
 }
 
 static void _ouch(actor& target, actor * source, miscast_source_info mc_info, int dam, beam_type flavour, string cause)

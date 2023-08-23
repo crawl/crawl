@@ -302,7 +302,7 @@ string SkillMenuEntry::get_prefix()
 
 void SkillMenuEntry::set_aptitude()
 {
-    // noloc section start
+    // @noloc section start
     string text = "<white>";
 
     const bool manual = you.skill_manual_points[m_sk] > 0;
@@ -322,7 +322,7 @@ void SkillMenuEntry::set_aptitude()
     }
 
     m_aptitude->set_text(text);
-    // noloc section end
+    // @noloc section end
 }
 
 void SkillMenuEntry::set_level()
@@ -543,7 +543,7 @@ string SkillMenuSwitch::get_help()
             if (_any_crosstrained())
                 causes.push_back("cross-training");
 
-            // locnote: %s = comma-separated list containing any of Heroism, <god>'s power, cross-training
+            // @locnote: %s = comma-separated list containing any of Heroism, <god>'s power, cross-training
             string fmt = "Skills enhanced by %s are in <green>green</green>.";
             string cause_str = comma_separated_line(causes.begin(), causes.end());
             result = localise(fmt, cause_str);
@@ -559,7 +559,7 @@ string SkillMenuSwitch::get_help()
 
             if (!result.empty())
                 result += "\n";
-            // locnote: %s = in theory a comma-separated list, but in practice always "Ashenzari's anger"
+            // @locnote: %s = in theory a comma-separated list, but in practice always "Ashenzari's anger"
             string fmt = "Skills reduced by %s are in <magenta>magenta</magenta>.";
             string cause_str = comma_separated_line(causes.begin(), causes.end());
             result += localise(fmt, cause_str);
@@ -665,7 +665,7 @@ bool SkillMenuSwitch::toggle()
 
 void SkillMenuSwitch::update()
 {
-    // noloc section start
+    // @noloc section start
     if (m_states.size() <= 1)
     {
         set_text("");
@@ -686,7 +686,7 @@ void SkillMenuSwitch::update()
         states += make_stringf("<%s>%s</%s>", col.c_str(), state.c_str(),
                                col.c_str());
     }
-    // noloc section end
+    // @noloc section end
     if (m_name.empty())
         text += states;
     else
@@ -786,7 +786,7 @@ void SkillMenu::init(int flag, int region_height)
     m_max_coord.y = region_height + 1;
 #endif
 
-    m_ff->init(m_min_coord, m_max_coord, "freeform"); // noloc
+    m_ff->init(m_min_coord, m_max_coord, "freeform"); // @noloc
     attach_object(m_ff);
     set_active_object(m_ff);
 
@@ -828,7 +828,7 @@ void SkillMenu::init(int flag, int region_height)
         refresh_display();
 
     m_highlighter = new BoxMenuHighlighter(this);
-    m_highlighter->init(coord_def(-1,-1), coord_def(-1,-1), "highlighter"); // noloc
+    m_highlighter->init(coord_def(-1,-1), coord_def(-1,-1), "highlighter"); // @noloc
     attach_object(m_highlighter);
 
     m_ff->set_visible(true);
@@ -1365,8 +1365,8 @@ void SkillMenu::refresh_button_row()
 {
     if (is_set(SKMF_SPECIAL))
         return;
-    const string helpstring = "[<yellow>?</yellow>] "; // noloc
-    const string azstring = "[<yellow>a</yellow>-<yellow>z</yellow>] "; // noloc
+    const string helpstring = "[<yellow>?</yellow>] "; // @noloc
+    const string azstring = "[<yellow>a</yellow>-<yellow>z</yellow>] "; // @noloc
 
     string legend = localise(is_set(SKMF_SIMPLE) ? "Skill descriptions" : "Help");
     string midlegend = "";
@@ -1382,20 +1382,20 @@ void SkillMenu::refresh_button_row()
         if (is_set(SKMF_SET_TARGET))
         {
             midlegend = azstring + localise("set skill target");
-            clearlegend = "[<yellow>-</yellow>] "; // noloc 
+            clearlegend = "[<yellow>-</yellow>] "; // @noloc 
             clearlegend += localise("clear selected target");
         }
         else
         {
-            midlegend = "[<yellow>=</yellow>] "; // noloc
+            midlegend = "[<yellow>=</yellow>] "; // @noloc
             midlegend += localise("set a skill target");
-            clearlegend = "[<yellow>-</yellow>] "; // noloc 
+            clearlegend = "[<yellow>-</yellow>] "; // @noloc 
             clearlegend += localise("clear all targets");
         }
     }
     else if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING)) // SKM_VIEW_TARGETS unavailable for Gn
     {
-        midlegend = "[<yellow>=</yellow>] "; // noloc
+        midlegend = "[<yellow>=</yellow>] "; // @noloc
         midlegend += localise("set a skill target");
     }
 

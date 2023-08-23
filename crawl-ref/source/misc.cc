@@ -222,11 +222,11 @@ const string maybe_to_string(const maybe_bool mb)
     switch (mb)
     {
     case MB_TRUE:
-        return "true"; // noloc
+        return "true"; // @noloc
     case MB_FALSE:
-        return "false"; // noloc
+        return "false"; // @noloc
     case MB_MAYBE:
     default:
-        return "maybe"; // noloc
+        return "maybe"; // @noloc
     }
 }

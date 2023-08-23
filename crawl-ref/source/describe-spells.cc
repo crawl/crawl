@@ -353,8 +353,8 @@ static string _range_string(const spell_type &spell, const monster_info *mon_own
                     && crawl_state.need_save
                     && in_bounds(mon_owner->pos)
                     && grid_distance(you.pos(), mon_owner->pos) <= range;
-    const char *range_col = in_range ? "lightred" : "lightgray"; // noloc
-    return make_stringf("(<%s>%d</%s>)", range_col, range, range_col); // noloc
+    const char *range_col = in_range ? "lightred" : "lightgray"; // @noloc
+    return make_stringf("(<%s>%d</%s>)", range_col, range, range_col); // @noloc
 }
 
 static dice_def _spell_damage(spell_type spell, int hd)
@@ -456,7 +456,7 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         }
         if (you.immune_to_hex(spell))
             return "(immune)";
-        return make_stringf("(%d%%)", hex_chance(spell, hd)); // noloc
+        return make_stringf("(%d%%)", hex_chance(spell, hd)); // @noloc
     }
 
     const dice_def dam = _spell_damage(spell, hd);
@@ -577,7 +577,7 @@ static void _describe_book(const spellbook_contents &book,
             known = chop_string(known, 8, true, true);
         }
 
-        description.cprintf("%s%d%s\n", // noloc
+        description.cprintf("%s%d%s\n", // @noloc
                             chop_string(schools, 30).c_str(),
                             spell_difficulty(spell),
                             known.c_str());

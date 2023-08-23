@@ -717,7 +717,7 @@ ability_type ability_by_name(const string &key)
 
 string print_abilities()
 {
-    string text = "\n<w>a:</w> "; // noloc
+    string text = "\n<w>a:</w> "; // @noloc
 
     const vector<talent> talents = your_talents(false);
 
@@ -893,7 +893,7 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::sacrifice)
     {
         ret += localise(", ");
-        const string prefix = "Sacrifice "; // noloc
+        const string prefix = "Sacrifice "; // @noloc
         ret += string(ability_name(ability)).substr(prefix.size());
         ret += ru_sac_text(ability);
     }
@@ -1237,7 +1237,7 @@ static string _nemelex_desc(ability_type ability)
     if (deck == DECK_STACK)
         name = "your stacked deck";
     else
-        name = "the " + deck_name(deck); // noloc
+        name = "the " + deck_name(deck); // @noloc
 
     desc << localise("Draw a card from %s; ", name);
     desc << lowercase_first(deck_description(deck));
@@ -1332,7 +1332,7 @@ bool activate_ability()
 
     string luachoice;
 
-    if (!clua.callfn("c_choose_ability", ">s", &luachoice)) // noloc
+    if (!clua.callfn("c_choose_ability", ">s", &luachoice)) // @noloc
     {
         if (!clua.error.empty())
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
@@ -2979,7 +2979,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, you.pos(),
                      MHITNOT, MG_NONE, GOD_JIYVA);
 
-        mg.non_actor_summoner = "Jiyva"; // noloc (handled elsewhere)
+        mg.non_actor_summoner = "Jiyva"; // @noloc (handled elsewhere)
 
         if (!create_monster(mg))
             return spret::abort;
@@ -2991,7 +2991,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         fail_check();
         const item_def* const weapon = you.weapon();
         const string msg = weapon ? weapon->name(DESC_YOUR)
-                                  : ("your " + you.hand_name(true)); // noloc
+                                  : ("your " + you.hand_name(true)); // @noloc
         mprf(MSGCH_DURATION, "A thick mucus forms on %s.", msg.c_str());
         you.increase_duration(DUR_SLIMIFY,
                               random2avg(you.piety / 4, 2) + 3, 100);
@@ -3909,7 +3909,7 @@ void swap_ability_slots(int index1, int index2, bool silent)
 
     if (!silent)
     {
-        mprf_nocap("%c - %s", index_to_letter(index2), // noloc
+        mprf_nocap("%c - %s", index_to_letter(index2), // @noloc
                    ability_name(you.ability_letter_table[index2]));
     }
 

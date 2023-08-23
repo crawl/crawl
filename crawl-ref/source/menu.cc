@@ -559,8 +559,8 @@ void UIMenuPopup::_allocate_region()
     {
         int scroll = m_menu->m_ui.scroller->get_scroll();
         int scroll_percent = scroll*100/(menu_height-viewport_height);
-        string perc = scroll <= 0 ? "top" // noloc
-            : scroll_percent >= 100 ? "bot" // noloc
+        string perc = scroll <= 0 ? "top" // @noloc
+            : scroll_percent >= 100 ? "bot" // @noloc
             : make_stringf("%2d%%", scroll_percent);
 
         string scroll_more = m_menu->more.to_colour_string();
@@ -944,13 +944,13 @@ void Menu::set_more(const string s)
 void Menu::set_more()
 {
     m_keyhelp_more = true;
-    string separator = "        "; // noloc
-    string pageup_keys = minus_is_pageup() ? "<w>-</w>|<w><<</w>" : "<w><<</w>"; // noloc
+    string separator = "        "; // @noloc
+    string pageup_keys = minus_is_pageup() ? "<w>-</w>|<w><<</w>" : "<w><<</w>"; // @noloc
     more = formatted_string::parse_string(
         "<lightgrey>" + localise("[<w>+</w>|<w>></w>|<w>Space</w>]: page down")
         + separator + localise("[%s]: page up", pageup_keys) + separator
         + localise("[<w>Esc</w>]: close") + separator
-        + "[<w>XXX</w>]</lightgrey>" // noloc
+        + "[<w>XXX</w>]</lightgrey>" // @noloc
     );
     update_more();
 }

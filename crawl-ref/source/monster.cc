@@ -921,7 +921,7 @@ int monster::armour_bonus(const item_def &item, bool calc_unid) const
 
 void monster::equip_armour_message(item_def &item)
 {
-    // locnote: equip armour
+    // @locnote: equip armour
     string str = localise("%s wears %s.", this->name(DESC_THE),
                           item.name(DESC_A));
     simple_monster_message(*this, str.c_str());
@@ -931,7 +931,7 @@ void monster::equip_jewellery_message(item_def &item)
 {
     ASSERT(item.base_type == OBJ_JEWELLERY);
 
-    // locnote: equip ring/amulet
+    // @locnote: equip ring/amulet
     string str = localise("%s puts on %s.", this->name(DESC_THE),
                           item.name(DESC_A));
     simple_monster_message(*this, str.c_str());
@@ -1015,7 +1015,7 @@ void monster::unequip_armour(item_def &item, bool msg)
 {
     if (msg)
     {
-        // locnote: unequip armour
+        // @locnote: unequip armour
         const string str = localise("%s takes off %s.", name(DESC_THE),
                                     item.name(DESC_A));
         simple_monster_message(*this, str.c_str());
@@ -1028,7 +1028,7 @@ void monster::unequip_jewellery(item_def &item, bool msg)
 
     if (msg)
     {
-        // locnote: unequip ring/amulet
+        // @locnote: unequip ring/amulet
         const string str = localise("%s removes %s.", name(DESC_THE),
                                     item.name(DESC_A));
         simple_monster_message(*this, str.c_str());
@@ -2214,7 +2214,7 @@ bool monster::has_base_name() const
     return !mname.empty() && !ghost;
 }
 
-// noloc section start
+// @noloc section start
 static string _invalid_monster_str(monster_type type)
 {
     string str = "INVALID MONSTER ";
@@ -2267,7 +2267,7 @@ static string _invalid_monster_str(monster_type type)
 
     return str;
 }
-// noloc section end
+// @noloc section end
 
 static string _mon_special_name(const monster& mon, description_level_type desc,
                                 bool force_seen)
@@ -2480,7 +2480,7 @@ string monster::hand_name(bool plural, bool *can_plural) const
         break;
 
     case MON_SHAPE_BUGGY:
-        str = "handbug"; // noloc
+        str = "handbug"; // @noloc
         break;
     }
 
@@ -2607,7 +2607,7 @@ string monster::foot_name(bool plural, bool *can_plural) const
         break;
 
     case MON_SHAPE_BUGGY:
-        str = "footbug"; // noloc
+        str = "footbug"; // @noloc
         break;
     }
 

@@ -1294,7 +1294,7 @@ static void _redraw_title()
     {
         string god = you_worship(GOD_JIYVA) ? god_name_jiyva(true)
                                             : god_name(you.religion);
-        string of_god = localise(" of %s", god); // noloc
+        string of_god = localise(" of %s", god); // @noloc
         NOWRAP_EOL_CPRINTF("%s%s", localise(species).c_str(), of_god.c_str());
 
         string piety = _god_asterisks();
@@ -1609,7 +1609,7 @@ static string _get_monster_name(const monster_info& mi, int count, bool fullname
 // because they're needed for the morgue dump.
 string mpr_monster_list(bool past)
 {
-    // noloc section start (only used in morgue and for debugging)
+    // @noloc section start (only used in morgue and for debugging)
     // Get monsters via the monster_pane_info, sorted by difficulty.
     vector<monster_info> mons;
     get_monster_info(mons);
@@ -1651,7 +1651,7 @@ string mpr_monster_list(bool past)
         msg = make_stringf("You can see %s.", monster_list.c_str());
 
     return msg;
-    // noloc section end
+    // @noloc section end
 }
 
 #ifndef USE_TILE_LOCAL
@@ -1855,7 +1855,7 @@ static string _itosym(int level, int max = 1, bool immune = false)
         }
         else // negative resistance
         {
-            sym += "x"; // noloc
+            sym += "x"; // @noloc
             ++level;
         }
         sym += (spacing) ? " " : "";
@@ -1864,7 +1864,7 @@ static string _itosym(int level, int max = 1, bool immune = false)
     return sym;
 }
 
-// noloc section start
+// @noloc section start
 // (only translated in lowercase form, and the specific ring slots aren't translated at all)
 static const char *s_equip_slot_names[] =
 {
@@ -1893,7 +1893,7 @@ const char *equip_slot_to_name(int equip)
 
     return s_equip_slot_names[equip];
 }
-// noloc section end
+// @noloc section end
 
 int equip_name_to_slot(const char *s)
 {
@@ -2008,7 +2008,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             const int col = prefcol == -1 ? LIGHTGREY : prefcol;
 
             // Colour melded equipment dark grey.
-            string colname = melded ? "darkgrey" : colour_to_str(col); // noloc
+            string colname = melded ? "darkgrey" : colour_to_str(col); // @noloc
 
             const int item_idx   = you.equip[eqslot];
             const char equip_char = index_to_letter(item_idx);
@@ -2017,7 +2017,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             item_name = chop_string(item_name, sw - 36, false);
 
             str = make_stringf(
-                     "<w>%c</w> - <%s>%s</%s>", // noloc
+                     "<w>%c</w> - <%s>%s</%s>", // @noloc
                      equip_char,
                      colname.c_str(),
                      item_name.c_str(),
@@ -2037,9 +2037,9 @@ static void _print_overview_screen_equip(column_composer& cols,
         }
         else
         {
-            str = "<darkgrey>("; // noloc
+            str = "<darkgrey>("; // @noloc
             if (eqslot == EQ_BOOTS && you.wear_barding())
-                str += localise("no " + slot_name_lwr); // noloc
+                str += localise("no " + slot_name_lwr); // @noloc
             else if (!you_can_wear(eqslot))
                 str += localise("%s unavailable", slot_name_lwr);
             else if (!you_can_wear(eqslot, true))
@@ -2047,8 +2047,8 @@ static void _print_overview_screen_equip(column_composer& cols,
             else if (you_can_wear(eqslot) == MB_MAYBE)
                 str += localise("%s restricted", slot_name_lwr);
             else
-                str += localise("no " + slot_name_lwr); // noloc
-            str += + ")</darkgrey>"; // noloc
+                str += localise("no " + slot_name_lwr); // @noloc
+            str += + ")</darkgrey>"; // @noloc
         }
         cols.add_formatted(2, str.c_str(), false);
     }
@@ -2620,7 +2620,7 @@ string dump_overview_screen(bool full_id)
 string _status_mut_rune_list(int sw)
 {
     // print status information
-    string text = "<w>@:</w> "; // noloc
+    string text = "<w>@:</w> "; // @noloc
     vector<string> status;
 
     status_info inf;
@@ -2647,14 +2647,14 @@ string _status_mut_rune_list(int sw)
     text += "\n";
 
     // print mutation information
-    text += "<w>A:</w> "; // noloc
+    text += "<w>A:</w> "; // @noloc
 
     text += terse_mutation_list();
 
     // print the Orb
     if (player_has_orb())
     {
-        text += "\n<w>0:</w> "; // noloc
+        text += "\n<w>0:</w> "; // @noloc
         text += localise("Orb of Zot");
     }
 
@@ -2665,7 +2665,7 @@ string _status_mut_rune_list(int sw)
             runes.emplace_back(rune_type_name(i));
     if (!runes.empty())
     {
-        text += make_stringf("\n<w>%s:</w> ", // noloc
+        text += make_stringf("\n<w>%s:</w> ", // @noloc
                     stringize_glyph(get_item_symbol(SHOW_ITEM_MISCELLANY)).c_str());
         text += localise("%d/%d runes: ", (int)runes.size(), you.obtainable_runes);
         text += localise(comma_separated_line(runes.begin(), runes.end(), ", ", ", "));

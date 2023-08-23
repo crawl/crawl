@@ -740,9 +740,9 @@ static const char *trap_names[] =
 string trap_name(trap_type trap)
 {
     if (trap == TRAP_GOLUBRIA)
-        return "passage"; // noloc
+        return "passage"; // @noloc
     else
-        return replace_last(full_trap_name(trap), " trap", ""); // noloc
+        return replace_last(full_trap_name(trap), " trap", ""); // @noloc
 }
 
 string full_trap_name(trap_type trap)
@@ -1145,7 +1145,7 @@ static string _skill_target_desc(skill_type skill, int scaled_target,
             level_diff / 10, level_diff % 10);
     if (you.wizard)
     {
-        description += "\n    "; // noloc
+        description += "\n    "; // @noloc
         description += localise("(%d xp, %d skp)",
                                 diffs.experience, diffs.skill_points);
     }
@@ -1896,7 +1896,7 @@ static string _describe_armour(const item_def &item, bool verbose)
         {
             // i18n: need space in front of "of" for translation (because
             // normally it's in the context of "<thing> of <ego>").
-            string ego_name = " of " + string(armour_ego_name(item, false)); // noloc
+            string ego_name = " of " + string(armour_ego_name(item, false)); // @noloc
             ego_name = localise(ego_name);
             // now remove that space
             if (starts_with(ego_name, " "))
@@ -2115,9 +2115,9 @@ string get_item_description(const item_def &item, bool verbose,
 
         if (dump)
         {
-            description << "[" // noloc
+            description << "[" // @noloc
                         << localise(item.name(DESC_DBNAME, true, false, false))
-                        << "]"; // noloc
+                        << "]"; // @noloc
             need_base_desc = false;
         }
         else if (is_unrandom_artefact(item) && item_type_known(item))
@@ -2482,7 +2482,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
     dungeon_feature_type feat = env.map_knowledge(pos).feat();
 
     string desc      = feature_description_at(pos, false, DESC_A);
-    string db_name   = feat == DNGN_ENTER_SHOP ? "a shop" : desc; // noloc
+    string db_name   = feat == DNGN_ENTER_SHOP ? "a shop" : desc; // @noloc
     strip_suffix(db_name, " (summoned)");
     string long_desc = getLongDescription(db_name);
 
@@ -3803,7 +3803,7 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
     case MTHRT_TOUGH:   return "This monster looks dangerous.";
     case MTHRT_NASTY:   return "This monster looks extremely dangerous.";
     case MTHRT_UNDEF:
-    default:            return "This montsre looks buggily threatening."; // noloc
+    default:            return "This montsre looks buggily threatening."; // @noloc
     }
 }
 
@@ -4747,7 +4747,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     string symbol;
     symbol += get_monster_data(mi.type)->basechar;
     if (isaupper(symbol[0]))
-        symbol = "cap-" + symbol; // noloc
+        symbol = "cap-" + symbol; // @noloc
 
     string quote2;
     if (!mons_is_unique(mi.type))
@@ -5252,12 +5252,12 @@ string short_ghost_description(const monster *mon, bool abbrev)
     const ghost_demon &ghost = *(mon->ghost);
     const char* rank = xl_rank_names[ghost_level_to_rank(ghost.xl)];
 
-    string fmt = string("%s%s ") + get_job_name(ghost.job); // noloc
+    string fmt = string("%s%s ") + get_job_name(ghost.job); // @noloc
     string desc = localise(fmt, rank, species::name(ghost.species));
 
     if (abbrev || strwidth(desc) > 40)
     {
-        fmt = string("%s%s") + get_job_abbrev(ghost.job); // noloc
+        fmt = string("%s%s") + get_job_abbrev(ghost.job); // @noloc
         desc = localise(fmt, rank, species::get_abbrev(ghost.species));
     }
 
@@ -5286,12 +5286,12 @@ string get_ghost_description(const monster_info &mi, bool concise)
     string fmt;
     if (concise)
     {
-        fmt = string("a %s%s") + get_job_abbrev(mi.i_ghost.job); // noloc
+        fmt = string("a %s%s") + get_job_abbrev(mi.i_ghost.job); // @noloc
         gstr << localise(fmt, rank, species::get_abbrev(gspecies));
     }
     else
     {
-        fmt = string("a %s%s ") + get_job_name(mi.i_ghost.job); // noloc
+        fmt = string("a %s%s ") + get_job_name(mi.i_ghost.job); // @noloc
         gstr << localise(fmt, rank, species::name(gspecies));
     }
 
@@ -5318,7 +5318,7 @@ string get_command_description(const command_type cmd, bool terse)
     string lookup = command_to_name(cmd);
 
     if (!terse)
-        lookup += " verbose"; // noloc
+        lookup += " verbose"; // @noloc
 
     string result = getLongDescription(lookup);
     if (result.empty())

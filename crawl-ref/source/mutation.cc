@@ -429,7 +429,7 @@ static int _num_full_suppressed = 0;
 static int _num_part_suppressed = 0;
 static int _num_transient = 0;
 
-// noloc section start
+// @noloc section start
 
 static string _suppressedmut(string desc, bool terse=false)
 {
@@ -455,7 +455,7 @@ static string _badmut(string desc, bool terse=false)
     return terse ? desc : "<lightred>" + desc + "</lightred>";
 }
 
-// noloc section end
+// @noloc section end
 
 static string _annotate_form_based(string desc, bool suppressed, bool terse=false)
 {
@@ -1094,7 +1094,7 @@ static formatted_string _vampire_Ascreen_footer(bool first_page)
     string blood_props = localise("Blood properties");
     string right_click = localise("Right-click");
 
-    // noloc section start
+    // @noloc section start
     if (first_page)
         mutations = "<w>" + mutations + "</w>";
     else
@@ -1105,7 +1105,7 @@ static formatted_string _vampire_Ascreen_footer(bool first_page)
     fmt += "|<w>" + right_click + "</w>";
 #endif
     fmt += "]: " + mutations + "|" + blood_props;
-    // noloc section end
+    // @noloc section end
 
     return formatted_string::parse_string(fmt);
 }
@@ -1154,7 +1154,7 @@ static string _display_vampire_attributes()
 
     const int highlight_col = you.vampire_alive ? 1 : 2;
 
-    // noloc section start
+    // @noloc section start
     for (int y = 0; y < lines; y++)  // lines   (properties)
     {
         for (int x = 0; x < 3; x++)  // columns (states)
@@ -1193,7 +1193,7 @@ static string _display_vampire_attributes()
          }
         result += "\n";
     }
-    // noloc section end
+    // @noloc section end
 
     trim_string_right(result);
     return result;
@@ -1206,19 +1206,19 @@ void display_mutations()
     string extra = "";
     if (_num_part_suppressed)
     {
-        extra += "<brown>()</brown>  : "; // noloc
+        extra += "<brown>()</brown>  : "; // @noloc
         extra += localise("Partially suppressed.");
         extra += "\n";
     }
     if (_num_full_suppressed)
     {
-        extra += "<darkgrey>(())</darkgrey>: "; // noloc
+        extra += "<darkgrey>(())</darkgrey>: "; // @noloc
         extra += localise("Completely suppressed.");
         extra += "\n";
     }
     if (_num_transient)
     {
-        extra += "<magenta>[]</magenta>   : "; // noloc
+        extra += "<magenta>[]</magenta>   : "; // @noloc
         extra += localise("Transient mutations.");
     }
 
@@ -1243,7 +1243,7 @@ void display_mutations()
 
     const string vamp_s = you.has_mutation(MUT_VAMPIRISM)
                                         ?_display_vampire_attributes()
-                                        : "N/A"; // noloc
+                                        : "N/A"; // @noloc
     const string descs[3] =  { mutation_s, vamp_s };
     for (int i = 0; i < 2; i++)
     {
@@ -2438,7 +2438,7 @@ bool delete_temp_mutation()
                                         you.attribute[ATTR_TEMP_MUTATIONS]);
 #endif
 
-        if (_delete_single_mutation_level(mutat, "temp mutation expiry", true)) // noloc
+        if (_delete_single_mutation_level(mutat, "temp mutation expiry", true)) // @noloc
             return true;
     }
 
@@ -2638,7 +2638,7 @@ string mutation_desc(mutation_type mut, int level, bool colour,
     else if (result.empty() && level > 0)
         result = localise(mdef.have[level - 1]);
 
-    // noloc section start
+    // @noloc section start
     if (!ignore_player)
     {
         if (fully_inactive)
@@ -2698,7 +2698,7 @@ string mutation_desc(mutation_type mut, int level, bool colour,
              << "</" << colourname << '>';
         result = ostr.str();
     }
-    // noloc section end
+    // @noloc section end
 
     return result;
 }

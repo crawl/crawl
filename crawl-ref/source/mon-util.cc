@@ -651,7 +651,7 @@ mon_holy_type holiness_by_name(string name)
 
 const char * holiness_name(mon_holy_type_flags which_holiness)
 {
-    // noloc section start (only used in LUA)
+    // @noloc section start (only used in LUA)
     switch (which_holiness)
     {
     case MH_HOLY:
@@ -671,7 +671,7 @@ const char * holiness_name(mon_holy_type_flags which_holiness)
     default:
         return "bug";
     }
-    // noloc section end
+    // @noloc section end
 }
 
 string holiness_description(mon_holy_type holiness)
@@ -2169,7 +2169,7 @@ string mon_attack_name(attack_type attack, bool with_object)
     const int verb_index = attack - AT_FIRST_ATTACK;
     ASSERT(verb_index < (int)ARRAYSZ(attack_types));
 
-    // noloc section start
+    // @noloc section start
     if (with_object)
         return attack_types[verb_index];
     else
@@ -2177,7 +2177,7 @@ string mon_attack_name(attack_type attack, bool with_object)
         return replace_all(replace_all(attack_types[verb_index], " at", ""),
                                                                  " on", "");
     }
-    // noloc section end
+    // @noloc section end
 }
 
 /**
@@ -3167,7 +3167,7 @@ monster_type demonspawn_base_by_name(const string &name)
 
 string mons_type_name(monster_type mc, description_level_type desc)
 {
-    // noloc section start
+    // @noloc section start
     string result;
 
     if (!mons_is_unique(mc))
@@ -3230,7 +3230,7 @@ string mons_type_name(monster_type mc, description_level_type desc)
     }
 
     return result;
-    // noloc section end
+    // @noloc section end
 }
 
 static string _get_proper_monster_name(const monster& mon)
@@ -4301,7 +4301,7 @@ static string _replace_god_name(god_type god)
 
 static string _get_species_insult(const string &species, const string &type)
 {
-    // noloc section start (keys)
+    // @noloc section start (keys)
     string insult;
     string lookup;
 
@@ -4326,7 +4326,7 @@ static string _get_species_insult(const string &species, const string &type)
     }
 
     return insult;
-    // noloc section end
+    // @noloc section end
 }
 
 // replace [@foo@==bar?A:B] with A if @foo@ == bar or B if not
@@ -4405,7 +4405,7 @@ static string _get_sound_string(int s_type, bool verb_only)
         "buzzes at @foe@",
         "moans at @foe@",
         "gurgles at @foe@",
-        "croaks at @foe@",       // locnote: frogs/toads, but also shadow demon
+        "croaks at @foe@",       // @locnote: frogs/toads, but also shadow demon
         "growls at @foe@",
         "hisses at @foe@",
         "sneers at @foe@",       // S_DEMON_TAUNT
@@ -4438,7 +4438,7 @@ static string _get_sound_string(int s_type, bool verb_only)
         "buzzes",
         "moans",
         "gurgles",
-        "croaks",       // locnote: frogs/toads, but also shadow demon
+        "croaks",       // @locnote: frogs/toads, but also shadow demon
         "growls",
         "hisses",
         "sneers",       // S_DEMON_TAUNT
@@ -4604,7 +4604,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     params["hand"] = part_str;
 
     if (!can_plural)
-        part_str = "NO PLURAL HANDS"; // noloc
+        part_str = "NO PLURAL HANDS"; // @noloc
     else
         part_str = mons.hand_name(true);
 
@@ -4616,7 +4616,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     params["arm"] = part_str;
 
     if (!can_plural)
-        part_str = "NO PLURAL ARMS"; // noloc
+        part_str = "NO PLURAL ARMS"; // @noloc
     else
         part_str = mons.arm_name(true);
 
@@ -4628,7 +4628,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     params["foot"] = part_str;
 
     if (!can_plural)
-        part_str = "NO PLURAL FEET"; // noloc
+        part_str = "NO PLURAL FEET"; // @noloc
     else
         part_str = mons.foot_name(true);
 
@@ -4649,14 +4649,14 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     // if it gets one, it should be used for the last two entries.
     if (mons.god == GOD_NO_GOD)
     {
-        params["a_God"] = "NO GOD"; // noloc
-        params["possessive_God"] = "NO GOD"; // noloc
-        params["my_God"] = "NO GOD"; // noloc
+        params["a_God"] = "NO GOD"; // @noloc
+        params["possessive_God"] = "NO GOD"; // @noloc
+        params["my_God"] = "NO GOD"; // @noloc
     }
     else if (mons.god == GOD_NAMELESS)
     {
         params["a_God"] = "a god";
-        const string possessive = mons.pronoun(PRONOUN_POSSESSIVE) + " god"; // noloc
+        const string possessive = mons.pronoun(PRONOUN_POSSESSIVE) + " god"; // @noloc
         params["possessive_God"] = possessive;
         params["my_God"] = "my god";
     }
@@ -4668,7 +4668,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         params["my_God"] = godname;
     }
 
-    // noloc section start
+    // @noloc section start
     // Replace with species specific insults.
     if (msg.find("@species_insult@") != string::npos)
     {
@@ -4684,7 +4684,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         msg = replace_all(msg, "@species_insult_noun@",
                                _get_species_insult(foe_genus, "noun"));
     }
-    // noloc section end
+    // @noloc section end
 
     // monster-specific sounds
     params["speaks"] = _get_sound_string(s_type, true);
@@ -4786,7 +4786,7 @@ string get_mon_shape_str(const mon_body_shape shape)
 {
     ASSERT_RANGE(shape, MON_SHAPE_HUMANOID, MON_SHAPE_MISC + 1);
 
-    // noloc section start (db lookup keys)
+    // @noloc section start (db lookup keys)
     static const char *shape_names[] =
     {
         "bug", "humanoid", "winged humanoid", "tailed humanoid",
@@ -4796,7 +4796,7 @@ string get_mon_shape_str(const mon_body_shape shape)
         "arachnid", "centipede", "snail", "plant", "fungus", "orb",
         "blob", "misc"
     };
-    // noloc section end
+    // @noloc section end
 
     COMPILE_CHECK(ARRAYSZ(shape_names) == MON_SHAPE_MISC + 1);
     return shape_names[shape];
@@ -4958,7 +4958,7 @@ bool mons_foe_is_marked(const monster& mon)
         return false;
 }
 
-// noloc section start (debug stuff)
+// @noloc section start (debug stuff)
 
 void debug_mondata()
 {
@@ -5162,7 +5162,7 @@ void debug_monspells()
     dump_test_fails(fails, "mon-spell");
 }
 
-// noloc section end
+// @noloc section end
 
 // Used when clearing level data, to ensure any additional reset quirks
 // are handled properly.

@@ -728,8 +728,8 @@ bool melee_attack::attack()
         saved_gyre_name = get_artefact_name(*weapon);
         // i18n: No need for explicit translation for these. Handled as if
         // they were random artefacts.
-        set_artefact_name(*weapon, cleaving ? "quick blade \"Gimble\"" // noloc
-                                            : "quick blade \"Gyre\""); // noloc
+        set_artefact_name(*weapon, cleaving ? "quick blade \"Gimble\"" // @noloc
+                                            : "quick blade \"Gyre\""); // @noloc
     }
 
     // Restore gyre's name before we return. We cannot use an unwind_var here

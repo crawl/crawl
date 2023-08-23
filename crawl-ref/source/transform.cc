@@ -672,7 +672,7 @@ public:
     {
         // there's special casing in base_hand_name to get "fists"
         string hand = you.base_hand_name(true, true);
-        return make_stringf("Stone %s", hand.c_str()); // noloc
+        return make_stringf("Stone %s", hand.c_str()); // @noloc
     }
 };
 
@@ -1102,7 +1102,7 @@ public:
         const auto heads = you.heads();
         const string headstr = (heads < 11 ? number_in_words(heads)
                                            : to_string(heads))
-                             + "-headed hydra"; // noloc
+                             + "-headed hydra"; // @noloc
         return article_a(headstr);
     }
 

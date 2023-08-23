@@ -880,8 +880,8 @@ string actor::describe_props() const
     for (auto i = props.begin(); i != props.end(); ++i)
     {
         if (i != props.begin())
-            oss <<  ", "; // noloc
-        oss << string(i->first) << ": "; // noloc
+            oss <<  ", "; // @noloc
+        oss << string(i->first) << ": "; // @noloc
 
         CrawlStoreValue val = i->second;
 
@@ -908,13 +908,13 @@ string actor::describe_props() const
             case SV_COORD:
             {
                 coord_def coord = val.get_coord();
-                oss << "(" << coord.x << ", " << coord.y << ")"; // noloc
+                oss << "(" << coord.x << ", " << coord.y << ")"; // @noloc
                 break;
             }
             case SV_MONST:
             {
                 monster mon = val.get_monster();
-                oss << mon.name(DESC_PLAIN) << "(" << mon.mid << ")"; // noloc
+                oss << mon.name(DESC_PLAIN) << "(" << mon.mid << ")"; // @noloc
                 break;
             }
             case SV_INT64:
@@ -922,7 +922,7 @@ string actor::describe_props() const
                 break;
 
             default:
-                oss << "???"; // noloc
+                oss << "???"; // @noloc
                 break;
         }
     }

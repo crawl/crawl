@@ -2529,7 +2529,7 @@ static void _gain_and_note_hp_mp()
     const int note_maxmp = get_real_mp(false);
 
     char buf[200];
-    sprintf(buf, "HP: %d/%d MP: %d/%d", // noloc
+    sprintf(buf, "HP: %d/%d MP: %d/%d", // @noloc
             min(you.hp, note_maxhp), note_maxhp,
             min(you.magic_points, note_maxmp), note_maxmp);
     take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
@@ -7264,7 +7264,7 @@ bool player::can_do_shaft_ability(bool quiet) const
     if (attribute[ATTR_HELD])
     {
         if (!quiet) {
-            // locnote: %s = "held in a net/web"
+            // @locnote: %s = "held in a net/web"
             mprf("You can't shaft yourself while %s.", held_status());
         }
         return false;
@@ -7400,7 +7400,7 @@ bool player::attempt_escape(int attempts)
     if (escape_score
         >= roll_dice(5, 8 + div_rand_round(themonst->get_hit_dice(), 4)))
     {
-        // locnote: You escape <the monster's> grip.
+        // @locnote: You escape <the monster's> grip.
         mprf("You escape %s grasp.", object.c_str());
 
         // Stun the monster to prevent it from constricting again right away.
@@ -7413,7 +7413,7 @@ bool player::attempt_escape(int attempts)
     }
     else
     {
-        // locnote: <The monster's> grasp...
+        // @locnote: <The monster's> grasp...
         mprf("%s grasp on you weakens, but your attempt to escape fails.",
              object.c_str());
         turn_is_over = true;
@@ -7878,7 +7878,7 @@ void player_close_door(coord_def doorpos)
 
     const char *adj, *noun;
     get_door_description(all_door.size(), &adj, &noun);
-    string waynoun_str = make_stringf("%sway", noun); // noloc
+    string waynoun_str = make_stringf("%sway", noun); // @noloc
 
     if (!door_desc_adj.empty())
         adj = door_desc_adj.c_str();
@@ -8082,7 +8082,7 @@ string player::hand_act(const string &singular_msg,
                         const string &plural_msg) const
 {
     bool plural;
-    string hand = "your " + hand_name(true, &plural); // noloc
+    string hand = "your " + hand_name(true, &plural); // @noloc
 
     string msg;
     if (plural)

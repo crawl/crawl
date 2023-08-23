@@ -382,7 +382,7 @@ namespace quiver
                         case FAV_TOUCH:
                             return !confused ? "Touch: " : "Confused touch: ";
                         case FAV_ENGULF:
-                            // locnote: Wisp form attack
+                            // @locnote: Wisp form attack
                             return !confused ? "Engulf: " : "Confused engulf: ";
                         case FAV_RELEASE_SPORES_AT:
                             return !confused ? "Release spores: "
@@ -390,7 +390,7 @@ namespace quiver
                         case FAV_SLASH:
                             return !confused ? "Slash: " : "Confused slash: ";
                         case FAV_SMACK:
-                            // locnote: Tree form attack
+                            // @locnote: Tree form attack
                             return !confused ? "Smack: ": "Confused smack: ";
                         default:
                             return !confused ? "Hit: " : "Confused hit: ";
@@ -921,7 +921,7 @@ namespace quiver
             // XX abstract to quiver verb?
             if (!short_desc)
             {
-                string verb = "Bug: "; // noloc
+                string verb = "Bug: "; // @noloc
                 if (!you.confused()) {
                     switch (projected)
                     {
@@ -1808,7 +1808,7 @@ namespace quiver
 
         virtual string quiver_verb() const override
         {
-            // locnote: evoke wand
+            // @locnote: evoke wand
             return "Zap: ";
         }
 
@@ -2065,7 +2065,7 @@ namespace quiver
         }
     };
 
-    // noloc section start
+    // @noloc section start
 
     void action::save(CrawlHashTable &save_target) const
     {
@@ -2090,7 +2090,7 @@ namespace quiver
         save_target["type"] = "melee_action";
     }
 
-    // noloc section end
+    // @noloc section end
 
     static shared_ptr<action> _load_action(CrawlHashTable &source)
     {
@@ -3249,11 +3249,11 @@ static bool _item_matches(const item_def &item, fire_type types,
     // of is_valid code...
     ASSERT(item.defined());
 
-    // noloc section start
+    // @noloc section start
     if (types & FIRE_INSCRIBED)
         if (item.inscription.find(manual ? "+F" : "+f", 0) != string::npos)
             return true;
-    // noloc section end
+    // @noloc section end
 
     if (item.base_type != OBJ_MISSILES)
         return false;

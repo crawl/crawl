@@ -95,7 +95,7 @@ InvEntry::InvEntry(const item_def &i)
         else
         {
             // buggy net, but don't crash
-            text += " (holding nobody)"; // noloc
+            text += " (holding nobody)"; // @noloc
         }
     }
 
@@ -325,7 +325,7 @@ void InvEntry::set_show_coordinates(bool doshow)
 }
 
 InvMenu::InvMenu(int mflags)
-    : Menu(mflags, "inventory"), // noloc
+    : Menu(mflags, "inventory"), // @noloc
       type(menu_type::invlist), pre_select(nullptr),
       title_annotate(nullptr), _mode_special_drop(false)
 {
@@ -934,9 +934,9 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
             if (tag == "pickup")
             {
                 if (ie->item && item_is_stationary(*ie->item))
-                    ie->tag = "nopickup"; // noloc
+                    ie->tag = "nopickup"; // @noloc
                 else
-                    ie->tag = "pickup"; // noloc
+                    ie->tag = "pickup"; // @noloc
             }
             if (get_flags() & MF_NOSELECT)
                 ie->hotkeys.clear();
@@ -985,7 +985,7 @@ vector<SelItem> InvMenu::get_selitems() const
 string InvMenu::help_key() const
 {
     if (type == menu_type::drop || type == menu_type::pickup)
-        return "pick-up"; // noloc (key)
+        return "pick-up"; // @noloc (key)
     else
         return "";
 }
@@ -1033,7 +1033,7 @@ const char *item_class_name(int type, bool terse)
         case OBJ_ARMOUR:     return "Armour";
         case OBJ_WANDS:      return "Wands";
 #if TAG_MAJOR_VERSION == 34
-        case OBJ_FOOD:       return "Comestibles"; // noloc (obsolete)
+        case OBJ_FOOD:       return "Comestibles"; // @noloc (obsolete)
 #endif
         case OBJ_SCROLLS:    return "Scrolls";
         case OBJ_JEWELLERY:  return "Jewellery";
@@ -1041,7 +1041,7 @@ const char *item_class_name(int type, bool terse)
         case OBJ_BOOKS:      return "Books";
         case OBJ_STAVES:     return "Magical Staves";
 #if TAG_MAJOR_VERSION == 34
-        case OBJ_RODS:       return "Rods"; // noloc (obsolete)
+        case OBJ_RODS:       return "Rods"; // @noloc (obsolete)
 #endif
         case OBJ_ORBS:       return "Orbs of Power";
         case OBJ_MISCELLANY: return "Miscellaneous";
@@ -1061,7 +1061,7 @@ const char* item_slot_name(equipment_type type)
     case EQ_GLOVES:      return "gloves";
     case EQ_BOOTS:       return "boots";
     case EQ_SHIELD:      return "shield";
-    case EQ_BODY_ARMOUR: return "body"; // noloc
+    case EQ_BODY_ARMOUR: return "body"; // @noloc
     default:             return "";
     }
 }

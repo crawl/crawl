@@ -134,8 +134,8 @@ static string _describe_favour(god_type which_god)
 static const char *divine_title[][8] =
 {
     // No god.
-    {"Buglet",             "Firebug",               "Bogeybug",                 "Bugger", // noloc
-        "Bugbear",            "Bugged One",            "Giant Bug",                "Lord of the Bugs"}, // noloc
+    {"Buglet",             "Firebug",               "Bogeybug",                 "Bugger", // @noloc
+        "Bugbear",            "Bugged One",            "Giant Bug",                "Lord of the Bugs"}, // @noloc
 
     // Zin.
     {"Blasphemer",         "Anchorite",             "Apologist",                "Pious",
@@ -577,9 +577,9 @@ static formatted_string _beogh_extra_description()
         if (companion_is_elsewhere(mons->mid))
         {
             desc += formatted_string::parse_string(
-                            " (<blue>" // noloc
+                            " (<blue>" // @noloc
                             + localise("on another level")
-                            + "</blue>)"); // noloc
+                            + "</blue>)"); // @noloc
         }
         else if (given_gift(mons))
         {
@@ -628,7 +628,7 @@ static string _describe_deck_summary()
 static formatted_string _god_extra_description(god_type which_god)
 {
     formatted_string desc;
-    string desc_key = god_name(which_god) + " extra"; // noloc
+    string desc_key = god_name(which_god) + " extra"; // @noloc
 
     switch (which_god)
     {
@@ -710,7 +710,7 @@ static string _get_god_misc_info(god_type which_god)
 static formatted_string _detailed_god_description(god_type which_god)
 {
     formatted_string desc;
-    _add_par(desc, getLongDescription(god_name(which_god) + " powers")); // noloc
+    _add_par(desc, getLongDescription(god_name(which_god) + " powers")); // @noloc
     _add_par(desc, get_god_likes(which_god));
     _add_par(desc, _get_god_misc_info(which_god));
     return desc;
@@ -1257,7 +1257,7 @@ static const string _god_service_fee_description(god_type which_god)
         {
             string str = random_choose("no fee if you act now",
                                        "no fee if you join today");
-            return "( " + localise(str) + ")"; // noloc
+            return "( " + localise(str) + ")"; // @noloc
         }
         else
         {
