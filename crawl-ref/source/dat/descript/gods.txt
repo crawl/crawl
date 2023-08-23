@@ -229,7 +229,7 @@ to specific skills, but cursed equipment cannot be enchanted and can only be
 removed by shattering it forever. As worshippers equip more cursed equipment,
 Ashenzari will grant increasing knowledge of the surrounding dungeon.
 Eventually, Ashenzari will reveal the invisible, grant clarity of mind, and
-protect worshippers from the Dungeon's malevolent surprises.
+protect worshippers from the Dungeon's malevolent forces.
 %%%%
 Beogh powers
 

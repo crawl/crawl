@@ -20,7 +20,7 @@ stop += from outside your range of vision
 stop += emerges from the mists of memory
 
 # Traps and doors
-stop += A sourceless malevolence
+stop += A malevolent force
 stop += A sentinel's mark forms upon you\.
 stop += it creaks loudly
 stop += flies open with a bang
