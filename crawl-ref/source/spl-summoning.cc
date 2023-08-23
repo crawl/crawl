@@ -32,6 +32,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
+#include "localise.h"
 #include "mapmark.h"
 #include "message.h"
 #include "mgen-data.h"
@@ -230,9 +231,13 @@ spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
 
     if (you.can_see(*beast))
     {
-        mprf("%s %s %s!", caster->name(DESC_THE).c_str(),
-                          caster->conj_verb("summon").c_str(),
-                          mons_type_name(type, DESC_A).c_str());
+        if (caster->is_player())
+            mprf("You summon %s!", mons_type_name(type, DESC_A).c_str());
+        else
+        {
+            mprf("%s summons %s!", caster->name(DESC_THE).c_str(),
+                                   mons_type_name(type, DESC_A).c_str());
+        }
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -563,7 +568,8 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
 
     if (!caster)
     {
-        mg.non_actor_summoner = "the rage of " + god_name(GOD_TROG, false);
+        mg.non_actor_summoner = make_stringf("the rage of %s",
+                                             god_name(GOD_TROG, false).c_str());
         mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
     }
 
@@ -662,16 +668,26 @@ static bool _check_tukima_validity(const actor *target)
             return _fail_tukimas();
 
         if (target_is_player)
+        {
+            // locnote: Tukima's dance fail messages
             mpr(you.hand_act("%s twitches.", "%s twitch."));
+        }
         else
         {
             // FIXME: maybe move hand_act to class actor?
             bool plural = true;
             const string hand = target->hand_name(true, &plural);
-
-            mprf("%s %s %s.",
-                 apostrophise(target->name(DESC_THE)).c_str(),
-                 hand.c_str(), conjugate_verb("twitch", plural).c_str());
+            const string owner = apostrophise(target->name(DESC_THE));
+            if (plural)
+            {
+                // locnote: <the monster's> <hands> twitch.
+                mprf("%s %s twitch.", owner.c_str(), hand.c_str());
+            }
+            else
+            {
+                // locnote: <the monster's> <hand> twitches.
+                mprf("%s %s twitches.", owner.c_str(), hand.c_str());
+            }
         }
         return false;
     }
@@ -684,13 +700,17 @@ static bool _check_tukima_validity(const actor *target)
         if (mons_class_is_animated_weapon(target->type))
         {
             simple_monster_message(*(monster*)target,
-                                   "%s is already dancing.");
+                                   " is already dancing.");
+        }
+        else if (wpn->quantity == 1)
+        {
+            mprf("%s vibrates crazily for a second.",
+                 _get_item_desc(wpn, target_is_player).c_str());
         }
         else
         {
-            mprf("%s vibrate%s crazily for a second.",
-                 _get_item_desc(wpn, target_is_player).c_str(),
-                 wpn->quantity > 1 ? "" : "s");
+            mprf("%s vibrate crazily for a second.",
+                 _get_item_desc(wpn, target_is_player).c_str());
         }
         return false;
     }
@@ -982,6 +1002,7 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
         if (!friendly)
         {
             mpr(charmed ? "You don't feel so good about this..."
+                        // locnote: it = demon
                         : "It doesn't seem very happy.");
         }
         else if (mon == MONS_CRIMSON_IMP || mon == MONS_WHITE_IMP
@@ -1447,6 +1468,7 @@ static void _display_undead_motions(int motions)
 {
     vector<const char *> motions_list;
 
+    // noloc section start
     // Check bitfield from _raise_remains for types of corpse(s) being animated.
     if (motions & DEAD_ARE_WALKING)
         motions_list.push_back("walking");
@@ -1460,14 +1482,17 @@ static void _display_undead_motions(int motions)
         motions_list.push_back("slithering");
     if (motions & DEAD_ARE_CRAWLING)
         motions_list.push_back("crawling");
+    // noloc section end
 
     // Prevents the message from getting too long and spammy.
-    if (motions_list.size() > 3)
+    if (motions_list.size() > 3 || localisation_active())
         mpr("The dead have arisen!");
     else
     {
+        // noloc section start
         mprf("The dead are %s!", comma_separated_line(motions_list.begin(),
              motions_list.end()).c_str());
+        // noloc section end
     }
 }
 
@@ -1530,8 +1555,10 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         {
             if (you.see_cell(pos))
             {
-                mprf("The headless hydra %s sways and immediately collapses!",
-                     item.sub_type == CORPSE_BODY ? "corpse" : "skeleton");
+                if (item.sub_type == CORPSE_BODY)
+                    mpr("The headless hydra corpse sways and immediately collapses!");
+                else
+                    mpr("The headless hydra skeleton sways and immediately collapses!");
             }
             return false;
         }
@@ -1837,9 +1864,10 @@ spret cast_simulacrum(int pow, god_type god, bool fail)
         // Avoid headless hydras. Unlike Animate Dead, still consume the flesh.
         if (corpse.props[CORPSE_HEADS].get_short() == 0)
         {
-            // No monster to conj_verb with :(
-            mprf("The headless hydra simulacr%s immediately collapse%s into snow!",
-                 how_many == 1 ? "um" : "a", how_many == 1 ? "s" : "");
+            if (how_many == 1)
+                mpr("The headless hydra simulacrum immediately collapses into snow!");
+            else
+                mpr("The headless hydra simulacra immediately collapse into snow!");
             if (!turn_corpse_into_skeleton(corpse))
                 butcher_corpse(corpse, false);
             return spret::success;
@@ -2050,10 +2078,14 @@ void init_servitor(monster* servitor, actor* caster)
 
     if (you.can_see(*caster))
     {
-        mprf("%s %s a servant imbued with %s destructive magic!",
-             caster->name(DESC_THE).c_str(),
-             caster->conj_verb("summon").c_str(),
-             caster->pronoun(PRONOUN_POSSESSIVE).c_str());
+        if (caster->is_player())
+            mpr("You summon a servant imbued with your destructive magic!");
+        else
+        {
+            // i18n: Avoid using his/her/its here because they're hard to translate
+            mprf("%s summons a servant imbued with destructive magic!",
+                 caster->name(DESC_THE).c_str());
+        }
     }
     else
         simple_monster_message(*servitor, " appears!");
@@ -2176,7 +2208,7 @@ spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
                 if (you.can_see(*agent) && you.can_see(*battlesphere))
                 {
                     simple_monster_message(*agent->as_monster(),
-                                           "%s conjures a globe of magical energy!");
+                                           " conjures a globe of magical energy!");
                 }
                 else if (you.can_see(*battlesphere))
                     simple_monster_message(*battlesphere, " appears!");
@@ -2517,8 +2549,10 @@ spret cast_fulminating_prism(actor* caster, int pow,
         {
             if (you.can_see(*victim))
             {
-                mprf("%s %s.", victim->name(DESC_THE).c_str(),
-                               victim->conj_verb("twitch").c_str());
+                if (victim->is_player())
+                    mpr("You twitch.");
+                else
+                    mprf("%s twitches.", victim->name(DESC_THE).c_str());
             }
             else
                 canned_msg(MSG_GHOSTLY_OUTLINE);
@@ -2541,11 +2575,12 @@ spret cast_fulminating_prism(actor* caster, int pow,
 
     if (prism)
     {
-        if (caster->observable())
+        if (caster->is_player())
+            mpr("You conjure a prism of explosive energy!");
+        else if (caster->observable())
         {
-            mprf("%s %s a prism of explosive energy!",
-                 caster->name(DESC_THE).c_str(),
-                 caster->conj_verb("conjure").c_str());
+            mprf("%s conjures a prism of explosive energy!",
+                 caster->name(DESC_THE).c_str());
         }
         else if (you.can_see(*prism))
             mprf("A prism of explosive energy appears from nowhere!");
@@ -2871,6 +2906,7 @@ static void _overgrow_wall(const coord_def &pos)
 
     if (monster_at(pos))
     {
+        // locnote: Fedhas overgrow ability
         mprf("Something unseen blocks growth in %s.", what.c_str());
         return;
     }
@@ -3089,9 +3125,10 @@ spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
 
     if (created && you.see_cell(agent.pos()))
     {
-        mprf("%s conjure%s some foxfire!",
-             agent.name(DESC_THE).c_str(),
-             agent.is_monster() ? "s" : "");
+        if (agent.is_player())
+            mpr("You conjure some foxfire!");
+        else
+            mprf("%s conjures some foxfire!", agent.name(DESC_THE).c_str());
     }
     else if (agent.is_player())
         canned_msg(MSG_NOTHING_HAPPENS);

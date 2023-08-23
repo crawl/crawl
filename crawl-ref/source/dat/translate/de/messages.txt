@@ -19901,13 +19901,16 @@ Der Boden um Euch herum verflüssigt sich!
 ##################
 %%%%
 You aren't wearing any armour!
-
+Ihr tragt keine Rüstung!
 %%%%
 A chill wind blows around you.
 Ein kalter Wind weht um Euch herum.
 %%%%
-summon
-
+You summon %s!
+Ihr ruft {acc}%s herbei!
+%%%%
+%s summons %s!
+%s ruft {acc}%s herbei!
 %%%%
 %s appears.
 %s erscheint.
@@ -19916,7 +19919,7 @@ You call out to the draconic realm, and the dragon horde roars back!
 Ihr ruft in das drakonische Reich und die Drachenhorde brüllt zurück!
 %%%%
 A dragon tries to answer your call, but you don't have enough magical power!
-
+Ein Drache versucht, auf Euren Ruf zu antworten, aber Ihr habt nicht genug magische Kraft!
 %%%%
 A dragon arrives to answer your call!
 Ein Drache kommt, um Euren Anruf zu beantworten!
@@ -19925,10 +19928,10 @@ A dragon appears.
 Ein Drache erscheint.
 %%%%
 A mana viper appears with a sibilant hiss.
-Eine Manaviper erscheint mit einem zischenden Zischen.
+Eine Manaviper erscheint mit einem Zischen.
 %%%%
-"the rage of "
-
+the rage of %s
+{gen}%s Zorn
 %%%%
 You are momentarily dazzled by a brilliant light.
 Ihr werdet für einen Moment von einem strahlenden Licht geblendet.
@@ -19936,20 +19939,29 @@ Ihr werdet für einen Moment von einem strahlenden Licht geblendet.
 You can't see a target there!
 Ihr könnt dort kein Ziel sehen!
 %%%%
+# note: Tukima's dance fail messages
 %s twitches.
-
+%s zuckt.
 %%%%
 %s twitch.
-
+%s zucken.
 %%%%
-twitch
-zucken
+# note: <the monster's> <hands> twitch.
+%s %s twitch.
+{gen}%s {nom}%s zucken.
+%%%%
+# note: <the monster's> <hand> twitches.
+%s %s twitches.
+{gen}%s {nom}%s zuckt.
 %%%%
 %s is already dancing.
-
+%s tanzt schon.
 %%%%
-%s vibrate%s crazily for a second.
-%s vibrieren%s für eine Sekunde verrückt.
+%s vibrates crazily for a second.
+%s vibriert eine Sekunde lang wie verrückt.
+%%%%
+%s vibrate crazily for a second.
+%s vibrieren eine Sekunde lang wie verrückt.
 %%%%
 %s twitches for a moment.
 %s zuckt für einen Moment.
@@ -19958,7 +19970,7 @@ zucken
 %s tanzt in die Luft!
 %%%%
 %s booms: How dare you animate that foul thing!
-
+%s dröhnt: Wie kannst du es wagen, dieses widerliche Ding zu animieren!
 %%%%
 You create some ball lightning!
 Ihr erschafft einen Kugelblitz!
@@ -19967,112 +19979,101 @@ A guardian golem appears, shielding your allies.
 Ein Wächtergolem erscheint und schützt Eure Verbündeten.
 %%%%
 A beastly little devil appears in a puff of frigid air.
-
+In einem eisigen Luftzug erscheint ein kleiner, biestiger Teufel.
 %%%%
 A metallic apparition takes form in the air.
-
+Eine metallische Erscheinung nimmt in der Luft Gestalt an.
 %%%%
 A shadowy apparition takes form in the air.
-
+Eine schattenhafte Erscheinung nimmt in der Luft Gestalt an.
 %%%%
 A beastly little devil appears in a puff of flame.
-
+Ein kleiner Teufel erscheint in einer Flammenwolke.
 %%%%
 A demon appears!
 Ein Dämon erscheint!
 %%%%
+# note: it = demon
 It doesn't seem very happy.
-
+Er scheint nicht sehr glücklich zu sein.
 %%%%
 You open a gate to Pandemonium!
 Ihr öffnet ein Tor zu Pandemonium!
 %%%%
 Wisps of shadow whirl around you...
-Schattenfetzen wirbeln um Euch herum ...
+Schattenfetzen wirbeln um Euch herum...
 %%%%
 The shadows disperse without effect.
-Die Schatten zerstreuen sich ohne Wirkung.
+Die Schatten verziehen sich ohne Wirkung.
 %%%%
 The dungeon shakes, a horrible noise fills the air, and a portal to some otherworldly place is opened!
-
+Der Dungeon erbebt, ein schreckliches Geräusch erfüllt die Luft, und ein Portal in eine andere Welt wird geöffnet!
 %%%%
 A gateway cannot be opened in this cramped space!
 In diesem engen Raum kann kein Tor geöffnet werden!
 %%%%
 A forested plane collides here with a resounding crunch!
-Ein bewaldetes Flugzeug kollidiert hier mit einem lauten Knirschen!
-%%%%
-walking
-
-%%%%
-hopping
-
-%%%%
-swimming
-
-%%%%
-slithering
-
-%%%%
-crawling
-
+Eine bewaldete Ebene kollidiert hier mit einem lauten Knirschen!
 %%%%
 The dead have arisen!
 Die Toten sind auferstanden!
 %%%%
-The dead are %s!
-Die Toten %s!
+The headless hydra corpse sways and immediately collapses!
+Die kopflose Hydra-Leiche schwankt und bricht sofort zusammen!
 %%%%
-The headless hydra %s sways and immediately collapses!
-Die kopflose Hydra schwankt %s und bricht sofort zusammen!
+The headless hydra skeleton sways and immediately collapses!
+Das kopflose Hydra-Skelett schwankt und bricht sofort zusammen!
 %%%%
 Before your eyes, flesh is ripped from the corpse!
 Vor Euren Augen wird Fleisch von der Leiche gerissen!
 %%%%
 ...but the skeleton had no space to rise!
-
+...aber das Skelett hatte keinen Platz zum Aufstehen!
 %%%%
-The headless hydra simulacr%s immediately collapse%s into snow!
-Die kopflose Hydra simulacr%s kollabiert sofort%s in Schnee!
+The headless hydra simulacrum immediately collapses into snow!
+Das kopflose Hydra-Simulakrum bricht sofort in Schnee zusammen!
 %%%%
-um
-
+The headless hydra simulacra immediately collapse into snow!
+Die kopflose Hydra-Simulakra bricht sofort in Schnee zusammen!
 %%%%
 An evil force gathers, but it quickly dissipates.
 Eine böse Kraft sammelt sich, aber sie löst sich schnell auf.
 %%%%
 You cannot haunt those who bear you no hostility.
-Ihr könnt diejenigen nicht verfolgen, die Euch ohne Feindseligkeit tragen.
+Ihr könnt diejenigen nicht spuken, die Euch ohne Feindseligkeit tragen.
 %%%%
 Insubstantial figures form in the air.
 In der Luft bilden sich unwesentliche Figuren.
 %%%%
 You sense hostile presences.
-
+Ihr spürt feindliche Wesenheiten.
 %%%%
 An insubstantial figure forms in the air.
 In der Luft bildet sich eine unwesentliche Figur.
 %%%%
 You sense a hostile presence.
-Ihr spürt eine feindliche Präsenz.
+Ihr spürt eine feindliche Wesenheit.
 %%%%
-%s %s a servant imbued with %s destructive magic!
-%s%s ein Diener, der von%s zerstörerischer Magie durchdrungen ist!
+You summon a servant imbued with your destructive magic!
+Ihr ruft einen Diener herbei, der von Eurer zerstörerischen Magie durchtränkt ist!
+%%%%
+%s summons a servant imbued with destructive magic!
+%s ruft einen Diener herbei, der von zerstörerischer Magie durchtränkt ist!
 %%%%
 %s appears!
-
+%s erscheint!
 %%%%
 You recall your battlesphere and imbue it with additional charge.
-
+Ihr ruft Eure Gefechtskugel zurück und ladet sie zusätzlich auf.
 %%%%
 You imbue your battlesphere with additional charge.
 Ihr erfüllt Eure Kampfsphäre mit zusätzliche Energie.
 %%%%
 You conjure a globe of magical energy.
-Ihr beschwört einen Globus magischer Energie.
+Ihr beschwört eine Kugel magischer Energie.
 %%%%
 %s conjures a globe of magical energy!
-
+%s beschwört eine Kugel magischer Energie.
 %%%%
 Your battlesphere expends the last of its energy and dissipates.
 
@@ -20084,10 +20085,10 @@ You feel your bond with your battlesphere wane.
 Ihr fühlt, wie Eure Bindung zu Eurer Kampfsphäre schwindet.
 %%%%
 barrage of energy
-
+Trommelfeuer der Energie
 %%%%
 %s fires!
-
+%s schießt!
 %%%%
 That's too far away.
 Das ist zu weit weg.
@@ -20098,17 +20099,20 @@ Das könnt Ihr nicht in ein festes Objekt zaubern!
 You can't place the prism on a creature.
 Ihr könnt das Prisma nicht auf eine Kreatur legen.
 %%%%
-%s %s a prism of explosive energy!
-%s%s ein Prisma explosiver Energie!
+You twitch.
+Ihr zuckt.
 %%%%
-conjure
-
+You conjure a prism of explosive energy!
+Ihr ruft ein Prisma aus explosiver Energie hervor!
+%%%%
+%s conjures a prism of explosive energy!
+%s ruft ein Prisma aus explosiver Energie hervor!
 %%%%
 A prism of explosive energy appears from nowhere!
 Ein Prisma explosiver Energie erscheint aus dem Nichts!
 %%%%
 %s fades away.
-
+%s verblasst.
 %%%%
 You feel your bond with your spectral weapon wane.
 Ihr fühlt, wie Eure Bindung zu Eurer Spektralwaffe nachlässt.
@@ -20120,19 +20124,20 @@ A briar patch grows up from the ground.
 Ein Dornbusch wächst aus dem Boden.
 %%%%
 No empty adjacent squares.
-Keine leeren benachbarten Quadrate.
+Keine leeren benachbarten Felder.
 %%%%
+# note: Fedhas overgrow ability
 Something unseen blocks growth in %s.
-Etwas Unsichtbares blockiert das Wachstum in%s.
+Etwas Unsichtbares blockiert das Wachstum in {dat}%s.
 %%%%
 %s is torn apart as %s grows in its place.
-%s wird auseinandergerissen, wenn%s an seiner Stelle wächst.
+%s wird auseinandergerissen, als %s an der Stelle wächst.
 %%%%
 %s falls apart, but nothing grows.
 %s fällt auseinander, aber nichts wächst.
 %%%%
 Aiming: <white>Overgrow</white>
-
+Zielen: <white>Überwuchern</white>
 %%%%
 You can't grow a ballistomycete there.
 Ihr könnt dort keinen Ballistomyceten züchten.
@@ -20141,13 +20146,13 @@ That space is already occupied.
 Dieser Raum ist bereits belegt.
 %%%%
 Something you can't see occupies that space!
-Etwas, das Ihr nicht sehen könnt, nimmt diesen Raum ein!
+Etwas, das Ihr nicht sehen könnt, besetzt diesen Raum!
 %%%%
 A ballistomycete grows from the ground.
 Ein Ballistomycet wächst aus dem Boden.
 %%%%
 You can't grow an oklob plant there.
-Ihr könnt dort keine Oklob-Pflanze anbauen.
+Ihr könnt dort keine Oklob-Pflanze züchten.
 %%%%
 Something you can't see is occupying that space!
 Etwas, das Ihr nicht sehen könnt, besetzt diesen Raum!
@@ -20156,10 +20161,13 @@ An oklob plant grows from the ground.
 Eine Klumpenpflanze wächst aus dem Boden.
 %%%%
 There is not enough space to conjure foxfire!
-
+Es gibt nicht genug Platz, um Fuchsfeuer hervorzurufen!
 %%%%
-%s conjure%s some foxfire!
-
+You conjure some foxfire!
+Ihr ruft Fuchsfeuer hervor!
+%%%%
+%s conjures some foxfire!
+%s ruft Fuchsfeuer hervor!
 %%%%
 
 ##################
