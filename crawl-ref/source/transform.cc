@@ -289,7 +289,7 @@ int Form::scaling_value(const FormScaling &sc, bool random,
         return sc.base * scale;
 
     const int lvl = get_max ? max_skill * scale : get_level(scale);
-    const int over_min = max(0, lvl - min_skill * scale);
+    const int over_min = lvl - min_skill * scale; // may be negative
     const int denom = max_skill - min_skill;
     if (random)
         return sc.base * scale + div_rand_round(over_min * sc.scaling, denom);
@@ -315,15 +315,15 @@ int Form::divided_scaling(const FormScaling &sc, bool random,
  *          allow for pseudo-decimal flexibility (& to match
  *          player::armour_class())
  */
-int Form::get_ac_bonus(bool max) const
+int Form::get_ac_bonus(bool get_max) const
 {
-    return scaling_value(ac, false, max, 100);
+    return max(0, scaling_value(ac, false, get_max, 100));
 }
 
-int Form::get_base_unarmed_damage(bool random, bool max) const
+int Form::get_base_unarmed_damage(bool random, bool get_max) const
 {
     // All forms start with base 3 UC damage.
-    return 3 + divided_scaling(unarmed_bonus_dam, random, max, 100);
+    return 3 + max(0, divided_scaling(unarmed_bonus_dam, random, get_max, 100));
 }
 
 /// `force_talisman` means to calculate HP as if we were in a talisman form (i.e. with penalties with insufficient Shapeshifting skill),
@@ -1015,9 +1015,10 @@ private:
 public:
     static const FormStorm &instance() { static FormStorm inst; return inst; }
 
-    int ev_bonus(bool max) const override
+    int ev_bonus(bool get_max) const override
     {
-        return scaling_value(FormScaling().Base(20).Scaling(7), false, max);
+        return max(0, scaling_value(FormScaling().Base(20).Scaling(7),
+                                    false, get_max));
     }
 
     bool can_offhand_punch() const override { return true; }
