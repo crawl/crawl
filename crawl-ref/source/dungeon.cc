@@ -4908,7 +4908,9 @@ int dgn_place_item(const item_spec &spec,
 
         // _apply_item_props will not generate a rune you already have,
         // so don't bother looping.
-        if (base_type == OBJ_RUNES)
+        // also, if the allow_useless flag above fails a bunch, just give up.
+        // XX is 20 tries reasonable?
+        if (base_type == OBJ_RUNES || useless_tries >= 20)
             return NON_ITEM;
         useless_tries++;
     }
