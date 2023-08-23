@@ -21,6 +21,7 @@ void packed_cell::clear()
     bg = 0;
     cloud = 0;
     map_knowledge.clear();
+    icons.clear();
 
     flv.floor_idx = 0;
     flv.wall_idx = 0;
