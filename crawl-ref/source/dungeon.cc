@@ -4839,7 +4839,18 @@ static object_class_type _concretize_type(const item_spec &spec)
     if (spec.props.exists(MIMIC_KEY))
         return get_random_item_mimic_type();
     if (spec.level == ISPEC_SUPERB)
-        return _superb_object_class();
+    {
+        // an unobtainable superb misc item is guaranteed to fail to generate,
+        // so prevent it from the start
+        // n.b. used in exactly one place, see `grunt_nemelex_the_gamble`
+        object_class_type ret;
+        do
+        {
+            ret = _superb_object_class();
+        }
+        while (spec.props.exists(UNOBTAINABLE_KEY) && ret == OBJ_MISCELLANY);
+        return ret;
+    }
     if (spec.level == ISPEC_ACQUIREMENT)
         return shuffled_acquirement_classes(false)[0];
     return spec.base_type;
