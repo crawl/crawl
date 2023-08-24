@@ -3077,7 +3077,8 @@ static void _maybe_launch_opportunity_attack(monster &mon, coord_def orig_pos)
     // pursuers. This is to avoid state changes after your turn
     // and before the monster's.
     // No, there is no logic to this ordering (pf):
-    if (!one_chance_in(3)
+    if (!mon.alive()
+        || !one_chance_in(3)
         || mon.wont_attack()
         || !mons_has_attacks(mon)
         || mon.confused()
