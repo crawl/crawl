@@ -167,7 +167,7 @@ static bool _decrement_a_duration(duration_type dur, int delay,
 
 static void _decrement_petrification(int delay)
 {
-    if (_decrement_a_duration(DUR_PETRIFIED, delay) && !you.paralysed())
+    if (_decrement_a_duration(DUR_PETRIFIED, delay))
     {
         you.redraw_armour_class = true;
         you.redraw_evasion = true;
@@ -178,8 +178,9 @@ static void _decrement_petrification(int delay)
                                             "flesh" :
                                             get_form()->flesh_equivalent;
 
-        mprf(MSGCH_DURATION, "You turn to %s and can move again.",
-             flesh_equiv.c_str());
+        mprf(MSGCH_DURATION, "You turn to %s%s.",
+             flesh_equiv.c_str(),
+             you.paralysed() ? "" : " and can move again");
 
         if (you.props.exists(PETRIFIED_BY_KEY))
             you.props.erase(PETRIFIED_BY_KEY);
@@ -192,11 +193,6 @@ static void _decrement_petrification(int delay)
         if ((dur -= delay) <= 0)
         {
             dur = 0;
-            // If we'd kill the player when active flight stops, this will
-            // need to pass the killer. Unlike monsters, almost all flight is
-            // magical, inluding tengu, as there's no flapping of wings. Should
-            // we be nasty to dragon and bat forms?  For now, let's not instakill
-            // them even if it's inconsistent.
             you.fully_petrify();
         }
         else if (dur < 15 && old_dur >= 15)
@@ -218,21 +214,29 @@ static void _decrement_paralysis(int delay)
 {
     _decrement_a_duration(DUR_PARALYSIS_IMMUNITY, delay);
 
-    if (you.duration[DUR_PARALYSIS])
-    {
-        _decrement_a_duration(DUR_PARALYSIS, delay);
+    if (!you.duration[DUR_PARALYSIS])
+        return;
 
-        if (!you.duration[DUR_PARALYSIS] && !you.petrified())
-        {
-            mprf(MSGCH_DURATION, "You can move again.");
-            you.redraw_armour_class = true;
-            you.redraw_evasion = true;
-            you.duration[DUR_PARALYSIS_IMMUNITY] = roll_dice(1, 3)
-            * BASELINE_DELAY;
-            if (you.props.exists(PARALYSED_BY_KEY))
-                you.props.erase(PARALYSED_BY_KEY);
-        }
+    _decrement_a_duration(DUR_PARALYSIS, delay);
+
+    if (you.duration[DUR_PARALYSIS])
+        return;
+
+    if (you.props.exists(PARALYSED_BY_KEY))
+        you.props.erase(PARALYSED_BY_KEY);
+
+    const int immunity = roll_dice(1, 3) * BASELINE_DELAY;
+    you.duration[DUR_PARALYSIS_IMMUNITY] = immunity;
+    if (you.petrified())
+    {
+        // no chain paralysis + petrification combos!
+        you.duration[DUR_PARALYSIS_IMMUNITY] += you.duration[DUR_PETRIFIED];
+        return;
     }
+
+    mprf(MSGCH_DURATION, "You can move again.");
+    you.redraw_armour_class = true;
+    you.redraw_evasion = true;
 }
 
 /**
@@ -525,6 +529,37 @@ static void _try_to_respawn_ancestor()
                       ancestor); // ;)
 }
 
+static void _decrement_transform_duration(int delay)
+{
+    if (you.form == you.default_form)
+        return;
+
+    // FIXME: [ds] Remove this once we've ensured durations can never go < 0?
+    if (you.duration[DUR_TRANSFORMATION] <= 0
+        && you.form != transformation::none)
+    {
+        you.duration[DUR_TRANSFORMATION] = 1;
+    }
+    // Vampire bat transformations are permanent (until ended), unless they
+    // are uncancellable (polymorph wand on a full vampire).
+    if (you.get_mutation_level(MUT_VAMPIRISM) < 2
+        || you.form != transformation::bat
+        || you.transform_uncancellable)
+    {
+        if (form_can_fly()
+            || form_likes_water() && feat_is_water(env.grid(you.pos())))
+        {
+            // Disable emergency flight if it was active
+            you.props.erase(EMERGENCY_FLIGHT_KEY);
+        }
+        if (_decrement_a_duration(DUR_TRANSFORMATION, delay, nullptr, random2(3),
+                                  "Your transformation is almost over."))
+        {
+            return_to_default_form();
+        }
+    }
+}
+
 
 /**
  * Take a 'simple' duration, decrement it, and print messages as appropriate
@@ -543,7 +578,6 @@ static void _decrement_simple_duration(duration_type dur, int delay)
         duration_end_effect(dur);
     }
 }
-
 
 
 /**
@@ -575,32 +609,7 @@ static void _decrement_durations()
     if (you.duration[DUR_LIQUEFYING])
         invalidate_agrid();
 
-    // FIXME: [ds] Remove this once we've ensured durations can never go < 0?
-    if (you.duration[DUR_TRANSFORMATION] <= 0
-        && you.form != transformation::none)
-    {
-        you.duration[DUR_TRANSFORMATION] = 1;
-    }
-
-    // Vampire bat transformations are permanent (until ended), unless they
-    // are uncancellable (polymorph wand on a full vampire).
-    if (you.get_mutation_level(MUT_VAMPIRISM) < 2
-        || you.form != transformation::bat
-        || you.transform_uncancellable)
-    {
-        if (form_can_fly()
-            || form_likes_water() && feat_is_water(env.grid(you.pos())))
-        {
-            // Disable emergency flight if it was active
-            you.props.erase(EMERGENCY_FLIGHT_KEY);
-        }
-
-        if (_decrement_a_duration(DUR_TRANSFORMATION, delay, nullptr, random2(3),
-                                  "Your transformation is almost over."))
-        {
-            untransform();
-        }
-    }
+    _decrement_transform_duration(delay);
 
     if (you.attribute[ATTR_SWIFTNESS] >= 0)
     {
@@ -831,8 +840,14 @@ static void _handle_emergency_flight()
 // Regen equipment only begins to function when full health is reached.
 static void _update_equipment_attunement_by_health()
 {
-    if (you.hp != you.hp_max || you.get_mutation_level(MUT_NO_REGENERATION))
+    if (you.hp != you.hp_max
+#if TAG_MAJOR_VERSION == 34
+        || you.get_mutation_level(MUT_NO_REGENERATION)
+#endif
+        )
+    {
         return;
+    }
 
     vector<string> eq_list;
     bool plural = false;
@@ -1039,6 +1054,8 @@ void player_reacts()
         xom_tick();
     else if (you_worship(GOD_QAZLAL))
         qazlal_storm_clouds();
+    else if (you_worship(GOD_ASHENZARI))
+        ash_scrying();
 
     if (you.props[EMERGENCY_FLIGHT_KEY].get_bool())
         _handle_emergency_flight();

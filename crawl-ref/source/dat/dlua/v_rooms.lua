@@ -371,7 +371,7 @@ function place_vaults_rooms(e, data, room_count, options)
         placed = true
         rooms_placed = rooms_placed + 1  -- Increment # rooms placed
         times_failed = 0 -- Reset fail count
-        -- Perform analysis for stairs (and perform inner wall substituion if applicable)
+        -- Perform analysis for stairs (and perform inner wall substitution if applicable)
         analyse_vault_post_placement(data,room,result,options)
         table.insert(results,result)
         -- Increment the count of rooms of this type
@@ -579,7 +579,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     v_normal_dir = v_normal.dir
   end
 
-  -- If placing a room in an existing wall we have the normal stored alredy in the usage data
+  -- If placing a room in an existing wall we have the normal stored already in the usage data
   if usage.usage == "eligible" or usage.usage == "eligible_open" then
     v_normal = usage.normal
     v_normal_dir = usage.normal.dir

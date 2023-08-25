@@ -278,6 +278,26 @@ xxxttt-s..s-ttt
       xxxxxx
 ENDMAP
 
+NAME:   alex1729_swamp_entry_worm_eleionoma
+TAGS:   swamp_entry patrolling transparent
+KFEAT:  O = enter_swamp
+KMONS:  O = eleionoma
+SUBST:  t = tt.
+NSUBST: 1 = 1:1 / 1=1t / .
+SUBST:  . = .....WW
+MARKER: O = lua:fog_machine { \
+             pow_min = 8, pow_max = 12, delay = 25, \
+             size = 2, walk_dist = 1, spread_rate= 33 }
+MAP
+  t.t
+ t.t.t
+ttttt.t
+.t.O.t.
+t.t.ttt
+ ttt.t
+  t.t
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Decorative vaults.
@@ -3140,11 +3160,11 @@ KITEM:   O = decaying rune of Zot
 NSUBST:  2 = 4 = 2. / * = 2, 0 = 1:412 / 3:2 / 2:. / * = 2., 3 = 1:. / *:3
 MARKER:  Q = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 8, pow_max = 12, delay_min = 30, delay_max = 40, \
-             size = 2, walk_dist = 1, spread_rate= 30, excl_rad = 0 }
+             size = 2, walk_dist = 1, excl_rad = 0 }
 MAP
 @@             wwttttttttt
 @.  ..        wwttcccccctt
-@ ..  ..  .....wwccQc3cctt
+@ ..  ..  .....wwcc.c3cctt
     ..  .....w?.wcXc3.Xctt
       ..    ?ww......cXctt
            www.wwXc3c3Xctt
@@ -3186,7 +3206,7 @@ ORIENT:  southeast
 MONS:    spectral swamp dragon / spectral hydra
 MONS:    hydra zombie / swamp dragon zombie
 MONS:    spectral swamp drake / swamp drake zombie
-MONS:    death drake / vampire mosquito band / w:5 oklob plant
+MONS:    death drake / vampire mosquito band / w:5 spectral bunyip
 MONS:    bloated husk, phantom, bog body
 KMONS:   8 = phantasmal warrior
 KMONS:   9 = ghost crab
@@ -3201,7 +3221,7 @@ SUBST:   1 = 113, ? = ??w, " = tc, ' = .w
 NSUBST:  6 = 1:5 / 3 = 89 / 10 = 5666. / *:., y = 1:Y / *:W
 MARKER:  Y = lua:fog_machine { cloud_type = "foul pestilence", \
              pow_min = 3, pow_max = 4, delay_min = 35, delay_max = 45, \
-             size = 3, walk_dist = 1, excl_rad = 0}
+             size = 1, walk_dist = 0, excl_rad = 0}
 MARKER:  O = lua:fog_machine { cloud_type = "foul pestilence", \
              pow_min = 3, pow_max = 4, delay_min = 35, delay_max = 45, \
              size = 3, walk_dist = 1, excl_rad = 0}
@@ -3217,13 +3237,13 @@ MAP
    't"c7.wwcccc"""ttttttt
    tttc...ccccccccccc"ttt
   ttt"cc...Ycccc6666c"ttt
-  ttt"cc....cccO6666cc"tt
+  ttt"ccY...cccO6666cc"tt
  ttttcccc...cc6666666c"tt
-  t""ccccY..ccc666666cctt
-   "cc1*cc...cc6666666ctt
-   tc211ccc..cccc6.666c"t
-   ccc2.1cc...cccc..6cc"t
-   ""c.1.ccc..ycccWW.cc"t
+  t""ccccY.Yccc666666cctt
+   "cc1*ccY.Ycc6666666ctt
+   tc211ccc.Ycccc6.666c"t
+   ccc2.1ccY.Ycccc..6cc"t
+   ""c.1.cccY.ycccWW.cc"t
    "tcc.1.cccy..ccWW..ctt
    "t"c2.21ccc..ccc6wcctt
    tttcc..2ccc..c..wwc"tt

@@ -21,7 +21,7 @@ function callback.trog_wizard_convert_wizard(data, triggerable,
     return
   end
 
-  local m = dgn.find_marker_positions_by_prop("slave_name", "trog_wizard")[1]
+  local m = dgn.find_marker_positions_by_prop("replica_name", "trog_wizard")[1]
   if m ~= nil then
     local _x, _y = m:xy()
 
@@ -65,7 +65,7 @@ COLOUR: 1 = darkgray
 KFEAT:  1 = .
 # A terrified wizard whose spells have been taken away
 # (he refused to convert)
-MARKER: 1 = lua:portal_desc {slave_name="trog_wizard"}
+MARKER: 1 = lua:portal_desc {replica_name="trog_wizard"}
 KMONS:  1 = wizard perm_ench:mute spells:. dbname:captured_wizard ; nothing
 KPROP:  1 = no_tele_into
 KFEAT:  # = iron_grate

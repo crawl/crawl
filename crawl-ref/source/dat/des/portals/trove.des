@@ -7,9 +7,6 @@
 # chance that you'll get rubbish (casters in an weapon/armour room and melee
 # fighters in a library), but that's kind of the point.
 #
-# Two Trove portals are 'nasty': one features summoners behind (diggable) glass,
-# and the other features two wandering shining eyes. Have a nice time!
-#
 ##############################################################################
 {{
 
@@ -152,7 +149,7 @@ function trove.get_trove_item(e, value, base_item)
   end
 
   local stasis_tolls = {
-       {base="scroll", type="blinking", quant=2+d(3)+d(3)},
+       {base="scroll", type="blinking", quant=1+d(2)+d(2)},
        {base="scroll", type="teleportation", quant=10+d(4)+d(4)} }
 
   if you.race() ~= "Formicid" then
@@ -834,7 +831,7 @@ x.....x
 xxxxxxx
 ENDMAP
 
-# A "nasty" monsters-behind-glass map for dpeg.
+# Did you ever wonder who the treasure was taken from?
 NAME:   trove_nasty
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup no_vmirror no_rotate
@@ -842,42 +839,37 @@ WEIGHT: 2
 COLOUR: x = blue
 NSUBST: " = 1:+ / *:x
 NSUBST: ' = 1:+ / *:x
-MONS:   ynoxinul
-# 25 items, just because we're feeling generous.
+# 24 items, just because we're feeling generous.
 ITEM:   any useful good_item w:10 / any
 ITEM:   any useful jewellery good_item / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
-ITEM:   wand of digging ident:all
+ITEM:   human skeleton
 KFEAT:  m = iron_grate
 : trove.setup_features(_G)
 MAP
         mmmmmmmmmm
-        m..1mm1..m
+        m..gmmg..m
 xxxxxxxxmmmmmmmmmmxxxxxxxx
 x........................x
 x.x'x'xxxxxxxxxxxxxxxxxx.x
 x.'edd+...............<x.x
 x.xdedx.mmmmmmmmmm.xx"xx"x
-x.'ddex.m..1mm1..m."dedddx
+x.'ddex.m..gmmg..m."dedddx
 x'xxxxx.mmmmmmmmmm.xededfx
-xA.g..............."fffedx
+xA................."fffedx
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# Another nasty vault, because dpeg asked.
+# It's better down where it's wetter.
 NAME:   trove_treasure_island
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup no_vmirror no_rotate no_pool_fixup
 WEIGHT: 2
 COLOUR: x = blue
-KFEAT:  1 = deep_water
-KMONS:  1 = generate_awake shining eye
-# 21 items, 'cos this one is *nasty*.
-# There are 4 extra potions of cure/mutation, anyway.
+# 17 items.
 ITEM:   any useful good_item / any
 ITEM:   any useful jewellery good_item / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
-ITEM:   potion of mutation q:3 ident:type
 : trove.setup_features(_G)
 : set_border_fill_type("open_sea")
 MAP
@@ -887,21 +879,21 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwww1wwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwww.wwwwwwwwwwwwww
-wwwwwwwwwwww..g.wwwwwwwwwwwww
-wwwwwwwwww...ge...wwwwwwwwwww
+wwwwwwwwwwww....wwwwwwwwwwwww
+wwwwwwwwww....e...wwwwwwwwwww
 wwwwwwwwww..<dded.wwwwwwwwwww
 wwwwwwwww...d...d..wwwwwwwwww
 wwwwwwww.e.fd.A.d..dwwwwwwwww
 wwwwwwwww...d...df..wwwwwwwww
-wwwwwwwwww..gddd<d.wwwwwwwwww
-wwwwwwwwwww..g.dd..wwwwwwwwww
+wwwwwwwwww...ddd<d.wwwwwwwwww
+wwwwwwwwwww....dd..wwwwwwwwww
 wwwwwwwwwwwww.f..wwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwww1ww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
@@ -917,9 +909,9 @@ NAME:    trove_misc_throne_room
 ORIENT:  encompass
 WEIGHT:  15
 TAGS:    no_item_gen no_monster_gen allow_dup
-ITEM:    manual of evocations, lightning rod, piece from Xom's chessboard
+ITEM:    manual of evocations, lightning rod, acquire magical staff
 ITEM:    any area misc, phial of floods, any ally misc, phantom mirror
-ITEM:    acquire wand w:15 / acquire magical staff w:5
+ITEM:    acquire wand
 SHUFFLE: efghij
 COLOUR:  x = blue
 COLOUR:  ' = yellow
@@ -1407,4 +1399,35 @@ xxxxxxxxx..xxxxxxxxx
 xxxxxxxx....xxxxxxxx
 xxxxxxxxRRRRxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# Who said hidden doors were removed, anyway?
+NAME:    pf_trove_less_simple
+WEIGHT:  5
+ORIENT:  encompass
+TAGS:    no_item_gen no_monster_gen allow_dup
+# Loot: 16 items.
+ITEM:   any useful good_item
+ITEM:   acquire jewellery / any useful good_item
+ITEM:   acquire weapon / acquire armour / any useful good_item
+ITEM:   gold q:1
+KITEM:  D = stone mimic
+KITEM:  E = wand of flame mimic / potion of degeneration mimic / scroll of noise mimic
+KITEM:  F = any weapon damaged ident:all mimic / any armour damaged ident:all mimic
+KFEAT:  X = rock_wall mimic
+: trove.setup_features(_G)
+MAP
+xxxxxxxxx
+xDDDgX+.x
+xFEEDxx.x
+xEFEDxx.x
+xDEFDxx.x
+xx++xxxgx
+xx..xxxXxxxx
+xx..xxx+xx<x
+xx..xxxdefdx
+x....xxefedx
+x.<A.xxfeedx
+x....xxddddx
+xxxxxxxxxxxx
 ENDMAP

@@ -237,7 +237,7 @@ int player::damage_type(int)
     if (const item_def* wp = weapon())
         return get_vorpal_type(*wp);
     else if (form == transformation::blade_hands)
-        return DVORP_SLICING;
+        return DAMV_PIERCING;
     else if (has_usable_claws())
         return DVORP_CLAWING;
     else if (has_usable_tentacles())
@@ -696,7 +696,7 @@ string player::arm_name(bool plural, bool *can_plural) const
     string str = species::arm_name(species);
 
     string adj;
-    if (form == transformation::lich)
+    if (form == transformation::death)
         adj = "bony";
     else if (form == transformation::shadow)
         adj = "shadowy";
@@ -825,7 +825,7 @@ bool player::go_berserk(bool intentional, bool potion)
     you.increase_duration(DUR_BERSERK, dur);
 
     // Apply Berserk's +50% Current/Max HP.
-    calc_hp(true, false);
+    calc_hp(true);
 
     you.berserk_penalty = 0;
 
@@ -893,8 +893,7 @@ bool player::antimagic_susceptible() const
 
 bool player::is_web_immune() const
 {
-    return form == transformation::spider
-        || is_insubstantial()
+    return is_insubstantial()
         || player_equip_unrand(UNRAND_SLICK_SLIPPERS);
 }
 
@@ -926,11 +925,11 @@ int player::constriction_damage(constrict_type typ) const
     {
     case CONSTRICT_BVC:
         return roll_dice(2, div_rand_round(40 +
-                   you.props[VILE_CLUTCH_POWER_KEY].get_int(), 20));
+                   you.props[VILE_CLUTCH_POWER_KEY].get_int(), 25));
     case CONSTRICT_ROOTS:
         // Assume we're using the wand.
-        // Min power 2d4, max power ~2d14 (also ramps over time)
-        return roll_dice(2, div_rand_round(25 +
+        // Min power 2d3, max power ~2d14 (also ramps over time)
+        return roll_dice(2, div_rand_round(20 +
                     you.props[FASTROOT_POWER_KEY].get_int(), 10));
     default:
         return roll_dice(2, div_rand_round(strength(), 5));

@@ -229,8 +229,6 @@ bool fill_status_info(int status, status_info& inf)
             inf.short_text   = "sluggish";
             inf.long_text    = "You are moving sluggishly.";
         }
-        if (you.in_liquid())
-            inf.light_colour = DARKGREY;
         break;
 
     case STATUS_ZOT:
@@ -997,7 +995,7 @@ static void _describe_invisible(status_info& inf)
 /**
  * Does a given duration tick down simply over time?
  *
- * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @param dur   The duration in question (e.g. DUR_PETRIFIED).
  * @return      Whether the duration's end_msg is non-null.
  */
 bool duration_decrements_normally(duration_type dur)
@@ -1008,7 +1006,7 @@ bool duration_decrements_normally(duration_type dur)
 /**
  * What message should a given duration print when it expires, if any?
  *
- * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @param dur   The duration in question (e.g. DUR_PETRIFIED).
  * @return      A message to print for the duration when it ends.
  */
 const char *duration_end_message(duration_type dur)
@@ -1020,7 +1018,7 @@ const char *duration_end_message(duration_type dur)
  * What message should a given duration print when it passes its
  * expiring threshold, if any?
  *
- * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @param dur   The duration in question (e.g. DUR_PETRIFIED).
  * @return      A message to print.
  */
 const char *duration_expire_message(duration_type dur)
@@ -1032,7 +1030,7 @@ const char *duration_expire_message(duration_type dur)
  * How much should the duration be decreased by when it passes its
  * expiring threshold (to fuzz the remaining time), if at all?
  *
- * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @param dur   The duration in question (e.g. DUR_PETRIFIED).
  * @return      A random value to reduce the remaining duration by; may be 0.
  */
 int duration_expire_offset(duration_type dur)
@@ -1044,7 +1042,7 @@ int duration_expire_offset(duration_type dur)
  * At what number of turns remaining is the given duration considered to be
  * 'expiring', for purposes of messaging & status light colouring?
  *
- * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @param dur   The duration in question (e.g. DUR_PETRIFIED).
  * @return      The maximum number of remaining turns at which the duration
  *              is considered 'expiring'; may be 0.
  */
@@ -1056,7 +1054,7 @@ int duration_expire_point(duration_type dur)
 /**
  * What channel should the duration messages be printed in?
  *
- * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @param dur   The duration in question (e.g. DUR_PETRIFIED).
  * @return      The appropriate message channel, e.g. MSGCH_RECOVERY.
  */
 msg_channel_type duration_expire_chan(duration_type dur)
@@ -1068,7 +1066,7 @@ msg_channel_type duration_expire_chan(duration_type dur)
 /**
  * If a duration has some special effect when ending, trigger it.
  *
- * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @param dur   The duration in question (e.g. DUR_PETRIFIED).
  */
 void duration_end_effect(duration_type dur)
 {

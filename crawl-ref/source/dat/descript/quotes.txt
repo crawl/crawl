@@ -772,6 +772,12 @@ Nikola
     -Nikola Tesla, “The Transmission of Electrical Energy Without Wires As a
 Means for Furthering Peace”, _Electrical World and Engineer_. January 7, 1905.
 %%%%
+Norris
+
+“Death and death alone gives meaning to life and this meaning is entirely
+negative.”
+    -Georges Poulet
+%%%%
 Orcish Mines
 
 “You load sixteen tons, what do you get
@@ -2163,10 +2169,10 @@ merfolk impaler
  slime, to choke ye, engorging your organs ‘til ye turn blue and bloated with
  bilge and brine and can scream no more -- only when he, crowned in cockle
  shells with slitherin’ tentacled tail and steaming beard take up his fell
- be-finned arm, his coral-tine trident screeches banshee-like in the tempest and
+ be-finnéd arm, his coral-tine trident screeches banshee-like in the tempest and
  plunges right through yer gullet, bursting ye -- a bulging bladder no more, but
- a blasted bloody film now and nothing for the harpies and the souls of dead
- sailors to  peck and claw and feed upon only to be lapped up and swallowed by
+ a blasted bloody film now -- a nothing for the harpies and the souls of dead
+ sailors to peck and claw and feed upon, only to be lapped up and swallowed by
  the infinite waters of the dread emperor himself -- forgotten to any man, to
  any time, forgotten to any god or devil, forgotten even to the sea, for any
  stuff or part of Winslow, even any scantling of your soul is Winslow no more,
@@ -3095,6 +3101,15 @@ shapeshifter
  Curl'd all at top, and shot up to the sky.”
     -Homer, _The Odyssey_, IV, 602-14.
      trans. George Chapman, 1857.
+%%%%
+shillelagh "Devastator"
+
+“‘Hurrah! my boys,’ says I, my shillelagh I let fly.
+ Some Galway boys were by, they saw I was a hobbling;
+ Then with a loud ‘hurrah!’ they joined me in the fray.
+ Faugh-a-ballagh! Clear the way! for the rocky road to Dublin!”
+
+    -D.K. Gavan, _Rocky Road to Dublin_. 19th Century.
 %%%%
 shortbow
 

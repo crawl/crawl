@@ -250,7 +250,7 @@ int get_spell_slot_by_letter(char letter)
 static int _get_spell_slot(spell_type spell)
 {
     // you.spells is a FixedVector of spells in some arbitrary order. It
-    // doesn't corespond to letters.
+    // doesn't correspond to letters.
     auto i = find(begin(you.spells), end(you.spells), spell);
     return i == end(you.spells) ? -1 : i - begin(you.spells);
 }
@@ -1273,23 +1273,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         break;
 
-    case SPELL_STATUE_FORM:
-        if (SP_GARGOYLE == you.species)
-            return "you're already a statue.";
-        // fallthrough to other forms
-
-    case SPELL_BEASTLY_APPENDAGE:
-    case SPELL_BLADE_HANDS:
-    case SPELL_DRAGON_FORM:
-    case SPELL_ICE_FORM:
-    case SPELL_STORM_FORM:
-    case SPELL_SPIDER_FORM:
-        if (you.undead_state(temp) == US_UNDEAD)
-            return "your undead flesh cannot be transformed.";
-        if (you.is_lifeless_undead(temp))
-            return "your current blood level is not sufficient.";
-        break;
-
     case SPELL_PORTAL_PROJECTILE:
         if (you.has_mutation(MUT_NO_GRASPING))
             return "this spell is useless without hands.";
@@ -1315,11 +1298,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you are still too close to death's doorway.";
         // Prohibited to all undead.
         if (you.undead_state(temp))
-            return "you're too dead.";
-        break;
-    case SPELL_NECROMUTATION:
-        // only prohibited to actual undead, not lichformed players
-        if (you.undead_state(false))
             return "you're too dead.";
         break;
 
@@ -1393,7 +1371,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     case SPELL_ROT:
         {
-            const mon_holy_type holiness = you.holiness(temp);
+            const mon_holy_type holiness = you.holiness(temp, false);
             if (holiness != MH_NATURAL && holiness != MH_UNDEAD)
                 return "you have no flesh to rot.";
         }
@@ -1672,7 +1650,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     if (testbits(flags, spflag::helpful))
         return false;
 
-    // For chosing default targets and prompting we don't treat Inner Flame as
+    // For choosing default targets and prompting we don't treat Inner Flame as
     // neutral, since the seeping flames trigger conducts and harm the monster
     // before it explodes.
     const bool allow_friends = testbits(flags, spflag::neutral)
@@ -1957,6 +1935,15 @@ const set<spell_type> removed_spells =
     SPELL_CONJURE_FLAME,
     SPELL_CORPSE_ROT,
     SPELL_FLAME_TONGUE,
+    SPELL_BEASTLY_APPENDAGE,
+    SPELL_SPIDER_FORM,
+    SPELL_ICE_FORM,
+    SPELL_BLADE_HANDS,
+    SPELL_STATUE_FORM,
+    SPELL_STORM_FORM,
+    SPELL_DRAGON_FORM,
+    SPELL_NECROMUTATION,
+    SPELL_AWAKEN_EARTH,
 #endif
 };
 
@@ -1964,6 +1951,24 @@ bool spell_removed(spell_type spell)
 {
     return removed_spells.count(spell) != 0;
 }
+
+#if TAG_MAJOR_VERSION == 34
+set<spell_type> form_spells = {
+    SPELL_BEASTLY_APPENDAGE,
+    SPELL_SPIDER_FORM,
+    SPELL_ICE_FORM,
+    SPELL_BLADE_HANDS,
+    SPELL_STATUE_FORM,
+    SPELL_STORM_FORM,
+    SPELL_DRAGON_FORM,
+    SPELL_NECROMUTATION,
+};
+
+bool spell_was_form(spell_type spell)
+{
+    return form_spells.count(spell);
+}
+#endif
 
 void end_wait_spells(bool quiet)
 {

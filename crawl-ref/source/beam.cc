@@ -653,7 +653,7 @@ static beam_type _chaos_beam_flavour(bolt* beam)
           5, BEAM_DAMNATION,
           5, BEAM_STICKY_FLAME,
           5, BEAM_MINDBURST,
-         // These are not actualy used by SPWPN_CHAOS, but are here to augment
+         // These are not actually used by SPWPN_CHAOS, but are here to augment
          // the list of effects, since not every SPWN_CHAOS effect has an
          // analogous BEAM_ type.
           4, BEAM_MIGHT,
@@ -840,7 +840,7 @@ void bolt::draw(const coord_def& p, bool force_refresh)
                                              : element_colour(colour);
     view_add_glyph_overlay(p, {glyph, c});
 
-    // If reduce_animations is set, the redraw is unnecesary and
+    // If reduce_animations is set, the redraw is unnecessary and
     // should be done only once outside the loop calling the bolt::draw
     if (Options.reduce_animations)
         return;
@@ -1744,7 +1744,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
             return true;
         }
         break;
-    case ENCH_INSANE:
+    case ENCH_FRENZIED:
         if (!mons->can_go_frenzy())
         {
             if (simple_monster_message(*mons, " is unaffected."))
@@ -1812,8 +1812,8 @@ spret mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
         if (resisted)
             continue;
 
-        if ((wh_enchant == ENCH_INSANE && mi->go_frenzy(&you))
-            || (wh_enchant != ENCH_INSANE
+        if ((wh_enchant == ENCH_FRENZIED && mi->go_frenzy(&you))
+            || (wh_enchant != ENCH_FRENZIED
                 && mi->add_ench(mon_enchant(wh_enchant, 0, &you))))
         {
             // Do messaging.
@@ -1837,7 +1837,7 @@ spret mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
     if (!did_msg)
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    if (wh_enchant == ENCH_INSANE)
+    if (wh_enchant == ENCH_FRENZIED)
         did_god_conduct(DID_HASTY, 8, true);
 
     return spret::success;
@@ -2182,7 +2182,7 @@ void bolt_parent_init(const bolt &parent, bolt &child)
 
     child.flavour        = parent.flavour;
 
-    // We don't copy target since that is often overriden.
+    // We don't copy target since that is often overridden.
     child.thrower        = parent.thrower;
     child.source         = parent.source;
     child.source_name    = parent.source_name;
@@ -4263,8 +4263,11 @@ void bolt::handle_stop_attack_prompt(monster* mon)
 
     // If prompts for overshooting the target are disabled, instead
     // just let the caller know that there was something there. They
-    // should be resposible and keep the player from shooting friends.
-    if (passed_target && !overshoot_prompt && you.can_see(*mon))
+    // should be responsible and keep the player from shooting friends.
+    // (We skip this for explosions, since stopping at our target is not
+    // guaranteed to spare allies behind the target)
+    if (passed_target && !overshoot_prompt && you.can_see(*mon)
+       && !is_explosion)
     {
         string adj, suffix;
         bool penance;
@@ -4281,8 +4284,8 @@ void bolt::handle_stop_attack_prompt(monster* mon)
         beam_cancelled = true;
         finish_beam();
     }
-    // Handle enslaving monsters when a nasty dur is up: give a prompt for
-    // attempting to enslave monsters that might be affected.
+    // Handle charming monsters when a nasty dur is up: give a prompt for
+    // attempting to charm monsters that might be affected.
     else if (flavour == BEAM_CHARM)
     {
         monclass_flags_t flags = monster_info(mon).airborne() ? M_FLIES
@@ -5596,7 +5599,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_BERSERK:
-        if (!mon->berserk_or_insane())
+        if (!mon->berserk_or_frenzied())
         {
             // currently from potion, hence voluntary
             mon->go_berserk(true);
@@ -5709,7 +5712,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
         // Being a puppet on magic strings is a nasty thing.
         // Mindless creatures shouldn't probably mind, but because of complex
-        // behaviour of enslaved neutrals, let's disallow that for now.
+        // behaviour of charmed neutrals, let's disallow that for now.
         mon->attitude = ATT_HOSTILE;
 
         // XXX: Another hackish thing for Pikel's band neutrality.
@@ -6133,7 +6136,7 @@ static sweep_type _radial_sweep(int r)
 
 /** How much noise does an explosion this big make?
  *
- *  @param the size of the explosion (radius, not diamater)
+ *  @param the size of the explosion (radius, not diameter)
  *  @returns how much noise it would make.
  */
 int explosion_noise(int rad)
@@ -6888,7 +6891,7 @@ int omnireflect_chance_denom(int SH)
 }
 
 /// Set up a beam aiming from the given monster to their target.
-bolt setup_targetting_beam(const monster &mons)
+bolt setup_targeting_beam(const monster &mons)
 {
     bolt beem;
 

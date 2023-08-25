@@ -751,6 +751,7 @@ void hints_gained_new_skill(skill_type skill)
     case SK_EVOCATIONS:
     case SK_DODGING:
     case SK_SHIELDS:
+    case SK_SHAPESHIFTING:
     case SK_THROWING:
     case SK_SPELLCASTING:
     {
@@ -1049,7 +1050,6 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_SPELL_MISCAST:
     case HINT_CLOUD_WARNING:
     case HINT_SKILL_RAISE:
-    case HINT_OPPORTUNITY_ATTACK:
         return true;
     default:
         return false;
@@ -2487,8 +2487,8 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
     case DNGN_TRAP_WEB:
         ostr << "Some areas of the dungeon, such as the Spider Nest, may "
                 "be strewn with giant webs that may ensnare you for a short "
-                "time. Players in Spider Form can safely navigate the webs (as "
-                "can incorporeal entities and various oozes).";
+                "time. Insects, oozes and incorporeal entities can navigate "
+                "the webs safely.";
         Hints.hints_events[HINT_SEEN_WEB] = false;
         break;
 
@@ -2865,8 +2865,10 @@ void tutorial_msg(const char *key, bool end)
     _replace_static_tags(text);
     text = untag_tiles_console(text);
 
+    // n.b. leaving the dungeon counts as "winning" here (and pops up the
+    // tutorial summary)
     if (end)
-        screen_end_game(text);
+        screen_end_game(text, you.hp <= 0 ? game_exit::death : game_exit::win);
 
     // "\n" to preserve indented parts, the rest is unwrapped, or split into
     // paragraphs by "\n\n", split_string() will ignore the empty line.

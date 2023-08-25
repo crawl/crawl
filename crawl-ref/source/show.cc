@@ -109,9 +109,6 @@ bool show_type::is_cleanable_monster() const
 
 static void _update_feat_at(const coord_def &gp)
 {
-    if (!you.see_cell(gp))
-        return;
-
     dungeon_feature_type feat = env.grid(gp);
     unsigned colour = env.grid_colours(gp);
     trap_type trap = TRAP_UNASSIGNED;
@@ -216,6 +213,7 @@ static show_item_type _item_to_show_code(const item_def &item)
     case OBJ_RODS:       return SHOW_ITEM_ROD;
 #endif
     case OBJ_MISCELLANY: return SHOW_ITEM_MISCELLANY;
+    case OBJ_TALISMANS:  return SHOW_ITEM_TALISMAN;
     case OBJ_CORPSES:
         if (item.sub_type == CORPSE_SKELETON)
             return SHOW_ITEM_SKELETON;

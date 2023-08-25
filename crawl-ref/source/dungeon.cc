@@ -113,7 +113,7 @@ static void _pick_float_exits(vault_placement &place,
                               vector<coord_def> &targets);
 static bool _feat_is_wall_floor_liquid(dungeon_feature_type);
 static bool _connect_spotty(const coord_def& from,
-                            bool (*overwriteable)(dungeon_feature_type) = nullptr);
+                            bool (*overwritable)(dungeon_feature_type) = nullptr);
 static bool _connect_vault_exit(const coord_def& exit);
 
 // VAULT FUNCTIONS
@@ -1140,7 +1140,7 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
                 && (fill_small_zones <= 0 || zone_size <= fill_small_zones))
             {
                 // Don't fill in areas connected to vaults.
-                // We want vaults to be accessible; if the area is disconneted
+                // We want vaults to be accessible; if the area is disconnected
                 // from the rest of the level, this will cause the level to be
                 // vetoed later on.
                 bool veto = false;
@@ -1216,7 +1216,7 @@ static void _fill_small_disconnected_zones()
 {
     // debugging tip: change the feature to something like lava that will be
     // very noticeable.
-    // TODO: make even more agressive, up to ~25?
+    // TODO: make even more aggressive, up to ~25?
     _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_ROCK_WALL,
                                        _dgn_square_is_passable,
                                        _dgn_square_is_boring,
@@ -4766,7 +4766,14 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
     if (props.exists(IDENT_KEY))
         item.flags |= props[IDENT_KEY].get_int();
     if (props.exists(UNOBTAINABLE_KEY))
+    {
         item.flags |= ISFLAG_UNOBTAINABLE;
+        if (is_unrandom_artefact(item) || is_xp_evoker(item))
+        {
+            destroy_item(item, true);
+            return false;
+        }
+    }
 
     if (props.exists(NO_PICKUP_KEY))
         item.flags |= ISFLAG_NO_PICKUP;
@@ -4798,7 +4805,8 @@ static object_class_type _superb_object_class()
             10, OBJ_JEWELLERY,
             10, OBJ_BOOKS,
             10, OBJ_STAVES,
-            10, OBJ_MISCELLANY);
+            10, OBJ_MISCELLANY,
+            1, OBJ_TALISMANS);
 }
 
 static int _concretize_level(int spec_level, int dgn_level)
@@ -4831,7 +4839,18 @@ static object_class_type _concretize_type(const item_spec &spec)
     if (spec.props.exists(MIMIC_KEY))
         return get_random_item_mimic_type();
     if (spec.level == ISPEC_SUPERB)
-        return _superb_object_class();
+    {
+        // an unobtainable superb misc item is guaranteed to fail to generate,
+        // so prevent it from the start
+        // n.b. used in exactly one place, see `grunt_nemelex_the_gamble`
+        object_class_type ret;
+        do
+        {
+            ret = _superb_object_class();
+        }
+        while (spec.props.exists(UNOBTAINABLE_KEY) && ret == OBJ_MISCELLANY);
+        return ret;
+    }
     if (spec.level == ISPEC_ACQUIREMENT)
         return shuffled_acquirement_classes(false)[0];
     return spec.base_type;
@@ -4900,7 +4919,9 @@ int dgn_place_item(const item_spec &spec,
 
         // _apply_item_props will not generate a rune you already have,
         // so don't bother looping.
-        if (base_type == OBJ_RUNES)
+        // also, if the allow_useless flag above fails a bunch, just give up.
+        // XX is 20 tries reasonable?
+        if (base_type == OBJ_RUNES || useless_tries >= 20)
             return NON_ITEM;
         useless_tries++;
     }
@@ -5732,10 +5753,10 @@ vector<coord_def> dgn_join_the_dots_pathfind(const coord_def &from,
 
 bool join_the_dots(const coord_def &from, const coord_def &to,
                    uint32_t mapmask,
-                   bool (*overwriteable)(dungeon_feature_type))
+                   bool (*overwritable)(dungeon_feature_type))
 {
-    if (!overwriteable)
-        overwriteable = _feat_is_wall_floor_liquid;
+    if (!overwritable)
+        overwritable = _feat_is_wall_floor_liquid;
 
     const vector<coord_def> path =
         dgn_join_the_dots_pathfind(from, to, mapmask);
@@ -5743,7 +5764,7 @@ bool join_the_dots(const coord_def &from, const coord_def &to,
     for (auto c : path)
     {
         auto feat = env.grid(c);
-        if (!map_masked(c, mapmask) && overwriteable(feat))
+        if (!map_masked(c, mapmask) && overwritable(feat))
         {
             env.grid(c) = DNGN_FLOOR;
             dgn_height_set_at(c);
@@ -6079,7 +6100,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
         set_ident_flags(item, ISFLAG_IDENT_MASK);
 
     // Now move it into the shop!
-    dec_mitm_item_quantity(item_index, item.quantity);
+    dec_mitm_item_quantity(item_index, item.quantity, false);
     item.pos = shop.pos;
     item.link = ITEM_IN_SHOP;
     shop.stock.push_back(item);
@@ -6159,6 +6180,8 @@ object_class_type item_in_shop(shop_type shop_type)
         return OBJ_RANDOM;
 
     case SHOP_JEWELLERY:
+        if (one_chance_in(10))
+            return OBJ_TALISMANS;
         return OBJ_JEWELLERY;
 
     case SHOP_BOOK:
@@ -6200,14 +6223,14 @@ static bool _feat_is_wall_floor_liquid(dungeon_feature_type feat)
 // It might be better to aim for a more open connection -- currently
 // it stops pretty much as soon as connectivity is attained.
 static set<coord_def> _dgn_spotty_connect_path(const coord_def& from,
-            bool (*overwriteable)(dungeon_feature_type))
+            bool (*overwritable)(dungeon_feature_type))
 {
     set<coord_def> flatten;
     set<coord_def> border;
     bool success = false;
 
-    if (!overwriteable)
-        overwriteable = _feat_is_wall_floor_liquid;
+    if (!overwritable)
+        overwritable = _feat_is_wall_floor_liquid;
 
     for (adjacent_iterator ai(from); ai; ++ai)
         if (!map_masked(*ai, MMT_VAULT) && _spotty_seed_ok(*ai))
@@ -6229,7 +6252,7 @@ static set<coord_def> _dgn_spotty_connect_path(const coord_def& from,
             if (env.grid(*ai) == DNGN_FLOOR)
                 success = true; // Through, but let's remove the others, too.
 
-            if (!overwriteable(env.grid(*ai)) || flatten.count(*ai))
+            if (!overwritable(env.grid(*ai)) || flatten.count(*ai))
                 continue;
 
             flatten.insert(*ai);
@@ -6252,10 +6275,10 @@ static set<coord_def> _dgn_spotty_connect_path(const coord_def& from,
 }
 
 static bool _connect_spotty(const coord_def& from,
-                            bool (*overwriteable)(dungeon_feature_type))
+                            bool (*overwritable)(dungeon_feature_type))
 {
     const set<coord_def> spotty_path =
-        _dgn_spotty_connect_path(from, overwriteable);
+        _dgn_spotty_connect_path(from, overwritable);
 
     if (!spotty_path.empty())
     {

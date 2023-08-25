@@ -572,7 +572,7 @@ static void _show_commandline_options_help()
     puts("      Defaults to entire dungeon; same level syntax as -mapstat.");
     puts("  -iters <num>        For -mapstat and -objstat, set the number of "
          "iterations");
-    puts("  -force-map <map>    For -mapstat and -objstat, alway choose the "
+    puts("  -force-map <map>    For -mapstat and -objstat, always choose the "
          "      given map on every level.");
 #endif
     puts("");
@@ -1066,6 +1066,7 @@ static void _input()
 
     if (you.props.exists(DREAMSHARD_KEY))
         you.props.erase(DREAMSHARD_KEY);
+    crawl_state.potential_pursuers.clear();
 
     apply_exp();
 
@@ -1371,7 +1372,8 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
     }
 
     // Rune locks
-    switch (ftype) {
+    switch (ftype)
+    {
     case DNGN_EXIT_VAULTS:
         if (runes_in_pack() < 1)
         {
@@ -1478,7 +1480,8 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
         return false;
     }
 
-    if (!down && player_in_branch(BRANCH_ZOT) && you.depth == 5
+    if (!down && player_in_branch(BRANCH_ZOT)
+        && you.depth == brdepth[BRANCH_ZOT]
         && you.chapter == CHAPTER_ANGERED_PANDEMONIUM)
     {
         if (!yesno("Really leave the Orb behind?", false, 'n'))

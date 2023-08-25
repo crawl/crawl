@@ -49,7 +49,7 @@ int get_max_subtype(object_class_type base_type);
 bool item_type_has_unidentified(object_class_type base_type);
 
 bool dec_inv_item_quantity(int obj, int amount);
-bool dec_mitm_item_quantity(int obj, int amount);
+bool dec_mitm_item_quantity(int obj, int amount, bool player_action=true);
 
 void inc_inv_item_quantity(int obj, int amount);
 void inc_mitm_item_quantity(int obj, int amount);

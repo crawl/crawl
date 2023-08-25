@@ -1178,7 +1178,8 @@ static bool _is_potentially_boring(stash_search_result res)
         && !res.in_inventory
         && (res.item.base_type == OBJ_WEAPONS
             || res.item.base_type == OBJ_ARMOUR
-            || res.item.base_type == OBJ_MISSILES)
+            || res.item.base_type == OBJ_MISSILES
+            || res.item.base_type == OBJ_TALISMANS) // TODO: also misc?
         && (item_type_known(res.item) || !item_is_branded(res.item))
         || res.match_type == MATCH_FEATURE && feat_is_trap(res.feat);
 }
@@ -1597,7 +1598,7 @@ protected:
 
 formatted_string StashSearchMenu::calc_title()
 {
-    const int num_matches = items.size();
+    const int num_matches = item_count(false);
     const int num_alt_matches = title->quantity;
     formatted_string fs;
     fs.textcolour(title->colour);

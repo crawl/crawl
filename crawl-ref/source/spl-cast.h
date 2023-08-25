@@ -58,7 +58,7 @@ enum class spflag
     not_evil           = 0x20000000,      // not considered evil by the
                                           // good gods
     holy               = 0x40000000,      // considered holy (can't be
-                                          // used by Yred enslaved souls)
+                                          // used by Yred bound souls)
 };
 DEF_BITFIELD(spell_flags, spflag);
 

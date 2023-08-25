@@ -545,6 +545,18 @@ unseen Vv cast
 
 You hear the sound of rock striking rock.
 %%%%
+Smiting Jeremiah cast
+
+@The_monster@ lets out a twisted cry.
+
+@The_monster@ mumbles a slurred invocation.
+
+VISUAL:@The_monster@ throws @possessive@ arms up pleadingly.
+
+@The_monster@ cries, "Fearful master, protect me!"
+
+@The_monster@ shouts, "O dreadful one, destroy my foe!"
+%%%%
 ########################################################################
 # Individual monsters
 ########################################################################
@@ -801,10 +813,17 @@ formless jellyfish cast
 
 @The_monster@ shimmers eerily.
 %%%%
+crystal echidna cast targeted
+
+@The_monster@ flicks its quills @at@ @target@.
+%%%%
+culicivora cast targeted
+
+@The_monster@ chitters @at@ @target@.
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
-%%%%
 angel cast targeted
 
 @The_monster@ calls down the wrath of @possessive_God@ upon @target@.

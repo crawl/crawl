@@ -458,7 +458,7 @@ void wizard_set_all_skills()
 
         // We're not updating skill cost here since XP hasn't changed.
 
-        calc_hp(true, false);
+        calc_hp(true);
         calc_mp();
 
         you.redraw_armour_class = true;
@@ -957,7 +957,9 @@ void wizard_transform()
     }
 
     you.transform_uncancellable = false;
-    if (!transform(200, form) && you.form != form)
+    if (you.default_form == you.form && you.form != transformation::none)
+        you.default_form = form;
+    if (!transform(200, form, true) && you.form != form)
         mpr("Transformation failed.");
 }
 

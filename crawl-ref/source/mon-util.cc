@@ -3390,7 +3390,7 @@ mon_attitude_type mons_attitude(const monster& m)
 
 bool mons_is_confused(const monster& m, bool class_too)
 {
-    return (m.has_ench(ENCH_CONFUSION) || m.has_ench(ENCH_MAD))
+    return (m.has_ench(ENCH_CONFUSION) || m.has_ench(ENCH_MAD) || m.sleepwalking())
            && (class_too || !mons_class_flag(m.type, M_CONFUSED));
 }
 
@@ -4058,10 +4058,7 @@ mon_inv_type item_to_mslot(const item_def &item)
     case OBJ_WANDS:
         return MSLOT_WAND;
     case OBJ_BOOKS:
-    case OBJ_SCROLLS:
-        return MSLOT_SCROLL;
-    case OBJ_POTIONS:
-        return MSLOT_POTION;
+    case OBJ_TALISMANS:
     case OBJ_MISCELLANY:
         return MSLOT_MISCELLANY;
     case OBJ_GOLD:

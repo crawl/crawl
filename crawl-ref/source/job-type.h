@@ -27,7 +27,7 @@ enum job_type
 #endif
     JOB_VENOM_MAGE,
     JOB_CHAOS_KNIGHT,
-    JOB_TRANSMUTER,
+    JOB_SHAPESHIFTER,
 #if TAG_MAJOR_VERSION == 34
     JOB_HEALER,
     JOB_STALKER,

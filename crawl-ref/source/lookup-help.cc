@@ -403,7 +403,11 @@ static vector<string> _get_cloud_keys()
     vector<string> names;
 
     for (int i = CLOUD_NONE + 1; i < NUM_CLOUD_TYPES; i++)
-        names.push_back(cloud_type_name((cloud_type) i) + " cloud");
+    {
+        const cloud_type cloud = static_cast<cloud_type>(i);
+        if (!cloud_is_removed(cloud))
+            names.push_back(cloud_type_name(cloud) + " cloud");
+    }
 
     return names;
 }

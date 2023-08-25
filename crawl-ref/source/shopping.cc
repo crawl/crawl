@@ -639,16 +639,43 @@ unsigned int item_value(item_def item, bool ident)
         case MISC_SACK_OF_SPIDERS:
         case MISC_CONDENSER_VANE:
         case MISC_PHANTOM_MIRROR:
+        case MISC_LIGHTNING_ROD:
             valued += 400;
             break;
 
-        case MISC_LIGHTNING_ROD:
+        default:
+            valued += 200;
+        }
+        break;
+
+    case OBJ_TALISMANS:
+        // These are all pretty arbitrary.
+        switch (item.sub_type)
+        {
+        case TALISMAN_DEATH:
+        case TALISMAN_STORM:
+            valued += 1200;
+            break;
+
+        case TALISMAN_DRAGON:
+        case TALISMAN_STATUE:
+            valued += 800;
+            break;
+
+        case TALISMAN_MAW:
+        case TALISMAN_SERPENT:
+        case TALISMAN_BLADE:
+            valued += 400;
+            break;
+
+        case TALISMAN_FLUX:
             valued += 300;
             break;
 
-        case MISC_XOMS_CHESSBOARD:
+        case TALISMAN_BEAST:
         default:
             valued += 200;
+            break;
         }
         break;
 
@@ -1205,7 +1232,7 @@ bool ShopMenu::examine_index(int i)
     ASSERT(i < static_cast<int>(items.size()));
     // A hack to make the description more useful.
     // The default copy constructor is non-const for item_def,
-    // so we need this violation of const hygene to tweak the flags
+    // so we need this violation of const hygiene to tweak the flags
     // to make the description more useful. The flags are copied by
     // value by the default copy constructor so this is safe.
     item_def& item(*const_cast<item_def*>(dynamic_cast<ShopEntry*>(
@@ -1735,6 +1762,7 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
     case OBJ_JEWELLERY:
     case OBJ_BOOKS:
     case OBJ_STAVES:
+    case OBJ_TALISMANS:
         // Only these are really interchangeable.
         break;
     case OBJ_MISCELLANY:
@@ -2035,7 +2063,7 @@ void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
         || crawl_state.obj_stat_gen
         || crawl_state.test)
     {
-        return; // Shopping list is unitialized and uneeded.
+        return; // Shopping list is initialized and unneeded.
     }
 
     const level_pos src(level_id::current(), _src);

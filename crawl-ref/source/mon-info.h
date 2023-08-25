@@ -56,7 +56,7 @@ enum monster_info_flags
     MB_OLD_ENSLAVED,
 #endif
     MB_SWIFT,
-    MB_INSANE,
+    MB_FRENZIED,
     MB_SILENCING,
     MB_MESMERIZING,
 #if TAG_MAJOR_VERSION == 34
@@ -214,6 +214,9 @@ enum monster_info_flags
     MB_SIMULACRUM,
     MB_REFLECTING,
     MB_TELEPORTING,
+    MB_CONTAM_LIGHT,
+    MB_CONTAM_HEAVY,
+    MB_PURSUING,
     NUM_MB_FLAGS
 };
 
@@ -260,6 +263,9 @@ struct monster_info_base
     mon_attack_def attack[MAX_NUM_ATTACKS];
     bool can_go_frenzy;
     bool can_feel_fear;
+    bool sleepwalking;
+    bool backlit;
+    bool umbraed;
 
     uint32_t client_id;
 };
@@ -415,6 +421,9 @@ struct monster_info : public monster_info_base
     }
 
     bool fellow_slime() const;
+
+    vector<string> get_unusual_items() const;
+    bool has_unusual_items() const;
 
     bool has_spells() const;
     bool antimagic_susceptible() const;

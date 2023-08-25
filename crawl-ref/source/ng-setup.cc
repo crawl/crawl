@@ -30,6 +30,7 @@
 #include "state.h"
 #include "tag-version.h"
 #include "throw.h"
+#include "transform.h"
 
 #define MIN_START_STAT       3
 
@@ -491,6 +492,8 @@ static void _setup_generic(const newgame_def& ng,
     give_items_skills(ng);
 
     roll_demonspawn_mutations();
+    if (you.has_mutation(MUT_MULTILIVED))
+        you.lives = 1;
 
     if (crawl_state.game_is_sprint())
         _give_bonus_items();
@@ -532,6 +535,12 @@ static void _setup_generic(const newgame_def& ng,
             item.props["adjusted"] = true;
             auto_assign_item_slot(item);
         }
+    }
+
+    if (you.char_class == JOB_SHAPESHIFTER)
+    {
+        you.default_form = transformation::beast;
+        set_form(transformation::beast, 1); // hacky...
     }
 
     reassess_starting_skills();

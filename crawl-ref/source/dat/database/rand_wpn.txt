@@ -1060,38 +1060,6 @@ Unpleasantness
 Urgency
 
 %%%%
-_mental_illness_weapon_
-
-Compulsion
-
-Egomania
-
-Exhibitionism
-
-Fatigue
-
-Fixation
-
-Insomnia
-
-Megalomania
-
-Neurosis
-
-Obsession
-
-Oenomania
-
-Perfectionism
-
-Psychosis
-
-Pyromania
-
-Satyriasis
-
-Suicidal Tendencies
-%%%%
 _philosophy_or_science_
 
 @_philosophy_name_@

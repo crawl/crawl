@@ -470,6 +470,8 @@ public:
                 afflictions.push_back("!!!QUAD DAMAGE!!!");
             if (you.has_mutation(MUT_GLOWING))
                 afflictions.push_back("body"); // all flesh is a curse...
+            if (you.form == transformation::flux)
+                afflictions.push_back("form");
             mprf(MSGCH_DURATION,
                  "You become %stransparent, but the glow from %s "
                  "%s prevents you from becoming completely invisible.",
@@ -705,26 +707,23 @@ public:
 
     bool can_quaff(string *reason = nullptr, bool temp = true) const override
     {
-        if (you.is_lifeless_undead(temp))
-        {
-            if (reason)
-            {
-                if (!temp || you.is_lifeless_undead(false))
-                    *reason = "Your unliving flesh cannot be transformed in this way.";
-                else
-                    *reason = "You cannot currently transmute yourself.";
-            }
-            return false;
-        }
-        // transformation prevented for other reasons than lifeless undead.
-        // These should all be temp reasons (e.g. in an uncancellable form)...
-        if (temp)
-            return transform(0, transformation::tree, false, true, reason);
-        return true;
+        const string treason = cant_transform_reason(transformation::tree,
+                                                     false, temp);
+        if (treason.empty())
+            return true;
+
+        if (reason)
+            *reason = treason;
+        return false;
     }
 
     bool effect(bool was_known = true, int=40, bool is_potion=true) const override
     {
+        if (you.form == transformation::death) // Gozag potion petition
+        {
+            mpr("You're too dead to put down roots!");
+            return false;
+        }
         return transform(_scale_effect(30, is_potion), transformation::tree, !was_known);
     }
 

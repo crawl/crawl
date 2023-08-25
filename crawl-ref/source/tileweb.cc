@@ -510,7 +510,7 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
 
         mprf(MSGCH_DGL_MESSAGE, "%s", m.c_str());
         // The following two lines are a magic incantation to get this mprf
-        // to actually render without waiting on player inout
+        // to actually render without waiting on player input
         flush_prev_message();
         c = CK_REDRAW;
     }
@@ -1479,14 +1479,7 @@ void TilesFramework::send_doll(const dolls_data &doll, bool submerged, bool ghos
         if (p == TILEP_PART_SHADOW && (submerged || ghost))
             continue;
 
-        int ymax = TILE_Y;
-
-        if (flags[p] == TILEP_FLAG_CUT_CENTAUR
-            || flags[p] == TILEP_FLAG_CUT_NAGA)
-        {
-            ymax = 18;
-        }
-
+        const int ymax = flags[p] == TILEP_FLAG_CUT_BOTTOM ? 18 : TILE_Y;
         tiles.json_write_comma();
         tiles.write_message("[%u,%d]", (unsigned int) doll.parts[p], ymax);
     }
@@ -1544,7 +1537,9 @@ static bool _needs_flavour(const packed_cell &cell)
 // XX code duplicateion
 static inline unsigned _get_highlight(int col)
 {
-    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_highlight :
+    return ((col & COLFLAG_UNUSUAL_MASK) == COLFLAG_UNUSUAL_MASK) ?
+                                              Options.unusual_highlight :
+           (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_highlight :
            (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_highlight :
            (col & COLFLAG_ITEM_HEAP)        ? Options.heap_highlight :
            (col & COLFLAG_WILLSTAB)         ? Options.stab_highlight :

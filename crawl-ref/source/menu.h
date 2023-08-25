@@ -358,7 +358,7 @@ public:
     virtual vector<MenuEntry *> show(bool reuse_selections = false);
     vector<MenuEntry *> selected_entries() const;
 
-    size_t item_count() const    { return items.size(); }
+    size_t item_count(bool include_headers=true) const;
 
     // Get entry index, skipping quantity 0 entries. Returns -1 if not found.
     int get_entry_index(const MenuEntry *e) const;
@@ -366,10 +366,9 @@ public:
     virtual int item_colour(const MenuEntry *me) const;
 
     typedef string (*selitem_tfn)(const vector<MenuEntry*> *sel);
-    typedef int (*keyfilter_tfn)(int keyin);
 
     selitem_tfn      f_selitem;
-    keyfilter_tfn    f_keyfilter;
+    function<int(int)> f_keyfilter;
     function<bool(const MenuEntry&)> on_single_selection;
     function<bool(const MenuEntry&)> on_examine;
     function<bool()> on_show;

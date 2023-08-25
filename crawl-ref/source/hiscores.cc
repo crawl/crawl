@@ -70,7 +70,7 @@ using namespace ui;
 // enough memory allocated to snarf in the scorefile entries
 static unique_ptr<scorefile_entry> hs_list[SCORE_FILE_ENTRIES];
 static int hs_list_size = 0;
-static bool hs_list_initalized = false;
+static bool hs_list_initialized = false;
 
 static FILE *_hs_open(const char *mode, const string &filename);
 static void  _hs_close(FILE *handle);
@@ -158,7 +158,7 @@ int hiscores_new_entry(const scorefile_entry &ne)
     }
 
     hs_list_size = i;
-    hs_list_initalized = true;
+    hs_list_initialized = true;
 
     // If we've still not inserted it, it's not a highscore.
     if (!inserted)
@@ -253,7 +253,7 @@ void hiscores_read_to_memory()
     }
 
     hs_list_size = i;
-    hs_list_initalized = true;
+    hs_list_initialized = true;
 
     //close off
     _hs_close(scores);
@@ -295,7 +295,7 @@ string hiscores_print_list(int display_count, int format, int newest_entry, int&
     string ret;
 
     // Additional check to preserve previous functionality
-    if (!hs_list_initalized)
+    if (!hs_list_initialized)
         hiscores_read_to_memory();
 
     int i, total_entries;

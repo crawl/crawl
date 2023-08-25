@@ -186,9 +186,9 @@ int attack::calc_pre_roll_to_hit(bool random)
             mhit += maybe_random_div(you.experience_level * 100, 100, random);
         else
         {
-            // Claws give a slight bonus to accuracy when active
-            mhit += (you.get_mutation_level(MUT_CLAWS) > 0
-                     && wpn_skill == SK_UNARMED_COMBAT) ? 4 : 2;
+            // UC gets extra acc to compensate for lack of weapon enchantment.
+            if (wpn_skill == SK_UNARMED_COMBAT)
+                mhit += 6;
 
             mhit += maybe_random_div(you.skill(wpn_skill, 100), 100,
                                      random);
@@ -479,14 +479,10 @@ bool attack::distortion_affects_defender()
         NONE
     };
 
-    // Don't banish or blink the player during aoops, for sanity.
-    const int banish_weight = crawl_state.player_moving ? 0 : 5;
-    const int blink_weight = crawl_state.player_moving ? 0 : 20;
-
     const disto_effect choice = random_choose_weighted(35, SMALL_DMG,
                                                        25, BIG_DMG,
-                                                       banish_weight, BANISH,
-                                                       blink_weight, BLINK,
+                                                       5, BANISH,
+                                                       20, BLINK,
                                                        15,  NONE);
 
     if (simu && !(choice == SMALL_DMG || choice == BIG_DMG))
@@ -590,7 +586,7 @@ static const vector<chaos_effect> chaos_effects = {
         BEAM_NONE, [](attack &attack) {
             actor &defender = *attack.defender;
             ASSERT(defender.is_monster());
-            monster *clone = clone_mons(defender.as_monster(), true);
+            monster *clone = clone_mons(defender.as_monster());
             if (!clone)
                 return false;
 
@@ -602,6 +598,8 @@ static const vector<chaos_effect> chaos_effects = {
             // The player shouldn't get new permanent followers from cloning.
             if (clone->attitude == ATT_FRIENDLY && !clone->is_summoned())
                 clone->mark_summoned(6, true, MON_SUMM_CLONE);
+            else
+                clone->flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
             // Monsters being cloned is interesting.
             xom_is_stimulated(clone->friendly() ? 12 : 25);
@@ -1451,7 +1449,8 @@ bool attack::apply_damage_brand(const char *what)
         break;
     }
     case SPWPN_PAIN:
-        pain_affects_defender();
+        if (!you_worship(GOD_TROG))
+            pain_affects_defender();
         break;
 
     case SPWPN_DISTORTION:

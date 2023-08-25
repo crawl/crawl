@@ -1140,13 +1140,6 @@ misc_sack MISC_SACK_OF_SPIDERS
 misc_phantom_mirror MISC_PHANTOM_MIRROR
 misc_zigfig MISC_ZIGGURAT
 misc_quad MISC_QUAD_DAMAGE
-misc_pawn MISC_CHESSPIECE_FIRST
-misc_rook
-misc_knight
-misc_bishop
-misc_queen
-misc_king
-misc_thimble MISC_CHESSPIECE_LAST
 %sdir item/misc/runes
 generic MISC_RUNE_OF_ZOT
 rune_tartarus RUNE_TARTARUS
@@ -1172,6 +1165,18 @@ rune_demonic_4
 rune_demonic_5
 rune_demonic_6
 rune_elven RUNE_ELVEN
+
+#OBJ_TALISMANS
+%sdir item/talisman
+%rim 0
+beast TALISMAN_BEAST
+snake TALISMAN_SNAKE
+maw TALISMAN_MAW
+blade TALISMAN_BLADE
+statue TALISMAN_STATUE
+dragon TALISMAN_DRAGON
+storm TALISMAN_STORM
+death TALISMAN_DEATH
 
 %sdir item/misc/uncollected_runes
 generic MISC_UNCOLLECTED_RUNE_OF_ZOT

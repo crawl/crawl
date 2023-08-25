@@ -118,7 +118,7 @@ int actor::skill_rdiv(skill_type sk, int mult, int div) const
     return div_rand_round(skill(sk, mult * 256), div * 256);
 }
 
-int actor::check_willpower(const actor* source, int power)
+int actor::check_willpower(const actor* source, int power) const
 {
     int wl = willpower();
 
@@ -337,13 +337,10 @@ int actor::spirit_shield(bool items) const
     return ss;
 }
 
-bool actor::rampaging(bool items) const
+bool actor::rampaging() const
 {
-    return items &&
-           (wearing_ego(EQ_ALL_ARMOUR, SPARM_RAMPAGING)
-            || scan_artefacts(ARTP_RAMPAGING)
-            || is_player() && (player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS)
-                               || you.has_mutation(MUT_ROLLPAGE)));
+    return wearing_ego(EQ_ALL_ARMOUR, SPARM_RAMPAGING)
+           || scan_artefacts(ARTP_RAMPAGING);
 }
 
 int actor::apply_ac(int damage, int max_damage, ac_type ac_rule, bool for_real) const
@@ -595,7 +592,7 @@ bool actor::has_invalid_constrictor(bool move) const
     return move
         // Constriction doesn't work out of LOS, to avoid sauciness.
         || !ignoring_player && !attacker->see_cell(pos())
-        || typ == CONSTRICT_BVC && !feat_has_solid_floor(env.grid(pos()));
+        || !feat_has_solid_floor(env.grid(pos()));
 }
 
 /**
@@ -708,8 +705,7 @@ bool actor::can_constrict(const actor &defender, constrict_type typ) const
     if (!see_cell_no_trans(defender.pos()))
         return false;
 
-    return typ != CONSTRICT_BVC
-           || feat_has_solid_floor(env.grid(defender.pos()));
+    return feat_has_solid_floor(env.grid(defender.pos()));
 }
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -733,13 +729,12 @@ void actor::constriction_damage_defender(actor &defender, int duration)
     int damage = constriction_damage(typ);
 
     DIAG_ONLY(const int basedam = damage);
-    damage += div_rand_round(damage * stepdown((float)duration, 50.0),
-                             BASELINE_DELAY * 5);
+    damage += div_rand_round(damage * duration, BASELINE_DELAY * 5);
     if (is_player() && typ == CONSTRICT_MELEE)
         damage = div_rand_round(damage * (27 + 2 * you.experience_level), 81);
 
     DIAG_ONLY(const int durdam = damage);
-    damage -= random2(1 + (defender.armour_class() / 2));
+    damage -= random2(1 + (div_rand_round(defender.armour_class(), 2)));
     DIAG_ONLY(const int acdam = damage);
     damage = timescale_damage(this, damage);
     DIAG_ONLY(const int timescale_dam = damage);

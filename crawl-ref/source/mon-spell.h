@@ -161,9 +161,9 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DEEP_ELF_ELEMENTALIST,
       {
-       { SPELL_FREEZING_CLOUD, 11, MON_SPELL_WIZARD },
+       { SPELL_FREEZING_CLOUD, 22, MON_SPELL_WIZARD },
        { SPELL_FIREBALL, 11, MON_SPELL_WIZARD },
-       { SPELL_AWAKEN_EARTH, 44, MON_SPELL_WIZARD },
+       { SPELL_LRD, 33, MON_SPELL_WIZARD },
        { SPELL_REPEL_MISSILES, 11, MON_SPELL_WIZARD },
        { SPELL_HASTE, 11, MON_SPELL_WIZARD },
       }
@@ -597,12 +597,6 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('t') Testudines.
-    {  MST_ALLIGATOR,
-      {
-       { SPELL_SPRINT, 31, MON_SPELL_NATURAL },
-      }
-    },
-
     {  MST_FIRE_CRAB,
       {
        { SPELL_FLAMING_CLOUD, 62, MON_SPELL_NATURAL },
@@ -948,10 +942,10 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SPHINX,
       {
-       { SPELL_CONFUSE, 11, MON_SPELL_WIZARD },
-       { SPELL_SLOW, 11, MON_SPELL_WIZARD },
-       { SPELL_PARALYSE, 11, MON_SPELL_WIZARD },
-       { SPELL_SMITING, 11, MON_SPELL_WIZARD },
+       { SPELL_CONFUSE, 10, MON_SPELL_WIZARD },
+       { SPELL_SLOW, 10, MON_SPELL_WIZARD },
+       { SPELL_PARALYSE, 10, MON_SPELL_WIZARD },
+       { SPELL_SMITING, 10, MON_SPELL_WIZARD },
       }
     },
 
@@ -1822,6 +1816,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    // ('F') Froggos.
+    {  MST_JEREMIAH,
+      {
+       { SPELL_BLINK_RANGE, 20, MON_SPELL_NATURAL },
+       { SPELL_SMITING, 20, MON_SPELL_PRIEST },
+      }
+    },
+
     // ('H') Hybrids.
     {  MST_ARACHNE,
       {
@@ -2044,7 +2046,6 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_MAURICE,
       {
-       { SPELL_SPRINT, 14, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 14, MON_SPELL_WIZARD },
        { SPELL_BLINK, 14, MON_SPELL_WIZARD },
       }
@@ -2161,6 +2162,14 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BOLT_OF_FIRE, 36, MON_SPELL_WIZARD },
        { SPELL_FIREBALL, 36, MON_SPELL_WIZARD },
+      }
+    },
+
+    {  MST_NORRIS,
+      {
+       { SPELL_BRAIN_FEED, 16, MON_SPELL_PRIEST },
+       { SPELL_PRIMAL_WAVE, 16, MON_SPELL_PRIEST },
+       { SPELL_DRAIN_MAGIC, 16, MON_SPELL_PRIEST },
       }
     },
 

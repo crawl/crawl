@@ -215,62 +215,30 @@ static void _clear_constriction_data()
         you.stop_being_constricted();
 }
 
-static void _trigger_opportunity_attacks(coord_def new_pos)
+static void _mark_potential_pursuers(coord_def new_pos)
 {
-    if (you.attribute[ATTR_SERPENTS_LASH]          // too fast!
-        || wu_jian_move_triggers_attacks(new_pos)  // too cool!
-        || is_sanctuary(you.pos())                 // Zin protects!
-        || is_sanctuary(new_pos))                  // .. very generously.
+    if (you.attribute[ATTR_SERPENTS_LASH]           // too fast!
+        || wu_jian_move_triggers_attacks(new_pos)   // too cool!
+        || crawl_state.game_is_tutorial())          // too new!
     {
         return;
     }
 
-    unwind_bool moving(crawl_state.player_moving, true);
-
     const coord_def orig_pos = you.pos();
-    for (adjacent_iterator ai(orig_pos); ai; ++ai)
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
-        if (adjacent(*ai, new_pos))
+        // Only randomize energy for monsters you're moving away from.
+        if (grid_distance(new_pos, *ri) <= grid_distance(orig_pos, *ri))
             continue;
-        monster* mon = monster_at(*ai);
+        monster* mon = monster_at(*ri);
         // No, there is no logic to this ordering (pf):
-        if (!mon
-            || mon->wont_attack()
-            || !mons_has_attacks(*mon)
-            || mon->confused()
-            || mon->incapacitated()
-            || mons_is_fleeing(*mon)
-            || mon->is_constricted() && (mon->constricted_by != MID_PLAYER
-                                         || mon->get_constrict_type() != CONSTRICT_MELEE)
-            || !mon->can_see(you)
-            // only let monsters attack if they might follow you
-            || !mon->may_have_action_energy() || mon->is_stationary()
-            // if you're swapping with a pal or moving off a fedhas plant,
-            // you can't be followed, so no aoops
-            || monster_at(you.pos())
-            // Zin protects!
-            || is_sanctuary(mon->pos())
-            // creates some weird bugs
-            || mons_self_destructs(*mon)
-            // monsters that are slower than you mayn't attack
-            || mon->outpaced_by_player()
-            || !one_chance_in(3))
-        {
+        if (!mon || !mon->can_see(you))
             continue;
-        }
         actor* foe = mon->get_foe();
         if (!foe || !foe->is_player())
             continue;
 
-        simple_monster_message(*mon, " attacks as you move away!");
-        const int old_energy = mon->speed_increment;
-        launch_opportunity_attack(*mon);
-        // Refund up to 10 energy (1 turn) from the attack.
-        // Thus, only slow attacking monsters use energy for these.
-        mon->speed_increment = min(mon->speed_increment + 10, old_energy);
-
-        if (you.pending_revival || you.pos() != orig_pos)
-            return;
+        crawl_state.potential_pursuers.insert(mon);
     }
 }
 
@@ -739,7 +707,7 @@ static spret _rampage_forward(coord_def move)
 
     // First, apply any necessary pre-move effects:
     _clear_constriction_data();
-    // (But not opportunity attacks - messy codewise, and no design benefit.)
+    _mark_potential_pursuers(rampage_destination);
 
     // stepped = true, we're flavouring this as movement, not a blink.
     move_player_to_grid(rampage_destination, true);
@@ -877,9 +845,7 @@ void move_player_action(coord_def move)
 
     bool rampaged = false;
 
-    // Rampaging takes priority over normal Wu Jian movement, but not over
-    // Serpent's Lash.
-    if (you.rampaging() && !you.attribute[ATTR_SERPENTS_LASH])
+    if (you.rampaging())
     {
         switch (_rampage_forward(move))
         {
@@ -921,7 +887,7 @@ void move_player_action(coord_def move)
     // XX generalize?
     const string walkverb = you.airborne()                     ? "fly"
                           : you.swimming()                     ? "swim"
-                          : you.form == transformation::spider ? "crawl"
+                          : you.form == transformation::anaconda ? "slither"
                           : you.form != transformation::none   ? "walk" // XX
                           : walk_verb_to_present(lowercase_first(species::walking_verb(you.species)));
 
@@ -1003,7 +969,7 @@ void move_player_action(coord_def move)
             }
         }
         else if (targ_monst->temp_attitude() == ATT_NEUTRAL
-                 && !targ_monst->has_ench(ENCH_INSANE)
+                 && !targ_monst->has_ench(ENCH_FRENZIED)
                  && !you.confused()
                  && targ_monst->visible_to(&you))
         {
@@ -1110,9 +1076,6 @@ void move_player_action(coord_def move)
         else if (!running)
             clear_travel_trail();
 
-        // Calculate time_taken before checking opportunity attacks so that
-        // we can guess whether monsters will be able to follow you (& hence
-        // trigger opp attacks).
         _apply_move_time_taken();
 
         coord_def old_pos = you.pos();
@@ -1121,16 +1084,12 @@ void move_player_action(coord_def move)
         if (you.pos() != targ && targ_pass)
         {
             _clear_constriction_data();
-            _trigger_opportunity_attacks(targ);
-            // Check nothing weird happened during opportunity attacks.
-            if (!you.pending_revival)
-            {
-                move_player_to_grid(targ, true);
-                apply_barbs_damage();
-                remove_ice_movement();
-                you.clear_far_engulf(false, true);
-                apply_cloud_trail(old_pos);
-            }
+            _mark_potential_pursuers(targ);
+            move_player_to_grid(targ, true);
+            apply_barbs_damage();
+            remove_ice_movement();
+            you.clear_far_engulf(false, true);
+            apply_cloud_trail(old_pos);
         }
 
         // Now it is safe to apply the swappee's location effects and add

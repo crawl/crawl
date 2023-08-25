@@ -458,7 +458,6 @@ int raw_spell_fail(spell_type spell)
     int chance2 = max((((chance + 426) * chance + 82670) * chance + 7245398)
                       / 262144, 0);
 
-    chance2 += get_form()->spellcasting_penalty;
     chance2 -= 2 * you.get_mutation_level(MUT_SUBDUED_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_WILD_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_ANTI_WIZARDRY);
@@ -918,11 +917,8 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
         // None currently dock just piety, right?
-        if (!yesno(god_loathes_spell(spell, you.religion) ?
-            "Casting this spell will cause instant excommunication! "
-            "Really cast?" :
-            "Casting this spell will place you under penance. Really cast?",
-            true, 'n'))
+        if (!yesno("Casting this spell will place you under penance. "
+                   "Really cast?", true, 'n'))
         {
             canned_msg(MSG_OK);
             crawl_state.zero_turns_taken();
@@ -1001,9 +997,6 @@ static void _spellcasting_god_conduct(spell_type spell)
     // not is_hasty_spell since the other ones handle the conduct themselves.
     if (spell == SPELL_SWIFTNESS)
         did_god_conduct(DID_HASTY, conduct_level);
-
-    if (god_loathes_spell(spell, you.religion))
-        excommunication();
 }
 
 /**
@@ -1288,15 +1281,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_POISONOUS_VAPOURS:
         return make_unique<targeter_poisonous_vapours>(&you, range);
 
-    // at player's position only but not a selfench; most transmut spells go here:
-    case SPELL_SPIDER_FORM:
-    case SPELL_BLADE_HANDS:
-    case SPELL_STATUE_FORM:
-    case SPELL_ICE_FORM:
-    case SPELL_DRAGON_FORM:
-    case SPELL_STORM_FORM:
-    case SPELL_NECROMUTATION:
-    case SPELL_BEASTLY_APPENDAGE:
+    // at player's position only but not a selfench (wait, why wereblood?)
     case SPELL_WEREBLOOD:
     case SPELL_ROT:
     case SPELL_SUBLIMATION_OF_BLOOD:
@@ -2036,7 +2021,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
                  && you.penance[GOD_KIKUBAAQUDGHA]
                  && one_chance_in(20))
         {
-            // And you thought you'd Necromutate your way out of penance...
+            // And you thought you'd Haunt your way out of penance...
             simple_god_message(" does not allow the disloyal to dabble in "
                                "death!", GOD_KIKUBAAQUDGHA);
 
@@ -2378,7 +2363,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_intoxicate(powc, fail);
 
     case SPELL_DISCORD:
-        return mass_enchantment(ENCH_INSANE, powc, fail);
+        return mass_enchantment(ENCH_FRENZIED, powc, fail);
 
     case SPELL_ENGLACIATION:
         return cast_englaciation(powc, fail);
@@ -2389,31 +2374,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_ROT:
         return cast_dreadful_rot(powc, fail);
 
-    // Transformations.
-    case SPELL_BEASTLY_APPENDAGE:
-        return cast_transform(powc, transformation::appendage, fail);
-
-    case SPELL_BLADE_HANDS:
-        return cast_transform(powc, transformation::blade_hands, fail);
-
-    case SPELL_SPIDER_FORM:
-        return cast_transform(powc, transformation::spider, fail);
-
-    case SPELL_STATUE_FORM:
-        return cast_transform(powc, transformation::statue, fail);
-
-    case SPELL_ICE_FORM:
-        return cast_transform(powc, transformation::ice_beast, fail);
-
-    case SPELL_STORM_FORM:
-        return cast_transform(powc, transformation::storm, fail);
-
-    case SPELL_DRAGON_FORM:
-        return cast_transform(powc, transformation::dragon, fail);
-
-    case SPELL_NECROMUTATION:
-        return cast_transform(powc, transformation::lich, fail);
-
+    // Our few remaining self-enchantments.
     case SPELL_SWIFTNESS:
         return cast_swiftness(powc, fail);
 

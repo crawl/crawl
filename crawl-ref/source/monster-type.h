@@ -844,9 +844,7 @@ enum monster_type                      // env.mons[].type
     MONS_WIGLAF,
 #endif
     MONS_XTAHUA,
-#if TAG_MAJOR_VERSION == 34
     MONS_NORRIS,
-#endif
     MONS_FREDERICK,
     MONS_MARGERY,
     MONS_BORIS,
@@ -909,6 +907,7 @@ enum monster_type                      // env.mons[].type
     MONS_VV,
     MONS_ZENATA,
     MONS_GRUNN,
+    MONS_JEREMIAH,
 #endif
     // Sprint uniques:
     MONS_CHUCK,
@@ -1193,6 +1192,7 @@ enum monster_type                      // env.mons[].type
     MONS_SLEEPCAP,
     MONS_CERULEAN_IMP,
     MONS_FORMLESS_JELLYFISH,
+    MONS_JEREMIAH,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

@@ -1515,7 +1515,7 @@ static const string VISITED_LEVELS_KEY = "visited_levels";
 // needs to happen.
 // before pregeneration, whether the level had been visited was synonymous with
 // whether it had been visited, but after, we need to track this information
-// more directly. It is also inferrable from turns_on_level, but you can't get
+// more directly. It is also inferable from turns_on_level, but you can't get
 // at that very easily without fully loading the level.
 // no need for a minor version here, though there will be a brief window of
 // offline pregen games that this doesn't handle right -- they will get things
@@ -2004,6 +2004,32 @@ static void _rescue_player_from_wall()
     }
 }
 
+#if TAG_MAJOR_VERSION == 34
+static void _fixup_transmuters()
+{
+    vector<pair<spell_type, talisman_type>> forms = {
+        { SPELL_BEASTLY_APPENDAGE, TALISMAN_BEAST },
+        { SPELL_SPIDER_FORM,       TALISMAN_FLUX },
+        { SPELL_ICE_FORM,          TALISMAN_SERPENT },
+        { SPELL_BLADE_HANDS,       TALISMAN_BLADE },
+        { SPELL_STATUE_FORM,       TALISMAN_STATUE },
+        { SPELL_DRAGON_FORM,       TALISMAN_DRAGON },
+        { SPELL_STORM_FORM,        TALISMAN_STORM },
+        { SPELL_NECROMUTATION,     TALISMAN_DEATH },
+    };
+    for (auto &p : forms) {
+        if (!you.has_spell(p.first))
+            continue;
+        int obj = items(false, OBJ_TALISMANS, p.second, 0);
+        if (obj == NON_ITEM)
+            continue;
+        // Funny but tragic if the player is over red or blue lava.
+        move_item_to_grid(&obj, you.pos(), true);
+        del_spell_from_memory(p.first);
+    }
+}
+#endif
+
 /**
  * Load the current level.
  *
@@ -2232,10 +2258,11 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         you.time_taken = div_rand_round(you.time_taken * 3, 4);
 
-        dprf("arrival time: %d", you.time_taken);
-
         if (just_created_level)
             run_map_epilogues();
+
+        // no cross-level pursuits
+        crawl_state.potential_pursuers.clear();
     }
 
     // Save the created/updated level out to disk:
@@ -2324,7 +2351,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (just_created_level && make_changes)
     {
         you.attribute[ATTR_ABYSS_ENTOURAGE] = 0;
-        gozag_detect_level_gold(true);
+        gozag_count_level_gold();
+        if (branches[you.where_are_you].branch_flags & brflag::fully_map)
+            magic_mapping(GDM, 100, true, false, false, true, false);
     }
 
 
@@ -2373,11 +2402,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
             xom_new_level_noise_or_stealth();
     }
 
-    if (just_created_level && (load_mode == LOAD_ENTER_LEVEL
-                               || load_mode == LOAD_START_GAME))
-    {
+    if (just_created_level && make_changes)
         decr_zot_clock();
-    }
 
     // Initialize halos, etc.
     invalidate_agrid(true);
@@ -2409,6 +2435,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         }
         you.props.erase("zig-fixup");
     }
+
+    if (load_mode == LOAD_RESTART_GAME)
+        _fixup_transmuters();
 #endif
 
     return just_created_level;

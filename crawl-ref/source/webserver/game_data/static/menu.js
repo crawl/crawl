@@ -1025,12 +1025,16 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
                 break;
             // otherwise, fall through to pageup:
         case "<":
+            if (menu.tag == "travel")
+                break;
         case ";":
             paging(true);
             event.preventDefault();
             return false;
 
         case ">":
+            if (menu.tag == "travel")
+                break;
         case "+":
         case " ":
             paging();

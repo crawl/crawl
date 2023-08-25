@@ -98,6 +98,7 @@ string cloud_type_name(cloud_type type, bool terse = true);
 cloud_type random_smoke_type();
 cloud_type cloud_name_to_type(const string &name);
 const cloud_tile_info& cloud_type_tile_info(cloud_type type);
+bool cloud_is_removed(cloud_type type);
 
 void start_still_winds();
 void end_still_winds();

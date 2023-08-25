@@ -366,7 +366,7 @@ static bool _disabled_merge(monster* thing)
            || mons_is_fleeing(*thing)
            || mons_is_confused(*thing)
            || thing->paralysed()
-           || thing->has_ench(ENCH_INSANE);
+           || thing->has_ench(ENCH_FRENZIED);
 }
 
 // See if there are any appropriate adjacent slime creatures for 'thing'
@@ -997,7 +997,7 @@ bool mon_special_ability(monster* mons)
             actor *foe = mons->get_foe();
             if (foe && mons->can_see(*foe))
             {
-                bolt beem = setup_targetting_beam(*mons);
+                bolt beem = setup_targeting_beam(*mons);
                 beem.target = foe->pos();
                 setup_mons_cast(mons, beem, SPELL_THORN_VOLLEY);
 
@@ -1037,6 +1037,7 @@ bool mon_special_ability(monster* mons)
     break;
 
     case MONS_WATER_NYMPH:
+    case MONS_NORRIS:
     {
         if (!one_chance_in(5))
             break;

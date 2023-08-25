@@ -1,7 +1,7 @@
 /**
  * @file
  * @brief Collects all calls to skills.cc:exercise for
- *            easier changes to the training modell.
+ *            easier changes to the training model.
 **/
 
 #pragma once

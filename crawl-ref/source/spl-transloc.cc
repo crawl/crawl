@@ -1226,7 +1226,7 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
 
     shuffle_array(targets);
     // UC is worse at launching multiple manifold assaults, since
-    // transmuters have a much easier time casting it.
+    // shapeshifters have a much easier time casting it.
     const size_t max_targets = weapon ? 2 + div_rand_round(pow, 50)
                                       : 1 + div_rand_round(pow, 100);
     for (size_t i = 0; i < max_targets && i < targets.size(); i++)

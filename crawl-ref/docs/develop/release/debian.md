@@ -77,7 +77,7 @@ To create these, run the following:
 
 In principle you can leave some of these environment variables out where they
 match your current system, but it is safest not to simplify. In order for
-these to run succesfully in docker, you will need to be running the docker
+these to run successfully in docker, you will need to be running the docker
 image with `--privileged`.
 
 We build the debs against either debian stable, or debian oldstable. Basically,

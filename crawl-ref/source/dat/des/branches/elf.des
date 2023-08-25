@@ -737,7 +737,7 @@ xxxx+xxxx-x_xx-xxxx+xxxx
             ..x..
 ENDMAP
 
-NAME:    hangedman_elf_targetted_burst
+NAME:    hangedman_elf_targeted_burst
 TAGS:    transparent extra
 DEPTH:   Elf
 SUBST:   x : xxc, Y : yycvb, y : xxcbv, z : cbv, Z = cbvwl

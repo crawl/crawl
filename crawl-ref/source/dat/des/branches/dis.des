@@ -24,10 +24,10 @@ end
 function callback.grunt_iron_hall_animate(data,triggerable,trigger,marker,ev)
     if not dgn.persist.grunt_iron_hall_animated then
         dgn.persist.grunt_iron_hall_animated = true
-        for slave in iter.slave_iterator("trap_statue", 1) do
+        for replica in iter.replica_iterator("trap_statue", 1) do
         if crawl.one_chance_in(4) then
-            dgn.terrain_changed(slave.x, slave.y, "floor", false)
-            dgn.create_monster(slave.x, slave.y,
+            dgn.terrain_changed(replica.x, replica.y, "floor", false)
+            dgn.create_monster(replica.x, replica.y,
                                "patrolling iron golem generate_awake")
         end
     end
@@ -1291,7 +1291,7 @@ SUBST:   4 = 4:20 7
 SUBST:   8 = 8o
 COLOUR:  o : cyan
 TILE:    o = dngn_statue_iron_golem
-# Use master/slave setup.
+# Use primary/replica setup.
 MARKER:  o = lua:monster_on_death { \
             death_monster="Dispater", new_monster="generate_awake iron golem", \
             message_seen="The iron statue comes to life!", \

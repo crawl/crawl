@@ -60,6 +60,12 @@ enum ability_type
 #endif
     // Storm Form
     ABIL_BLINKBOLT,
+    // Death Form
+    ABIL_SIPHON_ESSENCE,
+    // Talismans
+    ABIL_BEGIN_UNTRANSFORM,
+
+    // Note: this is getting dangerously close to ABIL_EVOKE_BERSERK! be careful
 
     // Evoking items.
 #if TAG_MAJOR_VERSION == 34
@@ -256,7 +262,8 @@ enum ability_type
     ABIL_RU_SACRIFICE_SKILL,
     ABIL_RU_SACRIFICE_EYE,
     ABIL_RU_SACRIFICE_RESISTANCE,
-        ABIL_FINAL_SACRIFICE = ABIL_RU_SACRIFICE_RESISTANCE,
+    ABIL_RU_SACRIFICE_FORMS,
+        ABIL_FINAL_SACRIFICE = ABIL_RU_SACRIFICE_FORMS,
     ABIL_RU_REJECT_SACRIFICES,
 
 #if TAG_MAJOR_VERSION == 34

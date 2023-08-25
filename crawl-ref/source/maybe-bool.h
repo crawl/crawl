@@ -2,7 +2,7 @@
 
 #include <string>
 
-// inspired by boost's logic::tribool, but with a much simpler implementaiton
+// inspired by boost's logic::tribool, but with a much simpler implementation
 //    (https://github.com/boostorg/logic/blob/develop/include/boost/logic/tribool.hpp)
 // This essentially is a Kleene strong three-valued boolean, that requires an
 // explicit cast to use as a bool.

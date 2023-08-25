@@ -280,6 +280,29 @@ bool RevivifyDelay::try_interrupt(bool force)
     return false;
 }
 
+bool TransformDelay::try_interrupt(bool force)
+{
+    bool interrupt = false;
+
+    if (force)
+        interrupt = true;
+    else if (duration > 1 && !was_prompted)
+    {
+        if (!crawl_state.disables[DIS_CONFIRMATIONS]
+            && !yesno("Keep transforming yourself?", false, 0, false))
+        {
+            interrupt = true;
+        }
+        else
+            was_prompted = true;
+    }
+
+    if (!interrupt)
+        return false;
+    mpr("You stop transforming.");
+    return true;
+}
+
 void stop_delay(bool stop_relocations, bool force)
 {
     if (you.delay_queue.empty())
@@ -433,6 +456,14 @@ void RevivifyDelay::start()
     mprf(MSGCH_MULTITURN_ACTION, "You begin the revivification ritual.");
 }
 
+void TransformDelay::start()
+{
+    if (form == transformation::none)
+        mprf(MSGCH_MULTITURN_ACTION, "You begin untransforming.");
+    else
+        mprf(MSGCH_MULTITURN_ACTION, "You begin transforming.");
+}
+
 command_type RunDelay::move_cmd() const
 {
     return _get_running_command();
@@ -470,8 +501,10 @@ void BaseRunDelay::handle()
 
     command_type cmd = CMD_NO_CMD;
 
-    if ((want_move() && you.confused()) ||
-        (!(unsafe_once && first_move) && !i_feel_safe(true, want_move())))
+    if ((want_move() && you.confused())
+        || !(unsafe_once && first_move) && !i_feel_safe(true, want_move())
+        || you.running.is_rest()
+           && (!can_rest_here(true) || regeneration_is_inhibited()))
     {
         stop_running();
     }
@@ -588,6 +621,14 @@ void DropItemDelay::tick()
     // in finish().
     // FIXME: get rid of this hack!
     you.time_taken = 0;
+}
+
+void TransformDelay::tick()
+{
+    if (form == transformation::none)
+        mprf(MSGCH_MULTITURN_ACTION, "You continue untransforming.");
+    else
+        mprf(MSGCH_MULTITURN_ACTION, "You continue transforming.");
 }
 
 void Delay::handle()
@@ -839,6 +880,25 @@ void RevivifyDelay::finish()
     mpr("You return to life.");
     temp_mutate(MUT_FRAIL, "vampire revification");
     vampire_update_transformations();
+}
+
+bool TransformDelay::invalidated()
+{
+    // Got /poly'd while mid-transform?
+    return you.transform_uncancellable;
+}
+
+void TransformDelay::finish()
+{
+    if (form == transformation::none)
+    {
+        untransform();
+        you.default_form = transformation::none;
+        return;
+    }
+
+    you.default_form = form;
+    return_to_default_form();
 }
 
 void run_macro(const char *macroname)

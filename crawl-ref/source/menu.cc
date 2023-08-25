@@ -1971,7 +1971,7 @@ bool Menu::process_key(int keyin)
     }
 
     if (f_keyfilter)
-        keyin = (*f_keyfilter)(keyin);
+        keyin = f_keyfilter(keyin);
     keyin = pre_process(keyin);
 
 #ifdef USE_TILE_WEB
@@ -2150,6 +2150,8 @@ int Menu::get_first_visible(bool skip_init_headers, int col) const
             return i;
         }
     }
+    // returns 0 on empty menu -- callers should guard for this if relevant
+    // (XX -1 might be better? but callers currently assume non-negative...)
     return items.size();
 }
 
@@ -2403,6 +2405,9 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
         tileset.emplace_back(TILE_HALO_GD_NEUTRAL);
     else if (m->neutral())
         tileset.emplace_back(TILE_HALO_NEUTRAL);
+    else if (Options.tile_show_threat_levels.find("unusual") != string::npos
+             && m->has_unusual_items())
+        tileset.emplace_back(TILE_THREAT_UNUSUAL);
     else
         switch (m->threat)
         {
@@ -2505,6 +2510,8 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
         tileset.emplace_back(TILEI_GOOD_NEUTRAL);
     else if (m->neutral())
         tileset.emplace_back(TILEI_NEUTRAL);
+    else if (m->is(MB_PARALYSED))
+        tileset.emplace_back(TILEI_PARALYSED);
     else if (m->is(MB_FLEEING))
         tileset.emplace_back(TILEI_FLEEING);
     else if (m->is(MB_STABBABLE))
@@ -2588,14 +2595,7 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
 
         ASSERT_RANGE(idx, TILE_MAIN_MAX, TILEP_PLAYER_MAX);
 
-        int ymax = TILE_Y;
-
-        if (flags[p] == TILEP_FLAG_CUT_CENTAUR
-            || flags[p] == TILEP_FLAG_CUT_NAGA)
-        {
-            ymax = 18;
-        }
-
+        const int ymax = flags[p] == TILEP_FLAG_CUT_BOTTOM ? 18 : TILE_Y;
         tileset.emplace_back(idx, ymax);
     }
 
@@ -2673,6 +2673,21 @@ void Menu::select_index(int index, int qty)
     {
         select_item_index(si, qty);
     }
+}
+
+size_t Menu::item_count(bool include_headers) const
+{
+    size_t count = items.size();
+    if (!include_headers)
+    {
+        for (const auto &item : items)
+            if (item->level != MEL_ITEM)
+            {
+                ASSERT(count > 0);
+                count--;
+            }
+    }
+    return count;
 }
 
 int Menu::get_entry_index(const MenuEntry *e) const
@@ -2979,23 +2994,26 @@ bool Menu::snap_in_page(int index)
 
     const int vpy = m_ui.scroller->get_scroll();
 
-    if (y2 >= vpy + vph)
+#ifdef USE_TILE_LOCAL
+    // on local tiles, when scrolling longer menus, the scroller will apply a
+    // shade to the edge of the scroller. Compensate for this for non-end menu
+    // items.
+    const int shade = (index > 0 || index < static_cast<int>(items.size()) - 1)
+        ? UI_SCROLLER_SHADE_SIZE / 2 : 0;
+#else
+    const int shade = 0;
+#endif
+
+    // the = for these is to apply the local tiles shade adjustment if necessary
+    if (y1 <= vpy)
     {
         // scroll up
-        m_ui.scroller->set_scroll(y2 - vph
-#ifdef USE_TILE_LOCAL
-            + UI_SCROLLER_SHADE_SIZE / 2
-#endif
-            );
+        m_ui.scroller->set_scroll(y1 - shade);
     }
-    else if (y1 < vpy)
+    else if (y2 >= vpy + vph)
     {
         // scroll down
-        m_ui.scroller->set_scroll(y1
-#ifdef USE_TILE_LOCAL
-            - UI_SCROLLER_SHADE_SIZE / 2
-#endif
-            );
+        m_ui.scroller->set_scroll(y2 - vph + shade);
     }
     else
         return false; // already in page
@@ -3081,11 +3099,11 @@ bool Menu::page_up()
 bool Menu::line_down()
 {
     // check if we are already at the end.
-    // (why is this necessary?)
-    if (items.size() && in_page(static_cast<int>(items.size()) - 1, true))
+    if (items.empty() || in_page(static_cast<int>(items.size()) - 1, true))
         return false;
 
     int index = get_first_visible();
+
     int first_vis_y;
     m_ui.menu->get_item_region(index, &first_vis_y, nullptr);
 

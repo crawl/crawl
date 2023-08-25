@@ -136,7 +136,7 @@ bool TilesFramework::fonts_initialized()
 static void _init_consoles()
 {
 #ifdef TARGET_OS_WINDOWS
-    // Windows has an annoying habbit of disconnecting GUI apps from
+    // Windows has an annoying habit of disconnecting GUI apps from
     // consoles at startup, and insisting that console apps start with
     // consoles.
     //
@@ -277,6 +277,10 @@ void TilesFramework::calculate_default_options()
         if (m_windowsz.x >= _screen_sizes[auto_size][0]
             && m_windowsz.y >= _screen_sizes[auto_size][1])
 #else
+        // In android we define screen sizes from 480 to 800. Bigger screens
+        // are adjusted with the game scale. E.g. A 1920x1080 device would use:
+        //     * game scale  => 2
+        //     * screen size => 540x540 (usually it can be rotated)
         int adjust_scale = 1;
         if (Options.game_scale == min(m_windowsz.x, m_windowsz.y)/960+1)
             adjust_scale = Options.game_scale;

@@ -722,6 +722,7 @@ static void _process_command(const char keypress)
         case '_':
             if (!altars_present.empty())
             {
+                // XX fix this
                 macro_sendkeys_end_add_expanded('_');
                 do_interlevel_travel();
             }
@@ -1210,7 +1211,7 @@ void do_annotate()
             annotate_level(lid);
             return;
         case ID_UP:
-            // level_id() is the error vallue of find_up_level(lid)
+            // level_id() is the error value of find_up_level(lid)
             if (find_up_level(lid) == level_id())
                 mpr("There is no level above you.");
             else

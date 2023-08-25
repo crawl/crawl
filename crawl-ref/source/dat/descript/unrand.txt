@@ -27,11 +27,11 @@ of more ordinary instruments of chaos.
 glaive of Prune
 
 The glaive of Prune carries a terrible and insidious curse. Unless its wielder
-maintains firm self-control, they are doomed to succumb, undergoing a horrifying
-(albeit temporary) transformation. This is normally trivial to resist, but
-incapacitated wielders are certain to succumb, finding themselves nightmarishly
-purple, squishy, and delicious. They can take comfort in learning that it's
-surprisingly hard to injure a giant prune.
+maintains firm self-control, they are doomed to undergo a horrifying (albeit
+temporary) transformation. This is normally trivial to resist, but incapacitated
+wielders are certain to succumb, finding themselves nightmarishly purple, squishy,
+and delicious. They can take comfort in learning that it's surprisingly hard to
+injure a giant prune.
 %%%%
 sword of Power
 
@@ -796,3 +796,9 @@ A disc of crackling metal, created by a woman whose cunning artifice and
 crafty politics once united a continent. Most of her surviving inventions are
 closely guarded by various royals, ostensible proof of their claim to be her
 true successor, but this early prototype slipped through their fingers.
+%%%%
+hand cannon "Mule"
+
+Hand cannons use magical dust to launch projectiles. The alchemists who craft
+them boast of their potency, but omit the smoke and noise blasted out with each
+shot. Filled with powdered blastmotes, Mule packs an especially powerful kick.

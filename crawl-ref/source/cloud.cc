@@ -937,7 +937,7 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
 #endif
                    ;
         case CLOUD_MEPHITIC:
-            return act.res_poison() > 0;
+            return act.res_poison() > 0 || act.clarity();
         case CLOUD_POISON:
             return act.res_poison() > 0;
         case CLOUD_STEAM:
@@ -1386,7 +1386,7 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances, bool yours
         // [ds] Yes, this is an ugly kludge: temporarily hide
         // durations and transforms.
         unwind_var<durations_t> old_durations(you.duration);
-        unwind_var<transformation> old_form(you.form, transformation::none);
+        unwind_var<transformation> old_form(you.form, you.default_form);
         you.duration.init(0);
         return is_damaging_cloud(type, true, yours);
     }
@@ -1422,7 +1422,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
     // Berserk monsters are less careful and will blindly plow through any
     // dangerous cloud, just to kill you. {due}
     // Fleeing monsters are heedless and will make very poor life choices.
-    if (!extra_careful && (mons->berserk_or_insane() || mons_is_fleeing(*mons)))
+    if (!extra_careful && (mons->berserk_or_frenzied() || mons_is_fleeing(*mons)))
         return false;
 
     switch (cloud.type)
@@ -1876,5 +1876,19 @@ void surround_actor_with_cloud(const actor* a, cloud_type cloud)
         if (mons && mons->alive() && mons_aligned(a, mons))
             continue;
         place_cloud(cloud, *ai, 2 + random2(6), a);
+    }
+}
+
+bool cloud_is_removed(cloud_type cloud)
+{
+    switch (cloud)
+    {
+#if TAG_MAJOR_VERSION == 34
+    case CLOUD_GLOOM:
+    case CLOUD_EMBERS:
+        return true;
+#endif
+    default:
+        return false;
     }
 }

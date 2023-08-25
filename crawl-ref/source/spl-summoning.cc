@@ -131,9 +131,7 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
     else
         mon = MONS_HOUND;
 
-    const int dur = min(2 + (random2(pow) / 4), 6);
-
-    if (!create_monster(_pal_data(mon, dur, god, SPELL_CALL_CANINE_FAMILIAR)))
+    if (!create_monster(_pal_data(mon, 3, god, SPELL_CALL_CANINE_FAMILIAR)))
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
@@ -208,9 +206,8 @@ spret cast_summon_ice_beast(int pow, god_type god, bool fail)
         return spret::abort;
 
     fail_check();
-    const int dur = min(2 + div_rand_round(random2(1 + pow), 4), 4);
 
-    mgen_data ice_beast = _pal_data(MONS_ICE_BEAST, dur, god,
+    mgen_data ice_beast = _pal_data(MONS_ICE_BEAST, 3, god,
                                     SPELL_SUMMON_ICE_BEAST);
     ice_beast.hd = (3 + div_rand_round(pow, 13));
 
@@ -235,7 +232,7 @@ spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
     else
         type = coinflip() ? MONS_MANTICORE : MONS_LINDWURM;
 
-    mgen_data mdata = _summon_data(*caster, type, 4, god,
+    mgen_data mdata = _summon_data(*caster, type, 3, god,
                                    SPELL_MONSTROUS_MENAGERIE);
     if (caster->is_player())
         mdata.hd = get_monster_data(type)->HD + div_rand_round(pow - 50, 25);
@@ -907,9 +904,7 @@ spret cast_call_imp(int pow, god_type god, bool fail)
 
     fail_check();
 
-    const int dur = min(2 + div_rand_round(random2(1 + pow), 5), 6);
-
-    mgen_data imp_data = _pal_data(MONS_CERULEAN_IMP, dur, god, SPELL_CALL_IMP);
+    mgen_data imp_data = _pal_data(MONS_CERULEAN_IMP, 3, god, SPELL_CALL_IMP);
     if (monster *imp = create_monster(imp_data))
     {
         mpr("A tiny devil pulls itself out of the air.");
@@ -1589,7 +1584,7 @@ spret cast_spellforged_servitor(int pow, god_type god, bool fail)
 
     fail_check();
 
-    mgen_data mdata = _pal_data(MONS_SPELLFORGED_SERVITOR, 4, god,
+    mgen_data mdata = _pal_data(MONS_SPELLFORGED_SERVITOR, 3, god,
                                 SPELL_SPELLFORGED_SERVITOR);
 
     if (monster* mon = create_monster(mdata))
@@ -2198,7 +2193,6 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_SCARABS,           { 0, 8 } },
     { SPELL_SUMMON_HOLIES,            { 0, 4 } },
     { SPELL_SUMMON_EXECUTIONERS,      { 0, 3 } },
-    { SPELL_AWAKEN_EARTH,             { 0, 9 } },
     { SPELL_GREATER_SERVANT_MAKHLEB,  { 0, 1 } },
     { SPELL_SUMMON_GREATER_DEMON,     { 0, 3 } },
     { SPELL_SUMMON_DEMON,             { 0, 3 } },

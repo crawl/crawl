@@ -818,7 +818,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
             if (mon->type == MONS_PIKEL)
             {
-                // Don't give XP for the slaves to discourage hunting. Pikel
+                // Don't give XP for the band to discourage hunting. Pikel
                 // has an artificially large XP modifier to compensate for
                 // this.
                 member->flags |= MF_NO_REWARD;
@@ -1954,6 +1954,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_EIDOLON, { {0, 0, []() { return player_in_hell(); }},
                                    {{ BAND_SPECTRALS, {2, 6}, true} }}},
     { MONS_GRUNN,            { {}, {{ BAND_DOOM_HOUNDS, {2, 4}, true }}}},
+    { MONS_NORRIS,           { {}, {{ BAND_SKYSHARKS, {2, 5}, true }}}},
 
     // special-cased band-sizes
     { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1}, true }}}},
@@ -2078,7 +2079,7 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
 }
 
 /// a weighted list of possible monsters for a given band slot.
-typedef vector<pair<monster_type, int>> member_possibilites;
+typedef vector<pair<monster_type, int>> member_possibilities;
 
 /**
  * For each band type, a list of weighted lists of monsters that can appear
@@ -2097,7 +2098,7 @@ typedef vector<pair<monster_type, int>> member_possibilites;
  * the third, fourth, etc monsters will either be MONS_C or MONS_D with equal
  * likelihood.
  */
-static const map<band_type, vector<member_possibilites>> band_membership = {
+static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_HOGS,                {{{MONS_HOG, 1}}}},
     { BAND_YAKS,                {{{MONS_YAK, 1}}}},
     { BAND_FAUNS,               {{{MONS_FAUN, 1}}}},
@@ -2415,6 +2416,8 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_DEMONSPAWN_BLACK_SUN, 1}}}},
     // for Grunn
     { BAND_DOOM_HOUNDS,         {{{MONS_DOOM_HOUND, 1}}}},
+    // for Norris
+    { BAND_SKYSHARKS,           {{{MONS_SKYSHARK, 1}}}},
 };
 
 /**
@@ -2859,9 +2862,6 @@ conduct_type god_hates_monster(const monster &mon)
 monster* create_monster(mgen_data mg, bool fail_msg)
 {
     ASSERT(in_bounds(mg.pos)); // otherwise it's a guaranteed fail
-
-    if (crawl_state.player_moving)
-        return nullptr; // monster might end up on player's tile - too scary
 
     const monster_type montype = fixup_zombie_type(mg.cls, mg.base_type);
 

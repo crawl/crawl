@@ -130,12 +130,6 @@ Xom of Malevolent Giggling
 w:5
 Xom of Malicious Giggling
 
-w:5
-Xom the Psychotic
-
-w:5
-Xom the Psychopath
-
 w:2
 Xom of Gnomic Intent
 

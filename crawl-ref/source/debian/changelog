@@ -542,7 +542,7 @@ crawl (2:0.5.2-1) unstable; urgency=low
   * Appease lintian:
     * debhelper-but-no-misc-depends;
     * extra-license-file;
-    * spelling-error-in-binary: persistant.
+    * spelling-error-in-binary: persistent.
   * Add a watch file for uscan(1).
   * Drop Debian.README; it should be clear to everyone by now that DCSS is
     the actively developed Crawl codebase.

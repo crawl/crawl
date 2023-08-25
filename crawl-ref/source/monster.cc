@@ -234,7 +234,7 @@ void monster::ensure_has_client_id()
 
 mon_attitude_type monster::temp_attitude() const
 {
-    if (has_ench(ENCH_INSANE))
+    if (has_ench(ENCH_FRENZIED))
         return ATT_NEUTRAL;
 
     if (has_ench(ENCH_HEXED))
@@ -780,6 +780,8 @@ bool monster::can_use_missile(const item_def &item) const
 bool monster::likes_wand(const item_def &item) const
 {
     ASSERT(item.base_type == OBJ_WANDS);
+    if (item.sub_type == WAND_DIGGING)
+        return false; // Avoid very silly abuses.
     // kind of a hack
     // assumptions:
     // bad wands are value 32, so won't be used past hd 6
@@ -1344,7 +1346,8 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
             return wtype == WPN_DEMON_WHIP;
 
         // Donald kept dropping his shield. I hate that.
-        if (mons->type == MONS_DONALD)
+        // Jerry: I gotta have my orb!
+        if (mons->type == MONS_DONALD || mons->type == MONS_JEREMIAH)
             return mons->hands_reqd(weapon) == HANDS_ONE;
 
         // What kind of assassin would forget her dagger somewhere else?
@@ -1941,18 +1944,6 @@ bool monster::pickup_wand(item_def &item, bool msg, bool force)
         return false;
 }
 
-bool monster::pickup_scroll(item_def &item, bool msg)
-{
-    return pickup(item, MSLOT_SCROLL, msg);
-}
-
-bool monster::pickup_potion(item_def &item, bool msg, bool force)
-{
-    if (!can_drink() && !force)
-        return false;
-    return pickup(item, MSLOT_POTION, msg);
-}
-
 bool monster::pickup_gold(item_def &item, bool msg)
 {
     return pickup(item, MSLOT_GOLD, msg);
@@ -1989,11 +1980,8 @@ bool monster::pickup_item(item_def &item, bool msg, bool force)
         return pickup_missile(item, msg, force);
     case OBJ_WANDS:
         return pickup_wand(item, msg, force);
-    case OBJ_SCROLLS:
-        return pickup_scroll(item, msg);
-    case OBJ_POTIONS:
-        return pickup_potion(item, msg, force);
     case OBJ_BOOKS:
+    case OBJ_TALISMANS:
     case OBJ_MISCELLANY:
         return pickup_misc(item, msg, force);
     default:
@@ -2649,7 +2637,7 @@ bool monster::go_frenzy(actor *source)
 
     const int duration = 16 + random2avg(13, 2);
 
-    add_ench(mon_enchant(ENCH_INSANE, 0, source, duration * BASELINE_DELAY));
+    add_ench(mon_enchant(ENCH_FRENZIED, 0, source, duration * BASELINE_DELAY));
     add_ench(mon_enchant(ENCH_HASTE, 0, source, duration * BASELINE_DELAY));
     add_ench(mon_enchant(ENCH_MIGHT, 0, source, duration * BASELINE_DELAY));
 
@@ -2900,10 +2888,15 @@ bool monster::asleep() const
     return behaviour == BEH_SLEEP;
 }
 
+bool monster::sleepwalking() const
+{
+    return asleep() && has_ench(ENCH_CONFUSION);
+}
+
 bool monster::backlit(bool self_halo, bool /*temp*/) const
 {
     if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME)
-        || has_ench(ENCH_SILVER_CORONA))
+        || has_ench(ENCH_SILVER_CORONA) || has_ench(ENCH_CONTAM))
     {
         return true;
     }
@@ -2992,7 +2985,7 @@ bool monster::pacified() const
 bool monster::can_feel_fear(bool /*include_unknown*/) const
 {
     return (holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
-           && !berserk_or_insane();
+           && !berserk_or_frenzied();
 }
 
 /**
@@ -3376,7 +3369,7 @@ void monster::suicide(int hp_target)
     hit_points = hp_target;
 }
 
-mon_holy_type monster::holiness(bool /*temp*/) const
+mon_holy_type monster::holiness(bool /*temp*/, bool /*incl_form*/) const
 {
     // zombie kraken tentacles
     if (testbits(flags, MF_FAKE_UNDEAD))
@@ -3417,7 +3410,7 @@ bool monster::is_holy() const
     return bool(holiness() & MH_HOLY) || is_priest() && is_good_god(god);
 }
 
-bool monster::is_nonliving(bool /*temp*/) const
+bool monster::is_nonliving(bool /*temp*/, bool /*incl_form*/) const
 {
     return bool(holiness() & MH_NONLIVING);
 }
@@ -4274,7 +4267,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         // Damage over time effects are excluded for similar reasons.
         if (agent && agent->is_player()
             && mons_class_gives_xp(type)
-            && (temp_attitude() == ATT_HOSTILE || has_ench(ENCH_INSANE))
+            && (temp_attitude() == ATT_HOSTILE || has_ench(ENCH_FRENZIED))
             && type != MONS_NAMELESS // hack - no usk piety for miscasts
             && flavour != BEAM_SHARED_PAIN
             && flavour != BEAM_STICKY_FLAME
@@ -4860,14 +4853,14 @@ bool monster::can_get_mad() const
     if (paralysed() || petrified() || petrifying())
         return false;
 
-    if (berserk_or_insane() || has_ench(ENCH_FATIGUE))
+    if (berserk_or_frenzied() || has_ench(ENCH_FATIGUE))
         return false;
 
     return true;
 }
 
 /**
- * Can the monster suffer ENCH_INSANE?
+ * Can the monster suffer ENCH_FRENZIED?
  */
 bool monster::can_go_frenzy() const
 {
@@ -4897,9 +4890,9 @@ bool monster::berserk() const
 }
 
 // XXX: this function could use a better name
-bool monster::berserk_or_insane() const
+bool monster::berserk_or_frenzied() const
 {
-    return berserk() || has_ench(ENCH_INSANE);
+    return berserk() || has_ench(ENCH_FRENZIED);
 }
 
 bool monster::needs_berserk(bool check_spells, bool ignore_distance) const
@@ -5196,18 +5189,6 @@ bool monster::has_action_energy() const
     return speed_increment >= ENERGY_THRESHOLD;
 }
 
-bool monster::may_have_action_energy() const
-{
-    const int max_gain = (speed * you.time_taken + 9) / BASELINE_DELAY;
-    return speed_increment + max_gain >= ENERGY_THRESHOLD;
-}
-
-/// At the player's current movement speed, will they eventually outpace this monster?
-bool monster::outpaced_by_player() const
-{
-    return speed * you.time_taken < energy_cost(EUT_MOVE, 1, BASELINE_DELAY);
-}
-
 /// If a monster had enough energy to act this turn, change it so it doesn't.
 void monster::drain_action_energy()
 {
@@ -5400,7 +5381,7 @@ bool monster::swap_with(monster* other)
 }
 
 // Returns true if the trap should be revealed to the player.
-bool monster::do_shaft(bool check_terrain)
+bool monster::do_shaft()
 {
     if (!is_valid_shaft_level())
         return false;
@@ -5411,8 +5392,7 @@ bool monster::do_shaft(bool check_terrain)
 
     // Handle instances of do_shaft() being invoked magically when
     // the monster isn't standing over a shaft.
-    if (check_terrain
-        && get_trap_type(pos()) != TRAP_SHAFT
+    if (get_trap_type(pos()) != TRAP_SHAFT
         && !feat_is_shaftable(env.grid(pos())))
     {
         return false;
@@ -5506,6 +5486,9 @@ int monster::action_energy(energy_use_type et) const
     if (has_ench(ENCH_SWIFT))
         move_cost -= 3;
 
+    if (has_ench(ENCH_PURSUING))
+        move_cost -= 2;
+
     if (has_ench(ENCH_ROLLING))
         move_cost -= 5;
 
@@ -5544,171 +5527,6 @@ int monster::energy_cost(energy_use_type et, int div, int mult) const
 void monster::lose_energy(energy_use_type et, int div, int mult)
 {
     speed_increment -= energy_cost(et, div, mult);
-}
-
-/**
- * Can this monster ever drink any potions at all?
- *
- * @return  Whether the monster can drink potions (not a statue, mummy, etc)
- */
-bool monster::can_drink() const
-{
-    if (mons_class_is_stationary(type))
-        return false;
-
-    if (mons_itemuse(*this) < MONUSE_STARTING_EQUIPMENT)
-        return false;
-
-    // These monsters cannot drink.
-    if (is_skeletal() || is_insubstantial()
-        || mons_species() == MONS_LICH || mons_genus(type) == MONS_MUMMY
-        || mons_species() == MONS_WIGHT || type == MONS_GASTRONOK)
-    {
-        return false;
-    }
-
-    return true;
-}
-
-bool monster::can_drink_potion(potion_type ptype) const
-{
-    if (!can_drink())
-        return false;
-
-    switch (ptype)
-    {
-        case POT_CURING:
-        case POT_HEAL_WOUNDS:
-            return !(holiness() & (MH_NONLIVING | MH_PLANT));
-        case POT_BERSERK_RAGE:
-            return can_go_berserk();
-        case POT_BRILLIANCE:
-            return is_actual_spellcaster();
-        case POT_HASTE:
-        case POT_MIGHT:
-        case POT_INVISIBILITY:
-        case POT_RESISTANCE:
-            // If there are any item using monsters that are permanently
-            // invisible, this might have to be restricted.
-            return true;
-        default:
-            break;
-        CASE_REMOVED_POTIONS(ptype)
-    }
-
-    return false;
-}
-
-bool monster::should_drink_potion(potion_type ptype) const
-{
-    switch (ptype)
-    {
-    case POT_CURING:
-        return hit_points <= max_hit_points / 2
-               || has_ench(ENCH_POISON)
-               || has_ench(ENCH_CONFUSION);
-    case POT_HEAL_WOUNDS:
-        return hit_points <= max_hit_points / 2;
-    case POT_BERSERK_RAGE:
-        // this implies !berserk()
-        return !has_ench(ENCH_MIGHT) && !has_ench(ENCH_HASTE)
-               && needs_berserk();
-    case POT_HASTE:
-        return !has_ench(ENCH_HASTE);
-    case POT_MIGHT:
-        return !has_ench(ENCH_MIGHT) && foe_distance() <= 2;
-    case POT_BRILLIANCE:
-        return !has_ench(ENCH_EMPOWERED_SPELLS) && !is_silenced();
-    case POT_RESISTANCE:
-        return !has_ench(ENCH_RESISTANCE);
-    case POT_INVISIBILITY:
-        // We're being nice: friendlies won't go invisible if the player
-        // won't be able to see them.
-        return !has_ench(ENCH_INVIS)
-               && (you.can_see_invisible() || !friendly());
-    default:
-        break;
-    CASE_REMOVED_POTIONS(ptype)
-    }
-
-    return false;
-}
-
-// Return true if the potion should be identified.
-bool monster::drink_potion_effect(potion_type pot_eff, bool card)
-{
-    if (!card)
-        simple_monster_message(*this, " drinks a potion.");
-
-    switch (pot_eff)
-    {
-    case POT_CURING:
-    {
-        if (heal(5 + random2(7)))
-            simple_monster_message(*this, " is healed!");
-
-        static const enchant_type cured_enchants[] =
-        {
-            ENCH_POISON, ENCH_CONFUSION
-        };
-
-        for (enchant_type cured : cured_enchants)
-            del_ench(cured);
-    }
-    break;
-
-    case POT_HEAL_WOUNDS:
-        if (heal(10 + random2avg(28, 3)))
-            simple_monster_message(*this, " is healed!");
-        break;
-
-    case POT_BERSERK_RAGE:
-        enchant_actor_with_flavour(this, this, BEAM_BERSERK);
-        break;
-
-    case POT_HASTE:
-        enchant_actor_with_flavour(this, this, BEAM_HASTE);
-        break;
-
-    case POT_MIGHT:
-        enchant_actor_with_flavour(this, this, BEAM_MIGHT);
-        break;
-
-    case POT_BRILLIANCE:
-        simple_monster_message(*this, "'s spells are empowered!");
-        add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 1));
-        break;
-
-    case POT_INVISIBILITY:
-        enchant_actor_with_flavour(this, this, BEAM_INVISIBILITY);
-        break;
-
-    case POT_RESISTANCE:
-        enchant_actor_with_flavour(this, this, BEAM_RESISTANCE);
-        break;
-
-    default:
-        return false;
-    CASE_REMOVED_POTIONS(pot_eff)
-    }
-
-    return !card;
-}
-
-bool monster::can_evoke_jewellery(jewellery_type /*jtype*/) const
-{
-    return false;
-}
-
-bool monster::should_evoke_jewellery(jewellery_type /*jtype*/) const
-{
-    return false;
-}
-
-// Return true if the jewellery should be identified.
-bool monster::evoke_jewellery_effect(jewellery_type /*jtype*/)
-{
-    return false;
 }
 
 void monster::react_to_damage(const actor *oppressor, int damage,
@@ -6316,7 +6134,7 @@ bool monster::is_illusion() const
 {
     return type == MONS_PLAYER_ILLUSION
            || has_ench(ENCH_PHANTOM_MIRROR)
-           || props.exists(CLONE_SLAVE_KEY);
+           || props.exists(CLONE_REPLICA_KEY);
 }
 
 bool monster::is_divine_companion() const
@@ -6353,7 +6171,9 @@ int monster::dragon_level() const
 /// Is this monster's Blink ability themed as a 'jump'?
 bool monster::is_jumpy() const
 {
-    return type == MONS_JUMPING_SPIDER || type == MONS_BOULDER_BEETLE;
+    return type == MONS_JUMPING_SPIDER
+        || type == MONS_BOULDER_BEETLE
+        || mons_species() == MONS_BARACHI;
 }
 
 // HD for spellcasting purposes.
@@ -6423,7 +6243,7 @@ bool monster::has_facet(int facet) const
 /// If the player attacks this monster, will it become hostile?
 bool monster::angered_by_attacks() const
 {
-    return !has_ench(ENCH_INSANE)
+    return !has_ench(ENCH_FRENZIED)
             && !mons_is_avatar(type)
             && !mons_class_is_zombified(type)
             && type != MONS_BOUND_SOUL

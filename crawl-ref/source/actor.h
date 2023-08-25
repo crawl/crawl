@@ -258,11 +258,11 @@ public:
 
     virtual monster_type mons_species(bool zombie_base = false) const = 0;
 
-    virtual mon_holy_type holiness(bool temp = true) const = 0;
+    virtual mon_holy_type holiness(bool temp = true, bool incl_form = true) const = 0;
     virtual bool undead_or_demonic(bool temp = true) const = 0;
     virtual bool holy_wrath_susceptible() const;
     virtual bool is_holy() const = 0;
-    virtual bool is_nonliving(bool temp = true) const = 0;
+    virtual bool is_nonliving(bool temp = true, bool incl_form = true) const = 0;
     virtual bool evil() const;
     virtual int  how_chaotic(bool check_spells_god = false) const = 0;
     virtual bool is_unbreathing() const = 0;
@@ -284,7 +284,7 @@ public:
     virtual bool res_petrify(bool temp = true) const = 0;
     virtual int res_constrict() const = 0;
     virtual int willpower() const = 0;
-    virtual int check_willpower(const actor* source, int power);
+    virtual int check_willpower(const actor* source, int power) const;
     virtual bool no_tele(bool blink = false, bool temp = true) const = 0;
     virtual int inaccuracy() const;
     int inaccuracy_penalty() const;
@@ -308,7 +308,7 @@ public:
     // Return an int so we know whether an item is the sole source.
     virtual int equip_flight() const;
     virtual int spirit_shield(bool items = true) const;
-    virtual bool rampaging(bool items = true) const;
+    virtual bool rampaging() const;
 
     virtual bool is_banished() const = 0;
     virtual bool is_web_immune() const = 0;
@@ -369,7 +369,7 @@ public:
 
     virtual bool     will_trigger_shaft() const;
     virtual level_id shaft_dest() const;
-    virtual bool     do_shaft(bool check_terrain = true) = 0;
+    virtual bool     do_shaft() = 0;
 
     coord_def position;
 

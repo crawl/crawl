@@ -201,8 +201,8 @@ New features:
 - Save information can be shown to players in the webtiles lobby, for crawl
   versions that support it. Configurable on a version-by-version basis.
 - Add a tool for admins to send messages to all players on the server, via
-  a collapsable admin panel in the lobby visible to admin users.
+  a collapsible admin panel in the lobby visible to admin users.
 
 Fixes, improvements, changes:
-- Various fixes to loggin and error handling
+- Various fixes to login and error handling
 - stuck processes are now killed with SIGABRT, rather than SIGTERM

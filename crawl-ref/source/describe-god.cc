@@ -926,7 +926,6 @@ static formatted_string _describe_god_powers(god_type which_god)
 
     case GOD_GOZAG:
         have_any = true;
-        desc.cprintf("You passively detect gold.\n");
         desc.cprintf("%s turns your defeated foes' bodies to gold.\n",
                 uppercase_first(god_name(which_god)).c_str());
         desc.cprintf("Your enemies may become distracted by gold.\n");

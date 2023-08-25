@@ -28,7 +28,7 @@ function util.subclass(parent, subclassname)
   return subclass
 end
 
---- Instatiate a new object
+--- Instantiate a new object
 function util.newinstance(class)
   local instance = { }
   setmetatable(instance, class)

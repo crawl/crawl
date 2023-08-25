@@ -428,15 +428,25 @@ void lucy_check_meddling()
     if (potential_banishees.empty())
         return;
 
-    simple_god_message(" does not welcome meddling.");
-    const int to_banish = roll_dice(2, 3);
+    bool banished = false;
     shuffle_array(begin(potential_banishees), end(potential_banishees));
-    for (int i = 0; i < to_banish && i < (int)potential_banishees.size(); ++i)
+    for (monster *mon : potential_banishees)
     {
         // We might have banished a summoner and poofed its summons, etc.
-        monster* mon = potential_banishees[i];
-        if (!invalid_monster(mon) && mon->alive())
+        if (invalid_monster(mon) || !mon->alive())
+            continue;
+        // 80% chance of banishing god wrath summons, 30% chance of banishing
+        // other creatures nearby. Lazily assume that any perma summoned mons
+        // is a god wrath summon.
+        if (x_chance_in_y(mon->is_perm_summoned() ? 8 : 3, 10))
+        {
+            if (!banished)
+            {
+                simple_god_message(" does not welcome meddling.");
+                banished = true;
+            }
             mon->banish(&you);
+        }
     }
 }
 
@@ -1257,7 +1267,7 @@ static void _jiyva_transform()
         you.transform_uncancellable = true;
 }
 /**
- * Make Jiyva contaminate tha player.
+ * Make Jiyva contaminate that player.
  */
 static void _jiyva_contaminate()
 {

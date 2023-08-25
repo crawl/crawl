@@ -11,6 +11,7 @@
 #include "travel.h"
 
 #include <algorithm>
+#include <array>
 #include <cctype>
 #include <cstdarg>
 #include <cstdio>
@@ -2149,24 +2150,49 @@ static bool _is_valid_branch(const Branch &br)
         && !branch_is_unfinished(br.id);
 }
 
-static bool _is_disconnected_branch(const Branch &br)
-{
-    return !is_connected_branch(br.id);
-}
-
 class TravelPromptMenu : public PromptMenu
 {
 public:
+    enum class Mode { normal, waypoints, altars };
+
     TravelPromptMenu(int _prompt_flags)
         : PromptMenu(), result(ID_CANCEL), prompt_flags(_prompt_flags),
-          waypoint_list(false)
+          travel_mode(Mode::normal)
     {
-        prompt_branches = _get_branches(
-            (prompt_flags & TPF_SHOW_ALL_BRANCHES) ? _is_valid_branch :
-            (prompt_flags & TPF_SHOW_PORTALS_ONLY) ? _is_disconnected_branch
-                                                   : _is_known_branch);
+        prompt_branches = _get_branches((prompt_flags & TPF_SHOW_ALL_BRANCHES)
+                ? _is_valid_branch : _is_known_branch);
+
+        tag = "travel";
+        if ((prompt_flags & TPF_REMEMBER_TARGET) && !trans_travel_dest.empty())
+            def_target = level_target;
 
         populate_menu();
+    }
+
+    bool mode_allowed(Mode m) const
+    {
+        switch (m)
+        {
+        case Mode::normal:
+            return true;
+        case Mode::waypoints:
+            return !(prompt_flags & TPF_SHOW_ALL_BRANCHES)
+                && (prompt_flags & TPF_ALLOW_WAYPOINTS)
+                && travel_cache.get_waypoint_count();
+        case Mode::altars:
+            return !(prompt_flags & TPF_SHOW_ALL_BRANCHES) && seen_altars();
+        }
+        return false;
+    }
+
+    bool has_default_target() const
+    {
+        // weirdness: for historical reasons, we use this static string to
+        // indicate validity. Sometimes only a branch is set on the travel
+        // dest? I'm not entirely sure what's going on here.
+        return (prompt_flags & TPF_REMEMBER_TARGET)
+            && !trans_travel_dest.empty()
+            && def_target.id.branch >= 0;
     }
 
     void set_waypoint_result(int waypoint)
@@ -2179,28 +2205,33 @@ public:
 
     void refresh_prompt()
     {
-        string shortcuts = "(";
+        vector<string> segs;
+
+        // given limited space, be selective about what is actually shown
+        // in the prompt itself
+        // XX convert this to keyhints in a more?
+        if (travel_mode == Mode::altars)
+            segs.emplace_back("_ - list branches");
+        else if (travel_mode == Mode::waypoints)
+            segs.emplace_back("* - list branches");
+        else if (mode_allowed(Mode::waypoints))
+            segs.emplace_back("* - list waypoints");
+
+        if (has_default_target())
         {
+            segs.push_back(make_stringf("%s - %s",
+                    (in_prompt_mode || !is_set(MF_ARROWS_SELECT))
+                        ? "Tab/Enter" : "Tab",
+                    _get_trans_travel_dest(def_target).c_str()));
+        }
 
-            vector<string> segs;
-            if (prompt_flags & TPF_ALLOW_WAYPOINTS)
-            {
-                if (waypoint_list)
-                    segs.emplace_back("* - list branches");
-                else if (travel_cache.get_waypoint_count())
-                    segs.emplace_back("* - list waypoints");
-            }
-
-            if (!trans_travel_dest.empty()
-                                    && (prompt_flags & TPF_REMEMBER_TARGET))
-            {
-                segs.push_back(make_stringf(
-                        (in_prompt_mode ? "Enter - %s" : "Tab - %s"),
-                        trans_travel_dest.c_str()));
-            }
-
+        if (!(prompt_flags & TPF_SHOW_ALL_BRANCHES))
             segs.emplace_back("? - help");
 
+        string shortcuts;
+        if (!segs.empty())
+        {
+            shortcuts = "(";
             shortcuts += comma_separated_line(segs.begin(), segs.end(),
                                               ", ", ", ");
             shortcuts += ") ";
@@ -2208,12 +2239,50 @@ public:
         set_title(make_stringf("Where to? %s", shortcuts.c_str()));
     }
 
+    bool seen_altars() const
+    {
+        extern map<level_pos, god_type> altars_present;
+
+        return !altars_present.empty();
+    }
+
+    array<level_pos, NUM_GODS> find_nearest_altars() const
+    {
+        array<level_pos, NUM_GODS> nearest_altars;
+
+        extern map<level_pos, god_type> altars_present;
+        const level_id curr = level_id::current();
+
+        for (const auto &entry : altars_present)
+        {
+            // This is necessary because faded altars (i.e., GOD_ECUMENICAL)
+            // are also recorded in altars_present
+            // XX travel to faded altar?
+            if (entry.second >= NUM_GODS)
+                continue;
+
+            int dist = level_distance(curr, entry.first.id);
+            if (dist == -1)
+                continue;
+
+            level_pos &best = nearest_altars[entry.second];
+            int old_dist = best.id.is_valid()
+                ? level_distance(curr, best.id)
+                : INT_MAX;
+
+            if (dist < old_dist)
+                best = entry.first;
+        }
+        return nearest_altars;
+    }
+
     void populate_menu()
     {
         clear();
         refresh_prompt();
+        int def_choice = 0;
 
-        if (waypoint_list)
+        if (travel_mode == Mode::waypoints)
         {
             vector<string> wdescs = travel_cache.get_waypoint_descs();
             // if this ever shows >10 waypoints, hotkeys would need some
@@ -2231,7 +2300,51 @@ public:
                 add_entry(wp_entry);
             }
         }
-        else
+        else if (travel_mode == Mode::altars)
+        {
+            const auto nearest_altars = find_nearest_altars();
+
+            // list gods in the same order as dgn-overview.cc lists them.
+            vector<god_type> god_list = temple_god_list();
+            vector<god_type> nt_god_list = nontemple_god_list();
+            god_list.insert(god_list.end(), nt_god_list.begin(), nt_god_list.end());
+
+            for (const god_type god : god_list)
+            {
+                if (!nearest_altars[god].is_valid() || is_unavailable_god(god))
+                    continue;
+
+                // "The Shining One" is too long for the prompt mode version of
+                // this to keep 4 columns, which will push it into too many
+                // lines. XX: may be better to force menu for this case? (Or
+                // remove the mode?)
+                string altar_name;
+                if (in_prompt_mode && god == GOD_SHINING_ONE)
+                    altar_name = "TSO";
+                else
+                    altar_name  = god_name(god);
+                char god_initial = god == GOD_SHINING_ONE ? '1'   : altar_name.at(0);
+
+                level_pos altar_target = nearest_altars[god];
+
+                // XX this menu would be more useful if it showed the target
+                // branch
+                MenuEntry *altar_entry = new MenuEntry(altar_name, god_initial,
+                    [this, altar_target](const MenuEntry&)
+                    {
+                        result = ID_ALTAR;
+                        altar_result = altar_target;
+                        return false;
+                    });
+                // why do we keep the uppercase around? not sure it matters much
+                const auto shortcut = tolower_safe(god_initial);
+                if (shortcut != god_initial)
+                    altar_entry->add_hotkey(shortcut);
+
+                add_entry(altar_entry);
+            }
+        }
+        else // Mode::normal
         {
             for (const branch_type &br : prompt_branches)
             {
@@ -2248,9 +2361,13 @@ public:
                 if (shortcut != branches[br].travel_shortcut)
                     br_entry->add_hotkey(shortcut);
                 add_entry(br_entry);
+                if (has_default_target() && def_target.id.branch == br)
+                    def_choice = items.size() - 1;
             }
         }
         update_menu(true);
+        if (def_choice >= 0)
+            set_hovered(def_choice);
     }
 
     vector<MenuEntry *> show_in_msgpane() override
@@ -2261,7 +2378,6 @@ public:
         return PromptMenu::show_in_msgpane();
     }
 
-
     bool process_key(int keyin) override
     {
         const bool allow_updown = (prompt_flags & TPF_ALLOW_UPDOWN);
@@ -2271,18 +2387,26 @@ public:
         switch (keyin)
         {
         case '?':
-            show_interlevel_travel_branch_help();
+            // standard help doesn't make much sense for this version
+            if (prompt_flags & TPF_SHOW_ALL_BRANCHES)
+                return true;
+            if (travel_mode == Mode::altars)
+                show_interlevel_travel_altar_help();
+            else
+                show_interlevel_travel_branch_help();
             return true;
         case '_':
-            result = ID_ALTAR;
-            return false;
+            if (!mode_allowed(Mode::altars))
+                return true;
+            travel_mode = travel_mode == Mode::altars ? Mode::normal : Mode::altars;
+            populate_menu();
+            return true;
         case '\n': case '\r':
-            if (ui_is_initialized())
-                break; // awkwardness: this shortcut doesn't work in menu form
+            if (ui_is_initialized() && is_set(MF_ARROWS_SELECT))
+                break; // awkwardness: this shortcut doesn't work in normal menu form
         case '\t':
-            if (prompt_flags & TPF_REMEMBER_TARGET)
+            if (has_default_target())
             {
-                // awkwardness: this shortcut doesn't work in menu form
                 result = ID_REPEAT;
                 return false;
             }
@@ -2307,16 +2431,16 @@ public:
             result = curr.branch;
             return false;
         case '*':
-            cycle_mode();
+            if (!mode_allowed(Mode::waypoints))
+                return true;
+            travel_mode = travel_mode == Mode::waypoints ? Mode::normal : Mode::waypoints;
+            populate_menu();
             return true;
-            break;
         }
 
         // in order to let waypoint hotkeys work in both modes, we short-circuit
         // the superclass key processing here
-        if ((prompt_flags & TPF_ALLOW_WAYPOINTS)
-            && travel_cache.get_waypoint_count()
-            && keyin >= '0' && keyin <= '9')
+        if (mode_allowed(Mode::waypoints) && keyin >= '0' && keyin <= '9')
         {
             set_waypoint_result(keyin - '0');
             if (result != ID_CANCEL)
@@ -2328,12 +2452,24 @@ public:
         return PromptMenu::process_key(keyin);
     }
 
-    bool cycle_mode(bool=true) override
+    bool cycle_mode(bool forward=true) override
     {
-        if (!(prompt_flags & TPF_ALLOW_WAYPOINTS) || !travel_cache.get_waypoint_count())
-            return false;
+        vector<Mode> modes = { Mode::normal };
+        // somewhat non-general code...
+        if (mode_allowed(Mode::waypoints))
+            modes.push_back(Mode::waypoints);
+        if (mode_allowed(Mode::altars))
+            modes.push_back(Mode::altars);
 
-        waypoint_list = !waypoint_list;
+        while (travel_mode != modes.front())
+            rotate(modes.begin(), modes.begin() + 1, modes.end());
+
+        if (forward)
+            rotate(modes.begin(), modes.begin() + 1, modes.end());
+        else
+            rotate(modes.rbegin(), modes.rbegin() + 1, modes.rend());
+
+        travel_mode = modes.front();
         populate_menu();
         return true;
     }
@@ -2348,148 +2484,13 @@ public:
     }
 
     int result;
+    level_pos altar_result; // XX consolidate?
     int prompt_flags;
-    bool waypoint_list;
+    Mode travel_mode;
+    level_pos def_target;
+    string def_target_name;
     vector<branch_type> prompt_branches;
 };
-
-static int _prompt_travel_branch(int prompt_flags)
-{
-    TravelPromptMenu pm(prompt_flags);
-    // Don't kill the prompt even if the only branch we know is the main dungeon
-    // This keeps things consistent for the player.
-    // XX I can't figure out how the above comment relates to this check..
-    if (pm.prompt_branches.size() < 1)
-        return BRANCH_DUNGEON;     // Default
-    return pm.run(); // XX waypoints
-}
-
-static god_type _god_from_initial(const char god_initial)
-{
-    switch (toupper_safe(god_initial))
-    {
-        case '1': return GOD_SHINING_ONE;
-        case 'A': return GOD_ASHENZARI;
-        case 'B': return GOD_BEOGH;
-        case 'C': return GOD_CHEIBRIADOS;
-        case 'D': return GOD_DITHMENOS;
-        case 'E': return GOD_ELYVILON;
-        case 'F': return GOD_FEDHAS;
-        case 'G': return GOD_GOZAG;
-        case 'H': return GOD_HEPLIAKLQANA;
-        case 'I': return GOD_IGNIS;
-        case 'J': return GOD_JIYVA;
-        case 'K': return GOD_KIKUBAAQUDGHA;
-        case 'L': return GOD_LUGONU;
-        case 'M': return GOD_MAKHLEB;
-        case 'N': return GOD_NEMELEX_XOBEH;
-        case 'O': return GOD_OKAWARU;
-#if TAG_MAJOR_VERSION == 34
-        case 'P': return GOD_PAKELLAS;
-#endif
-        case 'Q': return GOD_QAZLAL;
-        case 'R': return GOD_RU;
-        case 'S': return GOD_SIF_MUNA;
-        case 'T': return GOD_TROG;
-        case 'U': return GOD_USKAYAW;
-        case 'V': return GOD_VEHUMET;
-        case 'W': return GOD_WU_JIAN;
-        case 'X': return GOD_XOM;
-        case 'Y': return GOD_YREDELEMNUL;
-        case 'Z': return GOD_ZIN;
-        default:  return GOD_NO_GOD;
-    }
-}
-
-static level_pos _prompt_travel_altar()
-{
-    extern map<level_pos, god_type> altars_present;
-
-    if (altars_present.empty())
-        return level_pos();
-
-    level_pos nearest_altars[NUM_GODS];
-    const level_id curr = level_id::current();
-
-    // Populate nearest_altars[] with nearest altars
-    for (const auto &entry : altars_present)
-    {
-        // This is necessary because faded altars (i.e., GOD_ECUMENICAL)
-        // are also recorded in altars_present
-        if (entry.second >= NUM_GODS)
-            continue;
-
-        int dist = level_distance(curr, entry.first.id);
-        if (dist == -1)
-            continue;
-
-        level_pos *best = &nearest_altars[entry.second];
-        int old_dist = best->id.is_valid() ? level_distance(curr, best->id) : INT_MAX;
-
-        if (dist < old_dist)
-            *best = entry.first;
-    }
-
-    while (true)
-    {
-        clear_messages();
-
-        int col = 0;
-        string line;
-        string altar_name;
-        char god_initial;
-        vector<god_type> god_list = temple_god_list();
-        vector<god_type> nt_god_list = nontemple_god_list();
-        god_list.insert(god_list.end(), nt_god_list.begin(), nt_god_list.end());
-
-        // list gods in the same order as dgn-overview.cc lists them.
-        for (const god_type god : god_list)
-        {
-            if (!nearest_altars[god].is_valid())
-                continue;
-
-            if (is_unavailable_god(god))
-                continue;
-
-            // "The Shining One" is too long to keep the same G menu layout
-            altar_name  = god == GOD_SHINING_ONE ? "TSO" : god_name(god);
-            god_initial = god == GOD_SHINING_ONE ? '1'   : altar_name.at(0);
-
-            if (col == 4)
-            {
-                col = 0;
-                mpr(line);
-                line = "";
-            }
-            line += make_stringf("(%c) %-14s ", god_initial, altar_name.c_str());
-            ++col;
-        }
-        if (!line.empty())
-            mpr(line);
-
-        mprf(MSGCH_PROMPT, "Go to which altar? (? - help) ");
-
-        int keyin = get_ch();
-        if (ui::key_exits_popup(keyin, false))
-            return level_pos();
-        switch (keyin)
-        {
-            case '?':
-                show_interlevel_travel_altar_help();
-                redraw_screen();
-                update_screen();
-                break;
-            case '\n': case '\r':
-                return level_target;
-            default:
-                const level_pos altar_pos = nearest_altars[_god_from_initial(keyin)];
-                if (altar_pos.is_valid())
-                    return altar_pos;
-
-                return level_pos();
-        }
-    }
-}
 
 level_id find_up_level(level_id curr, bool up_branch)
 {
@@ -2693,18 +2694,31 @@ static level_pos _travel_depth_munge(int munge_method, const string &s,
     return result;
 }
 
-static level_pos _prompt_travel_depth(const level_id &id)
+static level_pos _prompt_travel_depth(const level_id &id, bool remember_targ)
 {
+    // TODO: incorporate into TravelPromptMenu?
     level_pos target = level_pos(id);
 
     // Handle one-level branches by not prompting.
     if (single_level_branch(target.id.branch))
         return level_pos(level_id(target.id.branch, 1));
 
-    target.id.depth = _get_nearest_level_depth(target.id.branch);
+    // if there's a previous target, and we are going to that branch again,
+    // use the previous target depth as the default
+    if (level_target.id.is_valid() && remember_targ
+        && level_target.id.branch == target.id.branch)
+    {
+        target.id.depth = level_target.id.depth;
+    }
+    else // otherwise, use the nearest level
+        target.id.depth = _get_nearest_level_depth(target.id.branch);
+
+    clear_messages();
+    msgwin_temporary_mode temp;
+
     while (true)
     {
-        clear_messages();
+        msgwin_clear_temporary();
         mprf(MSGCH_PROMPT, "What level of %s? "
              "(default %s, ? - help) ",
              branches[target.id.branch].longname,
@@ -2728,20 +2742,27 @@ static level_pos _prompt_travel_depth(const level_id &id)
 level_pos prompt_translevel_target(int prompt_flags, string& dest_name)
 {
     level_pos target;
-    int branch = _prompt_travel_branch(prompt_flags);
     const bool remember_targ = (prompt_flags & TPF_REMEMBER_TARGET);
+    int menu_result = BRANCH_DUNGEON;
 
-    if (branch == ID_CANCEL)
+    TravelPromptMenu pm(prompt_flags);
+    // Don't kill the prompt even if the only branch we know is the main dungeon
+    // This keeps things consistent for the player.
+    // XX I can't figure out how the above comment relates to this check..
+    if (pm.prompt_branches.size() > 0)
+        menu_result = pm.run();
+
+    if (menu_result == ID_CANCEL)
         return target;
 
-    if (branch == ID_ALTAR)
-        return _prompt_travel_altar();
+    if (menu_result == ID_ALTAR)
+        return pm.altar_result;
 
     // If user chose to repeat last travel, return that.
-    if (branch == ID_REPEAT)
+    if (menu_result == ID_REPEAT)
         return level_target;
 
-    if (branch == ID_UP)
+    if (menu_result == ID_UP)
     {
         target = _find_up_level();
         if (target.id.depth > 0 && remember_targ)
@@ -2749,7 +2770,7 @@ level_pos prompt_translevel_target(int prompt_flags, string& dest_name)
         return target;
     }
 
-    if (branch == ID_DOWN)
+    if (menu_result == ID_DOWN)
     {
         target = _find_down_level();
         if (target.id.depth > 0 && remember_targ)
@@ -2757,18 +2778,20 @@ level_pos prompt_translevel_target(int prompt_flags, string& dest_name)
         return target;
     }
 
-    if (branch < 0)
+    // XX make less hacky
+    if (menu_result < 0) // any other negative val should be a waypoint
     {
-        target = travel_cache.get_waypoint(-branch - 1);
+        target = travel_cache.get_waypoint(-menu_result - 1);
         if (target.id.depth > 0 && remember_targ)
             dest_name = _get_trans_travel_dest(target);
         return target;
     }
 
-    target.id.branch = static_cast<branch_type>(branch);
+    // otherwise, menu_result is a branch
+    target.id.branch = static_cast<branch_type>(menu_result);
 
     // User's chosen a branch, so now we ask for a level.
-    target = _prompt_travel_depth(target.id);
+    target = _prompt_travel_depth(target.id, remember_targ);
 
     if (target.id.depth < 1
         || target.id.depth > brdepth[target.id.branch])

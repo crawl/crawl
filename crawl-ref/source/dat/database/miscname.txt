@@ -104,10 +104,6 @@ terrific
 transcendent
 
 wondrous
-
-w:1
-pretty good
-
 %%%%
 welcome_spam
 

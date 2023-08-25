@@ -45,6 +45,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-clouds.h" // big_cloud
 #include "spl-goditem.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -1114,13 +1115,6 @@ static bool _init_frag_player(frag_effect &effect)
         effect.colour     = mons_class_colour(player_mons(true));
         return true;
     }
-    if (you.form == transformation::ice_beast)
-    {
-        effect.name       = "icy blast";
-        effect.colour     = WHITE;
-        effect.damage     = frag_damage_type::ice;
-        return true;
-    }
     return false;
 }
 
@@ -1542,9 +1536,7 @@ static int _shatter_player_dice()
         return 1;
     if (you.petrified() || you.petrifying())
         return 6; // reduced later by petrification's damage reduction
-    else if (you.form == transformation::statue
-             || you.form == transformation::ice_beast
-             || you.species == SP_GARGOYLE)
+    else if (you.form == transformation::statue || you.species == SP_GARGOYLE)
         return 6;
     else if (you.airborne())
         return 1;
@@ -1749,8 +1741,12 @@ void shillelagh(actor *wielder, coord_def where, int pow)
 
 dice_def scorch_damage(int pow, bool random)
 {
-    const int max_dam = 10 + (random ? div_rand_round(pow, 6) : pow / 6);
-    return calc_dice(2, max_dam);
+    if (random)
+    {
+        const int max_dam = 10 + div_rand_round(pow, 6);
+        return calc_dice(2, max_dam);
+    }
+    return dice_def(2, (10 + pow / 6) / 2);
 }
 
 static void _animate_scorch(coord_def p)
@@ -2629,10 +2625,10 @@ vector<coord_def> arcjolt_targets(const actor &agent, bool actual)
     to_check.push_back(agent.pos());
     seen.insert(agent.pos());
 
-    for (adjacent_iterator ai(agent.pos()); ai; ++ai)
+    for (radius_iterator ri(agent.pos(), 2, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
     {
-        to_check.push_back(*ai);
-        seen.insert(*ai);
+        to_check.push_back(*ri);
+        seen.insert(*ri);
     }
 
     while (!to_check.empty())
@@ -2644,12 +2640,14 @@ vector<coord_def> arcjolt_targets(const actor &agent, bool actual)
             const bool seen_act = act && (actual || agent.can_see(*act));
             if (!seen_act
                 || act == &agent
-                || act->res_elec() >= 3
-                || act->is_monster()
-                   && mons_is_projectile(*act->as_monster()))
+                || act->res_elec() >= 3)
             {
                 continue;
             }
+
+            const monster* mon = act->as_monster();
+            if (mon && (mons_is_projectile(*mon) || god_protects(&agent, mon)))
+                continue;
 
             targets.push_back(p);
 
@@ -2709,9 +2707,6 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
             continue;
 
         monster* mon = act->as_monster();
-        if (mon && god_protects(&agent, mon, false))
-            continue;
-
         const int rolled_dam = arcjolt_damage(pow, true).roll();
         const int post_ac_dam = max(0, act->apply_ac(rolled_dam, 0,
                                                      ac_type::half));
@@ -2867,7 +2862,7 @@ static ai_action::goodness _fire_plasma_beam_at(const actor &agent, int pow,
     beam.draw_delay   = 5;
     beam.foe_ratio    = 80; // default
     beam.is_tracer    = tracer;
-    zappy(ZAP_LIGHTNING_BOLT, pow, mon, beam);
+    zappy(ZAP_PLASMA_LIGHTNING, pow, mon, beam);
     beam.fire();
     const ai_action::goodness fire_good = beam.good_to_fire();
 
@@ -4375,17 +4370,21 @@ static void _discharge_maxwells_coupling()
     // XX the messaging and corpse logic here would be better handled in
     // monster_die, so that various special cases (e.g. dancing weapons in
     // the abyss) can get clear but non-redundant handling
+    const coord_def pos = mon->pos();
     const bool goldify = mons_will_goldify(*mon);
     if (goldify)
         simple_monster_message(*mon, " vaporises and condenses as gold!");
     else
+    {
         simple_monster_message(*mon, " vaporises in an electric haze!");
+        big_cloud(CLOUD_ELECTRICITY, &you, pos, random_range(4, 8), random_range(8, 12));
+    }
 
-    const coord_def pos = mon->pos();
     item_def* corpse = monster_die(*mon, KILL_YOU,
                                     actor_to_death_source(&you));
     if (corpse && !goldify)
         destroy_item(corpse->index());
+
 
     noisy(spell_effect_noise(SPELL_MAXWELLS_COUPLING), pos, you.mid);
 }
@@ -4489,4 +4488,15 @@ spret cast_noxious_bog(int pow, bool fail)
     mpr("You spew toxic sludge!");
 
     return spret::success;
+}
+
+int siphon_essence_range() { return 2; }
+
+bool siphon_essence_affects(const monster &m)
+{
+    return !m.wont_attack()
+        && !m.res_torment()
+        && !mons_is_conjured(m.type) // redundant?
+        && !mons_is_tentacle_or_tentacle_segment(m.type); // dubious
+        // intentionally allowing firewood, i guess..?
 }

@@ -342,7 +342,7 @@ void trj_spawn_fineff::fire()
         ? attitude_creation_behavior(trj->as_monster()->attitude)
         : BEH_HOSTILE;
 
-    // No permanent friendly jellies from an enslaved TRJ.
+    // No permanent friendly jellies from a charmed TRJ.
     if (spawn_beh == BEH_FRIENDLY && !crawl_state.game_is_arena())
         return;
 
@@ -626,7 +626,7 @@ void kirke_death_fineff::fire()
 
     // Revert the player last
     if (you.form == transformation::pig)
-        untransform();
+        return_to_default_form();
 }
 
 void rakshasa_clone_fineff::fire()
@@ -702,37 +702,38 @@ void infestation_death_fineff::fire()
 
 void make_derived_undead_fineff::fire()
 {
-    if (monster *undead = create_monster(mg))
+    monster *undead = create_monster(mg);
+    if (!undead)
+        return;
+
+    if (!message.empty() && you.can_see(*undead))
+        mpr(message);
+
+    // If the original monster has been levelled up, its HD might be
+    // different from its class HD, in which case its HP should be
+    // rerolled to match.
+    if (undead->get_experience_level() != experience_level)
     {
-        if (!message.empty() && you.can_see(*undead))
-            mpr(message);
-
-        // If the original monster has been levelled up, its HD might be
-        // different from its class HD, in which case its HP should be
-        // rerolled to match.
-        if (undead->get_experience_level() != experience_level)
-        {
-            undead->set_hit_dice(max(experience_level, 1));
-            roll_zombie_hp(undead);
-        }
-
-        // Fix up custom names
-        if (!mg.mname.empty())
-            name_zombie(*undead, mg.base_type, mg.mname);
-
-        if (mg.god != GOD_YREDELEMNUL)
-        {
-            if (undead->type == MONS_ZOMBIE)
-                undead->props[ANIMATE_DEAD_KEY] = true;
-            else
-            {
-                int dur = undead->type == MONS_SKELETON ? 3 : 5;
-                undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
-            }
-        }
-        if (!agent.empty())
-            mons_add_blame(undead, "animated by " + agent);
+        undead->set_hit_dice(max(experience_level, 1));
+        roll_zombie_hp(undead);
     }
+
+    // Fix up custom names
+    if (!mg.mname.empty())
+        name_zombie(*undead, mg.base_type, mg.mname);
+
+    if (mg.god != GOD_YREDELEMNUL)
+    {
+        if (undead->type == MONS_ZOMBIE)
+            undead->props[ANIMATE_DEAD_KEY] = true;
+        else
+        {
+            int dur = undead->type == MONS_SKELETON ? 3 : 5;
+            undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
+        }
+    }
+    if (!agent.empty())
+        mons_add_blame(undead, "animated by " + agent);
 }
 
 const actor *mummy_death_curse_fineff::fixup_attacker(const actor *a)

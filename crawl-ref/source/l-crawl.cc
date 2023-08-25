@@ -929,11 +929,11 @@ static int crawl_split(lua_State *ls)
 
 /*** Compare two strings in a locale-independent way.
  * Lua's built in comparison operations for strings are dependent on locale,
- * which isn't always desireable. This is just a wrapper on
+ * which isn't always desirable. This is just a wrapper on
  * std::basic_string::compare.
  *
  * @tparam string s1 the first string.
- * @tparam string s2 the second sring.
+ * @tparam string s2 the second string.
  * @treturn number -1 if s1 < s2, 1 if s2 < s1, 0 if s1 == s2.
  * @function string_compare
  */
@@ -1271,7 +1271,6 @@ static int crawl_get_command(lua_State *ls)
     return 1;
 }
 
-LUAWRAP(crawl_endgame, screen_end_game(luaL_checkstring(ls, 1)))
 LUAWRAP(crawl_tutorial_skill, set_tutorial_skill(luaL_checkstring(ls, 1), luaL_safe_checkint(ls, 2)))
 LUAWRAP(crawl_tutorial_hint, tutorial_init_hint(luaL_checkstring(ls, 1)))
 LUAWRAP(crawl_print_hint, print_hint(luaL_checkstring(ls, 1), luaL_optstring(ls, 2, ""), luaL_optstring(ls, 3, "")))
@@ -1507,7 +1506,6 @@ static const struct luaL_reg crawl_clib[] =
     { "is_webtiles",        crawl_is_webtiles },
     { "err_trace",          crawl_err_trace },
     { "get_command",        crawl_get_command },
-    { "endgame",            crawl_endgame },
     { "tutorial_msg",       crawl_tutorial_msg },
     { "dump_char",          crawl_dump_char },
 #ifdef WIZARD
@@ -1689,7 +1687,7 @@ LUAFN(_crawl_unavailable_god)
 /*** Divine voices.
  * @within dlua
  * @tparam string Name of a current crawl god.
- * @tparam string Speach
+ * @tparam string Speech
  * @function god_speaks
  */
 LUAFN(_crawl_god_speaks)

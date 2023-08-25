@@ -1273,14 +1273,13 @@ COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
   {  1,  27,  100, FLAT, MONS_FIRE_BAT },\
   {  1,  27,  100, FLAT, MONS_FIRE_ELEMENTAL },\
   {  1,  27,   50, FLAT, MONS_MOLTEN_GARGOYLE },\
-  {  1,  27,   50, FLAT, MONS_FIRE_VORTEX },\
   {  1,  27,  145, FLAT, MONS_LAVA_SNAKE },\
   {  1,  27,   15, FLAT, MONS_SALAMANDER },\
-  {  1,  27,  290, FLAT, MONS_NO_MONSTER },\
+  {  1,  27,  340, FLAT, MONS_NO_MONSTER },\
 }
 
 #define HELL_LAVA_POP {\
-  {  1,  8,   300, FALL, MONS_FIRE_VORTEX },\
+  {  1,  8,   300, FALL, MONS_NO_MONSTER }, \
   {  1,  7,    50, RISE, MONS_STOKER },\
   {  1,  7,    50, FLAT, MONS_CREEPING_INFERNO },\
   {  1,  7,   100, FLAT, MONS_NO_MONSTER },\
@@ -1291,7 +1290,6 @@ COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
 #define DEPTHS_LAVA_POP {\
   {  1,  6,   22, FALL, MONS_FIRE_ELEMENTAL },\
   {  1,  6,   22, FALL, MONS_FIRE_BAT },\
-  {  1,  6,   11, FALL, MONS_FIRE_VORTEX },\
   {  1,  6,   11, FALL, MONS_MOLTEN_GARGOYLE },\
   {  1,  6,   60, FLAT, MONS_SALAMANDER },\
   {  1,  8,   85, SEMI, MONS_SALAMANDER_MYSTIC },\
@@ -1304,9 +1302,9 @@ static const vector<pop_entry> population_lava[] =
 {
     { // Dungeon lava monsters
       {  7,  27,  145, FLAT, MONS_LAVA_SNAKE },
-      {  11, 27,  290, RISE, MONS_FIRE_ELEMENTAL },
+      {  11, 27,  360, RISE, MONS_FIRE_ELEMENTAL },
       {  11, 27,  145, RISE, MONS_MOLTEN_GARGOYLE },
-      {  11, 27,  145, RISE, MONS_FIRE_VORTEX },
+      {  11, 27,   75, RISE, MONS_NO_MONSTER },
       {  7,  27,  290, FLAT, MONS_NO_MONSTER },
     },
     GENERIC_LAVA_POP, // Temple

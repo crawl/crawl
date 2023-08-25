@@ -594,6 +594,11 @@ static const duration_def duration_data[] =
       "You are reanimating the dead.", D_DISPELLABLE | D_EXPIRES,
       {{ "Your reaping aura expires.", _end_animate_dead },
       { "Your reaping aura is weakening.", 1 }}, 6},
+    { DUR_SIPHON_COOLDOWN,
+      YELLOW, "-Siphon",
+      "on siphon cooldown", "siphon cooldown",
+      "You are unable to siphon essence.", D_NO_FLAGS,
+      {{ "You are ready to siphon essence again." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

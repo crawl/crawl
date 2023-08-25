@@ -244,6 +244,7 @@ boulder_beetle_rolling2
 ## Frogs ('F')
 %sdir mon/unique
 prince_ribbit MONS_PRINCE_RIBBIT
+jeremiah MONS_JEREMIAH
 %rim 1
 %sdir mon/animals
 bullfrog MONS_BULLFROG
@@ -600,7 +601,7 @@ margery MONS_MARGERY
 maurice MONS_MAURICE
 %rim 0
 nikola MONS_NIKOLA
-%rim 0
+norris MONS_NORRIS
 psyche MONS_PSYCHE
 rupert MONS_RUPERT
 sigmund MONS_SIGMUND
@@ -1232,9 +1233,10 @@ misc/unseen PLAYER
 ## Transformations
 %sdir player/transform
 bat_form TRAN_BAT
+beast_form TRAN_BEAST
 spider_form TRAN_SPIDER
 pig_form TRAN_PIG
-ice_form TRAN_ICE_BEAST
+anaconda_form TRAN_ANACONDA
 statue_form_humanoid TRAN_STATUE_HUMANOID
 %syn TRAN_STATUE_EQUIP_FIRST
 statue_form_palentonga TRAN_STATUE_ARMATAUR
@@ -1244,7 +1246,6 @@ statue_form_djinni TRAN_STATUE_DJINN
 %syn TRAN_STATUE_EQUIP_LAST
 statue_form_felid TRAN_STATUE_FELID
 dragon_form TRAN_DRAGON
-dragon_form_red TRAN_DRAGON_RED
 dragon_form_white TRAN_DRAGON_WHITE
 dragon_form_green TRAN_DRAGON_GREEN
 dragon_form_yellow TRAN_DRAGON_YELLOW
@@ -1252,6 +1253,7 @@ dragon_form_grey TRAN_DRAGON_GREY
 dragon_form_black TRAN_DRAGON_BLACK
 dragon_form_purple TRAN_DRAGON_PURPLE
 dragon_form_pale TRAN_DRAGON_PALE
+dragon_form_felid TRAN_DRAGON_FELID
 lich_form_humanoid TRAN_LICH_HUMANOID
 %syn TRAN_LICH_EQUIP_FIRST
 lich_form_palentonga TRAN_LICH_ARMATAUR

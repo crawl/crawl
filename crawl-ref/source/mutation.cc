@@ -31,7 +31,7 @@
 #include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
-#include "melee-attack.h" // aux_attack_desc
+#include "melee-attack.h" // mut_aux_attack_desc
 #include "menu.h"
 #include "message.h"
 #include "mon-place.h"
@@ -164,24 +164,14 @@ vector<mutation_type> get_removed_mutations()
  */
 static const int conflict[][3] =
 {
-#if TAG_MAJOR_VERSION == 34
-    { MUT_REGENERATION,        MUT_SLOW_METABOLISM,         0},
-#endif
     { MUT_REGENERATION,        MUT_INHIBITED_REGENERATION,  0},
     { MUT_FAST,                MUT_SLOW,                    0},
-#if TAG_MAJOR_VERSION == 34
-    { MUT_STRONG_STIFF,        MUT_FLEXIBLE_WEAK,           1},
-#endif
     { MUT_STRONG,              MUT_WEAK,                    1},
     { MUT_CLEVER,              MUT_DOPEY,                   1},
     { MUT_AGILE,               MUT_CLUMSY,                  1},
     { MUT_ROBUST,              MUT_FRAIL,                   1},
     { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,               1},
     { MUT_WILD_MAGIC,          MUT_SUBDUED_MAGIC,           1},
-#if TAG_MAJOR_VERSION == 34
-    { MUT_CARNIVOROUS,         MUT_HERBIVOROUS,             1},
-    { MUT_SLOW_METABOLISM,     MUT_FAST_METABOLISM,         1},
-#endif
     { MUT_REGENERATION,        MUT_INHIBITED_REGENERATION,  1},
     { MUT_BERSERK,             MUT_CLARITY,                 1},
     { MUT_FAST,                MUT_SLOW,                    1},
@@ -200,8 +190,10 @@ static const int conflict[][3] =
     { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY,     -1},
     { MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY,    -1},
     { MUT_STRONG_WILLED,       MUT_WEAK_WILLED,            -1},
+#if TAG_MAJOR_VERSION == 34
     { MUT_NO_REGENERATION,     MUT_INHIBITED_REGENERATION, -1},
     { MUT_NO_REGENERATION,     MUT_REGENERATION,           -1},
+#endif
     { MUT_HP_CASTING,          MUT_HIGH_MAGIC,             -1},
     { MUT_HP_CASTING,          MUT_LOW_MAGIC,              -1},
 };
@@ -418,6 +410,9 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         return mutation_activity_type::INACTIVE;
 
     if (mut == MUT_DEMONIC_GUARDIAN && you.allies_forbidden())
+        return mutation_activity_type::INACTIVE;
+
+    if (mut == MUT_ROLLPAGE && you_worship(GOD_WU_JIAN))
         return mutation_activity_type::INACTIVE;
 
     if (mut == MUT_NIMBLE_SWIMMER)
@@ -705,15 +700,6 @@ static string _terse_mut_name(mutation_type mut)
     return current;
 }
 
-// TODO: reimplement other form quirks as mutations, generalize this idea?
-static bool _is_appendage_mutation(mutation_type mut)
-{
-    for (auto app : you.props[APPENDAGE_KEY].get_vector())
-        if (mut == static_cast<mutation_type>(app.get_int()))
-            return true;
-    return false;
-}
-
 static vector<string> _get_form_fakemuts(bool terse)
 {
     vector<string> result;
@@ -723,16 +709,6 @@ static vector<string> _get_form_fakemuts(bool terse)
     // % is shown right below a line which includes the form name.
     if (!terse)
         result.push_back(_formmut(form->get_description()));
-    else if (you.form == transformation::appendage)
-    {
-        // terse mode: these mutations are skipped later, so add the short
-        // forms here. The appendage description covers the long form case.
-        for (auto app : you.props[APPENDAGE_KEY].get_vector())
-        {
-            result.push_back(_terse_mut_name(
-                            static_cast<mutation_type>(app.get_int())));
-        }
-    }
 
     for (const auto &p : form->get_fakemuts(terse))
         if (!p.empty())
@@ -763,14 +739,18 @@ static vector<string> _get_form_fakemuts(bool terse)
     else if (form->player_can_swim() && !you.can_swim(true)) // n.b. this could cause issues for non-dragon giant forms if they exist
         result.push_back(terse ? "amphibious" : _formmut("You are amphibious."));
 
-    if (form->hp_mod > 10)
+    const int hp_mod = form->mult_hp(10);
+    if (hp_mod > 10)
     {
         result.push_back(terse ? "boosted hp"
             : _formmut(make_stringf("Your maximum health is %sincreased.",
-                form->hp_mod < 13 ? "" : "greatly ")));
+                hp_mod < 13 ? "" : "greatly ")));
     }
-    else if (form->hp_mod < 10)
-        result.push_back(terse ? "reduced hp" : _badmut("Your maximum health is decreased."));
+    else if (hp_mod < 10)
+        result.push_back(terse ? "reduced hp"
+            : _badmut(make_stringf("Your maximum health is decreased%s.",
+                form->underskilled() ? ", since you lack skill for your form"
+                    : "")));
 
     // immunity comes from form
     if (!terse && player_res_poison(false, true, false) == 3
@@ -782,12 +762,8 @@ static vector<string> _get_form_fakemuts(bool terse)
     }
 
     // bad stuff
-    if (!terse
-        && (form->spellcasting_penalty > 0
-            || you.form == transformation::shadow)) // hard-coded effect
-    {
+    if (!terse && you.form == transformation::shadow) // hard-coded effect
         result.push_back(_badmut("Your spellcasting is less reliable in this form."));
-    }
 
     // XX say something about AC? Best would be to compare it to AC without
     // the form, but I'm not sure if that's possible
@@ -996,7 +972,7 @@ static vector<mutation_type> _get_ordered_mutations()
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
         mutation_type mut = static_cast<mutation_type>(i);
-        if (!_is_appendage_mutation(mut) && you.has_innate_mutation(mut))
+        if (you.has_innate_mutation(mut))
             muts.push_back(mut);
     }
 
@@ -1004,8 +980,7 @@ static vector<mutation_type> _get_ordered_mutations()
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
         mutation_type mut = static_cast<mutation_type>(i);
-        if (!_is_appendage_mutation(mut)
-            && you.get_base_mutation_level(mut, false, false, true) > 0
+        if (you.get_base_mutation_level(mut, false, false, true) > 0
             && !you.has_innate_mutation(mut)
             && !you.has_temporary_mutation(mut))
         {
@@ -1505,7 +1480,7 @@ static string _mut_blocks_item_reason(const item_def &item, mutation_type mut, i
     case EQ_BOOTS:
         if (mut == MUT_FLOAT)
             return "You have no feet!"; // or legs
-        if (level < 3)
+        if (level < 3 || item.sub_type == ARM_BARDING)
             break;
         if (mut == MUT_HOOVES)
             return "You can't wear boots with hooves!";
@@ -1646,7 +1621,7 @@ static int _handle_conflicting_mutations(mutation_type mutation,
                     }
 
                 default:
-                    die("bad mutation conflict resulution");
+                    die("bad mutation conflict resolution");
                 }
             }
         }
@@ -1799,7 +1774,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
 
     // Already immune.
-    if (you.is_nonliving(false) && mutat == MUT_POISON_RESISTANCE)
+    if (you.is_nonliving(false, false) && mutat == MUT_POISON_RESISTANCE)
         return true;
 
     // We can't use is_useless_skill() here, since species that can still wear
@@ -2391,10 +2366,6 @@ static mutation_type _concretize_mut_deletion(mutation_type mut_type)
         // Check whether we have a non-innate, permanent level of this mut
         if (you.get_base_mutation_level(mutdef.mutation, false, false) == 0)
             continue;
-        // XXX: the following feels hacky. Is it needed?
-        // MUT_ANTENNAE is 0, and you.attribute[] is initialized to 0.
-        if (mutdef.mutation && _is_appendage_mutation(mutdef.mutation))
-            continue;
 
         ++seen;
         if (one_chance_in(seen))
@@ -2539,7 +2510,7 @@ string get_mutation_desc(mutation_type mut)
     if (lookup.empty()) // Nothing found?
         desc << mutation_desc(mut, -1, false) << "\n";
 
-    desc << aux_attack_desc(mut);
+    desc << mut_aux_attack_desc(mut);
 
     // TODO: consider adding other fun facts here
         // _get_mutation_def(mut).form_based
@@ -2583,7 +2554,7 @@ const char* category_mutation_name(mutation_type mut)
  *                          with the partial match results (e.g. show them to the user). If this is `nullptr`,
  *                          will accept only exact matches.
  *
- * @return the mutation type if succesful, otherwise NUM_MUTATIONS if it can't find a single match.
+ * @return the mutation type if successful, otherwise NUM_MUTATIONS if it can't find a single match.
  */
 mutation_type mutation_from_name(string name, bool allow_category, vector<mutation_type> *partial_matches)
 {
@@ -2764,8 +2735,6 @@ string mutation_desc(mutation_type mut, int level, bool colour,
             colourname = "darkgrey";
         else if (partially_active)
             colourname = "brown";
-        else if (_is_appendage_mutation(mut) && you.form == transformation::appendage)
-            colourname = "green";
         else if (is_slime_mutation(mut))
             colourname = "lightgreen";
         else if (temporary)

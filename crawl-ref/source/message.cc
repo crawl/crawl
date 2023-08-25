@@ -797,7 +797,7 @@ public:
             //
             // However, it should only print one message at a time when it really
             // needs to, i.e. an sound that interrupts the game. Otherwise it is
-            // more efficent to print text together.
+            // more efficient to print text together.
 #ifdef USE_SOUND
             play_sound(check_sound_patterns(orig_full_text));
 #endif

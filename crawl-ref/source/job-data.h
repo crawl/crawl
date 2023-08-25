@@ -93,7 +93,7 @@ static const map<job_type, job_def> job_data =
     { SP_HILL_ORC, SP_TROLL, SP_GNOLL, SP_MERFOLK, SP_MINOTAUR,
       SP_BASE_DRACONIAN, SP_DEMONSPAWN, },
     { },
-    { "leather armour plus:2", "piece from Xom's chessboard" },
+    { "leather armour plus:2", "scroll of butterflies no_exclude" },
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 3 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 },
       { SK_WEAPON, 3 } },
@@ -318,21 +318,16 @@ static const map<job_type, job_def> job_data =
       { SK_STEALTH, 2 }, },
 } },
 
-{ JOB_TRANSMUTER, {
-    "Tm", "Transmuter",
-    2, 5, 5,
+{ JOB_SHAPESHIFTER, {
+    "Sh", "Shapeshifter",
+    6, 2, 4,
     { SP_NAGA, SP_MERFOLK, SP_BASE_DRACONIAN, SP_DEMIGOD, SP_DEMONSPAWN,
       SP_TROLL, SP_METEORAN, },
-    {
-        SPELL_BEASTLY_APPENDAGE,
-        SPELL_WEREBLOOD,
-        SPELL_SPIDER_FORM,
-        SPELL_ICE_FORM,
-    },
-    { "robe", "potion of lignification" },
+    { },
+    { "animal skin", "potion of lignification", "beast talisman", "flux talisman" },
     WCHOICE_NONE,
     { { SK_FIGHTING, 1 }, { SK_UNARMED_COMBAT, 3 }, { SK_DODGING, 2 },
-      { SK_SPELLCASTING, 2 }, { SK_TRANSMUTATIONS, 2 }, },
+      { SK_SHAPESHIFTING, 3 }, },
 } },
 
 { JOB_VENOM_MAGE, {
@@ -374,7 +369,7 @@ static const map<job_type, job_def> job_data =
         SPELL_TELEPORT_OTHER,
         SPELL_MANIFOLD_ASSAULT,
     },
-    { "leather armour", "scroll of blinking", "boomerang ego:dispersal q:7" },
+    { "leather armour", "scroll of blinking", "dart ego:dispersal q:7" },
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 2 },
       { SK_SPELLCASTING, 2 }, { SK_TRANSLOCATIONS, 3 }, { SK_THROWING, 1 },

@@ -28,6 +28,7 @@
 #include "fight.h"
 #include "god-abil.h"
 #include "god-conduct.h"
+#include "god-item.h" // god_despises_item
 #include "god-passive.h"
 #include "invent.h"
 #include "item-prop.h"
@@ -43,6 +44,7 @@
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "mutant-beast.h"
+#include "nearby-danger.h" // i_feel_safe
 #include "place.h"
 #include "player.h"
 #include "player-stats.h"
@@ -322,9 +324,9 @@ static bool _place_webs()
 {
     bool webbed = false;
     const int evo_skill = you.skill(SK_EVOCATIONS);
-    // At 0 evo skill, this is about a 1/3 chance of webbing an
-    // adjacent enemy. At 27 skill, it's about an 9/10 chance.
-    const int web_skill_factor = 64 - evo_skill * 2;
+    // At 0 evo skill, this is about a 1/3 chance of webbing each
+    // enemy. At 27 skill, it's about an 9/10 chance.
+    const int web_chance = 36 + evo_skill * 2;
     const int max_range = LOS_DEFAULT_RANGE / 2 + 2;
     for (monster_near_iterator mi(you.pos(), LOS_SOLID); mi; ++mi)
     {
@@ -340,11 +342,6 @@ static bool _place_webs()
             continue;
         }
 
-        // web chance increases with proximity & evo skill
-        // code here uses double negatives; sorry! i blame the other guy
-        const int dist = you.pos().distance_from((*mi)->pos());
-        const int web_dist_factor = 100 * (dist - 1) / max_range;
-        const int web_chance = 100 - web_dist_factor - web_skill_factor;
         if (!x_chance_in_y(web_chance, 100))
             continue;
 
@@ -391,8 +388,11 @@ static bool _sack_of_spiders_veto_mon(monster_type mon)
 
 static bool _spill_out_spiders()
 {
-    const int evo_skill = you.skill(SK_EVOCATIONS);
-    const int n_mons = random_range(2, 3);
+    const int evo_skill = you.skill_rdiv(SK_EVOCATIONS);
+    // 2 at min skill, 3-4 at mid, 4-6 at max
+    const int min = 2 + div_rand_round(2 * evo_skill, 27);
+    const int max = 2 + div_rand_round(4 * evo_skill, 27);
+    const int n_mons = random_range(min, max);
     bool made_mons = false;
     for (int n = 0; n < n_mons; n++)
     {
@@ -944,76 +944,31 @@ static spret _condenser()
     return spret::success;
 }
 
-static bool _xoms_chessboard()
+static transformation _form_for_talisman(const item_def &talisman)
 {
-    vector<monster *> targets;
-    bool see_target = false;
+    const transformation trans = form_for_talisman(talisman);
+    if (trans == you.form)
+        return transformation::none;
+    return trans;
+}
 
-    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
-    {
-        if (mi->friendly() || mi->neutral() && !mi->has_ench(ENCH_INSANE))
-            continue;
-        if (mons_is_firewood(**mi))
-            continue;
-        if (you.can_see(**mi))
-            see_target = true;
-
-        targets.emplace_back(*mi);
-    }
-
-    if (!see_target
-        && !yesno("You can't see anything. Try to make a move anyway?",
-                  true, 'n'))
+static bool _evoke_talisman(const item_def &talisman)
+{
+    const transformation trans = _form_for_talisman(talisman);
+    if (!check_transform_into(trans) || !check_form_stat_safety(trans))
+        return false;
+    if (!i_feel_safe(true) && !yesno("Still begin transforming?", true, 'n'))
     {
         canned_msg(MSG_OK);
         return false;
     }
 
-    const int power = 15 + you.skill(SK_EVOCATIONS, 7) / 2;
-
-    mpr("You make a move on Xom's chessboard...");
-
-    if (targets.empty())
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return true;
-    }
-
-    bolt beam;
-    const monster * target = *random_iterator(targets);
-    beam.source = target->pos();
-    beam.target = target->pos();
-    beam.set_agent(&you);
-
-    // List of possible effects. Mostly debuffs, a few buffs to keep it
-    // exciting
-    zap_type zap = random_choose_weighted(5, ZAP_HASTE,
-                                          5, ZAP_INVISIBILITY,
-                                          5, ZAP_MIGHT,
-                                          10, ZAP_CORONA,
-                                          15, ZAP_SLOW,
-                                          15, ZAP_MALMUTATE,
-                                          15, ZAP_PETRIFY,
-                                          10, ZAP_PARALYSE,
-                                          10, ZAP_CONFUSE,
-                                          10, ZAP_SLEEP);
-    beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
-
-    return zapping(zap, power, beam, false) == spret::success;
-}
-
-static bool _player_has_zigfig()
-{
-    // does the player have a zigfig? used to override sac artiface
-    // a bit ugly...this thing could probably be goldified or converted to an
-    // ability trigger
-    for (const item_def &s : you.inv)
-        if (s.defined() && s.base_type == OBJ_MISCELLANY
-                                 && s.sub_type == MISC_ZIGGURAT)
-        {
-            return true;
-        }
-    return false;
+    count_action(CACT_FORM, (int)trans);
+    start_delay<TransformDelay>(trans);
+    if (god_despises_item(talisman))
+        excommunication();
+    you.turn_is_over = true;
+    return true;
 }
 
 /// Does the item only serve to produce summons or allies?
@@ -1046,10 +1001,12 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
     if (temp && you.confused())
         return "You are too confused!";
 
+    // all generic checks passed
+    if (!item)
+        return "";
+
     // historically allowed under confusion/berserk, but why?
-    if (item && item->base_type == OBJ_MISCELLANY
-                                            && item->sub_type == MISC_ZIGGURAT
-        || !item && _player_has_zigfig())
+    if (item->is_type(OBJ_MISCELLANY, MISC_ZIGGURAT))
     {
         // override sac artifice for zigfigs, including a general check
         // TODO: zigfig has some terrain/level constraints that aren't handled
@@ -1057,12 +1014,21 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
         return "";
     }
 
+    if (item->base_type == OBJ_TALISMANS)
+    {
+        const transformation trans = _form_for_talisman(*item);
+        const string form_unreason = cant_transform_reason(trans, false, temp);
+        if (!form_unreason.empty())
+            return lowercase_first(form_unreason);
+
+        // TODO: add talisman artefacts
+        if (you.form != you.default_form)
+            return "you need to leave your temporary form first.";
+        return "";
+    }
+
     if (you.get_mutation_level(MUT_NO_ARTIFICE))
         return "You cannot evoke magical items.";
-
-    // all generic checks passed
-    if (!item)
-        return "";
 
     // is this really necessary?
     if (item_type_removed(item->base_type, item->sub_type))
@@ -1148,6 +1114,9 @@ bool evoke_item(item_def& item, dist *preselect)
         return you.turn_is_over;
     }
 
+    case OBJ_TALISMANS:
+        return _evoke_talisman(item);
+
     case OBJ_MISCELLANY:
         ASSERT(in_inventory(item));
         did_work = true; // easier to do it this way for misc items
@@ -1156,18 +1125,10 @@ bool evoke_item(item_def& item, dist *preselect)
         {
 #if TAG_MAJOR_VERSION == 34
         case MISC_BOTTLED_EFREET:
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return false;
-
         case MISC_FAN_OF_GALES:
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return false;
-
         case MISC_LAMP_OF_FIRE:
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return false;
-
         case MISC_STONE_OF_TREMORS:
+        case MISC_CRYSTAL_BALL_OF_ENERGY:
             canned_msg(MSG_NOTHING_HAPPENS);
             return false;
 #endif
@@ -1211,12 +1172,6 @@ bool evoke_item(item_def& item, dist *preselect)
                 practise_evoking(1);
             }
             return false;
-
-#if TAG_MAJOR_VERSION == 34
-        case MISC_CRYSTAL_BALL_OF_ENERGY:
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return false;
-#endif
 
         case MISC_LIGHTNING_ROD:
             if (_lightning_rod(preselect))
@@ -1293,18 +1248,6 @@ bool evoke_item(item_def& item, dist *preselect)
                     practise_evoking(1);
                     break;
             }
-            break;
-
-        case MISC_XOMS_CHESSBOARD:
-            if (_xoms_chessboard())
-            {
-                expend_xp_evoker(item.sub_type);
-                if (!evoker_charges(item.sub_type))
-                    mpr("The chess piece greys!");
-                practise_evoking(1);
-            }
-            else
-                return false;
             break;
 
         default:

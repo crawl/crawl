@@ -6,7 +6,6 @@
 #include "coordit.h"
 #include "directn.h"
 #include "env.h"
-#include "god-passive.h" // passive_t::auto_map
 #include "level-state-type.h"
 #include "notes.h"
 #include "religion.h"
@@ -92,26 +91,19 @@ void clear_map_or_travel_trail()
     }
 }
 
-static void _automap_from(int x, int y, int mutated)
+static void _automap_from(int x, int y, int level)
 {
-    if (mutated)
+    if (level)
     {
-        const bool godly = have_passive(passive_t::auto_map);
-        magic_mapping(8 * mutated,
-                      godly ? 25 + you.piety / 8 : 25,
-                      true, godly,
-                      true, coord_def(x,y));
+        magic_mapping(LOS_MAX_RANGE * level, 25,
+                      true, false, true, false, true,
+                      coord_def(x,y));
     }
 }
 
 static int _map_quality()
 {
-    int passive = you.get_mutation_level(MUT_PASSIVE_MAPPING);
-    // the explanation of this 51 vs max_piety of 200 is left as
-    // an exercise to the reader
-    if (have_passive(passive_t::auto_map))
-        passive = max(passive, you.piety / 51);
-    return passive;
+    return you.get_mutation_level(MUT_PASSIVE_MAPPING);
 }
 
 void reautomap_level()

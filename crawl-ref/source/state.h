@@ -133,13 +133,14 @@ struct game_state
 
     bool invisible_targeting;
 
-    bool player_moving;
-
     // Area beyond which view should be darkened,  0 = disabled.
     targeter *darken_range;
 
     // Monsters to highlight on the screen, 0 = disabled.
     vector<monster *> *flash_monsters;
+
+    // monsters which saw the player retreating.
+    set<monster*> potential_pursuers;
 
     // Any changes to macros that need to be changed?
     bool unsaved_macros;

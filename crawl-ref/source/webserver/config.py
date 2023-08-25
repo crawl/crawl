@@ -113,7 +113,7 @@ game_data_no_cache = True
 # Recursive templating is supported. If a template named `default` is defined,
 # it will be used as the template for any game definitions that specify no
 # template at all (see example below). If `default` is defined, it can be
-# explicitly overriden by using the template name `base` (which cannot be
+# explicitly overridden by using the template name `base` (which cannot be
 # redefined).
 
 # Templating string values:
@@ -276,7 +276,7 @@ ssl_port = 8081
 #
 # 2. `nick_check_fun` if defined, is a function that returns true on valid
 # nicknames. You can use this for arbitrary custom nick checks in a server
-# config. You will need to do case management manually in this funciton.
+# config. You will need to do case management manually in this function.
 # def nick_check_fun(s):
 #     return s.lower() != "plog" and s.lower() != "muggle"
 #
@@ -338,7 +338,7 @@ lobby_url = None
 # TODO: set_blocking_log_threshold is deprecated in tornado 5+...
 # Ideally, test out these settings carefully in a non-production setting
 # before enabling this, as there's a bunch of ways for this to go wrong and you
-# don't want to get your SMTP server blacklisted.
+# don't want to get your SMTP server blocklisted.
 smtp_host = "localhost"
 smtp_port = 25
 smtp_use_ssl = False

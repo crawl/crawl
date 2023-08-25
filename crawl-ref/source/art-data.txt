@@ -1,4 +1,4 @@
-# This file contains the definitions of undrandarts (and what used to be
+# This file contains the definitions of unrandarts (and what used to be
 # fixed artefacts).  util/art-data.pl translates this file into
 # art-data.h, and also updates the enumeration and NUM_UNRANDARTS in
 # artefact.h. C/C++ functions which give unrandarts non-standard
@@ -109,13 +109,14 @@
 #
 # The description of a power can be split across more than one line. The
 # subsequent lines should be just below the first one, and should start with
-# a space (with no header name).
+# a space (with no header name). A power with a short name followed by a `:`
+# will be automatically indented on the item description screen.
 #
 # If there are multiple powers, subsequent powers can be added with a +.
 #
 # Example:
-# DESCRIP: It enhances your template magic.
-# + It gives you a regex malus.
+# DESCRIP: Perl: It enhances your regex magic.
+# + Python: It gives you a bracketing malus.
 
 # DBRAND: Description of a brand which is specific to this artefact.
 #
@@ -252,11 +253,11 @@ DBRAND:  Lifebolt:  It occasionally discharges a powerful but inaccurate bolt
 
 NAME:    staff of Olgreb
 INSCRIP: rPois∞
-DESCRIP: It enhances your poison magic.
-+It grants immunity to poison.
-+It can be activated via the 'a'bility menu to radiate toxic energy, with
+DESCRIP: Radiate: It can be activated via the 'a'bility menu to radiate toxic energy, with
  effectiveness depending on Evocations skill.
-DBRAND: If the wielder is skilled in Evocations, they can envenom those struck
++Pois: It enhances your poison magic.
++rPois∞: It grants immunity to poison.
+DBRAND: Envenom: If the wielder is skilled in Evocations, they can envenom those struck
  by it, dealing poison damage which bypasses armour.
 OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +9
@@ -620,15 +621,16 @@ FALLBACK: OBJ_WEAPONS/WPN_LAJATANG
 FB_BRAND: SPWPN_FREEZING
 PLUS:     +3
 COLOUR:   DARKGREY
+INSCRIP:  ele,
 TILE:     urand_elemental
 TILE_EQ:  elemental_staff
 FIRE:     1
 COLD:     1
 AC:       3
 BOOL:     elec
-DBRAND:   If the wielder is skilled in Evocations, they can discharge powerful
+DBRAND:   Ele:       It enhances your fire, ice, earth and air
+ magic. If skilled in Evocations, you can discharge powerful
  blasts of elemental energy when striking with it.
-DESCRIP:  It enhances your fire, ice, earth and air magic.
 
 NAME:     heavy crossbow "Sniper"
 OBJ:      OBJ_WEAPONS/WPN_TRIPLE_CROSSBOW
@@ -1284,7 +1286,7 @@ BOOL:     nogen, no_upgrade
 
 NAME:     moon troll leather armour
 OBJ:      OBJ_ARMOUR/ARM_TROLL_LEATHER_ARMOUR
-PLUS:     +4
+PLUS:     +5
 COLOUR:   ETC_SHIMMER_BLUE
 BRAND:    SPARM_SPIRIT_SHIELD
 TILE:     urand_moon_troll_leather_armour
@@ -1434,7 +1436,7 @@ TYPE:    pair of quick blades
 COLOUR:  ETC_ENCHANT
 TILE:    urand_gyre
 TILE_EQ: gyre
-PLUS:    12
+PLUS:    10
 BRAND:   SPWPN_PROTECTION
 FB_BRAND: SPWPN_FREEZING
 
@@ -1571,10 +1573,10 @@ COLOUR:   ETC_MAGIC
 TILE:     urand_battle
 TILE_EQ:  orb_of_battle
 VALUE:    800
-DESCRIP:  It enhances your destructive magic.
-+It weakens your non-destructive magic.
-+It summons a battlesphere in combat, with strength depending on Conjurations
- skill.
+DESCRIP: Battle: It summons a battlesphere in combat, with strength
+ depending on Conjurations skill.
++Destructive: It enhances your destructive magic, and weakens non-destructive
+ magic.
 
 ENUM:     EMBRACE
 NAME:     Cigotuvi's embrace
@@ -1802,6 +1804,18 @@ OBJ:      OBJ_JEWELLERY/AMU_ACROBAT
 COLOUR:   ETC_SILVER
 TILE:     urand_dreamdust
 BOOL:     special, nogen
+
+NAME:     hand cannon "Mule"
+TYPE:     hand cannon
+OBJ:      OBJ_WEAPONS/WPN_HAND_CROSSBOW
+TILE:     spwpn_mule
+TILE_EQ:  mule
+PLUS:     7
+FIRE:     1
+COLOUR:   ETC_INCARNADINE
+BRAND:    SPWPN_FLAMING
+INSCRIP:  backblast,
+DBRAND:   Backblast: When fired, it often launches its wielder backwards.
 
 # This entry must always be last.
 ENUM:   DUMMY2

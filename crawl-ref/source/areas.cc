@@ -779,7 +779,7 @@ int monster::umbra_radius() const
     if (!(holiness() & MH_UNDEAD))
         return -1;
 
-    // Enslaved holies get an umbra.
+    // Bound holies get an umbra.
     if (mons_bound_soul(*this))
         return _mons_class_halo_radius(base_monster);
 

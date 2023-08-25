@@ -958,6 +958,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
                          { CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY });
     _add_insert_commands(cols, 0, "<red>\"</red> : amulets (<w>%</w>ut on and <w>%</w>emove)",
                          { CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY });
+    _add_insert_commands(cols, 0, "<lightred>percent</lightred> : talismans (e<w>%</w>oke)",
+                         { CMD_EVOKE });
     _add_insert_commands(cols, 0, "<lightgrey>/</lightgrey> : wands (e<w>%</w>oke)",
                          { CMD_EVOKE });
 
@@ -1256,6 +1258,10 @@ static void _add_formatted_hints_help(column_composer &cols)
                          "amulets (<w>%</w>ut on and <w>%</w>emove)",
                          { CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY });
     _add_insert_commands(cols, 1,
+                         "<console><lightred>percent</lightred> : </console>"
+                         "talismans (e<w>%</w>oke)",
+                         { CMD_EVOKE });
+    _add_insert_commands(cols, 1,
                          "<console><lightgrey>/</lightgrey> : </console>"
                          "wands (e<w>%</w>oke)",
                          { CMD_EVOKE });
@@ -1418,7 +1424,7 @@ private:
                 // disable these if there's no character to view
                 if (!crawl_state.game_started)
                     return maybe_bool::maybe;
-                // falltrough
+                // fallthrough
             case CK_ESCAPE: case '/': case 'q': case 'v': case '!':
                 // exit the UI, these help screens are activated outside of
                 // the scroller popup

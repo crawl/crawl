@@ -23,6 +23,7 @@
   * [Lua](#lua)
   * [PCRE](#pcre)
   * [Unicode](#unicode)
+* [Troubleshooting](#troubleshooting)
 * [Getting Help](#getting-help)
 
 ## Getting DCSS To Run
@@ -122,7 +123,6 @@ Dependencies](#packaged-dependencies) above):
 * sqlite
 * zlib
 * pcre
-* zlib
 * freetype (tiles builds only)
 * DejaVu fonts (tiles builds only)
 * SDL2 (tiles builds only)
@@ -581,6 +581,23 @@ settings. For anything more, please select one of TrueType fonts. If, like one
 of our players, you are deeply attached to the looks of bitmap fonts, you can
 [download a corrected version of the Terminal
 font](http://www.yohng.com/software/terminalvector.html)
+
+## Troubleshooting
+
+When compiling, you may run into the following errors: 
+
+    cat: util/release_ver: No such file or directory
+    
+    Can't get version information: `git describe` failed (no git, 
+    no repository, or shallow clone), and util/release_ver doesn't exist.
+
+To solve this, run:
+
+    git remote add upstream https://github.com/crawl/crawl/
+    git fetch --tags upstream
+
+If this doesn't resolve the problem, you can try creating `util/release_ver`
+manually, with contents along the lines of `0.31-a0`.
 
 ## Getting Help
 

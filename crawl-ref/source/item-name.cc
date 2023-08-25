@@ -303,6 +303,11 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 }
             }
         }
+        else if (base_type == OBJ_TALISMANS
+                 && you.form == form_for_talisman(*this))
+        {
+                buff << " (active)";
+        }
         else if (you.quiver_action.item_is_quivered(*this))
             buff << " (quivered)";
     }
@@ -978,12 +983,32 @@ static string misc_type_name(int type)
     case MISC_SACK_OF_SPIDERS:           return "sack of spiders";
     case MISC_PHANTOM_MIRROR:            return "phantom mirror";
     case MISC_ZIGGURAT:                  return "figurine of a ziggurat";
-    case MISC_XOMS_CHESSBOARD:           return "piece from Xom's chessboard";
+#if TAG_MAJOR_VERSION == 34
+    case MISC_XOMS_CHESSBOARD:           return "removed chess piece";
+#endif
     case MISC_TIN_OF_TREMORSTONES:       return "tin of tremorstones";
     case MISC_CONDENSER_VANE:            return "condenser vane";
 
     default:
         return "buggy miscellaneous item";
+    }
+}
+
+static string talisman_type_name(int type)
+{
+    switch (type)
+    {
+    case TALISMAN_BEAST:    return "beast talisman";
+    case TALISMAN_FLUX:    return "flux talisman";
+    case TALISMAN_MAW:      return "maw talisman";
+    case TALISMAN_SERPENT:  return "serpent talisman";
+    case TALISMAN_BLADE:    return "blade talisman";
+    case TALISMAN_STATUE:   return "granite talisman";
+    case TALISMAN_DRAGON:   return "dragon-blood talisman";
+    case TALISMAN_DEATH:    return "talisman of death";
+    case TALISMAN_STORM:    return "storm talisman";
+    default:
+        return "buggy talisman";
     }
 }
 
@@ -1004,8 +1029,8 @@ static const char* _book_type_name(int booktype)
     case BOOK_DEATH:                  return "Death";
     case BOOK_MISFORTUNE:             return "Misfortune";
     case BOOK_CHANGES:                return "Changes";
-    case BOOK_TRANSFIGURATIONS:       return "Transfigurations";
 #if TAG_MAJOR_VERSION == 34
+    case BOOK_TRANSFIGURATIONS:       return "Transfigurations";
     case BOOK_BATTLE:                 return "Battle";
 #endif
     case BOOK_VAPOURS:                return "Vapours";
@@ -1015,7 +1040,9 @@ static const char* _book_type_name(int booktype)
     case BOOK_MALEDICT:               return "Maledictions";
 #endif
     case BOOK_AIR:                    return "Air";
+#if TAG_MAJOR_VERSION == 34
     case BOOK_SKY:                    return "the Sky";
+#endif
     case BOOK_WARP:                   return "the Warp";
 #if TAG_MAJOR_VERSION == 34
     case BOOK_ENVENOMATIONS:          return "Envenomations";
@@ -1048,8 +1075,8 @@ static const char* _book_type_name(int booktype)
 #endif
     case BOOK_DECAY:                  return "Decay";
     case BOOK_DISPLACEMENT:           return "Displacement";
-    case BOOK_RIME:                   return "Rime";
 #if TAG_MAJOR_VERSION == 34
+    case BOOK_RIME:                   return "Rime";
     case BOOK_STONE:                  return "Stone";
 #endif
     case BOOK_SENSES:                 return "the Senses";
@@ -1134,6 +1161,7 @@ const char *base_type_string(object_class_type type)
     case OBJ_CORPSES: return "corpse";
     case OBJ_GOLD: return "gold";
     case OBJ_RUNES: return "rune";
+    case OBJ_TALISMANS: return "talisman";
     default: return "";
     }
 }
@@ -1209,6 +1237,7 @@ string sub_type_string(const item_def &item, bool known)
     case OBJ_RODS:   return "removed rod";
 #endif
     case OBJ_MISCELLANY: return misc_type_name(sub_type);
+    case OBJ_TALISMANS: return talisman_type_name(sub_type);
     // these repeat as base_type_string
     case OBJ_ORBS: return "orb of Zot";
     case OBJ_CORPSES: return "corpse";
@@ -1788,6 +1817,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         break;
     }
 
+    case OBJ_TALISMANS:
+        // TODO: add talisman artefacts
+        buff << talisman_type_name(item_typ);
+        break;
+
     case OBJ_BOOKS:
         if (is_random_artefact(*this) && !dbname && !basename)
         {
@@ -1951,6 +1985,7 @@ bool item_type_known(const item_def& item)
 
     switch (item.base_type)
     {
+    case OBJ_TALISMANS: // TODO: add talisman artefacts
     case OBJ_MISCELLANY:
     case OBJ_MISSILES:
     case OBJ_BOOKS:
@@ -2206,6 +2241,28 @@ void display_runes()
     menu.show();
 }
 
+static string _unforbid(string name)
+{
+    // Ironically, the ROT13'd versions can be pretty good names.
+    set<string> forbidden_words = set<string>{
+        "puvax", "snt", "avt", "avttre",
+        "xvxr", "ovgpu", "juber", "tvzc",
+        "ergneq", "phag", "pbba", "fdhnj",
+        "jbt", "qlxr", "ubzb", "genaal"
+    };
+    auto parts = split_string(" ", name);
+    for (size_t i = 0; i < parts.size(); i++)
+    {
+        string part = parts[i];
+        string rot13d = "";
+        for (size_t j = 0; j < part.size(); j++)
+            rot13d += ((part[j] + 13 - 'a') % 26) + 'a';
+        if (forbidden_words.count(rot13d))
+            parts[i] = rot13d;
+    }
+    return join_strings(parts.begin(), parts.end());
+}
+
 // Seed ranges for _random_consonant_set: (B)eginning and one-past-the-(E)nd
 // of the (B)eginning, (E)nding, and (M)iddle cluster ranges.
 const size_t RCS_BB = 0;
@@ -2389,6 +2446,7 @@ string make_name(uint32_t seed, makename_type name_type)
 
         name = "plog";
     }
+    name = _unforbid(name);
 
     string uppercased_name;
     for (size_t i = 0; i < name.length(); i++)
@@ -2676,6 +2734,8 @@ bool is_bad_item(const item_def &item)
     switch (item.base_type)
     {
     case OBJ_SCROLLS:
+        if (item.sub_type == SCR_TORMENT)
+            return !you.res_torment();
         return item.sub_type == SCR_NOISE;
     case OBJ_POTIONS:
         // Can't be bad if you can't use them.
@@ -2690,24 +2750,6 @@ bool is_bad_item(const item_def &item)
             return false;
         CASE_REMOVED_POTIONS(item.sub_type);
         }
-    case OBJ_JEWELLERY:
-        // Potentially useful. TODO: check the properties.
-        if (is_artefact(item))
-            return false;
-
-        switch (item.sub_type)
-        {
-        case RING_EVASION:
-        case RING_PROTECTION:
-        case RING_STRENGTH:
-        case RING_DEXTERITY:
-        case RING_INTELLIGENCE:
-        case RING_SLAYING:
-            return item_ident(item, ISFLAG_KNOW_PLUSES) && item.plus <= 0;
-        default:
-            return false;
-        }
-
     default:
         return false;
     }
@@ -2747,8 +2789,6 @@ bool is_dangerous_item(const item_def &item, bool temp)
         case SCR_POISON:
             return player_res_poison(false, temp, true) <= 0
                    && !you.cloud_immune();
-        case SCR_TORMENT:
-            return !you.res_torment();
         default:
             return false;
         }
@@ -3049,7 +3089,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
         if (you.undead_or_demonic() && is_holy_item(item, false))
         {
-            if (!temp && you.form == transformation::lich
+            if (!temp && you.form == transformation::death
                 && you.species != SP_DEMONSPAWN)
             {
                 return false;
@@ -3127,6 +3167,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return reasons.size();
     }
 
+    case OBJ_TALISMANS:
     case OBJ_MISCELLANY:
     case OBJ_WANDS:
         return cannot_evoke_item_reason(&item, temp, ident || item_type_known(item)).size();
@@ -3179,8 +3220,11 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return player_prot_life(false, temp, false) == 3;
 
         case AMU_REGENERATION:
-            return you.get_mutation_level(MUT_NO_REGENERATION) > 0
-                   || (temp
+            return
+#if TAG_MAJOR_VERSION == 34
+                   you.get_mutation_level(MUT_NO_REGENERATION) > 0 ||
+#endif
+                     (temp
                        && (you.get_mutation_level(MUT_INHIBITED_REGENERATION) > 0
                            || you.has_mutation(MUT_VAMPIRISM))
                        && regeneration_is_inhibited());

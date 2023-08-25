@@ -237,7 +237,7 @@ string wordwrap_line(string &s, int width, bool tags, bool indent, int force_ind
 #endif
     s.erase(0, cp - cp0);
 
-    // if we had to break a line, reinsert the indendation
+    // if we had to break a line, reinsert the indentation
     if (indent && c != '\n')
         s = indentation + s;
 

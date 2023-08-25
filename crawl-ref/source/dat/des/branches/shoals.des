@@ -1020,23 +1020,20 @@ MAP
 ENDMAP
 
 NAME:    nicolae_shoals_mertower
-FHEIGHT: ;'b123 = 40
-KPROP:   ;'b123 = no_tide
-KMONS:   1 = merfolk
-KMONS:   2 = merfolk impaler / nothing w:4
-KMONS:   3 = merfolk javelineer / nothing w:4
-KFEAT:   ' = W
-KFEAT:   ;23 = w
-KFEAT:   b = .
+TAGS:    patrolling no_monster_gen
+KPROP:   a+-12 = no_tide
+ITEM:    tower shield good_item / tower shield randart / superb_item w:20
+MONS:    merfolk, merfolk impaler / merfolk javelineer w:5
+SUBST:   - = -:110 1 2:5
 MAP
   wwwwwwww
- wwwxxxxxww
- wwxx;22xxw
-.b1x';;;3xw
-.bb+';;;3xw
-.b1x';;;3xw
- wwxx;22xxw
- wwwxxxxxww
+ wwwxxmxxww
+ wwxx-2-xxw
+.a1x--*--xw
+.aa+--d-2mw
+.a1x--*--xw
+ wwxx-2-xxw
+ wwwxxmxxww
   wwwwwwww
 ENDMAP
 
@@ -1684,10 +1681,8 @@ xndnx
 ENDMAP
 
 NAME:   nicolae_shoals_abyss_on_the_beach
-TAGS:   transparent
-KPROP:  =aDPQ'_ = no_tide
-KITEM:  _ = *
-KITEM:  P = |
+TAGS:   transparent no_monster_gen no_item_gen
+KPROP:  =*|1P_' = no_tide
 KMONS:  p = plant
 KMONS:  1P_ = thrashing horror / wretched star / chaos spawn / zombie / \
               small abomination / large abomination / ancient zyme / neqoxec / \
@@ -1699,7 +1694,7 @@ KFEAT:  _ = altar_lugonu
 KFEAT:  q = x
 NSUBST: 2 = 2 / 2=2.
 SUBST:  z = wx, M = w., . = p...., 1 = 1', a = q:80 c:40 D:20 vb'
-FTILE:  =aD1P'_ = floor_nerves
+FTILE:  =*|1P_'D = floor_nerves
 TILE:   q = wall_abyss
 MAP
    wwwwwwwww
@@ -1707,8 +1702,8 @@ MAP
  wwwzzzzzzzwww
 wwwzxxxxxxxzwww
 wwzxxaaaaaxxzww
-wwzxaa1P1aaxzww
-wwzxa1'1'1axzww
+wwzxaa*P*aaxzww
+wwzxa11|11axzww
 wwzxa1'_'1axzww
 MMzxa1'''1axzMM
 .MMxaa'''aaxMM.
@@ -1886,7 +1881,6 @@ TAGS:   no_pool_fixup no_trap_gen water_ok
 DEPTH:  Shoals, !Shoals:$
 ORIENT: northwest
 KPROP:  123DL*n'} = no_tide
-KITEM:  L = phantom mirror
 KMONS:  K = kraken
 # Two glyphs for merfolk: 1 gets no_tide (inside), M doesn't (outside)
 KMONS:  1M = merfolk / nothing w:2
@@ -1897,6 +1891,9 @@ KFEAT:  ~ = open_sea
 KFEAT:  D = closed_clear_door
 KFEAT:  R = runed_clear_door
 KFEAT:  K = w
+KPROP:  L = no_tele_into
+KMASK:  L = no_item_gen
+KMASK:  L = no_monster_gen
 FTILE:  123DRL*n'} = floor_limestone
 SUBST:  } = }]), * = **|
 NSUBST: . = Q / *=% M:30 .:150, ' = Q / '
@@ -1916,7 +1913,7 @@ MAP
 ~www.n''''''12'n.wwwwww
 ~www.n11'nnn''1n.wwwwww
 ~www.n11'nLn'2*n.wwwwww
-~www.n'''nnR21*n.wwwwww
+~www.n'''nnn21*n.wwwwww
 ~www.n'21''232*n.wwwwww
 ~www.nn12'212*nn.wwwwww
 ~www..nn'1***nn..wwwwww
@@ -2834,7 +2831,7 @@ NAME:   shoals_end_hellmonk_lost_city
 : set_border_fill_type("open_sea")
 ORIENT: encompass
 PLACE:  Shoals:$
-WEIGHT: 4
+WEIGHT: 3
 KITEM:  O = barnacled rune of Zot
 MONS:   faun w:15 / manticore / harpy, satyr, minotaur, sphinx
 KMONS:  O = sphinx
@@ -2896,11 +2893,102 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 ENDMAP
 
+NAME:    shoals_end_hellmonk_holy_island
+: set_border_fill_type("open_sea")
+TAGS:    no_trap_gen
+ORIENT:  encompass
+PLACE:   Shoals:$
+WEIGHT:  3
+KITEM:   O = barnacled rune of Zot
+MONS:    cyclops
+MONS:    death yak / dream sheep / yak / holy swine w:3 / apis w:3
+MONS:    w:15 merfolk impaler ; trident ego:flaming good_item |\
+            trident ego:freezing good_item | trident ego:protection good_item |\
+            trishula w:5 . robe w:15 | pearl dragon scales w:1 / \
+         merfolk javelineer ; javelin ego:silver w:20 | javelin /\
+         merfolk aquamancer
+MONS:    cherub
+KMONS:   O = angel / daeva w:3
+KMONS:   P = plant
+NSUBST:  < = 1:( / 1:[ / 1:{ / *: <''
+SUBST:   - = W:30 ' P:1, _ = W:5 ':15 P:1
+SUBST:   3 = 330, 0 = 0...
+NSUBST:  4 = 2:4 / * = 4...
+NSUBST:  ' = 8 = 1''' / 24 = 2''' / * = P''''''''''
+NSUBST:  H = 1:O / *:|
+SHUFFLE: DEF
+KFEAT:   D = altar_zin
+KFEAT:   E = altar_elyvilon
+KFEAT:   F = altar_the_shining_one
+TILE:    G = dngn_statue_angel
+FTILE:   12P'~([{< = floor_grass
+FTILE:   034|DEFGOc+. = floor_limestone
+MAP
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwww-----wwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwww---ccc----wwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwww------cccHccc------wwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwww------cc|3.3|cc------wwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww----___c3.000.3c___----wwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww----__'cc...3...cc''__---wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwww---__''c3.0ccc0.3c''__---wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwww----_c''c40ccDcc04c''c__---wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww---_cc''c0.G000G.0c''cc_---wwwwwwwwwwwwwww
+wwwwwwwwwwwwwww--_cc'''cc...3...cc'''c_----wwwwwwwwwwwwww
+wwwwwwwwwwwwww---_c'''''c.......c''''cc----wwwwwwwwwwwwww
+wwwwwwwwwwwwww---_c'''''cc.....cc'''''c_---wwwwwwwwwwwwww
+wwwwwwwwwwwwww---_'''''''ccc.ccc''''''c_---wwwwwwwwwwwwww
+wwwwwwwwwwwwww--__'''''''''c+c'''''''''__---wwwwwwwwwwwww
+wwwwwwwwwwwww---__'''''''''''''''''''''__---wwwwwwwwwwwww
+wwwwwwwwwwwww---_'''''''''''''''''''''''_---wwwwwwwwwwwww
+wwwwwwwwwwwww---_'''''''''''''''''''''''_---wwwwwwwwwwwww
+wwwwwwwwwwwww---_'''''''''''''''''''''''_----wwwwwwwwwwww
+wwwwwwwwwwwwww--__'''''''''''''''''''''__--wwwwwwwwwwwwww
+wwwwwwwwwwwwwww--___'''''''~~~''''''___--wwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwww--___'cc''~<~''cc'__--wwwwwwwwwwwwwwwwww
+wwwwwwwwwwww-wwwwww--___cc'~~~'cc__--wwwwww---wwwwwwwwwww
+wwwwwwwwwww----wwwwww--__ccccccc_--wwwwww-----wwwwwwwwwww
+wwwwwwwwwww------wwwwww--ccccccc-wwwwww--__---wwwwwwwwwww
+wwwwwwwwwww---__---wwwwwW--~~~--Wwwww--__'_----wwwwwwwwww
+wwwwwwwwwww--______--wwwwW_~<~_WWww---__''_----wwwwwwwwww
+wwwwwwwwww---__''''_---wW--~~~------___''''_---wwwwwwwwww
+wwwwwwwwww--___'''''__---cc---cc--___''''''_---wwwwwwwwww
+wwwwwwwwww--__''''''cc___ccWwWcc___cc''''''__---wwwwwwwww
+wwwwwwwwww--_''''''''ccc__-www-__ccc'''''''__---wwwwwwwww
+wwwwwwwww---_''''''''~~cc_-www-_cc~~'''''''__---wwwwwwwww
+wwwwwwwww--__''''''''~<~c_-www-_c~<~''''''''_---wwwwwwwww
+wwwwwwwww--_'''''''''~~~c_-www-_cc~~'''''''''_---wwwwwwww
+wwwwwwwww--_c+c'''''''''c_--www-_c''''''''c+c_---wwwwwwww
+wwwwwwww--ccc.ccc''''''''__-www-_c''''''ccc.ccc--wwwwwwww
+wwwwwwww-cc.....cc'''''''__-www-_''''''cc.....cc-wwwwwwww
+wwwwwwww-c.......c'''''''__-www-_''''''c.......c--wwwwwww
+wwwwwww-cc...3...cc''''''__-www-_'''''cc...3...cc-wwwwwww
+wwwwwww-c0.G000G.0c'''''c__-www-_c''''c0.G000G.0c-wwwwwww
+wwwwwww-c40ccEcc04c''''cc_-www--_c''''c40ccFcc04c-wwwwwww
+wwwwwww-c3.0ccc0.3c''ccc__-www-__ccc''c3.0ccc0.3c-wwwwwww
+wwwwwww-cc...3...cc'_____--www-______'cc...3...cc-wwwwwww
+wwwwwwww-c3.000.3c_______-www-_________c3.000.3c-wwwwwwww
+wwwwwwww-cc|3.3|cc___-----www-------___cc|3.3|cc-wwwwwwww
+wwwwwwwww-cccHccc---------www-----------cccHccc-wwwwwwwww
+wwwwwwwwww--ccc----------www--------------ccc--wwwwwwwwww
+wwwwwwwwwww--------------www------------------wwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ENDMAP
+
 NAME: shoals_end_hellmonk_storm_palace
 : set_border_fill_type("open_sea")
 ORIENT: encompass
 PLACE:  Shoals:$
-WEIGHT: 4
+WEIGHT: 3
 MONS:   water elemental / air elemental w:5, wind drake / water nymph
 MONS:   merfolk impaler / merfolk javelineer w:5 / merfolk aquamancer w:5
 SUBST:  + : ++., p : ccc+., q : ccc+., r : ccc+., s = W.c

@@ -749,11 +749,8 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type & skill,
         return _give_wanderer_minor_spells(skill);
 
     case SK_EVOCATIONS:
-        if (one_chance_in(3))
-            newgame_make_item(OBJ_MISCELLANY, MISC_XOMS_CHESSBOARD, 1);
-        else
-            newgame_make_item(OBJ_WANDS, coinflip() ? WAND_FLAME
-                                : WAND_POLYMORPH, 1, 3 + random2(5));
+        newgame_make_item(OBJ_WANDS, coinflip() ? WAND_FLAME : WAND_POLYMORPH,
+                          1, 3 + random2(5));
         break;
 
     case SK_STEALTH:

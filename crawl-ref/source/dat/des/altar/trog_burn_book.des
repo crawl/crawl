@@ -20,7 +20,7 @@ function callback.trog_book_convert_book(data, triggerable,
     return
   end
 
-  local m = dgn.find_marker_positions_by_prop("slave_name", "trog_book")[1]
+  local m = dgn.find_marker_positions_by_prop("replica_name", "trog_book")[1]
   if m ~= nil then
     local _x, _y = m:xy()
 
@@ -51,7 +51,7 @@ local tm = TriggerableFunction:new{func="callback.trog_book_convert_book",
 tm:add_triggerer(DgnTriggerer:new{type="player_los"})
 lua_marker('_', tm)
 }}
-MARKER: b = lua:portal_desc {slave_name="trog_book"}
+MARKER: b = lua:portal_desc {replica_name="trog_book"}
 KFEAT:  b = .
 KITEM:  b = randbook title:Retrieval spells:apportation numspells:1
 MAP

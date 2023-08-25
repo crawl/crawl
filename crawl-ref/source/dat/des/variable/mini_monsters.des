@@ -919,9 +919,9 @@ ITEM:   any potion
 ITEM:   young poisoner's handbook / book of changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
         randbook numspells:4 title:Nature \
-        spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
+        spells:summon_small_mammal&call_canine_familiar&hailstorm&summon_forest / \
         randbook numspells:4 title:Nature \
-        spells:beastly_appendage&sting&wereblood&spider_form
+        spells:sting&wereblood&hailstorm&summon_forest
 KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
 KITEM:  g = any potion q:2
 MONS:   plant, oklob sapling, ball python
@@ -971,9 +971,9 @@ ITEM:   any potion
 ITEM:   young poisoner's handbook / book of changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
         randbook numspells:4 title:Nature \
-        spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
+        spells:summon_small_mammal&call_canine_familiar&hailstorm&summon_forest / \
         randbook numspells:4 title:Nature \
-        spells:beastly_appendage&sting&wereblood&spider_form
+        spells:sting&wereblood&hailstorm&summon_forest
 KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
 KITEM:  g = any potion q:2 / any potion q:3
 MONS:   plant, oklob sapling, ball python
@@ -1272,29 +1272,30 @@ DEPTH:  D:12-
 veto {{
    return crawl.game_started() and dgn.br_exists("Swamp")
 }}
-# The final loot is geared towards 6-8 pieces of good stuff, including a
-# guaranteed randart, because otherwise who would go in?
-KITEM:  | = nothing / |, nothing / |, |, |, |, |, gold good_item, \
-            any armour randart / any weapon randart / any jewellery randart
+# The final loot is geared towards 6-9 pieces of good stuff, including a
+# guaranteed randart or two, because otherwise who would go in?
 KITEM:  * = *
 KITEM:  % = %
 KITEM:  $ = $
+KITEM:  s = | w:70 / gold good_item
+KITEM:  S- = any armour randart / any weapon randart / any jewellery randart
 KMONS:  P = one-headed hydra
 KMONS:  Q = three-headed hydra
 KMONS:  R = nine-headed hydra
 KMONS:  S = the Lernaean Hydra
-KFEAT:  $%*|PQRS` = . / W w:5
+KFEAT:  $%*|PQRS`s- = . / W w:5
 KFEAT:  t = mangrove
+NSUBST: O = s / O
 SUBST:  L = tp, M = tq, N = tr, O = ts
-NSUBST: p = 27:P / 7:$ / `, q = 9:Q / 5:% / `, r = 3:R / 3:* / `, s = S / `
+NSUBST: p = 27:P / 7:$ / `, q = 9:Q / 5:% / `, r = 3:R / 3:* / `, s = S / - / s
 MAP
 ccccccccccc
 cpppppppppccccccccc
 cppLLpLLppcMqqqqqMccccccc
 cpLLLpLLLpcqMMqMMqcrNrNrccccc
-cpLLpppLLpcqMMMMMqcNrNrNcOsOccc
-=ppppLpppp=qqMtMqq=rNtNr=sss=|n@
-cpLLpppLLpcqMMMMMqcNrNrNcOsOccc
+cpLLpppLLpcqMMMMMqcNrNrNcOsOc
+=ppppLpppp=qqMtMqq=rNtNr=sssn@
+cpLLpppLLpcqMMMMMqcNrNrNcOsOc
 cpLLLpLLLpcqMMqMMqcrNrNrccccc
 cppLLpLLppcMqqqqqMccccccc
 cpppppppppccccccccc
@@ -1448,8 +1449,8 @@ ENDMAP
 NAME:   minmay_unpleasant_kobolds
 TAGS:   transparent
 DEPTH:  D:6-
-MONS:   kobold ; boomerang ego:dispersal q:2 / w:3 kobold brigand ; boomerang ego:dispersal q:4
-MONS:   kobold ; boomerang ego:silver q:2 / w:3 kobold brigand ; boomerang ego:silver q:4
+MONS:   kobold ; dart ego:dispersal q:2 / w:3 kobold brigand ; dart ego:dispersal q:4
+MONS:   kobold ; boomerang q:2 / w:3 kobold brigand ; boomerang q:4
 MONS:   kobold ; dart ego:curare q:1 / \
         w:3 kobold brigand ; dart ego:curare q:2
 : if you.absdepth() > 13 then
@@ -3766,7 +3767,7 @@ ENDMAP
 NAME:   hangedman_incinerator
 TAGS:   no_item_gen no_monster_gen
 DEPTH:  D:8-14
-MONS:   fire bat, lava snake, fire vortex, hell hound
+MONS:   fire bat, lava snake, fire elemental, hell hound
 NSUBST: ' = 4:' / *:.
 MARKER: ' = lua:fog_machine { cloud_type = "flame", pow_min = 25, \
             pow_max = 75, delay = 50, size = 1, walk_dist = 0, excl_rad = 0 }
@@ -3774,9 +3775,9 @@ KPROP:  l = no_cloud_gen
 MAP
 xxxxxxxxx
 xl.1xx23x
-x1l'3x|2x
+x1l''x|2x
 x.l''4xxx
-x.ll''3xx
+x.ll'''xx
 x.lll''1x
 x'.llll.x
 x.'...1lx
@@ -8897,6 +8898,257 @@ xxNNNxx
 xxx@xxx
 ENDMAP
 
+NAME:    nicolae_guarded_unrand_lochaber
+TAGS:    patrolling no_monster_gen no_item_gen
+DEPTH:   D:9-, Depths
+WEIGHT:  3
+KITEM:   L = lochaber axe no_pickup
+: if you.in_branch("D") then
+# Two-headed ogres get half the weight because they get twice the armament.
+KMONS:   a = orc knight ; war axe | broad axe | battleaxe w:5 / \
+             deep elf knight ; war axe | broad axe | battleaxe w:5 / \
+             tengu warrior ; war axe | broad axe | battleaxe w:5 / \
+             two-headed ogre w:5 ; war axe | broad axe | battleaxe w:5 . \
+                                   war axe | broad axe | battleaxe w:5
+KMONS:   p = orc knight ; halberd | demon trident | glaive w:5 / \
+             deep elf knight ; halberd | demon trident | glaive w:5 / \
+             tengu warrior ; halberd | demon trident | glaive w:5 / \
+             two-headed ogre w:5 ; halberd | demon trident | glaive w:5 . \
+                                   halberd | demon trident | glaive w:5
+KMONS:   L = ettin ; executioner's axe . bardiche
+KMONS:   P = phantasmal warrior w:5 / nothing
+: else
+KMONS:   a = war gargoyle ; broad axe | battleaxe / \
+             stone giant ; broad axe | battleaxe / \
+             orc warlord ; broad axe | battleaxe / \
+             ettin w:5 ; broad axe | battleaxe . broad axe | battleaxe
+KMONS:   p = war gargoyle ; demon trident | glaive / \
+             stone giant ; demon trident | glaive / \
+             orc warlord ; demon trident | glaive / \
+             ettin w:5 ; demon trident | glaive . demon trident | glaive
+KMONS:   L = deep elf blademaster ; executioner's axe . bardiche
+KMONS:   P = phantasmal warrior / nothing w:5
+: end
+SHUFFLE: DE
+SUBST:   D : cccT., E : GGGc.
+MAP
+G.....ccccccccccccccccc
+.....Gcc.a.a.a.a.cccccc
+..c++cc..........Pccccc
+..c..cE.D.E.D.E.D.Ecccc
+@.c..............P...cc
+@.c................L..c
+@.c..............P...cc
+..c..cE.D.E.D.E.D.Ecccc
+..c++cc..........Pccccc
+.....Gcc.p.p.p.p.cccccc
+G.....ccccccccccccccccc
+ENDMAP
+
+# Skysharks because that's what the slippers are made of. Elementals, anacondas,
+# and throwing nets to demonstrate the hazards that the slippers can help you
+# with. The merfolk will also have some nets and tridents, if you're not
+# interested in the footwear.
+NAME:   nicolae_guarded_unrand_slippers
+TAGS:   no_item_gen no_monster_gen no_trap_gen no_pool_fixup transparent
+DEPTH:  D:10-
+WEIGHT: 3
+KITEM:  s = slick slippers no_pickup
+KMONS:  S = skyshark w:40 / nothing
+KMONS:  ET = nothing w:20 / water elemental / anaconda / \
+             w:20 merfolk ; trident w:45 | trident good_item | \
+                            demon trident w:5 . throwing net q:4
+KFEAT:  sS = W
+KFEAT:  E = w
+KFEAT:  T = T w:30 / V
+KPROP:  sSEwWT` = no_tele_into
+MAP
+       .........
+  ......cccnccc......
+...ccccccwwwwwcccccc...
+...cwwwwwEwEwE`````c...
+@..cwSWSwwwwww`T`T`c..@
+@..nwWsWWWWWWW`````=..@
+@..cwSWSwwwwww`T`T`c..@
+...cwwwwwEwEwE`````c...
+...ccccccwwwwwcccccc...
+  ......cccnccc......
+       .........
+ENDMAP
+
+NAME:   nicolae_guarded_unrand_storm_shield
+TAGS:   no_monster_gen no_trap_gen no_tele_into
+DEPTH:  D:10-
+KITEM:  S = storm queen's shield no_pickup
+KMONS:  S = patrolling storm dragon
+KMONS:  1 = sixfirhy w:20 / shock serpent w:20 / spark wasp w:20 / \
+            air elemental / raiju
+KMONS:  2 = tengu conjurer  / deep elf zephyrmancer / spriggan air mage w:3
+NSUBST: 1 = 2 / 1111112
+MAP
+  xxx         xxx
+ xxxxx  @@@  xxxxx
+xxxxxxc.....cxxxxxx
+xxxxxxccc=cccxxxxxx
+xxxxccc.....cccxxxx
+ xxxcG.......Gcxxx
+  ccc....1....ccc
+  .c...1...1...c.
+ @.c...........c.@
+ @.=..1..S..1..=.@
+ @.c...........c.@
+  .c...1...1...c.
+  ccc....1....ccc
+ xxxcG.......Gcxxx
+xxxxccc.....cccxxxx
+xxxxxxccc=cccxxxxxx
+xxxxxxc.....cxxxxxx
+ xxxxx  @@@  xxxxx
+  xxx         xxx
+ENDMAP
+
+# From the dcss channel on the roguelikes discord:
+# Lici the Crawler: @nicolae  FR some earlyish (d7-d11) vaults
+#                   with lightning rod in them
+# Iguana Iguana:    @nicolae  FR some earlyish (d7-d11) vaults
+#                   with lightning rod and harm in them. FTFY
+# You've got to give the people what they want.
+NAME:   nicolae_have_a_lightning_rod
+DEPTH:  D:7-11
+KITEM:  L = lightning rod
+KITEM:  H = scarf ego:harm ident:all
+KMONS:  E = electric eel
+KMONS:  R = patrolling raiju
+KFEAT:  E = w
+NSUBST: E = 2=E / 2=w / 2=Ew
+veto {{
+  return not items.pickable("lightning rod")
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxwEwwxxxxxxxxxxxxx
+xxxwww..wwwxxxxxxxxwwx
+xwww...R..wEwxxxxEww.@
+xw..........wwwwww...@
+@.....ww..LH..ww.....@
+@...wwwwww..........wx
+@.wwExxxxwEw..R...wwwx
+xwwxxxxxxxxwww..wwwxxx
+xxxxxxxxxxxxxwwEwxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# I expanded Lici's request to a few other evokers.
+# (See comment on nicolae_have_a_lightning_rod)
+NAME:   nicolae_beast_mode
+TAGS:   transparent
+DEPTH:  D:7-11
+KITEM:  D = box of beasts
+KMONS:  D = juvenile mutant beast
+KMONS:  L = larval mutant beast
+NSUBST: D = D / L / ., L = 3=L / 3=-L / -
+SUBST:  - = .x, ` = x_
+CLEAR:  _
+veto {{
+  return not items.pickable("box of beasts")
+}}
+MAP
+     `xxxxx`
+    `xx-.-x
+  ..xx-L.....xx`
+  .......-...-x`
+`x-...-..L...-xx`
+xxx-.L.....-..-xx`
+xxx-.-.......L.-x`
+xx-.....DD......x`
+`x-..L..DDD..-.L.
+ xx-.-...DD......
+ `x-.L........L..
+ `xx-..-.....-.-x`
+  xx-..L..-L..-xx`
+ `x..........-xx`
+  ...-xxx-..xxxx
+   .xxxxxx..xx`
+     `xxx`
+ENDMAP
+
+NAME:   nicolae_rank_and_phial
+TAGS:   transparent
+DEPTH:  D:7-11
+KITEM:  P = phial of floods
+KMONS:  E = water elemental
+KMONS:  P = patrolling merfolk
+KFEAT:  E~ = w
+KMASK:  E~ = no_pool_fixup
+SUBST:  M = w.
+NSUBST: E = 3=E / 2=Ew / w
+veto {{
+  return not items.pickable("phial of floods")
+}}
+MAP
+MMMMMMMMMMM
+MwwwwwwwwwM
+MwE~~E~~EwM
+Mw~wwwww~wM
+Mw~w...w~wM
+MwEw.P.wEwM
+Mw~w...w~wM
+Mw~wwWww~wM
+MwE~~W~~EwM
+MwwwwWwwwwM
+MMMMMWMMMMM
+ENDMAP
+
+# Summoning a player illusion is probably too cruel at this depth, so a boggart
+# or two doing shadow creatures will have to suffice thematically instead.
+NAME:    nicolae_phantomly_mirrored
+TAGS:    no_item_gen no_monster_gen no_trap_gen
+DEPTH:   D:7-11
+KITEM:   P = phantom mirror
+# Using the same probabilities from mon-gear.cc.
+KMONS:   O : w:60 two-headed ogre ; giant club . giant club / \
+             w:30 two-headed ogre ; giant spiked club . giant spiked club / \
+             w:9  two-headed ogre ; dire flail . dire flail / \
+             w:1  two-headed ogre ; great mace . great mace
+KMONS:   S = boggart
+KFEAT:   DEFH = G
+SHUFFLE: OS
+{{
+local statuetiles = {"dngn_statue_ancient_evil", "dngn_statue_ancient_hero",
+   "dngn_statue_angel", "dngn_statue_archer", "dngn_statue_axe",
+   "dngn_statue_cat", "dngn_statue_centaur", "dngn_statue_cerebov",
+   "dngn_statue_demonic_bust", "dngn_statue_dragon", "dngn_statue_dwarf",
+   "dngn_statue_elephant", "dngn_statue_hydra", "dngn_statue_imp",
+   "dngn_statue_maw", "dngn_statue_mermaid", "dngn_statue_naga",
+   "dngn_statue_orb", "dngn_statue_orb_guardian", "dngn_statue_polearm",
+   "dngn_statue_princess", "dngn_statue_sigmund", "dngn_statue_snail",
+   "dngn_statue_sword", "dngn_statue_tengu", "dngn_statue_tentacles",
+   "dngn_statue_triangle", "dngn_statue_twins", "dngn_statue_wraith"}
+tile("D : " .. util.random_from(statuetiles))
+tile("E : " .. util.random_from(statuetiles))
+tile("F : " .. util.random_from(statuetiles))
+tile("H : " .. util.random_from(statuetiles))
+}}
+veto {{
+  return not items.pickable("phantom mirror")
+}}
+MAP
+xxxxxxxx
+xxvvvvvxxxx
+xxv...vvvvxxxx
+xxv.H....vvvvxxxx
+xvv....F....vvvvx
+xv.....O..E....vx
+@.........S..D.vx
+@............P.vx
+@.........S..D.vx
+xv.....O..E....vx
+xvv....F....vvvvx
+xxv.H....vvvvxxxx
+xxv...vvvxxxxx
+xxvvvvvxxx
+xxxxxxxx
+ENDMAP
 
 ###################################################################
 #

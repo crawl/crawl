@@ -133,7 +133,7 @@ typedef uint32_t mid_t;
  * This macro produces several inline function definitions; use it only at
  * file/namespace scope. It requires a trailing semicolon.
  *
- * @param T A type expression naming the enum type to augument. Evaluated
+ * @param T A type expression naming the enum type to augment. Evaluated
  *          several times.
  */
 #define DEF_ENUM_INC(T) \

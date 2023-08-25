@@ -197,6 +197,7 @@ void expend_xp_evoker(int evoker_type);
 int evoker_charge_xp_debt(int evoker_type);
 int evoker_charges(int evoker_type);
 int evoker_max_charges(int evoker_type);
+void print_xp_evoker_recharge(const item_def &evoker, int gained, bool silenced);
 
 // ring functions:
 bool jewellery_type_has_plusses(int jewel_type) PURE;
@@ -244,7 +245,7 @@ string item_base_name(object_class_type type, int sub_type);
 const char *weapon_base_name(weapon_type subtype) IMMUTABLE;
 weapon_type name_nospace_to_weapon(string name_nospace);
 
-void initialise_item_sets();
+void initialise_item_sets(bool reset = false);
 void force_item_set_choice(item_set_type typ, int sub_type);
 void populate_sets_by_obj_type();
 void mark_inventory_sets_unknown();

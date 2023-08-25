@@ -1131,7 +1131,7 @@ void do_trap_effects()
     vector<trap_type> available_traps = { TRAP_TELEPORT };
     // Don't shaft the player when shafts aren't allowed in the location or when
     //  it would be into a dangerous end.
-    if (_is_valid_shaft_effect_level())
+    if (_is_valid_shaft_effect_level() && you.shaftable())
         available_traps.push_back(TRAP_SHAFT);
     // No alarms on the first 3 floors
     if (env.absdepth0 > 3)
@@ -1147,7 +1147,7 @@ void do_trap_effects()
                 simple_god_message(" reveals a hidden shaft just before you would have fallen in.");
                 return;
             }
-            if (you.do_shaft(false))
+            if (you.do_shaft())
                 set_shafted();
             break;
 

@@ -2,7 +2,7 @@
 -- vault.lua: Vault helper functions from more than one file.
 --------------------------------------------------------------------------
 
--- Counting Pan runes for Ignacio and for exits.
+-- Counting Pan runes for exits.
 function count_pan_runes()
   local runes = 0
   for _, r in ipairs({"demonic","glowing","magical","fiery","dark"}) do

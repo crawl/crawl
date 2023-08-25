@@ -1045,6 +1045,86 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxx'''''''xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:    slime_pit_nicolae_block_by_block
+SHUFFLE: {[(<
+SUBST:   ` = x., 2 = 2., 4 = 444., 0 = 0.., 9 = 9998
+NSUBST:  P = O / n, 1 = 1 / 3
+NSUBST:  { = { / 9..., [ = [ / 9..., ( = ( / 9..., < = < / 9...
+: setup_slime_pit_ending(_G)
+KPROP:   `- = no_tele_into
+KMASK:   `- = opaque
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxx````````xxxxxxxxx````````xxxxxxx````````xxxxxxxxx````````xxxxxx
+xxxx``....`...``xxxxx``...`....`xxxxx`....`...``xxxxx``...`....``xxxx
+xxx`....c...c...``x``...c...c..`cxxxc`..c...c...``x``...c...c....`xxx
+xx`....ccccccc..n.`.n..ccccccc`cccxccc`ccccccc..n.`.n..ccccccc....`xx
+xx`.....cxxxc...........cxxxcxxxcxxxcxxxcxxxc...........cxxxc.....`xx
+x`......cxxxc.{...0...{.cxxxcxxxxxxxxxxxcxxxc.[...0...[.cxxxc......`x
+x`..c...cxxxc...c...c...cxxxcxxxcxxxcxxxcxxxc...c...c...cxxxc...c..`x
+x`.ccccccxxxcccccc.ccccccxxxcccccc`ccccccxxxcccccc.ccccccxxxcccccc.`x
+x`..cxxxxxxxxxxxc...cxxxxxxxxxxxc`.`cxxxxxxxxxxxc...cxxxxxxxxxxxc..`x
+x``.cxxxxxxxxxxxc...cxxxxxxxxxxxc.9.cxxxxxxxxxxxc...cxxxxxxxxxxxc.``x
+x`..cxxxxxxxxxxxc...cxxxxxxxxxxxc...cxxxxxxxxxxxc...cxxxxxxxxxxxc..`x
+x`.ccccccxxxcccccc.ccccccxxxcccccc.ccccccxxxcccccc.ccccccxxxcccccc.`x
+x`..c...cxxxc...c...c...cxxxc...c...c...cxxxc...c...c...cxxxc...c..`x
+xx`...{.cxxxc...........cxxxc.4...n...4.cxxxc...........cxxxc.[...`xx
+xx`.....cxxxc...n...n...cxxxc...c...c...cxxxc...n...n...cxxxc.....`xx
+xxx`n..ccccccc.ncn.ncn.ccccccc.ccc.ccc.ccccccc.ncn.ncn.ccccccc..n`xxx
+xxx`....c...c...n...n...c...c...c...c...c...c...n...n...c...c....`xxx
+xxxx`.0...........n...........n...c...n...........n...........0.`xxxx
+xxx`....c...c...n...n...c...c...c...c...c...c...n...c...c...c....`xxx
+xxx`n..ccccccc.ncn.ncn.ccccccc.ccc.ccc.ccccccc.ncn.ccc.ccccccc..n`xxx
+xx`.....cxxxc...n...n...cxxxc...c...c...cxxxc...n...c...cxxxc.....`xx
+xx`...{.cxxxc...........cxxxc.4...n...4.cxxxc...........cxxxc.[...`xx
+x`..c...cxxxc...c...c...cxxxc...c...c...cxxxc...c...c...cxxxc...c..`x
+x`.ccccccxxxcccccc.ccccccxnxcccccc.ccccccxnxcccccc.ccccccxxxcccccc.`x
+x`..cxxxxxxxxxxxc...cxxxxnnnn|**c...c**|nnnnxxxxc...cxxxxxxxxxxxc..`x
+x``.cxxxxxxxxxxxc...cxxxnnPnn|**c.c.c**|nnPnnxxxc...cxxxxxxxxxxxc.``x
+x`..cxxxxxxxxxxxc...cxxxxnnnn|**c...c**|nnnnxxxxc...cxxxxxxxxxxxc..`x
+x`.ccccccxxxcccccc.ccccccnnncnnncc.ccnnncnnncccccc.ccccccxxxcccccc.`x
+x`..cxxxcxxxc...c...c...c|||n..nc...cn..n|||c...c...c...cxxxcxxxc..`x
+x`..`xxxcxxxc.4...n...4.c***n.3...c...3.n***c.4...n...4.cxxxcxxx`..`x
+xx``cxxxcxxxc...c...c...c***nn..c...c..nn***c...c...c...cxxxcxxxc``xx
+xxxcccxccccccc.ccc.ccc.ccccccc.ccc2ccc.ccccccc.ccc.ccc.cccccccxcccxxx
+xxxxcxxxc`..c...c...c...c...c...c1.1c...c...c...c...c...c..`cxxxcxxxx
+xxxxxxxx`.9...n...c...n...c...c.2.Z.2.c...c...n...c...n...9.`xxxxxxxx
+xxxxcxxxc`..c...c...c...c...c...c1.1c...c...c...c...c...c..`cxxxcxxxx
+xxxcccxccccccc.ccc.ccc.ccccccc.ccc2ccc.ccccccc.ccc.ccc.cccccccxcccxxx
+xx``cxxxcxxxc...c...c...c***nn..c...c..nn***c...c...c...cxxxcxxxc``xx
+x`..`xxxcxxxc.4...n...4.c***n.3...c...3.n***c.4...n...4.cxxxcxxx`..`x
+x`..cxxxcxxxc...c...c...c|||n..nc...cn..n|||c...c...c...cxxxcxxxc..`x
+x`.ccccccxxxcccccc.ccccccnnncnnncc.ccnnncnnncccccc.ccccccxxxcccccc.`x
+x`..cxxxxxxxxxxxc...cxxxxnnnn|**c...c**|nnnnxxxxc...cxxxxxxxxxxxc..`x
+x``.cxxxxxxxxxxxc...cxxxnnPnn|**c.c.c**|nnPnnxxxc...cxxxxxxxxxxxc.``x
+x`..cxxxxxxxxxxxc...cxxxxnnnn|**c...c**|nnnnxxxxc...cxxxxxxxxxxxc..`x
+x`.ccccccxxxcccccc.ccccccxnxcccccc.ccccccxnxcccccc.ccccccxxxcccccc.`x
+x`..c...cxxxc...c...c...cxxxc...c...c...cxxxc...c...c...cxxxc...c..`x
+xx`...<.cxxxc...........cxxxc.4...n...4.cxxxc...........cxxxc.(...`xx
+xx`.....cxxxc...n...n...cxxxc...c...c...cxxxc...n...n...cxxxc.....`xx
+xxx`n..ccccccc.ncn.ncn.ccccccc.ccc.ccc.ccccccc.ncn.ncn.ccccccc..n`xxx
+xxx`....c...c...n...n...c...c...c...c...c...c...n...n...c...c....`xxx
+xxxx`.0...........n...........n...c...n...........n...........0.`xxxx
+xxx`....c...c...n...n...c...c...c...c...c...c...n...n...c...c....`xxx
+xxx`n..ccccccc.ncn.ncn.ccccccc.ccc.ccc.ccccccc.ncn.ncn.ccccccc..n`xxx
+xx`.....cxxxc...n...n...cxxxc...c...c...cxxxc...n...n...cxxxc.....`xx
+xx`...<.cxxxc...........cxxxc.4...n...4.cxxxc...........cxxxc.(...`xx
+x`..c...cxxxc...c...c...cxxxc...c...c...cxxxc...c...c...cxxxc...c..`x
+x`.ccccccxxxcccccc.ccccccxxxcccccc.ccccccxxxcccccc.ccccccxxxcccccc.`x
+x`..cxxxxxxxxxxxc...cxxxxxxxxxxxc...cxxxxxxxxxxxc...cxxxxxxxxxxxc..`x
+x``.cxxxxxxxxxxxc...cxxxxxxxxxxxc.9.cxxxxxxxxxxxc...cxxxxxxxxxxxc.``x
+x`..cxxxxxxxxxxxc...cxxxxxxxxxxxc`.`cxxxxxxxxxxxc...cxxxxxxxxxxxc..`x
+x`.ccccccxxxcccccc.ccccccxxxcccccc`ccccccxxxcccccc.ccccccxxxcccccc.`x
+x`..c...cxxxc...c...c...cxxxcxxxcxxxcxxxcxxxc...c...c...cxxxc...c..`x
+x`......cxxxc.<...0...<.cxxxcxxxxxxxxxxxcxxxc.(...0...(.cxxxc......`x
+xx`.....cxxxc...........cxxxcxxxcxxxcxxxcxxxc...........cxxxc.....`xx
+xx`....ccccccc..n.`.n..ccccccc`cccxccc`ccccccc..n.`.n..ccccccc....`xx
+xxx`....c...c...``x``...c...c..`cxxxc`..c...c...``x``...c...c....`xxx
+xxxx``....`...``xxxxx``...`....`xxxxx`....`...``xxxxx``...`....``xxxx
+xxxxxx````````xxxxxxxxx````````xxxxxxx````````xxxxxxxxx````````xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 # An acidless path to the center is likely, but not guaranteed. You'll be fine.
 NAME:   slime_pit_nicolae_inversion
 SUBST:  3 = 33., 4 = 444.., ' = x.
@@ -1120,27 +1200,27 @@ ENDMAP
 
 NAME:    slime_pit_nicolae_jellycorners
 SHUFFLE: Pp/Qq/Rr/Ss
-SUBST:   ' = x., ! = cx., " = cx, P = 1, QRS = 998, pqr = 4.....
+SUBST:   ' = x., ! = cx., - = cccx., " = cx, P = 1, QRS = 998, pqr = 4.....
 NSUBST:  p = 2=2 / 2=2. / 2=3 / 3. / 4., \
          D = O / *|, { = { / [ / ( / Z
 : setup_slime_pit_ending(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xcccc"""""cccc!.''xxxxxxxxxxxxxxxxxx''!cccc"""""ccccx
+xcccc"""""cccc!!''xxxxxxxxxxxxxxxxxx'!!cccc"""""ccccx
 xc"!.......!"c....'xxxxxxxxxxx''''''...c"!.......!"cx
-xc!.......p.!!!....''xxxxxx'''........!!!.q.......!cx
+xc!.......p.!!!!...''xxxxxx'''.......!!!!.q.......!cx
 xc..P....ppp.!.......''''''............!.qqq....Q..cx
-x".....!..p..!!.......................!!..q..!....."x
-x"....!!!...................................!!!...."x
-x"...!!"!!.................................!!"!!..."x
-x"....!!!.........xxx'......................!!!...."x
-x"..p..!..p..!''xxxxxx'.............'''!..q..!..q.."x
+x".....-..p..!!!.....................!!!..q..-....."x
+x"....---...................................---...."x
+x"...--"--.................................--"--..."x
+x"....---.........xxx'......................---...."x
+x"..p..-..p..!!'xxxxxx'.............''!!..q..-..q.."x
 xc.ppp...ppp.!xxxxxxxx'............'xxx".qqq...qqq.cx
 xc!.p.....p.!!xxxx''''............'xxxx"'.q.....q.!cx
 xc"!.......!""xxx'................'xxxxx"!.......!"cx
 xcc!!!...!!!""xxx'................'xxxxxx"!!...!!!ccx
 x!.!.!...!.!.!'xxx'................'xxxxxxx!...!.!.!x
-xx............'xxx'................'xxxxxx'.........x
+x!.!.!...!.!.!'xxx'................'xxxxxx'!...!.!.!x
 xx'............'xxx'..............'xxxxxx'........'xx
 xxx'............'xxx'............'xxxxxx'.........'xx
 xxx'............'xxxx'....{....'xxxxxx''..........'xx
@@ -1162,21 +1242,21 @@ xx'......'xxxxx''xxxxx'.......xxxxxxxxxxxxx'.....'xxx
 xx'.......''xxxxxxxxx'....{...''xxxxxxxxx''......'xxx
 xxx'........xxxxxxx''...........''xxxxxx'.........'xx
 xxx'........'xxxxx'...............'xxxxx'..........'x
-xxxx'.......'xxxxx'................'xxxx'...........x
+xxxx'!...!."'xxxxx'................'xxxx'!.!...!.!.!x
 xxxx'!...!""xxxxx'..................'xxx"!.!...!.!.!x
-xxxx'!...!!!""xx'....................'"""!!!...!!!ccx
+xxxx"!...!!!""xx'....................!"""!!!...!!!ccx
 xxx'.......!""x'......................'""!.......!"cx
-xx'.s.....s.!!".......................!!!.r.....r.!cx
+xx'.s.....s.!!"".....................!!!!.r.....r.!cx
 xx.sss...sss.!.........................!.rrr...rrr.cx
-x"..s..!..s..!!......'''..............!!..r..!..r.."x
-x"....!!!...........'xxx'...................!!!...."x
-x"...!!"!!..........'xxx'.....''...........!!"!!..."x
-x"....!!!..........'xxxx'....'xx'...........!!!...."x
-x".....!..s..!!....'xxx'.....'xxx'....!!..r..!.....xx
+x"..s..-..s..!!!.....'''.............!!!..r..-..r.."x
+x"....---...........'xxx'...................---...."x
+x"...--"--..........'xxx'.....''...........--"--..."x
+x"....---..........'xxxx'....'xx'...........---...."x
+x".....-..s..!!!...'xxx'.....'xxx'...!!!..r..-.....xx
 xc..S....sss.!....'xxxx'......'xxx'....!.rrr....R.'xx
-xc!.......s.!!!...'xxx'......'xxxx'...!!!.r......'xxx
+xc!.......s.!!!!..'xxx'......'xxxx'..!!!!.r......'xxx
 xc"!.......!"c...'xxxxx'''''xxxxxxx'...c"!......'xxxx
-xcccc"""""cccc!''xxxxxxxxxxxxxxxxxxx''!cccc""""xxxxxx
+xcccc"""""cccc!!'xxxxxxxxxxxxxxxxxxx'!!cccc""""xxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 

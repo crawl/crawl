@@ -458,7 +458,7 @@ parameters for each.
 
    * monster_dies: Waits for a monster to die. Needs the parameter
          "target", who's value is the name of the monster who's death
-         we're wating for. Doesn't matter where the triggerable/marker
+         we're waiting for. Doesn't matter where the triggerable/marker
          is placed.
    * feat_change: Waits for a cell's feature to change. Accepts the
          optional parameter "target", which if set delays the trigger

@@ -99,7 +99,7 @@ endif
 # down MinGW and Cygwin builds by a very VERY noticeable degree. Besides, we have
 # _explicit_ rules defined for everything. So we don't need them.
 MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
-.SUFFIXES:       # ... so zap the suffix list to neutralize most predifined rules, too
+.SUFFIXES:       # ... so zap the suffix list to neutralize most predefined rules, too
 
 .PHONY: all test install clean clean-contrib clean-rltiles clean-android \
         clean-appimage clean-catch2 clean-plug-and-play-tests \
@@ -1329,7 +1329,8 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
             e_m_fields sastrei_chei anon_octopus_wizard arbituhhh_tesu \
             kaonedong_ignis_the_dying_flame kaonedong_menkaure_prince_of_dust \
             philosopheropposite_palentonga_paladin gompami_kohu_xbow \
-            micah_c_ereshkigal SpinningBird_djinn_sears_gnolls benadryl_antaeus
+            micah_c_ereshkigal SpinningBird_djinn_sears_gnolls \
+			benadryl_antaeus king7artist_eustachio
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
@@ -1787,7 +1788,7 @@ $(OBJECTS:%.o=%.cc) main.cc: $(CONTRIB_LIBS)
 $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
 $(TILEDEFOBJS): ALL_CFLAGS=$(RLTILES_CFLAGS)
 
-# The "|" designates "order-only" dependancies. See: (make) Prerequisite Types.
+# The "|" designates "order-only" dependencies. See: (make) Prerequisite Types.
 #
 # This ensures that we update these headers before building anything
 # that might depend on them without our knowing it yet, but lets the

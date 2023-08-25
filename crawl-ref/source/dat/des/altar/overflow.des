@@ -60,24 +60,24 @@ function get_overflow_altar_count(e)
 end
 
 function callback.vampire_church_blood(data, triggerable, triggerer, marker, ev)
-  local slaves = dgn.find_marker_positions_by_prop("slave_name", "vampire_church_blood")
+  local replicas = dgn.find_marker_positions_by_prop("replica_name", "vampire_church_blood")
   crawl.god_speaks("Kikubaaqudgha", "As you approach the altar, the fountains"
                                  .. " begin to flow with blood!")
-  for i, slave in ipairs(slaves) do
-    dgn.terrain_changed(slave.x, slave.y, "fountain_blood", false)
+  for i, replica in ipairs(replicas) do
+    dgn.terrain_changed(replica.x, replica.y, "fountain_blood", false)
   end
 end
 
 function callback.hep_ancestral_shrine_los(data, triggerable, triggerer, marker, ev)
   if not dgn.persist.hep_ancestral_shrine_reborn and you.god() == "Hepliaklqana" then
     local trees = dgn.find_marker_positions_by_prop("dead_tree", 1)
-    for i, slave in ipairs(trees) do
-      dgn.tile_feat_changed(slave.x, slave.y, "DNGN_TREE")
+    for i, replica in ipairs(trees) do
+      dgn.tile_feat_changed(replica.x, replica.y, "DNGN_TREE")
     end
     dgn.reset_feature_name_for(trees[1].x, trees[1].y, "tree")
     local slime = dgn.find_marker_positions_by_prop("green_water", 1)
-    for i, slave in ipairs(slime) do
-      dgn.colour_at(slave.x, slave.y, "blue")
+    for i, replica in ipairs(slime) do
+      dgn.colour_at(replica.x, replica.y, "blue")
     end
     crawl.god_speaks("Hepliaklqana", "Let the past return from memory!")
     dgn.persist.hep_ancestral_shrine_reborn = true
@@ -1281,11 +1281,10 @@ NSUBST:  123 = 2=.
 MONS:    gargoyle ; quarterstaff good_item \
          / molten gargoyle w:5 ; quarterstaff good_item
 MONS:   kobold brigand ; dagger ego:draining good_item . wand of paralysis \
-             . dart ego:atropa . potion of haste \
+             . dart ego:atropa \
          / spriggan ; dagger ego:draining good_item . robe good_item . buckler \
-             . wand of paralysis . potion of haste \
-         / vampire ; dagger ego:draining good_item . robe good_item \
-             . potion of haste
+             . wand of paralysis \
+         / vampire ; dagger ego:draining good_item . robe good_item
 MONS:    orc warrior ; flail good_item . kite shield . chain mail good_item \
          / gnoll sergeant ; flail good_item . kite shield \
              . chain mail good_item \
@@ -1295,42 +1294,37 @@ MONS:    orc warrior ; flail good_item . kite shield . chain mail good_item \
 NSUBST:  123 = 1=.
 # For D:13- and Depths, we generate all three ancestor monsters.
 :     else
-MONS:    ogre mage; lajatang ego:freezing . potion of haste \
-         / molten gargoyle ; lajatang ego:flaming . potion of haste
+MONS:    ogre mage; lajatang ego:freezing \
+         / molten gargoyle ; lajatang ego:flaming
 MONS:    spriggan ; dagger ego:draining good_item . robe good_item \
-             . buckler good_item . wand of paralysis . potion of haste \
+             . buckler good_item . wand of paralysis \
          / vampire ; dagger ego:draining good_item . robe good_item \
-             . buckler . wand of paralysis . potion of haste
+             . buckler . wand of paralysis
 MONS:    orc knight; broad axe ego:flaming . chain mail good_item \
-             . tower shield ego:reflection . potion of haste \
+             . tower shield ego:reflection \
          / tengu warrior ; broad axe ego:flaming . chain mail good_item \
-             . tower shield ego:reflection . potion of haste \
+             . tower shield ego:reflection \
          / naga warrior ; broad axe ego:flaming . chain mail good_item \
-             . tower shield ego:reflection . potion of haste \
+             . tower shield ego:reflection \
          / skeletal warrior ; broad axe ego:flaming . chain mail good_item \
-             . tower shield ego:reflection . potion of haste
+             . tower shield ego:reflection
 :     end
 # Depths
 : else
 MONS:    tengu reaver ; lajatang ego:freezing good_item \
-             | lajatang ego:freezing randart . scale mail . potion of haste \
-             . potion of haste \
+             | lajatang ego:freezing randart . scale mail \
          / ancient champion ; lajatang ego:freezing good_item \
              | lajatang ego:freezing randart . scale mail
 MONS:    vampire knight; quick blade ego:antimagic . buckler good_item \
-             . shadow dragon scales good_item . potion of haste \
-             . potion of haste \
+             . shadow dragon scales good_item \
          / spriggan defender; quick blade ego:antimagic w:20 \
-             . robe good_item . buckler good_item . wand of paralysis \
-             . potion of haste . potion of haste
+             . robe good_item . buckler good_item . wand of paralysis
 MONS:    minotaur ; broad axe ego:speed good_item \
              | broad axe ego:speed randart | arga w:1 . plate armour good_item \
-             . tower shield ego:reflection good_item . potion of haste \
-             . potion of haste \
+             . tower shield ego:reflection good_item \
          / orc warlord ; broad axe ego:speed good_item \
              | broad axe ego:speed randart | arga w:1 . plate armour good_item \
-             . tower shield ego:reflection good_item . potion of haste \
-             . potion of haste
+             . tower shield ego:reflection good_item
 : end
 KFEAT:   _ = altar_hepliaklqana
 KFEAT:   - = altar_ecumenical
@@ -1483,7 +1477,7 @@ local trig_marker = TriggerableFunction:new {
 }
 trig_marker:add_triggerer(DgnTriggerer:new { type = "player_move" })
 lua_marker("A", trig_marker)
-lua_marker("V", portal_desc { slave_name = "vampire_church_blood" })
+lua_marker("V", portal_desc { replica_name = "vampire_church_blood" })
 }}
 : interest_check(_G)
 MAP
@@ -2037,6 +2031,45 @@ vvv.'.vvv
 v.......v
 v..v+v..v
 vvvv@vvvv
+ENDMAP
+
+# After much consideration, I decided this should go with the other overflow
+# altars, rather than with the other guarded unrand vaults, since the majority
+# of the tags are for its role as an overflow.
+NAME:   nicolae_overflow_guarded_unrand_okawaru_victory
+TAGS:   temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru transparent
+DEPTH:  D:3-9
+WEIGHT: 3
+KPROP:  `SLps = no_tele_into
+KFEAT:  _ = altar_okawaru
+: if you.depth() < 6 then
+KMONS:  S = gnoll bouda band / gnoll sergeant band
+KMONS:  ps = gnoll / orc / ogre w:5 / centaur w:5 / nothing
+: elseif you.depth() < 8 then
+KMONS:  S = wight band / kobold brigand band / orc warrior band
+KMONS:  ps = ogre / centaur / wight / nothing
+: else
+KMONS:  S = two-headed ogre / troll / gargoyle
+KMONS:  ps = orc warrior / kobold brigand / wight / troll w:5 / gargoyle w:5 / \
+             two-headed ogre w:5
+: end
+KITEM:  S = victory no_pickup
+KITEM:  p = any potion no_pickup
+KITEM:  s = any scroll no_pickup
+SUBST:  c : ccccv
+NSUBST: L = 2=p / 2=s
+MAP
+xxc@@@cxxxxxxxx
+xxc...cxxxxxxxx
+xcc...ccccccccx
+xcG...GcG`L`Gcx
+xc.....c````Lcx
+xc.._..=``S``cx
+xc.....c````Lcx
+xcG...GcG`L`Gcx
+xcc...ccccccccx
+xxc...cxxxxxxxx
+xxc@@@cxxxxxxxx
 ENDMAP
 
 ### Qazlal overflow altars ####################################################
@@ -3225,7 +3258,6 @@ ENDMAP
 NAME:    xom_butterflies
 TAGS:    temple_overflow_1 temple_overflow_xom transparent patrolling
 KFEAT:   _ = altar_xom
-KITEM:   _ = piece from Xom's chessboard
 COLOUR:  . = random
 NSUBST:  . = 2: 1/ *: .
 MONS:    butterfly
@@ -4068,36 +4100,6 @@ xxxXXX+CCCxxx
     x.@.x
 ENDMAP
 
-# If the berserker scares you, use the escape hatch.
-NAME:   grunt_temple_overflow_bloody_war
-TAGS:   temple_overflow_2 temple_overflow_okawaru temple_overflow_trog
-TAGS:   patrolling transparent
-WEIGHT: 5
-KFEAT:  A = altar_okawaru
-KFEAT:  B = altar_trog
-KPROP:  . = bloody / nothing
-: if you.absdepth() < 8 then
-MONS:   gnoll ; club | spear | nothing . potion of berserk rage / \
-        orc ; club | hand axe | short sword . \
-              leather armour | nothing . potion of berserk rage
-: else
-MONS:   orc warrior ; club | hand axe | short sword . \
-                      leather armour | ring mail . \
-                      potion of berserk rage
-: end
-MAP
-xxxxxxx
-xxxxxxx
-xxA.Bxx
-xx.1.xx
-xx...xx
-xx...xx
-xx...xx
-xx...xx
-xxx+xxx
-  .@<
-ENDMAP
-
 NAME:    grunt_temple_overflow_magic_moments
 TAGS:    temple_overflow_3 temple_overflow_kikubaaqudgha
 TAGS:    temple_overflow_sif_muna temple_overflow_vehumet
@@ -4311,27 +4313,27 @@ TAGS:    temple_overflow_2 temple_overflow_xom temple_overflow_hepliaklqana
     los_marker:add_triggerer(DgnTriggerer:new {
       type="player_los"})
 
-    lua_marker('1', los_marker)
+    lua_marker('D', los_marker)
 }}
-KMONS:   2 = spectral ugly thing
+KMONS:   1 = spectral ugly thing
 KFEAT:   A = altar_xom
 KFEAT:   B = altar_hepliaklqana
 SHUFFLE: AB
 SUBST:   G = G...
-KPROP:   12' = no_tele_into
-KMASK:   12' = no_item_gen
-KMASK:   12' = no_trap_gen
+KPROP:   1D' = no_tele_into
+KMASK:   1D' = no_item_gen
+KMASK:   1D' = no_trap_gen
 KMASK:   ' = no_monster_gen
 # TODO: this fog machine doesn't do much, is it supposed to spread?
-MARKER:  2 = lua:fog_machine { cloud_type = "thin mist", \
+MARKER:  1 = lua:fog_machine { cloud_type = "thin mist", \
              pow_min = 100, pow_max = 100, delay = 1, \
              size = 1, walk_dist = 0, start_clouds = 1 }
 MAP
 cccccc
 ccb'bccccc
-cb2n1bc.+.
+cb1nDbc.+.
 c'nnnnc.c.
-cb1nA...cc
+cbDnA...cc
 ccbn.G.bc
 cccc..Bcc
  c...bcc

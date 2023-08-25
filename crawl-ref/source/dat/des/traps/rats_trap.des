@@ -28,10 +28,10 @@ function callback.rats_trap_stepped(data, triggerable, triggerer, marker, ev)
   data.triggered = true
   dgn.grid(x, y, "floor")
 
-  for slave in iter.slave_iterator("hole", 1) do
-      if not dgn.is_passable(slave.x,slave.y) then
-        dgn.terrain_changed(slave.x, slave.y, "floor", false)
-        dgn.create_item(slave.x, slave.y, "stone q:3 / stone q:2 / stone")
+  for replica in iter.replica_iterator("hole", 1) do
+      if not dgn.is_passable(replica.x,replica.y) then
+        dgn.terrain_changed(replica.x, replica.y, "floor", false)
+        dgn.create_item(replica.x, replica.y, "stone q:3 / stone q:2 / stone")
       else
         crawl.mpr("You hear a click.")
         return

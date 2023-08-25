@@ -44,7 +44,7 @@ static bool _mons_has_path_to_player(const monster* mon)
         return true;
 
     // Non-adjacent non-tentacle stationary monsters are only threatening
-    // because of any ranged attack they might posess, which is handled
+    // because of any ranged attack they might possess, which is handled
     // elsewhere in the safety checks. Presently all stationary monsters
     // have a ranged attack, but if a melee stationary monster is introduced
     // this will fail. Don't add a melee stationary monster it's not a good
@@ -458,9 +458,7 @@ bool bring_to_safety()
 // This includes ALL afflictions, unlike wizard/Xom revive.
 void revive()
 {
-    adjust_level(-1);
-    // Allow a spare after two levels (we just lost one); the exact value
-    // doesn't matter here.
+    // Allow a spare after a few levels; the exact value doesn't matter here.
     you.attribute[ATTR_LIFE_GAINED] = 0;
 
     you.magic_contamination = 0;
@@ -470,8 +468,8 @@ void revive()
     you.attribute[ATTR_DIVINE_VIGOUR] = 0;
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
     you.attribute[ATTR_DIVINE_SHIELD] = 0;
-    if (you.form != transformation::none)
-        untransform(true);
+    if (you.form != you.default_form)
+        return_to_default_form();
     you.clear_beholders();
     you.clear_fearmongers();
     you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
@@ -490,7 +488,7 @@ void revive()
 
     // TODO: this doesn't seem to call any duration end effects?
     for (int dur = 0; dur < NUM_DURATIONS; dur++)
-        if (dur != DUR_PIETY_POOL)
+        if (dur != DUR_PIETY_POOL && dur != DUR_TRANSFORMATION)
             you.duration[dur] = 0;
 
     update_vision_range(); // in case you had darkness cast before
@@ -509,6 +507,7 @@ void revive()
         you.lives = 0;
         mpr("You are too frail to live.");
         // possible only with an extreme abuse of Borgnjor's
+        // might be impossible now that felids don't level down on death?
         ouch(INSTANT_DEATH, KILLED_BY_DRAINING);
     }
 

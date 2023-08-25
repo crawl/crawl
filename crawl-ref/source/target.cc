@@ -1243,6 +1243,23 @@ aff_type targeter_flame_wave::is_affected(coord_def loc)
     return AFF_MAYBE;
 }
 
+targeter_siphon_essence::targeter_siphon_essence()
+    : targeter_radius(&you, LOS_NO_TRANS, 2, 0, 1)
+{ }
+
+aff_type targeter_siphon_essence::is_affected(coord_def loc)
+{
+    const aff_type base_aff = targeter_radius::is_affected(loc);
+    if (base_aff == AFF_NO)
+        return AFF_NO;
+    monster* mons = monster_at(loc);
+    if (!mons || !you.can_see(*mons))
+        return AFF_MAYBE;
+    if (!siphon_essence_affects(*mons))
+        return AFF_NO;
+    return AFF_YES;
+}
+
 aff_type targeter_shatter::is_affected(coord_def loc)
 {
     if (loc == origin)

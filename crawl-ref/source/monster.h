@@ -152,8 +152,6 @@ public:
         override;
     bool is_perm_summoned() const override;
     bool has_action_energy() const;
-    bool may_have_action_energy() const;
-    bool outpaced_by_player() const;
     void drain_action_energy();
     void check_redraw(const coord_def &oldpos, bool clear_tiles = true) const;
     void apply_location_effects(const coord_def &oldpos,
@@ -216,15 +214,6 @@ public:
     void react_to_damage(const actor *oppressor, int damage, beam_type flavour);
 
     void apply_enchantments();
-
-    bool can_drink() const;
-    bool can_drink_potion(potion_type ptype) const;
-    bool should_drink_potion(potion_type ptype) const;
-    bool drink_potion_effect(potion_type pot_eff, bool card = false);
-
-    bool can_evoke_jewellery(jewellery_type jtype) const;
-    bool should_evoke_jewellery(jewellery_type jtype) const;
-    bool evoke_jewellery_effect(jewellery_type jtype);
 
     void timeout_enchantments(int levels);
 
@@ -356,7 +345,7 @@ public:
     bool go_berserk(bool intentional, bool potion = false) override;
     bool go_frenzy(actor *source);
     bool berserk() const override;
-    bool berserk_or_insane() const;
+    bool berserk_or_frenzied() const;
     bool can_mutate() const override;
     bool can_safely_mutate(bool temp = true) const override;
     bool can_polymorph() const override;
@@ -373,11 +362,11 @@ public:
 
     monster_type mons_species(bool zombie_base = false) const override;
 
-    mon_holy_type holiness(bool /*temp*/ = true) const override;
+    mon_holy_type holiness(bool /*temp*/ = true, bool /*incl_form*/ = true) const override;
     bool undead_or_demonic(bool /*temp*/ = true) const override;
     bool evil() const override;
     bool is_holy() const override;
-    bool is_nonliving(bool /*temp*/ = true) const override;
+    bool is_nonliving(bool /*temp*/ = true, bool /*incl_form*/ = true) const override;
     int how_unclean(bool check_god = true) const;
     int known_chaos(bool check_spells_god = false) const;
     int how_chaotic(bool check_spells_god = false) const override;
@@ -427,6 +416,7 @@ public:
     bool confused_by_you() const;
     bool caught() const override;
     bool asleep() const override;
+    bool sleepwalking() const;
     bool backlit(bool self_halo = true, bool /*temp*/ = true) const override;
     bool umbra() const override;
     int halo_radius() const override;
@@ -534,7 +524,7 @@ public:
 
     int action_energy(energy_use_type et) const;
 
-    bool do_shaft(bool check_terrain = true) override;
+    bool do_shaft() override;
     bool has_spell_of_type(spschool discipline) const;
 
     void bind_melee_flags();

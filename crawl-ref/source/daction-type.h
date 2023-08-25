@@ -9,7 +9,7 @@ enum daction_type
     DACT_ALLY_UNHOLY_EVIL,
     DACT_ALLY_UNCLEAN_CHAOTIC,
     DACT_ALLY_SPELLCASTER,
-    DACT_ALLY_YRED_SLAVE,
+    DACT_ALLY_YRED_RELEASE_SOULS,
 #endif
     DACT_ALLY_BEOGH, // both orcs and demons summoned by high priests
     DACT_ALLY_SLIME,

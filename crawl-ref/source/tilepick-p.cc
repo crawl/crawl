@@ -490,21 +490,24 @@ tileidx_t tileidx_player()
     switch (you.form)
     {
     // equipment-using forms are handled regularly
+    case transformation::beast:
+    case transformation::flux:
+    case transformation::maw:
     case transformation::statue:
-    case transformation::lich:
+    case transformation::death:
     case transformation::tree:
     // (so is storm form)
     case transformation::storm:
         break;
     // animals
     case transformation::bat:       ch = TILEP_TRAN_BAT;       break;
-    case transformation::spider:    ch = TILEP_TRAN_SPIDER;    break;
-    case transformation::pig:       ch = TILEP_TRAN_PIG;       break;
 #if TAG_MAJOR_VERSION == 34
-    case transformation::porcupine: ch = TILEP_TRAN_PIG; break;
+    case transformation::spider:    ch = TILEP_TRAN_SPIDER;    break;
+    case transformation::porcupine:
 #endif
+    case transformation::pig:       ch = TILEP_TRAN_PIG;       break;
     // non-animals
-    case transformation::ice_beast: ch = TILEP_TRAN_ICE_BEAST; break;
+    case transformation::anaconda:  ch = TILEP_TRAN_ANACONDA; break;
     case transformation::wisp:      ch = TILEP_MONS_INSUBSTANTIAL_WISP; break;
 #if TAG_MAJOR_VERSION == 34
     case transformation::jelly:     ch = TILEP_MONS_JELLY;     break;
@@ -515,6 +518,7 @@ tileidx_t tileidx_player()
     {
         switch (you.species)
         {
+        case SP_FELID:             ch = TILEP_TRAN_DRAGON_FELID;   break;
         case SP_BLACK_DRACONIAN:   ch = TILEP_TRAN_DRAGON_BLACK;   break;
         case SP_YELLOW_DRACONIAN:  ch = TILEP_TRAN_DRAGON_YELLOW;  break;
         case SP_GREY_DRACONIAN:    ch = TILEP_TRAN_DRAGON_GREY;    break;
@@ -522,14 +526,13 @@ tileidx_t tileidx_player()
         case SP_PALE_DRACONIAN:    ch = TILEP_TRAN_DRAGON_PALE;    break;
         case SP_PURPLE_DRACONIAN:  ch = TILEP_TRAN_DRAGON_PURPLE;  break;
         case SP_WHITE_DRACONIAN:   ch = TILEP_TRAN_DRAGON_WHITE;   break;
-        case SP_RED_DRACONIAN:     ch = TILEP_TRAN_DRAGON_RED;     break;
+        case SP_RED_DRACONIAN:
         default:                   ch = TILEP_TRAN_DRAGON;         break;
         }
         break;
     }
     // no special tile
     case transformation::blade_hands:
-    case transformation::appendage:
     case transformation::none:
     default:
         break;
@@ -944,7 +947,7 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             break;
 
-        case JOB_TRANSMUTER:
+        case JOB_SHAPESHIFTER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_RAINBOW;
             parts[TILEP_PART_HAND1] = TILEP_HAND1_STAFF_RUBY;
             parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_MAGENTA_DIM;
@@ -1047,15 +1050,11 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
     if (doll.parts[TILEP_PART_HELM] >= TILEP_HELM_FHELM_OFS)
         flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
 
-    if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_NAGA))
+    if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_NAGA)
+        || is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_ARMATAUR))
     {
         flag[TILEP_PART_BOOTS] = flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
-        flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_NAGA;
-    }
-    else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_ARMATAUR))
-    {
-        flag[TILEP_PART_BOOTS] = flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
-        flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_CENTAUR;
+        flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_BOTTOM;
     }
     else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_MERFOLK_WATER)
              || is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_DJINNI))
@@ -1063,6 +1062,7 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_BOOTS]  = TILEP_FLAG_HIDE;
         flag[TILEP_PART_LEG]    = TILEP_FLAG_HIDE;
         flag[TILEP_PART_SHADOW] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BODY]   = TILEP_FLAG_CUT_BOTTOM;
     }
     else if (doll.parts[TILEP_PART_BASE] >= TILEP_BASE_DRACONIAN_FIRST
              && doll.parts[TILEP_PART_BASE] <= TILEP_BASE_DRACONIAN_LAST)

@@ -319,8 +319,12 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     if (proprt[ARTP_CONTAM] && msg && !unmeld)
         mpr("You feel a build-up of mutagenic energy.");
 
-    if (proprt[ARTP_RAMPAGING] && msg && !unmeld && !you.has_mutation(MUT_ROLLPAGE))
+    if (proprt[ARTP_RAMPAGING] && msg && !unmeld
+        && !you.has_mutation(MUT_ROLLPAGE)
+        && !you_worship(GOD_WU_JIAN))
+    {
         mpr("You feel ready to rampage towards enemies.");
+    }
 
     if (proprt[ARTP_ARCHMAGI] && msg && !unmeld)
     {
@@ -392,8 +396,12 @@ static void _unequip_artefact_effect(item_def &item,
         contaminate_player(7000, true);
     }
 
-    if (proprt[ARTP_RAMPAGING] && !you.rampaging() && msg && !meld)
+    if (proprt[ARTP_RAMPAGING] && msg && !meld
+        && !you.rampaging()
+        && !you_worship(GOD_WU_JIAN))
+    {
         mpr("You no longer feel able to rampage towards enemies.");
+    }
 
     if (proprt[ARTP_ARCHMAGI] && msg && !meld)
         mpr("You feel strangely numb.");
@@ -533,7 +541,12 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 case SPWPN_PAIN:
                 {
                     const string your_arm = you.arm_name(false);
-                    if (you.skill(SK_NECROMANCY) == 0)
+                    if (you_worship(GOD_TROG))
+                    {
+                        mprf(MSGCH_GOD, "Trog suppresses %s necromantic effect.",
+                             apostrophise(item_name).c_str());
+                    }
+                    else if (you.skill(SK_NECROMANCY) == 0)
                         mpr("You have a feeling of ineptitude.");
                     else if (you.skill(SK_NECROMANCY) <= 6)
                     {
@@ -830,7 +843,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             break;
 
         case SPARM_RAMPAGING:
-            if (!you.has_mutation(MUT_ROLLPAGE))
+            if (!you.has_mutation(MUT_ROLLPAGE) && !you_worship(GOD_WU_JIAN))
                 mpr("You feel ready to rampage towards enemies.");
             break;
 
@@ -973,7 +986,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
 
     case SPARM_RAMPAGING:
-        if (!you.rampaging())
+        if (!you.rampaging() && !you_worship(GOD_WU_JIAN))
             mpr("You no longer feel able to rampage towards enemies.");
         break;
 
@@ -1046,12 +1059,14 @@ static void _equip_regeneration_item(const item_def &item)
                                          ? "armour"
                                          : item_slot_name(eq_slot);
 
+#if TAG_MAJOR_VERSION == 34
     if (you.get_mutation_level(MUT_NO_REGENERATION))
     {
         mprf("The %s feel%s cold and inert.", item_name.c_str(),
              plural ? "" : "s");
         return;
     }
+#endif
     if (you.hp == you.hp_max)
     {
         mprf("The %s throb%s to your uninjured body.", item_name.c_str(),

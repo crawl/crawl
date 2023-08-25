@@ -52,6 +52,7 @@ enum monster_list_colour_type
     MLC_EASY,
     MLC_TOUGH,
     MLC_NASTY,
+    MLC_UNUSUAL,
     NUM_MLC
 };
 
@@ -510,6 +511,9 @@ public:
     bool        show_blood; // whether to show blood or not
     bool        reduce_animations;   // if true, don't show interim steps for animations
 
+    vector<text_pattern> unusual_monster_items; // which monster items to
+                                                // highlight as unusual
+
     int         hp_warning;      // percentage hp for danger warning
     int         magic_point_warning;    // percentage mp for danger warning
     bool        clear_messages;   // clear messages each turn
@@ -517,6 +521,8 @@ public:
     bool        small_more;       // Show one-char more prompts.
     unsigned    friend_highlight;     // Attribute for highlighting friendly monsters
     unsigned    neutral_highlight;    // Attribute for highlighting neutral monsters
+    unsigned    unusual_highlight;    // Attribute for highlighting hostile
+                                      // monsters with unusual items
     bool        blink_brightens_background; // Assume blink will brighten bg.
     maybe_bool  bold_brightens_foreground; // Assume bold will brighten fg.
     bool        best_effort_brighten_background; // Allow bg brighten attempts.
@@ -697,6 +703,7 @@ public:
 
     int         pickup_menu_limit;  // Over this number of items, menu for
                                     // pickup
+    bool        prompt_menu;        // yesno prompt uses a menu popup
     bool        ability_menu;       // 'a'bility starts with a full-screen menu
     bool        spell_menu;         // 'z' starts with a full-screen menu
     bool        easy_floor_use;     // , selects the floor item if there's 1

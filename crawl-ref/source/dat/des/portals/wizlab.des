@@ -1010,7 +1010,7 @@ ITEM:       potion of mutation
 ITEM:       potion of mutation q:1, potion of mutation
 ITEM:       any jewellery randart / w:5 hat_of_the_alchemist
 ITEM:       randbook disc:transmutation disc2:necromancy owner:Cigotuvi
-ITEM:       book of transfigurations / randbook disc:transmutation
+ITEM:       any talisman
 ITEM:       staff of death, scroll of poison
 SHUFFLE:    de / h~ / j|
 NSUBST:     de = 1:e / 1:f / *:d, g = 1:g / *:$, h = 1:h / 2:i / *:., j = 1:j / *:k
@@ -1218,7 +1218,7 @@ local wizard_appear_marker = TriggerableFunction:new {
     data = { awoke = false },
     func = "wizlab_zonguldrok_awaken_wizard",
     repeated = true,
-    props = {listen_to_slaves = true, only_at_slave = true }
+    props = {listen_to_replicas = true, only_at_replica = true }
     }
 
 wizard_appear_marker:add_triggerer(DgnTriggerer:new {
@@ -1335,8 +1335,8 @@ dgn.persist.wucad_mu_died = false
 local function trigfn (spot)
   return Triggerable.synchronized_markers(function_at_spot(
             "wizlab_wucad_msgfn",
-            { spot=spot, trig = false}, true, { only_at_slave = true,
-              listen_to_slaves = true }))
+            { spot=spot, trig = false}, true, { only_at_replica = true,
+              listen_to_replicas = true }))
 end
 
 lua_marker('1', trigfn(1))
@@ -1431,19 +1431,19 @@ ENDMAP
 NAME:    wizlab_golubria
 TAGS:    no_pool_fixup
 KMONS:   1 = spatial vortex w:7 / blink frog / nothing w:5
-KMONS:   2 = deep elf knight w:5 ; boomerang ego:dispersal w:20 | boomerang w:5 | nothing / \
-             rakshasa w:5 ; boomerang ego:dispersal w:20 | boomerang w:5 | nothing / \
-             boggart ; boomerang ego:dispersal w:20 | boomerang w:5 | nothing /  \
-             wizard ; boomerang ego:dispersal w:20 | boomerang w:5 | nothing
+KMONS:   2 = deep elf knight w:5 ; dart ego:dispersal w:20 | boomerang w:5 | nothing / \
+             rakshasa w:5 ; dart ego:dispersal w:20 | boomerang w:5 | nothing / \
+             boggart ; dart ego:dispersal w:20 | boomerang w:5 | nothing /  \
+             wizard ; dart ego:dispersal w:20 | boomerang w:5 | nothing
 KMONS:   3 = rakshasa w:5 ; whip ego:distortion | whip ego:heavy w:6 | dagger \
              ego:distortion | dagger ego:heavy w:6 | spear ego:distortion | \
-             spear ego:heavy w:6 . boomerang ego:dispersal / \
+             spear ego:heavy w:6 . dart ego:dispersal / \
              boggart w:5 ; whip ego:distortion | whip ego:heavy w:6 | dagger \
              ego:distortion | dagger ego:heavy w:6 | spear ego:distortion | \
-             spear ego:heavy w:6 . boomerang ego:dispersal / \
+             spear ego:heavy w:6 . dart ego:dispersal / \
              wizard ; whip ego:distortion | whip ego:heavy w:6 | dagger \
              ego:distortion | dagger ego:heavy w:6 | spear ego:distortion | \
-             spear ego:heavy w:6 . boomerang ego:dispersal . robe
+             spear ego:heavy w:6 . dart ego:dispersal . robe
 KMONS:   04 = large abomination w:15 / small abomination w:15 / unseen horror w:5 / \
               thrashing horror w:30 / skeleton w:30 / freezing wraith w:5 /  \
               hellwing / chaos spawn w:5 / orange demon / ice devil /  \
@@ -1463,7 +1463,7 @@ KMONS:   6 = executioner w:5 / balrug w:5 / cacodemon / shadow demon / hellion w
              starcursed mass w:30 / apocalypse crab w:20
 KMONS:   7 = eldritch tentacle
 KMONS:   8 = obsidian statue
-# Translocations items, abyss escape aides, shrouds, and an immeadiate aide.
+# Translocations items, abyss escape aides, shrouds, and an immediate aide.
 KITEM:   d = scroll of blinking / scroll of teleportation q:3 w:15 / \
              any scroll w:1
 KITEM:   e = any ring

@@ -699,7 +699,7 @@ void do_crash_dump()
     // generation info if the crash happened during level generation.
     _dump_level_info(file);
 
-    // Dumping information on marker inconsistancy is unlikely to crash,
+    // Dumping information on marker inconsistency is unlikely to crash,
     // as is dumping the descriptions of non-Lua markers.
     fprintf(file, "Markers:\n");
     fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<\n");

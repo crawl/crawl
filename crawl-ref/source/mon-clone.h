@@ -3,8 +3,8 @@
 #include "mon-attitude-type.h"
 #include "spell-type.h"
 
-#define CLONE_MASTER_KEY "mcloneorig"
-#define CLONE_SLAVE_KEY "mclonedupe"
+#define CLONE_PRIMARY_KEY "mcloneorig"
+#define CLONE_REPLICA_KEY "mclonedupe"
 
 class actor;
 class monster;

@@ -105,7 +105,7 @@ static const char *skill_titles[NUM_SKILLS][7] =
     {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Worldbinder",    "Planerender",  "Summ"},
     {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "@Genus_Short@ of Death", "Necr"},
     {"Translocations", "Grasshopper",   "Placeless @Genus@", "Blinker",       "Portalist",      "Plane @Walker@", "Tloc"},
-    {"Transmutations", "Changer",       "Transmogrifier",  "Alchemist",       "Malleable",      "Shapeless @Genus@", "Tmut"},
+    {"Transmutations", "Destabilizer",  "Alchemist",       "Transmogrifier",  "Entropist",      "Reality Shaper", "Tmut"},
 
     {"Fire Magic",     "Firebug",       "Arsonist",        "Scorcher",        "Pyromancer",     "Infernalist",  "Fire"},
     {"Ice Magic",      "Chiller",       "Frost Mage",      "Gelid",           "Cryomancer",     "Englaciator",  "Ice"},
@@ -117,7 +117,8 @@ static const char *skill_titles[NUM_SKILLS][7] =
     // use the god titles instead, depending on piety or, in Gozag's case, gold.
     // or, in U's case, invocations skill.
     {"Invocations",    "Unbeliever",    "Agnostic",        "Dissident",       "Heretic",        "Apostate",     "Invo"},
-    {"Evocations",     "Charlatan",     "Prestidigitator", "Fetichist",       "Evocator",       "Talismancer",  "Evo"},
+    {"Evocations",     "Charlatan",     "Prestidigitator", "Fetichist",       "Evocator",       "Ex Machina",  "Evo"},
+    {"Shapeshifting",  "Changeling",    "Mimic",           "Metamorph",       "Skinwalker",     "Shapeless @Genus@", "Shft"},
 };
 
 static const char *martial_arts_titles[6] =
@@ -358,24 +359,25 @@ static void _change_skill_level(skill_type exsk, int n)
 
     // calc_hp() has to be called here because it currently doesn't work
     // right if you.skills[] hasn't been updated yet.
-    if (exsk == SK_FIGHTING)
-        calc_hp(true, false);
+    if (exsk == SK_FIGHTING || exsk == SK_SHAPESHIFTING)
+        calc_hp(true);
 }
 
 // Called whenever a skill is trained.
 void redraw_skill(skill_type exsk, skill_type old_best_skill, bool recalculate_order)
 {
-    if (exsk == SK_FIGHTING)
-        calc_hp(true, false);
+    const bool trained_form = exsk == SK_SHAPESHIFTING && you.form != transformation::none;
+    if (exsk == SK_FIGHTING || trained_form)
+        calc_hp(true);
 
     if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
         calc_mp();
 
-    if (exsk == SK_DODGING || exsk == SK_ARMOUR)
+    if (exsk == SK_DODGING || exsk == SK_ARMOUR || trained_form)
         you.redraw_evasion = true;
 
     if (exsk == SK_ARMOUR || exsk == SK_SHIELDS || exsk == SK_ICE_MAGIC
-        || exsk == SK_EARTH_MAGIC || you.duration[DUR_TRANSFORMATION] > 0)
+        || exsk == SK_EARTH_MAGIC || trained_form)
     {
         you.redraw_armour_class = true;
     }
@@ -1948,6 +1950,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Holy Roller";
             else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
                 result = "Forbidden One";
+            else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_USKAYAW)
+                result = "Necrodancer";
             else if (species == SP_VINE_STALKER && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
                 result = "Black Lotus";
             else if (species == SP_GARGOYLE && skill_rank == 5 && god == GOD_JIYVA)
@@ -2195,6 +2199,7 @@ static map<skill_type, mutation_type> skill_sac_muts = {
     { SK_ARMOUR,         MUT_NO_ARMOUR_SKILL },
     { SK_EVOCATIONS,     MUT_NO_ARTIFICE },
     { SK_STEALTH,        MUT_NO_STEALTH },
+    { SK_SHAPESHIFTING,  MUT_NO_FORMS },
 };
 
 bool can_sacrifice_skill(mutation_type mut)

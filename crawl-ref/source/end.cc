@@ -215,7 +215,7 @@ void delete_files()
     you.save = 0;
 }
 
-NORETURN void screen_end_game(string text)
+NORETURN void screen_end_game(string text, game_exit exit)
 {
 #ifdef USE_TILE_WEB
     tiles.send_exit_reason("quit");
@@ -224,9 +224,9 @@ NORETURN void screen_end_game(string text)
     delete_files();
 
     if (!text.empty())
-        ui::message(text);
+        ui::message(text, "", "<cyan>Hit any key to exit...</cyan>", true);
 
-    game_ended(game_exit::abort); // TODO: is this the right exit condition?
+    game_ended(exit); // TODO: is this the right exit condition?
 }
 
 static game_exit _kill_method_to_exit(kill_method_type kill)
@@ -307,104 +307,6 @@ NORETURN void end_game(scorefile_entry &se)
     identify_inventory();
 
     delete_files();
-
-    // death message
-    if (!non_death)
-    {
-        canned_msg(MSG_YOU_DIE);
-        xom_death_message(death_type);
-
-        switch (you.religion)
-        {
-        case GOD_FEDHAS:
-            simple_god_message(" appreciates your contribution to the "
-                               "ecosystem.");
-            break;
-
-        case GOD_NEMELEX_XOBEH:
-            nemelex_death_message();
-            break;
-
-        case GOD_KIKUBAAQUDGHA:
-        {
-            const mon_holy_type holi = you.holiness();
-
-            if (holi & (MH_NONLIVING | MH_UNDEAD))
-            {
-                simple_god_message(" rasps: \"You have failed me! "
-                                   "Welcome... oblivion!\"");
-            }
-            else
-            {
-                simple_god_message(" rasps: \"You have failed me! "
-                                   "Welcome... death!\"");
-            }
-            break;
-        }
-
-        case GOD_YREDELEMNUL:
-            if (you.undead_state() != US_ALIVE)
-                simple_god_message(" claims you as an undead slave.");
-            else if (death_type != KILLED_BY_DISINT
-                  && death_type != KILLED_BY_LAVA)
-            {
-                mprf(MSGCH_GOD, "Your body rises from the dead as a mindless "
-                     "zombie.");
-            }
-            // No message if you're not undead and your corpse is lost.
-            break;
-
-        case GOD_BEOGH:
-            if (actor* killer = se.killer())
-            {
-                if (killer->is_monster() && killer->deity() == GOD_BEOGH)
-                {
-                    const string msg = " appreciates "
-                        + killer->name(DESC_ITS)
-                        + " killing of a heretic priest.";
-                    simple_god_message(msg.c_str());
-                }
-            }
-            break;
-
-#if TAG_MAJOR_VERSION == 34
-        case GOD_PAKELLAS:
-        {
-            const string result = getSpeakString("Pakellas death");
-            god_speaks(GOD_PAKELLAS, result.c_str());
-            break;
-        }
-#endif
-
-        default:
-            if (will_have_passive(passive_t::goldify_corpses)
-                && death_type != KILLED_BY_DISINT
-                && death_type != KILLED_BY_LAVA)
-            {
-                mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
-            }
-            // Doesn't depend on Okawaru worship - you can still lose the duel
-            // after abandoning.
-            if (actor* killer = se.killer())
-            {
-                if (killer->props.exists(OKAWARU_DUEL_TARGET_KEY))
-                {
-                    const string msg = " crowns "
-                        + killer->name(DESC_THE, true)
-                        + " victorious!";
-                    simple_god_message(msg.c_str(), GOD_OKAWARU);
-                }
-            }
-            break;
-        }
-
-        flush_prev_message();
-        viewwindow(); // don't do for leaving/winning characters
-        update_screen();
-
-        if (crawl_state.game_is_hints())
-            hints_death_screen();
-    }
 
     string fname = morgue_name(you.your_name, se.get_death_time());
     if (!dump_char(fname, true, true, &se))

@@ -33,6 +33,7 @@ earth_magic EARTH_MAGIC_ON
 poison_magic POISON_MAGIC_ON
 invocations INVOCATIONS_ON
 evocations EVOCATIONS_ON
+shapeshifting SHAPESHIFTING_ON
 %sdir gui/skills/gods
 kikubaaqudgha NECROMANCY_K_ON
 tso INVOCATIONS_1_ON
@@ -86,6 +87,7 @@ earth_magic EARTH_MAGIC_FOCUS
 poison_magic POISON_MAGIC_FOCUS
 invocations INVOCATIONS_FOCUS
 evocations EVOCATIONS_FOCUS
+shapeshifting SHAPESHIFTING_FOCUS
 %sdir gui/skills/gods
 kikubaaqudgha NECROMANCY_K_FOCUS
 tso INVOCATIONS_1_FOCUS
@@ -139,6 +141,7 @@ earth_magic EARTH_MAGIC_OFF
 poison_magic POISON_MAGIC_OFF
 invocations INVOCATIONS_OFF
 evocations EVOCATIONS_OFF
+shapeshifting SHAPESHIFTING_OFF
 %sdir gui/skills/gods
 kikubaaqudgha NECROMANCY_K_OFF
 tso INVOCATIONS_1_OFF
@@ -192,6 +195,7 @@ earth_magic EARTH_MAGIC_INACTIVE
 poison_magic POISON_MAGIC_INACTIVE
 invocations INVOCATIONS_INACTIVE
 evocations EVOCATIONS_INACTIVE
+shapeshifting SHAPESHIFTING_INACTIVE
 %sdir gui/skills/gods
 kikubaaqudgha NECROMANCY_K_INACTIVE
 tso INVOCATIONS_1_INACTIVE
@@ -245,6 +249,7 @@ earth_magic EARTH_MAGIC_MAX
 poison_magic POISON_MAGIC_MAX
 invocations INVOCATIONS_MAX
 evocations EVOCATIONS_MAX
+shapeshifting SHAPESHIFTING_MAX
 %sdir gui/skills/gods
 kikubaaqudgha NECROMANCY_K_MAX
 tso INVOCATIONS_1_MAX

@@ -1,6 +1,6 @@
 ##############################################################################
 # mini_features.des: This is the place for minivaults without monsters.
-#           So all vaults in this file should have neiter ORIENT nor MONS or
+#           So all vaults in this file should have neither ORIENT nor MONS or
 #           KMONS lines. Exceptions are made for vaults which generally have
 #           no monsters or are supposed to look as if they had no monsters.
 #
@@ -3397,7 +3397,7 @@ yyyzzzccqqqccSSSZZZ
 ENDMAP
 
 NAME:    nicolae_letter_subblock
-TAGS:    unrand transparent nico_letterblock allow_dup
+TAGS:    unrand transparent nico_letterblock allow_dup no_dump
 DEPTH:   D:4-, Depths, Elf, Snake, Crypt
 SHUFFLE: DEF/-''/'--/'--/'--/'--/'-'
 SUBST:   D- : c, EF' = .
@@ -3854,29 +3854,6 @@ MAP
 ..xxaaaxx..
 ..x..G..x..
 ...........
-ENDMAP
-
-NAME:    hellmonk_bongcloud_opening
-TAGS:    no_item_gen no_monster_gen no_trap_gen no_hmirror no_vmirror no_rotate
-TAGS:    decor extra transparent
-DEPTH:   D:5-, Depths, Orc, Elf
-ITEM:    piece from Xom's chessboard
-KFEAT:   H = G
-COLOUR:  d' = white
-COLOUR:  - = brown
-FTILE:   Gd' = floor_pebble_white
-FTILE:   H- = floor_pebble_brown
-MAP
-..........
-.GHGHGHGH.
-.HGHG-GHG.
-.'-'-'-'-.
-.-'-'H'-'.
-.'-'-G-'-.
-.-'-'-'-'.
-.GHGHdHGH.
-.HGHG-GHG.
-..........
 ENDMAP
 
 NAME: nicolae_benzene_ring

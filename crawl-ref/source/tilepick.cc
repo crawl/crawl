@@ -2100,6 +2100,9 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_GD_NEUTRAL;
     else if (mons.neutral())
         ch |= TILE_FLAG_NEUTRAL;
+    else if (Options.tile_show_threat_levels.find("unusual") != string::npos
+             && mons.has_unusual_items())
+        ch |= TILE_FLAG_UNUSUAL;
     else
         switch (mons.threat)
         {
@@ -2123,7 +2126,9 @@ tileidx_t tileidx_monster(const monster_info& mons)
             break;
         }
 
-    if (mons.is(MB_FLEEING))
+    if (mons.is(MB_PARALYSED))
+        ch |= TILE_FLAG_PARALYSED;
+    else if (mons.is(MB_FLEEING))
         ch |= TILE_FLAG_FLEEING;
     else if (mons.is(MB_STABBABLE) || mons.is(MB_SLEEPING)
              || mons.is(MB_DORMANT))
@@ -2220,6 +2225,7 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_INFESTATION, TILEI_INFESTED },
     { MB_CORROSION, TILEI_CORRODED },
     { MB_SWIFT, TILEI_SWIFT },
+    { MB_PURSUING, TILEI_SWIFT }, // ew
     { MB_VILE_CLUTCH, TILEI_VILE_CLUTCH },
     { MB_GRASPING_ROOTS, TILEI_CONSTRICTED }, // XXX placeholder
     { MB_POSSESSABLE, TILEI_POSSESSABLE },
@@ -2239,10 +2245,12 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_CONCENTRATE_VENOM, TILEI_CONC_VENOM },
     { MB_REPEL_MSL, TILEI_REPEL_MISSILES },
     { MB_INJURY_BOND, TILEI_INJURY_BOND },
-    { MB_REFLECTING, TILEI_REFLECTING },
     { MB_TELEPORTING, TILEI_TELEPORTING },
     { MB_EMPOWERED_SPELLS, TILEI_BRILLIANCE },
     { MB_RESISTANCE, TILEI_RESISTANCE },
+    { MB_CONTAM_LIGHT, TILEI_GLOW_LIGHT },
+    { MB_CONTAM_HEAVY, TILEI_GLOW_HEAVY },
+    { MB_PAIN_BOND, TILEI_PAIN_BOND },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -2712,6 +2720,23 @@ static tileidx_t _tileidx_rune(const item_def &item)
     }
 }
 
+static tileidx_t _tileidx_talisman(const item_def &item)
+{
+    switch (item.sub_type)
+    {
+    case TALISMAN_BEAST:    return TILE_TALISMAN_BEAST;
+    case TALISMAN_SERPENT:  return TILE_TALISMAN_SNAKE;
+    case TALISMAN_MAW:      return TILE_TALISMAN_MAW;
+    case TALISMAN_BLADE:    return TILE_TALISMAN_BLADE;
+    case TALISMAN_STATUE:   return TILE_TALISMAN_STATUE;
+    case TALISMAN_DRAGON:   return TILE_TALISMAN_DRAGON;
+    case TALISMAN_STORM:    return TILE_TALISMAN_STORM;
+    case TALISMAN_DEATH:    return TILE_TALISMAN_DEATH;
+    case TALISMAN_FLUX:
+    default: return TILE_ERROR;
+    }
+}
+
 static tileidx_t _tileidx_misc(const item_def &item)
 {
     switch (item.sub_type)
@@ -2740,9 +2765,6 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_CONDENSER_VANE:
             return evoker_charges(item.sub_type) ? TILE_MISC_CONDENSER_VANE
                                                  : TILE_MISC_CONDENSER_VANE_INERT;
-
-    case MISC_XOMS_CHESSBOARD:
-            return _modrng(item.rnd, TILE_MISC_CHESSPIECE_FIRST, TILE_MISC_CHESSPIECE_LAST);
 
 #if TAG_MAJOR_VERSION == 34
     case MISC_BUGGY_LANTERN_OF_SHADOWS:
@@ -2929,6 +2951,9 @@ tileidx_t tileidx_item(const item_def &item)
 
     case OBJ_MISCELLANY:
         return _tileidx_misc(item);
+
+    case OBJ_TALISMANS:
+        return _tileidx_talisman(item);
 
     case OBJ_RUNES:
         if (item.quantity <= 0)
@@ -3357,6 +3382,7 @@ tileidx_t tileidx_skill(skill_type skill, int train)
     case SK_EARTH_MAGIC:    ch = TILEG_EARTH_MAGIC_ON; break;
     case SK_POISON_MAGIC:   ch = TILEG_POISON_MAGIC_ON; break;
     case SK_EVOCATIONS:     ch = TILEG_EVOCATIONS_ON; break;
+    case SK_SHAPESHIFTING:  ch = TILEG_SHAPESHIFTING_ON; break;
     case SK_INVOCATIONS:
         {
             switch (you.religion)
@@ -3584,9 +3610,12 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_HOP;
     case ABIL_BLINKBOLT:
         return TILEG_ABILITY_BLINKBOLT;
+    case ABIL_SIPHON_ESSENCE:
+        return TILEG_ABILITY_SIPHON_ESSENCE;
 
     // Others
     case ABIL_END_TRANSFORMATION:
+    case ABIL_BEGIN_UNTRANSFORM:
         return TILEG_ABILITY_END_TRANSFORMATION;
     case ABIL_STOP_RECALL:
         return TILEG_ABILITY_STOP_RECALL;
@@ -3830,6 +3859,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_RU_SACRIFICE_EYE;
     case ABIL_RU_SACRIFICE_RESISTANCE:
         return TILEG_ABILITY_RU_SACRIFICE_RESISTANCE;
+    case ABIL_RU_SACRIFICE_FORMS:
+        return TILEG_ABILITY_RU_SACRIFICE_FORMS;
     case ABIL_RU_REJECT_SACRIFICES:
         return TILEG_ABILITY_RU_REJECT_SACRIFICES;
     // Hepliaklqana
@@ -3999,8 +4030,8 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_VENOM_MAGE;
         case JOB_CHAOS_KNIGHT:
             return TILEG_JOB_CHAOS_KNIGHT;
-        case JOB_TRANSMUTER:
-            return TILEG_JOB_TRANSMUTER;
+        case JOB_SHAPESHIFTER:
+            return TILEG_JOB_SHAPESHIFTER;
         case JOB_MONK:
             return TILEG_JOB_MONK;
         case JOB_WARPER:

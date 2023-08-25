@@ -158,7 +158,7 @@ function omnigrid.subdivide_recursive(x1,y1,x2,y2,options,chance,depth)
     local new_depth = depth + 1
     -- Could probably avoid this duplication but it's not that bad
     if which == "x" then
-      -- Don't reduce the chance until we satisy maximum size
+      -- Don't reduce the chance until we satisfy maximum size
       if req_x then new_chance = chance end
       local pos = crawl.random_range(options.minimum_size_x,width-options.minimum_size_x)
       -- Create the two new areas
@@ -201,7 +201,7 @@ function omnigrid.subdivide_recursive(x1,y1,x2,y2,options,chance,depth)
         table.insert(results,b)
       end
     else
-      -- Don't reduce the chance until we satisy maximum size
+      -- Don't reduce the chance until we satisfy maximum size
       if req_y then new_chance = chance end
       local pos = crawl.random_range(options.minimum_size_y,height-options.minimum_size_y)
       -- Create the two new areas

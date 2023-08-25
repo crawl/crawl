@@ -435,7 +435,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
     if (!mon->alive())
         return;
 
-    // Ball lightning dissapates harmlessly out of LOS
+    // Ball lightning dissipates harmlessly out of LOS
     if (mon->type == MONS_BALL_LIGHTNING && mon->summoner == MID_PLAYER)
     {
         monster_die(*mon, KILL_RESET, NON_MONSTER);
@@ -463,7 +463,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
 
     // Yred & animate dead zombies crumble on floor change
     if (mon->friendly()
-        && (is_yred_undead_slave(*mon) && !mons_bound_soul(*mon)
+        && (is_yred_undead_follower(*mon) && !mons_bound_soul(*mon)
             || mon->props.exists(ANIMATE_DEAD_KEY)))
     {
         if (turns > 2)
@@ -471,7 +471,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
         else
         {
             // handle expiration messages if the player was quick
-            // doing it this way so the mesages are kept consistent with
+            // doing it this way so the messages are kept consistent with
             // corresponding non-yred derived undead
             mon_enchant abj(ENCH_FAKE_ABJURATION, 0, 0, 1);
             mon->add_ench(abj);
@@ -578,7 +578,7 @@ void monster::timeout_enchantments(int levels)
 
         switch (entry.first)
         {
-        case ENCH_POISON: case ENCH_CORONA:
+        case ENCH_POISON: case ENCH_CORONA: case ENCH_CONTAM:
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
         case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
         case ENCH_CHARM: case ENCH_SLEEP_WARY: case ENCH_SICK:
@@ -591,12 +591,12 @@ void monster::timeout_enchantments(int levels)
         case ENCH_BREATH_WEAPON: case ENCH_WRETCHED:
         case ENCH_SCREAMED: case ENCH_BLIND: case ENCH_WORD_OF_RECALL:
         case ENCH_INJURY_BOND: case ENCH_FLAYED: case ENCH_BARBS:
-        case ENCH_AGILE: case ENCH_FROZEN:
+        case ENCH_AGILE: case ENCH_FROZEN: case ENCH_PURSUING:
         case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC: case ENCH_NEUTRAL_BRIBED:
         case ENCH_FRIENDLY_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:
         case ENCH_RESISTANCE: case ENCH_HEXED: case ENCH_IDEALISED:
         case ENCH_BOUND_SOUL: case ENCH_STILL_WINDS: case ENCH_DRAINED:
-        case ENCH_ANGUISH: case ENCH_FIRE_VULN:
+        case ENCH_ANGUISH: case ENCH_FIRE_VULN: case ENCH_SPELL_CHARGED:
             lose_ench_levels(entry.second, levels);
             break;
 
@@ -619,7 +619,7 @@ void monster::timeout_enchantments(int levels)
                 lose_ench_levels(entry.second, levels);
             break;
 
-        case ENCH_INSANE:
+        case ENCH_FRENZIED:
         case ENCH_BERSERK:
         case ENCH_INNER_FLAME:
         case ENCH_ROLLING:

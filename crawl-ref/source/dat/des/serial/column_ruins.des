@@ -288,7 +288,7 @@ NMLlll!?!lllLMN
     NNNMNNN
 ENDMAP
 
-# Although it is hard to tell from the map, this enterance can
+# Although it is hard to tell from the map, this entrance can
 #  have a moat of lava around it too.
 NAME:    column_ruins_portal_squares
 TAGS:    serial_column_ruins_portal luniq_column_ruins_portal

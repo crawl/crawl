@@ -905,7 +905,7 @@ static void _abyss_move_entities(coord_def target_centre,
             if (map_bounds_with_margin(dst, MAPGEN_BORDER))
             {
                 shift_area_mask->set(dst);
-                // Wipe the dstination clean before dropping things on it.
+                // Wipe the destination clean before dropping things on it.
                 _abyss_wipe_square_at(dst);
                 _abyss_move_entities_at(src, dst);
                 _abyss_update_transporter(dst, source_centre, target_centre,
@@ -1561,7 +1561,7 @@ static void abyss_area_shift()
     check_map_validity();
     // TODO: should dactions be rerun at this point instead? That would cover
     // this particular case...
-    gozag_detect_level_gold(false);
+    gozag_move_level_gold_to_top();
     _update_abyssal_map_knowledge();
 }
 
@@ -1760,7 +1760,7 @@ void abyss_teleport(bool wizard_tele)
     stop_delay(true);
     forget_map(false);
     clear_excludes();
-    gozag_detect_level_gold(false);
+    gozag_move_level_gold_to_top();
     auto &vault_list =  you.vault_list[level_id::current()];
 #ifdef DEBUG
     vault_list.push_back("[tele]");

@@ -480,6 +480,10 @@ canvas {
     color: darkgray;
 }
 
+.menu_prompt {
+    min-width: 20em;
+}
+
 .menu .title_prompt {
     height: 1em;
     border: 0;

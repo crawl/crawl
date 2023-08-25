@@ -203,3 +203,27 @@ ccc.cccc.
 .1...
 ...x.
 ENDMAP
+
+NAME:   hellmonk_depths_entry_around_the_bend
+TAGS:   transparent
+KMONS:  O = deep troll earth mage
+SUBST:  A = c:25 .:4 G:1
+SUBST:  B : b:30 n:15 T:3 G:2 V:1
+SUBST:  c : c:15 v:1
+NSUBST: - = 12 = 0... / *=., ' = 1:899 / 8 = 0... / *=.
+: depths_entry(_G)
+MAP
+ ccccccccccccc
+ccBA'AA'AA'ABcc
+cB'''''O'''''Bc
+c'''''''''''''c
+cA'''-A'A-'''Ac
+cA---BcccB---Ac
+cA--Acc ccA--Ac
+c---Ac   cA---c
+cA--Ac   cA--Ac
+cA---c   c---Ac
+cA--Ac   cA--Ac
+cA--Ac   cA--Ac
+cB@@Bc   cB@@Bc
+ENDMAP

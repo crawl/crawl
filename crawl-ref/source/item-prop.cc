@@ -16,6 +16,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "describe.h"
+#include "english.h" // number_in_words
 #include "evoke.h"
 #include "god-passive.h"
 #include "invent.h"
@@ -149,7 +150,7 @@ static const armour_def Armour_prop[] =
        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 0, {},
        ARMF_REGENERATION, },
 #endif
-    { ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",  4,  -40,    150,
+    { ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",  3,  -40,    150,
        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 50, {},
        ARMF_REGENERATION },
 
@@ -922,6 +923,9 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_BOOKS,     BOOK_STONE },
     { OBJ_BOOKS,     BOOK_PAIN },
     { OBJ_BOOKS,     BOOK_MALEDICT },
+    { OBJ_BOOKS,     BOOK_SKY },
+    { OBJ_BOOKS,     BOOK_RIME },
+    { OBJ_BOOKS,     BOOK_TRANSFIGURATIONS },
     { OBJ_RODS,      ROD_VENOM },
     { OBJ_RODS,      ROD_WARDING },
     { OBJ_RODS,      ROD_DESTRUCTION },
@@ -1142,6 +1146,8 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_RUNES:
     case OBJ_GOLD:
     case OBJ_BOOKS:
+    case OBJ_MISCELLANY:
+    case OBJ_TALISMANS: // TODO: add talisman artefacts
 #if TAG_MAJOR_VERSION == 34
     case OBJ_FOOD:
     case OBJ_RODS:
@@ -1154,9 +1160,6 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_STAVES:
     case OBJ_JEWELLERY:
         flagset = ISFLAG_KNOW_TYPE;
-        break;
-    case OBJ_MISCELLANY:
-        flagset = 0;
         break;
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
@@ -1608,7 +1611,7 @@ int wand_charge_value(int type, int item_level)
 /**
  * Is the given item a wand which is empty? Wands are normally destroyed when
  * their charges are exhausted, but empty wands can still happen through
- * transfered games.
+ * transferred games.
  *
  * @param item  The item in question.
  * @return      Whether the wand is empty.
@@ -2014,9 +2017,11 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     }
 
     // Jewellery with evokable abilities, wands and similar unwielded
-    // evokers allow training.
+    // evokers allow training. (Talismans don't use evo.)
     // XX why are gives_ability cases broken up like this
-    if (item_ever_evokable(item)
+    if (item.base_type == OBJ_TALISMANS)
+        skills.insert(SK_SHAPESHIFTING);
+    else if (item_ever_evokable(item) && !item.is_type(OBJ_MISCELLANY, MISC_ZIGGURAT)
         || item.base_type == OBJ_JEWELLERY && gives_ability(item)
         || staff_uses_evocations(item)
         || item.base_type == OBJ_WEAPONS && gives_ability(item))
@@ -2034,6 +2039,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
         if (gives_ability(item))
             skills.insert(SK_EVOCATIONS);
     }
+
 
     // Weapons and staves allow training as long as your species can wield them.
     if (!you.could_wield(item, true, true))
@@ -3135,6 +3141,27 @@ void expend_xp_evoker(int evoker_type)
     evoker_debt(evoker_type) += evoker_charge_xp_debt(evoker_type);
 }
 
+static string _xp_evoker_recharge_msg(const item_def &evoker, int gained, bool silenced)
+{
+    const evoker_data* edata = map_find(xp_evoker_data,
+                                        static_cast<misc_item_type>(evoker.sub_type));
+    ASSERT(edata);
+    const string msg = silenced ? edata->recharge_msg.silent : edata->recharge_msg.noisy;
+    if (!msg.empty())
+        return msg;
+    if (edata->max_charges == 1)
+        return "%s has recharged.";
+    return make_stringf("%%s has regained %s charge%s.",
+                        number_in_words(gained).c_str(),
+                        gained > 1 ? "s" : "");
+}
+
+void print_xp_evoker_recharge(const item_def &evoker, int gained, bool silenced)
+{
+    mprf(_xp_evoker_recharge_msg(evoker, gained, silenced).c_str(),
+         evoker.name(DESC_YOUR).c_str());
+}
+
 /// witchcraft. copied from mon-util.h's get_resist
 static inline int _get_armour_flag(armflags_t all, armour_flag res)
 {
@@ -3223,13 +3250,13 @@ static int &_item_set_choice(item_set_type typ)
 /// Some items are guaranteed to only generate in some games, and are
 /// mutually exclusive with other items within their set. Determine which
 /// will be generated in this game.
-void initialise_item_sets()
+void initialise_item_sets(bool reset)
 {
     for (int i = 0; i < NUM_ITEM_SET_TYPES; ++i)
     {
         const item_set_type iset = (item_set_type)i;
 #if TAG_MAJOR_VERSION == 34
-        if (you.props.exists(_item_set_key(iset)))
+        if (!reset && you.props.exists(_item_set_key(iset)))
             continue;
 #endif
         const vector<int> &subtypes = item_sets[i].subtypes;

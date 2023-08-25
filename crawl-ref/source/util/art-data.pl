@@ -1108,7 +1108,7 @@ sub read_data
         # Strip comments.
         s/#.*//;
 
-        # Strip trailing whitspace; leading whitespace indicates the
+        # Strip trailing whitespace; leading whitespace indicates the
         # continuation of a string field.
         s/\s*$//;
 

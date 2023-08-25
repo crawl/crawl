@@ -34,7 +34,7 @@ gnoll3_m
 gnoll3_f
 gnoll4_m
 gnoll4_f
-gnome_f
+gnome_f GNOME
 gnome_m
 halfling_m HALFLING
 halfling_f
@@ -462,6 +462,11 @@ orange_crystal ORANGE_CRYSTAL
 vines VINES
 kryias KRYIAS
 talos TALOS
+
+%sdir player/transform
+maw_form0 MAW_FORM
+maw_form1
+
 %end_ctg
 
 ### Arms
@@ -1108,6 +1113,8 @@ cat3 HORNS_CAT_SILLY
 cat6
 cat10
 draconian1 HORNS_DRAC
+statue_form_felid_horns HORNS_CAT_STATUE
+
 %sdir player/head
 
 ## Doll editor tiles, but not randomly picked

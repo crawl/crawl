@@ -157,7 +157,7 @@ end
 -- @param custom_loot If non-nil, place this as a guaranteed loot item.
 function gauntlet_arena_item_setup(e, custom_loot)
     -- Replace all 'd' after the first with the unused 'X' glyph so we can more
-    -- easilly apply any custom replacement for those extra items.
+    -- easily apply any custom replacement for those extra items.
     e.nsubst("d = d / X")
 
     -- Redefine these item class glyphs to use no_pickup

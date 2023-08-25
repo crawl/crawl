@@ -29,8 +29,8 @@ enum class passive_t
     /// You identity items on sight, including monster equipment.
     identify_items,
 
-    /// You have (improved) automatic mapping.
-    auto_map,
+    /// You reveal the layout of the nearby dungeon.
+    scrying,
 
     /// You detect the threat level of monsters.
     detect_montier,
@@ -168,9 +168,6 @@ enum class passive_t
     /// Corpses turn to gold.
     goldify_corpses,
 
-    /// You detect the presence of gold. Gold is moved on top in stacks.
-    detect_gold,
-
     /// Allied plants are friendly towards you
     friendly_plants,
 
@@ -278,7 +275,10 @@ monster_type ash_monster_tier(const monster *mon);
 unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill);
 int ash_skill_boost(skill_type sk, int scale);
 bool ash_has_skill_boost(skill_type sk);
-void gozag_detect_level_gold(bool count);
+void ash_scrying();
+void gozag_move_level_gold_to_top();
+void gozag_move_gold_to_top(const coord_def p);
+void gozag_count_level_gold();
 int qazlal_sh_boost(int piety = you.piety);
 int tso_sh_boost();
 void qazlal_storm_clouds();

@@ -27,6 +27,7 @@ aptitudes:
   hexes: 4
   translocations: 4
   transmutations: 1
+  shapeshifting: 0
   fire_magic: -1
   ice_magic: -1
   air_magic: -1
@@ -59,7 +60,7 @@ mutations:
 recommended_jobs:
   - JOB_BERSERKER
   - JOB_ENCHANTER
-  - JOB_TRANSMUTER
+  - JOB_SHAPESHIFTER
   - JOB_ICE_ELEMENTALIST
   - JOB_AIR_ELEMENTALIST
   - JOB_CONJURER

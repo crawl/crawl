@@ -35,15 +35,15 @@ static string _monster_clone_id_for(monster* mons)
 
 static bool _monster_clone_exists(monster* mons)
 {
-    if (!mons->props.exists(CLONE_MASTER_KEY))
+    if (!mons->props.exists(CLONE_PRIMARY_KEY))
         return false;
 
-    const string clone_id = mons->props[CLONE_MASTER_KEY].get_string();
+    const string clone_id = mons->props[CLONE_PRIMARY_KEY].get_string();
     for (monster_iterator mi; mi; ++mi)
     {
         monster* thing(*mi);
-        if (thing->props.exists(CLONE_SLAVE_KEY)
-            && thing->props[CLONE_SLAVE_KEY].get_string() == clone_id)
+        if (thing->props.exists(CLONE_REPLICA_KEY)
+            && thing->props[CLONE_REPLICA_KEY].get_string() == clone_id)
         {
             return true;
         }
@@ -86,15 +86,15 @@ static void _mons_summon_monster_illusion(monster* caster,
 
     bool cloning_visible = false;
 
-    // If an enslaved caster creates a clone from a regular hostile,
+    // If a charmed caster creates a clone from a regular hostile,
     // the clone should still be friendly.
     if (monster *clone = clone_mons(foe, true, &cloning_visible,
                                     caster->friendly() ?
                                     ATT_FRIENDLY : caster->attitude))
     {
         const string clone_id = _monster_clone_id_for(foe);
-        clone->props[CLONE_SLAVE_KEY] = clone_id;
-        foe->props[CLONE_MASTER_KEY] = clone_id;
+        clone->props[CLONE_REPLICA_KEY] = clone_id;
+        foe->props[CLONE_PRIMARY_KEY] = clone_id;
         mons_add_blame(clone,
                        "woven by " + caster->name(DESC_THE));
         if (!clone->has_ench(ENCH_ABJ))
@@ -105,6 +105,7 @@ static void _mons_summon_monster_illusion(monster* caster,
         // Discard unsuitable enchantments.
         clone->del_ench(ENCH_CHARM);
         clone->del_ench(ENCH_STICKY_FLAME);
+        clone->del_ench(ENCH_CONTAM);
         clone->del_ench(ENCH_CORONA);
         clone->del_ench(ENCH_SILVER_CORONA);
         clone->del_ench(ENCH_HEXED);
@@ -132,9 +133,9 @@ static void _init_player_illusion_properties(monsterentry *me)
 {
     me->holiness = you.holiness();
     // [ds] If we're cloning the player, use their base holiness, not
-    // the effects of their Necromutation spell. This is important
-    // since Necromutation users presumably also have Dispel Undead
-    // available to them. :P
+    // the effects of their Necromutation form. This was 'important'
+    // since Necromutation spell-users presumably also had Dispel
+    // Undead available to them, but now...?!
     if (form_changed_physiology() && me->holiness & MH_UNDEAD)
         me->holiness = MH_NATURAL;
 }
@@ -225,7 +226,8 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
     if (mons_is_unique(mon->type)
         || mons_is_ghost_demon(mon->type)
         || mon->is_named()
-        || mon->type == MONS_BATTLESPHERE)
+        || mons_is_conjured(mon->type)
+        || mons_is_tentacle_or_tentacle_segment(mon->type))
     {
         return false;
     }
@@ -248,11 +250,6 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
             return false;
     }
 
-    // Is the monster carrying an artefact?
-    for (mon_inv_iterator ii(const_cast<monster &>(*mon)); ii; ++ii)
-        if (is_artefact(*ii))
-            return false;
-
     return true;
 }
 
@@ -264,7 +261,7 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
  */
 monster* clone_mons(const monster* orig, bool quiet, bool* obvious)
 {
-    // Pass temp_attitude to handle enslaved monsters cloning monsters
+    // Pass temp_attitude to handle charmed monsters cloning monsters
     return clone_mons(orig, quiet, obvious, orig->temp_attitude());
 }
 

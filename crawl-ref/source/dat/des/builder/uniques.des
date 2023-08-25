@@ -193,6 +193,10 @@ NAME:   uniq_maggie
 DEPTH:  D:6-10, Lair:1-2
 : place_unique(_G, "Maggie")
 
+NAME:   uniq_jeremiah
+DEPTH:  D:6-9, Lair:1
+: place_unique(_G, "Jeremiah")
+
 NAME:   uniq_maurice
 DEPTH:  D:8-13, Orc
 : place_unique(_G, "Maurice")
@@ -359,6 +363,10 @@ DEPTH:  Depths:1-2, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-3
 NAME:   uniq_parghit
 DEPTH:  Depths:3-, Zot:1-4
 : place_unique(_G, "Parghit")
+
+NAME:   uniq_norris
+DEPTH:  Depths:1-3, Elf, Vaults:1-4
+: place_unique(_G, "Norris band")
 
 NAME:   uniq_saint_roka
 DEPTH:  Orc:$, Depths, Elf:2-, Snake:2-, Vaults, Crypt

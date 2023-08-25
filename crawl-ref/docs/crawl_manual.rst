@@ -102,7 +102,7 @@ species-dependent:
 
 Major:
 
-- The amount of hit points you get each level
+- The amount of health you get each level
 - Your rate of skill advancement
 - Your initial primary attributes (this also depends on background)
 - Various special abilities, powers and limitations
@@ -168,14 +168,14 @@ numbers. These describe different aspects of the character.
 Health
   A measure of life force. Synonymous with hit points and sometimes abbreviated
   as HP. You die if your health drops to zero or less (although you can die in
-  other ways, too). The main screen shows both your current and maximum hit
-  points. Usually, you regain hit points slowly over time. Pressing '5' or
-  Shift-Num-5 lets you wait for a longer period.
+  other ways, too). The main screen shows both your current and maximum health.
+  Usually, you regain health slowly over time. Pressing '5' or Shift-Num-5 lets
+  you wait for a longer period.
 
 Magic
   A measure of magic or other intrinsic power. This is used primarily for
   spellcasting, but is sometimes also used for the evoking and invoking of many
-  other special abilities. They are displayed in the same way as hit points;
+  other special abilities. They are displayed in the same way as health;
   nothing bad happens if these drop to zero, except, of course, that you can't
   cast any spells. Resting also restores your reserves of magic.
 
@@ -228,7 +228,7 @@ through the dungeon is displayed.
 
 Experience Level
   Abbreviated to "XL". Starting characters have experience level 1; the highest
-  possible level is 27. Gaining a level nets additional hit and magic points,
+  possible level is 27. Gaining a level nets additional health and magic points,
   and will grant spell slots and sometimes primary attributes.
 
 Place
@@ -270,10 +270,10 @@ Willpower
 Size
   Different species have different sizes: Spriggans and Felids are very small;
   Kobolds are small; Ogres and Trolls are large; Nagas and Armataurs are large
-  with a medium torso; all other species are medium-sized. Many transmutations
-  will change your size. Size affects your evasion: the smaller your character,
-  the more evasive it is. On the other hand, characters of larger than medium
-  size do not suffer the usual attack penalties when standing in shallow water.
+  with a medium torso; all other species are medium-sized. Many talismans will
+  change your size. Size affects your evasion: the smaller your character, the
+  more evasive it is. On the other hand, characters of larger than medium size
+  do not suffer the usual attack penalties when standing in shallow water.
   Characters of smaller than medium size will have problems with some larger
   weapons. Very small characters and large characters are not able to use most
   types of armour. Players and monsters can only constrict foes of the same size
@@ -348,8 +348,8 @@ firing.
 Resting
 ========================================
 
-If you press '5', you will rest until your hit points or magic return to full.
-You can rest for just one turn by pressing '.' or 's'.
+If you press '5', you will rest until your health or magic return to full. You
+can rest for just one turn by pressing '.' or 's'.
 
 Resting stops if a monster appears or if you are otherwise interrupted.
 
@@ -564,7 +564,7 @@ E. Experience and skills
 
 When you kill monsters, you gain experience points (XP). When you get enough XP,
 you gain an experience level, making your character more powerful. As they gain
-levels, characters gain more hit points, magic points, and spell levels.
+levels, characters gain more health, magic, and spell levels.
 
 Additionally, the experience you gain is used to train your skills. These skills
 represent proficiency with all areas of endeavour an ambitious adventurer might
@@ -710,6 +710,7 @@ adventures, how they are displayed, and what commands there are to use them:
 "        amulets        (use 'P'ut on and 'R'emove)
 \|       staves         (use 'w'ield)
 :        spellbooks     (use 'M'emorise and 'z'ap, 'Q' to quiver)
+%        talismans      (use 'V' to evoke)
 }        miscellaneous  (use 'V' to evoke, 'Q' to quiver)
 $        gold           (use 'g' to pick up)
 =======  =============  ================================================
@@ -882,7 +883,7 @@ magic) with the 'r' command.
 
 While scrolls tend to affect your equipment or your environment, most potions
 affect your character in some way. The most common type is the simple curing
-potion, which restores some hit points and cures many ailments, but there are
+potion, which restores some health and cures many ailments, but there are
 many other varieties of potions to be found. Potions can be quaffed (drunk) with
 the 'q' command.
 
@@ -942,6 +943,17 @@ experience will have twice the usual effect when used for training that skill.
 Once a certain amount of bonus experience has been gained in this way, you will
 automatically discard the finished manual.
 
+% Talismans
+========================================
+
+Talismans allow their user to shift into a different form. Entering or leaving
+a form with a talisman requires a brief period of concentration, but otherwise,
+forms last until the user chooses to leave them.
+
+More powerful talismans require some amount of Shapeshifting skill, without
+which a user will find their maximum health reduced until they leave the form.
+Shapeshifting skill also increases other benefits provided by talismans' forms,
+though weaker talismans have a limit to how helpful skill can be.
 
 { Miscellaneous
 ========================================
@@ -1533,7 +1545,7 @@ Hill Orcs (HO)
   convert to Beogh even without an altar whenever an orc priest is in sight.
 
 Minotaurs (Mi)
-  The Minotaurs are a species of hybrids, posessing human bodies with bovine
+  The Minotaurs are a species of hybrids, possessing human bodies with bovine
   heads. They delve into the Dungeon because of their instinctive love of
   twisting passageways.
 
@@ -1864,8 +1876,8 @@ Felids (Fe)
   Spriggans. Felids advance in levels very slowly. They are skilled with many
   forms of magic, though less so with raw elemental magic.
 
-  Felids gain extra lives as they increase in levels. Upon death, they will be
-  resurrected in a safe place, losing an experience level in the process.
+  Felids start with an extra life, and gain more as they increase in levels.
+  Upon death, they will be resurrected in a safe place.
 
 Barachim (Ba)
   Barachim are an amphibious humanoid species, spawned at the dawn of time as
@@ -1991,27 +2003,6 @@ Brigands
   daggers or darts. They start with a dagger, a robe and cloak, poisoned darts,
   and a few deadly and rare curare darts.
 
-Adventurer backgrounds
-======================
-
-Adventurers have varied and idiosyncratic skills that they have picked up in
-their travels.
-
-Artificers
-  Artificers have built, bought or burgled an assortment of magic wands to
-  help them through the early Dungeon. Wands have a limited number of uses,
-  though, so they'll want to upgrade from their club ASAP.
-
-Wanderers
-  Wanderers are "jacks-of-all-trades, masters of none". They start the game
-  with a random assortment of skills, items, and maybe spells.
-
-Delvers
-  Delvers have, through some mishap, found themselves several floors below the
-  surface of the Dungeon. They're equipped with a wide variety of magical escape
-  tools, and are well advised to use them to travel to earlier dungeon floors as
-  quickly as possible.
-
 Zealot backgrounds
 ==================
 
@@ -2027,13 +2018,39 @@ Chaos Knights
   The Chaos Knight is a plaything of Xom, subject to the god's constantly
   changing moods. Xom is a very unpredictable (and possibly psychotic) entity
   who rewards or punishes according to whim. They begin with a lightly enchanted
-  leather armour, a simple weapon of their choice, and one of Xom's toys.
+  leather armour, a simple weapon of their choice, and a scroll of butterflies.
 
 Cinder Acolytes
   Cinder Acolytes serve Ignis, the Dying Flame, who grants them incredible
   power over fire... but there is only so much fire left to draw on, and once
   it burns out, acolytes may need to abandon Ignis. They start with a robe,
   a choice of flaming weapons, and the spell Scorch.
+
+Adventurer backgrounds
+======================
+
+Adventurers have varied and idiosyncratic skills that they have picked up in
+their travels.
+
+Artificers
+  Artificers have built, bought or burgled an assortment of magic wands to
+  help them through the early Dungeon. Wands have a limited number of uses,
+  though, so they'll want to upgrade from their club ASAP.
+
+Shapeshifters
+  Shapeshifters use talismans to shift their body into different forms,
+  granting them uncanny power but making them unable to use some items.
+  They enter the dungeon with two talismans and a potion of lignification.
+
+Wanderers
+  Wanderers are "jacks-of-all-trades, masters of none". They start the game
+  with a random assortment of skills, items, and maybe spells.
+
+Delvers
+  Delvers have, through some mishap, found themselves several floors below the
+  surface of the Dungeon. They're equipped with a wide variety of magical escape
+  tools, and are well advised to use them to travel to earlier dungeon floors as
+  quickly as possible.
 
 Warrior-mage backgrounds
 ========================
@@ -2042,18 +2059,12 @@ Warrior mages begin the game with a mix of physical combat and magic skills,
 though usually excel at neither. They start with a library of spells and
 (usually) some way of defending themselves.
 
-Transmuters
-  Transmuters specialise in transmutation magic, and can cause strange changes
-  in themselves and others. They deal damage primarily in unarmed combat, often
-  using transformations to enhance their defensive and offensive capabilities.
-  They also enter the dungeon with a potion of lignification.
-
 Warpers
   Warpers specialise in translocation magic, and are experts in travelling long
   distances and positioning themselves precisely and use this to their advantage
   in melee or missile combat. They start with a scroll of blinking, a selection
-  of translocation spells, some dispersal boomerangs, a simple weapon of their
-  choice, and leather armour.
+  of translocation spells, some dispersal darts, a simple weapon of their choice,
+  and leather armour.
 
 Hexslinger
   Hexslingers use debilitating spells to assist their ranged attacks. They
@@ -2135,12 +2146,13 @@ help menu using '?%', and during character choice with '%'.
 Fighting skills
 ========================================
 
-Fighting is the basic skill used in ranged and melee combat, and applies no matter
-which weapon your character is wielding (if any). Fighting is also the skill
-that determines the number of hit points your character gets as they increase in
-levels (note that this is calculated so that you don't get a long run advantage
-by starting out with a high Fighting skill). Unlike the specific weapon skill,
-Fighting does not change the speed with which you make your attacks.
+Fighting is the basic skill used in ranged and melee combat, and applies no
+matter which weapon your character is wielding (if any). Fighting is also the
+skill that determines the amount of health your character gains as they
+increase in levels (note that this is calculated so that you don't get a long
+run advantage by starting out with a high Fighting skill). Unlike the specific
+weapon skill, Fighting does not change the speed with which you make your
+attacks.
 
 Weapon skills affect your ability to fight with specific melee weapons. Weapon
 skills include:
@@ -2203,9 +2215,9 @@ Magic skills
 ========================================
 
 Spellcasting is the basic skill for magic use. It affects your reserves of
-magical energy (Magic) in the same way that Fighting affects your hit points:
-every time you increase the Spellcasting skill you gain some magic points, and
-you gain a spell level every time you reach a skill level divisible by 0.5.
+magical energy (Magic) in the same way that Fighting affects your health: every
+time you increase the Spellcasting skill you gain some magic points, and you
+gain a spell level every time you reach a skill level divisible by 0.5.
 Spellcasting also helps with the power and success rate of your spells, but to
 a lesser extent than the more specialised magical skills.
 

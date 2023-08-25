@@ -103,7 +103,7 @@ void wizard_create_spec_object()
     {
         mprf(MSGCH_PROMPT, ") - weapons     ( - missiles  [ - armour  / - wands    ?  - scrolls");
         mprf(MSGCH_PROMPT, "= - jewellery   ! - potions   : - books   | - staves   }  - miscellany");
-        mprf(MSGCH_PROMPT, "X - corpses     $ - gold    0  - the Orb");
+        mprf(MSGCH_PROMPT, "%% - talismans   X - corpses   $ - gold    0  - the Orb");
         mprf(MSGCH_PROMPT, "ESC - exit");
 
         msgwin_prompt("What class of item? ");
@@ -534,7 +534,7 @@ void wizard_value_item()
 /**
  * Generate every unrand (including removed ones).
  *
- * @param override_unique if true, will generate unrands that have alread
+ * @param override_unique if true, will generate unrands that have already
  * placed in the game. If false, will generate fallback randarts for any
  * unrands that have already placed.
  */

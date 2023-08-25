@@ -211,6 +211,12 @@ static int _get_mons_colour(const monster_info& mi)
     {
         col |= COLFLAG_MAYSTAB;
     }
+    else if (Options.unusual_highlight != CHATTR_NORMAL
+             && mi.attitude == ATT_HOSTILE
+             && mi.has_unusual_items())
+    {
+        col |= COLFLAG_UNUSUAL_MASK;
+    }
     else if (mons_class_is_stationary(mi.type))
     {
         if (Options.feature_item_highlight != CHATTR_NORMAL
