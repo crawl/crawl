@@ -1013,8 +1013,11 @@ bool mons_throw(monster* mons, bolt &beam, bool teleport)
         delete beam.special_explosion;
 
     // dubious...
-    if (mons->weapon() && is_unrandom_artefact(*mons->weapon(), UNRAND_MULE))
+    if (mons->alive() && mons->weapon()
+        && is_unrandom_artefact(*mons->weapon(), UNRAND_MULE))
+    {
         _handle_mule_fx(*mons, beam.target);
+    }
 
     return true;
 }
