@@ -800,5 +800,5 @@ true successor, but this early prototype slipped through their fingers.
 hand cannon "Mule"
 
 Hand cannons use magical dust to launch projectiles. The alchemists who craft
-them boast of their potency, but users lament the smoke blasted out with each
+them boast of their potency, but omit the smoke and noise blasted out with each
 shot. Filled with powdered blastmotes, Mule packs an especially powerful kick.
