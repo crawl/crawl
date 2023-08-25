@@ -320,7 +320,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_SHAPESHIFTER, {
     "Sh", "Shapeshifter",
-    7, 0, 5,
+    6, 2, 4,
     { SP_NAGA, SP_MERFOLK, SP_BASE_DRACONIAN, SP_DEMIGOD, SP_DEMONSPAWN,
       SP_TROLL, SP_METEORAN, },
     { },
