@@ -389,7 +389,10 @@ static bool _sack_of_spiders_veto_mon(monster_type mon)
 static bool _spill_out_spiders()
 {
     const int evo_skill = you.skill_rdiv(SK_EVOCATIONS);
-    const int n_mons = random_range(2, 3);
+    // 2 at min skill, 3-4 at mid, 4-6 at max
+    const int min = 2 + div_rand_round(2 * evo_skill, 27);
+    const int max = 2 + div_rand_round(4 * evo_skill, 27);
+    const int n_mons = random_range(min, max);
     bool made_mons = false;
     for (int n = 0; n < n_mons; n++)
     {

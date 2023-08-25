@@ -1056,7 +1056,7 @@ A charm which allows entry into the Realm of Zot.
 sack of spiders
 
 A woven silk bag. Opening it will cover the area with webs, spiders, and other
-skittering things. Evocations skill increases spider quality and webbing.
+skittering things. Evocations skill increases spider quality, quantity and webbing.
 %%%%
 sacred scourge
 
