@@ -5804,6 +5804,11 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             {
                 obvious_effect = true;
             }
+
+            // This is unpleasant, but currently this beam is only used by the
+            // spell itself and only players can cast it. Would be nice if there
+            // was somewhere nicer in the bolt struct to cache this, but there isn't?
+            mon->props[INNER_FLAME_POW_KEY] = calc_spell_power(SPELL_INNER_FLAME);
         }
         return MON_AFFECTED;
 
