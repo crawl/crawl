@@ -118,7 +118,7 @@ int actor::skill_rdiv(skill_type sk, int mult, int div) const
     return div_rand_round(skill(sk, mult * 256), div * 256);
 }
 
-int actor::check_willpower(const actor* source, int power)
+int actor::check_willpower(const actor* source, int power) const
 {
     int wl = willpower();
 
