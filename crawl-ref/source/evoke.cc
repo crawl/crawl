@@ -324,9 +324,9 @@ static bool _place_webs()
 {
     bool webbed = false;
     const int evo_skill = you.skill(SK_EVOCATIONS);
-    // At 0 evo skill, this is about a 1/3 chance of webbing an
-    // adjacent enemy. At 27 skill, it's about an 9/10 chance.
-    const int web_skill_factor = 64 - evo_skill * 2;
+    // At 0 evo skill, this is about a 1/3 chance of webbing each
+    // enemy. At 27 skill, it's about an 9/10 chance.
+    const int web_chance = 36 + evo_skill * 2;
     const int max_range = LOS_DEFAULT_RANGE / 2 + 2;
     for (monster_near_iterator mi(you.pos(), LOS_SOLID); mi; ++mi)
     {
@@ -342,11 +342,6 @@ static bool _place_webs()
             continue;
         }
 
-        // web chance increases with proximity & evo skill
-        // code here uses double negatives; sorry! i blame the other guy
-        const int dist = you.pos().distance_from((*mi)->pos());
-        const int web_dist_factor = 100 * (dist - 1) / max_range;
-        const int web_chance = 100 - web_dist_factor - web_skill_factor;
         if (!x_chance_in_y(web_chance, 100))
             continue;
 
