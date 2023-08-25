@@ -1805,6 +1805,18 @@ COLOUR:   ETC_SILVER
 TILE:     urand_dreamdust
 BOOL:     special, nogen
 
+NAME:     hand cannon "Mule"
+TYPE:     hand cannon
+OBJ:      OBJ_WEAPONS/WPN_HAND_CROSSBOW
+TILE:     spwpn_mule
+TILE_EQ:  mule
+PLUS:     7
+FIRE:     1
+COLOUR:   ETC_INCARNADINE
+BRAND:    SPWPN_FLAMING
+INSCRIP:  backblast,
+DBRAND:   Backblast: When fired, it often launches its wielder backwards.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

@@ -28,6 +28,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "item-use.h"
+#include "los.h" // fallback_ray
 #include "macro.h"
 #include "message.h"
 #include "misc.h"
@@ -544,6 +545,62 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     return false;
 }
 
+static void _handle_mule_fx(actor &act, coord_def targ)
+{
+    const coord_def oldpos = act.pos();
+
+    // blast smoke
+    for (adjacent_iterator ai(oldpos, false); ai; ++ai)
+    {
+        if (!in_bounds(*ai)
+            || cell_is_solid(*ai)
+            || cloud_at(*ai)
+            || !one_chance_in(3))
+        {
+            continue;
+        }
+        place_cloud(CLOUD_BLACK_SMOKE, *ai, random_range(3, 6), &act);
+        break;
+    }
+
+    // knock back
+    if (coinflip()
+        || act.is_stationary()
+        || act.resists_dislodge("being knocked back"))
+    {
+        return;
+    }
+
+    ray_def ray;
+    fallback_ray(oldpos, targ, ray);
+    if (!ray.advance()) // !?
+        return;
+    const coord_def back_dir = oldpos - ray.pos();
+    const coord_def newpos = oldpos + back_dir;
+    if (!adjacent(newpos, oldpos)) // !?
+        return;
+
+    // copied from actor::knockback, ew
+    if (!in_bounds(newpos)
+        || cell_is_solid(newpos)
+        || actor_at(newpos)
+        || !act.can_pass_through(newpos)
+        || !act.is_habitable(newpos))
+    {
+        return;
+    }
+
+    if (act.is_player())
+        mpr("Mule's kick sends you backwards.");
+    else
+        simple_monster_message(*act.as_monster(), " is knocked back by Mule's kick.");
+
+    act.move_to_pos(newpos);
+    act.apply_location_effects(oldpos, act.is_player() ? KILL_YOU_MISSILE
+                                                       : KILL_MON_MISSILE,
+                               actor_to_death_source(&act));
+}
+
 static void _throw_noise(actor* act, const item_def &ammo)
 {
     ASSERT(act); // XXX: change to actor &act
@@ -556,6 +613,7 @@ static void _throw_noise(actor* act, const item_def &ammo)
         return; // moooom, players are tossing their weapons again
 
     const char* msg   = nullptr;
+    int noise = 5;
 
     // XXX: move both messages into item-prop.cc?
     switch (launcher->sub_type)
@@ -581,10 +639,18 @@ static void _throw_noise(actor* act, const item_def &ammo)
                  launcher->name(DESC_PLAIN).c_str());
         return;
     }
+
+    if (is_unrandom_artefact(*launcher, UNRAND_MULE))
+    {
+        noise *= 2;
+        msg = "You hear a hand cannon's boom.";
+    }
+
     if (act->is_player() || you.can_see(*act))
         msg = nullptr;
 
-    noisy(5, act->pos(), msg, act->mid);
+
+    noisy(noise, act->pos(), msg, act->mid);
 }
 
 // throw_it - handles player throwing/firing only. Monster throwing is handled
@@ -843,6 +909,9 @@ void throw_it(quiver::action &a)
 
     _throw_noise(&you, thrown);
 
+    if (launcher && is_unrandom_artefact(*launcher, UNRAND_MULE))
+        _handle_mule_fx(you, pbolt.target);
+
     // ...any monster nearby can see that something has been thrown, even
     // if it didn't make any noise.
     alert_nearby_monsters();
@@ -942,6 +1011,10 @@ bool mons_throw(monster* mons, bolt &beam, bool teleport)
 
     if (beam.special_explosion != nullptr)
         delete beam.special_explosion;
+
+    // dubious...
+    if (mons->weapon() && is_unrandom_artefact(*mons->weapon(), UNRAND_MULE))
+        _handle_mule_fx(*mons, beam.target);
 
     return true;
 }

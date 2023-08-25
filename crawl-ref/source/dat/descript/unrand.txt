@@ -796,3 +796,9 @@ A disc of crackling metal, created by a woman whose cunning artifice and
 crafty politics once united a continent. Most of her surviving inventions are
 closely guarded by various royals, ostensible proof of their claim to be her
 true successor, but this early prototype slipped through their fingers.
+%%%%
+hand cannon "Mule"
+
+Hand cannons use magical dust to launch projectiles. The alchemists who craft
+them boast of their potency, but users lament the smoke blasted out with each
+shot. Filled with powdered blastmotes, Mule packs an especially powerful kick.
