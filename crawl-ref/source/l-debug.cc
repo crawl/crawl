@@ -517,6 +517,9 @@ LUAFN(debug_check_moncasts)
         SPELL_ELECTRIC_CHARGE,
         SPELL_MEPHITIC_BREATH,
         SPELL_MINOR_DESTRUCTION,
+        SPELL_JINXBITE,
+        SPELL_SIGIL_OF_BINDING,
+        SPELL_DIMENSIONAL_BULLSEYE,
     };
 
     for (int s = SPELL_FIRST_SPELL; s < NUM_SPELLS; s++)
