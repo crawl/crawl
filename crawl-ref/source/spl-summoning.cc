@@ -58,6 +58,7 @@
 #include "target.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "tilepick.h"
 #include "timed-effects.h"
 #include "unwind.h"
 #include "viewchar.h"
@@ -2775,9 +2776,7 @@ bool maybe_make_jinxsprite(const actor& agent, const actor& victim, string sourc
     // (Return silently if we don't pass the check)
     int pow = get_jinxsprite_summon_power(agent);
     if (victim.check_willpower(&agent, pow) <= 0)
-    {
         return false;
-    }
     else
     {
         // Show brief animation when we summon one successfully (to help sell
@@ -2814,12 +2813,12 @@ bool maybe_make_jinxsprite(const actor& agent, const actor& victim, string sourc
             if (!targ || !(agent.can_see(*targ)) || targ == &agent
                 || targ->wont_attack() == sprite->wont_attack()
                 || targ->willpower() == WILL_INVULN)
+            {
                 continue;
+            }
 
             if (!foe || coinflip())
-            {
                 foe = actor_at(*di);
-            }
         }
 
         if (foe)
@@ -2850,7 +2849,9 @@ bool jinxbite_targets_available()
     {
         if (mons_is_threatening(**mi) && !mi->wont_attack()
             && mi->willpower() != WILL_INVULN)
+        {
             return true;
+        }
     }
 
     return false;
