@@ -2787,7 +2787,7 @@ bool maybe_make_jinxsprite(const actor& agent, const actor& victim, string sourc
             view_add_tile_overlay(victim.pos(), tileidx_zap(ETC_MAGIC));
 #endif
             view_add_glyph_overlay(victim.pos(), {dchar_glyph(DCHAR_FIRED_ZAP),
-                                    static_cast<unsigned short>(ETC_MAGIC)});
+                                    static_cast<unsigned short>(LIGHTBLUE)});
             animation_delay(50, true);
         }
     }
