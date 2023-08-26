@@ -5,6 +5,8 @@
 class actor;
 class dist;
 
+const int GOLUBRIA_FUZZ_RANGE = 2;
+
 spret cast_disjunction(int pow, bool fail);
 void disjunction_spell();
 
@@ -37,7 +39,6 @@ string weapon_unprojectability_reason();
 
 struct bolt;
 spret cast_apportation(int pow, bolt& beam, bool fail);
-int golubria_fuzz_range();
 bool golubria_valid_cell(coord_def p, bool just_check = false);
 spret cast_golubrias_passage(int pow, const coord_def& where, bool fail);
 

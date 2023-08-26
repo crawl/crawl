@@ -92,8 +92,7 @@ void trap_def::prepare_ammo(int charges)
     {
     case TRAP_GOLUBRIA:
         // really, time until it vanishes
-        ammo_qty = (orb_limits_translocation() ? 10 + random2(10)
-                                               : 30 + random2(20));
+        ammo_qty = 10 + random2(10);
         break;
     case TRAP_TELEPORT:
         ammo_qty = 1;

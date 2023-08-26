@@ -879,8 +879,8 @@ aff_type targeter_passage::is_affected(coord_def loc)
 
     if (golubria_valid_cell(loc, true))
     {
-        bool p1 = grid_distance(loc, origin) <= golubria_fuzz_range();
-        bool p2 = grid_distance(loc, aim) <= golubria_fuzz_range()
+        bool p1 = grid_distance(loc, origin) <= GOLUBRIA_FUZZ_RANGE;
+        bool p2 = grid_distance(loc, aim) <= GOLUBRIA_FUZZ_RANGE
                   && loc != you.pos();
 
         if (p1 && p2)

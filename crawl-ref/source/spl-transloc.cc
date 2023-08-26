@@ -1365,11 +1365,6 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
     return spret::success;
 }
 
-int golubria_fuzz_range()
-{
-    return orb_limits_translocation() ? 4 : 2;
-}
-
 bool golubria_valid_cell(coord_def p, bool just_check)
 {
     return in_bounds(p)
@@ -1400,12 +1395,9 @@ spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
         return spret::abort;
     }
 
-    // randomize position a bit to make it not as useful to use on monsters
-    // chasing you, as well as to not give away hidden trap positions
     int tries = 0;
     int tries2 = 0;
-    // Less accurate when the orb is interfering.
-    const int range = golubria_fuzz_range();
+    const int range = GOLUBRIA_FUZZ_RANGE;
     coord_def randomized_where = where;
     coord_def randomized_here = you.pos();
     do
@@ -1433,10 +1425,17 @@ spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
     if (tries >= 100 || tries2 >= 100)
     {
         if (you.trans_wall_blocking(randomized_where))
-            mpr("You cannot create a passage on the other side of the transparent wall.");
+        {
+            mpr("You cannot create a passage on the other side of the "
+                "transparent wall.");
+        }
         else
+        {
             // XXX: bleh, dumb message
-            mpr("Creating a passage of Golubria requires sufficient empty space.");
+            mpr("Creating a passage of Golubria requires sufficient empty "
+                "space.");
+        }
+
         return spret::abort;
     }
 
@@ -1452,9 +1451,6 @@ spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
         mpr("Something buggy happened.");
         return spret::abort;
     }
-
-    if (orb_limits_translocation())
-        mprf(MSGCH_ORB, "The Orb disrupts the stability of your passage!");
 
     trap->reveal();
     trap2->reveal();
