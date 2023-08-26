@@ -3829,6 +3829,8 @@ colour_t item_def::talisman_colour() const
         return ETC_POISON;
     case TALISMAN_BLADE:
         return ETC_IRON;
+    case TALISMAN_SPELLFORGED:
+        return ETC_CRYSTAL;
     case TALISMAN_STATUE:
         return ETC_EARTH;
     case TALISMAN_DRAGON:

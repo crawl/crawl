@@ -171,6 +171,7 @@ public:
     virtual int get_ac_bonus(bool max = false) const;
     virtual int ev_bonus(bool /*max*/ = false) const { return 0; }
     virtual int get_base_ac_penalty(int /*base*/) const { return 0; }
+    virtual int infuse_boost(bool /*random*/ = true, bool /*max*/ = false) const { return 0; }
 
     bool enables_flight() const;
     bool forbids_flight() const;
