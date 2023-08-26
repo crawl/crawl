@@ -589,6 +589,68 @@ public:
 
 };
 
+class FormSpellforge : public Form
+{
+private:
+    FormSpellforge() : Form(transformation::spellforged) { }
+    DISALLOW_COPY_AND_ASSIGN(FormSpellforge);
+public:
+    static const FormSpellforge &instance() { static FormSpellforge inst; return inst; }
+
+    /**
+     * @ description
+     */
+    string get_description(bool past_tense) const override
+    {
+        return make_stringf("Your skin %s made of spellforged metal.",
+                            past_tense ? "is" : "was");
+
+        return "Your skin is made of spellforged metal.";
+    }
+    /**
+     * Get a message for transforming into this form.
+     */
+    string transform_message(bool /*was_flying*/) const override
+    {
+        return "Your skin turns to spellforged metal.";
+    }
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const override
+    {
+        return "Your metal dermis becomes flesh again.";
+    }
+
+    //TODO figure out good messaging for this.
+    //Right now will look like it scales off skill
+    //Scaling on this feels a little wack
+    int get_ac_bonus(bool get_max) const override
+    {
+        int effective_intel = you.max_intel() - 10;
+        if (get_max || effective_intel > 32)
+            effective_intel = 32;
+        return max(0, effective_intel * 50);
+    }
+
+    /**
+     * How much EV do you 'gain' from being in this form?
+     * This should be a negative number, or zero!
+     */
+    int ev_bonus(bool get_max) const override
+    {
+        return min(0, scaling_value(FormScaling().Base(-8).Scaling(8),
+                                    false, get_max));
+    }
+
+    //TODO: properly describe infuse power
+    int infuse_boost() const
+    {
+        return divided_scaling(FormScaling().Base(4).Scaling(16), true, false, 100);
+    }
+};
+
+
 class FormBlade : public Form
 {
 private:
@@ -1090,6 +1152,7 @@ static const Form* forms[] =
     &FormBeast::instance(),
     &FormMaw::instance(),
     &FormFlux::instance(),
+    &FormSpellforge::instance(),
 };
 
 const Form* get_form(transformation xform)

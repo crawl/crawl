@@ -379,5 +379,18 @@ static const form_entry formdata[] =
       { "contaminating", "Foes you strike become dangerously contaminated with magical radiation." } }
 },
 
+{
+    transformation::spellforged, MONS_SPELLFORGED_SERVITOR, "Spellforged",
+    "spellforged skin", "spellforged", "a",
+    10, 19, TALISMAN_SPELLFORGED,
+    SLOTF(EQ_BODY_ARMOUR) | SLOTF(EQ_GLOVES), MR_NO_FLAGS,
+    DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
+    {}, true, FormScaling().Base(2),
+    SPWPN_NORMAL, CYAN, "", DEFAULT_VERBS,
+    FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, false,
+    "", 0, "", "", "", "",
+    { }
+},
+
 };
 COMPILE_CHECK(ARRAYSZ(formdata) == NUM_TRANSFORMS);
