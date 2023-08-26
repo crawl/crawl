@@ -2775,7 +2775,7 @@ bool maybe_make_jinxsprite(const actor& agent, const actor& victim, string sourc
     // Test victim will to see if we should spawn something.
     // (Return silently if we don't pass the check)
     int pow = get_jinxsprite_summon_power(agent);
-    if (victim.check_willpower(&agent, pow) <= 0)
+    if (victim.check_willpower(&agent, pow) > 0)
         return false;
     else
     {

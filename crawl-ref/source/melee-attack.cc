@@ -327,7 +327,8 @@ bool melee_attack::handle_phase_dodged()
     if (defender->is_player())
         count_action(CACT_DODGE, DODGE_EVASION);
 
-    maybe_trigger_jinxbite(weapon ? weapon->name(DESC_YOUR) : you.hand_name(true));
+    maybe_trigger_jinxbite(weapon ? weapon->name(DESC_YOUR)
+                                  : ("your " + you.hand_name(true)));
 
     if (attacker != defender
         && attacker->alive() && defender->can_see(*attacker)
@@ -586,9 +587,10 @@ bool melee_attack::handle_phase_hit()
                 defender_name(true).c_str(),
                 attacker->is_player() ? "do" : "does");
         }
-
-        maybe_trigger_jinxbite(weapon ? weapon->name(DESC_YOUR) : you.hand_name(true));
     }
+
+    maybe_trigger_jinxbite(weapon ? weapon->name(DESC_YOUR)
+                                  : ("your " + you.hand_name(true)));
 
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();

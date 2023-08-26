@@ -83,7 +83,8 @@ bool attack::handle_phase_blocked()
     if (attacker->is_player())
         behaviour_event(defender->as_monster(), ME_WHACK, attacker);
 
-    maybe_trigger_jinxbite(weapon ? weapon->name(DESC_YOUR) : you.hand_name(true));
+    maybe_trigger_jinxbite(weapon ? weapon->name(DESC_YOUR)
+                                  : ("your " + you.hand_name(true)));
 
     return true;
 }
