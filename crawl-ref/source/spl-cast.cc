@@ -1358,6 +1358,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_flame_wave>(range);
     case SPELL_GOLUBRIAS_PASSAGE:
         return make_unique<targeter_passage>(range);
+    case SPELL_SIGIL_OF_BINDING:
+        return make_unique<targeter_multiposition>(&you,
+                                                   find_sigil_locations(true));
 
     default:
         break;

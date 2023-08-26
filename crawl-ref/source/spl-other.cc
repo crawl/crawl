@@ -525,23 +525,35 @@ spret cast_intoxicate(int pow, bool fail, bool tracer)
     return spret::success;
 }
 
-spret cast_sigil_of_binding(int pow, bool fail, bool tracer)
+vector<coord_def> find_sigil_locations(bool tracer)
 {
-    // Fill list of viable locations to create the sigil (keeping separate lists
-    // for distance 1 and 2)
-    vector<coord_def> sigil_pos_d1;
-    vector<coord_def> sigil_pos_d2;
+    vector<coord_def> positions;
     for (radius_iterator ri(you.pos(), 2, C_SQUARE); ri; ++ri)
     {
         if (you.see_cell(*ri) && env.grid(*ri) == DNGN_FLOOR
             && (!actor_at(*ri) || (actor_at(*ri) && tracer
                                    && !you.can_see(*actor_at(*ri)))))
         {
-            if (grid_distance(you.pos(), *ri) == 1)
-                sigil_pos_d1.push_back(*ri);
-            else
-                sigil_pos_d2.push_back(*ri);
+            positions.push_back(*ri);
         }
+    }
+
+    return positions;
+}
+
+spret cast_sigil_of_binding(int pow, bool fail, bool tracer)
+{
+    // Fill list of viable locations to create the sigil (keeping separate lists
+    // for distance 1 and 2)
+    vector<coord_def> positions = find_sigil_locations(tracer);
+    vector<coord_def> sigil_pos_d1;
+    vector<coord_def> sigil_pos_d2;
+    for (auto p : positions)
+    {
+        if (grid_distance(you.pos(), p) == 1)
+            sigil_pos_d1.push_back(p);
+        else
+            sigil_pos_d2.push_back(p);
     }
 
     // Remove any old sigil that may still be active
