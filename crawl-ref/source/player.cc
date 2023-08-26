@@ -3770,7 +3770,8 @@ int player::infusion_amount() const
     int cost = 0;
     if (player_equip_unrand(UNRAND_POWER_GLOVES))
         cost = you.has_mutation(MUT_HP_CASTING) ? 0 : 999;
-    else if (wearing_ego(EQ_GLOVES, SPARM_INFUSION))
+    else if (wearing_ego(EQ_GLOVES, SPARM_INFUSION)
+          || you.form == transformation::spellforged)
         cost = 1;
 
     if (you.has_mutation(MUT_HP_CASTING))
