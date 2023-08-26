@@ -120,6 +120,7 @@ Form::Form(const form_entry &fe)
       uc_colour(fe.uc_colour), uc_attack_verbs(fe.uc_attack_verbs),
       can_bleed(fe.can_bleed),
       keeps_mutations(fe.keeps_mutations),
+      changes_physiology(fe.changes_physiology),
       shout_verb(fe.shout_verb),
       shout_volume_modifier(fe.shout_volume_modifier),
       hand_name(fe.hand_name), foot_name(fe.foot_name),
@@ -1212,14 +1213,9 @@ bool form_likes_water(transformation form)
 }
 
 // Used to mark transformations which override species intrinsics.
-// TODO: time to dataify this.
 bool form_changed_physiology(transformation form)
 {
-    return form != transformation::none
-        && form != transformation::beast
-        && form != transformation::flux
-        && form != transformation::maw
-        && form != transformation::blade_hands;
+    return get_form(form)->changes_physiology;
 }
 
 /**
