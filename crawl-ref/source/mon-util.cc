@@ -869,7 +869,7 @@ bool mons_is_projectile(const monster& mon)
 
 bool mons_is_chaser(monster_type mc)
 {
-    return (mc == MONS_FOXFIRE || mc == MONS_JINXSPRITE);
+    return mc == MONS_FOXFIRE || mc == MONS_JINXSPRITE;
 }
 
 bool mons_is_chaser(const monster& mon)

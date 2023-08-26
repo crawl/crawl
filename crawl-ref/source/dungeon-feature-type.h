@@ -69,6 +69,7 @@ enum dungeon_feature_type
 #if TAG_MAJOR_VERSION > 34
     DNGN_MUD,                         // Leda's Unmaking
     DNGN_TOXIC_BOG,                   // Eringya's Noxious Bog
+    DNGN_BINDING_SIGIL,               // Sigil of Binding
 #endif
 
     DNGN_FLOOR,

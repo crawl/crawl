@@ -74,9 +74,7 @@ public:
         set_prompt();
         need_redraw = false; // XX simplify
         if (!targeted())
-        {
             needs_path = false;
-        }
     }
 
     // targeting_behaviour API
