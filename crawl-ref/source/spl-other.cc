@@ -536,7 +536,8 @@ spret cast_sigil_of_binding(int pow, bool fail, bool tracer)
     for (radius_iterator ri(you.pos(), 2, C_SQUARE); ri; ++ri)
     {
         if (you.see_cell(*ri) && env.grid(*ri) == DNGN_FLOOR
-            && (!actor_at(*ri) || (actor_at(*ri) && tracer && !you.can_see(*actor_at(*ri)))))
+            && (!actor_at(*ri) || (actor_at(*ri) && tracer
+                                   && !you.can_see(*actor_at(*ri)))))
         {
             if (grid_distance(you.pos(), *ri) == 1)
                 sigil_pos_d1.push_back(*ri);
@@ -549,8 +550,9 @@ spret cast_sigil_of_binding(int pow, bool fail, bool tracer)
     if (!tracer)
         timeout_binding_sigils();
 
-    // If the player knows there are no valid places for a sigil, abort. But if invisible monsters are standing on the
-    // only valid locations, we will need to simply fail at cast time.
+    // If the player knows there are no valid places for a sigil, abort. But if
+    // invisible monsters are standing on the only valid locations, we will need
+    // to simply fail at cast time.
     if (sigil_pos_d1.empty() && sigil_pos_d2.empty())
     {
         if (tracer)
@@ -565,9 +567,11 @@ spret cast_sigil_of_binding(int pow, bool fail, bool tracer)
         }
     }
 
-    int dur = random_range(5 + div_rand_round(pow, 4), 8 + div_rand_round(pow, 2)) * BASELINE_DELAY;
-    // Now select a random spot for each range and put the sigil there - attempting
-    // to favor placing the sigils in two positions are are non-adjacent.
+    int dur = BASELINE_DELAY * random_range(5 + div_rand_round(pow, 4),
+                                            8 + div_rand_round(pow, 2));
+    // Now select a random spot for each range and put the sigil there -
+    // attempting to favor placing the sigils in two positions that are
+    // non-adjacent.
     shuffle_array(sigil_pos_d1);
     shuffle_array(sigil_pos_d2);
 
@@ -621,8 +625,8 @@ void trigger_binding_sigil(actor& actor)
         {
             mpr("You step onto the binding sigil and are held in place!");
 
-            // Player self-bind duration does *not* scale with spellpower, so the
-            // spell can never get 'worse' in any way from training it.
+            // Player self-bind duration does *not* scale with spellpower, so
+            // the spell can never get 'worse' in any way from training it.
             you.increase_duration(DUR_LOCKED_DOWN, random_range(2, 4));
             revert_terrain_change(actor.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
         }
@@ -631,18 +635,26 @@ void trigger_binding_sigil(actor& actor)
     {
         monster* m = actor.as_monster();
         if (m->airborne())
-            simple_monster_message(*m, " passes harmlessly over your binding sigil.");
+        {
+            simple_monster_message(*m,
+                " passes harmlessly over your binding sigil.");
+        }
         else
         {
             int pow = calc_spell_power(SPELL_SIGIL_OF_BINDING);
             int dur = max(2, random_range(4 + pow / 12, 8 + pow / 6)
-                          - div_rand_round(m->get_hit_dice(), 4)) * BASELINE_DELAY;
+                          - div_rand_round(m->get_hit_dice(), 4))
+                      * BASELINE_DELAY;
 
             if (m->body_size() == SIZE_GIANT)
                 dur /= 2;
 
             if (m->add_ench(mon_enchant(ENCH_BOUND, 0, &you, dur)))
-                simple_monster_message(*m, " steps onto your binding sigil and is bound in place!", MSGCH_FRIEND_SPELL);
+            {
+                simple_monster_message(*m,
+                    " steps onto your binding sigil and is bound in place!",
+                    MSGCH_FRIEND_SPELL);
+            }
 
             revert_terrain_change(actor.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
         }
