@@ -556,10 +556,6 @@ spret cast_sigil_of_binding(int pow, bool fail, bool tracer)
             sigil_pos_d2.push_back(p);
     }
 
-    // Remove any old sigil that may still be active
-    if (!tracer)
-        timeout_binding_sigils();
-
     // If the player knows there are no valid places for a sigil, abort. But if
     // invisible monsters are standing on the only valid locations, we will need
     // to simply fail at cast time.
@@ -574,6 +570,9 @@ spret cast_sigil_of_binding(int pow, bool fail, bool tracer)
     }
 
     fail_check();
+
+    // Remove any old sigil that may still be active.
+    timeout_binding_sigils();
 
     int dur = BASELINE_DELAY * random_range(5 + div_rand_round(pow, 4),
                                             8 + div_rand_round(pow, 2));

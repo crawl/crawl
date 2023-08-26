@@ -973,9 +973,9 @@ void timeout_binding_sigils()
                 dynamic_cast<map_terrain_change_marker*>(mark);
         if (marker->change_type == TERRAIN_CHANGE_BINDING_SIGIL)
         {
-            revert_terrain_change(marker->pos, TERRAIN_CHANGE_BINDING_SIGIL);
             if (you.see_cell(marker->pos))
                 mprf(MSGCH_DURATION, "Your binding sigil disappears.");
+            revert_terrain_change(marker->pos, TERRAIN_CHANGE_BINDING_SIGIL);
         }
     }
 }
