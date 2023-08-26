@@ -527,8 +527,6 @@ spret cast_intoxicate(int pow, bool fail, bool tracer)
 
 spret cast_sigil_of_binding(int pow, bool fail, bool tracer)
 {
-    fail_check();
-
     // Fill list of viable locations to create the sigil (keeping separate lists
     // for distance 1 and 2)
     vector<coord_def> sigil_pos_d1;
@@ -553,19 +551,17 @@ spret cast_sigil_of_binding(int pow, bool fail, bool tracer)
     // If the player knows there are no valid places for a sigil, abort. But if
     // invisible monsters are standing on the only valid locations, we will need
     // to simply fail at cast time.
-    if (sigil_pos_d1.empty() && sigil_pos_d2.empty())
+    bool success = !(sigil_pos_d1.empty() && sigil_pos_d2.empty());
+    if (tracer)
+        return success ? spret::success : spret::abort;
+    else if (!success)
     {
-        if (tracer)
-        {
-            mpr("This is no room nearby to place a sigil!");
-            return spret::abort;
-        }
-        else
-        {
-            mpr("Your attempt to inscribe a sigil of binding fails!");
-            return spret::fail;
-        }
+        fail_check();
+        mpr("Your attempt to inscribe a sigil of binding fails!");
+        return spret::success;
     }
+
+    fail_check();
 
     int dur = BASELINE_DELAY * random_range(5 + div_rand_round(pow, 4),
                                             8 + div_rand_round(pow, 2));
@@ -581,25 +577,33 @@ spret cast_sigil_of_binding(int pow, bool fail, bool tracer)
                             TERRAIN_CHANGE_BINDING_SIGIL, you.mid);
     }
 
-    bool non_adj_found = false;
-    for (unsigned int i = 0; i < sigil_pos_d2.size(); ++i)
+    if (!sigil_pos_d2.empty())
     {
-        // Skip adjacent grids on first pass
-        if (grid_distance(sigil_pos_d1[0], sigil_pos_d2[i]) <= 1)
-            continue;
+        // If this is in fact the second sigil, try to place it non-adjacent to
+        // the first one.
+        bool non_adj = false;
+        if (!sigil_pos_d1.empty())
+        {
+            for (unsigned int i = 0; i < sigil_pos_d2.size(); ++i)
+            {
+                // Skip adjacent grids on first pass
+                if (grid_distance(sigil_pos_d1[0], sigil_pos_d2[i]) <= 1)
+                    continue;
 
-        temp_change_terrain(sigil_pos_d2[i], DNGN_BINDING_SIGIL, dur,
-                            TERRAIN_CHANGE_BINDING_SIGIL, you.mid);
-        non_adj_found = true;
-        break;
-    }
+                temp_change_terrain(sigil_pos_d2[i], DNGN_BINDING_SIGIL, dur,
+                                    TERRAIN_CHANGE_BINDING_SIGIL, you.mid);
+                non_adj = true;
+                break;
+            }
+        }
 
-    // If we couldn't find a non-adjacent position to put the second sigil, just
-    // take any viable space instead.
-    if (!non_adj_found)
-    {
-        temp_change_terrain(sigil_pos_d2[0], DNGN_BINDING_SIGIL, dur,
-                            TERRAIN_CHANGE_BINDING_SIGIL, you.mid);
+        // If we couldn't find a non-adjacent position to put the second sigil,
+        // or if this is the only sigil, just take any viable space instead.
+        if (!non_adj)
+        {
+            temp_change_terrain(sigil_pos_d2[0], DNGN_BINDING_SIGIL, dur,
+                                TERRAIN_CHANGE_BINDING_SIGIL, you.mid);
+        }
     }
 
     if (!sigil_pos_d1.empty() && !sigil_pos_d2.empty())
