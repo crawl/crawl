@@ -1017,8 +1017,8 @@ public:
 
     int ev_bonus(bool get_max) const override
     {
-        return max(0, scaling_value(FormScaling().Base(20).Scaling(7),
-                                    false, get_max));
+        return max(0, divided_scaling(FormScaling().Base(20).Scaling(7),
+                                    false, get_max, 100));
     }
 
     bool can_offhand_punch() const override { return true; }
