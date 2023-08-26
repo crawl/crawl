@@ -133,7 +133,7 @@ static equipment_type _acquirement_armour_slot(bool divine)
     if (you.wear_barding()
         && one_chance_in(you.seen_armour[ARM_BARDING] ? 4 : 2))
     {
-            return EQ_BOOTS;
+        return EQ_BOOTS;
     }
 
     vector<pair<equipment_type, int>> weights = {
@@ -267,7 +267,7 @@ static int _body_acquirement_weight(armour_type armour,
  * god gifts.
  *
  * @param divine      Whether the armour is a god gift.
- * @return A potentially wearable type of body armour..
+ * @return A potentially wearable type of body armour.
  */
 static armour_type _acquirement_body_armour(bool divine)
 {
@@ -1164,7 +1164,6 @@ static void _adjust_brand(item_def &item, bool divine, int agent)
 
     if (is_artefact(item))
         return; // their own kettle of fish
-
 
     // Trog has a restricted brand table.
     if (agent == GOD_TROG && item.base_type == OBJ_WEAPONS)
