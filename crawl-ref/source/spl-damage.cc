@@ -4003,7 +4003,7 @@ void chaser_attack(const monster *chaser, actor *target)
     beam.aux_source  = beam.name;
     beam.target      = target->pos();
 
-    switch(chaser->type)
+    switch (chaser->type)
     {
         case MONS_JINXSPRITE:
             _do_jinxsprite_hit(target, chaser->get_hit_dice());
