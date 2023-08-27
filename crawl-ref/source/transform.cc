@@ -646,7 +646,7 @@ public:
     //Scaling on this feels a little wack
     int get_ac_bonus(bool get_max) const override
     {
-        int effective_intel = you.max_intel() - 10;
+        int effective_intel = you.intel() - 10;
         if(get_max || effective_intel > 32)
             effective_intel = 32;
         return max(0, effective_intel * 50);

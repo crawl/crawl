@@ -1149,6 +1149,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
 
     case RING_INTELLIGENCE:
         notify_stat_change(STAT_INT, item.plus, false);
+        you.redraw_armour_class = true; //For spellforged talisman
         break;
 
     case RING_MAGICAL_POWER:
@@ -1278,6 +1279,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
 
     case RING_INTELLIGENCE:
         notify_stat_change(STAT_INT, -item.plus, false);
+        you.redraw_armour_class = true; //For spellforged talisman
         break;
 
     case RING_FLIGHT:
