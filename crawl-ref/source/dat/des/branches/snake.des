@@ -1049,8 +1049,8 @@ MARKER: 3 = lua:fog_machine { cloud_type = "noxious fumes", pow_min = 5, \
 MAP
      ...
     .....
-   ..+++..
-  ..m+2+m..
+   ..===..
+  ..m=2=m..
   ..mm1mm..
  ..mm111mm..
 ..mm11111mm..
