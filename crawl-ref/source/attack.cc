@@ -37,7 +37,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
-#include "spl-summoning.h"
+#include "spl-damage.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
@@ -83,8 +83,7 @@ bool attack::handle_phase_blocked()
     if (attacker->is_player())
         behaviour_event(defender->as_monster(), ME_WHACK, attacker);
 
-    maybe_trigger_jinxbite(weapon ? weapon->name(DESC_YOUR)
-                                  : ("your " + you.hand_name(true)));
+    maybe_trigger_jinxbite();
 
     return true;
 }
@@ -1738,11 +1737,12 @@ actor &attack::stat_source() const
 }
 
 // Attempt to trigger jinxbite, if it is active for the attacker.
-void attack::maybe_trigger_jinxbite(string source_name)
+void attack::maybe_trigger_jinxbite()
 {
     if (attacker->is_player() && you.duration[DUR_JINXBITE]
+        && defender->alive()
         && !defender->wont_attack() && defender->willpower() != WILL_INVULN)
     {
-        maybe_make_jinxsprite(*attacker, *defender, source_name);
+        attempt_jinxbite_hit(*attacker, *defender);
     }
 }

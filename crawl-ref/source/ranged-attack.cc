@@ -192,7 +192,7 @@ bool ranged_attack::handle_phase_blocked()
              punctuation.c_str());
     }
 
-    maybe_trigger_jinxbite(projectile->name(DESC_THE));
+    maybe_trigger_jinxbite();
 
     return attack::handle_phase_blocked();
 }
@@ -229,7 +229,7 @@ bool ranged_attack::handle_phase_dodged()
              attack_strength_punctuation(damage_done).c_str());
     }
 
-    maybe_trigger_jinxbite(projectile->name(DESC_THE));
+    maybe_trigger_jinxbite();
 
     return true;
 }
@@ -309,7 +309,7 @@ bool ranged_attack::handle_phase_hit()
             }
         }
 
-        maybe_trigger_jinxbite(projectile->name(DESC_THE));
+        maybe_trigger_jinxbite();
     }
 
     if ((using_weapon() || throwing())

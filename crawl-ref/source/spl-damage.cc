@@ -3918,62 +3918,117 @@ spret cast_starburst(int pow, bool fail, bool tracer)
     return spret::success;
 }
 
-static void _print_jinxsprite_message(const monster& victim)
+static string _get_jinxsprite_message(const monster& victim)
 {
     string msg;
 
     // This is *extremely* ripe ground for varied comical messages. Tie a snake's tail
     // in a knot, unravel a mummy's bandages, tell Edmund he'll never be as scary as his brother.
 
-    if (mon_shape_is_humanoid(get_mon_shape(victim.type)) && victim.inv[MSLOT_WEAPON] != NON_ITEM
-        && coinflip())
+    if (get_mon_shape(victim.type) == MON_SHAPE_SNAKE && coinflip())
     {
-        msg = make_stringf("bonks %s with %s.",
-                        victim.name(DESC_THE).c_str(),
-                        env.item[victim.inv[MSLOT_WEAPON]].name(DESC_ITS).c_str());
+        msg = make_stringf("ties %s tail in a knot.",
+                        victim.name(DESC_ITS).c_str());
     }
-    else if (coinflip())
+    else if (mon_shape_is_humanoid(get_mon_shape(victim.type)) && coinflip())
     {
-        msg = make_stringf("makes %s trip over %s own %s.",
-                        victim.name(DESC_THE).c_str(),
-                        victim.pronoun(PRONOUN_POSSESSIVE).c_str(),
-                        victim.foot_name(true).c_str());
+        if (victim.inv[MSLOT_WEAPON] != NON_ITEM && coinflip())
+        {
+            return make_stringf("bonks %s with %s.",
+                                victim.name(DESC_THE).c_str(),
+                                env.item[victim.inv[MSLOT_WEAPON]].name(DESC_ITS).c_str());
+        }
+        else if (one_chance_in(3))
+        {
+            return make_stringf("insults %s ancestors.",
+                                victim.name(DESC_ITS).c_str());
+        }
+        else
+        {
+            return make_stringf("doodles on %s face.",
+                                victim.name(DESC_ITS).c_str());
+        }
     }
     else
     {
-        msg = make_stringf("smacks %s with %s own %s.",
-                        victim.name(DESC_THE).c_str(),
-                        victim.pronoun(PRONOUN_POSSESSIVE).c_str(),
-                        victim.hand_name(false).c_str());
-    }
-
-    if (you.can_see(victim))
-        mprf("The jinxsprite %s", msg.c_str());
-}
-
-static void _do_jinxsprite_hit(actor *target, int pow)
-{
-    int dmg = roll_dice(2, pow);
-
-    if (target->is_monster())
-    {
-        monster* mons = target->as_monster();
-        _print_jinxsprite_message(*mons);
-        _player_hurt_monster(*target->as_monster(), dmg, BEAM_MAGIC);
-
-        // The slow application ignores Will, since Will was already checked to
-        // spawn the sprite in the first place. Yes, it may not have been the
-        // victim's own will, but sprites do what they want.
-        if (mons->alive() && mons->willpower() != WILL_INVULN)
+        switch (random2(2))
         {
-            if (coinflip())
-                mons->add_ench(ENCH_WEAK);
-            else
-                mons->add_ench(ENCH_SLOW);
+            case 0:
+            return make_stringf("makes %s trip over %s own %s.",
+                                victim.name(DESC_THE).c_str(),
+                                victim.pronoun(PRONOUN_POSSESSIVE).c_str(),
+                                victim.foot_name(true).c_str());
 
-            simple_monster_message(*mons, " reels.");
+            case 1:
+            return make_stringf("smacks %s with %s own %s.",
+                                victim.name(DESC_THE).c_str(),
+                                victim.pronoun(PRONOUN_POSSESSIVE).c_str(),
+                                victim.hand_name(false).c_str());
+
+            case 2:
+            return make_stringf("does a pirouette on top of %s.",
+                                victim.name(DESC_THE).c_str());
         }
     }
+
+    return msg;
+}
+
+int get_jinxbite_trigger_power(const actor& agent)
+{
+    int pow = (agent.is_player() ? calc_spell_power(SPELL_JINXBITE) : 50);
+    return pow;
+}
+
+bool attempt_jinxbite_hit(const actor& agent, actor& victim)
+{
+    // Test victim will to see if we should trigger.
+    // (Return silently if we don't pass the check)
+    int pow = get_jinxbite_trigger_power(agent);
+    if (victim.check_willpower(&agent, pow) > 0)
+        return false;
+
+    // Show brief animation when we successfully trigger (helps sell to the
+    // player that this is a Will check, also)
+    if ((Options.use_animations & UA_BEAM))
+    {
+#ifdef USE_TILE
+        view_add_tile_overlay(victim.pos(), tileidx_zap(LIGHTBLUE));
+#endif
+        view_add_glyph_overlay(victim.pos(), {dchar_glyph(DCHAR_FIRED_ZAP),
+                                static_cast<unsigned short>(LIGHTBLUE)});
+        animation_delay(50, true);
+    }
+
+    int dmg = roll_dice(2, 2 + div_rand_round(pow, 25));
+
+    if (victim.is_monster())
+    {
+        monster* mons = victim.as_monster();
+
+        if (you.can_see(victim))
+        {
+            mprf("A giggling sprite leaps out and %s",
+                    _get_jinxsprite_message(*mons).c_str());
+        }
+
+        _player_hurt_monster(*mons, dmg, BEAM_MAGIC);
+
+        if (mons->alive())
+        {
+
+            mons->add_ench(mon_enchant(ENCH_DRAINED, 2, &you, random_range(3, 5)
+                                                              * BASELINE_DELAY));
+            //simple_monster_message(*mons, " reels.");
+        }
+    }
+
+    // Drain some duration from the effect every time we spawn a sprite
+    you.duration[DUR_JINXBITE] -= 4;
+    if (you.duration[DUR_JINXBITE] < 1)
+        you.duration[DUR_JINXBITE] = 1;
+
+    return true;
 }
 
 void chaser_attack(const monster *chaser, actor *target)
@@ -4006,7 +4061,7 @@ void chaser_attack(const monster *chaser, actor *target)
     switch (chaser->type)
     {
         case MONS_JINXSPRITE:
-            _do_jinxsprite_hit(target, chaser->get_hit_dice());
+            attempt_jinxbite_hit(*chaser, *target);
             break;
 
         default:

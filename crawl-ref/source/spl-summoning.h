@@ -109,8 +109,3 @@ bool summon_spider(const actor &agent, coord_def pos, god_type god,
 spret summon_spiders(actor &agent, int pow, god_type god, bool fail = false);
 
 spret summon_butterflies();
-
-int get_jinxsprite_summon_power(const actor& agent);
-bool maybe_make_jinxsprite(const actor& agent, const actor& victim, string souce_name);
-bool jinxbite_targets_available();
-spret cast_jinxbite(int pow, bool fail);

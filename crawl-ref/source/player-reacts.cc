@@ -76,6 +76,7 @@
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-goditem.h"
+#include "spl-selfench.h"
 #include "spl-other.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
@@ -252,6 +253,22 @@ static void _maybe_melt_armour()
     {
         you.props.erase(MELT_ARMOUR_KEY);
         mprf(MSGCH_DURATION, "The heat melts your icy armour.");
+    }
+}
+
+// Give a two turn grace period for the sprites to lose interest when no
+// valid enemies are in sight (and reset it if enemies come into sight again)
+static void _handle_jinxbite_interest()
+{
+    if (you.duration[DUR_JINXBITE])
+    {
+        if (!jinxbite_targets_available())
+        {
+            if (!you.duration[DUR_JINXBITE_LOST_INTEREST])
+                you.duration[DUR_JINXBITE_LOST_INTEREST] = 20;
+        }
+        else
+            you.duration[DUR_JINXBITE_LOST_INTEREST] = 0;
     }
 }
 
@@ -452,6 +469,8 @@ void player_reacts_to_monsters()
         mprf("The grasping roots release their grip on you.");
         you.stop_being_constricted(true);
     }
+
+    _handle_jinxbite_interest();
 
     _maybe_melt_armour();
     _update_cowardice();
@@ -812,12 +831,6 @@ static void _decrement_durations()
     {
         ASSERT(you.duration[DUR_HEAVENLY_STORM]);
         wu_jian_heaven_tick();
-    }
-
-    if (you.duration[DUR_JINXBITE] && !jinxbite_targets_available())
-    {
-        mprf(MSGCH_DURATION, "The sprites lose interest in your situation.");
-        you.duration[DUR_JINXBITE] = 0;
     }
 
     // these should be after decr_ambrosia, transforms, liquefying, etc.
