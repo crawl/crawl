@@ -1230,6 +1230,7 @@ static void _grab_followers()
     const bool can_follow = branch_allows_followers(you.where_are_you);
 
     int non_stair_using_allies = 0;
+    int non_stair_using_undead = 0;
     int non_stair_using_summons = 0;
 
     monster* dowan = nullptr;
@@ -1253,6 +1254,8 @@ static void _grab_followers()
             non_stair_using_allies++;
             if (fol->is_summoned() || mons_is_conjured(fol->type))
                 non_stair_using_summons++;
+            if (fol->holiness() & MH_UNDEAD)
+                non_stair_using_undead++;
         }
     }
 
@@ -1287,9 +1290,11 @@ static void _grab_followers()
         }
         else
         {
+            const bool all_dead = non_stair_using_undead == non_stair_using_allies;
             // Permanent undead are left behind but stay.
-            mprf("Your mindless puppet%s behind to rot.",
-                 non_stair_using_allies > 1 ? "s stay" : " stays");
+            mprf("Your mindless puppet%s behind%s.",
+                 non_stair_using_allies > 1 ? "s stay" : " stays",
+                 all_dead ? " to rot" : "");
         }
     }
 
