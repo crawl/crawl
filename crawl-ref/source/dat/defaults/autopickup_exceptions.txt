@@ -17,6 +17,9 @@ ae += useless_item
 # Exclude items which your god disapproves of.
 ae += forbidden
 
+# ?noise is pretty useless.
+ae += scroll of noise
+
 ### good_item backstop (keep last) ###
 
 ae += <good_item

@@ -2733,10 +2733,6 @@ bool is_bad_item(const item_def &item)
 
     switch (item.base_type)
     {
-    case OBJ_SCROLLS:
-        if (item.sub_type == SCR_TORMENT)
-            return !you.res_torment();
-        return item.sub_type == SCR_NOISE;
     case OBJ_POTIONS:
         // Can't be bad if you can't use them.
         if (!you.can_drink(false))
@@ -2785,7 +2781,10 @@ bool is_dangerous_item(const item_def &item, bool temp)
         {
         case SCR_IMMOLATION:
         case SCR_VULNERABILITY:
+        case SCR_NOISE:
             return true;
+        case SCR_TORMENT:
+            return !you.res_torment();
         case SCR_POISON:
             return player_res_poison(false, temp, true) <= 0
                    && !you.cloud_immune();
