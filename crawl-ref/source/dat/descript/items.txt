@@ -1351,8 +1351,11 @@ fastened on one end.
 spellforging talisman
 
 A clear glass dewar of molten mana. Transforms the user's flesh to a substance
-equal parts mana and metal, with hardness dependant on the wearer's mental
-prowess. Their spellforged skin is also an excellent conductor for mana,
+equal parts mana and metal, held together by constant concentration.
+The spellforged flesh will provide more intelligent users with stronger
+armouring, but their intellect is fully occupied and does not help reduce spell
+failure.
+Their spellforged flesh is also an excellent conductor for mana,
 expending it to empower their blows to a degree dependant on shapeshifting
 skill.
 
