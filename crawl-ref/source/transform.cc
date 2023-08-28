@@ -649,7 +649,7 @@ public:
         int effective_intel = you.intel();
         if(get_max || effective_intel > 32)
             effective_intel = 32;
-        return max(0, effective_intel * 50);
+        return max(0, effective_intel * 67);
     }
 
     /**
@@ -665,7 +665,7 @@ public:
     //TODO: properly describe infuse power
     int infuse_boost() const
     {
-        return divided_scaling(FormScaling().Base(4).Scaling(16), true, false, 100);
+        return divided_scaling(FormScaling().Base(8).Scaling(12), true, false, 100);
     }
 };
 
