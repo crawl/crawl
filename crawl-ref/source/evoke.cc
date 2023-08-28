@@ -1171,7 +1171,9 @@ bool evoke_item(item_def& item, dist *preselect)
                     mpr("The sack is emptied!");
                 practise_evoking(1);
             }
-            return false;
+            else
+                return false;
+            break;
 
         case MISC_LIGHTNING_ROD:
             if (_lightning_rod(preselect))
