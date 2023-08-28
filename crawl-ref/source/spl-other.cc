@@ -631,20 +631,10 @@ void trigger_binding_sigil(actor& actor)
 {
     if (actor.is_player())
     {
-        if (actor.airborne())
-        {
-            mpr("Your binding sigil unravels as you pass over it.");
-            revert_terrain_change(actor.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
-        }
-        else
-        {
-            mpr("You step onto the binding sigil and are held in place!");
-
-            // Player self-bind duration does *not* scale with spellpower, so
-            // the spell can never get 'worse' in any way from training it.
-            you.increase_duration(DUR_LOCKED_DOWN, random_range(2, 4));
-            revert_terrain_change(actor.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
-        }
+        mprf(MSGCH_WARN, "Your binding sigil unravels as you pass over it and "
+                         "the feedback drains your magic!");
+        revert_terrain_change(actor.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
+        pay_mp(3);
     }
     else
     {
@@ -654,12 +644,18 @@ void trigger_binding_sigil(actor& actor)
             simple_monster_message(*m,
                 " passes harmlessly over your binding sigil.");
         }
+        else if (m->has_ench(ENCH_SWIFT))
+        {
+            simple_monster_message(*m,
+                " has too much momentum for your sigil to bind in place!");
+        }
         else
         {
             int pow = calc_spell_power(SPELL_SIGIL_OF_BINDING);
-            int dur = max(2, random_range(4 + pow / 12, 8 + pow / 6)
+            int dur = max(2, random_range(3 + div_rand_round(pow, 12),
+                                          6 + div_rand_round(pow, 8))
                           - div_rand_round(m->get_hit_dice(), 4))
-                      * BASELINE_DELAY;
+                        * BASELINE_DELAY;
 
             if (m->body_size() == SIZE_GIANT)
                 dur /= 2;
@@ -667,8 +663,11 @@ void trigger_binding_sigil(actor& actor)
             if (m->add_ench(mon_enchant(ENCH_BOUND, 0, &you, dur)))
             {
                 simple_monster_message(*m,
-                    " steps onto your binding sigil and is bound in place!",
+                    " moves onto your binding sigil and is bound in place!",
                     MSGCH_FRIEND_SPELL);
+
+                // The enemy will gain swift for twice as long as it was bound
+                m->props[BINDING_SIGIL_DURATION_KEY] = dur * 2;
             }
 
             revert_terrain_change(actor.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
