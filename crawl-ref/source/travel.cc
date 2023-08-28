@@ -2378,6 +2378,13 @@ public:
         return PromptMenu::show_in_msgpane();
     }
 
+    bool skip_process_command(int keyin) override
+    {
+        if (keyin == '!')
+            return true; // Gauntlet travel hotkey
+        return Menu::skip_process_command(keyin);
+    }
+
     bool process_key(int keyin) override
     {
         const bool allow_updown = (prompt_flags & TPF_ALLOW_UPDOWN);

@@ -269,6 +269,13 @@ namespace
             set_title(new MenuEntry(prompt, MEL_TITLE));
         }
 
+        bool skip_process_command(int keyin) override
+        {
+            if (keyin == '!')
+                return true; // Gauntlet branch help hotkey
+            return Menu::skip_process_command(keyin);
+        }
+
         void sort()
         {
             if (!toggleable_sort)
