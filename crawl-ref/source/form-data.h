@@ -385,7 +385,7 @@ static const form_entry formdata[] =
     10, 19, TALISMAN_SPELLFORGED,
     SLOTF(EQ_BODY_ARMOUR) | SLOTF(EQ_GLOVES), MR_NO_FLAGS,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
-    {}, true, FormScaling().Base(2),
+    {}, true, {},
     SPWPN_NORMAL, CYAN, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, false,
     "", 0, "", "", "", "",
