@@ -561,6 +561,7 @@ sniper SNIPER
 crossbow_fire FIERY_DEVIL
 condemnation CONDEMNATION
 zephyr ZEPHYR
+mule MULE
 sceptre_of_torment SCEPTRE_OF_TORMENT
 # start TAG_MAJOR_VERSION == 34
 botono BOTONO
