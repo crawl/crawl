@@ -32,6 +32,9 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
+#include "los.h"
+#include "losglobal.h"
+#include "losparam.h"
 #include "mapmark.h"
 #include "message.h"
 #include "mgen-data.h"
@@ -2743,5 +2746,48 @@ spret summon_spiders(actor &agent, int pow, god_type god, bool fail)
     else if (agent.is_player())
         canned_msg(MSG_NOTHING_HAPPENS);
 
+    return spret::success;
+}
+
+spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool fail)
+{
+    fail_check();
+
+    ray_def ray;
+    if (!find_ray(agent.pos(), targ, ray, opc_solid) || !ray.advance())
+    {
+        mpr("There's something in the way.");
+        return spret::abort;
+    }
+    const coord_def pos = ray.pos();
+
+    // For unseen invisble enemies
+    if (actor_at(pos))
+    {
+        mpr("Your attempt to unleash a boulder fails!");
+        return spret::success;
+    }
+
+    mgen_data mg = mgen_data(MONS_BOULDER,
+                             agent.is_player()
+                                ? BEH_FRIENDLY
+                                : SAME_ATTITUDE(agent.as_monster()),
+                             pos, MHITNOT, MG_FORCE_PLACE);
+    mg.set_summoned(&agent, 0, SPELL_BOULDER);
+    monster *boulder = create_monster(mg);
+
+    // If some other reason prevents this from working (I'm not sure what?)
+    if (!boulder)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
+    }
+
+    boulder->props[BOULDER_POWER_KEY] = pow;
+    // XX: This will produce weird data if the caster isn't adjacent to the target spot.
+    //     Currently that can't happen, but in future it might.
+    boulder->props[BOULDER_DIRECTION_KEY] = pos - agent.pos();
+
+    mpr("You send a boulder barrelling forward!");
     return spret::success;
 }

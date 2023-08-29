@@ -2185,3 +2185,63 @@ bool targeter_poisonous_vapours::valid_aim(coord_def a)
 
     return true;
 }
+
+
+targeter_boulder::targeter_boulder(const actor* caster)
+    : targeter_beam(caster, LOS_MAX_RANGE, ZAP_IOOD, 0, 0, 0)
+{
+}
+
+bool targeter_boulder::set_aim(coord_def a)
+{
+    if (!targeter::set_aim(a))
+        return false;
+
+    bolt tempbeam = beam;
+
+    tempbeam.target = a;
+    tempbeam.aimed_at_spot = false;
+    tempbeam.path_taken.clear();
+    tempbeam.fire();
+    path_taken = tempbeam.path_taken;
+
+    return true;
+}
+
+
+bool targeter_boulder::valid_aim(coord_def a)
+{
+    if (!in_bounds(a))
+        return false;
+
+    if (a == agent->pos())
+        return notify_fail("There's a thick-headed creature in the way.");
+
+    // make sure it's a true cardinal
+    const coord_def delta = a - agent->pos();
+    if (delta.x && delta.y && abs(delta.x) != abs(delta.y))
+        return notify_fail("Boulders only roll along the cardinals.");
+
+    ray_def ray;
+    if (!find_ray(agent->pos(), a, ray, opc_solid))
+        return notify_fail("There's something in the way.");
+    if (!ray.advance())
+        return notify_fail("You cannot create a boulder there.");
+
+    const coord_def start = ray.pos();
+    if (feat_is_solid(env.grid(start)) || actor_at(start))
+        return notify_fail("You cannot create a boulder in an occupied space.");
+    if (!feat_has_solid_floor(env.grid(start)))
+        return notify_fail("You cannot create a boulder there.");
+
+
+    return true;
+}
+
+aff_type targeter_boulder::is_affected(coord_def loc)
+{
+    for (auto pc : path_taken)
+        if (pc == loc)
+            return cell_is_solid(pc) ? AFF_NO : AFF_YES;
+    return AFF_NO;
+}

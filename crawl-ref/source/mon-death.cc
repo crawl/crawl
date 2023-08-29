@@ -2820,6 +2820,11 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
         simple_monster_message(*mons, " drowns.",
                                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
     }
+    else if (mons->type == MONS_BOULDER)
+    {
+        simple_monster_message(*mons, " sinks to the bottom.",
+                               MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+    }
     else
     {
         simple_monster_message(*mons, " falls apart.",

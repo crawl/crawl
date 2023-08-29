@@ -1460,6 +1460,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_SIGIL_OF_BINDING:
         if (temp && cast_sigil_of_binding(0, false, true) == spret::abort)
             return "there is no room nearby to place a sigil.";
+        break;
 
     default:
         break;
@@ -1520,6 +1521,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_FULMINANT_PRISM:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     case SPELL_NOXIOUS_BOG:
+    case SPELL_BOULDER:
     // This can always potentially hit out-of-LOS, although this is conditional
     // on spell-power.
     case SPELL_FIRE_STORM:

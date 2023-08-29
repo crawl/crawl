@@ -974,6 +974,100 @@ static bool _handle_reaching(monster& mons)
     return ret;
 }
 
+static void _setup_boulder_explosion(monster& boulder, bolt& beam)
+{
+    const int pow = boulder.props[BOULDER_POWER_KEY].get_int();
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.source_id    = boulder.mid;
+    beam.thrower      = boulder.summoner == MID_PLAYER ? KILL_YOU : KILL_MON;
+    beam.source       = boulder.pos();
+    beam.target       = beam.source;
+    beam.hit          = AUTOMATIC_HIT;
+    beam.colour       = BROWN;
+    beam.flavour      = BEAM_FRAG;
+    beam.ex_size      = 1;
+    beam.is_explosion = true;
+    beam.hit_verb     = "hits";
+    beam.name         = "rocky shrapnel";
+    beam.source_name  = boulder.name(DESC_PLAIN, true);
+    beam.damage       = boulder_damage(pow, true);
+}
+
+static void _handle_boulder_movement(monster& boulder)
+{
+    place_cloud(CLOUD_DUST, boulder.pos(), 2 + random2(3), &boulder);
+
+    // First, find out where we intend to move next
+    coord_def dir = boulder.props[BOULDER_DIRECTION_KEY].get_coord();
+    coord_def targ = boulder.pos() + dir;
+
+    // If our summoner is the player, and they cannot see us, silently crumble
+    if (boulder.summoner == MID_PLAYER
+        && (!you.can_see(boulder) || !you.see_cell(targ)))
+    {
+        simple_monster_message(boulder, " crumbles as it rolls away.");
+        monster_die(boulder, KILL_RESET, true);
+        return;
+    }
+
+    // If we're moving into something solid, shatter.
+    if (feat_is_solid(env.grid(targ)))
+    {
+        if (you.can_see(boulder))
+        {
+            mprf("%s slams into the %s and explodes in a flurry of rock fragments!",
+                 boulder.name(DESC_THE).c_str(),
+                 feat_type_name(env.grid(targ)));
+        }
+
+        bolt beam;
+        _setup_boulder_explosion(boulder, beam);
+        monster_die(boulder, KILL_NONE, true);
+        beam.explode();
+        return;
+    }
+
+    // If we're about to run into things, this is a bit more complicated
+    if (actor_at(targ))
+    {
+        actor* obstruction = actor_at(targ);
+        // First, do impact damage to the actor and see if we kill it
+
+        do_boulder_impact(boulder, *obstruction);
+        if (!boulder.alive())
+            return;
+
+        // If the obstacle is still alive (and so is the boulder), do knockback calculations
+        if (obstruction->alive())
+        {
+            // We want to trace a line of all connected monsters in a row, in the
+            // direction we're moving, and then push them away in reverse order.
+            vector<actor*> push_targs;
+            coord_def pos = targ;
+            while (actor_at(pos))
+            {
+                push_targs.push_back(actor_at(pos));
+                pos += dir;
+            }
+
+            for (int i = push_targs.size() - 1; i >= 0; --i)
+                push_targs[i]->knockback(boulder, 1, 10, "");
+        }
+
+        // If there is still somehow something in our way (maybe we were unable to
+        // push everything out of it), stop here
+        if (actor_at(targ))
+        {
+            _swim_or_move_energy(boulder);
+            return;
+        }
+    }
+
+    // If we're still here, actually move. (But consume energy, even if we somehow don't)
+    if (!_do_move_monster(boulder, dir))
+        _swim_or_move_energy(boulder);
+}
+
 static void _mons_fire_wand(monster& mons, spell_type mzap, bolt &beem)
 {
     if (!simple_monster_message(mons, " zaps a wand."))
@@ -1575,6 +1669,12 @@ void handle_monster_move(monster* mons)
             mons->suicide();
             return;
         }
+    }
+
+    if (mons->type == MONS_BOULDER)
+    {
+        _handle_boulder_movement(*mons);
+        return;
     }
 
     mons->shield_blocks = 0;

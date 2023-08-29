@@ -4605,3 +4605,28 @@ bool siphon_essence_affects(const monster &m)
         && !mons_is_tentacle_or_tentacle_segment(m.type); // dubious
         // intentionally allowing firewood, i guess..?
 }
+
+dice_def boulder_damage(int pow, bool random)
+{
+    if (random)
+        return dice_def(2, 3 + div_rand_round(pow, 12));
+    return dice_def(2, 3 + pow / 12);
+}
+
+void do_boulder_impact(monster& boulder, actor& victim)
+{
+    if (you.can_see(boulder))
+        mprf("The boulder barrels into %s!", victim.name(DESC_THE).c_str());
+
+    const int pow = boulder.props[BOULDER_POWER_KEY].get_int();
+    int dam = boulder_damage(pow, true).roll();
+    dam = victim.apply_ac(dam);
+
+    if (victim.is_player())
+        ouch(dam, KILLED_BY_ROLLING, boulder.mid);
+    else
+        _player_hurt_monster(*victim.as_monster(), dam, BEAM_MISSILE);
+
+    // Dealing damage causes the boulder to also take damage.
+    boulder.hurt(&boulder, roll_dice(2, 5), BEAM_NONE, KILLED_BY_COLLISION);
+}

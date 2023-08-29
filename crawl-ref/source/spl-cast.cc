@@ -1369,6 +1369,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SIGIL_OF_BINDING:
         return make_unique<targeter_multiposition>(&you,
                                                    find_sigil_locations(true));
+    case SPELL_BOULDER:
+        return make_unique<targeter_boulder>(&you);
 
     default:
         break;
@@ -2478,6 +2480,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_SIGIL_OF_BINDING:
         return cast_sigil_of_binding(powc, fail, false);
 
+    case SPELL_BOULDER:
+        return cast_broms_barrelling_boulder(you, beam.target, powc, fail);
+
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).
     case SPELL_DRAIN_LIFE:
@@ -2761,6 +2766,8 @@ static dice_def _spell_damage(spell_type spell, int power)
             return polar_vortex_dice(power, false);
         case SPELL_NOXIOUS_BOG:
             return toxic_bog_damage();
+        case SPELL_BOULDER:
+            return boulder_damage(power, false);
         default:
             break;
     }

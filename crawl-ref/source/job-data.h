@@ -137,6 +137,7 @@ static const map<job_type, job_def> job_data =
         SPELL_PASSWALL,
         SPELL_STONE_ARROW,
         SPELL_PETRIFY,
+        SPELL_BOULDER,
     },
     { "robe", "potion of magic", },
     WCHOICE_NONE,
