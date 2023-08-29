@@ -1026,9 +1026,9 @@ bool melee_attack::attack()
         {
             bool cont = handle_phase_hit();
 
-            attacker_sustain_passive_damage();
-
-            if (!cont)
+            if (cont)
+                attacker_sustain_passive_damage();
+            else
             {
                 if (!defender->alive())
                     handle_phase_killed();
