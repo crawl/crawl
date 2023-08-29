@@ -226,7 +226,7 @@ public:
     const form_capability can_bleed;
     /// "Used to mark forms which keep most form-based mutations."
     const bool keeps_mutations;
-    // 
+    //
     const bool changes_physiology;
 
     /// what verb does the player use when shouting in this form?
