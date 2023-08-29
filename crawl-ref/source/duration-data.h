@@ -303,7 +303,9 @@ static const duration_def duration_data[] =
       LIGHTGREY, "DDoor",
       "in death's door", "deaths door",
       "You are standing in death's doorway.", D_EXPIRES,
-      {{ "Your life is in your own hands again!", []() {
+      {{ "", []() {
+            mprf(MSGCH_DURATION, "Your life is in your own %s again!",
+                 you.hand_name(true).c_str());
             you.duration[DUR_DEATHS_DOOR_COOLDOWN] = random_range(10, 30);
       }}, { "Your time is quickly running out!", 5 }}, 10},
     { DUR_DEATHS_DOOR_COOLDOWN,
