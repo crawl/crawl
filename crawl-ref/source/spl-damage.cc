@@ -4500,3 +4500,25 @@ bool siphon_essence_affects(const monster &m)
         && !mons_is_tentacle_or_tentacle_segment(m.type); // dubious
         // intentionally allowing firewood, i guess..?
 }
+
+void do_boulder_impact(monster& boulder, actor& victim)
+{
+    if (you.can_see(boulder))
+    {
+        mprf("The boulder barrels into %s!", victim.name(DESC_THE).c_str());
+    }
+
+    int dam = roll_dice(3, div_rand_round(boulder.get_hit_dice() * 3, 2));
+    dam = victim.apply_ac(dam);
+
+    if (victim.is_player())
+        ouch(dam, KILLED_BY_ROLLING, boulder.mid);
+    else
+    {
+        monster* mon = victim.as_monster();
+        _player_hurt_monster(*mon, dam, BEAM_MISSILE);
+    }
+
+    // Dealing damage causes the boulder to also take damage and it may die
+    boulder.hurt(&boulder, roll_dice(2, 7), BEAM_NONE, KILLED_BY_COLLISION);
+}

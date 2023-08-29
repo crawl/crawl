@@ -171,6 +171,7 @@ struct mgen_data
         ASSERT(summon_type == 0 || abjuration_dur >= 1 && abjuration_dur <= 6
                || cls == MONS_BALL_LIGHTNING || cls == MONS_ORB_OF_DESTRUCTION
                || cls == MONS_BATTLESPHERE || cls == MONS_BALLISTOMYCETE_SPORE
+               || cls == MONS_BOULDER
                || summon_type == SPELL_ANIMATE_DEAD
                || summon_type == SPELL_NECROTISE
                || summon_type == SPELL_DEATH_CHANNEL

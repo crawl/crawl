@@ -1457,6 +1457,20 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         break;
 
+    case SPELL_BROMS_BARRELLELING_BOULDER:
+        if (temp)
+        {
+            // Check if we have a boulder active already
+            for (monster_iterator mi; mi; ++mi)
+            {
+                if (mi->type == MONS_BOULDER && mi->summoner == MID_PLAYER)
+                {
+                    return "Your boulder is already barrelling!";
+                }
+            }
+        }
+        break;
+
     default:
         break;
     }
@@ -1516,6 +1530,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_FULMINANT_PRISM:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     case SPELL_NOXIOUS_BOG:
+    case SPELL_BROMS_BARRELLELING_BOULDER:
     // This can always potentially hit out-of-LOS, although this is conditional
     // on spell-power.
     case SPELL_FIRE_STORM:

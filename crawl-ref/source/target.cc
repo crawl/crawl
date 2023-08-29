@@ -2185,3 +2185,60 @@ bool targeter_poisonous_vapours::valid_aim(coord_def a)
 
     return true;
 }
+
+
+targeter_boulder::targeter_boulder(const actor* caster)
+    : targeter_beam(caster, LOS_MAX_RANGE, ZAP_IOOD, 0, 0, 0)
+{
+}
+
+bool targeter_boulder::set_aim(coord_def a)
+{
+    if (!targeter::set_aim(a) || grid_distance(origin, a) > 1)
+        return false;
+
+    bolt tempbeam = beam;
+
+    tempbeam.target = a;
+    tempbeam.aimed_at_spot = false;
+    tempbeam.path_taken.clear();
+    tempbeam.fire();
+    path_taken = tempbeam.path_taken;
+
+    return true;
+}
+
+
+bool targeter_boulder::valid_aim(coord_def a)
+{
+    if (in_bounds(a))
+    {
+        if (feat_is_solid(env.grid(a)) || actor_at(a))
+            return notify_fail("You cannot create a boulder in an occupied space.");
+        else if (!feat_has_solid_floor(env.grid(a)))
+            return notify_fail("You cannot create a boulder there.");
+
+        if (grid_distance(origin, a) > 1)
+            return false;
+
+        return true;
+    }
+
+    return false;
+}
+
+aff_type targeter_boulder::is_affected(coord_def loc)
+{
+    for (auto pc : path_taken)
+    {
+        if (pc == loc)
+        {
+            if (cell_is_solid(pc))
+                return AFF_NO;
+
+            return AFF_YES;
+        }
+    }
+
+    return AFF_NO;
+}

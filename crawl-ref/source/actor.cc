@@ -1102,9 +1102,10 @@ bool actor::knockback(const actor &cause, int dist, int pow, string source_name)
 
     if (you.can_see(*this))
     {
-        mprf("%s %s knocked back by the %s.",
+        mprf("%s %s knocked back%s%s.",
              name(DESC_THE).c_str(),
              conj_verb("are").c_str(),
+             !source_name.empty() ? " by the " : "",
              source_name.c_str());
     }
 

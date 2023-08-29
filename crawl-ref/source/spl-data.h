@@ -3540,6 +3540,17 @@ static const struct spell_desc spelldata[] =
     TILEG_KISS_OF_DEATH,
 },
 
+{
+    SPELL_BROMS_BARRELLELING_BOULDER, "Brom's Barrelling Boulder",
+    spschool::earth | spschool::conjuration,
+    spflag::target | spflag::not_self,
+    4,
+    200,
+    1, 1,
+    0,
+    TILEG_ERROR,
+},
+
 // Not an actual spell - dummy entry for (player) Green Draconian breath.
 {
     SPELL_MEPHITIC_BREATH, "Mephitic Breath",
