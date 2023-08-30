@@ -571,10 +571,14 @@ in touch with death mutation
 Your Necromancy spells are more powerful. The second level of this mutation
 enhances your Necromancy spellpower further.
 %%%%
-acrobatic flight mutation
+acrobatic mutation
 
-You fly acrobatically through the air, allowing you to evade attacks while moving
-or waiting.
+Your magical nature helps you tumble your hollow bones around acrobatically,
+allowing you to evade attacks while moving or waiting.
+%%%%
+evasive flight mutation
+
+You fly evasively through the air, increasing your evasion somewhat.
 %%%%
 big wings mutation
 

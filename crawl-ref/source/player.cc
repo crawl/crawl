@@ -1926,7 +1926,7 @@ bool player_is_shapechanged()
 bool player_acrobatic()
 {
     return you.wearing(EQ_AMULET, AMU_ACROBAT)
-        || you.has_mutation(MUT_TENGU_FLIGHT);
+        || you.has_mutation(MUT_ACROBATIC);
 }
 
 void update_acrobat_status()
@@ -2003,6 +2003,9 @@ static int _player_evasion_bonuses()
 
     if (you.get_mutation_level(MUT_DISTORTION_FIELD))
         evbonus += you.get_mutation_level(MUT_DISTORTION_FIELD) + 1;
+
+    if (you.has_mutation(MUT_TENGU_FLIGHT))
+        evbonus += 4;
 
     // transformation penalties/bonuses not covered by size alone:
     if (you.get_mutation_level(MUT_SLOW_REFLEXES))

@@ -42,6 +42,8 @@ mutations:
   1:
     MUT_BEAK: 1
     MUT_TALONS: 3
+    MUT_ACROBATIC: 1
+  7:
     MUT_TENGU_FLIGHT: 1
 recommended_jobs:
   - JOB_BERSERKER

@@ -3386,6 +3386,7 @@ static void _tag_read_you(reader &th)
     SP_MUT_FIX(MUT_DIVINE_ATTRS, SP_DEMIGOD);
     SP_MUT_FIX(MUT_DAYSTALKER, SP_BARACHI);
     SP_MUT_FIX(MUT_TENGU_FLIGHT, SP_TENGU);
+    SP_MUT_FIX(MUT_ACROBATIC, SP_TENGU);
 
     if (you.has_innate_mutation(MUT_NIMBLE_SWIMMER)
         || you.species == SP_MERFOLK || you.species == SP_OCTOPODE)
