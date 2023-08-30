@@ -3200,6 +3200,12 @@ static void _tag_read_you(reader &th)
                 you.mutation[j] = you.innate_mutation[j] + you.temp_mutation[j];
             }
         }
+        if (th.getMinorVersion() < TAG_MINOR_SLENGU
+            && j == MUT_TENGU_FLIGHT
+            && you.innate_mutation[j])
+        {
+            you.innate_mutation[j] = you.mutation[j] = 2;
+        }
 #endif
     }
 

@@ -1835,10 +1835,6 @@ int player_movement_speed(bool check_terrain)
     else if (player_under_penance(GOD_CHEIBRIADOS))
         mv += 2 + min(div_rand_round(you.piety_max[GOD_CHEIBRIADOS], 20), 8);
 
-    // Tengu can move slightly faster when flying.
-    if (you.tengu_flight())
-        mv--;
-
     if (you.duration[DUR_FROZEN])
         mv += 3;
 
@@ -2002,6 +1998,9 @@ static int _player_evasion_bonuses()
     if (you.get_mutation_level(MUT_DISTORTION_FIELD))
         evbonus += you.get_mutation_level(MUT_DISTORTION_FIELD) + 1;
 
+    if (you.get_mutation_level(MUT_TENGU_FLIGHT))
+        evbonus += 4;
+
     // transformation penalties/bonuses not covered by size alone:
     if (you.get_mutation_level(MUT_SLOW_REFLEXES))
         evbonus -= you.get_mutation_level(MUT_SLOW_REFLEXES) * 5;
@@ -2033,8 +2032,8 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
         return prescaled_ev + ev_bonus;
     }
 
-    // Flying Tengu get a 20% evasion bonus.
-    if (you.tengu_flight())
+    // Level 2 tengu flight gives +20% EV.
+    if (you.get_mutation_level(MUT_TENGU_FLIGHT) >= 2)
     {
         const int ev_bonus = max(1 * scale, prescaled_ev / 5);
         return prescaled_ev + ev_bonus;
@@ -4851,13 +4850,10 @@ void float_player()
         mpr("Your tail turns into legs as you fly out of the water.");
         merfolk_stop_swimming();
     }
-    else if (you.tengu_flight())
+    else if (you.get_mutation_level(MUT_TENGU_FLIGHT) >= 2)
         mpr("You swoop lightly up into the air.");
     else
         mpr("You fly up into the air.");
-
-    if (you.has_mutation(MUT_TENGU_FLIGHT))
-        you.redraw_evasion = true;
 }
 
 void fly_player(int pow, bool already_flying)
@@ -4910,8 +4906,6 @@ bool land_player(bool quiet)
 
     if (!quiet)
         mpr("You float gracefully downwards.");
-    if (you.has_mutation(MUT_TENGU_FLIGHT))
-        you.redraw_evasion = true;
 
     // Re-enter the terrain.
     move_player_to_grid(you.pos(), false);
@@ -6604,7 +6598,7 @@ bool player::no_tele(bool blinking, bool temp) const
 
 bool player::racial_permanent_flight() const
 {
-    return get_mutation_level(MUT_TENGU_FLIGHT)
+    return get_mutation_level(MUT_TENGU_FLIGHT) >= 2
         || get_mutation_level(MUT_BIG_WINGS)
         || has_mutation(MUT_FLOAT);
 }
@@ -6621,15 +6615,6 @@ bool player::permanent_flight(bool include_equip) const
         || racial_permanent_flight()                 // species muts
         || get_form()->enables_flight()
            && get_form(you.default_form)->enables_flight();
-}
-
-/**
- * Does the player get the tengu flight perks?
- */
-bool player::tengu_flight() const
-{
-    // XX could tengu just get MUT_FLOAT?
-    return you.has_mutation(MUT_TENGU_FLIGHT) && airborne();
 }
 
 /**

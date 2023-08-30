@@ -529,7 +529,6 @@ public:
     bool is_fiery() const override;
     bool is_skeletal() const override;
 
-    bool tengu_flight() const;
     int heads() const override { return 1; }
 
     bool spellcasting_unholy() const;

@@ -722,11 +722,15 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_TENGU_FLIGHT, 0, 1, mutflag::good, false,
-  "nimble flight",
+{ MUT_TENGU_FLIGHT, 0, 2, mutflag::good, false,
+  "nimble",
 
-  {"Your magical nature lets you fly swiftly and evasively.", "", ""},
-  {"Your magical nature develops, letting you fly swiftly and evasively.", "", ""},
+  {"Your magical nature helps you evade attacks. (EV +4)",
+   "Your magical nature helps you fly and evade attacks. (EV +20% +4)",
+   ""},
+  {"",
+   "Your magical nature develops, letting you fly evasively.",
+   ""},
   {"", "", ""},
 },
 
