@@ -1923,9 +1923,15 @@ bool player_is_shapechanged()
         && you.form != transformation::shadow;
 }
 
+bool player_acrobatic()
+{
+    return you.wearing(EQ_AMULET, AMU_ACROBAT)
+        || you.has_mutation(MUT_TENGU_FLIGHT);
+}
+
 void update_acrobat_status()
 {
-    if (!you.wearing(EQ_AMULET, AMU_ACROBAT))
+    if (!player_acrobatic())
         return;
 
     // Acrobat duration goes slightly into the next turn, giving the
@@ -1998,9 +2004,6 @@ static int _player_evasion_bonuses()
     if (you.get_mutation_level(MUT_DISTORTION_FIELD))
         evbonus += you.get_mutation_level(MUT_DISTORTION_FIELD) + 1;
 
-    if (you.get_mutation_level(MUT_TENGU_FLIGHT))
-        evbonus += 4;
-
     // transformation penalties/bonuses not covered by size alone:
     if (you.get_mutation_level(MUT_SLOW_REFLEXES))
         evbonus -= you.get_mutation_level(MUT_SLOW_REFLEXES) * 5;
@@ -2029,13 +2032,6 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
         && you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
     {
         const int ev_bonus = max(2 * scale, prescaled_ev / 4);
-        return prescaled_ev + ev_bonus;
-    }
-
-    // Level 2 tengu flight gives +20% EV.
-    if (you.get_mutation_level(MUT_TENGU_FLIGHT) >= 2)
-    {
-        const int ev_bonus = max(1 * scale, prescaled_ev / 5);
         return prescaled_ev + ev_bonus;
     }
 

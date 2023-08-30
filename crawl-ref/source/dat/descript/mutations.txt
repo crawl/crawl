@@ -571,10 +571,10 @@ in touch with death mutation
 Your Necromancy spells are more powerful. The second level of this mutation
 enhances your Necromancy spellpower further.
 %%%%
-nimble flight mutation
+acrobatic flight mutation
 
-You fly quickly through the air, covering ground more quickly than you would on
-foot. Your evasion is also multiplied by this effect.
+You fly acrobatically through the air, allowing you to evade attacks while moving
+or waiting.
 %%%%
 big wings mutation
 

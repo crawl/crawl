@@ -1729,8 +1729,8 @@ Tengu (Te)
   The Tengu are an ancient and feared species of bird-people with a legendary
   propensity for violence. Basically humanoid with bird-like heads and clawed
   feet, the Tengu can wear all types of armour except helmets and boots. Despite
-  their lack of wings, more experienced Tengu can fly magically. They're quite
-  evasive, especially as they grow more experienced.
+  their lack of wings, more experienced Tengu can magically fly, and are quite
+  adept at evading attacks while moving or waiting.
 
   They are experts at all forms of fighting, including the magical arts of
   combat (conjurations, summonings and, to a lesser extent, necromancy). They
