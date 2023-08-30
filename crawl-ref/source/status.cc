@@ -270,6 +270,7 @@ bool fill_status_info(int status, status_info& inf)
             inf.short_text   = "in debt";
             inf.long_text    = "You are in debt. Gold earned will pay it off.";
         }
+        break;
 
     case STATUS_CONTAMINATION:
         _describe_glow(inf);
