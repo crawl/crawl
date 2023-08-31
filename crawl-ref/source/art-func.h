@@ -1402,6 +1402,9 @@ static void _THERMIC_ENGINE_world_reacts(item_def *item)
 
 static void _ZHOR_world_reacts(item_def */*item*/)
 {
+    if (!you.time_taken)
+        return;
+    
     if (there_are_monsters_nearby(true, false, false)
         && one_chance_in(7 * div_rand_round(BASELINE_DELAY, you.time_taken)))
     {
