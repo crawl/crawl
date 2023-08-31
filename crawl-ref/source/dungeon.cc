@@ -3806,6 +3806,9 @@ static void _place_branch_entrances(bool use_vaults)
                 break;
             }
     }
+    
+    int descent_water_sbranch = random_choose(BRANCH_SWAMP, BRANCH_SHOALS);
+    int descent_poison_sbranch = random_choose(BRANCH_SNAKE, BRANCH_SPIDER);
 
     // Place actual branch entrances.
     for (branch_iterator it; it; ++it)
@@ -3821,6 +3824,8 @@ static void _place_branch_entrances(bool use_vaults)
         {
             brentry_allowed = it->entry_stairs != NUM_FEATURES
                 && _in_descent_parent(it->id)
+                && it->id != descent_water_sbranch
+                && it->id != descent_poison_sbranch
                 && at_branch_bottom();
         }
         else
