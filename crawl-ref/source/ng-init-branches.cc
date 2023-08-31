@@ -20,11 +20,14 @@ FixedVector<level_id, NUM_BRANCHES> create_brentry()
     {
         if (skip_branch_brentry(it))
             continue;
-        if (crawl_state.game_is_descent() && it->id == BRANCH_CRYPT)
-            continue; // EVIL HACK - otherwise we get double crypt entrances in Vaults
-
+        
         const int depth = random_range(it->mindepth, it->maxdepth);
+        
         candidate_brentry[it->id] = level_id(it->parent_branch, depth);
+        
+        // EVIL HACK: needed to prevent duplicate crypt entrance spawns
+        if (crawl_state.game_is_descent() && it->id == BRANCH_CRYPT)
+            candidate_brentry[it->id] = level_id(it->parent_branch, 5);
     }
 
     vector<branch_type> disabled_branch = random_choose_disabled_branches();
