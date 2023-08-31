@@ -4849,7 +4849,7 @@ void float_player()
         mpr("Your tail turns into legs as you fly out of the water.");
         merfolk_stop_swimming();
     }
-    else if (you.get_mutation_level(MUT_TENGU_FLIGHT) >= 2)
+    else if (you.has_mutation(MUT_TENGU_FLIGHT))
         mpr("You swoop lightly up into the air.");
     else
         mpr("You fly up into the air.");
@@ -6597,7 +6597,7 @@ bool player::no_tele(bool blinking, bool temp) const
 
 bool player::racial_permanent_flight() const
 {
-    return get_mutation_level(MUT_TENGU_FLIGHT) >= 2
+    return has_mutation(MUT_TENGU_FLIGHT)
         || get_mutation_level(MUT_BIG_WINGS)
         || has_mutation(MUT_FLOAT);
 }
