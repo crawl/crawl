@@ -53,12 +53,16 @@ rampage
 randalieren
 %%%%
 
-# These ones only used in the prompt "Really <move> into <dangerous thing>?"
+# These ones used in prompts like "Really <move> into <dangerous thing>?"
 # In German, we formulate that prompt with the infinitive (so we don't need the finite forms)
 
 %%%%
 {verb-inf}blink
 blinzeln
+%%%%
+# Barachi (froglike)
+hop
+hüpfen
 %%%%
 charge
 stürmen

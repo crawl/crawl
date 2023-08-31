@@ -20177,38 +20177,53 @@ Ihr ruft Fuchsfeuer hervor!
 You feel jittery for a moment.
 Ihr fühlt Euch für einen Moment nervös.
 %%%%
-" to where?"
-
-%%%%
-Cancelling %s due to HUP.
-%s wegen HUP abbrechen.
-%%%%
-"Are you sure you want to cancel this "
-
-%%%%
-You cannot %s away from %s!
-Ihr könnt nicht%s von%s entfernt sein!
-%%%%
-You cannot %s closer to %s!
-Ihr könnt %s nicht näher an %s!
-%%%%
-You can't %s into that!
-Darauf könnt Ihr nicht %s!
-%%%%
-You can't %s onto %s!
-Ihr könnt nicht%s auf%s setzen!
+Hop to where?
+Wohin hüpfen?
 %%%%
 Blink to where?
-
+Wohin blinzeln?
+%%%%
+Cancelling hop due to HUP.
+Hüpfen abgebrochen wegen HUP.
+%%%%
+Cancelling blink due to HUP.
+Blinzeln abgebrochen wegen HUP.
+%%%%
+Are you sure you want to cancel this hop?
+Wirklich dieses Hüpfen abbrechen?
+%%%%
+Are you sure you want to cancel this blink?
+Wirklich dieses Blinzeln abbrechen?
+%%%%
+You cannot hop away from %s!
+Ihr könnt {dat}%s nicht weghüpfen!
+%%%%
+You cannot blink away from %s!
+Ihr könnt {dat}%s nicht wegblinzeln!
+%%%%
+You cannot hop closer to %s!
+Ihr könnt nicht näher an {acc}%s hüpfen!
+%%%%
+You cannot blink closer to %s!
+Ihr könnt nicht näher an {acc}%s blinzeln!
+%%%%
+You can't hop into that!
+Da könnt Ihr nicht reinhüpfen!
+%%%%
+You can't blink into that!
+Da könnt Ihr nicht reinblinzeln!
+%%%%
+You cannot hop onto %s!
+Ihr könnt nicht auf {acc}%s hüpfen!
+%%%%
+You cannot blink onto %s!
+Ihr könnt nicht auf {acc}%s blinzeln!
 %%%%
 Please don't blink into the map border.
 Bitte nicht in den Kartenrand blinzeln.
 %%%%
 Please don't try to blink into monsters.
 Bitte versuche nicht, in Monster zu blinzeln.
-%%%%
-hop
-
 %%%%
 That's out of range!
 Das ist außerhalb der Reichweite!
@@ -20220,34 +20235,34 @@ Boing!
 Boing!
 %%%%
 You can't roll into that!
-
+Da könnt Ihr nicht reinrollen!
 %%%%
 Roll where?
-
+Wohin rollen?
 %%%%
 Cancelling rolling charge due to HUP.
-
+Rollender Ansturm abgebrochen wegen HUP.
 %%%%
 You cannot roll away from %s!
-
+Ihr könnt nicht weg von {dat}%s rollen!
 %%%%
 You cannot roll closer to %s!
-
+Ihr könnt nicht näher an {acc}%s rollen!
 %%%%
 You can't roll through that!
-
+Da könnt Ihr nicht durchrollen!
 %%%%
 You're already next to %s!
-
+Ihr seid schon neben {dat}%s!
 %%%%
 There's nothing you can charge at!
-
+Es gibt nichts, was Ihr ansturmen könnt!
 %%%%
 You roll forward with a clatter of scales!
-
+Ihr rollt mit klappernden Schuppen vorwärts!
 %%%%
 You can't repeat controlled blinks.
-
+Ihr könnt kontrollierte Blinzeln nicht wiederholen.
 %%%%
 Oops! There was something there already!
 Ups! Da war schon etwas!
@@ -20259,13 +20274,13 @@ You feel the Orb delaying your translocation!
 Ihr fühlt, wie die Kugel Eure Translokation verzögert!
 %%%%
 Even you can't go there right now. Sorry!
-Sogar Ihr könnt jetzt nicht dorthin gehen. Entschuldigung!
+Sogar Ihr könnt jetzt nicht dorthin gehen. Sorry!
 %%%%
-You are suddenly yanked towards %s nearby monster%s!
-Ihr werdet plötzlich zu%s nahegelegenem Monster%s gezogen!
+You are suddenly yanked towards a nearby monster!
+Ihr werdet plötzlich zu einem Monster in der Nähe gezerrt!
 %%%%
-some
-
+You are suddenly yanked towards some nearby monsters!
+Ihr werdet plötzlich zu einigen Monstern in der Nähe gezerrt!
 %%%%
 Your surroundings flicker for a moment.
 Eure Umgebung flackert für einen Moment.
@@ -20283,10 +20298,10 @@ You renew your portal.
 Ihr erneuert Euer Portal.
 %%%%
 %s would react catastrophically with paradoxical space!
-
+%s würde katastrophal mit paradoxem Raum reagieren!
 %%%%
 You can't see anything to attack.
-
+Ihr seht nichts, was ihr angreifen könnt.
 %%%%
 Space momentarily warps into an impossible shape!
 
@@ -20298,25 +20313,28 @@ You cannot apport that!
 Das könnt Ihr nicht zuordnen!
 %%%%
 The Orb shrieks and becomes a dead weight against your magic!
-
+Der Raum verformt sich augenblicklich in eine unmögliche Form!
 %%%%
 The Orb lets out a furious burst of light and becomes a dead weight against your magic!
-
+Die Kugel stößt einen wilden Lichtblitz aus und wird zu einem toten Gewicht gegen Eure Magie!
 %%%%
 The Orb shrieks as your magic touches it!
-
+Die Kugel kreischt, als Eure Magie sie berührt!
 %%%%
 The Orb lets out a furious burst of light as your magic touches it!
-
+Die Kugel stößt einen wilden Lichtblitz aus, als Eure Magie sie berührt!
 %%%%
 Now pick up the Orb and get out of here!
-
+Jetzt nehmt die Kugel und verschwindet von hier!
 %%%%
 Not with that terrain in the way!
 Nicht mit diesem Gelände im Weg!
 %%%%
-Yoink! You pull the item%s towards yourself.
-Yoink! Ihr zieht den Gegenstand%s zu Euch.
+Yoink! You pull the item towards yourself.
+Grabsch! Ihr zieht den Gegenstand zu Euch heran.
+%%%%
+Yoink! You pull the items towards yourself.
+Grabsch! Ihr zieht die Gegenstände zu Euch heran.
 %%%%
 A magic seal in the Gauntlet prevents you from opening a passage!
 
@@ -20328,46 +20346,37 @@ Creating a passage of Golubria requires sufficient empty space.
 Um eine Passage von Golubria zu schaffen, ist ausreichend leerer Raum erforderlich.
 %%%%
 The Orb disrupts the stability of your passage!
-
+Ein magisches Siegel in der Spießrute verhindert, dass Ihr einen Durchgang öffnen könnt!
 %%%%
 The air shimmers briefly around you.
 Die Luft schimmert kurz um Euch herum.
 %%%%
 by gravitational forces
-
-%%%%
-%s violently %s moving!
-%s bewegt sich heftig%s!
-%%%%
-stop
-
+durch Gravitationskräfte
 %%%%
 Gravity reorients around %s.
-Die Schwerkraft richtet sich um%s aus.
+Die Schwerkraft richtet sich um {acc}%s neu aus.
 %%%%
-empty space
-
+Gravity reorients around empty space.
+Die Schwerkraft richtet sich um leeren Raum neu aus.
 %%%%
-%s %s suddenly forward!
-%s%s plötzlich vorwärts!
-%%%%
-hurl
-
+%s hurls suddenly forward!
+%s schleudert sich plötzlich nach vorne!
 %%%%
 %s is pulled toward you!
-
+%s wird zu Euch gezogen!
 %%%%
 You cannot see any enemies that you can affect. Speak a word of chaos anyway?
-
+Ihr könnt keine Feinde sehen, die Ihr beeinflussen könnt. Ein Wort des Chaos trotzdem sprechen?
 %%%%
 You speak a word of chaos!
-
+Ihr sprecht ein Wort des Chaos!
 %%%%
 You see nothing there to target!
-
+Ihr seht da nichts, worauf Ihr zielen könntet!
 %%%%
 shock of your passage
-
+Shock über Euren Durchtritt
 %%%%
 
 ##################
@@ -23949,6 +23958,9 @@ scenery
 
 %%%%
 %s fountain%s start%s gushing blood
+
+%%%%
+some
 
 %%%%
 %d fountains blood

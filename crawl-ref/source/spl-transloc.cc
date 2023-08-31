@@ -27,6 +27,7 @@
 #include "items.h"
 #include "level-state-type.h"
 #include "libutil.h"
+#include "localise.h"
 #include "los.h"
 #include "losglobal.h"
 #include "losparam.h"
@@ -171,20 +172,30 @@ static bool _find_cblink_target(dist &target, bool safe_cancel,
         direction_chooser_args args;
         args.restricts = DIR_TARGET;
         args.needs_path = false;
-        args.top_prompt = uppercase_first(verb) + " to where?";
+        if (verb == "hop")
+            args.top_prompt = "Hop to where?";
+        else
+            args.top_prompt = "Blink to where?";
         args.hitfunc = hitfunc;
         direction(target, args);
 
         if (crawl_state.seen_hups)
         {
-            mprf("Cancelling %s due to HUP.", verb.c_str());
+            if (verb == "hop")
+                mprf("Cancelling hop due to HUP.");
+            else
+                mprf("Cancelling blink due to HUP.");
             return false;
         }
 
         if (!target.isValid || target.target == you.pos())
         {
-            const string prompt =
-                "Are you sure you want to cancel this " + verb + "?";
+            string prompt;
+            if (verb == "hop")
+                prompt = "Are you sure you want to cancel this hop?";
+            else
+                prompt = "Are you sure you want to cancel this blink?";
+
             if (!safe_cancel && !yesno(prompt.c_str(), false, 'n'))
             {
                 clear_messages();
@@ -198,8 +209,8 @@ static bool _find_cblink_target(dist &target, bool safe_cancel,
         const monster* beholder = you.get_beholder(target.target);
         if (beholder)
         {
-            mprf("You cannot %s away from %s!",
-                 verb.c_str(),
+            mprf(verb == "hop" ? "You cannot hop away from %s!"
+                               : "You cannot blink away from %s!",
                  beholder->name(DESC_THE, true).c_str());
             continue;
         }
@@ -207,8 +218,8 @@ static bool _find_cblink_target(dist &target, bool safe_cancel,
         const monster* fearmonger = you.get_fearmonger(target.target);
         if (fearmonger)
         {
-            mprf("You cannot %s closer to %s!",
-                 verb.c_str(),
+            mprf(verb == "hop" ? "You cannot hop closer to %s!"
+                               : "You cannot blink closer to %s!",
                  fearmonger->name(DESC_THE, true).c_str());
             continue;
         }
@@ -216,14 +227,18 @@ static bool _find_cblink_target(dist &target, bool safe_cancel,
         if (cell_is_solid(target.target))
         {
             clear_messages();
-            mprf("You can't %s into that!", verb.c_str());
+            if (verb == "hop")
+                mpr("You can't hop into that!");
+            else
+                mpr("You can't blink into that!");
             continue;
         }
 
         monster* target_mons = monster_at(target.target);
         if (target_mons && you.can_see(*target_mons))
         {
-            mprf("You can't %s onto %s!", verb.c_str(),
+            mprf(verb == "hop" ? "You cannot hop onto %s!"
+                               : "You cannot blink onto %s!",
                  target_mons->name(DESC_THE).c_str());
             continue;
         }
@@ -927,9 +942,10 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
                 interrupt_activity(activity_interrupt::teleport);
                 if (!reason.empty())
                     mpr(reason);
-                mprf("You are suddenly yanked towards %s nearby monster%s!",
-                     mons_near_target > 1 ? "some" : "a",
-                     mons_near_target > 1 ? "s" : "");
+                if (mons_near_target == 1)
+                    mpr("You are suddenly yanked towards a nearby monster!");
+                else
+                    mpr("You are suddenly yanked towards some nearby monsters!");
             }
         }
 
@@ -1069,8 +1085,8 @@ string weapon_unprojectability_reason()
     {
         if (is_unrandom_artefact(it, urand))
         {
-            return make_stringf("%s would react catastrophically with paradoxical space!",
-                                you.weapon()->name(DESC_THE, false, false, false, ISFLAG_KNOW_PLUSES).c_str());
+            return localise("%s would react catastrophically with paradoxical space!",
+                            you.weapon()->name(DESC_THE, false, false, false, ISFLAG_KNOW_PLUSES));
         }
     }
     return "";
@@ -1102,7 +1118,7 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
         const string unproj_reason = weapon_unprojectability_reason();
         if (unproj_reason != "")
         {
-            mprf("%s", unproj_reason.c_str());
+            mpr_nolocalise(unproj_reason);
             return spret::abort;
         }
     }
@@ -1246,8 +1262,10 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
     dprf("Apport: new spot is %d/%d", new_spot.x, new_spot.y);
 
     // Actually move the item.
-    mprf("Yoink! You pull the item%s towards yourself.",
-         (item.quantity > 1) ? "s" : "");
+    if (item.quantity == 1)
+        mpr("Yoink! You pull the item towards yourself.");
+    else
+        mpr("Yoink! You pull the items towards yourself.");
 
     move_top_item(where, new_spot);
 
@@ -1387,9 +1405,8 @@ static void _attract_actor(const actor* agent, actor* victim,
         // This probably shouldn't ever happen, but just in case:
         if (you.can_see(*victim))
         {
-            mprf("%s violently %s moving!",
-                 victim->name(DESC_THE).c_str(),
-                 victim->conj_verb("stop").c_str());
+            mprf("%s violently stops moving!",
+                 victim->name(DESC_THE).c_str());
         }
         if (fedhas_prot)
         {
@@ -1491,13 +1508,16 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail)
 
     monster* mons = monster_at(where);
 
-    mprf("Gravity reorients around %s.",
-         mons                      ? mons->name(DESC_THE).c_str() :
-         feat_is_solid(env.grid(where)) ? feature_description(env.grid(where),
-                                                         NUM_TRAPS, "",
-                                                         DESC_THE)
-                                                         .c_str()
-                                   : "empty space");
+    if (mons)
+        mprf("Gravity reorients around %s.", mons->name(DESC_THE).c_str());
+    else if (feat_is_solid(env.grid(where)))
+    {
+       mprf("Gravity reorients around %s.",
+            feature_description(env.grid(where), NUM_TRAPS, "", DESC_THE).c_str());
+    }
+    else
+        mpr("Gravity reorients around empty space.");
+
     fatal_attraction(where, &you, pow);
     return spret::success;
 }
@@ -1552,9 +1572,7 @@ bool beckon(actor &beckoned, const bolt &path)
     if (!beckoned.move_to_pos(dest))
         return false;
 
-    mprf("%s %s suddenly forward!",
-         beckoned.name(DESC_THE).c_str(),
-         beckoned.conj_verb("hurl").c_str());
+    mprf("%s hurls suddenly forward!", beckoned.name(DESC_THE).c_str());
 
     beckoned.apply_location_effects(old_pos); // traps, etc.
     if (beckoned.is_monster())
