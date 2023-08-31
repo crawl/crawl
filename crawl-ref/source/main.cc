@@ -1427,6 +1427,13 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
         canned_msg(MSG_OK);
         return false;
     }
+    
+    // Descent mode prompts for "atypical" branch order that skips content
+    if (crawl_state.game_is_descent() && !prompt_descent_shortcut(ygrd))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
 
     // Does the next level have a warning annotation, or would you be bezotted
     // there?
