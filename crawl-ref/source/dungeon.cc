@@ -3806,7 +3806,7 @@ static void _place_branch_entrances(bool use_vaults)
                 break;
             }
     }
-    
+
     int descent_water_sbranch = random_choose(BRANCH_SWAMP, BRANCH_SHOALS);
     int descent_poison_sbranch = random_choose(BRANCH_SNAKE, BRANCH_SPIDER);
 
