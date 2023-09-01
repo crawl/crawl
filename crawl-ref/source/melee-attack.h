@@ -39,6 +39,7 @@ public:
     bool         is_riposte;      // fencers' retaliation attack
     bool         is_projected;    // projected weapon spell attack
     int          charge_pow;      // electric charge bonus damage
+    int          rending_pow;     // bonus magic damage from rending wave
     wu_jian_attack_type wu_jian_attack;
     int wu_jian_number_of_targets;
     coord_def attack_position;

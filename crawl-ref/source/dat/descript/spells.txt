@@ -1092,6 +1092,18 @@ Quicksilver Bolt spell
 
 <Breathe Dispelling Energy ability>
 %%%%
+Rending Blade spell
+
+Condenses the caster's magic into a blade of pure energy and slashes nearby foes
+with it. Contact with other beings solidify the spell; if at least 2 enemies are
+attacked at once, the blade will stabilize - remaining near the caster and
+dancing through their enemies whenever they land a hit in melee. If 3 are hit,
+a pair of blades will be created instead.
+
+The act of condensing one's magic outside one's own body leaves the caster
+unable to use any other spells for as long as the blade remains - whether the
+attempt to create it was fully successful or not!
+%%%%
 Repel Missiles spell
 
 Reduces the chance of projectile attacks striking the caster, making them

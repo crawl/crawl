@@ -196,6 +196,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Battle
     SPELL_WEREBLOOD,
     SPELL_OZOCUBUS_ARMOUR,
+    SPELL_RENDING_BLADE,
 },
 #endif
 
@@ -414,6 +415,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_TUKIMAS_DANCE,
     SPELL_PORTAL_PROJECTILE,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
+    SPELL_RENDING_BLADE
 },
 
 { // Book of Sloth

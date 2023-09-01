@@ -293,6 +293,7 @@ static const map<job_type, job_def> job_data =
         SPELL_KISS_OF_DEATH,
         SPELL_MOMENTUM_STRIKE,
         SPELL_HAILSTORM,
+        SPELL_RENDING_BLADE,
     },
     { "leather armour" },
     WCHOICE_PLAIN,

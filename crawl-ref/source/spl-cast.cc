@@ -1358,6 +1358,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_flame_wave>(range);
     case SPELL_GOLUBRIAS_PASSAGE:
         return make_unique<targeter_passage>(range);
+    case SPELL_RENDING_BLADE:
+        return make_unique<targeter_minicleave>();
 
     default:
         break;
@@ -2460,6 +2462,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return cast_imb(powc, fail);
+
+    case SPELL_RENDING_BLADE:
+        return cast_rending_wave(beam.target, powc, fail);
 
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).

@@ -3540,6 +3540,17 @@ static const struct spell_desc spelldata[] =
     TILEG_KISS_OF_DEATH,
 },
 
+{
+    SPELL_RENDING_BLADE, "Rending Blade",
+    spschool::conjuration | spschool::transmutation,
+    spflag::dir_or_target | spflag::needs_tracer,
+    4,
+    100,
+    1, 1,
+    0,
+    TILEG_TUKIMAS_DANCE,
+},
+
 // Not an actual spell - dummy entry for (player) Green Draconian breath.
 {
     SPELL_MEPHITIC_BREATH, "Mephitic Breath",

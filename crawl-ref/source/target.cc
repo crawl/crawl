@@ -2185,3 +2185,34 @@ bool targeter_poisonous_vapours::valid_aim(coord_def a)
 
     return true;
 }
+
+targeter_minicleave::targeter_minicleave()
+    : targeter_smite(&you, 1)
+{
+}
+
+bool targeter_minicleave::set_aim(coord_def a)
+{
+    if (grid_distance(origin, a) == 1)
+        fill_minicleave_spots(origin, a - origin, cleave_pos);
+    else
+    {
+        for (int i = 0; i < 3; ++i)
+            cleave_pos[i].reset();
+    }
+    return true;
+}
+
+aff_type targeter_minicleave::is_affected(coord_def loc)
+{
+    if (grid_distance(origin, aim) > 1)
+        return AFF_NO;
+
+    for (int i = 0; i < 3; ++i)
+    {
+        if (cleave_pos[i] == loc)
+            return AFF_YES;
+    }
+
+    return AFF_NO;
+}

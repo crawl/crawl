@@ -489,6 +489,75 @@ static void _passively_summon_butterfly(const monster &summoner)
     butt->move_to_pos(closest_pos);
 }
 
+static bool _handle_rending_blade_trigger(monster* blade)
+{
+    if (blade->props.exists(RENDING_BLADE_TRIGGERS_KEY)
+        && blade->props[RENDING_BLADE_TRIGGERS_KEY].get_int() > 0)
+    {
+        vector<bolt> tracers;
+
+        // Look at all hostile enemies both you and the blade can see, then
+        // fire tracers to each of them. Ignore ones that have any friendly fire,
+        // then pick the one that is the most effective against enemies out of
+        // the paths remaining. If none meet this criteria, do nothing and hope
+        // we'll be in a better position next turn.
+        for (monster_near_iterator mi(blade, LOS_NO_TRANS); mi; ++mi)
+        {
+            if (mons_aligned(*mi, blade) || !you.can_see(**mi)
+                || grid_distance(mi->pos(), blade->pos()) > 4)
+                continue;
+
+            bolt tracer;
+            zappy(ZAP_RENDING_SLASH, blade->get_hit_dice() * 4, true, tracer);
+            tracer.is_tracer = true;
+            tracer.range = 5;
+            tracer.source = blade->pos();
+            tracer.source_id = blade->mid;
+            tracer.thrower = KILL_MON_MISSILE;
+            tracer.origin_spell = SPELL_RENDING_BLADE;
+            tracer.target = mi->pos();
+            tracer.foe_ratio = 100;
+
+            fire_tracer(blade, tracer);
+            if (mons_should_fire(tracer) && !monster_at(tracer.path_taken[tracer.path_taken.size() - 1]))
+            {
+                tracers.push_back(tracer);
+            }
+        }
+
+        // If we found no valid tracers, bail.
+        if (tracers.empty())
+            return false;
+
+        // Otherwise, pick the best one
+        int best_index = -1;
+        int best_power = -1;
+        for (unsigned int i = 0; i < tracers.size(); ++i)
+        {
+            if (tracers[i].foe_info.power > best_power)
+            {
+                best_index = i;
+                best_power = tracers[i].foe_info.power;
+            }
+        }
+
+        if (best_index != -1)
+        {
+            bolt real = tracers[best_index];
+            real.is_tracer = false;
+            real.fire();
+
+            blade->blink_to(real.path_taken[real.path_taken.size() - 1], true, true);
+
+            blade->props[RENDING_BLADE_TRIGGERS_KEY].get_int() -= 1;
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
 // If a hostile monster finds itself on a grid of an "interesting" feature,
 // while unoccupied, it will remain in that area, and try to return to it
 // if it left it for fighting, seeking etc.
@@ -1574,6 +1643,12 @@ void handle_monster_move(monster* mons)
             mons->suicide();
             return;
         }
+    }
+
+    if (mons->type == MONS_RENDING_BLADE)
+    {
+        if (_handle_rending_blade_trigger(mons))
+            return;
     }
 
     mons->shield_blocks = 0;

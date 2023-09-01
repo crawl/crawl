@@ -71,7 +71,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
     cleaving(is_cleaving), is_multihit(false),
-    is_riposte(false), is_projected(false), charge_pow(0),
+    is_riposte(false), is_projected(false), charge_pow(0), rending_pow(0),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1)
 {
@@ -893,6 +893,12 @@ bool melee_attack::handle_phase_end()
         monster_die(*attacker->as_monster(), KILL_MISC, NON_MONSTER);
     }
 
+    if (attacker->is_player() && you.props.exists(RENDING_BLADE_COUNT_KEY)
+        && you.props[RENDING_BLADE_COUNT_KEY].get_int() > 0)
+    {
+        trigger_rending_blades(you);
+    }
+
     return attack::handle_phase_end();
 }
 
@@ -1688,6 +1694,9 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
     if (charge_pow > 0 && defender->res_elec() <= 0)
         damage += div_rand_round(damage * charge_pow, 150);
 
+    // Rending wave bonus
+    damage += rending_pow;
+
     // Can't affect much of anything as a shadow.
     if (you.form == transformation::shadow)
         damage = div_rand_round(damage, 2);
@@ -2446,7 +2455,7 @@ int melee_attack::post_roll_to_hit_modifiers(int mhit, bool random)
     int modifiers = attack::post_roll_to_hit_modifiers(mhit, random);
 
     // Electric charges feel bad when they miss, so make them miss less often.
-    if (charge_pow > 0)
+    if (charge_pow > 0 || rending_pow > 0)
         modifiers += 5;
 
     return modifiers;

@@ -34,6 +34,7 @@
 #include "losglobal.h"
 #include "macro.h"
 #include "mapmark.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -4499,4 +4500,87 @@ bool siphon_essence_affects(const monster &m)
         && !mons_is_conjured(m.type) // redundant?
         && !mons_is_tentacle_or_tentacle_segment(m.type); // dubious
         // intentionally allowing firewood, i guess..?
+}
+
+// Fill a 3-element array with the 3 adjacent spots forming a minicleave, in
+// clockwise order.
+void fill_minicleave_spots(coord_def center, coord_def aim, coord_def* spots)
+{
+    spots[0] = center + rotate_adjacent(aim, -1);
+    spots[1] = center + aim;
+    spots[2] = center + rotate_adjacent(aim, 1);
+}
+
+spret cast_rending_wave(coord_def aim, int pow, bool fail)
+{
+    coord_def pos[3];
+    fill_minicleave_spots(you.pos(), aim - you.pos(), pos);
+
+    vector<monster*> targets;
+
+    // Initialize slash zap
+    bolt slash;
+    zappy(ZAP_RENDING_SLASH, pow * 3 / 2, false, slash);
+    slash.range = 1;
+    slash.source = you.pos();
+    slash.source_id = MID_PLAYER;
+    slash.thrower = KILL_YOU_MISSILE;
+    slash.origin_spell = SPELL_RENDING_BLADE;
+    slash.draw_delay = 50;
+
+    for (int i = 0; i < 3; ++i)
+    {
+        if (in_bounds(pos[i]) && monster_at(pos[i]))
+        {
+            monster* mon = monster_at(pos[i]);
+
+            // Entirely ignore monsters that we can't slash
+            if (shoot_through_monster(slash, mon))
+                continue;
+
+            // Then prompt for monsters we *could* slash, but probably don't want to
+            bool prompted = false;
+            if (stop_attack_prompt(mon, false, pos[i], &prompted))
+                return spret::abort;
+
+            // These can be hit, but shouldn't count for empowering the blade.
+            // (Probably more things should go on this list?)
+            if (mon->wont_attack() || mons_is_firewood(*mon))
+                continue;
+
+            targets.push_back(mon);
+        }
+    }
+
+    fail_check();
+
+    mpr("You condense your magic into a blade and unleash it with a mighty slash!");
+
+    // Perform the initial attack
+    for (int i = 0; i < 3; ++i)
+    {
+        if (in_bounds(pos[i]))
+        {
+            slash.target = pos[i];
+            slash.fire();
+        }
+    }
+
+    // If we swung at 2 targets, spawn a rending blade. If we swung at 3, spawn 2.
+    int dur = random_range(7, 10);
+    if (targets.size() > 1)
+    {
+        spawn_rending_blades(you, pow, targets.size() - 1, dur * BASELINE_DELAY);
+    }
+    else
+    {
+        mpr("The blade wavers and falls apart.");
+    }
+
+    // This is deliberately longer than the blade's own duration, so that
+    // message order looks nicer (since the status effect should immediately
+    // wear off after the blades timeout anyway).
+    you.increase_duration(DUR_NO_CAST, dur + 5);
+
+    return spret::success;
 }

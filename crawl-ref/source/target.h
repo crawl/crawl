@@ -578,3 +578,14 @@ public:
     bool affects_monster(const monster_info& mon) override;
     bool valid_aim(coord_def a) override;
 };
+
+class targeter_minicleave : public targeter_smite
+{
+    public:
+        targeter_minicleave();
+        bool set_aim(coord_def a) override;
+        aff_type is_affected(coord_def loc) override;
+
+    private:
+        coord_def cleave_pos[3];
+};

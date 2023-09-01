@@ -1840,4 +1840,20 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     false,
 },
 
+{
+    ZAP_RENDING_SLASH,
+    "rending slash",
+    150,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<2, 6, 1, 9>,
+    new tohit_calculator<30>,
+    MAGENTA,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+},
+
 };

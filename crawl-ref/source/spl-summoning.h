@@ -109,3 +109,6 @@ bool summon_spider(const actor &agent, coord_def pos, god_type god,
 spret summon_spiders(actor &agent, int pow, god_type god, bool fail = false);
 
 spret summon_butterflies();
+
+void trigger_rending_blades(actor& agent);
+void spawn_rending_blades(actor& agent, int pow, int num, int dur);

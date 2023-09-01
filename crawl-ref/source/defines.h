@@ -335,6 +335,8 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define KIRKE_BAND_KEY "kirke_band"
 #define CHARMED_DEMON_KEY "charmed_demon"
 #define EMERGENCY_CLONE_KEY "emergency_clone"
+#define RENDING_BLADE_COUNT_KEY "rending_blades"
+#define RENDING_BLADE_TRIGGERS_KEY "rending_triggers"
 
 #define HELPLESS_KEY "helpless"
 #define POISONER_KEY "poisoner"

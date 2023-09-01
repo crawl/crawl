@@ -2741,3 +2741,34 @@ spret summon_spiders(actor &agent, int pow, god_type god, bool fail)
 
     return spret::success;
 }
+
+void spawn_rending_blades(actor& agent, int pow, int num, int dur)
+{
+    mgen_data blade = _pal_data(MONS_RENDING_BLADE, 0, GOD_NO_GOD, SPELL_RENDING_BLADE);
+    blade.hd = 5 + div_rand_round(pow, 5);
+
+    int count = 0;
+    for (int i = 0; i < num; ++i)
+    {
+        if (monster* mon = create_monster(blade))
+        {
+            mon->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 1, &agent, dur));
+            ++count;
+        }
+    }
+
+    you.props[RENDING_BLADE_COUNT_KEY].get_int() = count;
+}
+
+// Find all blades that belong to this agent and increse their stored trigger
+// count by one (so that they will try to fire when their turn comes around).
+void trigger_rending_blades(actor& agent)
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_RENDING_BLADE && mi->summoner == agent.mid)
+        {
+            mi->props[RENDING_BLADE_TRIGGERS_KEY].get_int() += 1;
+        }
+    }
+}

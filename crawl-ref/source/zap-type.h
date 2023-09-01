@@ -129,5 +129,6 @@ enum zap_type
     ZAP_PLASMA,
     ZAP_UNMAKING,
     ZAP_PLASMA_LIGHTNING,
+    ZAP_RENDING_SLASH,
     NUM_ZAPS
 };

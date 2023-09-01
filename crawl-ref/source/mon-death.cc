@@ -2473,6 +2473,20 @@ item_def* monster_die(monster& mons, killer_type killer,
     if (mons.type == MONS_PHARAOH_ANT && !was_banished && !mons.is_summoned())
         _pharaoh_ant_bind_souls(&mons);
 
+    if (mons.type == MONS_RENDING_BLADE && mons.summoner == MID_PLAYER)
+    {
+        you.props[RENDING_BLADE_COUNT_KEY].get_int() -= 1;
+        if (you.props[RENDING_BLADE_COUNT_KEY].get_int() == 0)
+        {
+            // Technically this isn't the only way to get DUR_NO_CAST, but the
+            // only other current way is Sap Magic, which would require you to
+            // have somehow already cast a spell while DUR_NO_CAST is active, so
+            // I guess this is fine?
+            mprf(MSGCH_DURATION, "Your magic returns to you!");
+            you.duration[DUR_NO_CAST] = 0;
+        }
+    }
+
     const unsigned int player_xp = gives_player_xp
         ? _calc_player_experience(&mons) : 0;
     const unsigned int monster_xp = _calc_monster_experience(&mons, killer,
@@ -2939,6 +2953,9 @@ string summoned_poof_msg(const monster* mons, bool plural)
 
         if (mons->type == MONS_LIVING_SPELL)
             msg = "disperses";
+
+        if (mons->type == MONS_RENDING_BLADE)
+            msg = "implode%s with a snap";
     }
 
     // Conjugate.
