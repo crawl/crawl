@@ -5566,7 +5566,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         actor *owner = actor_by_mid(summoner);
         if (owner && owner != oppressor && oppressor->mid != summoner)
         {
-            int shared_damage = damage / 2;
+            int shared_damage = div_rand_round(damage*7,10);
             if (shared_damage > 0)
             {
                 if (owner->is_player())
