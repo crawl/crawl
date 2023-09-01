@@ -3208,7 +3208,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return you.res_corr(false, false);
 
         case AMU_ACROBAT:
-            return you.has_mutation(MUT_TENGU_FLIGHT);
+            return you.has_mutation(MUT_ACROBATIC);
 
         case AMU_FAITH:
             return (you.has_mutation(MUT_FORLORN) && !you.religion) // ??
