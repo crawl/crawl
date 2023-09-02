@@ -2242,3 +2242,60 @@ aff_type targeter_boulder::is_affected(coord_def loc)
 
     return AFF_NO;
 }
+
+targeter_petrifying_grasp::targeter_petrifying_grasp(const actor* caster, int r)
+    : targeter_beam(caster, r, ZAP_PETRIFY, 0, 0, 0)
+{
+}
+
+bool targeter_petrifying_grasp::set_aim(coord_def a)
+{
+    if (!targeter::set_aim(a))
+        return false;
+
+    bolt tempbeam = beam;
+
+    tempbeam.target = a;
+    tempbeam.aimed_at_spot = false;
+    tempbeam.path_taken.clear();
+    tempbeam.fire();
+    path_taken = tempbeam.path_taken;
+
+    chain_targ.clear();
+
+    monster* targ = monster_at(path_taken[path_taken.size() - 1]);
+    if (targ && agent->can_see(*targ))
+    {
+        vector<monster*> chain_targ_mons;
+        fill_grasp_chain_targets(tempbeam, *targ, 1000, chain_targ_mons);
+
+        for (unsigned int i = 0; i < chain_targ_mons.size(); ++i)
+        {
+            chain_targ.push_back(chain_targ_mons[i]->pos());
+        }
+    }
+
+    return true;
+}
+
+aff_type targeter_petrifying_grasp::is_affected(coord_def loc)
+{
+    for (auto pc : path_taken)
+    {
+        if (pc == loc)
+        {
+            if (cell_is_solid(pc))
+                return AFF_NO;
+
+            return AFF_YES;
+        }
+    }
+
+    for (unsigned int i = 0; i < chain_targ.size(); ++i)
+    {
+        if (chain_targ[i] == loc)
+            return AFF_MAYBE;
+    }
+
+    return AFF_NO;
+}

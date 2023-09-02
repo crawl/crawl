@@ -267,7 +267,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Alchemy
     SPELL_SUBLIMATION_OF_BLOOD,
-    SPELL_PETRIFY,
+    SPELL_PETRIFYING_GRASP,
     SPELL_IRRADIATE,
 },
 
@@ -420,7 +420,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Book of Sloth
     SPELL_FROZEN_RAMPARTS,
-    SPELL_PETRIFY,
+    SPELL_PETRIFYING_GRASP,
     SPELL_ENGLACIATION,
 },
 

@@ -4467,6 +4467,28 @@ void bolt::enchantment_affect_monster(monster* mon)
             beogh_follower_convert(mon, true);
     }
 
+    // Handle ray bounces
+    if (origin_spell == SPELL_PETRIFYING_GRASP && hit_count.size() == 1)
+    {
+        vector<monster*> chain_targs;
+        fill_grasp_chain_targets(*this, *mon, 2, chain_targs);
+
+        if (!chain_targs.empty())
+        {
+            // Bounces are at 2/3 power
+            int saved_ench_power = ench_power;
+            ench_power = ench_power * 2 / 3;
+
+            shuffle_array(chain_targs);
+            for (int i = 0; i < min(static_cast<int>(chain_targs.size()), 2); ++i)
+            {
+                affect_monster(chain_targs[i]);
+            }
+
+            ench_power = saved_ench_power;
+        }
+    }
+
     extra_range_used += range_used_on_hit();
 }
 

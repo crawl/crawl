@@ -221,7 +221,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_PETRIFY, "Petrify",
     spschool::transmutation | spschool::earth,
-    spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check,
+    spflag::monster | spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check,
     4,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -3549,6 +3549,17 @@ static const struct spell_desc spelldata[] =
     1, 1,
     0,
     TILEG_ERROR,
+},
+
+{
+    SPELL_PETRIFYING_GRASP, "Petrifying Grasp",
+    spschool::transmutation | spschool::earth,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check,
+    4,
+    200,
+    6, 6,
+    0,
+    TILEG_PETRIFY,
 },
 
 // Not an actual spell - dummy entry for (player) Green Draconian breath.

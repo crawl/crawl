@@ -76,6 +76,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_BOLT_OF_LIGHT, ZAP_BOLT_OF_LIGHT },
     { SPELL_FASTROOT, ZAP_FASTROOT },
     { SPELL_MOMENTUM_STRIKE, ZAP_MOMENTUM_STRIKE },
+    { SPELL_PETRIFYING_GRASP, ZAP_PETRIFY},
 
     // monster-specific
     { SPELL_SLUG_DART, ZAP_SLUG_DART },

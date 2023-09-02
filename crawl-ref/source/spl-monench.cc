@@ -8,8 +8,10 @@
 
 #include "spl-monench.h"
 
+#include "coordit.h"
 #include "english.h" // apostrophise
 #include "env.h"
+#include "losglobal.h"
 #include "message.h"
 #include "spl-util.h"
 #include "stringutil.h" // make_stringf
@@ -223,5 +225,47 @@ void grasp_with_roots(actor &caster, actor &target, int turns)
         auto ench = mon_enchant(ENCH_GRASPING_ROOTS, 0, &caster,
                                 turns * BASELINE_DELAY);
         target.as_monster()->add_ench(ench);
+    }
+}
+
+static void _add_grasp_chain_candidates(const bolt& beam, const monster& orig_targ,
+                                      coord_def spot, vector<monster*>& candidates)
+{
+    for (adjacent_iterator ai(spot); ai; ++ai)
+    {
+        if (monster_at(*ai) && cell_see_cell(beam.source, *ai, LOS_NO_TRANS)
+            && !shoot_through_monster(beam, monster_at(*ai))
+            && !mons_is_firewood(*monster_at(*ai)))
+        {
+            // Ensure this monster isn't already in the list
+            monster* candidate = monster_at(*ai);
+            for (unsigned int i = 0; i < candidates.size(); ++i)
+            {
+                if (candidates[i] == candidate || candidates[i] == &orig_targ)
+                    continue;
+            }
+
+            candidates.push_back(monster_at(*ai));
+        }
+    }
+}
+
+void fill_grasp_chain_targets(const bolt& beam, const monster& first, int num,
+                            vector<monster*>& targs)
+{
+    int count = 0;
+    vector<monster*> candidates;
+
+    _add_grasp_chain_candidates(beam, first, first.pos(), candidates);
+
+    while (count < num && !candidates.empty())
+    {
+        int rand = random2(candidates.size());
+        targs.push_back(candidates[rand]);
+        _add_grasp_chain_candidates(beam, first, candidates[rand]->pos(), candidates);
+
+        // XX: Ugly, but this vector should be too small for this inefficiency to matter
+        candidates.erase(candidates.begin() + rand);
+        ++count;
     }
 }

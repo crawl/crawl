@@ -587,3 +587,14 @@ public:
     bool set_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
 };
+
+class targeter_petrifying_grasp : public targeter_beam
+{
+public:
+    targeter_petrifying_grasp(const actor *act, int r);
+    bool set_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+
+private:
+    vector<coord_def> chain_targ;
+};

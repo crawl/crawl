@@ -20,3 +20,5 @@ string mons_simulacrum_immune_reason(const monster *mons);
 spret cast_simulacrum(coord_def target, int pow, bool fail);
 spret cast_vile_clutch(int pow, bolt &beam, bool fail);
 void grasp_with_roots(actor &caster, actor &target, int turns);
+
+void fill_grasp_chain_targets(const bolt& beam, const monster& first, int num, vector<monster*>& targs);

@@ -1360,6 +1360,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_passage>(range);
     case SPELL_BROMS_BARRELLELING_BOULDER:
         return make_unique<targeter_boulder>(&you);
+    case SPELL_PETRIFYING_GRASP:
+        return make_unique<targeter_petrifying_grasp>(&you, range);
 
     default:
         break;

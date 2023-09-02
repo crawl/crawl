@@ -1024,6 +1024,13 @@ Petrifies a targeted creature. If successful, the target is slowed down for a
 while until it is temporarily turned into stone. In this state, the target will
 take less damage upon being hit.
 %%%%
+Petrifying Grasp spell
+
+Petrifies a targeted creature and up to two other random creatures connected to
+it. If successful, each target is slowed down for a while until it is
+temporarily turned into stone. In this state, the target will take less damage
+upon being hit.
+%%%%
 Petrifying Cloud spell
 
 Exhales calcifying dust, which petrifies anyone affected for longer than a
