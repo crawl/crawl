@@ -3747,6 +3747,9 @@ void bolt::affect_player_enchantment(bool resistible)
         }
     }
 
+    // Handle bouncing to other targets if this is petrify
+    handle_petrify_chaining(you);
+
     // Regardless of effect, we need to know if this is a stopper
     // or not - it seems all of the above are.
     extra_range_used += range_used_on_hit();
@@ -4564,7 +4567,81 @@ void bolt::enchantment_affect_monster(monster* mon)
             beogh_follower_convert(mon, true);
     }
 
+    // Handle bouncing to other targets if this is petrify
+    handle_petrify_chaining(*mon);
+
     extra_range_used += range_used_on_hit();
+}
+
+static void _add_petrify_chain_candidates(const bolt& beam, const actor& orig_targ,
+                                        coord_def spot, vector<actor*>& candidates)
+{
+    for (adjacent_iterator ai(spot); ai; ++ai)
+    {
+        actor* act = actor_at(*ai);
+
+        // Ignore friendlies, firewood, and things we can fire through.
+        if (!act || !cell_see_cell(beam.source, *ai, LOS_NO_TRANS)
+            || mons_aligned(beam.agent(), act)
+            || (act->is_monster()
+                && (shoot_through_monster(beam, monster_at(*ai))
+                    || mons_is_firewood(*monster_at(*ai)))))
+        {
+            continue;
+        }
+
+        // Ensure this actor isn't already in the list
+        for (unsigned int i = 0; i < candidates.size(); ++i)
+        {
+            if (candidates[i] == act || candidates[i] == &orig_targ)
+                continue;
+        }
+
+        candidates.push_back(act);
+    }
+}
+
+void fill_petrify_chain_targets(const bolt& beam, const actor& first, int num,
+                                vector<actor*>& targs)
+{
+    int count = 0;
+    vector<actor*> candidates;
+
+    _add_petrify_chain_candidates(beam, first, first.pos(), candidates);
+
+    while (count < num && !candidates.empty())
+    {
+        int rand = random2(candidates.size());
+        targs.push_back(candidates[rand]);
+        _add_petrify_chain_candidates(beam, first, candidates[rand]->pos(), candidates);
+
+        // XX: Ugly, but this vector should be too small for this inefficiency to matter
+        candidates.erase(candidates.begin() + rand);
+        ++count;
+    }
+}
+
+void bolt::handle_petrify_chaining(actor& origin_targ)
+{
+    // Handle ray bounces
+    if (origin_spell == SPELL_PETRIFY && hit_count.size() == 1)
+    {
+        vector<actor*> chain_targs;
+        fill_petrify_chain_targets(*this, origin_targ, 2, chain_targs);
+
+        if (!chain_targs.empty())
+        {
+            // Bounces are at 2/3 power
+            int saved_ench_power = ench_power;
+            ench_power = ench_power * 2 / 3;
+
+            shuffle_array(chain_targs);
+            for (int i = 0; i < min(static_cast<int>(chain_targs.size()), 2); ++i)
+                affect_actor(chain_targs[i]);
+
+            ench_power = saved_ench_power;
+        }
+    }
 }
 
 static void _print_pre_death_message(const monster &mon, bool goldify,

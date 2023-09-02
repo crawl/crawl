@@ -224,7 +224,7 @@ static const struct spell_desc spelldata[] =
     spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check,
     4,
     200,
-    LOS_RADIUS, LOS_RADIUS,
+    6, 6,
     0,
     TILEG_PETRIFY,
 },

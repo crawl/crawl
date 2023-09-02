@@ -8,8 +8,10 @@
 
 #include "spl-monench.h"
 
+#include "coordit.h"
 #include "english.h" // apostrophise
 #include "env.h"
+#include "losglobal.h"
 #include "message.h"
 #include "spl-util.h"
 #include "stringutil.h" // make_stringf

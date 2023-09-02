@@ -1099,9 +1099,13 @@ be helpless.
 %%%%
 Petrify spell
 
-Petrifies a targeted creature. If successful, the target is slowed down for a
-while until it is temporarily turned into stone. In this state, the target will
-take less damage upon being hit.
+Petrifies a targeted creature and up to two other hostile creatures physically
+connected to them. If successful, each creature is slowed down briefly and then
+temporarily turned to stone. In this state, they will be unable to act, but also
+take less damage.
+
+The chance of success against secondary targets is 2/3 that of the primary
+target.
 %%%%
 Petrifying Cloud spell
 

@@ -1373,6 +1373,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                                    find_sigil_locations(true));
     case SPELL_BOULDER:
         return make_unique<targeter_boulder>(&you);
+    case SPELL_PETRIFY:
+        return make_unique<targeter_petrify>(&you, range);
 
     default:
         break;
