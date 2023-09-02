@@ -37,19 +37,6 @@ static void _end_death_channel()
     }
 }
 
-static void _end_animate_dead()
-{
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->type == MONS_ZOMBIE && mi->summoner == MID_PLAYER)
-        {
-            mon_enchant abj = mi->get_ench(ENCH_FAKE_ABJURATION);
-            abj.duration = 0;
-            mi->update_ench(abj);
-        }
-    }
-}
-
 static void _end_sticky_flame()
 {
     you.props.erase("sticky_flame_source");
@@ -594,7 +581,7 @@ static const duration_def duration_data[] =
       MAGENTA, "Reap",
       "animating dead", "animating dead",
       "You are reanimating the dead.", D_DISPELLABLE | D_EXPIRES,
-      {{ "Your reaping aura expires.", _end_animate_dead },
+      {{ "Your reaping aura expires."},
       { "Your reaping aura is weakening.", 1 }}, 6},
     { DUR_SIPHON_COOLDOWN,
       YELLOW, "-Siphon",
