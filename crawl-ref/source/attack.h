@@ -42,9 +42,6 @@ public:
     int     special_damage; // TODO: We'll see if we can remove this
     int     aux_damage;     // TODO: And this too
 
-    int     min_delay;
-    int     final_attack_delay;
-
     beam_type special_damage_flavour;
 
     bool    stab_attempt;
