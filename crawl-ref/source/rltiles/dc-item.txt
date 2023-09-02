@@ -1170,6 +1170,7 @@ rune_elven RUNE_ELVEN
 %sdir item/talisman
 %rim 0
 beast TALISMAN_BEAST
+flux TALISMAN_FLUX
 snake TALISMAN_SNAKE
 maw TALISMAN_MAW
 blade TALISMAN_BLADE
