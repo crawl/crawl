@@ -175,6 +175,8 @@ vector<branch_type> random_choose_disabled_branches()
     {
         disabled_branch.push_back(BRANCH_TEMPLE);
         disabled_branch.push_back(BRANCH_TOMB);
+        you.props[DESCENT_WATER_BRANCH_KEY] = random_choose(BRANCH_SWAMP, BRANCH_SHOALS);
+        you.props[DESCENT_POIS_BRANCH_KEY] = random_choose(BRANCH_SPIDER, BRANCH_SNAKE);
     }
 
     return disabled_branch;

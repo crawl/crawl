@@ -3807,8 +3807,11 @@ static void _place_branch_entrances(bool use_vaults)
             }
     }
 
-    int descent_water_sbranch = random_choose(BRANCH_SWAMP, BRANCH_SHOALS);
-    int descent_poison_sbranch = random_choose(BRANCH_SNAKE, BRANCH_SPIDER);
+    if (crawl_state.game_is_descent())
+    {
+        ASSERT(you.props.exists(DESCENT_WATER_BRANCH_KEY));
+        ASSERT(you.props.exists(DESCENT_POIS_BRANCH_KEY));
+    }
 
     // Place actual branch entrances.
     for (branch_iterator it; it; ++it)
@@ -3824,8 +3827,8 @@ static void _place_branch_entrances(bool use_vaults)
         {
             brentry_allowed = it->entry_stairs != NUM_FEATURES
                 && _in_descent_parent(it->id)
-                && it->id != descent_water_sbranch
-                && it->id != descent_poison_sbranch
+                && it->id != you.props[DESCENT_WATER_BRANCH_KEY].get_int()
+                && it->id != you.props[DESCENT_POIS_BRANCH_KEY].get_int()
                 && at_branch_bottom();
         }
         else
