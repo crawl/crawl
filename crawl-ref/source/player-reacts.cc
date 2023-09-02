@@ -982,6 +982,10 @@ static void _handle_wereblood(int delay)
 
 void player_reacts()
 {
+    // don't allow reactions while stair peeking in descent mode
+    if (crawl_state.game_is_descent() && !env.properties.exists(DESCENT_STAIRS_KEY))
+        return;
+
     //XXX: does this _need_ to be calculated up here?
     const int stealth = player_stealth();
 
