@@ -1110,6 +1110,10 @@ bool mon_special_ability(monster* mons)
                         mons->summoner;
             mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, actor_by_mid(act),
                                        INFINITE_DURATION));
+
+            // Set guardian golem explosive power the same as old values.
+            // (Should it maybe be lower or scale with spellpower?)
+            mons->props[INNER_FLAME_POW_KEY] = 100;
         }
         break;
 
