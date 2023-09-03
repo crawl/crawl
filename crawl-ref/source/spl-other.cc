@@ -652,8 +652,8 @@ void trigger_binding_sigil(actor& actor)
         else
         {
             int pow = calc_spell_power(SPELL_SIGIL_OF_BINDING);
-            int dur = max(2, random_range(3 + div_rand_round(pow, 12),
-                                          6 + div_rand_round(pow, 8))
+            int dur = max(2, random_range(4 + div_rand_round(pow, 12),
+                                          7 + div_rand_round(pow, 8))
                           - div_rand_round(m->get_hit_dice(), 4))
                         * BASELINE_DELAY;
 
