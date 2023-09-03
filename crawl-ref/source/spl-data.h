@@ -3543,7 +3543,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_BROMS_BARRELLELING_BOULDER, "Brom's Barrelling Boulder",
     spschool::earth | spschool::conjuration,
-    spflag::target | spflag::not_self,
+    spflag::target | spflag::not_self | spflag::no_ghost,
     4,
     200,
     1, 1,

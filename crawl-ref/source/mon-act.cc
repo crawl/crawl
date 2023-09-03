@@ -1048,9 +1048,7 @@ static void _handle_boulder_movement(monster& boulder)
             }
 
             for (int i = push_targs.size() - 1; i >= 0; --i)
-            {
                 push_targs[i]->knockback(boulder, 1, 10, "");
-            }
         }
 
         // If there is still somehow something in our way (maybe we were unable to

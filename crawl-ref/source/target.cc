@@ -2270,9 +2270,7 @@ bool targeter_petrifying_grasp::set_aim(coord_def a)
         fill_grasp_chain_targets(tempbeam, *targ, 1000, chain_targ_mons);
 
         for (unsigned int i = 0; i < chain_targ_mons.size(); ++i)
-        {
             chain_targ.push_back(chain_targ_mons[i]->pos());
-        }
     }
 
     return true;

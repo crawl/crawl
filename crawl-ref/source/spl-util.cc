@@ -1464,9 +1464,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             for (monster_iterator mi; mi; ++mi)
             {
                 if (mi->type == MONS_BOULDER && mi->summoner == MID_PLAYER)
-                {
                     return "Your boulder is already barrelling!";
-                }
             }
         }
         break;

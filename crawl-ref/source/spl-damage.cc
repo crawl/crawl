@@ -4504,9 +4504,7 @@ bool siphon_essence_affects(const monster &m)
 void do_boulder_impact(monster& boulder, actor& victim)
 {
     if (you.can_see(boulder))
-    {
         mprf("The boulder barrels into %s!", victim.name(DESC_THE).c_str());
-    }
 
     int dam = roll_dice(3, div_rand_round(boulder.get_hit_dice() * 3, 2));
     dam = victim.apply_ac(dam);

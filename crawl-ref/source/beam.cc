@@ -4481,9 +4481,7 @@ void bolt::enchantment_affect_monster(monster* mon)
 
             shuffle_array(chain_targs);
             for (int i = 0; i < min(static_cast<int>(chain_targs.size()), 2); ++i)
-            {
                 affect_monster(chain_targs[i]);
-            }
 
             ench_power = saved_ench_power;
         }
