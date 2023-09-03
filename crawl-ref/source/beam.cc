@@ -2417,12 +2417,23 @@ void bolt::affect_endpoint()
     {
         monster* bullseye_targ = monster_by_mid(you.props[BULLSEYE_TARGET_KEY].get_int());
 
-        // This is a valid shot if it was aimed at SOMETHING and that something
-        // did not include the bullseye target (but you can still see it)
-        if (!hit_count.empty() && hit_count[bullseye_targ->mid] == 0
+        // This is a valid shot if it was aimed at SOMETHING hostile and that
+        // something did not include the bullseye target itself (but the player
+        // can still see it)
+        if (!hit_count.empty() && hit_count.count(bullseye_targ->mid) == 0
             && you.can_see(*bullseye_targ))
         {
-            use_bullseye = true;
+            map<mid_t, int>::iterator iter;
+
+            for (iter = hit_count.begin(); iter != hit_count.end(); iter++)
+            {
+                monster* targ = monster_by_mid(iter->first);
+                if (targ && !mons_is_firewood(*targ) && targ->summoner != MID_PLAYER)
+                {
+                    use_bullseye = true;
+                    break;
+                }
+            }
         }
     }
 
