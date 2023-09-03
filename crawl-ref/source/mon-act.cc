@@ -998,7 +998,7 @@ static void _handle_boulder_movement(monster& boulder)
     // If our summoner is the player, and they cannot see us, silently crumble
     if (boulder.summoner == MID_PLAYER && !you.can_see(boulder))
     {
-        monster_die(boulder, KILL_UNSUMMONED, true);
+        monster_die(boulder, KILL_RESET, true);
         return;
     }
 
