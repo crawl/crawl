@@ -4024,7 +4024,7 @@ bool attempt_jinxbite_hit(const actor& agent, actor& victim)
     }
 
     // Drain some duration from the effect every time we spawn a sprite
-    you.duration[DUR_JINXBITE] -= 4;
+    you.duration[DUR_JINXBITE] -= 40;
     if (you.duration[DUR_JINXBITE] < 1)
         you.duration[DUR_JINXBITE] = 1;
 
