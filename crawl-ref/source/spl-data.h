@@ -3543,7 +3543,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_RENDING_BLADE, "Rending Blade",
     spschool::conjuration | spschool::transmutation,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::no_ghost,
     4,
     100,
     1, 1,

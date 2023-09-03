@@ -2767,8 +2767,6 @@ void trigger_rending_blades(actor& agent)
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->type == MONS_RENDING_BLADE && mi->summoner == agent.mid)
-        {
             mi->props[RENDING_BLADE_TRIGGERS_KEY].get_int() += 1;
-        }
     }
 }

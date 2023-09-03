@@ -505,7 +505,9 @@ static bool _handle_rending_blade_trigger(monster* blade)
         {
             if (mons_aligned(*mi, blade) || !you.can_see(**mi)
                 || grid_distance(mi->pos(), blade->pos()) > 4)
+            {
                 continue;
+            }
 
             bolt tracer;
             zappy(ZAP_RENDING_SLASH, blade->get_hit_dice() * 4, true, tracer);
@@ -520,9 +522,7 @@ static bool _handle_rending_blade_trigger(monster* blade)
 
             fire_tracer(blade, tracer);
             if (mons_should_fire(tracer) && !monster_at(tracer.path_taken[tracer.path_taken.size() - 1]))
-            {
                 tracers.push_back(tracer);
-            }
         }
 
         // If we found no valid tracers, bail.

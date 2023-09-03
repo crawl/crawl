@@ -4569,13 +4569,9 @@ spret cast_rending_wave(coord_def aim, int pow, bool fail)
     // If we swung at 2 targets, spawn a rending blade. If we swung at 3, spawn 2.
     int dur = random_range(7, 10);
     if (targets.size() > 1)
-    {
         spawn_rending_blades(you, pow, targets.size() - 1, dur * BASELINE_DELAY);
-    }
     else
-    {
         mpr("The blade wavers and falls apart.");
-    }
 
     // This is deliberately longer than the blade's own duration, so that
     // message order looks nicer (since the status effect should immediately
