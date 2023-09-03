@@ -767,6 +767,10 @@ void PasswallDelay::finish()
     mpr("You finish merging with the rock.");
     // included in default force_more_message
 
+    // Immediately cancel bonus AC (since there are so many paths through this code)
+    you.props.erase(PASSWALL_ARMOUR_KEY);
+    you.redraw_armour_class = true;
+
     if (dest.x == 0 || dest.y == 0)
         return;
 

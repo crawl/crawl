@@ -261,9 +261,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Burglary
-    SPELL_PASSWALL,
     SPELL_HIBERNATION,
     SPELL_SWIFTNESS,
+    SPELL_PASSWALL,
 },
 
 {   // Book of Dreams

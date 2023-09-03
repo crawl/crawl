@@ -1033,12 +1033,12 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_PASSWALL, "Passwall",
-    spschool::alchemy | spschool::earth,
+    spschool::earth,
     spflag::target | spflag::escape | spflag::not_self | spflag::utility
         | spflag::silent,
-    2,
-    120,
-    1, 7,
+    3,
+    100,
+    3, 3,
     0,
     TILEG_PASSWALL,
 },
