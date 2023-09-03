@@ -336,6 +336,7 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define CHARMED_DEMON_KEY "charmed_demon"
 #define EMERGENCY_CLONE_KEY "emergency_clone"
 #define BOULDER_DIRECTION_KEY "boulder_direction"
+#define PASSWALL_ARMOUR_KEY "passwall_armour"
 
 #define HELPLESS_KEY "helpless"
 #define POISONER_KEY "poisoner"

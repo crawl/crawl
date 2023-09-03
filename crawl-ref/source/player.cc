@@ -6161,6 +6161,9 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
             AC += _meek_bonus() * scale;
     }
 
+    if (you.props.exists(PASSWALL_ARMOUR_KEY))
+        AC += you.props[PASSWALL_ARMOUR_KEY].get_int() * scale;
+
     AC -= 400 * corrosion_amount();
 
     AC += sanguine_armour_bonus();
