@@ -324,6 +324,10 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
         mons->props.erase(OKAWARU_DUEL_ABANDONED_KEY);
     }
 
+    // Don't display non-functional bullseye targets
+    if (mons->has_ench(ENCH_BULLSEYE_TARGET))
+        mons->del_ench(ENCH_BULLSEYE_TARGET);
+
     // Duplicate objects, or unequip them if they can't be duplicated.
     for (mon_inv_iterator ii(*mons); ii; ++ii)
     {
