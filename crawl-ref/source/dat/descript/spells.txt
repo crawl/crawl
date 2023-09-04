@@ -1220,14 +1220,15 @@ Throws a bouncing bolt of electricity. It bypasses half of defenders' armour.
 Sigil of Binding spell
 
 Inscribes a pair of magical sigils on the floor nearby which will temporarily
-contain the momentum of any enemy that steps on them, binding them in place
-until the spell wears off - at which point that momentum will be returned to
-them rapidly, granting incredible movement speed and preventing subsequent
-binding attempts until they slow down again.
+contain the momentum of anyone that passes over them, binding them in place
+until the spell wears off - at which point that momentum will return rapidly,
+granting the victim incredible movement speed and preventing subsequent binding
+attempts until they slow down again.
 
-Only one set of sigils can be maintained at a time, and while the caster is
-immune to the containment effects of their own sigils, the arcane feedback
-caused by stepping onto one will nonetheless drain their magical energy.
+The caster is not immune to their own sigils, and spell feedback will prevent
+them from gaining any delayed benefit, either. Be careful!
+
+Only one set of sigils can be maintained at a time.
 %%%%
 Silence spell
 
