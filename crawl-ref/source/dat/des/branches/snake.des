@@ -1924,7 +1924,7 @@ NAME:    nicolae_snake_shooting_gallery
 TAGS:    no_pool_fixup transparent
 DEPTH:   Snake, !Snake:$
 ORIENT:  float
-ITEM:    shortbow / orcbow / longbow w:4 / hand crossbow w:1 / \
+ITEM:    shortbow / orcbow / longbow w:4 / hand cannon w:1 / \
          arbalest w:6 / triple crossbow w:1
 MONS:    naga sharpshooter
 SUBST:   s = 1'

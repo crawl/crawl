@@ -752,7 +752,7 @@ KITEM:    H = demon blade mundane ident:all plus:5, \
               great sword mundane ident:all plus:5, \
               triple sword mundane ident:all plus:5
 KITEM:    I = lajatang mundane ident:all plus:5
-KITEM:    J = hand crossbow mundane ident:all plus:5, \
+KITEM:    J = hand cannon mundane ident:all plus:5, \
               arbalest mundane ident:all plus:5, \
               triple crossbow mundane ident:all plus:5, \
               shortbow mundane ident:all plus:5, \

@@ -2264,7 +2264,7 @@ ENDMAP
 NAME:  nicolae_blade_bullseye
 TAGS:  no_item_gen
 KMONS: 2 = patrolling dancing weapon ; sling | shortbow | orcbow | \
-           longbow w:5 | hand crossbow w:5 | arbalest | triple crossbow w:5
+           longbow w:5 | hand cannon w:5 | arbalest | triple crossbow w:5
 : elven_blade_entry(_G)
 MAP
       =

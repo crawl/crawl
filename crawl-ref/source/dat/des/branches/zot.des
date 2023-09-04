@@ -1044,10 +1044,10 @@ KMONS:   1 = guardian mummy ; randart dire flail ego:chaos | \
              randart great sword ego:chaos | randart glaive ego:chaos | \
              randart dire flail | randart great mace | randart battleaxe | \
              randart great sword | randart glaive
-KMONS:   3 = guardian mummy ; randart hand crossbow ego:chaos / \
+KMONS:   3 = guardian mummy ; randart hand cannon ego:chaos / \
              guardian mummy ; randart longbow ego:chaos / \
              guardian mummy ; randart triple crossbow / \
-             guardian mummy ; randart hand crossbow / \
+             guardian mummy ; randart hand cannon / \
              guardian mummy ; randart longbow / \
              guardian mummy ; randart arbalest
 KMONS:   5 = guardian mummy ; any beam wand

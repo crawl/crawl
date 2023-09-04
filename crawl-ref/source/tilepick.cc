@@ -2368,7 +2368,7 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_SLING:                 return TILE_WPN_SLING;
     case WPN_SHORTBOW:              return TILE_WPN_SHORTBOW;
     case WPN_ORCBOW:                return TILE_WPN_ORCBOW;
-    case WPN_HAND_CROSSBOW:         return TILE_WPN_HAND_CROSSBOW;
+    case WPN_HAND_CANNON:           return TILE_WPN_HAND_CANNON;
     case WPN_ARBALEST:              return TILE_WPN_ARBALEST;
     case WPN_TRIPLE_CROSSBOW:       return TILE_WPN_TRIPLE_CROSSBOW;
     case WPN_SPEAR:                 return TILE_WPN_SPEAR;

@@ -173,9 +173,9 @@ longbow1 WPN_LONGBOW
 longbow2
 longbow3
 
-hand_crossbow WPN_HAND_CROSSBOW
-hand_crossbow2
-hand_crossbow3
+hand_cannon WPN_HAND_CANNON
+hand_cannon2
+hand_cannon3
 arbalest1 WPN_ARBALEST
 arbalest2
 arbalest3

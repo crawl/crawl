@@ -2482,8 +2482,8 @@ ENDMAP
 NAME:   nicolae_shoals_the_drawing_of_the_three
 TAGS:   transparent
 DEPTH:  Shoals
-# No pistols, either, so it will have to be hand crossbows.
-KITEM:  r = hand crossbow
+# A hand cannon is a pistol with some sequins glued on.
+KITEM:  r = hand cannon
 KMONS:  1 = snapping turtle w:15 / alligator snapping turtle w:5
 NSUBST: . = 2=1 / 2=1. / 2=r / .
 MAP

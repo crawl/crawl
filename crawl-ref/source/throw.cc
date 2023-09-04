@@ -545,8 +545,11 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     return false;
 }
 
-static void _handle_mule_fx(actor &act, coord_def targ)
+static void _handle_cannon_fx(actor &act, const item_def &weapon, coord_def targ)
 {
+    if (!weapon.is_type(OBJ_WEAPONS, WPN_HAND_CANNON))
+        return;
+
     const coord_def oldpos = act.pos();
 
     // blast smoke
@@ -562,6 +565,9 @@ static void _handle_mule_fx(actor &act, coord_def targ)
         place_cloud(CLOUD_BLACK_SMOKE, *ai, random_range(3, 6), &act);
         break;
     }
+
+    if (!is_unrandom_artefact(weapon, UNRAND_MULE))
+        return;
 
     // knock back
     if (coinflip()
@@ -626,24 +632,21 @@ static void _throw_noise(actor* act, const item_def &ammo)
     case WPN_LONGBOW:
         msg   = "You hear a bow twang.";
         break;
-    case WPN_HAND_CROSSBOW:
     case WPN_ARBALEST:
         msg   = "You hear a crossbow thunk.";
         break;
     case WPN_TRIPLE_CROSSBOW:
         msg   = "You hear a triple crossbow go thunk-thunk-thunk.";
         break;
+    case WPN_HAND_CANNON:
+        noise *= 2;
+        msg = "You hear a hand cannon's boom.";
+        break;
 
     default:
         die("Invalid launcher '%s'",
                  launcher->name(DESC_PLAIN).c_str());
         return;
-    }
-
-    if (is_unrandom_artefact(*launcher, UNRAND_MULE))
-    {
-        noise *= 2;
-        msg = "You hear a hand cannon's boom.";
     }
 
     if (act->is_player() || you.can_see(*act))
@@ -909,8 +912,8 @@ void throw_it(quiver::action &a)
 
     _throw_noise(&you, thrown);
 
-    if (launcher && is_unrandom_artefact(*launcher, UNRAND_MULE))
-        _handle_mule_fx(you, pbolt.target);
+    if (launcher)
+        _handle_cannon_fx(you, *launcher, pbolt.target);
 
     // ...any monster nearby can see that something has been thrown, even
     // if it didn't make any noise.
@@ -1013,11 +1016,8 @@ bool mons_throw(monster* mons, bolt &beam, bool teleport)
         delete beam.special_explosion;
 
     // dubious...
-    if (mons->alive() && mons->weapon()
-        && is_unrandom_artefact(*mons->weapon(), UNRAND_MULE))
-    {
-        _handle_mule_fx(*mons, beam.target);
-    }
+    if (mons->alive() && mons->weapon())
+        _handle_cannon_fx(*mons, *(mons->weapon()), beam.target);
 
     return true;
 }

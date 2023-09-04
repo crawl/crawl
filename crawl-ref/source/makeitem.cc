@@ -120,7 +120,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
     if (one_chance_in(30) && x_chance_in_y(item_level + 3, 100))
     {
         return random_choose(WPN_LAJATANG,
-                             WPN_HAND_CROSSBOW,
+                             WPN_HAND_CANNON,
                              WPN_TRIPLE_CROSSBOW,
                              WPN_DEMON_WHIP,
                              WPN_DEMON_BLADE,
@@ -259,7 +259,7 @@ static int _num_brand_tries(const item_def& item, int item_level)
         return 5;
     if (is_demonic(item)
         // Hand crossbows usually appear late, so encourage use.
-        || item.sub_type == WPN_HAND_CROSSBOW
+        || item.sub_type == WPN_HAND_CANNON
         || x_chance_in_y(101 + item_level, 300))
     {
         return 1;
@@ -472,7 +472,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         item.plus -= 1 + random2(3);
     }
     else if ((force_good || is_demonic(item)
-              || item.sub_type == WPN_HAND_CROSSBOW || forced_ego
+              || item.sub_type == WPN_HAND_CANNON || forced_ego
                     || x_chance_in_y(51 + item_level, 200))
                 && (!item.is_mundane() || force_good))
     {

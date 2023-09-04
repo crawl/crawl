@@ -5655,7 +5655,7 @@ void unmarshallItem(reader &th, item_def &item)
 
 #if TAG_MAJOR_VERSION == 34
     if (item.is_type(OBJ_WEAPONS, WPN_FUSTIBALUS))
-        item.sub_type = WPN_HAND_CROSSBOW;
+        item.sub_type = WPN_HAND_CANNON;
 #endif
 
     bind_item_tile(item);

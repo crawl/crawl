@@ -703,7 +703,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_YAKTAUR,         { { { WPN_ARBALEST, 1 } } } },
         { MONS_YAKTAUR_CAPTAIN, { {
             { WPN_ARBALEST,      19 },
-            { WPN_HAND_CROSSBOW, 1  },
+            { WPN_HAND_CANNON, 1  },
         } } },
         { MONS_EFREET,                  EFREET_WSPEC },
         { MONS_ERICA,                   EFREET_WSPEC },
@@ -989,7 +989,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         } } },
         { MONS_VAULT_SENTINEL,
             { { { WPN_ARBALEST,                 19 },
-                { WPN_HAND_CROSSBOW,            1 },
+                { WPN_HAND_CANNON,            1 },
                 { NUM_WEAPONS,                  40 },
         } } },
         { MONS_FAUN, { { { WPN_SLING, 1 } } } },
