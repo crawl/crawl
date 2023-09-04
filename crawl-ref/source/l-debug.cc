@@ -454,75 +454,10 @@ LUAFN(debug_check_moncasts)
     monster *m2 = monster_at(c2);
     ASSERT(m1);
 
-    // it would be nice if this followed from the casting code or at least
-    // could be validated in some way?
-    const unordered_set<int> no_monster_impl =
-    {
-        SPELL_APPORTATION,
-        SPELL_INNER_FLAME,
-        SPELL_FULMINANT_PRISM,
-        SPELL_DAZZLING_FLASH,
-        SPELL_ISKENDERUNS_MYSTIC_BLAST,
-        SPELL_ANIMATE_SKELETON,
-        SPELL_BORGNJORS_REVIVIFICATION,
-        SPELL_SUBLIMATION_OF_BLOOD,
-        SPELL_DEATH_CHANNEL,
-        SPELL_CONFUSING_TOUCH,
-        SPELL_CALL_CANINE_FAMILIAR,
-        SPELL_DISPERSAL,
-        SPELL_INTOXICATE,
-        SPELL_DISJUNCTION,
-        SPELL_WEREBLOOD,
-        SPELL_DISCORD,
-        SPELL_CHAIN_OF_CHAOS,
-        SPELL_SUMMON_FOREST,
-        SPELL_SUMMON_LIGHTNING_SPIRE,
-        SPELL_SUMMON_GUARDIAN_GOLEM,
-        SPELL_DRAGON_CALL,
-        SPELL_IRRADIATE,
-        SPELL_IGNITION,
-        SPELL_SONIC_WAVE,
-        SPELL_STARBURST,
-        SPELL_FOXFIRE,
-        SPELL_HAILSTORM,
-        SPELL_NOXIOUS_BOG,
-        SPELL_FROZEN_RAMPARTS,
-        SPELL_MAXWELLS_COUPLING,
-        SPELL_DISPEL_UNDEAD,
-        SPELL_TUKIMAS_DANCE,
-        SPELL_AGONY,
-        SPELL_PASSWALL,
-        SPELL_GOLUBRIAS_PASSAGE,
-        SPELL_THUNDERBOLT,
-        SPELL_SEARING_RAY,
-        SPELL_DEBUGGING_RAY,
-        SPELL_VIOLENT_UNRAVELLING,
-        SPELL_INFESTATION,
-        SPELL_BECKONING,
-        SPELL_RANDOM_EFFECTS,
-        SPELL_POISONOUS_VAPOURS,
-        SPELL_BORGNJORS_VILE_CLUTCH,
-        SPELL_ANIMATE_ARMOUR,
-        SPELL_MANIFOLD_ASSAULT,
-        SPELL_SUMMON_CACTUS,
-        SPELL_SCORCH,
-        SPELL_FLAME_WAVE,
-        SPELL_ENFEEBLE,
-        SPELL_ANGUISH,
-        SPELL_NECROTISE,
-        SPELL_BLASTMOTE,
-        SPELL_ROT,
-        SPELL_MOMENTUM_STRIKE,
-        SPELL_KISS_OF_DEATH,
-        SPELL_ELECTRIC_CHARGE,
-        SPELL_MEPHITIC_BREATH,
-        SPELL_MINOR_DESTRUCTION,
-    };
-
     for (int s = SPELL_FIRST_SPELL; s < NUM_SPELLS; s++)
     {
         spell_type spell = static_cast<spell_type>(s);
-        if (no_monster_impl.count(s) || spell_removed(spell))
+        if (!is_valid_mon_spell(spell) || spell_removed(spell))
             continue;
         // we need to reset the foe each time: some spells (e.g. lesser
         // and greater healing) could change it.
