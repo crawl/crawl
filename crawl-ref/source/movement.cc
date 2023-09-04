@@ -535,8 +535,10 @@ bool prompt_dangerous_portal(dungeon_feature_type ftype)
 bool prompt_descent_shortcut(dungeon_feature_type ftype)
 {
     if (ftype == DNGN_ENTER_DEPTHS && !player_in_branch(BRANCH_SLIME))
+    {
         return yesno("This entrance appears to skip some branches and may be "
                      "quite dangerous. Continue anyway?", false, 'n');
+    }
     return true;
 }
 
