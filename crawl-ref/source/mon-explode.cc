@@ -132,7 +132,14 @@ static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
     const int size   = origin.body_size(PSIZE_BODY);
     beam.flavour     = BEAM_FIRE;
 
-    int pow = origin.props[INNER_FLAME_POW_KEY].get_int();
+    int pow = 100;  // Fallback if power key isn't present. This could be a save
+                    // compat thing, but could also be a bug. Still better not to crash, though.
+
+    if (origin.props.exists(INNER_FLAME_POW_KEY))
+        pow = origin.props[INNER_FLAME_POW_KEY].get_int();
+    else
+        mprf(MSGCH_DIAGNOSTICS, "Buggy inner flame power for: %s", origin.name(DESC_PLAIN).c_str());
+
     int dam = div_rand_round(pow, 5) + 5;
 
     beam.damage      = (size > SIZE_LARGE) ? dice_def(3, dam + 10) :
