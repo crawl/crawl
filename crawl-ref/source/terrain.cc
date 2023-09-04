@@ -2523,6 +2523,7 @@ static void _descent_reveal_around(coord_def p)
         if (cell_see_cell_nocache(p, *ri))
         {
             force_show_update_at(*ri);
+            update_item_at(*ri, true);
             set_terrain_visible(*ri);
             view_update_at(*ri);
         }
