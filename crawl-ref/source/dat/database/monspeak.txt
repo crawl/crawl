@@ -1708,12 +1708,20 @@ _Agnes_rare_
 @The_monster@ asks, "Have you seen my kris anywhere?"
 
 @The_monster@ mutters, "I could really go for a good breadfruit right now."
+%%%%
+Agnes triumphant
+
+@The_monster@ says, "May you follow the Path of Peace in your next life."
 ## END Agnes ##
 %%%%
 ############ ANTAEUS ### A titan demonically corrupted into a hell lord.
 Antaeus
 
 @_hell_lord_taunt_@
+%%%%
+Antaeus triumphant
+
+@The_monster@ says, "Your soul will be trapped in ice for ten thousand years."
 ## END Antaeus
 %%%%
 ############ AMAEMON ### A demonspawn with poisoned words and a poisoned heart
@@ -1760,6 +1768,10 @@ Arachne
 @The_monster@ says @to_foe@, "You'll find yourself a bit attached to my weave."
 
 @The_monster@ says @to_foe@, "No one escapes my webs."
+%%%%
+Arachne triumphant
+
+@The_monster@ says, "All wrapped up."
 %%%%
 ############ ASTERION ### Minotaur of Makhleb
 Asterion
@@ -1824,6 +1836,12 @@ You hear demonic laughter.
 @The_monster@ screams @at_foe@, "What ORB?! I have an entire kingdom!" @player_only@
 
 @The_monster@ screams @at_foe@, "Bow down before your king! Bow! Bow!!" @player_only@
+%%%%
+Asterion triumphant
+
+@The_monster@ screams, "The power of Makhleb!"
+
+@The_monster@ bellows, "I am king! All will kneel!"
 %%%%
 ############ AZRAEL ### efreet
 Azrael
@@ -2065,13 +2083,13 @@ Boris unsummoned
 friendly Boris unsummoned
 
 @Boris unsummoned@
-## END Boris ##
 %%%%
 Boris triumphant
 
 @The_monster@ says, "And that's the last I'll see of you."
 
 @The_monster@ says, "I'd like to see you come back from this one."
+## END Boris ##
 %%%%
 ############ CHUCK ### An avid rock collector.
 Chuck
