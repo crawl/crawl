@@ -2410,31 +2410,16 @@ static void _waterlog_mon(monster &mon, int ench_pow)
 
 void bolt::affect_endpoint()
 {
-    // Test if this shot should trigger Dimensional Bullseye
+    // Test if this shot should trigger Dimensional Bullseye.
     bool use_bullseye = false;
-    if (was_missile && agent()->is_player() && you.duration[DUR_DIMENSIONAL_BULLSEYE]
-        && !special_explosion)
+    if (can_trigger_bullseye)
     {
+        // We've already verified that at least one valid triggering target was
+        // aimed at, but we need to know that we didn't ALSO aim at the bullseye
+        // target (and that it's still in range)
         monster* bullseye_targ = monster_by_mid(you.props[BULLSEYE_TARGET_KEY].get_int());
-
-        // This is a valid shot if it was aimed at SOMETHING hostile and that
-        // something did not include the bullseye target itself (but the player
-        // can still see it)
-        if (!hit_count.empty() && hit_count.count(bullseye_targ->mid) == 0
-            && you.can_see(*bullseye_targ))
-        {
-            map<mid_t, int>::iterator iter;
-
-            for (iter = hit_count.begin(); iter != hit_count.end(); iter++)
-            {
-                monster* targ = monster_by_mid(iter->first);
-                if (targ && !mons_is_firewood(*targ) && targ->summoner != MID_PLAYER)
-                {
-                    use_bullseye = true;
-                    break;
-                }
-            }
-        }
+        if (hit_count.count(bullseye_targ->mid) == 0 && you.can_see(*bullseye_targ))
+            use_bullseye = true;
     }
 
     // hack: we use hit_verb to communicate whether a ranged
@@ -4943,6 +4928,14 @@ void bolt::affect_monster(monster* mon)
 
     if (flavour == BEAM_MISSILE && item)
     {
+        // Test if this qualifies to trigger Dimensional Bullseye later on.
+        if (agent()->is_player() && you.duration[DUR_DIMENSIONAL_BULLSEYE]
+            && !can_trigger_bullseye && !special_explosion
+            && !mons_is_firewood(*mon) && mon->summoner != MID_PLAYER)
+        {
+            can_trigger_bullseye = true;
+        }
+
         actor *ag = agent(true);
         // if the immediate agent is now dead, check to see if we can get a
         // usable agent by factoring in reflections.
