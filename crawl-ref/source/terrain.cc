@@ -2507,6 +2507,10 @@ void descent_crumble_stairs()
             dungeon_terrain_changed(*ri, DNGN_FLOOR);
             if (you.see_cell(*ri))
                 mpr("The exit collapses.");
+            env.map_knowledge(*ri).set_feature(DNGN_FLOOR);
+            set_terrain_mapped(*ri);
+            force_show_update_at(*ri);
+            view_update_at(*ri);
         }
     }
 
