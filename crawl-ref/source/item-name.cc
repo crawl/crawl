@@ -2866,7 +2866,8 @@ string cannot_read_item_reason(const item_def *item, bool temp, bool ident)
 {
     // convoluted ordering is because the general checks below need to go before
     // the item id check, but non-temp messages go before general checks
-    if (item && item->base_type == OBJ_SCROLLS && item_type_known(*item))
+    if (item && item->base_type == OBJ_SCROLLS
+        && (ident || item_type_known(*item)))
     {
         // this function handles a few cases of perma-uselessness. For those,
         // be sure to print the message first. (XX generalize)
