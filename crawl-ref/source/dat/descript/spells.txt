@@ -1000,8 +1000,8 @@ Passage of Golubria spell
 
 Opens two gateways (one always near the caster), which allow instantaneous
 transport to random other open gateways to any creature entering them. There is
-no limit to the number of gateways that can be open at one time, but a gateway
-will close when entered, or after a short amount of time.
+no limit to the number of gateways that can be open at one time. However,
+gateways close a short time after being opened, or immediately once entered.
 %%%%
 Passwall spell
 
