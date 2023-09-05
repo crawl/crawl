@@ -428,11 +428,17 @@ NORETURN static void _launch_game()
         msg::stream << "<yellow>Welcome" << (game_start? "" : " back") << ", "
                     << you.your_name << " the "
                     << species::name(you.species)
-                    << " " << get_job_name(you.char_class) << ".</yellow>"
-                    << endl;
+                    << " " << get_job_name(you.char_class) << ".</yellow>";
         // TODO: seeded sprint?
         if (crawl_state.type == GAME_TYPE_CUSTOM_SEED)
-            msg::stream << "<white>" << seed_description() << "</white>" << endl;
+            msg::stream << endl << "<white>" << seed_description() << "</white>";
+        else
+        {
+            const string type_name = crawl_state.game_type_name();
+            if (!type_name.empty())
+                msg::stream << "<white> [" << type_name << "]</white>";
+        }
+        msg::stream << endl;
     }
 
 #ifdef USE_TILE
