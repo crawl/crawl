@@ -1407,7 +1407,9 @@ void StashTracker::search_stashes(string search_term)
     string csearch_literal = search_term.empty() ? (*buf? buf : lastsearch) : search_term;
     string csearch = csearch_literal;
 
-    bool curr_lev = (csearch[0] == '@' || csearch == ".");
+    // allowing offlevel stash searching is not useful in descent mode
+    bool curr_lev = (csearch[0] == '@' || csearch == "."
+                                       || crawl_state.game_is_descent());
     if (curr_lev)
     {
         csearch.erase(0, 1);
