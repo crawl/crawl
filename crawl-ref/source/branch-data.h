@@ -278,7 +278,7 @@ const Branch branches[NUM_BRANCHES] =
       "Bazaar", "a bazaar", "Bazaar",
       "You enter an inter-dimensional bazaar!",
       BLUE, YELLOW,
-      '1', {}, branch_noise::normal,
+      '1', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
       {} },
 
     { BRANCH_TROVE, NUM_BRANCHES, -1, -1, 1, 18,
