@@ -685,31 +685,27 @@ static bool _kikubaaqudgha_retribution()
     god_speaks(god, coinflip() ? "You hear Kikubaaqudgha cackling."
                                : "Kikubaaqudgha's malice focuses upon you.");
 
-    if (x_chance_in_y(you.experience_level, 27))
+    const bool sil = silenced(you.pos());
+    const bool rtorm = you.res_torment();
+    if (one_chance_in(3) && (!sil || !rtorm))
     {
-        // torment, or 3 death curses of maximum power
-        if (!you.res_torment())
+        if (!rtorm)
             torment(nullptr, TORMENT_KIKUBAAQUDGHA, you.pos());
-        else
+        if (!sil)
         {
-            for (int i = 0; i < 3; ++i)
-            {
-                death_curse(you, nullptr,
-                            _god_wrath_name(god), you.experience_level);
-            }
+            mprf(MSGCH_GOD, god, "Wails of torment echo through the air!");
+            noisy(25, you.pos());
         }
-    }
-    else if (random2(you.experience_level) >= 4)
-    {
-        // death curse, 25% chance of additional curse
-        const int num_curses = one_chance_in(4) ? 2 : 1;
-        for (int i = 0; i < num_curses; i++)
-        {
-                death_curse(you, nullptr,
-                            _god_wrath_name(god), you.experience_level);
-        }
+        return true;
     }
 
+    if (coinflip())
+    {
+        lose_stat(STAT_RANDOM, 2 + random2avg(you.experience_level / 3, 2));
+        return true;
+    }
+    const int xl = you.experience_level;
+    you.drain(nullptr, false, random_range(xl * 27, xl * 42));
     return true;
 }
 
