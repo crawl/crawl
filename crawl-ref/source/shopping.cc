@@ -986,12 +986,25 @@ void ShopMenu::update_help()
     const int total_cost = !can_purchase ? 0 : selected_cost(true);
     if (total_cost > you.gold)
     {
-        top_line += "<lightred>";
-        top_line +=
-            make_stringf(" You are short %d gold piece%s for the purchase.",
-                         total_cost - you.gold,
-                         (total_cost - you.gold != 1) ? "s" : "");
-        top_line += "</lightred>";
+        if (crawl_state.game_is_descent())
+        {
+            top_line += "<lightred>";
+            top_line +=
+                make_stringf(" Purchasing will put you in debt for %d gold"
+                             " piece%s.",
+                             total_cost - you.gold,
+                             (total_cost - you.gold != 1) ? "s" : "");
+            top_line += "</lightred>";
+        }
+        else
+        {
+            top_line += "<lightred>";
+            top_line +=
+                make_stringf(" You are short %d gold piece%s for the purchase.",
+                             total_cost - you.gold,
+                             (total_cost - you.gold != 1) ? "s" : "");
+            top_line += "</lightred>";
+        }
     }
     else if (total_cost)
     {
