@@ -657,8 +657,16 @@ bool game_state::seed_is_known() const
 string game_state::game_savedir_path() const
 {
     if (!game_is_valid_type())
-        return ""; // a game from the future -- avoid the ASSERT below
-    return game_is_sprint()? "sprint/" : "";
+        return ""; // a game from the future...
+    switch (type)
+    {
+    case GAME_TYPE_SPRINT:
+        return "sprint/";
+    case GAME_TYPE_DESCENT:
+        return "descent/";
+    default:
+        return "";
+    }
 }
 
 string game_state::game_type_qualifier() const
