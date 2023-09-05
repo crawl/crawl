@@ -212,6 +212,10 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
  */
 static armour_type _acquirement_shield_type()
 {
+    // Fixed chance for an orb.
+    if (one_chance_in(4))
+        return ARM_ORB;
+
     const int scale = 256;
     vector<pair<armour_type, int>> weights = {
         { ARM_BUCKLER,       (5 + player_shield_racial_factor()) * 4 * scale
