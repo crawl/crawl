@@ -804,7 +804,8 @@ ENDMAP
 NAME:    trove_hunter_1
 WEIGHT:  5
 ORIENT:  encompass
-TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe no_species_op
+TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe no_species_op \
+         no_species_dr
 # Loot:  15 items, this time.
 COLOUR:  x = blue
 MONS:    storm dragon zombie
