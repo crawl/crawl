@@ -3753,6 +3753,16 @@ bool enough_mp(int minimum, bool suppress_msg, bool abort_macros)
     return true;
 }
 
+void apply_rampage_heal()
+{
+    //only armataurs heal on rampage
+    if(you.get_mutation_level(MUT_ROLLPAGE) == 0)
+        return;
+
+    int hp_gain = div_round_up(you.hp_max, 20); 
+    inc_hp(hp_gain);
+}
+
 void inc_mp(int mp_gain, bool silent)
 {
     ASSERT(!crawl_state.game_is_arena());

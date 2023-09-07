@@ -869,6 +869,7 @@ void move_player_action(coord_def move)
 
             case spret::success:
                 rampaged = true;
+                apply_rampage_heal();
                 // If we've rampaged, reset initial_position for the second
                 // move.
                 initial_position = you.pos();
@@ -1096,6 +1097,8 @@ void move_player_action(coord_def move)
             _clear_constriction_data();
             _mark_potential_pursuers(targ);
             move_player_to_grid(targ, true);
+            if(rampaged)
+                apply_rampage_heal();
             apply_barbs_damage();
             remove_ice_movement();
             you.clear_far_engulf(false, true);

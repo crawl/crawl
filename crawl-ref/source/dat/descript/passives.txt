@@ -58,7 +58,8 @@ You take an additional free step when moving towards enemies.
 %%%%
 roll passive
 
-<rampage passive>
+You take an additional free step when moving towards enemies, and heal while
+doing so.
 %%%%
 faith passive
 
