@@ -795,18 +795,14 @@ and restore health.
 %%%%
 roll mutation
 
-You instinctively roll as you move toward enemies, rampaging forward an additional
-space.
+You instinctively roll as you move toward enemies, rampaging forward an
+additional space. The second level of this mutation grants health regeneration
+when rolling.
 %%%%
 long tongue mutation
 
 Your tongue is extremely long. This lets you lick potion bottles dry, doubling their
 effects on you.
-%%%%
-awkward tongue mutation
-
-Your tongue is very floppy, giving you trouble when reading the arcane syllables
-encoded on magical scrolls. As such, scrolls take you half again as long to read.
 %%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation

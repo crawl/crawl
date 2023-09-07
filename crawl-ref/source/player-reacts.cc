@@ -579,6 +579,15 @@ static void _decrement_transform_duration(int delay)
     }
 }
 
+static void _decrement_rampage_heal_duration(int delay)
+{
+    const int heal = you.props[RAMPAGE_HEAL_KEY].get_int();
+    if (heal > 0 && _decrement_a_duration(DUR_RAMPAGE_HEAL, delay))
+    {
+        you.props[RAMPAGE_HEAL_KEY] = heal - 1;
+        reset_rampage_heal_duration();
+    }
+}
 
 /**
  * Take a 'simple' duration, decrement it, and print messages as appropriate
@@ -658,6 +667,8 @@ static void _decrement_durations()
         you.props[POWERED_BY_DEATH_KEY] = pbd_str - 1;
         reset_powered_by_death_duration();
     }
+
+    _decrement_rampage_heal_duration(delay);
 
     dec_ambrosia_player(delay);
     dec_channel_player(delay);

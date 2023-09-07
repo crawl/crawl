@@ -246,5 +246,6 @@ enum duration_type
 #endif
     DUR_JINXBITE_LOST_INTEREST,
     DUR_VITRIFIED,
+    DUR_RAMPAGE_HEAL,
     NUM_DURATIONS
 };

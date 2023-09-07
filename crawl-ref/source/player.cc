@@ -1171,6 +1171,10 @@ static int _player_bonus_regen()
     if (you.duration[DUR_POWERED_BY_DEATH])
         rr += you.props[POWERED_BY_DEATH_KEY].get_int() * 100;
 
+    // Rampage healing grants a variable regen boost while active.
+    if (you.duration[DUR_RAMPAGE_HEAL])
+        rr += you.props[RAMPAGE_HEAL_KEY].get_int() * REGEN_PIP;
+
     return rr;
 }
 
@@ -4809,6 +4813,28 @@ void dec_frozen_ramparts(int delay)
         end_frozen_ramparts();
         mpr("The frozen ramparts melt away.");
     }
+}
+
+void reset_rampage_heal_duration()
+{
+    const int heal_dur = random_range(3, 7);
+    you.set_duration(DUR_RAMPAGE_HEAL, heal_dur);
+}
+
+void apply_rampage_heal(const monster* mons)
+{
+    if (mons == nullptr
+        || you.get_mutation_level(MUT_ROLLPAGE) < 2
+        || mons_threat_level(*mons) < MTHRT_EASY)
+    {
+        return;
+    }
+
+    reset_rampage_heal_duration();
+
+    const int heal = you.props[RAMPAGE_HEAL_KEY].get_int();
+    if (heal < RAMPAGE_HEAL_MAX)
+        you.props[RAMPAGE_HEAL_KEY] = heal + 1;
 }
 
 bool invis_allowed(bool quiet, string *fail_reason, bool temp)

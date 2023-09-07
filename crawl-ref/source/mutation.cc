@@ -132,6 +132,7 @@ vector<mutation_type> get_removed_mutations()
         MUT_BLINK,
         MUT_UNBREATHING,
         MUT_GOURMAND,
+        MUT_AWKWARD_TONGUE,
 #endif
     };
 

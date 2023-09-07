@@ -3810,8 +3810,7 @@ bool read(item_def* scroll, dist *target)
     // For cancellable scrolls leave printing this message to their
     // respective functions.
     const string pre_succ_msg =
-            make_stringf("As you%s read the %s, it %s.",
-                         you.has_mutation(MUT_AWKWARD_TONGUE) ? " slowly" : "",
+            make_stringf("As you read the %s, it %s.",
                           scroll->name(DESC_QUALNAME).c_str(),
                          which_scroll == SCR_FOG ? "dissolves into smoke" : "crumbles to dust");
     if (!_is_cancellable_scroll(which_scroll))
@@ -4060,13 +4059,6 @@ bool read(item_def* scroll, dist *target)
             dec_mitm_item_quantity(scroll->index(), 1);
 
         count_action(CACT_USE, OBJ_SCROLLS);
-
-        if (you.has_mutation(MUT_AWKWARD_TONGUE))
-        {
-            you.time_taken = div_rand_round(you.time_taken * 3, 2);
-            if (which_scroll == SCR_REVELATION) // ew
-                you.duration[DUR_REVELATION] = you.time_taken + 1;
-        }
     }
 
     if (!alreadyknown

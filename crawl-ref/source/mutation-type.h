@@ -287,7 +287,9 @@ enum mutation_type
     MUT_FAITH,
     MUT_ROLLPAGE,
     MUT_LONG_TONGUE,
+#if TAG_MAJOR_VERSION == 34
     MUT_AWKWARD_TONGUE,
+#endif
     MUT_NO_FORMS,
     MUT_ACROBATIC,
     NUM_MUTATIONS,

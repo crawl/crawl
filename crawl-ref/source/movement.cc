@@ -554,6 +554,9 @@ static coord_def _rampage_destination(coord_def move, monster* target)
 /// What can the player rampage towards in the given direction, if anything?
 monster* get_rampage_target(coord_def move)
 {
+    if (!you.rampaging())
+        return nullptr;
+
     // Don't rampage if the player has status effects that should prevent it.
     if (you.is_nervous()
         || you.confused()
@@ -729,6 +732,7 @@ static spret _rampage_forward(coord_def move)
         behaviour_event(mon_target, ME_ALERT, &you, you.pos());
 
     // Lastly, apply post-move effects unhandled by move_player_to_grid().
+    apply_rampage_heal(mon_target);
     apply_barbs_damage(true);
     remove_ice_movement();
     you.clear_far_engulf(false, true);
@@ -855,6 +859,7 @@ void move_player_action(coord_def move)
     }
 
     bool rampaged = false;
+    const monster* rampage_targ_monst = get_rampage_target(move);
 
     if (you.rampaging())
     {
@@ -1097,6 +1102,8 @@ void move_player_action(coord_def move)
             _clear_constriction_data();
             _mark_potential_pursuers(targ);
             move_player_to_grid(targ, true);
+            if (rampaged && rampage_targ_monst)
+                apply_rampage_heal(rampage_targ_monst);
             apply_barbs_damage();
             remove_ice_movement();
             you.clear_far_engulf(false, true);

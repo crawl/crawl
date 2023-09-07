@@ -383,6 +383,17 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
+    case DUR_RAMPAGE_HEAL:
+    {
+        const int rampage_heal_str = you.props[RAMPAGE_HEAL_KEY].get_int();
+        if (rampage_heal_str > 0)
+        {
+            inf.light_colour = LIGHTMAGENTA;
+            inf.light_text   = make_stringf("Regen (%d)", rampage_heal_str);
+        }
+        break;
+    }
+
     case STATUS_INVISIBLE:
         _describe_invisible(inf);
         break;

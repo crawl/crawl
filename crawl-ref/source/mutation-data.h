@@ -994,6 +994,12 @@ static const mutation_def mut_data[] =
   {"You now curl defensively after being hit.", "", ""},
   {"", "", ""},
 },
+
+{ MUT_AWKWARD_TONGUE, 0, 1, mutflag::bad, false, "awkward tongue",
+  {"Your tongue gives you trouble enunciating. (1.5x scroll delay)", "", ""},
+  {"Your tongue begins to flop around amusingly.", "", ""},
+  {"Your tongue regains its customary placidity.", "", ""},
+},
 #endif
 
 { MUT_ARMOURED_TAIL, 0, 1, mutflag::good, true,
@@ -1004,12 +1010,20 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_ROLLPAGE, 0, 1, mutflag::good, false,
+{ MUT_ROLLPAGE, 0, 2, mutflag::good, false,
   "roll",
 
-  {"You roll when moving toward enemies. (Rampage)", "", ""},
-  {"", "", ""},
-  {"", "", ""},
+  {"You roll when moving toward enemies. (Rampage)",
+   "You roll and regenerate health when moving toward enemies. (Rampage Heal)",
+   ""},
+
+  {"You begin to roll when moving toward enemies.",
+   "You begin to regenerate health when rolling toward enemies.",
+   ""},
+
+  {"You can no longer roll toward enemies.",
+   "You can no longer regenerate health when rolling toward enemies.",
+   ""},
 },
 
 { MUT_SHAGGY_FUR, 2, 3, mutflag::good, true,
@@ -2440,12 +2454,6 @@ static const mutation_def mut_data[] =
   {"Your long tongue fully drains potion bottles. (2x potion effects)", "", ""},
   {"Your tongue grows exceptionally long.", "", ""},
   {"Your tongue shrinks into a sad, ordinary nub.", "", ""},
-},
-
-{ MUT_AWKWARD_TONGUE, 0, 1, mutflag::bad, false, "awkward tongue",
-  {"Your tongue gives you trouble enunciating. (1.5x scroll delay)", "", ""},
-  {"Your tongue begins to flop around amusingly.", "", ""},
-  {"Your tongue regains its customary placidity.", "", ""},
 },
 
 };

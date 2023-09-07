@@ -1629,10 +1629,10 @@ Armataurs (At)
   terrorize the lands outside the Dungeon.
 
   Armataurs instinctively roll when moving toward foes, getting a free move.
-  Their long, nimble tongues drink every last drop from potions, doubling
-  their effects, but the strange syllables of magical scrolls slow them down.
-  They have great aptitudes with armour and shields, though their body shape
-  reduces the protection offered by body armour early on.
+  Their long, nimble tongues drink every last drop from potions, doubling their
+  effects. They have great aptitudes with armour and shields, though their body
+  shape reduces the protection offered by body armour early on. At higher levels
+  they regenerate health when rolling, making them truly resilient fighters.
 
 Gnolls (Gn)
   Gnolls are a species of caniform humanoids originally hailing from the arid
