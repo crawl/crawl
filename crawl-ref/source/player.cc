@@ -5006,10 +5006,11 @@ static int _apply_descent_debt(int gold)
     if (you.props.exists(DESCENT_DEBT_KEY))
     {
         int &debt = you.props[DESCENT_DEBT_KEY].get_int();
-        if (gold > debt)
+        if (gold >= debt)
         {
+            gold = gold - debt;
             you.props.erase(DESCENT_DEBT_KEY);
-            return gold - debt;
+            return gold;
         }
         debt -= gold;
         return 0;
