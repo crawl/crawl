@@ -96,10 +96,11 @@ static string _score_file_name()
     return ret;
 }
 
-static string _log_file_name()
+static string _log_file_name(bool milestones=false)
 {
     return catpath(Options.shared_dir,
-        "logfile" + crawl_state.game_type_qualifier());
+        (milestones ? "milestones" : "logfile")
+        + crawl_state.game_type_qualifier());
 }
 
 int hiscores_new_entry(const scorefile_entry &ne)
@@ -3095,8 +3096,8 @@ void mark_milestone(const string &type, const string &milestone,
 #endif
 
     const string xlog_line = xl.xlog_line();
-    const string milestone_file = catpath(
-        Options.save_dir, "milestones" + crawl_state.game_type_qualifier());
+    const string milestone_file = _log_file_name(true);
+
     if (FILE *fp = lk_open("a", milestone_file))
     {
         fprintf(fp, "%s\n", xlog_line.c_str());
