@@ -3903,8 +3903,10 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
         }
 
         mspec.genweight = find_weight(mon_str);
-        if (mspec.genweight == TAG_UNFOUND || mspec.genweight <= 0)
+        if (mspec.genweight == TAG_UNFOUND)
             mspec.genweight = 10;
+        else if (mspec.genweight <= 0)
+            mspec.genweight = 0;
 
         mspec.generate_awake = strip_tag(mon_str, "generate_awake");
         mspec.patrolling     = strip_tag(mon_str, "patrolling");
