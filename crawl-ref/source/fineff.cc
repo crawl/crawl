@@ -32,6 +32,7 @@
 #include "mon-place.h"
 #include "ouch.h"
 #include "religion.h"
+#include "spl-damage.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
@@ -908,6 +909,13 @@ void spectral_weapon_fineff::fire()
 
 void lugonu_meddle_fineff::fire() {
     lucy_check_meddling();
+}
+
+void jinxbite_fineff::fire()
+{
+    actor* def = defender();
+    if (def && def->alive())
+        attempt_jinxbite_hit(*def);
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

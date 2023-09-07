@@ -3974,22 +3974,19 @@ static string _get_jinxsprite_message(const monster& victim)
     return msg;
 }
 
-int get_jinxbite_trigger_power(const actor& agent)
+void attempt_jinxbite_hit(actor& victim)
 {
-    int pow = (agent.is_player() ? calc_spell_power(SPELL_JINXBITE) : 50);
-    return pow;
-}
+    if (!victim.is_monster() || victim.wont_attack())
+        return;
 
-bool attempt_jinxbite_hit(const actor& agent, actor& victim)
-{
     // Test victim will to see if we should trigger.
-    // (Return silently if we don't pass the check)
-    int pow = get_jinxbite_trigger_power(agent);
-    if (victim.check_willpower(&agent, pow) > 0)
-        return false;
+    // (Return silently if we don't pass the check.)
+    const int pow = calc_spell_power(SPELL_JINXBITE);
+    if (victim.check_willpower(&you, pow) > 0)
+        return;
 
-    // Show brief animation when we successfully trigger (helps sell to the
-    // player that this is a Will check, also)
+    // Show brief animation when we successfully trigger. (Helps sell to the
+    // player that this is a Will check, also.)
     if ((Options.use_animations & UA_BEAM))
     {
 #ifdef USE_TILE
@@ -4000,35 +3997,25 @@ bool attempt_jinxbite_hit(const actor& agent, actor& victim)
         animation_delay(50, true);
     }
 
-    int dmg = roll_dice(2, 2 + div_rand_round(pow, 25));
+    // XXX TODO: move this out and display it
+    const int dmg = roll_dice(2, 2 + div_rand_round(pow, 25));
 
-    if (victim.is_monster())
+    monster* mons = victim.as_monster();
+    const int drain_dur = random_range(3 * BASELINE_DELAY, 5 * BASELINE_DELAY);
+    mons->add_ench(mon_enchant(ENCH_DRAINED, 2, &you, drain_dur));
+
+    if (you.can_see(victim))
     {
-        monster* mons = victim.as_monster();
-
-        if (you.can_see(victim))
-        {
-            mprf("A giggling sprite leaps out and %s",
-                    _get_jinxsprite_message(*mons).c_str());
-        }
-
-        _player_hurt_monster(*mons, dmg, BEAM_MAGIC);
-
-        if (mons->alive())
-        {
-
-            mons->add_ench(mon_enchant(ENCH_DRAINED, 2, &you, random_range(3, 5)
-                                                              * BASELINE_DELAY));
-            //simple_monster_message(*mons, " reels.");
-        }
+        mprf("A giggling sprite leaps out and %s",
+                _get_jinxsprite_message(*mons).c_str());
     }
 
-    // Drain some duration from the effect every time we spawn a sprite
+    _player_hurt_monster(*mons, dmg, BEAM_MAGIC);
+
+    // Drain some duration every time we spawn a sprite.
     you.duration[DUR_JINXBITE] -= 40;
     if (you.duration[DUR_JINXBITE] < 1)
         you.duration[DUR_JINXBITE] = 1;
-
-    return true;
 }
 
 void foxfire_attack(const monster *foxfire, const actor *target)

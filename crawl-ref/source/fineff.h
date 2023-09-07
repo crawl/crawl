@@ -515,4 +515,21 @@ protected:
     lugonu_meddle_fineff() : final_effect(nullptr, nullptr, coord_def()) { }
 };
 
+class jinxbite_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &/*a*/) const override { return false; };
+    void fire() override;
+
+    static void schedule(const actor *defend)
+    {
+        final_effect::schedule(new jinxbite_fineff(defend));
+    }
+protected:
+    jinxbite_fineff(const actor *defend)
+        : final_effect(nullptr, defend, coord_def())
+    {
+    }
+};
+
 void fire_final_effects();

@@ -3605,7 +3605,7 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
 
     if (you.duration[DUR_JINXBITE])
     {
-        const int pow = get_jinxbite_trigger_power(you);
+        const int pow = calc_spell_power(SPELL_JINXBITE);
         const int wl = you.wearing_ego(EQ_ALL_ARMOUR, SPARM_GUILE) ?
             guile_adjust_willpower(mi.willpower()) : mi.willpower();
         descs.emplace_back(make_stringf("chance to call a sprite on attack: %d%%",

@@ -1736,13 +1736,8 @@ actor &attack::stat_source() const
     return *summoner;
 }
 
-// Attempt to trigger jinxbite, if it is active for the attacker.
 void attack::maybe_trigger_jinxbite()
 {
-    if (attacker->is_player() && you.duration[DUR_JINXBITE]
-        && defender->alive()
-        && !defender->wont_attack() && defender->willpower() != WILL_INVULN)
-    {
-        attempt_jinxbite_hit(*attacker, *defender);
-    }
+    if (attacker->is_player() && you.duration[DUR_JINXBITE])
+        jinxbite_fineff::schedule(defender);
 }

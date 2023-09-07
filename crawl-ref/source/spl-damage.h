@@ -148,5 +148,4 @@ vector<coord_def> find_near_hostiles(int range, bool affect_invis);
 int siphon_essence_range();
 bool siphon_essence_affects(const monster &m);
 
-int get_jinxbite_trigger_power(const actor& agent);
-bool attempt_jinxbite_hit(const actor& agent, actor& victim);
+void attempt_jinxbite_hit(actor& victim);
