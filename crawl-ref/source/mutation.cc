@@ -393,7 +393,6 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         }
     }
 
-    //XXX: Should this make claws inactive too?
     if (you.form == transformation::blade_hands
         && (mut == MUT_PAWS || mut == MUT_CLAWS))
     {
