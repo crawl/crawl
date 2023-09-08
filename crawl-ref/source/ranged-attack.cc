@@ -73,11 +73,15 @@ int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random)
 
     if (teleport && attacker->is_monster())
         modifiers += attacker->as_monster()->get_hit_dice() * 3 / 2;
-    else if (attacker->is_player() && you.duration[DUR_DIMENSIONAL_BULLSEYE]
-             && static_cast<unsigned int>(you.props[BULLSEYE_TARGET_KEY].get_int()) == defender->mid)
+    // XXX: Not reflected in visible to-hit display.
+    else if (defender && attacker->is_player()
+             && you.duration[DUR_DIMENSIONAL_BULLSEYE]
+             && (mid_t)you.props[BULLSEYE_TARGET_KEY].get_int()
+                 == defender->mid)
     {
-        modifiers += maybe_random_div(calc_spell_power(SPELL_DIMENSIONAL_BULLSEYE),
-                                      BULLSEYE_TO_HIT_DIV, random);
+        modifiers += maybe_random_div(
+                         calc_spell_power(SPELL_DIMENSIONAL_BULLSEYE),
+                         BULLSEYE_TO_HIT_DIV, random);
     }
 
     // Duplicates describe.cc::_to_hit_pct().
