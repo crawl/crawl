@@ -6970,10 +6970,6 @@ int player::has_claws(bool allow_tran) const
         // these transformations bring claws with them
         if (form == transformation::dragon)
             return DRAGON_CLAWS;
-
-        // blade hands override claws
-        if (form == transformation::blade_hands)
-            return 0;
     }
 
     return get_mutation_level(MUT_CLAWS, allow_tran);
