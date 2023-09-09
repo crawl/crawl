@@ -18,6 +18,8 @@ const int UMBRA_TO_HIT_MALUS = -3;
 const int CONFUSION_TO_HIT_MALUS = -5;
 const int TRANSLUCENT_SKIN_TO_HIT_MALUS = -2;
 
+const int BULLSEYE_TO_HIT_DIV = 6;
+
 class attack
 {
 // Public Properties
