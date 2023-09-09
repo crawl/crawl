@@ -1545,13 +1545,10 @@ static bool _do_wield_weapon(item_def *to_wield, bool adjust_time_taken)
 #endif
             canned_msg(MSG_EMPTY_HANDED_NOW);
 
-            // Switching to bare hands is extra fast.
+            // Switching to bare hands is the same speed as other weapon swaps.
             you.turn_is_over = true;
             if (adjust_time_taken)
-            {
-                you.time_taken *= 3;
-                you.time_taken /= 10;
-            }
+                you.time_taken /= 2;
         }
         else
             canned_msg(MSG_EMPTY_HANDED_ALREADY);
