@@ -5374,6 +5374,7 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
             animation_delay(25, true);
     }
 
+    bool made_lava = false;
     for (coord_def pos : affected)
     {
         beam.source = pos;
@@ -5383,12 +5384,15 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
         switch (beam.flavour)
         {
             case BEAM_LAVA:
-                if (env.grid(pos) == DNGN_FLOOR && !actor_at(pos) && coinflip())
+                if (env.grid(pos) == DNGN_FLOOR && !actor_at(pos)
+                    && (!made_lava || coinflip()))
                 {
                     temp_change_terrain(
                         pos, DNGN_LAVA,
                         random2(14) * BASELINE_DELAY,
                         TERRAIN_CHANGE_FLOOD);
+
+                    made_lava = true;
                 }
                 break;
             case BEAM_AIR:
