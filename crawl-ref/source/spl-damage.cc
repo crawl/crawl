@@ -3892,6 +3892,11 @@ spret cast_starburst(int pow, bool fail, bool tracer)
         beam.target = you.pos() + offset;
         if (!tracer && !player_tracer(ZAP_BOLT_OF_FIRE, pow, beam))
             return spret::abort;
+        // If the player has already answered yes to shooting at at least one
+        // friendly, don't make them answer the question again for friendlies
+        // in every other direction.
+        else if (!tracer && beam.friend_info.dont_stop)
+            break;
 
         if (tracer)
         {

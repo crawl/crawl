@@ -284,6 +284,7 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
     pbolt.attitude      = ATT_FRIENDLY;
     pbolt.thrower       = KILL_YOU_MISSILE;
     pbolt.overshoot_prompt = false;
+    pbolt.passed_target = false;
 
     // Init tracer variables.
     pbolt.friend_info.reset();
