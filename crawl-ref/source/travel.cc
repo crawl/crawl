@@ -530,6 +530,9 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
             return true;
     }
 
+    if (grid == DNGN_BINDING_SIGIL)
+        return false;
+
     if (!try_fallback && _feat_is_blocking_door(levelmap_cell.feat()))
         return false;
 
