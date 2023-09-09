@@ -1562,7 +1562,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.damage      = dice_def(3, 24);
         beam.hit         = AUTOMATIC_HIT;
         beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
-        beam.ex_size     = 2;
+        beam.ex_size     = 1;
         break;
 
     case SPELL_ERUPTION:
@@ -1570,7 +1570,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.damage      = eruption_damage();
         beam.hit         = AUTOMATIC_HIT;
         beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
-        beam.ex_size     = 2;
+        beam.ex_size     = 1;
         break;
 
     default:
