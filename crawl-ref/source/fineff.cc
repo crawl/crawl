@@ -913,9 +913,9 @@ void lugonu_meddle_fineff::fire() {
 
 void jinxbite_fineff::fire()
 {
-    actor* def = defender();
-    if (def && def->alive())
-        attempt_jinxbite_hit(*def);
+    actor* defend = defender();
+    if (defend && defend->alive())
+        attempt_jinxbite_hit(*defend);
 }
 
 // Effects that occur after all other effects, even if the monster is dead.
