@@ -57,7 +57,7 @@ local books = {
 "Honourable_Companions owner:Okawaru numspells:5 spells:foxfire&"
   .. "fulminant_prism&iskenderun's_battlesphere&conjure_ball_lightning&"
   .. "orb_of_destruction",
-"How_To_Cook_Stone_Soup numspells:5 spells:freeze&searing_ray&"
+"Cookery numspells:5 spells:freeze&searing_ray&"
   .. "scorch&ozocubu's_refrigeration&summon_cactus_giant",
 "Legendary_Spells,_Part_II numspells:6 spells:gell's_gravitas&"
   .. "leda's_liquefaction&lee's_rapid_deconstruction&iskenderun's_battlesphere&"
