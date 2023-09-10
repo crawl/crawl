@@ -253,9 +253,10 @@ spret cast_jinxbite(int pow, bool fail)
          you.duration[DUR_JINXBITE] ? "more" : "some");
 
     int dur = random_range(9, 15) + div_rand_round(pow, 4);
+    int max = 15 + div_rand_round(pow, 4);
 
     you.increase_duration(DUR_JINXBITE, dur);
-    you.increase_duration(DUR_LOWERED_WL, dur * 2, 0, "You feel your willpower being sapped.");
+    you.increase_duration(DUR_LOWERED_WL, dur * 2, max * 2, "You feel your willpower being sapped.");
 
     return spret::success;
 }
