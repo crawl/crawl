@@ -7163,7 +7163,7 @@ xx.qpppq.xx
 ENDMAP
 
 NAME:    nicolae_fountain_basement
-TAGS:    transparent allow_dup luniq
+TAGS:    transparent allow_dup luniq no_descent
 DEPTH:   D:5-, Depths:2-, Snake:2-, Elf:2-, Crypt:2-
 KMASK:   -'cnTUVY0%{[( = opaque
 SHUFFLE: DE/TF
