@@ -115,7 +115,7 @@ const Branch branches[NUM_BRANCHES] =
       nullptr,
       GREEN, BROWN,
       'M', { RUNE_SLIME }, branch_noise::quiet, 7,
-      {BRANCH_VAULTS } },
+      {BRANCH_LAIR, BRANCH_VAULTS } },
 
     { BRANCH_VAULTS, BRANCH_DUNGEON, 13, 14, 5, 19,
       brflag::dangerous_end,
