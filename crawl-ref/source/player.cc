@@ -7659,6 +7659,10 @@ void player::increase_duration(duration_type dur, int turns, int cap,
         mpr(msg);
     cap *= BASELINE_DELAY;
 
+    // If we are already over the cap, do not increase or decrease duration.
+    if (cap && duration[dur] > cap)
+        return;
+
     duration[dur] += turns * BASELINE_DELAY;
     if (cap && duration[dur] > cap)
         duration[dur] = cap;
