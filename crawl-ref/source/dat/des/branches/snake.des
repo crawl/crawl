@@ -1011,7 +1011,7 @@ wwwWwWww
 ENDMAP
 
 NAME:   minmay_snake_river
-TAGS:   no_monster_gen generate_awake
+TAGS:   no_monster_gen generate_awake no_descent
 ORIENT: south
 KITEM:  2 = * / nothing
 KITEM:  3 = |
@@ -1049,8 +1049,8 @@ MARKER: 3 = lua:fog_machine { cloud_type = "noxious fumes", pow_min = 5, \
 MAP
      ...
     .....
-   ..+++..
-  ..m+2+m..
+   ..===..
+  ..m=2=m..
   ..mm1mm..
  ..mm111mm..
 ..mm11111mm..
@@ -1360,7 +1360,7 @@ x..YY.xxx..YY.xxxxxxxxx.@.
 ENDMAP
 
 NAME:    nicolae_snake_salamander_stairs
-TAGS:    no_monster_gen
+TAGS:    no_monster_gen no_descent
 DEPTH:   Snake, !Snake:$
 : if you.depth() < 2 then
 KMONS:   1 = salamander mystic / salamander tyrant w:5
@@ -1457,6 +1457,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_snake_attic_fulla_snakes
+TAGS:    no_descent
 DEPTH:   Snake, !Snake:$
 ORIENT:  northeast
 KITEM:   2 = *
@@ -1924,7 +1925,7 @@ NAME:    nicolae_snake_shooting_gallery
 TAGS:    no_pool_fixup transparent
 DEPTH:   Snake, !Snake:$
 ORIENT:  float
-ITEM:    shortbow / orcbow / longbow w:4 / hand crossbow w:1 / \
+ITEM:    shortbow / orcbow / longbow w:4 / hand cannon w:1 / \
          arbalest w:6 / triple crossbow w:1
 MONS:    naga sharpshooter
 SUBST:   s = 1'

@@ -1231,6 +1231,8 @@ static void _make_derived_undead(monster* mons, bool quiet,
                     0,
                     spell, god);
     mg.set_base(mons->type);
+    if (god == GOD_KIKUBAAQUDGHA) // kiku wrath
+        mg.extra_flags |= MF_NO_REWARD;
 
     if (!mons->mname.empty() && !(mons->flags & MF_NAME_NOCORPSE))
         mg.mname = mons->mname;
@@ -1265,7 +1267,9 @@ static void _make_derived_undead(monster* mons, bool quiet,
             agent_name = agent->as_monster()->full_name(DESC_A);
     }
 
-    const string message = quiet ? "" : _derived_undead_message(*mons, which_z, mist);
+    const string message = quiet ? "" :
+                           god == GOD_KIKUBAAQUDGHA ? "Kikubaaqudha cackles." :
+                           _derived_undead_message(*mons, which_z, mist);
     make_derived_undead_fineff::schedule(mons->pos(), mg,
             mons->get_experience_level(), agent_name, message);
 }
@@ -1397,6 +1401,15 @@ static bool _reaping(monster &mons)
     return _mons_reaped(*killer, mons);
 }
 
+static void _kiku_wrath_raise(monster &mons, bool quiet, bool corpse_gone)
+{
+    monster_type which_z = MONS_SPECTRAL_THING;
+    if (!corpse_gone && mons_can_be_zombified(mons) && !one_chance_in(3))
+        which_z = coinflip() ? MONS_ZOMBIE : MONS_SIMULACRUM;
+    _make_derived_undead(&mons, quiet, which_z, BEH_HOSTILE,
+                         SPELL_NO_SPELL, GOD_KIKUBAAQUDGHA);
+}
+
 static bool _apply_necromancy(monster &mons, bool quiet, bool corpse_gone,
                               bool in_los, bool corpseworthy)
 {
@@ -1407,6 +1420,12 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool corpse_gone,
         _make_derived_undead(&mons, quiet, MONS_SIMULACRUM,
                              SAME_ATTITUDE(&mons),
                              SPELL_BIND_SOULS, GOD_NO_GOD);
+        return true;
+    }
+
+    if (corpseworthy && you.penance[GOD_KIKUBAAQUDGHA] && one_chance_in(3))
+    {
+        _kiku_wrath_raise(mons, quiet, corpse_gone);
         return true;
     }
 
@@ -1669,6 +1688,9 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     // and webbed monsters
     monster_web_cleanup(mons, true);
+
+    // Lose our bullseye target
+    mons.del_ench(ENCH_BULLSEYE_TARGET, true);
 
     // Clean up any blood from the flayed effect
     if (mons.has_ench(ENCH_FLAYED))

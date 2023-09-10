@@ -381,6 +381,7 @@ static bool _check_fall_down_stairs(const dungeon_feature_type ftype, bool going
     if (!you.airborne()
         && you.confused()
         && !feat_is_escape_hatch(ftype)
+        && !crawl_state.game_is_descent()
         && coinflip())
     {
         const char* fall_where = "down the stairs";
@@ -454,7 +455,7 @@ static void _maybe_use_runes(dungeon_feature_type ftype)
     switch (ftype)
     {
     case DNGN_ENTER_ZOT:
-        if (!you.level_visited(level_id(BRANCH_ZOT, 1)))
+        if (!you.level_visited(level_id(BRANCH_ZOT, 1)) && !crawl_state.game_is_descent())
             _rune_effect(ftype);
         break;
     case DNGN_EXIT_VAULTS:
@@ -762,6 +763,12 @@ void floor_transition(dungeon_feature_type how,
         jiyva_end_oozemancy();
     if (you.duration[DUR_NOXIOUS_BOG])
         you.duration[DUR_NOXIOUS_BOG] = 0;
+    if (you.duration[DUR_DIMENSIONAL_BULLSEYE])
+    {
+        monster* targ = monster_by_mid(you.props[BULLSEYE_TARGET_KEY].get_int());
+        if (targ)
+            targ->del_ench(ENCH_BULLSEYE_TARGET);
+    }
 
     // Fire level-leaving trigger.
     leaving_level_now(how);
@@ -1007,6 +1014,10 @@ void floor_transition(dungeon_feature_type how,
         _new_level_amuses_xom(how, whence, shaft,
                               (shaft ? whither.depth - old_level.depth : 1),
                               !forced);
+
+        // scary hack!
+        if (crawl_state.game_is_descent() && !env.properties.exists(DESCENT_STAIRS_KEY))
+            load_level(how, LOAD_RESTART_GAME, old_level);
     }
 
     // This should maybe go in load_level?

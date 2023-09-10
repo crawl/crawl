@@ -622,7 +622,7 @@ enum weapon_type
 #endif
 
 #if TAG_MAJOR_VERSION > 34
-    WPN_HAND_CROSSBOW,
+    WPN_HAND_CANNON,
 #endif
     WPN_ARBALEST,
 #if TAG_MAJOR_VERSION > 34
@@ -674,7 +674,7 @@ enum weapon_type
 
 #if TAG_MAJOR_VERSION == 34
     WPN_FUSTIBALUS,
-    WPN_HAND_CROSSBOW,
+    WPN_HAND_CANNON,
     WPN_TRIPLE_CROSSBOW,
 
     WPN_CUTLASS,

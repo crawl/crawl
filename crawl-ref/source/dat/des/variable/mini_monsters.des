@@ -105,7 +105,7 @@ ENDMAP
 
 # Beehive which needs digging to access.
 NAME:   hive_lemuel
-TAGS:   no_trap_gen transparent
+TAGS:   no_trap_gen transparent no_descent
 DEPTH:  D:9-, Spider
 MONS:   killer bee, meliai, queen bee, hornet
 KMASK:  1234*R = opaque
@@ -588,7 +588,7 @@ ENDMAP
 # The no_trap_gen tag prevents teleport traps (or shafts) that might set
 # the lindwurms free.
 NAME:   minmay_lindwurm_lava
-TAGS:   no_monster_gen no_trap_gen transparent
+TAGS:   no_monster_gen no_trap_gen transparent no_descent
 DEPTH:  D:8-, Lair:2-
 KMASK:  '*|1> = opaque
 KPROP:  '*|1> = no_tele_into
@@ -1710,7 +1710,7 @@ ENDMAP
 
 # Centaur isle (Lemuel)
 NAME:   centaur_isle
-TAGS:   no_monster_gen no_pool_fixup no_rotate
+TAGS:   no_monster_gen no_pool_fixup no_rotate no_descent
 DEPTH:  D:6-12, Shoals
 MONS:   centaur, yaktaur, faun, centaur warrior
 : if you.absdepth() > 11 then
@@ -1801,7 +1801,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_rotating_lava
-TAGS:   no_monster_gen transparent
+TAGS:   no_monster_gen transparent no_descent
 DEPTH:  D:10-
 MONS:   hell hound, hell knight band, hell knight
 ITEM:   potion of enlightenment ident:type q:3
@@ -2479,7 +2479,7 @@ ENDMAP
 NAME:   hellmonk_jugg_or_not
 DEPTH:  D:13-, Orc:1
 WEIGHT: 3
-TAGS:   no_monster_gen no_item_gen
+TAGS:   no_monster_gen no_item_gen no_descent
 MONS:   juggernaut
 KFEAT:   B = altar_nemelex_xobeh
 SHUFFLE: DE
@@ -2722,6 +2722,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_metal_thing
+TAGS:   no_descent
 DEPTH:  Depths
 MONS:   iron dragon, rust devil
 KPROP:  .1$| = no_tele_into
@@ -3422,7 +3423,7 @@ ENDMAP
 
 # Another Ice Statue vault
 NAME:  ice2_lemuel
-TAGS:  no_pool_fixup no_monster_gen
+TAGS:  no_pool_fixup no_monster_gen no_descent
 DEPTH: D:12-, Depths, !Depths:$, Lair:2-
 KMONS: 1 = ice statue
 KMONS: 2 = white imp / ice beast w:30 / polar bear / nothing w:50
@@ -3525,7 +3526,7 @@ ENDMAP
 
 # Rather shallow depth but you cannot randomly teleport in there.
 NAME:    minmay_crystal_box
-TAGS:    no_monster_gen patrolling transparent
+TAGS:    no_monster_gen patrolling transparent no_descent
 DEPTH:   D:12-, Depths, !Depths:$
 MONS:    crystal guardian, orange crystal statue
 SUBST:   . = .:80 %$*|
@@ -4337,7 +4338,7 @@ MAP
 ENDMAP
 
 NAME:    onia_ninara_dug_in_and_dangerous
-TAGS:    ruin_abyss transparent
+TAGS:    ruin_abyss transparent no_descent
 DEPTH:   D:8-, !D:$, Depths:2-, !Depths:$, Abyss
 SHUFFLE: vcb, AB?/CD!, d<>, de
 SUBST:   A=9, B=8, C=1, D=9
@@ -4480,7 +4481,7 @@ ENDMAP
 # Updated to not hide the loot area behind opaque walls and to scale numbers of
 # monsters/loot in the chamber with depth of placement. -gammafunk
 NAME:   wad_dig_loot
-TAGS:   transparent
+TAGS:   transparent no_descent
 DEPTH:  D:8-, Elf, Depths, !Depths:$
 WEIGHT: 4
 KPROP:  %*8DEF = no_tele_into
@@ -4523,7 +4524,7 @@ vvvvv0....vvvvv
 ENDMAP
 
 NAME:    evilmike_minifort
-TAGS:    misc_elf_vault
+TAGS:    misc_elf_vault no_descent
 DEPTH:   D:9-, Depths, !Depths:$, Elf
 TILE:    x = wall_marble
 COLOUR:  x = white
@@ -5797,7 +5798,7 @@ ENDMAP
 # TODO: this can be hard to place because the boundaries are not passable;
 # maybe add some dead space as a buffer?
 NAME:    kennysheep_island_fort
-TAGS:    no_pool_fixup
+TAGS:    no_pool_fixup no_descent
 DEPTH:   D:8-, Depths:2-, !D:$, !Depths:$
 SHUFFLE: {}'
 KFEAT:   ' = .
@@ -7480,7 +7481,7 @@ ENDMAP
 # The dancing weapon is very out of depth early in D, but digging it out
 # is mostly a deliberate action and there are enough system warnings. (r-i)
 NAME:    sword_in_stone
-TAGS:    no_monster_gen patrolling vaults_hard transparent
+TAGS:    no_monster_gen patrolling vaults_hard transparent no_descent
 DEPTH:   D:5-, Depths, !Depths:$, Vaults, Orc, Elf
 WEIGHT:  3
 KMONS:   A = gnoll sergeant ; trident . scale mail | chain mail . kite shield
@@ -9485,6 +9486,7 @@ ENDMAP
 
 # No, John. You are the door vault
 NAME:   reverse_door_vault
+TAGS:   no_descent
 DEPTH:  Depths:2-
 WEIGHT: 4
 KMONS:  1 = 8
@@ -9509,6 +9511,7 @@ ENDMAP
 
 # Closed-box minivault
 NAME:  minivault_12
+TAGS:  no_descent
 DEPTH: D:8-, Depths, !Depths:$
 KMASK: " = !opaque
 MAP
@@ -9551,7 +9554,7 @@ ENDMAP
 
 # Lava pond
 NAME:  minivault_15
-TAGS:  extra transparent
+TAGS:  extra transparent no_descent
 : if you.in_branch("D") then
 KMONS: 1 = orange crystal statue / obsidian statue / ice statue
 : else

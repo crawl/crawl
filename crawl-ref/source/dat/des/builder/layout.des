@@ -867,6 +867,9 @@ TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
     local iterations
     local boxy = false
     local connected = false
+    if dgn.is_descent() then
+        connected = true
+    end
     if you.in_branch("orc") or you.in_branch("slime") then
         if you.at_branch_bottom() then
             iterations = 600 + crawl.random2(600)

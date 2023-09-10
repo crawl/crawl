@@ -1082,7 +1082,7 @@ static void _equip_regeneration_item(const item_def &item)
 
 bool acrobat_boost_active()
 {
-    return you.wearing(EQ_AMULET, AMU_ACROBAT)
+    return player_acrobatic()
            && you.duration[DUR_ACROBAT]
            && (!you.caught())
            && (!you.is_constricted());
@@ -1197,7 +1197,10 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_ACROBAT:
-        mpr("You feel ready to tumble and roll out of harm's way.");
+        if (you.has_mutation(MUT_TENGU_FLIGHT))
+            mpr("You feel no more acrobatic than usual.");
+        else
+            mpr("You feel ready to tumble and roll out of harm's way.");
         break;
 
     case AMU_MANA_REGENERATION:

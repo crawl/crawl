@@ -1230,6 +1230,7 @@ static void _grab_followers()
     const bool can_follow = branch_allows_followers(you.where_are_you);
 
     int non_stair_using_allies = 0;
+    int non_stair_using_undead = 0;
     int non_stair_using_summons = 0;
 
     monster* dowan = nullptr;
@@ -1253,6 +1254,8 @@ static void _grab_followers()
             non_stair_using_allies++;
             if (fol->is_summoned() || mons_is_conjured(fol->type))
                 non_stair_using_summons++;
+            if (fol->holiness() & MH_UNDEAD)
+                non_stair_using_undead++;
         }
     }
 
@@ -1287,9 +1290,11 @@ static void _grab_followers()
         }
         else
         {
+            const bool all_dead = non_stair_using_undead == non_stair_using_allies;
             // Permanent undead are left behind but stay.
-            mprf("Your mindless puppet%s behind to rot.",
-                 non_stair_using_allies > 1 ? "s stay" : " stays");
+            mprf("Your mindless puppet%s behind%s.",
+                 non_stair_using_allies > 1 ? "s stay" : " stays",
+                 all_dead ? " to rot" : "");
         }
     }
 
@@ -2095,7 +2100,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         // games.
         if (old_level.depth != -1)
         {
-            _grab_followers();
+            if (!crawl_state.game_is_descent())
+                _grab_followers();
 
             if (env.level_state & LSTATE_DELETED)
                 delete_level(old_level), dprf("<lightmagenta>Deleting level.</lightmagenta>");
@@ -2195,7 +2201,15 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (make_changes || load_mode == LOAD_RESTART_GAME)
         env.markers.activate_all();
 
-    if (make_changes && env.elapsed_time && !just_created_level)
+    const bool descent_downclimb = crawl_state.game_is_descent()
+                                   && feat_stair_direction(stair_taken) == CMD_GO_DOWNSTAIRS
+                                   && !feat_is_descent_exitable(stair_taken);
+    const bool descent_peek = descent_downclimb
+                              && !feat_is_escape_hatch(stair_taken)
+                              && stair_taken != DNGN_TRAP_SHAFT
+                              && old_level.branch == you.where_are_you;
+
+    if (make_changes && env.elapsed_time && !just_created_level && !descent_peek)
         update_level(you.elapsed_time - env.elapsed_time);
 
     // Apply all delayed actions, if any. TODO: logic for marshalling this is
@@ -2229,6 +2243,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (just_created_level && make_changes)
         replace_boris();
 
+    if (descent_peek && just_created_level)
+        descent_reveal_stairs();
+
     if (make_changes)
     {
         // Tell stash-tracker and travel that we've changed levels.
@@ -2251,12 +2268,21 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Things to update for player entering level
     if (load_mode == LOAD_ENTER_LEVEL)
     {
-        // new stairs have less wary monsters, and we don't
-        // want them to attack players quite as soon.
-        // (just_created_level only relevant if we crashed.)
-        you.time_taken *= fast || just_created_level ? 1 : 2;
-
-        you.time_taken = div_rand_round(you.time_taken * 3, 4);
+        if (descent_downclimb)
+        {
+            you.time_taken = 0; // free takebacks
+            if (!descent_peek)
+                descent_crumble_stairs(); // no sense waiting
+        }
+        else
+        {
+            // new stairs have less wary monsters, and we don't
+            // want them to attack players quite as soon.
+            // (just_created_level only relevant if we crashed.)
+            const bool fast_entry = fast || just_created_level;
+            you.time_taken *= fast_entry ? 1 : 2;
+            you.time_taken = div_rand_round(you.time_taken * 3, 4);
+        }
 
         if (just_created_level)
             run_map_epilogues();

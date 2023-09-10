@@ -969,7 +969,7 @@ ENDMAP
 
 NAME:    st_sunken_temple
 DEPTH:   Shoals, !Shoals:$
-TAGS:    no_pool_fixup
+TAGS:    no_pool_fixup no_descent
 KMONS:   1 = merfolk javelineer
 KMONS:   2 = merfolk impaler
 KMONS:   3 = merfolk aquamancer
@@ -1103,7 +1103,7 @@ xxxcxxxxxcxxxxW@Wxxxxcxxx
 ENDMAP
 
 NAME:   nicolae_shoals_so_close
-TAGS:   no_pool_fixup water_ok no_item_gen no_trap_gen no_monster_gen
+TAGS:   no_pool_fixup water_ok no_item_gen no_trap_gen no_monster_gen no_descent
 DEPTH:  Shoals, !Shoals:$
 KPROP:  YycfZ. = no_tide
 KPROP:  ZYcf. = no_tele_into
@@ -1168,7 +1168,7 @@ WWWWWWW
 ENDMAP
 
 NAME:    nicolae_shoals_isolated_beach
-TAGS:    water_ok no_pool_fixup
+TAGS:    water_ok no_pool_fixup no_descent
 DEPTH:   Shoals:2-
 NSUBST:  { = 1:{ / *:.
 SUBST:   b = .wW, r = ..Wxx
@@ -1469,7 +1469,7 @@ xxx...IHGFWYWWWYWFGHI..xxx
 ENDMAP
 
 NAME:   argonaut_golden_fleece
-TAGS:   no_pool_fixup no_trap_gen no_monster_gen no_item_gen
+TAGS:   no_pool_fixup no_trap_gen no_monster_gen no_item_gen no_descent
 DEPTH:  Shoals, !Shoals:$
 ORIENT: northwest
 # Fudging the myth a bunch, due to it being weak
@@ -1853,7 +1853,7 @@ MAP
 ENDMAP
 
 NAME:   nicolae_shoals_hidden_pirate_stash
-TAGS:   no_trap_gen no_monster_gen
+TAGS:   no_trap_gen no_monster_gen no_descent
 DEPTH:  Shoals, !Shoals:$
 ITEM:   gold good_item
 ITEM:   rapier good_item w:70 / captain's cutlass
@@ -1877,7 +1877,7 @@ xx''''xx
 ENDMAP
 
 NAME:   nicolae_shoals_lighthouse
-TAGS:   no_pool_fixup no_trap_gen water_ok
+TAGS:   no_pool_fixup no_trap_gen water_ok no_descent
 DEPTH:  Shoals, !Shoals:$
 ORIENT: northwest
 KPROP:  123DL*n'} = no_tide
@@ -1928,7 +1928,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_shoals_mermall
-TAGS:    water_ok no_tide no_pool_fixup
+TAGS:    water_ok no_tide no_pool_fixup no_descent
 ORIENT:  northwest
 KPROP:   DEF = no_tele_into
 KMONS:   1 = merfolk
@@ -2207,7 +2207,7 @@ ENDMAP
 
 NAME:    ebering_ghost_davey_jones
 ORIENT:  float
-TAGS:    water_ok
+TAGS:    water_ok no_descent
 KMONS:   O = player_ghost
 KITEM:   O = any ring randart w:20 / ring of the octopus king w:1
 KMONS:   1 = snapping turtle / sea snake / alligator snapping turtle w:2
@@ -2265,7 +2265,7 @@ WWccccnnnccccWW
 ENDMAP
 
 NAME:   dreamdust_from_the_deep
-TAGS:   no_monster_gen no_item_gen no_tide patrolling
+TAGS:   no_monster_gen no_item_gen no_tide patrolling no_descent
 DEPTH:  Shoals, !Shoals:$
 ORIENT: northwest
 ITEM:   any ring randart
@@ -2342,7 +2342,7 @@ _.......xxx......._
 ENDMAP
 
 NAME:   nicolae_shoals_offshore_bank_account
-TAGS:   water_ok no_pool_fixup transparent
+TAGS:   water_ok no_pool_fixup transparent no_descent
 DEPTH:  Shoals
 ORIENT: west
 KITEM:  pr = $ w:80 / any jewellery
@@ -2482,8 +2482,8 @@ ENDMAP
 NAME:   nicolae_shoals_the_drawing_of_the_three
 TAGS:   transparent
 DEPTH:  Shoals
-# No pistols, either, so it will have to be hand crossbows.
-KITEM:  r = hand crossbow
+# A hand cannon is a pistol with some sequins glued on.
+KITEM:  r = hand cannon
 KMONS:  1 = snapping turtle w:15 / alligator snapping turtle w:5
 NSUBST: . = 2=1 / 2=1. / 2=r / .
 MAP

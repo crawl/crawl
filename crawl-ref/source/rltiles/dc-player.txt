@@ -561,6 +561,7 @@ sniper SNIPER
 crossbow_fire FIERY_DEVIL
 condemnation CONDEMNATION
 zephyr ZEPHYR
+mule MULE
 sceptre_of_torment SCEPTRE_OF_TORMENT
 # start TAG_MAJOR_VERSION == 34
 botono BOTONO
@@ -775,7 +776,9 @@ orcbow1
 orcbow3
 great_bow GREAT_BOW
 storm_bow STORM_BOW
-hand_crossbow HAND_CROSSBOW
+hand_cannon HAND_CANNON
+hand_cannon2
+hand_cannon3
 arbalest ARBALEST
 arbalest_two ARBALEST2
 arbalest_three ARBALEST3

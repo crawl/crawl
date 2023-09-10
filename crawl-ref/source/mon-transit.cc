@@ -166,6 +166,9 @@ static monster* _place_lost_monster(follower &f)
         mons->flags &= ~MF_JUST_SUMMONED;
         // Don't keep chasing forever.
         mons->props.erase(OKAWARU_DUEL_ABANDONED_KEY);
+        // The status should already have been removed from the player, but
+        // this prevents an erroneous status indicator sticking on the monster
+        mons->del_ench(ENCH_BULLSEYE_TARGET);
         return update_monster(*mons, turns);
     }
     else

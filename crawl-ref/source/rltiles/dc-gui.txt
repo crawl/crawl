@@ -7,6 +7,7 @@
 
 %sdir gui/startup
 stonesoup STARTUP_STONESOUP
+ironsoup STARTUP_IRONSOUP
 tutorial STARTUP_TUTORIAL
 hints_mode STARTUP_HINTS
 dungeon_sprint STARTUP_SPRINT

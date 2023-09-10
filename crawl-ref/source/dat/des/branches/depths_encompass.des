@@ -222,7 +222,7 @@ default-depth: Depths:2-, !Depths:$
 # Lemuel
 #
 NAME:    lemuel_river_lethe
-TAGS:    no_rotate no_monster_gen no_item_gen uniq_d_encompass
+TAGS:    no_rotate no_monster_gen no_item_gen uniq_d_encompass no_descent
 ORIENT:  encompass
 KITEM:   r = any scroll
 KITEM:   e = any / any good_item w:4

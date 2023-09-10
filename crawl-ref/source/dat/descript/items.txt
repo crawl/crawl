@@ -665,10 +665,11 @@ hand axe
 
 A small axe.
 %%%%
-hand crossbow
+hand cannon
 
-A compact piece of machinery, used for firing bolts. It takes some time to load
-and fire.
+A machine that fires bolts via applied alchemy. Some enchant their projectiles
+to fall forward instead of down, others bewitch the bolts with a fatal attraction
+to their targets. All are slow, loud, and blast out thick smoke with each shot.
 %%%%
 hat
 
@@ -1137,7 +1138,8 @@ monsters are also immune.
 %%%%
 scroll of fog
 
-A scroll that surrounds the reader with a dense cloud of fog.
+A scroll that surrounds the reader with a dense cloud of fog, which can block
+vision temporarily. The fog takes a short time to fully spill out.
 %%%%
 scroll of identify
 
@@ -1146,7 +1148,8 @@ A useful magic scroll which identifies the properties of any unknown object.
 scroll of immolation
 
 A scroll that fills the creatures around the reader with an unstable and
-powerful inner flame.
+powerful inner flame. This fire is released any time the victims are hit, and
+explosively released upon their death. Giant creatures cause bigger explosions.
 %%%%
 scroll of noise
 

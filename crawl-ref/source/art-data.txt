@@ -1806,8 +1806,7 @@ TILE:     urand_dreamdust
 BOOL:     special, nogen
 
 NAME:     hand cannon "Mule"
-TYPE:     hand cannon
-OBJ:      OBJ_WEAPONS/WPN_HAND_CROSSBOW
+OBJ:      OBJ_WEAPONS/WPN_HAND_CANNON
 TILE:     spwpn_mule
 TILE_EQ:  mule
 PLUS:     7

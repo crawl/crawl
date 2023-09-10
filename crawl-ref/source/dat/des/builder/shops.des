@@ -108,7 +108,7 @@ T.T
 ENDMAP
 
 NAME:   shop_statue
-TAGS:   allow_dup extra shop
+TAGS:   allow_dup extra shop no_descent
 KFEAT:  O = any shop
 MAP
 @G.O.<.G@
@@ -154,7 +154,7 @@ b.b
 ENDMAP
 
 NAME: nicolae_shop_statue_plus
-TAGS: allow_dup extra shop
+TAGS: allow_dup extra shop no_descent
 KFEAT: O = any shop
 MAP
    @
@@ -395,7 +395,7 @@ D.}.O.{.D
 ENDMAP
 
 NAME:  nicolae_take_the_stairs
-TAGS:  shop extra
+TAGS:  shop extra no_descent
 DEPTH: D:4-, !D:$, Depths, !Depths:$, Shoals, !Shoals:$, Snake, !Snake:$, \
        Elf, !Elf:$
 KFEAT: O = any shop
@@ -1143,7 +1143,7 @@ ENDMAP
 # Get away from it all.
 NAME: nicolae_island_escapes
 DEPTH: D:7-, !D:$, Depths, !Depths:$, Shoals, !Shoals:$, Swamp, !Swamp:$
-TAGS: no_item_gen no_monster_gen water_ok no_tide no_pool_fixup
+TAGS: no_item_gen no_monster_gen water_ok no_tide no_pool_fixup no_descent
 WEIGHT: 5
 SHUFFLE: Aa/Bb
 SUBST: Aa = t, B = ..t, b = .
@@ -1205,7 +1205,7 @@ KFEAT:  S = weapon shop type:Hydra suffix:Hut count:7 ; falchion ego:flaming | \
     long sword ego:flaming | scimitar ego:flaming | great sword ego:flaming | \
     hand axe ego:flaming | broad axe ego:flaming | war axe ego:flaming | \
     battleaxe ego:flaming | lajatang ego:flaming | halberd ego:flaming | \
-    glaive ego:flaming | hand crossbow ego:freezing | orcbow ego:freezing | \
+    glaive ego:flaming | hand cannon ego:freezing | orcbow ego:freezing | \
     arbalest ego:freezing | shortbow ego:freezing | longbow ego:freezing
 FTILE:  -1wP = floor_lair
 COLOUR: -1 = brown
@@ -1237,7 +1237,7 @@ KFEAT:   S = general shop type:Lightly-Used suffix:Armoury ; \
              damaged ego:none demon trident | \
              damaged ego:none bardiche | \
              damaged ego:none lajatang | \
-             damaged ego:none hand crossbow | \
+             damaged ego:none hand cannon | \
              damaged ego:none triple crossbow | \
              damaged ego:none longbow | \
              damaged ego:none crystal plate armour | \
@@ -1374,7 +1374,7 @@ KFEAT:  S = general shop type:Last-Chance suffix:Deals greed:0 count:7 ; \
  any ring randart w:15 | any amulet randart w:15 | quick blade randart | \
  pearl dragon scales randart | executioner's axe randart | \
  triple sword randart | triple crossbow randart | longbow randart | \
- hand crossbow randart | bardiche randart | eveningstar randart | \
+ hand cannon randart | bardiche randart | eveningstar randart | \
  crystal plate armour randart | any armour good_item randart w:50
 MAP
   t
@@ -1422,7 +1422,7 @@ KITEM:  E = throwing net q:1
 # The slightly-higher weights go to the better weapons, because I'm nice.
 KFEAT:  S = weapon shop type:Firing suffix:Range ; dart w:14 | \
         throwing net w:14 | boomerang  w:14 | javelin w:14 | large rock w:14 \
-        | sling | shortbow | orcbow | longbow | hand crossbow | arbalest | \
+        | sling | shortbow | orcbow | longbow | hand cannon | arbalest | \
         triple crossbow | manual of throwing w:1 | manual of ranged weapons w:1
 NSUBST: D = E / D
 SUBST:  ' = H .:25
@@ -1842,7 +1842,7 @@ local metal_goods = {"ring mail", "scale mail", "chain mail", "plate armour",
    "buckler", "kite shield", "tower shield", "helmet", "rapier", "war axe",
    "short sword", "scimitar", "great sword", "broad axe", "battleaxe", "glaive",
    "morningstar", "dire flail", "great mace", "trident", "arbalest", "bardiche",
-   "executioner's axe", "eveningstar", "lajatang", "hand crossbow",
+   "executioner's axe", "eveningstar", "lajatang", "hand cannon",
    "triple crossbow"}
 local inventory = {}
 for _, good in ipairs(metal_goods) do
@@ -2032,7 +2032,7 @@ ENDMAP
 
 # 3 shops, on different "floors"
 NAME:  nicolae_shop_distant_corner_stores
-TAGS:  transparent luniq_floating_shops extra
+TAGS:  transparent luniq_floating_shops extra no_descent
 DEPTH: D:4-, !D:$, Depths:2-, !Depths:$
 KFEAT: Ss = any shop
 KMASK: {[()]}T`s = opaque

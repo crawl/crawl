@@ -32,6 +32,7 @@
 #include "mon-place.h"
 #include "ouch.h"
 #include "religion.h"
+#include "spl-damage.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
@@ -568,9 +569,16 @@ void explosion_fineff::fire()
     }
 
     if (typ == EXPLOSION_FINEFF_INNER_FLAME)
+    {
+        // Cloud chance scales from 50% at 0 power to 80% at 100 power (the max)
+        int cloud_chance = 50 + div_rand_round(beam.ench_power * 3, 10);
+        int cloud_dur = 5 + div_rand_round(beam.ench_power, 20);
         for (adjacent_iterator ai(beam.target, false); ai; ++ai)
-            if (!cell_is_solid(*ai) && !cloud_at(*ai) && !one_chance_in(5))
-                place_cloud(CLOUD_FIRE, *ai, 10 + random2(10), flame_agent);
+        {
+            if (!cell_is_solid(*ai) && !cloud_at(*ai) && x_chance_in_y(cloud_chance, 100))
+                place_cloud(CLOUD_FIRE, *ai, cloud_dur + random2(cloud_dur), flame_agent);
+        }
+    }
 
     beam.explode();
 
@@ -901,6 +909,13 @@ void spectral_weapon_fineff::fire()
 
 void lugonu_meddle_fineff::fire() {
     lucy_check_meddling();
+}
+
+void jinxbite_fineff::fire()
+{
+    actor* defend = defender();
+    if (defend && defend->alive())
+        attempt_jinxbite_hit(*defend);
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

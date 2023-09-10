@@ -1708,12 +1708,20 @@ _Agnes_rare_
 @The_monster@ asks, "Have you seen my kris anywhere?"
 
 @The_monster@ mutters, "I could really go for a good breadfruit right now."
+%%%%
+Agnes triumphant
+
+@The_monster@ says, "May you follow the Path of Peace in your next life."
 ## END Agnes ##
 %%%%
 ############ ANTAEUS ### A titan demonically corrupted into a hell lord.
 Antaeus
 
 @_hell_lord_taunt_@
+%%%%
+Antaeus triumphant
+
+@The_monster@ says, "Your soul will be trapped in ice for ten thousand years."
 ## END Antaeus
 %%%%
 ############ AMAEMON ### A demonspawn with poisoned words and a poisoned heart
@@ -1760,6 +1768,10 @@ Arachne
 @The_monster@ says @to_foe@, "You'll find yourself a bit attached to my weave."
 
 @The_monster@ says @to_foe@, "No one escapes my webs."
+%%%%
+Arachne triumphant
+
+@The_monster@ says, "All wrapped up."
 %%%%
 ############ ASTERION ### Minotaur of Makhleb
 Asterion
@@ -1824,6 +1836,12 @@ You hear demonic laughter.
 @The_monster@ screams @at_foe@, "What ORB?! I have an entire kingdom!" @player_only@
 
 @The_monster@ screams @at_foe@, "Bow down before your king! Bow! Bow!!" @player_only@
+%%%%
+Asterion triumphant
+
+@The_monster@ screams, "The power of Makhleb!"
+
+@The_monster@ bellows, "I am king! All will kneel!"
 %%%%
 ############ AZRAEL ### efreet
 Azrael
@@ -2065,13 +2083,13 @@ Boris unsummoned
 friendly Boris unsummoned
 
 @Boris unsummoned@
-## END Boris ##
 %%%%
 Boris triumphant
 
 @The_monster@ says, "And that's the last I'll see of you."
 
 @The_monster@ says, "I'd like to see you come back from this one."
+## END Boris ##
 %%%%
 ############ CHUCK ### An avid rock collector.
 Chuck
@@ -6129,6 +6147,12 @@ VISUAL:@The_monster@ toys with @possessive@ hair.
 
 VISUAL:@The_monster@ cries.
 
+VISUAL:@The_monster@ looks as if @subjective@ doubts whether @foe@ exists.
+
+VISUAL:@The_monster@ looks excited.
+
+VISUAL:@The_monster@ looks confused.
+
 @The_monster@ sings.
 
 @The_monster@ sings a strange song.
@@ -6146,6 +6170,14 @@ VISUAL:@The_monster@ cries.
 @The_monster@ cries, "I hate blood and violence."
 
 @The_monster@ cries @to_foe@, "You've killed my pet!"
+
+@The_monster@ screams @at_foe@, "Die, monster!"
+
+@The_monster@ screams @at_foe@, "Give me the Holy Grail!"
+
+@The_monster@ screams @at_foe@, "You killed all those lovely monsters, you murderer!"
+
+@The_monster@ screams @at_foe@, "Hurray!"
 %%%%
 _Psyche_rare_
 
@@ -6156,6 +6188,14 @@ VISUAL:@The_monster@ stares at @foe@ for a moment.
 VISUAL:@The_monster@ bursts into tears.
 
 VISUAL:@The_monster@ sucks @possessive@ thumb.
+
+@The_monster@ asks @foe,@ "You're a monster, aren't you?"
+
+@The_monster@ says @to_foe@, "My Mum always said: 'Kill them all.'"
+
+@The_monster@ screams @at_foe@, "Get ready! I'll kill you! Or something like that..."
+
+@The_monster@ screams @at_foe@, "Red! No, blue!"
 
 @The_monster@ screams @at_foe@, "YOU ARE VIOLATING AREA SECURITY!!!"
 
@@ -6294,7 +6334,7 @@ w:5
 @The_monster@ says @to_foe@, "Don't just stand there! You can move, can't you?"
 ## END Roxanne ##
 %%%%
-############ RUPERT ### A crazy adventurer
+############ RUPERT ### The strongest of the strong, and inexplicably Slavic
 Rupert
 
 @_Rupert_common_@
@@ -6304,31 +6344,42 @@ w:5
 %%%%
 _Rupert_common_
 
-VISUAL:@The_monster@ looks as if @subjective@ doubts whether @foe@ exists.
+VISUAL:@The_monster@ flexes.
 
-VISUAL:@The_monster@ looks excited.
+VISUAL:@The_monster@ pounds @possessive@ chest with @possessive@ fists.
 
-VISUAL:@The_monster@ looks confused.
+VISUAL:Sweat drips down @the_monster@'s chest.
 
-@The_monster@ screams @at_foe@, "Die, monster!"
+@The_monster@ says, "Strength rules this world!"
 
-@The_monster@ screams @at_foe@, "Give me the Holy Grail!"
+@The_monster@ says @to_foe@, "You are weak."
 
-@The_monster@ screams @at_foe@, "You killed all those lovely monsters, you murderer!"
+@The_monster@ says, "I crush you like a bug!"
 
-@The_monster@ screams @at_foe@, "Hurray!"
+@The_monster@ says, "I tear you limb from limb!"
+
+@The_monster@ says @to_foe@, "Killing you is giving me appetite."
 %%%%
 _Rupert_rare_
 
-@The_monster@ asks @foe,@ "You're a monster, aren't you?"
+VISUAL:@The_monster@ does some quick breathing exercises.
 
-@The_monster@ says @to_foe@, "My Mum always said: 'Kill them all.'"
+@The_monster@ asks, "Why wear clothes with body like mine?"
 
-@The_monster@ shouts @at_foe@, "I'm a great and powerful hero!"
+@The_monster@ lets out a booming laugh, sending rocks and debris crashing down.
 
-@The_monster@ screams @at_foe@, "Get ready! I'll kill you! Or something like that..."
+w:3
+@The_monster@ flexes and says, "Free ticket to bow show!"
 
-@The_monster@ screams @at_foe@, "Red! No, blue!"
+@The_monster@ says, "I stay hydrated... with blood of my enemies!"
+
+@The_monster@ says @to_foe@, "You look like me... when I was tiny, weak little boy."
+
+@The_monster@ says @to_foe@, "Your skull will make great drinking cup."
+%%%%
+Rupert triumphant
+
+@The_monster@ roars with triumph.
 ## END Rupert ##
 %%%%
 ############ SAINT ROKA ### orc warlord

@@ -379,7 +379,7 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule, bool for_real) 
     }
 
     saved = max(saved, min(gdr * max_damage / 100, div_rand_round(ac, 2)));
-    if (for_real && (damage > 0) && (saved >= damage) && is_player())
+    if (for_real && (damage > 0) && is_player())
     {
         const item_def *body_armour = slot_item(EQ_BODY_ARMOUR);
         if (body_armour)

@@ -14,6 +14,9 @@ void timeout_tombs(int duration);
 int count_malign_gateways();
 void timeout_malign_gateways(int duration);
 
+void maybe_show_binding_sigil_duration_warning();
+void timeout_binding_sigils();
+
 void timeout_terrain_changes(int duration, bool force = false);
 
 void setup_environment_effects();

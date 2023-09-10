@@ -289,7 +289,7 @@ static void _post_init(bool newc)
     {
         // n.b. temple already generated in setup_game at this point
         if (Options.pregen_dungeon == level_gen_type::full
-            && crawl_state.game_standard_levelgen())
+            && crawl_state.game_has_random_floors())
         {
             pregen_dungeon(level_id(NUM_BRANCHES, -1));
         }
@@ -430,6 +430,8 @@ static const vector<game_modes_menu_item> entries =
     {GAME_TYPE_HINTS, "Hints Mode for Dungeon Crawl",
         "A mostly normal game that provides more advanced hints "
         "than the tutorial."},
+    {GAME_TYPE_DESCENT, "Dungeon Descent",
+        "Mode with a branching, one-way path through the Dungeon." },
     {GAME_TYPE_SPRINT, "Dungeon Sprint",
         "Hard, fixed single level game mode." },
     {GAME_TYPE_INSTRUCTIONS, "Instructions", "Help menu." },
@@ -733,6 +735,7 @@ private:
         switch (selected_game_type)
         {
         case GAME_TYPE_NORMAL:
+        case GAME_TYPE_DESCENT:
         case GAME_TYPE_CUSTOM_SEED:
         case GAME_TYPE_TUTORIAL:
         case GAME_TYPE_SPRINT:
@@ -912,6 +915,7 @@ void UIStartupMenu::menu_item_activated(int id)
     switch (id)
     {
     case GAME_TYPE_NORMAL:
+    case GAME_TYPE_DESCENT:
     case GAME_TYPE_CUSTOM_SEED:
     case GAME_TYPE_TUTORIAL:
     case GAME_TYPE_SPRINT:

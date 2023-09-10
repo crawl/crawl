@@ -131,14 +131,25 @@ bool ugly_thing_mutate(monster& ugly, bool force)
     return true;
 }
 
+// Returns whether an enchantment should be given to split monsters and inherited on merge.
+// TODO: This list is definitely incomplete.
+static bool _should_share_ench(enchant_type type)
+{
+    return type != ENCH_HELD
+           && type != ENCH_GRASPING_ROOTS
+           && type != ENCH_VILE_CLUTCH
+           && type != ENCH_BULLSEYE_TARGET;
+}
+
 // Inflict any enchantments the parent slime has on its offspring,
 // leaving durations unchanged, I guess. -cao
 static void _split_ench_durations(monster* initial_slime, monster* split_off)
 {
     for (const auto &entry : initial_slime->enchantments)
-        // Don't let new slimes inherit being held by a web or net
-        if (entry.second.ench != ENCH_HELD)
+    {
+        if (_should_share_ench(entry.second.ench))
             split_off->add_ench(entry.second);
+    }
 }
 
 // What to do about any enchantments these two creatures may have?
@@ -154,6 +165,9 @@ void merge_ench_durations(monster& initial, monster& merge_to, bool usehd)
 
     for (auto &entry : from_ench)
     {
+        if (!_should_share_ench(entry.second.ench))
+            continue;
+
         // Does the other creature have this enchantment as well?
         const mon_enchant temp = merge_to.get_ench(entry.first);
         // If not, use duration 0 for their part of the average.
@@ -167,7 +181,14 @@ void merge_ench_durations(monster& initial, monster& merge_to, bool usehd)
             entry.second.duration = 1;
 
         if (no_initial)
+        {
             merge_to.add_ench(entry.second);
+
+            // XX: This is ugly special-casing. Is there a way to fold this into
+            //     gaining inner flame in general?
+            if (entry.second.ench == ENCH_INNER_FLAME)
+                merge_to.props[INNER_FLAME_POW_KEY] = initial.props[INNER_FLAME_POW_KEY].get_int();
+        }
         else
             merge_to.update_ench(entry.second);
     }
@@ -1105,6 +1126,10 @@ bool mon_special_ability(monster* mons)
                         mons->summoner;
             mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, actor_by_mid(act),
                                        INFINITE_DURATION));
+
+            // Set guardian golem explosive power the same as old values.
+            // (Should it maybe be lower or scale with spellpower?)
+            mons->props[INNER_FLAME_POW_KEY] = 100;
         }
         break;
 

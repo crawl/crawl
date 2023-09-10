@@ -5,6 +5,8 @@
 class actor;
 class dist;
 
+const int GOLUBRIA_FUZZ_RANGE = 2;
+
 spret cast_disjunction(int pow, bool fail);
 void disjunction_spell();
 
@@ -30,14 +32,13 @@ bool you_teleport_to(const coord_def where,
 bool cell_vetoes_teleport(coord_def cell, bool check_monsters = true,
                           bool wizard_tele = false);
 
-spret cast_portal_projectile(int pow, bool fail);
+spret cast_dimensional_bullseye(int pow, monster *target, bool fail);
 
 spret cast_manifold_assault(int pow, bool fail, bool real = true);
 string weapon_unprojectability_reason();
 
 struct bolt;
 spret cast_apportation(int pow, bolt& beam, bool fail);
-int golubria_fuzz_range();
 bool golubria_valid_cell(coord_def p, bool just_check = false);
 spret cast_golubrias_passage(int pow, const coord_def& where, bool fail);
 

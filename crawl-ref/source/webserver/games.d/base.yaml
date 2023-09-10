@@ -87,6 +87,11 @@ games:
     name: Seeded
     options:
       - -seed
+  - id: descent-web-trunk
+    template: trunk
+    name: Descent
+    options:
+      - -descent
   - id: tut-web-trunk
     template: trunk
     name: Tutorial

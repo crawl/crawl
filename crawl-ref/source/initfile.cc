@@ -738,6 +738,7 @@ const vector<GameOption*> game_options::build_options_list()
         new MultipleChoiceGameOption<game_type>(NEWGAME_NAME(type),
             GAME_TYPE_NORMAL,
             {{"normal", GAME_TYPE_NORMAL},
+             {"descent", GAME_TYPE_DESCENT},
              {"seeded", GAME_TYPE_CUSTOM_SEED},
              {"arena", GAME_TYPE_ARENA},
              {"sprint", GAME_TYPE_SPRINT},
@@ -1204,6 +1205,8 @@ string gametype_to_str(game_type type)
         return "sprint";
     case GAME_TYPE_HINTS:
         return "hints";
+    case GAME_TYPE_DESCENT:
+        return "descent";
     default:
         return "none";
     }
@@ -2468,7 +2471,7 @@ void save_player_name()
 // TODO: update all newgame prefs based on the current char, in this function?
 void save_game_prefs()
 {
-    if (!crawl_state.game_standard_levelgen() || Options.no_save)
+    if (!crawl_state.game_saves_prefs() || Options.no_save)
         return;
     // Read existing preferences
     const newgame_def old_prefs = read_startup_prefs();
@@ -4565,6 +4568,7 @@ enum commandline_option_type
     CLO_SAVE_JSON,
     CLO_GAMETYPES_JSON,
     CLO_EDIT_BONES,
+    CLO_DESCENT,
 #if defined(UNIX) || defined(USE_TILE_LOCAL)
     CLO_HEADLESS,
 #endif
@@ -4616,7 +4620,7 @@ static const char *cmd_ops[] =
     "print-charset", "tutorial", "wizard", "explore", "no-save",
     "no-player-bones", "gdb", "no-gdb", "nogdb", "throttle", "no-throttle",
     "lua-max-memory", "playable-json", "branches-json", "save-json",
-    "gametypes-json", "bones",
+    "gametypes-json", "bones", "descent",
 #if defined(UNIX) || defined(USE_TILE_LOCAL)
     "headless",
 #endif
@@ -5331,6 +5335,8 @@ static string _gametype_to_clo(game_type g)
         return cmd_ops[CLO_ARENA];
     case GAME_TYPE_SPRINT:
         return cmd_ops[CLO_SPRINT];
+    case GAME_TYPE_DESCENT: // no CLO?
+        return cmd_ops[CLO_DESCENT];
     case GAME_TYPE_HINTS: // no CLO?
     case GAME_TYPE_NORMAL:
     default:
@@ -5847,6 +5853,11 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_SPRINT:
             if (!rc_only)
                 Options.game.type = GAME_TYPE_SPRINT;
+            break;
+
+        case CLO_DESCENT:
+            if (!rc_only)
+                Options.game.type = GAME_TYPE_DESCENT;
             break;
 
         case CLO_SPRINT_MAP:

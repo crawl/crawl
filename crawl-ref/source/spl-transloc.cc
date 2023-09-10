@@ -1136,18 +1136,37 @@ void you_teleport_now(bool wizard_tele, bool teleportitis, string reason)
     }
 }
 
-spret cast_portal_projectile(int pow, bool fail)
+spret cast_dimensional_bullseye(int pow, monster *target, bool fail)
 {
+    if (target == nullptr || target->submerged() || !you.can_see(*target))
+    {
+        canned_msg(MSG_NOTHING_THERE);
+        // You cannot place a bullseye on invisible enemies anyway, so just abort
+        return spret::abort;
+    }
+
+    if (stop_attack_prompt(target, false, you.pos()))
+        return spret::abort;
+
     fail_check();
-    if (!you.duration[DUR_PORTAL_PROJECTILE])
-        mpr("You begin teleporting projectiles to their destination.");
-    else
-        mpr("You renew your portal.");
-    // Calculate the accuracy bonus based on current spellpower.
-    you.attribute[ATTR_PORTAL_PROJECTILE] = pow;
-    int dur = 2 + random2(1 + div_rand_round(pow, 2))
-                + random2(1 + div_rand_round(pow, 5));
-    you.increase_duration(DUR_PORTAL_PROJECTILE, dur, 50);
+
+    // We can only have a bullseye on one target a time, so remove the old one if it's still active
+    if (you.props.exists(BULLSEYE_TARGET_KEY))
+    {
+        monster* old_targ = monster_by_mid(you.props[BULLSEYE_TARGET_KEY].get_int());
+
+        if (old_targ)
+            old_targ->del_ench(ENCH_BULLSEYE_TARGET);
+    }
+
+    mprf("You create a dimensional link between your ranged weaponry and %s.", target->name(DESC_THE).c_str());
+
+    // So we can automatically end the status if the target dies or becomes friendly
+    target->add_ench(ENCH_BULLSEYE_TARGET);
+
+    you.props[BULLSEYE_TARGET_KEY].get_int() = target->mid;
+    int dur = random_range(5 + div_rand_round(pow, 5), 7 + div_rand_round(pow, 4));
+    you.set_duration(DUR_DIMENSIONAL_BULLSEYE, dur);
     return spret::success;
 }
 
@@ -1365,11 +1384,6 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
     return spret::success;
 }
 
-int golubria_fuzz_range()
-{
-    return orb_limits_translocation() ? 4 : 2;
-}
-
 bool golubria_valid_cell(coord_def p, bool just_check)
 {
     return in_bounds(p)
@@ -1400,12 +1414,9 @@ spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
         return spret::abort;
     }
 
-    // randomize position a bit to make it not as useful to use on monsters
-    // chasing you, as well as to not give away hidden trap positions
     int tries = 0;
     int tries2 = 0;
-    // Less accurate when the orb is interfering.
-    const int range = golubria_fuzz_range();
+    const int range = GOLUBRIA_FUZZ_RANGE;
     coord_def randomized_where = where;
     coord_def randomized_here = you.pos();
     do
@@ -1433,10 +1444,17 @@ spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
     if (tries >= 100 || tries2 >= 100)
     {
         if (you.trans_wall_blocking(randomized_where))
-            mpr("You cannot create a passage on the other side of the transparent wall.");
+        {
+            mpr("You cannot create a passage on the other side of the "
+                "transparent wall.");
+        }
         else
+        {
             // XXX: bleh, dumb message
-            mpr("Creating a passage of Golubria requires sufficient empty space.");
+            mpr("Creating a passage of Golubria requires sufficient empty "
+                "space.");
+        }
+
         return spret::abort;
     }
 
@@ -1452,9 +1470,6 @@ spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
         mpr("Something buggy happened.");
         return spret::abort;
     }
-
-    if (orb_limits_translocation())
-        mprf(MSGCH_ORB, "The Orb disrupts the stability of your passage!");
 
     trap->reveal();
     trap2->reveal();

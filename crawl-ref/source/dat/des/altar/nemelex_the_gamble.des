@@ -78,7 +78,7 @@ end
 
 NAME:   grunt_nemelex_the_gamble
 TAGS:   temple_overflow_nemelex_xobeh temple_overflow_1 no_trap_gen
-TAGS:   no_monster_gen no_item_gen
+TAGS:   no_monster_gen no_item_gen no_descent
 WEIGHT: 2
 ITEM:   unobtainable any, unobtainable superb_item
 {{

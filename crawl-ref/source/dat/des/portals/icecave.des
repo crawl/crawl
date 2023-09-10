@@ -353,7 +353,7 @@ function ice_cave_weapon_loot(e, glyphs)
         ["double sword"] = 5, ["maxwell's thermic engine"] = 2,
         ["great sword"] = 10, ["triple sword"] = 5, ["lajatang"] = 10,
         ["broad axe"] = 10, ["battleaxe"] = 10, ["frostbite"] = 2,
-        ["executioner's axe"] = 5, ["hand crossbow"] = 10, ["longbow"] = 10,
+        ["executioner's axe"] = 5, ["hand cannon"] = 10, ["longbow"] = 10,
         ["arbalest"] = 5, ["triple crossbow"] = 5
     }
     local quality = ""

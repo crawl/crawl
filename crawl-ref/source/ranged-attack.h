@@ -2,8 +2,6 @@
 
 #include "attack.h"
 
-const int PPROJ_TO_HIT_DIV = 8;
-
 class ranged_attack : public attack
 {
 // Public Properties

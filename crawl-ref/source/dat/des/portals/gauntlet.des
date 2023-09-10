@@ -1124,7 +1124,7 @@ dgn.delayed_decay_extra(_G, "Q", "kobold skeleton",
     "    / dart ego:dispersal" ..
     ", dagger good_item / short sword good_item / rapier good_item" ..
     "    / long sword good_item / double sword / demon blade" ..
-    "    / sling randart / hand crossbow good_item / shortbow randart" ..
+    "    / sling randart / hand cannon good_item / shortbow randart" ..
     "    / orcbow randart / arbalest good_item / triple crossbow" ..
     "    / any armour good_item / nothing w:130" ..
     ", buckler good_item / kite shield good_item / " .. dgn.good_aux_armour ..

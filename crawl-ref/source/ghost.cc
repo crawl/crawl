@@ -32,7 +32,7 @@
 
 #define MAX_GHOST_DAMAGE     50
 #define MAX_GHOST_HP        400
-#define MAX_GHOST_EVASION    60
+#define MAX_GHOST_EVASION    50
 
 // Pan lord AOE conjuration spell list.
 static spell_type search_order_aoe_conj[] =

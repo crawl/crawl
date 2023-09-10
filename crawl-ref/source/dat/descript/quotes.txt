@@ -1808,12 +1808,6 @@ hand axe
  She gave her father forty-one.”
     -A popular skipping-rope rhyme, after 1893.
 %%%%
-hand crossbow
-
-“Energy may be likened to the bending of a crossbow;
- decision, to the releasing of a trigger.”
-    -Sun Tzu
-%%%%
 harpy
 
 “Bird-bodied, girl-faced things they are; abominable their droppings, their
@@ -3660,7 +3654,9 @@ trident
 %%%%
 triple crossbow
 
-<arbalest>
+“Energy may be likened to the bending of a crossbow;
+ decision, to the releasing of a trigger.”
+    -Sun Tzu
 %%%%
 troll leather armour
 

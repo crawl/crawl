@@ -108,7 +108,7 @@
        "great wizards, vol. vii" }
 
       elseif s == "H" then i = { "halberd", "hand axe",
-       "hand crossbow", "potion of heal wounds",
+       "hand cannon", "potion of heal wounds",
        "potion of haste", "manual of hexes", "hat",
        "helmet", "book of hexes", "book of the hunter" }
 

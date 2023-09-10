@@ -1,7 +1,7 @@
 %%%%
 amulet
 
-A talisman to be worn as jewellery around the neck, charged with arcane powers
+An amulet to be worn as jewellery around the neck, charged with arcane powers
 of unknown provenance.
 %%%%
 book
@@ -19,8 +19,8 @@ An unlabelled flask containing a single dose of unknown liquid.
 %%%%
 ring
 
-A talisman charged with arcane forces of unknown provenance, to be worn as
-jewellery on a finger.
+A ring charged with arcane forces of unknown provenance, to be worn as jewellery
+on a finger.
 %%%%
 scroll
 

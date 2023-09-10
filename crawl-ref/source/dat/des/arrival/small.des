@@ -2927,7 +2927,7 @@ KPROP:  q = no_tele_into
 SUBST:  p = Pw, q = Pw
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxx
-xqwqqwqqqqqqwqqp.p.p...x
+xqwqqwqqqqqqwqqp.p.....x
 xwwwwwwqqqqqwwqpp..w...x
 xwwwwwwwqwqwwwwqpwwwwp.x
 xwwwwwwwwwwwwwwwwww..w.+
@@ -3788,7 +3788,7 @@ MAP
 ENDMAP
 
 NAME:    spicycebolla_arrival_ecumenical
-TAGS:    arrival uniq_ecumenical_altar transparent
+TAGS:    arrival uniq_ecumenical_altar transparent no_descent
 KMASK:   -_Tt)n = opaque
 ORIENT:  float
 KFEAT:   _ = altar_ecumenical

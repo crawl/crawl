@@ -380,12 +380,10 @@ static pair<bool, string> _feat_is_blocking_door_strict(
  * Returns true if the square at (x,y) is a dungeon feature the character
  * can't (under normal circumstances) safely cross.
  *
- * Note: is_reseedable can return true for dungeon features that is_traversable
- *       also returns true for. This is okay, because is_traversable always
- *       takes precedence over is_reseedable. is_reseedable is used only to
- *       decide which squares to reseed from when flood-filling outwards to
- *       colour the level map. It does not affect pathing of actual
- *       travel/explore.
+ * This is used to decide which squares to reseed from when flood-filling
+ * outwards, and will affect whether autoexplore considers a level to be fully
+ * explored or only partially explored, when attempting to path through a tile
+ * that is considered elsewhere to be non-traversable.
  */
 static bool _is_reseedable(const coord_def& c, bool ignore_danger = false)
 {
@@ -400,6 +398,7 @@ static bool _is_reseedable(const coord_def& c, bool ignore_danger = false)
 
     return feat_is_water(grid)
            || grid == DNGN_LAVA
+           || grid == DNGN_BINDING_SIGIL
            || _feat_is_blocking_door(grid)
            || is_trap(c)
            || !ignore_danger && _monster_blocks_travel(cell.monsterinfo())
@@ -529,6 +528,9 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
         if (trap.is_safe())
             return true;
     }
+
+    if (grid == DNGN_BINDING_SIGIL)
+        return false;
 
     if (!try_fallback && _feat_is_blocking_door(levelmap_cell.feat()))
         return false;
@@ -2376,6 +2378,13 @@ public:
         // way to do this?)
         refresh_prompt();
         return PromptMenu::show_in_msgpane();
+    }
+
+    bool skip_process_command(int keyin) override
+    {
+        if (keyin == '!')
+            return true; // Gauntlet travel hotkey
+        return Menu::skip_process_command(keyin);
     }
 
     bool process_key(int keyin) override

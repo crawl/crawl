@@ -729,10 +729,10 @@ static const weapon_def Weapon_prop[] =
     { WPN_SLING,             "sling",               7,  0, 14,
         SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_LITTLE, MI_SLING_BULLET,
         DAMV_NON_MELEE, 8, 10, 15, RANGED_BRANDS },
-    { WPN_HAND_CROSSBOW,     "hand crossbow",      16,  3, 19,
+    { WPN_HAND_CANNON,       "hand cannon",      16,  3, 19,
         SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_LITTLE, MI_BOLT,
         DAMV_NON_MELEE, 0, 10, 35, {
-            // Hand crossbows appear late, so encourage use by reducing
+            // Hand cannons appear late, so encourage use by reducing
             // SPWPN_NORMAL weight relative to other ranged weapons.
             { SPWPN_NORMAL,        15 },
             { SPWPN_FLAMING,       11 },
@@ -2101,7 +2101,7 @@ bool is_crossbow(const item_def &item)
         return false;
     switch (item.sub_type)
     {
-    case WPN_HAND_CROSSBOW:
+    case WPN_HAND_CANNON:
     case WPN_ARBALEST:
     case WPN_TRIPLE_CROSSBOW:
         return true;

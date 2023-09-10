@@ -131,9 +131,20 @@ static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
     _setup_base_explosion(beam, origin);
     const int size   = origin.body_size(PSIZE_BODY);
     beam.flavour     = BEAM_FIRE;
-    beam.damage      = (size > SIZE_LARGE) ? dice_def(3, 25) :
-                       (size > SIZE_TINY)  ? dice_def(3, 20) :
-                                             dice_def(3, 15);
+
+    int pow = 100;  // Fallback if power key isn't present. This could be a save
+                    // compat thing, but could also be a bug. Still better not to crash, though.
+
+    if (origin.props.exists(INNER_FLAME_POW_KEY))
+        pow = origin.props[INNER_FLAME_POW_KEY].get_int();
+    else
+        mprf(MSGCH_DIAGNOSTICS, "Buggy inner flame power for: %s", origin.name(DESC_PLAIN).c_str());
+
+    int dam = div_rand_round(pow, 5) + 5;
+
+    beam.damage      = (size > SIZE_LARGE) ? dice_def(3, dam + 10) :
+                       (size > SIZE_TINY)  ? dice_def(3, dam + 5) :
+                                             dice_def(3, dam);
     beam.name        = "fiery explosion";
     beam.colour      = RED;
     beam.ex_size     = (size > SIZE_LARGE) ? 2 : 1;
@@ -141,6 +152,11 @@ static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
     beam.origin_spell = SPELL_INNER_FLAME;
     beam.thrower     = (agent && agent->is_player()) ? KILL_YOU_MISSILE
                                                      : KILL_MON_MISSILE;
+
+    // Slightly hacky way of storing the spellpower of this explosion, so we
+    // can use it to determine cloud spawning later on
+    beam.ench_power = pow;
+
     if (agent)
         beam.source_id = agent->mid;
 }

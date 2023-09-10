@@ -205,6 +205,8 @@ enum enchant_type
     ENCH_NECROTISE,
     ENCH_CONTAM,
     ENCH_PURSUING,
+    ENCH_BOUND,
+    ENCH_BULLSEYE_TARGET,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

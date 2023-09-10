@@ -1051,6 +1051,7 @@ KMONS:  3 = eidolon / profane servitor / bone dragon / shadow wraith / \
 KMONS:  } = tzitzimitl / tainted leviathan
 KFEAT:  } = }
 KMASK:  1 = no_trap_gen
+NSUBST: N = 1:= / n
 MAP
          ccccc
         cc.c.cc
@@ -1062,9 +1063,9 @@ MAP
   cccc.{...c...2.cccc
  cc.c.....ccc.....c.cc
 cc..3......c......3..cc
-c...c.c.c.ncn.c.c.c...c
+c...c.c.c.ncN.c.c.c...c
 cc2cccccccc1cccccccc2cc
-c...c.c.c.ncn.c.c.c...c
+c...c.c.c.NcN.c.c.c...c
 cc..3......c......3..cc
  cc.c.....ccc.....c.cc
   cccc.2...c...}.cccc

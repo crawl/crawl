@@ -112,8 +112,17 @@ int to_hit_pct(const monster_info& mi, attack &atk, bool melee)
         adjusted_mhit += atk.post_roll_to_hit_modifiers(adjusted_mhit, false);
 
         // Duplicates ranged_attack::post_roll_to_hit_modifiers().
-        if (!melee && mi.is(MB_REPEL_MSL))
-            adjusted_mhit -= (adjusted_mhit + 1) / 2;
+        if (!melee)
+        {
+            if (mi.is(MB_BULLSEYE_TARGET))
+            {
+                adjusted_mhit += calc_spell_power(SPELL_DIMENSIONAL_BULLSEYE)
+                                 / 2 / BULLSEYE_TO_HIT_DIV;
+            }
+
+            if (mi.is(MB_REPEL_MSL))
+                adjusted_mhit -= (adjusted_mhit + 1) / 2;
+        }
 
         if (adjusted_mhit >= ev)
             hits++;

@@ -390,9 +390,9 @@ static bool _spill_out_spiders()
 {
     const int evo_skill = you.skill_rdiv(SK_EVOCATIONS);
     // 2 at min skill, 3-4 at mid, 4-6 at max
-    const int min = 2 + div_rand_round(2 * evo_skill, 27);
-    const int max = 2 + div_rand_round(4 * evo_skill, 27);
-    const int n_mons = random_range(min, max);
+    const int min_pals = 2 + div_rand_round(2 * evo_skill, 27);
+    const int max_buds = 2 + div_rand_round(4 * evo_skill, 27);
+    const int n_mons = random_range(min_pals, max(min_pals, max_buds));
     bool made_mons = false;
     for (int n = 0; n < n_mons; n++)
     {
@@ -1171,7 +1171,9 @@ bool evoke_item(item_def& item, dist *preselect)
                     mpr("The sack is emptied!");
                 practise_evoking(1);
             }
-            return false;
+            else
+                return false;
+            break;
 
         case MISC_LIGHTNING_ROD:
             if (_lightning_rod(preselect))

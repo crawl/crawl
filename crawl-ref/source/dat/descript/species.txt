@@ -69,7 +69,7 @@ Humans advance quickly in levels and have equal abilities in most skills.
 Tengu
 
 Tengu are bird-people who love to fight, both with weapons and spells. They are
-quite fragile, but they learn to fly swiftly later on.
+fragile but agile, and eventually learn to fly.
 %%%%
 Kobold
 

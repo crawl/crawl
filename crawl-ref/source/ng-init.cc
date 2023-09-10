@@ -95,7 +95,15 @@ void initialise_temples()
     map_def *main_temple = nullptr;
     int altar_count = 0;
 
-    if (one_chance_in(100))
+    if (crawl_state.game_is_descent())
+    {
+        main_temple
+            = const_cast<map_def*>(random_map_for_tag("temple_altars_0", false));
+
+        if (main_temple == nullptr)
+            end(1, false, "No temple of size 0");
+    }
+    else if (one_chance_in(100))
     {
         main_temple = const_cast<map_def*>(random_map_for_tag("temple_rare"));
 

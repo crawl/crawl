@@ -72,6 +72,7 @@
 #include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
+#include "spl-other.h"
 #include "spl-util.h"
 #include "sprint.h"
 #include "stairs.h"
@@ -569,6 +570,9 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         trap_def* ptrap = trap_at(you.pos());
         if (ptrap)
             ptrap->trigger(you);
+
+        if (env.grid(you.pos()) == DNGN_BINDING_SIGIL)
+            trigger_binding_sigil(you);
     }
 
     if (stepped)
@@ -1835,10 +1839,6 @@ int player_movement_speed(bool check_terrain)
     else if (player_under_penance(GOD_CHEIBRIADOS))
         mv += 2 + min(div_rand_round(you.piety_max[GOD_CHEIBRIADOS], 20), 8);
 
-    // Tengu can move slightly faster when flying.
-    if (you.tengu_flight())
-        mv--;
-
     if (you.duration[DUR_FROZEN])
         mv += 3;
 
@@ -1927,9 +1927,15 @@ bool player_is_shapechanged()
         && you.form != transformation::shadow;
 }
 
+bool player_acrobatic()
+{
+    return you.wearing(EQ_AMULET, AMU_ACROBAT)
+        || you.has_mutation(MUT_ACROBATIC);
+}
+
 void update_acrobat_status()
 {
-    if (!you.wearing(EQ_AMULET, AMU_ACROBAT))
+    if (!player_acrobatic())
         return;
 
     // Acrobat duration goes slightly into the next turn, giving the
@@ -2002,6 +2008,9 @@ static int _player_evasion_bonuses()
     if (you.get_mutation_level(MUT_DISTORTION_FIELD))
         evbonus += you.get_mutation_level(MUT_DISTORTION_FIELD) + 1;
 
+    if (you.has_mutation(MUT_TENGU_FLIGHT))
+        evbonus += 4;
+
     // transformation penalties/bonuses not covered by size alone:
     if (you.get_mutation_level(MUT_SLOW_REFLEXES))
         evbonus -= you.get_mutation_level(MUT_SLOW_REFLEXES) * 5;
@@ -2030,13 +2039,6 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
         && you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
     {
         const int ev_bonus = max(2 * scale, prescaled_ev / 4);
-        return prescaled_ev + ev_bonus;
-    }
-
-    // Flying Tengu get a 20% evasion bonus.
-    if (you.tengu_flight())
-    {
-        const int ev_bonus = max(1 * scale, prescaled_ev / 5);
         return prescaled_ev + ev_bonus;
     }
 
@@ -4851,13 +4853,10 @@ void float_player()
         mpr("Your tail turns into legs as you fly out of the water.");
         merfolk_stop_swimming();
     }
-    else if (you.tengu_flight())
+    else if (you.has_mutation(MUT_TENGU_FLIGHT))
         mpr("You swoop lightly up into the air.");
     else
         mpr("You fly up into the air.");
-
-    if (you.has_mutation(MUT_TENGU_FLIGHT))
-        you.redraw_evasion = true;
 }
 
 void fly_player(int pow, bool already_flying)
@@ -4910,8 +4909,6 @@ bool land_player(bool quiet)
 
     if (!quiet)
         mpr("You float gracefully downwards.");
-    if (you.has_mutation(MUT_TENGU_FLIGHT))
-        you.redraw_evasion = true;
 
     // Re-enter the terrain.
     move_player_to_grid(you.pos(), false);
@@ -4992,6 +4989,33 @@ int count_worn_ego(int which_ego)
     }
 
     return result;
+}
+
+static int _apply_descent_debt(int gold)
+{
+    if (gold < 0)
+    {
+        // This is necessary because shop purchases are made individually in an
+        // unintuitive (for players) order. Stacking debt is prevented elsewhere.
+        if (!you.props.exists(DESCENT_DEBT_KEY))
+            you.props[DESCENT_DEBT_KEY] = 0;
+        you.props[DESCENT_DEBT_KEY].get_int() -= gold;
+        return 0;
+    }
+
+    if (you.props.exists(DESCENT_DEBT_KEY))
+    {
+        int &debt = you.props[DESCENT_DEBT_KEY].get_int();
+        if (gold > debt)
+        {
+            you.props.erase(DESCENT_DEBT_KEY);
+            return gold - debt;
+        }
+        debt -= gold;
+        return 0;
+    }
+
+    return gold;
 }
 
 player::player()
@@ -6604,7 +6628,7 @@ bool player::no_tele(bool blinking, bool temp) const
 
 bool player::racial_permanent_flight() const
 {
-    return get_mutation_level(MUT_TENGU_FLIGHT)
+    return has_mutation(MUT_TENGU_FLIGHT)
         || get_mutation_level(MUT_BIG_WINGS)
         || has_mutation(MUT_FLOAT);
 }
@@ -6621,15 +6645,6 @@ bool player::permanent_flight(bool include_equip) const
         || racial_permanent_flight()                 // species muts
         || get_form()->enables_flight()
            && get_form(you.default_form)->enables_flight();
-}
-
-/**
- * Does the player get the tengu flight perks?
- */
-bool player::tengu_flight() const
-{
-    // XX could tengu just get MUT_FLOAT?
-    return you.has_mutation(MUT_TENGU_FLIGHT) && airborne();
 }
 
 /**
@@ -6955,10 +6970,6 @@ int player::has_claws(bool allow_tran) const
         // these transformations bring claws with them
         if (form == transformation::dragon)
             return DRAGON_CLAWS;
-
-        // blade hands override claws
-        if (form == transformation::blade_hands)
-            return 0;
     }
 
     return get_mutation_level(MUT_CLAWS, allow_tran);
@@ -7498,6 +7509,10 @@ bool player::shaftable() const
 // different effect from the player invokable ability.
 bool player::do_shaft()
 {
+    // disabled in descent mode
+    if (crawl_state.game_is_descent())
+        return false;
+
     if (!shaftable()
         || resists_dislodge("falling into an unexpected shaft"))
     {
@@ -7595,6 +7610,9 @@ void player::del_gold(int delta)
 
 void player::set_gold(int amount)
 {
+    if (crawl_state.game_is_descent())
+        amount = _apply_descent_debt(amount);
+
     ASSERT(amount >= 0);
 
     if (amount != gold)

@@ -1695,7 +1695,7 @@ static string _category_string(const item_def &item)
         {
             description += make_stringf(
                 "It is%s good for stabbing helpless or unaware enemies. ",
-                (item.sub_type == WPN_DAGGER) ? "extremely" : "");
+                (item.sub_type == WPN_DAGGER) ? " extremely" : "");
 
         }
         break;
@@ -5099,7 +5099,7 @@ void describe_to_hit(const monster_info& mi, ostringstream &result,
         // TODO: handle throwing to-hit somehow?
         item_def fake_proj;
         populate_fake_projectile(*weapon, fake_proj);
-        ranged_attack attk(&you, nullptr, &fake_proj, is_pproj_active());
+        ranged_attack attk(&you, nullptr, &fake_proj, false);
         acc_pct = to_hit_pct(mi, attk, false);
     }
 

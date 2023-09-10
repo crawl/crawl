@@ -685,4 +685,11 @@ FOUNTAIN(DNGN_RUNELIGHT, "runelight", "runelight", ETC_DISJUNCTION),
     FFT_NONE, MF_STAIR_BRANCH,
 },
 
+{
+    DNGN_BINDING_SIGIL, "a binding sigil", "binding_sigil",
+    DCHAR_TRAP, NUM_DCHAR_TYPES,
+    COLOUR_AND_MAP(RED),
+    FFT_NONE, MF_FLOOR,
+},
+
 };

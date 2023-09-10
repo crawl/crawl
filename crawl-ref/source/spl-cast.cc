@@ -1202,12 +1202,13 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_cloud>(&you, range);
     case SPELL_THUNDERBOLT:
         return make_unique<targeter_thunderbolt>(&you, range,
-                                            get_thunderbolt_last_aim(&you));
+                   get_thunderbolt_last_aim(&you));
     case SPELL_LRD:
         return make_unique<targeter_fragment>(&you, pow, range);
     case SPELL_AIRSTRIKE:
         return make_unique<targeter_airstrike>();
     case SPELL_MOMENTUM_STRIKE:
+    case SPELL_DIMENSIONAL_BULLSEYE:
         return make_unique<targeter_smite>(&you, range);
     case SPELL_FULMINANT_PRISM:
         return make_unique<targeter_smite>(&you, range, 0, 2);
@@ -1246,7 +1247,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                           // all potentially affected monsters?
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1);
     case SPELL_ARCJOLT:
-        return make_unique<targeter_multiposition>(&you, arcjolt_targets(you, false));
+        return make_unique<targeter_multiposition>(&you,
+                                                   arcjolt_targets(you, false));
     case SPELL_PLASMA_BEAM:
     {
         auto plasma_targets = plasma_beam_targets(you, pow, false);
@@ -1287,7 +1289,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SUBLIMATION_OF_BLOOD:
     case SPELL_BORGNJORS_REVIVIFICATION:
     case SPELL_BLASTMOTE:
-    case SPELL_PORTAL_PROJECTILE:
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
 
     // LOS radius:
@@ -1300,7 +1301,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS,
                                             POLAR_VORTEX_RADIUS, 0, 1);
     case SPELL_SHATTER:
-        return make_unique<targeter_shatter>(&you); // special version that affects walls
+        return make_unique<targeter_shatter>(&you); // special version that
+                                                    // affects walls
     case SPELL_IGNITE_POISON: // many cases
         return make_unique<targeter_ignite_poison>(&you);
     case SPELL_CAUSE_FEAR: // for these, we just mark the eligible monsters
@@ -1316,9 +1318,11 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_DISCORD:
         return make_unique<targeter_discord>();
     case SPELL_IGNITION:
-        return make_unique<targeter_multifireball>(&you, get_ignition_blast_sources(&you, true));
+        return make_unique<targeter_multifireball>(&you,
+                   get_ignition_blast_sources(&you, true));
 
-    // Summons. Most summons have a simple range 2 radius, see find_newmons_square
+    // Summons. Most summons have a simple range 2 radius, see
+    // find_newmons_square
     case SPELL_SUMMON_SMALL_MAMMAL:
     case SPELL_CALL_CANINE_FAMILIAR:
     case SPELL_ANIMATE_ARMOUR:
@@ -1342,22 +1346,29 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     // directions, so this targeter is not entirely accurate.
     case SPELL_MALIGN_GATEWAY:
     case SPELL_SUMMON_FOREST:
-        return make_unique<targeter_radius>(&you, LOS_NO_TRANS, LOS_RADIUS, 0, 2);
+        return make_unique<targeter_radius>(&you, LOS_NO_TRANS, LOS_RADIUS,
+                                            0, 2);
 
     case SPELL_BLINK:
         return make_unique<targeter_multiposition>(&you, find_blink_targets());
     case SPELL_MANIFOLD_ASSAULT:
-        return make_unique<targeter_multiposition>(&you, _simple_find_all_hostiles());
+        return make_unique<targeter_multiposition>(&you,
+                                                   _simple_find_all_hostiles());
     case SPELL_SCORCH:
         return make_unique<targeter_scorch>(you, range, false);
-    case SPELL_DRAGON_CALL: // this is just convenience: you can start the spell with no enemies in sight
-        return make_unique<targeter_multifireball>(&you, _simple_find_all_hostiles());
+    case SPELL_DRAGON_CALL: // this is just convenience: you can start the spell
+                            // with no enemies in sight
+        return make_unique<targeter_multifireball>(&you,
+                                                   _simple_find_all_hostiles());
     case SPELL_NOXIOUS_BOG:
         return make_unique<targeter_bog>(&you, pow);
     case SPELL_FLAME_WAVE:
         return make_unique<targeter_flame_wave>(range);
     case SPELL_GOLUBRIAS_PASSAGE:
         return make_unique<targeter_passage>(range);
+    case SPELL_SIGIL_OF_BINDING:
+        return make_unique<targeter_multiposition>(&you,
+                                                   find_sigil_locations(true));
 
     default:
         break;
@@ -2387,8 +2398,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_WEREBLOOD:
         return cast_wereblood(powc, fail);
 
-    case SPELL_PORTAL_PROJECTILE:
-        return cast_portal_projectile(powc, fail);
+    case SPELL_DIMENSIONAL_BULLSEYE:
+        return cast_dimensional_bullseye(powc, monster_at(target), fail);
 
     // other
     case SPELL_BORGNJORS_REVIVIFICATION:
@@ -2460,6 +2471,12 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return cast_imb(powc, fail);
+
+    case SPELL_JINXBITE:
+        return cast_jinxbite(powc, fail);
+
+    case SPELL_SIGIL_OF_BINDING:
+        return cast_sigil_of_binding(powc, fail, false);
 
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).

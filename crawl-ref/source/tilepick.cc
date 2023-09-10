@@ -536,6 +536,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_UNKNOWN_ALTAR;
     case DNGN_UNKNOWN_PORTAL:
         return TILE_DNGN_UNKNOWN_PORTAL;
+    case DNGN_BINDING_SIGIL:
+        return TILE_SIGIL_RHOMBUS;
     default:
         return TILE_DNGN_ERROR;
     }
@@ -558,7 +560,9 @@ tileidx_t tileidx_feature(const coord_def &gc)
                         && feat != DNGN_FLOOR
                         && feat != DNGN_UNSEEN
                         && feat != DNGN_PASSAGE_OF_GOLUBRIA
-                        && feat != DNGN_MALIGN_GATEWAY;
+                        && feat != DNGN_MALIGN_GATEWAY
+                        && feat != DNGN_BINDING_SIGIL
+                        && feat != DNGN_UNKNOWN_PORTAL;
     if (override && can_override)
         return override;
 
@@ -2251,6 +2255,8 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_CONTAM_LIGHT, TILEI_GLOW_LIGHT },
     { MB_CONTAM_HEAVY, TILEI_GLOW_HEAVY },
     { MB_PAIN_BOND, TILEI_PAIN_BOND },
+    { MB_BOUND, TILEI_CONSTRICTED},     // XXX: Terrible placeholder, since this doesn't do damage. Replace as soon as possible.
+    { MB_BULLSEYE_TARGET, TILEI_IDEALISED} // XXX: Another terrible placeholder, but at least it's unambiguous.
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -2367,7 +2373,7 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_SLING:                 return TILE_WPN_SLING;
     case WPN_SHORTBOW:              return TILE_WPN_SHORTBOW;
     case WPN_ORCBOW:                return TILE_WPN_ORCBOW;
-    case WPN_HAND_CROSSBOW:         return TILE_WPN_HAND_CROSSBOW;
+    case WPN_HAND_CANNON:           return TILE_WPN_HAND_CANNON;
     case WPN_ARBALEST:              return TILE_WPN_ARBALEST;
     case WPN_TRIPLE_CROSSBOW:       return TILE_WPN_TRIPLE_CROSSBOW;
     case WPN_SPEAR:                 return TILE_WPN_SPEAR;
@@ -2725,6 +2731,7 @@ static tileidx_t _tileidx_talisman(const item_def &item)
     switch (item.sub_type)
     {
     case TALISMAN_BEAST:    return TILE_TALISMAN_BEAST;
+    case TALISMAN_FLUX:    return TILE_TALISMAN_FLUX;
     case TALISMAN_SERPENT:  return TILE_TALISMAN_SNAKE;
     case TALISMAN_MAW:      return TILE_TALISMAN_MAW;
     case TALISMAN_BLADE:    return TILE_TALISMAN_BLADE;
@@ -2732,7 +2739,6 @@ static tileidx_t _tileidx_talisman(const item_def &item)
     case TALISMAN_DRAGON:   return TILE_TALISMAN_DRAGON;
     case TALISMAN_STORM:    return TILE_TALISMAN_STORM;
     case TALISMAN_DEATH:    return TILE_TALISMAN_DEATH;
-    case TALISMAN_FLUX:
     default: return TILE_ERROR;
     }
 }
@@ -3561,6 +3567,8 @@ tileidx_t tileidx_gametype(const game_type gtype)
     case GAME_TYPE_NORMAL:
     case GAME_TYPE_CUSTOM_SEED:
         return TILEG_STARTUP_STONESOUP;
+    case GAME_TYPE_DESCENT:
+        return TILEG_STARTUP_IRONSOUP;
     case GAME_TYPE_TUTORIAL:
         return TILEG_STARTUP_TUTORIAL;
     case GAME_TYPE_HINTS:

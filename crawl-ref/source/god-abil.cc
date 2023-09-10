@@ -1787,7 +1787,7 @@ bool kiku_gift_capstone_spells()
 #endif
     more();
     you.one_time_ability_used.set(you.religion);
-    take_note(Note(NOTE_GOD_GIFT, you.religion));
+    take_note(Note(NOTE_GOD_GIFT, you.religion, 0, "forbidden knowledge"));
     return true;
 }
 

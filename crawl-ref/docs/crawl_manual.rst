@@ -1728,9 +1728,9 @@ Spriggans (Sp)
 Tengu (Te)
   The Tengu are an ancient and feared species of bird-people with a legendary
   propensity for violence. Basically humanoid with bird-like heads and clawed
-  feet, the Tengu can wear all types of armour except helmets and boots. Despite
-  their lack of wings, powerful Tengu can fly magically, and their movement
-  speed and evasion are increased slightly while flying.
+  feet, the Tengu can wear all types of armour except helmets and boots. Their
+  magical nature helps them evade attacks while in motion, and despite their
+  lack of wings, more experienced Tengu can magically fly.
 
   They are experts at all forms of fighting, including the magical arts of
   combat (conjurations, summonings and, to a lesser extent, necromancy). They
@@ -2391,9 +2391,10 @@ s, Del, . or Numpad 5
 5 or Shift-Numpad 5
   Long resting, until both health and magic points are full.
 
-Resting is the only way to get rid of manticore spikes, but is otherwise
-indistinguishable from any other action; healing, magic point restoration,
-etc, proceed at the same rate, whether you're resting or not.
+Resting is generally indistinguishable from any other action; healing, magic
+point restoration, etc, proceed at the same rate, whether you're resting or not.
+A few specific spells can be 'channeled' via the rest key for ongoing effects,
+as mentioned in their descriptions.
 
 Dungeon interaction
 ----------------------------------------

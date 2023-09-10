@@ -2702,7 +2702,7 @@ static string _extra_passive_effects()
     if (you.reflection())
         passives.emplace_back("reflection");
 
-    if (you.wearing(EQ_AMULET, AMU_ACROBAT))
+    if (player_acrobatic())
         passives.emplace_back("acrobat");
 
     if (you.clarity())

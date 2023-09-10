@@ -230,6 +230,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Party Tricks
     SPELL_APPORTATION,
+    SPELL_JINXBITE,
     SPELL_INTOXICATE,
 },
 
@@ -243,6 +244,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Debilitation
     SPELL_SLOW,
+    SPELL_SIGIL_OF_BINDING,
     SPELL_VAMPIRIC_DRAINING,
     SPELL_CONFUSING_TOUCH,
 },
@@ -260,6 +262,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Dreams
+    SPELL_JINXBITE,
     SPELL_HIBERNATION,
     SPELL_ANGUISH,
 },
@@ -412,7 +415,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Book of Weapons
     SPELL_TUKIMAS_DANCE,
-    SPELL_PORTAL_PROJECTILE,
+    SPELL_DIMENSIONAL_BULLSEYE,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
 },
 
@@ -477,8 +480,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of the Hunter
+    SPELL_SIGIL_OF_BINDING,
     SPELL_CALL_CANINE_FAMILIAR,
-    SPELL_PORTAL_PROJECTILE,
+    SPELL_DIMENSIONAL_BULLSEYE,
     SPELL_LEDAS_LIQUEFACTION,
 },
 

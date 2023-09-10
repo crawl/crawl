@@ -52,6 +52,9 @@
 #define PETRIFIED_BY_KEY "petrified_by"
 #define FROZEN_RAMPARTS_KEY "frozen_ramparts_position"
 #define DREAMSHARD_KEY "dreamshard"
+#define DESCENT_DEBT_KEY "descent_debt"
+#define DESCENT_WATER_BRANCH_KEY "descent_water_branch"
+#define DESCENT_POIS_BRANCH_KEY "descent_poison_branch"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -529,7 +532,6 @@ public:
     bool is_fiery() const override;
     bool is_skeletal() const override;
 
-    bool tengu_flight() const;
     int heads() const override { return 1; }
 
     bool spellcasting_unholy() const;
@@ -988,6 +990,7 @@ bool player_can_hear(const coord_def& p, int hear_distance = 999);
 bool player_is_shapechanged();
 
 void update_acrobat_status();
+bool player_acrobatic();
 
 bool is_effectively_light_armour(const item_def *item);
 bool player_effectively_in_light_armour();

@@ -410,6 +410,16 @@ Blocks any translocations attempted by the affected target, be they voluntary
 or not. This includes even some cross-plane effects, although notably not
 Banishment.
 %%%%
+Dimensional Bullseye spell
+
+Weaves a subtle dimensional link between the caster's weaponry and a target
+of their choice. While this link is active, all projectiles thrown or fired by
+the caster will unerringly teleport to that target at the end of their original
+arc - provided they were initially aimed at something else entirely.
+
+Maintaining this link is tiring and each projectile fired while the spell is
+active will drain a small amount of the caster's magic.
+%%%%
 Discord spell
 
 Drives nearby creatures into an wild frenzy, causing them to mercilessly
@@ -771,6 +781,19 @@ Iskenderun's Mystic Blast spell
 Detonates a crackling sphere of destructive energy. The explosion will hit all
 nearby monsters with physical force, knocking them back if damage is done.
 %%%%
+Jinxbite spell
+
+Beckons tiny trickster spirits to join in the caster's fight and turn their
+attention against the caster's enemies. So long as they remain interested, any
+attack the caster makes against an enemy whose willpower this spell can overcome
+will suffer minor irresistable damage and draining from the sprites' playful
+malice.
+
+Fae assistance is fickle, however; they cannot be beckoned unless a susceptible
+victim is visible and will depart rapidly once no more remain. And even the mere
+act of inviting them will leave the caster more succeptible to hostile
+enchantments for a time.
+%%%%
 Volatile Blastmotes spell
 
 Brings forth a cloud of volatile blastmotes around the caster, which explode
@@ -1000,8 +1023,8 @@ Passage of Golubria spell
 
 Opens two gateways (one always near the caster), which allow instantaneous
 transport to random other open gateways to any creature entering them. There is
-no limit to the number of gateways that can be open at one time, but a gateway
-will close when entered, or after a moderate amount of time.
+no limit to the number of gateways that can be open at one time. However,
+gateways close a short time after being opened, or immediately once entered.
 %%%%
 Passwall spell
 
@@ -1193,6 +1216,19 @@ animating them and sending them out to attack.
 Shock spell
 
 Throws a bouncing bolt of electricity. It bypasses half of defenders' armour.
+%%%%
+Sigil of Binding spell
+
+Inscribes a pair of magical sigils on the floor nearby which will temporarily
+contain the momentum of anyone that passes over them, binding them in place
+until the spell wears off - at which point that momentum will return rapidly,
+granting the victim incredible movement speed and preventing subsequent binding
+attempts until they slow down again.
+
+The caster is not immune to their own sigils, and spell feedback will prevent
+them from gaining any delayed benefit, either. Be careful!
+
+Only one set of sigils can be maintained at a time.
 %%%%
 Silence spell
 

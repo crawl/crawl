@@ -1562,7 +1562,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.damage      = dice_def(3, 24);
         beam.hit         = AUTOMATIC_HIT;
         beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
-        beam.ex_size     = 2;
+        beam.ex_size     = 1;
         break;
 
     case SPELL_ERUPTION:
@@ -1570,7 +1570,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.damage      = eruption_damage();
         beam.hit         = AUTOMATIC_HIT;
         beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
-        beam.ex_size     = 2;
+        beam.ex_size     = 1;
         break;
 
     default:
@@ -5374,6 +5374,7 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
             animation_delay(25, true);
     }
 
+    bool made_lava = false;
     for (coord_def pos : affected)
     {
         beam.source = pos;
@@ -5383,12 +5384,15 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
         switch (beam.flavour)
         {
             case BEAM_LAVA:
-                if (env.grid(pos) == DNGN_FLOOR && !actor_at(pos) && coinflip())
+                if (env.grid(pos) == DNGN_FLOOR && !actor_at(pos)
+                    && (!made_lava || coinflip()))
                 {
                     temp_change_terrain(
                         pos, DNGN_LAVA,
                         random2(14) * BASELINE_DELAY,
                         TERRAIN_CHANGE_FLOOD);
+
+                    made_lava = true;
                 }
                 break;
             case BEAM_AIR:
@@ -5903,8 +5907,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_CONJURE_LIVING_SPELLS:
     {
         const int hd = mons->spell_hd(spell_cast);
-        const int n = living_spell_count(spell_cast, true);
         const spell_type spell = living_spell_type_for(mons->type);
+        const int n = living_spell_count(spell, true);
         // XXX: will crash if wizmode player tries to cast?
         ASSERT(spell != SPELL_NO_SPELL);
         for (int i = 0; i < n; ++i)

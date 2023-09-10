@@ -221,6 +221,11 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_EXHAUSTED] = 0;
         you.duration[DUR_BREATH_WEAPON] = 0;
         you.duration[DUR_BLINKBOLT_COOLDOWN] = 0;
+        you.duration[DUR_NO_CAST] = 0;
+        you.duration[DUR_NO_POTIONS] = 0;
+        you.duration[DUR_NO_SCROLLS] = 0;
+        you.duration[DUR_LOWERED_WL] = 0;
+        you.duration[DUR_VERTIGO] = 0;
         delete_all_temp_mutations("Super heal");
         you.stat_loss.init(0);
         you.attribute[ATTR_STAT_LOSS_XP] = 0;
