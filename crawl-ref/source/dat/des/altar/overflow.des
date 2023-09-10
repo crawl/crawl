@@ -2195,7 +2195,7 @@ ENDMAP
 # general_overflow_altar cannot contain the power of Qazlal
 NAME:    nicolae_qazlal_general_emergency
 TAGS:    temple_overflow_qazlal temple_overflow_1 uniq_altar_qazlal
-TAGS:    no_monster_gen no_pool_fixup transparent decor
+TAGS:    no_monster_gen no_pool_fixup transparent decor no_descent
 SHUFFLE: xXY / xXY / xXY / abc
 SHUFFLE: XY
 SUBST:   z = w.., X = +++w., Y = xxxxw., x = wxxx, a = w, b = w, c = w
