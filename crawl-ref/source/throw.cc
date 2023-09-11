@@ -559,7 +559,7 @@ static void _handle_cannon_fx(actor &act, const item_def &weapon, coord_def targ
         {
             continue;
         }
-        place_cloud(CLOUD_BLACK_SMOKE, *ai, random_range(3, 6), &act);
+        place_cloud(CLOUD_MAGIC_TRAIL, *ai, random_range(3, 6), &act);
         break;
     }
 
