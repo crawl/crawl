@@ -1852,7 +1852,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         return _tileidx_monster_zombified(mon);
 
     if (mon.props.exists(MONSTER_TILE_KEY))
-        return mon.props[MONSTER_TILE_KEY].get_short();
+        return mon.props[MONSTER_TILE_KEY].get_int();
 
     int tile_num = 0;
     if (mon.props.exists(TILE_NUM_KEY))

@@ -4068,7 +4068,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             }
             // Store name along with the tile.
             mspec.props[MONSTER_TILE_NAME_KEY].get_string() = tile;
-            mspec.props[MONSTER_TILE_KEY] = short(index);
+            mspec.props[MONSTER_TILE_KEY] = int(index);
         }
 
         string dbname = strip_tag_prefix(mon_str, "dbname:");

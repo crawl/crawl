@@ -4959,7 +4959,7 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast)
 static void _cast_marshlight(monster &mons, mon_spell_slot, bolt&)
 {
     const int pow = mons_spellpower(mons, SPELL_MARSHLIGHT);
-    cast_foxfire(mons, pow, GOD_NO_GOD, false);
+    cast_foxfire(mons, pow, GOD_NO_GOD, false, true);
 }
 
 static void _cast_flay(monster &caster, mon_spell_slot, bolt&)

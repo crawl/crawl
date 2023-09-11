@@ -5275,7 +5275,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     if (mspec.props.exists(MONSTER_TILE_KEY))
     {
         mons->props[MONSTER_TILE_KEY] =
-            mspec.props[MONSTER_TILE_KEY].get_short();
+            mspec.props[MONSTER_TILE_KEY].get_int();
     }
     if (mspec.props.exists(MONSTER_TILE_NAME_KEY))
     {

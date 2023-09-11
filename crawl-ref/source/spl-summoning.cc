@@ -2593,7 +2593,7 @@ void kiku_unearth_wretches()
 }
 
 static bool _create_foxfire(const actor &agent, coord_def pos,
-                            god_type god, int pow)
+                            god_type god, int pow, bool marshlight = false)
 {
     const auto att = agent.is_player() ? BEH_FRIENDLY
                                        : SAME_ATTITUDE(agent.as_monster());
@@ -2612,6 +2612,8 @@ static bool _create_foxfire(const actor &agent, coord_def pos,
 
     foxfire->add_ench(ENCH_SHORT_LIVED);
     foxfire->steps_remaining = you.current_vision + 2;
+    if (marshlight)
+        foxfire->props[MONSTER_TILE_KEY] = TILEP_MONS_MARSHLIGHT;
 
     // Avoid foxfire without targets always moving towards (0,0)
     if (!foxfire->get_foe()
@@ -2622,7 +2624,7 @@ static bool _create_foxfire(const actor &agent, coord_def pos,
     return true;
 }
 
-spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
+spret cast_foxfire(actor &agent, int pow, god_type god, bool fail, bool marshlight)
 {
     bool see_space = false;
     for (adjacent_iterator ai(agent.pos()); ai; ++ai)
@@ -2647,7 +2649,7 @@ spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
 
     for (fair_adjacent_iterator ai(agent.pos()); ai; ++ai)
     {
-        if (!_create_foxfire(agent, *ai, god, pow))
+        if (!_create_foxfire(agent, *ai, god, pow, marshlight))
             continue;
         ++created;
         if (created == 2)
@@ -2656,9 +2658,10 @@ spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
 
     if (created && you.see_cell(agent.pos()))
     {
-        mprf("%s conjure%s some foxfire!",
+        mprf("%s conjure%s some %s!",
              agent.name(DESC_THE).c_str(),
-             agent.is_monster() ? "s" : "");
+             agent.is_monster() ? "s" : "",
+             marshlight ? "marshlight" : "foxfire");
     }
     else if (agent.is_player())
         canned_msg(MSG_NOTHING_HAPPENS);

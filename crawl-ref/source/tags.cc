@@ -7166,7 +7166,7 @@ void unmarshallMonster(reader &th, monster& m)
                 m.props.erase(MONSTER_TILE_KEY);
         }
         else // Update monster tile.
-            m.props[MONSTER_TILE_KEY] = short(index);
+            m.props[MONSTER_TILE_KEY] = int(index);
     }
 
 #if TAG_MAJOR_VERSION == 34
