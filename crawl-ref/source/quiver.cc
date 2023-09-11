@@ -106,6 +106,8 @@ namespace quiver
      */
     bool action::autofight_check() const
     {
+        if (crawl_state.skip_autofight_check)
+            return false;
         // don't do these checks if the action will lead to interactive targeting
         if (target.needs_targeting())
             return false;
