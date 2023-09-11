@@ -1724,7 +1724,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
                 {
                     monster_info minfo(MONS_PLAYER, MONS_PLAYER);
                     minfo.props[MONSTER_TILE_KEY] =
-                        last_player_doll.parts[TILEP_PART_BASE];
+                        int(last_player_doll.parts[TILEP_PART_BASE]);
                     item_def *item;
                     if (you.slot_item(EQ_WEAPON))
                     {
