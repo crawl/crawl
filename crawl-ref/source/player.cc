@@ -6567,9 +6567,6 @@ string player::no_tele_reason(bool blinking, bool temp) const
     if (temp && duration[DUR_DIMENSION_ANCHOR])
         problems.emplace_back("locked down by a dimension anchor");
 
-    if (temp && duration[DUR_LOCKED_DOWN])
-        problems.emplace_back("magically locked down");
-
     if (temp && form == transformation::tree)
         problems.emplace_back("held in place by your roots");
 
@@ -7305,8 +7302,7 @@ bool player::can_drink(bool temp) const
 
 bool player::is_stationary() const
 {
-    return form == transformation::tree
-        || you.duration[DUR_LOCKED_DOWN];
+    return form == transformation::tree;
 }
 
 bool player::is_motile() const
@@ -7543,7 +7539,7 @@ bool player::can_do_shaft_ability(bool quiet) const
         return false;
     }
 
-    if (you.duration[DUR_LOCKED_DOWN]) // XXX: also DUR_NO_MOMENTUM?
+    if (you.duration[DUR_NO_MOMENTUM])
     {
         if (!quiet)
             mpr("You can't shaft yourself while stuck.");

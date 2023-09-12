@@ -149,11 +149,6 @@ or by breaking line of sight with them.
 
 You are prevented from teleporting or blinking.
 %%%%
-Stuck status
-
-You are prevented from moving, blinking, or teleporting. (You can still take
-other actions.)
-%%%%
 -Move status
 
 You cannot walk, fly around, slither, etc. You can still take other actions,

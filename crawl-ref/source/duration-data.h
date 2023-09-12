@@ -405,11 +405,6 @@ static const duration_def duration_data[] =
       "untranslocatable", "dimension anchor",
       "You are firmly anchored to this plane.", D_DISPELLABLE,
       {{ "You are no longer firmly anchored in space." }}},
-    { DUR_LOCKED_DOWN,
-      RED, "Stuck",
-      "stuck", "",
-      "You are magically locked in place.", D_DISPELLABLE,
-      {{ "You are no longer locked in place." }}},
     { DUR_NO_MOMENTUM,
       RED, "-Move",
       "immotile", "",
@@ -729,5 +724,6 @@ static const duration_def duration_data[] =
     { DUR_SHAFT_IMMUNITY, 0, "", "", "old shaft immunity", "", D_NO_FLAGS, {{""}}},
     { DUR_EXCRUCIATING_WOUNDS, 0, "", "", "old excruciating wounds", "", D_NO_FLAGS },
     { DUR_CORPSE_ROT, 0, "", "", "old corpse rot", "", D_NO_FLAGS },
+    { DUR_LOCKED_DOWN, 0, "", "", "old stuck", "", D_NO_FLAGS },
 #endif
 };
