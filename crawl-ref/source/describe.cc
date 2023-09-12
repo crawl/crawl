@@ -5749,6 +5749,13 @@ string serpent_of_hell_flavour(monster_type m)
     return lowercase_string(branches[serpent_of_hell_branch(m)].shortname);
 }
 
+static string _desc_foxfire_dam(const monster_info &mi)
+{
+    bolt beam;
+    zappy(ZAP_FOXFIRE, mi.hd, mi.attitude != ATT_FRIENDLY, beam);
+    return make_stringf("%dd%d", beam.damage.num, beam.damage.size);
+}
+
 // Fetches the monster's database description and reads it into inf.
 void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                          bool &has_stat_desc, bool mark_spells)
@@ -5863,6 +5870,10 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         // XX why are these "quick" here but "slow" elsewhere??
         if (mi.is(MB_SLOWLY_DYING))
             inf.body << "\nIt is quickly crumbling away.\n";
+        break;
+
+    case MONS_FOXFIRE:
+        inf.body << "\nIt deals " << _desc_foxfire_dam(mi) << " fire damage.\n";
         break;
 
     case MONS_PROGRAM_BUG:
