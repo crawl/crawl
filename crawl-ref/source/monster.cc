@@ -56,6 +56,7 @@
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mon-transit.h"
+#include "notes.h"
 #include "ouch.h"
 #include "religion.h"
 #include "spl-clouds.h" // explode_blastmotes_at
@@ -5888,6 +5889,11 @@ void monster::steal_item_from_player()
              stolen_amount,
              stolen_amount != 1 ? "s" : "");
 
+        const string what = make_stringf("%s stole %d gold",
+                                        uppercase_first(name(DESC_A)).c_str(),
+                                        stolen_amount);
+        take_note(Note(NOTE_MESSAGE, 0, 0, what), true);
+
         you.attribute[ATTR_GOLD_FOUND] -= stolen_amount;
 
         you.del_gold(stolen_amount);
@@ -5948,6 +5954,10 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot,
                  name(DESC_THE).c_str(),
                  new_item.name(DESC_YOUR).c_str());
         }
+        const string what = make_stringf("%s stole %s",
+                                        uppercase_first(name(DESC_A)).c_str(),
+                                        new_item.name(DESC_A).c_str());
+        take_note(Note(NOTE_MESSAGE, 0, 0, what), true);
         new_item.quantity = stolen_amount;
     }
 
