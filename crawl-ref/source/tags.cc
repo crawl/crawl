@@ -6306,6 +6306,12 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
     mi.props.read(th);
 
 #if TAG_MAJOR_VERSION == 34
+    if (mi.props.exists(MONSTER_TILE_KEY)
+        && mi.props[MONSTER_TILE_KEY].get_type() == SV_SHORT)
+    {
+        mi.props[MONSTER_TILE_KEY].get_int() = mi.props[MONSTER_TILE_KEY];
+    }
+
     if (mi.type == MONS_ZOMBIE_SMALL || mi.type == MONS_ZOMBIE_LARGE)
         mi.type = MONS_ZOMBIE;
     if (mi.type == MONS_SKELETON_SMALL || mi.type == MONS_SKELETON_LARGE)
@@ -7152,6 +7158,14 @@ void unmarshallMonster(reader &th, monster& m)
 
     m.props.clear();
     m.props.read(th);
+
+#if TAG_MAJOR_VERSION == 34
+    if (m.props.exists(MONSTER_TILE_KEY)
+        && m.props[MONSTER_TILE_KEY].get_type() == SV_SHORT)
+    {
+        m.props[MONSTER_TILE_KEY].get_int() = m.props[MONSTER_TILE_KEY];
+    }
+#endif
 
     if (m.props.exists(MONSTER_TILE_NAME_KEY))
     {
