@@ -1007,9 +1007,7 @@ void floor_transition(dungeon_feature_type how,
     }
 
     // scary hack!
-    if (crawl_state.game_is_descent() && !env.properties.exists(DESCENT_STAIRS_KEY)
-        && (how == DNGN_STONE_STAIRS_DOWN_I || how == DNGN_STONE_STAIRS_DOWN_II
-        || how == DNGN_STONE_STAIRS_DOWN_III))
+    if (crawl_state.game_is_descent() && !env.properties.exists(DESCENT_STAIRS_KEY))
             load_level(how, LOAD_VISITOR, old_level);
 
     const auto speed = dest_known ? LOAD_ENTER_LEVEL : LOAD_ENTER_LEVEL_FAST;
