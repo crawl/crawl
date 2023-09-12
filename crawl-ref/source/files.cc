@@ -2202,13 +2202,13 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                               && !feat_is_escape_hatch(stair_taken)
                               && stair_taken != DNGN_TRAP_SHAFT
                               && old_level.branch == you.where_are_you;
-                              
+
     // Markers must be activated early, since they may rely on
     // events issued later, e.g. DET_ENTERING_LEVEL or
     // the DET_TURN_ELAPSED from update_level.
     if (make_changes || (load_mode == LOAD_RESTART_GAME && !descent_peek))
         env.markers.activate_all();
-    
+
     if (load_mode == LOAD_RESTART_GAME && descent_peek)
         env.markers.clear_need_activate();
 
