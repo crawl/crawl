@@ -1006,10 +1006,6 @@ void floor_transition(dungeon_feature_type how,
         mpr("Beware, you cannot shaft yourself on this level.");
     }
 
-    // scary hack!
-    if (crawl_state.game_is_descent() && !env.properties.exists(DESCENT_STAIRS_KEY))
-            load_level(how, LOAD_VISITOR, old_level);
-
     const auto speed = dest_known ? LOAD_ENTER_LEVEL : LOAD_ENTER_LEVEL_FAST;
     const bool newlevel = load_level(how, speed, old_level);
 
@@ -1018,6 +1014,10 @@ void floor_transition(dungeon_feature_type how,
         _new_level_amuses_xom(how, whence, shaft,
                               (shaft ? whither.depth - old_level.depth : 1),
                               !forced);
+
+        // scary hack!
+        if (crawl_state.game_is_descent() && !env.properties.exists(DESCENT_STAIRS_KEY))
+            load_level(how, LOAD_RESTART_GAME, old_level);
     }
 
     // This should maybe go in load_level?
