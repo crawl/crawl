@@ -211,7 +211,7 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_DOOM_HOWL] = 0;
         you.duration[DUR_WEAK] = 0;
         you.duration[DUR_NO_HOP] = 0;
-        you.duration[DUR_LOCKED_DOWN] = 0;
+        you.duration[DUR_DIMENSION_ANCHOR] = 0;
         you.duration[DUR_NO_MOMENTUM] = 0;
         you.props[CORROSION_KEY] = 0;
         you.duration[DUR_BARBS] = 0;
