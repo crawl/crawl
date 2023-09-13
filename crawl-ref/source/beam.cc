@@ -3242,7 +3242,7 @@ bool bolt::misses_player()
                 }
                 else
                 {
-                    mprf("You block %s... and reflect it back!",
+                    mprf("You block the %s... and reflect it back!",
                             refl_name.c_str());
                 }
                 reflect();
