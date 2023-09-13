@@ -758,6 +758,11 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_colour = LIGHTMAGENTA;
             inf.light_text = "Orb";
         }
+        else if (player_equip_unrand(UNRAND_CHARLATANS_ORB))
+        {
+            inf.light_colour = LIGHTMAGENTA;
+            inf.light_text = "Orb?";
+        }
         else if (orb_limits_translocation())
         {
             inf.light_colour = MAGENTA;
