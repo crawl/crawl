@@ -1,4 +1,4 @@
-# This file contains the definitions of undrandarts (and what used to be
+# This file contains the definitions of unrandarts (and what used to be
 # fixed artefacts).  util/art-data.pl translates this file into
 # art-data.h, and also updates the enumeration and NUM_UNRANDARTS in
 # artefact.h. C/C++ functions which give unrandarts non-standard
@@ -1709,6 +1709,16 @@ TILE:    urand_hermit_pendant
 MP:      +5
 INSCRIP: Invo=14 Evo=0
 DBRAND:  It sets your invocations skill to 14 and your evocations skill to 0.
+
+NAME:     Charlatan's Orb
+OBJ:      OBJ_ARMOUR/ARM_ORB
+TILE:     urand_charlatan
+TILE_EQ:  orb2
+COLOUR:   MAGENTA
+INSCRIP: orb
+DBRAND:  It boosts the power of your evoked items.
++It massively reduces your stealth.
++It interferes with translocations, delaying teleports
 
 # This entry must always be last.
 ENUM:   DUMMY2
