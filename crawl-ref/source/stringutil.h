@@ -6,6 +6,7 @@
 #pragma once
 
 #include <vector>
+#include <set>
 
 #include "config.h"
 #include "libutil.h" // always_true
@@ -124,7 +125,7 @@ Enum find_earliest_match(const string &spec, Enum begin, Enum end,
  * @tparam F A callable type that takes whatever Z points to, and
  *     returns a string or null-terminated char *.
  * @tparam G A callable type that takes whatever Z points to, and
- *     returns some type that is explicitly convertable to bool
+ *     returns some type that is explicitly convertible to bool
  *
  * @param start An iterator to the beginning of the range of elements to
  *     consider.
@@ -142,7 +143,7 @@ Enum find_earliest_match(const string &spec, Enum begin, Enum end,
  *     of elements in the range.
  *
  * @return A string containing the stringifications of all the elements
- *     for which filter returns true, with andc separating the last two
+ *     for which filter returns true, with and separating the last two
  *     elements and comma separating the other elements. If the range is
  *     empty, returns the empty string.
  */
@@ -238,13 +239,13 @@ static inline bool ends_with(const string &s, const string &suffix)
     return s.find(suffix, s.length() - suffix.length()) != string::npos;
 }
 
-// Splits string 's' on the separator 'sep'. If trim == true, trims each
-// segment. If accept_empties == true, accepts empty segments. If nsplits >= 0,
-// splits on the first nsplits occurrences of the separator, and stores the
-// remainder of the string as the last segment; negative values of nsplits
-// split on all occurrences of the separator.
 vector<string> split_string(const string &sep, string s, bool trim = true,
-                            bool accept_empties = false, int nsplits = -1);
+                            bool accept_empties = false, int nsplits = -1,
+                            bool ignore_escapes = false);
+
+set<size_t> find_escapes(const string &s);
+string deescape(string s, const set<size_t> &escapes);
+string deescape(string s);
 
 // time
 

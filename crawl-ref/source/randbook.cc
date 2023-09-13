@@ -557,27 +557,27 @@ bool make_book_level_randart(item_def &book, int level, bool sif)
     {
         if (level > 1)
             return make_book_level_randart(book, level - 1);
-        char buf[80];
+        string err;
 
         if (god_discard > 0 && uncastable_discard == 0)
         {
-            snprintf(buf, sizeof(buf), "%s disliked all level %d spells",
+            err = make_stringf("%s disliked all level %d spells",
                      god_name(god).c_str(), level);
         }
         else if (god_discard == 0 && uncastable_discard > 0)
-            sprintf(buf, "No level %d spells can be cast by you", level);
+            err = make_stringf("No level %d spells can be cast by you", level);
         else if (god_discard > 0 && uncastable_discard > 0)
         {
-            snprintf(buf, sizeof(buf),
+            err = make_stringf(
                      "All level %d spells are either disliked by %s "
                      "or cannot be cast by you.",
                      level, god_name(god).c_str());
         }
         else
-            sprintf(buf, "No level %d spells?!?!?!", level);
+            err = make_stringf("No level %d spells?!?!?!", level);
 
         mprf(MSGCH_ERROR, "Could not create fixed level randart spellbook: %s",
-             buf);
+             err.c_str());
 
         return false;
     }
@@ -889,18 +889,6 @@ static string _gen_randbook_owner(god_type god, spschool disc1,
     return "";
 }
 
-// Give Roxanne a randart spellbook of the disciplines Transmutations/Earth
-// that includes Statue Form and is named after her.
-void make_book_roxanne_special(item_def *book)
-{
-    spschool disc = random_choose(spschool::transmutation, spschool::earth);
-    vector<spell_type> forced_spell = {SPELL_STATUE_FORM};
-    build_themed_book(*book,
-                      forced_spell_filter(forced_spell,
-                                           capped_spell_filter(19)),
-                      forced_book_theme(disc), 5, "Roxanne");
-}
-
 /// Does the given acq source generate books totally randomly?
 static bool _completely_random_books(int agent)
 {
@@ -909,7 +897,7 @@ static bool _completely_random_books(int agent)
     return agent == GOD_XOM || agent == GOD_NO_GOD;
 }
 
-/// How desireable is the given spell for inclusion in an acquired randbook?
+/// How desirable is the given spell for inclusion in an acquired randbook?
 static int _randbook_spell_weight(spell_type spell, int agent)
 {
     if (_completely_random_books(agent))

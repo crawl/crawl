@@ -60,8 +60,8 @@ function callback.badplayer_boxes_open_up(data, triggerable, triggerer, marker,
                                           ev)
   if not data.triggered then
     data.triggered = true
-    for slave in iter.slave_iterator("disappearing_wall", 1) do
-      dgn.terrain_changed(slave.x, slave.y, "floor", false)
+    for replica in iter.replica_iterator("disappearing_wall", 1) do
+      dgn.terrain_changed(replica.x, replica.y, "floor", false)
     end
     crawl.mpr("There is a click, and some walls slide away!", 'warning')
   end
@@ -1146,7 +1146,7 @@ NSUBST: M  = 1:+ / *:c
 lua_marker(":", Triggerable.synchronized_markers(
   function_at_spot( "callback.badplayer_boxes_open_up",
                     { triggered = false }, true,
-                    { only_at_slave = true, listen_to_slaves = true })))
+                    { only_at_replica = true, listen_to_replicas = true })))
 
 lua_marker('ab', props_marker {disappearing_wall = 1})
 }}

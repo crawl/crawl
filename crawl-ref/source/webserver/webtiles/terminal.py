@@ -12,15 +12,13 @@ import tornado.ioloop
 from tornado.escape import to_unicode
 from tornado.ioloop import IOLoop
 
-from webtiles import util
+from webtiles import util, config
 
 BUFSIZ = 2048
 
 class TerminalRecorder(object):
     def __init__(self,
                  command, # type: List[str]
-                 filename,
-                 id_header,
                  logger,
                  termsize,
                  env_vars, # type: Dict[str, str]
@@ -30,14 +28,11 @@ class TerminalRecorder(object):
         Args:
             command: argv of command to run, eg [cmd, args, ...]
             env_vars: dictionary of environment variables to set. The variables
-                COLUMNS, LINES, and TERM cannot be overriden.
+                COLUMNS, LINES, and TERM cannot be overridden.
         """
         self.command = command
-        if filename:
-            self.ttyrec = open(filename, "wb", 0) # type: Optional[BinaryIO]
-        else:
-            self.ttyrec = None
-        self.id = id
+        self.ttyrec = None
+        self.desc = "TerminalRecorder"
         self.returncode = None
         self.output_buffer = b""
         self.termsize = termsize
@@ -57,8 +52,13 @@ class TerminalRecorder(object):
 
         self.logger = logger
 
+    def start(self, ttyrec_filename, id_header):
+        if ttyrec_filename:
+            self.desc = ttyrec_filename
+            with util.SlowWarning("Slow IO: open '%s'" % self.desc):
+                self.ttyrec = open(ttyrec_filename, "wb") # type: Optional[BinaryIO]
         if id_header:
-            self.write_ttyrec_chunk(id_header)
+            self.write_ttyrec_chunk(id_header, flush=True)
 
         self._spawn()
 
@@ -69,6 +69,14 @@ class TerminalRecorder(object):
 
         if self.pid == 0:
             # We're the child
+            # Warning! There are potential race conditions if a signal is
+            # received (or maybe other things happen) before the execvpe call
+            # replaces python state...
+
+            # prevent server's finally block from running in the event of an
+            # early signal:
+            config.set("pidfile", None)
+            # replace server's signal handling:
             def handle_signal(signal, f):
                 sys.exit(0)
             signal.signal(1, handle_signal)
@@ -104,6 +112,8 @@ class TerminalRecorder(object):
 
         # We're the parent
         os.close(errpipe_write)
+        if not self.ttyrec:
+            self.desc = "TerminalRecorder (fd %d)" % self.child_fd
 
         IOLoop.current().add_handler(self.child_fd,
                                      self._handle_read,
@@ -113,11 +123,11 @@ class TerminalRecorder(object):
                                      self._handle_err_read,
                                      IOLoop.READ)
 
-    @util.note_blocking_fun
     def _handle_read(self, fd, events):
         if events & IOLoop.READ:
             try:
-                buf = os.read(fd, BUFSIZ)
+                with util.SlowWarning("Slow IO: os.read (session '%s')" % self.desc):
+                    buf = os.read(fd, BUFSIZ)
             except (OSError, IOError):
                 self.poll() # fd probably closed?
                 return
@@ -136,10 +146,10 @@ class TerminalRecorder(object):
         if events & IOLoop.ERROR:
             self.poll()
 
-    @util.note_blocking_fun
     def _handle_err_read(self, fd, events):
         if events & IOLoop.READ:
-            buf = os.read(fd, BUFSIZ)
+            with util.SlowWarning("Slow IO: os.read stderr (session '%s')" % self.desc):
+                buf = os.read(fd, BUFSIZ)
 
             if len(buf) > 0:
                 self.error_buffer += buf
@@ -147,18 +157,27 @@ class TerminalRecorder(object):
 
             self.poll()
 
-    @util.note_blocking_fun
     def write_ttyrec_header(self, sec, usec, l):
-        if self.ttyrec is None: return
+        if self.ttyrec is None:
+            return
         s = struct.pack("<iii", sec, usec, l)
         self.ttyrec.write(s)
 
-    @util.note_blocking_fun
-    def write_ttyrec_chunk(self, data):
-        if self.ttyrec is None: return
-        t = time.time()
-        self.write_ttyrec_header(int(t), int((t % 1) * 1000000), len(data))
-        self.ttyrec.write(data)
+    def write_ttyrec_chunk(self, data, flush=False):
+        if self.ttyrec is None:
+            return
+        with util.SlowWarning("Slow IO: write_ttyrec_chunk '%s'" % self.desc):
+            t = time.time()
+            self.write_ttyrec_header(int(t), int((t % 1) * 1000000), len(data))
+            self.ttyrec.write(data)
+        if flush:
+            self.flush_ttyrec()
+
+    def flush_ttyrec(self):
+        if self.ttyrec is None:
+            return
+        with util.SlowWarning("Slow IO: flush '%s'" % self.desc):
+            self.ttyrec.flush()
 
     def _do_output_callback(self):
         pos = self.output_buffer.find(b"\n")
@@ -213,7 +232,8 @@ class TerminalRecorder(object):
                 os.close(self.errpipe_read)
 
                 if self.ttyrec:
-                    self.ttyrec.close()
+                    with util.SlowWarning("Slow IO: close '%s'" % self.desc):
+                        self.ttyrec.close()
 
                 if self.end_callback:
                     self.end_callback()

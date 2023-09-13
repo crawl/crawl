@@ -48,7 +48,7 @@ enum monster_type                      // env.mons[].type
 #endif
 #if TAG_MAJOR_VERSION > 34
     MONS_CRYSTAL_ECHIDNA,
-    MONS_PALENTONGA,
+    MONS_ARMATAUR,
 #endif
     MONS_JACKAL,
     MONS_HOUND,
@@ -352,6 +352,7 @@ enum monster_type                      // env.mons[].type
     MONS_FUNGUS,
     MONS_WANDERING_MUSHROOM,
 #if TAG_MAJOR_VERSION > 34
+    MONS_SLEEPCAP,
     MONS_DEATHCAP,
 #endif
     MONS_PLANT,
@@ -463,6 +464,8 @@ enum monster_type                      // env.mons[].type
     MONS_MERFOLK_AVATAR,
 #if TAG_MAJOR_VERSION > 34
     MONS_DROWNED_SOUL,
+    MONS_SICKLY_MERFOLK_SIREN,
+    MONS_MALARIOUS_MERFOLK_AVATAR,
 #endif
     MONS_MERFOLK_IMPALER,
     MONS_MERFOLK_AQUAMANCER,
@@ -592,11 +595,15 @@ enum monster_type                      // env.mons[].type
     MONS_ELECTRIC_EEL,
 #if TAG_MAJOR_VERSION == 34
     MONS_JELLYFISH,
+#else
+    MONS_FORMLESS_JELLYFISH,
 #endif
     MONS_WATER_ELEMENTAL,
     MONS_SWAMP_WORM,
 #if TAG_MAJOR_VERSION == 34
     MONS_SHARK,
+#else
+    MONS_SKYSHARK,
 #endif
     MONS_KRAKEN,
     MONS_KRAKEN_TENTACLE,
@@ -621,6 +628,9 @@ enum monster_type                      // env.mons[].type
     MONS_UFETUBUS,
     MONS_IRON_IMP,
     MONS_SHADOW_IMP,
+#if TAG_MAJOR_VERSION > 34
+    MONS_CERULEAN_IMP,
+#endif
     MONS_RED_DEVIL,
 #if TAG_MAJOR_VERSION == 34
     MONS_ROTTING_DEVIL,
@@ -834,9 +844,7 @@ enum monster_type                      // env.mons[].type
     MONS_WIGLAF,
 #endif
     MONS_XTAHUA,
-#if TAG_MAJOR_VERSION == 34
     MONS_NORRIS,
-#endif
     MONS_FREDERICK,
     MONS_MARGERY,
     MONS_BORIS,
@@ -899,6 +907,7 @@ enum monster_type                      // env.mons[].type
     MONS_VV,
     MONS_ZENATA,
     MONS_GRUNN,
+    MONS_JEREMIAH,
 #endif
     // Sprint uniques:
     MONS_CHUCK,
@@ -1123,7 +1132,7 @@ enum monster_type                      // env.mons[].type
     MONS_FOXFIRE,
     MONS_MAGGIE,
     MONS_NAMELESS,
-    MONS_PALENTONGA,
+    MONS_ARMATAUR,
     MONS_BLOATED_HUSK,
     MONS_BUNYIP,
     MONS_GOLIATH_FROG,
@@ -1177,6 +1186,13 @@ enum monster_type                      // env.mons[].type
     MONS_METEORAN,
     MONS_GRUNN,
     MONS_STARFLOWER,
+    MONS_SICKLY_MERFOLK_SIREN,
+    MONS_MALARIOUS_MERFOLK_AVATAR,
+    MONS_SKYSHARK,
+    MONS_SLEEPCAP,
+    MONS_CERULEAN_IMP,
+    MONS_FORMLESS_JELLYFISH,
+    MONS_JEREMIAH,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

@@ -26,6 +26,7 @@
 #include "chardump.h"
 #include "cloud.h"
 #include "colour.h"
+#include "database.h"
 #include "delay.h"
 #include "dgn-event.h"
 #include "end.h"
@@ -44,6 +45,7 @@
 #include "mgen-data.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "mon-speak.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "nearby-danger.h"
@@ -79,7 +81,7 @@ void maybe_melt_player_enchantments(beam_type flavour, int damage)
             if (!you.duration[DUR_ICEMAIL_DEPLETED])
             {
                 if (you.has_mutation(MUT_ICEMAIL))
-                    mprf(MSGCH_DURATION, "Your icy defenses dissipate!");
+                    mprf(MSGCH_DURATION, "Your icy defences dissipate!");
                 else
                     mprf(MSGCH_DURATION, "Your condensation shield dissipates!");
             }
@@ -311,7 +313,8 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
     qazlal_element_adapt(flavour, strength);
 
     if (flavour == BEAM_COLD && slow_cold_blooded
-        && you.get_mutation_level(MUT_COLD_BLOODED)
+        && (you.get_mutation_level(MUT_COLD_BLOODED)
+            || you.form == transformation::anaconda)
         && you.res_cold() <= 0 && coinflip())
     {
         you.slow_down(0, strength);
@@ -345,10 +348,9 @@ void lose_level()
     calc_hp();
     calc_mp();
 
-    char buf[200];
-    sprintf(buf, "HP: %d/%d MP: %d/%d",
-            you.hp, you.hp_max, you.magic_points, you.max_magic_points);
-    take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
+    take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0,
+        make_stringf("HP: %d/%d MP: %d/%d",
+                you.hp, you.hp_max, you.magic_points, you.max_magic_points)));
 
     you.redraw_title = true;
     you.redraw_experience = true;
@@ -714,15 +716,19 @@ static void _deteriorate(int dam)
     }
 }
 
+int corrosion_chance(int sources)
+{
+    return 3 * sources;
+}
+
 /**
  * Maybe corrode the player after taking damage if they're wearing *Corrode.
  **/
 static void _maybe_corrode()
 {
     int corrosion_sources = you.scan_artefacts(ARTP_CORRODE);
-    int degree = binomial(corrosion_sources, 3);
-    if (degree > 0)
-        you.corrode_equipment("Your corrosive artefact", degree);
+    if (x_chance_in_y(corrosion_chance(corrosion_sources), 100))
+        you.corrode_equipment("Your corrosive artefact");
 }
 
 /**
@@ -731,8 +737,34 @@ static void _maybe_corrode()
 static void _maybe_slow()
 {
     int slow_sources = you.scan_artefacts(ARTP_SLOW);
-    for (int degree = binomial(slow_sources, 1); degree > 0; degree--)
+    if (x_chance_in_y(slow_sources, 100))
         slow_player(10 + random2(5));
+}
+
+/**
+ * Maybe disable scrolls after taking damage if the player has MUT_READ_SAFETY.
+ **/
+static void _maybe_disable_scrolls()
+{
+    int mut_level = you.get_mutation_level(MUT_READ_SAFETY);
+    if (mut_level && !you.duration[DUR_NO_SCROLLS] && x_chance_in_y(mut_level, 100))
+    {
+        mpr("You feel threatened and lose the ability to read scrolls!");
+        you.increase_duration(DUR_NO_SCROLLS, 10 + random2(5));
+    }
+}
+
+/**
+ * Maybe disable potions after taking damage if the player has MUT_DRINK_SAFETY.
+ **/
+static void _maybe_disable_potions()
+{
+    int mut_level = you.get_mutation_level(MUT_DRINK_SAFETY);
+    if (mut_level && !you.duration[DUR_NO_POTIONS] && x_chance_in_y(mut_level, 100))
+    {
+        mpr("You feel threatened and lose the ability to drink potions!");
+        you.increase_duration(DUR_NO_POTIONS, 10 + random2(5));
+    }
 }
 
 static void _place_player_corpse(bool explode)
@@ -768,14 +800,25 @@ static void _wizard_restore_life()
 }
 #endif
 
+int outgoing_harm_amount(int levels)
+{
+    return 15 * (levels + 1);
+}
+
+int incoming_harm_amount(int levels)
+{
+    return 10 * (levels + 1);
+}
+
 static int _apply_extra_harm(int dam, mid_t source)
 {
     monster* damager = monster_by_mid(source);
-    // Don't check for monster amulet if there source isn't a monster
+    // +30% damage if opp has one level of harm, +45% with two
     if (damager && damager->extra_harm())
-        return dam * 13 / 10; // +30% damage when the opponent has harm
-    else if (you.extra_harm())
-        return dam * 6 / 5; // +20% damage when you have harm
+        return dam * (100 + outgoing_harm_amount(damager->extra_harm())) / 100;
+    // +20% damage if you have one level of harm, +30% with two
+    if (you.extra_harm())
+        return dam * (100 + incoming_harm_amount(you.extra_harm())) / 100;
 
     return dam;
 }
@@ -807,52 +850,122 @@ int do_shave_damage(int dam)
 }
 #endif
 
-// Determine what's threatening for purposes of no drink and no scroll mutation.
-// The statuses are guaranteed not to happen if the incoming damage is less
-// than 12/5% max hp and if the remaining hp is higher than 50/80% based on the
-// mutation tier. Otherwise, they scale up with damage taken and with lower
-// health, becoming certain at 50/20% max health damage.
-static bool _is_damage_threatening (int damage_fraction_of_hp, int mut_level)
+/// Let Sigmund crow in triumph.
+static void _triumphant_mons_speech(actor *killer)
 {
-    const int hp_fraction = you.hp * 100 / you.hp_max;
-    const int safe_damage_fraction = mut_level == 1 ? 12 : 5;
-    const int scary_damage_fraction = mut_level == 1 ? 50 : 20;
-    return damage_fraction_of_hp > safe_damage_fraction
-            && hp_fraction <= 100 - scary_damage_fraction + safe_damage_fraction
-            && (damage_fraction_of_hp + random2(scary_damage_fraction) >= scary_damage_fraction
-                || random2(100) > hp_fraction);
+    if (!killer || !killer->alive())
+        return;
+
+    monster* mon = killer->as_monster();
+    if (mon && !mon->wont_attack())
+        mons_speaks(mon);  // They killed you and they meant to.
 }
 
-// Palentongas curl up after the first time they've been hit in a round.
-static void _consider_curling(kill_method_type death_type)
+static void _god_death_message(kill_method_type death_type, const actor *killer)
 {
-    if (!you.has_mutation(MUT_CURL)
-        || you.props[PALENTONGA_CURL_KEY].get_bool())
+    xom_death_message(death_type);
+
+    switch (you.religion)
     {
+    case GOD_FEDHAS:
+        simple_god_message(" appreciates your contribution to the "
+                           "ecosystem.");
+        break;
+
+    case GOD_NEMELEX_XOBEH:
+        nemelex_death_message();
+        break;
+
+    case GOD_KIKUBAAQUDGHA:
+    {
+        const mon_holy_type holi = you.holiness();
+
+        if (holi & (MH_NONLIVING | MH_UNDEAD))
+        {
+            simple_god_message(" rasps: \"You have failed me! "
+                               "Welcome... oblivion!\"");
+        }
+        else
+        {
+            simple_god_message(" rasps: \"You have failed me! "
+                               "Welcome... death!\"");
+        }
+        break;
+    }
+
+    case GOD_YREDELEMNUL:
+        if (you.undead_state() != US_ALIVE)
+            mprf(MSGCH_GOD, "You join the legions of the undead harvest.");
+        else if (death_type != KILLED_BY_DISINT
+              && death_type != KILLED_BY_LAVA)
+        {
+            mprf(MSGCH_GOD, "Your body rises from the dead as a mindless "
+                 "zombie.");
+        }
+        // No message if you're not undead and your corpse is lost.
+        break;
+
+    case GOD_BEOGH:
+        if (killer && killer->is_monster() && killer->deity() == GOD_BEOGH)
+        {
+            const string msg = " appreciates "
+                + killer->name(DESC_ITS)
+                + " killing of a heretic priest.";
+            simple_god_message(msg.c_str());
+        }
+        break;
+
+#if TAG_MAJOR_VERSION == 34
+    case GOD_PAKELLAS:
+    {
+        const string result = getSpeakString("Pakellas death");
+        god_speaks(GOD_PAKELLAS, result.c_str());
+        break;
+    }
+#endif
+
+    default:
+        if (will_have_passive(passive_t::goldify_corpses)
+            && death_type != KILLED_BY_DISINT
+            && death_type != KILLED_BY_LAVA)
+        {
+            mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
+        }
+        // Doesn't depend on Okawaru worship - you can still lose the duel
+        // after abandoning.
+        if (killer && killer->props.exists(OKAWARU_DUEL_TARGET_KEY))
+        {
+            const string msg = " crowns "
+                + killer->name(DESC_THE, true)
+                + " victorious!";
+            simple_god_message(msg.c_str(), GOD_OKAWARU);
+        }
+        break;
+    }
+}
+
+static void _print_endgame_messages(scorefile_entry &se)
+{
+    const kill_method_type death_type = (kill_method_type) se.get_death_type();
+    const bool non_death = death_type == KILLED_BY_QUITTING
+                        || death_type == KILLED_BY_WINNING
+                        || death_type == KILLED_BY_LEAVING;
+    if (non_death)
         return;
-    }
 
-    switch (death_type)
-    {
-        case KILLED_BY_MONSTER:
-        case KILLED_BY_BEAM:
-        case KILLED_BY_DEATH_EXPLOSION:
-        case KILLED_BY_TRAP:
-        case KILLED_BY_BOUNCE:
-        case KILLED_BY_REFLECTION:
-        case KILLED_BY_DISINT:
-        case KILLED_BY_HEADBUTT:
-        case KILLED_BY_ROLLING:
-        case KILLED_BY_BEING_THROWN:
-        case KILLED_BY_COLLISION:
-            break;
-        default:
-            // stuff like poison, smiting, etc
-            return;
-    }
 
-    you.props[PALENTONGA_CURL_KEY] = true;
-    you.redraw_armour_class = true;
+    canned_msg(MSG_YOU_DIE);
+
+    actor* killer = se.killer();
+    _triumphant_mons_speech(killer);
+    _god_death_message(death_type, killer);
+
+    flush_prev_message();
+    viewwindow(); // don't do for leaving/winning characters
+    update_screen();
+
+    if (crawl_state.game_is_hints())
+        hints_death_screen();
 }
 
 /** Hurt the player. Isn't it fun?
@@ -876,7 +989,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     int drain_amount = 0;
 
-    // Multiply damage if scarf of harm is in play
+    // Multiply damage if Harm is in play
     if (dam != INSTANT_DEATH)
         dam = _apply_extra_harm(dam, source);
 
@@ -909,8 +1022,6 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     if (dam > 0 && dam < you.hp && death_type != KILLED_BY_POISON)
         you.check_awaken(500);
 
-    _consider_curling(death_type);
-
     const bool non_death = death_type == KILLED_BY_QUITTING
                         || death_type == KILLED_BY_WINNING
                         || death_type == KILLED_BY_LEAVING;
@@ -927,49 +1038,16 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     {
         // death's door protects against everything but falling into
         // water/lava, Zot, excessive rot, leaving the dungeon, or quitting.
-        if (you.duration[DUR_DEATHS_DOOR])
+        // Likewise, dreamshard protects you until the start of your next turn.
+        if (you.duration[DUR_DEATHS_DOOR] || you.props.exists(DREAMSHARD_KEY))
             return;
         // the dreamshard necklace protects from any fatal blow or death source
-        // that death's door would protect from, plus a chance of activating on
-        // hits for more than 80% of a player's remaining hitpoints
-        // (but doesn't activate while in death's door)
+        // that death's door would protect from.
         else if (player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE)
-                 && (dam >= you.hp
-                     || ((dam * 100) / you.hp) > 80 && coinflip()))
+                 && dam >= you.hp)
         {
             dreamshard_shatter();
             return;
-        }
-    }
-
-    if (dam > 0 && death_type != KILLED_BY_POISON)
-    {
-        int damage_fraction_of_hp = dam * 100 / you.hp_max;
-
-        // Check _is_damage_threatening separately for read and drink so they
-        // don't always trigger in unison when you have both.
-        if (you.get_mutation_level(MUT_READ_SAFETY))
-        {
-            if (_is_damage_threatening(damage_fraction_of_hp,
-                                       you.get_mutation_level(MUT_READ_SAFETY)))
-            {
-                if (!you.duration[DUR_NO_SCROLLS])
-                    mpr("You feel threatened and lose the ability to read scrolls!");
-
-                you.increase_duration(DUR_NO_SCROLLS, 1 + random2(dam), 30);
-            }
-        }
-
-        if (you.get_mutation_level(MUT_DRINK_SAFETY))
-        {
-            if (_is_damage_threatening(damage_fraction_of_hp,
-                                       you.get_mutation_level(MUT_DRINK_SAFETY)))
-            {
-                if (!you.duration[DUR_NO_POTIONS])
-                    mpr("You feel threatened and lose the ability to drink potions!");
-
-                you.increase_duration(DUR_NO_POTIONS, 1 + random2(dam), 30);
-            }
         }
     }
 
@@ -989,7 +1067,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             drain_mp(mp);
 
             // Wake players who took fatal damage exactly equal to current HP,
-            // but had it reduced below fatal threshhold by spirit shield.
+            // but had it reduced below fatal threshold by spirit shield.
             if (dam < you.hp)
                 you.check_awaken(500);
 
@@ -1059,6 +1137,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             {
                 _maybe_corrode();
                 _maybe_slow();
+                _maybe_disable_scrolls();
+                _maybe_disable_potions();
             }
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);
@@ -1149,7 +1229,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         if (!non_death)
             tutorial_death_message();
 
-        screen_end_game("");
+        // only quitting can lead to this?
+        screen_end_game("", game_exit::quit);
     }
 
     // Okay, so you're dead.
@@ -1182,7 +1263,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     // Prevent bogus notes.
     activate_notes(false);
-
+    _print_endgame_messages(se);
     end_game(se);
 }
 

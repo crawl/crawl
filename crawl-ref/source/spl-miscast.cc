@@ -352,7 +352,8 @@ static const map<spschool, miscast_datum> miscast_effects = {
                 {
                     // number arbitrarily chosen & needs more playtesting
                     const int dur = div_rand_round(dam, 2);
-                    you.set_duration(DUR_LOCKED_DOWN, dur, dur,
+                    you.set_duration(DUR_DIMENSION_ANCHOR, dur, dur);
+                    you.set_duration(DUR_NO_MOMENTUM, dur, dur,
                                      "You are magically locked in place.");
                 }
                 else
@@ -596,6 +597,14 @@ void miscast_effect(spell_type spell, int fail)
     for (const auto bit : spschools_type::range())
         if (spell_typematch(spell, bit))
             school_list.push_back(bit);
+
+    // only monster spells should lack schools altogether, and they should
+    // only be castable under wizmode
+    ASSERT(you.wizard && (get_spell_flags(spell) & spflag::monster)
+            || !school_list.empty());
+
+    if (school_list.empty())
+        return;
 
     spschool school = *random_iterator(school_list);
 

@@ -6,7 +6,6 @@
 #pragma once
 
 #include "coord.h"
-#include "maybe-bool.h"
 
 #include <algorithm>
 #include <chrono>
@@ -19,15 +18,13 @@ void swap_with_monster(monster *mon_to_swap);
 void handle_real_time(chrono::time_point<chrono::system_clock> when
                       = chrono::system_clock::now());
 
+bool december_holidays();
 bool today_is_halloween();
+bool today_is_serious();
 bool now_is_morning();
 
 unsigned int breakpoint_rank(int val, const int breakpoints[],
                              unsigned int num_breakpoints);
-
-bool tobool(maybe_bool mb, bool def);
-maybe_bool frombool(bool b);
-const string maybe_to_string(const maybe_bool mb);
 
 struct counted_monster_list
 {

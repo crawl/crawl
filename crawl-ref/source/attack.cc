@@ -37,6 +37,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
+#include "spl-damage.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
@@ -55,8 +56,8 @@ attack::attack(actor *attk, actor *defn, actor *blame)
       attack_occurred(false), cancel_attack(false), did_hit(false),
       needs_message(false), attacker_visible(false), defender_visible(false),
       perceived_attack(false), obvious_effect(false), to_hit(0),
-      damage_done(0), special_damage(0), aux_damage(0), min_delay(0),
-      final_attack_delay(0), special_damage_flavour(BEAM_NONE),
+      damage_done(0), special_damage(0), aux_damage(0),
+      special_damage_flavour(BEAM_NONE),
       stab_attempt(false), stab_bonus(0), ev_margin(0), weapon(nullptr),
       damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT),
       art_props(0), unrand_entry(nullptr),
@@ -81,6 +82,8 @@ bool attack::handle_phase_blocked()
 
     if (attacker->is_player())
         behaviour_event(defender->as_monster(), ME_WHACK, attacker);
+
+    maybe_trigger_jinxbite();
 
     return true;
 }
@@ -158,17 +161,15 @@ int attack::calc_pre_roll_to_hit(bool random)
     {
         return AUTOMATIC_HIT;
     }
-
-    int mhit = attacker->is_player() ?
-                15 + (you.dex() / 2)
-              : calc_mon_to_hit_base();
+    int mhit;
 
     // This if statement is temporary, it should be removed when the
     // implementation of a more universal (and elegant) to-hit calculation
     // is designed. The actual code is copied from the old mons_to_hit and
     // player_to_hit methods.
-    if (attacker->is_player())
+    if (stat_source().is_player())
     {
+        mhit = 15 + (you.dex() / 2);
         // fighting contribution
         mhit += maybe_random_div(you.skill(SK_FIGHTING, 100), 100, random);
 
@@ -188,9 +189,9 @@ int attack::calc_pre_roll_to_hit(bool random)
             mhit += maybe_random_div(you.experience_level * 100, 100, random);
         else
         {
-            // Claws give a slight bonus to accuracy when active
-            mhit += (you.get_mutation_level(MUT_CLAWS) > 0
-                     && wpn_skill == SK_UNARMED_COMBAT) ? 4 : 2;
+            // UC gets extra acc to compensate for lack of weapon enchantment.
+            if (wpn_skill == SK_UNARMED_COMBAT)
+                mhit += 6;
 
             mhit += maybe_random_div(you.skill(wpn_skill, 100), 100,
                                      random);
@@ -221,6 +222,7 @@ int attack::calc_pre_roll_to_hit(bool random)
     }
     else    // Monster to-hit.
     {
+        mhit = calc_mon_to_hit_base();
         if (using_weapon())
             mhit += weapon->plus + property(*weapon, PWPN_HIT);
 
@@ -242,12 +244,12 @@ int attack::calc_pre_roll_to_hit(bool random)
  *
  * @param mhit The post-roll player's to-hit value.
  */
-int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/, bool /*aux*/)
+int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
 {
     int modifiers = 0;
 
     // Penalties for both players and monsters:
-    modifiers -= 5 * attacker->inaccuracy();
+    modifiers -= attacker->inaccuracy_penalty();
 
     if (attacker->confused())
         modifiers += CONFUSION_TO_HIT_MALUS;
@@ -293,15 +295,16 @@ int attack::calc_to_hit(bool random)
         return AUTOMATIC_HIT;
 
     // hit roll
-    if (attacker->is_player())
+    const actor &src = stat_source();
+    if (src.is_player())
         mhit = maybe_random2(mhit, random);
 
     mhit += post_roll_to_hit_modifiers(mhit, random);
 
     // We already did this roll for players.
-    if (!attacker->is_player())
+    if (!src.is_player())
         mhit = maybe_random2(mhit + 1, random);
-
+;
     dprf(DIAG_COMBAT, "%s: to-hit: %d",
          attacker->name(DESC_PLAIN).c_str(), mhit);
 
@@ -479,14 +482,10 @@ bool attack::distortion_affects_defender()
         NONE
     };
 
-    // Don't banish or blink the player during aoops, for sanity.
-    const int banish_weight = crawl_state.player_moving ? 0 : 5;
-    const int blink_weight = crawl_state.player_moving ? 0 : 20;
-
     const disto_effect choice = random_choose_weighted(35, SMALL_DMG,
                                                        25, BIG_DMG,
-                                                       banish_weight, BANISH,
-                                                       blink_weight, BLINK,
+                                                       5, BANISH,
+                                                       20, BLINK,
                                                        15,  NONE);
 
     if (simu && !(choice == SMALL_DMG || choice == BIG_DMG))
@@ -533,29 +532,13 @@ void attack::antimagic_affects_defender(int pow)
         enchant_actor_with_flavour(defender, nullptr, BEAM_DRAIN_MAGIC, pow);
 }
 
-/// Whose skill should be used for a pain-weapon effect?
-static actor* _pain_weapon_user(actor* attacker)
-{
-    if (attacker->type != MONS_SPECTRAL_WEAPON)
-        return attacker;
-
-    const mid_t summoner_mid = attacker->as_monster()->summoner;
-    if (summoner_mid == MID_NOBODY)
-        return attacker;
-
-    actor* summoner = actor_by_mid(attacker->as_monster()->summoner);
-    if (!summoner || !summoner->alive())
-        return attacker;
-    return summoner;
-}
-
 void attack::pain_affects_defender()
 {
-    actor* user = _pain_weapon_user(attacker);
-    if (!one_chance_in(user->skill_rdiv(SK_NECROMANCY) + 1))
+    actor &user = stat_source();
+    if (!one_chance_in(user.skill_rdiv(SK_NECROMANCY) + 1))
     {
         special_damage += resist_adjust_damage(defender, BEAM_NEG,
-                              random2(1 + user->skill_rdiv(SK_NECROMANCY)));
+                              random2(1 + user.skill_rdiv(SK_NECROMANCY)));
 
         if (special_damage && defender_visible)
         {
@@ -606,7 +589,7 @@ static const vector<chaos_effect> chaos_effects = {
         BEAM_NONE, [](attack &attack) {
             actor &defender = *attack.defender;
             ASSERT(defender.is_monster());
-            monster *clone = clone_mons(defender.as_monster(), true);
+            monster *clone = clone_mons(defender.as_monster());
             if (!clone)
                 return false;
 
@@ -618,6 +601,8 @@ static const vector<chaos_effect> chaos_effects = {
             // The player shouldn't get new permanent followers from cloning.
             if (clone->attitude == ATT_FRIENDLY && !clone->is_summoned())
                 clone->mark_summoned(6, true, MON_SUMM_CLONE);
+            else
+                clone->flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
             // Monsters being cloned is interesting.
             xom_is_stimulated(clone->friendly() ? 12 : 25);
@@ -666,7 +651,7 @@ static const vector<chaos_effect> chaos_effects = {
     { "hasting", 10, _is_chaos_slowable, BEAM_HASTE },
     { "mighting", 10, nullptr, BEAM_MIGHT },
     { "agilitying", 10, nullptr, BEAM_AGILITY },
-    { "invisible", 10, nullptr, BEAM_INVISIBILITY, },
+    { "resistance", 10, nullptr, BEAM_RESISTANCE, },
     { "slowing", 10, _is_chaos_slowable, BEAM_SLOW },
     {
         "paralysis", 5, [](const actor &defender) {
@@ -1084,7 +1069,7 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
 
     // XXX: should this also trigger on auxes?
     if (!aux && !ranged)
-        damage_plus += you.infusion_amount() * you.infusion_multiplier();
+        damage_plus += you.infusion_amount() * 4;
 
     return _core_apply_slaying(damage, damage_plus);
 }
@@ -1095,6 +1080,16 @@ int attack::player_apply_final_multipliers(int damage, bool /*aux*/)
     if (you.form == transformation::shadow)
         damage = div_rand_round(damage, 2);
 
+    // Spectral weapons deal "only" 70% of the damage that their
+    // owner would, matching cleaving.
+    if (attacker->type == MONS_SPECTRAL_WEAPON)
+        damage = div_rand_round(damage * 7, 10);
+
+    return damage;
+}
+
+int attack::player_apply_postac_multipliers(int damage)
+{
     return damage;
 }
 
@@ -1108,7 +1103,7 @@ void attack::player_exercise_combat_skills()
  * TODO: Complete symmetry for base_unarmed damage
  * between monsters and players.
  */
-int attack::calc_base_unarmed_damage()
+int attack::calc_base_unarmed_damage() const
 {
     // Should only get here if we're not wielding something that's a weapon.
     // If there's a non-weapon in hand, it has no base damage.
@@ -1122,15 +1117,20 @@ int attack::calc_base_unarmed_damage()
     return dam > 0 ? dam : 0;
 }
 
+int attack::adjusted_weapon_damage() const
+{
+    return brand_adjust_weapon_damage(weapon_damage(), damage_brand, true);
+}
+
 int attack::calc_damage()
 {
-    if (attacker->is_monster())
+    if (stat_source().is_monster())
     {
         int damage = 0;
         int damage_max = 0;
         if (using_weapon() || wpn_skill == SK_THROWING)
         {
-            damage_max = weapon_damage();
+            damage_max = adjusted_weapon_damage();
             damage += random2(damage_max);
 
             int wpn_damage_plus = 0;
@@ -1162,7 +1162,7 @@ int attack::calc_damage()
         int potential_damage, damage;
 
         potential_damage = using_weapon() || wpn_skill == SK_THROWING
-            ? weapon_damage() : calc_base_unarmed_damage();
+            ? adjusted_weapon_damage() : calc_base_unarmed_damage();
 
         potential_damage = stat_modify_damage(potential_damage, wpn_skill, using_weapon());
 
@@ -1184,6 +1184,7 @@ int attack::calc_damage()
             return 0;
         damage = player_apply_final_multipliers(damage);
         damage = apply_defender_ac(damage);
+        damage = player_apply_postac_multipliers(damage);
 
         damage = max(0, damage);
         set_attack_verb(damage);
@@ -1272,7 +1273,7 @@ bool attack::attack_shield_blocked(bool verbose)
                                       : atk_name(DESC_ITS).c_str());
         }
 
-        defender->shield_block_succeeded();
+        defender->shield_block_succeeded(attacker);
 
         return true;
     }
@@ -1333,7 +1334,7 @@ bool attack::apply_damage_brand(const char *what)
     if (!damage_done
         && (brand == SPWPN_FLAMING || brand == SPWPN_FREEZING
             || brand == SPWPN_HOLY_WRATH || brand == SPWPN_ANTIMAGIC
-            || brand == SPWPN_VORPAL || brand == SPWPN_VAMPIRISM))
+            || brand == SPWPN_VAMPIRISM))
     {
         // These brands require some regular damage to function.
         return false;
@@ -1407,11 +1408,6 @@ bool attack::apply_damage_brand(const char *what)
         drain_defender();
         break;
 
-    case SPWPN_VORPAL:
-        special_damage = 1 + random2(damage_done) / 3;
-        // Note: Leaving special_damage_message empty because there isn't one.
-        break;
-
     case SPWPN_VAMPIRISM:
     {
         if (!weapon
@@ -1456,7 +1452,8 @@ bool attack::apply_damage_brand(const char *what)
         break;
     }
     case SPWPN_PAIN:
-        pain_affects_defender();
+        if (!you_worship(GOD_TROG))
+            pain_affects_defender();
         break;
 
     case SPWPN_DISTORTION:
@@ -1532,7 +1529,7 @@ bool attack::apply_damage_brand(const char *what)
         break;
 
     case SPWPN_ACID:
-        defender->splash_with_acid(attacker, 3);
+        defender->splash_with_acid(attacker);
         break;
 
 
@@ -1722,4 +1719,25 @@ void attack::handle_noise(const coord_def & pos)
     loudness = min(12, loudness);
 
     noisy(loudness, pos, attacker->mid);
+}
+
+actor &attack::stat_source() const
+{
+    if (attacker->type != MONS_SPECTRAL_WEAPON)
+        return *attacker;
+
+    const mid_t summoner_mid = attacker->as_monster()->summoner;
+    if (summoner_mid == MID_NOBODY)
+        return *attacker;
+
+    actor* summoner = actor_by_mid(attacker->as_monster()->summoner);
+    if (!summoner || !summoner->alive())
+        return *attacker;
+    return *summoner;
+}
+
+void attack::maybe_trigger_jinxbite()
+{
+    if (attacker->is_player() && you.duration[DUR_JINXBITE])
+        jinxbite_fineff::schedule(defender);
 }

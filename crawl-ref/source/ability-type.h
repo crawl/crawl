@@ -54,11 +54,18 @@ enum ability_type
     ABIL_SHAFT_SELF,
     // Barachim
     ABIL_HOP,
-    // Palentongas
+#if TAG_MAJOR_VERSION == 34
+    // Armataurs
     ABIL_ROLLING_CHARGE,
-    // Air Walk
+#endif
+    // Storm Form
     ABIL_BLINKBOLT,
-    ABIL_MAX_INTRINSIC = ABIL_BLINKBOLT,
+    // Death Form
+    ABIL_SIPHON_ESSENCE,
+    // Talismans
+    ABIL_BEGIN_UNTRANSFORM,
+
+    // Note: this is getting dangerously close to ABIL_EVOKE_BERSERK! be careful
 
     // Evoking items.
 #if TAG_MAJOR_VERSION == 34
@@ -68,7 +75,6 @@ enum ability_type
     ABIL_EVOKE_BLINK,
 #else
     ABIL_EVOKE_BLINK = 40,
-    ABIL_MIN_EVOKE = ABIL_EVOKE_BLINK,
 #endif
     ABIL_EVOKE_TURN_INVISIBLE,
 #if TAG_MAJOR_VERSION == 34
@@ -81,10 +87,8 @@ enum ability_type
     ABIL_EVOKE_RATSKIN,
     ABIL_EVOKE_THUNDER,
 #endif
-    ABIL_EVOKE_ASMODEUS,
     ABIL_EVOKE_DISPATER,
     ABIL_EVOKE_OLGREB,
-    ABIL_MAX_EVOKE = ABIL_EVOKE_ASMODEUS,
 
     // Divine abilities
     // Zin
@@ -165,7 +169,9 @@ enum ability_type
     ABIL_ELYVILON_DIVINE_VIGOUR,
     // Lugonu
     ABIL_LUGONU_ABYSS_EXIT = 1100,
+#if TAG_MAJOR_VERSION == 34
     ABIL_LUGONU_BEND_SPACE,
+#endif
     ABIL_LUGONU_BANISH,
     ABIL_LUGONU_CORRUPT,
     ABIL_LUGONU_ABYSS_ENTER,
@@ -256,7 +262,8 @@ enum ability_type
     ABIL_RU_SACRIFICE_SKILL,
     ABIL_RU_SACRIFICE_EYE,
     ABIL_RU_SACRIFICE_RESISTANCE,
-        ABIL_FINAL_SACRIFICE = ABIL_RU_SACRIFICE_RESISTANCE,
+    ABIL_RU_SACRIFICE_FORMS,
+        ABIL_FINAL_SACRIFICE = ABIL_RU_SACRIFICE_FORMS,
     ABIL_RU_REJECT_SACRIFICES,
 
 #if TAG_MAJOR_VERSION == 34

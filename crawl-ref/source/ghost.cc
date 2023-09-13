@@ -32,7 +32,7 @@
 
 #define MAX_GHOST_DAMAGE     50
 #define MAX_GHOST_HP        400
-#define MAX_GHOST_EVASION    60
+#define MAX_GHOST_EVASION    50
 
 // Pan lord AOE conjuration spell list.
 static spell_type search_order_aoe_conj[] =
@@ -61,6 +61,7 @@ static spell_type search_order_conj[] =
     SPELL_MINDBURST,
     SPELL_BOLT_OF_FIRE,
     SPELL_BOLT_OF_COLD,
+    SPELL_UNMAKING,
     SPELL_IRON_SHOT,
     SPELL_POISON_ARROW,
     SPELL_BOLT_OF_DRAINING,
@@ -484,7 +485,7 @@ void ghost_demon::init_player_ghost()
                 case STAFF_POISON: brand = SPWPN_VENOM; break;
                 case STAFF_DEATH: brand = SPWPN_PAIN; break;
                 case STAFF_AIR: brand = SPWPN_ELECTROCUTION; break;
-                case STAFF_EARTH: brand = SPWPN_VORPAL; break;
+                case STAFF_EARTH: brand = SPWPN_HEAVY; break;
                 default: ;
                 }
             }

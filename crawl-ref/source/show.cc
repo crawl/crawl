@@ -109,9 +109,6 @@ bool show_type::is_cleanable_monster() const
 
 static void _update_feat_at(const coord_def &gp)
 {
-    if (!you.see_cell(gp))
-        return;
-
     dungeon_feature_type feat = env.grid(gp);
     unsigned colour = env.grid_colours(gp);
     trap_type trap = TRAP_UNASSIGNED;
@@ -216,6 +213,7 @@ static show_item_type _item_to_show_code(const item_def &item)
     case OBJ_RODS:       return SHOW_ITEM_ROD;
 #endif
     case OBJ_MISCELLANY: return SHOW_ITEM_MISCELLANY;
+    case OBJ_TALISMANS:  return SHOW_ITEM_TALISMAN;
     case OBJ_CORPSES:
         if (item.sub_type == CORPSE_SKELETON)
             return SHOW_ITEM_SKELETON;
@@ -420,7 +418,7 @@ static void _handle_unseen_mons(monster* mons, uint32_t hash_ind)
  *
  * This function updates the map_knowledge grid with a monster_info if relevant.
  * If the monster is not currently visible to the player, the map knowledge will
- * be upated with a disturbance if necessary.
+ * be updated with a disturbance if necessary.
  * @param mons  The monster at the relevant location.
 **/
 static void _update_monster(monster* mons)
@@ -501,28 +499,33 @@ void show_update_at(const coord_def &gp, layers_type layers)
         return;
     else
         env.map_knowledge(gp).clear_monster();
+
+    force_show_update_at(gp, layers);
+}
+
+void force_show_update_at(const coord_def &gp, layers_type layers)
+{
     // The sequence is grid, items, clouds, monsters.
     // XX it actually seems to be grid monsters clouds items??
     _update_feat_at(gp);
+    if (!in_bounds(gp))
+        return;
 
-    if (in_bounds(gp))
+    if (layers & LAYER_MONSTERS)
     {
-        if (layers & LAYER_MONSTERS)
-        {
-            monster* mons = monster_at(gp);
-            if (mons && mons->alive())
-                _update_monster(mons);
-            else if (env.map_knowledge(gp).flags & MAP_INVISIBLE_UPDATE)
-                _mark_invisible_at(gp);
-        }
-
-        if (layers & LAYER_CLOUDS)
-            if (cloud_struct* cloud = cloud_at(gp))
-                _update_cloud(*cloud);
-
-        if (layers & LAYER_ITEMS)
-            update_item_at(gp);
+        monster* mons = monster_at(gp);
+        if (mons && mons->alive())
+            _update_monster(mons);
+        else if (env.map_knowledge(gp).flags & MAP_INVISIBLE_UPDATE)
+            _mark_invisible_at(gp);
     }
+
+    if (layers & LAYER_CLOUDS)
+        if (cloud_struct* cloud = cloud_at(gp))
+            _update_cloud(*cloud);
+
+    if (layers & LAYER_ITEMS)
+        update_item_at(gp);
 }
 
 void show_init(layers_type layers)

@@ -545,6 +545,11 @@ static void _forget_map(bool wizard_forget = false)
 #ifdef USE_TILE
             tile_forget_map(*ri);
 #endif
+            if (monster *m = monster_at(*ri))
+            {
+                m->seen_context = SC_NONE;
+                m->flags &= ~(MF_WAS_IN_VIEW | MF_SEEN);
+            }
         }
         else if (flags & MAP_SEEN_FLAG)
         {
@@ -1063,14 +1068,12 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
         state.feats->init();
         break;
 
-#ifdef WIZARD
     case CMD_MAP_EXCLUDE_RADIUS:
         set_exclude(state.lpos.pos, getchm() - '0');
 
         _reset_travel_colours(*state.features, state.on_level);
         state.feats->init();
         break;
-#endif
 
     case CMD_MAP_MOVE_DOWN_LEFT:
         state.lpos.pos += coord_def(-1, 1);

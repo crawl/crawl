@@ -132,16 +132,21 @@ static int l_item_do_wield(lua_State *ls)
 
     UDATA_ITEM(item);
 
-    int slot = -1;
-    if (item && item->defined() && in_inventory(*item))
-        slot = item->link;
-    bool res = wield_weapon(true, slot);
-    lua_pushboolean(ls, res);
+    if (item)
+    {
+        int slot = -1;
+        if (item && item->defined() && in_inventory(*item))
+            slot = item->link;
+        lua_pushboolean(ls, wield_weapon(slot));
+    }
+    else
+        lua_pushboolean(ls, use_an_item(OPER_WIELD));
+
     return 1;
 }
 
 /*** Wield this item.
- * @treturn boolean successfuly wielded
+ * @treturn boolean successfully wielded
  * @function wield
  */
 IDEFN(wield, do_wield)
@@ -162,7 +167,7 @@ static int l_item_do_wear(lua_State *ls)
 }
 
 /*** Wear this item (as armour).
- * @treturn boolean successfuly worn
+ * @treturn boolean successfully worn
  * @function wear
  */
 IDEFN(wear, do_wear)
@@ -177,12 +182,12 @@ static int l_item_do_puton(lua_State *ls)
     if (!item || !in_inventory(*item))
         return 0;
 
-    lua_pushboolean(ls, puton_ring(item->link));
+    lua_pushboolean(ls, puton_ring(*item));
     return 1;
 }
 
 /*** Put this item on (as jewellry).
- * @treturn boolean successfuly put on
+ * @treturn boolean successfully put on
  * @function puton
  */
 IDEFN(puton, do_puton)
@@ -212,7 +217,7 @@ static int l_item_do_remove(lua_State *ls)
 
     bool result = false;
     if (eq == EQ_WEAPON)
-        result = wield_weapon(true, SLOT_BARE_HANDS);
+        result = wield_weapon(SLOT_BARE_HANDS);
     else if (eq >= EQ_FIRST_JEWELLERY && eq <= EQ_LAST_JEWELLERY)
         result = remove_ring(item->link);
     else
@@ -444,7 +449,7 @@ static int l_item_do_name_coloured(lua_State *ls)
     if (item)
     {
         string name   = _item_name(ls, item);
-        int    col    = menu_colour(name, item_prefix(*item));
+        int    col    = menu_colour(name, item_prefix(*item), "item", false);
         string colstr = colour_to_str(col);
 
         ostringstream out;
@@ -1324,7 +1329,7 @@ static int l_item_pickup(lua_State *ls)
 /*** Get the Item in a given equipment slot.
  * Takes either a slot name or a slot number.
  * @tparam string|int where
- * @treturn Item|nil returns nil for nothing equiped or invalid slot
+ * @treturn Item|nil returns nil for nothing equipped or invalid slot
  * @function equipped_at
  */
 static int l_item_equipped_at(lua_State *ls)
@@ -1402,20 +1407,32 @@ static int l_item_get_items_at(lua_State *ls)
     s.y = luaL_safe_checkint(ls, 2);
     coord_def p = player2grid(s);
 
-    if (!query_map_knowledge(false, p, [](const map_cell& cell) {
-          return cell.item() && cell.item()->defined();
-        }))
-    {
+    if (!map_bounds(p))
         return 0;
-    }
+
+    const auto item = env.map_knowledge(p).item();
+    // XXX: Sensed items like those from Gnoll's strong nose mutation aren't
+    // fully defined. These currently shouldn't be returned to clua, since many
+    // methods like :name() don't work properly. Ideally they would have a
+    // valid representation we could return.
+    if (!item || !item->defined())
+        return 0;
 
     lua_newtable(ls);
 
     const vector<item_def> items = item_list_in_stash(p);
     int index = 0;
-    for (const auto &item : items)
+    for (const auto &it : items)
     {
-        _clua_push_item_temp(ls, item);
+        _clua_push_item_temp(ls, it);
+        lua_rawseti(ls, -2, ++index);
+    }
+
+    // The item is defined in our map knowledge, but not in our stash, hence
+    // it's a sensed item like the Abyssal rune.
+    if (!index)
+    {
+        _clua_push_item_temp(ls, *item);
         lua_rawseti(ls, -2, ++index);
     }
 
@@ -1578,6 +1595,34 @@ LUAFN(l_item_for_set)
     return 1;
 }
 
+static bool _item_pickable(object_class_type base, int sub)
+{
+    if (base == OBJ_MISCELLANY
+        && you.generated_misc.count((misc_item_type)sub))
+    {
+        return false;
+    }
+    return !item_excluded_from_set(base, sub);
+}
+
+LUAFN(l_item_pickable)
+{
+    ASSERT_DLUA;
+
+    const string &specifier = luaL_checkstring(ls, 1);
+    item_list il;
+    item_spec parsed_spec;
+    if (!il.parse_single_spec(parsed_spec, specifier))
+    {
+        luaL_error(ls, make_stringf("Invalid item spec '%s'.",
+                                    specifier.c_str()).c_str());
+        return 0;
+    }
+    lua_pushboolean(ls, _item_pickable(parsed_spec.base_type,
+                                       parsed_spec.sub_type));
+    return 1;
+}
+
 
 struct ItemAccessor
 {
@@ -1680,6 +1725,7 @@ static const struct luaL_reg item_lib[] =
 
     { "excluded_from_set", l_item_excluded_from_set },
     { "item_for_set",      l_item_for_set },
+    { "pickable",          l_item_pickable },
     { nullptr, nullptr },
 };
 

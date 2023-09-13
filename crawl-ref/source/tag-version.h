@@ -86,7 +86,7 @@ enum tag_minor_version
     TAG_MINOR_ABIL_GOD_FIXUP,      // Movement of some non-god-specific abils.
     TAG_MINOR_NEMELEX_DUNGEONS,    // Make nemelex not give/track decks of dungeons.
     TAG_MINOR_DEMONSPAWN,          // Save compat wrt demonspawn enemies.
-    TAG_MINOR_EVENT_TIMERS,        // "Every 20 turn" effects are less determinstic.
+    TAG_MINOR_EVENT_TIMERS,        // "Every 20 turn" effects are less deterministic.
     TAG_MINOR_EVENT_TIMER_FIX,     // Correct event timers in transferred games
     TAG_MINOR_MONINFO_ENERGY,      // Energy usage in monster_info
     TAG_MINOR_BOOK_ID,             // Track spellbooks you've identified
@@ -276,6 +276,16 @@ enum tag_minor_version
     TAG_MINOR_RECOMPRESS_BADMUTS,  // Reduce some more mutations to 2 levels.
     TAG_MINOR_SPAWN_RATE,          // Remove the env.spawn_random_rate field.
     TAG_MINOR_REMOVE_AK,           // Remove Abyssal Knight.
+    TAG_MINOR_BUTTERSUMMONS,       // Alternate ?butt with ?summ, not ?fog.
+    TAG_MINOR_WU_ABILITIES,        // Make Lunge and Whirlwind Abil, not Invok
+    TAG_MINOR_MORE_WAYPOINTS,      // Increase the number of allowed waypoints.
+    TAG_MINOR_GENERATED_MISC,      // Track generated misc item types.
+    TAG_MINOR_SAVE_TERRAIN_FLAVOUR, // Save flavour in terrain-change markers.
+    TAG_MINOR_DJ_SPLIT,            // Make Djinn use all magic skills.
+    TAG_MINOR_TALISMANS,           // Add talismans and indefinite transforms.
+    TAG_MINOR_SHAPESHIFTING,       // Add Shapeshifting skill.
+    TAG_MINOR_LANGUAGE_FIX,        // Remove some outdated language.
+    TAG_MINOR_SLENGU,              // Split tengu mutations.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

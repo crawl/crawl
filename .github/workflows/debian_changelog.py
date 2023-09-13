@@ -13,8 +13,6 @@ if __name__ == "__main__":
 
     filename = sys.argv[1]
     version = sys.argv[2]
-    if not re.compile("^\d+\.\d+\.\d+$").match(version):
-        sys.exit("Invalid version: {}".format(version))
 
     with open(filename, 'r', encoding='utf-8') as file:
         changelog = file.readlines()
@@ -30,7 +28,7 @@ if __name__ == "__main__":
         changelog.insert(0, "  * New upstream release.\n")
         changelog.insert(0, "\n")
         changelog.insert(0, "crawl (2:{}-1) unstable; urgency=low\n".format(version))
-  
+
         with open(filename, 'w', encoding='utf-8') as file:
             file.writelines(changelog)
 

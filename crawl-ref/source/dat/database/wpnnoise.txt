@@ -766,7 +766,7 @@ _common_speaking_no_tension_
 
 @The_weapon@ grouses, "Silence can be so depressing."
 
-@The_weapon@ grouses, "Silence always makes me sulking."
+@The_weapon@ grouses, "Silence always makes me sulk."
 
 @The_weapon@ compliments you on your taste in weapons.
 

@@ -28,7 +28,7 @@ function setup_hydra_weapon(e)
                      ["war axe"] = 8, ["broad axe"] = 12, ["lajatang"] = 2}
 
     -- Basic set of egos with weights.
-    local egos = {["none"] = 30, ["vorpal"] = 15, ["freezing"] = 15,
+    local egos = {["none"] = 30, ["heavy"] = 15, ["freezing"] = 15,
             ["electrocution"] = 10, ["venom"] = 10, ["protection"] = 10,
             ["vampirism"] = 5, ["holy_wrath"] = 5, ["draining"] = 5,
             ["pain"] = 2, ["distortion"] = 2, ["antimagic"] = 2, ["speed"] = 1}
@@ -41,13 +41,13 @@ end
 function wrathful_weapon(class, quality)
     local egos
     -- Only the egos Trog gifts, using equal weights for good_item but giving
-    -- the more desireable antimagic brand for randarts, which are trying to be
+    -- the more desirable antimagic brand for randarts, which are trying to be
     -- better quality.
     if quality == "good_item" then
-        egos = {["antimagic"] = 10, ["vorpal"] = 10, ["flaming"] = 10}
+        egos = {["antimagic"] = 10, ["heavy"] = 10, ["flaming"] = 10}
     elseif quality == "randart" then
         -- Increased chance for antimagic.
-        egos = {["antimagic"] = 25, ["vorpal"] = 10, ["flaming"] = 10}
+        egos = {["antimagic"] = 25, ["heavy"] = 10, ["flaming"] = 10}
     else
         error("Unknown weapon quality: " .. quality)
     end
@@ -1683,9 +1683,9 @@ KMONS:   H = frost giant ; great mace ego:freezing w:20 \
 KMONS:   J = frost giant ; great mace ego:freezing randart w:20 \
             | giant club ego:freezing randart w:3 \
             | giant spiked club ego:freezing randart w:2
-KMONS:   K = iron giant ; great mace ego:vorpal randart w:20 \
-            | giant club ego:vorpal randart w:3 \
-            | giant spiked club ego:vorpal randart w:2
+KMONS:   K = iron giant ; great mace ego:heavy randart w:20 \
+            | giant club ego:heavy randart w:3 \
+            | giant spiked club ego:heavy randart w:2
 # Use one of the two inner wall patterns.
 SHUFFLE: xv
 SUBST:   v = -, x : xcbv
@@ -2337,7 +2337,7 @@ ORIENT: float
 KMASK:  -DEFHNOQRdeqrsyuz1234|*%$^ = opaque
 KITEM:  N = scroll of teleportation q:3 ident:all w:20 \
             / scroll of blinking ident:all w:20 \
-            / boomerang ego:dispersal ident:all \
+            / dart ego:dispersal ident:all \
             / book of spatial translocations \
             / book of the warp \
             / there-and-back book \
@@ -2627,7 +2627,7 @@ NAME:   hellmonk_ghost_big_iron
 TAGS:   vaults_orient_s
 DEPTH:  D:8-13, Elf, Vaults, !Vaults:$, Crypt, Depths, Zot
 ORIENT: float
-ITEM:   randbook disc:earth spells:iron_shot, javelin q:1
+ITEM:   book of iron, javelin q:1
 KMONS:  O = player ghost
 KMONS:  p = plant
 KMONS:  - = bush

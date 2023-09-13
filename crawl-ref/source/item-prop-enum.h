@@ -144,7 +144,7 @@ enum brand_type // item_def.special
     SPWPN_PROTECTION,
     SPWPN_DRAINING,
     SPWPN_SPEED,
-    SPWPN_VORPAL,
+    SPWPN_HEAVY,
 #if TAG_MAJOR_VERSION == 34
     SPWPN_FLAME,   // ranged, only
     SPWPN_FROST,   // ranged, only
@@ -310,16 +310,14 @@ enum misc_item_type
     MISC_QUAD_DAMAGE, // Sprint only
 
     MISC_PHIAL_OF_FLOODS,
-#if TAG_MAJOR_VERSION == 34
     MISC_SACK_OF_SPIDERS,
-#endif
     MISC_ZIGGURAT,
 
     MISC_PHANTOM_MIRROR,
 #if TAG_MAJOR_VERSION == 34
     MISC_DECK_OF_ODDITIES,
-#endif
     MISC_XOMS_CHESSBOARD,
+#endif
     MISC_TIN_OF_TREMORSTONES,
     MISC_CONDENSER_VANE,
 
@@ -342,11 +340,11 @@ const vector<misc_item_type> misc_types =
 #endif
     MISC_LIGHTNING_ROD, MISC_PHIAL_OF_FLOODS,
     MISC_QUAD_DAMAGE,
-#if TAG_MAJOR_VERSION == 34
     MISC_SACK_OF_SPIDERS,
-#endif
     MISC_PHANTOM_MIRROR,
+#if TAG_MAJOR_VERSION == 34
     MISC_XOMS_CHESSBOARD,
+#endif
     MISC_ZIGGURAT,
 #if TAG_MAJOR_VERSION == 34
     MISC_BOTTLED_EFREET, MISC_BUGGY_EBONY_CASKET,
@@ -425,7 +423,7 @@ enum scroll_type
 #endif
     SCR_IMMOLATION,
     SCR_BLINKING,
-    SCR_MAGIC_MAPPING,
+    SCR_REVELATION,
     SCR_FOG,
     SCR_ACQUIREMENT,
 #if TAG_MAJOR_VERSION == 34
@@ -624,7 +622,7 @@ enum weapon_type
 #endif
 
 #if TAG_MAJOR_VERSION > 34
-    WPN_HAND_CROSSBOW,
+    WPN_HAND_CANNON,
 #endif
     WPN_ARBALEST,
 #if TAG_MAJOR_VERSION > 34
@@ -632,6 +630,9 @@ enum weapon_type
 #endif
 
     WPN_SHORTBOW,
+#if TAG_MAJOR_VERSION > 34
+    WPN_ORCBOW,
+#endif
     WPN_LONGBOW,
 
 #if TAG_MAJOR_VERSION > 34
@@ -673,10 +674,11 @@ enum weapon_type
 
 #if TAG_MAJOR_VERSION == 34
     WPN_FUSTIBALUS,
-    WPN_HAND_CROSSBOW,
+    WPN_HAND_CANNON,
     WPN_TRIPLE_CROSSBOW,
 
     WPN_CUTLASS,
+    WPN_ORCBOW,
 #endif
 
     NUM_WEAPONS,
@@ -707,8 +709,8 @@ enum vorpal_damage_type
     DAM_WHIP            = 0x0008,       // whip slashing
     DAM_MAX_TYPE        = DAM_WHIP,
 
-    // These are used for vorpal weapon descriptions. You shouldn't set
-    // more than one of these.
+    // These were used for vorpal weapon descriptions, many years ago.
+    // You shouldn't set more than one of these.
     DVORP_NONE          = 0x0000,       // used for non-melee weapons
     DVORP_CRUSHING      = 0x1000,
     DVORP_SLICING       = 0x2000,
@@ -807,6 +809,22 @@ enum item_set_type
     ITEM_SET_HEX_WANDS,
     ITEM_SET_BEAM_WANDS,
     ITEM_SET_BLAST_WANDS,
-    ITEM_SET_CONCEAL_SCROLLS,
+    ITEM_SET_ALLY_SCROLLS,
+    ITEM_SET_AREA_MISCELLANY,
+    ITEM_SET_ALLY_MISCELLANY,
     NUM_ITEM_SET_TYPES
+};
+
+enum talisman_type
+{
+    TALISMAN_BEAST,
+    TALISMAN_MAW,
+    TALISMAN_SERPENT,
+    TALISMAN_BLADE,
+    TALISMAN_STATUE,
+    TALISMAN_DRAGON,
+    TALISMAN_DEATH,
+    TALISMAN_STORM,
+    TALISMAN_FLUX,
+    NUM_TALISMANS,
 };

@@ -91,7 +91,7 @@ static const vector<pop_entry> population[] =
   {  4,  7, 1000, PEAK, MONS_IGUANA },
   {  4,  7,  350, PEAK, MONS_PHANTOM },
   {  4,  8,  500, PEAK, MONS_JELLY },
-  {  4,  8,  350, PEAK, MONS_NECROPHAGE },
+  {  4,  8,  350, PEAK, MONS_SLEEPCAP },
   {  4,  8,  350, PEAK, MONS_BLACK_BEAR },
 
   {  4, 10,  200, PEAK, MONS_GNOLL_BOUDA },
@@ -198,7 +198,6 @@ static const vector<pop_entry> population[] =
 },
 
 { // Orcish Mines
-  {  1,  4,  384, FLAT, MONS_NO_MONSTER },
   {  1,  4,  192, FLAT, MONS_ORC_WARRIOR },
   {  1,  4,   25, FLAT, MONS_ORC_PRIEST },
   {  1,  4,   25, FLAT, MONS_ORC_WIZARD },
@@ -260,7 +259,6 @@ static const vector<pop_entry> population[] =
 #endif
 
 { // Lair (OOD cap: 11)
-  {  0,  4, 4500, FLAT, MONS_NO_MONSTER }, // Roughly old D:1-4 chaff weight
   { -2,  4,  100, SEMI, MONS_BLACK_BEAR },
   { -2,  6,  310, SEMI, MONS_BASILISK },
   { -1,  3,   24, PEAK, MONS_SCORPION },
@@ -285,6 +283,7 @@ static const vector<pop_entry> population[] =
   {  1, 15,   70, SEMI, MONS_BOULDER_BEETLE },
   {  1, 15,   85, SEMI, MONS_TORPOR_SNAIL },
   {  2,  7,   75, SEMI, MONS_POLAR_BEAR },
+  {  2,  7,  200, SEMI, MONS_SKYSHARK },
   {  2,  9,   50, PEAK, MONS_LINDWURM },
   {  2, 10,  400, SEMI, MONS_HYDRA },
   {  3, 11,  140, SEMI, MONS_DREAM_SHEEP },
@@ -353,6 +352,7 @@ static const vector<pop_entry> population[] =
 { // Shoals
   {  0,  3,   89, SEMI, MONS_CENTAUR_WARRIOR },
   {  0,  3,  355, SEMI, MONS_FAUN },
+  {  0,  3,  400, SEMI, MONS_SKYSHARK },
   {  0,  6,  300, SEMI, MONS_WATER_NYMPH },
   {  0,  6,  170, SEMI, MONS_MERFOLK_AVATAR },
   {  0,  6,  110, SEMI, MONS_CYCLOPS },
@@ -370,6 +370,7 @@ static const vector<pop_entry> population[] =
   {  1,  7,  135, PEAK, MONS_MERFOLK_JAVELINEER },
   {  1,  7,  110, PEAK, MONS_ALLIGATOR_SNAPPING_TURTLE },
   {  2,  4,  190, SEMI, MONS_SATYR },
+  {  3,  7,   30, PEAK, MONS_FORMLESS_JELLYFISH },
 },
 
 { // Snake Pit
@@ -453,6 +454,7 @@ static const vector<pop_entry> population[] =
   {  1,  5,  515, FLAT, MONS_QUICKSILVER_OOZE },
   {  1,  5,  515, FLAT, MONS_SHINING_EYE },
   {  1,  5,  200, FLAT, MONS_GOLDEN_EYE },
+  {  1,  5,  200, FLAT, MONS_FORMLESS_JELLYFISH },
   {  1,  8,  300, SEMI, MONS_EYE_OF_DEVASTATION },
   {  1,  8,  390, SEMI, MONS_GREAT_ORB_OF_EYES },
   {  2,  5,  100, RISE, MONS_GLOWING_ORANGE_BRAIN },
@@ -490,8 +492,8 @@ static const vector<pop_entry> population[] =
   {  1,  4,  325, RISE, MONS_GREAT_ORB_OF_EYES },
   {  1,  4,   50, FLAT, MONS_GLOWING_ORANGE_BRAIN },
   {  1,  4,   50, RISE, MONS_GLOWING_ORANGE_BRAIN },
-  {  1,  4,  150, FLAT, MONS_VERY_UGLY_THING },
-  {  1,  4,  100, RISE, MONS_VERY_UGLY_THING },
+  {  1,  4,  150, FLAT, MONS_FORMLESS_JELLYFISH },
+  {  1,  4,  100, RISE, MONS_FORMLESS_JELLYFISH },
   {  1,  4,  350, FLAT, MONS_WIZARD },
   {  1,  4,  350, RISE, MONS_WIZARD },
   {  1,  4,   75, FLAT, MONS_NECROMANCER },
@@ -1271,14 +1273,13 @@ COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
   {  1,  27,  100, FLAT, MONS_FIRE_BAT },\
   {  1,  27,  100, FLAT, MONS_FIRE_ELEMENTAL },\
   {  1,  27,   50, FLAT, MONS_MOLTEN_GARGOYLE },\
-  {  1,  27,   50, FLAT, MONS_FIRE_VORTEX },\
   {  1,  27,  145, FLAT, MONS_LAVA_SNAKE },\
   {  1,  27,   15, FLAT, MONS_SALAMANDER },\
-  {  1,  27,  290, FLAT, MONS_NO_MONSTER },\
+  {  1,  27,  340, FLAT, MONS_NO_MONSTER },\
 }
 
 #define HELL_LAVA_POP {\
-  {  1,  8,   300, FALL, MONS_FIRE_VORTEX },\
+  {  1,  8,   300, FALL, MONS_NO_MONSTER }, \
   {  1,  7,    50, RISE, MONS_STOKER },\
   {  1,  7,    50, FLAT, MONS_CREEPING_INFERNO },\
   {  1,  7,   100, FLAT, MONS_NO_MONSTER },\
@@ -1289,7 +1290,6 @@ COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
 #define DEPTHS_LAVA_POP {\
   {  1,  6,   22, FALL, MONS_FIRE_ELEMENTAL },\
   {  1,  6,   22, FALL, MONS_FIRE_BAT },\
-  {  1,  6,   11, FALL, MONS_FIRE_VORTEX },\
   {  1,  6,   11, FALL, MONS_MOLTEN_GARGOYLE },\
   {  1,  6,   60, FLAT, MONS_SALAMANDER },\
   {  1,  8,   85, SEMI, MONS_SALAMANDER_MYSTIC },\
@@ -1302,9 +1302,9 @@ static const vector<pop_entry> population_lava[] =
 {
     { // Dungeon lava monsters
       {  7,  27,  145, FLAT, MONS_LAVA_SNAKE },
-      {  11, 27,  290, RISE, MONS_FIRE_ELEMENTAL },
+      {  11, 27,  360, RISE, MONS_FIRE_ELEMENTAL },
       {  11, 27,  145, RISE, MONS_MOLTEN_GARGOYLE },
-      {  11, 27,  145, RISE, MONS_FIRE_VORTEX },
+      {  11, 27,   75, RISE, MONS_NO_MONSTER },
       {  7,  27,  290, FLAT, MONS_NO_MONSTER },
     },
     GENERIC_LAVA_POP, // Temple

@@ -163,6 +163,69 @@ xx---.---xx
  xxxx@xxxx
 ENDMAP
 
+NAME:   nicolae_snake_entry_squirm
+TAGS:   snake_entry patrolling transparent
+KMONS:  OT = naga
+KFEAT:  O = enter_snake_pit
+KFEAT:  T = T
+MAP
+xxxxxxxxxxxxxxx
+xxxxxxxxxxxx.xx
+xxx...xxxxx...x
+x...T..xxx....@
+x.O.....x...x.@
+x...T......xxx@
+xxx...x...xxxxx
+xxxxxxxx.xxxxxx
+xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_snake_entry_warm_welcome
+TAGS:   snake_entry patrolling transparent
+KMONS:  L = lava snake
+KMONS:  O = salamander
+KFEAT:  O = enter_snake_pit
+KFEAT:  l = l
+SUBST:  ` = lx, - = l.
+NSUBST: l = 2=L / 2=Ll / l
+MAP
+  xxxxxx
+ xx`lllxx
+xx`l--llxx
+x.--...llx
+@....O.llx
+x.--...llx
+xx`l--llxx
+ xx`lllxx
+  xxxxxx
+ENDMAP
+
+NAME:   alex1729_snake_entry_snake
+TAGS:   snake_entry patrolling no_monster_gen transparent
+ORIENT: float
+MONS:   naga / w:3 nothing, w:20 plant / bush
+KFEAT:  O = enter_snake_pit
+KFEAT:  L = l
+KMONS:  L = salamander ; longbow | shortbow
+SUBST:  - = W2..
+MAP
+      xxxxxxx
+    xxx-.---xx
+   xx-....-.-x
+xxxx..O..t...x
+xlLl....xx..-x
+xxlxxxxxx-..xx
+ xxxx xx1..xx
+     xx-..tx
+ xxx x-.-ttxxxx@
+@.-xxx..t-----.x
+ x..1-..t-ttt-.x
+ xx-.....---t-.x
+  xxxx-..-1--.-x
+     xx-..-..-xx
+      xxxxxxxxx
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Decorative vaults.
@@ -636,6 +699,24 @@ xx...........xxx.....xxx........'@
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# https://www.youtube.com/watch?v=RmzgObMCicw
+NAME:  nicolae_snake_flat_spine
+TAGS:  transparent extra
+DEPTH: Snake
+MAP
+        .....................
+    ......cc.cc.cc.cc.cc.cc....
+......cc.c..c..c..c..c..c..cc...
+..cc.c..c..c..c..c..c..c..c..cc.
+..c..c..c..c..c..c..c..c..c..c..
+cccccccccccccccccccccccccccccccc
+..c..c..c..c..c..c..c..c..c..c..
+..cc.c..c..c..c..c..c..c..c..cc.
+......cc.c..c..c..c..c..c..cc...
+    ......cc.cc.cc.cc.cc.cc....
+        .....................
+ENDMAP
+
 ################################################################################
 # Gridmaze is a series of decor vaults inspired by the layout_grid_maze variant
 # that have two-block-thick walls with rounded corners. The cleared notches
@@ -930,7 +1011,7 @@ wwwWwWww
 ENDMAP
 
 NAME:   minmay_snake_river
-TAGS:   no_monster_gen generate_awake
+TAGS:   no_monster_gen generate_awake no_descent
 ORIENT: south
 KITEM:  2 = * / nothing
 KITEM:  3 = |
@@ -968,8 +1049,8 @@ MARKER: 3 = lua:fog_machine { cloud_type = "noxious fumes", pow_min = 5, \
 MAP
      ...
     .....
-   ..+++..
-  ..m+2+m..
+   ..===..
+  ..m=2=m..
   ..mm1mm..
  ..mm111mm..
 ..mm11111mm..
@@ -1279,7 +1360,7 @@ x..YY.xxx..YY.xxxxxxxxx.@.
 ENDMAP
 
 NAME:    nicolae_snake_salamander_stairs
-TAGS:    no_monster_gen
+TAGS:    no_monster_gen no_descent
 DEPTH:   Snake, !Snake:$
 : if you.depth() < 2 then
 KMONS:   1 = salamander mystic / salamander tyrant w:5
@@ -1376,6 +1457,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_snake_attic_fulla_snakes
+TAGS:    no_descent
 DEPTH:   Snake, !Snake:$
 ORIENT:  northeast
 KITEM:   2 = *
@@ -1843,8 +1925,8 @@ NAME:    nicolae_snake_shooting_gallery
 TAGS:    no_pool_fixup transparent
 DEPTH:   Snake, !Snake:$
 ORIENT:  float
-ITEM:    shortbow / longbow w:4 / hand crossbow / arbalest w:3 \
-         / triple crossbow w:1
+ITEM:    shortbow / orcbow / longbow w:4 / hand cannon w:1 / \
+         arbalest w:6 / triple crossbow w:1
 MONS:    naga sharpshooter
 SUBST:   s = 1'
 SHUFFLE: }])
@@ -1978,6 +2060,37 @@ xcccG.2.....2.Gccc.@
 xxxccccG222Gccccxxxx
   xxxxcccccccxxxx
      xxxxxxxxx
+ENDMAP
+
+NAME:  nicolae_snake_the_dead_are_slithering
+TAGS:  transparent
+DEPTH: Snake
+# No zombies, because "zombie" doesn't begin with "s".
+KMONS: S = naga simulacrum / naga warrior simulacrum / anaconda simulacrum / \
+           guardian serpent simulacrum / sea snake simulacrum
+KMONS: s = naga spectre / naga warrior spectre / anaconda spectre / \
+           guardian serpent spectre / sea snake spectre
+KMONS: ` = naga skeleton / naga warrior skeleton / anaconda skeleton / \
+           guardian serpent skeleton / sea snake skeleton
+SUBST: z = SSss`.....
+MAP
+      xxxxx
+     xxx..x
+    xxx...+
+    xxx...x
+    xxx...xxxxx
+    xx.zzz.xxxxx
+xx+xx.zzzzz.xxxxx
+x....zzzzzzz...xx
+x....zzzzzzz....x
+xx...zzzzzzz....x
+xxxxx.zzzzz.xx+xx
+ xxxxx.zzz.xx
+  xxxxx...xxx
+      x...xxx
+      +...xxx
+      x..xxx
+      xxxxx
 ENDMAP
 
 ###############################################################################
@@ -2437,8 +2550,8 @@ NSUBST: . = 20=0. / .
 TILE:   G = dngn_statue_dragon
 MAP
               ccccc
-             cc2O2cc
-            ccG.1.Gcc
+             cc1O1cc
+            ccG.2.Gcc
             cc..c..cc
            cc...c...cc
            cc..ccc..cc

@@ -465,7 +465,7 @@ void debug_stethoscope(int mon)
                 continue;
 
             // this is arguably redundant with mons_list::parse_mons_spells
-            // specificially the bit that turns names into flags
+            // specifically the bit that turns names into flags
             static const map<mon_spell_slot_flag, string> flagnames = {
                 { MON_SPELL_EMERGENCY,  "E" },
                 { MON_SPELL_NATURAL,    "N" },
@@ -732,6 +732,12 @@ void wizard_move_player_or_monster(const coord_def& where)
 {
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
+
+    if (!in_bounds(where))
+    {
+        mpr("Cannot move out of bounds.");
+        return;
+    }
 
     static bool already_moving = false;
 
@@ -1072,7 +1078,7 @@ void debug_miscast(int target_index)
     }
 
     // Handle repeats ourselves since miscasts are likely to interrupt
-    // command repetions, especially if the player is the target.
+    // command repetitions, especially if the player is the target.
     int repeats = prompt_for_int("Number of repetitions? ", true);
     if (repeats < 1)
     {

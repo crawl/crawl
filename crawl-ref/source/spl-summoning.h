@@ -71,6 +71,7 @@ monster* find_battlesphere(const actor* agent);
 spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail);
 void end_battlesphere(monster* mons, bool killed);
 bool battlesphere_can_mirror(spell_type spell);
+vector<spell_type> player_battlesphere_spells();
 bool aim_battlesphere(actor* agent, spell_type spell);
 bool trigger_battlesphere(actor* agent);
 bool fire_battlesphere(monster* mons);
@@ -83,6 +84,7 @@ int prism_hd(int pow, bool random = true);
 
 monster* find_spectral_weapon(const actor* agent);
 void end_spectral_weapon(monster* mons, bool killed, bool quiet = false);
+void check_spectral_weapon(actor &agent);
 
 spret cast_infestation(int pow, bolt &beam, bool fail);
 
@@ -100,7 +102,8 @@ spret fedhas_grow_oklob(const coord_def& target, bool fail);
 
 void kiku_unearth_wretches();
 
-spret cast_foxfire(actor &agent, int pow, god_type god, bool fail);
+spret cast_foxfire(actor &agent, int pow, god_type god, bool fail,
+                   bool marshlight = false);
 spret foxfire_swarm();
 bool summon_spider(const actor &agent, coord_def pos, god_type god,
                         spell_type spell, int pow);

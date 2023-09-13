@@ -149,6 +149,6 @@ example:
     crawl -arena "arena:smoke random v random"
 
 will cause the monsters to fight in an arena which is filled with smoke. The
-available alternate terrains are in source/dat/arena.des. If an arena you
+available terrains are in source/dat/des/builder/arena.des. If an arena you
 want is tagged with "arena_foo" in the des file, then you put "arena:foo" on
 the command line.

@@ -17,6 +17,7 @@
 #include "env.h"
 #include "fight.h"
 #include "files.h"
+#include "fineff.h"
 #include "fprop.h"
 #include "god-abil.h"
 #include "god-prayer.h"
@@ -255,6 +256,8 @@ static const vector<god_passive> god_passives[] =
     {
         { -1, passive_t::safe_distortion,
               "are NOW protected from distortion unwield effects" },
+        { -1, passive_t::wrath_banishment,
+              "GOD will NOW banish foes whenever another god meddles" },
         { -1, passive_t::map_rot_res_abyss,
               "remember the shape of the Abyss better" },
         {  5, passive_t::attract_abyssal_rune,
@@ -329,15 +332,16 @@ static const vector<god_passive> god_passives[] =
     {
         { -1, passive_t::want_curses, "prefer cursed items" },
         {  0, passive_t::detect_portals, "sense portals" },
-        {  0, passive_t::auto_map, "have improved mapping abilities" },
         {  0, passive_t::detect_montier, "sense threats" },
         {  0, passive_t::detect_items, "sense items" },
         {  0, passive_t::bondage_skill_boost,
               "get a skill boost from cursed items" },
         {  1, passive_t::identify_items, "sense the properties of items" },
-        {  1, passive_t::avoid_traps, "avoid traps" },
         {  2, passive_t::sinv, "are NOW clear of vision" },
         {  3, passive_t::clarity, "are NOW clear of mind" },
+        {  4, passive_t::avoid_traps, "avoid traps" },
+        {  4, passive_t::scrying,
+              "reveal the structure of the nearby dungeon" },
     },
 
     // Dithmenos
@@ -354,7 +358,6 @@ static const vector<god_passive> god_passives[] =
 
     // Gozag
     {
-        { -1, passive_t::detect_gold, "detect gold" },
         {  0, passive_t::goldify_corpses,
               "GOD NOW turns all corpses to gold" },
         {  0, passive_t::gold_aura, "have a gold aura" },
@@ -580,7 +583,7 @@ void ash_check_bondage()
 
         // handles missing hand, octopode ring slots, finger necklace, species
         // armour restrictions, etc. Finger necklace slot counts.
-        if (you_can_wear(i) == MB_FALSE)
+        if (!you_can_wear(i))
             continue;
 
         // transformed away slots are still considered to be possibly bound
@@ -755,7 +758,7 @@ unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill)
 {
     unsigned int skill_points = 0;
     const int scale = 10;
-    const int skill_boost = scale * (you.skill_boost[sk] * 3 + 2) / 2;
+    const int skill_boost = scale * (you.skill_boost[sk] * 4 + 3) / 3;
 
     skill_points += skill_boost * (piety_rank() + 1) * max(scaled_skill, 1)
                     * species_apt_factor(sk) / scale;
@@ -765,7 +768,7 @@ unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill)
 int ash_skill_boost(skill_type sk, int scale)
 {
     // It gives a bonus to skill points. The formula is:
-    // ( curses * 3 / 2 + 1 ) * (piety_rank + 1) * skill_level
+    // ( curses * 4 / 3 + 1 ) * (piety_rank + 1) * skill_level
 
     unsigned int skill_points = you.skill_points[sk]
                   + get_crosstrain_points(sk)
@@ -780,10 +783,41 @@ int ash_skill_boost(skill_type sk, int scale)
     return min(level, MAX_SKILL_LEVEL * scale);
 }
 
-void gozag_detect_level_gold(bool count)
+void ash_scrying()
+{
+    if (have_passive(passive_t::scrying))
+    {
+        magic_mapping(LOS_MAX_RANGE, 100, true, true, false, false, false,
+                      you.pos());
+    }
+}
+
+void gozag_move_level_gold_to_top()
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+        gozag_move_gold_to_top(*ri);
+}
+
+void gozag_move_gold_to_top(const coord_def p)
+{
+    if (you_worship(GOD_GOZAG))
+    {
+        for (int gold = env.igrid(p); gold != NON_ITEM;
+             gold = env.item[gold].link)
+        {
+            if (env.item[gold].base_type == OBJ_GOLD)
+            {
+                unlink_item(gold);
+                move_item_to_grid(&gold, p, true);
+                break;
+            }
+        }
+    }
+}
+
+void gozag_count_level_gold()
 {
     ASSERT(you.on_current_level);
-    vector<item_def *> gold_piles;
     vector<coord_def> gold_places;
     int gold = 0;
     for (rectangle_iterator ri(0); ri; ++ri)
@@ -793,38 +827,17 @@ void gozag_detect_level_gold(bool count)
             if (j->base_type == OBJ_GOLD && !(j->flags & ISFLAG_UNOBTAINABLE))
             {
                 gold += j->quantity;
-                gold_piles.push_back(&(*j));
                 gold_places.push_back(*ri);
             }
         }
     }
 
-    if (!player_in_branch(BRANCH_ABYSS) && count)
+    if (!player_in_branch(BRANCH_ABYSS))
         you.attribute[ATTR_GOLD_GENERATED] += gold;
 
-    if (have_passive(passive_t::detect_gold))
-    {
-        for (unsigned int i = 0; i < gold_places.size(); i++)
-        {
-            int dummy = gold_piles[i]->index();
-            coord_def &pos = gold_places[i];
-            unlink_item(dummy);
-            move_item_to_grid(&dummy, pos, true);
-            if ((!env.map_knowledge(pos).item()
-                 || env.map_knowledge(pos).item()->base_type != OBJ_GOLD
-                 && you.visible_igrd(pos) != NON_ITEM))
-            {
-                env.map_knowledge(pos).set_item(
-                        get_item_known_info(*gold_piles[i]),
-                        !!env.map_knowledge(pos).item());
-                env.map_knowledge(pos).flags |= MAP_DETECTED_ITEM;
-#ifdef USE_TILE
-                // force an update for gold generated during Abyss shifts
-                tiles.update_minimap(pos);
-#endif
-            }
-        }
-    }
+    if (you_worship(GOD_GOZAG))
+        for (auto pos : gold_places)
+            gozag_move_gold_to_top(pos);
 }
 
 int qazlal_sh_boost(int piety)
@@ -1241,7 +1254,7 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     beem.target = target;
     beem.aimed_at_spot = orig_beam->aimed_at_spot;
 
-    mprf(MSGCH_FRIEND_SPELL, "%s mimicks your spell!",
+    mprf(MSGCH_FRIEND_SPELL, "%s mimics your spell!",
          mon->name(DESC_THE).c_str());
     mons_cast(mon, beem, shadow_spell, MON_SPELL_WIZARD, false);
 
@@ -1268,6 +1281,7 @@ static void _wu_jian_trigger_serpents_lash(const coord_def& old_pos,
         you.attribute[ATTR_SERPENTS_LASH] -= wall_jump ? 2 : 1;
         you.redraw_status_lights = true;
         update_turn_count();
+        fire_final_effects();
     }
 
     if (you.attribute[ATTR_SERPENTS_LASH] == 0)
@@ -1399,7 +1413,7 @@ static bool _wu_jian_lunge(coord_def old_pos, coord_def new_pos,
              number_of_attacks > 1 ? ", in a flurry of attacks" : "");
     }
 
-    count_action(CACT_INVOKE, ABIL_WU_JIAN_LUNGE);
+    count_action(CACT_ABIL, ABIL_WU_JIAN_LUNGE);
 
     for (int i = 0; i < number_of_attacks; i++)
     {
@@ -1467,7 +1481,7 @@ static bool _wu_jian_whirlwind(coord_def old_pos, coord_def new_pos,
                      ", with incredible momentum" : "");
         }
 
-        count_action(CACT_INVOKE, ABIL_WU_JIAN_WHIRLWIND);
+        count_action(CACT_ABIL, ABIL_WU_JIAN_WHIRLWIND);
 
         for (int i = 0; i < number_of_attacks; i++)
         {
@@ -1506,19 +1520,38 @@ static bool _wu_jian_trigger_martial_arts(coord_def old_pos,
     return attacked;
 }
 
-void wu_jian_wall_jump_effects()
+// Return a monster at pos which a wall jump could attack, nullptr if none.
+monster *wu_jian_wall_jump_monster_at(const coord_def &pos)
+{
+    monster *target = monster_at(pos);
+    if (target && target->alive() && _can_attack_martial(target))
+        return target;
+    return nullptr;
+}
+
+static vector<monster*> _wu_jian_wall_jump_monsters(const coord_def &pos)
 {
     vector<monster*> targets;
-    for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
-    {
-        monster* target = monster_at(*ai);
-        if (target && _can_attack_martial(target) && target->alive())
+    for (adjacent_iterator ai(pos, true); ai; ++ai)
+        if (monster *target = wu_jian_wall_jump_monster_at(*ai))
             targets.push_back(target);
+    return targets;
+}
 
+// Return true if wu_jian_wall_jump_effects() would attack a monster when
+// called with you.pos() as pos.
+bool wu_jian_wall_jump_triggers_attacks(const coord_def &pos)
+{
+    return !_wu_jian_wall_jump_monsters(pos).empty();
+}
+
+void wu_jian_wall_jump_effects()
+{
+    for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
         if (!cell_is_solid(*ai))
             check_place_cloud(CLOUD_DUST, *ai, 1 + random2(3) , &you, 0, -1);
-    }
 
+    vector<monster*> targets = _wu_jian_wall_jump_monsters(you.pos());
     for (auto target : targets)
     {
         if (!target->alive())

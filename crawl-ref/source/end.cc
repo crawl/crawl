@@ -67,7 +67,7 @@ bool crawl_should_restart(game_exit exit)
     if (exit == game_exit::abort || exit == game_exit::unknown)
         return true; // always restart on aborting out of a menu
     bool ret =
-        tobool(Options.restart_after_game, !crawl_state.bypassed_startup_menu);
+        Options.restart_after_game.to_bool(!crawl_state.bypassed_startup_menu);
     if (exit == game_exit::save)
         ret = ret && Options.restart_after_save;
     return ret;
@@ -91,6 +91,8 @@ static void _clear_globals_on_exit()
     destroy_abyss();
 }
 
+// game is dying / crashing, potentially quite early in the startup process.
+// do our best to provide this information to the user somehow.
 bool fatal_error_notification(string error_msg)
 {
     if (error_msg.empty())
@@ -102,13 +104,25 @@ bool fatal_error_notification(string error_msg)
     // initialisation process, and cio_init should be fairly safe.
 #ifndef USE_TILE_LOCAL
     if (!ui::is_available() && !msg::uses_stderr(MSGCH_ERROR))
-        cio_init(); // this, however, should be fairly safe
+        cio_init();
 #endif
 
-    mprf(MSGCH_ERROR, "%s", error_msg.c_str());
+    const bool ui_available =
+#if (!defined(DGAMELAUNCH)) || defined(DGL_PAUSE_AFTER_ERROR)
+        // possibly changed by the cio_init call
+        ui::is_available() && !msg::uses_stderr(MSGCH_ERROR);
+#else
+        false;
+#endif
 
-    if (!ui::is_available() || msg::uses_stderr(MSGCH_ERROR))
+    if (!ui_available || crawl_state.seen_hups)
+    {
+        // in these cases we don't want to attempt the ui popup for the error
+        // message, just print the error to the log. In the non-crash case,
+        // this will also echo to stderr.
+        mprf(MSGCH_ERROR, "%s", error_msg.c_str());
         return false;
+    }
 
     // do the linebreak here so webtiles has it, but it's needed below as well
     linebreak_string(error_msg, 79);
@@ -116,46 +130,7 @@ bool fatal_error_notification(string error_msg)
     tiles.send_exit_reason("error", error_msg);
 #endif
 
-    // this is a bit heavy to continue past here in the face of a real crash.
-    if (crawl_state.seen_hups)
-        return false;
-
-#if (!defined(DGAMELAUNCH)) || defined(DGL_PAUSE_AFTER_ERROR)
-#ifdef USE_TILE_WEB
-    tiles_crt_popup show_as_popup;
-    tiles.set_ui_state(UI_CRT);
-#endif
-
-    // TODO: better formatting, maybe use a formatted_scroller?
-    // Escape '<'.
-    // NOTE: This assumes that the error message doesn't contain
-    //       any formatting!
-    error_msg = string("Fatal error:\n\n<lightred>")
-                       + replace_all(error_msg, "<", "<<");
-    error_msg += "</lightred>\n\n<cyan>Hit any key to exit, "
-                 "ctrl-p for the full log.</cyan>";
-    linebreak_string(error_msg, cgetsize(GOTO_CRT).x - 1);
-
-    auto prompt_ui =
-                make_shared<Text>(formatted_string::parse_string(error_msg));
-    auto popup = make_shared<ui::Popup>(prompt_ui);
-    bool done = false;
-
-    popup->on_hotkey_event([&](const KeyEvent& ev) {
-        if (ev.key() == CONTROL('P'))
-        {
-            replay_messages();
-            return true;
-        }
-        return false;
-    });
-
-    popup->on_keydown_event([&](const KeyEvent&) { return done = true; });
-
-    mouse_control mc(MOUSE_MODE_MORE);
-    ui::run_layout(move(popup), done);
-#endif
-
+    ui::error(error_msg, "Fatal error:", true);
     return true;
 }
 
@@ -240,7 +215,7 @@ void delete_files()
     you.save = 0;
 }
 
-NORETURN void screen_end_game(string text)
+NORETURN void screen_end_game(string text, game_exit exit)
 {
 #ifdef USE_TILE_WEB
     tiles.send_exit_reason("quit");
@@ -249,18 +224,9 @@ NORETURN void screen_end_game(string text)
     delete_files();
 
     if (!text.empty())
-    {
-        auto prompt_ui = make_shared<Text>(
-                formatted_string::parse_string(text));
-        auto popup = make_shared<ui::Popup>(prompt_ui);
-        bool done = false;
-        popup->on_keydown_event([&](const KeyEvent&) { return done = true; });
+        ui::message(text, "", "<cyan>Hit any key to exit...</cyan>", true);
 
-        mouse_control mc(MOUSE_MODE_MORE);
-        ui::run_layout(move(popup), done);
-    }
-
-    game_ended(game_exit::abort); // TODO: is this the right exit condition?
+    game_ended(exit); // TODO: is this the right exit condition?
 }
 
 static game_exit _kill_method_to_exit(kill_method_type kill)
@@ -342,104 +308,6 @@ NORETURN void end_game(scorefile_entry &se)
 
     delete_files();
 
-    // death message
-    if (!non_death)
-    {
-        canned_msg(MSG_YOU_DIE);
-        xom_death_message(death_type);
-
-        switch (you.religion)
-        {
-        case GOD_FEDHAS:
-            simple_god_message(" appreciates your contribution to the "
-                               "ecosystem.");
-            break;
-
-        case GOD_NEMELEX_XOBEH:
-            nemelex_death_message();
-            break;
-
-        case GOD_KIKUBAAQUDGHA:
-        {
-            const mon_holy_type holi = you.holiness();
-
-            if (holi & (MH_NONLIVING | MH_UNDEAD))
-            {
-                simple_god_message(" rasps: \"You have failed me! "
-                                   "Welcome... oblivion!\"");
-            }
-            else
-            {
-                simple_god_message(" rasps: \"You have failed me! "
-                                   "Welcome... death!\"");
-            }
-            break;
-        }
-
-        case GOD_YREDELEMNUL:
-            if (you.undead_state() != US_ALIVE)
-                simple_god_message(" claims you as an undead slave.");
-            else if (death_type != KILLED_BY_DISINT
-                  && death_type != KILLED_BY_LAVA)
-            {
-                mprf(MSGCH_GOD, "Your body rises from the dead as a mindless "
-                     "zombie.");
-            }
-            // No message if you're not undead and your corpse is lost.
-            break;
-
-        case GOD_BEOGH:
-            if (actor* killer = se.killer())
-            {
-                if (killer->is_monster() && killer->deity() == GOD_BEOGH)
-                {
-                    const string msg = " appreciates "
-                        + killer->name(DESC_ITS)
-                        + " killing of a heretic priest.";
-                    simple_god_message(msg.c_str());
-                }
-            }
-            break;
-
-#if TAG_MAJOR_VERSION == 34
-        case GOD_PAKELLAS:
-        {
-            const string result = getSpeakString("Pakellas death");
-            god_speaks(GOD_PAKELLAS, result.c_str());
-            break;
-        }
-#endif
-
-        default:
-            if (will_have_passive(passive_t::goldify_corpses)
-                && death_type != KILLED_BY_DISINT
-                && death_type != KILLED_BY_LAVA)
-            {
-                mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
-            }
-            // Doesn't depend on Okawaru worship - you can still lose the duel
-            // after abandoning.
-            if (actor* killer = se.killer())
-            {
-                if (killer->props.exists(OKAWARU_DUEL_TARGET_KEY))
-                {
-                    const string msg = " crowns "
-                        + killer->name(DESC_THE, true)
-                        + " victorious!";
-                    simple_god_message(msg.c_str(), GOD_OKAWARU);
-                }
-            }
-            break;
-        }
-
-        flush_prev_message();
-        viewwindow(); // don't do for leaving/winning characters
-        update_screen();
-
-        if (crawl_state.game_is_hints())
-            hints_death_screen();
-    }
-
     string fname = morgue_name(you.your_name, se.get_death_time());
     if (!dump_char(fname, true, true, &se))
         mpr("Char dump unsuccessful! Sorry about that.");
@@ -502,7 +370,7 @@ NORETURN void end_game(scorefile_entry &se)
             crawl_state.game_type_name().c_str());
 
 #ifdef USE_TILE_LOCAL
-        const int line_height = tiles.get_crt_font()->char_height();
+        const int line_height = in_headless_mode() ? 1 : tiles.get_crt_font()->char_height();
 #else
         const int line_height = 1;
 #endif
@@ -523,7 +391,11 @@ NORETURN void end_game(scorefile_entry &se)
     vbox->add_child(scroller);
 
 #ifndef DGAMELAUNCH
+# ifndef __ANDROID__
     string morgue_dir = make_stringf("\nYou can find your morgue file in the '%s' directory.",
+# else
+    string morgue_dir = make_stringf("\nYou can find your morgue file in the \n'%s'\n directory.",
+# endif
             morgue_directory().c_str());
     vbox->add_child(make_shared<Text>(formatted_string::parse_string(morgue_dir)));
 #endif

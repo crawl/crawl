@@ -202,4 +202,8 @@ end
 if all_mons then explorer.mons_notable = function (x) return true end end
 
 explorer.catalog_seeds(seed_seq, max_depth, categories, show_level_fun)
+if crawl.seen_hups() > 0 then
+    crawl.stderr("Aborting! ")
+end
+
 explorer.reset_to_defaults()

@@ -30,9 +30,11 @@
 #include "mon-tentacle.h"
 #include "newgame-def.h"
 #include "ng-init.h"
+#include "prompt.h"
 #include "spl-miscast.h"
 #include "state.h"
 #include "stringutil.h"
+#include "syscalls.h"
 #include "teleport.h"
 #include "terrain.h"
 #ifdef USE_TILE
@@ -117,44 +119,6 @@ namespace msg
 }
 
 extern void world_reacts();
-
-static void _results_popup(string msg, bool error=false)
-{
-    // TODO: shared code here with end.cc
-    linebreak_string(msg, 79);
-
-#ifdef USE_TILE_WEB
-    tiles_crt_popup show_as_popup;
-    tiles.set_ui_state(UI_CRT);
-#endif
-
-    if (error)
-    {
-        msg = string("Arena error:\n\n<lightred>")
-                       + replace_all(msg, "<", "<<");
-        msg += "</lightred>";
-    }
-    else
-        msg = string("Arena results:\n\n") + msg;
-
-    msg += "\n\n<cyan>Hit any key to continue, "
-                 "ctrl-p for the full log.</cyan>";
-
-    auto prompt_ui = make_shared<Text>(
-            formatted_string::parse_string(msg));
-    bool done = false;
-    prompt_ui->on_hotkey_event([&](const KeyEvent& ev) {
-        if (ev.key() == CONTROL('P'))
-            replay_messages();
-        else
-            done = true;
-        return done;
-    });
-
-    mouse_control mc(MOUSE_MODE_MORE);
-    auto popup = make_shared<ui::Popup>(prompt_ui);
-    ui::run_layout(move(popup), done);
-}
 
 namespace arena
 {
@@ -873,6 +837,9 @@ namespace arena
                 mprf("---- Turn #%d ----", turns);
 #endif
 
+                if (crawl_state.terminal_resized)
+                    show_fight_banner();
+
                 // Check the consistency of our book-keeping every 100 turns.
                 if ((turns++ % 100) == 0)
                     count_foes();
@@ -1055,8 +1022,6 @@ namespace arena
             virtual void _render() override {};
             virtual void _allocate_region() override {
                 // XX sometimes this gets called spuriously?
-                show_fight_banner();
-                viewwindow();
                 update_screen();
                 display_message_window();
             };
@@ -1111,7 +1076,10 @@ namespace arena
 
             mpr("---- Contest finished ----\n" + outcome);
             if (!skipped_arena_ui)
-                _results_popup(outcome);
+            {
+                ui::message(outcome, "Arena results:",
+                    "<cyan>Hit any key to continue, ctrl-p for the full log.</cyan>");
+            }
         }
 
         ui::pop_layout();
@@ -1549,7 +1517,7 @@ NORETURN void run_arena(const newgame_def& choice, const string &default_arena_t
         end(0, false, "Results file already open");
     // would be more elegant if arena_tee handled file open/close, but
     // that would need a bunch of refactoring of how the file is handled here.
-    arena::file = fopen("arena.result", "w");
+    arena::file = fopen_u("arena.result", "w");
     msg::arena_tee log(&arena::file);
 
     do
@@ -1581,8 +1549,7 @@ NORETURN void run_arena(const newgame_def& choice, const string &default_arena_t
             }
             else
             {
-                mprf(MSGCH_ERROR, "%s", error.what());
-                _results_popup(error.what(), true);
+                ui::error(error.what());
                 last_teams = arena_choice.arena_teams;
                 arena_choice.arena_teams = "";
                 // fallthrough

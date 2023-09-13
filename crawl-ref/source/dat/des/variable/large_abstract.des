@@ -456,6 +456,7 @@ ENDMAP
 # Impenetrable vault
 #
 NAME:   impenetrable_vault
+TAGS:   no_descent
 DEPTH:  Depths:2-, !Depths:$
 ORIENT: southeast
 KMASK:   - = !opaque
@@ -710,6 +711,7 @@ ENDMAP
 NAME:    minmay_connected_triangles_in_corner
 ORIENT:  southeast
 DEPTH:   D:12-, !D:$, Depths, !Depths:$
+TAGS:    no_descent
 SHUFFLE: ([{)]}, 890, |*%$
 SUBST:   c : cv
 KMASK:   - = !opaque
@@ -830,6 +832,7 @@ ENDMAP
 
 NAME:    minmay_nested_s
 ORIENT:  southwest
+TAGS:    no_descent
 DEPTH:   D:12-, !D:$, Depths, !Depths:$
 SUBST:   c : cv
 SHUFFLE: ([{, )]}
@@ -1098,6 +1101,7 @@ ENDMAP
 
 NAME:    minmay_broken_ring
 ORIENT:  northwest
+TAGS:    no_descent
 DEPTH:   Depths
 SHUFFLE: |*
 SUBST:   y : z:50 .:50 xcvbn8GTUVY
@@ -1749,4 +1753,45 @@ x.%x.x%.x.x.x%x0.x....x.xx.....xx...xx..xx..xx..x.x.x....x.x.....xx.x000x...x%%x
 x0xx.xx0x.x.0x%x.xxxx0x....x...xx..xx..xx..xx.....x.x..x...x..xx....+...+.000%%x
 x..0.0..x.x...........xxx.0.0x.0..xx0...0.xx0.....x0..0x.0..0...0.0.x000x000x%%x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_aperiodic_l_corner
+TAGS:   transparent
+DEPTH:  D:12-, Depths
+ORIENT: southwest
+SUBST: 0 = .:50 0, 9 = .:50 9, 8 = .:50 8, % = .:50 %, * = .:50 *, | = .:50 |
+MAP
+ccccccccccccccccc
+c%..%..%c%..%..%c
+c.00000.+.00000.c
+c.0....%c%....0.c
+c%0.ccccccccc.0%c
+c.0.c*..*..*c.0.c
+c.0.c.99999.+.0.c
+c%.%c.9....*c%.%c
+cc+cc*9.cccccc+cc
+c%.%c.9.c%..%..%c
+c.0.c.9.c.00000.c
+c.0.c*.*c.0....%c
+c%0.cc+cc%0.cc+cc
+c.0....%c.0.c...c@@@
+c.00000.c.0.c.T.+..@
+c%..%..%c%.%c.0.c..@
+cc+ccccccc+cc.0.cc+cccccccccccccc
+c*..*..*c%.%c.0.....c%.%c%..%..%c
+c.99999.c.0.c.T000T.+.0.+.00000.c
+c.9....*c.0.c.......c.0.c%....0.c
+c*9.cc+cc%0.ccccccccc.0%cc+cc.0%c
+c.9.c|.|c.0....%c%....0.c*.*c.0.c
+c.9.c.8.c.00000.+.00000.c.9.c.0.c
+c*.*c.8.c%..%..%c%..%..%c.9.c%.%c
+cc+cc|8.ccccccccccccccccc.9*cc+cc
+c*.*c.8....|c*.*c%.%c*....9.c%.%c
+c.9.c.88888.+.9.c.0.+.99999.c.0.c
+c.9.c|..|..|c.9.c.0.c*..*..*c.0.c
+c*9.ccccccccc.9*c%0.ccccccccc.0%c
+c.9....*c*....9.c.0....%c%....0.c
+c.99999.+.99999.+.00000.+.00000.c
+c*..*..*c*..*..*c%..%..%c%..%..%c
+ccccccccccccccccccccccccccccccccc
 ENDMAP

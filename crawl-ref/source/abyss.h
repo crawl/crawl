@@ -50,5 +50,6 @@ bool is_level_incorruptible_monster();
 void lugonu_corrupt_level(int power);
 void lugonu_corrupt_level_monster(const monster &who);
 void run_corruption_effects(int duration);
+void splash_corruption(coord_def centre);
 void set_abyss_state(coord_def coord, uint32_t depth);
 void destroy_abyss();

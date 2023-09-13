@@ -108,7 +108,7 @@ protected:
 
 int str_to_colour(const string &str, int default_colour = -1,
                   bool accept_number = true, bool accept_elemental = false);
-const string colour_to_str(colour_t colour);
+const string colour_to_str(colour_t colour, bool human_readable=false);
 
 void init_element_colours();
 void add_element_colour(base_colour_calc *colour);

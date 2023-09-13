@@ -5,22 +5,97 @@ server; game changes (including webtiles UI aside from the lobby) go in the
 main changelog. The version numbers here are crawl version numbers as an
 organizing principle, though it is important to know that the webtiles server
 as normally installed (e.g on dgamelaunch-config setups) always runs trunk
-code. This file is update at least at major releases.
+code. This file is updated at least at major releases.
 
-## [0.30-a0 through 0.30-a0-29-g142975f185]
+## [0.30-a0 through 0.30-a0-740-g6493da8e45]
+
+Major changes:
+- Major revamp of game definitions, with the aim of supporting most of the
+  dgl-config templating techniques (in slightly different ways) directly in
+  the webserver. (This revamp is backwards compatible.)
+- The previous tileschat mutelist feature is converted to block rather than
+  just mute.
+- Improvements to account and community management features.
+- Performance improvements, focusing on blocking I/O and related issues.
+- **Breaking change**: Python 2 (soft-deprecated in 0.25 in 2020, fully
+  deprecated in 0.29 in 2022) is now completely disallowed, as are old Tornado
+  versions.
 
 New features:
-- Option `load_logging_rate`: if set to a number `n` other than 0, logs a
-  message every `n` seconds indicating player load. 0 by default.
-- Option `slow_callback_alert`: set to a number `n`, logs callbacks that take
-  longer than `n` seconds (accepts values like 0.25), and can give an
-  indication of why players might be experiencing freezes. Defaults to `None`.
+- Game definition improvements (see `config.py` and `games.d/base.yaml` for
+  documentation and examples)
+    * Enhanced templating. Game definitions now support templating via version
+      number, if the game config sets a version
+    * Allow specifying a partial game template, and using that to instantiate
+      particular games (e.g. defining a common set of parameters for all
+      stable games, and then instantiating them with just a version)
+    * Reload on HUP fully supports game removals and additions, and has better
+      caching.
+- Per-player block features: the previous muting features are converted to
+  instead allow players to block others from tileschat. As part of this,
+  players may block spectating entirely (`/block [all]`) and block anonymous
+  spectating (`/block [anon]`). A new chat command, `/kick`, allows players
+  to (only within a game session, not saved across game sessions) kick a
+  spectator for a set amount of time (in minutes).
+- Username ban management. See documentation in `config.py` for examples, but
+  this can be set via the config option `banned`, and if the file
+  `banned_players.yml` exists, the server will try to load a list of bad
+  usernames from there.
+- Improve the CLI for dealing with account bans/holds: this now allows editing
+  all dgl flags that are currently in use somewhere via the `wtutil.py`
+  script.
+- The webserver now loads configuration from `config.yml` if it exists, after
+  loading `config.py`. When running in live-debug mode, it will also try
+  `debug-config.yml`. Neither of these files are version controlled.
+- New server options:
+    * Option `allow_anon_spectate`: allows disabling anonymous spectating at a
+      server level.
+    * Option `load_logging_rate`: if set to a number `n` other than 0, logs a
+      message every `n` seconds indicating player load. 0 by default.
+    * Option `slow_callback_alert`: set to a number `n`, logs callbacks that
+      take longer than `n` seconds (accepts values like 0.25), and can give an
+      indication of why players might be experiencing freezes. Default: `None`.
+    * Option `slow_io_alert`: if I/O takes longer than this value (in seconds),
+      a warning is logged. Default: `0.250`. (Overlaps with callback logging.)
+    * Option `milestone_interval`: allow configuring how often milestone tailing
+      happens (applicable only to older game versions).
+    * Option `enable_ttyrecs`: lets ttyrec saving be disabled at the server
+      level, rather than per game version.
+- Admin panel updates. This panel now shows socket stats (including lobby), and
+  version info about the webserver
+- A RESTful lobby endpoint: `/status/lobby/` now provides lobby state directly.
+  See https://github.com/crawl/crawl/commit/f932412b2a00 for motivation.
+- A RESTful version endpoint: `/status/version/` provides server version
+  information. (Not yet game version information.)
 
 Fixes, improvements, changes:
-- Fixed a major source of blocking/freezes on Tornado 6, when players manage
-  to fill the UDS socket buffer with key input.
+- The webserver will now attempt to impose a `UNIQUE` constraint on the
+  username index. For reasons that still remain unclear, extant userdbs may
+  violate this constraint. If this happens, the server will still load fine,
+  but log a warning suggesting manual intervention. What this means is that a
+  server admin will need to go in and carefully remove duplicated username rows
+  via `sqlite3` at the command line (care is especially needed if the rows
+  appear to have distinct passwords). This warning is safe to ignore in the
+  short term, but fixing this will result in a speedup for database access,
+  possibly substantial depending on the database age and size.
+- Fixes to blocking calls and blocking call handling
+    * Fixed a major source of blocking/freezes on Tornado 6, when players manage
+      to fill the UDS socket buffer with key input.
+    * Improvements when a game ends with many spectators (previously this
+      scaled linearly with the number of watchers)
+    * Various other (less major) sources of I/O bound blocking
+    * Improvements to logging of blocking calls and blocking I/O (see new
+      options related to this)
+- Many logging improvements; IP is more consistently shown, some error spam is
+  reduced.
+- Password recovery tokens now expire by default in 12 hours, not 1 hour; this
+  time is now configurable via `recovery_token_lifetime`
 - A bug that was preventing change email/password dialogues from proceeding was
   fixed.
+- The option `games_config_dir` is now deprecated (and is treated as a bool
+  for backwards compatibility)
+- Improvements to game config validation and error reporting on startup
+- Experimental support for asynchronous file IO, via the `aiofiles` package.
 
 ## [0.29.0] - Shooting Stars - 2022-08-23
 
@@ -31,7 +106,7 @@ Major changes:
 - Many new community management features developed during the 0.29 cycle.
 
 Documentation:
-- Changelog added. (Notes back to X.XX are retroactive)
+- Changelog added. (Notes back to 0.25.0 are retroactive)
 
 New features:
 - Community management changes:
@@ -126,8 +201,8 @@ New features:
 - Save information can be shown to players in the webtiles lobby, for crawl
   versions that support it. Configurable on a version-by-version basis.
 - Add a tool for admins to send messages to all players on the server, via
-  a collapsable admin panel in the lobby visible to admin users.
+  a collapsible admin panel in the lobby visible to admin users.
 
 Fixes, improvements, changes:
-- Various fixes to loggin and error handling
+- Various fixes to login and error handling
 - stuck processes are now killed with SIGABRT, rather than SIGTERM

@@ -37,7 +37,8 @@ int englaciate(coord_def where, int pow, actor *agent)
         return 0;
     }
 
-    int duration = roll_dice(3, pow) / 6 - victim->get_hit_dice() / 2;
+    int duration = div_rand_round(roll_dice(3, 1 + pow), 6)
+                    - div_rand_round(victim->get_hit_dice() - 1, 2);
 
     if (duration <= 0)
     {
@@ -173,7 +174,7 @@ string mons_simulacrum_immune_reason(const monster *mons)
     if (!mons || !you.can_see(*mons))
         return "You can't see anything there.";
 
-    if (mons->has_ench(ENCH_SIMULACRUM))
+    if (mons->has_ench(ENCH_SIMULACRUM) || mons->has_ench(ENCH_BOUND_SOUL))
     {
         return make_stringf("%s's soul is already gripped in ice!",
                             mons->name(DESC_THE).c_str());

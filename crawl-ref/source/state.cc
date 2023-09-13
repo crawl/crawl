@@ -15,6 +15,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "hints.h"
+#include "initfile.h"
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
@@ -33,6 +34,7 @@ game_state::game_state()
       need_save(false), save_after_turn(false),
       game_started(false), saving_game(false),
       updating_scores(false),
+      parsing_rc(false),
 #ifndef USE_TILE_LOCAL
       smallterm(false),
 #endif
@@ -49,7 +51,8 @@ game_state::game_state()
       throttle(false),
       bypassed_startup_menu(false),
 #endif
-      show_more_prompt(true), terminal_resize_handler(nullptr),
+      clua_max_memory_mb(16), show_more_prompt(true),
+      skip_autofight_check(false), terminal_resize_handler(nullptr),
       terminal_resize_check(nullptr), doing_prev_cmd_again(false),
       prev_cmd(CMD_NO_CMD), repeat_cmd(CMD_NO_CMD),
       cmd_repeat_started_unsafe(false),
@@ -61,7 +64,6 @@ game_state::game_state()
       tiles_disabled(false),
       title_screen(true),
       invisible_targeting(false),
-      player_moving(false),
       darken_range(nullptr), unsaved_macros(false), disables(),
       minor_version(-1), save_rcs_version(),
       nonempty_buffer_flush_errors(false),
@@ -551,9 +553,14 @@ bool game_state::player_is_dead() const
     return updating_scores && !need_save;
 }
 
-bool game_state::game_standard_levelgen() const
+bool game_state::game_has_random_floors() const
 {
-    return game_is_normal() || game_is_hints();
+    return game_is_normal() || game_is_hints() || game_is_descent();
+}
+
+bool game_state::game_saves_prefs() const
+{
+    return game_is_normal() || game_is_hints() || game_is_descent();
 }
 
 bool game_state::game_is_valid_type() const
@@ -592,6 +599,12 @@ bool game_state::game_is_hints() const
     return type == GAME_TYPE_HINTS;
 }
 
+bool game_state::game_is_descent() const
+{
+    ASSERT(game_is_valid_type());
+    return type == GAME_TYPE_DESCENT;
+}
+
 bool game_state::game_is_hints_tutorial() const
 {
     return game_is_hints() || game_is_tutorial();
@@ -620,6 +633,8 @@ string game_state::game_type_name_for(game_type _type)
         return "Arena";
     case GAME_TYPE_SPRINT:
         return "Dungeon Sprint";
+    case GAME_TYPE_DESCENT:
+        return "Dungeon Descent";
     case NUM_GAME_TYPE:
         return "Unknown";
     }
@@ -642,19 +657,29 @@ bool game_state::seed_is_known() const
 string game_state::game_savedir_path() const
 {
     if (!game_is_valid_type())
-        return ""; // a game from the future -- avoid the ASSERT below
-    return game_is_sprint()? "sprint/" : "";
+        return ""; // a game from the future...
+    switch (type)
+    {
+    case GAME_TYPE_SPRINT:
+        return "sprint/";
+    case GAME_TYPE_DESCENT:
+        return "descent/";
+    default:
+        return "";
+    }
 }
 
 string game_state::game_type_qualifier() const
 {
-    if (type == GAME_TYPE_CUSTOM_SEED)
-        return "-seeded";
-    if (crawl_state.game_is_sprint())
-        return "-sprint";
-    if (crawl_state.game_is_tutorial())
-        return "-tutorial";
-    if (crawl_state.game_is_hints())
-        return "-hints";
-    return "";
+    switch (type)
+    {
+    case GAME_TYPE_CUSTOM_SEED:
+    case GAME_TYPE_SPRINT:
+    case GAME_TYPE_HINTS:
+    case GAME_TYPE_TUTORIAL:
+    case GAME_TYPE_DESCENT:
+        return "-" + gametype_to_str(type);
+    default:
+        return "";
+    }
 }

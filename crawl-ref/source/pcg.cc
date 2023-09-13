@@ -14,7 +14,7 @@
  * Original source is (c) 2014 Melissa O'Neill <oneill@pcg-random.org>
  * Licensed under Apache License 2.0
  *
- * get_bounded_uint32 is derived/modified from an implemention by Melissa
+ * get_bounded_uint32 is derived/modified from an implementation by Melissa
  * O'Neill of an algorithm by Daniel Lemire as part of a comparison of bounded
  * random functions:
  *    http://www.pcg-random.org/posts/bounded-rands.html

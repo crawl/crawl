@@ -69,7 +69,7 @@ bewildered foes.
 %%%%
 Hunter
 
-Hunters carry a shortbow, light armour and a scroll of immolation.
+Hunters carry a shortbow, light armour and a scroll of butterflies.
 %%%%
 Hexslinger
 
@@ -83,8 +83,8 @@ library are quite versatile.
 %%%%
 Monk
 
-Monks start with a simple weapon of their choice and a potion of divine ambrosia,
-and gain additional piety with the first god they worship.
+Monks start with a simple weapon of their choice, an orb of light, and a potion
+of divine ambrosia, and gain additional piety with the first god they worship.
 %%%%
 Necromancer
 
@@ -101,10 +101,10 @@ Summoner
 Summoners are able to cast Summon Small Mammal from the start, and begin with
 other Summonings spells in their library.
 %%%%
-Transmuter
+Shapeshifter
 
-Transmuters learn spells to shift their form, making them powerful unarmed
-fighters.
+Shapeshifters use talismans to shift their form, making them powerful melee
+fighters (especially when unarmed) at the cost of armour.
 %%%%
 Venom Mage
 
@@ -117,6 +117,6 @@ Wanderers start with random equipment and skills.
 %%%%
 Warper
 
-Warpers start with a weapon of their choice, a scroll of blinking, boomerangs
-of dispersal, and some Translocation spells in their library.
+Warpers start with a weapon of their choice, a scroll of blinking, darts of
+dispersal, and some Translocation spells in their library.
 %%%%

@@ -26,5 +26,6 @@ enum caction_type    // Primary categorization of counted actions.
                      //   auxtype used for special cases
                      //   (reflection, god ability, spell, etc)
     CACT_RIPOSTE,    // as CACT_MELEE
+    CACT_FORM,       // transformation
     NUM_CACTIONS,
 };

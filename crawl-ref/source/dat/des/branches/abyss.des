@@ -69,7 +69,7 @@ ENDMAP
 NAME:  marbit_kobold_abyss_entry
 TAGS:  no_monster_gen nolayout_encompass
 WEIGHT: 5
-MONS:  kobold brigand ; boomerang ego:dispersal, kobold demonologist
+MONS:  kobold brigand ; dart ego:dispersal, kobold demonologist
 KPROP: 1 = no_tele_into
 : abyss_entry(_G, '_')
 MAP
@@ -254,19 +254,14 @@ COLOUR:  " : white w:5 / none
 FTILE:   "ABCDEFGHIJKLMNOPRQSTUV : floor_limestone w:5 / floor_nerves
 SUBST:   " = .
 MONS:    plant, bush
-# Disable Wu in the stable version.
-: if crawl.unavailable_god("Wu Jian") then
-SHUFFLE: ABCDEFHIJKLMNOPQRSTU
-SUBST:   V = .
-: else
-SHUFFLE: ABCDEFHIJKLMNOPQRSTUV
-: end
+SHUFFLE: ABCDEFGHIJKLMNOPQRSTUV
 KFEAT:   A = altar_makhleb
 KFEAT:   B = altar_xom
 KFEAT:   C = altar_zin
 KFEAT:   D = altar_the_shining_one
 KFEAT:   E = altar_kikubaaqudgha
 KFEAT:   F = altar_yredelemnul
+KFEAT:   G = altar_gozag
 KFEAT:   H = altar_vehumet
 KFEAT:   I = altar_okawaru
 KFEAT:   J = altar_sif_muna
@@ -277,7 +272,7 @@ KFEAT:   N = altar_fedhas
 KFEAT:   O = altar_cheibriados
 KFEAT:   P = altar_ashenzari
 KFEAT:   Q = altar_dithmenos
-KFEAT:   R = altar_gozag
+KFEAT:   R = altar_ru
 KFEAT:   S = altar_qazlal
 KFEAT:   T = altar_uskayaw
 KFEAT:   U = altar_hepliaklqana
@@ -289,7 +284,7 @@ MAP
 ''''c"A"""I"""L"""S"c..
 ''G'c"""E"""V"""Q"""ct.
 ''''+"B"""J"""N"""T"c..
-''G'c"""F"""""""R"""c..
+''G'c"""F"""R"""R"""c..
 ''''c"C"""K"""O"""U"c.t
 ''G'c"""H"""""""S"""c..
 ''ccccccccccccccccccc..
@@ -963,7 +958,7 @@ MONS:    bone dragon / tentacled starspawn / starcursed mass / \
          glowing shapeshifter
 ITEM:    superb_item
 ITEM:    boomerang good_item q:10 / javelin good_item q:5, any magical staff
-ITEM:    scroll of magic mapping q:4 / scroll of noise q:4
+ITEM:    scroll of revelation q:4 / scroll of noise q:4
 ITEM:    ring mail randart / scale mail randart / chain mail randart w:20
 ITEM:    demon blade ego:chaos good_item ident:type / \
          demon trident ego:chaos good_item ident:type / \
@@ -1126,7 +1121,7 @@ TAGS:    abyss_rune unrand no_monster_gen no_item_gen no_pool_fixup
 WEIGHT:  5
 MONS:    catoblepas, earth elemental, basilisk, boulder beetle
 MONS:    catoblepas skeleton, air elemental, death drake
-ITEM:    potion of flight q:1 ident:type
+ITEM:    potion of enlightenment q:1 ident:type
 KMONS:   O = patrolling war gargoyle
 KITEM:   O = abyssal rune of Zot
 KFEAT:   A = stone_arch
@@ -1406,7 +1401,7 @@ KMONS:   45 = hellephant
 KMONS:   67 = generate_awake spatial vortex
 KMONS:   89 = draconian shifter
 KMONS:   _ = patrolling spatial maelstrom
-ITEM:    potion of flight q:1 ident:type
+ITEM:    potion of enlightenment q:1 ident:type
 KITEM:   _ = abyssal rune of Zot
 KFEAT:   _ = altar_lugonu
 KFEAT:   A = stone_arch

@@ -270,7 +270,7 @@ ENDMAP
 NAME:   sprint2_basic_supplies
 TAGS:   sprint2_basic_supplies no_item_gen no_trap_gen no_monster_gen no_pool_fixup
 NSUBST: % = 1:a / 1:b / 1:c / *:%
-KITEM:  a = potion of flight q:3
+KITEM:  a = potion of enlightenment q:3
 KITEM:  b = potion of resistance q:3
 KITEM:  c = potion of magic q:3
 MAP
@@ -427,7 +427,7 @@ KITEM:  m = gold q:81
 KMONS:  m = patrolling yaktaur
 KMONS:  b = patrolling death drake
 KMONS:  n = patrolling death drake
-KITEM:  n = potion of flight q:3
+KITEM:  n = potion of enlightenment q:3
 KMONS:  d = patrolling electric golem
 KITEM:  d = gold q:243
 KMONS:  p = earth elemental
@@ -727,7 +727,7 @@ NSUBST: | = 1:a / 2:b / 1:d / 6:$ / *:|
 KITEM:  $ = gold q:81
 KITEM:  a = scroll of acquirement q:3 / potion of mutation q:3 / potion of experience q:1
 KITEM:  b = scroll of acquirement q:1 / potion of magic q:9 / potion of haste q:3
-KITEM:  d = potion of flight q:3
+KITEM:  d = potion of enlightenment q:3
 SUBVAULT: A : sprint2_smallroom
 SUBVAULT: B : sprint2_smallroom
 SUBVAULT: D : sprint2_smallroom
@@ -760,7 +760,7 @@ NSUBST: f = 1:a / 2:b / 1:h / 9:$ / *:|
 KITEM:  a = scroll of acquirement q:3 / potion of mutation q:3 / potion of experience q:1
 KITEM:  $ = gold q:81
 KITEM:  b = scroll of acquirement q:1 / potion of magic q:9 / potion of haste q:3
-KITEM:  h = potion of flight q:3
+KITEM:  h = potion of enlightenment q:3
 MONS:   Nessos, jelly, sixfirhy, Gastronok, orc sorcerer, dire elephant
 SUBST:  . = '.........
 KFEAT:  ' = net trap
@@ -831,7 +831,7 @@ local mons_gen_marker = TriggerableFunction:new {
     },
     func = "sprint2_forest_area_1_mons_gen",
     repeated = true,
-    props = {listen_to_slaves = true, only_at_slave = true }
+    props = {listen_to_replicas = true, only_at_replica = true }
     }
 mons_gen_marker:add_triggerer(DgnTriggerer:new {
     type = "player_move" })
@@ -865,7 +865,7 @@ NSUBST: 1 = 1:1 / *:e
 NSUBST: f = 1:f / 1:3 / *:4
 KITEM:  a = scroll of acquirement q:3 / potion of mutation q:3 / potion of experience q:1
 KFEAT:  e = any shop
-KITEM:  f = potion of flight q:3
+KITEM:  f = potion of enlightenment q:3
 SHUFFLE: 12
 MONS:   golden dragon, storm dragon, necrophage, iron imp
 SUBVAULT: A : sprint2_smallroom

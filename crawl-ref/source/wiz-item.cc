@@ -11,6 +11,7 @@
 
 #include "acquire.h"
 #include "act-iter.h"
+#include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "cio.h"
@@ -42,6 +43,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "stringutil.h"
+#include "syscalls.h"
 #include "tag-version.h"
 #include "terrain.h"
 #include "unicode.h"
@@ -101,7 +103,7 @@ void wizard_create_spec_object()
     {
         mprf(MSGCH_PROMPT, ") - weapons     ( - missiles  [ - armour  / - wands    ?  - scrolls");
         mprf(MSGCH_PROMPT, "= - jewellery   ! - potions   : - books   | - staves   }  - miscellany");
-        mprf(MSGCH_PROMPT, "X - corpses     $ - gold    0  - the Orb");
+        mprf(MSGCH_PROMPT, "%% - talismans   X - corpses   $ - gold    0  - the Orb");
         mprf(MSGCH_PROMPT, "ESC - exit");
 
         msgwin_prompt("What class of item? ");
@@ -494,13 +496,6 @@ void wizard_tweak_object()
     }
 }
 
-// Returns whether an item of this type can be an artefact.
-static bool _item_type_can_be_artefact(int type)
-{
-    return type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY
-           || type == OBJ_BOOKS;
-}
-
 static bool _make_book_randart(item_def &book)
 {
     int type;
@@ -539,7 +534,7 @@ void wizard_value_item()
 /**
  * Generate every unrand (including removed ones).
  *
- * @param override_unique if true, will generate unrands that have alread
+ * @param override_unique if true, will generate unrands that have already
  * placed in the game. If false, will generate fallback randarts for any
  * unrands that have already placed.
  */
@@ -644,7 +639,7 @@ void wizard_make_object_randart()
         return;
     }
 
-    if (!_item_type_can_be_artefact(item.base_type))
+    if (!item_type_can_be_artefact(item.base_type))
     {
         mpr("That item cannot be turned into an artefact.");
         return;
@@ -1092,7 +1087,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "protection",
             "draining",
             "speed",
-            "vorpal",
+            "heavy",
 #if TAG_MAJOR_VERSION == 34
             "flame",
             "frost",
@@ -1289,7 +1284,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 
     // Now output the sub types.
     char format_str[80];
-    sprintf(format_str, "%%%ds: %%6.2f\n", max_width);
+    snprintf(format_str, sizeof(format_str), "%%%ds: %%6.2f\n", max_width);
 
     for (int i = 0; i < 256; ++i)
     {
@@ -1493,7 +1488,9 @@ static void _debug_rap_stats(FILE *ostat)
 #endif
         "ARTP_NOISE",
         "ARTP_PREVENT_SPELLCASTING",
+#if TAG_MAJOR_VERSION == 34
         "ARTP_CAUSE_TELEPORTATION",
+#endif
         "ARTP_PREVENT_TELEPORTATION",
         "ARTP_ANGRY",
 #if TAG_MAJOR_VERSION == 34
@@ -1536,6 +1533,17 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_HARM",
         "ARTP_RAMPAGING",
         "ARTP_ARCHMAGI",
+        "ARTP_ENHANCE_CONJ",
+        "ARTP_ENHANCE_HEXES",
+        "ARTP_ENHANCE_SUMM",
+        "ARTP_ENHANCE_NECRO",
+        "ARTP_ENHANCE_TLOC",
+        "ARTP_ENHANCE_TMUT",
+        "ARTP_ENHANCE_FIRE",
+        "ARTP_ENHANCE_ICE",
+        "ARTP_ENHANCE_AIR",
+        "ARTP_ENHANCE_EARTH",
+        "ARTP_ENHANCE_POISON",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 
@@ -1572,7 +1580,7 @@ static void _debug_rap_stats(FILE *ostat)
 
 void debug_item_statistics()
 {
-    FILE *ostat = fopen("items.stat", "a");
+    FILE *ostat = fopen_u("items.stat", "a");
 
     if (!ostat)
     {
@@ -1678,5 +1686,15 @@ void wizard_recharge_evokers()
         evoker_debt(dummy.sub_type) = 0;
     }
     mpr("Evokers recharged.");
+}
+
+void wizard_unobtain_runes_and_orb()
+{
+    you.runes.reset();
+
+    you.chapter = CHAPTER_ORB_HUNTING;
+    invalidate_agrid(true);
+
+    mpr("Unobtained all runes and the Orb of Zot.");
 }
 #endif

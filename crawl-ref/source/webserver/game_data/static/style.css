@@ -300,7 +300,7 @@ canvas {
 }
 
 #monster_list .good_neutral,
-#monster_list .neutral, {
+#monster_list .neutral {
     color: #8f5902; /* brown */
 }
 
@@ -375,7 +375,6 @@ canvas {
     border-right: 5px solid #040204;
     background: #7d623c;
     opacity: 1 !important;
-    background-radius: 0;
     left: 0;
     right: 0;
     cursor: pointer;
@@ -479,6 +478,10 @@ canvas {
 
 .menu_contents li.placeholder {
     color: darkgray;
+}
+
+.menu_prompt {
+    min-width: 20em;
 }
 
 .menu .title_prompt {
@@ -915,6 +918,14 @@ canvas {
     background: rgba(255,255,0,0.196);
     width: 100%;
     display: block;
+}
+
+.formatted-scroller > .header {
+    margin-bottom: 10px;
+}
+
+.formatted-scroller > .more {
+    margin-top: 15px;
 }
 
 .spellset ol {

@@ -547,19 +547,19 @@ maybe_bool CLua::callmbooleanfn(const char *fn, const char *params,
     error.clear();
     lua_State *ls = state();
     if (!ls)
-        return MB_MAYBE;
+        return maybe_bool::maybe;
 
     lua_stack_cleaner clean(ls);
 
     pushglobal(fn);
     if (!lua_isfunction(ls, -1))
-        return MB_MAYBE;
+        return maybe_bool::maybe;
 
     bool ret = calltopfn(ls, params, args, 1);
     if (!ret)
-        return MB_MAYBE;
+        return maybe_bool::maybe;
 
-    return frombool(lua_toboolean(ls, -1));
+    return lua_toboolean(ls, -1);
 }
 
 maybe_bool CLua::callmbooleanfn(const char *fn, const char *params, ...)
@@ -576,19 +576,19 @@ maybe_bool CLua::callmaybefn(const char *fn, const char *params, va_list args)
     error.clear();
     lua_State *ls = state();
     if (!ls)
-        return MB_MAYBE;
+        return maybe_bool::maybe;
 
     lua_stack_cleaner clean(ls);
 
     pushglobal(fn);
     if (!lua_isfunction(ls, -1))
-        return MB_MAYBE;
+        return maybe_bool::maybe;
 
     bool ret = calltopfn(ls, params, args, 1);
-    if (!ret)
-        return MB_MAYBE;
+    if (!ret || !lua_isboolean(ls, -1))
+        return maybe_bool::maybe;
 
-    return lua_isboolean(ls, -1) ? frombool(lua_toboolean(ls, -1)) : MB_MAYBE;
+    return lua_toboolean(ls, -1);
 }
 
 maybe_bool CLua::callmaybefn(const char *fn, const char *params, ...)
@@ -606,7 +606,7 @@ bool CLua::callbooleanfn(bool def, const char *fn, const char *params, ...)
     va_start(args, params);
     maybe_bool r = callmbooleanfn(fn, params, args);
     va_end(args);
-    return tobool(r, def);
+    return r.to_bool(def);
 }
 
 bool CLua::proc_returns(const char *par) const
@@ -1102,7 +1102,9 @@ static void *_clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize)
     CLua *cl = static_cast<CLua *>(ud);
     cl->memory_used += nsize - osize;
 
-    if (nsize > osize && cl->memory_used >= CLUA_MAX_MEMORY_USE * 1024
+    if (nsize > osize
+        && cl->memory_used >= static_cast<long>(crawl_state.clua_max_memory_mb)
+            * 1024 * 1024
         && cl->mixed_call_depth)
     {
         return nullptr;

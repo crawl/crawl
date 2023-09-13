@@ -2154,7 +2154,7 @@ ice bat
 
 Un mort vivant à l'aspect d'une chauve souris, composé de glace.
 %%%%
-kamikaze kobold
+flame-cult kobold
 
 Ce kobold est soit fou soit un martyr pour quelques croyances koboldes
 obscures, il est enchanté pour exploser dans une gerbe de feu. Vous ferez mieux

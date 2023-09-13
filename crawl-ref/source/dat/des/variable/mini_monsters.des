@@ -105,7 +105,7 @@ ENDMAP
 
 # Beehive which needs digging to access.
 NAME:   hive_lemuel
-TAGS:   no_trap_gen transparent
+TAGS:   no_trap_gen transparent no_descent
 DEPTH:  D:9-, Spider
 MONS:   killer bee, meliai, queen bee, hornet
 KMASK:  1234*R = opaque
@@ -588,7 +588,7 @@ ENDMAP
 # The no_trap_gen tag prevents teleport traps (or shafts) that might set
 # the lindwurms free.
 NAME:   minmay_lindwurm_lava
-TAGS:   no_monster_gen no_trap_gen transparent
+TAGS:   no_monster_gen no_trap_gen transparent no_descent
 DEPTH:  D:8-, Lair:2-
 KMASK:  '*|1> = opaque
 KPROP:  '*|1> = no_tele_into
@@ -919,9 +919,9 @@ ITEM:   any potion
 ITEM:   young poisoner's handbook / book of changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
         randbook numspells:4 title:Nature \
-        spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
+        spells:summon_small_mammal&call_canine_familiar&hailstorm&summon_forest / \
         randbook numspells:4 title:Nature \
-        spells:beastly_appendage&sting&wereblood&spider_form
+        spells:sting&wereblood&hailstorm&summon_forest
 KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
 KITEM:  g = any potion q:2
 MONS:   plant, oklob sapling, ball python
@@ -971,9 +971,9 @@ ITEM:   any potion
 ITEM:   young poisoner's handbook / book of changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
         randbook numspells:4 title:Nature \
-        spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
+        spells:summon_small_mammal&call_canine_familiar&hailstorm&summon_forest / \
         randbook numspells:4 title:Nature \
-        spells:beastly_appendage&sting&wereblood&spider_form
+        spells:sting&wereblood&hailstorm&summon_forest
 KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
 KITEM:  g = any potion q:2 / any potion q:3
 MONS:   plant, oklob sapling, ball python
@@ -1229,6 +1229,78 @@ x<<xxxxxxxxxxxxxxxxxxcx
 x&&xxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# I'd apologize for this pun, but I'm not actually sorry.
+NAME:    nicolae_half_adder
+TAGS:    transparent patrolling
+DEPTH:   D:2-6
+KMONS:   1 = adder
+KFEAT:   !O = c
+SHUFFLE: pqrs/O!!O/!O!O/!!O!
+SUBST:   pqrs = O
+: nsubst( "1 = " .. you.depth() .. "=1 / 1=1. / ." )
+TILE:    ! = DNGN_TRANSPARENT_STONE_WHITE
+TILE:    O = DNGN_TRANSPARENT_STONE_DARKGRAY
+COLOUR:  ! = white
+COLOUR:  O = magenta
+MAP
+.....................
+..p.........c.c....1.
+.pppppppppppcpcc..r..
+..p.p.1..1..1.%ccrrr.
+.1...p....qqcqcc..r..
+....1.p..q.1c.c..1...
+.......pq............
+.......qp............
+....1.q..p.1cccc.1...
+.1...q....ppccccc.s..
+..q.q.1..1..1.%ccsss.
+.qqqqqqqqqqqccccc.s..
+..q.........cccc...1.
+.....................
+ENDMAP
+
+# A similar idea didn't cut it as a Swamp rune vault, so let's resurrect it as
+# a lower-Dungeon vault. The gimmick, of course, is that each room has
+# 27 hydra heads, just arranged on a different number of hydra bodies.
+# Only places if this game doesn't have Swamp. This way, there's no incentive
+# to dive down through D in the hopes of finding this vault before the Swamp
+# end is generated to keep the Lernaean Hydra from being generated in the
+# rune vault.
+NAME:   nicolae_hydra_factorization
+TAGS:   no_monster_gen no_trap_gen
+DEPTH:  D:12-
+veto {{
+   return crawl.game_started() and dgn.br_exists("Swamp")
+}}
+# The final loot is geared towards 6-9 pieces of good stuff, including a
+# guaranteed randart or two, because otherwise who would go in?
+KITEM:  * = *
+KITEM:  % = %
+KITEM:  $ = $
+KITEM:  s = | w:70 / gold good_item
+KITEM:  S- = any armour randart / any weapon randart / any jewellery randart
+KMONS:  P = one-headed hydra
+KMONS:  Q = three-headed hydra
+KMONS:  R = nine-headed hydra
+KMONS:  S = the Lernaean Hydra
+KFEAT:  $%*|PQRS`s- = . / W w:5
+KFEAT:  t = mangrove
+NSUBST: O = s / O
+SUBST:  L = tp, M = tq, N = tr, O = ts
+NSUBST: p = 27:P / 7:$ / `, q = 9:Q / 5:% / `, r = 3:R / 3:* / `, s = S / - / s
+MAP
+ccccccccccc
+cpppppppppccccccccc
+cppLLpLLppcMqqqqqMccccccc
+cpLLLpLLLpcqMMqMMqcrNrNrccccc
+cpLLpppLLpcqMMMMMqcNrNrNcOsOc
+=ppppLpppp=qqMtMqq=rNtNr=sssn@
+cpLLpppLLpcqMMMMMqcNrNrNcOsOc
+cpLLLpLLLpcqMMqMMqcrNrNrccccc
+cppLLpLLppcMqqqqqMccccccc
+cpppppppppccccccccc
+ccccccccccc
+ENDMAP
 
 ###############################################################################
 #
@@ -1377,8 +1449,8 @@ ENDMAP
 NAME:   minmay_unpleasant_kobolds
 TAGS:   transparent
 DEPTH:  D:6-
-MONS:   kobold ; boomerang ego:dispersal q:2 / w:3 kobold brigand ; boomerang ego:dispersal q:4
-MONS:   kobold ; boomerang ego:silver q:2 / w:3 kobold brigand ; boomerang ego:silver q:4
+MONS:   kobold ; dart ego:dispersal q:2 / w:3 kobold brigand ; dart ego:dispersal q:4
+MONS:   kobold ; boomerang q:2 / w:3 kobold brigand ; boomerang q:4
 MONS:   kobold ; dart ego:curare q:1 / \
         w:3 kobold brigand ; dart ego:curare q:2
 : if you.absdepth() > 13 then
@@ -1638,7 +1710,7 @@ ENDMAP
 
 # Centaur isle (Lemuel)
 NAME:   centaur_isle
-TAGS:   no_monster_gen no_pool_fixup no_rotate
+TAGS:   no_monster_gen no_pool_fixup no_rotate no_descent
 DEPTH:  D:6-12, Shoals
 MONS:   centaur, yaktaur, faun, centaur warrior
 : if you.absdepth() > 11 then
@@ -1729,10 +1801,10 @@ MAP
 ENDMAP
 
 NAME:   minmay_rotating_lava
-TAGS:   no_monster_gen transparent
+TAGS:   no_monster_gen transparent no_descent
 DEPTH:  D:10-
 MONS:   hell hound, hell knight band, hell knight
-ITEM:   potion of flight ident:type q:3
+ITEM:   potion of enlightenment ident:type q:3
 KMASK:  .123*< = opaque
 KPROP:  .123*< = no_tele_into
 KFEAT:  ' = floor
@@ -1847,9 +1919,9 @@ ITEM:    book of callings w:5 / book of the wilderness w:20 / grand grimoire w:5
 ITEM:    manual of summonings
 ITEM:    amulet of magic regeneration w:5 ident:type / \
             amulet of magic regeneration randart
-ITEM:    box of beasts
+ITEM:    any ally misc
 KITEM:   % = any, any / gold / nothing, any / nothing
-KITEM:   _ = scroll of summoning ident:type , scroll of summoning ident:type / nothing
+KITEM:   _ = any ally scroll ident:type , any ally scroll ident:type / nothing
 KFEAT:   _ = altar_sif_muna
 KMASK:   "'@ = !no_monster_gen
 SHUFFLE: 12, 34, 12 / 34
@@ -2407,7 +2479,7 @@ ENDMAP
 NAME:   hellmonk_jugg_or_not
 DEPTH:  D:13-, Orc:1
 WEIGHT: 3
-TAGS:   no_monster_gen no_item_gen
+TAGS:   no_monster_gen no_item_gen no_descent
 MONS:   juggernaut
 KFEAT:   B = altar_nemelex_xobeh
 SHUFFLE: DE
@@ -2553,6 +2625,53 @@ MAP
  ...
 ENDMAP
 
+# Robin is capable of hurling Ijyb at the player, but sadly, instances where a
+# player was killed by a projectile Ijyb are few and far between. Here, we put
+# the two goblin uniques together to increase the chances of a lethal Ijyb toss.
+# Robin's band is reduced from its usual 10-12 to 5-6, to increase the chances
+# that Ijyb gets thrown instead of a non-unique goblin.
+NAME:   nicolae_goblin_pals
+DEPTH:  D:3-5
+TAGS:   transparent
+KMONS:  1 = Robin, goblin / hobgoblin
+KMONS:  2 = Ijyb, goblin / hobgoblin
+# The usual ratio of Robin's band is goblin w:30 / hobgoblin, but here it has
+# slightly more hobgoblins to compensate for the reduction in size.
+KMONS:  3 = goblin / hobgoblin
+NSUBST: ` = 5=3 / 3. / .
+MAP
+........
+........
+..````..
+..`1.`..
+..`.2`..
+..````..
+........
+........
+ENDMAP
+
+# A shopkeeper has learned why there are no NetHack-style shops in this dungeon.
+NAME:   nicolae_nh_ransacked_shop
+TAGS:   transparent patrolling no_item_gen
+DEPTH:  D:4-10
+KITEM:  1d = any armour no_uniq w:9 / any weapon no_uniq w:1 / nothing w:40
+KMONS:  1 = orc priest band / orc wizard band / orc warrior band / \
+            kobold brigand band
+KFEAT:  + = broken_door / +
+NSUBST: D = + / c, E = e / .
+KPROP:  e = bloody
+: dgn.delayed_decay(_G, "e", "human corpse")
+MAP
+xx     xx
+xcDDDDDcx
+xcEEEEEcx
+xcdddddcx
+xcdd1ddcx
+xcdddddcx
+xcccccccx
+xxxxxxxxx
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead
@@ -2603,6 +2722,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_metal_thing
+TAGS:   no_descent
 DEPTH:  Depths
 MONS:   iron dragon, rust devil
 KPROP:  .1$| = no_tele_into
@@ -3063,6 +3183,153 @@ xGD..D..1..E..EGx
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
+# Another NetHack-inspired vault, based on the top floor of Vlad's Tower.
+NAME:  nicolae_nh_vlads_tower
+TAGS:  transparent patrolling
+DEPTH: D:11-, Crypt
+KITEM: | = |
+KITEM: _ = *
+KITEM: 1 = %
+: if you.absdepth() < 13 then
+KMONS: _ = vampire mage
+KMONS: 1 = vampire
+: else
+KMONS: _ = vampire mage / vampire knight
+KMONS: 1 = vampire / jiangshi
+: end
+KFEAT: _ = altar_dithmenos / altar_kikubaaqudgha / altar_makhleb / \
+           altar_yredelemnul
+MAP
+xxxxxxxxxxxxxxxxx
+xxxcccxcccxcccxxx
+xxxc1cxc1cxc1cxxx
+xccc+ccc+ccc+cccx
+xc.......+.+...cx
+xccc+ccccc.ccc+cx
+xxxc..._|c.+1c..@
+xccc+ccccc.cccccx
+xc.......+.+...cx
+xccc+ccc+ccc+cccx
+xxxc1cxc1cxc1cxxx
+xxxcccxcccxcccxxx
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_demonic_statue_gallery
+TAGS:   transparent
+DEPTH:  D:9-12
+KMONS:  5 = lesser demon
+KMONS:  4 = common demon
+NSUBST: D = 2=4 / 2=45 / 2=5 / .5
+MAP
+ ccGl@lGcc
+ccGl...lGcc
+cGl..D..lGc
+Gl.D.l.D.lG
+l...lGl...l
+@.DlGcGlD.@
+l...lGl...l
+Gl.D.l.D.lG
+cGl..D..lGc
+ccGl...lGcc
+ ccGl@lGcc
+ENDMAP
+
+# It's mostly ufetubi. It's fine. You'll be fine.
+NAME:    nicolae_fort_ynox
+TAGS:    transparent no_pool_fixup
+DEPTH:   D:9-12
+KMONS:   }])> = ynoxinul
+KMONS:   5 = ufetubus
+KFEAT:   - = iron_grate
+KFEAT:   } = }
+KFEAT:   ] = ]
+KFEAT:   ) = )
+KFEAT:   > = >
+SHUFFLE: }])>>
+SUBST:   ` = 5...
+MAP
+    .........
+   ..wwwwwww..
+  ..wwv---vww..
+ ..wwvv}])vvww..
+..wwvv.....vvww..
+.wwvv..```..vvww.
+.wvv..`````..vvw.
+.w-$.```````.$-w.
+.w-$.```G```.$-w.
+.w-$.```````.$-w.
+.wvv..`````..vvw.
+.wwvv..```..vvww.
+..wwvv.....vvww..
+ ..wwvv...vvww..
+  ..wwv+++vww..
+   ..ww...ww..
+    .........
+ENDMAP
+
+NAME:    nicolae_neqoxec_dot_bat
+TAGS:    transparent
+DEPTH:   D:9-12
+KMONS:   3 = neqoxec
+KMONS:   4 = chaos spawn / hellwing / ice devil / orange demon / red devil / \
+             rust devil
+NSUBST:  3 = 2=3 / 4
+SUBST:   4 = 44., % = %%%*
+MAP
+           cccccc
+         cccccccccc
+       cccc......cccc
+  cc@@ccc..........ccc@@cc
+ cc...cc....cccc....cc...cc
+ cc..cc...cccccccc...cc..cc
+cc...cc..ccc%..%ccc..cc...cc
+cc..cc.......3.3.cc.......cc
+cc..cc.....3......cc......cc
+cc..cccccc...GG.3.cccccc..cc
+cc..cccccc.3.GG...cccccc..cc
+cc......cc......3.....cc..cc
+cc.......cc.3.3.......cc..cc
+cc...cc..ccc%..%ccc..cc...cc
+ cc..cc...cccccccc...cc..cc
+ cc...cc....cccc....cc...cc
+  cc@@ccc..........ccc@@cc
+       cccc......cccc
+         cccccccccc
+           cccccc
+ENDMAP
+
+# oh nice you can put ' in vault names
+NAME:   nicolae_where_there's_smoke
+TAGS:   transparent
+DEPTH:  D:9-12
+KITEM:  2 = % / nothing
+KITEM:  3 = *
+KMONS:  2 = nothing / hellwing / red devil / rust devil
+KMONS:  3 = patrolling smoke demon
+KFEAT:  - = iron_grate
+NSUBST: ` = . / c, c = 2:. / 3:.c / c
+SUBST:  Cc = cccc-l, L = ll.
+MAP
+    .........
+  .............
+ ......cLc......
+ ....LL`c`LL....
+....Lccc.cccL....
+...LcCL.2.LCcL...
+...LcLLL.LLLcL...
+..c`c.L...L.c`c..
+..Lc.2..3..2.cL..
+..c`c.L...L.c`c..
+...LcLLL.LLLcL...
+...LcCL.2.LCcL...
+....Lccc.cccL....
+ ....LL`c`LL....
+ ......cLc......
+  .............
+    .........
+ENDMAP
+
 ################################################################################
 #
 # <<5>> Stationary shooters: statues, oklobs, fog generators.
@@ -3156,7 +3423,7 @@ ENDMAP
 
 # Another Ice Statue vault
 NAME:  ice2_lemuel
-TAGS:  no_pool_fixup no_monster_gen
+TAGS:  no_pool_fixup no_monster_gen no_descent
 DEPTH: D:12-, Depths, !Depths:$, Lair:2-
 KMONS: 1 = ice statue
 KMONS: 2 = white imp / ice beast w:30 / polar bear / nothing w:50
@@ -3259,7 +3526,7 @@ ENDMAP
 
 # Rather shallow depth but you cannot randomly teleport in there.
 NAME:    minmay_crystal_box
-TAGS:    no_monster_gen patrolling transparent
+TAGS:    no_monster_gen patrolling transparent no_descent
 DEPTH:   D:12-, Depths, !Depths:$
 MONS:    crystal guardian, orange crystal statue
 SUBST:   . = .:80 %$*|
@@ -3501,7 +3768,7 @@ ENDMAP
 NAME:   hangedman_incinerator
 TAGS:   no_item_gen no_monster_gen
 DEPTH:  D:8-14
-MONS:   fire bat, lava snake, fire vortex, hell hound
+MONS:   fire bat, lava snake, fire elemental, hell hound
 NSUBST: ' = 4:' / *:.
 MARKER: ' = lua:fog_machine { cloud_type = "flame", pow_min = 25, \
             pow_max = 75, delay = 50, size = 1, walk_dist = 0, excl_rad = 0 }
@@ -3509,9 +3776,9 @@ KPROP:  l = no_cloud_gen
 MAP
 xxxxxxxxx
 xl.1xx23x
-x1l'3x|2x
+x1l''x|2x
 x.l''4xxx
-x.ll''3xx
+x.ll'''xx
 x.lll''1x
 x'.llll.x
 x.'...1lx
@@ -3636,14 +3903,12 @@ ENDMAP
 # tree of life.
 NAME:    pf_eden
 TAGS:    no_monster_gen
-DEPTH:   D:13-
+DEPTH:   Elf
 MONS:    patrolling cherub, patrolling dancing weapon ; great sword ego:flaming
 KMONS:   p = plant
-# TODO: this potion once was an apple, maybe just remove this with no apple
-# flavor possible?
-ITEM:    potion of ambrosia ident:type
+ITEM:    randbook title:Forbidden_Fruit owner:the_Tempter numspells:2 spells:summon_mana_viper&discord
 NSUBST:  1 = 2:1 / *:.
-NSUBST:  d = 2:d / *:.
+NSUBST:  d = 1:d / *:.
 SUBST:   3 = 33.
 RTILE:   x = wall_lair
 FTILE:   12p.dt@ = floor_lair
@@ -3724,6 +3989,25 @@ c...........c
 +.1.1.1.1.1.+
 cc..T.).T..cc
  ccccccccccc
+ENDMAP
+
+NAME:   hellmonk_no_cap
+TAGS:   transparent no_monster_gen
+DEPTH:  D:3-7
+MONS:   sleepcap
+ITEM:   hat / nothing
+NSUBST: - = 1:1 / 4 = 10.. / *:.
+SUBST:  c : cxt, + : +.
+MAP
+   c
+  ccc
+  cdc
+ cc-cc
+ c---c
+cc---cc
+c-----c
+c.....c
+cc+++cc
 ENDMAP
 
 ###################################################################
@@ -4054,7 +4338,7 @@ MAP
 ENDMAP
 
 NAME:    onia_ninara_dug_in_and_dangerous
-TAGS:    ruin_abyss transparent
+TAGS:    ruin_abyss transparent no_descent
 DEPTH:   D:8-, !D:$, Depths:2-, !Depths:$, Abyss
 SHUFFLE: vcb, AB?/CD!, d<>, de
 SUBST:   A=9, B=8, C=1, D=9
@@ -4197,7 +4481,7 @@ ENDMAP
 # Updated to not hide the loot area behind opaque walls and to scale numbers of
 # monsters/loot in the chamber with depth of placement. -gammafunk
 NAME:   wad_dig_loot
-TAGS:   transparent
+TAGS:   transparent no_descent
 DEPTH:  D:8-, Elf, Depths, !Depths:$
 WEIGHT: 4
 KPROP:  %*8DEF = no_tele_into
@@ -4240,7 +4524,7 @@ vvvvv0....vvvvv
 ENDMAP
 
 NAME:    evilmike_minifort
-TAGS:    misc_elf_vault
+TAGS:    misc_elf_vault no_descent
 DEPTH:   D:9-, Depths, !Depths:$, Elf
 TILE:    x = wall_marble
 COLOUR:  x = white
@@ -5514,7 +5798,7 @@ ENDMAP
 # TODO: this can be hard to place because the boundaries are not passable;
 # maybe add some dead space as a buffer?
 NAME:    kennysheep_island_fort
-TAGS:    no_pool_fixup
+TAGS:    no_pool_fixup no_descent
 DEPTH:   D:8-, Depths:2-, !D:$, !Depths:$
 SHUFFLE: {}'
 KFEAT:   ' = .
@@ -6879,7 +7163,7 @@ xx.qpppq.xx
 ENDMAP
 
 NAME:    nicolae_fountain_basement
-TAGS:    transparent allow_dup luniq
+TAGS:    transparent allow_dup luniq no_descent
 DEPTH:   D:5-, Depths:2-, Snake:2-, Elf:2-, Crypt:2-
 KMASK:   -'cnTUVY0%{[( = opaque
 SHUFFLE: DE/TF
@@ -6967,6 +7251,35 @@ ccc............ccc
 cccc'''cccc'''cccc
 cccccFccccccFccccc
 cccc   cccc   cccc
+ENDMAP
+
+# So named because the layout started as a doodle in my notebook.
+NAME:  nicolae_doodle_vault
+TAGS:  transparent
+DEPTH: D:8-
+KITEM: * = * w:30 / |
+KMONS: * = 9 w:30 / 8
+SUBST: 0 = .000, % = .%%%
+MAP
+  xx@xxxxxxxxx@xx
+  x......x......x
+xxx.xxxx.x.xxxx.xxx
+x...x....x....x...x
+@.xxx.x.xxx.x.xxx.@
+x.x..0x0...0x0..x.x
+x.x.xxxxx.xxxxx.x.x
+x.x..0x*%.%*x0..x.x
+x...x.x%xxx%x.x...x
+xxxxx...xxx...xxxxx
+x...x.x%xxx%x.x...x
+x.x..0x*%.%*x0..x.x
+x.x.xxxxx.xxxxx.x.x
+x.x..0x0...0x0..x.x
+@.xxx.x.xxx.x.xxx.@
+x...x....x....x...x
+xxx.xxxx.x.xxxx.xxx
+  x......x......x
+  xx@xxxxxxxxx@xx
 ENDMAP
 
 ################################################################
@@ -7168,7 +7481,7 @@ ENDMAP
 # The dancing weapon is very out of depth early in D, but digging it out
 # is mostly a deliberate action and there are enough system warnings. (r-i)
 NAME:    sword_in_stone
-TAGS:    no_monster_gen patrolling vaults_hard transparent
+TAGS:    no_monster_gen patrolling vaults_hard transparent no_descent
 DEPTH:   D:5-, Depths, !Depths:$, Vaults, Orc, Elf
 WEIGHT:  3
 KMONS:   A = gnoll sergeant ; trident . scale mail | chain mail . kite shield
@@ -7803,11 +8116,11 @@ ccc2.d.2ccc
 ccccccccccc
 ENDMAP
 
-NAME:   hellmonk_guarded_unrand_staff_of_battle
+NAME:   hellmonk_guarded_unrand_sphere_of_battle
 TAGS:   transparent
 DEPTH:  D:8-
 WEIGHT: 3
-ITEM:   staff_of_battle no_pickup
+ITEM:   sphere_of_battle no_pickup
 MONS:   tengu conjurer, tengu reaver
 : if you.depth() < 13 then
 SUBST:  D = 1.
@@ -7844,7 +8157,7 @@ MONS:   ettin ; dark maul . great mace randart
 MONS:   stone giant w:30 / ettin w:20 / juggernaut / titan / iron giant w:5
 SUBST:  D = 222.
 : elseif you.in_branch("Orc") then
-MONS:   two-headed ogre ; dark maul . dire flail ego:vorpal
+MONS:   two-headed ogre ; dark maul . dire flail ego:heavy
 MONS:   two-headed ogre / cyclops / orc knight / orc warlord w:2 \
         / stone giant w:2 / ettin w:2
 SUBST:  D = 2..
@@ -7856,7 +8169,7 @@ MONS:   orc warrior / two-headed ogre / cyclops / orc knight w:2
 SUBST:  D = 2...
 # D:13-15
 : else
-MONS:   ettin ; dark maul . great mace ego:vorpal good_item
+MONS:   ettin ; dark maul . great mace ego:heavy good_item
 MONS:   two-headed ogre / cyclops / orc knight / orc warlord w:5 \
         / stone giant w:5 / ettin w:5
 SUBST:  D = 2.
@@ -8177,7 +8490,8 @@ NAME:   hellmonk_guarded_unrand_zhor
 TAGS:   transparent no_monster_gen
 DEPTH:  D:7-, Lair
 WEIGHT: 3
-ITEM:   skin_of_zhor no_pickup, box of beasts
+ITEM:   skin_of_zhor no_pickup, box of beasts w:100 /\
+        scroll of summoning ident:all q:3 w:1
 MONS:   rime drake, torpor snail, ice dragon
 NSUBST: d = d / 1
 SUBST:  e = e..
@@ -8489,7 +8803,7 @@ NAME:   dilly_guarded_unrand_morg
 TAGS:   no_monster_gen
 DEPTH:  D:2-9
 WEIGHT: 3
-ITEM:   morg no_pickup, w:30 book of necromancy / w:5 book of decay \
+ITEM:   dagger randart ego:pain ident:type no_pickup, w:30 book of necromancy / w:5 book of decay \
         / w:5 book of death
 KMONS:  p = withered plant
 MONS:   skeleton / zombie, spectral thing / simulacrum, necrophage, phantom
@@ -8585,6 +8899,257 @@ xxNNNxx
 xxx@xxx
 ENDMAP
 
+NAME:    nicolae_guarded_unrand_lochaber
+TAGS:    patrolling no_monster_gen no_item_gen
+DEPTH:   D:9-, Depths
+WEIGHT:  3
+KITEM:   L = lochaber axe no_pickup
+: if you.in_branch("D") then
+# Two-headed ogres get half the weight because they get twice the armament.
+KMONS:   a = orc knight ; war axe | broad axe | battleaxe w:5 / \
+             deep elf knight ; war axe | broad axe | battleaxe w:5 / \
+             tengu warrior ; war axe | broad axe | battleaxe w:5 / \
+             two-headed ogre w:5 ; war axe | broad axe | battleaxe w:5 . \
+                                   war axe | broad axe | battleaxe w:5
+KMONS:   p = orc knight ; halberd | demon trident | glaive w:5 / \
+             deep elf knight ; halberd | demon trident | glaive w:5 / \
+             tengu warrior ; halberd | demon trident | glaive w:5 / \
+             two-headed ogre w:5 ; halberd | demon trident | glaive w:5 . \
+                                   halberd | demon trident | glaive w:5
+KMONS:   L = ettin ; executioner's axe . bardiche
+KMONS:   P = phantasmal warrior w:5 / nothing
+: else
+KMONS:   a = war gargoyle ; broad axe | battleaxe / \
+             stone giant ; broad axe | battleaxe / \
+             orc warlord ; broad axe | battleaxe / \
+             ettin w:5 ; broad axe | battleaxe . broad axe | battleaxe
+KMONS:   p = war gargoyle ; demon trident | glaive / \
+             stone giant ; demon trident | glaive / \
+             orc warlord ; demon trident | glaive / \
+             ettin w:5 ; demon trident | glaive . demon trident | glaive
+KMONS:   L = deep elf blademaster ; executioner's axe . bardiche
+KMONS:   P = phantasmal warrior / nothing w:5
+: end
+SHUFFLE: DE
+SUBST:   D : cccT., E : GGGc.
+MAP
+G.....ccccccccccccccccc
+.....Gcc.a.a.a.a.cccccc
+..c++cc..........Pccccc
+..c..cE.D.E.D.E.D.Ecccc
+@.c..............P...cc
+@.c................L..c
+@.c..............P...cc
+..c..cE.D.E.D.E.D.Ecccc
+..c++cc..........Pccccc
+.....Gcc.p.p.p.p.cccccc
+G.....ccccccccccccccccc
+ENDMAP
+
+# Skysharks because that's what the slippers are made of. Elementals, anacondas,
+# and throwing nets to demonstrate the hazards that the slippers can help you
+# with. The merfolk will also have some nets and tridents, if you're not
+# interested in the footwear.
+NAME:   nicolae_guarded_unrand_slippers
+TAGS:   no_item_gen no_monster_gen no_trap_gen no_pool_fixup transparent
+DEPTH:  D:10-
+WEIGHT: 3
+KITEM:  s = slick slippers no_pickup
+KMONS:  S = skyshark w:40 / nothing
+KMONS:  ET = nothing w:20 / water elemental / anaconda / \
+             w:20 merfolk ; trident w:45 | trident good_item | \
+                            demon trident w:5 . throwing net q:4
+KFEAT:  sS = W
+KFEAT:  E = w
+KFEAT:  T = T w:30 / V
+KPROP:  sSEwWT` = no_tele_into
+MAP
+       .........
+  ......cccnccc......
+...ccccccwwwwwcccccc...
+...cwwwwwEwEwE`````c...
+@..cwSWSwwwwww`T`T`c..@
+@..nwWsWWWWWWW`````=..@
+@..cwSWSwwwwww`T`T`c..@
+...cwwwwwEwEwE`````c...
+...ccccccwwwwwcccccc...
+  ......cccnccc......
+       .........
+ENDMAP
+
+NAME:   nicolae_guarded_unrand_storm_shield
+TAGS:   no_monster_gen no_trap_gen no_tele_into
+DEPTH:  D:10-
+KITEM:  S = storm queen's shield no_pickup
+KMONS:  S = patrolling storm dragon
+KMONS:  1 = sixfirhy w:20 / shock serpent w:20 / spark wasp w:20 / \
+            air elemental / raiju
+KMONS:  2 = tengu conjurer  / deep elf zephyrmancer / spriggan air mage w:3
+NSUBST: 1 = 2 / 1111112
+MAP
+  xxx         xxx
+ xxxxx  @@@  xxxxx
+xxxxxxc.....cxxxxxx
+xxxxxxccc=cccxxxxxx
+xxxxccc.....cccxxxx
+ xxxcG.......Gcxxx
+  ccc....1....ccc
+  .c...1...1...c.
+ @.c...........c.@
+ @.=..1..S..1..=.@
+ @.c...........c.@
+  .c...1...1...c.
+  ccc....1....ccc
+ xxxcG.......Gcxxx
+xxxxccc.....cccxxxx
+xxxxxxccc=cccxxxxxx
+xxxxxxc.....cxxxxxx
+ xxxxx  @@@  xxxxx
+  xxx         xxx
+ENDMAP
+
+# From the dcss channel on the roguelikes discord:
+# Lici the Crawler: @nicolae  FR some earlyish (d7-d11) vaults
+#                   with lightning rod in them
+# Iguana Iguana:    @nicolae  FR some earlyish (d7-d11) vaults
+#                   with lightning rod and harm in them. FTFY
+# You've got to give the people what they want.
+NAME:   nicolae_have_a_lightning_rod
+DEPTH:  D:7-11
+KITEM:  L = lightning rod
+KITEM:  H = scarf ego:harm ident:all
+KMONS:  E = electric eel
+KMONS:  R = patrolling raiju
+KFEAT:  E = w
+NSUBST: E = 2=E / 2=w / 2=Ew
+veto {{
+  return not items.pickable("lightning rod")
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxwEwwxxxxxxxxxxxxx
+xxxwww..wwwxxxxxxxxwwx
+xwww...R..wEwxxxxEww.@
+xw..........wwwwww...@
+@.....ww..LH..ww.....@
+@...wwwwww..........wx
+@.wwExxxxwEw..R...wwwx
+xwwxxxxxxxxwww..wwwxxx
+xxxxxxxxxxxxxwwEwxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# I expanded Lici's request to a few other evokers.
+# (See comment on nicolae_have_a_lightning_rod)
+NAME:   nicolae_beast_mode
+TAGS:   transparent
+DEPTH:  D:7-11
+KITEM:  D = box of beasts
+KMONS:  D = juvenile mutant beast
+KMONS:  L = larval mutant beast
+NSUBST: D = D / L / ., L = 3=L / 3=-L / -
+SUBST:  - = .x, ` = x_
+CLEAR:  _
+veto {{
+  return not items.pickable("box of beasts")
+}}
+MAP
+     `xxxxx`
+    `xx-.-x
+  ..xx-L.....xx`
+  .......-...-x`
+`x-...-..L...-xx`
+xxx-.L.....-..-xx`
+xxx-.-.......L.-x`
+xx-.....DD......x`
+`x-..L..DDD..-.L.
+ xx-.-...DD......
+ `x-.L........L..
+ `xx-..-.....-.-x`
+  xx-..L..-L..-xx`
+ `x..........-xx`
+  ...-xxx-..xxxx
+   .xxxxxx..xx`
+     `xxx`
+ENDMAP
+
+NAME:   nicolae_rank_and_phial
+TAGS:   transparent
+DEPTH:  D:7-11
+KITEM:  P = phial of floods
+KMONS:  E = water elemental
+KMONS:  P = patrolling merfolk
+KFEAT:  E~ = w
+KMASK:  E~ = no_pool_fixup
+SUBST:  M = w.
+NSUBST: E = 3=E / 2=Ew / w
+veto {{
+  return not items.pickable("phial of floods")
+}}
+MAP
+MMMMMMMMMMM
+MwwwwwwwwwM
+MwE~~E~~EwM
+Mw~wwwww~wM
+Mw~w...w~wM
+MwEw.P.wEwM
+Mw~w...w~wM
+Mw~wwWww~wM
+MwE~~W~~EwM
+MwwwwWwwwwM
+MMMMMWMMMMM
+ENDMAP
+
+# Summoning a player illusion is probably too cruel at this depth, so a boggart
+# or two doing shadow creatures will have to suffice thematically instead.
+NAME:    nicolae_phantomly_mirrored
+TAGS:    no_item_gen no_monster_gen no_trap_gen
+DEPTH:   D:7-11
+KITEM:   P = phantom mirror
+# Using the same probabilities from mon-gear.cc.
+KMONS:   O : w:60 two-headed ogre ; giant club . giant club / \
+             w:30 two-headed ogre ; giant spiked club . giant spiked club / \
+             w:9  two-headed ogre ; dire flail . dire flail / \
+             w:1  two-headed ogre ; great mace . great mace
+KMONS:   S = boggart
+KFEAT:   DEFH = G
+SHUFFLE: OS
+{{
+local statuetiles = {"dngn_statue_ancient_evil", "dngn_statue_ancient_hero",
+   "dngn_statue_angel", "dngn_statue_archer", "dngn_statue_axe",
+   "dngn_statue_cat", "dngn_statue_centaur", "dngn_statue_cerebov",
+   "dngn_statue_demonic_bust", "dngn_statue_dragon", "dngn_statue_dwarf",
+   "dngn_statue_elephant", "dngn_statue_hydra", "dngn_statue_imp",
+   "dngn_statue_maw", "dngn_statue_mermaid", "dngn_statue_naga",
+   "dngn_statue_orb", "dngn_statue_orb_guardian", "dngn_statue_polearm",
+   "dngn_statue_princess", "dngn_statue_sigmund", "dngn_statue_snail",
+   "dngn_statue_sword", "dngn_statue_tengu", "dngn_statue_tentacles",
+   "dngn_statue_triangle", "dngn_statue_twins", "dngn_statue_wraith"}
+tile("D : " .. util.random_from(statuetiles))
+tile("E : " .. util.random_from(statuetiles))
+tile("F : " .. util.random_from(statuetiles))
+tile("H : " .. util.random_from(statuetiles))
+}}
+veto {{
+  return not items.pickable("phantom mirror")
+}}
+MAP
+xxxxxxxx
+xxvvvvvxxxx
+xxv...vvvvxxxx
+xxv.H....vvvvxxxx
+xvv....F....vvvvx
+xv.....O..E....vx
+@.........S..D.vx
+@............P.vx
+@.........S..D.vx
+xv.....O..E....vx
+xvv....F....vvvvx
+xxv.H....vvvvxxxx
+xxv...vvvxxxxx
+xxvvvvvxxx
+xxxxxxxx
+ENDMAP
 
 ###################################################################
 #
@@ -8921,6 +9486,7 @@ ENDMAP
 
 # No, John. You are the door vault
 NAME:   reverse_door_vault
+TAGS:   no_descent
 DEPTH:  Depths:2-
 WEIGHT: 4
 KMONS:  1 = 8
@@ -8945,6 +9511,7 @@ ENDMAP
 
 # Closed-box minivault
 NAME:  minivault_12
+TAGS:  no_descent
 DEPTH: D:8-, Depths, !Depths:$
 KMASK: " = !opaque
 MAP
@@ -8987,7 +9554,7 @@ ENDMAP
 
 # Lava pond
 NAME:  minivault_15
-TAGS:  extra transparent
+TAGS:  extra transparent no_descent
 : if you.in_branch("D") then
 KMONS: 1 = orange crystal statue / obsidian statue / ice statue
 : else

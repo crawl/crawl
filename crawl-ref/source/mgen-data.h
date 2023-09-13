@@ -15,8 +15,6 @@
 #define MGEN_NUM_HEADS "num_heads"
 #define MGEN_BLOB_SIZE "blob_size"
 #define MGEN_TENTACLE_CONNECT "tentacle_connect"
-/// doesn't automatically perish over time (for pillars of salt, blocks of ice)
-#define MGEN_NO_AUTO_CRUMBLE "no_auto_crumble"
 
 // A structure with all the data needed to whip up a new monster.
 struct mgen_data

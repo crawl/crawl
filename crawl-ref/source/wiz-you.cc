@@ -19,7 +19,6 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
-#include "misc.h" // frombool
 #include "mutation.h"
 #include "output.h"
 #include "playable.h"
@@ -212,11 +211,21 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_DOOM_HOWL] = 0;
         you.duration[DUR_WEAK] = 0;
         you.duration[DUR_NO_HOP] = 0;
-        you.duration[DUR_LOCKED_DOWN] = 0;
+        you.duration[DUR_DIMENSION_ANCHOR] = 0;
         you.duration[DUR_NO_MOMENTUM] = 0;
         you.props[CORROSION_KEY] = 0;
+        you.duration[DUR_BARBS] = 0;
+        you.attribute[ATTR_BARBS_POW] = 0;
+        you.props.erase(BARBS_MOVE_KEY);
+        you.duration[DUR_SICKNESS]  = 0;
+        you.duration[DUR_EXHAUSTED] = 0;
         you.duration[DUR_BREATH_WEAPON] = 0;
         you.duration[DUR_BLINKBOLT_COOLDOWN] = 0;
+        you.duration[DUR_NO_CAST] = 0;
+        you.duration[DUR_NO_POTIONS] = 0;
+        you.duration[DUR_NO_SCROLLS] = 0;
+        you.duration[DUR_LOWERED_WL] = 0;
+        you.duration[DUR_VERTIGO] = 0;
         delete_all_temp_mutations("Super heal");
         you.stat_loss.init(0);
         you.attribute[ATTR_STAT_LOSS_XP] = 0;
@@ -226,11 +235,9 @@ void wizard_heal(bool super_heal)
     else
         mpr("Healing.");
 
-    // Clear most status ailments.
-    you.duration[DUR_SICKNESS]  = 0;
+    // Clear some status ailments.
     you.duration[DUR_CONF]      = 0;
     you.duration[DUR_POISONING] = 0;
-    you.duration[DUR_EXHAUSTED] = 0;
     set_hp(you.hp_max);
     set_mp(you.max_magic_points);
     you.redraw_hit_points = true;
@@ -456,7 +463,7 @@ void wizard_set_all_skills()
 
         // We're not updating skill cost here since XP hasn't changed.
 
-        calc_hp(true, false);
+        calc_hp(true);
         calc_mp();
 
         you.redraw_armour_class = true;
@@ -581,8 +588,7 @@ void wizard_set_stats()
     you.base_stats[STAT_DEX] = debug_cap_stat(sdex);
     you.stat_loss.init(0);
     you.attribute[ATTR_STAT_LOSS_XP] = 0;
-    you.redraw_stats.init(true);
-    you.redraw_evasion = true;
+    notify_stat_change();
 }
 
 void wizard_edit_durations()
@@ -956,7 +962,9 @@ void wizard_transform()
     }
 
     you.transform_uncancellable = false;
-    if (!transform(200, form) && you.form != form)
+    if (you.default_form == you.form && you.form != transformation::none)
+        you.default_form = form;
+    if (!transform(200, form, true) && you.form != form)
         mpr("Transformation failed.");
 }
 
@@ -999,8 +1007,8 @@ void wizard_xom_acts()
 
     if (specs[0] == '\0')
     {
-        const maybe_bool nice = you_worship(GOD_XOM) ? MB_MAYBE :
-                                frombool(coinflip());
+        const maybe_bool nice = you_worship(GOD_XOM) ? maybe_bool::maybe :
+                                coinflip();
         const xom_event_type result = xom_acts(severity, nice);
         dprf("Xom did '%s'.", xom_effect_to_name(result).c_str());
 #ifndef DEBUG_DIAGNOSTICS

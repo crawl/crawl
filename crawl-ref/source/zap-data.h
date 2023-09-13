@@ -21,7 +21,6 @@ struct zap_info
     dungeon_char_type glyph;
     bool can_beam;
     bool is_explosion;
-    int hit_loudness;
 }
 */
 
@@ -44,7 +43,6 @@ static zap_info _mon_hex_zap(zap_type ztype, beam_type beam,
         NUM_DCHAR_TYPES,
         false,
         false,
-        0
     };
 }
 
@@ -65,7 +63,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0
 },
 
 {
@@ -82,15 +79,15 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0
 },
 
 {
     ZAP_ENERGY_BOLT,
     "bolt of energy",
     200,
-    nullptr,
-    nullptr,
+    // Only used for Makh's targeter.
+    new dicedef_calculator<3, 20, 0, 1>,
+    new tohit_calculator<15, 1, 30>,
     new dicedef_calculator<3, 20, 0, 1>,
     new tohit_calculator<15, 1, 30>,
     YELLOW,
@@ -99,7 +96,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0
 },
 
 {
@@ -116,7 +112,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0
 },
 
 {
@@ -133,7 +128,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_MISSILE,
     true,
     false,
-    0
 },
 
 {
@@ -150,7 +144,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_MISSILE,
     false,
     false,
-    0
 },
 
 {
@@ -167,7 +160,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_MISSILE,
     false,
     false,
-    0
 },
 
 {
@@ -184,7 +176,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_MISSILE,
     false,
     false,
-    0
 },
 
 {
@@ -201,7 +192,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     false,
     true,
-    0
 },
 
 {
@@ -218,7 +208,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0
 },
 
 {
@@ -235,7 +224,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0
 },
 
 {
@@ -252,7 +240,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0
 },
 
 {
@@ -269,7 +256,22 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     false,
     true,
-    0 // Noise comes from explosion
+},
+
+{
+    ZAP_ICY_FLASH_FREEZE,
+    "icy flash freeze",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<3, 7, 1, 12>,
+    new tohit_calculator<5, 1, 3>,
+    WHITE,
+    false,
+    BEAM_ICE, // rC capped at 50%, use ZAP_FLASH_FREEZE if you don't want this
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
 },
 
 {
@@ -282,11 +284,10 @@ static const zap_info zap_data[] =
     new tohit_calculator<5, 1, 3>,
     WHITE,
     false,
-    BEAM_ICE,
+    BEAM_COLD, // normal rC (e.g. fully resisted at rC+++)
     DCHAR_FIRED_ZAP,
     false,
     false,
-    0
 },
 
 {
@@ -303,7 +304,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     false,
     false,
-    0
 },
 
 {
@@ -320,7 +320,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0
 },
 
 {
@@ -337,7 +336,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0
 },
 
 {
@@ -354,7 +352,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0
 },
 
 {
@@ -371,7 +368,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0
 },
 
 {
@@ -388,7 +384,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0
 },
 
 {
@@ -405,7 +400,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0
 },
 
 {
@@ -422,7 +416,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     false,
     false,
-    2
 },
 
 {
@@ -439,7 +432,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     false,
     false,
-    2
 },
 
 {
@@ -447,7 +439,7 @@ static const zap_info zap_data[] =
     "",
     100,
     nullptr,
-    new tohit_calculator<0, 3, 2>,
+    nullptr,
     nullptr,
     new tohit_calculator<0, 1, 3>,
     BLACK,
@@ -456,7 +448,6 @@ static const zap_info zap_data[] =
     NUM_DCHAR_TYPES,
     false,
     false,
-    0
 },
 
 {
@@ -473,7 +464,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     false,
     true,
-    0 // Noise comes from explosion
 },
 
 {
@@ -490,7 +480,6 @@ static const zap_info zap_data[] =
     NUM_DCHAR_TYPES,
     false,
     false,
-    0
 },
 
 {
@@ -507,7 +496,6 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     false,
     false,
-    1
 },
 
 _mon_hex_zap(ZAP_PARALYSE, BEAM_PARALYSIS),
@@ -526,7 +514,6 @@ _mon_hex_zap(ZAP_PARALYSE, BEAM_PARALYSIS),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    6
 },
 
 {
@@ -543,7 +530,6 @@ _mon_hex_zap(ZAP_PARALYSE, BEAM_PARALYSIS),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    6
 },
 
 { // Used only by phial of floods
@@ -563,7 +549,6 @@ _mon_hex_zap(ZAP_PARALYSE, BEAM_PARALYSIS),
     DCHAR_WAVY,
     false,
     false,
-    6
 },
 
 _mon_hex_zap(ZAP_CONFUSE, BEAM_CONFUSION),
@@ -583,7 +568,6 @@ _mon_hex_zap(ZAP_TUKIMAS_DANCE, BEAM_TUKIMAS_DANCE, 100),
     NUM_DCHAR_TYPES,
     false,
     false,
-    0
 },
 
 {
@@ -600,7 +584,6 @@ _mon_hex_zap(ZAP_TUKIMAS_DANCE, BEAM_TUKIMAS_DANCE, 100),
     NUM_DCHAR_TYPES,
     true,
     false,
-    4
 },
 
 {
@@ -617,7 +600,6 @@ _mon_hex_zap(ZAP_TUKIMAS_DANCE, BEAM_TUKIMAS_DANCE, 100),
     DCHAR_FIRED_BURST,
     false,
     true,
-    0 // Noise comes from explosion
 },
 
 {
@@ -634,11 +616,10 @@ _mon_hex_zap(ZAP_TUKIMAS_DANCE, BEAM_TUKIMAS_DANCE, 100),
     DCHAR_FIRED_ZAP,
     false,
     true,
-    0 // Noise comes from explosion
 },
 
 {
-    ZAP_BLASTSPARK,
+    ZAP_BLASTMOTE,
     "concussive blast",
     50,
     new calcdice_calculator<2, 20, 1, 3>,
@@ -651,7 +632,6 @@ _mon_hex_zap(ZAP_TUKIMAS_DANCE, BEAM_TUKIMAS_DANCE, 100),
     DCHAR_FIRED_ZAP,
     false,
     true,
-    0 // Noise comes from explosion
 },
 
 
@@ -669,7 +649,6 @@ _mon_hex_zap(ZAP_TUKIMAS_DANCE, BEAM_TUKIMAS_DANCE, 100),
     DCHAR_FIRED_ZAP,
     false,
     true,
-    0 // Noise comes from explosion
 },
 
 {
@@ -686,7 +665,6 @@ _mon_hex_zap(ZAP_TUKIMAS_DANCE, BEAM_TUKIMAS_DANCE, 100),
     NUM_DCHAR_TYPES,
     false,
     true,
-    0
 },
 
 {
@@ -703,7 +681,6 @@ _mon_hex_zap(ZAP_TUKIMAS_DANCE, BEAM_TUKIMAS_DANCE, 100),
     NUM_DCHAR_TYPES,
     false,
     false,
-    0
 },
 
 {
@@ -720,7 +697,6 @@ _mon_hex_zap(ZAP_TUKIMAS_DANCE, BEAM_TUKIMAS_DANCE, 100),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    5 // XXX: Maybe louder?
 },
 
 _mon_hex_zap(ZAP_POLYMORPH, BEAM_POLYMORPH),
@@ -739,7 +715,6 @@ _mon_hex_zap(ZAP_POLYMORPH, BEAM_POLYMORPH),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    5 // XXX: Quieter because it's poison?
 },
 
 {
@@ -756,7 +731,6 @@ _mon_hex_zap(ZAP_POLYMORPH, BEAM_POLYMORPH),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0 // Draining is soundless
 },
 
 {
@@ -773,7 +747,6 @@ _mon_hex_zap(ZAP_POLYMORPH, BEAM_POLYMORPH),
     DCHAR_FIRED_ZAP,
     false,
     false,
-    0 // Draining is soundless
 },
 
 {
@@ -790,7 +763,6 @@ _mon_hex_zap(ZAP_POLYMORPH, BEAM_POLYMORPH),
     DCHAR_FIRED_MISSILE,
     false,
     false,
-    8
 },
 
 _mon_hex_zap(ZAP_CHARMING, BEAM_CHARM),
@@ -809,7 +781,6 @@ _mon_hex_zap(ZAP_CHARMING, BEAM_CHARM),
     NUM_DCHAR_TYPES,
     false,
     false,
-    1 // XXX: Should this be soundless?
 },
 
 {
@@ -826,7 +797,6 @@ _mon_hex_zap(ZAP_CHARMING, BEAM_CHARM),
     DCHAR_FIRED_ZAP,
     false,
     false,
-    1
 },
 
 {
@@ -843,7 +813,6 @@ _mon_hex_zap(ZAP_CHARMING, BEAM_CHARM),
     DCHAR_FIRED_ZAP,
     false,
     false,
-    1
 },
 
 {
@@ -860,7 +829,6 @@ _mon_hex_zap(ZAP_CHARMING, BEAM_CHARM),
     NUM_DCHAR_TYPES,
     false,
     false,
-    0
 },
 
 {
@@ -877,7 +845,6 @@ _mon_hex_zap(ZAP_CHARMING, BEAM_CHARM),
     NUM_DCHAR_TYPES,
     false,
     false,
-    0
 },
 
 _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
@@ -896,7 +863,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_ZAP,
     false,
     false,
-    1 // XXX: Maybe silent because it's poison?
 },
 
 {
@@ -913,7 +879,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_ZAP,
     false,
     true,
-    9 // XXX: Even louder because it's hellish?
 },
 
 {
@@ -930,7 +895,22 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_MISSILE,
     false,
     false,
-    6
+},
+
+{
+    ZAP_UNMAKING,
+    "entropic shot",
+    200,
+    new calcdice_calculator<9, 13, 2, 3>,
+    new tohit_calculator<7, 1, 15>,
+    new dicedef_calculator<3, 8, 1, 9>,
+    new tohit_calculator<20, 1, 25>,
+    BROWN,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_MISSILE,
+    false,
+    false,
 },
 
 {
@@ -947,7 +927,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_MISSILE,
     false,
     false,
-    3
 },
 
 {
@@ -964,7 +943,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    1 // XXX: maybe electricity should be louder?
 },
 
 {
@@ -981,7 +959,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    8
 },
 
 {
@@ -998,7 +975,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_ZAP,
     false,
     true,
-    6 // XXX: maybe electricity should be louder?
 },
 
 {
@@ -1015,7 +991,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_ZAP,
     false,
     false,
-    1
 },
 
 {
@@ -1032,10 +1007,8 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_DEBUG,
     false,
     false,
-    0
 },
 
-// XXX: How loud should breath be?
 {
     ZAP_BREATHE_FIRE,
     "fiery breath",
@@ -1050,7 +1023,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    7
 },
 
 {
@@ -1067,7 +1039,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    6
 },
 
 {
@@ -1084,7 +1055,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_ZAP,
     false,
     false,
-    6
 },
 
 {
@@ -1101,7 +1071,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0 // Explosion does the noise.
 },
 
 {
@@ -1118,7 +1087,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    6
 },
 
 {
@@ -1135,7 +1103,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_ZAP,
     false,
     false,
-    6
 },
 
 {
@@ -1152,7 +1119,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     NUM_DCHAR_TYPES,
     false,
     false,
-    0
 },
 
 {
@@ -1169,7 +1135,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     NUM_DCHAR_TYPES,
     false,
     false,
-    0
 },
 
 {
@@ -1186,7 +1151,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     NUM_DCHAR_TYPES,
     false,
     false,
-    0
 },
 
 {
@@ -1203,7 +1167,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     NUM_DCHAR_TYPES,
     true,
     false,
-    6
 },
 
 {
@@ -1220,7 +1183,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0 // Explosion does the noise.
 },
 
 {
@@ -1237,7 +1199,6 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     DCHAR_FIRED_MISSILE,
     false,
     false,
-    4
 },
 
 {
@@ -1254,28 +1215,10 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     NUM_DCHAR_TYPES,
     false,
     false,
-    0
 },
 
 // player spellpower is capped to 50 in spl-zap.cc:spell_zap_power.
 _mon_hex_zap(ZAP_HIBERNATION, BEAM_HIBERNATION),
-
-{
-    ZAP_FLAME_TONGUE,
-    "flame tongue",
-    25,
-    new dicedef_calculator<1, 8, 1, 4>,
-    new tohit_calculator<11, 1, 6>,
-    new dicedef_calculator<3, 3, 1, 12>,
-    new tohit_calculator<7, 1, 6>,
-    RED,
-    false,
-    BEAM_FIRE,
-    DCHAR_FIRED_BOLT,
-    false,
-    false,
-    1
-},
 
 {
     ZAP_SANDBLAST,
@@ -1291,7 +1234,6 @@ _mon_hex_zap(ZAP_HIBERNATION, BEAM_HIBERNATION),
     DCHAR_FIRED_BOLT,
     false,
     false,
-    2 // XXX: Sound 2 for level one spell?
 },
 
 {
@@ -1308,7 +1250,6 @@ _mon_hex_zap(ZAP_HIBERNATION, BEAM_HIBERNATION),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    5
 },
 
 {
@@ -1325,7 +1266,6 @@ _mon_hex_zap(ZAP_HIBERNATION, BEAM_HIBERNATION),
     DCHAR_FIRED_ZAP,
     false,
     false,
-    4
 },
 
 {
@@ -1342,7 +1282,6 @@ _mon_hex_zap(ZAP_HIBERNATION, BEAM_HIBERNATION),
     DCHAR_FIRED_MISSILE,
     false,
     false,
-    6 // XXX: Less noise because it's poison?
 },
 
 _mon_hex_zap(ZAP_PETRIFY, BEAM_PETRIFY),
@@ -1364,7 +1303,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
                      // hence invisible
     true,
     false,
-    0
 },
 
 {
@@ -1381,7 +1319,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0
 },
 
 {
@@ -1389,7 +1326,7 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     "",
     100,
     nullptr,
-    new tohit_calculator<0, 3, 1>,
+    new tohit_calculator<AUTOMATIC_HIT>,
     nullptr,
     nullptr,
     BLACK,
@@ -1398,7 +1335,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     NUM_DCHAR_TYPES,
     false,
     false,
-    0
 },
 
 {
@@ -1415,7 +1351,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_MISSILE,
     false,
     false,
-    5
 },
 
 {
@@ -1432,7 +1367,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    2
 },
 
 {
@@ -1449,7 +1383,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    6
 },
 
 {
@@ -1466,7 +1399,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    6
 },
 
 {
@@ -1483,7 +1415,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    6
 },
 
 {
@@ -1500,7 +1431,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    6
 },
 
 {
@@ -1517,7 +1447,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     NUM_DCHAR_TYPES,
     false,
     false,
-    0 // dubious
 },
 
 {
@@ -1534,7 +1463,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_MISSILE,
     false,
     true,
-    0 // Noise comes from explosion
 },
 
 {
@@ -1551,7 +1479,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_MISSILE,
     false,
     false,
-    1
 },
 
 {
@@ -1568,7 +1495,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    10,
 },
 
 {
@@ -1585,7 +1511,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0
 },
 
 {
@@ -1602,7 +1527,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0
 },
 
 {
@@ -1619,7 +1543,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_MISSILE,
     false,
     false,
-    1
 },
 
 _mon_hex_zap(ZAP_DIMENSION_ANCHOR, BEAM_DIMENSION_ANCHOR),
@@ -1643,7 +1566,6 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     DCHAR_FIRED_ZAP,
     false,
     false,
-    0
 },
 
 {
@@ -1660,7 +1582,6 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     DCHAR_FIRED_ZAP,
     false,
     true,
-    0 // handled by explosion
 },
 
 {
@@ -1677,7 +1598,6 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     NUM_DCHAR_TYPES,
     false,
     false,
-    0
 },
 
 {
@@ -1694,7 +1614,6 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     DCHAR_FIRED_BURST,
     true,
     false,
-    5
 },
 
 {
@@ -1711,7 +1630,6 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     NUM_DCHAR_TYPES,
     false,
     false,
-    0 // No additional effect noise.
 },
 
 {
@@ -1728,7 +1646,6 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     NUM_DCHAR_TYPES,
     false,
     false,
-    0 // No additional effect noise.
 },
 
 {
@@ -1745,7 +1662,6 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     NUM_DCHAR_TYPES,
     false,
     false,
-    0 // No additional effect noise.
 },
 
 {
@@ -1762,7 +1678,6 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     DCHAR_FIRED_MISSILE,
     false,
     false,
-    6
 },
 
 {
@@ -1779,7 +1694,6 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     DCHAR_FIRED_BOLT,
     false,
     false,
-    1
 },
 
 {
@@ -1796,7 +1710,6 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     DCHAR_FIRED_BURST,
     false,
     true,
-    0 // Noise comes from explosion
 },
 
 {
@@ -1813,7 +1726,6 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     DCHAR_FIRED_BURST,
     false,
     false,
-    0
 },
 
 {
@@ -1830,7 +1742,6 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    10
 },
 
 {
@@ -1847,7 +1758,6 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    0
 },
 
 {
@@ -1864,7 +1774,6 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     NUM_DCHAR_TYPES,
     false,
     false,
-    0
 },
 
 {
@@ -1881,7 +1790,6 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     NUM_DCHAR_TYPES,
     false,
     false,
-    0
 },
 
 {
@@ -1898,7 +1806,38 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     NUM_DCHAR_TYPES,
     false,
     false,
-    1 // XXX: Should this be soundless?
+},
+
+{
+    ZAP_PLASMA,
+    "fiery plasma",
+    200,
+    new dicedef_calculator<1, 10, 11, 20>,
+    new tohit_calculator<7, 1, 40>,
+    new dicedef_calculator<3, 10, 1, 17>,
+    new tohit_calculator<16, 1, 40>,
+    RED,
+    false,
+    BEAM_FIRE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+},
+
+{
+    ZAP_PLASMA_LIGHTNING, // please keep damage dice identical to ZAP_PLASMA
+    "bolt of lightning",
+    200,
+    new dicedef_calculator<1, 10, 11, 20>,
+    new tohit_calculator<7, 1, 40>,
+    new dicedef_calculator<3, 10, 1, 17>,
+    new tohit_calculator<16, 1, 40>,
+    LIGHTCYAN,
+    false,
+    BEAM_ELECTRICITY,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
 },
 
 };

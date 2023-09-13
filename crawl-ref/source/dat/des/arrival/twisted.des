@@ -46,11 +46,11 @@ SUBST:  Zz=., V=x
 : end
 MARKER: { = lua:props_marker { arrival_stairs=1 }
 veto {{
-  local slave = dgn.find_marker_positions_by_prop( "arrival_stairs", 1 )
-  if slave == nil then return false end
-  if slave[1] == nil then return false end
-  crawl.mpr("(".. slave[1].x .. "," .. slave[1].y .. ")")
-  return not dgn.has_exit_from(slave[1])
+  local replica = dgn.find_marker_positions_by_prop( "arrival_stairs", 1 )
+  if replica == nil then return false end
+  if replica[1] == nil then return false end
+  crawl.mpr("(".. replica[1].x .. "," .. replica[1].y .. ")")
+  return not dgn.has_exit_from(replica[1])
 }}
 MAP
             xxxxxx@xxxxxx
@@ -108,7 +108,7 @@ KMONS:   P = demigod ; nothing
 KMONS:   Q = octopode ; nothing
 KMONS:   R = formicid ; nothing
 KMONS:   S = gargoyle ; nothing
-KMONS:   T = palentonga ; nothing
+KMONS:   T = armataur ; nothing
 KMONS:   Z = vine stalker ; nothing
 MAP
  ccccc

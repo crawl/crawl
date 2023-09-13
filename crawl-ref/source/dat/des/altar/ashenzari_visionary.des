@@ -5,8 +5,8 @@ function callback.grunt_ashenzari_visionary_reveal(data,triggerable,triggerer,ma
     end
     data.trig = true
     crawl.god_speaks("Ashenzari", "Ashenzari says, \"See what I see, mortal...\"")
-    for slave in iter.slave_iterator("revealing_wall", 1) do
-        dgn.terrain_changed(slave.x, slave.y, "clear_stone_wall", false)
+    for replica in iter.replica_iterator("revealing_wall", 1) do
+        dgn.terrain_changed(replica.x, replica.y, "clear_stone_wall", false)
     end
     local msg = ""
     if #data.branches > 0 then
@@ -28,6 +28,7 @@ end
 
 NAME:     grunt_ashenzari_visionary
 TAGS:     temple_overflow_1 temple_overflow_ashenzari no_trap_gen no_monster_gen
+TAGS:     no_descent
 WEIGHT:   5
 SHUFFLE:  ef
 # The branches should be in reverse order here so we don't select the
@@ -68,7 +69,7 @@ SUBVAULT: f : grunt_ashenzari_visionary
 lua_marker(":", Triggerable.synchronized_markers(
     function_at_spot("callback.grunt_ashenzari_visionary_reveal",
                      { trig = false, branches = branches },
-                     true, { only_at_slave = true, listen_to_slaves = true })))
+                     true, { only_at_replica = true, listen_to_replicas = true })))
 lua_marker('d', props_marker {revealing_wall=1})
 }}
 KFEAT: d = stone_wall

@@ -118,7 +118,9 @@ void DungeonRegion::pack_cursor(cursor_type type, unsigned int tile)
 // XX code duplication
 static unsigned _get_highlight(int col)
 {
-    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_highlight :
+    return ((col & COLFLAG_UNUSUAL_MASK) == COLFLAG_UNUSUAL_MASK) ?
+                                              Options.unusual_highlight :
+           (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_highlight :
            (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_highlight :
            (col & COLFLAG_ITEM_HEAP)        ? Options.heap_highlight :
            (col & COLFLAG_WILLSTAB)         ? Options.stab_highlight :
@@ -458,11 +460,6 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
 
     if (!inside(event.px, event.py))
         return 0;
-
-#ifdef TOUCH_UI
-    if (event.event == wm_mouse_event::WHEEL && (event.mod & TILES_MOD_CTRL))
-        zoom(event.button == wm_mouse_event::SCROLL_UP);
-#endif
 
     if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
         && event.event == wm_mouse_event::PRESS

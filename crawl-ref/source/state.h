@@ -57,6 +57,7 @@ struct game_state
     bool game_started;      // Set to true when a game has started.
     bool saving_game;       // Set to true while in save_game.
     bool updating_scores;   // Set to true while updating hiscores.
+    bool parsing_rc;
 #ifndef USE_TILE_LOCAL
     bool smallterm;         // The terminal has been resized under the min view
                             // size, and errors need to be displayed
@@ -89,9 +90,18 @@ struct game_state
     vector<string> script_args;    // Arguments to scripts.
 
     bool throttle;
+
     bool bypassed_startup_menu;
 
+    /** The maximum total memory that the user-script Lua interpreter is
+     * allowed to allocate, in megabytes. This limit is enforced to prevent
+     * badly-written or malicious user scripts from consuming too much memory.
+     */
+    uint64_t clua_max_memory_mb;
+
     bool show_more_prompt;  // Set to false to disable --more-- prompts.
+
+    bool skip_autofight_check; // XXX EVIL HACK
 
     string sprint_map;      // Sprint map set on command line, if any.
 
@@ -125,13 +135,14 @@ struct game_state
 
     bool invisible_targeting;
 
-    bool player_moving;
-
     // Area beyond which view should be darkened,  0 = disabled.
     targeter *darken_range;
 
     // Monsters to highlight on the screen, 0 = disabled.
     vector<monster *> *flash_monsters;
+
+    // monsters which saw the player retreating.
+    set<monster*> potential_pursuers;
 
     // Any changes to macros that need to be changed?
     bool unsaved_macros;
@@ -211,7 +222,6 @@ public:
     void dump();
     bool player_is_dead() const;
 
-    bool game_standard_levelgen() const;
     bool game_is_valid_type() const;
     bool game_is_normal() const;
     bool game_is_tutorial() const;
@@ -219,6 +229,10 @@ public:
     bool game_is_sprint() const;
     bool game_is_hints() const;
     bool game_is_hints_tutorial() const;
+    bool game_is_descent() const;
+
+    bool game_has_random_floors() const;
+    bool game_saves_prefs() const;
 
     bool seed_is_known() const;
 

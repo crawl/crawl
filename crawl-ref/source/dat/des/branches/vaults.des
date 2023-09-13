@@ -84,7 +84,7 @@ TAGS:    vaults_entry transparent
 MONS:    human
 KMONS:   2 = orc knight / Urug, orc knight
 KMONS:   3 = centaur warrior w:20 / Nessos, centaur warrior
-KMONS:   4 = two-headed ogre / Rupert, two-headed ogre
+KMONS:   4 = two-headed ogre w:20 / Rupert / Lodul, two-headed ogre
 SHUFFLE: 2349
 KFEAT:   O = enter_vaults
 MAP
@@ -267,7 +267,7 @@ TAGS: vaults_entry no_pool_fixup no_monster_gen patrolling transparent
 ORIENT: north
 MONS: human ; arbalest q:10 . short sword | dagger . \
               leather armour w:5 | ring mail | scale mail / \
-      orc warrior ; arbalest q:10 . short sword | dagger . \
+      orc warrior ; orcbow q:10 . short sword | dagger . \
                     leather armour w:5 | ring mail | scale mail / \
       deep elf knight w:5 / deep elf archer w:5 / gargoyle / yaktaur
 MONS: vault guard / orc knight w:2
@@ -374,6 +374,79 @@ v+n+n+n+n+n+v
 v+v+v+v+v+v+v
 vdvdvdvdvdvdv
 vvvvvvvvvvvvv
+ENDMAP
+
+NAME:   hellmonk_vaults_keyhole
+TAGS:   vaults_entry no_monster_gen
+ORIENT: north
+MONS:   human, vault guard, ironbound thunderhulk / ironbound frostheart
+SUBST:  v : v:90 b
+NSUBST: 2 = 1:3 / *=2., - = 8=10.. / *:.
+KFEAT: O = enter_vaults
+MAP
+  vvv
+ vv2vv
+vv...vv
+v2.O.2v
+vv...vv
+ vv2vv
+  v-v
+  v-v
+ vv-vv
+ v---v
+vv---vv
+v-----v
+v-----v
+vv+++vv
+  @@@
+ENDMAP
+
+NAME:   hellmonk_vaults_order_and_chaos
+TAGS:   vaults_entry transparent no_monster_gen
+MONS:   entropy weaver / glowing orange brain / great orb of eyes w:1
+MONS:   ironbound preserver / vault guard / peacekeeper w:1
+SHUFFLE: AB/CO
+NSUBST: - = 1:1 / *:-, . = 1:2 / *:.
+KFEAT:  A = enter_vaults
+KFEAT:  O = enter_vaults
+KITEM:  B = any armour good_item / gold good_item w:50
+KITEM:  C = any weapon good_item ego:chaos / any wand w:50
+FTILE:  .BO2 = floor_hall
+FTILE:  -AC1 = floor_nerves
+MAP
+    vvv
+   vv.vv
+  vv...vv
+ @v..B..v
+ @-....vv
+ @--...v
+ v---..@
+vv----.@
+v--A--v@
+vv---vv
+ vv-vv
+  vvv
+ENDMAP
+
+# something nasty has slaughtered the usual guards, but can't get in (no rune)
+NAME:   hellmonk_vaults_attempted_burglary
+TAGS:   vaults_entry transparent no_monster_gen
+NSUBST: 8 = 1:89 / *:.
+SUBST:  1 = 1., .= .:80 ', v = v:80 y
+KFEAT:  O = enter_vaults
+KFEAT:  y = metal_wall
+KPROP:  'y = bloody
+: dgn.delayed_decay(_G, '1', 'human corpse')
+MAP
+vvvv vvvv
+vv8vvv8vv
+v1..8..1v
+vv..1..vv
+ v.1O1.v
+vv..1..vv
+v1..G..1v
+vv.....vv
+vvv+++vvv
 ENDMAP
 ###############################################################################
 # Vaults:$ last level of the vaults -- dungeon.cc will change all these 'x's

@@ -400,8 +400,11 @@ static void _dispellable_player_buffs(player_debuff_effects &buffs)
         const int dur = you.duration[i];
         if (dur <= 0 || !duration_dispellable((duration_type) i))
             continue;
-        if (i == DUR_TRANSFORMATION && you.form == transformation::shadow)
+        if (i == DUR_TRANSFORMATION && (you.form == transformation::shadow
+                                        || you.form == you.default_form))
+        {
             continue;
+        }
         buffs.durations.push_back((duration_type) i);
         // this includes some buffs that won't be reduced in duration -
         // anything already at 1 aut, or flight/transform while <= 11 aut
@@ -1313,7 +1316,7 @@ void majin_bo_vampirism(monster &mon, int damage)
 void dreamshard_shatter()
 {
     ASSERT(player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE));
-
+    you.slot_item(EQ_AMULET, true)->unrand_idx = UNRAND_DREAMDUST_NECKLACE;
     mpr("Your necklace shatters, unleashing a wave of protective dreams!");
 
     for (int i = 0; i < 5; i++)
@@ -1322,9 +1325,11 @@ void dreamshard_shatter()
         scaled_delay(200);
     }
 
-    vector<string> dreams;
-    if (you.heal(random_range(you.hp_max*0.5, you.hp_max)))
-        dreams.push_back("health");
+    // Don't die until your next turn.
+    you.duration[DUR_POISONING] = 0;
+    set_hp(1);
+    you.props[DREAMSHARD_KEY] = true;
+    vector<string> dreams = {"life"};
 
     if (!you.allies_forbidden())
     {
@@ -1355,7 +1360,4 @@ void dreamshard_shatter()
     // put it here after the dream message so that a sleeping player who
     // gets dreamsharded gets a nice message order
     you.check_awaken(500);
-
-    dec_inv_item_quantity(you.slot_item(EQ_AMULET,1)->link, 1);
-    ash_check_bondage();
 }

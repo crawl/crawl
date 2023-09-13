@@ -97,6 +97,7 @@ ENDMAP
 #
 NAME:    statuecave_lemuel
 ORIENT:  northeast
+TAGS:    no_descent
 DEPTH:   D:7-, Lair, Crypt:1-4
 : if you.in_branch("Crypt") then
 MONS:    orange crystal statue
@@ -181,7 +182,7 @@ NAME:    dragon1_lemuel
 ORIENT:  northeast
 DEPTH:   D:9-, Lair
 MONS:    patrolling fire dragon, patrolling ice dragon
-ITEM:    potion of flight ident:type / scroll of teleportation ident:type
+ITEM:    potion of enlightenment ident:type / scroll of teleportation ident:type
 SUBST:   ! : ?x
 SHUFFLE: 1?/2W
 SUBST:   2=2:20 1
@@ -337,7 +338,7 @@ x.......................
 ENDMAP
 
 NAME:   minmay_ice_pillars
-TAGS:   no_rotate no_pool_fixup no_monster_gen no_tele_into
+TAGS:   no_rotate no_pool_fixup no_monster_gen no_tele_into no_descent
 ORIENT: north
 DEPTH:  D:11-, !D:$
 WEIGHT: 5
@@ -431,6 +432,7 @@ ENDMAP
 
 NAME:   minmay_haunted_quarter
 ORIENT: northwest
+TAGS:   no_descent
 DEPTH:  Depths, !Depths:$
 KMONS:  w = shadow wraith / phantasmal warrior / \
             flayed ghost / nothing w:950
@@ -507,7 +509,7 @@ ENDMAP
 # Fort Yaktaur
 #
 NAME:   fort_yaktaur
-TAGS:   no_pool_fixup
+TAGS:   no_pool_fixup no_descent
 ORIENT: southeast
 DEPTH:  D:11-, !D:$
 MONS:   gnoll, yak, death yak, yaktaur, minotaur
@@ -549,10 +551,10 @@ ENDMAP
 NAME:    erik_rubicon_a
 DEPTH:   D:10-, !D:$
 ORIENT:  south
-TAGS:    no_pool_fixup no_rotate uniq_rubicon
+TAGS:    no_pool_fixup no_rotate uniq_rubicon no_descent
 WEIGHT:  6
-ITEM:    ring of flight ident:type / potion of flight ident:type / nothing
-ITEM:    potion of flight ident:type / nothing, nothing, nothing, nothing
+ITEM:    ring of flight ident:type / potion of enlightenment ident:type / nothing
+ITEM:    potion of enlightenment ident:type / nothing, nothing, nothing, nothing
 SHUFFLE: {[(, )gh
 SUBST:   ?:?.w, ?=w., w:lw, ':'.c, '=cx.
 MAP
@@ -580,10 +582,10 @@ ENDMAP
 NAME:    erik_rubicon_b
 DEPTH:   D:10-, !D:$
 ORIENT:  south
-TAGS:    no_rotate uniq_rubicon
+TAGS:    no_rotate uniq_rubicon no_descent
 WEIGHT:  4
-ITEM:    ring of flight ident:type / potion of flight ident:type / nothing
-ITEM:    potion of flight ident:type, nothing, nothing, nothing, nothing
+ITEM:    ring of flight ident:type / potion of enlightenment ident:type / nothing
+ITEM:    potion of enlightenment ident:type, nothing, nothing, nothing, nothing
 SHUFFLE: {[(, fgW, )hi
 SUBST:   ?:?.wW, ?=wW., ':'.c, '=c.
 MAP
@@ -613,7 +615,7 @@ ENDMAP
 #
 NAME:   gold_lair_mu
 ORIENT: southeast
-TAGS:   no_monster_gen
+TAGS:   no_monster_gen no_descent
 DEPTH:  Depths, !Depths:$
 MONS:   golden dragon, any draconian, fungus, plant, oklob plant
 KMONS:  6 = rime drake / swamp drake / lindwurm
@@ -665,7 +667,7 @@ ENDMAP
 # Each room is progressively more challenging; both the golems, and their
 # creators.
 NAME:   constructs_gauntlet_mu_hangedman
-TAGS:   no_monster_gen no_item_gen no_pool_fixup
+TAGS:   no_monster_gen no_item_gen no_pool_fixup no_descent
 DEPTH:  Depths, !Depths:$
 ORIENT: east
 MARKER: y = lua:fog_machine { \
@@ -821,6 +823,7 @@ ENDMAP
 
 NAME:   minmay_twisted_water
 ORIENT: north
+TAGS:   no_descent
 DEPTH:  D:9-
 SUBST:  W = wW
 MONS:   ice statue, patrolling ice dragon, patrolling frost giant, ice beast
@@ -1637,7 +1640,7 @@ xwwwxx+++xxwwwwww
 ENDMAP
 
 NAME:   kennysheep_tiny_hell
-TAGS:   no_monster_gen
+TAGS:   no_monster_gen no_descent
 ORIENT: centre
 DEPTH:  D:13-14
 WEIGHT: 5
@@ -2319,7 +2322,7 @@ xxxxxxxxxxx.@@@..xxxxxx
 ENDMAP
 
 NAME:   dreamdust_isle_of_ice
-TAGS:   no_monster_gen patrolling
+TAGS:   no_monster_gen patrolling no_descent
 DEPTH:  D:11-, Lair, Depths
 ORIENT: south
 # A thematic loot item similar to one of the thematic items one might find in

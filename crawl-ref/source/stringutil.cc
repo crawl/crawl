@@ -13,6 +13,7 @@
 #include "libutil.h"
 #include "random.h"
 #include "unicode.h"
+#include "mpr.h"
 
 #ifndef CRAWL_HAVE_STRLCPY
 size_t strlcpy(char *dst, const char *src, size_t n)
@@ -236,7 +237,7 @@ string wordwrap_line(string &s, int width, bool tags, bool indent, int force_ind
 #endif
     s.erase(0, cp - cp0);
 
-    // if we had to break a line, reinsert the indendation
+    // if we had to break a line, reinsert the indentation
     if (indent && c != '\n')
         s = indentation + s;
 
@@ -451,24 +452,90 @@ static void add_segment(vector<string> &segs, string s, bool trim,
         segs.push_back(s);
 }
 
+set<size_t> find_escapes(const string &s)
+{
+    set<size_t> ret;
+    size_t i = 0;
+    while ((i = s.find("\\", i)) != string::npos)
+        if (i < s.size())
+            ret.insert(++i);
+    return ret;
+}
+
+string deescape(string s, const set<size_t> &escapes)
+{
+    for (auto i = escapes.rbegin(); i != escapes.rend(); ++i)
+        s.erase(*i, 1);
+    return s;
+}
+
+/// simply remove backslashes protecting any escaped characters. Intended for
+/// use after moret interesting escape processing has happened.
+string deescape(string s)
+{
+    set<size_t> escapes = find_escapes(s);
+    return deescape(move(s), escapes);
+}
+
+/**
+ * Split a string using separator `sep`
+ *
+ * @param sep the separator to split on
+ * @param s the string to split
+ * @param trim_segments if true, trim whitespace on the resulting segments.
+ *        Default: true
+ * @param accept_empty_segments if true, allow length 0 segments. If false,
+ *        the separator characters around empty segments will be consumed, bu
+ *        the resulting vector will not include the empty segment
+ *        Default: false
+ * @param nsplits the maximum number of times to split; the final returned
+ *        element will be the remainder. If negative, there is no limit on the
+ *        number of splits.
+ *        Default: -1
+ * @param ignore_escapes if set to true, will interpret a `\` symbol before
+ *        any instances of `sep` as escaping those instances. This `\` will be
+ *        removed, but no other escapes will be processed (including `\\`).
+ *        Default: false
+ *
+ * @return a vector of the resulting segments after the split
+ */
 vector<string> split_string(const string &sep, string s, bool trim_segments,
-                            bool accept_empty_segments, int nsplits)
+                            bool accept_empty_segments, int nsplits,
+                            bool ignore_escapes)
 {
     vector<string> segments;
     int separator_length = sep.length();
+    set<size_t> escapes; // annoying to have to always create...
+    if (ignore_escapes)
+        escapes = find_escapes(s);
 
-    string::size_type pos;
-    while (nsplits && (pos = s.find(sep)) != string::npos)
+    size_t pos = 0;
+    size_t original_pos = 0; // original position of s[0]
+    while (nsplits && (pos = s.find(sep, pos)) != string::npos)
     {
+        if (escapes.count(pos + original_pos))
+        {
+            ASSERT(pos > 0); // should be impossible for char 0 to be escaped
+            // erase the backslash
+            s.erase(pos - 1, 1);
+            original_pos++;
+            pos += separator_length - 1;
+            continue;
+        }
         add_segment(segments, s.substr(0, pos),
                     trim_segments, accept_empty_segments);
 
         s.erase(0, pos + separator_length);
+        original_pos += pos + separator_length;
+        pos = 0;
 
         if (nsplits > 0)
             --nsplits;
     }
 
+    // consume any escaped separators in the remainder; not a very elegant approach
+    if (ignore_escapes)
+        s = replace_all(s, make_stringf("\\%s", sep.c_str()), sep);
     add_segment(segments, s, trim_segments, accept_empty_segments);
 
     return segments;

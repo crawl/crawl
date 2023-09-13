@@ -153,7 +153,7 @@ This happens because the tiles for floor and wall tiles get rolled once on
 level creation and are subsequently stored in the level files, so they don't
 change every time you reload the game. Any time a tile's number is changed,
 the actually displayed tile gets shifted a bit which can lead to floor
-looking like walls, staircases like shops and similar odd occurences.
+looking like walls, staircases like shops and similar odd occurrences.
 Items and monsters that are cached out of sight may similarly be affected.
 
 This is not a big problem and in the development version, we don't even
@@ -183,7 +183,7 @@ value that has to be manually compared to the relevant minor tag.
 
 The current major version of the software is accessible by calling
 file.major_version(). There's no need to pass the reader in, as if the major
-version of a file mis-matches, the game won't attempt to load it, and you will
+version of a file mismatches, the game won't attempt to load it, and you will
 never get to a stage of being able to look for it.
 
 All Lua markers will need to be checked for minor-version checks when updating

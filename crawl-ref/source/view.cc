@@ -15,6 +15,7 @@
 
 #include "act-iter.h"
 #include "artefact.h"
+#include "branch.h"
 #include "cio.h"
 #include "cloud.h"
 #include "clua.h"
@@ -150,7 +151,7 @@ void seen_monsters_react(int stealth)
         if (!mi->visible_to(&you))
             continue;
 
-        if (!mi->has_ench(ENCH_INSANE) && mi->can_see(you))
+        if (!mi->has_ench(ENCH_FRENZIED) && mi->can_see(you))
         {
             // Trigger Duvessa & Dowan upgrades
             if (mi->props.exists(ELVEN_ENERGIZE_KEY))
@@ -275,6 +276,8 @@ static bool _is_mon_equipment_worth_listing(const monster_info &mi)
     if (alt_weap && alt_weap->base_type == OBJ_WANDS)
         return true;
     if (mi.inv[MSLOT_WAND])
+        return true;
+    if (mi.has_unusual_items())
         return true;
 
     return _is_item_worth_listing(mi.inv[MSLOT_SHIELD])
@@ -447,7 +450,7 @@ static string _describe_monsters_from_species(const vector<details> &species)
         [] (const details &det)
         {
             string name = det.name;
-            if (mons_is_unique(det.mon->type))
+            if (mons_is_unique(det.mon->type) || mons_is_specially_named(det.mon->type))
                 return name;
             else if (det.count > 1 && det.genus)
             {
@@ -683,8 +686,8 @@ static colour_t _feat_default_map_colour(dungeon_feature_type feat)
 
 // Returns true if it succeeded.
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
-                   bool force, bool deterministic,
-                   coord_def origin)
+                   bool force, bool deterministic, bool full_info,
+                   bool range_falloff, coord_def origin)
 {
     if (!force && !is_map_persistent())
     {
@@ -693,8 +696,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
         return false;
     }
-
-    const bool wizard_map = (you.wizard && map_radius == 1000);
 
     if (map_radius < 5)
         map_radius = 5;
@@ -715,7 +716,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
          ri; ++ri)
     {
         coord_def pos = *ri;
-        if (!wizard_map)
+        if (range_falloff)
         {
             int threshold = proportion;
 
@@ -754,7 +755,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         const bool already_mapped = knowledge.mapped()
                             && knowledge.feat() != DNGN_UNSEEN;
 
-        if (!wizard_map && (knowledge.seen() || already_mapped))
+        if (!full_info && (knowledge.seen() || already_mapped))
             continue;
 
         const dungeon_feature_type feat = env.grid(pos);
@@ -777,7 +778,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
         if (open)
         {
-            if (wizard_map)
+            if (full_info)
             {
                 knowledge.set_feature(feat, _feat_default_map_colour(feat),
                     feat_is_trap(env.grid(pos)) ? get_trap_type(pos)
@@ -794,12 +795,14 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             if (emphasise(pos))
                 knowledge.flags |= MAP_EMPHASIZE;
 
-            if (wizard_map)
+            if (full_info)
             {
                 if (is_notable_terrain(feat))
                     seen_notable_thing(feat, pos);
 
                 set_terrain_seen(pos);
+                StashTrack.add_stash(pos);
+                show_update_at(pos);
 #ifdef USE_TILE
                 tile_wizmap_terrain(pos);
 #endif
@@ -991,6 +994,18 @@ bool view_update()
     return false;
 }
 
+void animation_delay(unsigned int ms, bool do_refresh)
+{
+    // this leaves any Options.use_animations & UA_BEAM checks to the caller;
+    // but maybe it could be refactored into here
+    if (do_refresh)
+    {
+        viewwindow(false);
+        update_screen();
+    }
+    scaled_delay(ms);
+}
+
 void flash_view(use_animation_type a, colour_t colour, targeter *where)
 {
     if (crawl_state.need_save && Options.use_animations & a)
@@ -1040,7 +1055,7 @@ static update_flags player_view_update_at(const coord_def &gc)
     maybe_remove_autoexclusion(gc);
     update_flags ret;
 
-    // Set excludes in a radius of 1 around harmful clouds genereated
+    // Set excludes in a radius of 1 around harmful clouds generated
     // by neither monsters nor the player.
     const cloud_struct* cloud = cloud_at(gc);
     if (cloud && !crawl_state.game_is_arena())
@@ -1076,13 +1091,14 @@ static update_flags player_view_update_at(const coord_def &gc)
     if (!(env.pgrid(gc) & FPROP_SEEN_OR_NOEXP))
     {
         if (!crawl_state.game_is_arena()
+            && !(branches[you.where_are_you].branch_flags & brflag::fully_map)
             && you.has_mutation(MUT_EXPLORE_REGEN))
         {
             _do_explore_healing();
         }
         if (!crawl_state.game_is_arena()
             && cell_triggers_conduct(gc)
-            && !player_in_branch(BRANCH_TEMPLE)
+            && !(branches[you.where_are_you].branch_flags & brflag::fully_map)
             && !(player_in_branch(BRANCH_SLIME) && you_worship(GOD_JIYVA)))
         {
             did_god_conduct(DID_EXPLORATION, 2500);

@@ -737,7 +737,7 @@ xxxx+xxxx-x_xx-xxxx+xxxx
             ..x..
 ENDMAP
 
-NAME:    hangedman_elf_targetted_burst
+NAME:    hangedman_elf_targeted_burst
 TAGS:    transparent extra
 DEPTH:   Elf
 SUBST:   x : xxc, Y : yycvb, y : xxcbv, z : cbv, Z = cbvwl
@@ -1800,7 +1800,7 @@ KITEM:   P = staff of fire / randbook disc:fire / wand of flame \
          / scroll of immolation
 KITEM:   Q = staff of earth / randbook disc:earth / wand of digging \
          /  ring of protection / tin of tremorstones \
-         / any weapon ego:protection / any weapon ego:vorpal
+         / any weapon ego:protection / any weapon ego:heavy
 KITEM:   R = staff of cold / randbook disc:ice / wand of iceblast \
          / ring of ice / ring of protection from cold / phial of floods \
          / any weapon ego:freezing / any armour ego:cold_resistance
@@ -2263,8 +2263,8 @@ ENDMAP
 
 NAME:  nicolae_blade_bullseye
 TAGS:  no_item_gen
-KMONS: 2 = patrolling dancing weapon ; sling | shortbow | longbow w:5 | \
-           hand crossbow w:5 | arbalest | triple crossbow w:5
+KMONS: 2 = patrolling dancing weapon ; sling | shortbow | orcbow | \
+           longbow w:5 | hand cannon w:5 | arbalest | triple crossbow w:5
 : elven_blade_entry(_G)
 MAP
       =

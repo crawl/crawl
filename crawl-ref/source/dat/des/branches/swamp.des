@@ -252,6 +252,52 @@ tt--ttt---ttt
      ttttt
 ENDMAP
 
+NAME:   nicolae_swamp_entry_spooky
+TAGS:   swamp_entry patrolling transparent
+WEIGHT: 5
+KMONS:  s = spectral thing
+KMONS:  OP = ghost crab
+KFEAT:  O = enter_swamp
+KFEAT:  t = mangrove
+NSUBST: O = O / P...
+SUBST:  - = t., s = s.., . = ....W
+MARKER: O = lua:fog_machine { pow_min = 8, pow_max = 12, delay = 25, \
+                              size = 2, walk_dist = 1, spread_rate= 33 }
+MAP
+      xxxxxx
+    xxxttttxx
+  xxxttt--tttt
+xxxttt-s..s-ttt
+xttt-.s.--.s..@
+xtO..s.-tt-.s.@
+xtO..s.-tt-.s.@
+xttt-.s.--.s..@
+xxxttt-s..s-ttt
+  xxxttt--tttt
+    xxxttttxx
+      xxxxxx
+ENDMAP
+
+NAME:   alex1729_swamp_entry_worm_eleionoma
+TAGS:   swamp_entry patrolling transparent
+KFEAT:  O = enter_swamp
+KMONS:  O = eleionoma
+SUBST:  t = tt.
+NSUBST: 1 = 1:1 / 1=1t / .
+SUBST:  . = .....WW
+MARKER: O = lua:fog_machine { \
+             pow_min = 8, pow_max = 12, delay = 25, \
+             size = 2, walk_dist = 1, spread_rate= 33 }
+MAP
+  t.t
+ t.t.t
+ttttt.t
+.t.O.t.
+t.t.ttt
+ ttt.t
+  t.t
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Decorative vaults.
@@ -957,7 +1003,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_swamp_ascending_descending
-TAGS:    transparent decor no_pool_fixup
+TAGS:    transparent decor no_pool_fixup no_descent
 ORIENT:  float
 : if you.depth() == 1 then
 SUBST:   P = p, Q = q, R = r, S = s, Z = z
@@ -978,7 +1024,7 @@ SSSSSSSSS
 ENDMAP
 
 NAME:    nicolae_swamp_ascending_descending_big
-TAGS:    transparent decor no_pool_fixup
+TAGS:    transparent decor no_pool_fixup no_descent
 ORIENT:  float
 SUBST:   D = PQ, E = QR, F = RS, _ = S_
 : if you.depth() == 1 then
@@ -2856,6 +2902,65 @@ Ztt..Kttttt..ttZ
 ZtrrrrtZZtqqqqtZ
 ENDMAP
 
+NAME:    nicolae_swamp_thats_no_hydra
+TAGS:    transparent no_pool_fixup
+DEPTH:   Swamp
+KMONS:   1 = kraken
+KFEAT:   @ = . / W
+KFEAT:   1 = w
+SHUFFLE: LMN, OPQ, RSZ
+NSUBST:  `- = 2=H / 2=H. / .
+SUBST:   LOR = @, MNPQSZ = t, - = .W, ` = wW, D = tww
+: dgn.delayed_decay(_G, 'H', 'hydra skeleton')
+MAP
+     LLLLM
+   ZZLLLLMMM
+  ZZZ-----MMM
+ ZZ--`````--MM
+ ZZ-`DDDDD`-NN
+SS-`DDDDDDD`-NN
+SS-`DDwwwDD`-NN
+SS-`DDw1wDD`-NN
+SS-`DDwwwDD`-OO
+RR-`DDDDDDD`-OO
+ RR-`DDDDD`-OO
+ RR--`````--OO
+  RRQ-----PPP
+   RQQQQPPPP
+     QQQPP
+ENDMAP
+
+NAME:    nicolae_swamp_vermiculated
+TAGS:    transparent
+DEPTH:   Swamp
+KMONS:   ~ = steelbarb worm w:5 / swamp worm / tyrant leech
+KFEAT:   ~ = . w:50 / W
+SHUFFLE: DEFH
+NSUBST:  D = 1:@, E = 1:@, DEFH = 3=@. / .
+SUBST:   ~ = ~., - = t:90 ., . = .....W, a = t_
+CLEAR:   _
+MAP
+aaaaa      a   aaaaa
+atttt-D--D-t-D-tttta
+ -t--t.t-.--t.t--t-
+ H.--.t--..--t.--.E
+ --~~--t.-..t--~~t-
+at-~~--.t-.-.--~~-ta
+at-.-..t--.-t..-.-ta
+at-t.----.-----.t-ta
+ ----.--~~~~--.--tta
+ H..--..~~~~-...---
+ ---...-~~~~..--..E
+att--.--~~~~--.----
+at-t.-----.----.t-ta
+at-.-..t-.--t..-.-ta
+at-~~--.-.-t.--~~-ta
+ --~~--t..-.t--~~--
+ H.--.t--..--t.--.E
+ -t--t.t--.-t.t--t-
+atttt-F-t-F--F-tttta
+ aaaa   a      aaaaa
+ENDMAP
 
 ###############################################################################
 #
@@ -3055,11 +3160,11 @@ KITEM:   O = decaying rune of Zot
 NSUBST:  2 = 4 = 2. / * = 2, 0 = 1:412 / 3:2 / 2:. / * = 2., 3 = 1:. / *:3
 MARKER:  Q = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 8, pow_max = 12, delay_min = 30, delay_max = 40, \
-             size = 2, walk_dist = 1, spread_rate= 30, excl_rad = 0 }
+             size = 2, walk_dist = 1, excl_rad = 0 }
 MAP
 @@             wwttttttttt
 @.  ..        wwttcccccctt
-@ ..  ..  .....wwccQc3cctt
+@ ..  ..  .....wwcc.c3cctt
     ..  .....w?.wcXc3.Xctt
       ..    ?ww......cXctt
            www.wwXc3c3Xctt
@@ -3101,7 +3206,7 @@ ORIENT:  southeast
 MONS:    spectral swamp dragon / spectral hydra
 MONS:    hydra zombie / swamp dragon zombie
 MONS:    spectral swamp drake / swamp drake zombie
-MONS:    death drake / vampire mosquito band / w:5 oklob plant
+MONS:    death drake / vampire mosquito band / w:5 spectral bunyip
 MONS:    bloated husk, phantom, bog body
 KMONS:   8 = phantasmal warrior
 KMONS:   9 = ghost crab
@@ -3116,7 +3221,7 @@ SUBST:   1 = 113, ? = ??w, " = tc, ' = .w
 NSUBST:  6 = 1:5 / 3 = 89 / 10 = 5666. / *:., y = 1:Y / *:W
 MARKER:  Y = lua:fog_machine { cloud_type = "foul pestilence", \
              pow_min = 3, pow_max = 4, delay_min = 35, delay_max = 45, \
-             size = 3, walk_dist = 1, excl_rad = 0}
+             size = 1, walk_dist = 0, excl_rad = 0}
 MARKER:  O = lua:fog_machine { cloud_type = "foul pestilence", \
              pow_min = 3, pow_max = 4, delay_min = 35, delay_max = 45, \
              size = 3, walk_dist = 1, excl_rad = 0}
@@ -3132,13 +3237,13 @@ MAP
    't"c7.wwcccc"""ttttttt
    tttc...ccccccccccc"ttt
   ttt"cc...Ycccc6666c"ttt
-  ttt"cc....cccO6666cc"tt
+  ttt"ccY...cccO6666cc"tt
  ttttcccc...cc6666666c"tt
-  t""ccccY..ccc666666cctt
-   "cc1*cc...cc6666666ctt
-   tc211ccc..cccc6.666c"t
-   ccc2.1cc...cccc..6cc"t
-   ""c.1.ccc..ycccWW.cc"t
+  t""ccccY.Yccc666666cctt
+   "cc1*ccY.Ycc6666666ctt
+   tc211ccc.Ycccc6.666c"t
+   ccc2.1ccY.Ycccc..6cc"t
+   ""c.1.cccY.ycccWW.cc"t
    "tcc.1.cccy..ccWW..ctt
    "t"c2.21ccc..ccc6wcctt
    tttcc..2ccc..c..wwc"tt

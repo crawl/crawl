@@ -16,7 +16,7 @@
 function ecumenical_altar_setup(e)
   e.depth("D:1-3")
   e.tags("uniq_ecumenical_altar chance_ecumenical_altar extra")
-  e.chance(5000)
+  e.chance(2500)
   e.kfeat("_ = altar_ecumenical")
 end
 }}
@@ -1167,7 +1167,7 @@ Nwwwcc+ccwwwN
 ENDMAP
 
 NAME:   nicolae_ecumenical_oubliette
-TAGS:   transparent no_pool_fixup
+TAGS:   transparent no_pool_fixup no_descent
 # The ecumenical_altar_setup function includes a DEPTH: D:1-3 line,
 # but I don't want this one to show up on D:1.
 WEIGHT: 0 (D:1), 10

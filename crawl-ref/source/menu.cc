@@ -72,6 +72,9 @@
 // | \-ToggleableMenu (menu.cc/h): ability menu, various deck menus
 // |   \-SpellMenu (spl-cast.cc): spell casting / spell view menu
 // |
+// |\--PromptMenu (prompt.h): menus that can show in both the message pane
+//                            prompt channel, and as a regular menu
+// |
 // |\--InvMenu (invent.cc/h): most inventory/inv selection menus aside from
 // |   |                      what the subclasses do. (Including take off
 // |   |                      jewellery and remove armour.)
@@ -80,7 +83,7 @@
 // |   |                              armour, wield, scroll item selection
 // |   |                              (e.g. brand, enchant)
 // |   |\--KnownMenu (known-items.cc): known/unknown items
-// |   |\--DescMenu (directn.cc): xv and ctrl-x menus
+// |   |\--DescMenu (directn.cc): xv and ctrl-x menus, help lookup
 // |   \---ShopMenu (shopping.cc): buying in shops
 // |
 // |\--ShoppingListMenu (shopping.cc): shopping lists (`$`)
@@ -105,10 +108,10 @@ class UIMenu : public Widget
 {
     friend class UIMenuPopup;
 public:
-    UIMenu(Menu *menu) : m_menu(menu)
+    UIMenu(Menu *menu) : m_menu(menu), m_num_columns(1)
 
 #ifdef USE_TILE_LOCAL
-    , m_num_columns(1), m_font_entry(tiles.get_crt_font()), m_text_buf(m_font_entry)
+    , m_font_entry(tiles.get_crt_font()), m_text_buf(m_font_entry)
 #endif
     {
 #ifdef USE_TILE_LOCAL
@@ -126,14 +129,14 @@ public:
     virtual void _render() override;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
-#ifdef USE_TILE_LOCAL
-    virtual bool on_event(const Event& event) override;
     int get_num_columns() const { return m_num_columns; };
     void set_num_columns(int n) {
         m_num_columns = n;
         _invalidate_sizereq();
         _queue_allocation();
     };
+#ifdef USE_TILE_LOCAL
+    virtual bool on_event(const Event& event) override;
 #endif
     void set_min_col_width(int w) { m_min_col_width = w; } // XX min height?
     int get_min_col_width() { return m_min_col_width; }
@@ -148,6 +151,7 @@ public:
 
     void is_visible_item_range(int *vis_min, int *vis_max);
     void get_item_region(int index, int *y1, int *y2);
+    void get_item_gridpos(int index, int *row, int *col);
 
 #ifndef USE_TILE_LOCAL
     void set_showable_height(int h)
@@ -168,20 +172,23 @@ protected:
     bool m_initial_hover_snap = false;
     int m_scroll_context = 0;
 
-#ifdef USE_TILE_LOCAL
-    void do_layout(int mw, int num_columns);
-
-    int get_max_viewport_height();
-    int m_nat_column_width; // set by do_layout()
     int m_num_columns = 1;
-
+    int m_nat_column_width; // set by do_layout()
+    void do_layout(int mw, int num_columns, bool just_checking=false);
     struct MenuItemInfo {
         int x, y, row, column;
         formatted_string text;
+#ifdef USE_TILE_LOCAL
         vector<tile_def> tiles;
+#endif
         bool heading;
     };
     vector<MenuItemInfo> item_info;
+
+#ifdef USE_TILE_LOCAL
+
+    int get_max_viewport_height();
+
     vector<int> row_heights;
 
     bool m_mouse_pressed = false;
@@ -203,6 +210,8 @@ public:
     static constexpr int item_pad = 2;
     static constexpr int pad_right = 10;
 #else
+    static constexpr int pad_right = 2; // no vertical padding for console
+
     int m_shown_height {0};
 #endif
 };
@@ -211,9 +220,7 @@ void UIMenu::update_items()
 {
     _invalidate_sizereq();
 
-#ifdef USE_TILE_LOCAL
     item_info.resize(m_menu->items.size());
-#endif
     for (unsigned int i = 0; i < m_menu->items.size(); ++i)
         update_item(i);
 
@@ -234,8 +241,8 @@ void UIMenu::is_visible_item_range(int *vis_min, int *vis_max)
     const int viewport_height = m_menu->m_ui.scroller->get_region().height;
     const int scroll = m_menu->m_ui.scroller->get_scroll();
 
-#ifdef USE_TILE_LOCAL
     int v_min = 0, v_max = item_info.size(), i;
+#ifdef USE_TILE_LOCAL
     for (i = 0; i < (int)item_info.size(); ++i)
     {
         if (row_heights[item_info[i].row + 1] > scroll)
@@ -253,21 +260,56 @@ void UIMenu::is_visible_item_range(int *vis_min, int *vis_max)
         }
     }
 #else
-    int v_min = scroll;
-    int v_max = scroll + viewport_height;
+    for (i = 0; i < (int)item_info.size(); ++i)
+    {
+        if (item_info[i].row >= scroll)
+        {
+            v_min = i;
+            break;
+        }
+    }
+    for (; i < (int)item_info.size(); ++i)
+    {
+        if (item_info[i].row >= scroll + viewport_height)
+        {
+            v_max = i;
+            break;
+        }
+    }
 #endif
-    v_max = min(v_max, (int)m_menu->items.size());
+    v_max = min(v_max, (int)m_menu->items.size()); // ??
     if (vis_min)
         *vis_min = v_min;
     if (vis_max)
         *vis_max = v_max;
 }
 
+void UIMenu::get_item_gridpos(int index, int *row, int *col)
+{
+    ASSERT_RANGE(index, 0, (int)m_menu->items.size());
+    if (item_info.empty())
+    {
+        // no layout yet
+        if (row)
+            *row = index;
+        if (col)
+            *col = 0;
+        return;
+    }
+    ASSERT_RANGE(index, 0, (int)item_info.size());
+    // XX why not just expose MenuItemInfo
+    if (row)
+        *row = item_info[index].row;
+    if (col)
+        *col = item_info[index].column;
+}
+
 void UIMenu::get_item_region(int index, int *y1, int *y2)
 {
     ASSERT_RANGE(index, 0, (int)m_menu->items.size());
+
 #ifdef USE_TILE_LOCAL
-    int row = item_info[index].row;
+    int row = item_info[index].row; // XX this seems unsafe before layout? but it doesn't crash...
     if (static_cast<size_t>(row + 1) >= row_heights.size())
     {
         // call before UIMenu has been laid out
@@ -282,10 +324,16 @@ void UIMenu::get_item_region(int index, int *y1, int *y2)
     if (y2)
         *y2 = row_heights[row+1];
 #else
+    // for console, use just the index in an uninitialized menu
+    int row = -1;
+    if (item_info.size() != m_menu->items.size())
+        row = index;
+    else
+        row = item_info[index].row;
     if (y1)
-        *y1 = index;
+        *y1 = row;
     if (y2)
-        *y2 = index+1;
+        *y2 = row+1;
 #endif
 }
 
@@ -293,7 +341,7 @@ void UIMenu::update_item(int index)
 {
     _invalidate_sizereq();
     _queue_allocation();
-#ifdef USE_TILE_LOCAL
+
     ASSERT(index < static_cast<int>(m_menu->items.size()));
     const MenuEntry *me = m_menu->items[index];
     int colour = m_menu->item_colour(me);
@@ -306,10 +354,9 @@ void UIMenu::update_item(int index)
     entry.text.textcolour(colour);
     entry.text += formatted_string::parse_string(text);
     entry.heading = me->level == MEL_TITLE || me->level == MEL_SUBTITLE;
+#ifdef USE_TILE_LOCAL
     entry.tiles.clear();
     me->get_tiles(entry.tiles);
-#else
-    UNUSED(index);
 #endif
 }
 
@@ -322,9 +369,11 @@ static bool _has_hotkey_prefix(const string &s)
     bool plus = (s[3] == '-' || s[3] == '+' || s[3] == '#');
     return let && plus && s[0] == ' ' && s[2] == ' ' && s[4] == ' ';
 }
+#endif
 
-void UIMenu::do_layout(int mw, int num_columns)
+void UIMenu::do_layout(int mw, int num_columns, bool just_checking)
 {
+#ifdef USE_TILE_LOCAL
     const int min_column_width = m_min_col_width > 0 ? m_min_col_width : 400;
     const int max_column_width = mw / num_columns;
     const int text_height = m_font_entry->char_height();
@@ -333,9 +382,17 @@ void UIMenu::do_layout(int mw, int num_columns)
     int column_width = 0;
     int row_height = 0;
     int height = 0;
+    int row_count = 0;
 
-    row_heights.clear();
-    row_heights.reserve(m_menu->items.size()+1);
+    // if the row heights are completely uninitialized, we should put something
+    // in there
+    just_checking = just_checking && !row_heights.empty();
+
+    if (!just_checking)
+    {
+        row_heights.clear();
+        row_heights.reserve(m_menu->items.size()+1);
+    }
 
     for (size_t i = 0; i < m_menu->items.size(); ++i)
     {
@@ -348,14 +405,17 @@ void UIMenu::do_layout(int mw, int num_columns)
             row_height += row_height == 0 ? 0 : 2*item_pad;
             m_scroll_context = max(m_scroll_context, row_height);
             height += row_height;
-            row_heights.push_back(height);
+            if (!just_checking)
+                row_heights.push_back(height);
+            row_count++;
             row_height = 0;
         }
 
         const int text_width = m_font_entry->string_width(entry.text);
 
-        entry.y = height;
-        entry.row = row_heights.size() - 1;
+        if (!just_checking)
+            entry.y = height;
+        entry.row = row_count - 1;
         entry.column = column;
 
         if (entry.heading)
@@ -384,6 +444,7 @@ void UIMenu::do_layout(int mw, int num_columns)
 
             // Split menu entries that don't fit into a single line into two lines.
             if (!m_menu->is_set(MF_NO_WRAP_ROWS))
+            {
                 if ((text_width > max_column_width-entry.x-pad_right))
                 {
                     formatted_string text;
@@ -406,6 +467,7 @@ void UIMenu::do_layout(int mw, int num_columns)
                     string_height = min(string_height, text_height*2);
                     item_height = max(item_height, string_height);
                 }
+            }
 
             column_width = max(column_width, text_sx + text_width + pad_right);
             row_height = max(row_height, item_height);
@@ -414,13 +476,54 @@ void UIMenu::do_layout(int mw, int num_columns)
     row_height += row_height == 0 ? 0 : 2*item_pad;
     m_scroll_context = max(m_scroll_context, row_height);
     height += row_height;
-    row_heights.push_back(height);
+    if (!just_checking)
+        row_heights.push_back(height);
     column_width += 2*item_pad;
 
     m_height = height;
     m_nat_column_width = max(min_column_width, min(column_width, max_column_width));
+#else
+    UNUSED(just_checking);
+    // TODO: this code is not dissimilar to the tiles code, could they be
+    // further unified?
+    const int min_column_width = m_min_col_width > 0 ? m_min_col_width : 10;
+    const int max_column_width = mw / num_columns;
+
+    int row = -1;
+    int column = -1; // an initial increment makes these 0
+    int column_width = 0;
+
+    for (size_t i = 0; i < m_menu->items.size(); ++i)
+    {
+        auto& entry = item_info[i];
+
+        column = entry.heading ? 0 : (column+1) % num_columns;
+        if (column == 0)
+            row++;
+
+        const int text_width = static_cast<int>(entry.text.width());
+
+        entry.x = 0;
+        entry.y = row;
+        entry.row = row;
+        entry.column = column;
+
+        if (entry.heading)
+            column = num_columns-1; // occupy the entire row
+        else
+        {
+            // TODO(?): tiles will wrap menu entries that don't fit in a single
+            // row, should that be implemented for console?
+            column_width = max(column_width, text_width + pad_right);
+        }
+    }
+    m_height = row + 1;
+    // should this update the region??
+    m_nat_column_width = max(min_column_width, min(column_width, max_column_width));
+#endif
 }
 
+#ifdef USE_TILE_LOCAL
 int UIMenu::get_max_viewport_height()
 {
     // Limit page size to ensure <= 52 items visible
@@ -469,8 +572,9 @@ void UIMenu::_render()
     for (int i = vis_min; i < vis_max; i++)
     {
         const MenuEntry *me = m_menu->items[i];
-        int y = i - vis_min + 1;
-        cgotoxy(m_region.x+1, m_region.y+scroll+y);
+        int y = item_info[i].y - item_info[vis_min].y + 1;
+        int x = item_info[i].x + item_info[i].column * m_nat_column_width;
+        cgotoxy(m_region.x + x + 1, m_region.y + scroll + y);
         const int col = m_menu->item_colour(me);
         textcolour(col);
 
@@ -483,12 +587,14 @@ void UIMenu::_render()
         {
             formatted_string s = formatted_string::parse_string(
                 me->get_text(), col);
-            s.chop(m_region.width).display();
+            // s.chop(m_region.width).display();
+            s.chop(m_nat_column_width).display();
         }
         else
         {
             string text = me->get_text();
-            text = chop_string(text, m_region.width);
+            // text = chop_string(text, m_region.width);
+            text = chop_string(text, m_nat_column_width);
             cprintf("%s", text.c_str());
         }
         textbackground(BLACK);
@@ -501,14 +607,14 @@ SizeReq UIMenu::_get_preferred_size(Direction dim, int prosp_width)
 #ifdef USE_TILE_LOCAL
     if (!dim)
     {
-        do_layout(INT_MAX, m_num_columns);
-        const int em = Options.tile_font_crt_size;
+        do_layout(INT_MAX, m_num_columns, true);
+        const int em = tiles.get_crt_font()->char_width();
         int max_menu_width = min(93*em, m_nat_column_width * m_num_columns);
         return {0, max_menu_width};
     }
     else
     {
-        do_layout(prosp_width, m_num_columns);
+        do_layout(prosp_width, m_num_columns, true);
         return {0, m_height};
     }
 #else
@@ -544,6 +650,11 @@ public:
         m_text += fs;
         _expose();
         m_wrapped_size = Size(-1);
+        // XX this doesn't handle height changes. I think it's partly a
+        // sequencing issue: previous code will correctly invalidate on a
+        // height change, but m_region isn't updated until later, so you get
+        // the wrong wrapping behavior + a lack of reflowing until the next
+        // update.
         wrap_text_to_size(m_region.width, m_region.height);
     }
 
@@ -615,11 +726,50 @@ public:
     UIMenuPopup(shared_ptr<Widget> child, Menu *menu) : ui::Popup(child), m_menu(menu) {};
     virtual ~UIMenuPopup() {};
 
+    int _calc_columns(int mw) const;
     virtual void _allocate_region() override;
 
 private:
     Menu *m_menu;
 };
+
+/// What is the max number of columns that will fit into mw, given the current
+/// items?
+int UIMenuPopup::_calc_columns(int mw) const
+{
+    int min_column_width = m_menu->m_ui.menu->get_min_col_width();
+    if (min_column_width <= 0)
+#ifdef USE_TILE_LOCAL
+        min_column_width = m_menu->m_ui.menu->m_font_entry->char_width() * 10;
+#else
+        min_column_width = 10;
+#endif
+
+#ifdef USE_TILE_LOCAL
+    // TODO: some code overlap with do_layout
+    int max_entry_text = min_column_width;
+    for (size_t i = 0; i < m_menu->items.size(); ++i)
+    {
+        auto& entry = m_menu->m_ui.menu->item_info[i];
+        const int text_width = entry.x
+                    + m_menu->m_ui.menu->m_font_entry->string_width(entry.text)
+                    + m_menu->m_ui.menu->pad_right;
+        max_entry_text = max(max_entry_text, text_width);
+    }
+#else
+    int max_entry_text = min_column_width;
+    for (size_t i = 0; i < m_menu->items.size(); ++i)
+    {
+        max_entry_text = max(max_entry_text,
+                static_cast<int>(m_menu->items[i]->get_text().size())
+                + m_menu->m_ui.menu->pad_right);
+    }
+#endif
+
+    // the 6 here is somewhat heuristic, but menus with more columns than
+    // around this, in my testing, become harder to parse
+    return max(1, min(6, mw / max_entry_text));
+}
 
 void UIMenuPopup::_allocate_region()
 {
@@ -630,31 +780,42 @@ void UIMenuPopup::_allocate_region()
     max_height -= m_menu->m_ui.title->get_margin().bottom;
     max_height -= m_menu->m_ui.more->get_region().height;
     int viewport_height = m_menu->m_ui.scroller->get_region().height;
-
-#ifdef USE_TILE_LOCAL
     int menu_w = m_menu->m_ui.menu->get_region().width;
     m_menu->m_ui.menu->do_layout(menu_w, 1);
-    int m_height = m_menu->m_ui.menu->m_height;
 
+    // see if we should try a two-column layout
+    int m_height = m_menu->m_ui.menu->m_height;
     int more_height = m_menu->m_ui.more->get_region().height;
-    // switch number of columns
     int num_cols = m_menu->m_ui.menu->get_num_columns();
-    if (m_menu->m_ui.menu->m_draw_tiles && m_menu->is_set(MF_USE_TWO_COLUMNS)
-        && !Options.tile_single_column_menus)
+    if (m_menu->is_set(MF_GRID_LAYOUT))
     {
+        const int max_columns = _calc_columns(menu_w);
+        if (num_cols != max_columns)
+        {
+            // TODO: it might be good to horizontally shrink grid layout
+            // menus a bit if the calculated column count would add too much
+            // whitespace. But I'm not quite sure how to do this...
+            m_menu->m_ui.menu->set_num_columns(max_columns);
+            ui::restart_layout(); // NORETURN
+        }
+    }
+    else if (m_menu->is_set(MF_USE_TWO_COLUMNS))
+    {
+        // XX should this be smarter about width for console?
         if ((num_cols == 1 && m_height+more_height > max_height)
          || (num_cols == 2 && m_height+more_height <= max_height))
         {
             m_menu->m_ui.menu->set_num_columns(3 - num_cols);
-            ui::restart_layout();
+            ui::restart_layout(); // NORETURN
         }
     }
     m_menu->m_ui.menu->do_layout(menu_w, num_cols);
-#endif
 
-    const int menu_height = m_menu->m_ui.menu->get_region().height;
     if (m_menu->m_keyhelp_more)
     {
+        // note: m_menu->m_ui.menu->get_region().height seems to be inaccurate
+        // on console (ok on tiles) -- is this a problem?
+        const int menu_height = m_menu->m_ui.menu->m_height;
         const int scroll_percent = (menu_height - viewport_height == 0)
                     ? 0
                     : m_menu->m_ui.scroller->get_scroll() * 100
@@ -718,11 +879,8 @@ void UIMenu::_allocate_region()
         m_initial_hover_snap = true;
     }
 
-#ifndef USE_TILE_LOCAL
-    // XXX: is this needed?
-    m_height = m_menu->items.size();
-#else
     do_layout(m_region.width, m_num_columns);
+#ifdef USE_TILE_LOCAL
     if (!(m_menu->flags & MF_ARROWS_SELECT) || m_menu->last_hovered < 0)
         update_hovered_entry();
     else
@@ -1298,6 +1456,11 @@ void Menu::set_title(MenuEntry *e, bool first, bool indent)
     update_title();
 }
 
+void Menu::set_title(const string &t, bool first, bool indent)
+{
+    set_title(new MenuEntry(t, MEL_TITLE), first, indent);
+}
+
 void Menu::add_entry(MenuEntry *entry)
 {
     entry->tag = tag;
@@ -1381,18 +1544,6 @@ void Menu::do_menu()
         done = !process_key(key);
         return true;
     });
-#ifdef TOUCH_UI
-    auto menu_wrap_click = [this, &done](const MouseEvent& ev) {
-        if (!m_filter && ev.button() == MouseEvent::Button::Left)
-        {
-            done = !process_key(CK_TOUCH_DUMMY);
-            return true;
-        }
-        return false;
-    };
-    m_ui.title->on_mousedown_event(menu_wrap_click);
-    m_ui.more->on_mousedown_event(menu_wrap_click);
-#endif
 
     update_menu();
     ui::push_layout(m_ui.popup, m_kmc);
@@ -1548,20 +1699,46 @@ bool Menu::process_command(command_type cmd)
     const int old_vis_first = get_first_visible();
 #endif
 
+    // note -- MF_USE_TWO_COLUMNS doesn't guarantee two cols!
+    // currently guaranteed to be false except on local tiles
+    const bool multicol = m_ui.menu->get_num_columns() > 1;
+    const int old_hover = last_hovered;
+
     switch (cmd)
     {
     case CMD_MENU_UP:
         if (is_set(MF_ARROWS_SELECT))
-            cycle_hover(true);
+        {
+            cycle_hover(true, false, true);
+            if (last_hovered >= 0 && old_hover == last_hovered)
+                line_up();
+        }
         else
             line_up();
         break;
     case CMD_MENU_DOWN:
         if (is_set(MF_ARROWS_SELECT))
-            cycle_hover();
+        {
+            cycle_hover(false, false, true);
+            if (last_hovered >= 0 && old_hover == last_hovered)
+                line_down();
+        }
         else
             line_down();
         break;
+    case CMD_MENU_RIGHT:
+        if (multicol && is_set(MF_ARROWS_SELECT))
+            cycle_hover(false, true, false);
+        else
+            cycle_mode(true);
+        break;
+    case CMD_MENU_LEFT:
+        if (multicol && is_set(MF_ARROWS_SELECT))
+            cycle_hover(true, true, false);
+        else
+            cycle_mode(false);
+        break;
+
     case CMD_MENU_LINE_UP:
         line_up();
         break;
@@ -1794,7 +1971,7 @@ bool Menu::process_key(int keyin)
     }
 
     if (f_keyfilter)
-        keyin = (*f_keyfilter)(keyin);
+        keyin = f_keyfilter(keyin);
     keyin = pre_process(keyin);
 
 #ifdef USE_TILE_WEB
@@ -1831,22 +2008,11 @@ bool Menu::process_key(int keyin)
     case CK_REDRAW:
     case CK_RESIZE:
         return true;
-#ifndef TOUCH_UI
     case 0:
         return true;
-#endif
     case CK_MOUSE_CLICK:
         // click event from ui.cc
         break;
-
-#ifdef TOUCH_UI
-    case CK_TOUCH_DUMMY:  // mouse click in top/bottom region of menu
-    case 0:               // do the same as <enter> key
-        if (!(flags & MF_MULTISELECT)) // bail out if not a multi-select
-            return true;
-        return process_command(CMD_MENU_SELECT); // TODO: is this right??
-        // seemingly intentional fallthrough
-#endif
     default:
         // Even if we do return early, lastch needs to be set first,
         // as it's sometimes checked when leaving a menu.
@@ -1957,9 +2123,7 @@ void Menu::deselect_all(bool update_view)
     sel.clear();
 }
 
-
-
-int Menu::get_first_visible(bool skip_init_headers) const
+int Menu::get_first_visible(bool skip_init_headers, int col) const
 {
     int y = m_ui.scroller->get_scroll();
     for (int i = 0; i < static_cast<int>(items.size()); i++)
@@ -1976,9 +2140,18 @@ int Menu::get_first_visible(bool skip_init_headers) const
                 // useful to ignore visible headers
                 continue;
             }
+            if (col >= 0)
+            {
+                int cur_col;
+                m_ui.menu->get_item_gridpos(i, nullptr, &cur_col);
+                if (cur_col != col)
+                    continue;
+            }
             return i;
         }
     }
+    // returns 0 on empty menu -- callers should guard for this if relevant
+    // (XX -1 might be better? but callers currently assume non-negative...)
     return items.size();
 }
 
@@ -1991,7 +2164,8 @@ bool Menu::is_hotkey(int i, int key)
 /// find the first item (if any) that has hotkey `key`.
 int Menu::hotkey_to_index(int key, bool primary_only)
 {
-    const int first_entry = get_first_visible();
+    // when called without a ui, just check from the beginning
+    const int first_entry = ui_is_initialized() ? get_first_visible() : 0;
     const int final = items.size();
 
     // Process all items, in case user hits hotkey for an
@@ -2112,10 +2286,7 @@ void MenuEntry::select(int qty)
 string MenuEntry::_get_text_preface() const
 {
     if (level == MEL_ITEM && hotkeys_count())
-    {
-        return make_stringf(" %s - ",
-            keycode_to_name(hotkeys[0]).c_str());
-    }
+        return make_stringf(" %s - ", keycode_to_name(hotkeys[0]).c_str());
     else if (level == MEL_ITEM && indent_no_hotkeys)
         return "     ";
     else
@@ -2234,6 +2405,9 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
         tileset.emplace_back(TILE_HALO_GD_NEUTRAL);
     else if (m->neutral())
         tileset.emplace_back(TILE_HALO_NEUTRAL);
+    else if (Options.tile_show_threat_levels.find("unusual") != string::npos
+             && m->has_unusual_items())
+        tileset.emplace_back(TILE_THREAT_UNUSUAL);
     else
         switch (m->threat)
         {
@@ -2336,6 +2510,8 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
         tileset.emplace_back(TILEI_GOOD_NEUTRAL);
     else if (m->neutral())
         tileset.emplace_back(TILEI_NEUTRAL);
+    else if (m->is(MB_PARALYSED))
+        tileset.emplace_back(TILEI_PARALYSED);
     else if (m->is(MB_FLEEING))
         tileset.emplace_back(TILEI_FLEEING);
     else if (m->is(MB_STABBABLE))
@@ -2408,22 +2584,7 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
         p_order[7] = TILEP_PART_LEG;
     }
 
-    // Special case bardings from being cut off.
-    bool is_naga = (equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA
-                    || equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA + 1);
-    if (equip_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
-        && equip_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED)
-    {
-        flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
-    }
-
-    bool is_ptng = (equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_PALENTONGA
-                    || equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_PALENTONGA + 1);
-    if (equip_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
-        && equip_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
-    {
-        flags[TILEP_PART_BOOTS] = is_ptng ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
-    }
+    reveal_bardings(equip_doll.parts, flags);
 
     for (int i = 0; i < TILEP_PART_MAX; ++i)
     {
@@ -2434,14 +2595,7 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
 
         ASSERT_RANGE(idx, TILE_MAIN_MAX, TILEP_PLAYER_MAX);
 
-        int ymax = TILE_Y;
-
-        if (flags[p] == TILEP_FLAG_CUT_CENTAUR
-            || flags[p] == TILEP_FLAG_CUT_NAGA)
-        {
-            ymax = 18;
-        }
-
+        const int ymax = flags[p] == TILEP_FLAG_CUT_BOTTOM ? 18 : TILE_Y;
         tileset.emplace_back(idx, ymax);
     }
 
@@ -2519,6 +2673,21 @@ void Menu::select_index(int index, int qty)
     {
         select_item_index(si, qty);
     }
+}
+
+size_t Menu::item_count(bool include_headers) const
+{
+    size_t count = items.size();
+    if (!include_headers)
+    {
+        for (const auto &item : items)
+            if (item->level != MEL_ITEM)
+            {
+                ASSERT(count > 0);
+                count--;
+            }
+    }
+    return count;
 }
 
 int Menu::get_entry_index(const MenuEntry *e) const
@@ -2625,6 +2794,17 @@ int Menu::item_colour(const MenuEntry *entry) const
 
 formatted_string Menu::calc_title() { return formatted_string(); }
 
+MenuEntry *Menu::get_cur_title() const
+{
+    const bool first = (action_cycle == CYCLE_NONE
+                        || menu_action == ACT_EXECUTE);
+
+    // if title2 is set, use it as an alt title; otherwise don't change
+    // titles
+    return first ? title
+                 : title2 ? title2 : title;
+}
+
 void Menu::update_title()
 {
     if (!title || crawl_state.doing_prev_cmd_again)
@@ -2644,14 +2824,8 @@ void Menu::update_title()
 
     if (fs.empty())
     {
-        const bool first = (action_cycle == CYCLE_NONE
-                            || menu_action == ACT_EXECUTE);
-
-        // if title2 is set, use it as an alt title; otherwise don't change
-        // titles
-        const auto *t = first ? title
-                              : title2 ? title2 : title;
-
+        const auto *t = get_cur_title();
+        ASSERT(t);
         auto col = item_colour(t);
         string text = t->get_text();
 
@@ -2722,15 +2896,17 @@ bool Menu::in_page(int index, bool strict) const
 
 bool Menu::set_scroll(int index)
 {
-    // TODO: code duplication, maybe could be refactored into lower-level code
-    const int vph = m_ui.scroller->get_region().height;
-    if (vph == 0)
+    // ui not yet set up. Setting this value now will force a
+    // `set_scroll` call with the same index on first render.
+    if (!ui_is_initialized())
     {
-        // ui not yet set up. Setting this value now will force a
-        // `set_scroll` call with the same index on first render.
         m_ui.menu->set_initial_scroll(index);
         return false;
     }
+
+    // TODO: code duplication, maybe could be refactored into lower-level code
+    const int vph = m_ui.scroller->get_region().height;
+    ASSERT(vph > 0);
     if (index < 0 || index >= static_cast<int>(items.size()))
         return false;
 
@@ -2758,16 +2934,23 @@ bool Menu::set_scroll(int index)
     return vpy != y1;
 }
 
+bool Menu::ui_is_initialized() const
+{
+    // is this really the best way to do this?? I arrived at this by
+    // generalizing some code that used this specific check, but maybe it
+    // should be done in some more general fashion...
+    return m_ui.scroller && m_ui.scroller->get_region().height > 0;
+}
+
 bool Menu::item_visible(int index)
 {
+    // ui not yet set up. Use `set_scroll` for this case, or a hover will
+    // be automatically snapped.
+    if (!ui_is_initialized())
+        return false;
     // TODO: code duplication, maybe could be refactored into lower-level code
     const int vph = m_ui.scroller->get_region().height;
-    if (vph == 0)
-    {
-        // ui not yet set up. Use `set_scroll` for this case, or a hover will
-        // be automatically snapped.
-        return false;
-    }
+    ASSERT(vph > 0);
     if (index < 0 || index >= static_cast<int>(items.size()))
         return false;
 
@@ -2790,14 +2973,13 @@ bool Menu::item_visible(int index)
 /// relative to the current scroll.
 bool Menu::snap_in_page(int index)
 {
+    // ui not yet set up. Use `set_scroll` for this case, or a hover will
+    // be automatically snapped.
+    if (!ui_is_initialized())
+        return false;
     // TODO: code duplication, maybe could be refactored into lower-level code
     const int vph = m_ui.scroller->get_region().height;
-    if (vph == 0)
-    {
-        // ui not yet set up. Use `set_scroll` for this case, or a hover will
-        // be automatically snapped.
-        return false;
-    }
+    ASSERT(vph > 0);
     if (index < 0 || index >= static_cast<int>(items.size()))
         return false;
 
@@ -2812,23 +2994,26 @@ bool Menu::snap_in_page(int index)
 
     const int vpy = m_ui.scroller->get_scroll();
 
-    if (y2 >= vpy + vph)
+#ifdef USE_TILE_LOCAL
+    // on local tiles, when scrolling longer menus, the scroller will apply a
+    // shade to the edge of the scroller. Compensate for this for non-end menu
+    // items.
+    const int shade = (index > 0 || index < static_cast<int>(items.size()) - 1)
+        ? UI_SCROLLER_SHADE_SIZE / 2 : 0;
+#else
+    const int shade = 0;
+#endif
+
+    // the = for these is to apply the local tiles shade adjustment if necessary
+    if (y1 <= vpy)
     {
         // scroll up
-        m_ui.scroller->set_scroll(y2 - vph
-#ifdef USE_TILE_LOCAL
-            + UI_SCROLLER_SHADE_SIZE / 2
-#endif
-            );
+        m_ui.scroller->set_scroll(y1 - shade);
     }
-    else if (y1 < vpy)
+    else if (y2 >= vpy + vph)
     {
         // scroll down
-        m_ui.scroller->set_scroll(y1
-#ifdef USE_TILE_LOCAL
-            - UI_SCROLLER_SHADE_SIZE / 2
-#endif
-            );
+        m_ui.scroller->set_scroll(y2 - vph + shade);
     }
     else
         return false; // already in page
@@ -2841,8 +3026,17 @@ bool Menu::page_down()
     if (is_set(MF_ARROWS_SELECT) && last_hovered < 0 && items.size() > 0)
         last_hovered = 0;
     // preserve relative position
-    if (last_hovered >= 0 && in_page(last_hovered))
-        new_hover = last_hovered - get_first_visible(true);
+
+    int col = 0;
+    if (last_hovered >= 0 && m_ui.menu)
+        m_ui.menu->get_item_gridpos(last_hovered, nullptr, &col);
+
+    if (last_hovered >= 0)
+    {
+        new_hover = in_page(last_hovered)
+                        ? max(0, last_hovered - get_first_visible(true, col))
+                        : 0;
+    }
     int dy = m_ui.scroller->get_region().height - m_ui.menu->get_scroll_context();
     int y = m_ui.scroller->get_scroll();
     bool at_bottom = y+dy >= m_ui.menu->get_region().height;
@@ -2855,10 +3049,10 @@ bool Menu::page_down()
     if (new_hover >= 0)
     {
         // if pgdn wouldn't change the hover, move it to the last element
-        if (is_set(MF_ARROWS_SELECT) && get_first_visible(true) + new_hover == last_hovered)
+        if (is_set(MF_ARROWS_SELECT) && get_first_visible(true, col) + new_hover == last_hovered)
             set_hovered(items.size() - 1);
         else
-            set_hovered(get_first_visible(true) + new_hover);
+            set_hovered(get_first_visible(true, col) + new_hover);
         if (items[last_hovered]->level != MEL_ITEM)
             cycle_hover(true); // reverse so we don't overshoot
     }
@@ -2875,8 +3069,14 @@ bool Menu::page_up()
     int new_hover = -1;
     if (is_set(MF_ARROWS_SELECT) && last_hovered < 0 && items.size() > 0)
         last_hovered = 0;
-    if (last_hovered >= 0 && in_page(last_hovered))
-        new_hover = last_hovered - get_first_visible(true);
+
+    if (last_hovered >= 0)
+    {
+        new_hover = in_page(last_hovered)
+                        ? max(0, last_hovered - get_first_visible(true))
+                        : 0;
+    }
+
     int dy = m_ui.scroller->get_region().height - m_ui.menu->get_scroll_context();
     int y = m_ui.scroller->get_scroll();
     m_ui.scroller->set_scroll(y-dy);
@@ -2898,7 +3098,12 @@ bool Menu::page_up()
 
 bool Menu::line_down()
 {
+    // check if we are already at the end.
+    if (items.empty() || in_page(static_cast<int>(items.size()) - 1, true))
+        return false;
+
     int index = get_first_visible();
+
     int first_vis_y;
     m_ui.menu->get_item_region(index, &first_vis_y, nullptr);
 
@@ -2916,7 +3121,7 @@ bool Menu::line_down()
     return false;
 }
 
-void Menu::cycle_hover(bool reverse)
+void Menu::cycle_hover(bool reverse, bool preserve_row, bool preserve_col)
 {
     if (!is_set(MF_ARROWS_SELECT))
         return;
@@ -2928,6 +3133,10 @@ void Menu::cycle_hover(bool reverse)
     int new_hover = last_hovered;
     if (reverse && last_hovered < 0)
         new_hover = 0;
+    int row = 0;
+    int col = 0;
+    if (last_hovered >= 0 && m_ui.menu)
+        m_ui.menu->get_item_gridpos(last_hovered, &row, &col);
     bool found = false;
     while (items_tried < max_items)
     {
@@ -2938,6 +3147,14 @@ void Menu::cycle_hover(bool reverse)
         if (is_set(MF_WRAP) && sz > 0)
             new_hover = (new_hover + sz) % sz;
         new_hover = max(0, min(new_hover, sz - 1));
+
+        int cur_row, cur_col;
+        if (m_ui.menu && (preserve_row || preserve_col))
+        {
+            m_ui.menu->get_item_gridpos(new_hover, &cur_row, &cur_col);
+            if (preserve_row && cur_row != row || preserve_col && cur_col != col)
+                continue;
+        }
 
         if (items[new_hover]->level == MEL_ITEM)
         {
@@ -3263,14 +3480,16 @@ void Menu::webtiles_write_item(const MenuEntry* me) const
 // Menu colouring
 //
 
-int menu_colour(const string &text, const string &prefix, const string &tag)
+int menu_colour(const string &text, const string &prefix, const string &tag, bool strict)
 {
     const string tmp_text = prefix + text;
 
     for (const colour_mapping &cm : Options.menu_colour_mappings)
     {
-        if ((cm.tag.empty() || cm.tag == "any" || cm.tag == tag
-               || cm.tag == "inventory" && tag == "pickup")
+        const bool match_any = !strict &&
+            (cm.tag.empty() || cm.tag == "item" || cm.tag == "any");
+        if ((match_any
+                || cm.tag == tag || cm.tag == "inventory" && tag == "pickup")
             && cm.pattern.matches(tmp_text))
         {
             return cm.colour;
@@ -3425,12 +3644,7 @@ void ToggleableMenu::add_toggle_from_command(command_type cmd)
 // needed?
 int ToggleableMenu::pre_process(int key)
 {
-#ifdef TOUCH_UI
-    if (find(toggle_keys.begin(), toggle_keys.end(), key) != toggle_keys.end()
-        || key == CK_TOUCH_DUMMY)
-#else
     if (find(toggle_keys.begin(), toggle_keys.end(), key) != toggle_keys.end())
-#endif
     {
         // Toggle all menu entries
         for (MenuEntry *item : items)
@@ -3456,11 +3670,7 @@ int ToggleableMenu::pre_process(int key)
         }
 
         // Don't further process the key
-#ifdef TOUCH_UI
-        return CK_TOUCH_DUMMY;
-#else
         return 0;
-#endif
     }
     return key;
 }

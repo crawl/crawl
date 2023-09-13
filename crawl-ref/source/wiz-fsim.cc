@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Fight simualtion wizard functions.
+ * @brief Fight simulation wizard functions.
 **/
 
 #include "AppHdr.h"
@@ -38,6 +38,7 @@
 #include "species.h"
 #include "state.h"
 #include "stringutil.h"
+#include "syscalls.h"
 #include "throw.h"
 #include "unwind.h"
 #include "version.h"
@@ -76,8 +77,13 @@ string fight_data::header(bool tsv)
 string fight_data::summary(const string prefix, bool tsv)
 {
     string s = "";
-    s += player.summary(prefix, tsv) + "\n";
-    s += monster.summary(prefix, tsv);
+
+    if (player.hits > 0)
+        s += player.summary(prefix, tsv) + "\n";
+
+    if (monster.hits > 0)
+        s += monster.summary(prefix, tsv);
+
     return s;
 }
 
@@ -97,7 +103,7 @@ static skill_type _equipped_skill()
     return SK_UNARMED_COMBAT;
 }
 
-static string _equipped_weapon_name()
+static string _equipped_weapon_name(bool show_prefix)
 {
     const int weapon = you.equip[EQ_WEAPON];
     const item_def * iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
@@ -105,17 +111,19 @@ static string _equipped_weapon_name()
 
     if (iweap)
     {
-        string item_buf = iweap->name(DESC_PLAIN);
-        // If it's a ranged weapon, add the description of the missile
-        if (is_range_weapon(*iweap) && missile < ENDOFPACK && missile >= 0)
-            item_buf += " with " + you.inv[missile].name(DESC_PLAIN);
-        return "Wielding: " + item_buf;
+        if (show_prefix)
+            return "Wielding: " + iweap->name(DESC_PLAIN);
+        else
+            return iweap->name(DESC_PLAIN);
     }
 
     if (missile != -1 && you.inv[missile].defined()
                 && you.inv[missile].base_type == OBJ_MISSILES)
     {
-        return "Quivering: " + you.inv[missile].name(DESC_PLAIN);
+        if (show_prefix)
+            return "Quivering: " + you.inv[missile].name(DESC_PLAIN);
+        else
+            return you.inv[missile].name(DESC_PLAIN);
     }
 
     return "Unarmed";
@@ -146,7 +154,7 @@ static void _write_version(FILE * o)
 static void _write_matchup(FILE * o, monster &mon, bool defend, int iter_limit)
 {
     fprintf(o, "%s: %s %s vs. %s (%d rounds) (%s)\n",
-            defend ? "Defense" : "Attack",
+            defend ? "Defence" : "Attack",
             species::name(you.species).c_str(),
             get_job_name(you.char_class),
             mon.name(DESC_PLAIN, true).c_str(),
@@ -168,7 +176,7 @@ static void _write_you(FILE * o)
 static void _write_weapon(FILE * o)
 {
     fprintf(o, "%s, Skill: %s\n",
-            _equipped_weapon_name().c_str(),
+            _equipped_weapon_name(true).c_str(),
             skill_name(_equipped_skill()));
 }
 
@@ -192,7 +200,7 @@ static bool _equip_weapon(const string &weapon, bool &abort)
         {
             if (i != you.equip[EQ_WEAPON])
             {
-                wield_weapon(true, i, false);
+                wield_weapon(i, false);
                 if (i != you.equip[EQ_WEAPON])
                 {
                     abort = true;
@@ -380,13 +388,11 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
 
     if (!defend)
     {
-        // first, ranged weapons. note: this includes
+        // first, throwing weapons. note: this only includes
         // being empty-handed but having a missile quivered
         // TODO: handle non-missile quivered items?
         if (missile != -1 && you.inv[missile].base_type == OBJ_MISSILES
-            && (iweap && iweap->base_type == OBJ_WEAPONS &&
-                    is_range_weapon(*iweap)
-                || !iweap && missile != -1))
+            && !iweap)
         {
             ranged_attack attk(&you, &mon, &you.inv[missile], false);
             attk.simu = true;
@@ -397,6 +403,22 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
                 fd.player.hits++;
             }
             you.time_taken = you.attack_delay(&you.inv[missile]).roll();
+        }
+        // launchers
+        else if (iweap && iweap->base_type == OBJ_WEAPONS
+                && is_range_weapon(*iweap))
+        {
+            item_def fake_proj;
+            populate_fake_projectile(*iweap, fake_proj);
+            ranged_attack attk(&you, &mon, &fake_proj, false);
+            attk.simu = true;
+            attk.attack();
+            if (attk.ev_margin >= 0)
+            {
+                did_hit = true;
+                fd.player.hits++;
+            }
+            you.time_taken = you.attack_delay(&fake_proj).roll();
         }
         else // otherwise, melee combat
         {
@@ -419,7 +441,7 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
         fd.player.time_taken += time_taken;
         if (did_hit)
             fd.monster.hits++;
-        // did player succesfully do some kind of retaliatory damage?
+        // did player successfully do some kind of retaliatory damage?
         // TODO check for damage-less hits
         if (mon.max_hit_points > mon.hit_points)
             fd.player.hits++;
@@ -505,6 +527,8 @@ void wizard_quick_fsim()
     monster *mon = _init_fsim();
     if (!mon)
         return;
+
+    mprf("Fighting %s with %s\n", mon->name(DESC_PLAIN, true).c_str(), _equipped_weapon_name(false).c_str());
 
     const int iter_limit = Options.fsim_rounds;
     fight_data fdata = _get_fight_data(*mon, iter_limit, false);
@@ -703,7 +727,7 @@ void wizard_fight_sim(bool double_scale)
     // TODO: why is this a .csv file? It's not a CSV.
     const char * fightstat = Options.fsim_csv ? "fsim.csv" : "fsim.txt";
 
-    FILE * o = fopen(fightstat, "a");
+    FILE * o = fopen_u(fightstat, "a");
     if (!o)
     {
         mprf(MSGCH_ERROR, "Can't write %s: %s", fightstat, strerror(errno));
@@ -720,7 +744,7 @@ void wizard_fight_sim(bool double_scale)
     }
     else
     {
-        mprf(MSGCH_PROMPT, "(A)ttack or (D)efense?");
+        mprf(MSGCH_PROMPT, "(A)ttack or (D)efence?");
 
         switch (toalower(getch_ck()))
         {

@@ -33,6 +33,7 @@
 #include "spl-damage.h"
 #include "spl-monench.h"
 #include "state.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -70,21 +71,56 @@ bool player::is_summoned(int* _duration, int* summon_type) const
     return false;
 }
 
-void player::moveto(const coord_def &c, bool clear_net)
+// n.b. it might be better to use this as player::moveto's function signature
+// itself (or something more flexible), but that involves annoying refactoring
+// because of the actor/monster signature.
+static void _player_moveto(const coord_def &c, bool real_movement, bool clear_net)
 {
-    if (c != pos())
+    if (c != you.pos())
     {
         if (clear_net)
             clear_trapping_net();
+
+        // we need to do this even for fake movement -- otherwise nothing ends
+        // the dur for temporal distortion. (I'm not actually sure why?)
         end_wait_spells();
-        // Remove spells that break upon movement
-        remove_ice_movement();
+        if (real_movement)
+        {
+            // Remove spells that break upon movement
+            remove_ice_movement();
+        }
     }
 
     crawl_view.set_player_at(c);
-    set_position(c);
+    you.set_position(c);
 
-    clear_invalid_constrictions();
+    // clear invalid constrictions even with fake movement
+    you.clear_invalid_constrictions();
+}
+
+player_vanishes::player_vanishes(bool _movement)
+    : source(you.pos()), movement(_movement)
+{
+    _player_moveto(coord_def(0,0), movement, true);
+}
+
+player_vanishes::~player_vanishes()
+{
+    if (monster *mon = monster_at(source))
+    {
+        mon->props[FAKE_BLINK_KEY].get_bool() = true;
+        mon->blink();
+        mon->props.erase(FAKE_BLINK_KEY);
+        if (monster *stubborn = monster_at(source))
+            monster_teleport(stubborn, true, true);
+    }
+
+    _player_moveto(source, movement, true);
+}
+
+void player::moveto(const coord_def &c, bool clear_net)
+{
+    _player_moveto(c, true, clear_net);
 }
 
 bool player::move_to_pos(const coord_def &c, bool clear_net, bool /*force*/)
@@ -201,7 +237,7 @@ int player::damage_type(int)
     if (const item_def* wp = weapon())
         return get_vorpal_type(*wp);
     else if (form == transformation::blade_hands)
-        return DVORP_SLICING;
+        return DAMV_PIERCING;
     else if (has_usable_claws())
         return DVORP_CLAWING;
     else if (has_usable_tentacles())
@@ -296,8 +332,13 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
             return attk_delay;
 
         attk_delay -= div_rand_round(random_var(wpn_sklev), DELAY_SCALE);
-        if (get_weapon_brand(*weap) == SPWPN_SPEED)
+        // we should really use weapon_adjust_delay here,
+        // but we'd need to support random_var
+        const brand_type brand = get_weapon_brand(*weap);
+        if (brand == SPWPN_SPEED)
             attk_delay = div_rand_round(attk_delay * 2, 3);
+        else if (brand == SPWPN_HEAVY)
+            attk_delay = div_rand_round(attk_delay * 3, 2);
     }
 
     // At the moment it never gets this low anyway.
@@ -655,7 +696,7 @@ string player::arm_name(bool plural, bool *can_plural) const
     string str = species::arm_name(species);
 
     string adj;
-    if (form == transformation::lich)
+    if (form == transformation::death)
         adj = "bony";
     else if (form == transformation::shadow)
         adj = "shadowy";
@@ -778,11 +819,13 @@ bool player::go_berserk(bool intentional, bool potion)
 
     mpr("You feel mighty!");
 
-    const int berserk_duration = (20 + random2avg(19,2)) / 2;
-    you.increase_duration(DUR_BERSERK, berserk_duration);
+    int dur = 20 + random2avg(19,2);
+    if (!you.has_mutation(MUT_LONG_TONGUE))
+        dur /= 2;
+    you.increase_duration(DUR_BERSERK, dur);
 
     // Apply Berserk's +50% Current/Max HP.
-    calc_hp(true, false);
+    calc_hp(true);
 
     you.berserk_penalty = 0;
 
@@ -850,8 +893,8 @@ bool player::antimagic_susceptible() const
 
 bool player::is_web_immune() const
 {
-    // Spider form
-    return form == transformation::spider;
+    return is_insubstantial()
+        || player_equip_unrand(UNRAND_SLICK_SLIPPERS);
 }
 
 bool player::shove(const char* feat_name)
@@ -881,12 +924,12 @@ int player::constriction_damage(constrict_type typ) const
     switch (typ)
     {
     case CONSTRICT_BVC:
-        return roll_dice(2, div_rand_round(70 +
-                   you.props[VILE_CLUTCH_POWER_KEY].get_int(), 20));
+        return roll_dice(2, div_rand_round(40 +
+                   you.props[VILE_CLUTCH_POWER_KEY].get_int(), 25));
     case CONSTRICT_ROOTS:
         // Assume we're using the wand.
-        // Min power 2d4, max power ~2d14 (also ramps over time)
-        return roll_dice(2, div_rand_round(25 +
+        // Min power 2d3, max power ~2d14 (also ramps over time)
+        return roll_dice(2, div_rand_round(20 +
                     you.props[FASTROOT_POWER_KEY].get_int(), 10));
     default:
         return roll_dice(2, div_rand_round(strength(), 5));

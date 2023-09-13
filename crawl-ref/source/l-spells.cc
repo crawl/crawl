@@ -71,7 +71,7 @@ LUAFN(l_spells_mana_cost)
 LUAFN(l_spells_range)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    PLUARET(number, spell_range(spell, calc_spell_power(spell, true)));
+    PLUARET(number, spell_range(spell, calc_spell_power(spell)));
 }
 
 /*** The maximum range of the spell.
@@ -103,16 +103,19 @@ LUAFN(l_spells_min_range)
  * @tparam int y coordinate to aim at, in player coordinates
  * @tparam int x coordinate of spell source, in player coordinates (default=0)
  * @tparam int y coordinate of spell source, in player coordinates (default=0)
- * @treturn table|nil a table of {x,y} of the path the spell will take, in player coordinates.
-     Nil is returned if the spell does not follow a path (eg., smite-targeted spells)
-     or if the spell has zero range.
+ * @tparam boolean[opt=false] if true, have the spell aim at the target; if
+ *                            false, shoot past it.
+ * @treturn table|nil a table of {x,y} of the path the spell will take, in
+ *                    player coordinates.
+ * Nil is returned if the spell does not follow a path (eg. smite-targeted
+ * spells) or if the spell has zero range.
  * @function path
  */
 LUAFN(l_spells_path)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
     zap_type zap = spell_to_zap(spell);
-    int power = calc_spell_power(spell, true);
+    int power = calc_spell_power(spell);
     int range = spell_range(spell, power);
     // return nil for non-zap or zero-range spells
     if (range <= 0 || zap >= NUM_ZAPS)
@@ -144,6 +147,8 @@ LUAFN(l_spells_path)
     beam.foe_info.dont_stop = true;
     beam.ex_size = 0;
     beam.aimed_at_spot = true;
+    if (lua_isboolean(ls, 6))
+        beam.aimed_at_spot = lua_toboolean(ls, 6);
     beam.path_taken.clear();
     beam.fire();
 
@@ -210,7 +215,7 @@ LUAFN(l_spells_power_perc)
 LUAFN(l_spells_power)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    PLUARET(number, power_to_barcount(calc_spell_power(spell, true)));
+    PLUARET(number, power_to_barcount(calc_spell_power(spell)));
 }
 
 /*** The maximum spellpower (in bars).
@@ -305,24 +310,6 @@ LUAFN(l_spells_god_hates)
     PLUARET(boolean, god_hates_spell(spell, god));
 }
 
-/*** Does our god loathe this spell?
- * Casting this will result in excommunication.
- * @tparam string name
- * @treturn boolean
- * @function god_loathes
- */
-LUAFN(l_spells_god_loathes)
-{
-    spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    god_type god = you.religion;
-    if (lua_gettop(ls) > 1)
-    {
-        const char *godname = luaL_checkstring(ls, 2);
-        god = str_to_god(godname);
-    }
-    PLUARET(boolean, god_loathes_spell(spell, god));
-}
-
 /*** Cast a spell at a target. If the target is not provided, enters interactive
  * targeting.
  *
@@ -393,7 +380,6 @@ static const struct luaL_reg spells_clib[] =
     { "targ_obj"      , l_spells_targ_obj },
     { "god_likes"     , l_spells_god_likes },
     { "god_hates"     , l_spells_god_hates },
-    { "god_loathes"   , l_spells_god_loathes },
     { "cast"          , l_spells_cast },
     { "describe"      , l_spells_describe },
     { nullptr, nullptr }

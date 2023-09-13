@@ -68,7 +68,7 @@ def _packages_to_install(args: argparse.Namespace) -> Set[str]:
                 "libsdl2-dev",
                 "libfreetype6-dev",
                 "libpng-dev",
-                "ttf-dejavu-core",
+                "fonts-dejavu",
             ]
         )
     if "FULLDEBUG" in args.debug_opts:
@@ -81,6 +81,8 @@ def _packages_to_install(args: argparse.Namespace) -> Set[str]:
     if args.compiler == "clang":
         # dependencies for llvm.sh
         packages.update(["lsb-release", "wget", "software-properties-common"])
+    if args.appimage:
+        packages.add("libfuse2")
     if args.debian_packages:
         packages.update(["cowbuilder", "debhelper"])
     return packages
@@ -93,6 +95,7 @@ def apt_install(args: argparse.Namespace) -> None:
 
 def install_llvm() -> None:
     run(["wget", "-O", "/tmp/llvm.sh", "https://apt.llvm.org/llvm.sh"])
+    run(["sudo", "apt-get", "purge", "--auto-remove", "llvm", "python3-lldb-14", "llvm-14", "-y"])
     run(["sudo", "bash", "/tmp/llvm.sh"])
     for binary in os.scandir("/usr/bin"):
         if binary.name.startswith("clang-") or binary.name.startswith("clang++-"):

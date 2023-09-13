@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <memory.h>
 #include <algorithm>
+#include <cstring>
 
 #ifdef USE_TILE
  #include <png.h>
@@ -371,6 +372,18 @@ bool tile::texture(const tile &img)
     return true;
 }
 
+#ifdef USE_TILE
+// Suppress two warning messages which may occur as libpng reads images.
+// XXX - Can, and should, these warnings be avoided altogether?
+static void _libpng_warning(png_structp png_ptr, png_const_charp warning_msg)
+{
+    auto w1 = "iCCP: known incorrect sRGB profile",
+        w2 = "Interlace handling should be turned on when using png_read_image";
+    if (strcmp(warning_msg, w1) && strcmp(warning_msg, w2))
+        fprintf(stderr, "libpng: %s\n", warning_msg);
+}
+#endif
+
 bool tile::load(const string &new_filename)
 {
     m_filename = new_filename;
@@ -394,7 +407,8 @@ bool tile::load(const string &new_filename)
     }
 
     png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,
-                                                 nullptr, nullptr, nullptr);
+                                                 nullptr, nullptr,
+                                                 _libpng_warning);
     png_infop info_ptr = png_create_info_struct(png_ptr);
 
     // libpng error handling!

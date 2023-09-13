@@ -105,7 +105,7 @@ end
 local function have_quiver_action(no_move)
   return ((AUTOFIGHT_THROW or no_move and AUTOFIGHT_THROW_NOMOVE)
           and you.quiver_valid(1) and you.quiver_enabled(1)
-          -- TODO: palentonga roll passes the following check, which may be
+          -- TODO: armataur roll passes the following check, which may be
           -- counterintuitive for the nomove case
           and you.quiver_allows_autofight()
           and (not you.quiver_uses_mp() or not AUTOMAGIC_FIGHT or not af_mp_is_low()))
@@ -266,13 +266,14 @@ local function get_monster_info(dx,dy,no_move)
   info.injury = m:damage_level()
   info.threat = m:threat()
   info.orc_priest_wizard = (name == "orc priest" or name == "orc wizard") and 1 or 0
+  info.bullseye_target = (info.attack_type == AF_FIRE and m:status("targeted by your dimensional bullseye")) and -1 or 0
   return info
 end
 
 local function compare_monster_info(m1, m2)
   flag_order = autofight_flag_order
   if flag_order == nil then
-    flag_order = {"can_attack", "safe", "distance", "constricting_you", "very_stabbable", "injury", "threat", "orc_priest_wizard"}
+    flag_order = {"bullseye_target", "can_attack", "safe", "distance", "constricting_you", "very_stabbable", "injury", "threat", "orc_priest_wizard"}
   end
   for i,flag in ipairs(flag_order) do
     if m1[flag] > m2[flag] then
@@ -302,7 +303,7 @@ local function is_candidate_for_attack(x,y)
     return false
   end
   if m:attitude() == ATT_HOSTILE
-      or m:attitude() == ATT_NEUTRAL and m:is("insane") then
+      or m:attitude() == ATT_NEUTRAL and m:is("frenzied") then
     return true
   end
   return false
@@ -511,6 +512,9 @@ end
 
 chk_lua_option.autofight_stop = set_stop_level
 chk_lua_option.autofight_caught = set_af_caught
+chk_lua_option.autofight_fires = set_af_throw
+chk_lua_option.autofight_nomove_fires = set_af_throw_nomove
+-- the following two options are here for backwards compatibility
 chk_lua_option.autofight_throw = set_af_throw
 chk_lua_option.autofight_throw_nomove = set_af_throw_nomove
 chk_lua_option.autofight_fire_stop = set_af_fire_stop

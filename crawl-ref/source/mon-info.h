@@ -5,6 +5,7 @@
 
 #include "enchant-type.h"
 #include "mon-util.h"
+#include "options.h"
 #include "tag-version.h"
 
 using std::vector;
@@ -55,7 +56,7 @@ enum monster_info_flags
     MB_OLD_ENSLAVED,
 #endif
     MB_SWIFT,
-    MB_INSANE,
+    MB_FRENZIED,
     MB_SILENCING,
     MB_MESMERIZING,
 #if TAG_MAJOR_VERSION == 34
@@ -213,6 +214,11 @@ enum monster_info_flags
     MB_SIMULACRUM,
     MB_REFLECTING,
     MB_TELEPORTING,
+    MB_CONTAM_LIGHT,
+    MB_CONTAM_HEAVY,
+    MB_PURSUING,
+    MB_BOUND,
+    MB_BULLSEYE_TARGET,
     NUM_MB_FLAGS
 };
 
@@ -232,6 +238,7 @@ struct monster_info_base
         int is_active;   ///< Whether this ballisto is active or not
     };
     int _colour;
+    int ghost_colour;
     mon_attitude_type attitude;
     mon_threat_level_type threat;
     mon_dam_level_type dam;
@@ -258,6 +265,9 @@ struct monster_info_base
     mon_attack_def attack[MAX_NUM_ATTACKS];
     bool can_go_frenzy;
     bool can_feel_fear;
+    bool sleepwalking;
+    bool backlit;
+    bool umbraed;
 
     uint32_t client_id;
 };
@@ -388,6 +398,7 @@ struct monster_info : public monster_info_base
     reach_type reach_range(bool items = true) const;
 
     size_type body_size() const;
+    bool net_immune() const;
 
     // These should be kept in sync with the actor equivalents
     // (Maybe unify somehow?)
@@ -413,6 +424,9 @@ struct monster_info : public monster_info_base
 
     bool fellow_slime() const;
 
+    vector<string> get_unusual_items() const;
+    bool has_unusual_items() const;
+
     bool has_spells() const;
     bool antimagic_susceptible() const;
     int spell_hd(spell_type spell = SPELL_NO_SPELL) const;
@@ -429,7 +443,7 @@ protected:
 };
 
 // Colour should be between -1 and 15 inclusive!
-bool set_monster_list_colour(string key, int colour);
+bool set_monster_list_colour(monster_list_colour_type, int colour);
 void clear_monster_list_colours();
 
 void get_monster_info(vector<monster_info>& mons);

@@ -60,8 +60,8 @@ endif
 # The makefile is unorthodox, requiring all options to be specified on every invocation.
 ARGS_CONSOLE = prefix=/usr CFOPTIMIZE="$(CFOPTIMIZE)" STRIP=: $(CROSS) $(VERBOSE)
 ARGS_TILES   = $(ARGS_CONSOLE) TILES=y GAME=crawl-tiles \
-	PROPORTIONAL_FONT=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf \
-	MONOSPACED_FONT=/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf
+	PROPORTIONAL_FONT=$(shell fc-match -f "${file}" dejavusans) \
+	MONOSPACED_FONT=$(shell fc-match -f "${file}" dejavusansmono)
 
 build-arch build-indep: build-stamp
 build-stamp: tree-stamp

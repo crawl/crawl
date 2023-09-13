@@ -34,7 +34,7 @@ gnoll3_m
 gnoll3_f
 gnoll4_m
 gnoll4_f
-gnome_f
+gnome_f GNOME
 gnome_m
 halfling_m HALFLING
 halfling_f
@@ -90,7 +90,7 @@ troll_m
 octopode1 OCTOPODE
 octopode2
 octopode3
-octopode4
+octopode4 OCTOPODE_SILLY
 octopode5
 %rim 0
 djinni_f DJINNI
@@ -117,12 +117,7 @@ draconian_purple DRACONIAN_PURPLE
 draconian_red DRACONIAN_RED
 draconian_white DRACONIAN_WHITE DRACONIAN_LAST
 
-palentonga_red_f PALENTONGA
-palentonga_red_m
-palentonga_f
-palentonga_m
-palentonga_green_f
-palentonga_green_m
+armataur ARMATAUR
 demigod_f DEMIGOD
 demigod_m
 spriggan_m SPRIGGAN
@@ -158,16 +153,17 @@ gargoyle_red_f
 gargoyle_brown_m
 gargoyle_brown_f
 %sdir player/felids
+# These must match the felid horns tiles.
 %rim 0
 cat1 FELID
 cat2
-cat3
 cat4
 cat5
-cat6
 cat7
 cat8
 cat9
+cat3 FELID_SILLY
+cat6
 cat10
 %sdir player/base
 %end_ctg
@@ -225,6 +221,7 @@ short_red SHORT_RED FIRST_NORM
 short_purple SHORT_PURPLE
 short_brown SHORT_BROWN
 short_brown2 SHORT_BROWN2
+short_blue SHORT_BLUE
 pj PJ
 middle_brown MIDDLE_BROWN
 middle_gray MIDDLE_GRAY
@@ -243,21 +240,15 @@ mesh_white MESH_WHITE
 mesh_blue MESH_BLUE LAST_NORM
 spider SPIDER
 seven_league_boots SEVEN_LEAGUE_BOOTS
+slippers SLIPPERS
 
 ## Mutations
 hooves HOOVES
 ## Bardings
-%rim 1
 %sdir player/barding
-naga_barding_blue NAGA_BARDING
-naga_barding_metal NAGA_BARDING_METAL
-naga_barding_magenta NAGA_BARDING_MAGENTA
-naga_barding_red NAGA_BARDING_RED
-centaur_barding_blue CENTAUR_BARDING
-centaur_barding_metal CENTAUR_BARDING_METAL
-centaur_barding_magenta CENTAUR_BARDING_MAGENTA
-centaur_barding_red CENTAUR_BARDING_RED
-%rim 0
+barding1 BARDING
+barding2 BARDING_EGO
+barding3 BARDING_RANDART
 lightning_scales LIGHTNING_SCALES
 black_knight BLACK_KNIGHT
 %end_ctg
@@ -471,6 +462,11 @@ orange_crystal ORANGE_CRYSTAL
 vines VINES
 kryias KRYIAS
 talos TALOS
+
+%sdir player/transform
+maw_form0 MAW_FORM
+maw_form1
+
 %end_ctg
 
 ### Arms
@@ -542,12 +538,12 @@ glaive_of_prune GLAIVE_OF_PRUNE
 finisher FINISHER
 glaive_of_the_guard GLAIVE_OF_THE_GUARD
 wyrmbane WYRMBANE
+force_lance FORCE_LANCE
 rift RIFT
 lochaber_axe LOCHABER_AXE
 ## staves
 elemental_staff ELEMENTAL_STAFF
 asmodeus ASMODEUS
-dispater DISPATER
 olgreb OLGREB
 order ORDER
 battle_staff BATTLE_STAFF
@@ -555,6 +551,7 @@ battle_staff BATTLE_STAFF
 axe_trog AXE_TROG
 arga ARGA
 demon_axe DEMON_AXE
+holy_axe HOLY_AXE
 axe_of_woe AXE_OF_WOE
 frostbite FROSTBITE
 ## launchers
@@ -564,6 +561,7 @@ sniper SNIPER
 crossbow_fire FIERY_DEVIL
 condemnation CONDEMNATION
 zephyr ZEPHYR
+mule MULE
 sceptre_of_torment SCEPTRE_OF_TORMENT
 # start TAG_MAJOR_VERSION == 34
 botono BOTONO
@@ -571,6 +569,7 @@ chilly_death CHILLY_DEATH
 crystal_spear CRYSTAL_SPEAR
 flaming_death FLAMING_DEATH
 # end TAG_MAJOR_VERSION
+skullcrusher SKULLCRUSHER
 
 %sdir player/hand1
 # blades
@@ -611,6 +610,8 @@ sword_three SWORD3
 sword_breaker SWORD_BREAKER
 sword_jag SWORD_JAG
 demonblade DEMON_BLADE
+demonblade
+randart_demon_blade
 enchantress_dagger ENCHANTRESS_DAGGER
 
 ## blunt
@@ -638,12 +639,15 @@ morningstar MORNINGSTAR
 morningstar2
 eveningstar EVENINGSTAR
 eveningstar2
+eveningstar3
 hammer HAMMER
 hammer2
 hammer_one HAMMER1
 hammer_two HAMMER2
 large_mace LARGE_MACE
 black_whip BLACK_WHIP
+black_whip
+randart_demon_whip
 sacred_scourge SACRED_SCOURGE
 sacred_scourge_two SACRED_SCOURGE2
 flail_stick FLAIL_STICK
@@ -671,6 +675,8 @@ halberd2
 pick_axe PICK_AXE
 trident TRIDENT
 trident_demon DEMON_TRIDENT
+trident_demon
+randart_demon_trident
 trident_elec TRIDENT_ELEC
 trident_two TRIDENT2
 trident_two2
@@ -701,6 +707,7 @@ trishula TRISHULA
 lajatang1 LAJATANG
 lajatang2
 lajatang3
+xmas-scythe XMAS_SCYTHE
 
 ## staves
 
@@ -720,6 +727,14 @@ staff_evil STAFF_EVIL
 staff_ring_blue STAFF_RING_BLUE
 staff_mummy STAFF_MUMMY
 staff_fork STAFF_FORK
+
+staff-artefact1 STAFF_RANDART_OFFSET
+staff-artefact2
+staff-artefact3
+staff-artefact4
+staff-artefact5
+staff-artefact6
+staff-artefact7
 
 # start TAG_MAJOR_VERSION == 34
 ## rods
@@ -755,11 +770,15 @@ axe_short AXE_SHORT
 ## launchers
 sling SLING
 bow BOW
-bow_two BOW2
-bow_three BOW3
+shortbow SHORTBOW
+orcbow1 ORCBOW
+orcbow1
+orcbow3
 great_bow GREAT_BOW
 storm_bow STORM_BOW
-hand_crossbow HAND_CROSSBOW
+hand_cannon HAND_CANNON
+hand_cannon2
+hand_cannon3
 arbalest ARBALEST
 arbalest_two ARBALEST2
 arbalest_three ARBALEST3
@@ -845,6 +864,10 @@ orb2 ORB2
 orb3 ORB3 ORB_LAST
 
 ##unrand (or unique) shields
+orb_of_dispater ORB_OF_DISPATER
+orb_of_wucad_mu ORB_OF_WUCAD_MU
+orb_of_battle ORB_OF_BATTLE
+
 buckler_spriggan BUCKLER_SPRIGGAN
 buckler_warlock BUCKLER_WARLOCK
 
@@ -852,6 +875,7 @@ kite_shield_donald KITE_SHIELD_DONALD
 kite_shield_bullseye KITE_SHIELD_BULLSEYE
 kite_shield_gong KITE_SHIELD_GONG
 kite_shield_of_resistance KITE_SHIELD_OF_RESISTANCE
+kite_shield_storm_queen KITE_SHIELD_STORM_QUEEN
 
 tower_shield_of_ignorance TOWER_SHIELD_OF_IGNORANCE
 tower_shield_louise TOWER_SHIELD_LOUISE
@@ -1069,6 +1093,7 @@ turban_white TURBAN_WHITE
 turban_brown TURBAN_BROWN
 turban_purple TURBAN_PURPLE HAT_LAST_NORM
 pumpkin PUMPKIN
+santa_hat SANTA
 hat_archer ARCHER
 hat_archer2 ARCHER2
 hat_explorer EXPLORER
@@ -1079,17 +1104,20 @@ horns1 HORNS1
 horns2 HORNS2
 horns3 HORNS3
 %sdir player/mutations
+# These must match the base felid tiles.
 cat1 HORNS_CAT
 cat2
-cat3
 cat4
 cat5
-cat6
 cat7
 cat8
 cat9
+cat3 HORNS_CAT_SILLY
+cat6
 cat10
 draconian1 HORNS_DRAC
+statue_form_felid_horns HORNS_CAT_STATUE
+
 %sdir player/head
 
 ## Doll editor tiles, but not randomly picked

@@ -6,6 +6,16 @@ You can reread all messages at any time with
 <localtiles> or <input>left click</input> with mouse</localtiles> to clear the
 <cyan>--more--</cyan> prompts.
 %%%%
+tutorial death
+
+You die...
+
+In Crawl, death is a sad but common occurrence. Note that there's usually
+something you could have done to survive, for example by using some kind of
+item, running away, resting between fights, or by avoiding combat entirely.
+Keep trying, eventually you'll prevail!
+
+%%%%
 ##############################################
 # Tutorial map 1: Movement and exploration   #
 ##############################################
@@ -116,6 +126,8 @@ with <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> or by
 tutorial1 exit
 
 :nowrap
+<white>Tutorial 1 summary: Movement</white>
+
 <yellow>Movement commands</yellow>
    Numpad:       <w>7 8 9</w>           vi-keys:    <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
                   \|/                         \|/
@@ -139,8 +151,6 @@ tutorial1 exit
   mouseclick on the <w>minimap</w></localtiles><nomouse>
   <input>$cmd[CMD_DISPLAY_MAP]</input>  enter the level map, travel with <input>Enter</input></nomouse>
   <input>$cmd[CMD_EXPLORE]</input>  autoexplore
-
-                                 <cyan>Press <input>any key</input> to clear this screen...</cyan>
 %%%%
 ##############################################
 # Tutorial map 2: Monsters and combat        #
@@ -249,6 +259,8 @@ tutorial, simply go down these stairs.
 tutorial2 exit
 
 :nowrap
+<white>Tutorial 2 summary: Combat</white>
+
 <yellow>Weapons<console> <cyan>)</cyan></console></yellow>
   <input>$cmd[CMD_PICKUP]</input>  pick up an item
   <input>$cmd[CMD_WIELD_WEAPON]</input>  wield a weapon<localtiles>
@@ -269,8 +281,6 @@ tutorial2 exit
 <yellow>Resting</yellow>
   <input>$cmd[CMD_WAIT]</input>  wait and rest a single turn
   <input>$cmd[CMD_REST]</input>  wait and rest up to 100 turns
-
-                                 <cyan>Press <input>any key</input> to clear this screen...</cyan>
 %%%%
 #######################################
 # Tutorial map 3: Items and Inventory #
@@ -445,6 +455,8 @@ tutorial3 exit
 
 # A single screen recapping all commands.
 :nowrap
+<white>Tutorial 3 summary: Items</white>
+
 <yellow>Item commands</yellow>
   <input>$cmd[CMD_PICKUP]</input>  pick up an item
   <input>$cmd[CMD_WEAR_ARMOUR]</input>  wear a piece of armour
@@ -464,8 +476,6 @@ tutorial3 exit
   <input>$cmd[CMD_EXPLORE]</input>  explore automatically
   <input>$cmd[CMD_SEARCH_STASHES]</input> search for items/features previously seen<localtiles>
   Several of these commands can also be executed by clicking in the <w>command panel</w>.</localtiles>
-
-                                 <cyan>Press <input>any key</input> to clear this screen...</cyan>
 %%%%
 ##############################################
 # Tutorial map 4: Magic and Spellcasting     #
@@ -606,6 +616,8 @@ tutorial4 exit
 
 # A single screen recapping all commands.
 :nowrap
+<white>Tutorial 4 summary: Magic</white>
+
 <yellow>Spellcasting commands</yellow>
   <input>$cmd[CMD_MEMORISE_SPELL]</input>  learn a new spell
   <input>$cmd[CMD_DISPLAY_SPELLS]</input>  check spell proficiency
@@ -617,8 +629,6 @@ tutorial4 exit
   <input>$cmd[CMD_REST]</input>  rest up to 100 turns to regain magic points and health
   <input>$cmd[CMD_SHOUT]</input>  order allies
   <input>$cmd[CMD_REMOVE_ARMOUR]</input>  take off armour
-
-                                 <cyan>Press <input>any key</input> to clear this screen...</cyan>
 %%%%
 ##############################################
 # Tutorial map 5: Gods and divine abilities  #
@@ -689,6 +699,8 @@ tutorial5 exit
 
 # A single screen recapping all commands.
 :nowrap
+<white>Tutorial 5 summary: Religion</white>
+
 <yellow>Religious commands</yellow>
   <input>$cmd[CMD_GO_DOWNSTAIRS]</input>  pray at an altar to join a god
   <input>$cmd[CMD_USE_ABILITY]</input>  use a divine ability
@@ -702,6 +714,4 @@ tutorial5 exit
 <yellow>Other commands</yellow>
   <input>$cmd[CMD_DISPLAY_OVERMAP]</input> display an overview of the dungeon
   <input>$cmd[CMD_DISPLAY_COMMANDS]/</input>  search the description database
-
-                                 <cyan>Press <input>any key</input> to clear this screen...</cyan>
 %%%%

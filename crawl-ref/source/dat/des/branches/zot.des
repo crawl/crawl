@@ -646,7 +646,7 @@ ENDMAP
 #
 NAME:   lemuel_lich_library
 DEPTH:  Zot, !Zot:$
-TAGS:   no_monster_gen
+TAGS:   no_monster_gen no_descent
 MONS:   flying skull, lich, ancient lich / dread lich, necromancer
 MONS:   vampire mage
 ITEM:   any book mimic:10 w:20 / any scroll mimic:10
@@ -924,7 +924,7 @@ ENDMAP
 NAME:    minmay_elemental_castle
 ORIENT:  southwest
 DEPTH:   Zot, !Zot:$
-TAGS:    no_rotate
+TAGS:    no_rotate no_descent
 : if crawl.coinflip() then
 MONS:    titan, storm dragon, electric golem
 SUBST:   F = 3
@@ -1007,7 +1007,7 @@ WEIGHT: 5
 MONS:   oklob plant w:4 / lightning spire w:3
 MONS:   obsidian statue / orange crystal statue / curse skull
 # Not quite the orb, but but close enough
-ITEM:   tin of tremorstones
+ITEM:   orb no_pickup
 NSUBST: 1 = 1:1 / 6 = 11. / *:., 3 = 1:1 / 4 = 11....... / *:.
 SUBST:  } = }:80 >, ) = ):80 >, ] = ]:80 >
 MAP
@@ -1044,15 +1044,15 @@ KMONS:   1 = guardian mummy ; randart dire flail ego:chaos | \
              randart great sword ego:chaos | randart glaive ego:chaos | \
              randart dire flail | randart great mace | randart battleaxe | \
              randart great sword | randart glaive
-KMONS:   3 = guardian mummy ; randart hand crossbow ego:chaos / \
+KMONS:   3 = guardian mummy ; randart hand cannon ego:chaos / \
              guardian mummy ; randart longbow ego:chaos / \
              guardian mummy ; randart triple crossbow / \
-             guardian mummy ; randart hand crossbow / \
+             guardian mummy ; randart hand cannon / \
              guardian mummy ; randart longbow / \
              guardian mummy ; randart arbalest
-KMONS:   5 = guardian mummy ; any beam wand | scroll of summoning
+KMONS:   5 = guardian mummy ; any beam wand
 KMONS:   7 = guardian mummy ; randart ring mail | randart scale mail | \
-             randart chain mail | randart robe . scroll of summoning
+             randart chain mail | randart robe
 KMONS:   2468 = killer klown
 KMONS:   _ = ghost moth
 KMONS:   90 = moth of wrath / butterfly w:30
@@ -1655,7 +1655,7 @@ ENDMAP
 ##########################################################################
 
 NAME:    hangedman_zot_spectrum
-TAGS:    no_monster_gen
+TAGS:    no_monster_gen no_descent
 DEPTH:   Zot, !Zot:$
 KMONS:   A = red very ugly thing
 KMONS:   B = red draconian
@@ -2016,7 +2016,7 @@ ORIENT: float
 # The refs:
 MONS:   Killer Klown
 # The ball / puck / whatever:
-ITEM:   tin of tremorstones
+ITEM:   orb
 
 KFEAT:  K = iron_grate
 NSUBST: @ = 2:@ / *:x
@@ -2238,7 +2238,7 @@ MONS:    very ugly thing w:20 / deep elf annihilator w:15 / \
 MONS:    curse skull w:15 / apocalypse crab / lorocyproca / acid blob
 MONS:    butterfly
 ITEM:    stone q:1 no_pickup, large rock q:1 no_pickup
-ITEM:    orb, tin of tremorstones no_pickup
+ITEM:    orb no_pickup
 # Altars obliquely refer to those temple maps.
 KFEAT:   D = altar_lugonu / altar_jiyva / altar_beogh w:5 / C w:20
 KFEAT:   ~ = zot trap
@@ -2248,7 +2248,7 @@ SUBST:   X : X Y Z:4, X = bbbbvnc, Y = bvvvvnc, Z = bbvnncc
 SUBST:   az = bbvc, y = x, B : x.
 NSUBST:  2 = 4 = 2223 / *:2, . = 3:0 / 3 = 9. / 1:4 / *:., 1 = 1:1.. / *:1
 # 1/15 chance for two downward staircases, 9/15 for (only) one.
-SHUFFLE: ])defG, fgGCD~
+SHUFFLE: ])defG, fGCD~
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2711,6 +2711,155 @@ xvvvvnG.---?"?"?"?x
 x.......---"?"?"?"x
 x........."?"?"?"?x
 xxxxxxxxx@xxxxxxxxx
+ENDMAP
+
+##############################################################################
+# some more fun and exciting stair vaults
+
+NAME:   hellmonk_body_bag
+TAGS:   no_monster_gen transparent
+DEPTH:  Zot:1-4
+MONS:   toenail golem w:1 / glowing orange brain / golden eye band
+MONS:   shining eye / floating eye w:5, bone dragon, curse toe / curse skull
+SUBST:  ' = c., V:VYY
+NSUBST: - = 16 = 1... / 16 = 2... / 16 = 3... / 16 = 4... / .
+NSUBST:  > = 1 = ):80 . / 1 = ]:80 . / 1 = }:80 >
+MAP
+  ccccccc
+ ccc>>>ccc
+ cc-----cc
+ c'--c--'c
+ c-'-c-'-c
+cc--ccc--cc
+c----c----c
+c--c-'-c--c
+c'cc'V'cc'c
+c--c-'-c--c
+c-'--c--'-c
+c---ccc---c
+c--'-c-'--c
+c-'--'--'-c
+cc-ccccc-cc
+ c--ccc--c
+ c..ccc..c
+ c.'.c.'.c
+ c'..c..'c
+ c...c...c
+ cc.....cc
+ cc.....cc
+  ccc+ccc
+     @
+ENDMAP
+
+NAME:   hellmonk_formless_pools
+TAGS:   no_monster_gen transparent no_pool_fixup
+DEPTH:  Zot:1-4
+MONS:   glowing shapeshifter hd:20 / glowing shapeshifter hd:18
+SUBST:  -: Ac, A:lw
+NSUBST: ' = 4:1 / 12 = 1... / .
+NSUBST:  < = 1 = }. / 1 = ). / 1 = ]<
+TILE:   G = dngn_statue_tentacles
+MAP
+   @@@@@
+ cc+++++cc
+ cG..-..Gc
+ c...-...c
+ c...-...c
+ c'''''''c
+cc''''''Gc
+cG''ccccccc
+cA'ccc'<'ccc
+cA'cG''G''Gc
+cA'cc<'''<cc
+cG''ccc''cc
+cc'''''''c
+ ccGAAAGcc
+  ccccccc
+ENDMAP
+
+NAME:   hellmonk_crystal_mountain
+TAGS:   transparent ruin
+ORIENT: north
+DEPTH:  Zot:1-4
+MONS:   lich , ancient lich / dread lich
+NSUBST: . = 4 = 2. / 16 = 1... / 12 = 8... / 12 = 0...
+NSUBST:  < = 1 = {([. / 1 = )}].
+TILE:   G = dngn_gravestone
+MAP
+bbbbbbbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbbbbbbb
+bb.......bbb.......bb
+b......<.bbb.<......b
+b..bbb...bbb...bbb..b
+b.bbbbbbbbbbbbbbbbb.b
+b..bbb...bbb...bbb..b
+b......G..b..G......b
+bb........b........bb
+bbbb..bbb.b.bbb..bbbb
+ bbb.bbbbbbbbbbb.bbb
+  bb..bbb.b.bbb..bb
+  bb......b......bb
+   bb.....b.....bb
+   bbbb..bbb..bbbb
+    bbb..bbb..bbb
+     bb..bbb..bb
+     bb...b...bb
+      bb.....bb
+      bbbb.bbbb
+       bb@@@bb
+ENDMAP
+
+NAME:   hellmonk_zot_clocked
+TAGS:   transparent no_monster_gen
+DEPTH:  Zot:2-4
+MONS:   death cob, iron golem
+SHUFFLE:    DEFH
+SUBST:  D = v, EFH = ., -: B:1 G:26, > = ({[)}]
+NSUBST: '  = 1:1 / 1:2 / 16 = 1... / 16 = 2.....
+KFEAT:  B = altar_cheibriados
+TILE:   G = dngn_statue_snail
+MAP
+         @
+       cc+cc
+     ccc'-'ccc
+    cc-'''''-cc
+   cc'H''n''''cc
+  cc''HH'n'''''cc
+  c-'''Hcnc''DD-c
+ cc''''ccnccDD''cc
+ c''''ccHnDcc''''c
+@+-FFF+FF>..+'''-+@
+ c''''cc..Ecc''''c
+ cc''''cc.cc''''cc
+  c-''''c+cE'''-c
+  cc'''''''EE''cc
+   cc'''''''E'cc
+    cc-'''''-cc
+     ccc'-'ccc
+       cc+cc
+         @
+ENDMAP
+
+NAME:   hellmonk_greenhouse_of_terror
+TAGS:   no_monster_gen no_descent
+DEPTH:  Zot:2-4
+MONS:   orb of fire, bush
+NSUBST: . = 1:1 / .
+SUBST:  > = )}], < = ({[
+MAP
+  ttttt
+  t.>.t
+  t.t.t
+ tt.t.tt
+tt..t..tt
+t...t...t
+t.tt2tt.t
+t...t...t
+tt..t..tt
+ tt.t.tt
+  t.t.t
+  t.<.t
+  ttttt
 ENDMAP
 
 ##############################################################################

@@ -17,6 +17,9 @@ static const command_type ct_system_commands[] =
     // meta commands
     CMD_SAVE_GAME_NOW, CMD_DISPLAY_COMMANDS, CMD_GAME_MENU,
     CMD_LOOKUP_HELP,
+#ifdef __ANDROID__
+    CMD_TOGGLE_KEYBOARD,
+#endif
 };
 
 static const command_type ct_map_commands[] =
@@ -55,9 +58,6 @@ static const command_type ct_action_commands[] =
     CMD_DISPLAY_SKILLS, CMD_MEMORISE_SPELL,
     CMD_INTERLEVEL_TRAVEL, CMD_SEARCH_STASHES,
     CMD_LOOKUP_HELP,
-#ifdef TOUCH_UI
-    CMD_SHOW_KEYBOARD,
-#endif
 };
 
 bool tile_command_not_applicable(const command_type cmd, bool safe);

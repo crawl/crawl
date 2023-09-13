@@ -13,6 +13,7 @@
 #include "env.h"
 #include "fight.h"
 #include "god-abil.h"
+#include "god-passive.h"
 #include "items.h"
 #include "libutil.h"
 #include "los-def.h"
@@ -119,7 +120,7 @@ targeting_iterator targeter::affected_iterator(aff_type threshold)
     return targeting_iterator(*this, threshold);
 }
 
-// Is the given location a valid endpoint for a Palentonga charge?
+// Is the given location a valid endpoint for an electric charge?
 // That is, is there an enemy there which is visible to the player and
 // is not firewood? If not, why not?
 // Note that this does NOT handle checking the intervening path for
@@ -145,24 +146,13 @@ static bool _ok_charge_target(coord_def a)
     return bad_charge_target(a) == "";
 }
 
-// Can a player (for targeting purposes) charge through a given grid
-// with a Palentonga rolling charge?
-// We only check for monsters, not terrain.
-bool can_charge_through_mons(coord_def a)
-{
-    const monster* mons = monster_at(a);
-    return !mons
-           || !you.can_see(*mons)
-           || fedhas_passthrough(mons);
-}
-
 targeter_charge::targeter_charge(const actor *act, int r)
+    : targeter(), range(r)
 {
     ASSERT(act);
     ASSERT(r > 0);
     agent = act;
-    range = r;
-    obeys_mesmerise = true;
+    obeys_mesmerise = true; // override superclass constructor
 }
 
 bool targeter_charge::valid_aim(coord_def a)
@@ -171,7 +161,8 @@ bool targeter_charge::valid_aim(coord_def a)
         return notify_fail("You can't charge at yourself.");
     if (adjacent(agent->pos(), a))
         return notify_fail("You're already next to there.");
-    if (grid_distance(agent->pos(), a) > range)
+    const int dist_to_targ = grid_distance(agent->pos(), a);
+    if (dist_to_targ > range)
         return notify_fail("That's out of range!");
 
     ray_def ray;
@@ -186,18 +177,20 @@ bool targeter_charge::valid_aim(coord_def a)
                 return notify_fail(bad);
             return true;
         }
-        else if (is_feat_dangerous(env.grid(ray.pos())))
+        if (grid_distance(ray.pos(), agent->pos()) == dist_to_targ -1)
         {
-            return notify_fail("There's "
-                               + feature_description_at(ray.pos())
-                               + " in the way.");
-        }
-        else if (!can_charge_through_mons(ray.pos()))
-        {
-            return notify_fail("There's "
-                               + monster_at(ray.pos())->name(DESC_A)
-                               + " in the way.");
-
+            if (is_feat_dangerous(env.grid(ray.pos())))
+            {
+                return notify_fail("There's "
+                                   + feature_description_at(ray.pos())
+                                   + " there.");
+            }
+            const monster* mon = monster_at(ray.pos());
+            if (mon && you.can_see(*mon) && mons_class_is_stationary(mon->type))
+            {
+                return notify_fail(mon->name(DESC_THE)
+                                   + " is immovably fixed there.");
+            }
         }
     }
     die("Ray never reached the end?");
@@ -215,11 +208,6 @@ bool targeter_charge::set_aim(coord_def a)
         path_taken.push_back(ray.pos());
         if (grid_distance(agent->pos(), ray.pos()) >= range || ray.pos() == a)
             break;
-
-        if (!can_charge_through_mons(ray.pos()))
-            break;
-        if (is_feat_dangerous(env.grid(ray.pos())))
-            return false;
     }
     return true;
 }
@@ -565,7 +553,8 @@ aff_type targeter_walljump::is_affected(coord_def loc)
     if (loc == wall_jump_landing_spot)
         return AFF_YES;
 
-    if (loc.distance_from(wall_jump_landing_spot) == 1 && monster_at(loc))
+    auto d = loc.distance_from(wall_jump_landing_spot);
+    if (d == 1 && wu_jian_wall_jump_monster_at(loc))
         return AFF_YES;
 
     return AFF_NO;
@@ -740,7 +729,11 @@ bool targeter_inner_flame::valid_aim(coord_def a)
 {
     if (!targeter_smite::valid_aim(a))
         return false;
-    return mons_inner_flame_immune_reason(monster_at(a)).empty();
+
+    if (!mons_inner_flame_immune_reason(monster_at(a)).empty())
+        return notify_fail(mons_inner_flame_immune_reason(monster_at(a)));
+
+    return true;
 }
 
 targeter_simulacrum::targeter_simulacrum(const actor* act, int r) :
@@ -752,7 +745,11 @@ bool targeter_simulacrum::valid_aim(coord_def a)
 {
     if (!targeter_smite::valid_aim(a))
         return false;
-    return mons_simulacrum_immune_reason(monster_at(a)).empty();
+
+    if (!mons_simulacrum_immune_reason(monster_at(a)).empty())
+        return notify_fail(mons_simulacrum_immune_reason(monster_at(a)));
+
+    return true;
 }
 
 targeter_unravelling::targeter_unravelling()
@@ -880,10 +877,10 @@ aff_type targeter_passage::is_affected(coord_def loc)
     if (!valid_aim(aim))
         return AFF_NO;
 
-    if (golubria_valid_cell(loc))
+    if (golubria_valid_cell(loc, true))
     {
-        bool p1 = grid_distance(loc, origin) <= golubria_fuzz_range();
-        bool p2 = grid_distance(loc, aim) <= golubria_fuzz_range()
+        bool p1 = grid_distance(loc, origin) <= GOLUBRIA_FUZZ_RANGE;
+        bool p2 = grid_distance(loc, aim) <= GOLUBRIA_FUZZ_RANGE
                   && loc != you.pos();
 
         if (p1 && p2)
@@ -1244,6 +1241,23 @@ aff_type targeter_flame_wave::is_affected(coord_def loc)
         return AFF_YES;
     }
     return AFF_MAYBE;
+}
+
+targeter_siphon_essence::targeter_siphon_essence()
+    : targeter_radius(&you, LOS_NO_TRANS, 2, 0, 1)
+{ }
+
+aff_type targeter_siphon_essence::is_affected(coord_def loc)
+{
+    const aff_type base_aff = targeter_radius::is_affected(loc);
+    if (base_aff == AFF_NO)
+        return AFF_NO;
+    monster* mons = monster_at(loc);
+    if (!mons || !you.can_see(*mons))
+        return AFF_MAYBE;
+    if (!siphon_essence_affects(*mons))
+        return AFF_NO;
+    return AFF_YES;
 }
 
 aff_type targeter_shatter::is_affected(coord_def loc)
@@ -2145,4 +2159,29 @@ bool targeter_anguish::affects_monster(const monster_info& mon)
         && mon.willpower() != WILL_INVULN
         && !mons_atts_aligned(agent->temp_attitude(), mon.attitude)
         && !mon.is(MB_ANGUISH);
+}
+
+targeter_poisonous_vapours::targeter_poisonous_vapours(const actor* act, int r)
+    : targeter_smite(act, r, 0, 0, false, nullptr)
+{
+}
+
+bool targeter_poisonous_vapours::affects_monster(const monster_info& mon)
+{
+    return get_resist(mon.resists(), MR_RES_POISON) <= 0;
+}
+
+bool targeter_poisonous_vapours::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    const monster_info *mon = env.map_knowledge(a).monsterinfo();
+    if (mon && !affects_monster(*mon))
+    {
+        return notify_fail(mon->full_name(DESC_THE) + " cannot be affected by "
+                           "poisonous vapours.");
+    }
+
+    return true;
 }

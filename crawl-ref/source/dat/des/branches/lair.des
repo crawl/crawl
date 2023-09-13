@@ -23,10 +23,10 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
 
     if you.in_branch("Lair") then
         e.mons("spriggan")
-        if you.absdepth() >= 14 then
-            e.mons("wolf / black bear w:4 / yak w:2")
-        else
+        if you.absdepth() >= 13 then
             e.mons("wyvern / elephant w:4 / dream sheep w:2")
+        else
+            e.mons("wolf / black bear w:4 / yak w:2")
         end
     else
         if you.absdepth() >= 12 then
@@ -287,15 +287,11 @@ MAP
 ENDMAP
 
 # Lava Lair entry
-# TODO: this vault will veto without a path to the O tile, which lowers the
-# probability below weight 1. It would be better to not use vetoes to control
-# the probability. This vault vetos around 80-85% of the time in the
-# placement.lua test script case (completely open level)
 NAME:   minmay_lair_entry_lava
 TAGS:   lair_entry no_monster_gen transparent
 ORIENT: float
 WEIGHT: 1
-MONS:   fire dragon
+MONS:   fire crab
 KFEAT:  O = enter_lair
 NSUBST: M = 1 / L
 SUBST:  L = l.
@@ -305,7 +301,7 @@ MAP
 ..llllll.
 ..llMMlL.
 .LlMOMll.
-.llMMlll.
+.ll.Mlll.
 .l.llll..
 ..lllL...
 .........
@@ -476,6 +472,39 @@ MAP
 ..####c####..
 .............
 .............
+ENDMAP
+
+NAME:   hellmonk_lair_entry_icy
+TAGS:   lair_entry transparent
+ORIENT: float
+MONS:   ice beast, wolf / polar bear w:3, rime drake
+NSUBST: 3 = 3 / 2.., . = 2 / 4 = 2... / .
+SUBST:  x = xxx., - = W:5 ':25 x:20 .:15
+NSUBST: ' = 16 = 1''' / '
+KFEAT:  O = enter_lair
+TILE:   x = wall_ice_block
+FTILE:  '1 = floor_ice
+COLOUR: '1 = blue
+MAP
+       -------
+     --'''''''--
+    -'''''''''''-
+   -''''-----''''-
+  -'''.........'''-
+ -'''.x.x...x.x.'''-
+ -'''..xxx.xxx..'''-
+-'''-.xxx.3.xxx.-'''-
+-'''-..x.....x..-'''-
+-'''-...3.O.3...-'''-
+-'''-..x.....x..-'''-
+-'''-.xxx.3.xxx.-'''-
+ -'''. xxx.xxx..'''-
+ -'''.x x...x.x.'''-
+  -'''.........'''-
+   -''''-----''''-
+    -'''''''''''-
+     --'''''''--
+       ---@---
 ENDMAP
 
 ###############################################################################
@@ -1241,15 +1270,15 @@ NAME:    grunt_forest_large_clearings
 TAGS:    transparent no_pool_fixup
 DEPTH:   Lair
 WEIGHT:  15
+KMONS:   p = plant / bush
 MONS:    wolf, black bear / polar bear, spriggan / centaur w:4
+KMONS:   4 = spriggan rider / faun w:4
 KMONS:   9 = 9
-KMONS:   * = spriggan rider / faun w:4
-KMONS:   P = plant / bush
-KITEM:   9* = *
-KFEAT:   9 = W
-SHUFFLE: wW'"-_9 / ''GG''* / '''0''% / `````1G
-SUBST:   t = t.., '. = 1:49 .:405, W = WW., "w = wwwW
-NSUBST:  2 = 3:1 / 2:2 / 1:3 / *:.
+KITEM:   94 = *
+KFEAT:   94 = W
+SHUFFLE: wW'"-9 / ''GG'4 / '''0'% / ````1G
+SUBST:   t = t.., '. = p:49 .:405, W = WW., "w = wwwW
+NSUBST:  1 = 3=1 / 2=2 / 3 / .
 MAP
       tt@@@tt
     ttt.....ttt
@@ -1258,12 +1287,12 @@ MAP
  ttwww..........tt
  t..www..'.......t
 tt...w"w....'....tt
-t.....ww-._.......t
-@......-.W-_......@
+t.....ww-.-.......t
+@......-.W--......@
 @....'..W9W..'....@
-@......_-W.-......@
-t.....'._.-ww.....t
-tt.........w"w...tt
+@......--W.-......@
+t.......-.-ww.....t
+tt....'....w"w...tt
  t.......'..www..t
  tt..........wwwtt
   t...........wwt
@@ -1852,8 +1881,61 @@ xxxWWWWWxxx
   xxxxxx
 ENDMAP
 
+# Someone hasn't taken care of their garden, but occasionally it takes care of itself.
+NAME:    pdpol_lair_neglected_garden
+TAGS:    extra decor transparent no_trap_gen
+DEPTH:   Lair
+SHUFFLE: ac"` / pbbp
+SUBST:   ab = D, cp = P
+: if crawl.one_chance_in(5) then
+MONS:    plant, bush
+SUBST:   V = T, D = 2, P = 1
+FTILE:   ' = floor_dirt, 12`" = floor_grass
+:else
+MONS:    withered plant / plant w:1, fungus
+SUBST:   P = 1, D = 122
+:end
+SUBST:   '`" = .
+MAP
+.....@.....
+..`P"'"P`..
+.`Pac'caP`.
+.``c'''c``.
+.`"''D''"`.
+@`"'DVD'"`@
+.`"''D''"`.
+.``c'''c``.
+.`Pac'caP`.
+..`P"'"P`..
+.....@.....
+ENDMAP
+
 ###############################################################################
 # Remaining non-grouped regular Lair vaults.
+
+NAME:   beargit_carnivore_pack
+ORIENT: float
+DEPTH:  Lair:2-
+KMONS:  1 = komodo dragon band
+KMONS:  2 = skyshark band
+KMONS:  3 = Grum, komodo dragon
+KMONS:  4 = Snorg, skyshark
+SUBST:  1 : 111122222234, 1 = 11., 2 = 2.
+NSUBST: 3 = 3 / ., 4 = 4 / ., . = ..`
+KPROP:  ` = bloody
+{{
+if crawl.coinflip() then
+    dgn.delayed_decay(_G, 'a', "dire elephant skeleton")
+else
+    dgn.delayed_decay(_G, 'a', "dire elephant corpse")
+end
+}}
+MAP
+.....
+..1..
+.1a1.
+.....
+ENDMAP
 
 # Rats! (Lemuel) [combined both Lair and D versions]
 NAME:    lemuel_ratsnest
@@ -2163,7 +2245,7 @@ ENDMAP
 # A sealed arena. The walls are usually thick enough
 # to make this only accessible from the floor below.
 NAME:   kennysheep_catoblepas_arena
-TAGS:   no_monster_gen ruin
+TAGS:   no_monster_gen ruin no_descent
 DEPTH:  Lair:3-, !Lair:$
 MONS:   catoblepas
 NSUBST: d = 4=%* / 3:0 / *:.
@@ -2719,6 +2801,84 @@ MAP
   -------------------
 ENDMAP
 
+# Dead by dawn!
+NAME:    pdpol_lair_cabin_in_the_woods
+TAGS:    no_item_gen no_monster_gen
+DEPTH:   Lair
+# The last survivor
+KMONS:   1 = human ; war axe ego:heavy good_item \
+                       | war axe ego:flaming good_item \
+                   . leather armour good_item | ring mail good_item \
+                       | scale mail good_item
+# Trying to get some good horror move trope representation
+KMONS:   2 = Rupert / reaper / vampire mage / phantasmal warrior \
+                 / tentacled starspawn \
+             , reaper / vampire mage / phantasmal warrior / tentacled starspawn
+NSUBST:  a = a / c, p = p / c, q = q / c
+NSUBST:  r = r / c, s = s / c, u = u / c
+# These are distinct to preserve 'a' for the rune door.
+SHUFFLE: Er / ?u, Daqp / ?sur
+NSUBST:  D = 2 / | / S / `, E = 1 / *%% / S / `
+NSUBST:  T = 2=009 / * = .ttt
+NSUBST:  aq = 1:= / c, p = +
+SHUFFLE: rsu
+NSUBST:  r = + / c, s = + / c
+SUBST:   u = c, " = `.., `? = `..., _ = t_
+KPROP:   ` = bloody
+MARKER:  F = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
+         pow_max = 3, delay = 10, start_clouds = 1, size_min = 2, \
+         size_max = 3, spread_rate = 33 }
+: dgn.delayed_decay(_G, 'S', "human skeleton")
+CLEAR:   _
+MAP
+   _____________________
+   @ttttttttttttttttttttt_
+ @..ttttTttttttttttttttttt_
+ tTt.tt..ccccccccccccccctt_
+ttt.tTt..cDDDDDq``rEEEEctt_
+ttTt.TtF.cDDDDDq``rEEEEctt_
+ttt.ttt..caaaaac``rEEEEctt_
+ttTt..t."n`````p``cssssctt_
+tTt..T'T"+`````p``u????ctt_
+tt.ttt.F"n`````p``u????ctt_
+ttT.tt...c`````p``u????ctt_
+ tTt.tt..ccccccccccccccctt_
+ @..ttttTttttttttttttttttt_
+   @ttttttttttttttttttttt_
+   ________________________
+ENDMAP
+
+NAME:   pdpol_lair_cavern_descent
+TAGS:   no_pool_fixup
+DEPTH:  Lair
+KITEM:  * = *
+KMONS:  1 = water moccasin / black bear / wolf / wyvern
+KMONS:  2 = electric eel
+KMONS:  3 = cane toad / black mamba / komodo dragon / polar bear
+KMONS:  4 = hydra / boulder beetle / hornet / rime drake
+KMONS:  5 = basilisk / torpor snail w:5 / manticore w:2
+KFEAT:  5* = W
+KFEAT:  2 = w
+SUBST:  u = wW
+NSUBST: ' = 2:1 / 2=1. / 3 / 2=3. / 4 / 4. / .
+NSUBST: W = 5 / 2=5W / W
+NSUBST: w = 2 / 2=2ww / w
+MAP
+   xxxxxxxxx
+  xx'''x'''xx
+ xx''x'''x''xx
+ x''xxw'wxx''x
+xx'xxwwwwwx''x
+x''xwwuwuw'''x
+xx'xwwuWWwxx'x
+ x'''wwuWWx''x
+xx..wwwuWW%%xx
+x..xxwwW**Wxx
+xx..xxxW**xx
+ x....xxxxx
+ xxxx@@x
+ENDMAP
+
 ###############################################################################
 # Lair endings - split in two types.
 ###############################################################################
@@ -2978,7 +3138,7 @@ TAGS:    no_pool_fixup no_wall_fixup no_monster_gen
 PLACE:   Lair:$
 ORIENT:  north
 # A necromancy-themed loot item behind the obsidian statue.
-ITEM:    morg w:1 / rapier ego:pain w:5 / rapier ego:draining w:5 \
+ITEM:    rapier ego:pain w:5 / rapier ego:draining w:5 \
          / quickblade ego:pain w:5 / quickblade ego:draining w:5 \
          / demon blade ego:draining / sword of zonguldruk w:1 \
          / great sword ego:draining / triple sword ego:draining \
@@ -2990,7 +3150,7 @@ ITEM:    morg w:1 / rapier ego:pain w:5 / rapier ego:draining w:5 \
          / cigotuvi's embrace w:1 / amulet of regeneration randart \
          / ring of positive energy randart / staff of death \
          / book of necromancy / book of death / book of unlife \
-         / randbook owner:Kikubaaqudgh disc:necromancy \
+         / randbook owner:Kikubaaqudgha disc:necromancy \
          / necronomicon w:1
 KMONS:   pq = withered plant
 MONS:    elephant skeleton / elephant zombie / spectral elephant \
@@ -3114,7 +3274,7 @@ KMONS:   2 = cane toad
 KMONS:   3 = vampire mosquito
 KMONS:   4 = blink frog
 KMONS:   5 = komodo dragon / hydra
-KMONS:   6 = patrolling tyrant leech
+KMONS:   6 = tyrant leech / skyshark w:5
 KMONS:   7 = electric eel
 KMONS:   8 = goliath frog
 KMONS:   p = plant
@@ -3335,13 +3495,14 @@ KITEM:   e = throwing net q:3 / rapier good_item / captain's cutlass w:2 \
 KMONS:   p = plant
 KMONS:   1 = hornet / wyvern / blink frog / cane toad / steam dragon
 KMONS:   2 = elephant / komodo dragon / polar bear / rime drake
-KMONS:   3 = snapping turtle / sea snake / manticore / wind drake / harpy
+KMONS:   3 = snapping turtle / sea snake / manticore / wind drake / harpy \
+         / skyshark
 KMONS:   4 = dire elephant / hydra / torpor snail
 KMONS:   5 = patrolling merfolk avatar
 KFEAT:   p12345de%*| = W
 NSUBST:  % = 2=d / 2=d% / e / %%*|
 # Open up squares on the fixed portions of the temple walls, on the outer
-# colums, and in the inner room.
+# columns, and in the inner room.
 SUBST:   c = c:20 .:1 W:1, a = ccc-, q = cccc'
 # Each wall has a 50% chance of being broken open
 SHUFFLE: DEFHJ / uuyzz
@@ -3466,10 +3627,8 @@ PLACE:   Lair:$
 ORIENT:  northwest
 MONS:    blink frog / basilisk w:3, small abomination
 MONS:    shapeshifter / chaos spawn / smoke demon / ynoxinul
-MONS:    ancient zyme, ugly thing / large abomination,  thrashing horror
+MONS:    raiju, ugly thing / large abomination,  thrashing horror
 KMONS:   7 = spriggan ; rapier ego:distortion
-KMONS:   M = mlioglotl w:1 / spriggan ; rapier ego:distortion, \
-         spriggan ; rapier ego:distortion
 KFEAT:   u = demonic_tree
 KFEAT:   N = enter_abyss
 KFEAT:   _ = altar_lugonu

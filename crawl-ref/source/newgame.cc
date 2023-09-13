@@ -49,6 +49,8 @@ static void _choose_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
                                  const newgame_def& defaults);
 static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
                           const newgame_def& defaults);
+static void _mark_fully_random(newgame_def& ng, newgame_def& ng_choice,
+                               bool viable);
 
 #ifdef USE_TILE_LOCAL
 #  define STARTUP_HIGHLIGHT_NORMAL LIGHTGRAY
@@ -410,7 +412,7 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
 
 #if defined(DGAMELAUNCH) && defined(TOURNEY)
     // Apologies to non-public servers.
-    if (ng.type == GAME_TYPE_NORMAL)
+    if (ng.type == GAME_TYPE_NORMAL || ng.type == GAME_TYPE_DESCENT)
     {
         if (!yesno("Trunk doesn't count for the tournament, you want "
                    TOURNEY ". Play trunk anyway? (Y/N)", false, 'n'))
@@ -419,6 +421,12 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
         }
     }
 #endif
+    if (Options.game.fully_random)
+    {
+        // maybe the option values themselves should be true|false|viable?
+        _mark_fully_random(ng, choice,
+            defaults.species == SP_VIABLE || defaults.job == JOB_VIABLE);
+    }
 
     while (true)
     {
@@ -645,7 +653,7 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
                 for (char ch : newgame_random_name())
                     reader.putkey(ch);
                 break;
-            case CK_ESCAPE:
+            case CK_ESCAPE: // redundant with key_exits_popup check below
                 done = cancel = true;
                 break;
         }
@@ -654,6 +662,8 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
 
     popup->on_keydown_event([&](const KeyEvent& ev) {
         auto key = ev.key();
+        if (ui::key_exits_popup(key, false))
+            return done = cancel = true;
 
         if (!overwrite_prompt)
         {
@@ -699,7 +709,7 @@ static keyfun_action _keyfun_seed_input(int &ch)
     // lose focus. (TODO: maybe handle this better in TextEntry somehow?)
     if (ch == CONTROL('K') || ch == CONTROL('D') || ch == CONTROL('W') ||
             ch == CONTROL('U') || ch == CONTROL('A') || ch == CONTROL('E') ||
-            ch == CK_BKSP || ch == CK_ESCAPE || ch == CK_MOUSE_CMD ||
+            ch == CK_BKSP || ui::key_exits_popup(ch, false) ||
             ch < 0 || // this should get all other special keys
             isadigit(ch))
     {
@@ -940,7 +950,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
             return false;
         }
 #endif
-        else if (key_is_escape(key) || key == CK_MOUSE_CMD)
+        else if (ui::key_exits_popup(key, false))
             return done = cancel = true;
         return false;
     });
@@ -1091,21 +1101,19 @@ static job_group jobs_order[] =
         { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_HUNTER, JOB_BRIGAND }
     },
     {
-        "Adventurer",
-        coord_def(0, 6), 20,
-        { JOB_ARTIFICER, JOB_WANDERER, JOB_DELVER, }
+        "Zealot",
+        coord_def(0, 6), 25,
+        { JOB_BERSERKER, JOB_CINDER_ACOLYTE, JOB_CHAOS_KNIGHT }
     },
     {
-        "Zealot",
-        coord_def(1, 0), 25,
-        { JOB_BERSERKER, JOB_CINDER_ACOLYTE,
-          JOB_CHAOS_KNIGHT }
+        "Adventurer",
+        coord_def(1, 0), 20,
+        { JOB_ARTIFICER, JOB_SHAPESHIFTER, JOB_WANDERER, JOB_DELVER, }
     },
     {
         "Warrior-mage",
-        coord_def(1, 4), 26,
-        { JOB_TRANSMUTER, JOB_WARPER, JOB_HEXSLINGER,
-          JOB_ENCHANTER, JOB_REAVER }
+        coord_def(1, 5), 26,
+        { JOB_WARPER, JOB_HEXSLINGER, JOB_ENCHANTER, JOB_REAVER }
     },
     {
         "Mage",
@@ -1196,7 +1204,10 @@ public:
         });
 
         m_vbox->on_hotkey_event([this](const KeyEvent& event) {
-            switch (event.key())
+            const int lastch = event.key();
+            if (ui::key_exits_popup(lastch, false))
+                return done = cancel = true;
+            switch (lastch)
             {
             case 'X':
             case CONTROL('Q'):
@@ -1204,9 +1215,6 @@ public:
                 tiles.send_exit_reason("cancel");
 #endif
                 return done = end_game = true;
-            CASE_ESCAPE
-            case CK_MOUSE_CMD:
-                return done = cancel = true;
             case CK_BKSP:
                 if (m_choice_type == C_JOB)
                     m_ng_choice.job = JOB_UNKNOWN;
@@ -1868,7 +1876,14 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
 
     auto popup = make_shared<ui::Popup>(vbox);
     popup->on_hotkey_event([&](const KeyEvent& ev) {
-        switch (ev.key())
+        const int lastch = ev.key();
+        if (ui::key_exits_popup(lastch, false)
+            || lastch == ' ')
+        {
+            ret = false;
+            return done = true;
+        }
+        switch (lastch)
         {
             case 'X':
             case CONTROL('Q'):
@@ -1877,11 +1892,6 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
 #endif
                 end(0);
                 break;
-            case ' ':
-            CASE_ESCAPE
-            case CK_MOUSE_CMD:
-                ret = false;
-                return done = true;
             default:
                 break;
         }
@@ -2236,7 +2246,10 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
 
     auto popup = make_shared<ui::Popup>(vbox);
     popup->on_hotkey_event([&](const KeyEvent& ev) {
-        switch (ev.key())
+        const int lastch = ev.key();
+        if (key_exits_popup(lastch, false))
+            return done = cancel = true;
+        switch (lastch)
         {
             case 'X':
             case CONTROL('Q'):
@@ -2244,10 +2257,6 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
                 tiles.send_exit_reason("cancel");
 #endif
                 end(0);
-                break;
-            case CK_MOUSE_CMD:
-            CASE_ESCAPE
-                return done = cancel = true;
                 break;
             case ' ':
                 return done = true;

@@ -67,11 +67,12 @@ static int _upgrade_weapon_type(int old_type, bool has_shield, bool highlevel)
         case WPN_HALBERD:     return WPN_GLAIVE;
         case WPN_GLAIVE:      return highlevel ? WPN_BARDICHE : WPN_GLAIVE;
 
-        case WPN_HAND_CROSSBOW: return !has_shield ? WPN_ARBALEST :
-                                                     WPN_HAND_CROSSBOW;
+        case WPN_HAND_CANNON: return !has_shield ? WPN_ARBALEST :
+                                                     WPN_HAND_CANNON;
         case WPN_ARBALEST:      return highlevel ? WPN_TRIPLE_CROSSBOW :
                                                    WPN_ARBALEST;
-        case WPN_SHORTBOW:      return highlevel ? WPN_LONGBOW : WPN_SHORTBOW;
+        case WPN_SHORTBOW:
+        case WPN_ORCBOW:      return highlevel ? WPN_LONGBOW : WPN_ORCBOW;
 
         default:              return old_type;
     }
@@ -248,8 +249,8 @@ static string _beogh_bless_ranged_weapon(monster* mon)
         return "ranged armament";
     }
 
-    // No launcher, no shield: give them a crossbow & some ammo.
-    _gift_weapon_to_orc(mon, WPN_ARBALEST);
+    // No launcher, no shield: give them an orcbow.
+    _gift_weapon_to_orc(mon, WPN_ORCBOW);
     if (mon->launcher() == nullptr)
     {
         dprf("Couldn't give crossbow to follower!");

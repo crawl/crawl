@@ -27,6 +27,8 @@ enum class brflag
     dangerous_end       = (1 << 4), // bottom level is more dangerous than normal
     spotty              = (1 << 5), // Connect vaults with more open paths, not hallways.
     no_shafts           = (1 << 6), // Don't generate random shafts.
+    fully_map           = (1 << 7), // Fully map floors on entry, no explore
+                                    // traps, piety or healing.
 };
 DEF_BITFIELD(branch_flags_t, brflag);
 
@@ -66,6 +68,8 @@ struct Branch
     vector<rune_type> runes;      // Contained rune(s) (if any).
     branch_noise ambient_noise; // affects noise loudness
     int mon_die_size;           // size of the dice to roll to determine mons/floor
+
+    vector<branch_type> descent_parents; // descent parent branches
 };
 
 enum class branch_iterator_type
@@ -119,10 +123,14 @@ branch_type get_branch_at(const coord_def& pos);
 bool branch_is_unfinished(branch_type branch);
 
 branch_type parent_branch(branch_type branch);
-int runes_for_branch(branch_type branch);
+vector<branch_type> descent_parents(branch_type branch);
 
 string branch_noise_desc(branch_type br);
 string branch_rune_desc(branch_type br, bool remaining_only);
 branch_type rune_location(rune_type rune);
 
 vector<branch_type> random_choose_disabled_branches();
+
+bool vaults_is_locked();
+void lock_vaults();
+void unlock_vaults();

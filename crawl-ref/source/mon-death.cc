@@ -399,7 +399,7 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
     item_colour(corpse);
 
     // Apply the gold aura effect to the player.
-    const int dur = corpse.quantity * 2;
+    const int dur = 6 + random2avg(14, 2);
     if (dur > you.duration[DUR_GOZAG_GOLD_AURA])
         you.set_duration(DUR_GOZAG_GOLD_AURA, dur);
 
@@ -413,9 +413,9 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
     you.redraw_title = true;
 }
 
-static void _create_monster_hide(const item_def &corpse, bool silent)
+static void _create_monster_hide(monster_type mtyp, monster_type montype,
+                                 coord_def pos, bool silent)
 {
-    const monster_type mtyp = corpse.mon_type;
     const armour_type type = hide_for_monster(mons_species(mtyp));
     ASSERT(type != NUM_ARMOURS);
 
@@ -426,8 +426,6 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
         return;
     item_def& item = env.item[o];
 
-    const monster_type montype =
-        static_cast<monster_type>(corpse.orig_monnum);
     if (!invalid_monster_type(montype) && mons_is_unique(montype))
         item.inscription = mons_type_name(montype, DESC_PLAIN);
 
@@ -456,7 +454,6 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
     if (bonus_plus)
         item.plus += random_range(*bonus_plus * 2/3, *bonus_plus * 3/2);
 
-    const coord_def pos = item_pos(corpse);
     if (pos.origin())
     {
         set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -481,14 +478,13 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
     set_ident_flags(item, ISFLAG_IDENT_MASK);
 }
 
-static void _create_monster_wand(const item_def &corpse, bool silent)
+static void _create_monster_wand(monster_type mtyp, coord_def pos, bool silent)
 {
-    const coord_def pos = item_pos(corpse);
     if (pos.origin())
         return;
 
     int w = items(false, OBJ_WANDS, OBJ_RANDOM,
-                  mons_class_hit_dice(corpse.mon_type));
+                  mons_class_hit_dice(mtyp));
 
     if (w == NON_ITEM)
         return;
@@ -500,21 +496,22 @@ static void _create_monster_wand(const item_def &corpse, bool silent)
     if (you.see_cell(pos) && !silent && !feat_eliminates_items(env.grid(pos)))
     {
         mprf("%s bone magically twists into %s.",
-             mons_type_name(corpse.mon_type, DESC_A).c_str(),
+             mons_type_name(mtyp, DESC_A).c_str(),
              item.name(DESC_A).c_str());
     }
 
     set_ident_flags(item, ISFLAG_IDENT_MASK);
 }
 
-static void _maybe_drop_monster_organ(const item_def &corpse, bool silent)
+void maybe_drop_monster_organ(monster_type mon, monster_type orig,
+                              coord_def pos, bool silent)
 {
-    if (mons_class_leaves_hide(corpse.mon_type) && !one_chance_in(3))
-        _create_monster_hide(corpse, silent);
+    if (mons_class_leaves_hide(mon) && !one_chance_in(3))
+        _create_monster_hide(mon, orig, pos, silent);
 
     // corpse RNG is enough for these right now
-    if (mons_class_leaves_wand(corpse.mon_type))
-        _create_monster_wand(corpse, silent);
+    if (mons_class_leaves_wand(mon))
+        _create_monster_wand(mon, pos, silent);
 }
 
 /**
@@ -612,7 +609,7 @@ static string _milestone_kill_verb(killer_type killer)
 {
     return killer == KILL_BANISHED ? "banished" :
            killer == KILL_PACIFIED ? "pacified" :
-           killer == KILL_CHARMD ? "enslaved" :
+           killer == KILL_CHARMD ? "charmed" :
            killer == KILL_SLIMIFIED ? "slimified" : "killed";
 }
 
@@ -665,16 +662,16 @@ static bool _is_pet_kill(killer_type killer, int i)
         return false;
 
     const monster* m = &env.mons[i];
-    if (m->friendly()) // This includes enslaved monsters.
+    if (m->friendly()) // This includes charmed monsters.
         return true;
 
     // Check if the monster was confused by you or a friendly, which
     // makes casualties to this monster collateral kills.
     const mon_enchant me = m->get_ench(ENCH_CONFUSION);
-    const mon_enchant me2 = m->get_ench(ENCH_INSANE);
+    const mon_enchant me2 = m->get_ench(ENCH_FRENZIED);
     return me.ench == ENCH_CONFUSION
            && (me.who == KC_YOU || me.who == KC_FRIENDLY)
-           || me2.ench == ENCH_INSANE
+           || me2.ench == ENCH_FRENZIED
               && (me2.who == KC_YOU || me2.who == KC_FRIENDLY);
 }
 
@@ -770,6 +767,8 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
              mons->hit_points * 2 <= mons->max_hit_points ? "." : "!");
 
     god_speaks(god, msg.c_str());
+
+    lugonu_meddle_fineff::schedule();
 
     return true;
 }
@@ -1143,7 +1142,7 @@ static string _killer_type_name(killer_type killer)
     case KILL_PACIFIED:
         return "pacified";
     case KILL_CHARMD:
-        return "enslaved";
+        return "charmed";
     case KILL_SLIMIFIED:
         return "slimified";
     }
@@ -1232,6 +1231,8 @@ static void _make_derived_undead(monster* mons, bool quiet,
                     0,
                     spell, god);
     mg.set_base(mons->type);
+    if (god == GOD_KIKUBAAQUDGHA) // kiku wrath
+        mg.extra_flags |= MF_NO_REWARD;
 
     if (!mons->mname.empty() && !(mons->flags & MF_NAME_NOCORPSE))
         mg.mname = mons->mname;
@@ -1266,7 +1267,9 @@ static void _make_derived_undead(monster* mons, bool quiet,
             agent_name = agent->as_monster()->full_name(DESC_A);
     }
 
-    const string message = quiet ? "" : _derived_undead_message(*mons, which_z, mist);
+    const string message = quiet ? "" :
+                           god == GOD_KIKUBAAQUDGHA ? "Kikubaaqudha cackles." :
+                           _derived_undead_message(*mons, which_z, mist);
     make_derived_undead_fineff::schedule(mons->pos(), mg,
             mons->get_experience_level(), agent_name, message);
 }
@@ -1351,15 +1354,15 @@ static bool _mons_reaped(actor &killer, monster& victim)
         beh = SAME_ATTITUDE(mon);
     }
 
-    _make_derived_undead(&victim, true, MONS_ZOMBIE, beh,
+    _make_derived_undead(&victim, false, MONS_ZOMBIE, beh,
                          SPELL_NO_SPELL, GOD_NO_GOD);
 
     return true;
 }
 
-static void _yred_reap(monster &mons, bool expl)
+static void _yred_reap(monster &mons, bool uncorpsed)
 {
-    monster_type which_z = !expl && mons_can_be_zombified(mons) ? MONS_ZOMBIE :
+    monster_type which_z = !uncorpsed && mons_can_be_zombified(mons) ? MONS_ZOMBIE :
                            MONS_SPECTRAL_THING;
 
     _make_derived_undead(&mons, false, which_z, BEH_FRIENDLY,
@@ -1371,7 +1374,7 @@ static bool _animate_dead_reap(monster &mons)
     if (!you.duration[DUR_ANIMATE_DEAD])
         return false;
     const int pow = you.props[ANIMATE_DEAD_POWER_KEY].get_int();
-    if (!x_chance_in_y(150 + pow/2, 200))
+    if (!x_chance_in_y(150 + div_rand_round(pow, 2), 200))
         return false;
 
     _make_derived_undead(&mons, false, MONS_ZOMBIE, BEH_FRIENDLY,
@@ -1398,15 +1401,31 @@ static bool _reaping(monster &mons)
     return _mons_reaped(*killer, mons);
 }
 
-static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
+static void _kiku_wrath_raise(monster &mons, bool quiet, bool corpse_gone)
+{
+    monster_type which_z = MONS_SPECTRAL_THING;
+    if (!corpse_gone && mons_can_be_zombified(mons) && !one_chance_in(3))
+        which_z = coinflip() ? MONS_ZOMBIE : MONS_SIMULACRUM;
+    _make_derived_undead(&mons, quiet, which_z, BEH_HOSTILE,
+                         SPELL_NO_SPELL, GOD_KIKUBAAQUDGHA);
+}
+
+static bool _apply_necromancy(monster &mons, bool quiet, bool corpse_gone,
                               bool in_los, bool corpseworthy)
 {
     // This is a hostile effect, and monsters are dirty cheaters. Sorry!
-    if (mons.has_ench(ENCH_BOUND_SOUL))
+    if (mons.has_ench(ENCH_BOUND_SOUL)
+        && !have_passive(passive_t::goldify_corpses))
     {
         _make_derived_undead(&mons, quiet, MONS_SIMULACRUM,
                              SAME_ATTITUDE(&mons),
                              SPELL_BIND_SOULS, GOD_NO_GOD);
+        return true;
+    }
+
+    if (corpseworthy && you.penance[GOD_KIKUBAAQUDGHA] && one_chance_in(3))
+    {
+        _kiku_wrath_raise(mons, quiet, corpse_gone);
         return true;
     }
 
@@ -1425,7 +1444,7 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
     if (in_los && have_passive(passive_t::reaping))
     {
         if (yred_reap_chance())
-            _yred_reap(mons, exploded);
+            _yred_reap(mons, corpse_gone);
         return true;
     }
 
@@ -1436,17 +1455,13 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
         return true;
     }
 
-    if (!exploded
-        && in_los
-        && !have_passive(passive_t::goldify_corpses)
-        && (_animate_dead_reap(mons) || _reaping(mons)))
-    {
-        return true;
-    }
+    if (corpse_gone || have_passive(passive_t::goldify_corpses))
+        return false;
 
-    if (!exploded
-        && !have_passive(passive_t::goldify_corpses)
-        && mons.has_ench(ENCH_NECROTISE))
+    if (in_los && (_animate_dead_reap(mons) || _reaping(mons)))
+        return true;
+
+    if (mons.has_ench(ENCH_NECROTISE))
     {
         _make_derived_undead(&mons, quiet, MONS_SKELETON,
                                  BEH_FRIENDLY,
@@ -1542,11 +1557,6 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
 
     if (mons.is_holy())
         did_kill_conduct(DID_KILL_HOLY, mons);
-
-    // Fedhas shrooms cause confusion which leads to subsequent
-    // confusion kills, sometimes of the player's own plants
-    if (fedhas_protects(&mons) && killer != KILL_YOU_CONF)
-        did_kill_conduct(DID_KILL_PLANT, mons);
 
     // Cheibriados hates fast monsters.
     if (cheibriados_thinks_mons_is_fast(mons) && !mons.cannot_act())
@@ -1678,6 +1688,9 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     // and webbed monsters
     monster_web_cleanup(mons, true);
+
+    // Lose our bullseye target
+    mons.del_ench(ENCH_BULLSEYE_TARGET, true);
 
     // Clean up any blood from the flayed effect
     if (mons.has_ench(ENCH_FLAYED))
@@ -1853,7 +1866,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
     else if (mons.type == MONS_FOXFIRE)
     {
-        // Foxfires are unkillable, they either dissapate by timing out
+        // Foxfires are unkillable, they either dissipate by timing out
         // or hit something.
         silent = true;
     }
@@ -2012,6 +2025,9 @@ item_def* monster_die(monster& mons, killer_type killer,
                 mpr("You feel a bit better.");
         }
     }
+
+    // Apply unrand effects.
+    unrand_death_effects(&mons, killer);
 
     switch (killer)
     {
@@ -2343,7 +2359,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
         else if (mons_is_mons_class(&mons, MONS_PIKEL))
         {
-            // His slaves don't care if he's dead or not, just whether or not
+            // His band doesn't care if he's dead or not, just whether or not
             // he goes away.
             pikel_band_neutralise();
         }
@@ -2435,6 +2451,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         const bool in_los = you.see_cell(mons.pos());
         const bool wretch = mons.props.exists(KIKU_WRETCH_KEY);
         const bool corpseworthy = gives_player_xp || wretch;
+        const bool corpse_gone = exploded || mons.props.exists(NEVER_CORPSE_KEY);
 
         // no doubling up with death channel and yred.
         // otherwise, death channel can work with other corpse-consuming spells.
@@ -2449,7 +2466,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                                  static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
         }
 
-        corpse_consumed = _apply_necromancy(mons, !death_message, exploded,
+        corpse_consumed = _apply_necromancy(mons, !death_message, corpse_gone,
                                             in_los, corpseworthy);
     }
 
@@ -2563,7 +2580,9 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (corpse->base_type == OBJ_CORPSES // not gold
             && !mons.props.exists(KIKU_WRETCH_KEY))
         {
-            _maybe_drop_monster_organ(*corpse, silent);
+            const monster_type orig = static_cast<monster_type>(corpse->orig_monnum);
+            maybe_drop_monster_organ(corpse->mon_type, orig,
+                                     item_pos(*corpse), silent);
         }
     }
 
@@ -2978,7 +2997,7 @@ bool mons_is_mons_class(const monster* mons, monster_type type)
  * Perform neutralisation for members of Pikel's band upon Pikel's 'death'.
  *
  * This neutralisation occurs in multiple instances: when Pikel is neutralised,
- * enslaved, when Pikel dies, when Pikel is banished.
+ * charmed, when Pikel dies, when Pikel is banished.
  * It is handled by a daction (as a fineff) to preserve across levels.
  **/
 void pikel_band_neutralise()
@@ -3127,7 +3146,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     // is intended to cover the slimify case, we don't want to pacify the other
     // if a slimified twin dies.
     if (twin->neutral()
-        && !twin->has_ench(ENCH_INSANE)
+        && !twin->has_ench(ENCH_FRENZIED)
         && !is_fellow_slime(*twin))
     {
         elven_twins_pacify(twin);
@@ -3211,7 +3230,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     }
 
     // Finally give them new energy
-    if (mons->can_see(you) && !mons->has_ench(ENCH_INSANE))
+    if (mons->can_see(you) && !mons->has_ench(ENCH_FRENZIED))
         elven_twin_energize(mons);
     else
         mons->props[ELVEN_ENERGIZE_KEY] = true;
@@ -3284,7 +3303,7 @@ void elven_twins_unpacify(monster* twin)
         return;
 
     // Don't consider already un-neutralised monsters or slimified twins.
-    if (!mons->neutral() || mons->has_ench(ENCH_INSANE)
+    if (!mons->neutral() || mons->has_ench(ENCH_FRENZIED)
         || is_fellow_slime(*mons))
     {
         return;
@@ -3339,7 +3358,7 @@ void mons_felid_revive(monster* mons)
     monster *newmons =
         create_monster(
             mgen_data(type, (mons->has_ench(ENCH_CHARM)
-                             || mons->has_ench(ENCH_INSANE) ? BEH_HOSTILE
+                             || mons->has_ench(ENCH_FRENZIED) ? BEH_HOSTILE
                              : SAME_ATTITUDE(mons)), revive_place, mons->foe));
 
     if (newmons)

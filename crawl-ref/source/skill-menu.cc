@@ -53,6 +53,15 @@ bool SkillTextTileItem::handle_mouse(const wm_mouse_event& me)
         skm.select(sk, 'A');
         return true;
     }
+    else if (me.event == wm_mouse_event::PRESS
+        && me.button == wm_mouse_event::RIGHT)
+    {
+        skill_type sk = skill_type(get_id());
+        if (is_invalid_skill(sk))
+            return false;
+        describe_skill(sk);
+        return true;
+    }
     else
         return false;
 }
@@ -310,7 +319,9 @@ void SkillMenuEntry::set_aptitude()
     else
         text += make_stringf(" %d", apt);
 
-    text += "</white> ";
+    text += "</white>";
+    if (apt < 10 && apt > -10)
+        text += " ";
 
     if (manual)
     {
@@ -1527,15 +1538,20 @@ void SkillMenu::toggle_practise(skill_type sk, int keyn)
     if (keyn >= 'A' && keyn <= 'Z')
         you.train.init(TRAINING_DISABLED);
     if (get_state(SKM_DO) == SKM_DO_PRACTISE)
-        you.train[sk] = (you.train[sk] ? TRAINING_DISABLED : TRAINING_ENABLED);
+        set_training_status(sk, you.train[sk] ? TRAINING_DISABLED : TRAINING_ENABLED);
     else if (get_state(SKM_DO) == SKM_DO_FOCUS)
-    {
-        you.train[sk]
-            = (training_status)((you.train[sk] + 1) % NUM_TRAINING_STATUSES);
-    }
+        set_training_status(sk, (training_status)((you.train[sk] + 1) % NUM_TRAINING_STATUSES));
     else
         die("Invalid state.");
     reset_training();
+    if (is_magic_skill(sk) && you.has_mutation(MUT_INNATE_CASTER))
+    {
+        // This toggles every single magic skill, so let's just regenerate the display.
+        refresh_display();
+        return;
+    }
+
+    // Otherwise, only toggle the affected skill button.
     SkillMenuEntry* skme = find_entry(sk);
     skme->set_name(true);
     const vector<int> hotkeys = skme->get_name_item()->get_hotkeys();
@@ -1796,11 +1812,9 @@ void skill_menu(int flag, int exp)
                     return true;
                 }
             // Fallthrough
-            case ' ':
-                // Space and escape exit in any mode.
-                if (skm.exit(false))
-                    return done = true;
             default:
+                if (ui::key_exits_popup(keyn, true) && skm.exit(false))
+                    return done = true;
                 // Don't exit from !experience on random keys.
                 if (!skm.is_set(SKMF_EXPERIENCE) && skm.exit(false))
                     return done = true;

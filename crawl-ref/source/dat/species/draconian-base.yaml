@@ -17,6 +17,7 @@ aptitudes:
   dodging: -1
   spellcasting: -1
   hexes: -1
+  shapeshifting: -1
   invocations: 1
 str: 10
 int: 8
@@ -27,7 +28,7 @@ mutations:
     MUT_COLD_BLOODED: 1
 recommended_jobs:
   - JOB_BERSERKER
-  - JOB_TRANSMUTER
+  - JOB_SHAPESHIFTER
   - JOB_CONJURER
   - JOB_FIRE_ELEMENTALIST
   - JOB_ICE_ELEMENTALIST

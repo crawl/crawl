@@ -68,7 +68,7 @@ function arena_sprint_spawn_enemies(data)
                 if dude then
                     if dude.experience > 0 then
                         -- Plants, fungi, etc, don't count
-                        dude.set_prop("arena_slave", 1)
+                        dude.set_prop("arena_replica", 1)
                         data.num_spawned = data.num_spawned + 1
                     end
                     dude.beh = mons.behaviour("wander")
@@ -275,7 +275,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "gnoll / gnoll bouda / gnoll sergeant / hound / wolf",
                 -- Gimmicks
                 "neqoxec", "orc priest", "vampire bat",
-                "kobold name:kamikaze_kobold n_rpl n_noc n_des perm_ench:inner_flame"
+                "kobold name:flame-cult_kobold n_rpl n_noc n_des perm_ench:inner_flame"
              }
         elseif round <= 10 then
             mon_set = {
@@ -322,7 +322,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "polar bear",
                 -- Gimmicks
                 "neqoxec",
-                "kobold name:kamikaze_kobold n_rpl n_noc n_des perm_ench:inner_flame",
+                "kobold name:flame-cult_kobold n_rpl n_noc n_des perm_ench:inner_flame",
                 "dwarf name:drunken n_adj n_des n_noc perm_ench:confusion"
             }
         elseif round <= 15 then
@@ -782,7 +782,7 @@ function thing_do_arena(data, triggerable, triggerer, marker, ev)
     -- Count kills
     if triggerer.type == "monster_dies" and not data.between_rounds then
         local mons = dgn.mons_from_mid(ev:arg1())
-        if mons.has_prop("arena_slave") then
+        if mons.has_prop("arena_replica") then
             data.num_killed = data.num_killed + 1
         elseif mons.has_prop("boss_mons") then
             data.num_killed = data.round_enemies
@@ -948,7 +948,7 @@ LROCKTILE:  wall_hall
     arena_marker:add_triggerer(DgnTriggerer:new {
         type = "monster_dies",
         -- Note: target is "any", but we don't do anything unless it has
-        -- the "arena_slave" or "boss_mons" property
+        -- the "arena_replica" or "boss_mons" property
         target = "any"
     })
 
@@ -1008,7 +1008,7 @@ KFEAT:  n = altar_qazlal
 KFEAT:  o = altar_ru
 KFEAT:  p = altar_uskayaw
 KFEAT:  q = altar_wu_jian
-KITEM:  { = scroll of blinking q:3, any concealment scroll q:3 ident:all, \
+KITEM:  { = scroll of blinking q:3, scroll of fog q:3 ident:all, \
             potion of heal wounds q:3, potion of haste q:3, \
             any blast wand charges:5 ident:all, \
             any beam wand charges:5 ident:all, \
@@ -1029,13 +1029,13 @@ KFEAT:  { = {
 KFEAT:  C = scroll shop type:Identification suffix:Station count:17 greed:25 ; scroll of identify q:3
 KFEAT:  D = book shop type:Must-Have suffix:Magic greed:7 count:17 use_all ; \
             book of the wilderness | book of spatial translocations | book of hexes |\
-            book of death | book of the sky | book of displacement |\
+            book of death | book of displacement |\
             book of the earth | book of burglary | book of annihilations |\
             grand grimoire | necronomicon | book of power | book of chaos |\
             book of the moon | book of blasting | ozocubu's autobiography
 KFEAT:  EP = scroll shop greed:10 use_all count:14 ; \
             scroll of blinking q:3 | scroll of blinking q:4 | scroll of blinking q:5 |\
-            any concealment scroll q:3 | any concealment scroll q:4 | any concealment scroll q:5 |\
+            scroll of fog q:3 | scroll of fog q:4 | scroll of fog q:5 |\
             scroll of silence q:3 | scroll of brand weapon | scroll of vulnerability q:3 |\
             scroll of amnesia q:5 | scroll of enchant weapon q:8 |\
             scroll of enchant armour q:4 | scroll of enchant armour q:4
@@ -1054,6 +1054,12 @@ KFEAT:  O = distillery shop type:Do-It-Yourself suffix:Clinic count:17 use_all g
             potion of curing q:4 | potion of curing q:4
 KFEAT:  I = antiques shop type:Jewellery count:17 greed:9 ; \
             any jewellery randart
+KFEAT:  J = general shop type:Miscellaneous suffix:Merchandise count:14 greed:15 use_all ; \
+            ring of poison resistance |\
+            ring of protection from fire | ring of protection from cold |\
+            ring of willpower | amulet of regeneration |\
+            amulet of reflection |\
+            ring of see invisible
 KFEAT:  K = antique armour shop count:17 use_all type:Advanced suffix:Armour greed:35 ; \
             pair of gloves randart | pair of gloves randart | pair of boots randart |\
             pair of boots randart | helmet randart | hat randart | buckler randart |\
@@ -1069,6 +1075,9 @@ KFEAT:  L = armour shop count:17 greed:12 type:Basic suffix:Armour use_all ; \
             mundane plate armour | mundane barding |\
             mundane cloak | mundane buckler |\
             mundane pair of gloves | mundane helmet
+KFEAT:  M = jewellery shop type:Timeless suffix:Talismans count:8 greed:7 use_all ; \
+            beast talisman | maw talisman | serpent talisman | blade talisman |\
+            dragon-blood talisman | granite talisman | storm talisman | talisman of death
 KFEAT:  N = weapon shop type:Staff suffix:Store count:9 use_all greed:30 ; \
             staff of fire | staff of air | staff of earth | staff of cold |\
             staff of poison | staff of death | staff of conjuration
@@ -1079,7 +1088,7 @@ KFEAT:  Q = weapon shop type:Weapon suffix:Rack count:17 use_all greed:30 ; \
             mundane great mace | mundane giant spiked club |\
             mundane demon trident | mundane bardiche |\
             mundane lajatang | mundane longbow |\
-            mundane hand crossbow | mundane triple crossbow
+            mundane hand cannon | mundane triple crossbow
 KFEAT:  H = distillery shop type:Bottled suffix:Wisdom count:5 use_all greed:6 ; \
             potion of experience q:1 | potion of experience q:1 |\
             potion of experience q:2 | potion of experience q:3 |\
@@ -1088,12 +1097,6 @@ KFEAT:  R = general shop type:Premium suffix:Goods use_all count:11 greed:20 ; \
             quad damage | quad damage | quad damage |\
             potion of heal wounds q:5 | potion of heal wounds q:5 |\
             potion of haste q:5 | potion of haste q:5
-KFEAT:  J = general shop type:Miscellaneous suffix:Merchandise count:14 greed:15 use_all ; \
-            ring of poison resistance |\
-            ring of protection from fire | ring of protection from cold |\
-            ring of willpower | amulet of regeneration |\
-            amulet of reflection |\
-            ring of see invisible
 SUBST:  b : cb
 TILE:   c = wall_marble
 KFEAT:  TUVWYZ!? = dry_fountain

@@ -13,6 +13,7 @@
 #include "tilefont.h"
 #include "tilemcache.h"
 #include "tilepick.h"
+#include "options.h"
 
 DungeonCellBuffer::DungeonCellBuffer(const ImageManager *im) :
     m_buf_floor(&im->get_texture(TEX_FLOOR)),
@@ -272,7 +273,7 @@ void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
         int offset = cell.flv.special % tile_dngn_count(TILE_LIQUEFACTION);
         m_buf_floor.add(TILE_LIQUEFACTION + offset, x, y);
     }
-    else if (cell.is_bloody)
+    else if (cell.is_bloody && Options.show_blood)
     {
         tileidx_t basetile;
         if (is_wall)
@@ -391,10 +392,6 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
         {
             if (cell.is_sanctuary)
                 m_buf_feat.add(TILE_SANCTUARY, x, y);
-#if TAG_MAJOR_VERSION == 34
-            if (cell.heat_aura)
-                m_buf_feat.add(TILE_HEAT_AURA + cell.heat_aura - 1, x, y);
-#endif
             if (cell.is_silenced)
                 m_buf_feat.add(TILE_SILENCED, x, y);
             if (cell.halo == HALO_RANGE)
@@ -430,6 +427,8 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                     m_buf_feat.add(TILE_THREAT_TOUGH, x, y);
                 else if (threat_flag == TILE_FLAG_NASTY)
                     m_buf_feat.add(TILE_THREAT_NASTY, x, y);
+                else if (threat_flag == TILE_FLAG_UNUSUAL)
+                    m_buf_feat.add(TILE_THREAT_UNUSUAL, x, y);
 
                 if (cell.is_highlighted_summoner)
                     m_buf_feat.add(TILE_HALO_SUMMONER, x, y);
@@ -492,10 +491,13 @@ static map<tileidx_t, int> status_icon_sizes = {
     { TILEI_CONC_VENOM,     7 },
     { TILEI_REPEL_MISSILES, 10 },
     { TILEI_INJURY_BOND,    10 },
-    { TILEI_REFLECTING,     9 },
     { TILEI_TELEPORTING,    9 },
     { TILEI_RESISTANCE,     8 },
     { TILEI_BRILLIANCE,     10 },
+    { TILEI_MALMUTATED,     8 },
+    { TILEI_GLOW_LIGHT,     10 },
+    { TILEI_GLOW_HEAVY,     10 },
+    { TILEI_PAIN_BOND,      11 },
 
     // These are in the bottom right, so don't need to shift.
     { TILEI_BERSERK,        FIXED_LOC_ICON },
@@ -559,7 +561,12 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     if (fg & TILE_FLAG_BEH_MASK)
     {
         const tileidx_t beh_flag = fg & TILE_FLAG_BEH_MASK;
-        if (beh_flag == TILE_FLAG_STAB)
+        if (beh_flag == TILE_FLAG_PARALYSED)
+        {
+            m_buf_icons.add(TILEI_PARALYSED, x, y);
+            status_shift += 12;
+        }
+        else if (beh_flag == TILE_FLAG_STAB)
         {
             m_buf_icons.add(TILEI_STAB_BRAND, x, y);
             status_shift += 12;
@@ -610,7 +617,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(icon, x, y, -status_shift, 0);
         if (!size)
         {
-            dprf("unknown icon %llu", icon);
+            dprf("unknown icon %" PRIu64, icon);
             size = 7; // could maybe crash here?
         }
         status_shift += size;
@@ -626,6 +633,9 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
 
     if (bg & TILE_FLAG_MM_UNSEEN && (bg != TILE_FLAG_MM_UNSEEN || fg))
         m_buf_icons.add(TILEI_MAGIC_MAP_MESH, x, y);
+
+    if (bg & TILE_FLAG_RAMPAGE)
+        m_buf_icons.add(TILEI_RAMPAGE, x, y);
 
     // Don't let the "new stair" icon cover up any existing icons, but
     // draw it otherwise.

@@ -70,7 +70,7 @@ using namespace ui;
 // enough memory allocated to snarf in the scorefile entries
 static unique_ptr<scorefile_entry> hs_list[SCORE_FILE_ENTRIES];
 static int hs_list_size = 0;
-static bool hs_list_initalized = false;
+static bool hs_list_initialized = false;
 
 static FILE *_hs_open(const char *mode, const string &filename);
 static void  _hs_close(FILE *handle);
@@ -96,10 +96,11 @@ static string _score_file_name()
     return ret;
 }
 
-static string _log_file_name()
+static string _log_file_name(bool milestones=false)
 {
     return catpath(Options.shared_dir,
-        "logfile" + crawl_state.game_type_qualifier());
+        (milestones ? "milestones" : "logfile")
+        + crawl_state.game_type_qualifier());
 }
 
 int hiscores_new_entry(const scorefile_entry &ne)
@@ -158,7 +159,7 @@ int hiscores_new_entry(const scorefile_entry &ne)
     }
 
     hs_list_size = i;
-    hs_list_initalized = true;
+    hs_list_initialized = true;
 
     // If we've still not inserted it, it's not a highscore.
     if (!inserted)
@@ -253,7 +254,7 @@ void hiscores_read_to_memory()
     }
 
     hs_list_size = i;
-    hs_list_initalized = true;
+    hs_list_initialized = true;
 
     //close off
     _hs_close(scores);
@@ -295,7 +296,7 @@ string hiscores_print_list(int display_count, int format, int newest_entry, int&
     string ret;
 
     // Additional check to preserve previous functionality
-    if (!hs_list_initalized)
+    if (!hs_list_initialized)
         hiscores_read_to_memory();
 
     int i, total_entries;
@@ -427,7 +428,7 @@ UIHiscoresMenu::UIHiscoresMenu()
 #endif
 
     auto title = make_shared<Text>(formatted_string(
-                "Dungeon Crawl Stone Soup: High Scores", YELLOW));
+                CRAWL ": High Scores", YELLOW));
     title->set_margin_for_sdl(0, 0, 0, 16);
     title_hbox->add_child(move(title));
 
@@ -611,7 +612,7 @@ static void _hs_close(FILE *handle)
 
 static bool _hs_read(FILE *scores, scorefile_entry &dest)
 {
-    char inbuf[1300];
+    char inbuf[1500];
     if (!scores || feof(scores))
         return false;
 
@@ -665,7 +666,7 @@ static const char *kill_method_names[] =
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration", "headbutt", "rolling",
     "mirror_damage", "spines", "frailty", "barbs", "being_thrown",
-    "collision", "zot", "constriction",
+    "collision", "zot", "constriction", "exploremode",
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
@@ -2032,6 +2033,19 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
     return desc;
 }
 
+static bool _very_boring_death_type(int death_type)
+{
+    switch (death_type)
+    {
+    case KILLED_BY_QUITTING:
+    case KILLED_BY_WIZMODE:
+    case KILLED_BY_EXPLORING:
+        return true;
+    default:
+        return false;
+    }
+}
+
 string scorefile_entry::death_place(death_desc_verbosity verbosity) const
 {
     bool verbose = (verbosity == DDV_VERBOSE);
@@ -2043,7 +2057,7 @@ string scorefile_entry::death_place(death_desc_verbosity verbosity) const
     if (verbosity == DDV_ONELINE || verbosity == DDV_TERSE)
         return " (" + level_id(branch, dlvl).describe() + ")";
 
-    if (verbose && death_type != KILLED_BY_QUITTING && death_type != KILLED_BY_WIZMODE)
+    if (verbose && !_very_boring_death_type(death_type))
         place += "...";
 
     // where did we die?
@@ -2339,6 +2353,10 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
     case KILLED_BY_WIZMODE:
         desc += terse? "wizmode" : "Entered wizard mode";
+        break;
+
+    case KILLED_BY_EXPLORING:
+        desc += terse? "exploremode" : "Entered explore mode";
         break;
 
     case KILLED_BY_DRAINING:
@@ -2729,8 +2747,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             else
                 desc = _append_sentence_delimiter(desc, ".");
         }
-        else if (death_type != KILLED_BY_QUITTING
-                 && death_type != KILLED_BY_WIZMODE)
+        else if (!_very_boring_death_type(death_type))
         {
             desc += _hiscore_newline_string();
 
@@ -3079,8 +3096,8 @@ void mark_milestone(const string &type, const string &milestone,
 #endif
 
     const string xlog_line = xl.xlog_line();
-    const string milestone_file = catpath(
-        Options.save_dir, "milestones" + crawl_state.game_type_qualifier());
+    const string milestone_file = _log_file_name(true);
+
     if (FILE *fp = lk_open("a", milestone_file))
     {
         fprintf(fp, "%s\n", xlog_line.c_str());

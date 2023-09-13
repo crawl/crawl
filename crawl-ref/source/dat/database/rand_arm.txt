@@ -158,13 +158,73 @@ Circus Animal
 Monkey's Uncle
 
 #classical mythical animals
+Centaur
+
 Cockatrice
+
+Chimera
 
 Dragon
 
 Griffon
 
+Hecatoncheires
+
+Hippogriff
+
 Kraken
+
+Skiapode
+
+Unicorn
+
+# Iapon
+
+Akabeko
+
+Baku
+
+Byakko
+
+Ikuchi
+
+Kappa
+
+Kitsune
+
+Kodama
+
+Oni
+
+Shishi
+
+Tsukumogami
+
+# Brasilia
+
+Curupira
+
+Mpinguari
+
+# Unlikely hybrids
+
+Giraffatuar
+
+Mertaur
+
+Merwolf
+
+Platytaur
+
+Rhinotaur
+
+Taurataur
+
+Treeataur
+
+Wereyak
+
+Zebrataur
 
 # modern mythical animals
 Chupacabra
@@ -265,32 +325,6 @@ Omission
 Restlessness
 
 the Doldrums
-
-%%%%
-_mental_illness_armour_
-Agoraphobia
-
-Catatonia
-
-Claustrophobia
-
-Depression
-
-Dyspraxia
-
-Hysteria
-
-Kleptomania
-
-Masochism
-
-Melancholy
-
-Mental Paralysis
-
-Narcissism
-
-Paranoia
 
 %%%%
 _good_or_divine_
@@ -979,6 +1013,25 @@ the Sacrificial Victim
 the Slightly Bent
 
 the Storm King
+
+#pasta
+Ravioli
+
+Spaghetti
+
+Tortelloni
+
+Farfalle
+
+Rotini
+
+Vermicelli
+
+Macaroni
+
+w:1
+the Pastamancer
+
 
 %%%%
 _card_

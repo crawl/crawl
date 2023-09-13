@@ -85,6 +85,7 @@ sub rebrace($$$)
 
 for my $f (@files)
 {
+    next if $f =~ /catch_amalgamated\.cc/;
     open F, "<", $f or (print(STDERR "Can't read $f\n"), next);
     my $old = $_ = <F>;
     close F;
@@ -133,7 +134,7 @@ for my $f (@files)
     /rebrace($1,$2,$3)/egsmx if $add_braces;
 
     # return is not a function, eliminate totally enclosing parentheses.
-    # This part handles parenthese-less payloads.
+    # This part handles parentheses-less payloads.
     while (/^( *)return \(([^()]+)\);/sm)
     {
         # Done this roundabout way to properly unindent multiline blocks.

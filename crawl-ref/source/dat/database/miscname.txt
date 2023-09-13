@@ -104,10 +104,6 @@ terrific
 transcendent
 
 wondrous
-
-w:1
-pretty good
-
 %%%%
 welcome_spam
 
@@ -125,8 +121,6 @@ Everyone else who sought the Orb of Zot has failed. Will you be different?
 
 They say the Orb of Zot lies within this dungeon, but they say a lot of things.
 
-You feel drawn to the Orb of Zot, downwards into the unfathomable depths...
-
 The @_great_adj_@ Orb of Zot lies far below, as if waiting for you to find it.
 
 Below lies the Orb of Zot, rumoured to be powerful enough to resurrect a god...
@@ -136,6 +130,22 @@ The Orb of Zot is coveted for many reasons. Will you seize it for your own?
 A smirking vizier told you that the Orb of Zot is just within this dungeon.
 
 If you return without finding the Orb of Zot, so far below, it's all over!
+
+It's a long way down to the Orb of Zot, but that shouldn't be any trouble.
+%%%%
+welcome_spam dungeon descent
+
+Will you descend where others failed? Will you find the Orb of Zot?
+
+Will you be the one to descend and find the @_great_adj_@ Orb of Zot?
+
+Are you destined to descend to the @_great_adj_@ Orb of Zot, or to die trying?
+
+You feel drawn to descend into the unfathomable depths for the Orb of Zot...
+
+The @_great_adj_@ Orb of Zot lies below, waiting for you to descend and find it.
+
+If you descend without finding the Orb of Zot, so far below, it's all over!
 %%%%
 # things that surround us on Halloween
 _halloween_things_

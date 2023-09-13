@@ -13,6 +13,7 @@
     * [MSYS2 (Recommended)](#msys2-recommended)
     * [Windows Subsystem for Linux (WSL)](#windows-subsystem-for-linux-wsl)
     * [Visual Studio](#visual-studio)
+  * [Android](#android)
 * [Advanced](#advanced)
   * [ccache](#ccache)
   * [Installing For All Users](#installing-for-all-users)
@@ -22,6 +23,7 @@
   * [Lua](#lua)
   * [PCRE](#pcre)
   * [Unicode](#unicode)
+* [Troubleshooting](#troubleshooting)
 * [Getting Help](#getting-help)
 
 ## Getting DCSS To Run
@@ -121,7 +123,6 @@ Dependencies](#packaged-dependencies) above):
 * sqlite
 * zlib
 * pcre
-* zlib
 * freetype (tiles builds only)
 * DejaVu fonts (tiles builds only)
 * SDL2 (tiles builds only)
@@ -147,7 +148,7 @@ help of the `linuxdeploy` tool.
 3. Follow [the above compilation steps](#compiling) and, when running `make`,
    include the `appimage` target and the path to `linuxdeploy` in the
    `LINUXDEPLOY` parameter.
-    
+
     ```sh
     # console build
     make LINUXDEPLOY=/path/to/linuxdeploy.AppImage appimage
@@ -157,12 +158,18 @@ help of the `linuxdeploy` tool.
 
 ## macOS
 
+The supported build method is via the command line. While installed Xcode is a
+a prerequisite for building, we do not support building within the Xcode app.
+
 1. Before building on macOS, you need a working copy of Xcode and the
-   associated command line tools.
+   associated command line tools (this installs a build toolchain).
     1. Install Xcode from the App Store
     2. Open Xcode and say yes if you are prompted to install optional developer
        tools. (You can quit Xcode after this completes.)
     3. Run `xcode-select --install` in a Terminal
+    4. Optional: install various command line conveniences from a package
+       manager (e.g anaconda, macports, or homebrew), such as GNU coreutils,
+       GNU make, an up-to-date python version, [ccache](#ccache), etc.
 
 2. You will also need to install DCSS's bundled dependencies:
 
@@ -177,11 +184,28 @@ help of the `linuxdeploy` tool.
     pip install pyyaml
     ```
 
-3. If you want to build a macOS application, add `mac-app-tiles` to your make
-   command, eg: `make -j4 mac-app-tiles TILES=y`. This will create an application in
-   `mac-app-zips/` of the source directory.
+    This step can go wrong if you have multiple python installs; ensure that
+    `pip` corresponds with the default `python3` binary. You can also install
+    this package in other ways, via package managers such as anaconda,
+    macports, or homebrew.
 
-Then follow [the above compilation steps](#compiling).
+4. Then follow [the above command-line compilation steps](#compiling).
+
+### Building a mac app
+
+The above instructions (as on linux) build a binary that can be run at the
+command line. To instead build a macOS application package, add
+`mac-app-tiles` or `mac-app-console` to your make command, eg:
+
+    make -j4 TILES=y mac-app-tiles
+    make -j4 mac-app-console
+
+This will create an application in `mac-app-zips/` of the source directory The
+build process does not sign applications. The build targets
+`mac-app-tiles-universal` and `mac-app-console-universal` will build x86/ARM
+universal binaries, which are generally only needed for distribution purposes.
+(A regular x86 application will run fine under Rosetta, but a non-universal
+binary built on ARM won't run on x86.)
 
 ## Windows
 
@@ -412,8 +436,8 @@ Troubleshooting tips:
 - Use "Rebuild Solution" to make sure all files are rewritten
 - Make sure all projects use `/MD` (or `/MDd` for the debug version)
 - Make sure the appropriate (`/MD` or `/MDd`) CRT libraries are included for
-  SDL, crawl, and tilegen
-  (https://msdn.microsoft.com/en-us/library/abx4dbyh.aspx)
+  SDL, crawl, and
+  [tilegen](https://msdn.microsoft.com/en-us/library/abx4dbyh.aspx).
 - Make sure `libpng.dll`, `SDL2.dll`, and `SDL2_image.dll` are in
   `crawl-ref/source` after building the `Contribs` solution. These are copied
   post-build from their original location in
@@ -430,6 +454,11 @@ Troubleshooting tips:
   build process, but will not stop the build from working.  `fresh.bat` inside
   the MSVC folder will clear these files, making sure `tilegen.exe` stops the
   build process if it fails.
+
+## Android
+
+The android build is done within Android Studio, or at the command line via
+gradle. See [docs/develop/android.txt](docs/develop/android.txt) for details.
 
 ## Advanced
 
@@ -520,7 +549,7 @@ automatically if flex/bison is not available.
 ### Code Coverage
 
 Code coverage requires some more package to be installed. See
-[testing.md](crawl-ref/docs/develop/testing.md) for more info.
+[testing.md](docs/develop/testing.md) for more info.
 
 ### Lua
 
@@ -552,6 +581,23 @@ settings. For anything more, please select one of TrueType fonts. If, like one
 of our players, you are deeply attached to the looks of bitmap fonts, you can
 [download a corrected version of the Terminal
 font](http://www.yohng.com/software/terminalvector.html)
+
+## Troubleshooting
+
+When compiling, you may run into the following errors: 
+
+    cat: util/release_ver: No such file or directory
+    
+    Can't get version information: `git describe` failed (no git, 
+    no repository, or shallow clone), and util/release_ver doesn't exist.
+
+To solve this, run:
+
+    git remote add upstream https://github.com/crawl/crawl/
+    git fetch --tags upstream
+
+If this doesn't resolve the problem, you can try creating `util/release_ver`
+manually, with contents along the lines of `0.31-a0`.
 
 ## Getting Help
 

@@ -7,6 +7,7 @@
 #include "artefact.h"
 #include "branch.h"
 #include "cloud.h"
+#include "dungeon.h" // DESCENT_STAIRS_KEY
 #include "duration-type.h"
 #include "env.h"
 #include "evoke.h"
@@ -26,6 +27,7 @@
 #include "spl-summoning.h" // NEXT_DOOM_HOUND_KEY in duration-data
 #include "spl-transloc.h" // for you_teleport_now() in duration-data
 #include "stairs.h" // rise_through_ceiling
+#include "state.h" // crawl_state
 #include "stringutil.h"
 #include "throw.h"
 #include "transform.h"
@@ -165,7 +167,6 @@ static void _describe_poison(status_info& inf);
 static void _describe_transform(status_info& inf);
 static void _describe_stat_zero(status_info& inf, stat_type st);
 static void _describe_terrain(status_info& inf);
-static void _describe_missiles(status_info& inf);
 static void _describe_invisible(status_info& inf);
 static void _describe_zot(status_info& inf);
 
@@ -230,22 +231,10 @@ bool fill_status_info(int status, status_info& inf)
             inf.short_text   = "sluggish";
             inf.long_text    = "You are moving sluggishly.";
         }
-        if (you.in_liquid())
-            inf.light_colour = DARKGREY;
         break;
 
     case STATUS_ZOT:
         _describe_zot(inf);
-        break;
-
-    case STATUS_CURL:
-        if (you.props[PALENTONGA_CURL_KEY].get_bool())
-        {
-            inf.light_text = "Curl";
-            inf.light_colour = BLUE;
-            inf.short_text = "curled up";
-            inf.long_text = "You are defensively curled.";
-        }
         break;
 
     case STATUS_AIRBORNE:
@@ -259,6 +248,27 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_text   = "Mesm";
             inf.short_text   = "mesmerised";
             inf.long_text    = "You are mesmerised.";
+        }
+        break;
+
+    case STATUS_PEEKING:
+        if (crawl_state.game_is_descent() && !env.properties.exists(DESCENT_STAIRS_KEY))
+        {
+            inf.light_colour = WHITE;
+            inf.light_text   = "Peek";
+            inf.short_text   = "peeking";
+            inf.long_text    = "You are peeking down the stairs.";
+        }
+        break;
+
+    case STATUS_IN_DEBT:
+        if (you.props.exists(DESCENT_DEBT_KEY))
+        {
+            inf.light_colour = RED;
+            inf.light_text = make_stringf("Debt (%d)",
+                          you.props[DESCENT_DEBT_KEY].get_int());
+            inf.short_text   = "in debt";
+            inf.long_text    = "You are in debt. Gold earned will pay it off.";
         }
         break;
 
@@ -371,10 +381,6 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
     }
-
-    case STATUS_MISSILES:
-        _describe_missiles(inf);
-        break;
 
     case STATUS_INVISIBLE:
         _describe_invisible(inf);
@@ -666,9 +672,9 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
-    case DUR_PORTAL_PROJECTILE:
+    case DUR_DIMENSIONAL_BULLSEYE:
     {
-        if (!is_pproj_active())
+        if (!is_bullseye_active())
             inf.light_colour = DARKGREY;
         break;
     }
@@ -920,12 +926,11 @@ static void _describe_airborne(status_info& inf)
     const bool perm      = you.permanent_flight();
     const bool expiring  = (!perm && dur_expiring(DUR_FLIGHT));
     const bool emergency = you.props[EMERGENCY_FLIGHT_KEY].get_bool();
-    const string desc   = you.tengu_flight() ? " quickly and evasively" : "";
 
     inf.light_colour = perm ? WHITE : emergency ? LIGHTRED : BLUE;
     inf.light_text   = "Fly";
-    inf.short_text   = "flying" + desc;
-    inf.long_text    = "You are flying" + desc + ".";
+    inf.short_text   = "flying";
+    inf.long_text    = "You are flying.";
     inf.light_colour = _dur_colour(inf.light_colour, expiring);
     _mark_expiring(inf, expiring);
 }
@@ -990,17 +995,6 @@ static void _describe_terrain(status_info& inf)
     }
 }
 
-static void _describe_missiles(status_info& inf)
-{
-    if (you.missile_repulsion())
-    {
-        inf.light_colour = WHITE;
-        inf.light_text   = "RMsl";
-        inf.short_text   = "repel missiles";
-        inf.long_text    = "You repel missiles.";
-    }
-}
-
 static void _describe_invisible(status_info& inf)
 {
     if (!you.duration[DUR_INVIS] && you.form != transformation::shadow)
@@ -1029,7 +1023,7 @@ static void _describe_invisible(status_info& inf)
 /**
  * Does a given duration tick down simply over time?
  *
- * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @param dur   The duration in question (e.g. DUR_PETRIFIED).
  * @return      Whether the duration's end_msg is non-null.
  */
 bool duration_decrements_normally(duration_type dur)
@@ -1040,7 +1034,7 @@ bool duration_decrements_normally(duration_type dur)
 /**
  * What message should a given duration print when it expires, if any?
  *
- * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @param dur   The duration in question (e.g. DUR_PETRIFIED).
  * @return      A message to print for the duration when it ends.
  */
 const char *duration_end_message(duration_type dur)
@@ -1052,7 +1046,7 @@ const char *duration_end_message(duration_type dur)
  * What message should a given duration print when it passes its
  * expiring threshold, if any?
  *
- * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @param dur   The duration in question (e.g. DUR_PETRIFIED).
  * @return      A message to print.
  */
 const char *duration_expire_message(duration_type dur)
@@ -1064,7 +1058,7 @@ const char *duration_expire_message(duration_type dur)
  * How much should the duration be decreased by when it passes its
  * expiring threshold (to fuzz the remaining time), if at all?
  *
- * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @param dur   The duration in question (e.g. DUR_PETRIFIED).
  * @return      A random value to reduce the remaining duration by; may be 0.
  */
 int duration_expire_offset(duration_type dur)
@@ -1076,7 +1070,7 @@ int duration_expire_offset(duration_type dur)
  * At what number of turns remaining is the given duration considered to be
  * 'expiring', for purposes of messaging & status light colouring?
  *
- * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @param dur   The duration in question (e.g. DUR_PETRIFIED).
  * @return      The maximum number of remaining turns at which the duration
  *              is considered 'expiring'; may be 0.
  */
@@ -1088,7 +1082,7 @@ int duration_expire_point(duration_type dur)
 /**
  * What channel should the duration messages be printed in?
  *
- * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @param dur   The duration in question (e.g. DUR_PETRIFIED).
  * @return      The appropriate message channel, e.g. MSGCH_RECOVERY.
  */
 msg_channel_type duration_expire_chan(duration_type dur)
@@ -1100,7 +1094,7 @@ msg_channel_type duration_expire_chan(duration_type dur)
 /**
  * If a duration has some special effect when ending, trigger it.
  *
- * @param dur   The duration in question (e.g. DUR_PETRIFICATION).
+ * @param dur   The duration in question (e.g. DUR_PETRIFIED).
  */
 void duration_end_effect(duration_type dur)
 {

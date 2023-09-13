@@ -60,6 +60,11 @@ LUARET1(you_turn_is_over, boolean, you.turn_is_over)
  * @function name
  */
 LUARET1(you_name, string, you.your_name.c_str())
+/*** Get name of player's species.
+ * @treturn string
+ * @function species
+ */
+LUARET1(you_species, string, species::name(you.species).c_str())
 /*** Get name of player's race.
  * @treturn string
  * @function race
@@ -124,6 +129,22 @@ LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
  * @function base_mp
  */
 LUARET1(you_base_mp, number, get_real_mp(false))
+/*** Armour class.
+ * @treturn int
+ * @function ac
+ */
+LUARET1(you_ac, number, you.armour_class())
+/*** Evasion.
+ * @treturn int
+ * @function ev
+ */
+LUARET1(you_ev, number, you.evasion())
+/*** Shield class.
+ * @treturn int
+ * @function sh
+ */
+LUARET1(you_sh, number, player_displayed_shield_class())
+
 /*** How much drain.
  * @treturn int
  * @function drain
@@ -887,16 +908,6 @@ static int you_gold(lua_State *ls)
     PLUARET(number, you.gold);
 }
 
-/*** Can you eat chunks?
- * @treturn boolean
- * @function you_can_consume_corpses
- */
-static int you_can_consume_corpses(lua_State *ls)
-{
-    lua_pushboolean(ls, false);
-    return 1;
-}
-
 static int _you_have_rune(lua_State *ls)
 {
     int which_rune = NUM_RUNE_TYPES;
@@ -1101,9 +1112,9 @@ LUAFN(you_train_skill)
     skill_type sk = str_to_skill_safe(luaL_checkstring(ls, 1));
     if (lua_gettop(ls) >= 2 && can_enable_skill(sk))
     {
-        you.train[sk] = min(max((training_status)luaL_safe_checkint(ls, 2),
+        set_training_status(sk, min(max((training_status)luaL_safe_checkint(ls, 2),
                                                  TRAINING_DISABLED),
-                                             TRAINING_FOCUSED);
+                                             TRAINING_FOCUSED));
         reset_training();
     }
 
@@ -1240,6 +1251,7 @@ static const struct luaL_reg you_clib[] =
     { "ability_table", l_you_abil_table },
     { "known_items" , you_known_items },
     { "name"        , you_name },
+    { "species"     , you_species },
     { "race"        , you_race },
     { "hand"        , you_hand },
     { "class"       , you_class },
@@ -1254,6 +1266,9 @@ static const struct luaL_reg you_clib[] =
     { "hp"          , you_hp },
     { "mp"          , you_mp },
     { "base_mp"     , you_base_mp },
+    { "ac"          , you_ac },
+    { "ev"          , you_ev },
+    { "sh"          , you_sh },
     { "drain"       , you_drain },
     { "strength"    , you_strength },
     { "intelligence", you_intelligence },
@@ -1322,8 +1337,6 @@ static const struct luaL_reg you_clib[] =
     { "constricting", you_constricting },
     { "status",       you_status },
     { "immune_to_hex", you_immune_to_hex },
-
-    { "can_consume_corpses",      you_can_consume_corpses },
 
     { "stop_activity", you_stop_activity },
     { "taking_stairs", you_taking_stairs },

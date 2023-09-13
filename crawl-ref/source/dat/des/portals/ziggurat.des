@@ -42,7 +42,7 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_b
-TAGS:    zig_entry transparent
+TAGS:    zig_entry transparent no_descent
 KMASK:   O = opaque
 KFEAT:   O = enter_ziggurat no_mimic
 TAGS:    no_pool_fixup
@@ -65,7 +65,7 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_c
-TAGS:    zig_entry no_trap_gen transparent
+TAGS:    zig_entry no_trap_gen transparent no_descent
 KFEAT:   O = enter_ziggurat no_mimic
 MONS:    lich / ancient lich / dread lich
 MONS:    angel / daeva
@@ -90,7 +90,7 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_d
-TAGS:    zig_entry no_trap_gen transparent
+TAGS:    zig_entry no_trap_gen transparent no_descent
 KFEAT:   O = enter_ziggurat no_mimic
 MONS:    lich / ancient lich / dread lich
 MONS:    angel / daeva
@@ -134,7 +134,7 @@ MAP
 ENDMAP
 
 NAME:   enter_ziggurat_f
-TAGS:   zig_entry no_trap_gen transparent
+TAGS:   zig_entry no_trap_gen transparent no_descent
 KFEAT:  O = enter_ziggurat no_mimic
 MONS:   angel / nothing w:20
 KPROP:  1Om; = no_tele_into

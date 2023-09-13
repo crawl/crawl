@@ -326,6 +326,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEEP_ELF_BLADEMASTER:
     case TILEP_MONS_HEADMASTER:
     case TILEP_MONS_CRIMSON_IMP:
+    case TILEP_MONS_CERULEAN_IMP:
     case TILEP_MONS_IRON_IMP:
     case TILEP_MONS_SHADOW_IMP:
     case TILEP_MONS_HAROLD:
@@ -343,6 +344,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_ANCESTOR_BATTLEMAGE:
     case TILEP_MONS_RAGGED_HIEROPHANT:
     case TILEP_MONS_VAMPIRE_MAGE:
+    case TILEP_MONS_NORRIS:
         *ofs_x = 0;
         *ofs_y = 0;
         break;
@@ -381,6 +383,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_GRUM:
     case TILEP_MONS_GRUNN:
     case TILEP_MONS_GNOLL_BOUDA:
+    case TILEP_MONS_NESSOS_BOWLESS:
         *ofs_x = -3;
         *ofs_y = 0;
         break;
@@ -426,6 +429,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_PSYCHE:
     case TILEP_MONS_DUVESSA:
     case TILEP_MONS_DUVESSA_1:
+    case TILEP_MONS_JEREMIAH:
         *ofs_x = 0;
         *ofs_y = -1;
         break;
@@ -654,6 +658,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     // Shift downwards and to the right.
     case TILEP_MONS_OGRE:
+    case TILEP_MONS_SWAMP_OGRE:
     case TILEP_MONS_OGRE_MAGE:
     case TILEP_MONS_IRONBOUND_THUNDERHULK:
     case TILEP_MONS_LODUL:
@@ -884,6 +889,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEMONSPAWN_WARMONGER:
     case TILEP_MONS_DEMONSPAWN_CORRUPTER:
     case TILEP_MONS_DEMONSPAWN_BLACK_SUN:
+    case TILEP_MONS_NORRIS:
         *ofs_x = 2;
         *ofs_y = 0;
         break;
@@ -1042,6 +1048,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
 
     case TILEP_MONS_GHOUL:
     case TILEP_MONS_OGRE:
+    case TILEP_MONS_SWAMP_OGRE:
         *ofs_x = 2;
         *ofs_y = 1;
         break;
@@ -1134,6 +1141,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         break;
 
     case TILEP_MONS_WRETCHED_STAR:
+    case TILEP_MONS_JEREMIAH:
         *ofs_x = 1;
         *ofs_y = -4;
         break;
@@ -1396,7 +1404,7 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
     ac /= 10;
 
     // Become uncannily spooky!
-    if (today_is_halloween())
+    if (!Options.tile_grinch && today_is_halloween())
         m_doll.parts[TILEP_PART_HELM] = TILEP_HELM_PUMPKIN;
     else if (m_doll.parts[TILEP_PART_HELM] == TILEP_HELM_PUMPKIN)
         m_doll.parts[TILEP_PART_HELM] = TILEP_HELM_FIRST_NORM; // every day is *not* halloween
@@ -1486,7 +1494,7 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
         break;
 
     case SK_RANGED_WEAPONS:
-        m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_BOW2;
+        m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_SHORTBOW;
         break;
 
 #if TAG_MAJOR_VERSION == 34

@@ -310,13 +310,20 @@ static string mi_calc_major_healing(monster* mons)
 static string mi_calc_freeze_damage(monster* mons)
 {
     const int pow = mons_power_for_hd(SPELL_FREEZE, mons->get_hit_dice());
-    return dice_def_string(freeze_damage(pow));
+    return dice_def_string(freeze_damage(pow, false));
 }
 
 static string mi_calc_irradiate_damage(const monster &mon)
 {
     const int pow = mons_power_for_hd(SPELL_IRRADIATE, mon.get_hit_dice());
     return dice_def_string(irradiate_damage(pow));
+}
+
+static string mi_calc_resonance_strike_damage(monster* mons)
+{
+    const int pow = mons->spell_hd(SPELL_RESONANCE_STRIKE);
+    dice_def dice = resonance_strike_base_damage(pow);
+    return describe_resonance_strike_dam(dice);
 }
 
 /**
@@ -346,15 +353,18 @@ static string mons_human_readable_spell_damage_string(monster* monster,
             return "3x" + dice_def_string(ball_lightning_damage(mons_ball_lightning_hd(pow, false)));
         case SPELL_MARSHLIGHT:
             return "2x" + dice_def_string(zap_damage(ZAP_FOXFIRE, pow, true));
+        case SPELL_PLASMA_BEAM:
+            return "2x" + dice_def_string(zap_damage(ZAP_PLASMA, pow, true));
         case SPELL_WATERSTRIKE:
             spell_beam.damage = waterstrike_damage(monster->spell_hd(sp));
             break;
         case SPELL_RESONANCE_STRIKE:
-            return dice_def_string(resonance_strike_base_damage(*monster))
-                   + "+"; // could clarify further?
+            return mi_calc_resonance_strike_damage(monster);
         case SPELL_IOOD:
             spell_beam.damage = mi_calc_iood_damage(monster);
             break;
+        case SPELL_POLAR_VORTEX:
+            return dice_def_string(polar_vortex_dice(pow, true)) + "*";
         case SPELL_IRRADIATE:
             return mi_calc_irradiate_damage(*monster);
         case SPELL_VAMPIRIC_DRAINING:
@@ -1037,6 +1047,9 @@ int main(int argc, char* argv[])
                 case AF_MUTATE:
                     monsterattacks += colour(LIGHTGREEN, "(mutation)");
                     break;
+                case AF_MINIPARA:
+                    monsterattacks += colour(LIGHTRED, "(minipara)");
+                    break;
                 case AF_POISON_PARALYSE:
                     monsterattacks += colour(LIGHTRED, "(paralyse)");
                     break;
@@ -1115,6 +1128,12 @@ int main(int argc, char* argv[])
                     break;
                 case AF_SPIDER:
                     monsterattacks += colour(YELLOW, "(summon spider)");
+                    break;
+                case AF_BLOODZERK:
+                    monsterattacks += colour(RED, "(bloodzerk)");
+                    break;
+                case AF_SLEEP:
+                    monsterattacks += colour(BLUE, "(sleep)");
                     break;
                 case AF_CRUSH:
                 case AF_PLAIN:

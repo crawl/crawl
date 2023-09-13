@@ -13,7 +13,7 @@
 default-depth:  Depths, !Depths:$
 
 NAME:   grated_community_mu
-TAGS:   no_rotate no_monster_gen no_item_gen
+TAGS:   no_rotate no_monster_gen no_item_gen no_descent
 ORIENT: north
 MONS:   patrolling vault guard, patrolling wolf, patrolling centaur warrior
 MONS:   generate_awake lemure, kobold
@@ -121,7 +121,7 @@ ccccccccccccccccccccccccccccccccccccccccccgggccccccccccccccccccccccccccccccccccc
 ENDMAP
 
 ####  Room subvaults for the homes in grated_community_mu
-####  vampire, some slaves, bloody lounge, bricked up window, guard dogs
+####  vampire, some bound demons, bloody lounge, bricked up window, guard dogs
 NAME: grated_community_mu_vampire_home
 TAGS: grated_community_mu_home grated_community_mu_home1 unrand
 KMONS:   1 = generate_awake lemure

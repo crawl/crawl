@@ -17,8 +17,8 @@ function dk_xom_monty_hall(door_char, goblin_char)
 
   crawl.god_speaks("Xom", "You feel as though Xom is toying with you.")
   crawl.mpr("Suddenly, the walls become transparent!")
-  for slave in iter.slave_iterator('char', str) do
-    dgn.terrain_changed(slave.x, slave.y, "clear_rock_wall", false)
+  for replica in iter.replica_iterator('char', str) do
+    dgn.terrain_changed(replica.x, replica.y, "clear_rock_wall", false)
   end
 
 end

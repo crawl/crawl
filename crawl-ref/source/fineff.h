@@ -235,32 +235,31 @@ protected:
     }
 };
 
-class shock_serpent_discharge_fineff : public final_effect
+class shock_discharge_fineff : public final_effect
 {
 public:
     bool mergeable(const final_effect &a) const override;
     void merge(const final_effect &a) override;
     void fire() override;
 
-    static void schedule(const actor *serpent, actor &oppressor,
-                         coord_def pos, int pow)
+    static void schedule(const actor *discharger, actor &oppressor,
+                         coord_def pos, int pow, string shock_source)
     {
-        final_effect::schedule(new shock_serpent_discharge_fineff(serpent,
-                                                                  oppressor,
-                                                                  pos, pow));
+        final_effect::schedule(new shock_discharge_fineff(discharger,
+                                                          oppressor, pos, pow,
+                                                          shock_source));
     }
 protected:
-    shock_serpent_discharge_fineff(const actor *serpent, actor &rudedude,
-                                   coord_def pos, int pow)
-        : final_effect(0, serpent, coord_def()), oppressor(rudedude),
-          position(pos), power(pow),
-        attitude(mons_attitude(*serpent->as_monster()))
+    shock_discharge_fineff(const actor *discharger, actor &rudedude,
+                           coord_def pos, int pow, string shock_src)
+        : final_effect(0, discharger, coord_def()), oppressor(rudedude),
+          position(pos), power(pow), shock_source(shock_src)
     {
     }
     actor &oppressor;
     coord_def position;
     int power;
-    mon_attitude_type attitude;
+    string shock_source;
 };
 
 enum explosion_fineff_type : int {
@@ -499,6 +498,36 @@ public:
 protected:
     spectral_weapon_fineff(const actor &attack, const actor &defend)
         : final_effect(&attack, &defend, coord_def())
+    {
+    }
+};
+
+class lugonu_meddle_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &) const override { return true; };
+    void fire() override;
+
+    static void schedule() {
+        final_effect::schedule(new lugonu_meddle_fineff());
+    }
+protected:
+    lugonu_meddle_fineff() : final_effect(nullptr, nullptr, coord_def()) { }
+};
+
+class jinxbite_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &/*a*/) const override { return false; };
+    void fire() override;
+
+    static void schedule(const actor *defend)
+    {
+        final_effect::schedule(new jinxbite_fineff(defend));
+    }
+protected:
+    jinxbite_fineff(const actor *defend)
+        : final_effect(nullptr, defend, coord_def())
     {
     }
 };

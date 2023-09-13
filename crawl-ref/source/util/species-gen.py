@@ -180,7 +180,7 @@ ALL_APTITUDES = ('fighting', 'short_blades', 'long_blades', 'axes',
     'spellcasting', 'conjurations', 'hexes', 'summoning',
     'necromancy', 'transmutations', 'translocations', 'fire_magic',
     'ice_magic', 'air_magic', 'earth_magic', 'poison_magic', 'invocations',
-    'evocations')
+    'evocations', 'shapeshifting')
 UNDEAD_TYPES = ('US_ALIVE', 'US_UNDEAD', 'US_SEMI_UNDEAD')
 SIZES = ('SIZE_TINY', 'SIZE_LITTLE', 'SIZE_SMALL', 'SIZE_MEDIUM', 'SIZE_LARGE',
     'SIZE_GIANT')
@@ -321,7 +321,7 @@ def aptitudes(apts):
     for apt, val in apts.items():
         if apt not in ALL_APTITUDES and apt not in ('xp', 'hp', 'mp_mod', 'mr'):
             raise ValueError("Unknown aptitude (typo?): %s" % apt)
-        validate_int_range(val, apt, -10, 10)
+        validate_int_range(val, apt, -10, 20)
     return apts
 
 

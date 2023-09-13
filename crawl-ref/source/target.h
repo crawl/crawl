@@ -273,6 +273,13 @@ public:
     aff_type is_affected(coord_def loc) override;
 };
 
+class targeter_siphon_essence : public targeter_radius
+{
+public:
+    targeter_siphon_essence();
+    aff_type is_affected(coord_def loc) override;
+};
+
 class targeter_thunderbolt : public targeter
 {
 public:
@@ -400,7 +407,6 @@ private:
 };
 
 string bad_charge_target(coord_def a);
-bool can_charge_through_mons(coord_def a);
 
 // a fixed los targeter matching how it is called for shatter, with a custom
 // tweak to affect walls.
@@ -563,4 +569,12 @@ class targeter_anguish : public targeter_multimonster
 public:
     targeter_anguish();
     bool affects_monster(const monster_info& mon) override;
+};
+
+class targeter_poisonous_vapours : public targeter_smite
+{
+public:
+    targeter_poisonous_vapours(const actor *act, int range);
+    bool affects_monster(const monster_info& mon) override;
+    bool valid_aim(coord_def a) override;
 };

@@ -22,6 +22,7 @@ aptitudes:
   dodging: -2
   stealth: 3
   shields: -1
+  shapeshifting: -1
   evocations: -1
 str: 10
 int: 8
@@ -36,7 +37,6 @@ mutations:
     MUT_MANA_SHIELD: 1
     MUT_ANTIMAGIC_BITE: 1
     MUT_NO_POTION_HEAL: 2
-  4:
     MUT_REGENERATION: 1
   8:
     MUT_FANGS: 1

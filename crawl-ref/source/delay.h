@@ -14,6 +14,7 @@
 #include "mpr.h"
 #include "operation-types.h"
 #include "seen-context-type.h"
+#include "transformation.h"
 
 using std::vector;
 
@@ -698,6 +699,29 @@ public:
     const char* name() const override
     {
         return "revivify";
+    }
+};
+
+class TransformDelay : public Delay
+{
+    transformation form;
+
+    bool was_prompted = false;
+
+    void start() override;
+    void tick() override;
+    bool invalidated() override;
+    void finish() override;
+public:
+    TransformDelay(transformation f) :
+                   Delay(3), form(f)
+    { }
+
+    bool try_interrupt(bool force = false) override;
+
+    const char* name() const override
+    {
+        return "transform";
     }
 };
 

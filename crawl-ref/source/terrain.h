@@ -89,6 +89,7 @@ bool feat_is_portal_entrance(dungeon_feature_type feat);
 bool feat_is_portal_exit(dungeon_feature_type feat);
 
 bool feat_is_bidirectional_portal(dungeon_feature_type feat);
+bool feat_is_descent_exitable(dungeon_feature_type feat);
 bool feat_is_fountain(dungeon_feature_type feat);
 bool feat_is_reachable_past(dungeon_feature_type feat);
 
@@ -104,6 +105,7 @@ void find_connected_identical(const coord_def& d, set<coord_def>& out, bool know
 
 bool slime_wall_neighbour(const coord_def& c);
 int count_adjacent_slime_walls(const coord_def &pos);
+int slime_wall_corrosion(actor* act);
 void slime_wall_damage(actor* act, int delay);
 
 int count_adjacent_icy_walls(const coord_def &pos);
@@ -120,7 +122,9 @@ void dungeon_terrain_changed(const coord_def &pos,
                              bool preserve_features = false,
                              bool preserve_items = false,
                              bool temporary = false,
-                             bool wizmode = false);
+                             bool wizmode = false,
+                             unsigned short flv_nfeat = 0,
+                             unsigned short flv_nfeat_idx = 0);
 
 // Moves everything on the level at src to dst.
 void dgn_move_entities_at(coord_def src,
@@ -171,3 +175,6 @@ void dgn_open_door(const coord_def &dest);
 void dgn_break_door(const coord_def &dest);
 
 void ice_wall_damage(monster &victim, int delay);
+
+void descent_crumble_stairs();
+void descent_reveal_stairs();

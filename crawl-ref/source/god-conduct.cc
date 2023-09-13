@@ -77,7 +77,7 @@ static const char *conducts[] =
     "Kill Fast", "Banishment", "Spell Memorise", "Spell Cast",
     "Spell Practise", "Cannibalism", "Deliberate Mutation",
     "Cause Glowing", "Use Unclean", "Use Chaos", "Desecrate Orcish Remains",
-    "Kill Slime", "Kill Plant", "Was Hasty", "Attack In Sanctuary",
+    "Kill Slime", "Was Hasty", "Attack In Sanctuary",
     "Kill Artificial", "Exploration", "Seen Monster",
     "Sacrificed Love", "Hurt Foe", "Use Wizardly Item",
 };
@@ -120,7 +120,7 @@ static void _handle_piety_penance(int piety_change, int piety_denom,
 }
 
 /**
- * Whether good gods that you folow are offended by you attacking a specific
+ * Whether good gods that you follow are offended by you attacking a specific
  * holy monster.
  *
  * @param victim    The holy in question. (May be nullptr.)
@@ -383,10 +383,6 @@ static peeve_map divine_peeves[] =
     },
     // GOD_FEDHAS,
     {
-        { DID_KILL_PLANT, {
-            "you destroy plants", false,
-            1, 0
-        } },
         { DID_ATTACK_FRIEND, _on_attack_friend(nullptr) },
     },
     // GOD_CHEIBRIADOS,
@@ -568,7 +564,7 @@ static int _piety_bonus_for_holiness(mon_holy_type holiness)
  * @param god_is_good   Whether this is a good god.
  *                      (They don't scale piety with XL in the same way...?)
  * @param special       A special-case function.
- * @return              An appropropriate like_response.
+ * @return              An appropriate like_response.
  */
 static like_response _on_kill(const char* desc, mon_holy_type holiness,
                               bool god_is_good = false,
@@ -1011,7 +1007,7 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monster &mon,
             _first_attack_was_friendly.insert(mid);
         }
     }
-    else if (mon.neutral() && !mon.has_ench(ENCH_INSANE))
+    else if (mon.neutral() && !mon.has_ench(ENCH_FRENZIED))
         conduct[0].set(DID_ATTACK_NEUTRAL, 5, known, &mon);
 
     // Penance value is handled by remove_sanctuary().
@@ -1154,9 +1150,6 @@ void did_hurt_conduct(conduct_type thing_done,
 bool god_punishes_spell(spell_type spell, god_type god)
 {
     if (map_find(divine_peeves[god], DID_SPELL_CASTING))
-        return true;
-
-    if (god_loathes_spell(spell, god))
         return true;
 
     if (map_find(divine_peeves[god], DID_EVIL)

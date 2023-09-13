@@ -20,12 +20,11 @@ enum unarmed_attack_type
     UNAT_BITE,
     UNAT_PSEUDOPODS,
     UNAT_TENTACLES,
+    UNAT_MAW,
     UNAT_FIRST_ATTACK = UNAT_CONSTRICT,
-    UNAT_LAST_ATTACK = UNAT_TENTACLES,
+    UNAT_LAST_ATTACK = UNAT_MAW,
     NUM_UNARMED_ATTACKS,
 };
-
-const int UC_FORM_TO_HIT_BONUS = 5;
 
 class melee_attack : public attack
 {
@@ -36,9 +35,10 @@ public:
 
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
-    bool         is_riposte;      // long blade retaliation attack
+    bool         is_multihit;     // quick blade follow-up attack
+    bool         is_riposte;      // fencers' retaliation attack
     bool         is_projected;    // projected weapon spell attack
-    int          roll_dist;       // palentonga rolling charge distance
+    int          charge_pow;      // electric charge bonus damage
     wu_jian_attack_type wu_jian_attack;
     int wu_jian_number_of_targets;
     coord_def attack_position;
@@ -51,8 +51,7 @@ public:
     // Applies attack damage and other effects.
     bool attack();
     int calc_to_hit(bool random) override;
-    int post_roll_to_hit_modifiers(int mhit, bool random,
-                                   bool aux = false) override;
+    int post_roll_to_hit_modifiers(int mhit, bool random) override;
 
     static void chaos_affect_actor(actor *victim);
 
@@ -68,7 +67,7 @@ private:
 
     /* Combat Calculations */
     bool using_weapon() const override;
-    int weapon_damage() override;
+    int weapon_damage() const override;
     int calc_mon_to_hit_base() override;
     int apply_damage_modifiers(int damage) override;
     int calc_damage() override;
@@ -113,7 +112,7 @@ private:
     void do_starlight();
 
     /* Brand / Attack Effects */
-    bool do_knockback(bool trample = true);
+    bool do_knockback(bool slippery);
 
     /* Output methods */
     void set_attack_verb(int damage) override;
@@ -142,6 +141,7 @@ private:
 
     int  player_apply_misc_modifiers(int damage) override;
     int  player_apply_final_multipliers(int damage, bool aux = false) override;
+    int  player_apply_postac_multipliers(int damage) override;
 
     void player_exercise_combat_skills() override;
     bool player_monattk_hit_effects();
@@ -151,6 +151,7 @@ private:
     void player_stab_check() override;
     bool player_good_stab() override;
     void player_announce_aux_hit();
+    string charge_desc();
     void player_warn_miss();
     void player_weapon_upsets_god();
     bool bad_attempt();
@@ -166,4 +167,5 @@ private:
     bool can_reach();
 };
 
-string aux_attack_desc(mutation_type mut);
+string aux_attack_desc(unarmed_attack_type unat, int force_damage = -1);
+string mut_aux_attack_desc(mutation_type mut);

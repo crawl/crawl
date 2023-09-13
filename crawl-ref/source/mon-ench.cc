@@ -209,6 +209,10 @@ bool monster::add_ench(const mon_enchant &ench)
     {
         remove_summons();
     }
+
+    if (ench.ench == ENCH_PARALYSIS)
+        stop_directly_constricting_all();
+
     return true;
 }
 
@@ -222,7 +226,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         scale_hp(3, 2);
         // deliberate fall-through
 
-    case ENCH_INSANE:
+    case ENCH_FRENZIED:
         if (has_ench(ENCH_SUBMERGED))
             del_ench(ENCH_SUBMERGED);
 
@@ -270,12 +274,13 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
         if (type == MONS_FLAYED_GHOST)
         {
-            // temporarly change our attitude back (XXX: scary code...)
+            // temporarily change our attitude back (XXX: scary code...)
             unwind_var<mon_enchant_list> enchants(enchantments, mon_enchant_list{});
             unwind_var<FixedBitVector<NUM_ENCHANTMENTS>> ecache(ench_cache, {});
             end_flayed_effect(this);
         }
         del_ench(ENCH_STILL_WINDS);
+        del_ench(ENCH_BULLSEYE_TARGET);
 
         if (is_patrolling())
         {
@@ -473,11 +478,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         shoals_release_tide(this);
         break;
 
-    case ENCH_INSANE:
+    case ENCH_FRENZIED:
         if (mons_is_elven_twin(this))
         {
             monster* twin = mons_find_elven_twin_of(this);
-            if (twin && !twin->has_ench(ENCH_INSANE))
+            if (twin && !twin->has_ench(ENCH_FRENZIED))
                 attitude = twin->attitude;
             else
                 attitude = ATT_HOSTILE;
@@ -497,6 +502,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_SWIFT:
+    case ENCH_PURSUING:
         if (!quiet)
         {
             if (type == MONS_ALLIGATOR)
@@ -555,7 +561,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_FEAR:
     {
         string msg;
-        if (is_nonliving() || berserk_or_insane())
+        if (is_nonliving() || berserk_or_frenzied())
         {
             // This should only happen because of fleeing sanctuary
             msg = " stops retreating.";
@@ -671,6 +677,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         behaviour_event(this, ME_EVAL);
         break;
 
+    case ENCH_CONTAM:
     case ENCH_CORONA:
     case ENCH_SILVER_CORONA:
     if (!quiet)
@@ -1012,6 +1019,22 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " no longer looks unusually toxic.");
         break;
 
+    case ENCH_BOUND:
+        if (!quiet)
+            simple_monster_message(*this, "'s lost momentum returns to it!");
+        add_ench(mon_enchant(ENCH_SWIFT, 1, &you, props[BINDING_SIGIL_DURATION_KEY].get_int()));
+        props.erase(BINDING_SIGIL_DURATION_KEY);
+        break;
+
+    case ENCH_BULLSEYE_TARGET:
+        // We check that this is the 'real' target before removing the status
+        // from the player on death, since the status can be transiently created
+        // on cloned monsters and silently removing it shouldn't end the status
+        // on the original.
+        if (static_cast<unsigned int>(you.props[BULLSEYE_TARGET_KEY].get_int()) == mid)
+            you.set_duration(DUR_DIMENSIONAL_BULLSEYE, 0);
+        break;
+
     default:
         break;
     }
@@ -1133,7 +1156,7 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
     return false;
 }
 
-bool monster::clear_far_engulf(bool force)
+bool monster::clear_far_engulf(bool force, bool /*moved*/)
 {
     if (you.duration[DUR_WATER_HOLD]
         && (mid_t) you.props[WATER_HOLDER_KEY].get_int() == mid)
@@ -1329,10 +1352,10 @@ void monster::apply_enchantment(const mon_enchant &me)
     enchant_type en = me.ench;
     switch (me.ench)
     {
-    case ENCH_INSANE:
+    case ENCH_FRENZIED:
         if (decay_enchantment(en))
         {
-            simple_monster_message(*this, " is no longer in an insane frenzy.");
+            simple_monster_message(*this, " is no longer in an wild frenzy.");
             const int duration = random_range(70, 130);
             add_ench(mon_enchant(ENCH_FATIGUE, 0, 0, duration));
             add_ench(mon_enchant(ENCH_SLOW, 0, 0, duration));
@@ -1360,6 +1383,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SLOW:
     case ENCH_HASTE:
     case ENCH_SWIFT:
+    case ENCH_PURSUING:
     case ENCH_MIGHT:
     case ENCH_FEAR:
     case ENCH_PARALYSIS:
@@ -1367,6 +1391,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_PETRIFIED:
     case ENCH_SICK:
     case ENCH_CORONA:
+    case ENCH_CONTAM:
     case ENCH_ABJ:
     case ENCH_CHARM:
     case ENCH_SLEEP_WARY:
@@ -1413,6 +1438,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SIMULACRUM:
     case ENCH_NECROTISE:
     case ENCH_CONCENTRATE_VENOM:
+    case ENCH_BOUND:
         decay_enchantment(en);
         break;
 
@@ -1625,7 +1651,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             add_ench(ENCH_SEVERED);
 
             // Severed tentacles immediately become "hostile" to everyone
-            // (or insane)
+            // (or frenzied)
             attitude = ATT_NEUTRAL;
             mons_att_changed(this);
             if (!crawl_state.game_is_arena())
@@ -2002,7 +2028,7 @@ static const char *enchant_names[] =
     "slouch",
 #endif
     "swift", "tide",
-    "insane", "silenced", "awaken_forest", "exploding",
+    "frenzied", "silenced", "awaken_forest", "exploding",
 #if TAG_MAJOR_VERSION == 34
     "bleeding",
 #endif
@@ -2090,7 +2116,8 @@ static const char *enchant_names[] =
     "vile_clutch", "waterlogged", "ring_of_flames",
     "ring_chaos", "ring_mutation", "ring_fog", "ring_ice", "ring_neg",
     "ring_acid", "ring_miasma", "concentrate_venom", "fire_champion",
-    "anguished", "simulacra", "necrotizing",
+    "anguished", "simulacra", "necrotizing", "glowing", "pursuing",
+    "bound", "bullseye_target",
     "buggy", // NUM_ENCHANTMENTS
 };
 
@@ -2236,6 +2263,11 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_ANGUISH:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;
+    case ENCH_PURSUING:
+        // This is about 20 turns, or enough time for a same-speed monster to
+        // get four space closer before it expires.
+        cturn = 500 / _mod_speed(25, mons->speed);
+        break;
     case ENCH_LIQUEFYING:
     case ENCH_SILENCE:
     case ENCH_REGENERATION:
@@ -2269,6 +2301,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_HELD:
         cturn = 120 / _mod_speed(25, mons->speed);
         break;
+    case ENCH_CONTAM: // TODO: maybe faster
     case ENCH_POISON:
         cturn = 1000 * deg / _mod_speed(125, mons->speed);
         break;

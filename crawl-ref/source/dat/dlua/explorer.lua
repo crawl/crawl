@@ -464,6 +464,9 @@ function explorer.catalog_current_place(lvl, to_show, hide_empty)
     if not explorer.quiet then
         h_l = { }
         for _, cat in ipairs(to_show) do
+            if crawl.seen_hups() > 0 then
+                break
+            end
             h_l[#h_l+1] = explorer.make_highlight(highlights, cat, hide_empty)
         end
         h_l = util.filter(function (a) return #a > 0 end, h_l)
@@ -496,6 +499,9 @@ function explorer.catalog_portals(i, lvl, cats_to_show, show_level_fun)
     local result = { }
     current_where = you.where()
     for j,port in ipairs(explorer.portal_order) do
+        if crawl.seen_hups() > 0 then
+            break
+        end
         if you.where() == dgn.level_name(dgn.br_entrance(port)) then
             result[port] = explorer.catalog_place(-j, port, cats_to_show, show_level_fun)
             -- restore the level, in case there are multiple portals from a
@@ -515,6 +521,9 @@ function explorer.catalog_dungeon(max_depth, cats_to_show, show_level_fun)
     for i,lvl in ipairs(explorer.generation_order) do
         if i > max_depth then break end
         result[lvl] = explorer.catalog_place(i, lvl, cats_to_show, show_level_fun)
+        if crawl.seen_hups() > 0 then
+            break
+        end
         if result[lvl] ~= nil then
             -- only check portals if the place was built
             local portals = explorer.catalog_portals(i, lvl, cats_to_show, show_level_fun)
@@ -534,6 +543,8 @@ function explorer.catalog_seed(seed, depth, cats, show_level_fun, describe_cat)
         out("Catalog for seed " .. seed ..
             " (" .. table.concat(cats, ", ") .. "):")
     end
+    -- this will return early on hup, so the caller should consider checking
+    -- for hups and printing an appropriate message
     return explorer.catalog_dungeon(depth, cats, show_level_fun)
 end
 
@@ -554,6 +565,9 @@ function explorer.catalog_seeds(seeds, depth, cats, show_level_fun, describe_cat
         cats = util.set(explorer.available_cats)
     end
     for _, i in ipairs(seeds) do
+        if crawl.seen_hups() > 0 then
+            break
+        end
         if _ > 1 then out("") end -- generates a newline for stderr output
         explorer.catalog_seed(i, depth, cats, show_level_fun, describe_cat)
     end

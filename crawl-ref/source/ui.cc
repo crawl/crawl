@@ -44,6 +44,25 @@ namespace ui {
 static void clear_text_region(Region region, COLOURS bg);
 #endif
 
+// helper functions for instantiating ui classes
+command_type get_action(int keyin)
+{
+    // TODO: support other menu commands (perhaps at the ui level?)
+    static const unordered_set<command_type, std::hash<int>> handled =
+        { CMD_MENU_EXIT };
+    command_type c = key_to_command(keyin, KMC_MENU);
+    if (handled.count(c))
+        return c;
+    return CMD_NO_CMD;
+}
+
+bool key_exits_popup(int keyin, bool extended)
+{
+    return get_action(keyin) == CMD_MENU_EXIT
+        || extended && keyin == CK_ENTER; // ugh
+}
+
+
 static struct UIRoot
 {
 public:
@@ -167,11 +186,14 @@ KeyEvent::KeyEvent(Event::Type _type, const wm_keyboard_event& wm_ev) : Event(_t
 }
 
 #ifdef USE_TILE_LOCAL
-MouseEvent::MouseEvent(Event::Type _type, const wm_mouse_event& wm_ev) : Event(_type)
+MouseEvent::MouseEvent(Event::Type _type, const wm_mouse_event& wm_ev)
+    : Event(_type),
+        m_x(0), m_y(0)
 {
     m_button = static_cast<MouseEvent::Button>(wm_ev.button);
     // XXX: is it possible that the cursor has moved since the SDL event fired?
-    wm->get_mouse_state(&m_x, &m_y);
+    if (wm)
+        wm->get_mouse_state(&m_x, &m_y);
     m_wheel_dx = _type == MouseWheel ? wm_ev.px : 0;
     m_wheel_dy = _type == MouseWheel ? wm_ev.py : 0;
 }
@@ -622,6 +644,8 @@ void Text::set_text(const formatted_string &fs)
 #ifdef USE_TILE_LOCAL
 void Text::set_font(FontWrapper *font)
 {
+    if (in_headless_mode())
+        return;
     ASSERT(font);
     m_font = font;
     _queue_allocation();
@@ -1041,6 +1065,8 @@ void Image::set_tile(tile_def tile)
 #ifdef USE_TILE
     m_tile = tile;
 #ifdef USE_TILE_LOCAL
+    if (in_headless_mode())
+        return;
     const tile_info &ti = tiles.get_image_manager()->tile_def_info(m_tile);
     m_tw = ti.width;
     m_th = ti.height;
@@ -1891,6 +1917,8 @@ void TextEntry::_render()
     m_hscroll = min(m_hscroll, max(0, content_width - viewport_width + 1));
 
 #ifdef USE_TILE_LOCAL
+    if (in_headless_mode())
+        return;
     // XXX: we need to transform the scissor because the skill menu is rendered
     // using the CRT, with an appropriate transform that positions it into the
     // centre of the screen
@@ -2232,7 +2260,7 @@ void TextEntry::LineReader::insert_char_at_cursor(int ch)
 #ifdef USE_TILE_LOCAL
 void TextEntry::LineReader::clipboard_paste()
 {
-    if (wm->has_clipboard())
+    if (wm && wm->has_clipboard())
         for (char ch : wm->get_clipboard())
             process_key(ch);
 }
@@ -2243,7 +2271,7 @@ int TextEntry::LineReader::process_key(int ch)
     switch (ch)
     {
     CASE_ESCAPE
-        return CK_ESCAPE;
+        return CK_ESCAPE; // triggers focusout, not close
     case CK_UP:
     case CONTROL('P'):
     case CK_DOWN:
@@ -2345,6 +2373,8 @@ void TextEntry::sync_load_state(const JsonNode *json)
 #ifdef USE_TILE_LOCAL
 void Dungeon::_render()
 {
+    if (in_headless_mode())
+        return;
     GLW_3VF t = {(float)m_region.x, (float)m_region.y, 0}, s = {32, 32, 1};
     glmanager->set_transform(t, s);
     m_buf.draw();
@@ -2405,22 +2435,7 @@ void PlayerDoll::_pack_doll()
         p_order[7] = TILEP_PART_LEG;
     }
 
-    // Special case bardings from being cut off.
-    bool is_naga = (m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA
-                    || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA + 1);
-    if (m_save_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
-        && m_save_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED)
-    {
-        flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
-    }
-
-    bool is_ptng = (m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_PALENTONGA
-                    || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_PALENTONGA + 1);
-    if (m_save_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
-        && m_save_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
-    {
-        flags[TILEP_PART_BOOTS] = is_ptng ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
-    }
+    reveal_bardings(m_save_doll.parts, flags);
 
     for (int i = 0; i < TILEP_PART_MAX; ++i)
     {
@@ -2431,14 +2446,7 @@ void PlayerDoll::_pack_doll()
 
         ASSERT_RANGE(idx, TILE_MAIN_MAX, TILEP_PLAYER_MAX);
 
-        int ymax = TILE_Y;
-
-        if (flags[p] == TILEP_FLAG_CUT_CENTAUR
-            || flags[p] == TILEP_FLAG_CUT_NAGA)
-        {
-            ymax = 18;
-        }
-
+        const int ymax = flags[p] == TILEP_FLAG_CUT_BOTTOM ? 18 : TILE_Y;
         m_tiles.emplace_back(idx, ymax);
     }
 }
@@ -2523,13 +2531,9 @@ void UIRoot::resize(int w, int h)
     m_h = h;
     m_needs_layout = true;
 
-    // On console with the window size smaller than the minimum layout,
-    // enlarging the window will not cause any size reallocations, and the
-    // newly visible region of the terminal will not be filled.
-    // Fix: explicitly mark the entire screen as dirty on resize: it won't
-    // be strictly necessary for most resizes, but won't hurt.
 #ifndef USE_TILE_LOCAL
-    expose_region({0, 0, w, h});
+    cgotoxy(1, 1, GOTO_CRT);
+    clrscr();
 #endif
 }
 
@@ -2571,7 +2575,15 @@ bool should_render_current_regions = true;
 
 void UIRoot::render()
 {
-    if (!needs_paint)
+#ifndef USE_TILE_LOCAL
+    if (crawl_state.smallterm)
+    {
+        smallterm_warning();
+        return;
+    }
+#endif
+
+    if (!needs_paint || in_headless_mode())
         return;
 
 #ifdef USE_TILE_LOCAL
@@ -2626,7 +2638,8 @@ void UIRoot::swap_buffers()
         return;
     needs_swap = false;
 #ifdef USE_TILE_LOCAL
-    wm->swap_buffers();
+    if (wm)
+        wm->swap_buffers();
 #else
     update_screen();
 #endif
@@ -2753,8 +2766,10 @@ static function<bool(const wm_event&)> event_filter;
 #ifdef USE_TILE_LOCAL
 void UIRoot::update_hover_path()
 {
-    int mx, my;
-    wm->get_mouse_state(&mx, &my);
+    int mx = 0;
+    int my = 0;
+    if (wm)
+        wm->get_mouse_state(&mx, &my);
 
     /* Find current hover path */
     vector<Widget*> new_hover_path;
@@ -3194,7 +3209,7 @@ void pump_events(int wait_event_timeout)
     // since these can come in faster than crawl can redraw.
     // unlike mousemotion events, we don't drop all but the last event
     // ...but if there are macro keys, we do need to layout (for menu UI)
-    if (!wm->next_event_is(WME_MOUSEWHEEL) || macro_key != -1)
+    if (!wm || !wm->next_event_is(WME_MOUSEWHEEL) || macro_key != -1)
 #endif
     {
         ui_root.layout();
@@ -3230,7 +3245,7 @@ void pump_events(int wait_event_timeout)
             break;
         }
 
-        if (!wm->wait_event(&event, wait_event_timeout))
+        if (!wm || !wm->wait_event(&event, wait_event_timeout))
         {
             if (wait_event_timeout == INT_MAX)
                 continue;
@@ -3240,7 +3255,7 @@ void pump_events(int wait_event_timeout)
 
         // For consecutive mouse events, ignore all but the last,
         // since these can come in faster than crawl can redraw.
-        if (event.type == WME_MOUSEMOTION && wm->next_event_is(WME_MOUSEMOTION))
+        if (event.type == WME_MOUSEMOTION && wm && wm->next_event_is(WME_MOUSEMOTION))
             continue;
         if (event.type == WME_KEYDOWN
             && (event.key.keysym.sym == 0 || event.key.keysym.sym == CK_NO_KEY))
@@ -3261,7 +3276,8 @@ void pump_events(int wait_event_timeout)
             // to get rid of stupid Windows/SDL bug with Alt-Tab.
             if (event.active.gain != 0)
             {
-                wm->set_mod_state(TILES_MOD_NONE);
+                if (wm)
+                    wm->set_mod_state(TILES_MOD_NONE);
                 ui_root.needs_paint = true;
             }
             break;
@@ -3279,7 +3295,7 @@ void pump_events(int wait_event_timeout)
         }
 
         case WME_MOVE:
-            if (tiles.update_dpi())
+            if (wm && tiles.update_dpi())
                 ui_root.resize(wm->screen_width(), wm->screen_height());
             ui_root.needs_paint = true;
             break;
@@ -3639,9 +3655,15 @@ wm_mouse_event to_wm_event(const MouseEvent &ev)
                 ev.type() == Event::Type::MouseDown ? wm_mouse_event::PRESS :
                 wm_mouse_event::WHEEL;
     mev.button = static_cast<wm_mouse_event::mouse_event_button>(ev.button());
-    mev.mod = wm->get_mod_state();
-    int x, y;
-    mev.held = wm->get_mouse_state(&x, &y);
+    int x = 0;
+    int y = 0;
+    if (wm)
+    {
+        mev.mod = wm->get_mod_state();
+        mev.held = wm->get_mouse_state(&x, &y);
+    }
+    else
+        mev.mod = mev.held = 0;
     mev.px = x;
     mev.py = y;
     return mev;

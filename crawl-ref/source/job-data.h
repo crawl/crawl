@@ -68,7 +68,7 @@ static const map<job_type, job_def> job_data =
 { JOB_BERSERKER, {
     "Be", "Berserker",
     9, -1, 4,
-    { SP_HILL_ORC, SP_OGRE, SP_MERFOLK, SP_MINOTAUR, SP_GARGOYLE, SP_PALENTONGA, },
+    { SP_HILL_ORC, SP_OGRE, SP_MERFOLK, SP_MINOTAUR, SP_GARGOYLE, SP_ARMATAUR, },
     { },
     { "animal skin" },
     WCHOICE_PLAIN,
@@ -93,7 +93,7 @@ static const map<job_type, job_def> job_data =
     { SP_HILL_ORC, SP_TROLL, SP_GNOLL, SP_MERFOLK, SP_MINOTAUR,
       SP_BASE_DRACONIAN, SP_DEMONSPAWN, },
     { },
-    { "leather armour plus:2", "piece from Xom's chessboard" },
+    { "leather armour plus:2", "scroll of butterflies no_exclude" },
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 3 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 },
       { SK_WEAPON, 3 } },
@@ -164,7 +164,7 @@ static const map<job_type, job_def> job_data =
     "Fi", "Fighter",
     8, 0, 4,
     { SP_METEORAN, SP_HILL_ORC, SP_TROLL, SP_MINOTAUR, SP_GARGOYLE,
-      SP_PALENTONGA, },
+      SP_ARMATAUR, },
     { },
     { "scale mail", "buckler", "potion of might" },
     WCHOICE_GOOD,
@@ -180,7 +180,7 @@ static const map<job_type, job_def> job_data =
     {
         SPELL_FOXFIRE,
         SPELL_SCORCH,
-        SPELL_BLASTSPARK,
+        SPELL_BLASTMOTE,
         SPELL_INNER_FLAME,
         SPELL_FLAME_WAVE,
     },
@@ -203,18 +203,19 @@ static const map<job_type, job_def> job_data =
 
 { JOB_HEXSLINGER, {
     "Hs", "Hexslinger",
-    2, 5, 5,
+    0, 5, 7,
     { SP_FORMICID, SP_DEEP_ELF, SP_KOBOLD, SP_SPRIGGAN, SP_GNOLL },
     {
-        SPELL_SLOW,
+        SPELL_JINXBITE,
+        SPELL_SIGIL_OF_BINDING,
         SPELL_INNER_FLAME,
-        SPELL_PORTAL_PROJECTILE,
         SPELL_CAUSE_FEAR,
+        SPELL_DIMENSIONAL_BULLSEYE,
     },
     { "robe", "scroll of poison", "sling plus:1" },
     WCHOICE_NONE,
     { { SK_FIGHTING, 1 }, { SK_DODGING, 2 }, { SK_SPELLCASTING, 1 },
-      { SK_HEXES, 3 }, { SK_WEAPON, 2 }, },
+      { SK_FIRE_MAGIC, 1}, { SK_HEXES, 3 }, { SK_WEAPON, 2 }, },
 } },
 
 { JOB_HUNTER, {
@@ -222,7 +223,7 @@ static const map<job_type, job_def> job_data =
     3, 1, 8,
     { SP_HILL_ORC, SP_MINOTAUR, SP_GNOLL, SP_KOBOLD, SP_SPRIGGAN, },
     { },
-    { "leather armour", "scroll of immolation", "shortbow" },
+    { "leather armour", "scroll of butterflies no_exclude", "shortbow" },
     WCHOICE_NONE,
     { { SK_FIGHTING, 2 }, { SK_DODGING, 2 }, { SK_STEALTH, 1 },
       { SK_WEAPON, 4 }, },
@@ -250,7 +251,7 @@ static const map<job_type, job_def> job_data =
     4, 2, 6,
     { SP_FELID, SP_SPRIGGAN, SP_KOBOLD, SP_VAMPIRE, SP_GNOLL },
     { },
-    { "leather armour", "scroll of fog no_exclude", "scroll of magic mapping",
+    { "leather armour", "scroll of fog no_exclude", "scroll of revelation",
       "scroll of fear", "potion of haste", "wand of digging charges:3" },
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 3 }, { SK_DODGING, 2 }, { SK_STEALTH, 5 }, { SK_WEAPON, 2 }, },
@@ -259,13 +260,12 @@ static const map<job_type, job_def> job_data =
 { JOB_MONK, {
     "Mo", "Monk",
     3, 2, 7,
-    { SP_METEORAN, SP_HILL_ORC, SP_TROLL, SP_PALENTONGA, SP_MERFOLK,
+    { SP_METEORAN, SP_HILL_ORC, SP_TROLL, SP_ARMATAUR, SP_MERFOLK,
       SP_GARGOYLE, SP_DEMONSPAWN, },
     { },
-    { "robe", "potion of ambrosia" },
+    { "robe", "potion of ambrosia", "orb ego:light" },
     WCHOICE_PLAIN,
-    { { SK_FIGHTING, 3 }, { SK_WEAPON, 3 }, { SK_DODGING, 3 },
-      { SK_STEALTH, 2 }, },
+    { { SK_FIGHTING, 3 }, { SK_WEAPON, 3 }, { SK_DODGING, 3 } },
 } },
 
 { JOB_NECROMANCER, {
@@ -319,21 +319,16 @@ static const map<job_type, job_def> job_data =
       { SK_STEALTH, 2 }, },
 } },
 
-{ JOB_TRANSMUTER, {
-    "Tm", "Transmuter",
-    2, 5, 5,
+{ JOB_SHAPESHIFTER, {
+    "Sh", "Shapeshifter",
+    6, 2, 4,
     { SP_NAGA, SP_MERFOLK, SP_BASE_DRACONIAN, SP_DEMIGOD, SP_DEMONSPAWN,
       SP_TROLL, SP_METEORAN, },
-    {
-        SPELL_BEASTLY_APPENDAGE,
-        SPELL_WEREBLOOD,
-        SPELL_SPIDER_FORM,
-        SPELL_ICE_FORM,
-    },
-    { "robe", "potion of lignification" },
+    { },
+    { "animal skin", "potion of lignification", "beast talisman", "flux talisman" },
     WCHOICE_NONE,
     { { SK_FIGHTING, 1 }, { SK_UNARMED_COMBAT, 3 }, { SK_DODGING, 2 },
-      { SK_SPELLCASTING, 2 }, { SK_TRANSMUTATIONS, 2 }, },
+      { SK_SHAPESHIFTING, 3 }, },
 } },
 
 { JOB_VENOM_MAGE, {
@@ -367,15 +362,15 @@ static const map<job_type, job_def> job_data =
 { JOB_WARPER, {
     "Wr", "Warper",
     3, 5, 4,
-    { SP_FELID, SP_METEORAN, SP_SPRIGGAN, SP_PALENTONGA, SP_BASE_DRACONIAN, },
+    { SP_FELID, SP_METEORAN, SP_SPRIGGAN, SP_ARMATAUR, SP_BASE_DRACONIAN, },
     {
         SPELL_BLINK,
         SPELL_BECKONING,
-        SPELL_GRAVITAS,
         SPELL_TELEPORT_OTHER,
         SPELL_MANIFOLD_ASSAULT,
+        SPELL_ELECTRIC_CHARGE,
     },
-    { "leather armour", "scroll of blinking", "boomerang ego:dispersal q:7" },
+    { "leather armour", "scroll of blinking", "dart ego:dispersal q:7" },
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 2 },
       { SK_SPELLCASTING, 2 }, { SK_TRANSLOCATIONS, 3 }, { SK_THROWING, 1 },

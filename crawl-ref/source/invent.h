@@ -103,10 +103,7 @@ public:
     bool         is_art() const;
     bool         is_equipped() const;
 
-    virtual int highlight_colour() const override
-    {
-        return menu_colour(get_text(), item_prefix(*item), "inventory");
-    }
+    virtual int highlight_colour(bool temp=false) const override;
 
     virtual void select(int qty = -1) override;
     void set_star(bool);
@@ -234,8 +231,8 @@ bool prompt_failed(int retval);
 void list_charging_evokers(FixedVector<item_def*, NUM_MISCELLANY> &evokers);
 
 bool item_is_wieldable(const item_def &item);
-bool item_is_evokable(const item_def &item, bool msg = false);
 bool needs_notele_warning(const item_def &item, operation_types oper);
 bool needs_handle_warning(const item_def &item, operation_types oper,
                           bool &penance);
 item_def *digit_inscription_to_item(char digit, operation_types oper);
+operation_types generalize_oper(operation_types oper);

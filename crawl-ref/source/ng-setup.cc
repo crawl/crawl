@@ -30,6 +30,7 @@
 #include "state.h"
 #include "tag-version.h"
 #include "throw.h"
+#include "transform.h"
 
 #define MIN_START_STAT       3
 
@@ -192,10 +193,8 @@ static void _give_job_spells(job_type job)
     if (you.has_mutation(MUT_INNATE_CASTER))
     {
         for (spell_type s : spells)
-        {
-            if (you.spell_no < MAX_DJINN_SPELLS)
+            if (you.spell_no < MAX_DJINN_SPELLS && !spell_is_useless(s, false))
                 add_spell_to_memory(s);
-        }
         return;
     }
 
@@ -209,20 +208,6 @@ static void _give_job_spells(job_type job)
     }
 }
 
-static void _cleanup_innate_magic_skills()
-{
-    // could use a reference here, but seems surprising to the reader
-    int spcasting = you.skills[SK_SPELLCASTING];
-    for (skill_type sk = SK_FIRST_MAGIC_SCHOOL; sk <= SK_LAST_MAGIC; sk++)
-    {
-        const int lvl = you.skills[sk];
-        if (lvl > spcasting)
-            spcasting = lvl;
-        you.skills[sk] = 0;
-    }
-    you.skills[SK_SPELLCASTING] = spcasting;
-}
-
 void give_items_skills(const newgame_def& ng)
 {
     create_wanderer();
@@ -233,7 +218,7 @@ void give_items_skills(const newgame_def& ng)
         you.religion = GOD_TROG;
         you.piety = 35;
 
-        if (you_can_wear(EQ_BODY_ARMOUR))
+        if (you_can_wear(EQ_BODY_ARMOUR) != false)
             you.skills[SK_ARMOUR] += 2;
         else
         {
@@ -293,9 +278,6 @@ void give_items_skills(const newgame_def& ng)
 
     if (you.has_mutation(MUT_NO_ARMOUR))
         you.skills[SK_SHIELDS] = 0;
-
-    if (you.has_mutation(MUT_INNATE_CASTER))
-        _cleanup_innate_magic_skills();
 
     if (!you_worship(GOD_NO_GOD))
     {
@@ -367,6 +349,7 @@ void setup_game(const newgame_def& ng,
     switch (crawl_state.type)
     {
     case GAME_TYPE_NORMAL:
+    case GAME_TYPE_DESCENT:
     case GAME_TYPE_CUSTOM_SEED:
     case GAME_TYPE_TUTORIAL:
     case GAME_TYPE_SPRINT:
@@ -510,6 +493,8 @@ static void _setup_generic(const newgame_def& ng,
     give_items_skills(ng);
 
     roll_demonspawn_mutations();
+    if (you.has_mutation(MUT_MULTILIVED))
+        you.lives = 1;
 
     if (crawl_state.game_is_sprint())
         _give_bonus_items();
@@ -553,6 +538,12 @@ static void _setup_generic(const newgame_def& ng,
         }
     }
 
+    if (you.char_class == JOB_SHAPESHIFTER)
+    {
+        you.default_form = transformation::beast;
+        set_form(transformation::beast, 1); // hacky...
+    }
+
     reassess_starting_skills();
     init_skill_order();
     init_can_currently_train();
@@ -593,6 +584,7 @@ static void _setup_generic(const newgame_def& ng,
     // pregen temple -- it's quick and easy, and this prevents a popup from
     // happening. This needs to happen after you.save is created.
     if (normal_dungeon_setup && you.deterministic_levelgen &&
+        !crawl_state.game_is_descent() && // disables temple
         !pregen_dungeon(level_id(BRANCH_TEMPLE, 1)))
     {
         die("Builder failure while trying to generate temple!");

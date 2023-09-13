@@ -10,6 +10,7 @@ aptitudes:
   mr: 3
   stealth: 1
   spellcasting: -1
+  shapeshifting: -1
   invocations: 1
 str: 8
 int: 8
