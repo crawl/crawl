@@ -3328,7 +3328,7 @@ int player_stealth()
     }
     // The shifting glow from the Orb, while too unstable to negate invis
     // or affect to-hit, affects stealth even more than regular glow.
-    if (player_has_orb())
+    if (player_has_orb() || player_equip_unrand(UNRAND_CHARLATANS_ORB))
         stealth /= 3;
 
     stealth = max(0, stealth);
@@ -6134,6 +6134,9 @@ int player::skill(skill_type sk, int scale, bool real, bool temp) const
     }
     else if (ash_has_skill_boost(sk))
             level = ash_skill_boost(sk, scale);
+
+    if (player_equip_unrand(UNRAND_CHARLATANS_ORB) && sk == SK_EVOCATIONS)
+        level = div_rand_round(level * 3, 2);
 
     if (temp && duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         level = min(level + 5 * scale, MAX_SKILL_LEVEL * scale);
