@@ -808,10 +808,8 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             continue;
         if (!(*vulnerable)(agent, *ai))
             continue;
-
         if ((*vulnerable)(agent, *ai))
             affected_actors.push_back(*ai);
-
         // For perf, don't count when running tracers.
         if (spell == SPELL_OZOCUBUS_REFRIGERATION)
             ozo_adj_count[*ai] = actual ? _count_adj_actors(ai->pos()) : 0;
