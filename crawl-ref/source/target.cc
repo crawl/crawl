@@ -1609,8 +1609,14 @@ aff_type targeter_refrig::is_affected(coord_def loc)
     for (adjacent_iterator ai(loc); ai; ++ai)
     {
         const actor* adj_act = actor_at(*ai);
-        if (adj_act
-            && agent->can_see(*adj_act)
+        if (!adj_act)
+            continue;
+
+        const monster* mon = adj_act->as_monster();
+        if (mon && mons_is_firewood(*mon))
+            continue;
+
+        if (agent->can_see(*adj_act)
             && !mons_is_conjured(adj_act->type))
         {
             ++adj;
