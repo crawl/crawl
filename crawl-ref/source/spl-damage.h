@@ -98,7 +98,6 @@ spret cast_toxic_radiance(actor *caster, int pow, bool fail = false,
                                bool mon_tracer = false);
 void toxic_radiance_effect(actor* agent, int mult, bool on_cast = false);
 
-int count_adj_actors(coord_def pos);
 dice_def glaciate_damage(int pow, int eff_range);
 spret cast_glaciate(actor *caster, int pow, coord_def aim,
                          bool fail = false);
