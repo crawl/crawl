@@ -1609,26 +1609,11 @@ aff_type targeter_refrig::is_affected(coord_def loc)
         return AFF_NO;
     if (god_protects(agent, act->as_monster(), true))
         return AFF_NO;
-
-    int adj = 0;
-    for (adjacent_iterator ai(loc); ai; ++ai)
+    switch (adjacent_huddlers(loc))
     {
-        const actor* adj_act = actor_at(*ai);
-        if (adj_act
-            && agent->can_see(*adj_act)
-            && !mons_is_conjured(adj_act->type))
-        {
-            ++adj;
-        }
-    }
-    switch (adj)
-    {
-    case 0:
-        return AFF_MULTIPLE;
-    case 1:
-        return AFF_YES;
-    default:
-        return AFF_MAYBE;
+    case 0:  return AFF_MULTIPLE;
+    case 1:  return AFF_YES;
+    default: return AFF_MAYBE;
     }
 }
 

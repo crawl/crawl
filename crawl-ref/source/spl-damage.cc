@@ -661,13 +661,21 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
     return hurted;
 }
 
-static int _count_adj_actors(coord_def pos)
+/**
+ * Returns the number of monsters adjacent to the given position which other
+ * monsters can huddle against. (Reducing damage taken from Refrigeration.)
+ */
+int adjacent_huddlers(coord_def pos)
 {
     int adj_count = 0;
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
         const actor* act = actor_at(*ai);
-        if (act && !mons_is_conjured(act->type))
+        if (!act || !act->is_monster())
+            continue;
+
+        const monster* mon = act->as_monster();
+        if (!mons_is_firewood(*mon) && !mons_is_conjured(mon->type))
             ++adj_count;
     }
     return adj_count;
@@ -806,7 +814,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
 
         // For perf, don't count when running tracers.
         if (spell == SPELL_OZOCUBUS_REFRIGERATION)
-            ozo_adj_count[*ai] = actual ? _count_adj_actors(ai->pos()) : 0;
+            ozo_adj_count[*ai] = actual ? adjacent_huddlers(ai->pos()) : 0;
     }
 
     const int avg_damage = (1 + beam.damage.num * beam.damage.size) / 2;
