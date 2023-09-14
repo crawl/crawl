@@ -661,13 +661,21 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
     return hurted;
 }
 
+//Counts adjacent non-firewood actors
 static int _count_adj_actors(coord_def pos)
 {
     int adj_count = 0;
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
         const actor* act = actor_at(*ai);
-        if (act && !mons_is_conjured(act->type))
+        if(!act)
+            continue;
+
+        const monster* mon = act->as_monster();
+        if(mon && mons_is_firewood(*mon))
+            continue;
+
+        if (!mons_is_conjured(act->type))
             ++adj_count;
     }
     return adj_count;
