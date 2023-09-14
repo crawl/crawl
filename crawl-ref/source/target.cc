@@ -1605,17 +1605,7 @@ aff_type targeter_refrig::is_affected(coord_def loc)
     if (god_protects(agent, act->as_monster(), true))
         return AFF_NO;
 
-    int adj = 0;
-    for (adjacent_iterator ai(loc); ai; ++ai)
-    {
-        const actor* adj_act = actor_at(*ai);
-        if (adj_act
-            && agent->can_see(*adj_act)
-            && !mons_is_conjured(adj_act->type))
-        {
-            ++adj;
-        }
-    }
+    int adj = count_adj_actors(loc);
     switch (adj)
     {
     case 0:

@@ -662,7 +662,7 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
 }
 
 //Counts adjacent non-firewood actors
-static int _count_adj_actors(coord_def pos)
+int count_adj_actors(coord_def pos)
 {
     int adj_count = 0;
     for (adjacent_iterator ai(pos); ai; ++ai)
@@ -814,7 +814,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
 
         // For perf, don't count when running tracers.
         if (spell == SPELL_OZOCUBUS_REFRIGERATION)
-            ozo_adj_count[*ai] = actual ? _count_adj_actors(ai->pos()) : 0;
+            ozo_adj_count[*ai] = actual ? count_adj_actors(ai->pos()) : 0;
     }
 
     const int avg_damage = (1 + beam.damage.num * beam.damage.size) / 2;
