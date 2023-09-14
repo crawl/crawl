@@ -181,14 +181,7 @@ void merge_ench_durations(monster& initial, monster& merge_to, bool usehd)
             entry.second.duration = 1;
 
         if (no_initial)
-        {
             merge_to.add_ench(entry.second);
-
-            // XX: This is ugly special-casing. Is there a way to fold this into
-            //     gaining inner flame in general?
-            if (entry.second.ench == ENCH_INNER_FLAME)
-                merge_to.props[INNER_FLAME_POW_KEY] = initial.props[INNER_FLAME_POW_KEY].get_int();
-        }
         else
             merge_to.update_ench(entry.second);
     }
@@ -1126,10 +1119,6 @@ bool mon_special_ability(monster* mons)
                         mons->summoner;
             mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, actor_by_mid(act),
                                        INFINITE_DURATION));
-
-            // Set guardian golem explosive power the same as old values.
-            // (Should it maybe be lower or scale with spellpower?)
-            mons->props[INNER_FLAME_POW_KEY] = 100;
         }
         break;
 

@@ -3913,11 +3913,7 @@ bool read(item_def* scroll, dist *target)
                 continue;
 
             if (mi->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, &you)))
-            {
-                // Equivalent to casting the spell at max power
-                mi->props[INNER_FLAME_POW_KEY] = 100;
                 had_effect = true;
-            }
         }
 
         if (had_effect)
