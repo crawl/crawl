@@ -1382,7 +1382,7 @@ string get_artefact_name(const item_def &item, bool force_known)
 {
     ASSERT(is_artefact(item));
 
-    if (item_type_known(item) || force_known)
+    if (item_ident(item, ISFLAG_KNOW_PROPERTIES) || force_known)
     {
         // print artefact's real name, if that's set
         if (item.props.exists(ARTEFACT_NAME_KEY))

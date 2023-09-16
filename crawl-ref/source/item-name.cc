@@ -112,7 +112,7 @@ static string _item_inscription(const item_def &item)
         }
     }
 
-    if (is_artefact(item))
+    if (is_artefact(item) && item_ident(item, ISFLAG_KNOW_PROPERTIES))
     {
         const string part = artefact_inscription(item);
         if (!part.empty())
@@ -185,8 +185,8 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
          && !(corpse_flags & MF_NAME_SUFFIX)
          && !starts_with(get_corpse_name(*this), "shaped "))
         || item_is_orb(*this) || item_is_horn_of_geryon(*this)
-        || (ident || item_type_known(*this)) && is_artefact(*this)
-            && special != UNRAND_OCTOPUS_KING_RING)
+        || (ident || item_ident(*this, ISFLAG_KNOW_PROPERTIES))
+           && is_artefact(*this) && special != UNRAND_OCTOPUS_KING_RING)
     {
         // Artefacts always get "the" unless we just want the plain name.
         switch (descrip)
@@ -1769,6 +1769,12 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (is_randart && !dbname)
         {
             buff << get_artefact_name(*this, ident);
+            if (!ident
+                && !item_ident(*this, ISFLAG_KNOW_PROPERTIES)
+                && item_type_known(*this))
+            {
+                buff << " of " << jewellery_effect_name(item_typ);
+            }
             break;
         }
 
