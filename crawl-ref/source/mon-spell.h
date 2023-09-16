@@ -1819,8 +1819,8 @@ static const mon_spellbook mspell_list[] =
     // ('F') Froggos.
     {  MST_JEREMIAH,
       {
-       { SPELL_BLINK_RANGE, 20, MON_SPELL_NATURAL },
-       { SPELL_SMITING, 20, MON_SPELL_PRIEST },
+       { SPELL_BLINK_RANGE, 16, MON_SPELL_NATURAL },
+       { SPELL_SMITING, 16, MON_SPELL_PRIEST },
       }
     },
 
