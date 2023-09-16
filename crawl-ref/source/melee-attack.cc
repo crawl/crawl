@@ -2963,7 +2963,7 @@ void melee_attack::mons_apply_attack_flavour()
             mpr("Your divine stamina protects you from poison!");
             break;
         }
-        if (defender->res_poison() >= 3 || coinflip())
+        if (defender->res_poison() >= 3)
             break;
         if (defender->res_poison() > 0 && !one_chance_in(3))
             break;
