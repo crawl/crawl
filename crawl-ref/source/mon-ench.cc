@@ -1021,8 +1021,9 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_BOUND:
         if (!quiet)
-            simple_monster_message(*this, "'s lost momentum returns to it!");
-        add_ench(mon_enchant(ENCH_SWIFT, 1, &you, props[BINDING_SIGIL_DURATION_KEY].get_int()));
+            simple_monster_message(*this, "'s lost momentum returns!");
+        add_ench(mon_enchant(ENCH_SWIFT, 1, &you,
+                 props[BINDING_SIGIL_DURATION_KEY].get_int()));
         props.erase(BINDING_SIGIL_DURATION_KEY);
         break;
 
