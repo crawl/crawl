@@ -1832,6 +1832,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (is_random_artefact(*this) && !dbname && !basename)
         {
             buff << get_artefact_name(*this, ident);
+            if (!ident && !item_ident(*this, ISFLAG_KNOW_PROPERTIES))
+                buff << "book";
             break;
         }
         if (basename)
