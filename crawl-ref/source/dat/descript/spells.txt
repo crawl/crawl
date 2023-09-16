@@ -151,9 +151,9 @@ still within sight of the target.
 %%%%
 Blink spell
 
-Randomly translocates the caster a short distance. Translocating in this way
-destabilises the caster temporarily, preventing consecutive blinks for a
-short period of time depending on spellpower.
+Randomly translocates the caster a short distance. After translocating in this
+way, the spell cannot be cast again for a short period of time depending on
+spell power.
 %%%%
 Blinkbolt spell
 

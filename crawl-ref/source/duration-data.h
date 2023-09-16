@@ -593,7 +593,7 @@ static const duration_def duration_data[] =
       YELLOW, "-Blink",
       "on blink cooldown", "blink cooldown",
       "You are unable to blink.", D_NO_FLAGS,
-      {{ "You feel stable enough to blink again."}}},
+      {{ "You feel ready to blink again."}}},
     { DUR_ANIMATE_DEAD,
       MAGENTA, "Reap",
       "animating dead", "animating dead",

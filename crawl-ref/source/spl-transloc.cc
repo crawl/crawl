@@ -812,9 +812,8 @@ spret cast_blink(int pow, bool fail)
     fail_check();
     uncontrolled_blink();
 
-    int cooldown = div_rand_round(50 - pow, 10);
-    if (cooldown)
-        you.increase_duration(DUR_BLINK_COOLDOWN, 1 + random2(2) + cooldown);
+    you.increase_duration(DUR_BLINK_COOLDOWN,
+                          2 + random2(3) + div_rand_round(50 - pow, 10));
 
     return spret::success;
 }
