@@ -4764,7 +4764,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_FIRE,              "deal up to %d extra fire damage" },
         { AF_SEAR,              "remove fire resistance" },
         { AF_MUTATE,            "cause mutations" },
-        { AF_MINIPARA,          "cause very brief paralysis" },
+        { AF_MINIPARA,          "poison and momentarily paralyse" },
         { AF_POISON_PARALYSE,   "poison and cause paralysis or slowing" },
         { AF_POISON,            "cause poisoning" },
         { AF_POISON_STRONG,     "cause strong poisoning" },

@@ -2587,18 +2587,15 @@ void melee_attack::announce_hit()
 // Returns if the target was actually poisoned by this attack
 bool melee_attack::mons_do_poison()
 {
-    int amount = 1;
+    int amount;
+    const int hd = attacker->get_hit_dice();
 
     if (attk_flavour == AF_POISON_STRONG)
-    {
-        amount = random_range(attacker->get_hit_dice() * 11 / 3,
-                              attacker->get_hit_dice() * 13 / 2);
-    }
+        amount = random_range(hd * 11 / 3, hd * 13 / 2);
+    else if (attk_flavour == AF_MINIPARA)
+        amount = random_range(hd, hd * 2);
     else
-    {
-        amount = random_range(attacker->get_hit_dice() * 2,
-                              attacker->get_hit_dice() * 4);
-    }
+        amount = random_range(hd * 2, hd * 4);
 
     if (attacker->as_monster()->has_ench(ENCH_CONCENTRATE_VENOM))
     {
@@ -2968,6 +2965,7 @@ void melee_attack::mons_apply_attack_flavour()
         if (defender->res_poison() > 0 && !one_chance_in(3))
             break;
         defender->paralyse(attacker, 1);
+        mons_do_poison();
         break;
     }
 
