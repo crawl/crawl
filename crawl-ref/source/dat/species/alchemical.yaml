@@ -1,0 +1,63 @@
+enum: SP_ALCHEMICAL
+monster: MONS_IRON_GOLEM
+name: "Alchemical"
+short_name: "Al"
+difficulty: Advanced
+difficulty_priority: 40
+species_flags:
+  - SPF_NO_HAIR
+aptitudes:
+  xp: 0
+  hp: -2
+  mp_mod: 1
+  mr: 3
+  fighting: -3
+  short_blades: 0
+  long_blades: -1
+  axes: -1
+  maces_and_flails: 0
+  polearms: 0
+  staves: 1
+  unarmed_combat: -1
+  ranged weapons: -1
+  throwing: 2
+  armour: 2
+  dodging: 1
+  stealth: 0
+  shields: 1
+  spellcasting: 1
+  conjurations: -2
+  hexes: 1
+  summoning: -1
+  necromancy: -1
+  translocations: 1
+  transmutations: 2
+  shapeshifting: -2
+  fire_magic: -1
+  ice_magic: -1
+  air_magic: -1
+  earth_magic: -1
+  poison_magic: 2
+  invocations: 2
+  evocations: 4
+size: medium
+str: 9
+int: 9
+dex: 6
+levelup_stat_frequency: 4
+levelup_stats:
+  - str
+  - int
+mutations:
+  1:
+    MUT_MP_WANDS: 1
+    MUT_POTION_POWERED: 1
+recommended_jobs:
+  - JOB_ARTIFICER
+  - JOB_GLADIATOR
+  - JOB_VENOM_MAGE
+  - JOB_FIGHTER
+  - JOB_ENCHANTER
+recommended_weapons:
+  - SK_POLEARMS
+  - SK_STAVES

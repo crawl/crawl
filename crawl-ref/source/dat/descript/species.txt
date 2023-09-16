@@ -1,4 +1,9 @@
 %%%%
+Alchemical
+
+Golems animated by potionwater. They are talented in alchemical disciplines
+and artifice, and bolster their vitality with any potion quaffed.
+%%%%
 Armataur
 
 Scaled mammals the size of horses, Armataurs are fast-rolling, well-protected,

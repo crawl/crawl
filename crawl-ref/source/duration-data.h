@@ -609,6 +609,10 @@ static const duration_def duration_data[] =
       "jinxed", "jinxbite",
       "You are surrounded by jinxing sprites.", D_DISPELLABLE | D_EXPIRES,
       {{ "The jinxing sprites lose interest in you." }}},
+    { DUR_POTION_POWERED, LIGHTBLUE, "Powered",
+      "powered", "powered",
+      "You are empowered by the potions running through you.", D_EXPIRES,
+      {{ "Your potions are running dry." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

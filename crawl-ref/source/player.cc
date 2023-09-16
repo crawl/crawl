@@ -3920,6 +3920,12 @@ int get_real_hp(bool trans, bool drained)
             hitp = hitp * 3 / 2;
     }
 
+    if (trans && you.duration[DUR_POTION_POWERED])
+    {
+        hitp *= 1000 + you.duration[DUR_POTION_POWERED];
+        hitp /= 1000;
+    }
+
     // TODO: should this also be in an if (trans) block?
     hitp *= 100 + you.attribute[ATTR_DIVINE_VIGOUR] * 5;
     hitp /= 100;

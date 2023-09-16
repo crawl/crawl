@@ -3040,6 +3040,12 @@ bool drink(item_def* potion)
         }
     }
 
+    if (you.has_mutation(MUT_POTION_POWERED))
+    {
+        you.increase_duration(DUR_POTION_POWERED, 50, 50);
+        calc_hp(true);
+    }
+
     // Drinking with hostile visible mons nearby resets unrand "Victory" stats.
     if (player_equip_unrand(UNRAND_VICTORY, true)
         && there_are_monsters_nearby(true, true, false))

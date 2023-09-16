@@ -2448,6 +2448,11 @@ static const mutation_def mut_data[] =
   {"Your tongue regains its customary placidity.", "", ""},
 },
 
+{ MUT_POTION_POWERED, 0, 1, mutflag::good, false, "potion powered",
+    {"Potions grant decaying vitality."},
+    {"You feel less vital."},
+    {"You feel more vital."},
+},
 };
 
 static const mutation_category_def category_mut_data[] =
