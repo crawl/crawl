@@ -241,13 +241,12 @@ Beogh will eventually be able to resurrect other fallen orcs.
 %%%%
 Cheibriados powers
 
-Followers of Cheibriados move more slowly as they gain favour, and are rewarded
-for killing creatures who are faster than they are. As they move slower,
-worshippers of Cheibriados are granted increased attributes. Cheibriados
-rewards the faithful with the power to slow other creatures and the power to
-briefly distort the flow of time. Devout worshippers will gain the ability to
-inflict great harm on all those who move more quickly than they do, and finally
-the ability to step out of the flow of time entirely.
+Followers of Cheibriados move more slowly as they gain favour. As they move
+slower, worshippers of Cheibriados are granted increased attributes.
+Cheibriados rewards the faithful with the power to slow other creatures and the
+power to briefly distort the flow of time. Devout worshippers will gain the
+ability to inflict great harm on all those who move more quickly than they do,
+and finally the ability to step out of the flow of time entirely.
 %%%%
 Dithmenos powers
 

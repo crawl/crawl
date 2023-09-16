@@ -854,7 +854,7 @@ int cheibriados_monster_player_speed_delta(const monster& mon)
 
 bool cheibriados_thinks_mons_is_fast(const monster& mon)
 {
-    return cheibriados_monster_player_speed_delta(mon) > 0;
+    return mons_base_speed(mon) >= 10;
 }
 
 bool mons_is_projectile(monster_type mc)
