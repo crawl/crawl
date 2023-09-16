@@ -1575,17 +1575,6 @@ Merfolk (Mf)
   still remains. The instability of their own morphogenic matrix has made them
   very accomplished transmuters, but most other magic seems foreign to them.
 
-Armataurs (At)
-  The Armataurs are a large, scaled mammalian species, walking on four feet
-  and swinging a powerful tail behind them. Their elephant-back armies
-  terrorize the lands outside the Dungeon.
-
-  Armataurs instinctively roll when moving toward foes, getting a free move.
-  Their long, nimble tongues drink every last drop from potions, doubling
-  their effects, but the strange syllables of magical scrolls slow them down.
-  They have great aptitudes with armour and shields, though their body shape
-  reduces the protection offered by body armour early on.
-
 Gargoyles (Gr)
   A cross between ordinary stone gargoyles and living beings, Gargoyles are
   hideous humanoids with an affinity to rock. They have low health, but large
@@ -1627,18 +1616,24 @@ Trolls (Tr)
   wounds. However, they are hopeless at spellcasting and learn most skills very
   slowly. Their large size prevents them from wearing most forms of armour.
 
-Ghouls (Gh)
-  Ghouls are horrible undead creatures that sleep in their graves for years on
-  end, only to rise and stalk the living. Slain foes heal these monstrous
-  beings as they feast on the macabre energies released.
+Deep Elves (DE)
+   The Deep Elves are a species of Elves who long ago fled the overworld to live
+   in darkness underground. There, they developed their mental powers, evolving
+   a natural gift for all forms of magic, and adapted physically to their new
+   environment, becoming weaker and losing all colouration. They are poor at
+   melee combat and physical defence, although they are capable at using bows
+   and other ranged weapons.
 
-  They learn most skills slowly, although they make decent unarmed fighters
-  with their claws. Due to their contact with the grave they can also learn to
-  use ice, earth, poison and necromantic magic without too many difficulties.
+Armataurs (At)
+  The Armataurs are a large, scaled mammalian species, walking on four feet
+  and swinging a powerful tail behind them. Their elephant-back armies
+  terrorize the lands outside the Dungeon.
 
-  Like other undead, ghouls are naturally immune to poisons, negative energy
-  and torment; have little warmth left to be affected by cold; and are not
-  susceptible to mutations.
+  Armataurs instinctively roll when moving toward foes, getting a free move.
+  Their long, nimble tongues drink every last drop from potions, doubling
+  their effects, but the strange syllables of magical scrolls slow them down.
+  They have great aptitudes with armour and shields, though their body shape
+  reduces the protection offered by body armour early on.
 
 Gnolls (Gn)
   Gnolls are a species of caniform humanoids originally hailing from the arid
@@ -1725,6 +1720,19 @@ Spriggans (Sp)
   armour. They cannot wield large weapons, and even most smaller weapons require
   both hands to be wielded by a Spriggan.
 
+Ghouls (Gh)
+  Ghouls are horrible undead creatures that sleep in their graves for years on
+  end, only to rise and stalk the living. Slain foes heal these monstrous
+  beings as they feast on the macabre energies released.
+
+  They learn most skills slowly, although they make decent unarmed fighters
+  with their claws. Due to their contact with the grave they can also learn to
+  use ice, earth, poison and necromantic magic without too many difficulties.
+
+  Like other undead, ghouls are naturally immune to poisons, negative energy
+  and torment; have little warmth left to be affected by cold; and are not
+  susceptible to mutations.
+
 Tengu (Te)
   The Tengu are an ancient and feared species of bird-people with a legendary
   propensity for violence. Basically humanoid with bird-like heads and clawed
@@ -1737,14 +1745,6 @@ Tengu (Te)
   are good at air and fire elemental magic, but poor at ice and earth magic.
   Tengu do not appreciate any form of servitude, and so are poor at using
   invocations. Their light avian bodies cannot sustain a great deal of injury.
-
-Deep Elves (DE)
-   The Deep Elves are a species of Elves who long ago fled the overworld to live
-   in darkness underground. There, they developed their mental powers, evolving
-   a natural gift for all forms of magic, and adapted physically to their new
-   environment, becoming weaker and losing all colouration. They are poor at
-   melee combat and physical defence, although they are capable at using bows
-   and other ranged weapons.
 
 Ogres (Og)
   Ogres are huge, chunky creatures who are very strong and robust, but are not
