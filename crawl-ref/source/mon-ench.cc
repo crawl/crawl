@@ -1032,7 +1032,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         // from the player on death, since the status can be transiently created
         // on cloned monsters and silently removing it shouldn't end the status
         // on the original.
-        if (static_cast<unsigned int>(you.props[BULLSEYE_TARGET_KEY].get_int()) == mid)
+        if ((mid_t) you.props[BULLSEYE_TARGET_KEY].get_int() == mid)
             you.set_duration(DUR_DIMENSIONAL_BULLSEYE, 0);
         break;
 
