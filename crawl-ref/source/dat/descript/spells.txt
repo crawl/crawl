@@ -202,8 +202,8 @@ Brom's Barrelling Boulder spell
 
 Unleashes a massive rolling boulder in a given cardinal direction. The boulder
 squashes and knocks back creatures it strikes, suffering wear and tear with each
-hit. If it strikes a wall, it will explode in an explosion of rock fragments,
-doing damage that is strongly reduced by armour.
+hit. If it strikes a wall, it will explode into fragments of rock, doing damage
+that is strongly reduced by armour.
 
 The boulder will disintegrate if it leaves the caster's sight.
 %%%%
