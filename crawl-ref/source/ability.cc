@@ -1451,7 +1451,7 @@ static bool _can_blinkbolt(bool quiet)
     if (you.duration[DUR_BLINKBOLT_COOLDOWN])
     {
         if (!quiet)
-            mpr("You aren't ready to blinkbolt again yet.");
+            canned_msg(MSG_CANNOT_DO_YET);
         return false;
     }
     return true;
@@ -1902,7 +1902,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         if (you.duration[DUR_BLINK_COOLDOWN])
         {
             if (!quiet)
-                mpr("You are still too unstable to blink.");
+                canned_msg(MSG_CANNOT_DO_YET);
             return false;
         }
         // fallthrough
@@ -2033,7 +2033,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         if (you.duration[DUR_SIPHON_COOLDOWN])
         {
             if (!quiet)
-                mpr("You're too exhausted to siphon the essence of your foes.");
+                canned_msg(MSG_CANNOT_DO_YET);
             return false;
         }
         return true;
