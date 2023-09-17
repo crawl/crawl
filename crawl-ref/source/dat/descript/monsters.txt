@@ -762,6 +762,10 @@ A gnoll witch possessed by a spirit of spite which flashes out from behind
 their eyes. Its strange chants and ululations send other gnolls into a wild
 frenzy.
 %%%%
+boulder
+
+A mass of fast-rolling stone, crushing everything in its path.
+%%%%
 boulder beetle
 
 A grey beetle with an almost impenetrable rocky carapace. When at some distance
