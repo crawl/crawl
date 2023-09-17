@@ -802,24 +802,23 @@ static void _wizard_restore_life()
 
 int outgoing_harm_amount(int levels)
 {
+    // +30% damage if opp has one level of harm, +45% with two
     return 15 * (levels + 1);
 }
 
 int incoming_harm_amount(int levels)
 {
+    // +20% damage if you have one level of harm, +30% with two
     return 10 * (levels + 1);
 }
 
 static int _apply_extra_harm(int dam, mid_t source)
 {
     monster* damager = monster_by_mid(source);
-    // +30% damage if opp has one level of harm, +45% with two
     if (damager && damager->extra_harm())
-        return dam * (100 + outgoing_harm_amount(damager->extra_harm())) / 100;
-    // +20% damage if you have one level of harm, +30% with two
+        dam *= (100 + outgoing_harm_amount(damager->extra_harm())) / 100;
     if (you.extra_harm())
-        return dam * (100 + incoming_harm_amount(you.extra_harm())) / 100;
-
+        dam *= (100 + incoming_harm_amount(you.extra_harm())) / 100;
     return dam;
 }
 
@@ -989,8 +988,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     int drain_amount = 0;
 
-    // Multiply damage if Harm is in play
-    if (dam != INSTANT_DEATH)
+    // Multiply damage if Harm is in play. (Poison is multiplied earlier.)
+    if (dam != INSTANT_DEATH && death_type != KILLED_BY_POISON)
         dam = _apply_extra_harm(dam, source);
 
 #if TAG_MAJOR_VERSION == 34
