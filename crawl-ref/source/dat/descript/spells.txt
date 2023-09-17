@@ -198,7 +198,7 @@ Drains a portion of a visible enemy's intelligence, with no direct line of fire
 required. Such a loss is only temporary, and can be recovered by gaining
 experience.
 %%%%
-Brom's Barrelling Boulder
+Brom's Barrelling Boulder spell
 
 Unleashes a massive rolling boulder in a given cardinal direction. The boulder
 squashes and knocks back creatures it strikes, suffering wear and tear with each
