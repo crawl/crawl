@@ -4236,7 +4236,8 @@ void actor_apply_toxic_bog(actor * act)
         {
             map_terrain_change_marker* tmarker =
                     dynamic_cast<map_terrain_change_marker*>(marker);
-            if (tmarker->change_type == TERRAIN_CHANGE_BOG)
+            const auto ct = tmarker->change_type;
+            if (ct == TERRAIN_CHANGE_BOG || ct == TERRAIN_CHANGE_FLOOD)
                 oppressor = actor_by_mid(tmarker->mon_num);
         }
     }
@@ -4283,7 +4284,7 @@ void actor_apply_toxic_bog(actor * act)
              oppr_name.c_str());
 
         act->hurt(oppressor, final_damage, BEAM_MISSILE,
-                  KILLED_BY_POISON, "", "toxic bog");
+                  KILLED_BY_BEAM, "", "toxic bog");
     }
 }
 
