@@ -336,8 +336,8 @@ if any other god attempts to interfere with their followers. Later, followers
 will be able to corrupt the ordered world, opening a gate for creatures
 of the Abyss to pass through, and to gate themselves directly into this realm of
 chaos. Lugonu will protect followers who unwield weapons imbued with the
-distorting energies of the Abyss, and eventually will offer to corrupt a
-follower's weapon in that way. Lugonu expects followers to spread unceasing
+distorting energies of the Abyss, and eventually will offer to distort a
+follower's melee weapon. Lugonu expects followers to spread unceasing
 chaos in the overworld, and as such does not grant piety to worshippers while
 they remain in the Abyss itself.
 %%%%
