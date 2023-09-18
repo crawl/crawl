@@ -1786,6 +1786,8 @@ static void _get_book(item_def& it)
             return;
         }
         mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
+        if (is_artefact(it) && !item_ident(it, ISFLAG_KNOW_PROPERTIES))
+            mprf("It was %s.", it.name(DESC_A, false, true).c_str());
 
         if (!library_add_spells(spells_in_book(it)))
             mpr("Unfortunately, you learned nothing new.");
