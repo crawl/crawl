@@ -1048,10 +1048,13 @@ static bool _do_book_acquirement(item_def &book, int agent)
     }
     } // switch book choice
 
-    // If we couldn't make a useful book, try to make a manual instead.
-    // We have to temporarily identify the book for this.
-    if (agent != GOD_XOM && agent != GOD_SIF_MUNA)
+
+    if (agent == GOD_XOM || agent == GOD_SIF_MUNA)
+        set_ident_flags(book, ISFLAG_IDENT_MASK);
+    else
     {
+        // If we couldn't make a useful book, try to make a manual instead.
+        // We have to temporarily identify the book for this.
         bool useless = false;
         {
             unwind_var<iflags_t> oldflags{book.flags};
