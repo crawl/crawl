@@ -1013,7 +1013,7 @@ static void _handle_boulder_movement(monster& boulder)
 
     // First, find out where we intend to move next
     coord_def dir = boulder.props[BOULDER_DIRECTION_KEY].get_coord();
-    if (one_chance_in(3))
+    if (one_chance_in(6))
         dir = _wobble_dir(dir);
     coord_def targ = boulder.pos() + dir;
 
