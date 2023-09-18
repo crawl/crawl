@@ -457,7 +457,9 @@ bool UseItemMenu::empty_check() const
         if (any_of(begin(floor_items), end(floor_items),
               [=] (const item_def* item) -> bool
               {
-                  return item->defined() && item->base_type == OBJ_TALISMANS;
+                  return item->defined()
+                         && item->base_type == OBJ_TALISMANS
+                         && item_is_selected(*item, item_type_filter);
               }))
         {
             return false;
