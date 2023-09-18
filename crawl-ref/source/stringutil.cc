@@ -474,7 +474,7 @@ string deescape(string s, const set<size_t> &escapes)
 string deescape(string s)
 {
     set<size_t> escapes = find_escapes(s);
-    return deescape(move(s), escapes);
+    return deescape(std::move(s), escapes);
 }
 
 /**

@@ -957,7 +957,7 @@ void ShopMenu::init_entries()
         auto newentry = make_unique<ShopEntry>(item, *this);
         newentry->hotkeys.clear();
         newentry->add_hotkey(ckey++);
-        add_entry(move(newentry));
+        add_entry(std::move(newentry));
     }
 }
 

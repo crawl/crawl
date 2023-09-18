@@ -991,7 +991,7 @@ namespace quiver
             {
                 auto a = make_shared<ammo_action>(i_inv);
                 if (a->is_valid() && (allow_disabled || a->is_enabled()))
-                    result.push_back(move(a));
+                    result.push_back(std::move(a));
             }
             return result;
         }
@@ -1011,7 +1011,7 @@ namespace quiver
             {
                 auto a = make_shared<ammo_action>(i);
                 if (a->is_valid() && (allow_disabled || a->is_enabled()))
-                    result.push_back(move(a));
+                    result.push_back(std::move(a));
                 // TODO: allow arbitrary items with +f to get added here? I
                 // have had some trouble getting this to work
             }
@@ -1318,7 +1318,7 @@ namespace quiver
                 auto a = make_shared<spell_action>(
                                 get_spell_by_letter(index_to_letter(i)));
                 if (a->in_fire_order(allow_disabled, menu))
-                    result.push_back(move(a));
+                    result.push_back(std::move(a));
             }
             return result;
         }
@@ -1606,7 +1606,7 @@ namespace quiver
                 }
                 auto a = make_shared<ability_action>(tal.which);
                 if (a->is_valid() && (allow_disabled || a->is_enabled()))
-                    result.push_back(move(a));
+                    result.push_back(std::move(a));
             }
             return result;
         }
@@ -1721,9 +1721,9 @@ namespace quiver
                     && (allow_disabled || w->is_enabled()))
                 {
                     if (you.inv[slot].base_type == OBJ_POTIONS)
-                        result.push_back(move(w));
+                        result.push_back(std::move(w));
                     else
-                        scrolls.push_back(move(w));
+                        scrolls.push_back(std::move(w));
                 }
             }
             result.insert(result.end(), scrolls.begin(), scrolls.end());
@@ -1829,7 +1829,7 @@ namespace quiver
                     // (Maybe do this with autoinscribe?)
                     && you.inv[slot].sub_type != WAND_DIGGING)
                 {
-                    result.push_back(move(w));
+                    result.push_back(std::move(w));
                 }
             }
             return result;
@@ -1930,7 +1930,7 @@ namespace quiver
                     // TODO: autoinscribe =f?
                     && you.inv[slot].sub_type != MISC_ZIGGURAT)
                 {
-                    result.push_back(move(w));
+                    result.push_back(std::move(w));
                 }
             }
             return result;
@@ -2060,7 +2060,7 @@ namespace quiver
         for (auto &val : history_vec)
         {
             auto a = _load_action(val.get_table());
-            history.push_back(move(a));
+            history.push_back(std::move(a));
         }
     }
 
@@ -2091,7 +2091,7 @@ namespace quiver
         auto n = new_act ? new_act : make_shared<action>();
 
         const bool diff = *n != *get();
-        current = move(n);
+        current = std::move(n);
         set_needs_redraw();
         return diff;
     }
@@ -2109,8 +2109,8 @@ namespace quiver
         auto n = new_act ? new_act : make_shared<action>();
 
         const bool diff = *n != *get();
-        auto old = move(current);
-        current = move(n);
+        auto old = std::move(current);
+        current = std::move(n);
 
         if (diff)
         {
@@ -2119,7 +2119,7 @@ namespace quiver
             history.erase(remove(history.begin(), history.end(), old), history.end());
             // this may push back an invalid action, which is useful for all
             // sorts of reasons
-            history.push_back(move(old));
+            history.push_back(std::move(old));
 
             if (history.size() > 6) // 6 chosen arbitrarily
                 history.erase(history.begin());

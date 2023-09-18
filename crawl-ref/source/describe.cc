@@ -128,19 +128,19 @@ int show_description(const describe_info &inf, const tile_def *tile)
             auto icon = make_shared<Image>();
             icon->set_tile(*tile);
             icon->set_margin_for_sdl(0, 10, 0, 0);
-            title_hbox->add_child(move(icon));
+            title_hbox->add_child(std::move(icon));
         }
 #else
         UNUSED(tile);
 #endif
 
         auto title = make_shared<Text>(inf.title);
-        title_hbox->add_child(move(title));
+        title_hbox->add_child(std::move(title));
 
         title_hbox->set_cross_alignment(Widget::CENTER);
         title_hbox->set_margin_for_sdl(0, 0, 20, 0);
         title_hbox->set_margin_for_crt(0, 0, 1, 0);
-        vbox->add_child(move(title_hbox));
+        vbox->add_child(std::move(title_hbox));
     }
 
     auto desc_sw = make_shared<Switcher>();
@@ -167,7 +167,7 @@ int show_description(const describe_info &inf, const tile_def *tile)
         auto text = make_shared<Text>(fs);
         text->set_wrap_text(true);
         scroller->set_child(text);
-        desc_sw->add_child(move(scroller));
+        desc_sw->add_child(std::move(scroller));
         more_sw->add_child(make_shared<Text>(
                 formatted_string::parse_string(mores[i])));
     }
@@ -218,7 +218,7 @@ int show_description(const describe_info &inf, const tile_def *tile)
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
-    ui::run_layout(move(popup), done);
+    ui::run_layout(std::move(popup), done);
 
     return lastch;
 }
@@ -3426,11 +3426,11 @@ bool describe_feature_wide(const coord_def& pos, bool do_actions)
 #ifdef USE_TILE
         auto icon = make_shared<Image>();
         icon->set_tile(feat.tile);
-        title_hbox->add_child(move(icon));
+        title_hbox->add_child(std::move(icon));
 #endif
         auto title = make_shared<Text>(feat.title);
         title->set_margin_for_sdl(0, 0, 0, 10);
-        title_hbox->add_child(move(title));
+        title_hbox->add_child(std::move(title));
         title_hbox->set_cross_alignment(Widget::CENTER);
 
         const bool has_desc = feat.body != feat.title && feat.body != "";
@@ -3440,7 +3440,7 @@ bool describe_feature_wide(const coord_def& pos, bool do_actions)
             title_hbox->set_margin_for_crt(0, 0, 1, 0);
             title_hbox->set_margin_for_sdl(0, 0, 20, 0);
         }
-        vbox->add_child(move(title_hbox));
+        vbox->add_child(std::move(title_hbox));
 
         if (has_desc)
         {
@@ -3473,13 +3473,13 @@ bool describe_feature_wide(const coord_def& pos, bool do_actions)
         footer->set_text(footer_text);
         footer->set_margin_for_crt(1, 0, 0, 0);
         footer->set_margin_for_sdl(20, 0, 0, 0);
-        vbox->add_child(move(footer));
+        vbox->add_child(std::move(footer));
     }
 
 #ifdef USE_TILE_LOCAL
     vbox->max_size().width = tiles.get_crt_font()->char_width()*80;
 #endif
-    scroller->set_child(move(vbox));
+    scroller->set_child(std::move(vbox));
 
     auto popup = make_shared<ui::Popup>(scroller);
 
@@ -3517,7 +3517,7 @@ bool describe_feature_wide(const coord_def& pos, bool do_actions)
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
-    ui::run_layout(move(popup), done);
+    ui::run_layout(std::move(popup), done);
     return _do_feat_action(pos, action);
 }
 
@@ -3917,20 +3917,20 @@ command_type describe_item_popup(const item_def &item,
         {
             auto icon = make_shared<Image>();
             icon->set_tile(tile);
-            tiles_stack->add_child(move(icon));
+            tiles_stack->add_child(std::move(icon));
         }
-        title_hbox->add_child(move(tiles_stack));
+        title_hbox->add_child(std::move(tiles_stack));
     }
 #endif
 
     auto title = make_shared<Text>(name);
     title->set_margin_for_sdl(0, 0, 0, 10);
-    title_hbox->add_child(move(title));
+    title_hbox->add_child(std::move(title));
 
     title_hbox->set_cross_alignment(Widget::CENTER);
     title_hbox->set_margin_for_crt(0, 0, 1, 0);
     title_hbox->set_margin_for_sdl(0, 0, 20, 0);
-    vbox->add_child(move(title_hbox));
+    vbox->add_child(std::move(title_hbox));
 
     auto scroller = make_shared<Scroller>();
     auto text = make_shared<Text>(fs_desc.trim());
@@ -3948,14 +3948,14 @@ command_type describe_item_popup(const item_def &item,
         footer->set_text(footer_text);
         footer->set_margin_for_crt(1, 0, 0, 0);
         footer->set_margin_for_sdl(20, 0, 0, 0);
-        vbox->add_child(move(footer));
+        vbox->add_child(std::move(footer));
     }
 
 #ifdef USE_TILE_LOCAL
     vbox->max_size().width = tiles.get_crt_font()->char_width()*80;
 #endif
 
-    auto popup = make_shared<ui::Popup>(move(vbox));
+    auto popup = make_shared<ui::Popup>(std::move(vbox));
 
     bool done = false;
     command_type action = CMD_NO_CMD;
@@ -4003,7 +4003,7 @@ command_type describe_item_popup(const item_def &item,
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
-    ui::run_layout(move(popup), done);
+    ui::run_layout(std::move(popup), done);
 
     return action;
 }
@@ -4498,7 +4498,7 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
 #ifdef USE_TILE
     auto spell_icon = make_shared<Image>();
     spell_icon->set_tile(tile_def(tileidx_spell(spell)));
-    title_hbox->add_child(move(spell_icon));
+    title_hbox->add_child(std::move(spell_icon));
 #endif
 
     string spl_title = spell_title(spell);
@@ -4507,21 +4507,21 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
     auto title = make_shared<Text>();
     title->set_text(spl_title);
     title->set_margin_for_sdl(0, 0, 0, 10);
-    title_hbox->add_child(move(title));
+    title_hbox->add_child(std::move(title));
 
     title_hbox->set_cross_alignment(Widget::CENTER);
     title_hbox->set_margin_for_crt(0, 0, 1, 0);
     title_hbox->set_margin_for_sdl(0, 0, 20, 0);
-    vbox->add_child(move(title_hbox));
+    vbox->add_child(std::move(title_hbox));
 
     auto scroller = make_shared<Scroller>();
     auto text = make_shared<Text>();
     text->set_text(formatted_string::parse_string(desc));
     text->set_wrap_text(true);
-    scroller->set_child(move(text));
+    scroller->set_child(std::move(text));
     vbox->add_child(scroller);
 
-    auto popup = make_shared<ui::Popup>(move(vbox));
+    auto popup = make_shared<ui::Popup>(std::move(vbox));
 
     bool done = false;
     int lastch;
@@ -4548,7 +4548,7 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
-    ui::run_layout(move(popup), done);
+    ui::run_layout(std::move(popup), done);
 }
 
 /**
@@ -6112,18 +6112,18 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
     auto dgn = make_shared<Dungeon>();
     dgn->width = dgn->height = 1;
     dgn->buf().add_monster(mi, 0, 0);
-    title_hbox->add_child(move(dgn));
+    title_hbox->add_child(std::move(dgn));
 #endif
 
     auto title = make_shared<Text>();
     title->set_text(inf.title);
     title->set_margin_for_sdl(0, 0, 0, 10);
-    title_hbox->add_child(move(title));
+    title_hbox->add_child(std::move(title));
 
     title_hbox->set_cross_alignment(Widget::CENTER);
     title_hbox->set_margin_for_crt(0, 0, 1, 0);
     title_hbox->set_margin_for_sdl(0, 0, 20, 0);
-    vbox->add_child(move(title_hbox));
+    vbox->add_child(std::move(title_hbox));
 
     desc += inf.body.str();
     if (crawl_state.game_is_hints())
@@ -6161,7 +6161,7 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
         auto text = make_shared<Text>(content[i]->trim());
         text->set_wrap_text(true);
         scroller->set_child(text);
-        desc_sw->add_child(move(scroller));
+        desc_sw->add_child(std::move(scroller));
 
         more_sw->add_child(make_shared<Text>(
                 formatted_string::parse_string(mores[i])));
@@ -6179,7 +6179,7 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
     vbox->max_size().width = tiles.get_crt_font()->char_width()*80;
 #endif
 
-    auto popup = make_shared<ui::Popup>(move(vbox));
+    auto popup = make_shared<ui::Popup>(std::move(vbox));
 
     bool done = false;
     int lastch;
@@ -6269,7 +6269,7 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
-    ui::run_layout(move(popup), done);
+    ui::run_layout(std::move(popup), done);
 
     return lastch;
 }

@@ -786,7 +786,7 @@ public:
         // happened, then it set m_state and we don't want to overwrite it.
         // TODO some refactoring to make this cleaner
         if (!check_and_reset_reentry())
-            m_state = move(ret);
+            m_state = std::move(ret);
 
         if (!m_state.map_alive)
             return;

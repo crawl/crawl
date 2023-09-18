@@ -1563,7 +1563,7 @@ void AcquireMenu::init_entries()
         auto newentry = make_unique<AcquireEntry>(item);
         newentry->hotkeys.clear();
         newentry->add_hotkey(ckey++);
-        add_entry(move(newentry));
+        add_entry(std::move(newentry));
     }
 
     on_single_selection = [this](const MenuEntry& item)

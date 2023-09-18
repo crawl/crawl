@@ -1872,7 +1872,7 @@ void skill_menu(int flag, int exp)
         return;
     }
 
-    ui::run_layout(move(popup), done);
+    ui::run_layout(std::move(popup), done);
 
     skm.clear();
 }
