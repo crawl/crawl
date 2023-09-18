@@ -584,4 +584,40 @@ jobs:
       - name: Build with Gradle
         run: gradle :app:assembleBuildTest
         working-directory: crawl-ref/source/android-project
-        
+
+  notify_irc:
+    name: "Notify #crawl-dev of build failure"
+    needs:
+      - linting
+      - build_linux
+      - build_macos
+      - build_mingw64_crosscompile
+      - codecov_catch2
+      - webserver
+    if: failure() && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build message
+        id: message
+        run: |
+          ref="${{ github.ref }}"
+          branch="${ref##refs/heads/}"
+          sha="${{ github.sha }}"
+          short_sha="${sha:0:8}"
+
+          # https://modern.ircdocs.horse/formatting.html
+          bold=$(printf '\x02')
+          col=$(printf '\x03')
+          red="04"
+          magenta="06"
+          yellow="08"
+          url="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          message="${bold}${col}${red}Build failed${col}${bold} for ${col}${yellow}${branch}${col} @ $short_sha ${col}${magenta}${url}"
+
+          echo "message=${message}" >> $GITHUB_OUTPUT
+      - uses: rectalogic/notify-irc@v1
+        with:
+          server: irc.libera.chat
+          channel: ${{ secrets.IRC_CHANNEL }}
+          nickname: dcss-ci
+          message: ${{ steps.message.outputs.message }}
