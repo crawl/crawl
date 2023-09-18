@@ -24,8 +24,9 @@
 #include "describe.h"
 #include "end.h"
 #include "god-conduct.h"
-#include "invent.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
+#include "invent.h"
 #include "libutil.h"
 #include "message.h"
 #include "output.h"
@@ -1089,7 +1090,7 @@ bool learn_spell(spell_type specspell, bool wizard, bool interactive)
     return true;
 }
 
-bool book_has_title(const item_def &book)
+bool book_has_title(const item_def &book, bool ident)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
@@ -1107,7 +1108,8 @@ bool book_has_title(const item_def &book)
         return false;
 
     return book.props.exists(BOOK_TITLED_KEY)
-           && book.props[BOOK_TITLED_KEY].get_bool() == true;
+           && book.props[BOOK_TITLED_KEY].get_bool() == true
+           && (ident || item_ident(book, ISFLAG_KNOW_PROPERTIES));
 }
 
 spret divine_exegesis(bool fail)

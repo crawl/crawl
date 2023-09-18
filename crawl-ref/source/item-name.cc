@@ -163,7 +163,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
             descrip = DESC_A;
     }
 
-    if (base_type == OBJ_BOOKS && book_has_title(*this))
+    if (base_type == OBJ_BOOKS && book_has_title(*this, ident))
     {
         if (descrip != DESC_DBNAME)
             descrip = DESC_PLAIN;
