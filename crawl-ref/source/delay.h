@@ -730,7 +730,7 @@ void push_delay(shared_ptr<Delay> delay);
 template<typename T, typename... Args>
 shared_ptr<Delay> start_delay(Args&&... args)
 {
-    auto delay = make_shared<T>(forward<Args>(args)...);
+    auto delay = make_shared<T>(std::forward<Args>(args)...);
     push_delay(delay);
     return delay;
 }

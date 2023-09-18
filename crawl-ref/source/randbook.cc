@@ -653,7 +653,7 @@ void init_book_theme_randart(item_def &book, vector<spell_type> spells)
 {
     book.sub_type = BOOK_RANDART_THEME;
     _make_book_randart(book);
-    _set_book_spell_list(book, move(spells));
+    _set_book_spell_list(book, std::move(spells));
 }
 
 /**

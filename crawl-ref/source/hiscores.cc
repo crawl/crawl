@@ -139,7 +139,7 @@ int hiscores_new_entry(const scorefile_entry &ne)
             // Fixed a nasty overflow bug here -- Sharp
             if (i+1 < SCORE_FILE_ENTRIES)
             {
-                hs_list[i + 1] = move(hs_list[i]);
+                hs_list[i + 1] = std::move(hs_list[i]);
                 hs_list[i].reset(new scorefile_entry(ne));
                 i++;
             }
@@ -424,13 +424,13 @@ UIHiscoresMenu::UIHiscoresMenu()
 #ifdef USE_TILE
     auto tile = make_shared<Image>();
     tile->set_tile(tile_def(TILEG_STARTUP_HIGH_SCORES));
-    title_hbox->add_child(move(tile));
+    title_hbox->add_child(std::move(tile));
 #endif
 
     auto title = make_shared<Text>(formatted_string(
                 CRAWL ": High Scores", YELLOW));
     title->set_margin_for_sdl(0, 0, 0, 16);
-    title_hbox->add_child(move(title));
+    title_hbox->add_child(std::move(title));
 
     title_hbox->set_main_alignment(Widget::CENTER);
     title_hbox->set_cross_alignment(Widget::CENTER);
@@ -441,7 +441,7 @@ UIHiscoresMenu::UIHiscoresMenu()
     nhsr = 0;
     _construct_hiscore_table();
 
-    m_root->add_child(move(title_hbox));
+    m_root->add_child(std::move(title_hbox));
     if (initial_focus)
     {
         m_root->add_child(m_description);
@@ -488,7 +488,7 @@ void UIHiscoresMenu::_add_hiscore_row(scorefile_entry& se, int id)
     tmp->set_text(hiscores_format_single(se));
     auto btn = make_shared<MenuButton>();
     tmp->set_margin_for_sdl(2);
-    btn->set_child(move(tmp));
+    btn->set_child(std::move(tmp));
     btn->on_activate_event([id](const ActivateEvent&) {
         _show_morgue(*hs_list[id]);
         return true;
@@ -496,13 +496,13 @@ void UIHiscoresMenu::_add_hiscore_row(scorefile_entry& se, int id)
     btn->on_focusin_event([this, se](const FocusEvent&) {
         formatted_string desc(hiscores_format_single_long(se, true));
         desc.cprintf(string(max(0, 9-count_linebreaks(desc)), '\n'));
-        m_description->set_text(move(desc));
+        m_description->set_text(std::move(desc));
         return false;
     });
 
     if (!initial_focus)
         initial_focus = btn.get();
-    m_score_entries->add_button(move(btn), 0, nhsr++);
+    m_score_entries->add_button(std::move(btn), 0, nhsr++);
 }
 
 void UIHiscoresMenu::_render()
@@ -535,7 +535,7 @@ void show_hiscore_table()
     unwind_var<string> sprintmap(crawl_state.map, crawl_state.sprint_map);
     auto hiscore_ui = make_shared<UIHiscoresMenu>();
     auto popup = make_shared<ui::Popup>(hiscore_ui);
-    ui::run_layout(move(popup), hiscore_ui->done);
+    ui::run_layout(std::move(popup), hiscore_ui->done);
 }
 
 // Trying to supply an appropriate verb for the attack type. -- bwr

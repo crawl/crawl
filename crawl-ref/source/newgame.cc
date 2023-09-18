@@ -354,7 +354,7 @@ static bool _reroll_random(newgame_def& ng)
 #ifdef USE_TILE_LOCAL
     auto tile = make_shared<ui::PlayerDoll>(doll);
     tile->set_margin_for_sdl(0, 10, 0, 0);
-    title_hbox->add_child(move(tile));
+    title_hbox->add_child(std::move(tile));
 #endif
 #endif
     title_hbox->add_child(make_shared<Text>(prompt));
@@ -363,9 +363,9 @@ static bool _reroll_random(newgame_def& ng)
     title_hbox->set_margin_for_crt(0, 0, 1, 0);
 
     auto vbox = make_shared<Box>(Box::VERT);
-    vbox->add_child(move(title_hbox));
+    vbox->add_child(std::move(title_hbox));
     vbox->add_child(make_shared<Text>("Do you want to play this combination? [Y/n/q]"));
-    auto popup = make_shared<ui::Popup>(move(vbox));
+    auto popup = make_shared<ui::Popup>(std::move(vbox));
 
     bool done = false;
     int c;
@@ -381,7 +381,7 @@ static bool _reroll_random(newgame_def& ng)
     tiles.push_ui_layout("newgame-random-combo", 0);
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
-    ui::run_layout(move(popup), done);
+    ui::run_layout(std::move(popup), done);
 
     // XX mouse interface in local tiles for `y` -- right now right click does
     // `q` only
@@ -523,12 +523,12 @@ static void _add_menu_sub_item(shared_ptr<OuterMenu>& menu, int x, int y, const 
     tmp->set_margin_for_crt(0, 2, 0, 0);
 
     auto btn = make_shared<MenuButton>();
-    btn->set_child(move(tmp));
+    btn->set_child(std::move(tmp));
     btn->id = id;
     btn->description = description;
     btn->hotkey = letter;
     btn->highlight_colour = STARTUP_HIGHLIGHT_CONTROL;
-    menu->add_button(move(btn), x, y);
+    menu->add_button(std::move(btn), x, y);
 }
 
 #ifndef DGAMELAUNCH
@@ -577,7 +577,7 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
 #ifdef USE_TILE_LOCAL
     auto tile = make_shared<ui::PlayerDoll>(doll);
     tile->set_margin_for_sdl(0, 10, 0, 0);
-    title_hbox->add_child(move(tile));
+    title_hbox->add_child(std::move(tile));
 #endif
 #endif
     title_hbox->add_child(make_shared<Text>(title));
@@ -586,7 +586,7 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
     title_hbox->set_margin_for_crt(0, 0, 1, 0);
 
     auto vbox = make_shared<Box>(Box::VERT);
-    vbox->add_child(move(title_hbox));
+    vbox->add_child(std::move(title_hbox));
     auto prompt_ui = make_shared<Text>();
     vbox->add_child(prompt_ui);
 
@@ -622,7 +622,7 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
         });
         tmp->set_margin_for_sdl(4,8);
         tmp->set_margin_for_crt(0, 2, 0, 0);
-        btn->set_child(move(tmp));
+        btn->set_child(std::move(tmp));
         btn->id = CK_ENTER;
         btn->description = "";
         btn->hotkey = CK_ENTER;
@@ -640,7 +640,7 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
         sub_items->add_button(btn, 2, 0);
     }
 
-    auto popup = make_shared<ui::Popup>(move(vbox));
+    auto popup = make_shared<ui::Popup>(std::move(vbox));
 
     sub_items->on_activate_event([&](const ActivateEvent& event) {
         const auto button = static_pointer_cast<MenuButton>(event.target());
@@ -680,7 +680,7 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
         return true;
     });
 
-    ui::push_layout(move(popup));
+    ui::push_layout(std::move(popup));
     while (!done && !crawl_state.seen_hups)
     {
         formatted_string prompt;
@@ -849,7 +849,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     clear_btn_label->set_margin_for_sdl(4, 4);
     clear_btn_label->set_margin_for_crt(0, 1, 0, 1);
     auto clear_btn = make_shared<MenuButton>();
-    clear_btn->set_child(move(clear_btn_label));
+    clear_btn->set_child(std::move(clear_btn_label));
     clear_btn->set_sync_id("btn-clear");
     clear_btn->hotkey = '-';
     clear_btn->set_margin_for_sdl(0,0,0,10);
@@ -859,7 +859,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
         ui::set_focused_widget(seed_input.get());
         return true;
     });
-    seed_hbox->add_child(move(clear_btn));
+    seed_hbox->add_child(std::move(clear_btn));
 
     auto d_btn_label = make_shared<ui::Text>();
     d_btn_label->set_text(formatted_string("[d] Today's daily seed", BROWN));
@@ -867,7 +867,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     d_btn_label->set_margin_for_crt(0, 2, 0, 0);
 
     auto daily_seed_btn = make_shared<MenuButton>();
-    daily_seed_btn->set_child(move(d_btn_label));
+    daily_seed_btn->set_child(std::move(d_btn_label));
     daily_seed_btn->set_sync_id("btn-daily");
     daily_seed_btn->hotkey = 'd';
     daily_seed_btn->set_margin_for_sdl(0,0,0,10);
@@ -882,7 +882,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
         ui::set_focused_widget(seed_input.get());
         return true;
     });
-    seed_hbox->add_child(move(daily_seed_btn));
+    seed_hbox->add_child(std::move(daily_seed_btn));
 
     const string footer_text =
 #ifdef USE_TILE_LOCAL
@@ -965,7 +965,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
-    ui::run_layout(move(popup), done, seed_input);
+    ui::run_layout(std::move(popup), done, seed_input);
 
     string result = seed_input->get_text();
     uint64_t tmp_seed = 0;
@@ -1267,7 +1267,7 @@ protected:
         tile->set_tile(item_tile);
         tile->set_margin_for_sdl(0, 6, 0, 0);
         tile->flex_grow = 0;
-        hbox->add_child(move(tile));
+        hbox->add_child(std::move(tile));
         hbox->add_child(label);
 #else
         UNUSED(item_tile);
@@ -1307,9 +1307,9 @@ protected:
         auto btn = make_shared<MenuButton>();
 #ifdef USE_TILE
         hbox->set_margin_for_sdl(2, 10, 2, 2);
-        btn->set_child(move(hbox));
+        btn->set_child(std::move(hbox));
 #else
-        btn->set_child(move(label));
+        btn->set_child(std::move(label));
 #endif
         btn->id = id;
         btn->description = desc;
@@ -1327,7 +1327,7 @@ protected:
     {
         auto text = make_shared<Text>(formatted_string(name, LIGHTBLUE));
         text->set_margin_for_sdl(7, 0, 7, 32+2+6);
-        m_main_items->add_label(move(text), position.x, position.y);
+        m_main_items->add_label(std::move(text), position.x, position.y);
     }
 
     void _add_choice_menu_option(int x, int y, const string& text, char letter,
@@ -1638,7 +1638,7 @@ static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_cho
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
-    ui::run_layout(move(popup), newgame_ui->done);
+    ui::run_layout(std::move(popup), newgame_ui->done);
 
     if (newgame_ui->end_game)
         end(0);
@@ -1670,9 +1670,9 @@ static void _construct_weapon_menu(const newgame_def& ng,
         string label;
         tileidx_t tile;
         weapon_menu_item(skill_type _skill, string _label, tileidx_t _tile)
-            : skill(move(_skill)), label(move(_label)), tile(move(_tile)) {};
+            : skill(std::move(_skill)), label(std::move(_label)), tile(std::move(_tile)) {};
         weapon_menu_item(skill_type _skill, string _label)
-            : skill(move(_skill)), label(move(_label)), tile(0) {};
+            : skill(std::move(_skill)), label(std::move(_label)), tile(0) {};
     };
     vector<weapon_menu_item> choices;
 
@@ -1753,7 +1753,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
         hbox->add_child(suffix);
 
         auto btn = make_shared<MenuButton>();
-        btn->set_child(move(hbox));
+        btn->set_child(std::move(hbox));
         btn->id = wpn_type;
         btn->hotkey = letter;
         btn->highlight_colour = bg;
@@ -1761,7 +1761,7 @@ static void _construct_weapon_menu(const newgame_def& ng,
         // Is this item our default weapon?
         if (wpn_type == defweapon || (defweapon == WPN_UNKNOWN && i == 0))
             main_items->set_initial_focus(btn.get());
-        main_items->add_button(move(btn), 0, i);
+        main_items->add_button(std::move(btn), 0, i);
     }
 
     _add_menu_sub_item(sub_items, 0, 0, "+ - Recommended random choice",
@@ -1806,7 +1806,7 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
 #ifdef USE_TILE_LOCAL
     auto tile = make_shared<ui::PlayerDoll>(doll);
     tile->set_margin_for_sdl(0, 10, 0, 0);
-    title_hbox->add_child(move(tile));
+    title_hbox->add_child(std::move(tile));
 #endif
 #endif
     auto title = make_shared<Text>(formatted_string(_welcome(ng), BROWN));
@@ -1909,7 +1909,7 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
     tiles.push_ui_layout("newgame-choice", 1);
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
-    ui::run_layout(move(popup), done);
+    ui::run_layout(std::move(popup), done);
 
     return ret;
 }
@@ -2103,7 +2103,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         auto tile = make_shared<Image>();
         tile->set_tile(tile_for_map_name(map_name));
         tile->set_margin_for_sdl(0, 6, 0, 0);
-        hbox->add_child(move(tile));
+        hbox->add_child(std::move(tile));
         hbox->add_child(label);
 #endif
 
@@ -2112,9 +2112,9 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
         auto btn = make_shared<MenuButton>();
 #ifdef USE_TILE
         hbox->set_margin_for_sdl(2, 10, 2, 2);
-        btn->set_child(move(hbox));
+        btn->set_child(std::move(hbox));
 #else
-        btn->set_child(move(label));
+        btn->set_child(std::move(label));
 #endif
         btn->id = i; // ID corresponds to location in vector
         btn->hotkey = letter;
@@ -2274,7 +2274,7 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
     tiles.push_ui_layout("newgame-choice", 1);
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
-    ui::run_layout(move(popup), done);
+    ui::run_layout(std::move(popup), done);
 
     if (cancel || crawl_state.seen_hups)
         game_ended(game_exit::abort);

@@ -198,16 +198,16 @@ void pick_hints(newgame_def& choice)
         fill_doll_for_newgame(doll, tng);
         auto tile = make_shared<ui::PlayerDoll>(doll);
         tile->set_margin_for_sdl(0, 6, 0, 0);
-        hbox->add_child(move(tile));
+        hbox->add_child(std::move(tile));
         hbox->add_child(label);
 #endif
 
         auto btn = make_shared<MenuButton>();
 #ifdef USE_TILE_LOCAL
         hbox->set_margin_for_sdl(4,8);
-        btn->set_child(move(hbox));
+        btn->set_child(std::move(hbox));
 #else
-        btn->set_child(move(label));
+        btn->set_child(std::move(label));
 #endif
         btn->id = i;
         btn->hotkey = 'a' + i;
@@ -241,7 +241,7 @@ void pick_hints(newgame_def& choice)
     {
         auto label = make_shared<Text>(formatted_string("Esc - Quit", BROWN));
         auto btn = make_shared<MenuButton>();
-        btn->set_child(move(label));
+        btn->set_child(std::move(label));
         btn->hotkey = CK_ESCAPE;
         btn->id = CK_ESCAPE;
         sub_items->add_button(btn, 0, 0);
@@ -249,7 +249,7 @@ void pick_hints(newgame_def& choice)
     {
         auto label = make_shared<Text>(formatted_string("  * - Random hints mode character", BROWN));
         auto btn = make_shared<MenuButton>();
-        btn->set_child(move(label));
+        btn->set_child(std::move(label));
         btn->hotkey = '*';
         btn->id = '*';
         sub_items->add_button(btn, 0, 1);
@@ -263,7 +263,7 @@ void pick_hints(newgame_def& choice)
         return false;
     });
 
-    ui::run_layout(move(popup), done);
+    ui::run_layout(std::move(popup), done);
 
     if (cancelled)
     {
@@ -414,7 +414,7 @@ void hints_starting_screen()
     popup->on_keydown_event([&](const KeyEvent&) { return done = true; });
 
     mouse_control mc(MOUSE_MODE_MORE);
-    ui::run_layout(move(popup), done);
+    ui::run_layout(std::move(popup), done);
 }
 
 // Called each turn from _input. Better name welcome.

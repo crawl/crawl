@@ -440,7 +440,7 @@ public:
                 ts.safe_if_ignoring_hostile_terrain =
                     is_travelsafe_square(p, true);
             }
-            _travel_safe_grid = move(tsgrid);
+            _travel_safe_grid = std::move(tsgrid);
         }
     }
     ~precompute_travel_safety_grid()

@@ -1481,9 +1481,9 @@ static void _choose_arena_teams(newgame_def& choice,
     prompt.cprintf("  Sigmund v Jessica\n");
     prompt.cprintf("  99 orc v the Royal Jelly\n");
     prompt.cprintf("  20-headed hydra v 10 kobold ; scimitar ego:flaming");
-    vbox->add_child(make_shared<Text>(move(prompt)));
+    vbox->add_child(make_shared<Text>(std::move(prompt)));
 
-    auto popup = make_shared<ui::Popup>(move(vbox));
+    auto popup = make_shared<ui::Popup>(std::move(vbox));
 
     bool done = false, cancel = false;
     popup->on_hotkey_event([&](const KeyEvent& ev) {
@@ -1494,7 +1494,7 @@ static void _choose_arena_teams(newgame_def& choice,
         return done;
     });
 
-    ui::run_layout(move(popup), done, teams_input);
+    ui::run_layout(std::move(popup), done, teams_input);
 
     if (cancel || crawl_state.seen_hups)
     {

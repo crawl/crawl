@@ -265,7 +265,7 @@ shared_ptr<Widget> Bin::get_child_at_offset(int x, int y)
 void Bin::set_child(shared_ptr<Widget> child)
 {
     child->_set_parent(this);
-    m_child = move(child);
+    m_child = std::move(child);
     _invalidate_sizereq();
 }
 
@@ -424,7 +424,7 @@ void Widget::set_visible(bool visible)
 void Widget::add_internal_child(shared_ptr<Widget> child)
 {
     child->_set_parent(this);
-    m_internal_children.emplace_back(move(child));
+    m_internal_children.emplace_back(std::move(child));
 }
 
 void Widget::set_sync_id(string id)
@@ -463,7 +463,7 @@ void Widget::sync_state_changed()
 void Box::add_child(shared_ptr<Widget> child)
 {
     child->_set_parent(this);
-    m_children.push_back(move(child));
+    m_children.push_back(std::move(child));
     _invalidate_sizereq();
 }
 
@@ -1112,7 +1112,7 @@ SizeReq Image::_get_preferred_size(Direction dim, int /*prosp_width*/)
 void Stack::add_child(shared_ptr<Widget> child)
 {
     child->_set_parent(this);
-    m_children.push_back(move(child));
+    m_children.push_back(std::move(child));
     _invalidate_sizereq();
     _queue_allocation();
 }
@@ -1171,7 +1171,7 @@ void Switcher::add_child(shared_ptr<Widget> child)
     // - it must be in the current top child
     // - unfocus it before we
     child->_set_parent(this);
-    m_children.push_back(move(child));
+    m_children.push_back(std::move(child));
     _invalidate_sizereq();
     _queue_allocation();
 }
@@ -1296,7 +1296,7 @@ shared_ptr<Widget> Grid::get_child_at_offset(int x, int y)
 void Grid::add_child(shared_ptr<Widget> child, int x, int y, int w, int h)
 {
     child->_set_parent(this);
-    child_info ch = { {x, y}, {w, h}, move(child) };
+    child_info ch = { {x, y}, {w, h}, std::move(child) };
     m_child_info.push_back(ch);
     m_track_info_dirty = true;
     _invalidate_sizereq();
@@ -1641,7 +1641,7 @@ Layout::Layout(shared_ptr<Widget> child)
     m_depth = ui_root.num_children();
 #endif
     child->_set_parent(this);
-    m_child = move(child);
+    m_child = std::move(child);
     expand_h = expand_v = true;
 }
 
@@ -2488,7 +2488,7 @@ void UIRoot::push_child(shared_ptr<Widget> ch, KeymapContext km)
     state.default_focus = state.current_focus = focus;
     state.generation_id = next_generation_id++;
 
-    m_root.add_child(move(ch));
+    m_root.add_child(std::move(ch));
     m_needs_layout = true;
     m_changed_layout_since_click = true;
     update_focus_order();
@@ -2787,7 +2787,7 @@ void UIRoot::update_hover_path()
 
     send_mouse_enter_leave_events(hover_path, new_hover_path);
 
-    hover_path = move(new_hover_path);
+    hover_path = std::move(new_hover_path);
     hover_path.resize(new_hover_path_size);
 }
 
@@ -3150,7 +3150,7 @@ void pop_cutoff()
 
 void push_layout(shared_ptr<Widget> root, KeymapContext km)
 {
-    ui_root.push_child(move(root), km);
+    ui_root.push_child(std::move(root), km);
 #ifdef USE_TILE_WEB
     ui_root.sync_state();
 #endif
@@ -3506,7 +3506,7 @@ progress_popup::progress_popup(string title, int width)
     contents->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
-    push_layout(move(contents));
+    push_layout(std::move(contents));
     pump_events(0);
 }
 
