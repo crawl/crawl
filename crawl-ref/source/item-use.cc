@@ -798,13 +798,6 @@ string UseItemMenu::get_keyhelp(bool) const
     // key shortcuts
     if (oper != OPER_ANY)
     {
-        if (_equip_oper(oper))
-        {
-            eu_modes = "[<w>tab</w>] ";
-            eu_modes += (generalize_oper(oper) == OPER_EQUIP)
-                ? "<w>equip</w>|unequip  " : "equip|<w>unequip</w>  ";
-        }
-
         if (available_modes.size() > 1)
         {
             vector<string> mode_names;
@@ -873,24 +866,6 @@ bool UseItemMenu::process_key(int key)
         // TODO: should this go with CMD_MENU_CYCLE_HEADERS instead of `,`?
         lastch = ','; // XX don't use keycode for this
         return false;
-    }
-    else if (key == CK_TAB && _equip_oper(oper))
-    {
-        item_type_filter = OSEL_ANY;
-        save_hover();
-        switch (oper)
-        {
-        case OPER_EQUIP:
-        case OPER_WIELD:   reset(OPER_UNEQUIP); break;
-        case OPER_WEAR:    reset(OPER_TAKEOFF); break;
-        case OPER_PUTON:   reset(OPER_REMOVE); break;
-        case OPER_UNEQUIP: reset(OPER_EQUIP); break;
-        case OPER_REMOVE:  reset(OPER_PUTON); break;
-        case OPER_TAKEOFF: reset(OPER_WEAR); break;
-        default: break;
-        }
-        restore_hover(false);
-        return true;
     }
 
     return Menu::process_key(key);
