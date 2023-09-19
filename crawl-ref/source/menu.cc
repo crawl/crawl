@@ -497,6 +497,7 @@ void UIMenu::do_layout(int mw, int num_columns, bool just_checking)
     {
         auto& entry = item_info[i];
 
+        // headings occupy the entire row
         column = entry.heading ? 0 : (column+1) % num_columns;
         if (column == 0)
             row++;
@@ -509,7 +510,7 @@ void UIMenu::do_layout(int mw, int num_columns, bool just_checking)
         entry.column = column;
 
         if (entry.heading)
-            column = num_columns-1; // occupy the entire row
+            column = num_columns-1; // headings occupy the entire row, skip the rest
         else
         {
             // TODO(?): tiles will wrap menu entries that don't fit in a single
@@ -587,14 +588,20 @@ void UIMenu::_render()
         {
             formatted_string s = formatted_string::parse_string(
                 me->get_text(), col);
-            // s.chop(m_region.width).display();
-            s.chop(m_nat_column_width).display();
+            // headings always occupy full width
+            if (item_info[i].heading)
+                s.chop(m_region.width).display();
+            else
+                s.chop(m_nat_column_width).display();
         }
         else
         {
             string text = me->get_text();
-            // text = chop_string(text, m_region.width);
-            text = chop_string(text, m_nat_column_width);
+            // headings always occupy full width
+            if (item_info[i].heading)
+                text = chop_string(text, m_region.width);
+            else
+                text = chop_string(text, m_nat_column_width);
             cprintf("%s", text.c_str());
         }
         textbackground(BLACK);
