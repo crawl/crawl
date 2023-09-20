@@ -1643,13 +1643,11 @@ bool AcquireMenu::skip_process_command(int keyin)
     return Menu::skip_process_command(keyin);
 }
 
-static item_def _acquirement_item_def(object_class_type item_type,
-                                      bool divine = false)
+static item_def _acquirement_item_def(object_class_type item_type, int agent)
 {
     item_def item;
 
-    const int item_index = acquirement_create_item(item_type,
-        divine ? (int)you.religion : (int)AQ_SCROLL, true);
+    const int item_index = acquirement_create_item(item_type, agent, true);
 
     if (item_index != NON_ITEM)
     {
@@ -1712,13 +1710,13 @@ void make_acquirement_items()
         if (acq_items.size() == num_wanted)
             break;
 
-        auto item = _acquirement_item_def(obj_type);
+        auto item = _acquirement_item_def(obj_type, AQ_SCROLL);
         if (item.defined())
             acq_items.push_back(item);
     }
 
     // Gold is guaranteed.
-    auto gold_item = _acquirement_item_def(OBJ_GOLD);
+    auto gold_item = _acquirement_item_def(OBJ_GOLD, AQ_SCROLL);
     if (gold_item.defined())
         acq_items.push_back(gold_item);
 }
@@ -1771,7 +1769,7 @@ static void _make_okawaru_gifts(object_class_type gift_type)
 
     while (acq_items.size() < 4)
     {
-        auto item = _acquirement_item_def(gift_type, true);
+        auto item = _acquirement_item_def(gift_type, you.religion);
         if (item.defined())
             acq_items.push_back(item);
     }
