@@ -24,14 +24,14 @@ DEPTH:  D:4-, Depths, Elf, Snake
 local books = {
 "Amateur_Aromatherapy numspells:4 spells:mephitic_cloud&eringya's_noxious_bog&"
   .. "cigotuvi's_dreadful_rot&poisonous_vapours",
-"Aperture_Sorcery numspells:4 spells:portal_projectile&passage_of_golubria&"
+"Aperture_Sorcery numspells:4 spells:dimensional_bullseye&passage_of_golubria&"
   .. "malign_gateway&death's_door",
 "Apprentice_Sorcery owner:Jessica numspells:4 spells:necrotise&slow&blink&"
   .. "swiftness",
 "Arcane_Animation numspells:2 spells:animate_armour&animate_dead",
 "Basic_Undead_Handling numspells:2 spells:animate_dead&dispel_undead",
 "Beguiling owner:Ashenzari numspells:5 spells:momentum_strike&dazzling_flash&"
-  .. "portal_projectile&fulminant_prism&iskenderun's_mystic_blast",
+  .. "dimensional_bullseye&fulminant_prism&iskenderun's_mystic_blast",
 "Crowd_Control numspells:3 spells:gell's_gravitas&arcjolt&ignition",
 "Curse_Words numspells:5 spells:slow&anguish&silence&enfeeble&discord",
 "Earth_from_Core_to_Peak numspells:8 spells:sandblast&passwall&stone_arrow&"
@@ -89,7 +89,7 @@ local books = {
   .. "volatile_blastmotes&arcjolt&plasma_beam",
 "Modern_Magic,_Vol._31 numspells:1 spells:leda's_unmaking",
 "Multidimensional_Combat numspells:6 spells:momentum_strike&"
-  .. "portal_projectile&vhi's_electric_charge&volatile_blastmotes&"
+  .. "dimensional_bullseye&vhi's_electric_charge&volatile_blastmotes&"
   .. "iskenderun's_mystic_blast&summon_forest",
 "Mystic_Impediments numspells:6 spells:slow&ensorcelled_hibernation&"
   .. "leda's_liquefaction&petrify&borgnjor's_vile_clutch&"
