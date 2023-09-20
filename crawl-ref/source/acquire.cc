@@ -1230,8 +1230,9 @@ int acquirement_create_item(object_class_type class_wanted,
 {
     ASSERT(class_wanted != OBJ_RANDOM);
 
+    // God gifts are generally lower quality than scroll acquirement.
     const bool divine = (agent == GOD_XOM
-                         || agent == GOD_OKAWARU
+                         || agent == GOD_OKAWARU && class_wanted == OBJ_MISSILES
                          || agent == GOD_TROG
 #if TAG_MAJOR_VERSION == 34
                          || agent == GOD_PAKELLAS
