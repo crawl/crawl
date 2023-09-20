@@ -1231,6 +1231,7 @@ int acquirement_create_item(object_class_type class_wanted,
     ASSERT(class_wanted != OBJ_RANDOM);
 
     const bool divine = (agent == GOD_XOM
+                         || agent == GOD_OKAWARU
                          || agent == GOD_TROG
 #if TAG_MAJOR_VERSION == 34
                          || agent == GOD_PAKELLAS
