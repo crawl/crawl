@@ -3042,7 +3042,7 @@ bool drink(item_def* potion)
 
     if (you.has_mutation(MUT_POTION_POWERED))
     {
-        you.increase_duration(DUR_POTION_POWERED, 50, 50);
+        you.increase_duration(DUR_POTION_POWERED, 25, 25);
         calc_hp(true);
     }
 

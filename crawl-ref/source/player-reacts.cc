@@ -470,8 +470,12 @@ void player_reacts_to_monsters()
         you.stop_being_constricted(true);
     }
 
-    if (_decrement_a_duration(DUR_POTION_POWERED, you.time_taken)
-        || you.duration[DUR_POTION_POWERED])
+    if (_decrement_a_duration(DUR_POTION_POWERED, you.time_taken))
+    {
+        mprf("Your potions are running dry.");
+        calc_hp(true);
+    }
+    if (you.duration[DUR_POTION_POWERED])
         calc_hp(true);
 
     _handle_jinxbite_interest();

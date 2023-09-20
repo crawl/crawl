@@ -3922,8 +3922,9 @@ int get_real_hp(bool trans, bool drained)
 
     if (trans && you.duration[DUR_POTION_POWERED])
     {
-        hitp *= 1000 + you.duration[DUR_POTION_POWERED];
-        hitp /= 1000;
+        //Each aut is .2% 
+        hitp *= 500 + you.duration[DUR_POTION_POWERED];
+        hitp /= 500;
     }
 
     // TODO: should this also be in an if (trans) block?

@@ -610,7 +610,8 @@ void reset_hud()
 static bool _boosted_hp()
 {
     return you.duration[DUR_DIVINE_VIGOUR]
-           || you.berserk();
+           || you.berserk()
+           || you.duration[DUR_POTION_POWERED];
 }
 
 static bool _boosted_mp()

@@ -483,6 +483,12 @@ bool fill_status_info(int status, status_info& inf)
                            you.props[WEREBLOOD_KEY].get_int());
         break;
 
+    case DUR_POTION_POWERED:
+        inf.light_text
+            = make_stringf("Powered (%u%%)",
+                           div_round_up(you.duration[DUR_POTION_POWERED], 5));
+        break;
+
     case STATUS_BEOGH:
         if (env.level_state & LSTATE_BEOGH && can_convert_to_beogh())
         {
