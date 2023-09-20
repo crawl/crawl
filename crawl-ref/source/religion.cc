@@ -161,11 +161,11 @@ const vector<vector<god_power>> & get_all_god_powers()
 
         // Okawaru
         {   { 1, ABIL_OKAWARU_HEROISM, "gain great but temporary skills" },
-            { 3, "Okawaru will now gift you throwing weapons as you gain piety.",
-                 "Okawaru will no longer gift you throwing weapons.",
-                 "Okawaru will gift you throwing weapons as you gain piety." },
             { 4, ABIL_OKAWARU_FINESSE, "speed up your combat" },
             { 5, ABIL_OKAWARU_DUEL, "enter into single combat with a foe"},
+            { 5, "Okawaru will now gift you throwing weapons as you gain piety.",
+                 "Okawaru will no longer gift you throwing weapons.",
+                 "Okawaru will gift you throwing weapons as you gain piety." },
             { 6, ABIL_OKAWARU_GIFT_WEAPON,
                  "Okawaru will grant you a choice of weapons... once.",
                  "Okawaru is no longer ready to gift you weaponry." },
@@ -1189,14 +1189,6 @@ bool pay_yred_souls(unsigned int how_many, bool just_check)
     return true;
 }
 
-static bool _want_missile_gift()
-{
-    return you.piety >= piety_breakpoint(2)
-           && random2(you.piety) > 70
-           && one_chance_in(8)
-           && x_chance_in_y(1 + you.skills[SK_THROWING], 12);
-}
-
 static bool _want_nemelex_gift()
 {
     if (you.piety < piety_breakpoint(0))
@@ -1410,7 +1402,9 @@ static bool _give_trog_oka_gift(bool forced)
                                             && random2(you.piety) > 120
                                             && one_chance_in(4));
     const bool want_missiles = you_worship(GOD_OKAWARU)
-                               && (forced || _want_missile_gift());
+                               && (forced || you.piety >= piety_breakpoint(4)
+                                             && random2(you.piety) > 120
+                                             && x_chance_in_y(2,5));
     object_class_type gift_type;
 
     if (want_weapons)
@@ -1444,7 +1438,7 @@ static bool _give_trog_oka_gift(bool forced)
     switch (gift_type)
     {
     case OBJ_MISSILES:
-        _inc_gift_timeout(6 + random2avg(10, 2));
+        _inc_gift_timeout(26 + random2avg(19, 2));
         break;
     case OBJ_WEAPONS:
         _inc_gift_timeout(30 + random2avg(19, 2));
