@@ -4613,7 +4613,7 @@ void dec_slow_player(int delay)
 
     if (you.torpor_slowed())
     {
-        you.duration[DUR_SLOW] = 1;
+        you.duration[DUR_SLOW] = max(1, you.duration[DUR_SLOW]);
         return;
     }
     if (you.props.exists(TORPOR_SLOWED_KEY))
