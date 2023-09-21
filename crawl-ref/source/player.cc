@@ -4611,7 +4611,7 @@ void dec_slow_player(int delay)
             ? haste_mul(delay) : delay;
     }
 
-    if (you.torpor_slowed())
+    if (you.torpor_slowed() && you.duration[DUR_SLOW] <= 1)
     {
         you.duration[DUR_SLOW] = 1;
         return;
