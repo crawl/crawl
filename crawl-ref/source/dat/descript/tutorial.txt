@@ -143,8 +143,7 @@ tutorial1 exit
   <input>$cmd[CMD_GO_DOWNSTAIRS]</input>  enter the next level
   <input>$cmd[CMD_DISPLAY_MAP]></input>/<input>$cmd[CMD_DISPLAY_MAP]<<</input> travel to the nearest up/downstairs
 
-<yellow>Doors</yellow>
-  can be opened by walking into them
+<yellow>Doors</yellow> can be opened by walking into them
   <input>$cmd[CMD_CLOSE_DOOR]</input>  close an open door
 
 <yellow>Travel</yellow><localtiles>
