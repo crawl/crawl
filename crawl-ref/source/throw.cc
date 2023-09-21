@@ -816,6 +816,7 @@ void throw_it(quiver::action &a)
     if (crawl_state.game_is_hints())
         Hints.hints_throw_counter++;
 
+    const coord_def target = pbolt.target;
     pbolt.fire();
 
     if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
@@ -844,7 +845,7 @@ void throw_it(quiver::action &a)
     _throw_noise(&you, thrown);
 
     if (launcher)
-        _handle_cannon_fx(you, *launcher, pbolt.target);
+        _handle_cannon_fx(you, *launcher, target);
 
     // ...any monster nearby can see that something has been thrown, even
     // if it didn't make any noise.
@@ -931,6 +932,7 @@ bool mons_throw(monster* mons, bolt &beam, bool teleport)
     // came into view and the screen hasn't been updated yet.
     viewwindow();
     update_screen();
+    const coord_def target = beam.target;
     if (teleport)
     {
         beam.use_target_as_pos = true;
@@ -948,7 +950,7 @@ bool mons_throw(monster* mons, bolt &beam, bool teleport)
 
     // dubious...
     if (mons->alive() && mons->weapon())
-        _handle_cannon_fx(*mons, *(mons->weapon()), beam.target);
+        _handle_cannon_fx(*mons, *(mons->weapon()), target);
 
     return true;
 }
