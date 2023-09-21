@@ -291,7 +291,7 @@ In this lesson you're going to learn about items and how to use them.
 tutorial3 armour
 
 Pick up these boots with <input>$cmd[CMD_PICKUP]</input> and wear them with
-<input>$cmd[CMD_WEAR_ARMOUR]</input>.<localtiles> Or simply
+<input>$cmd[CMD_EQUIP]</input> (or <input>$cmd[CMD_WEAR_ARMOUR]</input>).<localtiles> Or simply
 <input>mouseclick</input> on them in the inventory panel.</localtiles>
 %%%%
 tutorial3 autopickup
@@ -376,7 +376,7 @@ special properties. Some unique artefacts (such as this cloak) are always
 identified and may have special properties that cannot be found anywhere else!
 Others are generated with a random selection of properties, and are
 unidentified until you step on top of them. Try equipping this cloak with
-<input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> or <input>mouseclick</input>
+<input>$cmd[CMD_EQUIP]</input><localtiles> or <input>mouseclick</input>
 in the inventory panel</localtiles>.
 %%%%
 tutorial3 wand_fire
@@ -394,7 +394,7 @@ types.
 %%%%
 tutorial3 amulet
 
-Jewellery is put on with <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles>
+Jewellery is put on with <input>$cmd[CMD_EQUIP]</input> (or <input>$cmd[CMD_WEAR_JEWELLERY]</input>)<localtiles>
 or with <input>mouseclick</input> in the inventory panel</localtiles>.
 %%%%
 tutorial3 drop
@@ -458,16 +458,18 @@ tutorial3 exit
 
 <yellow>Item commands</yellow>
   <input>$cmd[CMD_PICKUP]</input>  pick up an item
-  <input>$cmd[CMD_WEAR_ARMOUR]</input>  wear a piece of armour
+  <input>$cmd[CMD_DROP]</input>  drop an item
+  <input>$cmd[CMD_EQUIP]</input>  equip armour, weapons, and jewellery
+       Specific equip commands: <input>$cmd[CMD_WEAR_ARMOUR]</input>wear armour, <input>$cmd[CMD_WIELD_WEAPON]</input> wield / unwield,
+                                <input>$cmd[CMD_WEAR_JEWELLERY]</input> put on jewellery
+  <input>$cmd[CMD_UNEQUIP]</input>  unequip armour, weapons, and jewellery
+       Specific unequip commands: <input>$cmd[CMD_REMOVE_ARMOUR]</input> take off armour,
+                                  <input>$cmd[CMD_REMOVE_JEWELLERY]</input> remove jewellery
   <input>$cmd[CMD_READ]</input>  read a scroll
-  <input>$cmd[CMD_WIELD_WEAPON]</input>  wield a weapon
   <input>$cmd[CMD_QUAFF]</input>  quaff a potion
   <input>$cmd[CMD_EVOKE]</input>  evoke a wand
-  <input>$cmd[CMD_WEAR_JEWELLERY]</input>  put on jewellery
-  <input>$cmd[CMD_REMOVE_JEWELLERY]</input>  remove jewellery
-  <input>$cmd[CMD_DROP]</input>  drop an item
-  Usage commands are also available from the inventory menu (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), as are the
-  item descriptions.<localtiles>
+
+  Use and (un)equip commands are also available from item descriptions in the inventory menu (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>).<localtiles>
   And of course, <input>mouseclicks</input> also work.</localtiles>
 
 <yellow>Other</yellow>
