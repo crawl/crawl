@@ -852,14 +852,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_UNMAKING, "Leda's Unmaking",
+    SPELL_BOMBARD, "Bombard",
     spschool::conjuration | spschool::earth,
     spflag::dir_or_target | spflag::needs_tracer,
     6,
     200,
     4, 4,
     0,
-    TILEG_LEDAS_UNMAKING,
+    TILEG_IRON_SHOT,
 },
 
 {

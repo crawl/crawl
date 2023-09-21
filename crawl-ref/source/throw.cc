@@ -547,10 +547,8 @@ static void _handle_cannon_fx(actor &act, const item_def &weapon, coord_def targ
     if (!weapon.is_type(OBJ_WEAPONS, WPN_HAND_CANNON))
         return;
 
-    const coord_def oldpos = act.pos();
-
     // blast smoke
-    for (adjacent_iterator ai(oldpos, false); ai; ++ai)
+    for (adjacent_iterator ai(act.pos(), false); ai; ++ai)
     {
         if (!in_bounds(*ai)
             || cell_is_solid(*ai)
@@ -567,41 +565,8 @@ static void _handle_cannon_fx(actor &act, const item_def &weapon, coord_def targ
         return;
 
     // knock back
-    if (coinflip()
-        || act.is_stationary()
-        || act.resists_dislodge("being knocked back"))
-    {
-        return;
-    }
-
-    ray_def ray;
-    fallback_ray(oldpos, targ, ray);
-    if (!ray.advance()) // !?
-        return;
-    const coord_def back_dir = oldpos - ray.pos();
-    const coord_def newpos = oldpos + back_dir;
-    if (!adjacent(newpos, oldpos)) // !?
-        return;
-
-    // copied from actor::knockback, ew
-    if (!in_bounds(newpos)
-        || cell_is_solid(newpos)
-        || actor_at(newpos)
-        || !act.can_pass_through(newpos)
-        || !act.is_habitable(newpos))
-    {
-        return;
-    }
-
-    if (act.is_player())
-        mpr("Mule's kick sends you backwards.");
-    else
-        simple_monster_message(*act.as_monster(), " is knocked back by Mule's kick.");
-
-    act.move_to_pos(newpos);
-    act.apply_location_effects(oldpos, act.is_player() ? KILL_YOU_MISSILE
-                                                       : KILL_MON_MISSILE,
-                               actor_to_death_source(&act));
+    if (coinflip())
+        act.stumble_away_from(targ, "Mule's kick");
 }
 
 static void _throw_noise(actor* act, const item_def &ammo)

@@ -4513,35 +4513,12 @@ void bolt::enchantment_affect_monster(monster* mon)
 static void _print_pre_death_message(const monster &mon, bool goldify,
                                      spell_type origin_spell)
 {
-    if (mon.is_insubstantial())
+    if (mon.is_insubstantial() || origin_spell != SPELL_GLACIATE)
         return;
-    switch (origin_spell)
-    {
-    case SPELL_GLACIATE:
-        if (goldify)
-            simple_monster_message(mon, " shatters and turns to gold!");
-        else
-            simple_monster_message(mon, " is frozen into a solid block of ice!");
-        break;
-    case SPELL_UNMAKING:
-        if (goldify)
-            simple_monster_message(mon, " dissolves into a mush of mud and gold!");
-        else
-            simple_monster_message(mon, " dissolves into mud!");
-        break;
-    default:
-        break;
-    }
-}
-
-static void _splash_mud(coord_def p, actor *agent, int dur)
-{
-    if (env.grid(p) != DNGN_FLOOR)
-        return;
-
-    temp_change_terrain(p, DNGN_MUD, dur * BASELINE_DELAY,
-                        TERRAIN_CHANGE_FLOOD, // dubious
-                        agent ? agent->mid : MID_NOBODY);
+    if (goldify)
+        simple_monster_message(mon, " shatters and turns to gold!");
+    else
+        simple_monster_message(mon, " is frozen into a solid block of ice!");
 }
 
 void bolt::kill_monster(monster &mon)
@@ -4582,38 +4559,22 @@ void bolt::kill_monster(monster &mon)
 
     item_def *corpse = monster_die(mon, ref_killer, kindex);
 
-    switch (origin_spell)
-    {
-    case SPELL_UNMAKING:
-        if (corpse && !goldify)
-            destroy_item(corpse->index());
+    if (origin_spell != SPELL_GLACIATE)
+        return;
 
-        _splash_mud(pos(), agent(), random_range(6,12));
-        for (adjacent_iterator ai(pos()); ai; ++ai)
-            if (coinflip())
-                _splash_mud(*ai, agent(), random_range(4,8));
-        break;
-    case SPELL_GLACIATE:
+    if (corpse)
+        destroy_item(corpse->index());
+    if (monster *pillar = create_monster(
+                                         mgen_data(MONS_BLOCK_OF_ICE,
+                                                   BEH_HOSTILE,
+                                                   where,
+                                                   MHITNOT,
+                                                   MG_FORCE_PLACE).set_base(species),
+                                         false))
     {
-        if (corpse)
-            destroy_item(corpse->index());
-
-        if (monster *pillar = create_monster(
-                                             mgen_data(MONS_BLOCK_OF_ICE,
-                                                       BEH_HOSTILE,
-                                                       where,
-                                                       MHITNOT,
-                                                       MG_FORCE_PLACE).set_base(species),
-                                             false))
-        {
-            const int time_left = random_range(7, 17) * BASELINE_DELAY;
-            mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
-            pillar->add_ench(temp_en);
-        }
-        break;
-    }
-    default:
-        break;
+        const int time_left = random_range(7, 17) * BASELINE_DELAY;
+        mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
+        pillar->add_ench(temp_en);
     }
 }
 

@@ -1123,6 +1123,45 @@ bool actor::knockback(const actor &cause, int dist, int pow, string source_name)
     return true;
 }
 
+void actor::stumble_away_from(coord_def targ, string src)
+{
+    if (is_stationary() || resists_dislodge("being knocked back"))
+        return;
+
+    const coord_def oldpos = pos();
+    ray_def ray;
+    fallback_ray(oldpos, targ, ray);
+    if (!ray.advance()) // !?
+        return;
+    const coord_def back_dir = oldpos - ray.pos();
+    const coord_def newpos = oldpos + back_dir;
+    if (!adjacent(newpos, oldpos)) // !?
+        return;
+
+    // copied from actor::knockback, ew
+    if (!in_bounds(newpos)
+        || cell_is_solid(newpos)
+        || actor_at(newpos)
+        || !can_pass_through(newpos)
+        || !is_habitable(newpos))
+    {
+        return;
+    }
+
+    if (!src.empty())
+    {
+        if (is_player())
+            mprf("%s sends you backwards.", uppercase_first(src).c_str());
+        else
+            simple_monster_message(*as_monster(), " is knocked back by %s.");
+    }
+
+    move_to_pos(newpos);
+    apply_location_effects(oldpos, is_player() ? KILL_YOU_MISSILE
+                                               : KILL_MON_MISSILE,
+                           actor_to_death_source(this));
+}
+
 /// Is this creature despised by the so-called 'good gods'?
 bool actor::evil() const
 {

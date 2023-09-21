@@ -219,7 +219,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Power
     SPELL_BATTLESPHERE,
-    SPELL_UNMAKING,
+    SPELL_BOMBARD,
     SPELL_SPELLFORGED_SERVITOR,
 },
 
@@ -366,7 +366,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of Earth
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_LRD,
-    SPELL_UNMAKING,
+    SPELL_BOMBARD,
 },
 
 { // Ozocubu's Autobio

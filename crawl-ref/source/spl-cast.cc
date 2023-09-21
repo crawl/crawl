@@ -317,7 +317,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
 }
 
 // Effects that happen after spells which are otherwise simple zaps.
-static void _apply_post_zap_effect(spell_type spell)
+static void _apply_post_zap_effect(spell_type spell, coord_def target)
 {
     switch (spell)
     {
@@ -326,6 +326,9 @@ static void _apply_post_zap_effect(spell_type spell)
         break;
     case SPELL_KISS_OF_DEATH:
         drain_player(100, true, true);
+        break;
+    case SPELL_BOMBARD:
+        you.stumble_away_from(target, "");
         break;
     default:
         break;
@@ -2078,6 +2081,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         aim_battlesphere(&you, spell);
     }
 
+    const coord_def orig_target_pos = beam.target;
     const auto orig_target = monster_at(beam.target);
     const bool self_target = you.pos() == beam.target;
     const bool had_tele = orig_target && orig_target->has_ench(ENCH_TP);
@@ -2089,7 +2093,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     {
     case spret::success:
     {
-        _apply_post_zap_effect(spell);
+        _apply_post_zap_effect(spell, orig_target_pos);
 
         const int demonic_magic = you.get_mutation_level(MUT_DEMONIC_MAGIC);
 

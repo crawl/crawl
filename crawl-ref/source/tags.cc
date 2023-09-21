@@ -2415,7 +2415,7 @@ static spell_type _fixup_removed_spells(spell_type s)
             return SPELL_CONFUSING_TOUCH;
 
         case SPELL_IRON_SHOT:
-            return SPELL_UNMAKING;
+            return SPELL_BOMBARD;
 
         default:
             return s;

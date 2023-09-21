@@ -1350,7 +1350,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_STICKY_FLAME_RANGE:
     case SPELL_STING:
     case SPELL_IRON_SHOT:
-    case SPELL_UNMAKING:
+    case SPELL_BOMBARD:
     case SPELL_STONE_ARROW:
     case SPELL_FORCE_LANCE:
     case SPELL_CORROSIVE_BOLT:
@@ -6487,6 +6487,13 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _summon(*mons, MONS_CREEPING_INFERNO, 2, slot);
         return;
 
+    case SPELL_BOMBARD:
+    {
+        const coord_def targ = pbolt.target;
+        _fire_simple_beam(*mons, slot, pbolt);
+        if (mons->alive() && coinflip())
+            mons->stumble_away_from(targ, "the blast");
+    }
     }
 
     if (spell_is_direct_explosion(spell_cast))

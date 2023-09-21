@@ -178,6 +178,10 @@ Bolt of Magma spell
 Fires a penetrating bolt of molten rock. Half of its damage bypasses fire
 resistance.
 %%%%
+Bombard spell
+
+Blasts an iron ball toward a target, sending the caster staggering backwards.
+%%%%
 Borgnjor's Revivification spell
 
 Instantly heals any and all wounds suffered by the caster, but also permanently
@@ -816,11 +820,6 @@ in melee may fail.
 The effect starts out with a radius depending on power, which will then shrink,
 eventually covering only the caster, before it times out. Maintaining the
 connection to the ground slows the caster's movement, even if they are flying.
-%%%%
-Leda's Unmaking spell
-
-Fires a blast of high-speed entropy. Slain victims dissolve into mud, slowing
-the movements and impairing the attacks of creatures stuck within.
 %%%%
 Lee's Rapid Deconstruction spell
 
