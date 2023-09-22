@@ -137,7 +137,7 @@ static equipment_type _acquirement_armour_slot(int agent)
     }
 
     vector<pair<equipment_type, int>> weights = {
-        { EQ_BODY_ARMOUR,   1 },
+        { EQ_BODY_ARMOUR,   (agent == GOD_OKAWARU ? 5 : 1) },
         { EQ_SHIELD,        1 },
         { EQ_CLOAK,         1 },
         { EQ_HELMET,        1 },
