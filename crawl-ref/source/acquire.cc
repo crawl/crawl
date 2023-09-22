@@ -1764,6 +1764,22 @@ bool okawaru_gift_weapon()
 
     simple_god_message(" offers you a choice of weapons!");
 
+    int index = 0;
+    if (!clua.callfn("c_choose_okawaru_weapon", ">d", &index))
+    {
+        if (!clua.error.empty())
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+    }
+    else if (index >= 1 && index <= acq_items.size())
+    {
+        _create_acquirement_item(acq_items[index - 1], OKAWARU_WEAPONS_KEY);
+
+        take_note(Note(NOTE_GOD_GIFT, you.religion));
+        you.props[OKAWARU_WEAPON_GIFTED_KEY] = true;
+
+        return true;
+    }
+
     AcquireMenu acq_menu(acq_items, OKAWARU_WEAPONS_KEY);
     acq_menu.show();
 
@@ -1787,6 +1803,22 @@ bool okawaru_gift_armour()
     auto &acq_items = you.props[OKAWARU_ARMOUR_KEY].get_vector();
 
     simple_god_message(" offers you a choice of armour!");
+
+    int index = 0;
+    if (!clua.callfn("c_choose_okawaru_armour", ">d", &index))
+    {
+        if (!clua.error.empty())
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+    }
+    else if (index >= 1 && index <= acq_items.size())
+    {
+        _create_acquirement_item(acq_items[index - 1], OKAWARU_ARMOUR_KEY);
+
+        take_note(Note(NOTE_GOD_GIFT, you.religion));
+        you.props[OKAWARU_ARMOUR_GIFTED_KEY] = true;
+
+        return true;
+    }
 
     AcquireMenu acq_menu(acq_items, OKAWARU_ARMOUR_KEY);
     acq_menu.show();
