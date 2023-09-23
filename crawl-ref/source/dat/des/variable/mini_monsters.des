@@ -9530,25 +9530,25 @@ MAP
 ENDMAP
 
 # Little trap spiral
-NAME: minivault_13
-TAGS: ruin_abyss transparent
-DEPTH: D:9-, Elf, Abyss
+NAME:    minivault_13
+TAGS:    ruin_abyss transparent
+DEPTH:   D:9-, Elf, Abyss
 SHUFFLE: AB, CD, EH/FG
-KITEM: ABCD = gold / nothing
-SUBST: F = G:99 F:1
-KMONS: F = orange crystal statue / obsidian statue / ice statue
+KITEM:   ABCD = gold / nothing
+SUBST:   F = G:99 F:1
+KMONS:   F = orange crystal statue / obsidian statue / ice statue
 MAP
 ............
 .xxxxxxxxxx.
 .+..c..c.9x.
 .x.B+.D+..x.
-.xcccccc=cx.
-.x.8+|0c8.x.
-.x8$c.|c..x.
-.xc+cccc+cx.
-.x.9+.F+..x.
-.x..cG.c9.x.
-.xxxxxxxxxx.
+.ccccccc=cc.
+.c.8+|0c8.c.
+.c8$c.|c..c.
+.cc+cccc+cc.
+.c.9+.F+..c.
+.c..cG.c9.c.
+.cccccccccc.
 ............
 ENDMAP
 
