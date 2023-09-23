@@ -149,6 +149,7 @@ You've just converted to worshipping <w>Ashenzari</w>. Unlike other gods,
 Ashenzari only cares about curses. As you explore the dungeon, Ashenzari will
 offer curses, locking an item onto you. The more cursed items you wear, the more
 Ashenzari will enhance your skills and otherwise help you.
+%%%%
 HINT_CONVERT Gozag
 
 You've just converted to worshipping <w>Gozag</w>. Unlike other gods, Gozag only
