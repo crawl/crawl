@@ -676,7 +676,7 @@ static spret _rampage_forward(coord_def move)
         {
             // .. and if a mons was in the way and invisible, notify the player.
             clear_messages();
-            mprf("Something unexpectedly blocked you, preventing you from %s!",
+            mprf("Something unexpectedly blocks you, preventing you from %s!",
                  verb.c_str());
         }
         return spret::fail;
