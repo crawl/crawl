@@ -1851,7 +1851,9 @@ static void _make_octoring(item_def &item)
 {
     if (you.octopus_king_rings == 0xff)
     {
-        ASSERT(you.wizard || you.suppress_wizard || crawl_state.test);
+        // possible this is too narrow: if this causes unexpected wizmode
+        // crashes, just back off to asserting you.wizard.
+        ASSERT(crawl_state.prev_cmd == CMD_WIZARD);
         item.sub_type = octoring_types[random2(8)];
         return;
     }
