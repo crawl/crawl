@@ -1491,6 +1491,17 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level, bool in_a
             continue;
         }
 
+        if (in_abyss && status == UNIQ_LOST_IN_ABYSS
+            && index == UNRAND_OCTOPUS_KING_RING
+            && you.octopus_king_rings == 0xff)
+        {
+            // the last octopus ring is lost in the abyss. We don't have the
+            // machinery to bring back the correct one, and it doesn't seem
+            // worth implementing. So just skip it. (TODO: clear the flag for
+            // a lost octoring on losing it?)
+            continue;
+        }
+
         // If an item does not generate randomly, we can only produce its index
         // here if it was lost in the abyss
         if ((!in_abyss || status != UNIQ_LOST_IN_ABYSS)
