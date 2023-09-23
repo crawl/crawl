@@ -634,6 +634,7 @@ static bool _make_item_fake_unrandart(item_def &item, int unrand_index)
     // use API rather than unwinds so that sanity checks don't need to be
     // duplicated
     const auto prior_status = get_unique_item_status(unrand_index);
+    unwind_var<uint8_t> octo(you.octopus_king_rings, 0x0); // easier to do unconditionally
     const bool r = make_item_unrandart(item, unrand_index);
     set_unique_item_status(item, prior_status);
     return r;
