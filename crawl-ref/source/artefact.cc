@@ -1481,7 +1481,7 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level, bool in_a
         const unique_item_status_type status =
             get_unique_item_status(index);
 
-        if (!(in_abyss || status != UNIQ_LOST_IN_ABYSS)
+        if ((!in_abyss || status != UNIQ_LOST_IN_ABYSS)
             && status != UNIQ_NOT_EXISTS
             // for previously acquired items, allow generation of the index
             // here; a fallback artefact will replace them in later steps.
