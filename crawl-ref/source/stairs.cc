@@ -154,6 +154,7 @@ static void _player_change_level(level_id lev)
 {
     you.depth         = lev.depth;
     you.where_are_you = lev.branch;
+    you.floor_version = lev.version;
 }
 
 static void _maybe_destroy_shaft(const coord_def &p)
@@ -1014,10 +1015,6 @@ void floor_transition(dungeon_feature_type how,
         _new_level_amuses_xom(how, whence, shaft,
                               (shaft ? whither.depth - old_level.depth : 1),
                               !forced);
-
-        // scary hack!
-        if (crawl_state.game_is_descent() && !env.properties.exists(DESCENT_STAIRS_KEY))
-            load_level(how, LOAD_RESTART_GAME, old_level);
     }
 
     // This should maybe go in load_level?
@@ -1187,6 +1184,10 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
         ASSERT(!at_branch_bottom());
         level_id lev = level_id::current();
         lev.depth++;
+        lev.version = feat - DNGN_STONE_STAIRS_DOWN_I;
+        if (feat == DNGN_ESCAPE_HATCH_DOWN)
+            lev.version = for_real ? random2(3) : 0;
+        dprf("version: %d", lev.version);
         return lev;
     }
 

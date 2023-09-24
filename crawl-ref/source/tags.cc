@@ -575,14 +575,11 @@ static void unmarshall_container(reader &th, T_container &container,
         (container.*inserter)(unmarshal(th));
 }
 
-static unsigned short _pack(const level_id& id)
-{
-    return (static_cast<int>(id.branch) << 8) | (id.depth & 0xFF);
-}
-
 void marshall_level_id(writer& th, const level_id& id)
 {
-    marshallShort(th, _pack(id));
+    marshallShort(th, id.branch);
+    marshallByte(th, id.version);
+    marshallShort(th, id.depth);
 }
 
 static void _marshall_level_id_set(writer& th, const set<level_id>& id)
@@ -629,27 +626,22 @@ static T unmarshall_int_as(reader& th)
     return static_cast<T>(unmarshallInt(th));
 }
 
-#if TAG_MAJOR_VERSION == 34
-level_id level_id::from_packed_place(unsigned short place)
-#else
-static level_id _unpack(unsigned short place)
-#endif
-{
-    level_id id;
-
-    id.branch     = static_cast<branch_type>((place >> 8) & 0xFF);
-    id.depth      = (int8_t)(place & 0xFF);
-
-    return id;
-}
-
 level_id unmarshall_level_id(reader& th)
 {
+    level_id id;
 #if TAG_MAJOR_VERSION == 34
-    return level_id::from_packed_place(unmarshallShort(th));
-#else
-    return _unpack(unmarshallShort(th));
+    if (th.getMinorVersion() < TAG_MINOR_FLOOR_VERSIONS)
+    {
+        const auto place = unmarshallShort(th);
+        id.branch = static_cast<branch_type>((place >> 8) & 0xFF);
+        id.depth  = (int8_t)(place & 0xFF);
+        return id;
+    }
 #endif
+    id.branch   = static_cast<branch_type>(unmarshallShort(th));
+    id.version  = unmarshallByte(th);
+    id.depth    = unmarshallShort(th);
+    return id;
 }
 
 static set<level_id> _unmarshall_level_id_set(reader& th)
@@ -1464,6 +1456,7 @@ static void _tag_construct_you(writer &th)
     marshallByte(th, you.max_level);
     marshallByte(th, you.where_are_you);
     marshallByte(th, you.depth);
+    marshallByte(th, you.floor_version);
     marshallByte(th, you.chapter);
     marshallByte(th, you.royal_jelly_dead);
     marshallByte(th, you.transform_uncancellable);
@@ -2619,6 +2612,12 @@ static void _tag_read_you(reader &th)
     ASSERT(you.where_are_you < NUM_BRANCHES);
     you.depth             = unmarshallByte(th);
     ASSERT(you.depth > 0);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_FLOOR_VERSIONS)
+        you.floor_version = 0;
+    else
+#endif
+        you.floor_version      = unmarshallByte(th);
     you.chapter           = static_cast<game_chapter>(unmarshallUByte(th));
     ASSERT(you.chapter < NUM_CHAPTERS);
 
@@ -5112,20 +5111,7 @@ void unmarshallItem(reader &th, item_def &item)
 
     item.slot        = unmarshallByte(th);
 
-#if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() < TAG_MINOR_PLACE_UNPACK)
-    {
-        unsigned short packed = unmarshallShort(th);
-        if (packed == 0)
-            item.orig_place.clear();
-        else if (packed == 0xFFFF)
-            item.orig_place = level_id(BRANCH_DUNGEON, 0);
-        else
-            item.orig_place = level_id::from_packed_place(packed);
-    }
-    else
-#endif
-    item.orig_place.load(th);
+    item.orig_place = unmarshall_level_id(th);
 
     item.orig_monnum = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 34
@@ -6606,26 +6592,6 @@ static void _tag_read_level(reader &th)
     env.properties.clear();
     env.properties.read(th);
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() < TAG_MINOR_PLACE_UNPACK)
-    {
-        CrawlHashTable &props = env.properties;
-        if (props.exists(VAULT_MON_BASES_KEY))
-        {
-            ASSERT(!props.exists(VAULT_MON_PLACES_KEY));
-            CrawlVector &type_vec = props[VAULT_MON_TYPES_KEY].get_vector();
-            CrawlVector &base_vec = props[VAULT_MON_BASES_KEY].get_vector();
-            size_t size = type_vec.size();
-            props[VAULT_MON_PLACES_KEY].new_vector(SV_LEV_ID).resize(size);
-            CrawlVector &place_vec = props[VAULT_MON_PLACES_KEY].get_vector();
-            for (size_t i = 0; i < size; i++)
-            {
-                if (type_vec[i].get_int() == -1)
-                   place_vec[i] = level_id::from_packed_place(base_vec[i].get_int());
-                else
-                   place_vec[i] = level_id();
-            }
-        }
-    }
     if (th.getMinorVersion() < TAG_MINOR_BOX_OF_BEASTS_CHARGES)
     {
         // this is a fairly approximate fixup for obscure cases where new

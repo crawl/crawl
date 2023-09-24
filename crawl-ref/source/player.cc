@@ -5154,8 +5154,9 @@ player::player()
 
     kills = KillMaster();
 
-    where_are_you    = BRANCH_DUNGEON;
-    depth            = 1;
+    where_are_you      = BRANCH_DUNGEON;
+    depth              = 1;
+    floor_version      = 0;
 
     religion         = GOD_NO_GOD;
     jiyva_second_name.clear();
@@ -7676,6 +7677,7 @@ void player::goto_place(const level_id &lid)
     where_are_you = static_cast<branch_type>(lid.branch);
     depth = lid.depth;
     ASSERT_RANGE(depth, 1, brdepth[where_are_you] + 1);
+    floor_version = lid.version;
 }
 
 bool player::attempt_escape(int attempts)

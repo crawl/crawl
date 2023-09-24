@@ -461,12 +461,7 @@ void Note::load(reader& inf)
 {
     type = static_cast<NOTE_TYPES>(unmarshallInt(inf));
     turn = unmarshallInt(inf);
-#if TAG_MAJOR_VERSION == 34
-    if (inf.getMinorVersion() < TAG_MINOR_PLACE_UNPACK)
-        place = level_id::from_packed_place(unmarshallShort(inf));
-    else
-#endif
-    place.load(inf);
+    place = unmarshall_level_id(inf);
     first  = unmarshallInt(inf);
     second = unmarshallInt(inf);
     unmarshallString4(inf, name);

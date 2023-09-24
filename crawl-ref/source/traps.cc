@@ -1175,7 +1175,11 @@ level_id generic_shaft_dest(level_id place)
 
     // In descent, instead always drop one floor. Too brutal otherwise.
     if (crawl_state.game_is_descent())
+    {
         place.depth = curr_depth + 1;
+        // Also, randomize which version of the floor you land on.
+        place.version = random2(3);
+    }
 
     if (place.depth > max_depth)
         place.depth = max_depth;

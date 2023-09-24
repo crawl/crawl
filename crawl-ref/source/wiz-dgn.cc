@@ -152,6 +152,7 @@ static void _wizard_go_to_level(const level_pos &pos)
 
     you.where_are_you = static_cast<branch_type>(pos.id.branch);
     you.depth         = pos.id.depth;
+    you.floor_version = 0; // dubious
     _wizard_level_target = pos.id;
 
     leaving_level_now(stair_taken);

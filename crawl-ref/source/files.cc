@@ -1042,6 +1042,7 @@ void write_ghost_version(writer &outf)
 
 static void _write_tagged_chunk(const string &chunkname, tag_type tag)
 {
+    dprf("saving chunk %s", chunkname.c_str()); // XXX DEBUG
     writer outf(you.save, chunkname);
 
     write_save_version(outf, save_version::current());
@@ -1887,11 +1888,15 @@ bool pregen_dungeon(const level_id &stopping_point)
         {
             for (int i = 1; i <= brdepth[br]; i++)
             {
-                level_id new_level = level_id(br, i);
-                // skip any levels that have already generated.
-                if (you.save->has_chunk(new_level.describe()))
-                    continue;
-                to_generate.push_back(new_level);
+                const int variants = crawl_state.game_is_descent() ? 3 : 1;
+                for (int j = 0; j < variants; j++)
+                {
+                    level_id new_level = level_id(br, i, j);
+                    // skip any levels that have already generated.
+                    if (you.save->has_chunk(new_level.describe()))
+                        continue;
+                    to_generate.push_back(new_level);
+                }
 
                 if (br == stopping_point.branch
                     && (i == stopping_point.depth || i == brdepth[br]))
@@ -3295,6 +3300,7 @@ static void _load_level(const level_id &level)
     // Load the given level.
     you.where_are_you = level.branch;
     you.depth =         level.depth;
+    you.floor_version = level.version;
 
     load_level(DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR, level_id());
 }

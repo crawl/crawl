@@ -566,23 +566,7 @@ void kill_def::load(reader& inf)
     places.clear();
     short place_count = unmarshallShort(inf);
     for (short i = 0; i < place_count; ++i)
-    {
-#if TAG_MAJOR_VERSION == 34
-        if (inf.getMinorVersion() < TAG_MINOR_PLACE_UNPACK)
-        {
-            places.push_back(level_id::from_packed_place(
-                                (unsigned short) unmarshallShort(inf)));
-        }
-        else
-        {
-#endif
-        level_id tmp;
-        tmp.load(inf);
-        places.push_back(tmp);
-#if TAG_MAJOR_VERSION == 34
-        }
-#endif
-    }
+        places.push_back(unmarshall_level_id(inf));
 }
 
 kill_ghost::kill_ghost(const monster* mon)
@@ -619,12 +603,7 @@ void kill_ghost::load(reader& inf)
 {
     unmarshallString4(inf, ghost_name);
     exp = unmarshallShort(inf);
-#if TAG_MAJOR_VERSION == 34
-    if (inf.getMinorVersion() < TAG_MINOR_PLACE_UNPACK)
-        place = level_id::from_packed_place((unsigned short) unmarshallShort(inf));
-    else
-#endif
-    place.load(inf);
+    place = unmarshall_level_id(inf);
 }
 
 kill_monster_desc::kill_monster_desc(const monster* mon)

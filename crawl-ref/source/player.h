@@ -249,6 +249,7 @@ public:
 
     branch_type where_are_you;
     int depth;
+    int floor_version;
 
     god_type religion;
     string jiyva_second_name;       // Random second name of Jiyva

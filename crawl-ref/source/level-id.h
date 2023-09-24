@@ -20,6 +20,7 @@ class level_id
 public:
     branch_type branch;     // The branch in which the level is.
     int depth;              // What depth (in this branch - starting from 1)
+    int version;            // In Descent mode, which version of the floor is this?
 
 public:
     // Returns the level_id of the current level.
@@ -31,11 +32,11 @@ public:
 
     // Important that if run after this, ::is_valid() is false.
     level_id()
-        : branch(BRANCH_DUNGEON), depth(-1)
+        : branch(BRANCH_DUNGEON), depth(-1), version(0)
     {
     }
-    level_id(branch_type br, int dep = 1)
-        : branch(br), depth(dep)
+    level_id(branch_type br, int dep = 1, int ver = 0)
+        : branch(br), depth(dep), version(ver)
     {
     }
 
@@ -51,6 +52,7 @@ public:
     {
         branch = BRANCH_DUNGEON;
         depth  = -1;
+        version = 0;
     }
 
     // Returns the absolute depth in the dungeon for the level_id;
@@ -65,7 +67,7 @@ public:
 
     bool operator == (const level_id &id) const
     {
-        return branch == id.branch && depth == id.depth;
+        return branch == id.branch && depth == id.depth && version == id.version;
     }
 
     bool operator != (const level_id &id) const
@@ -75,7 +77,11 @@ public:
 
     bool operator <(const level_id &id) const
     {
-        return branch < id.branch || (branch==id.branch && depth < id.depth);
+        if (branch != id.branch)
+            return branch < id.branch;
+        if (depth != id.depth)
+            return depth < id.depth;
+        return version < id.version;
     }
 
     void save(writer&) const;

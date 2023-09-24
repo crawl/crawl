@@ -214,6 +214,7 @@ static bool _build_dungeon()
     {
         you.where_are_you = lid.branch;
         you.depth = lid.depth;
+        you.floor_version = 0;
         if (!_do_build_level())
             return false;
     }

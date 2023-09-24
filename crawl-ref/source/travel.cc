@@ -3399,7 +3399,7 @@ void do_explore_cmd()
 
 level_id level_id::current()
 {
-    const level_id id(you.where_are_you, you.depth);
+    const level_id id(you.where_are_you, you.depth, you.floor_version);
     return id;
 }
 
@@ -3434,10 +3434,18 @@ level_id level_id::get_next_level_id(const coord_def &pos)
 
     switch (gridc)
     {
-    case DNGN_STONE_STAIRS_DOWN_I:   case DNGN_STONE_STAIRS_DOWN_II:
-    case DNGN_STONE_STAIRS_DOWN_III: case DNGN_ESCAPE_HATCH_DOWN:
+    case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_ABYSSAL_STAIR:
         id.depth++;
+        break;
+    case DNGN_STONE_STAIRS_DOWN_II:
+    case DNGN_STONE_STAIRS_DOWN_III:
+        id.depth++;
+        id.version = gridc - DNGN_STONE_STAIRS_DOWN_I;
+        break;
+    case DNGN_ESCAPE_HATCH_DOWN:
+        id.depth++;
+        id.version = random2(3);
         break;
     case DNGN_STONE_STAIRS_UP_I:     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:   case DNGN_ESCAPE_HATCH_UP:
@@ -3456,16 +3464,19 @@ string level_id::describe(bool long_name, bool with_number) const
 
     if (with_number && brdepth[branch] != 1)
     {
+        string depth_str = make_stringf("%d", depth);
+        if (version != 0)
+            depth_str = make_stringf("%d-%d", depth, version);
         if (long_name)
         {
             // decapitalise 'the'
             if (starts_with(result, "The"))
                 result[0] = 't';
-            result = make_stringf("Level %d of %s",
-                      depth, result.c_str());
+            result = make_stringf("Level %s of %s",
+                                  depth_str.c_str(), result.c_str());
         }
         else if (depth)
-            result = make_stringf("%s:%d", result.c_str(), depth);
+            result = make_stringf("%s:%s", result.c_str(), depth_str.c_str());
         else
             result = make_stringf("%s:$", result.c_str());
     }
