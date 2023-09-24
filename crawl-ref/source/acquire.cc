@@ -253,7 +253,7 @@ static int _body_acquirement_weight(armour_type armour, bool warrior)
     // highest chance when armour skill = (displayed) evp - 3
     const int evp = armour_prop(armour, PARM_EVASION);
     const int skill = min(27, _skill_rdiv(SK_ARMOUR) + 3);
-    const int sk_diff = skill + evp / 10;
+    const int sk_diff = abs(skill + evp / 10);
     const int inv_diff = max(1, 27 - sk_diff);
     // armour closest to ideal evp is 27^3 times as likely as the furthest away
     return base_weight * inv_diff * inv_diff * inv_diff;
