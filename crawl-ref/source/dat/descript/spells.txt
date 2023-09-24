@@ -180,7 +180,8 @@ resistance.
 %%%%
 Bombard spell
 
-Blasts an iron ball toward a target, sending the caster staggering backwards.
+Blasts an iron ball toward a target. The force of the blast often sends the
+caster staggering backwards.
 %%%%
 Borgnjor's Revivification spell
 

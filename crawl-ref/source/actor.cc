@@ -1148,13 +1148,10 @@ void actor::stumble_away_from(coord_def targ, string src)
         return;
     }
 
-    if (!src.empty())
-    {
-        if (is_player())
-            mprf("%s sends you backwards.", uppercase_first(src).c_str());
-        else
-            simple_monster_message(*as_monster(), " is knocked back by %s.");
-    }
+    if (is_player())
+        mprf("%s sends you backwards.", uppercase_first(src).c_str());
+    else
+        simple_monster_message(*as_monster(), " is knocked back by %s.");
 
     move_to_pos(newpos);
     apply_location_effects(oldpos, is_player() ? KILL_YOU_MISSILE

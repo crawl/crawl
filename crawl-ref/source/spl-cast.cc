@@ -328,7 +328,8 @@ static void _apply_post_zap_effect(spell_type spell, coord_def target)
         drain_player(100, true, true);
         break;
     case SPELL_BOMBARD:
-        you.stumble_away_from(target, "");
+        if (coinflip())
+            you.stumble_away_from(target, "the blast");
         break;
     default:
         break;
