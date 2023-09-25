@@ -4983,7 +4983,8 @@ static string _monster_attacks_description(const monster_info& mi)
 
     if (mons_class_flag(mi.type, M_ARCHER))
     {
-        result << make_stringf("It can deal up to %d extra damage when attacking with ranged weaponry.\n",
+        result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
+        result << make_stringf(" can deal up to %d extra damage when attacking with ranged weaponry.\n",
                                 archer_bonus_damage(mi.hd));
     }
 
