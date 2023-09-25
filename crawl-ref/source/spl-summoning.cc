@@ -758,19 +758,6 @@ static void _animate_weapon(int pow, actor* target)
     montarget->unequip(*(montarget->mslot_item(wp_slot)), false, true);
     montarget->inv[wp_slot] = NON_ITEM;
 
-    // Also steal ammo for launchers.
-    if (is_range_weapon(*wpn))
-    {
-        const int ammo = montarget->inv[MSLOT_MISSILE];
-        if (ammo != NON_ITEM)
-        {
-            ASSERT(mons->inv[MSLOT_MISSILE] == NON_ITEM);
-            mons->inv[MSLOT_MISSILE] = ammo;
-            montarget->inv[MSLOT_MISSILE] = NON_ITEM;
-            env.item[ammo].set_holding_monster(*mons);
-        }
-    }
-
     // Find out what our god thinks before killing the item.
     conduct_type why = god_hates_item_handling(*wpn);
 
