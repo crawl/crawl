@@ -386,7 +386,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         return false;
     }
 
-    if (mons_is_projectile(*mons))
+    if (mons_is_projectile(*mons) || mons->type == MONS_BOULDER)
     {
         if (!quiet)
             mpr("It's unwise to walk into this.");
@@ -877,6 +877,20 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     }
     else
         return false;
+}
+
+// Returns true if the player can wear at least some kind of armour.
+// False for species that can't ever armour, and in extreme Octopode cases.
+bool player_can_use_armour()
+{
+    if (you.has_mutation(MUT_NO_ARMOUR))
+        return false;
+
+    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
+        if (you_can_wear(static_cast<equipment_type>(i)) != false)
+            return true;
+
+    return false;
 }
 
 bool player_has_feet(bool temp, bool include_mutations)
@@ -3269,9 +3283,9 @@ static void _display_attack_delay()
     const bool at_min_delay = weapon
                               && you.skill(item_attack_skill(*weapon))
                                  >= weapon_min_delay_skill(*weapon);
-    const bool shield_penalty = you.adjusted_shield_penalty() > 0;
+    const bool shield_penalty = you.adjusted_shield_penalty(2) > 0;
     const bool armour_penalty = is_slowed_by_armour(weapon)
-                                && you.adjusted_body_armour_penalty() > 0;
+                                && you.adjusted_body_armour_penalty(2) > 0;
     string penalty_msg = "";
     if (shield_penalty || armour_penalty)
     {
@@ -4209,6 +4223,10 @@ bool poison_player(int amount, string source, string source_aux, bool force)
     if (player_res_poison() < 0)
         amount *= 2;
 
+    // TODO: support being poisoned by monsters wearing "harm (ha)
+    if (you.extra_harm())
+        amount *= (100 + incoming_harm_amount(amount)) / 100;
+
     you.duration[DUR_POISONING] += amount * 1000;
 
     if (you.duration[DUR_POISONING] > old_value)
@@ -4595,7 +4613,7 @@ void dec_slow_player(int delay)
 
     if (you.torpor_slowed())
     {
-        you.duration[DUR_SLOW] = 1;
+        you.duration[DUR_SLOW] = max(1, you.duration[DUR_SLOW]);
         return;
     }
     if (you.props.exists(TORPOR_SLOWED_KEY))
@@ -5006,10 +5024,11 @@ static int _apply_descent_debt(int gold)
     if (you.props.exists(DESCENT_DEBT_KEY))
     {
         int &debt = you.props[DESCENT_DEBT_KEY].get_int();
-        if (gold > debt)
+        if (gold >= debt)
         {
+            gold = gold - debt;
             you.props.erase(DESCENT_DEBT_KEY);
-            return gold - debt;
+            return gold;
         }
         debt -= gold;
         return 0;
@@ -6566,9 +6585,6 @@ string player::no_tele_reason(bool blinking, bool temp) const
     if (temp && duration[DUR_DIMENSION_ANCHOR])
         problems.emplace_back("locked down by a dimension anchor");
 
-    if (temp && duration[DUR_LOCKED_DOWN])
-        problems.emplace_back("magically locked down");
-
     if (temp && form == transformation::tree)
         problems.emplace_back("held in place by your roots");
 
@@ -7304,8 +7320,7 @@ bool player::can_drink(bool temp) const
 
 bool player::is_stationary() const
 {
-    return form == transformation::tree
-        || you.duration[DUR_LOCKED_DOWN];
+    return form == transformation::tree;
 }
 
 bool player::is_motile() const
@@ -7542,7 +7557,7 @@ bool player::can_do_shaft_ability(bool quiet) const
         return false;
     }
 
-    if (you.duration[DUR_LOCKED_DOWN]) // XXX: also DUR_NO_MOMENTUM?
+    if (you.duration[DUR_NO_MOMENTUM])
     {
         if (!quiet)
             mpr("You can't shaft yourself while stuck.");

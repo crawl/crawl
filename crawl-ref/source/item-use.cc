@@ -124,6 +124,8 @@ public:
     vector<const item_def*> item_inv;
     vector<const item_def*> item_floor;
 
+    bool do_easy_floor;
+
     void toggle_display_all();
     void toggle_inv_or_floor();
     void set_hovered(int hovered, bool force=false) override;
@@ -387,8 +389,8 @@ UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_ANY,
                 | MF_INIT_HOVER | MF_ALLOW_FORMATTING),
         display_all(false), is_inventory(true),
         item_type_filter(item_type), oper(_oper), saved_inv_item(NON_ITEM),
-        saved_hover(-1), last_inv_pos(-1), inv_header(nullptr),
-        floor_header(nullptr)
+        saved_hover(-1), last_inv_pos(-1), do_easy_floor(false),
+        inv_header(nullptr), floor_header(nullptr)
 {
     set_tag("use_item");
     set_flags(get_flags() & ~MF_USE_TWO_COLUMNS);
@@ -457,7 +459,9 @@ bool UseItemMenu::empty_check() const
         if (any_of(begin(floor_items), end(floor_items),
               [=] (const item_def* item) -> bool
               {
-                  return item->defined() && item->base_type == OBJ_TALISMANS;
+                  return item->defined()
+                         && item->base_type == OBJ_TALISMANS
+                         && item_is_selected(*item, item_type_filter);
               }))
         {
             return false;
@@ -868,8 +872,9 @@ bool UseItemMenu::process_key(int key)
         && Options.easy_floor_use && item_floor.size() == 1
         && (is_inventory || item_inv.empty()))
     {
-        // TODO: should this go with CMD_MENU_CYCLE_HEADERS instead of `,`?
-        lastch = ','; // XX don't use keycode for this
+        // handle easy_floor_use outside of the menu loop
+        lastch = ','; // sanity only
+        do_easy_floor = true;
         return false;
     }
     else if (key == CK_TAB && _equip_oper(oper))
@@ -1186,8 +1191,14 @@ operation_types use_an_item_menu(item_def *&target, operation_types oper, int it
         vector<MenuEntry*> sel = menu.show(true);
         int keyin = menu.getkey();
 
-        // Handle inscribed item keys
-        if (isadigit(keyin))
+        if (menu.do_easy_floor)
+        {
+            // handle an Options.easy_floor_use selection
+            ASSERT(!menu.item_floor.empty());
+            choice_made = true;
+            tmp_tgt = const_cast<item_def*>(menu.item_floor[0]);
+        }
+        else if (isadigit(keyin))
         {
             // select by inscription
             // This allows you to select stuff by inscription that is not on the
@@ -1197,13 +1208,6 @@ operation_types use_an_item_menu(item_def *&target, operation_types oper, int it
             tmp_tgt = digit_inscription_to_item(keyin, oper);
             if (tmp_tgt)
                 choice_made = true;
-        }
-        else if (keyin == ',')
-        {
-            // first floor item
-            ASSERT(!menu.item_floor.empty());
-            choice_made = true;
-            tmp_tgt = const_cast<item_def*>(menu.item_floor[0]);
         }
         else if (keyin == '-' && menu.show_unarmed())
         {
@@ -3913,11 +3917,7 @@ bool read(item_def* scroll, dist *target)
                 continue;
 
             if (mi->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, &you)))
-            {
-                // Equivalent to casting the spell at max power
-                mi->props[INNER_FLAME_POW_KEY] = 100;
                 had_effect = true;
-            }
         }
 
         if (had_effect)

@@ -4911,7 +4911,7 @@ _Jeremiah_rare_
 
 @The_monster@ wails, "It wants to be free! It wants to enslave everyone!"
 
-@The_monster@ asks @foe@, "Where did this glaive come from? Is it yours?"
+@The_monster@ asks @foe@, "Where did this trident come from? Is it yours?"
 
 @The_monster@ giggles, "Dreams, dreams, come out to play!"
 

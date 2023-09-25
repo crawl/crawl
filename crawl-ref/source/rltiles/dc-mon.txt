@@ -325,6 +325,7 @@ fulminant_prism2
 fulminant_prism3
 fulminant_prism4
 foxfire MONS_FOXFIRE
+marshlight MONS_MARSHLIGHT
 living_spell MONS_LIVING_SPELL
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/

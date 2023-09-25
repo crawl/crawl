@@ -151,9 +151,9 @@ still within sight of the target.
 %%%%
 Blink spell
 
-Randomly translocates the caster a short distance. Translocating in this way
-destabilises the caster temporarily, preventing consecutive blinks for a
-short period of time depending on spellpower.
+Randomly translocates the caster a short distance. After translocating in this
+way, the spell cannot be cast again for a short period of time depending on
+spell power.
 %%%%
 Blinkbolt spell
 
@@ -178,6 +178,11 @@ Bolt of Magma spell
 Fires a penetrating bolt of molten rock. Half of its damage bypasses fire
 resistance.
 %%%%
+Bombard spell
+
+Blasts an iron ball toward a target. The force of the blast often sends the
+caster staggering backwards.
+%%%%
 Borgnjor's Revivification spell
 
 Instantly heals any and all wounds suffered by the caster, but also permanently
@@ -197,6 +202,16 @@ Brain Feed spell
 Drains a portion of a visible enemy's intelligence, with no direct line of fire
 required. Such a loss is only temporary, and can be recovered by gaining
 experience.
+%%%%
+Brom's Barrelling Boulder spell
+
+Unleashes a massive rolling boulder in a given cardinal direction. The boulder
+squashes and knocks back creatures it strikes, suffering wear and tear with each
+hit. If it strikes a wall, it will explode into fragments of rock, doing damage
+that is strongly reduced by armour.
+
+The boulder sometimes veers from side to side, and will disintegrate if it leaves
+the caster's sight.
 %%%%
 Brothers in Arms spell
 
@@ -412,13 +427,11 @@ Banishment.
 %%%%
 Dimensional Bullseye spell
 
-Weaves a subtle dimensional link between the caster's weaponry and a target
-of their choice. While this link is active, all projectiles thrown or fired by
-the caster will unerringly teleport to that target at the end of their original
-arc - provided they were initially aimed at something else entirely.
+Weaves a link between the caster's weaponry and a chosen target. Whenever the
+caster fires or throws something at a *different* enemy, a matching projectile
+will be teleported at the target. Spellpower increases their accuracy.
 
-Maintaining this link is tiring and each projectile fired while the spell is
-active will drain a small amount of the caster's magic.
+Every shot will drain a drop of magic while the link persists.
 %%%%
 Discord spell
 
@@ -783,16 +796,13 @@ nearby monsters with physical force, knocking them back if damage is done.
 %%%%
 Jinxbite spell
 
-Beckons tiny trickster spirits to join in the caster's fight and turn their
-attention against the caster's enemies. So long as they remain interested, any
-attack the caster makes against an enemy whose willpower this spell can overcome
-will suffer minor irresistable damage and draining from the sprites' playful
-malice.
+Calls the attention of trickster spirits. While it holds, the spirits will
+follow up on the caster's attacks. If the spell overcomes victims' willpower,
+they will suffer minor damage and be drained by the sprites' playful malice.
 
 Fae assistance is fickle, however; they cannot be beckoned unless a susceptible
-victim is visible and will depart rapidly once no more remain. And even the mere
-act of inviting them will leave the caster more succeptible to hostile
-enchantments for a time.
+victim is visible, and will depart rapidly once no more remain. Calling on the
+fae also reduces the caster's own willpower for a time.
 %%%%
 Volatile Blastmotes spell
 
@@ -811,11 +821,6 @@ in melee may fail.
 The effect starts out with a radius depending on power, which will then shrink,
 eventually covering only the caster, before it times out. Maintaining the
 connection to the ground slows the caster's movement, even if they are flying.
-%%%%
-Leda's Unmaking spell
-
-Fires a blast of high-speed entropy. Slain victims dissolve into mud, slowing
-the movements and impairing the attacks of creatures stuck within.
 %%%%
 Lee's Rapid Deconstruction spell
 
@@ -1219,14 +1224,10 @@ Throws a bouncing bolt of electricity. It bypasses half of defenders' armour.
 %%%%
 Sigil of Binding spell
 
-Inscribes a pair of magical sigils on the floor nearby which will temporarily
-contain the momentum of anyone that passes over them, binding them in place
-until the spell wears off - at which point that momentum will return rapidly,
-granting the victim incredible movement speed and preventing subsequent binding
-attempts until they slow down again.
-
-The caster is not immune to their own sigils, and spell feedback will prevent
-them from gaining any delayed benefit, either. Be careful!
+Creates two sigils nearby. Anyone who passes over them will be bound, able to
+act and dodge normally but unable to move away. When the effect wears off,
+their movement speed will rebound, giving them temporary swiftness and preventing
+subsequent binding effects.
 
 Only one set of sigils can be maintained at a time.
 %%%%

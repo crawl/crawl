@@ -102,10 +102,13 @@ spret fedhas_grow_oklob(const coord_def& target, bool fail);
 
 void kiku_unearth_wretches();
 
-spret cast_foxfire(actor &agent, int pow, god_type god, bool fail);
+spret cast_foxfire(actor &agent, int pow, god_type god, bool fail,
+                   bool marshlight = false);
 spret foxfire_swarm();
 bool summon_spider(const actor &agent, coord_def pos, god_type god,
                         spell_type spell, int pow);
 spret summon_spiders(actor &agent, int pow, god_type god, bool fail = false);
 
 spret summon_butterflies();
+
+spret cast_broms_barrelling_boulder(actor& agent, coord_def pos, int pow, bool fail);

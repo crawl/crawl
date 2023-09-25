@@ -534,7 +534,8 @@ bool prompt_dangerous_portal(dungeon_feature_type ftype)
 
 bool prompt_descent_shortcut(dungeon_feature_type ftype)
 {
-    if (ftype == DNGN_ENTER_DEPTHS && !player_in_branch(BRANCH_SLIME))
+    if (ftype == DNGN_ENTER_DEPTHS && !player_in_branch(BRANCH_SLIME)
+        || ftype == DNGN_ENTER_SLIME && !player_in_branch(BRANCH_VAULTS))
     {
         return yesno("This entrance appears to skip some branches and may be "
                      "quite dangerous. Continue anyway?", false, 'n');
@@ -675,7 +676,7 @@ static spret _rampage_forward(coord_def move)
         {
             // .. and if a mons was in the way and invisible, notify the player.
             clear_messages();
-            mprf("Something unexpectedly blocked you, preventing you from %s!",
+            mprf("Something unexpectedly blocks you, preventing you from %s!",
                  verb.c_str());
         }
         return spret::fail;

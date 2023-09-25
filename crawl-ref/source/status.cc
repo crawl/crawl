@@ -252,7 +252,8 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_PEEKING:
-        if (crawl_state.game_is_descent() && !env.properties.exists(DESCENT_STAIRS_KEY))
+        if (crawl_state.game_is_descent() && !env.properties.exists(DESCENT_STAIRS_KEY)
+            && you.elapsed_time > 0)
         {
             inf.light_colour = WHITE;
             inf.light_text   = "Peek";

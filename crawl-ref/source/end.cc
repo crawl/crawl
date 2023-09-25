@@ -348,7 +348,7 @@ NORETURN void end_game(scorefile_entry &se)
 
     auto tile = make_shared<Image>(death_tile);
     tile->set_margin_for_sdl(0, 10, 0, 0);
-    title_hbox->add_child(move(tile));
+    title_hbox->add_child(std::move(tile));
 #endif
     string goodbye_title = make_stringf("Goodbye, %s.", you.your_name.c_str());
     title_hbox->add_child(make_shared<Text>(goodbye_title));
@@ -357,7 +357,7 @@ NORETURN void end_game(scorefile_entry &se)
     title_hbox->set_margin_for_crt(0, 0, 1, 0);
 
     auto vbox = make_shared<Box>(Box::VERT);
-    vbox->add_child(move(title_hbox));
+    vbox->add_child(std::move(title_hbox));
 
     string goodbye_msg;
     goodbye_msg += "    "; // Space padding where # would go in list format
@@ -400,7 +400,7 @@ NORETURN void end_game(scorefile_entry &se)
     vbox->add_child(make_shared<Text>(formatted_string::parse_string(morgue_dir)));
 #endif
 
-    auto popup = make_shared<ui::Popup>(move(vbox));
+    auto popup = make_shared<ui::Popup>(std::move(vbox));
     bool done = false;
     popup->on_keydown_event([&](const KeyEvent&) { return done = true; });
 
@@ -419,7 +419,7 @@ NORETURN void end_game(scorefile_entry &se)
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
-        ui::run_layout(move(popup), done);
+        ui::run_layout(std::move(popup), done);
     }
 
 #ifdef USE_TILE_WEB

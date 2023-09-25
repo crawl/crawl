@@ -61,7 +61,6 @@ static spell_type search_order_conj[] =
     SPELL_MINDBURST,
     SPELL_BOLT_OF_FIRE,
     SPELL_BOLT_OF_COLD,
-    SPELL_UNMAKING,
     SPELL_IRON_SHOT,
     SPELL_POISON_ARROW,
     SPELL_BOLT_OF_DRAINING,

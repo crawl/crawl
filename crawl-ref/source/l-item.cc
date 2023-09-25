@@ -1510,10 +1510,22 @@ static int l_item_shopping_list(lua_State *ls)
  */
 static int l_item_acquirement_items(lua_State *ls)
 {
-    if (!you.props.exists(ACQUIRE_ITEMS_KEY))
+
+    const int acquire_type = luaL_safe_checkint(ls, 1);
+    string acquire_key;
+    if (acquire_type <= 1)
+        acquire_key = ACQUIRE_ITEMS_KEY;
+    else if (acquire_type == 2)
+        acquire_key = OKAWARU_WEAPONS_KEY;
+    else if (acquire_type == 3)
+        acquire_key = OKAWARU_ARMOUR_KEY;
+    else
         return 0;
 
-    auto &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
+    if (!you.props.exists(acquire_key))
+        return 0;
+
+    auto &acq_items = you.props[acquire_key].get_vector();
 
     lua_newtable(ls);
 

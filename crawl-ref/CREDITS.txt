@@ -145,6 +145,7 @@
     Tom Conrad
     Vitor 'Baconkid' Costa
     RJ Cunningham
+    Cureja
     Aaron Curtis
     Simon Curtis
     cut1less

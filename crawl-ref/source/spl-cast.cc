@@ -317,7 +317,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
 }
 
 // Effects that happen after spells which are otherwise simple zaps.
-static void _apply_post_zap_effect(spell_type spell)
+static void _apply_post_zap_effect(spell_type spell, coord_def target)
 {
     switch (spell)
     {
@@ -326,6 +326,10 @@ static void _apply_post_zap_effect(spell_type spell)
         break;
     case SPELL_KISS_OF_DEATH:
         drain_player(100, true, true);
+        break;
+    case SPELL_BOMBARD:
+        if (coinflip())
+            you.stumble_away_from(target, "the blast");
         break;
     default:
         break;
@@ -1369,6 +1373,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SIGIL_OF_BINDING:
         return make_unique<targeter_multiposition>(&you,
                                                    find_sigil_locations(true));
+    case SPELL_BOULDER:
+        return make_unique<targeter_boulder>(&you);
 
     default:
         break;
@@ -2076,6 +2082,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         aim_battlesphere(&you, spell);
     }
 
+    const coord_def orig_target_pos = beam.target;
     const auto orig_target = monster_at(beam.target);
     const bool self_target = you.pos() == beam.target;
     const bool had_tele = orig_target && orig_target->has_ench(ENCH_TP);
@@ -2087,7 +2094,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     {
     case spret::success:
     {
-        _apply_post_zap_effect(spell);
+        _apply_post_zap_effect(spell, orig_target_pos);
 
         const int demonic_magic = you.get_mutation_level(MUT_DEMONIC_MAGIC);
 
@@ -2478,6 +2485,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_SIGIL_OF_BINDING:
         return cast_sigil_of_binding(powc, fail, false);
 
+    case SPELL_BOULDER:
+        return cast_broms_barrelling_boulder(you, beam.target, powc, fail);
+
     // non-player spells that have a zap, but that shouldn't be called (e.g
     // because they will crash as a player zap).
     case SPELL_DRAIN_LIFE:
@@ -2761,6 +2771,8 @@ static dice_def _spell_damage(spell_type spell, int power)
             return polar_vortex_dice(power, false);
         case SPELL_NOXIOUS_BOG:
             return toxic_bog_damage();
+        case SPELL_BOULDER:
+            return boulder_damage(power, false);
         default:
             break;
     }

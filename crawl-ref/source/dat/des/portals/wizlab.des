@@ -2389,7 +2389,7 @@ MONS:   dancing weapon; hand cannon ego:flaming w:15 /\
         dancing weapon; hand cannon ego:freezing w:15 /\
         dancing weapon; hand cannon ego:venom /\
         dancing weapon; hand cannon ego:electrocution w:2 /\
-        dancing weapon; hand cannon randart ego:speed w:1 /\
+        dancing weapon; hand cannon randart ego:penetration w:1 /\
         dancing weapon; longbow ego:flaming w:15 /\
         dancing weapon; longbow ego:freezing w:15 /\
         dancing weapon; longbow ego:venom /\
@@ -2399,8 +2399,7 @@ MONS:   dancing weapon; hand cannon ego:flaming w:15 /\
         dancing weapon; triple crossbow ego:freezing w:15 /\
         dancing weapon; triple crossbow ego:venom w:5 /\
         dancing weapon; triple crossbow ego:electrocution w:5 /\
-        dancing weapon; triple crossbow randart ego:speed w:1 /\
-        dancing weapon; triple crossbow ego:penetration w:1
+        dancing weapon; triple crossbow randart ego:penetration w:1
 MONS:   walking frostbound tome / walking earthen tome / walking crystal tome /\
         walking divine tome
 MONS:   strange machine

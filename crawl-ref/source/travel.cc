@@ -440,7 +440,7 @@ public:
                 ts.safe_if_ignoring_hostile_terrain =
                     is_travelsafe_square(p, true);
             }
-            _travel_safe_grid = move(tsgrid);
+            _travel_safe_grid = std::move(tsgrid);
         }
     }
     ~precompute_travel_safety_grid()
@@ -3209,6 +3209,22 @@ static void _populate_stair_distances(const level_pos &target)
     }
 }
 
+static coord_def _find_closest_adj(coord_def targ)
+{
+    coord_def closest_pos = coord_def(0,0);
+    int closest_dist = INT_MAX;
+    for (adjacent_iterator ai(targ); ai; ++ai)
+    {
+        const int dist = travel_point_distance[ai->x][ai->y];
+        if (dist > 0 && dist < closest_dist)
+        {
+            closest_pos = *ai;
+            closest_dist = dist;
+        }
+    }
+    return closest_pos;
+}
+
 static bool _find_transtravel_square(const level_pos &target, bool verbose)
 {
     level_id current = level_id::current();
@@ -3285,19 +3301,27 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
         }
     }
 
-    if (verbose)
+    if (!verbose)
+        return false;
+    if (target.id == current && (target.pos.x == -1 || target.pos == you.pos()))
+        return false;
+    if (maybe_traversable)
     {
-        if (target.id != current
-            || target.pos.x != -1 && target.pos != you.pos())
-        {
-            if (!maybe_traversable)
-                mpr("Sorry, I don't know how to traverse that place.");
-            else
-                mpr("Sorry, I don't know how to get there.");
-        }
+        mpr("Sorry, I don't know how to get there.");
+        return false;
     }
 
-    return false;
+    // check if there is a spot adjacent to the place that is reachable
+    coord_def closest_alt = _find_closest_adj(target.pos);
+    if (closest_alt.origin())
+    {
+        mpr("Sorry, I don't know how to traverse that place.");
+        return false;
+    }
+
+    level_pos new_target = target;
+    new_target.pos = closest_alt;
+    return _find_transtravel_square(new_target, verbose);
 }
 
 void start_travel(const coord_def& p)

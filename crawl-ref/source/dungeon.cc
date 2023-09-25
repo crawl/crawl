@@ -5275,7 +5275,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     if (mspec.props.exists(MONSTER_TILE_KEY))
     {
         mons->props[MONSTER_TILE_KEY] =
-            mspec.props[MONSTER_TILE_KEY].get_short();
+            mspec.props[MONSTER_TILE_KEY].get_int();
     }
     if (mspec.props.exists(MONSTER_TILE_NAME_KEY))
     {
@@ -7548,6 +7548,11 @@ static void _mark_solid_squares()
 int starting_absdepth()
 {
     if (you.char_class == JOB_DELVER)
+    {
+        // makes delver sort of work in descent
+        if (crawl_state.game_is_descent())
+            return 1;
         return 4;
+    }
     return 0; // (absdepth is 0-indexed)
 }

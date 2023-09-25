@@ -575,6 +575,7 @@ const vector<GameOption*> game_options::build_options_list()
         new ColourGameOption(SIMPLE_NAME(status_caption_colour), BROWN),
         new ColourGameOption(SIMPLE_NAME(background_colour), BLACK),
         new ColourGameOption(SIMPLE_NAME(foreground_colour), LIGHTGREY),
+        new BoolGameOption(SIMPLE_NAME(use_terminal_default_colours), false),
         new StringGameOption(enemy_hp_colour_option,
             {"enemy_hp_colour", "enemy_hp_color"}, "default", false,
             [this]() { update_enemy_hp_colour(); }),
@@ -3629,6 +3630,15 @@ void base_game_options::read_option_line(const string &str, bool runscripts)
         _base_split_parse(state.raw_field, ",",
                 [this](const string & s, bool b) { set_option_fragment(s, b); });
         return;
+    }
+    else if (state.key == "lua_max_memory")
+    {
+#ifdef DGAMELAUNCH
+        report_error("Option 'lua_max_memory' is disabled in this build.", state.field.c_str());
+#else
+        if (!sscanf(state.field.c_str(), "%" SCNu64, &crawl_state.clua_max_memory_mb))
+            report_error("Couldn't parse integer option lua_max_memory: \"%s\"", state.field.c_str());
+#endif
     }
     else if (state.key == "lua_file")
     {

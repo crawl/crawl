@@ -1090,7 +1090,7 @@ void map_lines::extend(int min_width, int min_height, char fill)
             for (int x = 0; x < old_width; ++x)
                 (*new_overlay)(x, y) = (*overlay)(x, y);
 
-        overlay = move(new_overlay);
+        overlay = std::move(new_overlay);
     }
 }
 
@@ -1601,7 +1601,7 @@ void map_lines::rotate(bool clockwise)
         for (int i = xs, y = 0; i != xe; i += xi, ++y)
             for (int j = ys, x = 0; j != ye; j += yi, ++x)
                 (*new_overlay)(x, y) = (*overlay)(i, j);
-        overlay = move(new_overlay);
+        overlay = std::move(new_overlay);
     }
 
     map_width = lines.size();
@@ -4068,7 +4068,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             }
             // Store name along with the tile.
             mspec.props[MONSTER_TILE_NAME_KEY].get_string() = tile;
-            mspec.props[MONSTER_TILE_KEY] = short(index);
+            mspec.props[MONSTER_TILE_KEY] = int(index);
         }
 
         string dbname = strip_tag_prefix(mon_str, "dbname:");

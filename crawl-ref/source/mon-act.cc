@@ -974,6 +974,116 @@ static bool _handle_reaching(monster& mons)
     return ret;
 }
 
+static void _setup_boulder_explosion(monster& boulder, bolt& beam)
+{
+    const int pow = boulder.props[BOULDER_POWER_KEY].get_int();
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.source_id    = boulder.mid;
+    beam.thrower      = boulder.summoner == MID_PLAYER ? KILL_YOU : KILL_MON;
+    beam.source       = boulder.pos();
+    beam.target       = beam.source;
+    beam.hit          = AUTOMATIC_HIT;
+    beam.colour       = BROWN;
+    beam.flavour      = BEAM_FRAG;
+    beam.ex_size      = 1;
+    beam.is_explosion = true;
+    beam.hit_verb     = "hits";
+    beam.name         = "rocky shrapnel";
+    beam.source_name  = boulder.name(DESC_PLAIN, true);
+    beam.damage       = boulder_damage(pow, true);
+}
+
+static coord_def _wobble_dir(coord_def dir)
+{
+    // Computer, can I get a boulder wobble?
+    if (dir.x && dir.y)
+    {
+        if (coinflip())
+            return coord_def(dir.x, 0);
+        return coord_def(0, dir.y);
+    }
+    if (dir.y)
+        return coord_def(coinflip() ? 1 : -1, dir.y);
+    return coord_def(dir.x, coinflip() ? 1 : -1);
+}
+
+static void _handle_boulder_movement(monster& boulder)
+{
+    place_cloud(CLOUD_DUST, boulder.pos(), 2 + random2(3), &boulder);
+
+    // First, find out where we intend to move next
+    coord_def dir = boulder.props[BOULDER_DIRECTION_KEY].get_coord();
+    if (one_chance_in(10))
+        dir = _wobble_dir(dir);
+    coord_def targ = boulder.pos() + dir;
+
+    // If our summoner is the player, and they cannot see us, silently crumble
+    if (boulder.summoner == MID_PLAYER
+        && (!you.can_see(boulder) || !you.see_cell(targ)))
+    {
+        simple_monster_message(boulder, " crumbles as it rolls away.");
+        monster_die(boulder, KILL_RESET, true);
+        return;
+    }
+
+    // If we're moving into something solid, shatter.
+    if (feat_is_solid(env.grid(targ)))
+    {
+        if (you.can_see(boulder))
+        {
+            mprf("%s slams into a %s and explodes!",
+                 boulder.name(DESC_THE).c_str(),
+                 feat_type_name(env.grid(targ)));
+        }
+
+        bolt beam;
+        _setup_boulder_explosion(boulder, beam);
+        monster_die(boulder, KILL_NONE, true);
+        beam.explode();
+        return;
+    }
+
+    // If we're about to run into things, this is a bit more complicated
+    if (actor_at(targ))
+    {
+        actor* obstruction = actor_at(targ);
+        // First, do impact damage to the actor and see if we kill it
+
+        do_boulder_impact(boulder, *obstruction);
+        if (!boulder.alive())
+            return;
+
+        // If the obstacle is still alive (and so is the boulder), do knockback calculations
+        if (obstruction->alive())
+        {
+            // We want to trace a line of all connected monsters in a row, in the
+            // direction we're moving, and then push them away in reverse order.
+            vector<actor*> push_targs;
+            coord_def pos = targ;
+            while (actor_at(pos))
+            {
+                push_targs.push_back(actor_at(pos));
+                pos += dir;
+            }
+
+            for (int i = push_targs.size() - 1; i >= 0; --i)
+                push_targs[i]->knockback(boulder, 1, 10, "");
+        }
+
+        // If there is still somehow something in our way (maybe we were unable to
+        // push everything out of it), stop here
+        if (actor_at(targ))
+        {
+            _swim_or_move_energy(boulder);
+            return;
+        }
+    }
+
+    // If we're still here, actually move. (But consume energy, even if we somehow don't)
+    if (!_do_move_monster(boulder, dir))
+        _swim_or_move_energy(boulder);
+}
+
 static void _mons_fire_wand(monster& mons, spell_type mzap, bolt &beem)
 {
     if (!simple_monster_message(mons, " zaps a wand."))
@@ -1080,16 +1190,22 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         return false;
 
     const item_def *launcher = mons->launcher();
+    item_def *throwable = mons->missiles();
+    const bool can_throw = (throwable && is_throwable(mons, *throwable));
     item_def fake_proj;
     item_def *missile = &fake_proj;
-    if (launcher)
-        populate_fake_projectile(*launcher, fake_proj);
-    else
+    bool using_launcher = false;
+    // If a monster somehow has both a launcher and a throwable, use the
+    // launcher 2/3 of the time.
+    if (launcher && (!can_throw || !one_chance_in(3)))
     {
-        missile = mons->missiles();
-        if (!missile || !is_throwable(mons, *missile))
-            return false;
+        populate_fake_projectile(*launcher, fake_proj);
+        using_launcher = true;
     }
+    else if (can_throw)
+        missile = throwable;
+    else
+        return false;
 
     if (player_or_mon_in_sanct(*mons))
         return false;
@@ -1196,7 +1312,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         // Monsters shouldn't shoot if fleeing, so let them "turn to attack".
         make_mons_stop_fleeing(mons);
 
-        if (launcher && launcher != mons->weapon())
+        if (launcher && using_launcher && launcher != mons->weapon())
             mons->swap_weapons();
 
         beem.name.clear();
@@ -1575,6 +1691,12 @@ void handle_monster_move(monster* mons)
             mons->suicide();
             return;
         }
+    }
+
+    if (mons->type == MONS_BOULDER)
+    {
+        _handle_boulder_movement(*mons);
+        return;
     }
 
     mons->shield_blocks = 0;

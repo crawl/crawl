@@ -295,12 +295,13 @@ static void _set_unique_item_existence(int art, bool exists)
 
     const unique_item_status_type status = !exists
         ? UNIQ_NOT_EXISTS
-        : !crawl_state.generating_level
+        : !crawl_state.generating_level // acquirement, gozag shops, ...
                 // treat unrands that generate in these branches as if they
                 // were acquired. TODO: there's a potential bug here if every
-                // octopus king ring generates and the last is acquired. Also,
-                // I suspect that these getting lost in the abyss isn't handled
-                // right
+                // octopus king ring generates and the last is acquired.
+                // note that unrands that generate in the abyss and get left
+                // there will convert to UNIQ_LOST_IN_ABYSS, but they don't
+                // get this automatically.
                 || level_id::current().branch == BRANCH_TROVE
                 || level_id::current().branch == BRANCH_ABYSS
             ? UNIQ_EXISTS_NONLEVELGEN
@@ -1382,7 +1383,7 @@ string get_artefact_name(const item_def &item, bool force_known)
 {
     ASSERT(is_artefact(item));
 
-    if (item_type_known(item) || force_known)
+    if (item_ident(item, ISFLAG_KNOW_PROPERTIES) || force_known)
     {
         // print artefact's real name, if that's set
         if (item.props.exists(ARTEFACT_NAME_KEY))
@@ -1480,18 +1481,29 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level, bool in_a
         const unique_item_status_type status =
             get_unique_item_status(index);
 
-        if (in_abyss && status != UNIQ_LOST_IN_ABYSS
-            || !in_abyss && status != UNIQ_NOT_EXISTS
-               // for acquired items, ignore them in the random calculations
-               // here and let fallback artefacts replace them. This is needed
-               // for seed stability.
-               // TODO: abyss? double check trove
-               && status != UNIQ_EXISTS_NONLEVELGEN)
+        if ((!in_abyss || status != UNIQ_LOST_IN_ABYSS)
+            && status != UNIQ_NOT_EXISTS
+            // for previously acquired items, allow generation of the index
+            // here; a fallback artefact will replace them in later steps.
+            // This is needed for seed stability.
+            && status != UNIQ_EXISTS_NONLEVELGEN)
         {
             continue;
         }
 
-        // Never randomly generated until lost in the abyss.
+        if (in_abyss && status == UNIQ_LOST_IN_ABYSS
+            && index == UNRAND_OCTOPUS_KING_RING
+            && you.octopus_king_rings == 0xff)
+        {
+            // the last octopus ring is lost in the abyss. We don't have the
+            // machinery to bring back the correct one, and it doesn't seem
+            // worth implementing. So just skip it. (TODO: clear the flag for
+            // a lost octoring on losing it?)
+            continue;
+        }
+
+        // If an item does not generate randomly, we can only produce its index
+        // here if it was lost in the abyss
         if ((!in_abyss || status != UNIQ_LOST_IN_ABYSS)
             && entry->flags & UNRAND_FLAG_NOGEN)
         {
@@ -1850,7 +1862,9 @@ static void _make_octoring(item_def &item)
 {
     if (you.octopus_king_rings == 0xff)
     {
-        ASSERT(you.wizard || you.suppress_wizard || crawl_state.test);
+        // possible this is too narrow: if this causes unexpected wizmode
+        // crashes, just back off to asserting you.wizard.
+        ASSERT(crawl_state.prev_cmd == CMD_WIZARD);
         item.sub_type = octoring_types[random2(8)];
         return;
     }

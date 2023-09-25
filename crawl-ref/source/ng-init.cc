@@ -63,6 +63,9 @@ void initialise_branch_depths()
     }
 
     initialise_brentry();
+
+    if (crawl_state.game_is_descent())
+        brdepth[BRANCH_DUNGEON] = 12;
 }
 
 static void _use_overflow_temple(vector<god_type> temple_gods)

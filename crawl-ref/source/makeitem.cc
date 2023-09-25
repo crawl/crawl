@@ -258,6 +258,7 @@ static int _num_brand_tries(const item_def& item, int item_level)
     if (item_level >= ISPEC_GIFT)
         return 5;
     if (is_demonic(item)
+        || is_blessed(item)
         // Hand crossbows usually appear late, so encourage use.
         || item.sub_type == WPN_HAND_CANNON
         || x_chance_in_y(101 + item_level, 300))
@@ -291,6 +292,9 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     item_def item;
     item.base_type = OBJ_WEAPONS;
     item.sub_type = type;
+
+    if (is_blessed_weapon_type(type) && brand != SPWPN_HOLY_WRATH)
+        return false;
 
     if (brand <= SPWPN_NORMAL)
         return true;
@@ -492,6 +496,13 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         // squash boring items.
         if (!force_good && item.brand == SPWPN_NORMAL && item.plus < 3)
             item.plus = 0;
+    }
+
+    // Blessed weapons must always be branded with holy wrath.
+    if (is_blessed(item))
+    {
+        set_item_ego_type(item, OBJ_WEAPONS,
+                          determine_weapon_brand(item, item_level));
     }
 }
 
@@ -912,7 +923,7 @@ static armour_type _get_random_armour_type(int item_level)
                                          2, ARM_KITE_SHIELD,
                                          4, ARM_BUCKLER,
                                          1, ARM_TOWER_SHIELD,
-                                         3, ARM_ORB);
+                                         4, ARM_ORB);
     }
     else if (x_chance_in_y(11 + item_level, 10000))
     {

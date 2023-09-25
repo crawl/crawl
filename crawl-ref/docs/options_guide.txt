@@ -160,9 +160,11 @@ The contents of this text are:
                 blink_brightens_background, bold_brightens_foreground,
                 best_effort_brighten_background,
                 best_effort_brighten_foreground, allow_extended_colours,
-                background_colour, foreground_colour, use_fake_cursor
+                background_colour, foreground_colour,
+                use_default_terminal_colours, use_fake_cursor
 
 6-  Lua.
+                lua_max_memory
 6-a     Including lua files.
 6-b     Executing inline lua.
 6-c     Conditional options.
@@ -3120,6 +3122,10 @@ foreground_colour = lightgrey
         This option comes with the same baggage as the background_colour option.
         See its documentation for more details.
 
+use_terminal_default_colours = false
+        Use the terminal's default foreground and background colors. This can
+        be used to enable a transparent background.
+
 use_fake_cursor = true
         If true, Crawl draws the cursor explicitly on the level-map and
         targeting screens instead of relying on the term to draw the
@@ -3131,6 +3137,9 @@ use_fake_cursor = true
 
 6-  Lua.
 ========
+
+lua_max_memory = 16
+        Max memory in MB allowed for user Lua scripts.
 
 6-a  Including lua files.
 -------------------------

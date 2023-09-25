@@ -149,11 +149,6 @@ or by breaking line of sight with them.
 
 You are prevented from teleporting or blinking.
 %%%%
-Stuck status
-
-You are prevented from moving, blinking, or teleporting. (You can still take
-other actions.)
-%%%%
 -Move status
 
 You cannot walk, fly around, slither, etc. You can still take other actions,
@@ -359,6 +354,11 @@ Slay status
 
 You have the blood of a were-beast, healing you and providing bonuses to
 your ranged and melee attacks which increase every time you slay a foe.
+%%%%
+Debt status
+
+You have lived beyond your means. You cannot spend gold again until you earn
+enough to cancel out your debt.
 %%%%
 Toxic status
 

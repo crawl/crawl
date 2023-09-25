@@ -203,6 +203,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SANDBLAST,
     SPELL_PASSWALL,
     SPELL_STONE_ARROW,
+    SPELL_BOULDER
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -218,7 +219,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Power
     SPELL_BATTLESPHERE,
-    SPELL_UNMAKING,
+    SPELL_BOMBARD,
     SPELL_SPELLFORGED_SERVITOR,
 },
 
@@ -317,6 +318,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Spheres
+    SPELL_BOULDER,
     SPELL_BATTLESPHERE,
     SPELL_FIREBALL,
     SPELL_CONJURE_BALL_LIGHTNING,
@@ -364,7 +366,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of Earth
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_LRD,
-    SPELL_UNMAKING,
+    SPELL_BOMBARD,
 },
 
 { // Ozocubu's Autobio

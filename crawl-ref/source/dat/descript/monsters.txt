@@ -246,12 +246,12 @@ unwitting adventurers to their deaths.
 %%%%
 Jeremiah
 
-Jeremiah is a peaceful dreamer, who made the mistake of dozing off while gazing
-into a magical orb. In their dreams, they were visited by an old and hateful
-power, which bound them to its service as all barachim were bound long ago. Now
-Jeremiah stumbles through the dungeon, searching for the precious dreamshard that
-will restore their master’s power, unsure whether they wake or slumber still.
-Their dreams leak into reality in the form of a constant stream of butterflies.
+Jeremiah was a peaceful dreamer, prone to impromptu naps. They slipped into
+slumber while gazing into a magical orb, and dreamed of an old and hateful
+power binding them into service. Now Jeremiah stumbles through the dungeon,
+searching for the precious dreamshard that will restore their master’s power,
+unsure whether they wake or slumber still. Their dreams leak into reality in
+the form of a constant stream of butterflies.
 %%%%
 Jessica
 
@@ -761,6 +761,10 @@ gnoll bouda
 A gnoll witch possessed by a spirit of spite which flashes out from behind
 their eyes. Its strange chants and ululations send other gnolls into a wild
 frenzy.
+%%%%
+boulder
+
+A mass of fast-rolling stone, crushing everything in its path.
 %%%%
 boulder beetle
 

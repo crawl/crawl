@@ -852,14 +852,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_UNMAKING, "Leda's Unmaking",
+    SPELL_BOMBARD, "Bombard",
     spschool::conjuration | spschool::earth,
     spflag::dir_or_target | spflag::needs_tracer,
     6,
     200,
     4, 4,
     0,
-    TILEG_LEDAS_UNMAKING,
+    TILEG_IRON_SHOT,
 },
 
 {
@@ -1969,7 +1969,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_INNER_FLAME, "Inner Flame",
     spschool::hexes | spschool::fire,
-    spflag::target | spflag::not_self | spflag::destructive,
+    spflag::target | spflag::not_self | spflag::WL_check | spflag::destructive,
     3,
     100,
     LOS_RADIUS, LOS_RADIUS,
@@ -3571,6 +3571,17 @@ static const struct spell_desc spelldata[] =
     LOS_RADIUS, LOS_RADIUS,
     0,
     TILEG_PORTAL_PROJECTILE,
+},
+
+{
+    SPELL_BOULDER, "Brom's Barrelling Boulder",
+    spschool::earth | spschool::conjuration,
+    spflag::target | spflag::not_self,
+    4,
+    100,
+    1, 1,
+    0,
+    TILEG_ERROR,
 },
 
 // Not an actual spell - dummy entry for (player) Green Draconian breath.

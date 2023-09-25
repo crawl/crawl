@@ -59,7 +59,8 @@ static int _gold_level()
            (you.gold >=  5000) ? 5 :
            (you.gold >=  1000) ? 4 :
            (you.gold >=   500) ? 3 :
-           (you.gold >=   100) ? 2
+           (you.gold >=   100) ? 2 :
+           (you.props.exists(DESCENT_DEBT_KEY)) ? 0
                                : 1;
 }
 
@@ -1060,16 +1061,16 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
     auto icon = make_shared<Image>();
     const tileidx_t idx = tileidx_feature_base(altar_for_god(which_god));
     icon->set_tile(tile_def(idx));
-    title_hbox->add_child(move(icon));
+    title_hbox->add_child(std::move(icon));
 #endif
 
     auto title = make_shared<Text>(topline.trim());
     title->set_margin_for_sdl(0, 0, 0, 16);
-    title_hbox->add_child(move(title));
+    title_hbox->add_child(std::move(title));
 
     title_hbox->set_main_alignment(Widget::CENTER);
     title_hbox->set_cross_alignment(Widget::CENTER);
-    vbox->add_child(move(title_hbox));
+    vbox->add_child(std::move(title_hbox));
 
     desc_sw = make_shared<Switcher>();
     more_sw = make_shared<Switcher>();
@@ -1110,7 +1111,7 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
         auto text = make_shared<Text>(desc.trim());
         text->set_wrap_text(true);
         scroller->set_child(text);
-        desc_sw->add_child(move(scroller));
+        desc_sw->add_child(std::move(scroller));
 
         more_sw->add_child(make_shared<Text>(
                 formatted_string::parse_string(mores[mores_index][i])));

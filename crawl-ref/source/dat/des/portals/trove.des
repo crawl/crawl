@@ -287,7 +287,7 @@ default-depth: D:10-, Depths, Elf, Vaults
 ##############################################################################
 
 NAME:   enter_trove_0
-TAGS:   transparent
+TAGS:   transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -295,7 +295,7 @@ O
 ENDMAP
 
 NAME:   enter_trove_1
-TAGS:   transparent
+TAGS:   transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -305,7 +305,7 @@ MAP
 ENDMAP
 
 NAME:   enter_trove_2
-TAGS:   transparent
+TAGS:   transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -317,7 +317,7 @@ G.O.G
 ENDMAP
 
 NAME:   enter_trove_3
-TAGS:   uniq_trove no_monster_gen no_wall_fixup transparent
+TAGS:   uniq_trove no_monster_gen no_wall_fixup transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 COLOUR: c = blue
@@ -331,7 +331,7 @@ ENDMAP
 
 # Of course, not everyone is willing for you to take their treasure...
 NAME:   enter_trove_5
-TAGS:   transparent
+TAGS:   transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 COLOUR: e = blue
@@ -359,7 +359,7 @@ ENDMAP
 
 # Someone left some gold behind for you!
 NAME:   enter_trove_6
-TAGS:   transparent
+TAGS:   transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 KFEAT:  X = +
@@ -376,7 +376,7 @@ ccc+ccc
 ENDMAP
 
 NAME: nicolae_trove_entry_columns
-TAGS: transparent
+TAGS: transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -391,7 +391,7 @@ ENDMAP
 
 
 NAME: nicolae_trove_entry_crossroad
-TAGS: transparent
+TAGS: transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 COLOUR: @ = blue
@@ -405,7 +405,7 @@ cc@cc
 ENDMAP
 
 NAME: nicolae_trove_entry_crystal
-TAGS: transparent
+TAGS: transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 FTILE: b = floor_marble
@@ -420,7 +420,7 @@ ccccccccccc
 ENDMAP
 
 NAME: nicolae_trove_entry_diagonal
-TAGS: transparent
+TAGS: transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -439,7 +439,7 @@ cccO.cc
 ENDMAP
 
 NAME: nicolae_trove_entry_free_sample
-TAGS: transparent
+TAGS: transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 COLOUR: % = blue
@@ -451,7 +451,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_trove_entry_isolated
-TAGS: no_pool_fixup transparent
+TAGS: no_pool_fixup transparent no_descent
 CHANCE: 5%
 KPROP: .O = no_tele_into
 KMASK: .O = opaque
@@ -468,7 +468,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_trove_entry_path_of_doom
-TAGS: transparent
+TAGS: transparent no_descent
 CHANCE: 5%
 KMONS: O = patrolling guardian mummy
 KMONS: m = patrolling guardian mummy / nothing w:20
@@ -488,7 +488,7 @@ cc.....cc
 ENDMAP
 
 NAME: trove_entry_hex_spiral
-TAGS: transparent
+TAGS: transparent no_descent
 CHANCE: 5%
 : trove.portal(_G)
 MAP

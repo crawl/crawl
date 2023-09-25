@@ -4809,7 +4809,7 @@ bool ru_power_leap()
     if (cell_is_solid(beam.target) || monster_at(beam.target))
     {
         // XXX: try to jump somewhere nearby?
-        mpr("Something unexpectedly blocked you, preventing you from leaping!");
+        mpr("Something unexpectedly blocks you, preventing you from leaping!");
         return true;
     }
 
@@ -5112,7 +5112,7 @@ bool uskayaw_line_pass()
     }
 
     if (monster_at(beam.target))
-        mpr("Something unexpectedly blocked you, preventing you from passing!");
+        mpr("Something unexpectedly blocks you, preventing you from passing!");
     else
     {
         line_pass.fire();
@@ -5373,7 +5373,7 @@ static void _transfer_drain_nearby(coord_def destination)
     for (adjacent_iterator it(destination); it; ++it)
     {
         monster* mon = monster_at(*it);
-        if (!mon || god_protects(mon))
+        if (!mon || god_protects(mon) || mons_is_firewood(*mon))
             continue;
 
         const int dur = random_range(60, 150);

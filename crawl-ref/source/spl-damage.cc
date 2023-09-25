@@ -1133,6 +1133,7 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_SALTLING,          { "salt crystal", WHITE } },
     { MONS_EARTH_ELEMENTAL,   { "rock", BROWN } },
     { MONS_ROCKSLIME,         { "rock", BROWN } },
+    { MONS_BOULDER,           { "rock", BROWN } },
     { MONS_USHABTI,           { "rock", BROWN } },
     { MONS_STATUE,            { "rock", BROWN } },
     { MONS_GARGOYLE,          { "rock", BROWN } },
@@ -4236,7 +4237,8 @@ void actor_apply_toxic_bog(actor * act)
         {
             map_terrain_change_marker* tmarker =
                     dynamic_cast<map_terrain_change_marker*>(marker);
-            if (tmarker->change_type == TERRAIN_CHANGE_BOG)
+            const auto ct = tmarker->change_type;
+            if (ct == TERRAIN_CHANGE_BOG || ct == TERRAIN_CHANGE_FLOOD)
                 oppressor = actor_by_mid(tmarker->mon_num);
         }
     }
@@ -4283,7 +4285,7 @@ void actor_apply_toxic_bog(actor * act)
              oppr_name.c_str());
 
         act->hurt(oppressor, final_damage, BEAM_MISSILE,
-                  KILLED_BY_POISON, "", "toxic bog");
+                  KILLED_BY_BEAM, "", "toxic bog");
     }
 }
 
@@ -4604,4 +4606,29 @@ bool siphon_essence_affects(const monster &m)
         && !mons_is_conjured(m.type) // redundant?
         && !mons_is_tentacle_or_tentacle_segment(m.type); // dubious
         // intentionally allowing firewood, i guess..?
+}
+
+dice_def boulder_damage(int pow, bool random)
+{
+    if (random)
+        return dice_def(2, 3 + div_rand_round(pow, 12));
+    return dice_def(2, 3 + pow / 12);
+}
+
+void do_boulder_impact(monster& boulder, actor& victim)
+{
+    if (you.can_see(boulder))
+        mprf("The boulder barrels into %s!", victim.name(DESC_THE).c_str());
+
+    const int pow = boulder.props[BOULDER_POWER_KEY].get_int();
+    int dam = boulder_damage(pow, true).roll();
+    dam = victim.apply_ac(dam);
+
+    if (victim.is_player())
+        ouch(dam, KILLED_BY_ROLLING, boulder.mid);
+    else
+        _player_hurt_monster(*victim.as_monster(), dam, BEAM_MISSILE);
+
+    // Dealing damage causes the boulder to also take damage.
+    boulder.hurt(&boulder, roll_dice(2, 5), BEAM_NONE, KILLED_BY_COLLISION);
 }

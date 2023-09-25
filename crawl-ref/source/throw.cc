@@ -547,10 +547,8 @@ static void _handle_cannon_fx(actor &act, const item_def &weapon, coord_def targ
     if (!weapon.is_type(OBJ_WEAPONS, WPN_HAND_CANNON))
         return;
 
-    const coord_def oldpos = act.pos();
-
     // blast smoke
-    for (adjacent_iterator ai(oldpos, false); ai; ++ai)
+    for (adjacent_iterator ai(act.pos(), false); ai; ++ai)
     {
         if (!in_bounds(*ai)
             || cell_is_solid(*ai)
@@ -559,7 +557,7 @@ static void _handle_cannon_fx(actor &act, const item_def &weapon, coord_def targ
         {
             continue;
         }
-        place_cloud(CLOUD_BLACK_SMOKE, *ai, random_range(3, 6), &act);
+        place_cloud(CLOUD_MAGIC_TRAIL, *ai, random_range(3, 6), &act);
         break;
     }
 
@@ -567,41 +565,8 @@ static void _handle_cannon_fx(actor &act, const item_def &weapon, coord_def targ
         return;
 
     // knock back
-    if (coinflip()
-        || act.is_stationary()
-        || act.resists_dislodge("being knocked back"))
-    {
-        return;
-    }
-
-    ray_def ray;
-    fallback_ray(oldpos, targ, ray);
-    if (!ray.advance()) // !?
-        return;
-    const coord_def back_dir = oldpos - ray.pos();
-    const coord_def newpos = oldpos + back_dir;
-    if (!adjacent(newpos, oldpos)) // !?
-        return;
-
-    // copied from actor::knockback, ew
-    if (!in_bounds(newpos)
-        || cell_is_solid(newpos)
-        || actor_at(newpos)
-        || !act.can_pass_through(newpos)
-        || !act.is_habitable(newpos))
-    {
-        return;
-    }
-
-    if (act.is_player())
-        mpr("Mule's kick sends you backwards.");
-    else
-        simple_monster_message(*act.as_monster(), " is knocked back by Mule's kick.");
-
-    act.move_to_pos(newpos);
-    act.apply_location_effects(oldpos, act.is_player() ? KILL_YOU_MISSILE
-                                                       : KILL_MON_MISSILE,
-                               actor_to_death_source(&act));
+    if (coinflip())
+        act.stumble_away_from(targ, "Mule's kick");
 }
 
 static void _throw_noise(actor* act, const item_def &ammo)
@@ -816,6 +781,7 @@ void throw_it(quiver::action &a)
     if (crawl_state.game_is_hints())
         Hints.hints_throw_counter++;
 
+    const coord_def target = pbolt.target;
     pbolt.fire();
 
     if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
@@ -844,7 +810,7 @@ void throw_it(quiver::action &a)
     _throw_noise(&you, thrown);
 
     if (launcher)
-        _handle_cannon_fx(you, *launcher, pbolt.target);
+        _handle_cannon_fx(you, *launcher, target);
 
     // ...any monster nearby can see that something has been thrown, even
     // if it didn't make any noise.
@@ -931,6 +897,7 @@ bool mons_throw(monster* mons, bolt &beam, bool teleport)
     // came into view and the screen hasn't been updated yet.
     viewwindow();
     update_screen();
+    const coord_def target = beam.target;
     if (teleport)
     {
         beam.use_target_as_pos = true;
@@ -948,7 +915,7 @@ bool mons_throw(monster* mons, bolt &beam, bool teleport)
 
     // dubious...
     if (mons->alive() && mons->weapon())
-        _handle_cannon_fx(*mons, *(mons->weapon()), beam.target);
+        _handle_cannon_fx(*mons, *(mons->weapon()), target);
 
     return true;
 }

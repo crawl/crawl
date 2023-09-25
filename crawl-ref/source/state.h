@@ -101,6 +101,8 @@ struct game_state
 
     bool show_more_prompt;  // Set to false to disable --more-- prompts.
 
+    bool skip_autofight_check; // XXX EVIL HACK
+
     string sprint_map;      // Sprint map set on command line, if any.
 
     string map;             // Map selected in the newgame menu

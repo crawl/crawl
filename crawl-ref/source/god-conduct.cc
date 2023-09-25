@@ -805,17 +805,20 @@ static like_map divine_likes[] =
     // GOD_CHEIBRIADOS,
     {
         { DID_KILL_FAST, {
-            "you kill fast things, relative to your speed", false,
+            "you kill non-sluggish things", false,
             -6, 18, 2, nullptr,
             [] (int &piety, int &/*denom*/, const monster* victim)
             {
-                const int speed_delta =
-                    cheibriados_monster_player_speed_delta(*victim);
-                dprf("Chei DID_KILL_FAST: %s speed delta: %d",
+                const int mons_speed = mons_base_speed(*victim);
+                dprf("Chei DID_KILL_FAST: %s base speed: %d",
                      victim->name(DESC_PLAIN, true).c_str(),
-                     speed_delta);
+                     mons_speed);
 
-                if (speed_delta > 0 && x_chance_in_y(speed_delta, 12))
+                // Scale piety up a bit in general.
+                piety = div_rand_round(4 * piety, 3);
+
+                // Double piety for speedy monsters sometimes
+                if (mons_speed > 10 && x_chance_in_y(mons_speed - 10, 10))
                 {
                     simple_god_message(" thoroughly appreciates the change of pace.");
                     piety *= 2;

@@ -578,3 +578,12 @@ public:
     bool affects_monster(const monster_info& mon) override;
     bool valid_aim(coord_def a) override;
 };
+
+class targeter_boulder : public targeter_beam
+{
+public:
+    targeter_boulder(const actor* caster);
+    bool valid_aim(coord_def a) override;
+    bool set_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+};

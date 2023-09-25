@@ -420,19 +420,19 @@ static void _describe_cards(CrawlVector& cards)
 #ifdef USE_TILE
         auto icon = make_shared<Image>();
         icon->set_tile(tile_def(TILEG_NEMELEX_CARD));
-        title_hbox->add_child(move(icon));
+        title_hbox->add_child(std::move(icon));
 #endif
         auto title = make_shared<Text>(formatted_string(name, WHITE));
         title->set_margin_for_sdl(0, 0, 0, 10);
-        title_hbox->add_child(move(title));
+        title_hbox->add_child(std::move(title));
         title_hbox->set_cross_alignment(Widget::CENTER);
         title_hbox->set_margin_for_crt(first ? 0 : 1, 0);
         title_hbox->set_margin_for_sdl(first ? 0 : 20, 0);
-        vbox->add_child(move(title_hbox));
+        vbox->add_child(std::move(title_hbox));
 
         auto text = make_shared<Text>(desc);
         text->set_wrap_text(true);
-        vbox->add_child(move(text));
+        vbox->add_child(std::move(text));
 
 #ifdef USE_TILE_WEB
         tiles.json_open_object();
@@ -447,7 +447,7 @@ static void _describe_cards(CrawlVector& cards)
     vbox->max_size().width = tiles.get_crt_font()->char_width()*80;
 #endif
 
-    scroller->set_child(move(vbox));
+    scroller->set_child(std::move(vbox));
     auto popup = make_shared<ui::Popup>(scroller);
 
     bool done = false;
@@ -462,7 +462,7 @@ static void _describe_cards(CrawlVector& cards)
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
 
-    ui::run_layout(move(popup), done);
+    ui::run_layout(std::move(popup), done);
 }
 
 string deck_status(deck_type deck)

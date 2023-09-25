@@ -3,7 +3,7 @@ monster: MONS_ARMATAUR
 name: "Armataur"
 short_name: "At"
 difficulty: Simple
-difficulty_priority: 60
+difficulty_priority: 30
 species_flags:
   - SPF_SMALL_TORSO
   - SPF_BARDING

@@ -519,7 +519,6 @@ COLOUR:   ETC_ELECTRICITY
 TILE:     urand_guard
 TILE_EQ:  glaive_of_the_guard
 BRAND:    SPWPN_ELECTROCUTION
-AC:       5
 INSCRIP:  spectral,
 DBRAND:   Spectral:  When it strikes, its spirit leaps out and fights alongside
  the wielder.
@@ -1436,7 +1435,7 @@ TYPE:    pair of quick blades
 COLOUR:  ETC_ENCHANT
 TILE:    urand_gyre
 TILE_EQ: gyre
-PLUS:    10
+PLUS:    8
 BRAND:   SPWPN_PROTECTION
 FB_BRAND: SPWPN_FREEZING
 

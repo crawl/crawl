@@ -32,6 +32,9 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
+#include "los.h"
+#include "losglobal.h"
+#include "losparam.h"
 #include "mapmark.h"
 #include "message.h"
 #include "mgen-data.h"
@@ -755,19 +758,6 @@ static void _animate_weapon(int pow, actor* target)
     montarget->unequip(*(montarget->mslot_item(wp_slot)), false, true);
     montarget->inv[wp_slot] = NON_ITEM;
 
-    // Also steal ammo for launchers.
-    if (is_range_weapon(*wpn))
-    {
-        const int ammo = montarget->inv[MSLOT_MISSILE];
-        if (ammo != NON_ITEM)
-        {
-            ASSERT(mons->inv[MSLOT_MISSILE] == NON_ITEM);
-            mons->inv[MSLOT_MISSILE] = ammo;
-            montarget->inv[MSLOT_MISSILE] = NON_ITEM;
-            env.item[ammo].set_holding_monster(*mons);
-        }
-    }
-
     // Find out what our god thinks before killing the item.
     conduct_type why = god_hates_item_handling(*wpn);
 
@@ -1469,15 +1459,16 @@ static spell_type servitor_spells[] =
     // primary spells
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_IOOD,
-    SPELL_UNMAKING,
-    SPELL_BOLT_OF_COLD, // left in for frederick
+    SPELL_BOMBARD,
+    SPELL_IRON_SHOT,    // left in for frederick
+    SPELL_BOLT_OF_COLD, // left in for frederick (dubious)
     SPELL_PLASMA_BEAM, // maybe should be higher?
     SPELL_FIREBALL,
     SPELL_ARCJOLT,
     SPELL_STONE_ARROW,
     SPELL_LRD,
     SPELL_AIRSTRIKE,
-    SPELL_FORCE_LANCE, // left in for frederick
+    SPELL_FORCE_LANCE, // left in for frederick (dubious)
     // less desirable
     SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_FREEZING_CLOUD,
@@ -2593,7 +2584,7 @@ void kiku_unearth_wretches()
 }
 
 static bool _create_foxfire(const actor &agent, coord_def pos,
-                            god_type god, int pow)
+                            god_type god, int pow, bool marshlight = false)
 {
     const auto att = agent.is_player() ? BEH_FRIENDLY
                                        : SAME_ATTITUDE(agent.as_monster());
@@ -2612,6 +2603,8 @@ static bool _create_foxfire(const actor &agent, coord_def pos,
 
     foxfire->add_ench(ENCH_SHORT_LIVED);
     foxfire->steps_remaining = you.current_vision + 2;
+    if (marshlight)
+        foxfire->props[MONSTER_TILE_KEY] = TILEP_MONS_MARSHLIGHT;
 
     // Avoid foxfire without targets always moving towards (0,0)
     if (!foxfire->get_foe()
@@ -2622,7 +2615,7 @@ static bool _create_foxfire(const actor &agent, coord_def pos,
     return true;
 }
 
-spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
+spret cast_foxfire(actor &agent, int pow, god_type god, bool fail, bool marshlight)
 {
     bool see_space = false;
     for (adjacent_iterator ai(agent.pos()); ai; ++ai)
@@ -2647,7 +2640,7 @@ spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
 
     for (fair_adjacent_iterator ai(agent.pos()); ai; ++ai)
     {
-        if (!_create_foxfire(agent, *ai, god, pow))
+        if (!_create_foxfire(agent, *ai, god, pow, marshlight))
             continue;
         ++created;
         if (created == 2)
@@ -2656,9 +2649,10 @@ spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
 
     if (created && you.see_cell(agent.pos()))
     {
-        mprf("%s conjure%s some foxfire!",
+        mprf("%s conjure%s some %s!",
              agent.name(DESC_THE).c_str(),
-             agent.is_monster() ? "s" : "");
+             agent.is_monster() ? "s" : "",
+             marshlight ? "marshlight" : "foxfire");
     }
     else if (agent.is_player())
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -2740,5 +2734,48 @@ spret summon_spiders(actor &agent, int pow, god_type god, bool fail)
     else if (agent.is_player())
         canned_msg(MSG_NOTHING_HAPPENS);
 
+    return spret::success;
+}
+
+spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool fail)
+{
+    fail_check();
+
+    ray_def ray;
+    if (!find_ray(agent.pos(), targ, ray, opc_solid) || !ray.advance())
+    {
+        mpr("There's something in the way.");
+        return spret::abort;
+    }
+    const coord_def pos = ray.pos();
+
+    // For unseen invisble enemies
+    if (actor_at(pos))
+    {
+        mpr("Your attempt to unleash a boulder fails!");
+        return spret::success;
+    }
+
+    mgen_data mg = mgen_data(MONS_BOULDER,
+                             agent.is_player()
+                                ? BEH_FRIENDLY
+                                : SAME_ATTITUDE(agent.as_monster()),
+                             pos, MHITNOT, MG_FORCE_PLACE);
+    mg.set_summoned(&agent, 0, SPELL_BOULDER);
+    monster *boulder = create_monster(mg);
+
+    // If some other reason prevents this from working (I'm not sure what?)
+    if (!boulder)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
+    }
+
+    boulder->props[BOULDER_POWER_KEY] = pow;
+    // XX: This will produce weird data if the caster isn't adjacent to the target spot.
+    //     Currently that can't happen, but in future it might.
+    boulder->props[BOULDER_DIRECTION_KEY] = pos - agent.pos();
+
+    mpr("You send a boulder barrelling forward!");
     return spret::success;
 }

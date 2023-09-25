@@ -24,18 +24,18 @@ DEPTH:  D:4-, Depths, Elf, Snake
 local books = {
 "Amateur_Aromatherapy numspells:4 spells:mephitic_cloud&eringya's_noxious_bog&"
   .. "cigotuvi's_dreadful_rot&poisonous_vapours",
-"Aperture_Sorcery numspells:4 spells:portal_projectile&passage_of_golubria&"
+"Aperture_Sorcery numspells:4 spells:dimensional_bullseye&passage_of_golubria&"
   .. "malign_gateway&death's_door",
 "Apprentice_Sorcery owner:Jessica numspells:4 spells:necrotise&slow&blink&"
   .. "swiftness",
 "Arcane_Animation numspells:2 spells:animate_armour&animate_dead",
 "Basic_Undead_Handling numspells:2 spells:animate_dead&dispel_undead",
 "Beguiling owner:Ashenzari numspells:5 spells:momentum_strike&dazzling_flash&"
-  .. "portal_projectile&fulminant_prism&iskenderun's_mystic_blast",
+  .. "dimensional_bullseye&fulminant_prism&iskenderun's_mystic_blast",
 "Crowd_Control numspells:3 spells:gell's_gravitas&arcjolt&ignition",
 "Curse_Words numspells:5 spells:slow&anguish&silence&enfeeble&discord",
 "Earth_from_Core_to_Peak numspells:8 spells:sandblast&passwall&stone_arrow&"
-  .. "petrify&lee's_rapid_deconstruction&leda's_unmaking&"
+  .. "petrify&brom's_barrelling_boulder&lee's_rapid_deconstruction&"
   .. "lehudib's_crystal_spear&shatter",
 "Electric_Invention owner:Nikola numspells:4 spells:shock&blink&arcjolt&"
   .. "chain_lightning",
@@ -48,8 +48,8 @@ local books = {
 "Endless_Yammering numspells:1 spells:discord",
 "Eternal_Blood numspells:2 spells:sublimation_of_blood&vampiric_draining",
 "Feline_Knowledge owner:Natasha numspells:3 spells:magic_dart&slow&call_imp",
-"Gerundive_Groundings numspells:5 spells:lesser_beckoning&vampiric_draining&"
-  .. "yara's_violent_unravelling&leda's_unmaking&maxwell's_capacitive_coupling",
+"Gerundive_Groundings numspells:4 spells:lesser_beckoning&vampiric_draining&"
+  .. "yara's_violent_unravelling&maxwell's_capacitive_coupling",
 "Getting_Closer_Than_Before numspells:3 spells:agony&confusing_touch&"
   .. "dispel_undead",
 "Hitting_the_Bricks numspells:4 spells:blink&passwall&swiftness&"
@@ -57,6 +57,8 @@ local books = {
 "Honourable_Companions owner:Okawaru numspells:5 spells:foxfire&"
   .. "fulminant_prism&iskenderun's_battlesphere&conjure_ball_lightning&"
   .. "orb_of_destruction",
+"Cookery numspells:4 spells:freeze&searing_ray&"
+  .. "scorch&ozocubu's_refrigeration",
 "Legendary_Spells,_Part_II numspells:6 spells:gell's_gravitas&"
   .. "leda's_liquefaction&lee's_rapid_deconstruction&iskenderun's_battlesphere&"
   .. "eringya's_noxious_bog&borgnjor's_revivification",
@@ -65,8 +67,8 @@ local books = {
   .. "yara's_violent_unravelling&ozocubu's_refrigeration&"
   .. "lehudib's_crystal_spear",
 "Legendary_Spells,_Part_XIV numspells:7 spells:tukima's_dance&ozocubu's_armour&"
-  .. "passage_of_golubria&borgnjor's_vile_clutch&alistair's_intoxication&"
-  .. "leda's_unmaking&maxwell's_capacitive_coupling",
+  .. "passage_of_golubria&brom's_barrelling_boulder&borgnjor's_vile_clutch&"
+  .. "alistair's_intoxication&maxwell's_capacitive_coupling",
 "Magical_Constructs numspells:5 spells:summon_guardian_golem&tukima's_dance&"
   .."animate_armour&summon_lightning_spire&spellforged_servitor",
 "Magnificence owner:Eustachio numspells:3 spells:summon_small_mammal&blink&"
@@ -85,9 +87,9 @@ local books = {
 "Modern_Magic,_Vol._30 numspells:7 spells:kiss_of_death&"
   .. "cigotuvi's_dreadful_rot&momentum_strike&vhi's_electric_charge&"
   .. "volatile_blastmotes&arcjolt&plasma_beam",
-"Modern_Magic,_Vol._31 numspells:1 spells:leda's_unmaking",
+"Modern_Magic,_Vol._31 numspells:1 spells:brom's_barrelling_boulder&bombard",
 "Multidimensional_Combat numspells:6 spells:momentum_strike&"
-  .. "portal_projectile&vhi's_electric_charge&volatile_blastmotes&"
+  .. "dimensional_bullseye&vhi's_electric_charge&volatile_blastmotes&"
   .. "iskenderun's_mystic_blast&summon_forest",
 "Mystic_Impediments numspells:6 spells:slow&ensorcelled_hibernation&"
   .. "leda's_liquefaction&petrify&borgnjor's_vile_clutch&"
@@ -115,12 +117,12 @@ local books = {
   .. "chain_lightning&ozocubu's_armour&lehudib's_crystal_spear&animate_dead&"
   .. "enfeeble",
 "Servitor_Tips_and_Tricks numspells:6 spells:plasma_beam&fireball&arcjolt&"
-  .. "leda's_unmaking&orb_of_destruction&lehudib's_crystal_spear",
+  .. "bombard&orb_of_destruction&lehudib's_crystal_spear",
 "Standing_By numspells:8 spells:freeze&kiss_of_death&static_discharge&"
   .. "vampiric_draining&dispel_undead&sticky_flame&agony&irradiate",
-"Terraforming numspells:7 spells:frozen_ramparts&leda's_liquefaction&"
+"Terraforming numspells:6 spells:frozen_ramparts&leda's_liquefaction&"
   .. "lee's_rapid_deconstruction&summon_forest&eringya's_noxious_bog&"
-  .. "leda's_unmaking&shatter",
+  .. "shatter",
 "Thorough_Poisoning numspells:8 spells:sting&cigotuvi's_dreadful_rot&"
   .. "poisonous_vapours&mephitic_cloud&ignite_poison&olgreb's_toxic_radiance&"
   .. "alistair's_intoxication&eringya's_noxious_bog",

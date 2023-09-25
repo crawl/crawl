@@ -207,7 +207,7 @@ typename M::mapped_type lookup(M &map, const typename M::key_type &key,
 template<typename T, typename... Args>
 unique_ptr<T> make_unique(Args&&... args)
 {
-    return unique_ptr<T>(new T(forward<Args>(args)...));
+    return unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 #endif
 /** Remove from a container all elements matching a predicate.

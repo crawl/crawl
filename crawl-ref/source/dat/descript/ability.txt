@@ -108,9 +108,9 @@ a shaft trap. It takes some time to dig the shaft.
 %%%%
 Evoke Blink ability
 
-Randomly translocates the user a short distance. Translocating in this way
-destabilises the user temporarily, preventing consecutive blinks for a
-short period of time depending on Evocations skill.
+Randomly translocates the user a short distance. After translocating in this
+way, the ability cannot be activated again for a short period of time depending
+on Evocations skill.
 %%%%
 Evoke Berserk Rage ability
 

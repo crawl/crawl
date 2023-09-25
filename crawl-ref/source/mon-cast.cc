@@ -1350,7 +1350,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_STICKY_FLAME_RANGE:
     case SPELL_STING:
     case SPELL_IRON_SHOT:
-    case SPELL_UNMAKING:
+    case SPELL_BOMBARD:
     case SPELL_STONE_ARROW:
     case SPELL_FORCE_LANCE:
     case SPELL_CORROSIVE_BOLT:
@@ -4959,7 +4959,7 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast)
 static void _cast_marshlight(monster &mons, mon_spell_slot, bolt&)
 {
     const int pow = mons_spellpower(mons, SPELL_MARSHLIGHT);
-    cast_foxfire(mons, pow, GOD_NO_GOD, false);
+    cast_foxfire(mons, pow, GOD_NO_GOD, false, true);
 }
 
 static void _cast_flay(monster &caster, mon_spell_slot, bolt&)
@@ -6487,6 +6487,13 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _summon(*mons, MONS_CREEPING_INFERNO, 2, slot);
         return;
 
+    case SPELL_BOMBARD:
+    {
+        const coord_def targ = pbolt.target;
+        _fire_simple_beam(*mons, slot, pbolt);
+        if (mons->alive() && coinflip())
+            mons->stumble_away_from(targ, "the blast");
+    }
     }
 
     if (spell_is_direct_explosion(spell_cast))
