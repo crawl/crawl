@@ -1407,9 +1407,7 @@ void StashTracker::search_stashes(string search_term)
     string csearch_literal = search_term.empty() ? (*buf? buf : lastsearch) : search_term;
     string csearch = csearch_literal;
 
-    // allowing offlevel stash searching is not useful in descent mode
-    bool curr_lev = (csearch[0] == '@' || csearch == "."
-                                       || crawl_state.game_is_descent());
+    bool curr_lev = (csearch[0] == '@' || csearch == ".");
     if (curr_lev)
     {
         csearch.erase(0, 1);
@@ -1453,7 +1451,9 @@ void StashTracker::search_stashes(string search_term)
     vector<stash_search_result> results;
     if (!curr_lev)
         results = _inventory_search(*search);
-    get_matching_stashes(*search, results, curr_lev);
+    // allowing offlevel stash searching is not useful in descent mode
+    get_matching_stashes(*search, results, curr_lev
+                                           || crawl_state.game_is_descent());
 
     if (results.empty())
     {
