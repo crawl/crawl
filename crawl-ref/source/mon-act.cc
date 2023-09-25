@@ -1190,16 +1190,22 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         return false;
 
     const item_def *launcher = mons->launcher();
+    item_def *throwable = mons->missiles();
+    const bool can_throw = (throwable && is_throwable(mons, *throwable));
     item_def fake_proj;
     item_def *missile = &fake_proj;
-    if (launcher)
-        populate_fake_projectile(*launcher, fake_proj);
-    else
+    bool using_launcher = false;
+    // If a monster somehow has both a launcher and a throwable, use the
+    // launcher 2/3 of the time.
+    if (launcher && (!can_throw || !one_chance_in(3)))
     {
-        missile = mons->missiles();
-        if (!missile || !is_throwable(mons, *missile))
-            return false;
+        populate_fake_projectile(*launcher, fake_proj);
+        using_launcher = true;
     }
+    else if (can_throw)
+        missile = throwable;
+    else
+        return false;
 
     if (player_or_mon_in_sanct(*mons))
         return false;
@@ -1306,7 +1312,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         // Monsters shouldn't shoot if fleeing, so let them "turn to attack".
         make_mons_stop_fleeing(mons);
 
-        if (launcher && launcher != mons->weapon())
+        if (launcher && using_launcher && launcher != mons->weapon())
             mons->swap_weapons();
 
         beem.name.clear();
