@@ -1408,7 +1408,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_QUICKSILVER_BOLT, "Quicksilver Bolt",
     spschool::conjuration,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::not_self,
     5,
     200,
     LOS_RADIUS, LOS_RADIUS,
