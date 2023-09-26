@@ -293,9 +293,9 @@ page, clearly reserving this book for only the tackiest of wizards.
 %%%%
 book of the spheres
 
-A book containing a comprehensive, well-rounded collection of sphere-related
-spells. Its final pages begin to describe a spell titled 'Summon Orb of Zot',
-but sadly, the remainder of the book has been completely vaporised.
+A book containing a well-rounded collection of sphere-related spells. Its
+final pages begin to describe a spell titled 'Summon Orb of Zot', but sadly,
+the remainder of the book has been completely vaporised.
 %%%%
 book of storms
 
