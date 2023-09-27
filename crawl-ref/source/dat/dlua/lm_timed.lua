@@ -118,6 +118,7 @@ function TimedMarker:event(marker, ev)
       self.dur = 1
     else
       self.dur = self.dur - ev:ticks()
+    end
     self.msg:event(self, marker, ev)
     if self.dur <= 0 then
       self:timeout(marker, true)
