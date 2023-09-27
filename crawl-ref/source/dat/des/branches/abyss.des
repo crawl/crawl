@@ -1057,10 +1057,8 @@ ENDMAP
 ###############################################################################
 # Abyss rune vaults
 #
-# Follow the lead of the other vaults here, and recolour / retile some border
-# floor to instantly distinguish the vault as containing the abyssal rune.
-# Solitary stone arches are also to be used here and nowhere else in Abyss
-# vaults.
+# Follow the lead of the other vaults here, and use runelights under different
+# floor colours to distinguish these vaults from other abyss vaults.
 ###############################################################################
 # Non-combined rune vaults (see the combined rune vault header).
 
@@ -1303,6 +1301,121 @@ MAP
 ............c0.
            .cc.
            ....
+ENDMAP
+
+
+NAME:   doesnt_abyss_rune_brain_food
+TAGS:   abyss_rune unrand patrolling no_pool_fixup
+MONS:   neqoxec, glowing orange brain, orange crystal statue, very ugly thing
+MONS:   starcursed mass
+KITEM:  O = abyssal rune of Zot
+KFEAT:  " = runelight
+COLOUR: n = lightmagenta
+NSUBST: - = 4:d / 2=d. / ., . = 3:1 / 1:2 / 1:4 / 1:5 / 2=112 / 2=45..
+SUBST:  l : lw
+{{
+dgn.delayed_decay(_G, 'd', 'ghoul corpse / minotaur corpse / ' ..
+                           'troll corpse / ogre corpse')
+}}
+MAP
+  cccnccc
+ cc-nOn-cc
+ c.--n--.c
+cc"-n-n-.cc
+c---...---c
+nll-...-lln
+n3l-.."-l3n
+nll-"..-lln
+n---...---n
+nn"......nn
+ nn...."nn
+  nn"."nn
+ENDMAP
+
+NAME:    gammafunk_abyss_rune_reverse_zot
+TAGS:    abyss_rune unrand
+MONS:    draconian, nonbase draconian
+MONS:    wretched star / starcursed mass / apocalypse crab / lurking horror \
+         / very ugly thing / quicksilver dragon / shadow dragon
+MONS:    balrug / hellion / lorocyproca / tormentor / cacodemon / reaper \
+         / blizzard demon / executioner / angel / daeva
+KMONS:   R = hellephant / ancient lich / dread lich / hell sentinel / profane servitor
+KITEM:   O = abyssal rune of Zot
+KFEAT:   " = runelight
+MARKER:  P = lua:transp_loc("reverse_zot_entry")
+MARKER:  Q = lua:transp_dest_loc("reverse_zot_entry")
+MARKER:  R = lua:transp_loc("reverse_zot_exit")
+MARKER:  S = lua:transp_dest_loc("reverse_zot_exit")
+SHUFFLE: AB, CD
+# Make a classed draconian and band in each lung.
+NSUBST:  A = 2 / 2=112 / 2=1' / ', C = 2 / 2=112 / 2=1" / "
+NSUBST:  B = 3 / 0 / ', D = 3 / 0 / "
+NSUBST:  ' = 003 / 003... / ., " = 003 / 003... / .
+NSUBST:  - = 2=4 / 2=34.. / .
+COLOUR:  c = lightmagenta
+COLOUR:  n@O012345. = magenta
+FTILE:   nc+@OPQRS012345. = floor_rough_magenta
+MAP
+         "@"
+cccccccccP.Sccccccccc
+ccAAAAcccnnncccCCCCcc
+cAAAAAAccnnnccCCCCCCc
+cAAAAAAc.....cCCCCCCc
+ccAAAAA+..Q..+CCCCCcc
+cAAAAAAc.....cCCCCCCc
+ccAAAAccccnccccCCCCCc
+cccBccccc+O+cccccDccc
+ccBBBcc--ccc--ccDDDcc
+cBBBBBcc-----ccDDDDDc
+cBBBBBcc-----ccDDDDDc
+cBBBBBc-------cDDDDDc
+cBBBBB+--c+c--+DDDDDc
+ccBBBccc-cRc-cccDDDcc
+ccccccccccccccccccccc
+ENDMAP
+
+NAME:   spicy_pingpong_abyss_rune
+TAGS:   abyss_rune unrand
+# four starflowers, 2 inside, 2 outside (1)
+NSUBST: F = 2:1 / 3
+MONS:   starflower
+# four wretched stars, with a 1/3 chance of being something else (2)
+SUBST:  2=223
+MONS:   wretched star
+# the "something else" squad contains the following:
+# monsters similarish to starflowers (3)
+SUBST:  3=3334
+MONS:   tentacled starspawn / starcursed mass / demonic plant / oklob plant w:20
+# generic abyss badthings who don't mind if their target is moved around (4)
+MONS:   lich / wizard / thrashing horror
+KITEM:  O = abyssal rune of Zot
+COLOUR: cO = magenta
+SUBST:  c = ccccb
+COLOUR: n- = lightmagenta
+FTILE:  AO = floor_crystal_squares
+KFEAT:  - = runelight
+KFEAT:  A = stone_arch
+KFEAT:  n = iron_grate
+KFEAT:  P = demonic_tree w:30 / petrified_tree / tree
+KFEAT:  t : demonic_tree / altar_lugonu / granite_statue
+MAP
+3
+ A F P PP    3
+  @--.-..-....-
+ F-++cccccccbb.3
+  -+-n3nPn3ntb.
+ P.cnA......nc.
+  -c3.-.P.n.3c.
+ P.cn..n2nP.nc-
+ P.cP.12O21.Pc.P
+  -cn.Pn2n..nc.P
+  .c3.n.P.-.3c-
+  .cn......Anc.P
+  .btn3nPn3n-+-
+ 3.bbccccccc++-F
+  -....-..-.--@
+   3    PP P F A
+                3
 ENDMAP
 
 ########################################
@@ -1580,120 +1693,6 @@ MAP
  .c2WWwwKwwWW3c.
  .cccWWwwwWWccc.
  ...""""A""""...
-ENDMAP
-
-NAME:   doesnt_abyss_rune_brain_food
-TAGS:   abyss_rune unrand patrolling no_pool_fixup
-MONS:   neqoxec, glowing orange brain, orange crystal statue, very ugly thing
-MONS:   starcursed mass
-KITEM:  O = abyssal rune of Zot
-KFEAT:  " = runelight
-COLOUR: n = lightmagenta
-NSUBST: - = 4:d / 2=d. / ., . = 3:1 / 1:2 / 1:4 / 1:5 / 2=112 / 2=45..
-SUBST:  l : lw
-{{
-dgn.delayed_decay(_G, 'd', 'ghoul corpse / minotaur corpse / ' ..
-                           'troll corpse / ogre corpse')
-}}
-MAP
-  cccnccc
- cc-nOn-cc
- c.--n--.c
-cc"-n-n-.cc
-c---...---c
-nll-...-lln
-n3l-.."-l3n
-nll-"..-lln
-n---...---n
-nn"......nn
- nn...."nn
-  nn"."nn
-ENDMAP
-
-NAME:    gammafunk_abyss_rune_reverse_zot
-TAGS:    abyss_rune unrand
-MONS:    draconian, nonbase draconian
-MONS:    wretched star / starcursed mass / apocalypse crab / lurking horror \
-         / very ugly thing / quicksilver dragon / shadow dragon
-MONS:    balrug / hellion / lorocyproca / tormentor / cacodemon / reaper \
-         / blizzard demon / executioner / angel / daeva
-KMONS:   R = hellephant / ancient lich / dread lich / hell sentinel / profane servitor
-KITEM:   O = abyssal rune of Zot
-KFEAT:   " = runelight
-MARKER:  P = lua:transp_loc("reverse_zot_entry")
-MARKER:  Q = lua:transp_dest_loc("reverse_zot_entry")
-MARKER:  R = lua:transp_loc("reverse_zot_exit")
-MARKER:  S = lua:transp_dest_loc("reverse_zot_exit")
-SHUFFLE: AB, CD
-# Make a classed draconian and band in each lung.
-NSUBST:  A = 2 / 2=112 / 2=1' / ', C = 2 / 2=112 / 2=1" / "
-NSUBST:  B = 3 / 0 / ', D = 3 / 0 / "
-NSUBST:  ' = 003 / 003... / ., " = 003 / 003... / .
-NSUBST:  - = 2=4 / 2=34.. / .
-COLOUR:  c = lightmagenta
-COLOUR:  n@O012345. = magenta
-FTILE:   nc+@OPQRS012345. = floor_rough_magenta
-MAP
-         "@"
-cccccccccP.Sccccccccc
-ccAAAAcccnnncccCCCCcc
-cAAAAAAccnnnccCCCCCCc
-cAAAAAAc.....cCCCCCCc
-ccAAAAA+..Q..+CCCCCcc
-cAAAAAAc.....cCCCCCCc
-ccAAAAccccnccccCCCCCc
-cccBccccc+O+cccccDccc
-ccBBBcc--ccc--ccDDDcc
-cBBBBBcc-----ccDDDDDc
-cBBBBBcc-----ccDDDDDc
-cBBBBBc-------cDDDDDc
-cBBBBB+--c+c--+DDDDDc
-ccBBBccc-cRc-cccDDDcc
-ccccccccccccccccccccc
-ENDMAP
-
-NAME:   spicy_pingpong_abyss_rune
-TAGS:   abyss_rune unrand
-# four starflowers, 2 inside, 2 outside (1)
-NSUBST: F = 2:1 / 3
-MONS:   starflower
-# four wretched stars, with a 1/3 chance of being something else (2)
-SUBST:  2=223
-MONS:   wretched star
-# the "something else" squad contains the following:
-# monsters similarish to starflowers (3)
-SUBST:  3=3334
-MONS:   tentacled starspawn / starcursed mass / demonic plant / oklob plant w:20
-# generic abyss badthings who don't mind if their target is moved around (4)
-MONS:   lich / wizard / thrashing horror
-KITEM:  O = abyssal rune of Zot
-COLOUR: cO = magenta
-SUBST:  c = ccccb
-COLOUR: n- = lightmagenta
-FTILE:  AO = floor_crystal_squares
-KFEAT:  - = runelight
-KFEAT:  A = stone_arch
-KFEAT:  n = iron_grate
-KFEAT:  P = demonic_tree w:30 / petrified_tree / tree
-KFEAT:  t : demonic_tree / altar_lugonu / granite_statue
-MAP
-3
- A F P PP    3
-  @--.-..-....-
- F-++cccccccbb.3
-  -+-n3nPn3ntb.
- P.cnA......nc.
-  -c3.-.P.n.3c.
- P.cn..n2nP.nc-
- P.cP.12O21.Pc.P
-  -cn.Pn2n..nc.P
-  .c3.n.P.-.3c-
-  .cn......Anc.P
-  .btn3nPn3n-+-
- 3.bbccccccc++-F
-  -....-..-.--@
-   3    PP P F A
-                3
 ENDMAP
 
 ###############################################################################

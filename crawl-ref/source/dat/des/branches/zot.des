@@ -2,10 +2,12 @@
 # zot.des: The ultimate goal. The Orb must be placed (Z). These maps can and
 #          should be serious challenges! Players dying on Zot:5 are okay :)
 #
-# Content: Zot entry vaults (these are on Depths:$ and contain the portal)
-#          Zot vaults, mini and not so mini
-#          Zot hall (on Zot:5)
-#          Vaults that define the floor/wall colours for Zot:1-5
+# Content:
+# <<1>> Zot entries (Depths:$)
+# <<2>> Zot decorative vaults
+# <<3>> Zot monster vaults
+# <<4>> Zot end hall (Zot:5)
+# <<5>> Zot floor-by-floor wall & floor colour changes
 #
 ##############################################################################
 
@@ -67,7 +69,7 @@ end
 ##############################################################################
 ##############################################################################
 #
-# Zot entries (D side)
+# <<1>> Zot entries (Depths side)
 #
 ##############################################################################
 ##############################################################################
@@ -586,20 +588,10 @@ ENDMAP
 ##############################################################################
 ##############################################################################
 #
-# Zot petite vaults
+# <<2>> Zot decorative vaults
 #
 ##############################################################################
 ##############################################################################
-
-# There's few vaults on Zot:5, tone down their chances.
-NAME: dummy_balancer_zot
-DEPTH: Zot:$
-TAGS: dummy
-ORIENT: float
-WEIGHT: 60
-MAP
-x
-ENDMAP
 
 NAME:   lemuel_baited_zot_trap
 TAGS:   allow_dup extra luniq
@@ -610,6 +602,444 @@ KITEM:  * = any good_item
 MAP
 *
 ENDMAP
+
+################################################################################
+# Space-filling minivaults by bh.
+
+NAME:   bh_zot_ikea_curve
+TAGS:   extra transparent
+DEPTH:  Zot
+MAP
+xxxxxxxxxxxxx
+@.....x.....@
+@.....x.....@
+xxxx..x..xxxx
+x.....x.....x
+x.....x.....x
+x..xxxxxxx..x
+x..x.....x..x
+x..x.....x..x
+x.....x.....x
+x.....x.....x
+xxxxxxxxxxxxx
+ENDMAP
+
+NAME:   bh_zot_lava_cross
+TAGS:   extra
+DEPTH:  Zot
+MAP
+     @@
+    x..x
+    x..x
+    x..x
+ xxxxllxxxx
+@...l..l...@
+@...l..l...@
+ xxxxllxxxx
+    x..x
+    x..x
+    x..x
+     @@
+ENDMAP
+
+NAME:   bh_zot_levy_curve
+TAGS:   extra
+DEPTH:  Zot
+SUBST:  W = Ww
+MAP
+          WWW.
+          W.W..
+          W.WWW
+          ....W
+         .....W
+        ....WWW
+       .......W
+      ..www...W
+     ...w.w.WWW
+    ....wwwWW..
+WWW.......W...
+W........WW..
+WWW..W..WW..
+..W..W..W..
+ .WWWWWWW.
+ENDMAP
+
+NAME:    hangedman_zot_gyre
+TAGS:    extra transparent
+DEPTH:   Zot
+WEIGHT:  8
+KITEM:   % = % no_pickup
+KFEAT:   Z = zot trap
+SHUFFLE: dD, eE, fF, gG, hH, dD / eE / fF / gG / hH
+SHUFFLE: cCbB / cCbB / bBcC, qQ / qQ / ZZ / wl / '' / ''
+SUBST:   defhH = X, DEF = ., g : X.., G : X.., ' = .
+SUBST:   B = bbCc, C : bWcc, b : bbc, c : bWcc, X : bcxx, W : wl
+NSUBST:  0 = 2 = 0:19 .:1 / *:.
+KPROP:   l = no_cloud_gen
+KMASK:   lw = no_monster_gen
+COLOUR:  qQ = darkgray
+FTILE:   qQ = floor_rough_darkgray
+MARKER:  q = lua:fog_machine {cloud_type = "freezing vapour", \
+             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = 0 }
+MARKER:  Q = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = 0 }
+:  if you.depth() == dgn.br_depth(you.branch()) then
+SUBST:  { = {([<
+:  else
+SUBST:  { = {([<})]>%
+:  end
+MAP
+           ......
+         ..........
+        ..xxxxxxx...
+        ........hx...
+      ....B......hx....
+     .............x.....
+    ..G.C.G.C.....ffxxx..
+    ..x...x.......x......
+   ...x...x...B...x...c....
+  ....F...E.......x.........
+ ...xxFxxxExxD..Q.eexxx.b.x.
+ ..xH.......0xD...x.......x..
+..xH......q...x..0x...c...x..
+..x...........x..xd.......x..
+..x.....b..dxx{xxd..b.....x..
+..x.......dx..x...........x..
+..x...c...x0..x...q......Hx..
+..x.......x...Dx0.......Hx..
+ .x.b.gxxee.Q..DxxExxxFxx...
+ .........x.......E...F....
+  ....c...x...B...x...x...
+    ......x.......x...x..
+    ..gxxff.....C.G.C.G..
+     .....x.............
+      ....xh......B....
+        ...xh........
+         ...xxxxxxx..
+          ..........
+            ......
+ENDMAP
+
+####
+# Weird orderly decorum.
+NAME:    hangedman_zot_decor_unnerving_road
+TAGS:    extra transparent no_pool_fixup
+DEPTH:   Zot
+WEIGHT:  8
+SHUFFLE: @&, (), vb / vb / vb / bv / cc, lw / lw / lw / '', JK / LM / NO
+SHUFFLE: JK / JK / JK / !!, LM / ??, NO / `` / `` / `` / ``, JKLMNO / JKLMNO / KJMLON
+SUBST:   '!?`& = ., X : xxc, JLN = F, KMO = f
+SUBST:   ( = (:1 .:14, ) = ):1 .:14
+KMASK:   wlfF = no_monster_gen
+COLOUR:  fF = darkgray
+FTILE:   fF = floor_rough_darkgray
+MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
+             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = 0 }
+MARKER:  F = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = 0 }
+KPROP:   l = no_cloud_gen
+MAP
+      XXXX...&&.
+      Xllvv......
+    XXXlv..v....@
+   XXlllv..v....@
+   Xllvv.vvJ.....
+ XXXlv..v.......
+XXlllv..v....XXXX
+Xllvv(vvL..ObbwwX
+Xlv..v.....b..bwXXX
+Xlv..v.....b..bwwwXX
+Xllvv.vv....bb.bbwwX
+XXlllv..v.....b..bwX
+ XXXlv..v.....b..bwX
+   XllvvN..Mbb)bbwwX
+   XXXX....b..bwwwXX
+    .......b..bwXXX
+   .....Kbb.bbwwX
+   @....b..bwwwXX
+   @....b..bwXXX
+   ......bbwwX
+    .&&...XXXX
+ENDMAP
+
+NAME:    hangedman_zot_decor_checkerboard
+TAGS:    extra transparent
+DEPTH:   Zot
+WEIGHT:  8
+KFEAT:   Z = zot trap
+SHUFFLE: @' / '@ / "" / "", defg / jkhi / HIJK / NOLM
+SUBST:   d : wbb, e : wwb, g : lvv, f : llv
+SUBST:   h : lvv, i : llv, j : wbb, k : wwb
+SUBST:   H : wwwwb, I : wwwwb, J : llllv, K : llllv
+SUBST:   L : lvvvv, M : lvvvv, N : wbbbb, O : wbbbb
+SHUFFLE: bv / bv / bv / vb / xx / cc
+NSUBST:  Z = 1 = (:1 Z:14 / 1 = ):1 Z:14 / Z
+SUBST:   Z = ZZUG..., '" = .
+KPROP:   l = no_cloud_gen
+KMASK:   wl = no_monster_gen
+MAP
+.......     ...'...
+.dw.lf.     .Hw.lJ.
+.we.gl.     .wI.Kl.
+@..Z...........Z.........
+.lg.ew.hl.wj.lK.Iw.Ll.wN.
+.fl.wd.li.kw.Jl.wH.lM.Ow.
+.........Z...........Z..@
+      .wk.il.     .wO.Ml.
+      .jw.lh.     .Nw.lL.
+      ...'...     .......
+ENDMAP
+
+NAME:    hangedman_zot_decor_slant
+TAGS:    extra transparent
+DEPTH:   Zot
+WEIGHT:  8
+KFEAT:   zZ = zot trap
+KFEAT:   fF = floor
+SHUFFLE: BVfF / VBFf, BV / BV / BV / wl, bv / bv / cc
+SHUFFLE: aAuU / aAuU / aAuU / uUaA
+SHUFFLE: AU / "", fF / fF / zz / '' / '', @! / !@ / ?? / ??
+SUBST:   aAB = b, uUV = v, Z = ()G .:45 Z:25, '"!? = .
+KMASK:   wlfF = no_monster_gen
+COLOUR:  fF = darkgray
+FTILE:   fF = floor_rough_darkgray
+MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
+             pow_min = 9, pow_max = 10, delay = 2, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = 0 }
+MARKER:  F = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 9, pow_max = 10, delay = 2, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = 0 }
+MAP
+            ...!..
+           ........
+           ..UuuU..
+         ....uuuu.!
+         @vv.uuuu..
+         .vv.uuuU..
+      ......F......
+      .vv.VV.vv...
+      .vv.VV.vv.
+   .@....Z....@.
+   .bb.BB.bb.
+ ...bb.BB.bb.
+......f......
+..Aaaa.bb.
+..aaaa.bb@
+!.aaaa....
+..AaaA..
+........
+ ..!...
+ENDMAP
+
+NAME:    hangedman_zot_decor_scrapings
+TAGS:    transparent extra
+DEPTH:   Zot
+KFEAT:   Z = zot trap
+SHUFFLE: HIJKLM / HIJKLM / IHKJML
+SUBST:   HJL : xxcb, I : x..., K : x..., M : x...
+SUBST:   N : xcG.., O : xc..., P : xcG.., Z = ()G .:45 Z:25
+MAP
+           ..   ...
+          .......x..
+         ..x......x..
+        ....x..O......
+    ................x..
+   ..J...P...L...N.I.H.
+  ..x.x.....x.x.....x..
+ ....K...M.Z.M...K....
+..x.....x.x.....x.x...
+.H.I.N...L...P...J...
+..x.................
+ ......O...x....
+  ..x.......x..
+   ..x........
+    ...    ..
+ENDMAP
+
+NAME:    hangedman_zot_decor_tridents
+TAGS:    transparent extra
+DEPTH:   Zot
+KFEAT:   Z = zot trap
+SHUFFLE: vb / xy / XY
+SUBST:   = = ()+Z .:60, - : ++., _ : +.., H : z., I : z., J : z.
+SUBST:   K : zzwl...., L : zzzwl.., M : zzwl...
+SUBST:   N : zzzwl.., O : zzwl..., P : zzwl.., XyYz = x
+KMASK:   wl = no_monster_gen
+MAP
+         xxx.....
+         xxx.......
+         x...Iv.vv.
+    .....x...v.....
+  .....K.-.O...N..@
+.........x...v.....
+.bb.bJ..Pxv_vHv.vv.
+.....b...x...v.....
+@..L...M.=.M...L..@
+.....b...y...v.....
+.bb.bHb_byP..Jv.vv.
+.....b...y.........
+@..N...O.-.K.....
+.....b...y.....
+.bb.bI...y
+.......yyy
+  .....yyy
+ENDMAP
+
+NAME:    hangedman_zot_diagonal_lockstep
+TAGS:    transparent extra decor
+DEPTH:   Zot
+ITEM:    % no_pickup
+KFEAT:   Z = zot trap
+SHUFFLE: ABCDEFG, defg / hijk / mnop / qrst, defg, hjik, mnop
+SUBST:   A : xbvcZ, B : xbvc, C : xxbvc, D : xxbvc, EFG = x
+SUBST:   d : xxZ, h = x, e : xx., i : xx., f : x.., j : x.., m : x..
+SUBST:   gknopqrst = .
+:  if you.depth() == dgn.br_depth(you.branch()) then
+SUBST:  { = {([ <:5 Z:5
+:  elseif you.depth() == "1" then
+SUBST:  { = {:40 })]> d:20 Z:20
+:  else
+SUBST:  { = {([<})]> d:20 Z:20
+:  end
+MAP
+             Dq...iC
+        .....rD...Ch..
+        .......x.x...p
+        ...mF...x...o.
+       Es..F...x.x....
+ ......tE.x..kx...x..eB
+ ........x...Cj....x.xd
+A..fB...x.x.....G...x..
+.A.xg.nG...{...Gn.gx.A.
+..x...G.....x.x...Bf..A
+dx.x....jC...x........
+Be..x...Ck..x.Et......
+ ....x.x...F..sE
+ .o...x...Fm...
+ p...x.x.......
+ ..hC...Dr.....
+   Ci...qD
+ENDMAP
+
+NAME:    hangedman_zot_wheel_spokes
+TAGS:    transparent extra decor
+DEPTH:   Zot, !Zot:$
+# Swap positions in unit's potential spots
+# with the spokes and / or the center, maybe.
+SHUFFLE: AGMBHN / AHMBGN / AGNBJM
+SHUFFLE: CIOFLR / CLOFIR / CIRFLO
+SHUFFLE: DJPEKQ / DJQEKP / DJQEKP
+SHUFFLE: AGM / BHN / CIO / DJP / EKQ / FLR
+# Make those slots random walls or floor.
+SUBST:   AGM : xxxxcccbbv, BHN : xxxxcccbbv
+SUBST:   CIO : xxxxcccbbv .:100
+SUBST:   DJP : xxxxcccbbv .:100, EFKLQR = .
+MAP
+      ...CDEF...
+      ..F.AB.C..
+........EB..AD..
+........DA..BE..
+.IJKL...C.BA.F..
+L.GH.I...FEDC...
+KH..GJ.OPQR.......
+JG..HKR.MN.O......
+I.HG.LQN..MP.IJKL.
+.LKJI.PM..NQL.GH.I
+......O.NM.RKH..GJ
+.......RQPO.JG..HK
+  ...CEDF...I.HG.L
+  ..F.AB.C...LKJI.
+  ..EB..AE........
+  ..DA..BD........
+  ..C.BA.F..
+  ...FEDC...
+ENDMAP
+
+##########################################################################
+# Some decorative multi-coloured glass columns
+NAME:   skrybe_zot_glass_1
+TAGS:   transparent decor no_pool_fixup
+DEPTH:  Zot
+SUBST:  W : Wwl
+KMASK:  Wwl = no_monster_gen
+: coloured_glass(_G)
+MAP
+  .....    .....
+ ..WWW..  ..WWW..
+..WWrWW....WWyWW..
+.WWrrrWW..WWyyyWW.
+.WrrrrrW..WyyyyyW.
+.WWrrrWW..WWyyyWW.
+..WWrWW....WWyWW..
+ ..WWW......WWW..
+  ..............
+  ..............
+ ..WWW......WWW..
+..WWoWW....WWgWW..
+.WWoooWW..WWgggWW.
+.WoooooW..WgggggW.
+.WWoooWW..WWgggWW.
+..WWoWW....WWgWW..
+ ..WWW..  ..WWW..
+  .....    .....
+ENDMAP
+
+NAME:   skrybe_zot_glass_2
+TAGS:   transparent decor no_pool_fixup
+DEPTH:  Zot
+SUBST:  l : Wwl
+KPROP:  l = no_cloud_gen
+KMASK:  Wwl = no_monster_gen
+: coloured_glass(_G)
+MAP
+      .....
+ ......lll......
+..lll.lloll.lll..
+.llrlllooolllyll.
+.lrrrlooooolyyyl.
+.llrlllooolllyll.
+..lll.lloll.lll..
+ ......lll......
+      .....
+ENDMAP
+
+NAME:   skrybe_zot_glass_3
+TAGS:   transparent decor no_pool_fixup
+DEPTH:  Zot
+SUBST:  l : Wwl
+SUBST:  ( : ([{.
+KMASK:  Wwl = no_monster_gen
+KPROP:  l = no_cloud_gen
+: coloured_glass(_G)
+MAP
+xxxxxx@@@xxxxxx
+xlllll...lllllx
+xlrrrl...looolx
+xlrrll...lloolx
+xlrll.....llolx
+xlll.......lllx
+@.............@
+@......(......@
+@.............@
+xlll.......lllx
+xlyll.....llglx
+xlyyll...llgglx
+xlyyyl...lggglx
+xlllll...lllllx
+xxxxxx@@@xxxxxx
+ENDMAP
+
+##############################################################################
+##############################################################################
+#
+# <<3>> Zot monster vaults
+#
+##############################################################################
+##############################################################################
 
 ###########################
 # Halls of Wrath
@@ -645,8 +1075,8 @@ ENDMAP
 # Lich library
 #
 NAME:   lemuel_lich_library
-DEPTH:  Zot, !Zot:$
 TAGS:   no_monster_gen no_descent
+DEPTH:  Zot, !Zot:$
 MONS:   flying skull, lich, ancient lich / dread lich, necromancer
 MONS:   vampire mage
 ITEM:   any book mimic:10 w:20 / any scroll mimic:10
@@ -705,8 +1135,8 @@ ENDMAP
 # Globe of electric golems
 #
 NAME:  lemuel_golem_globe
-DEPTH: Zot
 TAGS:  no_rotate no_exits
+DEPTH: Zot
 KFEAT: ^ = permanent teleport trap / dispersal trap
 KFEAT: m = iron_grate
 SUBST: 1 = 1.
@@ -726,9 +1156,9 @@ ENDMAP
 # There is an 70% chance all three downstairs will be here.
 #
 NAME:   lemuel_draconian_sentries
+TAGS:   no_rotate uniq_draconian_sentries
 DEPTH:  Zot, !Zot:$
 ORIENT: float
-TAGS:   no_rotate uniq_draconian_sentries
 MONS:   draconian scorcher w:5 / draconian stormcaller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
 SUBST:  w:w., w=Ww
@@ -752,9 +1182,9 @@ mmm.....www...]..www.....mmm
 ENDMAP
 
 NAME:   lemuel_draconian_sentries_small
+TAGS:   no_rotate uniq_draconian_sentries
 DEPTH:  Zot, !Zot:$
 ORIENT: float
-TAGS:   no_rotate uniq_draconian_sentries
 MONS:   draconian scorcher w:5 / draconian stormcaller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
 SUBST:  w:w., w=Ww
@@ -850,9 +1280,9 @@ ENDMAP
 # Circus (by mu)
 # full of klowns, caged animals outside
 NAME:   circus_mu
+TAGS:   no_rotate no_hmirror no_monster_gen
 DEPTH:  Zot, !Zot:$
 ORIENT: float
-TAGS:   no_rotate no_hmirror no_monster_gen
 MONS:   killer klown
 MONS:   elephant / w:5 dire elephant / w:2 hellephant
 MONS:   human ; club
@@ -922,9 +1352,9 @@ ENDMAP
 # Minmay's Elemental castle
 # 50% electricity, 25% fire, 25% ice
 NAME:    minmay_elemental_castle
+TAGS:    no_rotate no_descent
 ORIENT:  southwest
 DEPTH:   Zot, !Zot:$
-TAGS:    no_rotate no_descent
 : if crawl.coinflip() then
 MONS:    titan, storm dragon, electric golem
 SUBST:   F = 3
@@ -1092,67 +1522,6 @@ cccy``...`^~~^.d.``yccc
   @@ccyycm+m+mcyycc@@
      cccc8.7.8cccc
         ccccccc
-ENDMAP
-
-################################################################################
-# Space-filling minivaults by bh.
-
-NAME:   bh_zot_ikea_curve
-TAGS:   extra transparent
-DEPTH:  Zot
-MAP
-xxxxxxxxxxxxx
-@.....x.....@
-@.....x.....@
-xxxx..x..xxxx
-x.....x.....x
-x.....x.....x
-x..xxxxxxx..x
-x..x.....x..x
-x..x.....x..x
-x.....x.....x
-x.....x.....x
-xxxxxxxxxxxxx
-ENDMAP
-
-NAME:   bh_zot_lava_cross
-TAGS:   extra
-DEPTH:  Zot
-MAP
-     @@
-    x..x
-    x..x
-    x..x
- xxxxllxxxx
-@...l..l...@
-@...l..l...@
- xxxxllxxxx
-    x..x
-    x..x
-    x..x
-     @@
-ENDMAP
-
-NAME:   bh_zot_levy_curve
-TAGS:   extra
-DEPTH:  Zot
-SUBST:  W = Ww
-MAP
-          WWW.
-          W.W..
-          W.WWW
-          ....W
-         .....W
-        ....WWW
-       .......W
-      ..www...W
-     ...w.w.WWW
-    ....wwwWW..
-WWW.......W...
-W........WW..
-WWW..W..WW..
-..W..W..W..
- .WWWWWWW.
 ENDMAP
 
 #################
@@ -1606,9 +1975,9 @@ ENDMAP
 ##########################################################################
 
 NAME: nicolae_zot_draconian_monastery
+TAGS: no_trap_gen no_monster_gen no_item_gen
 DEPTH: Zot, !Zot:$
 ORIENT: float
-TAGS: no_trap_gen no_monster_gen no_item_gen
 MONS: draconian monk / base draconian w:15, patrolling draconian stormcaller, patrolling draconian knight
 MONS: patrolling draconian scorcher
 SHUFFLE: ]}), rybgmq, DZF
@@ -1765,232 +2134,6 @@ xx...G...vv4$v$4vv...G...xx
        xx@@vvvvv@@xx
 ENDMAP
 
-NAME:    hangedman_zot_gyre
-TAGS:    extra transparent
-DEPTH:   Zot
-WEIGHT:  8
-KITEM:   % = % no_pickup
-KFEAT:   Z = zot trap
-SHUFFLE: dD, eE, fF, gG, hH, dD / eE / fF / gG / hH
-SHUFFLE: cCbB / cCbB / bBcC, qQ / qQ / ZZ / wl / '' / ''
-SUBST:   defhH = X, DEF = ., g : X.., G : X.., ' = .
-SUBST:   B = bbCc, C : bWcc, b : bbc, c : bWcc, X : bcxx, W : wl
-NSUBST:  0 = 2 = 0:19 .:1 / *:.
-KPROP:   l = no_cloud_gen
-KMASK:   lw = no_monster_gen
-COLOUR:  qQ = darkgray
-FTILE:   qQ = floor_rough_darkgray
-MARKER:  q = lua:fog_machine {cloud_type = "freezing vapour", \
-             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
-             start_clouds = 1, excl_rad = 0 }
-MARKER:  Q = lua:fog_machine {cloud_type = "flame", \
-             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
-             start_clouds = 1, excl_rad = 0 }
-:  if you.depth() == dgn.br_depth(you.branch()) then
-SUBST:  { = {([<
-:  else
-SUBST:  { = {([<})]>%
-:  end
-MAP
-           ......
-         ..........
-        ..xxxxxxx...
-        ........hx...
-      ....B......hx....
-     .............x.....
-    ..G.C.G.C.....ffxxx..
-    ..x...x.......x......
-   ...x...x...B...x...c....
-  ....F...E.......x.........
- ...xxFxxxExxD..Q.eexxx.b.x.
- ..xH.......0xD...x.......x..
-..xH......q...x..0x...c...x..
-..x...........x..xd.......x..
-..x.....b..dxx{xxd..b.....x..
-..x.......dx..x...........x..
-..x...c...x0..x...q......Hx..
-..x.......x...Dx0.......Hx..
- .x.b.gxxee.Q..DxxExxxFxx...
- .........x.......E...F....
-  ....c...x...B...x...x...
-    ......x.......x...x..
-    ..gxxff.....C.G.C.G..
-     .....x.............
-      ....xh......B....
-        ...xh........
-         ...xxxxxxx..
-          ..........
-            ......
-ENDMAP
-
-####
-# Madness, frenzy, and lunacy, eh?
-# bh's curves made me think of some weird yet orderly decorum for Zot.
-NAME:    hangedman_zot_decor_unnerving_road
-TAGS:    extra transparent no_pool_fixup
-DEPTH:   Zot
-WEIGHT:  8
-SHUFFLE: @&, (), vb / vb / vb / bv / cc, lw / lw / lw / '', JK / LM / NO
-SHUFFLE: JK / JK / JK / !!, LM / ??, NO / `` / `` / `` / ``, JKLMNO / JKLMNO / KJMLON
-SUBST:   '!?`& = ., X : xxc, JLN = F, KMO = f
-SUBST:   ( = (:1 .:14, ) = ):1 .:14
-KMASK:   wlfF = no_monster_gen
-COLOUR:  fF = darkgray
-FTILE:   fF = floor_rough_darkgray
-MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
-             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
-             start_clouds = 1, excl_rad = 0 }
-MARKER:  F = lua:fog_machine {cloud_type = "flame", \
-             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
-             start_clouds = 1, excl_rad = 0 }
-KPROP:   l = no_cloud_gen
-MAP
-      XXXX...&&.
-      Xllvv......
-    XXXlv..v....@
-   XXlllv..v....@
-   Xllvv.vvJ.....
- XXXlv..v.......
-XXlllv..v....XXXX
-Xllvv(vvL..ObbwwX
-Xlv..v.....b..bwXXX
-Xlv..v.....b..bwwwXX
-Xllvv.vv....bb.bbwwX
-XXlllv..v.....b..bwX
- XXXlv..v.....b..bwX
-   XllvvN..Mbb)bbwwX
-   XXXX....b..bwwwXX
-    .......b..bwXXX
-   .....Kbb.bbwwX
-   @....b..bwwwXX
-   @....b..bwXXX
-   ......bbwwX
-    .&&...XXXX
-ENDMAP
-
-NAME:    hangedman_zot_decor_checkerboard
-TAGS:    extra transparent
-DEPTH:   Zot
-WEIGHT:  8
-KFEAT:   Z = zot trap
-SHUFFLE: @' / '@ / "" / "", defg / jkhi / HIJK / NOLM
-SUBST:   d : wbb, e : wwb, g : lvv, f : llv
-SUBST:   h : lvv, i : llv, j : wbb, k : wwb
-SUBST:   H : wwwwb, I : wwwwb, J : llllv, K : llllv
-SUBST:   L : lvvvv, M : lvvvv, N : wbbbb, O : wbbbb
-SHUFFLE: bv / bv / bv / vb / xx / cc
-NSUBST:  Z = 1 = (:1 Z:14 / 1 = ):1 Z:14 / Z
-SUBST:   Z = ZZUG..., '" = .
-KPROP:   l = no_cloud_gen
-KMASK:   wl = no_monster_gen
-MAP
-.......     ...'...
-.dw.lf.     .Hw.lJ.
-.we.gl.     .wI.Kl.
-@..Z...........Z.........
-.lg.ew.hl.wj.lK.Iw.Ll.wN.
-.fl.wd.li.kw.Jl.wH.lM.Ow.
-.........Z...........Z..@
-      .wk.il.     .wO.Ml.
-      .jw.lh.     .Nw.lL.
-      ...'...     .......
-ENDMAP
-
-NAME:    hangedman_zot_decor_slant
-TAGS:    extra transparent
-DEPTH:   Zot
-WEIGHT:  8
-KFEAT:   zZ = zot trap
-KFEAT:   fF = floor
-SHUFFLE: BVfF / VBFf, BV / BV / BV / wl, bv / bv / cc
-SHUFFLE: aAuU / aAuU / aAuU / uUaA
-SHUFFLE: AU / "", fF / fF / zz / '' / '', @! / !@ / ?? / ??
-SUBST:   aAB = b, uUV = v, Z = ()G .:45 Z:25, '"!? = .
-KMASK:   wlfF = no_monster_gen
-COLOUR:  fF = darkgray
-FTILE:   fF = floor_rough_darkgray
-MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
-             pow_min = 9, pow_max = 10, delay = 2, size_min = 1, size_max = 1, \
-             start_clouds = 1, excl_rad = 0 }
-MARKER:  F = lua:fog_machine {cloud_type = "flame", \
-             pow_min = 9, pow_max = 10, delay = 2, size_min = 1, size_max = 1, \
-             start_clouds = 1, excl_rad = 0 }
-MAP
-            ...!..
-           ........
-           ..UuuU..
-         ....uuuu.!
-         @vv.uuuu..
-         .vv.uuuU..
-      ......F......
-      .vv.VV.vv...
-      .vv.VV.vv.
-   .@....Z....@.
-   .bb.BB.bb.
- ...bb.BB.bb.
-......f......
-..Aaaa.bb.
-..aaaa.bb@
-!.aaaa....
-..AaaA..
-........
- ..!...
-ENDMAP
-
-NAME:    hangedman_zot_decor_scrapings
-TAGS:    transparent extra
-DEPTH:   Zot
-KFEAT:   Z = zot trap
-SHUFFLE: HIJKLM / HIJKLM / IHKJML
-SUBST:   HJL : xxcb, I : x..., K : x..., M : x...
-SUBST:   N : xcG.., O : xc..., P : xcG.., Z = ()G .:45 Z:25
-MAP
-           ..   ...
-          .......x..
-         ..x......x..
-        ....x..O......
-    ................x..
-   ..J...P...L...N.I.H.
-  ..x.x.....x.x.....x..
- ....K...M.Z.M...K....
-..x.....x.x.....x.x...
-.H.I.N...L...P...J...
-..x.................
- ......O...x....
-  ..x.......x..
-   ..x........
-    ...    ..
-ENDMAP
-
-NAME:    hangedman_zot_decor_tridents
-TAGS:    transparent extra
-DEPTH:   Zot
-KFEAT:   Z = zot trap
-SHUFFLE: vb / xy / XY
-SUBST:   = = ()+Z .:60, - : ++., _ : +.., H : z., I : z., J : z.
-SUBST:   K : zzwl...., L : zzzwl.., M : zzwl...
-SUBST:   N : zzzwl.., O : zzwl..., P : zzwl.., XyYz = x
-KMASK:   wl = no_monster_gen
-MAP
-         xxx.....
-         xxx.......
-         x...Iv.vv.
-    .....x...v.....
-  .....K.-.O...N..@
-.........x...v.....
-.bb.bJ..Pxv_vHv.vv.
-.....b...x...v.....
-@..L...M.=.M...L..@
-.....b...y...v.....
-.bb.bHb_byP..Jv.vv.
-.....b...y.........
-@..N...O.-.K.....
-.....b...y.....
-.bb.bI...y
-.......yyy
-  .....yyy
-ENDMAP
-
 ####
 # A bit of sporting fun...
 NAME: grunt_zot_stairs_faceoff
@@ -2118,8 +2261,8 @@ xxxxxxxxxxx@@@@@xxxxxxxxxxx
 ENDMAP
 
 NAME: nicolae_zot_crop_circle
-DEPTH: Zot, !Zot:1
 TAGS: no_monster_gen transparent
+DEPTH: Zot, !Zot:1
 SHUFFLE: {[(
 NSUBST: p = 2:2 / 1:12 / 1
 MONS: plant, death cob
@@ -2139,9 +2282,9 @@ ENDMAP
 
 
 NAME: nicolae_zot_stationary_front
+TAGS: transparent no_pool_fixup patrolling
 DEPTH: Zot
 ORIENT: float
-TAGS: transparent no_pool_fixup patrolling
 SHUFFLE: Gg/Gg/Gg/Hh, Pp/Pp/Pp/Qq
 SUBST: GP = x, g = r, p = c, HQ = @, hq = .
 COLOUR: r = red, c = blue
@@ -2168,8 +2311,8 @@ xxxxxGxxxxxxcww...wwcxxxxxxGxxxxxxcww...wwcx
 ENDMAP
 
 NAME: amethyst_zot_foddershock
-DEPTH: Zot, !Zot:$
 TAGS: no_monster_gen transparent
+DEPTH: Zot, !Zot:$
 MONS: lightning spire, patrolling electric golem
 NSUBST: % = 2:!, % = 2:a
 KMONS: ! = patrolling death cob
@@ -2183,42 +2326,6 @@ x.%1%.x
 x2%%%2x
 xx...xx
  xxxxx
-ENDMAP
-
-NAME:    hangedman_zot_diagonal_lockstep
-TAGS:    transparent extra decor
-DEPTH:   Zot
-ITEM:    % no_pickup
-KFEAT:   Z = zot trap
-SHUFFLE: ABCDEFG, defg / hijk / mnop / qrst, defg, hjik, mnop
-SUBST:   A : xbvcZ, B : xbvc, C : xxbvc, D : xxbvc, EFG = x
-SUBST:   d : xxZ, h = x, e : xx., i : xx., f : x.., j : x.., m : x..
-SUBST:   gknopqrst = .
-:  if you.depth() == dgn.br_depth(you.branch()) then
-SUBST:  { = {([ <:5 Z:5
-:  elseif you.depth() == "1" then
-SUBST:  { = {:40 })]> d:20 Z:20
-:  else
-SUBST:  { = {([<})]> d:20 Z:20
-:  end
-MAP
-             Dq...iC
-        .....rD...Ch..
-        .......x.x...p
-        ...mF...x...o.
-       Es..F...x.x....
- ......tE.x..kx...x..eB
- ........x...Cj....x.xd
-A..fB...x.x.....G...x..
-.A.xg.nG...{...Gn.gx.A.
-..x...G.....x.x...Bf..A
-dx.x....jC...x........
-Be..x...Ck..x.Et......
- ....x.x...F..sE
- .o...x...Fm...
- p...x.x.......
- ..hC...Dr.....
-   Ci...qD
 ENDMAP
 
 # Inspired by a distant submission from nicolae-,
@@ -2284,40 +2391,6 @@ xyyXXXX'''''''''''''''''''XXXXyyyyyyyyyyyXXXX'''
 xXXX'''''''''''''''''''''''''XXXXXXXXXXXXX'''''
 xx''''''''''''''''''''''''''''''''''''''''''''
    ''''''   ''''@''''   '''''''''   '''''''''
-ENDMAP
-
-NAME:    hangedman_zot_wheel_spokes
-TAGS:    transparent extra decor
-DEPTH:   Zot, !Zot:$
-# Swap positions in unit's potential spots
-# with the spokes and / or the center, maybe.
-SHUFFLE: AGMBHN / AHMBGN / AGNBJM
-SHUFFLE: CIOFLR / CLOFIR / CIRFLO
-SHUFFLE: DJPEKQ / DJQEKP / DJQEKP
-SHUFFLE: AGM / BHN / CIO / DJP / EKQ / FLR
-# Make those slots random walls or floor.
-SUBST:   AGM : xxxxcccbbv, BHN : xxxxcccbbv
-SUBST:   CIO : xxxxcccbbv .:100
-SUBST:   DJP : xxxxcccbbv .:100, EFKLQR = .
-MAP
-      ...CDEF...
-      ..F.AB.C..
-........EB..AD..
-........DA..BE..
-.IJKL...C.BA.F..
-L.GH.I...FEDC...
-KH..GJ.OPQR.......
-JG..HKR.MN.O......
-I.HG.LQN..MP.IJKL.
-.LKJI.PM..NQL.GH.I
-......O.NM.RKH..GJ
-.......RQPO.JG..HK
-  ...CEDF...I.HG.L
-  ..F.AB.C...LKJI.
-  ..EB..AE........
-  ..DA..BD........
-  ..C.BA.F..
-  ...FEDC...
 ENDMAP
 
 # Originally a submitted wizlab of "Nikola's Generator",
@@ -2438,80 +2511,6 @@ MAP
    xxxxx xxxxx xxxxx
 ENDMAP
 
-##########################################################################
-# Some decorative multi-coloured glass columns
-NAME:   skrybe_zot_glass_1
-TAGS:   transparent decor no_pool_fixup
-DEPTH:  Zot
-SUBST: W : Wwl
-KMASK:  Wwl = no_monster_gen
-: coloured_glass(_G)
-MAP
-  .....    .....
- ..WWW..  ..WWW..
-..WWrWW....WWyWW..
-.WWrrrWW..WWyyyWW.
-.WrrrrrW..WyyyyyW.
-.WWrrrWW..WWyyyWW.
-..WWrWW....WWyWW..
- ..WWW......WWW..
-  ..............
-  ..............
- ..WWW......WWW..
-..WWoWW....WWgWW..
-.WWoooWW..WWgggWW.
-.WoooooW..WgggggW.
-.WWoooWW..WWgggWW.
-..WWoWW....WWgWW..
- ..WWW..  ..WWW..
-  .....    .....
-ENDMAP
-
-NAME:   skrybe_zot_glass_2
-TAGS:   transparent decor no_pool_fixup
-DEPTH:  Zot
-SUBST:  l : Wwl
-KPROP:  l = no_cloud_gen
-KMASK:  Wwl = no_monster_gen
-: coloured_glass(_G)
-MAP
-      .....
- ......lll......
-..lll.lloll.lll..
-.llrlllooolllyll.
-.lrrrlooooolyyyl.
-.llrlllooolllyll.
-..lll.lloll.lll..
- ......lll......
-      .....
-ENDMAP
-
-NAME:   skrybe_zot_glass_3
-TAGS:   transparent decor no_pool_fixup
-DEPTH:  Zot
-SUBST:  l : Wwl
-SUBST:  ( : ([{.
-KMASK:  Wwl = no_monster_gen
-KPROP:  l = no_cloud_gen
-: coloured_glass(_G)
-MAP
-xxxxxx@@@xxxxxx
-xlllll...lllllx
-xlrrrl...looolx
-xlrrll...lloolx
-xlrll.....llolx
-xlll.......lllx
-@.............@
-@......(......@
-@.............@
-xlll.......lllx
-xlyll.....llglx
-xlyyll...llgglx
-xlyyyl...lggglx
-xlllll...lllllx
-xxxxxx@@@xxxxxx
-ENDMAP
-
 ##############################################################################
 # The circus has come to town
 
@@ -2521,9 +2520,9 @@ ENDMAP
 # The player either comes downstairs and finds themselves on the ride,
 # or needs to fight through the crowd lined up to find the way down.
 NAME:    ebering_klown_carousel
+TAGS:    no_monster_gen no_trap_gen
 DEPTH:   Zot, !Zot:$
 ORIENT:  float
-TAGS:    no_monster_gen no_trap_gen
 MONS:    killer klown, ancient lich / dread lich, death cob
 NSUBST:  - = 2 / 3 = 3.. / *:.
 : if (crawl.coinflip()) then
@@ -2567,9 +2566,9 @@ ENDMAP
 
 # The three ring circus, with the player descending in mid show
 NAME:    ebering_greatest_show_in_zot
+TAGS:    no_monster_gen no_trap_gen
 DEPTH:   Zot, !Zot:$
 ORIENT:  float
-TAGS:    no_monster_gen no_trap_gen
 SUBST:   x : x b:1
 SUBST:   < = {[(
 KFEAT:   ^ = alarm trap / zot trap
@@ -2631,13 +2630,6 @@ ENDMAP
 NAME:    hangedman_player_shredder
 TAGS:    transparent no_monster_gen no_item_gen no_pool_fixup
 DEPTH:   Zot:1-4
-SHUFFLE: abcdefghij / bacdegfhij / bcadeghfij / bcdaeghifj / bcdeaghijf, ghij, ^~
-SUBST:   a = +, bcde = v, fgh = %, i = P, j = p
-NSUBST:  } : 1:P / 1:p / *:%, p : 1:P / *:%
-SHUFFLE: HI, PQRS|, 0246' / 1357", 0246', 1357", 02468ACE, 13579BDF
-NSUBST:  P = 1:{ / 1:} / 1 : [:1 ]:1 %:16, Q = 1:{ / 1 : [:8 <:1 / 1 : (:1 %:8
-NSUBST:  RS = 1:} / 1 : ]:8 >:1 / 1 : ):1 %:8
-SUBST:   I = G, ~ : wv., ` : wv., ^ = ., % : %:9 .:1, % = %:499 |:1
 KMONS:   01 = ghost moth
 KMONS:   23 = golden dragon
 KMONS:   4567 = nonbase draconian
@@ -2652,6 +2644,13 @@ KMONS:   ! = base draconian w:30 ; cloak . great sword good_item | \
 KMONS:   ? = moth of wrath / death cob w:2 / guardian mummy w:2
 KITEM:   % = % / * w:2
 KMONS:   H = iron dragon
+SHUFFLE: abcdefghij / bacdegfhij / bcadeghfij / bcdaeghifj / bcdeaghijf, ghij, ^~
+SUBST:   a = +, bcde = v, fgh = %, i = P, j = p
+NSUBST:  } : 1:P / 1:p / *:%, p : 1:P / *:%
+SHUFFLE: HI, PQRS|, 0246' / 1357", 0246', 1357", 02468ACE, 13579BDF
+NSUBST:  P = 1:{ / 1:} / 1 : [:1 ]:1 %:16, Q = 1:{ / 1 : [:8 <:1 / 1 : (:1 %:8
+NSUBST:  RS = 1:} / 1 : ]:8 >:1 / 1 : ):1 %:8
+SUBST:   I = G, ~ : wv., ` : wv., ^ = ., % : %:9 .:1, % = %:499 |:1
 MAP
 .........................
 .vv...vv+vv...vv+vv...vv.
@@ -2865,7 +2864,7 @@ ENDMAP
 ##############################################################################
 ##############################################################################
 #
-# hall_of_Zot_5
+# <<4>> hall_of_Zot_5
 #
 ##############################################################################
 ##############################################################################
@@ -2951,18 +2950,28 @@ XXXXXXXXXXXccddddddddddddddccXXXc...............cXXXcchhhhhhhhhhhhhhccXXXXXXXXXX
 XXXXXXXXXXXXccccccccccccccccXXXXcccccccc@ccccccccXXXXccccccccccccccccXXXXXXXXXXX
 ENDMAP
 
+# There's few vaults on Zot:5, tone down their chances.
+NAME: dummy_balancer_zot
+TAGS: dummy
+DEPTH: Zot:$
+ORIENT: float
+WEIGHT: 60
+MAP
+x
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #
-# For colouring the walls and floors of the first four levels
+# <<5> Colouring the walls and floors of each floor
 #
 ##############################################################################
 ##############################################################################
 
 NAME:       hall_of_Zot_1
+TAGS:       extra transparent allow_dup no_dump
 DEPTH:      Zot:1
 CHANCE:     100%
-TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  lightgrey
 LROCKCOL:   white
 LFLOORTILE: floor_rough_lightgray
@@ -2972,9 +2981,9 @@ MAP
 ENDMAP
 
 NAME:       hall_of_Zot_2
+TAGS:       extra transparent allow_dup no_dump
 DEPTH:      Zot:2
 CHANCE:     100%
-TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  white
 LROCKCOL:   blue
 LFLOORTILE: floor_rough_white
@@ -2984,9 +2993,9 @@ MAP
 ENDMAP
 
 NAME:       hall_of_Zot_3
+TAGS:       extra transparent allow_dup no_dump
 DEPTH:      Zot:3
 CHANCE:     100%
-TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  blue
 LROCKCOL:   lightblue
 LFLOORTILE: floor_rough_blue
@@ -2996,9 +3005,9 @@ MAP
 ENDMAP
 
 NAME:       hall_of_Zot_4
+TAGS:       extra transparent allow_dup no_dump
 DEPTH:      Zot:4
 CHANCE:     100%
-TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  lightblue
 LROCKCOL:   magenta
 LFLOORTILE: floor_rough_lightblue
