@@ -165,8 +165,9 @@ force_more_message += With a soft hiss the gate opens wide
 force_more_message += The door slams shut behind you
 
 # God gifts
-force_more_message += grants you (a gift|throwing weapons|armour|a weapon)
+force_more_message += grants you (a gift|throwing weapons|a weapon)
 force_more_message += offers you (knowledge of|a choice of)
+force_more_message += will grant you a choice
 force_more_message += believes you are ready to make a new sacrifice
 force_more_message += may now remember your ancestor
 force_more_message += deals you some cards
