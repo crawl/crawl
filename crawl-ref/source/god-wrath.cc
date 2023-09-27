@@ -2285,7 +2285,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
         else
         {
             mprf(MSGCH_WARN, "The divine experience drains your vigour!");
-            slow_player(random2(20));
+            slow_player(10 + random2(5));
         }
     }
 
