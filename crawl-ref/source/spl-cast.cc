@@ -1841,6 +1841,23 @@ string target_desc(const monster_info& mi, spell_type spell)
     return comma_separated_line(d.begin(), d.end());
 }
 
+static bool _can_target_self(spell_flags flags, const item_def* const evoked_wand)
+{
+    if (testbits(flags, spflag::not_self))
+        return false;
+    if (!evoked_wand)
+        return true;
+    // HACK: should do this in a more principled way
+    switch (evoked_wand->sub_type)
+    {
+    case WAND_ICEBLAST:
+    case WAND_ROOTS:
+        return true;
+    default:
+        return false;
+    }
+}
+
 /**
  * Targets and fires player-cast spells & spell-like effects.
  *
@@ -1999,7 +2016,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         if (!spell_direction(*target, beam, &args))
             return spret::abort;
 
-        if (testbits(flags, spflag::not_self) && target->isMe())
+        if (!_can_target_self(flags, evoked_wand) && target->isMe())
         {
             if (spell == SPELL_TELEPORT_OTHER)
                 mpr("Sorry, this spell works on others only.");
