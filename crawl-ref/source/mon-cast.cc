@@ -6493,6 +6493,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _fire_simple_beam(*mons, slot, pbolt);
         if (mons->alive() && coinflip())
             mons->stumble_away_from(targ, "the blast");
+        return;
     }
     }
 
