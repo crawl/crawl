@@ -656,8 +656,9 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_ENHANCE_EARTH:
         case ARTP_ENHANCE_POISON:
             // Maybe we should allow these for robes, too?
-            // And hats? And orbs? And gloves and cloaks and scarves?
-            return item.base_type == OBJ_STAVES;
+            // And hats? And gloves and cloaks and scarves?
+            return item.base_type == OBJ_STAVES
+                   || item.is_type(OBJ_ARMOUR, ARM_ORB);
         default:
             return true;
     }
@@ -804,27 +805,27 @@ static const artefact_prop_data artp_data[] =
         []() {return 1;}, nullptr, 0, 0},
     { "Archmagi", ARTP_VAL_BOOL, 40, // ARTP_ARCHMAGI,
         []() {return 1;}, nullptr, 0, 0},
-    { "Conj", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_CONJ,
+    { "Conj", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_CONJ,
         []() {return 1;}, nullptr, 0, 0},
-    { "Hexes", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_HEXES,
+    { "Hexes", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_HEXES,
         []() {return 1;}, nullptr, 0, 0},
-    { "Summ", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_SUMM,
+    { "Summ", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_SUMM,
         []() {return 1;}, nullptr, 0, 0},
-    { "Necro", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_NECRO,
+    { "Necro", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_NECRO,
         []() {return 1;}, nullptr, 0, 0},
-    { "Tloc", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_TLOC,
+    { "Tloc", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_TLOC,
         []() {return 1;}, nullptr, 0, 0},
-    { "Tmut", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_TMUT,
+    { "Tmut", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_TMUT,
         []() {return 1;}, nullptr, 0, 0},
-    { "Fire", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_FIRE,
+    { "Fire", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_FIRE,
         []() {return 1;}, nullptr, 0, 0},
-    { "Ice", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_ICE,
+    { "Ice", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_ICE,
         []() {return 1;}, nullptr, 0, 0},
-    { "Air", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_AIR,
+    { "Air", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_AIR,
         []() {return 1;}, nullptr, 0, 0},
-    { "Earth", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_EARTH,
+    { "Earth", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_EARTH,
         []() {return 1;}, nullptr, 0, 0},
-    { "Poison", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_POISON,
+    { "Poison", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_POISON,
         []() {return 1;}, nullptr, 0, 0},
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
