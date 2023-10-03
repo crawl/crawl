@@ -178,17 +178,18 @@ MAP
   .....
 ENDMAP
 
-NAME: nicolae_swamp_entry_splash_gauntlet
-TAGS: swamp_entry patrolling transparent
-KFEAT: O = enter_swamp
+NAME:   nicolae_swamp_entry_splash_gauntlet
+TAGS:   swamp_entry patrolling transparent
+KMONS:  1 = swamp worm / bog body
+KMONS:  2 = electric eel
+KFEAT:  12 = w
+KFEAT:  O = enter_swamp
+SUBST:  D = twww
+NSUBST: E = 1:tt. / *:., F = 1:tt. / *:., H = 1:tt. / *:.
+NSUBST: J = 1:tt. / *:., K = 1:tt. / *:., L = 1:tt. / *:.
+NSUBST: 1 = 1:1 / 2 = 1122w / *:.
 MARKER: O = lua:fog_machine { pow_min = 8, pow_max = 12, delay = 25, \
-   size = 2, walk_dist = 1, spread_rate = 33 }
-SUBST: D = twww
-NSUBST: E = tt. / ., F = tt. / ., H = tt. / ., J = tt. / ., K = tt. / .
-NSUBST: L = tt. / .
-KMONS: 1 = swamp worm / bog body / nothing
-KMONS: 2 = electric eel
-KFEAT: 12 = w
+                              size = 2, walk_dist = 1, spread_rate = 33 }
 MAP
     ......tttttttt
   ...ttttttttttttttttt
@@ -222,11 +223,11 @@ ENDMAP
 
 NAME:   palyth_hydra_swamp_entry
 TAGS:   swamp_entry no_monster_gen no_pool_fixup
-MONS:   hydra
-MONS:   iguana / komodo dragon / cane toad / tyrant leech
-KMONS:  s = swamp worm / nothing w:70
+MONS:   hydra, komodo dragon / tyrant leech, iguana / cane toad
+KMONS:  s = swamp worm
 KFEAT:  s = w / W
-NSUBST: - = 2:1 / 2:2 / .
+NSUBST: 1 = 1:1 / 1:1123 / *:., - = 1:2 / 1:233. / *:.
+NSUBST: s = 1:s / 1 = sWww / * = wW, S = 1:s / *:.
 KFEAT:  O = enter_swamp
 KFEAT:  T = .
 MARKER: T = lua:fog_machine { \
@@ -235,19 +236,19 @@ MARKER: T = lua:fog_machine { \
 MAP
  ttttttt@@tt
  twwWWWW...tt
- twwssWsWstt
-ttwsssWsWtt
- ttwsWs---tt
+ twwSSWSWstt
+ttwSSSWSWtt
+ ttwSWS---tt
   tttt---tt
  ttT....ttttt
 ttt..ttttWsOt
  tt..tttWsWtt
-tt--ttt---ttt
- t--ssww---t
+tt--ttt-11ttt
+ t--ssww-11t
  tWWWWsww.Ttt
  ttWWssw..tt
   t..Ttt...t
-  tt.----..tt
+  tt.-111..tt
    ttt...ttt
      ttttt
 ENDMAP
@@ -280,11 +281,10 @@ ENDMAP
 
 NAME:   alex1729_swamp_entry_worm_eleionoma
 TAGS:   swamp_entry patrolling transparent
-KFEAT:  O = enter_swamp
 KMONS:  O = eleionoma
-SUBST:  t = tt.
+KFEAT:  O = enter_swamp
 NSUBST: 1 = 1:1 / 1=1t / .
-SUBST:  . = .....WW
+SUBST:  t = tt., . = .....WW
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
              size = 2, walk_dist = 1, spread_rate= 33 }

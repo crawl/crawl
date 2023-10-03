@@ -26,7 +26,7 @@ ENDMAP
 NAME:   minmay_snake_entry_guardpost_small
 TAGS:   snake_entry transparent
 ORIENT: float
-MONS:   naga, naga / nothing w:3
+SUBST:  2 = 1 .:3
 KFEAT:  O = enter_snake_pit
 MAP
 ccc.@.ccc
@@ -43,8 +43,8 @@ ENDMAP
 NAME:   minmay_snake_entry_guardpost_medium
 TAGS:   snake_entry transparent
 WEIGHT: 5
-ORIENT: float
-MONS:   naga, naga / nothing
+MONS:   naga, naga
+SUBST:  2 = 1.
 KFEAT:  O = enter_snake_pit
 MAP
    ccccccc
@@ -61,8 +61,8 @@ ENDMAP
 NAME:   minmay_snake_entry_guardpost_large
 TAGS:   snake_entry transparent
 WEIGHT: 2
-ORIENT: float
-MONS:   naga, naga / nothing
+MONS:   naga
+SUBST:  2 = 1.
 KFEAT:  O = enter_snake_pit
 MAP
 c@ccccccc
@@ -82,10 +82,11 @@ ENDMAP
 
 NAME:   minmay_snake_entry_six_corridors
 TAGS:   snake_entry ruin_lair transparent
-ORIENT: float
 MONS:   water moccasin, black mamba
-KMONS:  P = plant / fungus w:1 / nothing
-SUBST:  1 = 1 .:30, 2 = 122 .:30, D = 12 .:40
+KMONS:  P = plant / fungus w:1
+NSUBST: 1 = 3:1 / 3 = 1... / *:., 2 = 1:1 / 1:2 / 1:11222 / *:.
+NSUBST: D = 2 = 112 / *:.
+SUBST:  P = P:11 .
 KFEAT:  O = enter_snake_pit
 MAP
 xxxx.@1xxxxxxP@xxxxx
@@ -112,30 +113,31 @@ ENDMAP
 
 NAME:   minmay_snake_entry_spellcaster
 TAGS:   snake_entry transparent
-ORIENT: float
 WEIGHT: 2
 MONS:   guardian serpent
 KFEAT:  O = enter_snake_pit
 MAP
-...
-.O1
-...
+xxxxxxxxx
+ .......
+ ...O...
+ ...1...
+xxxxxxxxx
 ENDMAP
 
 NAME:   guppyfry_snake_entry_island
 TAGS:   snake_entry patrolling no_monster_gen transparent
-ORIENT: float
-MONS:   naga / nothing, plant
+MONS:   naga, water moccasin, plant
 KFEAT:  O = enter_snake_pit
-SUBST:  - = . W:2 2:1
+NSUBST: 1 = 1:1 / 1:- / * = 1--, 2 = 1:2 / 2:- / * = 2-
+SUBST:  - = . W:2 3:1
 MAP
    -WWWWW-
   -WWWWWWW-
  -WWW---WWW-
 -WWW-----WWW-
--WW---1---WW-
+.WW--212--WW.
 @WW--1O1--WW@
--WW---1---WW-
+.WW--212--WW.
 -WWW-----WWW-
  -WWW---WWW-
   -WWWWWWW-
@@ -144,11 +146,10 @@ ENDMAP
 
 NAME:   guppyfry_snake_entry_garden
 TAGS:   snake_entry patrolling no_monster_gen transparent
-ORIENT: float
-MONS:  naga / nothing, plant
+MONS:   naga, black mamba, plant
 KFEAT:  O = enter_snake_pit
-SUBST:  - = wW2t.
-SUBST:  " = W2.
+NSUBST: 1 = 1:1 / 1:2. / * = 1.
+SUBST:  - = wW3t., " = 3.
 MAP
  xxxx@xxxx
 xx---.---xx
@@ -202,12 +203,11 @@ ENDMAP
 
 NAME:   alex1729_snake_entry_snake
 TAGS:   snake_entry patrolling no_monster_gen transparent
-ORIENT: float
-MONS:   naga / w:3 nothing, w:20 plant / bush
+MONS:   naga, plant w:20 / bush
 KFEAT:  O = enter_snake_pit
 KFEAT:  L = l
 KMONS:  L = salamander ; longbow | shortbow
-SUBST:  - = W2..
+SUBST:  1 = 1 .:3, - = 2W..
 MAP
       xxxxxxx
     xxx-.---xx

@@ -99,20 +99,19 @@ MAP
 ....
 ENDMAP
 
-NAME:   slime_entry_2
-TAGS:   slime_entry
-KFEAT:  _ = altar_jiyva / floor w:5
-KPROP:  1O_ = no_tele_into
-SUBST:  1 : 111223
-NSUBST: 1 = 1 / 1. , 2 = 2 / 2... , 3 = 3 / 3....
-MONS:   jelly / endoplasm
-MONS:   acid blob / slime creature w:5
-MONS:   azure jelly
-KFEAT:  O = enter_slime_pits
+NAME:    slime_entry_2
+TAGS:    slime_entry
+MONS:    jelly / endoplasm, acid blob / slime creature w:5, azure jelly
+KFEAT:   O = enter_slime_pits
+KFEAT:   _ = altar_jiyva
+SHUFFLE: 1+ / 1+ / 1+ / 2= / 2= / 3=
+NSUBST:  1 = 3:1 / * = 1' , 2 = 1:2 / * = 2''' , 3 = 1:3 / * = 3''''
+SUBST:   _ = __'
+KPROP:   123'O_ = no_tele_into
 MAP
 ccccc
 c111m.
-cO1_=@
+cO1_+@
 c111m.
 ccccc
 ENDMAP
@@ -181,9 +180,11 @@ ENDMAP
 NAME:   minmay_slime_entry_jelly_boxes
 TAGS:   slime_entry ruin_lair
 WEIGHT: 5
-MONS:   jelly / endoplasm w:1 / nothing w:1
+MONS:   jelly / endoplasm w:1
 KFEAT:  O = enter_slime_pits
-KFEAT:  _ = altar_jiyva / floor w:5
+KFEAT:  _ = altar_jiyva
+SUBST:  _ = __.
+NSUBST: 1 = 2:1 / * = 1:11 .:1
 MAP
 .............
 .xxxxx.xxxxx.
@@ -258,15 +259,15 @@ xxx...xx.
 xx..
 ENDMAP
 
-NAME: nicolae_slime_entry_slimehenge
-TAGS: slime_entry transparent
-NSUBST: A = . / A, B = . / B, C = . / C
+NAME:    nicolae_slime_entry_slimehenge
+TAGS:    slime_entry transparent
+NSUBST:  A = . / A, B = . / B, C = . / C
 SHUFFLE: ABCD
-SUBST: A = x, BCD = .
-KFEAT: O = enter_slime_pits
-KMONS: 1 = endoplasm / jelly / nothing
-KFEAT: x = slimy_wall
-KFEAT: _ = altar_jiyva / floor w:5
+SUBST:   A = x, BCD = .
+KFEAT:   O = enter_slime_pits
+KMONS:   1 = endoplasm / jelly
+KFEAT:   x = slimy_wall
+KFEAT:   _ = altar_jiyva / floor w:5
 MAP
   .........
  ...........

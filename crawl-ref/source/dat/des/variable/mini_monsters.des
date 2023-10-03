@@ -2190,6 +2190,22 @@ MAP
    xxxxxxxxxxx
 ENDMAP
 
+NAME:   marbit_kobold_abyssish
+TAGS:   no_monster_gen
+DEPTH:  D:11-
+MONS:   kobold brigand ; dart ego:dispersal, kobold demonologist
+KFEAT:  _ = altar_lugonu
+KPROP:  1 = no_tele_into
+MAP
+xxxxxxxxxxxxxxx
+xxlllxx<.xlll%x
+xlllllxx.lll2.x
+@x.llll..lll._x
+x.xl1lllllll2>x
+xlllxlllx1lll%x
+xxxxxxxxxxxxxxx
+ENDMAP
+
 NAME: sigmund_edmund_badplayer
 TAGS: no_item_gen no_monster_gen no_pool_fixup no_trap_gen transparent
 DEPTH: D:4-7

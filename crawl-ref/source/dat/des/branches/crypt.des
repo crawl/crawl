@@ -237,19 +237,19 @@ ENDMAP
 ##############################################################################
 NAME:   minmay_crypt_entry_skeletal_spiral
 TAGS:   transparent
-MONS:   skeleton w:20 / skeletal warrior
+MONS:   skeleton w:20 / skeletal warrior, ancient champion
 : crypt_entry(_G)
 MAP
 ...........
 .xxxxxxxxx.
 .x..1..1.x.
 .x1xxxxx.x.
-.x.x111x1x.
+.x.x121x1x.
 .x.x1O1x.x.
 .x1x111x1x.
 .x.x.xxx.x.
 .x.x1.1.1x.
-.x1xxxxxxx.
+.x.xxxxxxx.
 ...........
 ENDMAP
 
@@ -323,8 +323,7 @@ ENDMAP
 ##############################################################################
 NAME:    blue_anna_dwarven_crypt
 TAGS:    transparent
-MONS:    death knight
-MONS:    shadow wraith / wraith / wight w:5
+MONS:    death knight, shadow wraith / freezing wraith
 : crypt_entry(_G)
 MAP
 cccc@cccc

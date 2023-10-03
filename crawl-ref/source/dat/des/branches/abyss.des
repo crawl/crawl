@@ -66,22 +66,6 @@ x311_x
 xxxxxx
 ENDMAP
 
-NAME:  marbit_kobold_abyss_entry
-TAGS:  no_monster_gen nolayout_encompass
-WEIGHT: 5
-MONS:  kobold brigand ; dart ego:dispersal, kobold demonologist
-KPROP: 1 = no_tele_into
-: abyss_entry(_G, '_')
-MAP
-xxxxxxxxxxxxxxx
-xxlllxx<.xlll.x
-xlllllxx.lll..x
-@x.llll..lll2_x
-x.xl1lllllll.>x
-xlllxlllx1lll.x
-xxxxxxxxxxxxxxx
-ENDMAP
-
 NAME:    abyss_entry_small_statue_room
 TAGS:    nolayout_encompass
 : abyss_entry(_G, 'O')
