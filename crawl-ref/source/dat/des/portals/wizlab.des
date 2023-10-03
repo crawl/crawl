@@ -1687,65 +1687,66 @@ ENDMAP
 
 ################################################################################
 # The Roulette of Golubria (by HangedMan.)
-# Golubria's fascination with translocations led him to warp out a sub-realm
-# of the Abyss into his own translocations playground, with some nasty and wild
-# security systems built in to defend his many assorted possessions.
+# Golubria's fascination with translocations led her to warp out a sub-realm
+# of the Abyss into her own translocations playground, with opaque security
+# systems built in to defend her many assorted woven possessions.
 #
 # Teleporter explanations: three sets of three chained rooms each,
 # rotating the same amount of rooms per direction in the same direction,
 # though distorted by the use of the ninth room and each set rotated.
 NAME:    wizlab_golubria
 TAGS:    no_pool_fixup
-KMONS:   1 = spatial vortex w:7 / blink frog / nothing w:5
-KMONS:   2 = deep elf knight w:5 ; dart ego:dispersal w:20 | boomerang w:5 | nothing / \
-             rakshasa w:5 ; dart ego:dispersal w:20 | boomerang w:5 | nothing / \
-             boggart ; dart ego:dispersal w:20 | boomerang w:5 | nothing / \
-             arcanist w:5 ; dart ego:dispersal w:20 | boomerang w:5 | nothing / \
-             occultist w:5 ; dart ego:dispersal w:20 | boomerang w:5 | nothing
-KMONS:   3 = rakshasa w:5 ; whip ego:distortion | whip ego:heavy w:6 | dagger \
-             ego:distortion | dagger ego:heavy w:6 | spear ego:distortion | \
-             spear ego:heavy w:6 . dart ego:dispersal / \
-             boggart w:5 ; whip ego:distortion | whip ego:heavy w:6 | dagger \
-             ego:distortion | dagger ego:heavy w:6 | spear ego:distortion | \
-             spear ego:heavy w:6 . dart ego:dispersal / \
-             arcanist w:5 ; whip ego:distortion | whip ego:heavy w:6 | dagger \
-             ego:distortion | dagger ego:heavy w:6 | spear ego:distortion | \
-             spear ego:heavy w:6 . dart ego:dispersal . robe / \
-             occultist w:5 ; whip ego:distortion | whip ego:heavy w:6 | dagger \
-             ego:distortion | dagger ego:heavy w:6 | spear ego:distortion | \
-             spear ego:heavy w:6 . dart ego:dispersal . robe
-KMONS:   04 = large abomination w:15 / small abomination w:15 / unseen horror w:5 / \
-              thrashing horror w:30 / skeleton w:30 / freezing wraith w:5 /  \
-              hellwing / chaos spawn w:5 / orange demon / ice devil /  \
-              hell hound / red devil w:5 / lesser demon w:25 / mana viper w:5 / \
-              worldbinder w:30 / fire elemental w:5 / air elemental w:5
-KMONS:   95 = ynoxinul / smoke demon / sixfirhy / sun demon w:5 / efreet w:5 / \
-              soul eater w:5 / hell knight w:5 / demonic crawler / raiju / \
-              ancient zyme w:20 / lurking horror / tentacled starspawn w:30 / \
-              wind drake w:5 / earth elemental w:5 / water elemental / \
-              ugly thing / base draconian / guardian serpent / \
-              eidolon w:5 / shadow wraith / anaconda skeleton w:5 / \
-              great orb of eyes w:5 / glowing orange brain
-KMONS:   6 = executioner w:5 / balrug w:5 / cacodemon / shadow demon / hellion w:5 / \
-             tormentor w:5 / lorocyproca w:5 / blizzard demon / \
-             reaper / lich w:5 / angel / profane servitor w:5 / \
-             death drake w:5 / tentacled monstrosity w:20 / draconian shifter w:20 / \
-             starcursed mass w:30 / apocalypse crab w:20
+KMONS:   1 = jumping spider w:15 / redback / orb spider w:5
+KMONS:   3 = ghost moth w:15 / entropy weaver / broodmother w:5
+# Rough order and weights for the tiered stuff:
+# direct abyss spawn (w:120, less at the top),
+# abyss demons, abyss undead (both w:30ish),
+# elementals, guests (both w:20ish, fuzzed with heavy un/holy overlap.)
+{{
+ local distoquip = "boomerang ego:dispersal w:20 | " ..
+                   "whip ego:distortion | spear ego:distortion | nothing w:5"
+ local lowtier = "large abomination w:25 / unseen horror w:15 / " ..
+                 "thrashing horror w:30 / raiju w:20 / worldbinder w:30 / " ..
+                 "smoke demon / sixfirhy / hellwing / " ..
+                 "elephant skeleton / anaconda skeleton / " ..
+                 "freezing wraith / air elemental / water elemental / " ..
+                 "will-o-the-wisp w:5 / mana viper / demonic crawler w:5"
+ local midtier = "tentacled starspawn w:50 / very ugly thing w:30 / " ..
+                 "glowing shapeshifter w:40 / efreet w:5 / " ..
+                 "soul eater / shadow demon / eidolon / " ..
+                 "shadow wraith / dire elephant skeleton / death drake / " ..
+                 "base draconian w:5 / spark wasp / glowing orange brain w:5"
+ local hightier = "starcursed mass w:30 / apocalypse crab w:30 / " ..
+                  "tentacled monstrosity w:20 / executioner w:15 /" ..
+                  "cacodemon / hellion w:5 / tormentor w:5 /  " ..
+                  "lorocyproca w:5 / lich / angel / " ..
+                  "profane servitor / balrug w:15 / " ..
+                  "blizzard demon w:15 / hellephant / " ..
+                  "draconian shifter w:15 / demonspawn corrupter w:5"
+
+ kmons("2 = rakshasa ; " .. distoquip .. " / boggart ; " .. distoquip)
+ kmons("04 = " .. lowtier)
+ kmons("95 = " .. midtier)
+ kmons("6 = " .. hightier .. " / reaper w:15 ; halberd itemname:scythe " ..
+                                 "tile:wpn_scythe wtile:scythe ego:distortion")
+
+ dgn.set_random_mon_list(lowtier .. " / " .. midtier .. " / " .. midtier ..
+                         " / " .. hightier .. " / " .. hightier .. " / reaper")
+}}
 KMONS:   7 = eldritch tentacle
 KMONS:   8 = obsidian statue
-# Translocations items, abyss escape aides, shrouds, and an immediate aide.
+
+# Translocations items, abyss escape aides, shrouds, and an immeadiate aide.
 KITEM:   d = scroll of blinking / scroll of teleportation q:3 w:15 / \
              any scroll w:1
-KITEM:   e = any ring
+KITEM:   e = any ally scroll / any scroll w:1
 KITEM:   f = there-and-back book w:5 / book of displacement w:5 / \
              manual of translocations w:5 / \
              randbook disc:translocation numspells:5 / \
              randbook disc:translocation owner:Golubria numspells:7 \
              spells:passage_of_golubria
-KITEM:   g = ring of flight / potion of enlightenment q:2 / \
-             potion of haste w:5 / \
-             scroll of fog / \
-             any potion w:1 / any scroll w:1
+KITEM:   g = ring of flight / potion of enlightenment / potion of haste w:5 / \
+             scroll of fog / any potion w:1 / any scroll w:1 / any ring w:1
 KITEM:   h = pair of boots ego:flying w:8 / pair of boots ego:rampaging w:1 / \
              pair of boots ego:stealth w:8 / pair of boots w:3
 KITEM:   i = wand of digging / any wand w:1
@@ -1753,24 +1754,39 @@ KITEM:   j = any level:3, any level:3 / nothing
 KITEM:   k = star_item / any w:5, any w:5 / nothing
 KITEM:   | = cloak good_item w:75 / randart cloak w:95 / \
              cloak_of_starlight w:20 / cloak_of_the_thief
+
 KFEAT:   m = iron_grate
-KFEAT:   ~ = deep_water
-KFEAT:   ^ = permanent teleport trap / dispersal trap
+KFEAT:   ~ = deep_water / web w:2
+KFEAT:   ^ = permanent teleport trap / web w:20
 KFEAT:   8_ = altar_lugonu
 KFEAT:   opqsrtuvw@}) = floor
 KPROP:   a"_~ = no_tele_into
-MARKER:  ^ = lua:fog_machine { cloud_type = "translocational energy", pow_max = 25, \
-             delay_min = 30, delay_max = 60, walk_dist = 1, size_min = 2, size_max = 3 }
+MARKER:  ^ = lua:fog_machine { cloud_type = "translocational energy", \
+             pow_max = 25, delay_min = 30, delay_max = 60, \
+             walk_dist = 1, size_min = 2, size_max = 3 }
+
+# Randomize the teleporter rotation mechanisms in weird rotations
+# that ever-so-importantly ensure every chamber is accessible from one another.
 SHUFFLE: ozRrIUuLO / uLOozRrIU / rIUuLOozR, pZSsJVvMP / vMPpZSsJV / sJVvMPpZS
 SHUFFLE: zRIULO / RzUIOL, ZSJVMP / SZVJPM, HTKW / THWK
-NSUBST:  @ = 1:w / 1:Y / 1:Q / *:<, 4 = 4:5 / *:4, ` = 4:d / 3:| / 1:|j / 1:i / 4:j / *:`
-NSUBST:  a = 1:_ / 1:_" / *:a, + = 1:+ / *:c, ( = 1:} / 1:( / *:<
-NSUBST:  2 = 1:6 / 2 = 66993 / 2:9 / * = 2:9 3:1 9:2, 1 = 2:0 / *:1, 0 = 2:9 / *:0
-NSUBST:  [ = 1:< / *:d, d = 2:k / 2:e / 2:f / 3:g / 2:eegghhj
-NSUBST:  7 = 1:7 / *:`, A = 1:) / 1:< / 1:{ / 1:A
 SUBST:   H = O, I = P, J = Q, K = R, L = S, M = T, Y = U, z = V, Z = W
-SUBST:   a = ":70 x:40 ccCC~, - = ':50 x:40 ccCC~, E = nccCC, c = cccb, C = cb
-SUBST:   B = ccbn..., e = de, j = jjjjg., k = kkj
+# Place the center's features, enemies, and items.
+NSUBST:  @ = 1:w / 1:Y / 1:Q / *:<, 7 = 2:7 / *:`
+NSUBST:  ` = 1:3 / 1:5 / 4:d / 3:| / 1:|j / 1:i / 4:j / *:`
+# Randomize enemies outside of the center.
+NSUBST:  2 = 1:6 / 2 = 66993 / 2:9 / 1:. / * = 9222
+NSUBST:  1 = 2:3 / 1:6 / 2:2 / 3 = 012 / 2:. / *:1, 0 = 2:9 / 1:6 / 1:. / *:0
+NSUBST:  4 = 1:3 / 3:5 / 1:. / *:4
+# Randomize starting / chambers, chamber / reward items, and escapes.
+NSUBST:  A = 1:) / 1:< / 1:{ / 1:A, ( = 1:} / 1:( / *:<
+NSUBST:  [ = 2:< / *:d, d = 2:k / 2:e / 2:f / 3:g / 2:eegghhj / *:d
+SUBST:   e = de, j = jjjjg., k = kkj
+# Randomize outside terrain and chamber pillars / glass.
+NSUBST:  a = 4:_ / 4:_^ / *:a, + = 1:+ / *:c
+SUBST:   a = ":40 x:40 cccCC~, - = ':40 x:40 ccCC~~, E = nccCC
+SUBST:   c = cccb, C = cb, B = ccbn...
+
+# Finally leave nightmare randomization and go over to colour / tile nonsense.
 COLOUR:  n = lightgreen
 COLOUR:  c = white
 COLOUR:  OPQRSTUVW&{( = warp
@@ -1797,15 +1813,6 @@ for i = 1, #trans_glyph do
     lua_marker(trans_dest_glyph:sub(i,i),
                transp_dest_loc("loc_" .. tostring(i)))
 end
-
-set_random_mon_list([[rakshasa w:15 / deep elf knight w:15 / arcanist / occultist / spatial vortex w:15 /
-                    boggart / blink frog w:5 / shadow wraith w:5 / unseen horror /
-                    raiju / ynoxinul / neqoxec / chaos spawn / glowing orange brain /
-                    large abomination w:15 / small abomination w:15 / skeleton w:20 /
-                    hellwing w:5 / smoke demon w:5 / hell hound w:5 / ugly thing w:5 /
-                    golden eye w:5 / executioner w:3 / shadow demon w:4 / hellion w:3 /
-                    thrashing horror w:25 / tentacled starspawn w:25 / ]])
-
 set_border_fill_type('permarock_wall')
 set_feature_name("permarock_wall", "The dimension's edge")
 set_feature_name("crystal_wall", "wall of crystal")
@@ -1818,9 +1825,9 @@ epilogue{{
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXcccccccEEccccccccccXXXXXXXXXXXXXXXXX
-XXXXXccccccXXXXccaaacc.o..ccaaaaaaccXXXXccccccXXXXXX
-XXXEEc...Pccccccaaacc......ccaaaaaaccccccZ...cEEXXXX
-XXXEv.....ccaaaaaaacz......Rcaaaaaaaaaacc.....pEXXXX
+XXXXXccccccXXXXccxxxcc.o..ccxxxxxxccXXXXccccccXXXXXX
+XXXEEc...Pccccccxaacc......ccaaaaaxccccccZ...cEEXXXX
+XXXEv.....ccxxxxaaacz......Rcaaaaaaxxxxcc.....pEXXXX
 XXcc.......naaaaaaan..BBBB..naaaaaaaaaan.......ccXXX
 XXc....B...n"aaaaa"n..0B2...n"aaaaaaaa"n...B....cXXX
 XXc...BBB.1c"aaaaa"c...B....c"aaaaaaaa"c0.BBB...cXXX
@@ -1828,33 +1835,33 @@ XXc....BB..cccaaaaacc......ccaaaaaaaaccc..BB....cXXX
 XXcM.....2...caaaaaac1.[..1caaaaaaaaac...2.....ScXXX
 XXccc..0..[..caaaaaacc....cc---aaaaaac..[..1..cccXXX
 XXXccnncc..1.ccaaaa--cc..cc-----aaaacc.1..ccnnccXXXX
-XXXcaa""c.....c--a--'-c+cc-''-'--a--c.....c""aacXXXX
-XXXcaaaacccc..c'---'-''-'-'--'-'---'c..ccccaaaacXXXX
-XXccaaaaaaaccc+-'-'------4------'-'-+cccaaaaaaaccXXX
-Xccaaaaaaaaa-'---'------'G'------'---'-aaaaaaaaacXXX
-Xcaaaaaaaaaa--'-4-'--'-'---'-'--'-4-'--aaaaaaaaaacXX
-Xcaaaaaaaaaaa--'-G-''C'C'-'C'C''-G-'--aaaaaaaaaaacXX
-Xcaaaaaaaaaa--'-'--CCCCCC(CCCCCC--'-'--aaaa""aaaacXX
-Xcaaaaaaaaa--'---'Cn'C''CnC'^C'nC'---'--aaccnnccacXX
-Xcaaaaaaaaa-'----'C'@C'`'n'`'C@'C'----'-ccc...HcccXX
-Xcaaaa""aaa--'--'CCCC`````````CCCC'--'-cc1......ccXX
-Xcaccnnccaa-'----'C^'`````````''C'---'cc....0B...cXXXXXXXX
-XcccO...ccc-'---'CC'````m`m````'CC'---+..[.BBB..qEXXnnnnnX
-Xcc......1cc-'-'-'CC'``mm7mm```CC'-'-'c.....2B...EXXnA.AnX
-Xc.........cc-4G--(nn```787```nn(--G4-cc.........cXXn...nX
-XE...B2.....c'-'-'CC'``mm7mm```CC'-'-'-cc1......ccXXnA.AnX
-XEu..BBB.[..+---'CC'````m`m````'CC'---'-ccc...TcccXXnnnnnX
-Xc...B0....cc'---'C''`````````'^C'----'-aaccnnccacXXXXXXXX
-Xcc......1cc-'--'CCCC`````````CCCC'--'--aaa""aaaacXX
-XcccL...ccc-'----'C'@C'`'n'`'C@'C'----'-aaaaaaaaacXX
-Xcaccnnccaa--'---'Cn'C^'CnC''C'nC'---'--aaaaaaaaacXX
-Xcaaaa""aaaa--'-'--CCCCCC(CCCCCC--'-'--aaaaaaaaaacXX
-Xcaaaaaaaaaaa--'-G-''C'C'-'C'C''-G-'--aaaaaaaaaaacXX
-Xcaaaaaaaaaa--'-4-'--'-'---'-'--'-4-'--aaaaaaaaaacXX
-Xccaaaaaaaaa-'---'------'G'------'---'-aaaaaaaaaccXX
-XXccaaaaaaaccc+-'-'------4------'-'-+cccaaaaaaaccXXX
-XXXcaaaaaccc..c'---'-'--'-'-''-'---'c..ccccaaaacXXXX
-XXXcaa""cc....c--a--'-''-cc+c-'--a--c.....c""aacXXXX
+XXXcxa""c.....c--a--'-c+cc-''-'--a--c.....c""aXcXXXX
+XXXcxaaacccc..c'---'-''-'-'--'-'---'c..ccccaaaxcXXXX
+XXccxaaaaaaccc+-'-'------4------'-'-+cccaaaaaaxccXXX
+Xccxaaaaaaaa-'---'------'~'------'---'-aaaaaaaaxcXXX
+Xcxaaaaaaaaa--'-4-'--'-'---'-'--'-4-'--aaaaaaaaaxcXX
+Xcxaaaaaaaaaa--'-~-''C'C'-'C'C''-~-'--aaaaaaaaaaxcXX
+Xcxaaaaaaaaa--'-'-'CCCCCC(CCCCCC'-'-'--aaaa""aaaxcXX
+Xcxaaaaaaaa--'---'CnCC^'CnC'^CCnC'---'--aaccnnccxcXX
+Xcxaaaaaaaa-'----'CCnC'`'n'`'CnCC'----'-ccc...HcccXX
+Xcxaaa""aaa--'--'CCCC@```````@CCCC'--'-cc1......ccXX
+Xcxccnnccaa-'----'C^'`````````'^C'---'cc....0B...cXXXXXXXXX
+XcccO...ccc-'---'CC'````m7m````'CC'---+..[.BBB..qEXXXnnnnnX
+Xcc......1cc-'-'-'CC'``mm`mm```CC'-'-'c.....2B...EXXXnA.AnX
+Xc.........cc-4~--(nn``7`8`7``nn(--~4-cc.........cXXXn...nX
+XE...B2.....c'-'-'CC'``mm`mm```CC'-'-'-cc1......ccXXXnA.AnX
+XEu..BBB.[..+---'CC'````m7m````'CC'---'-ccc...TcccXXXnnnnnX
+Xc...B0....cc'---'C^'`````````'^C'----'-aaccnnccxcXXXXXXXXX
+Xcc......1cc-'--'CCCC@```````@CCCC'--'--aaa""aaaxcXX
+XcccL...ccc-'----'CCnC'`'n'`'CnCC'----'-aaaaaaaaxcXX
+Xcxccnnccaa--'---'CnCC^'CnC'^CCnC'---'--aaaaaaaaxcXX
+Xcxaaa""aaaa--'-'-'CCCCCC(CCCCCC'-'-'--aaaaaaaaaxcXX
+Xcxaaaaaaaaaa--'-~-''C'C'-'C'C''-~-'--aaaaaaaaaaxcXX
+Xcxaaaaaaaaa--'-4-'--'-'---'-'--'-4-'--aaaaaaaaaxcXX
+Xccxaaaaaaaa-'---'------'~'------'---'-aaaaaaaaxccXX
+XXccxaaaaaaccc+-'-'------4------'-'-+cccaaaaaaxccXXX
+XXXcxaaaaccc..c'---'-'--'-'-''-'---'c..ccccaaaxcXXXX
+XXXcxa""cc....c--a--'-''-cc+c-'--a--c.....c""axcXXXX
 XXXccnncc..1.ccaaaa-----cc..cc--aaaacc.1..ccnnccXXXX
 XXccc..1..[..caaaaaaaaacc....ccaaaaaac..[..0..cccXXX
 XXcW.....2...caaaaaaaaac1..[.1caaaaaac...2.....IcXXX
@@ -1862,9 +1869,9 @@ XXc....BB..cccaaaaaaaacc......ccaaaaaccc..BB....cXXX
 XXc...BBB.0c"aaaaaaaa"c....B...c"aaaaa"c1.BBB...cXXX
 XXc....B...n"aaaaaaaa"n...2B0..n"aaaaa"n...B....cXXX
 XXcc.......naaaaaaaaaan...BBB..naaaaaaan.......EcXXX
-XXXEt.....ccaaaaaaaaaacV......Jcaaaaaaacc.....rcXXXX
-XXXEEc...Kccccccaaaaaacc......ccaaaccccccU...EcEXXXX
-XXXXXccccccXXXXccaaaaaacc..s.ccaaaccXXXXccccccXXXXXX
+XXXEt.....ccxxxxaaaaaacV......Jcaaaxxxxcc.....rcXXXX
+XXXEEc...Kccccccxaaaaacc......ccaaxccccccU...EcEXXXX
+XXXXXccccccXXXXccxxxxxxcc..s.ccxxxccXXXXccccccXXXXXX
 XXXXXXXXXXXXXXXXccccccccccEEcccccccXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP
