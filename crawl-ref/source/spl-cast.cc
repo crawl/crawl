@@ -2012,8 +2012,12 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
         if (spell == SPELL_BOMBARD)
         {
             const coord_def back = you.stumble_pos(target->target);
-            if (!back.origin() && !check_moveto(back, "potentially stumble back", false))
+            if (!back.origin()
+                && back != you.pos()
+                && !check_moveto(back, "potentially stumble back", false))
+            {
                 return spret::abort;
+            }
         }
     }
 

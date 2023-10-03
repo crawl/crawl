@@ -1125,7 +1125,7 @@ bool actor::knockback(const actor &cause, int dist, int pow, string source_name)
 
 coord_def actor::stumble_pos(coord_def targ) const
 {
-    if (is_stationary() || resists_dislodge(""))
+    if (is_stationary() || resists_dislodge("") || targ == pos())
         return coord_def();
 
     const coord_def oldpos = pos();
