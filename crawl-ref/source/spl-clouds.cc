@@ -210,7 +210,6 @@ void holy_flames(monster* caster, actor* defender)
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
         if (!in_bounds(*ai)
-            || cloud_at(*ai)
             || cell_is_solid(*ai)
             || is_sanctuary(*ai)
             || monster_at(*ai))
