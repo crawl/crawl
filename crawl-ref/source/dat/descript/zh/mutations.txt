@@ -147,7 +147,7 @@ hooves mutation
 
 你长出蹄子，如果不穿靴子，在近战时能够踢击敌人。这个变异每升一级，
 你的蹄子就会更硬、更强。这个变异达到第三级，你将无法穿靴子。
-3%%%%
+%%%%
 talons mutation
 
 你长出锋利的趾甲，如果不穿靴子，在近战时能够踢击敌人。这个变异每升一级，
@@ -494,9 +494,13 @@ in touch with death mutation
 
 你的死灵法术变得更为强大。这个变异达到第二级，就会增强你的死灵术的法力。
 %%%%
-nimble flight mutation
+acrobatic mutation
 
-你在空中快速飞行、俯瞰地面，这比步行要快。它的效果也会让你的闪避率倍增。
+你那神奇的天性有助于你杂技般地翻滚你的空心骨头，从而能在移动或等待时躲避攻击。
+%%%%
+evasive flight mutation
+
+你地在空中扑闪，闪避能力得到一定提升。
 %%%%
 big wings mutation
 
@@ -567,10 +571,10 @@ retaliatory headbutt mutation
 %%%%
 multi-lived mutation
 
-每过三级，你将获得额外的生命。如果你被杀的时候还剩下一条命，
-你会重新出现在当前楼层的另一区域，并在这个过程中会失去一个经验等级。
+每过三级，你将获得额外的生命。
+如果你被杀的时候还有一条命，你会在当前楼层的其他地方重新出现。
 即使你达到了最高的经验等级，你也可以继续获得额外的生命，
-但在任何时候，你都不能有超过两条的额外生命储备。
+但最多只能有两条额外生命。
 %%%%
 distributed training mutation
 
@@ -685,7 +689,7 @@ faith mutation
 %%%%
 devour on kill mutation
 
-当你杀死生物时，你有机会吞噬它们的生命力并恢复生命值。
+当你杀死生物时，你有机会吞噬它们的生命力并恢复健康。
 %%%%
 roll mutation
 
@@ -704,12 +708,12 @@ awkward tongue mutation
 inability to drink after injury mutation
 
 当你受伤时，你有可能暂时无法饮用药水。
-变异等级越高，受到的伤害就越大，离死亡越近的几率就越大。
+这个变异每升一级，几率就会增加1％。
 %%%%
 inability to read after injury mutation
 
-当你受伤时，你有可能暂时无法阅读。
-变异等级越高，受到的伤害就越大，离死亡越近的几率就越大。
+当你受伤时，你有可能暂时无法阅读卷轴。
+这个变异每升一级，几率就会增加1％。
 %%%%
 missing a hand mutation
 
