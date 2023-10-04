@@ -779,6 +779,8 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
         return;
 
     targeter_cloud place(agent, GDM, number, number);
+    // We can (try to) overwrite existing clouds.
+    place.avoid_clouds = false;
     if (!place.set_aim(where))
         return;
     unsigned int dist = 0;
