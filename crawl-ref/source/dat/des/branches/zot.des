@@ -607,68 +607,71 @@ ENDMAP
 # Space-filling minivaults by bh.
 
 NAME:   bh_zot_ikea_curve
-TAGS:   extra transparent
+TAGS:   extra zotdec transparent
 DEPTH:  Zot
+SUBST:  X : x., Y : x.
 MAP
 xxxxxxxxxxxxx
-@.....x.....@
+@....XxX....@
 @.....x.....@
 xxxx..x..xxxx
-x.....x.....x
+xY....x....Yx
 x.....x.....x
 x..xxxxxxx..x
-x..x.....x..x
+x..xY...Yx..x
 x..x.....x..x
 x.....x.....x
-x.....x.....x
+xX....x....Xx
 xxxxxxxxxxxxx
 ENDMAP
 
 NAME:   bh_zot_lava_cross
-TAGS:   extra
+TAGS:   extra zotdec luniq_zotdec_liquid
 DEPTH:  Zot
+SUBST:  K : l., L : l.
 MAP
-     @@
-    x..x
-    x..x
-    x..x
- xxxxllxxxx
-@...l..l...@
-@...l..l...@
- xxxxllxxxx
-    x..x
-    x..x
-    x..x
-     @@
+      @@
+     x..x
+     x..x
+     xK.x
+ xxxxxllxxxxx
+@....llllL...@
+@...Lllll....@
+ xxxxxllxxxxx
+     x.Kx
+     x..x
+     x..x
+      @@
 ENDMAP
 
 NAME:   bh_zot_levy_curve
-TAGS:   extra
+TAGS:   extra no_pool_fixup zotdec luniq_zotdec_liquid
 DEPTH:  Zot
-SUBST:  W = Ww
+SUBST:  d : WWw, e : WWw, f : WWw, ' : '...
+CLEAR:  '
 MAP
           WWW.
           W.W..
-          W.WWW
+          d.dWW
           ....W
-         .....W
-        ....WWW
+         ''...W
+        '''.WWe
        .......W
-      ..www...W
-     ...w.w.WWW
-    ....wwwWW..
-WWW.......W...
-W........WW..
-WWW..W..WW..
+      '.www...W
+     ''.w.w.fWe
+    '''.wwWWW..
+WWd.'''...W...
+W........fW.'
+WWd..W..WW..
 ..W..W..W..
- .WWWWWWW.
+ .WWWeWWe.
 ENDMAP
 
+##
+
 NAME:    hangedman_zot_gyre
-TAGS:    extra transparent
+TAGS:    extra transparent zotdec luniq_zotdec_large
 DEPTH:   Zot
-WEIGHT:  8
-KITEM:   % = % no_pickup
 KFEAT:   Z = zot trap
 SHUFFLE: dD, eE, fF, gG, hH, dD / eE / fF / gG / hH
 SHUFFLE: cCbB / cCbB / bBcC, qQ / qQ / ZZ / wl / '' / ''
@@ -725,10 +728,9 @@ ENDMAP
 ####
 # Weird orderly decorum.
 NAME:    hangedman_zot_decor_unnerving_road
-TAGS:    extra transparent no_pool_fixup
-DEPTH:   Zot
-WEIGHT:  8
-SHUFFLE: @&, (), vb / vb / vb / bv / cc, lw / lw / lw / '', JK / LM / NO
+TAGS:    extra transparent zotdec no_pool_fixup luniq_zotdec_liquid
+DEPTH:   Zot, !Zot:$
+SHUFFLE: @&, (), vb / vb / bv / cc / xx, lw / lw / lw / '', JK / LM / NO
 SHUFFLE: JK / JK / JK / !!, LM / ??, NO / `` / `` / `` / ``, JKLMNO / JKLMNO / KJMLON
 SUBST:   '!?`& = ., X : xxc, JLN = F, KMO = f
 SUBST:   ( = (:1 .:14, ) = ):1 .:14
@@ -767,44 +769,45 @@ XXlllv..v.....b..bwX
 ENDMAP
 
 NAME:    hangedman_zot_decor_checkerboard
-TAGS:    extra transparent
-DEPTH:   Zot
-WEIGHT:  8
+TAGS:    no_pool_fixup extra zotdec transparent luniq_zotdec_liquid
+DEPTH:   Zot, !Zot:$
 KFEAT:   Z = zot trap
 SHUFFLE: @' / '@ / "" / "", defg / jkhi / HIJK / NOLM
-SUBST:   d : wbb, e : wwb, g : lvv, f : llv
-SUBST:   h : lvv, i : llv, j : wbb, k : wwb
-SUBST:   H : wwwwb, I : wwwwb, J : llllv, K : llllv
-SUBST:   L : lvvvv, M : lvvvv, N : wbbbb, O : wbbbb
-SHUFFLE: bv / bv / bv / vb / xx / cc
-NSUBST:  Z = 1 = (:1 Z:14 / 1 = ):1 Z:14 / Z
-SUBST:   Z = ZZUG..., '" = .
+SUBST:   d : wbb, e : wwb, f : lbb, g : llb
+SUBST:   h : lbb, i : llb, j : wbb, k : wwb
+SUBST:   H : wwwbb, I : wwwbb, J : lllbb, K : lllbb
+SUBST:   L : lbbbb, M : lbbbb, N : wbbbb, O : wbbbb
+NSUBST:  Z = 1 = (:1 Z:14 / 1 = ):1 Z:14 / * = ZZUG...
+SUBST:   '" = ., b : cbbvxx
 KPROP:   l = no_cloud_gen
 KMASK:   wl = no_monster_gen
 MAP
-.......     ...'...
-.dw.lf.     .Hw.lJ.
-.we.gl.     .wI.Kl.
-@..Z...........Z.........
-.lg.ew.hl.wj.lK.Iw.Ll.wN.
-.fl.wd.li.kw.Jl.wH.lM.Ow.
-.........Z...........Z..@
-      .wk.il.     .wO.Ml.
-      .jw.lh.     .Nw.lL.
-      ...'...     .......
+             xx
+             xx
+.......      xx.......
+.dw.lf.      xx.Hw.xJ.
+.xe.gl.      xx.wI.Kl.
+@..Z.....'...xx...Z........
+.lg.ex.hl.wj.xx.lK.Iw.Ll.wN.
+.fl.wd.li.kw.xx.Jl.wH.xM.Ow.
+.........Z...xx...'.....Z..@
+      .wk.il.xx      .wO.Mx.
+      .jx.lh.xx      .Nw.lL.
+      .......xx      .......
+             xx
+             xx
 ENDMAP
 
 NAME:    hangedman_zot_decor_slant
-TAGS:    extra transparent
+TAGS:    extra transparent zotdec
 DEPTH:   Zot
-WEIGHT:  8
-KFEAT:   zZ = zot trap
+KFEAT:   z = zot trap
 KFEAT:   fF = floor
-SHUFFLE: BVfF / VBFf, BV / BV / BV / wl, bv / bv / cc
-SHUFFLE: aAuU / aAuU / aAuU / uUaA
-SHUFFLE: AU / "", fF / fF / zz / '' / '', @! / !@ / ?? / ??
-SUBST:   aAB = b, uUV = v, Z = ()G .:45 Z:25, '"!? = .
-KMASK:   wlfF = no_monster_gen
+SHUFFLE: BVfF / VBFf, aAuU / aAuU / aAuU / uUaA
+SHUFFLE: AU / "", fF / fF / zz, @! / !@ / ?? / ??
+SUBST:   aAB = b, uUV = v, Z = ()G .:45 z:25, '"!? = .
+SHUFFLE: bv / bc / vc / cc
+KMASK:   fF = no_monster_gen
 COLOUR:  fF = darkgray
 FTILE:   fF = floor_rough_darkgray
 MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
@@ -816,86 +819,88 @@ MARKER:  F = lua:fog_machine {cloud_type = "flame", \
 MAP
             ...!..
            ........
-           ..UuuU..
+           @.UuuU..
          ....uuuu.!
-         @vv.uuuu..
-         .vv.uuuU..
-      ......F......
-      .vv.VV.vv...
+         .vv.ufuu..
+     xx  .vv..uuU..
+     x.............
+      .vv.VV.vv.@.
       .vv.VV.vv.
-   .@....Z....@.
+   ......Z......
    .bb.BB.bb.
- ...bb.BB.bb.
-......f......
-..Aaaa.bb.
-..aaaa.bb@
+ .@.bb.BB.bb.
+.............x
+..Aaa..bb.  xx
+..aafa.bb.
 !.aaaa....
-..AaaA..
+..AaaA.@
 ........
  ..!...
 ENDMAP
 
 NAME:    hangedman_zot_decor_scrapings
-TAGS:    transparent extra
+TAGS:    transparent extra zotdec
 DEPTH:   Zot
 KFEAT:   Z = zot trap
 SHUFFLE: HIJKLM / HIJKLM / IHKJML
 SUBST:   HJL : xxcb, I : x..., K : x..., M : x...
-SUBST:   N : xcG.., O : xc..., P : xcG.., Z = ()G .:45 Z:25
+SUBST:   N : xcG.., O : xc..., P : xcG.., Z = ()G x:45 Z:25
 MAP
-           ..   ...
-          .......x..
-         ..x......x..
-        ....x..O......
-    ................x..
-   ..J...P...L...N.I.H.
-  ..x.x.....x.x.....x..
- ....K...M.Z.M...K....
-..x.....x.x.....x.x...
-.H.I.N...L...P...J...
-..x.................
- ......O...x....
-  ..x.......x..
-   ..x........
-    ...    ..
+          x     ..  ...
+          xx   .... .x..
+          xx  x.......x..
+           x   x...O......
+    .....  xx  .........x..
+   ..J...P  x   .L...N.I.H.
+  ..x.x...  xx  x.x.....x..
+ ....K...M   Z   M...K....
+..x.....x.x  xx  ...x.x..
+.H.I.N...L.   x  P...J..
+..x.........  xx  .....
+ ......O...x   x
+  ..x.......x  xx
+   ..x. ....   xx
+    ...  ..     x
 ENDMAP
 
 NAME:    hangedman_zot_decor_tridents
-TAGS:    transparent extra
+TAGS:    transparent extra zotdec
 DEPTH:   Zot
 KFEAT:   Z = zot trap
-SHUFFLE: vb / xy / XY
-SUBST:   = = ()+Z .:60, - : ++., _ : +.., H : z., I : z., J : z.
-SUBST:   K : zzwl...., L : zzzwl.., M : zzwl...
-SUBST:   N : zzzwl.., O : zzwl..., P : zzwl.., XyYz = x
+SHUFFLE: bc / xy / XY, bc / cb / cc
+SUBST:   ~ = ()+Z .:60, - : ++.
+SUBST:   H : z., I : z., J : z.
+SUBST:   K : ., L : xxxw.., M : xxw...
+SUBST:   N : xxxl.., O : xxl..., PXyY = x
 KMASK:   wl = no_monster_gen
 MAP
-         xxx.....
-         xxx.......
-         x...Iv.vv.
-    .....x...v.....
-  .....K.-.O...N..@
-.........x...v.....
-.bb.bJ..Pxv_vHv.vv.
-.....b...x...v.....
-@..L...M.=.M...L..@
-.....b...y...v.....
-.bb.bHb_byP..Jv.vv.
-.....b...y.........
-@..N...O.-.K.....
-.....b...y.....
-.bb.bI...y
-.......yyy
-  .....yyy
+            x
+            x      ......
+            x    ..Ic.ccc
+     ...    x    ..c.....
+   ....K.   x   .O...N.@
+.........   x cc...c....
+bbb.bJ..P   xccc-cHc.cc.
+.....b...   x cc...c....
+ @.L...M.   ~   .M...L.@
+ ....b...bb y   ...c.....
+ .bb.bHb-bbby   P..Jc.ccc
+ ....b...bb y   .........
+ @.N...O.   y   .K....
+.....b..    y    ...
+bbb.bI..    y
+......      y
+            y
 ENDMAP
 
+
 NAME:    hangedman_zot_diagonal_lockstep
-TAGS:    transparent extra decor
+TAGS:    transparent extra zotdec
 DEPTH:   Zot
 ITEM:    % no_pickup
 KFEAT:   Z = zot trap
 SHUFFLE: ABCDEFG, defg / hijk / mnop / qrst, defg, hjik, mnop
-SUBST:   A : xbvcZ, B : xbvc, C : xxbvc, D : xxbvc, EFG = x
+SUBST:   A : xbvcZ, B : xc, C : xxc, D : c, EFG = x
 SUBST:   d : xxZ, h = x, e : xx., i : xx., f : x.., j : x.., m : x..
 SUBST:   gknopqrst = .
 :  if you.depth() == dgn.br_depth(you.branch()) then
@@ -926,7 +931,7 @@ Be..x...Ck..x.Et......
 ENDMAP
 
 NAME:    hangedman_zot_wheel_spokes
-TAGS:    transparent extra decor
+TAGS:    transparent extra zotdec
 DEPTH:   Zot, !Zot:$
 # Swap positions in unit's potential spots
 # with the spokes and / or the center, maybe.
@@ -936,33 +941,34 @@ SHUFFLE: DJPEKQ / DJQEKP / DJQEKP
 SHUFFLE: AGM / BHN / CIO / DJP / EKQ / FLR
 # Make those slots random walls or floor.
 SUBST:   AGM : xxxxcccbbv, BHN : xxxxcccbbv
-SUBST:   CIO : xxxxcccbbv .:100
-SUBST:   DJP : xxxxcccbbv .:100, EFKLQR = .
+SUBST:   CIO : x., DJP : x., EFKLQR = .
 MAP
-      ...CDEF...
-      ..F.AB.C..
-........EB..AD..
-........DA..BE..
-.IJKL...C.BA.F..
-L.GH.I...FEDC...
-KH..GJ.OPQR.......
-JG..HKR.MN.O......
-I.HG.LQN..MP.IJKL.
-.LKJI.PM..NQL.GH.I
-......O.NM.RKH..GJ
-.......RQPO.JG..HK
-  ...CEDF...I.HG.L
-  ..F.AB.C...LKJI.
-  ..EB..AE........
-  ..DA..BD........
-  ..C.BA.F..
-  ...FEDC...
+                 x .CDEF@
+                 x.F.AB.C
+                 x.DB..AD
+      ......     x.EA..BE
+     .......     x.C.BA.F
+   .IJKL......@  x..FDEC.
+   L.GH.I........x......
+   KH..GJ..OPQR..xxxxxxxxx
+   JG..HK.R.MN.O.......
+   I.HG.L.QN..MP..IJKL.
+   .LKJI..PM..NQ.L.GH.I
+    ......O.NM.R.KH..GJ
+xxxxxxxxx..RQPO..JG..HK
+  ......x........I.HG.L
+ .CDEF..x  @......LKJI.
+ F.AB.C.x      ........
+ EB..AD.x      .......
+ DA..BE.x
+ C.BA.F.x
+ @FEDC. x
 ENDMAP
 
 ##########################################################################
 # Some decorative multi-coloured glass columns
 NAME:   skrybe_zot_glass_1
-TAGS:   transparent decor no_pool_fixup
+TAGS:   transparent zotdec no_pool_fixup luniq_zotdec_liquid
 DEPTH:  Zot
 SUBST:  W : Wwl
 KMASK:  Wwl = no_monster_gen
@@ -989,7 +995,7 @@ MAP
 ENDMAP
 
 NAME:   skrybe_zot_glass_2
-TAGS:   transparent decor no_pool_fixup
+TAGS:   transparent zotdec no_pool_fixup luniq_zotdec_liquid
 DEPTH:  Zot
 SUBST:  l : Wwl
 KPROP:  l = no_cloud_gen
@@ -1008,7 +1014,7 @@ MAP
 ENDMAP
 
 NAME:   skrybe_zot_glass_3
-TAGS:   transparent decor no_pool_fixup
+TAGS:   transparent zotdec no_pool_fixup luniq_zotdec_liquid
 DEPTH:  Zot
 SUBST:  l : Wwl
 SUBST:  ( : ([{.
