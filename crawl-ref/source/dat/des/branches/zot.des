@@ -603,6 +603,19 @@ MAP
 *
 ENDMAP
 
+# Directly place a decorative vault 33% of the time on Zot:1-4.
+NAME:    zot_decor
+TAGS:    no_dump extra allow_dup nolayout_encompass luniq
+DEPTH:   Zot, !Zot:$
+CHANCE:  33%
+{{
+  local c = 1
+  hook("post_place", function()
+    dgn.place_maps{tag="zotdec", count=c}
+  end)
+}}
+
+
 ################################################################################
 # Space-filling minivaults by bh.
 
