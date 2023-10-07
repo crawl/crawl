@@ -725,7 +725,7 @@ void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
     place_cloud(cl_type, p, lifetime, agent, spread_rate, excl_rad);
 }
 
-static bool _cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
+bool cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
 {
     return (is_harmless_cloud(cloud.type) && !is_opaque_cloud(cloud.type))
            || cloud.type == CLOUD_STEAM
@@ -806,7 +806,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
     // There's already a cloud here. See if we can overwrite it.
     const cloud_struct *cloud = cloud_at(ctarget);
-    if (cloud && !_cloud_is_stronger(cl_type, *cloud))
+    if (cloud && !cloud_is_stronger(cl_type, *cloud))
         return;
 
     // If the old cloud was opaque, may need to recalculate los. It *is*

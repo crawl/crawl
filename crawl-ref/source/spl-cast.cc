@@ -1203,7 +1203,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_FREEZING_CLOUD:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_HOLY_BREATH:
-        return make_unique<targeter_cloud>(&you, range);
+        return make_unique<targeter_cloud>(&you, spell_to_cloud(spell), range);
     case SPELL_THUNDERBOLT:
         return make_unique<targeter_thunderbolt>(&you, range,
                    get_thunderbolt_last_aim(&you));

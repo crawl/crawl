@@ -70,6 +70,7 @@ void swap_clouds(coord_def p1, coord_def p2);
 
 coord_def random_walk(coord_def start, int dist);
 
+bool cloud_is_stronger(cloud_type ct, const cloud_struct& cloud);
 void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
                        const actor *agent, int spread_rate = -1,
                        int excl_rad = -1);

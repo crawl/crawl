@@ -94,8 +94,20 @@ void explode_blastmotes_at(coord_def p)
                                nullptr);
 }
 
+cloud_type spell_to_cloud(spell_type spell)
+{
+    static map<spell_type, cloud_type> cloud_map =
+    {
+        { SPELL_POISONOUS_CLOUD, CLOUD_POISON },
+        { SPELL_FREEZING_CLOUD, CLOUD_COLD },
+        { SPELL_HOLY_BREATH, CLOUD_HOLY },
+    };
+
+    return lookup(cloud_map, spell, CLOUD_NONE);
+}
+
 spret cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
-                      bool fail)
+                 bool fail)
 {
     if (grid_distance(beam.target, you.pos()) > beam.range
         || !in_bounds(beam.target))
@@ -111,28 +123,36 @@ spret cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
         return spret::abort;
     }
 
-    cloud_type cty = CLOUD_NONE;
+    cloud_type cty = spell_to_cloud(spl);
+    if (is_sanctuary(beam.target) && !is_harmless_cloud(cty))
+    {
+        mprf("You can't place harmful clouds in a sanctuary.");
+        return spret::abort;
+    }
+
     //XXX: there should be a better way to specify beam cloud types
     switch (spl)
     {
         case SPELL_POISONOUS_CLOUD:
             beam.flavour = BEAM_POISON;
             beam.name = "blast of poison";
-            cty = CLOUD_POISON;
             break;
         case SPELL_HOLY_BREATH:
             beam.flavour = BEAM_HOLY;
             beam.origin_spell = SPELL_HOLY_BREATH;
-            cty = CLOUD_HOLY;
             break;
         case SPELL_FREEZING_CLOUD:
             beam.flavour = BEAM_COLD;
             beam.name = "freezing blast";
-            cty = CLOUD_COLD;
             break;
         default:
-            mpr("That kind of cloud doesn't exist!");
-            return spret::abort;
+            break;
+    }
+
+    if (cty == CLOUD_NONE)
+    {
+        mpr("That kind of cloud doesn't exist!");
+        return spret::abort;
     }
 
     beam.thrower           = KILL_YOU;

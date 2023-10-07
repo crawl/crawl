@@ -2468,8 +2468,8 @@ void bolt::affect_endpoint()
         if (cloud == CLOUD_NONE)
             return;
 
-        targeter_cloud tgt(agent(), range, get_cloud_size(true),
-                            get_cloud_size(false, true));
+        targeter_cloud tgt(agent(), cloud, range, get_cloud_size(true),
+                           get_cloud_size(false, true));
         tgt.set_aim(pos());
         for (const auto &entry : tgt.seen)
         {

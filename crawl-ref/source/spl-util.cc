@@ -778,9 +778,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
     if (number <= 0)
         return;
 
-    targeter_cloud place(agent, GDM, number, number);
-    // We can (try to) overwrite existing clouds.
-    place.avoid_clouds = false;
+    targeter_cloud place(agent, ctype, GDM, number, number);
     if (!place.set_aim(where))
         return;
     unsigned int dist = 0;
@@ -1558,10 +1556,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_POISONOUS_CLOUD:
     case SPELL_HOLY_BREATH:
     {
-        targeter_cloud tgt(&you, range);
-        // Accept monsters that are in clouds for the hostiles-in-range check
-        // (not for actual targeting).
-        tgt.avoid_clouds = false;
+        targeter_cloud tgt(&you, spell_to_cloud(spell), range);
         for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS);
              ri; ++ri)
         {
