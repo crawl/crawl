@@ -1399,6 +1399,433 @@ x1...1...1x
 xxx..@..xxx
 ENDMAP
 
+NAME:    nicolae_orc_all_along_the_watchtower
+TAGS:    transparent no_descent
+DEPTH:   Orc, !Orc:$
+KMONS:   1 = orc wizard / orc priest
+KMONS:   2 = orc warrior ; chain mail | plate armour . arbalest | longbow
+KFEAT:   - = iron_grate
+SHUFFLE: c1, !I, -Ic`
+SUBST:   } = }]), ! = 1
+NSUBST:  1 = 2=1 / 2=2 / 2=12``` / `
+KPROP:   l = no_cloud_gen
+KMASK:   `Ic-}])12 = opaque
+KMASK:   `Ic-}])12 = no_monster_gen
+MAP
+  ...@...
+ .........
+...lllll...
+..llI!Ill..
+..lIc1cIl..
+@.l!1}1!l.@
+..lIc1cIl..
+..llI!Ill..
+...lllll...
+ .........
+  ...@...
+ENDMAP
+
+NAME:    nicolae_orc_beogh_chapel
+TAGS:    transparent
+DEPTH:   Orc
+KFEAT:   _ = altar_beogh
+SHUFFLE: IT
+MAP
+.........
+.cc.T.cc.
+.cI...Ic.
+.........
+.T.._..T.
+.........
+.cI...Ic.
+.cc.T.cc.
+.........
+ENDMAP
+
+NAME:   nicolae_orc_big_mining_drill
+TAGS:   transparent
+DEPTH:  Orc
+ORIENT: east
+KITEM:  r = stone w:15 / large rock w:1
+KMONS:  F = orc warlord
+KMONS:  O = orc w:15 / orc priest w:5 / orc wizard w:5 / orc warrior w:5
+NSUBST: O = F / OOr
+SUBST:  - = x', ` = .x, r = ....r, ' = .$
+MAP
+         xxxxxxxxx
+  xxxxxxxxxxxxxxxxxxxxx
+  `````xxxxxxxxxx--xxxxxx
+ ......`xxxxxxxx-''---xxx
+.....O..`xxxxxxx..''''-xx
+....ccrrvrrrvrrrv..O'''-x
+....cvrOrvrOrvrOrv..9''-x
+...Ocbvbbbvbbbvbbbv.8''-x
+....cbrvrOrvrOrvrO..9''-x
+....ccrrvrrrvrrrv..O'''-x
+.....O.`xxxxxxxxx...''-xx
+ ``....`xxxxxxxxxx--''-xx
+ xx````xxxxxxxxxxxxx--xxx
+  xxxxxxxxxxxxxxxxxxxxxx
+       xxxxxxxxxx
+ENDMAP
+
+NAME:  nicolae_orc_combat_training
+TAGS:  transparent
+DEPTH: Orc
+# From the list of gear orc knights can get according to mon-gear.cc
+KITEM: R = arbalest / chain mail / plate armour / great sword / long sword / \
+           battle axe / war axe / great mace / dire flail / bardiche / glaive /\
+           broad axe / halberd
+KMONS: K = orc knight
+KMONS: O = orc warrior / orc w:2
+KMONS: D = training dummy
+SUBST: R = RRRRR., O = OOOOO.
+MAP
+ccccccccccccc
+ccccRRRRRcccc
+cc..........c
+cI.DO.DO.DO.c
+c...........c
+cI..........+
+cK.DO.DO.DO.+
+cI..........+
+c...........c
+cI.DO.DO.DO.c
+cc..........c
+ccccRRRRRcccc
+ccccccccccccc
+ENDMAP
+
+NAME:   nicolae_orc_crystal_seam
+TAGS:   no_exits
+DEPTH:  Orc
+: if crawl.one_chance_in( 5 ) then
+NSUBST: - = 2=@ / -
+: else
+NSUBST: b = 2=@ / bbbbbbbb-
+: end
+CLEAR:  -
+MAP
+   b
+ -b
+ b-  bb
+b  -b
+  bb-   bb
+ b   -bb
+    bb-   bbb
+  bb   -bb
+     bbb-    bbb
+   bb    -bbb
+       bbb-    bbbb
+    bbb    -bbb
+        bbbb-     bbbb
+     bbb     -bbbb
+          bbbb-
+      bbbb
+ENDMAP
+
+NAME:   nicolae_orc_found_a_spring
+TAGS:   transparent no_pool_fixup
+DEPTH:  Orc
+SUBST:  M = wx, ~ = Ww
+NSUBST: D = W / _, E = W / _, F = W / _, H = W / _, J = W / _, K = W / _
+CLEAR:  _
+MAP
+ xxxxxx..@
+xxxMMxx...   EWWWDxxxx
+xxMww~...   FWE DWWxxx
+xMwwww~WWJ HWF    xwwx
+xxMww~..JWWWH     xxxx
+xxxMMxx...
+ xxxxxx..@
+ENDMAP
+
+NAME:   nicolae_orc_ghostly_orcs
+TAGS:   transparent
+DEPTH:  Orc
+KMONS:  D = spectral orc / spectral orc warrior w:5
+NSUBST: ' = 3=D / 3=D. / $..
+SUBST:  - = x., ` = x'
+: dgn.delayed_decay(_G, 'D', 'orc corpse')
+MAP
+ xxxxxxxxx
+xxx-....xxx
+xx-.-...-xx
+x....-...-x
+@....-x..-x
+@.x--xx-''x
+xxxxxx`'''x
+xxxx`''''`x
+ xx`''''`xx
+  xx`''`xx
+   xxxxxxx
+ENDMAP
+
+# so that's what happened to the dwarves...
+NAME:   nicolae_orc_hostile_takeover
+TAGS:   transparent
+DEPTH:  Orc
+SUBST:  - = xxx'
+NSUBST: ' = 7=D / $..
+: dgn.delayed_decay(_G, 'D', 'dwarf corpse')
+MAP
+ xxxxxxxx
+xxxxx-''xx.
+xx--x-''.x.
+x-''xxx....
+x-''.....x.
+xx-x...xxxx
+xxxx...''-x
+xx-''xx''xx
+xx-''-x-xx
+ xxxxxxxx
+ENDMAP
+
+NAME:  nicolae_orc_mage_tower
+TAGS:  transparent
+DEPTH: Orc
+KITEM: d = any book
+KMONS: S = orc sorcerer
+KMONS: M = orc wizard
+SUBST: - = x_, ' = x.., M = MM.
+CLEAR: _
+MAP
+   ----@@@----
+  -xxxx...xxxx-
+ -xx'''...'''xx-
+-xx'.........'xx-
+-x'..'ccccc'..'x-
+-x..'ccdddcc'.'x-
+-x'.ccI.S.Icc.'x-
+-x'.c.......c.'x-
+-x'.c.M.M.M.c.'x-
+-x'.c.......c.'x-
+-x'.ccM.M.Mcc.'x-
+-x'.'cc...cc'.'x-
+-x'..'c+++c'..'x-
+-xx'.........'xx-
+ -xx'''''''''xx-
+  -xxxxxxxxxxx-
+   -----------
+ENDMAP
+
+NAME:  nicolae_orc_minecarts
+TAGS:  transparent
+DEPTH: Orc
+KITEM: L = stone, stone / nothing, stone / nothing, gold / nothing, \
+           gold / nothing, gold good_item w:1 / nothing w:24, \
+           large rock / nothing w:20
+KFEAT: - = iron_grate
+SUBST: 0 = 9000...., ` = ..xx_
+CLEAR: _
+MAP
+ `````````````
+`.............`
+...............
+.0v+v0v+v0v+v0.
+v-vLv-vLv-vLv-v
+.0v+v0v+v0v+v0.
+...............
+`.............`
+ `````````````
+ENDMAP
+
+NAME:   nicolae_orc_ogretown
+TAGS:   transparent
+DEPTH:  Orc
+KITEM:  s = any book
+KITEM:  z = any magical staff
+KITEM:  r = any jewellery
+KMONS:  M = ogre mage band
+KMONS:  O = ogre
+KMONS:  T = two-headed ogre
+NSUBST: E = D / x, D = . / x, F = . / .x / x, H = . / .x / x, J = . / x, \
+            K = . / x, L = . / x, % = ss% / rr% / zz% / ...%
+SUBST:  O = OOOOT.....
+MAP
+     xxxxx
+    xx...xxxx
+  ..H..O.F..xx
+ ..xx....F...x
+ ..H..O..F.O.x
+ ..H.....F...xxxxxxx
+...xxJJJJx...E....%x
+.O..H....F.O.E....%x
+....H..O.F...E..M.%x
+....H.OxFxLLLx....%x
+....H..F.....D....%x
+.O.xxKKx...O.xxxxxxx
+...H...F.O...x
+ ..H...F...xxx
+ ..H.O.xFFxx
+   x......x
+   x...O..x
+   xxxxxxxx
+ENDMAP
+
+NAME:   nicolae_orc_quarried_blocks
+TAGS:   transparent no_exits
+DEPTH:  Orc
+NSUBST: @ = @ / 2=@___ / _
+SUBST:  D : xxxx_, E : xxxx_, F : xxxx_, H : xxxx_, J : xxxx_, K : xxxx_
+SUBST:  L : xxxx_, M : xxxx_, N : xxxx_, O : xxxx_, P : xxxx_, Q : xxxx_
+SUBST:  R : xxxx_, S : xxxx_, Z : xxxx_, - : xxxx_
+CLEAR:  _
+MAP
+DDD EEE FFF HHH JJJ
+DDD EEE FFF HHH JJJ
+DDD EEE FFF HHH JJJ
+       @   @
+KKK xxx xxx xxx LLL
+KKK xxx xxx xxx LLL
+KKK xxx xxx xxx LLL
+   @   @   @   @
+MMM xxx xxx xxx NNN
+MMM xxx xxx xxx NNN
+MMM xxx xxx xxx NNN
+   @   @   @   @
+OOO xxx xxx xxx PPP
+OOO xxx xxx xxx PPP
+OOO xxx xxx xxx PPP
+       @   @
+QQQ RRR SSS ZZZ ---
+QQQ RRR SSS ZZZ ---
+QQQ RRR SSS ZZZ ---
+ENDMAP
+
+# I don't want to be buried / in an orc seminary
+# wait that's not how the song goes
+NAME:  nicolae_orc_seminary
+TAGS:  transparent
+DEPTH: Orc
+KITEM: _ = manual of invocations w:3 / amulet of faith ident:all w:12
+KMONS: _ = orc high priest
+KMONS: P = orc priest
+KFEAT: _ = altar_beogh
+SUBST: P = P .:15
+MAP
+ccccccccc
+cc.P.P.cc
+cI.....Pc
+c..P.P..+
+c_......+
+c..P.P..+
+cI.....Pc
+cc.P.P.cc
+ccccccccc
+ENDMAP
+
+# St. Roka, don't you call me, 'cause I can't go,
+NAME:   nicolae_orc_sixteen_tons
+TAGS:   transparent patrolling
+DEPTH:  Orc
+KITEM:  r = large rock q:1
+KMONS:  O = spectral orc w:8 / spectral orc warrior w:4 / \
+            spectral orc knight w:2 / spectral orc warlord w:1
+KFEAT:  S = general shop type:Company suffix:Store
+SUBST:  - = .__
+NSUBST: . = 16=r / 4=O / 4=O. / .
+CLEAR:  _
+MAP
+   -----
+  -.....-
+ -.......-
+-.........-
+-.........-
+-....S....-
+-.........-
+-.........-
+ -.......-
+  -.....-
+   -----
+ENDMAP
+
+# yes i know that's not a word
+NAME:  nicolae_orc_stalacmites
+TAGS:  transparent
+DEPTH: Orc
+SUBST: ' = x.
+MAP
+xx        xxx        xx
+'xxx    xxx'xxx    xxx'
+.x'xxxxxx'x.x'xxxxxx'x.
+.x.x'xx'x.x.x.x'xx'x.x.
+.x.x.''.x.x.x.x.''.x.x.
+.x.'....'.x.x.'....'.x.
+.'........'.'........'.
+@.....................@
+'..........'..........'
+x.'......'.x.'......'.x
+x.x.'..'.x.x.x.'..'.x.x
+x.x.x''x.x.x.x.x''x.x.x
+x.x'xxxx'x.x.x'xxxx'x.x
+x'xxx  xxx'x'xxx  xxx'x
+xxx      xxxxx      xxx
+ENDMAP
+
+# Boss makes a dollar / I make a dime / That's why I go / On company time
+NAME:  nicolae_orc_takin'_care_of_business
+TAGS:  transparent
+DEPTH: Orc, !Orc:$
+KITEM: % = any scroll
+KMONS: %1 = patrolling orc / nothing w:15
+KFEAT: ^ = shaft trap
+MAP
+xxxxxxxxxx
+x^%x^%x^%x
+x..x..x..x
+xx+xx+xx+x
+.1..1..1..
+ENDMAP
+
+NAME:    nicolae_orc_troll_toll
+TAGS:    transparent
+DEPTH:   Orc
+KFEAT:   _ = altar_beogh
+KMONS:   D = deep troll
+KMONS:   R = troll
+# 1/4 chance of having all three staircases.
+SUBST:   ( = GGGII_<<<(((, R = R...
+SHUFFLE: {[(
+: if you.depth() == 1 then
+SUBST:   { = }, [ = ], ( = ), < = >
+: end
+MAP
+ccccc
+c...c       ...
+cR{.cccccccc.R..
+c...+.R.R.Rc.....
+cD(.+R.R.R.+..R..
+c...+.R.R.Rc.....
+cR[.cccccccc.R..
+c...c       ...
+ccccc
+ENDMAP
+
+NAME:  nicolae_orc_vermin_nest
+TAGS:  transparent patrolling
+DEPTH: Orc
+KMONS: R = hell rat / river rat / vampire bat
+KMONS: S = redback / jumping spider / wolf spider
+KMONS: s = black mamba / water moccasin / anaconda
+KMONS: M = vampire mosquito / hornet / moth of wrath
+SUBST: - = RSMs...
+MAP
+   xx
+  ..xx
+x....x
+x..---  xxxx
+xx.---- -..x
+ xx--  ---..
+    - ----..
+  xx--  -..x
+ xx----  xxx
+ x..---
+  ...-x
+   ..xx
+    xx
+ENDMAP
+
 ############################################################################
 # Orc endings.
 #
