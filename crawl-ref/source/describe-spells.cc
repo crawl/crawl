@@ -7,6 +7,7 @@
 
 #include "describe-spells.h"
 
+#include "artefact.h" // is_artefact
 #include "colour.h"
 #include "delay.h"
 #include "describe.h"
@@ -38,7 +39,7 @@
 static string _effect_string(spell_type spell, const monster_info *mon_owner);
 
 /**
- * Returns a spellset containing the spells for the given item.
+ * Returns a spellset containing the player-known spells for the given item.
  *
  * @param item      The item in question.
  * @return          A single-element vector, containing the list of all
@@ -48,6 +49,12 @@ spellset item_spellset(const item_def &item)
 {
     if (!item.has_spells())
         return {};
+    // unid'd randbook?
+    if (is_artefact(item) &&
+        !get_item_known_info(item).props.exists(SPELL_LIST_KEY))
+    {
+        return {};
+    }
 
     return { { "\n", spells_in_book(item) } };
 }
