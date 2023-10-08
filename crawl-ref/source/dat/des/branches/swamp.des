@@ -1306,6 +1306,28 @@ tt... PppPqqq    QqqQQqQqqwwwwww.t
            PPPP    PPPP       ttt
 ENDMAP
 
+NAME:   nicolae_swamp_reclaimed_castle
+TAGS:   transparent
+DEPTH:  Swamp
+NSUBST: D = + / x, E = + / x, F = + / x, H = + / x, J = + / x
+NSUBST: K = + / x, L = + / x, M = + / x, N = + / x, O = + / x
+SUBST:  ` = .:20 _, ' = .:50 _, + = +:20 ., x = x:110 _, . = .:70 W
+CLEAR:  _
+MAP
+      ``xxxx    xxxx``
+xxxx  `.+.'xxxxxx'.+.`  xxxx
+x''xxxxxx'.J....L.'xxxxxx''x
+x'.D....xxJx.``.xLxx....F.'x
+xxDx.``..N...``...O..``.xFxx
+ x'.````.x.``````.x.````.'x
+ x'.````.x.``````.x.````.'x
+xxEx.``..N...``...O..``.xHxx
+x'.E....xxKx.``.xMxx....H.'x
+x''xxxxxx'.K....M.'xxxxxx''x
+xxxx  `.+.'xxxxxx'.+.`  xxxx
+      ``xxxx    xxxx``
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Monster-placing vaults.
