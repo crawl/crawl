@@ -1626,10 +1626,8 @@ size_type monster_info::body_size() const
 
 bool monster_info::net_immune() const
 {
-    // too big
-    return body_size() >= SIZE_GIANT
     // nets go right through (but weapons don't..?)
-        || mons_class_flag(type, M_INSUBSTANTIAL)
+    return mons_class_flag(type, M_INSUBSTANTIAL)
     // tentacles are too weird. don't mess with em
         || mons_is_tentacle_or_tentacle_segment(type)
     // if you net something that doesn't move (positionally or attacking),

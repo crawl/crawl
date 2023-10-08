@@ -74,28 +74,13 @@ void swap_with_monster(monster* mon_to_swap)
     {
         // XXX: destroy ammo == 1 webs? (rare case)
 
-        if (you.body_size(PSIZE_BODY) >= SIZE_GIANT) // e.g. dragonform
-        {
-            int net = get_trapping_net(you.pos());
-            if (net != NON_ITEM)
-            {
-                destroy_item(net);
-                mpr("The net rips apart!");
-            }
-
-            if (you_caught)
-                stop_being_held();
-        }
-        else // XXX: doesn't handle e.g. spiderform swapped into webs
-        {
-            you.attribute[ATTR_HELD] = 1;
-            if (get_trapping_net(you.pos()) != NON_ITEM)
-                mpr("You become entangled in the net!");
-            else
-                mpr("You get stuck in the web!");
-            quiver::set_needs_redraw();
-            you.redraw_evasion = true;
-        }
+        you.attribute[ATTR_HELD] = 1;
+        if (get_trapping_net(you.pos()) != NON_ITEM)
+            mpr("You become entangled in the net!");
+        else
+            mpr("You get stuck in the web!");
+        quiver::set_needs_redraw();
+        you.redraw_evasion = true;
 
         if (!you_caught)
             mon.del_ench(ENCH_HELD, true);
