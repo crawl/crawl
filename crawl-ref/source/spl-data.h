@@ -3559,7 +3559,7 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     0,
-    TILEG_ERROR,
+    TILEG_SIGIL_OF_BINDING,
 },
 
 {
