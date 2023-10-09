@@ -3581,7 +3581,7 @@ static const struct spell_desc spelldata[] =
     100,
     1, 1,
     0,
-    TILEG_ERROR,
+    TILEG_BOULDER,
 },
 
 // Not an actual spell - dummy entry for (player) Green Draconian breath.

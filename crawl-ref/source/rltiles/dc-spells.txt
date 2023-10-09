@@ -35,6 +35,7 @@ sandblast SANDBLAST
 shatter SHATTER
 statue_form STATUE_FORM
 stone_arrow STONE_ARROW
+boulder BOULDER
 
 %sdir gui/spells/enchantment
 anguish ANGUISH
