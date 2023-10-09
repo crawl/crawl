@@ -562,14 +562,13 @@ spret cast_sigil_of_binding(int pow, bool fail, bool tracer)
     bool success = !(sigil_pos_d1.empty() && sigil_pos_d2.empty());
     if (tracer)
         return success ? spret::success : spret::abort;
-    else if (!success)
-    {
-        fail_check();
-        mpr("Your attempt to inscribe a sigil of binding fails!");
-        return spret::success;
-    }
 
     fail_check();
+    if (!success)
+    {
+        mpr("There was nowhere nearby to inscribe sigils!");
+        return spret::success;
+    }
 
     // Remove any old sigil that may still be active.
     timeout_binding_sigils();
@@ -618,9 +617,9 @@ spret cast_sigil_of_binding(int pow, bool fail, bool tracer)
     }
 
     if (!sigil_pos_d1.empty() && !sigil_pos_d2.empty())
-        mpr("You inscribe a pair of binding sigils nearby!");
+        mpr("You inscribe a pair of binding sigils.");
     else
-        mpr("You inscribe a binding sigil nearby!");
+        mpr("You inscribe a binding sigil.");
 
     // Schedule a duration warning exactly 2 turns before our sigils expire.
     you.set_duration(DUR_BINDING_SIGIL_WARNING, (dur / BASELINE_DELAY) - 2);
