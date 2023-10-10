@@ -4683,7 +4683,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         mon->add_ench(mon_enchant(ENCH_PARALYSIS, 1, agent(), BASELINE_DELAY));
     }
 
-    if (flavour == BEAM_LIGHT && !mon->has_ench(ENCH_BLIND))
+    if (flavour == BEAM_LIGHT
+        && mons_can_be_dazzled(mon->type)
+        && !mon->has_ench(ENCH_BLIND))
     {
         const int dur = max(1, div_rand_round(54, mon->get_hit_dice())) * BASELINE_DELAY;
         auto ench = mon_enchant(ENCH_BLIND, 1, agent(),

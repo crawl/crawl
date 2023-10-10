@@ -388,8 +388,8 @@ walls of any material due to the crystal embedded in the shot.
 %%%%
 Dazzling Flash spell
 
-The caster erupts in a scintillating display of light. Any living creature
-nearby may be dazzled and left stumbling blindly.
+The caster erupts in a scintillating display of light. Any living, demonic
+or angelic creature nearby may be dazzled and left stumbling blindly.
 %%%%
 Death Channel spell
 
