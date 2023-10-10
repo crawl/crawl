@@ -87,6 +87,8 @@
     end
 
     function hex_setup(e)
+        e.tags("hex_subvault unrand no_rotate no_monster_gen no_item_gen")
+
         local set_weight = crawl.random2(14)
         if set_weight == 1 then
             e.mons("ogre mage band / ironbound thunderhulk / ettin / "..
@@ -1280,7 +1282,7 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
 NAME:   hex_subvault_empty
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen allow_dup
+TAGS:   allow_dup
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1308,7 +1310,6 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_big_grid
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: 3 = 1:3 / * = 3.., 2 = 2:2 / * = 2.., . = 4 = 2... / 28 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1336,7 +1337,6 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_open_curves
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1364,7 +1364,6 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_bowtie
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1392,7 +1391,6 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_four_corners
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: 3 = 1:3 / * = 3.., 2 = 2:2 / * = 2.., . = 4 = 2... / 28 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1420,7 +1418,6 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_ellipse_pattern
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: 3 = 1:3 / * = 3.., 2 = 2:2 / * = 2.., . = 4 = 2... / 28 = 1... / *:.
 SUBST:  C = AB.
 : hex_setup(_G)
@@ -1449,7 +1446,6 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_fishy
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1477,7 +1473,6 @@ xxxxx.....x.....xxxxx
 ENDMAP
 
 NAME:   hex_subvault_narrow
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1505,7 +1500,6 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_octagon
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: 3 = 1:3 / * = 3.., 2 = 2:2 / * = 2.., . = 4 = 2... / 28 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1533,7 +1527,6 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_one_slice
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1561,7 +1554,6 @@ xxx.......x...xxx....
 ENDMAP
 
 NAME:   hex_subvault_rings
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1589,7 +1581,6 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_roundabout
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1617,7 +1608,6 @@ xxxxxx..xxxxx..xxxxxx
 ENDMAP
 
 NAME:   hex_subvault_dug_out
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 NSUBST: A = 1:B / *:A
 : hex_setup(_G)
@@ -1646,7 +1636,6 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_village
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1674,7 +1663,6 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_spokes
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: 3 = 1:3 / 2:2 / 4 = 3... / *:., . = 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1702,7 +1690,6 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_bell
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1730,7 +1717,6 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_channel
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1758,7 +1744,6 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_orbs
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1786,7 +1771,6 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_rooms
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1814,7 +1798,6 @@ xxx+xxx+xx..x........
 ENDMAP
 
 NAME:   hex_subvault_rooms_two
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1842,7 +1825,6 @@ xxx+xxxxxx+xx.....x..
 ENDMAP
 
 NAME:   hex_subvault_small_grid
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 SUBST:  x = xxx.
 : hex_setup(_G)
@@ -1871,7 +1853,6 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_two_sheets
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1899,7 +1880,6 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_filled
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1927,7 +1907,6 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_double_channel
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1955,7 +1934,6 @@ MAP
 ENDMAP
 
 NAME:   hex_subvault_uneven
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -1983,7 +1961,6 @@ xxx.......x.......xxx
 ENDMAP
 
 NAME:   hex_subvault_angles
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
@@ -2011,7 +1988,6 @@ xxxxxxxxxxx....xx....
 ENDMAP
 
 NAME:   hex_subvault_crossings
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 NSUBST: x = 1:Bx / 12 = Axxx / .
 : hex_setup(_G)
@@ -2040,7 +2016,6 @@ x.x..xx..x.x...xx.xx.
 ENDMAP
 
 NAME:   hex_subvault_bug
-TAGS:   hex_subvault no_rotate no_monster_gen no_item_gen
 NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
 : hex_setup(_G)
 MAP
