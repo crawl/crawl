@@ -3228,7 +3228,8 @@ static void _corrupting_pulse(monster *mons)
 }
 
 // Returns the clone just created (null otherwise)
-monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc, int summ_type)
+monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc,
+                             int summ_type)
 {
     // Create clone.
     monster *mirror = clone_mons(targ, true);
@@ -3240,6 +3241,14 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc, int summ
     // Unentangle the real monster.
     if (targ->is_constricted())
         targ->stop_being_constricted();
+
+    if (you.props.exists(BULLSEYE_TARGET_KEY)
+        && (mid_t)you.props[BULLSEYE_TARGET_KEY].get_int() == targ->mid)
+    {
+        targ->del_ench(ENCH_BULLSEYE_TARGET);
+        you.duration[DUR_DIMENSIONAL_BULLSEYE] = 0;
+        you.props.erase(BULLSEYE_TARGET_KEY);
+    }
 
     mons_clear_trapping_net(targ);
 
