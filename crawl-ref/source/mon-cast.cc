@@ -5776,9 +5776,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         if (you.can_see(*mons))
         {
-            mprf("%s shimmers and seems to become %s!", mons->name(DESC_THE).c_str(),
-                                                        sumcount2 == 1 ? "two"
-                                                                       : "three");
+            mprf("%s shimmers and seems to become %s!",
+                 mons->name(DESC_THE).c_str(),
+                 sumcount2 == 1 ? "two" : "three");
         }
 
         return;

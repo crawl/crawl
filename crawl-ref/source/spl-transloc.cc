@@ -1140,7 +1140,7 @@ spret cast_dimensional_bullseye(int pow, monster *target, bool fail)
     if (target == nullptr || target->submerged() || !you.can_see(*target))
     {
         canned_msg(MSG_NOTHING_THERE);
-        // You cannot place a bullseye on invisible enemies anyway, so just abort
+        // You cannot place a bullseye on invisible enemies, so just abort
         return spret::abort;
     }
 
@@ -1149,22 +1149,27 @@ spret cast_dimensional_bullseye(int pow, monster *target, bool fail)
 
     fail_check();
 
-    // We can only have a bullseye on one target a time, so remove the old one if it's still active
+    // We can only have a bullseye on one target a time, so remove the old one
+    // if it's still active
     if (you.props.exists(BULLSEYE_TARGET_KEY))
     {
-        monster* old_targ = monster_by_mid(you.props[BULLSEYE_TARGET_KEY].get_int());
+        monster* old_targ =
+            monster_by_mid(you.props[BULLSEYE_TARGET_KEY].get_int());
 
         if (old_targ)
             old_targ->del_ench(ENCH_BULLSEYE_TARGET);
     }
 
-    mprf("You create a dimensional link between your ranged weaponry and %s.", target->name(DESC_THE).c_str());
+    mprf("You create a dimensional link between your ranged weaponry and %s.",
+         target->name(DESC_THE).c_str());
 
-    // So we can automatically end the status if the target dies or becomes friendly
+    // So we can automatically end the status if the target dies or becomes
+    // friendly
     target->add_ench(ENCH_BULLSEYE_TARGET);
 
     you.props[BULLSEYE_TARGET_KEY].get_int() = target->mid;
-    int dur = random_range(5 + div_rand_round(pow, 5), 7 + div_rand_round(pow, 4));
+    int dur = random_range(5 + div_rand_round(pow, 5),
+                           7 + div_rand_round(pow, 4));
     you.set_duration(DUR_DIMENSIONAL_BULLSEYE, dur);
     return spret::success;
 }
