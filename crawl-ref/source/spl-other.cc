@@ -621,8 +621,6 @@ spret cast_sigil_of_binding(int pow, bool fail, bool tracer)
     else
         mpr("You inscribe a binding sigil.");
 
-    // Schedule a duration warning exactly 2 turns before our sigils expire.
-    you.set_duration(DUR_BINDING_SIGIL_WARNING, (dur / BASELINE_DELAY) - 2);
     return spret::success;
 }
 

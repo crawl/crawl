@@ -951,22 +951,9 @@ void timeout_tombs(int duration)
     }
 }
 
-void maybe_show_binding_sigil_duration_warning()
-{
-    for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
-    {
-        map_terrain_change_marker *marker =
-                dynamic_cast<map_terrain_change_marker*>(mark);
-        if (marker->change_type == TERRAIN_CHANGE_BINDING_SIGIL &&
-            you.see_cell(marker->pos))
-        {
-            mprf(MSGCH_DURATION, "Your binding sigil wavers.");
-        }
-    }
-}
-
 void timeout_binding_sigils()
 {
+    int num_seen = 0;
     for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
     {
         map_terrain_change_marker *marker =
@@ -974,10 +961,15 @@ void timeout_binding_sigils()
         if (marker->change_type == TERRAIN_CHANGE_BINDING_SIGIL)
         {
             if (you.see_cell(marker->pos))
-                mprf(MSGCH_DURATION, "Your binding sigil disappears.");
+                num_seen++;
             revert_terrain_change(marker->pos, TERRAIN_CHANGE_BINDING_SIGIL);
         }
     }
+
+    if (num_seen > 1)
+        mprf(MSGCH_DURATION, "Your binding sigils disappear.");
+    else if (num_seen > 0)
+        mprf(MSGCH_DURATION, "Your binding sigil disappears.");
 }
 
 void timeout_terrain_changes(int duration, bool force)
@@ -1018,7 +1010,8 @@ void timeout_terrain_changes(int duration, bool force)
         actor* src = actor_by_mid(marker->mon_num);
         if (marker->duration <= 0
             || (marker->mon_num != 0
-                && (!src || !src->alive() || (src->is_monster() && src->as_monster()->pacified()))))
+                && (!src || !src->alive()
+                    || (src->is_monster() && src->as_monster()->pacified()))))
         {
             if (you.see_cell(marker->pos))
                 num_seen[marker->change_type]++;
@@ -1034,6 +1027,11 @@ void timeout_terrain_changes(int duration, bool force)
         mpr("The runic seals fade away.");
     else if (num_seen[TERRAIN_CHANGE_DOOR_SEAL] > 0)
         mpr("The runic seal fades away.");
+
+    if (num_seen[TERRAIN_CHANGE_BINDING_SIGIL] > 1)
+        mprf(MSGCH_DURATION, "Your binding sigils disappear.");
+    else if (num_seen[TERRAIN_CHANGE_BINDING_SIGIL] > 0)
+        mprf(MSGCH_DURATION, "Your binding sigil disappears.");
 }
 
 ////////////////////////////////////////////////////////////////////////////
