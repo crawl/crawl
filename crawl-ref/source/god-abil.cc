@@ -5222,7 +5222,8 @@ spret uskayaw_grand_finale(bool fail)
     if (mons->alive())
         monster_die(*mons, KILL_YOU, NON_MONSTER, false);
 
-    if (!mons->alive())
+    // a lost soul may sneak in here
+    if (!mons->alive() && !monster_at(beam.target))
         move_player_to_grid(beam.target, false);
     else
         mpr("You spring back to your original position.");
