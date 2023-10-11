@@ -3857,3 +3857,63 @@ MAP
 .......l.l.......
 .................
 ENDMAP
+
+##############################################################################
+NAME:    roadster_arrival_rocket_small
+TAGS:    arrival no_monster_gen no_trap_gen transparent
+ORIENT:  float
+MONS:    plant, bush
+SUBST:   t : 12tt
+MARKER:  F = lua:fog_machine{ cloud_type = "black smoke", \
+             pow_min = 24, pow_max = 32, delay_min = 280, delay_max = 320, \
+             size_min = 1, size_max = 2, start_clouds = 2, size_buildup_amnt = 2 }
+MARKER:  l = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 1000, pow_max = 1000, delay = 1, \
+             size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+MAP
+  t@.v.@t
+  t.vvv.t
+  tFm{mFt
+  tvv.vvt
+  vv...vv
+  v.....v
+  v.....v
+  v.....v
+  v.....v
+  v.....v
+  v..F..v
+  v.....v
+vvv+v+v+vvv
+ ...lFl...
+  @.....@
+ENDMAP
+
+NAME:    roadster_arrival_rocket_large
+TAGS:    arrival no_monster_gen no_trap_gen transparent
+ORIENT:  float
+MONS:    plant, bush
+SUBST:   t : 12tt
+MARKER:  F = lua:fog_machine{ cloud_type = "black smoke", \
+             pow_min = 24, pow_max = 32, delay_min = 280, delay_max = 320, \
+             size_min = 1, size_max = 2, start_clouds = 2, size_buildup_amnt = 2 }
+MARKER:  l = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 1000, pow_max = 1000, delay = 1, \
+             size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+MAP
+      v
+   t@vvv@t
+   t.m{m.t
+   tvv.vvt
+  Fvv...vvF
+  vv.....vv
+  v.......v
+  v.......v
+  v.......v
+  v.......v
+  v.......v
+  v...F...v
+ vv.......vv
+vvv+v+v+v+vvv
+...Fl.l.lF...
+ @.........@
+ENDMAP

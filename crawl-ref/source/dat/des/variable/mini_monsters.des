@@ -2750,6 +2750,46 @@ xXXXXXXXXX1XXXXXXXXXx
 xxxxxxxxxx=xxxxxxxxxx
 ENDMAP
 
+NAME:   roadster_trireme
+TAGS:   no_trap_gen no_monster_gen
+DEPTH:  D:8-, Depths
+: if you.branch() == "D" then
+:   if you.depth() < 12 then
+MONS:   gnoll / kobold brigand w:2, centaur, gnoll sergeant, merfolk
+NSUBST: 1 = 8:1 / 2 = 1. / *:.
+:   else
+MONS:   human ; quarterstaff . robe, merfolk
+MONS:   wizard / necromancer, cyclops / centaur warrior
+NSUBST: 1 = 10:1 / 3 = 122. / *:.
+:   end
+: else
+MONS:   tengu warrior / hell knight w:2, merfolk impaler
+MONS:   titan, merfolk javelineer
+NSUBST: 1 = 12:1 / 4 = 12. / *:.
+: end
+ITEM:   throwing net q:1, javelin
+MARKER: G = lua:fog_machine { cloud_type='translocational energy',  \
+                              pow_min = 7, pow_max = 10, delay = 50, \
+                              size = 4, walk_dist = 1 }
+TILE:   G = dngn_statue_mermaid
+MAP
+    wwwwwwwwwwwww
+...wwwwwwwwwwwwwww
+.WWxxxxxxxxxxxxxxww
+@Wxxxxxxxxxxxxxxxxww
+@xx1x1x1x1x1x1xxxxww
+@xx1x1x1x1x1x1x2xxxww
+@x.............d*xxxw
+@+.............34CxGw
+@x.............d|xxxw
+@xx1x1x1x1x1x1x2xxxww
+@xx1x1x1x1x1x1xxxxww
+@Wxxxxxxxxxxxxxxxxww
+.WWxxxxxxxxxxxxxxww
+...wwwwwwwwwwwwwww
+   wwwwwwwwwwwwww
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead
@@ -3406,6 +3446,48 @@ MAP
  ......cLc......
   .............
     .........
+ENDMAP
+
+NAME:    roadster_capsule_ark_zombie
+TAGS:    no_monster_gen patrolling
+DEPTH:   D:6-, Crypt
+: if you.branch() == "D" then
+:   if you.depth() < 10 then
+MONS:   adder zombie / scorpion zombie / \
+        hound zombie w:20 / howler monkey zombie
+MONS:   flying skull / human zombie / elf zombie / centaur zombie w:20
+MONS:   killer bee zombie / elephant zombie / ogre zombie
+:   else
+MONS:   wolf zombie / killer bee zombie / spriggan zombie / centaur zombie
+MONS:   small abomination / meliai zombie / \
+        elephant zombie / two-headed ogre zombie
+MONS:   large abomination / harpy zombie / minotaur zombie / hydra zombie
+:   end
+: else
+MONS:   large abomination / jiangshi / minotaur zombie / ettin zombie
+MONS:   spriggan defender zombie w:20 / dire elephant zombie / \
+        iron dragon zombie
+MONS:   deep elf blademaster zombie / caustic shrike zombie / \
+        storm dragon zombie / golden dragon zombie
+: end
+KITEM:  d = $ / %, any good_item
+KFEAT:  C = altar_kikubaaqudgha / altar_yredelemnul
+MARKER: F = lua:fog_machine{ cloud_type = "black smoke", \
+            pow_min = 24, pow_max = 32, delay_min = 280, delay_max = 320, \
+            size_min = 1, size_max = 2, start_clouds = 2, size_buildup_amnt = 1 }
+MARKER: l = lua:fog_machine { cloud_type = "flame", \
+            pow_min = 1000, pow_max = 1000, delay = 1, \
+            size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+MAP
+    v
+   vvv
+   +2+
+ vmv1vmv
+ vm212mv
+vv11311vv
+vd31113dv
+vvmv+vmvv
+@.FlClF.@
 ENDMAP
 
 ################################################################################
