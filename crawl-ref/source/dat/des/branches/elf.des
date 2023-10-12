@@ -30,12 +30,11 @@ of Blades Elf:2 vault:
 2) deep elf knights or a small chance of (1)
 3) deep elf blademaster (use sparingly!)
 4) random dancing weapon
-5) and 6) two high quality dancing weapons of mutually exclusive weapons
+5), 6), 7) two or three high quality dancing weapons
+           of mutually exclusive weapons and brands
 
-The last two are defined by the hall_of_blades_weapon() function.
-
-@tab e The map environment.
-]]
+The last three are defined by the hall_of_blades_weapon() function.
+]]--
 function hall_of_blades_monsters(e)
     e.mons("deep elf pyromancer / deep elf zephyrmancer")
     e.mons("deep elf knight w:22 / deep elf pyromancer w:1 \
@@ -43,6 +42,13 @@ function hall_of_blades_monsters(e)
     e.mons("deep elf blademaster")
     e.mons("dancing weapon")
     hall_of_blades_weapon(e)
+end
+
+-- Some thematic, limited extra rewards for opening the Hall of Blades.
+function hall_of_blades_extra_rewards(e)
+    e.kitem("d = scroll of enchant weapon ident:type q:1")
+    e.kitem("e = scroll of brand weapon ident:type q:1")
+    e.kitem("f = blade talisman")
 end
 
 -- Lua functions to simplify Elf:$
@@ -57,6 +63,7 @@ function elf_loot_randomisation(e)
   e.subst("| = | *:2")
   e.subst("$ = $:20 *:4 |:1")
   e.subst("* = * |:3")
+  e.nsubst("* = 2:$ / *:*")
 end
 
 -- The standard Elf:$ monster set
@@ -2363,6 +2370,9 @@ TAGS:     no_item_gen no_monster_gen
 PLACE:    Elf:2
 ORIENT:   north
 : hall_of_blades_monsters(_G)
+: hall_of_blades_extra_rewards(_G)
+# Two enchant weapon scrolls, third or a brand weapon, coinflip for a talisman.
+SUBST:    e = ed, f = f.
 SHUFFLE:  CD / CD / DC / DC / DD
 SUBST:    C = c, D = ., E : c--, F : c--, c : cv
 FTILE:    - = floor_vault
@@ -2380,7 +2390,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccx
 xcccc---cccc-cccc-cccc-cccc-F-ccccc-F-cccc-cccc-cccc-cccc---ccccx
 xccF-....cc-.-cc-.-cc-.-cc-...-ccc-...-cc-.-cc-.-cc-.-cc-...-Fccx
-xcc-.........................................................-ccx
+xcc-............................7............................-ccx
 xc-....c............--c--................-c--............c....-cx
 xc-...ccc...........-ccc-...............-ccc-...........ccc...-cx
 xcE..ccccc..........ccccc...............ccccc..........ccccc..Ecx
@@ -2390,7 +2400,7 @@ xcE...ccc...............................................ccc...Ecx
 xcE....c.................................................c....Ecx
 xc-............................D.D............................-cx
 xc-...........CC..............DDDDD..............CC...........-cx
-xcE5..2......CCCC.............DDDDD.............CCCC......2..6Ecx
+xcE5ed2......CCCC.............DDDDD.............CCCC......2df6Ecx
 xc-...........CC..............DDDDD..............CC...........-cx
 xc-............................D.D............................-cx
 xcE....c.................................................c....Ecx
@@ -2427,6 +2437,8 @@ PLACE:    Elf:2
 WEIGHT:   5
 ORIENT:   north
 : hall_of_blades_monsters(_G)
+: hall_of_blades_extra_rewards(_G)
+SUBST:    e = ed, f = f.
 SHUFFLE:  CD / CD / DC / DC / DD
 SUBST:    C = c, D = ., E : c--, F : c--, c : cv
 FTILE:    - = floor_vault
@@ -2442,7 +2454,7 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccx
 xcccc-F-cccc-cccc-cccc-cccc--cccc-F-cccc--cccc-cccc-cccc-cccc-F-ccccx
-xccF-...-cc-.-cc-.-cc-.-cc-..-cc-...-cc-..-cc-.-cc-.-cc-.-cc-...-Fccx
+xccF-...-cc-.-cc-.-cc-.-cc-..-cc-.7.-cc-..-cc-.-cc-.-cc-.-cc-...-Fccx
 xcc-..............................D..............................-ccx
 xccc........................''''DDDDD''''........................cccx
 xcc-..--c--.......--c--....'''''''D'''''''....--c--.......--c--..-ccx
@@ -2462,8 +2474,8 @@ xccc...cc...........cc...cccAAAAAAAAAAAAAccc...cc...........cc...cccx
 xccc..ccccc.......ccccc..cccAAAAAAAAAAAAAccc..ccccc.......ccccc..cccx
 xcc-.ccccccc.....ccccccc.-ccAAAAAAAAAAAAAcc-.ccccccc.....ccccccc.-ccx
 xc-...ccccc...2...ccccc...-cAAAAAAAAAAAAAc-...ccccc...2...ccccc...-cx
-xc-....cc4.........4cc....-c     @@@     c-....cc4.........4cc....-cx
-xcc-.....................-cc             cc-.....................-ccx
+xc-....cc4....d....4cc....-c     @@@     c-....cc4....d....4cc....-cx
+xcc-..........e..........-cc             cc-..........f..........-ccx
 xccF-.........5.........-Fcc             ccF-.........6.........-Fccx
 xcccc--EE-EE--E--EE--EE-cccc             cccc-EE--EE--E--EE-EE--ccccx
 xccccccccccccccccccccccccccc             cccccccccccccccccccccccccccx
@@ -2477,7 +2489,9 @@ TAGS:     no_item_gen no_monster_gen
 PLACE:    Elf:2
 ORIENT:   northwest
 : hall_of_blades_monsters(_G)
-MONS:     patrolling dancing weapon ; dagger good_item | mundane falchion w:6
+KMONS:    8 = patrolling dancing weapon ; dagger good_item | mundane falchion w:6
+: hall_of_blades_extra_rewards(_G)
+SUBST:    e = ed, f = f.
 : if crawl.one_chance_in(4) then
 SUBST:    FJH = b
 : else
@@ -2485,7 +2499,7 @@ SHUFFLE:  FH
 SUBST:    FJ = ., H : bb.
 : end
 SHUFFLE:  DE
-SUBST:    D : bbbb-, E : ----b, K : b.., 7 = 7'
+SUBST:    D : bbbb-, E : ----b, K : b.., 8 = 8'
 FTILE:    -~ = floor_vault
 COLOUR:   -~ = lightgrey
 SUBST:    - = .
@@ -2498,9 +2512,9 @@ MAP
  xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbx
  xbbbb---bbbbb---bbbbb---bbbbb---bbbbb---bbbbx
  xbbb-....bbb.....bbb.....bbb.....bbb....-bbbx
- xbb-......K.......K.......K...2...K.....6-bbx
- xb-.......................................-bx
- xb-...4...................................-bx
+ xbb-7.....K.......K.......K...2...K.....6-bbx
+ xb-....................................f..-bx
+ xb-...4...............................d...-bx
  xb-.......................................-bx
  xbb......DDD.....EEE.........FFF..........bbx
  xbbb....DDDDD...EEEEE.......FFFFF..4.....bbbx
@@ -2525,15 +2539,15 @@ MAP
  xbb......FFFJbbbJFFF.....'''==xxxxxxxxxxxxxxx
  xb-.....FFFFbbbbbFFFF....'''=~~'''''xxxxxx
  xb-..2..FFFFbbbbbFFFF.....-bx~~~''T''xxxxx
- xb-.....FFFFbbbbbFFFF.....-bx'~~~''7''xxxx
- xbb......FFFJbbbJFFF......bbx''~~~''7''xxx
- xbbb.......JHHHHHJ.......bbbx'''~~~''7''xx
- xbbbK.......HHHHH.......Kbbbx'T''~~~''7''x
- xbbb.....4..HHHHH........bbbx''7''~~~''7'x
- xbb..........HHH..........bbxx''7''~~~''Tx
- xb-.......................-bxxx''7''~~~''x
- xb-.......................-bxxxx''7''~~~'x
- xb-...........2...........-bxxxxx''7''~~~x
+ xb-.....FFFFbbbbbFFFF.....-bx'~~~''8''xxxx
+ xbb......FFFJbbbJFFF......bbx''~~~''8''xxx
+ xbbb.......JHHHHHJ.......bbbx'''~~~''8''xx
+ xbbbK.......HHHHH.......Kbbbx'T''~~~''8''x
+ xbbb.....4..HHHHH........bbbx''8''~~~''8'x
+ xbb..........HHH..........bbxx''8''~~~''Tx
+ xb-.......................-bxxx''8''~~~''x
+ xb-...d...................-bxxxx''8''~~~'x
+ xb-..e........2...........-bxxxxx''8''~~~x
  xbb-5.....K.......K......-bbxxxxxx''T''~~~@
  xbbb-....bbb.....bbb....-bbbxxxxxxxxxxxx~~@
  xbbbb---bbbbb---bbbbb---bbbbx           @@@
@@ -2550,14 +2564,16 @@ PLACE:    Elf:2
 ORIENT:   north
 : hall_of_blades_monsters(_G)
 KMONS:    E = dancing weapon
-SUBVAULT: D : elf_blade_entry
+: hall_of_blades_extra_rewards(_G)
+SUBST:    e = ed, f = f.
 # 1/4 chance each of the scalloped edges being 0/1/2/3 tiles around.
 SUBST:    P : Q-, Q : RR-, R : ccc-
-FTILE:    E- = floor_vault
-COLOUR:   E- = lightgrey
+FTILE:    7E- = floor_vault
+COLOUR:   7E- = lightgrey
 SUBST:    - = .
 NSUBST:   . = 6=1 / 3=2 / 34 / 4=4 / 2=42 / 6=14...
 SHUFFLE:  MN
+SUBVAULT: D : elf_blade_entry
 SUBST:    D : x, M : b, N : cccb, v : vvvn
 CLEAR:    "
 MAP
@@ -2567,9 +2583,9 @@ xcccccccccccccccccccccccccccccccccccccccccccccccx
 xcRQP---MMM---PQRRQP---MMM---PQRRQP---MMM---PQRcx
 xcQP---v...v---PQQP---v...v---PQQP---v...v---PQcx
 xcP---v.....v---PP---v.....v---PP---v.....v---Pcx
-xc---v.......v------v.......v------v.......v---cx
+xc---v.d.....v------v.......v------v.......v---cx
 xc--v.5.......v----v.........v----v.........v--cx
-xc-v...........v--v...........v--v...........v-cx
+xc-v.e.........v--v...........v--v...........v-cx
 xcN.....2....4..NN.............NN.............Ncx
 xcN.............NN.............NN.............Ncx
 xc-v...........v--v...........v--v...........v-cxDDDDDDDDDDDDD
@@ -2578,7 +2594,7 @@ xc---v...4...v------v.......v------v.......v---cxDDDDDDDDDDDDD
 xcP---v.....v--------v.....v--------v.....v-E--cxDDDDDDDDDDDDD
 xcQP---v...v----------v...v----------v...v-----cxDDDDDDDDDDDDD
 xcRQP---MMM------------MMM------------MMM-------=DDDDDDDDDDDDD@
-xcRQP---MMM------------MMM------------MMM---E---DDDDDDDDDDDDDD@
+xcRQP-7-MMM------------MMM------------MMM---E---DDDDDDDDDDDDDD@
 xcRQP---MMM------------MMM------------MMM-------=DDDDDDDDDDDDD@
 xcQP---v...v----------v...v----------v...v-----cxDDDDDDDDDDDDD
 xcP---v.....v--------v.....v--------v.....v-E--cxDDDDDDDDDDDDD
@@ -2587,9 +2603,9 @@ xc--v.........v----v.........v----v.........v--cxDDDDDDDDDDDDD
 xc-v...........v--v...........v--v...........v-cxDDDDDDDDDDDDD
 xcN.............NN.............NN.............Ncx
 xcN.....2....4..NN.............NN.............Ncx
-xc-v...........v--v...........v--v...........v-cx
+xc-v.f.........v--v...........v--v...........v-cx
 xc--v.6.......v----v.........v----v.........v--cx
-xc---v.......v------v.......v------v.......v---cx
+xc---v.d.....v------v.......v------v.......v---cx
 xcP---v.....v---PP---v.....v---PP---v.....v---Pcx
 xcQP---v...v---PQQP---v...v---PQQP---v...v---PQcx
 xcRQP---MMM---PQRRQP---MMM---PQRRQP---MMM---PQRcx
