@@ -54,6 +54,7 @@ slow SLOW
 tukimas_dance TUKIMAS_DANCE
 violent_unravelling VIOLENT_UNRAVELLING
 sigil_of_binding SIGIL_OF_BINDING
+jinxbite JINXBITE
 
 %sdir gui/spells/fire
 bolt_of_fire BOLT_OF_FIRE

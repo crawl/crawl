@@ -3548,7 +3548,7 @@ static const struct spell_desc spelldata[] =
     50,
     -1, -1,
     0,
-    TILEG_ERROR,
+    TILEG_JINXBITE,
 },
 
 {
