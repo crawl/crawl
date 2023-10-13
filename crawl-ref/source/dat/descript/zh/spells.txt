@@ -337,7 +337,8 @@ Crystal Bolt spell
 %%%%
 Dazzling Flash spell
 
-施法者爆发出闪烁的光芒。附近的任何生物都可能会目眩，盲目地跌跌撞撞。
+施法者爆发出闪烁的光芒。
+附近的任何普通、恶魔或天使类动物都可能会目眩，盲目地跌跌撞撞。
 %%%%
 Death Channel spell
 
@@ -669,7 +670,7 @@ Ink Cloud spell
 Inner Flame spell
 
 向一个敌人身体中灌入烈火。目标一旦死亡，体内的火焰就会被释放出来，
-造成一次大爆炸。爆炸的范围大小取决于目标体型。
+造成一次大爆炸。爆炸的范围大小取决于目标体形。
 %%%%
 Invisibility spell
 
