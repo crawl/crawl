@@ -26,8 +26,9 @@ ENDMAP
 NAME:   minmay_snake_entry_guardpost_small
 TAGS:   snake_entry transparent
 ORIENT: float
-SUBST:  2 = 1 .:3
+MONS:   naga
 KFEAT:  O = enter_snake_pit
+SUBST:  2 = 1 .:3
 MAP
 ccc.@.ccc
 c.......c
@@ -43,9 +44,9 @@ ENDMAP
 NAME:   minmay_snake_entry_guardpost_medium
 TAGS:   snake_entry transparent
 WEIGHT: 5
-MONS:   naga, naga
-SUBST:  2 = 1.
+MONS:   naga
 KFEAT:  O = enter_snake_pit
+SUBST:  2 = 1.
 MAP
    ccccccc
  ccc.....ccc
@@ -62,8 +63,8 @@ NAME:   minmay_snake_entry_guardpost_large
 TAGS:   snake_entry transparent
 WEIGHT: 2
 MONS:   naga
-SUBST:  2 = 1.
 KFEAT:  O = enter_snake_pit
+SUBST:  2 = 1.
 MAP
 c@ccccccc
 c.......cc
@@ -84,10 +85,10 @@ NAME:   minmay_snake_entry_six_corridors
 TAGS:   snake_entry ruin_lair transparent
 MONS:   water moccasin, black mamba
 KMONS:  P = plant / fungus w:1
+KFEAT:  O = enter_snake_pit
 NSUBST: 1 = 3:1 / 3 = 1... / *:., 2 = 1:1 / 1:2 / 1:11222 / *:.
 NSUBST: D = 2 = 112 / *:.
 SUBST:  P = P:11 .
-KFEAT:  O = enter_snake_pit
 MAP
 xxxx.@1xxxxxxP@xxxxx
 xxxx1.PxxxxxP..xxxxx
@@ -204,9 +205,9 @@ ENDMAP
 NAME:   alex1729_snake_entry_snake
 TAGS:   snake_entry patrolling no_monster_gen transparent
 MONS:   naga, plant w:20 / bush
+KMONS:  L = salamander ; longbow | shortbow
 KFEAT:  O = enter_snake_pit
 KFEAT:  L = l
-KMONS:  L = salamander ; longbow | shortbow
 SUBST:  1 = 1 .:3, - = 2W..
 MAP
       xxxxxxx

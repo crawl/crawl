@@ -76,7 +76,7 @@ ENDMAP
 #
 NAME: david_orc_3
 TAGS: orc_entry transparent
-MONS: weight:80 nothing / orc w:50 / orc priest / orc wizard / orc warrior
+MONS: orc w:50 / orc priest / orc wizard / orc warrior / nothing w:80
 MONS: orc warrior / warg / orc priest / nothing
 ORIENT: float
 KFEAT: O = enter_orcish_mines
