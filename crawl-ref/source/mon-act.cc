@@ -938,13 +938,17 @@ static bool _handle_swoop_or_flank(monster& mons)
         if (you.can_see(mons))
         {
             if (is_swoop)
+            {
                 mprf("%s swoops through the air toward %s!",
                 mons.name(DESC_THE).c_str(),
                 defender->name(DESC_THE).c_str());
+            }
             else
+            {
                 mprf("%s slips past %s!",
                 mons.name(DESC_THE).c_str(),
                 defender->name(DESC_THE).c_str());
+            }
         }
         mons.move_to_pos(tracer.path_taken[j+1]);
         fight_melee(&mons, defender);
