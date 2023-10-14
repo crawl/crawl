@@ -1337,7 +1337,7 @@ TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  5
 # Placed monsters.
-MONS:    kobold w:35 / shadow imp / ufetubus w:15 / nothing w:5
+MONS:    kobold w:35 / shadow imp / ufetubus / nothing
 # Randomly generated monsters.
 MONS:    kobold w:50 / kobold zombie / endoplasm / giant cockroach / \
          giant cockroach zombie w:3 / ball python / adder zombie w:3 / \

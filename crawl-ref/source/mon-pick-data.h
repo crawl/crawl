@@ -86,7 +86,6 @@ static const vector<pop_entry> population[] =
 // These historically don't get kills after D:7ish.
   {  4,  7,  800, PEAK, MONS_SCORPION },
   {  4,  7, 1000, PEAK, MONS_HOUND },
-  {  4,  7,  350, PEAK, MONS_UFETUBUS },
   {  4,  7,  500, PEAK, MONS_OGRE },
   {  4,  7, 1000, PEAK, MONS_IGUANA },
   {  4,  7,  350, PEAK, MONS_PHANTOM },
@@ -98,6 +97,7 @@ static const vector<pop_entry> population[] =
   {  4, 12,  150, PEAK, MONS_ORC_PRIEST },
   {  4, 14,  500, PEAK, MONS_ORC_WIZARD },
   {  4, 14,  350, PEAK, MONS_HOWLER_MONKEY },
+  {  5,  7,  350, PEAK, MONS_UFETUBUS },
   {  5,  8,  500, PEAK, MONS_WHITE_IMP },
   {  5,  8,  300, PEAK, MONS_SHADOW_IMP },
   {  5,  8,  500, PEAK, MONS_ICE_BEAST },

@@ -3357,21 +3357,16 @@ ENDMAP
 NAME:    nicolae_fort_ynox
 TAGS:    transparent no_pool_fixup
 DEPTH:   D:9-12
-KMONS:   }])> = ynoxinul
-KMONS:   5 = ufetubus
+MONS:    ufetubus, ynoxinul
 KFEAT:   - = iron_grate
-KFEAT:   } = }
-KFEAT:   ] = ]
-KFEAT:   ) = )
-KFEAT:   > = >
 SHUFFLE: }])>>
-SUBST:   ` = 5...
+NSUBST:  ` = 6:1 / 4 = 1. / *:.
 MAP
     .........
    ..wwwwwww..
   ..wwv---vww..
  ..wwvv}])vvww..
-..wwvv.....vvww..
+..wwvv2...2vvww..
 .wwvv..```..vvww.
 .wvv..`````..vvw.
 .w-$.```````.$-w.

@@ -123,6 +123,7 @@ enum band_type
     BAND_DOOM_HOUNDS,
     BAND_JELLYFISH,
     BAND_SKYSHARKS,
+    BAND_UFETUBI,
     NUM_BANDS                   // always last
 };
 
