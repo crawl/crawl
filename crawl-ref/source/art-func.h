@@ -289,7 +289,13 @@ static void _POWER_equip(item_def * /* item */, bool *show_msgs,
 static void _POWER_melee_effects(item_def* /*weapon*/, actor* attacker,
                                  actor* defender, bool mondied, int /*dam*/)
 {
-    if (!mondied && x_chance_in_y(min(attacker->stat_hp() / 10, 27), 27))
+    if (mondied)
+        return;
+
+    const int num_beams = div_rand_round(attacker->stat_hp(), 270);
+    coord_def targ = defender->pos();
+
+    for (int i = 0; i < num_beams; i++)
     {
         bolt beam;
         beam.thrower   = attacker->is_player() ? KILL_YOU : KILL_MON;
@@ -297,7 +303,7 @@ static void _POWER_melee_effects(item_def* /*weapon*/, actor* attacker,
         beam.source_id = attacker->mid;
         beam.attitude  = attacker->temp_attitude();
         beam.range = 4;
-        beam.target = defender->pos();
+        beam.target = targ;
         zappy(ZAP_SWORD_BEAM, 100, false, beam);
         beam.fire();
     }
