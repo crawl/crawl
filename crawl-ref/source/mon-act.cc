@@ -859,32 +859,53 @@ static void _handle_movement(monster* mons)
 }
 
 /**
- * Check if the monster has a swooping attack and is in a position to
- * use it, and do so if they can.
+ * Check if the monster has a swooping or flanking attack and is in a
+ * position to use it, and do so if they can.
  *
- * Specifically, this seems to try to move to the opposite side of the target
- * (if there's space) and perform a melee attack, then set a cooldown for
- * 4-8 turns.
+ * For either, if there's space, try to move to the opposite side of the
+ * target and perform a melee attack, then set a cooldown for 4-8 turns.
+ * Swoops happen from a distance, flanks happen in melee.
  *
- * @param mons The monster who might be swooping.
+ * @param mons The monster who might be swooping or flanking.
  * @return Whether they performed a swoop attack. False if the monster
  *         can't swoop, the foe isn't hostile, the positioning doesn't
  *         work, etc.
  */
-static bool _handle_swoop(monster& mons)
+
+static bool _handle_swoop_or_flank(monster& mons)
 {
-    // TODO: check for AF_SWOOP in other slots and/or make it work there?
-    if (mons_attack_spec(mons, 0, true).flavour != AF_SWOOP)
-        return false;
+    bool is_swoop;
+
+    // Check which of the two it is, then modulate the chance to try.
+    // TODO: check for the flavour in other slots and/or make it work there?
+    switch (mons_attack_spec(mons, 0, true).flavour)
+    {
+        case AF_SWOOP:
+            if (!one_chance_in(4))
+                return false;
+            else
+                is_swoop = true;
+            break;
+
+        case AF_FLANK:
+            if (!one_chance_in(3))
+                return false;
+            else
+                is_swoop = false;
+            break;
+
+        default:
+            return false;
+    }
 
     actor *defender = mons.get_foe();
     if (mons.confused() || !defender || !mons.can_see(*defender))
         return false;
 
-    if (mons.foe_distance() >= 5 || mons.foe_distance() == 1)
+    // Swoop can only be used at range. Flanking can only be used in melee.
+    if (is_swoop && (mons.foe_distance() >= 5 || mons.foe_distance() == 1))
         return false;
-
-    if (!one_chance_in(4))
+    else if (!is_swoop && mons.foe_distance() != 1)
         return false;
 
     if (mons.props.exists(SWOOP_COOLDOWN_KEY)
@@ -916,9 +937,14 @@ static bool _handle_swoop(monster& mons)
 
         if (you.can_see(mons))
         {
-            mprf("%s swoops through the air toward %s!",
-                 mons.name(DESC_THE).c_str(),
-                 defender->name(DESC_THE).c_str());
+            if (is_swoop)
+                mprf("%s swoops through the air toward %s!",
+                mons.name(DESC_THE).c_str(),
+                defender->name(DESC_THE).c_str());
+            else
+                mprf("%s slips past %s!",
+                mons.name(DESC_THE).c_str(),
+                defender->name(DESC_THE).c_str());
         }
         mons.move_to_pos(tracer.path_taken[j+1]);
         fight_melee(&mons, defender);
@@ -1562,9 +1588,9 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
         return true;
     }
 
-    if (_handle_swoop(mons))
+    if (_handle_swoop_or_flank(mons))
     {
-        DEBUG_ENERGY_USE_REF("_handle_swoop()");
+        DEBUG_ENERGY_USE_REF("_handle_swoop_or_flank()");
         return true;
     }
 

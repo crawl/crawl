@@ -4728,7 +4728,11 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
  */
 static const char* _special_flavour_prefix(attack_flavour flavour)
 {
-    return flavour == AF_SWOOP ? "swoop behind its foe and " : "";
+    if (flavour == AF_SWOOP)
+        return "swoop behind its foe and ";
+    else if (flavour == AF_FLANK)
+        return "slip behind its foe and ";
+    return "";
 }
 
 /**
@@ -4798,6 +4802,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_BLOODZERK,         "become enraged" },
         { AF_SLEEP,             "induce sleep" },
         { AF_SWOOP,             "" },
+        { AF_FLANK,             "" },
         { AF_PLAIN,             "" },
     };
 
