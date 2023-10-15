@@ -1786,9 +1786,9 @@ MAP
 ENDMAP
 
 NAME:    kb_tengu_band
+TAGS:    no_pool_fixup transparent
 DEPTH:   D:12-, Shoals, Swamp
 WEIGHT:  5
-TAGS:    no_pool_fixup transparent
 MONS:    tengu warrior, tengu conjurer
 MAP
  .........
@@ -8273,7 +8273,7 @@ ENDMAP
 
 NAME:   hellmonk_guarded_unrand_sphere_of_battle
 TAGS:   transparent
-DEPTH:  D:8-
+DEPTH:  D:9-
 WEIGHT: 3
 ITEM:   sphere_of_battle no_pickup
 MONS:   tengu conjurer, tengu reaver
@@ -8578,11 +8578,11 @@ ITEM:   lear's_hauberk no_pickup, hat plus:-2 ident:all
 ITEM:   helmet plus:-2 ident:all, chain mail plus:-2 ident:all
 ITEM:   pair of boots plus:-2 ident:all
 ITEM:   pair of gloves plus:-2 ident:all
-: if you.depth() < 8 then
+: if you.depth() < 9 then
 MONS:   troll
 : elseif you.depth() < 13 then
 MONS:   tengu warrior
-:else
+: else
 MONS:   minotaur
 : end
 NSUBST: D = d / e / f / g / h / i
@@ -8722,7 +8722,6 @@ KMASK:  alpwq'r = opaque
 KFEAT:  a = l
 KFEAT:  p = w
 : if you.in_branch("D") then
-# D:9-D:11
 :     if you.depth() < 12 then
 # Monsters 1 through 4 must be defined in order of fire, ice, earth, air.
 MONS:   fire elemental, rime drake / ice devil, gargoyle, steam dragon
@@ -8734,7 +8733,6 @@ MONS:   efreet / white ugly thing / basilisk / boulder beetle / raiju \
 MONS:   deep elf pyromancer ; elemental staff . robe good_item
 # Monster counts scale slowly, placing up to 1/3 of each type by Depths.
 SUBST:  1 = 1...., 2 = 2...., 3 = 3...., 4 = 4...., 5 = 5...
-# D:12-13
 :     elseif you.depth() < 14 then
 MONS:   deep elf pyromancer / efreet
 MONS:   rime drake / ice devil / white ugly thing
@@ -8744,7 +8742,6 @@ MONS:   fire crab / fire dragon / freezing wraith / earth elemental \
         / air elemental
 MONS:   deep elf zephyrmancer ; elemental staff . robe good_item
 SUBST:  1 = 1...., 2 = 2...., 3 = 3...., 4 = 4...., 5 = 5..
-# D:14-
 :     else
 MONS:   deep elf pyromancer / efreet / fire crab w:5 / fire dragon w:5
 MONS:   white ugly thing / freezing wraith / ice dragon w:5
@@ -8765,6 +8762,7 @@ MONS:   deep elf elementalist w:40 / fire giant / frost giant / iron dragon \
         / storm dragon
 : master_elementalist_setup(_G, "6")
 SUBST:  1 = 1..., 2 = 2..., 3 = 3..., 4 = 4...
+CLEAR:  @>
 # Depths
 : else
 MONS:   fire dragon / fire giant
@@ -8774,6 +8772,7 @@ MONS:   spriggan air mage / storm dragon
 MONS:   hellephant / shard shrike / iron giant / titan
 : master_elementalist_setup(_G, "6")
 SUBST:  1 = 1.., 2 = 2.., 3 = 3.., 4 = 4..
+CLEAR:  @>
 : end
 # Fog machine for each closed elemntal chamber.
 MARKER: a = lua:fog_machine { cloud_type = "flame", pow_min = 5, \
@@ -8795,8 +8794,8 @@ MAP
             nblbn
            nblllbn
           bbllallbb
-         bbnblllbnbb
-        +b11nblbn11b+
+        >bbnblllbnbb@
+       @+b11nblbn11b+>
        bb...1nbn1...bb
       bb4.5.1bbb1.5.3bb
      nbn4...bb.bb...3nbn
@@ -8808,8 +8807,8 @@ MAP
      nbn4...bb.bb...3nbn
       bb4.5.2bbb2.5.3bb
        bb...2nbn2...bb
-        +b22nbwbn22b+
-         bbnbwwwbnbb
+       >+b22nbwbn22b+@
+        @bbnbwwwbnbb>
           bbwwpwwbb
            nbwwwbn
             nbwbn
@@ -9056,7 +9055,7 @@ ENDMAP
 
 NAME:    nicolae_guarded_unrand_lochaber
 TAGS:    patrolling no_monster_gen no_item_gen
-DEPTH:   D:9-, Depths
+DEPTH:   D:10-, Depths
 WEIGHT:  3
 KITEM:   L = lochaber axe no_pickup
 : if you.in_branch("D") then

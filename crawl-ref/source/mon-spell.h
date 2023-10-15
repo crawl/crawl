@@ -1142,9 +1142,9 @@ static const mon_spellbook mspell_list[] =
     // ('Q') Tengu.
     {  MST_TENGU_CONJURER,
       {
-       { SPELL_LIGHTNING_BOLT, 19, MON_SPELL_WIZARD },
-       { SPELL_BATTLESPHERE, 19, MON_SPELL_WIZARD },
-       { SPELL_BLINK, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
+       { SPELL_BATTLESPHERE, 30, MON_SPELL_WIZARD },
+       { SPELL_LIGHTNING_BOLT, 20, MON_SPELL_WIZARD },
+       { SPELL_FORCE_LANCE, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -1156,6 +1156,7 @@ static const mon_spellbook mspell_list[] =
         { SPELL_CORROSIVE_BOLT, 11, MON_SPELL_WIZARD },
         { SPELL_LIGHTNING_BOLT, 11, MON_SPELL_WIZARD },
         { SPELL_BOLT_OF_DRAINING, 11, MON_SPELL_WIZARD },
+        { SPELL_REPEL_MISSILES, 11, MON_SPELL_WIZARD },
       }
     },
 

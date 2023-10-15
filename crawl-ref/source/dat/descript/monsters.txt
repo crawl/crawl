@@ -2563,8 +2563,8 @@ An elite, ferocious tengu highly skilled with both steel and spells.
 %%%%
 tengu warrior
 
-A particularly bloodthirsty tengu who has opted to hone its skill in fighting
-and weaponry instead of spellcasting.
+A particularly bloodthirsty tengu who has opted to hone its skill in airborne
+fighting and weaponry instead of spellcasting.
 %%%%
 tentacle
 
