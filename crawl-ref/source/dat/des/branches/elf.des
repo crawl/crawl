@@ -1427,7 +1427,7 @@ TAGS:    no_monster_gen misc_elf_vault
 DEPTH:   Elf
 MONS:    deep elf pyromancer / deep elf zephyrmancer
 # Some other fledgling miscellaneous magic casters.
-MONS:    wizard, tengu conjurer, boggart, kobold demonologist
+MONS:    arcanist / occultist, tengu conjurer, boggart, kobold demonologist
 MONS:    deep elf sorcerer / deep elf annihilator w:2
 NSUBST:  2 = 1:2 / 1:4 / 1:. / * = 223445
 NSUBST:  - = 1:+ / *:c, _ = 1:+ / *:c

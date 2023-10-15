@@ -173,7 +173,7 @@ function master_elementalist_setup(e, glyph, ele_staff)
         equip_def = " ; staff of air . robe ego:resistance good_item"
     end
 
-    e.kmons(glyph .. " = wizard hd:18 name:master_elementalist n_rpl" ..
+    e.kmons(glyph .. " = occultist hd:18 name:master_elementalist n_rpl" ..
         " n_des n_noc tile:mons_master_elementalist" ..
         " spells:lehudib's_crystal_spear.11.wizard;" ..
             "chain_lightning.11.wizard;" ..

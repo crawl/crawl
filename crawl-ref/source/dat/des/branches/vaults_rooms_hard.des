@@ -1479,7 +1479,7 @@ KITEM: L = any manual, any book good_item / any scroll good_item / nothing, \
 KITEM: RN = any book good_item / any scroll good_item
 KMONS: LN = deep elf annihilator / deep elf sorcerer / deep elf high priest / \
            deep elf death mage / deep elf demonologist
-KMONS: R = wizard / necromancer / lich / ogre mage / deep troll earth mage
+KMONS: R = arcanist / necromancer / lich / ogre mage / deep troll earth mage
 KMONS: S = vault sentinel / vault warden / ironbound preserver / \
            ironbound convoker
 SUBST: R = R:80 N, S = SSS.

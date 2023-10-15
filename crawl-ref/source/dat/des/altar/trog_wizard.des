@@ -32,7 +32,7 @@ function callback.trog_wizard_convert_wizard(data, triggerable,
 
     dgn.place_cloud(_x, _y, "flame", 15)
     local mons = dgn.mons_at(_x, _y)
-    if mons and mons.base_name == "wizard" then
+    if mons and mons.base_name == "arcanist" then
         crawl.god_speaks("Trog", "Flames erupt from the bowels of the wizard! "
                               .. "Trog roars with satisfaction!")
     else
@@ -66,7 +66,7 @@ KFEAT:  1 = .
 # A terrified wizard whose spells have been taken away
 # (he refused to convert)
 MARKER: 1 = lua:portal_desc {replica_name="trog_wizard"}
-KMONS:  1 = wizard perm_ench:mute spells:. dbname:captured_wizard ; nothing
+KMONS:  1 = arcanist perm_ench:mute spells:. dbname:captured_wizard ; nothing
 KPROP:  1 = no_tele_into
 KFEAT:  # = iron_grate
 MAP

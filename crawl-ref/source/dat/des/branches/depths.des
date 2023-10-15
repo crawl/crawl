@@ -84,7 +84,7 @@ cc...2...cc...cc
 ENDMAP
 
 NAME:   grunt_enter_depths_magical_seal
-MONS:   wizard / deep elf pyromancer w:5 / deep elf zephyrmancer w:5 / \
+MONS:   occultist / deep elf pyromancer w:5 / deep elf zephyrmancer w:5 / \
         orc sorcerer / tengu conjurer
 MONS:   rakshasa, necromancer band
 NSUBST: 1 = 1:112 / *:1
@@ -184,7 +184,7 @@ ENDMAP
 
 NAME:    hangedman_depths_entry_civil_slaughter
 TAGS:    transparent no_monster_gen
-MONS:    tengu warrior w:14 / tengu conjurer / wizard / necromancer
+MONS:    tengu warrior w:14 / tengu conjurer / occultist / necromancer
 MONS:    deep troll w:14 / hell knight / shapeshifter w:2
 KMONS:   O = ettin w:14 / stone giant w:2 / glowing shapeshifter w:2
 SHUFFLE: -~

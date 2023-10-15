@@ -1626,7 +1626,7 @@ ENDMAP
 NAME:    bh_hangedman_babel_library
 TAGS:    transparent no_monster_gen no_item_gen
 DEPTH:   D:10-, !D:$, Elf, !Elf:$
-MONS:    wizard / deep elf pyromancer / deep elf zephyrmancer
+MONS:    arcanist w:5 / occultist w:5 / deep elf pyromancer / deep elf zephyrmancer
 ITEM:    any potion
 ITEM:    randbook numspells:2 title:Dhcmrlchtdj
 ITEM:    randbook numspells:2 title:Combed_Thunderclap disc:air
@@ -2140,8 +2140,10 @@ TAGS:     vaults_hard vaults_orient_s no_monster_gen patrolling
 DEPTH:    Depths, Vaults, !Vaults:$
 : if you.in_branch("Vaults") then
 SUBST:   c : vvb, @ = .
+MONS:     lich, arcanist / naga mage / tengu conjurer, tengu reaver
+: else
+MONS:     lich, occultist / naga mage / tengu conjurer, tengu reaver
 : end
-MONS:     lich, wizard / naga mage / tengu conjurer, tengu reaver
 ITEM:     book of power, robe good_item, hat good_item, robe, hat
 KFEAT:    _ = altar_vehumet
 SHUFFLE: ef, gh, ij
@@ -2169,7 +2171,7 @@ DEPTH: Depths
 MONS:    ancient lich
 MONS:    deep elf annihilator / draconian annihilator w:5 / lich
 MONS:    deep elf pyromancer w:20 / deep elf zephyrmancer w:20 / tengu conjurer w:20 / \
-         wizard w:20 / orc sorcerer w:20 / nagaraja / tengu reaver
+         occultist w:20 / orc sorcerer w:20 / nagaraja / tengu reaver
 ITEM:    book of annihilations, book of power, book of conjurations
 ITEM:    randbook disc:conjuration, staff of conjuration
 KFEAT:   _ = altar_vehumet
@@ -2280,7 +2282,7 @@ ENDMAP
 NAME:  lightli_wizard_tower
 TAGS:  no_monster_gen patrolling
 DEPTH: D:9-
-MONS:  patrolling wizard, patrolling crimson imp
+MONS:  patrolling occultist / patrolling arcanist, patrolling crimson imp
 ITEM:  any book, any scroll
 MAP
    bbbb
@@ -2775,7 +2777,7 @@ MONS:   gnoll / kobold brigand w:2, centaur, gnoll sergeant, merfolk
 NSUBST: 1 = 8:1 / 2 = 1. / *:.
 :   else
 MONS:   human ; quarterstaff . robe, merfolk
-MONS:   wizard / necromancer, cyclops / centaur warrior
+MONS:   occultist w:5 / arcanist w:5 / necromancer, cyclops / centaur warrior
 NSUBST: 1 = 10:1 / 3 = 122. / *:.
 :   end
 : else
@@ -4545,7 +4547,7 @@ MONS:   deep elf annihilator w:30 / deep elf sorcerer w:20 / \
         deep elf demonologist / deep elf death mage
 ITEM:   any scroll / any book w:6
 : else
-MONS:   wizard w:50 / necromancer w:20 / deep elf pyromancer w:20 / \
+MONS:   occultist w:25 / arcanist w:25 / necromancer w:20 / deep elf pyromancer w:20 / \
         deep elf zephyrmancer w:20 / orc sorcerer / ogre mage / naga mage / \
         vampire mage / kobold demonologist w:5
 ITEM:   any scroll / any book w:3
@@ -7607,7 +7609,7 @@ NAME:   minmay_guarded_unrand_mage
 TAGS:   no_monster_gen no_item_gen transparent
 DEPTH:  Depths
 WEIGHT: 3
-MONS:   wizard, orange crystal statue / obsidian statue
+MONS:   occultist, orange crystal statue / obsidian statue
 KMONS:  3 = lich w:40 / ancient lich / dread lich
 KITEM:  3 = ring_of_the_mage no_pickup
 KPROP:  32'+ = no_tele_into
@@ -7665,8 +7667,8 @@ KMONS:   E = Joseph / orc knight ; long sword | scimitar . chain mail . kite shi
                       orc knight ; long sword | scimitar . chain mail . kite shield / nothing
 KMONS:   F = Urug / orc knight ; rapier | long sword . leather armour . buckler | nothing, \
                     orc knight ; rapier | long sword . leather armour . buckler | nothing / nothing
-KMONS:   G = Erica / wizard ; long sword . robe | leather armour . kite shield, \
-                     wizard ; long sword . robe | leather armour . kite shield / nothing
+KMONS:   G = Erica / arcanist ; long sword . robe | leather armour . kite shield, \
+                     arcanist ; long sword . robe | leather armour . kite shield / nothing
 KMONS:   H = Harold / deep elf knight, deep elf knight / nothing
 KMONS:   I = Donald / orc warlord, orc warlord / nothing
 KMONS:   J = Louise / hell knight, hell knight / nothing
@@ -7788,8 +7790,8 @@ NAME:    minmay_guarded_unrand_prune
 TAGS:    transparent no_monster_gen
 DEPTH:   D:12-
 WEIGHT:  3
-MONS:    deep elf pyromancer / deep elf zephyrmancer / ogre mage / wizard / \
-         kobold demonologist w:2 / vampire mage w:2 / naga mage w:2
+MONS:    deep elf pyromancer / deep elf zephyrmancer / ogre mage / occultist / \
+         arcanist / kobold demonologist w:2 / vampire mage w:2 / naga mage w:2
 NSUBST:  1 = 6:1 / 10=1.... / .
 ITEM:    glaive_of_prune no_pickup
 SUBST:   " : .:50 cvbnG
@@ -8538,7 +8540,7 @@ TAGS:   patrolling
 DEPTH:  D:13-, Depths
 WEIGHT: 3
 ITEM:   rift no_pickup
-MONS:   wizard, tentacled starspawn, starcursed mass
+MONS:   occultist / arcanist, tentacled starspawn, starcursed mass
 KFEAT:  t = demonic_tree
 KFEAT:  _ = altar_lugonu / enter_abyss
 : if you.in_branch("D") then
@@ -9562,7 +9564,7 @@ ENDMAP
 
 # Wizard's laboratory
 NAME:  laboratory
-MONS:  wizard, small abomination, large abomination
+MONS:  occultist / arcanist, small abomination, large abomination
 MAP
 ccc+cccccc
 c........c

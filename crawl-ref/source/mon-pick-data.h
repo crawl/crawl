@@ -7,7 +7,7 @@
 #define POP_DEPTHS \
 { /* Depths (OOD cap: 13)*/ \
   { -3,  3,  250, SEMI, MONS_RAKSHASA },\
-  { -3,  3,  100, SEMI, MONS_WIZARD },\
+  { -3,  3,  100, SEMI, MONS_OCCULTIST },\
   { -3,  3,  100, SEMI, MONS_NECROMANCER },\
   { -3,  9,  250, PEAK, MONS_FIRE_GIANT },\
   { -3,  9,  260, PEAK, MONS_FROST_GIANT },\
@@ -145,7 +145,8 @@ static const vector<pop_entry> population[] =
   { 13, 19,  285, SEMI, MONS_EFREET },
   { 13, 23,  675, SEMI, MONS_SHAPESHIFTER },
   { 13, 27,   89, FALL, MONS_CATOBLEPAS },
-  { 14, 19,  140, FLAT, MONS_WIZARD },
+  { 14, 19,   70, FLAT, MONS_ARCANIST },
+  { 14, 19,   70, FLAT, MONS_OCCULTIST },
   { 14, 22,  260, SEMI, MONS_FREEZING_WRAITH },
   { 14, 22,  270, SEMI, MONS_SIMULACRUM },
   { 14, 22,  115, SEMI, MONS_BOGGART },
@@ -494,8 +495,8 @@ static const vector<pop_entry> population[] =
   {  1,  4,   50, RISE, MONS_GLOWING_ORANGE_BRAIN },
   {  1,  4,  150, FLAT, MONS_FORMLESS_JELLYFISH },
   {  1,  4,  100, RISE, MONS_FORMLESS_JELLYFISH },
-  {  1,  4,  350, FLAT, MONS_WIZARD },
-  {  1,  4,  350, RISE, MONS_WIZARD },
+  {  1,  4,  350, FLAT, MONS_ARCANIST },
+  {  1,  4,  350, RISE, MONS_ARCANIST },
   {  1,  4,   75, FLAT, MONS_NECROMANCER },
   {  1,  4,   75, RISE, MONS_NECROMANCER },
   {  1,  4,  500, FLAT, MONS_YAKTAUR_CAPTAIN },
@@ -881,7 +882,7 @@ POP_DEPTHS,
   {  4,  6,   18, FALL, MONS_FLAYED_GHOST },
   {  1,  6,    8, FLAT, MONS_HELL_KNIGHT },
   {  1,  6,    8, FLAT, MONS_NECROMANCER },
-  {  1,  6,    8, FLAT, MONS_WIZARD },
+  {  1,  6,    8, FLAT, MONS_OCCULTIST },
 
   {  1,  5, 1000, FLAT, MONS_ABOMINATION_LARGE },
   {  6,  7, 1000, FALL, MONS_ABOMINATION_LARGE },

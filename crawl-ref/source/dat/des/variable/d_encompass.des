@@ -137,7 +137,7 @@ local bands = {
           "deep elf zephyrmancer", "necromancer", "yaktaur", "Azrael",
           "Kirke", },
     [26 - you.absdepth()] =
-        { "glowing orange brain", "spriggan berserker", "wizard",
+        { "glowing orange brain", "spriggan berserker", "occultist",
           "skeletal warrior", "salamander tyrant", "rakshasa", },
     [you.absdepth() * 2 - 37] =
         { "deep elf death mage", "spriggan air mage", "deep troll shaman", },

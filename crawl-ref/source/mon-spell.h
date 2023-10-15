@@ -427,8 +427,17 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    // Wizard set is also used by Erolcha.
-    {  MST_WIZARD,
+    {  MST_ARCANIST,
+      {
+       { SPELL_LIGHTNING_BOLT, 12, MON_SPELL_WIZARD },
+       { SPELL_PARALYSE, 10, MON_SPELL_WIZARD },
+       { SPELL_FORCE_LANCE, 12, MON_SPELL_WIZARD },
+       { SPELL_HASTE, 14, MON_SPELL_WIZARD },
+      }
+    },
+
+    // Occultist set is also used by Erolcha.
+    {  MST_OCCULTIST,
       {
        { SPELL_FIREBALL, 12, MON_SPELL_WIZARD },
        { SPELL_BANISHMENT, 10, MON_SPELL_WIZARD },

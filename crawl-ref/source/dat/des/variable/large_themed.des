@@ -265,7 +265,7 @@ ENDMAP
 NAME:   minmay_smoke_and_mirrors
 ORIENT: northwest
 DEPTH:  D:10-
-MONS:   wizard
+MONS:   occultist / arcanist
 ITEM:   warlock's_mirror no_pickup
 MARKER: F = lua:fog_machine { cloud_type="purple smoke", \
             pow_min = 5, pow_max = 15, delay_min = 10,   \
@@ -680,7 +680,7 @@ MARKER: z = lua:fog_machine { \
                 size_buildup_time = 25, cloud_type = "freezing vapour" }
 MONS:   gargoyle, earth elemental, air elemental
 MONS:   dancing weapon ; long sword good_item, crystal guardian, war gargoyle
-KMONS:  A = wizard
+KMONS:  A = occultist
 KMONS:  B = deep elf pyromancer
 KMONS:  C = deep elf zephyrmancer
 KMONS:  D = deep elf sorcerer
@@ -948,8 +948,8 @@ KPROP:  -47 = no_tele_into
 ITEM:   any jewellery randart, scroll of acquirement ident:type
 : item(dgn.randart_aux_armour)
 MONS:   human att:neutral, silent spectre, patrolling soul eater
-MONS:   ogre mage / deep elf pyromancer / deep elf zephyrmancer / wizard / \
-         necromancer / merfolk aquamancer / \
+MONS:   ogre mage / deep elf pyromancer / deep elf zephyrmancer / occultist / \
+        necromancer / merfolk aquamancer / \
         spriggan air mage / orc sorcerer / kobold demonologist
 MONS:   draconian shifter / draconian annihilator / lich / deep elf sorcerer / \
         deep elf annihilator / deep elf demonologist
@@ -1075,11 +1075,11 @@ ITEM:   any magical staff w:20 / any wand w:5 / any jewellery
 ITEM:   any randbook / gold
 : if you.in_branch("D") then
 MONS:   kobold demonologist / deep elf pyromancer / tengu conjurer
-MONS:   wizard / deep elf zephyrmancer / orc sorcerer / ogre mage
+MONS:   occultist w:5 / arcanist w:5 / deep elf zephyrmancer / orc sorcerer / ogre mage
 MONS:   deep troll earth mage / deep elf sorcerer / deep elf annihilator \
         / deep elf demonologist / deep elf death mage / tengu reaver
 : else
-MONS:   tengu conjurer / wizard / spriggan air mage / vampire mage \
+MONS:   tengu conjurer / occultist / spriggan air mage / vampire mage \
         / deep troll earth mage
 MONS:   tengu reaver / deep elf annihilator / deep elf sorcerer \
         / deep elf demonologist / lich
@@ -1197,12 +1197,12 @@ ORIENT: northeast
 MONS:   statue hd:12 spells:orb_of_destruction.62.magical \
         tile:mons_statue_mage col:vehumet name:conjurer n_adj
 : if you.in_branch("D") then
-MONS:   tengu conjurer / deep elf pyromancer / wizard
+MONS:   tengu conjurer / deep elf pyromancer / occultist w:5 / arcanist w:5
 MONS:   ogre mage / orc sorcerer / deep elf zephyrmancer, salamander tyrant
 KMONS:  5 = nikola / jorgrun, deep elf annihilator
 SUBST:  1 = 2GG, 4 = 4.
 : else
-MONS:   tengu conjurer / wizard / spriggan air mage / deep elf annihilator
+MONS:   tengu conjurer / occultist / spriggan air mage / deep elf annihilator
 MONS:   deep elf annihilator / tengu reaver / lich, salamander tyrant
 KMONS:  5 = frederick / boris, ancient lich
 : end
@@ -1337,7 +1337,7 @@ SUBST:   BDFHJLNPR = .
     local mons = nil
     mons = add_mons(mons, "acid dragon", semi(depth, 11, 21, 334))
     mons = add_mons(mons, "efreet", peak(depth, 13, 19, 52))
-    mons = add_mons(mons, "wizard", peak(depth, 14, 22, 89))
+    mons = add_mons(mons, "arcanist", peak(depth, 14, 22, 89))
     mons = add_mons(mons, "fire dragon", peak(depth, 14, 24, 192))
     mons = add_mons(mons, "ice dragon", semi(depth, 17, 25, 136))
     mons = add_mons(mons, "necromancer band", peak(depth, 18, 24, 52))
@@ -2232,7 +2232,7 @@ ITEM:    double sword, triple sword
 KPROP:   .* = bloody
 NSUBST:  . = 4:1 / 2=1.. / 1:d / 1:e / 1:f / 4=ff.
 SUBST:   c : cbxv
-: dgn.delayed_decay(_G, 'f', 'wizard corpse')
+: dgn.delayed_decay(_G, 'f', 'occultist corpse')
 MAP
 cccccccccc
 c.**..**.c
@@ -2248,7 +2248,7 @@ NAME: cheibrodos_cascadia
 TAGS: no_item_gen no_monster_gen no_pool_fixup
 DEPTH: Depths
 ORIENT: northwest
-MONS: wizard, freezing wraith, ice dragon, frost giant, blizzard demon, lich
+MONS: occultist, freezing wraith, ice dragon, frost giant, blizzard demon, lich
 KPROP: -Tp =  no_tele_into
 KMONS: I = ice statue
 KMONS: " = ancient lich / dread lich

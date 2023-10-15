@@ -486,7 +486,7 @@ NAME:    hangedman_abyss_lost_library
 TAGS:    patrolling no_monster_gen no_item_gen
 MONS:    guardian serpent, great orb of eyes, glowing orange brain
 MONS:    boggart, rakshasa, cacodemon, shadow demon
-KMONS:   0 = wizard
+KMONS:   0 = occultist
 KMONS:   8 = orc sorcerer
 KMONS:   9 = sphinx
 KMONS:   & = lich
@@ -929,7 +929,7 @@ ENDMAP
 NAME:    hangedman_abyss_town
 TAGS:    no_monster_gen patrolling allow_dup
 WEIGHT:  5
-MONS:    rakshasa / efreet / smoke demon / wizard / base draconian w:5 / \
+MONS:    rakshasa / efreet / smoke demon / occultist / base draconian w:5 / \
          guardian serpent w:1 / vampire w:3 / necromancer w:3
 MONS:    thrashing horror / blink frog / ugly thing / \
          large abomination / unseen horror / shapeshifter / \
@@ -1371,7 +1371,7 @@ MONS:   wretched star
 SUBST:  3=3334
 MONS:   tentacled starspawn / starcursed mass / demonic plant / oklob plant w:20
 # generic abyss badthings who don't mind if their target is moved around (4)
-MONS:   lich / wizard / thrashing horror
+MONS:   lich / occultist / thrashing horror
 KITEM:  O = abyssal rune of Zot
 COLOUR: cO = magenta
 SUBST:  c = ccccb
@@ -1459,7 +1459,7 @@ ENDMAP
 NAME:  evilmike_abyss_rune_siren_acolytes
 TAGS:  abyss_rune unrand patrolling no_pool_fixup
 # They really should have bend space instead of blink / other.
-MONS:   wizard hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des col:lightgreen \
+MONS:   occultist hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des col:lightgreen \
         tile:mons_mad_acolyte_of_lugonu \
         spells:smiting.20.priest;malign_gateway.20.priest;\
                blink.10.priest;blink_other.10.priest;\

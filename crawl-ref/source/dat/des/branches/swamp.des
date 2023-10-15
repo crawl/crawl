@@ -1623,7 +1623,7 @@ y..c...c...0...c...c..y
 ENDMAP
 
 NAME: grunt_hermit_hut
-MONS: orc high priest / orc sorcerer / wizard / necromancer band
+MONS: orc high priest / orc sorcerer / arcanist w:5 / occultist w:5 / necromancer band
 SHUFFLE: +d / +d / d+
 SUBST: w = w t:10
 SUBST: d = c
@@ -3495,7 +3495,7 @@ KITEM:  O = decaying rune of zot
 MONS:   fenstrider witch, green death / reaper / blizzard demon
 MONS:   neqoxec / soul eater / sixfirhy, orange demon / hellwing / chaos spawn
 MONS:   spriggan druid / orc sorcerer / ogre mage / deep elf pyromancer w:5 / \
-        deep elf zephyrmancer w:5 / wizard
+        deep elf zephyrmancer w:5 / arcanist w:5 / occultist w:5
 SUBST:  ' = W:55 .:15 4:5, 4 = 049
 KFEAT:  B = stone_arch
 KFEAT:  a = c

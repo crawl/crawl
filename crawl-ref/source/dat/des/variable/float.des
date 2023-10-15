@@ -1902,7 +1902,7 @@ SUBST:  2 = .:50 2:60 3:30 4
 :     end
 # Depths
 : else
-MONS:   wizard, deep troll, iron troll, deep troll shaman
+MONS:   arcanist / occultist, deep troll, iron troll, deep troll shaman
 SUBST:  2 = 2:30 3 4
 : end
 MAP
@@ -3046,9 +3046,9 @@ NAME:    hangedman_six_sided_sadism
 TAGS:    patrolling no_monster_gen no_item_gen
 DEPTH:   Depths
 ORIENT:  float
-MONS:    tengu warrior / deep troll earth mage / rakshasa / wizard \
+MONS:    tengu warrior / deep troll earth mage / rakshasa / occultist \
          / necromancer / vampire knight
-MONS:    tengu conjurer / ancient champion / stone giant / wizard \
+MONS:    tengu conjurer / ancient champion / stone giant / occultist \
          / deep elf high priest / phantasmal warrior \
          / spriggan berserker / salamander mystic / caustic shrike w:5
 MONS:    fire giant / frost giant / stone giant / ettin / hell knight \
@@ -3495,7 +3495,7 @@ KITEM:    * = *
 KITEM:    6| = |
 KMONS:    1 = tengu warrior / tengu conjurer / ettin / stone giant \
               / spriggan berserker
-KMONS:    2 = wizard / deep troll earth mage / spriggan air mage \
+KMONS:    2 = occultist / deep troll earth mage / spriggan air mage \
               / deep elf annihilator / deep elf high priest
 KMONS:    3 = fire dragon / ice dragon / iron dragon / storm dragon
 KMONS:    4 = tengu reaver / spriggan air mage / sphinx
@@ -3560,7 +3560,7 @@ NAME: cheibrodos_breeding_chamber
 TAGS: no_item_gen no_monster_gen
 DEPTH: D:10-
 ORIENT: float
-MONS: wizard, ugly thing, very ugly thing
+MONS: arcanist / occultist, ugly thing, very ugly thing
 SUBST: y = * |:4, r = *:2 %
 NSUBST: ' = 6:2 / *:.
 NSUBST: " = 1:3 / *:.
@@ -4642,7 +4642,7 @@ ITEM:   robe good_item / cloak good_item / scarf / pair of boots good_item \
         / pair of gloves good_item / hat good_item
 ITEM:   randbook w:40 / any magical staff
 : if you.in_branch("D") then
-MONS:   wizard / orc sorcerer, deep elf annihilator
+MONS:   arcanist w:5 / occultist w:5 / / orc sorcerer, deep elf annihilator
 :   if you.depth() < 10 then
 NSUBST: " = 1 / 1... / ., - = d / *% / %$.. / .
 :   elseif you.depth() < 13 then
@@ -4764,12 +4764,12 @@ SUBST:   4 = 23, 5 = 4
 MONS:    floating eye
 MONS:    boggart / kobold demonologist / deep elf pyromancer w:5 / \
          deep elf zephyrmancer w:5 / tengu conjurer
-MONS:    wizard / necromancer / orc sorcerer / ogre mage
+MONS:    arcanist w:5 / occultist w:5 / necromancer / orc sorcerer / ogre mage
 MONS:    deep elf annihilator / deep troll earth mage / sphinx / tengu reaver
 SUBST:   4 = 23, 5 = 4
 : elseif you.in_branch("Vaults") then
 MONS:    glowing orange brain / great orb of eyes / phantasmal warrior
-MONS:    boggart / rakshasa / ogre mage / wizard / necromancer
+MONS:    boggart / rakshasa / ogre mage / arcanist / necromancer
 MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist \
          / deep elf high priest / deep elf death mage / deep troll earth mage
 MONS:    sphinx / tengu reaver / lich / fire giant / frost giant
@@ -4777,7 +4777,7 @@ MONS:    titan / ancient lich w:5 / dread lich w:5 / glowing shapeshifter
 : elseif you.in_branch("Depths") then
 MONS:    floating eye / great orb of eyes / glowing orange brain \
          / phantasmal warrior
-MONS:    boggart / rakshasa / ogre mage / wizard / necromancer
+MONS:    boggart / rakshasa / ogre mage / occultist / necromancer
 MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist \
          / deep elf high priest / deep elf death mage / deep troll earth mage \
          / spriggan air mage / vampire mage
@@ -9380,9 +9380,9 @@ DEPTH: D:11-, Depths
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
 : if you.in_branch("D") then
-MONS: deep elf pyromancer w:8 / fire elemental w:5 / nothing, wizard
+MONS: deep elf pyromancer w:8 / fire elemental w:5 / nothing, arcanist / occultist
 : else
-MONS: wizard w:5 / fire elemental w:5 / nothing, lich
+MONS: occultist w:5 / fire elemental w:5 / nothing, lich
 : end
 ITEM: randbook / any scroll
 SUBST: - = .lx
@@ -10701,8 +10701,8 @@ SHUFFLE: def
 : if you.in_branch("D") then
 KMONS:   1 = patrolling ettin / patrolling iron troll
 KMONS:   2 = troll w:15 / two-headed ogre w:15 / cyclops w:5 / deep troll w:5
-KMONS:   3 = ogre mage / wizard / deep elf pyromancer / deep elf zephyrmancer \
-         / boggart / necromancer
+KMONS:   3 = ogre mage / arcanist / occultist / deep elf pyromancer / \
+         / deep elf zephyrmancer / boggart / necromancer
 : elseif you.in_branch("Orc") then
 KMONS:   1 = patrolling stone giant / patrolling ettin
 KMONS:   2 = troll w:15 / two-headed ogre w:15 / cyclops w:5 / deep troll w:5 \
@@ -10717,7 +10717,7 @@ SUBST:   5 = 7, p = m
 : elseif you.in_branch("Vaults") then
 KMONS:   1 = patrolling ettin / patrolling iron troll
 KMONS:   2 = two-headed ogre / cyclops / deep troll w:15 / stone giant
-KMONS:   3 = wizard / boggart / deep elf annihilator / deep elf demonologist \
+KMONS:   3 = arcanist / boggart / deep elf annihilator / deep elf demonologist \
           / deep elf sorcerer / deep elf high priest / titan / lich
 # Depths
 : else
@@ -11549,7 +11549,7 @@ TAGS:    no_monster_gen no_item_gen
 DEPTH:   D:13-, Depths
 ORIENT:  float
 KPROP:   23 = no_tele_into
-KMONS:   1 = wizard
+KMONS:   1 = arcanist / occultist
 KFEAT:   t = demonic_tree
 : item(dgn.loot_potions .. " / potion of mutation w:40")
 KMONS:   p = human perm_ench:berserk generate_awake \

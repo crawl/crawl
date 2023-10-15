@@ -26,14 +26,14 @@ KMONS:  b = patrolling ettin
 KMONS:  k = patrolling vampire mage / patrolling boggart
 KMONS:  d = orc warlord
   : if you.absdepth() < 23 then
-KMONS:  e = vampire / yaktaur /\
-            ettin / orc / wolf / gargoyle / iron troll /\
-            deep troll / cyclops / kobold / centaur / warg / wizard
+KMONS:  e = vampire / yaktaur / kobold /\
+            ettin / orc / wolf / gargoyle / iron troll / warg /\
+            deep troll / cyclops / centaur / occultist / arcanist
 KMONS:  i = frost giant / fire giant
   : else
 KMONS:  e = vampire / yaktaur / w:5 frost giant / w:5 fire giant /\
-            ettin / orc / wolf / gargoyle / iron troll /\
-            deep troll / cyclops / kobold / centaur / warg / wizard
+            ettin / orc / wolf / gargoyle / iron troll / deep troll /\
+            cyclops / kobold / centaur / warg / occultist / arcanist
 KMONS:  i = titan
   : end
 KMONS:  P = plant
@@ -222,7 +222,7 @@ KITEM: & = book of necromancy / book of death / book of unlife / book of decay /
            w:12 nothing
 KMONS: P = withered plant
   : elseif occupant == 1 then
-MONS:  wizard / ogre mage / deep elf sorcerer
+MONS:  occultist w:5 / arcanist w:5 / ogre mage / deep elf sorcerer
 KFEAT: * = altar_sif_muna / w:5 altar_ashenzari
 KITEM: " = gold, any potion / nothing, any potion / nothing, any potion /\
            nothing

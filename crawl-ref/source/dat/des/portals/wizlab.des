@@ -405,7 +405,8 @@ function yara_students(e)
            " / deep elf knight ; " .. goodgear ..
            " / naga mage ; " .. goodgear ..
            " / salamander mystic ; " .. goodgear ..
-           " / wizard ; " .. goodgear ..
+           " / arcanist ; " .. goodgear ..
+           " / occultist ; " .. goodgear ..
            " / hell knight ; " .. goodgear ..
            " / necromancer ; " .. goodgear ..
            " / vampire mage ; " .. goodgear ..
@@ -1698,15 +1699,19 @@ TAGS:    no_pool_fixup
 KMONS:   1 = spatial vortex w:7 / blink frog / nothing w:5
 KMONS:   2 = deep elf knight w:5 ; dart ego:dispersal w:20 | boomerang w:5 | nothing / \
              rakshasa w:5 ; dart ego:dispersal w:20 | boomerang w:5 | nothing / \
-             boggart ; dart ego:dispersal w:20 | boomerang w:5 | nothing /  \
-             wizard ; dart ego:dispersal w:20 | boomerang w:5 | nothing
+             boggart ; dart ego:dispersal w:20 | boomerang w:5 | nothing / \
+             arcanist w:5 ; dart ego:dispersal w:20 | boomerang w:5 | nothing / \
+             occultist w:5 ; dart ego:dispersal w:20 | boomerang w:5 | nothing
 KMONS:   3 = rakshasa w:5 ; whip ego:distortion | whip ego:heavy w:6 | dagger \
              ego:distortion | dagger ego:heavy w:6 | spear ego:distortion | \
              spear ego:heavy w:6 . dart ego:dispersal / \
              boggart w:5 ; whip ego:distortion | whip ego:heavy w:6 | dagger \
              ego:distortion | dagger ego:heavy w:6 | spear ego:distortion | \
              spear ego:heavy w:6 . dart ego:dispersal / \
-             wizard ; whip ego:distortion | whip ego:heavy w:6 | dagger \
+             arcanist w:5 ; whip ego:distortion | whip ego:heavy w:6 | dagger \
+             ego:distortion | dagger ego:heavy w:6 | spear ego:distortion | \
+             spear ego:heavy w:6 . dart ego:dispersal . robe / \
+             occultist w:5 ; whip ego:distortion | whip ego:heavy w:6 | dagger \
              ego:distortion | dagger ego:heavy w:6 | spear ego:distortion | \
              spear ego:heavy w:6 . dart ego:dispersal . robe
 KMONS:   04 = large abomination w:15 / small abomination w:15 / unseen horror w:5 / \
@@ -1793,7 +1798,7 @@ for i = 1, #trans_glyph do
                transp_dest_loc("loc_" .. tostring(i)))
 end
 
-set_random_mon_list([[rakshasa w:15 / deep elf knight w:15 / wizard w:15 / spatial vortex w:15 /
+set_random_mon_list([[rakshasa w:15 / deep elf knight w:15 / arcanist / occultist / spatial vortex w:15 /
                     boggart / blink frog w:5 / shadow wraith w:5 / unseen horror /
                     raiju / ynoxinul / neqoxec / chaos spawn / glowing orange brain /
                     large abomination w:15 / small abomination w:15 / skeleton w:20 /
@@ -2227,7 +2232,7 @@ TILE:   x = wall_brick
 TILE:   c = wall_church
 :           set_random_mon_list(
 :               "mana viper / tengu conjurer / ogre mage / " ..
-:               "deep elf knight / wizard / naga mage / " ..
+:               "deep elf knight / arcanist / occultist / naga mage / " ..
 :               "salamander mystic / necromancer / vampire mage / " ..
 :               "tengu reaver w:1 / quicksilver dragon w:1")
 :           wizlab_setup(_G)
@@ -2465,22 +2470,22 @@ KITEM:  " = gold q:1 no_pickup
 KITEM:  H = any magical staff no_pickup
 KITEM:  Q = star_item
 KITEM:  JKL = potion of degeneration ident:all
-MONS:   wizard / boggart w:2 / deep elf zephyrmancer w:3 /\
-        deep elf pyromancer w:3 / worldbinder w:1
+MONS:   arcanist / occultist / boggart w:4 / deep elf zephyrmancer w:6 /\
+        deep elf pyromancer w:6 / worldbinder w:2
 MONS:   great orb of eyes / glowing orange brain / sphinx / cacodemon w:2 /\
         very ugly thing / glowing shapeshifter / entropy weaver /\
         green death w:2 / tentacled starspawn / golden eye band w:6 /\
         worldbinder / floating eye w:4
 MONS:   nagaraja / deep elf high priest / sphinx w:5 / deep elf sorcerer /\
         worldbinder
-MONS:   wizard / necromancer w:2 / hell knight w:2 / worldbinder w:6
+MONS:   arcanist / occultist / necromancer w:4 / hell knight w:4 / worldbinder
 MONS:   demonspawn corrupter
-KMONS:  J = wizard generate_awake perm_ench:confusion ; nothing
+KMONS:  J = occultist generate_awake perm_ench:confusion ; nothing
 KMONS:  H = torpor snail / ghost moth / guardian serpent / water nymph /\
             acid blob / anaconda / swamp dragon
-KMONS:  F = spriggan druid / deep elf pyromancer / wizard
+KMONS:  F = spriggan druid / deep elf pyromancer / arcanist w:5 / occultist w:5
 KMONS:  E = water nymph / merfolk aquamancer / merfolk javelineer /\
-            merfolk aquamancer / wizard ; nothing
+            merfolk aquamancer / arcanist ; nothing / occultist ; nothing
 KMONS:  D = stone giant / ettin
 KFEAT:  E = shallow_water
 KFEAT:  N = granite_statue
@@ -2503,7 +2508,7 @@ FTILE:  H" = floor_mosaic
 FTILE:  N'12K = floor_w_marble
 FTILE:  -FTtAJLDQ< = floor_grass
 :           set_random_mon_list(
-:               "wizard w:40 / necromancer / boggart / " ..
+:               "arcanist w:20 / occultist w:20 / necromancer / boggart / " ..
 :               "glowing orange brain / worldbinder / sphinx / " ..
 :               "demonspawn corrupter w:1")
 :           wizlab_setup(_G)

@@ -628,7 +628,8 @@ human3
 hell_knight MONS_HELL_KNIGHT
 death_knight MONS_DEATH_KNIGHT
 necromancer MONS_NECROMANCER
-wizard MONS_WIZARD
+arcanist MONS_ARCANIST
+occultist MONS_OCCULTIST
 vault_guard MONS_VAULT_GUARD
 vault_warden MONS_VAULT_WARDEN
 vault_sentinel MONS_VAULT_SENTINEL

@@ -55,8 +55,8 @@ function pan_lord_setup(_G, name)
         ['Lom Lobon'] = "hellwing w:300 / sixfirhy w:100 / " ..
                  "smoke demon w:300 / blizzard demon w:100 / " ..
                  "green death w:200 / glowing orange brain / rakshasa / " ..
-                 "wizard / draconian annihilator / deep elf annihilator / " ..
-                 "titan w:5 / lich w:5 / demonspawn blood saint",
+                 "arcanist / occultist / draconian annihilator / " ..
+                 "deep elf annihilator / titan w:5 / lich w:5 / demonspawn blood saint",
         Cerebov = "efreet / orange demon / sun demon / ynoxinul / balrug / " ..
                   "brimstone fiend w:1 / demonspawn warmonger w:1",
         ['Gloorx Vloq'] = "skeleton w:400 / soul eater w:200 / " ..
@@ -809,7 +809,7 @@ TAGS:      lom_lobon uniq_lom_lobon no_rotate
 ORIENT:    north
 : pan_lord_setup(_G, 'Lom Lobon')
 MONS:      patrolling Lom Lobon, glowing orange brain, rakshasa
-MONS:      wizard w:20 / lich / draconian annihilator / deep elf annihilator
+MONS:      arcanist / occultist / lich / draconian annihilator / deep elf annihilator
 epilogue{{
   pan_lord_epilogue('Lom Lobon')
 }}
@@ -852,7 +852,7 @@ TAGS:      lom_lobon no_pool_fixup uniq_lom_lobon
 ORIENT:    northwest
 : pan_lord_setup(_G, 'Lom Lobon')
 MONS:      patrolling Lom Lobon
-MONS:      blizzard demon, green death, wizard, draconian annihilator
+MONS:      blizzard demon, green death, arcanist / occultist, draconian annihilator
 MONS:      sixfirhy
 SUBST:     0 = 23444445566
 NSUBST:    Q = 1:O / *:4
@@ -912,7 +912,7 @@ NAME:      lom_lobon_spiral_st
 TAGS:      lom_lobon no_pool_fixup patrolling uniq_lom_lobon
 ORIENT:    northeast
 : pan_lord_setup(_G, 'Lom Lobon')
-MONS:      patrolling Lom Lobon, titan, shock serpent, wizard
+MONS:      patrolling Lom Lobon, titan, shock serpent, arcanist / occultist
 KMONS:     S = storm dragon
 KMONS:     d = draconian annihilator
 KMONS:     e = deep elf annihilator
@@ -975,7 +975,7 @@ ORIENT:  north
 : pan_lord_setup(_G, 'Lom Lobon')
 MONS: patrolling Lom Lobon
 MONS: draconian annihilator / deep elf annihilator / \
-      wizard w:20 / rakshasa w:20 / glowing orange brain / \
+      arcanist / occultist / rakshasa w:20 / glowing orange brain / \
       blizzard demon / green death / titan w:5 / \
       spriggan air mage w:5 / lich w:5
 SUBST:   W = ww.
@@ -1035,7 +1035,7 @@ SHUFFLE: O2
 MONS:    patrolling Lom Lobon, patrolling titan, patrolling wind drake
 MONS:    blizzard demon / titan / spriggan air mage / storm dragon
 MONS:    draconian annihilator / deep elf annihilator / \
-         wizard w:20 / rakshasa w:20 / glowing orange brain / \
+         arcanist / occultist / rakshasa w:20 / glowing orange brain / \
          blizzard demon / green death / titan w:5 / \
          spriggan air mage w:5 / lich w:5
 epilogue{{

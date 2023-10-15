@@ -1677,8 +1677,8 @@ ENDMAP
 
 NAME:   minmay_the_grid_tri_star
 TAGS:   the_grid unrand
-MONS:   wizard / ogre mage / orc sorcerer w:5 / deep elf pyromancer w:2 / \
-        deep elf zephyrmancer w:2
+MONS:   occultist w:5 / arcanist w:5 / ogre mage / orc sorcerer w:5 / \
+        deep elf pyromancer w:2 / deep elf zephyrmancer w:2
 MONS:   deep elf pyromancer / deep elf zephyrmancer / \
         orc sorcerer w:20 / kobold demonologist
 MONS:   deep elf sorcerer / deep elf annihilator / lich / ancient lich w:5

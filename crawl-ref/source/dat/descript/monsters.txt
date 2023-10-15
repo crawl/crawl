@@ -647,6 +647,12 @@ apocalypse crab
 An opalescent crab with jet black eyes, and chaotic mists effusing from its
 mandibles. Rumours claim that this species is waiting for the end of time.
 %%%%
+arcanist
+
+A wizard fond of spectacle and destruction. They scorn the cowardice of other
+magicians, who hide from their foes rather than simply blasting them out of
+existence.
+%%%%
 azure jelly
 
 An extremely cold blob of bright blue cytoplasm, forming bits of frost in the
@@ -1901,6 +1907,12 @@ obsidian statue
 A beautiful statue of an unknown creature, jet-black like a tear in reality.
 Its eyes glow with an otherworldly, malignant radiance.
 %%%%
+occultist
+
+A wizard fond of illusion and treachery. They scorn the crudeness of other
+magicians, who hurl wild conjurations toward their foes rather than cunningly
+exploiting their greatest weaknesses.
+%%%%
 octopode
 
 A more intelligent cousin of the mighty kraken, capable of using tools and
@@ -2824,10 +2836,6 @@ wind drake
 
 A small but powerful dragon, particularly adept amongst its kin at manipulating
 the currents of air that surround it. It can exhale powerful blasts of wind.
-%%%%
-wizard
-
-A rather eccentric person, dabbling in all sorts of arcane oddities.
 %%%%
 wolf
 

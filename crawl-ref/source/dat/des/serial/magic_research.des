@@ -27,7 +27,7 @@ function init_research(e, disc)
   if you.in_branch("Elf") then
      e.kmons('0 = deep elf pyromancer / deep elf zephyrmancer / deep elf knight w:5 / deep elf archer w:5')
   else
-     e.kmons('0 = wizard / ogre mage / naga mage w:8 / deep elf pyromancer w:5 / deep elf zephyrmancer w:5')
+     e.kmons('0 = arcanist w:5 / occultist w:5 / ogre mage / naga mage w:8 / deep elf pyromancer w:5 / deep elf zephyrmancer w:5')
   end
   e.kmask('@, = !no_monster_gen')
   e.shuffle('abcdefghi')

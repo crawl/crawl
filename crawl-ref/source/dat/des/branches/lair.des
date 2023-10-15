@@ -3219,7 +3219,7 @@ TAGS:    no_pool_fixup no_wall_fixup no_monster_gen no_rotate
 PLACE:   Lair:$
 ORIENT:  southeast
 WEIGHT:  5
-MONS:    rime drake, hydra w:15 / dire elephant, wizard
+MONS:    rime drake, hydra w:15 / dire elephant, arcanist / occultist
 MONS:    red devil / ice devil w:15 / orange demon w:15
 MONS:    hellwing / smoke demon, sun demon / sixfirhy / hell beast w:4
 KMONS:   hH = hell hound

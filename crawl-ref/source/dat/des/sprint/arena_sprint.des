@@ -425,7 +425,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "wraith / wight / phantasmal warrior / skeletal warrior /\
                     vampire / ghoul / mummy / flayed ghost / bone dragon / death cob /\
                     profane servitor",
-                "vault guard / necromancer / hell knight / wizard /\
+                "vault guard / necromancer / hell knight / arcanist w:5 / occultist w:5 /\
                     killer klown",
                 "base draconian / w:1 nonbase draconian",
                 "golden eye / shining eye / floating eye / eye of devastation /\
@@ -488,7 +488,7 @@ function arena_sprint_get_monster_set(round, boss)
                     golden dragon / quicksilver dragon / iron dragon / w:1 xtahua",
                 "glowing shapeshifter",
                 "hell knight w:20 / w:1 margery",
-                "vault guard / necromancer / hell knight / wizard /\
+                "vault guard / necromancer / hell knight / arcanist w:5 / occultist w:5 /\
                     killer klown",
                 "base draconian / w:5 nonbase draconian",
                 "golden eye / shining eye / floating eye / eye of devastation /\
@@ -692,7 +692,7 @@ function arena_sprint_init_boss_table()
                  "serpentine rune of zot"}
     else
         bs[1] = {"place:Swamp", "the lernaean hydra / " ..
-                 "wizard name:witch n_rpl n_des n_noc col:green hp:130 " ..
+                 "arcanist name:witch n_rpl n_des n_noc col:green hp:130 " ..
                    "spells:mephitic_cloud.15.wizard;" ..
                           "summon_hydra.15.wizard;" ..
                           "invisibility.15.wizard;" ..

@@ -1944,7 +1944,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_DIRE_ELEPHANT,    { {0, 0, []() {
         return you.where_are_you == BRANCH_VAULTS;
     }},                            {{ BAND_DIRE_ELEPHANTS, {2, 4} }}}},
-    { MONS_WIZARD,  { {0, 0, []() {
+    { MONS_ARCANIST,  { {0, 0, []() {
         return player_in_branch(BRANCH_VAULTS);
     }},                            {{ BAND_UGLY_THINGS, {2, 4}, true }}}},
     { MONS_WENDIGO, { {}, {{ BAND_SIMULACRA, {2, 6} }}}},
@@ -2360,7 +2360,8 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                   {MONS_BLIZZARD_DEMON, 2},
                                   {MONS_GREEN_DEATH, 2},
                                   {MONS_RAKSHASA, 4},
-                                  {MONS_WIZARD, 4}}}},
+                                  {MONS_OCCULTIST, 2},
+                                  {MONS_ARCANIST, 2}}}},
 
     { BAND_HOLIES,              {{{MONS_ANGEL, 100},
                                   {MONS_CHERUB, 80},
