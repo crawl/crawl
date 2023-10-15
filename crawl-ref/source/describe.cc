@@ -4989,8 +4989,17 @@ static string _monster_attacks_description(const monster_info& mi)
     if (mons_class_flag(mi.type, M_ARCHER))
     {
         result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
-        result << make_stringf(" can deal up to %d extra damage when attacking with ranged weaponry.\n",
-                                archer_bonus_damage(mi.hd));
+        result << make_stringf(" can deal up to %d extra damage when attacking"
+                               " with ranged weaponry.\n",
+                               archer_bonus_damage(mi.hd));
+    }
+
+    if (mi.type == MONS_NESSOS)
+    {
+        result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
+        result << make_stringf(" can cause poisoning in addition to any other"
+                               " weapon effects if any damage is dealt when"
+                               " attacking with ranged weaponry.\n");
     }
 
     if (mi.type == MONS_ROYAL_JELLY)
