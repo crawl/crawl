@@ -3256,8 +3256,9 @@ static void _maybe_launch_opportunity_attack(monster &mon, coord_def orig_pos)
     // that they already launched an attack.
     crawl_state.potential_pursuers.erase(&mon);
 
-    const string msg = make_stringf(" attacks as %s pursues you!",
-                                    mon.pronoun(PRONOUN_SUBJECTIVE).c_str());
+    const string msg = make_stringf(" attacks as %s pursue%s you!",
+                                    mon.pronoun(PRONOUN_SUBJECTIVE).c_str(),
+                                    mon.pronoun_plurality() ? "" : "s");
     simple_monster_message(mon, msg.c_str());
     const int old_energy = mon.speed_increment;
     _launch_opportunity_attack(mon);
