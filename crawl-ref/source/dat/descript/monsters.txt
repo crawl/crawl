@@ -1266,8 +1266,8 @@ A bat whose leathery body burns with a hot flame.
 fire crab
 
 A variety of crab prized for its brilliantly jewelled shell. The rarity of the
-shells is only enhanced by its vicious, fiery nature, and its almost
-supernatural ability to expel massive quantities of flames.
+shells is only enhanced by its almost supernatural ability to wade through
+molten lava and expel massive quantities of flames.
 %%%%
 fire dragon
 
