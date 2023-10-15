@@ -7,7 +7,6 @@
 
 #include "describe-spells.h"
 
-#include "artefact.h" // is_artefact
 #include "colour.h"
 #include "delay.h"
 #include "describe.h"
@@ -49,12 +48,6 @@ spellset item_spellset(const item_def &item)
 {
     if (!item.has_spells())
         return {};
-    // unid'd randbook?
-    if (is_artefact(item) &&
-        !get_item_known_info(item).props.exists(SPELL_LIST_KEY))
-    {
-        return {};
-    }
 
     return { { "\n", spells_in_book(item) } };
 }

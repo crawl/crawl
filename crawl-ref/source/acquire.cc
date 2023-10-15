@@ -1037,9 +1037,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
     } // switch book choice
 
 
-    if (agent == GOD_XOM || agent == GOD_SIF_MUNA)
-        set_ident_flags(book, ISFLAG_IDENT_MASK);
-    else
+    if (agent != GOD_XOM && agent != GOD_SIF_MUNA)
     {
         // If we couldn't make a useful book, try to make a manual instead.
         // We have to temporarily identify the book for this.

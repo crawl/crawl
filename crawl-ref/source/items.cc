@@ -4630,17 +4630,11 @@ item_def get_item_known_info(const item_def& item)
         ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY, CORPSE_NAME_KEY,
         CORPSE_NAME_TYPE_KEY, ITEM_TILE_KEY, ITEM_TILE_NAME_KEY,
         WORN_TILE_KEY, WORN_TILE_NAME_KEY, NEEDS_AUTOPICKUP_KEY,
-        FORCED_ITEM_COLOUR_KEY, ITEM_NAME_KEY,
+        FORCED_ITEM_COLOUR_KEY, SPELL_LIST_KEY, ITEM_NAME_KEY,
     };
     for (const char *prop : copy_props)
         if (item.props.exists(prop))
             ii.props[prop] = item.props[prop];
-
-    static const char* copy_ident_props[] = {SPELL_LIST_KEY};
-    if (item_ident(item, ISFLAG_KNOW_PROPERTIES))
-        for (const char *prop : copy_ident_props)
-            if (item.props.exists(prop))
-                ii.props[prop] = item.props[prop];
 
     if (item.props.exists(ARTEFACT_PROPS_KEY))
     {
