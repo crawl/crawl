@@ -7267,7 +7267,11 @@ _tormentor_rare_
 ## END _tormentor_ ##
 %%%%
 ################## Wizard ##################################
-wizard
+arcanist
+
+@_wizard_@
+
+occultist
 
 @_wizard_@
 %%%%
