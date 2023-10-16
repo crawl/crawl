@@ -1685,14 +1685,6 @@ static void _on_enter_form(transformation which_trans)
     // Extra effects
     switch (which_trans)
     {
-    case transformation::statue:
-        if (you.duration[DUR_ICY_ARMOUR])
-        {
-            mprf(MSGCH_DURATION, "Your new body cracks your icy armour.");
-            you.duration[DUR_ICY_ARMOUR] = 0;
-        }
-        break;
-
     case transformation::tree:
         mpr("Your roots penetrate the ground.");
         if (you.duration[DUR_TELEPORT])
