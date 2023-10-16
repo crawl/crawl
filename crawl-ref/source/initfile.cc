@@ -3634,7 +3634,7 @@ void base_game_options::read_option_line(const string &str, bool runscripts)
     else if (state.key == "lua_max_memory")
     {
 #ifdef DGAMELAUNCH
-        report_error("Option 'lua_max_memory' is disabled in this build.", state.field.c_str());
+        report_error("Option 'lua_max_memory' is disabled in this build.");
 #else
         if (!sscanf(state.field.c_str(), "%" SCNu64, &crawl_state.clua_max_memory_mb))
             report_error("Couldn't parse integer option lua_max_memory: \"%s\"", state.field.c_str());
@@ -5084,7 +5084,7 @@ static void _bones_merge(const vector<string> files, const string out_name)
     {
         auto ghosts = load_bones_file(filename, false);
         auto end = ghosts.end();
-        if (out.size() + ghosts.size() > MAX_GHOSTS)
+        if (out.size() + ghosts.size() > static_cast<unsigned int>(MAX_GHOSTS))
         {
             //cout << "ghosts " << out.size() + ghosts.size() - MAX_GHOSTS;
             cout << "Too many ghosts! Capping merge at " << MAX_GHOSTS << "\n";
