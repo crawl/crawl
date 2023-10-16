@@ -447,13 +447,15 @@ end), { weight = 2 }))
 mset(with_props(spec_fn(function ()
   local d = 10 + you.zigs_completed() * 2
   local e = 10 + you.zigs_completed() * 4
-  return "wizard / necromancer / ogre mage w:5 / orc sorcerer w:5 / " ..
-         "naga mage / salamander mystic w:5 / merfolk aquamancer w:5 / " ..
-         "spriggan air mage w:" .. d - 5 .. " / nagaraja w:" .. d .. " / " ..
-         "deep elf annihilator w:" .. d .. " / deep elf sorcerer w:" .. d .. " / " ..
-         "tengu reaver w:" .. d .. " / draconian knight w:" .. d - 5 .. " / " ..
+  return "arcanist w:5 / occultist w:5 / necromancer / ogre mage w:5 / " ..
+         "orc sorcerer w:5 / naga mage / salamander mystic w:5 / " ..
+         "merfolk aquamancer w:5 / spriggan air mage w:" .. d - 5 .. " / " ..
+         "nagaraja w:" .. d .. " / deep elf annihilator w:" .. d .. " / " ..
+         "deep elf sorcerer w:" .. d .. " / tengu reaver w:" .. d .. " / " ..
+         "draconian knight w:" .. d - 5 .. " / " ..
          "draconian scorcher w:" .. d - 5 .. " / lich w:" .. d - 5 .. " / " ..
-         "ancient lich w:" .. d - 5 .. " / demonspawn blood saint w:" .. d .. " / " ..
+         "ancient lich w:" .. d - 5 .. " / " ..
+         "demonspawn blood saint w:" .. d .. " / " ..
          "draconian annihilator w:" .. e
 end), { weight = 2 }))
 
