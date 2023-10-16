@@ -429,7 +429,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_ARCANIST,
       {
-       { SPELL_LIGHTNING_BOLT, 12, MON_SPELL_WIZARD },
+       { SPELL_FREEZING_CLOUD, 12, MON_SPELL_WIZARD },
        { SPELL_PARALYSE, 10, MON_SPELL_WIZARD },
        { SPELL_FORCE_LANCE, 12, MON_SPELL_WIZARD },
        { SPELL_HASTE, 14, MON_SPELL_WIZARD },
