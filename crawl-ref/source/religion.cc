@@ -1504,7 +1504,7 @@ static bool _give_sif_gift(bool forced)
         return false;
 
     if (!forced && (you.piety < piety_breakpoint(4)
-                    || random2(you.piety) < 101 || coinflip()))
+                    || random2(you.piety) < 121 || one_chance_in(4)))
     {
         return false;
     }
