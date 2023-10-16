@@ -4587,6 +4587,7 @@ enum commandline_option_type
     CLO_AWAIT_CONNECTION,
     CLO_PRINT_WEBTILES_OPTIONS,
 #endif
+    CLO_RESET_CACHE,
 
     CLO_NOPS
 };
@@ -4596,6 +4597,7 @@ static set<commandline_option_type> clo_headless_ok = {
 // ok in all builds
     CLO_SCORES,
     CLO_BUILDDB,
+    CLO_RESET_CACHE,
     CLO_HELP,
     CLO_VERSION,
     CLO_PLAYABLE_JSON, // JSON metadata for species, jobs, combos.
@@ -4637,6 +4639,7 @@ static const char *cmd_ops[] =
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
 #endif
+    "reset-cache",
 };
 
 
@@ -5713,6 +5716,12 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 return false;
             crawl_state.build_db = true;
             enter_headless_mode();
+            break;
+
+        case CLO_RESET_CACHE:
+            if (next_is_param)
+                return false;
+            crawl_state.use_des_cache = false;
             break;
 
         case CLO_GDB:

@@ -583,6 +583,8 @@ static void _show_commandline_options_help()
 #endif
     puts("");
     puts("Miscellaneous options:");
+    puts("  -builddb         don't start the game; rebuild the .des cache and exit");
+    puts("  -reset-cache     force a full rebuild of the .des cache");
     puts("  -dump-maps       write map Lua to stderr when parsing .des files");
 #ifndef TARGET_OS_WINDOWS
     puts("  -gdb/-no-gdb     produce gdb backtrace when a crash happens (default:on)");
