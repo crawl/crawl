@@ -3031,6 +3031,66 @@ atttt-F-t-F--F-tttta
  aaaa   a      aaaaa
 ENDMAP
 
+NAME:   tekkud_bubbles_buried_in_this_jungle
+TAGS:   no_monster_gen
+DEPTH:  Swamp
+KMONS:  1 = fenstrider witch ; staff of poison | staff of death . \
+                               orb ego:wrath | orb ego:mayhem w:5 . robe
+KMONS:  2 = bog body
+KMONS:  3 = bloated husk
+KFEAT:  123 = W
+NSUBST: ~ = 2:w / 2:wW / *:W
+NSUBST: a = 1:1 / 2:2 / 3 = 2w / 1:3 / 2 = 3ww / * = w W:60
+MAP
+      WWW
+   WWWWtWWtt
+  WWWWttWWttt
+tWtWtaWtttWWtt
+t~tWaaaattt~t
+ttWWaaaaaaWtwt
+ tWWaaaaatWtwt
+ ttWtaaaaWWttt
+  ttt~ttWWtwWt
+   WWWtttt~W
+     WWtWWW
+ENDMAP
+
+NAME:   tekkud_swamp_unearthing_site
+TAGS:   no_item_gen
+DEPTH:  Swamp
+ORIENT: centre
+MONS:   spriggan w:12 ; shortbow | sling good_item / spriggan rider w:8
+MONS:   spriggan druid / spriggan air mage w:5 / \
+        spriggan berserker w:5 ; hand cannon . animal skin
+ITEM:   tin of tremorstones / staff of earth randart no_pickup w:2 / \
+        granite talisman / granite talisman randart w:2
+ITEM:   spear good_item / quick blade w:5 / shortbow / hand cannon w:5
+ITEM:   stone q:1 no_pickup
+KFEAT:  X = x
+NSUBST: ' = 1:2 / 1:d / *:., . = 4:1 / 1:e / 10:f / 5:g / 1:h / *:.
+FTILE:  .defgh12 = floor_sandstone
+TILE:   x = wall_brick_vines
+: dgn.delayed_decay(_G, 'g', 'spriggan corpse')
+: dgn.delayed_decay(_G, 'h', 'human corpse')
+{{
+  local n = 1
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_swamp_ruin", count=n}
+  end)
+}}
+MAP
+xxxx@@xxxx
+xXX.....Xx
+xXX......x
+x.....'..x
+@..'''...@
+@...'''..@
+x..'.....x
+x.......Xx
+x......XXx
+xxxx@@xxxx
+ENDMAP
+
 ###############################################################################
 #
 # <<4>> Swamp ending vaults
