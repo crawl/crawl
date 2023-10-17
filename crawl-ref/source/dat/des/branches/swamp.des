@@ -2984,6 +2984,29 @@ atttt-F-t-F--F-tttta
  aaaa   a      aaaaa
 ENDMAP
 
+NAME:   tekkud_bubbles_buried_in_this_jungle
+TAGS:   no_monster_gen
+DEPTH:  Swamp
+KMONS:  c = fenstrider witch ; orb ego:wrath | orb ego:mayhem w:5
+KMONS:  d = bog body
+KMONS:  e = bloated husk
+KFEAT:  cde = W
+NSUBST: a = 1:c / 2:d / *:b
+SUBST:  b = d:8 e:2 w:5 W:25
+MAP
+      WWW
+   WWWWtWWtt
+  WWWWttWWttt
+tWtWtaWtttWWtt
+tWtWaaaatttWt
+ttWWaaaaaaWtWt
+ tWWaaaaatWtWt
+ ttWtaaaaWWttt
+  tttWttWWtWWt
+   wWWttttWW
+     WWtWWW
+ENDMAP
+
 ###############################################################################
 #
 # <<4>> Swamp ending vaults
