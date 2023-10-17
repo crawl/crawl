@@ -3316,9 +3316,15 @@ static void _display_damage_rating()
         weapon_name = weapon->name(DESC_YOUR);
     else
         weapon_name = "unarmed combat";
-    mprf("Your damage rating with %s is about %s",
-         weapon_name.c_str(),
-         damage_rating(weapon).c_str());
+
+    if (weapon && is_unrandom_artefact(*weapon, UNRAND_WOE))
+        mprf("%s", uppercase_first(damage_rating(weapon)).c_str());
+    else
+    {
+        mprf("Your damage rating with %s is about %s",
+             weapon_name.c_str(),
+             damage_rating(weapon).c_str());
+    }
     return;
 }
 
