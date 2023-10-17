@@ -1444,6 +1444,8 @@ string damage_rating(const item_def *item)
         return "your enemies will bleed and die for Makhleb.";
 
     const bool thrown = item && item->base_type == OBJ_MISSILES;
+    if (item && !thrown && !is_weapon(*item))
+        return "0.";
 
     brand_type brand = SPWPN_NORMAL;
     if (!item)
