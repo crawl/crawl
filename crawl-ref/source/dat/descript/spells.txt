@@ -1710,3 +1710,8 @@ destructive mutagenic radiation. The victim and anyone adjacent will be
 blasted and heavily deformed, weakening them and reducing their armour.
 Summoned creatures are particularly vulnerable, as the enchantments binding
 them to this plane will unravel and cause them to be dismissed immediately.
+%%%%
+Vitrify spell
+
+Renders a creature's body structure as brittle and fragile as glass, increasing
+the damage they take from all sources.

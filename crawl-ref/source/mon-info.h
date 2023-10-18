@@ -219,6 +219,7 @@ enum monster_info_flags
     MB_PURSUING,
     MB_BOUND,
     MB_BULLSEYE_TARGET,
+    MB_VITRIFIED,
     NUM_MB_FLAGS
 };
 

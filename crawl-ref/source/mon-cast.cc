@@ -123,6 +123,7 @@ static ai_action::goodness _foe_polymorph_viable(const monster &caster);
 static ai_action::goodness _foe_sleep_viable(const monster &caster);
 static ai_action::goodness _foe_tele_goodness(const monster &caster);
 static ai_action::goodness _foe_mr_lower_goodness(const monster &caster);
+static ai_action::goodness _foe_vitrify_goodness(const monster &caster);
 static ai_action::goodness _still_winds_goodness(const monster &caster);
 static ai_action::goodness _arcjolt_goodness(const monster &caster);
 static ai_action::goodness _foe_near_wall(const monster &caster);
@@ -441,6 +442,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_CONFUSE, _hex_logic(SPELL_CONFUSE) },
     { SPELL_BANISHMENT, _hex_logic(SPELL_BANISHMENT) },
     { SPELL_PARALYSE, _hex_logic(SPELL_PARALYSE) },
+    { SPELL_VITRIFY, _hex_logic(SPELL_VITRIFY, _foe_vitrify_goodness) },
     { SPELL_PETRIFY, _hex_logic(SPELL_PETRIFY) },
     { SPELL_PAIN, _hex_logic(SPELL_PAIN, [](const monster& caster) {
             const actor* foe = caster.get_foe();
@@ -678,6 +680,11 @@ static ai_action::goodness _foe_tele_goodness(const monster &caster)
 static ai_action::goodness _foe_mr_lower_goodness(const monster &caster)
 {
     return _foe_effect_viable(caster, DUR_LOWERED_WL, ENCH_LOWERED_WL);
+}
+
+static ai_action::goodness _foe_vitrify_goodness(const monster &caster)
+{
+    return _foe_effect_viable(caster, DUR_VITRIFIED, ENCH_VITRIFIED);
 }
 
 /**

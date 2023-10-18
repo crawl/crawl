@@ -3569,6 +3569,13 @@ void bolt::affect_player_enchantment(bool resistible)
         obvious_effect = true;
         break;
 
+    case BEAM_VITRIFY:
+        if (!you.duration[DUR_VITRIFIED])
+            mpr("Your body becomes as fragile as glass!");
+        you.increase_duration(DUR_VITRIFIED, 10 + random2(16), 50);
+        obvious_effect = true;
+        break;
+
     case BEAM_MALIGN_OFFERING:
     {
         const int dam = resist_adjust_damage(&you, flavour, damage.roll());
@@ -5802,6 +5809,20 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         }
         return MON_AFFECTED;
 
+    case BEAM_VITRIFY:
+        if (!mon->has_ench(ENCH_VITRIFIED)
+            && mon->add_ench(mon_enchant(ENCH_VITRIFIED, 0, agent(),
+                                         random_range(20, 30) * BASELINE_DELAY)))
+        {
+            if (you.can_see(*mon))
+            {
+                mprf("%s becomes as fragile as glass.",
+                     mon->name(DESC_ITS).c_str());
+                obvious_effect = true;
+            }
+        }
+        return MON_AFFECTED;
+
     case BEAM_MALIGN_OFFERING:
     {
         const int dam = resist_adjust_damage(mon, flavour, damage.roll());
@@ -6759,6 +6780,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_ENFEEBLE:              return "enfeeble";
     case BEAM_NECROTISE:             return "necrotise";
     case BEAM_ROOTS:                 return "roots";
+    case BEAM_VITRIFY:               return "vitrification";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

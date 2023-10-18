@@ -849,3 +849,9 @@ Peek status
 You are peering down the stairs. You can freely return to the previous level, but
 once you take any action on this floor, all stairs leading back up will collapse.
 %%%%
+Fragile status
+
+Your body is as fragile and brittle as glass, increasing the damage you take from
+all sources.
+
+%%%%

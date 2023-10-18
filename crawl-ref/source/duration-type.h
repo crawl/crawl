@@ -245,5 +245,6 @@ enum duration_type
     DUR_BINDING_SIGIL_WARNING,
 #endif
     DUR_JINXBITE_LOST_INTEREST,
+    DUR_VITRIFIED,
     NUM_DURATIONS
 };

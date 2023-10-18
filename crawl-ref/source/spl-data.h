@@ -3584,6 +3584,18 @@ static const struct spell_desc spelldata[] =
     TILEG_BOULDER,
 },
 
+{
+    SPELL_VITRIFY, "Vitrify",
+    spschool::hexes,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check
+                          | spflag::monster,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
 // Not an actual spell - dummy entry for (player) Green Draconian breath.
 {
     SPELL_MEPHITIC_BREATH, "Mephitic Breath",

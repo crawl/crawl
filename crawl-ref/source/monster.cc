@@ -4237,6 +4237,10 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             }
         }
 
+        // Apply damage multiplier for vitrify
+        if (amount != INSTANT_DEATH && has_ench(ENCH_VITRIFIED))
+            amount = amount * 130 / 100;
+
         // Apply damage multipliers for quad damage
         if (attacker_effects && agent && agent->is_player()
             && you.duration[DUR_QUAD_DAMAGE]
