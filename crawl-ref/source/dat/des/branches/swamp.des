@@ -3007,6 +3007,33 @@ ttWWaaaaaaWtWt
      WWtWWW
 ENDMAP
 
+# site B
+NAME:   tekkud_swamp_mirage
+TAGS:   no_rotate no_item_gen
+DEPTH:  Swamp
+ORIENT: centre
+ITEM:   tin of tremorstones
+ITEM:   spriggan corpse
+ITEM:   spear good_item / quick blade w:5 / shortbow / longbow w:5
+MONS:   spriggan ; shortbow | sling good_item w:12 / spriggan rider w:8
+MONS:   spriggan druid / spriggan berserker ; arbalest w:5 / spriggan air mage w:5
+NSUBST: . = 4:1 / 1:2 / 1:d / 5:e / 1:f / *:-
+FTILE:  12def = floor_sandstone
+: dgn.delayed_decay(_G, 'e','spriggan corpse')
+: swamp_ruins(_G)
+MAP
+xxxx@@xxxx
+xxx.....xx
+xxx......x
+x........x
+@........@
+@........@
+x........x
+x.......xx
+x......xxx
+xxxx@@xxxx
+ENDMAP
+
 ###############################################################################
 #
 # <<4>> Swamp ending vaults
