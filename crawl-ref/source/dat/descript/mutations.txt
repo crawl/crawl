@@ -770,7 +770,8 @@ Those foes will be silenced and unable to breathe.
 otherworldly mutation
 
 You are foreign to this world, easily perceived by dark forces. You have only
-one-tenth the normal time on each dungeon floor before Zot finds and ends you.
+one-tenth the normal time on each dungeon floor before Zot finds you and
+permanently reduces your health.
 %%%%
 glowing mutation
 
