@@ -1319,7 +1319,7 @@ void dreamshard_shatter()
     ASSERT(player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE));
     you.slot_item(EQ_AMULET, true)->unrand_idx = UNRAND_DREAMDUST_NECKLACE;
     mpr("Your necklace shatters, unleashing a wave of protective dreams!");
-    mark_milestone("dreamshard", "saved by the dreamshard necklace!");
+    mark_milestone("dreamshard", "was saved by the dreamshard necklace!");
     take_note(NOTE_DREAMSHARD);
 
     for (int i = 0; i < 5; i++)
