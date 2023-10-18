@@ -4792,7 +4792,7 @@ bool invis_allowed(bool quiet, string *fail_reason, bool temp)
     string msg;
     bool success = true;
 
-    if (you.backlit(false, false))
+    if (you.backlit(true, false))
     {
         msg = "Your body glows too brightly to become invisible.";
         success = false;
@@ -4823,7 +4823,7 @@ bool invis_allowed(bool quiet, string *fail_reason, bool temp)
             success = false;
         }
     }
-    else if (you.backlit(false, temp))
+    else if (you.backlit(true, temp))
     {
         msg = "You are backlit; invisibility will do you no good right now";
         if (quiet)
@@ -7241,6 +7241,9 @@ bool player::backlit(bool self_halo, bool temp) const
                        && (self_halo || halo_radius() == -1))
            || self_halo && (you.has_mutation(MUT_GLOWING)
                             || you.form == transformation::flux);
+    // TODO: find some way to mark !invis for autopickup while
+    // fluxing while still marking it temp-useless (and while
+    // marking it perma-useless for meteors)
 }
 
 bool player::umbra() const
