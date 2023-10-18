@@ -3704,6 +3704,17 @@ static bool _mons_in_emergency(const monster &mons)
     return mons.hit_points < mons.max_hit_points / 3;
 }
 
+static bool _spell_flags_invalid_for_situation(const monster& mons,
+                                               const mon_spell_slot spell)
+{
+    return (spell.flags & MON_SPELL_EMERGENCY
+            && !_mons_in_emergency(mons))
+            || (spell.flags & MON_SPELL_SHORT_RANGE
+                && !_short_target_range(&mons))
+            || (spell.flags & MON_SPELL_LONG_RANGE
+                && !_long_target_range(&mons));
+}
+
 /**
  * Choose a spell for the given monster to consider casting.
  *
@@ -3733,15 +3744,8 @@ static mon_spell_slot _find_spell_prospect(const monster &mons,
     unsigned int i = 0;
     for (; i < hspell_pass.size(); i++)
     {
-        if ((hspell_pass[i].flags & MON_SPELL_EMERGENCY
-             && !_mons_in_emergency(mons))
-            || (hspell_pass[i].flags & MON_SPELL_SHORT_RANGE
-                && !_short_target_range(&mons))
-            || (hspell_pass[i].flags & MON_SPELL_LONG_RANGE
-                && !_long_target_range(&mons)))
-        {
+        if (_spell_flags_invalid_for_situation(mons, hspell_pass[i]))
             continue;
-        }
 
         if (hspell_pass[i].freq >= what)
             break;
@@ -3938,6 +3942,7 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
     // Promote the casting of useful spells for low-HP monsters.
     // (kraken should always cast their escape spell of inky).
     if (_mons_in_emergency(mons)
+        && !mons_is_fleeing(mons)
         && one_chance_in(mons.type == MONS_KRAKEN ? 4 : 8))
     {
         // Note: There should always be at least some chance we don't
@@ -3949,8 +3954,9 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
         for (const mon_spell_slot &slot : hspell_pass)
         {
             bolt targ_beam = orig_beem;
-            if (_target_and_justify_spell(mons, targ_beam, slot.spell,
-                                          ignore_good_idea)
+            if (!_spell_flags_invalid_for_situation(mons, slot)
+                && _target_and_justify_spell(mons, targ_beam, slot.spell,
+                                             ignore_good_idea)
                 && one_chance_in(++found_spell))
             {
                 chosen_slot = slot;
