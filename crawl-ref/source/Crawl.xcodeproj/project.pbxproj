@@ -36,7 +36,6 @@
 		1F909B2D148B242D00084E83 /* spl-summoning.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B18148B242D00084E83 /* spl-summoning.cc */; };
 		1F909B2E148B242D00084E83 /* spl-tornado.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B1A148B242D00084E83 /* spl-tornado.cc */; };
 		1F909B2F148B242D00084E83 /* spl-transloc.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B1B148B242D00084E83 /* spl-transloc.cc */; };
-		1F909B30148B242D00084E83 /* spl-wpnench.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B1D148B242D00084E83 /* spl-wpnench.cc */; };
 		1F909B31148B242D00084E83 /* status.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B1F148B242D00084E83 /* status.cc */; };
 		1F909B32148B242D00084E83 /* syscalls.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B21148B242D00084E83 /* syscalls.cc */; };
 		1F909B33148B242D00084E83 /* target.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B23148B242D00084E83 /* target.cc */; };
@@ -61,7 +60,6 @@
 		1F909BC1148B42C700084E83 /* spl-summoning.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B18148B242D00084E83 /* spl-summoning.cc */; };
 		1F909BC2148B42C700084E83 /* spl-tornado.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B1A148B242D00084E83 /* spl-tornado.cc */; };
 		1F909BC3148B42C700084E83 /* spl-transloc.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B1B148B242D00084E83 /* spl-transloc.cc */; };
-		1F909BC4148B42C700084E83 /* spl-wpnench.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B1D148B242D00084E83 /* spl-wpnench.cc */; };
 		1F909BC8148B42E900084E83 /* unicode.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B4C148B251700084E83 /* unicode.cc */; };
 		1F909BCE148B440800084E83 /* dgn-delve.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ACF148B23BC00084E83 /* dgn-delve.cc */; };
 		1F909BD0148B440800084E83 /* dgn-layouts.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AD3148B23BC00084E83 /* dgn-layouts.cc */; };
@@ -962,8 +960,6 @@
 		1F909B1A148B242D00084E83 /* spl-tornado.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-tornado.cc"; sourceTree = "<group>"; };
 		1F909B1B148B242D00084E83 /* spl-transloc.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-transloc.cc"; sourceTree = "<group>"; };
 		1F909B1C148B242D00084E83 /* spl-transloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spl-transloc.h"; sourceTree = "<group>"; };
-		1F909B1D148B242D00084E83 /* spl-wpnench.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-wpnench.cc"; sourceTree = "<group>"; };
-		1F909B1E148B242D00084E83 /* spl-wpnench.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spl-wpnench.h"; sourceTree = "<group>"; };
 		1F909B1F148B242D00084E83 /* status.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = status.cc; sourceTree = "<group>"; };
 		1F909B20148B242D00084E83 /* status.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = status.h; sourceTree = "<group>"; };
 		1F909B21148B242D00084E83 /* syscalls.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = syscalls.cc; sourceTree = "<group>"; };
@@ -2147,8 +2143,6 @@
 				1F909B1C148B242D00084E83 /* spl-transloc.h */,
 				E5D6408E10BD494500A99626 /* spl-util.cc */,
 				E5D6408F10BD494500A99626 /* spl-util.h */,
-				1F909B1D148B242D00084E83 /* spl-wpnench.cc */,
-				1F909B1E148B242D00084E83 /* spl-wpnench.h */,
 				7B5165BA11859D82005B23ED /* spl-zap.cc */,
 				7B5165BB11859D82005B23ED /* spl-zap.h */,
 				7B5165BC11859D82005B23ED /* sprint.cc */,
@@ -3099,7 +3093,6 @@
 				1F909BC2148B42C700084E83 /* spl-tornado.cc in Sources */,
 				1F909BC3148B42C700084E83 /* spl-transloc.cc in Sources */,
 				7B09F6061133D6AB004F149D /* spl-util.cc in Sources */,
-				1F909BC4148B42C700084E83 /* spl-wpnench.cc in Sources */,
 				7B5165CD11859D82005B23ED /* spl-zap.cc in Sources */,
 				7B5165CE11859D82005B23ED /* sprint.cc in Sources */,
 				7B09F6071133D6AB004F149D /* sqldbm.cc in Sources */,
@@ -3342,7 +3335,6 @@
 				1F909B2E148B242D00084E83 /* spl-tornado.cc in Sources */,
 				1F909B2F148B242D00084E83 /* spl-transloc.cc in Sources */,
 				E5D6415910BD494500A99626 /* spl-util.cc in Sources */,
-				1F909B30148B242D00084E83 /* spl-wpnench.cc in Sources */,
 				7B5165C711859D82005B23ED /* spl-zap.cc in Sources */,
 				7B5165C811859D82005B23ED /* sprint.cc in Sources */,
 				E5D6415A10BD494500A99626 /* sqldbm.cc in Sources */,

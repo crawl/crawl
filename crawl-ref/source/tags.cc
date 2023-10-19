@@ -77,7 +77,6 @@
 #include "skills.h"
 #include "species.h"
 #include "spl-damage.h" // vortex_power_key
-#include "spl-wpnench.h"
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
@@ -95,6 +94,10 @@
 #include "version.h"
 
 vector<ghost_demon> global_ghosts; // only for reading/writing
+
+#if TAG_MAJOR_VERSION == 34
+#define ORIGINAL_BRAND_KEY "orig brand"
+#endif
 
 // defined in dgn-overview.cc
 extern map<branch_type, set<level_id> > stair_level;

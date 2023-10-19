@@ -66,7 +66,6 @@
 #include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
-#include "spl-wpnench.h"
 #include "spl-zap.h"
 #include "state.h"
 #include "stepdown.h"

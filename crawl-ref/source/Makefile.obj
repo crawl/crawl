@@ -225,7 +225,6 @@ spl-summoning.o \
 spl-transloc.o \
 spl-util.o \
 spl-vortex.o \
-spl-wpnench.o \
 spl-zap.o \
 sprint.o \
 sqldbm.o \
@@ -535,7 +534,6 @@ spl-selfench.h.o \
 spl-summoning.h.o \
 spl-transloc.h.o \
 spl-util.h.o \
-spl-wpnench.h.o \
 spl-zap.h.o \
 sprint.h.o \
 sqldbm.h.o \
