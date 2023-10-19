@@ -2456,15 +2456,6 @@ static int _discharge_monsters(const coord_def &where, int pow,
     if (!victim || !victim->alive())
         return 0;
 
-    int damage = 0;
-    if (&agent == victim)
-        damage = 1 + random2(1 + div_rand_round(pow, 18));
-    else
-    {
-        damage = FLAT_DISCHARGE_ARC_DAMAGE
-                 + random2(3 + div_rand_round(pow, DISCHARGE_POWER_DIV));
-    }
-
     bolt beam;
     beam.flavour    = BEAM_ELECTRICITY; // used for mons_adjust_flavoured
     beam.glyph      = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -2481,9 +2472,15 @@ static int _discharge_monsters(const coord_def &where, int pow,
         beam.draw(where);
     }
 
+    int damage = FLAT_DISCHARGE_ARC_DAMAGE
+                 + random2(3 + div_rand_round(pow, DISCHARGE_POWER_DIV));
+
+    // Reduced damage when arcing back to the caster.
+    if (&agent == victim)
+        damage = div_rand_round(damage, 2);
+
     if (victim->is_player())
     {
-        damage = 1 + random2(2 + div_rand_round(pow,15));
         dprf("You: static discharge damage: %d", damage);
         damage = check_your_resists(damage, BEAM_ELECTRICITY,
                                     "static discharge");
