@@ -740,7 +740,7 @@ mon/holy/pearl_dragon MONS_PEARL_DRAGON
 ballistomycete_spore MONS_BALLISTOMYCETE_SPORE
 %sdir mon/eyes
 %rim 1
-floating_eye MONS_FLOATING_EYE
+glass_eye MONS_GLASS_EYE
 %rim 0
 mon/aberrations/glowing_orange_brain MONS_GLOWING_ORANGE_BRAIN
 %rim 1

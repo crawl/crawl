@@ -37,5 +37,5 @@ for i = 1,100 do
   ok("any corpse", "corpse")
 end
 fail("zombie chunk")
-fail("floating eye corpse")
+fail("glass eye corpse")
 ok("orc warrior corpse", "orc corpse")

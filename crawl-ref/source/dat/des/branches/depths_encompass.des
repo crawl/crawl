@@ -218,7 +218,7 @@ default-depth: Depths:2-, !Depths:$
 # The River Lethe
 #
 # The two orange statues are placed for maximum pain -- one you're likely to
-# first see while flying, the other aided by a floating eye and protective
+# first see while flying, the other aided by a glass eye and protective
 # plants.
 #
 # Lemuel
@@ -243,7 +243,7 @@ KMONS:   DE = patrolling glowing orange brain
 KMONS:   F = 0 band
 KMONS:   H = patrolling water elemental / patrolling spectral place:Depths:4 \
              / patrolling simulacrum place:Depths:4
-KMONS:   P = floating eye
+KMONS:   P = glass eye
 SHUFFLE: qr / su / yz / JK, 7N
 SUBST:   q = +, syJ = x, N = xw, p = pp.
 NSUBST:  L = + / x, M = + / x, u = u / * / %, z = u / %, K = u / %
@@ -263,7 +263,7 @@ xww..xxxMwwww;xxxc%.}.%cxxxc...........c...c;;;;xx;;cc..p.ppp..cxxxxxx
 xwww.xxxwww;;;;xxccccccccxxcc+ccc+ccccccc+cc;;;;xx;;cc.ppppp7..cxxxxxx
 xwwwxxxwwww;;;;;xxxxxxxxxxxc...c...c.......c;;;;x;;;cc..pppN..pcxxxxxx
 xwwwxxxwwwww;;5;;xxxxxxxxxxc...c...c.w.....c;;;;;;;;cc.pppppp|*cxxxxxx
-xwwwxxxwwwww;;;;;;;xxxxxxxxc...+...c.w.....+;;;;;;;;cc..ppp5.*Pcxxxxxx
+xwwwxxxwwwww;;;;;;;xxxxxxxxc...+...c.w.....+;;;;;;;;cc..pppP5*.cxxxxxx
 xwwwxxxwwww;;5;;;;;;;;xxx;;c...c...c.w.....c;;;;;;;;ccccccccccccxxxxxx
 xwwwxxxwww;;;;;;;;;;;;;;;;;cc+ccc+cc..w....c;;;;;;;;;;xxxxxxxxxxxxxxxx
 xwwwxxxwww;;;;;;;;;;;;;;;;;+.......+..w....cccc;;;;;;xxxxxxxxxxxxxxxxx

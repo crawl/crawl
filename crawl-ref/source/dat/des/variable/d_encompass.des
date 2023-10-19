@@ -124,7 +124,7 @@ WEIGHT:  1 (D:$), 2 (Depths:$), 10
 KMONS:   - = plant
 KMONS:   _ = demonic plant
 KMONS:   mo = vault guard
-KMONS:   p = floating eye
+KMONS:   p = glass eye
 KMONS:   q : great orb of eyes w:7 / guardian serpent w:3
 KMONS:   r = ettin / deep troll shaman / stone giant / frost giant
 KMONS:   t = draconian knight / draconian scorcher / draconian annihilator

@@ -33,7 +33,7 @@
   {  0, 13,   60, SEMI, MONS_SPHINX },\
   {  1,  7,  135, SEMI, MONS_SPRIGGAN_AIR_MAGE },\
   {  1,  7,  185, SEMI, MONS_SPRIGGAN_BERSERKER },\
-  {  1,  9,   25, FLAT, MONS_FLOATING_EYE },\
+  {  1,  9,   45, FLAT, MONS_GLASS_EYE },\
   {  2, 13,   45, FLAT, MONS_SPRIGGAN_DEFENDER },\
   {  3, 13,   80, SEMI, MONS_TENTACLED_MONSTROSITY },\
   {  3, 13,   40, FLAT, MONS_STORM_DRAGON },\
@@ -457,9 +457,9 @@ static const vector<pop_entry> population[] =
   {  1,  5,  200, FLAT, MONS_GOLDEN_EYE },
   {  1,  5,  200, FLAT, MONS_FORMLESS_JELLYFISH },
   {  1,  8,  300, SEMI, MONS_EYE_OF_DEVASTATION },
-  {  1,  8,  390, SEMI, MONS_GREAT_ORB_OF_EYES },
+  {  1,  8,  265, SEMI, MONS_GREAT_ORB_OF_EYES },
   {  2,  5,  100, RISE, MONS_GLOWING_ORANGE_BRAIN },
-  {  2,  8,   50, SEMI, MONS_FLOATING_EYE },
+  {  2,  8,  315, SEMI, MONS_GLASS_EYE },
 },
 
 { // The Vaults (OOD cap: 12)

@@ -583,7 +583,7 @@ MONS:    shapeshifter / ugly thing / large abomination w:2, wretched star
 MONS:    large abomination / ghoul, ancient zyme
 MONS:    large slime creature w:12 / very large slime creature w:8 / rakshasa w:2
 KMONS:   8 = starcursed mass
-KMONS:   9 = floating eye / chaos spawn / anaconda perm_ench:shapeshifter w:2
+KMONS:   9 = glass eye / chaos spawn / anaconda perm_ench:shapeshifter w:2
 KMONS:   0 = tentacled starspawn
 KMONS:   A = patrolling shadow demon
 KMONS:   B = boggart
@@ -1052,7 +1052,7 @@ MONS:   ettin ; giant spiked club ego:distortion | giant club ego:distortion . \
                 giant spiked club ego:chaos | giant club ego:chaos
 MONS:   ettin skeleton w:6 / flayed ghost / shadow wraith w:4
 MONS:   place:Abyss:$, silent spectre
-KMONS:  O = floating eye
+KMONS:  O = glass eye
 KITEM:  O = abyssal rune of Zot
 KFEAT:  A = stone_arch
 KFEAT:  " = runelight
@@ -1137,7 +1137,7 @@ ENDMAP
 NAME:   hangedman_abyss_rune_macabre_mess
 TAGS:   abyss_rune unrand no_monster_gen
 KMONS:  1 = glowing orange brain
-KMONS:  2 = golden eye / floating eye w:2
+KMONS:  2 = golden eye / glass eye w:4
 KMONS:  3O = flying skull
 KMONS:  4 = large abomination / small abomination w:6
 KMONS:  5 = cacodemon

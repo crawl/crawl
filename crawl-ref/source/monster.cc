@@ -2318,7 +2318,7 @@ string monster::hand_name(bool plural, bool *can_plural) const
                 str = "rhizome";
                 break;
 
-            case MONS_FLOATING_EYE:
+            case MONS_GLASS_EYE:
             case MONS_SHINING_EYE:
             case MONS_EYE_OF_DEVASTATION:
             case MONS_GOLDEN_EYE:

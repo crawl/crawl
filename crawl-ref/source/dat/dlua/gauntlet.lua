@@ -410,14 +410,14 @@ tier1_gauntlet_arenas = {
   },
   {
     first  = {mons = "shining eye", min = 1, max = 1},
-    second = {mons = "floating eye / golden eye", min = 1, max = 2},
+    second = {mons = "glass eye / golden eye", min = 1, max = 2},
     loot   = "potion of mutation ident:type",
     plant  = "demonic",
     weight = 5,
   },
   {
     first  = {mons = "eye of devastation", min = 1, max = 1},
-    second = {mons = "floating eye / golden eye", min = 1, max = 2},
+    second = {mons = "glass eye / golden eye", min = 1, max = 2},
     weight = 5,
   },
   {

@@ -137,7 +137,7 @@ ENDMAP
 NAME:   minmay_slime_entry_eyes
 TAGS:   slime_entry ruin_lair
 WEIGHT: 2
-MONS:   eye of devastation, floating eye
+MONS:   eye of devastation, glass eye
 KFEAT:  O = enter_slime_pits
 KFEAT:  S = slimy_wall
 KFEAT:  _ = altar_jiyva / floor w:5
@@ -738,7 +738,7 @@ NAME:    nicolae_slime_getting_an_eyeful
 TAGS:    transparent patrolling
 DEPTH:   Slime
 KMONS:   1 = glowing orange brain
-KMONS:   2 = floating eye / golden eye / shining eye / eye of devastation / \
+KMONS:   2 = glass eye / golden eye / shining eye / eye of devastation / \
              great orb of eyes
 SHUFFLE: DEF
 SUBST:   ` = 2..., D = @, E : @., F : @..., - = _x

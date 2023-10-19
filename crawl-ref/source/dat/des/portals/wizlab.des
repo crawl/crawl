@@ -1266,7 +1266,7 @@ MONS:       ugly thing, very ugly thing
 MONS:       shapeshifter / glowing shapeshifter w:1
 MONS:       small abomination
 KMONS:      8 = large abomination
-KMONS:      9 = generate_awake floating eye
+KMONS:      9 = generate_awake glass eye
 KMONS:      0 = col:red iron golem hd:5 spells:corrupting_pulse.36.magical \
                 name:flesh_golem name_replace \
                 tile:mons_flesh_golem name_descriptor
@@ -2475,7 +2475,7 @@ MONS:   arcanist / occultist / boggart w:4 / deep elf zephyrmancer w:6 /\
 MONS:   great orb of eyes / glowing orange brain / sphinx / cacodemon w:2 /\
         very ugly thing / glowing shapeshifter / entropy weaver /\
         green death w:2 / tentacled starspawn / golden eye band w:6 /\
-        worldbinder / floating eye w:4
+        worldbinder / glass eye w:4
 MONS:   nagaraja / deep elf high priest / sphinx w:5 / deep elf sorcerer /\
         worldbinder
 MONS:   arcanist / occultist / necromancer w:4 / hell knight w:4 / worldbinder

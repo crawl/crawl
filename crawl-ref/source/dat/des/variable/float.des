@@ -2959,7 +2959,7 @@ TAGS:    no_monster_gen no_item_gen transparent patrolling
 ORIENT:  float
 DEPTH:   Depths, !Depths:$
 WEIGHT:  3
-MONS:    generate_awake floating eye, eye of devastation, glowing orange brain
+MONS:    generate_awake glass eye, eye of devastation, glowing orange brain
 MONS:    generate_awake golden eye, slime creature, acid blob w:1 / nothing w:40
 KFEAT:   > = shaft trap
 KFEAT:   n = iron_grate
@@ -4761,7 +4761,7 @@ MONS:    necromancer / vampire mage / vampire knight / deep elf death mage \
 MONS:    revenant / ancient champion / lich, ancient lich / dread lich
 SUBST:   4 = 23, 5 = 4
 : elseif you.in_branch("D") then
-MONS:    floating eye
+MONS:    glass eye
 MONS:    boggart / kobold demonologist / deep elf pyromancer w:5 / \
          deep elf zephyrmancer w:5 / tengu conjurer
 MONS:    arcanist w:5 / occultist w:5 / necromancer / orc sorcerer / ogre mage
@@ -4775,7 +4775,7 @@ MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist \
 MONS:    sphinx / tengu reaver / lich / fire giant / frost giant
 MONS:    titan / ancient lich w:5 / dread lich w:5 / glowing shapeshifter
 : elseif you.in_branch("Depths") then
-MONS:    floating eye / great orb of eyes / glowing orange brain \
+MONS:    glass eye / great orb of eyes / glowing orange brain \
          / phantasmal warrior
 MONS:    boggart / rakshasa / ogre mage / occultist / necromancer
 MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist \
@@ -4859,7 +4859,7 @@ NSUBST:  - = 4=1 / 6=1. / 2 / 2. / 2=3. / .
 # Depths
 : else
 MONS:    slime creature
-MONS:    glowing orange brain / shining eye / floating eye / golden eye \
+MONS:    glowing orange brain / shining eye / glass eye / golden eye \
          / eye of devastation
 MONS:    acid blob / azure jelly / rockslime
 NSUBST:  ' = 2=d / f / 3=|* / * / %$-- / -
@@ -5830,10 +5830,10 @@ TAGS:   transparent no_monster_gen
 DEPTH:  D:10-, Orc, Depths, Zot
 ORIENT: float
 MONS:   hornet, orc sorcerer / ogre mage, fenstrider witch / great orb of eyes
-MONS:   sphinx / vampire knight, dread lich, floating eye
+MONS:   sphinx / vampire knight, dread lich
 # scroll of vulnerability as fallback if paralysis isn't generated this game
 ITEM:   wand of paralysis w:9999 / scroll of vulnerability w:1
-NSUBST: 6 = 1:6 / *:6.
+NSUBST: 1 = 1:1 / *:1.
 : if you.in_branch("D") and you.absdepth() < 13 then
 NSUBST:  - = 20 = 1... / 1:2 / *:.
 :elseif you.in_branch("Orc") then
@@ -5859,7 +5859,7 @@ c---vv---vv---c
 c-----vvv-----c
 c.vv-------vv.c
 c...vv...vv...c
-c6....vvv....6c
+c1....vvv....1c
 cc...........cc
  ccc.......ccc
    cccc+cccc

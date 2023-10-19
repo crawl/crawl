@@ -13,7 +13,7 @@ function base_monster_setup(e)
            bat / kobold / rat / gnoll band /\
            hobgoblin / jackal band / worm / adder / quokka /\
            gnoll bouda band / orc band / orc priest band /\
-           floating eye / hound / iguana / ogre / orc wizard band /\
+           glass eye / hound / iguana / ogre / orc wizard band /\
            phantom / scorpion / skeleton / gnoll sergeant band /\
            centaur / jelly / water moccasin / ice beast / crimson imp /\
            necrophage / quasit / zombie / sky beast /\
@@ -70,7 +70,7 @@ function base_monster_setup(e)
            deep elf demonologist / deep elf sorcerer / shadow dragon /\
            titan w:5 / death knight / ettin /\
            nagaraja / dancing weapon / dire elephant band /\
-           floating eye / vault guard / ghoul band w:5 /\
+           glass eye / vault guard / ghoul band w:5 /\
            mummy priest / spriggan air mage / spriggan berserker /\
            spriggan defender / base draconian w:70 / nonbase draconian w:5 /\
            base draconian band w:5 / lorocyproca / daeva / angel /\
@@ -96,7 +96,7 @@ function base_monster_setup(e)
            ball python /\
            bat / kobold / rat / gnoll /\
            hobgoblin / jackal band / adder / quokka /\
-           orc / scorpion / floating eye / skeleton /\
+           orc / scorpion / glass eye / skeleton /\
            zombie / river rat / ufetubus")
   e.kmons("H = Sigmund / Jessica / Blork the orc / Crazy Yiuf / Duvessa band /\
            Edmund / Ijyb / Grinder / Pikel band / Pargi / Terence / Menkaure /\
@@ -139,7 +139,7 @@ function base_monster_setup(e)
            hell sentinel / executioner")
   e.kmons("U = place:Slime:$ / slime creature band /\
            rockslime / azure jelly / acid blob /\
-           floating eye w:3 / quicksilver ooze w:3 / eye of devastation /\
+           glass eye w:3 / quicksilver ooze w:3 / eye of devastation /\
            golden eye w:3 / shining eye w:3")
   e.kmons("V = azure jelly / rockslime / acid blob")
   e.kmons("W = acid dragon / steam dragon / fire dragon / ice dragon /\

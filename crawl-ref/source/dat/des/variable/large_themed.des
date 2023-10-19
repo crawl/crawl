@@ -1729,7 +1729,7 @@ NAME: cheibrodos_hippocracy
 DEPTH: D:12-
 TAGS: no_item_gen no_monster_gen no_pool_fixup
 ORIENT: north
-MONS: glowing orange brain, small abomination, floating eye, demonic crawler
+MONS: glowing orange brain, small abomination, glass eye, demonic crawler
 ITEM: randbook
 NSUBST: ' = 3:4 / *:.
 NSUBST: " = 4:0 / 1:9 / *:.

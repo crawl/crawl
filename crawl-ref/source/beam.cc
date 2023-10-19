@@ -3576,6 +3576,15 @@ void bolt::affect_player_enchantment(bool resistible)
         obvious_effect = true;
         break;
 
+    case BEAM_VITRIFYING_GAZE:
+        if (!you.duration[DUR_VITRIFIED])
+            mpr("Your body becomes as fragile as glass!");
+        else
+            mpr("You feel your fragility will last longer.");
+        you.increase_duration(DUR_VITRIFIED, 6 + random2(5), 50);
+        obvious_effect = true;
+        break;
+
     case BEAM_MALIGN_OFFERING:
     {
         const int dam = resist_adjust_damage(&you, flavour, damage.roll());
@@ -5201,11 +5210,10 @@ bool bolt::has_saving_throw() const
     case BEAM_VAMPIRIC_DRAINING:
     case BEAM_CONCENTRATE_VENOM:
     case BEAM_ENFEEBLE:
+    case BEAM_VITRIFYING_GAZE:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores will 1/3 of the time
-    case BEAM_PARALYSIS:        // Giant eyeball paralysis is irresistible
-        return !(agent() && agent()->type == MONS_FLOATING_EYE);
     default:
         return true;
     }
@@ -5822,6 +5830,31 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             }
         }
         return MON_AFFECTED;
+
+    case BEAM_VITRIFYING_GAZE:
+    {
+        bool had_status = mon->has_ench(ENCH_VITRIFIED);
+
+        if (mon->add_ench(mon_enchant(ENCH_VITRIFIED, 0, agent(),
+                                  random_range(6, 10) * BASELINE_DELAY)))
+        {
+            if (you.can_see(*mon))
+            {
+                if (had_status)
+                {
+                    mprf("%s looks even more glass-like.",
+                         mon->name(DESC_THE).c_str());
+                }
+                else
+                {
+                    mprf("%s becomes as fragile as glass.",
+                         mon->name(DESC_ITS).c_str());
+                }
+                obvious_effect = true;
+            }
+        }
+        return MON_AFFECTED;
+    }
 
     case BEAM_MALIGN_OFFERING:
     {
@@ -6781,6 +6814,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_NECROTISE:             return "necrotise";
     case BEAM_ROOTS:                 return "roots";
     case BEAM_VITRIFY:               return "vitrification";
+    case BEAM_VITRIFYING_GAZE:  return "vitrification";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

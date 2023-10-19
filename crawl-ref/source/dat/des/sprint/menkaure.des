@@ -801,7 +801,7 @@ ENDMAP
 NAME:   sprint2_mutation_trap_area_1
 TAGS:   sprint2_mutation_trap_area no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 MARKER: + = lua:restrict_door()
-MONS:   floating eye, shining eye
+MONS:   glass eye, shining eye
 NSUBST: | = 1:a / *:|
 KITEM:  a = potion of mutation q:27
 MAP

@@ -745,7 +745,7 @@ ORIENT: float
 KMONS:  O = player ghost
 MONS:   jelly, slime creature, glowing orange brain / great orb of eyes
 MONS:   eye of devastation / rockslime / quicksilver ooze
-MONS:   floating eye / shining eye / golden eye band
+MONS:   glass eye / shining eye / golden eye band
 MONS:   azure jelly / acid blob
 : ghost_good_loot(_G)
 : if you.in_branch("D") then
@@ -2127,8 +2127,7 @@ MONS:   glowing shapeshifter
 SUBST:  D = FH, fg = |*, h = *, i = $%, j= -
 NSUBST: - = 1 / 2=1. / 4=2 / 4=2. / 2=3 / 2=3. / .
 : elseif you.in_branch("Depths") then
-MONS:   spark wasp / very ugly thing / fire dragon / ice dragon \
-        / floating eye w:5
+MONS:   spark wasp / very ugly thing / fire dragon / ice dragon / glass eye w:5
 MONS:   storm dragon / shadow dragon / quicksilver dragon / golden dragon \
         / iron dragon
 MONS:   caustic shrike

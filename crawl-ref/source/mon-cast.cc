@@ -394,6 +394,14 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             caster.get_foe()->weaken(&caster, caster.get_hit_dice());
         },
     } },
+    { SPELL_VITRIFYING_GAZE, {
+        _caster_sees_foe,
+        [](monster &caster, mon_spell_slot slot, bolt&) {
+            enchant_actor_with_flavour(caster.get_foe(), &caster,
+                                       BEAM_VITRIFYING_GAZE,
+                                       mons_spellpower(caster, slot.spell));
+        },
+    } },
     { SPELL_WATER_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
     { SPELL_EARTH_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
     { SPELL_AIR_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
@@ -6107,7 +6115,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             const monster_type mon = random_choose_weighted(
-                                       100, MONS_FLOATING_EYE,
+                                       100, MONS_GLASS_EYE,
                                         60, MONS_GOLDEN_EYE,
                                         40, MONS_SHINING_EYE,
                                         20, MONS_GREAT_ORB_OF_EYES,
