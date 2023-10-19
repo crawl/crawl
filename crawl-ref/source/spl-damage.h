@@ -13,7 +13,7 @@ struct dice_def;
 class dist;
 
 const int DEFAULT_SHATTER_DICE = 3;
-const int FLAT_DISCHARGE_ARC_DAMAGE = 2;
+const int FLAT_DISCHARGE_ARC_DAMAGE = 3;
 const int AIRSTRIKE_PER_SPACE_BONUS = 2;
 const int MAX_AIRSTRIKE_BONUS = 8 * AIRSTRIKE_PER_SPACE_BONUS;
 

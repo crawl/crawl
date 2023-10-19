@@ -2479,6 +2479,8 @@ static int _discharge_monsters(const coord_def &where, int pow,
     if (&agent == victim)
         damage = div_rand_round(damage, 2);
 
+    damage = max(0, victim->apply_ac(damage, 0, ac_type::half));
+
     if (victim->is_player())
     {
         dprf("You: static discharge damage: %d", damage);

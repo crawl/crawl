@@ -1324,8 +1324,8 @@ Static Discharge spell
 
 Releases electrical charges against those next to the caster. These may arc to
 other adjacent creatures, or back to the caster, before eventually grounding
-out. It deals reduced damage when arcing to the caster, and bypasses any armour
-the target may have.
+out. It deals reduced damage when arcing to the caster, and the damage dealt
+bypasses half of defenders' armour.
 %%%%
 Steam Ball spell
 
