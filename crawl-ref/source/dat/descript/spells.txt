@@ -1423,7 +1423,7 @@ Summons multiple Executioners to tear apart foes of the caster.
 %%%%
 Summon Eyeballs spell
 
-Summons multiple floating eyeballs that may be able to paralyse, drain,
+Summons multiple floating eyeballs that may be able to vitrify, polymorph,
 confuse, mutate or disintegrate.
 %%%%
 Summon Fire Elementals spell

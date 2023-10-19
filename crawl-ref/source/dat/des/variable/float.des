@@ -5829,7 +5829,7 @@ NAME:   hellmonk_paralyzer
 TAGS:   transparent no_monster_gen
 DEPTH:  D:10-, Orc, Depths, Zot
 ORIENT: float
-MONS:   hornet, orc sorcerer / ogre mage, fenstrider witch / great orb of eyes
+MONS:   hornet, orc sorcerer / ogre mage, fenstrider witch
 MONS:   sphinx / vampire knight, dread lich
 # scroll of vulnerability as fallback if paralysis isn't generated this game
 ITEM:   wand of paralysis w:9999 / scroll of vulnerability w:1
