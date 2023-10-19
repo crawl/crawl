@@ -265,14 +265,18 @@ ENDMAP
 NAME:   minmay_smoke_and_mirrors
 ORIENT: northwest
 DEPTH:  D:10-
-MONS:   occultist / arcanist
+MONS:   arcanist, occultist
 ITEM:   warlock's_mirror no_pickup
 MARKER: F = lua:fog_machine { cloud_type="purple smoke", \
             pow_min = 5, pow_max = 15, delay_min = 10,   \
             delay_max = 50, size_min = 1, size_max = 5,  \
             walk_dist = 0, spread_rate= 100 }
 SUBST:  F = .
-SUBST:  1 = 1.
+: if you.depth() < 11 then
+NSUBST: 1 = 1:1 / 1:. / * = 1.
+: else
+NSUBST: 1 = 1:1 / 1:2 / 1:. / * = 12..
+: end
 NSUBST: * = 1:d / *:*
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx

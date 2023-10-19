@@ -1902,7 +1902,7 @@ SUBST:  2 = .:50 2:60 3:30 4
 :     end
 # Depths
 : else
-MONS:   arcanist / occultist, deep troll, iron troll, deep troll shaman
+MONS:   occultist, deep troll, iron troll, deep troll shaman
 SUBST:  2 = 2:30 3 4
 : end
 MAP
@@ -3046,7 +3046,7 @@ NAME:    hangedman_six_sided_sadism
 TAGS:    patrolling no_monster_gen no_item_gen
 DEPTH:   Depths
 ORIENT:  float
-MONS:    tengu warrior / deep troll earth mage / rakshasa / occultist \
+MONS:    tengu warrior / deep troll earth mage / rakshasa \
          / necromancer / vampire knight
 MONS:    tengu conjurer / ancient champion / stone giant / occultist \
          / deep elf high priest / phantasmal warrior \
@@ -3556,14 +3556,19 @@ cctGt..caacc--cc*%$%*cc--cc''--x--wcc
      ccccccccccccccccccccccccccc
 ENDMAP
 
-NAME: cheibrodos_breeding_chamber
-TAGS: no_item_gen no_monster_gen
-DEPTH: D:10-
+NAME:   cheibrodos_breeding_chamber
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  D:10-
 ORIENT: float
-MONS: arcanist / occultist, ugly thing, very ugly thing
-SUBST: y = * |:4, r = *:2 %
-NSUBST: ' = 6:2 / *:.
+MONS:   arcanist, occultist, ugly thing, very ugly thing
+SUBST:  y = * |:4, r = *:2 %
+NSUBST: ' = 6:3 / *:.
+: if you.depth() > 11 then
+SUBST:  1 = 11222
+NSUBST: " = 1:4 / *:.
+: else
 NSUBST: " = 1:3 / *:.
+: end
 MAP
     cccccccccc         cccccccccc
    cccccGcccccc       ccccccGccccc
@@ -4636,23 +4641,23 @@ ENDMAP
 
 NAME:   cheibrodos_wizards_tower
 TAGS:   no_pool_fixup
-DEPTH:  D:7-, Elf
+DEPTH:  D:8-, Elf
 ORIENT: float
 ITEM:   robe good_item / cloak good_item / scarf / pair of boots good_item \
         / pair of gloves good_item / hat good_item
 ITEM:   randbook w:40 / any magical staff
 : if you.in_branch("D") then
-MONS:   arcanist w:5 / occultist w:5 / / orc sorcerer, deep elf annihilator
-:   if you.depth() < 10 then
-NSUBST: " = 1 / 1... / ., - = d / *% / %$.. / .
+MONS:   arcanist / orc sorcerer, occultist, deep elf annihilator
+:   if you.depth() < 11 then
+NSUBST: " = 1:1 / 1:1... / *:., - = 1:d / 1:*% / 1:%$.. / *:.
 :   elseif you.depth() < 13 then
-NSUBST: " = 1 / 1. / 2... / ., - = de / |* / %$ / .
+NSUBST: " = 1:1 / 1:112... / *:., - = 1:de / 1:|* / 1:%$ / *:.
 :   else
-NSUBST: " = 1 / 2=1. / 2. / ., - = d / e / |* / %$ / .
+NSUBST: " = 1:2 / 2 = 1. / 1:23.. / *:., - = 1:d / 1:e / 1:|* / 1:%$ / *:.
 :   end
 : else
 MONS:   deep elf sorcerer / deep elf annihilator
-NSUBST: " = 2=1 / 4=1. / ., - = d / e / 2=|* / *% / %$.. / .
+NSUBST: " = 2:1 / 3 = 1. / ., - = 1:d / 1:e / 2 = |* / 1:*% / 1:%$.. / *:.
 : end
 SHUFFLE: AB / CD / EF
 SUBST:   A = ., B = W, CDEF = w

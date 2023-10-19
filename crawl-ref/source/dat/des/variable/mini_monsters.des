@@ -1626,7 +1626,8 @@ ENDMAP
 NAME:    bh_hangedman_babel_library
 TAGS:    transparent no_monster_gen no_item_gen
 DEPTH:   D:10-, !D:$, Elf, !Elf:$
-MONS:    arcanist w:5 / occultist w:5 / deep elf pyromancer / deep elf zephyrmancer
+MONS:    arcanist w:6 / deep elf pyromancer
+MONS:    occultist w:6 / deep elf zephyrmancer
 ITEM:    any potion
 ITEM:    randbook numspells:2 title:Dhcmrlchtdj
 ITEM:    randbook numspells:2 title:Combed_Thunderclap disc:air
@@ -1635,13 +1636,18 @@ ITEM:    randbook numspells:2 title:Axaxaxas_mlö
 ITEM:    randbook numspells:3 title:Forking_Paths owner:Ts'ui_Pên disc:hexes
 ITEM:    randbook numspells:2 title:Sand
 KFEAT:   ^ : shaft trap
+: if you.branch() == "D" and you.depth() < 12 then
+NSUBST:  1 = 1:. / *:1
+: else
+NSUBST:  1 = 1:2 / * = 12
+: end
 SHUFFLE: defg, efghij, bm, bm / ++
 MAP
    xxx@xxx     xxx@xxx
   xx.....xx   xx.....xx
  xx1.....dxxxxxf.....1xx
 xx....^....xbx....^....xx
-@....^<^.........^>^....@
+@....^<^....1....^>^....@
 xx....^....xmx....^....xx
  xxe.....1xxxxx1.....gxx
   xx.....xx   xx.....xx
@@ -2166,8 +2172,8 @@ cccc+.......+cccc
     cc..@..cc
 ENDMAP
 
-NAME:  grunt_absolute_annihilation
-DEPTH: Depths
+NAME:    grunt_absolute_annihilation
+DEPTH:   Depths
 MONS:    ancient lich
 MONS:    deep elf annihilator / draconian annihilator w:5 / lich
 MONS:    deep elf pyromancer w:20 / deep elf zephyrmancer w:20 / tengu conjurer w:20 / \
@@ -2282,8 +2288,11 @@ ENDMAP
 NAME:  lightli_wizard_tower
 TAGS:  no_monster_gen patrolling
 DEPTH: D:9-
-MONS:  patrolling occultist / patrolling arcanist, patrolling crimson imp
+MONS:  crimson imp, arcanist, occultist
 ITEM:  any book, any scroll
+: if you.depth() > 11 then
+SUBST: 2 = 23
+: end
 MAP
    bbbb
   bbdebb
@@ -4534,7 +4543,7 @@ ENDMAP
 
 NAME:   minmay_librarian
 TAGS:   no_monster_gen no_item_gen no_trap_gen
-DEPTH:  D:9-, Depths
+DEPTH:  D:9-, Elf, Depths
 : if you.absdepth() > 24 then
 MONS:   ancient lich w:25 / dread lich w:25 / royal mummy
 ITEM:   any scroll w:6 / any book
@@ -4546,10 +4555,14 @@ ITEM:   any scroll / any book
 MONS:   deep elf annihilator w:30 / deep elf sorcerer w:20 / \
         deep elf demonologist / deep elf death mage
 ITEM:   any scroll / any book w:6
+: elseif you.absdepth() > 12 then
+MONS:   arcanist w:25 / occultist w:25 / necromancer w:20 / \
+        deep elf pyromancer w:20 / deep elf zephyrmancer w:20 / \
+        orc sorcerer / ogre mage / naga mage / vampire mage
 : else
-MONS:   occultist w:25 / arcanist w:25 / necromancer w:20 / deep elf pyromancer w:20 / \
-        deep elf zephyrmancer w:20 / orc sorcerer / ogre mage / naga mage / \
-        vampire mage / kobold demonologist w:5
+MONS:   arcanist w:20 / necromancer w:20 / \
+        deep elf pyromancer w:20 / orc sorcerer / \
+        naga mage w:5 / kobold demonologist
 ITEM:   any scroll / any book w:3
 : end
 MAP
@@ -8540,16 +8553,16 @@ TAGS:   patrolling
 DEPTH:  D:13-, Depths
 WEIGHT: 3
 ITEM:   rift no_pickup
-MONS:   occultist / arcanist, tentacled starspawn, starcursed mass
+MONS:   arcanist, occultist, tentacled starspawn, starcursed mass
 KFEAT:  t = demonic_tree
 KFEAT:  _ = altar_lugonu / enter_abyss
 : if you.in_branch("D") then
-NSUBST: D = d / 3 / 2
-SUBST:  1 = 1..
+SUBST:  1 = 12..
+NSUBST: D = d / 3 / 4
 # Depths
 : else
-NSUBST: D = d / 3
-SUBST:  1 = 12..
+SUBST:  1 = 23..
+NSUBST: D = d / 4
 : end
 SUBST:  c = ccvbx t:5
 SUBST:  E = xxxcvlWbtTG_....
@@ -9564,7 +9577,12 @@ ENDMAP
 
 # Wizard's laboratory
 NAME:  laboratory
-MONS:  occultist / arcanist, small abomination, large abomination
+MONS:  arcanist, occultist, small abomination, large abomination
+: if you.branch() ~= "D" then
+SUBST: 1 = 2
+: elseif you.depth() > 12 then
+SUBST: 1 = 12
+: end
 MAP
 ccc+cccccc
 c........c
@@ -9572,9 +9590,9 @@ c........c
 c......1.c
 c........c
 ccccccc+cc
-c***c3232c
-c|**+2223c
-c||*c3322c
+c***c4343c
+c|**+3334c
+c||*c4433c
 cccccccccc
 ENDMAP
 

@@ -184,8 +184,8 @@ ENDMAP
 
 NAME:    hangedman_depths_entry_civil_slaughter
 TAGS:    transparent no_monster_gen
-MONS:    tengu warrior w:14 / tengu conjurer / occultist / necromancer
-MONS:    deep troll w:14 / hell knight / shapeshifter w:2
+MONS:    tengu warrior w:14 / tengu conjurer / necromancer / shapeshifter w:2
+MONS:    deep troll w:14 / hell knight / occultist
 KMONS:   O = ettin w:14 / stone giant w:2 / glowing shapeshifter w:2
 SHUFFLE: -~
 SUBST:   - = +, ~ = ., c : c:9 v:2 b:1

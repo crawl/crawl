@@ -429,20 +429,19 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_ARCANIST,
       {
-       { SPELL_FREEZING_CLOUD, 12, MON_SPELL_WIZARD },
-       { SPELL_PARALYSE, 10, MON_SPELL_WIZARD },
-       { SPELL_FORCE_LANCE, 12, MON_SPELL_WIZARD },
+       { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
+       { SPELL_VITRIFY, 12, MON_SPELL_WIZARD },
        { SPELL_HASTE, 14, MON_SPELL_WIZARD },
+       { SPELL_BLINK, 10, MON_SPELL_WIZARD },
       }
     },
 
-    // Occultist set is also used by Erolcha.
     {  MST_OCCULTIST,
       {
        { SPELL_FIREBALL, 12, MON_SPELL_WIZARD },
-       { SPELL_BANISHMENT, 10, MON_SPELL_WIZARD },
-       { SPELL_BLINK, 12, MON_SPELL_WIZARD },
+       { SPELL_FORCE_LANCE, 12, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 14, MON_SPELL_WIZARD },
+       { SPELL_BANISHMENT, 10, MON_SPELL_WIZARD },
       }
     },
 
@@ -1912,7 +1911,16 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    // ('O') Lodul.
+    // ('O') Ogres.
+    {  MST_EROLCHA,
+      {
+       { SPELL_FIREBALL, 12, MON_SPELL_WIZARD },
+       { SPELL_INVISIBILITY, 14, MON_SPELL_WIZARD },
+       { SPELL_BANISHMENT, 10, MON_SPELL_WIZARD },
+       { SPELL_BLINK, 12, MON_SPELL_WIZARD },
+      }
+    },
+
     {  MST_LODUL,
       {
        { SPELL_CALL_DOWN_LIGHTNING, 40, MON_SPELL_MAGICAL },

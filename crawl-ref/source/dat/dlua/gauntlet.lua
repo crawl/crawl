@@ -425,7 +425,7 @@ tier1_gauntlet_arenas = {
     second = {mons = "tengu conjurer", min = 1, max = 2},
   },
   {
-    first  = {mons = "arcanist / occultist", min = 1, max = 1},
+    first  = {mons = "arcanist", min = 1, max = 1},
     second = {mons = "white imp / shadow imp", min = 1, max = 3},
   },
   {
