@@ -347,7 +347,7 @@ if you.race() == "Mummy" then
     return "velvet-covered"
 elseif you.mutation('beak') > 0 then
     return "pearl-beaked"
-elseif you.transform() == "lich" then
+elseif you.transform() == "death" then
     return "ivory-boned"
 elseif you.transform() == "statue" then
     return "marble-toed"
