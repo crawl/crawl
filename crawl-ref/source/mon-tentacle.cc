@@ -684,9 +684,7 @@ static int _collect_connection_data(monster* start_monster,
             }
         }
         else
-        {
             current_mon = nullptr;
-        }
         current_count++;
     }
 
