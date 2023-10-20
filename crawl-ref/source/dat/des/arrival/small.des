@@ -3503,14 +3503,14 @@ NAME:     amcnicky_arrival_blooded_trapdoor
 TAGS:     arrival no_monster_gen no_pool_fixup no_trap_gen
 ORIENT:   float
 SHUFFLE:  pqr
-SUBST:    s:xxxtw, p:x, q:x, r:@
-SUBST:    ' = '..
-KPROP:    ' = bloody
+SUBST:    p : x, q : x, r:@, s : xxxtw
+NSUBST:   " = 1:" / * = ".., ' = 1:" / * = "..
+KPROP:    " = bloody
 MAP
    xpppx
    x'''x
-xxxx'>'xxxxxqqq
-x...'''.......q
+xxxx">'xxxxxqqq
+x...""".......q
 x.{........ss.q
 x.............x
 xxxxxxxxrrrrxxx
