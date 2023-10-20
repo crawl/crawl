@@ -4231,7 +4231,7 @@ bool poison_player(int amount, string source, string source_aux, bool force)
 
     // TODO: support being poisoned by monsters wearing "harm (ha)
     if (you.extra_harm())
-        amount *= (100 + incoming_harm_amount(amount)) / 100;
+        amount *= (100 + incoming_harm_amount(you.extra_harm())) / 100;
 
     you.duration[DUR_POISONING] += amount * 1000;
 

@@ -816,9 +816,9 @@ static int _apply_extra_harm(int dam, mid_t source)
 {
     monster* damager = monster_by_mid(source);
     if (damager && damager->extra_harm())
-        dam *= (100 + outgoing_harm_amount(damager->extra_harm())) / 100;
+        dam = dam * (100 + outgoing_harm_amount(damager->extra_harm())) / 100;
     if (you.extra_harm())
-        dam *= (100 + incoming_harm_amount(you.extra_harm())) / 100;
+        dam = dam * (100 + incoming_harm_amount(you.extra_harm())) / 100;
     return dam;
 }
 
