@@ -1230,7 +1230,8 @@ staff of air
 
 A staff that increases the power of air spells cast by its wielder, and
 insulates them from electricity. If the wielder is skilled in Evocations and
-Air Magic, they can shock those struck by it.
+Air Magic, they can shock those struck by it, dealing electricity damage which
+bypasses armour.
 %%%%
 staff of cold
 
