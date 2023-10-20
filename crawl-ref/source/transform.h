@@ -351,3 +351,11 @@ int form_base_movespeed(transformation tran);
 bool draconian_dragon_exception();
 
 transformation form_for_talisman(const item_def &talisman);
+
+struct talisman_form_desc {
+    vector<pair<string, string>> skills;
+    vector<pair<string, string>> defenses;
+    vector<pair<string, string>> offenses; // heh
+};
+void describe_talisman_form(transformation form_type, talisman_form_desc &d,
+                            bool incl_special);

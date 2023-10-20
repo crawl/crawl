@@ -2337,103 +2337,42 @@ string describe_item_rarity(const item_def &item)
     }
 }
 
-static string _int_with_plus(int i)
-{
-    if (i < 0)
-        return make_stringf("%d", i);
-    return make_stringf("+%d", i);
-}
-
-static string _maybe_desc_prop(const char* name, int val, int max = -1)
-{
-    if (val == 0 && max <= 0)
-        return "";
-    const int len_delta = strlen("Minimum skill") - strlen(name);
-    const string padding = len_delta > 0 ? string(len_delta, ' ') : "";
-    const string base = make_stringf("\n%s: %s%s",
-                        name,
-                        padding.c_str(),
-                        _int_with_plus(val).c_str());
-    if (max == val || max == -1)
-        return base;
-    return base + make_stringf(" (%s at max skill)",
-                               _int_with_plus(max).c_str());
-}
-
 static string _describe_talisman_form(const item_def &item, bool monster)
 {
     const transformation form_type = form_for_talisman(item);
+    talisman_form_desc tfd;
+    describe_talisman_form(form_type, tfd, false);
     const Form* form = get_form(form_type);
     string description;
-    description += make_stringf("Minimum skill: %d", form->min_skill);
-    const bool below_target = _is_below_training_target(item, true);
-    if (below_target)
-        description += " (insufficient skill lowers this form's max HP)";
-    description += make_stringf("\nMaximum skill: %d\n", form->max_skill);
+    for (auto skinfo : tfd.skills)
+        description += make_stringf("%s: %s\n", skinfo.first.c_str(), skinfo.second.c_str());
     const int target_skill = _item_training_target(item);
+    const bool below_target = _is_below_training_target(item, true);
     const bool can_set_target = below_target && in_inventory(item)
                                 && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
+    // TODO: extract into talisman_form_desc
     description += _your_skill_desc(SK_SHAPESHIFTING, can_set_target,
                                     target_skill, "   ");
     if (below_target)
         _append_skill_target_desc(description, SK_SHAPESHIFTING, target_skill);
 
     // defenses
-    const int hp = form->mult_hp(100, true);
-    const int ac = form->get_ac_bonus();
-    const int ev = form->ev_bonus();
-    const int body_ac_loss_percent = form->get_base_ac_penalty(100);
-    const bool loses_body_ac = body_ac_loss_percent && you_can_wear(EQ_BODY_ARMOUR) != false;
-    if (below_target || hp != 100 || ac || ev || loses_body_ac)
+    if (!tfd.defenses.empty())
     {
         if (!monster)
             description += "\n\nDefense:";
-        if (below_target || hp != 100)
-        {
-            description += make_stringf("\nHP:            %d%%", hp);
-            if (below_target)
-                description += " (reduced by your low skill)";
-        }
-        description += _maybe_desc_prop("Bonus AC", ac / 100,
-                                        form->get_ac_bonus(true) / 100);
-        description += _maybe_desc_prop("Bonus EV", ev, form->ev_bonus(true));
-
-        if (body_ac_loss_percent)
-        {
-            const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
-            const int base_ac = body_armour ? property(*body_armour, PARM_AC) : 0;
-            const int ac_penalty = form->get_base_ac_penalty(base_ac);
-            description += make_stringf("\nAC:           -%d (-%d%% of your body armour's %d base AC)",
-                                        ac_penalty, body_ac_loss_percent, base_ac);
-        }
-
-        if (form->size != SIZE_CHARACTER)
-            description += "\nSize:          " + uppercase_first(get_size_adj(form->size));
+        for (auto skinfo : tfd.defenses)
+            description += make_stringf("\n%s: %s", skinfo.first.c_str(), skinfo.second.c_str());
     }
 
     // offense
-    if (!monster)
-        description += "\n\nOffense:";
-    const int uc = form->get_base_unarmed_damage(false); // TODO: compare to your base form?
-                                                         // folks don't know nudists have 3
-    const int max_uc = form->get_base_unarmed_damage(false, true);
-    description += make_stringf("\nUC base dam.:  %d%s",
-                                uc, max_uc == uc ? "" : make_stringf(" (max %d)", max_uc).c_str());
-    description += _maybe_desc_prop("Slay", form->slay_bonus(false),
-                                    form->slay_bonus(false, true));
-    if (form_type == transformation::statue)
-        description += "\nMelee damage:  +50%";
-    if (form_type == transformation::flux)
+    if (!tfd.offenses.empty())
     {
-        description += "\nMelee damage:  -33%";
-        const int contam_dam = form->contam_dam(false);
-        const int max_contam_dam = form->contam_dam(false, true);
-        description += make_stringf("\nContam Damage: %d", contam_dam);
-        if (max_contam_dam != contam_dam)
-            description += make_stringf(" (max %d)", max_contam_dam);
+        if (!monster)
+            description += "\n\nOffense:";
+        for (auto skinfo : tfd.offenses)
+            description += make_stringf("\n%s: %s", skinfo.first.c_str(), skinfo.second.c_str());
     }
-    description += _maybe_desc_prop("Str", form->str_mod);
-    description += _maybe_desc_prop("Dex", form->dex_mod);
 
     if (form_type == transformation::maw)
     {

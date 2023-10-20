@@ -1052,17 +1052,6 @@ string describe_mutations(bool drop_title)
     return result;
 }
 
-static string _vampire_Ascreen_footer(bool first_page)
-{
-    const char *text = first_page ? "<w>Mutations</w>|Blood properties"
-                                  : "Mutations|<w>Blood properties</w>";
-    return make_stringf("[<w>!</w>/<w>^</w>"
-#ifdef USE_TILE_LOCAL
-            "|<w>Right-click</w>"
-#endif
-            "]: %s", text);
-}
-
 static bool _has_partially_suppressed_muts()
 {
     for (int i = 0; i < NUM_MUTATIONS; ++i)
@@ -1097,19 +1086,33 @@ static bool _has_transient_muts()
     return false;
 }
 
+enum mut_menu_mode {
+    MENU_MUTS,
+    MENU_VAMP,
+    MENU_FORM,
+    NUM_MENU_MODES
+};
+
+const char *menu_mode_labels[] = {
+    "Mutations",
+    "Blood properties",
+    "Form properties"
+};
+COMPILE_CHECK(ARRAYSZ(menu_mode_labels) == NUM_MENU_MODES);
+
 class MutationMenu : public Menu
 {
 private:
     vector<string> fakemuts;
     vector<mutation_type> muts;
-    bool blood;
+    mut_menu_mode mode;
 public:
     MutationMenu()
         : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
             | MF_ARROWS_SELECT),
           fakemuts(_get_fakemuts(false)),
           muts( _get_ordered_mutations()),
-          blood(false)
+          mode(MENU_MUTS)
     {
         set_highlighter(nullptr);
         set_title(new MenuEntry("Innate Abilities, Weirdness & Mutations",
@@ -1123,10 +1126,53 @@ private:
     void update_entries()
     {
         clear();
-        if (blood)
-            update_blood();
-        else
+        switch (mode)
+        {
+        case MENU_MUTS:
             update_muts();
+            break;
+        case MENU_VAMP:
+            update_blood();
+            break;
+        case MENU_FORM:
+            update_form();
+            break;
+        default:
+            break;
+        }
+    }
+
+    void update_form()
+    {
+        talisman_form_desc tfd;
+        describe_talisman_form(you.default_form, tfd, true);
+        // TODO: label the form name
+        add_entry(new MenuEntry("", MEL_ITEM, 1, 0)); // XXX spacing kludge?
+        for (auto skinfo : tfd.skills)
+        {
+            const string label = make_stringf("%s: %s\n", skinfo.first.c_str(), skinfo.second.c_str());
+            add_entry(new MenuEntry(label, MEL_ITEM, 1, 0));
+        }
+        if (!tfd.defenses.empty())
+        {
+            add_entry(new MenuEntry("<w>Defense:</w>", MEL_ITEM, 1, 0));
+            add_entry(new MenuEntry("", MEL_ITEM, 1, 0)); // XXX  spacing kludge?
+        }
+        for (auto skinfo : tfd.defenses)
+        {
+            const string label = make_stringf("%s: %s\n", skinfo.first.c_str(), skinfo.second.c_str());
+            add_entry(new MenuEntry(label, MEL_ITEM, 1, 0));
+        }
+        if (!tfd.offenses.empty())
+        {
+            add_entry(new MenuEntry("<w>Offense:</w>", MEL_ITEM, 1, 0));
+            add_entry(new MenuEntry("", MEL_ITEM, 1, 0)); // XXX  spacing kludge?
+        }
+        for (auto skinfo : tfd.offenses)
+        {
+            const string label = make_stringf("%s: %s\n", skinfo.first.c_str(), skinfo.second.c_str());
+            add_entry(new MenuEntry(label, MEL_ITEM, 1, 0));
+        }
     }
 
     void update_blood()
@@ -1229,7 +1275,7 @@ private:
     void update_more()
     {
         string extra = "";
-        if (!blood)
+        if (mode == MENU_MUTS)
         {
             if (_has_partially_suppressed_muts())
                 extra += "<brown>()</brown>  : Partially suppressed.\n";
@@ -1239,9 +1285,41 @@ private:
             if (_has_transient_muts())
                 extra += "<magenta>[]</magenta>   : Transient mutations.\n";
         }
-        if (you.has_mutation(MUT_VAMPIRISM))
-            extra += _vampire_Ascreen_footer(!blood);
+        extra += picker_footer();
         set_more(extra);
+    }
+
+    string picker_footer()
+    {
+        auto modes = valid_modes();
+        if (modes.size() <= 1)
+            return "";
+        string t = "";
+        for (auto m : modes)
+        {
+            if (t.size() > 0)
+                t += "|";
+            const char* label = menu_mode_labels[m];
+            if (m == mode)
+                t += make_stringf("<w>%s</w>", label);
+            else
+                t += string(label);
+        }
+        return make_stringf("[<w>!</w>/<w>^</w>"
+#ifdef USE_TILE_LOCAL
+                "|<w>Right-click</w>"
+#endif
+                "]: %s", t.c_str());
+    }
+
+    vector<mut_menu_mode> valid_modes()
+    {
+        vector<mut_menu_mode> modes = {MENU_MUTS};
+        if (you.has_mutation(MUT_VAMPIRISM))
+            modes.push_back(MENU_VAMP);
+        if (you.default_form != transformation::none)
+            modes.push_back(MENU_FORM);
+        return modes;
     }
 
     virtual bool process_key(int keyin) override
@@ -1251,17 +1329,33 @@ private:
         case '!':
         case '^':
         case CK_MOUSE_CMD:
-            if (you.has_mutation(MUT_VAMPIRISM))
+        {
+            auto modes = valid_modes();
+            if (modes.size() > 1)
             {
-                blood = !blood;
+                cycle_mut_mode(modes);
                 update_entries();
                 update_more();
                 update_menu(true);
             }
+        }
             return true;
         default:
             return Menu::process_key(keyin);
         }
+    }
+
+    void cycle_mut_mode(const vector<mut_menu_mode> &modes)
+    {
+        for (int i = 0; i < (int)modes.size(); i++)
+        {
+            if (modes[i] == mode)
+            {
+                mode = modes[(i + 1) % modes.size()];
+                return;
+            }
+        }
+        ASSERT(false);
     }
 
     bool examine_index(int i) override
