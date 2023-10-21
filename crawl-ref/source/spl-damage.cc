@@ -1142,6 +1142,8 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_IRON_GOLEM,        { "metal", CYAN, frag_damage_type::metal } },
     { MONS_PEACEKEEPER,       { "metal", CYAN, frag_damage_type::metal } },
     { MONS_WAR_GARGOYLE,      { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_GLASS_EYE,         { "glass", LIGHTCYAN,
+                                frag_damage_type::crystal } },
     { MONS_CRYSTAL_GUARDIAN,  { "crystal", GREEN,
                                 frag_damage_type::crystal } },
     { MONS_CRYSTAL_ECHIDNA,   { "crystal", GREEN,
