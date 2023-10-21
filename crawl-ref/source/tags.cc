@@ -6915,6 +6915,14 @@ void unmarshallMonster(reader &th, monster& m)
         if (th.getMinorVersion() < TAG_MINOR_MORE_GHOST_MAGIC)
             slot.spell = _fixup_positional_monster_spell(slot.spell);
 
+        if (th.getMinorVersion() < TAG_MINOR_GLASS_EYES
+            && mons_genus(m.type) == MONS_FLOATING_EYE
+            && slot.spell == SPELL_PARALYSIS_GAZE)
+        {
+            slot.spell = SPELL_VITRIFYING_GAZE;
+            m.del_ench(ENCH_SPELL_CHARGED);
+        }
+
         if (mons_is_zombified(m) && !mons_bound_soul(m)
             && slot.spell != SPELL_CREATE_TENTACLES)
         {
