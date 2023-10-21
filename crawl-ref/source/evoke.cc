@@ -73,6 +73,8 @@
 #include "unicode.h"
 #include "view.h"
 
+#define PHIAL_RANGE 5
+
 static bool _evoke_horn_of_geryon()
 {
     bool created = false;
@@ -600,6 +602,11 @@ void wind_blast(actor* agent, int pow, coord_def target)
     }
 }
 
+static int _phial_power()
+{
+    return 10 + you.skill(SK_EVOCATIONS, 4);
+}
+
 static bool _phial_of_floods(dist *target)
 {
     dist target_local;
@@ -607,15 +614,24 @@ static bool _phial_of_floods(dist *target)
         target = &target_local;
     bolt beam;
 
-    const int power = 10 + you.skill(SK_EVOCATIONS, 4);
+    const int power = _phial_power();
     zappy(ZAP_PRIMAL_WAVE, power, false, beam);
-    beam.range = 5;
+    beam.range = PHIAL_RANGE;
     beam.aimed_at_spot = true;
 
     // TODO: this needs a custom targeter
     direction_chooser_args args;
     args.mode = TARG_HOSTILE;
     args.top_prompt = "Aim the phial where?";
+
+    unique_ptr<targeter> hitfunc = find_spell_targeter(SPELL_PRIMAL_WAVE,
+            power, beam.range);
+    targeter_beam* beamfunc = dynamic_cast<targeter_beam*>(hitfunc.get());
+    if (beamfunc && beamfunc->beam.hit > 0)
+    {
+        args.get_desc_func = bind(desc_beam_hit_chance, placeholders::_1,
+            hitfunc.get());
+    }
 
     if (spell_direction(*target, beam, &args)
         && player_tracer(ZAP_PRIMAL_WAVE, power, beam))
