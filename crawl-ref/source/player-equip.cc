@@ -255,8 +255,8 @@ void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg)
 // Actual equip and unequip effect implementation below
 //
 
-static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
-                                   equipment_type slot)
+void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
+                           equipment_type slot)
 {
     ASSERT(is_artefact(item));
 
@@ -353,10 +353,8 @@ static void _unequip_fragile_artefact(item_def& item, bool meld)
     }
 }
 
-static void _unequip_artefact_effect(item_def &item,
-                                     bool *show_msgs, bool meld,
-                                     equipment_type slot,
-                                     bool weapon)
+void unequip_artefact_effect(item_def &item,  bool *show_msgs, bool meld,
+                             equipment_type slot, bool weapon)
 {
     ASSERT(is_artefact(item));
 
@@ -465,7 +463,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     case OBJ_STAVES:
     {
         if (artefact)
-            _equip_artefact_effect(item, &showMsgs, unmeld, EQ_STAFF);
+            equip_artefact_effect(item, &showMsgs, unmeld, EQ_STAFF);
         break;
     }
 
@@ -474,7 +472,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         // Note that if the unrand equip prints a message, it will
         // generally set showMsgs to false.
         if (artefact)
-            _equip_artefact_effect(item, &showMsgs, unmeld, EQ_WEAPON);
+            equip_artefact_effect(item, &showMsgs, unmeld, EQ_WEAPON);
 
         special = item.brand;
 
@@ -635,8 +633,8 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
     // false if it does its own message handling.
     if (is_artefact(item))
     {
-        _unequip_artefact_effect(real_item, &showMsgs, meld, EQ_WEAPON,
-                                 true);
+        unequip_artefact_effect(real_item, &showMsgs, meld, EQ_WEAPON,
+                                true);
     }
 
     if (item.base_type == OBJ_WEAPONS)
@@ -876,7 +874,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
     if (is_artefact(arm))
     {
         bool show_msgs = true;
-        _equip_artefact_effect(arm, &show_msgs, unmeld, slot);
+        equip_artefact_effect(arm, &show_msgs, unmeld, slot);
     }
 
     you.redraw_armour_class = true;
@@ -1007,7 +1005,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         _deactivate_regeneration_item(item, meld);
 
     if (is_artefact(item))
-        _unequip_artefact_effect(item, nullptr, meld, slot, false);
+        unequip_artefact_effect(item, nullptr, meld, slot, false);
 }
 
 static void _remove_amulet_of_faith(item_def &item)
@@ -1220,7 +1218,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
     if (artefact)
     {
         bool show_msgs = true;
-        _equip_artefact_effect(item, &show_msgs, unmeld, slot);
+        equip_artefact_effect(item, &show_msgs, unmeld, slot);
     }
 
     if (!unmeld)
@@ -1314,7 +1312,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     }
 
     if (is_artefact(item))
-        _unequip_artefact_effect(item, &mesg, meld, slot, false);
+        unequip_artefact_effect(item, &mesg, meld, slot, false);
 
     // Must occur after ring is removed. -- bwr
     calc_mp();

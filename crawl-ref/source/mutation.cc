@@ -1146,15 +1146,29 @@ private:
     {
         if (you.active_talisman.defined())
         {
-            const string tal_name = you.active_talisman.name(DESC_PLAIN);
+            const string tal_name = you.active_talisman.name(DESC_PLAIN, false, false, false);
             const string head = make_stringf("<w>%s</w>:",
                                              uppercase_first(tal_name).c_str());
             add_entry(new MenuEntry(head, MEL_ITEM, 1, 0));
+
+            if (is_artefact(you.active_talisman))
+            {
+                vector<string> artps;
+                desc_randart_props(you.active_talisman, artps);
+                for (string desc : artps)
+                    add_entry(new MenuEntry(desc, MEL_ITEM, 1, 0));
+            }
         }
+
 
         talisman_form_desc tfd;
         describe_talisman_form(you.default_form, tfd, true);
         add_entry(new MenuEntry("", MEL_ITEM, 1, 0)); // XXX spacing kludge?
+        if (you.active_talisman.defined() && is_artefact(you.active_talisman))
+        {
+            add_entry(new MenuEntry("<w>Skill:</w>", MEL_ITEM, 1, 0));
+            add_entry(new MenuEntry("", MEL_ITEM, 1, 0)); // XXX spacing kludge?
+        }
         for (auto skinfo : tfd.skills)
         {
             const string label = make_stringf("%s: %s\n", skinfo.first.c_str(), skinfo.second.c_str());

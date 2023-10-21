@@ -962,10 +962,9 @@ static spret _condenser()
 
 static transformation _form_for_talisman(const item_def &talisman)
 {
-    const transformation trans = form_for_talisman(talisman);
-    if (trans == you.form)
+    if (you.using_talisman(talisman))
         return transformation::none;
-    return trans;
+    return form_for_talisman(talisman);
 }
 
 static bool _evoke_talisman(const item_def &talisman)
@@ -1037,7 +1036,6 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
         if (!form_unreason.empty())
             return lowercase_first(form_unreason);
 
-        // TODO: add talisman artefacts
         if (you.form != you.default_form)
             return "you need to leave your temporary form first.";
         return "";

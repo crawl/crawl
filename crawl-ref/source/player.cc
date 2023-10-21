@@ -3564,7 +3564,31 @@ int player::scan_artefacts(artefact_prop_type which_property,
             matches->push_back(&item);
     }
 
+    if (you.active_talisman.defined() && is_artefact(you.active_talisman))
+    {
+        const int val = artefact_property(you.active_talisman, which_property);
+        retval += val;
+        if (matches && val)
+            matches->push_back(&you.active_talisman);
+    }
+
     return retval;
+}
+
+bool player::using_talisman(const item_def &talisman) const
+{
+    if (!active_talisman.defined())
+        return false;
+    if (talisman.sub_type != active_talisman.sub_type)
+        return false;
+    const bool using_artefact = is_artefact(active_talisman);
+    const bool other_artefact = is_artefact(talisman);
+    if (using_artefact != other_artefact)
+        return false;
+    if (!using_artefact)
+        return true;
+    // hack alert!
+    return get_artefact_name(talisman) == get_artefact_name(active_talisman);
 }
 
 /**

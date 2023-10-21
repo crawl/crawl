@@ -2146,15 +2146,25 @@ void merfolk_stop_swimming()
 
 void unset_default_form()
 {
+    if (is_artefact(you.active_talisman))
+        unequip_artefact_effect(you.active_talisman, nullptr, false, EQ_NONE, false);
+
     you.default_form = transformation::none;
     you.active_talisman.clear();
 }
 
 void set_default_form(transformation t, const item_def *source)
 {
+    if (is_artefact(you.active_talisman))
+        unequip_artefact_effect(you.active_talisman, nullptr, false, EQ_NONE, false);
+
     you.default_form = t;
     if (source)
+    {
         you.active_talisman = *source; // iffy
+        if (is_artefact(you.active_talisman))
+            equip_artefact_effect(you.active_talisman, nullptr, false, EQ_NONE);
+    }
     else
         you.active_talisman.clear();
 }

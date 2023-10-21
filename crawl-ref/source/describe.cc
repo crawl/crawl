@@ -732,47 +732,13 @@ static string _padded_artp_name(artefact_prop_type prop, int val)
         (_randart_prop_abbrev(prop, val) + ":").c_str());
 }
 
-static string _randart_descrip(const item_def &item)
+void desc_randart_props(const item_def &item, vector<string> &lines)
 {
-    string description;
-
     artefact_properties_t  proprt;
     artefact_known_props_t known;
     artefact_desc_properties(item, proprt, known);
 
-    bool need_newline = false;
-    // Give a short description of the base type, for base types with no
-    // corresponding ARTP.
-    if (item.base_type == OBJ_JEWELLERY
-        && (item_ident(item, ISFLAG_KNOW_TYPE)))
-    {
-        // why are these specially hardcoded
-        const char* type = jewellery_base_ability_string(item.sub_type);
-        const char* desc = _jewellery_base_ability_description(item.sub_type);
-        if (*desc)
-        {
-            if (*type)
-            {
-                // XX a custom ego description isn't well handled here. The
-                // main case of this is Vitality
-                description += make_stringf("%-*s %s",
-                    MAX_ARTP_NAME_LEN + 1,
-                    (string(type) + ":").c_str(),
-                    desc);
-            }
-            else
-            {
-                // if this case happens, the formatting can get mixed with
-                // DBRANDS in weird ways
-                description += desc;
-            }
-            need_newline = true;
-        }
-    }
-
-    const auto &propdescs = _get_all_artp_desc_data();
-
-    for (const property_descriptor &desc : propdescs)
+    for (const property_descriptor &desc : _get_all_artp_desc_data())
     {
         if (!known_proprt(desc.property)) // can this ever happen..?
             continue;
@@ -782,22 +748,18 @@ static string _randart_descrip(const item_def &item)
         // these two have some custom string replacement
         if (desc.property == ARTP_WILLPOWER)
         {
-            description += make_stringf("%s%s It %s%s your willpower.",
-                     need_newline ? "\n" : "",
+            lines.push_back(make_stringf("%s It %s%s your willpower.",
                      _padded_artp_name(ARTP_WILLPOWER, stval).c_str(),
                      (stval < -1 || stval > 1) ? "greatly " : "",
-                     (stval < 0) ? "decreases" : "increases");;
-            need_newline = true;
+                     (stval < 0) ? "decreases" : "increases"));
             continue;
         }
         else if (desc.property == ARTP_STEALTH)
         {
-            description += make_stringf("%s%s It makes you %s%s stealthy.",
-                     need_newline ? "\n" : "",
+            lines.push_back(make_stringf("%s It makes you %s%s stealthy.",
                      _padded_artp_name(ARTP_STEALTH, stval).c_str(),
                      (stval < -1 || stval > 1) ? "much " : "",
-                     (stval < 0) ? "less" : "more");;
-            need_newline = true;
+                     (stval < 0) ? "less" : "more"));
             continue;
         }
 
@@ -828,15 +790,46 @@ static string _randart_descrip(const item_def &item)
             sdesc = prefixes[idx] + sdesc + '.';
         }
 
-        if (need_newline)
-            description += '\n';
-        description += make_stringf("%s %s",
-                                    _padded_artp_name(desc.property, stval).c_str(),
-                                    sdesc.c_str());
-        need_newline = true;
+        lines.push_back(make_stringf("%s %s",
+                                     _padded_artp_name(desc.property, stval).c_str(),
+                                     sdesc.c_str()));
+    }
+}
+
+static string _desc_randart_jewel(const item_def &item)
+{
+    // why are these specially hardcoded?
+    const char* type = jewellery_base_ability_string(item.sub_type);
+    const char* desc = _jewellery_base_ability_description(item.sub_type);
+    if (!*desc)
+        return "";
+    if (!*type)
+    {
+        // if this case happens, the formatting can get mixed with
+        // DBRANDS in weird ways
+        return string(desc);
+    }
+    // XX a custom ego description isn't well handled here. The
+    // main case of this is Vitality
+    return make_stringf("%-*s %s", MAX_ARTP_NAME_LEN + 1,
+                        (string(type) + ":").c_str(), desc);
+}
+
+static string _randart_descrip(const item_def &item)
+{
+    vector<string> lines;
+
+    // Give a short description of the base type, for base types with no
+    // corresponding ARTP.
+    if (item.base_type == OBJ_JEWELLERY && item_ident(item, ISFLAG_KNOW_TYPE))
+    {
+        const string jewel_desc = _desc_randart_jewel(item);
+        if (!jewel_desc.empty())
+            lines.push_back(jewel_desc);
     }
 
-    return description;
+    desc_randart_props(item, lines);
+    return join_strings(lines.begin(), lines.end(), "\n");
 }
 #undef known_proprt
 
@@ -2337,42 +2330,103 @@ string describe_item_rarity(const item_def &item)
     }
 }
 
+static string _int_with_plus(int i)
+{
+    if (i < 0)
+        return make_stringf("%d", i);
+    return make_stringf("+%d", i);
+}
+
+static string _maybe_desc_prop(const char* name, int val, int max = -1)
+{
+    if (val == 0 && max <= 0)
+        return "";
+    const int len_delta = strlen("Minimum skill") - strlen(name);
+    const string padding = len_delta > 0 ? string(len_delta, ' ') : "";
+    const string base = make_stringf("\n%s: %s%s",
+                        name,
+                        padding.c_str(),
+                        _int_with_plus(val).c_str());
+    if (max == val || max == -1)
+        return base;
+    return base + make_stringf(" (%s at max skill)",
+                               _int_with_plus(max).c_str());
+}
+
 static string _describe_talisman_form(const item_def &item, bool monster)
 {
     const transformation form_type = form_for_talisman(item);
-    talisman_form_desc tfd;
-    describe_talisman_form(form_type, tfd, false);
     const Form* form = get_form(form_type);
     string description;
-    for (auto skinfo : tfd.skills)
-        description += make_stringf("%s: %s\n", skinfo.first.c_str(), skinfo.second.c_str());
-    const int target_skill = _item_training_target(item);
+    description += make_stringf("Minimum skill: %d", form->min_skill);
     const bool below_target = _is_below_training_target(item, true);
+    if (below_target)
+        description += " (insufficient skill lowers this form's max HP)";
+    description += make_stringf("\nMaximum skill: %d\n", form->max_skill);
+    const int target_skill = _item_training_target(item);
     const bool can_set_target = below_target && in_inventory(item)
                                 && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
-    // TODO: extract into talisman_form_desc
     description += _your_skill_desc(SK_SHAPESHIFTING, can_set_target,
                                     target_skill, "   ");
     if (below_target)
         _append_skill_target_desc(description, SK_SHAPESHIFTING, target_skill);
 
     // defenses
-    if (!tfd.defenses.empty())
+    const int hp = form->mult_hp(100, true);
+    const int ac = form->get_ac_bonus();
+    const int ev = form->ev_bonus();
+    const int body_ac_loss_percent = form->get_base_ac_penalty(100);
+    const bool loses_body_ac = body_ac_loss_percent && you_can_wear(EQ_BODY_ARMOUR) != false;
+    if (below_target || hp != 100 || ac || ev || loses_body_ac)
     {
         if (!monster)
             description += "\n\nDefense:";
-        for (auto skinfo : tfd.defenses)
-            description += make_stringf("\n%s: %s", skinfo.first.c_str(), skinfo.second.c_str());
+        if (below_target || hp != 100)
+        {
+            description += make_stringf("\nHP:            %d%%", hp);
+            if (below_target)
+                description += " (reduced by your low skill)";
+        }
+        description += _maybe_desc_prop("Bonus AC", ac / 100,
+                                        form->get_ac_bonus(true) / 100);
+        description += _maybe_desc_prop("Bonus EV", ev, form->ev_bonus(true));
+
+        if (body_ac_loss_percent)
+        {
+            const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
+            const int base_ac = body_armour ? property(*body_armour, PARM_AC) : 0;
+            const int ac_penalty = form->get_base_ac_penalty(base_ac);
+            description += make_stringf("\nAC:           -%d (-%d%% of your body armour's %d base AC)",
+                                        ac_penalty, body_ac_loss_percent, base_ac);
+        }
+
+        if (form->size != SIZE_CHARACTER)
+            description += "\nSize:          " + uppercase_first(get_size_adj(form->size));
     }
 
     // offense
-    if (!tfd.offenses.empty())
+    if (!monster)
+        description += "\n\nOffense:";
+    const int uc = form->get_base_unarmed_damage(false); // TODO: compare to your base form?
+                                                         // folks don't know nudists have 3
+    const int max_uc = form->get_base_unarmed_damage(false, true);
+    description += make_stringf("\nUC base dam.:  %d%s",
+                                uc, max_uc == uc ? "" : make_stringf(" (max %d)", max_uc).c_str());
+    description += _maybe_desc_prop("Slay", form->slay_bonus(false),
+                                    form->slay_bonus(false, true));
+    if (form_type == transformation::statue)
+        description += "\nMelee damage:  +50%";
+    if (form_type == transformation::flux)
     {
-        if (!monster)
-            description += "\n\nOffense:";
-        for (auto skinfo : tfd.offenses)
-            description += make_stringf("\n%s: %s", skinfo.first.c_str(), skinfo.second.c_str());
+        description += "\nMelee damage:  -33%";
+        const int contam_dam = form->contam_dam(false);
+        const int max_contam_dam = form->contam_dam(false, true);
+        description += make_stringf("\nContam Damage: %d", contam_dam);
+        if (max_contam_dam != contam_dam)
+            description += make_stringf(" (max %d)", max_contam_dam);
     }
+    description += _maybe_desc_prop("Str", form->str_mod);
+    description += _maybe_desc_prop("Dex", form->dex_mod);
 
     if (form_type == transformation::maw)
     {

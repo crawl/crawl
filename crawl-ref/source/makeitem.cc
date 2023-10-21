@@ -1558,32 +1558,37 @@ static const vector<random_pick_entry<talisman_type>> talisman_weights =
     {  0, 35,   5, FLAT, TALISMAN_STORM },
 };
 
-static void _generate_talisman_item(item_def& item, int force_type, int item_level)
+static int _talisman_level(int item_level)
 {
-    if (force_type != OBJ_RANDOM)
-    {
-        item.sub_type = force_type;
-        return;
-    }
-
-    int lvl = item_level;
     switch (item_level) {
     case ISPEC_DAMAGED:
     case ISPEC_BAD:
-        lvl = 0;
-        break;
-    case ISPEC_RANDART:
-        // TODO: add talisman artefacts
+        return 0;
     case ISPEC_GIFT:
+        return 15; // ?? arbitrary
+    case ISPEC_RANDART:
     case ISPEC_GOOD_ITEM:
-        lvl = item_level + 10;
-        break;
+        return 27; // ?? arbitrary
+    default:
+        return min(item_level, 35); // roughly the bottom of the Hells
     }
-    if (lvl > 35) // roughly the bottom of the Hells
-        lvl = 35;
+}
+
+static int _pick_talisman_type(int force_type, int lvl)
+{
+    if (force_type != OBJ_RANDOM)
+        return force_type;
 
     random_picker<talisman_type, NUM_TALISMANS * 3 /*ew*/> picker;
-    item.sub_type = picker.pick(talisman_weights, lvl, NUM_TALISMANS);
+    return picker.pick(talisman_weights, lvl, NUM_TALISMANS);
+}
+
+static void _generate_talisman_item(item_def& item, int force_type, int item_level)
+{
+    const int lvl = _talisman_level(item_level);
+    item.sub_type = _pick_talisman_type(force_type, lvl);
+    if (item_level == ISPEC_RANDART || x_chance_in_y(item_level, 270))
+        make_item_randart(item);
 }
 
 misc_item_type get_misc_item_type(int force_type, bool exclude)

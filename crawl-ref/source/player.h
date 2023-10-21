@@ -858,6 +858,8 @@ public:
     int  skill(skill_type skill, int scale = 1, bool real = false,
                bool temp = true) const override;
 
+    bool using_talisman(const item_def &talisman) const;
+
     bool do_shaft() override;
     bool shaftable() const;
 

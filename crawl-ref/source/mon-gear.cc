@@ -137,6 +137,8 @@ static talisman_type _talisman_for(monster_type mtyp)
 static void _give_talisman(monster* mon, int level)
 {
     const talisman_type talisman = _talisman_for(mon->type);
+    if (mon->type == MONS_AIZUL)
+        level = ISPEC_RANDART; // partially compensate for lateness
     if (talisman != NUM_TALISMANS)
         give_specific_item(mon, items(false, OBJ_TALISMANS, talisman, level));
 }

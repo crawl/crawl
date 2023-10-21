@@ -955,7 +955,8 @@ static bool _id_floor_item(item_def &item)
             return true;
         }
     }
-    else if (item_type_is_equipment(item.base_type))
+    else if (item_type_is_equipment(item.base_type)
+             || item.base_type == OBJ_TALISMANS)
     {
         if (fully_identified(item))
             return false;

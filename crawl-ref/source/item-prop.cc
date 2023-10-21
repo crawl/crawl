@@ -1147,7 +1147,6 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_GOLD:
     case OBJ_BOOKS:
     case OBJ_MISCELLANY:
-    case OBJ_TALISMANS: // TODO: add talisman artefacts
 #if TAG_MAJOR_VERSION == 34
     case OBJ_FOOD:
     case OBJ_RODS:
@@ -1163,6 +1162,7 @@ static iflags_t _full_ident_mask(const item_def& item)
         break;
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
+    case OBJ_TALISMANS:
         // All flags necessary for full identification.
     default:
         break;
@@ -2973,6 +2973,24 @@ int guile_adjust_willpower(int wl)
     return max(0, wl - 2 * WL_PIP);
 }
 
+string talisman_type_name(int type)
+{
+    switch (type)
+    {
+    case TALISMAN_BEAST:    return "beast talisman";
+    case TALISMAN_FLUX:     return "flux talisman";
+    case TALISMAN_MAW:      return "maw talisman";
+    case TALISMAN_SERPENT:  return "serpent talisman";
+    case TALISMAN_BLADE:    return "blade talisman";
+    case TALISMAN_STATUE:   return "granite talisman";
+    case TALISMAN_DRAGON:   return "dragon-blood talisman";
+    case TALISMAN_DEATH:    return "talisman of death";
+    case TALISMAN_STORM:    return "storm talisman";
+    default:
+        return "buggy talisman";
+    }
+}
+
 string item_base_name(const item_def &item)
 {
     if (item.props.exists(ITEM_NAME_KEY))
@@ -2992,6 +3010,8 @@ string item_base_name(object_class_type type, int sub_type)
         return Armour_prop[Armour_index[sub_type]].name;
     case OBJ_JEWELLERY:
         return jewellery_is_amulet(sub_type) ? "amulet" : "ring";
+    case OBJ_TALISMANS:
+        return talisman_type_name(sub_type);
     default:
         return "";
     }
