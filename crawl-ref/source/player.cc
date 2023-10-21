@@ -5112,6 +5112,7 @@ player::player()
     symbol          = MONS_PLAYER;
     form            = transformation::none;
     default_form    = transformation::none;
+    active_talisman.clear();
 
     for (auto &item : inv)
         item.clear();

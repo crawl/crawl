@@ -2144,6 +2144,21 @@ void merfolk_stop_swimming()
 #endif
 }
 
+void unset_default_form()
+{
+    you.default_form = transformation::none;
+    you.active_talisman.clear();
+}
+
+void set_default_form(transformation t, const item_def *source)
+{
+    you.default_form = t;
+    if (source)
+        you.active_talisman = *source; // iffy
+    else
+        you.active_talisman.clear();
+}
+
 void vampire_update_transformations()
 {
     const undead_form_reason form_reason = lifeless_prevents_form();
@@ -2154,7 +2169,7 @@ void vampire_update_transformations()
         mprf(MSGCH_WARN,
              "Your blood-%s body can't sustain your transformation.",
              form_reason == UFR_TOO_DEAD ? "deprived" : "filled");
-        you.default_form = transformation::none;
+        unset_default_form();
         untransform();
     }
 }

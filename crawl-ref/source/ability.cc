@@ -2738,7 +2738,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             canned_msg(MSG_OK);
             return spret::abort;
         }
-        start_delay<TransformDelay>(transformation::none);
+        start_delay<TransformDelay>(transformation::none, nullptr);
         break;
 
     // INVOCATIONS:

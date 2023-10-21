@@ -177,6 +177,7 @@ public:
     monster_type symbol;
     transformation form;
     transformation default_form;
+    item_def active_talisman;
 
     FixedVector< item_def, ENDOFPACK > inv;
     FixedBitVector<NUM_RUNE_TYPES> runes;

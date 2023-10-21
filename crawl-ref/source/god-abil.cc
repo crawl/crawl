@@ -4310,7 +4310,7 @@ static void _extra_sacrifice_code(ability_type sac)
         if (you.form == transformation::none)
             break;
 
-        you.default_form = transformation::none;
+        unset_default_form();
         if (!you.transform_uncancellable)
             untransform(); // XXX: maybe should warn the player pre-sac?
 

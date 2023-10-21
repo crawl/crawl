@@ -964,7 +964,10 @@ void wizard_transform()
 
     you.transform_uncancellable = false;
     if (you.default_form == you.form && you.form != transformation::none)
-        you.default_form = form;
+    {
+        you.default_form = form; // ehhh
+        you.active_talisman.clear();
+    }
     if (!transform(200, form, true) && you.form != form)
         mpr("Transformation failed.");
 }

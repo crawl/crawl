@@ -331,6 +331,9 @@ bool transform(int pow, transformation which_trans, bool involuntary = false);
 // skip_move: don't make player re-enter current cell
 void untransform(bool skip_move = false);
 
+void unset_default_form();
+void set_default_form(transformation t, const item_def *source);
+
 void set_form(transformation which_trans, int dur);
 void return_to_default_form();
 

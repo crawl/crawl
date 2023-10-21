@@ -893,11 +893,11 @@ void TransformDelay::finish()
     if (form == transformation::none)
     {
         untransform();
-        you.default_form = transformation::none;
+        unset_default_form();
         return;
     }
 
-    you.default_form = form;
+    set_default_form(form, talisman);
     return_to_default_form();
 }
 
