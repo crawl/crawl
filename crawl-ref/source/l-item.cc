@@ -848,6 +848,38 @@ IDEF(damage)
     return 1;
 }
 
+static int l_item_do_damage_rating(lua_State *ls)
+{
+    UDATA_ITEM(item);
+
+    if (!item || !item->defined())
+        return 0;
+
+
+    if (is_weapon(*item)
+        || item->base_type == OBJ_MISSILES)
+    {
+        int rating = 0;
+        string rating_desc = damage_rating(item, &rating);
+        lua_pushnumber(ls, rating);
+        lua_pushstring(ls, rating_desc.c_str());
+    }
+    else
+    {
+        lua_pushnil(ls);
+        lua_pushnil(ls);
+    }
+
+    return 2;
+}
+
+/*** Item damage rating.
+ * @treturn number The item's damage rating.
+ * @treturn string The item's full damage rating string.
+ * @function damage_rating
+ */
+IDEFN(damage_rating, do_damage_rating)
+
 /*** Item base accuracy.
  * @field accuracy int
  */
@@ -1679,6 +1711,7 @@ static ItemAccessor item_attrs[] =
     { "spells",            l_item_spells },
     { "artprops",          l_item_artprops },
     { "damage",            l_item_damage },
+    { "damage_rating",     l_item_damage_rating },
     { "accuracy",          l_item_accuracy },
     { "delay",             l_item_delay },
     { "ac",                l_item_ac },

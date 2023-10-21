@@ -71,7 +71,7 @@ string describe_item_rarity(const item_def &item);
 void get_item_desc(const item_def &item, describe_info &inf);
 void inscribe_item(item_def &item);
 void target_item(item_def &item);
-string damage_rating(const item_def *item);
+string damage_rating(const item_def *item, int *rating_value = nullptr);
 
 int describe_monsters(const monster_info &mi, const string& footer = "");
 

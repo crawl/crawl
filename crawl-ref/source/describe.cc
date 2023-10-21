@@ -1438,10 +1438,15 @@ static string _describe_missile_brand(const item_def &item)
      return " + " + uppercase_first(brand_name);
 }
 
-string damage_rating(const item_def *item)
+string damage_rating(const item_def *item, int *rating_value)
 {
     if (item && is_unrandom_artefact(*item, UNRAND_WOE))
+    {
+        if (rating_value)
+            *rating_value = 666;
+
         return "your enemies will bleed and die for Makhleb.";
+    }
 
     const bool thrown = item && item->base_type == OBJ_MISSILES;
     if (item && !thrown && !is_weapon(*item))
@@ -1483,6 +1488,9 @@ string damage_rating(const item_def *item)
     rating = apply_fighting_skill(rating, false, false);
     rating /= DAM_RATE_SCALE;
     rating += plusses;
+
+    if (rating_value)
+        *rating_value = rating;
 
     const string base_dam_desc = thrown ? make_stringf("[%d + %d (Thrw)]",
                                                        base_dam, extra_base_dam) :
