@@ -22,4 +22,6 @@ int wand_mp_cost();
 int wand_power(spell_type spell);
 void zap_wand(int slot = -1, dist *target=nullptr);
 
+string target_evoke_desc(const monster_info& mi, const item_def& item);
+
 void black_drac_breath();

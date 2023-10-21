@@ -1292,3 +1292,45 @@ bool evoke_item(item_def& item, dist *preselect)
 
     return did_work;
 }
+
+/**
+ * For the clua api, returns the description displayed if targeting a monster
+ * with an evokable.
+ *
+ * @param mi     The targeted monster.
+ * @param spell  The item being evoked.
+ * @return       The displayed string.
+ **/
+string target_evoke_desc(const monster_info& mi, const item_def& item)
+{
+    spell_type spell;
+    int power;
+    int range;
+    if (item.base_type == OBJ_WANDS)
+    {
+        spell = spell_in_wand(static_cast<wand_type>(item.sub_type));
+        power = wand_power(spell);
+        range = spell_range(spell, power, false);
+    }
+    else if (item.base_type == OBJ_MISCELLANY
+            && item.sub_type == MISC_PHIAL_OF_FLOODS)
+    {
+        spell = SPELL_PRIMAL_WAVE;
+        range = PHIAL_RANGE;
+        power = _phial_power();
+    }
+    else
+        return "";
+
+    unique_ptr<targeter> hitfunc = find_spell_targeter(spell, power, range);
+    if (!hitfunc)
+        return "";
+
+    desc_filter addl_desc = targeter_addl_desc(spell, power,
+                                get_spell_flags(spell), hitfunc.get());
+    if (!addl_desc)
+        return "";
+
+    vector<string> d = addl_desc(mi);
+    return comma_separated_line(d.begin(), d.end());
+}

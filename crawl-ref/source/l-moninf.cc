@@ -363,7 +363,7 @@ static int moninf_get_target_spell(lua_State *ls)
 {
     MONINF(ls, 1, mi);
     spell_type spell = spell_by_name(luaL_checkstring(ls, 2), false);
-    string desc = target_desc(*mi, spell);
+    string desc = target_spell_desc(*mi, spell);
     lua_pushstring(ls, desc.c_str());
     return 1;
 }
@@ -380,6 +380,26 @@ static int moninf_get_target_throw(lua_State *ls)
     ranged_attack attk(&you, nullptr, item, false);
     string d = make_stringf("%d%% to hit", to_hit_pct(*mi, attk, false));
     lua_pushstring(ls, d.c_str());
+    return 1;
+}
+
+/*** Returns the string displayed if you target this monster with an evocable.
+ * @tparam item object to be evoked
+ * @treturn string (such as "about 45% to hit")
+ * @function target_evoke
+ */
+static int moninf_get_target_evoke(lua_State *ls)
+{
+    MONINF(ls, 1, mi);
+    item_def *item = *(item_def **) luaL_checkudata(ls, 2, ITEM_METATABLE);
+    if (!item)
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+
+    string desc = target_evoke_desc(*mi, *item);
+    lua_pushstring(ls, desc.c_str());
     return 1;
 }
 
@@ -849,6 +869,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(target_weapon),
     MIREG(target_spell),
     MIREG(target_throw),
+    MIREG(target_evoke),
     MIREG(x_pos),
     MIREG(y_pos),
     MIREG(pos),

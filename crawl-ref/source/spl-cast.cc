@@ -1815,14 +1815,14 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
 }
 
 /**
- * Returns the description displayed if targeting a monster with a spell.
- * For the clua api
+ * For the clua api, return the description displayed if targeting a monster
+ * with a spell.
  *
  * @param mi     The targeted monster.
  * @param spell  The spell being cast.
  * @return       The displayed string.
  **/
-string target_desc(const monster_info& mi, spell_type spell)
+string target_spell_desc(const monster_info& mi, spell_type spell)
 {
     int powc = calc_spell_power(spell);
     const int range = calc_spell_range(spell, powc, false);
