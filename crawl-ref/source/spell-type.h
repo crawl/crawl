@@ -559,5 +559,6 @@ enum spell_type : int
     SPELL_BOULDER,
     SPELL_VITRIFY,
     SPELL_VITRIFYING_GAZE,
+    SPELL_TREMORSTONE,
     NUM_SPELLS
 };

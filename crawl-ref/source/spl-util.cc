@@ -1081,6 +1081,7 @@ int spell_effect_noise(spell_type spell)
 
     case SPELL_LRD: // Can reach 3 only with crystal walls, which are rare
     case SPELL_FULMINANT_PRISM: // Players usually want the full size explosion
+    case SPELL_TREMORSTONE:
         expl_size = 2;
         break;
 

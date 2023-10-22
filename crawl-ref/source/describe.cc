@@ -2837,6 +2837,14 @@ string get_item_description(const item_def &item,
                     description << "Once activated";
                 description << ", this device is rendered temporarily inert. "
                             << "However, it recharges as you gain experience.";
+
+                const string damage_str = evoke_damage_string(item);
+                if (damage_str != "")
+                    description << "\nDamage: " << damage_str;
+
+                const string noise_str = evoke_noise_string(item);
+                if (noise_str != "")
+                    description << "\nNoise: " << noise_str;
             }
         }
 
@@ -2873,13 +2881,13 @@ string get_item_description(const item_def &item,
         {
             description << "\n";
 
-            const spell_type spell = spell_in_wand(static_cast<wand_type>(item.sub_type));
-
-            const string damage_str = spell_damage_string(spell, true);
+            const string damage_str = evoke_damage_string(item);
             if (damage_str != "")
                 description << "\nDamage: " << damage_str;
 
-            description << "\nNoise: " << spell_noise_string(spell);
+            const string noise_str = evoke_noise_string(item);
+            if (noise_str != "")
+                description << "\nNoise: " << noise_str;
 
             if (verbose)
                 _uselessness_desc(description, item);

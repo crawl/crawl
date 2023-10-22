@@ -54,7 +54,7 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
- #include "tilepick.h"
+#include "tilepick.h"
 #include "transform.h"
 #include "unicode.h"
 #include "viewchar.h"
@@ -2944,13 +2944,29 @@ coord_def get_thunderbolt_last_aim(actor *caster)
         return coord_def();
 }
 
-static void _set_thundervolt_last_aim(actor *caster, coord_def aim)
+static void _set_thunderbolt_last_aim(actor *caster, coord_def aim)
 {
     int &last_turn = caster->props[THUNDERBOLT_LAST_KEY].get_int();
     coord_def &last_aim = caster->props[THUNDERBOLT_AIM_KEY].get_coord();
 
     last_turn = you.num_turns;
     last_aim = aim;
+}
+
+dice_def thunderbolt_damage(int power, int arc)
+{
+    const int &charges = you.props[THUNDERBOLT_CHARGES_KEY].get_int();
+    ASSERT(charges <= LIGHTNING_MAX_CHARGE);
+
+    int charge_boost = 0;
+    if (in_bounds(get_thunderbolt_last_aim(&you)))
+        charge_boost = charges;
+
+    const int dice = div_rand_round(
+        (spell_mana(SPELL_THUNDERBOLT, false) + charge_boost)
+            * LIGHTNING_CHARGE_MULT,
+        LIGHTNING_CHARGE_MULT);
+    return dice_def(dice, div_rand_round(45 + power / 4, arc + 2));
 }
 
 spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
@@ -2973,12 +2989,6 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     }
 
     fail_check();
-
-    const int juice
-        = (spell_mana(SPELL_THUNDERBOLT, false) + charges)
-          * LIGHTNING_CHARGE_MULT;
-
-    dprf("juice: %d", juice);
 
     bolt beam;
     beam.name              = "thunderbolt";
@@ -3028,14 +3038,13 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         beam.source = beam.target = entry.first;
         beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
         beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
-        beam.damage = dice_def(div_rand_round(juice, LIGHTNING_CHARGE_MULT),
-                               div_rand_round(45 + pow / 4, arc + 2));
+        beam.damage = thunderbolt_damage(pow, arc);
         beam.fire();
     }
 
     noisy(spell_effect_noise(SPELL_THUNDERBOLT), caster->pos());
 
-    _set_thundervolt_last_aim(caster, aim);
+    _set_thunderbolt_last_aim(caster, aim);
 
     if (charges < LIGHTNING_MAX_CHARGE)
         charges++;

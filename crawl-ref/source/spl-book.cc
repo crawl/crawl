@@ -232,7 +232,9 @@ static unordered_set<int> _player_nonbook_spells =
     // items
     SPELL_THUNDERBOLT,
     SPELL_PHANTOM_MIRROR, // this isn't cast directly, but the player code at
-                          // least uses the enum value
+                          // least uses the enum value.
+    SPELL_TREMORSTONE,    // not cast directly, but the spell type is used for
+                          // damage and noise display.
     SPELL_SONIC_WAVE,
     // religion
     SPELL_SMITING,

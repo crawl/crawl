@@ -132,6 +132,11 @@ static void _spray_lightning(int range, int power)
     zapping(zap, power, beam);
 }
 
+static int _lightning_rod_power()
+{
+    return 5 + you.skill(SK_EVOCATIONS, 3);
+}
+
 /**
  * Evoke a lightning rod, creating an arc of lightning that can be sustained
  * by continuing to evoke.
@@ -140,9 +145,8 @@ static void _spray_lightning(int range, int power)
  */
 static bool _lightning_rod(dist *preselect)
 {
-    const int power = 5 + you.skill(SK_EVOCATIONS, 3);
-    const spret ret = your_spells(SPELL_THUNDERBOLT, power, false, nullptr,
-                                  preselect);
+    const spret ret = your_spells(SPELL_THUNDERBOLT, _lightning_rod_power(),
+            false, nullptr, preselect);
 
     if (ret == spret::abort)
         return false;
@@ -807,6 +811,11 @@ static coord_def _fuzz_tremorstone_target(coord_def center)
     return chosen;
 }
 
+static int _tremorstone_power()
+{
+    return 15 + you.skill(SK_EVOCATIONS);
+}
+
 /**
  * Number of explosions, scales up from 1 at 0 evo to 6 at 27 evo,
  * via a stepdown.
@@ -815,7 +824,7 @@ static coord_def _fuzz_tremorstone_target(coord_def center)
  * case an evocable enhancer returns to the game so that 0 evo with enhancer
  * gets some amount of enhancement.
  */
-static int _tremorstone_count(int pow)
+int tremorstone_count(int pow)
 {
     return 1 + stepdown((pow - 15) / 3, 2, ROUND_CLOSE);
 }
@@ -845,22 +854,19 @@ static spret _tremorstone()
         return spret::abort;
     }
 
-    mpr("The tremorstone explodes into fragments!");
-
-    static const int RADIUS = 2;
-    static const int SPREAD = 1;
-    static const int RANGE = RADIUS + SPREAD;
-    const int pow = 15 + you.skill(SK_EVOCATIONS);
-    const int num_explosions = _tremorstone_count(pow);
+    const int power = _tremorstone_power();
 
     bolt beam;
     beam.source_id  = MID_PLAYER;
     beam.thrower    = KILL_YOU;
-    zappy(ZAP_TREMORSTONE, pow, false, beam);
-    beam.range = RANGE;
-    beam.ex_size = RADIUS;
+    zappy(ZAP_TREMORSTONE, power, false, beam);
+    beam.range = 3;
+    beam.ex_size = 2;
     beam.target = center;
 
+    mpr("The tremorstone explodes into fragments!");
+
+    const int num_explosions = tremorstone_count(power);
     for (int i = 0; i < num_explosions; i++)
     {
         bolt explosion = beam;
@@ -1331,4 +1337,57 @@ string target_evoke_desc(const monster_info& mi, const item_def& item)
 
     vector<string> d = addl_desc(mi);
     return comma_separated_line(d.begin(), d.end());
+}
+
+string evoke_damage_string(const item_def& item)
+{
+    if (item.base_type == OBJ_WANDS)
+    {
+        return spell_damage_string(
+            spell_in_wand(static_cast<wand_type>(item.sub_type)), true);
+    }
+    else if (item.base_type == OBJ_MISCELLANY)
+    {
+        if (item.sub_type == MISC_PHIAL_OF_FLOODS)
+        {
+            return spell_damage_string(SPELL_PRIMAL_WAVE, true,
+                _phial_power());
+        }
+        else if (item.sub_type == MISC_LIGHTNING_ROD)
+        {
+            return spell_damage_string(SPELL_THUNDERBOLT, true,
+                _lightning_rod_power());
+        }
+        else if (item.sub_type == MISC_TIN_OF_TREMORSTONES)
+        {
+            return spell_damage_string(SPELL_TREMORSTONE, true,
+                _tremorstone_power());
+        }
+        else
+            return "";
+    }
+    else
+        return "";
+}
+
+string evoke_noise_string(const item_def& item)
+{
+    if (item.base_type == OBJ_WANDS)
+    {
+        return spell_noise_string(
+            spell_in_wand(static_cast<wand_type>(item.sub_type)));
+    }
+    else if (item.base_type == OBJ_MISCELLANY)
+    {
+        if (item.sub_type == MISC_PHIAL_OF_FLOODS)
+            return spell_noise_string(SPELL_PRIMAL_WAVE);
+        else if (item.sub_type == MISC_LIGHTNING_ROD)
+            return spell_noise_string(SPELL_THUNDERBOLT);
+        else if (item.sub_type == MISC_TIN_OF_TREMORSTONES)
+            return spell_noise_string(SPELL_TREMORSTONE);
+        else
+            return "";
+    }
+    else
+        return "";
 }

@@ -744,7 +744,8 @@ lightning rod
 A rod that allows its wielder to fire unavoidable blasts of lightning.
 Consecutive evocations cause the discharge to be sustained, which increases the
 power level up to four times and allows the blast to be redirected to affect an
-area. The strength of the blast increases with Evocations skill.
+area. The strength of the blast increases with Evocations skill and, for
+redirected blasts, decreases with the size of the affected area.
 %%%%
 long sword
 

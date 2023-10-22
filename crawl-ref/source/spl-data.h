@@ -3607,6 +3607,17 @@ static const struct spell_desc spelldata[] =
     TILEG_GENERIC_MONSTER_SPELL,
 },
 
+{
+    SPELL_TREMORSTONE, "Tremorstone",
+    spschool::earth,
+    spflag::area,
+    2,
+    200,
+    -1, -1,
+    15,
+    TILEG_LEES_RAPID_DECONSTRUCTION, // close enough
+},
+
 // Not an actual spell - dummy entry for (player) Green Draconian breath.
 {
     SPELL_MEPHITIC_BREATH, "Mephitic Breath",
