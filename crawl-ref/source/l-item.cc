@@ -16,6 +16,7 @@
 #include "coord.h"
 #include "describe.h"
 #include "env.h"
+#include "evoke.h" // evoke_damage_string()
 #include "invent.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -880,6 +881,19 @@ static int l_item_do_damage_rating(lua_State *ls)
  */
 IDEFN(damage_rating, do_damage_rating)
 
+/*** Item evoke damage.
+ * @field evoke_damage string The evokable item's damage string.
+ */
+IDEF(evoke_damage)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    const string damage_str = evoke_damage_string(*item);
+    lua_pushstring(ls, damage_str.c_str());
+    return 1;
+}
+
 /*** Item base accuracy.
  * @field accuracy int
  */
@@ -1712,6 +1726,7 @@ static ItemAccessor item_attrs[] =
     { "artprops",          l_item_artprops },
     { "damage",            l_item_damage },
     { "damage_rating",     l_item_damage_rating },
+    { "evoke_damage",      l_item_evoke_damage },
     { "accuracy",          l_item_accuracy },
     { "delay",             l_item_delay },
     { "ac",                l_item_ac },
