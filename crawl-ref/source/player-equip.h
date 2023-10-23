@@ -15,6 +15,8 @@ bool unmeld_slot(equipment_type slot);
 
 void equip_effect(equipment_type slot, int item_slot, bool unmeld, bool msg);
 void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg);
+
+struct item_def;
 void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
                            equipment_type slot);
 void unequip_artefact_effect(item_def &item,  bool *show_msgs, bool meld,
