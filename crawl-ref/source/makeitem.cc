@@ -1587,7 +1587,7 @@ static void _generate_talisman_item(item_def& item, int force_type, int item_lev
 {
     const int lvl = _talisman_level(item_level);
     item.sub_type = _pick_talisman_type(force_type, lvl);
-    if (item_level == ISPEC_RANDART || x_chance_in_y(item_level, 270))
+    if (item_level == ISPEC_RANDART || x_chance_in_y(lvl, 270))
         make_item_randart(item);
 }
 
