@@ -677,6 +677,15 @@ unsigned int item_value(item_def item, bool ident)
             valued += 200;
             break;
         }
+        if (is_artefact(item))
+        {
+            // XXX placeholder
+            if (item_type_known(item))
+                valued += artefact_value(item) * (valued / 10);
+            else
+                valued += valued / 16;
+        }
+
         break;
 
     case OBJ_BOOKS:
@@ -700,6 +709,14 @@ unsigned int item_value(item_def item, bool ident)
 
     case OBJ_STAVES:
         valued = item_type_known(item) ? 250 : 120;
+        if (is_artefact(item))
+        {
+            // XX placeholder
+            if (item_type_known(item))
+                valued += (7 * artefact_value(item));
+            else
+                valued += 50;
+        }
         break;
 
     case OBJ_ORBS:
