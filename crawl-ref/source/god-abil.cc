@@ -3557,7 +3557,6 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         args.mode = TARG_HOSTILE;
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Upheaval</white>";
-        args.self = confirm_prompt_type::cancel;
         args.hitfunc = &tgt;
         if (!spell_direction(*player_target, beam, &args))
             return spret::abort;
@@ -3572,7 +3571,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         bolt tempbeam;
         tempbeam.source    = beam.target;
         tempbeam.target    = beam.target;
-        tempbeam.flavour   = BEAM_MISSILE;
+        tempbeam.flavour   = BEAM_QAZLAL;
         tempbeam.ex_size   = max_radius;
         tempbeam.hit       = AUTOMATIC_HIT;
         tempbeam.damage    = dice_def(AUTOMATIC_HIT, 1);
@@ -3625,8 +3624,16 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     for (radius_iterator ri(beam.target, max_radius, C_SQUARE, LOS_SOLID, true);
          ri; ++ri)
     {
-        if (!in_bounds(*ri) || cell_is_solid(*ri))
+        if (!in_bounds(*ri) || cell_is_solid(*ri) || you.pos() == *ri)
             continue;
+
+        const monster *mon = monster_at(*ri);
+        int summon_type = 0;
+        if (mon && mon->is_summoned(nullptr, &summon_type)
+            && summon_type == MON_SUMM_AID)
+        {
+            continue;
+        }
 
         int chance = pow;
 
@@ -3779,24 +3786,28 @@ spret qazlal_disaster_area(bool fail)
     vector<coord_def> targets;
     vector<int> weights;
     const int pow = you.skill(SK_INVOCATIONS, 6);
-    const int upheaval_radius = _upheaval_radius(pow);
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE, LOS_NO_TRANS, true);
          ri; ++ri)
     {
         if (!in_bounds(*ri) || cell_is_solid(*ri))
             continue;
 
-        const monster_info* m = env.map_knowledge(*ri).monsterinfo();
-        if (m && mons_att_wont_attack(m->attitude)
-            && !mons_is_projectile(m->type))
+        const monster *mon = monster_at(*ri);
+        int summon_type = 0;
+        //Never fire at elemental forces
+        if (mon && mon->is_summoned(nullptr, &summon_type)
+            && summon_type == MON_SUMM_AID)
+        {
+            continue;
+        }
+
+        if (mon && mons_att_wont_attack(mon->attitude)
+            && !mons_is_projectile(mon->type))
         {
             friendlies = true;
         }
 
-        const int range = you.pos().distance_from(*ri);
         const int dist = grid_distance(you.pos(), *ri);
-        if (range <= upheaval_radius)
-            continue;
 
         targets.push_back(*ri);
         // We weight using the square of grid distance, so monsters fewer tiles

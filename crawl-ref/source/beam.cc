@@ -3158,6 +3158,9 @@ bool bolt::harmless_to_player() const
         return agent(true)->is_player()
                || (bool)!(you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
 
+    case BEAM_QAZLAL:
+        return true;
+
     default:
         return false;
     }
@@ -4316,6 +4319,9 @@ bool bolt::ignores_player() const
                || !agent()->can_constrict(you, flavour == BEAM_ROOTS ? CONSTRICT_ROOTS
                                                                      : CONSTRICT_BVC);
     }
+
+    if (flavour == BEAM_QAZLAL)
+        return true;
 
     return false;
 }
@@ -5531,6 +5537,11 @@ bool bolt::ignores_monster(const monster* mon) const
         return true;
 
     if (flavour == BEAM_WATER && mon->type == MONS_WATER_ELEMENTAL)
+        return true;
+
+    int summon_type = 0;
+    mon->is_summoned(nullptr, &summon_type);
+    if (flavour == BEAM_QAZLAL && summon_type == MON_SUMM_AID)
         return true;
 
     return false;
@@ -7244,6 +7255,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_UMBRAL_TORCHLIGHT:     return "umbral torchlight";
     case BEAM_CRYSTALLIZING:         return "crystallizing";
     case BEAM_WARPING:               return "spatial disruption";
+    case BEAM_QAZLAL:                return "upheaval targetter";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }
