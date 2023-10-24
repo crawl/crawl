@@ -3046,6 +3046,9 @@ bool bolt::harmless_to_player() const
     case BEAM_ROOTS:
         return mons_att_wont_attack(attitude) || !agent()->can_constrict(you, CONSTRICT_ROOTS);
 
+    case BEAM_QAZLAL:
+        return true;
+
     default:
         return false;
     }
@@ -4126,6 +4129,9 @@ bool bolt::ignores_player() const
     if (flavour == BEAM_DIGGING)
         return true;
 
+    if (flavour == BEAM_QAZLAL)
+        return true;
+
     if (agent() && agent()->is_monster()
         && mons_is_hepliaklqana_ancestor(agent()->as_monster()->type))
     {
@@ -5147,6 +5153,11 @@ bool bolt::ignores_monster(const monster* mon) const
         return true;
 
     if (flavour == BEAM_WATER && mon->type == MONS_WATER_ELEMENTAL)
+        return true;
+
+    int summon_type = 0;
+    mon->is_summoned(nullptr, &summon_type);
+    if (flavour == BEAM_QAZLAL && summon_type == MON_SUMM_AID)
         return true;
 
     return false;
@@ -6759,7 +6770,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_ENFEEBLE:              return "enfeeble";
     case BEAM_NECROTISE:             return "necrotise";
     case BEAM_ROOTS:                 return "roots";
-
+    case BEAM_QAZLAL:                return "upheaval targetter";
     case NUM_BEAMS:                  die("invalid beam type");
     }
     die("unknown beam type");

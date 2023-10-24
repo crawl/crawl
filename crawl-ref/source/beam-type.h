@@ -35,6 +35,7 @@ enum beam_type                  // bolt::flavour
     BEAM_CHAOS,
     BEAM_UNRAVELLED_MAGIC,
     BEAM_LIGHT,
+    BEAM_QAZLAL,
 
     // Enchantments
     BEAM_SLOW,
