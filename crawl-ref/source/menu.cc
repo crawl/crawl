@@ -3363,26 +3363,7 @@ void Menu::webtiles_update_items(int start, int end) const
     tiles.json_open_array("items");
 
     for (int i = start; i <= end; ++i)
-    {
-        // TODO: why is this different from Menu::webtiles_write_item?
-        tiles.json_open_object();
-        const MenuEntry* me = items[i];
-        tiles.json_write_string("text", me->get_text());
-        int col = item_colour(me);
-        // previous colour field is deleted by client if new one not sent
-        if (col != MENU_ITEM_STOCK_COLOUR)
-            tiles.json_write_int("colour", col);
-        webtiles_write_tiles(*me);
-        if (!me->hotkeys.empty())
-        {
-            tiles.json_open_array("hotkeys");
-            for (int hotkey : me->hotkeys)
-                tiles.json_write_int(hotkey);
-            tiles.json_close_array();
-        }
-
-        tiles.json_close_object();
-    }
+        webtiles_write_item(items[i]);
 
     tiles.json_close_array();
 
