@@ -654,22 +654,22 @@ unsigned int item_value(item_def item, bool ident)
         {
         case TALISMAN_DEATH:
         case TALISMAN_STORM:
-            valued += 1200;
+            valued += 800;
             break;
 
         case TALISMAN_DRAGON:
         case TALISMAN_STATUE:
-            valued += 800;
+            valued += 600;
             break;
 
         case TALISMAN_MAW:
         case TALISMAN_SERPENT:
         case TALISMAN_BLADE:
-            valued += 400;
+            valued += 300;
             break;
 
         case TALISMAN_FLUX:
-            valued += 300;
+            valued += 250;
             break;
 
         case TALISMAN_BEAST:
