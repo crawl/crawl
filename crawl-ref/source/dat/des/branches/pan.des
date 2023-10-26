@@ -49,14 +49,14 @@ function pan_lord_setup(_G, name)
                  "neqoxec w:200 / chaos spawn w:200 / " ..
                  "cacodemon w:300 / tormentor / " ..
                  "tentacled monstrosity w:5 / " ..
-                 "floating eye / golden eye band / eye of devastation / " ..
+                 "glass eye band/ golden eye band / eye of devastation / " ..
                  "shining eye / very ugly thing band / "..
                  "demonspawn corrupter",
         ['Lom Lobon'] = "hellwing w:300 / sixfirhy w:100 / " ..
                  "smoke demon w:300 / blizzard demon w:100 / " ..
                  "green death w:200 / glowing orange brain / rakshasa / " ..
-                 "wizard / draconian annihilator / deep elf annihilator / " ..
-                 "titan w:5 / lich w:5 / demonspawn blood saint",
+                 "arcanist / occultist / draconian annihilator / " ..
+                 "deep elf annihilator / titan w:5 / lich w:5 / demonspawn blood saint",
         Cerebov = "efreet / orange demon / sun demon / ynoxinul / balrug / " ..
                   "brimstone fiend w:1 / demonspawn warmonger w:1",
         ['Gloorx Vloq'] = "skeleton w:400 / soul eater w:200 / " ..
@@ -207,17 +207,22 @@ end
 
 function pan_entry_vault_contents(e, glyph)
     e.tags("patrolling no_monster_gen nolayout_encompass")
-    e.mons("common demon")
-    e.mons("common demon / nothing")
+    local tierthree = "sixfirhy / smoke demon / soul eater / " ..
+                      "sun demon / ynoxinul w:5"
+    local tiertwo = "balrug / blizzard demon / cacodemon w:5 / " ..
+                    "green death / hell beast / hellion / lorocyproca / " ..
+                    "reaper / shadow demon / tormentor"
+
     if e.is_validating() then return end
     if crawl.x_chance_in_y(you.depth() + 3, you.depth() + 5) then
         e.tags("luniq_hellpanabyss_threat_entry")
-        e.kmons(glyph .. " = green death / blizzard demon / balrug / "
-                      .. "   cacodemon / hell beast / hellion / reaper / "
-                      .. "   lorocyproca / tormentor / shadow demon")
+        e.kmons(glyph .. "1 = " .. tiertwo)
+        e.kmons("2 = " .. tierthree)
+        e.nsubst("2 = 2 = 22. / *:.")
+        e.nsubst("1 = 1:112 / *:.")
     else
         e.subst("12 = .")
-        e.kmons(glyph .. " = common demon / nothing")
+        e.kmons(glyph .. " = " .. tiertwo .. " / " .. tierthree .. " / " .. tierthree)
     end
 end
 
@@ -284,7 +289,6 @@ ENDMAP
 # Other entries; these ones are derived from rand_demon Pan vaults.
 NAME:   rand_demon_pan_entry_1
 TAGS:   transparent
-MONS:   common demon
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
@@ -293,7 +297,7 @@ x..1...x..x
 x..x...x..x
 x..x...x..x
 x..x.1.x..x
-x..x.O.x..x
+x..x2O2x..x
 x..x.1.x..x
 x..x...x..x
 x..x...1..x
@@ -308,11 +312,11 @@ MAP
 ............
 .x.x.x.x.x..
 ..x.x.x.x.x.
-.x.x.x.x.x..
+.x.x.x2x.x..
 ..x.x1x1x.x.
-.x.x.xOx.x..
+.x.x2xOx2x..
 ..x.x1x1x.x.
-.x.x.x.x.x..
+.x.x.x2x.x..
 ..x.x.x.x.x.
 .x.x.x.x.x..
 ..x.x.x.x.x.
@@ -328,9 +332,9 @@ MAP
 .xxxxxxxxx.
 .x...x1+.x.
 .x+x+x+x.x.
-.x1x...x.x.
+.x1x..2x2x.
 .x+xxx+x.x.
-.x...x1xOx.
+.x2..x1xOx.
 .x+x.xxxxx.
 .x1x.....+.
 .xxxxxxxxx.
@@ -346,10 +350,10 @@ MAP
 ...xx++xx...
 ..xx....xx..
 .xx......xx.
-.x........x.
+.x..2.....x.
 .+...1O...+.
 .+...11...+.
-.x........x.
+.x..2..2..x.
 .xx......xx.
 ..xx....xx..
 ...xx++xx...
@@ -358,7 +362,7 @@ ENDMAP
 
 NAME:   rand_demon_pan_entry_7
 TAGS:   transparent
-NSUBST: ? = 1:O / 4:1 / *:.
+NSUBST: ? = 1:O / 4:1 / 2:2 /*:.
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
@@ -387,17 +391,17 @@ MAP
 .xx..1..O.x.
 .x........x.
 .xx.......x.
-..xx.1..1.x.
-.........xx.
+..xx21..1.x.
+....22...xx.
 .....x...x..
-.....xx.xx..
+..x..xx.xx..
  @....xxx...
   ........
 ENDMAP
 
 NAME:   rand_demon_pan_entry_9
 TAGS:   transparent
-NSUBST: ^ = 4:1 / *:.
+NSUBST: ^ = 4:1 / 2:2 / *:.
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
@@ -410,7 +414,7 @@ MAP
 .x.x^^^^x.x.
 .x.x^^^^x.x.
 .x.xxxx+x.x.
-.xx.....x.x.
+.xx....2x.x.
 .xxxxxxxx+x.
 ............
 ENDMAP
@@ -420,13 +424,12 @@ ENDMAP
 
 NAME:  grunt_pan_entry_in_and_out
 TAGS:  transparent
-SUBST: d = 112
-: pan_entry_feature(_G, 'e')
-: pan_entry_vault_contents(_G, 'e')
+: pan_entry_feature(_G, 'O')
+: pan_entry_vault_contents(_G, 'O')
 MAP
 ............
 .x+xxxxxx+x.
-.x.x.de.x.x.
+.x.x.2O.x.x.
 .x2x....x2x.
 .x.x.11.x.x.
 .x2x....x2x.
@@ -440,17 +443,16 @@ ENDMAP
 
 NAME:  grunt_pan_entry_spiral
 TAGS:  transparent
-SUBST: d = 112
-: pan_entry_feature(_G, 'e')
-: pan_entry_vault_contents(_G, 'e')
+: pan_entry_feature(_G, 'O')
+: pan_entry_vault_contents(_G, 'O')
 MAP
 ............
 .x+xxxxxxxx.
 .x.xx2.2..+.
 .x.x.xxxxxx.
 .x2x1x.1.xx.
-.x.x.dexx2x.
-.x2xxfg.x.x.
+.x.x.2Oxx2x.
+.x2xx$$.x.x.
 .xx.1.x1x2x.
 .xxxxxx.x.x.
 .+..2.2xx.x.
@@ -460,17 +462,16 @@ ENDMAP
 
 NAME:  grunt_pan_entry_zigzag
 TAGS:  transparent
-SUBST: d = 112
-: pan_entry_feature(_G, 'e')
-: pan_entry_vault_contents(_G, 'e')
+: pan_entry_feature(_G, 'O')
+: pan_entry_vault_contents(_G, 'O')
 MAP
 ............
 .xxxxxxxxxx.
 .x..2..2..+.
 .x.2.xxxxxx.
 .xx.1.xx....
-..xx.d1xx...
-...xx1e.xx..
+..xx.21xx...
+...xx1O.xx..
 ....xx.1.xx.
 .xxxxxx.2.x.
 .+..2..2..x.
@@ -479,19 +480,18 @@ MAP
 ENDMAP
 
 NAME:  grunt_pan_entry_sceptre
-SUBST: d = 112
-: pan_entry_feature(_G, 'e')
-: pan_entry_vault_contents(_G, 'e')
+: pan_entry_feature(_G, 'O')
+: pan_entry_vault_contents(_G, 'O')
 MAP
  @........@
-@2.xxxxxx.2@
-..xx.de.xx..
+@..xxxxxx..@
+..xx.2O.xx..
 x+x......x+x
 x.x.1..1.x.x
 x.x......x.x
 x.x..22..x.x
 x2xx....xx2x
-x..xx++xx..x
+x.2xx++xx2.x
 xx..2..2..xx
  xxx.11.xxx
    xxxxxx
@@ -646,7 +646,7 @@ TAGS:       mnoleg uniq_mnoleg
 NSUBST:     O = 1:O / *:|
 TILE:       c = dngn_stone_wall_yellow
 MONS:       patrolling mnoleg
-MONS:       floating eye / golden eye / eye of devastation / \
+MONS:       glass eye / golden eye / eye of devastation / \
             shining eye
 MONS:       w:3 large abomination / w:2 tentacled monstrosity
 MONS:       cacodemon
@@ -759,7 +759,7 @@ NSUBST:  O = 1:O / *:|
 TILE:    c = dngn_stone_wall_yellow
 MONS:    patrolling Mnoleg, patrolling cacodemon
 MONS:    neqoxec, tentacled monstrosity, large abomination
-MONS:    very ugly thing band w:20 / floating eye / golden eye band / \
+MONS:    very ugly thing band w:20 / glass eye / golden eye band / \
          great orb of eyes / shining eye
 epilogue{{
   pan_lord_epilogue('Mnoleg')
@@ -809,7 +809,7 @@ TAGS:      lom_lobon uniq_lom_lobon no_rotate
 ORIENT:    north
 : pan_lord_setup(_G, 'Lom Lobon')
 MONS:      patrolling Lom Lobon, glowing orange brain, rakshasa
-MONS:      wizard w:20 / lich / draconian annihilator / deep elf annihilator
+MONS:      arcanist / occultist / lich / draconian annihilator / deep elf annihilator
 epilogue{{
   pan_lord_epilogue('Lom Lobon')
 }}
@@ -852,7 +852,7 @@ TAGS:      lom_lobon no_pool_fixup uniq_lom_lobon
 ORIENT:    northwest
 : pan_lord_setup(_G, 'Lom Lobon')
 MONS:      patrolling Lom Lobon
-MONS:      blizzard demon, green death, wizard, draconian annihilator
+MONS:      blizzard demon, green death, arcanist / occultist, draconian annihilator
 MONS:      sixfirhy
 SUBST:     0 = 23444445566
 NSUBST:    Q = 1:O / *:4
@@ -912,7 +912,7 @@ NAME:      lom_lobon_spiral_st
 TAGS:      lom_lobon no_pool_fixup patrolling uniq_lom_lobon
 ORIENT:    northeast
 : pan_lord_setup(_G, 'Lom Lobon')
-MONS:      patrolling Lom Lobon, titan, shock serpent, wizard
+MONS:      patrolling Lom Lobon, titan, shock serpent, arcanist / occultist
 KMONS:     S = storm dragon
 KMONS:     d = draconian annihilator
 KMONS:     e = deep elf annihilator
@@ -975,7 +975,7 @@ ORIENT:  north
 : pan_lord_setup(_G, 'Lom Lobon')
 MONS: patrolling Lom Lobon
 MONS: draconian annihilator / deep elf annihilator / \
-      wizard w:20 / rakshasa w:20 / glowing orange brain / \
+      arcanist / occultist / rakshasa w:20 / glowing orange brain / \
       blizzard demon / green death / titan w:5 / \
       spriggan air mage w:5 / lich w:5
 SUBST:   W = ww.
@@ -1035,7 +1035,7 @@ SHUFFLE: O2
 MONS:    patrolling Lom Lobon, patrolling titan, patrolling wind drake
 MONS:    blizzard demon / titan / spriggan air mage / storm dragon
 MONS:    draconian annihilator / deep elf annihilator / \
-         wizard w:20 / rakshasa w:20 / glowing orange brain / \
+         arcanist / occultist / rakshasa w:20 / glowing orange brain / \
          blizzard demon / green death / titan w:5 / \
          spriggan air mage w:5 / lich w:5
 epilogue{{

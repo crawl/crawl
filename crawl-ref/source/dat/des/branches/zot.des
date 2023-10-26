@@ -2,10 +2,12 @@
 # zot.des: The ultimate goal. The Orb must be placed (Z). These maps can and
 #          should be serious challenges! Players dying on Zot:5 are okay :)
 #
-# Content: Zot entry vaults (these are on Depths:$ and contain the portal)
-#          Zot vaults, mini and not so mini
-#          Zot hall (on Zot:5)
-#          Vaults that define the floor/wall colours for Zot:1-5
+# Content:
+# <<1>> Zot entries (Depths:$)
+# <<2>> Zot decorative vaults
+# <<3>> Zot monster vaults
+# <<4>> Zot end hall (Zot:5)
+# <<5>> Zot floor-by-floor wall & floor colour changes
 #
 ##############################################################################
 
@@ -18,11 +20,11 @@ function zot_entry_setup(e)
     e.mons("fire dragon / ice dragon / storm dragon / \
             shadow dragon / bone dragon / golden dragon")
     e.mons("patrolling nonbase draconian")
-    e.kmons("0 = ettin / tengu warrior / glowing shapeshifter w:5 / \
+    e.kmons("0 = ettin / rakshasa / glowing shapeshifter w:5 / \
                  stone giant w:12 / spriggan berserker w:8 / hell knight w:5")
     e.kmons("9 = fire giant w:12 / titan w:8 / vampire knight / \
                  spriggan air mage w:8 / deep troll earth mage w:8 / \
-                 tengu reaver / deep elf high priest w:12 / lich w:2")
+                 tengu reaver w:12 / tentacled monstrosity / lich w:2")
 end
 }}
 
@@ -67,7 +69,7 @@ end
 ##############################################################################
 ##############################################################################
 #
-# Zot entries (D side)
+# <<1>> Zot entries (Depths side)
 #
 ##############################################################################
 ##############################################################################
@@ -586,20 +588,10 @@ ENDMAP
 ##############################################################################
 ##############################################################################
 #
-# Zot petite vaults
+# <<2>> Zot decorative vaults
 #
 ##############################################################################
 ##############################################################################
-
-# There's few vaults on Zot:5, tone down their chances.
-NAME: dummy_balancer_zot
-DEPTH: Zot:$
-TAGS: dummy
-ORIENT: float
-WEIGHT: 60
-MAP
-x
-ENDMAP
 
 NAME:   lemuel_baited_zot_trap
 TAGS:   allow_dup extra luniq
@@ -610,6 +602,1809 @@ KITEM:  * = any good_item
 MAP
 *
 ENDMAP
+
+# Directly place a decorative vault 33% of the time on Zot:1-4.
+NAME:    zot_decor
+TAGS:    no_dump extra allow_dup nolayout_encompass luniq
+DEPTH:   Zot, !Zot:$
+CHANCE:  33%
+{{
+  local c = 1
+  hook("post_place", function()
+    dgn.place_maps{tag="zotdec", count=c}
+  end)
+}}
+
+
+################################################################################
+# Space-filling minivaults by bh.
+
+NAME:   bh_zot_ikea_curve
+TAGS:   extra zotdec transparent
+DEPTH:  Zot
+SUBST:  X : x., Y : x.
+MAP
+xxxxxxxxxxxxx
+@....XxX....@
+@.....x.....@
+xxxx..x..xxxx
+xY....x....Yx
+x.....x.....x
+x..xxxxxxx..x
+x..xY...Yx..x
+x..x.....x..x
+x.....x.....x
+xX....x....Xx
+xxxxxxxxxxxxx
+ENDMAP
+
+NAME:   bh_zot_lava_cross
+TAGS:   extra zotdec luniq_zotdec_liquid
+DEPTH:  Zot
+SUBST:  K : l., L : l.
+MAP
+      @@
+     x..x
+     x..x
+     xK.x
+ xxxxxllxxxxx
+@....llllL...@
+@...Lllll....@
+ xxxxxllxxxxx
+     x.Kx
+     x..x
+     x..x
+      @@
+ENDMAP
+
+NAME:   bh_zot_levy_curve
+TAGS:   extra no_pool_fixup zotdec luniq_zotdec_liquid
+DEPTH:  Zot
+SUBST:  d : WWw, e : WWw, f : WWw, ' : '...
+CLEAR:  '
+MAP
+          WWW.
+          W.W..
+          d.dWW
+          ....W
+         ''...W
+        '''.WWe
+       .......W
+      '.www...W
+     ''.w.w.fWe
+    '''.wwWWW..
+WWd.'''...W...
+W........fW.'
+WWd..W..WW..
+..W..W..W..
+ .WWWeWWe.
+ENDMAP
+
+##
+
+NAME:    hangedman_zot_gyre
+TAGS:    extra transparent zotdec luniq_zotdec_large
+DEPTH:   Zot
+KFEAT:   Z = zot trap
+SHUFFLE: dD, eE, fF, gG, hH, dD / eE / fF / gG / hH
+SHUFFLE: cCbB / cCbB / bBcC, qQ / qQ / ZZ / wl / '' / ''
+SUBST:   defhH = X, DEF = ., g : X.., G : X.., ' = .
+SUBST:   B = bbCc, C : bWcc, b : bbc, c : bWcc, X : bcxx, W : wl
+NSUBST:  0 = 2 = 0:19 .:1 / *:.
+KPROP:   l = no_cloud_gen
+KMASK:   lw = no_monster_gen
+COLOUR:  qQ = darkgray
+FTILE:   qQ = floor_rough_darkgray
+MARKER:  q = lua:fog_machine {cloud_type = "freezing vapour", \
+             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = 0 }
+MARKER:  Q = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = 0 }
+:  if you.depth() == dgn.br_depth(you.branch()) then
+SUBST:  { = {([<
+:  else
+SUBST:  { = {([<})]>%
+:  end
+MAP
+           ......
+         ..........
+        ..xxxxxxx...
+        ........hx...
+      ....B......hx....
+     .............x.....
+    ..G.C.G.C.....ffxxx..
+    ..x...x.......x......
+   ...x...x...B...x...c....
+  ....F...E.......x.........
+ ...xxFxxxExxD..Q.eexxx.b.x.
+ ..xH.......0xD...x.......x..
+..xH......q...x..0x...c...x..
+..x...........x..xd.......x..
+..x.....b..dxx{xxd..b.....x..
+..x.......dx..x...........x..
+..x...c...x0..x...q......Hx..
+..x.......x...Dx0.......Hx..
+ .x.b.gxxee.Q..DxxExxxFxx...
+ .........x.......E...F....
+  ....c...x...B...x...x...
+    ......x.......x...x..
+    ..gxxff.....C.G.C.G..
+     .....x.............
+      ....xh......B....
+        ...xh........
+         ...xxxxxxx..
+          ..........
+            ......
+ENDMAP
+
+####
+# Weird orderly decorum.
+NAME:    hangedman_zot_decor_unnerving_road
+TAGS:    extra transparent zotdec no_pool_fixup luniq_zotdec_liquid
+DEPTH:   Zot, !Zot:$
+SHUFFLE: @&, (), vb / vb / bv / cc / xx, lw / lw / lw / '', JK / LM / NO
+SHUFFLE: JK / JK / JK / !!, LM / ??, NO / `` / `` / `` / ``, JKLMNO / JKLMNO / KJMLON
+SUBST:   '!?`& = ., X : xxc, JLN = F, KMO = f
+SUBST:   ( = (:1 .:14, ) = ):1 .:14
+KMASK:   wlfF = no_monster_gen
+COLOUR:  fF = darkgray
+FTILE:   fF = floor_rough_darkgray
+MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
+             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = 0 }
+MARKER:  F = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = 0 }
+KPROP:   l = no_cloud_gen
+MAP
+      XXXX...&&.
+      Xllvv......
+    XXXlv..v....@
+   XXlllv..v....@
+   Xllvv.vvJ.....
+ XXXlv..v.......
+XXlllv..v....XXXX
+Xllvv(vvL..ObbwwX
+Xlv..v.....b..bwXXX
+Xlv..v.....b..bwwwXX
+Xllvv.vv....bb.bbwwX
+XXlllv..v.....b..bwX
+ XXXlv..v.....b..bwX
+   XllvvN..Mbb)bbwwX
+   XXXX....b..bwwwXX
+    .......b..bwXXX
+   .....Kbb.bbwwX
+   @....b..bwwwXX
+   @....b..bwXXX
+   ......bbwwX
+    .&&...XXXX
+ENDMAP
+
+NAME:    hangedman_zot_decor_checkerboard
+TAGS:    no_pool_fixup extra zotdec transparent luniq_zotdec_liquid
+DEPTH:   Zot, !Zot:$
+KFEAT:   Z = zot trap
+SHUFFLE: @' / '@ / "" / "", defg / jkhi / HIJK / NOLM
+SUBST:   d : wbb, e : wwb, f : lbb, g : llb
+SUBST:   h : lbb, i : llb, j : wbb, k : wwb
+SUBST:   H : wwwbb, I : wwwbb, J : lllbb, K : lllbb
+SUBST:   L : lbbbb, M : lbbbb, N : wbbbb, O : wbbbb
+NSUBST:  Z = 1 = (:1 Z:14 / 1 = ):1 Z:14 / * = ZZUG...
+SUBST:   '" = ., b : cbbvxx
+KPROP:   l = no_cloud_gen
+KMASK:   wl = no_monster_gen
+MAP
+             xx
+             xx
+.......      xx.......
+.dw.lf.      xx.Hw.xJ.
+.xe.gl.      xx.wI.Kl.
+@..Z.....'...xx...Z........
+.lg.ex.hl.wj.xx.lK.Iw.Ll.wN.
+.fl.wd.li.kw.xx.Jl.wH.xM.Ow.
+.........Z...xx...'.....Z..@
+      .wk.il.xx      .wO.Mx.
+      .jx.lh.xx      .Nw.lL.
+      .......xx      .......
+             xx
+             xx
+ENDMAP
+
+NAME:    hangedman_zot_decor_slant
+TAGS:    extra transparent zotdec
+DEPTH:   Zot
+KFEAT:   z = zot trap
+KFEAT:   fF = floor
+SHUFFLE: BVfF / VBFf, aAuU / aAuU / aAuU / uUaA
+SHUFFLE: AU / "", fF / fF / zz, @! / !@ / ?? / ??
+SUBST:   aAB = b, uUV = v, Z = ()G .:45 z:25, '"!? = .
+SHUFFLE: bv / bc / vc / cc
+KMASK:   fF = no_monster_gen
+COLOUR:  fF = darkgray
+FTILE:   fF = floor_rough_darkgray
+MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
+             pow_min = 9, pow_max = 10, delay = 2, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = 0 }
+MARKER:  F = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 9, pow_max = 10, delay = 2, size_min = 1, size_max = 1, \
+             start_clouds = 1, excl_rad = 0 }
+MAP
+            ...!..
+           ........
+           @.UuuU..
+         ....uuuu.!
+         .vv.ufuu..
+     xx  .vv..uuU..
+     x.............
+      .vv.VV.vv.@.
+      .vv.VV.vv.
+   ......Z......
+   .bb.BB.bb.
+ .@.bb.BB.bb.
+.............x
+..Aaa..bb.  xx
+..aafa.bb.
+!.aaaa....
+..AaaA.@
+........
+ ..!...
+ENDMAP
+
+NAME:    hangedman_zot_decor_scrapings
+TAGS:    transparent extra zotdec
+DEPTH:   Zot
+KFEAT:   Z = zot trap
+SHUFFLE: HIJKLM / HIJKLM / IHKJML
+SUBST:   HJL : xxcb, I : x..., K : x..., M : x...
+SUBST:   N : xcG.., O : xc..., P : xcG.., Z = ()G x:45 Z:25
+MAP
+          x     ..  ...
+          xx   .... .x..
+          xx  x.......x..
+           x   x...O......
+    .....  xx  .........x..
+   ..J...P  x   .L...N.I.H.
+  ..x.x...  xx  x.x.....x..
+ ....K...M   Z   M...K....
+..x.....x.x  xx  ...x.x..
+.H.I.N...L.   x  P...J..
+..x.........  xx  .....
+ ......O...x   x
+  ..x.......x  xx
+   ..x. ....   xx
+    ...  ..     x
+ENDMAP
+
+NAME:    hangedman_zot_decor_tridents
+TAGS:    transparent extra zotdec
+DEPTH:   Zot
+KFEAT:   Z = zot trap
+SHUFFLE: bc / xy / XY, bc / cb / cc
+SUBST:   ~ = ()+Z .:60, - : ++.
+SUBST:   H : z., I : z., J : z.
+SUBST:   K : ., L : xxxw.., M : xxw...
+SUBST:   N : xxxl.., O : xxl..., PXyY = x
+KMASK:   wl = no_monster_gen
+MAP
+            x
+            x      ......
+            x    ..Ic.ccc
+     ...    x    ..c.....
+   ....K.   x   .O...N.@
+.........   x cc...c....
+bbb.bJ..P   xccc-cHc.cc.
+.....b...   x cc...c....
+ @.L...M.   ~   .M...L.@
+ ....b...bb y   ...c.....
+ .bb.bHb-bbby   P..Jc.ccc
+ ....b...bb y   .........
+ @.N...O.   y   .K....
+.....b..    y    ...
+bbb.bI..    y
+......      y
+            y
+ENDMAP
+
+
+NAME:    hangedman_zot_diagonal_lockstep
+TAGS:    transparent extra zotdec
+DEPTH:   Zot
+ITEM:    % no_pickup
+KFEAT:   Z = zot trap
+SHUFFLE: ABCDEFG, defg / hijk / mnop / qrst, defg, hjik, mnop
+SUBST:   A : xbvcZ, B : xc, C : xxc, D : c, EFG = x
+SUBST:   d : xxZ, h = x, e : xx., i : xx., f : x.., j : x.., m : x..
+SUBST:   gknopqrst = .
+:  if you.depth() == dgn.br_depth(you.branch()) then
+SUBST:  { = {([ <:5 Z:5
+:  elseif you.depth() == "1" then
+SUBST:  { = {:40 })]> d:20 Z:20
+:  else
+SUBST:  { = {([<})]> d:20 Z:20
+:  end
+MAP
+             Dq...iC
+        .....rD...Ch..
+        .......x.x...p
+        ...mF...x...o.
+       Es..F...x.x....
+ ......tE.x..kx...x..eB
+ ........x...Cj....x.xd
+A..fB...x.x.....G...x..
+.A.xg.nG...{...Gn.gx.A.
+..x...G.....x.x...Bf..A
+dx.x....jC...x........
+Be..x...Ck..x.Et......
+ ....x.x...F..sE
+ .o...x...Fm...
+ p...x.x.......
+ ..hC...Dr.....
+   Ci...qD
+ENDMAP
+
+NAME:    hangedman_zot_wheel_spokes
+TAGS:    transparent extra zotdec
+DEPTH:   Zot, !Zot:$
+# Swap positions in unit's potential spots
+# with the spokes and / or the center, maybe.
+SHUFFLE: AGMBHN / AHMBGN / AGNBJM
+SHUFFLE: CIOFLR / CLOFIR / CIRFLO
+SHUFFLE: DJPEKQ / DJQEKP / DJQEKP
+SHUFFLE: AGM / BHN / CIO / DJP / EKQ / FLR
+# Make those slots random walls or floor.
+SUBST:   AGM : xxxxcccbbv, BHN : xxxxcccbbv
+SUBST:   CIO : x., DJP : x., EFKLQR = .
+MAP
+                 x .CDEF@
+                 x.F.AB.C
+                 x.DB..AD
+      ......     x.EA..BE
+     .......     x.C.BA.F
+   .IJKL......@  x..FDEC.
+   L.GH.I........x......
+   KH..GJ..OPQR..xxxxxxxxx
+   JG..HK.R.MN.O.......
+   I.HG.L.QN..MP..IJKL.
+   .LKJI..PM..NQ.L.GH.I
+    ......O.NM.R.KH..GJ
+xxxxxxxxx..RQPO..JG..HK
+  ......x........I.HG.L
+ .CDEF..x  @......LKJI.
+ F.AB.C.x      ........
+ EB..AD.x      .......
+ DA..BE.x
+ C.BA.F.x
+ @FEDC. x
+ENDMAP
+
+##########################################################################
+# Some decorative multi-coloured glass columns
+NAME:   skrybe_zot_glass_1
+TAGS:   transparent zotdec no_pool_fixup luniq_zotdec_liquid
+DEPTH:  Zot
+SUBST:  W : Wwl
+KMASK:  Wwl = no_monster_gen
+: coloured_glass(_G)
+MAP
+  .....    .....
+ ..WWW..  ..WWW..
+..WWrWW....WWyWW..
+.WWrrrWW..WWyyyWW.
+.WrrrrrW..WyyyyyW.
+.WWrrrWW..WWyyyWW.
+..WWrWW....WWyWW..
+ ..WWW......WWW..
+  ..............
+  ..............
+ ..WWW......WWW..
+..WWoWW....WWgWW..
+.WWoooWW..WWgggWW.
+.WoooooW..WgggggW.
+.WWoooWW..WWgggWW.
+..WWoWW....WWgWW..
+ ..WWW..  ..WWW..
+  .....    .....
+ENDMAP
+
+NAME:   skrybe_zot_glass_2
+TAGS:   transparent zotdec no_pool_fixup luniq_zotdec_liquid
+DEPTH:  Zot
+SUBST:  l : Wwl
+KPROP:  l = no_cloud_gen
+KMASK:  Wwl = no_monster_gen
+: coloured_glass(_G)
+MAP
+      .....
+ ......lll......
+..lll.lloll.lll..
+.llrlllooolllyll.
+.lrrrlooooolyyyl.
+.llrlllooolllyll.
+..lll.lloll.lll..
+ ......lll......
+      .....
+ENDMAP
+
+NAME:   skrybe_zot_glass_3
+TAGS:   transparent zotdec no_pool_fixup luniq_zotdec_liquid
+DEPTH:  Zot
+SUBST:  l : Wwl
+SUBST:  ( : ([{.
+KMASK:  Wwl = no_monster_gen
+KPROP:  l = no_cloud_gen
+: coloured_glass(_G)
+MAP
+xxxxxx@@@xxxxxx
+xlllll...lllllx
+xlrrrl...looolx
+xlrrll...lloolx
+xlrll.....llolx
+xlll.......lllx
+@.............@
+@......(......@
+@.............@
+xlll.......lllx
+xlyll.....llglx
+xlyyll...llgglx
+xlyyyl...lggglx
+xlllll...lllllx
+xxxxxx@@@xxxxxx
+ENDMAP
+
+###########################################################################
+# Some simple riffs on zot layout choices, negative space abuse,
+# and st_'s old gridded stair vaults.
+NAME:    regret_index_zot_stipple_split
+TAGS:    extra transparent zotdec no_pool_fixup luniq_zotdec_negative_space
+DEPTH:   Zot, !Zot:$
+SHUFFLE: ab, cde
+SUBST:   a : GlwTB b:30, b : GwT
+SUBST:   c : cbxdd, d : cbxxeee, e : ccxxx
+SUBST:   ' : xx.'''
+CLEAR:   '
+MAP
+            c.
+            ..
+            d.e
+            ...
+            ..c.d
+            '....
+      c.'''''.d.e.c
+      ....'''..b...
+    c.e.d.'''...c.d.e
+    ...a..'''........
+  c.e.d...'''.....e.c.d
+..........'''''..........
+c.e.d..'''''''''''..d.e.c
+..........'''''..........
+  d.c.e.....'''...d.e.c
+    ........'''..a...
+    e.d.c...'''.d.e.c
+      ...b..'''....
+      c.e.d.'''''.c
+        ....'
+        d.c..
+          ...
+          e.d
+           ..
+           .c
+ENDMAP
+
+NAME:    regret_index_zotdec_onion_hex
+TAGS:    extra transparent zotdec luniq_zotdec_negative_space
+DEPTH:   Zot
+SHUFFLE: ABCDE
+SUBST:   AB = x, C : x., D : x., E = ., ' : x.'''
+CLEAR:   '
+MAP
+    ........x
+   ..xxAxBx..
+  ..xx......x
+ ..xx..''''....x.......
+..xx..''''''CDE..x..xx..
+.xc..'''''''''.x.....xx..
+xc...'''''''''...'''..xx..
+.xc..''''''''''''''''..xx..
+..xx..''''''''''''''''..cx.
+ ..xx..'''..''''''''''...cx
+  ..xx.....x...'''''''..cx.
+   ..xx..x..EDC''''''..xx..
+    .......x....''''..xx..
+             x......xx..
+             ..xBxAxx..
+             x........
+ENDMAP
+
+NAME:    regret_index_zotdec_misc_clamp
+TAGS:    extra transparent zotdec
+DEPTH:   Zot, !Zot:$
+SHUFFLE: A' / B" / C` / D~
+SUBST:   X : xx`, Y : xxx., AB = x, '" = .
+NSUBST:  . = 1 = {[(}]} >:140 / *:.
+CLEAR:   C`D~
+MAP
+A'A'A'x.x.x.x.x.B"B"B
+ '''''.........."""""
+A'A'A'x.x.x.c.x.B"B"B
+ '''''.........."""""
+ `````xxxxx.c.x.xxxx
+C`C`C`xxxx......xxxx
+ `````xxxxx.x.x.xxxxxx
+C`C`C`xxxx......xxxxxxxx
+xxxxxxxxxxYxYxYxxxxxxxxxxxXX
+xxxxxxxxxxxxxxxxxxxxxxxxxxXX
+XXxxxxxxxxxxxxxxxxxxxxxxxxxx
+XXxxxxxxxxxxxYxYxYxxxxxxxxxx
+    xxxxxxxx......xxxx`C`C`C
+      xxxxxx.x.x.xxxxx`````
+        xxxx......xxxx`C`C`C
+        xxxx.x.c.xxxxx`````
+       """""..........'''''
+       B"B"B.x.c.x.x.x'A'A'A
+       """""..........'''''
+       B"B"B.x.x.x.x.x'A'A'A
+ENDMAP
+
+
+NAME:    regret_index_zotdec_stipple_waver
+TAGS:    extra transparent zotdec
+DEPTH:   Zot
+SHUFFLE: opqrstu
+SUBST:   o = c, p = x, q : x'', r : x'', stu = '
+NSUBST:  ' = 1:GTUV>... / *:.
+MAP
+    x.x.xrx.x.x
+    .q...q.....
+    x.x.x.x.x.x
+    .....s...s.
+x.x.x.x.x.x.x.x.xux      .xpx.x
+ ....o.     .t.....     .....o
+x.x.x.x     x.x.x.x     x.x.x.x
+ o.....     .....t.     .o....
+x.xpx.      xux.x.x.x.x.x.x.x.x
+                .s...s.....
+                x.x.x.x.x.x
+                .....q...q.
+                x.x.xrx.x.x
+ENDMAP
+
+NAME:    regret_index_zotdec_twisting_globes
+TAGS:    extra transparent zotdec luniq_zotdec_large
+DEPTH:   Zot, !Zot:$
+ORIENT:  float
+SHUFFLE: opqrs
+SUBST:   o : xxb, p : xxb, qrs = .
+SUBST:   { = {([})]<CG>TU
+NSUBST:  H = 1:x / 1:xxx++ / *:+, I = 1:x / 1:xxx++ / *:+
+NSUBST:  J = 1:c / *:+, K = 1:x / 1:xxx++ / *:+
+SHUFFLE: cvb
+MAP
+ xKxx...              ....xxHxx
+xx..xx..              ...xx...xx
+K....K..................xx..q..xx
+x....x..................x.......x
+xx..xx..ccJc...xoxxq.x..H.q.s.r.H
+.xKxx..cc..cc...x.rxxpxxx.......x
+......cc....cc..x.ss.p..xx..r..xx
+......c..po..cxxpxxr.x...xx...xx
+    ..J..o{..J..p.qxxox...xxHxx
+    ..cc....cc.................
+    ...cc..cc..................
+    ....ccJc..
+    .....x...
+    ..x..x...
+    ..oxppx..
+    ..x..x...
+    ..xrsxq..
+    ..qxsrx..
+    ...x..x..
+    ..ppxxo..
+  .....x..x..
+  .....x.....
+  ..xxIxx....
+  .xx...xx...
+  xx..q..xx..
+  x.......x..
+  I.q.s.r.I..
+  x.......x..
+  xx..r..xx..
+   xx...xx
+    xxIxx
+ENDMAP
+
+NAME:    regret_index_zotdec_storm_pass
+TAGS:    extra no_pool_fixup zotdec luniq_zotdec_negative_space
+DEPTH:   Zot, !Zot:$
+KFEAT:   C = altar_qazlal
+KFEAT:   S = w
+SUBST:   { = {([})]<>CCUUUUUU
+SUBST:   z : xxv.., Z : xxv.., v : vvvb
+KMASK:   wWS = no_monster_gen
+KMASK:   wWS = no_item_gen
+KPROP:   wWS = no_tele_into
+MARKER:   S = lua:fog_machine {cloud_type = "thunder", \
+              pow_min = 15, pow_max = 20, delay = 20, size_min = 4, size_max = 8, \
+              excl_rad = 1, walk_dist = 1}
+MAP
+             .xxxxxxxx
+             .vvvvvvvxxx
+@...         ...nwwSvvvx
+xv..z.       ...nnwwwWvxx
+xv....        z..nnnWwvvx
+xvnn..Z       .....nnwSvx
+xvwnn..         Z..{nwwvx
+xvwwn...Z         ..nnwvx
+xvSwnnC....       Z..nnvx
+xvvwWnnn..z        ....vx
+xxvWwwwnn...       .z..vx
+ xvvvSwwn...         ...@
+ xxxvvvvvvv.
+   xxxxxxxx.
+ENDMAP
+
+NAME:    regret_index_zotdec_carving_tricks
+TAGS:    extra transparent zotdec no_rotate luniq_zotdec_negative_space
+DEPTH:   Zot
+SHUFFLE: zZ
+SUBST:   z = b, Z = .
+MAP
+                       @
+                       .
+      .               .b
+      .                .  .
+   .  b.               .  .
+   .  .               .Zz.b..@
+   .  .           ...b.zZ.  .
+@..b.zZ.             .  .
+ .  .Zz.b...         .  .
+     .  .               b.
+     .  .               .
+    .b                  .
+     .
+     @
+ENDMAP
+
+NAME:    regret_index_zotdec_banners
+TAGS:    extra transparent zotdec
+TAGS:    luniq_zotdec_large luniq_zotdec_negative_space
+DEPTH:   Zot, !Zot:$
+ORIENT:  float
+SUBST:   y : c.., Y : c.., z : b..
+SHUFFLE: cb / xc / xc / xb, <>GUVm
+NSUBST:  < = 1:<<{([ / *:<, > = 1:>>})]
+MAP
+.c...
+..c...
+..c...
+cc.c..
+...c..
+...c..
+yyy.c.        ...b.
+....c.       ...b..
+..<..c       ...b..
+.....c       ..b.bb
+...cc.       ..b...
+.cc...       ..b.<.       .c..
+c.....       .b....       .c...
+c..>..       .b..zz       ..c...
+.c....       b.zz..       ..c...
+.c.YYY       b.....       cc.c..
+..c...       .bb...       ...c..
+..c...       ...bb.       ...c..
+..c.cc       zz...b       yyy.c.
+...c..       ..zz.b       ....c.
+...c..       ....b.       ..<..c
+ ...c.       .>..b.       .....c
+  ..c.       ...b..       ...cc.
+             ...b..       .cc...
+             bb.b..       c.....
+             ..b...       c..>..
+             ..b...       .c....
+             .b...        .c.YYY
+                          ..c...
+                          ..c...
+                          ..c.cc
+                          ...c..
+                          ...c..
+                           ...c.
+ENDMAP
+
+NAME:    regret_index_zotdec_split_disrupt
+TAGS:    extra transparent zotdec luniq_zotdec_negative_space
+DEPTH:   Zot, !Zot:$
+SHUFFLE: ABCDEFGHI
+SUBST:   AB = x, B : xx., C : xx., D : xx., E : x., F : x., G : x., HI = .
+SUBST:   { = {([})]xxxcTUV> .:40 %:40
+MAP
+                  ... .........   .......
+                   x....x.x.........x..x.
+       ...          x...x..xxxxxBxxx..xx.
+      ..x.. ...      x...E...........A...
+     ...x.....x       G...x.....c...x..
+    ...xCx.D...x       F...xx...x..xx.
+   .....x.......x   {   x.......x.....
+   .xx..x...xx...F       x...D.xCx...
+  ..x...c.....x...G       x.....x...
+...A...........E...x      ... ..x..
+.xx..xxxBxxxxx..x...x          ...
+.x..x.........x.x....x
+.......   ......... ...
+ENDMAP
+
+NAME:    regret_index_zotdec_ex
+TAGS:    extra transparent zotdec
+DEPTH:   Zot
+SHUFFLE: opqrstu
+SUBST:   o = b, p = x, q : xx., r : x.., stu = .
+MAP
+@.....              xx
+.xxx..         ss. xxx
+.xxx.r..      ....xxx
+.xxp....      ...xxx
+....pxx...  ....xxx..
+..o.xxx.r....tuxxx..s
+  ..xxq.......xxx...s
+  .....qxx...xxxu...
+    .o.xxx..xxx.t.
+    ...xxx.xxx....
+     .....bbx....
+     ....xbb.....
+    ....xxx.xxx...
+    .t.xxx..xxx.o.
+  ...uxxx...xxq.....
+ s...xxx.......qxx..
+ s..xxxut....r.xxx.o..
+ ..xxx....  ...xxp....
+  xxx...      ....pxx.
+ xxx....      ..r.xxx.
+xxx .ss         ..xxx.
+xx              .....@
+ENDMAP
+
+NAME:    regret_index_zotdec_zees
+TAGS:    extra transparent zotdec no_rotate no_hmirror no_vmirror
+DEPTH:   Zot
+KFEAT:   Z = zot trap
+SHUFFLE: opqrstu
+SUBST:   o = x, p : x., q : x., rs = ., z : xxbbCVG, b : bbc
+MARKER:  Z = lua:fog_machine {cloud_type = "seething chaos", \
+             pow_min = 9, pow_max = 10, delay = 2, size_min = 1, \
+             size_max = 1, start_clouds = 1, excl_rad = 0 }
+KMASK:   Z = opaque
+KMASK:   Z = no_monster_gen
+TILE:    m = dngn_transparent_wall_magenta
+MAP
+sxxxxxxxxxxxxx
+...........mZx
+.o.q.....z.mxx
+......xr...xx.
+.p...xb...xx..
+....xb...bx...
+...xb...bx....
+..xx...bx...u.
+.xx...rx......sxxxxxxxxxxxxx
+xxm.z.....t.o............mZx
+xZm............o.t.....z.mxx
+xxxxxxxxxxxxxs......xr...xx.
+              .u...xb...xx..
+              ....xb...bx...
+              ...xb...bx....
+              ..xx...bx...p.
+              .xx...rx......
+              xxm.z.....q.o.
+              xZm...........
+              xxxxxxxxxxxxxs
+ENDMAP
+
+NAME:    regret_index_zotdec_plus
+TAGS:    extra transparent zotdec
+DEPTH:   Zot
+SHUFFLE: '- / XX
+SUBST:   ' = ., - = +, X = x
+SUBST:   y : xx., z : xx., b = cccbbv+
+MAP
+       xxx
+ @.....xxx ..
+ .xxxx.xyx....
+ .x''-........
+ .x''x.....zz..
+ .x-xb..xxxxxxxxx
+ ..........x...
+xxx........x..
+xxy..x....xxx@
+xxx..x.....x..
+  ...x..x..x..x
+ ...zxxxxxxbxxxxxx
+ ...zx..x..xxxx
+  ...x..@..xxx..
+    .x.   xxx...
+     x     x ..@
+     x     x
+           x
+ENDMAP
+
+NAME:    regret_index_zotdec_tunneler
+TAGS:    extra transparent zotdec
+DEPTH:   Zot, !Zot:$
+SHUFFLE: hH / iI / jJ / kK / lL, hH, iI, jJ, kK, lL
+SUBST:   hij = x, k : xxxm, HIJKlL = .
+SUBST:   a : cccG., b : cc., c : ccb
+NSUBST:  @ = 2:@ / *:.
+TILE:    G = dngn_statue_tentacles
+MAP
+            xxxxxxxxxx.@x
+          xxxxxhxxxxix..x
+          xx..hhh..iii..xx
+          xxHHxhx..xixIIxx
+      xxxxxxxHHxx..xxxxIIx
+   ..xxjxxjxHHxxx..xxxIIxx
+   @.....jjj............x
+   ..xxJJxjx..aca..xxxKKxx
+ xxxxxxxJJxx..ccc..xxxxKKx
+ xkxxkxJJxxx..bca..xkxKKxx
+xx..kkk............kkk..xx
+xxKKxkx..acb..xxxJJxkxxkx
+xKKxxxx..ccc..xxJJxxxxxxx
+xxKKxxx..aca..xjxJJxx..
+ x............jjj.....@
+xxIIxxx..xxxHHxjxxjxx..
+xIIxxxx..xxHHxxxxxxx
+xxIIxix..xhxHHxx
+xx..iii..hhh..xx
+ x..xixxxxhxxxxx
+ x@.xxxxxxxxxx
+ENDMAP
+
+NAME:    regret_index_zotdec_ceiling_fans
+TAGS:    extra transparent luniq_zotdec
+DEPTH:   Zot, !Zot:$
+SHUFFLE: hHiIjJkKlLmMnNoO / oOhHiIjJkKlLmMnN / nNoOhHiIjJkKlLmM / \
+         mMnNoOhHiIjJkKlL / lLmMnNoOhHiIjJkK / kKlLmMnNoOhHiIjJ / \
+         jJkKlLmMnNoOhHiI / iIjJkKlLmMnNoOhH
+SUBST:   hjILKNO = x, HJilkno = ., mM : bbcvx, B : CGxx
+MAP
+  .J...... ..........x.....
+ IxJxK...........xx..J...x.
+.xIJKx...mmo.....xI..J..K...
+HHH.LLL..l.h.......I.J.K....
+.xONMx...kji........IJK......
+.OxNxM..........xHHHH.LLLLx..
+...N................ONM........
+..........x........O.N.M........
+......xx..N..xx..xO..N..Mx...B..
+...B..xM..N..Ox..xx..N..xx......
+ .......M.N.O........x..........
+  .......MNO................N...
+    .xLLLL.HHHHx..........MxNxO.
+    .....KJI........ijk...xMNOx.
+     ...K.J.I.......h.l..LLL.HHH
+     ..K..J..Ix.....onm...xKJIx.
+      x...J..xx...........KxJxI
+      ....x.......... ......J.
+ENDMAP
+
+# Not every enemy fort's readied in advance, you know.
+NAME:    regret_index_zotdec_under_construction
+TAGS:    extra transparent zotdec luniq_zotdec_large
+DEPTH:   Zot, !Zot:$
+NSUBST:  x = 4 = x. / *:x, + = 1:xx. / 3 = +.. / *:+
+NSUBST:  ' = 1:Gxx / *:., . = 1:Gxx / 1:{([})]TUV<>>>
+SUBST:   X = x..
+SHUFFLE: @&
+CLEAR:   &
+MAP
+               xxxxxxxxxxxxxx
+               xx..+...+...xx
+               x...x...x....x
+              xxx+xxx+xx.'.Xx
+              x....X...x...Xx
+             @+........x.'.Xx
+       xxxxxxxx....'...+...Xx
+       xx..XX.xX...'...x....x
+       x......xX.......xx..xx
+       x......x...XX...xxxxxx
+      xx+xxx+xx+xxxxx+xxx
+      x...x.....xxxx...Xx
+      x...+.....'xxxX...x
+     &x...x..'..xxxxxx+xx
+   xx+xxxxxx..'..x...x&
+   x...Xxxx'.....+...x
+   xX...xxxx.....x...x
+   xxx+xxxxx+xx+xxx+xx
+xxxxxx...XX...x......x
+xx..xx.......Xx......x
+x....x...'...Xx.XX..xx
+xX...+...'....xxxxxxxx
+xX.'.x........+@
+xX...x...X....x
+xX.'.xx+xxx+xxx
+x....x...x...x
+xx...+...+..xx
+xxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    regret_index_zotdec_wing_it
+TAGS:    extra transparent zotdec no_rotate no_vmirror
+DEPTH:   Zot, !Zot:$
+SHUFFLE: pqrs
+SUBST:   pq = x, r : xxV>.., s = .
+MAP
+                  xc
+              xxxx..
+          xxxx.....
+      xxxx........
+     x....xx...pqs
+     x......xx....
+     x...p....xx...
+    x.x.........xx..
+    x..x...q......xx
+    x...x.........
+   x.....x...r....
+   x..p...x......
+   x.......x..s.
+  x...q.....x...
+  xx.........x.
+  x.x...r.....
+ x..x.........
+ xp..x....s..
+ x.q..x.....
+x..s..x.....
+c.   ..x...
+ENDMAP
+
+NAME:    regret_index_zotdec_alabaster_prism
+TAGS:    extra zotdec
+DEPTH:   Zot, !Zot:$
+WEIGHT:  4
+KFEAT:   no = m
+KFEAT:   A = altar_the_shining_one
+KFEAT:   B = altar_zin
+KFEAT:   C = altar_elyvilon
+SHUFFLE: mno, AG / Bv / CT
+SUBST:   } = {([}}))]]<>, y : x.., z : x..
+SUBST:   X : xx., Y : xx., Z : xx., + = +++.
+FTILE:   'ABC : floor_w_marble
+TILE:    m : dngn_transparent_wall_white
+TILE:    n : dngn_transparent_wall_yellow
+TILE:    o : dngn_transparent_wall_brown
+TILE:    G = dngn_statue_angel
+MAP
+           xxxxxxx..
+          xxxx.Txc..
+         xxmx..xx...
+        xx..x.xx....
+       xx...xx......
+      xx....x............
+     xx'..z.xx....X......
+    xx'A'...x.xZ.......cx
+   xx..'G.xxx..Yc.....xxx
+  xx........xX.oYZ...xxGx
+ xx..y..x...x....x...x..x
+xxm.....x...v..X..x.x..xx
+xxxxZx.xxxxx+vxxxxxxxxxxx
+xxxxxxx..Y'vx...x.....nxx
+    xx.x.'B'x...x..z..xx
+    xx..x.'Yx........xx
+    xx..cx..xxx.T'..xx
+    xc.}..x.x...'C'xx
+    xxo....x.....'xx
+    xcxcxxxxx.y..xx
+    xxxxxxxxZ...xx
+           xx..xx
+           xxnxx
+           xxxx
+           xxx
+ENDMAP
+
+##########################################################################
+# A set of decorative vaults based off of branch rune vaults.
+# Constant coloured glass is always supposed to view just walls.
+
+NAME:    regret_index_zotdec_decaying_vile
+TAGS:    transparent extra no_pool_fixup zotdec luniq_zotdec_rune
+DEPTH:   Zot, !Zot:$
+WEIGHT:  5
+NSUBST:  A = 1:x / 1:. / * = x., B = 1:x / 1:. / * = x.
+NSUBST:  C = 1:x / 1:. / * = x., D = 2:x / 1:. / * = x.
+NSUBST:  E = 1:x / 1:. / * = x., F = 1:x / 1:. / * = x.
+NSUBST:  G = 1:x / 1:. / * = x., H = 1:x / 1:. / * = x.
+SUBST:   Z : zz., z = x:9 .:1, w : wx., { = {([})]>>>
+TILE:    m = dngn_transparent_wall_brown
+MAP
+...xxxxxxxx
+..z....Z..xx
+.z....z....xx
+x..AA..z..BBxx
+x..AA.z...BB.xx
+x......z......xx
+x.z.z.xxz.z.z..xx
+xZ.z.zxc.z.z.zc.xx
+x.....z.......z..xx
+x......z.......z..xx
+x..CC.z...DD..z..EExx
+x..CC..z..DD...z.EE.xx
+x.....z.......z......x
+x......z.......z.....x
+x.z.z.xcz.z.z.cxz.z.Zx
+xZ.z.zxx.z.z.zxx.z.z.x
+x.....z.......z......x
+x..FF..z..GG...z.HH..x
+x..FF.z...GG..z..HH..x
+xw{....z.......z....z.
+xmw...Z.......Z....z..
+xxxxxxxxxxxxxxxxxxx...
+ENDMAP
+
+NAME:    regret_index_zotdec_decaying_basic
+TAGS:    extra no_pool_fixup no_trap_gen zotdec luniq_zotdec_rune
+DEPTH:   Zot, !Zot:$
+ITEM:    swamp dragon scales, spear, wand of flame ident:type charges:1
+KFEAT:   ^ = shaft trap
+KFEAT:   C = altar_fedhas
+SHUFFLE: pqrs
+SUBST:   p : wxb., q : xb.., rs = .
+SHUFFLE: def, def / VCV / >{> / ^{^ / G^G
+SUBST:   { = {([})]>>>^, t : ttw, w : www..
+TILE:    m = dngn_transparent_wall_brown
+MAP
+         @@@
+  xx  xx..p..xx  xx
+ xxxxxxxx...xxxxxxxx
+xxxx.dxxx...xxxf.xxxx
+xx.....xx...xx.....xx
+xx..s..x..p..x..s..xx
+xxt...xx.....xx...txx
+xxw..xx..ccc..xx..wxx
+xxw.xx..ccccc..xx.wxx
+xx..x..cc.e.cc..x..xx
+xm..x.cc.....cc.x..mx
+xx....c..r.r..c....xx
+xxx.q.cc.....cc.q.xxx
+xxx...............xxx
+ xxxmxx..wtw..xxmxxx
+  xxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    regret_index_zotdec_serpentine_coiled
+TAGS:    extra transparent no_rotate zotdec
+TAGS:    luniq_zotdec_rune luniq_zotdec_large
+DEPTH:   Zot, !Zot:$
+WEIGHT:  5
+ITEM:    mundane barding
+KFEAT:   C = altar_cheibriados
+SHUFFLE: pqrs, yz
+SUBST:   p : xbCV, q : xb.., X rs = ., y : cb., z = c
+SUBST:   { = {([})]<$d>>>CCC
+TILE:    m = dngn_transparent_wall_green
+MAP
+     ..cc@@cc.....
+    ...c....c.cccc.
+  ..cccc....cc....cc
+ .cc...............@
+.c.................@
+.c...ccc.p..cc....cc
+c...cmxc....c.cccc..
+y.s.ccxc....z.....
+c...cmxc....c....
+.c...ccc..q.cccc..
+.c..............cc.
+..cc..............c.
+  ..cccc.r..ccc...c.
+    ...z....cxmc.s.y
+    ...z....cxmc.s.y
+  ..cccc..r.ccc...c.
+..cc..............c.
+.c..............cc..
+.c...ccc.q..cccc...
+c...cmxc....c...
+y.s.ccxc....z..
+c...cmxc....c...
+.c...ccc..p.cccc...
+.c..............cc..
+ .cc.............{cc
+  ..cccccccccccccccc
+ENDMAP
+
+NAME:    regret_index_zotdec_serpentine_scales
+TAGS:    extra transparent zotdec luniq_zot_rune
+DEPTH:   Zot, !Zot:$
+ITEM:    mundane barding
+KFEAT:   C = altar_cheibriados
+SHUFFLE: ABCDEF, no / pq / rs / tu / vw
+SUBST:   ABC = x, D : xx., E : xx., F = .
+SUBST:   npr = @, tuvw = x, { = {([})]<$d>>>CCC
+TILE:    m = dngn_transparent_wall_green
+CLEAR:   ors
+MAP
+fffxxxxxxxxxxxxxxxxxxxxxxxxxxxhhh
+fee..xxxxxxxxxxxxxxxxxxxxxxx..ggh
+x..A....xmx...........xmx....E..x
+xx..B..xx.xx.........xx.xx..D..xx
+xxx....x...x..xxcxx..x...x....xxx
+ xxx.........xxx{xxx.........xxx
+  xxx...C...xxx...xxx...C....xxx
+   xxx...D.............B...xxx
+    xxx...E...........A...xxx
+     xxx.....xx...xx.....xxx
+      xxx.....xx.xx.....xxx
+       xxx.....xcx.....xxx
+        xxxjjjjiiijjjjxxx
+ENDMAP
+
+NAME:    regret_index_zotdec_barnacled_simple
+TAGS:    extra transparent zotdec no_pool_fixup
+TAGS:    luniq_zotdec_rune luniq_zotdec_negative_space
+DEPTH:   Zot, !Zot:$
+ITEM:    mundane javelin q:1 no_pickup, throwing net q:1 no_pickup
+SUBST:   m = mw..
+NSUBST:  A = 1:+ / *:xxx+, B = 1:+ / *:xxx+, C = 1:+ / *:xxx+, D = 1:+ / *:xxx+
+NSUBST:  { = 1:{([T<<<<dwcc / 1:})]T>>>>ewcc / * = xxcww
+CLEAR:   `
+TILE:    m = dngn_transparent_wall_darkgray
+MAP
+                  ......
+  ......         ........
+ ........       ..mxxCxx.
+..mxxAxx.       ..xx...xx
+..xx...xx       ..x.....x
+..x.....x       ..C..{..x
+..A..{..x       ..x.....x
+..x.....x       ..xx...xx
+..xx...xx        ..xxxxx
+ ..xxxxx               `
+        `               `
+         `               `
+          `               xxxxx..
+          xxxxx..        xx...xx..
+         xx...xx..       x.....x..
+         x.....x..       x..{..D..
+         x..{..B..       x.....x..
+         x.....x..       xx...xx..
+         xx...xx..       .xxDxxm..
+         .xxBxxm..       ........
+         ........         ......
+          ......
+ENDMAP
+
+NAME:    regret_index_zotdec_barnacled_alternative
+TAGS:    extra transparent zotdec no_pool_fixup
+TAGS:    luniq_zotdec_rune luniq_zotdec_liquid
+DEPTH:   Zot, !Zot:$
+WEIGHT:  5
+MONS:    bush
+ITEM:    mundane javelin q:1 no_pickup, throwing net q:1 no_pickup
+SHUFFLE: AB / AB / BA, CD / CD / DC, -~
+SUBST:   AC : cbvxx, B = w, D = ., - = w, ~ : ww...
+SUBST:   { = {([<11%dG, } = })]>11$eG
+TILE:    m = dngn_transparent_wall_darkgray
+MAP
+  ........     ..........
+ .........     ..~xxxxxxw..
+..-xxxxx....   .~xxwwwwxxw.
+.-xx~...x...   .xx-...mwxx.
+.xx~..DC.x..   .x-..A.}mwx.
+.xw..x..C.x.   .x..xwB..wx.
+.xw.Aww.D.x.   .x.D.wwA.wx.
+.xw..Bwx..x.   .x.C..x..wx.
+.xwm{.A..-x.   ..x.CD..~xx.
+.xxwm...-xx.   ...x...~xx-.
+.wxxwwwwxx~.   ....xxxxx-..
+..wxxxxxx~..     .........
+ ..........      ........
+ENDMAP
+
+NAME:    regret_index_zotdec_gossamer_parallel
+TAGS:    extra no_trap_gen zotdec luniq_zotdec_rune
+DEPTH:   Zot, !Zot:$
+KFEAT:   z = web trap
+KFEAT:   Z = zot trap
+SUBST:   { = {[(}])<>$%, A : CVGZ..
+SUBST:   c : ccx
+SHUFFLE: qrs
+SUBST:   q = x, r : x.., s = .
+TILE:    m = dngn_transparent_wall_magenta
+MAP
+ cxxxxxxxxxxxxxxx
+  @......zxmz..xxx
+  ........xz....zxxx
+ .....r...x..A...xxx
+ ........xx.......xx
+cxxxxx.cxxxxxxcc..xx
+..................cx
+@.s...q...s.q....{cx
+..................cx
+cxxxxx.cxxxxxxcc..xx
+ ........xx.......xx
+ .....r...x..A...xxx
+  ........xz....zxxx
+  @......zxmz..xxx
+ cxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    regret_index_zotdec_gossamer_gf
+TAGS:    extra no_trap_gen zotdec no_rotate luniq_zotdec_rune
+DEPTH:   Zot, !Zot:$
+WEIGHT:  5
+ITEM:    mundane cloak
+KFEAT:   ^ = web trap
+NSUBST:  { = 1:{([T<<<<d^c / 1:})]T>>>>d^c / * = xxc^%
+SUBST:   c : ccx
+SHUFFLE: pqrstuv
+SUBST:   pqr = x, s : x.., t : x.., uv = ., X = x..
+TILE:    m = dngn_transparent_wall_magenta
+MAP
+    xxxxxxx.@.xxxxxxx
+ xxxxxxxxxx.X.xxxxxxxxxx
+xx^.x...ccxp.qxcc...x.^xx
+x^....x..{x...x{..x....^x
+xx...xXx..xr.rx..xXx...xx
+ xx...xxccx...xmcxx...xx
+  xx...xxxxq.pxxxx...xx
+  xxX...x.x...x.x...Xxx
+  xx...ss.t.u.v.XX...xx
+ xx..............r....xx
+ xx....r..............xx
+  xx...XX.v.u.t.ss...xx
+  xxX...x.x...x.x...Xxx
+  xx...xxxxp.qxxxx...xx
+ xx...xxcmx...xccxx...xx
+xx...xXx..xq.px..xXx...xx
+x^....x..{x...x{..x....^x
+xx^.x...ccx.X.xcc...x.^xx
+ xxxxxxxxxx.@.xxxxxxxxxx
+ENDMAP
+
+NAME:    regret_index_zotdec_slimy_original
+TAGS:    extra transparent zotdec luniq_zotdec_rune
+DEPTH:   Zot
+ITEM:    stone q:1
+KFEAT:   C = altar_jiyva
+SUBST:   < = <<<({[Cd$, > = >dCC
+NSUBST:  p = 4:' / 4 : x' / *:x, q = 4:' / 4 : x' / *:x
+NSUBST:  P = 4:. / 2 : c. / *:c, Q = 4:. / 2 : c. / *:c
+NSUBST:  r = 2 : x' / 2 : x' / *:x, s = 2 : x' / 2 : x' / *:x
+CLEAR:   '
+TILE:    m = dngn_transparent_wall_green
+MAP
+   pppppp
+ ppppppppp
+ pppp......
+ppp..........
+ppp.....cc..r
+pp....ccmcP.r
+pp...cccccP.r
+pp...cccccP.r
+pp..cmccccP.r
+ p..ccccccP.rr
+  ...PPPPP<..rrrrr.
+   ................
+   .sssss..>QQQQQ...
+        ss.Qcccccc..q
+         s.Qccccmc..qq
+         s.Qccccc...qq
+         s.Qccccc...qq
+         s.Qcmcc....qq
+         s..cc.....qqq
+         ..........qqq
+            .....qqqq
+             qqqqqqqq
+              qqqqq
+ENDMAP
+
+NAME:    regret_index_zotdec_abyssal_star_handed
+TAGS:    extra no_rotate no_pool_fixup luniq_zotdec_rune
+DEPTH:   Zot, !Zot:$
+ITEM:    dagger ego:distortion ident:type no_pickup
+KFEAT:   C = altar_lugonu
+KFEAT:   mn = m
+SUBST:   C = {([})]>>>CCC<d$
+NSUBST:  m = 2:m / 2:n / 1:mn
+NSUBST:  z = 1:. / 2:x / 2:b / * = xb, c = 6 : xxb / 2:. / *:c
+NSUBST:  + = 2:+ / *:c
+TILE:    m : dngn_transparent_wall_red / dngn_transparent_wall_brown / \
+             dngn_transparent_wall_green
+TILE:    n : dngn_transparent_wall_magenta / dngn_transparent_wall_blue / \
+             dngn_transparent_wall_cyan
+MAP
+      ..  ccc  ..
+ ..@....cccmccc....@..
+ ......+c.....c+......
+ c.ccccc...z...cccccccc
+ .cccm....z.z....mccc.
+ccccc.............cc.c
+ ...c...z.....z...c..
+  ..cc..z..C..z..cc..
+  ...+...........+...
+ @...c...z...z...c...@
+c.c..cc..zz.zz..cc....
+ccccccc.........ccccccc
+ .....cm.......mc...c.c
+ .....ccccc+ccccc.....
+      .....@.....
+ENDMAP
+
+NAME:    regret_index_zotdec_abyssal_contain_seething_sorcery
+TAGS:    extra transparent zotdec luniq_zotdec_rune
+DEPTH:   Zot, !Zot:$
+WEIGHT:  5
+ITEM:    dagger ego:distortion ident:type no_pickup
+KFEAT:   C = altar_lugonu
+KFEAT:   mn = m
+SUBST:   X = xxxcb......, { = {([})]>>>CC<d$
+TILE:    m : dngn_transparent_wall_red / dngn_transparent_wall_brown / \
+             dngn_transparent_wall_green
+TILE:    n : dngn_transparent_wall_magenta / dngn_transparent_wall_blue / \
+             dngn_transparent_wall_white
+MAP
+x x x x
+ x.xxxxxxxxxxxxxxx
+x.x.x...xxxnnmmxxxxx
+...x..X....mmnnmmxxxxx
+ .........X..mmnncccxxx
+ .....X..cc.xxxxcc+cccx
+  ......Xc..x...c...+cx
+   .X.V.....+...+.{.ccx
+  ......Xc..x...c...+cx
+ .....X..cc.xxxxcc+cccx
+ .........X..mmnncccxxx
+...x..X....mmnnmmxxxxx
+x.x.x...xxxnnmmxxxxx
+ x.xxxxxxxxxxxxxxx
+x x x x
+ENDMAP
+
+NAME:    regret_index_zotdec_silver_v_v_loose
+TAGS:    extra zotdec transparent no_trap_gen luniq_zotdec_rune
+DEPTH:   Zot, !Zot:$
+ITEM:    mundane arbalest
+KFEAT:   ^ = alarm trap
+KFEAT:   C = altar_gozag
+SHUFFLE: opqrstu
+SUBST:   op = ., q : v.., r : v.., stu = v
+SUBST:   { = {([<d$
+NSUBST:  > = 1:})]>>>> / * : d$>C^
+TILE:    m = dngn_transparent_wall_white
+MAP
+............
+.vvvvvvvvv..
+.v..................
+.v.q.r.s.v..vv..v.t.
+.v..>v...v.....p.o..
+.v.rvvvq.v..v.v.>.v.
+.v...vm..v..v..o.p..
+.v.s.q...v......v...
+.v.......v..us....v.
+.v.vvvvvvt..vu.v.vv.
+...........<..........
+..........{...........
+  .vv.v.uv..tvvvvvv.v.
+  .v....su..v.......v.
+  ...v......v...q.s.v.
+  ..p.o..v..v..mv...v.
+  .v.>.v....v.qvvvr.v.
+  ..o.p..v..v...v>..v.
+  .t.v..vv..v.s.r.q.v.
+  ..................v.
+          ..vvvvvvvvv.
+          ............
+ENDMAP
+
+NAME:    regret_index_zotdec_silver_v_v_orig_slice
+TAGS:    extra zotdec transparent no_trap_gen no_rotate
+TAGS:    luniq_zotdec_rune luniq_zotdec_large
+DEPTH:   Zot, !Zot:$
+ITEM:    mundane arbalest
+KFEAT:   ^ = alarm trap
+KFEAT:   C = altar_gozag
+SHUFFLE: opqrst
+SUBST:   op = ., q : vx.., r : vx.., st = v
+NSUBST:  { = 1:{([<<<d$ / * : d$, } = 1:})]>>>>C / * : d$>^
+TILE:    m = dngn_transparent_wall_white
+MAP
+              .p.vvvvvvvvvvvv
+              p...........m}v
+              .............mv
+              v....vvvvv....v
+              v..vvv....vv..v
+              v..v..vvv..v..v
+              q..v.vv}vv.v..v
+              v..v...vv..v..v
+              v..vvv...vvv..v
+              v....vvvvv....v
+            .................
+............................o
+..vvvvvvvvv.{.{..vvvvrvvvv.o.
+.v.v.v.v.r.v....
+v.o.v.v.v.v.v.
+vv.v.v.v.v.qv.
+v.v.v.v.v.v.v.
+vv.v.v.v.v.vv.
+v}v.v.v.v.v.v.
+vv.v.v.v.v.vv.
+v.v.v.v.v.p.v.
+vm.v}v.v.v.v..
+vvvvvvvvvvv...
+ENDMAP
+
+NAME:    regret_index_zotdec_golden_two_three
+TAGS:    extra zotdec no_trap_gen no_rotate no_vmirror
+TAGS:    luniq_zotdec_rune luniq_zotdec_large
+DEPTH:   Zot, !Zot:$
+ITEM:    stone q:1
+KFEAT:   C = altar_kikubaaqudgha / altar_yredelemnul
+KFEAT:   Z = zot trap / alarm trap
+SUBST:   < = <>, Z = ZC.
+SUBST:   { = {([})]<>%$VVVVC
+SHUFFLE: pqrs, +-
+SUBST:   pq = ., r : c., s = c, - : ++.
+TILE:    m = dngn_transparent_wall_yellow
+MAP
+         c     c
+     ....c..@..c....
+     p...c.....c...p
+  .@...cccccGccccc...@.
+ .....ccccccccccccc.....
+ p..ccc...........ccc..p
+ ..ccc.....ccc.....ccc..
+ccccc.r..mcc{ccm..r.ccccc
+ ..cc...ccc...ccc...cc..
+ r.cc..ccc.....ccc..cc.r
+ @.cc.......p.......cc.@
+ ..ccm...r.....r...mcc..
+cccccc.q...s.s...q.cccccc
+ ..ccc.............ccc..
+ ...ccc+cc.....cc+ccc...
+ @..cc...cc.Z.cc...cc..@
+ s..cc....c...c....cc..s
+ ..ccd.s..c...c..s.dcc..
+cccccd..q.+.p.+.q..dccccc
+ ..cccd...c...c...dccc..
+ @..cccd..c.<.c..dccc..@
+ ...cccddcc...ccddccc...
+ .q.c.ccccc---ccccc.c.q.
+    c......@.@......c
+ENDMAP
+
+NAME:    regret_index_zotdec_glowing_original
+TAGS:    extra transparent zotdec no_trap_gen luniq_zotdec_rune
+DEPTH:   Zot, !Zot:$
+KFEAT:   C = altar_nemelex_xobeh
+KFEAT:   Z = zot trap
+SHUFFLE: qrst
+SUBST:   q : ., r : c., st = c
+SUBST:   { = {([})]>>C%$UUUU, Z : ZUV
+TILE:    m = dngn_transparent_wall_yellow
+MAP
+.................
+.tcsccc.....cccc.
+.ccccmc..cc..cmc.
+.scccc..cZcc..cc.
+.cccc....cccc..c.
+.cmc..c...qccc...
+.cc...cr..{qccc..
+.c..c.cmr...cZc..
+...cc.cccr...c...
+.sccc.cccmr......
+.....tcccccc..cc.
+.ccc..t......cmc.
+.cccc..ccc..cccc.
+..crcc.cc..ccccs.
+ ..ccc.c..cmcccc.
+  ..cc.s.ccccsct.
+   ..............
+ENDMAP
+
+NAME:    regret_index_zotdec_magical_s
+TAGS:    extra transparent zotdec no_pool_fixup
+TAGS:    luniq_zotdec_rune luniq_zotdec_large luniq_zotdec_liquid
+DEPTH:   Zot, !Zot:$
+ITEM:    mundane ring of magical power ident:type
+KFEAT:   CD = altar_sif_muna
+SHUFFLE: MNmn, <CD>{$d, pqrs
+SUBST:   MNn : ., V = m, { = {([})]
+NSUBST:  B = 2:. / *:b
+SUBST:   p = ., q : w.., r : w.., s = w, w : ww.
+TILE:    m = dngn_transparent_wall_white
+MAP
+    ........ .........
+   ...ss.........rrr...
+  ..rbbbbbp.q..bbbbbbs..
+ ..bbbwwwbb...bbwwwwbbs..
+..rb......bb.bb..v+vwbb..
+.qbb.v.vv.wbBbw.vv.Vvwbr.
+.qbw..<...wb.bw.+.C.+wbr.
+.qbw.v.vv.bb.bb.vv.vvwbr.
+..bw.v.v..b...b..v+v.wb..
+..bb........N........bb..
+..qbbwwbb.m.N.M.bbwwbb...
+....bbbb.........bbbb....
+ .p..B...nn.Z.NN...B..q.
+....bbbb.........bbbb....
+...bbwwbb.M.n.m.bbwwbbp..
+............n........bb..
+   .......b...b..v.v.wbs.
+        ..bb.bb.vv.v.wbs.
+        ..wb.bw...>..wbs.
+        ..wbBbw.vv.v.bb..
+        ..bb.bb......br..
+        ..b...bbwwwbbb..
+         ...p.qbbbbbr..
+         .......qqq...
+         ............
+ENDMAP
+
+NAME:    regret_index_zotdec_fiery_em
+TAGS:    extra transparent zotdec
+TAGS:    luniq_zotdec_rune luniq_zotdec_large luniq_zotdec_liquid
+DEPTH:   Zot, !Zot:$
+ITEM:    mundane great sword ego:flaming plus:0 ident:type
+KFEAT:   C = altar_okawaru
+SHUFFLE: DEF, pqrs, lx', lxV
+SUBST:   D : ++., EF = v, p : v., q : v., rs : v
+SUBST:   ' : ., V = v, C = CCC>>>GG$dd<{([})]
+KPROP:   l = no_cloud_gen
+TILE:    m = dngn_transparent_wall_brown
+TILE:    G = dngn_statue_cerebov
+MAP
+       ...vvDvv..........
+       .vvv...vvv...vvEv.
+      ..vvv...vmv.vvv..E.
+      ....vv+vv...vvv..v.
+       .............+vvv.
+      ..vpv.v.vqv....mv..
+  .. ..vv.......vv...vv.
+......vv.........vv......
+.vv..vv..l'''''l..vv..vv.
+.vv..p..lll'''lll..r..vv.
+vvvv.v.llll'''llll.v.vvvv
+v..v...lxxll'llxxl...v..v
+F..+.v.xxxx'C'xxxx.v.+..F
+v..v...lxxll'llxxl...v..v
+vvvv.v.llll'''llll.v.vvvv
+.vm..q..lll'''lll..s..vv.
+.vv..vv..l'''''l..vv..vv.
+......vv.........vv......
+ .vv...vv.......vv.. ..
+..vv....vrv.v.vsv..
+.vvv+.............
+.v..vvv...vv+vv....
+.E..vvv.vmv...vvv..
+.vEvv...vvv...vvv.
+..........vvDvv...
+ENDMAP
+
+NAME:    regret_index_zotdec_dark_gr
+TAGS:    extra transparent zotdec no_trap_gen luniq_zotdec_rune
+DEPTH:   Zot, !Zot:$
+KFEAT:   C = altar_kikubaaqudgha
+KFEAT:   Z = zot trap
+SHUFFLE: qrs
+SUBST:   q = ., rs = x
+SUBST:   + : ++., Z : Z.., { = {([})]CC<>dd$VVV
+TILE:    m = dngn_transparent_wall_darkgray
+: dgn.delayed_decay(_G, 'd', 'any skeleton')
+MAP
+   ..x..x..x..x..
+  ...............
+  .ccccccccccc...
+ ..cr...s...ccc...
+ ..c.r.....x.mcc..
+...+..r...x...cc..
+...+...r.x.Z.x.c..
+.x.c.cccc...x..c..
+x.xccc...s.x.x.c..
+.q.cm{c.q.x...xc.
+x.xccc...s.x.x.c..
+.x.c.cccc...x..c..
+...+...r.x.Z.x.c..
+...+..r...x...cc..
+ ..c.r.....x.mcc..
+ ..cr...s...ccc...
+  .ccccccccccc...
+  ...............
+   ..x..x..x..x..
+ENDMAP
+
+# Based on the first four non-disco guaranteed demonic rune vaults.
+# Probably a bit too much for a decorative vault, but who cares, it's Zot.
+NAME:     regret_index_zotdec_demonic_mixed
+TAGS:     extra transparent zotdec no_item_gen no_pool_fixup
+TAGS:     luniq_zotdec_rune luniq_zotdec_large luniq_zotdec_liquid
+DEPTH:    Zot, !Zot:$
+WEIGHT:   4
+ITEM:     mundane demon whip / mundane demon blade / mundane demon trident
+KFEAT:    C = altar_makhleb
+KFEAT:    n = m
+KFEAT:    u = w
+KFEAT:    k = l
+SHUFFLE:  ABCDEF
+SUBST:    AB = w, C : w., D : w., EF = .
+SHUFFLE:  lk / uw, ~-, G' / Y' / C' / >"
+SUBST:    ~ : ++-, - : +vv, o : n.
+NSUBST:   < = 1:{([})]>w$d / *:.
+KMASK:    uk = no_monster_gen
+KMASK:    'YC = opaque
+KPROP:    uk = no_tele_into
+KPROP:    l = no_cloud_gen
+TILE:     m : dngn_transparent_wall_red / dngn_transparent_wall_yellow
+TILE:     n : dngn_transparent_wall_green / dngn_transparent_wall_blue
+TILE:     G = dngn_statue_ancient_evil
+MAP
+           ....@...
+          ..Dww.wwC..
+         ..Dwcc.vvwC..
+         .Ewcc.w.vvwB.
+        .Ewcc.w.w.vvwB..
+        .Fwc.......vwA..
+       ..Fwc......vvvA..
+      ...vvvvv-~vvvuvvv...
+    ....vv........vnvwvv..
+  ..EFFvv+mm..........wv..
+ ..Ewwwv.m<m.......c++vvv.
+..Dwcccv.mmm.lll...c..mkm.
+.Dwcc..v....cllll..c..vvv.
+.wcc...v...llc''ll.c..lv..
+.wc.w..v...ll'G'cl.c..lv..
+@..w...~...ll''>ll.c..lv..
+.wv.w..-....llclcl.c..lv..
+.wvv...v.....llll..c..vv..
+.Cwvv.vvv.........<c..v...
+..Cwvvvun.cccccccccc.....@
+ ..Bwwvvv.+...............
+  ..BAAvw.+..........ooo..
+    ...vvwvmvllllvv..ouo..
+    ....vvvkvvvvvv...ooo..
+       ...vmv............
+        ...........@....
+ENDMAP
+
+NAME:    regret_index_zotdec_obsidian_hm
+TAGS:    extra transparent zotdec
+TAGS:    luniq_zotdec_rune luniq_zotdec_large luniq_zotdec_liquid
+DEPTH:   Zot, !Zot:$
+ITEM:    mundane trident ego:flaming plus:0
+SHUFFLE: opqr, fg
+SUBST:   op = l, qr = ., f = v, g = ., l : ll.
+SUBST:   } = {([})]<G$>>>
+TILE:    m = dngn_transparent_wall_red
+MAP
+xxxxxxxxxxx
+c......col.
+c...vg.+o..
+c...fv.co..
+c.vf...co..
+c.gv...+o..
+c......co..
+cc+c+ccco..
+c.....cpl.
+c..v..cp..
+c.....+p..
+c..v..cp..
+c.....cp..
+cc+c+ccp..
+c....+ql.
+c.fg.cq..
+c.gf.cq..
+c....+q..
+c+c+ccq..            .......x
+c...crl.       ............lx
+c.v.+r..  ..........looooooox
+c...cr.}......lppppppcc+cc+cx
+cc+ccr...lqqqqqccc+ccc......x
+c.....rrrrc+cc+c.....c.gv...x
+c.....cc+cc....+.....+.vf...x
+@..d..c...+.fg.c.v.v.c...fv.x
+c.....+.v.c.gf.+.....+...vg.x
+cm....c...+....c.....c......x
+ccc@ccccccccccccccccccccccccx
+ENDMAP
+
+NAME:    regret_index_zotdec_icy_dp
+TAGS:    extra transparent zotdec no_pool_fixup
+TAGS:    luniq_zotdec_rune luniq_zotdec_large luniq_zotdec_liquid
+DEPTH:   Zot, !Zot:$
+SHUFFLE: HIJKLM, pqr, CT{([<$
+SUBST:   HI = x, J : xw, K : xw, LM = w
+SUBST:   p : xww., qr = ., - : ++., w : www..
+CLEAR:   '
+TILE:    m = dngn_transparent_wall_blue
+MAP
+   .............
+ .......www......
+ ...HHHHIwIJJJ.r..
+...M........JJ....
+.p.M..ccc....KK.q.
+...M.ccmcc+c..K...
+..wL.cc....c..Lw..
+..ww..cC..Tc..ww..
+..wL..c....cc.Lw..
+...K..c+ccmcc.M...
+.q.KK....ccc..M.p.
+....JJ........M...
+..r.JJJIwIHHHH....
+ ......www.......
+  ..............
+                ''''
+                    .......
+                   ..........
+                  ..pccc-ccc..
+                  ..cc.....cc.
+                  ..c..q...rc.
+                  ..-.......c.
+                  ..c.........
+                  ..ccr..
+                  ...ccc.
+                   ......
+ENDMAP
+
+NAME:    regret_index_zotdec_bone_old
+TAGS:    extra transparent zotdec luniq_zotdec_rune no_rotate
+DEPTH:   Zot, !Zot:$
+ITEM:    maw talisman
+KFEAT:   ^ = shaft trap
+SHUFFLE: opqrst
+SUBST:   op = x, q : xx., r : x.., st = .
+SUBST:   - : +c, { = {([})]++CC^^..
+TILE:    G = dngn_statue_wraith
+MAP
+           s
+   ........s........
+  cc-++-ccccccc-++-cc
+  c......+...+......c
+  c.x..x.x.G.x.x..x.c
+  c......x...x......c
+cccccccccxx{xxccccccccc
+  cd...............dc
+  cx.x.r.x.x.x.r.x.xc
+  c.................c
+  c.x.x.x.x.x.x.x.x.c
+  c.................c
+  cx.x.x.x.x.x.x.x.xc
+  c.................c
+   ...p.q.....q.p...
+ENDMAP
+
+NAME:    regret_index_zotdec_iron_s
+TAGS:    extra transparent zotdec luniq_zotdec_rune luniq_zotdec_large
+DEPTH:   Zot, !Zot:$
+ITEM:    mundane mace, any mundane weapon
+SHUFFLE: opqrst, P- / Q~ / R' / S"
+SUBST:   o : v.., p : vG., r : vGb, s : vb, t = v
+SUBST:   P = CCC>>><$d{([})], ~QRS = e, -'" = v, G : Gvv
+TILE:    G = dngn_statue_imp
+MAP
+  ........................
+  ........................
+  vv..v....v..vv..vv..vv..vv
+vvvvvvvv++vvvvvvvvvvvvvvvvvvvv
+vvvvmvvv++vvvmvvvvvvvvvvvvvvvv
+  vv..v....v..vvvvvv..vv..vv
+  zz............vv........
+  zz..........vvvvvvv.
+  zz..o....t..+..-d.v.
+  zz..p....s..v.P-..+.
+  zz.....G...vvvvvvvv.
+  zz..q....r.+..~d.v..
+  zz..q....r.v.Q~..+..
+  zz.........vvvvvvvv.
+  zz..r....q..v.R'..+.
+  zz..r....q..+..'d.v.
+  zz....G....vvvvvvvv.
+  zz..s....p.v.S"..+..
+  zz..t....o.+.."d.v..
+  zz.........vvvvvvv..
+  vvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+
+##############################################################################
+##############################################################################
+#
+# <<3>> Zot monster vaults
+#
+##############################################################################
+##############################################################################
 
 ###########################
 # Halls of Wrath
@@ -645,8 +2440,8 @@ ENDMAP
 # Lich library
 #
 NAME:   lemuel_lich_library
-DEPTH:  Zot, !Zot:$
 TAGS:   no_monster_gen no_descent
+DEPTH:  Zot, !Zot:$
 MONS:   flying skull, lich, ancient lich / dread lich, necromancer
 MONS:   vampire mage
 ITEM:   any book mimic:10 w:20 / any scroll mimic:10
@@ -705,8 +2500,8 @@ ENDMAP
 # Globe of electric golems
 #
 NAME:  lemuel_golem_globe
-DEPTH: Zot
 TAGS:  no_rotate no_exits
+DEPTH: Zot
 KFEAT: ^ = permanent teleport trap / dispersal trap
 KFEAT: m = iron_grate
 SUBST: 1 = 1.
@@ -726,9 +2521,9 @@ ENDMAP
 # There is an 70% chance all three downstairs will be here.
 #
 NAME:   lemuel_draconian_sentries
+TAGS:   no_rotate uniq_draconian_sentries
 DEPTH:  Zot, !Zot:$
 ORIENT: float
-TAGS:   no_rotate uniq_draconian_sentries
 MONS:   draconian scorcher w:5 / draconian stormcaller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
 SUBST:  w:w., w=Ww
@@ -752,9 +2547,9 @@ mmm.....www...]..www.....mmm
 ENDMAP
 
 NAME:   lemuel_draconian_sentries_small
+TAGS:   no_rotate uniq_draconian_sentries
 DEPTH:  Zot, !Zot:$
 ORIENT: float
-TAGS:   no_rotate uniq_draconian_sentries
 MONS:   draconian scorcher w:5 / draconian stormcaller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
 SUBST:  w:w., w=Ww
@@ -850,9 +2645,9 @@ ENDMAP
 # Circus (by mu)
 # full of klowns, caged animals outside
 NAME:   circus_mu
+TAGS:   no_rotate no_hmirror no_monster_gen
 DEPTH:  Zot, !Zot:$
 ORIENT: float
-TAGS:   no_rotate no_hmirror no_monster_gen
 MONS:   killer klown
 MONS:   elephant / w:5 dire elephant / w:2 hellephant
 MONS:   human ; club
@@ -922,9 +2717,9 @@ ENDMAP
 # Minmay's Elemental castle
 # 50% electricity, 25% fire, 25% ice
 NAME:    minmay_elemental_castle
+TAGS:    no_rotate no_descent
 ORIENT:  southwest
 DEPTH:   Zot, !Zot:$
-TAGS:    no_rotate no_descent
 : if crawl.coinflip() then
 MONS:    titan, storm dragon, electric golem
 SUBST:   F = 3
@@ -1092,67 +2887,6 @@ cccy``...`^~~^.d.``yccc
   @@ccyycm+m+mcyycc@@
      cccc8.7.8cccc
         ccccccc
-ENDMAP
-
-################################################################################
-# Space-filling minivaults by bh.
-
-NAME:   bh_zot_ikea_curve
-TAGS:   extra transparent
-DEPTH:  Zot
-MAP
-xxxxxxxxxxxxx
-@.....x.....@
-@.....x.....@
-xxxx..x..xxxx
-x.....x.....x
-x.....x.....x
-x..xxxxxxx..x
-x..x.....x..x
-x..x.....x..x
-x.....x.....x
-x.....x.....x
-xxxxxxxxxxxxx
-ENDMAP
-
-NAME:   bh_zot_lava_cross
-TAGS:   extra
-DEPTH:  Zot
-MAP
-     @@
-    x..x
-    x..x
-    x..x
- xxxxllxxxx
-@...l..l...@
-@...l..l...@
- xxxxllxxxx
-    x..x
-    x..x
-    x..x
-     @@
-ENDMAP
-
-NAME:   bh_zot_levy_curve
-TAGS:   extra
-DEPTH:  Zot
-SUBST:  W = Ww
-MAP
-          WWW.
-          W.W..
-          W.WWW
-          ....W
-         .....W
-        ....WWW
-       .......W
-      ..www...W
-     ...w.w.WWW
-    ....wwwWW..
-WWW.......W...
-W........WW..
-WWW..W..WW..
-..W..W..W..
- .WWWWWWW.
 ENDMAP
 
 #################
@@ -1606,9 +3340,9 @@ ENDMAP
 ##########################################################################
 
 NAME: nicolae_zot_draconian_monastery
+TAGS: no_trap_gen no_monster_gen no_item_gen
 DEPTH: Zot, !Zot:$
 ORIENT: float
-TAGS: no_trap_gen no_monster_gen no_item_gen
 MONS: draconian monk / base draconian w:15, patrolling draconian stormcaller, patrolling draconian knight
 MONS: patrolling draconian scorcher
 SHUFFLE: ]}), rybgmq, DZF
@@ -1765,232 +3499,6 @@ xx...G...vv4$v$4vv...G...xx
        xx@@vvvvv@@xx
 ENDMAP
 
-NAME:    hangedman_zot_gyre
-TAGS:    extra transparent
-DEPTH:   Zot
-WEIGHT:  8
-KITEM:   % = % no_pickup
-KFEAT:   Z = zot trap
-SHUFFLE: dD, eE, fF, gG, hH, dD / eE / fF / gG / hH
-SHUFFLE: cCbB / cCbB / bBcC, qQ / qQ / ZZ / wl / '' / ''
-SUBST:   defhH = X, DEF = ., g : X.., G : X.., ' = .
-SUBST:   B = bbCc, C : bWcc, b : bbc, c : bWcc, X : bcxx, W : wl
-NSUBST:  0 = 2 = 0:19 .:1 / *:.
-KPROP:   l = no_cloud_gen
-KMASK:   lw = no_monster_gen
-COLOUR:  qQ = darkgray
-FTILE:   qQ = floor_rough_darkgray
-MARKER:  q = lua:fog_machine {cloud_type = "freezing vapour", \
-             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
-             start_clouds = 1, excl_rad = 0 }
-MARKER:  Q = lua:fog_machine {cloud_type = "flame", \
-             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
-             start_clouds = 1, excl_rad = 0 }
-:  if you.depth() == dgn.br_depth(you.branch()) then
-SUBST:  { = {([<
-:  else
-SUBST:  { = {([<})]>%
-:  end
-MAP
-           ......
-         ..........
-        ..xxxxxxx...
-        ........hx...
-      ....B......hx....
-     .............x.....
-    ..G.C.G.C.....ffxxx..
-    ..x...x.......x......
-   ...x...x...B...x...c....
-  ....F...E.......x.........
- ...xxFxxxExxD..Q.eexxx.b.x.
- ..xH.......0xD...x.......x..
-..xH......q...x..0x...c...x..
-..x...........x..xd.......x..
-..x.....b..dxx{xxd..b.....x..
-..x.......dx..x...........x..
-..x...c...x0..x...q......Hx..
-..x.......x...Dx0.......Hx..
- .x.b.gxxee.Q..DxxExxxFxx...
- .........x.......E...F....
-  ....c...x...B...x...x...
-    ......x.......x...x..
-    ..gxxff.....C.G.C.G..
-     .....x.............
-      ....xh......B....
-        ...xh........
-         ...xxxxxxx..
-          ..........
-            ......
-ENDMAP
-
-####
-# Madness, frenzy, and lunacy, eh?
-# bh's curves made me think of some weird yet orderly decorum for Zot.
-NAME:    hangedman_zot_decor_unnerving_road
-TAGS:    extra transparent no_pool_fixup
-DEPTH:   Zot
-WEIGHT:  8
-SHUFFLE: @&, (), vb / vb / vb / bv / cc, lw / lw / lw / '', JK / LM / NO
-SHUFFLE: JK / JK / JK / !!, LM / ??, NO / `` / `` / `` / ``, JKLMNO / JKLMNO / KJMLON
-SUBST:   '!?`& = ., X : xxc, JLN = F, KMO = f
-SUBST:   ( = (:1 .:14, ) = ):1 .:14
-KMASK:   wlfF = no_monster_gen
-COLOUR:  fF = darkgray
-FTILE:   fF = floor_rough_darkgray
-MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
-             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
-             start_clouds = 1, excl_rad = 0 }
-MARKER:  F = lua:fog_machine {cloud_type = "flame", \
-             pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
-             start_clouds = 1, excl_rad = 0 }
-KPROP:   l = no_cloud_gen
-MAP
-      XXXX...&&.
-      Xllvv......
-    XXXlv..v....@
-   XXlllv..v....@
-   Xllvv.vvJ.....
- XXXlv..v.......
-XXlllv..v....XXXX
-Xllvv(vvL..ObbwwX
-Xlv..v.....b..bwXXX
-Xlv..v.....b..bwwwXX
-Xllvv.vv....bb.bbwwX
-XXlllv..v.....b..bwX
- XXXlv..v.....b..bwX
-   XllvvN..Mbb)bbwwX
-   XXXX....b..bwwwXX
-    .......b..bwXXX
-   .....Kbb.bbwwX
-   @....b..bwwwXX
-   @....b..bwXXX
-   ......bbwwX
-    .&&...XXXX
-ENDMAP
-
-NAME:    hangedman_zot_decor_checkerboard
-TAGS:    extra transparent
-DEPTH:   Zot
-WEIGHT:  8
-KFEAT:   Z = zot trap
-SHUFFLE: @' / '@ / "" / "", defg / jkhi / HIJK / NOLM
-SUBST:   d : wbb, e : wwb, g : lvv, f : llv
-SUBST:   h : lvv, i : llv, j : wbb, k : wwb
-SUBST:   H : wwwwb, I : wwwwb, J : llllv, K : llllv
-SUBST:   L : lvvvv, M : lvvvv, N : wbbbb, O : wbbbb
-SHUFFLE: bv / bv / bv / vb / xx / cc
-NSUBST:  Z = 1 = (:1 Z:14 / 1 = ):1 Z:14 / Z
-SUBST:   Z = ZZUG..., '" = .
-KPROP:   l = no_cloud_gen
-KMASK:   wl = no_monster_gen
-MAP
-.......     ...'...
-.dw.lf.     .Hw.lJ.
-.we.gl.     .wI.Kl.
-@..Z...........Z.........
-.lg.ew.hl.wj.lK.Iw.Ll.wN.
-.fl.wd.li.kw.Jl.wH.lM.Ow.
-.........Z...........Z..@
-      .wk.il.     .wO.Ml.
-      .jw.lh.     .Nw.lL.
-      ...'...     .......
-ENDMAP
-
-NAME:    hangedman_zot_decor_slant
-TAGS:    extra transparent
-DEPTH:   Zot
-WEIGHT:  8
-KFEAT:   zZ = zot trap
-KFEAT:   fF = floor
-SHUFFLE: BVfF / VBFf, BV / BV / BV / wl, bv / bv / cc
-SHUFFLE: aAuU / aAuU / aAuU / uUaA
-SHUFFLE: AU / "", fF / fF / zz / '' / '', @! / !@ / ?? / ??
-SUBST:   aAB = b, uUV = v, Z = ()G .:45 Z:25, '"!? = .
-KMASK:   wlfF = no_monster_gen
-COLOUR:  fF = darkgray
-FTILE:   fF = floor_rough_darkgray
-MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
-             pow_min = 9, pow_max = 10, delay = 2, size_min = 1, size_max = 1, \
-             start_clouds = 1, excl_rad = 0 }
-MARKER:  F = lua:fog_machine {cloud_type = "flame", \
-             pow_min = 9, pow_max = 10, delay = 2, size_min = 1, size_max = 1, \
-             start_clouds = 1, excl_rad = 0 }
-MAP
-            ...!..
-           ........
-           ..UuuU..
-         ....uuuu.!
-         @vv.uuuu..
-         .vv.uuuU..
-      ......F......
-      .vv.VV.vv...
-      .vv.VV.vv.
-   .@....Z....@.
-   .bb.BB.bb.
- ...bb.BB.bb.
-......f......
-..Aaaa.bb.
-..aaaa.bb@
-!.aaaa....
-..AaaA..
-........
- ..!...
-ENDMAP
-
-NAME:    hangedman_zot_decor_scrapings
-TAGS:    transparent extra
-DEPTH:   Zot
-KFEAT:   Z = zot trap
-SHUFFLE: HIJKLM / HIJKLM / IHKJML
-SUBST:   HJL : xxcb, I : x..., K : x..., M : x...
-SUBST:   N : xcG.., O : xc..., P : xcG.., Z = ()G .:45 Z:25
-MAP
-           ..   ...
-          .......x..
-         ..x......x..
-        ....x..O......
-    ................x..
-   ..J...P...L...N.I.H.
-  ..x.x.....x.x.....x..
- ....K...M.Z.M...K....
-..x.....x.x.....x.x...
-.H.I.N...L...P...J...
-..x.................
- ......O...x....
-  ..x.......x..
-   ..x........
-    ...    ..
-ENDMAP
-
-NAME:    hangedman_zot_decor_tridents
-TAGS:    transparent extra
-DEPTH:   Zot
-KFEAT:   Z = zot trap
-SHUFFLE: vb / xy / XY
-SUBST:   = = ()+Z .:60, - : ++., _ : +.., H : z., I : z., J : z.
-SUBST:   K : zzwl...., L : zzzwl.., M : zzwl...
-SUBST:   N : zzzwl.., O : zzwl..., P : zzwl.., XyYz = x
-KMASK:   wl = no_monster_gen
-MAP
-         xxx.....
-         xxx.......
-         x...Iv.vv.
-    .....x...v.....
-  .....K.-.O...N..@
-.........x...v.....
-.bb.bJ..Pxv_vHv.vv.
-.....b...x...v.....
-@..L...M.=.M...L..@
-.....b...y...v.....
-.bb.bHb_byP..Jv.vv.
-.....b...y.........
-@..N...O.-.K.....
-.....b...y.....
-.bb.bI...y
-.......yyy
-  .....yyy
-ENDMAP
-
 ####
 # A bit of sporting fun...
 NAME: grunt_zot_stairs_faceoff
@@ -2118,8 +3626,8 @@ xxxxxxxxxxx@@@@@xxxxxxxxxxx
 ENDMAP
 
 NAME: nicolae_zot_crop_circle
-DEPTH: Zot, !Zot:1
 TAGS: no_monster_gen transparent
+DEPTH: Zot, !Zot:1
 SHUFFLE: {[(
 NSUBST: p = 2:2 / 1:12 / 1
 MONS: plant, death cob
@@ -2139,9 +3647,9 @@ ENDMAP
 
 
 NAME: nicolae_zot_stationary_front
+TAGS: transparent no_pool_fixup patrolling
 DEPTH: Zot
 ORIENT: float
-TAGS: transparent no_pool_fixup patrolling
 SHUFFLE: Gg/Gg/Gg/Hh, Pp/Pp/Pp/Qq
 SUBST: GP = x, g = r, p = c, HQ = @, hq = .
 COLOUR: r = red, c = blue
@@ -2168,8 +3676,8 @@ xxxxxGxxxxxxcww...wwcxxxxxxGxxxxxxcww...wwcx
 ENDMAP
 
 NAME: amethyst_zot_foddershock
-DEPTH: Zot, !Zot:$
 TAGS: no_monster_gen transparent
+DEPTH: Zot, !Zot:$
 MONS: lightning spire, patrolling electric golem
 NSUBST: % = 2:!, % = 2:a
 KMONS: ! = patrolling death cob
@@ -2183,42 +3691,6 @@ x.%1%.x
 x2%%%2x
 xx...xx
  xxxxx
-ENDMAP
-
-NAME:    hangedman_zot_diagonal_lockstep
-TAGS:    transparent extra decor
-DEPTH:   Zot
-ITEM:    % no_pickup
-KFEAT:   Z = zot trap
-SHUFFLE: ABCDEFG, defg / hijk / mnop / qrst, defg, hjik, mnop
-SUBST:   A : xbvcZ, B : xbvc, C : xxbvc, D : xxbvc, EFG = x
-SUBST:   d : xxZ, h = x, e : xx., i : xx., f : x.., j : x.., m : x..
-SUBST:   gknopqrst = .
-:  if you.depth() == dgn.br_depth(you.branch()) then
-SUBST:  { = {([ <:5 Z:5
-:  elseif you.depth() == "1" then
-SUBST:  { = {:40 })]> d:20 Z:20
-:  else
-SUBST:  { = {([<})]> d:20 Z:20
-:  end
-MAP
-             Dq...iC
-        .....rD...Ch..
-        .......x.x...p
-        ...mF...x...o.
-       Es..F...x.x....
- ......tE.x..kx...x..eB
- ........x...Cj....x.xd
-A..fB...x.x.....G...x..
-.A.xg.nG...{...Gn.gx.A.
-..x...G.....x.x...Bf..A
-dx.x....jC...x........
-Be..x...Ck..x.Et......
- ....x.x...F..sE
- .o...x...Fm...
- p...x.x.......
- ..hC...Dr.....
-   Ci...qD
 ENDMAP
 
 # Inspired by a distant submission from nicolae-,
@@ -2284,40 +3756,6 @@ xyyXXXX'''''''''''''''''''XXXXyyyyyyyyyyyXXXX'''
 xXXX'''''''''''''''''''''''''XXXXXXXXXXXXX'''''
 xx''''''''''''''''''''''''''''''''''''''''''''
    ''''''   ''''@''''   '''''''''   '''''''''
-ENDMAP
-
-NAME:    hangedman_zot_wheel_spokes
-TAGS:    transparent extra decor
-DEPTH:   Zot, !Zot:$
-# Swap positions in unit's potential spots
-# with the spokes and / or the center, maybe.
-SHUFFLE: AGMBHN / AHMBGN / AGNBJM
-SHUFFLE: CIOFLR / CLOFIR / CIRFLO
-SHUFFLE: DJPEKQ / DJQEKP / DJQEKP
-SHUFFLE: AGM / BHN / CIO / DJP / EKQ / FLR
-# Make those slots random walls or floor.
-SUBST:   AGM : xxxxcccbbv, BHN : xxxxcccbbv
-SUBST:   CIO : xxxxcccbbv .:100
-SUBST:   DJP : xxxxcccbbv .:100, EFKLQR = .
-MAP
-      ...CDEF...
-      ..F.AB.C..
-........EB..AD..
-........DA..BE..
-.IJKL...C.BA.F..
-L.GH.I...FEDC...
-KH..GJ.OPQR.......
-JG..HKR.MN.O......
-I.HG.LQN..MP.IJKL.
-.LKJI.PM..NQL.GH.I
-......O.NM.RKH..GJ
-.......RQPO.JG..HK
-  ...CEDF...I.HG.L
-  ..F.AB.C...LKJI.
-  ..EB..AE........
-  ..DA..BD........
-  ..C.BA.F..
-  ...FEDC...
 ENDMAP
 
 # Originally a submitted wizlab of "Nikola's Generator",
@@ -2438,80 +3876,6 @@ MAP
    xxxxx xxxxx xxxxx
 ENDMAP
 
-##########################################################################
-# Some decorative multi-coloured glass columns
-NAME:   skrybe_zot_glass_1
-TAGS:   transparent decor no_pool_fixup
-DEPTH:  Zot
-SUBST: W : Wwl
-KMASK:  Wwl = no_monster_gen
-: coloured_glass(_G)
-MAP
-  .....    .....
- ..WWW..  ..WWW..
-..WWrWW....WWyWW..
-.WWrrrWW..WWyyyWW.
-.WrrrrrW..WyyyyyW.
-.WWrrrWW..WWyyyWW.
-..WWrWW....WWyWW..
- ..WWW......WWW..
-  ..............
-  ..............
- ..WWW......WWW..
-..WWoWW....WWgWW..
-.WWoooWW..WWgggWW.
-.WoooooW..WgggggW.
-.WWoooWW..WWgggWW.
-..WWoWW....WWgWW..
- ..WWW..  ..WWW..
-  .....    .....
-ENDMAP
-
-NAME:   skrybe_zot_glass_2
-TAGS:   transparent decor no_pool_fixup
-DEPTH:  Zot
-SUBST:  l : Wwl
-KPROP:  l = no_cloud_gen
-KMASK:  Wwl = no_monster_gen
-: coloured_glass(_G)
-MAP
-      .....
- ......lll......
-..lll.lloll.lll..
-.llrlllooolllyll.
-.lrrrlooooolyyyl.
-.llrlllooolllyll.
-..lll.lloll.lll..
- ......lll......
-      .....
-ENDMAP
-
-NAME:   skrybe_zot_glass_3
-TAGS:   transparent decor no_pool_fixup
-DEPTH:  Zot
-SUBST:  l : Wwl
-SUBST:  ( : ([{.
-KMASK:  Wwl = no_monster_gen
-KPROP:  l = no_cloud_gen
-: coloured_glass(_G)
-MAP
-xxxxxx@@@xxxxxx
-xlllll...lllllx
-xlrrrl...looolx
-xlrrll...lloolx
-xlrll.....llolx
-xlll.......lllx
-@.............@
-@......(......@
-@.............@
-xlll.......lllx
-xlyll.....llglx
-xlyyll...llgglx
-xlyyyl...lggglx
-xlllll...lllllx
-xxxxxx@@@xxxxxx
-ENDMAP
-
 ##############################################################################
 # The circus has come to town
 
@@ -2521,9 +3885,9 @@ ENDMAP
 # The player either comes downstairs and finds themselves on the ride,
 # or needs to fight through the crowd lined up to find the way down.
 NAME:    ebering_klown_carousel
+TAGS:    no_monster_gen no_trap_gen
 DEPTH:   Zot, !Zot:$
 ORIENT:  float
-TAGS:    no_monster_gen no_trap_gen
 MONS:    killer klown, ancient lich / dread lich, death cob
 NSUBST:  - = 2 / 3 = 3.. / *:.
 : if (crawl.coinflip()) then
@@ -2567,9 +3931,9 @@ ENDMAP
 
 # The three ring circus, with the player descending in mid show
 NAME:    ebering_greatest_show_in_zot
+TAGS:    no_monster_gen no_trap_gen
 DEPTH:   Zot, !Zot:$
 ORIENT:  float
-TAGS:    no_monster_gen no_trap_gen
 SUBST:   x : x b:1
 SUBST:   < = {[(
 KFEAT:   ^ = alarm trap / zot trap
@@ -2631,13 +3995,6 @@ ENDMAP
 NAME:    hangedman_player_shredder
 TAGS:    transparent no_monster_gen no_item_gen no_pool_fixup
 DEPTH:   Zot:1-4
-SHUFFLE: abcdefghij / bacdegfhij / bcadeghfij / bcdaeghifj / bcdeaghijf, ghij, ^~
-SUBST:   a = +, bcde = v, fgh = %, i = P, j = p
-NSUBST:  } : 1:P / 1:p / *:%, p : 1:P / *:%
-SHUFFLE: HI, PQRS|, 0246' / 1357", 0246', 1357", 02468ACE, 13579BDF
-NSUBST:  P = 1:{ / 1:} / 1 : [:1 ]:1 %:16, Q = 1:{ / 1 : [:8 <:1 / 1 : (:1 %:8
-NSUBST:  RS = 1:} / 1 : ]:8 >:1 / 1 : ):1 %:8
-SUBST:   I = G, ~ : wv., ` : wv., ^ = ., % : %:9 .:1, % = %:499 |:1
 KMONS:   01 = ghost moth
 KMONS:   23 = golden dragon
 KMONS:   4567 = nonbase draconian
@@ -2652,6 +4009,13 @@ KMONS:   ! = base draconian w:30 ; cloak . great sword good_item | \
 KMONS:   ? = moth of wrath / death cob w:2 / guardian mummy w:2
 KITEM:   % = % / * w:2
 KMONS:   H = iron dragon
+SHUFFLE: abcdefghij / bacdegfhij / bcadeghfij / bcdaeghifj / bcdeaghijf, ghij, ^~
+SUBST:   a = +, bcde = v, fgh = %, i = P, j = p
+NSUBST:  } : 1:P / 1:p / *:%, p : 1:P / *:%
+SHUFFLE: HI, PQRS|, 0246' / 1357", 0246', 1357", 02468ACE, 13579BDF
+NSUBST:  P = 1:{ / 1:} / 1 : [:1 ]:1 %:16, Q = 1:{ / 1 : [:8 <:1 / 1 : (:1 %:8
+NSUBST:  RS = 1:} / 1 : ]:8 >:1 / 1 : ):1 %:8
+SUBST:   I = G, ~ : wv., ` : wv., ^ = ., % : %:9 .:1, % = %:499 |:1
 MAP
 .........................
 .vv...vv+vv...vv+vv...vv.
@@ -2720,7 +4084,7 @@ NAME:   hellmonk_body_bag
 TAGS:   no_monster_gen transparent
 DEPTH:  Zot:1-4
 MONS:   toenail golem w:1 / glowing orange brain / golden eye band
-MONS:   shining eye / floating eye w:5, bone dragon, curse toe / curse skull
+MONS:   shining eye / glass eye w:5, bone dragon, curse toe / curse skull
 SUBST:  ' = c., V:VYY
 NSUBST: - = 16 = 1... / 16 = 2... / 16 = 3... / 16 = 4... / .
 NSUBST:  > = 1 = ):80 . / 1 = ]:80 . / 1 = }:80 >
@@ -2865,7 +4229,7 @@ ENDMAP
 ##############################################################################
 ##############################################################################
 #
-# hall_of_Zot_5
+# <<4>> hall_of_Zot_5
 #
 ##############################################################################
 ##############################################################################
@@ -2951,18 +4315,28 @@ XXXXXXXXXXXccddddddddddddddccXXXc...............cXXXcchhhhhhhhhhhhhhccXXXXXXXXXX
 XXXXXXXXXXXXccccccccccccccccXXXXcccccccc@ccccccccXXXXccccccccccccccccXXXXXXXXXXX
 ENDMAP
 
+# There's few vaults on Zot:5, tone down their chances.
+NAME: dummy_balancer_zot
+TAGS: dummy
+DEPTH: Zot:$
+ORIENT: float
+WEIGHT: 60
+MAP
+x
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #
-# For colouring the walls and floors of the first four levels
+# <<5> Colouring the walls and floors of each floor
 #
 ##############################################################################
 ##############################################################################
 
 NAME:       hall_of_Zot_1
+TAGS:       extra transparent allow_dup no_dump
 DEPTH:      Zot:1
 CHANCE:     100%
-TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  lightgrey
 LROCKCOL:   white
 LFLOORTILE: floor_rough_lightgray
@@ -2972,9 +4346,9 @@ MAP
 ENDMAP
 
 NAME:       hall_of_Zot_2
+TAGS:       extra transparent allow_dup no_dump
 DEPTH:      Zot:2
 CHANCE:     100%
-TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  white
 LROCKCOL:   blue
 LFLOORTILE: floor_rough_white
@@ -2984,9 +4358,9 @@ MAP
 ENDMAP
 
 NAME:       hall_of_Zot_3
+TAGS:       extra transparent allow_dup no_dump
 DEPTH:      Zot:3
 CHANCE:     100%
-TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  blue
 LROCKCOL:   lightblue
 LFLOORTILE: floor_rough_blue
@@ -2996,9 +4370,9 @@ MAP
 ENDMAP
 
 NAME:       hall_of_Zot_4
+TAGS:       extra transparent allow_dup no_dump
 DEPTH:      Zot:4
 CHANCE:     100%
-TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  lightblue
 LROCKCOL:   magenta
 LFLOORTILE: floor_rough_lightblue

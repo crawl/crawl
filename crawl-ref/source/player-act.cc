@@ -373,7 +373,7 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
     // We could simplify some code elsewhere if we fixed this,
     // e.g. cast_manifold_assault().
     return rv::max(div_rand_round(attk_delay * you.time_taken, BASELINE_DELAY),
-                   random_var(2));
+                   random_var(1));
 }
 
 // Returns the item in the given equipment slot, nullptr if the slot is empty.

@@ -129,5 +129,6 @@ enum zap_type
     ZAP_PLASMA,
     ZAP_BOMBARD,
     ZAP_PLASMA_LIGHTNING,
+    ZAP_VITRIFY,
     NUM_ZAPS
 };

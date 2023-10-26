@@ -73,6 +73,8 @@
 #include "unicode.h"
 #include "view.h"
 
+#define PHIAL_RANGE 5
+
 static bool _evoke_horn_of_geryon()
 {
     bool created = false;
@@ -130,6 +132,11 @@ static void _spray_lightning(int range, int power)
     zapping(zap, power, beam);
 }
 
+static int _lightning_rod_power()
+{
+    return 5 + you.skill(SK_EVOCATIONS, 3);
+}
+
 /**
  * Evoke a lightning rod, creating an arc of lightning that can be sustained
  * by continuing to evoke.
@@ -138,9 +145,8 @@ static void _spray_lightning(int range, int power)
  */
 static bool _lightning_rod(dist *preselect)
 {
-    const int power = 5 + you.skill(SK_EVOCATIONS, 3);
-    const spret ret = your_spells(SPELL_THUNDERBOLT, power, false, nullptr,
-                                  preselect);
+    const spret ret = your_spells(SPELL_THUNDERBOLT, _lightning_rod_power(),
+            false, nullptr, preselect);
 
     if (ret == spret::abort)
         return false;
@@ -600,6 +606,11 @@ void wind_blast(actor* agent, int pow, coord_def target)
     }
 }
 
+static int _phial_power()
+{
+    return 10 + you.skill(SK_EVOCATIONS, 4);
+}
+
 static bool _phial_of_floods(dist *target)
 {
     dist target_local;
@@ -607,15 +618,24 @@ static bool _phial_of_floods(dist *target)
         target = &target_local;
     bolt beam;
 
-    const int power = 10 + you.skill(SK_EVOCATIONS, 4);
+    const int power = _phial_power();
     zappy(ZAP_PRIMAL_WAVE, power, false, beam);
-    beam.range = 5;
+    beam.range = PHIAL_RANGE;
     beam.aimed_at_spot = true;
 
     // TODO: this needs a custom targeter
     direction_chooser_args args;
     args.mode = TARG_HOSTILE;
     args.top_prompt = "Aim the phial where?";
+
+    unique_ptr<targeter> hitfunc = find_spell_targeter(SPELL_PRIMAL_WAVE,
+            power, beam.range);
+    targeter_beam* beamfunc = dynamic_cast<targeter_beam*>(hitfunc.get());
+    if (beamfunc && beamfunc->beam.hit > 0)
+    {
+        args.get_desc_func = bind(desc_beam_hit_chance, placeholders::_1,
+            hitfunc.get());
+    }
 
     if (spell_direction(*target, beam, &args)
         && player_tracer(ZAP_PRIMAL_WAVE, power, beam))
@@ -791,6 +811,11 @@ static coord_def _fuzz_tremorstone_target(coord_def center)
     return chosen;
 }
 
+static int _tremorstone_power()
+{
+    return 15 + you.skill(SK_EVOCATIONS);
+}
+
 /**
  * Number of explosions, scales up from 1 at 0 evo to 6 at 27 evo,
  * via a stepdown.
@@ -799,7 +824,7 @@ static coord_def _fuzz_tremorstone_target(coord_def center)
  * case an evocable enhancer returns to the game so that 0 evo with enhancer
  * gets some amount of enhancement.
  */
-static int _tremorstone_count(int pow)
+int tremorstone_count(int pow)
 {
     return 1 + stepdown((pow - 15) / 3, 2, ROUND_CLOSE);
 }
@@ -829,22 +854,19 @@ static spret _tremorstone()
         return spret::abort;
     }
 
-    mpr("The tremorstone explodes into fragments!");
-
-    static const int RADIUS = 2;
-    static const int SPREAD = 1;
-    static const int RANGE = RADIUS + SPREAD;
-    const int pow = 15 + you.skill(SK_EVOCATIONS);
-    const int num_explosions = _tremorstone_count(pow);
+    const int power = _tremorstone_power();
 
     bolt beam;
     beam.source_id  = MID_PLAYER;
     beam.thrower    = KILL_YOU;
-    zappy(ZAP_TREMORSTONE, pow, false, beam);
-    beam.range = RANGE;
-    beam.ex_size = RADIUS;
+    zappy(ZAP_TREMORSTONE, power, false, beam);
+    beam.range = 3;
+    beam.ex_size = 2;
     beam.target = center;
 
+    mpr("The tremorstone explodes into fragments!");
+
+    const int num_explosions = tremorstone_count(power);
     for (int i = 0; i < num_explosions; i++)
     {
         bolt explosion = beam;
@@ -946,10 +968,9 @@ static spret _condenser()
 
 static transformation _form_for_talisman(const item_def &talisman)
 {
-    const transformation trans = form_for_talisman(talisman);
-    if (trans == you.form)
+    if (you.using_talisman(talisman))
         return transformation::none;
-    return trans;
+    return form_for_talisman(talisman);
 }
 
 static bool _evoke_talisman(const item_def &talisman)
@@ -964,7 +985,7 @@ static bool _evoke_talisman(const item_def &talisman)
     }
 
     count_action(CACT_FORM, (int)trans);
-    start_delay<TransformDelay>(trans);
+    start_delay<TransformDelay>(trans, &talisman);
     if (god_despises_item(talisman))
         excommunication();
     you.turn_is_over = true;
@@ -1021,7 +1042,6 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
         if (!form_unreason.empty())
             return lowercase_first(form_unreason);
 
-        // TODO: add talisman artefacts
         if (you.form != you.default_form)
             return "you need to leave your temporary form first.";
         return "";
@@ -1275,4 +1295,99 @@ bool evoke_item(item_def& item, dist *preselect)
         crawl_state.zero_turns_taken();
 
     return did_work;
+}
+
+/**
+ * For the clua api, returns the description displayed if targeting a monster
+ * with an evokable.
+ *
+ * @param mi     The targeted monster.
+ * @param spell  The item being evoked.
+ * @return       The displayed string.
+ **/
+string target_evoke_desc(const monster_info& mi, const item_def& item)
+{
+    spell_type spell;
+    int power;
+    int range;
+    if (item.base_type == OBJ_WANDS)
+    {
+        spell = spell_in_wand(static_cast<wand_type>(item.sub_type));
+        power = wand_power(spell);
+        range = spell_range(spell, power, false);
+    }
+    else if (item.base_type == OBJ_MISCELLANY
+            && item.sub_type == MISC_PHIAL_OF_FLOODS)
+    {
+        spell = SPELL_PRIMAL_WAVE;
+        range = PHIAL_RANGE;
+        power = _phial_power();
+    }
+    else
+        return "";
+
+    unique_ptr<targeter> hitfunc = find_spell_targeter(spell, power, range);
+    if (!hitfunc)
+        return "";
+
+    desc_filter addl_desc = targeter_addl_desc(spell, power,
+                                get_spell_flags(spell), hitfunc.get());
+    if (!addl_desc)
+        return "";
+
+    vector<string> d = addl_desc(mi);
+    return comma_separated_line(d.begin(), d.end());
+}
+
+string evoke_damage_string(const item_def& item)
+{
+    if (item.base_type == OBJ_WANDS)
+    {
+        return spell_damage_string(
+            spell_in_wand(static_cast<wand_type>(item.sub_type)), true);
+    }
+    else if (item.base_type == OBJ_MISCELLANY)
+    {
+        if (item.sub_type == MISC_PHIAL_OF_FLOODS)
+        {
+            return spell_damage_string(SPELL_PRIMAL_WAVE, true,
+                _phial_power());
+        }
+        else if (item.sub_type == MISC_LIGHTNING_ROD)
+        {
+            return spell_damage_string(SPELL_THUNDERBOLT, true,
+                _lightning_rod_power());
+        }
+        else if (item.sub_type == MISC_TIN_OF_TREMORSTONES)
+        {
+            return spell_damage_string(SPELL_TREMORSTONE, true,
+                _tremorstone_power());
+        }
+        else
+            return "";
+    }
+    else
+        return "";
+}
+
+string evoke_noise_string(const item_def& item)
+{
+    if (item.base_type == OBJ_WANDS)
+    {
+        return spell_noise_string(
+            spell_in_wand(static_cast<wand_type>(item.sub_type)));
+    }
+    else if (item.base_type == OBJ_MISCELLANY)
+    {
+        if (item.sub_type == MISC_PHIAL_OF_FLOODS)
+            return spell_noise_string(SPELL_PRIMAL_WAVE);
+        else if (item.sub_type == MISC_LIGHTNING_ROD)
+            return spell_noise_string(SPELL_THUNDERBOLT);
+        else if (item.sub_type == MISC_TIN_OF_TREMORSTONES)
+            return spell_noise_string(SPELL_TREMORSTONE);
+        else
+            return "";
+    }
+    else
+        return "";
 }

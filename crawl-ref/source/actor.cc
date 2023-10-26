@@ -1123,35 +1123,54 @@ bool actor::knockback(const actor &cause, int dist, int pow, string source_name)
     return true;
 }
 
-void actor::stumble_away_from(coord_def targ, string src)
+coord_def actor::stumble_pos(coord_def targ) const
 {
-    if (is_stationary() || resists_dislodge("being knocked back"))
-        return;
+    if (is_stationary() || resists_dislodge("") || targ == pos())
+        return coord_def();
 
     const coord_def oldpos = pos();
     ray_def ray;
     fallback_ray(oldpos, targ, ray);
     if (!ray.advance()) // !?
-        return;
+        return coord_def();
+
     const coord_def back_dir = oldpos - ray.pos();
     const coord_def newpos = oldpos + back_dir;
     if (!adjacent(newpos, oldpos)) // !?
-        return;
+        return coord_def();
 
     // copied from actor::knockback, ew
     if (!in_bounds(newpos)
         || cell_is_solid(newpos)
-        || actor_at(newpos)
         || !can_pass_through(newpos)
         || !is_habitable(newpos))
+    {
+        return coord_def();
+    }
+
+    const actor* other = actor_at(newpos);
+    if (other && can_see(*other))
+        return coord_def();
+
+    return newpos;
+}
+
+void actor::stumble_away_from(coord_def targ, string src)
+{
+    const coord_def oldpos = pos();
+    const coord_def newpos = stumble_pos(targ);
+
+    if (newpos.origin()
+        || actor_at(newpos)
+        || resists_dislodge("being knocked back"))
     {
         return;
     }
 
     if (is_player())
         mprf("%s sends you backwards.", uppercase_first(src).c_str());
-    else
-        simple_monster_message(*as_monster(), " is knocked back by %s.");
+    else if (you.can_see(*this))
+        mprf("%s is knocked back by %s.", name(DESC_THE).c_str(), src.c_str());
 
     move_to_pos(newpos);
     apply_location_effects(oldpos, is_player() ? KILL_YOU_MISSILE

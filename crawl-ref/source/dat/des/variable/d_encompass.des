@@ -124,7 +124,7 @@ WEIGHT:  1 (D:$), 2 (Depths:$), 10
 KMONS:   - = plant
 KMONS:   _ = demonic plant
 KMONS:   mo = vault guard
-KMONS:   p = floating eye
+KMONS:   p = glass eye
 KMONS:   q : great orb of eyes w:7 / guardian serpent w:3
 KMONS:   r = ettin / deep troll shaman / stone giant / frost giant
 KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
@@ -137,7 +137,7 @@ local bands = {
           "deep elf zephyrmancer", "necromancer", "yaktaur", "Azrael",
           "Kirke", },
     [26 - you.absdepth()] =
-        { "glowing orange brain", "spriggan berserker", "wizard",
+        { "glowing orange brain", "spriggan berserker", "occultist",
           "skeletal warrior", "salamander tyrant", "rakshasa", },
     [you.absdepth() * 2 - 37] =
         { "deep elf death mage", "spriggan air mage", "deep troll shaman", },

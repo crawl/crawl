@@ -252,10 +252,29 @@ spret cast_jinxbite(int pow, bool fail)
     mprf("You beckon %s vexing sprites to accompany your attacks.",
          you.duration[DUR_JINXBITE] ? "more" : "some");
 
-    int dur = random_range(9, 15) + div_rand_round(pow, 4);
+    const int base_dur = random_range(9, 15);
+    const int will_dur = random_range(base_dur, 15) +
+                         div_rand_round(spell_power_cap(SPELL_JINXBITE), 4);
 
-    you.increase_duration(DUR_JINXBITE, dur);
-    you.increase_duration(DUR_LOWERED_WL, dur * 2, 0, "You feel your willpower being sapped.");
+    you.increase_duration(DUR_JINXBITE, base_dur + div_rand_round(pow, 4), 28);
+    you.increase_duration(DUR_LOWERED_WL, will_dur, 28,
+                          "You feel your willpower being sapped.");
+
+    return spret::success;
+}
+
+spret cast_confusing_touch(int power, bool fail)
+{
+    fail_check();
+    msg::stream << you.hands_act("begin", "to glow ")
+                << (you.duration[DUR_CONFUSING_TOUCH] ? "brighter" : "red")
+                << "." << endl;
+
+    you.set_duration(DUR_CONFUSING_TOUCH,
+                     max(10 + div_rand_round(random2(1 + power), 5),
+                         you.duration[DUR_CONFUSING_TOUCH]),
+                     20, nullptr);
+    you.props[CONFUSING_TOUCH_KEY] = power;
 
     return spret::success;
 }

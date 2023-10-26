@@ -559,7 +559,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     // Shift upwards and to the right.
     case TILEP_MONS_NECROMANCER:
-    case TILEP_MONS_WIZARD:
+    case TILEP_MONS_ARCANIST:
+    case TILEP_MONS_OCCULTIST:
     case TILEP_MONS_CLOUD_MAGE:
     case TILEP_MONS_MASTER_ELEMENTALIST:
     case TILEP_MONS_JESSICA:

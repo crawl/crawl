@@ -1283,7 +1283,8 @@ ORIENT: encompass
 :volcano_setup(_G)
 KMONS:  D = orb of fire att:neutral
 MONS:   gargoyle / salamander / cyclops, molten gargoyle
-KMONS:  3 = red draconian / hell knight / wizard ; robe ego:fire_resistance
+KMONS:  3 = red draconian / hell knight / arcanist w:5 ; robe ego:fire_resistance / \
+        occultist w:5 ; robe ego:fire_resistance
 KMONS:  4 = salamander mystic / efreet / \
         deep elf pyromancer ; robe ego:fire_resistance / \
         orc knight ; dire flail ego:flaming . chain mail ego:fire_resistance
@@ -1385,7 +1386,8 @@ ORIENT: encompass
 NSUBST: h = 1:h / *:W
 KITEM:  h = gold
 COLOUR: m = blue
-MONS:   wizard ; mace ego:flaming . robe ego:fire_resistance ident:type
+MONS:   human ; mace ego:flaming . robe ego:fire_resistance
+MONS:   occultist ; mace ego:flaming . robe ego:fire_resistance
 MONS:   toenail golem
 MONS:   dancing weapon ; mace ego:flaming
 : place_chained_volcano(_G)
@@ -1393,6 +1395,7 @@ MONS:   dancing weapon ; mace ego:flaming
 : set_feature_name("clear_rock_wall", "glass window")
 KFEAT:  K = w
 KFEAT:  h = W
+NSUBST: 1 = 1:2 / *:1
 MARKER: K = lua:fog_machine ( { cloud_type = "rain", walk_dist=3, pow_max=2, \
                                     delay=250, size=3 } )
 KPROP:  lVK = no_tele_into
@@ -1400,12 +1403,12 @@ MAP
       xxxx                  vvvvvvvvvvvvv
    xxxxllxxx xxx            v...........v
  xxxlllllllxxxlxxx          v.vvvvvvvvv.v
-xxlllVlllllllllllxxxx       v.v22$e$$fv.v
+xxlllVlllllllllllxxxx       v.v3f$e$$2v.v
  xxlllllllllllllllllxxx     v.v$$egddgv.v
-xxllllllllllllllllllllxx    v.+ggdf$$3v.v
+xxllllllllllllllllllllxx    v.+ggdf$$4v.v
  xxllllllllvmvmvmvmvmvvvvvvvvvvvvvvvvvv.v
  xxllllllllm.....vKWhW..1....v.....+....v
-  xxlllllllv.212.vWWthW..2...+.<.vvvvvvvv
+  xxlllllllv.313.vWWthW..3...+.<.vvvvvvvv
    xxllllllm.....vlltth...1..v...vxxx
     xxxllllvvv+vvvvvvvvvvvvvvvv+vv.yxx
       xxlllm.....v.v..1v1.....v..m..yxx

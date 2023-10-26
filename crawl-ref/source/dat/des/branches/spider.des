@@ -56,8 +56,9 @@ ENDMAP
 
 NAME:   spider_nest_entry_a
 TAGS:   spider_entry patrolling no_monster_gen transparent
+MONS:   redback / jumping spider
 KFEAT:  O = enter_spider_nest
-MONS:   redback w:5 / jumping spider w:5 / nothing w:30
+NSUBST: 1 = 2:1 / 3:. / * = 1.
 MAP
 .WWW.WWW.
 W.WW.WW.W
@@ -72,9 +73,10 @@ ENDMAP
 
 NAME:   spider_nest_entry_webs
 TAGS:   spider_entry patrolling no_monster_gen transparent
+MONS:   redback
 KFEAT:  O = enter_spider_nest
 KFEAT:  ^ = web
-MONS:   redback / nothing
+NSUBST: 1 = 1:1 / * = 1.
 MAP
 .......x.....
 ..^...xxx.^..
@@ -92,18 +94,20 @@ ENDMAP
 
 NAME:   spider_nest_entry_funnel_web
 TAGS:   spider_entry patrolling no_monster_gen
+MONS:   redback / culicivora, wolf spider / jumping spider w:20
 KFEAT:  O = enter_spider_nest
-KFEAT:  ^ = web / floor
-MONS:   w:5 wolf spider / jumping spider / redback / culicivora / w:15 nothing
+KFEAT:  ^ = web
+SUBST:  ^ = ^.
+NSUBST: 1 = 1:1 / 1:11222 / 2:1.. / *:.
 MAP
       xxxxxx
-     xx11.1x
+     xx1111x
    xxx.1O1xx
    x^^^...x
   xx^^^^^xx
  xx^^^^^xx
 xx^^^^^xx
-@.^^^xxx
+@..^^xxx
 @.^xxx
 @.xx
 @@x
@@ -131,7 +135,7 @@ ENDMAP
 NAME:   spider_nest_entry_rubble
 TAGS:   spider_entry patrolling no_monster_gen transparent
 KFEAT:  O = enter_spider_nest
-KMONS:  O = wolf spider / tarantella / redback / jumping spider / culicivora
+KMONS:  1O = wolf spider / tarantella / redback / jumping spider / culicivora
 SUBST:  x = ..xx^
 KFEAT:  ^ = web
 MAP
@@ -141,29 +145,29 @@ MAP
 xxx.xxxxxxx
 xxxx.xxxxxx
 xxxxxOxxxxx
-xxxxxxxxxxx
+xxxxxx1xxxx
 xxxxxxxxxxx
  xxxxxxxxx
  xxxxxxxxx
    xxxxx
 ENDMAP
 
-NAME: nicolae_spider_entry_tight_spaces
-TAGS: spider_entry no_pool_fixup no_monster_gen no_trap_gen
-KFEAT: O = enter_spider_nest
-NSUBST: A = 2:x / '
-SUBST: X = xxx', ' = .....^^1
-KFEAT: ^ = web
-KMONS: 1 = redback / jumping spider / culicivora
+NAME:   nicolae_spider_entry_tight_spaces
+TAGS:   spider_entry no_pool_fixup no_monster_gen no_trap_gen
+MONS:   redback / jumping spider / culicivora
+KFEAT:  O = enter_spider_nest
+KFEAT:  ^ = web
+NSUBST: A = 2:x / ', 1 = 1:. / *:1
+SUBST:  X = xxx', ' = .....^^1
 MAP
  xxxxxxxxx
 xxXxXxXxXxx
 xXx'x'x'xXx
 xx'x'xAx'xxx
 x'xXxXxXx'xx
-@..x'xAx.1.w@
-@..'x'x'1O1w@
-@..x'xAx.1.w@
+@..x'xAx.1.m@
+@..'x'x'1O1m@
+@..x'xAx.1.m@
 x'xXxXxXx'xx
 xx'x'xAx'xxx
 xXx'x'x'xXx
@@ -171,12 +175,12 @@ xxXxXxXxXxx
  xxxxxxxxx
 ENDMAP
 
-NAME: nicolae_spider_entry_non_spiders
-TAGS: spider_entry ruin_lair transparent
-NSUBST: 1 = 21 / 1
-KFEAT: O = enter_spider_nest
-KMONS: 1 = scorpion w:20 / worm / giant cockroach
-KMONS: 2 = demonic crawler / boulder beetle / torpor snail
+NAME:   nicolae_spider_entry_non_spiders
+TAGS:   spider_entry ruin_lair transparent
+MONS:   scorpion w:20 / worm / giant cockroach
+MONS:   demonic crawler / boulder beetle / torpor snail
+KFEAT:  O = enter_spider_nest
+NSUBST: 1 = 1:21 / *:1
 MAP
 ...........
 ..xx...xx..
@@ -193,12 +197,12 @@ ENDMAP
 
 NAME: nicolae_spider_entry_orb_guardian
 TAGS: spider_entry no_monster_gen no_pool_fixup no_trap_gen
+KMONS: O = orb spider
+KFEAT: O = enter_spider_nest
+KFEAT: ^ = web
 KPROP: 'W = no_tele_into
 NSUBST: a = ..x / .
 SUBST: W = w', X = x., Q = xxx@, ' = ...x, . = .....^
-KFEAT: O = enter_spider_nest
-KFEAT: ^ = web
-KMONS: O = orb spider
 MAP
    QQQX@@XX
  xxxxxXX..XX
@@ -235,14 +239,14 @@ MAP
  .;;;;;;;.
 ENDMAP
 
-NAME: hellmonk_spider_entry_life_and_decay
-TAGS: spider_entry no_monster_gen no_trap_gen ruin
+NAME:  hellmonk_spider_entry_life_and_decay
+TAGS:  spider_entry no_monster_gen no_trap_gen ruin
 MONS:  culicivora
 :      dgn.delayed_decay(_G, '%', 'redback corpse')
 KFEAT: O = enter_spider_nest
 KFEAT: ^ = web
 SUBST: . = ^:1 .:25
-NSUBST: % = 1:1 / *=1%%%
+NSUBST: % = 1:1 / 1:% / * = 1%%%
 MAP
   xxxxxxx@@@xxxxxxx
   xxxxxxxx.xxxxxxxx
@@ -261,10 +265,10 @@ ENDMAP
 
 NAME:    nicolae_spider_entry_lesser_pyramids
 TAGS:    spider_entry transparent patrolling
+MONS:    scorpion, redback / tarantella / jumping spider
 KMONS:   O = pharaoh ant
-KMONS:   S = redback / tarantella / jumping spider
 KFEAT:   O = enter_spider_nest
-NSUBST:  S = 2=S / 2=S. / .
+NSUBST:  S = 1:1 / 1:2 / 2 = 112.. / .
 SUBST:   x = xx.
 MAP
        ...

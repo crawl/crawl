@@ -427,13 +427,21 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    // Wizard set is also used by Erolcha.
-    {  MST_WIZARD,
+    {  MST_ARCANIST,
+      {
+       { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
+       { SPELL_VITRIFY, 12, MON_SPELL_WIZARD },
+       { SPELL_HASTE, 14, MON_SPELL_WIZARD },
+       { SPELL_BLINK, 10, MON_SPELL_WIZARD },
+      }
+    },
+
+    {  MST_OCCULTIST,
       {
        { SPELL_FIREBALL, 12, MON_SPELL_WIZARD },
-       { SPELL_BANISHMENT, 10, MON_SPELL_WIZARD },
-       { SPELL_BLINK, 12, MON_SPELL_WIZARD },
+       { SPELL_FORCE_LANCE, 12, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 14, MON_SPELL_WIZARD },
+       { SPELL_BANISHMENT, 10, MON_SPELL_WIZARD },
       }
     },
 
@@ -881,9 +889,9 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('G') Organs.
-    {  MST_FLOATING_EYE,
+    {  MST_GLASS_EYE,
       {
-       { SPELL_PARALYSIS_GAZE, 80, MON_SPELL_MAGICAL | MON_SPELL_INSTANT },
+       { SPELL_VITRIFYING_GAZE, 75, MON_SPELL_MAGICAL | MON_SPELL_INSTANT },
       }
     },
 
@@ -908,9 +916,9 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_GREAT_ORB_OF_EYES,
       {
-       { SPELL_PARALYSE, 12, MON_SPELL_MAGICAL },
+       { SPELL_VITRIFY, 12, MON_SPELL_MAGICAL },
        { SPELL_MINDBURST, 12, MON_SPELL_MAGICAL },
-       { SPELL_DRAIN_MAGIC, 12, MON_SPELL_MAGICAL },
+       { SPELL_POLYMORPH, 12, MON_SPELL_MAGICAL },
        { SPELL_CONFUSE, 12, MON_SPELL_MAGICAL },
       }
     },
@@ -1142,9 +1150,9 @@ static const mon_spellbook mspell_list[] =
     // ('Q') Tengu.
     {  MST_TENGU_CONJURER,
       {
-       { SPELL_LIGHTNING_BOLT, 19, MON_SPELL_WIZARD },
-       { SPELL_BATTLESPHERE, 19, MON_SPELL_WIZARD },
-       { SPELL_BLINK, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
+       { SPELL_BATTLESPHERE, 30, MON_SPELL_WIZARD },
+       { SPELL_LIGHTNING_BOLT, 20, MON_SPELL_WIZARD },
+       { SPELL_FORCE_LANCE, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -1156,6 +1164,7 @@ static const mon_spellbook mspell_list[] =
         { SPELL_CORROSIVE_BOLT, 11, MON_SPELL_WIZARD },
         { SPELL_LIGHTNING_BOLT, 11, MON_SPELL_WIZARD },
         { SPELL_BOLT_OF_DRAINING, 11, MON_SPELL_WIZARD },
+        { SPELL_REPEL_MISSILES, 11, MON_SPELL_WIZARD },
       }
     },
 
@@ -1902,7 +1911,16 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    // ('O') Lodul.
+    // ('O') Ogres.
+    {  MST_EROLCHA,
+      {
+       { SPELL_FIREBALL, 12, MON_SPELL_WIZARD },
+       { SPELL_INVISIBILITY, 14, MON_SPELL_WIZARD },
+       { SPELL_BANISHMENT, 10, MON_SPELL_WIZARD },
+       { SPELL_BLINK, 12, MON_SPELL_WIZARD },
+      }
+    },
+
     {  MST_LODUL,
       {
        { SPELL_CALL_DOWN_LIGHTNING, 40, MON_SPELL_MAGICAL },

@@ -185,16 +185,16 @@ ENDMAP
 NAME:   david_lair_shrubbed
 TAGS:   lair_entry transparent
 ORIENT: float
-MONS:   komodo dragon
+MONS:   komodo dragon, wyvern / basilisk / iguana
 KMONS:  P = plant
 KFEAT:  O = enter_lair
-SUBST:  ' = P.
+SUBST:  ' = P., 2 = 22.
 MAP
 xxxxxxxxxxxxx
 xxPPPPPPPPPxx
 xPP1.'PPPPPPx
 xPP.O.'PPP''.
-xPP'..PPP'..@
+xPP'.2PPP'..@
 xPPPPPP''....
 xP''PP......x
 xx.''..'...xx
@@ -261,10 +261,10 @@ NAME:   minmay_lair_entry_grove
 TAGS:   lair_entry no_monster_gen transparent
 ORIENT: float
 MONS:   wyvern / basilisk w:4, yak, black bear / wolf
-MONS:   water moccasin w:14 / iguana w:2 / scorpion w:2
+MONS:   water moccasin / iguana w:2 / scorpion w:2
 KMONS:  P = plant / bush w:2 / fungus w:2
 KFEAT:  O = enter_lair
-NSUBST: . = 1:1 / 2:2 / 2:4 / 2 = 12 / 1 = 4. / 12:P / * = .:450 t:20 P:40
+NSUBST: . = 1:1 / 2:2 / 1:4 / 1 = 12 / 1 = 4. / 12:P / * = .:450 t:20 P:40
 NSUBST: ' = 1:1 / 1:2 / 1:4 / 1 = 12 / 1 = 40 / 8:P / * = .:250 t:20 P:40
 SUBST:  2 : 223
 validate {{ return has_exit_from_glyph('O') }}
@@ -293,18 +293,20 @@ ORIENT: float
 WEIGHT: 1
 MONS:   fire crab
 KFEAT:  O = enter_lair
-NSUBST: M = 1 / L
+NSUBST: M = 1:1 / *:L
 SUBST:  L = l.
 MAP
-.........
-...lLll..
-..llllll.
-..llMMlL.
-.LlMOMll.
-.ll.Mlll.
-.l.llll..
-..lllL...
-.........
+xx.x.x.x.xx
+x.........x
+....lLll...
+x..llllll.x
+...llMMlL..
+x.LlMOMll.x
+..ll.Mlll..
+x.l.llll..x
+...lllL....
+x.........x
+xx.x.x.x.xx
 ENDMAP
 
 # Welcome to Lair Island. We make great pancakes.
@@ -411,12 +413,12 @@ ENDMAP
 NAME:   grunt_lair_entry_orc_guard_hut
 TAGS:   lair_entry transparent
 ORIENT: float
-MONS:   bullfrog w:30 / scorpion w:20 / black bear w:20 / yak \
-        / komodo dragon w:5
+MONS:   bullfrog w:15 / scorpion / black bear
+MONS:   yak / elephant / komodo dragon
 MONS:   patrolling orc warrior
 KMONS:  P = plant / fungus
 KFEAT:  O = enter_lair
-NSUBST: D = 2:1 / 2 = 1` / * = P``, 1 = 3:1 / 2 = 1. / * = `
+NSUBST: D = 2:1 / 2 = 1` / * = P``, 1 = 2:1 / 1:2 / 2 = 1. / 1 = 12 / * = `
 SUBST:  P = PP`, . = P:1 .:5, ` = .
 validate {{ return has_exit_from_glyph('O') }}
 MAP
@@ -3217,7 +3219,7 @@ TAGS:    no_pool_fixup no_wall_fixup no_monster_gen no_rotate
 PLACE:   Lair:$
 ORIENT:  southeast
 WEIGHT:  5
-MONS:    rime drake, hydra w:15 / dire elephant, wizard
+MONS:    rime drake, hydra w:15 / dire elephant, arcanist / occultist
 MONS:    red devil / ice devil w:15 / orange demon w:15
 MONS:    hellwing / smoke demon, sun demon / sixfirhy / hell beast w:4
 KMONS:   hH = hell hound

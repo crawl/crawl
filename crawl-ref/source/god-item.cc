@@ -425,6 +425,8 @@ bool god_despises_item(const item_def &item)
  */
 bool god_likes_item_type(const item_def &item, god_type which_god)
 {
+    if (god_despises_item(item))
+        return false;
     // XXX: also check god_hates_item()?
     switch (which_god)
     {

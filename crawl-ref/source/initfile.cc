@@ -3634,7 +3634,7 @@ void base_game_options::read_option_line(const string &str, bool runscripts)
     else if (state.key == "lua_max_memory")
     {
 #ifdef DGAMELAUNCH
-        report_error("Option 'lua_max_memory' is disabled in this build.", state.field.c_str());
+        report_error("Option 'lua_max_memory' is disabled in this build.");
 #else
         if (!sscanf(state.field.c_str(), "%" SCNu64, &crawl_state.clua_max_memory_mb))
             report_error("Couldn't parse integer option lua_max_memory: \"%s\"", state.field.c_str());
@@ -4587,6 +4587,7 @@ enum commandline_option_type
     CLO_AWAIT_CONNECTION,
     CLO_PRINT_WEBTILES_OPTIONS,
 #endif
+    CLO_RESET_CACHE,
 
     CLO_NOPS
 };
@@ -4596,6 +4597,7 @@ static set<commandline_option_type> clo_headless_ok = {
 // ok in all builds
     CLO_SCORES,
     CLO_BUILDDB,
+    CLO_RESET_CACHE,
     CLO_HELP,
     CLO_VERSION,
     CLO_PLAYABLE_JSON, // JSON metadata for species, jobs, combos.
@@ -4637,6 +4639,7 @@ static const char *cmd_ops[] =
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
 #endif
+    "reset-cache",
 };
 
 
@@ -5084,7 +5087,7 @@ static void _bones_merge(const vector<string> files, const string out_name)
     {
         auto ghosts = load_bones_file(filename, false);
         auto end = ghosts.end();
-        if (out.size() + ghosts.size() > MAX_GHOSTS)
+        if (out.size() + ghosts.size() > static_cast<unsigned int>(MAX_GHOSTS))
         {
             //cout << "ghosts " << out.size() + ghosts.size() - MAX_GHOSTS;
             cout << "Too many ghosts! Capping merge at " << MAX_GHOSTS << "\n";
@@ -5713,6 +5716,12 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 return false;
             crawl_state.build_db = true;
             enter_headless_mode();
+            break;
+
+        case CLO_RESET_CACHE:
+            if (next_is_param)
+                return false;
+            crawl_state.use_des_cache = false;
             break;
 
         case CLO_GDB:

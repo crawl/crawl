@@ -123,6 +123,7 @@ static ai_action::goodness _foe_polymorph_viable(const monster &caster);
 static ai_action::goodness _foe_sleep_viable(const monster &caster);
 static ai_action::goodness _foe_tele_goodness(const monster &caster);
 static ai_action::goodness _foe_mr_lower_goodness(const monster &caster);
+static ai_action::goodness _foe_vitrify_goodness(const monster &caster);
 static ai_action::goodness _still_winds_goodness(const monster &caster);
 static ai_action::goodness _arcjolt_goodness(const monster &caster);
 static ai_action::goodness _foe_near_wall(const monster &caster);
@@ -393,6 +394,14 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             caster.get_foe()->weaken(&caster, caster.get_hit_dice());
         },
     } },
+    { SPELL_VITRIFYING_GAZE, {
+        _caster_sees_foe,
+        [](monster &caster, mon_spell_slot slot, bolt&) {
+            enchant_actor_with_flavour(caster.get_foe(), &caster,
+                                       BEAM_VITRIFYING_GAZE,
+                                       mons_spellpower(caster, slot.spell));
+        },
+    } },
     { SPELL_WATER_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
     { SPELL_EARTH_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
     { SPELL_AIR_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
@@ -441,6 +450,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_CONFUSE, _hex_logic(SPELL_CONFUSE) },
     { SPELL_BANISHMENT, _hex_logic(SPELL_BANISHMENT) },
     { SPELL_PARALYSE, _hex_logic(SPELL_PARALYSE) },
+    { SPELL_VITRIFY, _hex_logic(SPELL_VITRIFY, _foe_vitrify_goodness) },
     { SPELL_PETRIFY, _hex_logic(SPELL_PETRIFY) },
     { SPELL_PAIN, _hex_logic(SPELL_PAIN, [](const monster& caster) {
             const actor* foe = caster.get_foe();
@@ -678,6 +688,11 @@ static ai_action::goodness _foe_tele_goodness(const monster &caster)
 static ai_action::goodness _foe_mr_lower_goodness(const monster &caster)
 {
     return _foe_effect_viable(caster, DUR_LOWERED_WL, ENCH_LOWERED_WL);
+}
+
+static ai_action::goodness _foe_vitrify_goodness(const monster &caster)
+{
+    return _foe_effect_viable(caster, DUR_VITRIFIED, ENCH_VITRIFIED);
 }
 
 /**
@@ -3228,7 +3243,8 @@ static void _corrupting_pulse(monster *mons)
 }
 
 // Returns the clone just created (null otherwise)
-monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc, int summ_type)
+monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc,
+                             int summ_type)
 {
     // Create clone.
     monster *mirror = clone_mons(targ, true);
@@ -3240,6 +3256,14 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc, int summ
     // Unentangle the real monster.
     if (targ->is_constricted())
         targ->stop_being_constricted();
+
+    if (you.props.exists(BULLSEYE_TARGET_KEY)
+        && (mid_t)you.props[BULLSEYE_TARGET_KEY].get_int() == targ->mid)
+    {
+        targ->del_ench(ENCH_BULLSEYE_TARGET);
+        you.duration[DUR_DIMENSIONAL_BULLSEYE] = 0;
+        you.props.erase(BULLSEYE_TARGET_KEY);
+    }
 
     mons_clear_trapping_net(targ);
 
@@ -3695,6 +3719,17 @@ static bool _mons_in_emergency(const monster &mons)
     return mons.hit_points < mons.max_hit_points / 3;
 }
 
+static bool _spell_flags_invalid_for_situation(const monster& mons,
+                                               const mon_spell_slot spell)
+{
+    return (spell.flags & MON_SPELL_EMERGENCY
+            && !_mons_in_emergency(mons))
+            || (spell.flags & MON_SPELL_SHORT_RANGE
+                && !_short_target_range(&mons))
+            || (spell.flags & MON_SPELL_LONG_RANGE
+                && !_long_target_range(&mons));
+}
+
 /**
  * Choose a spell for the given monster to consider casting.
  *
@@ -3724,15 +3759,8 @@ static mon_spell_slot _find_spell_prospect(const monster &mons,
     unsigned int i = 0;
     for (; i < hspell_pass.size(); i++)
     {
-        if ((hspell_pass[i].flags & MON_SPELL_EMERGENCY
-             && !_mons_in_emergency(mons))
-            || (hspell_pass[i].flags & MON_SPELL_SHORT_RANGE
-                && !_short_target_range(&mons))
-            || (hspell_pass[i].flags & MON_SPELL_LONG_RANGE
-                && !_long_target_range(&mons)))
-        {
+        if (_spell_flags_invalid_for_situation(mons, hspell_pass[i]))
             continue;
-        }
 
         if (hspell_pass[i].freq >= what)
             break;
@@ -3929,6 +3957,7 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
     // Promote the casting of useful spells for low-HP monsters.
     // (kraken should always cast their escape spell of inky).
     if (_mons_in_emergency(mons)
+        && !mons_is_fleeing(mons)
         && one_chance_in(mons.type == MONS_KRAKEN ? 4 : 8))
     {
         // Note: There should always be at least some chance we don't
@@ -3940,8 +3969,9 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
         for (const mon_spell_slot &slot : hspell_pass)
         {
             bolt targ_beam = orig_beem;
-            if (_target_and_justify_spell(mons, targ_beam, slot.spell,
-                                          ignore_good_idea)
+            if (!_spell_flags_invalid_for_situation(mons, slot)
+                && _target_and_justify_spell(mons, targ_beam, slot.spell,
+                                             ignore_good_idea)
                 && one_chance_in(++found_spell))
             {
                 chosen_slot = slot;
@@ -5767,9 +5797,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         if (you.can_see(*mons))
         {
-            mprf("%s shimmers and seems to become %s!", mons->name(DESC_THE).c_str(),
-                                                        sumcount2 == 1 ? "two"
-                                                                       : "three");
+            mprf("%s shimmers and seems to become %s!",
+                 mons->name(DESC_THE).c_str(),
+                 sumcount2 == 1 ? "two" : "three");
         }
 
         return;
@@ -6085,7 +6115,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             const monster_type mon = random_choose_weighted(
-                                       100, MONS_FLOATING_EYE,
+                                       100, MONS_GLASS_EYE,
                                         60, MONS_GOLDEN_EYE,
                                         40, MONS_SHINING_EYE,
                                         20, MONS_GREAT_ORB_OF_EYES,
@@ -6493,6 +6523,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _fire_simple_beam(*mons, slot, pbolt);
         if (mons->alive() && coinflip())
             mons->stumble_away_from(targ, "the blast");
+        return;
     }
     }
 

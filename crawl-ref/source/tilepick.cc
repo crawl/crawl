@@ -537,7 +537,7 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_UNKNOWN_PORTAL:
         return TILE_DNGN_UNKNOWN_PORTAL;
     case DNGN_BINDING_SIGIL:
-        return TILE_SIGIL_RHOMBUS;
+        return TILE_DNGN_BINDING_SIGIL;
     default:
         return TILE_DNGN_ERROR;
     }
@@ -3709,6 +3709,10 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_OKAWARU_FINESSE;
     case ABIL_OKAWARU_DUEL:
         return TILEG_ABILITY_OKAWARU_DUEL;
+    case ABIL_OKAWARU_GIFT_WEAPON:
+        return TILEG_ABILITY_OKAWARU_GIFT_WEAPON;
+    case ABIL_OKAWARU_GIFT_ARMOUR:
+        return TILEG_ABILITY_OKAWARU_GIFT_ARMOUR;
     // Makhleb
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
         return TILEG_ABILITY_MAKHLEB_MINOR_DESTRUCTION;

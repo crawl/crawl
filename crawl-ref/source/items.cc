@@ -955,7 +955,8 @@ static bool _id_floor_item(item_def &item)
             return true;
         }
     }
-    else if (item_type_is_equipment(item.base_type))
+    else if (item_type_is_equipment(item.base_type)
+             || item.base_type == OBJ_TALISMANS)
     {
         if (fully_identified(item))
             return false;
@@ -4635,14 +4636,6 @@ item_def get_item_known_info(const item_def& item)
     for (const char *prop : copy_props)
         if (item.props.exists(prop))
             ii.props[prop] = item.props[prop];
-
-    static const char* copy_ident_props[] = {"spell_list"};
-    if (item_ident(item, ISFLAG_KNOW_TYPE))
-    {
-        for (const char *prop : copy_ident_props)
-            if (item.props.exists(prop))
-                ii.props[prop] = item.props[prop];
-    }
 
     if (item.props.exists(ARTEFACT_PROPS_KEY))
     {

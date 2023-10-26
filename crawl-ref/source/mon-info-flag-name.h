@@ -139,4 +139,5 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_TELEPORTING, "teleporting", "about to teleport", "teleporting"},
     { MB_BOUND, "bound", "bound in place", "bound" },
     { MB_BULLSEYE_TARGET, "bullseye target", "targeted by your dimensional bullseye", "bullseye target" },
+    { MB_VITRIFIED, "vitrified", "fragile as glass", "vitrified" },
 };

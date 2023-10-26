@@ -705,6 +705,7 @@ public:
 class TransformDelay : public Delay
 {
     transformation form;
+    const item_def *talisman;
 
     bool was_prompted = false;
 
@@ -713,8 +714,8 @@ class TransformDelay : public Delay
     bool invalidated() override;
     void finish() override;
 public:
-    TransformDelay(transformation f) :
-                   Delay(3), form(f)
+    TransformDelay(transformation f, const item_def *t) :
+                   Delay(3), form(f), talisman(t)
     { }
 
     bool try_interrupt(bool force = false) override;

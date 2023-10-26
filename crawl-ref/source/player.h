@@ -177,6 +177,7 @@ public:
     monster_type symbol;
     transformation form;
     transformation default_form;
+    item_def active_talisman;
 
     FixedVector< item_def, ENDOFPACK > inv;
     FixedBitVector<NUM_RUNE_TYPES> runes;
@@ -856,6 +857,8 @@ public:
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,
                bool temp = true) const override;
+
+    bool using_talisman(const item_def &talisman) const;
 
     bool do_shaft() override;
     bool shaftable() const;

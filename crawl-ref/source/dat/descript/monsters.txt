@@ -647,6 +647,12 @@ apocalypse crab
 An opalescent crab with jet black eyes, and chaotic mists effusing from its
 mandibles. Rumours claim that this species is waiting for the end of time.
 %%%%
+arcanist
+
+A wizard fond of spectacle and destruction. They scorn the cowardice of other
+magicians, who hide from their foes rather than simply blasting them out of
+existence.
+%%%%
 azure jelly
 
 An extremely cold blob of bright blue cytoplasm, forming bits of frost in the
@@ -1266,8 +1272,8 @@ A bat whose leathery body burns with a hot flame.
 fire crab
 
 A variety of crab prized for its brilliantly jewelled shell. The rarity of the
-shells is only enhanced by its vicious, fiery nature, and its almost
-supernatural ability to expel massive quantities of flames.
+shells is only enhanced by its almost supernatural ability to wade through
+molten lava and expel massive quantities of flames.
 %%%%
 fire dragon
 
@@ -1295,11 +1301,6 @@ flayed ghost
 A hideous floating undead creature, the anguished spirit of a tortured victim,
 with torn skin hanging from an emaciated body. It restlessly stalks the
 dungeon, inflicting the anguish it felt in life upon those still living.
-%%%%
-floating eye
-
-A floating eyeball, said to be one of the servitors of Jiyva. It possesses a
-gaze that can eventually paralyse even the most strong-willed of adventurers.
 %%%%
 flying skull
 
@@ -1371,6 +1372,12 @@ giant cockroach
 
 A big brown insect that makes a nasty hissing noise. Contrary to popular myth,
 it is in fact quite susceptible to mutagenic energies.
+%%%%
+glass eye
+
+A floating eyeball as transparent and glossy as glass, said to be one of the
+servitors of Jiyva. It possesses a gaze that will render even the most
+strong-willed of adventurers as fragile as glass.
 %%%%
 glowing orange brain
 
@@ -1900,6 +1907,12 @@ obsidian statue
 
 A beautiful statue of an unknown creature, jet-black like a tear in reality.
 Its eyes glow with an otherworldly, malignant radiance.
+%%%%
+occultist
+
+A wizard fond of illusion and treachery. They scorn the crudeness of other
+magicians, who hurl wild conjurations toward their foes rather than cunningly
+exploiting their greatest weaknesses.
 %%%%
 octopode
 
@@ -2563,8 +2576,8 @@ An elite, ferocious tengu highly skilled with both steel and spells.
 %%%%
 tengu warrior
 
-A particularly bloodthirsty tengu who has opted to hone its skill in fighting
-and weaponry instead of spellcasting.
+A particularly bloodthirsty tengu who has opted to hone its skill in airborne
+fighting and weaponry instead of spellcasting.
 %%%%
 tentacle
 
@@ -2654,7 +2667,8 @@ days when it will devour the sun.
 %%%%
 ufetubus
 
-A chattering and shrieking minor demon.
+A chattering and shrieking minor demon. They delight in sneaking past and
+backstabbing their prey.
 %%%%
 ugly thing
 
@@ -2823,10 +2837,6 @@ wind drake
 
 A small but powerful dragon, particularly adept amongst its kin at manipulating
 the currents of air that surround it. It can exhale powerful blasts of wind.
-%%%%
-wizard
-
-A rather eccentric person, dabbling in all sorts of arcane oddities.
 %%%%
 wolf
 

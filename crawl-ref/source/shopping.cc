@@ -654,22 +654,22 @@ unsigned int item_value(item_def item, bool ident)
         {
         case TALISMAN_DEATH:
         case TALISMAN_STORM:
-            valued += 1200;
+            valued += 800;
             break;
 
         case TALISMAN_DRAGON:
         case TALISMAN_STATUE:
-            valued += 800;
+            valued += 600;
             break;
 
         case TALISMAN_MAW:
         case TALISMAN_SERPENT:
         case TALISMAN_BLADE:
-            valued += 400;
+            valued += 300;
             break;
 
         case TALISMAN_FLUX:
-            valued += 300;
+            valued += 250;
             break;
 
         case TALISMAN_BEAST:
@@ -677,6 +677,15 @@ unsigned int item_value(item_def item, bool ident)
             valued += 200;
             break;
         }
+        if (is_artefact(item))
+        {
+            // XXX placeholder
+            if (item_type_known(item))
+                valued += artefact_value(item) * (valued / 10);
+            else
+                valued += valued / 16;
+        }
+
         break;
 
     case OBJ_BOOKS:
@@ -700,6 +709,14 @@ unsigned int item_value(item_def item, bool ident)
 
     case OBJ_STAVES:
         valued = item_type_known(item) ? 250 : 120;
+        if (is_artefact(item))
+        {
+            // XX placeholder
+            if (item_type_known(item))
+                valued += (7 * artefact_value(item));
+            else
+                valued += 50;
+        }
         break;
 
     case OBJ_ORBS:

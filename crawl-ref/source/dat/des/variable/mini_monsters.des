@@ -1626,7 +1626,8 @@ ENDMAP
 NAME:    bh_hangedman_babel_library
 TAGS:    transparent no_monster_gen no_item_gen
 DEPTH:   D:10-, !D:$, Elf, !Elf:$
-MONS:    wizard / deep elf pyromancer / deep elf zephyrmancer
+MONS:    arcanist w:6 / deep elf pyromancer
+MONS:    occultist w:6 / deep elf zephyrmancer
 ITEM:    any potion
 ITEM:    randbook numspells:2 title:Dhcmrlchtdj
 ITEM:    randbook numspells:2 title:Combed_Thunderclap disc:air
@@ -1635,13 +1636,18 @@ ITEM:    randbook numspells:2 title:Axaxaxas_mlö
 ITEM:    randbook numspells:3 title:Forking_Paths owner:Ts'ui_Pên disc:hexes
 ITEM:    randbook numspells:2 title:Sand
 KFEAT:   ^ : shaft trap
+: if you.branch() == "D" and you.depth() < 12 then
+NSUBST:  1 = 1:. / *:1
+: else
+NSUBST:  1 = 1:2 / * = 12
+: end
 SHUFFLE: defg, efghij, bm, bm / ++
 MAP
    xxx@xxx     xxx@xxx
   xx.....xx   xx.....xx
  xx1.....dxxxxxf.....1xx
 xx....^....xbx....^....xx
-@....^<^.........^>^....@
+@....^<^....1....^>^....@
 xx....^....xmx....^....xx
  xxe.....1xxxxx1.....gxx
   xx.....xx   xx.....xx
@@ -1786,9 +1792,9 @@ MAP
 ENDMAP
 
 NAME:    kb_tengu_band
+TAGS:    no_pool_fixup transparent
 DEPTH:   D:12-, Shoals, Swamp
 WEIGHT:  5
-TAGS:    no_pool_fixup transparent
 MONS:    tengu warrior, tengu conjurer
 MAP
  .........
@@ -2140,8 +2146,10 @@ TAGS:     vaults_hard vaults_orient_s no_monster_gen patrolling
 DEPTH:    Depths, Vaults, !Vaults:$
 : if you.in_branch("Vaults") then
 SUBST:   c : vvb, @ = .
+MONS:     lich, arcanist / naga mage / tengu conjurer, tengu reaver
+: else
+MONS:     lich, occultist / naga mage / tengu conjurer, tengu reaver
 : end
-MONS:     lich, wizard / naga mage / tengu conjurer, tengu reaver
 ITEM:     book of power, robe good_item, hat good_item, robe, hat
 KFEAT:    _ = altar_vehumet
 SHUFFLE: ef, gh, ij
@@ -2164,12 +2172,12 @@ cccc+.......+cccc
     cc..@..cc
 ENDMAP
 
-NAME:  grunt_absolute_annihilation
-DEPTH: Depths
+NAME:    grunt_absolute_annihilation
+DEPTH:   Depths
 MONS:    ancient lich
 MONS:    deep elf annihilator / draconian annihilator w:5 / lich
 MONS:    deep elf pyromancer w:20 / deep elf zephyrmancer w:20 / tengu conjurer w:20 / \
-         wizard w:20 / orc sorcerer w:20 / nagaraja / tengu reaver
+         occultist w:20 / orc sorcerer w:20 / nagaraja / tengu reaver
 ITEM:    book of annihilations, book of power, book of conjurations
 ITEM:    randbook disc:conjuration, staff of conjuration
 KFEAT:   _ = altar_vehumet
@@ -2188,6 +2196,22 @@ MAP
   xccccc2ccccccccccccxx
   xxcccccccccxxxxxxxxx
    xxxxxxxxxxx
+ENDMAP
+
+NAME:   marbit_kobold_abyssish
+TAGS:   no_monster_gen
+DEPTH:  D:11-
+MONS:   kobold brigand ; dart ego:dispersal, kobold demonologist
+KFEAT:  _ = altar_lugonu
+KPROP:  1 = no_tele_into
+MAP
+xxxxxxxxxxxxxxx
+xxlllxx<.xlll%x
+xlllllxx.lll2.x
+@x.llll..lll._x
+x.xl1lllllll2>x
+xlllxlllx1lll%x
+xxxxxxxxxxxxxxx
 ENDMAP
 
 NAME: sigmund_edmund_badplayer
@@ -2264,8 +2288,11 @@ ENDMAP
 NAME:  lightli_wizard_tower
 TAGS:  no_monster_gen patrolling
 DEPTH: D:9-
-MONS:  patrolling wizard, patrolling crimson imp
+MONS:  crimson imp, arcanist, occultist
 ITEM:  any book, any scroll
+: if you.depth() > 11 then
+SUBST: 2 = 23
+: end
 MAP
    bbbb
   bbdebb
@@ -2670,6 +2697,124 @@ xcdd1ddcx
 xcdddddcx
 xcccccccx
 xxxxxxxxx
+ENDMAP
+
+NAME:    mainiacjoe_okawaru_digging_arena
+TAGS:    no_monster_gen no_item_gen transparent patrolling
+DEPTH:   D:11-
+WEIGHT:  5
+MONS:    human, tengu warrior, tengu reaver
+MONS:    two-headed ogre, ettin, vampire, vampire knight
+KMONS:   8 = gargoyle
+KMONS:   9 = war gargoyle
+KFEAT:   C = altar_okawaru
+ITEM:    any armour / animal skin w:5, any weapon / boomerang q:1 w:5
+ITEM:    manual of fighting / manual of armour / \
+         manual of dodging / manual of shields / manual of stealth
+ITEM:    ring mail randart / scale mail randart / chain mail randart / \
+         plate armour randart / kite shield randart / tower shield randart
+ITEM:    manual of maces & flails / manual of axes / manual of polearms / \
+         manual of staves / manual of short blades / manual of long blades / \
+         manual of ranged weapons / manual of throwing
+ITEM:    great mace randart / battleaxe randart / glaive randart / \
+         lajatang randart / rapier randart / great sword randart
+KITEM:   C = wand of digging charges:1
+SHUFFLE: 23 / 45 / 67 / 89, fi / gh
+FTILE:   `"C23456789defghixn+ = floor_sand
+KMASK:   13579defghi = opaque
+KPROP:   13579defghi = no_tele_into
+MAP
+   vvvvvvvvv
+   v1111111vv
+   vnnnnnnnnvvv
+   v```v`2`n33v
+  .+```v```nddv
+ ..+```+``2nddvv
+ ..v```+```nddfv
+@..v```+``Cxxxxv
+ ..v```+```neeiv
+ ..+```+``4neevv
+  .+```v```neev
+   v```v`4`n55v
+   vnnnnnnnnvvv
+   v1111111vv
+   vvvvvvvvv
+ENDMAP
+
+NAME:   mainiacjoe_labyrinth_nostalgia
+TAGS:   no_monster_gen no_item_gen patrolling uniq_faux_labyrinth
+DEPTH:  D:11-
+WEIGHT: 5
+MONS:   basilisk / gargoyle / shadow, generate_awake minotaur
+KFEAT:  < = <
+KITEM:  < = |, *, %
+KFEAT:  X = rock_wall
+TILE:   X = wall_lab_rock
+TILE:   c = wall_lab_stone
+TILE:   v = wall_lab_metal
+FTILE:  `12| = floor_gauntlet
+MAP
+xxxxxxxxxxxxxxxxxx@xx
+xXXXXXXcccccvvvvvvnvx
+xX```X```````````v<vx
+xX`X`X`ccc`cvvvv`v2vx
+xX`X`X`c```c```v`v`vx
+xX`X`XXc`ccc`v`v`v`vx
+xX`X`````c```v`v`v`vx
+xX`XXXXccc`cvv`v`v`vx
+xX`X```c```c```v`v`vx
+xX`X`XXc`ccc`ccc`c`cx
+xX`X```````c`c```c`cx
+xX`XXXXccc`c`c`ccc`cx
+xX```````c`c`c`c```cx
+xX`XXXXc`c```c`c`cccx
+xX`X`````X`X`X`X```Xx
+xXXX`XXXXX`X`X`XXX`Xx
+xX```X`````X`X`````Xx
+xX`XXX`XXXXX`X`XXX`Xx
+xX```````X11`X`````Xx
+xXXXXXXXXX1XXXXXXXXXx
+xxxxxxxxxx=xxxxxxxxxx
+ENDMAP
+
+NAME:   roadster_trireme
+TAGS:   no_trap_gen no_monster_gen
+DEPTH:  D:8-, Depths
+: if you.branch() == "D" then
+:   if you.depth() < 12 then
+MONS:   gnoll / kobold brigand w:2, centaur, gnoll sergeant, merfolk
+NSUBST: 1 = 8:1 / 2 = 1. / *:.
+:   else
+MONS:   human ; quarterstaff . robe, merfolk
+MONS:   occultist w:5 / arcanist w:5 / necromancer, cyclops / centaur warrior
+NSUBST: 1 = 10:1 / 3 = 122. / *:.
+:   end
+: else
+MONS:   tengu warrior / hell knight w:2, merfolk impaler
+MONS:   titan, merfolk javelineer
+NSUBST: 1 = 12:1 / 4 = 12. / *:.
+: end
+ITEM:   throwing net q:1, javelin
+MARKER: G = lua:fog_machine { cloud_type='translocational energy',  \
+                              pow_min = 7, pow_max = 10, delay = 50, \
+                              size = 4, walk_dist = 1 }
+TILE:   G = dngn_statue_mermaid
+MAP
+    wwwwwwwwwwwww
+...wwwwwwwwwwwwwww
+.WWxxxxxxxxxxxxxxww
+@Wxxxxxxxxxxxxxxxxww
+@xx1x1x1x1x1x1xxxxww
+@xx1x1x1x1x1x1x2xxxww
+@x.............d*xxxw
+@+.............34CxGw
+@x.............d|xxxw
+@xx1x1x1x1x1x1x2xxxww
+@xx1x1x1x1x1x1xxxxww
+@Wxxxxxxxxxxxxxxxxww
+.WWxxxxxxxxxxxxxxww
+...wwwwwwwwwwwwwww
+   wwwwwwwwwwwwww
 ENDMAP
 
 ################################################################################
@@ -3239,21 +3384,16 @@ ENDMAP
 NAME:    nicolae_fort_ynox
 TAGS:    transparent no_pool_fixup
 DEPTH:   D:9-12
-KMONS:   }])> = ynoxinul
-KMONS:   5 = ufetubus
+MONS:    ufetubus, ynoxinul
 KFEAT:   - = iron_grate
-KFEAT:   } = }
-KFEAT:   ] = ]
-KFEAT:   ) = )
-KFEAT:   > = >
 SHUFFLE: }])>>
-SUBST:   ` = 5...
+NSUBST:  ` = 6:1 / 4 = 1. / *:.
 MAP
     .........
    ..wwwwwww..
   ..wwv---vww..
  ..wwvv}])vvww..
-..wwvv.....vvww..
+..wwvv2...2vvww..
 .wwvv..```..vvww.
 .wvv..`````..vvw.
 .w-$.```````.$-w.
@@ -3328,6 +3468,48 @@ MAP
  ......cLc......
   .............
     .........
+ENDMAP
+
+NAME:    roadster_capsule_ark_zombie
+TAGS:    no_monster_gen patrolling
+DEPTH:   D:6-, Crypt
+: if you.branch() == "D" then
+:   if you.depth() < 10 then
+MONS:   adder zombie / scorpion zombie / \
+        hound zombie w:20 / howler monkey zombie
+MONS:   flying skull / human zombie / elf zombie / centaur zombie w:20
+MONS:   killer bee zombie / elephant zombie / ogre zombie
+:   else
+MONS:   wolf zombie / killer bee zombie / spriggan zombie / centaur zombie
+MONS:   small abomination / meliai zombie / \
+        elephant zombie / two-headed ogre zombie
+MONS:   large abomination / harpy zombie / minotaur zombie / hydra zombie
+:   end
+: else
+MONS:   large abomination / jiangshi / minotaur zombie / ettin zombie
+MONS:   spriggan defender zombie w:20 / dire elephant zombie / \
+        iron dragon zombie
+MONS:   deep elf blademaster zombie / caustic shrike zombie / \
+        storm dragon zombie / golden dragon zombie
+: end
+KITEM:  d = $ / %, any good_item
+KFEAT:  C = altar_kikubaaqudgha / altar_yredelemnul
+MARKER: F = lua:fog_machine{ cloud_type = "black smoke", \
+            pow_min = 24, pow_max = 32, delay_min = 280, delay_max = 320, \
+            size_min = 1, size_max = 2, start_clouds = 2, size_buildup_amnt = 1 }
+MARKER: l = lua:fog_machine { cloud_type = "flame", \
+            pow_min = 1000, pow_max = 1000, delay = 1, \
+            size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+MAP
+    v
+   vvv
+   +2+
+ vmv1vmv
+ vm212mv
+vv11311vv
+vd31113dv
+vvmv+vmvv
+@.FlClF.@
 ENDMAP
 
 ################################################################################
@@ -3594,7 +3776,7 @@ KFEAT:  " = floor
 MONS:   lava snake, orange crystal statue
 SUBST:  wW = l
 : elseif crawl.coinflip() then
-MONS:   oklob plant, floating eye
+MONS:   oklob plant, glass eye
 MONS:   plant, bush
 SUBST:  w = 334, W = .
 : else
@@ -3733,7 +3915,7 @@ SUBST:   A : x, B : x, C : x, D : x, E : x, F : +, G : l:50 w:50 I
 SUBST:   x : xvcb
 SUBST:   H = 0 ., J = 1 0:100 $:20
 ITEM:    any jewellery
-MONS:    floating eye
+MONS:    glass eye
 MAP
 ...........
 ..xHxHxHx..
@@ -3788,8 +3970,8 @@ ENDMAP
 NAME:   hangedman_eye_storm
 TAGS:   no_monster_gen no_item_gen patrolling
 DEPTH:  Depths, !Depths:$, Abyss
-MONS:   golden eye, ophan, floating eye
-MONS:   eye of devastation, great orb of eyes / shining eye w:5
+MONS:   golden eye, ophan, glass eye, eye of devastation
+MONS:   great orb of eyes / shining eye w:5
 NSUBST: 5 = 2:5 / *:4 5:15
 KFEAT:  m = iron_grate
 : if you.in_branch("Abyss") then
@@ -4361,7 +4543,7 @@ ENDMAP
 
 NAME:   minmay_librarian
 TAGS:   no_monster_gen no_item_gen no_trap_gen
-DEPTH:  D:9-, Depths
+DEPTH:  D:9-, Elf, Depths
 : if you.absdepth() > 24 then
 MONS:   ancient lich w:25 / dread lich w:25 / royal mummy
 ITEM:   any scroll w:6 / any book
@@ -4373,10 +4555,14 @@ ITEM:   any scroll / any book
 MONS:   deep elf annihilator w:30 / deep elf sorcerer w:20 / \
         deep elf demonologist / deep elf death mage
 ITEM:   any scroll / any book w:6
+: elseif you.absdepth() > 12 then
+MONS:   arcanist w:25 / occultist w:25 / necromancer w:20 / \
+        deep elf pyromancer w:20 / deep elf zephyrmancer w:20 / \
+        orc sorcerer / ogre mage / naga mage / vampire mage
 : else
-MONS:   wizard w:50 / necromancer w:20 / deep elf pyromancer w:20 / \
-        deep elf zephyrmancer w:20 / orc sorcerer / ogre mage / naga mage / \
-        vampire mage / kobold demonologist w:5
+MONS:   arcanist w:20 / necromancer w:20 / \
+        deep elf pyromancer w:20 / orc sorcerer / \
+        naga mage w:5 / kobold demonologist
 ITEM:   any scroll / any book w:3
 : end
 MAP
@@ -7282,6 +7468,76 @@ xxx.xxxx.x.xxxx.xxx
   xx@xxxxxxxxx@xx
 ENDMAP
 
+# Places an early-ish talisman with corresponding monsters and scenery
+NAME:  hellmonk_talismancer
+TAGS:  transparent no_item_gen patrolling
+DEPTH: D:12-, Lair:2-, Orc:1
+: local r = 0
+: if you.branch() == "Lair" then
+:   r = crawl.random_range(1, 4)
+: elseif you.branch() == "Orc" then
+:   r = crawl.random_range(3, 6)
+: else
+:   r = crawl.random_range(1, 8)
+: end
+: if r == 1 then
+MONS:   eight-headed hydra / goliath frog
+ITEM:   maw talisman / maw talisman randart w:1
+SUBST:  " : ., . = . %:1
+:   dgn.delayed_decay(_G, '%', 'yak skeleton')
+: elseif r == 2 then
+MONS:   anaconda
+KMONS:  " = water moccasin
+ITEM:   serpent talisman / serpent talisman randart w:1
+KFEAT:  "' = shallow_water
+NSUBST: " = 1:" / 1:' / * = "'
+SUBST:  2 = .
+: elseif r == 3 then
+MONS:   fire dragon, lindwurm
+KITEM:  d = dragon-blood talisman / dragon-blood talisman randart w:1
+SUBST:  '" = l
+: elseif r == 4 then
+KMONS:  12 = boulder beetle
+KITEM:  d = granite talisman / granite talisman randart w:1
+SUBST:  " = G
+: elseif r == 5 then
+MONS:   dancing weapon ; rapier | scimitar | great sword | \
+                         quick blade w:1 | triple sword w:1 | double sword w:1
+ITEM:   blade talisman / blade talisman randart w:1
+KITEM:  " = damaged long sword / damaged falchion
+SUBST:  x = v, 2 = .
+: elseif r == 6 then
+MONS:   reaper, soul eater
+KITEM:  d = talisman of death / talisman of death randart w:1
+SUBST:  " = G
+TILE:   G = dngn_gravestone
+:   set_feature_name("granite_statue", "a gravestone")
+: elseif r >= 7 then
+MONS:   air elemental
+KMONS:  2" = raiju
+KITEM:  d = storm talisman / storm talisman randart w:1
+SUBST:  " = "...
+MARKER: d = lua:fog_machine {cloud_type = "thin mist", \
+             pow_min = 5, pow_max = 12, delay_min = 28, delay_max = 42, \
+             size = 2, spread_rate = 2, start_clouds = 1 }
+: else
+SUBST: 1d'" = .
+: end
+SUBST: x : xcc
+MAP
+xxxxxxxxxxx
+xxxxxxxxxxx
+xx"'xxx'"xx
+xx'..1..'xx
+xxx..2..xxx
+xxxx.d.xxxx
+xxx.....xxx
+xx'.....'xx
+xx"'x+x'"xx
+xxxxx.xxxxx
+xxxx+++xxxx
+ENDMAP
+
 ################################################################
 #
 # <<8>> Minivaults with monsters guarding a thematic item.
@@ -7436,7 +7692,7 @@ NAME:   minmay_guarded_unrand_mage
 TAGS:   no_monster_gen no_item_gen transparent
 DEPTH:  Depths
 WEIGHT: 3
-MONS:   wizard, orange crystal statue / obsidian statue
+MONS:   occultist, orange crystal statue / obsidian statue
 KMONS:  3 = lich w:40 / ancient lich / dread lich
 KITEM:  3 = ring_of_the_mage no_pickup
 KPROP:  32'+ = no_tele_into
@@ -7494,8 +7750,8 @@ KMONS:   E = Joseph / orc knight ; long sword | scimitar . chain mail . kite shi
                       orc knight ; long sword | scimitar . chain mail . kite shield / nothing
 KMONS:   F = Urug / orc knight ; rapier | long sword . leather armour . buckler | nothing, \
                     orc knight ; rapier | long sword . leather armour . buckler | nothing / nothing
-KMONS:   G = Erica / wizard ; long sword . robe | leather armour . kite shield, \
-                     wizard ; long sword . robe | leather armour . kite shield / nothing
+KMONS:   G = Erica / arcanist ; long sword . robe | leather armour . kite shield, \
+                     arcanist ; long sword . robe | leather armour . kite shield / nothing
 KMONS:   H = Harold / deep elf knight, deep elf knight / nothing
 KMONS:   I = Donald / orc warlord, orc warlord / nothing
 KMONS:   J = Louise / hell knight, hell knight / nothing
@@ -7617,8 +7873,8 @@ NAME:    minmay_guarded_unrand_prune
 TAGS:    transparent no_monster_gen
 DEPTH:   D:12-
 WEIGHT:  3
-MONS:    deep elf pyromancer / deep elf zephyrmancer / ogre mage / wizard / \
-         kobold demonologist w:2 / vampire mage w:2 / naga mage w:2
+MONS:    deep elf pyromancer / deep elf zephyrmancer / ogre mage / occultist / \
+         arcanist / kobold demonologist w:2 / vampire mage w:2 / naga mage w:2
 NSUBST:  1 = 6:1 / 10=1.... / .
 ITEM:    glaive_of_prune no_pickup
 SUBST:   " : .:50 cvbnG
@@ -8118,7 +8374,7 @@ ENDMAP
 
 NAME:   hellmonk_guarded_unrand_sphere_of_battle
 TAGS:   transparent
-DEPTH:  D:8-
+DEPTH:  D:9-
 WEIGHT: 3
 ITEM:   sphere_of_battle no_pickup
 MONS:   tengu conjurer, tengu reaver
@@ -8367,16 +8623,16 @@ TAGS:   patrolling
 DEPTH:  D:13-, Depths
 WEIGHT: 3
 ITEM:   rift no_pickup
-MONS:   wizard, tentacled starspawn, starcursed mass
+MONS:   arcanist, occultist, tentacled starspawn, starcursed mass
 KFEAT:  t = demonic_tree
 KFEAT:  _ = altar_lugonu / enter_abyss
 : if you.in_branch("D") then
-NSUBST: D = d / 3 / 2
-SUBST:  1 = 1..
+SUBST:  1 = 12..
+NSUBST: D = d / 3 / 4
 # Depths
 : else
-NSUBST: D = d / 3
-SUBST:  1 = 12..
+SUBST:  1 = 23..
+NSUBST: D = d / 4
 : end
 SUBST:  c = ccvbx t:5
 SUBST:  E = xxxcvlWbtTG_....
@@ -8423,11 +8679,11 @@ ITEM:   lear's_hauberk no_pickup, hat plus:-2 ident:all
 ITEM:   helmet plus:-2 ident:all, chain mail plus:-2 ident:all
 ITEM:   pair of boots plus:-2 ident:all
 ITEM:   pair of gloves plus:-2 ident:all
-: if you.depth() < 8 then
+: if you.depth() < 9 then
 MONS:   troll
 : elseif you.depth() < 13 then
 MONS:   tengu warrior
-:else
+: else
 MONS:   minotaur
 : end
 NSUBST: D = d / e / f / g / h / i
@@ -8567,7 +8823,6 @@ KMASK:  alpwq'r = opaque
 KFEAT:  a = l
 KFEAT:  p = w
 : if you.in_branch("D") then
-# D:9-D:11
 :     if you.depth() < 12 then
 # Monsters 1 through 4 must be defined in order of fire, ice, earth, air.
 MONS:   fire elemental, rime drake / ice devil, gargoyle, steam dragon
@@ -8579,7 +8834,6 @@ MONS:   efreet / white ugly thing / basilisk / boulder beetle / raiju \
 MONS:   deep elf pyromancer ; elemental staff . robe good_item
 # Monster counts scale slowly, placing up to 1/3 of each type by Depths.
 SUBST:  1 = 1...., 2 = 2...., 3 = 3...., 4 = 4...., 5 = 5...
-# D:12-13
 :     elseif you.depth() < 14 then
 MONS:   deep elf pyromancer / efreet
 MONS:   rime drake / ice devil / white ugly thing
@@ -8589,7 +8843,6 @@ MONS:   fire crab / fire dragon / freezing wraith / earth elemental \
         / air elemental
 MONS:   deep elf zephyrmancer ; elemental staff . robe good_item
 SUBST:  1 = 1...., 2 = 2...., 3 = 3...., 4 = 4...., 5 = 5..
-# D:14-
 :     else
 MONS:   deep elf pyromancer / efreet / fire crab w:5 / fire dragon w:5
 MONS:   white ugly thing / freezing wraith / ice dragon w:5
@@ -8610,6 +8863,7 @@ MONS:   deep elf elementalist w:40 / fire giant / frost giant / iron dragon \
         / storm dragon
 : master_elementalist_setup(_G, "6")
 SUBST:  1 = 1..., 2 = 2..., 3 = 3..., 4 = 4...
+CLEAR:  @>
 # Depths
 : else
 MONS:   fire dragon / fire giant
@@ -8619,6 +8873,7 @@ MONS:   spriggan air mage / storm dragon
 MONS:   hellephant / shard shrike / iron giant / titan
 : master_elementalist_setup(_G, "6")
 SUBST:  1 = 1.., 2 = 2.., 3 = 3.., 4 = 4..
+CLEAR:  @>
 : end
 # Fog machine for each closed elemntal chamber.
 MARKER: a = lua:fog_machine { cloud_type = "flame", pow_min = 5, \
@@ -8640,8 +8895,8 @@ MAP
             nblbn
            nblllbn
           bbllallbb
-         bbnblllbnbb
-        +b11nblbn11b+
+        >bbnblllbnbb@
+       @+b11nblbn11b+>
        bb...1nbn1...bb
       bb4.5.1bbb1.5.3bb
      nbn4...bb.bb...3nbn
@@ -8653,8 +8908,8 @@ MAP
      nbn4...bb.bb...3nbn
       bb4.5.2bbb2.5.3bb
        bb...2nbn2...bb
-        +b22nbwbn22b+
-         bbnbwwwbnbb
+       >+b22nbwbn22b+@
+        @bbnbwwwbnbb>
           bbwwpwwbb
            nbwwwbn
             nbwbn
@@ -8901,7 +9156,7 @@ ENDMAP
 
 NAME:    nicolae_guarded_unrand_lochaber
 TAGS:    patrolling no_monster_gen no_item_gen
-DEPTH:   D:9-, Depths
+DEPTH:   D:10-, Depths
 WEIGHT:  3
 KITEM:   L = lochaber axe no_pickup
 : if you.in_branch("D") then
@@ -9392,7 +9647,12 @@ ENDMAP
 
 # Wizard's laboratory
 NAME:  laboratory
-MONS:  wizard, small abomination, large abomination
+MONS:  arcanist, occultist, small abomination, large abomination
+: if you.branch() ~= "D" then
+SUBST: 1 = 2
+: elseif you.depth() > 12 then
+SUBST: 1 = 12
+: end
 MAP
 ccc+cccccc
 c........c
@@ -9400,9 +9660,9 @@ c........c
 c......1.c
 c........c
 ccccccc+cc
-c***c3232c
-c|**+2223c
-c||*c3322c
+c***c4343c
+c|**+3334c
+c||*c4433c
 cccccccccc
 ENDMAP
 

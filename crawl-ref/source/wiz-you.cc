@@ -226,6 +226,7 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_NO_SCROLLS] = 0;
         you.duration[DUR_LOWERED_WL] = 0;
         you.duration[DUR_VERTIGO] = 0;
+        you.duration[DUR_VITRIFIED] = 0;
         delete_all_temp_mutations("Super heal");
         you.stat_loss.init(0);
         you.attribute[ATTR_STAT_LOSS_XP] = 0;
@@ -963,7 +964,10 @@ void wizard_transform()
 
     you.transform_uncancellable = false;
     if (you.default_form == you.form && you.form != transformation::none)
-        you.default_form = form;
+    {
+        you.default_form = form; // ehhh
+        you.active_talisman.clear();
+    }
     if (!transform(200, form, true) && you.form != form)
         mpr("Transformation failed.");
 }

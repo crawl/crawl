@@ -112,7 +112,7 @@ ENDMAP
 
 NAME:  minmay_shoals_entry_hut
 TAGS:  shoals_entry transparent
-MONS:  snapping turtle
+MONS:  snapping turtle, water elemental
 SUBST: w = wwwW
 TILE:  x = wall_pebble_lightgray
 KFEAT: O = enter_shoals
@@ -124,16 +124,18 @@ Wwxx1..xxwW
 Wwx.....xwW
 Wwx..O..+.@
 Wwx.....xwW
-Wwxx...xxwW
+Wwxx2..xxwW
 WWwxxxxxwWW
  WWwwwwwWW
   WWWWWWW
 ENDMAP
 
-NAME:  minmay_shoals_entry_centaurs
-TAGS:  shoals_entry transparent
-MONS:  centaur / nothing w:5, plant / nothing w:20
-KFEAT: O = enter_shoals
+NAME:   minmay_shoals_entry_centaurs
+TAGS:   shoals_entry transparent patrolling
+MONS:   centaur, plant
+KFEAT:  O = enter_shoals
+SUBST:  2 = 2..
+NSUBST: 1 = 2:1 / 1:. / * = 11...
 MAP
    .......
   .2222222.
@@ -151,9 +153,9 @@ MAP
 ENDMAP
 
 NAME:    minmay_shoals_entry_beasts
-TAGS:    shoals_entry transparent
+TAGS:    shoals_entry transparent patrolling
 MONS:    wind drake, manticore
-NSUBST:  1 = 1 / 2 / .
+NSUBST:  1 = 1:112 / 1:2 / *:.
 KFEAT:   O = enter_shoals
 MAP
 111
@@ -178,32 +180,27 @@ ENDMAP
 
 NAME:   elwin_shoals_entry_stream
 TAGS:   shoals_entry transparent
+KMONS:  1 = merfolk
+KMONS:  2 = merfolk siren
+KFEAT:  12 = W
 KFEAT:  O = enter_shoals
-NSUBST: Z = 4:1 / *:W
-KFEAT:  1 = W
-KMONS:  1 = merfolk / merfolk siren
+NSUBST: Y = 2:1 / *:W, Z = 2:1 / *:W, 1 = 1:122 / 1:1112 / *:1
 MAP
-..xxx
-xZ..x
-x.Z.xx
-xxZ..x
- xZZ.xx
- xxZx.x
-  xZO.x
- xxZx.x
- xZZ.xx
-xxZ..x
-x.Z.xx
-xZ..x
-..xxx
+    xxxxx
+  xxx...xxx
+xxx..xOx..xxx
+x...YYWZZ...x
+x.YYYxxxZZZ.x
++W.xxx xxx.W+
++xxx     xxx+
 ENDMAP
 
 NAME:   elwin_shoals_entry_rooms
 TAGS:   shoals_entry transparent
+KMONS:  1 = merfolk / merfolk siren / nothing w:40
+KFEAT:  1 = W
 KFEAT:  O = enter_shoals
 NSUBST: 1 = 4:1 / *:W
-KFEAT:  1 = W
-KMONS:  1 = merfolk / merfolk siren / nothing w:40
 validate {{ return has_exit_from_glyph('O') }}
 MAP
 @...xxxxxxx....
@@ -224,18 +221,19 @@ ENDMAP
 NAME:   nicolae_shoals_entry_flooding
 TAGS:   shoals_entry patrolling transparent
 WEIGHT: 5
-KMONS:  ON = water nymph
+KMONS:  M = merfolk
+KMONS:  O = water nymph
 KFEAT:  O = enter_shoals
-NSUBST: N = N``` / `
-SUBST:  x = x`, ` = W.
+NSUBST: M = 1:M`` / *:`
+SUBST:  x = xx`, ` = W.
 MAP
  .........
 ...xx`xx...
 ..xxx`xxx..
 .xxxWWWxxx.
-.xxWNNNWxx.
-.``WNONW``.
-.xxWNNNWxx.
+.xxWMMMWxx.
+.``WMOMW``.
+.xxWMMMWxx.
 .xxxWWWxxx.
 ..xxx`xxx..
 ...xx`xx...
@@ -255,6 +253,28 @@ MAP
 `WxHxW`
 `WWWWW`
 ```````
+ENDMAP
+
+NAME:    mainiacjoe_shoals_entry_four_pools
+TAGS:    shoals_entry transparent
+KMONS:   P = plant
+KMONS:   1 = merfolk
+KMONS:   2 = merfolk siren / manticore / harpy / cyclops
+KITEM:   $ = gold q:1
+KFEAT:   @P12$ = W
+KFEAT:   O = enter_shoals
+SHUFFLE: 12
+NSUBST:  2 = 1:2 / *:W
+MAP
+xxxxx@xxxxx
+xWW1xWx1WWx
+xWWWxWxWWWx
+xPxxxWxxxPx
+x$WWWPWWW$x
+xPxxxWxxxPx
+xWWWxWxWWWx
+xWW1xWxOWWx
+xxxxx@xxxxx
 ENDMAP
 
 ###############################################################################

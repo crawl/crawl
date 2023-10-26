@@ -347,7 +347,7 @@ if you.race() == "Mummy" then
     return "velvet-covered"
 elseif you.mutation('beak') > 0 then
     return "pearl-beaked"
-elseif you.transform() == "lich" then
+elseif you.transform() == "death" then
     return "ivory-boned"
 elseif you.transform() == "statue" then
     return "marble-toed"
@@ -6940,14 +6940,6 @@ orb spider charge
 
 @The_monster@ begins to weave its threads into a brightly glowing ball.
 %%%%
-floating eye charge
-
-@The_monster@'s view fixates on @foe@.
-
-@The_monster@'s stare focuses on @foe@.
-
-@The_monster@ seems to glare at @foe@.
-%%%%
 ################## Bennu ###################################
 %%%%
 bennu
@@ -7267,7 +7259,11 @@ _tormentor_rare_
 ## END _tormentor_ ##
 %%%%
 ################## Wizard ##################################
-wizard
+arcanist
+
+@_wizard_@
+
+occultist
 
 @_wizard_@
 %%%%

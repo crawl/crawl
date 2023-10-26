@@ -13,7 +13,7 @@ struct dice_def;
 class dist;
 
 const int DEFAULT_SHATTER_DICE = 3;
-const int FLAT_DISCHARGE_ARC_DAMAGE = 2;
+const int FLAT_DISCHARGE_ARC_DAMAGE = 3;
 const int AIRSTRIKE_PER_SPACE_BONUS = 2;
 const int MAX_AIRSTRIKE_BONUS = 8 * AIRSTRIKE_PER_SPACE_BONUS;
 
@@ -81,6 +81,7 @@ void polar_vortex_damage(actor *caster, int dur);
 dice_def polar_vortex_dice(int pow, bool random);
 void cancel_polar_vortex(bool tloc = false);
 coord_def get_thunderbolt_last_aim(actor *caster);
+dice_def thunderbolt_damage(int power, int arc);
 spret cast_thunderbolt(actor *caster, int pow, coord_def aim,
                             bool fail);
 

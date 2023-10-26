@@ -816,9 +816,9 @@ static int _apply_extra_harm(int dam, mid_t source)
 {
     monster* damager = monster_by_mid(source);
     if (damager && damager->extra_harm())
-        dam *= (100 + outgoing_harm_amount(damager->extra_harm())) / 100;
+        dam = dam * (100 + outgoing_harm_amount(damager->extra_harm())) / 100;
     if (you.extra_harm())
-        dam *= (100 + incoming_harm_amount(you.extra_harm())) / 100;
+        dam = dam * (100 + incoming_harm_amount(you.extra_harm())) / 100;
     return dam;
 }
 
@@ -988,9 +988,14 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     int drain_amount = 0;
 
-    // Multiply damage if Harm is in play. (Poison is multiplied earlier.)
+    // Multiply damage if Harm or Vitrify is in play. (Poison is multiplied earlier.)
     if (dam != INSTANT_DEATH && death_type != KILLED_BY_POISON)
+    {
         dam = _apply_extra_harm(dam, source);
+
+        if (you.duration[DUR_VITRIFIED])
+            dam = dam * 130 / 100;
+    }
 
 #if TAG_MAJOR_VERSION == 34
     if (can_shave_damage() && dam != INSTANT_DEATH

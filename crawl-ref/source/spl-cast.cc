@@ -66,7 +66,6 @@
 #include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
-#include "spl-wpnench.h"
 #include "spl-zap.h"
 #include "state.h"
 #include "stepdown.h"
@@ -1203,7 +1202,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_FREEZING_CLOUD:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_HOLY_BREATH:
-        return make_unique<targeter_cloud>(&you, range);
+        return make_unique<targeter_cloud>(&you, spell_to_cloud(spell), range);
     case SPELL_THUNDERBOLT:
         return make_unique<targeter_thunderbolt>(&you, range,
                    get_thunderbolt_last_aim(&you));
@@ -1816,14 +1815,14 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
 }
 
 /**
- * Returns the description displayed if targeting a monster with a spell.
- * For the clua api
+ * For the clua api, return the description displayed if targeting a monster
+ * with a spell.
  *
  * @param mi     The targeted monster.
  * @param spell  The spell being cast.
  * @return       The displayed string.
  **/
-string target_desc(const monster_info& mi, spell_type spell)
+string target_spell_desc(const monster_info& mi, spell_type spell)
 {
     int powc = calc_spell_power(spell);
     const int range = calc_spell_range(spell, powc, false);
@@ -2007,6 +2006,17 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
                 canned_msg(MSG_UNTHINKING_ACT);
 
             return spret::abort;
+        }
+
+        if (spell == SPELL_BOMBARD)
+        {
+            const coord_def back = you.stumble_pos(target->target);
+            if (!back.origin()
+                && back != you.pos()
+                && !check_moveto(back, "potentially stumble back", false))
+            {
+                return spret::abort;
+            }
         }
     }
 
@@ -2773,6 +2783,8 @@ static dice_def _spell_damage(spell_type spell, int power)
             return toxic_bog_damage();
         case SPELL_BOULDER:
             return boulder_damage(power, false);
+        case SPELL_THUNDERBOLT:
+            return thunderbolt_damage(power, 1);
         default:
             break;
     }
@@ -2835,12 +2847,19 @@ string spell_damage_string(spell_type spell, bool evoked, int pow)
         case SPELL_CONJURE_BALL_LIGHTNING:
             mult = "3x";
             break;
+        case SPELL_TREMORSTONE:
+            mult = make_stringf("%dx", tremorstone_count(pow));
         default:
             break;
     }
-    const string dam_str = make_stringf("%s%dd%d", mult.c_str(), dam.num, dam.size);
-    if (spell == SPELL_LRD || spell == SPELL_SHATTER || spell == SPELL_POLAR_VORTEX)
+    const string dam_str = make_stringf("%s%dd%d", mult.c_str(), dam.num,
+            dam.size);
+    if (spell == SPELL_LRD
+        || spell == SPELL_SHATTER
+        || spell == SPELL_POLAR_VORTEX)
+    {
         return dam_str + "*"; // many special cases of more/less damage
+    }
     return dam_str;
 }
 

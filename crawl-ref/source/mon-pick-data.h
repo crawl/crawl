@@ -7,7 +7,7 @@
 #define POP_DEPTHS \
 { /* Depths (OOD cap: 13)*/ \
   { -3,  3,  250, SEMI, MONS_RAKSHASA },\
-  { -3,  3,  100, SEMI, MONS_WIZARD },\
+  { -3,  3,  100, SEMI, MONS_OCCULTIST },\
   { -3,  3,  100, SEMI, MONS_NECROMANCER },\
   { -3,  9,  250, PEAK, MONS_FIRE_GIANT },\
   { -3,  9,  260, PEAK, MONS_FROST_GIANT },\
@@ -33,7 +33,7 @@
   {  0, 13,   60, SEMI, MONS_SPHINX },\
   {  1,  7,  135, SEMI, MONS_SPRIGGAN_AIR_MAGE },\
   {  1,  7,  185, SEMI, MONS_SPRIGGAN_BERSERKER },\
-  {  1,  9,   25, FLAT, MONS_FLOATING_EYE },\
+  {  1,  9,   45, FLAT, MONS_GLASS_EYE },\
   {  2, 13,   45, FLAT, MONS_SPRIGGAN_DEFENDER },\
   {  3, 13,   80, SEMI, MONS_TENTACLED_MONSTROSITY },\
   {  3, 13,   40, FLAT, MONS_STORM_DRAGON },\
@@ -86,7 +86,6 @@ static const vector<pop_entry> population[] =
 // These historically don't get kills after D:7ish.
   {  4,  7,  800, PEAK, MONS_SCORPION },
   {  4,  7, 1000, PEAK, MONS_HOUND },
-  {  4,  7,  350, PEAK, MONS_UFETUBUS },
   {  4,  7,  500, PEAK, MONS_OGRE },
   {  4,  7, 1000, PEAK, MONS_IGUANA },
   {  4,  7,  350, PEAK, MONS_PHANTOM },
@@ -98,6 +97,7 @@ static const vector<pop_entry> population[] =
   {  4, 12,  150, PEAK, MONS_ORC_PRIEST },
   {  4, 14,  500, PEAK, MONS_ORC_WIZARD },
   {  4, 14,  350, PEAK, MONS_HOWLER_MONKEY },
+  {  5,  7,  350, PEAK, MONS_UFETUBUS },
   {  5,  8,  500, PEAK, MONS_WHITE_IMP },
   {  5,  8,  300, PEAK, MONS_SHADOW_IMP },
   {  5,  8,  500, PEAK, MONS_ICE_BEAST },
@@ -145,11 +145,12 @@ static const vector<pop_entry> population[] =
   { 13, 19,  285, SEMI, MONS_EFREET },
   { 13, 23,  675, SEMI, MONS_SHAPESHIFTER },
   { 13, 27,   89, FALL, MONS_CATOBLEPAS },
-  { 14, 19,  140, FLAT, MONS_WIZARD },
+  { 14, 19,   70, FLAT, MONS_ARCANIST },
   { 14, 22,  260, SEMI, MONS_FREEZING_WRAITH },
   { 14, 22,  270, SEMI, MONS_SIMULACRUM },
   { 14, 22,  115, SEMI, MONS_BOGGART },
   { 14, 27,  192, PEAK, MONS_FIRE_DRAGON },
+  { 15, 19,   70, FLAT, MONS_OCCULTIST },
   { 15, 20,  335, SEMI, MONS_YAKTAUR },
   { 15, 24,  345, FALL, MONS_ORC_KNIGHT },
   { 15, 25,  315, FALL, MONS_OGRE_MAGE },
@@ -456,9 +457,9 @@ static const vector<pop_entry> population[] =
   {  1,  5,  200, FLAT, MONS_GOLDEN_EYE },
   {  1,  5,  200, FLAT, MONS_FORMLESS_JELLYFISH },
   {  1,  8,  300, SEMI, MONS_EYE_OF_DEVASTATION },
-  {  1,  8,  390, SEMI, MONS_GREAT_ORB_OF_EYES },
+  {  1,  8,  265, SEMI, MONS_GREAT_ORB_OF_EYES },
   {  2,  5,  100, RISE, MONS_GLOWING_ORANGE_BRAIN },
-  {  2,  8,   50, SEMI, MONS_FLOATING_EYE },
+  {  2,  8,  315, SEMI, MONS_GLASS_EYE },
 },
 
 { // The Vaults (OOD cap: 12)
@@ -494,8 +495,8 @@ static const vector<pop_entry> population[] =
   {  1,  4,   50, RISE, MONS_GLOWING_ORANGE_BRAIN },
   {  1,  4,  150, FLAT, MONS_FORMLESS_JELLYFISH },
   {  1,  4,  100, RISE, MONS_FORMLESS_JELLYFISH },
-  {  1,  4,  350, FLAT, MONS_WIZARD },
-  {  1,  4,  350, RISE, MONS_WIZARD },
+  {  1,  4,  350, FLAT, MONS_ARCANIST },
+  {  1,  4,  350, RISE, MONS_ARCANIST },
   {  1,  4,   75, FLAT, MONS_NECROMANCER },
   {  1,  4,   75, RISE, MONS_NECROMANCER },
   {  1,  4,  500, FLAT, MONS_YAKTAUR_CAPTAIN },
@@ -881,7 +882,7 @@ POP_DEPTHS,
   {  4,  6,   18, FALL, MONS_FLAYED_GHOST },
   {  1,  6,    8, FLAT, MONS_HELL_KNIGHT },
   {  1,  6,    8, FLAT, MONS_NECROMANCER },
-  {  1,  6,    8, FLAT, MONS_WIZARD },
+  {  1,  6,    8, FLAT, MONS_OCCULTIST },
 
   {  1,  5, 1000, FLAT, MONS_ABOMINATION_LARGE },
   {  6,  7, 1000, FALL, MONS_ABOMINATION_LARGE },

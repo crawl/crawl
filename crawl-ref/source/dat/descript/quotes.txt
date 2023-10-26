@@ -1654,13 +1654,6 @@ giant club
     -Edmund Spenser, _The Faerie Queene_, Book I, “The Legend of the Knight of
      the Red Crosse”, Canto VIII, stanza vii, l. 55-9. 1590.
 %%%%
-floating eye
-
-“El ojo que ves
- no es ojo porque tú lo veas,
- es ojo porque te ve.”
-    -Antonio Machado, Campos de Castilla. 1912-1917.
-%%%%
 bullfrog
 
 “Hello, my baby
@@ -1703,6 +1696,13 @@ glaive
  to make the weapon lõger or ſhorter in fight at his pleaſure, a foot of the
  ſtaffe behind the backmoſt hand doth no harme.”
     -George Silver,_Paradoxes of Defence_.1599.
+%%%%
+glass eye
+
+“El ojo que ves
+ no es ojo porque tú lo veas,
+ es ojo porque te ve.”
+    -Antonio Machado, Campos de Castilla. 1912-1917.
 %%%%
 gnoll
 

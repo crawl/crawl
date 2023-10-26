@@ -732,47 +732,13 @@ static string _padded_artp_name(artefact_prop_type prop, int val)
         (_randart_prop_abbrev(prop, val) + ":").c_str());
 }
 
-static string _randart_descrip(const item_def &item)
+void desc_randart_props(const item_def &item, vector<string> &lines)
 {
-    string description;
-
     artefact_properties_t  proprt;
     artefact_known_props_t known;
     artefact_desc_properties(item, proprt, known);
 
-    bool need_newline = false;
-    // Give a short description of the base type, for base types with no
-    // corresponding ARTP.
-    if (item.base_type == OBJ_JEWELLERY
-        && (item_ident(item, ISFLAG_KNOW_TYPE)))
-    {
-        // why are these specially hardcoded
-        const char* type = jewellery_base_ability_string(item.sub_type);
-        const char* desc = _jewellery_base_ability_description(item.sub_type);
-        if (*desc)
-        {
-            if (*type)
-            {
-                // XX a custom ego description isn't well handled here. The
-                // main case of this is Vitality
-                description += make_stringf("%-*s %s",
-                    MAX_ARTP_NAME_LEN + 1,
-                    (string(type) + ":").c_str(),
-                    desc);
-            }
-            else
-            {
-                // if this case happens, the formatting can get mixed with
-                // DBRANDS in weird ways
-                description += desc;
-            }
-            need_newline = true;
-        }
-    }
-
-    const auto &propdescs = _get_all_artp_desc_data();
-
-    for (const property_descriptor &desc : propdescs)
+    for (const property_descriptor &desc : _get_all_artp_desc_data())
     {
         if (!known_proprt(desc.property)) // can this ever happen..?
             continue;
@@ -782,22 +748,18 @@ static string _randart_descrip(const item_def &item)
         // these two have some custom string replacement
         if (desc.property == ARTP_WILLPOWER)
         {
-            description += make_stringf("%s%s It %s%s your willpower.",
-                     need_newline ? "\n" : "",
+            lines.push_back(make_stringf("%s It %s%s your willpower.",
                      _padded_artp_name(ARTP_WILLPOWER, stval).c_str(),
                      (stval < -1 || stval > 1) ? "greatly " : "",
-                     (stval < 0) ? "decreases" : "increases");;
-            need_newline = true;
+                     (stval < 0) ? "decreases" : "increases"));
             continue;
         }
         else if (desc.property == ARTP_STEALTH)
         {
-            description += make_stringf("%s%s It makes you %s%s stealthy.",
-                     need_newline ? "\n" : "",
+            lines.push_back(make_stringf("%s It makes you %s%s stealthy.",
                      _padded_artp_name(ARTP_STEALTH, stval).c_str(),
                      (stval < -1 || stval > 1) ? "much " : "",
-                     (stval < 0) ? "less" : "more");;
-            need_newline = true;
+                     (stval < 0) ? "less" : "more"));
             continue;
         }
 
@@ -828,15 +790,46 @@ static string _randart_descrip(const item_def &item)
             sdesc = prefixes[idx] + sdesc + '.';
         }
 
-        if (need_newline)
-            description += '\n';
-        description += make_stringf("%s %s",
-                                    _padded_artp_name(desc.property, stval).c_str(),
-                                    sdesc.c_str());
-        need_newline = true;
+        lines.push_back(make_stringf("%s %s",
+                                     _padded_artp_name(desc.property, stval).c_str(),
+                                     sdesc.c_str()));
+    }
+}
+
+static string _desc_randart_jewel(const item_def &item)
+{
+    // why are these specially hardcoded?
+    const char* type = jewellery_base_ability_string(item.sub_type);
+    const char* desc = _jewellery_base_ability_description(item.sub_type);
+    if (!*desc)
+        return "";
+    if (!*type)
+    {
+        // if this case happens, the formatting can get mixed with
+        // DBRANDS in weird ways
+        return string(desc);
+    }
+    // XX a custom ego description isn't well handled here. The
+    // main case of this is Vitality
+    return make_stringf("%-*s %s", MAX_ARTP_NAME_LEN + 1,
+                        (string(type) + ":").c_str(), desc);
+}
+
+static string _randart_descrip(const item_def &item)
+{
+    vector<string> lines;
+
+    // Give a short description of the base type, for base types with no
+    // corresponding ARTP.
+    if (item.base_type == OBJ_JEWELLERY && item_ident(item, ISFLAG_KNOW_TYPE))
+    {
+        const string jewel_desc = _desc_randart_jewel(item);
+        if (!jewel_desc.empty())
+            lines.push_back(jewel_desc);
     }
 
-    return description;
+    desc_randart_props(item, lines);
+    return join_strings(lines.begin(), lines.end(), "\n");
 }
 #undef known_proprt
 
@@ -1438,12 +1431,19 @@ static string _describe_missile_brand(const item_def &item)
      return " + " + uppercase_first(brand_name);
 }
 
-string damage_rating(const item_def *item)
+string damage_rating(const item_def *item, int *rating_value)
 {
     if (item && is_unrandom_artefact(*item, UNRAND_WOE))
+    {
+        if (rating_value)
+            *rating_value = 666;
+
         return "your enemies will bleed and die for Makhleb.";
+    }
 
     const bool thrown = item && item->base_type == OBJ_MISSILES;
+    if (item && !thrown && !is_weapon(*item))
+        return "0.";
 
     brand_type brand = SPWPN_NORMAL;
     if (!item)
@@ -1481,6 +1481,9 @@ string damage_rating(const item_def *item)
     rating = apply_fighting_skill(rating, false, false);
     rating /= DAM_RATE_SCALE;
     rating += plusses;
+
+    if (rating_value)
+        *rating_value = rating;
 
     const string base_dam_desc = thrown ? make_stringf("[%d + %d (Thrw)]",
                                                        base_dam, extra_base_dam) :
@@ -2834,6 +2837,14 @@ string get_item_description(const item_def &item,
                     description << "Once activated";
                 description << ", this device is rendered temporarily inert. "
                             << "However, it recharges as you gain experience.";
+
+                const string damage_str = evoke_damage_string(item);
+                if (damage_str != "")
+                    description << "\nDamage: " << damage_str;
+
+                const string noise_str = evoke_noise_string(item);
+                if (noise_str != "")
+                    description << "\nNoise: " << noise_str;
             }
         }
 
@@ -2870,13 +2881,13 @@ string get_item_description(const item_def &item,
         {
             description << "\n";
 
-            const spell_type spell = spell_in_wand(static_cast<wand_type>(item.sub_type));
-
-            const string damage_str = spell_damage_string(spell, true);
+            const string damage_str = evoke_damage_string(item);
             if (damage_str != "")
                 description << "\nDamage: " << damage_str;
 
-            description << "\nNoise: " << spell_noise_string(spell);
+            const string noise_str = evoke_noise_string(item);
+            if (noise_str != "")
+                description << "\nNoise: " << noise_str;
 
             if (verbose)
                 _uselessness_desc(description, item);
@@ -4728,7 +4739,11 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
  */
 static const char* _special_flavour_prefix(attack_flavour flavour)
 {
-    return flavour == AF_SWOOP ? "swoop behind its foe and " : "";
+    if (flavour == AF_SWOOP)
+        return "swoop behind its foe and ";
+    else if (flavour == AF_FLANK)
+        return "slip behind its foe and ";
+    return "";
 }
 
 /**
@@ -4798,6 +4813,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_BLOODZERK,         "become enraged" },
         { AF_SLEEP,             "induce sleep" },
         { AF_SWOOP,             "" },
+        { AF_FLANK,             "" },
         { AF_PLAIN,             "" },
     };
 
@@ -4983,8 +4999,18 @@ static string _monster_attacks_description(const monster_info& mi)
 
     if (mons_class_flag(mi.type, M_ARCHER))
     {
-        result << make_stringf("It can deal up to %d extra damage when attacking with ranged weaponry.\n",
-                                archer_bonus_damage(mi.hd));
+        result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
+        result << make_stringf(" can deal up to %d extra damage when attacking"
+                               " with ranged weaponry.\n",
+                               archer_bonus_damage(mi.hd));
+    }
+
+    if (mi.type == MONS_NESSOS)
+    {
+        result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
+        result << make_stringf(" can cause poisoning in addition to any other"
+                               " weapon effects if any damage is dealt when"
+                               " attacking with ranged weaponry.\n");
     }
 
     if (mi.type == MONS_ROYAL_JELLY)

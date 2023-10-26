@@ -745,7 +745,7 @@ ORIENT: float
 KMONS:  O = player ghost
 MONS:   jelly, slime creature, glowing orange brain / great orb of eyes
 MONS:   eye of devastation / rockslime / quicksilver ooze
-MONS:   floating eye / shining eye / golden eye band
+MONS:   glass eye / shining eye / golden eye band
 MONS:   azure jelly / acid blob
 : ghost_good_loot(_G)
 : if you.in_branch("D") then
@@ -2127,8 +2127,7 @@ MONS:   glowing shapeshifter
 SUBST:  D = FH, fg = |*, h = *, i = $%, j= -
 NSUBST: - = 1 / 2=1. / 4=2 / 4=2. / 2=3 / 2=3. / .
 : elseif you.in_branch("Depths") then
-MONS:   spark wasp / very ugly thing / fire dragon / ice dragon \
-        / floating eye w:5
+MONS:   spark wasp / very ugly thing / fire dragon / ice dragon / glass eye w:5
 MONS:   storm dragon / shadow dragon / quicksilver dragon / golden dragon \
         / iron dragon
 MONS:   caustic shrike
@@ -2404,13 +2403,13 @@ NSUBST: - = qrs / 2=1 / 2=1- / 2--- / -
 MONS:   any lesser demon w:5 / small abomination
 MONS:   toenail golem / ancient zyme / any common demon / ugly thing
 MONS:   worldbinder / large abomination / raiju / shapeshifter / rakshasa \
-        / wizard / hell hog / thrashing horror
+        / arcanist / occultist / hell hog / thrashing horror
 SUBST:  d = *, e = *%, f = %$, ghij= -
 NSUBST: - = suy / 2=1 / 2=1- / 2=2- / 3--- / -
 :     elseif you.depth() < 12 then
 MONS:   small abomination / toenail golem / any common demon w:5
-MONS:   ugly thing / large abomination / raiju / shapeshifter / wizard \
-        / hell hog / thrashing horror
+MONS:   ugly thing / large abomination / raiju / shapeshifter / arcanist \
+        / occultist / hell hog / thrashing horror
 MONS:   ancient zyme / worldbinder / rakshasa
 MONS:   great orb of eyes / glowing orange brain / very ugly thing \
         / lurking horror / wretched star / tentacled starspawn
@@ -2418,8 +2417,8 @@ SUBST:  e = *, f = *%, g = %$--, hij= -
 NSUBST: - = uyz / 2=1 / 2=1- / 2 / 2- / 3- / 4--- / -
 :     elseif you.depth() < 14 then
 MONS:   any common demon / ugly thing / large abomination / worldbinder
-MONS:   raiju / shapeshifter / thrashing horror / wizard / hell hog \
-        / very ugly thing
+MONS:   raiju / shapeshifter / thrashing horror / arcanist / occultist \
+        / hell hog / very ugly thing
 MONS:   ancient zyme / rakshasa / great orb of eyes / glowing orange brain
 MONS:   lurking horror / wretched star / tentacled starspawn / cacodemon \
         / hellion / apocalypse crab / glowing shapeshifter / crystal guardian \
@@ -2429,8 +2428,8 @@ SUBST:  f = |*, g = *%, h = %$--, ij= -
 NSUBST: - = yzDF / 2=1 / 3=1- / 2 / 2=2- / 3 / 4- / -
 :     else
 MONS:   ugly thing / large abomination / worldbinder / raiju / shapeshifter \
-        / rakshasa / thrashing horror / wizard
-MONS:   wizard / hell hog / great orb of eyes / very ugly thing \
+        / rakshasa / thrashing horror / arcanist / occultist
+MONS:   arcanist / occultist / hell hog / great orb of eyes / very ugly thing \
         / glowing orange brain / tentacled starspawn / cacodemon
 MONS:   lurking horror / wretched star / hellion / apocalypse crab
 MONS:   glowing shapeshifter / crystal guardian / tentacled monstrosity \
@@ -2456,7 +2455,7 @@ NSUBST: - = qE / 2=1 / 2=1- / 2 / 2=2- / 3- / 4- / -
 FTILE:  'PSncbv = floor_nerves_green
 : elseif you.in_branch("Orc") then
 MONS:   any common demon / ugly thing / large abomination / worldbinder / raiju
-MONS:   shapeshifter / rakshasa / thrashing horror / wizard / hell hog \
+MONS:   shapeshifter / rakshasa / thrashing horror / occultist / hell hog \
         / very ugly thing
 MONS:   ancient zyme / great orb of eyes / glowing orange brain
 MONS:   lurking horror / wretched star / tentacled starspawn / cacodemon \
@@ -2472,7 +2471,7 @@ FTILE:  'PSncbv = floor_nerves_brown
 :        or you.in_branch("Spider") then
 # Use the same basic monster list for all 4 Lair branches.
 MONS:   ugly thing / large abomination / worldbinder / raiju \
-        / thrashing horror / wizard / hell hog
+        / thrashing horror / occultist / hell hog
 MONS:   great orb of eyes / glowing orange brain / very ugly thing \
         / tentacled starspawn / cacodemon
 MONS:   lurking horror / wretched star / hellion / apocalypse crab

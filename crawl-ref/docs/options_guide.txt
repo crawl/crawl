@@ -154,7 +154,7 @@ The contents of this text are:
                 use_modifier_prefix_keys, language, fake_lang, messaging
                 read_persist_options
 
-5-b     DOS and Windows.
+5-b     Windows.
                 dos_use_background_intensity
 5-c     Unix.
                 blink_brightens_background, bold_brightens_foreground,
@@ -705,7 +705,7 @@ everywhere; it depends on OS and terminal):
    highlight:colour -- set background colour of highlighted monsters to
                        "colour"
 The last can be abbreviated to hi:colour.
-See part DOS and Windows (5-b) for dos_use_background_intensity.
+See part Windows (5-b) for dos_use_background_intensity.
 
 Previously these options were named `..._brand`, and the old names are
 available for backwards-compatibility.
@@ -768,7 +768,7 @@ level_map_cursor_step = 7
 The viewport is the portion of the map that is displayed during normal
 play. The viewport is 33x17 by default, but if you use larger terminal
 sizes, you can set these options to make the game show a larger
-viewport. (These options are not fully available on DOS.)
+viewport.
 
 None of these options affects gameplay. In particular, your character's
 line-of-sight is unaffected by these options.
@@ -3014,16 +3014,16 @@ read_persist_options = false
         the skill menu is saved across games and automatically reloaded,
         unless set explicitly.
 
-5-b     DOS and Windows.
+5-b     Windows.
 ------------------------
 
 dos_use_background_intensity = false
-        On DOS and Windows, if you're using a console that can do
-        high-intensity background colours, set this option to true for
-        superior friend-highlighting. If your console doesn't like this
-        option, some friendly monsters will appear as blinking
-        characters (and setting this option to false may be advisable to
-        preserve your sanity in such cases).
+        On Windows, if you're using a console that can do high-intensity
+        background colours, set this option to true for superior
+        friend-highlighting. If your console doesn't like this option,
+        some friendly monsters will appear as blinking characters (and
+        setting this option to false may be advisable to preserve your
+        sanity in such cases).
 
 5-c     Unix.
 -------------

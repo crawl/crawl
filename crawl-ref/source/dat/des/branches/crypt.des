@@ -237,19 +237,19 @@ ENDMAP
 ##############################################################################
 NAME:   minmay_crypt_entry_skeletal_spiral
 TAGS:   transparent
-MONS:   skeleton w:20 / skeletal warrior
+MONS:   skeleton w:20 / skeletal warrior, ancient champion
 : crypt_entry(_G)
 MAP
 ...........
 .xxxxxxxxx.
 .x..1..1.x.
 .x1xxxxx.x.
-.x.x111x1x.
+.x.x121x1x.
 .x.x1O1x.x.
 .x1x111x1x.
 .x.x.xxx.x.
 .x.x1.1.1x.
-.x1xxxxxxx.
+.x.xxxxxxx.
 ...........
 ENDMAP
 
@@ -323,8 +323,7 @@ ENDMAP
 ##############################################################################
 NAME:    blue_anna_dwarven_crypt
 TAGS:    transparent
-MONS:    death knight
-MONS:    shadow wraith / wraith / wight w:5
+MONS:    death knight, shadow wraith / freezing wraith
 : crypt_entry(_G)
 MAP
 cccc@cccc
@@ -1118,7 +1117,7 @@ NAME: cheibrodos_crypt_eye_of_stone
 DEPTH: Crypt, !Crypt:$
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
-MONS: floating eye / curse skull, obsidian statue / orange crystal statue
+MONS: glass eye / curse skull, obsidian statue / orange crystal statue
 MONS: ancient champion, skeletal warrior
 SHUFFLE: AB / CD
 SUBST: A = G, B = 1, C = ., D = 2
@@ -1461,6 +1460,63 @@ cM.2N2..r1.V..S..V..Q..V..c
 c.1...1.c.L.L.c.....c.....c
 cG.MGM.GcG.1.GcG.1.GcG.1.Gc
 ccccccccccccccccccccccccccc
+ENDMAP
+
+# A very specific game reference makes for a strange ambush bubble.
+NAME:    tekkud_devil_daggers
+TAGS:    no_monster_gen no_item_gen no_trap_gen no_pool_fixup no_descent
+DEPTH:   Crypt
+ORIENT:  float
+WEIGHT:  5
+ITEM:    scroll of enchant weapon ident:type, blade talisman
+ITEM:    mundane dagger, dagger good_item
+: local q = "quick blade randart ego:"
+: item(q .. "draining / " .. q .. "vampirism / " .. q .. "pain / " ..
+:      q .. "distortion / damaged quick blade")
+MONS:    flying skull, curse skull
+MONS:    spectral demonic crawler, wolf spider zombie
+MONS:    culicivora zombie / redback zombie / \
+         jumping spider zombie / tarantella zombie
+MONS:    spectral tentacled monstrosity
+KMONS:   7 = kraken zombie
+KFEAT:   7 = w
+NSUBST:  2 = 1:2 / 1:1112 / *:1
+SHUFFLE: {e
+: if you.depth() == 1 then
+SUBST:  { = })]
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST:  { = {([
+: else
+SUBST:  { = {([})]
+: end
+KPROP:  7g = bloody
+MAP
+    ccccccccccccccccc
+   ccccccccccccccccccc
+  cccc..g.......g..cccc
+ cccc...............cccc
+cccc..1...f...f...1..cccc
+ccc...................ccc
+cc...4......{......3...cc
+ccg.f.f.f.f...f.f.f.f.gcc
+cc..........e..........cc
+cc.2..7..5........7..2.cc
+cc........f...f........cc
+cc.....................cc
+cc......f.......f......cc
+cc.....................cc
+cc....f...........f....cc
+cc.2...........5.....2.cc
+cc..f...............f..cc
+cc.....................cc
+ccg..3.............4..gcc
+ccc.........6.........ccc
+cccc..2...d...d...2..cccc
+ cccc.......h.......cccc
+  cccc.............cccc
+   cccccccccnccccccccc
+    ccccccccncccccccc
+            @
 ENDMAP
 
 ##############################################################################

@@ -80,7 +80,7 @@ Word of Chaos ability
 %%%%
 Heal Wounds ability
 
-显著恢复使用者的健康，使用过程中可能会永久减少1点魔法上限。
+显著恢复使用者的健康，使用过程中可能会永久减少1点魔力上限。
 %%%%
 Dig ability
 
@@ -97,8 +97,8 @@ Shaft Self ability
 %%%%
 Evoke Blink ability
 
-随机地将使用者转移一小段距离。以这种方式传送会让使用者暂时不稳定，
-短时间内不连续闪现的可能性取决于激活技能。
+随机地将使用者转移一小段距离。
+以这种方式移位后，短时间内无法再次激活该技能，其间隔时间取决于激活技能。
 %%%%
 Evoke Berserk Rage ability
 
@@ -191,8 +191,7 @@ Brand Weapon With Pain ability
 %%%%
 Receive Forbidden Knowledge ability
 
-赐予你最强大、最邪恶的死灵法术：
-作祟、博格尼尔的再生、侵扰、死灵变异和死亡之门。
+赐予你最强大、最邪恶的死灵法术：作祟、博格尼尔的再生、侵扰和死亡之门。
 你必须在这个礼物和痛楚武器印记之间二选一，而且任何一个礼物只能收到一次。
 %%%%
 # 伊莱德莱姆努尔
@@ -521,11 +520,11 @@ Sacrifice Purity ability
 %%%%
 Sacrifice Words ability
 
-舍弃在受重伤时使用魔法卷轴的能力。
+舍弃在受伤时使用魔法卷轴的能力。
 %%%%
 Sacrifice Drink ability
 
-舍弃在受重伤时使用饮用药水的能力。
+舍弃在受伤时使用饮用药水的能力。
 %%%%
 Sacrifice Essence ability
 
@@ -720,6 +719,12 @@ Blinkbolt ability
 对其路径上的所有物体造成电击伤害并将使用者放置在它的终点。
 使用此能力后，短时间内无法再次使用它。
 %%%%
+Siphon Essence ability
+
+折磨附近的活物敌人，使其生命值减半。
+所造成的痛楚能治疗使用者，治愈量取决于变身技能。
+使用此能力后，短时间内无法再次使用它。
+%%%%
 Evoke the Sceptre of Asmodeus ability
 
 唤起阿斯莫德的力量，召唤地狱的火系恶魔。
@@ -732,14 +737,6 @@ Evoke Damnation ability
 并且不被任何保护手段削弱，比如盔甲或抗性。
 但某些生物，通常是那些能够自己释放天遣的生物，完全不受天遣的伤害。
 该能力的强度与激活技能成正比。
-%%%%
-Siphon Essence ability
-
-猛烈地吸取附近敌人的生命精华，并将其剩余生命值的一半用来治疗使用者。
-提升变身技能可以增加治疗效果。
-
-它对任何生物、亡灵、恶魔或天使生效——任何曾经活着或试图活着的东西。
-友方不受此影响。
 %%%%
 Evoke the Staff of Olgreb ability
 

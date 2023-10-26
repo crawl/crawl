@@ -1408,7 +1408,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_QUICKSILVER_BOLT, "Quicksilver Bolt",
     spschool::conjuration,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::not_self,
     5,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -3548,7 +3548,7 @@ static const struct spell_desc spelldata[] =
     50,
     -1, -1,
     0,
-    TILEG_ERROR,
+    TILEG_JINXBITE,
 },
 
 {
@@ -3559,7 +3559,7 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     0,
-    TILEG_ERROR,
+    TILEG_SIGIL_OF_BINDING,
 },
 
 {
@@ -3581,7 +3581,41 @@ static const struct spell_desc spelldata[] =
     100,
     1, 1,
     0,
-    TILEG_ERROR,
+    TILEG_BOULDER,
+},
+
+{
+    SPELL_VITRIFY, "Vitrify",
+    spschool::hexes,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check
+                          | spflag::monster,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
+    SPELL_VITRIFYING_GAZE, "Vitrifying Gaze",
+    spschool::hexes,
+    spflag::target | spflag::not_self | spflag::monster,
+    6,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
+    SPELL_TREMORSTONE, "Tremorstone",
+    spschool::earth,
+    spflag::area,
+    2,
+    200,
+    -1, -1,
+    15,
+    TILEG_LEES_RAPID_DECONSTRUCTION, // close enough
 },
 
 // Not an actual spell - dummy entry for (player) Green Draconian breath.

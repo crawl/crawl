@@ -493,7 +493,7 @@ ENDMAP
 NAME:   mludivico_vault
 ORIENT: southwest
 DEPTH:  D:12-, !D:$
-MONS:   hell hound, necromancer, wizard, orange demon, rust devil
+MONS:   hell hound, necromancer, occultist / arcanist, orange demon, rust devil
 MONS:   hell knight, great orb of eyes
 MAP
 xx.@.xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1032,7 +1032,7 @@ NAME:   minmay_tri_stars
 ORIENT: north
 DEPTH:  D:12-, !D:$, Depths, !Depths:$
 SUBST:  x : xvb
-MONS:   wizard w:300 / deep elf pyromancer w:60 / deep elf zephyrmancer w:60 / \
+MONS:   occultist w:150 / arcanist w:150 / deep elf pyromancer w:60 / deep elf zephyrmancer w:60 / \
         orc wizard / orc sorcerer w:35 / tengu conjurer w:35 / nothing w:500
 MONS:   deep elf sorcerer / deep elf annihilator / lich / ancient lich w:5
 ITEM:   any book / any jewellery / any wand / any misc w:3 / \
@@ -1249,8 +1249,8 @@ ENDMAP
 NAME:   minmay_wizard_corner
 ORIENT: southeast
 DEPTH:  D:12-
-KMONS:  1 = wizard / nothing w:140
-KMONS:  * = wizard / nothing
+KMONS:  1 = occultist / arcanist / nothing w:280
+KMONS:  * = occultist / arcanist / nothing w:20
 KITEM:  * = *
 MAP
       .........x

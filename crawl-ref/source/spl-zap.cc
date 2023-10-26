@@ -76,6 +76,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_BOLT_OF_LIGHT, ZAP_BOLT_OF_LIGHT },
     { SPELL_FASTROOT, ZAP_FASTROOT },
     { SPELL_MOMENTUM_STRIKE, ZAP_MOMENTUM_STRIKE },
+    { SPELL_TREMORSTONE, ZAP_TREMORSTONE },
 
     // monster-specific
     { SPELL_SLUG_DART, ZAP_SLUG_DART },
@@ -120,6 +121,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_STUNNING_BURST, ZAP_STUNNING_BURST },
     { SPELL_SERACFALL, ZAP_ICEBLAST },
     { SPELL_CORONA, ZAP_CORONA },
+    { SPELL_VITRIFY, ZAP_VITRIFY},
 
     // These are all for zap -> spell lookup.
     { SPELL_QUICKSILVER_BOLT, ZAP_QUICKSILVER_BOLT },

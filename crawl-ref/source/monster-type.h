@@ -167,7 +167,10 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION == 34
     MONS_PULSATING_LUMP,
 #endif
-    MONS_FLOATING_EYE,
+#if TAG_MAJOR_VERSION > 34
+    MONS_FLOATING_EYE,               // genus
+#endif
+    MONS_GLASS_EYE,
 #if TAG_MAJOR_VERSION == 34
     MONS_EYE_OF_DRAINING,
 #endif
@@ -519,7 +522,10 @@ enum monster_type                      // env.mons[].type
     MONS_DEATH_KNIGHT,
 #endif
     MONS_NECROMANCER,
-    MONS_WIZARD,
+    MONS_OCCULTIST,
+#if TAG_MAJOR_VERSION > 34
+    MONS_ARCANIST,
+#endif
     MONS_VAULT_GUARD,
 #if TAG_MAJOR_VERSION > 34
     MONS_VAULT_SENTINEL,
@@ -1195,6 +1201,8 @@ enum monster_type                      // env.mons[].type
     MONS_FORMLESS_JELLYFISH,
     MONS_JEREMIAH,
     MONS_BOULDER,
+    MONS_ARCANIST,
+    MONS_FLOATING_EYE,                 // genus
 #endif
 
     NUM_MONSTERS,               // used for polymorph

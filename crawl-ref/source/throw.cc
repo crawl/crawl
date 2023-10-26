@@ -548,7 +548,7 @@ static void _handle_cannon_fx(actor &act, const item_def &weapon, coord_def targ
         return;
 
     // blast smoke
-    for (adjacent_iterator ai(act.pos(), false); ai; ++ai)
+    for (fair_adjacent_iterator ai(act.pos(), false); ai; ++ai)
     {
         if (!in_bounds(*ai)
             || cell_is_solid(*ai)

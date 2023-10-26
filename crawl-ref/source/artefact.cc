@@ -544,6 +544,28 @@ static void _add_randart_weapon_brand(const item_def &item,
         item_props[ARTP_BRAND] = SPWPN_NORMAL;
 }
 
+static bool _talisman_conflicts(int sub_type, artefact_prop_type prop)
+{
+    // Yuck! TODO: find a way to deduplicate this.
+    switch (sub_type)
+    {
+    case TALISMAN_STATUE:
+    case TALISMAN_STORM:
+        return prop == ARTP_POISON || prop == ARTP_ELECTRICITY;
+    case TALISMAN_DRAGON:
+        return prop == ARTP_POISON;
+    case TALISMAN_DEATH:
+        return prop == ARTP_POISON || prop == ARTP_NEGATIVE_ENERGY;
+    case TALISMAN_BEAST:
+    case TALISMAN_FLUX:
+    case TALISMAN_MAW:
+    case TALISMAN_SERPENT:
+    case TALISMAN_BLADE:
+    default:
+        return false;
+    }
+}
+
 /**
  * Can the given artefact property be placed on the given item?
  *
@@ -566,6 +588,9 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
     _populate_item_intrinsic_artps(item, intrinsic_proprt, _);
     if (intrinsic_proprt[prop])
         return false; // don't duplicate intrinsic props
+
+    if (item.base_type == OBJ_TALISMANS && _talisman_conflicts(item.sub_type, prop))
+        return false;
 
     const object_class_type item_class = item.base_type;
     // Categorise items by whether they're quick to swap or not. Some artefact
@@ -607,12 +632,16 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_RAMPAGING:
             // only on items that can't be quickly swapped
             return non_swappable;
-        // prevent on armour (since it's swapped infrequently) and rings (since
-        // 2 slots reduces the pressure to swap)
+        // prevent on armour/talismans (since they're swapped infrequently) and
+        // rings (since 2 slots reduces the pressure to swap)
         case ARTP_FRAGILE:
             return item_class != OBJ_ARMOUR
+                   && item_class != OBJ_TALISMANS
                    && (item_class != OBJ_JEWELLERY
                        || jewellery_is_amulet(item));
+        case ARTP_DRAIN:
+        case ARTP_CONTAM:
+            return item_class != OBJ_TALISMANS; // TODO: support..?
         case ARTP_ARCHMAGI:
             return item.is_type(OBJ_ARMOUR, ARM_ROBE);
         case ARTP_ENHANCE_CONJ:
@@ -1190,13 +1219,9 @@ static string _get_artefact_type(const item_def &item, bool appear = false)
     case OBJ_STAVES: // XXX: consider a separate section?
         return "weapon";
     case OBJ_ARMOUR:
-        if (item.sub_type == ARM_ROBE)
-            return "robe";
-        if (get_item_slot(item) == EQ_BODY_ARMOUR)
-            return "body armour";
         return "armour";
-    case OBJ_ORBS:
-        return "orb";
+    case OBJ_TALISMANS:
+        return "talisman";
     case OBJ_JEWELLERY:
         // Distinguish between amulets and rings only in appearance.
         if (!appear)
@@ -1218,6 +1243,7 @@ static bool _pick_db_name(const item_def &item)
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
     case OBJ_STAVES:
+    case OBJ_TALISMANS:
         return coinflip();
     case OBJ_JEWELLERY:
         return one_chance_in(5);
@@ -1248,6 +1274,7 @@ bool item_type_can_be_artefact(object_class_type typ)
     case OBJ_ARMOUR:
     case OBJ_JEWELLERY:
     case OBJ_BOOKS:
+    case OBJ_TALISMANS:
         return true;
     default:
         return false;
@@ -1343,7 +1370,7 @@ string make_artefact_name(const item_def &item, bool appearance)
         const string st_p = make_name();
         result += item_base_name(item);
 
-        if (item.base_type != OBJ_STAVES && one_chance_in(3))
+        if (one_chance_in(3))
         {
             result += " of ";
             result += st_p;
@@ -1699,6 +1726,7 @@ bool make_item_randart(item_def &item, bool force_mundane)
     case OBJ_ARMOUR:
     case OBJ_JEWELLERY:
     case OBJ_STAVES:
+    case OBJ_TALISMANS:
         break;
     default:
         return false;

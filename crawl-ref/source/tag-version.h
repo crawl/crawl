@@ -286,6 +286,8 @@ enum tag_minor_version
     TAG_MINOR_SHAPESHIFTING,       // Add Shapeshifting skill.
     TAG_MINOR_LANGUAGE_FIX,        // Remove some outdated language.
     TAG_MINOR_SLENGU,              // Split tengu mutations.
+    TAG_MINOR_GLASS_EYES,          // Fixup paralysis gaze to vitrifying gaze.
+    TAG_MINOR_SAVE_TALISMANS,      // Store the in-use talisman.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

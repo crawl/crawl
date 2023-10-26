@@ -205,17 +205,17 @@ private:
 class targeter_cloud : public targeter
 {
 public:
-    targeter_cloud(const actor* act, int range = LOS_RADIUS,
-                    int count_min = 8, int count_max = 10);
+    targeter_cloud(const actor* act, cloud_type ctype, int range = LOS_RADIUS,
+                   int count_min = 8, int count_max = 10);
     bool set_aim(coord_def a) override;
     bool valid_aim(coord_def a) override;
     bool can_affect_outside_range() override;
     aff_type is_affected(coord_def loc) override;
+    cloud_type ctype;
     int range;
     int cnt_min, cnt_max;
     map<coord_def, aff_type> seen;
     vector<vector<coord_def> > queue;
-    bool avoid_clouds;
 };
 
 class targeter_splash : public targeter_beam

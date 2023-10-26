@@ -4310,7 +4310,7 @@ static void _extra_sacrifice_code(ability_type sac)
         if (you.form == transformation::none)
             break;
 
-        you.default_form = transformation::none;
+        unset_default_form();
         if (!you.transform_uncancellable)
             untransform(); // XXX: maybe should warn the player pre-sac?
 
@@ -5222,7 +5222,8 @@ spret uskayaw_grand_finale(bool fail)
     if (mons->alive())
         monster_die(*mons, KILL_YOU, NON_MONSTER, false);
 
-    if (!mons->alive())
+    // a lost soul may sneak in here
+    if (!mons->alive() && !monster_at(beam.target))
         move_player_to_grid(beam.target, false);
     else
         mpr("You spring back to your original position.");

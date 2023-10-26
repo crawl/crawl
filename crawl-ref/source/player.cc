@@ -3316,9 +3316,15 @@ static void _display_damage_rating()
         weapon_name = weapon->name(DESC_YOUR);
     else
         weapon_name = "unarmed combat";
-    mprf("Your damage rating with %s is about %s",
-         weapon_name.c_str(),
-         damage_rating(weapon).c_str());
+
+    if (weapon && is_unrandom_artefact(*weapon, UNRAND_WOE))
+        mprf("%s", uppercase_first(damage_rating(weapon)).c_str());
+    else
+    {
+        mprf("Your damage rating with %s is about %s",
+             weapon_name.c_str(),
+             damage_rating(weapon).c_str());
+    }
     return;
 }
 
@@ -3558,7 +3564,31 @@ int player::scan_artefacts(artefact_prop_type which_property,
             matches->push_back(&item);
     }
 
+    if (you.active_talisman.defined() && is_artefact(you.active_talisman))
+    {
+        const int val = artefact_property(you.active_talisman, which_property);
+        retval += val;
+        if (matches && val)
+            matches->push_back(&you.active_talisman);
+    }
+
     return retval;
+}
+
+bool player::using_talisman(const item_def &talisman) const
+{
+    if (!active_talisman.defined())
+        return false;
+    if (talisman.sub_type != active_talisman.sub_type)
+        return false;
+    const bool using_artefact = is_artefact(active_talisman);
+    const bool other_artefact = is_artefact(talisman);
+    if (using_artefact != other_artefact)
+        return false;
+    if (!using_artefact)
+        return true;
+    // hack alert!
+    return get_artefact_name(talisman) == get_artefact_name(active_talisman);
 }
 
 /**
@@ -4225,7 +4255,7 @@ bool poison_player(int amount, string source, string source_aux, bool force)
 
     // TODO: support being poisoned by monsters wearing "harm (ha)
     if (you.extra_harm())
-        amount *= (100 + incoming_harm_amount(amount)) / 100;
+        amount *= (100 + incoming_harm_amount(you.extra_harm())) / 100;
 
     you.duration[DUR_POISONING] += amount * 1000;
 
@@ -4786,7 +4816,7 @@ bool invis_allowed(bool quiet, string *fail_reason, bool temp)
     string msg;
     bool success = true;
 
-    if (you.backlit(false, false))
+    if (you.backlit(true, false))
     {
         msg = "Your body glows too brightly to become invisible.";
         success = false;
@@ -4817,7 +4847,7 @@ bool invis_allowed(bool quiet, string *fail_reason, bool temp)
             success = false;
         }
     }
-    else if (you.backlit(false, temp))
+    else if (you.backlit(true, temp))
     {
         msg = "You are backlit; invisibility will do you no good right now";
         if (quiet)
@@ -5106,6 +5136,7 @@ player::player()
     symbol          = MONS_PLAYER;
     form            = transformation::none;
     default_form    = transformation::none;
+    active_talisman.clear();
 
     for (auto &item : inv)
         item.clear();
@@ -7235,6 +7266,9 @@ bool player::backlit(bool self_halo, bool temp) const
                        && (self_halo || halo_radius() == -1))
            || self_halo && (you.has_mutation(MUT_GLOWING)
                             || you.form == transformation::flux);
+    // TODO: find some way to mark !invis for autopickup while
+    // fluxing while still marking it temp-useless (and while
+    // marking it perma-useless for meteors)
 }
 
 bool player::umbra() const
@@ -7658,6 +7692,10 @@ void player::increase_duration(duration_type dur, int turns, int cap,
     if (msg)
         mpr(msg);
     cap *= BASELINE_DELAY;
+
+    // If we are already over the cap, do not increase or decrease duration.
+    if (cap && duration[dur] > cap)
+        return;
 
     duration[dur] += turns * BASELINE_DELAY;
     if (cap && duration[dur] > cap)

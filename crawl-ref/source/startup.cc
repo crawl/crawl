@@ -153,6 +153,8 @@ static void _initialize()
     if (crawl_state.build_db)
         end(0);
 
+    crawl_state.use_des_cache = true;
+
 #ifdef USE_TILE_LOCAL
     loading_screen_close();
 #endif

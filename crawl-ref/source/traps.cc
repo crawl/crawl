@@ -55,8 +55,6 @@ static string _net_immune_reason()
 {
     if (player_equip_unrand(UNRAND_SLICK_SLIPPERS))
         return "You slip through the net.";
-    if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
-        return "The net is torn apart by your bulk.";
     return "";
 }
 
@@ -258,18 +256,6 @@ static void _mark_net_trapping(const coord_def& where)
  */
 bool monster_caught_in_net(monster* mon)
 {
-    if (mon->body_size(PSIZE_BODY) >= SIZE_GIANT)
-    {
-        if (you.see_cell(mon->pos()))
-        {
-            if (!mon->visible_to(&you))
-                mpr("The net bounces off something gigantic!");
-            else
-                simple_monster_message(*mon, " is too large for the net to hold!");
-        }
-        return false;
-    }
-
     if (mon->is_insubstantial())
     {
         if (you.can_see(*mon))
@@ -334,24 +320,7 @@ bool player_caught_in_net()
 void check_net_will_hold_monster(monster* mons)
 {
     ASSERT(mons); // XXX: should be monster &mons
-    if (mons->body_size(PSIZE_BODY) >= SIZE_GIANT)
-    {
-        int net = get_trapping_net(mons->pos());
-        if (net != NON_ITEM)
-            destroy_item(net);
-
-        if (you.see_cell(mons->pos()))
-        {
-            if (mons->visible_to(&you))
-            {
-                mprf("The net rips apart, and %s comes free!",
-                     mons->name(DESC_THE).c_str());
-            }
-            else
-                mpr("All of a sudden the net rips apart!");
-        }
-    }
-    else if (mons->is_insubstantial())
+    if (mons->is_insubstantial())
     {
         const int net = get_trapping_net(mons->pos());
         if (net != NON_ITEM)
@@ -1351,13 +1320,6 @@ bool ensnare(actor *fly)
         // currently webs are stateless so except for flavour it's a no-op
         if (fly->is_player())
             mpr("You are even more entangled.");
-        return false;
-    }
-
-    if (fly->body_size() >= SIZE_GIANT)
-    {
-        if (you.can_see(*fly))
-            mprf("A web harmlessly splats on %s.", fly->name(DESC_THE).c_str());
         return false;
     }
 

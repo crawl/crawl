@@ -304,7 +304,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
             }
         }
         else if (base_type == OBJ_TALISMANS
-                 && you.form == form_for_talisman(*this))
+                 && you.using_talisman(*this))
         {
                 buff << " (active)";
         }
@@ -991,24 +991,6 @@ static string misc_type_name(int type)
 
     default:
         return "buggy miscellaneous item";
-    }
-}
-
-static string talisman_type_name(int type)
-{
-    switch (type)
-    {
-    case TALISMAN_BEAST:    return "beast talisman";
-    case TALISMAN_FLUX:    return "flux talisman";
-    case TALISMAN_MAW:      return "maw talisman";
-    case TALISMAN_SERPENT:  return "serpent talisman";
-    case TALISMAN_BLADE:    return "blade talisman";
-    case TALISMAN_STATUE:   return "granite talisman";
-    case TALISMAN_DRAGON:   return "dragon-blood talisman";
-    case TALISMAN_DEATH:    return "talisman of death";
-    case TALISMAN_STORM:    return "storm talisman";
-    default:
-        return "buggy talisman";
     }
 }
 
@@ -1824,8 +1806,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     }
 
     case OBJ_TALISMANS:
-        // TODO: add talisman artefacts
-        buff << talisman_type_name(item_typ);
+        if (is_random_artefact(*this) && !dbname && !basename)
+            buff << get_artefact_name(*this, ident);
+        else
+            buff << talisman_type_name(item_typ);
         break;
 
     case OBJ_BOOKS:
@@ -1993,7 +1977,6 @@ bool item_type_known(const item_def& item)
 
     switch (item.base_type)
     {
-    case OBJ_TALISMANS: // TODO: add talisman artefacts
     case OBJ_MISCELLANY:
     case OBJ_MISSILES:
     case OBJ_BOOKS:

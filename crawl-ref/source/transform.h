@@ -331,6 +331,9 @@ bool transform(int pow, transformation which_trans, bool involuntary = false);
 // skip_move: don't make player re-enter current cell
 void untransform(bool skip_move = false);
 
+void unset_default_form();
+void set_default_form(transformation t, const item_def *source);
+
 void set_form(transformation which_trans, int dur);
 void return_to_default_form();
 
@@ -351,3 +354,11 @@ int form_base_movespeed(transformation tran);
 bool draconian_dragon_exception();
 
 transformation form_for_talisman(const item_def &talisman);
+
+struct talisman_form_desc {
+    vector<pair<string, string>> skills;
+    vector<pair<string, string>> defenses;
+    vector<pair<string, string>> offenses; // heh
+};
+void describe_talisman_form(transformation form_type, talisman_form_desc &d,
+                            bool incl_special);

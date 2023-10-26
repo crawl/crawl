@@ -1037,9 +1037,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
     } // switch book choice
 
 
-    if (agent == GOD_XOM || agent == GOD_SIF_MUNA)
-        set_ident_flags(book, ISFLAG_IDENT_MASK);
-    else
+    if (agent != GOD_XOM && agent != GOD_SIF_MUNA)
     {
         // If we couldn't make a useful book, try to make a manual instead.
         // We have to temporarily identify the book for this.
@@ -1736,6 +1734,23 @@ bool acquirement_menu()
     return !you.props.exists(ACQUIRE_ITEMS_KEY);
 }
 
+/// Does this item duplicate an already-generated item's base/subtype plus ego? (Ignore plus.)
+static bool _is_duplicate(const item_def &item, CrawlVector &acq_items)
+{
+    if (is_artefact(item))
+        return false;
+    for (item_def &aitem : acq_items)
+    {
+        if (!is_artefact(aitem)
+            && aitem.is_type(item.base_type, item.sub_type)
+            && item.brand == aitem.brand)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 static void _make_okawaru_gifts(object_class_type gift_type)
 {
     ASSERT(gift_type == OBJ_WEAPONS || gift_type == OBJ_ARMOUR);
@@ -1743,12 +1758,12 @@ static void _make_okawaru_gifts(object_class_type gift_type)
     const string key = gift_type == OBJ_WEAPONS ? OKAWARU_WEAPONS_KEY
                                                 : OKAWARU_ARMOUR_KEY;
     CrawlVector &acq_items = you.props[key].get_vector();
-    acq_items.empty();
+    acq_items.clear();
 
     while (acq_items.size() < 4)
     {
         auto item = _acquirement_item_def(gift_type, you.religion);
-        if (item.defined())
+        if (item.defined() && !_is_duplicate(item, acq_items))
             acq_items.push_back(item);
     }
 }

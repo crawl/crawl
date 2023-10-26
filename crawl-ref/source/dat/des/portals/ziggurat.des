@@ -69,7 +69,7 @@ TAGS:    zig_entry no_trap_gen transparent no_descent
 KFEAT:   O = enter_ziggurat no_mimic
 MONS:    lich / ancient lich / dread lich
 MONS:    angel / daeva
-MONS:    eye of devastation / floating eye / \
+MONS:    eye of devastation / glass eye / \
          great orb of eyes / shining eye
 KPROP:   1Om = no_tele_into
 SHUFFLE: 123x
@@ -94,7 +94,7 @@ TAGS:    zig_entry no_trap_gen transparent no_descent
 KFEAT:   O = enter_ziggurat no_mimic
 MONS:    lich / ancient lich / dread lich
 MONS:    angel / daeva
-MONS:    eye of devastation / floating eye / \
+MONS:    eye of devastation / glass eye / \
          great orb of eyes / shining eye
 KPROP:   1On; = no_tele_into
 SHUFFLE: 123x
@@ -221,7 +221,7 @@ TAGS: ziggurat_pillar centered unrand no_exits
 # and teleports are more risky.
 MONS: dread lich / shadow demon / curse skull / \
       ironbound convoker / demonspawn corrupter / deep elf demonologist
-MONS: eye of devastation / floating eye / ghost moth / demonspawn black sun / \
+MONS: eye of devastation / glass eye / ghost moth / demonspawn black sun / \
       torpor snail
 MONS: plant
 : if you.depth() > 21 then

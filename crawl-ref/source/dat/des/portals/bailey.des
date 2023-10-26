@@ -1112,7 +1112,7 @@ TAGS:    bailey_polearm no_item_gen no_monster_gen no_pool_fixup
 :item(dgn.loot_potions)
 ITEM:    any armour good_item
 MONS:    wolf zombie, vampire bat
-MONS:    orc zombie ; spear, orc warrior zombie ; trident | halberd
+MONS:    orc zombie, orc warrior zombie
 MONS:    gargoyle
 MONS:    vampire ; halberd ego:vampirism w:15 | glaive ego:vampirism w:3 \
              | bardiche ego:vampirism w:1 \

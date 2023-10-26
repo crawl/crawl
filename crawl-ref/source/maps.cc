@@ -1380,6 +1380,9 @@ static bool _load_map_index(const string& cache, const string &base,
 static bool _load_map_cache(const string &filename, const string &cachename)
 {
     _check_des_index_dir();
+    if (!crawl_state.use_des_cache)
+        return false;
+
     const string descache_base = get_descache_path(cachename, "");
 
     file_lock deslock(descache_base + ".lk", "rb", false);

@@ -3407,6 +3407,60 @@ DED
 .F.
 ENDMAP
 
+NAME:    nicolae_tricolors
+TAGS:    transparent allow_dup luniq no_tide no_pool_fixup decor
+DEPTH:   D:4-, Depths, Zot, Shoals
+: local arrange = crawl.random2(7)
+:     if arrange == 0 then
+SUBST:   DEJMPSZ = w, FKNQ = l, HLOR = c
+: elseif arrange == 1 then
+SUBST:   DHLOR = w, EJMPS = l, FKNQZ = c
+: elseif arrange == 2 then
+SUBST:   DJNOS = w, EKLPZ = l, FHMQR = c
+: elseif arrange == 3 then
+SUBST:   DEFHK = w, OQRSZ = l, JLMNP = c
+: elseif arrange == 4 then
+SUBST:   DHLMNQZ = w, EFJK = l, OPRS = c
+: elseif arrange == 5 then
+SUBST:   DHLNQZ = w, EFMRS = l, JKOP = c
+: else
+SUBST:   DEFRSZ = w, HJKOPQ = l, LMN = c
+: end
+SHUFFLE: wlc
+KPROP:   l = no_cloud_gen
+MAP
+........
+.DDEEFF.
+.HHJJKK.
+.LLMMNN.
+.OOPPQQ.
+.RRSSZZ.
+........
+ENDMAP
+
+NAME:  nicolae_zig_zag_zippers
+TAGS:  transparent decor
+DEPTH: D:4-, Depths, Snake, Elf, Zot
+MAP
+@....
+..cc....
+.cc..cc....
+....cc..cc....
+   ....cc..cc....
+      ....cc..cc....
+         ....cc..cc.
+      ....cc..cc....
+   ....cc..cc....
+....cc..cc....
+.cc..cc....
+....cc..cc....
+   ....cc..cc....
+      ....cc..cc....
+         ....cc..cc.
+            ....cc..
+               ....@
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items

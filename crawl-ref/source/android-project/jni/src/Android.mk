@@ -245,7 +245,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/spl-transloc.cc \
     $(CRAWL_PATH)/spl-util.cc \
     $(CRAWL_PATH)/spl-vortex.cc \
-    $(CRAWL_PATH)/spl-wpnench.cc \
     $(CRAWL_PATH)/spl-zap.cc \
     $(CRAWL_PATH)/sprint.cc \
     $(CRAWL_PATH)/sqldbm.cc \

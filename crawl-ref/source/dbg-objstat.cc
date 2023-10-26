@@ -138,7 +138,7 @@ static map<item_base_type, vector<string> > item_fields = {
             "NumMax", "NumSD" },
     },
     { ITEM_TALISMANS,
-        { "Num", "NumVault", "NumShop", "NumMin", "NumMax", "NumSD" },
+        { "Num", "NumArte", "NumVault", "NumShop", "NumMin", "NumMax", "NumSD" },
     },
     { ITEM_MISCELLANY,
         { "Num", "NumVault", "NumShop", "NumMin", "NumMax", "NumSD" },
@@ -333,7 +333,7 @@ static bool _item_tracks_artefact(item_base_type base_type)
     case ITEM_ARMOUR:
     case ITEM_JEWELLERY:
     case ITEM_SPELLBOOKS:
-        // TODO: add talisman artefacts
+    case ITEM_TALISMANS:
         return true;
     default:
         return false;

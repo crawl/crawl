@@ -2126,5 +2126,5 @@ util/fake_pty: util/fake_pty.c
 
 # Should be not needed, but the race condition in bug #6509 is hard to fix.
 builddb: $(GAME)
-	./$(GAME) --builddb
+	./$(GAME) --builddb --reset-cache
 .PHONY: builddb

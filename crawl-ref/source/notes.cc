@@ -114,7 +114,9 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_FEAT_MIMIC
         || note.type == NOTE_OFFERED_SPELL
         || note.type == NOTE_ANCESTOR_TYPE
-        || note.type == NOTE_FOUND_UNRAND)
+        || note.type == NOTE_FOUND_UNRAND
+        || note.type == NOTE_ZOT_TOUCHED
+        || note.type == NOTE_DREAMSHARD)
     {
         return true;
     }
@@ -380,6 +382,9 @@ string Note::describe(bool when, bool where, bool what) const
             break;
         case NOTE_ZOT_TOUCHED:
             result << "Touched by the power of Zot (MHP " << first << " -> " << second << ")";
+            break;
+        case NOTE_DREAMSHARD:
+            result << "Saved by the dreamshard amulet";
             break;
         default:
             result << "Buggy note description: unknown note type";

@@ -3503,14 +3503,14 @@ NAME:     amcnicky_arrival_blooded_trapdoor
 TAGS:     arrival no_monster_gen no_pool_fixup no_trap_gen
 ORIENT:   float
 SHUFFLE:  pqr
-SUBST:    s:xxxtw, p:x, q:x, r:@
-SUBST:    ' = '..
-KPROP:    ' = bloody
+SUBST:    p : x, q : x, r:@, s : xxxtw
+NSUBST:   " = 1:" / * = ".., ' = 1:" / * = "..
+KPROP:    " = bloody
 MAP
    xpppx
    x'''x
-xxxx'>'xxxxxqqq
-x...'''.......q
+xxxx">'xxxxxqqq
+x...""".......q
 x.{........ss.q
 x.............x
 xxxxxxxxrrrrxxx
@@ -3856,4 +3856,90 @@ MAP
 ......Gl.lG......
 .......l.l.......
 .................
+ENDMAP
+
+##############################################################################
+NAME:    roadster_arrival_rocket_small
+TAGS:    arrival no_monster_gen no_trap_gen transparent
+ORIENT:  float
+MONS:    plant, bush
+SUBST:   t : 12tt
+MARKER:  F = lua:fog_machine{ cloud_type = "black smoke", \
+             pow_min = 24, pow_max = 32, delay_min = 280, delay_max = 320, \
+             size_min = 1, size_max = 2, start_clouds = 2, size_buildup_amnt = 2 }
+MARKER:  l = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 1000, pow_max = 1000, delay = 1, \
+             size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+MAP
+  t@.v.@t
+  t.vvv.t
+  tFm{mFt
+  tvv.vvt
+  vv...vv
+  v.....v
+  v.....v
+  v.....v
+  v.....v
+  v.....v
+  v..F..v
+  v.....v
+vvv+v+v+vvv
+ ...lFl...
+  @.....@
+ENDMAP
+
+NAME:    roadster_arrival_rocket_large
+TAGS:    arrival no_monster_gen no_trap_gen transparent
+ORIENT:  float
+MONS:    plant, bush
+SUBST:   t : 12tt
+MARKER:  F = lua:fog_machine{ cloud_type = "black smoke", \
+             pow_min = 24, pow_max = 32, delay_min = 280, delay_max = 320, \
+             size_min = 1, size_max = 2, start_clouds = 2, size_buildup_amnt = 2 }
+MARKER:  l = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 1000, pow_max = 1000, delay = 1, \
+             size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+MAP
+      v
+   t@vvv@t
+   t.m{m.t
+   tvv.vvt
+  Fvv...vvF
+  vv.....vv
+  v.......v
+  v.......v
+  v.......v
+  v.......v
+  v.......v
+  v...F...v
+ vv.......vv
+vvv+v+v+v+vvv
+...Fl.l.lF...
+ @.........@
+ENDMAP
+
+##############################################################################
+
+NAME:   mainiacjoe_arrival_oval_in_oval
+TAGS:   arrival transparent
+TAGS:   no_monster_gen no_pool_fixup
+ORIENT: float
+SUBST:  m : m#lw
+KFEAT:  # = iron_grate
+SUBST:  T : TGbt123V
+MONS:   fungus, plant, bush
+MAP
+     .......
+   ...........
+ .....mmmmm.....
+....mmm...mmm....
+..mmm...T...mmm..
+..m...T...T...m..
+....T...{...T....
+..m...T...T...m..
+..mmm...T...mmm..
+....mmm...mmm....
+ .....mmmmm.....
+   ...........
+     .......
 ENDMAP

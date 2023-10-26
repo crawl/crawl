@@ -286,22 +286,23 @@ function sroom_magic_class(e)
     if e.is_validating() then return end
 
     local mons = {}
-    mons[1] = "wizard w:8"
-    mons[2] = "ogre mage w:7"
-    mons[3] = "deep elf annihilator w:6"
-    mons[4] = "deep troll earth mage w:5"
-    mons[5] = "vampire knight w:5"
-    mons[6] = "spriggan air mage w:5"
-    mons[7] = "necromancer w:4"
-    mons[8] = "deep elf death mage w:3"
-    mons[9] = "deep elf sorcerer w:3"
-    mons[10] = "deep elf demonologist w:2"
-    mons[11] = "deep elf elementalist w:1"
-    mons[12] = "vampire mage w:1"
+    mons[1] = "ogre mage w:7"
+    mons[2] = "deep elf annihilator w:6"
+    mons[3] = "deep troll earth mage w:5"
+    mons[4] = "vampire knight w:5"
+    mons[5] = "spriggan air mage w:5"
+    mons[6] = "necromancer w:4"
+    mons[7] = "occultist w:4"
+    mons[8] = "arcanist w:4"
+    mons[9] = "deep elf death mage w:3"
+    mons[10] = "deep elf sorcerer w:3"
+    mons[11] = "deep elf demonologist w:2"
+    mons[12] = "deep elf elementalist w:1"
+    mons[13] = "vampire mage w:1"
 
     local absdepth = you.absdepth()
     if absdepth == 27 then
-        mons[13] = "draconian annihilator w:5"
+        mons[14] = "draconian annihilator w:5"
         lord_mon = "draconian shifter / ancient lich / Jory w:1 / " ..
                    "Frederick w:1 / Boris w:1, draconian shifter / " ..
                    "ancient lich / dread lich"

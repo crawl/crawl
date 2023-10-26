@@ -54,7 +54,7 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
- #include "tilepick.h"
+#include "tilepick.h"
 #include "transform.h"
 #include "unicode.h"
 #include "viewchar.h"
@@ -1142,6 +1142,8 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_IRON_GOLEM,        { "metal", CYAN, frag_damage_type::metal } },
     { MONS_PEACEKEEPER,       { "metal", CYAN, frag_damage_type::metal } },
     { MONS_WAR_GARGOYLE,      { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_GLASS_EYE,         { "glass", LIGHTCYAN,
+                                frag_damage_type::crystal } },
     { MONS_CRYSTAL_GUARDIAN,  { "crystal", GREEN,
                                 frag_damage_type::crystal } },
     { MONS_CRYSTAL_ECHIDNA,   { "crystal", GREEN,
@@ -2456,15 +2458,6 @@ static int _discharge_monsters(const coord_def &where, int pow,
     if (!victim || !victim->alive())
         return 0;
 
-    int damage = 0;
-    if (&agent == victim)
-        damage = 1 + random2(1 + div_rand_round(pow, 18));
-    else
-    {
-        damage = FLAT_DISCHARGE_ARC_DAMAGE
-                 + random2(3 + div_rand_round(pow, DISCHARGE_POWER_DIV));
-    }
-
     bolt beam;
     beam.flavour    = BEAM_ELECTRICITY; // used for mons_adjust_flavoured
     beam.glyph      = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -2481,9 +2474,17 @@ static int _discharge_monsters(const coord_def &where, int pow,
         beam.draw(where);
     }
 
+    int damage = FLAT_DISCHARGE_ARC_DAMAGE
+                 + random2(3 + div_rand_round(pow, DISCHARGE_POWER_DIV));
+
+    // Reduced damage when arcing back to the caster.
+    if (&agent == victim)
+        damage = div_rand_round(damage, 2);
+
+    damage = max(0, victim->apply_ac(damage, 0, ac_type::half));
+
     if (victim->is_player())
     {
-        damage = 1 + random2(2 + div_rand_round(pow,15));
         dprf("You: static discharge damage: %d", damage);
         damage = check_your_resists(damage, BEAM_ELECTRICITY,
                                     "static discharge");
@@ -2943,13 +2944,29 @@ coord_def get_thunderbolt_last_aim(actor *caster)
         return coord_def();
 }
 
-static void _set_thundervolt_last_aim(actor *caster, coord_def aim)
+static void _set_thunderbolt_last_aim(actor *caster, coord_def aim)
 {
     int &last_turn = caster->props[THUNDERBOLT_LAST_KEY].get_int();
     coord_def &last_aim = caster->props[THUNDERBOLT_AIM_KEY].get_coord();
 
     last_turn = you.num_turns;
     last_aim = aim;
+}
+
+dice_def thunderbolt_damage(int power, int arc)
+{
+    const int &charges = you.props[THUNDERBOLT_CHARGES_KEY].get_int();
+    ASSERT(charges <= LIGHTNING_MAX_CHARGE);
+
+    int charge_boost = 0;
+    if (in_bounds(get_thunderbolt_last_aim(&you)))
+        charge_boost = charges;
+
+    const int dice = div_rand_round(
+        (spell_mana(SPELL_THUNDERBOLT, false) + charge_boost)
+            * LIGHTNING_CHARGE_MULT,
+        LIGHTNING_CHARGE_MULT);
+    return dice_def(dice, div_rand_round(45 + power / 4, arc + 2));
 }
 
 spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
@@ -2972,12 +2989,6 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     }
 
     fail_check();
-
-    const int juice
-        = (spell_mana(SPELL_THUNDERBOLT, false) + charges)
-          * LIGHTNING_CHARGE_MULT;
-
-    dprf("juice: %d", juice);
 
     bolt beam;
     beam.name              = "thunderbolt";
@@ -3027,14 +3038,13 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         beam.source = beam.target = entry.first;
         beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
         beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
-        beam.damage = dice_def(div_rand_round(juice, LIGHTNING_CHARGE_MULT),
-                               div_rand_round(45 + pow / 4, arc + 2));
+        beam.damage = thunderbolt_damage(pow, arc);
         beam.fire();
     }
 
     noisy(spell_effect_noise(SPELL_THUNDERBOLT), caster->pos());
 
-    _set_thundervolt_last_aim(caster, aim);
+    _set_thunderbolt_last_aim(caster, aim);
 
     if (charges < LIGHTNING_MAX_CHARGE)
         charges++;

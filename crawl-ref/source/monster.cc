@@ -2318,7 +2318,7 @@ string monster::hand_name(bool plural, bool *can_plural) const
                 str = "rhizome";
                 break;
 
-            case MONS_FLOATING_EYE:
+            case MONS_GLASS_EYE:
             case MONS_SHINING_EYE:
             case MONS_EYE_OF_DEVASTATION:
             case MONS_GOLDEN_EYE:
@@ -4236,6 +4236,10 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                          / 100;
             }
         }
+
+        // Apply damage multiplier for vitrify
+        if (amount != INSTANT_DEATH && has_ench(ENCH_VITRIFIED))
+            amount = amount * 130 / 100;
 
         // Apply damage multipliers for quad damage
         if (attacker_effects && agent && agent->is_player()

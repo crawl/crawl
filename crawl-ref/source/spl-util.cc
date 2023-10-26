@@ -778,7 +778,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
     if (number <= 0)
         return;
 
-    targeter_cloud place(agent, GDM, number, number);
+    targeter_cloud place(agent, ctype, GDM, number, number);
     if (!place.set_aim(where))
         return;
     unsigned int dist = 0;
@@ -1081,6 +1081,7 @@ int spell_effect_noise(spell_type spell)
 
     case SPELL_LRD: // Can reach 3 only with crystal walls, which are rare
     case SPELL_FULMINANT_PRISM: // Players usually want the full size explosion
+    case SPELL_TREMORSTONE:
         expl_size = 2;
         break;
 
@@ -1302,8 +1303,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_OZOCUBUS_ARMOUR:
-        if (temp && you.form == transformation::statue)
-            return "the film of ice won't work on stone.";
         if (temp && player_equip_unrand(UNRAND_SALAMANDER))
             return "your ring of flames would instantly melt the ice.";
         break;
@@ -1556,10 +1555,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_POISONOUS_CLOUD:
     case SPELL_HOLY_BREATH:
     {
-        targeter_cloud tgt(&you, range);
-        // Accept monsters that are in clouds for the hostiles-in-range check
-        // (not for actual targeting).
-        tgt.avoid_clouds = false;
+        targeter_cloud tgt(&you, spell_to_cloud(spell), range);
         for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS);
              ri; ++ri)
         {

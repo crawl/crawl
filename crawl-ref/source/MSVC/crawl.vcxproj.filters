@@ -358,9 +358,6 @@
     <ClCompile Include="..\spl-zap.cc">
       <Filter>cc</Filter>
     </ClCompile>
-    <ClCompile Include="..\spl-wpnench.cc">
-      <Filter>cc</Filter>
-    </ClCompile>
     <ClCompile Include="..\spl-util.cc">
       <Filter>cc</Filter>
     </ClCompile>
@@ -1915,9 +1912,6 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\spl-util.h">
-      <Filter>h</Filter>
-    </ClInclude>
-    <ClInclude Include="..\spl-wpnench.h">
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\spl-zap.h">

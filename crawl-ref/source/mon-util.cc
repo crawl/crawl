@@ -1524,8 +1524,8 @@ bool mons_can_be_blinded(monster_type mc)
  * The undead, nonliving, vegetative, or unblindable cannot be dazzled.
  *
  * @param mc    The class of monster in question.
- * @return      Whether monsters of this type can get ENCH_BLIND from Dazzling
- *              Spray.
+ * @return      Whether monsters of this type can get `ENCH_BLIND` from Dazzling
+ *              Spray or wands of light.
  */
 bool mons_can_be_dazzled(monster_type mc)
 {
@@ -5355,7 +5355,6 @@ int max_mons_charge(monster_type m)
     switch (m)
     {
         case MONS_ORB_SPIDER:
-        case MONS_FLOATING_EYE:
             return 1;
         default:
             return 0;

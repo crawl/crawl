@@ -343,7 +343,7 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, LOS_MAX_RANGE, {fail_basis::xl, 30, 1}, abflag::breath },
         { ABIL_BREATHE_POWER, "Breathe Dispelling Energy",
             0, 0, 0, LOS_MAX_RANGE, {fail_basis::xl, 30, 1},
-            abflag::breath | abflag::dir_or_target },
+            abflag::breath | abflag::dir_or_target | abflag::not_self },
         { ABIL_BREATHE_STEAM, "Breathe Steam",
             0, 0, 0, 6, {fail_basis::xl, 20, 1},
             abflag::breath | abflag::dir_or_target },
@@ -2738,7 +2738,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             canned_msg(MSG_OK);
             return spret::abort;
         }
-        start_delay<TransformDelay>(transformation::none);
+        start_delay<TransformDelay>(transformation::none, nullptr);
         break;
 
     // INVOCATIONS:

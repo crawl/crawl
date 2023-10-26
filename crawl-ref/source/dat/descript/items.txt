@@ -293,9 +293,9 @@ page, clearly reserving this book for only the tackiest of wizards.
 %%%%
 book of the spheres
 
-A book containing a comprehensive, well-rounded collection of sphere-related
-spells. Its final pages begin to describe a spell titled 'Summon Orb of Zot',
-but sadly, the remainder of the book has been completely vaporised.
+A book containing a well-rounded collection of sphere-related spells. Its
+final pages begin to describe a spell titled 'Summon Orb of Zot', but sadly,
+the remainder of the book has been completely vaporised.
 %%%%
 book of storms
 
@@ -744,7 +744,8 @@ lightning rod
 A rod that allows its wielder to fire unavoidable blasts of lightning.
 Consecutive evocations cause the discharge to be sustained, which increases the
 power level up to four times and allows the blast to be redirected to affect an
-area. The strength of the blast increases with Evocations skill.
+area. The strength of the blast increases with Evocations skill and, for
+redirected blasts, decreases with the size of the affected area.
 %%%%
 long sword
 
@@ -1230,7 +1231,8 @@ staff of air
 
 A staff that increases the power of air spells cast by its wielder, and
 insulates them from electricity. If the wielder is skilled in Evocations and
-Air Magic, they can shock those struck by it.
+Air Magic, they can shock those struck by it, dealing electricity damage which
+bypasses armour.
 %%%%
 staff of cold
 
@@ -1420,7 +1422,8 @@ of victims' resistance to cold.
 wand of light
 
 A magical device which fires a ray of searing light, injuring and blinding
-those struck. Tougher monsters will recover their vision more quickly.
+those struck. Only living, demonic and angelic monsters can be blinded. and
+tougher monsters will recover their vision more quickly.
 %%%%
 wand of mindburst
 

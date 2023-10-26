@@ -38,7 +38,7 @@
 static string _effect_string(spell_type spell, const monster_info *mon_owner);
 
 /**
- * Returns a spellset containing the spells for the given item.
+ * Returns a spellset containing the player-known spells for the given item.
  *
  * @param item      The item in question.
  * @return          A single-element vector, containing the list of all

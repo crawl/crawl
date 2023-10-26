@@ -1927,7 +1927,7 @@ static const map<monster_type, band_set> bands_by_leader = {
         return you.where_are_you == BRANCH_DEPTHS;
     }},                           {{ BAND_SPARK_WASPS, {1, 4} }}}},
     { MONS_HOWLER_MONKEY,   { {2, 6}, {{ BAND_HOWLER_MONKEY, {1, 3} }}}},
-    { MONS_FLOATING_EYE,   { {0, 0, []() {
+    { MONS_GLASS_EYE,   { {0, 0, []() {
         return branch_has_monsters(you.where_are_you)
             || !vault_mon_types.empty();
     }},                           {{ BAND_RANDOM_SINGLE, {1, 2} }}}},
@@ -1944,7 +1944,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_DIRE_ELEPHANT,    { {0, 0, []() {
         return you.where_are_you == BRANCH_VAULTS;
     }},                            {{ BAND_DIRE_ELEPHANTS, {2, 4} }}}},
-    { MONS_WIZARD,  { {0, 0, []() {
+    { MONS_ARCANIST,  { {0, 0, []() {
         return player_in_branch(BRANCH_VAULTS);
     }},                            {{ BAND_UGLY_THINGS, {2, 4}, true }}}},
     { MONS_WENDIGO, { {}, {{ BAND_SIMULACRA, {2, 6} }}}},
@@ -1955,6 +1955,7 @@ static const map<monster_type, band_set> bands_by_leader = {
                                    {{ BAND_SPECTRALS, {2, 6}, true} }}},
     { MONS_GRUNN,            { {}, {{ BAND_DOOM_HOUNDS, {2, 4}, true }}}},
     { MONS_NORRIS,           { {}, {{ BAND_SKYSHARKS, {2, 5}, true }}}},
+    { MONS_UFETUBUS,         { {}, {{ BAND_UFETUBI, {1, 2} }}}},
 
     // special-cased band-sizes
     { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1}, true }}}},
@@ -2161,6 +2162,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_DEEP_TROLLS,         {{{MONS_DEEP_TROLL, 1}}}},
     { BAND_BONE_DRAGONS,        {{{MONS_BONE_DRAGON, 1}}}},
     { BAND_SPECTRALS,           {{{MONS_SPECTRAL_THING, 1}}}},
+    { BAND_UFETUBI,             {{{MONS_UFETUBUS, 1}}}},
     { BAND_DEEP_ELF_KNIGHT,     {{{MONS_DEEP_ELF_AIR_MAGE, 46},
                                   {MONS_DEEP_ELF_FIRE_MAGE, 46},
                                   {MONS_DEEP_ELF_KNIGHT, 24},
@@ -2358,7 +2360,8 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                   {MONS_BLIZZARD_DEMON, 2},
                                   {MONS_GREEN_DEATH, 2},
                                   {MONS_RAKSHASA, 4},
-                                  {MONS_WIZARD, 4}}}},
+                                  {MONS_OCCULTIST, 2},
+                                  {MONS_ARCANIST, 2}}}},
 
     { BAND_HOLIES,              {{{MONS_ANGEL, 100},
                                   {MONS_CHERUB, 80},

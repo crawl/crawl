@@ -2468,8 +2468,8 @@ void bolt::affect_endpoint()
         if (cloud == CLOUD_NONE)
             return;
 
-        targeter_cloud tgt(agent(), range, get_cloud_size(true),
-                            get_cloud_size(false, true));
+        targeter_cloud tgt(agent(), cloud, range, get_cloud_size(true),
+                           get_cloud_size(false, true));
         tgt.set_aim(pos());
         for (const auto &entry : tgt.seen)
         {
@@ -3566,6 +3566,22 @@ void bolt::affect_player_enchantment(bool resistible)
         if (!you.duration[DUR_LOWERED_WL])
             mpr("Your willpower is stripped away!");
         you.increase_duration(DUR_LOWERED_WL, 12 + random2(18), 50);
+        obvious_effect = true;
+        break;
+
+    case BEAM_VITRIFY:
+        if (!you.duration[DUR_VITRIFIED])
+            mpr("Your body becomes as fragile as glass!");
+        you.increase_duration(DUR_VITRIFIED, 10 + random2(16), 50);
+        obvious_effect = true;
+        break;
+
+    case BEAM_VITRIFYING_GAZE:
+        if (!you.duration[DUR_VITRIFIED])
+            mpr("Your body becomes as fragile as glass!");
+        else
+            mpr("You feel your fragility will last longer.");
+        you.increase_duration(DUR_VITRIFIED, 6 + random2(5), 50);
         obvious_effect = true;
         break;
 
@@ -4683,7 +4699,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         mon->add_ench(mon_enchant(ENCH_PARALYSIS, 1, agent(), BASELINE_DELAY));
     }
 
-    if (flavour == BEAM_LIGHT && !mon->has_ench(ENCH_BLIND))
+    if (flavour == BEAM_LIGHT
+        && mons_can_be_dazzled(mon->type)
+        && !mon->has_ench(ENCH_BLIND))
     {
         const int dur = max(1, div_rand_round(54, mon->get_hit_dice())) * BASELINE_DELAY;
         auto ench = mon_enchant(ENCH_BLIND, 1, agent(),
@@ -5192,11 +5210,10 @@ bool bolt::has_saving_throw() const
     case BEAM_VAMPIRIC_DRAINING:
     case BEAM_CONCENTRATE_VENOM:
     case BEAM_ENFEEBLE:
+    case BEAM_VITRIFYING_GAZE:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores will 1/3 of the time
-    case BEAM_PARALYSIS:        // Giant eyeball paralysis is irresistible
-        return !(agent() && agent()->type == MONS_FLOATING_EYE);
     default:
         return true;
     }
@@ -5799,6 +5816,45 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             }
         }
         return MON_AFFECTED;
+
+    case BEAM_VITRIFY:
+        if (!mon->has_ench(ENCH_VITRIFIED)
+            && mon->add_ench(mon_enchant(ENCH_VITRIFIED, 0, agent(),
+                                         random_range(20, 30) * BASELINE_DELAY)))
+        {
+            if (you.can_see(*mon))
+            {
+                mprf("%s becomes as fragile as glass.",
+                     mon->name(DESC_ITS).c_str());
+                obvious_effect = true;
+            }
+        }
+        return MON_AFFECTED;
+
+    case BEAM_VITRIFYING_GAZE:
+    {
+        bool had_status = mon->has_ench(ENCH_VITRIFIED);
+
+        if (mon->add_ench(mon_enchant(ENCH_VITRIFIED, 0, agent(),
+                                  random_range(6, 10) * BASELINE_DELAY)))
+        {
+            if (you.can_see(*mon))
+            {
+                if (had_status)
+                {
+                    mprf("%s looks even more glass-like.",
+                         mon->name(DESC_THE).c_str());
+                }
+                else
+                {
+                    mprf("%s becomes as fragile as glass.",
+                         mon->name(DESC_ITS).c_str());
+                }
+                obvious_effect = true;
+            }
+        }
+        return MON_AFFECTED;
+    }
 
     case BEAM_MALIGN_OFFERING:
     {
@@ -6757,6 +6813,8 @@ static string _beam_type_name(beam_type type)
     case BEAM_ENFEEBLE:              return "enfeeble";
     case BEAM_NECROTISE:             return "necrotise";
     case BEAM_ROOTS:                 return "roots";
+    case BEAM_VITRIFY:               return "vitrification";
+    case BEAM_VITRIFYING_GAZE:  return "vitrification";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

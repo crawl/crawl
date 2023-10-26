@@ -410,14 +410,14 @@ tier1_gauntlet_arenas = {
   },
   {
     first  = {mons = "shining eye", min = 1, max = 1},
-    second = {mons = "floating eye / golden eye", min = 1, max = 2},
+    second = {mons = "glass eye / golden eye", min = 1, max = 2},
     loot   = "potion of mutation ident:type",
     plant  = "demonic",
     weight = 5,
   },
   {
     first  = {mons = "eye of devastation", min = 1, max = 1},
-    second = {mons = "floating eye / golden eye", min = 1, max = 2},
+    second = {mons = "glass eye / golden eye", min = 1, max = 2},
     weight = 5,
   },
   {
@@ -425,7 +425,7 @@ tier1_gauntlet_arenas = {
     second = {mons = "tengu conjurer", min = 1, max = 2},
   },
   {
-    first  = {mons = "wizard", min = 1, max = 1},
+    first  = {mons = "arcanist", min = 1, max = 1},
     second = {mons = "white imp / shadow imp", min = 1, max = 3},
   },
   {
@@ -617,7 +617,7 @@ tier2_gauntlet_arenas = {
     plant  = "demonic",
   },
   {
-    second = {mons = "wizard", min = 2, max = 2},
+    second = {mons = "arcanist / occultist", min = 2, max = 2},
     third  = {mons = "white imp / shadow imp", min = 3, max = 6},
   },
   {

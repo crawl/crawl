@@ -60,7 +60,6 @@
 #include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
-#include "spl-wpnench.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"

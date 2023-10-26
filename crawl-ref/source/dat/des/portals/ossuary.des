@@ -302,6 +302,56 @@ xxxxxxxcAcxxxxxxx
 @@@@@@@@@@@@@@@@@
 ENDMAP
 
+NAME:   mainiacjoe_ossuary_entry_dusty_tomb
+TAGS:   no_monster_gen no_item_gen
+KFEAT:  ` = web
+KFEAT:  H = granite_statue
+NSUBST: ` = 8:` / *:.
+TILE:   G = dngn_sarcophagus_pedestal_right
+TILE:   H = dngn_sarcophagus_pedestal_left
+: set_feature_name("granite_statue", "sarcophagus")
+: ossuary_portal(_G)
+MAP
+  .......
+ .xxxxxxx.
+..x`G`G`x..
+.xx`````cc.
+.c``G`G``c.
+.+``````Oc.
+.c``H`H``c.
+.xx`````cc.
+..x`H`H`x..
+ .xxxxxxx.
+  .......
+ENDMAP
+
+NAME:  mainiacjoe_ossuary_entry_find_the_door
+TAGS:  no_monster_gen
+: local d = math.max(0, 6 - you.depth())
+: local e = math.max(0, you.depth() - 4)
+: local f = math.max(0, you.depth() - 6)
+: local z = "zombie w:"
+: local s = "skeleton w:"
+: mons("adder " .. z .. d .. " / adder " .. s .. d ..
+:      " / hound " .. z .. d .. " / hound " .. s .. d ..
+:      " / scorpion " .. z .. e .. " / howler monkey " .. s .. e ..
+:      " / bullfrog " .. s .. f .. " / killer bee " .. z .. f)
+SUBST: 1 = 11., 3 = 1.
+: ossuary_portal(_G)
+MAP
+   .....
+  .x+x+x.
+ ..x.x1x..
+.xxc.cccxx.
+.+1c3.3c1+.
+.xxc.O.cxx.
+.+1c3.3c1+.
+.xxcccccxx.
+ ..x1x1x..
+  .x+x+x.
+   .....
+ENDMAP
+
 #### The portal vaults ####################################
 
 # Reset default depth to prevent random generation of portal vaults.
