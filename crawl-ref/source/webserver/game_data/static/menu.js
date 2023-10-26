@@ -118,14 +118,15 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     function set_hovered(index, snap=true, from_mouse=false)
     {
-        if (index == menu.last_hovered && item_selectable(menu.items[index]))
+        if (index >= menu.items.length)
+            index = Math.max(0, menu.items.length - 1);
+        if (index == menu.last_hovered
+            && (index < 0 || item_selectable(menu.items[index])))
         {
             // just make sure the hover class is set correctly
             add_hover_class(menu.last_hovered);
             return;
         }
-        if (index >= menu.items.length)
-            index = Math.max(0, menu.items.length - 1);
         remove_hover_class(menu.last_hovered);
         if (index < 0 || item_selectable(menu.items[index]))
         {
