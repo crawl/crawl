@@ -4382,17 +4382,17 @@ xxxxxxxxxxxxxxx..@
 ENDMAP
 
 # Certain creatures are attracted to an abandoned site of magical significance
-NAME: cheibrodos_forgotten_conduit
-DEPTH: Spider, Snake
-TAGS: no_item_gen no_monster_gen
+NAME:   cheibrodos_forgotten_conduit
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  Spider, Snake
 ORIENT: float
 : if you.in_branch("Spider") then
-MONS: w:5 wolf spider / tarantella / redback,  demonic crawler / orb spider
-MONS: spark wasp
+MONS:   wolf spider w:5 / tarantella / redback, demonic crawler / orb spider
+MONS:   spark wasp
 : else
-MONS: w:5 anaconda / black mamba / water moccasin, mana viper, shock serpent
+MONS:   anaconda w:5 / black mamba / water moccasin, mana viper, shock serpent
 : end
-ITEM: w:60 star_item / staff of air / lightning rod w:20
+ITEM:   star_item w:60 / staff of air / lightning rod w:20
 NSUBST: " = 1:2 / 1:1 / 3=12., ' = 1:2 / 1:1 / 3=12., - = 2:3, ` = 2=*% / *:%
 MAP
 @...........
@@ -4412,18 +4412,21 @@ MAP
    ...........@
 ENDMAP
 
-NAME: cheibrodos_grave_circle
-DEPTH: D:7-11
-TAGS: no_item_gen no_monster_gen
+NAME:   cheibrodos_grave_circle
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  D:7-11
 ORIENT: float
-MONS: place:D:14 skeleton w:5 / place:D:14 zombie, shadow imp, hellwing
-NSUBST: . = 5:1 / 3=1. / 3:2 / 2=2., " = 1:*% / 4=$%.
-SUBST: . = .....--__tG
-KMONS: t = withered plant
-KFEAT: A = stone_arch
-TILE: G = dngn_gravestone
-FTILE: - = floor_pebble_brown
-FTILE: _ = floor_pebble_darkgray
+MONS:   place:D:14 skeleton w:5 / place:D:14 zombie, shadow imp, hellwing
+KMONS:  t = withered plant
+: if you.depth () < 10 then
+NSUBST: . = 3:1 / 3=1. / 3:2 / 2=2., " = 1:*% / 3 = $%., 3 = 1:3 / *:.
+: else
+NSUBST: . = 5:1 / 3=1. / 3:2 / 2=2., " = 1:*% / 5 = $%.
+: end
+SUBST:  . = .....--__tG
+TILE:   G = dngn_gravestone
+FTILE:  - = floor_pebble_brown
+FTILE:  _ = floor_pebble_darkgray
 : set_feature_name("granite_statue", "a gravestone")
 MAP
   ....@....
@@ -4442,8 +4445,8 @@ MAP
 ENDMAP
 
 NAME: cheibrodos_greedy_goblins
-DEPTH: D:2-4
 TAGS: no_item_gen no_monster_gen
+DEPTH: D:2-4
 ORIENT: float
 MONS: goblin, hobgoblin
 SUBST: - = 112..., " = 12., ' = 12.
@@ -4486,30 +4489,25 @@ MAP
      WWW
 ENDMAP
 
-NAME: cheibrodos_fertilizer
-TAGS: no_item_gen no_monster_gen no_tele_into
-DEPTH: D:2-8
+NAME:   cheibrodos_fertilizer
+TAGS:   no_item_gen no_monster_gen no_tele_into
+DEPTH:  D:2-8
 ORIENT: float
+KMONS:  A = fungus / toadstool
 : if you.absdepth() > 4 then
-MONS: kobold / kobold brigand w:6, endoplasm / jelly, slime creature
+MONS:   kobold / kobold brigand w:6, endoplasm / jelly, slime creature
 : else
-MONS: kobold, endoplasm, jelly
+MONS:   kobold, endoplasm, jelly
 : end
-{{
-dgn.delayed_decay(_G, 'd', 'goblin skeleton / hobgoblin skeleton ' ..
-                           '/ rat skeleton / bat skeleton')
-dgn.delayed_decay_extra(_G, 'e', 'human skeleton', 'star_item')
-}}
-KMONS: A = fungus / toadstool
-KMONS: B = fungus / toadstool
-KMONS: C = fungus / toadstool
-KMONS: D = fungus / toadstool
-KFEAT: ` = floor
-FTILE: `ABCDd = floor_mud
+: dgn.delayed_decay(_G, 'd', 'goblin skeleton / hobgoblin skeleton ' ..
+:                          '/ rat skeleton / bat skeleton')
+: dgn.delayed_decay_extra(_G, 'e', 'human skeleton', 'star_item')
+NSUBST: ' = 3:1 / 5 = 1. / 1:% / 2 = %.
+NSUBST: " = 5:2 / 5 = 2' / 1:3 / 2 = 3` / 2:d / 3 = d` / *:`
+NSUBST: A = 2 = dAA` / 1:`, B = 2 = dAA. / 1:`
+NSUBST: C = 2 = dAA` / 1:`, D = 2 = dAA` / 1:`
+FTILE:  `ABCDd = floor_mud
 COLOUR: `ABCDd = brown
-NSUBST: ' = 4:1 / 4=1. / 1:% / 2=%.
-NSUBST: " = 6:2 / 4=2' / 1:3 / 1=33` / 1=3` / 2:d / 3=d` / *:`
-NSUBST: A = 2=dAA` / 1:`, B = 2=dAA. / 1:`, C = 2=dAA` / 1:`, D = 2=dAA` / 1:`
 MAP
         xxxxxxxxxxxxx
   xxxxxxxxxxxxxxxxxxx
@@ -4566,21 +4564,24 @@ cGWW"WWA-$2$-AWW"WWGc
    .....;.c.`.....
 ENDMAP
 
-NAME: cheibrodos_pilgrimage
-TAGS: no_item_gen no_monster_gen
-DEPTH: D:2-4
+NAME:   cheibrodos_pilgrimage
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  D:2-4
 ORIENT: float
-MONS: orc priest band, orc
-SUBST: ' : cG.w
+MONS:   orc priest, orc priest band , orc
+SUBST:  ' : cG.w
+: if you.depth() == 4 or you.depth() == 3 and crawl.coinflip() then
+SUBST:  1 = 2
+: end
 MAP
  ...........
 ..ccccccccc.
 .ccc........
-.cc..'2..'..
+.cc..'3..'..
 .c$........@
-@nT.1......@
+@nT.1.......
 .c$........@
-.cc..'2..'..
+.cc..'3..'..
 .ccc........
 ..ccccccccc.
  ...........
@@ -6150,12 +6151,14 @@ DEPTH:   D:2-, !D:$, Elf:2, Crypt:2-, !Crypt:$, Zot:2-, !Zot:$
 ORIENT:  float
 WEIGHT:  10 (D), 5
 SUBST:   m:mn
+: if you.in_branch("Zot") then
+KMONS:   ]}) = orb of fire / electric golem / draconian knight w:20
+: elseif not you.in_branch("D") then
+KMONS:   ]}) = 9
+: end
 KFEAT:   ] = ]
 KFEAT:   } = }
 KFEAT:   ) = )
-: if not you.in_branch("D") then
-KMONS:   ]}) = 9
-: end
 SHUFFLE: ]}), [{(
 MAP
 mmmm
@@ -7138,12 +7141,16 @@ ENDMAP
 ###############################################################################
 
 NAME:    hangedman_cross_stitches
-ORIENT:  float
 TAGS:    transparent no_monster_gen
+ORIENT:  float
 DEPTH:   D:6-, !D:$, Depths, !Depths:$, Elf, Snake
 WEIGHT:  5 (Elf, Snake), 10
 KMONS:   0 = 0
+: if you.depth() < 9 then
+:   kmons("9 = place:D:" .. you.depth() + 3)
+: else
 KMONS:   9 = 9
+: end
 KITEM:   09 = % / $ w:5
 SHUFFLE: XzZ / '09
 SUBST:   XzZ = x, ' = ., x : x:90 c
@@ -7156,12 +7163,12 @@ MAP
          ...X..'..X..'..X..'..X...
         ...'x'XxX'x'XxX'x'XxX'x'..
        .....X..'..X..'..X..'..X...
-      ...X..'..z..9..z..'..X.....
-     ...'x'XxX0x0ZxZ0x0XxX'x'...
-    .....X..'..z..9..z..'..X...
-   ...X..'..z..9..z..'..X.....
-  ...'x'XxX0x0ZxZ0x0XxX'x'...
- .....X..'..z..9..z..'..X...
+      ...X..'..z..9..X..0..X.....
+     ...'x'XxX0x0ZxZ'x'zxz'x'...
+    .....X..'..z..9..X..0..X...
+   ...X..0..X..9..z..'..X.....
+  ...'x'zxz'x'ZxZ0x0XxX'x'...
+ .....X..0..X..9..z..'..X...
 ...X..'..X..'..X..'..X.....
 ..'x'XxX'x'XxX'x'XxX'x'...
 ...X..'..X..'..X..'..X...
@@ -7172,8 +7179,8 @@ ENDMAP
 ###############################################################################
 
 NAME:    hangedman_cross_veins
-ORIENT:  float
 TAGS:    transparent no_monster_gen no_pool_fixup
+ORIENT:  float
 DEPTH:   D:8-, Depths, !Depths:$, Elf, Snake, Abyss
 WEIGHT:  5 (Elf, Snake), 10
 KMONS:   12 = 0
@@ -9175,7 +9182,7 @@ ENDMAP
 NAME:   kennysheep_funnel
 ORIENT: float
 TAGS:   no_trap_gen no_monster_gen no_descent
-DEPTH:  D:12-, !D:$, Depths:2-, !Depths:$
+DEPTH:  D:12-, !D:$
 MAP
     ccc
    cc.cc
@@ -9206,7 +9213,7 @@ ENDMAP
 NAME:   kennysheep_six_static_rooms
 TAGS:   transparent
 ORIENT: float
-DEPTH:  D:2-, Depths, Elf, Zot, Snake, !D:$, !Depths:$
+DEPTH:  D:2-, !D:$, Snake, Elf, Zot
 MAP
   xxxxx   xxxxx   xxxxx
  xx...xx xx...xx xx...xx
@@ -9380,17 +9387,19 @@ MAP
            .........
 ENDMAP
 
-NAME: cheibrodos_lost_city_excavation
-DEPTH: D:11-, Depths
-TAGS: no_item_gen no_monster_gen
+NAME:   cheibrodos_lost_city_excavation
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  D:11-, Depths
 ORIENT: float
 : if you.in_branch("D") then
-MONS: deep elf pyromancer w:8 / fire elemental w:5 / nothing, arcanist / occultist
+MONS:   deep elf pyromancer w:8 / fire elemental w:5
+MONS:   arcanist / occultist
 : else
-MONS: occultist w:5 / fire elemental w:5 / nothing, lich
+MONS:   occultist / sun demon, lich
 : end
-ITEM: randbook / any scroll
-SUBST: - = .lx
+ITEM:   randbook / any scroll
+NSUBST: 1 = 1:1 / 1:. / * = 1.
+SUBST:  - = .lx
 MAP
 llllll
 llllllllll
@@ -10069,7 +10078,7 @@ xxxxx....|x|x
 ENDMAP
 
 NAME:   minmay_mutant_horseshoe
-DEPTH:  D:11-, Depths
+DEPTH:  D:11-
 ORIENT: float
 SUBST:  x : cvb
 MAP
@@ -10413,10 +10422,13 @@ MAP
 ....@@....
 ENDMAP
 
-NAME: cheibrodos_fzero
-TAGS: no_item_gen no_monster_gen transparent
-DEPTH: D:5-
+NAME:   cheibrodos_fzero
+TAGS:   no_item_gen no_monster_gen transparent
+DEPTH:  D:5-
 ORIENT: float
+: if you.depth() < 9 then
+:   kmons("9 = place:D:" .. you.depth() + 3)
+: end
 NSUBST: " = 3:0 / 3=0. / 1=9.., ` = 3:0 / 2=0. / 1=9..
 NSUBST: ' = 3:0 / 3=0. / 2:9 / 1=9.
 NSUBST: A = 1:% / 3=%., B = 2:* / 1=*%. / 1=%., C = 1:% / 3=%.
