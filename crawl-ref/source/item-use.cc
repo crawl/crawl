@@ -2984,6 +2984,7 @@ bool drink(item_def* potion)
         return false;
     }
 
+    const bool nearby_mons = there_are_monsters_nearby(true, true, false);
     if (player_equip_unrand(UNRAND_VICTORY, true)
         && !you.props.exists(VICTORY_CONDUCT_KEY))
     {
@@ -2994,7 +2995,7 @@ bool drink(item_def* potion)
                                                        false).c_str());
 
         if (item->props[VICTORY_STAT_KEY].get_int() > 0
-            && there_are_monsters_nearby(true, true, false)
+            && nearby_mons
             && !yesno(unrand_prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
@@ -3044,11 +3045,8 @@ bool drink(item_def* potion)
     }
 
     // Drinking with hostile visible mons nearby resets unrand "Victory" stats.
-    if (player_equip_unrand(UNRAND_VICTORY, true)
-        && there_are_monsters_nearby(true, true, false))
-    {
+    if (player_equip_unrand(UNRAND_VICTORY, true) && nearby_mons)
         you.props[VICTORY_CONDUCT_KEY] = true;
-    }
 
     // We'll need this later, after destroying the item.
     const bool was_exp = potion->sub_type == POT_EXPERIENCE;
@@ -3772,6 +3770,7 @@ bool read(item_def* scroll, dist *target)
         }
     }
 
+    const bool nearby_mons = there_are_monsters_nearby(true, true, false);
     if (player_equip_unrand(UNRAND_VICTORY, true)
         && !you.props.exists(VICTORY_CONDUCT_KEY))
     {
@@ -3782,7 +3781,7 @@ bool read(item_def* scroll, dist *target)
                                                        false).c_str());
 
         if (item->props[VICTORY_STAT_KEY].get_int() > 0
-            && there_are_monsters_nearby(true, true, false)
+            && nearby_mons
             && !yesno(unrand_prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
@@ -4102,7 +4101,7 @@ bool read(item_def* scroll, dist *target)
 
     // Reading with hostile visible mons nearby resets unrand "Victory" stats.
     if (player_equip_unrand(UNRAND_VICTORY, true)
-        && there_are_monsters_nearby(true, true, false)
+        && nearby_mons
         && !cancel_scroll)
     {
         you.props[VICTORY_CONDUCT_KEY] = true;
