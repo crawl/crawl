@@ -441,7 +441,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         return self.process.idle_time()
 
     def is_running(self):
-        return self.process is not None
+        return self.process is not None and self.process.process
 
     def is_in_lobby(self):
         return not self.is_running() and self.watched_game is None
@@ -465,7 +465,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def show_in_lobby(self):
         return (self.is_running()
-            and self.process.process
             and not self.account_restricted())
 
     def send_announcement(self, text):
