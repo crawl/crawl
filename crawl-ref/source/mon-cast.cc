@@ -2296,13 +2296,12 @@ static bool _should_force_door_shut(const coord_def& door)
          cur_tension, new_tension);
 
     // If closing the door would reduce player tension by too much, probably
-    // it is scarier for the player to leave it open and thus it should be left
-    // open
+    // it is scarier for the player to leave it open.
     //
     // Currently won't allow tension to be lowered by more than 33%.
     //
     // Also, if there's 0 tension, we require the door closure to create
-    // tensiion, otherwise we'll probably just lock the player away from the
+    // tension, otherwise we'll probably just lock the player away from the
     // warden.
     return 1 + cur_tension * 66 <= new_tension * 100;
 }
@@ -2325,6 +2324,10 @@ static bool _seal_doors_and_stairs(const monster* warden,
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE);
                  ri; ++ri)
     {
+        // No closing doors, etc, through grates - can softlock.
+        if (!cell_see_cell(warden->pos(), *ri, LOS_SOLID_SEE))
+            continue;
+
         if (feat_is_open_door(env.grid(*ri)))
         {
             if (!_can_force_door_shut(*ri))
