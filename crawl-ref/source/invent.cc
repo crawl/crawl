@@ -1770,7 +1770,7 @@ bool check_warning_inscriptions(const item_def& item,
             prompt += " while about to teleport";
         }
         prompt += "?";
-        if (god_despises_item(item))
+        if (god_despises_item(item, you.religion))
             prompt += " You'd be excommunicated if you did!";
         else if (penance)
             prompt += " This could place you under penance!";
