@@ -767,9 +767,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         dump_url = self.process.exit_dump_url
         self.process = None
 
-        if self.client_closed:
-            sockets.remove(self)
-        else:
+        if not self.client_closed:
             if shutting_down:
                 self.close()
             else:
@@ -787,11 +785,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     self.start_crawl(None)
 
         if config.get('dgl_mode'):
+            # queues a callback to update the status list
             update_global_status()
 
-        if shutting_down and len(sockets) == 0:
-            # The last crawl process has ended, now we can go
-            IOLoop.current().stop()
+        self.try_cleanup()
 
     def init_user(self, callback):
         # this would be more cleanly implemented with wait_for_exit, but I
@@ -1388,20 +1385,41 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         data["msg"] = msg
         return self.append_message(json_encode(data), False)
 
-    def on_close(self):
-        if self.process is None and self in sockets:
-            sockets.remove(self)
-            if shutting_down and len(sockets) == 0:
-                # The last socket has been closed, now we can go
-                IOLoop.current().stop()
-        elif self.is_running():
-            self.process.stop()
+    def try_cleanup(self):
+        global sockets
+        # try to do what cleanup can be done on game end or close at the
+        # current point in time.
+        # If there is a running process, some cleanup will need to be
+        # deferred, and if the client is not closed only the process will
+        # be cleaned up.
+        if not self.is_running():
+            self.process = None
+            if self.timeout:
+                IOLoop.current().remove_timeout(self.timeout)
+            if self.client_closed and self in sockets:
+                sockets.remove(self)
 
         if self.watched_game:
             self.watched_game.remove_watcher(self)
 
-        if self.timeout:
-            IOLoop.current().remove_timeout(self.timeout)
+        if shutting_down and len(sockets) == 0:
+            # The last crawl process has ended, now we can go
+            IOLoop.current().stop()
+
+    def on_close(self):
+        # at this point, self.client_closed is guaranteed to be true
+        extra = []
+        if self.is_running():
+            # this will (sooner or later) trigger _on_crawl_end, which will
+            # remove `self` from `sockets`
+            # XX would it be better to handle on_close messaging at that point?
+            self.process.stop()
+        elif self in sockets and self.process:
+            # buggy state (I think): `self.process` did not get set to
+            # None, but process is not actually running.
+            extra += ["stale process"]
+
+        self.try_cleanup()
 
         if self.total_message_bytes == 0:
             comp_ratio = "N/A"
@@ -1410,11 +1428,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             comp_ratio = round(comp_ratio, 2)
 
         if self.failed_messages > 0 or self.failed_on_messages > 0:
-            failed_msg = ", %d (client) + %d (process) failed messages" % (self.failed_messages, self.failed_on_messages)
-        else:
-            failed_msg = ""
+            extra += ["%d (client) + %d (process) failed messages" % (self.failed_messages, self.failed_on_messages)]
+
+        extra_msg = ""
+        if len(extra):
+            extra_msg = ", " + ", ".join(extra)
 
         self.logger.info("Socket closed. (%s sent, compression ratio %s%%%s)",
                          util.humanise_bytes(self.total_message_bytes),
                          comp_ratio,
-                         failed_msg)
+                         extra_msg)
