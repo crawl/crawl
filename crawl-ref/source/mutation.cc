@@ -1867,13 +1867,9 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    // Felid paws cap MUT_CLAWS at level 1. And octopodes have no hands.
-    if ((you.has_innate_mutation(MUT_PAWS)
-         || you.has_innate_mutation(MUT_TENTACLE_ARMS))
-        && mutat == MUT_CLAWS)
-    {
+    // Today's guru wisdom: octopodes have no hands.
+    if (you.has_innate_mutation(MUT_TENTACLE_ARMS) && mutat == MUT_CLAWS)
         return true;
-    }
 
     // Merfolk have no feet in the natural form, and we never allow mutations
     // that show up only in a certain transformation.
