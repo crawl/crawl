@@ -660,7 +660,7 @@ ifndef BUILD_LUA
     BUILD_LUA = yes
   endif
 endif
-# You can override the Lua package search with "make LUA_PACKAGE=lua-5-1".
+# You can override the Lua package search with "make LUA_PACKAGE=lua-5.4".
 # pkg-config is still required.
 ifndef LUA_PACKAGE
   ifndef BUILD_LUA
@@ -669,22 +669,22 @@ ifndef LUA_PACKAGE
         LUA_PACKAGE = luajit
       endif
     else
-      ifneq ($(shell $(PKGCONFIG) lua5.1 --exists || echo no),)
-        ifneq ($(shell $(PKGCONFIG) lua-5.1 --exists || echo no),)
-          ifneq ($(shell $(PKGCONFIG) lua51 --exists || echo no),)
+      ifneq ($(shell $(PKGCONFIG) lua5.4 --exists || echo no),)
+        ifneq ($(shell $(PKGCONFIG) lua-5.4 --exists || echo no),)
+          ifneq ($(shell $(PKGCONFIG) lua54 --exists || echo no),)
             ifeq ($(shell $(PKGCONFIG) lua --exists || echo no),)
-              ifeq ($(shell $(PKGCONFIG) lua --modversion | head -c 3),5.1)
+              ifeq ($(shell $(PKGCONFIG) lua --modversion | head -c 3),5.4)
                 LUA_PACKAGE = lua
               endif
             endif
           else
-            LUA_PACKAGE = lua51
+            LUA_PACKAGE = lua54
           endif
         else
-          LUA_PACKAGE = lua-5.1
+          LUA_PACKAGE = lua-5.4
         endif
       else
-        LUA_PACKAGE = lua5.1
+        LUA_PACKAGE = lua5.4
       endif
     endif
   endif
@@ -695,7 +695,7 @@ endif
 
 ifndef BUILD_LUA
   ifndef LUA_PACKAGE
-    LUA_PACKAGE = lua5.1
+    LUA_PACKAGE = lua5.4
   endif
   INCLUDES_L += $(shell $(PKGCONFIG) $(LUA_PACKAGE) --cflags-only-I | sed -e 's/-I/-isystem /')
   CFLAGS_L  += $(shell $(PKGCONFIG) $(LUA_PACKAGE) --cflags-only-other)
