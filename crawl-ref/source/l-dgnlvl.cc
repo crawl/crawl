@@ -131,7 +131,7 @@ LUAFN(dgn_zot_orb_type)
     return 1;
 }
 
-const struct luaL_reg dgn_level_dlib[] =
+const struct luaL_Reg dgn_level_dlib[] =
 {
 { "br_floorcol", dgn_br_floorcol },
 { "br_rockcol", dgn_br_rockcol },
