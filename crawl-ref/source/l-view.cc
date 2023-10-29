@@ -362,7 +362,7 @@ LUAFN(view_update_monsters)
     return 0;
 }
 
-static const struct luaL_reg view_lib[] =
+static const struct luaL_Reg view_lib[] =
 {
     { "feature_at", view_feature_at },
     { "cloud_at", view_cloud_at },
@@ -382,5 +382,7 @@ static const struct luaL_reg view_lib[] =
 
 void cluaopen_view(lua_State *ls)
 {
-    luaL_openlib(ls, "view", view_lib, 0);
+    lua_newtable(ls);
+    luaL_setfuncs(ls, view_lib, 0);
+    lua_setglobal(ls, "view");
 }

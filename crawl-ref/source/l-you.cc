@@ -607,7 +607,7 @@ LUARET1(you_branch, string, level_id::current().describe(false, false).c_str())
  * @treturn int
  * @function depth
  */
-LUARET1(you_depth, number, you.depth)
+LUARET1(you_depth, integer, you.depth)
 
 /*** What fraction of the branch you've gone into.
  * @treturn number
@@ -625,7 +625,7 @@ LUARET1(you_depth_fraction, number,
 // [ds] Absolute depth is 1-based for Lua to match things like DEPTH:
 // which are also 1-based. Yes, this is confusing. FIXME: eventually
 // change you.absdepth0 to be 1-based as well.
-LUARET1(you_absdepth, number, env.absdepth0 + 1)
+LUARET1(you_absdepth, integer, env.absdepth0 + 1)
 
 /*** How long has the player been on the current level?
  * @treturn number
@@ -1426,7 +1426,7 @@ LUARET1(you_is_web_immune, boolean, you.is_web_immune())
  */
 LUARET1(you_has_good_stab, boolean, you.has_good_stab())
 
-static const struct luaL_reg you_clib[] =
+static const struct luaL_Reg you_clib[] =
 {
     { "turn_is_over", you_turn_is_over },
     { "turns"       , you_turns },
@@ -1578,7 +1578,12 @@ static const struct luaL_reg you_clib[] =
 
 void cluaopen_you(lua_State *ls)
 {
-    luaL_openlib(ls, "you", you_clib, 0);
+    if (lua_getglobal(ls, "you") == LUA_TNIL) {
+        lua_pop(ls, 1);
+        lua_newtable(ls);
+    }
+    luaL_setfuncs(ls, you_clib, 0);
+    lua_setglobal(ls, "you");
 }
 
 //
@@ -1880,7 +1885,7 @@ LUARET1(you_skill_points, number,
         you.skill_points[l_skill(ls)])
 LUARET1(you_zigs_completed, number, you.zigs_completed)
 
-static const struct luaL_reg you_dlib[] =
+static const struct luaL_Reg you_dlib[] =
 {
 { "hear_pos",           you_can_hear_pos },
 { "x_pos",              you_x_pos },
@@ -1926,5 +1931,10 @@ static const struct luaL_reg you_dlib[] =
 
 void dluaopen_you(lua_State *ls)
 {
-    luaL_openlib(ls, "you", you_dlib, 0);
+    if (lua_getglobal(ls, "you") == LUA_TNIL) {
+        lua_pop(ls, 1);
+        lua_newtable(ls);
+    }
+    luaL_setfuncs(ls, you_dlib, 0);
+    lua_setglobal(ls, "you");
 }
