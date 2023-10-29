@@ -13,7 +13,7 @@ function get_altar_count(e, default)
   local params = dgn.map_parameters()
   local count = "";
   if params ~= nil then
-    local tag = unpack(params)
+    local tag = table.unpack(params)
     if tag ~= nil then
       -- temple_altars_ is 14 characters
       count = string.sub(tag, 15)
@@ -4617,7 +4617,7 @@ COLOUR: ' = red
 COLOUR: - = white
 COLOUR: G. = yellow
 : local altar_count = get_altar_count(_G, 19)
-: local half_count = (altar_count - 1) / 2
+: local half_count = math.floor((altar_count - 1) / 2)
 : nsubst ("D = " .. half_count .. ":B / *:'")
 : nsubst ("E = " .. half_count .. ":B / *:-")
 MARKER:  P = lua:transp_loc("pantheon_dark_entry")

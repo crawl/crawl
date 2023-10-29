@@ -185,7 +185,7 @@ local function mset(...)
 end
 
 local function mset_if(condition, ...)
-  mset(unpack(util.map(util.curry(spec_if, condition), { ... })))
+  mset(table.unpack(util.map(util.curry(spec_if, condition), { ... })))
 end
 
 -- Monster sets, in order:

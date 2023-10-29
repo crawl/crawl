@@ -258,7 +258,7 @@ function demonic_rune_vault_is_decoy(e)
     return false
   end
 
-  local tag, tag2 = unpack(params)
+  local tag, tag2 = table.unpack(params)
   return tag ~= nil and string.find(tag, "lure")
 end
 
