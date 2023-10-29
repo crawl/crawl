@@ -69,7 +69,7 @@ end
 function get_overflow_altar_count(e)
   local params = dgn.map_parameters()
   if params ~= nil then
-    local tag = unpack(params)
+    local tag = table.unpack(params)
     if tag ~= nil then
       -- temple_overflow_generic_ is 24 characters
       local result = string.sub(tag, 25)
@@ -4975,7 +4975,7 @@ KMASK: Y = no_monster_gen
 {{
   local params = dgn.map_parameters()
   if params ~= nil then
-    local tag = unpack(params)
+    local tag = table.unpack(params)
     if tag ~= nil then
       if string.find(tag, "trog") ~= nil then
         kfeat('_ = altar_trog')
