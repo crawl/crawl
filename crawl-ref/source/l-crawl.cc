@@ -1781,6 +1781,12 @@ LUAWRAP(crawl_clear_message_store, clear_message_store())
  */
 LUARET1(crawl_seen_hups, number, crawl_state.seen_hups)
 
+LUAFN(crawl_setfenv)
+{
+    lua_setupvalue(ls, 1, 1);
+    return 1;
+}
+
 static const struct luaL_Reg crawl_dlib[] =
 {
 { "args", _crawl_args },
@@ -1799,6 +1805,7 @@ static const struct luaL_Reg crawl_dlib[] =
 { "rng_wrap", crawl_rng_wrap },
 { "clear_message_store", crawl_clear_message_store },
 { "seen_hups", crawl_seen_hups },
+{ "setfenv", crawl_setfenv },
 
 { nullptr, nullptr }
 };
