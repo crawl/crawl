@@ -14,7 +14,7 @@
 // User-accessible file operations
 //
 
-static const struct luaL_reg file_clib[] =
+static const struct luaL_Reg file_clib[] =
 {
     { "write", CLua::file_write },
     { nullptr, nullptr },
@@ -22,7 +22,12 @@ static const struct luaL_reg file_clib[] =
 
 void cluaopen_file(lua_State *ls)
 {
-    luaL_openlib(ls, "file", file_clib, 0);
+    if (lua_getglobal(ls, "file") == LUA_TNIL) {
+        lua_pop(ls, 1);
+        lua_newtable(ls);
+    }
+    luaL_setfuncs(ls, file_clib, 0);
+    lua_setglobal(ls, "file");
 }
 
 //
@@ -215,7 +220,7 @@ LUAFN(_file_writefile)
     return 1;
 }
 
-static const struct luaL_reg file_dlib[] =
+static const struct luaL_Reg file_dlib[] =
 {
     { "marshall",   file_marshall },
     { "marshall_meta", file_marshall_meta },
@@ -233,5 +238,10 @@ static const struct luaL_reg file_dlib[] =
 
 void dluaopen_file(lua_State *ls)
 {
-    luaL_openlib(ls, "file", file_dlib, 0);
+    if (lua_getglobal(ls, "file") == LUA_TNIL) {
+        lua_pop(ls, 1);
+        lua_newtable(ls);
+    }
+    luaL_setfuncs(ls, file_dlib, 0);
+    lua_setglobal(ls, "file");
 }

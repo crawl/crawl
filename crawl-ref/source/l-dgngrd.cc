@@ -139,7 +139,7 @@ LUAFN(dgn_seen_destroy_feat)
     return 1;
 }
 
-const struct luaL_reg dgn_grid_dlib[] =
+const struct luaL_Reg dgn_grid_dlib[] =
 {
 { "feature_number", dgn_feature_number },
 { "feature_name", dgn_feature_name },

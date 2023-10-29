@@ -968,7 +968,7 @@ static int kill_lualc_summary(lua_State *ls)
     return 1;
 }
 
-static const struct luaL_reg kill_lib[] =
+static const struct luaL_Reg kill_lib[] =
 {
     { "nkills",     kill_lualc_nkills },
     { "exp"   ,     kill_lualc_exp },
@@ -989,7 +989,9 @@ static const struct luaL_reg kill_lib[] =
 
 void cluaopen_kills(lua_State *ls)
 {
-    luaL_openlib(ls, "kills", kill_lib, 0);
+    lua_newtable(ls);
+    luaL_setfuncs(ls, kill_lib, 0);
+    lua_setglobal(ls, "kills");
 }
 
 static void kill_lua_filltable(vector<kill_exp> &v)

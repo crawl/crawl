@@ -36,7 +36,7 @@ static int mapmarker_property(lua_State *ls)
     return 1;
 }
 
-const struct luaL_reg mapmarker_dlib[] =
+const struct luaL_Reg mapmarker_dlib[] =
 {
 { "pos", mapmarker_pos },
 { "move", mapmarker_move },

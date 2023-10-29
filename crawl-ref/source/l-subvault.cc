@@ -41,7 +41,7 @@ static int dgn_subvault_size(lua_State *ls)
     return 2;
 }
 
-const struct luaL_reg dgn_subvault_dlib[] =
+const struct luaL_Reg dgn_subvault_dlib[] =
 {
 { "is_subvault", dgn_is_subvault },
 { "default_subvault_glyphs", dgn_default_subvault_glyphs },

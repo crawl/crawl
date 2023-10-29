@@ -676,7 +676,7 @@ static int mons_behaviour(lua_State *ls)
     return 0;
 }
 
-static const struct luaL_reg mons_lib[] =
+static const struct luaL_Reg mons_lib[] =
 {
     { "behaviour", mons_behaviour },
     { nullptr, nullptr }
@@ -693,5 +693,8 @@ void dluaopen_monsters(lua_State *ls)
     lua_pushstring(ls, "__newindex");
     lua_pushcfunction(ls, monster_set);
     lua_settable(ls, -3);
-    luaL_register(ls, "mons", mons_lib);
+
+    lua_newtable(ls);
+    luaL_setfuncs(ls, mons_lib, 0);
+    lua_setglobal(ls, "mons");
 }

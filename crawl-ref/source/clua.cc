@@ -768,9 +768,7 @@ void CLua::init_lua()
 
     for (auto l : lua_core_libs)
     {
-        lua_pushcfunction(_state, l.second);
-        lua_pushstring(_state, l.first.c_str());
-        lua_call(_state, 1, 0);
+        luaL_requiref(_state, l.first.c_str(), l.second, 1);
     }
 #endif
 

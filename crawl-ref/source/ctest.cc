@@ -82,7 +82,7 @@ static int crawl_script_args(lua_State *ls)
     return clua_stringtable(ls, crawl_state.script_args);
 }
 
-static const struct luaL_reg crawl_test_lib[] =
+static const struct luaL_Reg crawl_test_lib[] =
 {
     { "begin_test", crawl_begin_test },
     { "test_success", crawl_test_success },
@@ -93,7 +93,12 @@ static const struct luaL_reg crawl_test_lib[] =
 static void _init_test_bindings()
 {
     lua_stack_cleaner clean(dlua);
-    luaL_openlib(dlua, "crawl", crawl_test_lib, 0);
+    if (lua_getglobal(dlua, "crawl") == LUA_TNIL) {
+        lua_pop(dlua, 1);
+        lua_newtable(dlua);
+    }
+    luaL_setfuncs(dlua, crawl_test_lib, 0);
+    lua_setglobal(dlua, "crawl");
     dlua.execfile("dlua/test.lua", true, true);
     initialise_branch_depths();
     initialise_item_descriptions();

@@ -793,7 +793,7 @@ static int crawl_regex_equals(lua_State *ls)
     lua_pushboolean(ls, **pattern == **arg);
     return 1;
 }
-static const luaL_reg crawl_regex_ops[] =
+static const luaL_Reg crawl_regex_ops[] =
 {
     { "matches",        crawl_regex_find },
     { "equals",         crawl_regex_equals },
@@ -877,7 +877,7 @@ static int crawl_messf_equals(lua_State *ls)
     return 1;
 }
 
-static const luaL_reg crawl_messf_ops[] =
+static const luaL_Reg crawl_messf_ops[] =
 {
     { "matches",        crawl_messf_matches },
     { "equals",         crawl_messf_equals },
@@ -1012,7 +1012,7 @@ LUARET1(crawl_stat_gain_prompt, boolean, crawl_state.stat_gain_prompt)
  * @treturn int
  * @function random2
  * */
-LUARET1(crawl_random2, number, random2(luaL_safe_checkint(ls, 1)))
+LUARET1(crawl_random2, integer, random2(luaL_safe_checkint(ls, 1)))
 /*** Perform a weighted coinflip.
  * @tparam int in
  * @treturn boolean
@@ -1025,7 +1025,7 @@ LUARET1(crawl_one_chance_in, boolean, one_chance_in(luaL_safe_checkint(ls, 1)))
  * @treturn int
  * @function random2avg
  */
-LUARET1(crawl_random2avg, number,
+LUARET1(crawl_random2avg, integer,
         random2avg(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2)))
 /*** Random number in a range.
  * @tparam int min
@@ -1033,7 +1033,7 @@ LUARET1(crawl_random2avg, number,
  * @tparam[opt=1] int rolls Average over multiple rolls
  * @function random_range
  */
-LUARET1(crawl_random_range, number,
+LUARET1(crawl_random_range, integer,
         random_range(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2),
                       lua_isnumber(ls, 3)? luaL_safe_checkint(ls, 3) : 1))
 /*** Flip a coin.
@@ -1047,7 +1047,7 @@ LUARET1(crawl_coinflip, boolean, coinflip())
  * @treturn int
  * @function roll_dice
  */
-LUARET1(crawl_roll_dice, number,
+LUARET1(crawl_roll_dice, integer,
         lua_gettop(ls) == 1
         ? roll_dice(1, luaL_safe_checkint(ls, 1))
         : roll_dice(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2)))
@@ -1065,7 +1065,7 @@ LUARET1(crawl_x_chance_in_y, boolean, x_chance_in_y(luaL_safe_checkint(ls, 1),
  * @treturn int
  * @function div_rand_round
  */
-LUARET1(crawl_div_rand_round, number, div_rand_round(luaL_safe_checkint(ls, 1),
+LUARET1(crawl_div_rand_round, integer, div_rand_round(luaL_safe_checkint(ls, 1),
                                                      luaL_safe_checkint(ls, 2)))
 /*** A random floating point number in [0,1.0)
  * @treturn number
@@ -1292,7 +1292,7 @@ static int crawl_err_trace(lua_State *ls)
     {
         // This code from lua.c:traceback() (mostly)
         (void) lua_tostring(ls, 1);
-        lua_getfield(ls, LUA_GLOBALSINDEX, "debug");
+        lua_getglobal(ls, "debug");
         if (!lua_istable(ls, -1))
         {
             lua_pop(ls, 1);
@@ -1443,7 +1443,7 @@ LUAFN(crawl_hints_type)
     return 1;
 }
 
-static const struct luaL_reg crawl_clib[] =
+static const struct luaL_Reg crawl_clib[] =
 {
     { "mpr",                crawl_mpr },
     { "formatted_mpr",      crawl_formatted_mpr },
@@ -1524,7 +1524,12 @@ void cluaopen_crawl(lua_State *ls)
     clua_register_metatable(ls, MESSF_METATABLE, crawl_messf_ops,
                             lua_object_gc<message_filter>);
 
-    luaL_openlib(ls, "crawl", crawl_clib, 0);
+    if (lua_getglobal(ls, "crawl") == LUA_TNIL) {
+        lua_pop(ls, 1);
+        lua_newtable(ls);
+    }
+    luaL_setfuncs(ls, crawl_clib, 0);
+    lua_setglobal(ls, "crawl");
 }
 
 //
@@ -1776,7 +1781,7 @@ LUAWRAP(crawl_clear_message_store, clear_message_store())
  */
 LUARET1(crawl_seen_hups, number, crawl_state.seen_hups)
 
-static const struct luaL_reg crawl_dlib[] =
+static const struct luaL_Reg crawl_dlib[] =
 {
 { "args", _crawl_args },
 { "mark_milestone", _crawl_milestone },
@@ -1800,5 +1805,10 @@ static const struct luaL_reg crawl_dlib[] =
 
 void dluaopen_crawl(lua_State *ls)
 {
-    luaL_openlib(ls, "crawl", crawl_dlib, 0);
+    if (lua_getglobal(ls, "crawl") == LUA_TNIL) {
+        lua_pop(ls, 1);
+        lua_newtable(ls);
+    }
+    luaL_setfuncs(ls, crawl_dlib, 0);
+    lua_setglobal(ls, "crawl");
 }

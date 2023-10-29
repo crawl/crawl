@@ -46,7 +46,7 @@ LUAWRAP(wiz_identify_all_items, wizard_identify_all_items())
 
 LUAWRAP(wiz_map_level, wizard_map_level())
 
-static const struct luaL_reg wiz_dlib[] =
+static const struct luaL_Reg wiz_dlib[] =
 {
 { "quick_fsim", wiz_quick_fsim },
 { "identify_all_items", wiz_identify_all_items},
@@ -56,7 +56,9 @@ static const struct luaL_reg wiz_dlib[] =
 
 void dluaopen_wiz(lua_State *ls)
 {
-    luaL_openlib(ls, "wiz", wiz_dlib, 0);
+    lua_newtable(ls);
+    luaL_setfuncs(ls, wiz_dlib, 0);
+    lua_setglobal(ls, "wiz");
 }
 
 #endif

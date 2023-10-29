@@ -2332,7 +2332,7 @@ LUAFN(dgn_layout_swamp)
     return 0;
 }
 
-const struct luaL_reg dgn_build_dlib[] =
+const struct luaL_Reg dgn_build_dlib[] =
 {
     { "count_feature_in_box", &dgn_count_feature_in_box },
     { "count_antifeature_in_box", &dgn_count_antifeature_in_box },

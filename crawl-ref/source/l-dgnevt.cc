@@ -52,7 +52,7 @@ static int dgnevent_arg2(lua_State *ls)
     PLUARET(number, dev->arg2);
 }
 
-static const struct luaL_reg dgnevent_dlib[] =
+static const struct luaL_Reg dgnevent_dlib[] =
 {
 { "type",  dgnevent_type },
 { "pos",   dgnevent_place },
@@ -145,7 +145,7 @@ static int dgn_dgn_event_is_position(lua_State *ls)
     return 1;
 }
 
-const struct luaL_reg dgn_event_dlib[] =
+const struct luaL_Reg dgn_event_dlib[] =
 {
 { "dgn_event_type",        dgn_dgn_event },
 { "dgn_event_is_global",   dgn_dgn_event_is_global },

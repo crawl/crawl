@@ -237,7 +237,7 @@ LUAFN(dgn_dismiss_monsters)
                              luaL_checkstring(ls, 1)));
 }
 
-const struct luaL_reg dgn_mons_dlib[] =
+const struct luaL_Reg dgn_mons_dlib[] =
 {
 { "set_random_mon_list", dgn_set_random_mon_list },
 { "mons_from_mid", dgn_mons_from_mid },

@@ -51,7 +51,7 @@ FEATF(_feat_is_player_altar, feat_is_player_altar)
 FEATF(_feat_is_branch_entrance, feat_is_branch_entrance)
 FEATF(_feat_is_critical, feat_is_critical)
 
-const struct luaL_reg feat_dlib[] =
+const struct luaL_Reg feat_dlib[] =
 {
 { "is_wall", _feat_is_wall },
 { "is_solid", _feat_is_solid },

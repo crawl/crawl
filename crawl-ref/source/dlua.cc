@@ -40,7 +40,7 @@ dlua_chunk::dlua_chunk(lua_State *ls)
 
     lua_stack_cleaner cln(ls);
     ostringstream out;
-    const int err = lua_dump(ls, dlua_compiled_chunk_writer, &out);
+    const int err = lua_dump(ls, dlua_compiled_chunk_writer, &out, 0);
     if (err)
     {
         const char *e = lua_tostring(ls, -1);
@@ -167,7 +167,7 @@ int dlua_chunk::load(CLua &interp)
     if (err)
         return err;
     ostringstream out;
-    err = lua_dump(interp, dlua_compiled_chunk_writer, &out);
+    err = lua_dump(interp, dlua_compiled_chunk_writer, &out, 0);
     if (err)
     {
         const char *e = lua_tostring(interp, -1);
@@ -297,9 +297,17 @@ void init_dungeon_lua()
     dluaopen_wiz(dlua);
     #endif
 
-    luaL_openlib(dlua, "feat", feat_dlib, 0);
-    luaL_openlib(dlua, "debug", debug_dlib, 0);
-    luaL_openlib(dlua, "los", los_dlib, 0);
+    lua_newtable(dlua);
+    luaL_setfuncs(dlua, feat_dlib, 0);
+    lua_setglobal(dlua, "feat");
+
+    lua_newtable(dlua);
+    luaL_setfuncs(dlua, debug_dlib, 0);
+    lua_setglobal(dlua, "debug");
+
+    lua_newtable(dlua);
+    luaL_setfuncs(dlua, los_dlib, 0);
+    lua_setglobal(dlua, "los");
 
     dlua.execfile("dlua/dungeon.lua", true, true);
     dlua.execfile("dlua/luamark.lua", true, true);
