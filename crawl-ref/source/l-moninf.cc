@@ -906,7 +906,7 @@ LUAFN(moninf_get_summoner_pos)
     }
 }
 
-static const struct luaL_reg moninf_lib[] =
+static const struct luaL_Reg moninf_lib[] =
 {
     MIREG(type),
     MIREG(base_type),
@@ -1004,7 +1004,7 @@ LUAFN(mi_get_monster_at)
     return 1;
 }
 
-static const struct luaL_reg mon_lib[] =
+static const struct luaL_Reg mon_lib[] =
 {
     { "get_monster_at", mi_get_monster_at },
 
@@ -1015,5 +1015,8 @@ void cluaopen_moninf(lua_State *ls)
 {
     clua_register_metatable(ls, MONINF_METATABLE, moninf_lib,
                             lua_object_gc<monster_info>);
-    luaL_openlib(ls, "monster", mon_lib, 0);
+
+    lua_newtable(ls);
+    luaL_setfuncs(ls, mon_lib, 0);
+    lua_setglobal(ls, "monster");
 }

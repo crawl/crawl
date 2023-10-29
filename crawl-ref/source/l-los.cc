@@ -57,7 +57,7 @@ LUAFN(los_cell_see_cell)
     PLUARET(number, cell_see_cell(p, q, LOS_DEFAULT));
 }
 
-const struct luaL_reg los_dlib[] =
+const struct luaL_Reg los_dlib[] =
 {
     { "findray", los_find_ray },
     { "make_ray", los_make_ray },
@@ -102,7 +102,7 @@ LUAFN(ray_pos)
     return 2;
 }
 
-static const struct luaL_reg ray_dlib[] =
+static const struct luaL_Reg ray_dlib[] =
 {
     { "start", ray_start },
     { "dir", ray_dir },
