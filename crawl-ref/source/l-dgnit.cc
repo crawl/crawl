@@ -250,7 +250,7 @@ static int dgn_stash_items(lua_State *ls)
     return 2;
 }
 
-const struct luaL_reg dgn_item_dlib[] =
+const struct luaL_Reg dgn_item_dlib[] =
 {
     { "item_from_index", dgn_item_from_index },
     { "items_at", dgn_items_at },
