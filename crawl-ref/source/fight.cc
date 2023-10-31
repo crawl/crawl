@@ -252,16 +252,13 @@ static bool _can_shoot_with(const item_def *weapon)
         && !you.berserk();
 }
 
-static bool _autofire_at(actor *defender)
+static void _autofire_at(actor *defender)
 {
-    if (!_can_shoot_with(you.weapon()) || you.duration[DUR_CONFUSING_TOUCH])
-        return false;
     dist t;
     t.target = defender->pos();
     shared_ptr<quiver::action> ract = quiver::find_ammo_action();
     ract->set_target(t);
     throw_it(*ract);
-    return true;
 }
 
 /**
@@ -319,14 +316,12 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         {
             if (Options.auto_switch && _autoswitch_to_melee())
                 return true; // Is this right? We did take time, but we didn't melee
-            if (!simu && _autofire_at(defender))
-                return true;
         }
-
-        melee_attack attk(&you, defender);
-
-        if (simu)
-            attk.simu = true;
+        bool asked = false, fire = !simu && !you.confused()
+                                   && !you.duration[DUR_CONFUSING_TOUCH]
+                                   && _can_shoot_with(you.weapon());
+        bool no_fire = fire && !check_warning_inscriptions(*you.weapon(),
+                                                           OPER_FIRE, &asked);
 
         // We're trying to hit a monster, break out of travel/explore now.
         interrupt_activity(activity_interrupt::hit_monster,
@@ -334,27 +329,35 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 
         // Check if the player is fighting with something unsuitable,
         // or someone unsuitable.
-        if (you.can_see(*defender) && !simu
-            && !wielded_weapon_check(attk.weapon))
+        if (no_fire || !asked && !simu && you.can_see(*defender)
+                       && !wielded_weapon_check(you.weapon()))
         {
             you.turn_is_over = false;
             return false;
         }
-
-        if (!attk.attack())
+        else if (fire)
+            _autofire_at(defender);
+        else
         {
-            // Attack was cancelled or unsuccessful...
-            if (attk.cancel_attack)
-                you.turn_is_over = false;
-            return !attk.cancel_attack;
+            melee_attack attk(&you, defender);
+
+            if (simu)
+                attk.simu = true;
+
+            if (!attk.attack())
+            {
+                // Attack was cancelled or unsuccessful...
+                if (attk.cancel_attack)
+                    you.turn_is_over = false;
+                return !attk.cancel_attack;
+            }
+
+            if (did_hit)
+                *did_hit = attk.did_hit;
+
+            if (!simu && will_have_passive(passive_t::shadow_attacks))
+                dithmenos_shadow_melee(defender);
         }
-
-        if (did_hit)
-            *did_hit = attk.did_hit;
-
-        if (!simu && will_have_passive(passive_t::shadow_attacks))
-            dithmenos_shadow_melee(defender);
-
         return true;
     }
 

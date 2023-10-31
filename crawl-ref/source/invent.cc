@@ -1697,8 +1697,9 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
 // If there are warning inscriptions associated with performing this operation
 // on this item, prompt the user for confirmation. Return true if all prompts
 // are OK'd.
+// Sets *asked (if provided) if a prompt is used.
 bool check_warning_inscriptions(const item_def& item,
-                                 operation_types oper)
+                                 operation_types oper, bool *asked)
 {
     bool penance = false;
     if (item.defined()
@@ -1759,6 +1760,9 @@ bool check_warning_inscriptions(const item_def& item,
             if (item.cursed())
                 return true;
         }
+
+        if (asked)
+            *asked = true;
 
         // XXX: duplicates a check in delay.cc:_finish_delay()
         string prompt = "Really " + _operation_verb(oper) + " ";
