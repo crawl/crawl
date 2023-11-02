@@ -1453,7 +1453,7 @@ string damage_rating(const item_def *item, int *rating_value)
 
     // Would be great to have a breakdown of UC damage by skill, form, claws etc.
     const int base_dam = item ? property(*item, PWPN_DAMAGE)
-                              : unarmed_base_damage();
+                              : unarmed_base_damage(false);
     // This is just SPWPN_HEAVY.
     const int post_brand_dam = brand_adjust_weapon_damage(base_dam, brand, false);
     const int heavy_dam = post_brand_dam - base_dam;

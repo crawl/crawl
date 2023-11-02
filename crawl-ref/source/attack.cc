@@ -1113,7 +1113,7 @@ int attack::calc_base_unarmed_damage() const
     if (!attacker->is_player())
         return 0;
 
-    const int dam = unarmed_base_damage() + unarmed_base_damage_bonus(true);
+    const int dam = unarmed_base_damage(true) + unarmed_base_damage_bonus(true);
     return dam > 0 ? dam : 0;
 }
 

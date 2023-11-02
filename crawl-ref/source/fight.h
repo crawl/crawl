@@ -107,5 +107,5 @@ int apply_fighting_skill(int base_dam, bool aux, bool random);
 int throwing_base_damage_bonus(const item_def &projectile);
 int brand_adjust_weapon_damage(int base_dam, int brand, bool random);
 
-int unarmed_base_damage();
+int unarmed_base_damage(bool random);
 int unarmed_base_damage_bonus(bool random);

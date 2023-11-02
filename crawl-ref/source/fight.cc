@@ -1358,15 +1358,18 @@ int brand_adjust_weapon_damage(int base_dam, int brand, bool random)
     return base_dam * 9 / 5;
 }
 
-int unarmed_base_damage()
+int unarmed_base_damage(bool random)
 {
-    int damage = get_form()->get_base_unarmed_damage();
+    int damage = get_form()->get_base_unarmed_damage(random);
 
     if (you.has_usable_claws())
         damage += you.has_claws() * 2;
 
     if (you.form_uses_xl())
-        damage += div_rand_round(you.experience_level, 3);
+    {
+        damage += random ? div_rand_round(you.experience_level, 3)
+                         : you.experience_level / 3;
+    }
 
     return damage;
 }
