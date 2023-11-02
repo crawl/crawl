@@ -5,6 +5,7 @@
 #pragma once
 
 #include "act-iter.h"
+#include "areas.h"
 #include "god-passive.h"
 #include "spl-selfench.h"
 #include "tag-version.h"
@@ -16,6 +17,15 @@ static void _end_invis()
         mprf(MSGCH_DURATION, "You feel more conspicuous.");
     else
         mprf(MSGCH_DURATION, "You flicker back into view.");
+}
+
+static void _end_brilliance()
+{
+    invalidate_agrid(true);
+    if (you.haloed() && you.halo_radius() != -1)
+        mprf(MSGCH_DURATION, "You feel a little less clever now.");
+    else
+        mprf(MSGCH_DURATION, "You feel a little less brilliant now.");
 }
 
 static void _end_corrosion()
@@ -193,7 +203,7 @@ static const duration_def duration_data[] =
       LIGHTBLUE, "Brill",
       "brilliant", "brilliance",
       "You are brilliant.", D_DISPELLABLE,
-      {{ "You feel a little less clever now." }}},
+      {{ "", _end_brilliance } }},
     { DUR_CONF,
       RED, "Conf",
       "confused", "conf",

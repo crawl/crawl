@@ -599,6 +599,8 @@ int player::halo_radius() const
         size = max(size, 3);
     else if (wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
         size = max(size, 3);
+    else if (you.duration[DUR_BRILLIANCE] > 0 || player_equip_unrand(UNRAND_FOLLY))
+        size = max(size, 3);
     else if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         size = max(size, 2);
 

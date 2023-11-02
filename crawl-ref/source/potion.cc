@@ -11,6 +11,7 @@
 #include <cstring>
 #include <unordered_map>
 
+#include "areas.h"
 #include "art-enum.h"
 #include "cloud.h"
 #include "god-conduct.h"
@@ -316,10 +317,17 @@ public:
     {
         const bool were_brilliant = you.duration[DUR_BRILLIANCE] > 0;
 
+        if (you.haloed() && you.halo_radius() != -1)
         mprf(MSGCH_DURATION, "You feel %sclever all of a sudden.",
              were_brilliant ? "more " : "");
+        else
+        mprf(MSGCH_DURATION, "You feel %sbrilliant all of a sudden.",
+             were_brilliant ? "more " : "");
+        
         const int add = _scale_effect(35 + random2(pow), is_potion);
         you.increase_duration(DUR_BRILLIANCE, add, 80);
+
+        invalidate_agrid(true);
         return true;
     }
 };
