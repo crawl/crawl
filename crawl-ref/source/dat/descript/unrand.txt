@@ -555,7 +555,9 @@ powers of regeneration and magical protection, however, are hard to dispute.
 %%%%
 macabre finger necklace
 
-An ugly dangling finger on a string. It would look better with a ring on it.
+An ugly dangling finger on a string. Everything about it reeks of malign
+influences... but it's hard to avoid thinking that it would look better with a
+ring on it.
 %%%%
 # TAG_MAJOR_VERSION == 34
 boots of the spider

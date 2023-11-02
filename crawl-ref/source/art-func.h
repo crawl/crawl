@@ -1713,14 +1713,9 @@ static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static void _VITALITY_world_reacts(item_def */*item*/)
+static void _FINGER_AMULET_world_reacts(item_def */*item*/)
 {
-    // once it starts regenerating you, you're doin evil
-    if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1
-        || you.activated[EQ_AMULET])
-    {
-        did_god_conduct(DID_EVIL, 1);
-    }
+    did_god_conduct(DID_EVIL, 1);
 }
 
 ///////////////////////////////////////////////////
