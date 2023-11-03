@@ -1021,7 +1021,7 @@ Prevents a creature from taking any action for a short time.
 %%%%
 Paralysis Gaze spell
 
-Irresistably prevents a creature from taking any action for a short time,
+Irresistibly prevents a creature from taking any action for a short time,
 requiring multiple charges but not line of fire.
 %%%%
 Passage of Golubria spell
@@ -1661,7 +1661,7 @@ the damage they take from all sources.
 %%%%
 Vitrifying Gaze spell
 
-Irresistably renders a creature's body structure as brittle and fragile as
+Irresistibly renders a creature's body structure as brittle and fragile as
 glass, increasing the damage they take from all sources. It requires line of
 sight but not line of fire.
 %%%%
@@ -1686,7 +1686,7 @@ It can affect targets standing in or flying above water.
 %%%%
 Weakening Gaze spell
 
-Irresistably weakens a creature's melee attacks for a period of time,
+Irresistibly weakens a creature's melee attacks for a period of time,
 requiring line of sight but not line of fire.
 %%%%
 Wereblood spell
