@@ -1452,8 +1452,13 @@ bool attack::apply_damage_brand(const char *what)
         break;
     }
     case SPWPN_PAIN:
-        if (!you_worship(GOD_TROG))
-            pain_affects_defender();
+        if (attacker->is_player() && you_worship(GOD_TROG)
+            || !attacker->is_player() && attacker->as_monster()->god == GOD_TROG)
+        {
+            break;
+        }
+
+        pain_affects_defender();
         break;
 
     case SPWPN_DISTORTION:
