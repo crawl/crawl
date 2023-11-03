@@ -210,7 +210,7 @@ int attack::calc_pre_roll_to_hit(bool random)
         }
 
         // slaying bonus
-        mhit += slaying_bonus(wpn_skill == SK_THROWING);
+        mhit += slaying_bonus(wpn_skill == SK_THROWING, false);
 
         // vertigo penalty
         if (you.duration[DUR_VERTIGO])
