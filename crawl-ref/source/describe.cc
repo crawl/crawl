@@ -1391,9 +1391,6 @@ static string _describe_brand(brand_type brand)
 {
     switch (brand) {
     case SPWPN_PAIN:
-        if (you_worship(GOD_TROG))
-            return "";
-        // fallthrough to description
     case SPWPN_ACID:
     case SPWPN_CHAOS:
     case SPWPN_DISTORTION:
