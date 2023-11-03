@@ -865,7 +865,7 @@ A potion containing the essence of life.
 potion of brilliance
 
 A potion which increases the power of the drinker's spells and halves their
-magic cost (rounding up).
+magic cost (rounding up). It also illuminates the drinker with a halo.
 %%%%
 potion of cancellation
 
