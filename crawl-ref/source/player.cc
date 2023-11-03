@@ -4829,10 +4829,12 @@ bool invis_allowed(bool quiet, string *fail_reason, bool temp)
             sources.push_back("weapon");
 
         if (temp && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
+        {
             sources.push_back("orb");
-        
+
         if (temp && you.duration[DUR_BRILLIANCE] > 0 || player_equip_unrand(UNRAND_FOLLY))
             sources.push_back("brilliance");
+        }
 
         if (temp && you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY)
             || you.religion == GOD_SHINING_ONE) // non-temp

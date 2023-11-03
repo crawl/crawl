@@ -323,7 +323,7 @@ public:
         else
         mprf(MSGCH_DURATION, "You feel %sbrilliant all of a sudden.",
              were_brilliant ? "more " : "");
-        
+
         const int add = _scale_effect(35 + random2(pow), is_potion);
         you.increase_duration(DUR_BRILLIANCE, add, 80);
 
