@@ -6599,7 +6599,7 @@ _Sojobo_advice_
 
 @The_monster@ says @to_foe@, "Ponder and deliberate before you make a move."
 %%%%
-Sojobo victorious
+Sojobo triumphant
 
 @The_monster@ says, "The outcome was never in doubt."
 
@@ -6641,7 +6641,7 @@ w:1
 
 @The_monster@ says @to_foe@, "Someone hired me to kill you, but I'm not supposed to say who."
 %%%%
-Sonja victorious
+Sonja triumphant
 
 VISUAL:@The_monster@ takes a bow.
 
@@ -6690,7 +6690,7 @@ _Terence_rare_
 
 @The_monster@ says @to_foe@, "Time to say good-bye..."
 %%%%
-Terence victorious
+Terence triumphant
 
 @The_monster@ says, "Rest in peace."
 
