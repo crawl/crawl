@@ -307,19 +307,19 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         ASSERT(!crawl_state.game_is_arena());
         // Can't damage orbs this way.
         if (mons_is_projectile(defender->type) && !you.confused())
-        {
-            you.turn_is_over = false;
             return false;
-        }
 
         if (!simu && you.weapon() && !you.confused())
         {
             if (Options.auto_switch && _autoswitch_to_melee())
                 return true; // Is this right? We did take time, but we didn't melee
         }
+        // Will this "melee" attack really fire a missile weapon?
         bool asked = false, fire = !simu && !you.confused()
                                    && !you.duration[DUR_CONFUSING_TOUCH]
                                    && _can_shoot_with(you.weapon());
+
+        // Has the player marked this missile weapon as "not to be fired"?
         bool no_fire = fire && !check_warning_inscriptions(*you.weapon(),
                                                            OPER_FIRE, &asked);
 
@@ -328,11 +328,10 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
                            defender->as_monster());
 
         // Check if the player is fighting with something unsuitable,
-        // or someone unsuitable.
+        // or someone unsuitable. Don't ask the player if we did this above.
         if (no_fire || !asked && !simu && you.can_see(*defender)
                        && !wielded_weapon_check(you.weapon()))
         {
-            you.turn_is_over = false;
             return false;
         }
         else if (fire)
