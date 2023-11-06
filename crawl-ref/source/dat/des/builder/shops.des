@@ -1823,8 +1823,8 @@ KMONS: i = shapeshifter hd:10
 # Zot
 : else
 KMONS: O = orb of fire
-KMONS: o = ball lightning
-KMONS: i = orb guardian
+KMONS: o = ancient lich / dread lich
+KMONS: i = lich
 : end
 : door_vault_setup(_G)
 MAP
