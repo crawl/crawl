@@ -386,10 +386,6 @@ A pulsating floor
 
 Dieser glitschige Boden scheint in einem unbekannten Takt zu pulsieren.
 %%%%
-Zonguldrok's gravestone
-
-Ein Grabstein. Der Name ‚Zonguldrok‘ ist in goldenen Buchstaben eingraviert.
-%%%%
 The ground
 
 Kein Leben wächst hier. Der Boden ist vollkommen tot.

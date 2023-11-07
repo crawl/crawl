@@ -767,6 +767,7 @@ enum monster_type                      // env.mons[].type
     MONS_PROFANE_SERVITOR,
 #if TAG_MAJOR_VERSION > 34
     MONS_ANCIENT_CHAMPION,
+    MONS_ANTIQUE_CHAMPION,
     MONS_REVENANT,
     MONS_LOST_SOUL,
     MONS_JIANGSHI,
@@ -1203,6 +1204,7 @@ enum monster_type                      // env.mons[].type
     MONS_BOULDER,
     MONS_ARCANIST,
     MONS_FLOATING_EYE,                 // genus
+    MONS_ANTIQUE_CHAMPION,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

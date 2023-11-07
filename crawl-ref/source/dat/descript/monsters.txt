@@ -2997,9 +2997,10 @@ air elementalist statue
 A delicate statue of a tengu gliding through the air. It looks quite
 insubstantial.
 %%%%
-antique lich
+antique champion
 
-A lich who has grown expensive over countless years.
+An unfathomably expensive skeleton. It has countless sigils engraved into its
+bones, and pulses with a ghostly presence.
 %%%%
 archer statue
 

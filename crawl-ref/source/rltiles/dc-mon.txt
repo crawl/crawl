@@ -865,7 +865,6 @@ lich MONS_LICH
 ancient_lich MONS_ANCIENT_LICH
 dread_lich MONS_DREAD_LICH
 halazid_warlock MONS_HALAZID_WARLOCK
-mon/vault/zonguldrok_lich MONS_ZONGULDROK_LICH
 
 ## Mummies ('M')
 %sdir mon/unique
@@ -1181,6 +1180,7 @@ wight MONS_WIGHT
 %rim 1
 skeletal_warrior MONS_SKELETAL_WARRIOR
 ancient_champion MONS_ANCIENT_CHAMPION
+mon/vault/antique_champion MONS_ANTIQUE_CHAMPION
 %rim 1
 %sdir mon/undead
 curse_skull MONS_CURSE_SKULL

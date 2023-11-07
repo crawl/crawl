@@ -823,10 +823,6 @@ The pulsating floor
 
 地面。它以未知的节奏搏动着。
 %%%%
-# 巫师实验室：宗古多克
-Zonguldrok's gravestone
-
-一个墓碑。上面刻有金色的字样：“宗古多克”。
 %%%%
 A gravestone
 

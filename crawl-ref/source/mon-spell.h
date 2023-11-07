@@ -1761,6 +1761,15 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_ANTIQUE_CHAMPION,
+      {
+       { SPELL_GHOSTLY_FIREBALL, 12, MON_SPELL_WIZARD },
+       { SPELL_HAUNT, 12, MON_SPELL_WIZARD },
+       { SPELL_MIGHT, 18, MON_SPELL_WIZARD },
+       { SPELL_HASTE, 18, MON_SPELL_WIZARD },
+      }
+    },
+
     // ('A') Angels.
     {  MST_MENNAS,
       {

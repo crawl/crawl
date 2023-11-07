@@ -886,7 +886,7 @@ The floor. It pulses to an unknown beat.
 # wizlab: Zonguldrok
 Zonguldrok's gravestone
 
-A gravestone. The name ‘Zonguldrok’ is engraved on it in golden letters.
+A gravestone of the house of Zonguldrok, still dripping with brackish ichor.
 %%%%
 A gravestone
 

@@ -495,6 +495,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     case TILEP_MONS_SONJA:
     case TILEP_MONS_ANCIENT_CHAMPION:
+    case TILEP_MONS_ANTIQUE_CHAMPION:
     case TILEP_MONS_SKELETAL_WARRIOR:
     case TILEP_MONS_SALAMANDER:
     case TILEP_MONS_VINE_STALKER:
@@ -958,6 +959,8 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         break;
 
     case TILEP_MONS_TWO_HEADED_OGRE: // second weapon
+    case TILEP_MONS_ANTIQUE_CHAMPION:
+    case TILEP_MONS_ANCIENT_CHAMPION:
         *ofs_x = 0;
         *ofs_y = 2;
         break;

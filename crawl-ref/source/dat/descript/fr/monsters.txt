@@ -2095,10 +2095,6 @@ ancient champion
 Un ancien squelette insondable. Il a des centaines de sceaux dorés gravés dans
 ses os, et il palpite d'un pouvoir terrible et malsain.
 %%%%
-antique lich
-
-Une liche qui est devenu très coûteuse au fil d'un temps incalculable.
-%%%%
 charred statue
 
 On dirait que cette statue a été imprégnée de magie de feu, lui permettant de
