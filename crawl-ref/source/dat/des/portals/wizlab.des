@@ -196,6 +196,7 @@ end
 
 local function spawn_zombie (x, y, spec)
     dgn.terrain_changed(x, y, "floor", false)
+    dgn.place_cloud(x, y, "sparse dust", 5, "", "", 5)
     local mons = dgn.create_monster(x, y, spec)
     mons.set_prop("zonguldrok", 1)
     return mons
@@ -212,22 +213,18 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
     end
     local graves = dgn.find_markers_by_prop("grave", 1)
 
-    -- These are the three types of derived undead to be spawned
-    local list_undead_types = { " zombie", " simulacrum", "spectral " }
+    local list_undead_types = { " zombie", " skeleton", " simulacrum" }
 
-
-    -- These are the base monsters for the derived undead
     local list_deriv_undead_base_mons = {
-        "cyclops", "two-headed ogre", "swamp dragon",          -- tier 1
-        "stone giant", "deep troll", "storm dragon",           -- tier 2
-        "juggernaut", "ettin", "golden dragon"                 -- tier 3
+        "cyclops", "two-headed ogre", "swamp dragon",  -- tier 1
+        "stone giant", "deep troll", "storm dragon",   -- tier 2
+        "juggernaut", "ettin", "golden dragon"         -- tier 3
     }
 
-    -- These are the non-derived undead to be spawned (tier 4 is always an ancient champion)
     local list_regular_undead = {
-        "shadow", "vampire", "wraith", "necrophage",                                  -- tier 1
-        "skeletal warrior", "vampire mage", "freezing wraith", "phantasmal warrior", -- tier 2
-        "ghoul", "vampire knight", "jiangshi", "shadow wraith"                       -- tier 3
+        "vampire", "skeletal warrior",                 -- tier 1
+        "jiangshi", "phantasmal warrior",              -- tier 2
+        "vampire knight", "ghoul",                     -- tier 3
     }
 
     local pick_undead_type
@@ -235,9 +232,9 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
     local pick_regular_undead
     local x, y
     for _, gmarker in ipairs(graves) do
-        pick_undead_type = crawl.random2(3) + 1
-        pick_undead_base_mon = crawl.random2(3) + 1
-        pick_regular_undead = crawl.random2(4) + 1
+        pick_undead_type = crawl.random_range(1, 3)
+        pick_undead_base_mon = crawl.random_range(1, 3)
+        pick_regular_undead = crawl.random_range(1, 2)
         x, y = gmarker:pos()
 
         if (you.see_cell(x, y) and crawl.one_chance_in(3)) or
@@ -246,13 +243,8 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
             -- tier 1 spawns
             if data.count < 9 or data.count < 15 and crawl.one_chance_in(6) then
                 if crawl.coinflip() then
-                    if pick_undead_type == 3 then
-                        monster = (list_undead_types[pick_undead_type]
-                                   .. list_deriv_undead_base_mons[pick_undead_base_mon])
-                    else
-                        monster = (list_deriv_undead_base_mons[pick_undead_base_mon]
-                                   .. list_undead_types[pick_undead_type])
-                    end
+                    monster = (list_deriv_undead_base_mons[pick_undead_base_mon]
+                               .. list_undead_types[pick_undead_type])
                 else
                     monster = list_regular_undead[pick_regular_undead]
                 end
@@ -261,15 +253,10 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
             elseif data.count < 18 or data.count < 23 and crawl.one_chance_in(4) then
                 if crawl.coinflip() then
                     pick_undead_base_mon = pick_undead_base_mon + 3
-                    if pick_undead_type == 3 then
-                        monster = (list_undead_types[pick_undead_type]
-                                   .. list_deriv_undead_base_mons[pick_undead_base_mon])
-                    else
-                        monster = (list_deriv_undead_base_mons[pick_undead_base_mon]
-                                   .. list_undead_types[pick_undead_type])
-                    end
+                    monster = (list_deriv_undead_base_mons[pick_undead_base_mon]
+                               .. list_undead_types[pick_undead_type])
                 else
-                    pick_regular_undead = pick_regular_undead + 4
+                    pick_regular_undead = pick_regular_undead + 2
                     monster = list_regular_undead[pick_regular_undead]
                 end
 
@@ -277,13 +264,8 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
             elseif data.count < 25 or crawl.x_chance_in_y(11, 14) then
                 if crawl.coinflip() then
                     pick_undead_base_mon = pick_undead_base_mon + 6
-                    if pick_undead_type == 3 then
-                        monster = (list_undead_types[pick_undead_type]
-                                   .. list_deriv_undead_base_mons[pick_undead_base_mon])
-                    else
-                        monster = (list_deriv_undead_base_mons[pick_undead_base_mon]
-                                   .. list_undead_types[pick_undead_type])
-                    end
+                    monster = (list_deriv_undead_base_mons[pick_undead_base_mon]
+                               .. list_undead_types[pick_undead_type])
                 else
                     pick_regular_undead = pick_regular_undead + 4
                     monster = list_regular_undead[pick_regular_undead]
@@ -292,7 +274,6 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
             -- tier 4 spawns: always spawn an ancient champion here
             else
                 monster = "ancient champion"
-                data.account = data.account + 1
             end
             monster = "generate_awake " .. monster
             spawn_zombie(x, y, monster)
@@ -341,15 +322,17 @@ function wizlab_zonguldrok_awaken_wizard(data, triggerable,
         return
     end
 
-    -- Place the antique champions
+    -- Place two antique champions
     local ant_pos1 = dgn.find_marker_positions_by_prop("antique_grave_a", 1)[1]
     local ant1 = dgn.create_monster(ant_pos1.x, ant_pos1.y,
                                     "generate_awake antique champion ; " ..
-                                    "sword_of_zonguldrok . plate armour . kite shield good_item")
+                                    "sword_of_zonguldrok . shadow dragon scales . kite shield good_item")
     local ant_pos2 = dgn.find_marker_positions_by_prop("antique_grave_b", 1)[1]
     local ant2 = dgn.create_monster(ant_pos2.x, ant_pos2.y,
                                     "generate_awake antique champion ; " ..
-                                    "double sword ego:draining . plate armour good_item . kite shield")
+                                    "double sword ego:draining . shadow dragon scales good_item . kite shield")
+    dgn.place_cloud(ant_pos1.x, ant_pos1.y, "black smoke", 5, "", "", 5)
+    dgn.place_cloud(ant_pos2.x, ant_pos2.y, "black smoke", 5, "", "", 5)
 
     if ant1 then
         data.awoke = true
@@ -1504,26 +1487,25 @@ vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
 ###############################################################################
-# Zonguldrok's Shrine
+# Zonguldrok's Shrine.
 NAME:       wizlab_zonguldrok
-TAGS:       no_rotate
-:           wizlab_setup(_G)
-SUBST:      ? = txxx
-SUBST:      ! = t..
-NSUBST:     Z = Z / '
-MONS:       patrolling skeletal warrior, patrolling ancient champion
-COLOUR:     t = brown / lightgrey w:5
-TILE:       t = dngn_tree_dead
-: set_feature_name("tree", "dead tree")
-LFLOORCOL:  darkgrey
-LROCKCOL:   darkgrey
-NSUBST:     d = 2:e / * = d:20 e:2
-ITEM:       any scroll / any potion, any book w:2
+TAGS:       no_rotate patrolling
+MONS:       skeletal warrior, ancient champion, lich
+ITEM:       any scroll / randbook disc:necromancy numspells:1 w:2
+# Shortlist of one-handed skeletal warrior weapons.
+: local d = "ego:draining good_item "
+: local p = "ego:pain good_item "
+: item("morningstar " .. d .. " / morningstar " .. p .. " / war axe " .. d ..
+:      " / war axe " .. p .. " / trident " .. d .. " / trident " .. p ..
+:      " / scimitar " .. d .. " / scimitar " .. p)
+ITEM:       shadow dragon scales good_item / shadow dragon scales randart / \
+            plate armour good_item / plate armour randart / \
+            chain mail good_item / chain mail randart / \
+            kite shield randart w:5 / tower shield randart w:5 / \
+            talisman of death w:5 / talisman of death randart w:1
 KFEAT:      GW = G
-KPROP:      12'def$ZL+ = no_tele_into
+NSUBST:     Z = Z / ', d = 6:e / 2:f / * = d:20 e:2, G = 27:G / 4 = G. / *:.
 {{
-graves = 28 + crawl.random2(4) + crawl.random2(4)
-nsubst("G = " .. graves .. ":G / *:.")
 lua_marker("G", portal_desc { grave = 1 })
 lua_marker("R", portal_desc { antique_grave_a = 1 })
 lua_marker("S", portal_desc { antique_grave_b = 1 })
@@ -1535,7 +1517,6 @@ local zombies_appear_marker = TriggerableFunction:new {
     repeated = true,
     data = {count = 0}
 }
-
 local zombies_killed_marker = TriggerableFunction:new {
     data = { number_killed = 0, door_appeared = false },
     func = "wizlab_zonguldrok_killed_zombie",
@@ -1545,8 +1526,8 @@ local wizard_appear_marker = TriggerableFunction:new {
     data = { awoke = false },
     func = "wizlab_zonguldrok_awaken_wizard",
     repeated = true,
-    props = {listen_to_replicas = true, only_at_replica = true }
-    }
+    props = { listen_to_replicas = true, only_at_replica = true }
+}
 wizard_appear_marker:add_triggerer(DgnTriggerer:new {
     type = "player_move" })
 zombies_appear_marker:add_triggerer(DgnTriggerer:new {
@@ -1562,33 +1543,32 @@ lua_marker("M", zombies_appear_marker)
 lua_marker("D", zombies_killed_marker)
 lua_marker("L", Triggerable.synchronized_markers(wizard_appear_marker))
 }}
-:           set_feature_name("granite_statue", "gravestone")
-SUBST:      M = x
-SUBST:      D = c
+SUBST:      ? = txxx, ! = t..
+SUBST:      M = x, CD = c, LZ = "
+KPROP:      'def$123L+ = no_tele_into
 COLOUR:     W = yellow
+COLOUR:     t = brown / lightgrey w:5
+COLOUR:     " = blue
 TILE:       W = dngn_zonguldrok_shrine
 TILE:       G = dngn_gravestone
-SUBST:      LZ = '
+TILE:       c = wall_stone_gray
+TILE:       t = dngn_tree_dead
+FTILE:      " = floor_nerves_darkgray
+LFLOORCOL:  darkgrey
+LROCKCOL:   darkgrey
 LFLOORTILE: floor_tomb
 LROCKTILE:  wall_hall_darkgray
-TILE:       c = wall_stone_gray
+: set_feature_name("tree", "dead tree")
+: set_feature_name("granite_statue", "gravestone")
+: wizlab_setup(_G)
 {{
 set_random_mon_list(
-    -- zombies have total weight 270
-       [[ two-headed ogre zombie / two-headed ogre simulacrum / spectral two-headed ogre / ]]
-    .. [[ cyclops zombie         / cyclops simulacrum         / spectral cyclops         / ]]
-    .. [[ swamp dragon zombie    / swamp dragon simulacrum    / spectral swamp dragon    / ]]
-    .. [[ deep troll zombie      / deep troll simulacrum      / spectral deep troll      / ]]
-    .. [[ stone giant zombie     / stone giant simulacrum     / spectral stone giant     / ]]
-    .. [[ titan zombie           / titan simulacrum           / spectral titan           / ]]
-    .. [[ ettin zombie           / ettin simulacrum           / spectral ettin           / ]]
-    .. [[ juggernaut zombie      / juggernaut simulacrum      / spectral juggernaut      / ]]
-    .. [[ golden dragon zombie   / golden dragon simulacrum   / spectral golden dragon   / ]]
-    -- non-derived undead have total weight 280
-    .. [[ vampire w:20 / necrophage w:20 / shadow w:20 / wraith w:20 / ]]
-    .. [[ vampire mage w:20 / phantasmal warrior w:20 / skeletal warrior w:20 / freezing wraith w:20 / ]]
-    .. [[ vampire knight w:20 / ghoul w:20 / jiangshi w:20 / shadow wraith w:20 / ]]
-    .. [[ ancient champion w:30 / lich / ]]
+    -- Selected to make derived and regular undead equal.
+       [[ two-headed ogre skeleton / cyclops zombie / swamp dragon simulacrum / ]]
+    .. [[ deep troll skeleton / stone giant zombie / storm dragon simulacrum / ]]
+    .. [[ ettin skeleton / juggernaut zombie / golden dragon simulacrum / ]]
+    .. [[ vampire / skeletal warrior / jiangshi / phantasmal warrior / ]]
+    .. [[ vampire knight / ghoul / ancient champion w:20 / lich / ]]
 )
 }}
 epilogue{{
@@ -1602,18 +1582,18 @@ M   xxxxxxxxxxxxxxxxxxx
 xx?!!.G.G.G.G.G.G.G.G.!!?xx
 x?!!.G.G.G.G.G.G.G.G.G.!!?x
 x?!.G.G.GcccccccccG.G.G.!?x
-x?!G.G.G.c'ddcdd'c.G.G.G!?x
+x?!G.G.G.cdddcdddc.G.G.G!?x
 x?!.G.G.ccdd'+'ddcc.G.G.!?x
 x?!G.Gcccddcc+ccddcccG.G!?x
-x?!.G.c'dd'cLLLc'dd'c.G.!?x
-x?!G.Gc$'ccc'''ccc'$cG.G!?x
-x?!.G.c$$c'R'''S'c$$c.G.!?x
+x?!.G.c$dddcLLLcddd$c.G.!?x
+x?!G.Gc$$ccc'''ccc$$cG.G!?x
+x?!.G.c$$c'''''''c$$c.G.!?x
 x?!G.Gcccc'RW'WS'ccccG.G!?x
-x?!.G.c''+'R'''S'+''c.G.!?x
-x?!G.Gc'2ccc'''ccc1'cG.G!?x
-x?!.G.c''1'c'''c'1''c.G.!?x
-x?!G.Gccc''ccccc1'cccG.G!?x
-x?!.G.G.cc'''c'''cc.G.G.!?x
+x?!.G.c''+'RR'SS'+''c.G.!?x
+x?!G.Gc'3ccc'''ccc2'cG.G!?x
+x?!.G.c''3'c'''c'1''c.G.!?x
+x?!G.GcCc''ccccc1'cCcG.G!?x
+x?!.G.G.cc'''+'''cc.G.G.!?x
 x?!G.G.G.c'''c'''c.G.G.G!?x
 x?!.G.G.GccccDccccG.G.G.!?x
 x?!!.G.G.G.GV.VG.G.G.G.!!?x
