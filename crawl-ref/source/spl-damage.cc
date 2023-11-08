@@ -3031,7 +3031,7 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         if (!actor_at(entry.first))
             continue;
 
-        int arc = hitfunc.arc_length[entry.first.distance_from(hitfunc.origin)];
+        int arc = hitfunc.arclen;
         ASSERT(arc > 0);
         dprf("at distance %d, arc length is %d",
              entry.first.distance_from(hitfunc.origin), arc);

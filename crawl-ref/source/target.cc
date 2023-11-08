@@ -1333,6 +1333,41 @@ static bool left_of(coord_def a, coord_def b)
     return a.x * b.y > a.y * b.x;
 }
 
+//FIXME: ensure rounding is sensible
+static coord_def _project_coord(coord_def coord, int range)
+{
+    if(coord.x > coord.y)
+        return coord * range / coord.x;
+    return coord * range / coord.y;
+}
+
+//returns the arc distance from a to b when projected to range away from center
+static int _get_arclen(coord_def a, coord_def b, coord_def center, int range)
+{
+    coord_def a_off = _project_coord(a - center, range); 
+    coord_def b_off = _project_coord(b - center, range);
+
+    int arclen = abs(a_off.x - b_off.x) + abs(a_off.y - b_off.y) + 1;
+
+    //A and b on opposite vertical sides
+    if(abs(a_off.x) == range && abs(b_off.x) == range && a_off.x != b_off.x)
+    {
+        const int a_to_side = range - abs(a_off.y);
+        const int b_to_side = range - abs(b_off.y);
+        arclen += 2 * min(a_to_side, b_to_side);
+    }
+
+    //Opposite horizontal sides
+    if(abs(a_off.y) == range && abs(b_off.y) == range && a_off.y != b_off.y)
+    {
+        const int a_to_side = range - abs(a_off.x);
+        const int b_to_side = range - abs(b_off.x);
+        arclen += 2 * min(a_to_side, b_to_side);
+    }
+
+    return arclen;
+}
+
 bool targeter_thunderbolt::set_aim(coord_def a)
 {
     aim = a;
@@ -1340,8 +1375,6 @@ bool targeter_thunderbolt::set_aim(coord_def a)
 
     if (a == origin)
         return false;
-
-    arc_length.init(0);
 
     ray_def ray;
     coord_def p; // ray.pos() does lots of processing, cache it
@@ -1354,7 +1387,6 @@ bool targeter_thunderbolt::set_aim(coord_def a)
         if (p != origin && zapped[p] <= 0)
         {
             zapped[p] = AFF_YES;
-            arc_length[origin.distance_from(p)]++;
         }
         ray.advance();
     }
@@ -1369,7 +1401,6 @@ bool targeter_thunderbolt::set_aim(coord_def a)
         if (p != origin && zapped[p] <= 0)
         {
             zapped[p] = AFF_MAYBE; // fully affected, we just want to highlight cur
-            arc_length[origin.distance_from(p)]++;
         }
         ray.advance();
     }
@@ -1388,15 +1419,13 @@ bool targeter_thunderbolt::set_aim(coord_def a)
             if (left_of(a1, r) && left_of(r, a2))
             {
                 (p = r) += origin;
-                if (!zapped.count(p))
-                    arc_length[r.rdist()]++;
                 if (zapped[p] <= 0 && cell_see_cell(origin, p, LOS_NO_TRANS))
                     zapped[p] = AFF_MAYBE;
             }
         }
 
     zapped[origin] = AFF_NO;
-
+    arclen = _get_arclen(aim, prev, origin, 5);
     return true;
 }
 

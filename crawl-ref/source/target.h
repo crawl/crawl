@@ -289,7 +289,7 @@ public:
     bool set_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
     map<coord_def, aff_type> zapped;
-    FixedVector<int, LOS_RADIUS + 1> arc_length;
+    int arclen;
 private:
     coord_def prev;
     int range;
