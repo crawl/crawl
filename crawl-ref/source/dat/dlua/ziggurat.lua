@@ -222,10 +222,10 @@ mset(spec_fn(function ()
   local e = math.floor(10 + you.zigs_completed() / 3)
   local f = 5 + you.zigs_completed() * 3
   local g = math.max(1, you.depth() + you.zigs_completed() - 9)
-  return "place:Swamp:$ w:" .. d .. " / hydra w:" .. e .. " / " ..
-         "swamp dragon w:" .. e .. "  / tentacled monstrosity w:" .. f .. " / " ..
-         "shambling mangrove w:" .. f .. " / green death w:" .. g + 3 .. " / " ..
-         "death drake w:" .. g .. " / golden dragon w:" .. g
+  return "place:Swamp:$ w:" .. d .. " / fenstrider witch w:" .. e .. " / " ..
+         "tentacled monstrosity w:" .. f .. " / " ..
+         "shambling mangrove w:" .. f .. " / green death w:" .. g .. " / " ..
+         "golden dragon w:" .. g
 end))
 
 mset(with_props(spec_fn(function ()
@@ -308,7 +308,7 @@ mset(with_props(spec_fn(function ()
   local e = 5 + you.zigs_completed() * 2
   local f = 10 + you.zigs_completed() * 4
   return "place:Coc:$ w:" .. d .. " / tormentor w:" .. e .. " / " ..
-         "shard shrike w:" .. e .. " / blizzard demon w:" .. f + 15 .. " / " ..
+         "shard shrike w:" .. e .. " / titan w:" .. f + 15 .. " / " ..
          "ice fiend w:" .. f
 end), { weight = 5 }))
 
@@ -317,7 +317,7 @@ mset(with_props(spec_fn(function ()
   local e = 5 + you.zigs_completed() * 2
   local f = 10 + you.zigs_completed() * 4
   return "place:Geh:$ w:" .. d .. " / hellion w:" .. e .. " / " ..
-         "hell knight w:" .. e .. " / balrug w:" .. f + 15 .. " / " ..
+         "salamander tyrant w:" .. e .. " / balrug w:" .. f + 15 .. " / " ..
          "brimstone fiend w:" .. f
 end), { weight = 5 }))
 
@@ -335,15 +335,15 @@ mset(with_props(spec_fn(function ()
   local e = 5 + you.zigs_completed() * 2
   local f = 10 + you.zigs_completed() * 4
   local g = 0 + you.zigs_completed()
-  return "place:Tar:$ w:" .. d .. " / shadow demon w:" .. e .. " / " ..
-         "curse toe w:" .. e .. " / reaper w:" .. f + 15 .. " / " ..
+  return "place:Tar:$ w:" .. d .. " / putrid mouth w:" .. e .. " / " ..
+         "curse toe w:" .. e .. " / doom hound w:" .. f + 15 .. " / " ..
          "tzitzimitl w:" .. f .. " / silent spectre w:" .. g
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
   local d = 10 + you.zigs_completed() * 2
   local e = 10 + you.zigs_completed() * 3
-  return "fire elemental / hell hound / efreet / fire crab / " ..
+  return "efreet / fire crab / hell knight / will-o-the-wisp / " ..
          "fire dragon w:" .. d .. " / fire giant w:" .. d .. " / " ..
          "balrug w:" .. d .. " / orb of fire w:" .. e
 end), { weight = 2 }))
