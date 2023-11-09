@@ -1,1 +1,1 @@
-cmake -B . -S ..\crawl-ref\source -G "Visual Studio 16 2019" -A Win32 -DCMAKE_TOOLCHAIN_FILE=../../vcpkg/scripts/buildsystems/vcpkg.cmake -DTILES=OFF
+cmake -B . -S ..\crawl-ref\source -G "Visual Studio 17 2022" -DCMAKE_TOOLCHAIN_FILE=../../vcpkg/scripts/buildsystems/vcpkg.cmake -DTILES=OFF

@@ -5,6 +5,7 @@ This guide describes how to build DCSS in the Visual Studio through the new expe
 * [Visual Studio 2019+](https://visualstudio.microsoft.com/ru/vs/)
 * [CMake 3.10+](https://cmake.org/)
 * [Perl](https://www.perl.org/get.html)
+* [Python(https://www.python.org/)
 * [vcpkg](https://github.com/microsoft/vcpkg)
   `vcpkg` should be in the same folder as `crawl`. So the folder structure is expected to look like this:
   ![](FolderStructure.png)
