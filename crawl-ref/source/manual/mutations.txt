@@ -1,0 +1,46 @@
+****************************************
+K. Mutations
+****************************************
+
+The Dungeon contains many sources of mutagenic radiation and magical
+contamination, which may cause your character to gain semi-permanent mutations
+if affected. You can use the 'A' command to view a list of any mutations that
+you have acquired. Individual mutations can be examined in further detail by
+pressing the letter they are labelled with.
+
+Many mutations are actually beneficial to your character, but there are plenty
+of nasty ones as well. Some mutations have multiple levels, each of which counts
+as a single mutation.
+
+Miscasting spells will cause magical contamination, which in turn can cause
+mutations if too much contamination is accrued at once. Certain powerful
+magical effects or spells (such as 'Invisibility' and 'Irradiate') also cause
+contamination as a side-effect even when successful. A single use of these
+effects is safe on its own, but multiple uses in short succession, or usage with
+existing contamination from other sources can cause dangerous levels of
+contamination.
+
+Mutations from magical contamination are almost always harmful. Mutations can
+also be caused by specific potions or by spells cast by powerful enemies found
+deep in the dungeon.
+
+It is more difficult to get rid of bad mutations than to get one. Using potions
+of mutation will remove a number of your current mutations, but will give you
+more mutations. These might be better to your taste. However, the only sure-fire
+ways is to join the gods Zin or Jiyva, each of whom provides some remedy against
+mutations.
+
+Demonspawn are a special case. Characters of this species get certain special
+mutations as they gain levels; these are listed in cyan. They are permanent and
+can never be removed. If one of your Demonspawn powers has been augmented by a
+random mutation, it is displayed in a lighter colour.
+
+Many a species starts with some special intrinsic features, like the greater
+speed of Felids or Spriggans, or the claws of Trolls and Ghouls. These are
+often, but not always, like a preset mutation. In case such an innate feature
+gets amplified by an ordinary mutation, it is displayed in a light blue colour.
+Some of these innate features will provide an activated ability, which can be
+used with the 'a' command.
+
+Some mutations are only temporary and will dissipate after slaying more enemies.
+These are listed in purple on the list of mutations, and marked as temporary.

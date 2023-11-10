@@ -1,0 +1,311 @@
+****************************************
+G. Items
+****************************************
+
+In the dungeons of Crawl there are many different kinds of normal and magical
+items to be found and used. Some of them are useful, some are nasty, and
+some give great power, but at a price. Some items are unique; these have
+interesting properties which can make your life rather bizarre for a while. They
+all fall into several classes of items, each of which is used in a different
+way. Here is a general list of what you might find in the course of your
+adventures, how they are displayed, and what commands there are to use them:
+
+=======  =============  ================================================
+)        weapons        (use 'w'ield)
+(        missiles       (use 'f'ire or 'F'ire, 'Q' to quiver)
+[        armour         (use 'W'ear and 'T'ake off)
+?        scrolls        (use 'r'ead)
+!        potions        (use 'q'uaff)
+/        wands          (use 'V' to evoke, 'Q' to quiver)
+=        rings          (use 'P'ut on and 'R'emove)
+"        amulets        (use 'P'ut on and 'R'emove)
+\|       staves         (use 'w'ield)
+:        spellbooks     (use 'M'emorise and 'z'ap, 'Q' to quiver)
+%        talismans      (use 'V' to evoke)
+}        miscellaneous  (use 'V' to evoke, 'Q' to quiver)
+$        gold           (use 'g' to pick up)
+=======  =============  ================================================
+
+There are several general keys for item management:
+
+d
+  drop item; if you want to drop only some items from a stack (of arrows, for
+  example), then press 'd' followed by a number and then the item's slot key
+
+g
+  pick up item from the ground (also with the comma key ',')
+
+=
+  reassign item slot (works also for spell slots and abilities)
+
+i
+  show inventory - pressing the key of an item shows additional information
+
+{
+  inscribe item (see Appendix `5. Inscriptions`_)
+
+\\
+  check list of already discovered items
+
+Item usage
+========================================
+
+You pick up items with the 'g'et or ',' (comma) command, and drop them with the
+'d'rop command. When you are given a prompt like "drop which item?", if you type
+a number before the letter of the item, you will drop that quantity of the item
+(similarly when picking up). The same works if you want to pick up only part of
+a stack and there are several types of items on the square (so that they are
+shown in a list). When there is only a single stack of arrows and you want to
+pick up only some of them, use the ';' command. Note that picking up items from
+one square takes exactly one turn. However, dropping several items at once takes
+more turns.
+
+Typing 'i' displays your inventory (what you are carrying). When you are given a
+prompt like "Throw [or Wield, Wear, etc] which item?", you usually get a list of
+all available options. You can press '*' in case you want to wield something
+unusual. When the inventory screen shows "-more-", to show you that there is
+another page of items, you can type the letter of the item you want, even if it
+is not visible, instead of pressing Space or Enter to see the next page.
+
+You can carry at most 52 items at once, and your item slot usage is printed at
+the top of the inventory screen.
+
+You can use the adjust command (the '=' key) to change the letters to which your
+possessions are assigned. This command can be used to change spell or ability
+letters, too.
+
+Items like scrolls, potions, and some other types each have a characteristic,
+like a label or a colour, which will let you tell them apart on the basis of
+their function. However, these characteristics change between each game, so
+while in one game every potion of curing may be yellow, in another game they
+might all be purple and bubbly. Once you have discovered the function of such an
+item, you will remember it for the rest of the current game. You can access your
+item discoveries with the '\\' key.
+
+In order to get a description of what an item does, bring up the inventory (with
+'i') and press the letter of that item. Try this when comparing different types
+of armours and weapons, but don't expect too much information from examining
+unidentified items.
+
+In most equipment-related prompts and menus, the ';' key is a shortcut for
+"last unequipped item," meaning the armour, jewellery or weapon you most
+recently took off or unwielded.
+
+Another useful command is the '{' key, which lets you inscribe items with a
+comment. You can also inscribe items when looking at your inventory with 'i',
+simply by pressing the letter of an item. For more details, and how to automate
+this process, check Appendix `5. Inscriptions`_.
+
+) Weapons
+========================================
+
+These are rather important. You will find a variety of weapons in the dungeon,
+ranging from small and quick daggers to huge, cumbersome battleaxes and
+polearms. Each type of weapon does a different amount of damage, has a different
+chance of hitting its target, and takes a different amount of time to swing.
+There are several weapon skills (press 'm' to show a list of those that you are
+training) like Short Blades, Long Blades, Axes, etc. These skills affect damage,
+accuracy, and speed (up to a point). The same goes for Unarmed Combat.
+
+Weapons can be enchanted; when you first identify them, you reveal values which
+tell you how much more effective they are than an unenchanted version. Weapons
+which are not enchanted are simply '+0'. Some weapons also have special magical
+effects which make them very effective against vulnerable enemies.
+
+You can wield weapons with the 'w' command, which is a very quick action. If for
+some reason you want to go bare-handed, type 'w' followed by a hyphen ('-').
+
+The ' (apostrophe) key is a shortcut which automatically wields the item in slot
+a. If item a is being wielded, ' causes you to wield item b instead, if
+possible. Try assigning the letter a to your primary weapon, and b to your bow
+or something else you need to wield only sometimes. Note that this is just a
+typing shortcut and is not functionally different to wielding these items
+normally.
+
+( Missiles
+========================================
+
+If monsters are disobligingly distant, you can use missiles to weaken (or kill!)
+them from afar. You'll find a variety of type, ranging from simple stones and
+piercing javelins to sophisticated darts covered in many types of poisons. Upon
+impact, missiles may become destroyed. The chance for this to occur depends on
+the type of missile.
+
+The 'F' and 'f' commands can be used to throw a missile. The default type to be
+thrown (which 'f' will launch) is shown in the "quiver" display below your
+weapon. Many other items, spells, and abilities can fill this quiver as well.
+
+See Appendix `5. Inscriptions`_ for inscriptions which let you fine-tune the
+list of items to choose from. See also the Missiles section of
+options_guide.txt.
+
+Use the '(', ')' to cycle through your quiver without firing, and 'Q' to choose
+a quivered item from a list. If you would like to choose something to fire
+without inserting it into the quiver, use 'F' instead.
+
+The interface for shooting or throwing things is also used for evoking wands and
+casting certain spells, and is described in detail in section I (Targeting).
+
+[ Armour
+========================================
+
+This is also rather important. Most worn armour improves your Armour Class,
+which decreases the amount of damage you take from most types of injury. The
+heavier an armour is, the more AC (armour class) it will provide, at the expense
+of your EV (evasion) and stealth. Wearing heavy armour also increases your
+chances of miscasting spells and slow your attacks with missile weapons, effects
+which are only slightly reduced by your Armour skill. These penalties are larger
+if you have low Strength.
+
+A shield normally increases neither your AC nor your evasion, but it lets you
+attempt to block melee attacks and some ranged attacks aimed at you. Wearing a
+shield (especially larger shields) slows your attacks, hampers your ability to
+cast spells, and lowers your evasion. Weaker characters are more affected by
+these penalties, but all characters can reduce and eventually eliminate these
+penalties by mastering the Shields skill. You also obviously cannot wield a
+two-handed weapon while wearing a shield. Shields are most effective against
+the first attack on you each turn, and become less useful for every one after
+that.
+
+Some magical armours have special powers. These powers are sometimes automatic,
+affecting you whenever you wear the armour, and sometimes must be activated with
+the 'a' command.
+
+You can wear armour with the 'W' command, and take it off with the 'T' command.
+With '[' you can have a quick look at your current gear.
+
+Most armours can be improved by reading the appropriate scroll. Body armour and
+bardings can be enchanted up to the base value of AC they provide. Shields can
+be enchanted up to +3, +5, or +8, depending on their size. Other gear is limited
+to +2.
+
+? Magical Scrolls
+========================================
+
+Scrolls have many different magical spells inscribed on them, some good and some
+bad. One of the most useful scrolls is the scroll of identify, which will tell
+you the function of any item you have in your inventory; you might want to save
+these up for items that are dangerous or wasteful to use when unidentified, such
+as potions or other scrolls. You can read scrolls (and by doing so invoke their
+magic) with the 'r' command.
+
+! Magical Potions
+========================================
+
+While scrolls tend to affect your equipment or your environment, most potions
+affect your character in some way. The most common type is the simple curing
+potion, which restores some health and cures many ailments, but there are
+many other varieties of potions to be found. Potions can be quaffed (drunk) with
+the 'q' command.
+
+/ Wands
+========================================
+
+Sometimes you will be lucky enough to find a stick which contains stored magical
+energies. Wands each have a certain number of charges, which you immediately
+recognise when you pick them up. When you pick up a wand of type you already
+have in inventory, its charges are absorbed into the existing one. When a wand's
+charges are fully depleted, it vanishes.
+
+Wands are aimed in the same way as missile weapons, and you can release the
+power of a wand by evoking it with 'V'. See section I for targeting.
+
+Wands can be 'Q'uivered in order to shoot via the autofire or 'f'ire
+interface, like spells and ammo.
+
+=" Rings and Amulets
+========================================
+
+Magical rings are among the most useful of the items you will find in the
+dungeon. While equipped, they provide some kind of passive benefit to the
+wearer, such as increasing their attributes or providing various types of
+protection. Use the 'P' command to put on rings, and 'R' to remove them. You can
+wear up to two rings simultaneously, one on each hand; which hand you put a ring
+on is immaterial to its function. If you try to put on a ring while both ring
+fingers are full, you will be asked which one to remove. Octopodes are an
+exception, and may wear up to eight rings on their tentacles.
+
+Amulets are similar to rings, but have different range of effects. Amulets are
+worn around the neck, and you can wear only one at a time. It is very quick to
+wear or remove a ring, but amulets' magics make them cumbersome to put on or
+take off.
+
+You can press '"' to quickly check what jewellery you're wearing.
+
+\| Staves
+========================================
+
+There are a number of types of magical staves, each attuned to a different
+class of spells. While wielded they greatly increase the power of that class
+of spells. They can even be used in melee combat, although with mediocre
+effectiveness unless you can harness their special power, using a combination of
+the Evocations skill and the skill specific to the staff's type.
+
+: Books
+========================================
+
+Most books contain magical spells which your character may be able to learn.
+Upon picking up a book, all of the spells in it will be added to your spell
+library, allowing you to access a description of each spell or memorise spells
+from it with the 'M' command.
+
+Occasionally you will find manuals of some skill. When you pick one up, your
+experience will have twice the usual effect when used for training that skill.
+Once a certain amount of bonus experience has been gained in this way, you will
+automatically discard the finished manual.
+
+% Talismans
+========================================
+
+Talismans allow their user to shift into a different form. Entering or leaving
+a form with a talisman requires a brief period of concentration, but otherwise,
+forms last until the user chooses to leave them.
+
+More powerful talismans require some amount of Shapeshifting skill, without
+which a user will find their maximum health reduced until they leave the form.
+Shapeshifting skill also increases other benefits provided by talismans' forms,
+though weaker talismans have a limit to how helpful skill can be.
+
+{ Miscellaneous
+========================================
+
+These are items which don't fall into any other category. They can be evoked
+with 'V', just like wands. Runes, a particular item in this category, have no
+function whatsoever except to open the endgame. You must collect at least three
+in order to enter the Realm of Zot. Some particularly cocky adventurers brag
+about having retrieved ten or even fifteen runes through their strength and
+cunning, but most scholars on the subject of Zot agree that such a thing is
+probably impossible in the first place, and secondly would be a meaningless
+achievement in any regard.
+
+Miscellany can often be 'Q'uivered in order to shoot via the autofire or 'f'ire
+interface, like spells and ammo.
+
+$ Gold
+========================================
+
+Gold can be used to buy items should you run across shops. There are also a
+few more esoteric uses for gold.
+
+Artefacts
+========================================
+
+Weapons, armour, jewellery and spellbooks can be artefacts. These come in two
+flavours: randomly created artefacts ('randarts') and predefined ones
+('unrandarts'). Randarts will always carry unusual names, such as "golden
+double sword" or "shimmering scale mail". Artefacts cannot be modified in any
+way, including enchantments.
+
+Apart from that, otherwise mundane items can get one special property. These are
+called 'ego items', and examples are: boots of flight, a weapon of flaming, a
+helmet of see invisible, and so on. Note that, unlike artefacts, such items can
+be modified by enchanting scrolls.
+
+All ego items are noted with special adjectives but not all items noted in this
+way need have a special property (they often have some positive enchantment,
+instead):
+
+:general: glowing, runed;
+:metal armours: shiny;
+:leather armours: dyed;
+:other armours: embroidered.

@@ -1,0 +1,75 @@
+****************************************
+F. Monsters
+****************************************
+
+In the caverns of Crawl, you will find a great variety of creatures, most of
+which are displayed by capital or small letters of the alphabet. Many of them
+would very much like to eat you. To stop them from doing this, you will
+generally need to fight them. To attack a monster, stand next to it and move in
+its direction; this makes you attack it with your wielded weapon. Of course,
+some monsters are just too nasty to beat, and you will find that discretion is
+often the better part of valour. Sneaky characters are known to choose
+encounters to their liking.
+
+There are several other ways to kill monsters. When using a bow or other ranged
+weapon, the 'v' command will fire. See the section on Targeting in the Items
+Chapter for more on this. Likewise, many magicians will prefer to use spells
+from a safe distance. They can use the 'z' command to cast spells previously
+'M'emorised. Again, see the Targeting section.
+
+Some monsters can be friendly; friendly monsters will follow you around and
+fight on your behalf. You can command your allies using the 't' key, which lets
+you tell them who to attack, or else tell them to stay where they are, retreat,
+or to follow you again. You can also shout to get the attention of all monsters
+in range if, for some reason, you want to do that.
+
+Some special monsters are Uniques. You can identify a unique because he, she or
+they have a name and personality. Many of these come up with very nasty ideas
+how to rid the dungeon of you. Treat them very carefully, particularly if you
+meet one of them for the first time.
+
+Other, even rarer, obstacles are statues. A variety of statues can appear,
+ranging from harmless granite ones (who still often signify something of
+interest) to really dreadful ones. Be alert whenever seeing such a statue.
+
+When playing Crawl, you will undoubtedly want to develop a feeling for the
+different monster types. For example, some monsters move unpredictably while
+most attack head-on. Likewise, ranged or magic attackers will prove a different
+kind of threat from melee fighters. Learn from past deaths and remember which
+monsters pose the most problems. If particular monsters are giving you
+trouble, try to alter your tactics for future encounters.
+
+You can obtain information about a monster by using the 'x' (examine) command,
+moving the cursor over the monster in question, and pressing 'v' to view the
+monster's details; or by searching for a monster by name or symbol with '?/m'.
+The details screen shows:
+
+- The monster's name and description.
+
+- Bars or numbers indicating its:
+
+  * Max HP: hit points; how much damage it can take
+
+  * AC: armour class; how well it ignores most damage
+
+  * EV: evasion; how well it avoids being hit (and your odds of hitting it
+    with your current melee attack)
+
+  * Will: willpower; its resistance to most Hexes and similar effects.
+
+- Its difficulty level, speed (if different from average speed), size,
+  resistances, and special attacks.
+
+- Its spells and special abilities. Monster spells and abilities are
+  of four types:
+
+  * Natural abilities are innate, non-magical effects.
+
+  * Magical abilities are innate magical effects. They are affected
+    by antimagic.
+
+  * Divine abilities call upon the monster's god for a magical effect.
+    They are prevented by silence, but not affected by antimagic.
+
+  * Spells are cast using memorised magical words. They are both
+    prevented by silence and affected by antimagic.

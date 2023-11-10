@@ -1,0 +1,39 @@
+****************************************
+I. Targeting
+****************************************
+
+When throwing or firing something, evoking wands, or casting certain spells,
+you are asked for a direction. There are several ways to tell Crawl which
+monster to target.
+
+You can press '?' when asked for a direction; this will bring up a help screen.
+Otherwise, you use the following commands:
+
+- The cursor will target on the monster which is closest to your position.
+  Should you have been firing at something previously, with the offender still
+  being in sight, the cursor will instead rest on the previous target.
+- Pressing '+' or '=' moves the cursor to the next monster, going from nearer to
+  further away. Similarly, '-' cycles backwards.
+- Any direction key moves the cursor by one square. Occasionally, it can be
+  useful to target non-inhabited squares.
+- Targets can be selected from a list by pressing 'Ctrl-X'.
+- When you are content with your choice of target, press one key of Enter, Del,
+  or Space to fire at the target. If you press '.', you also fire, but the
+  spell/missile will stop at the target's square if it misses. This can be
+  useful to keep friendlies out of the fire, or to make sure your precious
+  missiles won't end up in deep water.
+- You can press Escape if you changed your mind - no turns are deducted.
+
+There are some shortcuts while targeting:
+
+- Typing Shift-direction on your keypad fires straight away in that direction.
+- Pressing 'p' or 'f' fires at the previous target (if it is still alive and in
+  sight). Due to this, most hunters can go a long way by pressing 'vf' to fire
+  their ammunition at a monster and then keep firing at it with further 'vf'
+  strokes. At times, it will be useful to switch targets with the '+' or '-'
+  commands, though.
+
+If you target yourself while firing something harmful (which can be sensible at
+times), you will be asked for confirmation.
+
+Finally, the ':' key allows you to hide the path of your spell/wand/missile.

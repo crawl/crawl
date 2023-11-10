@@ -1,0 +1,180 @@
+****************************************
+N. Philosophy (pas de faq)
+****************************************
+
+In a nutshell: This game aims to be a tactical fantasy-themed dungeon crawl. We
+strive for strategy being a concern, too, and for exquisite gameplay and
+interface. However, don't expect plots or quests.
+
+You may ponder about the wisdom of certain design decisions of Crawl. This
+section tries to explain some of them. It could also be of interest if you are
+used to other roguelikes and want a bit of background on the differences. Prime
+mainstays of Crawl development are the following, most of which are explained in
+more detail below. Note that many of these date back to Linley's first versions.
+
+Major design goals
+  * challenging and random gameplay, with skill making a real difference
+  * meaningful decisions (no no-brainers)
+  * avoidance of grinding (no scumming)
+  * gameplay supporting painless interface and newbie support
+
+Minor design goals
+  * clarity (playability without need for spoilers)
+  * internal consistency
+  * replayability (using branches, species, playing styles and gods)
+  * proper use of out of depth monsters
+
+Balance
+========================================
+
+The notions of balance, or being imbalanced, are extremely vague. Here is our
+definition: Crawl is designed to be a challenging game, and is also renowned for
+its randomness. However, this does not mean that wins are an arbitrary matter of
+luck: the skill of players will have the largest impact. So, yes, there may be
+situations where you are doomed - no action could have saved your life. But
+then, from the midgame on, most deaths are not of this type: By this stage,
+almost all casualties can be traced back to actual mistakes; if not tactical
+ones, then of a strategical type, like wrong skilling (too broad or too narrow),
+unwise use of resources (too conservative or too liberal), or wrong decisions
+about branch/god/gear.
+
+The possibility of unavoidable deaths is a larger topic in computer games.
+Ideally, a game like this would be really challenging and have both random
+layout and random course of action, yet still be winnable with perfect play.
+This goal seems out of reach. Thus, computer games can be soft in the sense that
+optimal play ensures a win. Apart from puzzles, though, this means that the game
+is solved from the outset; this is where the lack of a human game-master is
+obvious. Alternatively, they can be hard in the sense that unavoidable deaths
+can occur. We feel that the latter choice provides much more fun in the long
+run.
+
+Crawl has a huge number of handmade vaults/maps to tweak the randomness. While
+the placement, and often parts of the contents, of such vaults are random as
+well, they provide several advantages: vaults offer challenges that are very
+hard to get via just random monster and layout generation; they may centre on
+some theme, providing additional immersion; finally, they will often contain
+some loot, forcing players to decide between safety and greed.
+
+(The next topic can also be filed under balance; see Replayability for what
+balance does not mean to us.)
+
+Crusade against no-brainers
+========================================
+
+A very important point in Crawl is steering away from no-brainers. Speaking
+about games in general, wherever there's a no-brainer, that means the
+development team put a lot of effort into providing a "choice" that's really not
+an interesting choice at all. And that's a horrible lost opportunity for fun.
+Examples for this are the resistances: there are very few permanent sources,
+most involve a choice (like rings or specific armour) or are only semi-permanent
+(like mutations). Another example is the absence of clear-cut best items, which
+comes from the fact that most artefacts are randomly generated. Furthermore,
+even non-random artefacts cannot be wished for, as scrolls of acquirement
+produce random items in general. Likewise, there are no sure-fire means of life
+saving (the closest equivalents are scrolls of blinking, and good religious
+standings for some deities).
+
+Anti-grinding
+========================================
+
+Another basic design principle is avoidance of grinding (also known as
+scumming). These are activities that have low risk, take a lot of time, and
+bring some reward. This is bad for a game's design because it encourages players
+to bore themselves. Even worse, it may be optimal to do so. We try to avoid
+this!
+
+This explains why shops don't buy: otherwise players would hoover the dungeon
+for items to sell. Not messing with lighting also falls into this category:
+there might be a benefit to mood when players have to carry candles/torches,
+but we don't see any gameplay benefit. The deep tactical gameplay Crawl aims
+for necessitates permanent dungeon levels. Many a time characters have to choose
+between descending or battling. While caution is a virtue in Crawl, as it is in
+many other roguelikes, there are strong forces driving characters deeper.
+
+Interface
+========================================
+
+The interface is radically designed to make gameplay easy - this sounds trivial,
+but we mean it. All tedious, but necessary, chores should be automated. Examples
+are long-distance travel, exploration and taking notes. Also, we try to cater
+for different preferences: both ASCII and tiles are supported; as are vi-keys
+and numpad. Documentation is plenty, context-specific and always available
+in-game. Finally, we ease getting started via tutorials.
+
+Clarity
+========================================
+
+Things ought to work in an intuitive way. Crawl definitely is winnable without
+spoiler access. Concerning important but hidden details (i.e. facts subject to
+spoilers) our policy is this: the joy of discovering something spoily is nice,
+once. (And disappears before it can start if you feel you need to read spoilers
+- a legitimate feeling.) The joy of dealing with ever-changing, unexpected and
+challenging strategic and tactical situations that arise out of transparent
+rules, on the other hand, is nice again and again. That said, we believe that
+qualitative feedback is often better than precise numbers.
+
+In concrete terms, we either spell out a gameplay mechanic explicitly (either in
+the manual, or by in-game feedback) or leave it to min-maxers if we feel that
+the naive approach is good enough.
+
+Consistency
+========================================
+
+While there is no plot to speak of, the game should still be set in a consistent
+Crawl universe. For example, names of artefacts should fit the mood, vaults
+should be sensibly placed and monsters should somehow fit as well. Essentially,
+this is about player immersion. As such, it's good to have in mind, but
+consistency is always secondary to gameplay. A typical example is player vs.
+monster behaviour: while we try to make these identical (or similar), there are
+good reasons for keeping them distinct in certain cases.
+
+Replayability
+========================================
+
+This is actually quite important, but in some sense just a corollary to the
+major design goals. Besides these, there are several other points helping to
+make playing Crawl fun over and over again:
+
+Diversity
+  whenever there are choices to the player, be that choice of species, god,
+  weapon or spell, the various options should be genuinely different. It is no
+  good to provide dozens of weapons with different names (and perhaps even
+  numbers) if, in the end, they all play the same.
+
+Many different species
+  This is partly due to the skills and aptitude system. Similarly important are
+  the built-in starting bonuses/handicaps of species; these often have great
+  impact on play. To us, balance does not mean that all combinations of
+  background and species play equally well! Some are much more challenging than
+  others, and this is fine with us. Each species has at least some backgrounds
+  playing rather well, though.
+
+Dungeon layout
+  Even veteran players may find the Tomb or the Hells exciting (which are
+  designed such that life endangering situations can always pop up). These and
+  other branches may or may not fit a given character's buildup. By the way, we
+  strongly believe that games are pointless if you can reach the invincible
+  state.
+
+Religion
+  This addresses new players, as getting to the Temple and choosing a god
+  becomes the first major task of most games. But religion is also a point in
+  favour of replayability for experienced players, since the choice of god can
+  matter as much as species does.
+
+Playing styles
+  Related to, but encompassing, species, background, god are fundamentally
+  different playing styles like melee oriented fighter, stabber, etc. Deciding
+  on whether (and when!) to make a transition of style can make or break games.
+
+Out of the depths
+========================================
+
+From time to time a discussion about Crawl's unfair OOD (out of depth) monsters
+turns up, like a dragon on the second dungeon level. These are not bugs!
+Actually, they are part of the randomness design goal. In this case, they also
+serve as additional motivation: in many situations, the OOD monster can be
+survived somehow, and the mental bond with the character will then surely grow.
+OOD monsters also help to keep players on their toes by making shallow levels
+still not trivial. In a similar vein, early trips to the Abyss are not deficits:
+there's more than one way out, and successfully escaping is exciting for anyone.

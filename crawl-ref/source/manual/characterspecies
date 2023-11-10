@@ -1,0 +1,479 @@
+****************************************
+1. List of character species
+****************************************
+
+Species are categorised, roughly, by how difficult and complex they are to
+learn how to play, into three categories: *Simple*, *Intermediate*, and
+*Advanced*. These categories do not necessarily align with difficulty for an
+experienced Crawl player, but rather are intended as an indication of to what
+degree a species has unusual or complex mechanics, or requires deeper/wider
+knowledge of how the game works. (For example, Djinn have one of the higher
+win rates of all species, but are classified as "Intermediate" because
+their no-mp/no-books mechanic takes some adapting to, and has non-trivial
+interactions with background and god choice.) Despite being the outcome of a
+discussion among many players, these categorizations definitely have a
+subjective element to them, and you shouldn't take them to be limiting!
+
+The order within categories is also, roughly, determined by our best judgment
+about the relative ease of learning to play each species.
+
+Next to each species name, in parentheses, is the canonical abbreviation for
+the species.
+
+.. note:: Use 'A' to check for which particular peculiarities a species might
+          have. Also, some species have special abilities which can be accessed
+          by the 'a' abilities menu. Some also have physical characteristics
+          which allow them to make extra attacks.
+
+.. note:: Humans are a useful reference point when considering other species:
+          they have 0 for almost all aptitudes; have no special abilities,
+          weakness, or constraints against using certain types of equipment;
+          move normally; and gain experience and willpower at a "typical"
+          rate. However, you will see that they are categorised as an
+          *Intermediate* species -- because they are decent, but not excellent,
+          at nearly everything, a Human may need to make use of all sorts of
+          game mechanics depending on what they find in the dungeon, and know
+          how to defend itself against any type of damage or attack it
+          encounters.
+
+Simple species
+==============
+
+Species categorised as *Simple* work straightforwardly for players who have
+less experience with Crawl's game mechanics. While many do have quirks, these
+quirks tend to be passive traits that simplify gameplay, rather than challenges
+that a player has to consciously work around. While all of these species do
+have weaknesses of some kind, these weaknesses are simple to understand, aren't
+fundamentally crippling to all members of the species, and are balanced by
+other strengths. In many cases the special properties of these species allow
+the player to set aside many aspects of the game while still developing a
+strong character.
+
+
+Hill Orcs (HO)
+  Hill Orcs are Orcs from the upper world who, jealous of the riches which their
+  cousins (the Cave Orcs) possess below the ground, descend in search of plunder
+  and adventure.
+
+  Hill Orcs are strong and robust. Their forte is brute-force fighting, and they
+  are skilled at using most hand weapons (particularly axes, with which they are
+  experts), though they are not particularly good at using missile weapons. Hill
+  Orcs are passable users of most types of magic and are particularly skilled
+  with fire.
+
+  Hill Orcs have a strong connection to the gods and learn Invocations very
+  quickly. The Orc god Beogh is worshipped only by Orcs, and the orc priests of
+  the Dungeon preach that Beogh is indeed the only true god. Hill Orcs may
+  convert to Beogh even without an altar whenever an orc priest is in sight.
+
+Minotaurs (Mi)
+  The Minotaurs are a species of hybrids, possessing human bodies with bovine
+  heads. They delve into the Dungeon because of their instinctive love of
+  twisting passageways.
+
+  Minotaurs are extremely good at all forms of physical combat, but are awful at
+  using any type of magic. They can wear all armour except for some headgear.
+  When in close combat, Minotaurs are able to reflexively headbutt those who
+  dare attack them.
+
+Merfolk (Mf)
+  The Merfolk are a hybrid species of half-human, half-fish that typically live
+  in the oceans and rivers, seldom venturing toward land. However, Merfolk
+  aren't as limited on land as some myths suggest; their tails will quickly
+  reform into legs once they leave the water (and, likewise, their legs will
+  quickly reform into a tail should they ever enter water). They tend to be
+  surprisingly nimble on land as well as in the water. Experts at swimming,
+  they need not fear drowning and move very quickly through water.
+
+  The Merfolk have developed their martial arts strongly on thrusting and
+  grappling, since those are the most efficient ways to fight underwater. They
+  therefore prefer polearms and short swords above all other weapons, though
+  they can also use longer swords quite well.
+
+  As spellcasters, they tend to be quite good in specific areas. Their mystical
+  relationship with water makes it easier for them to use poison and ice magic,
+  which use water occasionally as a material component. The legendary water
+  magic of the Merfolk was lost in ancient times, but some of that affinity
+  still remains. The instability of their own morphogenic matrix has made them
+  very accomplished transmuters, but most other magic seems foreign to them.
+
+Gargoyles (Gr)
+  A cross between ordinary stone gargoyles and living beings, Gargoyles are
+  hideous humanoids with an affinity to rock. They have low health, but large
+  amounts of innate armour which increases further as they gain levels. They
+  eventually gain the ability to fly.
+
+  Gargoyles' partially living form grants them immunity to poison, as well as
+  resistance to electricity, and protection from some effects of necromancy.
+  Their natural armour makes them strong melee fighters, and they are naturally
+  skilled with blunt weapons and in unarmed combat. They can also be exceptional
+  earth-based conjurers.
+
+Draconians (Dr)
+  Draconians are human-dragon hybrids: humanoid in form and approximately
+  human-sized, with wings, tails and scaly skins. Draconians start out in an
+  immature form with brown scales, but as they grow in power they take on a
+  variety of colours. This happens at an early stage in their career, and the
+  colour is determined by chromosomes, not by behaviour.
+
+  Most types of Draconians have breath weapons or special resistances.
+  Draconians cannot wear body armour and advance very slowly in levels, but are
+  reasonably good at all skills other than missile weapons, and they develop
+  natural physical defences that compensate for the lack of body armour, without
+  needing to train their Armour skill at all. Still, each colour has its own
+  strengths and some have complementary weaknesses, which sometimes requires a
+  bit of flexibility on the part of the player. They are good general-purpose
+  spellcasters, and typically their spellcasting aptitudes will adapt slightly
+  when they gain a colour.
+
+  Draconian colours are detailed below, in the subsection titled
+  `Draconian types`_.
+
+Trolls (Tr)
+  Trolls are monstrous creatures with powerful claws. They have thick, knobbly
+  skins of any colour from putrid green to mucky brown, which are covered in
+  patches of thick fur.
+
+  They are incredibly strong, and regenerate rapidly from even the most terrible
+  wounds. However, they are hopeless at spellcasting and learn most skills very
+  slowly. Their large size prevents them from wearing most forms of armour.
+
+Deep Elves (DE)
+   The Deep Elves are a species of Elves who long ago fled the overworld to live
+   in darkness underground. There, they developed their mental powers, evolving
+   a natural gift for all forms of magic, and adapted physically to their new
+   environment, becoming weaker and losing all colouration. They are poor at
+   melee combat and physical defence, although they are capable at using bows
+   and other ranged weapons.
+
+Armataurs (At)
+  The Armataurs are a large, scaled mammalian species, walking on four feet
+  and swinging a powerful tail behind them. Their elephant-back armies
+  terrorize the lands outside the Dungeon.
+
+  Armataurs instinctively roll when moving toward foes, getting a free move.
+  Their long, nimble tongues drink every last drop from potions, doubling
+  their effects, but the strange syllables of magical scrolls slow them down.
+  They have great aptitudes with armour and shields, though their body shape
+  reduces the protection offered by body armour early on.
+
+Gnolls (Gn)
+  Gnolls are a species of caniform humanoids originally hailing from the arid
+  deserts and grasslands of the east. In recent history they have become
+  unusually attracted to the Dungeon, establishing tribes around and even
+  inside of it. Unfortunately their long stay in the Dungeon has exposed their
+  somewhat fragile minds to excessive amounts of its magic.
+
+  On the one hand, their bizarrely altered brains now have incredible
+  proficiency at learning every skill. On the other, these same alterations
+  have rendered Gnolls incapable of selective learning. They learn all skills
+  at the same time, so are generally unable to specialise in any one thing.
+
+  In order to survive with this limitation, Gnolls use their universal
+  knowledge to take advantage of every resource they find in the Dungeon. They
+  also have powerful noses adapted to the Dungeon's scents, allowing them to
+  easily locate where treasures lay hidden.
+
+
+Intermediate Species
+====================
+
+Species classified as *Intermediate* require a broader understanding of the
+mechanics of Crawl, have some weakness(es) that must be actively compensated
+for, and/or add a relatively complex mechanic (or change in mechanic) to
+gameplay.
+
+Humans (Hu)
+  Humans tend to be hardworking and industrious, and learn new things quickly.
+  The Human species is the most versatile of all the species available to
+  players. Humans advance quickly in levels and have equal abilities in most
+  skills.
+
+Kobolds (Ko)
+  Kobolds are small, mysterious creatures of unknown origin. They are well
+  suited to lurking in the darkness of the Dungeon, and have a reduced range of
+  vision which also reduces the range at which they can be seen by enemies.
+
+  They are competent in combat, especially with short blades, maces or ranged
+  weapons, and are comfortable with all forms of magic. They are also very
+  adept at using magical devices. Their small size makes them unable to wield
+  large weapons, but they are agile and stealthy, and advance in levels as
+  quickly as Humans.
+
+Demonspawn (Ds)
+  Demonspawn are horrible half-mortal, half-infernal creatures. Demonspawn can
+  be created in any number of ways: magical experiments, breeding, unholy pacts,
+  etc. Although many Demonspawn may initially be indistinguishable from those of
+  pure mortal stock, they will inevitably grow horns, scales or other unusual
+  features. Powerful members of this class of beings also develop a range of
+  unholy abilities, which are listed as mutations.
+
+  Demonspawn advance slowly in experience and learn most skills slightly slower
+  than Humans, although they are talented at some forms of magic. They learn
+  Invocations especially quickly, although the good gods will not accept their
+  worship due to their unholy nature.
+
+Djinn (Dj)
+  Djinn are beings of smokeless fire. They enter the world spontaneously and
+  without explanation, born with a tireless hunger for knowledge and adventure.
+  Djinn have a unique relationship with magic: rather than learning spells
+  from books, their spells come from within, welling up from their fiery core
+  as they gain experience. They draw from that same fiery core to cast spells -
+  for Djinn, magical power and health are one and the same.
+
+  As elemental beings, Djinn are immune to poison and highly resistant to
+  fire, though cold damage is deeply inimical to them. Since they float
+  through the air without need for legs or feet, they cannot wear boots.
+
+  Djinn are middlingly competent at most forms of physical combat, but have
+  a particular aptitude for spellcasting. Their aptitudes for all forms of
+  magic are phenomenal, though their unique relationship with magic means that
+  they cannot choose to train magic skills independently.
+
+Spriggans (Sp)
+  Spriggans are small magical creatures distantly related to Elves. They love to
+  frolic and cast mischievous spells.
+
+  They are poor fighters and have little physical resilience, but they move
+  extremely quickly and stealthily, and are incredible at dodging attacks. They
+  are terrible at destructive magic - conjurations, summonings, necromancy and
+  elemental spells. On the other hand, they are excellent at other forms of
+  magic and at evoking magical items. Their size makes them unable to wear most
+  armour. They cannot wield large weapons, and even most smaller weapons require
+  both hands to be wielded by a Spriggan.
+
+Ghouls (Gh)
+  Ghouls are horrible undead creatures that sleep in their graves for years on
+  end, only to rise and stalk the living. Slain foes heal these monstrous
+  beings as they feast on the macabre energies released.
+
+  They learn most skills slowly, although they make decent unarmed fighters
+  with their claws. Due to their contact with the grave they can also learn to
+  use ice, earth, poison and necromantic magic without too many difficulties.
+
+  Like other undead, ghouls are naturally immune to poisons, negative energy
+  and torment; have little warmth left to be affected by cold; and are not
+  susceptible to mutations.
+
+Tengu (Te)
+  The Tengu are an ancient and feared species of bird-people with a legendary
+  propensity for violence. Basically humanoid with bird-like heads and clawed
+  feet, the Tengu can wear all types of armour except helmets and boots. Their
+  magical nature helps them evade attacks while in motion, and despite their
+  lack of wings, more experienced Tengu can magically fly.
+
+  They are experts at all forms of fighting, including the magical arts of
+  combat (conjurations, summonings and, to a lesser extent, necromancy). They
+  are good at air and fire elemental magic, but poor at ice and earth magic.
+  Tengu do not appreciate any form of servitude, and so are poor at using
+  invocations. Their light avian bodies cannot sustain a great deal of injury.
+
+Ogres (Og)
+  Ogres are huge, chunky creatures who are very strong and robust, but are not
+  nimble at all. They possess a raw talent for magic, but are poor at making
+  use of magical devices. Ogres mature almost as quickly as Humans.
+
+  Their preferred methods of avoiding beatings are dodging and the use of
+  shields. Their large size prevents them from wearing most forms of armour.
+  Ogres are proficient at using all types of melee weapons, but all
+  sophisticated forms of missile combat are awkward for them. They are, however,
+  good at throwing things, in particular boulders.
+
+Advanced Species
+================
+
+*Advanced* species have some substantial weaknesses, and/or add multiple complex
+new mechanics to gameplay. This category includes several species that
+experienced players may not find difficult per se, but that may require quite
+a bit of experience to adapt to. It also includes species that are just
+plain difficult, such as Mummies.
+
+Vine Stalkers (VS)
+  Limber in shape, Vine Stalkers are anthropomorphic masses of thick vines.
+  They possess a once-humanoid core, parasitised moments before death by the
+  magical vines. Lacking any other discernible features, their faces are
+  dominated by the disproportionate, vicious maw with which they disrupt and
+  devour the magical energies of their foes.
+
+  Magic courses freely through their bodies, and any damage they take is split
+  between their health and magical reserves. They also physically regenerate
+  at an alarming rate. However these traits come at a price: the dual nature of
+  their bodies makes them extremely frail, and they cannot benefit from potions
+  to heal their wounds.
+
+  Living examples of adaptation, Vine Stalkers level up quickly and lend well
+  to an all-out offensive style; trusting their stealth to choose their prey
+  and then their regenerating capabilities to power through the wounds they may
+  sustain in battle. Many members of the species however, are seen wielding
+  magic quite competently and then switching to a hybrid style when their
+  reserves start to run low, thus replenishing their shroud of magic and their
+  spells' fuel with each voracious bite.
+
+Vampires (Vp)
+  Vampires are an undead species, with the ability to shift between bloodless
+  and alive forms at will. Bloodless Vampires can heal themselves by drinking
+  the blood of the living in combat, and have the traits of the undead (immunity
+  to poisons, negative energy and torment, and resistance to damage from cold),
+  but are much less resilient and cannot regenerate health when monsters are in
+  sight. On the other hand, a Vampire full with blood will regenerate very
+  quickly, but will lose all undead powers. Upon growing, they learn to
+  transform from their bloodless form into a fast-moving bat. Unlike other
+  undead species, they may be mutated normally at all times.
+
+Demigods (Dg)
+  Demigods are mortals with some divine or angelic ancestry, however distant.
+  Demigods look more or less like members of their mortal part's species, but
+  they are extremely robust and can draw on great supplies of magical energy.
+  They are able to sculpt their attributes to a far greater extent than any
+  other species, gaining substantial boosts to their choice of Strength,
+  Intelligence or Dexterity as they gain experience. On the downside, they
+  advance more slowly in experience than any other species, gain skills slightly
+  less quickly than Humans and, due to their status, refuse to worship any god.
+
+Formicids (Fo)
+  The Formicids are a species of humanoid ants. Just like their tiny insect
+  ancestors, the Formicids are well adept at earth work, both on the physical
+  and magical sides. Their abilities have been used to tunnel immense
+  underground communities and structures, many of which are tens of thousands of
+  years old.
+
+  Perhaps unfortunately, their strong ties to earth have left them completely
+  impervious to being teleported or hasted; Formicids are tied to the earth with
+  a complete sense of stasis. While this is a seemingly bad property for a
+  dungeon adventurer, stasis has the beneficial effect of preventing many types
+  of nasty hexes and maledictions.
+
+  With the ability to lift ten times their own weight, the Formicids have
+  strength rivaling that of Ogres. This, along with the fact that they have four
+  arms, allows Formicid warriors to equip both a shield and a two-handed weapon
+  at the same time.
+
+  Formicids make good earth and venom mages, but are quite capable at both melee
+  and ranged combat too. They are naturally bad at air magic and conjurations.
+
+Nagas (Na)
+  Nagas are a hybrid species: Human from the waist up with a large snake tail
+  instead of legs.
+
+  They are reasonably good at most things and advance in experience levels
+  slightly slower than Humans. They are naturally resistant to poisons, can see
+  invisible creatures, and have tough skin, but their tails are relatively slow
+  and cannot move them around as quickly as can other creatures' legs (this only
+  affects their movement rate; all other actions are at normal speed). Like
+  Armataurs, their body shape also prevents them from gaining full protection
+  from body armour. A Naga's biggest forte is stealth: Nagas are very good at
+  moving unnoticed. Their tails eventually grow strong enough to constrict
+  their foes in combat.
+
+  Nagas can spit poison; the accuracy and damage of this poison increases with
+  the Naga's experience level.
+
+Octopodes (Op)
+  These land-capable relatives of common octopuses can move about as fast as
+  humans and yet retain the ability to swim underwater, although their dual
+  adaptation is not as good as that of the shapechanging Merfolk.
+
+  Octopodes have eight tentacle-shaped legs, and need four of them to move.
+  While a tentacle lacks fingers, two tentacles are a rough equivalent of a
+  human's arm where item manipulation is concerned - including wielding
+  two-handed weapons with four. They can use no armour other than loose hats,
+  but can handle shields just fine. Another peculiarity they have is the ability
+  to wear eight rings, one on each tentacle.
+
+  Their natural camouflage makes them excel at stealth, and they have good
+  knowledge of poisons as well. They are also able to use their tentacles to
+  constrict enemies - potentially several at a time!
+
+Felids (Fe)
+  Felids are a breed of cats that have been granted sentience. Originally they
+  were witches' familiars that were magically augmented to provide help for
+  their masters' rituals, yet many have abandoned, outlived, or, in at least one
+  case, eviscerated their former masters and gone out into the world.
+
+  While fully capable of using speech and most forms of magic, Felids are at a
+  serious disadvantage due to their inability to use armour or weapons.
+
+  Their agility and stealth are legendary, as is their ability to get to hard to
+  reach places. They move faster than most species, but don't run as fast as
+  Spriggans. Felids advance in levels very slowly. They are skilled with many
+  forms of magic, though less so with raw elemental magic.
+
+  Felids start with an extra life, and gain more as they increase in levels.
+  Upon death, they will be resurrected in a safe place.
+
+Barachim (Ba)
+  Barachim are an amphibious humanoid species, spawned at the dawn of time as
+  servants for the gods. Inevitably, they rebelled and fled into the mortal
+  world; but even uncounted years later, the darkness still flees at their
+  approach, remembering those who they once served.
+
+  Barachim's most remarkable trait is their grossly overmuscled legs, which
+  allow them to leap great distances. When not leaping, they are somewhat
+  slow-moving, and the long sight-lines that their heritage creates can be a
+  major disadvantage, but they can master almost any skill.
+
+Meteorae (Me)
+  Meteorae are the people of the heavens, fallen to earth. They possess exceptional
+  skills, an uncanny sense for the space around them, and the ability to recover
+  health and magic as they explore the dungeon. However, as creatures clearly not
+  native to the world, they are easy prey for the dark forces that hunt adventurers
+  - they have one-tenth as much time as normal before Zot finds them. (See the
+  section on 'Zot' for more.)
+
+Mummies (Mu)
+  These are undead creatures who travel into the depths in search of revenge,
+  redemption, or just because they want to.
+
+  Mummies progress slowly in levels, half again as slowly as Humans in all
+  skills except fighting, spellcasting and necromancy. The sacred embalming
+  rituals that brought them into unlife also grant them a special connection
+  with the divine, and as they increase in levels, they become increasingly
+  in touch with the powers of death. However, their desiccated bodies are
+  highly flammable. They also cannot drink.
+
+  Like other undead, mummies are naturally immune to poisons, negative energy
+  and torment; have little warmth left to be affected by cold; and are not
+  susceptible to mutations.
+
+Draconian types
+========================================
+
+Red Draconians
+  feel at home in fiery surroundings. They are bad with ice magic but very
+  proficient with fire. Their scorchingly hot breath will leave a lingering
+  cloud of flame.
+
+White Draconians
+  stem from frost-bitten lands, and are naturally resistant to frost. Their
+  breath is piercing cold. They are versed in ice magic, but bad at fire.
+
+Green Draconians
+  are used to venomous surroundings and breathe clouds of mephitic vapours. They
+  are especially good in the arts of poison and without deficiencies in other
+  magic realms. Later on, they will develop a poisonous stinger.
+
+Yellow Draconians
+  have a sulphurous breath full of corrosive acid, and later gain an acidic bite
+  attack. They are acid resistant, too.
+
+Grey Draconians
+  have no breath weapon, but their bodies are adapted to the water, allowing
+  them to swim. They are proficient with earth magic but bad with air magic, and
+  they also have harder scales than other Draconians.
+
+Black Draconians
+  can unleash huge electrical discharges, and are naturally insulated. They are
+  good at air magic but feel cumbersome with earth magic. Their wings will
+  eventually grow larger, which allows them to fly when combined with their
+  natural skill with air magic.
+
+Purple Draconians
+  are highly adapted to all spellcasting in general, and to hexes in
+  particular. They are a bit better at evoking things than most other
+  Draconians. They can breathe dispelling energy which strips those it hits of
+  their enchantments, and are naturally stronger-willed than other draconians.
+
+Pale Draconians
+  are better at air and fire magic, and have no deficiencies in other schools.
+  They breathe steam and, like their Purple cousins, have a slight advantage at
+  Evocations.

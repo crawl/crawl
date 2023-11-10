@@ -1,0 +1,32 @@
+****************************************
+J. Religion
+****************************************
+
+There are a number of gods, demons and other assorted powers who will accept
+your character's worship, and sometimes give out favours in exchange. You can
+use the '^' command to check the requirements of whoever it is that you worship,
+and if you find religion to be an inconvenience you can always renounce your
+faith (use the 'a' command - but most gods resent being scorned). Further
+details can be seen with '!' while in the '^' screen.
+
+To use any powers which your god deems you fit for, access the abilities menu
+via the 'a' command; god-given abilities are listed as invocations. Many god
+abilities can be 'Q'uivered in order to trigger via the 'f'ire or autofire
+interface.
+
+Depending on background, some characters start out religious; others have to
+pray at an altar to dedicate themselves to a life of servitude. There are altars
+scattered all over the dungeon, and there are rumours of a special temple
+somewhere near the surface.
+
+At an altar, you can enter a god's service by pressing < or >. You'll first be
+given a description of the god, and then be asked if you really want to join.
+To see a list of the standard gods and which of their altars you've seen in your
+current game, press 'Ctrl-O'. You can also learn about all gods by pressing
+'?/G'.
+
+Note that some gods are picky about who can enter their service; for example,
+good gods will not accept demonic or undead devotees.
+
+If you would like to start the game with a religion, choose your background
+from Berserker, Chaos Knight, or Cinder Acolyte.

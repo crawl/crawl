@@ -1,0 +1,255 @@
+****************************************
+D. Exploring the dungeon
+****************************************
+
+Movement
+========================================
+
+You can make your character walk around with the numeric keypad (try both
+Numlock on and off) or the "Rogue" keys (hjklyubn). If this is too slow, you can
+make your character walk repeatedly by pressing Shift and a direction;
+alternatively, press '/' followed by a direction. You will walk in that
+direction until any of a number of things happen: a hostile monster is visible
+on the screen, a message is sent to the message window for any reason, you press
+a key, or you are about to step on anything other than normal floor and it is
+not your first move of the long walk. Note that this is functionally equivalent
+to just pressing the direction key several times.
+
+Another convenient method for moving long distances is described in the section
+on Automated Travel and Exploration below.
+
+Combat
+========================================
+
+The dungeon is a hostile place, and you will likely need to defend yourself. The
+basic case of combat involves melee attacks: if you are adjacent to a monster,
+moving towards that monster will cause you to attack it with a wielded melee
+weapon, or your fists. There are also a wide variety of ways to attack monsters
+that are further away, including polearms (which can reach a tile away), various
+bows, launchers, and throwable items, magical items that can be evoked such as
+wands, spells, and abilities. These are described throughout the rest of this
+document. These are triggered in a variety of ways, but one commonality is that
+all of these can be quivered: the quiver provides quick access to an action that
+can be fired.
+
+Both melee and ranged combat provide shortcuts that autotarget the nearest
+enemy, if there is one available. Your wielded weapon can be triggered by Tab
+("Autofight"), moving towards or attacking the nearest enemy depending on
+whether there is one in range for the weapon. Your quivered action can be
+triggered by Shift-Tab or 'p' ("Autofire"); if the action takes a target the
+nearest enemy will be selected, otherwise the action will be triggered. See
+`Attacking and firing`_ for the full key list related to attacking, quivers, and
+firing.
+
+Resting
+========================================
+
+If you press '5', you will rest until your health or magic return to full. You
+can rest for just one turn by pressing '.' or 's'.
+
+Resting stops if a monster appears or if you are otherwise interrupted.
+
+Examining your surroundings
+========================================
+
+The section of the viewing window which is coloured (with the "@" representing
+you at the centre) is what you can see around you. The dark grey around it is
+the parts of the level which you have visited, but cannot currently see. The 'x'
+command lets you move the cursor around to get a description of the various
+dungeon features, and typing 'v' when the cursor is over a monster or feature
+brings up a short description of that monster, as well as a short list of its
+various strengths, weaknesses, immunities, and any spells or abilities it has.
+This is generally useful with monsters you've never encountered before. You can
+also select monsters and features from a list by pressing 'Ctrl-X'. You can get
+a map of the whole level (which shows where you've already been) by typing 'X'.
+
+You can see the full set of commands available while looking around by pressing
+'?', both in the 'x' and 'X' modes.
+
+Staircases and Portals
+========================================
+
+You can make your way between levels by using staircases, which appear as ">"
+(down) and "<" (up), by pressing the '>' or '<' keys. It is important to know
+that most monsters adjacent to you will follow when you change levels; this
+holds both for hostile and allied monsters. Notable exceptions are zombies
+and other mindless undead, who are too stupid to properly operate stairs.
+
+When taking stairs with an unknown destination, you are guaranteed a chance to
+move before any adjacent monsters. When taking stairs that you've already seen
+the other side of, monsters will be alert and get a chance to move before you.
+
+If you ascend an up staircase on level one, you will leave the dungeon forever;
+if you are carrying the magical Orb of Zot, you win the game by doing this.
+Otherwise, the game ends, and you lose.
+
+Besides the dungeon you start in, Crawl's dungeon has many branches. All of them
+are themed and host opponents of some special sort. It is not mandatory to visit
+any particular branch, but you must explore some of them: progress to the Realms
+of Zot (where the Orb is located) is only possible for adventurers who have at
+least three magical runes of Zot. The bottoms of several branches contain such
+runes.
+
+Occasionally you will find an archway (displayed as "\\" or as an actual arch);
+these lead to special places like shops, themed one-off portals, or special
+branches such as Hell and Pandemonium. You can enter these by typing '<' or '>'.
+A few portals only accept one of '<' and '>'.
+
+Doors and Traps
+========================================
+
+Doors can usually be opened by just walking into them (there is an option to
+disable this); else this can also be done using the 'O' command. They can be
+closed with the 'C' command. Pressing Ctrl plus a direction, or '*' followed by
+a direction, will open/close doors, too.
+
+If there is no door in the indicated space, both Ctrl-direction and
+'*'-direction will attempt to attack any monster which may be standing there
+(this is the only way to attack a friendly creature with melee combat). If there
+is apparently nothing there, you will still attack it, just in case there's
+something invisible lurking around.
+
+The malevolent forces of Zot will attempt to thwart your progress through the
+dungeon, and will occasionally manifest traps to force you into dangerous
+situations. Some traps are visible in advance and can be triggered by monsters
+to unleash their effects on you.
+
+Shops
+========================================
+
+When you visit a shop (by using < or > while standing on one), you are shown
+what the shopkeeper has in stock and can choose what to buy. Unfortunately,
+the shopkeepers all have an exclusive deal with the Guild of Dungeon Procurers
+which prevents them using non-guild labour to obtain stock, so you can't sell
+anything in a shop. (But then, what shopkeeper would buy stolen goods from a
+disreputable adventurer, anyway?)
+
+To purchase one or more items, select them by pressing the letters of the item
+in the shop menu and then press Enter to make the purchase; you can examine
+items before buying them by pressing '!' and then the letter of the item.
+
+If you've lost track of the shops in the dungeon, you can get a list of all the
+shops you've found in the dungeon overview (use 'Ctrl-O').
+
+You can also use the stash search: Hitting 'Ctrl-F' and searching for "shop"
+will list all stores. The stash-search menu allows you travel quickly to a
+particular shop; if you just want to know what's in the shop, you can also
+examine the shop's inventory from the search menu without having to travel all
+the way to the shop.
+
+Some shops are antique stores that sell items of unknown provenance, usually at
+a good discount. The dungeon overview screen displays these with yellow glyphs.
+
+If you're short on gold for some particularly interesting commodity, you can
+place it onto your shopping list. The game will interrupt you when you have
+collected enough gold to finally purchase an item on that list. You can read the
+shopping list in the game with '$'.
+
+Automated Travel and Exploration
+========================================
+
+Crawl has an extensive automated travel system: pressing 'G' (or also 'Ctrl-G')
+lets you choose any dungeon level; the game will then take the shortest path to
+reach this destination. You can also use autotravel on the level map ('X'): Move
+the cursor to the place where you want to go and hit Enter. There are several
+shortcuts when choosing destinations: For example, try '<' and '>' to quickly
+reach the staircases.
+
+When your autotravel gets interrupted, Crawl will remember the previous
+destination. Hitting 'G' or 'Ctrl-G' again and following with Enter puts the
+cursor on that square. See Appendix `4. List of Keys and Commands`_ for all
+commands and shortcuts in level-map mode, or press 'G?' or 'X?' within the game.
+
+Another use of autotravel is exploration: 'o' makes your character move to the
+nearest unexplored area. Note that this algorithm does not attempt any
+optimisation by default. By manual exploration you can save turns, but
+auto-explore will usually save real time.
+
+Stashes and Searching
+========================================
+
+Since you can only carry 52 items, you will occasionally want to stash things
+away (by dropping them with the 'd' command). When you want to search for
+something in your stashes, you can do this with the Find command 'Ctrl-F'. The
+parser even accepts regular expressions, although you will mostly just need
+strings like 'mutation', 'heal wounds', etc. You will be presented with a list
+of all places where objects matching the search are (or have been) located; you
+can then travel there or examine the pile. The Find command will also search in
+shop inventories. Furthermore, you can search skills like 'long blades' (this
+will find all weapons training the long blades skill) or general terms like
+'shop', 'altar', 'portal', 'artefact', etc. You can get help on finding by
+pressing '?' at the prompt.
+
+The Goal
+========================================
+
+Your goal is to locate the Orb of Zot, which is held somewhere deep beneath the
+world's surface. The Orb is an ancient and incredibly powerful artefact, and the
+legends promise great things for anyone brave enough to extract it from the
+fearsome Dungeon. Some say it will grant immortality or even godhood to the one
+who carries it into the sunlight; many undead creatures seek it in the hope that
+it will restore them to life. But then, some people will believe anything. Good
+luck!
+
+Zot
+========================================
+
+No one knows who or what Zot is: demon, god, wizard, something else entirely?
+But adventurers seeking the Orb will, in turn, be hunted by Zot. Even a moment's
+contact with Zot is enough to permanently damage one's health.
+
+Zot is very slow moving, and can only sense adventurers once they've spent an
+inordinately long time in one area of the dungeon. Even once this happens,
+adventurers will have plenty of warning to either descend to new depths in the
+area (diffusing Zot's attention once more) or to leave the area entirely.
+
+The Abyss is beyond Zot's comprehension, and adventurers there are safe from
+it (albeit subject to many other hazards). The Hells, along with their
+Vestibule, are a single area as far as Zot is concerned. Rumours claim there
+are ways to escape Zot's pursuit forever, but what magics could be mighty
+enough to forestall such an implacable entity?
+
+Seeded play
+========================================
+
+Crawl dungeons are determined by a "seed" number used to initialise the game's
+random number generator. You may either let the game choose a seed randomly,
+or specify a seed; if you choose a seed this puts the game in "Seeded" mode,
+which is scored separately. Playing games with the same seed value, as long as
+the game version is constant, should (within certain parameters) lead to the
+same dungeon. The entire connected dungeon will be determined by the game
+seed, including dungeon layout, monster placement, and items. Portal vaults
+and chaotic zones such as the Abyss are not guaranteed to be the same, and the
+placement of rare unique artefacts may vary depending on certain player
+actions.
+
+To set a game seed, use the "Choose game seed" option from the main menu; you
+can also use the 'game_seed' rc file option, or the '-seed' command line
+option. In offline games you can view your game's seed with '?V' as well as in
+a character file; in online games a randomly chosen seed will only be shown to
+you after finishing the game.
+
+If you find that the same seed generates distinct parts of a dungeon on the
+same or different devices, please report it as a bug. However, keep in mind
+that upgrading your save game between multiple versions of crawl will
+naturally lead to seed divergence. When playing offline, if you would like to
+ensure that your game can be upgraded without divergence, you can set
+'pregen_dungeon = full' in your options file. (This will also ensure
+completely stable unique artefact placement.) On the other hand, to completely
+disable incremental pregeneration, you can set 'pregen_dungeon = false'.
+
+Further Help
+========================================
+
+To access Crawl's help menu, press '?'. To get the list of all commands, press
+'?' again. A different, more verbose description of the commands also appears in
+Appendix `4. List of Keys and Commands`_ of this text. Various other help texts
+are available as well, including this manual. You can also read the logbook from
+there by pressing ':'. Note that several commands have their own help screens,
+among them are targeting ('f'), level map ('X'), travel ('G' or 'Ctrl-G') and
+searching ('Ctrl-F'); again, press '?' when asked for input.
+
+If you don't like the standard keyset (either because some keys do not work
+properly, or because you want to decrease the amount of typing necessary), you
+can use keymaps and macros. See macros_guide.txt in the docs/ directory, or read
+it from the in-game help menu.

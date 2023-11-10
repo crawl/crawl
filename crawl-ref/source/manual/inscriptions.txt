@@ -1,0 +1,119 @@
+****************************************
+5. Inscriptions
+****************************************
+
+You can use the { command to manually inscribe items; alternatively, you can
+also inscribe when viewing items from the inventory (done by pressing the item's
+letter). This adds a note in curly braces to the item description. Besides
+simply allowing you to make comments about items, there are several further
+uses.
+
+Inscriptions as shortcuts
+========================================
+
+You can use inscriptions to define shortcuts for easy access to items,
+regardless of their actual inventory letter. For example, if an item's
+inscription contains "@w9", you can type 'w9' in order to wield it. Instead of
+the 9, any other digit works as well. And instead of 'w'ield, any other command
+used for handling items can be used: 'r'ead, 'q'uaff, e'v'oke, 'f'ire, etc.
+Using "@*9" will make any action command followed by '9' use this item.
+
+Safety inscriptions
+========================================
+
+Inscriptions containing the following strings affect the behaviour of some
+commands:
+
+!*
+  Prompt before any action using this item.
+
+!w
+  Prompt before wielding and unwielding this item.
+
+!a
+  Prompt before attacking when wielding this item. Non-weapons and ranged
+  weapons prompt automatically. Also, if you answer 'y', you won't be prompted
+  again until you switch weapons. To reset this prompt while keeping the
+  current weapon wielded, use 'w' and select the current weapon.
+
+!d
+  Prompt before dropping this item.
+
+!q
+  Prompt before quaffing this item.
+
+!r
+  Prompt before reading this item.
+
+!f
+  Prompt before firing or throwing this item.
+
+!W
+  Prompt before wearing this armour.
+
+!T
+  Prompt before taking off this armour.
+
+!P
+  Prompt before putting on this jewellery.
+
+!R
+  Prompt before removing this jewellery.
+
+!v
+  Prompt before evoking this item.
+
+=g
+  Pick this item up automatically if autopickup is on.
+
+=f
+  Exclude this item from automatic quivering.
+
+\+f
+  Include this item in automatic quivering.
+
+=F
+  Exclude this item when cycling quiver actions.
+
+\+F
+  Include this item when cycling quiver actions.
+
+!Q
+  Prompt before explicitly quivering this item. Entails =F,=f.
+
+=R
+  Do not offer to swap out this ring if another one can be removed instead.
+
+!D
+  Prompt before performing an action that might destroy this item. It won't
+  protect against lava or deep water accidents.
+
+You can use the autoinscribe option to have some items automatically inscribed.
+See options_guide.txt for details. Some examples are:
+
+  autoinscribe = stone:=f
+  autoinscribe = wand of heal wounds:!v
+
+Artefact autoinscriptions
+========================================
+
+Artefacts are automatically inscribed with abbreviated descriptions of their
+properties. The inscriptions use the following general ideas:
+
+rXXX
+  signifies a resistance; e.g. rF+ (a level of fire resistance), rN+++ (three
+  levels of negative energy resistance), rC- (cold vulnerability).
+
+\+XXX
+  signifies an ability you can evoke via the 'a' command. E.g. +Inv (evocable,
+  temporary invisibility).
+
+\-XXX
+  signifies a suppressed ability. E.g. -Cast (spellcasting forbidden).
+
+XX+6
+  means a boost to some numerical stat (similar with XX-2, etc.). E.g. Slay+3
+  (+3 to accuracy and damage of melee and ranged combat).
+
+For more information, examine an item (by selecting it in your (i)nventory);
+each property of an artefact will be listed and described.

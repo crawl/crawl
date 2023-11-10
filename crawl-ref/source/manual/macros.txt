@@ -1,0 +1,33 @@
+****************************************
+M. Macros, options, performance
+****************************************
+
+Crawl supports redefining keys via key maps. This is useful when your keyboard
+layout makes some key awkward to use. You can also define macros: these are
+command sequences which can make playing a great deal more convenient. Note that
+mapping 'a' to some other key will treat almost all pressings of 'a' in that new
+way (including dropping and wielding, etc.), so is not recommended. Macroing 'a'
+to some other key will only change the command key 'a'.
+
+You can set up key maps and macros in-game with the '~' key ('Ctrl-D' will also
+work); this also allows for saving all current key bindings and macros.
+Alternatively, you can directly edit the macro.txt file. For more information on
+both and for examples, see macros_guide.txt.
+
+Crawl supports a large number of options that allow for great flexibility in the
+interface. They are fully documented in the file options_guide.txt. The options
+themselves are set in the file ~/.crawlrc (for UNIX systems - copy over init.txt
+to ~/.crawlrc) or init.txt (for Windows).
+
+Several interface routines are outsourced to external Lua scripts. The standard
+distribution has them in the dat/clua/ directory. Have a look at the single
+scripts for short descriptions.
+
+Generally, Crawl should run swiftly on all machines (it compiles out of the box
+for Linux, Windows, OS X, and, to some lesser extent, other Unices). If, for
+some reason, you find Crawl runs unacceptably slowly on your machine, there are
+a few measures which may improve the situation:
+
+  - set travel_delay = -1 to avoid screen redraws during travel (this might be
+    especially useful if playing on a remote server)
+  - try playing in console mode rather than tiles

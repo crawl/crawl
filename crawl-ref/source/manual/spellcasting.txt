@@ -1,0 +1,59 @@
+****************************************
+H. Spellcasting
+****************************************
+
+Magical spells are a very important part of surviving in the dungeon. Every
+character can make use of magical spells.
+
+There are many skills related to magic, the principal one being Spellcasting.
+Spellcasting determines the number of Magic Points available; it also helps to
+cast any spell, though less so than schools associated with a spell. Next, there
+are several general magical schools (Conjuration, Hexes, Summoning, Necromancy,
+Translocation and Transmutation) as well as several elemental schools (Fire,
+Ice, Air and Earth) and, finally, Poison. A particular spell can belong to up
+to three schools. Being skilled in a spell's schools improves the casting
+chance and the power of that spell.
+
+Spells are stored in books, which you will occasionally find in the dungeon.
+Once you have picked up a book and added its contents to your spell library, you
+can memorise a spell using the 'M' command.
+
+In addition to picking up new spells, your character may also wish to get rid of
+old ones by reading a scroll of amnesia, which will let you pick a spell to
+forget.
+
+Each spell has a level. A spell's level denotes the amount of skill required to
+use it, the MP cost of casting it, and indicates how powerful it may be. You
+can only memorise a certain number of levels of spells; type 'M' to find out
+how many. When you gain experience levels or advance the Spellcasting skill,
+your maximum increases; you will need to save up for several levels to memorise
+the more powerful spells.
+
+There are two ways to activate memorised spells: by "quivering" them and using
+the fire interface, or directly by pressing 'z' (for Zap). To choose a spell
+for the quiver, use 'Q', or '(' and ')' to cycle among possible actions. Press
+'f' to enter the targeting interface, or shift-tab / 'p' to autofire a
+quivered spell at the nearest monster.
+
+Use 'I' to display a list of all memorised spells without actually casting one.
+The spells available are labelled with letters; you are free to change this
+labelling with the '=' command. You can assign both lowercase and uppercase
+letters to spells. Some spells, for example most damage dealing ones, require a
+target. See the next section for details on how to target.
+
+Most spells have caps on their effects: no matter how intelligent and proficient
+you are, there is a limit to the damage you can achieve with a Magic Dart. In
+general, it is a good idea to look at the output of the 'I' and 'II' screens to
+get a picture on your casting abilities. This is especially useful if you're
+about to change armour or rings.
+
+High level spells are difficult to cast, and you may miscast them every once in
+a while (resulting in a waste of magic and possibly dangerous side-effects).
+Your chance of failing to cast a spell properly depends on your skills, your
+intelligence, the level of the spell and whether you are wearing heavy armour.
+The chance of miscasting a spell is displayed on the spell screen, and coloured
+based on severity (yellow for moderate damage, light red for major
+damage, red for extreme damage, and magenta for potentially lethal damage).
+
+Be careful of magic-using enemies! Some of them can use magic just as well as
+you, if not better, and often use it intelligently.

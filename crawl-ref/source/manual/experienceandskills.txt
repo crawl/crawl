@@ -1,0 +1,52 @@
+****************************************
+E. Experience and skills
+****************************************
+
+When you kill monsters, you gain experience points (XP). When you get enough XP,
+you gain an experience level, making your character more powerful. As they gain
+levels, characters gain more health, magic, and spell levels.
+
+Additionally, the experience you gain is used to train your skills. These skills
+represent proficiency with all areas of endeavour an ambitious adventurer might
+need in the dungeons. They range from different weapon skills (both for close
+and ranged combat) to many magical skills and several additional activities like
+Dodging or Stealth. See Appendix `3. List of Skills`_ for a detailed
+description of all skills present in Crawl. The ease with which a character
+learns a skill depends solely on species. These aptitudes are displayed when
+viewing your skills, and a full table can be viewed in aptitudes.txt (also from
+the help screen during play via '?%').
+
+You can see your character's skills by pressing the 'm' key; the higher the
+level of a skill, the better you are at it. All characters start with a few
+skills already trained (determined by their background), those which are not
+present have to be learned from scratch. Each skill can go up to 27.
+
+The skill screen allows you to change which skills are exercised and at what
+speed. Note to new players: it is generally not necessary to finetune the skill
+selection.
+
+If you want to modify skill selection, here is how:
+
+There are two ways to assigning skills to practise: one is an automatic mode,
+which puts experience points into the skills you have used recently. The other
+one is a manual mode, where you specifically select the skills to train. You can
+switch between the modes by pressing '/' in the character skill screen ('m');
+also be sure to read that screen's help text should you want to tweak your
+skillset.
+
+You can elect to either not practise a particular skill or to focus on it by
+selecting it once or twice in the skill screen.
+
+Dark grey skills will not be trained, so that the skill will remain static and
+no experience points will be used to increase it. As a consequence, more
+experience will be spent on your other skills (and thus they will increase more
+quickly). Note that you cannot deselect all skills; at least one skill must be
+actively exercised.
+
+Highlighted skills are focused on and will use a higher proportion of available
+experience. You can highlight as many skills as you like, though obviously if
+all skills being trained are highlighted there will be no net effect.
+
+Occasionally you may find a manual of a skill which allows you to make quick
+progress in this area. When you pick it up, experience used to practise the
+given skill will have twice the usual effect for a while.

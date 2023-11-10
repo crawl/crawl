@@ -1,0 +1,104 @@
+****************************************
+B. Starting screen
+****************************************
+
+At the Crawl start screen, you will be presented with various game modes, a list
+of saved games (if any), and will be prompted to type a name for your character.
+You can navigate the game modes and saved games with the cursor 'up' and 'down'
+arrow keys.
+
+Game modes are:
+
+Dungeon Crawl
+  Start a standard game of Crawl.
+
+Choose game seed
+  Start a standard game of Crawl with a custom seed (see `Seeded play`_ below).
+
+Tutorial for Dungeon Crawl
+  Start one of several specialised tutorials to learn how to play.
+
+Hints Mode for Dungeon Crawl
+  Start a standard game of Crawl, modified to provide help as you play.
+
+Dungeon Sprint
+  Start one of several single-map challenge mode games of Crawl.
+
+Instructions
+  View the instructional help text you are currently reading.
+
+The Arena
+  Initiate an automated fight mode between two specified combatant groups.
+
+High Scores
+  View scores for prior games played, sorted by decreasing score.
+
+Pressing 'enter' immediately after typing your name will select standard Dungeon
+Crawl mode, and you will be prompted to select a species and background. Names
+are unique; entering a name from the saved game list will continue that saved
+game. If you select a game mode instead of entering a name, you will eventually
+be prompted to enter a name.
+
+You can choose species and background in either order or randomise any
+combination if you would rather have the game decide for you. If both are
+random, you will be prompted to confirm the chosen combination before the game
+starts.
+
+The choice of species affects several important characteristics, in particular
+the speed at which you learn different skills. This is very important, and helps
+to clearly differentiate the many available species. The following factors are
+species-dependent:
+
+Major:
+
+- The amount of health you get each level
+- Your rate of skill advancement
+- Your initial primary attributes (this also depends on background)
+- Various special abilities, powers and limitations
+
+Minor:
+
+- Your rate of level advancement
+- Occasional bonus points added to some primary attributes
+- The amount of magic points you get each level
+- Your innate willpower, your resistance to subtle magic
+- Your initial equipment (this also depends on background)
+
+.. note:: Humans are the average to which all other species are compared.
+
+The choice of character background is definitely less decisive than that of
+species in Crawl. Basically, the background determines what the character has
+learned prior to entering the dungeon (i.e. the starting skills), and also helps
+determine equipment at start.
+
+You will notice that a different set of backgrounds will be recommended (white)
+for each species. Although you are free to pick any background with almost any
+species (the only restrictions are religious backgrounds where some species
+are not permitted to worship certain gods, or backgrounds where the starting
+equipment is completely unusable by a given species), looking at the recommended
+combinations should give you a rough impression of the weaknesses, strengths,
+and roleplaying flavour of the different species.
+
+For some backgrounds, you must pick a starting weapon before starting the game.
+
+When you start a new character (or load an old one) and want to get a rough
+impression, you may read the full character dump with ?# or examine it with the
+following commands:
+
+A
+  shows any peculiarities like unusual speed or body parts
+
+m
+  shows your skills and lets you disable (or focus) training as desired
+
+i
+  lists equipment and items
+
+^
+  displays information on your god, should you have started with a religion
+
+%
+  gives a general, if terse, overview of your gear and most attributes
+
+Ctrl-O
+  gives an overview of the parts of the dungeon you have discovered so far

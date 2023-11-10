@@ -1,0 +1,177 @@
+****************************************
+2. List of character backgrounds
+****************************************
+
+In your quest, you play as one of a large number of different types of
+characters. Although each has its own strengths and weaknesses, some are
+definitely easier than others, at least to begin with. The best backgrounds for
+a beginner are probably Gladiators and Berserkers; if you really want to play a
+magician, try a Conjurer or a Hedge Wizard. However, not all species are equally
+well suited for all backgrounds. After you have selected a species, the background
+selection menu will show backgrounds generally considered to be more accessible
+for a species in a brighter colour.
+
+Each background starts out with a different set of skills and items, but from
+there you can shape them as you will. Note that due to peculiarities of size or
+body shape, some species-background combinations start with a different
+inventory than described here.
+
+Warrior backgrounds
+===================
+
+Warriors are experienced at using physical weapons and defending themselves.
+
+Fighters
+  Fighters usually start with a good weapon of their choice, a suit of medium
+  armour, a shield, and a potion of might.
+
+Gladiators
+  The Gladiator has been trained to fight in the ring. They start with a good
+  weapon of their choice, light armour, headgear and some throwing weapons and
+  nets.
+
+Monks
+  Monks have a head start with the divine. They start with only a simple weapon
+  of their choice, a potion of divine ambrosia, a robe, and an orb of light to
+  guide them. However, when they worship a god for the first time, their
+  spiritual training gives them a piety boost.
+
+Hunters
+  The Hunter is a type of fighter who specialises in missile weapons. A Hunter
+  starts with a shortbow, a scroll of butterflies, and a set of leathers.
+
+Brigands
+  A Brigand is a shady character who is especially good at killing, using
+  daggers or darts. They start with a dagger, a robe and cloak, poisoned darts,
+  and a few deadly and rare curare darts.
+
+Zealot backgrounds
+==================
+
+Zealots start the game already worshipping a god.
+
+Berserkers
+  Berserkers are hardy warriors who worship Trog the Wrathful, from whom they
+  get the power to go berserk (as well as a number of other powers, should they
+  prove worthy), but who forbids the use of spell magic. They enter the Dungeon
+  with a weapon of their choice, and dressed in animal skins.
+
+Chaos Knights
+  The Chaos Knight is a plaything of Xom, subject to the god's constantly
+  changing moods. Xom is a very unpredictable (and possibly psychotic) entity
+  who rewards or punishes according to whim. They begin with a lightly enchanted
+  leather armour, a simple weapon of their choice, and a scroll of butterflies.
+
+Cinder Acolytes
+  Cinder Acolytes serve Ignis, the Dying Flame, who grants them incredible
+  power over fire... but there is only so much fire left to draw on, and once
+  it burns out, acolytes may need to abandon Ignis. They start with a robe,
+  a choice of flaming weapons, and the spell Scorch.
+
+Adventurer backgrounds
+======================
+
+Adventurers have varied and idiosyncratic skills that they have picked up in
+their travels.
+
+Artificers
+  Artificers have built, bought or burgled an assortment of magic wands to
+  help them through the early Dungeon. Wands have a limited number of uses,
+  though, so they'll want to upgrade from their club ASAP.
+
+Shapeshifters
+  Shapeshifters use talismans to shift their body into different forms,
+  granting them uncanny power but making them unable to use some items.
+  They enter the dungeon with two talismans and a potion of lignification.
+
+Wanderers
+  Wanderers are "jacks-of-all-trades, masters of none". They start the game
+  with a random assortment of skills, items, and maybe spells.
+
+Delvers
+  Delvers have, through some mishap, found themselves several floors below the
+  surface of the Dungeon. They're equipped with a wide variety of magical escape
+  tools, and are well advised to use them to travel to earlier dungeon floors as
+  quickly as possible.
+
+Warrior-mage backgrounds
+========================
+
+Warrior mages begin the game with a mix of physical combat and magic skills,
+though usually excel at neither. They start with a library of spells and
+(usually) some way of defending themselves.
+
+Warpers
+  Warpers specialise in translocation magic, and are experts in travelling long
+  distances and positioning themselves precisely and use this to their advantage
+  in melee or missile combat. They start with a scroll of blinking, a selection
+  of translocation spells, some dispersal darts, a simple weapon of their choice,
+  and leather armour.
+
+Hexslinger
+  Hexslingers use debilitating spells to assist their ranged attacks. They
+  begin the game with a sling, some spells to support its use, a scroll of
+  poison to keep foes at a distance, and a robe.
+
+Enchanters
+  The Enchanter specialises in the subtle art of hexes. Instead of directly
+  damaging foes, hexes disable and debilitate them, allowing the Enchanter to
+  finish the helpless creatures in combat. The Enchanter begins with a lightly
+  enchanted dagger, a robe, potions of invisibility, and a selection of hexes.
+
+Reaver
+  Reavers have an assortment of powerful, but highly situational, conjurations
+  to draw upon when their skill in melee is insufficient. They start with a
+  simple weapon of their choice and leather armour.
+
+Mage backgrounds
+================
+
+A mage is not an available character background by itself, but a type of
+background, encompassing Hedge Wizards, Conjurers, Summoners, Necromancers,
+various Elementalists and Venom Mages. Mages are the best at using magic.
+Among other things, they start with a robe, a potion of magic, and spells
+which should see them through the first several levels of the Dungeon.
+
+Hedge Wizards
+  A Hedge Wizard is a magician who does not specialise in any area of magic.
+  Hedge Wizards start with a variety of magical skills and with Magic Dart
+  memorised, from a large library of varied low-level spells. They also get a
+  wizard hat.
+
+Conjurers
+  The Conjurer specialises in the violent and destructive magic of conjuration
+  spells. Like Wizards, the Conjurer starts with the Magic Dart spell, in their
+  case from a library of destructive conjurations.
+
+Summoners
+  The Summoner specialises in calling creatures from this and other worlds to
+  give assistance. Although they can at first summon only very weak creatures,
+  the more advanced summoning spells allow summoners to call on such powers as
+  hydras and dragons.
+
+Necromancers
+  The Necromancer is a magician who specialises in the less pleasant side of
+  magic. Necromantic spells are a varied bunch, but many involve some degree of
+  risk or harm to the caster.
+
+Elementalists
+  Elementalists are magicians who specialise in one of the four types of
+  elemental magic: air, fire, earth or ice.
+
+  Fire Magic
+    tends towards indiscriminate, wide-range destructive conjurations and
+    starting fires.
+
+  Ice Magic
+    offers diffuse, subtle effects, both defensive and offensive.
+
+  Air Magic
+    provides powerful but difficult to direct spells.
+
+  Earth Magic
+    offers direct effects, some destructive and some debilitating.
+
+Venom Mages
+  Venom Mages specialise in poison magic, which is extremely useful in the
+  shallower levels of the Dungeon where few creatures are immune to it.

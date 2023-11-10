@@ -1,0 +1,39 @@
+****************************************
+A. Overview
+****************************************
+
+Crawl is a fun game in the grand tradition of similar games like Rogue, Hack and
+Moria. The objective is to travel deep into a subterranean cave complex and
+retrieve the Orb of Zot, guarded by many horrible and hideous creatures.
+
+If you have never played Crawl (or a similar game) before, select the tutorial
+from the starting menu. The tutorial explains the interface in five easy
+lessons. Once you're familiar with the controls, you may want to play a few
+games using hints mode.
+
+Detailed instructions for playing Crawl follow. To simplify this manual, we
+assume you're using the standard distribution and you've not changed the default
+options. If you don't want to read the whole manual and prefer a short summary
+of the important points, review the quick-start guide file (quickstart.txt) and
+learn as you play.
+
+You can also read these documents while playing Crawl by hitting '?' at the help
+menu. A list of frequently asked questions about gameplay and design can be
+accessed by pressing '?Q' in the game.
+
+While Crawl is strictly a single player game, you can interact with others over
+a server. Connecting to a server opens several interesting options.
+
+You can:
+
+- watch other players and even communicate with them
+- view your past games or those of others
+- battle ghosts of other players
+- compete using a common score list
+- take part in the semiannual tournament
+- play the most recent development version
+
+See the Crawl website to find an online server, links to download the game for
+offline play, and other community resources:
+
+  http://crawl.develz.org/

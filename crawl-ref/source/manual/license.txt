@@ -1,0 +1,77 @@
+****************************************
+L. Licence, contact, history
+****************************************
+
+See licence.txt for information about Crawl's licensing. Most of the game's
+components are licensed under version 2 or later of the GNU General Public
+License; those that aren't are under compatible licenses.
+
+Disclaimer
+  This software is provided as is, with absolutely no warranty express or
+  implied. Use of it is at the sole risk of the user. No liability is accepted
+  for any damage to the user or to any of the user's possessions.
+
+Contact and community information
+========================================
+
+Crawl's homepage is at:
+
+  http://crawl.develz.org
+
+Use this page for direct links to downloads of the most recent version. You can
+also submit bug reports on the Github issue tracker at:
+
+  https://github.com/crawl/crawl/issues
+
+If you'd like to discuss Crawl, a good place to do so is the #dcss channel
+of the Roguelikes Discord:
+
+  https://discord.gg/GtT7xMe
+
+There's also an active subreddit for game discussion:
+
+  https://www.reddit.com/r/dcss/
+
+In both of these communities, topics related to this game usually meet a warm
+response, including tales of runes seized, victories (especially first
+victories), and sad stories of deceased characters. There are also usually
+experienced players around ready to give advice on equipment choices, tight
+spots, or other dilemmas. The Discord has a relay to the Sequell IRC bot that
+provides helpful information and statistics about the game.
+
+Some players frequent the #crawl channel on the Libera IRC network, which is
+also the home of Sequell and other info bots. For those interested in game
+development, see the #crawl-dev channel, which is frequented by many members of
+the game's development team.
+
+History
+========================================
+
+Crawl began as Linley's Dungeon Crawl, created in 1995 by Linley Henzell.
+Linley based Crawl on popular roguelikes of the time, namely Moria, Hack, and
+NetHack, also taking inspiration from traditional RPGs like Ultima IV. The
+object of your quest in Crawl, the Orb of Zot, was taken from Wizard's Castle,
+a text adventure written in BASIC.
+
+Linley produced Crawl versions up to 3.30, released in March 1999. Further work
+was then carried out by a group of developers who released 3.40 in February
+2000. Of these developers, Brent Ross emerged as the single maintainer,
+producing versions until 4.0 beta 26 in 2002. Brent released an alpha version
+4.1 in August 2005, which vastly overhauled the codebase and reworked many of
+the game's aspects, but also considerably increased its difficulty. By this
+point, Brent no longer had enough free time to develop Crawl. Hence Darshan
+Shaligram, who had previously contributed many UI improvements, recruited
+longtime player Erik Piper to start a new project and continue development.
+
+Darshan and Erik aimed to incorporate ideas from the 4.1 alpha and produce a
+more balanced an enjoyable game. Calling their project "Dungeon Crawl: Stone
+Soup" in reference to their collaborative process, they pulled many 4.1
+improvements into the 4.0 beta 26 codebase, play-testing and adjusting the
+results. Dungeon Crawl: Stone Soup version 0.1 was released to USENET in
+September 2006, with many additional developers subsequently joining the team.
+See Darshan's own account of the project's creation here:
+
+  https://crawl.develz.org/wordpress/the-dawn-of-stone-soup
+
+The development of Crawl proceeds to this day, with a team of many developers
+and hundreds of contributors.

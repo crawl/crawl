@@ -1,0 +1,147 @@
+****************************************
+C. Attributes and stats
+****************************************
+
+The stat area to the right of the playing map shows a lot of information. It
+starts with the character's name and title (determined by the character's
+highest skill), followed by a line listing the species. If the character
+worships a god, the name of the deity is also listed in the second line,
+together with an indicator of piety. Below these two lines follow a lot of
+numbers. These describe different aspects of the character.
+
+Health
+  A measure of life force. Synonymous with hit points and sometimes abbreviated
+  as HP. You die if your health drops to zero or less (although you can die in
+  other ways, too). The main screen shows both your current and maximum health.
+  Usually, you regain health slowly over time. Pressing '5' or Shift-Num-5 lets
+  you wait for a longer period.
+
+Magic
+  A measure of magic or other intrinsic power. This is used primarily for
+  spellcasting, but is sometimes also used for the evoking and invoking of many
+  other special abilities. They are displayed in the same way as health;
+  nothing bad happens if these drop to zero, except, of course, that you can't
+  cast any spells. Resting also restores your reserves of magic.
+
+Next come your defences. For all of them, more is better.
+
+Armour Class
+  Abbreviated to "AC". Your AC reduces the amount of damage you suffer from
+  most attacks (with a few rare exceptions), and provides some guaranteed
+  minimum protection against damage from melee attacks.
+
+Evasion
+  Abbreviated to "EV". This helps you avoid being hit by unpleasant things (but
+  will not reduce the amount of damage you suffer if you do get hit).
+
+Shield
+  Abbreviated to "SH". This number is a measure of how good your shield (if any)
+  is at blocking attacks.
+
+Your character's primary attributes are Strength, Intelligence and Dexterity:
+
+Strength
+  Abbreviated to "Str". Increases your damage with melee weapons (except for long
+  and short blades), with unarmed combat, and with throwing weapons. Reduces
+  penalties from wearing shields or heavy armour.
+
+Intelligence
+  Abbreviated to "Int". Affects your odds of successfully casting spells and how
+  powerful those spells are.
+
+Dexterity
+  Abbreviated to "Dex". Increases your accuracy with melee and ranged weapons,
+  and your damage with ranged weapons and long and short blades. Significantly
+  affects your ability to dodge attacks aimed at you, your effectiveness with
+  shields, your stealth, and your effectiveness when stabbing unaware enemies.
+
+These primary attributes grow permanently from gaining levels, and may
+increase or decrease temporarily from mutations or while using certain
+artefacts or abilities. Upon gaining levels 3, 9, 15, etc., you may choose an
+attribute to raise by two points. Most species gain additional attributes at
+some levels, with the frequency and the attribute to be increased determined by
+species.
+
+If any attribute drops to zero for some reason, you will experience very
+unpleasant side-effects, being slowed and suffering some stat-specific
+negative effects. These effects will persist for a short while even after the
+attribute is restored.
+
+Finally some additional information about your character and your progress
+through the dungeon is displayed.
+
+Experience Level
+  Abbreviated to "XL". Starting characters have experience level 1; the highest
+  possible level is 27. Gaining a level nets additional health and magic points,
+  and will grant spell slots and sometimes primary attributes.
+
+Place
+  This shows the branch you are currently in, as well as the level within the
+  branch. The starting branch is called Dungeon, so that the place information
+  will read "Dungeon:1" for a new character.
+
+Noise
+  This is a coloured bar indicating the loudness of noise that you heard on your
+  last turn. The colour provides a rough guide to how far away the noise it
+  indicates might be audible. If the bar is gray, the sound is less likely to
+  be audible outside of your line of sight (at least in an open area); if it is
+  yellow, the sound is likely to be audible outside of your line of sight; and
+  if it is red, the sound will be audible at a substantial distance. If the bar
+  turns magenta, you have made one of the loudest noises in the dungeon. N.b.:
+  terrain can reduce or block the spread of noise.
+
+Time
+  This indicates the amount of time that has passed since entering the dungeon,
+  and also displays in brackets the amount of time that your previous action took.
+  Most actions take 1.0 units of time, but certain actions are particularly slow
+  or quick (such as changing armour and swapping weapons respectively), and other
+  actions can vary in time taken depending on your status (such as attacking with
+  different weapons and at different skill levels).
+
+There are some additional stats that aren't as important on a turn to turn basis
+and thus aren't listed in the main stats area. They can easily be checked with
+the '@' or '%' commands, though.
+
+Willpower
+  Affects your ability to resist the effects of enchantments and similar
+  magic directed at you. Has no effect on direct damage dealt by magic,
+  just on more subtle effects. Although your willpower increases with your
+  level to an extent determined by your character's species, the creatures
+  you will meet deeper in the dungeon are better at casting spells, and are
+  more likely to be able to affect you. You can get a rough idea of your
+  current Will by pressing '%'.
+
+Size
+  Different species have different sizes: Spriggans and Felids are very small;
+  Kobolds are small; Ogres and Trolls are large; Nagas and Armataurs are large
+  with a medium torso; all other species are medium-sized. Many talismans will
+  change your size. Size affects your evasion: the smaller your character, the
+  more evasive it is. On the other hand, characters of larger than medium size
+  do not suffer the usual attack penalties when standing in shallow water.
+  Characters of smaller than medium size will have problems with some larger
+  weapons. Very small characters and large characters are not able to use most
+  types of armour. Players and monsters can only constrict foes of the same size
+  or smaller. In the dungeon you can also meet tiny and giant foes.
+
+Stealth
+  High stealth allows your character to move through the dungeon undetected.
+  It is affected by your species, dexterity, Stealth skill, and the encumbrance
+  of your body armour. Your current Stealth level can also been seen by pressing
+  '@' or '%'.
+
+There are many ailments or enchantments that can temporarily befall you. These
+are noted in the stats area below the experience line. Many of them are
+self-explanatory, like Pois or Slow. Many others, however, can be subtle, and
+their effects can be examined by pressing '?/T' and searching for the name of
+status effect.
+
+Monsters within your field of vision are listed on a special panel, the monster
+list. Single monsters also get indicators of their health status in the form of
+a coloured box, and also on effects they enjoy or suffer from. If there are
+many monsters in view, the extended monster list can be displayed with
+'Ctrl-X'. Within target mode you can directly target single monsters by use of
+the monster list by using 'Ctrl-X'.
+
+Sometimes characters will be able to use special abilities, e.g. the Naga's
+ability to spit poison or the magical power to turn invisible granted by a
+scarf of invisibility. These are accessed through the 'a' command.

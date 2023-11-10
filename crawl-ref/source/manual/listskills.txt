@@ -1,0 +1,143 @@
+****************************************
+3. List of skills
+****************************************
+
+Here is a description of the skills you may have. You can check your current
+skills with the 'm' command, and therein toggle between progress display and
+aptitude display using '*'. You can also read the table of aptitudes from the
+help menu using '?%', and during character choice with '%'.
+
+Fighting skills
+========================================
+
+Fighting is the basic skill used in ranged and melee combat, and applies no
+matter which weapon your character is wielding (if any). Fighting is also the
+skill that determines the amount of health your character gains as they
+increase in levels (note that this is calculated so that you don't get a long
+run advantage by starting out with a high Fighting skill). Unlike the specific
+weapon skill, Fighting does not change the speed with which you make your
+attacks.
+
+Weapon skills affect your ability to fight with specific melee weapons. Weapon
+skills include:
+
+  * Short Blades
+  * Long Blades
+  * Maces &amp; Flails
+  * Axes
+  * Staves
+  * Polearms
+
+If you are already good using a class of weapons, say Long Blades, you'll get
+a bonus to using similar weapons, like Short Blades; this is called
+crosstraining and is shown in blue in the skill menu. Similar types of weapons
+are:
+
+  * Short Blades and Long Blades
+  * Maces &amp; Flails and Axes
+  * Polearms and Axes
+  * Staves and Polearms
+  * Staves and Maces &amp; Flails
+
+Being good at a specific weapon improves the speed with which you attack with it.
+Both the base speed and the best (lowest) possible speed are displayed in the
+inventory entry for a weapon. Although lighter weapons are easier to use
+initially, as they strike quickly and accurately, heavier weapons increase in
+damage potential very quickly as you improve your skill with them. You can check
+the current delay of your weapon by swinging it at air (using ctrl-direction) and
+looking at the number in parentheses next to your turncount.
+
+Some weapon types have special abilities. Axes are able to cleave through
+multiple enemies in a single swing, hitting enemies in an arc around the
+wielder with every attack. Polearms can reach farther and allow the wielder to
+attack an opponent two squares away, and even reach over monsters. Use the 'v'
+command to target a specific monster with a reaching attack, or use Autofight
+('tab') to reach automatically.
+
+Unarmed Combat is a special fighting skill. It allows your character to make a
+powerful attack when unarmed and also to punch with the off hand as an
+additional melee attack. The Unarmed Combat skill continues to increase your
+attack speed while unarmed until it can be raised no more.
+
+Note that auxiliary attacks (such as a Armataur's tail-slap or a Minotaur's
+headbutt) are not affected by the Unarmed Combat skill.
+
+Ranged combat skills
+========================================
+
+Ranged Weapons is the skill for bows, crossbows, and slings, whereas Throwing
+governs all things hurled without a launcher: boomerangs, javelins, nets,
+darts, etc.
+
+Just as with melee weapons, ranged weapon skills and throwing skills increase
+the speed at which you attack, along with slightly increasing your accuracy
+and damage. Missile weapons, unlike melee or throwing weapons, are slowed by
+wearing heavy armour. Increasing your Strength and Armour skill will partially
+mitigate this.
+
+Magic skills
+========================================
+
+Spellcasting is the basic skill for magic use. It affects your reserves of
+magical energy (Magic) in the same way that Fighting affects your health: every
+time you increase the Spellcasting skill you gain some magic points, and you
+gain a spell level every time you reach a skill level divisible by 0.5.
+Spellcasting also helps with the power and success rate of your spells, but to
+a lesser extent than the more specialised magical skills.
+
+There are also individual skills for each different type of magic; the higher
+the skill, the more powerful the spell. Multidisciplinary spells use an average
+of the two or three skills.
+
+Miscellaneous skills
+========================================
+
+Armour
+  Having a high Armour skill means that you are skilled at wearing armour of all
+  kinds, multiplying the protection provided not just by body armour but also
+  by cloaks, gloves, etc. It also very slightly mitigates the penalties to
+  spellcasting and missile weapon speed from wearing heavy armour.
+
+Dodging
+  A high Dodging skill helps you to evade melee and ranged attacks more
+  effectively. This is more easily done in light armour, but can still be useful
+  in heavier armour.
+
+Stealth
+  Helps you avoid being noticed, and makes monsters more likely to lose track of
+  you when you leave their line of sight. Wearing heavy armour penalises stealth
+  attempts. Large creatures (like Trolls) are bad at stealth, except for Nagas,
+  which are unusually stealthy.
+
+  Stealth also helps you make a very powerful first strike against a
+  sleeping/resting monster who hasn't noticed you yet. This is most effective
+  with a dagger, slightly less effective with other short blades and Felid claws,
+  and less useful (although still by no means negligible) with any other weapon.
+
+  Stealth also improves some melee attacks against confused, distracted, or
+  otherwise incapacitated monsters, though this is much less effective than when
+  the monster is asleep or paralysed.
+
+  Note that in addition to the bonus from weapon type, there is an additional
+  stabbing bonus based on the average of your stealth skill and your skill with
+  your wielded weapon.
+
+Shields
+  Affects the amount of protection you gain by using a shield, and the degree to
+  which it hinders your evasion, attack speed and spellcasting success.
+  Mastering the Shields skill removes all penalties from using a shield.
+
+Invocations
+  Affects your ability to call on your god for aid. Those skilled at Invocations
+  have reduced failure rates and produce more powerful effects. Some gods (such
+  as Trog) do not require followers to learn this skill, or use a different
+  skill for their abilities instead (such as Necromancy under Kikubaaqudgha).
+
+  Invocations can increase your maximum magical reserves, although it has a
+  smaller effect than Spellcasting in this regard. The bonuses are not cumulative:
+  the highest contribution from Spellcasting or Invocations is used.
+
+Evocations
+  This skill lets you use wands much more effectively, in terms of both damage
+  and precision. Similarly, various other items that have evocable powers work
+  better for characters trained in this skill.
