@@ -27,30 +27,24 @@
 static const mon_spellbook mspell_list[] =
 {
 
-    /* Crimson imp, blink frog, and killer klown. */
+    /* Crimson imps, blink frogs, Prince Rabbit. */
     {  MST_BLINKER,
       {
        { SPELL_BLINK, 29, MON_SPELL_MAGICAL },
       }
     },
 
+    /* Phantasmal warriors and formless jellyfish. */
     {  MST_BLINK_CLOSE,
       {
        { SPELL_BLINK_CLOSE, 67, MON_SPELL_MAGICAL },
       }
     },
 
-    /* Orc warlords and cherubs. */
+    /* Orc warlords and cherubim. */
     {  MST_BATTLECRY,
       {
        { SPELL_BATTLECRY, 100, MON_SPELL_VOCAL },
-      }
-    },
-
-    /* Eyes of draining and ghost moths. */
-    {  MST_DRAIN_GAZE,
-      {
-       { SPELL_DRAINING_GAZE, 100, MON_SPELL_MAGICAL | MON_SPELL_INSTANT },
       }
     },
 
@@ -73,13 +67,6 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_METAL_SPLINTERS, 68, MON_SPELL_NATURAL | MON_SPELL_BREATH
                                      | MON_SPELL_NOISY },
-      }
-    },
-
-    // Howler monkeys and demonic crawlers.
-    { MST_SCREAMER,
-      {
-        { SPELL_WARNING_CRY, 40, MON_SPELL_VOCAL | MON_SPELL_BREATH },
       }
     },
 
@@ -245,6 +232,12 @@ static const mon_spellbook mspell_list[] =
     {  MST_BEAR,
       {
        { SPELL_BERSERKER_RAGE, 100, MON_SPELL_NATURAL | MON_SPELL_EMERGENCY },
+      }
+    },
+
+    { MST_HOWLER_MONKEY,
+      {
+        { SPELL_WARNING_CRY, 40, MON_SPELL_VOCAL | MON_SPELL_BREATH },
       }
     },
 
@@ -681,6 +674,12 @@ static const mon_spellbook mspell_list[] =
     {  MST_MOTH_OF_WRATH,
       {
        { SPELL_BERSERK_OTHER, 66, MON_SPELL_NATURAL },
+      }
+    },
+
+    {  MST_GHOST_MOTH,
+      {
+       { SPELL_DRAINING_GAZE, 100, MON_SPELL_MAGICAL | MON_SPELL_INSTANT },
       }
     },
 
