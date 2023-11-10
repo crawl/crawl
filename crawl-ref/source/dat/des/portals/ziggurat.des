@@ -436,6 +436,52 @@ GG.GG
 ^G.G^
 ENDMAP
 
+NAME:   ziggurat_pillar_centre_mark
+TAGS:   ziggurat_pillar centered unrand no_exits
+WEIGHT: 5
+KFEAT:  ^ = alarm trap
+MAP
+ G.G
+G^.^G
+..G..
+G^.^G
+ G.G
+ENDMAP
+
+NAME:   ziggurat_pillar_centre_ballista
+TAGS:   ziggurat_pillar centered generate_awake unrand no_exits
+WEIGHT: 5
+MONS:   ballistomycete, bush
+MAP
+  .
+ 222
+.212.
+ 222
+  .
+ENDMAP
+
+NAME:   ziggurat_pillar_centre_whats_kraken
+TAGS:   ziggurat_pillar centered generate_awake unrand no_exits no_pool_fixup
+WEIGHT: 5
+MONS:   kraken / kraken simulacrum / spectral kraken
+MAP
+ WWW 
+WWwWW
+Ww1wW
+WWwWW
+ WWW
+ENDMAP
+
+NAME:   ziggurat_pillar_centre_armed
+TAGS:   ziggurat_pillar centered unrand no_exits
+DEPTH:  Zig:7-
+WEIGHT: 5
+MONS:   dancing weapon ; any weapon good_item | giant spiked club good_item ego:heavy w:5 | giant club good_item ego:heavy w:5
+MAP
+ 1
+1
+ENDMAP
+
 #######################################################################
 
 NAME: ziggurat1
