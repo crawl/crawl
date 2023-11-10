@@ -22,6 +22,7 @@ void wizard_set_piety_to(int new_piety, bool force = false);
 void wizard_exercise_skill();
 void wizard_set_abyss();
 void wizard_set_skill_level(skill_type skill = SK_NONE);
+void wizard_search_help();
 void wizard_set_all_skills();
 void wizard_change_species();
 void wizard_set_xl(bool change_skills = false);

@@ -57,6 +57,8 @@ static void _do_wizard_command(int wiz_command)
         return;
     }
 
+    case CONTROL('M'): wizard_search_help(); break;
+
     case 'a': acquirement_menu(); break;
     case 'A': wizard_set_all_skills(); break;
     case CONTROL('A'):
@@ -229,7 +231,7 @@ static void _do_wizard_command(int wiz_command)
     // case '/': break;
 
     case ' ':
-    case '\r':
+    // case '\r':
     case '\n':
     case ESCAPE:
         canned_msg(MSG_OK);
@@ -430,6 +432,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>&</w>      list all divine followers\n"
                        "<w>=</w>      show info about skill points\n"
                        "<w>n</w>      set Zot clock to a value\n"
+                       "<w>Ctrl-M</w> Search manual\n"
                        "\n"
                        "<yellow>Dungeon features</yellow>\n"
                        "<w>T</w>      make a trap\n"

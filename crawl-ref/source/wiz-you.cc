@@ -9,6 +9,9 @@
 
 #include <algorithm>
 #include <functional>
+#include <iostream>
+#include <fstream>
+#include <string>
 
 #include "abyss.h"
 #include "dbg-util.h"
@@ -433,6 +436,237 @@ void wizard_set_skill_level(skill_type skill)
                                       old_amount > amount ? "Lowered"
                                                           : "Reset"),
          skill_name(skill), amount);
+}
+
+void wizard_search_help()
+{
+    char input[100];
+    mprf(MSGCH_PROMPT, "Search Manual for Keyword: ");
+    cancellable_get_line(input, sizeof input);
+
+    string searchTerm = input;
+    string line;
+
+    ifstream testfile("manual/overview.txt");
+    while (getline(testfile, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in A. Overview");
+            break;
+        }
+    }
+    testfile.close();
+
+    ifstream testfile1("manual/startingscreen.txt");
+    while (getline(testfile1, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in B. Starting Screen");
+            break;
+        }
+    }
+    testfile1.close();
+
+    ifstream testfile2("manual/overview.txt");
+    while (getline(testfile2, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in C. Attributes and Stats");
+            break;
+        }
+    }
+    testfile2.close();
+
+    ifstream testfile3("manual/exploring.txt");
+    while (getline(testfile3, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in D. Exploring and Dungeon");
+            break;
+        }
+    }
+    testfile3.close();
+
+    ifstream testfile4("manual/experienceandskills.txt");
+    while (getline(testfile4, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in E. Experience and Skills");
+            break;
+        }
+    }
+    testfile4.close();
+
+    ifstream testfile5("manual/monsters.txt");
+    while (getline(testfile5, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in F. Monsters");
+            break;
+        }
+    }
+    testfile5.close();
+
+    ifstream testfile6("manual/items.txt");
+    while (getline(testfile6, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in G. Items");
+            break;
+        }
+    }
+    testfile6.close();
+
+    ifstream testfile7("manual/spellcasting.txt");
+    while (getline(testfile7, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in H. Spellcasting");
+            break;
+        }
+    }
+    testfile7.close();
+
+    ifstream testfile8("manual/targeting.txt");
+    while (getline(testfile8, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in I. Targeting");
+            break;
+        }
+    }
+    testfile8.close();
+
+    ifstream testfile9("manual/religion.txt");
+    while (getline(testfile9, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in J. Religion");
+            break;
+        }
+    }
+    testfile9.close();
+
+    ifstream testfile10("manual/mutations.txt");
+    while (getline(testfile10, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in K. Mutations");
+            break;
+        }
+    }
+    testfile10.close();
+
+    ifstream testfile11("manual/license.txt");
+    while (getline(testfile11, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in L. Licence, Contact, History");
+            break;
+        }
+    }
+    testfile11.close();
+
+    ifstream testfile12("manual/macros.txt");
+    while (getline(testfile12, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in M. Macros, Options, Performance");
+            break;
+        }
+    }
+    testfile12.close();
+
+    ifstream testfile13("manual/philosophy.txt");
+    while (getline(testfile13, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in N. Philosophy");
+            break;
+        }
+    }
+    testfile13.close();
+
+    ifstream testfile14("manual/characterspecies.txt");
+    while (getline(testfile14, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in 1. List of Character Species");
+            break;
+        }
+    }
+    testfile14.close();
+
+    ifstream testfile15("manual/backgrounds.txt");
+    while (getline(testfile15, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in 2. List of Character Backgrounds");
+            break;
+        }
+    }
+    testfile15.close();
+
+    ifstream testfile16("manual/listskills.txt");
+    while (getline(testfile16, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in 3. List of Skills");
+            break;
+        }
+    }
+    testfile16.close();
+
+    ifstream testfile17("manual/keysandcommands.txt");
+    while (getline(testfile17, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in 4. List of Keys and Commands");
+            break;
+        }
+    }
+    testfile17.close();
+
+    ifstream testfile18("manual/inscriptions.txt");
+    while (getline(testfile18, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in 5. Inscriptions");
+            break;
+        }
+    }
+    testfile18.close();
+
+    ifstream testfile19("manual/sprintmodes.txt");
+    while (getline(testfile19, line))
+    {
+        size_t pos = line.find(searchTerm);
+        if ( pos != string::npos){
+            mprf(MSGCH_PROMPT, "Found your word in 6. Dungeon sprint modes");
+            break;
+        }
+    }
+    testfile19.close();
+
 }
 
 void wizard_set_all_skills()
