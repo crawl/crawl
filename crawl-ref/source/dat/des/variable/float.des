@@ -1831,7 +1831,7 @@ KFEAT:   ^ = alarm trap w:5 / dispersal trap / net trap / zot trap
 SUBST:   D = 1-, E = 2-, F = 4-, - = .:140 ^
 TILE:    c = wall_tomb
 TILE:    G = dngn_sarcophagus_pedestal_right
-FTILE:   G+.123456$*| = floor_sandstone
+FTILE:   G+.^123456$*| = floor_sandstone
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxcccccxxxxxxxxxxxxx
