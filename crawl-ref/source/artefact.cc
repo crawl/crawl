@@ -1281,6 +1281,13 @@ bool item_type_can_be_artefact(object_class_type typ)
     }
 }
 
+static string _base_name(const item_def &item)
+{
+    if (item.is_type(OBJ_TALISMANS, TALISMAN_DEATH))
+        return "death talisman"; // no talismans of death of foo
+    return item_base_name(item);
+}
+
 string make_artefact_name(const item_def &item, bool appearance)
 {
     ASSERT(is_artefact(item));
@@ -1321,6 +1328,7 @@ string make_artefact_name(const item_def &item, bool appearance)
     // get base type
     lookup += _get_artefact_type(item, appearance);
 
+    const string base_name = _base_name(item);
     if (appearance)
     {
         string appear = getRandNameString(lookup, " appearance");
@@ -1333,13 +1341,13 @@ string make_artefact_name(const item_def &item, bool appearance)
 
         result += appear;
         result += " ";
-        result += item_base_name(item);
+        result += base_name;
         return result;
     }
 
     if (_pick_db_name(item))
     {
-        result += item_base_name(item) + " ";
+        result += base_name + " ";
 
         int tries = 100;
         string name;
@@ -1368,7 +1376,7 @@ string make_artefact_name(const item_def &item, bool appearance)
     {
         // construct a unique name
         const string st_p = make_name();
-        result += item_base_name(item);
+        result += base_name;
 
         if (one_chance_in(3))
         {
@@ -1393,7 +1401,7 @@ static const unrandart_entry *_seekunrandart(const item_def &item)
 
 string get_artefact_base_name(const item_def &item, bool terse)
 {
-    string base_name = item_base_name(item);
+    string base_name = _base_name(item);
     const char* custom_type = _seekunrandart(item)->type_name;
     if (custom_type)
         base_name = custom_type;
@@ -1798,7 +1806,7 @@ static string _ashenzari_artefact_name(item_def &item)
 
     item.orig_monnum = old_orig;
 
-    return item_base_name(item) + " " + (name.empty() ? "of Ashenzari" : name);
+    return _base_name(item) + " " + (name.empty() ? "of Ashenzari" : name);
 }
 
 void make_ashenzari_randart(item_def &item)
