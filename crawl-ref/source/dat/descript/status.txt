@@ -853,5 +853,8 @@ Fragile status
 
 Your body is as fragile and brittle as glass, increasing the damage you take from
 all sources.
-
 %%%%
+Ooze status
+
+Acidic ooze creeps out of the walls around you. Each turn, foes are damaged
+depending on the number of slimy walls they remain adjacent to.
