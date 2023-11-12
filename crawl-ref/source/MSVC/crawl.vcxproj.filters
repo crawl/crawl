@@ -928,6 +928,7 @@
     <ClCompile Include="..\rltiles\tiledef-wall.cc">
       <Filter>rtiles_generated</Filter>
     </ClCompile>
+    <ClCompile Include="..\outer-menu.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ability.h">
@@ -1201,9 +1202,6 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\duration-type.h">
-      <Filter>h</Filter>
-    </ClInclude>
-    <ClInclude Include="..\confirm-level-type.h">
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\enchant-type.h">
@@ -2259,6 +2257,11 @@
     <ClInclude Include="..\rltiles\tiledef-wall.h">
       <Filter>rtiles_generated</Filter>
     </ClInclude>
+    <ClInclude Include="..\branch-data-json.h" />
+    <ClInclude Include="..\easy-confirm-type.h" />
+    <ClInclude Include="..\filter-enum.h" />
+    <ClInclude Include="..\mon-explode.h" />
+    <ClInclude Include="..\outer-menu.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="cc">
