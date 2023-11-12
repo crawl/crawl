@@ -119,6 +119,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>C:\Users\admin\repos\crawl\crawl-ref\source\MSVC\lib\x86;C:\Users\admin\repos\crawl\crawl-ref\source\MSVC\lib\x64;C:\Users\admin\repos\crawl\crawl-ref\source\MSVC\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>cd "$(SolutionDir)\..\rltiles"
@@ -162,6 +163,7 @@ copy *.png ..\dat\tiles\
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
+      <AdditionalLibraryDirectories>C:\Users\admin\repos\crawl\crawl-ref\source\MSVC\lib;C:\Users\admin\repos\crawl\crawl-ref\source\MSVC\lib\x86;C:\Users\admin\repos\crawl\crawl-ref\source\MSVC\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>cd "$(SolutionDir)\..\rltiles"
