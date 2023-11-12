@@ -1333,19 +1333,26 @@ static bool left_of(coord_def a, coord_def b)
     return a.x * b.y > a.y * b.x;
 }
 
-//FIXME: ensure rounding is sensible
+//Project a coordinate to 'range' tiles away from the origin
+//FIXME: rounding is incorrect.
 static coord_def _project_coord(coord_def coord, int range)
 {
-    if(coord.x > coord.y)
-        return coord * range / coord.x;
-    return coord * range / coord.y;
+    if(abs(coord.x) > abs(coord.y))
+        return coord * range / abs(coord.x);
+    return coord * range / abs(coord.y);
 }
 
 //returns the arc distance from a to b when projected to range away from center
 static int _get_arclen(coord_def a, coord_def b, coord_def center, int range)
 {
+    ASSERT(a != center);
+    ASSERT(b != center);
+
     coord_def a_off = _project_coord(a - center, range); 
     coord_def b_off = _project_coord(b - center, range);
+
+    ASSERT(a_off.rdist() == range);
+    ASSERT(b_off.rdist() == range);
 
     int arclen = abs(a_off.x - b_off.x) + abs(a_off.y - b_off.y) + 1;
 
