@@ -1,0 +1,9 @@
+include/zconf.h
+include/zlib.h
+lib/libz.a
+lib/libz.dll.a
+lib/zlib-bcc.lib
+lib/zlib.def
+lib/zlib.lib
+manifest/zlib-1.2.3-lib.mft
+manifest/zlib-1.2.3-lib.ver
