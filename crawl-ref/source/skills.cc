@@ -1960,6 +1960,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Silver Star"; // removed dc6d6fabc (0.15), ha!
             else if (species == SP_METEORAN && skill_rank == 5 && god == GOD_DITHMENOS)
                 result = "Starry Night"; // what a miserable god choice... challenge!
+            else if (species == SP_METEORAN && skill_rank == 5 && god == GOD_LUGONU)
+                result = "Wretched Star";
             else if (god != GOD_NO_GOD)
                 result = god_title(god, species, piety);
             else if (species == SP_BARACHI)
