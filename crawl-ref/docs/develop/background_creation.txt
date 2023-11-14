@@ -124,7 +124,7 @@ Take note of the coord_def variable. The background selection menu is typically 
                   JOB_ENCHANTER, JOB_REAVER }
         }
 
-For UI consistency, it is also relevant to note that species -> background recommendations are not automatically bi-directional. If you select your background first, you will see appropriate species recommendations as defined in job-data.h. However, if you select species first, you will not see those same recommendations. When starting from species selection, recommendations are derived from the species yaml files, found in souce/dat/species. To make the menu recommendations fully symmetrical, change each species yaml file that you identified in your job-data.h struct. This example is the relevant section in human.yaml:
+For UI consistency, it is also relevant to note that species -> background recommendations are not automatically bi-directional. If you select your background first, you will see appropriate species recommendations as defined in job-data.h. However, if you select species first, you will not see those same recommendations. When starting from species selection, recommendations are derived from the species yaml files, found in source/dat/species. To make the menu recommendations fully symmetrical, change each species yaml file that you identified in your job-data.h struct. This example is the relevant section in human.yaml:
 
         recommended_jobs:
           - JOB_BERSERKER
