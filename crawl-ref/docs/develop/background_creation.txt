@@ -1,4 +1,5 @@
 Written by Cerol, 2017/02/07
+Updates by Sam Willett, 2023/11/14
 
 Backgrounds are one of the simplest gameplay elements to modify in the DCSS
 codebase, as they only really determine things at character creation. Within the
@@ -108,6 +109,31 @@ count as a Adventurer, so I'll update the entry for them:
             { JOB_ARTIFICER, JOB_WANDERER, JOB_DELVER, JOB_SHEPHERD }
         },
 
+Take note of the coord_def variable. The background selection menu is typically laid out in three columns. Coord_def(x, y) identifies these locations. X of 0, 1, and 2 identifies the first, second and third columns. Y identifies the vertical start of the section within the column. As an example, if you were going to add a new Zealot background, you would have to increment the Y coordinate of the Warrior-mage section, which sits below it in the second column (where X == 1). In the example below, the Y coordinate of Warrior-mage has been incremented to 5 (from a default of 4) to allow room for a new background (JOB_CUSTOM) added to the Zealot section.
+
+        {
+                "Zealot",
+                coord_def(1, 0), 25,
+                { JOB_BERSERKER, JOB_CINDER_ACOLYTE,
+                  JOB_CHAOS_KNIGHT, JOB_CUSTOM }
+        },
+        {
+                "Warrior-mage",
+                coord_def(1, 5), 26,
+                { JOB_TRANSMUTER, JOB_WARPER, JOB_HEXSLINGER,
+                  JOB_ENCHANTER, JOB_REAVER }
+        }
+
+For UI consistency, it is also relevant to note that species -> background recommendations are not automatically bi-directional. If you select your background first, you will see appropriate species recommendations as defined in job-data.h. However, if you select species first, you will not see those same recommendations. When starting from species selection, recommendations are derived from the species yaml files, found in souce/dat/species. To make the menu recommendations fully symmetrical, change each species yaml file that you identified in your job-data.h struct. This example is the relevant section in human.yaml:
+
+        recommended_jobs:
+          - JOB_BERSERKER
+          - JOB_CINDER_ACOLYTE
+          - JOB_CONJURER
+          - JOB_NECROMANCER
+          - JOB_ICE_ELEMENTALIST
+          - JOB_CUSTOM
+
 And we're done. Compile and enjoy your new background!
 
 ... Unless your background has some other, more complicated starting situation
@@ -131,3 +157,4 @@ Summary and checklist:
          creation like the monk.)
     - ng-restr.cc for limitations to your background.
     - ng-wanderer.cc for wanderer nonsense.
+    - source/dat/species yaml files for bi-directional recommendations
