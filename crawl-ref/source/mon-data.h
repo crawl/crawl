@@ -112,11 +112,10 @@
 */
 
 #define MOVE_ENERGY(x)     { x,  x, 10, 10, 10, 10, 10, 100}
-#define ACTION_ENERGY(x)   {10, 10,  x,  x,  x,  x,  x, x * 10}
+#define SWIM_ENERGY(x)     {10,  x, 10, 10, 10, 10, 10, 100}
 #define ATTACK_ENERGY(x)   {10, 10,  x, 10, 10, 10, 10, 100}
 #define MISSILE_ENERGY(x)  {10, 10, 10,  x, 10, 10, 10, 100}
 #define SPELL_ENERGY(x)    {10, 10, 10, 10,  x, 10, 10, 100}
-#define SWIM_ENERGY(x)     {10,  x, 10, 10, 10, 10, 10, 100}
 
 #define M_NOT_DANGEROUS (M_NO_EXP_GAIN | M_NO_THREAT)
 
