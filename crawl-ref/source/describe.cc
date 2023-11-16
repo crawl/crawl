@@ -5364,7 +5364,10 @@ static void _add_speed_desc(const monster_info &mi, ostringstream &result)
     const bool unusual_energy = !(me == DEFAULT);
     const int travel_delay = me.move * 10 / speed;
     const int player_travel_delay = player_movement_speed(false, false);
-    const int travel_delay_diff = travel_delay - player_travel_delay;
+    // Don't show a difference in travel speed between players and statues,
+    // tentacle segments, etc.
+    const int travel_delay_diff = mons_class_flag(mi.type, M_STATIONARY) ? 0 :
+                                    travel_delay - player_travel_delay;
     if (!unusual_speed && !unusual_energy && !travel_delay_diff)
         return;
 
