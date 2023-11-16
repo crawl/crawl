@@ -120,5 +120,8 @@ int str_to_trap(const string &s);
 
 string extra_cloud_info(cloud_type cloud_type);
 
+string desc_resist(int level, int max = 1,
+                   bool immune = false, bool allow_spacing = true);
+
 /* Public for testing purposes only: do not use elsewhere. */
 string _monster_habitat_description(const monster_info& mi);

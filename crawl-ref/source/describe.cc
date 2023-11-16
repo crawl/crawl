@@ -5217,9 +5217,18 @@ static void _print_bar(int value, int scale, const string &name,
 #endif
 }
 
+static int _codepoints(string str)
+{
+    int len = 0;
+    for (char c : str)
+        if ((c & 0xc0) != 0x80)
+            ++len;
+    return len;
+}
+
 static string _padded(string str, int pad_to)
 {
-    const int padding = pad_to - str.length();
+    const int padding = pad_to - _codepoints(str);
     if (padding > 0)
         str.append(padding, ' ');
     return str;
@@ -5449,6 +5458,84 @@ static void _add_speed_desc(const monster_info &mi, ostringstream &result)
     }
 }
 
+// Converts a numeric resistance to its symbolic counterpart.
+// Can handle any maximum level. The default is for single level resistances
+// (the most common case). Negative resistances are allowed.
+// Resistances with a maximum of up to 4 are spaced (arbitrary choice), and
+// starting at 5 levels, they are continuous.
+// params:
+//  level : actual resistance level
+//  max : maximum number of levels of the resistance
+//  immune : overwrites normal pip display for full immunity
+string desc_resist(int level, int max, bool immune, bool allow_spacing)
+{
+    if (max < 1)
+        return "";
+
+    if (immune)
+        return Options.char_set == CSET_ASCII ? "inf" : "\u221e"; //"∞"
+
+    string sym;
+    const bool spacing = allow_spacing && max < 5;
+
+    while (max > 0)
+    {
+        if (level == 0)
+            sym += ".";
+        else if (level > 0)
+        {
+            sym += "+";
+            --level;
+        }
+        else // negative resistance
+        {
+            sym += "x";
+            ++level;
+        }
+        sym += (spacing) ? " " : "";
+        --max;
+    }
+    return sym;
+}
+
+static string _res_name(mon_resist_flags res)
+{
+    switch (res)
+    {
+    case MR_RES_FIRE:   return "rF";
+    case MR_RES_COLD:   return "rC";
+    case MR_RES_POISON: return "rPois";
+    case MR_RES_ELEC:   return "rElec";
+    case MR_RES_NEG:    return "rNeg";
+    default:            return "rEggplant";
+    }
+}
+
+static string _desc_mon_resist(resists_t resist_set, mon_resist_flags res)
+{
+    const int level = get_resist(resist_set, res);
+    const int max = (res == MR_RES_POISON || res == MR_RES_ELEC) ? 1 : 3; // lies
+    const string desc = desc_resist(level, max, level == 3, false);
+    return make_stringf("%s: %s", _res_name(res).c_str(), desc.c_str());
+}
+
+static void _add_resist_desc(resists_t resist_set, ostringstream &result)
+{
+    const mon_resist_flags common_resists[] =
+        { MR_RES_FIRE, MR_RES_COLD, MR_RES_POISON, MR_RES_NEG, MR_RES_ELEC };
+
+    bool found = false;
+    for (mon_resist_flags rflags : common_resists)
+        if (get_resist(resist_set, rflags))
+            found = true;
+    if (!found)
+        return;
+
+    result << "\n";
+    for (mon_resist_flags rflags : common_resists)
+        result << _padded(_desc_mon_resist(resist_set, rflags), 16);
+}
+
 // Describe a monster's (intrinsic) resistances, speed and a few other
 // attributes.
 static string _monster_stat_description(const monster_info& mi, bool mark_spells)
@@ -5458,25 +5545,25 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
 
     ostringstream result;
 
-    result << _padded(_describe_monster_hp(mi), 21);  // worst case is "Max HP: ~9999"
+    // These padding values are set to line up defenses with common resists.
+    result << _padded(_describe_monster_hp(mi), 16);  // worst case is "Max HP: ~9999"
                                                       // len 13, then 3 spaces after
-    result << _padded(_describe_monster_ac(mi), 22);  // "AC: ++++ ++++" 13 again
-    result << _padded(_describe_monster_ev(mi), 22);  // "EV*: ++++ ++++" 14
-    result << _padded(_describe_monster_wl(mi), 15);  // "Will: +++++" 11
-                                                      // total 80 (?)
+    result << _padded(_describe_monster_ac(mi), 16);  // "AC: ++++ ++++" 13 again
+    result << _padded(_describe_monster_ev(mi), 16);  // "EV*: ++++ ++++" 14
+    result << _padded(_describe_monster_wl(mi), 16);  // "Will: +++++" 11
+
+    const resists_t resist = mi.resists();
+    _add_resist_desc(resist, result);
 
     _add_speed_desc(mi, result);
 
     result << "\n\n";
 
-    resists_t resist = mi.resists();
 
-    const mon_resist_flags resists[] =
+    const mon_resist_flags special_resists[] =
     {
-        MR_RES_ELEC,    MR_RES_POISON, MR_RES_FIRE,
-        MR_RES_STEAM,   MR_RES_COLD,   MR_RES_ACID,
-        MR_RES_MIASMA,  MR_RES_NEG,    MR_RES_DAMNATION,
-        MR_RES_VORTEX,  MR_RES_TORMENT,
+        MR_RES_STEAM,     MR_RES_ACID,    MR_RES_VORTEX,
+        MR_RES_DAMNATION, MR_RES_MIASMA,  MR_RES_TORMENT,
     };
 
     vector<string> extreme_resists;
@@ -5484,7 +5571,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     vector<string> base_resists;
     vector<string> suscept;
 
-    for (mon_resist_flags rflags : resists)
+    for (mon_resist_flags rflags : special_resists)
     {
         int level = get_resist(resist, rflags);
 

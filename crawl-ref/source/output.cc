@@ -1924,46 +1924,6 @@ int update_monster_pane()
 }
 #endif
 
-// Converts a numeric resistance to its symbolic counterpart.
-// Can handle any maximum level. The default is for single level resistances
-// (the most common case). Negative resistances are allowed.
-// Resistances with a maximum of up to 4 are spaced (arbitrary choice), and
-// starting at 5 levels, they are continuous.
-// params:
-//  level : actual resistance level
-//  max : maximum number of levels of the resistance
-//  immune : overwrites normal pip display for full immunity
-static string _itosym(int level, int max = 1, bool immune = false)
-{
-    if (max < 1)
-        return "";
-
-    if (immune)
-        return Options.char_set == CSET_ASCII ? "inf" : "\u221e"; //"∞"
-
-    string sym;
-    bool spacing = (max >= 5) ? false : true;
-
-    while (max > 0)
-    {
-        if (level == 0)
-            sym += ".";
-        else if (level > 0)
-        {
-            sym += "+";
-            --level;
-        }
-        else // negative resistance
-        {
-            sym += "x";
-            ++level;
-        }
-        sym += (spacing) ? " " : "";
-        --max;
-    }
-    return sym;
-}
-
 static const char *s_equip_slot_names[] =
 {
     "Weapon", "Cloak",  "Helmet", "Gloves", "Boots",
@@ -2502,7 +2462,7 @@ static string _resist_composer(const char * name, int spacing, int value,
     string out;
     out += _determine_colour_string(pos_resist ? value : -value, max, immune);
     out += chop_string(name, spacing);
-    out += _itosym(value, max, immune);
+    out += desc_resist(value, max, immune);
 
     return out;
 }
