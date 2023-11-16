@@ -1716,8 +1716,8 @@ reach towards the shore and crush any who draw near.
 large abomination
 
 A hideous conglomeration of mangled body parts, possessed and altered in ways
-that challenge sanity. Each varies in speed and durability by the nature of
-whatever unfortunates were used to make it.
+that challenge sanity. Each varies in durability by the nature of whatever
+unfortunates were used to make it.
 %%%%
 lava snake
 
@@ -2366,8 +2366,8 @@ to do so in confined spaces.
 %%%%
 small abomination
 
-A hideous mass of body parts. Each varies in speed and durability by the nature
-of whatever unfortunates were used to make it.
+A hideous mass of body parts. Each varies in durability by the nature of
+whatever unfortunates were used to make it.
 %%%%
 smoke demon
 
