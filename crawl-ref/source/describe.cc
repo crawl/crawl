@@ -5395,6 +5395,17 @@ static bool _add_energy_desc(int energy, string name, int speed, vector<string> 
 
 static void _add_speed_desc(const monster_info &mi, ostringstream &result)
 {
+    if (mi.type == MONS_ABOMINATION_SMALL)
+    {
+        result << "\nSpeed: 70-160% (?)";
+        return;
+    }
+    if (mi.type == MONS_ABOMINATION_LARGE)
+    {
+        result << "\nSpeed: 60-120% (?)";
+        return;
+    }
+
     const int speed = mi.base_speed();
     if (!speed) // something weird - let's not touch it
         return;
