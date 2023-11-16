@@ -111,11 +111,11 @@
        TILE_ERROR for monsters without corpses. Only relevant for species mons.
 */
 
-#define MOVE_ENERGY(x)     { x,  x, 10, 10, 10, 10, 10, 100}
-#define SWIM_ENERGY(x)     {10,  x, 10, 10, 10, 10, 10, 100}
-#define ATTACK_ENERGY(x)   {10, 10,  x, 10, 10, 10, 10, 100}
-#define MISSILE_ENERGY(x)  {10, 10, 10,  x, 10, 10, 10, 100}
-#define SPELL_ENERGY(x)    {10, 10, 10, 10,  x, 10, 10, 100}
+#define MOVE_ENERGY(x)     { x,  x, 10, 10, 10}
+#define SWIM_ENERGY(x)     {10,  x, 10, 10, 10}
+#define ATTACK_ENERGY(x)   {10, 10,  x, 10, 10}
+#define MISSILE_ENERGY(x)  {10, 10, 10,  x, 10}
+#define SPELL_ENERGY(x)    {10, 10, 10, 10,  x}
 
 #define M_NOT_DANGEROUS (M_NO_EXP_GAIN | M_NO_THREAT)
 
@@ -1542,7 +1542,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard", TILEP_MONS_IGUANA)
     12, 780,
     // Impalers prefer light armour, and are dodging experts.
     0, 18, MST_NO_SPELLS, true, S_SHOUT,
-    I_HUMAN, HT_AMPHIBIOUS, 10, {10, 6, 6, 10, 10, 10, 10, 100},
+    I_HUMAN, HT_AMPHIBIOUS, 10, {10, 6, 6, 10, 10},
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID,
     {TILEP_MONS_MERFOLK_IMPALER, TVARY_WATER}, TILE_ERROR
 },
@@ -2283,7 +2283,7 @@ DUMMY(MONS_SPIDER, 's', CYAN, "spider", TILEP_MONS_REDBACK)
     { {AT_BITE, AF_REACH, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     10, 600,
     16, 5, MST_NO_SPELLS, true, S_HISS,
-    I_ANIMAL, HT_AMPHIBIOUS, 8, {10, 6, 8, 8, 8, 8, 8, 80},
+    I_ANIMAL, HT_AMPHIBIOUS, 8, {10, 6, 8, 8, 8},
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_QUADRUPED_TAILLESS,
     {TILEP_MONS_SNAPPING_TURTLE}, TILE_CORPSE_SNAPPING_TURTLE
 },

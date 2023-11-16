@@ -5662,16 +5662,6 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
                                          + " invocations"
                                        : conjugate_verb("use", plural)
                                          + " natural abilities", fast, slow);
-        _add_energy_to_string(speed, me.special,
-                              conjugate_verb("use", plural)
-                              + " special abilities",
-                              fast, slow);
-        if (mons_class_itemuse(mi.type) >= MONUSE_STARTING_EQUIPMENT)
-        {
-            _add_energy_to_string(speed, me.item,
-                                  conjugate_verb("use", plural) + " items",
-                                  fast, slow);
-        }
 
         if (speed >= 10)
         {

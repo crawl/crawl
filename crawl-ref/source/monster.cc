@@ -1040,12 +1040,8 @@ bool monster::unequip(item_def &item, bool msg, bool force)
 
 void monster::lose_pickup_energy()
 {
-    if (const monsterentry* entry = find_monsterentry())
-    {
-        const int delta = speed * entry->energy_usage.pickup_percent / 100;
-        if (speed_increment > 25 && delta < speed_increment)
-            speed_increment -= delta;
-    }
+    if (speed_increment > 25 && speed < speed_increment)
+        speed_increment -= speed;
 }
 
 void monster::pickup_message(const item_def &item)
@@ -5485,11 +5481,11 @@ int monster::action_energy(energy_use_type et) const
     // rather than here.
     case EUT_SWIM:    move_cost = mu.swim; break;
     case EUT_MISSILE: return mu.missile;
-    case EUT_ITEM:    return mu.item;
-    case EUT_SPECIAL: return mu.special;
     case EUT_SPELL:   return mu.spell;
     case EUT_ATTACK:  return mu.attack;
-    case EUT_PICKUP:  return mu.pickup_percent;
+    case EUT_ITEM:    return 10;
+    case EUT_SPECIAL: return 10;
+    case EUT_PICKUP:  return 100;
     }
 
     if (has_ench(ENCH_SWIFT))
