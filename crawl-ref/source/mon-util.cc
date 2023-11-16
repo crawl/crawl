@@ -2099,6 +2099,22 @@ static int _mons_damage(monster_type mc, int rt)
     return smc->attack[rt].damage;
 }
 
+string mon_attack_name_short(attack_type attack)
+{
+    switch (attack)
+    {
+    case AT_SPORE:         return "spore";
+    case AT_TENTACLE_SLAP: return "tentacle";
+    case AT_TAIL_SLAP:     return "tail";
+    case AT_TRUNK_SLAP:    return "trunk";
+    case AT_POUNCE:        return "pounce";
+    case AT_CHERUB:
+    case AT_RANDOM:        return "hit"; // eh
+    default:
+        return mon_attack_name(attack, false);
+    }
+}
+
 /**
  * A short description of the given monster attack type.
  *
@@ -2257,6 +2273,11 @@ bool flavour_has_reach(attack_flavour flavour)
         default:
             return false;
     }
+}
+
+bool flavour_has_mobility(attack_flavour flavour)
+{
+    return flavour == AF_SWOOP || flavour == AF_FLANK;
 }
 
 bool mons_invuln_will(const monster& mon)

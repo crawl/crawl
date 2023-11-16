@@ -100,6 +100,7 @@ using namespace ui;
 static command_type _get_action(int key, vector<command_type> actions);
 static void _print_bar(int value, int scale, const string &name,
                        ostringstream &result, int base_value = INT_MAX);
+static string _padded(string str, int pad_to);
 
 static void _describe_mons_to_hit(const monster_info& mi, ostringstream &result);
 static string _describe_weapon_brand(const item_def &item);
@@ -1385,27 +1386,6 @@ static string _desc_attack_delay(const item_def &item)
     if (weapon_adjust_delay(item, base_delay, false) == cur_delay)
         return "";
     return make_stringf("\n    Current attack delay: %.1f.", (float)cur_delay / 10);
-}
-
-static string _describe_brand(brand_type brand)
-{
-    switch (brand) {
-    case SPWPN_PAIN:
-    case SPWPN_ACID:
-    case SPWPN_CHAOS:
-    case SPWPN_DISTORTION:
-    case SPWPN_DRAINING:
-    case SPWPN_ELECTROCUTION:
-    case SPWPN_FLAMING:
-    case SPWPN_FREEZING:
-    case SPWPN_VENOM:
-    {
-        const string brand_name = uppercase_first(brand_type_name(brand, true));
-        return make_stringf(" + %s", brand_name.c_str());
-    }
-    default:
-        return "";
-    }
 }
 
 static string _describe_missile_brand(const item_def &item)
@@ -4726,124 +4706,64 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
     }
 }
 
-/**
- * Describe monster attack 'flavours' that trigger before the attack.
- *
- * @param flavour   The flavour in question; e.g. AF_SWOOP.
- * @return          A description of anything that happens 'before' an attack
- *                  with the given flavour;
- *                  e.g. "swoop behind its target and ".
- */
-static const char* _special_flavour_prefix(attack_flavour flavour)
-{
-    if (flavour == AF_SWOOP)
-        return "swoop behind its foe and ";
-    else if (flavour == AF_FLANK)
-        return "slip behind its foe and ";
-    return "";
-}
-
-/**
- * Describe monster attack 'flavours' that have extra range.
- *
- * @param flavour   The flavour in question; e.g. AF_REACH_STING.
- * @return          If the flavour has extra-long range, say so. E.g.,
- *                  " from a distance". (Else "").
- */
-static const char* _flavour_range_desc(attack_flavour flavour)
-{
-    if (flavour == AF_RIFT)
-        return " from a great distance";
-    else if (flavour_has_reach(flavour))
-        return " from a distance";
-    return "";
-}
-
 static string _flavour_base_desc(attack_flavour flavour)
 {
     static const map<attack_flavour, string> base_descs = {
-        { AF_ACID,              "deal extra acid damage"},
+        { AF_ACID,              "acid damage"},
+        { AF_REACH_TONGUE,      "acid damage" },
         { AF_BLINK,             "blink self" },
         { AF_BLINK_WITH,        "blink together with the defender" },
-        { AF_COLD,              "deal up to %d extra cold damage" },
+        { AF_COLD,              "cold damage" },
         { AF_CONFUSE,           "cause confusion" },
         { AF_DRAIN_STR,         "drain strength" },
         { AF_DRAIN_INT,         "drain intelligence" },
         { AF_DRAIN_DEX,         "drain dexterity" },
         { AF_DRAIN_STAT,        "drain strength, intelligence or dexterity" },
         { AF_DRAIN,             "drain life" },
-        { AF_ELEC,              "deal up to %d extra electric damage" },
-        { AF_FIRE,              "deal up to %d extra fire damage" },
+        { AF_VAMPIRIC,          "drain health from the living" },
+        { AF_DRAIN_SPEED,       "drain speed" },
+        { AF_ANTIMAGIC,         "drain magic" },
+        { AF_SCARAB,            "drain speed and health" },
+        { AF_ELEC,              "electric damage" },
+        { AF_FIRE,              "fire damage" },
         { AF_SEAR,              "remove fire resistance" },
         { AF_MUTATE,            "cause mutations" },
-        { AF_MINIPARA,          "poison and momentarily paralyse" },
-        { AF_POISON_PARALYSE,   "poison and cause paralysis or slowing" },
-        { AF_POISON,            "cause poisoning" },
-        { AF_POISON_STRONG,     "cause strong poisoning" },
-        { AF_VAMPIRIC,          "drain health from the living" },
-        { AF_DISTORT,           "cause wild translocation effects" },
-        { AF_RAGE,              "cause berserking" },
-        { AF_STICKY_FLAME,      "apply sticky flame" },
-        { AF_CHAOTIC,           "cause unpredictable effects" },
+        { AF_MINIPARA,          "poison and momentary paralysis" },
+        { AF_POISON_PARALYSE,   "poison and paralysis/slowing" },
+        { AF_POISON,            "poison" },
+        { AF_REACH_STING,       "poison" },
+        { AF_POISON_STRONG,     "strong poison" },
+        { AF_DISTORT,           "distortion" },
+        { AF_RIFT,              "distortion" },
+        { AF_RAGE,              "drive defenders berserk" },
+        { AF_STICKY_FLAME,      "sticky flame" },
+        { AF_CHAOTIC,           "chaos" },
         { AF_STEAL,             "steal items" },
         { AF_CRUSH,             "begin ongoing constriction" },
         { AF_REACH,             "" },
-        { AF_HOLY,              "deal extra damage to undead and demons" },
-        { AF_ANTIMAGIC,         "drain magic" },
-        { AF_PAIN,              "cause pain to the living" },
+        { AF_HOLY,              "extra damage to undead/demons" },
+        { AF_PAIN,              "extra pain damage to the living" },
         { AF_ENSNARE,           "ensnare with webbing" },
         { AF_ENGULF,            "engulf" },
-        { AF_PURE_FIRE,         "" },
-        { AF_DRAIN_SPEED,       "drain speed" },
+        { AF_PURE_FIRE,         "fire damage" },
         { AF_VULN,              "reduce willpower" },
-        { AF_SHADOWSTAB,        "deal increased damage when unseen" },
-        { AF_DROWN,             "deal drowning damage" },
+        { AF_SHADOWSTAB,        "increased damage when unseen" },
+        { AF_DROWN,             "extra drowning damage" },
         { AF_CORRODE,           "cause corrosion" },
-        { AF_SCARAB,            "drain speed and drain health" },
         { AF_TRAMPLE,           "knock back the defender" },
-        { AF_REACH_STING,       "cause poisoning" },
-        { AF_REACH_TONGUE,      "deal extra acid damage" },
-        { AF_RIFT,              "cause wild translocation effects" },
         { AF_WEAKNESS,          "cause weakness" },
         { AF_BARBS,             "embed barbs" },
         { AF_SPIDER,            "summon a spider" },
-        { AF_BLOODZERK,         "become enraged" },
+        { AF_BLOODZERK,         "become enraged on drawing blood" },
         { AF_SLEEP,             "induce sleep" },
-        { AF_SWOOP,             "" },
-        { AF_FLANK,             "" },
+        { AF_SWOOP,             "swoops behind the defender beforehand" },
+        { AF_FLANK,             "slips behind the defender beforehand" },
         { AF_PLAIN,             "" },
     };
 
     const string* desc = map_find(base_descs, flavour);
     ASSERT(desc);
     return *desc;
-}
-
-/**
- * Provide a short, and-prefixed flavour description of the given attack
- * flavour, if any.
- *
- * @param flavour  E.g. AF_COLD, AF_PLAIN.
- * @param HD       The hit dice of the monster using the flavour.
- * @return         "" if AF_PLAIN; else " <desc>", e.g.
- *                 " to deal up to 27 extra cold damage if any damage is dealt".
- */
-static string _flavour_effect(attack_flavour flavour, int HD)
-{
-    const string base_desc = _flavour_base_desc(flavour);
-    if (base_desc.empty())
-        return base_desc;
-
-    const int flavour_dam = flavour_damage(flavour, HD, false);
-    const string flavour_desc = make_stringf(base_desc.c_str(), flavour_dam);
-
-    if (flavour == AF_BLOODZERK)
-        return " to " + flavour_desc + " if blood is drawn"; // 🩸
-
-    if (!flavour_triggers_damageless(flavour) && flavour != AF_SWOOP)
-        return " to " + flavour_desc + " if any damage is dealt";
-
-    return " to " + flavour_desc;
 }
 
 struct mon_attack_info
@@ -4869,14 +4789,28 @@ struct mon_attack_info
  */
 static const item_def* _weapon_for_attack(const monster_info& mi, int atk)
 {
-    const item_def* weapon
-       = atk == 0 ? mi.inv[MSLOT_WEAPON].get() :
-         atk == 1 && mi.wields_two_weapons() ? mi.inv[MSLOT_ALT_WEAPON].get() :
-         nullptr;
-
+    // XXX: duplicates monster::weapon()
+    if ((atk % 2) && mi.wields_two_weapons())
+    {
+        item_def *alt_weap = mi.inv[MSLOT_ALT_WEAPON].get();
+        if (alt_weap && is_weapon(*alt_weap))
+            return alt_weap;
+    }
+    item_def* weapon = mi.inv[MSLOT_WEAPON].get();
     if (weapon && is_weapon(*weapon))
         return weapon;
     return nullptr;
+}
+
+static mon_attack_info _atk_info(const monster_info& mi, int i)
+{
+    const mon_attack_def &attack = mi.attack[i];
+    const item_def* weapon = nullptr;
+    // XXX: duplicates monster::weapon()
+    if (attack.type == AT_HIT || attack.type == AT_WEAP_ONLY)
+        weapon = _weapon_for_attack(mi, i);
+    mon_attack_info attack_info = { attack, weapon };
+    return attack_info;
 }
 
 static string _monster_attacks_description(const monster_info& mi)
@@ -4897,14 +4831,14 @@ static string _monster_attacks_description(const monster_info& mi)
         special_flavour = (brand_type) mi.props[SPECIAL_WEAPON_KEY].get_int();
     }
 
+    bool has_any_flavour = false;
+    bool flavour_without_dam = false;
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
-        const mon_attack_def &attack = mi.attack[i];
+        mon_attack_info attack_info = _atk_info(mi, i);
+        const mon_attack_def &attack = attack_info.definition;
         if (attack.type == AT_NONE)
             break; // assumes there are no gaps in attack arrays
-
-        const item_def* weapon = _weapon_for_attack(mi, i);
-        mon_attack_info attack_info = { attack, weapon };
 
         // Multi-headed monsters must always have their multi-attack in the
         // first slot.
@@ -4917,39 +4851,53 @@ static string _monster_attacks_description(const monster_info& mi)
         else
             ++attack_counts[attack_info];
 
+        if (attack.flavour == AF_PLAIN)
+            continue;
+
+        has_any_flavour = true;
+        const bool needs_dam = !flavour_triggers_damageless(attack.flavour)
+                            && !flavour_has_mobility(attack.flavour)
+                            && !flavour_has_reach(attack.flavour);
+        if (!needs_dam)
+            flavour_without_dam = true;
     }
 
-    vector<string> attack_descs;
-    for (const auto &attack_count : attack_counts)
+    if (attack_counts.empty())
+        return result.str();
+
+    _describe_mons_to_hit(mi, result);
+
+    // Table header.
+    result << _padded("Attacks", 12)
+           << _padded("Max Damage", 20);
+    if (has_any_flavour)
+        result << (flavour_without_dam ? "Bonus" : "After Damaging Hits");
+    result << "\n";
+
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
-        const mon_attack_info &info = attack_count.first;
+        const mon_attack_info info = _atk_info(mi, i);
         const mon_attack_def &attack = info.definition;
 
-        const string weapon_note = info.weapon ?
-            make_stringf(" with %s weapon", mi.pronoun(PRONOUN_POSSESSIVE))
-            : "";
+        int attk_mult = attack_counts[info];
+        if (!attk_mult) // already printed
+            continue;
+        attack_counts[info] = 0;
 
-        int attk_mult = attack_count.second;
         if (weapon_multihits(info.weapon))
             attk_mult *= weapon_hits_per_swing(*info.weapon);
+        const string attk_name = uppercase_first(mon_attack_name_short(attack.type));
+        string attk_desc = attk_name;
+        if (attk_mult > 1)
+            attk_desc = make_stringf("%dx %s", attk_mult, attk_desc.c_str());
+        result << _padded(attk_desc, 12);
 
-        const string count_desc =
-              attk_mult == 1 ? "" :
-              attk_mult == 2 ? " twice" :
-              " " + number_in_words(attk_mult) + " times";
-
-        // XXX: hack alert
-        if (attack.flavour == AF_PURE_FIRE)
-        {
-            attack_descs.push_back(
-                make_stringf("%s for up to %d fire damage",
-                             mon_attack_name(attack.type, false).c_str(),
-                             flavour_damage(attack.flavour, mi.hd, false)));
-            continue;
-        }
+        const int flav_dam = flavour_damage(attack.flavour, mi.hd, false);
 
         int dam = attack.damage;
-        if (info.weapon)
+        if (attack.flavour == AF_PURE_FIRE)
+            dam = flav_dam;
+        else if (info.weapon)
         {
             const int base_dam = property(*info.weapon, PWPN_DAMAGE);
             dam += brand_adjust_weapon_damage(base_dam, get_weapon_brand(*info.weapon), false);
@@ -4958,40 +4906,36 @@ static string _monster_attacks_description(const monster_info& mi)
                 dam += info.weapon->plus;
         }
 
-        const brand_type brand = info.weapon ? get_weapon_brand(*info.weapon)
-                                             : special_flavour;
-        const string brand_desc = _describe_brand(brand);
+        result << _padded(make_stringf("%d%s%s", dam,
+                                       attk_mult > 1 ? " each" : "",
+                                       info.weapon ? " (w/weapon)" : ""),
+                          20);
 
-        // Damage is listed in parentheses for attacks with a flavour
-        // description, but not for plain attacks.
-        bool has_flavour = !_flavour_base_desc(attack.flavour).empty();
-        const string damage_desc =
-            make_stringf("%sfor up to %d damage%s%s%s%s",
-                         has_flavour ? "(" : "",
-                         dam,
-                         brand_desc.c_str(),
-                         attack_count.second > 1 ? " each" : "",
-                         weapon_note.c_str(),
-                         has_flavour ? ")" : "");
+        const string base_desc = uppercase_first(_flavour_base_desc(attack.flavour));
+        result << base_desc;
+        if (flav_dam && attack.flavour != AF_PURE_FIRE)
+        {
+            result << " (max " << flav_dam;
+            if (attk_mult > 1)
+                result << " each";
+            result << ")";
+        }
 
-        attack_descs.push_back(
-            make_stringf("%s%s%s%s %s%s",
-                         _special_flavour_prefix(attack.flavour),
-                         mon_attack_name(attack.type, false).c_str(),
-                         _flavour_range_desc(attack.flavour),
-                         count_desc.c_str(),
-                         damage_desc.c_str(),
-                         _flavour_effect(attack.flavour, mi.hd).c_str()));
-    }
+        if (flavour_without_dam
+            && !base_desc.empty()
+            && !flavour_triggers_damageless(attack.flavour)
+            && !flavour_has_mobility(attack.flavour))
+        {
+            result << " (if damage dealt)";
+        }
 
-    if (!attack_descs.empty())
-    {
-        result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
-        result << " can " << comma_separated_line(attack_descs.begin(),
-                                                  attack_descs.end(),
-                                                  "; and ", "; ");
-        _describe_mons_to_hit(mi, result);
-        result << ".\n";
+        if (flavour_has_reach(attack.flavour))
+        {
+            result << (base_desc.empty() ? "Reaches" : "; reaches");
+            result << (attack.flavour == AF_RIFT ? " very far" : " from afar");
+        }
+
+        result << "\n";
     }
 
     if (mons_class_flag(mi.type, M_ARCHER))
@@ -5153,7 +5097,9 @@ static void _describe_mons_to_hit(const monster_info& mi, ostringstream &result)
     const int beat_sh_chance = mon_beat_sh_pct(shield_bypass, shield_class);
 
     const int hit_chance = beat_ev_chance * beat_sh_chance / 100;
-    result << " (about " << hit_chance << "% to hit you)";
+    result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) << " "
+           << conjugate_verb("have", mi.pronoun_plurality())
+           << " about " << hit_chance << "% to hit you.\n";
 }
 
 /**
