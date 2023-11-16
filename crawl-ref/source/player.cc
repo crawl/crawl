@@ -1819,7 +1819,7 @@ int player_prot_life(bool allow_random, bool temp, bool items)
 
 // Even a slight speed advantage is very good... and we certainly don't
 // want to go past 6 (see below). -- bwr
-int player_movement_speed(bool check_terrain)
+int player_movement_speed(bool check_terrain, bool temp)
 {
     int mv = you.form == transformation::none
         ? 10
@@ -1853,7 +1853,7 @@ int player_movement_speed(bool check_terrain)
     else if (player_under_penance(GOD_CHEIBRIADOS))
         mv += 2 + min(div_rand_round(you.piety_max[GOD_CHEIBRIADOS], 20), 8);
 
-    if (you.duration[DUR_FROZEN])
+    if (temp && you.duration[DUR_FROZEN])
         mv += 3;
 
     // Mutations: -2, -3, -4, unless innate and shapechanged.
@@ -1866,7 +1866,7 @@ int player_movement_speed(bool check_terrain)
         mv /= 10;
     }
 
-    if (you.duration[DUR_SWIFTNESS] > 0)
+    if (temp && you.duration[DUR_SWIFTNESS] > 0)
     {
         if (you.attribute[ATTR_SWIFTNESS] > 0)
           mv = div_rand_round(3*mv, 4);

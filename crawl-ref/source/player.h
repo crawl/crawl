@@ -1001,7 +1001,7 @@ bool player_effectively_in_light_armour();
 int player_shield_racial_factor();
 int player_armour_shield_spell_penalty();
 
-int player_movement_speed(bool check_terrain = true);
+int player_movement_speed(bool check_terrain = true, bool temp = true);
 
 int player_icemail_armour_class();
 int player_condensation_shield_class();

@@ -5066,38 +5066,6 @@ static string _monster_spells_description(const monster_info& mi, bool mark_spel
     return description.to_colour_string();
 }
 
-static const char *_speed_description(int speed)
-{
-    // These thresholds correspond to the player mutations for fast and slow.
-    if (speed < 7)
-        return "extremely slowly";
-    else if (speed < 8)
-        return "very slowly";
-    else if (speed < 10)
-        return "slowly";
-    else if (speed > 15)
-        return "extremely quickly";
-    else if (speed > 13)
-        return "very quickly";
-    else if (speed > 10)
-        return "quickly";
-
-    return "normally";
-}
-
-static void _add_energy_to_string(int speed, int energy, string what,
-                                  vector<string> &fast, vector<string> &slow)
-{
-    if (energy == 10)
-        return;
-
-    const int act_speed = (speed * 10) / energy;
-    if (act_speed > 10 || (act_speed == 10 && speed < 10))
-        fast.push_back(what + " " + _speed_description(act_speed));
-    if (act_speed < 10 || (act_speed == 10 && speed > 10))
-        slow.push_back(what + " " + _speed_description(act_speed));
-}
-
 /**
  * Display the % chance of a player hitting the given monster.
  *
@@ -5414,6 +5382,60 @@ static string _monster_current_target_description(const monster_info &mi)
     return result.str();
 }
 
+static bool _add_energy_desc(int energy, string name, int speed, vector<string> &out)
+{
+    if (energy == 10)
+        return false;
+
+    ASSERT(energy);
+    const int perc = speed * 100 / energy;
+    out.push_back(make_stringf("%s: %d%%", name.c_str(), perc));
+    return true;
+}
+
+static void _add_speed_desc(const monster_info &mi, ostringstream &result)
+{
+    const int speed = mi.base_speed();
+    if (!speed) // something weird - let's not touch it
+        return;
+
+    const bool unusual_speed = speed != 10;
+    const mon_energy_usage me = mi.menergy;
+    const mon_energy_usage DEFAULT = DEFAULT_ENERGY;
+    const bool unusual_energy = !(me == DEFAULT);
+    const int travel_delay = me.move * 10 / speed;
+    const int player_travel_delay = player_movement_speed(false, false);
+    const int travel_delay_diff = travel_delay - player_travel_delay;
+    if (!unusual_speed && !unusual_energy && !travel_delay_diff)
+        return;
+
+    result << "\nSpeed: " << speed * 10 << "%";
+
+    vector<string> unusuals;
+
+    _add_energy_desc(me.attack, "attack", speed, unusuals);
+    _add_energy_desc(me.missile, "shoot", speed, unusuals);
+    _add_energy_desc(me.move, "travel", speed, unusuals);
+    if (me.swim != me.move)
+        _add_energy_desc(me.swim, "swim", speed, unusuals);
+    // If we ever add a non-magical monster with fast/slow abilities,
+    // we'll need to update this.
+    _add_energy_desc(me.spell, mi.is_priest() ? "pray" : "magic",
+                     speed, unusuals);
+
+    if (!unusuals.empty())
+        result << " (" << join_strings(unusuals.begin(), unusuals.end(), ", ") << ")";
+
+    if (travel_delay_diff)
+    {
+        const bool slow = travel_delay_diff > 0;
+        const string diff_desc = slow ? "slower" : "faster";
+        result << " (normally travels " << diff_desc << " than you)";
+        // It would be interesting to qualify this with 'on land',
+        // if appropriate, but sort of annoying to get player swim speed.
+    }
+}
+
 // Describe a monster's (intrinsic) resistances, speed and a few other
 // attributes.
 static string _monster_stat_description(const monster_info& mi, bool mark_spells)
@@ -5430,23 +5452,8 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     result << _padded(_describe_monster_wl(mi), 15);  // "Will: +++++" 11
                                                       // total 80 (?)
 
-    // TODO: add speed here
+    _add_speed_desc(mi, result);
 
-    if (crawl_state.game_started)
-    {
-        result << "\n" << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
-               << " " << conjugate_verb("have", mi.pronoun_plurality())
-               << " ";
-        describe_to_hit(mi, result, you.weapon());
-        if (mi.base_ev != mi.ev)
-        {
-            if (!mi.ev)
-                result << " (while incapacitated)";
-            else
-                result << " (at present)";
-        }
-        result << ".";
-    }
     result << "\n\n";
 
     resists_t resist = mi.resists();
@@ -5621,87 +5628,6 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
                << conjugate_verb("are", plural) << " intelligent.\n";
     }
 
-    // Unusual monster speed.
-    const int speed = mi.base_speed();
-    bool did_speed = false;
-    if (speed != 10 && speed != 0)
-    {
-        did_speed = true;
-        result << uppercase_first(pronoun) << " "
-               << conjugate_verb("are", plural) << " "
-               << mi.speed_description();
-    }
-    const mon_energy_usage def = DEFAULT_ENERGY;
-    if (!(mi.menergy == def))
-    {
-        const mon_energy_usage me = mi.menergy;
-        vector<string> fast, slow;
-        if (!did_speed)
-            result << uppercase_first(pronoun) << " ";
-        _add_energy_to_string(speed, me.move,
-                              conjugate_verb("cover", plural) + " ground",
-                              fast, slow);
-        // since MOVE_ENERGY also sets me.swim
-        if (me.swim != me.move)
-        {
-            _add_energy_to_string(speed, me.swim,
-                                  conjugate_verb("swim", plural), fast, slow);
-        }
-        _add_energy_to_string(speed, me.attack,
-                              conjugate_verb("attack", plural), fast, slow);
-        if (mons_class_itemuse(mi.type) >= MONUSE_STARTING_EQUIPMENT)
-        {
-            _add_energy_to_string(speed, me.missile,
-                                  conjugate_verb("shoot", plural), fast, slow);
-        }
-        _add_energy_to_string(
-            speed, me.spell,
-            mi.is_actual_spellcaster() ? conjugate_verb("cast", plural)
-                                         + " spells" :
-            mi.is_priest()             ? conjugate_verb("use", plural)
-                                         + " invocations"
-                                       : conjugate_verb("use", plural)
-                                         + " natural abilities", fast, slow);
-
-        if (speed >= 10)
-        {
-            if (did_speed && fast.size() == 1)
-                result << " and " << fast[0];
-            else if (!fast.empty())
-            {
-                if (did_speed)
-                    result << ", ";
-                result << comma_separated_line(fast.begin(), fast.end());
-            }
-            if (!slow.empty())
-            {
-                if (did_speed || !fast.empty())
-                    result << ", but ";
-                result << comma_separated_line(slow.begin(), slow.end());
-            }
-        }
-        else if (speed < 10)
-        {
-            if (did_speed && slow.size() == 1)
-                result << " and " << slow[0];
-            else if (!slow.empty())
-            {
-                if (did_speed)
-                    result << ", ";
-                result << comma_separated_line(slow.begin(), slow.end());
-            }
-            if (!fast.empty())
-            {
-                if (did_speed || !slow.empty())
-                    result << ", but ";
-                result << comma_separated_line(fast.begin(), fast.end());
-            }
-        }
-        result << ".\n";
-    }
-    else if (did_speed)
-        result << ".\n";
-
     if (mi.type == MONS_SHADOW)
     {
         // Cf. monster::action_energy() in monster.cc.
@@ -5762,6 +5688,20 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
         result << "\n";
     }
 
+    if (crawl_state.game_started)
+    {
+        result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) << " "
+               << conjugate_verb("have", mi.pronoun_plurality()) << " ";
+        describe_to_hit(mi, result, you.weapon());
+        if (mi.base_ev != mi.ev)
+        {
+            if (!mi.ev)
+                result << " (while incapacitated)";
+            else
+                result << " (at present)";
+        }
+        result << ".\n";
+    }
     result << _monster_attacks_description(mi);
     result << _monster_missiles_description(mi);
     result << _monster_habitat_description(mi);
