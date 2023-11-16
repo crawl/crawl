@@ -5426,7 +5426,9 @@ static void _add_speed_desc(const monster_info &mi, ostringstream &result)
     if (!unusuals.empty())
         result << " (" << join_strings(unusuals.begin(), unusuals.end(), ", ") << ")";
 
-    if (travel_delay_diff)
+    if (mi.type == MONS_SIXFIRHY || mi.type == MONS_JIANGSHI)
+        result << " (but often pauses)";
+    else if (travel_delay_diff)
     {
         const bool slow = travel_delay_diff > 0;
         const string diff_desc = slow ? "slower" : "faster";
