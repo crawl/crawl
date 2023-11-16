@@ -2250,6 +2250,10 @@ int flavour_damage(attack_flavour flavour, int HD, bool random)
             if (random)
                 return HD * 3 / 2 + random2(HD);
             return HD * 5 / 2;
+        case AF_DROWN:
+            if (random)
+                return HD * 3 / 4 + random2(HD * 3 / 4);
+            return HD * 3 / 2;
         default:
             return 0;
     }

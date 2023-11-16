@@ -4748,7 +4748,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_PURE_FIRE,         "fire damage" },
         { AF_VULN,              "reduce willpower" },
         { AF_SHADOWSTAB,        "increased damage when unseen" },
-        { AF_DROWN,             "extra drowning damage" },
+        { AF_DROWN,             "drowning damage" },
         { AF_CORRODE,           "cause corrosion" },
         { AF_TRAMPLE,           "knock back the defender" },
         { AF_WEAKNESS,          "cause weakness" },
