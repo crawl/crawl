@@ -437,7 +437,6 @@ void ghost_demon::init_player_ghost()
     set_resist(resists, MR_RES_ACID, player_res_acid());
     // multi-level for players, boolean as an innate monster resistance
     set_resist(resists, MR_RES_STEAM, player_res_steam() ? 1 : 0);
-    set_resist(resists, MR_RES_STICKY_FLAME, player_res_sticky_flame());
     set_resist(resists, MR_RES_MIASMA, you.res_miasma());
     set_resist(resists, MR_RES_PETRIFY, you.res_petrify());
 
@@ -670,7 +669,7 @@ static resists_t _ugly_thing_resists(bool very_ugly, attack_flavour u_att_flav)
     {
     case AF_FIRE:
     case AF_STICKY_FLAME:
-        return MR_RES_FIRE * (very_ugly ? 2 : 1) | MR_RES_STICKY_FLAME;
+        return MR_RES_FIRE * (very_ugly ? 2 : 1);
 
     case AF_ACID:
         return MR_RES_ACID;

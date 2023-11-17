@@ -228,7 +228,7 @@ enum mon_resist_flags
 #else
     // unused 1 << 25,
 #endif
-    MR_RES_STICKY_FLAME  = 1 << 26,
+    // unused 1 << 26,
     // unused 1 << 27,
     MR_RES_STEAM         = 1 << 28,
 

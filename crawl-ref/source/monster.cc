@@ -3729,7 +3729,7 @@ int monster::res_poison(bool temp) const
 
 bool monster::res_sticky_flame() const
 {
-    return is_insubstantial() || get_mons_resist(*this, MR_RES_STICKY_FLAME) > 0;
+    return is_insubstantial();
 }
 
 bool monster::res_miasma(bool /*temp*/) const

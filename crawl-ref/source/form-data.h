@@ -239,7 +239,7 @@ static const form_entry formdata[] =
     "an insubstantial wisp.",
     0, 0, NUM_TALISMANS,
     EQF_ALL, mrd(MR_RES_FIRE, 2) | mrd(MR_RES_COLD, 2) | MR_RES_ELEC
-             | MR_RES_STICKY_FLAME | mrd(MR_RES_NEG, 3) | MR_RES_ACID
+             | mrd(MR_RES_NEG, 3) | MR_RES_ACID
              | MR_RES_PETRIFY,
     BAD_DURATION, 0, 0, SIZE_TINY, 10,
     FormScaling().Base(5).Scaling(14).XLBased(), false, FormScaling().Base(2).XLBased(),
@@ -325,7 +325,7 @@ static const form_entry formdata[] =
     transformation::storm, MONS_TWISTER, "Storm", "storm-form", "storm",
     "a lightning-filled tempest!",
     23, 27, TALISMAN_STORM,
-    EQF_PHYSICAL, MR_RES_ELEC | MR_RES_PETRIFY | MR_RES_STICKY_FLAME,
+    EQF_PHYSICAL, MR_RES_ELEC | MR_RES_PETRIFY,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
     FormScaling().Base(12).Scaling(3), true, FormScaling().Base(24).Scaling(6),
     SPWPN_ELECTROCUTION, LIGHTCYAN, "", { "hit", "buffet", "batter", "blast" },

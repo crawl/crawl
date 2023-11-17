@@ -426,14 +426,6 @@ bool Form::res_acid() const
 }
 
 /**
- * Does this form provide resistance to sticky flame?
- */
-bool Form::res_sticky_flame() const
-{
-    return get_resist(resists, MR_RES_STICKY_FLAME);
-}
-
-/**
  * Does this form provide resistance to petrification?
  */
 bool Form::res_petrify() const
