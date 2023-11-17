@@ -4686,8 +4686,6 @@ static const char* _get_resist_name(mon_resist_flags res_type)
         return "negative energy";
     case MR_RES_DAMNATION:
         return "damnation";
-    case MR_RES_VORTEX:
-        return "polar vortices";
     case MR_RES_TORMENT:
         return "torment";
     default:
@@ -5511,7 +5509,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
 
     const mon_resist_flags special_resists[] =
     {
-        MR_RES_STEAM,     MR_RES_ACID,    MR_RES_VORTEX,
+        MR_RES_STEAM,     MR_RES_ACID,
         MR_RES_DAMNATION, MR_RES_MIASMA,  MR_RES_TORMENT,
     };
 
@@ -5527,9 +5525,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
         if (level != 0)
         {
             const char* attackname = _get_resist_name(rflags);
-            if (rflags == MR_RES_DAMNATION
-                || rflags == MR_RES_VORTEX
-                || rflags == MR_RES_TORMENT)
+            if (rflags == MR_RES_DAMNATION || rflags == MR_RES_TORMENT)
             {
                 level = 3; // one level is immunity
             }
