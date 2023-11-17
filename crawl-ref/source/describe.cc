@@ -4865,7 +4865,7 @@ static string _monster_attacks_description(const monster_info& mi)
     }
 
     if (attack_counts.empty())
-        return result.str();
+        return "";
 
     _describe_mons_to_hit(mi, result);
 
@@ -4956,6 +4956,7 @@ static string _monster_attacks_description(const monster_info& mi)
                                " attacking with ranged weaponry.\n");
     }
 
+    result << "\n";
     return result.str();
 }
 
@@ -5492,6 +5493,21 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
 
     result << "\n\n";
 
+    if (crawl_state.game_started)
+    {
+        result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) << " "
+               << conjugate_verb("have", mi.pronoun_plurality()) << " ";
+        describe_to_hit(mi, result, you.weapon());
+        if (mi.base_ev != mi.ev)
+        {
+            if (!mi.ev)
+                result << " (while incapacitated)";
+            else
+                result << " (at present)";
+        }
+        result << ".\n";
+    }
+    result << _monster_attacks_description(mi);
 
     const mon_resist_flags special_resists[] =
     {
@@ -5728,21 +5744,6 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
         result << "\n";
     }
 
-    if (crawl_state.game_started)
-    {
-        result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) << " "
-               << conjugate_verb("have", mi.pronoun_plurality()) << " ";
-        describe_to_hit(mi, result, you.weapon());
-        if (mi.base_ev != mi.ev)
-        {
-            if (!mi.ev)
-                result << " (while incapacitated)";
-            else
-                result << " (at present)";
-        }
-        result << ".\n";
-    }
-    result << _monster_attacks_description(mi);
     result << _monster_missiles_description(mi);
     result << _monster_habitat_description(mi);
     result << _monster_spells_description(mi, mark_spells);
