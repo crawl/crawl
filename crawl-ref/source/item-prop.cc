@@ -2968,6 +2968,19 @@ bool shield_reflects(const item_def &shield)
     return is_shield(shield) && get_armour_ego_type(shield) == SPARM_REFLECTION;
 }
 
+int shield_block_limit(const item_def &shield)
+{
+    if (!is_shield(shield))
+        return 0;
+    switch (shield.sub_type)
+    {
+    case ARM_BUCKLER:      return 2;
+    case ARM_KITE_SHIELD:  return 3;
+    case ARM_TOWER_SHIELD: return 4;
+    default:               return 0; // ?!
+    }
+}
+
 int guile_adjust_willpower(int wl)
 {
     return max(0, wl - 2 * WL_PIP);

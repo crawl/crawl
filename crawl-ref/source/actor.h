@@ -245,8 +245,9 @@ public:
     virtual int evasion(bool ignore_helpless = false,
                         const actor *attacker = nullptr) const = 0;
     virtual bool shielded() const = 0;
+    virtual int shield_block_limit() const;
+    bool shield_exhausted() const;
     virtual int shield_bonus() const = 0;
-    virtual int shield_block_penalty() const = 0;
     virtual int shield_bypass_ability(int tohit) const = 0;
     virtual void shield_block_succeeded(actor *attacker);
     virtual bool missile_repulsion() const = 0;

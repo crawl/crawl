@@ -500,7 +500,6 @@ public:
 
     bool    shielded() const override;
     int     shield_bonus() const override;
-    int     shield_block_penalty() const override;
     void    shield_block_succeeded(actor *attacker) override;
     int     shield_bypass_ability(int tohit) const override;
     bool    missile_repulsion() const override;

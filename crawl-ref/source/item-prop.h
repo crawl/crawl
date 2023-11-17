@@ -131,6 +131,7 @@ bool is_offhand(const item_def &item) PURE;
 bool is_shield_incompatible(const item_def &weapon,
                             const item_def *shield = nullptr) PURE;
 bool shield_reflects(const item_def &shield) PURE;
+int shield_block_limit(const item_def &shield) PURE;
 
 int guile_adjust_willpower(int wl) PURE;
 

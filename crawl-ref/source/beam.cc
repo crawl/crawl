@@ -3198,6 +3198,7 @@ bool bolt::misses_player()
     if ((player_omnireflects() && is_omnireflectable()
          || is_blockable())
         && you.shielded()
+        && !you.shield_exhausted()
         && !aimed_at_feet
         && SH > 0)
     {
@@ -3215,8 +3216,7 @@ bool bolt::misses_player()
             // We use the original to-hit here.
             // (so that effects increasing dodge chance don't increase
             // block...?)
-            const int testhit = random2(hit * 130 / 100
-                                        + you.shield_block_penalty());
+            const int testhit = random2(hit * 130 / 100);
 
             const int block = you.shield_bonus();
 
@@ -4811,8 +4811,8 @@ bool bolt::attempt_block(monster* mon)
     if (shield_block <= 0)
         return false;
 
-    const int sh_hit = random2(hit * 130 / 100 + mon->shield_block_penalty());
-    if (sh_hit >= shield_block)
+    const int sh_hit = random2(hit * 130 / 100);
+    if (sh_hit >= shield_block || mon->shield_exhausted())
         return false;
 
     item_def *shield = mon->mslot_item(MSLOT_SHIELD);

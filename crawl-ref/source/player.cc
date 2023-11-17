@@ -5697,11 +5697,6 @@ bool player::liquefied_ground() const
            && ground_level() && !is_insubstantial();
 }
 
-int player::shield_block_penalty() const
-{
-    return 5 * shield_blocks * shield_blocks;
-}
-
 /**
  * Returns whether the player currently has any kind of shield.
  *

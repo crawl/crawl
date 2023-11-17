@@ -391,6 +391,19 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule, bool for_real) 
     return max(damage - saved, 0);
 }
 
+int actor::shield_block_limit() const
+{
+    const item_def *sh = shield();
+    if (!sh)
+        return 1;
+    return ::shield_block_limit(*sh);
+}
+
+bool actor::shield_exhausted() const
+{
+    return shield_blocks >= shield_block_limit();
+}
+
 bool actor_slime_wall_immune(const actor *act)
 {
     return act->is_player() && have_passive(passive_t::slime_wall_immune)

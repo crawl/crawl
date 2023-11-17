@@ -1247,8 +1247,7 @@ bool attack::attack_shield_blocked(bool verbose)
     if (defender->incapacitated())
         return false;
 
-    const int con_block = random2(attacker->shield_bypass_ability(to_hit)
-                                  + defender->shield_block_penalty());
+    const int con_block = random2(attacker->shield_bypass_ability(to_hit));
     int pro_block = defender->shield_bonus();
 
     if (!attacker->visible_to(defender))
@@ -1260,6 +1259,9 @@ bool attack::attack_shield_blocked(bool verbose)
     if (pro_block >= con_block)
     {
         perceived_attack = true;
+
+        if (defender->shield_exhausted())
+            return false;
 
         if (ignores_shield(verbose))
             return false;

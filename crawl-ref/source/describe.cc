@@ -2154,8 +2154,10 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
         {
             description += "Base shield rating: "
                         + to_string(property(item, PARM_AC));
-            description += "       Encumbrance rating: "
+            description += "     Encumbrance rating: "
                         + to_string(-property(item, PARM_EVASION) / 10);
+            description += "     Max blocks/turn: "
+                        + to_string(shield_block_limit(item));
             if (is_unrandom_artefact(item, UNRAND_WARLOCK_MIRROR))
                 description += _warlock_mirror_reflect_desc();
         }
