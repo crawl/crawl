@@ -5526,9 +5526,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
         {
             const char* attackname = _get_resist_name(rflags);
             if (rflags == MR_RES_DAMNATION || rflags == MR_RES_TORMENT)
-            {
                 level = 3; // one level is immunity
-            }
             level = max(level, -1);
             level = min(level,  3);
             switch (level)
