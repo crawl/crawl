@@ -9422,73 +9422,86 @@ xxvvvvvxxx
 xxxxxxxx
 ENDMAP
 
+####
+
 # A monster will have this equipped rather than it being on the ground
 # Yo ho ho and a bottle o' rum
 NAME:   beargit_guarded_unrand_captain_cutlass
 TAGS:   no_monster_gen no_item_gen patrolling
 DEPTH:  Shoals, Swamp, Crypt, Depths
 WEIGHT: 3
-KITEM:  d = potion of degeneration
-KITEM:	e = potion of ambrosia
-NSUBST: . = 10:d / 2:e
-KITEM:  G = gold
-KITEM:  I = scroll of immolation
-SUBST: 	% = %%I
-# The captain
-KMONS:   1 = ancient champion; captain's cutlass
-# And his "parrot"
-KMONS:  2 = caustic shrike zombie / shard shrike zombie /\
-            caustic shrike skeleton / shard shrike skeleton /\
-            spectral caustic shrike / spectral shard shrike
-: if you.in_branch("Crypt") or you.in_branch("Swamp") then
-KMONS:  3 = kraken zombie / kraken simulacrum
-KMONS:  4 = electric eel
-KMONS:  6 = wind drake zombie
-: else
-KMONS:  3 = kraken
-KMONS:  4 = electric eel
-KMONS:  6 = wind drake
+# The captain and their parrot(s), the lore-invoking kraken,
+# some undead crew members, and some lingering ghosts.
+: if you.in_branch("Swamp") then
+MONS:   skeletal warrior ; captain's cutlass . swamp dragon scales
+MONS:   shard shrike zombie, kraken zombie / kraken simulacrum
+MONS:   bog body / freezing wraith / spriggan berserker skeleton
+KMONS:  56 = bloated husk / hydra skeleton
+KMONS:  7 = ghost crab / will-o-the-wisp
+NSUBST: w = 1:3 / 4:6 / 1:67 / 1:7 / *:w
+SUBST:  ~ = t, ? = 4
+:   dgn.delayed_decay(_G, "Z", "human skeleton / spriggan skeleton" )
+: elseif you.in_branch("Shoals") then
+TAGS:   water_ok no_pool_fixup
+# Shoals doesn't have any default undead themes, so instead have
+# mostly wildlife that picked the crew's bones clean.
+MONS:   skeletal warrior ; captain's cutlass . scale mail . buckler
+MONS:   shard shrike skeleton, kraken
+MONS:   merfolk impaler skeleton / snapping turtle skeleton w:4
+KMONS:  56 = wind drake / manticore
+KMONS:  7 = alligator snapping turtle
+KMONS:  0 = harpy / sea snake / snapping turtle
+NSUBST: w = 1:3 / 3:6 / 1:77w / *:w, 4 = 4:0 / 2:Z / *:4
+SUBST:  ~ = @, ? = 0
+:   dgn.delayed_decay(_G, "Z", "human skeleton / merfolk skeleton" )
+: elseif you.in_branch("Crypt") then
+MONS:   ancient champion ; captain's cutlass . scale mail . kite shield
+MONS:   shard shrike simulacrum / spectral shard shrike, spectral kraken
+MONS:   skeletal warrior / jiangshi / vampire knight w:4 / \
+        alligator snapping turtle skeleton w:2 / sea snake simulacrum w:2
+KMONS:  56 = flayed ghost / vampire mage
+KMONS:  7 = curse skull
+SUBST:  ~ = xw, ? = 2
+NSUBST: w = 2:3 / 2:6 / 1:7 / 1:6w / *:w, . = 2:4
+:   dgn.delayed_decay(_G, "Z", "spriggan skeleton / merfolk skeleton")
+: else -- Depths
+MONS:   ancient champion ; captain's cutlass . plate armour
+MONS:   caustic shrike simulacrum / spectral caustic shrike
+MONS:   kraken / kraken simulacrum / spectral kraken
+MONS:   jiangshi / spriggan defender skeleton / vampire knight w:4
+KMONS:  56 = phantasmal warrior / storm dragon skeleton
+KMONS:  7 = flayed ghost / merfolk javelineer
+NSUBST: w = 3:3 / 3:6 / 3:7 / 4 = 67w / *:w
+SUBST:  ~ = xw, ? = 2
+:   dgn.delayed_decay(_G, "Z", "any skeleton")
 : end
-KMONS:  s = skeletal warrior
-KMONS:  S = wight band
-SUBST:  5 = ssssS
-
-#increase the difficulty if later spawn
-:if you.in_branch("Crypt") or you.in_branch("Depths") then
-KMONS:  b = flying skull band
-KMONS:  n = shadow wraith
-KMONS:  f = titan skeleton
-NSUBST: . =  8=bnf
-: else
-KMONS:  b = phantom
-KMONS:  n = wraith
-KMONS:  f = freezing wraith
-NSUBST: . =  9=bnf
-: end
-KMONS:  7 = flayed ghost
+ITEM:   potion of degeneration ident:type, potion of ambrosia ident:type
+ITEM:   scroll of immolation ident:type / % w:20
+KFEAT:  67 = w
+NSUBST: . = 10:d / 2:e / 8:Z / 3:` / 3:4 / 3 = 45.. / *:.
 KPROP:  ` = bloody
-NSUBST: w = 1:3 / 10=44446
+NSUBST: w = 1:3 / 10=wwww6
 MAP
      WWWWWWWWWWWWWW.@.WWWWWWWWWWWWWW
     WWWWWWWWwwwwwww...wWwWwwWWWwwwwwww
-   WwwwWwwwWwwwwwww...wwwwwwwWwwwwwwwwww
+   WwwwWwwwWwwwwwww.`.wwwwwwwWwwwwwwwwww
  wwwwwwwwwwwwwwwwww...wwwwwwwwwwwwwwwwww
-wwwwwxxmxmxmxmxmx.....wwwwwwwwwwwwwwwwwww
-wwwwxx%%.%+.....+............wwwwwwwwwwww
-wwwwx%..%xx..5..x...............xxxxwwwwwwww
-wwwxxxxxxxxxxxxxx.....5....>....x.5xxxxwwwwww
-wwxx....x.......+...............x`..`7xxxxwww
-wwm.....x.......x....xxx........+.5.`.x5.xxwwww
-wwx*12..xxx+xxxxx....xxx........xxxxxxx.5|xxxww
-wwm.....+...5...+....xxx..5.....+.....+.5xxwww
-wwxx....x.......x...............x..5..xxxxwwww
-wwwxxx+xxxxx+xxxx....5.....>....x..xxxxwwwwww
-wwwwxGGGGGx...5.x...............xxxxwwwwwwww
-wwwwxxGGGGx.....x............wwwwwwwwwwww
+wwwwwxxmxmxmxmxmx...`.wwwwwwwwwwwwwwwwwww
+wwwwxxff.f+.....+............wwwwwwwwwwww
+wwwwxf..fxx..4..x...............xxxxwwwwwwww
+wwwxxxxxxxxxxxxxx.....4....>....x.4xxxxwwwwww
+wwxx....x.......+...............x`.`.5xxxxwww
+wwm.....x.......x....xxx........+.4.`.x4.xxwwww
+wwx*12?.xxx+xxxxx....xxx........xxxxxxx.4|xxxww
+wwm.....+...4...+....xxx..4.....+.....+.4xxwww
+wwxx....x.......x...............x..4..xxxxwwww
+wwwxxx+xxxxx+xxxx....4.....>....x..xxxxwwwwww
+wwwwx$$$$$x...4.x...............xxxxwwwwwwww
+wwwwxx$$$$x.....x............wwwwwwwwwwww
 wwwwwxxxxxxmxmxmx.....wwwwwwwwwwwwwwwwww
  wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
   wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-  WWWWWWWwwwwwwwWWWwWwWwwWWWwwwwwwww
+  ~~~~~~~wwwwwww~~~w~w~ww~~~wwwwwwww
 ENDMAP
 
 ###################################################################
