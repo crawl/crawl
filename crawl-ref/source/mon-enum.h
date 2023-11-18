@@ -242,6 +242,20 @@ enum mon_resist_flags
     MR_VUL_COLD          = mrd(MR_RES_COLD, -1),
 };
 
+const mon_resist_flags ALL_MON_RESISTS[] = {
+    MR_RES_ELEC,
+    MR_RES_POISON,
+    MR_RES_FIRE,
+    MR_RES_COLD,
+    MR_RES_NEG,
+    MR_RES_ACID,
+    MR_RES_MIASMA,
+    MR_RES_TORMENT,
+    MR_RES_PETRIFY,
+    MR_RES_DAMNATION,
+    MR_RES_STEAM,
+};
+
 enum shout_type
 {
     S_SILENT,               // silent

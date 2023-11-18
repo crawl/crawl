@@ -284,6 +284,7 @@ public:
     virtual bool res_polar_vortex() const = 0;
     virtual bool res_petrify(bool temp = true) const = 0;
     virtual int res_constrict() const = 0;
+    int get_res(int res) const;
     virtual int willpower() const = 0;
     virtual int check_willpower(const actor* source, int power) const;
     virtual bool no_tele(bool blink = false, bool temp = true) const = 0;

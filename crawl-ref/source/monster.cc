@@ -3554,6 +3554,19 @@ bool monster::is_insubstantial() const
     return mons_class_flag(type, M_INSUBSTANTIAL);
 }
 
+/// All resists intrinsic to a monster, including enchants, equip, etc.
+resists_t monster::all_resists() const
+{
+    resists_t resists = 0;
+    for (auto res : ALL_MON_RESISTS)
+    {
+        const int lvl = get_res(res);
+        if (lvl)
+            resists |= mrd(res, lvl);
+    }
+    return resists;
+}
+
 /// Is this monster completely immune to Damnation-flavoured damage?
 bool monster::res_damnation() const
 {

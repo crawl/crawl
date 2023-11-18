@@ -388,6 +388,7 @@ public:
     bool res_polar_vortex() const override;
     bool res_petrify(bool /*temp*/ = true) const override;
     int res_constrict() const override;
+    resists_t all_resists() const;
     int willpower() const override;
     bool no_tele(bool blink = false, bool /*temp*/ = true) const override;
     bool res_corr(bool /*allow_random*/ = true, bool temp = true) const override;

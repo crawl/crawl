@@ -601,7 +601,7 @@ monster_info::monster_info(const monster* m, int milev)
     can_see_invis = m->can_see_invisible();
     if (m->nightvision())
         props[NIGHTVISION_KEY] = true;
-    mresists = get_mons_resists(*m);
+    mresists = m->all_resists();
     mitemuse = mons_itemuse(*m);
     mbase_speed = mons_base_speed(*m, true);
     menergy = mons_energy(*m);

@@ -383,6 +383,7 @@ resists_t get_mons_class_resists(monster_type mc)
     return _apply_holiness_resists(resists, mons_class_holiness(mc));
 }
 
+/// All resists intrinsic to a monster, excluding enchants, equip, etc.
 resists_t get_mons_resists(const monster& m)
 {
     const monster& mon = get_tentacle_head(m);
