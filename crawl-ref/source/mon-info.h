@@ -253,6 +253,7 @@ struct monster_info_base
     int ac;
     int ev;
     int base_ev;
+    int sh;
     int mr;
     resists_t mresists;
     bool can_see_invis;

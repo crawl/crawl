@@ -2991,26 +2991,45 @@ bool monster::shielded() const
     return shield() || wearing(EQ_AMULET, AMU_REFLECTION);
 }
 
-int monster::shield_bonus() const
+/// I honestly don't know what this means, really. It's vaguely similar
+/// to the player equivalent.
+int monster::shield_class() const
 {
-    if (incapacitated())
-        return -100;
-
     int sh = 0;
     const item_def *shld = shield();
-    if (shld && get_armour_slot(*shld) == EQ_SHIELD)
+    if (shld && is_shield(*shld))
     {
-
-        int shld_c = property(*shld, PARM_AC) + shld->plus * 2;
-        shld_c = shld_c * 2 + (body_size(PSIZE_TORSO) - SIZE_MEDIUM)
-                            * (shld->sub_type - ARM_TOWER_SHIELD);
-        sh = random2avg(shld_c + get_hit_dice() * 4 / 3, 2) / 2;
+        // Look, this is all nonsense.
+        // First, take the item properties.
+        const int base = property(*shld, PARM_AC) + shld->plus;
+        // Double them, because we halved the size of player-visible stats many
+        // years ago but never fixed the internal math. Sorry!
+        sh += base * 2;
+        // Do some ridiculous pointless nonsense with monster sizes
+        // where bigger monsters get less protection from smaller shields,
+        // and smaller monsters get more protection. TODO: REMOVEME
+        const int mon_size_delta = body_size(PSIZE_TORSO) - SIZE_MEDIUM;
+        const int sh_size_delta = shld->sub_type - ARM_TOWER_SHIELD;
+        sh += mon_size_delta * sh_size_delta;
+        // Finally, add in monster HD as a proxy for 'shield skill'.
+        sh += get_hit_dice() * 4 / 3;
     }
-    // shielding from jewellery
+
     const item_def *amulet = mslot_item(MSLOT_JEWELLERY);
     if (amulet && amulet->sub_type == AMU_REFLECTION)
         sh += AMU_REFLECT_SH;
 
+    return sh;
+}
+
+int monster::shield_bonus() const
+{
+    if (incapacitated())
+        return 100;
+
+    const int cls = shield_class();
+    // I don't know why we randomize like this.
+    const int sh = random2avg(cls, 2) / 2;
     return sh ? sh : -100;
 }
 

@@ -499,6 +499,7 @@ public:
 
 
     bool    shielded() const override;
+    int     shield_class() const;
     int     shield_bonus() const override;
     void    shield_block_succeeded(actor *attacker) override;
     int     shield_bypass_ability(int tohit) const override;

@@ -5191,7 +5191,8 @@ static string _padded(string str, int pad_to)
 
 static string _build_bar(int value, int scale)
 {
-    const int pips = value / scale;
+    // Round up.
+    const int pips = (value + scale - 1) / scale;
     if (pips <= 0)
         return "none";
     if (pips > 8) // too many..
@@ -5236,6 +5237,14 @@ static string _describe_monster_ac(const monster_info& mi)
 static string _describe_monster_ev(const monster_info& mi)
 {
     return "EV: " + _build_bar(mi.base_ev, 5);
+}
+
+static string _describe_monster_sh(const monster_info& mi)
+{
+    const int sh = mi.sh / 2; // rescale to match player SH
+    if (sh <= 0)
+        return "";
+    return "SH: " + _build_bar(sh, 5);
 }
 
 /**
@@ -5495,9 +5504,10 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     // These padding values are set to line up defenses with common resists.
     result << _padded(_describe_monster_hp(mi), 16);  // worst case is "Max HP: ~9999"
                                                       // len 13, then 3 spaces after
+    result << _padded(_describe_monster_wl(mi), 16);  // "Will: +++++" 11
     result << _padded(_describe_monster_ac(mi), 16);  // "AC: ++++ ++++" 13 again
     result << _padded(_describe_monster_ev(mi), 16);  // "EV*: ++++ ++++" 14
-    result << _padded(_describe_monster_wl(mi), 16);  // "Will: +++++" 11
+    result << _describe_monster_sh(mi);
 
     const resists_t resist = mi.resists();
     _add_resist_desc(resist, result);
