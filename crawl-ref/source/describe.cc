@@ -4844,6 +4844,7 @@ static string _monster_attacks_description(const monster_info& mi)
 
     bool has_any_flavour = false;
     bool flavour_without_dam = false;
+    bool plural = false;
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         mon_attack_info attack_info = _atk_info(mi, i);
@@ -4862,6 +4863,9 @@ static string _monster_attacks_description(const monster_info& mi)
         else
             ++attack_counts[attack_info];
 
+        if (i > 0)
+            plural = true;
+
         if (attack.flavour == AF_PLAIN)
             continue;
 
@@ -4879,7 +4883,7 @@ static string _monster_attacks_description(const monster_info& mi)
     _describe_mons_to_hit(mi, result);
 
     // Table header.
-    result << _padded("Attacks", 12)
+    result << _padded(plural ? "Attacks" : "Attack", 12)
            << _padded("Max Damage", 20);
     if (has_any_flavour)
         result << (flavour_without_dam ? "Bonus" : "After Damaging Hits");
