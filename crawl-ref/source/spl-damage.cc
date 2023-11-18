@@ -3024,7 +3024,7 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
 
 
     int arc = hitfunc.arclen;
-    
+
     ASSERT(arc > 0);
     dprf("arc length is %d", arc);
 

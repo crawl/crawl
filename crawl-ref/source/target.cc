@@ -1374,7 +1374,7 @@ bool targeter_thunderbolt::set_aim(coord_def a)
     zapped.clear();
 
     if (a == origin)
-        return false; 
+        return false;
 
     ray_def ray;
     coord_def p; // ray.pos() does lots of processing, cache it
