@@ -55,7 +55,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_SILVER_CORONA,   MB_GLOWING },
     { ENCH_SLOW,            MB_SLOWED },
     { ENCH_SICK,            MB_SICK },
-    { ENCH_FRENZIED,          MB_FRENZIED },
+    { ENCH_FRENZIED,        MB_FRENZIED },
     { ENCH_HASTE,           MB_HASTED },
     { ENCH_MIGHT,           MB_STRONG },
     { ENCH_CONFUSION,       MB_CONFUSED },
@@ -883,6 +883,19 @@ string monster_info::get_max_hp_desc() const
 
     mhp /= scale;
     return make_stringf("~%d", mhp);
+}
+
+/// HP regenerated every (scale) turns.
+int monster_info::regen_rate(int scale) const
+{
+    if (!can_regenerate() || is(MB_SICK) /* ? */)
+        return 0;
+    if (mons_class_fast_regen(type) || is(MB_REGENERATION) /* ? */)
+        return mons_class_regen_amount(type) * scale;
+
+    // Duplicates monster::natural_regen_rate.
+    const int divider = max(((15 - hd) + 2 /*round up*/) / 4, 1);
+    return min(scale, max(1, hd * scale / (divider * 25)));
 }
 
 /**

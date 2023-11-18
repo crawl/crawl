@@ -4697,12 +4697,23 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
 {
     switch (threat)
     {
-    case MTHRT_TRIVIAL: return "harmless";
-    case MTHRT_EASY:    return "easy";
-    case MTHRT_TOUGH:   return "dangerous";
-    case MTHRT_NASTY:   return "extremely dangerous";
-    case MTHRT_UNDEF:
-    default:            return "buggily threatening";
+    case MTHRT_UNDEF: // ?
+    case MTHRT_TRIVIAL: return "Minor";
+    case MTHRT_EASY:    return "Low";
+    case MTHRT_TOUGH:   return "High";
+    case MTHRT_NASTY:   return "Lethal";
+    default:            return "Eggstreme";
+    }
+}
+
+static const char* _get_int_desc(mon_intel_type intel)
+{
+    switch (intel)
+    {
+    case I_BRAINLESS:   return "Mindless";
+    case I_ANIMAL:      return "Animal";
+    case I_HUMAN:       return "Human";
+    default:            return "Eggplantelligent";
     }
 }
 
@@ -5487,6 +5498,17 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     const resists_t resist = mi.resists();
     _add_resist_desc(resist, result);
 
+    // Less important common properties. Arguably should be lower down.
+    const size_type sz = mi.body_size();
+    const string size_desc = sz == SIZE_LITTLE ? "V. Small" : uppercase_first(get_size_adj(sz));
+    const int regen_rate = mi.regen_rate(100);
+    result << "\n";
+    result << _padded(make_stringf("Threat: %s", _get_threat_desc(mi.threat)), 16);
+    result << _padded(make_stringf("Regen: %.2f", regen_rate/100.0f), 16);
+    result << _padded(make_stringf("Size: %s", size_desc.c_str()), 16);
+    result << _padded(make_stringf("Int: %s", _get_int_desc(mi.intel())), 16);
+    result << "See Invis: " << (mi.can_see_invisible() ? "+" : ".");
+
     _add_speed_desc(mi, result);
 
     result << "\n\n";
@@ -5580,13 +5602,6 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     const char* pronoun = mi.pronoun(PRONOUN_SUBJECTIVE);
     const bool plural = mi.pronoun_plurality();
 
-    if (mi.threat != MTHRT_UNDEF)
-    {
-        result << uppercase_first(pronoun) << " "
-               << conjugate_verb("look", plural) << " "
-               << _get_threat_desc(mi.threat) << ".\n";
-    }
-
     if (mi.has_unusual_items())
     {
         const vector<string> unusual_items = mi.get_unusual_items();
@@ -5642,10 +5657,6 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
                << " cold-blooded and may be slowed by cold attacks.\n";
     }
 
-    // Seeing invisible.
-    if (mi.can_see_invisible())
-        result << uppercase_first(pronoun) << " can see invisible.\n";
-
     if (mons_class_flag(mi.type, M_INSUBSTANTIAL))
     {
         result << uppercase_first(pronoun) << " "
@@ -5657,19 +5668,6 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     // it's true of such a huge number of monsters. (undead, statues, plants).
     // Might be better to have some place where players can see holiness &
     // information about holiness.......?
-
-    if (mi.intel() <= I_BRAINLESS)
-    {
-        // Matters for Ely.
-        result << uppercase_first(pronoun) << " "
-               << conjugate_verb("are", plural) << " mindless.\n";
-    }
-    else if (mi.intel() >= I_HUMAN)
-    {
-        // Matters for Yred, Gozag, Zin, TSO, Alistair....
-        result << uppercase_first(pronoun) << " "
-               << conjugate_verb("are", plural) << " intelligent.\n";
-    }
 
     if (mi.type == MONS_SHADOW)
     {
@@ -5688,25 +5686,6 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
 
     if (mi.airborne())
         result << uppercase_first(pronoun) << " can fly.\n";
-
-    // Unusual regeneration rates.
-    if (!mi.can_regenerate())
-        result << uppercase_first(pronoun) << " cannot regenerate.\n";
-    else if (mons_class_fast_regen(mi.type))
-        result << uppercase_first(pronoun) << " "
-               << conjugate_verb("regenerate", plural) << " "
-               << (mi.type == MONS_PARGHIT         ? "astonishingly "
-                 : mi.type == MONS_DEMONIC_CRAWLER ? "very "
-                                                   : "")
-               << "quickly.\n";
-
-    const char* mon_size = get_size_adj(mi.body_size(), true);
-    if (mon_size)
-    {
-        result << uppercase_first(pronoun) << " "
-               << conjugate_verb("are", plural) << " "
-               << mon_size << ".\n";
-    }
 
     if (in_good_standing(GOD_ZIN, 0) && !mi.pos.origin() && monster_at(mi.pos))
     {

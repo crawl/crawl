@@ -151,15 +151,11 @@ static void _monster_regenerate(monster* mons)
         return;
     }
 
-    if (mons->type == MONS_PARGHIT)
-        mons->heal(27); // go whoosh
-    else if (mons->type == MONS_DEMONIC_CRAWLER)
-        mons->heal(6); // go zoom
-    else if (mons_class_fast_regen(mons->type)
+    if (mons_class_fast_regen(mons->type)
         || mons->has_ench(ENCH_REGENERATION)
         || _mons_natural_regen_roll(mons))
     {
-        mons->heal(1);
+        mons->heal(mons_class_regen_amount(mons->type));
     }
 
     if (mons_is_hepliaklqana_ancestor(mons->type))

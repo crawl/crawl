@@ -2930,6 +2930,7 @@ bool monster::liquefied_ground() const
 }
 
 // in units of 1/25 hp/turn
+// Please update monster_info::regen_rate if you change this.
 int monster::natural_regen_rate() const
 {
     // A HD divider ranging from 3 (at 1 HD) to 1 (at 8 HD).
@@ -2944,12 +2945,8 @@ int monster::off_level_regen_rate() const
     if (!mons_can_regenerate(*this))
         return 0;
 
-    if (type == MONS_PARGHIT)
-        return 2700; // whoosh
-    if (type == MONS_DEMONIC_CRAWLER)
-        return 600; // zoom
     if (mons_class_fast_regen(type) || type == MONS_PLAYER_GHOST)
-        return 100;
+        return mons_class_regen_amount(type) * 100;
     // Capped at 0.1 hp/turn.
     return max(natural_regen_rate() * 4, 10);
 }

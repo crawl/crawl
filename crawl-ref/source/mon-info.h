@@ -341,6 +341,7 @@ struct monster_info : public monster_info_base
         return get_damage_level_string(holi, dam);
     }
     string get_max_hp_desc() const;
+    int regen_rate(int scale) const;
 
     inline bool neutral() const
     {

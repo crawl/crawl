@@ -1621,6 +1621,16 @@ bool mons_class_fast_regen(monster_type mc)
     return mons_class_flag(mc, M_FAST_REGEN);
 }
 
+int mons_class_regen_amount(monster_type mc)
+{
+    switch (mc)
+    {
+    case MONS_PARGHIT:         return 27;
+    case MONS_DEMONIC_CRAWLER: return 6;
+    default:                   return 1;
+    }
+}
+
 /**
  * Do monsters of the given type ever leave a hide?
  *
