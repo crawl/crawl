@@ -3005,12 +3005,6 @@ int monster::shield_class() const
         // Double them, because we halved the size of player-visible stats many
         // years ago but never fixed the internal math. Sorry!
         sh += base * 2;
-        // Do some ridiculous pointless nonsense with monster sizes
-        // where bigger monsters get less protection from smaller shields,
-        // and smaller monsters get more protection. TODO: REMOVEME
-        const int mon_size_delta = body_size(PSIZE_TORSO) - SIZE_MEDIUM;
-        const int sh_size_delta = shld->sub_type - ARM_TOWER_SHIELD;
-        sh += mon_size_delta * sh_size_delta;
         // Finally, add in monster HD as a proxy for 'shield skill'.
         sh += get_hit_dice() * 4 / 3;
     }
