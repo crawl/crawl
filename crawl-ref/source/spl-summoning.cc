@@ -1470,10 +1470,10 @@ static spell_type servitor_spells[] =
     SPELL_AIRSTRIKE,
     SPELL_FORCE_LANCE, // left in for frederick (dubious)
     // less desirable
-    SPELL_CONJURE_BALL_LIGHTNING,
+    SPELL_IRRADIATE,
+    SPELL_CONJURE_BALL_LIGHTNING, // but VERY funny
     SPELL_FREEZING_CLOUD,
     SPELL_MEPHITIC_CLOUD,
-    SPELL_STICKY_FLAME,
 };
 
 /**
