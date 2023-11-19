@@ -163,6 +163,10 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
             descrip = DESC_A;
     }
 
+    // XXX EVIL HACK: randbooks are always ID'd..?
+    if (base_type == OBJ_BOOKS && is_random_artefact(*this))
+        ident = true;
+
     if (base_type == OBJ_BOOKS && book_has_title(*this, ident))
     {
         if (descrip != DESC_DBNAME)
@@ -184,7 +188,8 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
               && !(corpse_flags & MF_NAME_DEFINITE))
          && !(corpse_flags & MF_NAME_SUFFIX)
          && !starts_with(get_corpse_name(*this), "shaped "))
-        || item_is_orb(*this) || item_is_horn_of_geryon(*this)
+        || item_is_orb(*this)
+        || item_is_horn_of_geryon(*this)
         || (ident || item_ident(*this, ISFLAG_KNOW_PROPERTIES))
            && is_artefact(*this) && special != UNRAND_OCTOPUS_KING_RING)
     {
@@ -1815,9 +1820,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     case OBJ_BOOKS:
         if (is_random_artefact(*this) && !dbname && !basename)
         {
-            buff << get_artefact_name(*this, ident);
-            if (!ident && !item_ident(*this, ISFLAG_KNOW_PROPERTIES))
-                buff << "book";
+            buff << get_artefact_name(*this, true);
             break;
         }
         if (basename)
