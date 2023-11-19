@@ -9,7 +9,7 @@ Agnes title
 %%%%
 Aizul title
 
-被忽视的守卫艾祖
+疏忽的守卫艾祖
 %%%%
 Amaemon title
 
@@ -25,7 +25,7 @@ Arachne title
 %%%%
 Asmodeus title
 
-阿斯莫德，欣嫩谷的王子
+阿斯蒙蒂斯，欣嫩谷的王子
 %%%%
 Asterion title
 
