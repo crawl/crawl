@@ -1351,7 +1351,7 @@ static int _get_arclen(coord_def a, coord_def b, coord_def center)
     int arclen = abs(a_off.x - b_off.x) + abs(a_off.y - b_off.y) + 1;
 
     //A and b on opposite vertical sides
-    if(abs(a_off.x) == range && abs(b_off.x) == range && a_off.x != b_off.x)
+    if (abs(a_off.x) == range && abs(b_off.x) == range && a_off.x != b_off.x)
     {
         const int a_to_side = range - abs(a_off.y);
         const int b_to_side = range - abs(b_off.y);
@@ -1359,7 +1359,7 @@ static int _get_arclen(coord_def a, coord_def b, coord_def center)
     }
 
     //Opposite horizontal sides
-    if(abs(a_off.y) == range && abs(b_off.y) == range && a_off.y != b_off.y)
+    if (abs(a_off.y) == range && abs(b_off.y) == range && a_off.y != b_off.y)
     {
         const int a_to_side = range - abs(a_off.x);
         const int b_to_side = range - abs(b_off.x);
