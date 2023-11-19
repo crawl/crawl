@@ -3019,7 +3019,7 @@ int monster::shield_class() const
 int monster::shield_bonus() const
 {
     if (incapacitated())
-        return 100;
+        return -100;
 
     const int cls = shield_class();
     // I don't know why we randomize like this.
