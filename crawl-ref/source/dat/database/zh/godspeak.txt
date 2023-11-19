@@ -72,7 +72,7 @@ Xom animate monster weapon
 
 “是时候找点乐子了!”
 
-你听到了佐姆疯狂的笑声。
+你听到佐姆疯狂的笑声。
 
 佐姆帮了你一个小忙。
 
@@ -105,7 +105,7 @@ Xom zero miscast effect
 
 有那么一会儿，佐姆的力量几乎触动到了你。
 
-你几乎听到了佐姆疯狂的笑声。
+你几乎听到佐姆疯狂的笑声。
 %%%%
 Xom rearrange the pieces
 
@@ -144,7 +144,7 @@ Xom draining or torment
 
 有那么一会儿，佐姆的力量触动到了你。
 
-你听到了佐姆疯狂的笑声。
+你听到佐姆疯狂的笑声。
 
 “受苦吧！”
 
@@ -159,7 +159,7 @@ Xom hostile monster
 
 “我们看看他是否足够强大，能够存活下来。”
 
-你听到了佐姆疯狂的笑声。
+你听到佐姆疯狂的笑声。
 %%%%
 Xom banishment
 
@@ -200,7 +200,7 @@ Xom chaos upgrade
 %%%%
 Xom noise
 
-佐姆制造了急剧的噪音！你听到了@weapon_noise@
+佐姆制造了急剧的噪音！你听到@weapon_noise@
 
 w:1
 “嘘！”
@@ -267,7 +267,7 @@ Xom good monster polymorph
 
 佐姆的力量触动了附近的一个怪物。
 
-“你听到了佐姆慈爱的轻笑声。”
+你听到佐姆慈爱的轻笑声。
 %%%%
 # 削弱友方，加强敌方
 Xom bad monster polymorph
@@ -282,7 +282,7 @@ Xom good mutations
 
 有那么一会儿，佐姆的力量触动到了你。
 
-你听到了佐姆疯狂的咯咯笑声。
+你听到佐姆疯狂的咯咯笑声。
 %%%%
 Xom random mutations
 
@@ -292,7 +292,7 @@ Xom random mutations
 
 有那么一会儿，佐姆的力量轻拂过你。
 
-“你听到了佐姆慈爱的轻笑声。”
+你听到佐姆慈爱的轻笑声。
 %%%%
 Xom snakes to sticks
 
@@ -707,7 +707,7 @@ Vehumet welcome
 %%%%
 Wu Jian welcome
 
-门派说：践行智慧和战斗之路！
+门派有言：践行智慧和战斗之路！
 %%%%
 Xom bored
 
@@ -802,7 +802,7 @@ w:2
 %%%%
 Yredelemnul penance
 
-伊莱德莱姆努尔说：面对死亡，一切平等！神圣的殉道毫无意义！
+伊莱德莱姆努尔说：死亡面前，一切平等！神圣的殉道毫无意义！
 %%%%
 Yredelemnul welcome
 
