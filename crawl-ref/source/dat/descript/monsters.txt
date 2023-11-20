@@ -1375,9 +1375,8 @@ it is in fact quite susceptible to mutagenic energies.
 %%%%
 glass eye
 
-A floating eyeball as transparent and glossy as glass, said to be one of the
-servitors of Jiyva. It possesses a gaze that will render even the most
-strong-willed of adventurers as fragile as glass.
+A floating eyeball formed from living glass. Only the divine Jiyva could form
+such a curious servitor.
 %%%%
 glowing orange brain
 
