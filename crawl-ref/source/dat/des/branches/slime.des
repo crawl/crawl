@@ -1411,12 +1411,16 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'''''xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# maybe change the c pillars to x's
+# a little too nicely organized?
 NAME:   slime_pit_tekkud_mandelbrot
-KMONS:  EY = eye of devastation
-KFEAT:  ^ = zot trap w:5 / dispersal trap w:15 / alarm trap / net trap
-KFEAT:  Y = shallow_water
-COLOUR: WY = lightgreen
-SUBST:  ' = x., D = ^..
+KMONS:  E  = eye of devastation
+KMONS:  A  = azure jelly
+KFEAT:  ^  = zot trap w:5 / dispersal trap w:15 /\
+             alarm trap / net trap
+KFEAT:  A  = shallow_water
+COLOUR: WA = lightgreen
+SUBST:  '  = x., D = ^..
 : setup_slime_pit_ending(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1468,11 +1472,11 @@ xxxxxxxxxxxx'........c.................c........'xxxxxxxxxxxxx
 xxxxxxxxxx''.....................................''xxxxxxxxxxx
 xxxxxxxx''.......c............c............c.......''xxxxxxxxx
 xxxxxxxxxx'.....ccc..........ccc..........ccc......'xxxxxxxxxx
-xxxxxxxx''.......c..........cWWWc..........c........'xxxxxxxxx
+xxxxxxxx''.......c..........cWAWc..........c........'xxxxxxxxx
 xxxxxxxx'..................cWWWWWc..................'xxxxxxxxx
-xxxx'xxx'.................ccWWYWWcc.................'xxx'xxxxx
+xxxx'xxx'.................ccAWAWAcc.................'xxx'xxxxx
 xxx''''''..................cWWWWWc..................'''''''xxx
-xx'.............c...........cWWWc...........c.............'xxx
+xx'.............c...........cWAWc...........c.............'xxx
 x'...{.........ccc...........ccc...........ccc........[...''xx
 xx'.............c.............c.............c............''xxx
 xxxx''''............................................'''''xxxxx
