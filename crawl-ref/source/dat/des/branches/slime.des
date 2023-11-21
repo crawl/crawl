@@ -1411,16 +1411,12 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'''''xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# maybe change the c pillars to x's
-# a little too nicely organized?
 NAME:   slime_pit_tekkud_mandelbrot
-KMONS:  E  = eye of devastation
-KMONS:  A  = azure jelly
-KFEAT:  ^  = zot trap w:5 / dispersal trap w:15 /\
-             alarm trap / net trap
-KFEAT:  A  = shallow_water
-COLOUR: WA = lightgreen
-SUBST:  '  = x., D = ^..
+KMONS:  Y = azure jelly
+KFEAT:  Y = shallow_water
+KFEAT:  ^ = zot trap w:5 / dispersal trap w:15 / alarm trap / net trap
+SUBST:  ' = x., D = ^..
+NSUBST: W = 4:Y / *:W
 : setup_slime_pit_ending(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1447,49 +1443,49 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxcc*****ccxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxccnnnccxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxccc.....cccxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxccc...2.2...cccxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxccc..2...1...2..cccxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxcE...............Ecxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxcc...4...E.4.....ccxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxc.......4....4....cxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxcc..2...1...2..ccxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxc...............cxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxcc...4...E.....4.ccxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxc...........4.....cxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxc..4............4.cxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxc.....4..Z..4.....cxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxc.E.....4...4..4E.cxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxcc...4...........ccxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxc..4......4.....ccxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxcc...4.........ccxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxcc........4..cccxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxc........Z........cxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxc..4...........4..cxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxcc...4...........ccxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxc.........4.....ccxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxcc...4.......4.ccxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxcc...........cccxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxccc.......cccxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxcDcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx''''.........''''xxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxx''''.................''''xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxx'...........c...........'xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx'............ccc...........''xxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxx'......c........c........c.....''xxxxxxxxxxxxxxx
-xxxxxxxxxxx'xx'.....ccc...............ccc......'xxxxxxxxxxxxxx
-xxxxxxxxx'''xx'....ccccc.............ccccc.....'xx'xxxxxxxxxxx
-xxxxxxxxxx'''.......ccc...............ccc.......''''xxxxxxxxxx
-xxxxxxxxxxxx'........c.................c........'xxxxxxxxxxxxx
-xxxxxxxxxx''.....................................''xxxxxxxxxxx
-xxxxxxxx''.......c............c............c.......''xxxxxxxxx
-xxxxxxxxxx'.....ccc..........ccc..........ccc......'xxxxxxxxxx
-xxxxxxxx''.......c..........cWAWc..........c........'xxxxxxxxx
-xxxxxxxx'..................cWWWWWc..................'xxxxxxxxx
-xxxx'xxx'.................ccAWAWAcc.................'xxx'xxxxx
-xxx''''''..................cWWWWWc..................'''''''xxx
-xx'.............c...........cWAWc...........c.............'xxx
-x'...{.........ccc...........ccc...........ccc........[...''xx
-xx'.............c.............c.............c............''xxx
-xxxx''''............................................'''''xxxxx
-xxxxxxxx''.........................................''xxxxxxxxx
-xxxxxxxxxx'.........c...................c.........'xxxxxxxxxxx
-xxxxxxxxxx'........ccc.................ccc........'xxxxxxxxxxx
-xxxxxxxxxx'.......ccccc...............ccccc.......'xxxxxxxxxxx
-xxxxxxxxxx''.......ccc.................ccc........'xxxxxxxxxxx
-xxxxxxxxxxxx'.......c.........(.........c........'xxxxxxxxxxxx
-xxxxxxxxxxxx''..................................'xxxxxxxxxxxxx
-xxxxxxxxxxxxxx'................................'xxxxxxxxxxxxxx
-xxxxxxxxxxxxx'''..............x...............'''xxxxxxxxxxxxx
-xxxxxxxxxxxx''xx'............xxx.............'x'xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx'.......................'xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx'....'.......'x'.......'...''xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx''....'x'.....'xxx'.....'x'....''xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx'....'xxx'.....'x'.....'xxx'.....'xxxxxxxxxxxxxx
+xxxxxxxxxxxxxx'...'xxxxx'.....'.....'xxxxx'....'xxxxxxxxxxxxxx
+xxxxxxxxxxxx''.....'xxx'.............'xxx'......'xxxxxxxxxxxxx
+xxxxxxxxxxxx'.......'x'...............'x'.......'xxxxxxxxxxxxx
+xxxxxxxxxx''.....'...'........c........'...'.....''xxxxxxxxxxx
+xxxxxxxxx'......'x'..........ccc..........'x'......'xxxxxxxxxx
+xxxxxxxxx'.....'xxx'........ccWcc........'xxx'.....'xxxxxxxxxx
+xxxxxxxx''......'x'........ccWWWcc........'x'.......'xxxxxxxxx
+xxxxxxxx'........'........ccWWWWWcc........'........'xxxxxxxxx
+xxxxxxxx'..................WWWWWWW..................'xxxxxxxxx
+xxxxx''''.......'.........ccWWWWWcc.........'.......''''xxxxxx
+xx'''..........'x'.........ccWWWcc.........'x'..........'''xxx
+x'.....{......'xxx'.........ccWcc.........'xxx'......[....''xx
+xx'............'x'...........ccc...........'x'...........''xxx
+xxxx''''........'.............c.............'.......'''''xxxxx
+xxxxxxxx''..........'...................'..........''xxxxxxxxx
+xxxxxxxxxx'........'x'.................'x'........'xxxxxxxxxxx
+xxxxxxxxxx'.......'xxx'...............'xxx'.......'xxxxxxxxxxx
+xxxxxxxxxx'......'xxxxx'.............'xxxxx'......'xxxxxxxxxxx
+xxxxxxxxxx''......'xxx'...............'xxx'.......'xxxxxxxxxxx
+xxxxxxxxxxxx'......'x'........(........'x'.......'xxxxxxxxxxxx
+xxxxxxxxxxxx''......'...................'.......'xxxxxxxxxxxxx
+xxxxxxxxxxxxxx'...............'................'xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx'..............x...............'xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx'............xxx.............'xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxx''..''..'''xxxxxxxx'''..'''.'xxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxx''xx''xxxxxxxxxxxxxx''xxx'xxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
