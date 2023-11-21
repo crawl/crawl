@@ -1938,6 +1938,8 @@ int prompt_invent_item(const char *prompt,
             else if ((keyin == CK_ENTER || keyin == CK_MOUSE_B1) && items.size() > 0)
             {
                 // hacky, but lets the inscription checks below trip
+                // Does the message above signify a need for change due to 
+                // inscription checks now being removed to extend inventory?
                 // TODO: this code should not rely on keyin, it breaks cmd
                 // bindings
                 keyin = items[0].slot;
@@ -1950,18 +1952,7 @@ int prompt_invent_item(const char *prompt,
             }
         }
 
-        if (isadigit(keyin))
-        {
-            // scan for our item
-            item_def *item = digit_inscription_to_item(keyin, oper);
-            if (item && in_inventory(*item))
-            {
-                ret = item->link;
-                if (!do_warning || check_warning_inscriptions(*item, oper))
-                    break;
-            }
-        }
-        else if (key_is_escape(keyin) || allow_easy_quit && keyin == ' ')
+        if (key_is_escape(keyin) || allow_easy_quit && keyin == ' ')
         {
             ret = PROMPT_ABORT;
             break;
