@@ -1393,32 +1393,6 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
     return items;
 }
 
-static bool item_matches_digit_inscription(item_def &item, char digit, operation_types oper)
-{
-    const string& r(item.inscription);
-    const char iletter = static_cast<char>(oper);
-    for (unsigned int j = 0; j + 2 < r.size(); ++j)
-        if (r[j] == '@' && (r[j+1] == iletter || r[j+1] == '*') && r[j+2] == digit)
-            return true;
-    return false;
-}
-
-item_def *digit_inscription_to_item(char digit, operation_types oper)
-{
-    for (int i = 0; i < ENDOFPACK; ++i)
-        if (you.inv[i].defined()
-                && item_matches_digit_inscription(you.inv[i], digit, oper))
-        {
-            return &you.inv[i];
-        }
-
-    for (stack_iterator si(you.pos(), true); si; ++si)
-        if (item_matches_digit_inscription(*si, digit, oper))
-            return &*si;
-
-    return nullptr;
-}
-
 operation_types generalize_oper(operation_types oper)
 {
     switch (oper)
