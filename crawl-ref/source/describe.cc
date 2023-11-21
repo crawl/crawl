@@ -5552,7 +5552,9 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     result << _padded(make_stringf("Class: %s", uppercase_first(holi).c_str()), 16);
     result << _padded(make_stringf("Size: %s", size_desc.c_str()), 16);
     result << _padded(make_stringf("Int: %s", _get_int_desc(mi.intel())), 16);
-    if (mons_class_fast_regen(mi.type))
+    if (mi.is(MB_SICK) || mi.is(MB_NO_REGEN))
+        result << "Regen: None";
+    else if (mons_class_fast_regen(mi.type) || mi.is(MB_REGENERATION))
         result << "Regen: " << mi.regen_rate(1) << "/turn"; // (Wait, what's a 'turn'?)
 
     _add_speed_desc(mi, result);
