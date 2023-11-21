@@ -1963,7 +1963,7 @@ int prompt_invent_item(const char *prompt,
             keyin = '?';
             need_getch = false;
         }
-        else if (isaalpha(keyin))
+        else if (isaalnum(keyin))
         {
             ret = letter_to_index(keyin);
 
