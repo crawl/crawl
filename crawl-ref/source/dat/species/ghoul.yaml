@@ -40,7 +40,7 @@ aptitudes:
   evocations: -1
 undead_type: US_UNDEAD
 str: 11
-int: 3
+int: 7
 dex: 4
 levelup_stat_frequency: 5
 levelup_stats:
