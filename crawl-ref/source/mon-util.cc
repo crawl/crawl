@@ -662,6 +662,20 @@ const char * holiness_name(mon_holy_type_flags which_holiness)
     }
 }
 
+/// Hack for demonspawn monsters. TODO: de-bitfieldify!
+const char * single_holiness_description(mon_holy_type holiness)
+{
+    for (const auto bit : mon_holy_type::range())
+    {
+        if (!(holiness & bit))
+            continue;
+        if (bit == MH_NATURAL && holiness != MH_NATURAL)
+            continue;
+        return holiness_name(bit);
+    }
+    return "eggplant";
+}
+
 string holiness_description(mon_holy_type holiness)
 {
     string description = "";

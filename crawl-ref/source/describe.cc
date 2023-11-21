@@ -5544,13 +5544,16 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     // Less important common properties. Arguably should be lower down.
     const size_type sz = mi.body_size();
     const string size_desc = sz == SIZE_LITTLE ? "V. Small" : uppercase_first(get_size_adj(sz));
-    const int regen_rate = mi.regen_rate(100);
+    const auto holiness = mons_class_holiness(mi.type);
+    const string holi = holiness == MH_NONLIVING ? "Nonliv."
+                                                 : single_holiness_description(holiness);
     result << "\n";
     result << _padded(make_stringf("Threat: %s", _get_threat_desc(mi.threat)), 16);
-    result << _padded(make_stringf("Regen: %.2f", regen_rate/100.0f), 16);
+    result << _padded(make_stringf("Class: %s", uppercase_first(holi).c_str()), 16);
     result << _padded(make_stringf("Size: %s", size_desc.c_str()), 16);
     result << _padded(make_stringf("Int: %s", _get_int_desc(mi.intel())), 16);
-    result << "See Invis: " << (mi.can_see_invisible() ? "+" : ".");
+    if (mons_class_fast_regen(mi.type))
+        result << "Regen: " << mi.regen_rate(1) << "/turn"; // (Wait, what's a 'turn'?)
 
     _add_speed_desc(mi, result);
 
@@ -5699,6 +5702,9 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
                << " " << conjugate_verb("are", plural)
                << " cold-blooded and may be slowed by cold attacks.\n";
     }
+
+    if (mi.can_see_invisible())
+        result << uppercase_first(pronoun) << " can see invisible.\n";
 
     if (mons_class_flag(mi.type, M_INSUBSTANTIAL))
     {

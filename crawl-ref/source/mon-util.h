@@ -250,6 +250,7 @@ bool mons_class_flag(monster_type mc, monclass_flags_t bits);
 
 mon_holy_type holiness_by_name(string name);
 const char * holiness_name(mon_holy_type_flags which_holiness);
+const char * single_holiness_description(mon_holy_type holiness);
 string holiness_description(mon_holy_type holiness);
 mon_holy_type mons_class_holiness(monster_type mc);
 
