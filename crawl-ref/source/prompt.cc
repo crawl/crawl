@@ -367,18 +367,22 @@ double prompt_for_float(const char* prompt)
 char index_to_letter(int the_index)
 {
     ASSERT_RANGE(the_index, 0, ENDOFPACK);
-    return the_index + ((the_index < 26) ? 'a' : ('A' - 26));
+    return the_index + ((the_index < 26) ? 'a' :
+                        (the_index < 52) ? ('A' - 26)
+                                         : ('0' - 52));
 }
 
-int letter_to_index(int the_letter)
+int letter_to_index(int the_character)
 {
-    if (the_letter >= 'a' && the_letter <= 'z')
-        return the_letter - 'a'; // returns range [0-25] {dlb}
-    else if (the_letter >= 'A' && the_letter <= 'Z')
-        return the_letter - 'A' + 26; // returns range [26-51] {dlb}
+    if (the_character >= 'a' && the_character <= 'z')
+        return the_character - 'a'; // returns range [0-25] {dlb}
+    else if (the_character >= 'A' && the_character <= 'Z')
+        return the_character - 'A' + 26; // returns range [26-51] {dlb}
+    else if (the_character >= '0' && the_character <= '9')
+        return the_character - '0' + 52; // returns range [52-61] {Sentei}
 
-    die("slot not a letter: %s (%d)", the_letter ?
-        stringize_glyph(the_letter).c_str() : "null", the_letter);
+    die("slot not a letter or number: %s (%d)", the_character ?
+        stringize_glyph(the_character).c_str() : "null", the_character);
 }
 
 bool PromptMenu::process_key(int keyin)
