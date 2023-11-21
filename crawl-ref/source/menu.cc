@@ -1992,16 +1992,7 @@ bool Menu::process_key(int keyin)
     }
 
     command_type cmd = CMD_NO_CMD;
-    if (is_set(MF_SELECT_QTY) && !is_set(MF_NOSELECT) && isadigit(keyin))
-    {
-        // override cmd bindings for quantity digits
-        if (num > 999)
-            num = -1;
-        num = (num == -1) ? keyin - '0' :
-                            num * 10 + keyin - '0';
-    }
-    else
-        cmd = get_command(keyin);
+    cmd = get_command(keyin);
 
     if (cmd != CMD_NO_CMD)
     {
@@ -2057,13 +2048,6 @@ bool Menu::process_key(int keyin)
             webtiles_update_scroll_pos(true);
 #endif
             return process_selection();
-        }
-
-        if (is_set(MF_ANYPRINTABLE)
-            && (!isadigit(keyin) || !is_set(MF_SELECT_QTY)))
-        {
-            // TODO: should this behavior be made to coexist with multiselect?
-            return false;
         }
 
         update_title();

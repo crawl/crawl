@@ -1101,9 +1101,6 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
             new_flags &= ~MF_MULTISELECT;
         }
 
-        if (!!(new_flags & MF_MULTISELECT))
-            new_flags |= MF_SELECT_QTY;
-
         new_flags |= MF_ALLOW_FORMATTING | MF_ARROWS_SELECT;
         if (!Options.single_column_item_menus)
             new_flags |= menu.get_flags() & MF_USE_TWO_COLUMNS;
@@ -1380,7 +1377,7 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
                       menu_type::drop,
                       OSEL_ANY,
                       -1,
-                      MF_MULTISELECT | MF_ALLOW_FILTER | MF_SELECT_QTY,
+                      MF_MULTISELECT | MF_ALLOW_FILTER,
                       _drop_menu_titlefn,
                       &items,
                       &Options.drop_filter,
