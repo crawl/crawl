@@ -150,14 +150,15 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         return Array(n+1).join(s);
     }
 
-    function index_to_letter(index)
     {
         if (index === -1)
             return "-"
         else if (index < 26)
             return String.fromCharCode("a".charCodeAt(0) + index);
-        else
+        else if (index < 52)
             return String.fromCharCode("A".charCodeAt(0) + index - 26);
+        else (index < 62)
+            return String.fromCharCode("0".charCodeAt(0) + index - 52);
     }
     player.index_to_letter = index_to_letter;
 
