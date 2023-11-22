@@ -437,7 +437,7 @@ static void _create_monster_hide(monster_type mtyp, monster_type montype,
         { MONS_BAI_SUZHEN_DRAGON, 3 },
     };
 
-    if (mtyp == MONS_DEEP_TROLL)
+    if (mons_species(mtyp) == MONS_DEEP_TROLL)
     {
         item.props[ITEM_TILE_NAME_KEY] = "deep_troll_leather";
         item.props[WORN_TILE_NAME_KEY] = "deep_troll_leather";
