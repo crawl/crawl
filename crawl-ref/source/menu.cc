@@ -2057,8 +2057,7 @@ bool Menu::process_key(int keyin)
     }
 
     // reset number state if anything other than setting a digit happened
-    if (!isadigit(keyin))
-        num = -1;
+    num = -1;//I wonder if this is correct since we are allowing numbered indexes?
 
 #ifdef USE_TILE_WEB
     // XX is handling this in process_command enough?
