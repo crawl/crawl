@@ -194,7 +194,7 @@ void unmarshallSpells(reader &, monster_spells &
 void unmarshall_vehumet_spells(reader &th, set<spell_type>& old_gifts,
         set<spell_type>& gifts);
 
-FixedVector<int, 52> unmarshall_player_spell_letter_table(reader &th);
+FixedVector<int, ENDOFLETTERS> unmarshall_player_spell_letter_table(reader &th);
 
 void remove_removed_library_spells(FixedBitVector<NUM_SPELLS>& lib);
 

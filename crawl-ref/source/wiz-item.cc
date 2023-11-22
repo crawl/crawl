@@ -274,12 +274,12 @@ static void _tweak_randart(item_def &item)
 
         if (choice_num < 26)
             choice = 'a' + choice_num;
-        else if (choice_num < 52)
+        else if (choice_num < ENDOFLETTERS)
             choice = 'A' + choice_num - 26;
-        else if (choice_num < 'A' - '0' + 52)
+        else if (choice_num < 'A' - '0' + ENDOFLETTERS)
         {
             // 0-9 then :;<=>?@ . Any higher would collide with letters.
-            choice = '0' + choice_num - 52;
+            choice = '0' + choice_num - ENDOFLETTERS;
         }
         else
             choice = '-'; // Too many choices!
@@ -306,7 +306,7 @@ static void _tweak_randart(item_def &item)
     else if (isaalpha(keyin) && isupper(keyin))
         choice = keyin - 'A' + 26;
     else if (keyin >= '0' && keyin < 'A')
-        choice = keyin - '0' + 52;
+        choice = keyin - '0' + ENDOFLETTERS;
     else
     {
         canned_msg(MSG_OK);

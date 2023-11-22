@@ -196,7 +196,7 @@ void SpellRegion::update()
 
     const unsigned int max_spells = min(22, mx*my);
 
-    for (int i = 0; i < 52; ++i)
+    for (int i = 0; i < ENDOFLETTERS; ++i)
     {
         const char letter = index_to_letter(i);
         const spell_type spell = get_spell_by_letter(letter);
