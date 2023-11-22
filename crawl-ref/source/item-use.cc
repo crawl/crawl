@@ -2137,7 +2137,7 @@ static int _prompt_ring_to_remove()
     {
         rings.push_back(you.slot_item(eq, true));
         ASSERT(rings.back());
-        slot_chars.push_back(index_to_letter(rings.back()->link));
+        slot_chars.push_back(index_to_alphanumeric(rings.back()->link));
     }
 
     if (slot_chars.size() + 2 > msgwin_lines() || ui::has_layout())
@@ -2536,7 +2536,7 @@ static equipment_type _choose_ring_slot()
         {
             if (c == _ring_slot_key(eq)
                 || (you.slot_item(eq, true)
-                    && c == index_to_letter(you.slot_item(eq, true)->link)))
+                    && c == index_to_alphanumeric(you.slot_item(eq, true)->link)))
             {
                 eqslot = eq;
                 c = ' ';

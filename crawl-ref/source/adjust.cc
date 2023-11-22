@@ -207,7 +207,7 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
 
     // Slot switching.
     tmp.slot = you.inv[to_slot].slot;
-    you.inv[to_slot].slot  = index_to_letter(to_slot);//you.inv[from_slot].slot is 0 when 'from_slot' contains no item.
+    you.inv[to_slot].slot  = index_to_alphanumeric(to_slot);//you.inv[from_slot].slot is 0 when 'from_slot' contains no item.
     you.inv[from_slot].slot = tmp.slot;
 
     you.inv[from_slot].link = from_slot;
