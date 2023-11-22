@@ -4261,7 +4261,7 @@ static void _tag_read_you_items(reader &th)
 
     // how many inventory slots?
     count = unmarshallByte(th);
-    ASSERT(count == ENDOFPACK); // not supposed to change
+    ASSERT(count == ENDOFPACK); // not supposed to change, but we are changing it.
 #if TAG_MAJOR_VERSION == 34
     string bad_slots;
 #endif
