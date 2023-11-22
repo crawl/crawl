@@ -198,7 +198,7 @@ DEPTH:  D:6-9, Lair:1
 : place_unique(_G, "Jeremiah")
 
 NAME:   uniq_maurice
-DEPTH:  D:8-13, Orc
+DEPTH:  D:7-12, Orc
 : place_unique(_G, "Maurice")
 
 NAME:   uniq_menkaure

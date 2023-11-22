@@ -599,7 +599,6 @@ kirke MONS_KIRKE
 louise MONS_LOUISE
 maggie MONS_MAGGIE
 margery MONS_MARGERY
-maurice MONS_MAURICE
 %rim 0
 nikola MONS_NIKOLA
 norris MONS_NORRIS
@@ -943,9 +942,11 @@ treant MONS_TREANT
 briar_patch MONS_BRIAR_PATCH
 %rim 1
 vine_stalker MONS_VINE_STALKER
+%rim 0
+%sdir mon/unique
+maurice MONS_MAURICE
 
 ## Trolls ('T')
-%sdir mon/unique
 pargi MONS_PARGI
 parghit MONS_PARGHIT
 snorg MONS_SNORG

@@ -5433,7 +5433,7 @@ _Maurice_common_
 
 VISUAL:@The_monster@ tries to hide in the shadows.
 
-@The_monster@ shouts, "HAHA!"
+VISUAL:@The_monster@ lashes his vines and gnashes his teeth.
 
 @The_monster@ says, "Nice gear. Can I borrow some?"
 
@@ -5455,7 +5455,7 @@ _Maurice_rare_
 
 @The_monster@ says to @foe@, "Money or life? Never mind, I think I'll take both."
 
-@The_monster@ says, "Killing adventurers and taking their stuff. It's what I do."
+@The_monster@ says, "Killing adventurers, taking their stuff. It's what he did, it's what I do."
 %%%%
 # Triggered when Maurice tries to steal something, but doesn't find anything.
 Maurice nonstealing

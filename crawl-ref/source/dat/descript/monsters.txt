@@ -347,10 +347,10 @@ slew the ancient dragon from whose hide her strange armour is crafted.
 %%%%
 Maurice
 
-A sly, conniving thief. In his profession, Maurice is considered a legend — at
-least according to himself. He is skilled, nonetheless, and among all the
-thieves and rogues lured by the Orb, Maurice is undoubtedly the most crafty.
-He uses magic wands in addition to cloak and dagger.
+A sly, conniving thief. A self-proclaimed legend, he was one of the most skilled
+and crafty of the thieves and rogues lured by the Orb. The magical parasitic
+vines that have claimed his body still wish to continue his life's work, with a
+back-up plan of both a vicious magic-drinking maw and potent wands.
 %%%%
 Menkaure
 
