@@ -231,7 +231,7 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
                 // sub in any alpha char if that's what the player typed, for
                 // error messaging
                 const int actual_key = pop.getkey();
-                if (isalpha(actual_key) && actual_key != tmp)
+                if (isaalpha(actual_key) && actual_key != tmp)
                     tmp = actual_key;
                 // otherwise, leave as ESCAPE
             }

@@ -2933,7 +2933,7 @@ void game_options::set_player_tile(const string &field)
     {
         // A variant tile. We have to find the base tile to look this up inthe
         // tile index.
-        if (isdigit(*(fields[1].rbegin())))
+        if (isadigit(*(fields[1].rbegin())))
         {
             string base_tname = fields[1];
             size_t found = base_tname.rfind('_');

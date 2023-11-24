@@ -124,7 +124,7 @@ struct god_passive
     void display(bool gaining, const char* fmt) const
     {
         const char * const str = gaining ? gain : loss;
-        if (isupper(str[0]))
+        if (isaupper(str[0]))
             god_speaks(you.religion, str);
         else
             god_speaks(you.religion, make_stringf(fmt, str).c_str());

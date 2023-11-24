@@ -301,9 +301,9 @@ static void _tweak_randart(item_def &item)
     int keyin = get_ch();
     unsigned int  choice;
 
-    if (isaalpha(keyin) && islower(keyin))
+    if (isaalpha(keyin) && isalower(keyin))
         choice = keyin - 'a';
-    else if (isaalpha(keyin) && isupper(keyin))
+    else if (isaalpha(keyin) && isaupper(keyin))
         choice = keyin - 'A' + 26;
     else if (keyin >= '0' && keyin < 'A')
         choice = keyin - '0' + ENDOFLETTERS;

@@ -2871,7 +2871,7 @@ namespace quiver
                                                     "quiver");
                 if (skey == 0)
                     return true;
-                if (isalpha(skey))
+                if (isaalpha(skey))
                 {
                     auto s = make_shared<spell_action>(
                             static_cast<spell_type>(get_spell_by_letter(skey)));

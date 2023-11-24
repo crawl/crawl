@@ -783,7 +783,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
             if (!clua.error.empty())
                 mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         }
-        else if (!luachoice.empty() && isalpha(luachoice[0]))
+        else if (!luachoice.empty() && isaalpha(luachoice[0]))
         {
             keyin = luachoice[0];
             const spell_type spl = get_spell_by_letter(keyin);
