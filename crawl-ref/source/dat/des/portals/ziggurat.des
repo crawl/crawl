@@ -259,7 +259,7 @@ ENDMAP
 
 NAME: ziggurat_pillar_centre_h
 TAGS: ziggurat_pillar centered no_dump unrand no_exits
-MONS: crimson imp
+MONS: crimson imp / pandemonium lord w:2
 MAP
 ccncc
 c...c
