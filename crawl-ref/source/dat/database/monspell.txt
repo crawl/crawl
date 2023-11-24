@@ -821,6 +821,10 @@ culicivora cast targeted
 
 @The_monster@ chitters @at@ @target@.
 %%%%
+kobold blastminer cast targeted
+
+@The_monster@ blasts @possessive@ cannon @at@ @target@.
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

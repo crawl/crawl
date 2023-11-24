@@ -853,6 +853,7 @@ pikel MONS_PIKEL
 kobold MONS_KOBOLD
 kobold_brigand MONS_KOBOLD_BRIGAND
 kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
+kobold_blastminer MONS_KOBOLD_BLASTMINER
 
 ## Liches ('L')
 %sdir mon/unique

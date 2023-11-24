@@ -7105,6 +7105,16 @@ w:1
 w:2
 @_hostile_imp_@
 %%%%
+################## Kobold blastminer #######################
+kobold blastminer
+
+VISUAL:@The_monster@ bats away at the thin smoke enveloping @possessive@ cannon.
+
+VISUAL:@The_monster@'s cannon shakes and flares with a red glow.
+
+w:20
+__NONE
+%%%%
 ################## Reaper ##################################
 # The reaper has come for you!
 reaper

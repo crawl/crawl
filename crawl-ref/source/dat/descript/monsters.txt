@@ -1699,6 +1699,11 @@ kobold brigand
 A kobold that is bigger and tougher than the ordinary kobold, with a penchant
 for underhanded tactics.
 %%%%
+kobold blastminer
+
+A kobold readied with multiple armaments. It struggles to carry its customary
+excavation gear, a volatile cannon unlikely to survive much violence.
+%%%%
 kobold demonologist
 
 A kobold in league with demonic powers, able to call forth beings from the

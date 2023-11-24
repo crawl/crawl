@@ -388,6 +388,9 @@ enum monster_type                      // env.mons[].type
     MONS_KOBOLD,
     MONS_KOBOLD_BRIGAND,
     MONS_KOBOLD_DEMONOLOGIST,
+#if TAG_MAJOR_VERSION > 34
+    MONS_KOBOLD_BLASTMINER,
+#endif
     MONS_ORC,
     MONS_ORC_WARRIOR,
     MONS_ORC_PRIEST,
@@ -1205,6 +1208,7 @@ enum monster_type                      // env.mons[].type
     MONS_ARCANIST,
     MONS_FLOATING_EYE,                 // genus
     MONS_ANTIQUE_CHAMPION,
+    MONS_KOBOLD_BLASTMINER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
