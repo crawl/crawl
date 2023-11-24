@@ -842,6 +842,10 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_MEMORISE_SPELL:
     case CMD_EXPLORE:
     case CMD_INTERLEVEL_TRAVEL:
+    case CMD_UNEQUIP:
+    case CMD_REMOVE_ARMOUR:
+    case CMD_EQUIP:
+    case CMD_WEAR_ARMOUR:
         mpr("You can't repeat multi-turn commands.");
         return false;
 
