@@ -849,9 +849,7 @@ string UseItemMenu::get_keyhelp(bool) const
 
 bool UseItemMenu::process_key(int key)
 {
-    // TODO: should check inscriptions here
-    if (isadigit(key)
-        || key == '-' && show_unarmed())
+    if (key == '-' && show_unarmed())
     {
         lastch = key;
         return false;
