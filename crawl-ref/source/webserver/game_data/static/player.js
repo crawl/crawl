@@ -150,6 +150,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         return Array(n+1).join(s);
     }
 
+    function index_to_letter(index)
     {
         if (index === -1)
             return "-"
