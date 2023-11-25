@@ -1600,7 +1600,7 @@ int find_free_slot(const item_def &i)
 
     // See if the item remembers where it's been. Lua code can play with
     // this field so be extra careful.
-    if (isalnum(i.slot))
+    if (isaalnum(i.slot))
         slot = alphanumeric_to_index(i.slot);
 
     if (slotisfree(slot))
@@ -2027,7 +2027,7 @@ item_def *auto_assign_item_slot(item_def& item)
                 overwrite = true;
             else if (i == '-')
                 overwrite = false;
-            else if (isalnum(i))
+            else if (isaalnum(i))
             {
                 const int index = alphanumeric_to_index(i);
                 auto &iitem = you.inv[index];
