@@ -923,7 +923,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.exit_message = "Error while starting the Crawl process!\nSomething has gone very wrong; please let a server admin know."
             self.exit_dump_url = None
 
-            if self.process:
+            if self.process and self.process.is_started():
                 self.stop()
             else:
                 self._on_process_end()
