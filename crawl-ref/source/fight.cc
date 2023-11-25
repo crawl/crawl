@@ -320,7 +320,8 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
                                    && _can_shoot_with(you.weapon());
 
         // Has the player marked this missile weapon as "not to be fired"?
-        bool no_fire = fire && !check_warning_inscriptions(*you.weapon(),
+        bool no_fire = fire && you.can_see(*defender)
+                            && !check_warning_inscriptions(*you.weapon(),
                                                            OPER_FIRE, &asked);
 
         // We're trying to hit a monster, break out of travel/explore now.
