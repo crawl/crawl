@@ -792,12 +792,17 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 update_global_status()
 
     def _on_crawl_end(self):
-        if config.get('dgl_mode'):
-            remove_in_lobbys(self.process)
+        if self.process:
+            if config.get('dgl_mode'):
+                remove_in_lobbys(self.process)
 
-        reason = self.process.exit_reason
-        message = self.process.exit_message
-        dump_url = self.process.exit_dump_url
+            reason = self.process.exit_reason
+            message = self.process.exit_message
+            dump_url = self.process.exit_dump_url
+        else:
+            # XX under what circumstance is this reachable?
+            reason = None
+
         self.process = None
 
         if not self.client_closed:
@@ -805,8 +810,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.close()
             else:
                 # Go back to lobby
-                self.send_message("game_ended", reason = reason,
-                                  message = message, dump = dump_url)
+                if reason:
+                    self.send_message("game_ended", reason = reason,
+                                      message = message, dump = dump_url)
 
                 self.invalidate_saveslot_cache(self.game_id)
 
