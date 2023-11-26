@@ -4381,7 +4381,7 @@ VISUAL:@The_monster@ grins, showing sharp teeth.
 
 @The_monster@ says, "DUCK!"
 
-@The_monster@ says, "FISH!"
+@The_monster@ sighs, "No one appreciates my work."
 
 @The_monster@ says, "Wait up."
 
@@ -4408,6 +4408,10 @@ VISUAL:@The_monster@ rolls @possessive@ eyes.
 Grinder triumphant
 
 @The_monster@ says, "Now the real fun starts!"
+
+@The_monster@ says, "Hey, I wasn't done torturing you yet!"
+
+@The_monster@ sighs, "Dead already? I want a refund."
 %%%%
 ############ GRUM ### A war dog-breeding gnoll
 Grum
