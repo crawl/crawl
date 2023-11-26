@@ -3784,7 +3784,7 @@ KFEAT:  " = floor
 MONS:   lava snake, orange crystal statue
 SUBST:  wW = l
 : elseif crawl.coinflip() then
-MONS:   oklob plant, glass eye
+MONS:   oklob plant, golden eye
 MONS:   plant, bush
 SUBST:  w = 334, W = .
 : else
@@ -4046,14 +4046,16 @@ KMONS:   5 = dancing weapon ; any weapon good_item ego:electrocution
 KMONS:   6 = spark wasp
 KMONS:   E = generate_awake air elemental w:7 / air elemental w:1
 KITEM:   d = any weapon good_item ego:electrocution ident:type, \
-             any weapon good_item ego:electrocution ident:type
+             any weapon good_item ego:electrocution ident:type, \
+             storm dragon scales / storm dragon scales randart w:3
 KITEM:   e = staff of air randart / storm talisman / \
              storm talisman randart w:1
+KITEM:   f = mundane ring of flight no_pickup
 KFEAT:   E56 = deep_water
 KFEAT:   de = shallow_water
 KFEAT:   T = dispersal trap
 SHUFFLE: vb
-NSUBST:  E = 12:E / *:w, 5 = 3:5 / *:w
+NSUBST:  E = 8:E / 3 = Ew / *:w, 5 = 3:5 / *:w
 : if you.branch() == "Depths" then
 SUBST:   2 = 3, 5 = 6
 : end
@@ -4066,7 +4068,7 @@ MAP
 .bvEvbvEvbv...vbtt
 @nEEwEwEEv2.5.1vtt
 .bvwwv5wvb.4v4.bvt
-.=TEndnE+.5nen5<bt
+f=TEndnE+.5nen5<bt
 .bvw5vwwvb.4v4.bvt
 @nEEwEwEEv2.5.1vtt
 .bvEvbvEvbv...vbtt
@@ -9451,7 +9453,7 @@ MONS:   merfolk impaler skeleton / snapping turtle skeleton w:4
 KMONS:  56 = wind drake / manticore
 KMONS:  7 = alligator snapping turtle
 KMONS:  0 = harpy / sea snake / snapping turtle
-NSUBST: w = 1:3 / 3:6 / 1:77w / *:w, 4 = 4:0 / 2:Z / *:4
+NSUBST: w = 2:3 / 3:6 / 1:77w / *:w, 4 = 4:0 / 2:Z / *:4
 SUBST:  ~ = @, ? = 0
 :   dgn.delayed_decay(_G, "Z", "human skeleton / merfolk skeleton" )
 : elseif you.in_branch("Crypt") then
@@ -9480,7 +9482,6 @@ ITEM:   scroll of immolation ident:type / % w:20
 KFEAT:  67 = w
 NSUBST: . = 10:d / 2:e / 8:Z / 3:` / 3:4 / 3 = 45.. / *:.
 KPROP:  ` = bloody
-NSUBST: w = 1:3 / 10=wwww6
 MAP
      WWWWWWWWWWWWWW.@.WWWWWWWWWWWWWW
     WWWWWWWWwwwwwww...wWwWwwWWWwwwwwww

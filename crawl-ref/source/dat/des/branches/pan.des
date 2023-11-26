@@ -49,7 +49,7 @@ function pan_lord_setup(_G, name)
                  "neqoxec w:200 / chaos spawn w:200 / " ..
                  "cacodemon w:300 / tormentor / " ..
                  "tentacled monstrosity w:5 / " ..
-                 "glass eye band/ golden eye band / eye of devastation / " ..
+                 "glass eye band / golden eye band / eye of devastation / " ..
                  "shining eye / very ugly thing band / "..
                  "demonspawn corrupter",
         ['Lom Lobon'] = "hellwing w:300 / sixfirhy w:100 / " ..
@@ -2901,7 +2901,7 @@ TAGS:   pan_fixed_rune_frozen pan_fixed_lure_frozen
 TAGS:   no_pool_fixup no_monster_gen transparent
 ORIENT: float
 MONS:   blizzard demon, demonspawn black sun
-MONS:   juggernaut simulacrum, ice devil
+MONS:   walking frostbound tome, ice devil
 KMONS:  56 = ice statue
 KMONS:  P = pandemonium lord
 : if demonic_rune_vault_is_decoy() then
@@ -2920,13 +2920,13 @@ KFEAT: { = {
 SUBST: A : wWW., B : wWW., C : WW., D : WW.
 MAP
 ccccccccccccccccccc
-.AwcwA1*1O1*1AwcwA.
-4AwcwB%12P21%BwcwA4
-.AwccwB%1.1%BwccwA.
- .BwccwA%1%AwccwB.
+4AwcwA1*1O1*1AwcwA4
+.AwcwB*12P21*BwcwA.
+4AwccwB%131%BwccwA4
+ .BwccwA313AwccwB.
  .Bwwcc65556ccwwB.
-  3CCwDDwwwDDwCC3
-   ..CwwwwwwwC.
+  .CCwwDwwwDwwCC.
+   ..CCwwwwwCC..
      ..DDDDD..
        .4.4.
 ENDMAP

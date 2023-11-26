@@ -1544,9 +1544,8 @@ lua_marker("L", Triggerable.synchronized_markers(wizard_appear_marker))
 SUBST:      ? = txxx, ! = t..
 SUBST:      M = x, CD = c, LZ = "
 KPROP:      'def$123L+ = no_tele_into
-COLOUR:     W = yellow
+COLOUR:     "W = lightmagenta
 COLOUR:     t = brown / lightgrey w:5
-COLOUR:     " = blue
 TILE:       W = dngn_zonguldrok_shrine
 TILE:       G = dngn_gravestone
 TILE:       c = wall_stone_gray

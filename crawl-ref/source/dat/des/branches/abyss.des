@@ -1089,11 +1089,11 @@ COLOUR: 45OG = lightmagenta
 MAP
 .......................
 ....."""ccc"5"cccccc...
-.cccccGcc2ccGcc...3cc..
-.+...ccc...ccc....cccc.
-A+.T15+"._."+"....+4Oc.
-.+...ccc...ccc....cccc.
-.cccccGcc2ccGcc...3cc..
+.c++ccGcc2ccGcc...3cc..
+.c...ccc...ccc....cccc.
+Ac.T15+"._."+"....+4Oc.
+.c...ccc...ccc....cccc.
+.c++ccGcc2ccGcc...3cc..
 ....."""ccc"5"cccccc...
 .......................
 ENDMAP
@@ -1139,7 +1139,7 @@ TAGS:   abyss_rune unrand no_monster_gen
 KMONS:  1 = glowing orange brain
 KMONS:  2 = golden eye / glass eye w:4
 KMONS:  3O = flying skull
-KMONS:  4 = large abomination / small abomination w:6
+KMONS:  4 = large abomination / small abomination w:7
 KMONS:  5 = cacodemon
 KMONS:  6 = executioner
 KMONS:  7 = shining eye
@@ -1155,7 +1155,7 @@ COLOUR: 48 = lightmagenta
 MAP
  "cccccc4@4cccccc"
  cc .. ccAcc .. cc
-"c 44"" x5x ""44 c"
+"c 4."" x"x "".4 c"
 cc44nnn.c+c.nnn44cc
 c 4nn7n.....n7nn4 c
 c44+13n5.c.5n31+44c
@@ -1177,23 +1177,25 @@ TAGS:   abyss_rune unrand patrolling
 MONS:   killer bee, meliai, spark wasp
 MONS:   wretched star, green very ugly thing
 KMONS:  O = queen bee
-# flavor: abyss creature wandered into the hive. TODO varied corpse types?
-: dgn.delayed_decay(_G, '1', 'deep elf demonologist corpse')
+# flavor: abyss creature wandered into the hive.
+: dgn.delayed_decay(_G, '1', 'any corpse')
 KITEM:  O = abyssal rune of Zot
 KFEAT:  a = x
 KFEAT:  A = stone_arch
+KFEAT:  t = demonic_tree
 KFEAT:  " = runelight
 NSUBST: 1 = 3:5 / 1:15 / 3:2 / 1:1 / 10 = 11. / * = .
 NSUBST: ' = 1:d / * = d:1 .:199
+SUBST:  t = tbb
 TILE:   a = wall_wax
 FTILE:  A4O = floor_crystal_squares
 COLOUR: a = yellow
 COLOUR: 4O = lightmagenta
 MAP
           xxxxxxx
-        xxxaaaaaxxxx
-      xxxxaaaOaaaaxxx
-    xxxaaaad1a1daaaxxx
+        xxxxtttxxxxx
+      xxxxattOttaaxxx
+    xxxaaaad1t1daaaxxx
    xxaa1aa21'1'12aa1axxx
   xxaa'a'."a"."a".'a'aaxx
  xxaa4aaa1aaa4aaa1aaa4aaxx
@@ -1211,7 +1213,7 @@ ENDMAP
 
 NAME:    nicolae_abyss_rune_star_stuff
 TAGS:    abyss_rune unrand no_monster_gen
-WEIGHT:  25
+WEIGHT:  20
 KMONS:   1 = starcursed mass
 KMONS:   2 = wretched star
 KMONS:   3 = tentacled starspawn
@@ -1226,31 +1228,31 @@ SHUFFLE: Aa'Bb"Dd-Ee_Ff~ / Bb"Dd-Ee_Ff~Aa' / Dd-Ee_Ff~Aa'Bb" / \
 NSUBST:  FAB : 1:O / *:"
 NSUBST:  s = 2:1 / 2:2 / 2:3
 SUBST:   a = +, ' = A, DE = ., bdef = c
-SUBST:   c = cccxbv
+SUBST:   c = cccxbv, z = cccbv
 CLEAR:   "-_~
 FTILE:   123O = floor_crystal_squares
 COLOUR:  123O = lightmagenta
 MAP
-     4ccc4
-    cccBccc
+     4zzz4
+    czzBzzc
   _ec..s..cf~
-4ccc...c...ccc4
-cc....c.c....cc
-cA...........Dc
-c..sc.....cs..c
-cc..c..s..c..cc
+4zcc...c...ccz4
+zz....c.c....zz
+zA...........Dz
+z..sc.....cs..z
+zz..c..s..c..zz
 -d...........a'
  c...c...c...c
- cc..cc.cc..cc
- 4c.s.....s.c4
-  cF.......Ec
-  cccccbccccc
+ cz..cc.cc..zc
+ 4z.s.....s.z4
+  zF.......Ez
+  zzzzcbczzzz
        "
 ENDMAP
 
 NAME:    nicolae_abyss_rune_left_handed
 TAGS:    abyss_rune unrand no_monster_gen
-WEIGHT:  25
+WEIGHT:  20
 MONS:    ancient zyme, wretched star, starcursed mass, lurking horror
 MONS:    thrashing horror, tentacled starspawn, apocalypse crab
 # Worldbinders summon from other branches....
@@ -1318,28 +1320,30 @@ ENDMAP
 NAME:    gammafunk_abyss_rune_reverse_zot
 TAGS:    abyss_rune unrand
 MONS:    draconian, nonbase draconian
-MONS:    wretched star / starcursed mass / apocalypse crab / lurking horror \
-         / very ugly thing / quicksilver dragon / shadow dragon
-MONS:    balrug / hellion / lorocyproca / tormentor / cacodemon / reaper \
-         / blizzard demon / executioner / angel / daeva
-KMONS:   R = hellephant / ancient lich / dread lich / hell sentinel / profane servitor
+MONS:    wretched star / starcursed mass / apocalypse crab / lurking horror / \
+         very ugly thing / storm dragon / shadow dragon
+MONS:    balrug / hellion / lorocyproca / tormentor / cacodemon / reaper / \
+         blizzard demon / hellephant / angel / daeva
+KMONS:   R = hellephant / ancient lich / dread lich / \
+             hell sentinel / profane servitor / executioner
 KITEM:   O = abyssal rune of Zot
-KFEAT:   " = runelight
+KFEAT:   ! = runelight
 MARKER:  P = lua:transp_loc("reverse_zot_entry")
 MARKER:  Q = lua:transp_dest_loc("reverse_zot_entry")
 MARKER:  R = lua:transp_loc("reverse_zot_exit")
 MARKER:  S = lua:transp_dest_loc("reverse_zot_exit")
 SHUFFLE: AB, CD
-# Make a classed draconian and band in each lung.
-NSUBST:  A = 2 / 2=112 / 2=1' / ', C = 2 / 2=112 / 2=1" / "
-NSUBST:  B = 3 / 0 / ', D = 3 / 0 / "
-NSUBST:  ' = 003 / 003... / ., " = 003 / 003... / .
-NSUBST:  - = 2=4 / 2=34.. / .
+# Make a classed draconian and band in the top lung parts.
+NSUBST:  A = 1:2 / 1 = 112 / 3 = 11''' / *:'
+NSUBST:  C = 1:2 / 1 = 112 / 3 = 11""" / *:"
+NSUBST:  B = 1:3 / 1:0 / *:', D = 1:3 / 1:0 / *:"
+NSUBST:  ' = 1:003 / 1:003... / *:., " = 1:003 / 1:003... / *:.
+NSUBST:  - = 1:4 / 2 = 34.. / .
 COLOUR:  c = lightmagenta
 COLOUR:  n@O012345. = magenta
 FTILE:   nc+@OPQRS012345. = floor_rough_magenta
 MAP
-         "@"
+!!       !@!       !!
 cccccccccP.Sccccccccc
 ccAAAAcccnnncccCCCCcc
 cAAAAAAccnnnccCCCCCCc
@@ -1447,7 +1451,10 @@ ENDMAP
 # and standardizing difficulty was easier with consolidation.
 NAME:   dshaligram_kb_abyss_rune_zappy_water_cross
 TAGS:   abyss_rune unrand patrolling no_pool_fixup
-MONS:   generate_awake lightning spire, raiju, smoke demon, blizzard demon
+KMONS:  1 = generate_awake lightning spire
+KMONS:  2 = raiju
+KMONS:  3 = smoke demon
+KMONS:  4 = blizzard demon
 KMONS:  O = merfolk impaler
 KITEM:  O = abyssal rune of Zot
 KFEAT:  O = shallow_water
@@ -1627,9 +1634,9 @@ MAP
  ...xmxmxcx c2c.c" .
  ..mxd4dxm1......c..
 ..xxd5d4dxx.......X"
-..md6ddd5d+3.....cX
+."md6ddd5d+3.....cX
 @.x4d4O4d4+...e..1XXA
-..md5ddd6d+3.....cX
+."md5ddd6d+3.....cX
 ..xxd4d5dxx.......X"
  ..mxd4dxm1......c..
  ...xmxmxxx c2c.c" .
@@ -1642,7 +1649,7 @@ NAME:    grunt_abyss_rune_forest_and_sorcery
 TAGS:    abyss_rune unrand patrolling no_pool_fixup no_monster_gen transparent
 MONS:    worldbinder, rakshasa
 KMONS:   34 = deep elf sorcerer
-KMONS:   56 = deep elf blademaster
+KMONS:   56 = deep elf demonologist
 KMONS:   78 = tengu reaver
 KMONS:   90 = shambling mangrove
 KMONS:   AB = thorn hunter
@@ -1714,7 +1721,7 @@ MAP
  ..c"""WWW"""c..
  ..c"""WwW"""c..
  .cccWWwwwWWccc.
- .c2WWwwKwwWW3c.
+ .c22WwwKwwW33c.
  .cccWWwwwWWccc.
  ...""""A""""...
 ENDMAP

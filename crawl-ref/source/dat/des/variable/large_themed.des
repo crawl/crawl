@@ -1815,7 +1815,7 @@ ORIENT:  south
 WEIGHT:  8
 MONS:    killer bee, meliai, queen bee
 NSUBST:  . = 3=001. / .
-NSUBST:  1 = 8=1. / 111112
+NSUBST:  1 = 8 = 1. / *:1
 NSUBST:  X = 4=d / 4=% / aa.
 # Guaranteed randomized access between combs.
 SHUFFLE: bc / de

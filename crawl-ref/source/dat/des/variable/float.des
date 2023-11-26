@@ -4227,31 +4227,32 @@ MAP
         ...
 ENDMAP
 
-NAME:   cheibrodos_iron_armory
-TAGS:   no_item_gen no_monster_gen no_descent
-DEPTH:  D:5-10
-ORIENT: float
-MONS:   rust devil, orc warrior
-ITEM:   scimitar / w:1 scimitar good_item, halberd / w:1 halberd good_item
-ITEM:   war axe / w:1 war axe good_item, morningstar / w:1 morningstar good_item
-ITEM:   plate armour / w:1 plate armour good_item
-ITEM:   chain mail / w:1 chain mail good_item
-NSUBST: " = 1:h / 1:i
-NSUBST: - = 1:d / 1:e / 1:f / 1:g
-KPROP:  ')+12defghji = no_tele_into
+NAME:    cheibrodos_iron_armory
+TAGS:    no_item_gen no_monster_gen no_descent
+DEPTH:   D:6-11
+ORIENT:  float
+MONS:    rust devil, orc warrior
+ITEM:    scimitar / scimitar good_item w:1
+ITEM:    halberd / halberd good_item w:1
+ITEM:    war axe / war axe good_item w:1
+ITEM:    morningstar / morningstar good_item w:1
+ITEM:    plate armour / plate armour good_item w:1
+ITEM:    chain mail / chain mail good_item w:1
+SHUFFLE: defg
+KPROP:   ')+12defghi = no_tele_into
 MAP
     .....
-  ...vvv...
+  ...vnv...
  ..nvvAvvn..
- .vvn1'1nvv.
-..v-'''''-v..
+ .vvv1'1vvv.
+..vd'''''ev..
 .vvv'''''vvv.
-.v"+'2G2'+"v.
+.vh+'2G2'+iv.
 .vvv'''''vvv.
-..v-'''''-v..
- .vvn'''nvv.
+..vf'''''gv..
+ .vvv'''vvv.
  ..nvv)vvn..
-  ...vvv...
+  ...vnv...
     .....
 ENDMAP
 
