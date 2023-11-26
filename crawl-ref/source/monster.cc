@@ -1366,9 +1366,6 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
         case UNRAND_ASMODEUS:
             return mons->type == MONS_ASMODEUS;
 
-        case UNRAND_DISPATER:
-            return mons->type == MONS_DISPATER;
-
         case UNRAND_CEREBOV:
             return mons->type == MONS_CEREBOV;
         }
@@ -1390,7 +1387,8 @@ static int _ego_damage_bonus(item_def &item)
 bool monster::pickup_melee_weapon(item_def &item, bool msg)
 {
     // Draconian monks are masters of unarmed combat.
-    if (type == MONS_DRACONIAN_MONK)
+    // Dispater only wants his orb.
+    if (type == MONS_DRACONIAN_MONK || type == MONS_DISPATER)
         return false;
 
     const bool dual_wielding = mons_wields_two_weapons(*this);
@@ -1566,6 +1564,10 @@ bool monster::wants_armour(const item_def &item) const
     {
         return false;
     }
+
+    // Dispater only wants his orb.
+    if (type == MONS_DISPATER && !is_unrandom_artefact(item, UNRAND_DISPATER))
+        return false;
 
     // Returns whether this armour is the monster's size.
     return check_armour_size(item, body_size());
