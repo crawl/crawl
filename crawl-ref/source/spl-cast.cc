@@ -351,10 +351,6 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     if (wizardry > 0)
       fail_reduce = fail_reduce * 6 / (7 + wizardry);
 
-    // Hard cap on fail rate reduction.
-    if (fail_reduce < 50)
-        fail_reduce = 50;
-
     return chance * fail_reduce / 100;
 }
 
