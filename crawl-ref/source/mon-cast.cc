@@ -6524,7 +6524,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     {
         const coord_def targ = pbolt.target;
         _fire_simple_beam(*mons, slot, pbolt);
-        if (mons->alive() && coinflip())
+        if (mons->alive())
             mons->stumble_away_from(targ, "the blast");
         return;
     }
