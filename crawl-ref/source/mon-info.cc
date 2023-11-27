@@ -1644,6 +1644,7 @@ bool monster_info::net_immune() const
 {
     // nets go right through (but weapons don't..?)
     return mons_class_flag(type, M_INSUBSTANTIAL)
+        || mons_genus(type) == MONS_JELLY
     // tentacles are too weird. don't mess with em
         || mons_is_tentacle_or_tentacle_segment(type)
     // if you net something that doesn't move (positionally or attacking),
