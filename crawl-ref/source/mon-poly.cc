@@ -653,28 +653,27 @@ bool mon_can_be_slimified(const monster* mons)
            && (holi & (MH_UNDEAD | MH_NATURAL) && !mons_is_slime(*mons));
 }
 
+static monster_type _slime_target(const monster &mon)
+{
+    const int hd = mon.get_hit_dice();
+    const int target = random_range(hd - 4, hd + 4);
+    if (!feat_has_solid_floor(env.grid(mon.pos())))
+        return target < 7 ? MONS_JELLY : MONS_SLIME_CREATURE; // Don't drown.
+
+    if (target < 3)
+        return MONS_ENDOPLASM;
+    if (target < 5)
+        return MONS_JELLY;
+    if (target < 12)
+        return MONS_SLIME_CREATURE;
+    if (coinflip())
+        return MONS_ACID_BLOB;
+    return MONS_AZURE_JELLY;
+}
+
 void slimify_monster(monster* mon)
 {
-    monster_type target = MONS_JELLY;
-
-    const int x = mon->get_hit_dice() + random_choose(1, -1) * random2(5);
-
-    if (x < 3)
-        target = MONS_ENDOPLASM;
-    else if (x >= 3 && x < 5)
-        target = MONS_JELLY;
-    else if (x >= 5 && x <= 11)
-        target = MONS_SLIME_CREATURE;
-    else
-    {
-        if (coinflip())
-            target = MONS_ACID_BLOB;
-        else
-            target = MONS_AZURE_JELLY;
-    }
-
-    if (feat_is_water(env.grid(mon->pos()))) // Pick something amphibious.
-        target = (x < 7) ? MONS_JELLY : MONS_SLIME_CREATURE;
+    const monster_type target = _slime_target(*mon);
 
     // Bail out if jellies can't live here.
     if (!monster_habitable_grid(target, env.grid(mon->pos())))
