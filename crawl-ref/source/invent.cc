@@ -480,6 +480,13 @@ static bool _has_temp_unwearable_armour()
     return false;
 }
 
+static string _no_offhand_caveat()
+{
+    if (you.has_mutation(MUT_WIELD_OFFHAND))
+        return " or one-handed weapons";
+    return "";
+}
+
 /**
  * What message should the player be given when they look for items matching
  * the given selector and don't find any?
@@ -499,15 +506,22 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any weapons.";
     case OSEL_BLESSABLE_WEAPON:
         return "You aren't carrying any weapons that can be blessed.";
-    case OBJ_ARMOUR:
-    {
+    case OBJ_ARMOUR: // XXX: unused?
         if (_has_melded_armour())
             return "Your armour is currently melded into you.";
-        else if (_has_temp_unwearable_armour())
+        if (_has_temp_unwearable_armour())
             return "You aren't carrying any currently wearable armour.";
-        else
-            return "You aren't carrying any wearable armour.";
-    }
+        return "You aren't carrying any wearable armour.";
+    case OSEL_WEARABLE:
+        if (_has_melded_armour())
+            return "Your armour is currently melded into you.";
+        if (_has_temp_unwearable_armour())
+        {
+            return make_stringf("You aren't carrying any currently wearable armour%s.",
+                                _no_offhand_caveat().c_str());
+        }
+        return make_stringf("You aren't carrying any wearable armour%s.",
+                            _no_offhand_caveat().c_str());
     case OSEL_UNIDENT:
         return "You don't currently have any unidentified items.";
     case OSEL_ENCHANTABLE_ARMOUR:
@@ -1089,7 +1103,7 @@ const char* item_slot_name(equipment_type type)
     case EQ_HELMET:      return "helmet";
     case EQ_GLOVES:      return "gloves";
     case EQ_BOOTS:       return "boots";
-    case EQ_SHIELD:      return "shield";
+    case EQ_OFFHAND:      return "shield";
     case EQ_BODY_ARMOUR: return "body";
     default:             return "";
     }
@@ -1145,8 +1159,14 @@ bool item_is_selected(const item_def &i, int selector)
     case OBJ_ARMOUR:
         return itype == OBJ_ARMOUR && can_wear_armour(i, false, false);
 
+    case OSEL_WEARABLE:
+        return can_wear_armour(i, false, false);
+
     case OSEL_WORN_ARMOUR:
-        return itype == OBJ_ARMOUR && item_is_equipped(i);
+        return itype == OBJ_ARMOUR && item_is_equipped(i)
+               || you.has_mutation(MUT_WIELD_OFFHAND)
+                  && is_weapon(i)
+                  && item_equip_slot(i) == EQ_OFFHAND;
 
     case OSEL_UNIDENT:
         return !fully_identified(i) && itype != OBJ_BOOKS;
@@ -1512,7 +1532,8 @@ bool check_old_item_warning(const item_def& item,
     }
     else if (oper == OPER_WEAR) // can we safely take off old item?
     {
-        if (item.base_type != OBJ_ARMOUR)
+        const bool offhand = is_weapon(item) && you.has_mutation(MUT_WIELD_OFFHAND);
+        if (item.base_type != OBJ_ARMOUR && !offhand)
             return true;
 
         equipment_type eq_slot = get_armour_slot(item);
@@ -1525,7 +1546,10 @@ bool check_old_item_warning(const item_def& item,
         if (!needs_handle_warning(old_item, OPER_TAKEOFF, penance))
             return true;
 
-        prompt += "Really take off ";
+        if (offhand)
+            prompt += "Really unwield ";
+        else
+            prompt += "Really take off ";
     }
     else if (oper == OPER_PUTON) // can we safely remove old item?
     {
@@ -1609,6 +1633,13 @@ bool needs_notele_warning(const item_def &item, operation_types oper)
 bool needs_handle_warning(const item_def &item, operation_types oper,
                           bool &penance)
 {
+    if (is_weapon(item)
+        && you.has_mutation(MUT_WIELD_OFFHAND)
+        && (oper == OPER_WEAR || oper == OPER_TAKEOFF))
+    {
+        oper = OPER_WIELD;
+    }
+
     if (_has_warning_inscription(item, oper))
         return true;
 
@@ -1721,6 +1752,7 @@ bool check_warning_inscriptions(const item_def& item,
     if (item.defined()
         && needs_handle_warning(item, oper, penance))
     {
+        operation_types verb_oper = oper;
         // Common pattern for wield/wear/put:
         // - if the player isn't capable of equipping it, return true
         //   immediately. No point warning, since the op is impossible.
@@ -1745,6 +1777,9 @@ bool check_warning_inscriptions(const item_def& item,
             int equip = you.equip[get_armour_slot(item)];
             if (equip != -1 && item.link == equip)
                 return check_old_item_warning(item, oper);
+
+            if (is_weapon(item) && you.has_mutation(MUT_WIELD_OFFHAND))
+                verb_oper = OPER_WIELD;
         }
         else if (oper == OPER_PUTON)
         {
@@ -1775,10 +1810,12 @@ bool check_warning_inscriptions(const item_def& item,
             // Don't ask if it will fail anyway.
             if (item.cursed())
                 return true;
+            if (is_weapon(item) && you.has_mutation(MUT_WIELD_OFFHAND))
+                verb_oper = OPER_UNEQUIP;
         }
 
         // XXX: duplicates a check in delay.cc:_finish_delay()
-        string prompt = "Really " + _operation_verb(oper) + " ";
+        string prompt = "Really " + _operation_verb(verb_oper) + " ";
         prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
                                       : item.name(DESC_A));
         if (needs_notele_warning(item, oper)

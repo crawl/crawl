@@ -3627,7 +3627,15 @@ static vector<command_type> _allowed_actions(const item_def& item)
         if (!item_is_equipped(item))
         {
             if (item_is_wieldable(item))
+            {
                 actions.push_back(CMD_WIELD_WEAPON);
+                if (you.has_mutation(MUT_WIELD_OFFHAND)
+                    && you.hands_reqd(item) == HANDS_ONE
+                    && !you.get_mutation_level(MUT_MISSING_HAND))
+                {
+                    actions.push_back(CMD_WIELD_OFFHAND);
+                }
+            }
         }
         else if (item_equip_slot(item) == EQ_WEAPON)
             actions.push_back(CMD_UNWIELD_WEAPON);
@@ -3668,6 +3676,7 @@ static string _actions_desc(const vector<command_type>& actions)
     {
         { CMD_WIELD_WEAPON, "(w)ield" },
         { CMD_UNWIELD_WEAPON, "(u)nwield" },
+        { CMD_WIELD_OFFHAND, "(o)ffhand wield" },
         { CMD_QUIVER_ITEM, "(q)uiver" }, // except for potions, see below
         { CMD_WEAR_ARMOUR, "(w)ear" },
         { CMD_REMOVE_ARMOUR, "(t)ake off" },
@@ -3705,6 +3714,7 @@ static command_type _get_action(int key, vector<command_type> actions)
     {
         { CMD_WIELD_WEAPON,     'w' },
         { CMD_UNWIELD_WEAPON,   'u' },
+        { CMD_WIELD_OFFHAND,    'o' },
         { CMD_QUIVER_ITEM,      'q' }, // except for potions, see below
         { CMD_WEAR_ARMOUR,      'w' },
         { CMD_REMOVE_ARMOUR,    't' },
@@ -3810,6 +3820,7 @@ static bool _do_action(item_def &item, const command_type action)
     {
     case CMD_WIELD_WEAPON:     wield_weapon(slot);            break;
     case CMD_UNWIELD_WEAPON:   wield_weapon(SLOT_BARE_HANDS); break;
+    case CMD_WIELD_OFFHAND:    wear_armour(slot); /*ha*/      break;
     case CMD_QUIVER_ITEM:
         quiver::set_to_quiver(quiver::slot_to_action(slot), you.quiver_action); // ugh
         break;

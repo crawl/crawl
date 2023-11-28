@@ -874,7 +874,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
         alternate.sub_type = ARM_ROBE;
         break;
 
-    case EQ_SHIELD:
+    case EQ_OFFHAND:
         // Assume that anything that can use an orb can wear some kind of
         // shield
         dummy.sub_type = ARM_ORB;
@@ -976,11 +976,17 @@ int player::wearing(equipment_type slot, int sub_type) const
         // Hands can have more than just weapons.
         if (weapon() && weapon()->is_type(OBJ_WEAPONS, sub_type))
             ret++;
+        // Special handling for dual wielding.
+        if (offhand_weapon() && offhand_weapon()->is_type(OBJ_WEAPONS, sub_type))
+            ret++;
         break;
 
     case EQ_STAFF:
         // Like above, but must be magical staff.
         if (weapon() && weapon()->is_type(OBJ_STAVES, sub_type))
+            ret++;
+        // Special handling for dual wielding.
+        if (offhand_weapon() && offhand_weapon()->is_type(OBJ_STAVES, sub_type))
             ret++;
         break;
 
@@ -2019,7 +2025,7 @@ static int _player_adjusted_evasion_penalty(const int scale)
     // Some lesser armours have small penalties now (barding).
     for (int i = EQ_MIN_ARMOUR; i < EQ_MAX_ARMOUR; i++)
     {
-        if (i == EQ_SHIELD || !you.slot_item(static_cast<equipment_type>(i)))
+        if (i == EQ_OFFHAND || !you.slot_item(static_cast<equipment_type>(i)))
             continue;
 
         // [ds] Evasion modifiers for armour are negatives, change
@@ -2232,7 +2238,7 @@ int player_shield_class()
         return 0;
 
     if (you.shield())
-        shield += _sh_from_shield(you.inv[you.equip[EQ_SHIELD]]);
+        shield += _sh_from_shield(you.inv[you.equip[EQ_OFFHAND]]);
 
     // mutations
     // +4, +6, +8 (displayed values)
@@ -3584,12 +3590,8 @@ int player::scan_artefacts(artefact_prop_type which_property,
         const item_def &item = inv[eq];
 
         // Only weapons give their effects when in our hands.
-        if (i == EQ_WEAPON
-            && item.base_type != OBJ_WEAPONS
-            && item.base_type != OBJ_STAVES)
-        {
+        if (i == EQ_WEAPON && !is_weapon(item))
             continue;
-        }
 
         int val = 0;
 
@@ -5901,7 +5903,7 @@ int player::adjusted_body_armour_penalty(int scale) const
  */
 int player::adjusted_shield_penalty(int scale) const
 {
-    const item_def *shield_l = slot_item(EQ_SHIELD, false);
+    const item_def *shield_l = slot_item(EQ_OFFHAND, false);
     if (!shield_l)
         return 0;
 
@@ -6236,7 +6238,7 @@ int player::base_ac_with_specific_items(int scale,
     for (auto item : armour_items)
     {
         // Shields give SH instead of AC
-        if (get_armour_slot(*item) != EQ_SHIELD)
+        if (get_armour_slot(*item) != EQ_OFFHAND)
         {
             AC += base_ac_from(*item, 100);
             AC += item->plus * 100;

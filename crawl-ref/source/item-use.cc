@@ -169,9 +169,15 @@ static string _default_use_title(operation_types oper)
             ? "Wield or unwield which item (- for none)?"
             : "Wield which item (- for none)?";
     case OPER_WEAR:
-        return Options.equip_unequip
-            ? "Wear or take off which item?"
-            : "Wear which item?";
+        if (Options.equip_unequip)
+        {
+            if (you.has_mutation(MUT_WIELD_OFFHAND))
+                return "Wear, off-hand wield, or remove which item?";
+            return "Wear or take off which item?";
+        }
+        if (you.has_mutation(MUT_WIELD_OFFHAND))
+            return "Wear or off-hand wield which item?";
+        return "Wear which item?";
     case OPER_PUTON:
         return Options.equip_unequip
             ? "Put on or remove which piece of jewellery?"
@@ -183,6 +189,8 @@ static string _default_use_title(operation_types oper)
     case OPER_EVOKE:
         return "Evoke which item?";
     case OPER_TAKEOFF:
+        if (you.has_mutation(MUT_WIELD_OFFHAND))
+            return "Take off or unwield which item?";
         return "Take off which piece of armour?";
     case OPER_REMOVE:
         return "Remove which piece of jewellery?";
@@ -220,7 +228,7 @@ static int _default_osel(operation_types oper)
     case OPER_WIELD:
         return OSEL_WIELD; // XX is this different from OBJ_WEAPONS any more?
     case OPER_WEAR:
-        return OBJ_ARMOUR;
+        return OSEL_WEARABLE;
     case OPER_PUTON:
         return OBJ_JEWELLERY;
     case OPER_QUAFF:
@@ -1591,16 +1599,16 @@ static bool _do_wield_weapon(item_def *to_wield, bool adjust_time_taken)
     if (!_safe_to_remove_or_wear(new_wpn, you.weapon(), false))
         return false;
 
+    bool swapping = false;
     // Unwield any old weapon.
     if (you.weapon())
     {
-        if (unwield_item())
-        {
-            // Enable skills so they can be re-disabled later
-            update_can_currently_train();
-        }
-        else
+        if (!unwield_item())
             return false;
+
+        swapping = true;
+        // Enable skills so they can be re-disabled later
+        update_can_currently_train();
     }
 
     const unsigned int old_talents = your_talents(false).size();
@@ -1613,6 +1621,15 @@ static bool _do_wield_weapon(item_def *to_wield, bool adjust_time_taken)
     // At this point new_wpn is potentially not the right thing anymore (the
     // thing actually in the player's inventory), that is, in the case where the
     // player chose something from the floor. So use item_slot from here on.
+
+    you.turn_is_over  = true;
+
+    if (you.has_mutation(MUT_SLOW_WIELD))
+    {
+        start_delay<EquipOnDelay>(ARMOUR_EQUIP_DELAY - (swapping ? 0 : 1),
+                                  you.inv[item_slot], true);
+        return true;
+    }
 
     // Go ahead and wield the weapon.
     equip_item(EQ_WEAPON, item_slot);
@@ -1630,7 +1647,6 @@ static bool _do_wield_weapon(item_def *to_wield, bool adjust_time_taken)
 
     you.wield_change  = true;
     quiver::on_weapon_changed();
-    you.turn_is_over  = true;
 
     return true;
 }
@@ -1674,8 +1690,6 @@ bool armour_prompt(const string & mesg, int *index, operation_types oper)
     return false;
 }
 
-static const int ARMOUR_EQUIP_DELAY = 5;
-
 // If you can't wear a bardings, why not? (If you can, return "".)
 static string _cant_wear_barding_reason(bool ignore_temporary)
 {
@@ -1703,8 +1717,9 @@ static string _cant_wear_barding_reason(bool ignore_temporary)
  */
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 {
-    const object_class_type base_type = item.base_type;
-    if (base_type != OBJ_ARMOUR || you.has_mutation(MUT_NO_ARMOUR))
+
+    if ((item.base_type != OBJ_ARMOUR || you.has_mutation(MUT_NO_ARMOUR))
+        && (!you.has_mutation(MUT_WIELD_OFFHAND) || !is_weapon(item)))
     {
         if (verbose)
             mprf(MSGCH_PROMPT, "You can't wear that!");
@@ -1745,7 +1760,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
-    if (you.get_mutation_level(MUT_MISSING_HAND) && is_offhand(item))
+    const bool offhand = is_offhand(item) || is_weapon(item);
+    if (you.get_mutation_level(MUT_MISSING_HAND) && offhand)
     {
         if (verbose)
         {
@@ -1757,8 +1773,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
-    if (!ignore_temporary && you.weapon()
-        && is_offhand(item)
+    if (!ignore_temporary && you.weapon() && offhand
         && is_shield_incompatible(*you.weapon(), &item))
     {
         if (verbose)
@@ -1784,6 +1799,22 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             mprf(MSGCH_PROMPT, "%s", mut_block.c_str());
         return false;
     }
+
+    if (is_weapon(item))
+    {
+        if (you.hands_reqd(item) != HANDS_ONE)
+        {
+            if (verbose)
+            {
+                mprf(MSGCH_PROMPT, "That's too large to wield in your off-%s!",
+                     you.hand_name(true).c_str());
+            }
+            return false;
+        }
+        return true;
+    }
+
+    // Logic below only applies to actual, real armour, not off-handed weapons.
 
     // Lear's hauberk covers also head, hands and legs.
     if (is_unrandom_artefact(item, UNRAND_LEAR))
@@ -1925,8 +1956,9 @@ static bool _can_takeoff_armour(int item);
 // precondition: item is not already worn
 static bool _can_equip_armour(const item_def &item)
 {
-    const object_class_type base_type = item.base_type;
-    if (base_type != OBJ_ARMOUR)
+    if (item.base_type != OBJ_ARMOUR
+        && !(is_weapon(item)
+             && you.has_mutation(MUT_WIELD_OFFHAND)))
     {
         mprf(MSGCH_PROMPT, "You can't wear that.");
         return false;
@@ -2009,7 +2041,7 @@ static bool _do_wear_armour(item_def *to_wear)
            || slot == EQ_HELMET
            || slot == EQ_GLOVES
            || slot == EQ_BOOTS
-           || slot == EQ_SHIELD
+           || slot == EQ_OFFHAND
            || slot == EQ_BODY_ARMOUR)
         && you.equip[slot] != -1)
     {
@@ -2038,7 +2070,9 @@ static bool _can_takeoff_armour(int item)
 
     item_def& invitem = you.inv[item];
 
-    if (invitem.base_type != OBJ_ARMOUR)
+    if (invitem.base_type != OBJ_ARMOUR
+        && (!you.has_mutation(MUT_WIELD_OFFHAND)
+            || item_equip_slot(invitem) != EQ_OFFHAND))
     {
         mprf(MSGCH_PROMPT, "You couldn't even remove that if you tried!");
         return false;

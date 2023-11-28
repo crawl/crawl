@@ -1986,7 +1986,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         }
     }
 
-    if (item_def* item = you.slot_item(EQ_SHIELD))
+    if (item_def* item = you.slot_item(EQ_OFFHAND))
     {
         string str = "Your ";
         str += item->name(DESC_BASENAME, false, false, false);

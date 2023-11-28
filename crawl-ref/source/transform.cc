@@ -44,7 +44,7 @@
 
 static const int EQF_NONE = 0;
 // "hand" slots (not rings)
-static const int EQF_HANDS = SLOTF(EQ_WEAPON) | SLOTF(EQ_SHIELD)
+static const int EQF_HANDS = SLOTF(EQ_WEAPON) | SLOTF(EQ_OFFHAND)
                              | SLOTF(EQ_GLOVES);
 // auxen
 static const int EQF_AUXES = SLOTF(EQ_GLOVES) | SLOTF(EQ_BOOTS)
@@ -56,7 +56,7 @@ static const int EQF_STATUE = SLOTF(EQ_GLOVES) | SLOTF(EQ_BOOTS)
 static const int EQF_LEAR = EQF_STATUE | SLOTF(EQ_HELMET);
 // everything you can (W)ear
 static const int EQF_WEAR = EQF_AUXES | SLOTF(EQ_BODY_ARMOUR)
-                            | SLOTF(EQ_SHIELD);
+                            | SLOTF(EQ_OFFHAND);
 // everything but jewellery
 static const int EQF_PHYSICAL = EQF_HANDS | EQF_WEAR;
 // all rings (except for the macabre finger amulet's)
@@ -1338,8 +1338,8 @@ static void _unmeld_equipment_type(equipment_type e)
 
     if (e == EQ_WEAPON)
     {
-        if (you.slot_item(EQ_SHIELD)
-            && is_shield_incompatible(item, you.slot_item(EQ_SHIELD)))
+        if (you.slot_item(EQ_OFFHAND)
+            && is_shield_incompatible(item, you.slot_item(EQ_OFFHAND)))
         {
             force_remove = true;
         }
@@ -1353,7 +1353,7 @@ static void _unmeld_equipment_type(equipment_type e)
         // If you switched weapons during the transformation, make
         // sure you can still wear your shield.
         // (This is only possible with Statue Form.)
-        if (e == EQ_SHIELD && you.weapon()
+        if (e == EQ_OFFHAND && you.weapon()
             && is_shield_incompatible(*you.weapon(), &item))
         {
             force_remove = true;

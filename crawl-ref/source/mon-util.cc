@@ -474,12 +474,12 @@ int monster::wearing(equipment_type slot, int sub_type) const
     case EQ_HELMET:
     case EQ_GLOVES:
     case EQ_BOOTS:
-    case EQ_SHIELD:
+    case EQ_OFFHAND:
         item = mslot_item(MSLOT_SHIELD);
         if (item && item->is_type(OBJ_ARMOUR, sub_type))
             ret++;
-        // Don't check MSLOT_ARMOUR for EQ_SHIELD
-        if (slot == EQ_SHIELD)
+        // Don't check MSLOT_ARMOUR for EQ_OFFHAND
+        if (slot == EQ_OFFHAND)
             break;
         // intentional fall-through
     case EQ_BODY_ARMOUR:
@@ -538,15 +538,15 @@ int monster::wearing_ego(equipment_type slot, int special) const
     case EQ_HELMET:
     case EQ_GLOVES:
     case EQ_BOOTS:
-    case EQ_SHIELD:
+    case EQ_OFFHAND:
         item = mslot_item(MSLOT_SHIELD);
         if (item && item->base_type == OBJ_ARMOUR
             && get_armour_ego_type(*item) == special)
         {
             ret++;
         }
-        // Don't check MSLOT_ARMOUR for EQ_SHIELD
-        if (slot == EQ_SHIELD)
+        // Don't check MSLOT_ARMOUR for EQ_OFFHAND
+        if (slot == EQ_OFFHAND)
             break;
         // intentional fall-through
     case EQ_BODY_ARMOUR:
@@ -3459,6 +3459,18 @@ bool should_shout_at_mons(const monster &m)
         && x_chance_in_y(you.get_mutation_level(MUT_SCREAM) * 6, 100);
 }
 
+/// Does this monster trigger your attractitis? (Random.)
+bool should_attract_mons(const monster &m)
+{
+    return you.has_mutation(MUT_INITIALLY_ATTRACTIVE)
+        && one_chance_in(3)
+        && grid_distance(you.pos(), m.pos()) > 2
+        && !mons_is_tentacle_or_tentacle_segment(m.type)
+        && !mons_is_conjured(m.type)
+        && !m.is_summoned() // XXX: unsure about this
+        && !m.no_tele();
+}
+
 bool mons_att_wont_attack(mon_attitude_type fr)
 {
     return fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL;
@@ -4103,7 +4115,7 @@ mon_inv_type equip_slot_to_mslot(equipment_type eq)
     {
     case EQ_WEAPON:      return MSLOT_WEAPON;
     case EQ_BODY_ARMOUR: return MSLOT_ARMOUR;
-    case EQ_SHIELD:      return MSLOT_SHIELD;
+    case EQ_OFFHAND:      return MSLOT_SHIELD;
     case EQ_RINGS:
     case EQ_AMULET:      return MSLOT_JEWELLERY;
     default: return NUM_MONSTER_SLOTS;

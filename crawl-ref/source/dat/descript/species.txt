@@ -112,6 +112,11 @@ Spriggan
 Very small, very frail and very fast, Spriggans are highly competent stabbers
 and spellcasters.
 %%%%
+Steel Elf
+
+Steel Elves forge bonds with weapons, which they can dual-wield, and with foes,
+which have a magnetic attraction to them.
+%%%%
 Troll
 
 Trolls are monstrous creatures with powerful claws. They regenerate health

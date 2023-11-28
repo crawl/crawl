@@ -13,6 +13,8 @@
 #include "object-selector-type.h"
 #include "operation-types.h"
 
+const int ARMOUR_EQUIP_DELAY = 5;
+
 operation_types use_an_item_menu(item_def *&target, operation_types oper,
                 int item_type=OSEL_ANY,
                 const char* prompt=nullptr,

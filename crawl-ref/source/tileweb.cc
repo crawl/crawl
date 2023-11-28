@@ -1732,10 +1732,10 @@ void TilesFramework::_send_cell(const coord_def &gc,
                             get_item_known_info(*you.slot_item(EQ_WEAPON)));
                         minfo.inv[MSLOT_WEAPON].reset(item);
                     }
-                    if (you.slot_item(EQ_SHIELD))
+                    if (you.slot_item(EQ_OFFHAND))
                     {
                         item = new item_def(
-                            get_item_known_info(*you.slot_item(EQ_SHIELD)));
+                            get_item_known_info(*you.slot_item(EQ_OFFHAND)));
                         minfo.inv[MSLOT_SHIELD].reset(item);
                     }
                     tileidx_t mcache_idx = mcache.register_monster(minfo);

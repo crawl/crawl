@@ -1672,11 +1672,11 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
         break;
     case ARM_GLOVES:
         if (base_type == MONS_NIKOLA)
-            eq = EQ_SHIELD;
+            eq = EQ_OFFHAND;
         break;
     case ARM_HELMET:
         if (base_type == MONS_ROBIN)
-            eq = EQ_SHIELD;
+            eq = EQ_OFFHAND;
         break;
     default:
         eq = get_armour_slot(item);
@@ -1687,7 +1687,7 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
         if (eq != EQ_HELMET && base_type == MONS_GASTRONOK)
             return false;
 
-        if (eq != EQ_HELMET && eq != EQ_SHIELD
+        if (eq != EQ_HELMET && eq != EQ_OFFHAND
             && genus == MONS_OCTOPODE)
         {
             return false;
@@ -1699,7 +1699,7 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
         return false;
 
     // XXX: Monsters can only equip body armour and shields (as of 0.4).
-    if (!force && eq != EQ_BODY_ARMOUR && eq != EQ_SHIELD)
+    if (!force && eq != EQ_BODY_ARMOUR && eq != EQ_OFFHAND)
         return false;
 
     const mon_inv_type mslot = equip_slot_to_mslot(eq);

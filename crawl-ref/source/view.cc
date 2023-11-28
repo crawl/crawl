@@ -61,6 +61,7 @@
 #include "shout.h"
 #include "show.h"
 #include "showsymb.h"
+#include "spl-transloc.h" // attract_monster
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
@@ -496,6 +497,18 @@ static void _maybe_trigger_shoutitis(const vector<monster*> monsters)
     }
 }
 
+/// If the player has the attractive mutation, maybe attract newly-seen monsters.
+static void _maybe_trigger_attractivitis(const vector<monster*> monsters)
+{
+    for (monster* mon : monsters)
+    {
+        if (!should_attract_mons(*mon))
+            continue;
+        const int dist = grid_distance(you.pos(), mon->pos());
+        attract_monster(*mon, dist - 2); // never attract adjacent
+    }
+}
+
 /// Let Gozag's wrath buff newly-seen hostile monsters, maybe.
 static void _maybe_gozag_incite(vector<monster*> monsters)
 {
@@ -592,6 +605,7 @@ void update_monsters_in_view()
         // XXX: does interrupt_activity() add 'comes into view' messages to
         // 'msgs' in ALL cases we want shoutitis/gozag wrath to trigger?
         _maybe_trigger_shoutitis(monsters);
+        _maybe_trigger_attractivitis(monsters);
         _maybe_gozag_incite(monsters);
     }
 

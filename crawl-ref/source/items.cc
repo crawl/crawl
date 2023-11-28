@@ -28,6 +28,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "corpse.h"
+#include "database.h" // getRandNameString
 #include "dbg-util.h"
 #include "defines.h"
 #include "delay.h"
@@ -4884,4 +4885,52 @@ bool maybe_identify_base_type(item_def &item)
 
     _identify_last_item(item);
     return true;
+}
+
+#define WEAPON_NAME_KEY "weapon_name"
+
+void name_weapon(item_def &item)
+{
+    string name = getRandNameString("steelspirit", " name");
+    if (name == "RANDGEN")
+        name = make_name();
+    item.props[WEAPON_NAME_KEY] = name;
+
+    if (!item.inscription.empty())
+        item.inscription += ", ";
+    item.inscription += name;
+}
+
+void maybe_name_weapon(item_def &item)
+{
+    const string it_name = item.name(DESC_YOUR, false, false, false);
+    if (is_artefact(item))
+    {
+        // TODO: variant messages? (in the database?)
+        mprf("%s silently whispers hello.", it_name.c_str());
+        return;
+    }
+
+    if (!item.props.exists(WEAPON_NAME_KEY))
+        name_weapon(item);
+
+    const string name = item.props[WEAPON_NAME_KEY].get_string();
+    // TODO: variant messages? (in the database?)
+    mprf("%s \"%s\" silently whispers hello.",
+         it_name.c_str(), name.c_str());
+}
+
+void say_farewell_to_weapon(const item_def &item)
+{
+    if (is_artefact(item))
+    {
+        // TODO: variant messages? (in the database?)
+        const string it_name = item.name(DESC_YOUR, false, false, false);
+        mprf("You whisper farewell to %s.", it_name.c_str());
+        return;
+    }
+
+    const string name = item.props[WEAPON_NAME_KEY].get_string();
+    // TODO: variant messages? (in the database?)
+    mprf("You whisper farewell to %s.", name.c_str());
 }

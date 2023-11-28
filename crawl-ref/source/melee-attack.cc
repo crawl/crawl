@@ -12,7 +12,6 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "areas.h"
 #include "art-enum.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
@@ -72,8 +71,9 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    cleaving(is_cleaving), is_multihit(false),
-    is_riposte(false), is_projected(false), charge_pow(0), never_cleave(false),
+    cleaving(is_cleaving), is_multihit(false), is_riposte(false),
+    is_off_hand(false), is_projected(false), charge_pow(0),
+    never_cleave(false),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1)
 {
@@ -96,10 +96,13 @@ bool melee_attack::can_reach()
 
 bool melee_attack::bad_attempt()
 {
+    if (is_off_hand)
+        return false; // handled earlier
+
     if (!attacker->is_player() || !defender || !defender->is_monster())
         return false;
 
-    if (player_unrand_bad_attempt())
+    if (player_unrand_bad_attempt(attacker->offhand_weapon()))
         return true;
 
     if (!cleave_targets.empty())
@@ -119,77 +122,25 @@ bool melee_attack::would_prompt_player()
     if (!attacker->is_player())
         return false;
 
+    item_def *offhand = attacker->offhand_weapon();
     bool penance;
     return weapon && needs_handle_warning(*weapon, OPER_ATTACK, penance)
-           || player_unrand_bad_attempt(true);
+           || offhand && !is_range_weapon(*offhand)
+              && needs_handle_warning(*offhand, OPER_ATTACK, penance)
+           || player_unrand_bad_attempt(offhand, true);
 }
 
-bool melee_attack::player_unrand_bad_attempt(bool check_only)
+bool melee_attack::player_unrand_bad_attempt(const item_def *offhand,
+                                             bool check_only)
 {
     // Unrands with secondary effects that can harm nearby friendlies.
     // Don't prompt for confirmation (and leak information about the
     // monster's position) if the player can't see the monster.
-    if (!weapon || !you.can_see(*defender))
+    if (!you.can_see(*defender))
         return false;
 
-    if (is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR))
-    {
-
-        targeter_smite hitfunc(attacker, 1, 1, 1, false);
-        hitfunc.set_aim(defender->pos());
-
-        return stop_attack_prompt(hitfunc, "attack",
-                                  [](const actor *act)
-                                  {
-                                      return !god_protects(act->as_monster());
-                                  }, nullptr, defender->as_monster(),
-                                  check_only);
-    }
-    else if (is_unrandom_artefact(*weapon, UNRAND_VARIABILITY)
-             || is_unrandom_artefact(*weapon, UNRAND_SINGING_SWORD)
-                && !silenced(you.pos()))
-    {
-        targeter_radius hitfunc(&you, LOS_NO_TRANS);
-
-        return stop_attack_prompt(hitfunc, "attack",
-                               [](const actor *act)
-                               {
-                                   return !god_protects(act->as_monster());
-                               }, nullptr, defender->as_monster(),
-                               check_only);
-    }
-    if (is_unrandom_artefact(*weapon, UNRAND_TORMENT))
-    {
-        targeter_radius hitfunc(&you, LOS_NO_TRANS);
-
-        return stop_attack_prompt(hitfunc, "attack",
-                               [] (const actor *m)
-                               {
-                                   return !m->res_torment()
-                                       && !god_protects(m->as_monster());
-                               },
-                                  nullptr, defender->as_monster(),
-                                check_only);
-    }
-    if (is_unrandom_artefact(*weapon, UNRAND_ARC_BLADE))
-    {
-        vector<const actor *> exclude;
-        return !safe_discharge(defender->pos(), exclude, check_only);
-    }
-    if (is_unrandom_artefact(*weapon, UNRAND_POWER))
-    {
-        targeter_beam hitfunc(&you, 4, ZAP_SWORD_BEAM, 100, 0, 0);
-        hitfunc.beam.aimed_at_spot = false;
-        hitfunc.set_aim(defender->pos());
-
-        return stop_attack_prompt(hitfunc, "attack",
-                               [](const actor *act)
-                               {
-                                   return !god_protects(act->as_monster());
-                               }, nullptr, defender->as_monster(),
-                               check_only);
-    }
-    return false;
+    return weapon && ::player_unrand_bad_attempt(*weapon, defender, check_only)
+        || offhand && ::player_unrand_bad_attempt(*offhand, defender, check_only);
 }
 
 bool melee_attack::handle_phase_attempted()
@@ -218,7 +169,11 @@ bool melee_attack::handle_phase_attempted()
         if (!is_riposte && !is_multihit && !cleaving
             && wu_jian_attack == WU_JIAN_ATTACK_NONE)
         {
-            you.time_taken = you.attack_delay().roll();
+            const int delay = you.attack_delay_with(nullptr, true, weapon).roll();
+            if (is_off_hand)
+                you.time_taken = max(you.time_taken, delay);
+            else
+                you.time_taken = delay;
         }
 
         const caction_type cact_typ = is_riposte ? CACT_RIPOSTE : CACT_MELEE;
@@ -718,7 +673,7 @@ bool melee_attack::handle_phase_damaged()
 bool melee_attack::handle_phase_aux()
 {
     if (attacker->is_player()
-        && !cleaving
+        && !cleaving && !is_off_hand
         && wu_jian_attack != WU_JIAN_ATTACK_TRIGGERED_AUX
         && !is_projected)
     {
@@ -878,6 +833,37 @@ static void _handle_spectral_brand(actor &attacker, const actor &defender)
     spectral_weapon_fineff::schedule(attacker, defender);
 }
 
+void melee_attack::launch_offhand_attack(item_def &offhand)
+{
+    if (!defender
+        || !defender->alive()
+        || !attacker->alive()
+        || dont_harm(*attacker, *defender))
+    {
+        return;
+    }
+
+    const bool reaching = weapon_reach(offhand) > REACH_NONE;
+    if (!is_projected
+        && !reaching
+        && !adjacent(attacker->pos(), defender->pos()))
+    {
+        return;
+    }
+
+    melee_attack attck(attacker, defender, attack_number,
+                       ++effective_attack_number, false);
+
+    attck.wu_jian_attack = wu_jian_attack;
+    attck.is_projected = is_projected;
+    attck.is_off_hand = true;
+    attck.weapon = &offhand;
+    if (!you.duration[DUR_CONFUSING_TOUCH])
+        attck.damage_brand = get_weapon_brand(offhand);
+    attck.init_attack(SK_UNARMED_COMBAT, attack_number /*hm*/);
+    attck.attack();
+}
+
 bool melee_attack::handle_phase_end()
 {
     if (!is_multihit && weapon_multihits(weapon))
@@ -904,6 +890,13 @@ bool melee_attack::handle_phase_end()
         attack_multiple_targets(*attacker, cleave_targets, attack_number,
                               effective_attack_number, wu_jian_attack,
                               is_projected, true);
+    }
+
+    if (!is_multihit && !cleaving && !is_off_hand)
+    {
+        item_def *offhand = attacker->offhand_weapon();
+        if (offhand && !is_range_weapon(*offhand))
+            launch_offhand_attack(*offhand);
     }
 
     // Check for passive mutation effects.

@@ -1,0 +1,50 @@
+enum: SP_STEEL_ELF
+monster: MONS_ELF
+name: Steel Elf
+short_name: "SE"
+adjective: "Elven"
+genus: "Elf"
+difficulty: Advanced
+difficulty_priority: 85
+aptitudes:
+  xp: 0
+  hp: 0
+  mp_mod: 0
+  wl: 3
+  short_blades: -1
+  long_blades: 0
+  axes: 0
+  maces_and_flails: -1
+  polearms: -1
+  staves: -1
+  ranged weapons: -1
+  throwing: -1
+  armour: -1
+  dodging: -1
+  shields: -3
+  unarmed_combat: -1
+  spellcasting: -1
+  necromancy: -1
+  conjurations: -1
+  shapeshifting: -2
+  fire_magic: -1
+  ice_magic: -1
+  air_magic: -1
+  earth_magic: 1
+  invocations: 1
+str: 8
+int: 7
+dex: 9
+levelup_stat_frequency: 4
+mutations:
+  1:
+    MUT_WIELD_OFFHAND: 1
+    MUT_SLOW_WIELD: 1
+    MUT_INITIALLY_ATTRACTIVE: 1
+recommended_jobs:
+  - JOB_GLADIATOR
+  - JOB_BRIGAND
+  - JOB_CINDER_ACOLYTE
+  - JOB_ENCHANTER
+  - JOB_WARPER
+  - JOB_EARTH_ELEMENTALIST

@@ -1699,9 +1699,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         }
         print_hint("HINT_YOU_MISCAST");
 
-        const item_def *shield = you.slot_item(EQ_SHIELD, false);
+        const item_def *shield = you.slot_item(EQ_OFFHAND, false);
         if (!player_effectively_in_light_armour()
-            || (shield && shield->sub_type != ARM_ORB))
+            || (shield
+                && shield->base_type == OBJ_ARMOUR
+                && shield->sub_type != ARM_ORB))
         {
             print_hint("HINT_MISCAST_ARMOUR");
         }

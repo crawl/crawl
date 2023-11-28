@@ -170,6 +170,8 @@ item_def* newgame_make_item(object_class_type base,
         _autopickup_ammo(static_cast<missile_type>(item.sub_type));
 
     origin_set_startequip(item);
+    if (item.base_type == OBJ_WEAPONS && you.species == SP_STEEL_ELF)
+        name_weapon(item);
 
     return &item;
 }

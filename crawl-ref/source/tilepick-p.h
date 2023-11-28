@@ -27,6 +27,8 @@ bool is_player_tile(tileidx_t tile, tileidx_t base_tile);
 tileidx_t tilep_species_to_base_tile(int sp, int level);
 void randomize_doll_base();
 
+tileidx_t mirror_weapon(const item_def &item);
+
 void tilep_draconian_init(int sp, int level, tileidx_t *base, tileidx_t *wing);
 void tilep_race_default(int sp, int level, dolls_data *doll);
 void tilep_job_default(int job, dolls_data *doll);

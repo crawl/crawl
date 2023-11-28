@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "areas.h" // silenced
 #include "art-enum.h"
 #include "coord.h"
 #include "coordit.h"
@@ -42,6 +43,7 @@
 #include "random-var.h"
 #include "religion.h"
 #include "shopping.h"
+#include "spl-damage.h" // safe_discharge
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
@@ -727,21 +729,52 @@ int apply_chunked_AC(int dam, int ac)
 
 ///////////////////////////////////////////////////////////////////////////
 
+static bool _weapon_is_ok(const item_def *weapon, bool &penance)
+{
+    return weapon
+           && !needs_handle_warning(*weapon, OPER_ATTACK, penance)
+           && (is_melee_weapon(*weapon) || _can_shoot_with(weapon));
+}
+
+/// If we have an off-hand weapon, will it attack when we fire/swing our main weapon?
+static bool _rangedness_matches(const item_def *weapon, const item_def *offhand)
+{
+    if (!offhand)
+        return true;
+    return (!weapon || is_melee_weapon(*weapon)) == is_melee_weapon(*offhand);
+}
+
+static string _describe_weapons(const item_def *weapon,
+                                const item_def *offhand)
+{
+    if (!weapon && !offhand)
+        return "nothing";
+    if (!weapon)
+        return offhand->name(DESC_YOUR).c_str();
+    if (!offhand)
+        return weapon->name(DESC_YOUR).c_str();
+    return make_stringf("%s and %s",
+                        weapon->name(DESC_YOUR).c_str(),
+                        offhand->name(DESC_YOUR).c_str());
+}
+
 bool wielded_weapon_check(const item_def *weapon, string attack_verb)
 {
     bool penance = false;
-    if (you.received_weapon_warning
-        || weapon
-           && !needs_handle_warning(*weapon, OPER_ATTACK, penance)
-           && (is_melee_weapon(*weapon) || _can_shoot_with(weapon))
-        || you.confused())
+    const item_def *offhand = you.offhand_weapon();
+    if (you.received_weapon_warning || you.confused())
+        return true;
+
+    if (_weapon_is_ok(weapon, penance)
+        && (!_rangedness_matches(weapon, offhand)
+            || _weapon_is_ok(offhand, penance)))
     {
         return true;
     }
 
     // Don't pester the player if they're using UC, in treeform,
     // or if they don't have any melee weapons yet.
-    if (!weapon
+    if (!weapon && !offhand
         && (you.skill(SK_UNARMED_COMBAT) > 0
             || you.form == transformation::tree
             || !any_of(you.inv.begin(), you.inv.end(),
@@ -751,10 +784,12 @@ bool wielded_weapon_check(const item_def *weapon, string attack_verb)
         return true;
     }
 
+    string wpn_desc = _describe_weapons(weapon, offhand);
+
     string prompt;
     prompt = make_stringf("Really %s while wielding %s?",
         attack_verb.size() ? attack_verb.c_str() : "attack",
-        weapon ? weapon->name(DESC_YOUR).c_str() : "nothing");
+        wpn_desc.c_str());
     if (penance)
         prompt += " This could place you under penance!";
 
@@ -772,6 +807,70 @@ bool wielded_weapon_check(const item_def *weapon, string attack_verb)
     return result;
 }
 
+bool player_unrand_bad_attempt(const item_def &weapon,
+                               const actor *defender,
+                               bool check_only)
+{
+    if (is_unrandom_artefact(weapon, UNRAND_DEVASTATOR))
+    {
+
+        targeter_smite hitfunc(&you, 1, 1, 1, false);
+        hitfunc.set_aim(defender->pos());
+
+        return stop_attack_prompt(hitfunc, "attack",
+                                  [](const actor *act)
+                                  {
+                                      return !god_protects(act->as_monster());
+                                  }, nullptr, defender->as_monster(),
+                                  check_only);
+    }
+    else if (is_unrandom_artefact(weapon, UNRAND_VARIABILITY)
+             || is_unrandom_artefact(weapon, UNRAND_SINGING_SWORD)
+                && !silenced(you.pos()))
+    {
+        targeter_radius hitfunc(&you, LOS_NO_TRANS);
+
+        return stop_attack_prompt(hitfunc, "attack",
+                               [](const actor *act)
+                               {
+                                   return !god_protects(act->as_monster());
+                               }, nullptr, defender->as_monster(),
+                               check_only);
+    }
+    if (is_unrandom_artefact(weapon, UNRAND_TORMENT))
+    {
+        targeter_radius hitfunc(&you, LOS_NO_TRANS);
+
+        return stop_attack_prompt(hitfunc, "attack",
+                               [] (const actor *m)
+                               {
+                                   return !m->res_torment()
+                                       && !god_protects(m->as_monster());
+                               },
+                                  nullptr, defender->as_monster(),
+                                check_only);
+    }
+    if (is_unrandom_artefact(weapon, UNRAND_ARC_BLADE))
+    {
+        vector<const actor *> exclude;
+        return !safe_discharge(defender->pos(), exclude, check_only);
+    }
+    if (is_unrandom_artefact(weapon, UNRAND_POWER))
+    {
+        targeter_beam hitfunc(&you, 4, ZAP_SWORD_BEAM, 100, 0, 0);
+        hitfunc.beam.aimed_at_spot = false;
+        hitfunc.set_aim(defender->pos());
+
+        return stop_attack_prompt(hitfunc, "attack",
+                               [](const actor *act)
+                               {
+                                   return !god_protects(act->as_monster());
+                               }, nullptr, defender->as_monster(),
+                               check_only);
+    }
+    return false;
+}
+
 /**
  * Should the given attacker cleave into the given victim with an axe or axe-
  * like weapon?
@@ -781,7 +880,7 @@ bool wielded_weapon_check(const item_def *weapon, string attack_verb)
  * @return          True if the defender is an enemy of the defender; false
  *                  otherwise.
  */
-static bool _dont_harm(const actor &attacker, const actor &defender)
+bool dont_harm(const actor &attacker, const actor &defender)
 {
     if (mons_aligned(&attacker, &defender))
         return true;
@@ -898,7 +997,7 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     {
         if (*di == def) continue; // no double jeopardy
         actor *target = actor_at(*di);
-        if (!target || _dont_harm(attacker, *target))
+        if (!target || dont_harm(attacker, *target))
             continue;
         if (di.radius() == 2 && !can_reach_attack_between(atk, *di, REACH_TWO))
             continue;
@@ -927,7 +1026,7 @@ void attack_multiple_targets(actor &attacker, list<actor*> &targets,
     {
         actor* def = targets.front();
 
-        if (def && def->alive() && !_dont_harm(attacker, *def)
+        if (def && def->alive() && !dont_harm(attacker, *def)
             && (is_projected
                 || adjacent(attacker.pos(), def->pos())
                 || reaching))

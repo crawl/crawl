@@ -4174,6 +4174,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
         case SP_METEORAN:
             return TILEG_SP_METEORAN;
 #endif
+        case SP_STEEL_ELF:
+            return TILEG_SP_STEEL_ELF;
         default:
             return TILEP_ERROR;
     }

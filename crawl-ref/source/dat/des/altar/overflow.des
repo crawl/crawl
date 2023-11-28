@@ -114,7 +114,9 @@ function callback.five_deadly_venoms(data, triggerable, triggerer, marker, ev)
 end
 
 function species_mock(e)
-  if you.race() == "Barachi" then
+  if you.race() == "Armataur" then
+    return "rat"
+  elseif you.race() == "Barachi" then
     return "cane toad"
   elseif you.race() == "Demigod" then
     return "titan simulacrum"
@@ -154,10 +156,10 @@ function species_mock(e)
     return "tentacled monstrosity"
   elseif you.race() == "Oni" then
     return "ogre"
-  elseif you.race() == "Armataur" then
-    return "rat"
   elseif you.race() == "Spriggan" then
     return "unseen horror"
+  elseif you.race() == "Steel Elf" then
+    return "iron elemental"
   elseif you.race() == "Tengu" then
     return "caustic shrike"
   elseif you.race() == "Troll" then

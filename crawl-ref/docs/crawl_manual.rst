@@ -1820,6 +1820,19 @@ Vampires (Vp)
   transform from their bloodless form into a fast-moving bat. Unlike other
   undead species, they may be mutated normally at all times.
 
+Steel Elves (SE)
+   The Steel Elves consider weakness a moral failing. Their pact with spirits
+   of metal and wood grants them the resilience that other elves lack, by
+   letting them strengthen their slender frames with charm-wrought steel. They
+   also commune with their weapons' spirits - a slow process, but one which
+   allows them to wield one weapon in each hand, letting the spirits guide their
+   strikes.
+
+   The spirits offer one further gift. Steel Elves which have yet to wed find
+   creatures of all kinds attracted to them, magically pulled close in the
+   hopes of love-at-first-sight. Sadly, this does nothing to improve the
+   dispositions of the Dungeon's relentlessly hostile inhabitants.
+
 Demigods (Dg)
   Demigods are mortals with some divine or angelic ancestry, however distant.
   Demigods look more or less like members of their mortal part's species, but

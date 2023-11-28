@@ -515,7 +515,18 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 // Returns the shield the player is wearing, or nullptr if none.
 item_def *player::shield() const
 {
-    return slot_item(EQ_SHIELD, false);
+    return slot_item(EQ_OFFHAND, false);
+}
+
+item_def *player::offhand_weapon() const
+{
+    if (!you.has_mutation(MUT_WIELD_OFFHAND))
+        return nullptr;
+    item_def *sh_slot_item = shield();
+    if (!sh_slot_item || !is_weapon(*sh_slot_item))
+        return nullptr;
+    // XXX: sanity check for 2hs..?
+    return sh_slot_item;
 }
 
 string player::name(description_level_type dt, bool, bool) const

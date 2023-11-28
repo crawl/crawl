@@ -283,7 +283,7 @@ void list_armour()
         estr << ((i == EQ_CLOAK)       ? "Cloak  " :
                  (i == EQ_HELMET)      ? "Helmet " :
                  (i == EQ_GLOVES)      ? "Gloves " :
-                 (i == EQ_SHIELD)      ? "Shield " :
+                 (i == EQ_OFFHAND)     ? "Offhand" :
                  (i == EQ_BODY_ARMOUR) ? "Armour " :
                  (i == EQ_BOOTS)       ?
                    (you.wear_barding() ? "Barding"
@@ -297,9 +297,19 @@ void list_armour()
             estr << "    (currently unavailable)";
         else if (armour_id != -1)
         {
-            estr << you.inv[armour_id].name(DESC_INVENTORY);
-            colour = menu_colour(estr.str(), item_prefix(you.inv[armour_id]),
-                                 "equip", false);
+            // XXX: consider if this is needed
+            if (you.has_mutation(MUT_WIELD_OFFHAND)
+                && is_weapon(you.inv[armour_id]))
+            {
+                estr << "    (currently unavailable)";
+            }
+            else
+            {
+                estr << you.inv[armour_id].name(DESC_INVENTORY);
+                colour = menu_colour(estr.str(),
+                                     item_prefix(you.inv[armour_id]),
+                                     "equip", false);
+            }
         }
         else if (you_can_wear(i) == maybe_bool::maybe)
             estr << "    (restricted)";

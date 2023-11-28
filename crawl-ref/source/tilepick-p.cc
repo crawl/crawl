@@ -219,6 +219,9 @@ tileidx_t tilep_equ_weapon(const item_def &item)
 
 tileidx_t tilep_equ_shield(const item_def &item)
 {
+    if (is_weapon(item) && you.has_mutation(MUT_WIELD_OFFHAND))
+        return tilep_equ_weapon(item);
+
     if (item.base_type != OBJ_ARMOUR)
         return 0;
 
@@ -248,6 +251,14 @@ tileidx_t tilep_equ_shield(const item_def &item)
                            TILEP_HAND2_ORB_LAST);
         default: return 0;
     }
+}
+
+tileidx_t mirror_weapon(const item_def &weapon)
+{
+    const tileidx_t unmirrored = tilep_equ_weapon(weapon);
+    if (unmirrored < TILEP_HAND1_FIRST || unmirrored > TILEP_HAND1_LAST)
+        return 0;
+    return unmirrored - TILEP_HAND1_FIRST + TILEP_HAND1_MIRROR_FIRST;
 }
 
 tileidx_t tilep_equ_armour(const item_def &item)
@@ -565,6 +576,7 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
 #endif
+    case SP_STEEL_ELF: // XXX TODO
     case SP_DEEP_ELF:
         return TILEP_BASE_DEEP_ELF;
 #if TAG_MAJOR_VERSION == 34

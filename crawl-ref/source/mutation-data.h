@@ -751,6 +751,33 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_WIELD_OFFHAND, 0, 1, mutflag::good, false,
+  "off-hand wielding",
+
+  {"You can wield a second weapon in your off-hand.",
+   "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_SLOW_WIELD, 0, 1, mutflag::bad, false,
+  "slow wielding",
+
+  {"It takes a long time for you to wield or remove held weapons.",
+   "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_INITIALLY_ATTRACTIVE, 0, 1, mutflag::bad, false,
+  "initially attractive",
+
+  {"You sometimes attract newly seen creatures.",
+   "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
 { MUT_HURL_DAMNATION, 0, 1, mutflag::good, false,
   "hurl damnation",
 

@@ -62,6 +62,7 @@ enum command_type
     CMD_FULL_VIEW,
     CMD_EVOKE,
     CMD_WIELD_WEAPON,
+    CMD_WIELD_OFFHAND,
     CMD_WEAPON_SWAP,
     CMD_FIRE,
     CMD_QUIVER_ITEM,

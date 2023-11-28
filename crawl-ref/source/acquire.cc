@@ -126,7 +126,7 @@ M filtered_vector_select(vector<pair<M, int>> weights, function<bool(M)> filter)
  * Guaranteed to be wearable, in principle.
  *
  * @param agent     The source of the acquirement (e.g. a god)
- * @return          A random equipment slot; e.g. EQ_SHIELD, EQ_BODY_ARMOUR...
+ * @return          A random equipment slot; e.g. EQ_OFFHAND, EQ_BODY_ARMOUR...
  */
 static equipment_type _acquirement_armour_slot(int agent)
 {
@@ -138,7 +138,7 @@ static equipment_type _acquirement_armour_slot(int agent)
 
     vector<pair<equipment_type, int>> weights = {
         { EQ_BODY_ARMOUR,   (agent == GOD_OKAWARU ? 5 : 1) },
-        { EQ_SHIELD,        1 },
+        { EQ_OFFHAND,        1 },
         { EQ_CLOAK,         1 },
         { EQ_HELMET,        1 },
         { EQ_GLOVES,        1 },
@@ -183,7 +183,7 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type)
             if (you_can_wear(EQ_HELMET))
                 return random_choose(ARM_HELMET, ARM_HAT);
             return ARM_HAT;
-        case EQ_SHIELD:
+        case EQ_OFFHAND:
             return _acquirement_shield_type();
         case EQ_BODY_ARMOUR:
             return _acquirement_body_armour();
@@ -307,7 +307,7 @@ static armour_type _acquirement_body_armour()
 static armour_type _useless_armour_type()
 {
     vector<pair<equipment_type, int>> weights = {
-        { EQ_BODY_ARMOUR, 1 }, { EQ_SHIELD, 1 }, { EQ_CLOAK, 1 },
+        { EQ_BODY_ARMOUR, 1 }, { EQ_OFFHAND, 1 }, { EQ_CLOAK, 1 },
         { EQ_HELMET, 1 }, { EQ_GLOVES, 1 }, { EQ_BOOTS, 1 },
     };
 
@@ -335,7 +335,7 @@ static armour_type _useless_armour_type()
             return random_choose(ARM_HELMET, ARM_HAT);
         case EQ_CLOAK:
             return ARM_CLOAK;
-        case EQ_SHIELD:
+        case EQ_OFFHAND:
         {
             vector<pair<armour_type, int>> shield_weights = {
                 { ARM_BUCKLER,       1 },

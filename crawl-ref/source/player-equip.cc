@@ -190,6 +190,8 @@ static void _assert_valid_slot(equipment_type eq, equipment_type slot)
 #ifdef ASSERTS
     if (eq == slot)
         return;
+    if (eq == EQ_WEAPON && slot == EQ_OFFHAND) // hack for off-hand wielding
+        return;
     ASSERT(eq == EQ_RINGS); // all other slots are unique
     equipment_type r1 = EQ_LEFT_RING, r2 = EQ_RIGHT_RING;
     if (species::arm_count(you.species) > 2)
@@ -1327,6 +1329,12 @@ bool unwield_item(bool showMsgs)
 
     if (is_weapon && !safe_to_remove(item))
         return false;
+
+    if (you.has_mutation(MUT_SLOW_WIELD))
+    {
+        start_delay<EquipOffDelay>(ARMOUR_EQUIP_DELAY - 1, item, true);
+        return true;
+    }
 
     unequip_item(EQ_WEAPON, showMsgs);
 
