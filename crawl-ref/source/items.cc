@@ -772,6 +772,34 @@ bool item_is_branded(const item_def& item)
     }
 }
 
+bool item_is_unusual(const item_def& item)
+{
+    const auto &patterns = Options.unusual_monster_items;
+    const string name = item.name(DESC_A, false, false, true, false);
+
+    return any_of(begin(patterns), end(patterns),
+                  [&](const text_pattern &p) -> bool
+                  { return p.matches(name); });
+}
+
+bool item_is_worth_listing(const item_def& item)
+{
+    if (item_is_unusual(item))
+        return true;
+
+    switch (item.base_type)
+    {
+    case OBJ_STAVES:
+    case OBJ_WANDS:
+        return true;
+    case OBJ_WEAPONS:
+        return is_unrandom_artefact(item)
+               || get_weapon_brand(item) != SPWPN_NORMAL;
+    default:
+        return item_is_branded(item) || is_artefact(item);
+    }
+}
+
 // 2 - artefact, 1 - glowing/runed, 0 - mundane
 static int _item_name_specialness(const item_def& item)
 {

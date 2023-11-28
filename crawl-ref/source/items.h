@@ -97,6 +97,8 @@ void pickup_menu(int item_link);
 void pickup(bool partial_quantity = false);
 
 bool item_is_branded(const item_def& item);
+bool item_is_unusual(const item_def& item);
+bool item_is_worth_listing(const item_def& item);
 vector<item_def*> item_list_on_square(int obj);
 vector<const item_def*> const_item_list_on_square(int obj);
 

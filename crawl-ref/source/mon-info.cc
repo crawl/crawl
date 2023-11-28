@@ -24,6 +24,7 @@
 #include "god-passive.h" // passive_t::neutral_slimes
 #include "item-prop.h"
 #include "item-status-flag-type.h"
+#include "items.h" // item_is_unusual
 #include "libutil.h"
 #include "los.h"
 #include "message.h"
@@ -1677,24 +1678,15 @@ bool monster_info::fellow_slime() const {
 vector<string> monster_info::get_unusual_items() const
 {
     vector<string> names;
-    const auto &patterns = Options.unusual_monster_items;
-
-    for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
+    for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
         if (!inv[i])
             continue;
 
         const item_def* item = inv[i].get();
-        const string name = item->name(DESC_A, false, false, true, false);
-
-        if (any_of(begin(patterns), end(patterns),
-                   [&](const text_pattern &p) -> bool
-                   { return p.matches(name); }))
-        {
-            names.push_back(name);
-        }
+        if (item_is_unusual(*item))
+            names.push_back(item->name(DESC_A, false, false, true, false));
     }
-
     return names;
 }
 
