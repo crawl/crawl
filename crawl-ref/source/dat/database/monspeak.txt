@@ -7279,11 +7279,25 @@ _tormentor_rare_
 ################## Wizard ##################################
 arcanist
 
+w:20
 @_wizard_@
 
+w:1
+@The_monster@ [grouses|grumbles] about occultists.
+
+w:9
+__NONE
+%%%%
 occultist
 
+w:20
 @_wizard_@
+
+w:1
+@The_monster@ [grouses|grumbles] about arcanists.
+
+w:9
+__NONE
 %%%%
 ################## Yak #####################################
 yak
