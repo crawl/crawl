@@ -518,16 +518,17 @@ tileidx_t tileidx_player()
     {
         switch (you.species)
         {
-        case SP_FELID:             ch = TILEP_TRAN_DRAGON_FELID;   break;
-        case SP_BLACK_DRACONIAN:   ch = TILEP_TRAN_DRAGON_BLACK;   break;
-        case SP_YELLOW_DRACONIAN:  ch = TILEP_TRAN_DRAGON_YELLOW;  break;
-        case SP_GREY_DRACONIAN:    ch = TILEP_TRAN_DRAGON_GREY;    break;
-        case SP_GREEN_DRACONIAN:   ch = TILEP_TRAN_DRAGON_GREEN;   break;
-        case SP_PALE_DRACONIAN:    ch = TILEP_TRAN_DRAGON_PALE;    break;
-        case SP_PURPLE_DRACONIAN:  ch = TILEP_TRAN_DRAGON_PURPLE;  break;
-        case SP_WHITE_DRACONIAN:   ch = TILEP_TRAN_DRAGON_WHITE;   break;
+        case SP_OCTOPODE:          ch = TILEP_TRAN_DRAGON_OCTOPODE; break;
+        case SP_FELID:             ch = TILEP_TRAN_DRAGON_FELID;    break;
+        case SP_BLACK_DRACONIAN:   ch = TILEP_TRAN_DRAGON_BLACK;    break;
+        case SP_YELLOW_DRACONIAN:  ch = TILEP_TRAN_DRAGON_YELLOW;   break;
+        case SP_GREY_DRACONIAN:    ch = TILEP_TRAN_DRAGON_GREY;     break;
+        case SP_GREEN_DRACONIAN:   ch = TILEP_TRAN_DRAGON_GREEN;    break;
+        case SP_PALE_DRACONIAN:    ch = TILEP_TRAN_DRAGON_PALE;     break;
+        case SP_PURPLE_DRACONIAN:  ch = TILEP_TRAN_DRAGON_PURPLE;   break;
+        case SP_WHITE_DRACONIAN:   ch = TILEP_TRAN_DRAGON_WHITE;    break;
         case SP_RED_DRACONIAN:
-        default:                   ch = TILEP_TRAN_DRAGON;         break;
+        default:                   ch = TILEP_TRAN_DRAGON;          break;
         }
         break;
     }

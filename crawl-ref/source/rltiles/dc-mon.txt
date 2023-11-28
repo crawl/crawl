@@ -1258,6 +1258,7 @@ dragon_form_grey TRAN_DRAGON_GREY
 dragon_form_black TRAN_DRAGON_BLACK
 dragon_form_purple TRAN_DRAGON_PURPLE
 dragon_form_pale TRAN_DRAGON_PALE
+dragon_form_octopode TRAN_DRAGON_OCTOPODE
 dragon_form_felid TRAN_DRAGON_FELID
 lich_form_humanoid TRAN_LICH_HUMANOID
 %syn TRAN_LICH_EQUIP_FIRST
