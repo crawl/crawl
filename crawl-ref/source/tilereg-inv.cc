@@ -166,6 +166,8 @@ int InventoryRegion::handle_mouse(wm_mouse_event &event)
         {
             if (event.mod & TILES_MOD_SHIFT)
                 tile_item_drop(idx, (event.mod & TILES_MOD_CTRL));
+            if (event.mod & TILES_MOD_CTRL)
+                tile_item_use_secondary(idx);
             else
                 tile_item_use(idx);
         }
@@ -196,8 +198,12 @@ int InventoryRegion::handle_mouse(wm_mouse_event &event)
 static bool _is_true_equipped_item(const item_def &item)
 {
     // Weapons and staves are only truly equipped if wielded.
-    if (item.link == you.equip[EQ_WEAPON])
-        return is_weapon(item);
+    if (is_weapon(item))
+    {
+        return item.link == you.equip[EQ_WEAPON]
+               || you.has_mutation(MUT_WIELD_OFFHAND)
+               && item.link == you.equip[EQ_OFFHAND];
+    }
 
     // Cursed armour and rings are only truly equipped if *not* wielded.
     return item.link != you.equip[EQ_WEAPON];
@@ -214,15 +220,7 @@ static bool _can_use_item(const item_def &item, bool equipped)
 #endif
 
     if (equipped && item.cursed())
-    {
-        // Evocable items (e.g. dispater staff) are still evocable when cursed.
-        if (item_ever_evokable(item))
-            return true;
-
-        // You can't unwield/fire a wielded cursed weapon/staff
-        // but cursed armour and rings can be unwielded without problems.
-        return !_is_true_equipped_item(item);
-    }
+        return false; // stuck!
 
     if (!you.can_drink())
         return item.base_type != OBJ_POTIONS;
@@ -355,6 +353,11 @@ bool InventoryRegion::update_tip_text(string& tip)
                 {
                     tmp += "Wield (%)";
                     cmd.push_back(CMD_WIELD_WEAPON);
+                    if (you.has_mutation(MUT_WIELD_OFFHAND)
+                        && you.hands_reqd(item) == HANDS_ONE)
+                    {
+                        tmp += "\n[Ctrl + L-Click] Offhand";
+                    }
                 }
                 break;
             case OBJ_WEAPONS + EQUIP_OFFSET:

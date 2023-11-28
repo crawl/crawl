@@ -4,7 +4,7 @@ name: Vampire
 short_name: Vp
 adjective: Vampiric
 difficulty: Advanced
-difficulty_priority: 90
+difficulty_priority: 80
 aptitudes:
   xp: -1
   hp: 0

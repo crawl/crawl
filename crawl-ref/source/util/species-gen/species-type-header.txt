@@ -75,5 +75,6 @@ enum species_type
     SP_METEORAN,
 #endif
     SP_MOUNTAIN_DWARF,
+    SP_COGLIN,
 
     // Auto-generated enums start here

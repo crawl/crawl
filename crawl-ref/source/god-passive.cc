@@ -1406,7 +1406,7 @@ static bool _wu_jian_lunge(coord_def old_pos, coord_def new_pos,
             break;
         melee_attack lunge(&you, mons);
         lunge.wu_jian_attack = WU_JIAN_ATTACK_LUNGE;
-        lunge.attack();
+        lunge.launch_attack_set();
     }
 
     return true;
@@ -1475,7 +1475,7 @@ static bool _wu_jian_whirlwind(coord_def old_pos, coord_def new_pos,
             melee_attack whirlwind(&you, mons);
             whirlwind.wu_jian_attack = WU_JIAN_ATTACK_WHIRLWIND;
             whirlwind.wu_jian_number_of_targets = common_targets.size();
-            whirlwind.attack();
+            whirlwind.launch_attack_set();
             did_at_least_one_attack = true;
         }
     }
@@ -1572,7 +1572,7 @@ void wu_jian_wall_jump_effects()
             melee_attack aerial(&you, target);
             aerial.wu_jian_attack = WU_JIAN_ATTACK_WALL_JUMP;
             aerial.wu_jian_number_of_targets = targets.size();
-            aerial.attack();
+            aerial.launch_attack_set();
         }
     }
 }

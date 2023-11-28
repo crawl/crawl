@@ -1837,7 +1837,7 @@ skill_type str_to_skill_safe(const string &skill)
 
 static string _stk_weight(species_type species)
 {
-    if (species::size(species) == SIZE_LARGE)
+    if (species::size(species) == SIZE_LARGE || species == SP_COGLIN)
         return "Heavy";
     else if (species::size(species, PSIZE_BODY) == SIZE_LARGE)
         return "Cruiser";

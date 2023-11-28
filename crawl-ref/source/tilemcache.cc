@@ -259,15 +259,7 @@ mcache_monster::mcache_monster(const monster_info& mon)
         m_shd_tile = 0;
         return;
     }
-
-    const tileidx_t unmirrored = tilep_equ_weapon(*mon_weapon2);
-    if (unmirrored < TILEP_HAND1_FIRST || unmirrored > TILEP_HAND1_LAST)
-    {
-        m_shd_tile = 0;
-        return;
-    }
-
-    m_shd_tile = unmirrored - TILEP_HAND1_FIRST + TILEP_HAND1_MIRROR_FIRST;
+    m_shd_tile = mirror_weapon(*mon_weapon2);
 }
 
 // Returns the amount of pixels necessary to shift a wielded weapon

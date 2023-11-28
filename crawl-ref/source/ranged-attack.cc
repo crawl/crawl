@@ -340,6 +340,13 @@ bool ranged_attack::handle_phase_hit()
     return true;
 }
 
+bool ranged_attack::handle_phase_end()
+{
+    if (you.has_mutation(MUT_WARMUP_STRIKES) && !throwing())
+        you.rev_up(you.attack_delay(projectile).roll());
+    return attack::handle_phase_end();
+}
+
 bool ranged_attack::throwing() const
 {
     return SK_THROWING == wpn_skill;
@@ -397,6 +404,13 @@ int ranged_attack::apply_damage_modifiers(int damage)
         const int bonus = archer_bonus_damage(attacker->get_hit_dice());
         damage += random2avg(bonus, 2);
     }
+    return damage;
+}
+
+int ranged_attack::player_apply_final_multipliers(int damage, bool /*aux*/)
+{
+    if (!throwing())
+        damage = apply_rev_penalty(damage);
     return damage;
 }
 

@@ -55,7 +55,7 @@ static const map<job_type, job_def> job_data =
 { JOB_ARTIFICER, {
     "Ar", "Artificer",
     4, 3, 5,
-    { SP_KOBOLD, SP_SPRIGGAN, SP_BASE_DRACONIAN, SP_DEMONSPAWN, },
+    { SP_KOBOLD, SP_SPRIGGAN, SP_BASE_DRACONIAN, SP_DEMONSPAWN, SP_COGLIN },
     { },
     { "club", "leather armour", "wand of flame charges:15",
       "wand of charming charges:15 no_exclude",
@@ -78,7 +78,7 @@ static const map<job_type, job_def> job_data =
 { JOB_BRIGAND, {
     "Br", "Brigand",
     3, 3, 6,
-    { SP_TROLL, SP_SPRIGGAN, SP_DEMONSPAWN, SP_VAMPIRE, SP_VINE_STALKER, },
+    { SP_TROLL, SP_SPRIGGAN, SP_DEMONSPAWN, SP_VAMPIRE, SP_VINE_STALKER, SP_GNOLL, },
     { },
     { "dagger plus:2", "robe", "cloak", "dart ego:poisoned q:9",
       "dart ego:curare q:3" },
@@ -192,7 +192,7 @@ static const map<job_type, job_def> job_data =
 { JOB_GLADIATOR, {
     "Gl", "Gladiator",
     6, 0, 6,
-    { SP_MOUNTAIN_DWARF, SP_MERFOLK, SP_TROLL, SP_GARGOYLE, SP_GNOLL, SP_VINE_STALKER, },
+    { SP_MOUNTAIN_DWARF, SP_MERFOLK, SP_TROLL, SP_GARGOYLE, SP_COGLIN, SP_VINE_STALKER, },
     { },
     { "leather armour", "helmet", "throwing net q:3" },
     WCHOICE_GOOD,
@@ -361,7 +361,7 @@ static const map<job_type, job_def> job_data =
 { JOB_WARPER, {
     "Wr", "Warper",
     3, 5, 4,
-    { SP_FELID, SP_SPRIGGAN, SP_ARMATAUR, SP_BASE_DRACONIAN, },
+    { SP_FELID, SP_SPRIGGAN, SP_ARMATAUR, SP_BASE_DRACONIAN, SP_COGLIN, },
     {
         SPELL_BLINK,
         SPELL_BECKONING,

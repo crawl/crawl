@@ -109,6 +109,7 @@ djinni_gold_f
 djinni_gold_m
 djinni_purple_f
 djinni_purple_m
+coglin COGLIN
 %rim 1
 formicid FORMICID
 vine_stalker_f VINE_STALKER

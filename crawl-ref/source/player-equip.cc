@@ -190,6 +190,8 @@ static void _assert_valid_slot(equipment_type eq, equipment_type slot)
 #ifdef ASSERTS
     if (eq == slot)
         return;
+    if (eq == EQ_WEAPON && slot == EQ_OFFHAND) // hack for off-hand wielding
+        return;
     ASSERT(eq == EQ_RINGS); // all other slots are unique
     equipment_type r1 = EQ_LEFT_RING, r2 = EQ_RIGHT_RING;
     if (species::arm_count(you.species) > 2)
@@ -220,7 +222,7 @@ void equip_effect(equipment_type slot, int item_slot, bool unmeld, bool msg)
 
     identify_item(item);
 
-    if (slot == EQ_WEAPON)
+    if (slot == EQ_WEAPON || (slot == EQ_OFFHAND && is_weapon(item)))
         _equip_weapon_effect(item, msg, unmeld);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
         _equip_armour_effect(item, unmeld, slot);
@@ -240,7 +242,7 @@ void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg)
 
     const interrupt_block block_meld_interrupts(meld);
 
-    if (slot == EQ_WEAPON)
+    if (slot == EQ_WEAPON || (slot == EQ_OFFHAND && is_weapon(item)))
         _unequip_weapon_effect(item, msg, meld);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
         _unequip_armour_effect(item, meld, slot);
@@ -1331,20 +1333,19 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     calc_mp();
 }
 
-bool unwield_item(bool showMsgs)
+bool unwield_item(const item_def &item, bool showMsgs)
 {
-    if (!you.weapon())
+    if (is_weapon(item) && !safe_to_remove(item))
         return false;
 
-    item_def& item = *you.weapon();
-
-    const bool is_weapon = get_item_slot(item) == EQ_WEAPON;
-
-    if (is_weapon && !safe_to_remove(item))
-        return false;
+    if (you.has_mutation(MUT_SLOW_WIELD))
+    {
+        start_delay<EquipOffDelay>(ARMOUR_EQUIP_DELAY - 1, item,
+                                   you.weapon() == &item /*ew*/);
+        return true;
+    }
 
     unequip_item(EQ_WEAPON, showMsgs);
-
     you.wield_change     = true;
     quiver::set_needs_redraw();
 

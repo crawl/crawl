@@ -108,13 +108,14 @@ KMONS:   W = gnoll ; nothing
 KMONS:   X = djinni ; nothing
 KMONS:   Y = armataur ; nothing
 KMONS:   Z = oni ; nothing
-SUBST:   - = ABCDEFGHJKLMNOPQRSTUVWXYZ
-SHUFFLE: ABCDEFGHJKLMNOPQRSTUVWXYZ
-KPROP:   ABCDEFGHJKLMNOPQRSTUVWXYZ? = no_tele_into
-KMASK:   ABCDEFGHJKLMNOPQRSTUVWXYZ? = no_item_gen
+KMONS:   1 = goblin ; nothing
+SUBST:   - = ABCDEFGHJKLMNOPQRSTUVWXYZ1
+SHUFFLE: ABCDEFGHJKLMNOPQRSTUVWXYZ1
+KPROP:   ABCDEFGHJKLMNOPQRSTUVWXYZ1? = no_tele_into
+KMASK:   ABCDEFGHJKLMNOPQRSTUVWXYZ1? = no_item_gen
 MAP
    ccccccccccccccccccccccccccccc
-ccccAcCcEcGcIcKcMcOcQcScUcWcYc?c
+ccccAcCcEcGcIcKcMcOcQcScUcWcYc1c
 c..cncncncncncncncncncncncncncnc
 c{.+...........................+@
 c..cncncncncncncncncncncncncncnc
@@ -142,7 +143,7 @@ KMONS: M = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
            felid / octopode ; nothing / djinni ; nothing / \
            gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
            barachi ; nothing / gnoll ; nothing / armataur ; nothing / \
-           oni ; nothing
+           oni ; nothing / goblin ; nothing
 # Player monsters, zombie versions (undead, vine stalkers, gargoyles and djinni
 # don't leave corpses):
 KMONS: N = human zombie / elf zombie / dwarf zombie / kobold zombie / \
@@ -150,7 +151,7 @@ KMONS: N = human zombie / elf zombie / dwarf zombie / kobold zombie / \
            spriggan zombie / minotaur zombie / demonspawn zombie / \
            tengu zombie / merfolk zombie / felid zombie / octopode zombie / \
            formicid zombie / barachi zombie / gnoll zombie / armataur zombie / \
-           oni zombie
+           oni zombie / goblin zombie
 # Player monsters, skeleton versions (octopodes and formicids drop out because
 # they have no skeletons):
 KMONS: N = human skeleton / elf skeleton / dwarf skeleton / kobold skeleton / \
@@ -158,7 +159,7 @@ KMONS: N = human skeleton / elf skeleton / dwarf skeleton / kobold skeleton / \
            demigod skeleton / spriggan skeleton / minotaur skeleton / \
            demonspawn skeleton / tengu skeleton / merfolk skeleton / \
            felid skeleton /  barachi skeleton / gnoll skeleton / \
-           armataur skeleton / oni skeleton
+           armataur skeleton / oni skeleton / goblin skeleton
 # And now for something completely different (if any of these turn out to be
 # able to escape or project spells out of their cells, they should be removed):
 KMONS: Q = orb of fire / ice dragon / shadow dragon / iron dragon / \
@@ -706,7 +707,7 @@ KMONS:  ! = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
             felid / octopode ; nothing / djinni ; nothing / \
             gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
             barachi ; nothing / gnoll ; nothing / armataur ; nothing / \
-            oni ; nothing
+            oni ; nothing / goblin ; nothing
 KPROP:  Kw'! = no_tele_into
 KMASK:  '! = no_item_gen
 KFEAT:  ' = .
@@ -740,7 +741,7 @@ KMONS:  ! = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
             felid / octopode ; nothing / djinni ; nothing / \
             gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
             barachi ; nothing / gnoll ; nothing / armataur ; nothing / \
-            oni ; nothing
+            oni ; nothing / goblin ; nothing
 KPROP:  Kw'! = no_tele_into
 KMASK:  '! = no_item_gen
 KFEAT:  ' = .

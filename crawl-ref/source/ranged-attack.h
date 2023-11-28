@@ -25,6 +25,7 @@ private:
     bool handle_phase_blocked() override;
     bool handle_phase_dodged() override;
     bool handle_phase_hit() override;
+    bool handle_phase_end() override;
     bool ignores_shield(bool verbose) override;
 
     /* Combat Calculations */
@@ -33,6 +34,7 @@ private:
     int calc_base_unarmed_damage() const override;
     int calc_mon_to_hit_base() override;
     int apply_damage_modifiers(int damage) override;
+    int player_apply_final_multipliers(int damage, bool aux = false) override;
     int player_apply_postac_multipliers(int damage) override;
     special_missile_type random_chaos_missile_brand();
     bool dart_check(special_missile_type type);

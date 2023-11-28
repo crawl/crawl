@@ -12,7 +12,6 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "areas.h"
 #include "art-enum.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
@@ -66,40 +65,38 @@
  **************************************************
 */
 melee_attack::melee_attack(actor *attk, actor *defn,
-                           int attack_num, int effective_attack_num,
-                           bool is_cleaving)
+                           int attack_num, int effective_attack_num)
     :  // Call attack's constructor
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    cleaving(is_cleaving), is_multihit(false),
-    is_riposte(false), is_projected(false), charge_pow(0), never_cleave(false),
+    cleaving(false), is_multihit(false), is_riposte(false),
+    is_projected(false), charge_pow(0), never_cleave(false),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1)
 {
     attack_occurred = false;
-    damage_brand = attacker->damage_brand(attack_number);
-    weapon = mutable_wpn = attacker->weapon(attack_number);
-    init_attack(SK_UNARMED_COMBAT, attack_number);
-    if (weapon && !using_weapon())
-        wpn_skill = SK_FIGHTING;
-
     attack_position = attacker->pos();
+    set_weapon(attacker->weapon(attack_num));
 }
 
-bool melee_attack::can_reach()
+bool melee_attack::can_reach(int dist)
 {
-    return attk_type == AT_HIT && weapon && weapon_reach(*weapon) > REACH_NONE
+    return dist <= 1
+           || attk_type == AT_HIT && weapon && weapon_reach(*weapon) >= dist
            || flavour_has_reach(attk_flavour)
            || is_projected;
 }
 
 bool melee_attack::bad_attempt()
 {
+    if (attack_number)
+        return false; // handled earlier
+
     if (!attacker->is_player() || !defender || !defender->is_monster())
         return false;
 
-    if (player_unrand_bad_attempt())
+    if (player_unrand_bad_attempt(offhand_weapon()))
         return true;
 
     if (!cleave_targets.empty())
@@ -119,84 +116,31 @@ bool melee_attack::would_prompt_player()
     if (!attacker->is_player())
         return false;
 
+    item_def *offhand = offhand_weapon();
     bool penance;
     return weapon && needs_handle_warning(*weapon, OPER_ATTACK, penance)
-           || player_unrand_bad_attempt(true);
+           || offhand && !is_range_weapon(*offhand)
+              && needs_handle_warning(*offhand, OPER_ATTACK, penance)
+           || player_unrand_bad_attempt(offhand, true);
 }
 
-bool melee_attack::player_unrand_bad_attempt(bool check_only)
+bool melee_attack::player_unrand_bad_attempt(const item_def *offhand,
+                                             bool check_only)
 {
     // Unrands with secondary effects that can harm nearby friendlies.
     // Don't prompt for confirmation (and leak information about the
     // monster's position) if the player can't see the monster.
-    if (!weapon || !you.can_see(*defender))
+    if (!you.can_see(*defender))
         return false;
 
-    if (is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR))
-    {
-
-        targeter_smite hitfunc(attacker, 1, 1, 1, false);
-        hitfunc.set_aim(defender->pos());
-
-        return stop_attack_prompt(hitfunc, "attack",
-                                  [](const actor *act)
-                                  {
-                                      return !god_protects(act->as_monster());
-                                  }, nullptr, defender->as_monster(),
-                                  check_only);
-    }
-    else if (is_unrandom_artefact(*weapon, UNRAND_VARIABILITY)
-             || is_unrandom_artefact(*weapon, UNRAND_SINGING_SWORD)
-                && !silenced(you.pos()))
-    {
-        targeter_radius hitfunc(&you, LOS_NO_TRANS);
-
-        return stop_attack_prompt(hitfunc, "attack",
-                               [](const actor *act)
-                               {
-                                   return !god_protects(act->as_monster());
-                               }, nullptr, defender->as_monster(),
-                               check_only);
-    }
-    if (is_unrandom_artefact(*weapon, UNRAND_TORMENT))
-    {
-        targeter_radius hitfunc(&you, LOS_NO_TRANS);
-
-        return stop_attack_prompt(hitfunc, "attack",
-                               [] (const actor *m)
-                               {
-                                   return !m->res_torment()
-                                       && !god_protects(m->as_monster());
-                               },
-                                  nullptr, defender->as_monster(),
-                                check_only);
-    }
-    if (is_unrandom_artefact(*weapon, UNRAND_ARC_BLADE))
-    {
-        vector<const actor *> exclude;
-        return !safe_discharge(defender->pos(), exclude, check_only);
-    }
-    if (is_unrandom_artefact(*weapon, UNRAND_POWER))
-    {
-        targeter_beam hitfunc(&you, 4, ZAP_SWORD_BEAM, 100, 0, 0);
-        hitfunc.beam.aimed_at_spot = false;
-        hitfunc.set_aim(defender->pos());
-
-        return stop_attack_prompt(hitfunc, "attack",
-                               [](const actor *act)
-                               {
-                                   return !god_protects(act->as_monster());
-                               }, nullptr, defender->as_monster(),
-                               check_only);
-    }
-    return false;
+    return weapon && ::player_unrand_bad_attempt(*weapon, defender, check_only)
+        || offhand && ::player_unrand_bad_attempt(*offhand, defender, check_only);
 }
 
 bool melee_attack::handle_phase_attempted()
 {
     // Skip invalid and dummy attacks.
-    if (defender && (!adjacent(attack_position, defender->pos())
-                     && !can_reach())
+    if (defender && !can_reach(grid_distance(attack_position, defender->pos()))
         || attk_flavour == AF_CRUSH
            && (!attacker->can_constrict(*defender, CONSTRICT_MELEE)
                || attacker->is_monster() && attacker->mid == MID_PLAYER))
@@ -715,7 +659,7 @@ bool melee_attack::handle_phase_damaged()
 bool melee_attack::handle_phase_aux()
 {
     if (attacker->is_player()
-        && !cleaving
+        && !cleaving && !attack_number
         && wu_jian_attack != WU_JIAN_ATTACK_TRIGGERED_AUX
         && !is_projected)
     {
@@ -867,17 +811,20 @@ bool melee_attack::handle_phase_killed()
     return attack::handle_phase_killed();
 }
 
-static void _handle_spectral_brand(actor &attacker, const actor &defender)
+void melee_attack::handle_spectral_brand()
 {
-    if (attacker.type == MONS_SPECTRAL_WEAPON || !defender.alive())
+    if (attacker->type == MONS_SPECTRAL_WEAPON || !defender->alive())
         return;
-    attacker.triggered_spectral = true;
-    spectral_weapon_fineff::schedule(attacker, defender);
+    attacker->triggered_spectral = true;
+    spectral_weapon_fineff::schedule(*attacker, *defender, weapon);
 }
 
-int melee_attack::roll_delay() const
+item_def *melee_attack::offhand_weapon() const
 {
-    return you.attack_delay_with(nullptr, true, weapon).roll();
+    item_def *offhand = attacker->offhand_weapon();
+    if (!offhand || is_range_weapon(*offhand))
+        return nullptr;
+    return offhand;
 }
 
 bool melee_attack::handle_phase_end()
@@ -892,7 +839,7 @@ bool melee_attack::handle_phase_end()
         // does a cleaving multi-hit attack. God help us.
         attack_multiple_targets(*attacker, extra_hits, attack_number,
                                 effective_attack_number, wu_jian_attack,
-                                is_projected, false);
+                                is_projected, false, mutable_wpn);
         if (attacker->is_player())
             print_wounds(*defender->as_monster());
     }
@@ -905,7 +852,7 @@ bool melee_attack::handle_phase_end()
     {
         attack_multiple_targets(*attacker, cleave_targets, attack_number,
                               effective_attack_number, wu_jian_attack,
-                              is_projected, true);
+                              is_projected, true, mutable_wpn);
     }
 
     // Check for passive mutation effects.
@@ -934,10 +881,10 @@ bool melee_attack::handle_phase_end()
     if (defender && !is_multihit)
     {
         if (damage_brand == SPWPN_SPECTRAL)
-            _handle_spectral_brand(*attacker, *defender);
+            handle_spectral_brand();
         // Use the Nessos hack to give the player glaive of the guard spectral too
         if (weapon && is_unrandom_artefact(*weapon, UNRAND_GUARD))
-            _handle_spectral_brand(*attacker, *defender);
+            handle_spectral_brand();
     }
 
     // Dead but not yet reset, most likely due to an attack flavour that
@@ -952,12 +899,160 @@ bool melee_attack::handle_phase_end()
     return attack::handle_phase_end();
 }
 
+// Copy over initial attack parameters, not state set later.
+void melee_attack::copy_to(melee_attack &other)
+{
+    other.cleaving = cleaving;
+    other.is_multihit = is_multihit;
+    other.is_riposte = is_riposte;
+    other.is_projected = is_projected;
+    other.wu_jian_attack = wu_jian_attack;
+    other.wu_jian_number_of_targets = wu_jian_number_of_targets;
+}
+
+void melee_attack::set_weapon(item_def *wpn, bool offhand)
+{
+    weapon = mutable_wpn = wpn;
+    if (offhand)
+    {
+        ASSERT(attacker->is_player());
+        damage_type = get_vorpal_type(*weapon);
+        if (!you.duration[DUR_CONFUSING_TOUCH])
+            damage_brand = get_weapon_brand(*weapon);
+    }
+    else
+    {
+        damage_brand = attacker->damage_brand(attack_number);
+        damage_type = attacker->damage_type(attack_number);
+    }
+
+    init_attack(SK_UNARMED_COMBAT, attack_number);
+    if (weapon && !using_weapon())
+        wpn_skill = SK_FIGHTING;
+}
+
+bool melee_attack::swing_with(item_def &weapon, bool offhand)
+{
+    const bool reaching = weapon_reach(weapon) > REACH_NONE;
+    if (!is_projected
+        && !reaching
+        && !adjacent(attacker->pos(), defender->pos()))
+    {
+        return false;
+    }
+
+    melee_attack swing(attacker, defender,
+                       attack_number,
+                       effective_attack_number);
+    copy_to(swing);
+    swing.set_weapon(&weapon, offhand);
+    bool success = swing.attack();
+    cancel_attack = swing.cancel_attack;
+    return success;
+}
+
+void melee_attack::force_cleave(item_def &wpn, coord_def target_pos)
+{
+    list<actor*> targets;
+    get_cleave_targets(*attacker, target_pos, targets,
+                       attack_number, false, &wpn);
+    if (targets.empty())
+        return;
+
+    attack_multiple_targets(*attacker, targets, attack_number,
+                            effective_attack_number, wu_jian_attack,
+                            is_projected /*false*/,  true, &wpn);
+}
+
+/**
+ * Launches a set of melee attacks. If the player is using two weapons, this
+ * launches attacks with the primary and off-hand weapon in a random order.
+ * Otherwise, this is equivalent to ::attack().
+ *
+ * Returns true iff either sub-attack succeeded.
+ */
+bool melee_attack::launch_attack_set()
+{
+    if (!attacker->is_player())
+        return attack();
+
+    // Calculate this first, in case the defender dies.
+    const bool should_rev = you.has_mutation(MUT_WARMUP_STRIKES)
+                            && defender && !defender->is_player()
+                            && !defender->wont_attack()
+                            && !mons_is_firewood(*defender->as_monster())
+                            && one_chance_in(wu_jian_number_of_targets);
+    bool success = run_attack_set();
+    if (should_rev)
+        you.rev_up(you.attack_delay().roll());
+    return success;
+}
+
+bool melee_attack::run_attack_set()
+{
+    item_def *primary = you.weapon();
+    item_def *offhand = you.offhand_weapon();
+    if (!primary || !offhand)
+    {
+        // Don't launch UC attacks when you have an offhand weapon.
+        if (offhand)
+            set_weapon(offhand);
+        return attack();
+    }
+
+    ASSERT(!attack_number);
+
+    item_def *first_weapon = primary;
+    item_def *second_weapon = offhand;
+    if (coinflip())
+    {
+        first_weapon = offhand;
+        second_weapon = primary;
+    }
+
+    const coord_def target = defender->pos();
+    bool success = swing_with(*first_weapon, first_weapon == offhand);
+    if (cancel_attack)
+        return success;
+
+    ++attack_number;
+    ++effective_attack_number;
+
+    if (!defender
+        || !defender->alive()
+        || !attacker->alive()
+        || dont_harm(*attacker, *defender))
+    {
+        if (attacker->alive()
+            && !simu
+            && attacker->pos() != target
+            && !is_projected
+            // WJC AOEs mayn't cleave.
+            && wu_jian_attack != WU_JIAN_ATTACK_WHIRLWIND
+            && wu_jian_attack != WU_JIAN_ATTACK_WALL_JUMP
+            && wu_jian_attack != WU_JIAN_ATTACK_TRIGGERED_AUX
+            && attack_cleaves(*attacker, second_weapon))
+        {
+            force_cleave(*second_weapon, target);
+        }
+        return true;
+    }
+
+    if (swing_with(*second_weapon, second_weapon == offhand))
+        success = true;
+    ASSERT(!cancel_attack);
+    return success;
+}
+
 /* Initiate the processing of the attack
  *
  * Called from the main code (fight.cc), this method begins the actual combat
  * for a particular attack and is responsible for looping through each of the
  * appropriate phases (which then can call other related phases within
  * themselves).
+ *
+ * Note that this does *not* trigger offhand attacks, but *can* trigger other
+ * derived attacks, e.g. cleaving or quick-blade multiswings.
  *
  * Returns whether combat was completely successful
  *      If combat was not successful, it could be any number of reasons, like
@@ -1120,7 +1215,7 @@ bool melee_attack::attack()
         && is_artefact(*weapon)
         && artefact_property(*weapon, ARTP_NOISE))
     {
-        noisy_equipment();
+        noisy_equipment(*weapon);
     }
 
     alert_defender();
@@ -1716,9 +1811,10 @@ void melee_attack::player_warn_miss()
 {
     did_hit = false;
 
-    mprf("You%s miss %s.",
+    mprf("You%s miss %s%s.",
          evasion_margin_adverb().c_str(),
-         defender->name(DESC_THE).c_str());
+         defender->name(DESC_THE).c_str(),
+         weapon_desc().c_str());
 }
 
 // A couple additive modifiers that should be applied to both unarmed and
@@ -1751,6 +1847,8 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
 
     if (you.duration[DUR_WEAK])
         damage = div_rand_round(damage * 3, 4);
+
+    apply_rev_penalty(damage);
 
     if (you.duration[DUR_CONFUSING_TOUCH] && !aux)
         return 0;
@@ -1957,7 +2055,7 @@ void melee_attack::set_attack_verb(int damage)
             break;
         }
 
-        if (you.damage_type() == DVORP_CLAWING)
+        if (damage_type == DVORP_CLAWING)
         {
             if (damage < HIT_WEAK)
                 attack_verb = "scratch";
@@ -1968,7 +2066,7 @@ void melee_attack::set_attack_verb(int damage)
             else
                 attack_verb = "eviscerate";
         }
-        else if (you.damage_type() == DVORP_TENTACLE)
+        else if (damage_type == DVORP_TENTACLE)
         {
             if (damage < HIT_WEAK)
                 attack_verb = "tentacle-slap";
@@ -2096,17 +2194,14 @@ bool melee_attack::player_monattk_hit_effects()
  *
  * @param dam           The damage done in the attack that may or may not chop
   *                     off a head.
- * @param damage_type   The type of damage done in the attack.
  * @return              Whether the defender was killed by the decapitation.
  */
-bool melee_attack::consider_decapitation(int dam, int damage_type)
+bool melee_attack::consider_decapitation(int dam)
 {
-    const int dam_type = (damage_type != -1) ? damage_type :
-                                               attacker->damage_type();
-    if (!attack_chops_heads(dam, dam_type))
+    if (!attack_chops_heads(dam))
         return false;
 
-    decapitate(dam_type);
+    decapitate();
 
     if (!defender->alive())
         return true;
@@ -2118,7 +2213,7 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     // What's the largest number of heads the defender can have?
     const int limit = defender->type == MONS_LERNAEAN_HYDRA ? 27 : 20;
 
-    if (attacker->damage_brand() == SPWPN_FLAMING)
+    if (damage_brand == SPWPN_FLAMING)
     {
         if (defender_visible)
             mpr("The flame cauterises the wound!");
@@ -2160,11 +2255,10 @@ static bool actor_can_lose_heads(const actor* defender)
  * relevant for hydra defenders)
  *
  * @param dam           The damage done in the attack in question.
- * @param dam_type      The vorpal_damage_type of the attack.
  * @param wpn_brand     The brand_type of the attack.
  * @return              Whether the attack will chop off a head.
  */
-bool melee_attack::attack_chops_heads(int dam, int dam_type)
+bool melee_attack::attack_chops_heads(int dam)
 {
     // hydras and hydra-like things only.
     if (!actor_can_lose_heads(defender))
@@ -2188,14 +2282,15 @@ bool melee_attack::attack_chops_heads(int dam, int dam_type)
     }
 
     // Only cutting implements.
-    if (dam_type != DVORP_SLICING && dam_type != DVORP_CHOPPING
-        && dam_type != DVORP_CLAWING)
+    if (damage_type != DVORP_SLICING
+        && damage_type != DVORP_CHOPPING
+        && damage_type != DVORP_CLAWING)
     {
         return false;
     }
 
     // Small claws are not big enough.
-    if (dam_type == DVORP_CLAWING && attacker->has_claws() < 3)
+    if (damage_type == DVORP_CLAWING && attacker->has_claws() < 3)
         return false;
 
     // You need to have done at least some damage.
@@ -2208,17 +2303,15 @@ bool melee_attack::attack_chops_heads(int dam, int dam_type)
 
 /**
  * Decapitate the (hydra or hydra-like) defender!
- *
- * @param dam_type      The vorpal_damage_type of the attack.
  */
-void melee_attack::decapitate(int dam_type)
+void melee_attack::decapitate()
 {
     // Player hydras don't gain or lose heads.
     ASSERT(defender->is_monster());
 
     const char *verb = nullptr;
 
-    if (dam_type == DVORP_CLAWING)
+    if (damage_type == DVORP_CLAWING)
     {
         static const char *claw_verbs[] = { "rip", "tear", "claw" };
         verb = RANDOM_ELEMENT(claw_verbs);
@@ -2579,7 +2672,7 @@ string melee_attack::mons_attack_desc()
     int dist = (attack_position - defender->pos()).rdist();
     if (dist > 1)
     {
-        ASSERT(can_reach());
+        ASSERT(can_reach(dist));
         ret = " from afar";
     }
 
@@ -2587,6 +2680,13 @@ string melee_attack::mons_attack_desc()
         ret += " with " + weapon->name(DESC_A);
 
     return ret;
+}
+
+string melee_attack::weapon_desc()
+{
+    if (!weapon || !you.offhand_weapon())
+        return "";
+    return " with " + weapon->name(DESC_YOUR, false, false, false);
 }
 
 string melee_attack::charge_desc()
@@ -2624,9 +2724,10 @@ void melee_attack::announce_hit()
             verb_degree = " " + verb_degree;
         }
 
-        mprf("You %s %s%s%s%s%s",
+        mprf("You %s %s%s%s%s%s%s",
              attack_verb.c_str(),
              defender->name(DESC_THE).c_str(), verb_degree.c_str(),
+             weapon_desc().c_str(),
              charge_desc().c_str(), debug_damage_number().c_str(),
              attack_strength_punctuation(damage_done).c_str());
     }
@@ -2726,11 +2827,8 @@ bool melee_attack::mons_attack_effects()
     // consider_decapitation() returns true if the defender was killed
     // by the decapitation, in which case we should stop the rest of the
     // attack, too.
-    if (consider_decapitation(damage_done,
-                              attacker->damage_type(attack_number)))
-    {
+    if (consider_decapitation(damage_done))
         return false;
-    }
 
     // Vhi's Electrolunge damage
     if (charge_pow > 0 && defender->alive() && defender->res_elec() <= 0)
@@ -3659,7 +3757,7 @@ void melee_attack::riposte()
     }
     melee_attack attck(defender, attacker, 0, effective_attack_number + 1);
     attck.is_riposte = true;
-    attck.attack();
+    attck.launch_attack_set();
 }
 
 bool melee_attack::do_knockback(bool slippery)
@@ -3806,7 +3904,7 @@ void melee_attack::cleave_setup()
     // We need to get the list of the remaining potential targets now because
     // if the main target dies, its position will be lost.
     get_cleave_targets(*attacker, defender->pos(), cleave_targets,
-                       attack_number);
+                       attack_number, false, weapon);
     // We're already attacking this guy.
     cleave_targets.pop_front();
 }

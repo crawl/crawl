@@ -34,4 +34,5 @@ enum object_selector
     OSEL_EQUIPABLE               = -22, // armour, jewellery, weapons
     OSEL_WORN_JEWELLERY          = -23,
     OSEL_WORN_EQUIPABLE          = -24,
+    OSEL_WEARABLE                = -25,
 };

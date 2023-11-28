@@ -13,6 +13,8 @@
 #include "object-selector-type.h"
 #include "operation-types.h"
 
+const int ARMOUR_EQUIP_DELAY = 5;
+
 operation_types use_an_item_menu(item_def *&target, operation_types oper,
                 int item_type=OSEL_ANY,
                 const char* prompt=nullptr,
@@ -47,6 +49,7 @@ bool can_wield(const item_def *weapon, bool say_why = false,
 
 bool auto_wield();
 bool wield_weapon(int slot);
+bool unwield_weapon(const item_def &wpn);
 
 bool use_an_item(operation_types oper, item_def *target=nullptr);
 

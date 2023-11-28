@@ -128,7 +128,7 @@ namespace species
 
     bool is_elven(species_type species)
     {
-        return species == SP_DEEP_ELF;
+        return species == SP_DEEP_ELF || species == SP_COGLIN;
     }
 
     bool is_undead(species_type species)
@@ -455,6 +455,8 @@ namespace species
             return "tentacle";
         else if (mutation_level(species, MUT_CLAWS))
             return "claw"; // overridden for felids by first check
+        else if (species == SP_COGLIN)
+            return "grasper";
         else
             return "hand";
     }
@@ -519,7 +521,7 @@ namespace species
             break;
         }
         // remaining should be armour only
-        if (species == SP_OCTOPODE && eq != EQ_HELMET && eq != EQ_SHIELD)
+        if (species == SP_OCTOPODE && eq != EQ_HELMET && eq != EQ_OFFHAND)
             return true;
 
         if (is_draconian(species) && eq == EQ_BODY_ARMOUR)

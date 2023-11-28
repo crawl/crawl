@@ -22,7 +22,7 @@ void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
 void unequip_artefact_effect(item_def &item,  bool *show_msgs, bool meld,
                              equipment_type slot, bool weapon);
 
-bool unwield_item(bool showMsgs = true);
+bool unwield_item(const item_def &item, bool showMsgs = true);
 
 bool acrobat_boost_active();
 

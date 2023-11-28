@@ -230,17 +230,16 @@ size_type player::body_size(size_part_type psize, bool base) const
     }
 }
 
-int player::damage_type(int)
+vorpal_damage_type player::damage_type(int)
 {
     if (const item_def* wp = weapon())
         return get_vorpal_type(*wp);
-    else if (form == transformation::blade_hands)
+    if (form == transformation::blade_hands)
         return DAMV_PIERCING;
-    else if (has_usable_claws())
+    if (has_usable_claws())
         return DVORP_CLAWING;
-    else if (has_usable_tentacles())
+    if (has_usable_tentacles())
         return DVORP_TENTACLE;
-
     return DVORP_CRUSHING;
 }
 
@@ -279,7 +278,22 @@ brand_type player::damage_brand(int)
  */
 random_var player::attack_delay(const item_def *projectile, bool rescale) const
 {
-    return attack_delay_with(projectile, rescale, weapon());
+    const item_def *primary = weapon();
+    const random_var primary_delay = attack_delay_with(projectile, rescale, primary);
+    if (projectile && !is_launcher_ammo(*projectile))
+        return primary_delay; // throwing doesn't use the offhand
+
+    const item_def *offhand = you.offhand_weapon();
+    if (!offhand
+        || is_melee_weapon(*offhand) && projectile
+        || is_range_weapon(*offhand) && !projectile)
+    {
+        return primary_delay;
+    }
+
+    // re-use of projectile is very dubious here
+    const random_var offhand_delay = attack_delay_with(projectile, rescale, offhand);
+    return (primary_delay + offhand_delay) / 2;
 }
 
 random_var player::attack_delay_with(const item_def *projectile, bool rescale,
@@ -493,7 +507,21 @@ bool player::could_wield(const item_def &item, bool /*ignore_brand*/,
 // Returns the shield the player is wearing, or nullptr if none.
 item_def *player::shield() const
 {
-    return slot_item(EQ_SHIELD, false);
+    item_def *offhand_item = slot_item(EQ_OFFHAND, false);
+    if (!offhand_item || offhand_item->base_type != OBJ_ARMOUR)
+        return nullptr;
+    return offhand_item;
+}
+
+item_def *player::offhand_weapon() const
+{
+    if (!you.has_mutation(MUT_WIELD_OFFHAND))
+        return nullptr;
+    item_def *offhand_item = slot_item(EQ_OFFHAND, false);
+    if (!offhand_item || !is_weapon(*offhand_item))
+        return nullptr;
+    // XXX: sanity check for 2hs..?
+    return offhand_item;
 }
 
 string player::name(description_level_type dt, bool, bool) const

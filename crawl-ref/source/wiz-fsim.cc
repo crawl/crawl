@@ -247,8 +247,8 @@ static bool _fsim_kit_equip(const string &kit, string &error)
             return false;
         }
     }
-    else if (you.weapon())
-        unwield_item(false);
+    else if (const item_def *wpn = you.weapon())
+        unwield_item(*wpn, false);
 
     you.wield_change = true;
 

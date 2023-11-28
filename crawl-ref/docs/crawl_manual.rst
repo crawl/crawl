@@ -1818,6 +1818,23 @@ Vampires (Vp)
   transform from their bloodless form into a fast-moving bat. Unlike other
   undead species, they may be mutated normally at all times.
 
+Coglins (Co)
+   Unlike most of their goblin kin, Coglins augment their tiny frames with
+   charm-wrought steel. Their exoskeletons, capable of wielding weapons
+   independently in each arm, are begun with hand-me-downs from their sprawling
+   families. By the time they come of age, they are inseparable from their
+   creations.
+
+   Haphazard and jerry-rigged, Coglin exoskeletons lack the flexibility of
+   natural bodies. Whenever their legs stop moving, they must be coaxed slowly
+   back into action; and though their arms can fly in a whir of destruction,
+   it takes quite a bit of swinging to rev them up to that speed.
+
+   Even so, a true Coglin would never criticize their creation. They believe
+   that spirits of steel and sandalwood come to rest within every thing that
+   draws blood, slowly and carefully re-attuning their exoskeletons to those
+   spirits whenever they wield or remove weapons. Never scorn the spirits!
+
 Demigods (Dg)
   Demigods are mortals with some divine or angelic ancestry, however distant.
   Demigods look more or less like members of their mortal part's species, but

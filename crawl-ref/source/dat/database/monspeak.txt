@@ -5021,6 +5021,8 @@ confused Ijyb
 
 @The_monster@ screams @at_foe@, "Wand still stronger! You very nasty!"
 
+@The_monster@ wonders, "Where me metal friend go?"
+
 w:5
 @The_monster@ screams, "Science deserve better than this!"
 
@@ -5036,7 +5038,7 @@ ijyb triumphant
 
 @The_monster@ screams, "Time for next experiment!"
 
-@The_monster@ screams, "Good help so hard to find!"
+@The_monster@ moans, "Good help so hard to find!"
 ## END Ijyb ##
 %%%%
 ############ ILSUIW ### a powerful merfolk witch

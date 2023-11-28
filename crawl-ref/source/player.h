@@ -616,7 +616,7 @@ public:
     size_type   body_size(size_part_type psize = PSIZE_TORSO,
                           bool base = false) const override;
     brand_type  damage_brand(int which_attack = -1) override;
-    int         damage_type(int which_attack = -1) override;
+    vorpal_damage_type damage_type(int which_attack = -1) override;
     random_var  attack_delay(const item_def *projectile = nullptr,
                              bool rescale = true) const override;
     random_var  attack_delay_with(const item_def *projectile, bool rescale,
@@ -669,6 +669,7 @@ public:
 
     item_def *weapon(int which_attack = -1) const override;
     item_def *shield() const override;
+    item_def *offhand_weapon() const override;
 
     hands_reqd_type hands_reqd(const item_def &item,
                                bool base = false) const override;
@@ -879,6 +880,14 @@ public:
     void did_deliberate_movement() override;
 
     void be_agile(int pow);
+
+    int rev_percent() const;
+    void rev_up(int time_taken);
+    void rev_down(int time_taken);
+
+    bool legs_stiff() const;
+    void check_deliberate_move();
+    void note_deliberate_move();
 
     bool allies_forbidden();
 

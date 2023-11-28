@@ -897,11 +897,7 @@ void spectral_weapon_fineff::fire()
         if (one_chance_in(seen_valid))
             chosen_pos = *ai;
     }
-    if (!seen_valid)
-        return;
-
-    const item_def *weapon = atkr->weapon();
-    if (!weapon)
+    if (!seen_valid || !weapon || !weapon->defined())
         return;
 
     mgen_data mg(MONS_SPECTRAL_WEAPON,

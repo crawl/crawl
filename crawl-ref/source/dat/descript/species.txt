@@ -9,6 +9,11 @@ Barachi
 Barachim are slow-moving, amphibious humanoids who can hop long distances.
 Their extended range of vision also allows them to be seen from further away.
 %%%%
+Coglin
+
+Coglins ride enchanted exoskeletons able to wield weapons in both hands,
+wrapping slow-revving metal around their puny goblinoid frames.
+%%%%
 Deep Elf
 
 Deep Elves have a strong affinity for all kinds of magic, but are very fragile.

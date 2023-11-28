@@ -909,6 +909,19 @@ int attack::player_apply_final_multipliers(int damage, bool /*aux*/)
     return damage;
 }
 
+int attack::apply_rev_penalty(int damage) const
+{
+    if (!attacker->is_player()
+        || !you.has_mutation(MUT_WARMUP_STRIKES)
+        || you.rev_percent() >= 66)
+    {
+        return damage;
+    }
+    // 2/3rds at 0 rev, 100% at 66+ rev
+    return div_rand_round(damage * 2 * 66 + damage * you.rev_percent(),
+                          3 * 66);
+}
+
 int attack::player_apply_postac_multipliers(int damage)
 {
     return damage;

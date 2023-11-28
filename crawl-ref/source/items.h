@@ -177,6 +177,10 @@ object_class_type get_random_item_mimic_type();
 bool maybe_identify_base_type(item_def &item);
 int count_movable_items(int obj);
 
+void name_weapon(item_def &item);
+void maybe_name_weapon(item_def &item);
+void say_farewell_to_weapon(const item_def &item);
+
 bool valid_item_index(int i);
 
 // stack_iterator guarantees validity so long as you don't manually

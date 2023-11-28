@@ -108,6 +108,7 @@ static TextDB AllDBs[] =
             "insult.txt",   // imp/demon taunts
             "godspeak.txt", // god speech
             "monname.txt"   // names for Beogh apostles and Hep ancestors
+                            // and weapon spirits
             }),
 
     TextDB("shout", "database/",

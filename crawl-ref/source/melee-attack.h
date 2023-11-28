@@ -4,6 +4,7 @@
 
 #include "attack.h"
 #include "fight.h"
+#include "item-prop-enum.h" // vorpal_damage_type
 #include "random-var.h"
 #include "tag-version.h"
 
@@ -29,7 +30,10 @@ enum unarmed_attack_type
 class melee_attack : public attack
 {
 public:
-    // mon_attack_def stuff
+    // For monsters, attack_number indicates which of their attacks is used.
+    // For players, attack_number is used when using off-hand weapons, and
+    // indicates whether this is their primary attack or their follow-up.
+    // Note that we randomize which hand is used for the primary attack.
     int       attack_number;
     int       effective_attack_number;
 
@@ -48,10 +52,10 @@ public:
 
 public:
     melee_attack(actor *attacker, actor *defender,
-                 int attack_num = -1, int effective_attack_num = -1,
-                 bool is_cleaving = false);
+                 int attack_num = 0, int effective_attack_num = 0);
+    void set_weapon(item_def *weapon, bool offhand = false);
 
-    // Applies attack damage and other effects.
+    bool launch_attack_set();
     bool attack();
     int calc_to_hit(bool random) override;
     int post_roll_to_hit_modifiers(int mhit, bool random) override;
@@ -59,8 +63,6 @@ public:
     bool would_prompt_player();
 
     static void chaos_affect_actor(actor *victim);
-
-    int roll_delay() const;
 
 private:
     /* Attack phases */
@@ -86,9 +88,13 @@ private:
 
     void rot_defender(int amount);
 
-    bool consider_decapitation(int damage_done, int damage_type = -1);
-    bool attack_chops_heads(int damage_done, int damage_type);
-    void decapitate(int dam_type);
+    bool consider_decapitation(int damage_done);
+    bool attack_chops_heads(int damage_done);
+    void decapitate();
+
+    bool run_attack_set();
+    bool swing_with(item_def &weapon, bool offhand);
+    void force_cleave(item_def &weapon, coord_def target);
 
     /* Axe cleaving */
     void cleave_setup();
@@ -161,11 +167,14 @@ private:
     bool player_good_stab() override;
     void player_announce_aux_hit();
     string charge_desc();
+    string weapon_desc();
     void player_warn_miss();
     void player_weapon_upsets_god();
     bool bad_attempt();
-    bool player_unrand_bad_attempt(bool check_only = false);
+    bool player_unrand_bad_attempt(const item_def *offhand,
+                                   bool check_only = false);
     void _defender_die();
+    void handle_spectral_brand();
 
     // Added in, were previously static methods of fight.cc
     bool _extra_aux_attack(unarmed_attack_type atk);
@@ -173,7 +182,14 @@ private:
                                      bool needs_bite_msg = false);
     bool _vamp_wants_blood_from_monster(const monster* mon);
 
-    bool can_reach();
+    bool can_reach(int dist);
+
+    item_def *offhand_weapon() const;
+
+    // XXX: set up a copy constructor instead?
+    void copy_to(melee_attack &other);
+
+    vorpal_damage_type damage_type;
 };
 
 string aux_attack_desc(unarmed_attack_type unat, int force_damage = -1);

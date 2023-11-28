@@ -1808,6 +1808,22 @@ static bool _body_facet_blocks(mutation_type mutat)
     return false;
 }
 
+static bool _exoskeleton_incompatible(mutation_type mutat)
+{
+    // Coglins attack with and wear aux armour on their exoskeleton-limbs,
+    // not their fleshy, mutatation-prone hands. Disable mutations that would
+    // make no sense in this scheme.
+    switch (mutat)
+    {
+    case MUT_HOOVES:
+    case MUT_CLAWS:
+    case MUT_TALONS:
+        return true;
+    default:
+        return false;
+    }
+}
+
 bool physiology_mutation_conflict(mutation_type mutat)
 {
     if (mutat == MUT_IRIDESCENT_SCALES)
@@ -1909,6 +1925,9 @@ bool physiology_mutation_conflict(mutation_type mutat)
 
     // Mutations of the same slot conflict
     if (_body_facet_blocks(mutat))
+        return true;
+
+    if (you.species == SP_COGLIN && _exoskeleton_incompatible(mutat))
         return true;
 
     return false;

@@ -1089,7 +1089,7 @@ const char* item_slot_name(equipment_type type)
     case EQ_HELMET:      return "helmet";
     case EQ_GLOVES:      return "gloves";
     case EQ_BOOTS:       return "boots";
-    case EQ_SHIELD:      return "shield";
+    case EQ_OFFHAND:     return "shield";
     case EQ_BODY_ARMOUR: return "body";
     default:             return "";
     }
@@ -1494,6 +1494,9 @@ bool check_old_item_warning(const item_def& item,
     bool penance = false;
     if (oper == OPER_WIELD) // can we safely unwield old item?
     {
+        if (you.has_mutation(MUT_WIELD_OFFHAND))
+            return true; // defer until unwielding
+
         if (!you.slot_item(EQ_WEAPON, check_melded))
             return true;
 
