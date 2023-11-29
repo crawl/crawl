@@ -175,8 +175,7 @@ static string monster_speed(const monster& mon, int speed_min, int speed_max)
 
     bool skip_action = false;
     if (cost.attack != 10 && cost.attack == cost.missile
-        && cost.attack == cost.spell && cost.attack == cost.special
-        && cost.attack == cost.item)
+        && cost.attack == cost.spell)
     {
         monster_action_cost(qualifiers, cost.attack, "act");
         skip_action = true;
@@ -190,8 +189,6 @@ static string monster_speed(const monster& mon, int speed_min, int speed_max)
         monster_action_cost(qualifiers, cost.attack, "atk");
         monster_action_cost(qualifiers, cost.missile, "msl");
         monster_action_cost(qualifiers, cost.spell, "spell");
-        monster_action_cost(qualifiers, cost.special, "special");
-        monster_action_cost(qualifiers, cost.item, "item");
     }
     if (speed_max > 0 && mons_class_flag(mon.type, M_STATIONARY))
     {
