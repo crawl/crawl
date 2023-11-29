@@ -33,7 +33,7 @@ aptitudes:
   earth_magic: -1
   invocations: 3
 str: 8
-int: 9
+int: 8
 dex: 8
 levelup_stat_frequency: 4
 recommended_jobs:
