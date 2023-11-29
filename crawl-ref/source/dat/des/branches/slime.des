@@ -1414,8 +1414,9 @@ ENDMAP
 NAME:   slime_pit_tekkud_mandelbrot
 KMONS:  Y = azure jelly
 KFEAT:  Y = shallow_water
-KFEAT:  ^ = zot trap w:5 / dispersal trap w:15 / alarm trap / net trap
-SUBST:  ' = x., D = ^..
+KFEAT:  ^ = zot trap w:5 / dispersal trap w:15 /\
+            alarm trap / nothing w:60
+SUBST:  ' = x.
 NSUBST: W = 4:Y / *:W
 : setup_slime_pit_ending(_G)
 MAP
@@ -1455,7 +1456,7 @@ xxxxxxxxxxxxxxxxxxxxxxc.........4.....ccxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxcc...4.......4.ccxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxcc...........cccxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxccc.......cccxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxcDcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxc^cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx''''.........''''xxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxx''''.................''''xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxx'.......................'xxxxxxxxxxxxxxxxxxx
