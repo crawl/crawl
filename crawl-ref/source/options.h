@@ -673,9 +673,6 @@ public:
     // Wait for rest wait percent HP and MP before exploring.
     bool        explore_auto_rest;
 
-    // Prompt Meteorans before exploring or resting.
-    bool        fear_zot;
-
     bool        travel_key_stop;   // Travel stops on keypress.
 
     bool        travel_one_unsafe_move; // Allow one unsafe move of auto travel

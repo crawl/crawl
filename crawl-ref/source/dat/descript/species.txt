@@ -112,11 +112,6 @@ Spriggan
 Very small, very frail and very fast, Spriggans are highly competent stabbers
 and spellcasters.
 %%%%
-Meteoran
-
-A celestial being fallen to earth, brilliant and fearsome... but with little
-time before darkness snuffs them out.
-%%%%
 Troll
 
 Trolls are monstrous creatures with powerful claws. They regenerate health

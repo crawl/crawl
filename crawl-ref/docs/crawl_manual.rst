@@ -1900,14 +1900,6 @@ Barachim (Ba)
   slow-moving, and the long sight-lines that their heritage creates can be a
   major disadvantage, but they can master almost any skill.
 
-Meteorae (Me)
-  Meteorae are the people of the heavens, fallen to earth. They possess exceptional
-  skills, an uncanny sense for the space around them, and the ability to recover
-  health and magic as they explore the dungeon. However, as creatures clearly not
-  native to the world, they are easy prey for the dark forces that hunt adventurers
-  - they have one-tenth as much time as normal before Zot finds them. (See the
-  section on 'Zot' for more.)
-
 Mummies (Mu)
   These are undead creatures who travel into the depths in search of revenge,
   redemption, or just because they want to.

@@ -2501,10 +2501,6 @@ spriggan rider
 A spriggan that has tamed a hornet as its mount, and is tasked with protecting
 the spriggan fens and cairns from intruders.
 %%%%
-meteoran
-
-A celestial being, descended to this earth for a brief time.
-%%%%
 starcursed mass
 
 A mass of stellar detritus that glows with the sickly putrescence of a dying

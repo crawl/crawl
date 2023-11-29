@@ -4165,8 +4165,10 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_GNOLL;
         case SP_DJINNI:
             return TILEG_SP_DJINNI;
+#if TAG_MAJOR_VERSION == 34
         case SP_METEORAN:
             return TILEG_SP_METEORAN;
+#endif
         default:
             return TILEP_ERROR;
     }

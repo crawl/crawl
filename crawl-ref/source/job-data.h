@@ -55,7 +55,7 @@ static const map<job_type, job_def> job_data =
 { JOB_ARTIFICER, {
     "Ar", "Artificer",
     4, 3, 5,
-    { SP_METEORAN, SP_KOBOLD, SP_SPRIGGAN, SP_BASE_DRACONIAN, SP_DEMONSPAWN, },
+    { SP_KOBOLD, SP_SPRIGGAN, SP_BASE_DRACONIAN, SP_DEMONSPAWN, },
     { },
     { "club", "leather armour", "wand of flame charges:15",
       "wand of charming charges:15 no_exclude",
@@ -102,7 +102,7 @@ static const map<job_type, job_def> job_data =
 { JOB_CINDER_ACOLYTE, {
     "CA", "Cinder Acolyte",
     6, 6, 0,
-    { SP_HILL_ORC, SP_BASE_DRACONIAN, SP_OGRE, SP_DJINNI, SP_GNOLL, SP_METEORAN },
+    { SP_HILL_ORC, SP_BASE_DRACONIAN, SP_OGRE, SP_DJINNI, SP_GNOLL },
     { SPELL_SCORCH },
     { "robe" },
     WCHOICE_PLAIN,
@@ -164,8 +164,7 @@ static const map<job_type, job_def> job_data =
 { JOB_FIGHTER, {
     "Fi", "Fighter",
     8, 0, 4,
-    { SP_METEORAN, SP_HILL_ORC, SP_TROLL, SP_MINOTAUR, SP_GARGOYLE,
-      SP_ARMATAUR, },
+    { SP_HILL_ORC, SP_TROLL, SP_MINOTAUR, SP_GARGOYLE, SP_ARMATAUR, },
     { },
     { "scale mail", "buckler", "potion of might" },
     WCHOICE_GOOD,
@@ -194,7 +193,7 @@ static const map<job_type, job_def> job_data =
 { JOB_GLADIATOR, {
     "Gl", "Gladiator",
     6, 0, 6,
-    { SP_METEORAN, SP_HILL_ORC, SP_MERFOLK, SP_TROLL, SP_GARGOYLE, SP_GNOLL, },
+    { SP_HILL_ORC, SP_MERFOLK, SP_TROLL, SP_GARGOYLE, SP_GNOLL, },
     { },
     { "leather armour", "helmet", "throwing net q:3" },
     WCHOICE_GOOD,
@@ -261,8 +260,7 @@ static const map<job_type, job_def> job_data =
 { JOB_MONK, {
     "Mo", "Monk",
     3, 2, 7,
-    { SP_METEORAN, SP_HILL_ORC, SP_TROLL, SP_ARMATAUR, SP_MERFOLK,
-      SP_GARGOYLE, SP_DEMONSPAWN, },
+    { SP_HILL_ORC, SP_TROLL, SP_ARMATAUR, SP_MERFOLK, SP_GARGOYLE, SP_DEMONSPAWN, },
     { },
     { "robe", "potion of ambrosia", "orb ego:light" },
     WCHOICE_PLAIN,
@@ -324,7 +322,7 @@ static const map<job_type, job_def> job_data =
     "Sh", "Shapeshifter",
     6, 2, 4,
     { SP_NAGA, SP_MERFOLK, SP_BASE_DRACONIAN, SP_DEMIGOD, SP_DEMONSPAWN,
-      SP_TROLL, SP_METEORAN, },
+      SP_TROLL },
     { },
     { "animal skin", "potion of lignification", "beast talisman", "flux talisman" },
     WCHOICE_NONE,
@@ -352,8 +350,8 @@ static const map<job_type, job_def> job_data =
 { JOB_WANDERER, {
     "Wn", "Wanderer",
     0, 0, 0, // Randomised
-    { SP_HILL_ORC, SP_METEORAN, SP_GNOLL, SP_MERFOLK, SP_BASE_DRACONIAN,
-      SP_HUMAN, SP_DEMONSPAWN, },
+    { SP_HILL_ORC, SP_GNOLL, SP_MERFOLK, SP_BASE_DRACONIAN, SP_HUMAN,
+      SP_DEMONSPAWN, },
     { }, // Randomised
     { }, // Randomised
     WCHOICE_NONE,
@@ -363,7 +361,7 @@ static const map<job_type, job_def> job_data =
 { JOB_WARPER, {
     "Wr", "Warper",
     3, 5, 4,
-    { SP_FELID, SP_METEORAN, SP_SPRIGGAN, SP_ARMATAUR, SP_BASE_DRACONIAN, },
+    { SP_FELID, SP_SPRIGGAN, SP_ARMATAUR, SP_BASE_DRACONIAN, },
     {
         SPELL_BLINK,
         SPELL_BECKONING,
@@ -382,7 +380,7 @@ static const map<job_type, job_def> job_data =
     "HW", "Hedge Wizard",
     2, 6, 4,
     { SP_DEEP_ELF, SP_NAGA, SP_BASE_DRACONIAN, SP_OCTOPODE, SP_HUMAN,
-      SP_DJINNI, SP_METEORAN, },
+      SP_DJINNI, },
     {
         SPELL_MAGIC_DART,
         SPELL_SLOW,

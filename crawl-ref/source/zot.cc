@@ -18,7 +18,6 @@
 #include "item-prop.h"
 #include "message.h"
 #include "notes.h" // NOTE_MESSAGE
-#include "options.h" // fear_zot
 #include "state.h"
 #include "stringutil.h" // make_stringf
 
@@ -136,10 +135,7 @@ bool bezotted()
 
 bool should_fear_zot()
 {
-    return bezotted()
-        || you.has_mutation(MUT_SHORT_LIFESPAN)
-           && zot_clock_active()
-           && Options.fear_zot;
+    return bezotted();
 }
 
 // Decrease the zot clock when the player enters a new level.
@@ -167,8 +163,10 @@ void decr_zot_clock(bool extra_life)
         }
         zot = max(0, zot - ZOT_CLOCK_PER_FLOOR / div);
     }
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_METEORAN)
         update_vision_range();
+#endif
 }
 
 static int _added_zot_time()
@@ -225,8 +223,10 @@ void incr_zot_clock()
             break;
     }
 
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_METEORAN)
         update_vision_range();
+#endif
 
     take_note(Note(NOTE_MESSAGE, 0, 0, "Glimpsed the power of Zot."));
     interrupt_activity(activity_interrupt::force);
@@ -348,6 +348,8 @@ void set_turns_until_zot(int turns_left)
 
     int &clock = _zot_clock();
     clock = MAX_ZOT_CLOCK - turns_left * BASELINE_DELAY;
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_METEORAN)
         update_vision_range();
+#endif
 }
