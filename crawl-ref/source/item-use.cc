@@ -3281,7 +3281,7 @@ bool enchant_weapon(item_def &wpn, bool quiet)
     bool success = false;
 
     // Get item name now before changing enchantment.
-    string iname = _item_name(wpn);
+    string iname = quiet ? "" : _item_name(wpn);
 
     if (is_weapon(wpn)
         && !is_artefact(wpn)
@@ -3291,7 +3291,10 @@ bool enchant_weapon(item_def &wpn, bool quiet)
         wpn.plus++;
         success = true;
         if (!quiet)
-            mprf("%s glows red for a moment.", iname.c_str());
+        {
+            auto time = wpn.plus < MAX_WPN_ENCHANT ? "moment" : "while";
+            mprf("%s glows red for a %s.", iname.c_str(), time);
+        }
     }
 
     if (!success && !quiet)
@@ -3360,7 +3363,11 @@ static bool _handle_enchant_weapon(bool alreadyknown, const string &pre_msg)
     if (!weapon)
         return !alreadyknown;
 
-    enchant_weapon(*weapon, false);
+    if (enchant_weapon(*weapon, false) && MAX_WPN_ENCHANT == weapon->plus)
+    {
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+    }
     return true;
 }
 
@@ -3369,28 +3376,29 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     ASSERT(arm.defined());
     ASSERT(arm.base_type == OBJ_ARMOUR);
 
-    ac_change = 0;
-
     // Cannot be enchanted.
     if (!is_enchantable_armour(arm))
     {
+        ac_change = 0;
         if (!quiet)
             canned_msg(MSG_NOTHING_HAPPENS);
         return false;
     }
+
+    string name = quiet ? "" : _item_name(arm);
+
+    arm.plus++;
+    ac_change = 1;
 
     // Output message before changing enchantment and curse status.
     if (!quiet)
     {
         const bool plural = armour_is_hide(arm)
                             && arm.sub_type != ARM_TROLL_LEATHER_ARMOUR;
-        mprf("%s %s green for a moment.",
-             _item_name(arm).c_str(),
-             conjugate_verb("glow", plural).c_str());
+        string glow = conjugate_verb("glow", plural);
+        auto time = is_enchantable_armour(arm) ? "moment" : "while";
+        mprf("%s %s green for a %s.", name.c_str(), glow.c_str(), time);
     }
-
-    arm.plus++;
-    ac_change++;
 
     return true;
 }
@@ -3411,7 +3419,14 @@ static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
     bool result = enchant_armour(ac_change, false, *target);
 
     if (ac_change)
+    {
         you.redraw_armour_class = true;
+        if (!is_enchantable_armour(*target))
+        {
+            crawl_state.cancel_cmd_again();
+            crawl_state.cancel_cmd_repeat();
+        }
+    }
 
     return result ? 1 : 0;
 }
