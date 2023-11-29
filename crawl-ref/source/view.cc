@@ -1069,6 +1069,7 @@ static update_flags player_view_update_at(const coord_def &gc)
     {
         if (!crawl_state.game_is_arena()
             && !(branches[you.where_are_you].branch_flags & brflag::fully_map)
+            && !player_in_branch(BRANCH_ARENA)
             && you.has_mutation(MUT_EXPLORE_REGEN))
         {
             _do_explore_healing();
