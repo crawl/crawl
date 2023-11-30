@@ -181,6 +181,11 @@ function ch_stash_search_annotate_item(it)
     annot = annot .. " {MR} {resist magic} {magic resistance}"
   end
 
+  -- Tag revelation as mapping for back-compat.
+  if it.class(true) == "scroll" and it.subtype() == "revelation" then
+    annot = annot .. " {magic mapping}"
+  end
+
   return annot
 end
 
