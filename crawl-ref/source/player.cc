@@ -2559,7 +2559,7 @@ bool will_gain_life(int lev)
     return you.lives - 1 + you.deaths < (lev - 1) / 3;
 }
 
-static void _felid_extra_life()
+static bool _felid_extra_life()
 {
     if (will_gain_life(you.max_level)
         && you.lives < 2)
@@ -2568,7 +2568,9 @@ static void _felid_extra_life()
         mprf(MSGCH_INTRINSIC_GAIN, "Extra life!");
         you.attribute[ATTR_LIFE_GAINED] = you.max_level;
         // Should play the 1UP sound from SMB...
+        return true;
     }
+    return false;
 }
 
 static void _gain_and_note_hp_mp()
@@ -2742,6 +2744,7 @@ void level_change(bool skip_attribute_increase)
     while (you.experience_level < you.get_max_xl()
            && you.experience >= exp_needed(you.experience_level + 1))
     {
+        bool gained_felid_life = false;
         if (!skip_attribute_increase)
         {
             crawl_state.cancel_cmd_all();
@@ -2951,7 +2954,7 @@ void level_change(bool skip_attribute_increase)
             }
 
             if (you.has_mutation(MUT_MULTILIVED))
-                _felid_extra_life();
+                gained_felid_life = _felid_extra_life();
 
             give_level_mutations(you.species, you.experience_level);
 
@@ -2964,6 +2967,9 @@ void level_change(bool skip_attribute_increase)
         }
         if (!updated_maxhp)
             _gain_and_note_hp_mp();
+
+        if (gained_felid_life)
+            take_note(Note(NOTE_GAIN_LIFE, you.lives));
 
         if (you.has_mutation(MUT_INNATE_CASTER))
             _gain_innate_spells();
@@ -2980,8 +2986,8 @@ void level_change(bool skip_attribute_increase)
         ASSERT(you.experience_level == you.get_max_xl());
         ASSERT(you.max_level < 127); // marshalled as an 1-byte value
         you.max_level++;
-        if (you.has_mutation(MUT_MULTILIVED))
-            _felid_extra_life();
+        if (you.has_mutation(MUT_MULTILIVED) && _felid_extra_life())
+            take_note(Note(NOTE_GAIN_LIFE, you.lives));
     }
 
     you.redraw_title = true;

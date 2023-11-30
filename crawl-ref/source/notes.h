@@ -64,6 +64,8 @@ enum NOTE_TYPES
     NOTE_ACQUIRE_ITEM,
     NOTE_ZOT_TOUCHED,           /* needs: old mhp, new mhp */
     NOTE_DREAMSHARD,
+    NOTE_GAIN_LIFE,             /* needs: lives left */
+    NOTE_LOSE_LIFE,             /* needs: lives left */
     NOTE_NUM_TYPES
 };
 

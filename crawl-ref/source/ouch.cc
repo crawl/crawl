@@ -1249,6 +1249,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         you.lives--;
         you.pending_revival = true;
 
+        take_note(Note(NOTE_LOSE_LIFE, you.lives));
+
         stop_delay(true);
 
         // You wouldn't want to lose this accomplishment to a crash, would you?
