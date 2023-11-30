@@ -434,8 +434,8 @@ end))
 mset(with_props(spec_fn(function ()
   local d = 20 + you.zigs_completed() * 2
   local e = 20 + you.zigs_completed() * 3
-  return "centaur w:15 / yaktaur w:15 / cyclops w:15 / " ..
-         "centaur warrior w:" .. d .. " / faun w:" .. d .. " / " ..
+  return "centaur w:5 / centaur warrior / yaktaur w:15 / cyclops w:15 / " ..
+         "kobold blastminer w:" .. d .. " / faun w:" .. d .. " / " ..
          "yaktaur captain w:" .. d .. " / satyr w:" .. d .. " / " ..
          "stone giant w:" .. e .. " / naga sharpshooter w:" .. e .. " / " ..
          "merfolk javelineer w:" .. e .. " / deep elf master archer w:" .. e

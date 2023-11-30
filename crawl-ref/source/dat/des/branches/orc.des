@@ -876,7 +876,7 @@ ENDMAP
 
 ##################################################
 # The orcs dug into a natural cave and used the bats as a shooting gallery.
-NAME:   mines_bat_river
+NAME:   blackcustard_mines_bat_river
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 DEPTH:  Orc
 MONS:   bat, kobold blastminer
@@ -912,14 +912,20 @@ ENDMAP
 
 ##################################################
 # The orcs piled up some loose rubble.
-NAME:   rock_pile
-TAGS:   no_item_gen no_monster_gen transparent
-DEPTH:  Orc
+NAME:   blackcustard_rock_pile
+TAGS:   no_item_gen no_monster_gen transparent preserve_wall vaults_hard
+DEPTH:  Orc, Vaults
+WEIGHT: 1 (Vaults), 10
 MONS:   orc ; sling, kobold blastminer, boulder beetle
-KITEM:  d = w:3 stone / w:1 large rock q:1
-SUBST:  a = .:4 b
-NSUBST: b = 1:2 / 1:3 / 4:1 / *:d
-SUBST:  1 = 1 .
+MONS:   orc knight ; plate armour . sling, stone giant
+ITEM:   stone w:30 / large rock q:1, gold q:100
+ITEM:   granite talisman / staff of earth / randbook disc:earth
+SUBST:  a = d:4 b
+: if you.in_branch("Vaults") then
+NSUBST: b = 3:2 / 2 = 3335 / 4 = 4d / 1:e / 1:f / *:d
+: else
+NSUBST: b = 1:2 / 1:3 / 4 = 1d / *:d
+: end
 MAP
      . .
    ....
@@ -1484,7 +1490,7 @@ MONS:    orc knight ; arbalest . glaive | broad axe | great mace
 MONS:    orc warrior
 MONS:    centaur w:20 / centaur warrior w:1, kobold blastminer
 SUBST:   3 = 23
-NSUBST:  5 = 3:5 / 3:6 / 4 = 556... / 4 = 5. / *:.
+NSUBST:  5 = 4:5 / 2:6 / 5 = 556... / 3 = 5. / *:.
 KFEAT:   S = any shop
 MAP
   ...............@...............
@@ -1644,9 +1650,9 @@ MONS:    orc high priest, orc sorcerer, orc knight
 MONS:    kobold blastminer, orc priest, orc wizard
 KFEAT:   S = any shop
 MAP
-xxxxxxxxxxxxxxxxxxxxxxx
-xcccccccccccccccccccccx
-xccccccS.......Sccccccx
+  xxxxxxxxxxxxxxxxxxx
+ xxcccccccccccccccccxx
+xxcccccS.......Scccccxx
 xccccS...cc.cc...Sccccx
 xccc...cc3...3cc...cccx
 xcc4.cc3...1...3cc.4ccx
@@ -1656,7 +1662,7 @@ xcc..cc2.......2cc..ccx
 xc....cc.......cc....cx
 xc.c6.....c.c.....6c.cx
 xc.cc6....c.c....6cc.cx
-xc..ccc4.6c.c6.4ccc..cx
+xc..ccc5.6c.c6.5ccc..cx
 xcc..cccccc.cccccc..ccx
 xccc...cccc.cccc...cccx
 xccccc...........cccccx
@@ -1674,7 +1680,7 @@ ORIENT: float
   -- small numbers of cyclopses, ettins, and a stone giant.
   -- I have yet to decide how fair this will be, so it's a fairly low
   -- chance until I decide one way or the other if it works.
-  dgn.persist.grunt_orc_gardens_giant_problem = crawl.one_chance_in(8)
+  dgn.persist.grunt_orc_gardens_giant_problem = crawl.one_chance_in(7)
   hook("post_place", function()
     local stores = { "antique weapon shop", "antique armour shop",
                      "general shop", "book shop / jewellery shop" }
@@ -1693,8 +1699,8 @@ ORIENT: float
   end)
 }}
 
-NAME: grunt_orc_garden
-TAGS: grunt_orc_garden allow_dup transparent no_monster_gen no_item_gen
+NAME:  grunt_orc_garden
+TAGS:  grunt_orc_garden allow_dup transparent no_monster_gen no_item_gen
 {{
   if dgn.persist.grunt_orc_gardens_giant_problem then
     if dgn.persist.grunt_orc_gardens_boss then
@@ -1704,7 +1710,8 @@ TAGS: grunt_orc_garden allow_dup transparent no_monster_gen no_item_gen
     end
     mons("cyclops")
     mons("kobold blastminer")
-    nsubst("0 : 1:1 / 2:2 / 1 = 3:1 .:20 / *:.")
+    nsubst("0 : 1:1 / 2:2 / 1 = 3:1 .:7 / *:.")
+    subst("3 = .")
   else
     if dgn.persist.grunt_orc_gardens_boss then
        mons("orc warlord")
@@ -1713,15 +1720,14 @@ TAGS: grunt_orc_garden allow_dup transparent no_monster_gen no_item_gen
     if not dgn.persist.grunt_orc_gardens_boss then
       mons("nothing")
     end
-    mons("orc warrior / orc sorcerer w:1 / orc high priest w:1 /"
-         .. "ogre w:1 / troll w:1 / warg w:1")
+    mons("orc warrior / orc sorcerer w:1 / orc high priest w:1 / "
+         .. "kobold blastminer w:1 / ogre w:1 / troll w:1 / warg w:1")
     nsubst("0 : 1:1 / *:2")
+    nsubst("3 = 4:3 / 1:I / 4 = P / *:.")
   end
 }}
-MONS: nothing w:20 / fungus
-SUBST: . = ..4
-NSUBST: 3 = 4:3 / 1:I / 4:P / *:.
-SUBST: P = .4
+MONS:  fungus
+SUBST: . = 4 .:80, P = 4 .:50
 : if is_validating() or dgn.persist.grunt_orc_gardens_store == nil then
 KFEAT: A = any shop
 : else
@@ -1747,7 +1753,8 @@ TAGS:   transparent no_monster_gen no_item_gen
 PLACE:  Orc:$
 ORIENT: float
 KMONS:  O = Saint Roka band w:3 / orc warlord band, orc warlord band
-MONS:   orc knight / orc warrior w:30, orc sorcerer / orc wizard w:30
+MONS:   orc knight / orc warrior w:30
+MONS:   orc sorcerer / kobold blastminer w:2 / orc wizard w:30
 MONS:   orc high priest / orc priest w:30
 MONS:   orc warrior / orc w:30, orc / nothing
 KFEAT:  _ = altar_beogh
@@ -1978,7 +1985,7 @@ PLACE: Orc:$
 ORIENT: float
 MONS: orc / nothing w:5, orc warrior / nothing w:5
 MONS: orc priest / nothing w:5, common demon / nothing w:5
-MONS: orc knight
+MONS: orc knight / kobold blastminer w:1
 MONS: demonspawn / nothing w:5
 MONS: orc high priest / orc sorcerer
 SHUFFLE: BC
@@ -2083,7 +2090,7 @@ PLACE:  Orc:$
 WEIGHT: 5
 MONS:   orc w:8 / orc warrior w:1 / nothing w:1
 MONS:   orc priest, orc warrior, orc warrior band
-MONS:   ogre w:8 / two-headed ogre w:4 / kobold blastminer w:2 / \
+MONS:   ogre w:8 / two-headed ogre w:4 / kobold blastminer w:4 / \
         troll w:1 / warg w:1 / nothing w:8
 MONS:   orc knight, orc sorcerer
 KMONS:  D = orc high priest

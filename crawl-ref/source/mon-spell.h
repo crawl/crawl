@@ -975,7 +975,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_KOBOLD_BLASTMINER,
       {
-       { SPELL_BOMBARD, 36, MON_SPELL_NATURAL | MON_SPELL_NOISY },
+       { SPELL_BOMBARD, 32, MON_SPELL_NATURAL | MON_SPELL_NOISY },
       }
     },
 

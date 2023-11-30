@@ -58,6 +58,13 @@ function sroom_kobold_lair(e)
     lord_mon = "kobold demonologist"
 
     fill_special_room(e, mon, lord_mon)
+
+    if you.in_branch("Orc") then
+        e.kmons('B = kobold blastminer')
+        e.item("! = any blast wand charges:2 no_pickup / \
+                    any beam wand charges:2 no_pickup")
+        e.nsubst('1 = 2:B / 1:! / *:1')
+    end
 end
 
 function sroom_orc_lair(e)

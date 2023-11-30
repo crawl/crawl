@@ -1771,17 +1771,16 @@ xxxwxxxx......xxxw.xx..xxx..xxx
 ENDMAP
 
 NAME:    kennysheep_kobold_grotto
-DEPTH:   D:13-, !D:$
+DEPTH:   D:12-, !D:$
 TAGS:    no_monster_gen
 ORIENT:  northwest
-MONS:    kobold brigand, patrolling kobold demonologist, kobold, plant
-MONS:    lesser demon, obsidian statue
+MONS:    kobold blastminer, kobold brigand, patrolling kobold demonologist
+MONS:    kobold, plant, lesser demon, obsidian statue
 KMONS:   g = bush
 SHUFFLE: !'
-NSUBST:  ! = 3:C / 4:- / 2:5 / *:.
-NSUBST:  ' = 2:C / *:.
-NSUBST:  . = 10:3 / 4:5
-SUBST:  .z = .:200 W:35 4:20
+NSUBST:  ! = 3:C / 4:- / 2:6 / *:., ' = 2:C / *:.
+NSUBST:  . = 10:4 / 4:6
+SUBST:  .z = .:220 W:15 5:20
 : dgn.delayed_decay(_G, 'C', 'spriggan corpse / spriggan skeleton')
 KPROP:  -C = bloody
 MAP
@@ -1793,12 +1792,12 @@ xxxxx................xx!!x
 xxxx...w..............g!xx
 x'x...www.............xxx
 x'g....w.........w...xx
-x'g..........x1.wWw.1xx
-xxx....w....xx.wW6Ww..x
+x'g..........x2.wWw.2xx
+xxx....w....xx.wW7Ww..x
 xx....wGw...xx..wWw..xx
-xxx.w1.w.1wxxx...w...xx
-xxxxww.1.wwxx.1.....1xx
- xxxx2***2xxx.......xxx
+xxx.w2.w.2wxxx...w...xx
+xxxxww.2.wwxx.2.....2xx
+ xxxx3***3xxx.......xxx
  xxxx**|**1xxxx.....xxx
   xxxxxxxxxxxxx.....xxx
     xxxxxxxxxxxx....xx
