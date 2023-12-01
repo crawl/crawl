@@ -1945,7 +1945,7 @@ MONS:       cacodemon
 MONS:       quicksilver dragon / war gargoyle / crystal guardian \
             / wretched star
 MONS:       orange crystal statue name:lunar_statue n_rpl n_des \
-                spells:brain_feed.24.magical;draining_gaze.24.magical;\
+                spells:brain_bite.24.magical;draining_gaze.24.magical;\
                        lehudib's_crystal_spear.24.magical;\
                        shadow_creatures.48.magical \
                 col:lightmagenta tile:mons_zot_statue
