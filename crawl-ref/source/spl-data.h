@@ -1305,14 +1305,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_BRAIN_FEED, "Brain Feed",
-    spschool::necromancy,
+    SPELL_BRAIN_BITE, "Brain Bite",
+    spschool::necromancy | spschool::hexes,
     spflag::target | spflag::monster,
     3,
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_BRAIN_FEED,
+    TILEG_BRAIN_BITE,
 },
 
 {

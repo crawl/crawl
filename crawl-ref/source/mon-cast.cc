@@ -132,6 +132,7 @@ static ai_action::goodness _foe_near_lava(const monster &caster);
 static ai_action::goodness _mons_likes_blinking(const monster &caster);
 static void _cast_injury_mirror(monster &mons, mon_spell_slot, bolt&);
 static void _cast_smiting(monster &mons, mon_spell_slot slot, bolt&);
+static void _cast_brain_bite(monster &mons, mon_spell_slot slot, bolt&);
 static void _cast_resonance_strike(monster &mons, mon_spell_slot, bolt&);
 static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt&);
 static void _cast_call_down_lightning(monster &caster, mon_spell_slot, bolt&);
@@ -362,6 +363,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         },
     } },
     { SPELL_SMITING, { _always_worthwhile, _cast_smiting, } },
+    { SPELL_BRAIN_BITE, { _always_worthwhile, _cast_brain_bite, } },
     { SPELL_CALL_DOWN_LIGHTNING, { _foe_not_nearby, _cast_call_down_lightning, _zap_setup(SPELL_CALL_DOWN_LIGHTNING) } },
     { SPELL_RESONANCE_STRIKE, { _always_worthwhile, _cast_resonance_strike, } },
     { SPELL_CREEPING_FROST, { _foe_near_wall, _cast_creeping_frost, _setup_creeping_frost } },
@@ -829,6 +831,49 @@ static void _cast_smiting(monster &caster, mon_spell_slot slot, bolt&)
     foe->hurt(&caster, 7 + random2avg(11, 2), BEAM_MISSILE, KILLED_BY_BEAM,
               "", "by divine providence");
     _whack(caster, *foe);
+}
+
+static void _cast_brain_bite(monster &caster, mon_spell_slot slot, bolt&)
+{
+    actor* foe = caster.get_foe();
+    ASSERT(foe);
+
+    int dam_multiplier = 1;
+    int drain = 0;
+
+    if (foe->is_player())
+    {
+        drain = min(you.magic_points, you.max_magic_points / 5);
+        if (drain > 0)
+            dam_multiplier = 2;
+        mprf("Something gnaws on your mind!");
+        xom_is_stimulated(30);
+    }
+    else
+    {
+        monster* mon_foe = foe->as_monster();
+        if (mon_foe->has_ench(ENCH_ANTIMAGIC))
+            dam_multiplier = 2;
+        simple_monster_message(*foe->as_monster(), "'s mind is gnawed upon.");
+    }
+
+    foe->hurt(&caster, 4 + random2avg(5, 2) * dam_multiplier,
+              BEAM_MISSILE, KILLED_BY_BEAM, "", "by psychic fangs");
+    _whack(caster, *foe);
+
+    if (foe->is_player())
+    {
+        if (drain > 0)
+        {
+            mprf(MSGCH_WARN, "You feel your power leaking away.");
+            drain_mp(drain);
+        }
+    }
+    else
+    {
+        enchant_actor_with_flavour(foe, &caster, BEAM_DRAIN_MAGIC,
+                                   mons_spellpower(caster, slot.spell));
+    }
 }
 
 static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&)
@@ -1740,7 +1785,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CONFUSION_GAZE:
     case SPELL_HAUNT:
     case SPELL_SUMMON_SPECTRAL_ORCS:
-    case SPELL_BRAIN_FEED:
+    case SPELL_BRAIN_BITE:
     case SPELL_HOLY_FLAMES:
     case SPELL_CALL_OF_CHAOS:
     case SPELL_AIRSTRIKE:
@@ -5634,16 +5679,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_HOLY_FLAMES:
         holy_flames(mons, foe);
         return;
-    case SPELL_BRAIN_FEED:
-        if (one_chance_in(3)
-            && lose_stat(STAT_INT, 1 + random2(3)))
-        {
-            mpr("Something feeds on your intellect!");
-            xom_is_stimulated(50);
-        }
-        else
-            mpr("Something tries to feed on your intellect!");
-        return;
 
     case SPELL_SUMMON_SPECTRAL_ORCS:
         // Wizard mode creates a dummy friendly monster, with no foe.
@@ -7380,9 +7415,6 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         }
         else
             return ai_action::good();
-    case SPELL_BRAIN_FEED:
-        ASSERT(foe);
-        return ai_action::good_or_bad(foe->is_player());
 
     case SPELL_BOLT_OF_DRAINING:
     case SPELL_MALIGN_OFFERING:

@@ -105,12 +105,6 @@ Borgnjor's Revivification spell
 이 주문은 죽음의 문을 강제로 닫을 수 있을 만큼 강력하다. 하지만 그 충격으로,
 시전자는 잠시 동안 아무 행동도 하지 못할 것이다.
 %%%%
-Brain Feed spell
-
-이 주문은 적의 지능의 일부를 흡수할 수 있게 한다. 그에 따른 지능의 손실은
-일시적이며, Ring of sustain 능력은 이 효과를 방지하거나 효과적으로 감소시킬
-것이다.
-%%%%
 Call Canine Familiar spell
 
 이 주문은 개 과의 동물을 하나 소환하여 시전자를 따르게 한다.

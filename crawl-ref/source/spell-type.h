@@ -204,7 +204,7 @@ enum spell_type : int
 #if TAG_MAJOR_VERSION == 34
     SPELL_VAMPIRE_SUMMON,
 #endif
-    SPELL_BRAIN_FEED,
+    SPELL_BRAIN_BITE,
 #if TAG_MAJOR_VERSION == 34
     SPELL_FAKE_RAKSHASA_SUMMON,
 #endif

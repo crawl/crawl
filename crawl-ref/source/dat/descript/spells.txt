@@ -197,11 +197,11 @@ Calls forth hands from corpses interred beneath the dungeon floor long ago.
 Enemies caught in the area will be held in place and constricted until they
 break free.
 %%%%
-Brain Feed spell
+Brain Bite spell
 
-Drains a portion of a visible enemy's intelligence, with no direct line of fire
-required. Such a loss is only temporary, and can be recovered by gaining
-experience.
+Drains a small amount of a visible enemy's mind and a proportion of their magic,
+with no direct line of fire required. If the enemy has emptied magic reserves,
+they will take more damage.
 %%%%
 Brom's Barrelling Boulder spell
 

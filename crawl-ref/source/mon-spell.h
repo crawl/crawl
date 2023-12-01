@@ -924,7 +924,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_GLOWING_ORANGE_BRAIN,
       {
-       { SPELL_BRAIN_FEED, 10, MON_SPELL_MAGICAL },
+       { SPELL_BRAIN_BITE, 10, MON_SPELL_MAGICAL },
        { SPELL_CAUSE_FEAR, 10, MON_SPELL_MAGICAL },
        { SPELL_SHADOW_CREATURES, 10, MON_SPELL_MAGICAL },
        { SPELL_MASS_CONFUSION, 10, MON_SPELL_MAGICAL },
@@ -1394,7 +1394,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_NEQOXEC,
       {
        { SPELL_MALMUTATE, 19, MON_SPELL_MAGICAL },
-       { SPELL_BRAIN_FEED, 19, MON_SPELL_MAGICAL },
+       { SPELL_BRAIN_BITE, 19, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1568,7 +1568,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_ORANGE_CRYSTAL_STATUE,
       {
        { SPELL_SHADOW_CREATURES, 40, MON_SPELL_MAGICAL },
-       { SPELL_BRAIN_FEED, 20, MON_SPELL_MAGICAL },
+       { SPELL_BRAIN_BITE, 20, MON_SPELL_MAGICAL },
        { SPELL_DRAINING_GAZE, 20, MON_SPELL_MAGICAL },
        { SPELL_MASS_CONFUSION, 20, MON_SPELL_MAGICAL },
       }
@@ -2197,7 +2197,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_NORRIS,
       {
-       { SPELL_BRAIN_FEED, 16, MON_SPELL_PRIEST },
+       { SPELL_BRAIN_BITE, 16, MON_SPELL_PRIEST },
        { SPELL_PRIMAL_WAVE, 16, MON_SPELL_PRIEST },
        { SPELL_DRAIN_MAGIC, 16, MON_SPELL_PRIEST },
       }

@@ -172,11 +172,6 @@ Borgnjor's Vile Clutch spell
 唤起地牢地层下被长久掩埋的尸体的手。
 被抓住的敌人会被束缚在原地，直到他们挣脱。
 %%%%
-Brain Feed spell
-
-令视野中的一个敌人流失一部分智力，无需直射。
-此影响只是暂时的，智力会通过获取经验而恢复。
-%%%%
 Brom's Barrelling Boulder spell
 
 在给定的基本方向上释出一个硕大的滚动巨砾。
