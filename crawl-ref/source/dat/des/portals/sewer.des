@@ -964,7 +964,7 @@ ITEM:    any scroll, potion of enlightenment ident:type
 KFEAT:   " = w
 KFEAT:   ? = W
 SHUFFLE: QED$ de
-NSUBST:  Q = 1:442 / * = 222., E = 1:553 / * = 333. 
+NSUBST:  Q = 1:442 / * = 222., E = 1:553 / * = 333.
 SUBST:   D : fgh, - = WW.
 NSUBST:  f = 1:f / *:', g = 2:g / *:', h = 2:h / *:'
 NSUBST:  w = 10 = "w / *:w, W = 42 = ?WWW / *:W, ! = 32 = 1... / *:.
