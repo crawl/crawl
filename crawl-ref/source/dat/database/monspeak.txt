@@ -3392,6 +3392,8 @@ w:50
 @The_monster@ says, "So, how do you deal with the weeds?"
 
 @The_monster@ says, "A plant spat acid at me. I hate that."
+
+@The_monster@ says, "Better hope you don't develop allergies."
 %%%%
 Cheibriados Donald
 
