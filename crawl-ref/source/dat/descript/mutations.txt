@@ -382,6 +382,16 @@ subdued magic mutation
 Your spells are slightly easier to cast (reduced miscast chance and severity),
 but less powerful. Each level of this mutation increases both effects further.
 %%%%
+slow poison mutation
+
+Poison affects you unusually slowly, lowering your health half as fast.
+(The total amount of health lost is unchanged.)
+%%%%
+fast poison mutation
+
+Poison affects you unusually quickly, lowering your health twice as fast.
+(The total amount of health lost is unchanged.)
+%%%%
 # ------ Badmuts without matching goodmuts -----
 teleportitis mutation
 

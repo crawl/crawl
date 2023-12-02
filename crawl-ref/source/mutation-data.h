@@ -330,6 +330,26 @@ static const mutation_def mut_data[] =
    ""},
 },
 
+{ MUT_FAST_POISON, 5, 1, mutflag::bad, false,
+  "fast poison",
+
+  {"Poison affects you twice as quickly.", "", ""},
+
+  {"Your system begins to process poison very quickly.", "", ""},
+
+  {"Your system processes poison normally again.", "", ""},
+},
+
+{ MUT_SLOW_POISON, 3, 1, mutflag::good, false,
+  "slow poison",
+
+  {"Poison affects you half as quickly.", "", ""},
+
+  {"Your system begins to process poison very slowly.", "", ""},
+
+  {"Your system processes poison normally again.", "", ""},
+},
+
 { MUT_STRONG_WILLED, 5, 3, mutflag::good, false,
   "strong-willed",
 

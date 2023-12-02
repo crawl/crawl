@@ -4308,6 +4308,15 @@ const double poison_min_hp_aut  = 100.0;
 // 5.0 HP/aut
 const double poison_max_hp_aut  = 5000.0;
 
+static double _poison_denom()
+{
+    if (you.has_mutation(MUT_FAST_POISON))
+        return poison_denom / 2;
+    if (you.has_mutation(MUT_SLOW_POISON))
+        return poison_denom * 2;
+    return poison_denom;
+}
+
 // The amount of aut needed for poison to end if
 // you.duration[DUR_POISONING] == dur, assuming no Chei/DD shenanigans.
 // This function gives the following behaviour:
@@ -4315,35 +4324,37 @@ const double poison_max_hp_aut  = 5000.0;
 // * but speed of poison is capped between the two parameters
 static double _poison_dur_to_aut(double dur)
 {
-    const double min_speed_dur = poison_denom * poison_min_hp_aut * 10.0;
-    const double decay = log(poison_denom / (poison_denom - 1.0));
+    double denom = _poison_denom();
+    const double min_speed_dur = denom * poison_min_hp_aut * 10.0;
+    const double decay = log(denom / (denom - 1.0));
     // Poison already at minimum speed.
     if (dur < min_speed_dur)
         return dur / poison_min_hp_aut;
     // Poison is not at maximum speed.
-    if (dur < poison_denom * poison_max_hp_aut * 10.0)
-        return 10.0 * (poison_denom + log(dur / min_speed_dur) / decay);
-    return 10.0 * (poison_denom + log(poison_max_hp_aut / poison_min_hp_aut) / decay)
-         + (dur - poison_denom * poison_max_hp_aut * 10.0) / poison_max_hp_aut;
+    if (dur < denom * poison_max_hp_aut * 10.0)
+        return 10.0 * (denom + log(dur / min_speed_dur) / decay);
+    return 10.0 * (denom + log(poison_max_hp_aut / poison_min_hp_aut) / decay)
+         + (dur - denom * poison_max_hp_aut * 10.0) / poison_max_hp_aut;
 }
 
 // The inverse of the above function, i.e. the amount of poison needed
 // to last for aut time.
 static double _poison_aut_to_dur(double aut)
 {
+    double denom = _poison_denom();
     // Amount of time that poison lasts at minimum speed.
-    if (aut < poison_denom * 10.0)
+    if (aut < denom * 10.0)
         return aut * poison_min_hp_aut;
-    const double decay = log(poison_denom / (poison_denom - 1.0));
+    const double decay = log(denom / (denom - 1.0));
     // Amount of time that poison exactly at the maximum speed lasts.
-    const double aut_from_max_speed = 10.0 * (poison_denom
+    const double aut_from_max_speed = 10.0 * (denom
         + log(poison_max_hp_aut / poison_min_hp_aut) / decay);
     if (aut < aut_from_max_speed)
     {
-        return 10.0 * poison_denom * poison_min_hp_aut
-            * exp(decay / 10.0 * (aut - poison_denom * 10.0));
+        return 10.0 * denom * poison_min_hp_aut
+            * exp(decay / 10.0 * (aut - denom * 10.0));
     }
-    return poison_denom * 10.0 * poison_max_hp_aut
+    return denom * 10.0 * poison_max_hp_aut
          + poison_max_hp_aut * (aut - aut_from_max_speed);
 }
 
@@ -4464,7 +4475,7 @@ int poison_survival()
     double min_poison_rate = poison_min_hp_aut;
 #if TAG_MAJOR_VERSION == 34
     if (dd)
-        min_poison_rate = 25.0/poison_denom;
+        min_poison_rate = 25.0/_poison_denom();
 #endif
     if (chei)
         min_poison_rate /= 1.5;
@@ -4479,7 +4490,7 @@ int poison_survival()
     }
     else
     {
-        regen_beats_poison = poison_denom * 10.0 * rr;
+        regen_beats_poison = _poison_denom() * 10.0 * rr;
         if (chei)
             regen_beats_poison = 3 * regen_beats_poison / 2;
     }

@@ -178,6 +178,7 @@ static const int conflict[][3] =
     { MUT_FAST,                MUT_SLOW,                    1},
     { MUT_MUTATION_RESISTANCE, MUT_DEVOLUTION,              1},
     { MUT_EVOLUTION,           MUT_DEVOLUTION,              1},
+    { MUT_FAST_POISON,         MUT_SLOW_POISON,             1},
     { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,              -1},
     { MUT_FANGS,               MUT_BEAK,                   -1},
     { MUT_ANTENNAE,            MUT_HORNS,                  -1}, // currently overridden by physiology_mutation_conflict
@@ -1888,8 +1889,13 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
 
     // Already immune.
-    if (you.is_nonliving(false, false) && mutat == MUT_POISON_RESISTANCE)
+    if (you.is_nonliving(false, false)
+        && (mutat == MUT_POISON_RESISTANCE
+            || mutat == MUT_SLOW_POISON
+            || mutat == MUT_FAST_POISON))
+    {
         return true;
+    }
 
     // We can't use is_useless_skill() here, since species that can still wear
     // body armour can sacrifice armour skill with Ru.
