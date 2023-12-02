@@ -191,8 +191,8 @@ end
 -- Monster sets, in order:
 -- Lair, Snake, Swamp, Shoals, Spider, Slime,
 -- Orc, Elf, Vaults, Crypt, Tomb,
--- Abyss, Gehenna, Cocytus, Dis, Tartarus,
--- Fire, Ice, Air, Earth, Negative Energy, Holy, Chaos
+-- Abyss, Cocytus, Gehenna, Dis, Tartarus,
+-- Fire, Ice, Air, Earth, Holy, Chaos, Negative Energy
 -- Giants, Dragons, Draconians, Archers, Conjurers
 -- Pan, Lair Roulette, Vestibule / all Hells
 -- By using spec_fn to wrap monster-spec functions, monster weights
