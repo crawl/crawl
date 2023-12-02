@@ -119,8 +119,8 @@ enum monster_type                      // env.mons[].type
     MONS_POLAR_BEAR,
     MONS_BLACK_BEAR,
     MONS_WORM,
-#if TAG_MAJOR_VERSION == 34
     MONS_BRAIN_WORM,
+#if TAG_MAJOR_VERSION == 34
     MONS_ROCK_WORM,
     MONS_SPINY_WORM,
 #endif

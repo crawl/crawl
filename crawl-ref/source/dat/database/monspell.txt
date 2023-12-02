@@ -560,6 +560,12 @@ VISUAL:@The_monster@ throws @possessive@ arms up pleadingly.
 ########################################################################
 # Individual monsters
 ########################################################################
+brain worm cast
+
+@The_monster@'s bulging head throbs.
+
+@The_monster@'s throbbing head pulsates.
+%%%%
 glowing orange brain cast
 
 @The_monster@ pulsates.

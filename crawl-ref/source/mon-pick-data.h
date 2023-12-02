@@ -802,13 +802,14 @@ POP_DEPTHS,
 { // Abyss
   // Sorted by 'home depth', somewhat arbitrarily defined.
   // Abyss:1
-  { -1,  6, 1500, FALL, MONS_ABOMINATION_SMALL },
+  { -1,  6, 1400, FALL, MONS_ABOMINATION_SMALL },
+  { -1,  6,  150, FALL, MONS_BRAIN_WORM },
 
   {  1,  4,   25, FALL, MONS_CRIMSON_IMP },
-  {  1,  4,  192, FALL, MONS_WHITE_IMP },
-  {  1,  4,  192, FALL, MONS_QUASIT },
-  {  1,  4,  192, FALL, MONS_UFETUBUS },
-  {  1,  4,  192, FALL, MONS_IRON_IMP },
+  {  1,  4,  180, FALL, MONS_WHITE_IMP },
+  {  1,  4,  180, FALL, MONS_QUASIT },
+  {  1,  4,  180, FALL, MONS_UFETUBUS },
+  {  1,  4,  180, FALL, MONS_IRON_IMP },
   {  1,  4,   25, FALL, MONS_SHADOW_IMP },
   {  1,  5,    8, FALL, MONS_RED_DEVIL },
   {  1,  5,   25, FALL, MONS_ICE_DEVIL },

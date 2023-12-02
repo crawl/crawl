@@ -785,6 +785,11 @@ The soul of a living, holy, or demonic creature, captured by a dark sacrifice
 to Yredelemnul. The bound soul will follow its captor through stairs and come
 when recalled from a different level.
 %%%%
+brain worm
+
+A slimy fluorescent worm with a greatly distended head. This creature feeds on
+others' intellect as it squirms through unworldly grime.
+%%%%
 briar patch
 
 A tangled cluster of thorny briars, sharp enough to pierce thick hide and

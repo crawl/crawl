@@ -125,6 +125,7 @@ enum band_type
     BAND_SKYSHARKS,
     BAND_UFETUBI,
     BAND_BLASTMINER,
+    BAND_BRAIN_WORMS,
     NUM_BANDS                   // always last
 };
 

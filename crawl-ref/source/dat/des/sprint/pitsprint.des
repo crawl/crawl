@@ -17,7 +17,7 @@ function base_monster_setup(e)
            phantom / scorpion / skeleton / gnoll sergeant band /\
            centaur / jelly / water moccasin / ice beast / crimson imp /\
            necrophage / quasit / zombie / sky beast /\
-           bullfrog / mummy / orc warrior band / wight band /\
+           bullfrog / brain worm / mummy / orc warrior band / wight band /\
            kobold brigand band / warg / wolf / black bear / river rat /\
            flying skull / iron imp / white imp / ufetubus / fire bat")
   e.kmons("B = steam dragon / killer bee band / hornet /\

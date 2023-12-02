@@ -6976,6 +6976,23 @@ confused Bennu permanently killed
 
 @Bennu permanently killed@
 %%%%
+################## Brain worm ################################
+brain worm
+
+VISUAL:@The_monster@ drips [complex|unknown] stolen formulae onto the @surface@.
+
+VISUAL:@The_monster@ is briefly caught in foreign memories of distant [stars|lands|kingdoms].
+
+VISUAL:@The_monster@ twitches its length with the pilfered instincts of [wings|pincers|fins].
+
+%%%%
+Sewer brain worm
+
+w:30
+@brain worm@
+
+VISUAL:@The_monster@ stares [perplexed|with bemusement] at its reflection in a puddle.
+%%%%
 ################## Bullfrog ################################
 bullfrog
 

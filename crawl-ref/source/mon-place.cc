@@ -1961,6 +1961,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     // special-cased band-sizes
     { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1}, true }}}},
     { MONS_THRASHING_HORROR, { {}, {{ BAND_THRASHING_HORRORS, {0, 1} }}}},
+    { MONS_BRAIN_WORM, { {}, {{ BAND_BRAIN_WORMS, {0, 1} }}}},
 };
 
 static band_type _choose_band(monster_type mon_type, int *band_size_p,
@@ -2063,9 +2064,14 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
             band_size = (one_chance_in(4) ? 3 : 2);
         break;
 
+    case MONS_BRAIN_WORM:
+        if (player_in_branch(BRANCH_ABYSS))
+            band_size = random2(you.depth) / 2;
+        break;
+
     case MONS_THRASHING_HORROR:
-        // XXX: rewrite this - wrong & bad if horrors aren't in abyss
-        band_size = random2(min(brdepth[BRANCH_ABYSS], you.depth));
+        if (player_in_branch(BRANCH_ABYSS))
+            band_size = random2(min(brdepth[BRANCH_ABYSS], you.depth));
         break;
 
     default: ;
@@ -2131,6 +2137,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_JELLYFISH,           {{{MONS_FORMLESS_JELLYFISH, 1}}}},
     { BAND_DEATH_YAKS,          {{{MONS_DEATH_YAK, 1}}}},
     { BAND_GREEN_RATS,          {{{MONS_RIVER_RAT, 1}}}},
+    { BAND_BRAIN_WORMS,         {{{MONS_BRAIN_WORM, 1}}}},
     { BAND_BLINK_FROGS,         {{{MONS_BLINK_FROG, 1}}}},
     { BAND_GOLDEN_EYE,          {{{MONS_GOLDEN_EYE, 1}}}},
     { BAND_HELL_HOUNDS,         {{{MONS_HELL_HOUND, 1}}}},

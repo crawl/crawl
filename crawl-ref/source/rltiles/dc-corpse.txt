@@ -83,6 +83,7 @@ apocalypse_crab CORPSE_APOCALYPSE_CRAB
 ## Worms and gastropods ('w')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 worm CORPSE_WORM
+brain_worm CORPSE_BRAIN_WORM
 ../aquatic/swamp_worm CORPSE_SWAMP_WORM
 tyrant_leech CORPSE_TYRANT_LEECH
 torpor_snail CORPSE_TORPOR_SNAIL

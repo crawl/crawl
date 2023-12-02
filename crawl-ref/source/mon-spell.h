@@ -631,6 +631,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    { MST_BRAIN_WORM,
+      {
+        { SPELL_BRAIN_BITE, 32, MON_SPELL_NATURAL },
+      }
+    },
+
     { MST_SWAMP_WORM,
       {
         { SPELL_HARPOON_SHOT, 80, MON_SPELL_NATURAL },

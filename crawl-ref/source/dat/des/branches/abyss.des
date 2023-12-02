@@ -1581,7 +1581,8 @@ ENDMAP
 
 NAME:   evilmike_nicolae_abyss_rune_containment_curve
 TAGS:   abyss_rune unrand patrolling no_monster_gen no_item_gen
-MONS:   neqoxec w:4 / raiju / worldbinder / thrashing horror / shapeshifter
+MONS:   brain worm w:4 / raiju / worldbinder / \
+        thrashing horror / shapeshifter
 MONS:   tormentor / hellion / shadow demon / \
         bone dragon / iron dragon zombie w:4
 KMONS:  3O = spatial maelstrom
@@ -1911,7 +1912,7 @@ ENDMAP
 NAME:  evilmike_abyss_exit_10
 TAGS:  abyss_exit
 SUBST: X = x.., x = xxxcv
-MONS:  neqoxec
+MONS:  neqoxec / brain worm w:5
 : init_abyss_exit(_G, "O")
 MAP
 XXXXXXXXXXX
