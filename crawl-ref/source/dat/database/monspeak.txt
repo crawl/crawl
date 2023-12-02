@@ -3067,7 +3067,7 @@ w:50
 
 @The_monster@ covers @possessive@ ears. "Shut up!"
 
-@The_monster@ says, "Wouldn't you'd get more for your money with Gozag?"
+@The_monster@ says, "Wouldn't you get more for your money with Gozag?"
 %%%%
 the Shining One Donald
 
