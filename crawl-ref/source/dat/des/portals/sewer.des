@@ -671,23 +671,22 @@ SHUFFLE: de
 MONS:    rat / river rat w:2
 MONS:    ball python / adder w:5 / frilled lizard w:2 / endoplasm w:1
 MONS:    bullfrog
-NSUBST:  - = 108 = 1... / *:.
-SUBST:   2 = 2.
 : item(dgn.loot_potions)
 : item(dgn.loot_scrolls)
 ITEM:    any scroll / any potion
 SUBST:   y : yyyyyyW., Y : YYYYYYWw, z = x., Z = wwwxx
-SUBST:   y = W., Y = Ww
-SUBST:   c = c x:1
+SUBST:   y = W., Y = Ww, c = c x:1
 NSUBST:  d = 2:d / *=d..., e = 2:e / *=e...
+NSUBST:  - = 92 = 1... / *:.
+SUBST:   2 = 2.
 : sewer_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxcccccxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxcccccc2-2ccccccxxxxxxxxxxxxxxxx
 xccccccxxxxxxxxcc2--22---22--2ccxxxcccccccccccx
 cc....ccxxxxxxcc---------------ccxxcdedcc32.3cc
-c......cxxxxxxc-------c---------cxxce<e+22.222c
-c..<A..cxxxxxcc------cc+cc------ccxcdedc22..22c
+c......cxxxxxxc-------c---------cxxce<e+2..222c
+c..<A..cxxxxxcc------cc+cc------ccxcdedc2...22c
 c......cxxxxxc------cccffcc------cxccccc222..2c
 czyyyyzcxxxxxczyyyyzcxcddcczyyyyzcxxxxxczyyyyzc
 cYYWYYYcxxxxxcYYWYYYcxcccccYYYYWYcxxxxxcYYZWYYc
@@ -708,7 +707,7 @@ cYYYWYYcxxxxxcwYWYwwcxxxxxcYYWYYYcxcccccYYWYYYc
 czyyyyzcxxxxxczyyyyzcxxxxxczyyyyzcxceecczyyyyzc
 c------ccxxxcc------cxxxxxc2-----cccffcc-----2c
 cc------ccxcc------ccxxxxxcc------cc+cc2-----cc
-xc-------ccc-------cxxxxxxxc2------c2-------2cx
+xc-------ccc-------cxxxxxxxc-------c2--------cx
 xcc------2-2------ccxxxxxxxcc2-------------2ccx
 xxcccc---------ccccxxxxxxxxxcccc-2------2ccccxx
 xxxxxcccc2-2ccccxxxxxxxxxxxxxxxcccc2-2ccccxxxxx
@@ -1342,23 +1341,21 @@ ENDMAP
 
 #############################################################
 # Kobolds who escaped to the sewers to worship evil in peace
-# The temple has 3 sealed chambers at the end, each with loot and a
-# boss monster.
+# The temple has 3 sealed chambers at the end, each with loot
+# and a boss monster.
 # Total loot: 8 ok items (mostly consumables), 4 star items
 NAME:    kennysheep_sewer_church
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  5
-# Placed monsters.
-MONS:    kobold w:35 / shadow imp / ufetubus / nothing
+# Placed monsters, then randomly distributed monsters.
+MONS:    kobold w:35 / shadow imp / ufetubus
 # Randomly generated monsters.
 MONS:    kobold w:50 / kobold zombie / endoplasm / giant cockroach / \
          giant cockroach zombie w:3 / ball python / adder zombie w:3 / \
          bat / bat zombie w:3
-SUBST:   1 = 1.
-NSUBST:  . = 20 = 2. / *:.
-# Bosses and features for the temple
-:if crawl.random2(2) == 0 then
+# Bosses and features for the temple, either Makhleb or Kiku
+: if crawl.random2(2) == 0 then
 KMONS:   3 = kobold brigand / quasit
 KMONS:   4 = kobold brigand
 KMONS:   5 = quasit
@@ -1366,22 +1363,19 @@ KFEAT:   B = altar_makhleb
 MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                                pow_max = 100, delay = 10, size = 1, \
                                walk_dist = 0, excl_rad = 0 }
-:else
-KMONS:   34 = kobold brigand / wight
+: else
+KMONS:   34 = kobold brigand / necrophage
 KMONS:   5 = phantom / necrophage
 KFEAT:   B = altar_kikubaaqudgha
 SUBST:   F : VY
-:end
-KMONS:   6 = Grinder, shadow imp
-SHUFFLE: 456
-KITEM:   456 = star_item
-KFEAT:   - = deep_water
-KPROP:   W- = no_tele_into
-SUBST:   W = WWWw.
-SUBST:   - = wwwW-
-COLOUR: - = green
+: end
+KMONS:   6 = Grinder / shadow imp w:5, shadow imp
 : item(dgn.loot_potions .. " / any scroll w:30 / any armour / any weapon")
-NSUBST:  d = 1:*
+KITEM:   456 = star_item
+SHUFFLE: 456
+NSUBST:  1 = 2:1 / 3:. / * = 1:13 .:15, . = 18 = 2. / *:.
+NSUBST:  d = 1:* / *:d
+SUBST:   W = WWWWW., - = wwwWW
 : sewer_setup(_G)
 MAP
                                           ccc
@@ -1390,27 +1384,27 @@ MAP
                                         ccd4dcc
                                         c-111-c
                xxxxxxxxxxxxxxxxxxxxxxxxxc-.1.-c
-               x---wwwwwwwwwwwww-W.+1W-xc-...-c
+               xwwwwwwwwwwwwwwww-W.+1W-xc-...-c
+               xwwwwwwwwwwwwwwww-W.x1W-xc-...-c
                x---wwwwwwwwwwwww-W.x1W-xc-...-c
-               x----wwwwwwwwwwww-W.x1W-xc-...-c
-               xWWW-wwwwwwwwwww--W.x1W-xc-...-c
+               xWW--wwwwwwwwwww--W.x1W-xc-...-c
                xWWW-wwwwwwwwww--W..x1W-xcc+++cc
-               xWWW------------W...x.W-xc.....ccccccccc
-               xxWxxxx-xx-xx-xxx1xxxx.xcc..F...c------cc
+               xWWW----ww-ww---W...x.W-xc.....ccccccccc
+               xxWxxxxWxxWxxWxxx1xxxx.xcc..F...c------cc
                x-W.x............1w-x...c..2.2F.+.....1dccc
                x-W.............1www-...+.F.B3..+....115d<c
                x-W.x............1w-x...c..2.2F.+.....1dccc
-               x-W.xxxx-x--xxx-x1xxxx.xcc..F...c------cc
-               x-W.x-----------W...x.W-xc.....ccccccccc
+               x-W.xxxxWxWWxxx-x1xxxx.xcc..F...c------cc
+               x-W.xww------w-WW...x.W-xc.....ccccccccc
                x-W.xwwwwwwwwww--W..x1W-xcc+++cc
                x-W.xwwwwwwwwwww--W.x1W-xc-...-c
                x-W.xwwwwwwwwwwww-W.x1W-xc-...-c
                x-W.xwwwwwwwwwwww-W.x1W-xc-...-c
                x-W1xwwwwwwwwwwww-W.+1W-xc-...-c
 xxxxxxxxxxxxxxxx-W.xxxxxxxxxxxxxxxxxxWxxc-.1.-c
-x----------------W1x-------------WWWWW-xc-111-c
-xWWWWWWWWWWWWWWWWW.W---wwwwwww---WWWWW-xccd6dcc
-x...............1.1x---wwwwwww---------x ccdcc
+x----------------w1xWW-wwwwwww-WWWWWWW-xc-111-c
+xWWWWWWWWWWWWWWWww.WWW-wwwwwww--WWWWWW-xccd6dcc
+x...............1.1xW-wwwwwwwwww-------x ccdcc
 xxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  c<c
 xx...xx                                   ccc
 x.....x
