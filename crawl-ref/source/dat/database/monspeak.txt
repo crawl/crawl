@@ -2167,8 +2167,7 @@ Xom Crazy Yiuf
 @The_monster@ says, "The present is the child, and the necessary child, of all the past, and the mother of all the future."
 
 # Hume
-@The_monster@ says, "Reason is nothing but a wonderful and unintelligible
-instinct in our souls."
+@The_monster@ says, "Reason is nothing but a wonderful and unintelligible instinct in our souls."
 
 # Kant
 @The_monster@ says, "It is extremely absurd to expect to be enlightened by reason, and yet to prescribe to it beforehand on which side it must incline."
@@ -2989,7 +2988,7 @@ w:50
 
 @The_monster@ says, "How do you make a golem out of electricity?"
 
-@The_monster@ says, "What's an "Orb Guardian", anyway?"
+@The_monster@ says, "What's an 'Orb Guardian', anyway?"
 
 @The_monster@ says, "Orbs of fire, orbs of destruction, the Orb of Zot... what's with all the orbs?"
 
@@ -3007,7 +3006,7 @@ w:50
 
 @The_monster@ says, "Oh, so that's what those runes are for!"
 
-@The_monster@ says, "Why do the walls change color every floor? Did they keep running out of paint?"
+@The_monster@ says, "Why do the walls change colour every floor? Did they keep running out of paint?"
 
 @The_monster@ says, "What's stopping the guards from just stealing the Orb themselves?"
 
@@ -5173,7 +5172,7 @@ VISUAL:@The_monster@ splashes a potion @at_foe@.
 
 VISUAL:@The_monster@ throws some [strange|weird|mysterious] powder @at_foe@.
 
-@The_monster@ says @to_foe@, "Odis was a nice man, you're awful."
+@The_monster@ says @to_foe@, "Odis was a nice man; you're awful."
 
 @The_monster@ holds @possessive@ sides and says @to_foe@, "You'll eat dirt beneath my feet."
 
