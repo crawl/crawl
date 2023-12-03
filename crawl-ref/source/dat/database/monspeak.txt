@@ -5173,7 +5173,7 @@ VISUAL:@The_monster@ splashes a potion @at_foe@.
 
 VISUAL:@The_monster@ throws some [strange|weird|mysterious] powder @at_foe@.
 
-@The_monster@ says @to_foe@, "Odis was a nice man, you're awful."
+@The_monster@ says @to_foe@, "Odis was a nice man; you're awful."
 
 @The_monster@ holds @possessive@ sides and says @to_foe@, "You'll eat dirt beneath my feet."
 
