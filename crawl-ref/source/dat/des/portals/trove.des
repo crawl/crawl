@@ -1099,8 +1099,11 @@ ENDMAP
 
 # 16 scrolls and books
 NAME:   trove_books_scrolls
-TAGS:   no_item_gen no_monster_gen allow_dup
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_dj
 ORIENT: encompass
+veto {{ return crawl.game_started()
+          and trove.spell_skills() < trove.weapon_skills()
+          and not crawl.one_chance_in(6) }}
 ITEM:   acquire magical staff / acquire book / acquire:sif_muna book / any book
 SUBST:  d = de
 : trove.good_scroll(_G)
