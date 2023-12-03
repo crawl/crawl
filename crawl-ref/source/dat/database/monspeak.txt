@@ -3285,8 +3285,6 @@ w:50
 
 @The_monster@ says, "Why would you want to visit the Abyss? For a holiday?"
 
-@The_monster@ says, "I never knew blinking was supposed to hurt."
-
 @The_monster@ says, "Nothing ever attacks me when I'm in the Abyss."
 
 @The_monster@ says, "Are you going to banish me, too?"
@@ -3385,8 +3383,6 @@ w:50
 
 @The_monster@ says, "I hate [trees|plants|fungi]."
 
-@The_monster@ says, "You're like a walking fruit salad. I hate that."
-
 @The_monster@ says, "Do you like gardening? I hate gardening."
 
 @The_monster@ says, "So, how do you deal with the weeds?"
@@ -3475,8 +3471,6 @@ w:50
 @The_monster@ makes a face at you and exclaims, "Curses!"
 
 @The_monster@ says, "I got nailed to the sky once. No big deal, really."
-
-@The_monster@ says, "You must love that deathly cold feeling. I hate it."
 
 @The_monster@ says, "I hate voyeurs."
 
