@@ -864,8 +864,7 @@ static void _WOE_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static setup_missile_type _DAMNATION_launch(item_def* /*item*/, bolt* beam,
-                                           string* ammo_name, bool* /*returning*/)
+static void _DAMNATION_launch(bolt* beam)
 {
     ASSERT(beam->item
            && beam->item->base_type == OBJ_MISSILES
@@ -873,7 +872,6 @@ static setup_missile_type _DAMNATION_launch(item_def* /*item*/, bolt* beam,
     beam->item->props[DAMNATION_BOLT_KEY].get_bool() = true;
 
     beam->name    = "damnation bolt";
-    *ammo_name    = "a damnation bolt";
     beam->colour  = LIGHTRED;
     beam->glyph   = DCHAR_FIRED_ZAP;
 
@@ -884,7 +882,6 @@ static setup_missile_type _DAMNATION_launch(item_def* /*item*/, bolt* beam,
     expl->name   = "damnation";
 
     beam->special_explosion = expl;
-    return SM_FINISHED;
 }
 
 ///////////////////////////////////////////////////

@@ -490,19 +490,8 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
     if (entry && entry->launch)
     {
-        setup_missile_type sm =
-            entry->launch(launcher, &beam, &ammo_name,
-                                     &returning);
-
-        switch (sm)
-        {
-        case SM_CONTINUE:
-            break;
-        case SM_FINISHED:
-            return false;
-        case SM_CANCEL:
-            return true;
-        }
+        entry->launch(&beam);
+        return false;
     }
 
     returning = item.base_type == OBJ_MISSILES
@@ -534,10 +523,12 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         beam.special_explosion = expl;
     }
 
-    if (!is_artefact(item))
-        ammo_name = article_a(ammo_name, true);
-    else
+    if (is_unrandom_artefact(item, UNRAND_DAMNATION))
+        ammo_name = "a damnation bolt";
+    else if (is_artefact(item))
         ammo_name = "the " + ammo_name;
+    else
+        ammo_name = article_a(ammo_name, true);
 
     return false;
 }
