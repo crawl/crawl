@@ -2445,11 +2445,12 @@ static void _handle_hp_drain(int exp)
     if (!you.hp_max_adj_temp)
         return;
 
-    int loss = div_rand_round(exp, 4 * calc_skill_cost(you.skill_cost_level));
+    const int mul = you.has_mutation(MUT_PERSISTENT_DRAIN) ? 2 : 1;
+    int loss = div_rand_round(exp, 4 * mul * calc_skill_cost(you.skill_cost_level));
 
     // Make it easier to recover from very heavy levels of draining
     // (they're nasty enough as it is)
-    loss = loss * (1 + (-you.hp_max_adj_temp / 25.0f));
+    loss = loss * (1 + (-you.hp_max_adj_temp / (25.0f * mul)));
 
     dprf("Lost %d of %d draining points", loss, -you.hp_max_adj_temp);
 
