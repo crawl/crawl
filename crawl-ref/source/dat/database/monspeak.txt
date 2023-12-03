@@ -2989,7 +2989,7 @@ w:50
 
 @The_monster@ says, "How do you make a golem out of electricity?"
 
-@The_monster@ says, "What's an "Orb Guardian", anyway?"
+@The_monster@ says, "What's an 'Orb Guardian', anyway?"
 
 @The_monster@ says, "Orbs of fire, orbs of destruction, the Orb of Zot... what's with all the orbs?"
 
