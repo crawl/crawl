@@ -330,6 +330,16 @@ static const mutation_def mut_data[] =
    ""},
 },
 
+{ MUT_PERSISTENT_DRAIN, 5, 1, mutflag::bad, false,
+  "persistent drain",
+
+  {"Your health recovers twice as slowly from being drained.", "", ""},
+
+  {"You begin to recover more slowly from draining effects.", "", ""},
+
+  {"You recover from draining at a normal speed again.", "", ""},
+},
+
 { MUT_STRONG_WILLED, 5, 3, mutflag::good, false,
   "strong-willed",
 
