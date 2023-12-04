@@ -843,26 +843,35 @@ static void _cast_brain_bite(monster &caster, mon_spell_slot slot, bolt&)
 
     if (foe->is_player())
     {
-        drain = min(you.magic_points, you.max_magic_points / 5);
-        if (drain > 0)
+        if (you.magic_points <= you.max_magic_points / 5)
+        {
             dam_multiplier = 2;
-        mprf("Something gnaws on your mind!");
-        xom_is_stimulated(30);
+            mprf("Something gnaws heavily on your mind!");
+            xom_is_stimulated(30);
+        }
+        else
+            mprf("Something gnaws on your mind!");
+
     }
     else
     {
         monster* mon_foe = foe->as_monster();
         if (mon_foe->has_ench(ENCH_ANTIMAGIC))
+        {
             dam_multiplier = 2;
-        simple_monster_message(*foe->as_monster(), "'s mind is gnawed upon.");
+            simple_monster_message(*foe->as_monster(), "'s mind is heavily gnawed upon.");
+        }
+        else
+            simple_monster_message(*foe->as_monster(), "'s mind is gnawed upon.");
     }
 
-    foe->hurt(&caster, 4 + random2avg(5, 2) * dam_multiplier,
+    foe->hurt(&caster, (4 + random2avg(5, 2)) * dam_multiplier,
               BEAM_MISSILE, KILLED_BY_BEAM, "", "by psychic fangs");
     _whack(caster, *foe);
 
     if (foe->is_player())
     {
+        drain = min(you.magic_points, you.max_magic_points / 5);
         if (drain > 0)
         {
             mprf(MSGCH_WARN, "You feel your power leaking away.");

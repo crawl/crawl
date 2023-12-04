@@ -509,6 +509,9 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
     if (spell == SPELL_SMITING)
         return "7-17"; // sigh
 
+    if (spell == SPELL_BRAIN_BITE)
+        return "4-8*"; // >_>
+
     const dice_def dam = _spell_damage(spell, hd);
     if (dam.num == 0 || dam.size == 0)
         return "";
