@@ -1363,6 +1363,13 @@ VISUAL:@The_monster@ waves a bulging coin purse at you.
 
 @The_monster@ says, "I guess you can't buy your way into a good afterlife."
 %%%%
+Hepliaklqana player ghost
+@The_monster@ says @to_foe@, "If I can't kill you now, I'll help my descendant do it later."
+
+@The_monster@ says @to_foe@, "I'll give you a battle you'll never forget!"
+
+@The_monster@ says @to_foe@, "I'm committing your attacks to memory."
+%%%%
 Ignis player ghost
 
 @The_monster@ says, "I burned twice as bright, and look where it got me..."
@@ -1472,6 +1479,16 @@ Trog player ghost
 
 @The_monster@ screams in joy, "As in life, so in death: Kill! Kill!! Kill!!!"
 %%%%
+Uskayaw player ghost
+@The_monster@ says @to_foe@, "It's your last dance!"
+
+@The_monster@ says @to_foe@, "Let me show you true rhythm."
+
+@The_monster@ says, "You either stomp with the beat or get stomped."
+
+# La Vie Dansante, Jimmy Buffett
+@The_monster@ says, "I used to wander and follow the dancing life. Look where it got me."
+%%%%
 Vehumet player ghost
 
 @The_monster@ threatens, "I'm fresh out of hellfire, but you will end anyway."
@@ -1481,6 +1498,14 @@ Vehumet player ghost
 @The_monster@ boasts, "After taking care of you, I will research a spell that consumes the world."
 
 @The_monster@ threatens, "Do not fail me, O fires of Iskenderun!"
+%%%%
+Wu Jian player ghost
+
+@The_monster@ says @to_foe@, "You lack the discipline to defeat me."
+
+@The_monster@ says @to_foe@, "Let's see how well you move."
+
+@The_monster@ says, "I'm much more flexible now that I'm not limited by flesh."
 %%%%
 Xom player ghost
 
