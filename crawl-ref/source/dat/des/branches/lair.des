@@ -2898,57 +2898,61 @@ TAGS:    no_wall_fixup no_monster_gen no_rotate
 PLACE:   Lair:$
 ORIENT:  southeast
 MONS:    torpor snail, tyrant leech, lindwurm, hornet
-MONS:    fire dragon / ice dragon
+MONS:    patrolling fire dragon / patrolling ice dragon
 KMONS:   p = plant
-SHUFFLE: ABC
+ITEM:    serpent talisman / serpent talisman randart w:2
+SHUFFLE: ABC, GU, HhIi5 / JjKk6
 NSUBST:  1 = 1:1 / *:., 4 = 3:4 / *:.
 NSUBST:  A = 3:4 / 1:23 / * = ....4
 NSUBST:  B = 2:2 / 1:1 / * = ....4
-NSUBST:  C = 1:1 / 1:2 / 1:3 / *:.
-SUBST:   0 = 1, P = pp., X = x., z = x'
+NSUBST:  C = 1:1 / 1:2 / 1:3 / *:., $ = 1:$$$$d / *:$
+SUBST:   Hi = -, h6 = $, I = p, JjK = x, k = c
+SUBST:   0 = 1, P = pp-, X = x., z = x'
 CLEAR:   '
-NSUBST:  " = 1:GU / *:.
-KMASK:   $5 = no_trap_gen
+NSUBST:  " = 1:x / *:p
+KMASK:   -$d5 = no_trap_gen
 : lair_small_ending(_G)
 MAP
-            zzzzzxxzzxxzzxxxxzzxxxzzzxxx
- @........@xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
- ..PP.XX..Px..xxxxxxxxxxxxxxxxxXAxxxxxxx
- ..PP.XX..PPxxxxxxxxXXBBXxxxxxA*..xxxxxx
- ...x.....PPP.xxxxxP4B.1BXxxxXAA.%Xxxxxx
- ..XxX..X.....xxxxxXB....Bxxx4AA..xxxxxx
- .Pxxxxx.x...xxxxxxx%...*XxxxxX.p..xxxxx
- xxccccxx..XPPxxxxxPpp.XPxxxxxxxXP.xxxxx
-zxcc$$ccxxXxx..xxxxxXp..xXxxxxXxx.pxxxxx
-zxc$$$$ccxxx...Xxxxxxx...x.xxxx...xxxxxx
-xxc$$$$$cxxx..xxxxxxxXx...xXxx...xxxxxxx
-xxcc$5$$cxx..xxxxxxxxxxx.P..X.0.xXxxxxxx
-xxxcc$$ccxX..XxxxxxxxXx......4xxxxxxxxxx
-xxxxccc=c"..xxxxxxxxXx....P.xXxxCCCxxxxx
-xxxxxxxcp".xxxxxxxxXx....XxxXxx4CCC1xxxx
-xxxxxxx"""xxXxxxXxx.....xxxxxxx*...xxxxx
-xxxxxxxxX.0.xxxxx.....x..xxxxxxxx..xxxxx
-xxxxxxxxxX...xXx....Xxx....pxxxX..%xxxxx
-xxxxxxxxxxx.......Xxxxxx..........xxxxxx
-xxxxxxxxxxXxx.p.xxXxxxxxxxxx....xxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+               zxxzzxxxzzxxxxxzzxx
+             zzxxxxxxxxxxxxxxxxxxxx
+           zzxxxxxxxxxxxxxXAxJJxxxxx
+          zxxxxXXBBXxxxxxA*..xxJxxxxx
+@.......@xxxxxP4B.1BXxxxXAA.%XxxJJJjxx
+..PP.XX.Px..xxXB....Bxxx4AA..xxxxxxKxx
+..PP.XX.PPxxxxx%...*XxxxxX.p..xxxKKxxx
+........PPP.xxPpp.XPxxxxxxxxP.Xckkxxxx
+..XxX.X......xxXp..xXxxxxXx...xc$ccxxx
+Pxxxx.x...x.Xxxxx...x.xxxx...Gcc6$ccxx
+zxxxxx..X..xxxxxXx...xXxx...xxc$$$$cxx
+zxxxxxxxPPxxxxxxxxx.P..X.0.xXxc$$5$cxx
+xxxxxxxX..XxxxxxXx......4xxxxxc$$$$cxx
+xxxxxx...xxxxxxXx....P.xXxxCCUcc$$icxx
+xxxxx...xxxxxxXx....XxxXxxCCC*xc$cixxx
+xxxx...xxXxxxX.....xxxxxxx4C..1cccIxxx
+xxxxxX.0.xxxx....x..xxxxxxxx..xHxxIxxx
+xxxxxxX...xX...Xxx....pxxxX..%xHxxIxxx
+ xxxxxxx.....Xxxxxx..........xxHxHhxxx
+  xxxxxXxx.p.Xxxxxxxxxx....xxXxxHxxxxx
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # Dogs by themselves get repetitive, so do bears. What if we combine them?...
 # Previously "kennels" and "bearwithus", both by due.
 NAME:    hangedman_lair_caniforms_friends
-PLACE:   Lair:$
 TAGS:    no_monster_gen no_rotate patrolling
+PLACE:   Lair:$
 ORIENT:  southwest
 MONS:    wolf, warg, hell hound, raiju
 MONS:    black bear, polar bear
+KMONS:   8 = hell hog
 KMONS:   P = plant
 # The one big reward and the several smaller stacks of items
 # are randomly split between the mostly-dog and mostly-bear sections.
-KITEM:   % = any, any w:1
-KITEM:   *| = gold, gold, gold, any good_item
-NSUBST:  2 = 2:22334 / *:3
+KITEM:   % = any, any
+KITEM:   *| = gold, gold, gold / maw talisman / maw talisman randart w:2, \
+              any good_item
+NSUBST:  2 = 2:22334 / *:3, 8 = 1:8 / *:.
 SHUFFLE: %'*" / %'"|
 SUBST:   X = xx., z = xx`, ' = ., " = x, p = PP.
 SUBST:   H = 3:3 4:1, 0 = 2
@@ -2963,7 +2967,7 @@ xx%'56xxxxXXxxxxxxxxxxxxxxxP..p@
 xx6..56xXx55xPxxxxxxxxxx...xP..
 xxx9..xxx%...xPxx1x.x.x..1..xP.
 xxXx...xxx...Px5x.........0..xp@
-xxxxxx.......Px........x...Xxxx
+xxxxxx8......Px........x...Xxxx
 xxxxXH.xx5...xP5..x2..x.xxxxxxx
 xxxxxx1Hxx.%XXxx..xxxxxxxxxxxxxz
 xxxxx"x06.Hxxxxx..xx1x.xx2xxxxxz
@@ -2976,8 +2980,8 @@ xxxxxPxPxPxxxxxxxxxxxxxxxxxxx.Xx
 xxxxxx6x6xxxxx1'xxxxxx2.x2x...xx
 xxxxx...xxxxxx..xHx1x.........xz
 xx*x1.....'xx1.....x.........xxz
-xxx0.9......x................xxx
-xxH...1.xx....xx.....xx.1.2xxxxx
+xxx0.9......x.......8........xxx
+xxH.%.1.xx....xx.....xx.1.2xxxxx
 xxx2.0'xxxX..xxX2...xHxX1x1xxxxx
 xxx.H.xxxxxx.xxxx'.xxxxxxxxxxxxx
 xxx'.%xxxxxxxxxxxx2xxxxxxxxxxxxx
@@ -2993,7 +2997,7 @@ PLACE:  Lair:$
 ORIENT: southeast
 MONS:   rime drake / swamp drake / acid dragon / steam dragon
 MONS:   basilisk / komodo dragon, iguana
-MONS:   fire dragon, swamp dragon
+MONS:   fire dragon / ice dragon, swamp dragon
 KMONS:  P = plant
 SUBST:  - = wwWW....%Ptt233, W = WWW., ? = 12**
 : lair_small_ending(_G)
@@ -3089,10 +3093,10 @@ SHUFFLE: AB / CD / EF / GH, DFH
 SUBST:   P = P:35 @:25, z = x:49 f:1, BCDEG = x, AH = ., F : xxP
 # A fixed number of chaff scattered throughout each eighth, and an even
 # distribution of the various stronger spawns.
-NSUBST:  1 = 6:1 / 4 = 1. / *:., 0 = 8:1 / 5 = 1. / 2:2 / *:.
+NSUBST:  1 = 6:1 / 4 = 11. / *:., 0 = 8:1 / 6 = 11. / 2:2 / *:.
 NSUBST:  9 = 1:256 / 2:3 / 2:4 / * = 33445
 NSUBST:  8 = 1:7 / 1:6 / 2 = 34 / * = 34 5:15 "
-NSUBST:  % = 10:% / 2 = %" / *:", x = 6:c / * = x
+NSUBST:  % = 10:% / 2 = %" / *:", x = 8:c / * = x
 KMASK:   %*" = no_monster_gen
 : lair_small_ending(_G)
 MAP
@@ -3105,7 +3109,7 @@ P...xx1.0cc""""cc0.1xx...P
 P....xx1.0c8""8c0.1xx....P
 x....1xx1.cc""cc.1xx1....x
 xzx.0.1xx%%c""c%%xx1.0.xzx
-P.xzx0.%BB9c""c9DD%.0xzx.P
+P.xzx0.%BB9cffc9DD%.0xzx.P
  P..xzx%9AAxffxCC9%xzx..P
  P....xxxAA""""CCxxx....P
   ......xc0"ff"0xx......
@@ -3139,6 +3143,16 @@ NAME:    due_jungle_book
 TAGS:    no_pool_fixup no_wall_fixup no_monster_gen
 PLACE:   Lair:$
 ORIENT:  north
+KMONS:   pq = withered plant
+MONS:    elephant skeleton / elephant zombie / spectral elephant w:5 \
+         / elephant simulacrum / spectral cane toad / cane toad simulacrum
+MONS:    elephant, cane toad / death yak
+MONS:    spectral death yak w:20 / death yak simulacrum w:20 \
+         / dire elephant skeleton / dire elephant zombie \
+         / spectral dire elephant w:5 / dire elephant simulacrum w:5
+MONS:    dire elephant, patrolling necromancer, obsidian statue
+# The anaconda's name is Kaa.
+KMONS:   R = spectral anaconda
 # A necromancy-themed loot item behind the obsidian statue.
 ITEM:    rapier ego:pain w:5 / rapier ego:draining w:5 \
          / quickblade ego:pain w:5 / quickblade ego:draining w:5 \
@@ -3154,20 +3168,10 @@ ITEM:    rapier ego:pain w:5 / rapier ego:draining w:5 \
          / book of necromancy / book of death / book of unlife \
          / randbook owner:Kikubaaqudgha disc:necromancy \
          / necronomicon w:1
-KMONS:   pq = withered plant
-MONS:    elephant skeleton / elephant zombie / spectral elephant \
-         / elephant simulacrum / spectral cane toad / cane toad simulacrum
-MONS:    elephant, cane toad / death yak
-MONS:    spectral death yak w:20 / death yak simulacrum w:20 \
-         / dire elephant skeleton / dire elephant zombie \
-         / spectral dire elephant w:5 / dire elephant simulacrum w:5
-MONS:    dire elephant, patrolling necromancer, obsidian statue
-# The anaconda's name is Kaa.
-KMONS:   R = spectral anaconda
 KFEAT:   R = deep_water
 KFEAT:   s = closed_clear_door
 # Thin out elephant/dire elephant bands of central necromancers a bit.
-SUBST:   2 = 22., 5 = 55.
+SUBST:   2 = 222.., 5 = 555..
 # DE/FH/JK will always have a monster set, with one a guaranteed necromancer
 # plus band, next a 50% chance to be a # necromancer band, 50% chance to be
 # derived undead band, last guaranteed derived undead band. Necromancer band is
@@ -3284,7 +3288,7 @@ ITEM:    any good_item
 KFEAT:   123678p = W
 # Previously 11.6 bullfrogs, 16.6 cane toads,
 # and 7.1 vampire mosquitoes on average.
-NSUBST:  XW = 3:1 / 5:2 / 5:3 / 8 = 11WWW / 12 = 22WWW / 8 = 44WWW
+NSUBST:  XW = 3:1 / 5:2 / 5:3 / 7 = 11WWW / 11 = 22WWW / 7 = 44WWW
 NSUBST:  W = 3 = 678 / *:W, 5 = 1:5 / *:4W
 NSUBST:  % = 1:d / 1:* / * = %%*|
 SHUFFLE: AB, CD
@@ -3383,7 +3387,8 @@ MONS:   yak, death yak, manticore
 KMONS:  4C = patrolling catoblepas
 # These are still living plants for all intents and purposes...
 KMONS:  P = plant perm_ench:petrified dbname:petrified_plant \
-            col:lightgrey tile:mons_withered_plant / nothing
+            col:lightgrey tile:mons_withered_plant
+SUBST:  P = P.
 NSUBST: 0 = 3:1 / 1:2 / * = 1112
 NSUBST: 9 = 1:C / 2:2 / 2:3 / * = 11222
 COLOUR: d|*$4c- = lightgrey
@@ -3567,6 +3572,7 @@ MONS:    black mamba, steam dragon
 MONS:    hell hound, molten gargoyle
 MONS:    komodo dragon / wyvern w:7 / basilisk w:7 / hydra w:2
 MONS:    lindwurm / fire crab w:3, fire dragon
+KMONS:   8 = hell hog
 KMONS:   Y = lava snake
 KFEAT:   Y = lava
 # Generate one of two paths leading to central chamber
@@ -3576,10 +3582,11 @@ SUBST:   A = @, BH = x, CI = ., K = ", J = l, L = c
 SHUFFLE: MN / OP
 SUBST:   M = 6, N = ., OP = l
 # Monster and loot placement
-SHUFFLE: ';`
-NSUBST:  ' = 3=3 / 2=3. / 5 / 2=15. / 2. / ., ; = 3=5 / 3=15. / 2. / .
-NSUBST:  ` = 3=5 / 3=15. / 2. / ., - = 7 / ", D = |* / 2=*% / 3=$% / 2=$ / "
-NSUBST:  G = 2=4 / 4. / G, l = 5=Y / l
+SHUFFLE: ';`, -~ / -~ / ~-
+NSUBST:  ' = 3:3 / 2 = 3. / 1:5 / 2 = 15. / 1:2. / *:.
+NSUBST:  ; = 3:5 / 3 = 15. / 1:2. / *:., ` = 3 = 5 / 3 = 15. / 1:2. / .
+NSUBST:  - = 1:7 / *:", ~ = 2:8 / *:", D = 1:|* / 2 = *% / 3 = $% / 2:$ / *:"
+NSUBST:  G = 2:4 / 1:4. / *:G, l = 5:Y / l
 KMASK:   "$%*|7 = no_trap_gen
 MAP
                 xxxxxxx

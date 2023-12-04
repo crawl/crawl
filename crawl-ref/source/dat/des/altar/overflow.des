@@ -352,7 +352,7 @@ NAME:  slow_altar_1
 TAGS:  patrolling no_monster_gen no_item_gen transparent
 TAGS:  uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
 : if you.in_branch("Depths") then
-KMONS: _ = iron golem
+KMONS: _ = iron dragon
 :else
 KMONS: _ = worm / mummy / iron imp
 :end
@@ -377,7 +377,7 @@ NAME:    slow_altar_2
 TAGS:    patrolling no_monster_gen no_item_gen transparent
 TAGS:    uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
 : if you.in_branch("Depths") then
-KMONS: _ = iron golem
+KMONS: _ = iron dragon
 :else
 KMONS: _ = worm / mummy / iron imp
 :end
@@ -403,7 +403,7 @@ TAGS:   temple_overflow_cheibriados transparent no_monster_gen
 TAGS:   transparent
 WEIGHT: 5
 : if you.in_branch("Depths") then
-KMONS: _ = iron golem
+KMONS: _ = iron dragon
 :else
 KMONS: _ = worm / mummy / iron imp
 :end

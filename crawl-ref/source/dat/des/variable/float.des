@@ -3859,10 +3859,10 @@ ORIENT:  float
 # The dances of angels and devils, of blessed birds and antagonist serpents...
 # and perhaps the stinger plunging into the poor toro de lidia?
 MONS:    dancing weapon ; glaive ego:antimagic
-MONS:    cherub, rakshasa, angel / daeva, balrug / blizzard demon
-MONS:    caustic shrike, shadow dragon
+MONS:    cherub, rakshasa, angel / daeva w:15, balrug / blizzard demon
+MONS:    caustic shrike, spectral quicksilver dragon
 KMONS:   8 = tengu reaver
-KMONS:   9 = bone dragon
+KMONS:   9 = shadow dragon
 KMONS:   0 = hornet
 KMONS:   & = minotaur
 KMONS:   ? = spark wasp

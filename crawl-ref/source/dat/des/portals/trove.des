@@ -942,12 +942,12 @@ ENDMAP
 # This can generate weapons that are out of character for Trog, e.g. pain.
 # Just say they were looted from unwilling arena participants.
 NAME:   trove_trog_arena
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 veto {{ return crawl.game_started()
           and (trove.weapon_skills() < trove.spell_skills()
                or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
           and not crawl.one_chance_in(3) }}
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 ITEM:   acquire weapon w:5 / acquire:trog weapon w:5 / \
         any useful weapon good_item / any weapon w:2
 ITEM:   acquire:trog weapon
@@ -1034,11 +1034,11 @@ ENDMAP
 
 # 16 weapons
 NAME:   trove_weapons_four_rooms
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 veto {{ return crawl.game_started()
           and (trove.weapon_skills() < trove.spell_skills()
                or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
           and not crawl.one_chance_in(3) }}
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 ORIENT: encompass
 ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
 NSUBST: " = 16:d / *:.

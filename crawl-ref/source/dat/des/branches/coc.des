@@ -763,7 +763,7 @@ xxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxx
 xxxxwwwwwwww.......wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxx
 xxxxwwwww....wwwww....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww''wwwwwwwwxxxx
 xxxxwww...wwwwwwwwwww....wwwwwwwwwwwwwwwwwwwwwwwwwww'.......wwwwwwxxxx
-xxxxwww.wwww......wwwwww..wwwwwwwwwwwwwwwwwwww'.......ccccc...wwwwxxxx
+xxxxwww.wwWw......wwwwww..wwwwwwwwwwwwwwwwwwww'.......ccccc...wwwwxxxx
 xxxxww..ww....cc......www.3wwwwwwwwwwwww..........ccccccccccc..wwwxxxx
 xxxxw...ww..cccccc.....www.wwwwwwwwww'3..........cc....9.2..cc..wwxxxx
 xxxxw..ww..ccccccc+c....ww.'wwwwwwwwwww''........ccf********cc..wwxxxx
@@ -773,7 +773,7 @@ xxxxw..ww..cc.%%%%.cc..www.'wwwwwwwwwwwwwwwwwwwwwwwww'.cc+cc..I..wxxxx
 xxxxw..www..c+cccccc...ww..wwwwwwwwwwwwwwwwwwwwwwwwwww..........wwxxxx
 xxxxww..ww....ccccH...www.wwwwwwwwwwwwwwwwwwwwwwwwwwwww........wwwxxxx
 xxxxww..www..........www..wwwwwwwwwwwwwwwwwwwwwwwwwwww'..2....w..wxxxx
-xxxxwww..wwww......wwww..wwwwwwwwwwwwwwwwwwwwwwwwwww'............wxxxx
+xxxxwww..wwww......wwWw..wwwwwwwwwwwwwwwwwwwwwwwwwww'............wxxxx
 xxxxwwwW..wwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwww..............wwxxxx
 xxxxwwwWW...'wwwwww....wwwwwwwwwwwwwwwwwwwwwwwwww............'wwwwxxxx
 xxxxwwwWWwww........'wwwwwwwwwwwwwwwwwwwwwwww'3..'ww'....''wwwwwwwxxxx
@@ -1103,12 +1103,13 @@ KMONS:   89 = azure jelly / frost giant w:4
 KMONS:   & = patrolling ice fiend
 : serpent_of_hell_setup(_G)
 KITEM:   d = $ no_pickup
-KFEAT:   d67& = W
-KFEAT:   8 = w
+KFEAT:   68 = w
+KFEAT:   d7& = W
 SHUFFLE: O1AB / eEFG, !?^~
 SUBST:   AE = 2, B = 2333, F = 339, G = 995, !? = &,  ^~ = 6
 SUBST:   e = |, y : yY, y = xxw, Y = xww
 NSUBST:  a = + / c, - = + / c, 6 = 2=6 / 2=677 / 7
+KPROP:   d7& = no_tele_into
 : coc_setup(_G)
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -1117,10 +1118,10 @@ cccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccccccccc
 cccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccccccccc
 cccccccxxwyyyyyyyyywwwwwyyyyyyyyyyyywxxccccccccccccccccccccccccccccccc
 cccccccxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxccccccccccccccccccccccccccccccc
-cccccccxxd8wwwwwwww..w..wwwwwwwwwwwwWxxccccccccccccccccccccccccccccccc
-ccxxxxxxxdwwwwwwww.cc.cc.wwwwwwwwwwwWxxxxxxxxxcccccccccccccccccccccccc
+cccccccxxd8wwwwwwww..w..wwwwwwwwwwwwwxxccccccccccccccccccccccccccccccc
+ccxxxxxxxdwwwwwwww.cc.cc.wwwwwwwwwwwwxxxxxxxxxcccccccccccccccccccccccc
 ccxxxxxxxd!wwwwww.c..c..c.wwwwwwwwwww6xxxxxxxxcccccccccccccccccccccccc
-ccxxwwddddwwwwww.c.......c.wwwwwwwwwwwWWwwwwxxcccccccccccccccccccccccc
+ccxxwwddddwwwwww.c.......c.wwwwwwwwwwwwwwwwwxxcccccccccccccccccccccccc
 ccxxyw8w?wwwwww.c....5....c.wwwwwwwwwwwwwwwyxxcccccccccccccccccccccccc
 ccxxywwwwwwwwww.c...535...c.wwwwwwwwwwwwwwwyxxcccccccccccccccccccccccc
 ccxxywwwwwwwwww.c...x5x...c.wwwwwwwwwwwwwwwyxxcccccccccccccccccccccccc
@@ -1135,22 +1136,22 @@ ccxxww.c...5x...c...1xAx.cc...x4...c.wwwwwwyxxcccccccccccccccccccccccc
 ccxxwww.c.535...-...xxx|$cc...54..c.wwwwwwwyxxcccccccccccccccccccccccc
 ccxxww.c...5x...c..xAxO$|cc...x4...c.wwwwwwwxxcccccccccccccccccccccccc
 ccxxww.c........cc.|x|$B|cc........c.wwwwww^xxcccccccccccccccccccccccc
-ccxxyww.c......cccB..$||cccc......c.wwwwwwwWxxxxxxxxxxxxxxxxxxcccccccc
-ccxxywww.c....c.ccccccccccc.c....c.wwwwwwwwWxxxxxxxxxxxxxxxxxxcccccccc
-ccxxywwww.cccc.w.ccccccccc.w.cccc.8wwwwwwwwWWW^wyyyyyyyyyyywxxcccccccc
+ccxxyww.c......cccB..$||cccc......c.wwwwwwwwxxxxxxxxxxxxxxxxxxcccccccc
+ccxxywww.c....c.ccccccccccc.c....c.wwwwwwwwwxxxxxxxxxxxxxxxxxxcccccccc
+ccxxywwww.cccc.w.ccccccccc.w.cccc.8wwwwwwwwwww^wyyyyyyyyyyywxxcccccccc
 ccxxywwwww....wWw.c.....c.www....wwwwwwwwwwwwwwwwwwwwwwwwwwwxxcccccccc
 ccxxywwwwwwwwwww.c.......c.w.Wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxcccccccc
 ccxxywwwwwwwwww.c.........c.W.Wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxcccccccc
 ccxxywwwwwwwwww.c...x5x...c.wW.Wwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxcccccccc
-ccxxywwwwwwwwww.c...444...c.wwW.WxxwxxwwwwwwwwwwwwwwwwwwwwwWxxcccccccc
-ccxxywwwwwwwwww.c.........c.wwwWx..x.DxwwwwwwwwwwwwwwwwwwwwWxxxxxxxxcc
+ccxxywwwwwwwwww.c...444...c.wwW.Wxxwxxwwwwwwwwwwwwwwwwwwwwwwxxcccccccc
+ccxxywwwwwwwwww.c.........c.wwwWx..x.Dxwwwwwwwwwwwwwwwwwwwwwxxxxxxxxcc
 ccxxywwwwwwwwwww.c.......c.wwwwx......xwwwwwww..w..wwwwwwwww6xxxxxxxcc
-ccxxywwwwwwwwwwww.c..c..c.8wwwwx...W.xwwwwwww.cc.cc.wwwwwwwwwWWwwwxxcc
+ccxxywwwwwwwwwwww.c..c..c.8wwwwx...W.xwwwwwww.cc.cc.wwwwwwwwwwwwwwxxcc
 ccxxywwwwwwwwwwwww.cc.cc.wwwwwwwx.W...xwwww8.c..c..c.wwwwwwwwwwwwyxxcc
-ccxxwwwWWwwwwwwwwww..w..wwwwwwwx......xwwww.c.......c.wwwwwwwwwwwyxxcc
+ccxxwwwwwwwwwwwwwww..w..wwwwwwwx......xwwww.c.......c.wwwwwwwwwwwyxxcc
 ccxxxxxxx6wwwwwwwwwwwwwwwwwwwcwW..x..xWwww.c.........c.wwwwwwwwwwyxxcc
-ccxxxxxxxxWwwwwwwwwwwwwwwwwwccW.WxwxxW.Www.c...444...c.wwwwwwwwwwyxxcc
-cccccccxxxWwwwwwwwwwwwwwwwwccW.WwwwwwwW.Ww.c....x....c.wwwwwwwwwwyxxcc
+ccxxxxxxxxwwwwwwwwwwwwwwwwwwccW.WxwxxW.Www.c...444...c.wwwwwwwwwwyxxcc
+cccccccxxxwwwwwwwwwwwwwwwwwccW.WwwwwwwW.Ww.c....x....c.wwwwwwwwwwyxxcc
 ccccccccxxwwwwwwwwwwwwwwwwccW.WccwwwwwwW.W.c....5x...c.wwwwwwwwwwyxxcc
 ccccccccxxwwwwwwwwwwwwwWWccW.WccwwwwwwwwW.w.c.......c.wwwwwwwwwwwyxxcc
 ccccccccxxwwwwwwwwwwwwWcccW.Wccwwwwww....www.c.....c.wWw....wwwwwyxxcc
@@ -1170,10 +1171,10 @@ ccccccccxxx...wxx..x.xxxccywwwwwwwwwwwwwwww.c.......c.wwwwwwwwwwwyxxcc
 cccccccccxxx.{.wxx....xxccywwwwwwwwwwwwwww.c.........c.wwwwwwwwwwyxxcc
 ccccccccccxxx...wxx.....ccywwwwwwwwwwwwwww.c....5x...c.wwwwwwwwwwyxxcc
 cccccccccccxxx...wxx....ccywwwwwwwwwwwwwww.c...535...c.wwwwwwwwwwyxxcc
-ccccccccccccxxx...wxx...ccwwwwWWwwwwwwwwww.c...x5....c.wwwwwWd!wwyxxcc
-cccccccccccccxxx...wxx..ccxxxxxx6wwwwwwwwww.c.......c.wwwwwWddd8wwxxcc
-ccccccccccccccxxx...wx..ccxxxxxxxWwwwwwwwwww.c..c..c.wwwwwwddxxxxxxxcc
-cccccccccccccccxxx...w..ccccccxxxWwwwwwwwwwww.cc.cc.wwwwwww?dxxxxxxxcc
+ccccccccccccxxx...wxx...ccwwwwwwwwwwwwwwww.c...x5....c.wwwwwwd!wwyxxcc
+cccccccccccccxxx...wxx..ccxxxxxx6wwwwwwwwww.c.......c.wwwwwwddd8wwxxcc
+ccccccccccccccxxx...wx..ccxxxxxxxwwwwwwwwwww.c..c..c.wwwwwwddxxxxxxxcc
+cccccccccccccccxxx...w..ccccccxxxwwwwwwwwwwww.cc.cc.wwwwwww?dxxxxxxxcc
 ccccccccccccccccxxx.....cccccccxxwwwwwwwwwwwww..w..wwwwwwwww8xxccccccc
 cccccccccccccccccxxx.wwwcccccccxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxccccccc
 ccccccccccccccccccxxxw88cccccccxxwyyyyyyyyyyyywwwwwyyyyyyyyywxxccccccc
@@ -1230,38 +1231,38 @@ Xw....wwwwwwwwwwww...ccccc...............ccccc...ccccc..EEEEcc..wwwwwX
 Xw...wwwwwwwwwwww...ccccc.....www....3.....cc..c.cccccccEEEEcc..wwwwwX
 Xww.wwwwwwwwwwww...ccccc...wwwwww...0......c..cc..cccccccEEccc..wwwwwX
 Xww.wwwwwwwwwww...cccccc..wwwwwwww3..3.....c.ccc..cccccccccccc..wwwwwX
-Xww.wwwwwwwwww...cccccc...wwwwwwww.......0...cccc...cFFccccccc..wwwwwX
-XwwWwwwwwwwww....ccccc...wwwww0wwwww...1.....ccccc..FFFFcccccc..wwwwwX
+Xww.wwwwwwwwww...cccccc...wwwwwwwW.......0...cccc...cFFccccccc..wwwwwX
+XwwWwwwwwwwww....ccccc...wwwww0wWwww...1.....ccccc..FFFFcccccc..wwwwwX
 XwwWwwwwwwwww...ccccc....wwww.3.w9ww.0.3...2...cccccFFFFccccc...wwwwwX
 XwwWwwwwwwww...ccccc....wwwww.0.wwwww....D......cccccFFcccc.....wwwwwX
-Xww.wwwwwwww..cccccc...wwwwwwwwwwwwww........0...cccccccccc....wwwwwwX
-Xww.wwwwwww...ccccc...wwwwwwwwwwwwwwwww...31........ccccccc....wwwwwwX
+Xww.wwwwwwww..cccccc...wwwwwWwwwwwwww........0...cccccccccc....wwwwwwX
+Xww.wwwwwww...ccccc...wwwwwWwwwwwwwwwww...31........ccccccc....wwwwwwX
 Xww..wwwwww..ccccc...wwwww..wwwwwwwwwww..0...3.3.....cccccc....wwwwwwX
-Xww..wwwww...cccc...wwwwwww..wwwwwwwwwwww.....0.......cccccc...wwwwwwX
-Xww...wwww...cccc...wwwwwww..wwww...wwwwwww..3..........cccc....wwwwwX
-Xww...wwww...ccc...wwwwwwww...www....wwwwww.............ccccc....wwwwX
+Xww..wwwww...cccc...wwwwwww..wwwwwwwwwwwW.....0.......cccccc...wwwwwwX
+Xww...wwww...cccc...wwwwwww..wwww...wwwWwww..3..........cccc....wwwwwX
+Xww...wwww...ccc...wwwwwwww...www....wWwwww.............ccccc....wwwwX
 Xww.0..ww...cccc...wwwwwwww.0.www.0...wwwwwwww...........cccc....wwwwX
 Xww....ww...cccc..wwwwwwwww...www......wwwwwwwww.........ccccc...wwwwX
-Xww..1.ww..ccccc..wwwwwwwww...www...1..wwwwwww9wwwwwwwww..cccc...wwwwX
-Xww....ww..cccc..wwwwwwwww.1.wwwww......wwwwwwwwwwwwwwww..cccc...wwwwX
-Xww..0.ww..cccc..wwwwwwww...wwwwwww..0..wwwwwwwwwwwwwwww..cccc...wwwwX
+Xww..1.ww..ccccc..wwwwwwwww...www...1..wwwwwww9wwWwwwwww..cccc...wwwwX
+Xww....ww..cccc..wwwwwwwww.1.wwwww......wwwwwwwwWwwwwwww..cccc...wwwwX
+Xww..0.ww..cccc..wwwwwwww...wwwwwww..0..wwwwwwwWwwwwwwww..cccc...wwwwX
 Xwww...ww..cccc..wwwwwww.0.wwwwwwww.....wwwww....wwwwwww..cccc...wwwwX
 Xwww..www..cccc.wwwwwwww..wwwwwwwwww...wwwwww..0..wwwww...cccc...wwwwX
-Xwwww.www..cccc.wwwwwwwwwwwwwwwwwwwwwwwwwwwww..3..wwwww..cccc....wwwwX
+Xwwww.www..cccc.wwwwwwwWwwwwwwwwwwwwwwwwwwwww..3..wwwww..cccc....wwwwX
 XwwwwWwwww.cccc.wwwww..wwwwwwwwwwwwwwwwwwwwwww....wwww...cccc...wwwwwX
 XwwwwWwwww.ccc..wwww.0.wwwwwwwwwwwwwwwwwwwwwww..0.www....cccc...wwwwwX
-XwwwwWwwww.ccc..wwww..wwwwwwwwwwwwww......wwwww..wwww...cccc...WWW.wwX
-Xwwww..www..cc.www..1.wwwwwwwwwwwwww....1..wwwwwwwww....cccc...WW...wX
-Xwww....www.cc.www....wwwwwwwww.0.www.0....wwwwwwwww...ccccc..wwww.WwX
+XwwwwWwwww.ccc..wwww..wwwwwwwwwwwwww......wWWWw..wwww...cccc...WWW.wwX
+Xwwww..www..cc.www..1.wwwwwwwwwwwwwW....1..wwwwwwwww....cccc...WW...wX
+Xwww....www.cc.www....wwwwwwwww.0.Www.0....wwwwwwwww...ccccc..wwww.WwX
 Xww..1..www....www.0..wwwwwww....wwwww.....wwwwwwww....cccc...wwwwWWwX
 Xww....wwwww..wwwww..wwwwwww...1.wwwwww..0.wwwwwww....ccccc..wwwwwWWwX
-Xww....wwwwwwwwwwwwwwww...0......wwwwww....wwwwww....ccccc..wwwwwwWWwX
-Xw..0..wwwwwwwwwwwwwwwwww.......wwwwwwww...wwwww....cccccc..wwwwww..wX
+Xww....wwwwwwwWwwwwwwww...0......wwwwww....wwwwww....ccccc..wwwwwwWWwX
+Xw..0..wwwwwwwWwwwwwwwwww.......wwwwwwww...wwwww....cccccc..wwwwww..wX
 Xw....wwwwwwwww.wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww....cccccc..wwwwww...wX
 Xww..wwwwwwwww.8.wwwwwwwwwwwwwwwwwwwwwwwwwwww.....cccccc...wwwww..0.wX
 Xwww.wwwwwwwwww.wwwwwwwwwwwwwwwwwwwwwwwwwww.....ccccccc...wwwwww....wX
-XwwwWwwww..wwwwwwwwww....wwwwwwwwwwwwww.......cccccccc...wwwwww....wwX
-XwwwWWw..1.0wwwwwww........wwwwwwww..........cccccccc...wwwwwww..0.wwX
+XwwwWwwww..wwwwwWwwww....wwwwwwwwwwwwww.......cccccccc...wwwwww....wwX
+XwwwWWw..1.0wwwwwWw........wwwwwwww..........cccccccc...wwwwwww..0.wwX
 XwwwwW.......wwwww....cc..............ccccccccccccc....wwwwwww.....wwX
 Xwwww....0.1.wwwww..ccccccccc.....ccccccccccccccc.....wwwwwww......wwX
 Xwwww.......wwwwww..cccccccccccccccccccccccccccc.....wwwwwww.......wwX
