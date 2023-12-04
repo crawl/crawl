@@ -724,7 +724,7 @@ void throw_it(quiver::action &a)
         count_action(CACT_THROW, item.sub_type, OBJ_MISSILES);
     }
 
-    _player_shoot(pbolt, thrown, item, ammo_slot);
+    _player_shoot(pbolt, item, launcher, ammo_slot);
 
     // ...any monster nearby can see that something has been thrown, even
     // if it didn't make any noise.
