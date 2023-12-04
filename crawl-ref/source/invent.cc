@@ -891,10 +891,14 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
         if (!inv_class[i])
             continue;
 
-        string subtitle = item_class_name(i);
+        string subtitle = item_class_name(i), select_all;
 
         // Mention the class selection shortcuts.
-        if (is_set(MF_MULTISELECT))
+        if (is_set(MF_SECONDARY_SCROLL))
+            select_all = "go to first";
+        else if (is_set(MF_MULTISELECT))
+            select_all = "select all";
+        if (!select_all.empty())
         {
             vector<char> glyphs;
             get_class_hotkeys(i, glyphs);
@@ -904,7 +908,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                 const string str = "Magical Staves ";
                 subtitle += string(strwidth(str) - strwidth(subtitle),
                                    ' ');
-                subtitle += "(select all with <w>";
+                subtitle += "("+select_all+" with <w>";
                 for (char gly : glyphs)
                     subtitle += gly;
                 subtitle += "</w><blue>)";

@@ -486,6 +486,11 @@ static void _note_tele_cancel(MenuEntry* entry)
 
 void UseItemMenu::populate_menu()
 {
+    const bool use_category_selection = item_type_filter == OSEL_UNIDENT
+                                        || _equip_oper(oper);
+    if (use_category_selection)
+        set_flags(get_flags() | MF_SECONDARY_SCROLL);
+
     if (item_inv.empty())
         is_inventory = false;
     else if (item_floor.empty())
@@ -526,7 +531,7 @@ void UseItemMenu::populate_menu()
                     {
                         // hacky: remove the class hotkey for cases where it
                         // is counterintuitive/useless
-                        if (item_type_filter != OSEL_UNIDENT)
+                        if (!use_category_selection)
                             entry->hotkeys.pop_back();
                         if (item_type_filter == OBJ_SCROLLS)
                             _note_tele_cancel(entry);
