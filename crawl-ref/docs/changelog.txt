@@ -1,12 +1,16 @@
-Stone Soup 0.31-a0 (through 0.31-a0-478-g4fd37da4f0)
+Stone Soup 0.31-a0 (through 0.31-a0-831-g143b1e81fc)
 ----------------------------------------------------
 
 Artefacts
 ---------
+* New unrand: Mule, a +7 flaming hand cannon which sometimes knocks the
+  user backwards when fired.
 * The dreamshard necklace now has Acrobat, but only restores the player to 1 HP
   when they'd otherwise die, rather than healing 50-100% of their max HP.
 * Artefact staves can now enhance other schools of magic, even those which
   don't have corresponding base enhancer staff types.
+* Gyre & Gimble's enchantment is reduced from +12 to +8.
+* Glaive of the Guard no longer gives +5 AC.
 
 Branches, Environment
 ---------------------
@@ -18,6 +22,13 @@ Character
 * New skill: Shapeshifting, used for talismans.
 * New background: Shapeshifter, replacing Transmuter. Shapeshifters enter the
   dungeon with a beast talisman, a potion of lignification, and an animal skin.
+* Reworked Hexslinger, which now starts with new spells Jinxbite, Sigil of
+  Binding, and Dimensional Bullseye, along with Inner Flame and Cause Fear.
+* Felids now get an extra life at XL 1, and don't lose XLs on dying.
+* Tengu now have inherent Acrobat (+15 EV after moving/waiting) at XL 1.
+  They now gain +4 EV at XL7 instead of a 20% EV bonus.
+* Mummies now get their first necromancy enhancer at XL 1, not 3.
+* Vine Stalkers now get regeneration at XL 1, not 4.
 * Djinn now use all magic skills, instead of only Spellcasting. Djinn can
   only choose to train all magic skills or none.
 * Unarmed combat is now more accurate for players.
@@ -28,9 +39,15 @@ Character
 
 Gods
 ----
-* Nemelex's Deal Four ability now costs more piety.
+* Okawaru now gives exactly one weapon gift and one armour gift as a capstone
+  (chosen by the player), rather than giving many random gifts.
+* Ashenzari now gives perfect mapping, but only maps within LOS radius.
 * Trog now disables pain brand instead of becoming angry at it.
+* Nemelex's Deal Four ability now costs more piety.
+* Cheibriados piety gain now only depends on monsters' base speed.
 * The good gods now hate distortion-branded weapons.
+* Gozag no longer detects gold.
+* Kikubaaqudgha's wrath has been overhauled to be much more dangerous.
 
 Interface and Options
 ---------------------
@@ -51,6 +68,8 @@ Items
     Different forms have different min and max Shapeshifting skills.
   - Beast talisman: starting talisman for Shapeshifters. Gives +Slay
     but melds aux armour.
+  - Flux talisman: starting talisman for Shapeshifters. Over multiple hits,
+    contaminates enemies with magical radiation until they explode.
   - Serpent talisman: transforms the player into a constricting anaconda.
   - Maw talisman: melds the body slot, transforming it into a devouring maw.
     Launches auxiliary chomp attacks and heals the player by devouring foes.
@@ -67,10 +86,12 @@ Items
 * Scrolls of magic mapping replaced with revelation, which also give X-ray
   vision and sInv for one turn.
 * New weapon: orcbow, between a shortbow and an arbalest in strength.
+* Hand crosssbows are now hand cannons, alchemically belching smoke and death.
 * Ranged weapons' damage, delay and accuracy have been adjusted.
-* Boomerangs of dispersal have been replaced with darts.
 * Quick blades now hit twice for every swing, with a higher attack delay.
+* Boomerangs of dispersal have been replaced with darts.
 * Condenser vanes are now more effective at low power.
+* Spectral weapons now share 70% of damage taken (from 50%).
 * Reaching weapons will no longer fail to reach over spectral weapons.
 * Troll leather armour now has slightly less base AC.
 * Removed books: Sky, Rime and Transfigurations.
@@ -78,22 +99,45 @@ Items
 
 Monsters
 --------
+* New unique: Jeremiah, a peaceful barachi trapped between sleep and waking.
+  Their dreams leak into reality in a stream of beautiful butterflies.
 * New unique: Norris, a death cultist who surfs into battle with a gang
   of skysharks.
 * New monster: formless jellyfish, which constricts and stings to inflict
   single-turn paralysis.
+* Attacks of opportunity have been reworked.
+  - Monsters now have a chance to attack when moving into melee with a player
+    who just moved away. Previously, this triggered immediately when the
+    player moved away, didn't use any of the monster's time, and couldn't
+    trigger for monsters slower than the player.
+  - Monsters have a slight chance to fall behind or catch up while following
+    the player.
 * Monsters no longer use up charges when zapping wands.
 * Monsters can no longer use scrolls or potions.
+* Some monsters now have special dialogue after killing the player.
 * Deep Elf Elementalists now cast LRD instead of Awaken Earth.
+* Alligators no longer sprint.
 * Allied undead no longer become angry when damaged.
 
 Spells
 ------
-* Iron Shot replaced with Leda's Unmaking, which liquifies slain foes.
+* New spells:
+  - Jinxbite (L2 Hex): deals additional Will-checking damage to foes hit
+    while its duration lasts, but also halves the caster's will.
+  - Sigil of Binding (L3 Hex): creates two magical traps nearby, which
+    temporarily bind hapless victims in place.
+  - Brom's Barrelling Boulder (L4 Earth/Conj): creates a boulder, which crushes
+    and knocks back foes and explodes when hitting walls.
+* Replaced spells:
+  - Dimensional Bullseye (replacing Portal Projectile): targets a foe and
+    teleports all shots fired at other foes to also hit the chosen unfortunate.
+  - Iron Shot replaced with Bombard, which sometimes knocks back the caster.
 * Plasma Beam no longer has limited range, but does 10% less damage.
 * Arcjolt now initially arcs to foes within two tiles of the caster.
+* Swiftness now works in water.
 * Borgnjor's Vile Clutch (and Fastroot) now work on invisible enemies.
 * Borgnjor's Vile Clutch does less damage.
+* Many summons now have a shorter duration.
 * Removed: Beastly Appendage, Spider Form, Ice Form, Blade Hands, Statue
   Form, Dragon Form, Storm Form, Necromutation.
 
