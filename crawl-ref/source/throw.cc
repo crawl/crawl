@@ -611,6 +611,9 @@ static void _throw_noise(actor* act, const item_def &ammo)
     noisy(noise, act->pos(), msg, act->mid);
 }
 
+static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher,
+                          int ammo_slot);
+
 // throw_it - handles player throwing/firing only. Monster throwing is handled
 // in mons_throw().
 // called only from ammo_action::trigger; this could probably be further
@@ -657,9 +660,8 @@ void throw_it(quiver::action &a)
 
     // Figure out if we're thrown or launched.
     const bool is_thrown = is_throwable(&you, thrown);
-    const bool tossing = !launcher && !is_thrown;
 
-    // Making a copy of the item: changed only for venom launchers.
+    // Make a copy of the item.
     item_def item = thrown;
     item.quantity = 1;
     if (ammo_slot != -1)
@@ -671,14 +673,9 @@ void throw_it(quiver::action &a)
         return;
     }
 
-    // Get the ammo/weapon type. Convenience.
-    const object_class_type wepClass = thrown.base_type;
-    const int               wepType  = thrown.sub_type;
-
     // Don't trace at all when confused.
     // Give the player a chance to be warned about helpless targets when using
     // Portaled Projectile, but obviously don't trace a path.
-    bool cancelled = false;
     if (!you.confused())
     {
         // Set values absurdly high to make sure the tracer will
@@ -694,20 +691,18 @@ void throw_it(quiver::action &a)
 
         pbolt.fire();
 
-        cancelled = pbolt.beam_cancelled;
-
         pbolt.hit    = 0;
         pbolt.damage = dice_def();
         if (pbolt.friendly_past_target)
             pbolt.aimed_at_spot = true;
-    }
 
-    // Should only happen if the player answered 'n' to one of those
-    // "Fire through friendly?" prompts.
-    if (cancelled)
-    {
-        you.turn_is_over = false;
-        return;
+        // Should only happen if the player answered 'n' to one of those
+        // "Fire through friendly?" prompts.
+        if (pbolt.beam_cancelled)
+        {
+            you.turn_is_over = false;
+            return;
+        }
     }
 
     pbolt.is_tracer = false;
@@ -718,10 +713,6 @@ void throw_it(quiver::action &a)
     // Even though direction is allowed, we're throwing so we
     // want to use tx, ty to make the missile fly to map edge.
     pbolt.set_target(a.target);
-
-    const int bow_brand = launcher ? get_weapon_brand(*launcher) : SPWPN_NORMAL;
-    const int ammo_brand = get_ammo_brand(item);
-    const bool returning = _returning(item);
 
     if (launcher)
     {
@@ -735,9 +726,36 @@ void throw_it(quiver::action &a)
             count_action(CACT_FIRE, launcher->sub_type);
     } else if (is_thrown)
     {
-        practise_throwing((missile_type)wepType);
-        count_action(CACT_THROW, wepType, OBJ_MISSILES);
+        practise_throwing((missile_type)item.sub_type);
+        count_action(CACT_THROW, item.sub_type, OBJ_MISSILES);
     }
+
+    _player_shoot(pbolt, thrown, launcher, ammo_slot);
+
+    // ...any monster nearby can see that something has been thrown, even
+    // if it didn't make any noise.
+    alert_nearby_monsters();
+
+    you.turn_is_over = true;
+
+    if ((launcher || is_thrown)
+        && will_have_passive(passive_t::shadow_attacks)
+        && item.base_type == OBJ_MISSILES
+        && item.sub_type != MI_DART)
+    {
+        dithmenos_shadow_throw(a.target, item);
+    }
+}
+
+// Once the player has committed to a target, shoot/throw/toss at it.
+static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher,
+                          int ammo_slot)
+{
+    const int bow_brand = launcher ? get_weapon_brand(*launcher) : SPWPN_NORMAL;
+    const int ammo_brand = get_ammo_brand(item);
+    const bool returning = _returning(item);
+    const bool is_thrown = is_throwable(&you, item);
+    const bool tossing = !launcher && !is_thrown;
 
     you.time_taken = you.attack_delay(&item).roll();
 
@@ -756,7 +774,7 @@ void throw_it(quiver::action &a)
 
     // Mark this item as thrown if it's a missile, so that we'll pick it up
     // when we walk over it.
-    if (wepClass == OBJ_MISSILES || wepClass == OBJ_WEAPONS)
+    if (item.base_type == OBJ_MISSILES)
         item.flags |= ISFLAG_THROWN;
     pbolt.item_mulches = !tossing && _thrown_object_destroyed(item);
     pbolt.drop_item = !pbolt.item_mulches && !returning;
@@ -785,33 +803,16 @@ void throw_it(quiver::action &a)
         update_screen();
         pbolt.fire();
     }
-    else
-    {
-        if (ammo_slot != -1)
-            dec_inv_item_quantity(ammo_slot, 1);
-    }
+    else if (ammo_slot != -1)
+        dec_inv_item_quantity(ammo_slot, 1);
 
-    _throw_noise(&you, thrown);
+    _throw_noise(&you, item);
 
     if (launcher)
         _handle_cannon_fx(you, *launcher, target);
 
-    // ...any monster nearby can see that something has been thrown, even
-    // if it didn't make any noise.
-    alert_nearby_monsters();
-
-    you.turn_is_over = true;
-
     if (pbolt.special_explosion != nullptr)
         delete pbolt.special_explosion;
-
-    if (!tossing
-        && will_have_passive(passive_t::shadow_attacks)
-        && thrown.base_type == OBJ_MISSILES
-        && thrown.sub_type != MI_DART)
-    {
-        dithmenos_shadow_throw(a.target, item);
-    }
 }
 
 void setup_monster_throw_beam(monster* mons, bolt &beam)
