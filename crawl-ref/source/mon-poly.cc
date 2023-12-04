@@ -35,6 +35,8 @@
 #include "traps.h"
 #include "xom.h"
 
+#define ORIG_HD_KEY "orig_hd"
+
 bool feature_mimic_at(const coord_def &c)
 {
     return map_masked(c, MMT_MIMIC);
@@ -278,6 +280,8 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
         if (mons->mons_species() == MONS_HYDRA)
             mons->props[OLD_HEADS_KEY].get_int() = mons->num_heads;
     }
+    if (!mons->props.exists(ORIG_HD_KEY))
+        mons->props[ORIG_HD_KEY] = mons->get_experience_level();
 
     mon_enchant abj       = mons->get_ench(ENCH_ABJ);
     mon_enchant fabj      = mons->get_ench(ENCH_FAKE_ABJURATION);
@@ -467,7 +471,9 @@ static void _fill_poly_weights(const monster &mons, poly_power_type ppt,
         return;
     }
 
-    const int orig_hd = mons_power(mons.type);
+    const int orig_hd = mons.props.exists(ORIG_HD_KEY) ?
+                            mons.props[ORIG_HD_KEY].get_int() :
+                            mons.get_experience_level();
     const bool orig_flies = monster_inherently_flies(mons);
     const habitat_type orig_hab
         = mons_habitat_type(mons.type, mons_base_type(mons), false);
