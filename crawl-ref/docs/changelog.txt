@@ -1,4 +1,4 @@
-Stone Soup 0.31-a0 (through 0.31-a0-831-g143b1e81fc)
+Stone Soup 0.31-a0 (through 0.31-a0-1128-gf31bc9b788)
 ----------------------------------------------------
 
 Artefacts
@@ -10,6 +10,8 @@ Artefacts
 * Artefact staves can now enhance other schools of magic, even those which
   don't have corresponding base enhancer staff types.
 * Gyre & Gimble's enchantment is reduced from +12 to +8.
+* The macabre finger necklace is now evil, and the amulet of Vitality
+  no longer is.
 * Glaive of the Guard no longer gives +5 AC.
 
 Branches, Environment
@@ -24,6 +26,7 @@ Character
   dungeon with a beast talisman, a potion of lignification, and an animal skin.
 * Reworked Hexslinger, which now starts with new spells Jinxbite, Sigil of
   Binding, and Dimensional Bullseye, along with Inner Flame and Cause Fear.
+* At XL 7, Armataurs regenerate when rampaging. Their max HP is reduced.
 * Felids now get an extra life at XL 1, and don't lose XLs on dying.
 * Tengu now have inherent Acrobat (+15 EV after moving/waiting) at XL 1.
   They now gain +4 EV at XL7 instead of a 20% EV bonus.
@@ -31,6 +34,10 @@ Character
 * Vine Stalkers now get regeneration at XL 1, not 4.
 * Djinn now use all magic skills, instead of only Spellcasting. Djinn can
   only choose to train all magic skills or none.
+* Ghouls start with an additional +4 Int.
+* Shields no longer degrade in effectiveness with each hit taken per-turn.
+  Instead, they now have a limit on per-turn blocks, based on shield type.
+* New mutation: persistent drain, which makes HP drain take more XP to cure.
 * Unarmed combat is now more accurate for players.
 * Players no longer get an accuracy bonus from being in certain forms.
 * Formicids can no longer be involuntarily shafted.
@@ -53,6 +60,8 @@ Interface and Options
 ---------------------
 * Monsters with unusual items (e.g. distortion) are now highlit in purple
   by default.
+* Monster descriptions have been compacted and made more informative.
+* Monster resists from equipment is now used for display and targeting.
 * For many list options, commas can now be escaped with backslash.
 * Polar Vortex and Noxious Bog damage is now displayed.
 * Meteorans can now choose to be warned before exploring or resting.
@@ -93,6 +102,8 @@ Items
 * Condenser vanes are now more effective at low power.
 * Spectral weapons now share 70% of damage taken (from 50%).
 * Reaching weapons will no longer fail to reach over spectral weapons.
+* Wands of light no longer affect undead, plant and nonliving monsters.
+* Wands of quicksilver can no longer be self-targeted.
 * Troll leather armour now has slightly less base AC.
 * Removed books: Sky, Rime and Transfigurations.
 * Removed: silver boomerangs and xom's chesspieces.
@@ -103,8 +114,15 @@ Monsters
   Their dreams leak into reality in a stream of beautiful butterflies.
 * New unique: Norris, a death cultist who surfs into battle with a gang
   of skysharks.
-* New monster: formless jellyfish, which constricts and stings to inflict
-  single-turn paralysis.
+* Maurice is now a vine stalker, with high regen and antimagic bites.
+* Erica is now an octopode, with constriction and new spells.
+* Other new monsters:
+  - Kobold blastminers, who blast enemies with alchemical cannons and get sent
+    flying backwards by the recoil.
+  - Brain worms, which eat magic and minds alike.
+  - Glass eyes, which vitrify victims to make them fragile as glass.
+  - Formless jellyfish, which constricts and stings for 1-turn paralysis.
+  - Arcanists, a kind of fairly dangerous vitrifying wizard.
 * Attacks of opportunity have been reworked.
   - Monsters now have a chance to attack when moving into melee with a player
     who just moved away. Previously, this triggered immediately when the
@@ -112,10 +130,17 @@ Monsters
     trigger for monsters slower than the player.
   - Monsters have a slight chance to fall behind or catch up while following
     the player.
+* Ufetubi and tengu warriors now slip behind their foe before meleeing.
+* Tengu reavers now have rMsl.
+* 'Wizard' has been renamed to 'occulist' and is now somewhat stronger.
+* Great orb of eyes have a new spell set, and are slightly stronger.
 * Monsters no longer use up charges when zapping wands.
 * Monsters can no longer use scrolls or potions.
+* Giant monsters can now be ensnared by webs and nets.
+* Jellies can no longer be netted or constricted.
 * Some monsters now have special dialogue after killing the player.
 * Deep Elf Elementalists now cast LRD instead of Awaken Earth.
+* Abominations' speed is no longer randomized.
 * Alligators no longer sprint.
 * Allied undead no longer become angry when damaged.
 
@@ -134,6 +159,8 @@ Spells
   - Iron Shot replaced with Bombard, which sometimes knocks back the caster.
 * Plasma Beam no longer has limited range, but does 10% less damage.
 * Arcjolt now initially arcs to foes within two tiles of the caster.
+* Static Discharge now does more damage, but checks half AC instead of none.
+* Hailstorm does more damage at low power and less at high power.
 * Swiftness now works in water.
 * Borgnjor's Vile Clutch (and Fastroot) now work on invisible enemies.
 * Borgnjor's Vile Clutch does less damage.
@@ -149,9 +176,9 @@ Tiles and Other Art
 * New art for Volatile Blastmotes (spell icon and clouds).
 * New art for short sword and eveningstar artefacts.
 * New art for the Orb of Zot.
-* New art for blink frogs, ancient lichen and shrike simulacrae.
+* New art for blink frogs, ancient lichen, rakshashas, and shrike simulacrae.
 * New art for Dithmenos's altar.
-* New Dragon Form art.
+* New Dragon Form and dragon monster art.
 * Icons added for many mutations.
 * New Eustachio splash screen.
 
