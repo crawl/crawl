@@ -1368,8 +1368,6 @@ ruby
 
 jade
 
-ruby
-
 crystal
 
 diamond
