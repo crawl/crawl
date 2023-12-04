@@ -449,8 +449,21 @@ void fire_item_no_quiver(dist *target)
         canned_msg(MSG_OK);
 }
 
-static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
-                                string &ammo_name, bool &returning)
+static string _ammo_name(const item_def &item, item_def const *launcher)
+{
+    if (launcher && is_unrandom_artefact(*launcher, UNRAND_DAMNATION))
+        return "a damnation bolt";
+    if (is_artefact(item))
+        return "the " + item.name(DESC_PLAIN);
+    return article_a(item.name(DESC_PLAIN), true);
+}
+
+static bool _returning(const item_def &item)
+{
+    return item.is_type(OBJ_MISSILES, MI_BOOMERANG);
+}
+
+static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item)
 {
     const auto cglyph = get_item_glyph(item);
     beam.glyph  = cglyph.ch;
@@ -483,7 +496,6 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     beam.aux_source.clear();
 
     beam.name = item.name(DESC_PLAIN, false, false, false);
-    ammo_name = item.name(DESC_PLAIN);
 
     const unrandart_entry* entry = launcher && is_unrandom_artefact(*launcher)
         ? get_unrand_entry(launcher->unrand_idx) : nullptr;
@@ -493,9 +505,6 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         entry->launch(&beam);
         return false;
     }
-
-    returning = item.base_type == OBJ_MISSILES
-                && item.sub_type == MI_BOOMERANG;
 
     if (item.base_type == OBJ_MISSILES
         && get_ammo_brand(item) == SPMSL_EXPLODING)
@@ -522,13 +531,6 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
         beam.special_explosion = expl;
     }
-
-    if (is_unrandom_artefact(item, UNRAND_DAMNATION))
-        ammo_name = "a damnation bolt";
-    else if (is_artefact(item))
-        ammo_name = "the " + ammo_name;
-    else
-        ammo_name = article_a(ammo_name, true);
 
     return false;
 }
@@ -622,9 +624,6 @@ void throw_it(quiver::action &a)
     // completely distinct?
     const int ammo_slot = launcher ? -1 : a.get_item();
 
-    bool returning   = false;    // Item can return to pack.
-    const bool teleport = is_bullseye_active();
-
     if (you.confused())
     {
         a.target.target = you.pos();
@@ -666,9 +665,7 @@ void throw_it(quiver::action &a)
     if (ammo_slot != -1)
         item.slot     = index_to_letter(item.link);
 
-    string ammo_name;
-
-    if (_setup_missile_beam(&you, pbolt, item, ammo_name, returning))
+    if (_setup_missile_beam(&you, pbolt, item))
     {
         you.turn_is_over = false;
         return;
@@ -724,6 +721,7 @@ void throw_it(quiver::action &a)
 
     const int bow_brand = launcher ? get_weapon_brand(*launcher) : SPWPN_NORMAL;
     const int ammo_brand = get_ammo_brand(item);
+    const bool returning = _returning(item);
 
     if (launcher)
     {
@@ -741,17 +739,12 @@ void throw_it(quiver::action &a)
         count_action(CACT_THROW, wepType, OBJ_MISSILES);
     }
 
-    // check for returning ammo
-    // XXX: Is it still necessary not to do this?
-    if (teleport)
-        returning = false;
-
     you.time_taken = you.attack_delay(&item).roll();
 
     // Create message.
     mprf("You %s %s.",
           is_thrown ? "throw" : launcher ? "shoot" : "toss away",
-          ammo_name.c_str());
+          _ammo_name(item, launcher).c_str());
 
     // Ensure we're firing a 'missile'-type beam.
     pbolt.pierce    = false;
@@ -812,8 +805,7 @@ void throw_it(quiver::action &a)
     if (pbolt.special_explosion != nullptr)
         delete pbolt.special_explosion;
 
-    if (!teleport
-        && !tossing
+    if (!tossing
         && will_have_passive(passive_t::shadow_attacks)
         && thrown.base_type == OBJ_MISSILES
         && thrown.sub_type != MI_DART)
@@ -836,9 +828,6 @@ void setup_monster_throw_beam(monster* mons, bolt &beam)
 
 bool mons_throw(monster* mons, bolt &beam, bool teleport)
 {
-    string ammo_name;
-    bool returning = false;
-
     ASSERT(beam.item);
     item_def &missile = *beam.item;
     ASSERT(missile.base_type == OBJ_MISSILES);
@@ -858,10 +847,10 @@ bool mons_throw(monster* mons, bolt &beam, bool teleport)
     item_def item = missile;
     item.quantity = 1;
 
-    if (_setup_missile_beam(mons, beam, item, ammo_name, returning))
+    if (_setup_missile_beam(mons, beam, item))
         return false;
 
-    beam.aimed_at_spot |= returning;
+    beam.aimed_at_spot |= _returning(item);
     // Avoid overshooting and potentially hitting the player.
     // Piercing beams' tracers already account for this.
     beam.aimed_at_spot |= mons->temp_attitude() == ATT_FRIENDLY
