@@ -3658,8 +3658,6 @@ void bolt::affect_player_enchantment(bool resistible)
             break;
         mprf(MSGCH_WARN, "You feel your power leaking away.");
         drain_mp(amount);
-        if (agent() && agent()->type == MONS_GHOST_MOTH)
-            agent()->heal(amount);
         obvious_effect = true;
         break;
     }

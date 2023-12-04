@@ -512,6 +512,12 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
     if (spell == SPELL_BRAIN_BITE)
         return "4-8*"; // >_>
 
+    if (spell == SPELL_DRAINING_GAZE)
+    {
+        const int pow = mons_power_for_hd(SPELL_DRAINING_GAZE, hd);
+        return make_stringf("0-%d MP", pow / 8); // >_> >_>
+    }
+
     const dice_def dam = _spell_damage(spell, hd);
     if (dam.num == 0 || dam.size == 0)
         return "";
