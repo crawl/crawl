@@ -463,7 +463,7 @@ static bool _returning(const item_def &item)
     return item.is_type(OBJ_MISSILES, MI_BOOMERANG);
 }
 
-static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item)
+static void _setup_missile_beam(const actor *agent, bolt &beam, item_def &item)
 {
     const auto cglyph = get_item_glyph(item);
     beam.glyph  = cglyph.ch;
@@ -503,7 +503,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item)
     if (entry && entry->launch)
     {
         entry->launch(&beam);
-        return false;
+        return;
     }
 
     if (item.base_type == OBJ_MISSILES
@@ -531,8 +531,6 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item)
 
         beam.special_explosion = expl;
     }
-
-    return false;
 }
 
 static void _handle_cannon_fx(actor &act, const item_def &weapon, coord_def targ)
@@ -667,11 +665,7 @@ void throw_it(quiver::action &a)
     if (ammo_slot != -1)
         item.slot     = index_to_letter(item.link);
 
-    if (_setup_missile_beam(&you, pbolt, item))
-    {
-        you.turn_is_over = false;
-        return;
-    }
+    _setup_missile_beam(&you, pbolt, item);
 
     // Don't trace at all when confused.
     // Give the player a chance to be warned about helpless targets when using
@@ -848,9 +842,7 @@ bool mons_throw(monster* mons, bolt &beam, bool teleport)
     item_def item = missile;
     item.quantity = 1;
 
-    if (_setup_missile_beam(mons, beam, item))
-        return false;
-
+    _setup_missile_beam(mons, beam, item);
     beam.aimed_at_spot |= _returning(item);
     // Avoid overshooting and potentially hitting the player.
     // Piercing beams' tracers already account for this.
