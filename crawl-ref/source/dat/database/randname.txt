@@ -1209,6 +1209,8 @@ jade
 pearl
 
 tiger eye
+
+ametrine
 %%%%
 ######################################################
 # Jewellery appearance
@@ -1318,6 +1320,8 @@ turquoise
 lapis lazuli
 
 glass
+
+carnelian
 
 w:2
 gossamer
