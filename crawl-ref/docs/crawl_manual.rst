@@ -1168,10 +1168,9 @@ mutations as they gain levels; these are listed in cyan. They are permanent and
 can never be removed. If one of your Demonspawn powers has been augmented by a
 random mutation, it is displayed in a lighter colour.
 
-Many a species starts with some special intrinsic features, like the greater
-speed of Felids or Spriggans, or the claws of Trolls and Ghouls. These are
-often, but not always, like a preset mutation. In case such an innate feature
-gets amplified by an ordinary mutation, it is displayed in a light blue colour.
+Many species have special intrinsic features, like Trolls' claws and Felids' fur.
+These can also be viewed on the 'A' screen. If enhanced by a mutation, they will
+be displayed in light blue. (Mutations cannot remove species intrinsics.)
 Some of these innate features will provide an activated ability, which can be
 used with the 'a' command.
 
