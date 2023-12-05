@@ -1460,15 +1460,12 @@ static spell_type servitor_spells[] =
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_IOOD,
     SPELL_BOMBARD,
-    SPELL_IRON_SHOT,    // left in for frederick
-    SPELL_BOLT_OF_COLD, // left in for frederick (dubious)
     SPELL_PLASMA_BEAM, // maybe should be higher?
     SPELL_FIREBALL,
     SPELL_ARCJOLT,
     SPELL_STONE_ARROW,
     SPELL_LRD,
     SPELL_AIRSTRIKE,
-    SPELL_FORCE_LANCE, // left in for frederick (dubious)
     // less desirable
     SPELL_IRRADIATE,
     SPELL_CONJURE_BALL_LIGHTNING, // but VERY funny
