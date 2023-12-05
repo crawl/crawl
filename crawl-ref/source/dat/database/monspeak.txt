@@ -3105,6 +3105,16 @@ w:50
 @The_monster@ says, "I hate zombies."
 
 @The_monster@ says, "Yuck, you smell of miasma!"
+
+@The_monster@ says, "I hate wretches."
+
+@The_monster@ says, "How deep do you have to dig to get a never-ending supply of wretches?"
+
+@The_monster@ says, "You must really love pain. I hate it."
+
+@The_monster@ says, "Do you just use necromancy for everything, then?"
+
+@The_monster@ says, "Why a 'Demon-God'? Wouldn't a 'Zombie-God' be more appropriate?"
 %%%%
 friendly Yredelemnul Donald
 
