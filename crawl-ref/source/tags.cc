@@ -3423,6 +3423,9 @@ static void _tag_read_you(reader &th)
         _fixup_species_mutations(MUT_UNBREATHING);
     }
 
+    if (you.species == SP_FELID && you.has_innate_mutation(MUT_FAST))
+        _fixup_species_mutations(MUT_FAST);
+
     #undef SP_MUT_FIX
 
     if (th.getMinorVersion() < TAG_MINOR_SPIT_POISON

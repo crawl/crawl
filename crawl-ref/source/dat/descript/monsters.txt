@@ -387,10 +387,10 @@ A demonic skull rolling along the ground.
 %%%%
 Natasha
 
-A magical cat. Once a powerful wizard's familiar, Natasha was abandoned after
-her master was consumed by the very necromantic forces he sought to control.
-Now she patrols the dungeon, taking a bloody vengeance with spell and claw upon
-any adventurer who crosses her path.
+A fast-moving magical cat. Once a powerful wizard's familiar, Natasha was
+abandoned after her master was consumed by the very necromantic forces he sought
+to control. Now she patrols the dungeon, taking a bloody vengeance with spell
+and claw upon any adventurer who crosses her path.
 
 This cat doesn't have nine lives, but just one death isn't going to be enough
 to put her down for good.
