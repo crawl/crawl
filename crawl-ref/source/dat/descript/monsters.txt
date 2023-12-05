@@ -1706,8 +1706,9 @@ for underhanded tactics.
 %%%%
 kobold blastminer
 
-A kobold readied with multiple armaments. It struggles to carry its excavation
-gear, a blastmote-packed cannon that sends it backwards with each shot.
+A kobold, ready with multiple armaments to defends itself from the many
+dangers of the depths. The blastmote-packed cannon on its shoulder bears its
+maker's mark, and is fiercely loyal; it will fire for none other.
 %%%%
 kobold demonologist
 
