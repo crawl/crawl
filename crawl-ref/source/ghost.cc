@@ -543,10 +543,6 @@ static attack_flavour _very_ugly_thing_flavour_upgrade(attack_flavour u_att_flav
 {
     switch (u_att_flav)
     {
-    case AF_FIRE:
-        u_att_flav = AF_STICKY_FLAME;
-        break;
-
     case AF_POISON:
         u_att_flav = AF_POISON_STRONG;
         break;
