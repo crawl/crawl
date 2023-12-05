@@ -2515,11 +2515,6 @@ void bolt::affect_endpoint()
             // beneath them). I think this should work fine?
             drop_object();
         }
-
-        // We pay the per-shot mp cost here, so that it activates only on shots
-        // that fully trigger bullseye
-        pay_mp(1);
-        finalize_mp_cost();
     }
 
     // you like special cases, right?

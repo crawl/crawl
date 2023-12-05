@@ -430,8 +430,6 @@ Dimensional Bullseye spell
 Weaves a link between the caster's weaponry and a chosen target. Whenever the
 caster fires or throws something at a *different* enemy, a matching projectile
 will be teleported at the target. Spellpower increases their accuracy.
-
-Every shot will drain a drop of magic while the link persists.
 %%%%
 Discord spell
 
