@@ -1354,10 +1354,19 @@ static void _summon_dancing_weapon(int power)
 static void _summon_bee(int power)
 {
     const int power_level = _get_power_level(power);
-    const int how_many = 1 + random2((power_level + 1) * 3);
+    const int how_many = 1 + random2(3 + (power_level));
 
     for (int i = 0; i < how_many; ++i)
         _friendly(MONS_KILLER_BEE, 3);
+
+    if (power_level > 0)
+        _friendly(MONS_QUEEN_BEE, 3);
+
+    if (power_level > 1)
+    {
+        for (int i = 0; i < 3; ++i)
+            _friendly(MONS_MELIAI, 3);
+    }
 }
 
 static void _summon_rangers(int power)
