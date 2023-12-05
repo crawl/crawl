@@ -194,6 +194,21 @@ const vector<GameOption*> base_game_options::build_options_list()
     return options; // ignored by subclass...
 }
 
+static map<string, game_type> _game_modes()
+{
+    map<string, game_type> modes = {
+        {"normal", GAME_TYPE_NORMAL},
+        {"seeded", GAME_TYPE_CUSTOM_SEED},
+        {"arena", GAME_TYPE_ARENA},
+        {"sprint", GAME_TYPE_SPRINT},
+        {"tutorial", GAME_TYPE_TUTORIAL},
+        {"hints", GAME_TYPE_HINTS}
+    };
+    if (Version::ReleaseType == VER_ALPHA)
+        modes["descent"] = GAME_TYPE_DESCENT;
+    return modes;
+}
+
 // **Adding new options**
 //
 // The main place to put a new option is in the big vector of GameOption
@@ -738,13 +753,7 @@ const vector<GameOption*> game_options::build_options_list()
 #else
         new MultipleChoiceGameOption<game_type>(NEWGAME_NAME(type),
             GAME_TYPE_NORMAL,
-            {{"normal", GAME_TYPE_NORMAL},
-             {"descent", GAME_TYPE_DESCENT},
-             {"seeded", GAME_TYPE_CUSTOM_SEED},
-             {"arena", GAME_TYPE_ARENA},
-             {"sprint", GAME_TYPE_SPRINT},
-             {"tutorial", GAME_TYPE_TUTORIAL},
-             {"hints", GAME_TYPE_HINTS}}),
+            _game_modes()),
         new BoolGameOption(SIMPLE_NAME(name_bypasses_menu), true),
         new BoolGameOption(SIMPLE_NAME(restart_after_save), true),
         new BoolGameOption(SIMPLE_NAME(newgame_after_quit), false),

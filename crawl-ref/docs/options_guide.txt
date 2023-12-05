@@ -360,7 +360,8 @@ type = normal
         "arena", "sprint", "descent", and "hints". If explicitly set (not just
         left to the default), this sets the default game type at the main menu.
         If the main menu is bypassed (e.g. by setting `name`), this option can
-        be used to determine the game type.
+        be used to determine the game type. "descent" is only valid in alpha
+        (development) builds.
 
 remember_name = true
         Crawl remembers the options (species, background etc.) you used
