@@ -1173,7 +1173,7 @@ static int _player_bonus_regen()
 
     // Rampage healing grants a variable regen boost while active.
     if (you.duration[DUR_RAMPAGE_HEAL])
-        rr += you.props[RAMPAGE_HEAL_KEY].get_int() * REGEN_PIP;
+        rr += you.props[RAMPAGE_HEAL_KEY].get_int() * 65;
 
     return rr;
 }
@@ -4818,7 +4818,7 @@ void dec_frozen_ramparts(int delay)
 
 void reset_rampage_heal_duration()
 {
-    const int heal_dur = random_range(3, 7);
+    const int heal_dur = random_range(3, 6);
     you.set_duration(DUR_RAMPAGE_HEAL, heal_dur);
 }
 

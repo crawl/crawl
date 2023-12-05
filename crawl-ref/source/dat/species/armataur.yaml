@@ -9,7 +9,7 @@ species_flags:
   - SPF_BARDING
 aptitudes:
   xp: -1
-  hp: 1
+  hp: 0
   mp_mod: 0
   mr: 3
   fighting: -1
