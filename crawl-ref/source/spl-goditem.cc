@@ -745,14 +745,10 @@ int detect_creatures(int pow, bool telepathic)
 
 spret cast_tomb(int pow, actor* victim, int source, bool fail)
 {
-    // power guidelines:
-    // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
-    // up to 300 or so with godly assistance or end-level, and 1200
-    // as more or less the theoretical maximum.
     const coord_def& where = victim->pos();
     int number_built = 0;
 
-    // This is so dubious. Also duplicates khufu logic in mon-cast.cc.
+    // This is a very dubious set. Maybe we should just use !(feat_is_solid)?
     static const set<dungeon_feature_type> safe_tiles =
     {
         DNGN_SHALLOW_WATER, DNGN_DEEP_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR,
@@ -897,6 +893,20 @@ spret cast_tomb(int pow, actor* victim, int source, bool fail)
             {
                 temp_change_terrain(*ai, DNGN_ROCK_WALL, INFINITE_DURATION,
                                     TERRAIN_CHANGE_TOMB);
+
+                env.grid_colours(*ai) = RED;
+                tile_env.flv(*ai).feat_idx =
+                        store_tilename_get_index("wall_sandstone");
+                tile_env.flv(*ai).feat = TILE_WALL_SANDSTONE;
+                if (env.map_knowledge(*ai).seen())
+                {
+                    env.map_knowledge(*ai).set_feature(DNGN_ROCK_WALL);
+                    env.map_knowledge(*ai).clear_item();
+#ifdef USE_TILE
+                    tile_env.bk_bg(*ai) = TILE_WALL_SANDSTONE;
+                    tile_env.bk_fg(*ai) = 0;
+#endif
+                }
             }
 
             number_built++;
