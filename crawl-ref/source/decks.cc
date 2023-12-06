@@ -1396,31 +1396,52 @@ static void _cloud_card(int power)
 {
     const int power_level = _get_power_level(power);
     bool something_happened = false;
+    cloud_type cloudy = CLOUD_DEBUGGING;
 
+    switch (power_level)
+    {
+    case 0:
+        cloudy = CLOUD_MEPHITIC;
+        break;
+    case 1:
+        cloudy = CLOUD_MIASMA;
+        break;
+    default:
+        cloudy = CLOUD_PETRIFY;
+    }
+
+    vector<coord_def> cloud_pos;
     for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
     {
         monster *mons = monster_at(*di);
-        cloud_type cloudy;
-        cloudy = CLOUD_BLACK_SMOKE;
 
         if (!mons || mons->wont_attack() || !mons_is_threatening(*mons))
             continue;
 
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
         {
-            if (env.grid(*ai) == DNGN_FLOOR && !cloud_at(*ai))
-            {
-                const int cloud_power = 5 + random2avg(power_level * 6, 2);
-                place_cloud(cloudy, *ai, cloud_power, &you);
+            // don't place clouds directly on the monsters
+            if (monster_at(*ai))
+                continue;
 
-                if (you.see_cell(*ai))
-                    something_happened = true;
+            if (!feat_is_solid(env.grid(*ai)) && !cloud_at(*ai))
+            {
+                cloud_pos.push_back(*ai);
             }
         }
     }
 
+    for (auto pos : cloud_pos)
+    {
+        const int cloud_power = 4 + random2avg(power_level * 2, 2);
+        place_cloud(cloudy, pos, cloud_power, &you);
+
+        if (you.see_cell(pos))
+            something_happened = true;
+    }
+
     if (something_happened)
-        mpr("Clouds appear around you!");
+        mpr("Clouds appear around your foes!");
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 }
