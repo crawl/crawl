@@ -1425,9 +1425,7 @@ static void _cloud_card(int power)
                 continue;
 
             if (!feat_is_solid(env.grid(*ai)) && !cloud_at(*ai))
-            {
                 cloud_pos.push_back(*ai);
-            }
         }
     }
 
