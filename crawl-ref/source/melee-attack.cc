@@ -2714,8 +2714,12 @@ bool melee_attack::mons_attack_effects()
                           && adjacent(attacker->pos(), defender->pos())
                           && !player_stair_delay() // feet otherwise occupied
                           && player_equip_unrand(UNRAND_SLICK_SLIPPERS);
-    if (attacker != defender && (attk_flavour == AF_TRAMPLE || slippery))
+    if (attacker != defender && (attk_flavour == AF_TRAMPLE ||
+                                 slippery && attk_flavour != AF_DRAG))
         do_knockback(slippery);
+
+    if (attacker != defender && attk_flavour == AF_DRAG)
+        do_drag();
 
     special_damage = 0;
     special_damage_message.clear();
@@ -3692,6 +3696,59 @@ bool melee_attack::do_knockback(bool slippery)
         defender->move_to_pos(new_pos);
 
     return true;
+}
+
+bool melee_attack::do_drag()
+{
+{
+    if (defender->is_stationary())
+        return false; // don't even print a message
+
+    if (attacker->cannot_act())
+        return false;
+
+    // Calculate what is 'backwards' from the attacker's perspective, relative
+    // to the defender. (Remember, this can occur on reaching attacks, so
+    // attacker and defender may be non-adjacent!)
+    const coord_def drag_shift = -(defender->pos() - attacker->pos()).sgn();
+    const coord_def new_defender_pos = defender->pos() + drag_shift;
+
+    // Only move the attacker back if the defender was already adjacent and we
+    // want to move them *into* the attacker's space.
+    bool move_attacker = new_defender_pos == attacker->pos();
+    coord_def new_attacker_pos = (move_attacker ? attacker->pos() + drag_shift
+                                                : attacker->pos());
+
+    // Abort if there isn't habitable empty space at the endpoints of both the
+    // attacker and defender's move, or if something else is interfering with it.
+    if (move_attacker && (!attacker->is_habitable(new_attacker_pos)
+                         || actor_at(new_attacker_pos))
+        || !defender->is_habitable(new_defender_pos)
+        || (new_defender_pos != attacker->pos() && actor_at(new_defender_pos))
+        || defender->is_player() && need_expiration_warning(new_defender_pos)
+        || defender->is_constricted()
+        || defender->resists_dislodge(needs_message ? "being dragged" : ""))
+    {
+        return false;
+    }
+
+    // We should be okay to move, then.
+    if (needs_message)
+    {
+        mprf("%s drags %s backwards!",
+             attacker->name(DESC_THE).c_str(),
+             defender_name(true).c_str());
+    }
+
+    // Only move the attacker back if the defender was already adjacent and we
+    // want to move them *into* the attacker's space.
+    if (new_defender_pos == attacker->pos())
+        attacker->move_to_pos(new_attacker_pos);
+
+    defender->move_to_pos(new_defender_pos);
+
+    return true;
+}
 }
 
 /**

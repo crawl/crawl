@@ -1890,6 +1890,7 @@ static const set<attack_flavour> allowed_zombie_af = {
     AF_REACH,
     AF_CRUSH,
     AF_TRAMPLE,
+    AF_DRAG,
 };
 
 static mon_attack_def _downscale_zombie_attack(const monster& mons,

@@ -145,6 +145,7 @@ enum attack_flavour
     AF_SLEEP,
     AF_MINIPARA,
     AF_FLANK,
+    AF_DRAG,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
