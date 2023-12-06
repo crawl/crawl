@@ -475,9 +475,9 @@ You are unstable at a fundamental level. You inflict dangerous levels of
 magical contamination on foes with each touch. Sufficient contamination
 causes a highly localized meltdown, dealing enormous damage.
 
-However, this instability makes you unable to use weapons or shields. You
-also glow, reducing stealth and preventing invisibility, and your melee
-damage is reduced, as your limbs sometimes destabilize mid-swing.
+However, this instability makes you unable to use weapons, shields, or
+body armour. You also glow, reducing stealth and preventing invisibility,
+and you do less damage in melee, as your limbs sometimes destabilize mid-swing.
 %%%%
 Blade status
 

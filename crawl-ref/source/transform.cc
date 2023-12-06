@@ -597,10 +597,16 @@ private:
 public:
     static const FormFlux &instance() { static FormFlux inst; return inst; }
 
-    int contam_dam(bool random = true, bool max = false) const
+    int contam_dam(bool random = true, bool max = false) const override
     {
         return divided_scaling(FormScaling().Base(30).Scaling(20), random, max, 100);
     }
+
+    int ev_bonus(bool /*get_max*/) const override
+    {
+        return 4;
+    }
+
 };
 
 class FormBlade : public Form
