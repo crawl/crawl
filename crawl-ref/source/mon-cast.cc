@@ -3113,9 +3113,6 @@ static bool _place_druids_call_beast(const monster* druid, monster* beast,
             }
         }
 
-        // Assign blame (for statistical purposes, mostly)
-        mons_add_blame(beast, "called by " + druid->name(DESC_A, true));
-
         return true;
     }
 
