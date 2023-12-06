@@ -1210,9 +1210,10 @@ it's quite similar to a halberd.
 serpent talisman
 
 A jade serpent coiled around a nagaraja's name-day egg. Transforms the user
-into a giant, cold-blooded anaconda, ready to wind their coils around foes and
-crush them to death. Shapeshifting skill increases the armour provided by the
-snake's scales. While transformed, any equipped weapons and armour are melded.
+into a giant, cold-blooded, poison-resistant anaconda, ready to wind their
+coils around foes and crush them to death. Shapeshifting skill increases the
+armour provided by the snake's scales. While transformed, any equipped weapons
+and armour are melded.
 %%%%
 shortbow
 

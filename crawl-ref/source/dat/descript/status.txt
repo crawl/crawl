@@ -491,8 +491,8 @@ Any equipped weapons, shields, and gloves are melded.
 %%%%
 Anaconda status
 
-You have been transformed into a giant, cold-blooded anaconda, ready to wind
-your coils around foes and crush them to death.
+You have been transformed into a giant, cold-blooded, poison-resistant anaconda,
+ready to wind your coils around foes and crush them to death.
 
 Any equipped weapons and armour are melded.
 %%%%

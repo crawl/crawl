@@ -119,7 +119,7 @@ static const form_entry formdata[] =
     transformation::anaconda, MONS_ANACONDA, "Anaconda", "snake-form", "snake",
     "an enormous anaconda.",
     10, 19, TALISMAN_SERPENT,
-    EQF_PHYSICAL, MR_NO_FLAGS,
+    EQF_PHYSICAL, MR_RES_POISON,
     DEFAULT_DURATION, 5, 0, SIZE_LARGE, 12,
     FormScaling().Base(9).Scaling(6), true, FormScaling().Base(7),
     SPWPN_NORMAL, LIGHTGREY, "", { "hit", "lash", "body-slam", "crush" },

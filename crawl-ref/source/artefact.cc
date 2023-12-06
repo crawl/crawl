@@ -553,13 +553,13 @@ static bool _talisman_conflicts(int sub_type, artefact_prop_type prop)
     case TALISMAN_STORM:
         return prop == ARTP_POISON || prop == ARTP_ELECTRICITY;
     case TALISMAN_DRAGON:
+    case TALISMAN_SERPENT:
         return prop == ARTP_POISON;
     case TALISMAN_DEATH:
         return prop == ARTP_POISON || prop == ARTP_NEGATIVE_ENERGY;
     case TALISMAN_BEAST:
     case TALISMAN_FLUX:
     case TALISMAN_MAW:
-    case TALISMAN_SERPENT:
     case TALISMAN_BLADE:
     default:
         return false;
