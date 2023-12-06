@@ -486,7 +486,7 @@ void UseItemMenu::populate_menu()
 {
     const bool use_category_selection = item_type_filter == OSEL_UNIDENT
                                         || _equip_oper(oper);
-    if (use_category_selection)
+    if (_equip_oper(oper))
         set_flags(get_flags() | MF_SECONDARY_SCROLL);
 
     if (item_inv.empty())
@@ -527,14 +527,10 @@ void UseItemMenu::populate_menu()
         load_items(item_inv,
                     [&](MenuEntry* entry) -> MenuEntry*
                     {
-                        // hacky: remove the class hotkey for cases where it
-                        // is counterintuitive/useless
-                        if (!use_category_selection)
-                            entry->hotkeys.pop_back();
                         if (item_type_filter == OBJ_SCROLLS)
                             _note_tele_cancel(entry);
                         return entry;
-                    });
+                    }, 'a', true, use_category_selection);
     }
     last_inv_pos = items.size() - 1;
 
@@ -554,12 +550,10 @@ void UseItemMenu::populate_menu()
         load_items(item_floor,
                     [&](MenuEntry* entry) -> MenuEntry*
                     {
-                        // hacky: remove the class hotkey
-                        entry->hotkeys.pop_back();
                         if (item_type_filter == OBJ_SCROLLS)
                             _note_tele_cancel(entry);
                         return entry;
-                    });
+                    }, 'a', true, false);
     }
     update_sections();
 
