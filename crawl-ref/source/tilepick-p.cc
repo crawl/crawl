@@ -507,7 +507,7 @@ tileidx_t tileidx_player()
 #endif
     case transformation::pig:       ch = TILEP_TRAN_PIG;       break;
     // non-animals
-    case transformation::anaconda:  ch = TILEP_TRAN_ANACONDA; break;
+    case transformation::serpent:   ch = TILEP_TRAN_ANACONDA; break;
     case transformation::wisp:      ch = TILEP_MONS_INSUBSTANTIAL_WISP; break;
 #if TAG_MAJOR_VERSION == 34
     case transformation::jelly:     ch = TILEP_MONS_JELLY;     break;

@@ -489,9 +489,9 @@ and reducing the effectiveness of body armour.
 
 Any equipped weapons, shields, and gloves are melded.
 %%%%
-Anaconda status
+Serpent status
 
-You have been transformed into a giant, cold-blooded, poison-resistant anaconda,
+You have been transformed into a giant, cold-blooded, poison-resistant serpent,
 ready to wind your coils around foes and crush them to death.
 
 Any equipped weapons and armour are melded.

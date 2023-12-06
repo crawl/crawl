@@ -116,8 +116,8 @@ static const form_entry formdata[] =
     }
 },
 {
-    transformation::anaconda, MONS_ANACONDA, "Anaconda", "snake-form", "snake",
-    "an enormous anaconda.",
+    transformation::serpent, MONS_ANACONDA, "Serpent", "snake-form", "snake",
+    "an enormous serpent.",
     10, 19, TALISMAN_SERPENT,
     EQF_PHYSICAL, MR_RES_POISON,
     DEFAULT_DURATION, 5, 0, SIZE_LARGE, 12,

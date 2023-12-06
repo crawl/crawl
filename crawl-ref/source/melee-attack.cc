@@ -3777,7 +3777,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
         return you.get_mutation_level(MUT_CONSTRICTING_TAIL) >= 2
                 || you.has_mutation(MUT_TENTACLE_ARMS)
                     && you.has_usable_tentacle()
-                || you.form == transformation::anaconda;
+                || you.form == transformation::serpent;
 
     case UNAT_KICK:
         return you.has_usable_hooves()

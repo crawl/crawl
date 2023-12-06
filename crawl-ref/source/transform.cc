@@ -740,13 +740,13 @@ public:
     }
 };
 
-class FormAnaconda : public Form
+class FormSerpent : public Form
 {
 private:
-    FormAnaconda() : Form(transformation::anaconda) { }
-    DISALLOW_COPY_AND_ASSIGN(FormAnaconda);
+    FormSerpent() : Form(transformation::serpent) { }
+    DISALLOW_COPY_AND_ASSIGN(FormSerpent);
 public:
-    static const FormAnaconda &instance() { static FormAnaconda inst; return inst; }
+    static const FormSerpent &instance() { static FormSerpent inst; return inst; }
 };
 
 class FormDragon : public Form
@@ -1084,7 +1084,7 @@ static const Form* forms[] =
     &FormBlade::instance(),
     &FormStatue::instance(),
 
-    &FormAnaconda::instance(),
+    &FormSerpent::instance(),
     &FormDragon::instance(),
     &FormDeath::instance(),
     &FormBat::instance(),
