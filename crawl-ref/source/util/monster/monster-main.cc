@@ -1152,6 +1152,9 @@ int main(int argc, char* argv[])
                 case AF_FLANK:
                     monsterattacks += "(flank)";
                     break;
+                case AF_DRAG:
+                    monsterattacks += colour(BROWN, "(drag)");
+                    break;
                 case AF_CRUSH:
                 case AF_PLAIN:
                 case AF_REACH:
