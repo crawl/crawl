@@ -20,7 +20,7 @@ SOUND:You hear doubly buggy behaviour!
 %%%%
 __SHOUT
 
-SOUND:You hear the shout of @a_monster_vis@!
+SOUND:You hear a shout!
 %%%%
 __SHOUT seen
 
@@ -28,7 +28,7 @@ SOUND:@The_monster@ shouts!
 %%%%
 __BARK unseen
 
-SOUND:You hear the bark of @a_monster_vis@!
+SOUND:You hear a bark!
 %%%%
 __BARK seen
 
@@ -36,7 +36,7 @@ SOUND:@The_monster@ barks!
 %%%%
 __HOWL unseen
 
-SOUND:You hear the howl of @a_monster_vis@!
+SOUND:You hear a howl!
 %%%%
 __HOWL seen
 
@@ -44,7 +44,7 @@ SOUND:@The_monster@ howls!
 %%%%
 __TWO_SHOUTS unseen
 
-SOUND:You hear two shouts from @a_monster_vis@!
+SOUND:You hear two shouts!
 %%%%
 __TWO_SHOUTS seen
 
@@ -52,7 +52,7 @@ SOUND:@The_monster@ shouts in stereo!
 %%%%
 __ROAR unseen
 
-SOUND:You hear the roar of @a_monster_vis@!
+SOUND:You hear a roar!
 %%%%
 __ROAR seen
 
@@ -60,7 +60,7 @@ SOUND:@The_monster@ roars!
 %%%%
 __SCREAM unseen
 
-SOUND:You hear the hideous shriek of @a_monster_vis@!
+SOUND:You hear a hideous shriek!
 %%%%
 __SCREAM seen
 
@@ -68,7 +68,7 @@ SOUND:@The_monster@ gives a hideous shriek!
 %%%%
 __BELLOW unseen
 
-SOUND:You hear the bellow of @a_monster_vis@!
+SOUND:You hear a bellow!
 %%%%
 __BELLOW seen
 
@@ -76,7 +76,7 @@ SOUND:@The_monster@ bellows!
 %%%%
 __BLEAT unseen
 
-SOUND:You hear the bleat of @a_monster_vis@!
+SOUND:You hear a bleat!
 %%%%
 __BLEAT seen
 
@@ -84,7 +84,7 @@ SOUND:@The_monster@ bleats!
 %%%%
 __TRUMPET unseen
 
-SOUND:You hear the trumpeting of @a_monster_vis@!
+SOUND:You hear a trumpeting!
 %%%%
 __TRUMPET seen
 
@@ -92,7 +92,7 @@ SOUND:@The_monster@ trumpets!
 %%%%
 __SCREECH unseen
 
-SOUND:You hear the screech of @a_monster_vis@!
+SOUND:You hear a screech!
 %%%%
 __SCREECH seen
 
@@ -100,7 +100,7 @@ SOUND:@The_monster@ screeches!
 %%%%
 __BUZZ unseen
 
-SOUND:You hear the angry buzzing of @a_monster_vis@.
+SOUND:You hear an angry buzzing noise.
 %%%%
 __BUZZ seen
 
@@ -108,7 +108,7 @@ SOUND:@The_monster@ buzzes angrily.
 %%%%
 __MOAN unseen
 
-SOUND:You hear the chilling moan of @a_monster_vis@.
+SOUND:You hear a chilling moan.
 %%%%
 __MOAN seen
 
@@ -116,7 +116,7 @@ SOUND:@The_monster@ gives a chilling moan.
 %%%%
 __GURGLE unseen
 
-SOUND:You hear the horrible gurgling of @a_monster_vis@!
+SOUND:You hear a horrible gurgling sound!
 %%%%
 __GURGLE seen
 
@@ -124,7 +124,7 @@ SOUND:@The_monster@ gurgles horribly!
 %%%%
 __CROAK unseen
 
-SOUND:You hear the loud, deep croak of @a_monster_vis@!
+SOUND:You hear a loud, deep croak!
 
 SOUND:You hear a croak.
 %%%%
@@ -136,7 +136,7 @@ SOUND:@The_monster@ croaks.
 %%%%
 __GROWL unseen
 
-SOUND:You hear the angry growl of @a_monster_vis@.
+SOUND:You hear an angry growl.
 %%%%
 __GROWL seen
 
@@ -144,7 +144,7 @@ SOUND:@The_monster@ growls angrily.
 %%%%
 __HISS unseen
 
-SOUND:You hear the angry hiss of @a_monster_vis@.
+SOUND:You hear an angry hiss.
 %%%%
 __HISS seen
 
@@ -152,7 +152,7 @@ SOUND:@The_monster@ hisses angrily.
 %%%%
 __SKITTER unseen
 
-SOUND:You hear the skittering sound of @a_monster_vis@.
+SOUND:You hear a skittering sound.
 %%%%
 __SKITTER seen
 
@@ -160,7 +160,7 @@ SOUND:@The_monster@'s many legs skitter.
 %%%%
 __FAINT_SKITTER unseen
 
-SOUND:You hear a faint skittering sound of @a_monster_vis@.
+SOUND:You hear a faint skittering sound.
 %%%%
 __FAINT_SKITTER seen
 
@@ -168,7 +168,7 @@ SOUND:@The_monster@'s many legs skitter faintly.
 %%%%
 __SQUEAL unseen
 
-SOUND:You hear the angry squeal of @a_monster_vis@.
+SOUND:You hear an angry squeal.
 %%%%
 __SQUEAL seen
 
@@ -190,17 +190,17 @@ SOUND:@The_monster@'s human head shouts!
 %%%%
 __CHERUB unseen
 
-SOUND:You hear the shout of @a_monster_vis@.
+SOUND:You hear a shout.
 
-SOUND:You hear the screech of @a_monster_vis@.
+SOUND:You hear a screech.
 
-SOUND:You hear the roar of @a_monster_vis@.
+SOUND:You hear a roar.
 
-SOUND:You hear the low of @a_monster_vis@.
+SOUND:You hear a low.
 %%%%
 __LOUD_ROAR unseen
 
-SOUND:You hear the deafening roar of @a_monster_vis@!
+SOUND:You hear a deafening roar!
 %%%%
 __LOUD_ROAR seen
 
@@ -208,7 +208,7 @@ SOUND:@The_monster@ roars deafeningly!
 %%%%
 __RUSTLE unseen
 
-SOUND:You hear the loud rustle of @a_monster_vis@'s pages.
+SOUND:You hear a loud rustle.
 %%%%
 __RUSTLE seen
 
