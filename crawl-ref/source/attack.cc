@@ -754,9 +754,9 @@ struct chaos_attack_type
 // instead of a normal attack brand when selected.
 static const vector<chaos_attack_type> chaos_types = {
     { AF_FIRE,      SPWPN_FLAMING,       10,
-      [](const actor &d) { return !d.is_fiery(); } },
+      [](const actor &d) { return d.is_player() || d.res_fire() < 3; } },
     { AF_COLD,      SPWPN_FREEZING,      10,
-      [](const actor &d) { return !d.is_icy(); } },
+      [](const actor &d) { return d.is_player() || d.res_cold() < 3; } },
     { AF_ELEC,      SPWPN_ELECTROCUTION, 10,
       [](const actor &d) { return d.res_elec() <= 0; } },
     { AF_POISON,    SPWPN_VENOM,         10,
