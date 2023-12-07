@@ -4387,6 +4387,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     msg = replace_all(msg, "@monster@",     plain);
     msg = replace_all(msg, "@a_monster@",   mons.name(DESC_A));
     msg = replace_all(msg, "@the_monster@", mons.name(nocap));
+    msg = replace_all(msg, "@a_monster_vis@",   mons.name(DESC_A, true));
 
     plain[0] = toupper_safe(plain[0]);
     msg = replace_all(msg, "@Monster@",     plain);
