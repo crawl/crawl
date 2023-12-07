@@ -4543,6 +4543,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         "squeals",
         "roars",
         "rustles",      // dubious
+        "squeaks",
         "buggily says", // NUM_SHOUTS
         "breathes",     // S_VERY_SOFT
         "whispers",     // S_SOFT

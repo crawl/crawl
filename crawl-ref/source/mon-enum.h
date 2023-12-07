@@ -283,6 +283,7 @@ enum shout_type
     S_SQUEAL,               // pigs
     S_LOUD_ROAR,            // dragons, &c. loud!
     S_RUSTLE,               // books
+    S_SQUEAK,               // rats and similar
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt
