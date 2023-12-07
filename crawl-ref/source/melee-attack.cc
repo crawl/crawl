@@ -2716,7 +2716,9 @@ bool melee_attack::mons_attack_effects()
                           && player_equip_unrand(UNRAND_SLICK_SLIPPERS);
     if (attacker != defender && (attk_flavour == AF_TRAMPLE ||
                                  slippery && attk_flavour != AF_DRAG))
+    {
         do_knockback(slippery);
+    }
 
     if (attacker != defender && attk_flavour == AF_DRAG)
         do_drag();
