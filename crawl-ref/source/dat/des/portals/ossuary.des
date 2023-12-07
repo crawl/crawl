@@ -982,7 +982,7 @@ KMONS:  P = spectral adder / spectral jackal / \
 KMONS:  6 = spectral bullfrog / spectral scorpion
 ITEM:   any potion / any scroll / nothing w:1
 KFEAT:  IP`" = floor
-KFEAT:  ^ = alarm trap 
+KFEAT:  ^ = alarm trap
 NSUBST: I = 1:5i / 8:I / 5 = I` / *:`, P = 1:6p / 8:P / 5 = P" / *:"
 COLOUR: I` = cyan
 COLOUR: P" = green
