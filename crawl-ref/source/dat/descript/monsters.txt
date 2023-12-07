@@ -900,6 +900,10 @@ crimson imp
 A small, ugly minor demon. Its fanged maw seems locked in a permanent malign
 grin, and its horns protrude obscenely from its scaly pate.
 %%%%
+crocodile
+
+A crocodilian with powerful jaws.
+%%%%
 crystal echidna
 
 A spiny, long snouted rodent grown out of pure living crystal. It is

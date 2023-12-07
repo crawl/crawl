@@ -271,7 +271,6 @@ static monsterentry mondata[] =
     AXED_MON(MONS_MONSTROUS_FEATURE_MIMIC, "monstrous feature mimic")
     AXED_MON(MONS_SLAVE, "slave")
     AXED_MON(MONS_HUNGRY_GHOST, "hungry ghost")
-    AXED_MON(MONS_CROCODILE, "crocodile")
     AXED_MON(MONS_HIPPOGRIFF, "hippogriff")
     AXED_MON(MONS_PORCUPINE, "porcupine")
     AXED_MON(MONS_CRAWLING_CORPSE, "crawling corpse")
@@ -2260,6 +2259,19 @@ DUMMY(MONS_SPIDER, 's', CYAN, "spider", TILEP_MONS_REDBACK)
 },
 
 // alligators, testudines, and crabs ('t')
+{
+    MONS_CROCODILE, 't', BROWN, "crocodile",
+    M_COLD_BLOOD,
+    MR_NO_FLAGS,
+    11, MONS_CROCODILE, MONS_CROCODILE, MH_NATURAL, 20,
+    { {AT_BITE, AF_DRAG, 18}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    5, 245,
+    4, 10, MST_NO_SPELLS, true, S_SILENT,
+    I_ANIMAL, HT_AMPHIBIOUS, 10, SWIM_ENERGY(6),
+    MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED,
+    {TILEP_MONS_CROCODILE}, TILE_CORPSE_CROCODILE
+},
+
 {
     MONS_ALLIGATOR, 't', LIGHTBLUE, "alligator",
     M_COLD_BLOOD,

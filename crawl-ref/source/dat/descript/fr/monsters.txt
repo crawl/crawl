@@ -571,6 +571,11 @@ Un petit démon mineur. Sa mâchoire dentée semble être bloquée en un rictus
 permanent, et ses cornes saillissent de façon obscène de ses plaques
 écailleuses.
 %%%%
+crocodile
+
+Un crocodile agressif avec une grande mâchoire fracassante et pleine de dents
+pointues.
+%%%%
 curse skull
 
 Un crâne carbonisé flottant dans les airs et se tournant lentement. Des

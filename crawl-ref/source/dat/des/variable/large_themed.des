@@ -2661,7 +2661,8 @@ KMONS:   F = fungus
        " / kobold brigand w:" .. e / 2 .. " / shadow w:" .. f ..
        " / hornet w:" .. f)
   mons("water moccasin w:" .. d .. " / sleepcap w:" .. d ..
-       " / ugly thing w:" .. e .. " / gnoll bouda band w:" .. e / 3 ..
+       " / crocodile w:" .. d .. " / ugly thing w:" .. e ..
+       " / gnoll bouda band w:" .. e / 3 ..
        " / large slime creature w:" .. f ..
        " / glowing orange brain w:" .. f / 2)
   mons("two-headed ogre w:" .. d .. " / steam dragon w:".. d ..

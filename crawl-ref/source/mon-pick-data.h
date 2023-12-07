@@ -1050,6 +1050,8 @@ POP_DEPTHS,
   {  1,  1,  515, FLAT, MONS_WORM },
   {  1,  1,  515, FLAT, MONS_ENDOPLASM },
   {  1,  1,  515, FLAT, MONS_GIANT_COCKROACH },
+  {  1,  1,   55, FLAT, MONS_BRAIN_WORM },
+  {  1,  1,   55, FLAT, MONS_CROCODILE },
 },
 
 { // Ossuary

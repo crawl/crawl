@@ -28,7 +28,7 @@ ORIENT: encompass
 SHUFFLE: 12
 SUBST:  ' = '..........
 KFEAT:  ' = net trap
-MONS:   Menkaure, water moccasin, kraken, flying skull
+MONS:   Menkaure, crocodile, kraken, flying skull
 MARKER: a = lua:fog_machine { \
              pow_min = 1, pow_max = 2, delay = 3, \
              size = 2, walk_dist = 8, spread_rate= -1, \
@@ -39,7 +39,7 @@ MARKER: d = lua:fog_machine { \
              size = 2, walk_dist = 16, spread_rate= -1, \
              cloud_type= "grey smoke" }
 KFEAT:  dV = shallow_water
-KMONS:  V = water moccasin
+KMONS:  V = crocodile
 KMONS:  b = hell rat / scorpion / vampire mosquito / blink frog
 KITEM:  b = star_item
 SUBVAULT: A : sprint2_stairs_cluster
@@ -543,7 +543,7 @@ ENDMAP
 
 NAME:   sprint2_smallroom_1
 TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-MONS:   water moccasin
+MONS:   crocodile
 KITEM:  $ = gold q:81
 MAP
 11

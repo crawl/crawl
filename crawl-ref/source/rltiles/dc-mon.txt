@@ -193,6 +193,7 @@ pharaoh_ant  MONS_PHARAOH_ANT
 ## Turtles and crabs ('t')
 %sdir mon/animals
 %rim 1
+crocodile MONS_CROCODILE
 alligator MONS_ALLIGATOR
 snapping_turtle MONS_SNAPPING_TURTLE
 alligator_snapping_turtle MONS_ALLIGATOR_SNAPPING_TURTLE

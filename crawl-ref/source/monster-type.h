@@ -80,9 +80,7 @@ enum monster_type                      // env.mons[].type
     MONS_BABY_ALLIGATOR,
 #endif
     MONS_ALLIGATOR,
-#if TAG_MAJOR_VERSION == 34
     MONS_CROCODILE,
-#endif
     MONS_HYDRA,
 #if TAG_MAJOR_VERSION == 34
     MONS_SHEEP,

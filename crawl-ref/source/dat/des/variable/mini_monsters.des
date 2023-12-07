@@ -5408,7 +5408,8 @@ ENDMAP
 
 NAME:    minmay_lizard_king
 DEPTH:   D:1-13
-MONS:    frilled lizard, iguana, komodo dragon, basilisk, plant
+MONS:    frilled lizard, iguana w:20 / crocodile w:1
+MONS:    komodo dragon, basilisk, plant
 SUBST:   5 = 51, 1 = 1.
 : if you.absdepth() > 9 then
 SUBST:   1 = 32211

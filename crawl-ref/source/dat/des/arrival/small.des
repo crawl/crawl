@@ -2347,7 +2347,7 @@ MONS:    komodo dragon / iguana / basilisk
 MONS:    ettin / frost giant / stone giant / fire giant
 : else
 SHUFFLE: 1234567
-MONS:    frilled lizard / iguana / snapping turtle / komodo dragon
+MONS:    iguana / crocodile / snapping turtle / komodo dragon
 MONS:    hog / jackal / wolf / hound
 MONS:    scorpion / butterfly / killer bee / boulder beetle / redback
 MONS:    swamp worm / lindwurm / brain worm
