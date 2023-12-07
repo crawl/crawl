@@ -1243,7 +1243,7 @@ bat_form TRAN_BAT
 beast_form TRAN_BEAST
 spider_form TRAN_SPIDER
 pig_form TRAN_PIG
-anaconda_form TRAN_ANACONDA
+serpent_form TRAN_SERPENT
 statue_form_humanoid TRAN_STATUE_HUMANOID
 %syn TRAN_STATUE_EQUIP_FIRST
 statue_form_palentonga TRAN_STATUE_ARMATAUR
