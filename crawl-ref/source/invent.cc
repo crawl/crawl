@@ -570,7 +570,7 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
     vector<const item_def *> tobeshown;
     _get_inv_items_to_show(tobeshown, item_selector, excluded_slot);
 
-    load_items(tobeshown, procfn);
+    load_items(tobeshown, procfn, 'a', true, true);
 
     if (!item_count())
         set_title(no_selectables_message(item_selector));
