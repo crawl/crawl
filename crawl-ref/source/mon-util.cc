@@ -2280,6 +2280,10 @@ int flavour_damage(attack_flavour flavour, int HD, bool random)
             if (random)
                 return HD * 3 / 4 + random2(HD * 3 / 4);
             return HD * 3 / 2;
+        case AF_ACID:
+            if (random)
+                return roll_dice(3, 4);
+            return 12;
         default:
             return 0;
     }
