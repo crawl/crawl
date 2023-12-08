@@ -174,9 +174,10 @@ vgate_broken_down_crypt DNGN_VGATE_BROKEN_DOWN_CRYPT
 ## Alternate doors for vaults, etc. Should be in the order listed above for
 ## doors which also provide gateways; otherwise detected, closed, open, broken,
 ## or closed, open, broken.
-fleshy_orifice_closed DNGN_FLESHY_ORIFICE
-fleshy_orifice_open
-fleshy_orifice_ruined
+%sdir dngn/vaults
+cigotuvi_door_closed DNGN_FLESHY_ORIFICE
+cigotuvi_door_open
+cigotuvi_door_ruined
 
 # Place new door tiles before this point, otherwise they can't be used as
 # door overrides.
