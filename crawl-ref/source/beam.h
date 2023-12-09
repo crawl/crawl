@@ -105,6 +105,8 @@ struct bolt
     bool   effect_known = true;   // did we _know_ this would happen?
     bool   effect_wanton = false; // could we have guessed it would happen?
 
+    bool   no_saving_throw = false;   // whether to ignore any saving throw
+                                      // this beam might otherwise have
     int    draw_delay = 15;       // delay used when drawing beam.
     int    explode_delay = 50;    // delay when drawing explosions.
     bool   redraw_per_cell = true; // whether to force a redraw after every cell

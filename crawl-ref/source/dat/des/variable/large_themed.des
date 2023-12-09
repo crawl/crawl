@@ -2298,7 +2298,7 @@ MONS:   small abomination, demonic crawler, ugly thing, chaos spawn, neqoxec
 MONS:   large abomination / very ugly thing
 KMONS:  _ = tentacled monstrosity
 KITEM:  _ = |
-NSUBST: - = _ / 2=%%* / 3=234 / 2=234... / 5. / 2=6 / 6. / 1
+NSUBST: - = _ / 2 = %%* / 3 = 2334 / 2 = 2334.... / 1:5. / 2:6 / 1:6. / *:1
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxx-xxxxxxxxxxxxxxx

@@ -581,6 +581,8 @@ struct chaos_effect
     function<bool(attack &attack)> misc_effect;
 };
 
+// TODO: Unite this with _chaos_beam_flavour in beam.cc.
+// For now, update that when you update this.
 static const vector<chaos_effect> chaos_effects = {
     {
         "clone", 1, [](const actor &d) {
@@ -610,57 +612,68 @@ static const vector<chaos_effect> chaos_effects = {
         },
     },
     {
-        "polymorph", 2, _is_chaos_polyable, BEAM_POLYMORPH,
-    },
-    {
-        "shifter", 1, [](const actor &defender)
-        {
-            const monster *mon = defender.as_monster();
-            return _is_chaos_polyable(defender)
-                   && mon && !mon->is_shapeshifter()
-                   && defender.holiness() & MH_NATURAL;
-        },
-        BEAM_NONE, [](attack &attack) {
-            monster* mon = attack.defender->as_monster();
-            ASSERT(_is_chaos_polyable(*attack.defender));
-            ASSERT(mon);
-            ASSERT(!mon->is_shapeshifter());
-
-            const bool obvious_effect = you.can_see(*attack.defender);
-            mon->add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
-                                           : ENCH_SHAPESHIFTER);
-            // Immediately polymorph monster, just to make the effect obvious.
-            mon->polymorph();
-
-            // Xom loves it if this happens!
-            const int friend_factor = mon->friendly() ? 1 : 2;
-            const int glow_factor   = mon->has_ench(ENCH_SHAPESHIFTER) ? 1 : 2;
-            xom_is_stimulated(64 * friend_factor * glow_factor);
-
-            return obvious_effect;
-        },
+        "polymorph", 3, _is_chaos_polyable, BEAM_POLYMORPH,
     },
     {
         "rage", 5, [](const actor &defender) {
             return defender.can_go_berserk();
         }, BEAM_NONE, [](attack &attack) {
-            attack.defender->go_berserk(false);
+            if (attack.defender->is_monster())
+            {
+                monster* mon = attack.defender->as_monster();
+                ASSERT(mon);
+                if (mon->can_go_frenzy()) {
+                    mon->add_ench(ENCH_FRENZIED);
+                }
+            }
+            else
+                attack.defender->go_berserk(false);
+
             return you.can_see(*attack.defender);
         },
     },
-    { "hasting", 10, _is_chaos_slowable, BEAM_HASTE },
-    { "mighting", 10, nullptr, BEAM_MIGHT },
-    { "agilitying", 10, nullptr, BEAM_AGILITY },
+    { "hasting", 12, _is_chaos_slowable, BEAM_HASTE },
+    { "mighting", 12, nullptr, BEAM_MIGHT },
     { "resistance", 10, nullptr, BEAM_RESISTANCE, },
     { "slowing", 10, _is_chaos_slowable, BEAM_SLOW },
+    { "confusing", 12, [](const actor &defender) {
+        return !(defender.clarity()); }, BEAM_CONFUSION },
+    { "weakening", 10, nullptr,
+       BEAM_NONE, [](attack &attack) {
+           attack.defender->weaken(attack.attacker, attack.attk_damage);
+           return you.can_see(*attack.defender);
+       }, },
+    { "will-halving", 10, [](const actor &defender) {
+       return !defender.is_monster()
+              || mons_invuln_will(*(defender.as_monster()));
+    }, BEAM_VULNERABILITY, },
+    { "blinking", 3, nullptr, BEAM_BLINK },
+    { "corroding", 5, [](const actor &defender) {
+        return defender.res_acid() < 3; },
+        BEAM_NONE, [](attack &attack) {
+           attack.defender->corrode_equipment();
+           return you.can_see(*attack.defender);
+       },
+    },
+    { "vitrifying", 5, nullptr, BEAM_VITRIFY, },
+    // Making a web even if it's web-immune is cute, so.
+    { "ensnaring", 3, nullptr, BEAM_ENSNARE, },
     {
-        "paralysis", 5, [](const actor &defender) {
+        "minipara", 3, [](const actor &defender) {
             return !defender.is_monster()
                     || !mons_is_firewood(*defender.as_monster());
-        }, BEAM_PARALYSIS,
+        }, BEAM_NONE, [](attack &attack) {
+            attack.defender->paralyse(attack.attacker, 1);
+            return you.can_see(*attack.defender);
+        },
     },
     {
-        "petrify", 5, [](const actor &defender) {
+        "sleep", 3, [](const actor &defender) {
+            return defender.can_sleep();
+        }, BEAM_SLEEP,
+    },
+    {
+        "petrify", 3, [](const actor &defender) {
             return _is_chaos_slowable(defender) && !defender.res_petrify();
         }, BEAM_PETRIFY,
     },
@@ -686,6 +699,8 @@ void attack::chaos_affects_defender()
 
     bolt beam;
     beam.flavour = effect.flavour;
+    beam.no_saving_throw = true;
+
     if (beam.flavour != BEAM_NONE)
     {
         if (defender->is_player() && have_passive(passive_t::no_haste)
@@ -758,15 +773,14 @@ static const vector<chaos_attack_type> chaos_types = {
     { AF_COLD,      SPWPN_FREEZING,      10,
       [](const actor &d) { return d.is_player() || d.res_cold() < 3; } },
     { AF_ELEC,      SPWPN_ELECTROCUTION, 10,
-      [](const actor &d) { return d.res_elec() <= 0; } },
+      [](const actor &d) { return d.is_player() || d.res_elec() <= 0; } },
     { AF_POISON,    SPWPN_VENOM,         10,
       [](const actor &d) {
           return !(d.holiness() & (MH_UNDEAD | MH_NONLIVING)); } },
-    { AF_CHAOTIC,   SPWPN_CHAOS,         10,
+    { AF_CHAOTIC,   SPWPN_CHAOS,         13,
       nullptr },
-    { AF_DRAIN,  SPWPN_DRAINING,      5,
-      [](const actor &d) {
-          return bool(d.holiness() & (MH_NATURAL | MH_PLANT)); } },
+    { AF_DRAIN,  SPWPN_DRAINING,         5,
+      [](const actor &d) { return d.res_negative_energy() < 3; } },
     { AF_VAMPIRIC,  SPWPN_VAMPIRISM,     5,
       [](const actor &d) {
           return !d.is_summoned()
@@ -775,10 +789,6 @@ static const vector<chaos_attack_type> chaos_types = {
       [](const actor &d) { return d.holy_wrath_susceptible(); } },
     { AF_ANTIMAGIC, SPWPN_ANTIMAGIC,     5,
       [](const actor &d) { return d.antimagic_susceptible(); } },
-    { AF_CONFUSE,   SPWPN_CONFUSE,       2,
-      [](const actor &d) { return !d.clarity(); } },
-    { AF_DISTORT,   SPWPN_DISTORTION,    2,
-      nullptr },
 };
 
 brand_type attack::random_chaos_brand()

@@ -624,43 +624,34 @@ static beam_type _chaos_beam_flavour(bolt* beam)
     flavour = random_choose_weighted(
          // SPWPN_CHAOS randomizes to brands analogous to these beam effects
          // with similar weights.
-         70, BEAM_FIRE,
-         70, BEAM_COLD,
-         70, BEAM_ELECTRICITY,
-         70, BEAM_POISON,
+         80, BEAM_FIRE,
+         80, BEAM_COLD,
+         80, BEAM_ELECTRICITY,
+         80, BEAM_POISON,
          // Combined weight from drain + vamp.
-         70, BEAM_NEG,
-         35, BEAM_HOLY,
-         14, BEAM_CONFUSION,
-         // We don't have a distortion beam, so choose from the three effects
-         // we can use, based on the lower weight distortion has.
-          5, BEAM_BANISH,
-          5, BEAM_BLINK,
-          5, BEAM_TELEPORT,
+         80, BEAM_NEG,
+         40, BEAM_HOLY,
+         40, BEAM_DRAIN_MAGIC,
          // From here are beam effects analogous to effects that happen when
          // SPWPN_CHAOS chooses itself again as the ego (roughly 1/7 chance).
          // Weights similar to those from chaos_effects in attack.cc
-         10, BEAM_SLOW,
-         10, BEAM_HASTE,
-         10, BEAM_AGILITY,
-          5, BEAM_PARALYSIS,
-          5, BEAM_PETRIFY,
           5, BEAM_BERSERK,
-         // Combined weight for poly, clone, and "shapeshifter" effects.
-          5, BEAM_POLYMORPH,
-         // Seen through miscast effects.
-          5, BEAM_ACID,
-          5, BEAM_LIGHT,
-          5, BEAM_DAMNATION,
-          5, BEAM_STICKY_FLAME,
-          5, BEAM_MINDBURST,
-         // These are not actually used by SPWPN_CHAOS, but are here to augment
-         // the list of effects, since not every SPWN_CHAOS effect has an
-         // analogous BEAM_ type.
-          4, BEAM_MIGHT,
-          4, BEAM_HEALING,
-          4, BEAM_RESISTANCE,
-          4, BEAM_ENSNARE);
+         12, BEAM_HASTE,
+         12, BEAM_MIGHT,
+         10, BEAM_RESISTANCE,
+         10, BEAM_SLOW,
+         12, BEAM_CONFUSION,
+         10, BEAM_WEAKNESS,
+         10, BEAM_VULNERABILITY,
+         10, BEAM_ACID,
+          5, BEAM_VITRIFY,
+          5, BEAM_ENSNARE,
+          3, BEAM_BLINK,
+          3, BEAM_PARALYSIS,
+          3, BEAM_PETRIFY,
+          3, BEAM_SLEEP,
+         // Combined weight for poly and clone effects.
+          4, BEAM_POLYMORPH);
 
     return flavour;
 }
@@ -3426,6 +3417,11 @@ void bolt::affect_player_enchantment(bool resistible)
         obvious_effect = true;
         break;
 
+    case BEAM_WEAKNESS:
+        you.weaken(agent(), 8 + random2(4));
+        obvious_effect = true;
+        break;
+
     case BEAM_TELEPORT:
         you_teleport();
 
@@ -5175,7 +5171,7 @@ bool bolt::self_targeted() const
 
 bool bolt::has_saving_throw() const
 {
-    if (self_targeted())
+    if (self_targeted() || no_saving_throw)
         return false;
 
     switch (flavour)
@@ -5613,6 +5609,16 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             && mon->add_ench(ENCH_MIGHT))
         {
             if (simple_monster_message(*mon, " seems to grow stronger."))
+                obvious_effect = true;
+        }
+        return MON_AFFECTED;
+
+    case BEAM_WEAKNESS:
+        if (!mon->has_ench(ENCH_WEAK)
+            && mons_has_attacks(*mon)
+            && mon->add_ench(ENCH_WEAK))
+        {
+            if (simple_monster_message(*mon, " looks weaker."))
                 obvious_effect = true;
         }
         return MON_AFFECTED;
@@ -6807,7 +6813,8 @@ static string _beam_type_name(beam_type type)
     case BEAM_NECROTISE:             return "necrotise";
     case BEAM_ROOTS:                 return "roots";
     case BEAM_VITRIFY:               return "vitrification";
-    case BEAM_VITRIFYING_GAZE:  return "vitrification";
+    case BEAM_VITRIFYING_GAZE:       return "vitrification";
+    case BEAM_WEAKNESS:              return "weakness";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }
