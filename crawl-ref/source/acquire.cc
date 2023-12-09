@@ -1213,8 +1213,9 @@ int acquirement_create_item(object_class_type class_wanted,
 {
     ASSERT(class_wanted != OBJ_RANDOM);
 
-    // Trog/Xom gifts are generally lower quality than scroll acquirement or Oka gifts.
-    const int item_level = ((agent == GOD_TROG || agent == GOD_XOM) ? ISPEC_GIFT : ISPEC_GOOD_ITEM);
+    // Trog/Xom gifts are generally lower quality than scroll acquirement or
+    // Oka gifts. We also use lower quality for missile gifts.
+    const int item_level = ((agent == GOD_TROG || agent == GOD_XOM || class_wanted == OBJ_MISSILES) ? ISPEC_GIFT : ISPEC_GOOD_ITEM);
     int thing_created = NON_ITEM;
     int quant = 1;
 #define MAX_ACQ_TRIES 40
