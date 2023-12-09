@@ -5614,13 +5614,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_WEAKNESS:
-        if (!mon->has_ench(ENCH_WEAK)
-            && mons_has_attacks(*mon)
-            && mon->add_ench(ENCH_WEAK))
-        {
-            if (simple_monster_message(*mon, " looks weaker."))
-                obvious_effect = true;
-        }
+        mon->weaken(agent(), 8 + random2(4));
         return MON_AFFECTED;
 
     case BEAM_BERSERK:

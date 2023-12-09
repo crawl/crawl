@@ -2256,6 +2256,7 @@ int mon_enchant::calc_duration(const monster* mons,
         break;
     case ENCH_HASTE:
     case ENCH_MIGHT:
+    case ENCH_WEAK:
     case ENCH_INVIS:
     case ENCH_AGILE:
     case ENCH_BLACK_MARK:

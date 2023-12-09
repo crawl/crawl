@@ -569,6 +569,7 @@ static bool _is_chaos_slowable(const actor &defender)
     if (!mon)
         return true;
 
+    // What, no hasting oklobs? Boo.
     return !mons_is_firewood(*mon) && !mon->is_stationary();
 }
 
@@ -634,15 +635,14 @@ static const vector<chaos_effect> chaos_effects = {
     },
     { "hasting", 12, _is_chaos_slowable, BEAM_HASTE },
     { "mighting", 12, nullptr, BEAM_MIGHT },
-    { "resistance", 10, nullptr, BEAM_RESISTANCE, },
+    { "resistance", 10, [](const actor &defender) {
+        return defender.res_fire() < 3 && defender.res_cold() < 3 &&
+               defender.res_elec() < 3 && defender.res_poison() < 3 &&
+               defender.res_acid() < 3; }, BEAM_RESISTANCE, },
     { "slowing", 10, _is_chaos_slowable, BEAM_SLOW },
     { "confusing", 12, [](const actor &defender) {
         return !(defender.clarity()); }, BEAM_CONFUSION },
-    { "weakening", 10, nullptr,
-       BEAM_NONE, [](attack &attack) {
-           attack.defender->weaken(attack.attacker, attack.attk_damage);
-           return you.can_see(*attack.defender);
-       }, },
+    { "weakening", 10, nullptr, BEAM_WEAKNESS, },
     { "will-halving", 10, [](const actor &defender) {
        return !defender.is_monster()
               || mons_invuln_will(*(defender.as_monster()));
@@ -656,7 +656,7 @@ static const vector<chaos_effect> chaos_effects = {
        },
     },
     { "vitrifying", 5, nullptr, BEAM_VITRIFY, },
-    // Making a web even if it's web-immune is cute, so.
+    // Making a web even if the target is web-immune is cute, so.
     { "ensnaring", 3, nullptr, BEAM_ENSNARE, },
     {
         "minipara", 3, [](const actor &defender) {
