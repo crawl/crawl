@@ -29,7 +29,7 @@ mayhem passive
 %%%%
 repel missiles passive
 
-你驱逐了飞弹，提升了躲开它们的机率。
+你驱逐了飞弹，提升了躲开它们的几率。
 %%%%
 reflection passive
 
@@ -57,7 +57,7 @@ rampage passive
 %%%%
 roll passive
 
-<rampage passive>
+<roll mutation>
 %%%%
 faith passive
 
