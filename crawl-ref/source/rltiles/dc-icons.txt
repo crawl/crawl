@@ -81,6 +81,7 @@ glow_heavy GLOW_HEAVY
 pain_bond PAIN_BOND
 paralysed PARALYSED
 bullseye BULLSEYE
+vitrified VITRIFIED
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR
