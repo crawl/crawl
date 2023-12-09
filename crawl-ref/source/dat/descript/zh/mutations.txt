@@ -333,7 +333,7 @@ teleportitis mutation
 %%%%
 deformed body mutation
 
-你的身体被一种非人的方式塑造，这在一定程度上削弱了护甲提供的防护。
+你的身体被一种非人的方式塑造，这在一定程度上削弱了铠甲提供的防护。
 这对护甲附魔提供的防护没有影响，也不会影响训练的护甲技能的防御效果。
 %%%%
 screaming mutation
@@ -355,6 +355,10 @@ no potion heal mutation
 
 你的系统会抗拒饮用的灵丹妙药，削弱了各种治疗药水的效果。
 这个变异达到第二级，会完全阻断药水的疗效。（哥萨戈神的援助不受影响。）
+%%%%
+persistent drain mutation
+
+你衰竭后，恢复正常所用的时间是原先的两倍。（所需的总经验值增加了一倍。）
 %%%%
 # ------ 魔人变异 -----
 demonic guardian mutation
@@ -692,16 +696,12 @@ devour on kill mutation
 %%%%
 roll mutation
 
-当你移向敌人时会本能地翻滚，会冲到前面一个额外的空格。
+当你移向敌人时会本能地翻滚，会向前再冲出一格。
+这个变异达到第二级，生命值的恢复速度会提升。
 %%%%
 long tongue mutation
 
 你的舌头出奇地长。你会舔干药水瓶，使它们对你的影响加倍。
-%%%%
-awkward tongue mutation
-
-你的舌头很软，读魔法卷轴上的神秘音节时会有麻烦。
-因此，阅读卷轴的时间是原先的一半。
 %%%%
 # ------ 入要求的舍弃 ------
 inability to drink after injury mutation
