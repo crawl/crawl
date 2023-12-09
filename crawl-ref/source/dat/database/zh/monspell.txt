@@ -556,6 +556,12 @@ VISUAL:@The_monster@恳切地举起手臂。
 ########################################################################
 # 个别怪物
 ########################################################################
+brain worm cast
+
+@The_monster@鼓鼓的脑袋在悸动。
+
+@The_monster@悸动的脑袋在搏动。
+%%%%
 glowing orange brain cast
 
 @The_monster@悸动着。
@@ -816,6 +822,10 @@ crystal echidna cast targeted
 culicivora cast targeted
 
 @The_monster@发出的窸窣声音@at@ @target@。
+%%%%
+kobold blastminer cast targeted
+
+@The_monster@用火铳释出的爆炸@at@ @target@。
 %%%%
 ########################################################################
 # 怪物的种族和属的消息
