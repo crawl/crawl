@@ -1117,6 +1117,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.INJURY_BOND:
                 case icons.GLOW_LIGHT:
                 case icons.GLOW_HEAVY:
+                case icons.BULLSEYE:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 10;
                 case icons.CONSTRICTED:
