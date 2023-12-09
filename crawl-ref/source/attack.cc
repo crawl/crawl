@@ -623,7 +623,7 @@ static const vector<chaos_effect> chaos_effects = {
                 monster* mon = attack.defender->as_monster();
                 ASSERT(mon);
                 if (mon->can_go_frenzy()) {
-                    mon->add_ench(ENCH_FRENZIED);
+                    mon->go_frenzy(attack.attacker);
                 }
             }
             else
