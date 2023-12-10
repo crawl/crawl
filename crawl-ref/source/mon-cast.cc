@@ -871,7 +871,7 @@ static void _cast_brain_bite(monster &caster, mon_spell_slot slot, bolt&)
 
     if (foe->is_player())
     {
-        drain = min(you.magic_points, you.max_magic_points / 5);
+        drain = min(you.magic_points, max(1, you.max_magic_points / 5));
         if (drain > 0)
         {
             mprf(MSGCH_WARN, "You feel your power leaking away.");
