@@ -1524,35 +1524,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    // ('8') Animate / statues.
-    {  MST_USHABTI,
-      {
-       { SPELL_DEATH_RATTLE, 36, MON_SPELL_MAGICAL },
-       { SPELL_WARNING_CRY, 56, MON_SPELL_VOCAL | MON_SPELL_BREATH },
-       { SPELL_DISPEL_UNDEAD_RANGE, 44, MON_SPELL_MAGICAL },
-      }
-    },
-
-    {  MST_PEACEKEEPER,
-      {
-       { SPELL_THROW_BARBS, 33, MON_SPELL_NATURAL },
-       { SPELL_BATTLECRY, 25, MON_SPELL_VOCAL },
-      }
-    },
-
-    {  MST_CRYSTAL_GUARDIAN,
-      {
-       { SPELL_CRYSTAL_BOLT, 66, MON_SPELL_MAGICAL },
-      }
-    },
-
-    {  MST_ELECTRIC_GOLEM,
-      {
-       { SPELL_LIGHTNING_BOLT, 44, MON_SPELL_MAGICAL },
-       { SPELL_BLINK, 22, MON_SPELL_MAGICAL },
-      }
-    },
-
+    // ('8') Statues.
     {  MST_ICE_STATUE,
       {
        { SPELL_BOLT_OF_COLD, 20, MON_SPELL_MAGICAL },
@@ -1585,7 +1557,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    // ('9') Gargoyles.
+    // ('9') Animate statuary, golems, gargoyles.
     {  MST_GARGOYLE,
       {
        { SPELL_STONE_ARROW, 56, MON_SPELL_NATURAL },
@@ -1595,6 +1567,34 @@ static const mon_spellbook mspell_list[] =
     {  MST_MOLTEN_GARGOYLE,
       {
        { SPELL_BOLT_OF_MAGMA, 57, MON_SPELL_NATURAL },
+      }
+    },
+
+    {  MST_USHABTI,
+      {
+       { SPELL_DEATH_RATTLE, 36, MON_SPELL_MAGICAL },
+       { SPELL_WARNING_CRY, 56, MON_SPELL_VOCAL | MON_SPELL_BREATH },
+       { SPELL_DISPEL_UNDEAD_RANGE, 44, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_PEACEKEEPER,
+      {
+       { SPELL_THROW_BARBS, 33, MON_SPELL_NATURAL },
+       { SPELL_BATTLECRY, 25, MON_SPELL_VOCAL },
+      }
+    },
+
+    {  MST_CRYSTAL_GUARDIAN,
+      {
+       { SPELL_CRYSTAL_BOLT, 66, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_ELECTRIC_GOLEM,
+      {
+       { SPELL_LIGHTNING_BOLT, 44, MON_SPELL_MAGICAL },
+       { SPELL_BLINK, 22, MON_SPELL_MAGICAL },
       }
     },
 

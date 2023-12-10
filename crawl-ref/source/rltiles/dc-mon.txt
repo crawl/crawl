@@ -111,7 +111,7 @@ gigabat MONS_GIGABAT
 phase_bat MONS_PHASE_BAT
 %sdir mon/animals
 
-## Hounds and hogs ('h')
+## Hounds, hogs, and other four-legged carnivores ('h')
 %rim 0
 jackal MONS_JACKAL
 %rim 1
@@ -142,14 +142,15 @@ queen_bee MONS_QUEEN_BEE
 meliai MONS_MELIAI
 %sdir mon/animals
 
-## Lizards ('l')
+## Reptiles and lizards ('l')
 frilled_lizard MONS_FRILLED_LIZARD
 iguana MONS_IGUANA
+crocodile MONS_CROCODILE
 %rim 0
 basilisk MONS_BASILISK
-skyshark MONS_SKYSHARK
 %rim 1
 komodo_dragon MONS_KOMODO_DRAGON
+alligator MONS_ALLIGATOR
 
 ## Slugs ('w')
 %sdir mon/unique
@@ -193,14 +194,11 @@ pharaoh_ant  MONS_PHARAOH_ANT
 ## Turtles and crabs ('t')
 %sdir mon/animals
 %rim 1
-crocodile MONS_CROCODILE
-alligator MONS_ALLIGATOR
 snapping_turtle MONS_SNAPPING_TURTLE
 alligator_snapping_turtle MONS_ALLIGATOR_SNAPPING_TURTLE
 %rim 0
 fire_crab MONS_FIRE_CRAB
 ghost_crab MONS_GHOST_CRAB
-%rim 1
 
 ## Worms ('w')
 %sdir mon/aquatic
@@ -243,7 +241,7 @@ boulder_beetle_rolling0 MONS_BOULDER_BEETLE_ROLLING
 boulder_beetle_rolling1
 boulder_beetle_rolling2
 
-## Frogs ('F')
+## Frogs and flying fish ('F')
 %sdir mon/unique
 prince_ribbit MONS_PRINCE_RIBBIT
 jeremiah MONS_JEREMIAH
@@ -253,8 +251,9 @@ bullfrog MONS_BULLFROG
 %rim 0
 blink_frog MONS_BLINK_FROG
 blinking_frog MONS_BLINK_FROG_BLINKING
-goliath_frog MONS_GOLIATH_FROG
 cane_toad MONS_CANE_TOAD
+goliath_frog MONS_GOLIATH_FROG
+skyshark MONS_SKYSHARK
 
 ## Snakes ('S')
 ball_python MONS_BALL_PYTHON
@@ -332,8 +331,6 @@ living_spell MONS_LIVING_SPELL
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 creeping_inferno MONS_CREEPING_INFERNO
-%sdir mon/undead
-death_cob MONS_DEATH_COB /*'%'*/
 
 ### Abyssal horrors ('*')
 %sdir mon/abyss
@@ -861,7 +858,6 @@ kobold_blastminer MONS_KOBOLD_BLASTMINER
 %sdir mon/unique
 boris MONS_BORIS
 %sdir mon/undead
-revenant MONS_REVENANT
 stoker MONS_STOKER
 %rim 1
 lich MONS_LICH
@@ -1178,7 +1174,7 @@ deep_dwarf MONS_DEEP_DWARF
 %sdir mon/unique
 jorgrun MONS_JORGRUN
 
-## Small zombified monsters ('z')
+## Non-derived undead ('z')
 %sdir mon/undead
 %rim 0
 wight MONS_WIGHT
@@ -1188,6 +1184,8 @@ ancient_champion MONS_ANCIENT_CHAMPION
 mon/vault/antique_champion MONS_ANTIQUE_CHAMPION
 %rim 1
 %sdir mon/undead
+death_cob MONS_DEATH_COB /* rip % */
+revenant MONS_REVENANT
 curse_skull MONS_CURSE_SKULL
 %rim 0
 curse_toe MONS_CURSE_TOE
