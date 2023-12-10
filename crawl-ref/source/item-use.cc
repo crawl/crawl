@@ -422,9 +422,8 @@ bool UseItemMenu::populate_list(bool check_only)
     for (const auto *it : floor)
     {
         // ...only stuff that can go into your inventory though
-        if (!it->defined() || item_is_stationary(*it) || item_is_orb(*it)
-            || item_is_spellbook(*it) || it->base_type == OBJ_GOLD
-            || it->base_type == OBJ_RUNES)
+        if (!it->defined() || item_is_stationary(*it) || item_is_spellbook(*it)
+            || item_is_collectible(*it) || it->base_type == OBJ_GOLD)
         {
             continue;
         }

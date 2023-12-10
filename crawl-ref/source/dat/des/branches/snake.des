@@ -2107,7 +2107,7 @@ NAME:    snake_hunt
 TAGS:    no_rotate
 PLACE:   Snake:$
 ORIENT:  northwest
-KITEM:   O = serpentine rune of Zot
+KITEM:   O = serpentine rune of Zot, jade gem
 MONS:    naga w:30 / salamander
 MONS:    nagaraja w:20 / salamander tyrant
 MONS:    guardian serpent
@@ -2173,7 +2173,7 @@ NAME:   snake_pit
 TAGS:   no_rotate
 PLACE:  Snake:$
 ORIENT: southwest
-KITEM:  O = serpentine rune of Zot
+KITEM:  O = serpentine rune of Zot, jade gem
 MONS:   nagaraja / salamander tyrant w:5, naga w:15 / salamander w:5
 MONS:   naga mage w:30 / naga ritualist / salamander mystic / naga sharpshooter
 MONS:   naga warrior / naga sharpshooter w:5
@@ -2223,7 +2223,7 @@ NAME:    minmay_snake_end_coiled
 TAGS:    no_rotate
 PLACE:   Snake:$
 ORIENT:  southwest
-KITEM:   O = serpentine rune of Zot
+KITEM:   O = serpentine rune of Zot, jade gem
 MONS:    naga, naga warrior / naga sharpshooter w:5
 MONS:    naga mage w:30 / naga ritualist / naga sharpshooter \
          / salamander mystic
@@ -2285,7 +2285,7 @@ NAME:   snake_pit_salamanders_mu
 TAGS:   no_monster_gen no_rotate
 PLACE:  Snake:$
 ORIENT: north
-KITEM:  O = serpentine rune of Zot
+KITEM:  O = serpentine rune of Zot, jade gem
 MONS:   naga / salamander w:15
 MONS:   naga mage / naga ritualist / naga sharpshooter \
         / salamander mystic w:30
@@ -2343,7 +2343,7 @@ ENDMAP
 NAME:   grunt_snake_rune_spirals
 PLACE:  Snake:$
 ORIENT: centre
-KITEM:  D = serpentine rune of Zot
+KITEM:  D = serpentine rune of Zot, jade gem
 KITEM:  E = serpentine rune of Zot mimic / w:90 any good_item
 MONS:   naga w:30 / salamander, naga warrior / naga sharpshooter w:5
 MONS:   naga mage w:15 / naga ritualist / naga sharpshooter /\
@@ -2382,7 +2382,7 @@ NAME:   grunt_snake_rune_pools
 TAGS:   no_trap_gen no_monster_gen
 PLACE:  Snake:$
 ORIENT: north
-KITEM:  O = serpentine rune of zot
+KITEM:  O = serpentine rune of Zot, jade gem
 # I've added a fire theme, which places salamander monsters and lava instead of
 # deep water and sea snakes. --gammafunk
 : if crawl.one_chance_in(3) then
@@ -2443,7 +2443,7 @@ ENDMAP
 NAME:   grunt_snake_rune_serpentine_throne
 PLACE:  Snake:$
 ORIENT: north
-KITEM:  O = serpentine rune of Zot
+KITEM:  O = serpentine rune of Zot, jade gem
 KMONS:  L = vashnia / nagaraja, nagaraja
 MONS:   nagaraja w:15 / naga sharpshooter / salamander tyrant w:5
 MONS:   naga mage w:15 / naga ritualist / naga sharpshooter /\
@@ -2497,7 +2497,7 @@ ENDMAP
 NAME:   johnstein_snake_rune_scales
 PLACE:  Snake:$
 ORIENT: north
-KITEM:  O = serpentine rune of Zot
+KITEM:  O = serpentine rune of Zot, jade gem
 MONS:   naga w:30 / salamander, naga warrior / naga / salamander w:5
 MONS:   naga mage w:15 / naga ritualist / naga sharpshooter /\
         salamander mystic
@@ -2542,7 +2542,7 @@ ENDMAP
 NAME:   hellmonk_snake_rune_quicksilver_temple
 PLACE:  Snake:$
 ORIENT: north
-KITEM:  O = serpentine rune of Zot
+KITEM:  O = serpentine rune of Zot, jade gem
 MONS:   naga sharpshooter / guardian serpent / nagaraja / salamander tyrant
 MONS:   quicksilver dragon
 # Ten high tier monsters and ten normal spawns on average.

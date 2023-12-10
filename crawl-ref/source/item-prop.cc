@@ -15,6 +15,7 @@
 
 #include "artefact.h"
 #include "art-enum.h"
+#include "branch.h" // gem_time_limit
 #include "describe.h"
 #include "english.h" // number_in_words
 #include "evoke.h"
@@ -831,6 +832,34 @@ static const food_def Food_prop[] =
 };
 #endif
 
+struct gem_def
+{
+    gem_type    id;
+    const char *adj;
+    branch_type branch;
+    int         time_per_floor;
+};
+static int Gem_index[NUM_GEM_TYPES];
+static const gem_def Gem_prop[] =
+{
+    { GEM_DUNGEON, "smoky",       BRANCH_DUNGEON, 6000 },
+    { GEM_ORC,     "glittering",  BRANCH_ORC,     6000 },
+    { GEM_ELF,     "shimmering",  BRANCH_ELF,     6000 },
+    { GEM_LAIR,    "earthy",      BRANCH_LAIR,    7500 }, // travel time
+
+    { GEM_SWAMP,   "mossy",       BRANCH_SWAMP,   6000 },
+    { GEM_SHOALS,  "azure",       BRANCH_SHOALS,  6000 },
+    { GEM_SNAKE,   "jade",        BRANCH_SNAKE,   6000 },
+    { GEM_SPIDER,  "milky-white", BRANCH_SPIDER,  6000 },
+
+    { GEM_SLIME,   "starry",      BRANCH_SLIME,   3000 }, // usually dived
+    { GEM_VAULTS,  "shining",     BRANCH_VAULTS,  7500 }, // big, travel time
+    { GEM_CRYPT,   "ivory",       BRANCH_CRYPT,   6000 },
+    { GEM_TOMB,    "sanguine",    BRANCH_TOMB,    6000 },
+    { GEM_DEPTHS,  "obsidian",    BRANCH_DEPTHS,  7500 }, // big, travel time
+    { GEM_ZOT,     "prismatic",   BRANCH_ZOT,     3000 }, // often dived
+};
+
 struct item_set_def
 {
     string name;
@@ -856,11 +885,12 @@ void init_properties()
 {
     // The compiler would complain about too many initializers but not
     // about too few, so we check this ourselves.
-    COMPILE_CHECK(NUM_ARMOURS  == ARRAYSZ(Armour_prop));
-    COMPILE_CHECK(NUM_WEAPONS  == ARRAYSZ(Weapon_prop));
-    COMPILE_CHECK(NUM_MISSILES == ARRAYSZ(Missile_prop));
+    COMPILE_CHECK(NUM_ARMOURS   == ARRAYSZ(Armour_prop));
+    COMPILE_CHECK(NUM_WEAPONS   == ARRAYSZ(Weapon_prop));
+    COMPILE_CHECK(NUM_MISSILES  == ARRAYSZ(Missile_prop));
+    COMPILE_CHECK(NUM_GEM_TYPES == ARRAYSZ(Gem_prop));
 #if TAG_MAJOR_VERSION == 34
-    COMPILE_CHECK(NUM_FOODS    == ARRAYSZ(Food_prop));
+    COMPILE_CHECK(NUM_FOODS     == ARRAYSZ(Food_prop));
 #endif
 
     for (int i = 0; i < NUM_ARMOURS; i++)
@@ -871,6 +901,9 @@ void init_properties()
 
     for (int i = 0; i < NUM_MISSILES; i++)
         Missile_index[ Missile_prop[i].id ] = i;
+
+    for (int i = 0; i < NUM_GEM_TYPES; i++)
+        Gem_index[ Gem_prop[i].id ] = i;
 
 #if TAG_MAJOR_VERSION == 34
     for (int i = 0; i < NUM_FOODS; i++)
@@ -1144,6 +1177,7 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_MISSILES:
     case OBJ_ORBS:
     case OBJ_RUNES:
+    case OBJ_GEMS:
     case OBJ_GOLD:
     case OBJ_BOOKS:
     case OBJ_MISCELLANY:
@@ -2223,6 +2257,35 @@ int ammo_type_damage(int missile_type)
     return Missile_prop[ Missile_index[missile_type] ].dam;
 }
 
+branch_type branch_for_gem(gem_type gem)
+{
+    return Gem_prop[ Gem_index[gem]].branch;
+}
+
+gem_type gem_for_branch(branch_type br)
+{
+    // XXX TODO: maybe bake a map in advance
+    for (int i = 0; i < NUM_GEM_TYPES; i++)
+        if (Gem_prop[ Gem_index[i]].branch == br)
+            return static_cast<gem_type>(i);
+    return NUM_GEM_TYPES;
+}
+
+const char* gem_adj(gem_type gem)
+{
+    return Gem_prop[ Gem_index[gem]].adj;
+}
+
+int gem_time_limit(gem_type gem)
+{
+    const int per_floor = Gem_prop[ Gem_index[gem]].time_per_floor;
+    const branch_type br = Gem_prop[ Gem_index[gem]].branch;
+    const int floors = branches[br].numlevels;
+    const int base_time = per_floor * floors;
+    if (have_passive(passive_t::slow_zot))
+        return base_time * 3 / 2;
+    return base_time;
+}
 
 //
 // Reaching functions:
@@ -2252,6 +2315,20 @@ bool item_is_unique_rune(const item_def &item)
 bool item_is_orb(const item_def &item)
 {
     return item.is_type(OBJ_ORBS, ORB_ZOT);
+}
+
+/// Is this item a unique collectible which doesn't take inventory space?
+bool item_is_collectible(const item_def &item)
+{
+    switch (item.base_type)
+    {
+    case OBJ_RUNES:
+    case OBJ_GEMS:
+    case OBJ_ORBS:
+        return true;
+    default:
+        return false;
+    }
 }
 
 bool item_is_horn_of_geryon(const item_def &item)
@@ -2908,7 +2985,7 @@ bool item_is_jelly_edible(const item_def &item)
         return false;
 
     // Don't eat special game items.
-    if (item_is_orb(item) || item.base_type == OBJ_RUNES)
+    if (item_is_collectible(item))
         return false;
 
     return true;

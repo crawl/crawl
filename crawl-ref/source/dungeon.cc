@@ -4807,6 +4807,9 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         item_colour(item);
     }
 
+    if (item.base_type == OBJ_GEMS)
+        item_colour(item);
+
     if (props.exists(USEFUL_KEY) && is_useless_item(item, false)
         && !allow_useless)
     {

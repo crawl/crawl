@@ -2450,6 +2450,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (make_changes && you.position != env.old_player_pos)
        shake_off_monsters(you.as_player());
 
+    if (make_changes)
+        maybe_break_floor_gem();
+
 #if TAG_MAJOR_VERSION == 34
     if (make_changes && you.props.exists("zig-fixup")
         && you.where_are_you == BRANCH_TOMB

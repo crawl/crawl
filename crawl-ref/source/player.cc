@@ -5166,6 +5166,11 @@ player::player()
     runes.reset();
     obtainable_runes = 15;
 
+    gems_found.reset();
+    gems_shattered.reset();
+    for (int &t : gem_time_spent)
+        t = 0;
+
     spell_library.reset();
     spells.init(SPELL_NO_SPELL);
     old_vehumet_gifts.clear();

@@ -567,7 +567,7 @@ ENDMAP
 NAME:  vaults_end_rune
 TAGS:  vaults_end_rune
 KMONS: O = 8 / 9
-KITEM: O = silver rune of Zot
+KITEM: O = silver rune of Zot, shining gem
 MAP
 O
 ENDMAP

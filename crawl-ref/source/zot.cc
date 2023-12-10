@@ -8,14 +8,19 @@
 #include "zot.h"
 
 #include "activity-interrupt-type.h" // for zot clock key
+#include "areas.h" // silenced
 #include "branch.h" // for zot clock key
+#include "coordit.h" // rectangle_iterator
 #include "database.h" // getSpeakString
 #include "delay.h" // interrupt_activity
 #include "god-passive.h"
+#include "items.h" // stack_iterator
+#include "item-prop.h"
 #include "message.h"
 #include "notes.h" // NOTE_MESSAGE
 #include "options.h" // fear_zot
 #include "state.h"
+#include "stringutil.h" // make_stringf
 
 #if TAG_MAJOR_VERSION == 34
 static int _old_zot_clock(const string& branch_name) {
@@ -225,6 +230,115 @@ void incr_zot_clock()
 
     take_note(Note(NOTE_MESSAGE, 0, 0, "Glimpsed the power of Zot."));
     interrupt_activity(activity_interrupt::force);
+}
+
+bool gem_clock_active()
+{
+    return !player_has_orb()
+           && !crawl_state.game_is_sprint()
+           && !crawl_state.game_is_descent();
+}
+
+static void _shatter_floor_gem(gem_type gem, bool quiet = false)
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        for (stack_iterator si(*ri); si; ++si)
+        {
+            if (!si->is_type(OBJ_GEMS, gem))
+                continue;
+
+            item_was_destroyed(*si);
+            destroy_item(si.index());
+            you.gems_shattered.set(gem);
+
+            if (!quiet && you.see_cell(*ri))
+            {
+                mprf("%sZot shatters the %s gem into ten thousand fragments!",
+                     silenced(*ri) ? "" : "With a nightmarish wail, ",
+                     gem_adj(gem));
+            }
+
+            return;
+        }
+    }
+}
+
+void print_gem_warnings(int gem_int, int old_time_taken)
+{
+    gem_type gem = static_cast<gem_type>(gem_int);
+    ASSERT_RANGE(gem, 0, NUM_GEM_TYPES);
+    if (!gem_clock_active() || you.gems_shattered[gem])
+        return;
+
+    const int time_taken = you.gem_time_spent[gem];
+    const int limit = gem_time_limit(gem);
+
+    if (old_time_taken + 2700 < limit && time_taken + 2700 >= limit)
+    {
+        mprf("If you linger in this branch much longer, Zot will find and "
+             "shatter your %s gem.", gem_adj(gem));
+    }
+
+    if (old_time_taken + 1000 < limit && time_taken + 1000 >= limit)
+    {
+        mprf("Zot senses the otherworldly energies of your %s gem, and will "
+             "surely shatter it if you linger in this branch any longer!",
+             gem_adj(gem));
+    }
+}
+
+void incr_gem_clock()
+{
+    if (!gem_clock_active())
+        return;
+
+    const branch_type br = you.where_are_you;
+    const gem_type gem = gem_for_branch(br);
+    if (gem == NUM_GEM_TYPES || you.gems_shattered[gem])
+        return;
+
+    int &time_taken = you.gem_time_spent[gem];
+    const int limit = gem_time_limit(gem);
+    if (time_taken >= limit)
+        return; // already lost...
+
+    const int old_time_taken = time_taken;
+    time_taken += you.time_taken;
+
+    //if (you.gems_found[gem])
+        print_gem_warnings(gem, old_time_taken);
+
+    if (time_taken < limit)
+        return;
+
+    // lose it!
+    if (you.gems_found[gem])
+    {
+        mprf("%sZot shatters your %s gem into ten thousand fragments!",
+             silenced(you.pos()) ? "" : "With a nightmarish wail, ",
+             gem_adj(gem));
+        take_note(Note(NOTE_GEM_LOST, gem));
+        mark_milestone("gem.lost", make_stringf("lost the %s gem!",
+                                                gem_adj(gem)));
+        you.gems_shattered.set(gem);
+        return;
+    }
+
+    // OK, maybe it was on the level somewhere?
+    _shatter_floor_gem(gem);
+    // If not, we'll clean it up when we load the appropriate level.
+}
+
+void maybe_break_floor_gem()
+{
+    const gem_type gem = gem_for_branch(you.where_are_you);
+    if (gem != NUM_GEM_TYPES
+        && !you.gems_shattered[gem]
+        && you.gem_time_spent[gem] >= gem_time_limit(gem))
+    {
+        _shatter_floor_gem(gem, true);
+    }
 }
 
 void set_turns_until_zot(int turns_left)

@@ -956,6 +956,7 @@ void floor_transition(dungeon_feature_type how,
             if (you.species == SP_METEORAN)
                 update_vision_range();
         }
+        print_gem_warnings(gem_for_branch(branch), 0);
 
         if (how == DNGN_ENTER_VAULTS && !runes_in_pack())
         {

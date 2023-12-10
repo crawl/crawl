@@ -1166,6 +1166,40 @@ rune_demonic_5
 rune_demonic_6
 rune_elven RUNE_ELVEN
 
+#OBJ_GEMS
+%sdir item/gem
+dungeon_found_whole GEM_DUNGEON
+dungeon_found_broken
+orc_found_whole GEM_ORC
+orc_found_broken
+elf_found_whole GEM_ELF
+elf_found_broken
+lair_found_whole GEM_LAIR
+lair_found_broken
+swamp_found_whole GEM_SWAMP
+swamp_found_broken
+shoals_found_whole GEM_SHOALS
+shoals_found_broken
+snake_found_whole GEM_SNAKE
+snake_found_broken
+spider_found_whole GEM_SPIDER
+spider_found_broken
+slime_found_whole GEM_SLIME
+slime_found_broken
+vaults_found_whole GEM_VAULTS
+vaults_found_broken
+crypt_found_whole GEM_CRYPT
+crypt_found_broken
+tomb_found_whole GEM_TOMB
+tomb_found_broken
+depths_found_whole GEM_DEPTHS
+depths_found_broken
+zot_found_whole GEM_ZOT
+zot_found_broken
+
+generic_unfound GEM_GENERIC
+generic_unfound_broken
+
 #OBJ_TALISMANS
 %sdir item/talisman
 %rim 0

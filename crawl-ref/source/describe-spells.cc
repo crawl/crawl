@@ -446,27 +446,6 @@ static colour_t _spell_colour(spell_type spell)
     return zap_colour(zap);
 }
 
-static string _colourize(string base, colour_t col)
-{
-    if (col < NUM_TERM_COLOURS)
-    {
-        if (col == BLACK)
-            col = DARKGRAY;
-        const string col_name = colour_to_str(col);
-        return make_stringf("<%s>%s</%s>",
-                            col_name.c_str(), base.c_str(), col_name.c_str());
-    }
-    string out = make_stringf("%c", base[0]);
-    for (int i = 1; i < (int)base.length() - 1; i++)
-    {
-        const int term_col = element_colour(col, false, you.pos());
-        const string col_name = colour_to_str(term_col);
-        out += "<" + col_name + ">" + base[i] + "</" + col_name + ">";
-    }
-    out += base[base.length() - 1];
-    return out;
-}
-
 static string _describe_living_spells(const monster_info &mon_owner)
 {
     const spell_type spell = living_spell_type_for(mon_owner.type);
@@ -598,7 +577,7 @@ static void _describe_book(const spellbook_contents &book,
         const int chop_len = 30 - effect_len - range_len - effect_range_space;
 
         if (effect_len && !testbits(get_spell_flags(spell), spflag::WL_check))
-            effect_str = _colourize(effect_str, _spell_colour(spell));
+            effect_str = colourize_str(effect_str, _spell_colour(spell));
 
         string spell_name = spell_title(spell);
         if (spell == SPELL_LEHUDIBS_CRYSTAL_SPEAR
@@ -695,7 +674,7 @@ static void _write_book(const spellbook_contents &book,
 
         string effect_str = _effect_string(spell, mon_owner);
         if (!testbits(get_spell_flags(spell), spflag::WL_check))
-            effect_str = _colourize(effect_str, _spell_colour(spell));
+            effect_str = colourize_str(effect_str, _spell_colour(spell));
         tiles.json_write_string("effect", effect_str);
 
         string range_str = _range_string(spell, mon_owner, hd);

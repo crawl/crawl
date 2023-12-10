@@ -46,7 +46,7 @@ function setup_slime_pit_ending(e)
   e.mons("acid blob")
   e.mons("great orb of eyes / nothing")
   e.kfeat("Z = altar_jiyva")
-  e.kitem("O = slimy rune of Zot")
+  e.kitem("O = slimy rune of Zot, starry gem")
 
 -- Attach function to the Royal Jelly itself. This will follow it wherever
 -- it goes, even through polymorphs, and set dgn.persist.fix_slime_vaults

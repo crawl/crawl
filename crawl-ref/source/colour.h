@@ -65,6 +65,7 @@ enum element_type
     ETC_WU_JIAN,        // Wu Jian Chinese-inspired colours
     ETC_AWOKEN_FOREST,  // Angry trees.
     ETC_CANDLES,        // Ignis flickering candles
+    ETC_STEEL,          // a brighter iron
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
 
@@ -128,3 +129,5 @@ colour_t rune_colour(int type);
 
 // Applies ETC_ colour substitutions
 unsigned real_colour(unsigned raw_colour, const coord_def& loc = coord_def());
+
+string colourize_str(string base, colour_t col);

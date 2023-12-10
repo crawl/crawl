@@ -1432,6 +1432,12 @@ static void _generate_rune_item(item_def& item, int force_type)
         item.sub_type = force_type;
 }
 
+static void _generate_gem_item(item_def& item, int force_type)
+{
+    ASSERT_RANGE(force_type, 0, NUM_GEM_TYPES);
+    item.sub_type = force_type;
+}
+
 static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
                                           int item_level, int agent)
 {
@@ -1933,6 +1939,10 @@ int items(bool allow_uniques,
     case OBJ_ORBS:              // always forced in current setup {dlb}
     case OBJ_RUNES:
         _generate_rune_item(item, force_type);
+        break;
+
+    case OBJ_GEMS:
+        _generate_gem_item(item, force_type);
         break;
 
     case OBJ_TALISMANS:

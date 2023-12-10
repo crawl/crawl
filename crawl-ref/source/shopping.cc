@@ -724,6 +724,7 @@ unsigned int item_value(item_def item, bool ident)
         break;
 
     case OBJ_RUNES:
+    case OBJ_GEMS:
         valued = 10000;
         break;
 

@@ -2566,7 +2566,7 @@ KMONS:     ge = merfolk impaler / merfolk javelineer / merfolk aquamancer
 : if shoals_vault_is_mimic() then
 KITEM:     O = barnacled rune of Zot mimic
 : else
-KITEM:     O = barnacled rune of Zot
+KITEM:     O = barnacled rune of Zot, azure gem
 : end
 KPROP:     O = no_tide
 LROCKTILE: wall_pebble_lightgray
@@ -2628,7 +2628,7 @@ KMONS:     d = merfolk avatar / water nymph w:5
 : if shoals_vault_is_mimic() then
 KITEM:     d = barnacled rune of zot mimic
 : else
-KITEM:     d = barnacled rune of zot
+KITEM:     d = barnacled rune of Zot, azure gem
 : end
 KFEAT:     123 = w
 KPROP:     d = no_tide
@@ -2712,7 +2712,7 @@ KMONS:  K = kraken simulacrum / frost giant w:20
 : if shoals_vault_is_mimic() then
 KITEM:  O = barnacled rune of Zot mimic
 : else
-KITEM:  O = barnacled rune of Zot
+KITEM:  O = barnacled rune of Zot, azure gem
 : end
 KFEAT:  K = deep_water
 NSUBST: A = 1:. / 1:xxxx. / *:x
@@ -2797,7 +2797,7 @@ KMONS:   P = plant
 : if shoals_vault_is_mimic() then
 KITEM:   O = barnacled rune of Zot mimic
 : else
-KITEM:   O = barnacled rune of Zot
+KITEM:   O = barnacled rune of Zot, azure gem
 : end
 NSUBST:  1 = 4:1 / 2:1. / 2:1. / 2:2 / 2:2. / 2:2. / *:.
 SHUFFLE: abcdefghijk, ABCDEFGH
@@ -2852,7 +2852,7 @@ NAME:   shoals_end_hellmonk_lost_city
 ORIENT: encompass
 PLACE:  Shoals:$
 WEIGHT: 3
-KITEM:  O = barnacled rune of Zot
+KITEM:  O = barnacled rune of Zot, azure gem
 MONS:   faun w:15 / manticore / harpy, satyr, minotaur, sphinx
 KMONS:  O = sphinx
 KMONS:  P = plant
@@ -2919,7 +2919,7 @@ TAGS:    no_trap_gen
 ORIENT:  encompass
 PLACE:   Shoals:$
 WEIGHT:  3
-KITEM:   O = barnacled rune of Zot
+KITEM:   O = barnacled rune of Zot, azure gem
 MONS:    cyclops
 MONS:    death yak / dream sheep / yak / holy swine w:3 / apis w:3
 MONS:    w:15 merfolk impaler ; trident ego:flaming good_item |\
@@ -3072,7 +3072,7 @@ ENDMAP
 
 NAME:   storm_palace_center_square
 TAGS:   storm_palace_rune
-KITEM:  O = barnacled rune of Zot
+KITEM:  O = barnacled rune of Zot, azure gem
 KITEM:  | = superb_item
 MONS:   merfolk aquamancer / merfolk javelineer / merfolk impaler
 KMONS:  O = patrolling storm dragon / patrolling titan
@@ -3106,7 +3106,7 @@ ENDMAP
 
 NAME:   storm_palace_center_circular
 TAGS:   storm_palace_rune no_pool_fixup
-KITEM:  O = barnacled rune of Zot
+KITEM:  O = barnacled rune of Zot, azure gem
 MONS:   merfolk aquamancer / merfolk javelineer / merfolk impaler
 KMONS:  O = patrolling storm dragon / patrolling titan
 KMONS:  P = plant
@@ -3139,7 +3139,7 @@ ENDMAP
 
 NAME:   storm_palace_center_ruins
 TAGS:   storm_palace_rune
-KITEM:  O = barnacled rune of Zot
+KITEM:  O = barnacled rune of Zot, azure gem
 MONS:   merfolk aquamancer / merfolk javelineer / merfolk impaler
 KMONS:  O = patrolling storm dragon / patrolling titan
 NSUBST: | = 1:O / *:|, 1 = 4 = 8. / * = 1..

@@ -7,6 +7,7 @@
 
 #include <set>
 
+#include "branch-type.h"
 #include "equipment-type.h"
 #include "item-prop-enum.h"
 #include "reach-type.h"
@@ -184,12 +185,18 @@ bool ammo_never_destroyed(const item_def &missile) PURE;
 int  ammo_type_destroy_chance(int missile_type) PURE;
 int  ammo_type_damage(int missile_type) PURE;
 
-
 reach_type weapon_reach(const item_def &item) PURE;
+
+// gem functions:
+int gem_time_limit(gem_type gem) PURE;
+const char *gem_adj(gem_type gem) IMMUTABLE;
+branch_type branch_for_gem(gem_type gem) PURE;
+gem_type gem_for_branch(branch_type br) PURE;
 
 // Macguffins
 bool item_is_unique_rune(const item_def &item) PURE;
 bool item_is_orb(const item_def &orb) PURE;
+bool item_is_collectible(const item_def &item) PURE;
 bool item_is_horn_of_geryon(const item_def &item) PURE;
 bool item_is_spellbook(const item_def &item) PURE;
 

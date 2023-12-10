@@ -56,6 +56,7 @@
 #include "unicode.h"
 #include "unwind.h"
 #include "viewgeom.h"
+#include "zot.h" // gem_clock_active
 
 static bool _is_consonant(char let);
 static char _random_vowel();
@@ -957,6 +958,11 @@ const char* rune_type_name(short p)
     }
 }
 
+static string gem_type_name(gem_type g)
+{
+    return string(gem_adj(g)) + " gem";
+}
+
 static string misc_type_name(int type)
 {
 #if TAG_MAJOR_VERSION == 34
@@ -1148,6 +1154,7 @@ const char *base_type_string(object_class_type type)
     case OBJ_CORPSES: return "corpse";
     case OBJ_GOLD: return "gold";
     case OBJ_RUNES: return "rune";
+    case OBJ_GEMS: return "gem";
     case OBJ_TALISMANS: return "talisman";
     default: return "";
     }
@@ -1230,6 +1237,7 @@ string sub_type_string(const item_def &item, bool known)
     case OBJ_CORPSES: return "corpse";
     case OBJ_GOLD: return "gold";
     case OBJ_RUNES: return "rune of Zot";
+    case OBJ_GEMS: return gem_type_name(static_cast<gem_type>(sub_type));
     default: return "";
     }
 }
@@ -1876,6 +1884,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         buff << "rune of Zot";
         break;
 
+    case OBJ_GEMS:
+        buff << gem_type_name(static_cast<gem_type>(sub_type));
+        break;
+
     case OBJ_GOLD:
         buff << "gold piece";
         break;
@@ -2119,12 +2131,55 @@ bool get_ident_type(object_class_type basetype, int subtype)
     return you.type_ids[basetype][subtype];
 }
 
+static colour_t _gem_colour(const item_def *gem)
+{
+    if (!you.gems_found[gem->sub_type])
+        return DARKGREY;
+    return gem->gem_colour();
+}
+
+static string _gem_parenthetical(gem_type gem)
+{
+    string text = " (";
+    text += branches[branch_for_gem(gem)].longname;
+    if (!gem_clock_active())
+        return text + ")";
+
+    const int lim = gem_time_limit(gem);
+    const int left = lim - you.gem_time_spent[gem];
+    if (left <= 0)
+        return text + ", shattered)";
+
+    // Rescale from aut to dAut.
+    text += make_stringf(", %d", left / 10);
+    if (left < lim)
+        text += make_stringf("/%d", lim / 10);
+    else
+        text += " turns"; // XXX: ?
+    return text + " until shattered)";
+}
+
+static string _gem_text(const item_def *gem_it)
+{
+    string text = gem_it->name(DESC_PLAIN);
+    const gem_type gem = static_cast<gem_type>(gem_it->sub_type);
+    text = colourize_str(text, _gem_colour(gem_it));
+    const bool in_branch = player_in_branch(branch_for_gem(gem));
+    const colour_t pcol = in_branch ? WHITE
+              : you.gems_found[gem] ? LIGHTGREY
+                                    : DARKGREY;
+    text += colourize_str(_gem_parenthetical(gem), pcol);
+    return text;
+}
+
 static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
 {
     auto entry = static_cast<InvEntry*>(me);
     ASSERT(entry);
 
-    if (entry->item->base_type == OBJ_RUNES)
+    switch (entry->item->base_type)
+    {
+    case OBJ_RUNES:
     {
         auto rune = static_cast<rune_type>(entry->item->sub_type);
         colour_t colour;
@@ -2152,87 +2207,251 @@ static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
         text += colour_to_str(colour);
         text += ">";
         entry->text = text;
+        break;
     }
-    else if (entry->item->is_type(OBJ_ORBS, ORB_ZOT))
-    {
+    case OBJ_GEMS:
+        entry->text = _gem_text(entry->item);
+        break;
+    case OBJ_ORBS:
         if (player_has_orb())
             entry->text = "<magenta>The Orb of Zot</magenta>";
         else
         {
             entry->text = "<darkgrey>The Orb of Zot"
-                          " (the Realm of Zot)</darkgrey>";
+            " (the Realm of Zot)</darkgrey>";
         }
+        break;
+    default:
+        entry->text = "Eggplant"; // bug!
+        break;
     }
 
     return entry;
 }
 
-void display_runes()
+class RuneMenu : public InvMenu
 {
+    virtual bool process_key(int keyin) override;
+
+public:
+    RuneMenu();
+
+private:
+    void populate();
+
+    string get_title();
+    string gem_title();
+
+    void fill_contents();
+    void set_normal_runes();
+    void set_sprint_runes();
+    void set_gems();
+
+    void set_footer();
+
+    bool can_show_gems();
+    bool can_show_more_gems();
+
+    bool show_gems;
+    // For player morale, default to hiding gems you've already missed.
+    bool more_gems;
+
+    vector<item_def> contents;
+};
+
+RuneMenu::RuneMenu()
+    : InvMenu(MF_NOSELECT | MF_ALLOW_FORMATTING),
+      show_gems(false), more_gems(false)
+{
+    populate();
+}
+
+void RuneMenu::populate()
+{
+    contents.clear();
+    items.clear();
+
+    set_title(get_title());
+    fill_contents();
+    // We've sorted this vector already, so disable menu sorting. Maybe we
+    // could a menu entry comparator and modify InvMenu::load_items() to allow
+    // passing this in instead of doing a sort ahead of time.
+    load_items(contents, _fixup_runeorb_entry, 0, false);
+
+    set_footer();
+}
+
+string RuneMenu::get_title()
+{
+    if (show_gems)
+        return gem_title();
+
     auto col = runes_in_pack() < ZOT_ENTRY_RUNES ?  "lightgrey" :
                runes_in_pack() < you.obtainable_runes ? "green" :
                                                    "lightgreen";
 
-    auto title = make_stringf("<white>Runes of Zot (</white>"
-                              "<%s>%d</%s><white> collected) & Orbs of Power</white>",
-                              col, runes_in_pack(), col);
+    return make_stringf("<white>Runes of Zot (</white>"
+                        "<%s>%d</%s><white> collected) & Orbs of Power</white>",
+                        col, runes_in_pack(), col);
+}
 
-    InvMenu menu(MF_NOSELECT | MF_ALLOW_FORMATTING);
+string RuneMenu::gem_title()
+{
+    const int found = gems_found();
+    const int lost = gems_lost();
+    string title = make_stringf("<white>Gems (%d collected", found);
+    if (lost < found)
+        title += make_stringf(", %d intact", found - lost);
+    // don't explicitly mention that your gems are all broken otherwise - sad!
 
-    menu.set_title(title);
+    return title + ")</white>";
+}
 
-    vector<item_def> items;
+void RuneMenu::set_footer()
+{
+    if (!can_show_gems())
+        return;
 
-    if (!crawl_state.game_is_sprint())
+    string more_text = make_stringf("[<w>!</w>/<w>^</w>"
+#ifdef USE_TILE_LOCAL
+            "|<w>Right-click</w>"
+#endif
+            "]: %s", show_gems ? "Show Runes" : "Show Gems");
+    if (can_show_more_gems())
+        more_text += make_stringf("\n[<w>-</w>]: %s", more_gems ? "Less" : "More");
+    set_more(more_text);
+}
+
+bool RuneMenu::can_show_gems()
+{
+    return !crawl_state.game_is_sprint() || !crawl_state.game_is_descent();
+}
+
+bool RuneMenu::can_show_more_gems()
+{
+    if (!show_gems)
+        return false;
+    for (int i = 0; i < NUM_GEM_TYPES; i++)
+        if (you.gems_shattered[i] && !you.gems_found[i])
+            return true;
+    return false;
+}
+
+void RuneMenu::fill_contents()
+{
+    if (show_gems)
     {
-        // Add the runes in order of challenge (semi-arbitrary).
-        for (branch_iterator it(branch_iterator_type::danger); it; ++it)
-        {
-            const branch_type br = it->id;
-            if (!connected_branch_can_exist(br))
-                continue;
+        set_gems();
+        return;
+    }
 
-            for (auto rune : branches[br].runes)
-            {
-                item_def item;
-                item.base_type = OBJ_RUNES;
-                item.sub_type = rune;
-                item.quantity = you.runes[rune] ? 1 : 0;
-                item_colour(item);
-                items.push_back(item);
-            }
-        }
-    }
-    else
-    {
-        // We don't know what runes are accessible in the sprint, so just show
-        // the ones you have. We can't iterate over branches as above since the
-        // elven rune and mossy rune may exist in sprint.
-        for (int i = 0; i < NUM_RUNE_TYPES; ++i)
-        {
-            if (you.runes[i])
-            {
-                item_def item;
-                item.base_type = OBJ_RUNES;
-                item.sub_type = i;
-                item.quantity = 1;
-                item_colour(item);
-                items.push_back(item);
-            }
-        }
-    }
     item_def item;
     item.base_type = OBJ_ORBS;
     item.sub_type = ORB_ZOT;
     item.quantity = player_has_orb() ? 1 : 0;
-    items.push_back(item);
+    contents.push_back(item);
 
-    // We've sorted this vector already, so disable menu sorting. Maybe we
-    // could a menu entry comparator and modify InvMenu::load_items() to allow
-    // passing this in instead of doing a sort ahead of time.
-    menu.load_items(items, _fixup_runeorb_entry, 0, false);
+    if (crawl_state.game_is_sprint())
+        set_sprint_runes();
+    else
+        set_normal_runes();
+}
 
-    menu.show();
+void RuneMenu::set_normal_runes()
+{
+    // Add the runes in order of challenge (semi-arbitrary).
+    for (branch_iterator it(branch_iterator_type::danger); it; ++it)
+    {
+        const branch_type br = it->id;
+        if (!connected_branch_can_exist(br))
+            continue;
+
+        for (auto rune : branches[br].runes)
+        {
+            item_def item;
+            item.base_type = OBJ_RUNES;
+            item.sub_type = rune;
+            item.quantity = you.runes[rune] ? 1 : 0;
+            ::item_colour(item);
+            contents.push_back(item);
+        }
+    }
+}
+
+void RuneMenu::set_sprint_runes()
+{
+    // We don't know what runes are accessible in the sprint, so just show
+    // the ones you have. We can't iterate over branches as above since the
+    // elven rune and mossy rune may exist in sprint.
+    for (int i = 0; i < NUM_RUNE_TYPES; ++i)
+    {
+        if (!you.runes[i])
+            continue;
+
+        item_def item;
+        item.base_type = OBJ_RUNES;
+        item.sub_type = i;
+        item.quantity = 1;
+        ::item_colour(item);
+        contents.push_back(item);
+    }
+}
+
+void RuneMenu::set_gems()
+{
+    // Add the gems in order of challenge (semi-arbitrary).
+    for (branch_iterator it(branch_iterator_type::danger); it; ++it)
+    {
+        const branch_type br = it->id;
+        if (!connected_branch_can_exist(br))
+            continue;
+        const gem_type gem = gem_for_branch(br);
+        if (gem == NUM_GEM_TYPES)
+            continue;
+
+        if (!more_gems && you.gems_shattered[gem] && !you.gems_found[gem])
+            continue;
+
+        item_def item;
+        item.base_type = OBJ_GEMS;
+        item.sub_type = gem;
+        item.quantity = you.gems_found[gem] ? 1 : 0;
+        ::item_colour(item);
+        contents.push_back(item);
+    }
+}
+
+bool RuneMenu::process_key(int keyin)
+{
+    if (!can_show_gems())
+        return Menu::process_key(keyin);
+
+    switch (keyin)
+    {
+    case '!':
+    case '^':
+    case CK_MOUSE_CMD:
+        show_gems = !show_gems;
+        populate();
+        update_menu(true);
+        return true;
+    case '-':
+        if (show_gems)
+        {
+            more_gems = !more_gems;
+            populate();
+            update_menu(true);
+            return true;
+        }
+        return Menu::process_key(keyin);
+    default:
+        return Menu::process_key(keyin);
+    }
+}
+
+void display_runes()
+{
+    RuneMenu().show();
 }
 
 static string _unforbid(string name)

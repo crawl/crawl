@@ -572,6 +572,11 @@ void init_element_colours()
                               {40,  DARKGREY},
                             }));
     add_element_colour(new random_element_colour_calc(
+                            ETC_STEEL, "steel",
+                            { {1,  CYAN},
+                              {1,  LIGHTGREY},
+                            }));
+    add_element_colour(new random_element_colour_calc(
                             ETC_BONE, "bone",
                             { {90,  WHITE},
                               {30,  LIGHTGREY},
@@ -805,4 +810,27 @@ unsigned real_colour(unsigned raw_colour, const coord_def& loc)
         raw_colour = colflags | element_colour(raw_colour, false, loc);
 
     return raw_colour;
+}
+
+string colourize_str(string base, colour_t col)
+{
+    if (col < NUM_TERM_COLOURS)
+    {
+        if (col == BLACK)
+            col = DARKGRAY;
+        const string col_name = colour_to_str(col);
+        return make_stringf("<%s>%s</%s>",
+                            col_name.c_str(), base.c_str(), col_name.c_str());
+    }
+    vector<int> colours;
+    for (int i = 0; i < (int)base.length(); i++)
+        colours.push_back(element_colour(col, false, you.pos()));
+    sort(colours.begin(), colours.end());
+    string out;
+    for (int i = 0; i < (int)base.length(); i++)
+    {
+        const string col_name = colour_to_str(colours[i]);
+        out += "<" + col_name + ">" + base[i] + "</" + col_name + ">";
+    }
+    return out;
 }

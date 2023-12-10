@@ -969,11 +969,24 @@ achievement in any regard.
 Miscellany can often be 'Q'uivered in order to shoot via the autofire or 'f'ire
 interface, like spells and ammo.
 
-$ Gold
+$ Gold and Gems
 ========================================
 
 Gold can be used to buy items should you run across shops. There are also a
 few more esoteric uses for gold.
+
+Gems are extremely rare items found at the end of many dungeon branches. They
+are completely useless within the dungeon, and only a particularly cocky
+adventurer would set out to retrieve even one to the outside world. Zot hoards
+these gems jealously, and will spitefully smash them soon after an adventurer
+enters the branch of the dungeon in which they rest.
+
+Still, a very quick-moving adventurer might seize a gem first and keep its
+precious shards. Zot cannot track gems outside their home branches, so with
+truly astonishing speed, it might even be possible to abscond with one still
+intact... but such a feat is difficult to credit, and likely pointless besides.
+
+Once the Orb of Zot is taken, Zot will be unable to smash any gems.
 
 Artefacts
 ========================================
