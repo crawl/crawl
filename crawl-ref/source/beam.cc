@@ -2166,6 +2166,7 @@ void bolt_parent_init(const bolt &parent, bolt &child)
 {
     child.name           = parent.name;
     child.short_name     = parent.short_name;
+    child.hit_verb       = parent.hit_verb;
     child.aux_source     = parent.aux_source;
     child.source_id      = parent.source_id;
     child.origin_spell   = parent.origin_spell;

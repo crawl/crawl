@@ -2566,13 +2566,11 @@ static void _setup_creeping_frost(bolt &beam, const monster &, int pow)
     zappy(spell_to_zap(SPELL_CREEPING_FROST), pow, true, beam);
     beam.hit = AUTOMATIC_HIT;
     beam.name = "frost";
+    beam.hit_verb = "grips";
 }
 
 static bool _creeping_frost_freeze(coord_def p, bolt &beam)
 {
-    beam.hit_verb = "grips"; // We can't do this in _setup_creeping_frost,
-                             // since hit_verb isn't copied. XXX: think about
-                             // the consequences of copying it in bolt_parent_init
     beam.source = p;
     beam.target = p;
     beam.aux_source = "creeping frost";
