@@ -1676,6 +1676,14 @@ bool is_enchantable_armour(const item_def &arm, bool unknown)
     return true;
 }
 
+bool is_enchantable_weapon(const item_def &weapon, bool unknown)
+{
+    return weapon.base_type == OBJ_WEAPONS
+       && !is_artefact(weapon)
+       && (unknown && !item_ident(weapon, ISFLAG_KNOW_PLUSES)
+           || weapon.plus < MAX_WPN_ENCHANT);
+}
+
 //
 // Weapon information and checking functions:
 //

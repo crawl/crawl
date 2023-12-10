@@ -418,10 +418,62 @@ function c_message(text, channel) end
 --
 -- This hook can be defined to execute lua when an acquirement scroll is read.
 --
--- The hook should call @{items.acquirement_items} to get an array of
--- @{items.Item} representations of the offered items. If it returns a valid
--- index in this array, the given item will be acquired without the usual
--- acquirement menu.
+-- The hook should call @{items.acquirement_items} with an argument of 1 to get
+-- an array of @{items.Item} representations of the offered items. If it
+-- returns a valid index in this array, the given item will be acquired without
+-- the usual acquirement menu.
 --
 -- @treturn int An index between 1 and the number of offered items.
 -- @function c_choose_acquirement
+
+--- Okawaru weapon and armour acquirement hooks.
+--
+-- These hooks can be defined to execute lua when an Okawaru's Recieve Weapon
+-- or Recieve Armour capstone abilities are used.
+--
+-- The hook should call @{items.acquirement_items} with an argument of 2
+-- (for weapons) or 3 (for armour) to get an array of @{items.Item}
+-- representations of the offered items. If it returns a valid index in this
+-- array, the given item will be acquired without the usual acquirement menu.
+--
+-- @function c_choose_okawaru_weapon
+-- @treturn int An index between 1 and the number of offered items.
+--
+-- @function c_choose_okawaru_armour
+-- @treturn int An index between 1 and the number of offered items.
+
+-- Identify scroll hook.
+--
+-- This hook can be defined to execute lua when an identify scroll is read. If
+-- the item with the returned inventory letter is not identified, the scroll
+-- will target this item without the usual menu.
+--
+-- @treturn int A string with a slot letter (i.e. a-z or A-Z).
+-- @function c_choose_identify
+
+-- Enchant weapon scroll hook.
+--
+-- This hook can be defined to execute lua when an enchant weapon scroll is
+-- read. If the item with the returned inventory letter is an enchantable
+-- weapon, the scroll will target this weapon without the usual menu.
+--
+-- @treturn int A string with a slot letter (i.e. a-z or A-Z).
+-- @function c_choose_enchant_weapon
+
+-- Brand weapon scroll hook.
+--
+-- This hook can be defined to execute lua when a brand weapon scroll is read.
+-- If the item with the returned inventory letter is a brandable weapon, the
+-- scroll will target this weapon without the usual menu.
+--
+-- @treturn int A string with a slot letter (i.e. a-z or A-Z).
+-- @function c_choose_brand_weapon
+
+-- Enchant armour scroll hook.
+--
+-- This hook can be defined to execute lua when an enchant armour scroll is
+-- read. If the item with the returned inventory letter is enchantable armour,
+-- the scroll will target this armour without the usual menu.
+--
+-- @treturn int A string with a slot letter (i.e. a-z or A-Z).
+-- @function c_choose_enchant_armour
