@@ -771,20 +771,24 @@ bool ghost_demon::has_spells() const
     return spells.size() > 0;
 }
 
-// When passed the number for a player spell, returns the equivalent
-// monster spell. Returns SPELL_NO_SPELL on failure (no equivalent).
+// When passed the number for player spells, returns approximate and
+// equivalent monster spells. Returns SPELL_NO_SPELL with no equivalent.
 spell_type ghost_demon::translate_spell(spell_type spell) const
 {
     switch (spell)
     {
 #if TAG_MAJOR_VERSION == 34
     case SPELL_CONTROLLED_BLINK:
-        return SPELL_BLINK;        // approximate
+        return SPELL_BLINK;
 #endif
     case SPELL_DRAGON_CALL:
         return SPELL_SUMMON_DRAGON;
     case SPELL_SWIFTNESS:
         return SPELL_SPRINT;
+    case SPELL_NECROTISE:
+        return SPELL_PAIN;
+    case SPELL_CONFUSING_TOUCH:
+        return SPELL_CONFUSE;
     default:
         break;
     }
