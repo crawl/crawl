@@ -12,6 +12,7 @@
 #include <cmath>
 
 #include "areas.h"
+#include "art-enum.h"
 #include "bloodspatter.h"
 #include "branch.h"
 #include "cloud.h"
@@ -50,6 +51,13 @@
 #include "travel.h"
 #include "xom.h"
 
+static string _net_immune_reason()
+{
+    if (player_equip_unrand(UNRAND_SLICK_SLIPPERS))
+        return "You slip through the net.";
+    return "";
+}
+
 static const string TRAP_PROJECTILE_KEY = "trap_projectile";
 
 bool trap_def::active() const
@@ -82,8 +90,7 @@ void trap_def::prepare_ammo(int charges)
     {
     case TRAP_GOLUBRIA:
         // really, time until it vanishes
-        ammo_qty = (orb_limits_translocation() ? 10 + random2(10)
-                                               : 30 + random2(20));
+        ammo_qty = 10 + random2(10);
         break;
     case TRAP_TELEPORT:
         ammo_qty = 1;
@@ -153,6 +160,9 @@ bool trap_def::is_safe(actor* act) const
     }
 
     if (type == TRAP_GOLUBRIA || type == TRAP_SHAFT)
+        return true;
+
+    if (type == TRAP_NET && !_net_immune_reason().empty())
         return true;
 
     // Let players specify traps as safe via lua.
@@ -246,19 +256,26 @@ static void _mark_net_trapping(const coord_def& where)
  */
 bool monster_caught_in_net(monster* mon)
 {
-    if (mon->body_size(PSIZE_BODY) >= SIZE_GIANT)
+    if (mon->is_insubstantial() || (mons_genus(mon->type) == MONS_JELLY))
     {
-        if (you.see_cell(mon->pos()))
+        if (you.can_see(*mon))
         {
-            if (!mon->visible_to(&you))
-                mpr("The net bounces off something gigantic!");
+            if (mon->is_insubstantial())
+            {
+                mprf("The net passes right through %s!",
+                     mon->name(DESC_THE).c_str());
+            }
             else
-                simple_monster_message(*mon, " is too large for the net to hold!");
+            {
+                mprf("%s effortlessly oozes through the net!",
+                     mon->name(DESC_THE).c_str());
+            }
         }
         return false;
     }
 
-    if (mons_class_is_stationary(mon->type))
+    monster_info mi(mon);
+    if (mi.net_immune())
     {
         if (you.see_cell(mon->pos()))
         {
@@ -269,16 +286,6 @@ bool monster_caught_in_net(monster* mon)
             }
             else
                 mpr("The net is caught on something unseen!");
-        }
-        return false;
-    }
-
-    if (mon->is_insubstantial())
-    {
-        if (you.can_see(*mon))
-        {
-            mprf("The net passes right through %s!",
-                 mon->name(DESC_THE).c_str());
         }
         return false;
     }
@@ -300,53 +307,41 @@ bool monster_caught_in_net(monster* mon)
 
 bool player_caught_in_net()
 {
-    if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
+    if (!_net_immune_reason().empty())
         return false;
 
-    if (!you.attribute[ATTR_HELD])
-    {
-        mpr("You become entangled in the net!");
-        stop_running();
+    if (you.attribute[ATTR_HELD])
+        return false;
 
-        // Set the attribute after the mpr, otherwise the screen updates
-        // and we get a glimpse of a web because there isn't a trapping net
-        // item yet
-        you.attribute[ATTR_HELD] = 1;
+    mpr("You become entangled in the net!");
+    stop_running();
 
-        stop_delay(true); // even stair delays
-        return true;
-    }
-    return false;
+    // Set the attribute after the mpr, otherwise the screen updates
+    // and we get a glimpse of a web because there isn't a trapping net
+    // item yet
+    you.attribute[ATTR_HELD] = 1;
+
+    stop_delay(true); // even stair delays
+    return true;
 }
 
 void check_net_will_hold_monster(monster* mons)
 {
     ASSERT(mons); // XXX: should be monster &mons
-    if (mons->body_size(PSIZE_BODY) >= SIZE_GIANT)
-    {
-        int net = get_trapping_net(mons->pos());
-        if (net != NON_ITEM)
-            destroy_item(net);
-
-        if (you.see_cell(mons->pos()))
-        {
-            if (mons->visible_to(&you))
-            {
-                mprf("The net rips apart, and %s comes free!",
-                     mons->name(DESC_THE).c_str());
-            }
-            else
-                mpr("All of a sudden the net rips apart!");
-        }
-    }
-    else if (mons->is_insubstantial())
+    if (mons->is_insubstantial() || (mons_genus(mons->type) == MONS_JELLY))
     {
         const int net = get_trapping_net(mons->pos());
         if (net != NON_ITEM)
             free_stationary_net(net);
 
-        simple_monster_message(*mons,
-                               " drifts right through the net!");
+        if (mons->is_insubstantial())
+        {
+            simple_monster_message(*mons,
+                                   " drifts right through the net!");
+        }
+        else
+            simple_monster_message(*mons,
+                                   " oozes right through the net!");
     }
     else
         mons->add_ench(ENCH_HELD);
@@ -627,7 +622,11 @@ void trap_def::trigger(actor& triggerer)
 
         if (!player_caught_in_net())
         {
-            mpr("The net is torn apart by your bulk.");
+            if (!m) // no message already printed
+                mpr("You trigger the net trap.");
+            const string reason = _net_immune_reason();
+            if (!reason.empty())
+                mprf("%s", reason.c_str());
             break;
         }
 
@@ -1022,9 +1021,10 @@ dungeon_feature_type trap_feature(trap_type type)
 /***
  * Can a shaft be placed on the current level?
  *
+ * @param respect_brflags Whether brflag::no_shafts should be factored in.
  * @returns true if such a shaft can be placed.
  */
-bool is_valid_shaft_level()
+bool is_valid_shaft_level(bool respect_brflags)
 {
     // Important: We are sometimes called before the level has been loaded
     // or generated, so should not depend on properties of the level itself,
@@ -1038,17 +1038,22 @@ bool is_valid_shaft_level()
 
     const Branch &branch = branches[place.branch];
 
-    if (branch.branch_flags & brflag::no_shafts)
+    if (respect_brflags && branch.branch_flags & brflag::no_shafts)
         return false;
 
     // Don't allow shafts from the bottom of a branch.
     return (brdepth[place.branch] - place.depth) >= 1;
 }
 
-///
 static bool& _shafted_in(const Branch &branch)
 {
     return you.props[make_stringf("shafted_in_%s", branch.abbrevname)].get_bool();
+}
+
+/// Mark the player as having been shafted in the current branch.
+void set_shafted()
+{
+    _shafted_in(branches[you.where_are_you]) = true;
 }
 
 /**
@@ -1076,14 +1081,14 @@ void roll_trap_effects()
 {
     int trap_rate = trap_rate_for_place();
 
-    you.trapped = you.num_turns && !have_passive(passive_t::avoid_traps)
+    you.trapped = you.num_turns
         && env.density > 0 // can happen with builder in debug state
         && (you.trapped || x_chance_in_y(trap_rate, 9 * env.density));
 }
 
 static string _malev_msg()
 {
-    return make_stringf("A sourceless malevolence fills %s...",
+    return make_stringf("A malevolent force fills %s...",
                         branches[you.where_are_you].longname);
 }
 
@@ -1098,6 +1103,9 @@ static void _print_malev()
  */
 void do_trap_effects()
 {
+    if (crawl_state.game_is_descent())
+        return;
+
     // Try to shaft, teleport, or alarm the player.
 
     // We figure out which possibilities are allowed before picking which happens
@@ -1108,7 +1116,7 @@ void do_trap_effects()
     vector<trap_type> available_traps = { TRAP_TELEPORT };
     // Don't shaft the player when shafts aren't allowed in the location or when
     //  it would be into a dangerous end.
-    if (_is_valid_shaft_effect_level())
+    if (_is_valid_shaft_effect_level() && you.shaftable())
         available_traps.push_back(TRAP_SHAFT);
     // No alarms on the first 3 floors
     if (env.absdepth0 > 3)
@@ -1119,8 +1127,13 @@ void do_trap_effects()
         case TRAP_SHAFT:
             dprf("Attempting to shaft player.");
             _print_malev();
-            if (you.do_shaft(false))
-                _shafted_in(branches[you.where_are_you]) = true;
+            if (have_passive(passive_t::avoid_traps))
+            {
+                simple_god_message(" reveals a hidden shaft just before you would have fallen in.");
+                return;
+            }
+            if (you.do_shaft())
+                set_shafted();
             break;
 
         case TRAP_ALARM:
@@ -1129,6 +1142,11 @@ void do_trap_effects()
             // XXX: improve messaging to make it clear there's a wail outside of the
             // player's silence
             _print_malev();
+            if (have_passive(passive_t::avoid_traps))
+            {
+                simple_god_message(" reveals an alarm trap just before you would have tripped it.");
+                return;
+            }
             mprf("With a horrendous wail, an alarm goes off!");
             fake_noisy(40, you.pos());
             you.sentinel_mark(true);
@@ -1138,6 +1156,12 @@ void do_trap_effects()
         {
             string msg = make_stringf("%s and a teleportation trap spontaneously manifests!",
                                       _malev_msg().c_str());
+            if (have_passive(passive_t::avoid_traps))
+            {
+                mprf("%s", msg.c_str());
+                simple_god_message(" warns you in time for you to avoid it.");
+                return;
+            }
             you_teleport_now(false, true, msg);
             break;
         }
@@ -1162,6 +1186,10 @@ level_id generic_shaft_dest(level_id place)
     // Shafts drop you 1/2/3 levels with equal chance.
     // 33.3% for 1, 2, 3 from D:3, less before
     place.depth += 1 + random2(min(place.depth, 3));
+
+    // In descent, instead always drop one floor. Too brutal otherwise.
+    if (crawl_state.game_is_descent())
+        place.depth = curr_depth + 1;
 
     if (place.depth > max_depth)
         place.depth = max_depth;
@@ -1306,13 +1334,6 @@ bool ensnare(actor *fly)
         // currently webs are stateless so except for flavour it's a no-op
         if (fly->is_player())
             mpr("You are even more entangled.");
-        return false;
-    }
-
-    if (fly->body_size() >= SIZE_GIANT)
-    {
-        if (you.can_see(*fly))
-            mprf("A web harmlessly splats on %s.", fly->name(DESC_THE).c_str());
         return false;
     }
 

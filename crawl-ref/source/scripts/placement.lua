@@ -119,7 +119,7 @@ end
 
 local maps_to_test = args_init
 
--- Which des file is the map in? Only neeed if if the des file isn't specificed
+-- Which des file is the map in? Only need if if the des file isn't specified
 -- in dat/dlua/loadmaps.lua
 local des_file = one_arg(args, "-des", "")
 local need_to_load_des = des_file ~= ""

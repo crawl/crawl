@@ -255,8 +255,8 @@ void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg)
 // Actual equip and unequip effect implementation below
 //
 
-static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
-                                   equipment_type slot)
+void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
+                           equipment_type slot)
 {
     ASSERT(is_artefact(item));
 
@@ -319,8 +319,12 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     if (proprt[ARTP_CONTAM] && msg && !unmeld)
         mpr("You feel a build-up of mutagenic energy.");
 
-    if (proprt[ARTP_RAMPAGING] && msg && !unmeld)
+    if (proprt[ARTP_RAMPAGING] && msg && !unmeld
+        && !you.has_mutation(MUT_ROLLPAGE)
+        && !you_worship(GOD_WU_JIAN))
+    {
         mpr("You feel ready to rampage towards enemies.");
+    }
 
     if (proprt[ARTP_ARCHMAGI] && msg && !unmeld)
     {
@@ -349,10 +353,8 @@ static void _unequip_fragile_artefact(item_def& item, bool meld)
     }
 }
 
-static void _unequip_artefact_effect(item_def &item,
-                                     bool *show_msgs, bool meld,
-                                     equipment_type slot,
-                                     bool weapon)
+void unequip_artefact_effect(item_def &item,  bool *show_msgs, bool meld,
+                             equipment_type slot, bool weapon)
 {
     ASSERT(is_artefact(item));
 
@@ -392,8 +394,12 @@ static void _unequip_artefact_effect(item_def &item,
         contaminate_player(7000, true);
     }
 
-    if (proprt[ARTP_RAMPAGING] && !you.rampaging() && msg && !meld)
+    if (proprt[ARTP_RAMPAGING] && msg && !meld
+        && !you.rampaging()
+        && !you_worship(GOD_WU_JIAN))
+    {
         mpr("You no longer feel able to rampage towards enemies.");
+    }
 
     if (proprt[ARTP_ARCHMAGI] && msg && !meld)
         mpr("You feel strangely numb.");
@@ -456,6 +462,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     {
     case OBJ_STAVES:
     {
+        if (artefact)
+            equip_artefact_effect(item, &showMsgs, unmeld, EQ_STAFF);
         break;
     }
 
@@ -464,7 +472,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         // Note that if the unrand equip prints a message, it will
         // generally set showMsgs to false.
         if (artefact)
-            _equip_artefact_effect(item, &showMsgs, unmeld, EQ_WEAPON);
+            equip_artefact_effect(item, &showMsgs, unmeld, EQ_WEAPON);
 
         special = item.brand;
 
@@ -531,7 +539,12 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 case SPWPN_PAIN:
                 {
                     const string your_arm = you.arm_name(false);
-                    if (you.skill(SK_NECROMANCY) == 0)
+                    if (you_worship(GOD_TROG))
+                    {
+                        mprf(MSGCH_GOD, "Trog suppresses %s necromantic effect.",
+                             apostrophise(item_name).c_str());
+                    }
+                    else if (you.skill(SK_NECROMANCY) == 0)
                         mpr("You have a feeling of ineptitude.");
                     else if (you.skill(SK_NECROMANCY) <= 6)
                     {
@@ -620,8 +633,8 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
     // false if it does its own message handling.
     if (is_artefact(item))
     {
-        _unequip_artefact_effect(real_item, &showMsgs, meld, EQ_WEAPON,
-                                 true);
+        unequip_artefact_effect(real_item, &showMsgs, meld, EQ_WEAPON,
+                                true);
     }
 
     if (item.base_type == OBJ_WEAPONS)
@@ -691,10 +704,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                 {
                     monster *spectral_weapon = find_spectral_weapon(&you);
                     if (spectral_weapon)
-                    {
-                        mpr("Your spectral weapon disappears.");
-                        end_spectral_weapon(spectral_weapon, false, true);
-                    }
+                        end_spectral_weapon(spectral_weapon, false, false);
                 }
                 break;
 
@@ -831,7 +841,8 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             break;
 
         case SPARM_RAMPAGING:
-            mpr("You feel ready to rampage towards enemies.");
+            if (!you.has_mutation(MUT_ROLLPAGE) && !you_worship(GOD_WU_JIAN))
+                mpr("You feel ready to rampage towards enemies.");
             break;
 
         case SPARM_INFUSION:
@@ -863,7 +874,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
     if (is_artefact(arm))
     {
         bool show_msgs = true;
-        _equip_artefact_effect(arm, &show_msgs, unmeld, slot);
+        equip_artefact_effect(arm, &show_msgs, unmeld, slot);
     }
 
     you.redraw_armour_class = true;
@@ -973,7 +984,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
 
     case SPARM_RAMPAGING:
-        if (!you.rampaging())
+        if (!you.rampaging() && !you_worship(GOD_WU_JIAN))
             mpr("You no longer feel able to rampage towards enemies.");
         break;
 
@@ -994,7 +1005,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         _deactivate_regeneration_item(item, meld);
 
     if (is_artefact(item))
-        _unequip_artefact_effect(item, nullptr, meld, slot, false);
+        unequip_artefact_effect(item, nullptr, meld, slot, false);
 }
 
 static void _remove_amulet_of_faith(item_def &item)
@@ -1046,12 +1057,14 @@ static void _equip_regeneration_item(const item_def &item)
                                          ? "armour"
                                          : item_slot_name(eq_slot);
 
+#if TAG_MAJOR_VERSION == 34
     if (you.get_mutation_level(MUT_NO_REGENERATION))
     {
         mprf("The %s feel%s cold and inert.", item_name.c_str(),
              plural ? "" : "s");
         return;
     }
+#endif
     if (you.hp == you.hp_max)
     {
         mprf("The %s throb%s to your uninjured body.", item_name.c_str(),
@@ -1067,7 +1080,7 @@ static void _equip_regeneration_item(const item_def &item)
 
 bool acrobat_boost_active()
 {
-    return you.wearing(EQ_AMULET, AMU_ACROBAT)
+    return player_acrobatic()
            && you.duration[DUR_ACROBAT]
            && (!you.caught())
            && (!you.is_constricted());
@@ -1153,6 +1166,11 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
             mpr("You feel a surge of self-confidence.");
             break;
         }
+        if (you.has_mutation(MUT_FAITH))
+        {
+            mpr("You already have all the faith you need.");
+            break;
+        }
 
         const string ignore_reason = ignore_faith_reason();
         if (!ignore_reason.empty())
@@ -1177,7 +1195,10 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_ACROBAT:
-        mpr("You feel ready to tumble and roll out of harm's way.");
+        if (you.has_mutation(MUT_TENGU_FLIGHT))
+            mpr("You feel no more acrobatic than usual.");
+        else
+            mpr("You feel ready to tumble and roll out of harm's way.");
         break;
 
     case AMU_MANA_REGENERATION:
@@ -1197,7 +1218,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
     if (artefact)
     {
         bool show_msgs = true;
-        _equip_artefact_effect(item, &show_msgs, unmeld, slot);
+        equip_artefact_effect(item, &show_msgs, unmeld, slot);
     }
 
     if (!unmeld)
@@ -1291,7 +1312,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     }
 
     if (is_artefact(item))
-        _unequip_artefact_effect(item, &mesg, meld, slot, false);
+        unequip_artefact_effect(item, &mesg, meld, slot, false);
 
     // Must occur after ring is removed. -- bwr
     calc_mp();

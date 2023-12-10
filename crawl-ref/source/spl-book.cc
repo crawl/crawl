@@ -24,8 +24,9 @@
 #include "describe.h"
 #include "end.h"
 #include "god-conduct.h"
-#include "invent.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
+#include "invent.h"
 #include "libutil.h"
 #include "message.h"
 #include "output.h"
@@ -231,12 +232,17 @@ static unordered_set<int> _player_nonbook_spells =
     // items
     SPELL_THUNDERBOLT,
     SPELL_PHANTOM_MIRROR, // this isn't cast directly, but the player code at
-                          // least uses the enum value
+                          // least uses the enum value.
+    SPELL_TREMORSTONE,    // not cast directly, but the spell type is used for
+                          // damage and noise display.
     SPELL_SONIC_WAVE,
     // religion
     SPELL_SMITING,
+    SPELL_MINOR_DESTRUCTION,
     // Ds powers
     SPELL_HURL_DAMNATION,
+    // Green Draconian breath
+    SPELL_MEPHITIC_BREATH,
 };
 
 bool is_player_spell(spell_type which_spell)
@@ -277,6 +283,13 @@ static void _list_available_spells(spell_set &available_spells)
     // Handle Vehumet gifts
     for (auto gift : you.vehumet_gifts)
         available_spells.insert(gift);
+}
+
+static bool _spell_available_to_memorize(spell_type which_spell)
+{
+    spell_set available_spells;
+    _list_available_spells(available_spells);
+    return available_spells.count(which_spell) > 0;
 }
 
 bool player_has_available_spells()
@@ -576,7 +589,7 @@ private:
                 "   [<w>?</w>] help"; // XX hardcoded for this menu
 
         if (search_text.size())
-            return pad_more_with(desc.str(), "[<w>Esc</w>] clear"); // esc is harcoded for this case
+            return pad_more_with(desc.str(), "[<w>Esc</w>] clear"); // esc is hardcoded for this case
         else
             return pad_more_with_esc(desc.str());
     }
@@ -1005,6 +1018,12 @@ static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
         return false;
     }
 
+    if (!wizard && !_spell_available_to_memorize(specspell))
+    {
+        mpr("You haven't found that spell!");
+        return false;
+    }
+
     return true;
 }
 
@@ -1073,7 +1092,7 @@ bool learn_spell(spell_type specspell, bool wizard, bool interactive)
     return true;
 }
 
-bool book_has_title(const item_def &book)
+bool book_has_title(const item_def &book, bool ident)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
@@ -1081,6 +1100,7 @@ bool book_has_title(const item_def &book)
     if (book.sub_type == BOOK_BIOGRAPHIES_II
         || book.sub_type == BOOK_BIOGRAPHIES_VII
         || book.sub_type == BOOK_OZOCUBU
+        || book.sub_type == BOOK_MAXWELL
         || book.sub_type == BOOK_UNRESTRAINED)
     {
         return true;
@@ -1090,7 +1110,8 @@ bool book_has_title(const item_def &book)
         return false;
 
     return book.props.exists(BOOK_TITLED_KEY)
-           && book.props[BOOK_TITLED_KEY].get_bool() == true;
+           && book.props[BOOK_TITLED_KEY].get_bool() == true
+           && (ident || item_ident(book, ISFLAG_KNOW_PROPERTIES));
 }
 
 spret divine_exegesis(bool fail)

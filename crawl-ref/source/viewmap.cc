@@ -76,7 +76,6 @@ static unsigned _get_travel_colour(const coord_def& p)
 }
 #endif
 
-#ifndef USE_TILE_LOCAL
 bool travel_colour_override(const coord_def& p)
 {
     if (is_waypoint(p) || is_stair_exclusion(p)
@@ -108,6 +107,7 @@ bool travel_colour_override(const coord_def& p)
         return false;
 }
 
+#ifndef USE_TILE_LOCAL
 static char32_t _get_sightmap_char(dungeon_feature_type feat)
 {
     return get_feature_def(feat).symbol();
@@ -545,6 +545,11 @@ static void _forget_map(bool wizard_forget = false)
 #ifdef USE_TILE
             tile_forget_map(*ri);
 #endif
+            if (monster *m = monster_at(*ri))
+            {
+                m->seen_context = SC_NONE;
+                m->flags &= ~(MF_WAS_IN_VIEW | MF_SEEN);
+            }
         }
         else if (flags & MAP_SEEN_FLAG)
         {
@@ -781,7 +786,7 @@ public:
         // happened, then it set m_state and we don't want to overwrite it.
         // TODO some refactoring to make this cleaner
         if (!check_and_reset_reentry())
-            m_state = move(ret);
+            m_state = std::move(ret);
 
         if (!m_state.map_alive)
             return;
@@ -1063,14 +1068,12 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
         state.feats->init();
         break;
 
-#ifdef WIZARD
     case CMD_MAP_EXCLUDE_RADIUS:
         set_exclude(state.lpos.pos, getchm() - '0');
 
         _reset_travel_colours(*state.features, state.on_level);
         state.feats->init();
         break;
-#endif
 
     case CMD_MAP_MOVE_DOWN_LEFT:
         state.lpos.pos += coord_def(-1, 1);

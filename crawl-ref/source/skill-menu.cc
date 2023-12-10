@@ -10,6 +10,8 @@
 
 #include "skill-menu.h"
 
+#include "artefact.h"
+#include "art-enum.h"
 #include "cio.h"
 #include "clua.h"
 #include "command.h"
@@ -49,6 +51,15 @@ bool SkillTextTileItem::handle_mouse(const wm_mouse_event& me)
             return false;
 
         skm.select(sk, 'A');
+        return true;
+    }
+    else if (me.event == wm_mouse_event::PRESS
+        && me.button == wm_mouse_event::RIGHT)
+    {
+        skill_type sk = skill_type(get_id());
+        if (is_invalid_skill(sk))
+            return false;
+        describe_skill(sk);
         return true;
     }
     else
@@ -308,7 +319,9 @@ void SkillMenuEntry::set_aptitude()
     else
         text += make_stringf(" %d", apt);
 
-    text += "</white> ";
+    text += "</white>";
+    if (apt < 10 && apt > -10)
+        text += " ";
 
     if (manual)
     {
@@ -492,6 +505,27 @@ static bool _any_crosstrained()
     return false;
 }
 
+static bool _hermit_bonus()
+{
+    if (player_equip_unrand(UNRAND_HERMITS_PENDANT)
+        && you.skill(SK_INVOCATIONS, 10,  true) < 140)
+    {
+        return true;
+    }
+    return false;
+}
+
+static bool _hermit_penalty()
+{
+    if (player_equip_unrand(UNRAND_HERMITS_PENDANT))
+    {
+        if (you.skill(SK_EVOCATIONS, 10, true) > 0
+            || you.skill(SK_INVOCATIONS, 10, true) > 140)
+        return true;
+    }
+    return false;
+}
+
 string SkillMenuSwitch::get_help()
 {
     switch (m_state)
@@ -530,6 +564,8 @@ string SkillMenuSwitch::get_help()
             }
             if (_any_crosstrained())
                 causes.push_back("cross-training");
+            if (_hermit_bonus())
+                causes.push_back("the Hermit's pendant");
             result = "Skills enhanced by "
                      + comma_separated_line(causes.begin(), causes.end())
                      + " are in <green>green</green>.";
@@ -540,7 +576,8 @@ string SkillMenuSwitch::get_help()
             vector<const char *> causes;
             if (player_under_penance(GOD_ASHENZARI))
                 causes.push_back("Ashenzari's anger");
-
+            if (_hermit_penalty())
+                causes.push_back("the Hermit's pendant");
             if (!result.empty())
                 result += "\n";
             result += "Skills reduced by "
@@ -1501,15 +1538,20 @@ void SkillMenu::toggle_practise(skill_type sk, int keyn)
     if (keyn >= 'A' && keyn <= 'Z')
         you.train.init(TRAINING_DISABLED);
     if (get_state(SKM_DO) == SKM_DO_PRACTISE)
-        you.train[sk] = (you.train[sk] ? TRAINING_DISABLED : TRAINING_ENABLED);
+        set_training_status(sk, you.train[sk] ? TRAINING_DISABLED : TRAINING_ENABLED);
     else if (get_state(SKM_DO) == SKM_DO_FOCUS)
-    {
-        you.train[sk]
-            = (training_status)((you.train[sk] + 1) % NUM_TRAINING_STATUSES);
-    }
+        set_training_status(sk, (training_status)((you.train[sk] + 1) % NUM_TRAINING_STATUSES));
     else
         die("Invalid state.");
     reset_training();
+    if (is_magic_skill(sk) && you.has_mutation(MUT_INNATE_CASTER))
+    {
+        // This toggles every single magic skill, so let's just regenerate the display.
+        refresh_display();
+        return;
+    }
+
+    // Otherwise, only toggle the affected skill button.
     SkillMenuEntry* skme = find_entry(sk);
     skme->set_name(true);
     const vector<int> hotkeys = skme->get_name_item()->get_hotkeys();
@@ -1770,11 +1812,9 @@ void skill_menu(int flag, int exp)
                     return true;
                 }
             // Fallthrough
-            case ' ':
-                // Space and escape exit in any mode.
-                if (skm.exit(false))
-                    return done = true;
             default:
+                if (ui::key_exits_popup(keyn, true) && skm.exit(false))
+                    return done = true;
                 // Don't exit from !experience on random keys.
                 if (!skm.is_set(SKMF_EXPERIENCE) && skm.exit(false))
                     return done = true;
@@ -1832,7 +1872,7 @@ void skill_menu(int flag, int exp)
         return;
     }
 
-    ui::run_layout(move(popup), done);
+    ui::run_layout(std::move(popup), done);
 
     skm.clear();
 }

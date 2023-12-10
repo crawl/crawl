@@ -27,9 +27,9 @@ function nemelex_gamble_make_transporter(exit_prop, cleanup_prop)
 end
 
 function nemelex_gamble_remove_transporter()
-    slave = dgn.find_marker_positions_by_prop("the_gamble_entry", 1)
-    dgn.terrain_changed(slave[1].x, slave[1].y, "floor", false)
-    if (you.see_cell(slave[1].x, slave[1].y)) then
+    replica = dgn.find_marker_positions_by_prop("the_gamble_entry", 1)
+    dgn.terrain_changed(replica[1].x, replica[1].y, "floor", false)
+    if (you.see_cell(replica[1].x, replica[1].y)) then
         crawl.mpr("<white>The transporter glows with a rainbow of weird " ..
                   "colours and disappears.</white>")
     end
@@ -78,7 +78,7 @@ end
 
 NAME:   grunt_nemelex_the_gamble
 TAGS:   temple_overflow_nemelex_xobeh temple_overflow_1 no_trap_gen
-TAGS:   no_monster_gen no_item_gen
+TAGS:   no_monster_gen no_item_gen no_descent
 WEIGHT: 2
 ITEM:   unobtainable any, unobtainable superb_item
 {{

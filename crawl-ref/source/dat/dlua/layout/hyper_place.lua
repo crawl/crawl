@@ -62,7 +62,7 @@ function hyper.place.build_rooms(build,usage_grid,options)
       local result = hyper.place.place_room(room,build,usage_grid,options)
       if result ~= nil and result.placed then
         placed = true
-        -- Increment rooms placed in this build, and total rooms placed by all bulids
+        -- Increment rooms placed in this build, and total rooms placed by all builds
         -- TODO: Could increment this automatically when applying instead...
         rooms_placed = rooms_placed + 1
         total_rooms_placed = total_rooms_placed + 1

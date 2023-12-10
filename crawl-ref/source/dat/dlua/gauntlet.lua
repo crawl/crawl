@@ -157,7 +157,7 @@ end
 -- @param custom_loot If non-nil, place this as a guaranteed loot item.
 function gauntlet_arena_item_setup(e, custom_loot)
     -- Replace all 'd' after the first with the unused 'X' glyph so we can more
-    -- easilly apply any custom replacement for those extra items.
+    -- easily apply any custom replacement for those extra items.
     e.nsubst("d = d / X")
 
     -- Redefine these item class glyphs to use no_pickup
@@ -383,9 +383,6 @@ tier1_gauntlet_arenas = {
     liquid = "lava",
   },
   {
-    second = {mons = "shapeshifter", min = 1, max = 3},
-  },
-  {
     first  = {mons = "flying skull band", min = 1, max = 1},
     plant  = "withered",
   },
@@ -413,14 +410,14 @@ tier1_gauntlet_arenas = {
   },
   {
     first  = {mons = "shining eye", min = 1, max = 1},
-    second = {mons = "floating eye / golden eye", min = 1, max = 2},
+    second = {mons = "glass eye / golden eye", min = 1, max = 2},
     loot   = "potion of mutation ident:type",
     plant  = "demonic",
     weight = 5,
   },
   {
     first  = {mons = "eye of devastation", min = 1, max = 1},
-    second = {mons = "floating eye / golden eye", min = 1, max = 2},
+    second = {mons = "glass eye / golden eye", min = 1, max = 2},
     weight = 5,
   },
   {
@@ -428,7 +425,7 @@ tier1_gauntlet_arenas = {
     second = {mons = "tengu conjurer", min = 1, max = 2},
   },
   {
-    first  = {mons = "wizard", min = 1, max = 1},
+    first  = {mons = "arcanist", min = 1, max = 1},
     second = {mons = "white imp / shadow imp", min = 1, max = 3},
   },
   {
@@ -555,10 +552,6 @@ tier2_gauntlet_arenas = {
     plant  = "withered",
   },
   {
-    first  = {mons = "glowing shapeshifter", min = 1, max = 1},
-    second = {mons = "shapeshifter", min = 2, max = 3},
-  },
-  {
     first  = {mons = "apocalypse crab", min = 1, max = 1},
     plant  = "demonic",
   },
@@ -624,7 +617,7 @@ tier2_gauntlet_arenas = {
     plant  = "demonic",
   },
   {
-    second = {mons = "wizard", min = 2, max = 2},
+    second = {mons = "arcanist / occultist", min = 2, max = 2},
     third  = {mons = "white imp / shadow imp", min = 3, max = 6},
   },
   {

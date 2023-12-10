@@ -7,7 +7,7 @@ difficulty: Advanced
 difficulty_priority: 40
 aptitudes:
   xp: -1
-  hp: -4
+  hp: -3
   mp_mod: 1
   mr: 6
   short_blades: False
@@ -27,6 +27,7 @@ aptitudes:
   hexes: 4
   translocations: 4
   transmutations: 1
+  shapeshifting: -2
   fire_magic: -1
   ice_magic: -1
   air_magic: -1
@@ -35,9 +36,9 @@ aptitudes:
   evocations: 1
 size: little
 str: 4
-int: 9
+int: 11
 dex: 11
-levelup_stat_frequency: 5
+levelup_stat_frequency: 4
 levelup_stats:
   - int
   - dex
@@ -46,7 +47,6 @@ mutations:
     MUT_NO_GRASPING: 1
     MUT_NO_ARMOUR: 1
     MUT_MULTILIVED: 1
-    MUT_FAST: 1
     MUT_FANGS: 3
     MUT_SHAGGY_FUR: 1
     MUT_ACUTE_VISION: 1
@@ -59,7 +59,7 @@ mutations:
 recommended_jobs:
   - JOB_BERSERKER
   - JOB_ENCHANTER
-  - JOB_TRANSMUTER
+  - JOB_SHAPESHIFTER
   - JOB_ICE_ELEMENTALIST
   - JOB_AIR_ELEMENTALIST
   - JOB_CONJURER

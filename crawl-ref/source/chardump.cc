@@ -758,13 +758,7 @@ static bool _dump_item_origin(const item_def &item)
     if (fs(IODS_JEWELLERY) && item.base_type == OBJ_JEWELLERY)
         return true;
 
-    if (fs(IODS_RUNES) && item.base_type == OBJ_RUNES)
-        return true;
-
     if (fs(IODS_STAVES) && item.base_type == OBJ_STAVES)
-        return true;
-
-    if (fs(IODS_BOOKS) && item.base_type == OBJ_BOOKS)
         return true;
 
     const int refpr = Options.dump_item_origin_price;
@@ -862,28 +856,31 @@ static void _sdump_spells(dump_params &par)
 {
     string &text(par.text);
 
-    int spell_levels = player_spell_levels();
-
     string verb = par.se? "had" : "have";
 
-    if (spell_levels == 1)
-        text += "You " + verb + " one spell level left.";
-    else if (spell_levels == 0)
+    if (!you.has_mutation(MUT_INNATE_CASTER))
     {
-        verb = par.se? "couldn't" : "cannot";
+        int spell_levels = player_spell_levels();
 
-        text += "You " + verb + " memorise any spells.";
-    }
-    else
-    {
-        if (par.se)
-            text += "You had ";
+        if (spell_levels == 1)
+            text += "You " + verb + " one spell level left.";
+        else if (spell_levels == 0)
+        {
+            verb = par.se? "couldn't" : "cannot";
+
+            text += "You " + verb + " memorise any spells.";
+        }
         else
-            text += "You have ";
-        text += make_stringf("%d spell levels left.", spell_levels);
-    }
+        {
+            if (par.se)
+                text += "You had ";
+            else
+                text += "You have ";
+            text += make_stringf("%d spell levels left.", spell_levels);
+        }
 
-    text += "\n";
+        text += "\n";
+    }
 
     if (!you.spell_no)
     {
@@ -1075,7 +1072,7 @@ static void _sdump_kills_by_place(dump_params &par)
 
     string header =
     "Table legend:\n"
-    " A = Kills in this place as a percentage of kills in entire the game.\n"
+    " A = Kills in this place as a percentage of kills in the entire game.\n"
     " B = Kills by you in this place as a percentage of kills by you in\n"
     "     the entire game.\n"
     " C = Kills by friends in this place as a percentage of kills by\n"
@@ -1202,33 +1199,35 @@ static string _describe_action(caction_type type)
     case CACT_MELEE:
         return "Melee";
     case CACT_FIRE:
-        return " Fire";
+        return "Fire";
     case CACT_THROW:
         return "Throw";
     case CACT_ARMOUR:
-        return "Armor"; // "Armour" is too long
+        return "Armour";
     case CACT_BLOCK:
         return "Block";
     case CACT_DODGE:
         return "Dodge";
     case CACT_CAST:
-        return " Cast";
+        return "Cast";
     case CACT_INVOKE:
-        return "Invok";
+        return "Invoke";
     case CACT_ABIL:
-        return " Abil";
+        return "Ability";
     case CACT_EVOKE:
         return "Evoke";
     case CACT_USE:
-        return "  Use";
+        return "Use";
     case CACT_STAB:
-        return " Stab";
+        return "Stab";
 #if TAG_MAJOR_VERSION == 34
     case CACT_EAT:
-        return "  Eat";
+        return "Eat";
 #endif
     case CACT_RIPOSTE:
-        return "Rpst.";
+        return "Riposte";
+    case CACT_FORM:
+        return "Form";
     default:
         return "Error";
     }
@@ -1262,6 +1261,7 @@ static const char* _aux_attack_names[] =
     "Bite",
     "Pseudopods",
     "Tentacles",
+    "Maw",
 };
 COMPILE_CHECK(ARRAYSZ(_aux_attack_names) == NUM_UNARMED_ATTACKS);
 
@@ -1372,6 +1372,8 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
         COMPILE_CHECK(ARRAYSZ(_stab_names) == NUM_STABS);
         ASSERT_RANGE(subtype, 1, NUM_STABS);
         return _stab_names[subtype];
+    case CACT_FORM:
+        return get_form((transformation)subtype)->short_name;
 #if TAG_MAJOR_VERSION == 34
     case CACT_EAT:
         return "Removed food";
@@ -1391,11 +1393,10 @@ static void _sdump_action_counts(dump_params &par)
     if (max_lt)
         max_lt++;
 
-    par.text += make_stringf("%-24s", "Action");
+    par.text += make_stringf("%-26s", "Action");
     for (int lt = 0; lt < max_lt; lt++)
         par.text += make_stringf(" | %2d-%2d", lt * 3 + 1, lt * 3 + 3);
-    par.text += make_stringf(" || %5s", "total");
-    par.text += "\n-------------------------";
+    par.text += " || total\n" + string(27, '-');
     for (int lt = 0; lt < max_lt; lt++)
         par.text += "+-------";
     par.text += "++-------\n";
@@ -1422,11 +1423,11 @@ static void _sdump_action_counts(dump_params &par)
         {
             if (ac == action_vec.begin())
             {
-                par.text += _describe_action(caction_type(cact));
-                par.text += ": ";
+                const string act = _describe_action(caction_type(cact));
+                par.text += make_stringf("%7.7s: ", act.c_str());
             }
             else
-                par.text += "       ";
+                par.text.append(9, ' ');
             par.text += chop_string(_describe_action_subtype(caction_type(cact), ac->first), 17);
             for (int lt = 0; lt < max_lt; lt++)
             {
@@ -1691,12 +1692,21 @@ static bool _write_dump(const string &fname, const dump_params &par, bool quiet)
     return succeeded;
 }
 
+static int _add_text(formatted_scroller &scr, const string &tag,
+                     const string &text)
+{
+    int colour = menu_colour(text, "", tag);
+    scr.add_formatted_string(formatted_string(text, colour));
+    return colour;
+}
+
 void display_notes()
 {
     formatted_scroller scr(FS_START_AT_END | FS_PREWRAPPED_TEXT);
     scr.set_more();
-    scr.set_tag("notes");
-    scr.add_raw_text("Turn   | Place    | Note\n");
+    const string tag = "notes";
+    scr.set_tag(tag);
+    _add_text(scr, tag, "Turn   | Place    | Note\n");
     for (const Note &note : note_list)
     {
         if (note.hidden())
@@ -1714,9 +1724,12 @@ void display_notes()
         if (parts.empty()) // Disregard pure-whitespace notes.
             continue;
 
-        scr.add_raw_text(prefix + parts[0] + "\n");
+        auto colour = _add_text(scr, tag, prefix + parts[0] + "\n");
         for (unsigned int j = 1; j < parts.size(); ++j)
-            scr.add_raw_text(string(prefix.length()-2, ' ') + string("| ") + parts[j] + "\n");
+        {
+            auto str = string(prefix.length()-2, ' ') + "| " + parts[j] + "\n";
+            scr.add_formatted_string(formatted_string(str, colour));
+        }
     }
     scr.show();
 }

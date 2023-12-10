@@ -183,6 +183,11 @@ Non-swimmers must wade through the water slowly and will occasionally fail to
 attack in melee when wading through shallow water; although large creatures are
 able to keep their balance, move at a normal speed, and avoid fumbling.
 %%%%
+Some mud
+
+A thick layer of gritty mud.
+<liquefied>
+%%%%
 The open sea
 
 An expanse of endless wind and waves, with not a lighthouse in sight. Anyone
@@ -224,7 +229,8 @@ walls.
 %%%%
 A slime covered rock wall
 
-A rock wall coated with bright green slime. It is acidic to the touch.
+A rock wall coated with bright green slime. It is acidic to the touch; just
+standing near it is enough to cause temporary corrosion.
 %%%%
 A metal wall
 
@@ -880,7 +886,7 @@ The floor. It pulses to an unknown beat.
 # wizlab: Zonguldrok
 Zonguldrok's gravestone
 
-A gravestone. The name ‘Zonguldrok’ is engraved on it in golden letters.
+A gravestone of the house of Zonguldrok, still dripping with brackish ichor.
 %%%%
 A gravestone
 

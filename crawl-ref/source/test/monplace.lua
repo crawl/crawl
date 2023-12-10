@@ -25,3 +25,5 @@ assert_place_monster_on("flying skull", "lava")
 assert_place_monster_on("dryad", "tree")
 assert_place_monster_on("cyan ugly thing")
 assert_place_monster_on("purple very ugly thing")
+
+dgn.dismiss_monsters()

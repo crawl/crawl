@@ -833,7 +833,11 @@ TAGS:   no_rotate no_vmirror no_hmirror
     end
 
     local iterations = math.floor(crawl.random_range(75, 125) * area_fraction)
-    spotty_map { boxy = true, iterations = iterations }
+    if you.in_branch("Lair") then
+        spotty_map { boxy = crawl.coinflip(), iterations = iterations }
+    else
+        spotty_map { boxy = true, iterations = iterations }
+    end
 
     theme.level_material(_G)
 }}
@@ -863,6 +867,9 @@ TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
     local iterations
     local boxy = false
     local connected = false
+    if dgn.is_descent() then
+        connected = true
+    end
     if you.in_branch("orc") or you.in_branch("slime") then
         if you.at_branch_bottom() then
             iterations = 600 + crawl.random2(600)
@@ -1458,7 +1465,7 @@ TAGS:   no_rotate no_hmirror no_vmirror
 {{
   -- information for rooms of different sizes
 
-  local GLPYH_BY_RADIUS =
+  local GLYPH_BY_RADIUS =
     { [4] = { [0] = "c", "-", ".", ".", ":" },
       [5] = { [0] = "c", "-", ".", ".", ":", ":" },
       [6] = { [0] = "c", "c", "-", ".", ".", ":", ":" },
@@ -1520,7 +1527,7 @@ TAGS:   no_rotate no_hmirror no_vmirror
         local y = center_y + dy
         local abs_sum = math.abs(dx) + math.abs(dy)
         if (abs_sum <= radius) then
-          local new_glyph = GLPYH_BY_RADIUS[radius][abs_sum]
+          local new_glyph = GLYPH_BY_RADIUS[radius][abs_sum]
           if (GLYPH_PRIORITY[new_glyph] <
               GLYPH_PRIORITY[mapgrd[x][y]]) then
             mapgrd[x][y] = new_glyph

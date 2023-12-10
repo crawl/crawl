@@ -115,12 +115,12 @@ end
 
 --[[
 Returns monster simulacrum definition strings according to three types,
-"mocking", "savage", and "cruel", that are modified by ice cave difficulty.
-The "mocking" set tends to resemble player species, the "savage" set contains
+"mocking", "animal", and "cruel", that are modified by ice cave difficulty.
+The "mocking" set tends to resemble player species, the "animal" set contains
 beastly simulacrum, and the "cruel" set contains particularly dangerous
 simulacrum in terms of speed, attack strength, or number of attacks.
 
-@treturn table A table of strings with keys "mocking", "savage", and "cruel".
+@treturn table A table of strings with keys "mocking", "animal", and "cruel".
 ]]
 function simulacrum_monsters()
     local mons = {}
@@ -133,10 +133,10 @@ function simulacrum_monsters()
     end
 
     if dgn.persist.ice_cave_hard then
-        mons["savage"] = "lindwurm simulacrum / dire elephant simulacrum" ..
+        mons["animal"] = "lindwurm simulacrum / dire elephant simulacrum" ..
             " / alligator simulacrum / harpy simulacrum / anaconda simulacrum"
     else
-        mons["savage"] = "wolf simulacrum / elephant simulacrum" ..
+        mons["animal"] = "wolf simulacrum / elephant simulacrum" ..
             " / polar bear simulacrum / cane toad simulacrum" ..
             " / death yak simulacrum"
     end
@@ -174,7 +174,8 @@ ratios 18:6:2:1.
 function ice_cave_undead_demon_monster_set(e, reaper_glyphs)
     simul = simulacrum_monsters()
 
-    local reaper_equip = " ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:freezing"
+    local reaper_equip = " ; halberd plus:-4 itemname:scythe" ..
+                         " tile:wpn_scythe wtile:scythe ego:freezing"
     -- Make sure this reaper has rC+++ so it doesn't die in freezing vapour.
     if reaper_glyphs ~= nil then
         reaper_equip = reaper_equip .. " . robe ego:cold_resistance" ..
@@ -183,7 +184,7 @@ function ice_cave_undead_demon_monster_set(e, reaper_glyphs)
 
     if dgn.persist.ice_cave_hard then
         e.kmons("1 = " .. simul["mocking"] .. " / ice devil")
-        e.kmons("2 = " .. simul["savage"] .. " / freezing wraith")
+        e.kmons("2 = " .. simul["animal"] .. " / freezing wraith")
         e.kmons("3 = obsidian statue")
         e.kmons("4 = freezing wraith")
         e.kmons("5 = " .. simul["cruel"])
@@ -199,7 +200,7 @@ function ice_cave_undead_demon_monster_set(e, reaper_glyphs)
             dgn.random_entry_arg(simul["mocking"] .. " / ice devil",
                 "w:144") ..
             -- 48 * 5 = 240 total weight for tier 2.
-            " / " .. dgn.random_entry_arg(simul["savage"], "w:48") ..
+            " / " .. dgn.random_entry_arg(simul["animal"], "w:48") ..
             -- 80 weight for tier 4.
             " / freezing wraith w:80" ..
             -- 40 total weight for tier 5.
@@ -211,7 +212,7 @@ function ice_cave_undead_demon_monster_set(e, reaper_glyphs)
         end
 
         e.kmons("1 = " .. simul["mocking"] .. "/ white imp / ufetubus")
-        e.kmons("2 = " .. simul["savage"])
+        e.kmons("2 = " .. simul["animal"])
         e.kmons("3 = ice statue")
         e.kmons("4 = ice devil")
         e.kmons("5 = " .. simul["cruel"])
@@ -224,7 +225,7 @@ function ice_cave_undead_demon_monster_set(e, reaper_glyphs)
             dgn.random_entry_arg(simul["mocking"] .. " / white imp / ufetubus",
                 "w:120") ..
             -- 48 * 5 = 240 total weight for tier 2.
-            " / " .. dgn.random_entry_arg(simul["savage"], "w:48") ..
+            " / " .. dgn.random_entry_arg(simul["animal"], "w:48") ..
             -- 80 weight for tier 4.
             " / ice devil w:80" ..
             -- 40 total weight for tier 5.
@@ -353,7 +354,7 @@ function ice_cave_weapon_loot(e, glyphs)
         ["double sword"] = 5, ["maxwell's thermic engine"] = 2,
         ["great sword"] = 10, ["triple sword"] = 5, ["lajatang"] = 10,
         ["broad axe"] = 10, ["battleaxe"] = 10, ["frostbite"] = 2,
-        ["executioner's axe"] = 5, ["hand crossbow"] = 10, ["longbow"] = 10,
+        ["executioner's axe"] = 5, ["hand cannon"] = 10, ["longbow"] = 10,
         ["arbalest"] = 5, ["triple crossbow"] = 5
     }
     local quality = ""
@@ -390,7 +391,7 @@ function ice_cave_magic_loot(e, glyphs)
 end
 
 --[[
-Define some common loot items using six KITEM statments on the supplied glyphs.
+Define some common loot items using six KITEM statements on the supplied glyphs.
 The first three are armour, the next two are weapons, and that last is magical
 items. See comments for ice_cave_armour_loot, ice_cave_weapon_loot, and
 ice_cave_magic_loot for details.
@@ -477,7 +478,7 @@ TAGS:   patrolling no_monster_gen transparent
 ice_cave_portal(_G)
 local simul = simulacrum_monsters()
 mons(simul["mocking"])
-mons(simul["savage"])
+mons(simul["animal"])
 }}
 : if you.in_branch("D") then
 :     if you.depth() < 12 then
@@ -1109,7 +1110,8 @@ KITEM:   D = any scroll
 # more. For ice fiend, minimum of one and 50% chance for another.
 : if dgn.persist.ice_cave_hard then
 : ice_cave_undead_demon_monster_set(_G)
-KMONS:   D7 = reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:freezing
+KMONS:   D7 = reaper ; halberd plus:-4 itemname:scythe \
+              tile:wpn_scythe wtile:scythe ego:freezing
 SHUFFLE: D7 / 88
 NSUBST:  7 = 7 / 7.., 8 = 8 / 8. / .
 NSUBST:  4 = 6 / 446, F = 122445
@@ -1420,7 +1422,7 @@ ORIENT: encompass
 {{
 ice_cave_common_loot(_G)
 local simul = simulacrum_monsters()
-mons(simul["savage"])
+mons(simul["animal"])
 mons(simul["cruel"])
 }}
 # For easy ice caves, both statues are ice statues, and a freezing wraith has a
@@ -1430,16 +1432,16 @@ mons(simul["cruel"])
 # are two more star_items.
 : if dgn.persist.ice_cave_hard then
 MONS:   orange crystal statue, freezing wraith, white very ugly thing
-# 12 * 5 = 60 total weight for savage simulacra, 4 * 5 = 20 total weight for
+# 12 * 5 = 60 total weight for animal simulacra, 4 * 5 = 20 total weight for
 # cruel simulacra, and 10 weight for freezing wraiths.
-: set_random_mon_list(dgn.random_entry_arg(simul["savage"], "w:12") ..
+: set_random_mon_list(dgn.random_entry_arg(simul["animal"], "w:12") ..
 :     " / " .. dgn.random_entry_arg(simul["cruel"], "w:5")  ..
 :     " / freezing wraith")
 SUBST:  1 = 112, 3 = 4, D = 3, E = *
 NSUBST: % = * / %
 :else
 MONS:   ice statue, freezing wraith, white ugly thing
-: set_random_mon_list(dgn.random_entry_arg(simul["savage"], "w:16") ..
+: set_random_mon_list(dgn.random_entry_arg(simul["animal"], "w:16") ..
 :     " / " .. simul["cruel"])
 NSUBST: 1 = 2=1 / 4=1112.... / ., 5 = 45 / 5
 SUBST:  D = *
@@ -1479,7 +1481,7 @@ ORIENT: encompass
 {{
 ice_cave_common_loot(_G)
 local simul = simulacrum_monsters()
-mons(simul["savage"])
+mons(simul["animal"])
 mons(simul["cruel"])
 }}
 # For easy ice caves, three ice statues in the middle chamber, and a freezing
@@ -1489,16 +1491,16 @@ mons(simul["cruel"])
 # the final chamber, and there two more star_items.
 : if dgn.persist.ice_cave_hard then
 MONS:   orange crystal statue, freezing wraith, white very ugly thing
-# 12 * 5 = 60 total weight for savage simulacra, 4 * 5 = 20 total weight for
+# 12 * 5 = 60 total weight for animal simulacra, 4 * 5 = 20 total weight for
 # cruel simulacra, and 10 weight for freezing wraiths.
-: set_random_mon_list(dgn.random_entry_arg(simul["savage"], "w:12") ..
+: set_random_mon_list(dgn.random_entry_arg(simul["animal"], "w:12") ..
 :     " / " .. dgn.random_entry_arg(simul["cruel"], "w:5")  ..
 :     " / freezing wraith")
 NSUBST: D = 3 / 1
 SUBST:  E = 124, F = 4, 1 = 112, J = *
 : else
 MONS:   ice statue, freezing wraith, white ugly thing
-: set_random_mon_list(dgn.random_entry_arg(simul["savage"], "w:16") ..
+: set_random_mon_list(dgn.random_entry_arg(simul["animal"], "w:16") ..
 :    " / " .. simul["cruel"])
 NSUBST: 1 = 2=1 / 4=1112.... / ., D = 2=3 / 1, 5 = 45 / 5
 : end

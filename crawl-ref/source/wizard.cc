@@ -174,7 +174,7 @@ static void _do_wizard_command(int wiz_command)
     case CONTROL('Y'): wizard_suppress(); break;
 
     case 'z': wizard_cast_spec_spell(); break;
-    // case 'Z': break;
+    case 'Z': wizard_unobtain_runes_and_orb(); break;
     // case CONTROL('Z'): break;
 
     case '!': wizard_memorise_spec_spell(); break;
@@ -364,10 +364,7 @@ void handle_wizard_command()
 void enter_explore_mode()
 {
     // WIZ_NEVER gives protection for those who have wiz compiles,
-    // and don't want to risk their characters. Also, and hackishly,
-    // it's used to prevent access for non-authorised users to wizard
-    // builds in dgamelaunch builds unless the game is started with the
-    // -wizard flag.
+    // and don't want to risk their characters.
     if (Options.explore_mode == WIZ_NEVER)
         return;
 
@@ -392,7 +389,8 @@ void enter_explore_mode()
         take_note(Note(NOTE_MESSAGE, 0, 0, "Entered explore mode."));
 
 #ifndef SCORE_WIZARD_CHARACTERS
-        _log_wizmode_entrance();
+        scorefile_entry se(INSTANT_DEATH, MID_NOBODY, KILLED_BY_EXPLORING, nullptr);
+        logfile_new_entry(se);
 #endif
 
         you.explore = true;
@@ -504,6 +502,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>+</w>      make randart from item\n"
                        "<w>'</w>      list items\n"
                        "<w>J</w>      Jiyva off-level sacrifice\n"
+                       "<w>Z</w>      Unobtain runes and Orb of Zot\n"
                        "\n"
                        "<yellow>Debugging commands</yellow>\n"
                        "<w>f</w>      quick fight simulation\n"

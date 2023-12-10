@@ -3,6 +3,7 @@ airstrike AIRSTRIKE
 chain_lightning CHAIN_LIGHTNING
 conjure_ball_lightning CONJURE_BALL_LIGHTNING
 lightning_bolt LIGHTNING_BOLT
+arcjolt ARCJOLT
 maxwells MAXWELLS_COUPLING
 repel_missiles REPEL_MISSILES
 shock SHOCK
@@ -19,6 +20,8 @@ dazzling_spray DAZZLING_SPRAY
 force_lance FORCE_LANCE
 fulminant_prism FULMINANT_PRISM
 searing_ray SEARING_RAY
+momentum_strike MOMENTUM_STRIKE
+irradiate IRRADIATE
 
 %sdir gui/spells/earth
 iron_shot IRON_SHOT
@@ -32,6 +35,7 @@ sandblast SANDBLAST
 shatter SHATTER
 statue_form STATUE_FORM
 stone_arrow STONE_ARROW
+boulder BOULDER
 
 %sdir gui/spells/enchantment
 anguish ANGUISH
@@ -49,14 +53,15 @@ mass_confusion MASS_CONFUSION
 slow SLOW
 tukimas_dance TUKIMAS_DANCE
 violent_unravelling VIOLENT_UNRAVELLING
+sigil_of_binding SIGIL_OF_BINDING
+jinxbite JINXBITE
 
 %sdir gui/spells/fire
 bolt_of_fire BOLT_OF_FIRE
 bolt_of_magma BOLT_OF_MAGMA
-conjure_flame CONJURE_FLAME
 fire_storm FIRE_STORM
 fireball FIREBALL
-flame_tongue FLAME_TONGUE
+volatile_blastmotes BLASTMOTE
 ignite_poison IGNITE_POISON
 sticky_flame STICKY_FLAME
 throw_flame THROW_FLAME
@@ -66,6 +71,7 @@ starburst STARBURST
 foxfire FOXFIRE
 scorch SCORCH
 flame_wave FLAME_WAVE
+plasma_beam PLASMA_BEAM
 
 %sdir gui/spells/ice
 bolt_of_cold BOLT_OF_COLD
@@ -104,6 +110,7 @@ symbol_of_torment SYMBOL_OF_TORMENT
 vampiric_draining VAMPIRIC_DRAINING
 infestation INFESTATION
 borgnjors_vile_clutch BORGNJORS_VILE_CLUTCH
+kiss_of_death KISS_OF_DEATH
 
 %sdir gui/spells/poison
 alistairs_intoxication ALISTAIRS_INTOXICATION
@@ -151,14 +158,7 @@ portal_projectile PORTAL_PROJECTILE
 teleport_other TELEPORT_OTHER
 gravitas GRAVITAS
 manifold_assault MANIFOLD_ASSAULT
-
-%sdir gui/spells/transmutation
-blade_hands BLADE_HANDS
-beastly_appendage BEASTLY_APPENDAGE
-irradiate IRRADIATE
-storm_form STORM_FORM
-dragon_form DRAGON_FORM
-wereblood WEREBLOOD
+electric_charge ELECTRIC_CHARGE
 
 # item-based spells
 %sdir gui/spells/misc
@@ -168,6 +168,8 @@ cloud_cone CLOUD_CONE
 bolt_corrosive CORROSIVE_BOLT
 iceblast ICEBLAST
 bolt_energy ENERGY_BOLT
+# and wereblood
+wereblood WEREBLOOD
 
 # spells normally only used by monsters
 %back gui/spells/bg
@@ -176,7 +178,7 @@ generic GENERIC_MONSTER_SPELL
 air_elementals AIR_ELEMENTALS
 awaken_vines AWAKEN_VINES
 blink_other BLINK_OTHER
-brain_feed BRAIN_FEED
+brain_bite BRAIN_BITE
 call_down_damnation CALL_DOWN_DAMNATION
 cantrip CANTRIP
 cold_breath COLD_BREATH

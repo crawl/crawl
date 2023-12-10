@@ -1,18 +1,8 @@
 %%%%
-Abyssal Knight
-
-Abyssal Knights worship Lugonu, and are sent from the Abyss into the Dungeon to
-spread corruption and chaos.
-%%%%
 Air Elementalist
 
 Air Elementalists have learned the Shock spell. Later on, their selection of
 Air Magic spells provides them with the flexibility to survive.
-%%%%
-Arcane Marksman
-
-Arcane Marksmen carry a sling, and use magic to make their foes more
-vulnerable to attacks from afar.
 %%%%
 Artificer
 
@@ -79,7 +69,12 @@ bewildered foes.
 %%%%
 Hunter
 
-Hunters carry a shortbow, light armour and a scroll of immolation.
+Hunters carry a shortbow, light armour and a scroll of butterflies.
+%%%%
+Hexslinger
+
+Hexslingers carry a sling, and use hex magic to make their foes more vulnerable
+to attacks from afar.
 %%%%
 Ice Elementalist
 
@@ -88,23 +83,28 @@ library are quite versatile.
 %%%%
 Monk
 
-Monks start with a simple weapon of their choice and a potion of divine ambrosia,
-and gain additional piety with the first god they worship.
+Monks start with a simple weapon of their choice, an orb of light, and a potion
+of divine ambrosia, and gain additional piety with the first god they worship.
 %%%%
 Necromancer
 
 Necromancers are wizards specializing in the practice of death magic. They
 start out with the Necrotise spell.
 %%%%
+Reaver
+
+Reavers start with a weapon of their choice and deadly magic to supplement it
+when in need. They start with the Kiss of Death spell.
+%%%%
 Summoner
 
 Summoners are able to cast Summon Small Mammal from the start, and begin with
 other Summonings spells in their library.
 %%%%
-Transmuter
+Shapeshifter
 
-Transmuters learn spells to shift their form, making them powerful unarmed
-fighters.
+Shapeshifters use talismans to shift their form, making them powerful melee
+fighters (especially when unarmed) at the cost of armour.
 %%%%
 Venom Mage
 
@@ -117,6 +117,6 @@ Wanderers start with random equipment and skills.
 %%%%
 Warper
 
-Warpers start with a weapon of their choice, a scroll of blinking, boomerangs
-of dispersal, and some Translocation spells in their library.
+Warpers start with a weapon of their choice, a scroll of blinking, darts of
+dispersal, and some Translocation spells in their library.
 %%%%

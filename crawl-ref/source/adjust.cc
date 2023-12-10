@@ -86,7 +86,7 @@ static void _adjust_spell()
 
     // Select starting slot
     mprf(MSGCH_PROMPT, "Adjust which spell? ");
-    int keyin = list_spells(false, false, false, "Adjust which spell?");
+    int keyin = list_spells(false, false, false, "adjust");
 
     if (!isaalpha(keyin))
     {
@@ -120,8 +120,13 @@ static void _adjust_spell()
         }
         // FIXME: It would be nice if the user really could select letters
         // without spells from this menu.
+        // XX this does not really work well with new menu code
         if (keyin == '?' || keyin == '*')
-            keyin = list_spells(true, false, false, "Adjust to which letter?");
+        {
+            keyin = list_spells(true, false, false, "adjust it to");
+            if (keyin < 'a' || keyin > 'Z')
+                continue;
+        }
     }
 
     const int input_2 = keyin;

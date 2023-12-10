@@ -62,6 +62,8 @@ enum NOTE_TYPES
 #endif
     NOTE_FOUND_UNRAND,          /* needs: item name (string) */
     NOTE_ACQUIRE_ITEM,
+    NOTE_ZOT_TOUCHED,           /* needs: old mhp, new mhp */
+    NOTE_DREAMSHARD,
     NOTE_NUM_TYPES
 };
 

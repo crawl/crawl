@@ -36,23 +36,23 @@ end
 #
 NAME:    david_vaults_1
 TAGS:    vaults_entry transparent
-MONS:    troll / two-headed ogre
-MONS:    necromancer / wizard / vampire w:4 / \
-         deep elf pyromancer w:2 / deep elf zephyrmancer w:2
+MONS:    troll / two-headed ogre / orc knight w:5
+MONS:    necromancer / arcanist / \
+         deep elf pyromancer w:4 / deep elf zephyrmancer w:4
 SHUFFLE: !-
 SUBST:   ! = x, - = +, c : cxv
-NSUBST:  1 = 1:1 / * = 1.., 2 = 1:2 / * = 2..
+NSUBST:  1 = 2:1 / * = 111.., 2 = 1:2 / * = 222..
 KFEAT:   O = enter_vaults
 MAP
-xxxxx.@.ccccc
-x...+...c..2c
-x...x...c...c
-x!x-x.1.c...c
-@.x.x12.+.O1c
-x.x.x.1.c...c
-x.x.x...c...c
-x.+.x...c..2c
-xxxxx.@.ccccc
+xxxxxx.@.ccccc
+x....+...c..2c
+x....x...c...c
+x!x--x.1.c..1c
+@.x..x12.+.O1c
+x.x..x.1.c..1c
+x.x..x...c...c
+x.+..x...c..2c
+xxxxxx.@.ccccc
 ENDMAP
 
 ############################################################
@@ -82,21 +82,21 @@ ENDMAP
 NAME:    david_vaults_3
 TAGS:    vaults_entry transparent
 MONS:    human
-KMONS:   2 = orc knight / Urug, orc knight
-KMONS:   3 = centaur warrior w:20 / Nessos, centaur warrior
-KMONS:   4 = two-headed ogre / Rupert, two-headed ogre
+KMONS:   2 = orc knight w:20 / Urug, orc knight
+KMONS:   3 = centaur warrior w:30 / Nessos, centaur warrior
+KMONS:   4 = two-headed ogre w:30 / Rupert / Lodul, two-headed ogre
 SHUFFLE: 2349
 KFEAT:   O = enter_vaults
 MAP
 @..........@
-....1131....
+.$..1131..$.
 ...1....1...
 ..1......1..
 ..2..O{..1..
 ..1..()..4..
 ..1......1..
 ...1....1...
-....1911....
+.$..1911..$.
 @..........@
 ENDMAP
 
@@ -106,10 +106,10 @@ ENDMAP
 NAME:    david_vaults_4
 TAGS:    vaults_entry transparent
 MONS:    fire dragon / ice dragon / hydra / lindwurm
-MONS:    freezing wraith / shadow wraith / wraith / phantasmal warrior
-MONS:    deep troll / iron troll / troll
+MONS:    freezing wraith / shadow wraith / phantasmal warrior
+MONS:    deep troll / troll
 MONS:    two-headed ogre / cyclops / ettin
-MONS:    necromancer / glowing shapeshifter / vault guard / wizard
+MONS:    necromancer / glowing shapeshifter / vault guard / arcanist
 MONS:    shapeshifter
 NSUBST:  1 = 1:1 / 1:2 / 1:3. / 1 : 4 .:30 / 1:5 .:70
 SHUFFLE: 12345
@@ -135,8 +135,9 @@ NAME:   david_vaults_5
 TAGS:   vaults_entry
 KMONS:  O = vault guard
 KFEAT:  O = enter_vaults
-SUBST:  ! : !., ? : ?.
-SUBST:  ?! = .:30 0:10 9:5 %:10 *:5
+SUBST:  ! : !', ? : ?'
+SUBST:  ?! = ':30 0:10 9:5 %:10 *:5
+NSUBST: ' = 2:0 / 1:$ / *:.
 MAP
 xxxxxxxxxxxxxx
 xOx!x!x?x!x?xx
@@ -156,14 +157,15 @@ ENDMAP
 NAME:   erik_vaults_1
 TAGS:   vaults_entry transparent
 MONS:   dancing weapon ; long sword good_item
-SUBST:  v : vcxxx
+MONS:   vault guard ; long sword good_item . chain mail
+SUBST:  v : vcxxx, 2 = 221
 KFEAT:  O = enter_vaults
 MAP
 .............
 .............
 .....v%v.....
 ....vvvvv....
-.....1O1.....
+.....1O2.....
 ....vvvvv....
 .....v%v.....
 .............
@@ -191,20 +193,20 @@ vvvvvv.vvvvvv
 ENDMAP
 
 ############################################################
-# HangedMan's map
+# Bands entry
 #
 NAME:    hangedman_vaults_entry_quadrant_bands
 TAGS:    vaults_entry no_monster_gen no_item_gen patrolling transparent
 ORIENT:  float
 MONS:    centaur warrior, centaur / nothing w:5
-MONS:    ogre mage, two-headed ogre / ogre w:16
-MONS:    orc knight, orc priest / orc warrior / orc wizard / orc w:15
+MONS:    ogre mage, two-headed ogre / ogre w:15
+MONS:    orc knight, orc priest / orc warrior / orc wizard
 KMONS:   7 = yaktaur
-KMONS:   8 = yaktaur / nothing w:5
+KMONS:   8 = yaktaur / nothing
 KMONS:   9 = deep elf knight / deep elf archer
-KMONS:   0 = deep elf pyromancer / deep elf zephyrmancer / nothing
+KMONS:   0 = deep elf pyromancer / deep elf zephyrmancer w:5 / nothing
 KMONS:   A = boggart / kobold demonologist
-KMONS:   B = kobold brigand / kobold w:5
+KMONS:   B = kobold brigand / kobold w:2
 KMONS:   C = skeletal warrior
 KMONS:   D = skeleton
 KMASK:   @` = !no_item_gen
@@ -236,10 +238,10 @@ ENDMAP
 NAME:   grunt_vaults_entry_tiered
 TAGS:   vaults_entry no_monster_gen no_tele_into transparent
 MONS:   human w:29 / orc warrior w:1
-MONS:   necromancer / wizard / yaktaur w:2
+MONS:   necromancer / arcanist / yaktaur w:2
 MONS:   vault guard w:58 / deep elf knight w:1 / deep elf archer w:1
 SUBST:  x : xcv
-NSUBST: 2 = 1:2 / * = 12, 3 = 1:3 / * = 113
+NSUBST: 2 = 2:2 / * = 12, 3 = 2:3 / * = 113, % = 2:. / *:%
 KFEAT:  O = enter_vaults
 MAP
 ...............
@@ -262,16 +264,16 @@ ENDMAP
 ############################################################
 # A fortification!
 #
-NAME: grunt_vaults_entry_fortified
-TAGS: vaults_entry no_pool_fixup no_monster_gen patrolling transparent
+NAME:   grunt_vaults_entry_fortified
+TAGS:   vaults_entry no_pool_fixup no_monster_gen patrolling transparent
 ORIENT: north
-MONS: human ; arbalest q:10 . short sword | dagger . \
-              leather armour w:5 | ring mail | scale mail / \
-      orc warrior ; arbalest q:10 . short sword | dagger . \
-                    leather armour w:5 | ring mail | scale mail / \
-      deep elf knight w:5 / deep elf archer w:5 / gargoyle / yaktaur
-MONS: vault guard / orc knight w:2
-MONS: wizard / tengu conjurer / orc sorcerer / ogre mage
+MONS:   human ; arbalest . short sword | dagger . \
+                leather armour w:5 | ring mail | scale mail / \
+        orc warrior ; orcbow . short sword | dagger . \
+                      leather armour w:5 | ring mail | scale mail / \
+        deep elf knight w:5 / deep elf archer w:5 / gargoyle / yaktaur
+MONS:   vault guard / orc knight w:2
+MONS:   arcanist / tengu conjurer / orc sorcerer / ogre mage
 NSUBST: T = 1:U / *:T
 KFEAT: O = enter_vaults
 MAP
@@ -287,8 +289,8 @@ xv...............vx
 xvv+vvvv.v.vvvv+vvx
 xv...vxv...vxv...vx
 xv...vxv.1.vxv...vx
-xv...vxv...vxv...vx
-xvv12vvv+++vvv21vvx
+xv2..vxv.1.vxv..2vx
+xvv11vvv+++vvv11vvx
 .wwwwwwW...Wwwwwww.
 .WwwwwwW...WwwwwwW.
  .WwwwWW...WwwwwW.
@@ -302,6 +304,7 @@ NAME: lightli_vaults_fourway_checkpoint
 TAGS: vaults_entry transparent
 MONS: vault guard
 KFEAT: O = enter_vaults
+NSUBST: 0 = 1:. / 1:0. / *:0
 MAP
 .................
 ...vv.......vv...
@@ -310,9 +313,9 @@ MAP
 .vvvvvvv+vvvvvvv.
 ..vvvv.....vvvv..
 ...vv.v0.0v.vv...
-....v.0.1.0.v....
+....v.0%1.0.v....
 ....+..1O1..+....
-....v.0.1.0.v....
+....v.0.1%0.v....
 ...vv.v0.0v.vv...
 ..vvvv.....vvvv..
 .vvvvvvv+vvvvvvv.
@@ -354,13 +357,14 @@ MAP
         @@
 ENDMAP
 
-NAME: ximxim_vaults_locker_room
-TAGS: vaults_entry no_monster_gen no_item_gen no_trap_gen
-MONS: human w:15 / vault guard w:5
-ITEM: w:30 plate armour / w:7 broad axe / glaive / kite shield \
-      / w:5 tower shield / w:3 arbalest / great sword / great mace
-KFEAT: O = enter_vaults
-KFEAT: Z = shallow_water
+NAME:   ximxim_vaults_locker_room
+TAGS:   vaults_entry no_monster_gen no_item_gen no_trap_gen
+MONS:   human, vault guard
+ITEM:   plate armour w:30 / broad axe w:7 / glaive / kite shield / \
+        tower shield w:5 / arbalest w:3 / great sword / great mace
+KFEAT:  O = enter_vaults
+KFEAT:  Z = shallow_water
+NSUBST: 1 = 2:2 / 2 = 12 / * = 1112
 MARKER: Z = lua:fog_machine { cloud_type = "rain", \
                 pow_min = 10, pow_max = 10, delay = 10, \
                 size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
@@ -375,6 +379,80 @@ v+v+v+v+v+v+v
 vdvdvdvdvdvdv
 vvvvvvvvvvvvv
 ENDMAP
+
+NAME:   hellmonk_vaults_keyhole
+TAGS:   vaults_entry no_monster_gen
+ORIENT: north
+MONS:   human, vault guard, ironbound thunderhulk / ironbound frostheart
+SUBST:  v : v:90 b
+NSUBST: 2 = 1:3 / *=2., - = 8=10.. / *:.
+KFEAT: O = enter_vaults
+MAP
+  vvv
+ vv2vv
+vv...vv
+v2.O.2v
+vv...vv
+ vv2vv
+  v-v
+  v-v
+ vv-vv
+ v---v
+vv---vv
+v-----v
+v-----v
+vv+++vv
+  @@@
+ENDMAP
+
+NAME:   hellmonk_vaults_order_and_chaos
+TAGS:   vaults_entry transparent no_monster_gen
+MONS:   entropy weaver / glowing orange brain / great orb of eyes w:1
+MONS:   ironbound preserver / vault guard / peacekeeper w:1
+SHUFFLE: AB/CO
+NSUBST: - = 1:1 / *:-, . = 1:2 / *:.
+KFEAT:  A = enter_vaults
+KFEAT:  O = enter_vaults
+KITEM:  B = any armour good_item / gold good_item w:50
+KITEM:  C = any weapon good_item ego:chaos / any wand w:50
+FTILE:  .BO2 = floor_hall
+FTILE:  -AC1 = floor_nerves
+MAP
+    vvv
+   vv.vv
+  vv...vv
+ @v..B..v
+ @-....vv
+ @--...v
+ v---..@
+vv----.@
+v--A--v@
+vv---vv
+ vv-vv
+  vvv
+ENDMAP
+
+# something nasty has slaughtered the usual guards, but can't get in (no rune)
+NAME:   hellmonk_vaults_attempted_burglary
+TAGS:   vaults_entry transparent no_monster_gen
+NSUBST: 8 = 1:89 / *:.
+SUBST:  1 = 1., .= .:80 ', v = v:80 y
+KFEAT:  O = enter_vaults
+KFEAT:  y = metal_wall
+KPROP:  'y = bloody
+: dgn.delayed_decay(_G, '1', 'human corpse')
+MAP
+vvvv vvvv
+vv8vvv8vv
+v1..8..1v
+vv..1..vv
+ v.1O1.v
+vv..1..vv
+v1..G..1v
+vv.....vv
+vvv+++vvv
+ENDMAP
+
 ###############################################################################
 # Vaults:$ last level of the vaults -- dungeon.cc will change all these 'x's
 ###############################################################################

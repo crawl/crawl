@@ -14,6 +14,7 @@
 #include "god-passive.h"
 #include "message.h"
 #include "notes.h" // NOTE_MESSAGE
+#include "options.h" // fear_zot
 #include "state.h"
 
 #if TAG_MAJOR_VERSION == 34
@@ -72,14 +73,6 @@ bool zot_immune()
     return player_has_orb() || you.zigs_completed;
 }
 
-// will the zot clock reaching 0 kill the player?
-bool zot_clock_fatal()
-{
-    return you.hp_max_adj_temp // are we drained at all?
-        && !zot_immune()
-        && get_real_hp(true, true) <= get_real_hp(true, false) / 10;
-}
-
 int turns_until_zot_in(branch_type br)
 {
     const int aut = (MAX_ZOT_CLOCK - _zot_clock_for(br));
@@ -136,6 +129,14 @@ bool bezotted()
     return bezotted_in(you.where_are_you);
 }
 
+bool should_fear_zot()
+{
+    return bezotted()
+        || you.has_mutation(MUT_SHORT_LIFESPAN)
+           && zot_clock_active()
+           && Options.fear_zot;
+}
+
 // Decrease the zot clock when the player enters a new level.
 void decr_zot_clock(bool extra_life)
 {
@@ -182,19 +183,21 @@ void incr_zot_clock()
     if (!bezotted())
         return;
 
-    const bool in_death_range = zot_clock_fatal();
     if (_zot_clock() >= MAX_ZOT_CLOCK)
     {
-        if (in_death_range)
-        {
-            mprf("%s", getSpeakString("Zot death").c_str());
-            ouch(INSTANT_DEATH, KILLED_BY_ZOT);
-            return;
-        }
-
         mpr("Zot's power touches on you...");
-        drain_player(270, true, true);
-        take_note(Note(NOTE_MESSAGE, 0, 0, "Touched by the power of Zot."));
+        // Use your 'base' MHP (excluding forms, berserk, artefacts...)
+        // to calculate loss, so that Dragon Form doesn't penalize extra HP
+        // and players in unskilled talisman forms don't lose less HP.
+        // TODO: also ignore ATTR_DIVINE_VIGOUR.
+        const int mhp = get_real_hp(false, false);
+        // However, use your current hp_max to set the max loss, so that you
+        // can't go below 1 MHP ever.
+        const int loss = min(3 + mhp / 6, you.hp_max - 1);
+        // Take the note before decrementing max HP, so the notes have cause
+        // before effect. Not sure if this should use current or base MHP.
+        take_note(Note(NOTE_ZOT_TOUCHED, you.hp_max, you.hp_max - loss));
+        dec_max_hp(loss);
         interrupt_activity(activity_interrupt::force);
 
         set_turns_until_zot(you.has_mutation(MUT_SHORT_LIFESPAN) ? 200 : 1000);
@@ -207,15 +210,13 @@ void incr_zot_clock()
     switch (lvl)
     {
         case 1:
-            mprf("You have lingered too long. Zot senses you. Dive deeper or flee this branch before you %s!", in_death_range ? "perish" : "suffer");
+            mprf("You have lingered too long. Zot senses you. Dive deeper or flee this branch before you suffer!");
             break;
         case 2:
-            mprf("Zot draws nearer. Dive deeper or flee this branch before you %s!",
-                 in_death_range ? "perish" : "suffer");
+            mpr("Zot draws nearer. Dive deeper or flee this branch before you suffer!");
             break;
         case 3:
-            mprf("Zot has nearly found you. %s is approaching. Descend or flee this branch!",
-                 in_death_range ? "Death" : "Suffering");
+            mprf("Zot has nearly found you. Suffering is imminent. Descend or flee this branch!");
             break;
     }
 

@@ -6,7 +6,6 @@
 #include "coordit.h"
 #include "directn.h"
 #include "env.h"
-#include "god-passive.h" // passive_t::auto_map
 #include "level-state-type.h"
 #include "notes.h"
 #include "religion.h"
@@ -92,26 +91,19 @@ void clear_map_or_travel_trail()
     }
 }
 
-static void _automap_from(int x, int y, int mutated)
+static void _automap_from(int x, int y, int level)
 {
-    if (mutated)
+    if (level)
     {
-        const bool godly = have_passive(passive_t::auto_map);
-        magic_mapping(8 * mutated,
-                      godly ? 25 + you.piety / 8 : 25,
-                      true, godly,
-                      true, coord_def(x,y));
+        magic_mapping(LOS_MAX_RANGE * level, 25,
+                      true, false, true, false, true,
+                      coord_def(x,y));
     }
 }
 
 static int _map_quality()
 {
-    int passive = you.get_mutation_level(MUT_PASSIVE_MAPPING);
-    // the explanation of this 51 vs max_piety of 200 is left as
-    // an exercise to the reader
-    if (have_passive(passive_t::auto_map))
-        passive = max(passive, you.piety / 51);
-    return passive;
+    return you.get_mutation_level(MUT_PASSIVE_MAPPING);
 }
 
 void reautomap_level()
@@ -331,10 +323,12 @@ bool map_cell::update_cloud_state()
 }
 
 /**
- * Find the known map bounds as a pair of coordinates. Returns (-1,-1) x (-1,-1)
- * if the map is not known at all (this state shouldn't arise during normal
- * gameplay, but may arise in weird limiting cases, like during levelgen or
- * in tests).
+ * Find the known map bounds as a pair of coordinates. This is a minimal
+ * bounding box containing all areas of the map known by the player.
+ * @return A pair of coord_defs. This is { (-1,-1), (-1,-1) } if the map is not
+ *         known at all (this state shouldn't arise during normal gameplay, but
+ *         may arise in weird limiting cases, like during levelgen or in
+ *         tests).
  */
 std::pair<coord_def, coord_def> known_map_bounds() {
     int min_x = GXM, max_x = 0, min_y = 0, max_y = 0;
@@ -364,4 +358,16 @@ std::pair<coord_def, coord_def> known_map_bounds() {
         min_x = max_x = min_y = max_y = -1;
 
     return std::make_pair(coord_def(min_x, min_y), coord_def(max_x, max_y));
+}
+
+/**
+ * Are the given coordinates in the minimal bounding box of the known map?
+ * @param p A coord_def to test.
+ * @return True if p is in the bounding box, false otherwise.
+ */
+bool in_known_map_bounds(const coord_def& p)
+{
+    std::pair<coord_def, coord_def> b = known_map_bounds();
+    return p.x >= b.first.x && p.y >= b.first.y
+        && p.x <= b.second.x && p.y <= b.second.y;
 }

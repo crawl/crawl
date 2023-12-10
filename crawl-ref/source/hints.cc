@@ -99,13 +99,8 @@ void init_hints_options()
     // Clear possible debug messages before messing
     // with messaging options.
     clear_messages(true);
-//     Options.clear_messages = true;
     Options.show_more  = true;
     Options.small_more = false;
-
-#ifdef USE_TILE
-    Options.tile_tag_pref = TAGPREF_TUTORIAL;
-#endif
 }
 
 void init_hints()
@@ -203,16 +198,16 @@ void pick_hints(newgame_def& choice)
         fill_doll_for_newgame(doll, tng);
         auto tile = make_shared<ui::PlayerDoll>(doll);
         tile->set_margin_for_sdl(0, 6, 0, 0);
-        hbox->add_child(move(tile));
+        hbox->add_child(std::move(tile));
         hbox->add_child(label);
 #endif
 
         auto btn = make_shared<MenuButton>();
 #ifdef USE_TILE_LOCAL
         hbox->set_margin_for_sdl(4,8);
-        btn->set_child(move(hbox));
+        btn->set_child(std::move(hbox));
 #else
-        btn->set_child(move(label));
+        btn->set_child(std::move(label));
 #endif
         btn->id = i;
         btn->hotkey = 'a' + i;
@@ -246,7 +241,7 @@ void pick_hints(newgame_def& choice)
     {
         auto label = make_shared<Text>(formatted_string("Esc - Quit", BROWN));
         auto btn = make_shared<MenuButton>();
-        btn->set_child(move(label));
+        btn->set_child(std::move(label));
         btn->hotkey = CK_ESCAPE;
         btn->id = CK_ESCAPE;
         sub_items->add_button(btn, 0, 0);
@@ -254,7 +249,7 @@ void pick_hints(newgame_def& choice)
     {
         auto label = make_shared<Text>(formatted_string("  * - Random hints mode character", BROWN));
         auto btn = make_shared<MenuButton>();
-        btn->set_child(move(label));
+        btn->set_child(std::move(label));
         btn->hotkey = '*';
         btn->id = '*';
         sub_items->add_button(btn, 0, 1);
@@ -263,13 +258,12 @@ void pick_hints(newgame_def& choice)
     auto popup = make_shared<ui::Popup>(vbox);
 
     popup->on_keydown_event([&](const KeyEvent& ev) {
-        auto key = ev.key();
-        if (key == CK_MOUSE_CMD)
+        if (ui::key_exits_popup(ev.key(), false))
             return done = cancelled = true;
         return false;
     });
 
-    ui::run_layout(move(popup), done);
+    ui::run_layout(std::move(popup), done);
 
     if (cancelled)
     {
@@ -420,7 +414,7 @@ void hints_starting_screen()
     popup->on_keydown_event([&](const KeyEvent&) { return done = true; });
 
     mouse_control mc(MOUSE_MODE_MORE);
-    ui::run_layout(move(popup), done);
+    ui::run_layout(std::move(popup), done);
 }
 
 // Called each turn from _input. Better name welcome.
@@ -757,6 +751,7 @@ void hints_gained_new_skill(skill_type skill)
     case SK_EVOCATIONS:
     case SK_DODGING:
     case SK_SHIELDS:
+    case SK_SHAPESHIFTING:
     case SK_THROWING:
     case SK_SPELLCASTING:
     {
@@ -1055,7 +1050,6 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_SPELL_MISCAST:
     case HINT_CLOUD_WARNING:
     case HINT_SKILL_RAISE:
-    case HINT_OPPORTUNITY_ATTACK:
         return true;
     default:
         return false;
@@ -2187,7 +2181,7 @@ string hints_describe_item(const item_def &item)
             }
             else if (item.sub_type == ARM_BARDING)
             {
-                ostr << "Only nagas and palentongas can wear barding.";
+                ostr << "Only nagas and armataurs can wear barding.";
                 wearable = false;
             }
             else
@@ -2493,8 +2487,8 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
     case DNGN_TRAP_WEB:
         ostr << "Some areas of the dungeon, such as the Spider Nest, may "
                 "be strewn with giant webs that may ensnare you for a short "
-                "time. Players in Spider Form can safely navigate the webs (as "
-                "can incorporeal entities and various oozes).";
+                "time. Insects, oozes and incorporeal entities can navigate "
+                "the webs safely.";
         Hints.hints_events[HINT_SEEN_WEB] = false;
         break;
 
@@ -2871,8 +2865,10 @@ void tutorial_msg(const char *key, bool end)
     _replace_static_tags(text);
     text = untag_tiles_console(text);
 
+    // n.b. leaving the dungeon counts as "winning" here (and pops up the
+    // tutorial summary)
     if (end)
-        screen_end_game(text);
+        screen_end_game(text, you.hp <= 0 ? game_exit::death : game_exit::win);
 
     // "\n" to preserve indented parts, the rest is unwrapped, or split into
     // paragraphs by "\n\n", split_string() will ignore the empty line.

@@ -14,6 +14,7 @@
 #include "dungeon.h"
 #include "env.h"
 #include "initfile.h"
+#include "item-prop.h" // initialise_item_sets
 #include "libutil.h"
 #include "maps.h"
 #include "message.h"
@@ -22,6 +23,7 @@
 #include "shopping.h"
 #include "state.h"
 #include "stringutil.h"
+#include "syscalls.h"
 #include "tag-version.h"
 #include "view.h"
 
@@ -145,11 +147,8 @@ static bool _do_build_level()
             if (item.defined())
                 objstat_record_item(item);
 
-    {
-        unwind_bool wiz(you.wizard, true);
-        magic_mapping(1000, 100, true, true, false,
-                      coord_def(GXM/2, GYM/2));
-    }
+    magic_mapping(GDM, 100, true, true, false, true, false,
+                  coord_def(GXM/2, GYM/2));
 
     // Dump the map of any disconnected level if this CLO is set.
     if (_is_disconnected_level() && crawl_state.map_stat_dump_disconnect)
@@ -162,7 +161,7 @@ static bool _do_build_level()
         if (!vaults.empty())
             vaults = " (" + vaults + ")";
 
-        FILE *fp = fopen("map.dump", "w");
+        FILE *fp = fopen_u("map.dump", "w");
         fprintf(fp, "Bad (disconnected) level (%s) on %s%s.\n\n",
                 env.level_build_method.c_str(),
                 level_id::current().describe().c_str(),
@@ -215,15 +214,6 @@ static bool _build_dungeon()
     {
         you.where_are_you = lid.branch;
         you.depth = lid.depth;
-
-#if TAG_MAJOR_VERSION == 34
-        // An unholy hack, FIXME!
-        if (!brentry[BRANCH_FOREST].is_valid()
-            && lid.branch == BRANCH_FOREST && lid.depth == 5)
-        {
-            you.unique_creatures.set(MONS_THE_ENCHANTRESS, false);
-        }
-#endif
         if (!_do_build_level())
             return false;
     }
@@ -267,6 +257,8 @@ bool mapstat_build_levels()
         you.uniq_map_tags_abyss.clear();
         you.uniq_map_names_abyss.clear();
         you.unique_creatures.reset();
+        you.generated_misc.clear();
+        initialise_item_sets(true);
         initialise_branch_depths();
         init_level_connectivity();
         if (!_build_dungeon())
@@ -334,7 +326,7 @@ static void _check_mapless(const level_id &lid, vector<level_id> &mapless)
 static void _write_map_stats()
 {
     const char *out_file = "mapstat.log";
-    FILE *outf = fopen(out_file, "w");
+    FILE *outf = fopen_u(out_file, "w");
     printf("Writing map stats to %s...", out_file);
     fflush(stdout);
     fprintf(outf, "Map Generation Stats\n\n");

@@ -16,7 +16,7 @@ using std::set;
 using std::string;
 using std::vector;
 
-#if !defined(DGAMELAUNCH) && !defined(__ANDROID__) && !defined(DEBUG_DIAGNOSTICS)
+#if !defined(DGAMELAUNCH) && !defined(DEBUG_DIAGNOSTICS)
 #define DO_FSYNC
 #endif
 

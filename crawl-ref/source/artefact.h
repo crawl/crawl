@@ -17,6 +17,8 @@
 
 #define DAMNATION_BOLT_KEY "damnation_bolt"
 #define EMBRACE_ARMOUR_KEY "embrace_armour"
+#define VICTORY_STAT_KEY    "victory_stat"
+#define VICTORY_CONDUCT_KEY "victory_conduct"
 
 struct bolt;
 
@@ -35,13 +37,6 @@ enum unrand_flag_type
     UNRAND_FLAG_UNIDED           =0x200,
     UNRAND_FLAG_SKIP_EGO         =0x400,
     // Please make sure it fits in unrandart_entry.flags (currently 16 bits).
-};
-
-enum setup_missile_type
-{
-    SM_CONTINUE,
-    SM_FINISHED,
-    SM_CANCEL,
 };
 
 struct unrandart_entry
@@ -72,8 +67,8 @@ struct unrandart_entry
     void (*world_reacts_func)(item_def* item);
     void (*melee_effects)(item_def* item, actor* attacker,
                           actor* defender, bool mondied, int damage);
-    setup_missile_type (*launch)(item_def* item, bolt* beam,
-                                 string* ammo_name, bool* returning);
+    void (*launch)(bolt* beam);
+    void (*death_effects)(item_def* item, monster* mons, killer_type killer);
 };
 
 bool is_known_artefact(const item_def &item);
@@ -141,7 +136,7 @@ enum artp_value_type
 {
     ARTP_VAL_BOOL,  ///< bool (e.g. Fly)
     ARTP_VAL_POS,   ///< Positive integer (e.g. x% chance to get angry)
-    ARTP_VAL_BRAND, ///< Brand (e.g. flaming, vorpal).
+    ARTP_VAL_BRAND, ///< Brand (e.g. flaming, heavy).
                     ///      See \ref brand_type in item-prop-enum.h
     ARTP_VAL_ANY,   ///< int (e.g. dex-4, AC+4, SH+8)
 };
@@ -155,3 +150,6 @@ int get_unrandart_num(const char *name);
 int extant_unrandart_by_exact_name(string name);
 
 void unrand_reacts();
+void unrand_death_effects(monster* mons, killer_type killer);
+
+bool item_type_can_be_artefact(object_class_type typ);

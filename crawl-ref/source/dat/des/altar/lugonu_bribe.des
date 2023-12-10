@@ -12,7 +12,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
     return
   end
 
-  local m = dgn.find_marker_positions_by_prop("slave_name", "altar")[1]
+  local m = dgn.find_marker_positions_by_prop("replica_name", "altar")[1]
   if m ~= nil then
     local x, y = m:xy()
 
@@ -31,13 +31,13 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          Cheibriados="potion of haste ident:type q:3",
          Dithmenos="scroll of noise ident:type q:3",
          Elyvilon="book of Necromancy / book of Death / book of Unlife",
-         Gozag="randbook owner:Lugonu spells:corpse_rot&animate_dead numspells:2",
+         Gozag="randbook owner:Lugonu spells:animate_dead&simulacrum numspells:2",
          Kikubaaqudgha="rat corpse / kobold corpse",
          ["the Shining One"]="good_item " .. weapon .. " ego:pain ident:type /\
               good_item " .. weapon .. " ego:draining ident:type /\
               good_item " .. weapon .. " ego:vampirism ident:type /\
               potion of invisibility ident:type q:3",
-         Okawaru="scroll of summoning ident:type q:3 / box of beasts /\
+         Okawaru="any ally scroll ident:type q:3 / any ally misc /\
               phantom mirror",
          Trog="manual of Spellcasting / manual of Air Magic w:5 /\
               manual of Earth Magic w:5 / manual of Fire Magic w:5 /\
@@ -66,7 +66,7 @@ NAME:   tgw_lugonu_bribe
 TAGS:   transparent
 DEPTH:  D:12-, Depths
 KFEAT:  _ = altar_lugonu
-MARKER: _ = lua:portal_desc {slave_name="altar"}
+MARKER: _ = lua:portal_desc {replica_name="altar"}
 
 {{
 local tm = TriggerableFunction:new{

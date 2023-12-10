@@ -1,7 +1,7 @@
 --- Entry points crawl uses for calling into lua.
 --
 -- Crawl contacts clua through hooks. Hooks can be interacted with either by
--- altering a hook table, defining certian functions, or the interface
+-- altering a hook table, defining certain functions, or the interface
 -- functions described here.
 --
 -- *Note:* This is not a real module. All names described here are in the
@@ -50,7 +50,7 @@ chk_lua_option          = { }
 -- A list of functions which get called when saving. They are expected to
 -- return strings of lua that will be executed on load. Data saved with this
 -- method is associated with the character save and will be lost on death.
--- For permanet storage see @{c_persist}.
+-- For permanent storage see @{c_persist}.
 -- @table chk_lua_save
 chk_lua_save            = { }
 
@@ -199,7 +199,7 @@ end
 -- This variable can be set by lua before the user is shown the
 -- "Activate which ability?" prompt. If set to a valid ability letter that
 -- ability will be activated without prompting the user. Otherwise the ability
--- prompt proceedes as normal.
+-- prompt proceeds as normal.
 --
 -- This value is cleared after every ability activation.
 --
@@ -418,10 +418,62 @@ function c_message(text, channel) end
 --
 -- This hook can be defined to execute lua when an acquirement scroll is read.
 --
--- The hook should call @{items.acquirement_items} to get an array of
--- @{items.Item} representations of the offered items. If it returns a valid
--- index in this array, the given item will be acquired without the usual
--- acquirement menu.
+-- The hook should call @{items.acquirement_items} with an argument of 1 to get
+-- an array of @{items.Item} representations of the offered items. If it
+-- returns a valid index in this array, the given item will be acquired without
+-- the usual acquirement menu.
 --
 -- @treturn int An index between 1 and the number of offered items.
 -- @function c_choose_acquirement
+
+--- Okawaru weapon and armour acquirement hooks.
+--
+-- These hooks can be defined to execute lua when an Okawaru's Recieve Weapon
+-- or Recieve Armour capstone abilities are used.
+--
+-- The hook should call @{items.acquirement_items} with an argument of 2
+-- (for weapons) or 3 (for armour) to get an array of @{items.Item}
+-- representations of the offered items. If it returns a valid index in this
+-- array, the given item will be acquired without the usual acquirement menu.
+--
+-- @function c_choose_okawaru_weapon
+-- @treturn int An index between 1 and the number of offered items.
+--
+-- @function c_choose_okawaru_armour
+-- @treturn int An index between 1 and the number of offered items.
+
+-- Identify scroll hook.
+--
+-- This hook can be defined to execute lua when an identify scroll is read. If
+-- the item with the returned inventory letter is not identified, the scroll
+-- will target this item without the usual menu.
+--
+-- @treturn int A string with a slot letter (i.e. a-z or A-Z).
+-- @function c_choose_identify
+
+-- Enchant weapon scroll hook.
+--
+-- This hook can be defined to execute lua when an enchant weapon scroll is
+-- read. If the item with the returned inventory letter is an enchantable
+-- weapon, the scroll will target this weapon without the usual menu.
+--
+-- @treturn int A string with a slot letter (i.e. a-z or A-Z).
+-- @function c_choose_enchant_weapon
+
+-- Brand weapon scroll hook.
+--
+-- This hook can be defined to execute lua when a brand weapon scroll is read.
+-- If the item with the returned inventory letter is a brandable weapon, the
+-- scroll will target this weapon without the usual menu.
+--
+-- @treturn int A string with a slot letter (i.e. a-z or A-Z).
+-- @function c_choose_brand_weapon
+
+-- Enchant armour scroll hook.
+--
+-- This hook can be defined to execute lua when an enchant armour scroll is
+-- read. If the item with the returned inventory letter is enchantable armour,
+-- the scroll will target this armour without the usual menu.
+--
+-- @treturn int A string with a slot letter (i.e. a-z or A-Z).
+-- @function c_choose_enchant_armour

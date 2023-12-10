@@ -40,6 +40,7 @@
 #include "libutil.h"
 #include "mapmark.h"
 #include "message.h"
+#include "misc.h"
 #include "mgen-data.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
@@ -117,6 +118,8 @@ bool monster_inherently_flies(const monster &mons)
     // check both so spectral humans and zombified dragons both fly
     return monster_class_flies(mons.type)
         || monster_class_flies(mons_base_type(mons))
+        || mons_is_draconian_job(mons.type)
+            && monster_class_flies(draconian_subspecies(mons))
         || mons_is_ghost_demon(mons.type) && mons.ghost && mons.ghost->flies
         || mons.has_facet(BF_BAT);
 }
@@ -380,6 +383,7 @@ resists_t get_mons_class_resists(monster_type mc)
     return _apply_holiness_resists(resists, mons_class_holiness(mc));
 }
 
+/// All resists intrinsic to a monster, excluding enchants, equip, etc.
 resists_t get_mons_resists(const monster& m)
 {
     const monster& mon = get_tentacle_head(m);
@@ -658,6 +662,20 @@ const char * holiness_name(mon_holy_type_flags which_holiness)
     }
 }
 
+/// Hack for demonspawn monsters. TODO: de-bitfieldify!
+const char * single_holiness_description(mon_holy_type holiness)
+{
+    for (const auto bit : mon_holy_type::range())
+    {
+        if (!(holiness & bit))
+            continue;
+        if (bit == MH_NATURAL && holiness != MH_NATURAL)
+            continue;
+        return holiness_name(bit);
+    }
+    return "eggplant";
+}
+
 string holiness_description(mon_holy_type holiness)
 {
     string description = "";
@@ -851,7 +869,7 @@ int cheibriados_monster_player_speed_delta(const monster& mon)
 
 bool cheibriados_thinks_mons_is_fast(const monster& mon)
 {
-    return cheibriados_monster_player_speed_delta(mon) > 0;
+    return mons_base_speed(mon) >= 10;
 }
 
 bool mons_is_projectile(monster_type mc)
@@ -1032,17 +1050,26 @@ bool mons_eats_items(const monster& mon)
  * Undead actors and summoned, temporary, or ghostified monsters are all not
  * susceptible.
  * @param act The actor.
+ * @param only_known Only include information known to the player.
  * @returns True if the actor is susceptible to vampirism, false otherwise.
  */
-bool actor_is_susceptible_to_vampirism(const actor& act)
+bool actor_is_susceptible_to_vampirism(const actor& act, bool only_known)
 {
-    if (!(act.holiness() & (MH_NATURAL | MH_PLANT)) || act.is_summoned())
+    if (!(act.holiness() & (MH_NATURAL | MH_PLANT)))
         return false;
 
     if (act.is_player())
         return true;
 
     const monster *mon = act.as_monster();
+    // Don't leak phantom mirror info.
+    if (act.is_summoned() && (!only_known
+                              || !mon->has_ench(ENCH_PHANTOM_MIRROR)
+                              || mon->friendly()))
+    {
+        return false;
+    }
+
     // Don't allow HP draining from temporary monsters, spectralised monsters,
     // or firewood.
     return !mon->has_ench(ENCH_FAKE_ABJURATION)
@@ -1471,6 +1498,13 @@ bool mons_is_or_was_unique(const monster& mon)
               && mons_is_unique((monster_type) mon.props[ORIGINAL_TYPE_KEY].get_int());
 }
 
+/// This monster isn't a unique per se, but it gets a name anyway.
+/// E.g., the Hellbinder.
+bool mons_is_specially_named(monster_type mc)
+{
+    return mons_class_flag(mc, M_ALWAYS_NAMED);
+}
+
 /**
  * Is the given type one of Hepliaklqana's granted ancestors?
  *
@@ -1505,8 +1539,8 @@ bool mons_can_be_blinded(monster_type mc)
  * The undead, nonliving, vegetative, or unblindable cannot be dazzled.
  *
  * @param mc    The class of monster in question.
- * @return      Whether monsters of this type can get ENCH_BLIND from Dazzling
- *              Spray.
+ * @return      Whether monsters of this type can get `ENCH_BLIND` from Dazzling
+ *              Spray or wands of light.
  */
 bool mons_can_be_dazzled(monster_type mc)
 {
@@ -1517,6 +1551,23 @@ bool mons_can_be_dazzled(monster_type mc)
     const mon_holy_type holiness = mons_class_holiness(mc);
     return !(holiness & (MH_UNDEAD | MH_NONLIVING | MH_PLANT))
         && mons_can_be_blinded(mc);
+}
+
+/**
+ * Can this type of monster survive in deep water?
+ *
+ * @param type  The monster type in question.
+ * @param base  The base type of the monster. (For e.g. draconians.)
+ * @return      Whether monsters of this type can survive falling into deep
+ *              water.
+ *
+ * XXX: Duplicates monster::res_water_drowning().
+ */
+bool mons_resists_drowning(monster_type type, monster_type base)
+{
+    const habitat_type ht = mons_habitat_type(type, base, true);
+
+    return mons_is_unbreathing(type) || ht == HT_WATER || ht == HT_AMPHIBIOUS;
 }
 
 char32_t mons_char(monster_type mc)
@@ -1585,6 +1636,16 @@ bool mons_class_fast_regen(monster_type mc)
     return mons_class_flag(mc, M_FAST_REGEN);
 }
 
+int mons_class_regen_amount(monster_type mc)
+{
+    switch (mc)
+    {
+    case MONS_PARGHIT:         return 27;
+    case MONS_DEMONIC_CRAWLER: return 6;
+    default:                   return 1;
+    }
+}
+
 /**
  * Do monsters of the given type ever leave a hide?
  *
@@ -1648,6 +1709,11 @@ bool mons_class_is_animated_weapon(monster_type type)
     return type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON;
 }
 
+bool mons_class_is_remnant(monster_type mc)
+{
+    return mons_class_flag(mc, M_REMNANT);
+}
+
 bool mons_class_is_animated_object(monster_type type)
 {
     return mons_class_is_animated_weapon(type)
@@ -1672,15 +1738,17 @@ bool mons_class_can_leave_corpse(monster_type mc)
     return smc->leaves_corpse;
 }
 
-bool mons_class_can_be_zombified(monster_type mc)
+bool mons_class_can_be_zombified(monster_type mzc)
 {
-    monster_type ms = mons_species(mc);
-    return !invalid_monster_type(ms)
-            && !mons_class_flag(mc, M_NO_ZOMBIE)
-            && !mons_class_flag(mc, M_INSUBSTANTIAL)
-            && !mons_is_tentacle_or_tentacle_segment(mc)
-            && (mons_class_holiness(mc) & MH_NATURAL
-                || mons_class_can_leave_corpse(ms));
+    monster_type mc = mons_species(mzc);
+    ASSERT_smc();
+    return !invalid_monster_type(mc)
+            && !mons_class_flag(mzc, M_NO_ZOMBIE)
+            && !mons_class_flag(mzc, M_INSUBSTANTIAL)
+            && !mons_is_tentacle_or_tentacle_segment(mzc)
+            && (mons_class_holiness(mzc) & MH_NATURAL
+                || mons_class_can_leave_corpse(mc))
+            && smc->attack[0].damage; // i.e. has_attack
 }
 
 bool mons_can_be_zombified(const monster& mon)
@@ -1691,16 +1759,24 @@ bool mons_can_be_zombified(const monster& mon)
            && mons_has_attacks(mon, true);
 }
 
+bool mons_class_can_be_spectralised(monster_type mzc, bool divine)
+{
+    monster_type mc = mons_species(mzc);
+    ASSERT_smc();
+    return mons_class_holiness(mzc) & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
+        && mc != MONS_PANDEMONIUM_LORD
+        && (!divine || smc->attack[0].type != AT_NONE); // i.e. has_attack
+}
+
 // Does this monster have a soul that can be used for necromancy (Death
 // Channel, Simulacrum, Yredelemnul's Bind Soul)? For Bind Soul, allow
 // monsters with no attacks if they have some spells to use.
 bool mons_can_be_spectralised(const monster& mon, bool divine)
 {
-    return mon.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
+    return mons_class_can_be_spectralised(mon.type, divine)
            && !mon.is_summoned()
            && (!testbits(mon.flags, MF_NO_REWARD)
                || mon.props.exists(KIKU_WRETCH_KEY))
-           && mon.type != MONS_PANDEMONIUM_LORD
            && (mons_has_attacks(mon, true)
                || divine && mon.has_spells());
 }
@@ -1814,6 +1890,7 @@ static const set<attack_flavour> allowed_zombie_af = {
     AF_REACH,
     AF_CRUSH,
     AF_TRAMPLE,
+    AF_DRAG,
 };
 
 static mon_attack_def _downscale_zombie_attack(const monster& mons,
@@ -2048,6 +2125,22 @@ static int _mons_damage(monster_type mc, int rt)
     return smc->attack[rt].damage;
 }
 
+string mon_attack_name_short(attack_type attack)
+{
+    switch (attack)
+    {
+    case AT_SPORE:         return "spore";
+    case AT_TENTACLE_SLAP: return "tentacle";
+    case AT_TAIL_SLAP:     return "tail";
+    case AT_TRUNK_SLAP:    return "trunk";
+    case AT_POUNCE:        return "pounce";
+    case AT_CHERUB:
+    case AT_RANDOM:        return "hit"; // eh
+    default:
+        return mon_attack_name(attack, false);
+    }
+}
+
 /**
  * A short description of the given monster attack type.
  *
@@ -2183,6 +2276,14 @@ int flavour_damage(attack_flavour flavour, int HD, bool random)
             if (random)
                 return HD * 3 / 2 + random2(HD);
             return HD * 5 / 2;
+        case AF_DROWN:
+            if (random)
+                return HD * 3 / 4 + random2(HD * 3 / 4);
+            return HD * 3 / 2;
+        case AF_ACID:
+            if (random)
+                return roll_dice(3, 4);
+            return 12;
         default:
             return 0;
     }
@@ -2206,6 +2307,11 @@ bool flavour_has_reach(attack_flavour flavour)
         default:
             return false;
     }
+}
+
+bool flavour_has_mobility(attack_flavour flavour)
+{
+    return flavour == AF_SWOOP || flavour == AF_FLANK;
 }
 
 bool mons_invuln_will(const monster& mon)
@@ -2436,6 +2542,7 @@ int exper_value(const monster& mon, bool real, bool legacy)
             case SPELL_BANISHMENT:
             case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
             case SPELL_IRON_SHOT:
+            case SPELL_BOMBARD:
             case SPELL_IOOD:
             case SPELL_FIREBALL:
             case SPELL_AGONY_RANGE:
@@ -2759,14 +2866,13 @@ void define_monster(monster& mons, bool friendly)
 
     switch (mcls)
     {
+    // Please keep describe.cc in sync if you change abominations.
     case MONS_ABOMINATION_SMALL:
         hd = 4 + random2(4);
-        mons.props[MON_SPEED_KEY] = 7 + random2avg(9, 2);
         break;
 
     case MONS_ABOMINATION_LARGE:
         hd = 8 + random2(4);
-        mons.props[MON_SPEED_KEY] = 6 + random2avg(7, 2);
         break;
 
     case MONS_SLIME_CREATURE:
@@ -3338,13 +3444,13 @@ mon_attitude_type mons_attitude(const monster& m)
 
 bool mons_is_confused(const monster& m, bool class_too)
 {
-    return (m.has_ench(ENCH_CONFUSION) || m.has_ench(ENCH_MAD))
+    return (m.has_ench(ENCH_CONFUSION) || m.has_ench(ENCH_MAD) || m.sleepwalking())
            && (class_too || !mons_class_flag(m.type, M_CONFUSED));
 }
 
 bool mons_is_wandering(const monster& m)
 {
-    return m.behaviour == BEH_WANDER;
+    return m.behaviour == BEH_WANDER || m.behaviour == BEH_BATTY;
 }
 
 bool mons_is_seeking(const monster& m)
@@ -3584,25 +3690,7 @@ bool mons_should_fire(bolt &beam, bool ignore_good_idea)
             return false;
     }
 
-    // Use of foeRatio:
-    // The higher this number, the more monsters will _avoid_ collateral
-    // damage to their friends.
-    // Setting this to zero will in fact have all monsters ignore their
-    // friends when considering collateral damage.
-
-    // Quick check - did we in fact get any foes?
-    if (beam.foe_info.count == 0)
-        return false;
-
-    // If we hit no friends, fire away.
-    if (beam.friend_info.count == 0)
-        return true;
-
-    // Only fire if they do acceptably low collateral damage.
-    return beam.foe_info.power >=
-           div_round_up(beam.foe_ratio *
-                        (beam.foe_info.power + beam.friend_info.power),
-                        100);
+    return beam.good_to_fire() >= ai_action::good();
 }
 
 /**
@@ -3703,6 +3791,7 @@ bool mons_has_ranged_attack(const monster& mon)
 {
     return mons_has_ranged_spell(mon, true)
            || _mons_has_usable_ranged_weapon(&mon)
+           || mon.missiles()
            || mon.reach_range() != REACH_NONE
            || _mons_has_attack_wand(mon);
 }
@@ -3891,10 +3980,13 @@ bool monster_senior(const monster& m1, const monster& m2, bool fleeing)
     // Let all related monsters (all demons are 'related') push past ones that
     // are weaker at all. Unrelated ones have to be quite a bit stronger, to
     // reduce excessive swapping and because HD correlates only weakly with
-    // monster strength.
+    // monster strength - but still give a small chance for slightly-higher
+    // HD monsters to swap, to discourage ratscumming.
+    const int hd1 = m1.get_hit_dice();
+    const int hd2 = m2.get_hit_dice();
     return related && fleeing
-           || related && m1.get_hit_dice() > m2.get_hit_dice()
-           || m1.get_hit_dice() > m2.get_hit_dice() + 5;
+           || related && hd1 > hd2
+           || hd1 > hd2 + min(5, random2(11));
 }
 
 bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
@@ -4020,10 +4112,7 @@ mon_inv_type item_to_mslot(const item_def &item)
     case OBJ_WANDS:
         return MSLOT_WAND;
     case OBJ_BOOKS:
-    case OBJ_SCROLLS:
-        return MSLOT_SCROLL;
-    case OBJ_POTIONS:
-        return MSLOT_POTION;
+    case OBJ_TALISMANS:
     case OBJ_MISCELLANY:
         return MSLOT_MISCELLANY;
     case OBJ_GOLD:
@@ -4457,6 +4546,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         "squeals",
         "roars",
         "rustles",      // dubious
+        "squeaks",
         "buggily says", // NUM_SHOUTS
         "breathes",     // S_VERY_SOFT
         "whispers",     // S_SOFT
@@ -5320,7 +5410,6 @@ int max_mons_charge(monster_type m)
     switch (m)
     {
         case MONS_ORB_SPIDER:
-        case MONS_FLOATING_EYE:
             return 1;
         default:
             return 0;

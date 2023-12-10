@@ -10,8 +10,10 @@
 #include "rltiles/tiledef-player.h"
 #include "tag-version.h"
 #include "tiledoll.h"
+#include "tilefont.h"
 #include "tilemcache.h"
 #include "tilepick.h"
+#include "options.h"
 
 DungeonCellBuffer::DungeonCellBuffer(const ImageManager *im) :
     m_buf_floor(&im->get_texture(TEX_FLOOR)),
@@ -24,13 +26,28 @@ DungeonCellBuffer::DungeonCellBuffer(const ImageManager *im) :
     m_buf_spells(&im->get_texture(TEX_GUI)),
     m_buf_skills(&im->get_texture(TEX_GUI)),
     m_buf_commands(&im->get_texture(TEX_GUI)),
-    m_buf_icons(&im->get_texture(TEX_ICONS))
+    m_buf_icons(&im->get_texture(TEX_ICONS)),
+    m_buf_glyphs(im->get_glyph_font())
 {
 }
 
 static bool _in_water(const packed_cell &cell)
 {
     return (cell.bg & TILE_FLAG_WATER) && !(cell.fg & TILE_FLAG_FLYING);
+}
+
+void DungeonCellBuffer::add_glyph(const char32_t &g, const VColour &col, int x, int y)
+{
+    float sx = x;
+    float sy = y;
+    m_buf_glyphs.get_font_wrapper().store(m_buf_glyphs, sx, sy, g, col);
+}
+
+void DungeonCellBuffer::add_glyph(const char32_t &g, const VColour &col, const VColour &bg, int x, int y)
+{
+    float sx = x;
+    float sy = y;
+    m_buf_glyphs.get_font_wrapper().store(m_buf_glyphs, sx, sy, g, col, bg);
 }
 
 void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
@@ -201,6 +218,7 @@ void DungeonCellBuffer::clear()
     m_buf_doll.clear();
     m_buf_main_trans.clear();
     m_buf_main.clear();
+    m_buf_glyphs.clear();
     m_buf_spells.clear();
     m_buf_skills.clear();
     m_buf_commands.clear();
@@ -209,6 +227,26 @@ void DungeonCellBuffer::clear()
 
 void DungeonCellBuffer::draw()
 {
+    // normal tiles draw cycle: no glyphs
+    draw_tiles();
+    draw_icons();
+}
+
+void DungeonCellBuffer::draw_glyphs()
+{
+    // this can't happen under the same transform as regular tiles, so it
+    // needs to be called separately. (Refactor somehow?)
+
+    // TODO: used only in DungeonRegion. Implement:
+    // * grid controls (items, monsters)
+    // * popups
+    // * menu icons
+    m_buf_glyphs.draw();
+}
+
+void DungeonCellBuffer::draw_tiles()
+{
+    // things that alternate with glyphs
     m_buf_floor.draw();
     m_buf_wall.draw();
     m_buf_feat.draw();
@@ -216,6 +254,11 @@ void DungeonCellBuffer::draw()
     m_buf_doll.draw();
     m_buf_main_trans.draw();
     m_buf_main.draw();
+}
+
+void DungeonCellBuffer::draw_icons()
+{
+    // things that happen after / instead of glyphs
     m_buf_skills.draw();
     m_buf_spells.draw();
     m_buf_commands.draw();
@@ -230,7 +273,7 @@ void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
         int offset = cell.flv.special % tile_dngn_count(TILE_LIQUEFACTION);
         m_buf_floor.add(TILE_LIQUEFACTION + offset, x, y);
     }
-    else if (cell.is_bloody)
+    else if (cell.is_bloody && Options.show_blood)
     {
         tileidx_t basetile;
         if (is_wall)
@@ -349,10 +392,6 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
         {
             if (cell.is_sanctuary)
                 m_buf_feat.add(TILE_SANCTUARY, x, y);
-#if TAG_MAJOR_VERSION == 34
-            if (cell.heat_aura)
-                m_buf_feat.add(TILE_HEAT_AURA + cell.heat_aura - 1, x, y);
-#endif
             if (cell.is_silenced)
                 m_buf_feat.add(TILE_SILENCED, x, y);
             if (cell.halo == HALO_RANGE)
@@ -388,6 +427,8 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                     m_buf_feat.add(TILE_THREAT_TOUGH, x, y);
                 else if (threat_flag == TILE_FLAG_NASTY)
                     m_buf_feat.add(TILE_THREAT_NASTY, x, y);
+                else if (threat_flag == TILE_FLAG_UNUSUAL)
+                    m_buf_feat.add(TILE_THREAT_UNUSUAL, x, y);
 
                 if (cell.is_highlighted_summoner)
                     m_buf_feat.add(TILE_HALO_SUMMONER, x, y);
@@ -450,10 +491,15 @@ static map<tileidx_t, int> status_icon_sizes = {
     { TILEI_CONC_VENOM,     7 },
     { TILEI_REPEL_MISSILES, 10 },
     { TILEI_INJURY_BOND,    10 },
-    { TILEI_REFLECTING,     9 },
     { TILEI_TELEPORTING,    9 },
     { TILEI_RESISTANCE,     8 },
     { TILEI_BRILLIANCE,     10 },
+    { TILEI_MALMUTATED,     8 },
+    { TILEI_GLOW_LIGHT,     10 },
+    { TILEI_GLOW_HEAVY,     10 },
+    { TILEI_PAIN_BOND,      11 },
+    { TILEI_BULLSEYE,       10 },
+    { TILEI_VITRIFIED,      6 },
 
     // These are in the bottom right, so don't need to shift.
     { TILEI_BERSERK,        FIXED_LOC_ICON },
@@ -517,7 +563,12 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     if (fg & TILE_FLAG_BEH_MASK)
     {
         const tileidx_t beh_flag = fg & TILE_FLAG_BEH_MASK;
-        if (beh_flag == TILE_FLAG_STAB)
+        if (beh_flag == TILE_FLAG_PARALYSED)
+        {
+            m_buf_icons.add(TILEI_PARALYSED, x, y);
+            status_shift += 12;
+        }
+        else if (beh_flag == TILE_FLAG_STAB)
         {
             m_buf_icons.add(TILEI_STAB_BRAND, x, y);
             status_shift += 12;
@@ -568,7 +619,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(icon, x, y, -status_shift, 0);
         if (!size)
         {
-            dprf("unknown icon %llu", icon);
+            dprf("unknown icon %" PRIu64, icon);
             size = 7; // could maybe crash here?
         }
         status_shift += size;
@@ -584,6 +635,9 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
 
     if (bg & TILE_FLAG_MM_UNSEEN && (bg != TILE_FLAG_MM_UNSEEN || fg))
         m_buf_icons.add(TILEI_MAGIC_MAP_MESH, x, y);
+
+    if (bg & TILE_FLAG_RAMPAGE)
+        m_buf_icons.add(TILEI_RAMPAGE, x, y);
 
     // Don't let the "new stair" icon cover up any existing icons, but
     // draw it otherwise.
@@ -686,4 +740,10 @@ void DungeonCellBuffer::pack_mcache(mcache_entry *entry, int x, int y,
                        dinfo[i].ofs_x, dinfo[i].ofs_y);
     }
 }
+
+FontWrapper *DungeonCellBuffer::get_glyph_font()
+{
+    return &m_buf_glyphs.get_font_wrapper();
+}
+
 #endif //TILEDGNBUF.CC

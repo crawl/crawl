@@ -228,10 +228,6 @@ Eruption cast
 
 @The_monster@ rends the earth beneath you!
 %%%%
-Chant Word of Entropy cast
-
-@The_monster@ begins to chant a word of entropy!
-%%%%
 Call of Chaos cast
 
 @The_monster@ calls on the powers of chaos!
@@ -250,7 +246,7 @@ Harpoon Shot cast
 %%%%
 Throw Klown Pie cast
 
-@The_monster@ pies you viciously!
+@The_monster@ pies @target@ viciously!
 %%%%
 Stunning Burst cast
 
@@ -512,7 +508,7 @@ Rupert cast targeted
 %%%%
 Ensnare Arachne cast
 
-@The_monster@ points her staff @at@ @target@, shooting a stream of webbing.
+@The_monster@ points @possessive@ staff @at@ @target@, shooting a stream of webbing.
 
 @The_monster@'s staff shoots out a stream of webbing.
 %%%%
@@ -549,9 +545,27 @@ unseen Vv cast
 
 You hear the sound of rock striking rock.
 %%%%
+Smiting Jeremiah cast
+
+@The_monster@ lets out a twisted cry.
+
+@The_monster@ mumbles a slurred invocation.
+
+VISUAL:@The_monster@ throws @possessive@ arms up pleadingly.
+
+@The_monster@ cries, "Fearful master, protect me!"
+
+@The_monster@ shouts, "O dreadful one, destroy my foe!"
+%%%%
 ########################################################################
 # Individual monsters
 ########################################################################
+brain worm cast
+
+@The_monster@'s bulging head throbs.
+
+@The_monster@'s throbbing head pulsates.
+%%%%
 glowing orange brain cast
 
 @The_monster@ pulsates.
@@ -572,7 +586,7 @@ flayed ghost cast
 %%%%
 manticore cast
 
-@The_monster@ flicks its tail.
+@The_monster@ flicks @possessive@ tail.
 %%%%
 orange crystal statue cast
 
@@ -580,7 +594,7 @@ orange crystal statue cast
 %%%%
 orange crystal statue cast targeted
 
-@The_monster@ fixes its piercing gaze on @target@.
+@The_monster@ fixes @possessive@ piercing gaze on @target@.
 %%%%
 orb of fire cast
 
@@ -627,7 +641,7 @@ thrashing horror cast
 %%%%
 Airstrike wind drake cast
 
-@The_monster@ flaps its wings @at@ @target@.
+@The_monster@ flaps @possessive@ wings @at@ @target@.
 %%%%
 Wind Blast wind drake cast
 
@@ -647,15 +661,15 @@ Minor Healing dryad cast
 %%%%
 Battlecry satyr cast
 
-@The_monster@ plays a rousing melody on his pipes!
+@The_monster@ plays a rousing melody on @possessive@ pipes!
 %%%%
 Cause Fear satyr cast
 
-@The_monster@ plays a frightful melody on his pipes!
+@The_monster@ plays a frightful melody on @possessive@ pipes!
 %%%%
 Sleep satyr cast
 
-@The_monster@ plays a lulling melody on his pipes!
+@The_monster@ plays a lulling melody on @possessive@ pipes!
 %%%%
 Sleep dream sheep cast
 
@@ -801,10 +815,25 @@ Woodweal cast
 
 @The_monster@ touches a tree and draws upon its vitality.
 %%%%
+formless jellyfish cast
+
+@The_monster@ shimmers eerily.
+%%%%
+crystal echidna cast targeted
+
+@The_monster@ flicks its quills @at@ @target@.
+%%%%
+culicivora cast targeted
+
+@The_monster@ chitters @at@ @target@.
+%%%%
+kobold blastminer cast targeted
+
+@The_monster@ blasts @possessive@ cannon @at@ @target@.
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
-%%%%
 angel cast targeted
 
 @The_monster@ calls down the wrath of @possessive_God@ upon @target@.

@@ -456,6 +456,7 @@ ENDMAP
 # Impenetrable vault
 #
 NAME:   impenetrable_vault
+TAGS:   no_descent
 DEPTH:  Depths:2-, !Depths:$
 ORIENT: southeast
 KMASK:   - = !opaque
@@ -492,7 +493,7 @@ ENDMAP
 NAME:   mludivico_vault
 ORIENT: southwest
 DEPTH:  D:12-, !D:$
-MONS:   hell hound, necromancer, wizard, orange demon, rust devil
+MONS:   hell hound, necromancer, occultist / arcanist, orange demon, rust devil
 MONS:   hell knight, great orb of eyes
 MAP
 xx.@.xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -710,6 +711,7 @@ ENDMAP
 NAME:    minmay_connected_triangles_in_corner
 ORIENT:  southeast
 DEPTH:   D:12-, !D:$, Depths, !Depths:$
+TAGS:    no_descent
 SHUFFLE: ([{)]}, 890, |*%$
 SUBST:   c : cv
 KMASK:   - = !opaque
@@ -785,13 +787,13 @@ MAP
 c+..ccccccccccccccx
 c...0cccccccccccccx
 c...9cccccccccccccx
-cc09.mccccccccccccx
-ccccm=...cccccccccx
+cc09.nccccccccccccx
+ccccn=...cccccccccx
 ccccc....0ccccccccx
 ccccc...09ccccccccx
 ccccc..098ccccccccx
-cccccc098.mcccccccx
-cccccccccm=....cccx
+cccccc098.ncccccccx
+cccccccccn=....cccx
 cccccccccc.....0ccx
 cccccccccc....09ccx
 cccccccccc...098ccx
@@ -830,6 +832,7 @@ ENDMAP
 
 NAME:    minmay_nested_s
 ORIENT:  southwest
+TAGS:    no_descent
 DEPTH:   D:12-, !D:$, Depths, !Depths:$
 SUBST:   c : cv
 SHUFFLE: ([{, )]}
@@ -1029,7 +1032,7 @@ NAME:   minmay_tri_stars
 ORIENT: north
 DEPTH:  D:12-, !D:$, Depths, !Depths:$
 SUBST:  x : xvb
-MONS:   wizard w:300 / deep elf pyromancer w:60 / deep elf zephyrmancer w:60 / \
+MONS:   occultist w:150 / arcanist w:150 / deep elf pyromancer w:60 / deep elf zephyrmancer w:60 / \
         orc wizard / orc sorcerer w:35 / tengu conjurer w:35 / nothing w:500
 MONS:   deep elf sorcerer / deep elf annihilator / lich / ancient lich w:5
 ITEM:   any book / any jewellery / any wand / any misc w:3 / \
@@ -1098,6 +1101,7 @@ ENDMAP
 
 NAME:    minmay_broken_ring
 ORIENT:  northwest
+TAGS:    no_descent
 DEPTH:   Depths
 SHUFFLE: |*
 SUBST:   y : z:50 .:50 xcvbn8GTUVY
@@ -1245,8 +1249,8 @@ ENDMAP
 NAME:   minmay_wizard_corner
 ORIENT: southeast
 DEPTH:  D:12-
-KMONS:  1 = wizard / nothing w:140
-KMONS:  * = wizard / nothing
+KMONS:  1 = occultist / arcanist / nothing w:280
+KMONS:  * = occultist / arcanist / nothing w:20
 KITEM:  * = *
 MAP
       .........x
@@ -1749,4 +1753,45 @@ x.%x.x%.x.x.x%x0.x....x.xx.....xx...xx..xx..xx..x.x.x....x.x.....xx.x000x...x%%x
 x0xx.xx0x.x.0x%x.xxxx0x....x...xx..xx..xx..xx.....x.x..x...x..xx....+...+.000%%x
 x..0.0..x.x...........xxx.0.0x.0..xx0...0.xx0.....x0..0x.0..0...0.0.x000x000x%%x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_aperiodic_l_corner
+TAGS:   transparent
+DEPTH:  D:12-, Depths
+ORIENT: southwest
+SUBST: 0 = .:50 0, 9 = .:50 9, 8 = .:50 8, % = .:50 %, * = .:50 *, | = .:50 |
+MAP
+ccccccccccccccccc
+c%..%..%c%..%..%c
+c.00000.+.00000.c
+c.0....%c%....0.c
+c%0.ccccccccc.0%c
+c.0.c*..*..*c.0.c
+c.0.c.99999.+.0.c
+c%.%c.9....*c%.%c
+cc+cc*9.cccccc+cc
+c%.%c.9.c%..%..%c
+c.0.c.9.c.00000.c
+c.0.c*.*c.0....%c
+c%0.cc+cc%0.cc+cc
+c.0....%c.0.c...c@@@
+c.00000.c.0.c.T.+..@
+c%..%..%c%.%c.0.c..@
+cc+ccccccc+cc.0.cc+cccccccccccccc
+c*..*..*c%.%c.0.....c%.%c%..%..%c
+c.99999.c.0.c.T000T.+.0.+.00000.c
+c.9....*c.0.c.......c.0.c%....0.c
+c*9.cc+cc%0.ccccccccc.0%cc+cc.0%c
+c.9.c|.|c.0....%c%....0.c*.*c.0.c
+c.9.c.8.c.00000.+.00000.c.9.c.0.c
+c*.*c.8.c%..%..%c%..%..%c.9.c%.%c
+cc+cc|8.ccccccccccccccccc.9*cc+cc
+c*.*c.8....|c*.*c%.%c*....9.c%.%c
+c.9.c.88888.+.9.c.0.+.99999.c.0.c
+c.9.c|..|..|c.9.c.0.c*..*..*c.0.c
+c*9.ccccccccc.9*c%0.ccccccccc.0%c
+c.9....*c*....9.c.0....%c%....0.c
+c.99999.+.99999.+.00000.+.00000.c
+c*..*..*c*..*..*c%..%..%c%..%..%c
+ccccccccccccccccccccccccccccccccc
 ENDMAP

@@ -1,7 +1,7 @@
 # temple_compat.des
 #
 # When cc390b852004c86 updated / revised / combined / renamed
-# a great deal of map variations, this screwed with save compatability:
+# a great deal of map variations, this screwed with save compatibility:
 # Crawl decides what temple map to use at the beginning of the game,
 # and most of the maps were made inaccessible by name. While Crawl can
 # still recover from this, it still quite easily means a dearth of gods

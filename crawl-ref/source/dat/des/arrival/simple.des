@@ -1420,23 +1420,6 @@ xxW3...tWxx
   xxx xxx
 ENDMAP
 
-NAME:    ldierk_water_garden
-TAGS:    arrival no_monster_gen no_pool_fixup transparent
-ORIENT:  float
-SUBST:   W : wW
-MONS:    toadstool
-MAP
-  W       W
- WtW     WtW
-WtTtWWWWWtTtW
-.Wt.......tW.
-@.W...{...W.@
-.Wt.......1W.
-WtTtWWWWW1T1W
- WtW     W1W
-  W       W
-ENDMAP
-
 ##############################################################################
 # tarquinn's gardens
 

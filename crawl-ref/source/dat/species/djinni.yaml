@@ -17,20 +17,21 @@ aptitudes:
   staves: -1
   ranged weapons: -2
   throwing: -2
-  spellcasting: -3
+  spellcasting: 11
+  fire_magic: 11
+  ice_magic: 11
+  air_magic: 11
+  earth_magic: 11
+  poison_magic: 11
+  conjurations: 11
+  hexes: 11
+  summoning: 11
+  necromancy: 11
+  translocations: 11
+  transmutations: 11
   dodging: 1
-  fire_magic: False
-  ice_magic: False
-  air_magic: False
-  earth_magic: False
-  poison_magic: False
-  conjurations: False
-  hexes: False
-  summoning: False
-  necromancy: False
-  translocations: False
-  transmutations: False
   stealth: -1
+  shapeshifting: -2
 str: 7
 int: 9
 dex: 8
@@ -51,7 +52,7 @@ fake_mutations:
   - short: sickness immunity
 recommended_jobs:
   - JOB_GLADIATOR
-  - JOB_TRANSMUTER
+  - JOB_SHAPESHIFTER
   - JOB_HEDGE_WIZARD
   - JOB_FIRE_ELEMENTALIST
   - JOB_ICE_ELEMENTALIST

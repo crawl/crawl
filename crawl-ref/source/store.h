@@ -161,7 +161,7 @@ public:
     // default before the operation is done.
 
     // If the value is a hash table or vector, the container's values
-    // can be accessed with the [] operator with the approriate key
+    // can be accessed with the [] operator with the appropriate key
     // type (strings for hashes, longs for vectors).
     CrawlStoreValue &operator [] (const string &key);
     CrawlStoreValue &operator [] (const char *key);

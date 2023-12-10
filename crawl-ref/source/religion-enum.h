@@ -30,6 +30,11 @@ enum nemelex_gift_types
 #define ACQUIRE_KEY "acquired" // acquirement source prop on acquired items
 #define ACQUIRE_ITEMS_KEY "acquire_items" // acquirement items player prop
 
+#define OKAWARU_WEAPONS_KEY "okawaru_weapons"
+#define OKAWARU_WEAPON_GIFTED_KEY "okawaru_weapon_gifted"
+#define OKAWARU_ARMOUR_KEY "okawaru_armour"
+#define OKAWARU_ARMOUR_GIFTED_KEY "okawaru_armour_gifted"
+
 /// the name of the ally hepliaklqana granted the player
 #define HEPLIAKLQANA_ALLY_NAME_KEY "hepliaklqana_ally_name"
 /// ancestor gender

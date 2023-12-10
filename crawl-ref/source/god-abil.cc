@@ -15,6 +15,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
+#include "attack.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
 #include "branch.h"
@@ -90,6 +91,7 @@
  #include "rltiles/tiledef-main.h"
 #endif
 #include "timed-effects.h"
+#include "transform.h" // untransform
 #include "traps.h"
 #include "viewchar.h"
 #include "view.h"
@@ -1224,7 +1226,7 @@ static void _zin_saltify(monster* mon)
         // Enemies with more HD leave longer-lasting pillars of salt.
         int time_left = (random2(8) + hd) * BASELINE_DELAY;
         mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
-        pillar->update_ench(temp_en);
+        pillar->add_ench(temp_en);
     }
 }
 
@@ -1392,35 +1394,12 @@ void elyvilon_remove_divine_vigour()
 
 bool vehumet_supports_spell(spell_type spell)
 {
-    if (spell_typematch(spell, spschool::conjuration))
-        return true;
-
     // Conjurations work by conjuring up a chunk of short-lived matter and
     // propelling it towards the victim. This is the most popular way, but
     // by no means it has a monopoly for being destructive.
     // Vehumet loves all direct physical destruction.
-    if (spell == SPELL_SHATTER
-        || spell == SPELL_LRD
-        || spell == SPELL_SANDBLAST
-        || spell == SPELL_AIRSTRIKE
-        || spell == SPELL_POLAR_VORTEX
-        || spell == SPELL_FREEZE
-        || spell == SPELL_IGNITE_POISON
-        || spell == SPELL_OZOCUBUS_REFRIGERATION
-        || spell == SPELL_OLGREBS_TOXIC_RADIANCE
-        || spell == SPELL_VIOLENT_UNRAVELLING
-        || spell == SPELL_INNER_FLAME
-        || spell == SPELL_IGNITION
-        || spell == SPELL_FROZEN_RAMPARTS
-        || spell == SPELL_MAXWELLS_COUPLING
-        || spell == SPELL_NOXIOUS_BOG
-        || spell == SPELL_POISONOUS_VAPOURS
-        || spell == SPELL_SCORCH)
-    {
-        return true;
-    }
-
-    return false;
+    return spell_typematch(spell, spschool::conjuration)
+           || (get_spell_flags(spell) & spflag::destructive);
 }
 
 void trog_do_trogs_hand(int pow)
@@ -1729,14 +1708,6 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     // the proper stats from it.
     define_zombie(mon, mon->type, MONS_BOUND_SOUL);
 
-    // If the original monster has been levelled up, its HD might be different
-    // from its class HD, in which case its HP should be rerolled to match.
-    if (mon->get_experience_level() != orig.get_experience_level())
-    {
-        mon->set_hit_dice(max(orig.get_experience_level(), 1));
-        roll_zombie_hp(mon);
-    }
-
     mon->flags |= MF_NO_REWARD;
 
     // If the original monster type has melee abilities, make sure
@@ -1748,6 +1719,7 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
             mon->spells.push_back(slot);
     if (mon->spells.size())
         mon->props[CUSTOM_SPELLS_KEY] = true;
+    mon->props[KNOWN_MAX_HP_KEY] = mons_avg_hp(orig.type);
 
     name_zombie(*mon, orig);
 
@@ -1784,7 +1756,6 @@ bool kiku_gift_capstone_spells()
     vector<spell_type> candidates = { SPELL_HAUNT,
                                       SPELL_BORGNJORS_REVIVIFICATION,
                                       SPELL_INFESTATION,
-                                      SPELL_NECROMUTATION,
                                       SPELL_DEATHS_DOOR };
 
     for (auto spell : candidates)
@@ -1816,7 +1787,7 @@ bool kiku_gift_capstone_spells()
 #endif
     more();
     you.one_time_ability_used.set(you.religion);
-    take_note(Note(NOTE_GOD_GIFT, you.religion));
+    take_note(Note(NOTE_GOD_GIFT, you.religion, 0, "forbidden knowledge"));
     return true;
 }
 
@@ -1845,23 +1816,6 @@ bool fedhas_passthrough(const monster_info* target)
            && fedhas_passthrough_class(target->type)
            && (mons_species(target->type) != MONS_OKLOB_PLANT
                || target->attitude != ATT_HOSTILE);
-}
-
-static bool _lugonu_warp_monster(monster& mon)
-{
-    // XXX: should this ignore mon.no_tele(), as with the player?
-    if (mon.wont_attack() || mon.no_tele() || coinflip())
-        return false;
-
-    mon.blink();
-    return true;
-}
-
-void lugonu_bend_space()
-{
-    mpr("Space bends violently around you!");
-    uncontrolled_blink(true);
-    apply_monsters_around_square(_lugonu_warp_monster, you.pos());
 }
 
 void cheibriados_time_bend(int pow)
@@ -1903,10 +1857,10 @@ static int _slouch_damage(monster *mon)
                          : mon->type == MONS_JIANGSHI ? 90
                                                       : 1;
 
-    const int player_numer = BASELINE_DELAY * BASELINE_DELAY * BASELINE_DELAY;
+    const int player_number = BASELINE_DELAY * BASELINE_DELAY * BASELINE_DELAY;
     return 4 * (mon->speed * BASELINE_DELAY * jerk_num
                            / mon->action_energy(EUT_MOVE) / jerk_denom
-                - player_numer / player_movement_speed() / player_speed());
+                - player_number / player_movement_speed() / player_speed());
 }
 
 static bool _slouchable(coord_def where)
@@ -1981,64 +1935,57 @@ static void _run_time_step()
     while (--you.duration[DUR_TIME_STEP] > 0);
 }
 
+static void _cleanup_time_steps()
+{
+    you.duration[DUR_TIME_STEP] = 0;
+
+    // Noxious bog terrain gets cleaned up while stepped from time.
+    // That seems consistent with clouds, etc, so let's just make the duration
+    // match, rather than trying to persist the bog during time steps or
+    // regenerating it afterward.
+    you.duration[DUR_NOXIOUS_BOG] = 0;
+}
+
 // A low-duration step from time, allowing monsters to get closer
 // to the player safely.
 void cheibriados_temporal_distortion()
 {
-    const coord_def old_pos = you.pos();
-
     you.duration[DUR_TIME_STEP] = 3 + random2(3);
-    you.moveto(coord_def(0, 0));
 
-    _run_time_step();
-
-    you.los_noise_level = 0;
-    you.los_noise_last_turn = 0;
-
-    if (monster *mon = monster_at(old_pos))
     {
-        mon->props[FAKE_BLINK_KEY].get_bool() = true;
-        mon->blink();
-        mon->props.erase(FAKE_BLINK_KEY);
-        if (monster *stubborn = monster_at(old_pos))
-            monster_teleport(stubborn, true, true);
+        player_vanishes absent;
+
+        _run_time_step();
+
+        // why only here and not for step from time?
+        you.los_noise_level = 0;
+        you.los_noise_last_turn = 0;
     }
 
-    you.moveto(old_pos);
-    you.duration[DUR_TIME_STEP] = 0;
+    _cleanup_time_steps();
 
     mpr("You warp the flow of time around you!");
 }
 
 void cheibriados_time_step(int pow) // pow is the number of turns to skip
 {
-    const coord_def old_pos = you.pos();
-
     mpr("You step out of the flow of time.");
     flash_view(UA_PLAYER, LIGHTBLUE);
     you.duration[DUR_TIME_STEP] = pow;
-    you.moveto(coord_def(0, 0));
+    {
+        player_vanishes absent(true);
 
-    you.time_taken = 10;
-    _run_time_step();
-    // Update corpses, etc.
-    update_level(pow * 10);
+        you.time_taken = 10;
+        _run_time_step();
+        // Update corpses, etc.
+        update_level(pow * 10);
 
 #ifndef USE_TILE_LOCAL
-    scaled_delay(1000);
+        scaled_delay(1000);
 #endif
 
-    if (monster *mon = monster_at(old_pos))
-    {
-        mon->props[FAKE_BLINK_KEY].get_bool() = true;
-        mon->blink();
-        mon->props.erase(FAKE_BLINK_KEY);
-        if (monster *stubborn = monster_at(old_pos))
-            monster_teleport(stubborn, true, true);
     }
-
-    you.moveto(old_pos);
-    you.duration[DUR_TIME_STEP] = 0;
+    _cleanup_time_steps();
 
     flash_view(UA_PLAYER, 0);
     mpr("You return to the normal time flow.");
@@ -2059,7 +2006,6 @@ static map<curse_type, curse_data> _ashenzari_curses =
             SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT },
     } },
     { CURSE_RANGED, {
-        // XXX: merge with evocations..?
         "Ranged Combat", "Range",
         { SK_RANGED_WEAPONS, SK_THROWING },
     } },
@@ -2091,9 +2037,9 @@ static map<curse_type, curse_data> _ashenzari_curses =
         "Cunning", "Cun",
         { SK_DODGING, SK_STEALTH },
     } },
-    { CURSE_EVOCATIONS, {
-        "Evocations", "Evo",
-        { SK_EVOCATIONS },
+    { CURSE_DEVICES, {
+        "Devices", "Dev",
+        { SK_EVOCATIONS, SK_SHAPESHIFTING },
     } },
 };
 
@@ -2260,9 +2206,9 @@ bool ashenzari_curse_item()
 
     item_def& item(you.inv[item_slot]);
 
-    if (!item_is_cursable(item))
+    if (!item_is_selected(item, OSEL_CURSABLE))
     {
-        mpr("You can't curse that!");
+        mprf(MSGCH_PROMPT, "You cannot curse that!");
         return false;
     }
 
@@ -2293,6 +2239,12 @@ bool ashenzari_uncurse_item()
         return false;
 
     item_def& item(you.inv[item_slot]);
+
+    if (!item_is_selected(item, OSEL_CURSED_WORN))
+    {
+        mprf(MSGCH_PROMPT, "You cannot uncurse and destroy that!");
+        return false;
+    }
 
     if (is_unrandom_artefact(item, UNRAND_FINGER_AMULET)
         && you.equip[EQ_RING_AMULET] != -1)
@@ -2494,6 +2446,9 @@ spret dithmenos_shadow_step(bool fail)
 
     fail_check();
 
+    if (!you.attempt_escape(2))
+        return spret::success;
+
     const coord_def old_pos = you.pos();
     // XXX: This only ever fails if something's on the landing site;
     // perhaps this should be handled more gracefully.
@@ -2524,6 +2479,7 @@ static potion_type _gozag_potion_list[][4] =
     { POT_HASTE, POT_HEAL_WOUNDS, NUM_POTIONS, NUM_POTIONS },
     { POT_HASTE, POT_BRILLIANCE, NUM_POTIONS, NUM_POTIONS },
     { POT_HASTE, POT_RESISTANCE, NUM_POTIONS, NUM_POTIONS },
+    { POT_HASTE, POT_ENLIGHTENMENT, NUM_POTIONS, NUM_POTIONS },
     { POT_BRILLIANCE, POT_MAGIC, NUM_POTIONS, NUM_POTIONS },
     { POT_INVISIBILITY, POT_MIGHT, NUM_POTIONS, NUM_POTIONS },
     { POT_HEAL_WOUNDS, POT_CURING, POT_MAGIC, NUM_POTIONS },
@@ -2533,6 +2489,7 @@ static potion_type _gozag_potion_list[][4] =
     { POT_RESISTANCE, POT_MIGHT, NUM_POTIONS, NUM_POTIONS },
     { POT_RESISTANCE, POT_MIGHT, POT_HASTE, NUM_POTIONS },
     { POT_RESISTANCE, POT_INVISIBILITY, NUM_POTIONS, NUM_POTIONS },
+    { POT_RESISTANCE, POT_ENLIGHTENMENT, NUM_POTIONS, NUM_POTIONS },
     { POT_LIGNIFY, POT_MIGHT, POT_RESISTANCE, NUM_POTIONS },
 };
 
@@ -3297,14 +3254,12 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     for (coord_def pos : affected)
         beam.draw(pos, false);
 
+    // When `quiet`, refresh the view after each complete draw pass. Add a bit
+    // of delay even for this, otherwise it goes by too quickly.
     if (quiet)
     {
-        // When `quiet`, refresh the view after each complete draw pass.
-        // why this call dance to refresh? I just copied it from bolt::draw
-        viewwindow(false);
-        update_screen();
-        scaled_delay(50); // add some delay per upheaval draw, otherwise it all
-                          // goes by too fast.
+        if (!Options.reduce_animations)
+            animation_delay(50, true);
     }
     else
     {
@@ -3497,7 +3452,9 @@ spret qazlal_disaster_area(bool fail)
         targets.erase(targets.begin() + which);
         weights.erase(weights.begin() + which);
     }
-    scaled_delay(200);
+    // possibly this delay should be slightly increased if reduce_animations is
+    // true?
+    animation_delay(200, Options.reduce_animations);
 
     return spret::success;
 }
@@ -4046,7 +4003,7 @@ static void _ru_expire_sacrifices()
         you.props[key].get_vector().clear();
     }
 
-    // Clear out stored sacrfiice values.
+    // Clear out stored sacrifice values.
     for (int i = 0; i < NUM_ABILITIES; ++i)
         you.sacrifice_piety[i] = 0;
 }
@@ -4265,8 +4222,9 @@ static void _ru_kill_skill(skill_type skill)
 
 static void _extra_sacrifice_code(ability_type sac)
 {
-    const sacrifice_def &sac_def = _get_sacrifice_def(sac);
-    if (sac_def.sacrifice == ABIL_RU_SACRIFICE_HAND)
+    switch (_get_sacrifice_def(sac).sacrifice)
+    {
+    case ABIL_RU_SACRIFICE_HAND:
     {
         auto ring_slots = species::ring_slots(you.species, true);
         equipment_type sac_ring_slot = species::sacrificial_arm(you.species);
@@ -4281,7 +4239,7 @@ static void _extra_sacrifice_code(ability_type sac)
         if (shield != nullptr)
         {
             mprf("You can no longer hold %s!",
-                shield->name(DESC_YOUR).c_str());
+                 shield->name(DESC_YOUR).c_str());
             unequip_item(EQ_SHIELD);
         }
 
@@ -4291,7 +4249,7 @@ static void _extra_sacrifice_code(ability_type sac)
             if (you.hands_reqd(*weapon) == HANDS_TWO)
             {
                 mprf("You can no longer hold %s!",
-                    weapon->name(DESC_YOUR).c_str());
+                     weapon->name(DESC_YOUR).c_str());
                 unequip_item(EQ_WEAPON);
             }
         }
@@ -4310,7 +4268,7 @@ static void _extra_sacrifice_code(ability_type sac)
             const bool can_keep = open_ring_slot != EQ_NONE;
 
             mprf("You can no longer wear %s!",
-                ring->name(DESC_YOUR).c_str());
+                 ring->name(DESC_YOUR).c_str());
             unequip_item(sac_ring_slot, true, can_keep);
             if (can_keep)
             {
@@ -4321,10 +4279,12 @@ static void _extra_sacrifice_code(ability_type sac)
                 equip_item(open_ring_slot, ring_inv_slot, false, true);
             }
         }
+        break;
     }
-    else if (sac_def.sacrifice == ABIL_RU_SACRIFICE_EXPERIENCE)
+    case ABIL_RU_SACRIFICE_EXPERIENCE:
         level_change();
-    else if (sac_def.sacrifice == ABIL_RU_SACRIFICE_SKILL)
+        break;
+    case ABIL_RU_SACRIFICE_SKILL:
     {
         uint8_t saved_skills[NUM_SKILLS];
         for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
@@ -4344,6 +4304,19 @@ static void _extra_sacrifice_code(ability_type sac)
 
         redraw_screen();
         update_screen();
+        break;
+    }
+    case ABIL_RU_SACRIFICE_FORMS:
+        if (you.form == transformation::none)
+            break;
+
+        unset_default_form();
+        if (!you.transform_uncancellable)
+            untransform(); // XXX: maybe should warn the player pre-sac?
+
+        break;
+    default:
+        break;
     }
 }
 
@@ -4570,7 +4543,7 @@ bool ru_reject_sacrifices(bool forced_rejection)
         return false;
     }
 
-    ru_reset_sacrifice_timer(false, true);
+    ru_reset_sacrifice_timer(false, forced_rejection);
     _ru_expire_sacrifices();
     simple_god_message(" will take longer to evaluate your readiness.");
     return true;
@@ -4624,7 +4597,11 @@ void ru_reset_sacrifice_timer(bool clear_timer, bool faith_penalty)
         }
     }
 
-    delay = div_rand_round((delay + added_delay) * (3 - you.faith()), 3);
+    // No faith reduction if this is due to abandoning Ru.
+    if (!you_worship(GOD_RU))
+        delay += added_delay;
+    else
+        delay = div_rand_round((delay + added_delay) * (3 - you.faith()), 3);
     if (crawl_state.game_is_sprint())
         delay /= SPRINT_MULTIPLIER;
 
@@ -4832,7 +4809,7 @@ bool ru_power_leap()
     if (cell_is_solid(beam.target) || monster_at(beam.target))
     {
         // XXX: try to jump somewhere nearby?
-        mpr("Something unexpectedly blocked you, preventing you from leaping!");
+        mpr("Something unexpectedly blocks you, preventing you from leaping!");
         return true;
     }
 
@@ -5135,7 +5112,7 @@ bool uskayaw_line_pass()
     }
 
     if (monster_at(beam.target))
-        mpr("Something unexpectedly blocked you, preventing you from passing!");
+        mpr("Something unexpectedly blocks you, preventing you from passing!");
     else
     {
         line_pass.fire();
@@ -5221,16 +5198,18 @@ spret uskayaw_grand_finale(bool fail)
 
     ASSERT(mons);
 
+    string attack_punctuation = attack_strength_punctuation(mons->hit_points);
+
     // kill the target
     if (mons->type == MONS_ROYAL_JELLY && !mons->is_summoned())
     {
         // need to do this here, because react_to_damage is never called
-        mprf("%s explodes violently into a cloud of jellies!",
-                                        mons->name(DESC_THE, false).c_str());
+        mprf("%s explodes violently into a cloud of jellies%s",
+                                        mons->name(DESC_THE, false).c_str(), attack_punctuation.c_str());
         trj_spawn_fineff::schedule(&you, mons, mons->pos(), mons->hit_points);
     }
     else
-        mprf("%s explodes violently!", mons->name(DESC_THE, false).c_str());
+        mprf("%s explodes violently%s", mons->name(DESC_THE, false).c_str(), attack_punctuation.c_str());
     mons->flags |= MF_EXPLODE_KILL;
     if (!mons->is_insubstantial())
     {
@@ -5243,7 +5222,8 @@ spret uskayaw_grand_finale(bool fail)
     if (mons->alive())
         monster_die(*mons, KILL_YOU, NON_MONSTER, false);
 
-    if (!mons->alive())
+    // a lost soul may sneak in here
+    if (!mons->alive() && !monster_at(beam.target))
         move_player_to_grid(beam.target, false);
     else
         mpr("You spring back to your original position.");
@@ -5394,7 +5374,7 @@ static void _transfer_drain_nearby(coord_def destination)
     for (adjacent_iterator it(destination); it; ++it)
     {
         monster* mon = monster_at(*it);
-        if (!mon || god_protects(mon))
+        if (!mon || god_protects(mon) || mons_is_firewood(*mon))
             continue;
 
         const int dur = random_range(60, 150);
@@ -5450,7 +5430,8 @@ spret hepliaklqana_transference(bool fail)
 
     const bool victim_immovable
         = victim && (mons_is_tentacle_or_tentacle_segment(victim->type)
-                     || victim->is_stationary());
+                     || victim->is_stationary()
+                     || mons_is_projectile(victim->type));
     if (victim_visible && victim_immovable)
     {
         mpr("You can't transfer that.");
@@ -5602,7 +5583,7 @@ bool wu_jian_can_wall_jump_in_principle(const coord_def& target)
 {
     if (!have_passive(passive_t::wu_jian_wall_jump)
         || !feat_can_wall_jump_against(env.grid(target))
-        || you.is_stationary()
+        || !you.is_motile()
         || you.digging)
     {
         return false;
@@ -5688,7 +5669,9 @@ bool wu_jian_do_wall_jump(coord_def targ)
     auto wall_jump_direction = (you.pos() - targ).sgn();
     auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
                                    + wall_jump_direction);
-    if (!check_moveto(wall_jump_landing_spot, "wall jump"))
+    if ((wu_jian_wall_jump_triggers_attacks(wall_jump_landing_spot)
+         && !wielded_weapon_check(you.weapon())
+        || !check_moveto(wall_jump_landing_spot, "wall jump")))
     {
         you.turn_is_over = false;
         return false;
@@ -5697,7 +5680,7 @@ bool wu_jian_do_wall_jump(coord_def targ)
     auto initial_position = you.pos();
     move_player_to_grid(wall_jump_landing_spot, false);
     wu_jian_wall_jump_effects();
-    remove_water_hold();
+    you.clear_far_engulf(false, true);
 
     int wall_jump_modifier = (you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2
                                                                       : 1;

@@ -1,4 +1,9 @@
 %%%%
+Armataur
+
+Scaled mammals the size of horses, Armataurs are fast-rolling, resilient, and
+great potion drinkers, but they lack dexterity.
+%%%%
 Barachi
 
 Barachim are slow-moving, amphibious humanoids who can hop long distances.
@@ -35,8 +40,7 @@ strong and they live in a state of permanent stasis.
 %%%%
 Felid
 
-Felids are many-lived cats possessing sentience. They are incapable of advanced
-item manipulation or the use of armour or weapons.
+Felids are many-lived sentient cats. They cannot use armour or weapons.
 %%%%
 Ghoul
 
@@ -65,7 +69,7 @@ Humans advance quickly in levels and have equal abilities in most skills.
 Tengu
 
 Tengu are bird-people who love to fight, both with weapons and spells. They are
-quite fragile, but they learn to fly swiftly later on.
+fragile but agile, and eventually learn to fly.
 %%%%
 Kobold
 
@@ -84,8 +88,8 @@ of close and ranged combat.
 %%%%
 Mummy
 
-Compelled to walk by an ancient curse, Mummies are adept at Necromancy but
-learn other skills very slowly. They are unable to consume potions.
+Compelled to walk by an ancient curse, Mummies have innate faith and are adept
+at Necromancy, but learn other skills very slowly. They cannot drink potions.
 %%%%
 Naga
 
@@ -101,11 +105,6 @@ Ogre
 
 Large, strong, and extremely robust, Ogres are competent at all forms of melee.
 Not merely brutes, they are also quite capable spellcasters.
-%%%%
-Palentonga
-
-Scaled mammals the size of horses, Palentongas are able to launch powerful
-rolling charges.
 %%%%
 Spriggan
 

@@ -391,7 +391,7 @@ UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
     //  * Wet cities have
     //  * City + water areas have lateral bridges
     //  * Borrow some easing functions from somewhere to better
-    //    control how features vary across bounaries
+    //    control how features vary across boundaries
     //  * Look at surrounding squares to determine gradients - will help
     //    with lateral features and also e.g. growing plants on sunlit mountainsides...
     //  * Use some lateral wetness to try and join mountain streams up to rivers...

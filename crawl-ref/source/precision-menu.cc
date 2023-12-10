@@ -96,10 +96,6 @@ bool PrecisionMenu::process_key(int key)
         }
     }
 
-#ifdef TOUCH_UI
-    if (key == CK_TOUCH_DUMMY)
-        return true; // mouse click in title area, which wouldn't usually be handled
-#endif
     // Handle CK_MOUSE_CLICK separately
     // This signifies a menu ending action
     if (key == CK_MOUSE_CLICK)
@@ -1317,7 +1313,7 @@ void MenuFreeform::render()
 }
 
 /**
- * Handle all the dirtyness here that the MenuItems themselves do not handle
+ * Handle all the dirtiness here that the MenuItems themselves do not handle
  */
 void MenuFreeform::_place_items()
 {

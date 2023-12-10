@@ -16,7 +16,7 @@
 function ecumenical_altar_setup(e)
   e.depth("D:1-3")
   e.tags("uniq_ecumenical_altar chance_ecumenical_altar extra")
-  e.chance(5000)
+  e.chance(2500)
   e.kfeat("_ = altar_ecumenical")
 end
 }}
@@ -775,8 +775,8 @@ ENDMAP
 
 NAME:  hellmonk_ecumenical_altar_watching_god
 TAGS:  transparent
-KMONS: 1 = floating eye / golden eye / shining eye / eye of devastation / \
-            great orb of eyes
+KMONS: 1 = glass eye / golden eye / shining eye / \
+           eye of devastation /  great orb of eyes
 KMASK: 1 = opaque
 KPROP: 1 = no_tele_into
 : ecumenical_altar_setup(_G)
@@ -1167,7 +1167,7 @@ Nwwwcc+ccwwwN
 ENDMAP
 
 NAME:   nicolae_ecumenical_oubliette
-TAGS:   transparent no_pool_fixup
+TAGS:   transparent no_pool_fixup no_descent
 # The ecumenical_altar_setup function includes a DEPTH: D:1-3 line,
 # but I don't want this one to show up on D:1.
 WEIGHT: 0 (D:1), 10

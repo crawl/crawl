@@ -55,7 +55,7 @@ static bool _items_similar(const item_def& a, const item_def& b,
 static vector<string> _desc_hit_chance(const monster_info &mi)
 {
     ostringstream result;
-    describe_to_hit(mi, result, false, you.weapon());
+    describe_to_hit(mi, result, you.weapon());
     string str = result.str();
     if (str.empty())
         return vector<string>{};
@@ -74,17 +74,17 @@ namespace quiver
     static maybe_bool _fireorder_inscription_ok(int slot, bool cycling = false)
     {
         if (slot < 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
-            return MB_MAYBE;
+            return maybe_bool::maybe;
         if (strstr(you.inv[slot].inscription.c_str(), cycling ? "=F" : "=f")
             || !_quiver_inscription_ok(slot))
         {
-            return MB_FALSE;
+            return false;
         }
         // n.b. here for completeness, this is actually handled by dodgy
         // ancient fire order code...
         if (strstr(you.inv[slot].inscription.c_str(), cycling ? "+F" : "+f"))
-            return MB_TRUE;
-        return MB_MAYBE;
+            return true;
+        return maybe_bool::maybe;
     }
 
     void action::set_target(const dist &t)
@@ -106,6 +106,8 @@ namespace quiver
      */
     bool action::autofight_check() const
     {
+        if (crawl_state.skip_autofight_check)
+            return false;
         // don't do these checks if the action will lead to interactive targeting
         if (target.needs_targeting())
             return false;
@@ -289,7 +291,7 @@ namespace quiver
 
             // =F prevents item from being in fire order.
             const maybe_bool i_check = _fireorder_inscription_ok(i_inv, true);
-            if (!ignore_inscription_etc && i_check == MB_FALSE)
+            if (!ignore_inscription_etc && bool(!i_check))
                 continue;
 
             for (unsigned int i_flags = 0; i_flags < Options.fire_order.size();
@@ -354,7 +356,7 @@ namespace quiver
 
         bool uses_mp() const override
         {
-            return is_pproj_active();
+            return is_bullseye_active();
         }
 
         bool affected_by_pproj() const override
@@ -398,7 +400,7 @@ namespace quiver
 
             const string prefix = item_prefix(weapon);
             const int prefcol =
-                menu_colour(weapon.name(DESC_PLAIN), prefix, "stats");
+                menu_colour(weapon.name(DESC_PLAIN), prefix, "stats", false);
             if (!is_enabled())
                 qdesc.textcolour(DARKGREY);
             else if (prefcol != -1)
@@ -503,7 +505,7 @@ namespace quiver
             const string prefix = weapon ? item_prefix(*weapon) : "";
 
             const int prefcol =
-                menu_colour(weapon ? weapon->name(DESC_PLAIN) : "", prefix, "stats");
+                menu_colour(weapon ? weapon->name(DESC_PLAIN) : "", prefix, "stats", false);
             if (!is_enabled())
                 qdesc.textcolour(DARKGREY);
             else if (prefcol != -1)
@@ -526,7 +528,7 @@ namespace quiver
 
             if (you.confused())
             {
-                if (you.is_stationary())
+                if (!you.is_motile())
                 {
                     // XX duplicate code with movement.cc:move_player_action
                     if (cancel_confused_move(true))
@@ -607,7 +609,7 @@ namespace quiver
             unique_ptr<targeter> hitfunc;
             if (attack_cleaves(you, -1))
             {
-                const int range = reach_range == REACH_TWO ? 2 : 1;
+                const int range = reach_range;
                 hitfunc = make_unique<targeter_cleave>(&you, you.pos(), range);
             }
             else
@@ -707,6 +709,8 @@ namespace quiver
                 if ((midmons = monster_at(middle))
                     && !midmons->submerged()
                     && !god_protects(&you, midmons, true)
+                    && (midmons->type != MONS_SPECTRAL_WEAPON
+                        || !midmons->wont_attack())
                     && coinflip())
                 {
                     success = false;
@@ -906,7 +910,7 @@ namespace quiver
 
         bool uses_mp() const override
         {
-            return is_pproj_active();
+            return is_bullseye_active();
         }
 
         bool affected_by_pproj() const override
@@ -933,8 +937,7 @@ namespace quiver
             // Update the legacy quiver history data structure
             // TODO: eliminate this? History should be stored per quiver, not
             // globally
-            you.m_quiver_history.on_item_fired(you.inv[item_slot],
-                    !target.fire_context || !target.fire_context->autoswitched);
+            you.m_quiver_history.on_item_fired(you.inv[item_slot]);
         }
 
         virtual formatted_string quiver_description(bool short_desc) const override
@@ -964,7 +967,7 @@ namespace quiver
             const string prefix = item_prefix(quiver);
 
             const int prefcol =
-                menu_colour(quiver.name(DESC_PLAIN), prefix, "stats");
+                menu_colour(quiver.name(DESC_PLAIN), prefix, "stats", false);
             if (!is_enabled())
                 qdesc.textcolour(DARKGREY);
             else if (prefcol != -1)
@@ -988,7 +991,7 @@ namespace quiver
             {
                 auto a = make_shared<ammo_action>(i_inv);
                 if (a->is_valid() && (allow_disabled || a->is_enabled()))
-                    result.push_back(move(a));
+                    result.push_back(std::move(a));
             }
             return result;
         }
@@ -1008,7 +1011,7 @@ namespace quiver
             {
                 auto a = make_shared<ammo_action>(i);
                 if (a->is_valid() && (allow_disabled || a->is_enabled()))
-                    result.push_back(move(a));
+                    result.push_back(std::move(a));
                 // TODO: allow arbitrary items with +f to get added here? I
                 // have had some trouble getting this to work
             }
@@ -1145,7 +1148,12 @@ namespace quiver
             // extremely side-effect-y, and can crash if called at the wrong
             // time.
             enabled_cache = can_cast_spells(true)
-                                    && !spell_is_useless(spell, true, false);
+                            && !spell_is_useless(spell, true, false)
+            // Use a version of the charge range check that
+            // ignores things like butterflies, so that autofight doesn't get
+            // tripped up.
+                            && (spell != SPELL_ELECTRIC_CHARGE
+                                || electric_charge_impossible_reason(false).empty());
             // this imposes excommunication colors
             if (!enabled_cache)
                 col_cache = COL_USELESS;
@@ -1310,7 +1318,7 @@ namespace quiver
                 auto a = make_shared<spell_action>(
                                 get_spell_by_letter(index_to_letter(i)));
                 if (a->in_fire_order(allow_disabled, menu))
-                    result.push_back(move(a));
+                    result.push_back(std::move(a));
             }
             return result;
         }
@@ -1348,6 +1356,7 @@ namespace quiver
         switch (a)
         {
         case ABIL_END_TRANSFORMATION:
+        case ABIL_BEGIN_UNTRANSFORM:
         case ABIL_EXSANGUINATE:
         case ABIL_TSO_BLESS_WEAPON:
         case ABIL_KIKU_BLESS_WEAPON:
@@ -1361,6 +1370,8 @@ namespace quiver
         case ABIL_STOP_RECALL:
         case ABIL_RENOUNCE_RELIGION:
         case ABIL_CONVERT_TO_BEOGH:
+        case ABIL_OKAWARU_GIFT_WEAPON:
+        case ABIL_OKAWARU_GIFT_ARMOUR:
         // high price zone
         case ABIL_ZIN_DONATE_GOLD:
         // not entirely pseudo, but doesn't make a lot of sense to quiver:
@@ -1382,14 +1393,6 @@ namespace quiver
         // it from the `a` menu, just not from the quiver.
         // (What abilities are missing here?)
 
-        if (abil == ABIL_ROLLING_CHARGE)
-        {
-            // Use a version of the palentonga charge range check that
-            // ignores things like butterflies, so that autofight doesn't get
-            // tripped up.
-            return palentonga_charge_possible(quiet, false);
-        }
-
         if (get_dist_to_nearest_monster() > ability_range(abil)
             && (get_ability_flags(abil) & abflag::targeting_mask))
 
@@ -1406,7 +1409,6 @@ namespace quiver
         switch (ability)
         {
         case ABIL_BLINKBOLT: // TODO: disable under nomove?
-        case ABIL_ROLLING_CHARGE: // TODO: disable under nomove?
         case ABIL_RU_POWER_LEAP: // disable under nomove, or altogether?
         case ABIL_SPIT_POISON:
         case ABIL_BREATHE_ACID:
@@ -1480,7 +1482,6 @@ namespace quiver
             {
             case ABIL_HOP:
             case ABIL_BLINKBOLT:
-            case ABIL_ROLLING_CHARGE:
             case ABIL_BREATHE_ACID:
             case ABIL_DAMNATION:
             case ABIL_ELYVILON_HEAL_OTHER:
@@ -1607,7 +1608,7 @@ namespace quiver
                 }
                 auto a = make_shared<ability_action>(tal.which);
                 if (a->is_valid() && (allow_disabled || a->is_enabled()))
-                    result.push_back(move(a));
+                    result.push_back(std::move(a));
             }
             return result;
         }
@@ -1678,7 +1679,8 @@ namespace quiver
         {
             if (!is_valid())
                 return "Buggy";
-            return you.inv[item_slot].base_type == OBJ_POTIONS ? "Drink" : "Read";
+            return you.inv[item_slot].base_type == OBJ_SCROLLS ? "Read" :
+                   you.has_mutation(MUT_LONG_TONGUE) ? "Slurp" : "Drink";
         }
 
         bool use_autofight_targeting() const override { return false; }
@@ -1721,9 +1723,9 @@ namespace quiver
                     && (allow_disabled || w->is_enabled()))
                 {
                     if (you.inv[slot].base_type == OBJ_POTIONS)
-                        result.push_back(move(w));
+                        result.push_back(std::move(w));
                     else
-                        scrolls.push_back(move(w));
+                        scrolls.push_back(std::move(w));
                 }
             }
             result.insert(result.end(), scrolls.begin(), scrolls.end());
@@ -1740,7 +1742,8 @@ namespace quiver
 
         bool is_enabled() const override
         {
-            return evoke_check(item_slot, true);
+            const item_def *item = item_slot == -1 ? nullptr : &you.inv[item_slot];
+            return cannot_evoke_item_reason(item).empty();
         }
 
         // n.b. implementing do_inscription_check for OPER_EVOKE is not needed
@@ -1774,7 +1777,7 @@ namespace quiver
             }
         }
 
-        // TOOD: uses_mp for wand mp mutation? Because this mut no longer forces
+        // TODO: uses_mp for wand mp mutation? Because this mut no longer forces
         // mp use, the result is somewhat weird
 
         void trigger(dist &t) override
@@ -1785,17 +1788,20 @@ namespace quiver
 
             if (!is_enabled())
             {
-                evoke_check(item_slot); // for messaging
+                const item_def *item = item_slot == -1 ? nullptr : &you.inv[item_slot];
+                mpr(cannot_evoke_item_reason(item));
                 return;
             }
 
             // to apply smart targeting behavior for iceblast; should have no
             // impact on other wands
             target.find_target = true;
-            if (autofight_check() || !do_inscription_check())
+            if (autofight_check())
+                return;
+            if (!check_warning_inscriptions(you.inv[item_slot], OPER_EVOKE))
                 return;
 
-            evoke_item(item_slot, &target);
+            evoke_item(you.inv[item_slot], &target);
 
             t = target; // copy back, in case they are different
         }
@@ -1819,13 +1825,13 @@ namespace quiver
                     && (allow_disabled || w->is_enabled())
                     // for fire order, treat =F inscription as disabling
                     && (menu
-                        || _fireorder_inscription_ok(slot, true) != MB_FALSE)
+                        || _fireorder_inscription_ok(slot, true) != false)
                     // skip digging for fire cycling, it seems kind of
                     // non-useful? Can still be force-quivered from inv.
                     // (Maybe do this with autoinscribe?)
                     && you.inv[slot].sub_type != WAND_DIGGING)
                 {
-                    result.push_back(move(w));
+                    result.push_back(std::move(w));
                 }
             }
             return result;
@@ -1869,6 +1875,7 @@ namespace quiver
             switch (you.inv[item_slot].sub_type)
             {
             case MISC_ZIGGURAT:     // non-damaging misc items
+            case MISC_SACK_OF_SPIDERS:
             case MISC_BOX_OF_BEASTS:
             case MISC_HORN_OF_GERYON:
             case MISC_QUAD_DAMAGE:
@@ -1921,11 +1928,11 @@ namespace quiver
                 if (w->is_valid()
                     && (allow_disabled || w->is_enabled())
                     && (menu
-                        || _fireorder_inscription_ok(slot, true) != MB_FALSE)
+                        || _fireorder_inscription_ok(slot, true) != false)
                     // TODO: autoinscribe =f?
                     && you.inv[slot].sub_type != MISC_ZIGGURAT)
                 {
-                    result.push_back(move(w));
+                    result.push_back(std::move(w));
                 }
             }
             return result;
@@ -2014,7 +2021,7 @@ namespace quiver
     }
 
     action_cycler::action_cycler(shared_ptr<action> init)
-        : autoswitched(false), current(init)
+        : current(init)
     { }
 
     // by default, initialize as invalid, not empty
@@ -2055,7 +2062,7 @@ namespace quiver
         for (auto &val : history_vec)
         {
             auto a = _load_action(val.get_table());
-            history.push_back(move(a));
+            history.push_back(std::move(a));
         }
     }
 
@@ -2069,7 +2076,7 @@ namespace quiver
         {
             if ((*it) && (*it)->is_valid())
             {
-                if (_fireorder_inscription_ok((*it)->get_item(), false) == MB_FALSE)
+                if (!_fireorder_inscription_ok((*it)->get_item(), false))
                     continue;
 
                 return *it;
@@ -2086,7 +2093,7 @@ namespace quiver
         auto n = new_act ? new_act : make_shared<action>();
 
         const bool diff = *n != *get();
-        current = move(n);
+        current = std::move(n);
         set_needs_redraw();
         return diff;
     }
@@ -2099,14 +2106,13 @@ namespace quiver
      * @param new_act the action to fill in. nullptr is safe.
      * @return whether the action changed as a result of the call.
      */
-    bool action_cycler::set(const shared_ptr<action> new_act, bool _autoswitched)
+    bool action_cycler::set(const shared_ptr<action> new_act)
     {
         auto n = new_act ? new_act : make_shared<action>();
 
         const bool diff = *n != *get();
-        auto old = move(current);
-        current = move(n);
-        autoswitched = _autoswitched;
+        auto old = std::move(current);
+        current = std::move(n);
 
         if (diff)
         {
@@ -2115,7 +2121,7 @@ namespace quiver
             history.erase(remove(history.begin(), history.end(), old), history.end());
             // this may push back an invalid action, which is useful for all
             // sorts of reasons
-            history.push_back(move(old));
+            history.push_back(std::move(old));
 
             if (history.size() > 6) // 6 chosen arbitrarily
                 history.erase(history.begin());
@@ -2123,12 +2129,9 @@ namespace quiver
             // side effects, ugh. Update the fire history, and play a sound
             // if needed. TODO: refactor so this is less side-effect-y
             // somehow?
-            if (!autoswitched)
-            {
-                const int item_slot = get()->get_item();
-                if (item_slot >= 0 && you.inv[item_slot].defined())
-                    you.m_quiver_history.set_quiver(you.inv[item_slot]);
-            }
+            const int item_slot = get()->get_item();
+            if (item_slot >= 0 && you.inv[item_slot].defined())
+                you.m_quiver_history.set_quiver(you.inv[item_slot]);
 #ifdef USE_SOUND
             parse_sound(CHANGE_QUIVER_SOUND);
 #endif
@@ -2149,7 +2152,6 @@ namespace quiver
         // don't use regular set: avoid all the side effects when importing
         // from another action cycler. (Used in targeting.)
         current = other.get();
-        autoswitched = false;
         set_needs_redraw();
         return diff;
     }
@@ -2320,27 +2322,8 @@ namespace quiver
         return set(next(dir, allow_disabled));
     }
 
-    void action_cycler::on_actions_changed(bool check_autoswitch)
+    void action_cycler::on_actions_changed()
     {
-        if (!get()->is_valid())
-        {
-            // XX should find_replacement respect +f?
-            auto r = get()->find_replacement();
-            if (r && r->is_valid()
-                && _fireorder_inscription_ok(r->get_item(), false) != MB_FALSE)
-            {
-                set(r, true);
-            }
-        }
-        else if (check_autoswitch && autoswitched)
-        {
-            auto r = ammo_to_action(you.m_quiver_history.get_last_ammo());
-            if (r && r->is_valid()
-                && _fireorder_inscription_ok(r->get_item(), false) != MB_FALSE)
-            {
-                set(r);
-            }
-        }
         set_needs_redraw();
     }
 
@@ -2457,7 +2440,7 @@ namespace quiver
     /**
      * Return an action corresponding to an ability.
      *
-     * @abil the abilty to use
+     * @abil the ability to use
      * @return the resulting action. May be invalid.
      */
     shared_ptr<action> ability_to_action(ability_type abil)
@@ -2499,6 +2482,7 @@ namespace quiver
         tmp = wand_action(-1).get_fire_order(true, true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = misc_action(-1).get_fire_order(true, true);
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
         return actions;
     }
 
@@ -2898,7 +2882,7 @@ namespace quiver
             else if (key == '&' && any_spells)
             {
                 const int skey = list_spells(false, false, false,
-                                                    "Select a spell to quiver");
+                                                    "quiver");
                 if (skey == 0)
                     return true;
                 if (isalpha(skey))
@@ -3155,9 +3139,9 @@ namespace quiver
     }
 #endif
 
-    void on_actions_changed(bool check_autoswitch)
+    void on_actions_changed()
     {
-        you.quiver_action.on_actions_changed(check_autoswitch);
+        you.quiver_action.on_actions_changed();
     }
 
     void set_needs_redraw()
@@ -3169,7 +3153,7 @@ namespace quiver
     {
         if (Options.launcher_autoquiver && you.weapon()
             && is_range_weapon(*you.weapon())
-            && _fireorder_inscription_ok(you.equip[EQ_WEAPON], false) != MB_FALSE)
+            && _fireorder_inscription_ok(you.equip[EQ_WEAPON], false) != false)
         {
             you.quiver_action.set(get_primary_action());
         }
@@ -3251,7 +3235,7 @@ static int _get_pack_slot(const item_def &item)
         if (inv_item.quantity && _items_similar(item, inv_item, true))
         {
             // =f prevents item from being autoquivered.
-            if (quiver::_fireorder_inscription_ok(i, false) == MB_FALSE)
+            if (!quiver::_fireorder_inscription_ok(i, false))
                 continue;
 
             return i;

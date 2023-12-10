@@ -692,7 +692,7 @@ class ResourceFile():
             call([EDITOR, tmp.name])
         except OSError:
             print >> sys.stderr, "Cannot start text editor." \
-                                 "Set the EDITOR environement variable."
+                                 "Set the EDITOR environment variable."
             return False
         tmp_res = self.__class__(self.language, self.resource)
         tmp_res.path = tmp.name

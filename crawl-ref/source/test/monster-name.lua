@@ -99,3 +99,5 @@ local name_checks = {
     { "a", "a gnoll corpse of gnoll lieutenant" } },
 }
 check_names(name_checks)
+
+dgn.dismiss_monsters()

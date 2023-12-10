@@ -91,7 +91,7 @@ bool xom_is_nice(int tension = -1);
 const string describe_xom_favour();
 int xom_favour_rank();
 
-xom_event_type xom_acts(int sever, maybe_bool niceness = MB_MAYBE,
+xom_event_type xom_acts(int sever, maybe_bool niceness = maybe_bool::maybe,
                         int tension = -1, bool debug = false);
 xom_event_type xom_choose_action(bool niceness,  int sever, int tension);
 void xom_take_action(xom_event_type action, int sever);

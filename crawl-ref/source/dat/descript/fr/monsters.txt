@@ -242,9 +242,7 @@ une assez bonne protection. Et distraire les hommes au combat est une qualité.
 %%%%
 Maurice
 
-Un voleur sournois et connivent. En sa profession, Maurice est considéré comme
-une légende — du moins, d'après lui-même. Il est expérimenté toutefois, et de
-tout les voleurs attirés par l'Orbe, Maurice est sans doute le plus astucieux.
+Un voleur sournois et connivent.
 %%%%
 Menkaure
 
@@ -572,6 +570,11 @@ crimson imp
 Un petit démon mineur. Sa mâchoire dentée semble être bloquée en un rictus
 permanent, et ses cornes saillissent de façon obscène de ses plaques
 écailleuses.
+%%%%
+crocodile
+
+Un crocodile agressif avec une grande mâchoire fracassante et pleine de dents
+pointues.
 %%%%
 curse skull
 
@@ -2095,10 +2098,6 @@ ancient champion
 Un ancien squelette insondable. Il a des centaines de sceaux dorés gravés dans
 ses os, et il palpite d'un pouvoir terrible et malsain.
 %%%%
-antique lich
-
-Une liche qui est devenu très coûteuse au fil d'un temps incalculable.
-%%%%
 charred statue
 
 On dirait que cette statue a été imprégnée de magie de feu, lui permettant de
@@ -2154,7 +2153,7 @@ ice bat
 
 Un mort vivant à l'aspect d'une chauve souris, composé de glace.
 %%%%
-kamikaze kobold
+flame-cult kobold
 
 Ce kobold est soit fou soit un martyr pour quelques croyances koboldes
 obscures, il est enchanté pour exploser dans une gerbe de feu. Vous ferez mieux

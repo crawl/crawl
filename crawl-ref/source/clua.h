@@ -147,7 +147,7 @@ public:
 
     void print_stack();
 
-    /* Add the libaries and globals currently used by clua and dlua */
+    /* Add the libraries and globals currently used by clua and dlua */
     void init_libraries();
 
 public:

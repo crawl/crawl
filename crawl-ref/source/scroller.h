@@ -7,6 +7,7 @@
 
 #include "menu.h"
 #include "ui.h"
+#include "maybe-bool.h"
 
 enum FSFlag {
     FS_START_AT_END = 0x01,
@@ -35,10 +36,10 @@ public:
     void set_tag(const string& tag) { m_tag = tag; }
 
     void set_more() { m_more.clear(); }
-    void set_more(formatted_string more) { m_more = move(more); }
+    void set_more(formatted_string more) { m_more = std::move(more); }
 
     void set_title() { m_title.clear(); };
-    void set_title(formatted_string title) { m_title = move(title); };
+    void set_title(formatted_string title) { m_title = std::move(title); };
 
     void scroll_to_end();
     void set_scroll(int y);
@@ -59,7 +60,7 @@ protected:
 
     bool m_contents_dirty, m_scroll_dirty;
 
-    virtual bool process_key(int keyin);
+    virtual maybe_bool process_key(int keyin);
     shared_ptr<ui::Scroller> m_scroller;
 };
 

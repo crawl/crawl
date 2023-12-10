@@ -138,6 +138,7 @@ map-knowledge.o \
 mapdef.o \
 mapmark.o \
 maps.o \
+maybe-bool.o \
 melee-attack.o \
 menu.o \
 message-stream.o \
@@ -224,7 +225,6 @@ spl-summoning.o \
 spl-transloc.o \
 spl-util.o \
 spl-vortex.o \
-spl-wpnench.o \
 spl-zap.o \
 sprint.o \
 sqldbm.o \
@@ -395,6 +395,7 @@ externs.h.o \
 explore-greedy-options.h.o \
 fight.h.o \
 filter-enum.h.o \
+fixedp.h.o \
 fineff.h.o \
 flang-t.h.o \
 flush-reason-type.h.o \
@@ -533,7 +534,6 @@ spl-selfench.h.o \
 spl-summoning.h.o \
 spl-transloc.h.o \
 spl-util.h.o \
-spl-wpnench.h.o \
 spl-zap.h.o \
 sprint.h.o \
 sqldbm.h.o \
@@ -593,6 +593,7 @@ $(WEBTILES_OBJECTS) $(YACC_OBJECTS) $(TILEDEFOBJS) $(HEADER_OBJECTS) \
 libw32c.o \
 libunix.o \
 catch2-tests/test_plug_and_play.o \
+catch2-tests/catch_amalgamated.o \
 catch2-tests/test_main.o \
 main.o \
 util/monster/monster-main.o \

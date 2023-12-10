@@ -29,10 +29,8 @@ bool player::see_cell(const coord_def &p) const
         return true;
     if (!in_bounds(pos()))
         return false; // A non-arena player at (0,0) can't see anything.
-    if (wizard_vision)
+    if (wizard_vision || you.duration[DUR_REVELATION])
         return (pos() - p).rdist() <= current_vision;
-    if (have_passive(passive_t::xray_vision))
-        return (pos() - p).rdist() <= ash_scry_radius() || actor::see_cell(p);
     return actor::see_cell(p);
 }
 

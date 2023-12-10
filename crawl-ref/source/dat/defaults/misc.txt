@@ -1,6 +1,6 @@
 drop_filter += useless_item
 
-auto_exclude += oklob,statue,roxanne,lightning spire,starflower
+auto_exclude += oklob,statue,roxanne,lightning spire,starflower,strange machine
 
 # Interrupting run and rest compound commands:
 runrest_ignore_monster += ^butterfly$:1
@@ -16,5 +16,12 @@ note_monsters += orb of fire, ancient lich, dread lich, Sigmund
 monster_item_view_features += stair, trap
 
 # Dangerous and non-tactical items
-action_panel_filter = attraction,degeneration,experience,flight,mutation
-action_panel_filter += acquirement,amnesia,brand,enchant,identify,mapping,noise,torment
+action_panel_filter  = attraction,degeneration,experience,mutation
+action_panel_filter += acquirement,amnesia,brand,enchant,identify,noise,torment
+
+# These items cause monsters to display with unusual threat highlighting:
+unusual_monster_items  = wand
+unusual_monster_items += disto,chaos
+unusual_monster_items += curare,atropa,datura,dispersal
+unusual_monster_items += throwing net
+unusual_monster_items += reflect

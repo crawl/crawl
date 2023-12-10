@@ -407,7 +407,7 @@ potion of experience
 
 Ein wirklich wundervoller und sehr seltenes Getränk.
 %%%%
-potion of flight
+potion of enlightenment
 
 Ein Trank, welcher eine große Beschwingtheit, auf denjenigen der ihn trinkt,
 überträgt.
@@ -575,7 +575,7 @@ erlauben.
 Wenn verwendet, auf einem Deck von Karten wird diese Schriftrolle auch die
 Spitzenkarte weggeben.
 %%%%
-scroll of magic mapping
+scroll of revelation
 
 Diese Schriftrolle offenbart die Umgebungen von demjenigen, der es liest.
 %%%%

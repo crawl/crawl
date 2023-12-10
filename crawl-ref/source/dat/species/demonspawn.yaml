@@ -26,19 +26,19 @@ aptitudes:
   necromancy: 1
   translocations: -1
   transmutations: -1
+  shapeshifting: -2
   fire_magic: -1
   ice_magic: -1
   air_magic: -1
   earth_magic: -1
   invocations: 3
 str: 8
-int: 9
+int: 8
 dex: 8
 levelup_stat_frequency: 4
 recommended_jobs:
   - JOB_GLADIATOR
   - JOB_BERSERKER
-  - JOB_ABYSSAL_KNIGHT
   - JOB_HEDGE_WIZARD
   - JOB_NECROMANCER
   - JOB_FIRE_ELEMENTALIST

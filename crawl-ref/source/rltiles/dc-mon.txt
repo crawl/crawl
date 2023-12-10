@@ -147,6 +147,7 @@ frilled_lizard MONS_FRILLED_LIZARD
 iguana MONS_IGUANA
 %rim 0
 basilisk MONS_BASILISK
+skyshark MONS_SKYSHARK
 %rim 1
 komodo_dragon MONS_KOMODO_DRAGON
 
@@ -192,6 +193,7 @@ pharaoh_ant  MONS_PHARAOH_ANT
 ## Turtles and crabs ('t')
 %sdir mon/animals
 %rim 1
+crocodile MONS_CROCODILE
 alligator MONS_ALLIGATOR
 snapping_turtle MONS_SNAPPING_TURTLE
 alligator_snapping_turtle MONS_ALLIGATOR_SNAPPING_TURTLE
@@ -208,6 +210,7 @@ swamp_worm_water
 %rim 1
 %sdir mon/animals
 worm MONS_WORM
+brain_worm MONS_BRAIN_WORM
 tyrant_leech MONS_TYRANT_LEECH
 dart_slug MONS_DART_SLUG
 steelbarb_worm MONS_STEELBARB_WORM
@@ -227,6 +230,7 @@ sun_moth MONS_SUN_MOTH
 %sdir mon/aquatic
 %rim 0
 electric_eel MONS_ELECTRIC_EEL
+jellyfish MONS_JELLYFISH
 %rim 1
 
 %include dc-tentacles.txt
@@ -242,17 +246,17 @@ boulder_beetle_rolling2
 ## Frogs ('F')
 %sdir mon/unique
 prince_ribbit MONS_PRINCE_RIBBIT
+jeremiah MONS_JEREMIAH
 %rim 1
 %sdir mon/animals
 bullfrog MONS_BULLFROG
 %rim 0
 blink_frog MONS_BLINK_FROG
+blinking_frog MONS_BLINK_FROG_BLINKING
 goliath_frog MONS_GOLIATH_FROG
-%rim 1
 cane_toad MONS_CANE_TOAD
 
 ## Snakes ('S')
-%rim 0
 ball_python MONS_BALL_PYTHON
 adder MONS_ADDER
 black_mamba MONS_BLACK_MAMBA
@@ -323,6 +327,7 @@ fulminant_prism2
 fulminant_prism3
 fulminant_prism4
 foxfire MONS_FOXFIRE
+marshlight MONS_MARSHLIGHT
 living_spell MONS_LIVING_SPELL
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
@@ -398,6 +403,7 @@ hellwing MONS_HELLWING
 
 # type '5' demons
 crimson_imp MONS_CRIMSON_IMP
+cerulean_imp MONS_CERULEAN_IMP
 %rim 0
 lemure MONS_LEMURE
 quasit MONS_QUASIT
@@ -482,6 +488,9 @@ abomination_small1
 %sdir mon/aquatic
 %rim 0
 octopode MONS_OCTOPODE
+%sdir mon/unique
+erica MONS_ERICA
+erica_swordless MONS_ERICA_SWORDLESS
 %sdir mon/animals
 bunyip MONS_BUNYIP
 
@@ -577,8 +586,6 @@ frostbound_tome MONS_FROSTBOUND_TOME
 donald MONS_DONALD
 edmund MONS_EDMUND
 edmund_weaponless MONS_EDMUND_WEAPONLESS
-erica MONS_ERICA
-erica_swordless MONS_ERICA_SWORDLESS
 eustachio MONS_EUSTACHIO
 frances MONS_FRANCES
 %rim 0
@@ -595,13 +602,14 @@ kirke MONS_KIRKE
 louise MONS_LOUISE
 maggie MONS_MAGGIE
 margery MONS_MARGERY
-maurice MONS_MAURICE
 %rim 0
 nikola MONS_NIKOLA
-%rim 0
+norris MONS_NORRIS
 psyche MONS_PSYCHE
 rupert MONS_RUPERT
 sigmund MONS_SIGMUND
+sigmund_scytheless MONS_SIGMUND_SCYTHELESS
+xmas-sigmund MONS_XMAS_SIGMUND
 zenata MONS_ZENATA
 %rim 1
 terence MONS_TERENCE
@@ -622,7 +630,8 @@ human3
 hell_knight MONS_HELL_KNIGHT
 death_knight MONS_DEATH_KNIGHT
 necromancer MONS_NECROMANCER
-wizard MONS_WIZARD
+arcanist MONS_ARCANIST
+occultist MONS_OCCULTIST
 vault_guard MONS_VAULT_GUARD
 vault_warden MONS_VAULT_WARDEN
 vault_sentinel MONS_VAULT_SENTINEL
@@ -733,7 +742,7 @@ mon/holy/pearl_dragon MONS_PEARL_DRAGON
 ballistomycete_spore MONS_BALLISTOMYCETE_SPORE
 %sdir mon/eyes
 %rim 1
-floating_eye MONS_FLOATING_EYE
+glass_eye MONS_GLASS_EYE
 %rim 0
 mon/aberrations/glowing_orange_brain MONS_GLOWING_ORANGE_BRAIN
 %rim 1
@@ -758,7 +767,7 @@ minotaur MONS_MINOTAUR
 %rim 0
 jorogumo MONS_JOROGUMO
 fenstrider_witch MONS_FENSTRIDER_WITCH
-palentonga MONS_PALENTONGA
+armataur MONS_ARMATAUR
 %rim 1
 tengu MONS_TENGU
 tengu_conjurer MONS_TENGU_CONJURER
@@ -846,6 +855,7 @@ pikel MONS_PIKEL
 kobold MONS_KOBOLD
 kobold_brigand MONS_KOBOLD_BRIGAND
 kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
+kobold_blastminer MONS_KOBOLD_BLASTMINER
 
 ## Liches ('L')
 %sdir mon/unique
@@ -858,7 +868,6 @@ lich MONS_LICH
 ancient_lich MONS_ANCIENT_LICH
 dread_lich MONS_DREAD_LICH
 halazid_warlock MONS_HALAZID_WARLOCK
-mon/vault/zonguldrok_lich MONS_ZONGULDROK_LICH
 
 ## Mummies ('M')
 %sdir mon/unique
@@ -899,6 +908,7 @@ lodul MONS_LODUL
 ogre MONS_OGRE
 two_headed_ogre MONS_TWO_HEADED_OGRE
 %rim 0
+swamp_ogre MONS_SWAMP_OGRE
 ogre_mage MONS_OGRE_MAGE
 ironbound_thunderhulk MONS_IRONBOUND_THUNDERHULK
 %rim 1
@@ -936,9 +946,11 @@ treant MONS_TREANT
 briar_patch MONS_BRIAR_PATCH
 %rim 1
 vine_stalker MONS_VINE_STALKER
+%rim 0
+%sdir mon/unique
+maurice MONS_MAURICE
 
 ## Trolls ('T')
-%sdir mon/unique
 pargi MONS_PARGI
 parghit MONS_PARGHIT
 snorg MONS_SNORG
@@ -985,6 +997,7 @@ orb_guardian MONS_ORB_GUARDIAN
 %rim 1
 %sdir mon/unique
 nessos MONS_NESSOS
+nessos_bowless MONS_NESSOS_BOWLESS
 %sdir mon/demihumanoids/taurs
 %rim 0
 # 'melee' tiles must be immediately following the normal ones
@@ -1047,6 +1060,7 @@ fungus9
 ballistomycete MONS_BALLISTOMYCETE
 wandering_mushroom MONS_WANDERING_MUSHROOM
 deathcap MONS_DEATHCAP
+sleepcap MONS_SLEEPCAP
 %rim 1
 
 ## Goblins ('g')
@@ -1171,6 +1185,7 @@ wight MONS_WIGHT
 %rim 1
 skeletal_warrior MONS_SKELETAL_WARRIOR
 ancient_champion MONS_ANCIENT_CHAMPION
+mon/vault/antique_champion MONS_ANTIQUE_CHAMPION
 %rim 1
 %sdir mon/undead
 curse_skull MONS_CURSE_SKULL
@@ -1225,19 +1240,19 @@ misc/unseen PLAYER
 ## Transformations
 %sdir player/transform
 bat_form TRAN_BAT
+beast_form TRAN_BEAST
 spider_form TRAN_SPIDER
 pig_form TRAN_PIG
-ice_form TRAN_ICE_BEAST
+serpent_form TRAN_SERPENT
 statue_form_humanoid TRAN_STATUE_HUMANOID
 %syn TRAN_STATUE_EQUIP_FIRST
-statue_form_palentonga TRAN_STATUE_PALENTONGA
+statue_form_palentonga TRAN_STATUE_ARMATAUR
 statue_form_naga TRAN_STATUE_NAGA
 statue_form_octopode TRAN_STATUE_OCTOPODE
 statue_form_djinni TRAN_STATUE_DJINN
 %syn TRAN_STATUE_EQUIP_LAST
 statue_form_felid TRAN_STATUE_FELID
 dragon_form TRAN_DRAGON
-dragon_form_red TRAN_DRAGON_RED
 dragon_form_white TRAN_DRAGON_WHITE
 dragon_form_green TRAN_DRAGON_GREEN
 dragon_form_yellow TRAN_DRAGON_YELLOW
@@ -1245,9 +1260,11 @@ dragon_form_grey TRAN_DRAGON_GREY
 dragon_form_black TRAN_DRAGON_BLACK
 dragon_form_purple TRAN_DRAGON_PURPLE
 dragon_form_pale TRAN_DRAGON_PALE
+dragon_form_octopode TRAN_DRAGON_OCTOPODE
+dragon_form_felid TRAN_DRAGON_FELID
 lich_form_humanoid TRAN_LICH_HUMANOID
 %syn TRAN_LICH_EQUIP_FIRST
-lich_form_palentonga TRAN_LICH_PALENTONGA
+lich_form_palentonga TRAN_LICH_ARMATAUR
 lich_form_naga TRAN_LICH_NAGA
 lich_form_octopode TRAN_LICH_OCTOPODE
 lich_form_djinn TRAN_LICH_DJINN
@@ -1284,4 +1301,5 @@ polymoth MONS_POLYMOTH
 %rim 0
 jack_o_lantern MONS_JACK_O_LANTERN
 gastronaut MONS_GASTRONAUT
+crawling_zombie_skyshark MONS_SKYSHARK_CRAWLING
 anubis_guard MONS_ANUBIS_GUARD

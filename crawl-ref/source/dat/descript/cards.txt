@@ -100,7 +100,8 @@ the Pentagram card
 
 The card depicts cultists marking out a ritual pentagram on the floor.
 
-Drawing this card will summon a pair of demons to the user's aid.
+Drawing this card will summon a pair of demons to the user's aid. There is a
+small chance one of the demons will be hostile.
 %%%%
 the Dance card
 
@@ -138,13 +139,6 @@ The card depicts the hand of the divine, reaching down from the heavens to hurl
 furious lightning.
 
 Drawing this card will draw a god's wrath against the user.
-%%%%
-Famine card
-
-The card depicts a gaunt figure crawling along an expanse of dry, cracked
-earth.
-
-Drawing this card will leave its user on the brink of starvation.
 %%%%
 the Wraith card
 

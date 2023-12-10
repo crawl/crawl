@@ -13,7 +13,7 @@ from tornado.escape import to_unicode
 from tornado.escape import utf8
 from tornado.ioloop import IOLoop
 
-from webtiles import config
+from webtiles import config, util
 
 
 class WebtilesSocketConnection(object):
@@ -25,6 +25,7 @@ class WebtilesSocketConnection(object):
         self.socketpath = None
         self.open = False
         self.close_callback = None
+        self.username = ""
 
         self.msg_buffer = None
 
@@ -35,7 +36,7 @@ class WebtilesSocketConnection(object):
             return
 
         self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
-        self.socket.settimeout(10)
+        self.socket.setblocking(False)
 
         # Set close-on-exec
         flags = fcntl.fcntl(self.socket.fileno(), fcntl.F_GETFD)
@@ -109,6 +110,12 @@ class WebtilesSocketConnection(object):
             self.socket.sendto(utf8(data), self.crawl_socketpath)
         except socket.timeout:
             self.logger.warning("Game socket send timeout", exc_info=True)
+            self.close()
+            return
+        except FileNotFoundError:
+            # I *think* this may be a relatively normal thing to happen, in
+            # which case it probably doesn't need a warning...
+            self.logger.warning("Game socket closed during sendto")
             self.close()
             return
         end = datetime.now()

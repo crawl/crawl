@@ -1,0 +1,169 @@
+%%%%
+Zin lastname
+
+定法者辛
+%%%%
+Yredelemnul lastname
+
+黑暗神伊莱德莱姆努尔
+%%%%
+Okawaru lastname
+
+战争之主奥卡瓦鲁
+%%%%
+Makhleb lastname
+
+毁灭者马科列布
+%%%%
+Sif Muna lastname
+
+学识之主席夫·穆纳
+%%%%
+Trog lastname
+
+狂怒者特洛戈
+%%%%
+Elyvilon lastname
+
+治愈者艾利维隆
+%%%%
+Lugonu lastname
+
+无形之神卢格努
+%%%%
+Beogh lastname
+
+强盗比欧弗
+%%%%
+Fedhas lastname
+
+费德哈·莽动
+%%%%
+Cheibriados lastname
+
+深思者切布理亚多
+%%%%
+Ashenzari lastname
+
+束缚者艾申扎利
+%%%%
+Dithmenos lastname
+
+隐没者迪斯姆诺
+%%%%
+Nemelex Xobeh lastname
+
+杂耍者尼姆雷斯・索布
+%%%%
+Gozag lastname
+
+贪婪者哥萨戈·亿·赛格斯
+%%%%
+Qazlal lastname
+
+兴风者卡兹拉尔
+%%%%
+Ru lastname
+
+觉醒者入
+%%%%
+Pakellas lastname
+
+发明者帕克拉斯
+%%%%
+Uskayaw lastname
+
+狂欢者乌斯卡亚
+%%%%
+Hepliaklqana lastname
+
+遗忘者惠普利亚卡纳
+%%%%
+Ignis lastname
+
+伊格尼斯，曳焰
+%%%%
+Wu Jian lastname
+
+无间门派
+%%%%
+Xom lastname
+
+w:280
+混沌之主佐姆
+
+w:20
+混沌神佐姆
+
+w:5
+随机之主佐姆
+
+w:5
+随机数之神佐姆
+
+w:5
+年长的混沌神佐姆
+
+谲诈之主佐姆
+
+w:5
+不定之主佐姆
+
+w:5
+无常之主佐姆
+
+重门之主佐姆
+
+任性之主佐姆
+
+w:5
+血腥的奇想之主佐姆
+
+w:5
+强施的奇想之主佐姆
+
+冷幽默之主佐姆
+
+w:5
+恶意的咯咯笑之主佐姆
+
+w:5
+恶毒的咯咯笑之主佐姆
+
+w:2
+深意之主佐姆
+
+w:2
+妙意之主佐姆
+
+w:2
+随意之主佐姆
+
+w:2
+肆意之主佐姆
+
+w:2
+隐意之主佐姆
+
+易变之主佐姆
+
+意图不详之主佐姆
+
+w:4
+佐姆大师
+
+w:2
+佐姆大师，佐姆罗姆叮咚
+
+w:2
+佐姆大师，乐子神佐姆
+
+w:2
+佐姆大师，佐姆佐姆与鲍姆，布拉娜范娜与佛姆
+
+w:5
+混乱之源佐姆
+
+w:5
+间断之源佐姆
+%%%%

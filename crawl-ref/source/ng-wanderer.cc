@@ -69,11 +69,8 @@ static void _give_wanderer_weapon(skill_type wpn_skill, bool good_item)
         sub_type = WPN_SPEAR;
         break;
 
-    // remaining types can't have basetype upgraded, so offer vorpal instead
     case SK_STAVES:
         sub_type = WPN_QUARTERSTAFF;
-        if (upgrade_base)
-            ego = SPWPN_VORPAL;
         break;
 
     case SK_RANGED_WEAPONS:
@@ -82,18 +79,21 @@ static void _give_wanderer_weapon(skill_type wpn_skill, bool good_item)
 
     default:
         sub_type = WPN_DAGGER;
-        if (upgrade_base)
-            ego = SPWPN_VORPAL;
         break;
     }
 
     if (upgrade_base)
     {
+        const weapon_type old_type = sub_type;
         sub_type = starting_weapon_upgrade(sub_type, you.char_class,
                                             you.species);
+        // If we can't upgrade the type, give it a little plus.
+        if (sub_type == old_type)
+            plus = 2;
     }
     else if (good_item)
         plus = 2;
+
 
     newgame_make_item(OBJ_WEAPONS, sub_type, 1, plus, ego);
 }
@@ -222,9 +222,6 @@ static skill_type _wanderer_role_skill_select(bool defense)
 
     if (defense)
         skill = _apt_weighted_choice(defense_skills, defense_size);
-    // give Djinn some help since they only have one magic apt
-    else if (you.has_mutation(MUT_INNATE_CASTER) && coinflip())
-        skill = SK_SPELLCASTING;
     // reduce the chance of a spell felid a bit
     else if (you.has_mutation(MUT_NO_GRASPING) && one_chance_in(3))
         skill = _apt_weighted_choice(physical_skills, physical_size);
@@ -253,12 +250,7 @@ static void _setup_starting_skills(skill_type sk1, skill_type sk2,
         if (sk <= SK_LAST_MUNDANE)
             martial++;
         else if (sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC)
-        {
-            // handle Djinn
-            if (you.has_mutation(MUT_INNATE_CASTER))
-                sk = SK_SPELLCASTING;
             magical++;
-        }
         if (sk != SK_NONE)
         {
             you.skills[sk]++;
@@ -423,9 +415,10 @@ static void _good_potion_or_scroll()
 {
     // vector of weighted {object_class_type, subtype} pairs
     // xxx: could we use is_useless_item here? (not without dummy items...?)
+    const int ally_scr_type = item_for_set(ITEM_SET_ALLY_SCROLLS);
     const vector<pair<pair<object_class_type, int>, int>> options = {
         { { OBJ_SCROLLS, SCR_FEAR }, 4 },
-        { { OBJ_SCROLLS, SCR_SUMMONING }, 1 },
+        { { OBJ_SCROLLS, ally_scr_type }, 1 },
         { { OBJ_SCROLLS, SCR_BLINKING },
             you.stasis() ? 0 : 4 },
         { { OBJ_POTIONS, POT_HEAL_WOUNDS },
@@ -460,11 +453,10 @@ static void _decent_potion_or_scroll()
 {
     // vector of weighted {object_class_type, subtype} pairs
     // xxx: could we use is_useless_item here? (not without dummy items...?)
-    const int conceal_scr_type = item_for_set(ITEM_SET_CONCEAL_SCROLLS);
     const vector<pair<pair<object_class_type, int>, int>> options = {
         { { OBJ_SCROLLS, SCR_TELEPORTATION },
             you.stasis() ? 0 : 6 },
-        { { OBJ_SCROLLS, conceal_scr_type }, 6 },
+        { { OBJ_SCROLLS, SCR_FOG }, 6 },
         { { OBJ_SCROLLS, SCR_VULNERABILITY }, 2 },
         { { OBJ_SCROLLS, SCR_SILENCE }, 2 },
         { { OBJ_POTIONS, POT_CURING },
@@ -488,10 +480,14 @@ static void _wanderer_random_evokable()
 {
     if (one_chance_in(3))
     {
-        int selected_evoker =
-              random_choose(MISC_BOX_OF_BEASTS, MISC_PHIAL_OF_FLOODS,
-                            MISC_PHANTOM_MIRROR, MISC_CONDENSER_VANE,
-                            MISC_TIN_OF_TREMORSTONES, MISC_LIGHTNING_ROD);
+        const auto area_evoker_type =
+            (misc_item_type)item_for_set(ITEM_SET_AREA_MISCELLANY);
+        const auto ally_evoker_type =
+            (misc_item_type)item_for_set(ITEM_SET_ALLY_MISCELLANY);
+        misc_item_type selected_evoker =
+              random_choose(ally_evoker_type, MISC_PHIAL_OF_FLOODS,
+                            MISC_PHANTOM_MIRROR, area_evoker_type,
+                            MISC_LIGHTNING_ROD);
 
         newgame_make_item(OBJ_MISCELLANY, selected_evoker, 1);
     }
@@ -576,13 +572,6 @@ static vector<spell_type> _wanderer_good_equipment(skill_type & skill)
     // Normalise the input type.
     if (skill == SK_FIGHTING)
         skill =  _apt_weighted_choice(combined_weapon_skills, total_weapons);
-
-    // handle Djinn
-    if (you.has_mutation(MUT_INNATE_CASTER) && skill == SK_SPELLCASTING)
-    {
-        skill = (skill_type)(SK_SPELLCASTING + random2(SK_LAST_MAGIC
-                    - SK_SPELLCASTING + 1));
-    }
 
     switch (skill)
     {
@@ -702,13 +691,6 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type & skill,
         skill = SK_FIGHTING;
     }
 
-    // handle Djinn
-    if (you.has_mutation(MUT_INNATE_CASTER) && skill == SK_SPELLCASTING)
-    {
-        skill = (skill_type)(SK_SPELLCASTING + random2(SK_LAST_MAGIC
-                    - SK_SPELLCASTING + 1));
-    }
-
     // Don't give a gift from the same skill twice; just default to
     // a decent consumable
     if (gift_skills.count(skill))
@@ -767,11 +749,8 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type & skill,
         return _give_wanderer_minor_spells(skill);
 
     case SK_EVOCATIONS:
-        if (one_chance_in(3))
-            newgame_make_item(OBJ_MISCELLANY, MISC_XOMS_CHESSBOARD, 1);
-        else
-            newgame_make_item(OBJ_WANDS, coinflip() ? WAND_FLAME
-                                : WAND_POLYMORPH, 1, 3 + random2(5));
+        newgame_make_item(OBJ_WANDS, coinflip() ? WAND_FLAME : WAND_POLYMORPH,
+                          1, 3 + random2(5));
         break;
 
     case SK_STEALTH:
@@ -815,21 +794,19 @@ static void _wanderer_cover_equip_holes()
     }
 }
 
-static void _add_spells(vector<spell_type> &all_spells,
+static void _add_spells(set<spell_type> &all_spells,
                         const vector<spell_type> &new_spells)
 {
-    all_spells.insert(all_spells.end(), new_spells.begin(), new_spells.end());
+    all_spells.insert(new_spells.begin(), new_spells.end());
 }
 
-static void _handle_start_spells(const vector<spell_type> &spells)
+static void _handle_start_spells(const set<spell_type> &spells)
 {
     if (you.has_mutation(MUT_INNATE_CASTER))
     {
         for (spell_type s : spells)
-        {
             if (you.spell_no < MAX_DJINN_SPELLS)
                 add_spell_to_memory(s);
-        }
         return;
     }
 
@@ -872,7 +849,7 @@ void create_wanderer()
     // 1 last stage to fill any glaring equipment holes (no clothes,
     // etc.).
 
-    vector<spell_type> spells;
+    set<spell_type> spells;
     _add_spells(spells, _wanderer_good_equipment(gift_skill_1));
     gift_skills.insert(gift_skill_1);
 

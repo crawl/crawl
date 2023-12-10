@@ -5,7 +5,26 @@
 
 #pragma once
 
+// change these defs for forks (please)
+// (there are various places in the build system that will also need manual
+// attention, as well as the main menu, etc)
 #define CRAWL "Dungeon Crawl Stone Soup"
+#define CRAWL_SHORT "Crawl"
+// shown in crashes:
+#define CRAWL_BUG_REPORT "https://github.com/crawl/crawl/issues"
+// reminder, modifications of the following should obey the licensing, you
+// can't just replace this with your name. Also, this should fit (maybe with
+// multiple lines) in 80 chars.
+#define CRAWL_COPYRIGHT "(c) Copyright 1997-2002 Linley Henzell, 2002-2023 Crawl DevTeam"
+
+#ifdef USE_TILE_WEB
+#  define CRAWL_BUILD_NAME "Console/Webtiles"
+#elif defined(USE_TILE_LOCAL)
+#  define CRAWL_BUILD_NAME "SDL Tiles"
+#else
+#  define CRAWL_BUILD_NAME "Console"
+#endif
+
 
 enum rel_type
 {

@@ -269,12 +269,6 @@ enum KEYS
     CK_NUMPAD_0,
     CK_MAX_NUMPAD = CK_NUMPAD_0,
 
-#ifdef TOUCH_UI
-    // TODO remove
-    CK_NUMPAD_PLUS = CK_NUMPAD_ADD,
-    CK_NUMPAD_MINUS = CK_NUMPAD_SUBTRACT,
-#endif
-
 // ugly...
 // TODO: should crawl just use one of these internally and convert?
 // why stop at F15? (Previously, was F12.) This is what SDL on mac goes up to...

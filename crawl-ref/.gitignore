@@ -129,6 +129,7 @@ makefile.dep
 
 # The Crawl executable.
 /source/crawl
+/source/crawl-tiles
 
 # Precompiled header
 /source/AppHdr.h.gch
@@ -229,12 +230,16 @@ source/.tx/config
 .metadata/
 
 # generated files for android
-icon.png
-/source/android-project/AndroidManifest.xml
-/source/android-project/assets
-/source/android-project/gen
-/source/android-project/libs
-/source/android-project/obj
+/source/android-project/.gradle/
+/source/android-project/.idea/
+/source/android-project/local.properties
+/source/android-project/app/.cxx/
+/source/android-project/app/build/
+/source/android-project/app/build.gradle
+/source/android-project/app/release/
+/source/android-project/app/src/main/assets/
+/source/android-project/build/
+/source/android-project/app/src/main/res/drawable/*.png
 
 # generated files for monster
 /source/util/monster/monster
@@ -250,3 +255,7 @@ icon.png
 
 # generated files for catch2-tests
 /source/catch2-tests/*.d
+
+# generated files for appimage
+/source/appimage
+/source/stone_soup-*.AppImage

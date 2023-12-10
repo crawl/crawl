@@ -151,12 +151,13 @@ NAME:   hellmouth_3
 TAGS:   transparent
 ORIENT: float
 MONS:   sun demon / hell knight / hell hog / soul eater / smoke demon
-MONS:   hellion / balrug / hell beast / hell knight
-ITEM:   demon blade / demon whip / demon trident / nothing
+MONS:   hellion / balrug w:20 / hell beast
+ITEM:   demon blade / demon whip / demon trident
+NSUBST: 1 = 1:l / 1:1l / *:1
 KMASK:  12Ad = opaque
 SUBST:  ? : . l ?:40, ?=l.
 : hell_entry_feature(_G, 'A')
-: hell_entry_tier(_G, "mid")
+: hell_entry_tier(_G, "high")
 MAP
               ..??..      ....
    .....     .......     ..??.
@@ -188,7 +189,6 @@ MONS:   sun demon / smoke demon / soul eater / ynoxinul / sixfirhy \
         / neqoxec w:5 / w:50 nothing
 MONS:   blizzard demon / hell beast / cacodemon / green death / reaper \
         / balrug / hellion w:5 / tormentor w:5 / nothing w:30
-MONS:
 ITEM:   skeleton
 KFEAT:  b = .
 KMONS:  A = obsidian statue
@@ -259,11 +259,16 @@ ENDMAP
 
 ##############################################################################
 NAME: grunt_hell_horde
-WEIGHT: 6
 TAGS: nolayout_encompass uniq_hell_entry_high transparent
-: hell_entry_feature(_G, 'O')
+WEIGHT: 6
+MONS: hellephant, hell hog
+# Second hellephant chance and hell hog counts increases with depth.
+: nsubst("1 = 1:1 / 1:2 / 1:2. / 1 = 1:" ..
+:         you.depth() .. " .:" .. 5 - you.depth())
+: nsubst("2 = " .. you.depth() + 1 .. ":2 / 4:. / * = " ..
+:        "2:" .. you.depth() .. " .:" .. 6 - you.depth())
 NSUBST: + = 1:+ / 1:+x / *:x
-MONS: hellephant / hell hog, hell hog / nothing
+: hell_entry_feature(_G, 'O')
 : hell_entry_tier(_G, "high")
 MAP
  xxx+xxx
@@ -297,11 +302,11 @@ NAME: grunt_mini_vestibule
 TAGS: nolayout_encompass no_monster_gen uniq_hell_entry_high transparent
 : hell_entry_feature(_G, 'O')
 KMONS: O = hell beast
-MONS: quicksilver dragon simulacrum / blizzard demon / ice dragon
-MONS: iron troll / iron dragon
-MONS: hell beast / hell hog / balrug
-MONS: bone dragon / reaper / ancient champion band / soul eater w:20
-: hell_entry_tier(_G, "mid")
+MONS: frost giant / quicksilver dragon simulacrum / freezing wraith
+MONS: iron dragon / war gargoyle / ancient champion
+MONS: salamander tyrant / hell hog / balrug
+MONS: eidolon / spectral spark wasp / bone dragon
+: hell_entry_tier(_G, "high")
 MAP
   .....@.....
  ..ccnc+cncc..
@@ -654,8 +659,8 @@ WEIGHT: 2
   -- the Dis inventory focuses on damage/AC increases to counteract the
   -- corrosion hell effect, rCorr for caustic shrikes, reflection for various
   -- Dis projectiles, and enchant armour/weapon scrolls in bulk
-  local disinv = util.random_subset( { "any weapon good_item ego:vorpal",
-    "any weapon randart ego:vorpal", "ring of slaying randart",
+  local disinv = util.random_subset( { "any weapon good_item ego:heavy",
+    "any weapon randart ego:heavy", "ring of slaying randart",
     "ring of protection randart", "any weapon good_item ego:protection",
     "any weapon randart ego:protection", "crystal plate armour randart",
     "gold dragon scales randart", "tower shield randart",
@@ -700,8 +705,8 @@ WEIGHT: 2
   -- up to two generic randarts/randbooks, as well as magic stuff and
   -- assorted weapons, including demon weapons
   local hellinv = util.random_subset( { "scroll of blinking q:10",
-    "scroll of magic mapping q:10", "scroll of silence q:10",
-    "scroll of summoning q:10", "scroll of teleportation q:10",
+    "scroll of revelation q:10", "scroll of silence q:10",
+    "any ally scroll q:10", "scroll of teleportation q:10",
     "potion of brilliance q:10",
     "potion of cancellation q:10", "potion of curing q:10",
     "potion of haste q:10","potion of heal wounds q:10", "potion of magic q:10",
@@ -721,7 +726,7 @@ WEIGHT: 2
     "executioner's axe randart ego:holy_wrath",
     "trishula randart ego:holy_wrath", "sacred scourge randart ego:holy_wrath",
     "eveningstar randart ego:holy_wrath", "bardiche randart ego:holy_wrath",
-    "lajatang randart ego:holy_wrath", "hand crossbow randart ego:holy_wrath",
+    "lajatang randart ego:holy_wrath", "hand cannon randart ego:holy_wrath",
     "longbow randart ego:holy_wrath", "arbalest randart ego:holy_wrath",
     "triple crossbow randart ego:holy_wrath" }, 1 )
 

@@ -54,14 +54,19 @@
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tilepick.h"
+ #include "tilepick-p.h"
 #endif
 #include "tileview.h"
+#include "traps.h" // set_shafted
 #include "viewchar.h"
 #include "view.h"
 #ifdef USE_TILE_LOCAL
  #include "windowmanager.h"
 #endif
 #include "ui.h"
+#ifdef __ANDROID__
+ #include "syscalls.h"
+#endif
 #include "version.h"
 
 using namespace ui;
@@ -70,8 +75,7 @@ static void _loading_message(string m)
 {
     mpr(m.c_str());
 #ifdef USE_TILE_LOCAL
-    if (!crawl_state.tiles_disabled && crawl_state.title_screen)
-        loading_screen_update_msg(m.c_str());
+    loading_screen_update_msg(m.c_str());
 #endif
 }
 
@@ -127,8 +131,7 @@ static void _initialize()
     // Draw the splash screen before the database gets initialised as that
     // may take awhile and it's better if the player can look at a pretty
     // screen while this happens.
-    if (!crawl_state.tiles_disabled && crawl_state.title_screen)
-        loading_screen_open();
+    loading_screen_open();
 #endif
 
     // Initialise internal databases.
@@ -150,9 +153,10 @@ static void _initialize()
     if (crawl_state.build_db)
         end(0);
 
+    crawl_state.use_des_cache = true;
+
 #ifdef USE_TILE_LOCAL
-    if (!crawl_state.tiles_disabled && crawl_state.title_screen)
-        loading_screen_close();
+    loading_screen_close();
 #endif
 
     you.game_seed = crawl_state.seed;
@@ -185,19 +189,20 @@ static void _initialize()
 #error "DEBUG must be defined if DEBUG_TESTS is defined"
 #endif
 
-#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
+#if !defined(DEBUG_DIAGNOSTICS) && !defined(DEBUG_TESTS)
+        if (!crawl_state.script)
+        {
+            end(1, false, "Non-debug Crawl cannot run tests. "
+                "Please use a debug build (defined FULLDEBUG, DEBUG_DIAGNOSTIC "
+                "or DEBUG_TESTS)");
+        }
+#endif
 #ifdef USE_TILE
         init_player_doll();
 #endif
         dgn_reset_level();
         crawl_state.show_more_prompt = false;
-        run_tests();
-        // doesn't return
-#else
-        end(1, false, "Non-debug Crawl cannot run tests. "
-            "Please use a debug build (defined FULLDEBUG, DEBUG_DIAGNOSTIC "
-            "or DEBUG_TESTS)");
-#endif
+        run_tests(); // noreturn
     }
 
     mpr(opening_screen().tostring().c_str());
@@ -286,7 +291,7 @@ static void _post_init(bool newc)
     {
         // n.b. temple already generated in setup_game at this point
         if (Options.pregen_dungeon == level_gen_type::full
-            && crawl_state.game_standard_levelgen())
+            && crawl_state.game_has_random_floors())
         {
             pregen_dungeon(level_id(NUM_BRANCHES, -1));
         }
@@ -294,11 +299,9 @@ static void _post_init(bool newc)
         you.entering_level = false;
         you.transit_stair = DNGN_UNSEEN;
         you.depth = starting_absdepth() + 1;
-        // Abyssal Knights start out in the Abyss.
-        if (you.chapter == CHAPTER_POCKET_ABYSS)
-            you.where_are_you = BRANCH_ABYSS;
-        else
-            you.where_are_you = root_branch;
+        you.where_are_you = root_branch;
+        if (you.depth > 1)
+            set_shafted();
     }
 
     // XXX: Any invalid level_id should do.
@@ -315,12 +318,6 @@ static void _post_init(bool newc)
                you.entering_level ? LOAD_ENTER_LEVEL :
                newc               ? LOAD_START_GAME : LOAD_RESTART_GAME,
                old_level);
-
-    if (newc && you.chapter == CHAPTER_POCKET_ABYSS)
-    {
-        generate_abyss();
-        save_level(level_id::current());
-    }
 
 #ifdef WIZARD
     // Save-less games are pointless except for tests.
@@ -362,6 +359,8 @@ static void _post_init(bool newc)
     init_monster_symbols();
 
 #ifdef USE_TILE
+    if (newc)
+        randomize_doll_base();
     init_player_doll();
 
     tiles.resize();
@@ -380,6 +379,10 @@ static void _post_init(bool newc)
     if (you.prev_save_version != Version::Long)
         check_if_everything_is_identified();
 
+    // XX why is this run now in addition to a related call in load_level?
+    // (There this function is only called on level change, and instead
+    // we run travel_init_load_level; this function is just a call to
+    // travel_init_new_level, which from the comments shouldn't be run on load?)
     trackers_init_new_level();
 
     if (newc) // start a new game
@@ -417,7 +420,7 @@ struct game_modes_menu_item
     const char *description;
 };
 
-static const game_modes_menu_item entries[] =
+static const vector<game_modes_menu_item> entries =
 {
     {GAME_TYPE_NORMAL, "Dungeon Crawl",
         "Dungeon Crawl: The main game: full of monsters, items, "
@@ -429,6 +432,8 @@ static const game_modes_menu_item entries[] =
     {GAME_TYPE_HINTS, "Hints Mode for Dungeon Crawl",
         "A mostly normal game that provides more advanced hints "
         "than the tutorial."},
+    {GAME_TYPE_DESCENT, "Dungeon Descent",
+        "Mode with a branching, one-way path through the Dungeon." },
     {GAME_TYPE_SPRINT, "Dungeon Sprint",
         "Hard, fixed single level game mode." },
     {GAME_TYPE_INSTRUCTIONS, "Instructions", "Help menu." },
@@ -440,9 +445,12 @@ static const game_modes_menu_item entries[] =
 
 static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
 {
-    for (unsigned int i = 0; i < ARRAYSZ(entries); ++i)
+    for (size_t i = 0; i < entries.size(); ++i)
     {
         const auto& entry = entries[i];
+        if (entry.id == GAME_TYPE_DESCENT && Version::ReleaseType != VER_ALPHA)
+            continue;
+
         auto label = make_shared<Text>();
 
 #ifdef USE_TILE_LOCAL
@@ -451,7 +459,7 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
         auto tile = make_shared<Image>();
         tile->set_tile(tile_def(tileidx_gametype(entry.id)));
         tile->set_margin_for_sdl(0, 6, 0, 0);
-        hbox->add_child(move(tile));
+        hbox->add_child(std::move(tile));
         hbox->add_child(label);
 #endif
 
@@ -460,14 +468,14 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
         auto btn = make_shared<MenuButton>();
 #ifdef USE_TILE_LOCAL
         hbox->set_margin_for_sdl(2, 10, 2, 2);
-        btn->set_child(move(hbox));
+        btn->set_child(std::move(hbox));
 #else
-        btn->set_child(move(label));
+        btn->set_child(std::move(label));
 #endif
         btn->id = entry.id;
         btn->description = entry.description;
         btn->highlight_colour = LIGHTGREY;
-        container->add_button(move(btn), 0, i);
+        container->add_button(std::move(btn), 0, i);
     }
 }
 
@@ -485,9 +493,9 @@ static shared_ptr<MenuButton> _make_newgame_button(int num_chars)
 
     auto btn = make_shared<MenuButton>();
 #ifdef USE_TILE_LOCAL
-    btn->set_child(move(hbox));
+    btn->set_child(std::move(hbox));
 #else
-    btn->set_child(move(label));
+    btn->set_child(std::move(label));
 #endif
     btn->get_child()->set_margin_for_sdl(2, 10, 2, 2);
     btn->id = NUM_GAME_TYPE + num_chars;
@@ -506,7 +514,7 @@ static void _construct_save_games_menu(shared_ptr<OuterMenu>& container,
 #ifdef USE_TILE_LOCAL
         auto tile = make_shared<ui::PlayerDoll>(chars.at(i).doll);
         tile->set_margin_for_sdl(0, 6, 0, 0);
-        hbox->add_child(move(tile));
+        hbox->add_child(std::move(tile));
 #endif
 
         const COLOURS fg = chars.at(i).save_loadable ? WHITE : RED;
@@ -530,20 +538,20 @@ static void _construct_save_games_menu(shared_ptr<OuterMenu>& container,
 
         auto btn = make_shared<MenuButton>();
 #ifdef USE_TILE_LOCAL
-        btn->set_child(move(hbox));
+        btn->set_child(std::move(hbox));
 #else
-        btn->set_child(move(label));
+        btn->set_child(std::move(label));
 #endif
         btn->get_child()->set_margin_for_sdl(2, 10, 2, 2);
         btn->id = NUM_GAME_TYPE + i;
         btn->highlight_colour = LIGHTGREY;
-        container->add_button(move(btn), 0, i);
+        container->add_button(std::move(btn), 0, i);
     }
 
     if (!chars.empty())
     {
         auto btn = _make_newgame_button(chars.size());
-        container->add_button(move(btn), 0, (int)chars.size());
+        container->add_button(std::move(btn), 0, (int)chars.size());
     }
 }
 
@@ -583,7 +591,7 @@ public:
         about->set_margin_for_crt(0, 0, 1, 0);
         about->set_margin_for_sdl(0, 0, 10, 0);
 
-        m_root->add_child(move(about));
+        m_root->add_child(std::move(about));
 
         auto grid = make_shared<Grid>();
         grid->set_margin_for_crt(0, 0, 1, 0);
@@ -599,7 +607,7 @@ public:
         input_text->set_margin_for_crt(0, 0, 1, 0);
         input_text->set_margin_for_sdl(0, 0, 10, 10);
 
-        grid->add_child(move(name_prompt), 0, 0);
+        grid->add_child(std::move(name_prompt), 0, 0);
         grid->add_child(input_text, 1, 0);
 
         descriptions = make_shared<Switcher>();
@@ -607,7 +615,7 @@ public:
         auto mode_prompt = make_shared<Text>("Choices:");
         mode_prompt->set_margin_for_crt(0, 1, 1, 0);
         mode_prompt->set_margin_for_sdl(0, 0, 10, 0);
-        game_modes_menu = make_shared<OuterMenu>(true, 1, ARRAYSZ(entries));
+        game_modes_menu = make_shared<OuterMenu>(true, 1, entries.size());
         game_modes_menu->set_margin_for_sdl(0, 0, 10, 10);
         game_modes_menu->set_margin_for_crt(0, 0, 1, 0);
         game_modes_menu->descriptions = descriptions;
@@ -619,7 +627,7 @@ public:
         game_modes_menu->min_size().height = 2;
 #endif
 
-        grid->add_child(move(mode_prompt), 0, 1);
+        grid->add_child(std::move(mode_prompt), 0, 1);
         grid->add_child(game_modes_menu, 1, 1);
 
         save_games_menu = make_shared<OuterMenu>(num_saves > 1, 1, num_saves + 1);
@@ -638,7 +646,7 @@ public:
             save_games_menu->descriptions = descriptions;
 
             _construct_save_games_menu(save_games_menu, chars);
-            grid->add_child(move(save_prompt), 0, 2);
+            grid->add_child(std::move(save_prompt), 0, 2);
             grid->add_child(save_games_menu, 1, 2);
 
             game_modes_menu->linked_menus[2] = save_games_menu;
@@ -672,7 +680,7 @@ public:
         grid->column_flex_grow(0) = 1;
         grid->column_flex_grow(1) = 10;
 
-        m_root->add_child(move(grid));
+        m_root->add_child(std::move(grid));
 
         string instructions_text;
         // TODO: these can overflow on console 80x24 and won't line-wrap, is
@@ -724,6 +732,7 @@ private:
     vector<player_save_info> chars;
     int num_saves;
     bool first_action = true;
+    int default_id = 0;
 
     bool on_button_focusin(const MenuButton& btn)
     {
@@ -731,6 +740,7 @@ private:
         switch (selected_game_type)
         {
         case GAME_TYPE_NORMAL:
+        case GAME_TYPE_DESCENT:
         case GAME_TYPE_CUSTOM_SEED:
         case GAME_TYPE_TUTORIAL:
         case GAME_TYPE_SPRINT:
@@ -799,6 +809,8 @@ void UIStartupMenu::on_show()
     if (selected_game_type >= NUM_GAME_TYPE)
         selected_game_type = GAME_TYPE_UNSPECIFIED;
 
+    default_id = defaults.type < NUM_GAME_TYPE ? defaults.type : 0;
+
     int id;
     if (selected_game_type != GAME_TYPE_UNSPECIFIED)
         id = selected_game_type;
@@ -807,12 +819,8 @@ void UIStartupMenu::on_show()
         // save game id is offset by NUM_GAME_TYPE
         id = NUM_GAME_TYPE + save;
     }
-    else if (defaults.type != NUM_GAME_TYPE)
-        id = defaults.type;
-    else if (!chars.empty())
-        id = NUM_GAME_TYPE + 0;
     else
-        id = 0;
+        id = default_id;
 
     if (auto focus = game_modes_menu->get_button_by_id(id))
         game_modes_menu->scroll_button_into_view(focus);
@@ -899,8 +907,10 @@ void UIStartupMenu::on_show()
         // game.
         int i = _find_save(chars, input_string);
         auto menu = i == -1 ? game_modes_menu : save_games_menu;
-        auto btn = menu->get_button(0, i == -1 ? 0 : i);
-        menu->scroll_button_into_view(btn);
+        auto btn = i == -1 ? menu->get_button_by_id(default_id)
+                           : menu->get_button(0, i);
+        if (btn)
+            menu->scroll_button_into_view(btn);
         return true;
     });
 }
@@ -910,6 +920,7 @@ void UIStartupMenu::menu_item_activated(int id)
     switch (id)
     {
     case GAME_TYPE_NORMAL:
+    case GAME_TYPE_DESCENT:
     case GAME_TYPE_CUSTOM_SEED:
     case GAME_TYPE_TUTORIAL:
     case GAME_TYPE_SPRINT:
@@ -966,17 +977,14 @@ static void _show_startup_menu(newgame_def& ng_choice,
 {
     unwind_bool no_more(crawl_state.show_more_prompt, false);
 
-#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
-    wm->show_keyboard();
-#elif defined(USE_TILE_WEB)
+#ifdef USE_TILE_WEB
     tiles_crt_popup show_as_popup;
 #endif
-
 
     auto startup_ui = make_shared<UIStartupMenu>(ng_choice, defaults);
     auto popup = make_shared<ui::Popup>(startup_ui);
 
-    ui::run_layout(move(popup), startup_ui->done);
+    ui::run_layout(std::move(popup), startup_ui->done);
 
     if (startup_ui->end_game || crawl_state.seen_hups)
     {
@@ -1030,6 +1038,12 @@ bool startup_step()
     if (!SysEnv.crawl_name.empty())
         choice.name = SysEnv.crawl_name;
 
+#ifdef __ANDROID__
+    // Request the Android virtual keyboard. Waiting for the SDLActivity to be
+    // resized avoids some display bugs.
+    jni_keyboard_control(false);
+    sleep(1);
+#endif
 
 #ifndef DGAMELAUNCH
 

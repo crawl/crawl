@@ -13,9 +13,9 @@ both speak to the training she underwent. Underestimate her at your peril!
 Aizul
 
 Once the primary guardian serpent of a legendary treasure hoard, she was
-disgraced after thieves looted it while she slept. She now slithers about the
-dungeon, seeking vengeance against all would-be looters. She is an accomplished
-spellcaster, but no more deadly in melee combat than others of her kind.
+disgraced after thieves looted it while she slept. She seeks to make up for her
+failure by protecting the only treasure the villains overlooked, a single
+precious talisman.
 %%%%
 Amaemon
 
@@ -93,9 +93,9 @@ on to his ears with hooks?
 %%%%
 Dispater
 
-Greatest of the Lords of Hell, Dispater was born when first an iron sword drank
-mortal blood. They despise mortal vanities, the pursuit of ‘reason’ and
-‘beauty’ - the only art they enjoy is the art of war.
+Greatest and most ruthless of the Lords of Hell, Dispater was born when first an
+iron sword drank mortal blood. They despise mortal vanities, the pursuit of
+‘reason’ and ‘beauty’ - the only art they enjoy is the art of war.
 %%%%
 Dissolution
 
@@ -156,7 +156,8 @@ loved ones separated by untimely death, enwreathed in the silence of the grave.
 %%%%
 Erica
 
-A wild-tempered adventuress.
+A wild-tempered adventuress. She's quite prideful for an octopode, and brandishes
+their venomous capacity and camouflage talents with cruel force.
 %%%%
 Erolcha
 
@@ -243,6 +244,15 @@ Ilsuiw
 
 A deadly merfolk water-witch, who uses her dominion over the tides to draw
 unwitting adventurers to their deaths.
+%%%%
+Jeremiah
+
+Jeremiah was a peaceful dreamer, prone to impromptu naps. They slipped into
+slumber while gazing into a magical orb, and dreamed of an old and hateful
+power binding them into service. Now Jeremiah stumbles through the dungeon,
+searching for the precious dreamshard that will restore their master’s power,
+unsure whether they wake or slumber still. Their dreams leak into reality in
+the form of a constant stream of butterflies.
 %%%%
 Jessica
 
@@ -338,10 +348,10 @@ slew the ancient dragon from whose hide her strange armour is crafted.
 %%%%
 Maurice
 
-A sly, conniving thief. In his profession, Maurice is considered a legend — at
-least according to himself. He is skilled, nonetheless, and among all the
-thieves and rogues lured by the Orb, Maurice is undoubtedly the most crafty.
-He uses magic wands in addition to cloak and dagger.
+A sly, conniving thief. A self-proclaimed legend, he was one of the most skilled
+and crafty of the thieves and rogues lured by the Orb. The magical parasitic
+vines that have claimed his body still wish to continue his life's work, with a
+back-up plan of both a vicious magic-drinking maw and potent wands.
 %%%%
 Menkaure
 
@@ -377,10 +387,10 @@ A demonic skull rolling along the ground.
 %%%%
 Natasha
 
-A magical cat. Once a powerful wizard's familiar, Natasha was abandoned after
-her master was consumed by the very necromantic forces he sought to control.
-Now she patrols the dungeon, taking a bloody vengeance with spell and claw upon
-any adventurer who crosses her path.
+A fast-moving magical cat. Once a powerful wizard's familiar, Natasha was
+abandoned after her master was consumed by the very necromantic forces he sought
+to control. Now she patrols the dungeon, taking a bloody vengeance with spell
+and claw upon any adventurer who crosses her path.
 
 This cat doesn't have nine lives, but just one death isn't going to be enough
 to put her down for good.
@@ -406,6 +416,12 @@ Nikola
 A brilliant scientist obsessed with electricity. In his attempts to perfect his
 electric golem, he was involved in a terrible accident, and now phases in and
 out of reality.
+%%%%
+Norris
+
+A relaxed water cultist with a healthy tan and a soothing voice. He
+doesn't really care if it is you or he who dies — “both” would probably be the
+best option.
 %%%%
 Pargi
 
@@ -450,11 +466,14 @@ find a stream of screaming goblins flying toward them!
 Roxanne
 
 A strikingly realistic sapphire statue of a famous earth mage who disappeared
-after a catastrophic spell failure. She is clutching a book.
+after a catastrophic mishap with a magical talisman.
 %%%%
 Rupert
 
-A human whose savage roars bring terror to all those who hear them.
+Rippling muscles, glistening pecs, incredible glutes - Rupert is the peak of
+physical perfection. Even so, his roars seem louder than even his fantastic form
+can explain. Perhaps he holds some talisman that lends supernatural force to his
+bellows?
 %%%%
 Saint Roka
 
@@ -477,6 +496,8 @@ that is, easy meals — it attracts.
 Sojobo
 
 Queen of the tengu, with legendary skill in swordsmanship, tactics, and magic.
+Storytellers claim she once trapped a raging tempest in a bottle and kept it
+as a talisman.
 %%%%
 Sonja
 
@@ -627,6 +648,12 @@ apocalypse crab
 An opalescent crab with jet black eyes, and chaotic mists effusing from its
 mandibles. Rumours claim that this species is waiting for the end of time.
 %%%%
+arcanist
+
+A wizard fond of spectacle and destruction. They scorn the cowardice of other
+magicians, who hide from their foes rather than simply blasting them out of
+existence.
+%%%%
 azure jelly
 
 An extremely cold blob of bright blue cytoplasm, forming bits of frost in the
@@ -690,8 +717,7 @@ from death in a burst of unholy flame.
 %%%%
 black bear
 
-A small black bear. Like all ursines, it will become enraged if badly hurt or
-frightened.
+A small black bear. Like all ursines, it will become enraged if badly hurt.
 %%%%
 black draconian
 
@@ -743,6 +769,10 @@ A gnoll witch possessed by a spirit of spite which flashes out from behind
 their eyes. Its strange chants and ululations send other gnolls into a wild
 frenzy.
 %%%%
+boulder
+
+A mass of fast-rolling stone, crushing everything in its path.
+%%%%
 boulder beetle
 
 A grey beetle with an almost impenetrable rocky carapace. When at some distance
@@ -754,6 +784,11 @@ bound soul
 The soul of a living, holy, or demonic creature, captured by a dark sacrifice
 to Yredelemnul. The bound soul will follow its captor through stairs and come
 when recalled from a different level.
+%%%%
+brain worm
+
+A slimy fluorescent worm with a greatly distended head. This creature feeds on
+others' intellect as it squirms through unworldly grime.
 %%%%
 briar patch
 
@@ -834,7 +869,12 @@ skilled in archery.
 centaur warrior
 
 A muscular centaur, veteran of numerous battles, armed with well-made weapons
-and able to use them skilfully.
+and able to use them skillfully.
+%%%%
+cerulean imp
+
+A small, willful minor demon. Its wings, far larger than its scrawny body, were
+made to soar, and it lands only rarely and with the greatest reluctance.
 %%%%
 chaos spawn
 
@@ -859,6 +899,10 @@ crimson imp
 
 A small, ugly minor demon. Its fanged maw seems locked in a permanent malign
 grin, and its horns protrude obscenely from its scaly pate.
+%%%%
+crocodile
+
+A crocodilian with powerful jaws.
 %%%%
 crystal echidna
 
@@ -965,8 +1009,7 @@ demonic forces and the creatures of the Abyss.
 deep elf elementalist
 
 A deep elf commanding the primal forces of the universe. It is renowned for its
-ability to dig out and pin down even the most elusive foes with powerful,
-unavoidable magic.
+ability to pin down even the most elusive foes with powerful, unavoidable magic.
 %%%%
 deep elf high priest
 
@@ -1021,8 +1064,9 @@ A human-like figure with an aura of power betraying its divine ancestry.
 %%%%
 demonic crawler
 
-A hellish insectoid creature with a long and bloated body, supported by dozens
-of short jointed legs and topped with an almost human head.
+A hellish insectoid creature, fueled by some infernal power that constantly
+regrows its chitinous segments. Nothing short of a lethal blow will stop it
+for long.
 %%%%
 demonspawn
 
@@ -1066,9 +1110,10 @@ An elemental spirit formed from smokeless fire.
 %%%%
 doom hound
 
-A demon lapdog of the queen of Tartarus, bound to hunt her enemies. Though it
-may appear alone, it has the terrible power to set creatures of nightmare on
-its victim's trails.
+A demon lapdog of the queen of Tartarus, bound to hunt her enemies. The first
+time a foe hears its howl, it will echo in their mind, calling nightmarish
+creatures to hunt them. Those who survive have the small consolation of being
+inoculated against that particular hound's howl.
 %%%%
 draconian
 
@@ -1237,8 +1282,8 @@ A bat whose leathery body burns with a hot flame.
 fire crab
 
 A variety of crab prized for its brilliantly jewelled shell. The rarity of the
-shells is only enhanced by its vicious, fiery nature, and its almost
-supernatural ability to expel massive quantities of flames.
+shells is only enhanced by its almost supernatural ability to wade through
+molten lava and expel massive quantities of flames.
 %%%%
 fire dragon
 
@@ -1267,11 +1312,6 @@ A hideous floating undead creature, the anguished spirit of a tortured victim,
 with torn skin hanging from an emaciated body. It restlessly stalks the
 dungeon, inflicting the anguish it felt in life upon those still living.
 %%%%
-floating eye
-
-A floating eyeball, said to be one of the servitors of Jiyva. It possesses a
-gaze that can eventually paralyse even the most strong-willed of adventurers.
-%%%%
 flying skull
 
 An undead skull kept aloft and flitting swiftly about by unholy magic.
@@ -1284,6 +1324,12 @@ its impressive frill at its victims while hissing angrily.
 formicid
 
 A sentient ant that walks upright and is competent at digging.
+%%%%
+formless jellyfish
+
+A gelatinous assemblage of tentacles and venom, leaving a glistening trail
+as it slides along. Surely such a mockery of life could not be natural..?
+# And yet, MH_NATURAL it is :)
 %%%%
 foxfire
 
@@ -1337,6 +1383,11 @@ giant cockroach
 A big brown insect that makes a nasty hissing noise. Contrary to popular myth,
 it is in fact quite susceptible to mutagenic energies.
 %%%%
+glass eye
+
+A floating eyeball formed from living glass. Only the divine Jiyva could form
+such a curious servitor.
+%%%%
 glowing orange brain
 
 A huge wrinkled brain, floating just off the floor and glowing with mutagenic
@@ -1359,8 +1410,9 @@ it earned its rank.
 %%%%
 goblin
 
-A short, ugly and unfriendly humanoid: squat, broad, flat-nosed,
-sallow-skinned, with a wide mouth and pistachio-shaped eyes.
+A short, impatient and unfriendly humanoid. Goblins first appeared only a few
+years ago, but are now remarkably numerous. Sadly, no number of raucous goblin
+parties will put them in a welcoming mood toward adventurers.
 %%%%
 golden dragon
 
@@ -1475,9 +1527,8 @@ ready with debilitating spells and deadly knifework.
 %%%%
 hobgoblin
 
-A larger and even uglier goblin, with an even worse temper to match. Many
-foolish young adventurers have underestimated the danger of crossing a
-hobgoblin and paid for it with their lives.
+A larger and even ruder goblin. Hobgoblins are perfectly capable of wielding
+weapons, but most prefer to beat their opponents to death with their bare hands.
 %%%%
 hog
 
@@ -1549,7 +1600,7 @@ A green lizard with strong jaws and sharp teeth, prized for its flesh.
 imperial myrmidon
 
 A warrior initiated in the mysteries of a dying cult, dedicated to serve
-thrones long-fallen. Its blows strip away magical defenses, leaving its foes
+thrones long-fallen. Its blows strip away magical defences, leaving its foes
 vulnerable to even the simplest hexes.
 %%%%
 iron dragon
@@ -1657,6 +1708,12 @@ kobold brigand
 A kobold that is bigger and tougher than the ordinary kobold, with a penchant
 for underhanded tactics.
 %%%%
+kobold blastminer
+
+A kobold, ready with multiple armaments to defends itself from the many
+dangers of the depths. The blastmote-packed cannon on its shoulder bears its
+maker's mark, and is fiercely loyal; it will fire for none other.
+%%%%
 kobold demonologist
 
 A kobold in league with demonic powers, able to call forth beings from the
@@ -1674,8 +1731,8 @@ reach towards the shore and crush any who draw near.
 large abomination
 
 A hideous conglomeration of mangled body parts, possessed and altered in ways
-that challenge sanity. Each varies in speed and durability by the nature of
-whatever unfortunates were used to make it.
+that challenge sanity. Each varies in durability by the nature of whatever
+unfortunates were used to make it.
 %%%%
 lava snake
 
@@ -1784,9 +1841,9 @@ body.
 %%%%
 moth of wrath
 
-A moth known for its ability to inspire insane rages by touching its foes, or
-merely gazing at its friends. For some inexplicable reason, it was eradicated
-from the surface centuries ago.
+A moth known for its ability to inspire rage by touching its foes, or merely
+gazing at its friends. For some inexplicable reason, it was eradicated from
+the surface centuries ago.
 %%%%
 mummy
 
@@ -1866,6 +1923,12 @@ obsidian statue
 A beautiful statue of an unknown creature, jet-black like a tear in reality.
 Its eyes glow with an otherworldly, malignant radiance.
 %%%%
+occultist
+
+A wizard fond of illusion and treachery. They scorn the crudeness of other
+magicians, who hurl wild conjurations toward their foes rather than cunningly
+exploiting their greatest weaknesses.
+%%%%
 octopode
 
 A more intelligent cousin of the mighty kraken, capable of using tools and
@@ -1933,13 +1996,13 @@ spinnerets. It seems to want to keep its distance.
 %%%%
 orc
 
-An ugly subterranean creature combining the worst features of humans, pigs and
-several other unpleasant creatures. It tends to run in packs or mobs, and
-delights in outbursts of insane violence.
+A peculiar subterranean creature, thought to be a distant relative of the
+human, or the pig, or perhaps the platypus. Orcs love groups, in which they
+gather for whatever worrying activities orcs enjoy.
 %%%%
 orc high priest
 
-An exalted servant of the orc god Beogh and a master of many black rites, to
+An exalted servant of the orc god Beogh and a master of many foul rites, to
 whose aid Beogh will even send beings from the netherworld.
 %%%%
 orc knight
@@ -1983,7 +2046,7 @@ is different, with its own set of strengths and weaknesses.
 %%%%
 peacekeeper
 
-A four-legged humanoid construct, tasked with recapturing escaped slaves and
+A four-legged humanoid construct, tasked with recapturing escaped prisoners and
 punishing heretics. Long after the fall of the empire it once served, it
 continues to enforce imperial law, knowing no jurisdiction.
 %%%%
@@ -2029,7 +2092,7 @@ its path.
 polar bear
 
 A bear covered in glistening white fur, habituated to cold conditions. Like all
-ursines, it will become enraged if badly hurt or frightened.
+ursines, it will become enraged if badly hurt.
 %%%%
 profane servitor
 
@@ -2299,6 +2362,17 @@ sky beast
 A strange aerial creature formed of clouds and tortured flesh that sparkles
 with electricity and, every so often, slips entirely from view.
 %%%%
+skyshark
+
+Skysharks cut through the air with a thoughtless ease. Just a taste of blood
+gives them an enraged strength, and further morsels drive them into a frenzy.
+%%%%
+sleepcap
+
+A surprisingly ambulatory mushroom. It wafts its spores over prey to send them
+into a deep sleep, making it simple for the fungus to kill and devour them.
+It can take months for its mycelia to fully infiltrate and digest victims.
+%%%%
 slime creature
 
 An icky glob of slime that slithers along the ground. It can merge with other
@@ -2307,8 +2381,8 @@ to do so in confined spaces.
 %%%%
 small abomination
 
-A hideous mass of body parts. Each varies in speed and durability by the nature
-of whatever unfortunates were used to make it.
+A hideous mass of body parts. Each varies in durability by the nature of
+whatever unfortunates were used to make it.
 %%%%
 smoke demon
 
@@ -2517,8 +2591,8 @@ An elite, ferocious tengu highly skilled with both steel and spells.
 %%%%
 tengu warrior
 
-A particularly bloodthirsty tengu who has opted to hone its skill in fighting
-and weaponry instead of spellcasting.
+A particularly bloodthirsty tengu who has opted to hone its skill in airborne
+fighting and weaponry instead of spellcasting.
 %%%%
 tentacle
 
@@ -2608,7 +2682,8 @@ days when it will devour the sun.
 %%%%
 ufetubus
 
-A chattering and shrieking minor demon.
+A chattering and shrieking minor demon. They delight in sneaking past and
+backstabbing their prey.
 %%%%
 ugly thing
 
@@ -2778,10 +2853,6 @@ wind drake
 A small but powerful dragon, particularly adept amongst its kin at manipulating
 the currents of air that surround it. It can exhale powerful blasts of wind.
 %%%%
-wizard
-
-A rather eccentric person, dabbling in all sorts of arcane oddities.
-%%%%
 wolf
 
 A strong wild canine, with sharp teeth and a healthy appetite.
@@ -2941,9 +3012,10 @@ air elementalist statue
 A delicate statue of a tengu gliding through the air. It looks quite
 insubstantial.
 %%%%
-antique lich
+antique champion
 
-A lich who has grown expensive over countless years.
+An unfathomably expensive skeleton. It has countless sigils engraved into its
+bones, and pulses with a ghostly presence.
 %%%%
 archer statue
 
@@ -3030,7 +3102,7 @@ ice bat
 
 An undead creature in the shape of a bat, made of ice.
 %%%%
-kamikaze kobold
+flame-cult kobold
 
 A kobold that has been enchanted to explode in a blaze of fire.
 %%%%

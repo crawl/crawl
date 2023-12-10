@@ -104,31 +104,32 @@ ENDMAP
 NAME:    hangedman_hellfire_club
 TAGS:    transparent no_monster_gen
 DEPTH:   Geh, !Geh:$, Zot:1-4
-MONS:    red draconian scorcher
-MONS:    red draconian stormcaller
-MONS:    hellion
+MONS:    red draconian scorcher, red draconian stormcaller, hellion
+KMONS:   L = patrolling creeping inferno / nothing w:15
 ITEM:    any potion good_item
-KMONS:   L = patrolling creeping inferno / nothing w:30
 KFEAT:   L = l
-KPROP:   l = no_cloud_gen
-SHUFFLE: 13, 24, 12 / 12 / 12 / 11 / 11 / 22, {}~- / {}~- / -~{}
-SUBST:   4 = 3, { = { <:2, } = } >:2, ~- = .
+SHUFFLE: 13 / 13 / 31, 24 / 24 / 42
+SHUFFLE: 12 / 12 / 12 / 11 / 11 / 22, {}~- / {}~- / -~{}
+SUBST:   4 = 3, { = {( <:4, }) = } >:4, ~- = .
 : if you.in_branch("Geh") then
 SUBST:   d$ = .
+: else
+SUBST:   L = l
 : end
+KPROP:   l = no_cloud_gen
 MAP
 xxxxxxxx.@.xxxxxxxx
 xccccccxx.xxccccccx
 xcd$$1cc...cc2$$dcx
-xcd$$cc.....cc$$dcx
-xc.~cc..x.x..cc..cx
-xc.cc..GxlxG..cc.cx
+xcd$3cc.....cc$$dcx
+xc$$cc..x.x..cc$$cx
+xc~cc..GxlxG..cc.cx
 xc....xxLllxx....cx
 xc.{...llLll...}.cx
 xc....xxllLxx....cx
-xc.cc..GxlxG..cc.cx
-xc..cc..x.x..cc-.cx
-xcd$$cc.....cc$$dcx
+xc.cc..GxlxG..cc-cx
+xc$$cc..x.x..cc$$cx
+xcd$$cc.....cc2$dcx
 xcd$$3cc...cc4$$dcx
 xccccccxx.xxccccccx
 xxxxxxxx.@.xxxxxxxx
@@ -137,8 +138,8 @@ ENDMAP
 ##############################################################################
 
 NAME:    nicolae_geh_sunburst
-DEPTH:   Geh, !Geh:$
 TAGS:    transparent extra decor
+DEPTH:   Geh, !Geh:$
 SHUFFLE: abcdefgh/!''''!!!/!!''!!''/!''!!''!/!'!'!'!'/!!!'!!!'/!!!!!!!'/''''''''
 SUBST:   { = }}}{
 SUBST:   'abcd = ., !efgh = l
@@ -267,9 +268,9 @@ ccccccc.....C```D
        c.@cc
 ENDMAP
 
-NAME: nicolae_geh_amphitheater
-TAGS: extra decor transparent
-DEPTH: Geh, !Geh:1
+NAME:  nicolae_geh_amphitheater
+TAGS:  transparent extra decor
+DEPTH: Geh:2-
 MAP
    lllll
  lllclclll
@@ -283,23 +284,6 @@ llll...lll
  lllclclll
    lllll
 ENDMAP
-
-NAME:  nicolae_geh_backdraft
-TAGS:  transparent
-DEPTH: Geh
-KMONS: 12 = creeping inferno / lurking horror w:5
-KFEAT: 2 = } / > w:5
-KMASK: 12 = no_monster_gen
-MAP
-.......
-.c===c.
-.=111=.
-.=121=.
-.=111=.
-.c===c.
-.......
-ENDMAP
-
 
 NAME:   nicolae_geh_erupted_tower
 TAGS:   transparent patrolling
@@ -976,10 +960,8 @@ MONS:    patrolling asmodeus, brimstone fiend, brimstone fiend
 MONS:    searing wretch, balrug, hellion, fire giant
 KMONS:   8 = searing wretch / stoker w:1 / hell hog
 KMONS:   9 = salamander tyrant
-NSUBST:  l = 10:R / 25:V / *:l
-SUBST:   R = RRV
+NSUBST:  l = 7:R / *:l
 KMONS:   R = patrolling stoker
-KMONS:   V = fire vortex
 : serpent_of_hell_setup(_G)
 SUBST:   4 = 444499566-
 COLOUR:  c = lightred
@@ -987,9 +969,8 @@ COLOUR:  G = red
 FTILE:   1234569D%$*|Ovcn+- = floor_pebble_red
 TILE:    n = dngn_transparent_stone_red
 SUBST:   - = .
-KFEAT:   RV = lava
+KFEAT:   R = lava
 KFEAT:   L = endless_lava
-KFEAT:   m = iron_grate
 : set_border_fill_type("endless_lava")
 : geh_setup(_G)
 MAP
@@ -1000,9 +981,9 @@ LlllvvvvvvvvvvcccccccccccccccccnnccllllllllllllllllllllllllllllllllllL
 LlllvvvvvvvvvvcccccccccccccccccnncccllllllllccccccclllllllcccncccllllL
 Llllvv------vvcccccc-cccccccc------cllRllcccc-----clllllllc--5--cllllL
 Llllvv-$$$$-vvccccc---ccccccc--4---ccllllc--c--4--ccccncccc-%-%-cllllL
-Llllvv-$%%$--v------1------c---vv---cvmmvc--+-----+-------+-%-%-nllllL
+Llllvv-$%%$--v------1------c---vv---cv..vc--+-----+-------+-%-%-nllllL
 Llllvv-$O%$--+------v------+--vvvv--+....+--c-----+-------+--%--cllllL
-Llllvv-$%%$--v------2------c---vv---cvmmvc--+-----cccc+cccc--%--cllllL
+Llllvv-$%%$--v------2------c---vv---cv..vc--+-----cccc+cccc--%--cllllL
 Llllvv-$$$$-vvccccc---ccccccc--4---ccllllc--c-----c-------c-%-%-nllllL
 Llllvv------vvcccccc-cccccccc------cllRllcccc--4--c---5---c-%-%-cllllL
 Llllvvvvvvvvvvcccccccccccccccccnncccllllllllc-----c---v---c--2--cllllL
@@ -1013,8 +994,8 @@ Llllllllllllllllllllllllllllllllllllllllllllllllllc-------cllllllllllL
 Llllllllllllllllllllllllllllllllllllllllllllllllllcccc+ccccllllllllllL
 Llllllllllllllllllllllllllllllllllllllllllllllllllllv.7.vllllllllllllL
 Lllllcccnnccclllllllllllllllcccnncccllllllllllllllllv.G.vllllllllllllL
-Lllllc------cllllccNcNccllllc------cllllllllllllllllm...mllllllllllllL
-Lllllc------cccccc--4--cccccc------cllllllllllllllllm...mllllllllllllL
+Lllllc------cllllccNcNccllllc------cllllllllllllllll.....llllllllllllL
+Lllllc------cccccc--4--cccccc------cllllllllllllllll.....llllllllllllL
 Llllln--vv--C----E-----E----C--vv--nllllllllllllllRlv.G.vlRllllllllllL
 Llllln--vv--I----F-----F----I--vv--nllllllllllllllllv...vllllllllllllL
 Lllllc----5-cccccccc-cccccccc-5----cllllllllcccllccccc+cccccllcccllllL
@@ -1024,13 +1005,13 @@ Lllllllc--c...................c--cllllllllllln%5-+--v---v--+-5%nlllllL
 Lllllllc--c.........v.........c--clllllllllllc%--c---------c--%clllllL
 Lllllllc--c....vv.......vv....c--cllllllllRlcccccccccc+ccccccccccllllL
 Lllllllc--c....vv.......vv....c--cllllllllllcccccccccc----------cllllL
-LlllllccEFc......8.....8......cFEccvvmmvmmvvc--------cccccccccc-cllllL
+LlllllccEFc......8.....8......cFEccvv..v..vvc--------cccccccccc-cllllL
 Llllllc---cG........{........Gc---c.........+--v--v---4-------c-cllllL
 LlllllN---cc.................cc---+..G.G.G.7c--------v--v--v-4+-cllllL
 Llllllc4---A7.v...{.G.{...v.7B---4c.....8...+----------------D+-nllllL
 LlllllN---cc.................cc---+..G.G.G.7c--------v--v--v-4+-cllllL
 Llllllc---cG........{........Gc---c.........+--v--v---4-------c-cllllL
-LlllllccEFc......8.....8......cFEccvvmmvmmvvc--------cccccccccc-cllllL
+LlllllccEFc......8.....8......cFEccvv..v..vvc--------cccccccccc-cllllL
 Lllllllc--c....vv.......vv....c--cllllllllllcccccccccc-------+--cllllL
 Lllllllc--c....vv.......vv....c--cllllllllRlcc-------c--vvv--ccccllllL
 Lllllllc--c.........v.........c--clllllllllllc-4-----+-------c5clllllL
@@ -1040,8 +1021,8 @@ Lllllc------c.....GcAcG.....c------cllllllllcccncc--------cccncccllllL
 Lllllc----5-cccccccc-cccccccc-5----cllllllllcccllccccc+cccccllcccllllL
 Llllln--vv--I----F-----F----I--vv--nllllllllllllllllv...vllllllllllllL
 Llllln--vv--C----E-----E----C--vv--nllllllllllllllRlvG.GvlRllllllllllL
-Lllllc------cccccc--4--cccccc------cllllllllllllllllm...mllllllllllllL
-Lllllc------cllllccNcNccllllc------cllllllllllllllllm...mllllllllllllL
+Lllllc------cccccc--4--cccccc------cllllllllllllllll.....llllllllllllL
+Lllllc------cllllccNcNccllllc------cllllllllllllllll.....llllllllllllL
 LllllcccnnccclllllllllllllllcccnncccllllllllllllllllvG.GvllllllllllllL
 Llllllllllllllllllllllllllllllllllllllllllllllllllllv.7.vllllllllllllL
 Lllllllllllllllllllllllllllllllllllllllllllllllllllccc+ccclllllllllllL
@@ -1052,9 +1033,9 @@ Lllvvvvvvvvvvvcccccccccccccccccnnccllllllllllllcc--ccccccc--cclllllllL
 Lllvvvvvvvvvvvcccccccccccccccccnncccllllllllllcc--ccccccccc--ccllllllL
 Lllvvvv----vvvcccc--2--ccccccc----cccRlllllllcc-4cc%2%-%5%cc4-cclllllL
 Lllvvv-||||-vvcccc-----cccccc--4---cclllllllcc--ccc-%-%-%-ccc--ccllllL
-Lllvv--|%%|--v------v------c--v--v--cvmmvmmvc--cccc%-%-%-%cccc--cllllL
+Lllvv--|%%|--v------v------c--v--v--cv..v..vc--cccc%-%-%-%cccc--cllllL
 Lllvv--|*%|--+-----vvv-----+--------+.......+--ccccccc+ccccccc--nllllL
-Lllvv--|%%|--v------v------c--v--v--cvmmvmmvc-------------------nllllL
+Lllvv--|%%|--v------v------c--v--v--cv..v..vc-------------------nllllL
 Lllvvv-||||-vvcccc-----cccccc--4---cclllllllc---------5---------cllllL
 Lllvvvv----vvvcccc--3--ccccccc----cccRllllllcccc---ccccccc---ccccllllL
 LllvvvvvvvvvvvcccccccccccccccccnnccclllllllllllccccclllllccncclllllllL
@@ -1224,13 +1205,16 @@ NAME:    geh_hangedman
 ORIENT:  encompass
 MONS:    patrolling Asmodeus, brimstone fiend, balrug
 MONS:    hellion, fire giant, salamander tyrant, hell hog
-KMONS:   y = creeping inferno / fire vortex w:30
+KMONS:   y = creeping inferno / nothing w:30
 KMONS:   Y = molten gargoyle
 KMONS:   zZ = searing wretch / hellephant / stoker w:2
+KMONS:   & = patrolling brimstone fiend
 KITEM:   $ = $ no_pickup
-KFEAT:   yYZ = lava
+KITEM:   M = *
+KFEAT:   ~ = .
+KFEAT:   yYZ& = lava
 KFEAT:   L = endless_lava
-# Swap trios of hell knights with fire giants.
+# Swap trios of salamander tyrants with fire giants.
 SHUFFLE: 5A6B / 5A6B / 6B5A
 SUBST:   A = ., B = 6
 # Just some pillar, door, and floor/wall/lava edge randomization.
@@ -1240,9 +1224,10 @@ SHUFFLE: EF / EF / FE, GH / GH / HG, IJ / IJ / JI
 SHUFFLE: PQ / PQ / QP, RS / RS / SR, TU / TU / UT
 SUBST:   X : ^<>, ^ = xxx., < = xx., > = x.
 SUBST:   ` : `'", ` = ll., ' = l., " = l..
-SUBST:   =! = +, -? = ., dg = v, efhi = .
+SUBST:   =! = +, -? = ., dg = v, efhi = ~
 SUBST:   EGIPRT = x, FHJQSU = l
 KMASK:   l = no_monster_gen
+KPROP:   ~MZ = no_tele_into
 : serpent_of_hell_setup(_G)
 : set_border_fill_type("endless_lava")
 : geh_setup(_G)
@@ -1256,21 +1241,21 @@ LLll.6...........ll````````llcc.........ccc..```````x```````x...{.XxLL
 LLllB.vv-vvvvvvvvllllllllllll+...vd3dv...cc..llllllllllllllllll...XxLL
 LLll..v...v$$$.vvYlllllllllllc..f..e..f..cc..lllllllllllllllllll..XxLL
 LLll..-.$..$.2$vvllllllFFllllc..f..e..f..cc..lllllllllllllllllll..XxLL
-LLll..v...v$..$vvYlllllxxllll+...vd.dv...cc.xlllllll.xllllllllllx.XxLL
-LLll..vv.vv.$$$vvllllllEEllllc.....v.....cc..llxllll.xlllllxllll`.XxLL
+LLll..v...v$..$vvYlllllxxllll+...vd.dv...cc.xlllllll~xllllllllllx.XxLL
+LLll..vv.vv.$$$vvllllllEEllllc.....v.....cc..llxllll~xlllllxllll`.XxLL
 LLll..v$$$.vv=vvvYlllllllllllccc...v...cccc..lllllllllllllllllll`.XxLL
-LLll..v$..$v%%.vvlll..llllllllccv+++++vccc7.lllllxxlllllxxllllll`.XxLL
-LLll..v$2.$=%0%vvlllxx.lllllllc....v....cc..lllllxxlllllxxllllll`.XxLL
-LLll..v.$$$v.%|vvlllxx.llHHlll+.ef*z*fe.cc..lllllllylll.llllllll`.XxLL
-LLll..vvvvvvvvvvvllllllllxxllyc.fdededf.cc..llllllll.$.lllllllll`.XxLL
-LLll..vvvvvvvvvvvl.3lllllGGlll+.ef*+*fe.cc..llxxllll$.$llllxxlll`.XxLL
-LLl..llYlYlYllllll*.llllllllllc....v....cc.xll..llll3$.llll..lllx.XxLL
-LLl..lllllllllll.**.Zlllllllllccc..v..cccc..lllllll.lllyllllllll`.XxLL
-LLl..`llllllllll3..2lllllllllllccv+++vccc7..lllllxxlllllxxllllll`.XxLL
-LLl..`llllll.xxlllZllllllllllllc...v...cc..llllllxxlllllxxllllll`.XxLL
-LLl..`llllll.xxllllllllllllllll+...v...cc..lllllllllllllllllllll`.XxLL
-LLl..`lllllll..lllllllEElllllll+..vzv..cc..llxxxllll.xlllllxllll`.XxLL
-LLl..`llFxElllllllllllExFllllllc...v...cc.xllxxxllll.xllllllllll`.XxLL
+LLll..v$..$v%%.vvlll~~llllllllccv+++++vccc7.lllllxxlllllxxllllll`.XxLL
+LLll..v$2.$=%0%vvlllxx~lllllllc....v....cc..lllllxxlllllxxllllll`.XxLL
+LLll..v.$$$v.%|vvlllxx~llHHlll+.ef*z*fe.cc..lllllllylll~llllllll`.XxLL
+LLll..vvvvvvvvvvvllllllllxxllyc.fdededf.cc..llllllll~l~lllllllll`.XxLL
+LLll..vvvvvvvvvvvl~3lllllGGlll+.ef*+*fe.cc..llxxllllM~lllllxxlll`.XxLL
+LLl..llYlYlYllllllM~llllllllllc....v....cc.xll~~llll~M~llll~~lllx.XxLL
+LLl..lllllllllll~MM~Zlllllllllccc..v..cccc..lllllll&lllyllllllll`.XxLL
+LLl..`llllllllll3~~&lllllllllllccv+++vccc7..lllllxxlllllxxllllll`.XxLL
+LLl..`llllll~xxlllZllllllllllllc...v...cc..llllllxxlllllxxllllll`.XxLL
+LLl..`llllll~xxllllllllllllllll+...v...cc..lllllllllllllllllllll`.XxLL
+LLl..`lllllll~~lllllllEElllllll+..vzv..cc..llxxxllll~xlllllxllll`.XxLL
+LLl..`llFxElllllllllllExFllllllc...v...cc.xllxxxllll~xllllllllll`.XxLL
 LLl..`llFxEllllllllllllFFllllllccc.v.cccc..llxxxllllllllllllllll`.XxLL
 LLl..`llllllllGxHlllllllllllllllcc+v+ccc7..lllllllllllllll..x.....XxLL
 LLl..`llllllllGxHlllllllllllllllc.A5A.cc..llllllll..x............XXxLL
@@ -1294,24 +1279,24 @@ LLl..`llldlllllllllllllllllllllc.A5A.clllllllllllllllSxRllllllll`..lLL
 LLl..`lldllllllllllllllllllllllcc+v+cclllllllllllllllSxRllllllll`..lLL
 LLll..llllllllllllllllllllllllccc.v.cccllllllUUllllllllllllPxQll`..lLL
 LLll..`llellllllllllllllllllllc...v...cllllllUxTlllllllllllPxQll`..lLL
-LLll..`lelllllllllllllllllllll+..vzv..+lllllllTTlllllll..lllllll`..lLL
-LLll..`lllllllllllllllllllllll+...v...+llllllllllllllllxx.llllll`..lLL
-LLlll..lllflllllllllllllllllllc...v...cllllllllllllZlllxx.llllll`..lLL
-LLlll..`lfllllllllllllllllllllccv+++vcclllllllllll2..3llllllllll`..lLL
-LLlll..`lllZlllllllllllllllllccc..v..ccclllllllllZ.**.lllllllllll..lLL
-LLlll..`llgllllllllllllllllllc....v....cllllllllll.*llllllYlYlYll..lLL
-LLlll..`lglllllllllllllllllllc.ef*+*fe.+lllSSlllll3.lvvvvvvvvvvv..llLL
+LLll..`lelllllllllllllllllllll+..vzv..+lllllllTTlllllll~~lllllll`..lLL
+LLll..`lllllllllllllllllllllll+...v...+llllllllllllllllxx~llllll`..lLL
+LLlll..lllflllllllllllllllllllc...v...cllllllllllllZlllxx~llllll`..lLL
+LLlll..`lfllllllllllllllllllllccv+++vcclllllllllll&~~3llllllllll`..lLL
+LLlll..`lllZlllllllllllllllllccc..v..ccclllllllllZ~MM~lllllllllll..lLL
+LLlll..`llgllllllllllllllllllc....v....cllllllllll~MllllllYlYlYll..lLL
+LLlll..`lglllllllllllllllllllc.ef*+*fe.+lllSSlllll3~lvvvvvvvvvvv..llLL
 LLllll..lllllllllllllllllllly+.fdededf.cyllxxllllllllvvvvvvvvvvv..llLL
-LLllll..`llhlllllllllllllllllc.ef*z*fe.+lllRRll.xxlllvvO%.v$$$.v..llLL
-LLllll..`lhllllllllllllllllllc....v....clllllll.xxlllvv%1%!$.2$v..llLL
-LLllll..`llllllllllllllllllllccv+++++vccllllllll..lllvv.%%v$..$v..llLL
+LLllll..`llhlllllllllllllllllc.ef*z*fe.+lllRRll~xxlllvvO%.v$$$.v..llLL
+LLllll..`lhllllllllllllllllllc....v....clllllll~xxlllvv%1%!$.2$v..llLL
+LLllll..`llllllllllllllllllllccv+++++vccllllllll~~lllvv.%%v$..$v..llLL
 LLllll..`llillhlllZlllllllllccc...v...ccclllllllllllYvvv!vv.$$$v..llLL
 LLllll..`lillhlllgllflllllllc.....v.....cllllPPllllllvv$$$.vv.vv..llLL
 LLlllll..lllllllgllflllelldl+...vd.dv...+llllxxlllllYvv$..$v...v..llLL
 LLlllll.2.`````lllllllelldllc..f..e..f..cllllQQllllllvv$2.$..$.?..llLL
 LLllv+vv........````llllllllc..f..e..f..clllllllllllYvv.$$$v...v..llLL
-LLllv..vll...........```llll+...vd3dv...+llllllllllllvvvvvvvv?vv.BllLL
-LLllv*.+llllllll.........``lcc.........ccll````````ll...........6.llLL
+LLllv~~vll...........```llll+...vd3dv...+llllllllllllvvvvvvvv?vv.BllLL
+LLllvM~+llllllll.........``lcc.........ccll````````ll...........6.llLL
 LLllvvvvlllllllllllll........cc++c+c++cc.......................B.lllLL
 LLlllllllllllllllllllllll....+....4....+..............llllllllllllllLL
 LLlllllllllllllllllllllllllllcccccccccccllllllllllllllllllllllllllllLL

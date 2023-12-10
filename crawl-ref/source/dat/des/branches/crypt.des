@@ -14,12 +14,12 @@ function crypt_drop_grates(data, triggerable, triggerer, marker, ev)
     end
 
     local did_change = false
-    for slave in iter.slave_iterator("wall_phase", 1) do
-        if dgn.feature_name(dgn.grid(slave.x, slave.y)) == "iron_grate" then
-          if you.see_cell(slave.x, slave.y) then
+    for replica in iter.replica_iterator("wall_phase", 1) do
+        if dgn.feature_name(dgn.grid(replica.x, replica.y)) == "iron_grate" then
+          if you.see_cell(replica.x, replica.y) then
             did_change = true
           end
-          dgn.terrain_changed(slave.x, slave.y, "floor", false)
+          dgn.terrain_changed(replica.x, replica.y, "floor", false)
         end
     end
     if did_change then
@@ -31,8 +31,8 @@ end
 
 function callback.grunt_crypt_arrival_guards_awaken(data,triggerable,trigger,marker,ev)
     local seen = false
-    for slave in iter.slave_iterator("trap_sarcophagus", 1) do
-        if you.see_cell(slave.x, slave.y) then
+    for replica in iter.replica_iterator("trap_sarcophagus", 1) do
+        if you.see_cell(replica.x, replica.y) then
             seen = true
             break
         end
@@ -44,11 +44,11 @@ function callback.grunt_crypt_arrival_guards_awaken(data,triggerable,trigger,mar
     else
         crawl.mpr("You hear grinding stone!", "warning");
     end
-    for slave in iter.slave_iterator("trap_sarcophagus", 1) do
-        if dgn.feature_name(dgn.grid(slave.x, slave.y)) == "granite_statue" then
-            dgn.terrain_changed(slave.x, slave.y, "floor", false)
-            dgn.colour_at(slave.x, slave.y, "lightgray")
-            dgn.create_monster(slave.x, slave.y,
+    for replica in iter.replica_iterator("trap_sarcophagus", 1) do
+        if dgn.feature_name(dgn.grid(replica.x, replica.y)) == "granite_statue" then
+            dgn.terrain_changed(replica.x, replica.y, "floor", false)
+            dgn.colour_at(replica.x, replica.y, "lightgray")
+            dgn.create_monster(replica.x, replica.y,
                                "human skeleton / human zombie / \
                                 mummy w:20 / guardian mummy")
         end
@@ -84,13 +84,12 @@ function crypt_loot_plus(e)
   e.kitem("g = " .. ring .. ", " .. ring .. " / " .. amulet .. " w:2, " ..
           ring .. " / " .. amulet .. " w:2 / nothing")
   -- and one drop-off of these.
-  e.kitem("h = vampires_tooth / morg / leech / sword_of_zonguldrok / " ..
+  e.kitem("h = vampires_tooth / leech / sword_of_zonguldrok / " ..
           "finisher / scythe_of_curses / majin-bo / sceptre_of_torment / " ..
           "undeadhunter")
-  e.kitem("i = necronomicon / " .. book .. "necromutation / " ..
-          book .. "death's_door / " .. book .. "haunt / " ..
-          book .. "borgnjor's_revivification / " .. book .. "infestation")
-  e.kitem("j = phial of floods w:20 / tin of tremorstones / box of beasts, " ..
+  e.kitem("i = necronomicon / " .. book .. "death's_door / " .. book .. "haunt / "
+          .. book .. "borgnjor's_revivification / " .. book .. "infestation")
+  e.kitem("j = phial of floods w:20 / any area misc / any ally misc, " ..
           "staff of death / any magical staff")
   e.subst("d = d:20 ef g:20")
   e.subst("h = h:5 ij")
@@ -238,19 +237,19 @@ ENDMAP
 ##############################################################################
 NAME:   minmay_crypt_entry_skeletal_spiral
 TAGS:   transparent
-MONS:   skeleton w:20 / skeletal warrior
+MONS:   skeleton w:20 / skeletal warrior, ancient champion
 : crypt_entry(_G)
 MAP
 ...........
 .xxxxxxxxx.
 .x..1..1.x.
 .x1xxxxx.x.
-.x.x111x1x.
+.x.x121x1x.
 .x.x1O1x.x.
 .x1x111x1x.
 .x.x.xxx.x.
 .x.x1.1.1x.
-.x1xxxxxxx.
+.x.xxxxxxx.
 ...........
 ENDMAP
 
@@ -324,8 +323,7 @@ ENDMAP
 ##############################################################################
 NAME:    blue_anna_dwarven_crypt
 TAGS:    transparent
-MONS:    death knight
-MONS:    shadow wraith / wraith / wight w:5
+MONS:    death knight, shadow wraith / freezing wraith
 : crypt_entry(_G)
 MAP
 cccc@cccc
@@ -550,7 +548,7 @@ ENDMAP
 # Ghost lake
 NAME:  weyrava_ghost_lake
 DEPTH: Crypt
-TAGS:  no_monster_gen no_item_gen
+TAGS:  no_monster_gen no_item_gen no_descent
 MONS:  flying skull
 MONS:  skeletal warrior ; long sword . kite shield . w:6 any beam wand | nothing /\
        skeletal warrior ; battleaxe | halberd . w:7 any beam wand | nothing
@@ -1119,7 +1117,7 @@ NAME: cheibrodos_crypt_eye_of_stone
 DEPTH: Crypt, !Crypt:$
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
-MONS: floating eye / curse skull, obsidian statue / orange crystal statue
+MONS: glass eye / curse skull, obsidian statue / orange crystal statue
 MONS: ancient champion, skeletal warrior
 SHUFFLE: AB / CD
 SUBST: A = G, B = 1, C = ., D = 2
@@ -1170,7 +1168,7 @@ ENDMAP
 
 NAME: nicolae_crypt_cryptocurrency
 DEPTH: Crypt
-TAGS: extra decor no_item_gen no_trap_gen no_monster_gen
+TAGS: extra decor no_item_gen no_trap_gen no_monster_gen no_descent
 KPROP: $-c = no_tele_into
 KMASK: .@ = !opaque
 KITEM: $ = $ / $ good_item w:3
@@ -1464,6 +1462,63 @@ cG.MGM.GcG.1.GcG.1.GcG.1.Gc
 ccccccccccccccccccccccccccc
 ENDMAP
 
+# A very specific game reference makes for a strange ambush bubble.
+NAME:    tekkud_devil_daggers
+TAGS:    no_monster_gen no_item_gen no_trap_gen no_pool_fixup no_descent
+DEPTH:   Crypt
+ORIENT:  float
+WEIGHT:  5
+ITEM:    scroll of enchant weapon ident:type, blade talisman
+ITEM:    mundane dagger, dagger good_item
+: local q = "quick blade randart ego:"
+: item(q .. "draining / " .. q .. "vampirism / " .. q .. "pain / " ..
+:      q .. "distortion / damaged quick blade")
+MONS:    flying skull, curse skull
+MONS:    spectral demonic crawler, wolf spider zombie
+MONS:    culicivora zombie / redback zombie / \
+         jumping spider zombie / tarantella zombie
+MONS:    spectral tentacled monstrosity
+KMONS:   7 = kraken zombie
+KFEAT:   7 = w
+NSUBST:  2 = 1:2 / 1:1112 / *:1
+SHUFFLE: {e
+: if you.depth() == 1 then
+SUBST:  { = })]
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST:  { = {([
+: else
+SUBST:  { = {([})]
+: end
+KPROP:  7g = bloody
+MAP
+    ccccccccccccccccc
+   ccccccccccccccccccc
+  cccc..g.......g..cccc
+ cccc...............cccc
+cccc..1...f...f...1..cccc
+ccc...................ccc
+cc...4......{......3...cc
+ccg.f.f.f.f...f.f.f.f.gcc
+cc..........e..........cc
+cc.2..7..5........7..2.cc
+cc........f...f........cc
+cc.....................cc
+cc......f.......f......cc
+cc.....................cc
+cc....f...........f....cc
+cc.2...........5.....2.cc
+cc..f...............f..cc
+cc.....................cc
+ccg..3.............4..gcc
+ccc.........6.........ccc
+cccc..2...d...d...2..cccc
+ cccc.......h.......cccc
+  cccc.............cccc
+   cccccccccnccccccccc
+    ccccccccncccccccc
+            @
+ENDMAP
+
 ##############################################################################
 # Crypt ends
 ##############################################################################
@@ -1715,8 +1770,8 @@ SUBST:  3 = 3., F = G:99 F:1
 lua_marker("|",
            Triggerable.synchronized_markers(
              function_at_spot("crypt_drop_grates", { trig = false },
-                              true, { only_at_slave = true,
-                                      listen_to_slaves = true })))
+                              true, { only_at_replica = true,
+                                      listen_to_replicas = true })))
 }}
 NSUBST:  %| = 1:d / 1:h
 : crypt_loot_plus(_G)

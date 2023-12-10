@@ -17,7 +17,7 @@
 -- {god gift} for god gifts
 --
 -- Item annotations are always prefixed to the item name. For instance:
--- {artefact} the Staff of Wucad Mu
+-- {artefact} the crystal ball of Wucad Mu
 ---------------------------------------------------------------------------
 
 -- Annotate items for searches
@@ -94,6 +94,18 @@ function ch_stash_search_annotate_item(it)
     end
   end
 
+  if it.class(true) == "potion" or it.class(true) == "scroll" then
+    local props = {
+      ["enlightenment"] = "Will+ flight Fly",
+      ["lignification"] = "rPois rTorment rDrown",
+      ["resistance"] = "rF+ rC+ rElec rPois rCorr",
+      ["revelation"] = "sInv"
+    }
+    if props[it.subtype()] then
+      annot = annot .. "{" .. props[it.subtype()] .. "} "
+    end
+  end
+
   if it.class(true) == "magical staff" and not it.artefact then
     annot = annot .. "{weapon} "
     local props = {
@@ -167,6 +179,11 @@ function ch_stash_search_annotate_item(it)
   -- Tag Willpower items as MR for back-compat.
   if annot:find("Will+", 1, true) then
     annot = annot .. " {MR} {resist magic} {magic resistance}"
+  end
+
+  -- Tag revelation as mapping for back-compat.
+  if it.class(true) == "scroll" and it.subtype() == "revelation" then
+    annot = annot .. " {magic mapping}"
   end
 
   return annot

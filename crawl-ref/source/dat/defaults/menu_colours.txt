@@ -19,15 +19,17 @@ menu += $forbidden:.*forbidden.*
 # Handle cursed and equipped items early to override other colour settings.
 menu += lightred:.*equipped.* cursed
 menu += red: (a|the) cursed
-menu += inventory:lightgreen:.*equipped.*
+menu += lightgreen:.*equipped.*
 
 # Important game items
 #
-menu += lightmagenta:.*misc.*rune of Zot
+menu += lightmagenta:rune of Zot
 menu += lightmagenta:.*orb.*Zot
 
 # Artefacts
 #
+menu += lightcyan:unrand.*artefact
+
 menu += white:.*artefact.*
 
 #menu += white:.*identified.*artefact.*
@@ -59,6 +61,7 @@ menu += lightblue:unidentified.*(potion|scroll|wand|jewellery|magical staff)
 menu_colour += pickup:green:god gift
 
 # Highlight (partly) selected items
+# XX this shouldn't be done this way!
 menu_colour += inventory:white:\w \+\s
 menu_colour += inventory:white:\w \#\s
 menu_colour += inventory:white:\w \*\s

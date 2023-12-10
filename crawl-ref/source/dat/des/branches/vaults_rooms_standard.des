@@ -1668,7 +1668,7 @@ ENDMAP
 
 NAME: nicolae_vaults_sealed_display
 WEIGHT: 5
-TAGS: vaults_room no_windows
+TAGS: vaults_room no_windows no_descent
 KMASK: >* = no_monster_gen
 KMONS: 0 = 0 band / 0
 MAP
@@ -1972,4 +1972,631 @@ fe..            ..ef
 ...%bc..)..)..cb%...
 .)...de......ed...).
 ......fx....xf......
+ENDMAP
+
+NAME:   nicolae_vaults_closet_pinwheel_1
+TAGS:   vaults_room allow_dup
+KITEM:  L = % / nothing w:15
+KMONS:  L = 0 / nothing w:15
+NSUBST: p = + / x, q = + / x, r = + / x, s = + / x
+# The s glyph intentionally doesn't appear in the middle of the shape; this
+# ensures at least one opening to the outside.
+MAP
+.........
+..xpxL...
+..p.xqqx.
+.LpLqL.q.
+.xxpxrxx.
+.s.LxLrL.
+.xssx.r..
+...Lxrx..
+.........
+ENDMAP
+
+NAME:   nicolae_vaults_closet_pinwheel_2
+TAGS:   vaults_room allow_dup
+KITEM:  L = % / nothing w:15
+KMONS:  L = 0 / nothing w:15
+NSUBST: p = + / x, q = + / x, r = + / x, s = + / x
+MAP
+...........
+.(.xppx..(.
+...p..pL...
+..Lp.xxqqx.
+.xsxLpL..q.
+.s.xxxqx.q.
+.s..LrLxqx.
+.xssxx.rL..
+...Lr..r...
+.(..xrrx.(.
+...........
+ENDMAP
+
+NAME:   nicolae_vaults_closet_pinwheel_3
+TAGS:   vaults_room allow_dup
+KITEM:  L = % / nothing w:15
+KMONS:  L = 0 / nothing w:15
+NSUBST: p = + / x, q = + / x, r = + / x, s = + / x
+MAP
+...........
+.(.xpxL..(.
+...p.xqx...
+..xx.p.xqx.
+.Lp.LpL..q.
+.xxxxxqqxx.
+.s..LrL.rL.
+.xsx.r.xx..
+...xsx.r...
+.(..Lxrx.(.
+...........
+ENDMAP
+
+NAME:   nicolae_vaults_closet_pinwheel_4
+TAGS:   vaults_room allow_dup
+KITEM:  L = % / nothing w:15
+KMONS:  L = 0 / nothing w:15
+NSUBST: p = + / x, q = + / x, r = + / x, s = + / x
+MAP
+...L....
+.xpxqqx.
+.p.pL.q.
+.pLxxqxL
+LxxxxLr.
+.s.Lr.r.
+.xssxrx.
+....L...
+ENDMAP
+
+NAME:   nicolae_vaults_closet_pinwheel_5
+TAGS:   vaults_room allow_dup
+KITEM:  ! = % / nothing w:15
+KMONS:  ! = 0 / nothing w:15
+: if crawl.coinflip() then
+# outer ring guaranteed exit
+NSUBST: D = + / x, Js = + / x, Pp = + / x, Sr = + / x, LQRq = + / x, \
+        HM = + / x, FL = + / x, EK = + / x
+: else
+# inner ring guaranteed exit
+NSUBST: s = +, DJ = + / x, Pp = + / x, Sr = + / x, QRq = + / x, \
+        EK = + / x, HM = + / x, FL = + / x
+: end
+MAP
+...........
+.xDDx..xEx.
+.D.!xxpx.E.
+.xxJxx.K!E.
+..s.!P!xxx.
+..xxSxQxx..
+.xxx!R!.q..
+.H!M.xxLxx.
+.H.xrxx!.F.
+.xHx..xFFx.
+...........
+ENDMAP
+
+NAME:   nicolae_vaults_closet_pinwheel_6
+TAGS:   vaults_room
+KITEM:  - = % / nothing w:15
+KMONS:  - = 0 / nothing w:15
+NSUBST: D = D / x, E = E / x, F = F / x, H = H / x, \
+        J = J / x, K = K / x, L = L / x, M = M / x
+: if crawl.coinflip() then
+# guaranteed corner exit
+NSUBST: D = + / x, JNs = + / x, Qas = + / x, HMZ = + / x, PZrq = + / x, \
+        OKpq = + / x, ERK = + / x, FLS = + / x
+: else
+# guaranteed side exit
+NSUBST: N = +, DJa = + / x, Qas = + / x, ERK = + / x, KOp = + / x, \
+        HMZ = + / x, PZrq = + / x, FLS = + / x
+: end
+MAP
+...........
+.xDxNxEEEx.
+.D.J.R.-.E.
+.D-J-xKKKx.
+.D.J.p.-.O.
+.xaxsxqxSx.
+.Q.-.r.L.F.
+.xMMMx-L-F.
+.H.-.Z.L.F.
+.xHHHxPxFx.
+.......UUU.
+ENDMAP
+
+NAME:    nicolae_vaults_cornered_office
+TAGS:    vaults_room allow_dup
+KMONS:   0 = 0 band
+SHUFFLE: Pp, Qq, Rr, Ss
+SUBST:   0 = .0, PQRS = ., pqrs = _
+CLEAR:   _
+MAP
+     P   p
+     PP pp
+     PP0pp
+     P...p
+     .....
+ssss.xx+xx.QQQQ
+ ss..x...x..QQ
+  0..+.(.+..0
+ SS..x...x..qq
+SSSS.xx+xx.qqqq
+     .....
+     r...R
+     rr0RR
+     rr RR
+     r   R
+ENDMAP
+
+NAME:  nicolae_vaults_door_testing_chamber
+TAGS:  vaults_room
+SUBST: ' = 0%++..
+: lua_marker('+', props_marker { connected_exclude="true" })
+MAP
+..x..'..x..
+..'..x..'..
+'x+x'+'x+x'
+..'..x..'..
+..x..'..x..
+x'+'x+x'+'x
+..x..'..x..
+..'..x..'..
+'x+x'+'x+x'
+..'..x..'..
+..x..'..x..
+ENDMAP
+
+NAME:  nicolae_vaults_doubleplus_tesselated
+TAGS:  vaults_room
+KFEAT: ' = closed_clear_door
+SUBST: 0 = ...0, . = % .:180
+MAP
+...x.x...x.x
+x'xx+xx'xx+x
+.0.x.x.0.x.x
+x.x.0.x.x.0.
+x+xx'xx+xx'x
+x.x.0.x.x.0.
+.0.x.x.0.x.x
+x'xx+xx'xx+x
+.0.x.x.0.x.x
+x.x.0.x.x.0.
+x+xx'xx+xx'x
+x.x...x.x...
+ENDMAP
+
+NAME:  nicolae_vaults_ellipses_ellipsis
+TAGS:  vaults_room
+KMONS: 0 = 0 band
+SUBST: ( = (((0
+MAP
+   .....xxxxxxx.....xxxxxxx.....
+ ....(....xxx....(....xxx....(....
+...........x...........x...........
+...(...(...+...(...(...+...(...(...
+...........x...........x...........
+ ....(....xxx....(....xxx....(....
+   .....xxxxxxx.....xxxxxxx.....
+ENDMAP
+
+NAME:   nicolae_vaults_frosty_reception
+TAGS:   vaults_room
+KMONS:  1 = ironbound frostheart
+NSUBST: 1 = 1 / 10 / 0.
+MAP
+     ...x...
+   ...x...x...
+ ...x...x...x...
+..x...1...1...x..
+x...x.x.x.x.x...x
+..x...1...1...x..
+  ..x...x...x..
+    ..x...x..
+      ..x..
+ENDMAP
+
+NAME:  nicolae_vaults_heart-shaped_vault
+TAGS:  vaults_room allow_dup
+SUBST: ( = (((0, 0 = .0
+MAP
+ .0   0.
+.... ....
+0.(...(.0
+ .......
+  ..(..
+   ...
+    0
+ENDMAP
+
+NAME:   nicolae_vaults_heist
+TAGS:   vaults_room
+WEIGHT: 5
+KITEM:  H = any weapon good_item randart / any armour good_item randart / \
+            any jewellery good_item randart / any manual / \
+            any magical staff good_item randart
+KMONS:  D = vault warden band
+KMONS:  S = vault sentinel
+KMONS:  s = vault guard
+KFEAT:  H = alarm trap
+KMASK:  H = no_monster_gen
+KMASK:  H = opaque
+KPROP:  H = no_tele_into
+NSUBST: ! = D / S / s..
+MAP
+.........
+.........
+..!.!.!..
+...mmm...
+..!mHm!..
+...mmm...
+..!.!.!..
+.........
+.........
+ENDMAP
+
+NAME:  nicolae_vaults_meiosis
+TAGS:  vaults_room
+SUBST: ( = (0
+MAP
+ ...          ...
+.....xxxxxxxx.....
+..(............(..
+.......xxxx.......
+ ................
+ x...(..xx..(...x
+ x..............x
+ x.x...xxxx...x.x
+ x.x.x.xxxx.x.x.x
+ x.x.x.xxxx.x.x.x
+ x.x...xxxx...x.x
+ x..............x
+ x...(..xx..(...x
+ ................
+.......xxxx.......
+..(............(..
+.....xxxxxxxx.....
+ ...          ...
+ENDMAP
+
+NAME:  nicolae_vaults_mitosis
+TAGS:  vaults_room
+SUBST: ( = (0
+MAP
+  ...xxxxxx...
+ ..............
+ ..(..xxxx..(..
+................
+.......xx.......
+...(........(...
+.......xx.......
+................
+ ..(..xxxx..(..
+ ..............
+  ...xxxxxx...
+ENDMAP
+
+NAME:    nicolae_vaults_more_shelving_1
+TAGS:    vaults_room vaults_orient_e vaults_orient_w
+SHUFFLE: Pp/Qq
+SUBST:   P = x, p = ', Qq = ., ' = .%0
+MAP
+x'x'x'x'x
+.........
+x'x'xpxqx
+xxxxxPxQx
+x'x'xpxqx
+.........
+x'x'x'x'x
+ENDMAP
+
+
+NAME:   nicolae_vaults_more_shelving_2
+TAGS:   vaults_room vaults_orient_n vaults_orient_s
+KITEM:  L = %
+KMONS:  L = 0
+NSUBST: D = + / x, E = + / x, ' = L / L.., - = L / L..
+MAP
+xxxx...xxxx
+'..x.(.x..-
+x..x...x..x
+'..D...E..-
+x..D...E..x
+'..D...E..-
+x..D...E..x
+'..D...E..-
+x..x...x..x
+'..x.(.x..-
+xxxx...xxxx
+ENDMAP
+
+NAME:  nicolae_vaults_sesquioval_fish
+TAGS:  vaults_room allow_dup
+SUBST: 0 = .0
+MAP
+xx..xxx.
+x0..0x0.
+x....x..
+........
+........
+x....x..
+x0..0x0.
+xx..xxx.
+ENDMAP
+
+NAME:  nicolae_vaults_shrinking_rooms_1
+TAGS:  vaults_room
+SUBST: 0 = 00.
+MAP
+        .
+      xx+xx
+      x...x
+     .+.0.+.
+      x...x
+   . xxx+xxx .
+ xx+xx.....xx+xx
+ x...x.(.(.x...x
+.+.0.+.....+.0.+.
+ x...x.(.(.x...x
+ xx+xx.....xx+xx
+   . xxx+xxx .
+      x...x
+     .+.0.+.
+      x...x
+      xx+xx
+        .
+ENDMAP
+
+NAME:  nicolae_vaults_shrinking_rooms_2
+TAGS:  vaults_room
+SUBST: 0 = 0.
+MAP
+        ..
+        ..
+       ....
+     ........
+     ..0..0..
+   ..xx....xx..
+   ..x......x..
+  ..0..(..(..0..
+..................
+..................
+  ..0..(..(..0..
+   ..x......x..
+   ..xx....xx..
+     ..0..0..
+     ........
+       ....
+        ..
+        ..
+ENDMAP
+
+NAME:  nicolae_vaults_sightless_eye
+TAGS:  vaults_room
+KITEM: 0 = %
+KMONS: 0 = 0
+MAP
+    ....
+  ........
+....x++x....
+....+00+....
+....+00+....
+....x++x....
+  ........
+    ....
+ENDMAP
+
+NAME:  nicolae_vaults_six-pack
+TAGS:  vaults_room allow_dup
+SUBST: 0 = 0.
+MAP
+..x..x..
+.0x0.x0.
+........
+xx.xx.xx
+........
+.0x.0x0.
+..x..x..
+ENDMAP
+
+NAME:  nicolae_vaults_spaceships
+TAGS:  vaults_room
+SUBST: 0 = .0
+MAP
+................
+.x....x....x....
+.xxx..xxx..xxx..
+.0xxx.0xxx.0xxx.
+.xxx..xxx..xxx..
+.x....x....x....
+...(....(....(...
+ ....x....x....x.
+ ..xxx..xxx..xxx.
+ .xxx0.xxx0.xxx0.
+ ..xxx..xxx..xxx.
+ ....x....x....x.
+ ................
+ENDMAP
+
+NAME:  nicolae_vaults_steering_wheel
+TAGS:  vaults_room
+SUBST: 0 = ..%0
+MAP
+      0.
+      .....
+   .0xxx.(.
+   ..xxx.....
+ ...xx...xx.0
+ .(.x0...0xxx
+ ..........xx.0
+..xx...(...xx..
+0.xx..........
+  xxx0...0x.(.
+  0.xx...xx...
+  .....xxx..
+    .(.xxx0.
+    .....
+       .0
+ENDMAP
+
+NAME:    nicolae_vaults_stepped_doors
+TAGS:    vaults_room vaults_orient_w vaults_orient_e
+SHUFFLE: DE, FHJ, KLMN
+SUBST:   DFK = +, EHJLMN = x, 0 = ...0, % = .%%%
+MAP
+      %K%
+   .F.0L0.F.
+.D.0H..M..H0.D.
+0E..J.0N0.J..E0
+.D.0H..M..H0.D.
+   .F.0L0.F.
+      %K%
+ENDMAP
+
+NAME:  nicolae_vaults_storage_closets_1
+TAGS:  vaults_room vaults_orient_w vaults_orient_e
+KITEM: L = % w:20 / nothing w:30
+KMONS: L = 0 / nothing w:15
+MAP
+xLLxLLxLLx
+x..x..x..x
+x+xx+xx+xx
+..........
+..........
+..........
+xx+xx+xx+x
+x..x..x..x
+xLLxLLxLLx
+ENDMAP
+
+NAME:    nicolae_vaults_storage_closets_2
+TAGS:    vaults_room vaults_orient_e
+KITEM:   L = % w:20 / nothing w:30
+KMONS:   L = 0 / nothing w:15
+SHUFFLE: DE
+SUBST:   D = +, E = x
+MAP
+L.E...D.Lx
+L.D...E.Lx
+xxx...xxxx
+L.x.......
+L.+.......
+L.x.......
+xxx...xxxx
+L.D...E.Lx
+L.E...D.Lx
+ENDMAP
+
+NAME:   nicolae_vaults_storage_closets_3
+TAGS:   vaults_room
+KITEM:  L = % w:20 / nothing w:30
+KMONS:  L = 0 / nothing w:15
+NSUBST: P = + / x, Q = + / x, R = + / x, S = + / x, \
+        p = L / ., q = L / ., r = L / ., s = L / .
+MAP
+...........
+...........
+..xPPxQQx..
+..P.pxq.Q..
+..PpLxLqQ..
+..xxxxxxx..
+..RrLxLsS..
+..R.rxs.S..
+..xRRxSSx..
+...........
+...........
+ENDMAP
+
+NAME:  nicolae_vaults_surprise_closet
+TAGS:  vaults_room allow_dup
+KITEM: 0 = %
+KMONS: 0 = 0
+MAP
+0
+ENDMAP
+
+NAME:  nicolae_vaults_taking_the_gang_shopping
+TAGS:  vaults_room
+KMONS: S = vault warden band / yaktaur captain band / orc warlord band / \
+           ironbound preserver band
+KFEAT: S = weapon shop / armour shop
+MAP
+...x...
+...x...
+.......
+xx.S.xx
+.......
+...x...
+...x...
+ENDMAP
+
+NAME:   nicolae_vaults_turnstiles
+TAGS:   vaults_room
+NSUBST: 0 = 2=0 / 0...
+MAP
+.............
+.(....(....(.
+.............
+xn0xn0xn0xn0x
+x..n..n..n..x
+x0nx0nx0nx0nx
+.............
+.(....(....(.
+.............
+ENDMAP
+
+NAME:  nicolae_vaults_weapon_check
+TAGS:  vaults_room vaults_orient_s
+KITEM: L = any weapon / any armour w:5
+KFEAT: - = iron_grate
+SUBST: M = 0.
+MAP
+.........
+..M...M..
++xxx+xxx+
+L.-...-.L
+LM-M.M-ML
+L.-.0.-.L
+L.-...-.L
+L.x-+-x.L
+xxx...xxx
+ENDMAP
+
+NAME:    nicolae_vaults_wine_cellar
+TAGS:    vaults_room vaults_orient_e
+KITEM:   ' = any potion w:15 / potion of degeneration / nothing
+SHUFFLE: Pp/Qq/Rr
+: if crawl.coinflip() then
+NSUBST:  J = 2=x.. / ., DEFH = x.. / .
+: else
+NSUBST:  D = x.. / ., E = x.. / ., F = x.. / ., H = x.. / ., J = .
+: end
+NSUBST:  . = 2=0 / 2=0. / .
+SUBST:   Pp = ., QR = x, qr = '
+MAP
+x'x'x'xx
+'.D.E.pP
+xDxJxExx
+'.J.J.qQ
+xFxJxHxx
+'.F.H.rR
+x'x'x'xx
+ENDMAP
+
+NAME:  nicolae_vaults_wrenched
+TAGS:  vaults_room
+KITEM: 0 = %
+KMONS: 0 = 0
+SUBST: ' = ...0
+MAP
+............
+.......x'x..
+.xx'xx.xxx..
+.'xxx'.'x'..
+.xx'xx.xxx..
+.......x'x..
+..x'x.......
+..xxx.xx'xx.
+..'x'.'xxx'.
+..xxx.xx'xx.
+..x'x.......
+............
 ENDMAP

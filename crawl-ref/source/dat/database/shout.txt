@@ -214,6 +214,14 @@ __RUSTLE seen
 
 SOUND:@The_monster@'s pages rustle loudly.
 %%%%
+__SQUEAK unseen
+
+SOUND:You hear a loud squeak.
+%%%%
+__SQUEAK seen
+
+SOUND:@The_monster@ squeaks loudly.
+%%%%
 ############################################
 # End of default shouts
 ############################################
@@ -231,7 +239,7 @@ Fighter player ghost
 
 @player ghost@
 %%%%
-Wizard player ghost
+Hedge Wizard player ghost
 
 @player ghost@
 %%%%
@@ -243,7 +251,7 @@ Necromancer player ghost
 
 @player ghost@
 %%%%
-Assassin player ghost
+Brigand player ghost
 
 @player ghost@
 %%%%
@@ -291,7 +299,7 @@ Chaos Knight player ghost
 
 @player ghost@
 %%%%
-Transmuter player ghost
+Shapeshifter player ghost
 
 @player ghost@
 %%%%

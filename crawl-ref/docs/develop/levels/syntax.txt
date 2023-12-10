@@ -550,7 +550,7 @@ ITEM:     (list of items, separated by comma)
           * "ego:ego_name", where "ego_name" is something like "running" or
             "fire_resistance", and so on; "none" can be used to prevent the
             item from getting an ego. The item must be fully specified, so
-            trying "any weapon ego:vorpal" or "any armour ego:positive_energy"
+            trying "any weapon ego:heavy" or "any armour ego:positive_energy"
             will result in an error. Trying to give an ego to something which
             can't accept an ego will also result in an error. The full lists
             are in the str_to_ego() function in mapdef.cc.
@@ -732,7 +732,7 @@ MONS:     (list of monsters)
           "mons_giant_bat" tile, but is otherwise identical to a rat.
           Obviously, this substitution of one monster onto another should
           never be used, but it can be useful for customised vault monsters
-          if an alternate tile exists. In ASCII mode, this will do nothing.
+          if an alternative tile exists. In ASCII mode, this will do nothing.
 
           You can set the monster's god using the "god:" specifier as
           follows:
@@ -1273,32 +1273,51 @@ KFEAT:    G = C / net trap / antique armour shop / altar_zin
           Shop definitions
           ----------------
 
+          The available types of shop that can be used in a shop definition are:
+             general, weapon, armour, antiques, antique weapon, antique armour,
+             jewellery, book, distillery, scroll, any
+          The three types of antiques store won't pre-identify the items sold
+          unless the player has seen them already. Even if you're planning to
+          specify the inventory yourself, it can be useful to specify an
+          appropriate shop type for the custom inventory, since the shop type is
+          shown on the Ctrl+O screen and affects what tile is used.
+
           It's possible to customise shops further than simply specifying the
           type of shop to place. There are a number of options, which are
-          enumerated below:
+          enumerated below. The `name`, `type`, and `suffix` fields all support
+          substitution of underscores for spaces; see "suffix" below for an
+          example.
 
             use_all:    If true, and items have been specified, all items
                         specified will be placed in the shop, without using
                         random selection to determine a number of items from
                         the list.
             name:       If provided, this is apostrophised and becomes the
-                        shop-keeper's name. For example, name:Ploog would
+                        shop-keeper's name. For example, `name:Ploog` would
                         result in "Ploog's <X shop>".
             type:       If provided, this is used as the "type" name for the
-                        shop. For example, type:Wand would result in "X's Wand
+                        shop. For example, `type:Wand` would result in "X's Wand
                         shop". Please note: this is *not* the type of shop,
                         simply the name. Setting this will not change the
                         content of the shop. You will still need to specify the
-                        type in the definition, i.e., "antique armour shop".
+                        type in the definition, i.e., `antique armour shop`.
             suffix:     If provided, this is used instead of "Emporium",
                         "Shop", etc, in the shop name. For example,
-                        suffix:Bazaar results in "X's x Bazaar".
+                        `suffix:Bazaar` results in "X's x Bazaar". An example
+                        with underscores: `suffix: Thing_Parlour` would
+                        result in "X's x Thing Parlour".
             count:      If specified, this restricts the number of items placed
-                        in the shop to this number. For example, "any shop
-                        count:1" results in a single shop with a single item in
+                        in the shop to this number. For example, `any shop
+                        count:1` results in a single shop with a single item in
                         it.
-            greed:      If specified, this increases the cost of items for sale
-                        in the shop. Someone should fill the algorithm here!
+            greed:      If specified, this changes the cost of items for sale
+                        in the shop. The base cost of the items in the shop is
+                        multiplied by (greed / 10). For example, a greed of 5
+                        will result in the items costing half of their usual
+                        price, while a greed of 20 will result in the items
+                        costing double. The pricing algorithm sets any prices
+                        less than 1 to a price of 1, so a greed of 0 will make
+                        everything in the shop cost 1 gold.
 
           Shop items
           ----------
@@ -1313,11 +1332,12 @@ KFEAT:    G = C / net trap / antique armour shop / altar_zin
           Examples
           --------
 
-          KFEAT: a = any shop name:Ploog type:Wand suffix:Emporium count:3
-                       use_all greed:10 ; any wand | any wand | any wand
+          KFEAT: a = general shop name:Ploog type:Wand suffix:Emporium count:3
+                       use_all greed:9 ; any wand | any wand | any wand
 
           In theory, this will create "Ploog's Wand Emporium", which has
-          exactly three items, each of which is a randomly chosen wand.
+          exactly three items, each of which is a randomly chosen wand, and each
+          of which will cost 90% of its usual price.
 
           Note: Transporters are placed in vaults via lua markers, and
           shouldn't need placement via KFEAT. See the Transporters section
@@ -1429,9 +1449,8 @@ KPROP:    x = bloody
              entering from nearby squares.
           * "no_tele_into": Prevents teleportation from choosing to use this
              square. Also prevents this square from being the destination of
-             a shaft or hatch. Use this tag to prevent nasty situations like
-             the player ending up in a closet or an extremely dense monster
-             array (like a hellion island); or for vaults with loot where the
+             a shaft or hatch. Use this tag to prevent the player from ending
+             up trapped in an isolated area; or for vaults with loot where the
              player is not supposed to get it by teleporting alone.
           * "no_tide": Shoals tides will not affect this square.
           * "no_jiyva": No spawning jellies, no off-level eating.

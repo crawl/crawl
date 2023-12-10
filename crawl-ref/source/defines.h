@@ -234,6 +234,7 @@ typedef uint8_t colour_t;
 
 #define COLFLAG_FRIENDLY_MONSTER         0x0100
 #define COLFLAG_NEUTRAL_MONSTER          0x0200
+#define COLFLAG_UNUSUAL_MASK             0x0300
 #define COLFLAG_WILLSTAB                 0x0400
 #define COLFLAG_MAYSTAB                  0x0800
 #define COLFLAG_ITEM_HEAP                0x1000
@@ -334,6 +335,10 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define KIRKE_BAND_KEY "kirke_band"
 #define CHARMED_DEMON_KEY "charmed_demon"
 #define EMERGENCY_CLONE_KEY "emergency_clone"
+#define BINDING_SIGIL_DURATION_KEY "binding_sigil_duration"
+#define BULLSEYE_TARGET_KEY "bullseye_target"
+#define BOULDER_DIRECTION_KEY "boulder_direction"
+#define BOULDER_POWER_KEY "boulder_power"
 
 #define HELPLESS_KEY "helpless"
 #define POISONER_KEY "poisoner"
@@ -344,7 +349,6 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define WATER_HOLD_SUBSTANCE_KEY "water_hold_substance"
 #define CORROSION_KEY "corrosion_amount"
 #define CONFUSING_TOUCH_KEY "confusing touch power"
-#define CFLAME_DUR_KEY "cflame_dur"
 #define NUM_SACRIFICES_KEY "num_sacrifice_muts"
 #define FLAY_DAMAGE_KEY "flay_damage"
 #define POLAR_VORTEX_KEY "polar_vortex_since"

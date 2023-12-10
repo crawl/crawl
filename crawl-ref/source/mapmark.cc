@@ -780,10 +780,11 @@ string map_door_seal_marker::debug_describe() const
 
 map_terrain_change_marker::map_terrain_change_marker (const coord_def& p,
                     dungeon_feature_type oldfeat, dungeon_feature_type newfeat,
+                    unsigned short flv_oldfeat, unsigned short flv_oldfeat_idx,
                     int dur, terrain_change_type ctype, int mnum, int oldcol)
     : map_marker(MAT_TERRAIN_CHANGE, p), duration(dur), mon_num(mnum),
-      old_feature(oldfeat), new_feature(newfeat), change_type(ctype),
-      colour(oldcol)
+      old_feature(oldfeat), new_feature(newfeat), flv_old_feature(flv_oldfeat),
+      flv_old_feature_idx(flv_oldfeat_idx), change_type(ctype), colour(oldcol)
 {
 }
 
@@ -793,6 +794,8 @@ void map_terrain_change_marker::write(writer &out) const
     marshallShort(out, duration);
     marshallUByte(out, old_feature);
     marshallUByte(out, new_feature);
+    marshallShort(out, flv_old_feature);
+    marshallShort(out, flv_old_feature_idx);
     marshallUByte(out, change_type);
     marshallShort(out, mon_num);
     marshallUByte(out, colour);
@@ -805,6 +808,20 @@ void map_terrain_change_marker::read(reader &in)
     duration = unmarshallShort(in);
     old_feature = static_cast<dungeon_feature_type>(unmarshallUByte(in));
     new_feature = static_cast<dungeon_feature_type>(unmarshallUByte(in));
+#if TAG_MAJOR_VERSION == 34
+    if (in.getMinorVersion() < TAG_MINOR_SAVE_TERRAIN_FLAVOUR)
+    {
+        flv_old_feature = 0;
+        flv_old_feature_idx = 0;
+    }
+    else
+    {
+#endif
+        flv_old_feature = unmarshallShort(in);
+        flv_old_feature_idx = unmarshallShort(in);
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
     change_type = static_cast<terrain_change_type>(unmarshallUByte(in));
     mon_num = unmarshallShort(in);
 #if TAG_MAJOR_VERSION == 34
@@ -825,8 +842,9 @@ map_marker *map_terrain_change_marker::read(reader &in, map_marker_type)
 map_marker *map_terrain_change_marker::clone() const
 {
     map_terrain_change_marker *mark =
-        new map_terrain_change_marker(pos, old_feature, new_feature, duration,
-                                      change_type, mon_num, colour);
+        new map_terrain_change_marker(pos, old_feature, new_feature,
+                                      flv_old_feature, flv_old_feature_idx,
+                                      duration, change_type, mon_num, colour);
     return mark;
 }
 

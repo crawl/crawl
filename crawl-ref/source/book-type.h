@@ -18,7 +18,9 @@ enum book_type
     BOOK_DEATH,
     BOOK_MISFORTUNE,
     BOOK_CHANGES,
+#if TAG_MAJOR_VERSION == 34
     BOOK_TRANSFIGURATIONS,
+#endif
     BOOK_FEN,
 #if TAG_MAJOR_VERSION == 34
     BOOK_WAR_CHANTS = BOOK_FEN,
@@ -26,9 +28,13 @@ enum book_type
     BOOK_VAPOURS,
     BOOK_NECROMANCY,
     BOOK_CALLINGS,
+#if TAG_MAJOR_VERSION == 34
     BOOK_MALEDICT,
+#endif
     BOOK_AIR,
+#if TAG_MAJOR_VERSION == 34
     BOOK_SKY,
+#endif
     BOOK_WARP,
 #if TAG_MAJOR_VERSION == 34
     BOOK_ENVENOMATIONS,
@@ -79,7 +85,9 @@ enum book_type
 #endif
     BOOK_DECAY,
     BOOK_DISPLACEMENT,
+#if TAG_MAJOR_VERSION == 34
     BOOK_RIME,
+#endif
     BOOK_EVERBURNING,
     BOOK_EARTH,
     BOOK_OZOCUBU,
@@ -103,6 +111,7 @@ enum book_type
     BOOK_TRISMEGISTUS,
     BOOK_HUNTER,
     BOOK_SCORCHING,
+    BOOK_MAXWELL,
     NUM_BOOKS
 };
 

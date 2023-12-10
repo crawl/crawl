@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ## This pre-commit hook calls scripts to check the diff contents of the commit
-## before it's commited.
+## before it's committed.
 
 crawl-ref/source/util/checkcommit || exit 1
 

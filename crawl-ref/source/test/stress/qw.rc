@@ -3382,7 +3382,7 @@ end
 
 function recall()
   if you.god() == "Yredelemnul" then
-    use_ability("Recall Undead Slaves", "", true)
+    use_ability("Recall Undead Harvest", "", true)
   else
     use_ability("Recall Orcish Followers", "", true)
   end
@@ -4535,8 +4535,7 @@ function starting_spell()
     no_spells = true
     return
   end
-  -- Missing Infusion for now.
-  local spell_list = {"Shock", "Magic Dart", "Sandblast", "Flame Tongue", "Freeze", "Pain", "Summon Small Mammal", "Beastly Appendage", "Sting"}
+  local spell_list = {"Shock", "Magic Dart", "Sandblast", "Freeze", "Pain", "Summon Small Mammal", "Beastly Appendage", "Sting"}
   for _,sp in ipairs(spell_list) do
     if spells.memorised(sp) and spells.fail(sp) <= 25 then
       return sp

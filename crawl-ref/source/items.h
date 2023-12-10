@@ -49,7 +49,7 @@ int get_max_subtype(object_class_type base_type);
 bool item_type_has_unidentified(object_class_type base_type);
 
 bool dec_inv_item_quantity(int obj, int amount);
-bool dec_mitm_item_quantity(int obj, int amount);
+bool dec_mitm_item_quantity(int obj, int amount, bool player_action=true);
 
 void inc_inv_item_quantity(int obj, int amount);
 void inc_mitm_item_quantity(int obj, int amount);
@@ -97,6 +97,8 @@ void pickup_menu(int item_link);
 void pickup(bool partial_quantity = false);
 
 bool item_is_branded(const item_def& item);
+bool item_is_unusual(const item_def& item);
+bool item_is_worth_listing(const item_def& item);
 vector<item_def*> item_list_on_square(int obj);
 vector<const item_def*> const_item_list_on_square(int obj);
 

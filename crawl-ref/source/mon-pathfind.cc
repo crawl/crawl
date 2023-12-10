@@ -140,7 +140,7 @@ bool monster_pathfind::start_pathfind(bool msg)
         for (int j = 0; j < GYM; j++)
         {
             dist[i][j] = INFINITE_DISTANCE;
-            traversable_cache[i][j] = MB_MAYBE;
+            traversable_cache[i][j] = maybe_bool::maybe;
         }
 
     dist[pos.x][pos.y] = 0;
@@ -394,9 +394,9 @@ vector<coord_def> monster_pathfind::calc_waypoints()
 
 bool monster_pathfind::traversable_memoized(const coord_def& p)
 {
-    if (traversable_cache[p.x][p.y] == MB_MAYBE)
-        traversable_cache[p.x][p.y] = frombool(traversable(p));
-    return tobool(traversable_cache[p.x][p.y], false);
+    if (traversable_cache[p.x][p.y] == maybe_bool::maybe)
+        traversable_cache[p.x][p.y] = traversable(p);
+    return bool(traversable_cache[p.x][p.y]);
 }
 
 bool monster_pathfind::traversable(const coord_def& p)

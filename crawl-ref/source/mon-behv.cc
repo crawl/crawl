@@ -69,7 +69,7 @@ static void _mon_check_foe_invalid(monster* mon)
         {
             const monster* foe_mons = foe->as_monster();
             if (foe_mons->alive() && summon_can_attack(mon, foe)
-                && (mon->has_ench(ENCH_INSANE)
+                && (mon->has_ench(ENCH_FRENZIED)
                     || mon->friendly() != foe_mons->friendly()
                     || mon->neutral() != foe_mons->neutral()))
             {
@@ -153,7 +153,7 @@ static void _decide_monster_firing_position(monster* mon, actor* owner)
     if (mon->foe == MHITYOU)
     {
         const bool ignore_special_firing_AI = mon->friendly()
-                                              || mon->berserk_or_insane();
+                                              || mon->berserk_or_frenzied();
 
         // The foe is the player.
         if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
@@ -188,7 +188,7 @@ static void _decide_monster_firing_position(monster* mon, actor* owner)
         mon->target = target->pos();
 
         if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
-            && !mon->berserk_or_insane()
+            && !mon->berserk_or_frenzied()
             && !(mons_is_avatar(mon->type)
                  && owner && mon->foe == owner->mindex()))
         {
@@ -257,7 +257,7 @@ void handle_behaviour(monster* mon)
     bool changed = true;
     bool isFriendly = mon->friendly();
     bool isNeutral  = mon->neutral();
-    bool wontAttack = mon->wont_attack() && !mon->has_ench(ENCH_INSANE);
+    bool wontAttack = mon->wont_attack() && !mon->has_ench(ENCH_FRENZIED);
 
     // Whether the player position is in LOS of the monster.
     bool proxPlayer = !crawl_state.game_is_arena() && mon->see_cell(you.pos())
@@ -320,7 +320,7 @@ void handle_behaviour(monster* mon)
     // Berserking allies ignore your commands!
     if (isFriendly
         && (mon->foe == MHITNOT || mon->foe == MHITYOU)
-        && !mon->berserk_or_insane()
+        && !mon->berserk_or_frenzied()
         && mon->behaviour != BEH_WITHDRAW
         && !mons_self_destructs(*mon)
         && !mons_is_avatar(mon->type))
@@ -333,7 +333,7 @@ void handle_behaviour(monster* mon)
 
     // Instead, berserkers attack nearest monsters.
     if (mon->behaviour != BEH_SLEEP
-        && (mon->has_ench(ENCH_INSANE)
+        && (mon->has_ench(ENCH_FRENZIED)
             || ((mon->berserk() || mons_self_destructs(*mon))
                 && (mon->foe == MHITNOT
                     || isFriendly && mon->foe == MHITYOU))))
@@ -341,7 +341,7 @@ void handle_behaviour(monster* mon)
         // Intelligent monsters prefer to attack the player,
         // even when berserking.
         if (!isFriendly
-            && !mon->has_ench(ENCH_INSANE)
+            && !mon->has_ench(ENCH_FRENZIED)
             && proxPlayer
             && mons_intel(*mon) >= I_HUMAN)
         {
@@ -380,7 +380,7 @@ void handle_behaviour(monster* mon)
 
     // Neutral monsters prefer not to attack players, or other neutrals.
     if (isNeutral
-        && !mon->has_ench(ENCH_INSANE)
+        && !mon->has_ench(ENCH_FRENZIED)
         && mon->foe != MHITNOT
         && (mon->foe == MHITYOU || env.mons[mon->foe].neutral()))
     {
@@ -392,7 +392,7 @@ void handle_behaviour(monster* mon)
     if (!isFriendly && !isNeutral
         && !mons_is_avatar(mon->type)
         && mon->foe != MHITYOU && mon->foe != MHITNOT
-        && proxPlayer && !mon->berserk_or_insane()
+        && proxPlayer && !mon->berserk_or_frenzied()
         && isHealthy
         && !one_chance_in(3))
     {
@@ -452,7 +452,7 @@ void handle_behaviour(monster* mon)
             {
                 if (crawl_state.game_is_arena()
                     || !proxPlayer && !isFriendly
-                    || isNeutral && !mon->has_ench(ENCH_INSANE)
+                    || isNeutral && !mon->has_ench(ENCH_FRENZIED)
                     || patrolling
                     || mons_self_destructs(*mon))
                 {
@@ -630,6 +630,7 @@ void handle_behaviour(monster* mon)
             break;
 
         case BEH_WANDER:
+        case BEH_BATTY:
             if (isPacified)
             {
                 // If a pacified monster isn't travelling toward
@@ -689,7 +690,7 @@ void handle_behaviour(monster* mon)
                 && in_bounds(you.pos())
                 && (!isFriendly && !mons_is_avatar(mon->type) && !isNeutral
                     && !isPacified
-                    || mon->has_ench(ENCH_INSANE)))
+                    || mon->has_ench(ENCH_FRENZIED)))
             {
                 new_foe = MHITYOU;
                 new_beh = BEH_SEEK;
@@ -742,7 +743,7 @@ void handle_behaviour(monster* mon)
 
         case BEH_FLEE:
             // Check for healed.
-            if (isHealthy && !isScared)
+            if (!isScared)
                 new_beh = BEH_SEEK;
 
             // Smart monsters flee until they can flee no more...
@@ -776,7 +777,7 @@ void handle_behaviour(monster* mon)
             if (!proxFoe)
             {
                 if ((isFriendly || proxPlayer)
-                    && (!isNeutral || mon->has_ench(ENCH_INSANE))
+                    && (!isNeutral || mon->has_ench(ENCH_FRENZIED))
                     && !patrolling
                     && !crawl_state.game_is_arena())
                 {
@@ -906,13 +907,13 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
            && (ignore_sight || mon->can_see(*foe))
            && (foe->friendly() != friendly
                || neutral && !foe->neutral()
-               || mon->has_ench(ENCH_INSANE))
+               || mon->has_ench(ENCH_FRENZIED))
            && !mons_is_projectile(*foe)
            && summon_can_attack(mon, p)
            && (friendly || !is_sanctuary(p))
            && !mons_is_firewood(*foe)
            && !foe->props.exists(KIKU_WRETCH_KEY)
-           || p == you.pos() && mon->has_ench(ENCH_INSANE);
+           || p == you.pos() && mon->has_ench(ENCH_FRENZIED);
 }
 
 // Choose random nearest monster as a foe.
@@ -1140,7 +1141,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // XXX: Neutral monsters are a tangled mess of arbitrary logic.
         // It's not even clear any more what behaviours are intended for
         // neutral monsters and what are merely accidents of the code.
-        if (mon->neutral() && !mon->has_ench(ENCH_INSANE))
+        if (mon->neutral() && !mon->has_ench(ENCH_FRENZIED))
         {
             if (mon->asleep())
                 mon->behaviour = BEH_WANDER;
@@ -1177,7 +1178,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     case ME_SCARE:
         // Stationary monsters can't flee, and berserking monsters
         // are too enraged.
-        if (mon->is_stationary() || mon->berserk_or_insane())
+        if (mon->is_stationary() || mon->berserk_or_frenzied())
         {
             mon->del_ench(ENCH_FEAR, true, true);
             break;

@@ -143,5 +143,8 @@ bool spell_is_soh_breath(spell_type spell);
 const vector<spell_type> *soh_breath_spells(spell_type spell);
 
 bool spell_removed(spell_type spell);
+#if TAG_MAJOR_VERSION == 34
+bool spell_was_form(spell_type spell);
+#endif
 
 void end_wait_spells(bool quiet = false);

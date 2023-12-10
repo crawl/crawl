@@ -7,41 +7,40 @@ CMD_NO_CMD_DEFAULT can be used to bind any key to the "Unknown command."
 Movement
 --------
 Moving one grid into a given direction:
-b         CMD_MOVE_DOWN_LEFT
-h         CMD_MOVE_LEFT
-j         CMD_MOVE_DOWN
-k         CMD_MOVE_UP
-l         CMD_MOVE_RIGHT
-n         CMD_MOVE_DOWN_RIGHT
-u         CMD_MOVE_UP_RIGHT
-y         CMD_MOVE_UP_LEFT
+b, NP1, End    CMD_MOVE_DOWN_LEFT
+h, NP4, Left   CMD_MOVE_LEFT
+j, NP2, Down   CMD_MOVE_DOWN
+k, NP8, Up     CMD_MOVE_UP
+l, NP6, Right  CMD_MOVE_RIGHT
+n, NP3, PgDn   CMD_MOVE_DOWN_RIGHT
+u, NP9, PgUp   CMD_MOVE_UP_RIGHT
+y, NP7, Home   CMD_MOVE_UP_LEFT
 
 Moving into a given direction until interrupted:
-B         CMD_RUN_DOWN_LEFT
-H         CMD_RUN_LEFT
-J         CMD_RUN_DOWN
-K         CMD_RUN_UP
-L         CMD_RUN_RIGHT
-N         CMD_RUN_DOWN_RIGHT
-U         CMD_RUN_UP_RIGHT
-Y         CMD_RUN_UP_LEFT
+B, Shift+End   CMD_RUN_DOWN_LEFT
+H, Shift+Left  CMD_RUN_LEFT
+J, Shift+Down  CMD_RUN_DOWN
+K, Shift+Up    CMD_RUN_UP
+L, Shift+Right CMD_RUN_RIGHT
+N, Shift+PgDn  CMD_RUN_DOWN_RIGHT
+U, Shift+PgUp  CMD_RUN_UP_RIGHT
+Y, Shift+Home  CMD_RUN_UP_LEFT
 
 Attacking in a given direction without moving:
-^B        CMD_ATTACK_DOWN_LEFT
-^H        CMD_ATTACK_LEFT
-^J        CMD_ATTACK_DOWN
-^K        CMD_ATTACK_UP
-^L        CMD_ATTACK_RIGHT
-^N        CMD_ATTACK_DOWN_RIGHT
-^U        CMD_ATTACK_UP_RIGHT
-^Y        CMD_ATTACK_UP_LEFT
+^B, ^End       CMD_ATTACK_DOWN_LEFT
+^H, ^Left      CMD_ATTACK_LEFT
+^J, ^Down      CMD_ATTACK_DOWN
+^K, ^Up        CMD_ATTACK_UP
+^L, ^Right     CMD_ATTACK_RIGHT
+^N, ^PgDn      CMD_ATTACK_DOWN_RIGHT
+^U, ^PgUp      CMD_ATTACK_UP_RIGHT
+^Y, ^Home      CMD_ATTACK_UP_LEFT
 
 Autofight commands:
-Tab       CMD_AUTOFIGHT        (attack with/fire primary weapon)
-Shift+Tab CMD_AUTOFIRE         (fire from quiver)
-p         CMD_AUTOFIRE
-<unbound> CMD_AUTOFIGHT_NOMOVE (fire from quiver at range, attack with primary
-                                weapon in melee range)
+Tab            CMD_AUTOFIGHT        (attack with/fire primary weapon)
+Shift+Tab, p   CMD_AUTOFIRE         (fire from quiver)
+<unbound>      CMD_AUTOFIGHT_NOMOVE (fire from quiver at range, attack with
+                                     primary weapon in melee range)
 
 Quivers
 -------
@@ -53,18 +52,18 @@ Q         CMD_QUIVER_ITEM
 
 Inventory management
 --------------------
+c         CMD_UNEQUIP
 d         CMD_DROP
-e         CMD_EAT
+D         CMD_DROP_LAST
+e         CMD_EQUIP
 g, ,      CMD_PICKUP
 i         CMD_DISPLAY_INVENTORY
 q         CMD_QUAFF
 r         CMD_READ
 V         CMD_EVOKE
 v         CMD_PRIMARY_ATTACK
-<unbound> CMD_EVOKE_WIELDED
-<unbound> CMD_FORCE_EVOKE_WIELDED
 w         CMD_WIELD_WEAPON
-F         CMD_THROW_ITEM_NO_QUIVER
+F         CMD_FIRE_ITEM_NO_QUIVER
 M         CMD_MEMORISE_SPELL
 P         CMD_WEAR_JEWELLERY
 R         CMD_REMOVE_JEWELLERY
@@ -76,16 +75,14 @@ W         CMD_WEAR_ARMOUR
 
 Dungeon interaction
 -------------------
-c         CMD_BUTCHER
 o         CMD_EXPLORE
-s, .      CMD_WAIT
-5         CMD_REST             (rest 100 turns)
+s, ., NP. CMD_WAIT
+5, NP5    CMD_REST             (rest 100 turns)
 t         CMD_SHOUT
 x         CMD_LOOK_AROUND
 X         CMD_DISPLAY_MAP
 ^X        CMD_FULL_VIEW
 |         CMD_SHOW_TERRAIN
-^V        CMD_TOGGLE_VIEWPORT_MONSTER_HP
 z         CMD_CAST_SPELL
 Z         CMD_FORCE_CAST_SPELL
 C         CMD_CLOSE_DOOR
@@ -97,6 +94,7 @@ O         CMD_OPEN_DOOR
 >         CMD_GO_DOWNSTAIRS
 ;         CMD_INSPECT_FLOOR
 !         CMD_ANNOTATE_LEVEL
+^T        CMD_TOGGLE_TRAVEL_SPEED
 
 Player status
 -------------
@@ -119,9 +117,11 @@ $         CMD_LIST_GOLD
 
 Meta-commands
 -------------
+F1, ~     CMD_GAME_MENU
 ^A        CMD_TOGGLE_AUTOPICKUP
 ^C        CMD_CLEAR_MAP
-^D, ~     CMD_MACRO_ADD
+^E        CMD_MACRO_ADD
+^D        CMD_MACRO_MENU
 <unbound> CMD_TOGGLE_SOUND      (only when compiled with sound)
 ^Q        CMD_QUIT
 ^R        CMD_REDRAW_SCREEN
@@ -129,54 +129,61 @@ S         CMD_SAVE_GAME
 ^S        CMD_SAVE_GAME_NOW
 ^Z        CMD_SUSPEND_GAME
 &         CMD_WIZARD            (issuing wiz-mode commands)
++         CMD_EXPLORE_MODE
 :         CMD_MAKE_NOTE
 _         CMD_READ_MESSAGES     (messaging during online play)
 ?         CMD_DISPLAY_COMMANDS
 `         CMD_PREV_CMD_AGAIN
-0         CMD_REPEAT_CMD
+0, Insert CMD_REPEAT_CMD
 <unbound> CMD_LUA_CONSOLE
 
 Targeting sub-commands
------------------------
+----------------------
 Move cursor one step in a given direction:
-b         CMD_TARGET_DOWN_LEFT
-h         CMD_TARGET_LEFT
-j         CMD_TARGET_DOWN
-k         CMD_TARGET_UP
-l         CMD_TARGET_RIGHT
-n         CMD_TARGET_DOWN_RIGHT
-u         CMD_TARGET_UP_RIGHT
-y         CMD_TARGET_UP_LEFT
+b, NP1, End    CMD_TARGET_DOWN_LEFT
+h, NP4, Left   CMD_TARGET_LEFT
+j, NP2, Down   CMD_TARGET_DOWN
+k, NP8, Up     CMD_TARGET_UP
+l, NP6, Right  CMD_TARGET_RIGHT
+n, NP3, PgDn   CMD_TARGET_DOWN_RIGHT
+u, NP9, PgUp   CMD_TARGET_UP_RIGHT
+y, NP7, Home   CMD_TARGET_UP_LEFT
 
 Shoot in a given direction:
-B         CMD_TARGET_DIR_DOWN_LEFT
-H         CMD_TARGET_DIR_LEFT
-J         CMD_TARGET_DIR_DOWN
-K         CMD_TARGET_DIR_UP
-L         CMD_TARGET_DIR_RIGHT
-N         CMD_TARGET_DIR_DOWN_RIGHT
-U         CMD_TARGET_DIR_UP_RIGHT
-Y         CMD_TARGET_DIR_UP_LEFT
+B, Shift+End   CMD_TARGET_DIR_DOWN_LEFT
+H, Shift+Left  CMD_TARGET_DIR_LEFT
+J, Shift+Down  CMD_TARGET_DIR_DOWN
+K, Shift+Up    CMD_TARGET_DIR_UP
+L, Shift+Right CMD_TARGET_DIR_RIGHT
+N, Shift+PgDn  CMD_TARGET_DIR_DOWN_RIGHT
+U, Shift+PgUp  CMD_TARGET_DIR_UP_RIGHT
+Y, Shift+Home  CMD_TARGET_DIR_UP_LEFT
 
-x, Esc         CMD_TARGET_CANCEL
+x, Esc, ^G     CMD_TARGET_CANCEL
 v              CMD_TARGET_DESCRIBE
+^X             CMD_TARGET_FULL_DESCRIBE
+e              CMD_TARGET_EXCLUDE
 ?              CMD_TARGET_HELP
-SPACE, !, Enter, NPenter
+SPACE, Enter, NPenter, 5, NP5, f
                CMD_TARGET_SELECT
-., 5, NP.      CMD_TARGET_SELECT_ENDPOINT
+!              CMD_TARGET_SELECT_FORCE
+., NP.         CMD_TARGET_SELECT_ENDPOINT
+@              CMD_TARGET_SELECT_FORCE_ENDPOINT
 ^P             CMD_TARGET_SHOW_PROMPT
-:              CMD_TARGET_HIDE_BEAM
-^I             CMD_TARGET_FIND_PORTAL
+:              CMD_TARGET_TOGGLE_BEAM
+Tab, \         CMD_TARGET_FIND_PORTAL
 ^              CMD_TARGET_FIND_TRAP
 _              CMD_TARGET_FIND_ALTAR
 <              CMD_TARGET_FIND_UPSTAIR
 >              CMD_TARGET_FIND_DOWNSTAIR
+r              CMD_TARGET_FIND_YOU
+g              CMD_TARGET_GET
 p              CMD_TARGET_PREV_TARGET
-f, t           CMD_TARGET_MAYBE_PREV_TARGET
--,NP-          CMD_TARGET_CYCLE_BACK,
+<unbound>      CMD_TARGET_MAYBE_PREV_TARGET
+-, NP-         CMD_TARGET_CYCLE_BACK,
 +, =, NP+, NP= CMD_TARGET_CYCLE_FORWARD
-/,NP/          CMD_TARGET_OBJ_CYCLE_BACK
-*, ',NP*       CMD_TARGET_OBJ_CYCLE_FORWARD
+/, NP/, ;      CMD_TARGET_OBJ_CYCLE_BACK
+*, ', NP*      CMD_TARGET_OBJ_CYCLE_FORWARD
 )              CMD_TARGET_CYCLE_QUIVER_FORWARD  (fire interface only)
 (              CMD_TARGET_CYCLE_QUIVER_BACKWARD (fire interface only)
 Q              CMD_TARGET_SELECT_ACTION         (fire interface only)
@@ -186,50 +193,81 @@ Level-map commands
 ?         CMD_MAP_HELP
 ^C        CMD_MAP_CLEAR_MAP
 ^F        CMD_MAP_FORGET
-^W        CMD_MAP_ADD_WAYPOINT
+^U        CMD_MAP_UNFORGET
+^W, w     CMD_MAP_ADD_WAYPOINT
 e         CMD_MAP_EXCLUDE_AREA (cycle through radii and toggle off/on)
 ^E        CMD_MAP_CLEAR_EXCLUDES
-+,NP+     CMD_MAP_SCROLL_DOWN
--,NP-     CMD_MAP_SCROLL_UP
-., Enter, ;, NPenter, NP. 
++, NP+    CMD_MAP_SCROLL_DOWN
+-, NP-    CMD_MAP_SCROLL_UP
+., ,, ;, S, Enter, NPenter, NP.
           CMD_MAP_GOTO_TARGET
 !         CMD_MAP_ANNOTATE_LEVEL
+R         CMD_MAP_EXCLUDE_RADIUS
+[         CMD_MAP_PREV_LEVEL
+]         CMD_MAP_NEXT_LEVEL
+G         CMD_MAP_GOTO_LEVEL
+o         CMD_MAP_EXPLORE
+v         CMD_MAP_DESCRIBE
+}         CMD_MAP_ZOOM_IN      (tiles only)
+{         CMD_MAP_ZOOM_OUT     (tiles only)
 Esc       CMD_MAP_EXIT_MAP
 
 Move cursor one step in a given direction
-b         CMD_MAP_MOVE_DOWN_LEFT
-h         CMD_MAP_MOVE_LEFT
-j         CMD_MAP_MOVE_DOWN
-k         CMD_MAP_MOVE_UP
-l         CMD_MAP_MOVE_RIGHT
-n         CMD_MAP_MOVE_DOWN_RIGHT
-u         CMD_MAP_MOVE_UP_RIGHT
-y         CMD_MAP_MOVE_UP_LEFT
+b, NP1, End    CMD_MAP_MOVE_DOWN_LEFT
+h, NP4, Left   CMD_MAP_MOVE_LEFT
+j, NP2, Down   CMD_MAP_MOVE_DOWN
+k, NP8, Up     CMD_MAP_MOVE_UP
+l, NP6, Right  CMD_MAP_MOVE_RIGHT
+n, NP3, PgDn   CMD_MAP_MOVE_DOWN_RIGHT
+u, NP9, PgUp   CMD_MAP_MOVE_UP_RIGHT
+y, NP7, Home   CMD_MAP_MOVE_UP_LEFT
 
 Move cursor several steps in a given direction
-B         CMD_MAP_JUMP_DOWN_LEFT
-H         CMD_MAP_JUMP_LEFT
-J         CMD_MAP_JUMP_DOWN
-K         CMD_MAP_JUMP_UP
-L         CMD_MAP_JUMP_RIGHT
-N         CMD_MAP_JUMP_DOWN_RIGHT
-U         CMD_MAP_JUMP_UP_RIGHT
-Y         CMD_MAP_JUMP_UP_LEFT
+B, Shift+End   CMD_MAP_JUMP_DOWN_LEFT
+H, Shift+Left  CMD_MAP_JUMP_LEFT
+J, Shift+Down  CMD_MAP_JUMP_DOWN
+K, Shift+Up    CMD_MAP_JUMP_UP
+L, Shift+Right CMD_MAP_JUMP_RIGHT
+N, Shift+PgDn  CMD_MAP_JUMP_DOWN_RIGHT
+U, Shift+PgUp  CMD_MAP_JUMP_UP_RIGHT
+Y, Shift+Home  CMD_MAP_JUMP_UP_LEFT
 
 Find a particular feature
 <         CMD_MAP_FIND_UPSTAIR
 >         CMD_MAP_FIND_DOWNSTAIR
 @         CMD_MAP_FIND_YOU
-Tab       CMD_MAP_FIND_PORTAL
+Tab, \    CMD_MAP_FIND_PORTAL
 ^         CMD_MAP_FIND_TRAP
 _         CMD_MAP_FIND_ALTAR
 E         CMD_MAP_FIND_EXCLUDED
-W         CMD_MAP_FIND_WAYPOINT
-I         CMD_MAP_FIND_STASH
+F, W      CMD_MAP_FIND_WAYPOINT
+I, '      CMD_MAP_FIND_STASH
 O         CMD_MAP_FIND_STASH_REVERSE (cycle through stashes, in reverse)
 
+Player doll editor (local tiles only)
+-------------------------------------
+-              CMD_EDIT_PLAYER_TILE
+^R             CMD_DOLL_RANDOMIZE
+H, Shift+Left  CMD_DOLL_SELECT_PREV_DOLL
+L, Shift+Right CMD_DOLL_SELECT_NEXT_DOLL
+k, NP8, Up     CMD_DOLL_SELECT_PREV_PART
+j, NP2, Down   CMD_DOLL_SELECT_NEXT_PART
+h, NP4, Left   CMD_DOLL_CHANGE_PART_PREV
+l, NP6, Right  CMD_DOLL_CHANGE_PART_NEXT
+Enter, NPenter CMD_DOLL_CONFIRM_CHOICE
+^C             CMD_DOLL_COPY
+^V             CMD_DOLL_PASTE
+t              CMD_DOLL_TAKE_OFF
+^T             CMD_DOLL_TAKE_OFF_ALL
+*              CMD_DOLL_TOGGLE_EQUIP
+^E             CMD_DOLL_TOGGLE_EQUIP_ALL
+^D             CMD_DOLL_JOB_DEFAULT
+m              CMD_DOLL_CHANGE_MODE
+Esc, ^S        CMD_DOLL_SAVE
+q ^Q           CMD_DOLL_QUIT
+
 Wiz-mode targeting sub-commands
---------------------------------
+-------------------------------
 ^C        CMD_TARGET_CYCLE_BEAM
 o         CMD_TARGET_WIZARD_GIVE_ITEM
 m         CMD_TARGET_WIZARD_MOVE
@@ -241,4 +279,12 @@ G         CMD_TARGET_WIZARD_GAIN_LEVEL
 M         CMD_TARGET_WIZARD_MISCAST
 S         CMD_TARGET_WIZARD_MAKE_SUMMONED
 ~         CMD_TARGET_WIZARD_POLYMORPH
+D         CMD_TARGET_WIZARD_DEBUG_MONSTER
+^H        CMD_TARGET_WIZARD_HEAL_MONSTER
+,         CMD_TARGET_WIZARD_HURT_MONSTER
+"         CMD_TARGET_WIZARD_DEBUG_PORTAL
+^B        CMD_TARGET_WIZARD_BANISH_MONSTER
+^K        CMD_TARGET_WIZARD_KILL_MONSTER
+^(        CMD_TARGET_WIZARD_CREATE_MIMIC
 T         CMD_MAP_WIZARD_TELEPORT
+^X        CMD_MAP_WIZARD_FORGET

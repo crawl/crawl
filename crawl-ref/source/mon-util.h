@@ -11,6 +11,7 @@
 #include "enum.h"
 #include "gender-type.h"
 #include "los-type.h"
+#include "mon-dam-level-type.h"
 #include "mon-enum.h"
 #include "mon-inv-type.h"
 #include "player.h"
@@ -29,7 +30,7 @@ struct mon_attack_def
 
 // Amount of mons->speed_increment used by different actions; defaults
 // to 10.
-#define DEFAULT_ENERGY {10, 10, 10, 10, 10, 10, 10, 100}
+#define DEFAULT_ENERGY {10, 10, 10, 10, 10}
 struct mon_energy_usage
 {
     uint8_t move;
@@ -37,12 +38,6 @@ struct mon_energy_usage
     uint8_t attack;
     uint8_t missile; // Arrows/crossbows/etc
     uint8_t spell;
-    uint8_t special;
-    uint8_t item;    // Using an item (i.e., drinking a potion)
-
-    // Percent of mons->speed used when picking up an item; defaults
-    // to 100%
-    uint8_t pickup_percent;
 
     static mon_energy_usage attack_cost(int cost, int sw = 10)
     {
@@ -82,9 +77,6 @@ struct mon_energy_usage
         me.attack = combine(attack, o.attack);
         me.missile = combine(missile, o.missile);
         me.spell = combine(spell, o.spell);
-        me.special = combine(special, o.special);
-        me.item = combine(item, o.item);
-        me.pickup_percent = combine(pickup_percent, o.pickup_percent, 100);
         return me;
     }
 
@@ -94,10 +86,7 @@ struct mon_energy_usage
                && swim == rvalue.swim
                && attack == rvalue.attack
                && missile == rvalue.missile
-               && spell == rvalue.spell
-               && special == rvalue.special
-               && item == rvalue.item
-               && pickup_percent == rvalue.pickup_percent;
+               && spell == rvalue.spell;
     }
 private:
     static uint8_t combine(uint8_t a, uint8_t b, uint8_t def = 10)
@@ -220,6 +209,8 @@ mon_itemuse_type mons_itemuse(const monster& mon);
 bool mons_can_be_blinded(monster_type mc);
 bool mons_can_be_dazzled(monster_type mc);
 
+bool mons_resists_drowning(monster_type type, monster_type base);
+
 int get_shout_noise_level(const shout_type shout);
 shout_type mons_shouts(monster_type mclass, bool demon_shout = false);
 bool mons_can_shout(monster_type mclass);
@@ -227,6 +218,7 @@ bool mons_can_shout(monster_type mclass);
 bool mons_is_ghost_demon(monster_type mc);
 bool mons_is_unique(monster_type mc);
 bool mons_is_or_was_unique(const monster& mon);
+bool mons_is_specially_named(monster_type mc);
 bool mons_is_pghost(monster_type mc);
 bool mons_is_draconian_job(monster_type mc);
 bool mons_is_hepliaklqana_ancestor(monster_type mc);
@@ -247,15 +239,18 @@ bool mons_invuln_will(const monster& mon);
 
 mon_attack_def mons_attack_spec(const monster& mon, int attk_number, bool base_flavour = true);
 string mon_attack_name(attack_type attack, bool with_object = true);
+string mon_attack_name_short(attack_type attack);
 bool is_plain_attack_type(attack_type attack);
 bool flavour_triggers_damageless(attack_flavour flavour);
 int flavour_damage(attack_flavour flavour, int HD, bool random = true);
 bool flavour_has_reach(attack_flavour flavour);
+bool flavour_has_mobility(attack_flavour flavour);
 
 bool mons_class_flag(monster_type mc, monclass_flags_t bits);
 
 mon_holy_type holiness_by_name(string name);
 const char * holiness_name(mon_holy_type_flags which_holiness);
+const char * single_holiness_description(mon_holy_type holiness);
 string holiness_description(mon_holy_type holiness);
 mon_holy_type mons_class_holiness(monster_type mc);
 
@@ -307,11 +302,13 @@ bool monster_inherently_flies(const monster &mons);
 bool mons_class_can_regenerate(monster_type mc);
 bool mons_can_regenerate(const monster& mon);
 bool mons_class_fast_regen(monster_type mc);
+int mons_class_regen_amount(monster_type mc);
 int mons_zombie_size(monster_type mc);
 monster_type mons_zombie_base(const monster& mon);
 bool mons_class_is_zombified(monster_type mc);
 bool mons_class_is_animated_weapon(monster_type type);
 bool mons_class_is_animated_object(monster_type type);
+bool mons_class_is_remnant(monster_type type);
 monster_type mons_base_type(const monster& mon);
 bool mons_class_can_leave_corpse(monster_type mc);
 bool mons_class_leaves_hide(monster_type mc);
@@ -320,6 +317,7 @@ bool mons_class_leaves_organ(monster_type mc);
 bool mons_is_zombified(const monster& mons);
 bool mons_class_can_be_zombified(monster_type mc);
 bool mons_can_be_zombified(const monster& mon);
+bool mons_class_can_be_spectralised(monster_type mc, bool divine = false);
 bool mons_can_be_spectralised(const monster& mon, bool divine = false);
 bool mons_class_can_use_stairs(monster_type mc);
 bool mons_class_can_use_transporter(monster_type mc);
@@ -388,7 +386,7 @@ bool mons_class_is_plant(monster_type mc);
 bool mons_class_is_draconic(monster_type mc);
 bool mons_is_plant(const monster& mon);
 bool mons_eats_items(const monster& mon);
-bool actor_is_susceptible_to_vampirism(const actor& act);
+bool actor_is_susceptible_to_vampirism(const actor& act, bool known = false);
 monster_type mons_genus(monster_type mc);
 monster_type mons_species(monster_type mc);
 monster_type draconian_subspecies(const monster& mon);
@@ -535,17 +533,6 @@ monster *choose_random_monster_on_level(
 
 int spell_freq_for_hd(int hd);
 void normalize_spell_freq(monster_spells &spells, int total_freq);
-
-enum mon_dam_level_type
-{
-    MDAM_OKAY,
-    MDAM_LIGHTLY_DAMAGED,
-    MDAM_MODERATELY_DAMAGED,
-    MDAM_HEAVILY_DAMAGED,
-    MDAM_SEVERELY_DAMAGED,
-    MDAM_ALMOST_DEAD,
-    MDAM_DEAD,
-};
 
 void print_wounds(const monster& mons);
 bool wounded_damaged(mon_holy_type holi);

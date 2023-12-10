@@ -149,6 +149,7 @@ You've just converted to worshipping <w>Ashenzari</w>. Unlike other gods,
 Ashenzari only cares about curses. As you explore the dungeon, Ashenzari will
 offer curses, locking an item onto you. The more cursed items you wear, the more
 Ashenzari will enhance your skills and otherwise help you.
+%%%%
 HINT_CONVERT Gozag
 
 You've just converted to worshipping <w>Gozag</w>. Unlike other gods, Gozag only
@@ -158,11 +159,11 @@ death.
 HINT_CONVERT Ru
 
 You've just converted to worshipping <w>Ru</w>. Unlike other gods, Ru grants
-piety (divine favour) in exchange for permanent sacrifices, like giving up your
-ability to drink potions while endangered, or losing the ability to train
-certain skills. The more piety you have, the more abilities Ru will grant, and
-the more powerful those abilities will become. Ru will offer more sacrifices as
-you explore the depths of the dungeon.
+piety (divine favour) in exchange for permanent sacrifices, like losing the
+ability to train certain skills, or permanently losing a hand. The more piety
+you have, the more abilities Ru will grant, and the more powerful those
+abilities will become. Ru will offer more sacrifices as you explore the depths
+of the dungeon.
 %%%%
 HINT_CONVERT Uskayaw
 
@@ -281,14 +282,14 @@ the item in your <w>$cmd[CMD_DISPLAY_INVENTORY]</w>nventory to see more
 information.
 
 {{
-    if crawl.hints_type() = "hunter" then
+    if crawl.hints_type() == "ranger" then
         return "As you're already trained in Ranged Weapons, you don't really "
                .. "need another type of ranged attack."
-    elseif crawl.hints_type() = "magic" then
+    elseif crawl.hints_type() == "magic" then
         return "However, as a spellslinger, you don't really need another type"
                .. " of ranged attack."
     else
-        return "";
+        return ""
     end
 }}
 %%%%
@@ -533,9 +534,10 @@ damage of blades and ranged weapons.
 %%%%
 HINT_MALEVOLENCE
 
-As you explore the dungeon and reveal new tiles, bad things will sometimes
-rnadomly happen to you. When this happens, pause, think carefully, and be ready
-to use consumables or abilities. Fight to survive!"
+As you explore the dungeon and reveal new tiles, the malevolent forces of the
+dungeon may randomly cause bad things to happen to you. When this happens,
+pause, think carefully, and be ready to use consumables or abilities. Fight to
+survive!"
 %%%%
 HINT_OPPORTUNITY_ATTACK
 

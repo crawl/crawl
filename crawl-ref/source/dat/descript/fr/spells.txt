@@ -120,12 +120,6 @@ Ce sortilège est assez puissant pour littéralement extirper quelqu'un des
 griffes de la mort, mais il choquera le sorcier au point de le rendre incapable
 d'agir pendant un moment.
 %%%%
-Brain Feed spell
-
-Ce sort permet de diminuer une partie de l'intelligence de l'ennemi. Une telle
-perte n'est que temporaire, et les anneaux de soutien de facultés peuvent
-prévenir ou réduire considérablement cet effet.
-%%%%
 Call Canine Familiar spell
 
 Ce sort convoque un unique canidé pour venir en aide au sorcier.
@@ -298,10 +292,6 @@ Fireball spell
 
 Ce sort expédie un missile de feu explosif. Ce sortilège n'a aucune coût
 additionnel de niveaux de sorts si le sorcier connait Boule de Feu Retardée.
-%%%%
-Flame Tongue spell
-
-Ce sort crée une courte rafale de flammes.
 %%%%
 Flight spell
 

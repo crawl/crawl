@@ -492,7 +492,7 @@ ORIENT:  encompass
 TAGS:    bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
 #
 ITEM:    any good_item
-ITEM:    potion of flight ident:type
+ITEM:    potion of enlightenment ident:type
 ITEM:    ring of flight ident:type
 ITEM:    pair of boots ego:flying ident:type
 SUBST:   e : eeef, g:eg
@@ -1112,7 +1112,7 @@ TAGS:    bailey_polearm no_item_gen no_monster_gen no_pool_fixup
 :item(dgn.loot_potions)
 ITEM:    any armour good_item
 MONS:    wolf zombie, vampire bat
-MONS:    orc zombie ; spear, orc warrior zombie ; trident | halberd
+MONS:    orc zombie, orc warrior zombie
 MONS:    gargoyle
 MONS:    vampire ; halberd ego:vampirism w:15 | glaive ego:vampirism w:3 \
              | bardiche ego:vampirism w:1 \
@@ -1181,7 +1181,7 @@ ORIENT: encompass
 TAGS:   bailey_axe no_item_gen no_monster_gen no_pool_fixup
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 : easy_axe_fighter(_G)
-MONS:   human ; hand axe ego:vorpal | war axe . scale mail | ring mail
+MONS:   human ; hand axe ego:heavy | war axe . scale mail | ring mail
 MONS:   vault guard ; broad axe . chain mail | plate armour
 KMONS:  4 = bullfrog
 KMONS:  5 = prince ribbit, blink frog / cane toad w:1

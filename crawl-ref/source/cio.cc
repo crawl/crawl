@@ -19,9 +19,6 @@
 #include "tiles-build-specific.h"
 #include "unicode.h"
 #include "viewgeom.h"
-#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
-#include "windowmanager.h"
-#endif
 #ifdef USE_TILE_LOCAL
 #include "tilefont.h"
 #endif
@@ -80,26 +77,28 @@ keycode_type numpad_to_regular(keycode_type key, bool keypad)
         return '=';
     case CK_NUMPAD_ENTER:
         return CK_ENTER;
+#define KP_PAIR(a, b) (keypad ? static_cast<keycode_type>(a) : static_cast<keycode_type>(b))
     case CK_NUMPAD_7:
-        return keypad ? CK_HOME : '7';
+        return KP_PAIR(CK_HOME, '7');
     case CK_NUMPAD_8:
-        return keypad ? CK_UP : '8';
+        return KP_PAIR(CK_UP, '8');
     case CK_NUMPAD_9:
-        return keypad ? CK_PGUP : '9';
+        return KP_PAIR(CK_PGUP, '9');
     case CK_NUMPAD_4:
-        return keypad ? CK_LEFT : '4';
+        return KP_PAIR(CK_LEFT, '4');
     case CK_NUMPAD_5:
         return '5';
     case CK_NUMPAD_6:
-        return keypad ? CK_RIGHT : '6';
+        return KP_PAIR(CK_RIGHT, '6');
     case CK_NUMPAD_1:
-        return keypad ? CK_END : '1';
+        return KP_PAIR(CK_END, '1');
     case CK_NUMPAD_2:
-        return keypad ? CK_DOWN : '2';
+        return KP_PAIR(CK_DOWN, '2');
     case CK_NUMPAD_3:
-        return keypad ? CK_PGDN : '3';
+        return KP_PAIR(CK_PGDN, '3');
     case CK_NUMPAD_0:
         return '0';
+#undef KP_PAIR
     default:
         return key;
     }
@@ -196,7 +195,8 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
     case '8': return 'k';
     case '9': return 'u';
 
-# ifndef USE_TILE_LOCAL
+# if !defined(USE_TILE_LOCAL)
+    // equivalent to return keyin for the headless case
     default: return unixcurses_get_vi_key(keyin);
 # endif
 
@@ -708,11 +708,6 @@ int line_reader::read_line(bool clear_previous, bool reset_cursor)
     if (clear_previous)
         *buffer = 0;
 
-#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
-    if (wm)
-        wm->show_keyboard();
-#endif
-
 #ifdef USE_TILE_WEB
     tiles.redraw();
     tiles.json_open_object();
@@ -1093,11 +1088,6 @@ int fontbuf_line_reader::read_line(bool clear_previous, bool reset_cursor)
 
     if (clear_previous)
         *buffer = 0;
-
-#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
-    if (wm)
-        wm->show_keyboard();
-#endif
 
     cursor_control con(true);
 

@@ -60,6 +60,7 @@
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
+#include "syscalls.h"
 #include "tag-version.h"
 #include "teleport.h"
 #include "terrain.h"
@@ -100,7 +101,6 @@ static const vector<spell_type> _xom_random_spells =
     SPELL_CAUSE_FEAR,
     SPELL_INTOXICATE,
     SPELL_SUMMON_MANA_VIPER,
-    SPELL_STATUE_FORM,
     SPELL_SUMMON_CACTUS,
     SPELL_DISPERSAL,
     SPELL_ENGLACIATION,
@@ -111,7 +111,6 @@ static const vector<spell_type> _xom_random_spells =
     SPELL_DISJUNCTION,
     SPELL_SUMMON_HORRIBLE_THINGS,
     SPELL_SUMMON_DRAGON,
-    SPELL_NECROMUTATION,
     SPELL_CHAIN_OF_CHAOS
 };
 
@@ -377,7 +376,7 @@ void xom_tick()
         // If Xom is bored, the chances for Xom acting are sort of reversed.
         if (!you.gift_timeout && x_chance_in_y(25 - chance*chance, 100))
         {
-            xom_acts(abs(you.piety - HALF_MAX_PIETY), MB_MAYBE, tension);
+            xom_acts(abs(you.piety - HALF_MAX_PIETY), maybe_bool::maybe, tension);
             return;
         }
         else if (you.gift_timeout <= 1 && chance > 0
@@ -404,7 +403,7 @@ void xom_tick()
         }
 
         if (x_chance_in_y(chance*chance, 100))
-            xom_acts(abs(you.piety - HALF_MAX_PIETY), MB_MAYBE, tension);
+            xom_acts(abs(you.piety - HALF_MAX_PIETY), maybe_bool::maybe, tension);
     }
 }
 
@@ -477,45 +476,6 @@ static bool _teleportation_check()
     return !you.no_tele();
 }
 
-static bool _transformation_check(const spell_type spell)
-{
-    transformation tran = transformation::none;
-    switch (spell)
-    {
-    case SPELL_BEASTLY_APPENDAGE:
-        tran = transformation::appendage;
-        break;
-    case SPELL_SPIDER_FORM:
-        tran = transformation::spider;
-        break;
-    case SPELL_STATUE_FORM:
-        tran = transformation::statue;
-        break;
-    case SPELL_ICE_FORM:
-        tran = transformation::ice_beast;
-        break;
-    case SPELL_DRAGON_FORM:
-        tran = transformation::dragon;
-        break;
-    case SPELL_STORM_FORM:
-        tran = transformation::storm;
-        break;
-    case SPELL_NECROMUTATION:
-        tran = transformation::lich;
-        break;
-    default:
-        break;
-    }
-
-    if (tran == transformation::none)
-        return true;
-
-    // Check whether existing enchantments/transformations, cursed
-    // equipment or potential stat loss interfere with this
-    // transformation.
-    return transform(0, tran, true, true);
-}
-
 /// Try to choose a random player-castable spell.
 static spell_type _choose_random_spell(int sever)
 {
@@ -525,11 +485,8 @@ static spell_type _choose_random_spell(int sever)
     for (int i = 0; i < min(spellenum, (int)spell_list.size()); ++i)
     {
         const spell_type spell = spell_list[i];
-        if (!spell_is_useless(spell, true, true, true)
-             && _transformation_check(spell))
-        {
+        if (!spell_is_useless(spell, true, true, true))
             ok_spells.push_back(spell);
-        }
     }
 
     if (!ok_spells.size())
@@ -920,7 +877,6 @@ static monster_type _xom_random_demon(int sever)
 static bool _player_is_dead()
 {
     return you.hp <= 0
-        || is_feat_dangerous(env.grid(you.pos()))
         || you.did_escape_death();
 }
 
@@ -949,6 +905,7 @@ static void _xom_do_potion(int /*sever*/)
                                      10, POT_MIGHT,
                                      10, POT_BRILLIANCE,
                                      10, POT_INVISIBILITY,
+                                     5,  POT_ATTRACTION,
                                      5,  POT_BERSERK_RAGE,
                                      1,  POT_EXPERIENCE);
     }
@@ -1956,7 +1913,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
     // Body, player species, transformations, etc.
 
     if (starts_with(species::skin_name(you.species), "bandage")
-        && you_can_wear(EQ_BODY_ARMOUR, true))
+        && you_can_wear(EQ_BODY_ARMOUR, true) != false)
     {
         messages.emplace_back("You briefly get tangled in your bandages.");
         if (!you.airborne() && !you.swimming())
@@ -1966,16 +1923,6 @@ static void _xom_pseudo_miscast(int /*sever*/)
     {
         string str = "A monocle briefly appears over your ";
         str += random_choose("right", "left");
-        if (you.form == transformation::spider)
-        {
-            if (coinflip())
-                str += " primary";
-            else
-            {
-                str += random_choose(" front", " middle", " rear");
-                str += " secondary";
-            }
-        }
         str += " eye.";
         messages.push_back(str);
     }
@@ -1992,7 +1939,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
     ///////////////////////////
     // Equipment related stuff.
 
-    if (you_can_wear(EQ_WEAPON, true)
+    if (you_can_wear(EQ_WEAPON, true) != false
         && !you.slot_item(EQ_WEAPON))
     {
         string str = "A fancy cane briefly appears in your ";
@@ -3091,15 +3038,15 @@ xom_event_type xom_choose_action(bool niceness, int sever, int tension)
         return XOM_DID_NOTHING;
     }
 
-    // Bad mojo. (this loop, that is)
-    while (true)
+    // try to do something bad
+    for (int i = 0; i < 100; i++)
     {
         const xom_event_type action = _xom_choose_bad_action(sever, tension);
         if (action != XOM_DID_NOTHING)
             return action;
     }
-
-    die("This should never happen.");
+    // player got lucky
+    return XOM_DID_NOTHING;
 }
 
 /**
@@ -3174,14 +3121,14 @@ void xom_take_action(xom_event_type action, int sever)
  *
  * @param sever         The intended magnitude of the action.
  * @param nice          Whether the action should be 'good' for the player.
- *                      If MB_MAYBE, determined by xom's whim.
+ *                      If maybe_bool::maybe, determined by xom's whim.
  *                      May be overridden.
  * @param tension       How much danger we think the player's currently in.
  * @return              Whichever action Xom took, or XOM_DID_NOTHING.
  */
 xom_event_type xom_acts(int sever, maybe_bool nice, int tension, bool debug)
 {
-    bool niceness = tobool(nice, xom_is_nice(tension));
+    bool niceness = nice.to_bool(xom_is_nice(tension));
 
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
     if (!debug)
@@ -3541,7 +3488,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BAD_TORMENT, { "torment", _xom_torment, 23}},
     { XOM_BAD_CHAOS_CLOUD, { "chaos cloud", _xom_chaos_cloud, 20}},
     { XOM_BAD_BANISHMENT, { "banishment", _xom_banishment, 50}},
-    { XOM_BAD_PSEUDO_BANISHMENT, {"psuedo-banishment", _xom_pseudo_banishment,
+    { XOM_BAD_PSEUDO_BANISHMENT, {"pseudo-banishment", _xom_pseudo_banishment,
                                   10}},
 };
 
@@ -3652,7 +3599,7 @@ void debug_xom_effects()
         return;
     }
 
-    FILE *ostat = fopen("xom_debug.stat", "w");
+    FILE *ostat = fopen_u("xom_debug.stat", "w");
     if (!ostat)
     {
         mprf(MSGCH_ERROR, "Can't write 'xom_debug.stat'. Aborting.");
@@ -3714,7 +3661,7 @@ void debug_xom_effects()
         // Repeat N times.
         for (int i = 0; i < N; ++i)
         {
-            const xom_event_type result = xom_acts(sever, MB_MAYBE, tension,
+            const xom_event_type result = xom_acts(sever, maybe_bool::maybe, tension,
                                                    true);
 
             mood_effects.push_back(result);

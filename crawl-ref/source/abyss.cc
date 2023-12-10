@@ -221,7 +221,7 @@ static bool _abyss_place_map(const map_def *mdef)
 static bool _abyss_place_vault_tagged(const map_bitmask &abyss_genlevel_mask,
                                       const string &tag)
 {
-    const map_def *map = random_map_for_tag(tag, true, true, MB_FALSE);
+    const map_def *map = random_map_for_tag(tag, true, true, false);
     if (map)
     {
         unwind_vault_placement_mask vaultmask(&abyss_genlevel_mask);
@@ -283,8 +283,15 @@ void clear_abyssal_rune_knowledge()
     cur_loc = coord_def(-1,-1);
 }
 
-static void _detect_abyssal_rune()
+static void _update_abyssal_map_knowledge()
 {
+    // reset any waypoints set while in the abyss so far.
+    // XX currently maprot doesn't clear waypoints, but they then don't show in
+    // the map view. Maybe not an issue for programmatic users.
+    travel_cache.flush_invalid_waypoints();
+
+    // Everything else here is managing rune knowledge.
+
     // Don't print misleading messages about the rune disappearing
     // after you already picked it up.
     if (you.runes[RUNE_ABYSSAL])
@@ -399,7 +406,7 @@ static int _banished_depth(const int power)
     // Ancient Liches are sending you to A:5 and there's nothing
     // you can do about that.
     const int maxdepth = div_rand_round((power + 5), 6);
-    const int mindepth = (4 * power + 7) / 23;
+    const int mindepth = min(maxdepth, (4 * power + 7) / 23);
     const int bottom = brdepth[BRANCH_ABYSS];
     return min(bottom, max(1, random_range(mindepth, maxdepth)));
 }
@@ -426,6 +433,7 @@ void banished(const string &who, const int power)
     const int depth = _banished_depth(power);
 
     stop_delay(true);
+    splash_corruption(you.pos());
     run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);
     push_features_to_abyss();
     floor_transition(DNGN_ENTER_ABYSS, orig_terrain(you.pos()),
@@ -519,8 +527,8 @@ static bool _abyss_check_place_feat(coord_def p,
 
 static dungeon_feature_type _abyss_pick_altar()
 {
-    // Lugonu has a flat 50% chance of corrupting the altar.
-    if (coinflip())
+    // Lugonu has a flat 90% chance of corrupting the altar.
+    if (!one_chance_in(10))
         return DNGN_ALTAR_LUGONU;
 
     god_type god;
@@ -897,7 +905,7 @@ static void _abyss_move_entities(coord_def target_centre,
             if (map_bounds_with_margin(dst, MAPGEN_BORDER))
             {
                 shift_area_mask->set(dst);
-                // Wipe the dstination clean before dropping things on it.
+                // Wipe the destination clean before dropping things on it.
                 _abyss_wipe_square_at(dst);
                 _abyss_move_entities_at(src, dst);
                 _abyss_update_transporter(dst, source_centre, target_centre,
@@ -1386,7 +1394,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                 DNGN_EXIT_ABYSS,
                                 abyss_genlevel_mask)
         ||
-        _abyss_check_place_feat(p, 10000,
+        _abyss_check_place_feat(p, 3000,
                                 &altars_wanted,
                                 nullptr,
                                 _abyss_pick_altar(),
@@ -1477,7 +1485,7 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
 
     _ensure_player_habitable(true);
 
-    _detect_abyssal_rune();
+    _update_abyssal_map_knowledge();
 
     // Abyss has a constant density.
     env.density = 0;
@@ -1553,8 +1561,8 @@ static void abyss_area_shift()
     check_map_validity();
     // TODO: should dactions be rerun at this point instead? That would cover
     // this particular case...
-    gozag_detect_level_gold(false);
-    _detect_abyssal_rune();
+    gozag_move_level_gold_to_top();
+    _update_abyssal_map_knowledge();
 }
 
 void destroy_abyss()
@@ -1665,28 +1673,16 @@ void generate_abyss()
         ASSERT(env.grid(*ri) > DNGN_UNSEEN);
     check_map_validity();
 
-    // If we're starting out in the Abyss, make sure the starting grid is
-    // an exit, and place an altar near by for flavour.
-    // Otherwise, we start out on floor and there's a chance there's an
-    // altar near-by.
-    if (player_in_starting_abyss())
+    // Start out on floor, and there's a chance there's an  altar nearby.
+    env.grid(ABYSS_CENTRE) = DNGN_FLOOR;
+    if (one_chance_in(5))
     {
-        env.grid(ABYSS_CENTRE) = DNGN_EXIT_ABYSS;
         _place_feature_near(ABYSS_CENTRE, LOS_RADIUS,
                             DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50);
     }
-    else
-    {
-        env.grid(ABYSS_CENTRE) = DNGN_FLOOR;
-        if (one_chance_in(5))
-        {
-            _place_feature_near(ABYSS_CENTRE, LOS_RADIUS,
-                                DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50);
-        }
-    }
 
     setup_environment_effects();
-    _detect_abyssal_rune();
+    _update_abyssal_map_knowledge();
 }
 
 static void _increase_depth()
@@ -1764,7 +1760,7 @@ void abyss_teleport(bool wizard_tele)
     stop_delay(true);
     forget_map(false);
     clear_excludes();
-    gozag_detect_level_gold(false);
+    gozag_move_level_gold_to_top();
     auto &vault_list =  you.vault_list[level_id::current()];
 #ifdef DEBUG
     vault_list.push_back("[tele]");
@@ -1773,7 +1769,7 @@ void abyss_teleport(bool wizard_tele)
     vault_list.insert(vault_list.end(),
                         level_vaults.begin(), level_vaults.end());
 
-    _detect_abyssal_rune();
+    _update_abyssal_map_knowledge();
     more();
 }
 
@@ -1997,6 +1993,11 @@ static bool _is_sealed_square(const coord_def &c)
     return true;
 }
 
+static void _recolour_wall(coord_def c, tileidx_t tile)
+{
+    tile_env.flv(c).wall_idx = store_tilename_get_index(tile_dngn_name(tile));
+}
+
 static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
 {
     dungeon_feature_type feat = env.grid(c);
@@ -2019,12 +2020,15 @@ static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
         tileidx_t idx = tile_dngn_coloured(TILE_WALL_ABYSS,
                                            cenv.rock_colour);
         tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
+        _recolour_wall(c, idx);
     }
     else if (feat == DNGN_FLOOR)
     {
         tileidx_t idx = tile_dngn_coloured(TILE_FLOOR_NERVES,
                                            floor);
         tile_env.flv(c).floor = idx + random2(tile_dngn_count(idx));
+        const string name = tile_dngn_name(idx);
+        tile_env.flv(c).floor_idx = store_tilename_get_index(name);
     }
     else if (feat == DNGN_STONE_WALL)
     {
@@ -2033,12 +2037,14 @@ static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
         tileidx_t idx = tile_dngn_coloured(TILE_DNGN_STONE_WALL,
                                            cenv.rock_colour);
         tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
+        _recolour_wall(c, idx);
     }
     else if (feat == DNGN_METAL_WALL)
     {
         tileidx_t idx = tile_dngn_coloured(TILE_DNGN_METAL_WALL,
                                            cenv.rock_colour);
         tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
+        _recolour_wall(c, idx);
     }
     else if (feat_is_tree(feat))
     {
@@ -2326,6 +2332,17 @@ void lugonu_corrupt_level_monster(const monster &who)
     // Allow extra time for the flash to linger.
     scaled_delay(300);
 #endif
+}
+
+/// Splash decorative corruption around the given space.
+void splash_corruption(coord_def centre)
+{
+    corrupt_env cenv;
+    _corrupt_choose_colours(&cenv);
+    _corrupt_square_flavor(cenv, centre);
+    for (adjacent_iterator ai(centre); ai; ++ai)
+        if (in_bounds(*ai) && coinflip())
+            _corrupt_square_flavor(cenv, *ai);
 }
 
 static void _cleanup_temp_terrain_at(coord_def pos)

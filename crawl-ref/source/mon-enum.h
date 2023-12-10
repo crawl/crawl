@@ -141,6 +141,11 @@ enum attack_flavour
     AF_BARBS,
     AF_SPIDER,
     AF_RIFT,
+    AF_BLOODZERK,
+    AF_SLEEP,
+    AF_MINIPARA,
+    AF_FLANK,
+    AF_DRAG,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -224,8 +229,8 @@ enum mon_resist_flags
 #else
     // unused 1 << 25,
 #endif
-    MR_RES_STICKY_FLAME  = 1 << 26,
-    MR_RES_VORTEX        = 1 << 27,
+    // unused 1 << 26,
+    // unused 1 << 27,
     MR_RES_STEAM         = 1 << 28,
 
     // vulnerabilities
@@ -236,6 +241,20 @@ enum mon_resist_flags
     MR_VUL_POISON        = mrd(MR_RES_POISON, -1),
     MR_VUL_FIRE          = mrd(MR_RES_FIRE, -1),
     MR_VUL_COLD          = mrd(MR_RES_COLD, -1),
+};
+
+const mon_resist_flags ALL_MON_RESISTS[] = {
+    MR_RES_ELEC,
+    MR_RES_POISON,
+    MR_RES_FIRE,
+    MR_RES_COLD,
+    MR_RES_NEG,
+    MR_RES_ACID,
+    MR_RES_MIASMA,
+    MR_RES_TORMENT,
+    MR_RES_PETRIFY,
+    MR_RES_DAMNATION,
+    MR_RES_STEAM,
 };
 
 enum shout_type
@@ -264,6 +283,7 @@ enum shout_type
     S_SQUEAL,               // pigs
     S_LOUD_ROAR,            // dragons, &c. loud!
     S_RUSTLE,               // books
+    S_SQUEAK,               // rats and similar
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt

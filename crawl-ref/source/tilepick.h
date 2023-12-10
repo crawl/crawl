@@ -60,7 +60,6 @@ tileidx_t tileidx_player_job(const job_type job, bool recommended);
 tileidx_t tileidx_player_species(const species_type species, bool recommended);
 
 tileidx_t tileidx_known_brand(const item_def &item);
-tileidx_t tileidx_corpse_brand(const item_def &item);
 
 tileidx_t tileidx_unseen_flag(const coord_def &gc);
 

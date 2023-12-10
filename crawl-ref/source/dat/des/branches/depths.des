@@ -24,14 +24,14 @@ end
 
 NAME: grunt_enter_depths_snipers
 TAGS: no_pool_fixup
-MONS: tengu warrior ; longbow / tengu warrior ; arbalest
+MONS: tengu warrior ; longbow | arbalest . ring mail
 KMONS: O = stone giant / frost giant w:4
 SUBST: - = ++c
 : depths_entry(_G)
 MAP
 ccccccccc
-c1+...+1c
-c.c.O.c.c
+c.+...+.c
+c1c.O.c1c
 c.c...c.c
 c.cc-cc.c
 c.w...w.c
@@ -83,21 +83,22 @@ cc...2...cc...cc
   cccccccc.@.@..c
 ENDMAP
 
-NAME: grunt_enter_depths_magical_seal
-KMONS: O = necromancer band
-MONS: wizard / deep elf pyromancer w:5 / deep elf zephyrmancer w:5 / \
-      orc sorcerer / naga mage
+NAME:   grunt_enter_depths_magical_seal
+MONS:   occultist / deep elf pyromancer w:5 / deep elf zephyrmancer w:5 / \
+        orc sorcerer / tengu conjurer
+MONS:   rakshasa, necromancer band
+NSUBST: 1 = 1:112 / *:1
 : depths_entry(_G)
 MAP
   bbbbbbb
- bb..1..bb
+ bb..2..bb
 bb.......bb
 b..bb+bb..b
-b..b...b..b
-b.1b.O.b1.b
-b..b...b..b
+b.1b...b1.b
+b..b.O.b..b
+b..b.3.b..b
 b..bbbbb..b
-bb...1...bb
+bb..1.1..bb
  bb.....bb
   bbb+bbb
 ENDMAP
@@ -106,7 +107,7 @@ NAME: gammafunk_enter_depths_forms
 MONS: ugly thing w:16 / very ugly thing w:2 / rakshasa w:4
 MONS: glowing orange brain / great orb of eyes, slime creature band
 MONS: glowing shapeshifter
-NSUBST: . = 4:1 / *:., 3 = 1:2 / 1:3
+NSUBST: . = 3:1 / 1:1. / *:., 3 = 1:2 / 1:3
 : depths_entry(_G)
 MAP
  xxxxxx
@@ -127,10 +128,15 @@ ENDMAP
 NAME: gammafunk_depths_entry_grave
 TAGS: patrolling transparent
 KMONS: t = withered plant
-MONS: place:Depths:1 skeleton / place:Depths:1 zombie w:20, necromancer
-MONS: skeletal warrior / guardian mummy w:2
-KMONS: O = vampire mage w:15 / flayed ghost / phantasmal warrior
-NSUBST: . = 4:1 / 1:2 / 2:3 / *:.
+# Was place:Depths:1 undead. Specified list is both speed >= 10
+# and also avoids undead juggernauts / caustic shrikes.
+MONS: sphinx skeleton / sphinx zombie / \
+      spriggan berserker skeleton / spriggan berserker zombie / \
+      storm dragon skeleton / storm dragon zombie / \
+      quicksilver dragon zombie / spark wasp zombie
+MONS: necromancer, skeletal warrior
+KMONS: O = vampire mage w:15 / flayed ghost
+NSUBST: . = 2:1 / 1:2 / 2:3 / 1:13 / *:.
 SUBST: . = .....--__tG
 TILE: G = dngn_gravestone
 FTILE: - = floor_pebble_brown
@@ -155,9 +161,9 @@ ENDMAP
 
 NAME:    hangedman_depths_entry_try_elsewhere_first
 TAGS:    no_pool_fixup transparent
-MONS:    hydra / ugly thing w:2, salamander / naga mage w:2
-MONS:    wolf spider / emperor scorpion w:2, manticore / merfolk w:2
-MONS:    large slime creature / great orb of eyes w:2
+MONS:    hydra / very ugly thing w:3, salamander / salamander mystic w:3
+MONS:    wolf spider / emperor scorpion w:3, manticore / water nymph w:3
+MONS:    very large slime creature / great orb of eyes w:3
 KMONS:   O = dire elephant / glowing shapeshifter w:4
 SHUFFLE: 12345, +'X / XX'
 SUBST:   XY = x, '" = .
@@ -177,29 +183,52 @@ xxx'Xxx+xXx
 ENDMAP
 
 NAME:    hangedman_depths_entry_civil_slaughter
-TAGS:    transparent
-MONS:    deep troll w:14 / tengu warrior w:12 / \
-         deep elf pyromancer w:1 / deep elf zephyrmancer w:1
-MONS:    wizard w:14 / tengu conjurer w:6 / necromancer w:14
-MONS:    deep troll w:14 / hell knight w:8 / orc sorcerer / shapeshifter w:4
+TAGS:    transparent no_monster_gen
+MONS:    tengu warrior w:14 / tengu conjurer / necromancer / shapeshifter w:2
+MONS:    deep troll w:14 / hell knight / occultist
 KMONS:   O = ettin w:14 / stone giant w:2 / glowing shapeshifter w:2
-SUBST:   c : c:9 v:2 b:1
-SHUFFLE: 12 / 12 / 21
+SHUFFLE: -~
+SUBST:   - = +, ~ = ., c : c:9 v:2 b:1
+NSUBST:  1 = 3:1 / *:.
 : depths_entry(_G)
 MAP
-          .x...
-          ...1.
-      .....x...
-      .cccc.ccc
+         x.x...
+         x...1.
+     x.....x...
+     x.cccc-ccc
       .cO..x...
- xxxxx.c.....x
- x2....c...x.x
- x..x.x.x.x..x
- x.x...c....2x
- x...3.c.xxxxx
+ xxxxx~c.....x
+ x1....c...x.x
+ x..x.x+x.x..x
+ x.x...c....1x
+ x...2.c~xxxxx
 ...x..Tc.
-ccc.cccc.
-...x.....
-.1...
-...x.
+ccc-cccc.x
+...x.....x
+.1...x
+...x.x
+ENDMAP
+
+NAME:   hellmonk_depths_entry_around_the_bend
+TAGS:   transparent
+KMONS:  O = deep troll earth mage
+SUBST:  A = c:25 .:4 G:1
+SUBST:  B : b:30 n:15 T:3 G:2 V:1
+SUBST:  c : c:15 v:1
+NSUBST: - = 12 = 0... / *=., ' = 1:899 / 8 = 0... / *=.
+: depths_entry(_G)
+MAP
+ ccccccccccccc
+ccBA'AA'AA'ABcc
+cB'''''O'''''Bc
+c'''''''''''''c
+cA'''-A'A-'''Ac
+cA---BcccB---Ac
+cA--Acc ccA--Ac
+c---Ac   cA---c
+cA--Ac   cA--Ac
+cA---c   c---Ac
+cA--Ac   cA--Ac
+cA--Ac   cA--Ac
+cB@@Bc   cB@@Bc
 ENDMAP

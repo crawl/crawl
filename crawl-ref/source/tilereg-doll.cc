@@ -260,8 +260,7 @@ void DollEditRegion::render()
         "Hair",
         "Beard",
         "Helm",
-        "DrcWing",
-        "DrcHead"
+        "DrcWing"
     };
 
     // Add current doll information:
@@ -390,9 +389,9 @@ void DollEditRegion::run()
     vbox->set_cross_alignment(Widget::CENTER);
     auto title = make_shared<Text>(formatted_string("Doll Editor", YELLOW));
     title->set_margin_for_sdl(0, 0, 20, 0);
-    vbox->add_child(move(title));
+    vbox->add_child(std::move(title));
     vbox->add_child(doll_ui);
-    auto popup = make_shared<ui::Popup>(move(vbox));
+    auto popup = make_shared<ui::Popup>(std::move(vbox));
 
     popup->on_keydown_event([this, &done, &doll_ui, &update_part_idx](const KeyEvent& ev) {
         const auto key = ev.key();
@@ -468,7 +467,6 @@ void DollEditRegion::run()
                 case TILEP_PART_HALO:
                 case TILEP_PART_ENCH:
                 case TILEP_PART_DRCWING:
-                case TILEP_PART_DRCHEAD:
                     break;
                 default:
                     m_dolls[m_doll_idx].parts[i] = 0;
@@ -502,7 +500,7 @@ void DollEditRegion::run()
         return true;
     });
 
-    ui::push_layout(move(popup), KMC_DOLL);
+    ui::push_layout(std::move(popup), KMC_DOLL);
     while (!done && !crawl_state.seen_hups)
     {
         if (update_part_idx)

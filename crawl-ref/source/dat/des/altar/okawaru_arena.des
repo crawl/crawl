@@ -5,15 +5,15 @@
 {{
 function callback.oka_start_challange(data, triggerable, triggerer, marker, ev)
   -- Open the cages.
-  for slave in iter.slave_iterator("cage_doors", 1) do
-    dgn.terrain_changed(slave.x, slave.y, "floor", false)
+  for replica in iter.replica_iterator("cage_doors", 1) do
+    dgn.terrain_changed(replica.x, replica.y, "floor", false)
   end
   crawl.mpr("The portcullises are lifted away, releasing the combatants.",
             "warning")
   crawl.mpr("The doors seal shut behind you!", "warning")
   -- Close the door.
-  for slave in iter.slave_iterator("iron_doors", 1) do
-    dgn.terrain_changed(slave.x, slave.y, "metal_wall", false)
+  for replica in iter.replica_iterator("iron_doors", 1) do
+    dgn.terrain_changed(replica.x, replica.y, "metal_wall", false)
   end
 end
 
@@ -28,12 +28,12 @@ function callback.oka_monsters_death (data, triggerable, triggerer, marker, ev)
     crawl.god_speaks("Okawaru",
                      "Okawaru booms, \"Excellent! You may choose a reward.\"")
     -- Open exit.
-    for slave in iter.slave_iterator("iron_doors", 1) do
-      dgn.terrain_changed(slave.x, slave.y, "floor", false)
+    for replica in iter.replica_iterator("iron_doors", 1) do
+      dgn.terrain_changed(replica.x, replica.y, "floor", false)
     end
     -- Open loot doors.
-    for slave in iter.slave_iterator("loot_doors", 1) do
-      dgn.terrain_changed(slave.x, slave.y, "floor", false)
+    for replica in iter.replica_iterator("loot_doors", 1) do
+      dgn.terrain_changed(replica.x, replica.y, "floor", false)
     end
     crawl.mpr("The gates behind the altar rise, and the entry reopens.")
   end
@@ -41,10 +41,10 @@ end
 
 function callback.oka_loot_burn (data, triggerable, triggerer, marker, ev)
   -- Drop item not chosen into lava.
-  for slave in iter.slave_iterator("lava_spout", 1) do
+  for replica in iter.replica_iterator("lava_spout", 1) do
     local you_x, you_y = you.pos()
-    if you_x ~= (slave.x+2) or you_y ~= slave.y then
-      dgn.terrain_changed(slave.x+2, slave.y, "lava", false, false)
+    if you_x ~= (replica.x+2) or you_y ~= replica.y then
+      dgn.terrain_changed(replica.x+2, replica.y, "lava", false, false)
     end
   end
 end
@@ -69,8 +69,8 @@ function callback.oka_populate_cages (data, triggerable, triggerer, marker, ev)
       monsters = "orc knight w:15 / stone giant / fire giant / frost giant"
                  .. " / titan w:1 / naga warrior"
   end
-  for slave in iter.slave_iterator("mons_spawn", 1) do
-    local dude = dgn.create_monster(slave.x, slave.y, monsters)
+  for replica in iter.replica_iterator("mons_spawn", 1) do
+    local dude = dgn.create_monster(replica.x, replica.y, monsters)
     dude.set_prop("oka_glad", 1)
     dude.beh = mons.behaviour("wander")
   end

@@ -36,6 +36,7 @@ aptitudes:
   poison_magic: 6
   invocations: 9
   evocations: 8
+  shapeshifting: 7
 str: 7
 int: 7
 dex: 7
@@ -47,7 +48,8 @@ mutations:
     MUT_DISTRIBUTED_TRAINING: 1
 recommended_jobs:
   - JOB_CINDER_ACOLYTE
+  - JOB_REAVER
   - JOB_WARPER
-  - JOB_ARCANE_MARKSMAN
-  - JOB_TRANSMUTER
+  - JOB_HEXSLINGER
+  - JOB_SHAPESHIFTER
   - JOB_WANDERER

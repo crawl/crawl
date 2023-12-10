@@ -3,7 +3,7 @@ monster: MONS_TROLL
 name: Troll
 adjective: Trollish
 difficulty: Simple
-difficulty_priority: 40
+difficulty_priority: 50
 aptitudes:
   xp: -1
   hp: 3
@@ -36,6 +36,7 @@ aptitudes:
   poison_magic: -3
   invocations: -1
   evocations: -3
+  shapeshifting: -1
 size: large
 str: 15
 int: 4

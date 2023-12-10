@@ -11,14 +11,6 @@
 
 #include "random.h"
 
-#ifdef __ANDROID__
-#include <android/log.h>
-double log2(double n)
-{
-    return log(n) / log(2); // :(
-}
-#endif
-
 double stepdown(double value, double step)
 {
     return step * log2(1 + value / step);

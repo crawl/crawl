@@ -244,9 +244,9 @@ large deltas in your distance function, so our 3D search can find
 them! [Alternatively, change the search algorithm for your special
 cases.]
 */
-            d2=dx*dx+dy*dy+dz*dz; /* Euclidian distance, squared */
+            d2=dx*dx+dy*dy+dz*dz; /* Euclidean distance, squared */
 
-            if (d2<F[max_order-1]) /* Is this point close enough to rememember? */
+            if (d2<F[max_order-1]) /* Is this point close enough to remember? */
             {
                 /* Insert the information into the output arrays if it's close enough.
                    We use an insertion sort. No need for a binary search to find

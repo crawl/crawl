@@ -16,7 +16,7 @@
 # Schools not covered: Conjurations. Too little to work with right now.
 # Other magic concepts might be interesting; additions are always welcome!
 
-default-depth: Depths, Vaults:1-4, Elf:1-2
+default-depth: Depths:1, Vaults, !Vaults:$, Elf, !Elf:$
 
 {{
 function init_research(e, disc)
@@ -27,7 +27,7 @@ function init_research(e, disc)
   if you.in_branch("Elf") then
      e.kmons('0 = deep elf pyromancer / deep elf zephyrmancer / deep elf knight w:5 / deep elf archer w:5')
   else
-     e.kmons('0 = wizard / ogre mage / naga mage w:8 / deep elf pyromancer w:5 / deep elf zephyrmancer w:5')
+     e.kmons('0 = arcanist w:5 / occultist w:5 / ogre mage / naga mage w:8 / deep elf pyromancer w:5 / deep elf zephyrmancer w:5')
   end
   e.kmask('@, = !no_monster_gen')
   e.shuffle('abcdefghi')
@@ -37,7 +37,7 @@ function init_research(e, disc)
   e.colour('v = white')
   e.tile('n = DNGN_TRANSPARENT_STONE_WHITE')
   e.kitem('D = randbook disc:' .. disc .. ' numspells:' ..
-               5 + crawl.random2(2) .. ', star_item')
+               4 + crawl.random2(2) .. ', star_item')
 end
 }}
 
@@ -53,8 +53,8 @@ CHANCE: 0.5%
 
 ################################################################################
 NAME:    hangedman_research_pyrotechnics
-MONS:    molten gargoyle, fire elemental, lava snake, lindwurm
-KMONS:   D = fire crab
+MONS:    molten gargoyle, fire crab, lava snake, lindwurm
+KMONS:   D = will-o-the-wisp
 COLOUR:  .01234D = red
 FTILE:   .+01234D = floor_volcanic
 SHUFFLE: 34
@@ -73,10 +73,10 @@ ENDMAP
 
 NAME:   hangedman_research_thermodynamics
 TAGS:   no_pool_fixup
-MONS:   troll simulacrum / elephant simulacrum / \
-        black mamba simulacrum / naga simulacrum
 MONS:   hydra simulacrum / fire dragon simulacrum / \
-        harpy simulacrum / anaconda simulacrum
+        bunyip simulacrum / snapping turtle simulacrum
+MONS:   deep troll simulacrum / golden dragon simulacrum / \
+        caustic shrike simulacrum / alligator snapping turtle simulacrum
 MONS:   azure jelly
 KMONS:  4D = ice statue
 COLOUR: .01234D = white
@@ -95,8 +95,7 @@ dcbadabcd
 ENDMAP
 
 NAME:   hangedman_research_electronics
-MONS:   air elemental / raiju / sky beast
-MONS:   lightning spire, ball lightning / shock serpent
+MONS:   air elemental / raiju, lightning spire, spark wasp / shock serpent
 COLOUR: .v0123D = cyan
 FTILE:  .+v0123D = floor_rough_cyan
 TILE:   v = dngn_metal_wall_cyan
@@ -114,8 +113,8 @@ dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_geology
-MONS:    basilisk, earth elemental, boulder beetle / catoblepas
-KMONS:   D = iron dragon
+MONS:    boulder beetle / catoblepas, crystal guardian, iron dragon
+KMONS:   D = caustic shrike
 COLOUR:  .x012345D = brown
 FTILE:   .+x012345D = floor_pebble_brown
 TILE:    x = wall_pebble_brown
@@ -133,10 +132,8 @@ dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_toxicology
-MONS:    cane toad / black mamba, redback
-MONS:    sea snake / redback, hornet
-MONS:    mana viper / tarantella
-KMONS:   D = death drake
+MONS:    sea snake, redback, mana viper, tarantella
+KMONS:   5D = death drake
 KITEM:   E = potion of degeneration ident:type / \
              potion of mutation ident:type
 COLOUR:  .012345DE = lightgreen
@@ -156,8 +153,8 @@ dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_thanatology
-MONS:    small abomination
-MONS:    place:Depths:$ skeleton, ghost crab, place:Depths:$ simulacrum
+MONS:    large abomination, place:Depths:$ skeleton
+MONS:    ghost crab, place:Depths:$ simulacrum
 KMONS:   D = bone dragon
 MARKER:  % = lua:fog_machine { cloud_type = "black smoke", pow_min = 10, \
                 pow_max = 20, delay = 40, size = 1, walk_dist = 0 }
@@ -234,13 +231,13 @@ b0.....0b
 c+nnnnn+c
 d...'...d
 a'.1.1.'a
-b..nnn..b
+b.1nnn2.b
 c2..D..2c
 dcbadabcd
 ENDMAP
 
 NAME:   hangedman_research_probablistics
-MONS:   eidolon, golden eye, great orb of eyes, sphinx
+MONS:   eidolon, glass eye, great orb of eyes, sphinx
 MARKER: V = lua:fog_machine { cloud_type = "seething chaos", pow_min = 3, \
                 pow_max = 10, delay = 50, size = 1, walk_dist = 1 }
 COLOUR: .01234D = blue

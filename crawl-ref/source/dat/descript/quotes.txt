@@ -244,6 +244,14 @@ A shaft
  horse splashes.”
     -J.B.S. Haldane, “On Being The Right Size”. March 1926.
 %%%%
+A shimmering altar of Xom
+
+the wise man bowed his head solemnly and spoke:
+ “theres actually zero difference between good & bad things.
+ you imbecile. you fucking moron”
+    -wint, @dril Twitter. June 1, 2014
+# https://twitter.com/dril/status/473265809079693312/
+%%%%
 A staircase leading out of the dungeon
 
 “We shall not cease from exploration
@@ -291,6 +299,12 @@ acid dragon scales
 
 <steam dragon scales>
 %%%%
+adder
+
+ADDER, n. A species of snake. So called from its habit of adding funeral outlays
+to the other expenses of living.
+    -Ambrose Bierce, _The Devil's Dictionary_, 1906.
+%%%%
 Agony spell
 
 “Unbearable, isn't it? The suffering of strangers, the agony of friends. There
@@ -309,11 +323,9 @@ Asterion
 %%%%
 Aizul
 
-“I went to Heaven —
- 'Twas a small Town —
- Lit — with a Ruby —
- Lathed — with Down —”
-    -Emily Dickinson, _I went to Heaven_. ca. 1860.
+Wasn't it beautiful running wild 'til you fell asleep
+Before the monsters caught up to you?
+    -Taylor Swift, _Innocent_, 2010.
 %%%%
 Antaeus
 
@@ -458,6 +470,13 @@ Cigotuvi's Monster
  wrinkled his cheeks.”
     -Mary Shelley, _Frankenstein_. 1818.
 %%%%
+cloak of the Thief
+
+“so long suckers! i rev up my motorcylce and create a huge cloud of smoke.
+ when the cloud dissipates im lying completely dead on the pavement”
+    -wint, @dril Twitter. July 26, 2016
+# https://twitter.com/dril/status/757914951868485632/
+%%%%
 Cloud Mage
 
 “And when
@@ -534,6 +553,14 @@ Dowan
  finger tips.”
     -Rabindranath Tagore, _Chitra_, Act I, Scene iv. 1914.
 %%%%
+Duel ability
+
+DUEL, n. A formal ceremony preliminary to the reconciliation of two enemies.
+Great skill is necessary to its satisfactory observance; if awkwardly
+performed the most unexpected and deplorable consequences sometimes ensue.
+A long time ago, a man lost his life in a duel.
+    -Ambrose Bierce, _The Devil's Dictionary_, 1906.
+%%%%
 Duvessa
 
 “Twin children: the Girl, she was plain;
@@ -590,6 +617,14 @@ Frederick
  him.”
     -Mark Twain, _Autobiography of Mark Twain_. 1924.
 %%%%
+Frozen Ramparts spell
+
+”And as you cross the circle line
+ Well, the ice wall creaks behind
+ You're a rabbit on the run”
+
+    -Jethro Tull, “Skating Away (on the Thin Ice of a New Day)”.  1974.
+%%%%
 Geryon
 
 “Khrysaor, married to Kallirhoe, daughter of glorious Okeanos, was father to
@@ -599,6 +634,19 @@ Geryon
  crossed the stream of Okeanos and had killed Orthos and the oxherd Eurytion
  out in the gloomy meadow beyond fabulous Okeanos.”
     -Hesiod, _Theogony_, circa 700 BCE.
+%%%%
+Harold
+
+“One, you lock the target
+ Two, you bait the line
+ Three, you slowly spread the net
+ And four, you catch the man
+
+ You catch the man
+ You catch the man
+ I’m looking for this man to sell him to other men
+ To sell him to other men at ten times the price at least”
+    —Front 242, “Headhunter”
 %%%%
 Ilsuiw
 
@@ -722,6 +770,12 @@ Nikola
     -Nikola Tesla, “The Transmission of Electrical Energy Without Wires As a
 Means for Furthering Peace”, _Electrical World and Engineer_. January 7, 1905.
 %%%%
+Norris
+
+“Death and death alone gives meaning to life and this meaning is entirely
+negative.”
+    -Georges Poulet
+%%%%
 Orcish Mines
 
 “You load sixteen tons, what do you get
@@ -771,7 +825,7 @@ shambling mangrove
 “There is unrest in the forest
  There is trouble with the trees
  For the maples want more sunlight
- And the oaks ignore their pleas
+ And the oaks ignore their pleas”
     -Rush, "The Trees". 1978.
 %%%%
 Shatter spell
@@ -1199,6 +1253,19 @@ crimson imp
  substitute in their place imps.”
     -Martin Luther
 %%%%
+crocodile
+
+“How doth the little crocodile
+  Improve his shining tail,
+ And pour the waters of the Nile
+  On every golden scale!
+
+ How cheerfully he seems to grin,
+  How neatly spreads his claws,
+ And welcomes little fishes in
+  With gently smiling jaws!”
+    -Lewis Carroll, _Alice's Adventures in Wonderland_, 1865.
+%%%%
 curse skull
 
 “Good friend for Jesus’ sake forbear,
@@ -1526,14 +1593,14 @@ fire dragon scales
 flail
 
 “Even after forcing their way, with great effort and loss, through this double
- defense, [the Germans] still found themselves at a disadvantage; for their
- armor scarce enabled them to contend on equal terms with the uncouth but
+ defence, [the Germans] still found themselves at a disadvantage; for their
+ armour scarce enabled them to contend on equal terms with the uncouth but
  formidable weapons of their adversaries. The Bohemians were armed with long
  iron flails, which they swung with prodigious force. They seldom failed to
  hit, and when they did so, the flail crashed through brazen helmet, skull and
  all.”
     -James A. Wylie, _The History of Protestantism_, vol. I, book 3, ch. 15
-     “Jon Huss and the Hussite Wars”. 1878.
+     “John Huss and the Hussite Wars”. 1878.
 %%%%
 flayed ghost
 
@@ -1546,6 +1613,16 @@ flying skull
  excellent fancy. He hath bore me on his back a thousand times, and now how
  abhorr'd in my imagination it is! My gorge rises at it.”
     -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, V, 1. 1603
+%%%%
+formless jellyfish
+
+“From this story it is evident that in former times the jellyfish once had a
+shell and bones something like a tortoise, but, ever since the Dragon King's
+sentence was carried out on the ancestor of the jelly fishes, his descendants
+have all been soft and boneless just as you see them to-day thrown up by the
+waves high upon the shores of Japan.”
+    -“The Jellyfish and the Monkey”, adapted by Yei Theodora Ozaki, _Young
+     Folk's Treasury_, vol. II. 1909.
 %%%%
 frozen axe "Frostbite"
 
@@ -1587,13 +1664,6 @@ giant club
  Him thought at first encounter to have slaine.”
     -Edmund Spenser, _The Faerie Queene_, Book I, “The Legend of the Knight of
      the Red Crosse”, Canto VIII, stanza vii, l. 55-9. 1590.
-%%%%
-floating eye
-
-“El ojo que ves
- no es ojo porque tú lo veas,
- es ojo porque te ve.”
-    -Antonio Machado, Campos de Castilla. 1912-1917.
 %%%%
 bullfrog
 
@@ -1637,6 +1707,13 @@ glaive
  to make the weapon lõger or ſhorter in fight at his pleaſure, a foot of the
  ſtaffe behind the backmoſt hand doth no harme.”
     -George Silver,_Paradoxes of Defence_.1599.
+%%%%
+glass eye
+
+“El ojo que ves
+ no es ojo porque tú lo veas,
+ es ojo porque te ve.”
+    -Antonio Machado, Campos de Castilla. 1912-1917.
 %%%%
 gnoll
 
@@ -1741,12 +1818,6 @@ hand axe
  When she saw what she had done
  She gave her father forty-one.”
     -A popular skipping-rope rhyme, after 1893.
-%%%%
-hand crossbow
-
-“Energy may be likened to the bending of a crossbow;
- decision, to the releasing of a trigger.”
-    -Sun Tzu
 %%%%
 harpy
 
@@ -2097,7 +2168,21 @@ merfolk avatar
 %%%%
 merfolk impaler
 
-<merfolk>
+“Damn ye! Let Neptune strike ye dead, Winslow! HAAARK! Hark Triton, hark!
+ Bellow, bid our father the Sea King rise from the depths full foul in his fury!
+ Black waves teeming with salt-foam to smother this young mouth with pungent
+ slime, to choke ye, engorging your organs ‘til ye turn blue and bloated with
+ bilge and brine and can scream no more -- only when he, crowned in cockle
+ shells with slitherin’ tentacled tail and steaming beard take up his fell
+ be-finnéd arm, his coral-tine trident screeches banshee-like in the tempest and
+ plunges right through yer gullet, bursting ye -- a bulging bladder no more, but
+ a blasted bloody film now -- a nothing for the harpies and the souls of dead
+ sailors to peck and claw and feed upon, only to be lapped up and swallowed by
+ the infinite waters of the dread emperor himself -- forgotten to any man, to
+ any time, forgotten to any god or devil, forgotten even to the sea, for any
+ stuff or part of Winslow, even any scantling of your soul is Winslow no more,
+ but is now itself the sea!”
+    -Thomas Wake, _The Lighthouse_. 2019
 %%%%
 merfolk javelineer
 
@@ -2213,6 +2298,16 @@ nameless horror
  hideous, and it leaped straight out at Ged's face.”
     -Ursula K. Le Guin, _A Wizard Of Earthsea_. 1968.
 %%%%
+necromancer
+
+“Even now the intensity of his dread power can be felt
+ Weakening the body and saddening the heart
+ Ultimately they will become empty, mindless spectres
+ Stripped of will and soul
+ Only their thirst for freedom
+ Gives them hunger for vengeance...”
+    -Rush, “The Necromancer”. 1975.
+%%%%
 Necromutation spell
 
 “Don’t sing if you want to live long
@@ -2314,7 +2409,7 @@ orange demon
 Orb Guardian
 
 “X gon' give it to ya (what)
- F*** waitin' for you to get it on your own, X gon' deliver to ya
+ Fuck waitin' for you to get it on your own, X gon' deliver to ya
  Knock knock, open up the door, it's real
  With the non-stop pop-pop from stainless steel
  [...]
@@ -2436,6 +2531,11 @@ potion of degeneration
  literally takes the bread from the mouths of little children...
  then certainly I am against it.”
     -Noah S. Sweat, Jr. “If By Whiskey”. 1952
+%%%%
+potion of enlightenment
+
+“Let go your earthly tether. Enter the void. Empty, and become wind.”
+    -_The Legend of Korra_. 2014
 %%%%
 potion of invisibility
 
@@ -2773,7 +2873,17 @@ scroll
 %%%%
 scroll of acquirement
 
-<scroll>
+He had stopped trying to think. He just repeated his litany over and over:
+“I am an animal, you see that. I don’t have the words, they didn’t teach
+me the words. I don’t know how to think, the bastards didn’t let me learn
+how to think. But if you really are... all-powerful... all-knowing... then you
+figure it out! Look into my heart. I know that everything you need is in there.
+It has to be. I never sold my soul to anyone! It’s mine, it’s human! You
+take from me what it is I want... it just can’t be that I would want something
+bad! Damn it all, I can’t think of anything, except those words of his...
+‘HAPPINESS FOR EVERYBODY, FREE, AND NO ONE WILL GO AWAY UNSATISFIED!’”
+    -Arkady and Boris Strugatsky, “Roadside Picnic”. 1972.
+    trans. Antonina W. Bouis, 1977.
 %%%%
 scroll of amnesia
 
@@ -2787,6 +2897,19 @@ scroll of blinking
 scroll of brand weapon
 
 <scroll>
+%%%%
+scroll of butterflies
+
+“It used to be thought that the events that changed the world were things like
+ big bombs, maniac politicians, huge earthquakes, or vast population movements,
+ but it has now been realized that this is a very old-fashioned view held by
+ people totally out of touch with modern thought. The things that really change
+ the world, according to Chaos theory, are the tiny things. A butterfly flaps
+ its wings in the Amazonian jungle, and subsequently a storm ravages half of
+ Europe...”
+    -Neil Gaiman and Terry Pratchett, _Good Omens: The Nice And Accurate
+     Prophecies of Agnes Nutter, Witch_. 1990.
+
 %%%%
 scroll of enchant armour
 
@@ -2824,7 +2947,7 @@ scroll of immolation
 
 <scroll>
 %%%%
-scroll of magic mapping
+scroll of revelation
 
 “‘What a useful thing a pocket-map is!’ I remarked.
  ‘That’s another thing we’ve learned from your Nation,’ said Mein Herr,
@@ -2876,7 +2999,23 @@ scroll of summoning
 %%%%
 scroll of teleportation
 
-<scroll>
+“Eiris sazun idisi
+ sazun hera duoder
+ suma hapt heptidun
+ suma heri lezidun
+ suma clubodun
+ umbi cuoniouuidi
+ insprinc haptbandun
+ inuar uigandun
+
+ [Once sat women,
+ they sat here then there.
+ some fastened bonds,
+ some impeded an army,
+ some unraveled fetters:
+ Escape the bonds,
+ flee the enemy!]”
+    -First Merseburg incantation, trans. Patricia Giangrosso, 2001
 %%%%
 scroll of torment
 
@@ -2967,6 +3106,15 @@ shapeshifter
  Curl'd all at top, and shot up to the sky.”
     -Homer, _The Odyssey_, IV, 602-14.
      trans. George Chapman, 1857.
+%%%%
+shillelagh "Devastator"
+
+“‘Hurrah! my boys,’ says I, my shillelagh I let fly.
+ Some Galway boys were by, they saw I was a hobbling;
+ Then with a loud ‘hurrah!’ they joined me in the fray.
+ Faugh-a-ballagh! Clear the way! for the rocky road to Dublin!”
+
+    -D.K. Gavan, _Rocky Road to Dublin_. 19th Century.
 %%%%
 shortbow
 
@@ -3198,6 +3346,17 @@ spellforged servitor
 Spellforged Servitor spell
 
 <spellforged servitor>
+%%%%
+sphinx
+
+“The Second Coming! Hardly are those words out
+ When a vast image out of Spiritus Mundi
+ Troubles my sight: somewhere in sands of the desert
+ A shape with lion body and the head of a man,
+ A gaze blank and pitiless as the sun,
+ Is moving its slow thighs, while all about it
+ Reel shadows of the indignant desert birds.”
+    -W. B. Yeats, "The Second Coming". 1920.
 %%%%
 staff
 
@@ -3454,7 +3613,7 @@ toenail golem
 
 “Gentle socks pamper them by day, and shoes cobbled of leather fortify them,
  but my toes hardly notice. All they're interested in is turning out
- toenails—semitransparent, flexible sheets of a hornlike material, as defense
+ toenails—semitransparent, flexible sheets of a hornlike material, as defence
  against—whom?”
     -Jorge Luis Borges, “Toenails”. 1960.
     trans. Andrew Hurley, 1998.
@@ -3506,7 +3665,9 @@ trident
 %%%%
 triple crossbow
 
-<arbalest>
+“Energy may be likened to the bending of a crossbow;
+ decision, to the releasing of a trigger.”
+    -Sun Tzu
 %%%%
 troll leather armour
 

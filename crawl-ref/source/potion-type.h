@@ -19,7 +19,7 @@ enum potion_type
     POT_GAIN_DEXTERITY,
     POT_GAIN_INTELLIGENCE,
 #endif
-    POT_FLIGHT,
+    POT_ENLIGHTENMENT,
 #if TAG_MAJOR_VERSION == 34
     POT_POISON,
     POT_SLOWING,
@@ -68,7 +68,7 @@ const vector<potion_type> potion_types =
     POT_MIGHT,
     POT_BRILLIANCE,
     POT_ATTRACTION,
-    POT_FLIGHT,
+    POT_ENLIGHTENMENT,
     POT_CANCELLATION,
     POT_AMBROSIA,
     POT_INVISIBILITY,

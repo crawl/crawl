@@ -75,7 +75,6 @@ MAP
 ENDMAP
 
 NAME:   serial_bayou_pond_d
-#small pond
 TAGS:  coolio_serial_bayou allow_dup extra decor
 DEPTH:  D, Depths, Snake, Lair
 SUBST:  1 = 1W.
@@ -89,8 +88,7 @@ MAP
  W11
 ENDMAP
 
-NAME:serial_bayou_pond_e
-#small pond
+NAME:  serial_bayou_pond_e
 TAGS:  coolio_serial_bayou allow_dup extra decor
 DEPTH: D, Depths, Snake, Lair
 SUBST: W = WWW1.
@@ -103,8 +101,7 @@ WWWWW
 .WWW.
 ENDMAP
 
-NAME: serial_bayou_ford_a
-#a small pond that can be forded
+NAME:  serial_bayou_ford_a
 TAGS:  coolio_serial_bayou transparent extra decor
 DEPTH: D, Depths, Snake, Lair
 SUBST: ? = Wt
@@ -132,10 +129,9 @@ MAP
 ENDMAP
 
 NAME:   serial_bayou_shore_a
-#a shore of a small lake
 TAGS:   coolio_serial_bayou extra decor transparent
+DEPTH:  D, Snake, Lair
 ORIENT: east
-DEPTH:  D, Depths, Snake, Lair
 SUBST:  ? = Wt
 SUBST:  V = Www
 SUBST:  W = WWW1
@@ -159,7 +155,6 @@ MAP
 ENDMAP
 
 NAME:   serial_bayou_shore_b
-#a shore of a small pond, duplicable
 TAGS:   coolio_serial_bayou allow_dup extra decor transparent
 ORIENT: east
 DEPTH:  D, Depths, Snake, Lair
@@ -208,61 +203,58 @@ NAME:  serial_bayou_lagoon_b
 #a big lagoon with a bridge thingy going through it
 TAGS:  coolio_serial_bayou
 DEPTH: D, Depths, Snake, Lair
-SUBST: ? = Wt
-SUBST: V = Www
-SUBST: W = WWWW1
 KMONS: 1 = plant
 KFEAT: 1 = W
+SUBST: ? = Wt, ! = !t, V = Www, W = WWWW1
 FTILE: . = floor_dirt
+CLEAR: !
 MAP
-    ?????     ???
-   ?WWWWW?????ttt?
-  WWWWWWWttttWVWWt?
- @WWWWWWWWWWWVwVWWW?@@??
- @....................WW?
- @?WWWWWWWWWVwwVWWWw.wWWW?
-   ?WWWWWWWWWVVWWWWw.wWWWW?
-    ?WWWWW???WWWWWWw.VVWWWW?
-     ?????   ?tttWWV.wVVVWWW?
-              ?tttWw.wwVVVWWW?
-               ?ttVw.wwwVVWWtt
-               ?ttWw.wwVVVVWtt
-              ?ttWWV.wVVVWttt
-             ?tttVww.WWWWWtt
-             ?WWVVww.WWWWttt
-             ?WVwwww.WWWWtt
-            ??WWWVww.WWWt?
-           ?WWWWWWVw.WWW?
-            ?WWWWWWV.WW?
-             ?WWWWW?.??
-              ?????@@@
+   ?????     ???
+  ?WWWWW?!!??ttt?
+ WWWWWWWttttWVWWt?
+@WWWWWWWWWWWVwVWWW?@@??
+@....................WW?
+@?WWWWWWWWWVwwVWWWw.wWWW?
+  ?WWWWWWWWWVVWWWWw.wWWWW?
+   ?WWWWW???WWWWWWw.VVWWWW?
+    ?????   ?tttWWV.wVVVWWW?
+             !tttWw.wwVVVWWW?
+              !ttVw.wwwVVWWtt
+              !ttWw.wwVVVVWtt
+             !ttWWV.wVVVWttt
+            ?tttVww.WWWWWtt
+            ?WWVVww.WWWWttt
+            ?WVwwww.WWWWtt
+           ??WWWVww.WWWt?
+          ?WWWWWWVw.WWW?
+           ?WWWWWWV.WW?
+            ?WWWWW?.??
+             ?????@@@
 ENDMAP
 
-NAME:  serial_bayou_lake_a
-#a big lake
-TAGS:  coolio_serial_bayou transparent
-DEPTH: D, Depths, Snake, Lair
-SUBST: ? = Wt
-SUBST: V = Www
-SUBST: W = WWWW1
-KMONS: 1 = plant
-KFEAT: 1 = W
+NAME:   serial_bayou_lake_a
+TAGS:   coolio_serial_bayou transparent
+DEPTH:  D, Depths, Snake, Lair
+KMONS:  1 = plant
+KFEAT:  1 = W
+NSUBST: ! = 1:@ / * = @tt
+SUBST:  ? = Wt, V = Www, W = WWWW1
 MAP
-          ?????????
-      ?????????????????
-     ??????WWW?WWWWW??????
+          !!!!!!!!!
+      !!!!???????????!!
+     ??????WWW?WWWWW????!!
    ???WWWWWWVVVVV?WW?WW???
-  ??WWW?WWVVwwwwwVVWW?WWW??
+  ??WWW?WWVVwwwwwVVWW?WWW?!
  ??WW?WWWVwwwwwwwwwVWWWWW???
-??WWWWWWVwwwwwwwwwwwVW?WWWW??
-??W?WWWWVwwwwwwwwwwwVWWWWWW??
-??WWW?WWVwwwwwwwwwwwVWWW?WW??
+!?WWWWWWVwwwwwwwwwwwVW?WWWW?!
+!?W?WWWWVwwwwwwwwwwwVWWWWWW?!
+!?WWW?WWVwwwwwwwwwwwVWWW?WW?!
  ??WW?WW?VwwwwwwwwwVW?WWWW??
   ??WWWWWWVVwwwwwVV?WW?WW??
-    ???W?WWWWVVVVVWWWWWW???
-     ??????W?WWWWWWW??????
-       ?????????????????
-           ?????????
+    ???W?WWWWVVVVVWWWWWW??!
+     !?????W?WWWWWWW?????!
+       !!!???????????!!!
+           !!!!!!!!!
 ENDMAP
 
 NAME:  serial_bayou_crossing

@@ -282,11 +282,7 @@ static void _apply_ood(level_id &place)
 static int _get_monster_spawn_rate()
 {
     if (player_in_branch(BRANCH_ABYSS))
-    {
-        if (player_in_starting_abyss())
-            return 50;
         return 5 * (have_passive(passive_t::slow_abyss) ? 2 : 1);
-    }
 
     if (player_on_orb_run())
         return have_passive(passive_t::slow_orb_run) ? 36 : 18;
@@ -614,6 +610,16 @@ static bool _valid_monster_generation_location(mgen_data &mg)
     return _valid_monster_generation_location(mg, mg.pos);
 }
 
+static void _inherit_kmap(monster &mon, const actor *summoner)
+{
+    if (!summoner)
+        return;
+    const monster* monsum = summoner->as_monster();
+    if (!monsum || !monsum->has_originating_map())
+        return;
+    mon.props[MAP_KEY] = monsum->originating_map();
+}
+
 monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 {
     rng::subgenerator monster_rng;
@@ -812,7 +818,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
             if (mon->type == MONS_PIKEL)
             {
-                // Don't give XP for the slaves to discourage hunting. Pikel
+                // Don't give XP for the band to discourage hunting. Pikel
                 // has an artificially large XP modifier to compensate for
                 // this.
                 member->flags |= MF_NO_REWARD;
@@ -1173,19 +1179,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mg.cls == MONS_GLOWING_SHAPESHIFTER)
         mon->add_ench(ENCH_GLOWING_SHAPESHIFTER);
 
-    if ((mg.cls == MONS_TOADSTOOL
-         || mg.cls == MONS_PILLAR_OF_SALT
-         || mg.cls == MONS_BLOCK_OF_ICE)
-        && !mg.props.exists(MGEN_NO_AUTO_CRUMBLE))
-    {
-        // This enchantment is a timer that counts down until death.
-        // It should last longer than the lifespan of a corpse, to avoid
-        // spawning mushrooms in the same place over and over. Aside
-        // from that, the value is slightly randomised to avoid
-        // simultaneous die-offs of mushroom rings.
-        mon->add_ench(ENCH_SLOWLY_DYING);
-    }
-
     if (mg.cls == MONS_TWISTER || mg.cls == MONS_DIAMOND_OBELISK)
     {
         mon->props[POLAR_VORTEX_KEY].get_int() = you.elapsed_time;
@@ -1292,7 +1285,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             give_weapon(mon, place.absdepth());
 
         unwind_var<int> save_speedinc(mon->speed_increment);
-        mon->wield_melee_weapon(MB_FALSE);
+        mon->wield_melee_weapon(false);
     }
 
     if (mon->type == MONS_SLIME_CREATURE && mon->blob_size > 1)
@@ -1341,6 +1334,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->mark_summoned(mg.abjuration_duration,
                            mg.summon_type != SPELL_TUKIMAS_DANCE,
                            mg.summon_type);
+        _inherit_kmap(*mon, mg.summoner);
 
         if (mg.summon_type > 0 && mg.summoner)
         {
@@ -1567,6 +1561,12 @@ static bool _mc_too_slow_for_zombies(monster_type mon)
     return mons_class_zombie_base_speed(mons_species(mon)) < BASELINE_DELAY;
 }
 
+static bool _mc_bad_wretch(monster_type mon)
+{
+    // goofy on-death effect - probably other things could go here too
+    return mon == MONS_SPRIGGAN_DRUID;
+}
+
 /**
  * Pick a local monster type that's suitable for turning into a corpse.
  *
@@ -1584,7 +1584,7 @@ monster_type pick_local_corpsey_monster(level_id place)
 monster_type pick_local_zombifiable_monster(level_id place,
                                             monster_type cs,
                                             const coord_def& pos,
-                                            bool for_corpse)
+                                            bool for_wretch)
 {
     const bool really_in_d = place.branch == BRANCH_DUNGEON;
 
@@ -1606,8 +1606,9 @@ monster_type pick_local_zombifiable_monster(level_id place,
     place.depth = min(place.depth, branch_zombie_cap(place.branch));
     place.depth = max(1, place.depth);
 
-    const bool need_veto = really_in_d && !for_corpse;
-    mon_pick_vetoer veto = need_veto ? _mc_too_slow_for_zombies : nullptr;
+    mon_pick_vetoer veto = for_wretch ? _mc_bad_wretch :
+                           really_in_d ? _mc_too_slow_for_zombies
+                                        : nullptr;
 
     // try to grab a proper zombifiable monster
     monster_type mt = picker.pick_with_veto(zombie_population(place.branch),
@@ -1840,6 +1841,9 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_ALLIGATOR,       { { 5, 0, []() {
         return !player_in_branch(BRANCH_LAIR); }},
                                   {{ BAND_ALLIGATOR, {1, 2} }}}},
+    { MONS_FORMLESS_JELLYFISH, { { 0, 0, []() {
+        return player_in_branch(BRANCH_SLIME); }},
+                                  {{ BAND_JELLYFISH, {1, 3} }}}},
     { MONS_POLYPHEMUS,      { {}, {{ BAND_POLYPHEMUS, {3, 6}, true }}}},
     { MONS_HARPY,           { {}, {{ BAND_HARPIES, {2, 5} }}}},
     { MONS_SALTLING,        { {}, {{ BAND_SALTLINGS, {2, 4} }}}},
@@ -1923,7 +1927,7 @@ static const map<monster_type, band_set> bands_by_leader = {
         return you.where_are_you == BRANCH_DEPTHS;
     }},                           {{ BAND_SPARK_WASPS, {1, 4} }}}},
     { MONS_HOWLER_MONKEY,   { {2, 6}, {{ BAND_HOWLER_MONKEY, {1, 3} }}}},
-    { MONS_FLOATING_EYE,   { {0, 0, []() {
+    { MONS_GLASS_EYE,   { {0, 0, []() {
         return branch_has_monsters(you.where_are_you)
             || !vault_mon_types.empty();
     }},                           {{ BAND_RANDOM_SINGLE, {1, 2} }}}},
@@ -1940,7 +1944,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_DIRE_ELEPHANT,    { {0, 0, []() {
         return you.where_are_you == BRANCH_VAULTS;
     }},                            {{ BAND_DIRE_ELEPHANTS, {2, 4} }}}},
-    { MONS_WIZARD,  { {0, 0, []() {
+    { MONS_ARCANIST,  { {0, 0, []() {
         return player_in_branch(BRANCH_VAULTS);
     }},                            {{ BAND_UGLY_THINGS, {2, 4}, true }}}},
     { MONS_WENDIGO, { {}, {{ BAND_SIMULACRA, {2, 6} }}}},
@@ -1950,10 +1954,14 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_EIDOLON, { {0, 0, []() { return player_in_hell(); }},
                                    {{ BAND_SPECTRALS, {2, 6}, true} }}},
     { MONS_GRUNN,            { {}, {{ BAND_DOOM_HOUNDS, {2, 4}, true }}}},
+    { MONS_NORRIS,           { {}, {{ BAND_SKYSHARKS, {2, 5}, true }}}},
+    { MONS_UFETUBUS,         { {}, {{ BAND_UFETUBI, {1, 2} }}}},
+    { MONS_KOBOLD_BLASTMINER, { {}, {{ BAND_BLASTMINER, {0, 2} }}}},
 
     // special-cased band-sizes
     { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1}, true }}}},
     { MONS_THRASHING_HORROR, { {}, {{ BAND_THRASHING_HORRORS, {0, 1} }}}},
+    { MONS_BRAIN_WORM, { {}, {{ BAND_BRAIN_WORMS, {0, 1} }}}},
 };
 
 static band_type _choose_band(monster_type mon_type, int *band_size_p,
@@ -2056,9 +2064,14 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
             band_size = (one_chance_in(4) ? 3 : 2);
         break;
 
+    case MONS_BRAIN_WORM:
+        if (player_in_branch(BRANCH_ABYSS))
+            band_size = random2(you.depth) / 2;
+        break;
+
     case MONS_THRASHING_HORROR:
-        // XXX: rewrite this - wrong & bad if horrors aren't in abyss
-        band_size = random2(min(brdepth[BRANCH_ABYSS], you.depth));
+        if (player_in_branch(BRANCH_ABYSS))
+            band_size = random2(min(brdepth[BRANCH_ABYSS], you.depth));
         break;
 
     default: ;
@@ -2074,7 +2087,7 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
 }
 
 /// a weighted list of possible monsters for a given band slot.
-typedef vector<pair<monster_type, int>> member_possibilites;
+typedef vector<pair<monster_type, int>> member_possibilities;
 
 /**
  * For each band type, a list of weighted lists of monsters that can appear
@@ -2093,7 +2106,7 @@ typedef vector<pair<monster_type, int>> member_possibilites;
  * the third, fourth, etc monsters will either be MONS_C or MONS_D with equal
  * likelihood.
  */
-static const map<band_type, vector<member_possibilites>> band_membership = {
+static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_HOGS,                {{{MONS_HOG, 1}}}},
     { BAND_YAKS,                {{{MONS_YAK, 1}}}},
     { BAND_FAUNS,               {{{MONS_FAUN, 1}}}},
@@ -2121,8 +2134,10 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_JIANGSHI,            {{{MONS_JIANGSHI, 1}}}},
     { BAND_LINDWURMS,           {{{MONS_LINDWURM, 1}}}},
     { BAND_ALLIGATOR,           {{{MONS_ALLIGATOR, 1}}}},
+    { BAND_JELLYFISH,           {{{MONS_FORMLESS_JELLYFISH, 1}}}},
     { BAND_DEATH_YAKS,          {{{MONS_DEATH_YAK, 1}}}},
     { BAND_GREEN_RATS,          {{{MONS_RIVER_RAT, 1}}}},
+    { BAND_BRAIN_WORMS,         {{{MONS_BRAIN_WORM, 1}}}},
     { BAND_BLINK_FROGS,         {{{MONS_BLINK_FROG, 1}}}},
     { BAND_GOLDEN_EYE,          {{{MONS_GOLDEN_EYE, 1}}}},
     { BAND_HELL_HOUNDS,         {{{MONS_HELL_HOUND, 1}}}},
@@ -2155,6 +2170,8 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_DEEP_TROLLS,         {{{MONS_DEEP_TROLL, 1}}}},
     { BAND_BONE_DRAGONS,        {{{MONS_BONE_DRAGON, 1}}}},
     { BAND_SPECTRALS,           {{{MONS_SPECTRAL_THING, 1}}}},
+    { BAND_UFETUBI,             {{{MONS_UFETUBUS, 1}}}},
+    { BAND_BLASTMINER,          {{{MONS_KOBOLD_BLASTMINER, 1}}}},
     { BAND_DEEP_ELF_KNIGHT,     {{{MONS_DEEP_ELF_AIR_MAGE, 46},
                                   {MONS_DEEP_ELF_FIRE_MAGE, 46},
                                   {MONS_DEEP_ELF_KNIGHT, 24},
@@ -2352,7 +2369,8 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_BLIZZARD_DEMON, 2},
                                   {MONS_GREEN_DEATH, 2},
                                   {MONS_RAKSHASA, 4},
-                                  {MONS_WIZARD, 4}}}},
+                                  {MONS_OCCULTIST, 2},
+                                  {MONS_ARCANIST, 2}}}},
 
     { BAND_HOLIES,              {{{MONS_ANGEL, 100},
                                   {MONS_CHERUB, 80},
@@ -2410,6 +2428,8 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_DEMONSPAWN_BLACK_SUN, 1}}}},
     // for Grunn
     { BAND_DOOM_HOUNDS,         {{{MONS_DOOM_HOUND, 1}}}},
+    // for Norris
+    { BAND_SKYSHARKS,           {{{MONS_SKYSHARK, 1}}}},
 };
 
 /**
@@ -2854,9 +2874,6 @@ conduct_type god_hates_monster(const monster &mon)
 monster* create_monster(mgen_data mg, bool fail_msg)
 {
     ASSERT(in_bounds(mg.pos)); // otherwise it's a guaranteed fail
-
-    if (crawl_state.player_moving)
-        return nullptr; // monster might end up on player's tile - too scary
 
     const monster_type montype = fixup_zombie_type(mg.cls, mg.base_type);
 

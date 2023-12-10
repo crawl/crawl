@@ -38,7 +38,7 @@
 static string _effect_string(spell_type spell, const monster_info *mon_owner);
 
 /**
- * Returns a spellset containing the spells for the given item.
+ * Returns a spellset containing the player-known spells for the given item.
  *
  * @param item      The item in question.
  * @return          A single-element vector, containing the list of all
@@ -373,6 +373,7 @@ static string _range_string(const spell_type &spell, const monster_info *mon_own
     return make_stringf("(<%s>%d</%s>)", range_col, range, range_col);
 }
 
+// TODO: deduplicate with the same-named function in spl-cast.cc
 static dice_def _spell_damage(spell_type spell, int hd)
 {
     const int pow = mons_power_for_hd(spell, hd);
@@ -380,7 +381,7 @@ static dice_def _spell_damage(spell_type spell, int hd)
     switch (spell)
     {
         case SPELL_FREEZE:
-            return freeze_damage(pow);
+            return freeze_damage(pow, false);
         case SPELL_WATERSTRIKE:
             return waterstrike_damage(hd);
         case SPELL_IOOD:
@@ -394,9 +395,15 @@ static dice_def _spell_damage(spell_type spell, int hd)
         case SPELL_ERUPTION:
             return eruption_damage();
         case SPELL_LRD:
-            return base_fragmentation_damage(pow);
+            return base_fragmentation_damage(pow, false);
         case SPELL_AIRSTRIKE:
             return base_airstrike_damage(pow);
+        case SPELL_ARCJOLT:
+            return arcjolt_damage(pow, false);
+        case SPELL_RESONANCE_STRIKE:
+            return resonance_strike_base_damage(hd);
+        case SPELL_POLAR_VORTEX:
+            return polar_vortex_dice(pow, false);
         default:
             break;
     }
@@ -502,14 +509,26 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
     if (spell == SPELL_SMITING)
         return "7-17"; // sigh
 
+    if (spell == SPELL_BRAIN_BITE)
+        return "4-8*"; // >_>
+
+    if (spell == SPELL_DRAINING_GAZE)
+    {
+        const int pow = mons_power_for_hd(SPELL_DRAINING_GAZE, hd);
+        return make_stringf("0-%d MP", pow / 8); // >_> >_>
+    }
 
     const dice_def dam = _spell_damage(spell, hd);
     if (dam.num == 0 || dam.size == 0)
         return "";
-    string mult = "";
+
     if (spell == SPELL_AIRSTRIKE)
         return describe_airstrike_dam(dam);
-    if (spell == SPELL_MARSHLIGHT)
+    if (spell == SPELL_RESONANCE_STRIKE)
+        return describe_resonance_strike_dam(dam);
+
+    string mult = "";
+    if (spell == SPELL_MARSHLIGHT || spell == SPELL_PLASMA_BEAM)
         mult = "2x";
     else if (spell == SPELL_CONJURE_BALL_LIGHTNING)
         mult = "3x";

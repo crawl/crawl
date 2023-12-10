@@ -25,6 +25,7 @@ aptitudes:
   spellcasting: -3
   translocations: -2
   transmutations: -3
+  shapeshifting: -2
   fire_magic: 1
   ice_magic: -1
   air_magic: -2
@@ -40,8 +41,8 @@ recommended_jobs:
   - JOB_FIGHTER
   - JOB_MONK
   - JOB_BERSERKER
-  - JOB_ABYSSAL_KNIGHT
   - JOB_CINDER_ACOLYTE
+  - JOB_REAVER
   - JOB_FIRE_ELEMENTALIST
 recommended_weapons:
   - SK_MACES_FLAILS

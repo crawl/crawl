@@ -21,6 +21,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "monster.h"
+#include "options.h" // tile_grinch
 #include "state.h"
 #include "terrain.h"
 #include "tileview.h"
@@ -73,28 +74,13 @@ void swap_with_monster(monster* mon_to_swap)
     {
         // XXX: destroy ammo == 1 webs? (rare case)
 
-        if (you.body_size(PSIZE_BODY) >= SIZE_GIANT) // e.g. dragonform
-        {
-            int net = get_trapping_net(you.pos());
-            if (net != NON_ITEM)
-            {
-                destroy_item(net);
-                mpr("The net rips apart!");
-            }
-
-            if (you_caught)
-                stop_being_held();
-        }
-        else // XXX: doesn't handle e.g. spiderform swapped into webs
-        {
-            you.attribute[ATTR_HELD] = 1;
-            if (get_trapping_net(you.pos()) != NON_ITEM)
-                mpr("You become entangled in the net!");
-            else
-                mpr("You get stuck in the web!");
-            quiver::set_needs_redraw();
-            you.redraw_evasion = true;
-        }
+        you.attribute[ATTR_HELD] = 1;
+        if (get_trapping_net(you.pos()) != NON_ITEM)
+            mpr("You become entangled in the net!");
+        else
+            mpr("You get stuck in the web!");
+        quiver::set_needs_redraw();
+        you.redraw_evasion = true;
 
         if (!you_caught)
             mon.del_ench(ENCH_HELD, true);
@@ -198,6 +184,37 @@ bool today_is_halloween()
     return date->tm_mon == 9 && date->tm_mday == 31;
 }
 
+/// It's beginning to feel an awful lot like Christmas.
+/// Or Hannukah, maybe..? Who can say.
+bool december_holidays()
+{
+    // Currently, this customization only applies to tiles mode.
+    // If that changes, we should move this check to the appropriate
+    // call sites of this function, or add a wrapper.
+#ifndef USE_TILE
+    return false;
+#else
+    if (Options.tile_grinch)
+        return false;
+    const time_t curr_time = time(nullptr);
+    const struct tm *date = TIME_FN(&curr_time);
+    // Give em two weeks before Christmas and then until New Year's.
+    // (tm_mon is zero-based.)
+    return date->tm_mon == 11 && date->tm_mday > 10;
+#endif
+}
+
+/**
+ * Really, this goes without saying.
+ */
+bool today_is_serious()
+{
+    const time_t curr_time = time(nullptr);
+    const struct tm *date = TIME_FN(&curr_time);
+    // As ever, note that tm_mon is 0-based.
+    return date->tm_mon == 3 && date->tm_mday == 1;
+}
+
 bool now_is_morning()
 {
     const time_t curr_time = time(nullptr);
@@ -205,37 +222,4 @@ bool now_is_morning()
     // Assume 'morning' starts at 6 AM and ends at 6 PM.
     dprf("hr %d", date->tm_hour);
     return date->tm_hour >= 6 && date->tm_hour < 18;
-}
-
-bool tobool(maybe_bool mb, bool def)
-{
-    switch (mb)
-    {
-    case MB_TRUE:
-        return true;
-    case MB_FALSE:
-        return false;
-    case MB_MAYBE:
-    default:
-        return def;
-    }
-}
-
-maybe_bool frombool(bool b)
-{
-    return b ? MB_TRUE : MB_FALSE;
-}
-
-const string maybe_to_string(const maybe_bool mb)
-{
-    switch (mb)
-    {
-    case MB_TRUE:
-        return "true";
-    case MB_FALSE:
-        return "false";
-    case MB_MAYBE:
-    default:
-        return "maybe";
-    }
 }

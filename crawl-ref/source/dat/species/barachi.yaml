@@ -28,6 +28,7 @@ aptitudes:
   necromancy: -1
   translocations: 1
   transmutations: 1
+  shapeshifting: 0
   fire_magic: 1
   ice_magic: 2
   air_magic: 1
@@ -50,6 +51,7 @@ recommended_jobs:
   - JOB_FIGHTER
   - JOB_BERSERKER
   - JOB_WARPER
-  - JOB_ARCANE_MARKSMAN
+  - JOB_HEXSLINGER
   - JOB_SUMMONER
   - JOB_ICE_ELEMENTALIST
+  - JOB_REAVER

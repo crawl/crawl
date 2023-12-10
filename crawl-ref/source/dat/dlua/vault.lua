@@ -2,7 +2,7 @@
 -- vault.lua: Vault helper functions from more than one file.
 --------------------------------------------------------------------------
 
--- Counting Pan runes for Ignacio and for exits.
+-- Counting Pan runes for exits.
 function count_pan_runes()
   local runes = 0
   for _, r in ipairs({"demonic","glowing","magical","fiery","dark"}) do
@@ -103,29 +103,37 @@ function serpent_of_hell_setup(e)
   end
 end
 
--- Guarantee two rare base types with a brand
+-- Guarantee two or three rare base types with a brand
 function hall_of_blades_weapon(e)
   local long_blade_type = crawl.one_chance_in(2) and "double sword"
                                                   or "triple sword"
   local types = {"quick blade", long_blade_type,
                  "executioner's axe", "eveningstar", "bardiche",
                  "lajatang"}
-  local egos = {"flaming", "freezing", "electrocution", "venom",
-              "holy_wrath", "pain", "vampirism", "draining",
-              "antimagic", "distortion"}
+  local egos = {"flaming", "freezing", "electrocution", "heavy",
+                "holy_wrath", "pain", "vampirism",
+                "antimagic", "distortion", "spectral"}
   local weapon1 = util.random_from(types)
   local weapon2 = weapon1
+  local weapon3 = weapon1
   while weapon2 == weapon1 do
     weapon2 = util.random_from(types)
   end
+  while weapon3 == weapon1 or weapon3 == weapon2 do
+    weapon3 = util.random_from(types)
+  end
   local ego1 = util.random_from(egos)
   local ego2 = ego1
+  local ego3 = ego1
   while ego2 == ego1 do
     ego2 = util.random_from(egos)
   end
-
+  while ego3 == ego1 or ego3 == ego2 do
+    ego3 = util.random_from(egos)
+  end
   e.mons("dancing weapon; good_item " .. weapon1 .. " ego:" .. ego1)
   e.mons("dancing weapon; good_item " .. weapon2 .. " ego:" .. ego2)
+  e.mons("dancing weapon; good_item " .. weapon3 .. " ego:" .. ego3 .. " / nothing")
 end
 
 -- Setup for door vaults to define a common loot set and create the door
@@ -165,7 +173,7 @@ function master_elementalist_setup(e, glyph, ele_staff)
         equip_def = " ; staff of air . robe ego:resistance good_item"
     end
 
-    e.kmons(glyph .. " = wizard hd:18 name:master_elementalist n_rpl" ..
+    e.kmons(glyph .. " = occultist hd:18 name:master_elementalist n_rpl" ..
         " n_des n_noc tile:mons_master_elementalist" ..
         " spells:lehudib's_crystal_spear.11.wizard;" ..
             "chain_lightning.11.wizard;" ..

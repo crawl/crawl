@@ -1,5 +1,423 @@
-Stone Soup 0.29-b1 (through 0.29-b1)
+Stone Soup 0.31-a0 (through 0.31-a0-1128-gf31bc9b788)
+----------------------------------------------------
+
+Artefacts
+---------
+* New unrand: Mule, a +7 flaming hand cannon which sometimes knocks the
+  user backwards when fired.
+* The dreamshard necklace now has Acrobat, but only restores the player to 1 HP
+  when they'd otherwise die, rather than healing 50-100% of their max HP.
+* Artefact staves can now enhance other schools of magic, even those which
+  don't have corresponding base enhancer staff types.
+* Gyre & Gimble's enchantment is reduced from +12 to +8.
+* The macabre finger necklace is now evil, and the amulet of Vitality
+  no longer is.
+* Glaive of the Guard no longer gives +5 AC.
+
+Branches, Environment
+---------------------
+* The Slime Pits now have many new endings, instead of one fixed ending.
+* The Ecumenical Temple is now fully mapped on entry.
+
+Character
+---------
+* New skill: Shapeshifting, used for talismans.
+* New background: Shapeshifter, replacing Transmuter. Shapeshifters enter the
+  dungeon with a beast talisman, a potion of lignification, and an animal skin.
+* Reworked Hexslinger, which now starts with new spells Jinxbite, Sigil of
+  Binding, and Dimensional Bullseye, along with Inner Flame and Cause Fear.
+* At XL 7, Armataurs regenerate when rampaging. Their max HP is reduced.
+* Felids now get an extra life at XL 1, and don't lose XLs on dying.
+* Tengu now have inherent Acrobat (+15 EV after moving/waiting) at XL 1.
+  They now gain +4 EV at XL7 instead of a 20% EV bonus.
+* Mummies now get their first necromancy enhancer at XL 1, not 3.
+* Vine Stalkers now get regeneration at XL 1, not 4.
+* Djinn now use all magic skills, instead of only Spellcasting. Djinn can
+  only choose to train all magic skills or none.
+* Ghouls start with an additional +4 Int.
+* Shields no longer degrade in effectiveness with each hit taken per-turn.
+  Instead, they now have a limit on per-turn blocks, based on shield type.
+* New mutation: persistent drain, which makes HP drain take more XP to cure.
+* Unarmed combat is now more accurate for players.
+* Players no longer get an accuracy bonus from being in certain forms.
+* Formicids can no longer be involuntarily shafted.
+* Hunters and Chaos Knights now start with scrolls of butterflies instead
+  of immolation and xom's chesspieces, respectively.
+
+Gods
+----
+* Okawaru now gives exactly one weapon gift and one armour gift as a capstone
+  (chosen by the player), rather than giving many random gifts.
+* Ashenzari now gives perfect mapping, but only maps within LOS radius.
+* Trog now disables pain brand instead of becoming angry at it.
+* Nemelex's Deal Four ability now costs more piety.
+* Cheibriados piety gain now only depends on monsters' base speed.
+* The good gods now hate distortion-branded weapons.
+* Gozag no longer detects gold.
+* Kikubaaqudgha's wrath has been overhauled to be much more dangerous.
+
+Interface and Options
+---------------------
+* Monsters with unusual items (e.g. distortion) are now highlit in purple
+  by default.
+* Monster descriptions have been compacted and made more informative.
+* Monster resists from equipment is now used for display and targeting.
+* For many list options, commas can now be escaped with backslash.
+* Polar Vortex and Noxious Bog damage is now displayed.
+* Meteorans can now choose to be warned before exploring or resting.
+
+Items
+-----
+* New item type: talismans.
+  - When used, talismans transform the player into a corresponding form.
+    This transformation lasts until the player chooses to end it.
+    It takes five turns to use a talisman.
+  - Shapeshifting skill increases the power of talismans' forms. Insufficient
+    Shapeshifting skill reduces the player's maximum HP while in a form.
+    Different forms have different min and max Shapeshifting skills.
+  - Beast talisman: starting talisman for Shapeshifters. Gives +Slay
+    but melds aux armour.
+  - Flux talisman: starting talisman for Shapeshifters. Over multiple hits,
+    contaminates enemies with magical radiation until they explode.
+  - Serpent talisman: transforms the player into a constricting anaconda.
+  - Maw talisman: melds the body slot, transforming it into a devouring maw.
+    Launches auxiliary chomp attacks and heals the player by devouring foes.
+  - Blade talisman: gives the player blade hands and also a blade body,
+    reducing AC from body armour at lower Shapeshifting skill.
+  - Statue talisman: turns the player into a slow-moving, durable statue.
+  - Dragon-blood talisman: turns the player into a fire-breathing dragon.
+  - Storm talisman: turns the player into living lightning.
+  - Talisman of death: turns the player into an undead abomination, blighting
+    foes on hit and tormenting them to heal.
+* New item: sack of spiders, an XP-charged evoker which webs foes and
+  summons creepy-crawlies. Alternates with boxes of beasts.
+* Potions of flight replaced with enlightenment, which also give Will+.
+* Scrolls of magic mapping replaced with revelation, which also give X-ray
+  vision and sInv for one turn.
+* New weapon: orcbow, between a shortbow and an arbalest in strength.
+* Hand crosssbows are now hand cannons, alchemically belching smoke and death.
+* Ranged weapons' damage, delay and accuracy have been adjusted.
+* Quick blades now hit twice for every swing, with a higher attack delay.
+* Boomerangs of dispersal have been replaced with darts.
+* Condenser vanes are now more effective at low power.
+* Spectral weapons now share 70% of damage taken (from 50%).
+* Reaching weapons will no longer fail to reach over spectral weapons.
+* Wands of light no longer affect undead, plant and nonliving monsters.
+* Wands of quicksilver can no longer be self-targeted.
+* Troll leather armour now has slightly less base AC.
+* Removed books: Sky, Rime and Transfigurations.
+* Removed: silver boomerangs and xom's chesspieces.
+
+Monsters
+--------
+* New unique: Jeremiah, a peaceful barachi trapped between sleep and waking.
+  Their dreams leak into reality in a stream of beautiful butterflies.
+* New unique: Norris, a death cultist who surfs into battle with a gang
+  of skysharks.
+* Maurice is now a vine stalker, with high regen and antimagic bites.
+* Erica is now an octopode, with constriction and new spells.
+* Other new monsters:
+  - Kobold blastminers, who blast enemies with alchemical cannons and get sent
+    flying backwards by the recoil.
+  - Brain worms, which eat magic and minds alike.
+  - Glass eyes, which vitrify victims to make them fragile as glass.
+  - Formless jellyfish, which constricts and stings for 1-turn paralysis.
+  - Arcanists, a kind of fairly dangerous vitrifying wizard.
+* Attacks of opportunity have been reworked.
+  - Monsters now have a chance to attack when moving into melee with a player
+    who just moved away. Previously, this triggered immediately when the
+    player moved away, didn't use any of the monster's time, and couldn't
+    trigger for monsters slower than the player.
+  - Monsters have a slight chance to fall behind or catch up while following
+    the player.
+* Ufetubi and tengu warriors now slip behind their foe before meleeing.
+* Tengu reavers now have rMsl.
+* 'Wizard' has been renamed to 'occulist' and is now somewhat stronger.
+* Great orb of eyes have a new spell set, and are slightly stronger.
+* Monsters no longer use up charges when zapping wands.
+* Monsters can no longer use scrolls or potions.
+* Giant monsters can now be ensnared by webs and nets.
+* Jellies can no longer be netted or constricted.
+* Some monsters now have special dialogue after killing the player.
+* Deep Elf Elementalists now cast LRD instead of Awaken Earth.
+* Abominations' speed is no longer randomized.
+* Alligators no longer sprint.
+* Allied undead no longer become angry when damaged.
+
+Spells
+------
+* New spells:
+  - Jinxbite (L2 Hex): deals additional Will-checking damage to foes hit
+    while its duration lasts, but also halves the caster's will.
+  - Sigil of Binding (L3 Hex): creates two magical traps nearby, which
+    temporarily bind hapless victims in place.
+  - Brom's Barrelling Boulder (L4 Earth/Conj): creates a boulder, which crushes
+    and knocks back foes and explodes when hitting walls.
+* Replaced spells:
+  - Dimensional Bullseye (replacing Portal Projectile): targets a foe and
+    teleports all shots fired at other foes to also hit the chosen unfortunate.
+  - Iron Shot replaced with Bombard, which sometimes knocks back the caster.
+* Plasma Beam no longer has limited range, but does 10% less damage.
+* Arcjolt now initially arcs to foes within two tiles of the caster.
+* Static Discharge now does more damage, but checks half AC instead of none.
+* Hailstorm does more damage at low power and less at high power.
+* Swiftness now works in water.
+* Borgnjor's Vile Clutch (and Fastroot) now work on invisible enemies.
+* Borgnjor's Vile Clutch does less damage.
+* Many summons now have a shorter duration.
+* Removed: Beastly Appendage, Spider Form, Ice Form, Blade Hands, Statue
+  Form, Dragon Form, Storm Form, Necromutation.
+
+Tiles and Other Art
+-------------------
+* Player body variants are randomized at the start of each game.
+* New art for Eos, Sniper, Starlight, Dragonskin, Ratskin and the Thief.
+* New art for all bardings.
+* New art for Volatile Blastmotes (spell icon and clouds).
+* New art for short sword and eveningstar artefacts.
+* New art for the Orb of Zot.
+* New art for blink frogs, ancient lichen, rakshashas, and shrike simulacrae.
+* New art for Dithmenos's altar.
+* New Dragon Form and dragon monster art.
+* Icons added for many mutations.
+* New Eustachio splash screen.
+
+Stone Soup 0.30 (20230505)
+--------------------------
+
+Highlights
+----------
+* New background: Reavers, spellswords with powerful but situational
+  Conjurations.
+* Palentongas reworked into Armataurs, with innate rampage and an affinity
+  for potions.
+* A variety of exciting new spells for warriors and wizards alike.
+* Many new and reworked artefacts, both random and fixed.
+* Lugonu made more available and tempting to unfortunates cast into the Abyss.
+
+Branches, Environment
+---------------------
+* It is now possible to enter the Vaults without holding a rune. However,
+  a rune is still required to leave.
+* Slime walls now apply corrosion to the player, rather than dealing damage.
+  Jiyva's Oozemancy ability still deals damage as before.
+* Thunderstorms now deal much more damage.
+
+Character
+---------
+* New background: Reaver.
+  - Reavers are warrior-mages, primarily focused on melee combat but with
+    situational Conjurations for tough situations.
+  - Reavers begin with two new spells, Kiss of Death and Momentum Strike,
+    as well as a revised version of the Hailstorm spell.
+* Species rework: Palentonga -> Armataur.
+  - Like Palentongas, Armataurs are large, scaled mammals, wearing bardings
+    instead of boots.
+  - Armataurs lose the Rolling Charge and Curl abilities. They gain Rollpage
+    (innate Rampage) and long tongues, which double the effects of potions but
+    slow down scroll reading.
+  - Armataurs' aptitudes have been adjusted.
+* Background changes:
+  - Monks now start with an orb of light.
+  - Warpers replace Gell's Gravitas with Vhi's Electric Charge.
+  - Hedge Wizards have Conjure Flame replaced by Cigotuvi's Dreadful Rot.
+  - Fire Elementalists have Conjure Flame replaced by Volatile Blastmotes.
+  - Ice Elementalists have Hailstorm replaced by Summon Ice Beast.
+  - The 'Arcane Marksman' background has been renamed to 'Hexslinger'.
+  - Removed the Abyssal Knight background.
+* Miscellaneous species changes:
+  - Mummies gain innate Faith, giving them extra piety gain.
+  - Large species move at normal speed through shallow water.
+  - Formicids can now shaft themselves in the Tomb of the Ancients.
+  - Species size no longer affects SH.
+  - Pale draconians' breath is no longer usable twice as often as others'.
+* rF- and rC- are added to the 'bad mutations' pool.
+* All players regenerate an extra 0.2 HP/turn.
+* Will is now capped at `+++++`.
+* It is now possible to stack two levels of Harm.
+* Reaching the end of the Zot clock now causes a smaller amount of permanent
+  max HP loss (similar to Borgnjor's Revivication), rather than temp HP drain.
+
+Gods
+----
+* Lugonu:
+  - Banishment is now available at ** piety (from ***), has a lower failure
+    chance, and causes malmutation when resisted.
+  - When the player suffers the wrath of another god, Lugonu now responds by
+    banishing some number of hostile monsters nearby.
+  - Lugonu's altars are more common in the Abyss, and the piety bonus for
+    converting to Lugonu in the Abyss has been increased.
+  - The Bend Space ability has been removed.
+* Ashenzari:
+  - Skill boost reduced.
+  - Trap detection moved to 4* (was at 0*).
+  - Removed Astral Vision (automatically seeing through walls).
+* When worshipping at a faded altar, the player is given a preview of three
+  gods the altar might belong to.
+* Xom's mutation gifts are no longer limited to a small pool of options.
+* Gozag's corpse-to-gold effect now blocks enemies from creating simulacra,
+  and the duration of the distraction effect is no longer based on corpse size.
+* Fedhas protects trees from being set on fire by the player.
+* Okawaru's Heroism and Finesse abilities cost more piety.
+* Hepliaklqana's Knight now attacks 50% more slowly.
+* Good gods will now suppress evil clouds from Condenser Vanes.
+
+Interface and Options
+---------------------
+* Two new menus that unify all equip and unequip actions:
+  - The Equip menu (`e`) combines wield, wear, and put on commands for equipping
+    weapons, armour, and jewellery, respectively.
+  - The Unequip menu (`c`) allows to unwield, take off, or remove any equipped
+    item.
+  - Tab toggles between equip and unequip.
+* Character overview ('%') screen:
+  - Displays much more information about items, moving niche statuses downward.
+  - No longer shows .s for low Stealth values.
+* Damage ratings are now shown via @, including those for unarmed combat.
+* An indicator is now displayed when movement would cause a Rampage.
+* Bumping a foe while holding a ranged weapon shoots instead of bashing.
+* The piety cost of divine invocations is now shown more clearly.
+* Spells' maximum damage is now displayed in their descriptions.
+* Unrands (pre-defined artefacts) have a distinct colour by default.
+* Almost all unrands with special behavior now have a corresponding inscription.
+* Many weapon brands now provide more quantitative damage information.
+* Up to 100 waypoints can now be placed (up from 10).
+* New show_blood option allows disabling blood spatters and bloody corpses.
+* Webtiles muting commands are reworked into a block mechanism; see `/help` in
+  webtiles chat for more details.
+
+Items
+-----
+* New brand: Heavy.
+  - Heavy weapons have +80% base damage and +50% attack delay.
+  - Both melee and ranged weapons can be Heavy.
+* Elemental evokers:
+  * Lightning rods now do 50% more damage.
+  * Elemental evokers now recharge faster in the early game and slower later.
+  * Each elemental evoker can now generate at most once in a given game.
+  * Jiyva jellies can no longer eat elemental evokers.
+  * Condensation Vanes and Tremorstones can no longer both generate in one game.
+  * Phials of floods have their range and effect duration reduced.
+* Evocable invisibility and blink no longer have an MP cost.
+* Spells have been reshuffled between books, and a new Maxwell's Memoranda book
+  has been added.
+* Shield penalties are now reduced by Str rather than by players' size.
+* Orb, scarf, and magical staff artefacts can now appear.
+* Orbs of energy now give -Wiz in exchange for a chance to refund MP when
+  spells are cast, with no chance of backlash.
+* Scrolls of butterflies now blow back nearby creatures and create many more
+  butterflies. They now alternate with scrolls of summoning instead of fog.
+* Rings of evasion are now +5 (were +4).
+* All ranged weapons can now generate with electrocution, antimagic, and
+  draining brands. Venom ranged weapons no longer appear.
+* Ranged weapons are now quieter.
+* Longbows, arbalests and hand crossbows have had their stats slightly tweaked.
+* Throwing weapons now deal extra damage when they break.
+* The spectral brand now matches the player's accuracy and damage, the latter
+  reduced by 30% (ala cleaving).
+* Short sword attack delay reduced.
+* Removed the 'vorpal' brand.
+
+Monsters
+--------
+* New monsters:
+  - Sleepcap: native to the early Dungeon, sleepcaps may inflict sleep on hit,
+    making the player take massive damage from whoever attacks next.
+  - Skyshark: appearing in late Lair and early Shoals, skysharks become
+    enraged on drawing blood - first becoming Mighty, then Berserk!
+* Demonic Crawlers lose the Warning Cry ability and elemental resistances in
+  exchange for higher damage and very fast regeneration.
+* Doom Hounds' Howl is now resistible by Will.
+* Many monsters do somewhat less damage.
+* Walking Tomes are now unable to cast while silenced.
+* Ironbound Frosthearts' Creeping Frost spell is now fully resistible by rC.
+* Fleeing monsters will no longer avoid harmful clouds.
+* Monsters, notably Asterion, can now use spectral weapons.
+
+Spells
+------
+* New spells:
+  - Kiss of Death (L1 Conj/Necro): does high draining damage to an adjacent
+    enemy, at the cost of significant max HP drain to the caster.
+  - Momentum Strike (L2 Conj/Tloc). Redirects the caster's momentum for a
+    damaging attack that doesn't require line of fire, but locks the caster in
+    place for some turns after a hit (and cannot be recast until this expires).
+  - Cigotuvi's Dreadful Rot (L2 Necro/Air/Pois). Rots away the caster's flesh
+    to create a cloud of deadly miasma on their tile.
+  - Volatile Blastmotes (L3 Fire/Tloc). Creates an explosive cloud on the
+    caster's tile, usable as a land mine or tricky tool.
+  - Vhi's Electric Charge (L3 Tloc/Air). Launches the caster at a nearby foe
+    and launches a crackling melee attack, phasing through creatures en route.
+  - Arcjolt (L5 Air/Conj). Electrocutes everything adjacent to the caster,
+    everything adjacent to those creatures, etc, etc, in a chain.
+  - Plasma Beam (L6 Fire/Air): Fires a bolt of lightning and another bolt of
+    fire, both at the most distant foe.
+* Hailstorm moved to L3 (from L4) and can now miss.
+* Call Imp now always and only calls a spear-wielding cerulean imp.
+* Manifold Assault moved to L4 (from L5) and does half as many attacks with
+  UC as with a weapon.
+* Lesser Beckoning moved to L2 (from L3) and is now better at low power.
+* Battlespheres now fire when any destructive spell is cast, not just Conj.
+* Ozocubu's Refrigeration's damage has been increased.
+* Slow no longer has bonus hex power.
+* Irradiate now only has a 50% chance of malmutating affected creatures.
+* The Scorch, Simulacrum and Static Discharge spells have been weakened.
+* Removed: Conjure Flame, Corpse Rot and Lightning Bolt.
+
+Tiles and Other Art
+-------------------
+* New tiles for player draconians.
+* More icons for mutations.
+* Several new splash screens.
+* A new icon for Monstrous Menagerie.
+* New art for many monsters, including Prince Ribbit and X-shaped simulacra.
+* New art for many unrands, including the Elemental Staff and Wrath of Trog.
+* New holiday-exclusive tiles for Sigmund, ogres and hats.
+
+Unrands
+-------
+* New unrands:
+  - The Hermit's Pendant, an amulet of faith that sets the wearer's Invocations
+    skill to 14 and their Evocations skill to 0.
+  - The Consecrated Labrys, a holy axe with sInv, Flight, and an enchantment
+    that grows larger while more dangerous enemies are in view.
+  - The Slick Slippers, which make all damaging melee attacks trample their
+    wearer backward. They provide immunity to constriction, engulfing, etc.
+  - The Force Lance, a Heavy +5 lance (ala Wyrmbane) which has a 1/3 chance of
+    knocking back foes when landing a damaging blow.
+  - The Storm Queen's Shield, a +5 kite shield of rElec and flight which
+    fires electrical retaliation at those it blocks.
+  - The toga "Victory", a robe which gains AC, Int and Slay as the wearer
+    slays dangerous foes, but loses everything if they drink or read near foes.
+* Orbs:
+  - The Staff of Dispater is now an orb with +AC and *Corrode.
+  - The Staff of Battle is now an orb. It now enhances all destructive spells
+    (matching Vehumet's categorization), but de-enhances other spells.
+  - The Staff of Wucad Mu is now an orb, with double the MP refund chance of a
+    normal orb of energy.
+* Devorpalization:
+  - Sniper is now +27 and Heavy (was +9 and Vorpal).
+  - The Dark Maul is now Heavy (was Vorpal), and has its base stats adjusted.
+  - Other formerly Vorpal unrands have been adjusted individually.
+- The Mad Mage's Maulers lose Int-3 and RegenMP, gain -Cast and MPVamp (gain
+  MP from damage dealt), and deal twice as much damage when spending MP.
+- The Ring of the Hare is now +10 (was +8).
+- Majin-Bo is now one-handed and deals much more damage in melee.
+- The sceptre of Asmodeus is now an eveningstar that summons demons on-hit.
+- The Elemental Staff now provides weaker resistances.
+- The Lochaber Axe now causes HP Drain on unequip.
+- Removed Morg.
+
+Stone Soup 0.29.1 (20220911)
 ---------------------------------------------------
+
+Bugfix release
+--------------
+* 20+ bug and documentation fixes
+* Improvements to linux packaging support infrastructure
+
+Stone Soup 0.29.0 (20220825)
+----------------------------
 
 Highlights
 ----------
@@ -197,7 +615,7 @@ Spells
   - Animate Dead reworked: for a duration after being cast, the dead have a
     power-dependent chance of rising as allied zombies. The zombies are
     permanent until the player leaves the level or re-casts Animate Dead.
-  - Simulacrum is now a smite-targeted spell that gives an irresistable status.
+  - Simulacrum is now a smite-targeted spell that gives an irresistible status.
     Monsters that die with this status spawn a power-dependent number of
     simulacra.
   - Corpse Rot is now Level 4 Necromancy/Poison/Air. For a duration after being
@@ -257,7 +675,8 @@ Branches, Environment
   - The Abyss no longer generates random items, and kills in the abyss grant no
     experience or conventional piety. (Uskayaw and Yredelemnul continue to
     grant their special kinds of piety).
-  - Collecting the abyssal rune of zot grants two XP potions worth of experience.
+  - Collecting the abyssal rune of zot grants two XP potions worth of
+    experience.
   - The chance of an Abyss teleport sending the player deeper is increased, as
     are the rune, stair, and exit generation rates.
 * Sewer maps have been re-balanced and randomized, and two new sewers added.
@@ -316,7 +735,8 @@ Gods
     - 'Rising Flame': After 2-4 turns, sends the player through the ceiling (up
       one floor). Can only be used once.
 * Yredelemnul:
-  - Piety now solely based on the number and strength of allied zombies in sight.
+  - Piety now solely based on the number and strength of allied zombies in
+    sight.
   - Passive reaping: slain living, demonic, and holy monsters have a chance to
     automatically rise from the dead as undead allies.
   - Zombies cannot leave the level and expire when the player leaves the level.
@@ -511,7 +931,7 @@ Monsters
 * Demonic and holy monsters are now susceptible to fear, berserk, alistairs
   intoxication, and ballistomycete spores.
 * Monsters have a chance to break a door permanently when opening it. This
-  chance is higher if the mosnter is berserk.
+  chance is higher if the monster is berserk.
 * Classed draconians have a fixed colour per job.
 * When Dowan dies Duvessa goes berserk permanently; when Duvessa dies Dowan
   gains haste permanently.
@@ -538,8 +958,8 @@ Spells
   antimagic to a single foe. Targets that fail a Willpower check are also dazed
   and blinded.
 * New spell: Anguish (L4 Hexes/Necromancy). All enemies in sight must pass a
-  Will check or gain the new Anguished status effect. Whenever Anguished monsters
-  deal damage, they take the same amount of damage right back.
+  Will check or gain the new Anguished status effect. Whenever Anguished
+  monsters deal damage, they take the same amount of damage right back.
 * Yara's Violent Unravelling can now unravel summons, killing them immediately
   and turning them into explosions. It is now smite targeted.
 * Inner Flame is now smite targeted.
@@ -870,7 +1290,7 @@ Spells
   more powerful, arcing between visible foes for massive damage that partially
   ignores AC and rElec.
 * Tornado has been renamed to Polar Vortex. It is now a Level 9 Ice spell, and
-  its damage has been increased by 33% but is partially resistable by rC.
+  its damage has been increased by 33% but is partially resistible by rC.
 * Other spell level adjustments:
   - Ozocubu's Refrigeration is now level 7 (from 6).
   - Freezing Cloud is now level 5 (from 6).
@@ -1010,7 +1430,7 @@ Items
 * Bardings are merged into a single item type.
 * Staves of earth deal higher damage, but with the shrapnel effect of being
   affected 3 times by AC.
-* Staves of conjuration deal bonus irresistable damage that checks AC.
+* Staves of conjuration deal bonus irresistible damage that checks AC.
 * The full contents of item piles are revealed on sight.
 * Potions of stabbing, wands of clouds, and staves of energy, summoning, and
   wizardry are removed.
@@ -1286,7 +1706,7 @@ Items
   - Maxwell's Etheric Cage has been removed.
 * Phial of floods now applies a silencing "waterlogged" debuff to all monsters
   in the flooded area and no longer summons water elementals.
-* Staves of poison now do resistable poison damage on hit like other staves
+* Staves of poison now do resistible poison damage on hit like other staves
   instead of just having a chance to poison.
 * Distortion branded weapons no longer teleport foes.
 * Distortion unwield effects no longer cause a translocations miscast. Instead,
@@ -1420,10 +1840,10 @@ Spells
     + Force Lance is removed.
   - Poison spells poison things or perform some kind of alchemy
     + Sting is now a range 3 Poison/Transmutations spell using the same
-      partly-resistable beam type previously used by Poison Arrow.
+      partly-resistible beam type previously used by Poison Arrow.
     + New L6 Poison/Transmutations spell Eringya's Noxious Bog that creates a
       temporary toxic bog trail as the player moves. The bog terrain applies
-      the same partly-resistable damage flavor as Sting as well as the
+      the same partly-resistible damage flavor as Sting as well as the
       movement and combat penalties of shallow water.
     + Removed spells: Venom Bolt, Poison Arrow
     + As a result of these changes, Venom Mages now put starting skill in
@@ -1450,7 +1870,7 @@ Spells
   - Summoning: durably summon a nameless horror (new monster).
   - Translocation: dimension anchor.
   - Transmutation: extra contamination for the player, malmutate a monster.
-  - Conjuration: irresistable AC-ignoring damage.
+  - Conjuration: irresistible AC-ignoring damage.
   - Elemental schools: school flavored damage (Earth uses fragmentation
     damage).
 * The Deflect Missiles spell has been removed.
@@ -2176,7 +2596,8 @@ Character
   permanently reducing their MP. Their old recharge ability has been removed.
 * Loud noises no longer break mesmerization or fear.
 * Various 'badform' (e.g. wispform) special cases have been removed.
-* Several abilities that triggered exhaustion now have their own cooldown timers.
+* Several abilities that triggered exhaustion now have their own cooldown
+  timers.
 * Removed:
   - High elves.
   - Mottled draconians.
@@ -2243,8 +2664,8 @@ Items
   - Sword of Jihad: renamed to Zealot's Sword.
   - Sceptre of Torment only torments on-hit, rather than randomly.
   - The Captain's Cutlass no longer chops off hydra heads.
-  - The Ring of Shaolin is renamed to the Ring of Phasing, and the bow of Krishna
-    "Sharnga" is renamed to the longbow "Zephyr".
+  - The Ring of Shaolin is renamed to the Ring of Phasing, and the bow of
+    Krishna "Sharnga" is renamed to the longbow "Zephyr".
 * Potions of cure mutation, beneficial mutation, and mutation have been merged.
 * All types of food take one turn to eat.
 * All types of manuals are pre-identified.
@@ -2299,10 +2720,10 @@ Modding/contribution support
 * A number of guides from contributor Cerol on how to change key components
   of the game (first debuted in r/dcss and r/roguelikes) have been added to
   the documentation. These can be found at:
-    - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/background_creation.txt
-    - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/god_creation.txt
-    - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/mutation_creation.txt
-    - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/species_creation.txt
+    - crawl-ref/docs/develop/background_creation.txt
+    - crawl-ref/docs/develop/god_creation.txt
+    - crawl-ref/docs/develop/mutation_creation.txt
+    - crawl-ref/docs/develop/species_creation.txt
 
 Stone Soup 0.19.5 (20170228)
 --------------------------------------------
@@ -2534,7 +2955,7 @@ Monsters
 * Battlecry has been simplified, affecting all monsters of the same genus.
 * Blood Saints's Legendary Destruction now casts two spells at a time.
 * Necromancers gain Bind Soul, reviving slain monsters as simulacrula.
-* Ghostly Fireball is now completely resistable by rN and causes draining.
+* Ghostly Fireball is now completely resistible by rN and causes draining.
 * Obsidian statues can Mesmerise.
 * Wizards and Ogre Mages have split up and re-arranged their many spell sets
   to arrive at three sets each, with minimal overlap.
@@ -3774,7 +4195,8 @@ Items
 * Sustain abilities effects no longer stack.
 * Amulets of resist corrosion now give only 50% corrosion resistance, from 90%.
 * Potions of resistance now grant corrosion resistance.
-* Staves of air now activate extra melee damage as often as other elemental staves.
+* Staves of air now activate extra melee damage as often as other elemental
+  staves.
 * Flying creatures no longer have a 2/3rds chance of dodging thrown nets.
 * Weapons and armour which aren't visibly enchanted no longer have enchantments
   higher than +0.
@@ -3860,7 +4282,7 @@ Stone Soup 0.14.1 (20140428)
 ----------------------------
 * Several crash fixes.
 * Fire dragons correctly grant bonus Dithmenos piety.
-* Ranged attacks from invisibile monsters correctly turn off autopickup.
+* Ranged attacks from invisible monsters correctly turn off autopickup.
 * Good gods punish the player properly for negative energy clouds.
 * Natasha no longer revives after being pacified, and does not get a new
   item when reviving.
@@ -4959,7 +5381,7 @@ Stone Soup 0.11.2 (20130125)
 * Handle forcibly closing the game a bit better (save corruption, crashes,
   possible cheating).
 * No more false annotations in the Abyss.
-* Octopodes can't grow claws on their non-existant hands anymore.
+* Octopodes can't grow claws on their non-existent hands anymore.
 * Tile games did not always draw overlays properly.
 * Invocation based titles were wrong on the high scores list.
 * A number of other misc fixes.

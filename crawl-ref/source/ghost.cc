@@ -32,7 +32,7 @@
 
 #define MAX_GHOST_DAMAGE     50
 #define MAX_GHOST_HP        400
-#define MAX_GHOST_EVASION    60
+#define MAX_GHOST_EVASION    50
 
 // Pan lord AOE conjuration spell list.
 static spell_type search_order_aoe_conj[] =
@@ -437,7 +437,6 @@ void ghost_demon::init_player_ghost()
     set_resist(resists, MR_RES_ACID, player_res_acid());
     // multi-level for players, boolean as an innate monster resistance
     set_resist(resists, MR_RES_STEAM, player_res_steam() ? 1 : 0);
-    set_resist(resists, MR_RES_STICKY_FLAME, player_res_sticky_flame());
     set_resist(resists, MR_RES_MIASMA, you.res_miasma());
     set_resist(resists, MR_RES_PETRIFY, you.res_petrify());
 
@@ -484,7 +483,7 @@ void ghost_demon::init_player_ghost()
                 case STAFF_POISON: brand = SPWPN_VENOM; break;
                 case STAFF_DEATH: brand = SPWPN_PAIN; break;
                 case STAFF_AIR: brand = SPWPN_ELECTROCUTION; break;
-                case STAFF_EARTH: brand = SPWPN_VORPAL; break;
+                case STAFF_EARTH: brand = SPWPN_HEAVY; break;
                 default: ;
                 }
             }
@@ -544,10 +543,6 @@ static attack_flavour _very_ugly_thing_flavour_upgrade(attack_flavour u_att_flav
 {
     switch (u_att_flav)
     {
-    case AF_FIRE:
-        u_att_flav = AF_STICKY_FLAME;
-        break;
-
     case AF_POISON:
         u_att_flav = AF_POISON_STRONG;
         break;
@@ -670,7 +665,7 @@ static resists_t _ugly_thing_resists(bool very_ugly, attack_flavour u_att_flav)
     {
     case AF_FIRE:
     case AF_STICKY_FLAME:
-        return MR_RES_FIRE * (very_ugly ? 2 : 1) | MR_RES_STICKY_FLAME;
+        return MR_RES_FIRE * (very_ugly ? 2 : 1);
 
     case AF_ACID:
         return MR_RES_ACID;
@@ -776,20 +771,24 @@ bool ghost_demon::has_spells() const
     return spells.size() > 0;
 }
 
-// When passed the number for a player spell, returns the equivalent
-// monster spell. Returns SPELL_NO_SPELL on failure (no equivalent).
+// When passed the number for player spells, returns approximate and
+// equivalent monster spells. Returns SPELL_NO_SPELL with no equivalent.
 spell_type ghost_demon::translate_spell(spell_type spell) const
 {
     switch (spell)
     {
 #if TAG_MAJOR_VERSION == 34
     case SPELL_CONTROLLED_BLINK:
-        return SPELL_BLINK;        // approximate
+        return SPELL_BLINK;
 #endif
     case SPELL_DRAGON_CALL:
         return SPELL_SUMMON_DRAGON;
     case SPELL_SWIFTNESS:
         return SPELL_SPRINT;
+    case SPELL_NECROTISE:
+        return SPELL_PAIN;
+    case SPELL_CONFUSING_TOUCH:
+        return SPELL_CONFUSE;
     default:
         break;
     }

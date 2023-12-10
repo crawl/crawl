@@ -149,6 +149,7 @@ lajatang2
 lajatang3
 
 staff_mummy WPN_STAFF_MUMMY
+xmas-scythe WPN_XMAS_SCYTHE
 %rim 1
 
 
@@ -165,13 +166,16 @@ sling3
 shortbow1 WPN_SHORTBOW
 shortbow2
 shortbow3
+orcbow1 WPN_ORCBOW
+orcbow2
+orcbow3
 longbow1 WPN_LONGBOW
 longbow2
 longbow3
 
-hand_crossbow WPN_HAND_CROSSBOW
-hand_crossbow2
-hand_crossbow3
+hand_cannon WPN_HAND_CANNON
+hand_cannon2
+hand_cannon3
 arbalest1 WPN_ARBALEST
 arbalest2
 arbalest3
@@ -194,7 +198,7 @@ i-venom BRAND_VENOM
 i-protection BRAND_PROTECTION
 i-draining BRAND_DRAINING
 i-speed BRAND_SPEED
-i-vorpal BRAND_VORPAL
+i-heavy BRAND_HEAVY
 # start TAG_MAJOR_VERSION == 34
 i-flaming BRAND_FLAME
 i-freezing BRAND_FROST
@@ -388,15 +392,25 @@ animal_skin3
 
 troll_leather_armour ARM_TROLL_LEATHER_ARMOUR
 fire_dragon_armour ARM_FIRE_DRAGON_ARMOUR
+fire_dragon_armour_art
 ice_dragon_armour ARM_ICE_DRAGON_ARMOUR
+ice_dragon_armour_art
 steam_dragon_armour ARM_STEAM_DRAGON_ARMOUR
+steam_dragon_armour_art
 acid_dragon_armour ARM_ACID_DRAGON_ARMOUR
+acid_dragon_armour_art
 quicksilver_dragon_armour ARM_QUICKSILVER_DRAGON_ARMOUR
+quicksilver_dragon_armour_art
 storm_dragon_armour ARM_STORM_DRAGON_ARMOUR
+storm_dragon_armour_art
 shadow_dragon_armour ARM_SHADOW_DRAGON_ARMOUR
+shadow_dragon_armour_art
 gold_dragon_armour ARM_GOLD_DRAGON_ARMOUR
+gold_dragon_armour_art
 swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR
+swamp_dragon_armour_art
 pearl_dragon_armour ARM_PEARL_DRAGON_ARMOUR
+pearl_dragon_armour_art
 
 deep_troll_leather DEEP_TROLL_LEATHER
 iron_troll_leather IRON_TROLL_LEATHER
@@ -413,22 +427,18 @@ scarf2_2
 scarf2_3
 scarf3
 
-%sdir item/armour/bardings
-naga_barding_blue ARM_BARDING
-naga_barding_metal
-naga_barding_magenta
-naga_barding_red
-# start TAG_MAJOR_VERSION == 34
-centaur_barding_blue ARM_CENTAUR_BARDING
-centaur_barding_metal
-centaur_barding_magenta
-centaur_barding_red
-# end TAG_MAJOR_VERSION
+barding1 ARM_BARDING
+barding2
+barding3
 
 %sdir item/armour/shields
 
 %rim 0
 orb ARM_ORB
+orb_randart1 ARM_ORB_ART_FIRST
+orb_randart2
+orb_randart3
+orb_randart4 ARM_ORB_ART_LAST
 
 buckler1 ARM_BUCKLER
 buckler2
@@ -459,6 +469,7 @@ elven_leather_helm THELM_CAP
 cap_jester THELM_CAP_JESTER
 hat_explorer THELM_HAT_EXPLORER
 hat_explorer2 THELM_HAT_EXPLORER2
+santa_hat THELM_HAT_SANTA
 
 %rim 0
 hat1 THELM_HAT THELM_HAT_FIRST
@@ -688,7 +699,7 @@ i-immolation SCR_IMMOLATION
 %back scroll-purple
 i-blinking SCR_BLINKING
 %back scroll-yellow
-i-magic_mapping SCR_MAGIC_MAPPING
+i-magic_mapping SCR_REVELATION
 %back scroll-blue
 i-fog SCR_FOG
 %back scroll-cyan
@@ -921,7 +932,7 @@ i-gain-strength POT_REMOVEME2
 i-gain-dexterity POT_REMOVEME3
 i-gain-intelligence POT_REMOVEME4
 # end TAG_MAJOR_VERSION
-i-flight POT_FLIGHT
+i-flight POT_ENLIGHTENMENT
 # start TAG_MAJOR_VERSION == 34
 i-poison POT_POISON
 i-slowing POT_SLOWING
@@ -1022,6 +1033,15 @@ staff06
 staff07
 staff08
 staff09
+%rim 0
+staff-artefact1 STAFF_RANDART_OFFSET
+staff-artefact2
+staff-artefact3
+staff-artefact4
+staff-artefact5
+staff-artefact6
+staff-artefact7
+%rim 1
 
 # These must be in the same order as the enum in item-prop-enum.h!
 # start TAG_MAJOR_VERSION == 34
@@ -1083,8 +1103,11 @@ error ROD_VENOM ROD_ID_LAST
 
 #OBJ_ORBS
 %sdir item/misc
-misc_orb ORB UNSEEN_ORB
-misc_orb2
+orb_of_zot1 ORB UNSEEN_ORB
+orb_of_zot2
+orb_of_zot3
+orb_of_zot4
+orb_of_zot5
 uncollected_orb UNCOLLECTED_ORB
 
 #OBJ_MISCELLANY
@@ -1113,19 +1136,10 @@ misc_lantern MISC_LANTERN_OF_SHADOWS
 misc_horn MISC_HORN_OF_GERYON
 misc_box MISC_BOX_OF_BEASTS
 %rim 0
-# start TAG_MAJOR_VERSION == 34
 misc_sack MISC_SACK_OF_SPIDERS
-# end TAG_MAJOR_VERSION
 misc_phantom_mirror MISC_PHANTOM_MIRROR
 misc_zigfig MISC_ZIGGURAT
 misc_quad MISC_QUAD_DAMAGE
-misc_pawn MISC_CHESSPIECE_FIRST
-misc_rook
-misc_knight
-misc_bishop
-misc_queen
-misc_king
-misc_thimble MISC_CHESSPIECE_LAST
 %sdir item/misc/runes
 generic MISC_RUNE_OF_ZOT
 rune_tartarus RUNE_TARTARUS
@@ -1151,6 +1165,19 @@ rune_demonic_4
 rune_demonic_5
 rune_demonic_6
 rune_elven RUNE_ELVEN
+
+#OBJ_TALISMANS
+%sdir item/talisman
+%rim 0
+beast TALISMAN_BEAST
+flux TALISMAN_FLUX
+snake TALISMAN_SNAKE
+maw TALISMAN_MAW
+blade TALISMAN_BLADE
+statue TALISMAN_STATUE
+dragon TALISMAN_DRAGON
+storm TALISMAN_STORM
+death TALISMAN_DEATH
 
 %sdir item/misc/uncollected_runes
 generic MISC_UNCOLLECTED_RUNE_OF_ZOT

@@ -57,7 +57,7 @@ enum enchant_type
 #endif
     ENCH_SWIFT,
     ENCH_TIDE,
-    ENCH_INSANE,         // Berserk + changed attitude.
+    ENCH_FRENZIED,         // Berserk + changed attitude.
     ENCH_SILENCE,
     ENCH_AWAKEN_FOREST,
     ENCH_EXPLODING,
@@ -203,6 +203,11 @@ enum enchant_type
     ENCH_ANGUISH,
     ENCH_SIMULACRUM,
     ENCH_NECROTISE,
+    ENCH_CONTAM,
+    ENCH_PURSUING,
+    ENCH_BOUND,
+    ENCH_BULLSEYE_TARGET,
+    ENCH_VITRIFIED,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

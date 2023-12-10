@@ -141,7 +141,7 @@ define(function() {
             // The keycode mappings for function keys here were wrong for a very
             // long time. They should start with -265 to match ncurses keycodes,
             // but the code used numpad internal dcss keycodes for years and
-            // no one noticed. In fact, various incorrect changes happend to
+            // no one noticed. In fact, various incorrect changes happened to
             // the crawl binary to accommodate. For this reason, we still need
             // to use these keycodes for old versions. Overridden in 0.27+.
             112: -1011, // F1

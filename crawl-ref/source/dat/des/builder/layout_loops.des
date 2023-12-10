@@ -93,7 +93,7 @@ end
 # c = y * 1000 + x
 #
 # The array starts at 1.  Special position count (corners.count)
-#  is reserved for the number of elments in the array.  This
+#  is reserved for the number of elements in the array.  This
 #  array is basically serving as a vector with data in the range
 #  [1, count].
 #
@@ -111,19 +111,19 @@ end
 # Draws a "blocky" line of open cells connecting the two
 #  specified points.  The line is divided into a number of
 #  intervals that each of their own y-coordinate in the
-#  specified range.  The y-coordinates can be wieghted to low
+#  specified range.  The y-coordinates can be weighted to low
 #  or high values.
 #
 # Parameters:
 #  <1> e: The global environment
 #  <2> corners: The array of corners to update
 #  <3> start_x
-#  <4> start_y: The corrdinates of the start point
+#  <4> start_y: The coordinates of the start point
 #  <5> end_x
-#  <6> end_y: The corrdinates of the end point
+#  <6> end_y: The coordinates of the end point
 #  <7> min_y: The minimum y-coordinate
 #  <8> max_y: The maximum y-coordinate
-#  <9> weight_type: How the y-ccordinates should be weighted
+#  <9> weight_type: How the y-coordinates should be weighted
 #         < 0: to low values
 #        == 0: evenly
 #         > 0: to high values
@@ -320,7 +320,7 @@ end
 # loopsInsertDividedLoop
 #
 # Draws a square "loop" with blocky, irregular edges around a
-#  point.  The edges are in a number of segements with a
+#  point.  The edges are in a number of segments with a
 #  distance from the center in a specified range.  The segments
 #  are weighted towards the outside of the square because there
 #  is more are farther from the center.  The loop is forced to
@@ -330,7 +330,7 @@ end
 #  <1> e: The global environment
 #  <2> corners: The array of corners to update
 #  <3> center_x
-#  <4> center_y: The corrdinates of the center point
+#  <4> center_y: The coordinates of the center point
 #  <5> radius_min: The minimum radius of the square
 #  <6> radius_max: The maximum radius of the square
 #  <7> divisions: How many segments each side of the square
@@ -600,7 +600,7 @@ end
 #  .......   ...x...      NO
 #  .......   .xxxxx.              CENTER
 #  .......   .xxxxx.   OUTLINE
-#  .......   .xxxxx.              GLPYH
+#  .......   .xxxxx.              GLYPH
 #  .......   ...x...     FORM
 #    ...       ...                 FORM
 #
@@ -608,7 +608,7 @@ end
 #   .....     .xxx.       NO
 #  .......   ..xxx..              CENTER
 #  .......   .xxxxx.   OUTLINE
-#  .......   ..xxx..              GLPYH
+#  .......   ..xxx..              GLYPH
 #   .....     .xxx.      FORM
 #   .....     .....                FORM
 #
@@ -1429,7 +1429,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
 
   -- we have a chance of placing the stairs
   if crawl.random2(100) < PLACE_STAIRS_PERCENT then
-    -- In genral, we add 3 rooms on each arm to hold the stairs
+    -- In general, we add 3 rooms on each arm to hold the stairs
     --  and pick two arms at random to have the stairs.  We
     --  also connect these stairs rooms to the central room for
     --  the arm.  The connections are added first so that they

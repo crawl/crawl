@@ -435,7 +435,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
     if (!mon->alive())
         return;
 
-    // Ball lightning dissapates harmlessly out of LOS
+    // Ball lightning dissipates harmlessly out of LOS
     if (mon->type == MONS_BALL_LIGHTNING && mon->summoner == MID_PLAYER)
     {
         monster_die(*mon, KILL_RESET, NON_MONSTER);
@@ -463,7 +463,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
 
     // Yred & animate dead zombies crumble on floor change
     if (mon->friendly()
-        && (is_yred_undead_slave(*mon) && !mons_bound_soul(*mon)
+        && (is_yred_undead_follower(*mon) && !mons_bound_soul(*mon)
             || mon->props.exists(ANIMATE_DEAD_KEY)))
     {
         if (turns > 2)
@@ -471,7 +471,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
         else
         {
             // handle expiration messages if the player was quick
-            // doing it this way so the mesages are kept consistent with
+            // doing it this way so the messages are kept consistent with
             // corresponding non-yred derived undead
             mon_enchant abj(ENCH_FAKE_ABJURATION, 0, 0, 1);
             mon->add_ench(abj);
@@ -578,7 +578,7 @@ void monster::timeout_enchantments(int levels)
 
         switch (entry.first)
         {
-        case ENCH_POISON: case ENCH_CORONA:
+        case ENCH_POISON: case ENCH_CORONA: case ENCH_CONTAM:
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
         case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
         case ENCH_CHARM: case ENCH_SLEEP_WARY: case ENCH_SICK:
@@ -591,12 +591,13 @@ void monster::timeout_enchantments(int levels)
         case ENCH_BREATH_WEAPON: case ENCH_WRETCHED:
         case ENCH_SCREAMED: case ENCH_BLIND: case ENCH_WORD_OF_RECALL:
         case ENCH_INJURY_BOND: case ENCH_FLAYED: case ENCH_BARBS:
-        case ENCH_AGILE: case ENCH_FROZEN:
+        case ENCH_AGILE: case ENCH_FROZEN: case ENCH_PURSUING:
         case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC: case ENCH_NEUTRAL_BRIBED:
         case ENCH_FRIENDLY_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:
         case ENCH_RESISTANCE: case ENCH_HEXED: case ENCH_IDEALISED:
         case ENCH_BOUND_SOUL: case ENCH_STILL_WINDS: case ENCH_DRAINED:
-        case ENCH_ANGUISH:
+        case ENCH_ANGUISH: case ENCH_FIRE_VULN: case ENCH_SPELL_CHARGED:
+        case ENCH_VITRIFIED:
             lose_ench_levels(entry.second, levels);
             break;
 
@@ -619,7 +620,7 @@ void monster::timeout_enchantments(int levels)
                 lose_ench_levels(entry.second, levels);
             break;
 
-        case ENCH_INSANE:
+        case ENCH_FRENZIED:
         case ENCH_BERSERK:
         case ENCH_INNER_FLAME:
         case ENCH_ROLLING:
@@ -696,6 +697,7 @@ void update_level(int elapsedTime)
 
     if (env.sanctuary_time)
     {
+        // XX this doesn't guarantee that the final FPROP will be removed?
         if (turns >= env.sanctuary_time)
             remove_sanctuary();
         else
@@ -950,6 +952,27 @@ void timeout_tombs(int duration)
     }
 }
 
+void timeout_binding_sigils()
+{
+    int num_seen = 0;
+    for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
+    {
+        map_terrain_change_marker *marker =
+                dynamic_cast<map_terrain_change_marker*>(mark);
+        if (marker->change_type == TERRAIN_CHANGE_BINDING_SIGIL)
+        {
+            if (you.see_cell(marker->pos))
+                num_seen++;
+            revert_terrain_change(marker->pos, TERRAIN_CHANGE_BINDING_SIGIL);
+        }
+    }
+
+    if (num_seen > 1)
+        mprf(MSGCH_DURATION, "Your binding sigils disappear.");
+    else if (num_seen > 0)
+        mprf(MSGCH_DURATION, "Your binding sigil disappears.");
+}
+
 void timeout_terrain_changes(int duration, bool force)
 {
     if (!duration && !force)
@@ -988,7 +1011,8 @@ void timeout_terrain_changes(int duration, bool force)
         actor* src = actor_by_mid(marker->mon_num);
         if (marker->duration <= 0
             || (marker->mon_num != 0
-                && (!src || !src->alive() || (src->is_monster() && src->as_monster()->pacified()))))
+                && (!src || !src->alive()
+                    || (src->is_monster() && src->as_monster()->pacified()))))
         {
             if (you.see_cell(marker->pos))
                 num_seen[marker->change_type]++;
@@ -1004,6 +1028,11 @@ void timeout_terrain_changes(int duration, bool force)
         mpr("The runic seals fade away.");
     else if (num_seen[TERRAIN_CHANGE_DOOR_SEAL] > 0)
         mpr("The runic seal fades away.");
+
+    if (num_seen[TERRAIN_CHANGE_BINDING_SIGIL] > 1)
+        mprf(MSGCH_DURATION, "Your binding sigils disappear.");
+    else if (num_seen[TERRAIN_CHANGE_BINDING_SIGIL] > 0)
+        mprf(MSGCH_DURATION, "Your binding sigil disappears.");
 }
 
 ////////////////////////////////////////////////////////////////////////////

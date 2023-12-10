@@ -1,427 +1,1084 @@
-%%%%
-A basalt altar of Yredelemnul
+########################################################################
+### 祭坛
+########################################################################
+A detected altar
 
-一座由玄武岩柱加工而成的祭坛，供奉的神祗是黑暗之神伊莱德莱姆努尔。
+某种祭坛。如果不走近它，你就无法知道它是供奉什么神的。
 %%%%
-A bloodstained altar of Trog
+A faded altar of an unknown god
 
-一座供奉狂怒者塔洛格的祭坛。它做工粗糙，似乎是由巨人建造出来的；
-表面上溅满了鲜血。
-%%%%
-A blossoming altar of Fedhas
-
-一座供奉费德哈·马达许的祭坛。它上面长满了各种各样的植物。
-%%%%
-A broken pillar
-
-建造这根立柱的人早已离世多年。现在已经没有人记得建造这根立柱的原因了。
-%%%%
-A burning altar of Makhleb
-
-一座供奉毁灭者马科列布的祭坛。祭坛上有一团永不熄灭的火焰；透过火焰，
-你可以隐约看到一些陌生而扭曲的身影。
-%%%%
-A closed door
-
-一扇木门。要打开它很简单，直接向门的方向移动就可以了，或者按“O”键。
-%%%%
-A collapsed entrance
-
-这个通道的建筑质量显然不怎么样。任何人都无法使用它了。
-%%%%
-A corrupted altar of Lugonu
-
-一座供奉千面之神卢格努的祭坛。这祭坛也许曾经供奉过别的神祗，但不管怎么说，
-它现在确实已经被无可逆转地腐化了。
-%%%%
-A crawl-hole back to the Lair
-
-只要爬上这个楼梯，你就能返回外面的宽阔世界了。
-%%%%
-A deep blue altar of Sif Muna
-
-这座深蓝色的祭坛上画满了晦涩的图案与古老的文字。
-它所供奉的神祗即是学识之主席夫·穆纳。
-%%%%
-A dry fountain
-
-这个喷泉以前也曾经辉煌过，但它现在已经完全干涸了。
-%%%%
-A gate leading back out of this place
-
-这个传送门能让你回到地城中。
-%%%%
-A gate leading to another region of Pandemonium
-
-这扇门通往群魔殿中的又一片领域。群魔殿是无穷无尽的。
-%%%%
-A gateway back into the Dungeon
-
-这扇门允许你做到一件通常被认为不可能的事：活着逃出地狱。
-%%%%
-A gateway leading out of the Abyss
-
-在四周不断变化的光景中，只有这扇传送门固定在那里不动，发出微弱的光芒。
-它会将你带离这个受诅咒的地方。
-%%%%
-A gateway to Hell
-
-这扇传送门通往地狱前庭。很少有人会自愿前往那个地方。
-%%%%
-A gleaming silver wall
-
-辛创造出这面纯银之墙来囚禁一只怪物。这面墙正在快速解体；它撑不了多久了。
+一座古老的祭坛，时间冲刷掉了它的全部特征。
+在那里祈祷，将会皈依一个未知的神。
+祭坛的神灵会非常感念于你在这样古老的礼拜场所进行皈依。
 %%%%
 A glowing golden altar of the Shining One
 
-一座纯金制成的光明神祭坛。它发出的光芒几乎要将你亮瞎。
+光明神的祭坛，由纯金制成，发出几近眩目的光芒。
 %%%%
-A glowing silver altar of Zin
+A broken altar of Ashenzari
 
-一座微微发光的祭坛，供奉着定法者辛。它是用白银制成的；
-辛的信徒们也应该和这白银一样纯洁无暇。
-%%%%
-A granite statue
-
-虽然是用坚硬的岩石制成的，这尊雕像还经不起时间的消磨。
-你已经看不出这到底雕的是什么东西了。
-%%%%
-A mechanical trap
-
-一个用于杀伤闯入者的机械装置。有经验的冒险者可以尝试拆除它。
-%%%%
-A passage of Golubria
-
-这个不稳定的传送门让你瞬间传送到附近的另一个葛卢布理亚道标上。
-只要有任何东西通过这个传送门，它就会立刻关上。
-%%%%
-A portal to somewhere
-
-这是一道在现实中活生生撕开的裂痕。从中看过去，
-你可以看见对面的恐怖世界中有无数星星在闪耀。幸运的是，
-打开这道裂缝的魔法同时也会阻止它将视线中的一切东西尽数吞没。
-%%%%
-A radiant altar of Vehumet
-
-这座祭坛沐浴在伊斯肯德仑之光中，好像在对来人许诺：只要追随维忽麦特，
-他就会赐予你无比的毁灭之力。
-%%%%
-A rock wall
-
-这仅仅是一面石头墙。
+当艾申扎利被诅咒的时候，这座水晶祭坛也随之破碎。
+这里依然残留着强大的力量：
+黑色的光环将碎片定格在爆炸中期，悬停在时间和空间上，就像它们所昭示的神。
 %%%%
 A roughly hewn altar of Beogh
 
-一座供奉比欧弗的祭坛。祭坛做工粗糙，一眼就能看出是出自兽人艺术家之手。
-%%%%
-A runed door
-
-这扇门上面画满了符文记号。门的后面应该有什么特别的东西——可能是宝藏，
-也可能是危险。你可以破除上面的符文然后打开它，方法和打开其他门一样：
-直接向门的方向移动，或者按“O”键。
-%%%%
-A sealed door
-
-这扇门被奥术符文封得紧紧的。只有被这扇门上面的魔法承认的生物才能打开它。
-%%%%
-A shaft
-
-一个深洞。如果掉进去的话，不知道会掉到哪里。
-%%%%
-A shattered altar of Ashenzari
-
-当艾申扎利被诅咒的时候，这个水晶祭坛也随之破碎。但即使是这样，
-这里依然有力量残留：一圈黑色的光环环绕在悬浮的水晶的碎片周围—
-—就像它们供奉的古神一样，祭坛的碎片在时间和空间中完全停滞了。
-%%%%
-A shimmering altar of Xom
-
-这座祭坛上不断变换着发出各种颜色的光芒——甚至还包括不可见光。
-和这座祭坛所供奉的神祗——无常之主扫姆一样，这座祭坛本身也变幻无常。
-%%%%
-A shop
-
-有一位隐居的商人在不见天日的地城中开设了一家商店。这里的商店不能还价，不会退款，
-而且也不会从你那里购买任何东西。某些商店里兜售的是来路不明的二手货；
-店主自然不会告诉你这些商品的质量和性质。
-%%%%
-A slime covered rock wall
-
-这堵岩石墙壁被亮绿色的史莱姆覆盖。嗯。。。用手触摸的话会被酸腐蚀，而且，
-似乎你下的越深，腐蚀性越强。
+比欧弗的祭坛，做工粗糙，一眼就能看出是出自兽人工匠之手。
 %%%%
 A snail-covered altar of Cheibriados
 
-不知为什么，这座祭坛似乎比其他祭坛要来得更加稳定。
+深思者切布理亚多的祭坛。
+%%%%
+A shadowy altar of Dithmenos
+
+隐没者迪斯姆诺的祭坛。它似乎在吸收四周的光。
+%%%%
+A white marble altar of Elyvilon
+
+治愈者艾利维隆的祭坛，由纯白色大理石制成，顶端有净化之杯的雕像。
+%%%%
+A blossoming altar of Fedhas
+
+费德哈·莽动的祭坛，上面覆盖着生机盎然、色彩艳丽植物。
+%%%%
+An opulent altar of Gozag
+
+贪婪者哥萨戈·亿·赛格斯的祭坛，金光闪闪、饰以珠宝，
+即使在昏暗的地牢也熠熠生辉。
+%%%%
+A hazy altar of Hepliaklqana
+
+遗忘者惠普利亚卡纳的祭坛，被笼罩在薄雾中，难以清晰辨认。
+有些东西似曾相识，但很难说清原因。
+%%%%
+A candlelit altar of Ignis
+
+曳焰伊格尼斯的祭坛。上面摆满了各种形状和大小的蜡烛，
+但只有一根还亮着，它纤细的火焰在微风中摇曳。
+%%%%
+A viscous altar of Jiyva
+
+吉瓦的祭坛，黏滑、在不断变形。
+你不确定这祭坛到底是用什么材料制造的，而且你也不想知道。
+%%%%
+An ancient bone altar of Kikubaaqudgha
+
+这座用远古骸骨堆积成的祭坛供奉的是恐怖的魔神——奇库巴库哈。
+%%%%
+A corrupted altar of Lugonu
+
+无形之神卢格努的祭坛，
+这祭坛也许曾供奉过别的神祗，但现在已经不可逆转地被腐化了。
+%%%%
+A burning altar of Makhleb
+
+毁灭者马科列布的祭坛，上面永远燃烧着火焰。
+透过火焰，可以隐约看到一些奇特而扭曲的形状。
 %%%%
 A sparkling altar of Nemelex Xobeh
 
-这座祭坛发出的霓虹光比任何一个赌场的招牌都要亮；
-尼姆莱克斯·索贝就是靠这种手段来吸引信徒的。
+这座祭坛上的灯光比任何一个赌场都要亮，
+尼姆雷斯・索布在靠这种手段来吸引信徒。
 %%%%
-A spear trap
+An iron altar of Okawaru
 
-这个陷阱会射出长而尖的飞矛来刺穿闯入者。
+一座供奉战争之主奥卡瓦鲁的钢铁祭坛。祭坛的边缘出奇地锋利。
 %%%%
-A staircase back to the Dungeon
+A stormy altar of Qazlal
 
-这个楼梯会带你回到之前的地城楼层上。
+兴风者卡兹拉尔的祭坛，
+被包裹在狂风、闪电、喷涌的烈火和岩浆之中，时而与之震颤。
 %%%%
-A staircase back to the Lair
+A sacrificial altar of Ru
 
-这个楼梯会带你回到百兽之巢中。
+觉醒者入的祭坛，
+其外形是个天平，一个托盘中放有心，而另一个托盘中的符号象征力量和觉悟。
 %%%%
-A staircase back to the Mines
+A shimmering blue altar of Sif Muna
 
-这个楼梯会带你回到兽人矿坑中。
+学识之主席夫·穆纳的祭坛，上面布满了错综复杂的图案和久久被遗忘的文字。
+在深蓝色的基座上，盘旋着纯净的魔法凝结的光芒。
 %%%%
-A staircase back to the Vaults
+A bloodstained altar of Trog
 
-这个楼梯会带你回到藏宝库中。
+狂怒者特洛戈的祭坛，它做工粗糙，像是由巨人建造的，上面溅满了鲜血。
 %%%%
-A staircase to the Hall of Blades
+A hide-covered altar of Uskayaw
 
-这个楼梯通往万刃之厅。就连地上的脚印都被那里的活化武器给切开了。
+狂欢者阿斯卡亚的祭坛。
+它似乎是中空的，被一层皮覆盖着，形成了能够共振的表面。
+侧面的雕刻描绘着一群人，他们可能在跳舞、爱恋或战斗。
 %%%%
-A stone staircase leading down
+A radiant altar of Vehumet
 
-这个楼梯通往地下更深处。
+这座祭坛闪耀在伊斯肯德伦之光中，好像在对来人许诺：
+只要追随维胡梅特，他就会赐予你无比的毁灭之力。
 %%%%
-A stone staircase leading up
+An ornate altar of the Wu Jian Council
 
-这个楼梯通往上一层地城。
+无间门派的红金相间的祭坛。锋利的钢片在周围安静的空气中飘过。
 %%%%
-A stone wall
+A shimmering altar of Xom
 
-这是比普通石墙更难对付的障碍；只有最强力的魔法才能打碎这种石墙。
+这座祭坛不断闪现着各色光芒，甚至可能还有不可见光，
+和这座祭坛所供奉的神祗无常之主佐姆一样，变幻莫测。
 %%%%
-A teleport trap
+A basalt altar of Yredelemnul
 
-如果有任何倒霉蛋踩到——或者甚至是从上方飞过——这个魔法陷阱，
-他将会被立刻传送到这层地城上的一个随机地点。
+黑暗神伊莱德莱姆努尔的祭坛，由柱状玄武岩建成。
+%%%%
+A glowing silver altar of Zin
+
+定法者辛的祭坛，由银制成，与辛的追随者们所期望的一样纯净，柔和地发着光。
+%%%%
+########################################################################
+### 地面
+########################################################################
+The endless lava
+
+一片火与硫磺的海洋，一望不知边际。任何冒险要穿越它的人，都会立刻被烤死。
+%%%%
+The floor
+
+地面。
+%%%%
+Some deep water
+
+一个深水池。
+只有巨型生物可以趟过去，水性好的则可以游；而其他的，就只能选择飞过去。
+%%%%
+Some lava
+
+一个炽热的熔岩池，喷吐着硫磺烟云。
+只有传说中的火蜥蜴才能不凭借飞行就能穿越它。
+%%%%
+Some shallow water
+
+一个浑浊的水池，深及腰部。
+水性好的可以游过水，并能正常攻击。
+不会游泳的必须缓慢地涉水，在趟过浅水时，有时会在近战中失手；
+但大型生物能够以正常速度移动，以保持平衡，避免摔倒。
+%%%%
+A toxic bog
+
+一个肮脏、有毒的淤泥池，深及腰部。
+在淤泥中涉水或游泳会让任何生物中毒受伤，甚至是那些有毒抗的生物。
+水性好的可以游过它，并能正常攻击。
+不会游泳的必须缓慢地涉水，在趟过浅水时，有时会在近战中失手；
+但大型生物能够以正常速度移动，以保持平衡，避免摔倒。
+%%%%
+Some mud
+
+一层厚厚的含有沙砾的泥。
+<liquefied>
+%%%%
+The open sea
+
+前方只有无尽的风浪，在你视野可及之处都没有一座灯塔。
+任何冒险要穿越它的人，很快都会失去一切希望。
+%%%%
+An unnaturally hard rock wall
+
+这面墙被注入魔力，坚不可摧。
+%%%%
+A wall of the weird stuff which makes up Pandemonium
+
+这面墙由构筑魔窟的奇特材料制成。在其他大多数方面，似乎都和岩石一样。
+%%%%
+A crystal wall
+
+这面墙由抛光水晶制成，充满了奥术魔力。
+这使得墙难以被轻易破坏，并能反射热和冷。
 %%%%
 A translucent rock wall
 
-这面墙壁是用一种像优质玻璃一样透明的矿物。
+这面岩墙由一种像优质玻璃那样透明的矿物制成。
 你不确定它的这种性质是自然的还是被魔法改造的。
 %%%%
 A translucent stone wall
 
-这是比石墙更难对付的障碍；只有最强力的魔法才能打碎砖墙。这面墙壁被灌入了魔法，
-因此变成了透明的。
+这是比岩墙更难对付的障碍。只有最强力的魔法才能打碎石墙。
+这面墙壁被注入奥术魔法，因此变成了透明的。
 %%%%
 A translucent unnaturally hard rock wall
 
-这面墙上附着的魔法不仅使它变得坚不可摧，而且还使它变得像玻璃一样通体透明。
+这面墙被注入魔力，不仅使它坚不可摧，还让它变得像玻璃一样半透明。
 %%%%
-A viscous altar of Jiyva
+A stone wall
 
-一座满是黏液、不断变形的祭坛，供奉着吉瓦。你不确定这祭坛到底是用什么材料制造的，
-而且你也不想知道。
+这是比岩墙更难对付的障碍。只有最强力的魔法才能打碎石墙。
 %%%%
-A wall of the weird stuff which makes up Pandemonium
+A slime covered rock wall
 
-这面墙的材质就是构成群魔殿的那些古怪东西，不过除此之外和石墙似乎没什么区别。
+这面岩墙附着着亮绿色的黏液。它摸起来是酸性的；站在它附近就会被暂时腐蚀。
 %%%%
-A white marble altar of Elyvilon
+A metal wall
 
-一座供奉医者之神艾利维隆的祭坛。它是用纯白色大理石制成的，
-祭坛顶端是净化之杯的雕像。
+一面蓝灰色金属墙。地牢中的每个电工都知道，它甚至能让闪电箭接地。
 %%%%
-A web
+A rock wall
 
-编出这张网的蜘蛛肯定是个大家伙；看起来它要逮的是 {{ return 你.genus(true) }}
-而不是苍蝇。
+这仅仅是一面岩墙。
+%%%%
+########################################################################
+### 地标
+########################################################################
+A shop
+
+有一位神秘、隐居的商人在不见天日的地牢中开设了一家商店，
+这里的商店不能还价，不会退款，而且也不会从你那里购买任何东西。
+一些商店会出售来源不明的古物，店主自然不会告诉你这些商品的质量和性质。
+%%%%
+A stone staircase leading down
+
+一个通往下层的楼梯。
+%%%%
+A stone staircase leading up
+
+一个通往上层的楼梯。
+%%%%
+A tree
+
+一棵大树。在地牢的大多地方，昏暗的光线不足以维持大型植物的生长，
+但有些地方，受到费德哈的关照，在地下生长的树木也长得和地表的一样大。
+%%%%
+A mangrove
+
+这种树特别适合在沼泽环境中生长。它的藤蔓很茂密，看不到对面。
+%%%%
+A demonic tree
+
+一棵被混乱的恶魔力量扭曲的树。
+尽管外形怪异，偶尔还会有令人不安的动作，但它似乎是无害的。
 %%%%
 An abandoned shop
 
 这间商店已经被废弃了。
 %%%%
-An ancient bone altar of Kikubaaqudgha
+An orcish idol
 
-这座用骸骨堆积成的祭坛供奉的是恐怖的魔神——奇库巴卡德加。
+一尊兽人之神比欧弗的塑像。
 %%%%
-An empty arch of ancient stone
+An iron grate
 
-这座石头拱门的年代似乎非常久远。看起来，这座拱门并不通往什么地方。
-%%%%
-An escape hatch in the ceiling
-
-天花板上一个单向的逃生用舱门。
+一个生锈的铁门，可以用法术或法杖轻易破坏。但徒手还是不行。
 %%%%
 An escape hatch in the floor
 
-地面上一个单向的逃生用舱门。如果你遇到了无法打倒的敌人，你可以选择使用它—
-—逃离眼下的危险，但楼下可能有更大的危险潜伏着。
+地牢的地面上一个单向逃生口，
+让被敌人围困的冒险者可以选择使用它逃离眼下的危险，面对下一层的危险。
 %%%%
-An iron altar of Okawaru
+An escape hatch in the ceiling
 
-一座供奉战争之主奥卡瓦鲁的钢铁祭坛。出乎意料地，祭坛的边缘非常锋利。
+天花板上一个装有弹簧的单向逃生口。
 %%%%
+A shaft
+
+地面上的一个洞，通往更深一层或多层的地牢。
+%%%%
+A sealed passage leading down
+
+一条下行的通道，被魔法路障牢固地封印着。只要魔力一直存在，就不可能穿过它。
+%%%%
+A sealed passage leading up
+
+一条上行的通道，被魔法路障牢固地封印着。只要魔力一直存在，就不可能穿过它。
+%%%%
+An empty arch of ancient stone
+
+一个石拱门，看起来无法通往任何地方。
+%%%%
+# mmap/探知/etc
+A detected shop or portal
+
+某种入口。你不接近它就无法知道它通往哪里。
+%%%%
+A passage of Golubria
+
+这个不稳定的传送门让你瞬间传送到附近的另一个格鲁布里亚的通道上，
+只要有任何东西通过这个传送门，它就会立刻关闭。
+%%%%
+A portal to somewhere
+
+现实空间中的一道伤口般的裂缝，揭示着某个可怕的、繁星点点的另一个世界。
+幸运的是，打开这道裂缝的魔法同时也会阻止它将视线中的一切东西尽数吞没。
+%%%%
+A granite statue
+
+一座石像，其形象早已被时间消磨。
+%%%%
+A gleaming silver wall
+
+一面纯银制成的墙，由辛的力量生成，用来将一个怪物暂时囚禁起来。
+%%%%
+A dry fountain
+
+一个干涸的喷泉，见证过美好的岁月。
+%%%%
+A fountain of clear blue water
+
+一个装饰性喷泉，水流清澈。
+%%%%
+A fountain of blood
+
+一个装饰性喷泉，喷着看上去肮脏的血液。
+%%%%
+A fountain of sparkling water
+
+一个装饰性喷泉，流淌着闪烁、起泡的水。
+%%%%
+A runelight
+
+一道超自然、闪耀的光芒，在半空中飘浮、扭曲。
+附近肯定有个佐特符文，它溢出的能量生成出这一壮观的景象。
+%%%%
+# 毁坏的立柱
+A broken pillar
+
+一根残破的石柱。
+%%%%
+A one-way staircase leading down
+
+一个被诅咒的通往下层的楼梯，注入着魔力，以阻止任何回返。
+走这条通道的冒险者，到达所通往的楼层后，需要找到其他能够返回楼梯。
+%%%%
+A one-way staircase leading up
+
+一个被诅咒的通往上层的楼梯，注入着魔力，以阻止任何回返。
+走这条通道的冒险者，到达所通往的楼层后，需要找到其他能够返回楼梯。
+%%%%
+########################################################################
+### 分支入口和出口
+########################################################################
+A gate leading back out of this place
+
+这个大门，你穿过它能回到你来的地方。
+%%%%
+A gate leading out of Pandemonium
+
+一个返回地牢的大门。
+%%%%
+A gate leading to another region of Pandemonium
+
+一个通往另一个魔窟的大门。魔窟是无穷无尽的。
+%%%%
+A one-way gate leading to the halls of Pandemonium
+
+一个通往魔窟的无尽大厅的大门。
+%%%%
+A staircase to the Depths
+
+一个通往地底的楼梯。
+%%%%
+A gate to the Realm of Zot
+
+一个通往佐特领域的大门。
+%%%%
+A gateway back into the Dungeon
+
+这道大门能让你做到一件通常被认为不可能的事：活着逃出地狱。
+%%%%
+A gateway leading out of the Abyss
+
+一个离开深渊的出口，在无常的景象中发光变幻。
+%%%%
+A gateway leading deeper into the Abyss
+
+一个出奇平静的入口，坐落在深渊那混沌的景象中。它通向深渊的更深处。
+%%%%
+A gateway to a ziggurat
+
+一个通往金字塔的门户。
+%%%%
+A gateway to the ashen valley of Gehenna
+
+一个通往欣嫩谷的入口。
+%%%%
+A gateway leading out of Gehenna
+
+一个返回地狱前庭的出口。
+%%%%
+A gateway to Hell
+
+一个通往地狱前庭的入口。很少有人自愿前往那个地方。
+%%%%
+A gateway to the Iron City of Dis
+
+一个通往狄斯铁城的入口。
+%%%%
+A gateway leading out of Dis
+
+<A gateway leading out of Gehenna>
+%%%%
+A gateway to the decaying netherworld of Tartarus
+
+一个通往塔尔塔罗斯的入口。
+%%%%
+A gateway leading out of Tartarus
+
+<A gateway leading out of Gehenna>
+%%%%
+A gateway to the freezing wastes of Cocytus
+
+一个通往悲叹河的入口。
+%%%%
+A gateway leading out of Cocytus
+
+<A gateway leading out of Gehenna>
+%%%%
+
+A hole to the Spider Nest
+
+一个通往蜘蛛巢的通道。
+%%%%
+A one-way gate to the infinite horrors of the Abyss
+
+一个通往深渊的入口。
+%%%%
+A crawl-hole back to the Lair
+
+一个返回兽穴的出口。
+%%%%
+An exit through the horrors of the Abyss
+
+一个通过疯狂的深渊返回地牢的出口。
+%%%%
+A staircase back to the Dungeon
+
+一个返回你遇到过的地牢楼层的楼梯。
+%%%%
+A staircase back to the Lair
+
+一个返回兽穴的楼梯。
+%%%%
+A staircase back to the Mines
+
+一个返回兽人矿井的楼梯。
+%%%%
+A staircase back to the Vaults
+
+一个返回宝库的楼梯。
+%%%%
+A staircase leading out of the dungeon
+
+这个楼梯，穿过它能离开地牢。
+
+这个楼梯是离开地牢的出口。爬上这些楼梯会结束你的探索，无论是否携带宝珠。
+%%%%
+A staircase back to the Crypt
+
+一个返回墓室的楼梯。
+%%%%
+A staircase to the Crypt
+
+一个通往墓室的楼梯。
+%%%%
+A staircase to the Ecumenical Temple
+
+一个通往众神庙的楼梯。
+%%%%
+A staircase to the Elven Halls
+
+一个通往精灵殿堂的楼梯。
+%%%%
+A staircase to the Lair
+
+一个通往兽穴的楼梯。
+%%%%
+A staircase to the Orcish Mines
+
+一个通往兽人矿井的楼梯。
+%%%%
+A staircase to the Shoals
+
+一个通往海滩的楼梯。
+%%%%
+A staircase to the Slime Pits
+
+一个通往黏液坑洞的楼梯。
+%%%%
+A staircase to the Snake Pit
+
+一个通往蛇穴的楼梯。
+%%%%
+A staircase to the Swamp
+
+一个通往沼泽的楼梯。
+%%%%
+A staircase to the Tomb
+
+一个通往坟冢的楼梯。
+%%%%
+A gate to the Vaults
+
+一个通往宝库的入口。
+%%%%
+A transporter
+
+一个通往同层的另一个地方的传送门。
+当使用了这个传送门，旁边的盟友和怪物也会随你一起到达另一边。
+%%%%
+A transporter landing site
+
+传送门的目的地。由于这个传送门是单向的，你无法通过此位置的传送门返回。
+%%%%
+########################################################################
+## 门
+########################################################################
 An open door
 
-一扇木门。要关上它，你可以 {{
-    if crawl.is_tiles() then
-        return "在门上按Ctrl+鼠标左键，或按'C'。"
-    else
-        return "按'C'。"
-    end
-}}
+一扇打开的木门。如果被怪物重新打开，它可能会破裂。
 %%%%
-An orcish idol
+A closed door
 
-一尊兽人之神比欧弗的塑像。破坏它肯定会激怒比欧弗的。
+一扇关闭的木门。如果被怪物打开，它可能会破裂。
 %%%%
-An unnaturally hard rock wall
+A broken door
 
-你不能以任何方式影响这面墙。
+一扇令人失望、维护不善的木门。要想恰当地关闭它，只有魔法能做到。
 %%%%
-Some lava
+An open translucent door
 
-一个炽热的熔岩湖，里面散发出烟云和硫磺味。
+这扇打开的门由神奇的半透明木材制成。如果被怪物重新打开，它可能会破裂。
 %%%%
-Some shallow water
+A closed translucent door
 
-这里的浑水虽然只有齐腰深，但陆生动物在这里面移动和战斗也会受到影响。
-这可能会很危险，但这里的水肯定不会直接杀死你。
+这扇关闭的门由神奇的半透明木材制成。如果被怪物打开，它可能会破裂。
 %%%%
-The open sea
+A broken translucent door
 
-前方只有无尽的风浪；在你视野可及之处都没有一座灯塔。如果继续前进，过不了多久，
-你就要永远迷失在海中了——所以还是别那么干的好。
+<A broken door>
 %%%%
+A sealed door
+
+这扇门被奥术符文牢固地封印着。只有被这扇门上面的魔法承认的生物才能打开它。
+%%%%
+A runed door
+
+这扇门上满是符文记号。
+门的后面应该有什么特别的东西——可能是危险，也可能是宝藏。
+像打开其他门那样就能破坏符文，但地牢里的生物可不敢尝试。
+%%%%
+A large open door
+
+<An open door>
+%%%%
+An open gate
+
+<An open door>
+%%%%
+A huge open gate
+
+<An open door>
+%%%%
+A large closed door
+
+<A closed door>
+%%%%
+A closed gate
+
+<A closed door>
+%%%%
+A huge closed gate
+
+<A closed door>
+%%%%
+A large runed door
+
+<A runed door>
+%%%%
+A runed gate
+
+<A runed door>
+%%%%
+A huge runed gate
+
+<A runed door>
+%%%%
+A large sealed door
+
+<A sealed door>
+%%%%
+A sealed gate
+
+<A sealed door>
+%%%%
+A huge sealed gate
+
+<A sealed door>
+%%%%
+A large broken door
+
+<A broken door>
+%%%%
+A broken gate
+
+<A broken door>
+%%%%
+A huge broken gate
+
+<A broken door>
+%%%%
+A large translucent open door
+
+<An open translucent door>
+%%%%
+An open translucent gate
+
+<An open translucent door>
+%%%%
+A huge open translucent gate
+
+<An open translucent door>
+%%%%
+A large translucent closed door
+
+<A closed translucent door>
+%%%%
+A closed translucent gate
+
+<A closed translucent door>
+%%%%
+A huge closed translucent gate
+
+<A closed translucent door>
+%%%%
+A large translucent broken door
+
+<A broken translucent door>
+%%%%
+A broken translucent gate
+
+<A broken translucent door>
+%%%%
+A huge broken translucent gate
+
+<A broken translucent door>
+%%%%
+########################################################################
+### 陷阱
+########################################################################
+An alarm trap
+
+这个陷阱会发出很大的噪音引来附近的怪物。
+除了产生噪音外，它还会使用魔力，使当前层的所有怪物得知你的位置。
+敌对的怪物可能会故意触发这个陷阱从而对你引起效果，而你的盟友会避免踩到它。
+%%%%
+A dispersal trap
+
+任何踩上这个陷阱的人都会将自己和视野中的其他怪物转移到附近的新位置。
+敌对的怪物可能会故意触发这个陷阱，而你的盟友会避免踩到它。
+%%%%
+A net trap
+
+一个巨大而隐蔽的网挂在地牢的天花板上，
+它被佐特注入魔力，只会落在闯入者身上。
+%%%%
+A pressure plate
+
+某种触发机关。你无法确定它所连接的陷阱的类型。
+它有着复杂的探测系统，即使有人飞过也会触发陷阱。
+%%%%
+A teleport trap
+
+这个魔力陷阱，任何经过它的人会被传送到这层地牢的一个随机地点。
+它会被消磨，一旦被激活就会消散。
+%%%%
+A permanent teleport trap
+
+这个魔力陷阱，任何经过它的人会被传送到这层地牢的一个随机地点。
+%%%%
+A web
+
+一个蜘蛛网。留下这张网的蜘蛛肯定是个大家伙，
+因为这似乎是用来诱捕{{ return you.genus(true) }}而不是苍蝇的。
+%%%%
+A Zot trap
+
+这个陷阱，会对那些不幸踩到陷阱的人造成危险、不可预知的魔法效果。
+你可能会发现自己陷入深渊，被大量的野性魔法污染，
+被召唤出的强大的恶魔来对付你，等等。
+敌对的怪物可能会故意触发这个陷阱从而对你引起效果，而你的盟友会避免踩到它。
+%%%%
+########################################################################
+### 进入宝库的门户
+########################################################################
+A flagged portal
+
+一个通往堡场的门户，会随着旗帜降至地面而逐渐消失。
+%%%%
+A gauntlet entrance
+
+一个通往竞技场的门户。
+%%%%
+# 限时的集市
+A flickering gateway to a bazaar
+
+一个通往集市的门户，行商聚集在那里出售商品。
+他们永远不会在一个地方呆很长时间。
+%%%%
+# 永久的集市
+A gateway to a bazaar
+
+一个通往集市的门户，行商聚集在那里出售商品。
+他们会等你，但一旦你浏览过他们的存货，商家将出发寻找其他客户。
+%%%%
+A frozen archway
+
+一个通往冰窟的门户。拱门在渐渐融化。
+%%%%
+A sand-covered staircase
+
+一个通往埋骨地的楼梯。沙子在不断倾泻，会逐渐封住入口。
+%%%%
+A glowing drain
+
+一个通往下水道的通道。它在逐渐锈蚀。
+%%%%
+A portal to a secret trove of treasure
+
+一个通往库藏的门户。这个门户一旦被使用过就会变得不稳定，并会崩溃。
+%%%%
+A dark tunnel
+
+一个通往火山的门户。岩石不断从隧道顶部和侧面落下，将会堵住入口。
+%%%%
+A crumbling gateway
+
+一个被盐渍的拱门，上面雕满了诸善神，以求掩盖其中的邪恶。
+这座拱门曾提供的任何保护终都屈服于时间的摧残，
+遥远的土地上倾泻着刺骨的微风。
+%%%%
+A magical portal
+
+一个通往巫师实验室的门户。它在逐渐消失。
+%%%%
+# 这些应改为自定义名称。目前使用的：冰窟、埋骨地、
+# 下水道、库藏、火山。
+A collapsed entrance
+
+这个坍塌的通道，无法继续使用。
+%%%%
+########################################################################
+### 宝库重新界定
+########################################################################
+# 火山
+A rock-blocked tunnel
+
+这个隧道不可继续通行。
+%%%%
+A rocky tunnel leading out of this place
+
+一个火山岩体中不稳定的通道，外面的冷空气可以从中进入。
+它导向你回到原来的地方。一旦你穿过它，就再也无法回来了。
+%%%%
+# 巫师实验室
+A portal leading out of this place
+
+这个闪着微光的魔法门导向你回到原来的地方。一旦你穿过它，就再也无法回来了。
+%%%%
+# 巫师实验室：乌卡德·穆
 An autumnal tree
 
-这些高大的树木仿佛永远停留在秋季的一瞬间：金色和红色的树叶缓缓地从树枝上飘落，
-但就在它们要碰到地面时，一道黑影闪过，然后在下一个瞬间，树叶又回到树枝上了。
+这棵高大的树木仿佛永远定格在秋季的一瞬间。
+红色和金色的树叶从树枝上落下，优雅地飘在半空中，
+但在它们碰到地面之前，它们会闪着光，重新出现在树枝上，将要再次飘落。
+%%%%
+A crumbled stone wall
+
+一面因年久失修而濒临坍塌的石墙，不知何故屹立不倒，仿佛凝固在时间里。
 %%%%
 A strange statue
 
-这尊雕像看起来非常奇怪诡异。也许这是因为时间太久，这雕像损毁得太厉害了；
-也有可能这本来就是某种恶魔生物的雕像。
+这尊雕像看起来非常奇怪诡异。雕像是因为磨损和失去光泽，就变得如此难以辨认？
+还是它的主题就是什么恶魔和邪恶的东西？
 %%%%
-A timeless floor
+# 巫师实验室：多洛克罗赫
+A strange rock wall
 
-虽然这里的地面已经被无数只脚踩踏过，它还是显得坚不可摧。
+这面墙上装饰着你可能会在坟墓中看到的图像。
 %%%%
-A crystal clear mirror
+A highly decorated stone wall
 
-一面闪闪发光的镜子，反射出周围的所有事物。
+这面墙上满是令人不安、恐怖图案。
 %%%%
-A black marble wall
+The rough-hewn floor
 
-这些大理石外表璀璨生辉，甚是好看。
+地面。有些地方粗糙不平。
 %%%%
-A rose-covered archway
-
-这支玫瑰真漂亮！
-%%%%
+# 巫师实验室：西戈图维
 Viscous fluid
 
-这里的墙壁似乎在分泌这种粘性液体。看起来真恶心。
+这里的墙壁似乎在分泌一种黏性液体。看起来真恶心。
+%%%%
+A sinewy wall
+
+这面墙看起来像奇怪有机体，但却惊人地坚韧。
 %%%%
 A thin membrane
 
-这层奇怪的膜状物质很薄，你可以透过它看东西。
+这层奇怪的膜很薄，可以透过它看东西。
 %%%%
-A pulsating floor
+The pulsating floor
 
-这里光滑的地面似乎在按某种节奏跳动。
+地面。它以未知的节奏搏动着。
 %%%%
+# 巫师实验室：宗古多克
 Zonguldrok's gravestone
 
-一个墓碑，上面刻着金色的字样：“宗古卓克”。
+宗古多克家的一块墓碑，上面还滴着微咸的灵液。
 %%%%
-The ground
+A gravestone
 
-此地毫无生气。
+一个无名的墓碑。
 %%%%
+# 巫师实验室：格鲁布里亚
 The dimension's edge
 
 在这个孤独的微型位面边缘，就连空间本身就消失在虚无之中。
 你不可能踏入这片黑色虚空，也不可能改变它。
 %%%%
-A damp floor
+A wall of crystal
 
-不管是因为潮湿还是常年存在于此的云雾，反正这里的地面似乎永远是湿的。
+<A crystal wall>
+%%%%
+# 巫师实验室：云法师
+The damp floor
+
+地面。它永远保持潮湿，这可能是因为有潮气或云在不断流动。
+%%%%
+A wall of white crystal
+
+这面墙由次等水晶制成，有着乳白色的光芒。
+%%%%
+# 巫师实验室：地狱捆缚者
+A black wall
+
+这面墙可能是由石头或固体木炭或只有在最深处的地狱中才会有的物质制成的。
+%%%%
+A carved rock wall
+
+这面墙上装饰着死亡和破坏的图案。
 %%%%
 A dead tree
 
-这里的所有东西都已经死了；这棵树当然不是例外。
+一棵死去已久的树的干枯残骸。
 %%%%
+A dead mangrove
+
+一棵死去已久的红树的干枯残骸。
+%%%%
+# 狄斯城：7
+An iron statue
+
+一尊古代战士的雕像，上面饰有从手下败将那里获得的战利品。
+一些深色物质从其面甲的缝隙渗出，当然，这一定是油……？
+%%%%
+# 欣嫩谷：7
+Ashen ground
+
+灰烬和余烬，其中散落着早已陨落的王国的破碎的珍宝和毫无价值的硬币。
+%%%%
+A tempered metal wall
+
+这面墙由黄铜和镍制成，上面覆盖着的一层薄薄金箔在持续的高温下不断脱落。
+图案描绘着凡人与魔鬼在做交易，但前者似乎很少能在交易中占上风。
+%%%%
+# 悲叹河：7
 An ice-covered rock wall
 
-这面石墙上覆了一层厚厚的冰霜。
+这面岩墙上有一层厚厚的冰霜。
+表层下有扭曲的脸在怒目而视，这张愤怒和背叛的怪相永远被定格着。
 %%%%
 An ice-covered stone wall
 
-这面砖墙上覆了一层厚厚的冰霜。
+这面石墙上有一层厚厚的冰霜。
+表层下有扭曲的脸在怒目而视，这张愤怒和背叛的怪相永远被定格着。
 %%%%
 Frost-covered floor
 
-这里的地面覆着冰霜。冰被踩碎时发出的声音给你一种莫名的快感。
+这片地面永远被凝结在冰霜和寒冷之中。
+它似乎是永驻的、不变的，仿佛这种状态已存在了永恒的时光。
 %%%%
+# 魔窟：神圣层
 A golden statue
 
-一尊黄金制成的圣人雕像。
+一尊纯金的圣人雕像。
 %%%%
 A silver wall
 
-这面墙是用纯银制成的。
+这面墙由纯银制成。
 %%%%
-A rune carved stone wall
+# 黏液：$
+A rune-carved stone wall
 
-很奇怪，这面石墙上似乎没有一点软泥的痕迹。它上面刻满了无数的神秘符文；
-其中有一组不断重复的符文，似乎是在说“皇家胶质怪”。
+一面奇怪的没有黏液的石墙，上面刻满了无数保护符文。
 %%%%
+A rune-carved clear stone wall
+
+一面奇怪的没有黏液的石墙，在它的流通区域，闪着奇异的光。
+上面散布着的神秘符文，似乎在谈及一个“皇家胶冻”。
+%%%%
+# 坟冢：1
 A sarcophagus
 
-一个古代的石棺。里面似乎是空的。
+一个古代的石棺。它似乎是空的。
 %%%%
+# 宝库：$
 A heavily etched metal wall
 
-这面金属墙已经有些风化，
-但你还是可以看见上面的壁画描绘着从藏宝库中偷东西的人的悲惨下场。
-你感觉有点忐忑不安。
+这面金属墙上蚀刻着壁画，
+以极其可怕的细节描绘着从宝库中盗窃被抓的人的悲惨下场。
 %%%%
 A heavily etched crystal wall
 
-这面绿水晶墙已经有些风化，
-但你还是可以看见上面的壁画描绘着从藏宝库中偷东西的人的悲惨下场。
-你感觉有点忐忑不安。
+这面水晶墙上蚀刻着壁画，
+以极其可怕的细节描绘着从宝库中盗窃被抓的人的悲惨下场。
 %%%%
+# 城壕_墓地_入口（D:1）
 An adventurer's gravestone
 
-埋在这个坟墓里的是一位功亏一篑的冒险者。
+这个坟墓埋葬着一位功亏一篑的冒险者。
 %%%%
-A granite stump
+# 冰窟
+An ice choked empty arch of ancient stone
 
-一块不规则形状的大理石。它大概也曾是一尊雕像吧。
+一个失效的门户，几乎完全被冰块包裹。
 %%%%
+An ice covered gate leading back out of this place
+
+这个门户导向你回到原来的地方。
+其魔力将冰挡在海湾，阻止它堵塞大门。一旦你穿过它，就再也无法回来了。
+%%%%
+An ice covered rock wall
+
+这面岩墙上有一层厚厚的冰霜。
+%%%%
+Some ice crusted deep water
+
+一个深水池，表面冻结成了碎冰块。
+%%%%
+Some ice crusted shallow water
+
+一个浅水池，表面冻结成了碎冰块。
+%%%%
+# 下水道_minmay_处置（下水道）
 A large window
 
-一根巨型金属管上装了一扇窗户，从中可以看见管内的水流。
+一个嵌在巨大金属管道侧面的窗户，从中可以观察到管内的水流。
 %%%%
 A glass window
 
-一扇极为坚硬的玻璃窗，上面有不少火痕。
+一个极为坚硬的玻璃窗，上面有不少弹孔。
 %%%%
+A petrified tree
+
+一棵古树，很久以前就从生物学转入地质学意义。
+虽然它在物质意义上不再是木质的，但保留了树的精神品质。
+%%%%
+# due_丛林_书（兽穴：$）
 An elephant-shaped statue
 
-这尊有些磨损的花岗岩雕像刻画着一头摆出警戒姿势的大象。
+这尊有些磨损的花岗岩雕像刻画着一头大象在放哨。
 %%%%
+# 魔窟_迪斯科_大厅（魔窟）
 A weirdly glowing ball
 
-这个悬浮在半空中的球体向四周辐射出微光。
+这个悬在半空中的球体散发着微光。
 %%%%
+# ragdoll_坟冢_掠夺者
+A sealed sarcophagus
+
+一个古代的石棺。它密封着。
+%%%%
+# 荒地
+An endless expanse of salt
+
+一片似乎无尽的平原被眩目的盐风暴肆虐着。
+任何冒险要穿越它的人，很快都会失去一切希望。
+%%%%
+# 荒地
+A ruined idol
+
+一座纪念碑，用来纪念已故的神的荣光。
+雕像已被有条不紊地损毁了，没剩下一个可辨识的特征。
+%%%%
+# 西戈图维的巫师实验室
+A broken fleshy orifice
+
+它似乎在悄悄地渗出东西。最好不要碰它。
+########################################################################
+### 冲刺
+########################################################################
+# 冲刺_mu
 An open sea?
 
-虽然这现象与所有已知的物理和几何理论相悖，你还是不得不承认：就在这里，
-这一间小房间中，有着一片茫茫大海。
+虽然这与所有已知的物理和几何理论相悖，但不可否认的是：
+就在这个狭小的空间中，有着一片可怕的茫茫大海，其大小令人难以置信。
 
 话说回来，那也可能只是一面蓝色的墙。
 %%%%
+# 角斗场_冲刺
+A spawn point
+
+敌人可能会入场的地方。
+%%%%
+########################################################################
+### 教程
+########################################################################
 An exit from the tutorial
 
-这个通道带你离开地城，这样，这一课就结束了。
+这条路带你离开地牢，这样，这一课就结束了。
 %%%%
+########################################################################
+### 区域效果
+########################################################################
+haloed
+
+这片区域被神圣光环照亮，会削弱你的潜行能力，且阻止隐身，
+并增加任何被照亮的生物的攻击精度。
+%%%%
+umbraed
+
+这个区域被本影环绕，如果你被阴影所遮蔽，你的潜行能力得到提升，
+那些无法适应阴影的怪物的攻击精度会降低。
+%%%%
+liquefied
+
+这片地面被液化，移动会被减缓，发出任何近战攻击都有可能失手。
+%%%%
+disjunction haloed
+
+这个区域暴露在移位能量中，
+能量的发出者那里的生物会被闪送，距离施法者越近，几率就越大。
+%%%%
+########################################################################
+### 其他效果
+########################################################################
+ice covered
+
+这面墙上覆盖着有魔力的冰，会冻结在附近徘徊的受害者。
+这种伤害能无视目标可能拥有的任何护甲，还会暂时减缓冷血动物的速度。
+每个受害者一次只能受到一堵冰墙的影响。
+
+墙上覆着的这种冰的创造者及其任何盟友都可以安全地经过这面墙。
+%%%%
+awoken
+
+这棵树被暂时注入魔力，从而获得一些有限的活动能力，
+它会猛烈攻击任何相邻的与唤醒它的生物为敌的怪物。
+%%%%
+tree burning
+
+它容易受到闪电和足够强烈的火源的影响。
+由此产生的大火可能会蔓延到附近区域，引燃其他树木。
+%%%%
+mangrove burning
+
+它容易受到闪电和足够强烈的火源的影响。
+由于生长在沼泽地带，红树燃烧起来不像普通树木那样旺盛，在闷烧后会留下浅水。
+%%%%
+demonic tree burning
+
+它容易受到闪电和足够强烈的火源的影响。
+这棵树燃烧会释放出纯粹的混乱云而不是火焰云。
