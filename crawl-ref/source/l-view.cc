@@ -308,6 +308,7 @@ LUAFN(view_get_map)
         }
         lua_rawseti(ls, -2, 40000*(100+pc.x) + (100+pc.y));
     }
+}
 
 /**
  * @brief Are the given coordinates in the minimal bounding box of the known
