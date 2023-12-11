@@ -67,6 +67,10 @@ A gateway back into the Dungeon
  And hard, that out of Hell leads up to light.”
     -John Milton, _Paradise Lost_. 1674 (2nd Ed.).
 %%%%
+A gateway leading deeper into the Abyss.
+
+<Abyss>
+%%%%
 A gateway to Hell
 
 “I am the way into the city of woe.
@@ -233,6 +237,24 @@ A tree
 # Dungeon branches
 #
 ########################################
+%%%%
+Abyss
+
+“Out here in the zones, you never even knew when your bone marrow might book an
+ exotic vacation and neglect to invite you along. Thinking square thoughts under
+ a violet endomoon could redefine every third cell in your body as a verb. There
+ were sneakers that ate feet, bifocals that ate eyeballs, strawberry yogurt that
+ ate small intestines. Farther out there, _so_ much farther, there were
+ wavelengths of something ancestral to light that could crawl into your past and
+ eat the day you were born.
+
+ Nobody so much as batted an eye or quivered a flange when these things happened
+ to the unnaturally branchinated, the puzzling and comical tourists that blipped
+ in and out from the forgettable grey. Things like herself, or Fern, or the
+ plank maze loser were little more than _weird bugs_ to most entities, a quaint
+ curiosity at best and more often an unwanted parasite. Infinite layers of
+ reality, and it still felt, in the worst way, like she'd never left home.”
+    -Jonathan Wojcik, _Awful Hospital_. 2021.
 %%%%
 Desolation
 
@@ -521,23 +543,29 @@ Mephitic Cloud spell
  folgend, ihre Schrecken bis Astrachan, ja selbst bis Moskau getragen.”
     -Thomas Mann, _Der Tod in Venedig_, 1911.
 %%%%
-Necromutation spell
-
-“Don’t sing if you want to live long
- They have no use for your song
- You’re dead, you’re dead, you’re dead
- You’re dead and outta this world
-
- You’ll never get a second chance
- Plan all your moves in advance
- Stay dead, stay dead, stay dead
- Stay dead and outta this world”
-    -Norma Tanega, “You’re Dead”. 1966
-%%%%
 Passwall spell
 
 “He says the best way out is always through.”
     -Robert Frost, _A Servant to Servants_. 1915.
+%%%%
+Petrify spell
+
+“Any pose held too long calcifies.
+ A belief believed too long becomes dogma.
+ Any expression held long enough will harden into a mask.
+ And who is the _real_ us
+ that hard exterior
+ or the soft uncertain self we keep beneath?”
+    -Dorothy Gambrell, _Cat and Girl_, 2011.
+%%%%
+Poison Arrow spell
+
+“I saw in a hall an arrow pointing the way and I thought that this inoffensive
+ symbol had once been a thing of iron, an inescapable and fatal projectile that
+ pierced the flesh of men and lions and clouded the sun at Thermopylae and gave
+ Harald Sigurdarson six feet of English earth forever.”
+    -Jorge Luis Borges, _Mutations_. 1960.
+     trans. Mildred Boyle
 %%%%
 Sacrifice Love ability
 
@@ -605,16 +633,6 @@ Step From Time ability
  No, not at all
  In another dimension”
     -Richard O'Brien, “Time Warp”. 1975.
-%%%%
-Storm Form spell
-
-“Stormform is said to cause
- A tempest of winds and showers,
- Beware its powers, beware its powers.
- Though its coming brings the gods their night,
- It obliges a bloodred spren.
- Beware its end, beware its end.”
-    -Brandon Sanderson, “Words of Radiance”. 2014.
 %%%%
 Summon Demon spell
 
@@ -765,15 +783,6 @@ arbalest
     -Friedrich Schiller, _Wilhelm Tell_, IV, iii. 1804.
      trans. Sir Theodore Martin, 1898.
 %%%%
-arrow
-
-“I saw in a hall an arrow pointing the way and I thought that this inoffensive
- symbol had once been a thing of iron, an inescapable and fatal projectile that
- pierced the flesh of men and lions and clouded the sun at Thermopylae and gave
- Harald Sigurdarson six feet of English earth forever.”
-    -Jorge Luis Borges, _Mutations_. 1960.
-     trans. Mildred Boyle
-%%%%
 bardiche
 
 “The republic always maintains seven or eight thousand regular troops on the
@@ -793,15 +802,6 @@ battleaxe
  cult image.”
     -Sir Arthur John Evans, “Mycenaean tree and pillar cult and its
      Mediterranean relations,” _Journal of Hellenic Studies_ XXI, p. 109. 1901.
-%%%%
-bolt
-
-“In the midst of our last assault, which would have carried the gate sure and
- given us Paris and in effect France, Joan was struck down by a crossbow bolt,
- and our men fell back instantly and almost in a panic — for what were they
- without her? She was the army, herself.”
-    -Mark Twain, _Personal Recollections of Joan of Arc, by the Sieur Louis de
-     Conte_, Book II, chap. 40 “Treachery Conquers Joan”. 1896.
 %%%%
 book
 
@@ -1208,13 +1208,6 @@ potion
  To help to take her from her borrow'd grave,
  Being the time the potion's force should cease.”
     -William Shakespeare, _Romeo and Juliet_
-%%%%
-# TAG_MAJOR_VERSION == 34
-potion of blood
-
-“Only be sure that thou eat not the blood: for the blood _is_ the life;
- and thou mayest not eat the life with the flesh.”
-    -KJV Bible, Deuteronomy 12:23
 %%%%
 potion of curing
 
@@ -1704,13 +1697,6 @@ giant club "Skullcrusher"
  People this lonely tower, this tenement refit?”
     -Lord Byron, _Childe Harold's Pilgrimage_, Canto the Second, Stanzas V-VI
 %%%%
-sling bullet
-
-“For when things are once come to the execution, there is no secrecy comparable
- to celerity; like the motion of a bullet in the air, which flieth so swift as
- it outruns the eye.”
-    -Francis Bacon, _Essays_, “Of Delays”. 1625.
-%%%%
 spear
 
 “The halberd is inferior to the spear on the battlefield. With the spear you
@@ -1810,9 +1796,32 @@ storm dragon scales
 
 <steam dragon scales>
 %%%%
+storm talisman
+
+“Stormform is said to cause
+ A tempest of winds and showers,
+ Beware its powers, beware its powers.
+ Though its coming brings the gods their night,
+ It obliges a bloodred spren.
+ Beware its end, beware its end.”
+    -Brandon Sanderson, “Words of Radiance”. 2014.
+%%%%
 swamp dragon scales
 
 <steam dragon scales>
+%%%%
+talisman of death
+
+“Don’t sing if you want to live long
+ They have no use for your song
+ You’re dead, you’re dead, you’re dead
+ You’re dead and outta this world
+
+ You’ll never get a second chance
+ Plan all your moves in advance
+ Stay dead, stay dead, stay dead
+ Stay dead and outta this world”
+    -Norma Tanega, “You’re Dead”. 1966
 %%%%
 throwing net
 
@@ -2508,6 +2517,10 @@ apocalypse crab
 “I should have been a pair of ragged claws
  scuttling across the floors of silent seas.”
     -T.S. Eliot, _The Love Song of J. Alfred Prufrock_. 1915.
+%%%%
+arcanist
+
+<occultist>
 %%%%
 basilisk
 
@@ -3323,6 +3336,12 @@ neqoxec
     -_Proceedings of the American Philosophical Society_, Volume XXV, no. 150.
      1896.
 %%%%
+occultist
+
+“Each family or tribe has a wizard or conjuring doctor, whose office we could
+ never clearly ascertain.”
+    -Charles Darwin, _The Voyage of the Beagle_, ch. X. 1839.
+%%%%
 octopode
 
 “In their brief time together Slothrop forms the impression that this octopus
@@ -3995,12 +4014,6 @@ wight
 “Unhappie wight, borne to desastrous end,
  That doth his life in so long tendance spend!”
     -Edmund Spenser, “Mother Hubberds Tale”, _Complaints_. 1591.
-%%%%
-wizard
-
-“Each family or tribe has a wizard or conjuring doctor, whose office we could
- never clearly ascertain.”
-    -Charles Darwin, _The Voyage of the Beagle_, ch. X. 1839.
 %%%%
 worm
 
