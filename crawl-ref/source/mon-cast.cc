@@ -1455,6 +1455,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_ELECTRICAL_BOLT:
     case SPELL_DISPEL_UNDEAD_RANGE:
     case SPELL_STUNNING_BURST:
+    case SPELL_MALIGN_OFFERING:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
@@ -1584,11 +1585,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     //      damage is done via another means
     case SPELL_FREEZE:
         beam.flavour    = BEAM_COLD;
-        break;
-
-    case SPELL_MALIGN_OFFERING:
-        beam.flavour    = BEAM_MALIGN_OFFERING;
-        beam.damage     = dice_def(2, 7 + (power / 13));
         break;
 
     case SPELL_SHADOW_BOLT:

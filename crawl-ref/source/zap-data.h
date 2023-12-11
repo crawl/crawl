@@ -1842,4 +1842,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
 },
 
+{
+    ZAP_MALIGN_OFFERING,
+    "malign ofering",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<2, 7, 1, 13>,
+    nullptr,
+    DARKGRAY,
+    true,
+    BEAM_MALIGN_OFFERING,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+},
+
 };
