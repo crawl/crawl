@@ -1870,8 +1870,7 @@ Felids (Fe)
   serious disadvantage due to their inability to use armour or weapons.
 
   Their agility and stealth are legendary, as is their ability to get to hard to
-  reach places. They move faster than most species, but don't run as fast as
-  Spriggans. Felids advance in levels very slowly. They are skilled with many
+  reach places. Felids advance in levels very slowly. They are skilled with many
   forms of magic, though less so with raw elemental magic.
 
   Felids start with an extra life, and gain more as they increase in levels.
