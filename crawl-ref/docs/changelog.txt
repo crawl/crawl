@@ -1,4 +1,4 @@
-Stone Soup 0.31-a0 (through 0.31-a0-1128-gf31bc9b788)
+Stone Soup 0.31-a0 (through 0.31-a0-1181-g57eb4e83fd)
 ----------------------------------------------------
 
 Artefacts
@@ -7,8 +7,8 @@ Artefacts
   user backwards when fired.
 * The dreamshard necklace now has Acrobat, but only restores the player to 1 HP
   when they'd otherwise die, rather than healing 50-100% of their max HP.
-* Artefact staves can now enhance other schools of magic, even those which
-  don't have corresponding base enhancer staff types.
+* Artefact staves and orbs can now enhance other schools of magic, even those
+  which don't have corresponding base enhancer staff types.
 * Gyre & Gimble's enchantment is reduced from +12 to +8.
 * The macabre finger necklace is now evil, and the amulet of Vitality
   no longer is.
@@ -28,6 +28,7 @@ Character
   Binding, and Dimensional Bullseye, along with Inner Flame and Cause Fear.
 * At XL 7, Armataurs regenerate when rampaging. Their max HP is reduced.
 * Felids now get an extra life at XL 1, and don't lose XLs on dying.
+  They also have higher base health, but no longer have fast movement.
 * Tengu now have inherent Acrobat (+15 EV after moving/waiting) at XL 1.
   They now gain +4 EV at XL7 instead of a 20% EV bonus.
 * Mummies now get their first necromancy enhancer at XL 1, not 3.
@@ -50,7 +51,11 @@ Gods
   (chosen by the player), rather than giving many random gifts.
 * Ashenzari now gives perfect mapping, but only maps within LOS radius.
 * Trog now disables pain brand instead of becoming angry at it.
-* Nemelex's Deal Four ability now costs more piety.
+* Nemelex:
+  - The Swarm card can now summon higher level bees.
+  - The Elements card has had its summon set adjusted.
+  - The Cloud card now produces different types of cloud based on power.
+  - The Deal Four ability now costs more piety.
 * Cheibriados piety gain now only depends on monsters' base speed.
 * The good gods now hate distortion-branded weapons.
 * Gozag no longer detects gold.
@@ -79,7 +84,7 @@ Items
     but melds aux armour.
   - Flux talisman: starting talisman for Shapeshifters. Over multiple hits,
     contaminates enemies with magical radiation until they explode.
-  - Serpent talisman: transforms the player into a constricting anaconda.
+  - Serpent talisman: transforms the player into a big, constricting python.
   - Maw talisman: melds the body slot, transforming it into a devouring maw.
     Launches auxiliary chomp attacks and heals the player by devouring foes.
   - Blade talisman: gives the player blade hands and also a blade body,
@@ -95,13 +100,14 @@ Items
 * Scrolls of magic mapping replaced with revelation, which also give X-ray
   vision and sInv for one turn.
 * New weapon: orcbow, between a shortbow and an arbalest in strength.
-* Hand crosssbows are now hand cannons, alchemically belching smoke and death.
+* Hand crossbows are now hand cannons, alchemically belching smoke and death.
 * Ranged weapons' damage, delay and accuracy have been adjusted.
 * Quick blades now hit twice for every swing, with a higher attack delay.
 * Boomerangs of dispersal have been replaced with darts.
 * Condenser vanes are now more effective at low power.
 * Spectral weapons now share 70% of damage taken (from 50%).
 * Reaching weapons will no longer fail to reach over spectral weapons.
+* The 'chaos' brand has a new set of possible effects.
 * Wands of light no longer affect undead, plant and nonliving monsters.
 * Wands of quicksilver can no longer be self-targeted.
 * Troll leather armour now has slightly less base AC.
@@ -110,19 +116,22 @@ Items
 
 Monsters
 --------
-* New unique: Jeremiah, a peaceful barachi trapped between sleep and waking.
-  Their dreams leak into reality in a stream of beautiful butterflies.
-* New unique: Norris, a death cultist who surfs into battle with a gang
-  of skysharks.
-* Maurice is now a vine stalker, with high regen and antimagic bites.
-* Erica is now an octopode, with constriction and new spells.
-* Other new monsters:
+* Uniques:
+  - New: Jeremiah, a peaceful barachi trapped between sleep and waking.
+    Their dreams leak into reality in a stream of beautiful butterflies.
+  - Returned and revamped: Norris, a death cultist who surfs into battle with a
+    gang of skysharks.
+  - Maurice is now a vine stalker, with high regen and antimagic bites.
+  - Erica is now an octopode, with constriction and a more focused spell set.
+  - Frederick has a new spell set.
+* Other new and returned monsters:
   - Kobold blastminers, who blast enemies with alchemical cannons and get sent
     flying backwards by the recoil.
   - Brain worms, which eat magic and minds alike.
   - Glass eyes, which vitrify victims to make them fragile as glass.
   - Formless jellyfish, which constricts and stings for 1-turn paralysis.
   - Arcanists, a kind of fairly dangerous vitrifying wizard.
+  - Crocodiles, which drag victims backward.
 * Attacks of opportunity have been reworked.
   - Monsters now have a chance to attack when moving into melee with a player
     who just moved away. Previously, this triggered immediately when the
@@ -140,8 +149,10 @@ Monsters
 * Jellies can no longer be netted or constricted.
 * Some monsters now have special dialogue after killing the player.
 * Deep Elf Elementalists now cast LRD instead of Awaken Earth.
+* Red very ugly things now do direct fire damage instead of sticky flame.
 * Abominations' speed is no longer randomized.
-* Alligators no longer sprint.
+* Reapers do less damage and have less HP, but drag victims backward.
+* Alligators no longer sprint and have less HP, but drag victims backward.
 * Allied undead no longer become angry when damaged.
 
 Spells
