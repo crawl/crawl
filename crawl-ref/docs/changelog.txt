@@ -129,9 +129,18 @@ Monsters
     flying backwards by the recoil.
   - Brain worms, which eat magic and minds alike.
   - Glass eyes, which vitrify victims to make them fragile as glass.
-  - Formless jellyfish, which constricts and stings for 1-turn paralysis.
-  - Arcanists, a kind of fairly dangerous vitrifying wizard.
+  - Formless jellyfish, which constrict and sting for single-turn paralysis.
+  - Arcanists, fairly dangerous vitrifying wizards.
   - Crocodiles, which drag victims backward.
+* Other changes to individual monsters:
+  - Alligators and reapers are a bit weaker, but drag victims backward.
+  - Ufetubi and tengu warriors now slip behind their foe before meleeing.
+  - Tengu reavers now have rMsl.
+  - 'Wizard' has been renamed to 'occulist' and is now somewhat stronger.
+  - Great orbs of eyes have a new spell set, and are slightly stronger.
+  - Deep Elf Elementalists now cast LRD instead of Awaken Earth.
+  - Red very ugly things now do direct fire damage instead of sticky flame.
+  - Abominations' speed is no longer randomized.
 * Attacks of opportunity have been reworked.
   - Monsters now have a chance to attack when moving into melee with a player
     who just moved away. Previously, this triggered immediately when the
@@ -139,26 +148,18 @@ Monsters
     trigger for monsters slower than the player.
   - Monsters have a slight chance to fall behind or catch up while following
     the player.
-* Ufetubi and tengu warriors now slip behind their foe before meleeing.
-* Tengu reavers now have rMsl.
-* 'Wizard' has been renamed to 'occulist' and is now somewhat stronger.
-* Great orb of eyes have a new spell set, and are slightly stronger.
-* Monsters no longer use up charges when zapping wands.
-* Monsters can no longer use scrolls or potions.
-* Giant monsters can now be ensnared by webs and nets.
-* Jellies can no longer be netted or constricted.
+* Other behavioral changes:
+  - Giant monsters can now be ensnared by webs and nets..
+  - Jellies can no longer be netted or constricted.
+  - Allied undead no longer become angry when damaged.
+  - Monsters no longer use up charges when zapping wands.
+  - Monsters can no longer use scrolls or potions.
 * Some monsters now have special dialogue after killing the player.
-* Deep Elf Elementalists now cast LRD instead of Awaken Earth.
-* Red very ugly things now do direct fire damage instead of sticky flame.
-* Abominations' speed is no longer randomized.
-* Reapers do less damage and have less HP, but drag victims backward.
-* Alligators no longer sprint and have less HP, but drag victims backward.
-* Allied undead no longer become angry when damaged.
 
 Spells
 ------
 * New spells:
-  - Jinxbite (L2 Hex): deals additional Will-checking damage to foes hit
+  - Jinxbite (L2 Hex): deals additional Will-checking damage to foes attacked
     while its duration lasts, but also halves the caster's will.
   - Sigil of Binding (L3 Hex): creates two magical traps nearby, which
     temporarily bind hapless victims in place.
