@@ -149,7 +149,7 @@ Monsters
   - Monsters have a slight chance to fall behind or catch up while following
     the player.
 * Other behavioral changes:
-  - Giant monsters can now be ensnared by webs and nets..
+  - Giant monsters can now be ensnared by webs and nets.
   - Jellies can no longer be netted or constricted.
   - Allied undead no longer become angry when damaged.
   - Monsters no longer use up charges when zapping wands.
