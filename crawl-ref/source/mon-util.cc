@@ -2101,13 +2101,21 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
         // TODO: randomization here is not the greatest way of doing any of
         // these...
         if (attk.type == AT_RANDOM)
-            attk.type = random_choose(AT_HIT, AT_GORE);
+        {
+            attk.type = random_choose(AT_BITE, AT_STING, AT_SPORE, AT_TOUCH,
+                                      AT_PECK, AT_HEADBUTT, AT_PUNCH, AT_KICK,
+                                      AT_TENTACLE_SLAP, AT_TAIL_SLAP, AT_GORE,
+                                      AT_TRUNK_SLAP);
+        }
 
         if (attk.type == AT_CHERUB)
-            attk.type = random_choose(AT_HIT, AT_BITE, AT_PECK, AT_GORE);
+            attk.type = random_choose(AT_HEADBUTT, AT_BITE, AT_PECK, AT_GORE);
 
         if (attk.flavour == AF_DRAIN_STAT)
-            attk.flavour = random_choose(AF_DRAIN_STR, AF_DRAIN_INT,AF_DRAIN_DEX);
+        {
+            attk.flavour = random_choose(AF_DRAIN_STR, AF_DRAIN_INT,
+                                         AF_DRAIN_DEX);
+        }
     }
 
     // Slime creature attacks are multiplied by the number merged.

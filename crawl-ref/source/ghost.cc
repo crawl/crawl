@@ -180,7 +180,11 @@ static attack_type _pan_lord_random_attack_type()
     {
         do
         {
-            attack = static_cast<attack_type>(random_range(AT_FIRST_ATTACK, AT_LAST_REAL_ATTACK));
+            // An ugly list, but less brittle and without e.g. false trampling.
+            attack = static_cast<attack_type>(random_choose(AT_BITE, AT_STING,
+                                      AT_SPORE, AT_TOUCH, AT_PECK, AT_HEADBUTT,
+                                      AT_PUNCH, AT_KICK, AT_TENTACLE_SLAP,
+                                      AT_TAIL_SLAP, AT_GORE, AT_TRUNK_SLAP));
         }
         while (attack == AT_HIT || !is_plain_attack_type(attack));
     }
