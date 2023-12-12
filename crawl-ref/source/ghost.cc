@@ -668,7 +668,6 @@ static resists_t _ugly_thing_resists(bool very_ugly, attack_flavour u_att_flav)
     switch (u_att_flav)
     {
     case AF_FIRE:
-    case AF_STICKY_FLAME:
         return MR_RES_FIRE * (very_ugly ? 2 : 1);
 
     case AF_ACID:
