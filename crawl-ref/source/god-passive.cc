@@ -794,23 +794,23 @@ void ash_scrying()
 
 void gozag_move_level_gold_to_top()
 {
-    for (rectangle_iterator ri(0); ri; ++ri)
-        gozag_move_gold_to_top(*ri);
+    if (you_worship(GOD_GOZAG))
+    {
+        for (rectangle_iterator ri(0); ri; ++ri)
+            gozag_move_gold_to_top(*ri);
+    }
 }
 
 void gozag_move_gold_to_top(const coord_def p)
 {
-    if (you_worship(GOD_GOZAG))
+    for (int gold = env.igrid(p); gold != NON_ITEM;
+         gold = env.item[gold].link)
     {
-        for (int gold = env.igrid(p); gold != NON_ITEM;
-             gold = env.item[gold].link)
+        if (env.item[gold].base_type == OBJ_GOLD)
         {
-            if (env.item[gold].base_type == OBJ_GOLD)
-            {
-                unlink_item(gold);
-                move_item_to_grid(&gold, p, true);
-                break;
-            }
+            unlink_item(gold);
+            move_item_to_grid(&gold, p, true);
+            break;
         }
     }
 }
