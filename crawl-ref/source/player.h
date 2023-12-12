@@ -1167,7 +1167,7 @@ void dec_ambrosia_player(int delay);
 void dec_channel_player(int delay);
 void dec_frozen_ramparts(int delay);
 void reset_rampage_heal_duration();
-void apply_rampage_heal(const monster* mons);
+void apply_rampage_heal();
 bool invis_allowed(bool quiet = false, string *fail_reason = nullptr,
                                                         bool temp = true);
 bool flight_allowed(bool quiet = false, string *fail_reason = nullptr);

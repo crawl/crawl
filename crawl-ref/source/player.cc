@@ -4822,14 +4822,10 @@ void reset_rampage_heal_duration()
     you.set_duration(DUR_RAMPAGE_HEAL, heal_dur);
 }
 
-void apply_rampage_heal(const monster* mons)
+void apply_rampage_heal()
 {
-    if (mons == nullptr
-        || you.get_mutation_level(MUT_ROLLPAGE) < 2
-        || mons_threat_level(*mons) < MTHRT_EASY)
-    {
+    if (you.get_mutation_level(MUT_ROLLPAGE) < 2)
         return;
-    }
 
     reset_rampage_heal_duration();
 
