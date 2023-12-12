@@ -2045,7 +2045,7 @@ static const char *enchant_names[] =
      "battle_frenzy", "temp_pacif",
 #endif
     "petrifying",
-    "petrified", "lowered_mr", "soul_ripe", "slowly_dying",
+    "petrified", "lowered_wl", "soul_ripe", "slowly_dying",
 #if TAG_MAJOR_VERSION == 34
     "eat_items",
 #endif
