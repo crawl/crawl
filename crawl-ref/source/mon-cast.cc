@@ -122,7 +122,7 @@ static ai_action::goodness _caster_sees_foe(const monster &caster);
 static ai_action::goodness _foe_polymorph_viable(const monster &caster);
 static ai_action::goodness _foe_sleep_viable(const monster &caster);
 static ai_action::goodness _foe_tele_goodness(const monster &caster);
-static ai_action::goodness _foe_mr_lower_goodness(const monster &caster);
+static ai_action::goodness _foe_wl_lower_goodness(const monster &caster);
 static ai_action::goodness _foe_vitrify_goodness(const monster &caster);
 static ai_action::goodness _still_winds_goodness(const monster &caster);
 static ai_action::goodness _arcjolt_goodness(const monster &caster);
@@ -485,7 +485,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         }, 6)
     },
     { SPELL_STRIP_WILLPOWER,
-        _hex_logic(SPELL_STRIP_WILLPOWER, _foe_mr_lower_goodness, 6)
+        _hex_logic(SPELL_STRIP_WILLPOWER, _foe_wl_lower_goodness, 6)
     },
     { SPELL_SENTINEL_MARK, _hex_logic(SPELL_SENTINEL_MARK, nullptr, 16) },
     { SPELL_SAP_MAGIC, {
@@ -687,7 +687,7 @@ static ai_action::goodness _foe_tele_goodness(const monster &caster)
     return _foe_effect_viable(caster, DUR_TELEPORT, ENCH_TP);
 }
 
-static ai_action::goodness _foe_mr_lower_goodness(const monster &caster)
+static ai_action::goodness _foe_wl_lower_goodness(const monster &caster)
 {
     return _foe_effect_viable(caster, DUR_LOWERED_WL, ENCH_LOWERED_WL);
 }
