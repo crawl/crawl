@@ -1301,6 +1301,11 @@ Evocations player ghost
 
 @The_monster@ says @to_foe@, "Are you sure you're pointing that wand in the right direction?"
 %%%%
+Shapeshifting player ghost
+
+# The Heart Sutra
+@The_monster@ says, "Form is emptiness; emptiness is form."
+%%%%
 Ashenzari player ghost
 
 @The_monster@ says @to_foe@, "Life is a curse, you will soon understand."
