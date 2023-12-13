@@ -1464,11 +1464,8 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_CONCENTRATE_VENOM:
     case ENCH_BOUND:
     case ENCH_VITRIFIED:
-<<<<<<< HEAD
     case ENCH_INSTANT_CLEAVE:
-=======
     case ENCH_PROTEAN_SHAPESHIFTING:
->>>>>>> da99aeb9fe (New monster: protean progenitors, for Zot)
         decay_enchantment(en);
         break;
 
