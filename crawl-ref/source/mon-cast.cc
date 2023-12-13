@@ -6187,7 +6187,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             return;
         }
 
-        duration = 50 + random2(mons->spell_hd(spell_cast) * 20);
+        duration = (8 + random2avg(mons->spell_hd(spell_cast) * 3 / 2, 2))
+                   * BASELINE_DELAY;
 
         mons->add_ench(mon_enchant(ENCH_AWAKEN_FOREST, 0, mons, duration));
         // Actually, it's a boolean marker... save for a sanity check.

@@ -3052,7 +3052,10 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     return spret::success;
 }
 
-// Find an enemy who would suffer from Awaken Forest.
+// Find an enemy who might suffer from Awaken Forest.
+// (Search not just for enemies adjacent to trees, but also within one tile of a
+// tree, since that usually implies that the trees are close enough to constrain
+// future movement meaningfully.)
 actor* forest_near_enemy(const actor *mon)
 {
     const coord_def pos = mon->pos();
@@ -3063,8 +3066,8 @@ actor* forest_near_enemy(const actor *mon)
         if (!foe || mons_aligned(foe, mon))
             continue;
 
-        for (adjacent_iterator ai(*ri); ai; ++ai)
-            if (feat_is_tree(env.grid(*ai)) && cell_see_cell(pos, *ai, LOS_DEFAULT))
+        for (distance_iterator di(*ri, false, true, 2); di; ++di)
+            if (feat_is_tree(env.grid(*di)) && cell_see_cell(*di, *ri, LOS_NO_TRANS))
                 return foe;
     }
 
