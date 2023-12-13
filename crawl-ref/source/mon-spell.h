@@ -278,7 +278,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_STONE_ARROW, 15, MON_SPELL_WIZARD },
        { SPELL_DRUIDS_CALL, 15, MON_SPELL_WIZARD },
-       { SPELL_AWAKEN_FOREST, 15, MON_SPELL_WIZARD },
+       { SPELL_AWAKEN_FOREST, 25, MON_SPELL_WIZARD },
        { SPELL_MINOR_HEALING, 15, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
