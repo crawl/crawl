@@ -783,8 +783,7 @@ static const vector<chaos_attack_type> chaos_types = {
       [](const actor &d) { return d.res_negative_energy() < 3; } },
     { AF_VAMPIRIC,  SPWPN_VAMPIRISM,     5,
       [](const actor &d) {
-          return !d.is_summoned()
-                 && bool(d.holiness() & (MH_NATURAL | MH_PLANT)); } },
+          return actor_is_susceptible_to_vampirism(d); } },
     { AF_HOLY,      SPWPN_HOLY_WRATH,    5,
       [](const actor &d) { return d.holy_wrath_susceptible(); } },
     { AF_ANTIMAGIC, SPWPN_ANTIMAGIC,     5,
@@ -796,7 +795,14 @@ brand_type attack::random_chaos_brand()
     vector<pair<brand_type, int>> weights;
     for (const chaos_attack_type &choice : chaos_types)
         if (!choice.valid || choice.valid(*defender))
-            weights.push_back({choice.brand, choice.chance});
+        {
+            // Don't use vampiric brand if the attacker is at full health.
+            if (choice.brand != SPWPN_VAMPIRISM
+                || attacker->stat_hp() != attacker->stat_maxhp())
+            {
+                weights.push_back({choice.brand, choice.chance});
+            }
+        }
 
     ASSERT(!weights.empty());
 
@@ -808,15 +814,13 @@ brand_type attack::random_chaos_brand()
     {
     case SPWPN_FLAMING:         brand_name += "flaming"; break;
     case SPWPN_FREEZING:        brand_name += "freezing"; break;
-    case SPWPN_HOLY_WRATH:      brand_name += "holy wrath"; break;
     case SPWPN_ELECTROCUTION:   brand_name += "electrocution"; break;
     case SPWPN_VENOM:           brand_name += "venom"; break;
-    case SPWPN_DRAINING:        brand_name += "draining"; break;
-    case SPWPN_DISTORTION:      brand_name += "distortion"; break;
-    case SPWPN_VAMPIRISM:       brand_name += "vampirism"; break;
-    case SPWPN_ANTIMAGIC:       brand_name += "antimagic"; break;
     case SPWPN_CHAOS:           brand_name += "chaos"; break;
-    case SPWPN_CONFUSE:         brand_name += "confusion"; break;
+    case SPWPN_DRAINING:        brand_name += "draining"; break;
+    case SPWPN_VAMPIRISM:       brand_name += "vampirism"; break;
+    case SPWPN_HOLY_WRATH:      brand_name += "holy wrath"; break;
+    case SPWPN_ANTIMAGIC:       brand_name += "antimagic"; break;
     default:                    brand_name += "BUGGY"; break;
     }
 
@@ -833,7 +837,14 @@ attack_flavour attack::random_chaos_attack_flavour()
     vector<pair<attack_flavour, int>> weights;
     for (const chaos_attack_type &choice : chaos_types)
         if (!choice.valid || choice.valid(*defender))
-            weights.push_back({choice.flavour, choice.chance});
+        {
+            // Again, don't use vampiric brand if the attacker is at full hp.
+            if (choice.brand != SPWPN_VAMPIRISM
+                || attacker->stat_hp() != attacker->stat_maxhp())
+            {
+                weights.push_back({choice.flavour, choice.chance});
+            }
+        }
 
     ASSERT(!weights.empty());
 
