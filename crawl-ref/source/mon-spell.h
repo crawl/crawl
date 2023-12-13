@@ -797,6 +797,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_PROTEAN_PROGENITOR,
+      {
+       { SPELL_IRRADIATE, 22, MON_SPELL_WIZARD },
+      }
+    },
+
     // ('D') Dragons.
     {  MST_STEAM_DRAGON,
       {

@@ -654,6 +654,13 @@ A wizard fond of spectacle and destruction. They scorn the cowardice of other
 magicians, who hide from their foes rather than simply blasting them out of
 existence.
 %%%%
+aspiring flesh
+
+The divided and churning remains of a protean progenitor, striving desperately
+for form. Whatever they become, the last of their progenitor's power ensure it
+will be stronger and swifter than any such creature found elsewhere in the
+dungeon.
+%%%%
 azure jelly
 
 An extremely cold blob of bright blue cytoplasm, forming bits of frost in the
@@ -2113,6 +2120,13 @@ program bug
 
 A ravenous and incredibly buggy monster. Please report its existence to the
 DevTeam.
+%%%%
+protean progenitor
+
+A gargantuan humanoid of fractured shape from the aeons when the seas were but
+primordial soup. The many shapeshifters of the dungeon once sloughed off from
+these unfathomably ancient beings, and when they themselves finally cease, even
+their remains will give birth one last time to furious monsters.
 %%%%
 putrid mouth
 

@@ -616,6 +616,7 @@ terence MONS_TERENCE
 %rim 0
 shapeshifter MONS_SHAPESHIFTER
 glowing_shapeshifter MONS_GLOWING_SHAPESHIFTER
+aspiring_flesh MONS_ASPIRING_FLESH
 
 %sdir mon/demihumanoids
 entropy_weaver MONS_ENTROPY_WEAVER
@@ -691,6 +692,7 @@ frost_giant MONS_FROST_GIANT
 stone_giant MONS_STONE_GIANT
 titan MONS_TITAN
 juggernaut MONS_JUGGERNAUT
+protean_progenitor MONS_PROTEAN_PROGENITOR
 iron_giant MONS_IRON_GIANT
 cactus_giant MONS_CACTUS_GIANT
 tainted_leviathan MONS_TAINTED_LEVIATHAN

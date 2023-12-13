@@ -126,6 +126,7 @@ enum band_type
     BAND_UFETUBI,
     BAND_BLASTMINER,
     BAND_BRAIN_WORMS,
+    BAND_PROTEAN_PROGENITORS,
     NUM_BANDS                   // always last
 };
 
