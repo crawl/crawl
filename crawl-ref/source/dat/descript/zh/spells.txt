@@ -1243,10 +1243,6 @@ Summon Dragon spell
 召唤并束缚一条强大的龙来执行施法者的命令。
 当法力很高时，便可以召唤特别致命的龙，或者同时召唤多个较弱的龙。
 %%%%
-Summon Drakes spell
-
-召唤多条亚龙、科莫多巨蜥和林德虫。
-%%%%
 Summon Earth Elementals spell
 
 召唤一个或多个土元素。

@@ -4339,11 +4339,10 @@ static monster_type _pick_vermin()
 static monster_type _pick_drake()
 {
     return random_choose_weighted(5, MONS_SWAMP_DRAKE,
-                                  5, MONS_KOMODO_DRAGON,
-                                  5, MONS_WIND_DRAKE,
-                                  6, MONS_RIME_DRAKE,
-                                  6, MONS_DEATH_DRAKE,
-                                  3, MONS_LINDWURM);
+                                  6, MONS_WIND_DRAKE,
+                                  8, MONS_RIME_DRAKE,
+                                  7, MONS_DEATH_DRAKE,
+                                  4, MONS_LINDWURM);
 }
 
 static void _do_high_level_summon(monster* mons, spell_type spell_cast,
