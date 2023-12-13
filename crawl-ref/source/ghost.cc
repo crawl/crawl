@@ -746,6 +746,20 @@ void ghost_demon::init_spectral_weapon(const item_def& weapon)
     max_hp = random_range(20, 30);
 }
 
+void ghost_demon::init_inugami(int power)
+{
+    const monster_type type = MONS_INUGAMI;
+    const monsterentry* stats = get_monster_data(type);
+
+    speed = stats->speed;
+    ev = stats->ev;
+    ac = stats->AC + div_rand_round(power, 10);
+    damage = 5 + div_rand_round(power, 6);
+    max_hp = 14 + div_rand_round(power, 4);
+    xl = 3 + div_rand_round(power, 15);
+    move_energy = stats->energy_usage.move;
+}
+
 // Used when creating ghosts: goes through and finds spells for the
 // ghost to cast. Death is a traumatic experience, so ghosts only
 // remember a few spells.

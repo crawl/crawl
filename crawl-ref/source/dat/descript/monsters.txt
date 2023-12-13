@@ -1603,6 +1603,15 @@ A warrior initiated in the mysteries of a dying cult, dedicated to serve
 thrones long-fallen. Its blows strip away magical defences, leaving its foes
 vulnerable to even the simplest hexes.
 %%%%
+inugami
+
+A mystical canine, frequently bound into the service of wizards and sorcerers.
+Its eyes flicker with remarkable intelligence, but its bite is no less sharp
+than its wilder cousins.
+
+They are difficult to truly kill - when gravely wounded, they instead return to
+spiritual form to lick their wounds until ready to be summoned again.
+%%%%
 iron dragon
 
 A very heavy, slow and apparently flightless dragon. It is named for its

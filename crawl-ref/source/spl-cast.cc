@@ -1323,7 +1323,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     // Summons. Most summons have a simple range 2 radius, see
     // find_newmons_square
     case SPELL_SUMMON_SMALL_MAMMAL:
-    case SPELL_CALL_CANINE_FAMILIAR:
     case SPELL_ANIMATE_ARMOUR:
     case SPELL_SUMMON_ICE_BEAST:
     case SPELL_MONSTROUS_MENAGERIE:
@@ -1339,6 +1338,16 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     case SPELL_BATTLESPHERE:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
+    case SPELL_CALL_CANINE_FAMILIAR:
+        if (you.props.exists(CANINE_FAMILIAR_MID))
+        {
+            monster* dog = monster_by_mid(you.props[CANINE_FAMILIAR_MID].get_int());
+            vector<coord_def> targ;
+            targ.push_back(dog->pos());
+            return make_unique<targeter_multiposition>(&you, targ);
+        }
+        else
+            return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
     case SPELL_FOXFIRE:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
     // TODO: these two actually have pretty wtf positioning that uses compass

@@ -1441,6 +1441,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_CONCENTRATE_VENOM:
     case ENCH_BOUND:
     case ENCH_VITRIFIED:
+    case ENCH_INSTANT_CLEAVE:
         decay_enchantment(en);
         break;
 
@@ -2119,7 +2120,7 @@ static const char *enchant_names[] =
     "ring_chaos", "ring_mutation", "ring_fog", "ring_ice", "ring_neg",
     "ring_acid", "ring_miasma", "concentrate_venom", "fire_champion",
     "anguished", "simulacra", "necrotizing", "glowing", "pursuing",
-    "bound", "bullseye_target", "vitrified",
+    "bound", "bullseye_target", "vitrified", "cleaving_attack",
     "buggy", // NUM_ENCHANTMENTS
 };
 
