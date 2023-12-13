@@ -9,7 +9,7 @@ species_flags:
 aptitudes:
   xp: 0
   hp: 1
-  mp_mod: -1
+  mp_mod: 0
   mr: 3
   fighting: 1
   short_blades: -1
