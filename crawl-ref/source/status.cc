@@ -733,6 +733,15 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
+    case STATUS_CANINE_FAMILIAR_ACTIVE:
+        if (you.props.exists(CANINE_FAMILIAR_MID))
+        {
+            inf.light_colour = WHITE;
+            inf.light_text   = "Dog";
+            inf.short_text   = "inugami summoned";
+            inf.long_text    = "Your inugami has been summoned.";
+        }
+
     case STATUS_NO_SCROLL:
         if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS]
             || player_in_branch(BRANCH_GEHENNA))

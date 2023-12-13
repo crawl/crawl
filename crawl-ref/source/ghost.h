@@ -57,6 +57,8 @@ public:
 
     void ugly_thing_to_very_ugly_thing();
 
+    void init_inugami(int power);
+
 
 public:
     static const vector<ghost_demon> find_ghosts(bool include_player=true);

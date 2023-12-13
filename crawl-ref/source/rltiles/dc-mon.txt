@@ -120,6 +120,7 @@ howler MONS_HOWLER_MONKEY
 warg MONS_WARG
 wolf MONS_WOLF
 raiju MONS_RAIJU
+inugami MONS_INUGAMI
 hell_hound MONS_HELL_HOUND
 %rim 0
 doom_hound MONS_DOOM_HOUND

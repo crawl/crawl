@@ -25,6 +25,7 @@
 #include "env.h"
 #include "fight.h"
 #include "fprop.h"
+#include "ghost.h"
 #include "god-conduct.h"
 #include "god-item.h"
 #include "invent.h"
@@ -120,23 +121,58 @@ spret cast_summon_small_mammal(int pow, god_type god, bool fail)
 
 spret cast_call_canine_familiar(int pow, god_type god, bool fail)
 {
-    if (stop_summoning_prompt())
+    // Many parts of this spell behave differently if our familiar has already
+    // been summoned.
+    bool familiar_active = you.props.exists(CANINE_FAMILIAR_MID);
+
+    if (!familiar_active && stop_summoning_prompt())
         return spret::abort;
+    else if (familiar_active)
+    {
+        monster* dog = monster_by_mid(you.props[CANINE_FAMILIAR_MID].get_int());
+        if (!you.can_see(*dog))
+        {
+            mprf(MSGCH_PROMPT, "Your familiar is too far away to imbue with magic.");
+            return spret::abort;
+        }
+    }
 
     fail_check();
-    monster_type mon = MONS_PROGRAM_BUG;
 
-    const int chance = pow + random_range(-10, 10);
+    // Summon our dog if one isn't already active
+    if (!familiar_active)
+    {
+        mgen_data mg = _pal_data(MONS_INUGAMI, 5, god, SPELL_CALL_CANINE_FAMILIAR);
 
-    if (chance > 59)
-        mon = MONS_WARG;
-    else if (chance > 39)
-        mon = MONS_WOLF;
+        monster* dog = create_monster(mg);
+        if (!dog)
+        {
+            canned_msg(MSG_NOTHING_HAPPENS);
+            return spret::success;
+        }
+
+        // Use a ghost_demon to handle the familiar's scaling damage and stats
+        ghost_demon ghost;
+        ghost.init_inugami(pow);
+        dog->set_ghost(ghost);
+        dog->inugami_init();
+
+        mpr("You call for your canine familiar and it appears with a howl!");
+        you.props[CANINE_FAMILIAR_MID].get_int() = dog->mid;
+    }
+    // If it's active, instead heal and boost its next attack.
     else
-        mon = MONS_HOUND;
+    {
+        monster* dog = monster_by_mid(you.props[CANINE_FAMILIAR_MID].get_int());
 
-    if (!create_monster(_pal_data(mon, 3, god, SPELL_CALL_CANINE_FAMILIAR)))
-        canned_msg(MSG_NOTHING_HAPPENS);
+        // Heal familiar and make its next attack (within the new few turns,
+        // so that you don't just prebuff for this) an instant cleave.
+        dog->heal(random_range(5, 9) + div_rand_round(pow, 5));
+        dog->add_ench(mon_enchant(ENCH_INSTANT_CLEAVE, 1, &you, 50));
+
+        mpr("You imbue your familiar with magical energy and its fangs glint"
+            " viciously.");
+    }
 
     return spret::success;
 }

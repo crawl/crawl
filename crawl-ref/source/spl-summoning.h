@@ -12,6 +12,10 @@
 
 #define DRAGON_CALL_POWER_KEY "dragon_call_power"
 
+// Mid of an active canine familiar. Should exist only so long as the player
+// has a living one.
+#define CANINE_FAMILIAR_MID "canine_familiar_mid"
+
 spret cast_summon_small_mammal(int pow, god_type god, bool fail);
 
 spret cast_call_canine_familiar(int pow, god_type god, bool fail);

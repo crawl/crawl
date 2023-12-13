@@ -929,6 +929,14 @@ bool melee_attack::attack()
         if (!handle_phase_attempted())
             return false;
     }
+    // If we're a monster that is cleaving due to a temporary boost, remove it
+    // upon this attack and refund the energy
+    else if (attacker->is_monster())
+    {
+        monster* mons = attacker->as_monster();
+        mons->del_ench(ENCH_INSTANT_CLEAVE);
+        mons->speed_increment += mons->action_energy(EUT_ATTACK);
+    }
 
     if (attacker != defender && attacker->is_monster()
         && mons_self_destructs(*attacker->as_monster()))
