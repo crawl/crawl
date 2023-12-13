@@ -2819,7 +2819,9 @@ KMONS:   5 = guardian mummy ; randart great sword ego:chaos . \
              randart scale mail . any beam wand
 KMONS:   7 = guardian mummy ; randart glaive ego:chaos . \
              randart ring mail . throwing net
-KMONS:   2468 = killer klown
+KMONS:   246 = killer klown ; club plus:12 ego:chaos | \
+                              club plus:12 ego:antimagic w:5
+KMONS:   8&! = protean progenitor
 KMONS:   _ = ghost moth
 KMONS:   90 = moth of wrath / butterfly w:30
 KFEAT:   0 = zot trap
@@ -2830,7 +2832,7 @@ KFEAT:   m = iron_grate
 SUBST:   d = tGmcc, y = c`, c = cccccbbvvx, l = wl
 NSUBST:  > = 1 = }:80 > / 1 = ):80 > / 1 = ]:80 > / >, 9 = 0 / 9
 NSUBST:  ^ = ' / ^, ~ = " / ~, ` = 2=f / .
-SHUFFLE: 12 / 34 / 56 / 78, 56, 78, ^' / ~"
+SHUFFLE: 12 / 34 / 56 / 78 / &!, 56, 78, ^' / ~"
 MARKER:  f = lua:fog_machine { cloud_type = "seething chaos", pow_max = 17, \
              delay_min = 450, delay_max = 700, size = 1, excl_rad = 0 }
 FTILE:   f = floor_pebble_lightmagenta
@@ -3381,8 +3383,10 @@ KMONS:   L = shard shrike / white draconian stormcaller w:6
 KMONS:   M = brown very ugly thing
 KMONS:   N = yellow draconian
 KMONS:   O = acid blob / yellow draconian annihilator w:6
-KMONS:   Z = killer klown ; club randart plus:12 ego:chaos / Tiamat w:3, \
-             killer klown ; club randart plus:12 ego:chaos
+KMONS:   Z = killer klown ; club randart plus:12 ego:chaos / \
+             protean progenitor band w:6 / Tiamat w:3, \
+             killer klown ; club randart plus:12 ego:chaos / \
+             protean progenitor band w:6
 KITEM:   BEHKN = $ w:15 / % w:25 / *
 KITEM:   z = any good_item
 KITEM:   Z = superb_item
@@ -3438,8 +3442,9 @@ MONS:    fire dragon / ice dragon / storm dragon w:8 / moth of wrath w:12 / \
          ghost moth w:5 / tentacled monstrosity w:5 / quicksilver dragon w:5
 MONS:    titan / lich / deep elf annihilator w:3 / deep elf high priest w:4 / \
          deep elf sorcerer w:3 / glowing orange brain w:3
-MONS:    nonbase draconian w:20 / killer klown / orb of fire w:5 / \
-         curse toe w:5 / ancient lich / dread lich / electric golem / death cob
+MONS:    nonbase draconian w:20 / protean progenitor / killer klown / \
+         death cob / curse toe w:5 / ancient lich / dread lich / \
+         electric golem / orb of fire w:5
 SHUFFLE: EF
 SUBST:   E : .
 SHUFFLE: ABCDF, GH / GH / GH / HG
@@ -3951,10 +3956,10 @@ KMONS:   r = moth of wrath / ghost moth
 KMONS:   s = quicksilver dragon / storm dragon / \
              shadow dragon / iron dragon / \
              bone dragon / golden dragon w:5
-# The Freakshow: death cobs and maybe a curse toe
+# The Freakshow: death cobs and maybe a curse toe or protean
 NSUBST:  F = 8 = z. / 1 = y .:50 / *:.
 KMONS:   y = curse toe
-KMONS:   z = death cob
+KMONS:   z = death cob / protean progenitor w:6
 # The Jugglers:  draconian shifters and purple draconians
 NSUBST:  H = 3 = aa7 / 9 = 7. / *:.
 KMONS:   a = draconian shifter
@@ -3989,7 +3994,8 @@ TAGS:    transparent no_monster_gen no_item_gen no_pool_fixup
 DEPTH:   Zot:1-4
 KMONS:   01 = ghost moth
 KMONS:   23 = golden dragon
-KMONS:   4567 = nonbase draconian
+KMONS:   45 = nonbase draconian
+KMONS:   67 = protean progenitor
 KMONS:   89 = killer klown
 KMONS:   AB = curse toe
 KMONS:   CD = electric golem
@@ -4038,7 +4044,8 @@ TAGS:   no_monster_gen
 ORIENT: float
 DEPTH:  Zot
 MONS:   angel god:zin dbname:zin_angel
-MONS:   killer klown, chaos spawn, glowing shapeshifter
+MONS:   killer klown / protean progenitor w:5
+MONS:   chaos spawn, glowing shapeshifter
 KMONS:  s = killer klown-shaped pillar of salt
 KMONS:  f = butterfly
 KFEAT:  _ = altar_zin
@@ -4108,10 +4115,11 @@ ENDMAP
 NAME:   hellmonk_formless_pools
 TAGS:   no_monster_gen transparent no_pool_fixup
 DEPTH:  Zot, !Zot:$
+MONS:   protean progenitor
 MONS:   glowing shapeshifter hd:20 / glowing shapeshifter hd:18
-SUBST:  -: Ac, A:lw
-NSUBST: ' = 4:1 / 12 = 1... / .
-NSUBST:  < = 1 = }. / 1 = ). / 1 = ]<
+SUBST:  - : Ac, A : lw
+NSUBST: ' = 2:1 / 3:2 / 2 = 1... / 8 = 2... / .
+NSUBST: < = 1 = }. / 1 = ). / 1 = ]<
 TILE:   G = dngn_statue_tentacles
 MAP
    @@@@@
@@ -4222,10 +4230,10 @@ NAME:    regret_index_zot_pan_timeshare
 TAGS:    no_monster_gen patrolling transparent
 DEPTH:   Zot, !Zot:$
 ORIENT:  float
-MONS:    glass eye, tentacled monstrosity, blizzard demon
+MONS:    glass eye, protean progenitor, blizzard demon
 MONS:    draconian annihilator, balrug, draconian scorcher, executioner
 KMONS:   8 = curse toe
-NSUBST:  1 = 2:1 / 2:2 / 2 = 112. / *:.,  3 = 3:3 / 2:4 / 4 = 334. / *:.
+NSUBST:  1 = 2:1 / 2:2 / 1 = 112. / *:.,  3 = 3:3 / 2:4 / 4 = 334. / *:.
 NSUBST:  5 = 2:5 / 2:6 / 4 = 556. / *:., 7 = 1:7 / 1:8 / 3 = 7.. / 2 = 8.. / *:.
 SHUFFLE: {([}
 SUBST:   ( = (:40 U, [ = [:40 Y

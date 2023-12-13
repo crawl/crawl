@@ -4842,7 +4842,7 @@ MONS:    nagaraja / salamander tyrant
 SUBST:   5 = 4, 4 = 23
 : elseif you.in_branch("Zot") then
 MONS:    ghost moth / death cob / curse toe
-MONS:    nonbase draconian
+MONS:    nonbase draconian / protean progenitor w:2
 MONS:    ancient lich / dread lich, orb of fire
 SUBST:   3 = 2, 4 = 3, 5 = 4
 : end
@@ -7984,7 +7984,7 @@ KMONS:  8 = bone dragon / lich / ancient lich / dread lich / w:5 death cob / \
 : elseif you.in_branch("Zot") then
 KMONS:  8 = w:35 nonbase draconian / orb of fire / electric golem / \
             killer klown / death cob / w:5 curse toe / w:5 ancient lich / \
-            w:5 dread lich
+            w:5 dread lich / protean progenitor w:15
 SUBST:  *% = .
 :else
 KMONS:  8 = 8 band
@@ -10892,7 +10892,8 @@ KMONS:   2 = executioner / brimstone fiend / ice fiend / tzitzimitl \
            / hell sentinel
 SUBST:   8 = 29, 9 = 01
 : elseif you.in_branch("Zot") then
-KMONS:   1 = ancient lich w:5 / dread lich w:5 / orb of fire / curse toe
+KMONS:   1 = ancient lich w:5 / dread lich w:5 / proteaan_progenitor / \
+             orb of fire / curse toe
 SUBST:   8 = 18
 : end
 # In Vaults we let the layout dictate wall type and need a border of floor.

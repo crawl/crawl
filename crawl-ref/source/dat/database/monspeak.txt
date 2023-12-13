@@ -7262,6 +7262,20 @@ default profane servitor
 
 __NONE
 %%%%
+################## Protean progenitor ###########################
+protean progenitor
+
+VISUAL:@The_monster@'s form [briefly |][ripples|wavers] with deep exhaustion.
+
+VISUAL:@The_monster@'s [three nested|six fanged|nine smoking] eyes blink slowly.
+
+VISUAL:@The_monster@ [glitters|crackles], [sighs|grumbles], and [beckons|stomps].
+
+VISUAL:@The_monster@ unfurls and squashes hidden [antennae|spinnerets|pseudopods].
+
+w:20
+__NONE
+%%%%
 ################## Statues ##################
 default orange crystal statue
 

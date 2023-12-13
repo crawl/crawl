@@ -397,10 +397,12 @@ end), { weight = 2 }))
 mset(spec_fn(function ()
   local d = math.max(2, math.floor((32 - you.depth()) / 5))
   local e = math.min(8, math.floor((you.depth()) / 5) + 4)
-  local f = math.max(1, you.depth() + you.zigs_completed() - 5)
+  local f = math.max(1, you.depth() + you.zigs_completed() - 4)
   return "chaos spawn w:" .. d .. " / very ugly thing w:" .. d .. " / " ..
          "apocalypse crab w:4 / killer klown w:8 / " ..
-         "shapeshifter hd:16 w:" .. e .. " / glowing shapeshifter w:" .. e .. " / " ..
+         "shapeshifter hd:16 w:" .. e .. " / " ..
+         "glowing shapeshifter w:" .. e / 3 .. " / " ..
+         "protean progenitor w:" .. e .. " / " ..
          "greater demon w:2 / pandemonium lord w:" .. f
 end))
 

@@ -514,6 +514,8 @@ enum monster_type                      // env.mons[].type
     MONS_IRON_GIANT,
     MONS_CACTUS_GIANT,
     MONS_TAINTED_LEVIATHAN,
+    MONS_PROTEAN_PROGENITOR,
+    MONS_ASPIRING_FLESH,
 #endif
     MONS_HUMAN,
 #if TAG_MAJOR_VERSION == 34
@@ -1209,6 +1211,8 @@ enum monster_type                      // env.mons[].type
     MONS_ANTIQUE_CHAMPION,
     MONS_KOBOLD_BLASTMINER,
     MONS_INUGAMI,
+    MONS_PROTEAN_PROGENITOR,
+    MONS_ASPIRING_FLESH,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

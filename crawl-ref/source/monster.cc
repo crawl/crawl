@@ -3488,12 +3488,17 @@ int monster::known_chaos(bool check_spells_god) const
         || type == MONS_TIAMAT            // For her colour-changing.
         || type == MONS_BAI_SUZHEN
         || type == MONS_BAI_SUZHEN_DRAGON // For her transformation.
+        || type == MONS_PROTEAN_PROGENITOR
         || mons_genus(type) == MONS_DEMONSPAWN) // Like player demonspawn.
     {
         chaotic++;
     }
 
     if (is_shapeshifter() && (flags & MF_KNOWN_SHIFTER))
+        chaotic++;
+
+    // This includes both aspiring flesh and whatever they turn into.
+    if (has_ench(ENCH_PROTEAN_SHAPESHIFTING))
         chaotic++;
 
     // Knowing chaotic spells is not enough to make you "essentially"
