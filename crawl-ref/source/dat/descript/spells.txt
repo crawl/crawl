@@ -1411,7 +1411,7 @@ dragons at once.
 %%%%
 Summon Drakes spell
 
-Summons multiple drakes, komodo dragons, and lindwurms.
+Summons multiple drakes and lindwurms.
 %%%%
 Summon Earth Elementals spell
 
