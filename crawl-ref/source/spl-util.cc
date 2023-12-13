@@ -1461,6 +1461,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "there is no room nearby to place a sigil.";
         break;
 
+    case SPELL_CALL_CANINE_FAMILIAR:
+        if (temp && you.duration[DUR_CANINE_FAMILIAR_DEAD])
+            return "your canine familiar is too injured to answer your call.";
+
     default:
         break;
     }

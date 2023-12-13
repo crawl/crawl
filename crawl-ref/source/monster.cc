@@ -4466,6 +4466,13 @@ void monster::uglything_init(bool only_mutate)
     colour          = ghost->colour;
 }
 
+void monster::inugami_init()
+{
+    hit_dice            = ghost->xl;
+    max_hit_points      = ghost->max_hp;
+    hit_points          = max_hit_points;
+}
+
 void monster::ghost_demon_init()
 {
     hit_dice        = ghost->xl;

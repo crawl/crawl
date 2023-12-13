@@ -823,6 +823,11 @@ bool attack_cleaves(const actor &attacker, int which_attack)
     {
         return true;
     }
+    else if (attacker.is_monster()
+             && attacker.as_monster()->has_ench(ENCH_INSTANT_CLEAVE))
+    {
+        return true;
+    }
 
     const item_def* weap = attacker.weapon(which_attack);
     return weap && weapon_cleaves(*weap);

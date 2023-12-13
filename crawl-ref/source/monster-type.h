@@ -61,6 +61,7 @@ enum monster_type                      // env.mons[].type
     MONS_WARG,
     MONS_HELL_HOUND,
 #if TAG_MAJOR_VERSION > 34
+    MONS_INUGAMI,
     MONS_RAIJU,
     MONS_DOOM_HOUND,
 #endif
@@ -1207,6 +1208,7 @@ enum monster_type                      // env.mons[].type
     MONS_FLOATING_EYE,                 // genus
     MONS_ANTIQUE_CHAMPION,
     MONS_KOBOLD_BLASTMINER,
+    MONS_INUGAMI,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
