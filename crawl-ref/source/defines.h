@@ -339,6 +339,7 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define BULLSEYE_TARGET_KEY "bullseye_target"
 #define BOULDER_DIRECTION_KEY "boulder_direction"
 #define BOULDER_POWER_KEY "boulder_power"
+#define PROTEAN_TARGET_KEY "protean_target"
 
 #define HELPLESS_KEY "helpless"
 #define POISONER_KEY "poisoner"

@@ -1342,6 +1342,87 @@ static void _orb_of_mayhem(actor& maniac, const monster& victim)
     }
 }
 
+static void _protean_explosion(monster* mons)
+{
+    // This is slightly hacky, but we determine which thing to turn into by
+    // creating a dummy monster of the right hd, then making a poly set for it
+    // and picking the first one.
+    monster dummy;
+    dummy.type = MONS_SHAPESHIFTER;
+    define_monster(dummy);
+    dummy.set_hit_dice(12);
+    init_poly_set(&dummy);
+    const CrawlVector &set = dummy.props[POLY_SET_KEY];
+    monster_type target = (monster_type)set[0].get_int();
+
+    // It may be thematic to become a shapeshifter, but this also tosses off the
+    // might and haste immediately. (We can just pick the second polyset target
+    // since they should be guaranteed to be different.)
+    if (target == MONS_GLOWING_SHAPESHIFTER)
+        target = (monster_type)set[1].get_int();
+
+    if (you.can_see(*mons))
+    {
+        mprf(MSGCH_MONSTER_WARNING, "For just a moment, %s begins to "
+                                    "look like %s, then it explodes!",
+                                    mons->name(DESC_THE).c_str(),
+                                    mons_type_name(target, DESC_A).c_str());
+    }
+
+    // Determine number of children based on the HD of what we roll.
+    // HD >= 12 generates 2
+    // HD 10-11 generates 2-3
+    // HD < 10 generates 3
+    int num_children = 2;
+    if (mons_class_hit_dice(target) < 12 && coinflip())
+        ++num_children;
+    else if (mons_class_hit_dice(target) < 10)
+        ++num_children;
+
+    // Then create and scatter the piles around
+    int delay = random_range(2, 4) * BASELINE_DELAY;
+    for (int i = 0; i < num_children; ++i)
+    {
+        coord_def spot;
+
+        // Try to find a spot within 3 tiles. If that fails, expand to 6 tiles.
+        // If that also fails, stop trying to place children; the player got off
+        // easy this time.
+        //
+        // XXX: This is somewhat imperfect, since it checks for the habitat of
+        //      what the flesh will *become*, which has a very slim chance of
+        //      being somewhere the flesh itself cannot survive if - say - we
+        //      roll turning into a salamander and there's lava nearby. So it
+        //      may think we have a valid tile when we don't. It's very awkward
+        //      to prevent that without also limiting the possible spawn pool to
+        //      ONLY monsters that can survive in deep water, though.
+        find_habitable_spot_near(mons->pos(), target, 3, false, spot);
+        if (spot.origin())
+            find_habitable_spot_near(mons->pos(), target, 6, false, spot);
+        if (spot.origin())
+            return;
+
+        mgen_data mg = mgen_data(MONS_ASPIRING_FLESH, SAME_ATTITUDE(mons),
+                                 spot, MHITNOT, MG_FORCE_PLACE | MG_FORCE_BEH);
+
+        monster *child = create_monster(mg);
+
+        if (child)
+        {
+            child->props[PROTEAN_TARGET_KEY] = target;
+            child->add_ench(mon_enchant(ENCH_PROTEAN_SHAPESHIFTING, 0, 0, delay));
+            child->flags |= MF_WAS_IN_VIEW;
+
+            // Prevent them from being trivially unaware of the player
+            child->foe = mons->foe;
+            child->behaviour = BEH_SEEK;
+
+            // Make each one shift a little later than the last
+            delay += random_range(1, 3) * BASELINE_DELAY;
+        }
+    }
+}
+
 static bool _mons_reaped(actor &killer, monster& victim)
 {
     beh_type beh;
@@ -1997,6 +2078,12 @@ item_def* monster_die(monster& mons, killer_type killer,
              && !wizard && !mons_reset)
     {
         _druid_final_boon(&mons);
+    }
+    else if (mons.type == MONS_PROTEAN_PROGENITOR && !was_banished
+             && !wizard && !mons_reset)
+    {
+        _protean_explosion(&mons);
+        silent = true;
     }
 
     const bool death_message = !silent && !did_death_message

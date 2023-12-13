@@ -1962,6 +1962,8 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1}, true }}}},
     { MONS_THRASHING_HORROR, { {}, {{ BAND_THRASHING_HORRORS, {0, 1} }}}},
     { MONS_BRAIN_WORM, { {}, {{ BAND_BRAIN_WORMS, {0, 1} }}}},
+    { MONS_PROTEAN_PROGENITOR, { {}, {{ BAND_PROTEAN_PROGENITORS, {0, 1} }}}},
+
 };
 
 static band_type _choose_band(monster_type mon_type, int *band_size_p,
@@ -2074,6 +2076,11 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
             band_size = random2(min(brdepth[BRANCH_ABYSS], you.depth));
         break;
 
+    case MONS_PROTEAN_PROGENITOR:
+        if (one_chance_in(3))
+            band_size = 1;
+        break;
+
     default: ;
     }
 
@@ -2172,6 +2179,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_SPECTRALS,           {{{MONS_SPECTRAL_THING, 1}}}},
     { BAND_UFETUBI,             {{{MONS_UFETUBUS, 1}}}},
     { BAND_BLASTMINER,          {{{MONS_KOBOLD_BLASTMINER, 1}}}},
+    { BAND_PROTEAN_PROGENITORS, {{{MONS_PROTEAN_PROGENITOR, 1}}}},
     { BAND_DEEP_ELF_KNIGHT,     {{{MONS_DEEP_ELF_AIR_MAGE, 46},
                                   {MONS_DEEP_ELF_FIRE_MAGE, 46},
                                   {MONS_DEEP_ELF_KNIGHT, 24},
