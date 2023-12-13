@@ -737,6 +737,10 @@ monster_info::monster_info(const monster* m, int milev)
         if (m->props.exists(MIRRORED_GHOST_KEY))
             props[MIRRORED_GHOST_KEY] = m->props[MIRRORED_GHOST_KEY];
     }
+    // Otherwise the description lies wildly about the average hp of melee lords
+    else if (m->type == MONS_PANDEMONIUM_LORD)
+        props[KNOWN_MAX_HP_KEY] = (int)(m->ghost->max_hp);
+
     if (m->has_ghost_brand())
         props[SPECIAL_WEAPON_KEY] = m->ghost_brand();
 
