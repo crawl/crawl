@@ -9,7 +9,7 @@ aptitudes:
   xp: 0
   hp: -2
   mp_mod: 1
-  mr: 3
+  wl: 3
   short_blades: 1
   long_blades: 1
   axes: 1
