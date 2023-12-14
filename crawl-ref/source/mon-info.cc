@@ -1901,6 +1901,7 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
         int reach_count = 0;
         int constrict_count = 0;
         int trample_count = 0;
+        int drag_count = 0;
 
         for (int j = start; j < start + count; ++j)
         {
@@ -1918,6 +1919,8 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
                 constrict_count++;
             if (_has_attack_flavour(mi[j], AF_TRAMPLE))
                 trample_count++;
+            if (_has_attack_flavour(mi[j], AF_DRAG))
+                drag_count++;
         }
 
         if (wand_count)
@@ -1968,6 +1971,13 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
             conditions.push_back(_condition_string(trample_count, count,
                                                    {MB_UNSAFE, "trample",
                                                     "trample", "trample"}));
+        }
+
+        if (drag_count)
+        {
+            conditions.push_back(_condition_string(drag_count, count,
+                                                   {MB_UNSAFE, "drag",
+                                                    "drag", "drag"}));
         }
     }
 
