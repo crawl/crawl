@@ -1102,7 +1102,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             // Don't attempt to 'anger' monsters that are already hostile; this can
             // have weird and unexpected effects, such as prematurely ending hostile
             // effects.
-            else if (mon->attitude != ATT_HOSTILE)
+            else if (mon->temp_attitude()  != ATT_HOSTILE)
             {
                 mon->attitude = ATT_HOSTILE;
                 breakCharm    = true;
@@ -1255,7 +1255,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     {
         mon->target = src_pos;
         if (src->is_player() && mon->angered_by_attacks()
-            && mon->attitude != ATT_HOSTILE)
+            && mon->temp_attitude() != ATT_HOSTILE)
         {
             // Why only attacks by the player change attitude? -- 1KB
             mon->attitude = ATT_HOSTILE;
