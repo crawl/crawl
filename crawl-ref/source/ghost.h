@@ -57,7 +57,7 @@ public:
 
     void ugly_thing_to_very_ugly_thing();
 
-    void init_inugami(int power);
+    void init_inugami_from_player(int power);
 
 
 public:

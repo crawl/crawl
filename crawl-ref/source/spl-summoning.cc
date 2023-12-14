@@ -172,10 +172,11 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
             return spret::success;
         }
 
-        // Use a ghost_demon to handle the familiar's scaling damage and stats
-        ghost_demon ghost;
-        ghost.init_inugami(pow);
-        dog->set_ghost(ghost);
+        // Use a ghost_demon to handle the familiar's scaling damage and stats.
+        // The ghost_demon is created, but not initialized, during the
+        // create_monster call above.
+        ASSERT(dog->ghost);
+        dog->ghost->init_inugami_from_player(pow);
         dog->inugami_init();
 
         mpr("You call for your canine familiar and it appears with a howl!");

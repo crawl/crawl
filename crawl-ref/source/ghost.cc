@@ -746,7 +746,7 @@ void ghost_demon::init_spectral_weapon(const item_def& weapon)
     max_hp = random_range(20, 30);
 }
 
-void ghost_demon::init_inugami(int power)
+void ghost_demon::init_inugami_from_player(int power)
 {
     const monster_type type = MONS_INUGAMI;
     const monsterentry* stats = get_monster_data(type);
