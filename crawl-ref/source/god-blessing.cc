@@ -253,7 +253,7 @@ static string _beogh_bless_ranged_weapon(monster* mon)
     _gift_weapon_to_orc(mon, WPN_ORCBOW);
     if (mon->launcher() == nullptr)
     {
-        dprf("Couldn't give crossbow to follower!");
+        dprf("Couldn't give orcbow to follower!");
         return ""; // ?
     }
 
