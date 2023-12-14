@@ -10892,7 +10892,7 @@ KMONS:   2 = executioner / brimstone fiend / ice fiend / tzitzimitl \
            / hell sentinel
 SUBST:   8 = 29, 9 = 01
 : elseif you.in_branch("Zot") then
-KMONS:   1 = ancient lich w:5 / dread lich w:5 / proteaan_progenitor / \
+KMONS:   1 = ancient lich w:5 / dread lich w:5 / protean progenitor / \
              orb of fire / curse toe
 SUBST:   8 = 18
 : end
