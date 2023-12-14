@@ -741,6 +741,7 @@ bool fill_status_info(int status, status_info& inf)
             inf.short_text   = "inugami summoned";
             inf.long_text    = "Your inugami has been summoned.";
         }
+        break;
 
     case STATUS_NO_SCROLL:
         if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS]
