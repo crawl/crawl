@@ -188,11 +188,12 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
 
         // Heal familiar and make its next attack (within the new few turns,
         // so that you don't just prebuff for this) an instant cleave.
-        dog->heal(random_range(5, 9) + div_rand_round(pow, 5));
-        dog->add_ench(mon_enchant(ENCH_INSTANT_CLEAVE, 1, &you, 50));
-
         mpr("You imbue your familiar with magical energy and its fangs glint"
             " viciously.");
+
+        dog->heal(random_range(5, 9) + div_rand_round(pow, 5));
+        dog->lose_ench_levels(ENCH_POISON, 1);
+        dog->add_ench(mon_enchant(ENCH_INSTANT_CLEAVE, 1, &you, 50));
     }
 
     return spret::success;
