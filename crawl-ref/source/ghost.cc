@@ -758,6 +758,7 @@ void ghost_demon::init_inugami(int power)
     max_hp = 14 + div_rand_round(power, 4);
     xl = 3 + div_rand_round(power, 15);
     move_energy = stats->energy_usage.move;
+    see_invis = true;
 }
 
 // Used when creating ghosts: goes through and finds spells for the
