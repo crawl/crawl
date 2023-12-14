@@ -734,7 +734,7 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_CANINE_FAMILIAR_ACTIVE:
-        if (you.props.exists(CANINE_FAMILIAR_MID))
+        if (canine_familiar_is_alive())
         {
             inf.light_colour = WHITE;
             inf.light_text   = "Dog";

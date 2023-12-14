@@ -119,11 +119,32 @@ spret cast_summon_small_mammal(int pow, god_type god, bool fail)
     return spret::success;
 }
 
+bool canine_familiar_is_alive()
+{
+    if (you.props.exists(CANINE_FAMILIAR_MID))
+    {
+        // Some sanity checking. This prop should already be removed whenever
+        // the dog stops existing, but sometimes this still isn't the case.
+        // So double-check the dog's existence, and remove the prop if it
+        // doesn't exist to avoid crashes elsewhere.
+        monster* dog = monster_by_mid(you.props[CANINE_FAMILIAR_MID].get_int());
+        if (!dog)
+        {
+            you.props.erase(CANINE_FAMILIAR_MID);
+            return false;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
 spret cast_call_canine_familiar(int pow, god_type god, bool fail)
 {
     // Many parts of this spell behave differently if our familiar has already
     // been summoned.
-    bool familiar_active = you.props.exists(CANINE_FAMILIAR_MID);
+    bool familiar_active = canine_familiar_is_alive();
 
     if (!familiar_active && stop_summoning_prompt())
         return spret::abort;
