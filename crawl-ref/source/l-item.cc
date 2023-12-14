@@ -627,6 +627,19 @@ IDEF(is_throwable)
     return 1;
 }
 
+/*** Is this an elemental evoker?
+ * @field is_xp_evoker boolean
+ */
+IDEF(is_xp_evoker)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushboolean(ls, is_xp_evoker(*item));
+
+    return 1;
+}
+
 /*** Did we drop this?
  * @field dropped boolean
  */
@@ -1718,6 +1731,7 @@ static ItemAccessor item_attrs[] =
     { "reach_range",       l_item_reach_range },
     { "is_ranged",         l_item_is_ranged },
     { "is_throwable",      l_item_is_throwable },
+    { "is_xp_evoker",      l_item_is_xp_evoker },
     { "dropped",           l_item_dropped },
     { "is_melded",         l_item_is_melded },
     { "is_corpse",         l_item_is_corpse },

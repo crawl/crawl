@@ -1915,6 +1915,7 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
             unrand          (For non-random artefacts.)
             melee           (Melee weapons, including magical staves.)
             ranged          (Ranged weapons.)
+            evoker          (Elemental evokers.)
             identified      (The item is fully identified.)
             known           (You recognize the item's subtype.)
             unidentified    (You don't recognize the item's subtype.)

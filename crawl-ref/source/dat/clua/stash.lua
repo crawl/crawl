@@ -46,6 +46,10 @@ function ch_stash_search_annotate_item(it)
     annot = annot .. "{ego} {branded} "
   end
 
+  if it.is_xp_evoker then
+    annot = annot .. "{evoker} "
+  end
+
   if it.god_gift then
     annot = annot .. "{god gift} "
   end

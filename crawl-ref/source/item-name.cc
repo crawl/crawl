@@ -3374,6 +3374,11 @@ string item_prefix(const item_def &item, bool temp)
             prefixes.push_back("spellbook");
         break;
 
+    case OBJ_MISCELLANY:
+        if (is_xp_evoker(item))
+            prefixes.push_back("evoker");
+        break;
+
     default:
         break;
     }
