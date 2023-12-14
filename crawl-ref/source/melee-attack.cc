@@ -934,8 +934,11 @@ bool melee_attack::attack()
     else if (attacker->is_monster())
     {
         monster* mons = attacker->as_monster();
-        mons->del_ench(ENCH_INSTANT_CLEAVE);
-        mons->speed_increment += mons->action_energy(EUT_ATTACK);
+        if (mons->has_ench(ENCH_INSTANT_CLEAVE))
+        {
+            mons->del_ench(ENCH_INSTANT_CLEAVE);
+            mons->speed_increment += mons->action_energy(EUT_ATTACK);
+        }
     }
 
     if (attacker != defender && attacker->is_monster()
