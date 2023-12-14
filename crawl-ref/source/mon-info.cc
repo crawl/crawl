@@ -682,9 +682,9 @@ monster_info::monster_info(const monster* m, int milev)
     if (!m->friendly())
     {
         const stab_type st = find_stab_type(&you, *m, false);
-        if (st == STAB_INVISIBLE && !mb[MB_BLIND])
+        if (!you.visible_to(m))
             mb.set(MB_CANT_SEE_YOU);
-        else if (st == STAB_DISTRACTED && !mb[MB_UNAWARE] && !mb[MB_WANDERING])
+        if (st == STAB_DISTRACTED && !mb[MB_UNAWARE] && !mb[MB_WANDERING])
             mb.set(MB_DISTRACTED_ONLY);
     }
 
