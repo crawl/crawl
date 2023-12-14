@@ -5615,6 +5615,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_WEAKNESS:
         mon->weaken(agent(), 8 + random2(4));
+        obvious_effect = true;
         return MON_AFFECTED;
 
     case BEAM_BERSERK:
