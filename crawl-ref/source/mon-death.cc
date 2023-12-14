@@ -1417,6 +1417,8 @@ static void _protean_explosion(monster* mons)
             child->foe = mons->foe;
             child->behaviour = BEH_SEEK;
 
+            mons_add_blame(child, "spawned from " + mons->name(DESC_A, true));
+
             // Make each one shift a little later than the last
             delay += random_range(1, 3) * BASELINE_DELAY;
         }
