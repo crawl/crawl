@@ -1913,7 +1913,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_LEDAS_LIQUEFACTION, "Leda's Liquefaction",
-    spschool::earth | spschool::hexes,
+    spschool::earth | spschool::transmutation,
     spflag::area,
     4,
     200,
