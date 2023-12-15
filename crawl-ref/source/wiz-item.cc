@@ -96,33 +96,18 @@ void wizard_create_spec_object_by_name()
 
 void wizard_create_spec_object()
 {
-    char specs[80];
-    char32_t keyin;
-    object_class_type class_wanted;
-
-    do
+    string title = "Which item class (ESC to exit)?";
+    vector<WizardEntry> options =
     {
-        mprf(MSGCH_PROMPT, ") - weapons     ( - missiles  [ - armour  / - wands    ?  - scrolls");
-        mprf(MSGCH_PROMPT, "= - jewellery   ! - potions   : - books   | - staves   }  - miscellany");
-        mprf(MSGCH_PROMPT, "%% - talismans   X - corpses   $ - gold    0  - the Orb");
-        mprf(MSGCH_PROMPT, "ESC - exit");
-
-        msgwin_prompt("What class of item? ");
-
-        keyin = towupper(get_ch());
-
-        class_wanted = item_class_by_sym(keyin);
-        if (key_is_escape(keyin) || keyin == ' '
-                || keyin == '\r' || keyin == '\n')
-        {
-            msgwin_reply("");
-            canned_msg(MSG_OK);
-            return;
-        }
-    } while (class_wanted == NUM_OBJECT_CLASSES);
-
-    // XXX: hope item_class_by_sym never returns a real class for non-ascii.
-    msgwin_reply(string(1, (char) keyin));
+        {')', "weapons"}, {'(', "missiles"}, {'[', "armour"}, {'/', "wands"},
+        {'?', "scrolls"}, {'=', "jewellery"}, {'!', "potions"}, {':', "books"},
+        {'|', "staves"}, {'}', "miscellany"}, {'X', "corpses"}, {'$', "gold"},
+        {'0', "the Orb"}
+    };
+    auto menu = WizardMenu(title, options);
+    object_class_type class_wanted = item_class_by_sym(menu.run());
+    if (NUM_OBJECT_CLASSES == class_wanted)
+        return;
 
     // Allocate an item to play with.
     int thing_created = get_mitm_slot();
@@ -195,7 +180,9 @@ void wizard_create_spec_object()
     }
     else
     {
-        string prompt = "What type of item? ";
+        char specs[80];
+        string prompt = make_stringf("What type of %s? ",
+                                     base_type_string(class_wanted));
         if (class_wanted == OBJ_BOOKS)
             prompt += "(\"all\" for all) ";
         msgwin_get_line_autohist(prompt, specs, sizeof(specs));
@@ -259,68 +246,30 @@ static void _tweak_randart(item_def &item)
 
     string prompt = "";
 
-    vector<unsigned int> choice_to_prop;
-    for (unsigned int i = 0, choice_num = 0; i < ARTP_NUM_PROPERTIES; ++i)
+    vector<WizardEntry> choices;
+    for (unsigned int i = 0, choice = 'a'; i < ARTP_NUM_PROPERTIES; ++i)
     {
 #if TAG_MAJOR_VERSION == 34
         if (i == ARTP_METABOLISM || i == ARTP_ACCURACY || i == ARTP_TWISTER)
             continue;
 #endif
-        choice_to_prop.push_back(i);
-        if (choice_num % 8 == 0 && choice_num != 0)
-            prompt.back() = '\n'; // Replace the space
+        auto prop = (artefact_prop_type)i;
+        choices.emplace_back(WizardEntry(choice, artp_name(prop), i));
 
-        char choice;
-        char buf[80];
-
-        if (choice_num < 26)
-            choice = 'a' + choice_num;
-        else if (choice_num < 52)
-            choice = 'A' + choice_num - 26;
-        else if (choice_num < 'A' - '0' + 52)
-        {
-            // 0-9 then :;<=>?@ . Any higher would collide with letters.
-            choice = '0' + choice_num - 52;
-        }
+        if (choice == 'z')
+            choice = 'A';
+        else if (choice == 'Z')
+            choice = '0';
+        else if (choice == '@' || !choice)
+            choice = 0;
         else
-            choice = '-'; // Too many choices!
-
-        snprintf(buf, sizeof(buf), "%s) %s%-6s%s ",
-                choice == '<' ? "<<" : string(1, choice).c_str(),
-                 props[i] ? "<w>" : "",
-                 artp_name((artefact_prop_type)choice_to_prop[choice_num]),
-                 props[i] ? "</w>" : "");
-
-        prompt += buf;
-
-        choice_num++;
+            ++choice;
     }
-    mprf_nocap(MSGCH_PROMPT, "%s", prompt.c_str());
-
-    mprf(MSGCH_PROMPT, "Change which field? ");
-
-    int keyin = get_ch();
-    unsigned int  choice;
-
-    if (isaalpha(keyin) && islower(keyin))
-        choice = keyin - 'a';
-    else if (isaalpha(keyin) && isupper(keyin))
-        choice = keyin - 'A' + 26;
-    else if (keyin >= '0' && keyin < 'A')
-        choice = keyin - '0' + 52;
-    else
-    {
-        canned_msg(MSG_OK);
+    auto menu = WizardMenu("Change which field (ESC to exit)?", choices);
+    if (!menu.run(true))
         return;
-    }
+    auto prop = static_cast<artefact_prop_type>(menu.result());
 
-    if (choice >= choice_to_prop.size())
-    {
-        canned_msg(MSG_HUH);
-        return;
-    }
-
-    const artefact_prop_type prop = (artefact_prop_type)choice_to_prop[choice];
     switch (artp_value_type(prop))
     {
     case ARTP_VAL_BOOL:
@@ -408,39 +357,29 @@ void wizard_tweak_object()
     while (true)
     {
         int64_t old_val = 0; // flags are uint64_t, but they don't care
-
-        while (true)
+        string c_prop = is_art ? "art props" : "special";
+        vector<WizardEntry> options =
         {
-            mprf_nocap("%s", you.inv[item].name(DESC_INVENTORY_EQUIP).c_str());
+            {'a', "plus"}, {'b', "plus2"}, {'c', c_prop}, {'d', "quantity"},
+            {'e', "flags"}
+        };
+        mprf_nocap("%s", you.inv[item].name(DESC_INVENTORY_EQUIP).c_str());
+        auto menu = WizardMenu("Which field (Esc to exit)?", options);
+        keyin = menu.run();
 
-            mprf_nocap(MSGCH_PROMPT, "a - plus  b - plus2  c - %s  "
-                                     "d - quantity  e - flags  ESC - exit",
-                                     is_art ? "art props" : "special");
+        if (keyin == 'a')
+            old_val = you.inv[item].plus;
+        else if (keyin == 'b')
+            old_val = you.inv[item].plus2;
+        else if (keyin == 'c')
+            old_val = you.inv[item].special;
+        else if (keyin == 'd')
+            old_val = you.inv[item].quantity;
+        else if (keyin == 'e')
+            old_val = you.inv[item].flags;
+        else if (!menu.success())
+            return;
 
-            mprf(MSGCH_PROMPT, "Which field? ");
-
-            keyin = toalower(get_ch());
-
-            if (keyin == 'a')
-                old_val = you.inv[item].plus;
-            else if (keyin == 'b')
-                old_val = you.inv[item].plus2;
-            else if (keyin == 'c')
-                old_val = you.inv[item].special;
-            else if (keyin == 'd')
-                old_val = you.inv[item].quantity;
-            else if (keyin == 'e')
-                old_val = you.inv[item].flags;
-            else if (key_is_escape(keyin) || keyin == ' '
-                    || keyin == '\r' || keyin == '\n')
-            {
-                canned_msg(MSG_OK);
-                return;
-            }
-
-            if (keyin >= 'a' && keyin <= 'e')
-                break;
-        }
 
         if (is_art && keyin == 'c')
         {
@@ -835,24 +774,21 @@ static void _debug_acquirement_stats()
     env.item[p].base_type = OBJ_UNASSIGNED;
 
     clear_messages();
-    mpr("[a] Weapons [b] Armours   [c] Jewellery [d] Books");
-    mpr("[e] Staves  [f] Evocables");
-    mprf(MSGCH_PROMPT, "What kind of item would you like to get acquirement stats on? ");
 
-    object_class_type type;
-    const int keyin = toalower(get_ch());
-    switch (keyin)
+    vector<WizardEntry> choices;
+    object_class_type list[] =
     {
-    case 'a': type = OBJ_WEAPONS;    break;
-    case 'b': type = OBJ_ARMOUR;     break;
-    case 'c': type = OBJ_JEWELLERY;  break;
-    case 'd': type = OBJ_BOOKS;      break;
-    case 'e': type = OBJ_STAVES;     break;
-    case 'f': type = OBJ_MISCELLANY; break;
-    default:
-        canned_msg(MSG_OK);
+        OBJ_WEAPONS, OBJ_ARMOUR, OBJ_JEWELLERY, OBJ_BOOKS, OBJ_STAVES,
+        OBJ_MISCELLANY
+    };
+    char c = 'a';
+    for (auto typ : list)
+        choices.emplace_back(WizardEntry(c++, item_class_name(typ), typ));
+    auto menu = WizardMenu("What kind of item would you like to get acquirement"
+                           " stats on (ESC to exit)?", choices, OBJ_UNASSIGNED);
+    if (!menu.run(true))
         return;
-    }
+    auto type = static_cast<object_class_type>(menu.result());
 
     const int num_itrs = prompt_for_int("How many iterations? ", true);
     if (num_itrs < 0)

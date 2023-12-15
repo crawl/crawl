@@ -768,60 +768,41 @@ void wizard_make_monster_summoned(monster* mon)
         return;
     }
 
-    mprf(MSGCH_PROMPT, "[a] clone [b] animated [c] chaos [d] miscast [e] zot");
-    mprf(MSGCH_PROMPT, "[f] wrath [h] aid   [m] misc    [s] spell");
-
-    mprf(MSGCH_PROMPT, "Which summon type? ");
-
-    char choice = toalower(getchm());
-
-    if (!(choice >= 'a' && choice <= 'h') && choice != 'm' && choice != 's')
+    vector<WizardEntry> choices =
     {
-        canned_msg(MSG_OK);
+        {'a', "clone", MON_SUMM_CLONE}, {'b', "animated", MON_SUMM_ANIMATE},
+        {'c', "chaos", MON_SUMM_CHAOS}, {'d', "miscast", MON_SUMM_MISCAST},
+        {'e', "zot", MON_SUMM_ZOT}, {'f', "wrath", MON_SUMM_WRATH},
+        {'h', "aid", MON_SUMM_AID}, {'m', "misc", 0},
+        {'s', "spell", 's'},
+    };
+
+    auto menu = WizardMenu("Which summon type (ESC to exit)?", choices);
+    if (!menu.run(true))
         return;
-    }
 
-    int type = 0;
-
-    switch (choice)
+    int type = menu.result();
+    if ('s' == type)
     {
-        case 'a': type = MON_SUMM_CLONE; break;
-        case 'b': type = MON_SUMM_ANIMATE; break;
-        case 'c': type = MON_SUMM_CHAOS; break;
-        case 'd': type = MON_SUMM_MISCAST; break;
-        case 'e': type = MON_SUMM_ZOT; break;
-        case 'f': type = MON_SUMM_WRATH; break;
-        case 'h': type = MON_SUMM_AID; break;
-        case 'm': type = 0; break;
+        char specs[80];
 
-        case 's':
+        msgwin_get_line("Cast which spell by name? ",
+                        specs, sizeof(specs));
+
+        if (specs[0] == '\0')
         {
-            char specs[80];
-
-            msgwin_get_line("Cast which spell by name? ",
-                            specs, sizeof(specs));
-
-            if (specs[0] == '\0')
-            {
-                canned_msg(MSG_OK);
-                return;
-            }
-
-            spell_type spell = spell_by_name(specs, true);
-            if (spell == SPELL_NO_SPELL)
-            {
-                mprf(MSGCH_PROMPT, "No such spell.");
-                return;
-            }
-            type = (int) spell;
-            break;
+            canned_msg(MSG_OK);
+            return;
         }
 
-        default:
-            die("Invalid summon type choice.");
-            break;
+        spell_type spell = spell_by_name(specs, true);
+        if (spell == SPELL_NO_SPELL)
+        {
+            mprf(MSGCH_PROMPT, "No such spell.");
+            return;
+        }
+        type = (int) spell;
     }
-
     mon->mark_summoned(dur, true, type);
     mpr("Monster is now summoned.");
 }

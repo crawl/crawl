@@ -602,109 +602,84 @@ void wizard_set_stats()
     notify_stat_change();
 }
 
-void wizard_edit_durations()
+// Let the user type in a duration name.
+// Return true and set "choice" if one match is found.
+// If none, or more than one, is found, return false.
+static bool _wizard_enter_duration_name(duration_type &choice)
 {
-    vector<duration_type> durs;
-    size_t max_len = 0;
+    char buf[80];
+    vector<string> match_names;
+
+    mprf(MSGCH_PROMPT, "Edit which duration (name)? ");
+
+    if (cancellable_get_line_autohist(buf, sizeof buf) || !*buf
+        || !strlcpy(buf, lowercase_string(trimmed_string(buf)).c_str(),
+                    sizeof(buf)))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
 
     for (int i = 0; i < NUM_DURATIONS; ++i)
     {
-        const duration_type dur = static_cast<duration_type>(i);
+        const auto dur = static_cast<duration_type>(i);
+        if (strcmp(duration_name(dur), buf) == 0)
+        {
+            choice = dur;
+            return true;
+        }
+        if (strstr(duration_name(dur), buf) != nullptr)
+        {
+            choice = dur;
+            match_names.emplace_back(duration_name(dur));
+        }
+    }
+    if (match_names.size() == 1)
+        return true;
+    else if (match_names.empty())
+    {
+        mprf(MSGCH_PROMPT, "No durations matching '%s'.", buf);
+        return false;
+    }
+    else
+    {
+        string prefix = "No exact match for duration '";
+        prefix += buf;
+        prefix += "', possible matches are: ";
 
+        mpr_comma_separated_list(prefix, match_names, " and ", ", ",
+                                 MSGCH_DIAGNOSTICS);
+        return false;
+    }
+}
+
+void wizard_edit_durations()
+{
+    vector<WizardEntry> active;
+    duration_type choice;
+
+    for (int i = 0; i < NUM_DURATIONS; ++i)
+    {
+        const auto d = static_cast<duration_type>(i);
         if (!you.duration[i])
             continue;
-
-        max_len = max(strlen(duration_name(dur)), max_len);
-        durs.push_back(dur);
+        auto text = make_stringf("%s : %d", duration_name(d), you.duration[i]);
+        active.emplace_back(WizardEntry(text, i));
     }
-
-    if (!durs.empty())
+    if (!active.empty())
     {
-        for (size_t i = 0; i < durs.size(); ++i)
-        {
-            const duration_type dur = durs[i];
-            const char ch = i >= 26 ? ' ' : 'a' + i;
-            mprf_nocap(MSGCH_PROMPT, "%c%c %-*s : %d",
-                 ch, ch == ' ' ? ' ' : ')',
-                 (int)max_len, duration_name(dur), you.duration[dur]);
-        }
-        mprf(MSGCH_PROMPT, "\nEdit which duration (letter or name)? ");
+        active.emplace_back('*', "other durations", NUM_DURATIONS);
+        auto menu = WizardMenu("Edit which duration (ESC to exit)?", active);
+        if (!menu.run(true))
+            return;
+        choice = static_cast<duration_type>(menu.result());
+        if (NUM_DURATIONS == choice && !_wizard_enter_duration_name(choice))
+            return;
     }
-    else
-        mprf(MSGCH_PROMPT, "Edit which duration (name)? ");
+    else if (!_wizard_enter_duration_name(choice))
+        return;
 
     char buf[80];
-
-    if (cancellable_get_line_autohist(buf, sizeof buf) || !*buf)
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
-
-    if (!strlcpy(buf, lowercase_string(trimmed_string(buf)).c_str(), sizeof(buf)))
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
-
-    duration_type choice = NUM_DURATIONS;
-
-    if (strlen(buf) == 1 && isalower(buf[0]))
-    {
-        if (durs.empty())
-        {
-            mprf(MSGCH_PROMPT, "No existing durations to choose from.");
-            return;
-        }
-        const int dchoice = buf[0] - 'a';
-
-        if (dchoice < 0 || dchoice >= (int) durs.size())
-        {
-            mprf(MSGCH_PROMPT, "Invalid choice.");
-            return;
-        }
-        choice = durs[dchoice];
-    }
-    else
-    {
-        vector<duration_type> matches;
-        vector<string> match_names;
-
-        for (int i = 0; i < NUM_DURATIONS; ++i)
-        {
-            const duration_type dur = static_cast<duration_type>(i);
-            if (strcmp(duration_name(dur), buf) == 0)
-            {
-                choice = dur;
-                break;
-            }
-            if (strstr(duration_name(dur), buf) != nullptr)
-            {
-                matches.push_back(dur);
-                match_names.emplace_back(duration_name(dur));
-            }
-        }
-        if (choice != NUM_DURATIONS)
-            ;
-        else if (matches.size() == 1)
-            choice = matches[0];
-        else if (matches.empty())
-        {
-            mprf(MSGCH_PROMPT, "No durations matching '%s'.", buf);
-            return;
-        }
-        else
-        {
-            string prefix = "No exact match for duration '";
-            prefix += buf;
-            prefix += "', possible matches are: ";
-
-            mpr_comma_separated_list(prefix, match_names, " and ", ", ",
-                                     MSGCH_DIAGNOSTICS);
-            return;
-        }
-    }
-
     snprintf(buf, sizeof(buf), "Set '%s' to: ", duration_name(choice));
     int num = prompt_for_int(buf, false);
 
@@ -924,47 +899,20 @@ void wizard_god_mollify()
 
 void wizard_transform()
 {
-    transformation form;
-
-    while (true)
+    vector<WizardEntry> choices;
+    for (int i = 0; i < NUM_TRANSFORMS; ++i)
     {
-        string line;
-        for (int i = 0; i < NUM_TRANSFORMS; i++)
-        {
             const auto tr = static_cast<transformation>(i);
 #if TAG_MAJOR_VERSION == 34
             if (tr == transformation::jelly || tr == transformation::porcupine)
                 continue;
 #endif
-            line += make_stringf("[%c] %-10s ", i + 'a', transform_name(tr));
-            if (i % 5 == 4 || i == NUM_TRANSFORMS - 1)
-            {
-                mprf(MSGCH_PROMPT, "%s", line.c_str());
-                line.clear();
-            }
-        }
-        mprf(MSGCH_PROMPT, "Which form (ESC to exit)? ");
-
-        int keyin = toalower(get_ch());
-
-        if (key_is_escape(keyin) || keyin == ' '
-            || keyin == '\r' || keyin == '\n')
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
-
-        if (keyin < 'a' || keyin > 'a' + NUM_TRANSFORMS - 1)
-            continue;
-
-        const auto k_tr = static_cast<transformation>(keyin - 'a');
-#if TAG_MAJOR_VERSION == 34
-        if (k_tr == transformation::jelly || k_tr == transformation::porcupine)
-            continue;
-#endif
-        form = k_tr;
-        break;
+        choices.emplace_back(WizardEntry(0, transform_name(tr), i));
     }
+    auto menu = WizardMenu("Which form (ESC to exit)?", choices);
+    if (!menu.run(true))
+        return;
+    auto form = static_cast<transformation>(menu.result());
 
     you.transform_uncancellable = false;
     if (you.default_form == you.form && you.form != transformation::none)
