@@ -267,6 +267,9 @@ static void _shatter_floor_gem(gem_type gem, bool quiet = false)
 void print_gem_warnings(int gem_int, int old_time_taken)
 {
     gem_type gem = static_cast<gem_type>(gem_int);
+    if (gem == NUM_GEM_TYPES)
+        return;
+
     ASSERT_RANGE(gem, 0, NUM_GEM_TYPES);
     if (!gem_clock_active() || you.gems_shattered[gem])
         return;
