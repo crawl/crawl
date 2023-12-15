@@ -1966,7 +1966,7 @@ NSUBST:  1 = 10=1 / 8=1. / .
 :    if you.depth() < 13 then
 MONS:    hell rat / vampire mosquito / skeleton / zombie / spectral thing w:5 \
          / simulacrum w:5
-MONS:    warg / hell hound w:2
+MONS:    wolf / warg w:2 / hell hound w:2
 MONS:    flying skull
 MONS:    basilisk / spectral black mamba / black mamba simulacrum \
          / spectral boulder beetle / boulder beetle simulacrum /

@@ -224,8 +224,8 @@ SUBST:   c = v
 : else
 MONS:    patrolling stone giant, patrolling frost giant, patrolling fire giant
 MONS:    cyclops, ettin
-MONS:    w:50 ogre / w:5 ogre mage / two-headed ogre
-MONS:    wolf / warg
+MONS:    ogre w:50 / ogre mage w:5 / two-headed ogre
+MONS:    wolf w:15 / warg
 SUBST:   G = '
 # Nothing / water moat / lava moat for stone / frost / fire giant chiefs.
 SHUFFLE: '1 / '1 / w2 / l3

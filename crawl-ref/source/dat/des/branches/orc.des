@@ -74,19 +74,20 @@ ENDMAP
 ##############################################################################
 # Orcish monsters near stair
 #
-NAME: david_orc_3
-TAGS: orc_entry transparent
-MONS: orc w:50 / orc priest / orc wizard / orc warrior / nothing w:80
-MONS: orc warrior / warg / orc priest / nothing
+NAME:   david_orc_3
+TAGS:   orc_entry transparent
 ORIENT: float
-KFEAT: O = enter_orcish_mines
+MONS:   orc w:50 / orc priest / orc wizard / orc warrior / nothing w:80
+MONS:   orc warrior / orc priest, warg
+SUBST:  2 = 222., 3 = 223.
+KFEAT:  O = enter_orcish_mines
 MAP
 1.....@....11
 1............
 .............
 ......21.....
 @.....O.....@
-.....12......
+.....13......
 .............
 .............
 11..@......11
@@ -201,19 +202,19 @@ ENDMAP
 ##############################################################################
 # C'mon, you *gotta* have a *fort*!
 #
-NAME:  erik_orc_2
-TAGS:  orc_entry no_pool_fixup no_rotate
+NAME:   erik_orc_2
+TAGS:   orc_entry no_pool_fixup no_rotate
 ORIENT: float
-MONS:  orc warrior, orc priest / orc wizard, orc w:100 / orc warrior
+MONS:   orc warrior, orc priest / orc wizard, orc w:100 / orc warrior
 : if you.absdepth() >= 10 and crawl.one_chance_in(10) then
-MONS: orc knight
-SUBST: G = .
+MONS:   orc knight
+SUBST:  G = .
 : else
 MONS:  orc warrior
-SUBST: G = 4
+SUBST:  G = 4
 : end
-SUBST: c = c:1000 x
-KFEAT: O = enter_orcish_mines
+SUBST:  c = c:1000 x
+KFEAT:  O = enter_orcish_mines
 MAP
 .............................
 .Iwwwwwwwwwwwwwwwwwwwwwwwwww.
@@ -237,8 +238,8 @@ ENDMAP
 NAME:   erik_orc_3
 TAGS:   orc_entry no_item_gen
 ORIENT: float
-MONS:   orc / gnoll w:4, orc wizard / orc priest / orc warrior
-MONS:   warg / ogre / cyclops
+MONS:   orc / kobold brigand w:2, orc wizard / orc priest / orc warrior
+MONS:   ogre / troll, warg / cyclops
 KFEAT:  O = enter_orcish_mines
 SUBST:  1 = 11., 2 = 2222.
 SUBST:  ; = . $:1, ? = x . $:1
@@ -257,7 +258,7 @@ x?xx?xx.x??...x.1x.1;?x
 xx..xxx...x.x.x.1?1.xxx
 x?.2....xx2.x...xx.x;?x
 xxx??xx..xx.xx.x?..xxxx
-xx..1.x.x.3...x2.x1..xx
+xx..1.x.x.4...x2.x1..xx
 ..x??x.xxx..xxxx?;.??xx
 xx;.??.11.x;xxx..x..xxx
 x??xxxx???xx?xxx??x.?xx
@@ -267,16 +268,17 @@ ENDMAP
 ##############################################################################
 # Orc-henge
 #
-NAME: erik_orc_4
-TAGS: orc_entry no_rotate transparent
-MONS: human / gnoll / orc w:2
-MONS: orc priest, orc
-MONS: orc priest / orc wizard / w:2 goblin / nothing
-MONS: orc warrior / warg
-ITEM: dagger
+NAME:   erik_orc_4
+TAGS:   orc_entry no_rotate transparent
 ORIENT: float
-SUBST: A : c:60 ., B : c:60 ., C : c:60 ., D : c:60 ., E : c:60 .
-KFEAT: O = enter_orcish_mines
+MONS:   human / gnoll / orc w:2
+MONS:   orc priest, orc
+MONS:   orc priest / orc wizard / kobold w:2
+MONS:   orc warrior / warg
+ITEM:   dagger
+SUBST:  3 = 3:22 .
+SUBST:  A : c:60 ., B : c:60 ., C : c:60 ., D : c:60 ., E : c:60 .
+KFEAT:  O = enter_orcish_mines
 #
 MAP
   ..........................
@@ -434,9 +436,9 @@ NAME:   minmay_orc_entry_guard_dogs
 TAGS:   orc_entry transparent patrolling
 WEIGHT: 5
 ORIENT: float
-MONS:   warg
+MONS:   warg, wolf
 KFEAT:  O = enter_orcish_mines
-NSUBST: 1 = 1:1 / 1:. / * = 1 .:2
+NSUBST: 1 = 1:1 / 1:. / * = 2 .:2
 MAP
 1.1
 .O.
@@ -564,14 +566,14 @@ ENDMAP
 ###################################
 # warg stables, with kobold stablehand
 NAME:  mines5_lemuel
-SUBST: ?: wx
 MONS:  warg / wolf, kobold blastminer
+SUBST: ? : wx
 MAP
 x???????x
 xwwwwwwwx
 xwwwwwwwx
 x1.1.1.1x
-x.1.1.1.x
+x.1...1.x
 x1.2...1x
 xxxx+xxxx
 ENDMAP
@@ -1362,12 +1364,12 @@ xx...........xx
      .@@@.
 ENDMAP
 
-NAME: cheibrodos_orc_guarddog
-TAGS: no_monster_gen transparent
-DEPTH: Orc
+NAME:   cheibrodos_orc_guarddog
+TAGS:   no_monster_gen transparent
+DEPTH:  Orc
 ORIENT: float
-MONS: warg
-NSUBST: 1 = 3:1 / 4=1..
+MONS:   warg
+NSUBST: 1 = 3:1 / 4 = 1..
 MAP
 xxx..@..xxx
 x1...1...1x

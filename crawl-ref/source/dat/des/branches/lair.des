@@ -365,7 +365,7 @@ ENDMAP
 NAME:   erik_lair_orcish_takeover
 TAGS:   lair_entry transparent
 ORIENT: float
-MONS:   orc, warg, orc warrior / warg
+MONS:   orc, wolf, orc warrior / warg
 MONS:   orc priest / orc wizard / plant
 KFEAT:  O = enter_lair
 MAP
