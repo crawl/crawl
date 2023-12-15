@@ -1673,10 +1673,10 @@ for, and/or add a relatively complex mechanic (or change in mechanic) to
 gameplay.
 
 Humans (Hu)
-  Humans tend to be hardworking and industrious, and learn new things quickly.
-  The Human species is the most versatile of all the species available to
-  players. Humans advance quickly in levels and have equal abilities in most
-  skills.
+  Humans are natural explorers. As they uncover new spaces in the dungeon,
+  they are refreshed and invigorated, rapidly healing and recovering magic.
+  They are also the most versatile of all species - having balanced aptitudes
+  for all skills lets them adapt to use whatever they find.
 
 Kobolds (Ko)
   Kobolds are small, mysterious creatures of unknown origin. They are well

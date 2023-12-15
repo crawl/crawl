@@ -4,7 +4,7 @@ name: Human
 difficulty: Intermediate
 difficulty_priority: 100
 aptitudes:
-  xp: 1
+  xp: 0
   hp: 0
   mp_mod: 0
   mr: 3
@@ -22,3 +22,6 @@ recommended_jobs:
   - JOB_CONJURER
   - JOB_NECROMANCER
   - JOB_ICE_ELEMENTALIST
+mutations:
+  1:
+    MUT_EXPLORE_REGEN: 1

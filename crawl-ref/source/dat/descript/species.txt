@@ -64,7 +64,8 @@ they may worship the Orc god Beogh.
 %%%%
 Human
 
-Humans advance quickly in levels and have equal abilities in most skills.
+Humans are natural explorers. Discovering new places refreshes and invigorates them.
+They are otherwise completely average.
 %%%%
 Tengu
 

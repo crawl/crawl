@@ -785,7 +785,8 @@ and you cannot become invisible.
 %%%%
 explore regen mutation
 
-As you explore the dungeon, your wounds will heal and your magic will replenish.
+You are invigorated by the discovery of the unknown. As you explore the dungeon,
+your wounds will heal and your magic will replenish.
 %%%%
 faith mutation
 
