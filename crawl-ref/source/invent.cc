@@ -97,7 +97,7 @@ InvEntry::InvEntry(const item_def &i)
     }
 
     if (i.base_type != OBJ_GOLD && in_inventory(i))
-        add_hotkey(index_to_letter(i.link));
+        add_hotkey(index_to_alphanumeric(i.link));
     else
         add_hotkey(' ');        // dummy hotkey
 
@@ -382,7 +382,7 @@ int InvMenu::pre_process(int key)
              && you.last_unequip != -1
              && (type == menu_type::drop || type == menu_type::invlist))
     {
-        key = index_to_letter(you.last_unequip);
+        key = index_to_alphanumeric(you.last_unequip);
     }
     else if (key == '-')
         _mode_special_drop = false;
@@ -445,7 +445,7 @@ bool InvMenu::examine_index(int i)
         // default behavior: examine inv item. You must override or use on_examine
         // if your items come from somewhere else, or this will cause crashes!
         unsigned char select = ie->hotkeys[0];
-        const int invidx = letter_to_index(select);
+        const int invidx = alphanumeric_to_index(select);
         ASSERT(you.inv[invidx].defined());
         return describe_item(you.inv[invidx], nullptr, do_actions);
     }
@@ -1101,9 +1101,6 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
             new_flags &= ~MF_MULTISELECT;
         }
 
-        if (!!(new_flags & MF_MULTISELECT))
-            new_flags |= MF_SELECT_QTY;
-
         new_flags |= MF_ALLOW_FORMATTING | MF_ARROWS_SELECT;
         if (!Options.single_column_item_menus)
             new_flags |= menu.get_flags() & MF_USE_TWO_COLUMNS;
@@ -1380,7 +1377,7 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
                       menu_type::drop,
                       OSEL_ANY,
                       -1,
-                      MF_MULTISELECT | MF_ALLOW_FILTER | MF_SELECT_QTY,
+                      MF_MULTISELECT | MF_ALLOW_FILTER,
                       _drop_menu_titlefn,
                       &items,
                       &Options.drop_filter,
@@ -1388,35 +1385,9 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
                       &preselected_items);
 
     for (SelItem &sel : items)
-        sel.slot = letter_to_index(sel.slot);
+        sel.slot = alphanumeric_to_index(sel.slot);
 
     return items;
-}
-
-static bool item_matches_digit_inscription(item_def &item, char digit, operation_types oper)
-{
-    const string& r(item.inscription);
-    const char iletter = static_cast<char>(oper);
-    for (unsigned int j = 0; j + 2 < r.size(); ++j)
-        if (r[j] == '@' && (r[j+1] == iletter || r[j+1] == '*') && r[j+2] == digit)
-            return true;
-    return false;
-}
-
-item_def *digit_inscription_to_item(char digit, operation_types oper)
-{
-    for (int i = 0; i < ENDOFPACK; ++i)
-        if (you.inv[i].defined()
-                && item_matches_digit_inscription(you.inv[i], digit, oper))
-        {
-            return &you.inv[i];
-        }
-
-    for (stack_iterator si(you.pos(), true); si; ++si)
-        if (item_matches_digit_inscription(*si, digit, oper))
-            return &*si;
-
-    return nullptr;
 }
 
 operation_types generalize_oper(operation_types oper)
@@ -1938,6 +1909,8 @@ int prompt_invent_item(const char *prompt,
             else if ((keyin == CK_ENTER || keyin == CK_MOUSE_B1) && items.size() > 0)
             {
                 // hacky, but lets the inscription checks below trip
+                // Does the message above signify a need for change due to
+                // inscription checks now being removed to extend inventory?
                 // TODO: this code should not rely on keyin, it breaks cmd
                 // bindings
                 keyin = items[0].slot;
@@ -1950,18 +1923,7 @@ int prompt_invent_item(const char *prompt,
             }
         }
 
-        if (isadigit(keyin))
-        {
-            // scan for our item
-            item_def *item = digit_inscription_to_item(keyin, oper);
-            if (item && in_inventory(*item))
-            {
-                ret = item->link;
-                if (!do_warning || check_warning_inscriptions(*item, oper))
-                    break;
-            }
-        }
-        else if (key_is_escape(keyin) || allow_easy_quit && keyin == ' ')
+        if (key_is_escape(keyin) || allow_easy_quit && keyin == ' ')
         {
             ret = PROMPT_ABORT;
             break;
@@ -1972,9 +1934,9 @@ int prompt_invent_item(const char *prompt,
             keyin = '?';
             need_getch = false;
         }
-        else if (isaalpha(keyin))
+        else if (isaalnum(keyin))
         {
-            ret = letter_to_index(keyin);
+            ret = alphanumeric_to_index(keyin);
 
             if (must_exist && !you.inv[ret].defined())
                 mpr("You don't have any such object.");

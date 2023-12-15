@@ -231,7 +231,7 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
                 // sub in any alpha char if that's what the player typed, for
                 // error messaging
                 const int actual_key = pop.getkey();
-                if (isalpha(actual_key) && actual_key != tmp)
+                if (isaalpha(actual_key) && actual_key != tmp)
                     tmp = actual_key;
                 // otherwise, leave as ESCAPE
             }
@@ -363,11 +363,18 @@ double prompt_for_float(const char* prompt)
     return ret;
 }
 
-
 char index_to_letter(int the_index)
 {
-    ASSERT_RANGE(the_index, 0, ENDOFPACK);
+    ASSERT_RANGE(the_index, 0, ENDOFLETTERS);
     return the_index + ((the_index < 26) ? 'a' : ('A' - 26));
+}
+
+char index_to_alphanumeric(int the_index)
+{
+    ASSERT_RANGE(the_index, 0, ENDOFPACK);
+    return the_index + ((the_index < 26) ? 'a' :
+                        (the_index < ENDOFLETTERS) ? ('A' - 26)
+                                         : ('0' - ENDOFLETTERS));
 }
 
 int letter_to_index(int the_letter)
@@ -379,6 +386,19 @@ int letter_to_index(int the_letter)
 
     die("slot not a letter: %s (%d)", the_letter ?
         stringize_glyph(the_letter).c_str() : "null", the_letter);
+}
+
+int alphanumeric_to_index(int the_character)
+{
+    if (the_character >= 'a' && the_character <= 'z')
+        return the_character - 'a'; // returns range [0-25] {dlb}
+    else if (the_character >= 'A' && the_character <= 'Z')
+        return the_character - 'A' + 26; // returns range [26-51] {dlb}
+    else if (the_character >= '0' && the_character <= '9')
+        return the_character - '0' + ENDOFLETTERS; // returns range [52-61] {Sentei}
+
+    die("slot not a letter or number: %s (%d)", the_character ?
+        stringize_glyph(the_character).c_str() : "null", the_character);
 }
 
 bool PromptMenu::process_key(int keyin)

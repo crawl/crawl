@@ -209,7 +209,7 @@ namespace quiver
     int action::source_hotkey() const
     {
         if (get_item() >= 0 && is_valid())
-            return index_to_letter(get_item());
+            return index_to_alphanumeric(get_item());
         return 0;
     }
 
@@ -395,7 +395,7 @@ namespace quiver
                 string verb = you.confused() ? "confused " : "";
                 verb += quiver_verb();
                 qdesc.cprintf("%s: %c) ", uppercase_first(verb).c_str(),
-                                index_to_letter(weapon.link));
+                                index_to_alphanumeric(weapon.link));
             }
 
             const string prefix = item_prefix(weapon);
@@ -499,7 +499,7 @@ namespace quiver
 
                 verb += quiver_verb();
                 qdesc.cprintf("%s: %c) ", uppercase_first(verb).c_str(),
-                                weapon ? index_to_letter(weapon->link) : '-');
+                                weapon ? index_to_alphanumeric(weapon->link) : '-');
             }
 
             const string prefix = weapon ? item_prefix(*weapon) : "";
@@ -1313,7 +1313,7 @@ namespace quiver
         {
             // goes by letter order
             vector<shared_ptr<action>> result;
-            for (int i = 0; i < 52; i++)
+            for (int i = 0; i < ENDOFLETTERS; i++)
             {
                 auto a = make_shared<spell_action>(
                                 get_spell_by_letter(index_to_letter(i)));
@@ -2863,20 +2863,6 @@ namespace quiver
                 mprf("Clearing quiver.");
                 return false;
             }
-            else if (isadigit(key))
-            {
-                item_def *item = digit_inscription_to_item(key, OPER_QUIVER);
-                if (item && in_inventory(*item))
-                {
-                    auto a = slot_to_action(item->link, true);
-                    // XX would be better to show an error if a is invalid?
-                    if (a->is_valid())
-                    {
-                        set_to_quiver(a);
-                        return false;
-                    }
-                }
-            }
             else if ((key == '*' || key == '%') && any_items)
                 return _choose_from_inv();
             else if (key == '&' && any_spells)
@@ -2885,7 +2871,7 @@ namespace quiver
                                                     "quiver");
                 if (skey == 0)
                     return true;
-                if (isalpha(skey))
+                if (isaalpha(skey))
                 {
                     auto s = make_shared<spell_action>(
                             static_cast<spell_type>(get_spell_by_letter(skey)));

@@ -432,7 +432,7 @@ string thing_do_grammar(description_level_type dtype, string desc,
             dtype = DESC_PLAIN;
     }
 
-    if (dtype == DESC_PLAIN || !ignore_case && isupper(desc[0]))
+    if (dtype == DESC_PLAIN || !ignore_case && isaupper(desc[0]))
         return desc;
 
     switch (dtype)

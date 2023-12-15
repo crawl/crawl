@@ -2209,7 +2209,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
                     desc += make_stringf(" (%s)", beam.c_str());
             }
         }
-        else if (isupper(auxkilldata[0]))  // already made (ie shot arrows)
+        else if (isaupper(auxkilldata[0]))  // already made (ie shot arrows)
         {
             // If terse we have to parse the information from the string.
             // Darn it to heck.
@@ -2586,7 +2586,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 // Lugonu's touch or "the <retribution> of <deity>";
                 // otherwise it's a beam
-                if (!isupper(auxkilldata[0])
+                if (!isaupper(auxkilldata[0])
                     && !starts_with(auxkilldata, "the "))
                 {
                     desc += is_vowel(auxkilldata[0]) ? "an " : "a ";

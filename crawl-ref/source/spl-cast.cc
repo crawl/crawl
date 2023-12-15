@@ -272,7 +272,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     spell_menu.menu_action = viewing ? Menu::ACT_EXAMINE : Menu::ACT_EXECUTE;
 
     int initial_hover = 0;
-    for (int i = 0; i < 52; ++i)
+    for (int i = 0; i < ENDOFLETTERS; ++i)
     {
         const char letter = index_to_letter(i);
         const spell_type spell = get_spell_by_letter(letter);
@@ -779,7 +779,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
             if (!clua.error.empty())
                 mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         }
-        else if (!luachoice.empty() && isalpha(luachoice[0]))
+        else if (!luachoice.empty() && isaalpha(luachoice[0]))
         {
             keyin = luachoice[0];
             const spell_type spl = get_spell_by_letter(keyin);
@@ -796,7 +796,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
                 if (you.spell_no == 1)
                 {
                     // Set last_cast_spell to the current only spell.
-                    for (int i = 0; i < 52; ++i)
+                    for (int i = 0; i < ENDOFLETTERS; ++i)
                     {
                         const char letter = index_to_letter(i);
                         const spell_type spl = get_spell_by_letter(letter);

@@ -2942,7 +2942,7 @@ void game_options::set_player_tile(const string &field)
     {
         // A variant tile. We have to find the base tile to look this up inthe
         // tile index.
-        if (isdigit(*(fields[1].rbegin())))
+        if (isadigit(*(fields[1].rbegin())))
         {
             string base_tname = fields[1];
             size_t found = base_tname.rfind('_');
@@ -3860,8 +3860,8 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
     }
     else if (key == "fire_items_start")
     {
-        if (isaalpha(state.raw_field[0]))
-            fire_items_start = letter_to_index(state.raw_field[0]);
+        if (isaalnum(state.raw_field[0]))
+            fire_items_start = alphanumeric_to_index(state.raw_field[0]);
         else
             report_error("Bad fire item start index: %s\n", state.raw_field.c_str());
         return true;

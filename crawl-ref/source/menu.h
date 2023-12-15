@@ -258,7 +258,7 @@ enum MenuFlag
     MF_NOSELECT         = 0x00001,   ///< No selection is permitted
     MF_SINGLESELECT     = 0x00002,   ///< Select just one item
     MF_MULTISELECT      = 0x00004,   ///< Select multiple items
-    MF_SELECT_QTY       = 0x00008,   ///< Allow partial selections by quantity
+    MF_SELECT_QTY       = 0x00008,   ///< Unused, due to inventory using numbers for indexes
     MF_ANYPRINTABLE     = 0x00010,   ///< Any printable character is valid, and
                                      ///< closes the menu.
     MF_SELECT_BY_PAGE   = 0x00020,   ///< Allow selections to occur only on

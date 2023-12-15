@@ -992,7 +992,7 @@ static formatted_string _describe_god_powers(god_type which_god)
             desc.textcolour(DARKGREY);
 
         string buf = power.general;
-        if (!isupper(buf[0])) // Complete sentence given?
+        if (!isaupper(buf[0])) // Complete sentence given?
             buf = "You can " + buf + ".";
         const int desc_len = buf.size();
 

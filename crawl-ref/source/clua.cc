@@ -513,7 +513,7 @@ int CLua::return_count(lua_State *ls, const char *format)
         return strlen(gs + 1);
 
     const char *cs = strchr(format, ':');
-    if (cs && isdigit(*format))
+    if (cs && isadigit(*format))
     {
         char *es = nullptr;
         int ci = strtol(format, &es, 10);

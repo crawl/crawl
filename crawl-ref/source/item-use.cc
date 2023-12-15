@@ -849,9 +849,7 @@ string UseItemMenu::get_keyhelp(bool) const
 
 bool UseItemMenu::process_key(int key)
 {
-    // TODO: should check inscriptions here
-    if (isadigit(key)
-        || key == '-' && show_unarmed())
+    if (key == '-' && show_unarmed())
     {
         lastch = key;
         return false;
@@ -1196,17 +1194,6 @@ operation_types use_an_item_menu(item_def *&target, operation_types oper, int it
             ASSERT(!menu.item_floor.empty());
             choice_made = true;
             tmp_tgt = const_cast<item_def*>(menu.item_floor[0]);
-        }
-        else if (isadigit(keyin))
-        {
-            // select by inscription
-            // This allows you to select stuff by inscription that is not on the
-            // screen, but only if you couldn't by default use it for that
-            // operation anyway. It's a bit weird, but it does save a '*'
-            // keypress for bread-swingers.
-            tmp_tgt = digit_inscription_to_item(keyin, oper);
-            if (tmp_tgt)
-                choice_made = true;
         }
         else if (keyin == '-' && menu.show_unarmed())
         {
@@ -2148,7 +2135,7 @@ static int _prompt_ring_to_remove()
     {
         rings.push_back(you.slot_item(eq, true));
         ASSERT(rings.back());
-        slot_chars.push_back(index_to_letter(rings.back()->link));
+        slot_chars.push_back(index_to_alphanumeric(rings.back()->link));
     }
 
     if (slot_chars.size() + 2 > msgwin_lines() || ui::has_layout())
@@ -2547,7 +2534,7 @@ static equipment_type _choose_ring_slot()
         {
             if (c == _ring_slot_key(eq)
                 || (you.slot_item(eq, true)
-                    && c == index_to_letter(you.slot_item(eq, true)->link)))
+                    && c == index_to_alphanumeric(you.slot_item(eq, true)->link)))
             {
                 eqslot = eq;
                 c = ' ';

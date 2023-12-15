@@ -320,7 +320,7 @@ static void _german(string &txt)
     ben a deterent to akurate speling.
     */
     for (int i = txt.length() - 2; i > 0; i--)
-        if (isalpha(txt[i]) && txt[i] == txt[i + 1])
+        if (isaalpha(txt[i]) && txt[i] == txt[i + 1])
             txt.erase(i, 1);
     /*
     Also, al wil agre that the horibl mes of the silent "e" in the languag is
@@ -482,7 +482,7 @@ static string _replacement_butt(const string &token)
     string butt = "butt";
     char plural = 's';
     const char *ly = "-ly";
-    if (isupper(token[0]))
+    if (isaupper(token[0]))
     {
         // All caps and not a single-letter word?
         if (token.size() > 1 && uppercase_string(token) == token)
