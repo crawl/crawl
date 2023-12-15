@@ -2689,7 +2689,7 @@ static tileidx_t _tileidx_gem_base(const item_def &item)
 static tileidx_t _tileidx_gem(const item_def &item)
 {
     const tileidx_t base = _tileidx_gem_base(item);
-    if (you.gems_shattered[item.sub_type])
+    if (item.sub_type < NUM_GEM_TYPES && you.gems_shattered[item.sub_type])
         return base + 1;
     return base;
 }
