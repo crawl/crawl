@@ -127,6 +127,7 @@ enum band_type
     BAND_BLASTMINER,
     BAND_BRAIN_WORMS,
     BAND_PROTEAN_PROGENITORS,
+    BAND_MARGERY,
     NUM_BANDS                   // always last
 };
 
