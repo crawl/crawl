@@ -1641,7 +1641,7 @@ static string _handedness_string(const item_def &item)
 
 }
 
-static string _category_string(const item_def &item)
+static string _category_string(const item_def &item, bool monster)
 {
     if (is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
         return ""; // handled in art-data DBRAND
@@ -1663,7 +1663,11 @@ static string _category_string(const item_def &item)
     switch (item_attack_skill(item))
     {
     case SK_POLEARMS:
-        description += "It has an extended reach (target with [<white>v</white>]). ";
+        // TODO(PF): maybe remove this whole section for util/monster summaries..?
+        description += "It has an extended reach";
+        if (!monster)
+            description += " (target with [<white>v</white>])";
+        description += ". ";
         break;
     case SK_AXES:
         description += "It hits all enemies adjacent to the wielder";
@@ -1842,7 +1846,7 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
 
     if (verbose)
     {
-        description += "\n\n" + _category_string(item);
+        description += "\n\n" + _category_string(item, monster);
 
 
 
