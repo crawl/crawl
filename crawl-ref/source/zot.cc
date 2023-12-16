@@ -8,7 +8,6 @@
 #include "zot.h"
 
 #include "activity-interrupt-type.h" // for zot clock key
-#include "areas.h" // silenced
 #include "branch.h" // for zot clock key
 #include "coordit.h" // rectangle_iterator
 #include "database.h" // getSpeakString
@@ -18,8 +17,10 @@
 #include "item-prop.h"
 #include "message.h"
 #include "notes.h" // NOTE_MESSAGE
+#include "options.h" // UA_PICKUP
 #include "state.h"
 #include "stringutil.h" // make_stringf
+#include "view.h" // flash_view_delay
 
 #if TAG_MAJOR_VERSION == 34
 static int _old_zot_clock(const string& branch_name) {
@@ -268,9 +269,11 @@ static void _shatter_floor_gem(gem_type gem, bool quiet = false)
 
             if (!quiet && you.see_cell(*ri))
             {
-                mprf("%sZot shatters the %s gem into ten thousand fragments!",
-                     silenced(*ri) ? "" : "With a nightmarish wail, ",
-                     gem_adj(gem));
+                mprf("With a frightful flash, the power of Zot shatters the %s"
+                     " gem into ten thousand fragments!", gem_adj(gem));
+                // Using UA_PICKUP here is dubious.
+                flash_view_delay(UA_PICKUP, MAGENTA, 100);
+                flash_view_delay(UA_PICKUP, LIGHTMAGENTA, 100);
             }
 
             return;
@@ -293,7 +296,7 @@ void print_gem_warnings(int gem_int, int old_time_taken)
 
     if (old_time_taken + 2700 < limit && time_taken + 2700 >= limit)
     {
-        mprf("If you linger in this branch much longer, Zot will find and "
+        mprf("If you linger in this branch much longer, the power of Zot will "
              "shatter your %s gem.", gem_adj(gem));
     }
 
@@ -331,13 +334,15 @@ void incr_gem_clock()
     // lose it!
     if (you.gems_found[gem])
     {
-        mprf("%sZot shatters your %s gem into ten thousand fragments!",
-             silenced(you.pos()) ? "" : "With a nightmarish wail, ",
-             gem_adj(gem));
+        mprf("With a frightful flash, the power of Zot shatters your %s gem "
+             "into ten thousand fragments!", gem_adj(gem));
         take_note(Note(NOTE_GEM_LOST, gem));
         mark_milestone("gem.lost", make_stringf("lost the %s gem!",
                                                 gem_adj(gem)));
         you.gems_shattered.set(gem);
+        // Using UA_PICKUP here is dubious.
+        flash_view_delay(UA_PICKUP, MAGENTA, 100);
+        flash_view_delay(UA_PICKUP, LIGHTMAGENTA, 100);
         return;
     }
 
@@ -369,8 +374,7 @@ string gem_status()
     }
     const int time_left = gem_time_limit(gem) - you.gem_time_spent[gem];
     const int turns_left = (time_left + 9) / 10; // round up
-    return make_stringf("Zot will find and smash your %s gem in %d turns if "
-                        "you stay in this branch.\n",
-                        gem_adj(gem),
-                        turns_left);
+    return make_stringf("If you linger in this branch for another %d turns, "
+                        "the power of Zot will shatter your %s gem.\n",
+                        turns_left, gem_adj(gem));
 }

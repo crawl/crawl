@@ -198,7 +198,7 @@ enum use_animation_type
     UA_HP               = (1 << 2),
     // flashes the screen on attempt to travel or rest with a monster in view
     UA_MONSTER_IN_SIGHT = (1 << 3),
-    // various animations for picking up runes and the orb
+    // various animations for picking up runes, gems, and the orb
     UA_PICKUP           = (1 << 4),
     // various monster spell/ability effects (slime creature merging, etc)
     UA_MONSTER          = (1 << 5),
