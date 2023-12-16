@@ -4329,6 +4329,54 @@ Frederick triumphant
 
 @The_monster@ says, "You don't even know how to die right."
 %%%%
+Ashenzari Frederick triumphant
+
+w:2
+@The_monster@ shakes @possessive@ head sadly, "Willingly shackling yourself to the bindings of a God... pitiful."
+
+w:2
+@Frederick@
+%%%%
+Beogh Frederick triumphant
+
+w:2
+@The_monster@ sighs, "Your brethren were only holding you back, Orc."
+
+w:2
+@Frederick@
+%%%%
+Cheibriados Frederick triumphant
+
+w:2
+@The_monster@ says, "Look at all you gave up for Cheibriados. And what did it get you?"
+
+w:2
+@Frederick@
+%%%%
+Dithmenos Frederick triumphant
+
+w:2
+@The_monster@ scoffs, "Willingly snuffing out the glorious light of your own radiance... and for what?"
+
+w:2
+@Frederick@
+%%%%
+Elyvilon Frederick triumphant
+
+w:2
+@The_monster@ says, "The denizens of this place deserve your pity, perhaps, but not your aid."
+
+w:2
+@Frederick@
+%%%%
+Okawaru Frederick triumphant
+
+w:2
+@The_monster@ says, "Now do you deem me a worthy opponent?"
+
+w:2
+@Frederick@
+%%%%
 ############ FANNAR ### A cold-hearted elven sorcerer
 Fannar
 
