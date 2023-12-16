@@ -784,6 +784,30 @@ IDEF(plus)
     return 1;
 }
 
+/*** Is this item enchantable?
+ * @field is_enchantable boolean
+ */
+IDEF(is_enchantable)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    if (is_artefact(*item)
+        || item->base_type != OBJ_WEAPONS && item->base_type != OBJ_ARMOUR)
+    {
+        lua_pushboolean(ls, false);
+    }
+    // We assume unidentified non-artefact items are enchantable.
+    else if (!item_ident(*item, ISFLAG_KNOW_PLUSES))
+        lua_pushboolean(ls, true);
+    else if (item->base_type == OBJ_WEAPONS)
+        lua_pushboolean(ls, is_enchantable_weapon(*item));
+    else
+        lua_pushboolean(ls, is_enchantable_armour(*item));
+
+    return 1;
+}
+
 IDEF(plus2)
 {
     if (!item || !item->defined())
@@ -1707,7 +1731,8 @@ static ItemAccessor item_attrs[] =
     { "branded",           l_item_branded },
     { "god_gift",          l_item_god_gift },
     { "fully_identified",  l_item_fully_identified },
-    { PLUS_KEY,              l_item_plus },
+    { PLUS_KEY,            l_item_plus },
+    { "is_enchantable",    l_item_is_enchantable },
     { "plus2",             l_item_plus2 },
     { "class",             l_item_class },
     { "subtype",           l_item_subtype },
