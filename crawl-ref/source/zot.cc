@@ -285,7 +285,7 @@ void print_gem_warnings(int gem_int, int old_time_taken)
         return;
 
     ASSERT_RANGE(gem, 0, NUM_GEM_TYPES);
-    if (!gem_clock_active() || you.gems_shattered[gem])
+    if (!gem_clock_active() || !you.gems_found[gem] || you.gems_shattered[gem])
         return;
 
     const int time_taken = you.gem_time_spent[gem];
@@ -323,8 +323,7 @@ void incr_gem_clock()
     const int old_time_taken = time_taken;
     time_taken += you.time_taken;
 
-    if (you.gems_found[gem])
-        print_gem_warnings(gem, old_time_taken);
+    print_gem_warnings(gem, old_time_taken);
 
     if (time_taken < limit)
         return;
