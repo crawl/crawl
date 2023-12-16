@@ -48,3 +48,5 @@ recommended_weapons:
   - SK_MACES_FLAILS
   - SK_AXES
   - SK_POLEARMS
+# if you add any mutations here: you'll need to fix test/mut_species.lua, which
+# relies on HO having none.
