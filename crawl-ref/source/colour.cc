@@ -822,14 +822,11 @@ string colourize_str(string base, colour_t col)
         return make_stringf("<%s>%s</%s>",
                             col_name.c_str(), base.c_str(), col_name.c_str());
     }
-    vector<int> colours;
-    for (int i = 0; i < (int)base.length(); i++)
-        colours.push_back(element_colour(col, false, you.pos()));
-    sort(colours.begin(), colours.end());
     string out;
     for (int i = 0; i < (int)base.length(); i++)
     {
-        const string col_name = colour_to_str(colours[i]);
+        const colour_t term_col = element_colour(col, false, you.pos());
+        const string col_name = colour_to_str(term_col);
         out += "<" + col_name + ">" + base[i] + "</" + col_name + ">";
     }
     return out;
