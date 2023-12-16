@@ -3860,7 +3860,7 @@ colour_t item_def::gem_colour() const
     {
     default:
     case GEM_DUNGEON: return LIGHTGREY;
-    case GEM_ORC:     return BROWN; // don't want yellow, that's normal gold
+    case GEM_ORC:     return ETC_GOLD;
     case GEM_ELF:     return ETC_ELVEN;
     case GEM_LAIR:    return GREEN;
 
@@ -4072,6 +4072,8 @@ colour_t item_def::get_colour() const
         case OBJ_RUNES:
             return rune_colour();
         case OBJ_GEMS:
+            if (sub_type == GEM_ORC)
+                return BROWN;  // don't want yellow, that's normal gold
             return gem_colour();
         case OBJ_DETECTED:
             return Options.detected_item_colour;
