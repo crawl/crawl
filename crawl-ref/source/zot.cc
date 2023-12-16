@@ -232,6 +232,20 @@ void incr_zot_clock()
     interrupt_activity(activity_interrupt::force);
 }
 
+void set_turns_until_zot(int turns_left)
+{
+    if (turns_left < 0 || turns_left > MAX_ZOT_CLOCK / BASELINE_DELAY)
+        return;
+
+    int &clock = _zot_clock();
+    clock = MAX_ZOT_CLOCK - turns_left * BASELINE_DELAY;
+#if TAG_MAJOR_VERSION == 34
+    if (you.species == SP_METEORAN)
+        update_vision_range();
+#endif
+}
+
+
 bool gem_clock_active()
 {
     return !player_has_orb()
@@ -344,15 +358,20 @@ void maybe_break_floor_gem()
     }
 }
 
-void set_turns_until_zot(int turns_left)
+string gem_status()
 {
-    if (turns_left < 0 || turns_left > MAX_ZOT_CLOCK / BASELINE_DELAY)
-        return;
-
-    int &clock = _zot_clock();
-    clock = MAX_ZOT_CLOCK - turns_left * BASELINE_DELAY;
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_METEORAN)
-        update_vision_range();
-#endif
+    const gem_type gem = gem_for_branch(you.where_are_you);
+    if (gem == NUM_GEM_TYPES
+        || !you.gems_found[gem]
+        || you.gems_shattered[gem]
+        || !gem_clock_active())
+    {
+        return "";
+    }
+    const int time_left = gem_time_limit(gem) - you.gem_time_spent[gem];
+    const int turns_left = (time_left + 9) / 10; // round up
+    return make_stringf("Zot will find and smash your %s gem in %d turns if "
+                        "you stay in this branch.\n",
+                        gem_adj(gem),
+                        turns_left);
 }

@@ -2150,10 +2150,10 @@ static string _gem_parenthetical(gem_type gem)
     if (left <= 0)
         return text + ", shattered)";
 
-    // Rescale from aut to dAut.
-    text += make_stringf(", %d", left / 10);
+    // Rescale from aut to dAut. Round up.
+    text += make_stringf(", %d", (left + 9) / 10);
     if (left < lim)
-        text += make_stringf("/%d", lim / 10);
+        text += make_stringf("/%d", (lim + 9) / 10);
     else
         text += " turns"; // XXX: ?
     return text + " until shattered)";
