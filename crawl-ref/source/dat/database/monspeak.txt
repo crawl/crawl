@@ -1,3 +1,15 @@
+# NOTES FOR ROSSTIN - DELETE BEFORE MERGING
+# REQUESTS FOR MONSPEAK DIALOG
+# dialog for "top killers" 
+# http://crawl.akrasiac.org/scoring/killers.html
+# some other monspeak stuff that comes to mind on a quick scroll down:
+# * iconically dangerous lategame monsters getting triumphant killing-player lines would be nice also, because they'll be pretty memorable (think liches, shrikes, juggernauts, orbs of fire, other zot things)
+# * arachne has nearly no lines
+# * enchantress has no lines period??
+# * frederick as a demigod is supposed to insult the gods player chooses but only has two of these lines thus far
+# * other relatively minimally written uniques: fannar, jorgrun, mennas
+# * uniques with incredibly boring killmurderkill dialogue it'd be nice to take in some other direction: blork, erolcha, josephine, margery, nergalle
+
 ############################################################
 # This file contains the messages of monsters that "talk"
 # to the player, or at least the biggest part there-of.
