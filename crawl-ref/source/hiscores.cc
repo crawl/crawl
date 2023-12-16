@@ -1683,7 +1683,8 @@ void scorefile_entry::init(time_t dt)
         }
         // Add a little score for gems so that newer players who find one
         // feel rewarded, but not so much that it impacts high score play.
-        pt += (num_runes + gems_found) * 10000;
+        pt += gems_found * 10000 * ((death_type == KILLED_BY_WINNING) ? 10 : 1);
+        pt += num_runes * 10000;
         pt += num_runes * (num_runes + 2) * 1000;
 
         points = pt;
