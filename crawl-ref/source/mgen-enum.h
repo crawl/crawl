@@ -128,6 +128,7 @@ enum band_type
     BAND_BRAIN_WORMS,
     BAND_PROTEAN_PROGENITORS,
     BAND_MARGERY,
+    BAND_LATE_ROKA,
     NUM_BANDS                   // always last
 };
 

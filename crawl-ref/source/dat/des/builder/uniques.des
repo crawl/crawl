@@ -369,7 +369,7 @@ DEPTH:  Depths:1-3, Elf, Vaults:1-4
 : place_unique(_G, "Norris band")
 
 NAME:   uniq_saint_roka
-DEPTH:  Orc:$, Depths, Elf:2-, Snake:2-, Vaults, Crypt
+DEPTH:  Orc:$, Depths:1-2, Elf:2-, Snake:2-, Vaults, Crypt:1-2
 : place_unique(_G, "Saint Roka band")
 
 NAME:   uniq_sojobo

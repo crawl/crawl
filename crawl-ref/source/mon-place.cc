@@ -1764,7 +1764,10 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_ORC_WARRIOR,     { {}, {{ BAND_ORC_WARRIOR, {2, 5} }}}},
     { MONS_ORC_WARLORD,     { {0, 0, [](){ return !player_in_branch(BRANCH_VAULTS); }},
                                          {{ BAND_ORC_KNIGHT, {8, 16}, true }}}},
-    { MONS_SAINT_ROKA,      { {}, {{ BAND_ORC_KNIGHT, {8, 16}, true }}}},
+    { MONS_SAINT_ROKA,     { {0, 0, [](){ return !player_in_branch(BRANCH_VAULTS) ||
+                                                 !player_in_branch(BRANCH_DEPTHS) ||
+                                                 !player_in_branch(BRANCH_CRYPT); }},
+                                         {{ BAND_ORC_KNIGHT, {8, 16}, true }}}},
     { MONS_ORC_KNIGHT,      { {}, {{ BAND_ORC_KNIGHT, {3, 7}, true }}}},
     { MONS_ORC_HIGH_PRIEST, { {}, {{ BAND_ORC_KNIGHT, {4, 8}, true }}}},
     { MONS_KOBOLD_BRIGAND,  { {0, 4}, {{ BAND_KOBOLDS, {2, 8} }}}},
@@ -2044,6 +2047,16 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
         }
         break;
 
+    case MONS_SAINT_ROKA:
+        if (player_in_branch(BRANCH_VAULTS) ||
+            player_in_branch(BRANCH_DEPTHS) ||
+            player_in_branch(BRANCH_CRYPT))
+        {
+            band = BAND_LATE_ROKA;
+            band_size = random_range(5, 7);
+        }
+        break;
+
     case MONS_SATYR:
         if (!one_chance_in(3))
         {
@@ -2241,6 +2254,16 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                   {MONS_OGRE, 1},
                                   {MONS_TROLL, 1},
                                   {MONS_ORC_SORCERER, 1}}}},
+
+    { BAND_LATE_ROKA,           {{{MONS_ORC_PRIEST, 1}},
+
+                                 {{MONS_ORC_KNIGHT, 1}},
+
+                                 {{MONS_ORC_PRIEST, 2},
+                                  {MONS_ORC_KNIGHT, 3},
+                                  {MONS_ORC_SORCERER, 3},
+                                  {MONS_ORC_HIGH_PRIEST, 4}}}},
+
     { BAND_OGRE_MAGE,           {{{MONS_TWO_HEADED_OGRE, 2},
                                   {MONS_OGRE, 1}}}},
     { BAND_OGRE_MAGE_EXTERN,    {{{MONS_OGRE_MAGE, 1}},
