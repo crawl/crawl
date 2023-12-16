@@ -84,7 +84,7 @@ struct item_def
 public:
     item_def() : base_type(OBJ_UNASSIGNED), sub_type(0), plus(0), plus2(0),
                  special(0), rnd(0), quantity(0), flags(0),
-                 pos(), link(NON_ITEM), slot(0), orig_place(),
+                 pos(), link(NON_ITEM), slot(-1), orig_place(),
                  orig_monnum(0), inscription()
     {
     }

@@ -519,7 +519,7 @@ static void _setup_generic(const newgame_def& ng,
             continue;
         item.pos = ITEM_IN_INVENTORY;
         item.link = i;
-        item.slot = index_to_letter(item.link);
+        item.slot = i;
         item_colour(item);  // set correct special and colour
     }
 

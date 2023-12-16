@@ -5151,6 +5151,14 @@ void unmarshallItem(reader &th, item_def &item)
     item.slot        = unmarshallByte(th);
 
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_NUMERIC_ITEM_SLOT)
+    {
+        if (!item.slot)
+            item.slot = -1;
+        else
+            item.slot = letter_to_index(item.slot);
+    }
+
     if (th.getMinorVersion() < TAG_MINOR_PLACE_UNPACK)
     {
         unsigned short packed = unmarshallShort(th);

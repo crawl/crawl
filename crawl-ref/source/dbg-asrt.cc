@@ -341,7 +341,7 @@ static void _dump_player(FILE *file)
                     i, name.c_str(), item.link);
         }
 
-        if (item.slot < 0 || item.slot > 127)
+        if (item.slot != -1 && item.slot != i)
         {
             fprintf(file, "    slot #%d: item '%s' has invalid slot %d\n",
                     i, name.c_str(), item.slot);

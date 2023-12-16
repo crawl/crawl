@@ -33,6 +33,7 @@
 #include "nearby-danger.h"
 #include "options.h"
 #include "output.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
 #include "showsymb.h"
@@ -2019,11 +2020,11 @@ static string _hints_throw_stuff(const item_def &item)
     string result;
 
     result  = "To do this, press <w>%</w> to fire, then ";
-    if (item.slot)
+    if (item.slot >= 0)
     {
         result += "<w>";
-        result += item.slot;
-        result += "</w> for";
+        result += index_to_letter(item.slot);
+        result += "</w> for ";
     }
     else
     {

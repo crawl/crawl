@@ -1629,11 +1629,8 @@ int find_free_slot(const item_def &i)
 
     // See if the item remembers where it's been. Lua code can play with
     // this field so be extra careful.
-    if (isaalpha(i.slot))
-        slot = letter_to_index(i.slot);
-
-    if (slotisfree(slot))
-        return slot;
+    if (slotisfree(i.slot))
+        return i.slot;
 
     FixedBitVector<ENDOFPACK> disliked;
     if (i.base_type == OBJ_POTIONS)
@@ -2121,7 +2118,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     item          = it;
     item.link     = freeslot;
     item.quantity = quant_got;
-    item.slot     = index_to_letter(item.link);
+    item.slot     = item.link;
     item.pos = ITEM_IN_INVENTORY;
     // Remove "unobtainable" as it was just proven false.
     item.flags &= ~ISFLAG_UNOBTAINABLE;
@@ -2422,7 +2419,7 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
                     // If the items on the floor already have a nonzero slot,
                     // leave it as such, otherwise set the slot.
                     if (!si->slot)
-                        si->slot = index_to_letter(item.link);
+                        si->slot = item.link;
 
                     si->flags |= ISFLAG_DROPPED;
                     si->flags &= ~ISFLAG_THROWN;
@@ -2448,7 +2445,7 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
 
     if (mark_dropped)
     {
-        new_item.slot   = index_to_letter(item.link);
+        new_item.slot   = item.link;
         new_item.flags |= ISFLAG_DROPPED;
         new_item.flags &= ~ISFLAG_THROWN;
         origin_set_unknown(new_item);

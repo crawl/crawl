@@ -979,7 +979,7 @@ vector<SelItem> InvMenu::get_selitems() const
     for (MenuEntry *me : sel)
     {
         InvEntry *inv = dynamic_cast<InvEntry*>(me);
-        selected_items.emplace_back(inv->hotkeys[0], inv->selected_qty,
+        selected_items.emplace_back(inv->item->slot, inv->selected_qty,
                                     inv->item, inv->has_star());
     }
     return selected_items;
@@ -1388,9 +1388,6 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
                       &Options.drop_filter,
                       _drop_selitem_text,
                       &preselected_items);
-
-    for (SelItem &sel : items)
-        sel.slot = letter_to_index(sel.slot);
 
     return items;
 }
@@ -1937,12 +1934,11 @@ int prompt_invent_item(const char *prompt,
                     keyin = '*';
                 continue;
             }
-            else if ((keyin == CK_ENTER || keyin == CK_MOUSE_B1) && items.size() > 0)
+            else if ((keyin == CK_ENTER || keyin == CK_MOUSE_B1)
+                     && items.size() > 0)
             {
                 // hacky, but lets the inscription checks below trip
-                // TODO: this code should not rely on keyin, it breaks cmd
-                // bindings
-                keyin = items[0].slot;
+                ret = items[0].slot;
             }
             else if (other_valid_char != 0 && keyin == other_valid_char)
             {
@@ -1951,6 +1947,9 @@ int prompt_invent_item(const char *prompt,
                 break;
             }
         }
+
+        if (isalpha(keyin))
+            ret = letter_to_index(keyin);
 
         if (isadigit(keyin))
         {
@@ -1974,10 +1973,8 @@ int prompt_invent_item(const char *prompt,
             keyin = '?';
             need_getch = false;
         }
-        else if (isaalpha(keyin))
+        else if (ret >= 0)
         {
-            ret = letter_to_index(keyin);
-
             if (must_exist && !you.inv[ret].defined())
                 mpr("You don't have any such object.");
             else if (must_exist && !item_is_selected(you.inv[ret],

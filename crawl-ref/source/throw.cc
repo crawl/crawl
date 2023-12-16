@@ -663,7 +663,7 @@ void throw_it(quiver::action &a)
     item_def item = thrown;
     item.quantity = 1;
     if (ammo_slot != -1)
-        item.slot     = index_to_letter(item.link);
+        item.slot     = item.link;
 
     _setup_missile_beam(&you, pbolt, item);
 
