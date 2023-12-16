@@ -5529,12 +5529,10 @@ bool player::is_sufficiently_rested(bool starting) const
 
     return (!player_regenerates_hp()
                 || _should_stop_resting(hp, hp_max, !starting)
-                || !hp_interrupts
-                || you.has_mutation(MUT_EXPLORE_REGEN))
+                || !hp_interrupts)
         && (!player_regenerates_mp()
                 || _should_stop_resting(magic_points, max_magic_points, !starting)
-                || !mp_interrupts
-                || you.has_mutation(MUT_EXPLORE_REGEN))
+                || !mp_interrupts)
         && (can_freely_move || !hp_interrupts);
 }
 

@@ -1090,7 +1090,7 @@ rest_wait_percent = 100
 
 explore_auto_rest = true
         If true, auto-explore waits until your HP and MP are both at
-        rest_wait_percent before moving. This is always disabled for Meteorans.
+        rest_wait_percent before moving.
 
 fear_zot = false
         If true, Meteorans will be prompted before resting or auto-exploring
