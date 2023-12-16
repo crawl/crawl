@@ -221,12 +221,11 @@ Call Canine Familiar spell
 
 Summons an inugami to the caster's aid. These mystical canines form a bond with
 their summoner that strengthens them in direct proportion with the caster's
-spellpower, but that same bond will also drain the summoner's lifeforce if they
-ever allow their familiar to die on the battlefield.
+spellpower.
 
-Recasting this spell while your familiar is already present will instead imbue
-it with additional magic, mending some of its wounds and causing its next
-attack to strike more quickly and cleave adjacent foes.
+Recasting this spell while your familiar is nearby will imbue it with additional
+magic, mending some of its wounds and causing its next attack to strike more
+quickly and cleave adjacent foes.
 %%%%
 Call Down Damnation spell
 

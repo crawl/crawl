@@ -2536,17 +2536,10 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         you.props.erase(CANINE_FAMILIAR_MID);
 
-        // Suffer backlash if your familiar actually oughtright died. If you
-        // just left a floor, there should be no penalty, and it's okay if the
-        // player can just summon them back from the abyss.
         if (!wizard && !mons_reset && !was_banished)
         {
-            mprf(MSGCH_WARN, "The death of your familiar leaves you staggered"
-                             " and unwell.");
-            drain_player(70, false, true);
-
             // Prevent you from resummoning it for a little while.
-            you.duration[DUR_CANINE_FAMILIAR_DEAD] = random_range(5, 12)
+            you.duration[DUR_CANINE_FAMILIAR_DEAD] = random_range(6, 11)
                                                      * BASELINE_DELAY;
         }
     }
