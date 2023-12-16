@@ -3822,9 +3822,6 @@ colour_t item_def::rune_colour() const
         case RUNE_SHOALS:                   // barnacled
             return ETC_WATER;
 
-            // This one is hardly unique, but colour isn't used for
-            // stacking, so we don't have to worry too much about this.
-            // - bwr
         case RUNE_DEMONIC:                  // random Pandemonium lords
         {
             static const element_type types[] =
