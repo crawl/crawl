@@ -383,6 +383,13 @@ int InvMenu::pre_process(int key)
     }
     else if (key == '-')
         _mode_special_drop = false;
+    else if (key == '&' && is_set(MF_ARROWS_SELECT) && items.size())
+    {
+        int lh = last_hovered >= 0 ? last_hovered : items.size()-1;
+        if (items[lh]->data_n >= 0)
+            set_hovered(items[lh]->data_n);
+        key = CK_NO_KEY;
+    }
     return key;
 }
 
@@ -872,6 +879,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
     if (sort)
         cond = find_menu_sort_condition();
 
+    int nonletter = -1;
     for (int obj = 0; obj < NUM_OBJECT_CLASSES; ++obj)
     {
         int i = inv_order[obj];
@@ -938,11 +946,26 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                 else
                     ie->hotkeys[0] = ckey++;
             }
-            do_preselect(ie);
+            else if (ie->hotkeys[0] == '&' && nonletter < 0)
+                nonletter = items.size();
 
+            do_preselect(ie);
             add_entry(procfn ? procfn(ie) : ie);
         }
     }
+    // set data_n to the index of the next entry denoted by a &.
+    // XXX This changes pre-existing items[] items, but doesn't search them
+    // for nonletter.
+    if (nonletter >= 0)
+    {
+        for (int i = items.size()-1; i >= 0; --i)
+        {
+            items[i]->data_n = nonletter;
+            if (is_hotkey(i, '&'))
+                nonletter = i;
+        }
+    }
+
 
     return ckey;
 }

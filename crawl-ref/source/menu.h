@@ -106,6 +106,7 @@ public:
     bool indent_no_hotkeys;
     string preface_format;
     void *data;
+    int data_n; // Used by InvMenu as "next non-letter".
     function<bool(const MenuEntry&)> on_select;
 
 #ifdef USE_TILE
@@ -120,7 +121,7 @@ public:
         text(txt), quantity(qty), selected_qty(0), colour(-1),
         hotkeys(), level(lev),
         indent_no_hotkeys(false),
-        data(nullptr),
+        data(nullptr), data_n(-1),
         on_select(nullptr),
         m_enabled(true)
     {
