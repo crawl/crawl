@@ -12,7 +12,7 @@
 ##############################################################################
 
 {{
--- e.kitem("O = obsidian gem") should be here, but it didn't work. Sorry! -- PF
+-- e.kitem("O = midnight gem") should be here, but it didn't work. Sorry! -- PF
 function zot_entry_setup(e)
     e.place("Depths:$")
     e.orient("float")
@@ -106,7 +106,7 @@ SUBST:  v: vcxlmb, n: nnnnvbcx
 FTILE:  O.4G : floor_marble
 SUBST:  4 = 122223
 : zot_entry_setup(_G)
-KITEM:  O = obsidian gem
+KITEM:  O = midnight gem
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxcccccccxxxxxxx
@@ -148,7 +148,7 @@ FTILE:  .+cm^01234$ = floor_hall
 SUBST:  D = +, "' = .
 NSUBST: 3 = 1:9 / *:3
 : zot_entry_setup(_G)
-KITEM:  O = obsidian gem
+KITEM:  O = midnight gem
 MONS:   base draconian ; glaive | halberd
 MAP
 '''''''''''''''''''''''''''''''''''''''''
@@ -263,7 +263,7 @@ FTILE:  -12O = floor_hall
 SUBST:  - = .
 KMONS:  O = nonbase draconian
 : zot_entry_setup(_G)
-KITEM:  O = obsidian gem
+KITEM:  O = midnight gem
 MONS:   draconian stormcaller
 MAP
 xxxxxxxxxxxx@xxxxxxxxxxxx
@@ -305,7 +305,7 @@ SUBST:  v: ....cnXblw, z:..cnXblw
 NSUBST: d = 1:0 / 4:1 / 2:2 / *:.
 SUBST:  D = +
 : zot_entry_setup(_G)
-KITEM:  O = obsidian gem
+KITEM:  O = midnight gem
 MAP
                    cccccccccccc
                    cc..3....ccc
@@ -331,7 +331,7 @@ KPROP:  O- = no_tele_into
 SUBST:  - = .
 NSUBST: d = 1:0 / 4:1 / 2:2 / 1:3
 : zot_entry_setup(_G)
-KITEM:  O = obsidian gem
+KITEM:  O = midnight gem
 MAP
 ....d....
 .dcc+ccd.
@@ -356,7 +356,7 @@ NSUBST: 1 = 1:0 / *:1
 NSUBST: 2 = 2:2 / *:.
 NSUBST: 3 = 2:3 / *:2
 : zot_entry_setup(_G)
-KITEM:  O = obsidian gem
+KITEM:  O = midnight gem
 MAP
       ..3..
      .2c+c2.
@@ -384,7 +384,7 @@ FTILE:  ABC-_O = floor_hall
 SUBST:  _ = ., A = 2, B = 3, C = c, - = +
 NSUBST: 3 = 1:993 / *:3
 : zot_entry_setup(_G)
-KITEM:  O = obsidian gem
+KITEM:  O = midnight gem
 MAP
       cccccccccccccccccccc
     ccc..................cc
@@ -409,7 +409,7 @@ COLOUR: 123c+. = magenta
 FTILE:  123c+.O = floor_hall
 NSUBST: 3 = 1:9 / *:3, 1 = 2:0 / *:1
 : zot_entry_setup(_G)
-KITEM:  O = obsidian gem
+KITEM:  O = midnight gem
 MAP
       @       @
     cc+cc   cc+cc
@@ -441,7 +441,7 @@ COLOUR: 123c+. = magenta
 FTILE:  123c+.AO = floor_hall
 NSUBST: A = 1:O / *:A, 1 = 2:0 / *:1, 3 = 1:9 / *:3
 : zot_entry_setup(_G)
-KITEM:  O = obsidian gem
+KITEM:  O = midnight gem
 MAP
        @
      cc+cc
@@ -471,7 +471,7 @@ FTILE:  0123+_OT = floor_hall
 SUBST:  _ = .
 NSUBST: 3 = 1:9 / *:3
 : zot_entry_setup(_G)
-KITEM:  O = obsidian gem
+KITEM:  O = midnight gem
 MAP
             .....
           ...ccc...
@@ -499,7 +499,7 @@ FTILE:  ABC-_O = floor_hall
 SUBST:  _ = ., A = 2, B = 110, C = c, - = +
 NSUBST: 3 = 1:9 / *:3
 : zot_entry_setup(_G)
-KITEM:  O = obsidian gem
+KITEM:  O = midnight gem
 MAP
 @......               ......@
 .+cccc.................cccc+.
@@ -536,7 +536,7 @@ FTILE:  ABC-_O = floor_hall
 SUBST:  _ = ., A = 2, B = 1, C = c, - = +
 NSUBST: 1 = 3:0 / 7:1 / *:., 3 = 1:9 / *:3
 : zot_entry_setup(_G)
-KITEM:  O = obsidian gem
+KITEM:  O = midnight gem
 MAP
            .........
          ...ccccccc...
@@ -579,7 +579,7 @@ FTILE:  29C-_O = floor_hall
 SUBST:  _ = ., C = c
 NSUBST: @ = 1:@ / *:.
 : zot_entry_setup(_G)
-KITEM:  O = obsidian gem
+KITEM:  O = midnight gem
 MAP
      ccccccc
     ccCCCCCcc

@@ -830,6 +830,14 @@ increases the damage done by the maw.
 
 While transformed, any body armour is melded.
 %%%%
+midnight gem
+
+[[gem]]
+
+The stoneborn brought forth this gem from the uttermost depths of the earth as
+a gift and a warning: beware Zot! That it lies now within Zot's power is a sure
+proof of the perversity of mortals and fate alike.
+%%%%
 milky-white gem
 
 [[gem]]
@@ -856,14 +864,6 @@ necronomicon
 An extremely rare book, powerful and sinister. Many foolhardy magicians have
 tried to study this tome, only to find themselves entangled within necromantic
 forces they could not hope to control.
-%%%%
-obsidian gem
-
-[[gem]]
-
-The stoneborn brought forth this gem from the uttermost depths of the earth as
-a gift and a warning: beware Zot! That it lies now within Zot's power is a sure
-proof of the perversity of mortals and fate alike.
 %%%%
 orb
 
