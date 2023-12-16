@@ -158,8 +158,6 @@ function species_mock(e)
     return "rat"
   elseif you.race() == "Spriggan" then
     return "unseen horror"
-  elseif you.race() == "Meteoran" then
-    return "wretched star"
   elseif you.race() == "Tengu" then
     return "caustic shrike"
   elseif you.race() == "Troll" then

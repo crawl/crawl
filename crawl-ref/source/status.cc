@@ -385,11 +385,13 @@ bool fill_status_info(int status, status_info& inf)
 
     case DUR_RAMPAGE_HEAL:
     {
-        const int rampage_heal_str = you.props[RAMPAGE_HEAL_KEY].get_int();
-        if (rampage_heal_str > 0)
+        const int rh_pwr = you.props[RAMPAGE_HEAL_KEY].get_int();
+        if (rh_pwr > 0)
         {
-            inf.light_colour = LIGHTMAGENTA;
-            inf.light_text   = make_stringf("Regen (%d)", rampage_heal_str);
+            const int rh_lvl = you.get_mutation_level(MUT_ROLLPAGE);
+            inf.light_colour = rh_lvl < 2 ? LIGHTBLUE : LIGHTMAGENTA;
+            inf.light_text   = make_stringf(rh_lvl < 2 ? "MPRegen (%d)"
+                                                       : "Regen (%d)", rh_pwr);
         }
         break;
     }
@@ -734,13 +736,14 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_CANINE_FAMILIAR_ACTIVE:
-        if (you.props.exists(CANINE_FAMILIAR_MID))
+        if (canine_familiar_is_alive())
         {
             inf.light_colour = WHITE;
             inf.light_text   = "Dog";
             inf.short_text   = "inugami summoned";
             inf.long_text    = "Your inugami has been summoned.";
         }
+        break;
 
     case STATUS_NO_SCROLL:
         if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS]

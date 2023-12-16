@@ -785,7 +785,8 @@ and you cannot become invisible.
 %%%%
 explore regen mutation
 
-As you explore the dungeon, your wounds will heal and your magic will replenish.
+You are invigorated by the discovery of the unknown. As you explore the dungeon,
+your wounds will heal and your magic will replenish.
 %%%%
 faith mutation
 
@@ -801,8 +802,8 @@ and restore health.
 roll mutation
 
 You instinctively roll as you move toward enemies, rampaging forward an
-additional space. The second level of this mutation grants health regeneration
-when rolling.
+additional space. This mutation grants magic regeneration when rolling; the
+second level of this mutation regenerates both magic and health.
 %%%%
 long tongue mutation
 

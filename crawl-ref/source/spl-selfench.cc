@@ -219,7 +219,7 @@ spret cast_liquefaction(int pow, bool fail)
 
     mpr("The ground around you becomes liquefied!");
 
-    you.increase_duration(DUR_LIQUEFYING, 10 + random2avg(pow, 2), 100);
+    you.increase_duration(DUR_LIQUEFYING, 15 + random2avg(pow, 2), 100);
     invalidate_agrid(true);
     return spret::success;
 }

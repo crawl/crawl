@@ -57,6 +57,13 @@ arbalest
 A large piece of machinery used for firing bolts, braced with steel and cranked
 with a windlass. It takes some time to load and fire.
 %%%%
+azure gem
+
+[[gem]]
+
+As clear and blue as a cloudless sky or a depthless sea, this gem holds its
+secrets locked within impenetrable depths.
+%%%%
 bardiche
 
 A long pole with an enormous, cleaving blade on one end.
@@ -534,6 +541,13 @@ A vial of pure dragon-blood, crystallized over many years. {{
 
 While transformed, any equipped weapons and armour are melded.
 %%%%
+earthy gem
+
+[[gem]]
+
+Deep within this gem, flowing leaves and swaying branches seem to lurk. And
+here, a bone picked clean - there, a predator's eyes, staring hungrily out..?
+%%%%
 eggplant
 
 A rotten eggplant which you can throw at the Crawl developers. It's a bug if
@@ -595,6 +609,20 @@ However, this instability makes the user unable to use weapons, shields or body
 armour. They also glow, reducing stealth and preventing invisibility, and their
 melee damage is reduced, as their limbs sometimes destabilize mid-swing.
 %%%%
+gem
+
+A stone of unearthly beauty and almost immeasurable value outside the dungeon.
+Within its confines, it is utterly useless.
+
+Zot hoards these gems jealously, and will spitefully smash them soon after an
+adventurer enters the branch of the Dungeon in which they rest. Still, a very
+quick-moving adventurer might seize one first and keep its precious shards.
+Zot cannot track gems outside their home branches, so with truly astonishing
+speed, it might be possible to abscond with one still intact... but such a
+feat is difficult to credit, and likely pointless besides.
+
+Once the Orb of Zot is taken, Zot will be unable to smash any gems.
+%%%%
 giant club
 
 A giant lump of wood.
@@ -606,6 +634,14 @@ A giant lump of wood with sharp spikes at one end.
 glaive
 
 A pole with a large, heavy blade on one end.
+%%%%
+glittering gem
+
+[[gem]]
+
+Sparkling with golden light, this gem was considered a sign of divine favour by
+the orcs who first unearthed it. They crushed all opposition to their new cult
+of Beogh, and to this day guard it jealously in their innermost sanctum.
 %%%%
 gold dragon scales
 
@@ -702,6 +738,21 @@ the user to each place. Most copies are locked up, chained down, or otherwise
 restrained, as the book has a habit of otherwise following its owner wherever
 they go.
 %%%%
+ivory gem
+
+[[gem]]
+
+Countless spirits swirl around this gem, shrouding it in a bone-deep chill.
+Unwelcome in the Good gods' afterlife, they find here a heaven of their own.
+%%%%
+jade gem
+
+[[gem]]
+
+Sigils of fire burn deep within this gem, symbol of the eternal compact between
+naga and salamander. Their bond is that of the poison which scourges the impure
+and the flame which burns away impurity.
+%%%%
 javelin
 
 A lightweight spear, designed for throwing. It will pass through the targets it
@@ -779,9 +830,34 @@ increases the damage done by the maw.
 
 While transformed, any body armour is melded.
 %%%%
+midnight gem
+
+[[gem]]
+
+The stoneborn brought forth this gem from the uttermost depths of the earth as
+a gift and a warning: beware Zot! That it lies now within Zot's power is a sure
+proof of the perversity of mortals and fate alike.
+%%%%
+milky-white gem
+
+[[gem]]
+
+Smooth as a spider's silk, white as the eyes of some crawling thing which has
+lived too long in the dark, this gem buzzes with a fearful potential. Still, to
+a certain eye, it possesses a strange allure...
+%%%%
 morningstar
 
 A mace with a head covered in short spikes.
+%%%%
+mossy gem
+
+[[gem]]
+
+Though it drips with mud and muck, still a peculiar dignity attaches itself to
+this gem. The people of the Swamp, who first carried this stone, struggled
+against insurmountable odds. They failed, but there is much to admire even in
+the ruin of their efforts.
 %%%%
 necronomicon
 
@@ -936,6 +1012,13 @@ A potion which makes the drinker attract enemies, translocating them quickly clo
 for the duration of the effect. The effect is surprisingly subtle, and unwary
 victims may sleep through it entirely.
 %%%%
+prismatic gem
+
+[[gem]]
+
+Shining with every colour of the rainbow and a few others besides, some
+consider this gem 'a bit tacky'. Preposterous!
+%%%%
 quad damage
 
 A mysterious item resembling a rune of some kind. Once evoked, it will make the
@@ -1064,6 +1147,15 @@ sacred scourge
 
 A blessed weapon, woven by the saints in Heaven and hated by the unholy. It is
 a favoured weapon of the Shining One's servants.
+%%%%
+sanguine gem
+
+[[gem]]
+
+They who smote down Death herself and buried themselves in a Tomb of their own
+making were not shy of their ambitions. Fain to seize upon baubles and
+overweening proud, their Lord journeyed into their eternal unrest with this gem
+upon their breast.
 %%%%
 scale mail
 
@@ -1215,6 +1307,23 @@ around foes and crush them to death. Shapeshifting skill increases the armour
 provided by the snake's scales. While transformed, any equipped weapons and
 armour are melded.
 %%%%
+shining gem
+
+[[gem]]
+
+Many are the treasures of the Ironbound Order, but none older nor more precious
+than this steel-shining gem. The Vaults were first forged to hold it, and none
+who gazed within its depths could fault the choice.
+%%%%
+shimmering gem
+
+[[gem]]
+
+Unearthly energies gently flow along the surface of this gem, guided by the
+archmage who first built the Elven Halls. Countless generations of elves
+flocked to learn from her, but her foremost pursuit was always the perfection
+of this piece of art.
+%%%%
 shortbow
 
 A curved piece of wood and string, for shooting arrows.
@@ -1222,6 +1331,14 @@ A curved piece of wood and string, for shooting arrows.
 short sword
 
 A personal stabbing weapon with a short grip.
+%%%%
+smoky gem
+
+[[gem]]
+
+Swirls of dark smoke seem to swirl in the depths of this gem. Countless dark
+deeds were done in the Dungeon even before Zot seized and remade it, and their
+dreadful residue now taints every hint of beauty trapped within its confines.
 %%%%
 spear
 
@@ -1275,6 +1392,13 @@ A staff that increases the power of poisoning spells cast by its wielder, and
 protects them from the effects of poison. If the wielder is skilled in
 Evocations and Poison Magic, they can envenom those struck by it, dealing
 poison damage which bypasses armour.
+%%%%
+starry gem
+
+[[gem]]
+
+Odd lights twinkle within the depths of this gem. From what strange stuff is it
+made, and from what distant land did it travel?
 %%%%
 steam dragon scales
 

@@ -1035,10 +1035,6 @@ A large window
 A window embedded in the side of an enormous metal pipe, allowing observation
 of the water flowing inside.
 %%%%
-A glass window
-
-A pockmarked, ultra-hard glass window.
-%%%%
 A petrified tree
 
 An ancient tree, long ago passed from biology into geology. While no longer

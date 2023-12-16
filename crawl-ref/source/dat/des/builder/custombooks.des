@@ -43,7 +43,7 @@ local books = {
   .. "ensorcelled_hibernation&passwall&scorch&static_discharge",
 "Elemental_Confusion numspells:2 spells:polar_vortex&"
   .. "maxwell's_capacitive_coupling",
-"Enchanting_Elements numspells:4 spells:inner_flame&leda's_liquefaction&"
+"Enchanting_Elements numspells:3 spells:inner_flame&"
  .. "metabolic_englaciation&silence",
 "Endless_Yammering numspells:1 spells:discord",
 "Eternal_Blood numspells:2 spells:sublimation_of_blood&vampiric_draining",

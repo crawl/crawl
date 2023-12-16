@@ -82,7 +82,7 @@
 #include "viewchar.h"
 #include "view.h"
 #include "xom.h"
-#include "zot.h" // bezotted
+#include "zot.h" // bezotted, print_gem_warnings
 
 static int _autopickup_subtype(const item_def &item);
 static void _autoinscribe_item(item_def& item);
@@ -173,10 +173,9 @@ void link_items()
 
 static bool _item_ok_to_clean(int item)
 {
-    // Never clean misc items, Orbs, or runes.
+    // Never clean misc items, Orbs, gems, or runes.
     if (env.item[item].base_type == OBJ_MISCELLANY
-        || item_is_orb(env.item[item])
-        || env.item[item].base_type == OBJ_RUNES)
+        || item_is_collectible(env.item[item]))
     {
         return false;
     }
@@ -1136,7 +1135,7 @@ void origin_acquired(item_def &item, int agent)
     item.orig_monnum = -agent;
 }
 
-static string _milestone_rune(const item_def &item)
+static string _milestone_collectible(const item_def &item)
 {
     return string("found ") + item.name(DESC_A) + ".";
 }
@@ -1144,7 +1143,9 @@ static string _milestone_rune(const item_def &item)
 static void _milestone_check(const item_def &item)
 {
     if (item.base_type == OBJ_RUNES)
-        mark_milestone("rune", _milestone_rune(item));
+        mark_milestone("rune", _milestone_collectible(item));
+    else if (item.base_type == OBJ_GEMS)
+        mark_milestone("gem.found", _milestone_collectible(item));
     else if (item_is_orb(item))
         mark_milestone("orb", "found the Orb of Zot!");
 }
@@ -1154,7 +1155,7 @@ static void _check_note_item(item_def &item)
     if (item.flags & (ISFLAG_NOTED_GET | ISFLAG_NOTED_ID))
         return;
 
-    if (item.base_type == OBJ_RUNES || item_is_orb(item) || is_artefact(item))
+    if (item_is_collectible(item) || is_artefact(item))
     {
         take_note(Note(NOTE_GET_ITEM, 0, 0, item.name(DESC_A),
                        origin_desc(item)));
@@ -1549,7 +1550,7 @@ bool items_similar(const item_def &item1, const item_def &item2)
     if (item1.base_type != item2.base_type || item1.sub_type != item2.sub_type)
         return false;
 
-    if (item1.base_type == OBJ_GOLD || item1.base_type == OBJ_RUNES)
+    if (item1.base_type == OBJ_GOLD || item_is_collectible(item1))
         return true;
 
     if (is_artefact(item1) != is_artefact(item2))
@@ -1783,7 +1784,7 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
     bool actually_went_in = false;
     const bool keep_going = _put_item_in_inv(it, quant_got, quiet, actually_went_in);
 
-    if ((it.base_type == OBJ_RUNES || item_is_orb(it) || in_bounds(old_item_pos))
+    if ((item_is_collectible(it) || in_bounds(old_item_pos))
         && actually_went_in)
     {
         dungeon_events.fire_position_event(dgn_event(DET_ITEM_PICKUP,
@@ -1913,6 +1914,20 @@ static void _get_rune(const item_def& it, bool quiet)
         mpr("You feel the abyssal rune guiding you out of this place.");
 }
 
+static void _get_gem(const item_def& it, bool quiet)
+{
+    you.gems_found.set(it.sub_type);
+    if (quiet)
+        return;
+
+    flash_view_delay(UA_PICKUP, it.gem_colour(), 300);
+    // XXX: consider customizing this message per-gem
+    mprf("You pick up %s and feel its impossibly delicate weight in your %s.",
+         it.name(DESC_THE).c_str(), you.hand_name(true).c_str());
+    mpr("Press } and ! to see all the gems you have collected.");
+    print_gem_warnings(it.sub_type, 0);
+}
+
 /**
  * Place the Orb of Zot into the player's inventory.
  */
@@ -1931,8 +1946,10 @@ static void _get_orb()
     start_orb_run(CHAPTER_ESCAPING, "Now all you have to do is get back out "
                                     "of the dungeon!");
 
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_METEORAN)
         update_vision_range();
+#endif
 }
 
 /**
@@ -2174,10 +2191,15 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
         _get_book(it);
         return true;
     }
-    // Runes are also massless.
+    // Runes and gems are also massless.
     if (it.base_type == OBJ_RUNES)
     {
         _get_rune(it, quiet);
+        return true;
+    }
+    if (it.base_type == OBJ_GEMS)
+    {
+        _get_gem(it, quiet);
         return true;
     }
     // The Orb is also handled specially.
@@ -2921,6 +2943,7 @@ static int _autopickup_subtype(const item_def &item)
 #endif
     case OBJ_GOLD:
     case OBJ_RUNES:
+    case OBJ_GEMS:
         return max_type;
     default:
         return item.sub_type;
@@ -3160,12 +3183,10 @@ static bool _interesting_explore_pickup(const item_def& item)
         // Books always start out unidentified.
         return true;
 
-    case OBJ_ORBS:
-        // Orb is always interesting.
-        return true;
-
     case OBJ_RUNES:
-        // Runes are always interesting.
+    case OBJ_GEMS:
+    case OBJ_ORBS:
+        // Always interesting.
         return true;
 
     default:
@@ -3309,6 +3330,7 @@ int get_max_subtype(object_class_type base_type)
 #endif
         NUM_RUNE_TYPES,
         NUM_TALISMANS,
+        NUM_GEM_TYPES,
     };
     COMPILE_CHECK(ARRAYSZ(max_subtype) == NUM_OBJECT_CLASSES);
 
@@ -3800,9 +3822,6 @@ colour_t item_def::rune_colour() const
         case RUNE_SHOALS:                   // barnacled
             return ETC_WATER;
 
-            // This one is hardly unique, but colour isn't used for
-            // stacking, so we don't have to worry too much about this.
-            // - bwr
         case RUNE_DEMONIC:                  // random Pandemonium lords
         {
             static const element_type types[] =
@@ -3829,6 +3848,33 @@ colour_t item_def::rune_colour() const
         case RUNE_GLOORX_VLOQ:              // dark
         default:
             return ETC_DARK;
+    }
+}
+
+/**
+ * Assuming this item is a gem, what colour is it?
+ */
+colour_t item_def::gem_colour() const
+{
+    switch (sub_type)
+    {
+    default:
+    case GEM_DUNGEON: return LIGHTGREY;
+    case GEM_ORC:     return ETC_GOLD;
+    case GEM_ELF:     return ETC_ELVEN;
+    case GEM_LAIR:    return GREEN;
+
+    case GEM_SWAMP:   return ETC_DECAY;
+    case GEM_SHOALS:  return ETC_ENCHANT;
+    case GEM_SNAKE:   return ETC_POISON;
+    case GEM_SPIDER:  return ETC_AIR;
+
+    case GEM_SLIME:   return ETC_SLIME;
+    case GEM_VAULTS:  return ETC_STEEL;
+    case GEM_CRYPT:   return ETC_BONE;
+    case GEM_TOMB:    return ETC_DWARVEN; // XXX replaceme
+    case GEM_DEPTHS:  return ETC_DITHMENOS;
+    case GEM_ZOT:     return ETC_RANDOM; // dubious
     }
 }
 
@@ -4025,6 +4071,10 @@ colour_t item_def::get_colour() const
             return YELLOW;
         case OBJ_RUNES:
             return rune_colour();
+        case OBJ_GEMS:
+            if (sub_type == GEM_ORC)
+                return BROWN;  // don't want yellow, that's normal gold
+            return gem_colour();
         case OBJ_DETECTED:
             return Options.detected_item_colour;
         case NUM_OBJECT_CLASSES:
@@ -4641,6 +4691,7 @@ item_def get_item_known_info(const item_def& item)
     case OBJ_GOLD:
     case OBJ_ORBS:
     case OBJ_RUNES:
+    case OBJ_GEMS:
     default:
         ii.sub_type = item.sub_type;
         break;
@@ -4688,6 +4739,26 @@ item_def get_item_known_info(const item_def& item)
 int runes_in_pack()
 {
     return static_cast<int>(you.runes.count());
+}
+
+/// Includes destroyed gems.
+int gems_found()
+{
+    return static_cast<int>(you.gems_found.count());
+}
+
+int gems_lost()
+{
+    int count = 0;
+    for (int i = 0; i < NUM_GEM_TYPES; i++)
+        if (you.gems_found[i] && you.gems_shattered[i])
+            count += 1;
+    return count;
+}
+
+int gems_held_intact()
+{
+    return gems_found() - gems_lost();
 }
 
 object_class_type get_random_item_mimic_type()

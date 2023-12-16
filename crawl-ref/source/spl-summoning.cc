@@ -119,11 +119,32 @@ spret cast_summon_small_mammal(int pow, god_type god, bool fail)
     return spret::success;
 }
 
+bool canine_familiar_is_alive()
+{
+    if (you.props.exists(CANINE_FAMILIAR_MID))
+    {
+        // Some sanity checking. This prop should already be removed whenever
+        // the dog stops existing, but sometimes this still isn't the case.
+        // So double-check the dog's existence, and remove the prop if it
+        // doesn't exist to avoid crashes elsewhere.
+        monster* dog = monster_by_mid(you.props[CANINE_FAMILIAR_MID].get_int());
+        if (!dog)
+        {
+            you.props.erase(CANINE_FAMILIAR_MID);
+            return false;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
 spret cast_call_canine_familiar(int pow, god_type god, bool fail)
 {
     // Many parts of this spell behave differently if our familiar has already
     // been summoned.
-    bool familiar_active = you.props.exists(CANINE_FAMILIAR_MID);
+    bool familiar_active = canine_familiar_is_alive();
 
     if (!familiar_active && stop_summoning_prompt())
         return spret::abort;
@@ -151,10 +172,11 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
             return spret::success;
         }
 
-        // Use a ghost_demon to handle the familiar's scaling damage and stats
-        ghost_demon ghost;
-        ghost.init_inugami(pow);
-        dog->set_ghost(ghost);
+        // Use a ghost_demon to handle the familiar's scaling damage and stats.
+        // The ghost_demon is created, but not initialized, during the
+        // create_monster call above.
+        ASSERT(dog->ghost);
+        dog->ghost->init_inugami_from_player(pow);
         dog->inugami_init();
 
         mpr("You call for your canine familiar and it appears with a howl!");
@@ -167,11 +189,12 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
 
         // Heal familiar and make its next attack (within the new few turns,
         // so that you don't just prebuff for this) an instant cleave.
-        dog->heal(random_range(5, 9) + div_rand_round(pow, 5));
-        dog->add_ench(mon_enchant(ENCH_INSTANT_CLEAVE, 1, &you, 50));
-
         mpr("You imbue your familiar with magical energy and its fangs glint"
             " viciously.");
+
+        dog->heal(random_range(5, 9) + div_rand_round(pow, 5));
+        dog->lose_ench_levels(ENCH_POISON, 1);
+        dog->add_ench(mon_enchant(ENCH_INSTANT_CLEAVE, 1, &you, 50));
     }
 
     return spret::success;
@@ -2207,7 +2230,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_SPECTRAL_ORCS,     { 0, 3 } },
     { SPELL_FIRE_SUMMON,              { 0, 4 } },
     { SPELL_SUMMON_MINOR_DEMON,       { 0, 3 } },
-    { SPELL_CALL_LOST_SOUL,           { 0, 3 } },
+    { SPELL_CALL_LOST_SOULS,          { 0, 4 } },
     { SPELL_SUMMON_VERMIN,            { 0, 5 } },
     { SPELL_FORCEFUL_INVITATION,      { 0, 3 } },
     { SPELL_PLANEREND,                { 0, 6 } },

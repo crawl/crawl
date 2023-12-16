@@ -211,6 +211,8 @@ public:
         }
         else if (item->base_type == OBJ_RUNES)
             name = "runes";
+        else if (item->base_type == OBJ_GEMS)
+            name = "gems";
         else if (item->sub_type == get_max_subtype(item->base_type))
         {
             name = "unknown "
@@ -466,6 +468,7 @@ void check_item_knowledge(bool unknown_items)
             { OBJ_GOLD, 1 },
             { OBJ_BOOKS, 0 },
             { OBJ_RUNES, NUM_RUNE_TYPES },
+            { OBJ_GEMS, NUM_GEM_TYPES },
         };
         for (auto e : misc_list)
             _add_fake_item(e.first, e.second, selected_items, items_other);

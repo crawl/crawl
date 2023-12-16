@@ -186,7 +186,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BOLT_OF_DRAINING, 22, MON_SPELL_WIZARD },
        { SPELL_VAMPIRIC_DRAINING, 22, MON_SPELL_WIZARD },
-       { SPELL_CALL_LOST_SOUL, 11, MON_SPELL_WIZARD },
+       { SPELL_CALL_LOST_SOULS, 22, MON_SPELL_WIZARD },
       }
     },
 
@@ -1812,7 +1812,7 @@ static const mon_spellbook mspell_list[] =
 
     { MST_BAI_SUZHEN_DRAGON,
       {
-        { SPELL_PRIMAL_WAVE, 60, MON_SPELL_NATURAL | MON_SPELL_BREATH
+        { SPELL_PRIMAL_WAVE, 68, MON_SPELL_NATURAL | MON_SPELL_BREATH
                                   | MON_SPELL_NOISY },
       }
     },
@@ -2214,8 +2214,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_FREDERICK,
       {
-       { SPELL_PLASMA_BEAM, 18, MON_SPELL_WIZARD },
-       { SPELL_BOMBARD, 18, MON_SPELL_WIZARD },
+       { SPELL_PLASMA_BEAM, 24, MON_SPELL_WIZARD },
+       { SPELL_BOMBARD, 24, MON_SPELL_WIZARD },
        { SPELL_SPELLFORGED_SERVITOR, 32, MON_SPELL_WIZARD },
       }
     },

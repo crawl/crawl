@@ -2661,6 +2661,39 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     }
 }
 
+static tileidx_t _tileidx_gem_base(const item_def &item)
+{
+    if (item.quantity <= 0)
+        return TILE_GEM_GENERIC;
+
+    switch (item.sub_type)
+    {
+    default:
+    case GEM_DUNGEON: return TILE_GEM_DUNGEON;
+    case GEM_ORC:     return TILE_GEM_ORC;
+    case GEM_ELF:     return TILE_GEM_ELF;
+    case GEM_LAIR:    return TILE_GEM_LAIR;
+    case GEM_SWAMP:   return TILE_GEM_SWAMP;
+    case GEM_SHOALS:  return TILE_GEM_SHOALS;
+    case GEM_SNAKE:   return TILE_GEM_SNAKE;
+    case GEM_SPIDER:  return TILE_GEM_SPIDER;
+    case GEM_SLIME:   return TILE_GEM_SLIME;
+    case GEM_VAULTS:  return TILE_GEM_VAULTS;
+    case GEM_CRYPT:   return TILE_GEM_CRYPT;
+    case GEM_TOMB:    return TILE_GEM_TOMB;
+    case GEM_DEPTHS:  return TILE_GEM_DEPTHS;
+    case GEM_ZOT:     return TILE_GEM_ZOT;
+    }
+}
+
+static tileidx_t _tileidx_gem(const item_def &item)
+{
+    const tileidx_t base = _tileidx_gem_base(item);
+    if (item.sub_type < NUM_GEM_TYPES && you.gems_shattered[item.sub_type])
+        return base + 1;
+    return base;
+}
+
 static tileidx_t _tileidx_uncollected_rune(const item_def &item)
 {
     switch (item.sub_type)
@@ -2967,6 +3000,9 @@ tileidx_t tileidx_item(const item_def &item)
         if (item.quantity <= 0)
             return _tileidx_uncollected_rune(item);
         return _tileidx_rune(item);
+
+    case OBJ_GEMS:
+        return _tileidx_gem(item);
 
     case OBJ_DETECTED:
         return TILE_UNSEEN_ITEM;
@@ -4129,8 +4165,10 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_GNOLL;
         case SP_DJINNI:
             return TILEG_SP_DJINNI;
+#if TAG_MAJOR_VERSION == 34
         case SP_METEORAN:
             return TILEG_SP_METEORAN;
+#endif
         default:
             return TILEP_ERROR;
     }

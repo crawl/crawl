@@ -33,7 +33,7 @@ function castle_lemuel_setup(e)
            e.mons("gnoll bouda / gnoll sergeant / orc warrior"
                   .. " / kobold brigand")
            e.mons("troll / two-headed ogre / cyclops / kobold demonologist")
-           e.mons("hound / howler monkey / warg w:5")
+           e.mons("hound / howler monkey / wolf w:5")
            e.mons("orc / gnoll / ogre")
            e.mons("hound / howler monkey")
            e.subst("* = %$")

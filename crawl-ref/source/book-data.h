@@ -423,6 +423,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Book of Sloth
     SPELL_FROZEN_RAMPARTS,
+    SPELL_LEDAS_LIQUEFACTION,
     SPELL_PETRIFY,
     SPELL_ENGLACIATION,
 },
@@ -485,7 +486,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SIGIL_OF_BINDING,
     SPELL_CALL_CANINE_FAMILIAR,
     SPELL_DIMENSIONAL_BULLSEYE,
-    SPELL_LEDAS_LIQUEFACTION,
 },
 
 { // Book of Scorching

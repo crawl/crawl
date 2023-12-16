@@ -190,9 +190,9 @@ Word of Recall cast
 
 @The_monster@ begins to recite a word of recall!
 %%%%
-Call Lost Soul cast
+Call Lost Souls cast
 
-@The_monster@ beckons forth a restless soul!
+@The_monster@ beckons forth restless souls!
 %%%%
 Haste Plants cast
 

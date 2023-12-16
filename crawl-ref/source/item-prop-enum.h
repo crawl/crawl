@@ -403,6 +403,26 @@ enum rune_type
     NUM_RUNE_TYPES
 };
 
+// Order roughly matches branch_type.
+enum gem_type
+{
+    GEM_DUNGEON,
+    GEM_ORC,
+    GEM_ELF,
+    GEM_LAIR,
+    GEM_SWAMP,
+    GEM_SHOALS,
+    GEM_SNAKE,
+    GEM_SPIDER,
+    GEM_SLIME,
+    GEM_VAULTS,
+    GEM_CRYPT,
+    GEM_TOMB,
+    GEM_DEPTHS,
+    GEM_ZOT,
+    NUM_GEM_TYPES
+};
+
 enum scroll_type
 {
     SCR_IDENTIFY,

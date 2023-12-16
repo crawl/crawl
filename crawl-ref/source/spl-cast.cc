@@ -1339,7 +1339,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_BATTLESPHERE:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
     case SPELL_CALL_CANINE_FAMILIAR:
-        if (you.props.exists(CANINE_FAMILIAR_MID))
+        if (canine_familiar_is_alive())
         {
             monster* dog = monster_by_mid(you.props[CANINE_FAMILIAR_MID].get_int());
             vector<coord_def> targ;

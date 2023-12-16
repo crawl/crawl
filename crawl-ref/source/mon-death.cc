@@ -1417,6 +1417,8 @@ static void _protean_explosion(monster* mons)
             child->foe = mons->foe;
             child->behaviour = BEH_SEEK;
 
+            mons_add_blame(child, "spawned from " + mons->name(DESC_A, true));
+
             // Make each one shift a little later than the last
             delay += random_range(1, 3) * BASELINE_DELAY;
         }
@@ -2534,17 +2536,10 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         you.props.erase(CANINE_FAMILIAR_MID);
 
-        // Suffer backlash if your familiar actually oughtright died. If you
-        // just left a floor, there should be no penalty, and it's okay if the
-        // player can just summon them back from the abyss.
         if (!wizard && !mons_reset && !was_banished)
         {
-            mprf(MSGCH_WARN, "The death of your familiar leaves you staggered"
-                             " and unwell.");
-            drain_player(70, false, true);
-
             // Prevent you from resummoning it for a little while.
-            you.duration[DUR_CANINE_FAMILIAR_DEAD] = random_range(5, 12)
+            you.duration[DUR_CANINE_FAMILIAR_DEAD] = random_range(6, 11)
                                                      * BASELINE_DELAY;
         }
     }
@@ -3037,7 +3032,7 @@ string summoned_poof_msg(const monster* mons, bool plural)
         break;
 
     case SPELL_SPECTRAL_CLOUD:
-    case SPELL_CALL_LOST_SOUL:
+    case SPELL_CALL_LOST_SOULS:
         msg = "fade%s away";
         break;
     }

@@ -422,9 +422,8 @@ bool UseItemMenu::populate_list(bool check_only)
     for (const auto *it : floor)
     {
         // ...only stuff that can go into your inventory though
-        if (!it->defined() || item_is_stationary(*it) || item_is_orb(*it)
-            || item_is_spellbook(*it) || it->base_type == OBJ_GOLD
-            || it->base_type == OBJ_RUNES)
+        if (!it->defined() || item_is_stationary(*it) || item_is_spellbook(*it)
+            || item_is_collectible(*it) || it->base_type == OBJ_GOLD)
         {
             continue;
         }
@@ -3274,7 +3273,7 @@ static bool _handle_brand_weapon(bool alreadyknown, const string &pre_msg)
         if (!clua.error.empty())
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     }
-    else if (!letter.empty())
+    else if (isalpha(letter.c_str()[0]))
     {
         item_def &item = you.inv[letter_to_index(letter.c_str()[0])];
         if (item.defined() && is_brandable_weapon(item, true))
@@ -3340,7 +3339,7 @@ static bool _identify(bool alreadyknown, const string &pre_msg, int &link)
         if (!clua.error.empty())
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     }
-    else if (!letter.empty())
+    else if (isalpha(letter.c_str()[0]))
     {
         item_def &item = you.inv[letter_to_index(letter.c_str()[0])];
         if (item.defined() && !fully_identified(item))
@@ -3394,7 +3393,7 @@ static bool _handle_enchant_weapon(bool alreadyknown, const string &pre_msg)
         if (!clua.error.empty())
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     }
-    else if (!letter.empty())
+    else if (isalpha(letter.c_str()[0]))
     {
         item_def &item = you.inv[letter_to_index(letter.c_str()[0])];
         if (item.defined() && is_enchantable_weapon(item, true))
@@ -3454,7 +3453,7 @@ static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
         if (!clua.error.empty())
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     }
-    else if (!letter.empty())
+    else if (isalpha(letter.c_str()[0]))
     {
         item_def &item = you.inv[letter_to_index(letter.c_str()[0])];
         if (item.defined() && is_enchantable_armour(item, true))

@@ -928,16 +928,19 @@ bool melee_attack::attack()
         cleave_setup();
         if (!handle_phase_attempted())
             return false;
-    }
-    // If we're a monster that is cleaving due to a temporary boost, remove it
-    // upon this attack and refund the energy
-    else if (attacker->is_monster())
-    {
-        monster* mons = attacker->as_monster();
-        if (mons->has_ench(ENCH_INSTANT_CLEAVE))
+
+        // If we're a monster that was supposed to get a free instant cleave
+        // attack, refund the energy now. (It may look strange that this is
+        // in the '!cleaving' block, but otherwise the 'free' attack will only
+        // ever happen if there were multiple targets being hit by it.)
+        if (attacker->is_monster())
         {
-            mons->del_ench(ENCH_INSTANT_CLEAVE);
-            mons->speed_increment += mons->action_energy(EUT_ATTACK);
+            monster* mons = attacker->as_monster();
+            if (mons->has_ench(ENCH_INSTANT_CLEAVE))
+            {
+                mons->del_ench(ENCH_INSTANT_CLEAVE);
+                mons->speed_increment += mons->action_energy(EUT_ATTACK);
+            }
         }
     }
 

@@ -744,8 +744,10 @@ void update_vision_range()
     // penalizing players with low LOS from items, don't shrink normal_vision.
     you.current_vision = you.normal_vision;
 
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_METEORAN)
         you.current_vision -= max(0, (bezotting_level() - 1) * 2); // spooky fx
+#endif
 
     // scarf of shadows gives -1.
     if (you.wearing_ego(EQ_CLOAK, SPARM_SHADOWS))
@@ -1172,8 +1174,11 @@ static int _player_bonus_regen()
         rr += you.props[POWERED_BY_DEATH_KEY].get_int() * 100;
 
     // Rampage healing grants a variable regen boost while active.
-    if (you.duration[DUR_RAMPAGE_HEAL])
+    if (you.get_mutation_level(MUT_ROLLPAGE) > 1
+        && you.duration[DUR_RAMPAGE_HEAL])
+    {
         rr += you.props[RAMPAGE_HEAL_KEY].get_int() * 65;
+    }
 
     return rr;
 }
@@ -1265,10 +1270,14 @@ int player_mp_regen()
             regen_amount += 40;
     }
 
+    // Rampage healing grants a variable regen boost while active.
+    if (you.duration[DUR_RAMPAGE_HEAL])
+        regen_amount += you.props[RAMPAGE_HEAL_KEY].get_int() * 33;
+
     if (have_passive(passive_t::jelly_regen))
     {
         // We use piety rank to avoid leaking piety info to the player.
-        regen_amount += 25 + (25 * (piety_rank(you.piety) - 1)) / 5;
+        regen_amount += 40 + (40 * (piety_rank(you.piety) - 1)) / 5;
     }
 
     return regen_amount;
@@ -4824,7 +4833,7 @@ void reset_rampage_heal_duration()
 
 void apply_rampage_heal()
 {
-    if (you.get_mutation_level(MUT_ROLLPAGE) < 2)
+    if (!you.has_mutation(MUT_ROLLPAGE))
         return;
 
     reset_rampage_heal_duration();
@@ -5165,6 +5174,11 @@ player::player()
         item.clear();
     runes.reset();
     obtainable_runes = 15;
+
+    gems_found.reset();
+    gems_shattered.reset();
+    for (int &t : gem_time_spent)
+        t = 0;
 
     spell_library.reset();
     spells.init(SPELL_NO_SPELL);

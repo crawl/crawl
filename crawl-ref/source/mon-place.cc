@@ -1778,8 +1778,8 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_UGLY_THING,      { {0, 13}, {{ BAND_UGLY_THINGS, {2, 6} }}}},
     { MONS_HELL_HOUND,      { {}, {{ BAND_HELL_HOUNDS, {2, 5} }}}},
     { MONS_JACKAL,          { {}, {{ BAND_JACKALS, {1, 4} }}}},
-    { MONS_MARGERY,         { {}, {{ BAND_HELL_KNIGHTS, {4, 8}, true }}}},
     { MONS_HELL_KNIGHT,     { {}, {{ BAND_HELL_KNIGHTS, {4, 8} }}}},
+    { MONS_MARGERY,         { {}, {{ BAND_MARGERY, {5, 7}, true }}}},
     { MONS_AMAEMON,         { {}, {{ BAND_ORANGE_DEMONS, {1, 2}, true }}}},
     { MONS_JOSEPHINE,       { {}, {{ BAND_JOSEPHINE, {3, 6}, true }}}},
     { MONS_NECROMANCER,     { {}, {{ BAND_NECROMANCER, {3, 6}, true }}}},
@@ -2206,6 +2206,18 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                   {MONS_SIMULACRUM, 1}}}},
     { BAND_HELL_KNIGHTS,        {{{MONS_HELL_KNIGHT, 3},
                                   {MONS_NECROMANCER, 1}}}},
+
+    { BAND_MARGERY,             {{{MONS_HELLEPHANT, 4},
+                                  {MONS_SEARING_WRETCH, 3}},
+
+                                {{MONS_DEEP_ELF_DEATH_MAGE, 4},
+                                 {MONS_DEEP_ELF_HIGH_PRIEST, 3}},
+
+                                {{MONS_HELL_KNIGHT, 1}},
+
+                                {{MONS_HELL_KNIGHT, 3},
+                                 {MONS_NECROMANCER, 1}}}},
+
     { BAND_POLYPHEMUS,          {{{MONS_CATOBLEPAS, 1}},
 
                                  {{MONS_DEATH_YAK, 1}}}},

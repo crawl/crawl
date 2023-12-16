@@ -1578,9 +1578,6 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
         if (this_species == SP_UNKNOWN)
             break;
 
-        if (this_species == SP_METEORAN && ng.type == GAME_TYPE_SPRINT)
-            continue;
-
         if (ng.job == JOB_UNKNOWN && !species::is_starting_species(this_species))
             continue;
 

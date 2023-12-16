@@ -1132,9 +1132,10 @@ static const vector<pop_entry> pop_generic_late_zombie =
   {  5,  15,  500, FLAT, MONS_ANACONDA },
   {  5,  15,  500, FLAT, MONS_NAGA_WARRIOR },
   {  5,  15,  500, FLAT, MONS_NAGARAJA },
-  // Tramplers
-  {  5,   8,  222, FALL, MONS_FIRE_DRAGON },
-  {  5,   8,  222, FALL, MONS_ICE_DRAGON },
+  // Draggers and tramplers
+  {  5,   8,  222, FALL, MONS_ALLIGATOR },
+  {  5,   8,  111, FALL, MONS_FIRE_DRAGON },
+  {  5,   8,  111, FALL, MONS_ICE_DRAGON },
   {  5,   8,  222, FALL, MONS_SWAMP_DRAGON },
   {  5,   8,  222, FLAT, MONS_SHADOW_DRAGON },
   {  5,   8,  222, FLAT, MONS_STORM_DRAGON },

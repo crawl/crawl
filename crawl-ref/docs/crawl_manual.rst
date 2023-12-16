@@ -969,11 +969,24 @@ achievement in any regard.
 Miscellany can often be 'Q'uivered in order to shoot via the autofire or 'f'ire
 interface, like spells and ammo.
 
-$ Gold
+$ Gold and Gems
 ========================================
 
 Gold can be used to buy items should you run across shops. There are also a
 few more esoteric uses for gold.
+
+Gems are extremely rare items found at the end of many dungeon branches. They
+are completely useless within the dungeon, and only a particularly cocky
+adventurer would set out to retrieve even one to the outside world. Zot hoards
+these gems jealously, and will spitefully smash them soon after an adventurer
+enters the branch of the dungeon in which they rest.
+
+Still, a very quick-moving adventurer might seize a gem first and keep its
+precious shards. Zot cannot track gems outside their home branches, so with
+truly astonishing speed, it might even be possible to abscond with one still
+intact... but such a feat is difficult to credit, and likely pointless besides.
+
+Once the Orb of Zot is taken, Zot will be unable to smash any gems.
 
 Artefacts
 ========================================
@@ -1627,11 +1640,12 @@ Armataurs (At)
   and swinging a powerful tail behind them. Their elephant-back armies
   terrorize the lands outside the Dungeon.
 
-  Armataurs instinctively roll when moving toward foes, getting a free move.
-  Their long, nimble tongues drink every last drop from potions, doubling their
-  effects. They have great aptitudes with armour and shields, though their body
-  shape reduces the protection offered by body armour early on. At higher levels
-  they regenerate health when rolling, making them truly resilient fighters.
+  Armataurs instinctively roll when moving toward foes, getting a free move and
+  regenerating magic. Their long, nimble tongues drink every last drop from
+  potions, doubling their effects. They have great aptitudes with armour and
+  shields, though their body shape reduces the protection offered by body armour
+  early on. At higher levels they regenerate health when rolling, making them
+  truly resilient.
 
 Gnolls (Gn)
   Gnolls are a species of caniform humanoids originally hailing from the arid
@@ -1660,10 +1674,10 @@ for, and/or add a relatively complex mechanic (or change in mechanic) to
 gameplay.
 
 Humans (Hu)
-  Humans tend to be hardworking and industrious, and learn new things quickly.
-  The Human species is the most versatile of all the species available to
-  players. Humans advance quickly in levels and have equal abilities in most
-  skills.
+  Humans are natural explorers. As they uncover new spaces in the dungeon,
+  they are refreshed and invigorated, rapidly healing and recovering magic.
+  They are also the most versatile of all species - having balanced aptitudes
+  for all skills lets them adapt to use whatever they find.
 
 Kobolds (Ko)
   Kobolds are small, mysterious creatures of unknown origin. They are well
@@ -1886,14 +1900,6 @@ Barachim (Ba)
   allow them to leap great distances. When not leaping, they are somewhat
   slow-moving, and the long sight-lines that their heritage creates can be a
   major disadvantage, but they can master almost any skill.
-
-Meteorae (Me)
-  Meteorae are the people of the heavens, fallen to earth. They possess exceptional
-  skills, an uncanny sense for the space around them, and the ability to recover
-  health and magic as they explore the dungeon. However, as creatures clearly not
-  native to the world, they are easy prey for the dark forces that hunt adventurers
-  - they have one-tenth as much time as normal before Zot finds them. (See the
-  section on 'Zot' for more.)
 
 Mummies (Mu)
   These are undead creatures who travel into the depths in search of revenge,

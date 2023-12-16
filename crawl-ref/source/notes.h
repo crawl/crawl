@@ -64,6 +64,7 @@ enum NOTE_TYPES
     NOTE_ACQUIRE_ITEM,
     NOTE_ZOT_TOUCHED,           /* needs: old mhp, new mhp */
     NOTE_DREAMSHARD,
+    NOTE_GEM_LOST,              /* needs: gem idx */
     NOTE_NUM_TYPES
 };
 

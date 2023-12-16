@@ -4474,8 +4474,10 @@ void monster::uglything_init(bool only_mutate)
 void monster::inugami_init()
 {
     hit_dice            = ghost->xl;
-    max_hit_points      = ghost->max_hp;
-    hit_points          = max_hit_points;
+    // these `max`es let an incomplete inugami be valid long enough to get
+    // fully set up
+    max_hit_points      = max(static_cast<int>(ghost->max_hp), 1);
+    hit_points          = max(max_hit_points, 1);
 }
 
 void monster::ghost_demon_init()
@@ -5474,6 +5476,8 @@ void monster::weaken(actor *attacker, int pow)
 {
     if (!has_ench(ENCH_WEAK))
         simple_monster_message(*this, " looks weaker.");
+    else
+        simple_monster_message(*this, " looks even weaker.");
 
     add_ench(mon_enchant(ENCH_WEAK, 1, attacker,
                          (pow + random2(pow + 3)) * BASELINE_DELAY));

@@ -1586,7 +1586,7 @@ ENDMAP
 
 NAME:   nooodl_orcs_dogs
 TAGS:   transparent vaults_hard
-DEPTH:  D:10-, Orc, Vaults, !Vaults:$
+DEPTH:  D:11-, Orc, Vaults, !Vaults:$
 WEIGHT: 5 (Vaults), 10
 : if you.branch() == "Vaults" then
 TAGS:   no_monster_gen

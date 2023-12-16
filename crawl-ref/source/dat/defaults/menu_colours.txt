@@ -52,6 +52,10 @@ menu += cyan:.*good_item.*
 
 # Dangerous (but still useful) items
 menu += $dangerous:.*dangerous_item.*
+menu += $dangerous:misc.*ziggurat
+
+# Evokers come after dangerous items to allow tremorstones to be properly purple
+menu += lightcyan:evoker.*
 
 # Defaults for normal items
 menu += lightblue:unidentified.*(potion|scroll|wand|jewellery|magical staff)
