@@ -2147,7 +2147,7 @@ static int _prompt_ring_to_remove()
     {
         rings.push_back(you.slot_item(eq, true));
         ASSERT(rings.back());
-        slot_chars.push_back(index_to_letter(rings.back()->link));
+        slot_chars.push_back(index_to_char(rings.back()->link));
     }
 
     if (slot_chars.size() + 2 > msgwin_lines() || ui::has_layout())
@@ -2170,7 +2170,10 @@ static int _prompt_ring_to_remove()
         if (key == '<')
             m += '<';
 
-        m += "</w> or " + rings[i]->name(DESC_INVENTORY);
+        if ('&' == slot_chars[i])
+            m += "</w> " + rings[i]->name(DESC_PLAIN);
+        else
+            m += "</w> or " + rings[i]->name(DESC_INVENTORY);
         mprf_nocap("%s", m.c_str());
     }
     flush_prev_message();
@@ -2185,6 +2188,8 @@ static int _prompt_ring_to_remove()
     do
     {
         c = getchm();
+        if ('&' == c) // Never a valid response.
+            continue;
         for (size_t i = 0; i < slot_chars.size(); i++)
         {
             if (c == slot_chars[i]
@@ -2508,8 +2513,8 @@ static equipment_type _choose_ring_slot()
 {
     clear_messages();
 
-    mprf(MSGCH_PROMPT,
-         "Put ring on which %s? (<w>Esc</w> to cancel)", you.hand_name(false).c_str());
+    mprf(MSGCH_PROMPT, "Put ring on which %s? (<w>Esc</w> to cancel)",
+         you.hand_name(false).c_str());
 
     const vector<equipment_type> slots = _current_ring_types();
     for (auto eq : slots)
@@ -2545,8 +2550,8 @@ static equipment_type _choose_ring_slot()
         for (auto eq : slots)
         {
             if (c == _ring_slot_key(eq)
-                || (you.slot_item(eq, true)
-                    && c == index_to_letter(you.slot_item(eq, true)->link)))
+                || (c != '&' && you.slot_item(eq, true)
+                    && c == index_to_char(you.slot_item(eq, true)->link)))
             {
                 eqslot = eq;
                 c = ' ';

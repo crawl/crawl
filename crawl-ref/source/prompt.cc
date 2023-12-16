@@ -363,13 +363,27 @@ double prompt_for_float(const char* prompt)
     return ret;
 }
 
-
-char index_to_letter(int the_index)
+// Allow ENDOFPACK indices.
+char index_to_char(int the_index)
 {
     ASSERT_RANGE(the_index, 0, ENDOFPACK);
-    return the_index + ((the_index < 26) ? 'a' : ('A' - 26));
+    if (the_index > 51)
+        return '&';
+    else if (the_index > 25)
+        return the_index+'A'-26;
+    else
+        return the_index+'a';
 }
 
+// Allow 52 indices.
+char index_to_letter(int the_index)
+{
+    char rtn = index_to_char(the_index);
+    ASSERT(rtn != '&');
+    return rtn;
+}
+
+// Allow 52 letters. "&" does not represent a specific index.
 int letter_to_index(int the_letter)
 {
     if (the_letter >= 'a' && the_letter <= 'z')

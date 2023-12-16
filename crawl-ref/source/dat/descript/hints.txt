@@ -567,7 +567,7 @@ selection with <w>Enter</w>.
 %%%%
 HINT_FULL_INVENTORY
 
-Sadly, your inventory is limited to 52 items, and it appears your knapsack is
+Sadly, your inventory is limited to 104 items, and it appears your knapsack is
 full. However, this is easy enough to rectify: simply <w>$cmd[CMD_DROP]</w>rop
 some of the stuff you don't need right now. In the drop menu you can then
 comfortably select which items to drop by pressing their inventory

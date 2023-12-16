@@ -209,7 +209,7 @@ namespace quiver
     int action::source_hotkey() const
     {
         if (get_item() >= 0 && is_valid())
-            return index_to_letter(get_item());
+            return index_to_char(get_item());
         return 0;
     }
 
@@ -395,7 +395,7 @@ namespace quiver
                 string verb = you.confused() ? "confused " : "";
                 verb += quiver_verb();
                 qdesc.cprintf("%s: %c) ", uppercase_first(verb).c_str(),
-                                index_to_letter(weapon.link));
+                                index_to_char(weapon.link));
             }
 
             const string prefix = item_prefix(weapon);
@@ -499,7 +499,7 @@ namespace quiver
 
                 verb += quiver_verb();
                 qdesc.cprintf("%s: %c) ", uppercase_first(verb).c_str(),
-                                weapon ? index_to_letter(weapon->link) : '-');
+                                weapon ? index_to_char(weapon->link) : '-');
             }
 
             const string prefix = weapon ? item_prefix(*weapon) : "";

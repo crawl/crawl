@@ -293,6 +293,7 @@ enum tag_minor_version
     TAG_MINOR_RAMPAGE_HEAL,        // Adjust Armataur mutations for healpage.
     TAG_MINOR_GEMS,                // Add gems.
     TAG_MINOR_NUMERIC_ITEM_SLOT,   // item_def.slot is the index, not a letter.
+    TAG_MINOR_104_INVENTORY,       // you.inv[] has 104 elements (was 52).
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

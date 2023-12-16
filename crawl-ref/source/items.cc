@@ -1627,9 +1627,9 @@ int find_free_slot(const item_def &i)
     if (slotisfree(slot))
         return slot;
 
-    // See if the item remembers where it's been. Lua code can play with
-    // this field so be extra careful.
-    if (slotisfree(i.slot))
+    // See if the item remembers where it's been (letter slots only).
+    // Lua code can play with this field so be extra careful.
+    if (52 > i.slot && slotisfree(i.slot))
         return i.slot;
 
     FixedBitVector<ENDOFPACK> disliked;
@@ -2085,6 +2085,19 @@ item_def *auto_assign_item_slot(item_def& item)
                     newslot = index;
                     break;
                 }
+            }
+            else if (i == '&') // Move to a non-letter slot; don't care which.
+            {
+                for (int j = 52; j < ENDOFPACK; ++j)
+                {
+                    if (!you.inv[j].defined())
+                    {
+                        newslot = j;
+                        break;
+                    }
+                }
+                if (overwrite && newslot == -1)
+                    newslot = ENDOFPACK-1;
             }
         }
         if (newslot != -1 && newslot != item.link)

@@ -1123,7 +1123,7 @@ static void _print_stats_wp(int y)
         text = you.unarmed_attack_name();
 
     textcolour(HUD_CAPTION_COLOUR);
-    const char slot_letter = you.weapon() ? index_to_letter(you.weapon()->link)
+    const char slot_letter = you.weapon() ? index_to_char(you.weapon()->link)
                                           : '-';
     const string slot_name = make_stringf("%c) ", slot_letter);
     CPRINTF("%s", slot_name.c_str());
@@ -2066,7 +2066,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             string colname = melded ? "darkgrey" : colour_to_str(col);
 
             const int item_idx   = you.equip[eqslot];
-            const char equip_char = index_to_letter(item_idx);
+            const char equip_char = index_to_char(item_idx);
 
             str = make_stringf(
                      "<w>%c</w> - <%s>%s%s</%s>",
@@ -2536,7 +2536,8 @@ public:
 private:
     maybe_bool process_key(int ch) override
     {
-        if (find(equip_chars.begin(), equip_chars.end(), ch) != equip_chars.end())
+        if (isaalpha(ch) && equip_chars.end() !=
+                            find(equip_chars.begin(), equip_chars.end(), ch))
         {
             item_def& item = you.inv[letter_to_index(ch)];
             return describe_item(item);

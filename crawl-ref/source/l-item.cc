@@ -1260,7 +1260,7 @@ static int l_item_inventory(lua_State *ls)
     return 1;
 }
 
-/*** Get the inventory letter of a slot number.
+/*** Get the inventory character of a slot number.
  * @tparam int idx
  * @treturn string
  * @function index_to_letter
@@ -1270,7 +1270,7 @@ static int l_item_index_to_letter(lua_State *ls)
     int index = luaL_safe_checkint(ls, 1);
     char sletter[2] = "?";
     if (index >= 0 && index <= ENDOFPACK)
-        *sletter = index_to_letter(index);
+        *sletter = index_to_char(index);
     lua_pushstring(ls, sletter);
     return 1;
 }
@@ -1469,7 +1469,7 @@ static int l_item_fired_item(lua_State *ls)
 static int l_item_inslot(lua_State *ls)
 {
     int index = luaL_safe_checkint(ls, 1);
-    if (index >= 0 && index < 52 && you.inv[index].defined())
+    if (index >= 0 && index < ENDOFPACK && you.inv[index].defined())
         clua_push_item(ls, &you.inv[index]);
     else
         lua_pushnil(ls);

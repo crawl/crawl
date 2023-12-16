@@ -399,7 +399,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
             return;
 
         // Have we received the inventory yet?
-        // Note: an empty inventory will still have 52 empty slots.
+        // Note: an empty inventory will still have 104 empty slots.
         var inventory_initialized = Object.values(player.inv).length;
         if (!inventory_initialized)
         {

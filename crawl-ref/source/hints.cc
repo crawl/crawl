@@ -2020,7 +2020,7 @@ static string _hints_throw_stuff(const item_def &item)
     string result;
 
     result  = "To do this, press <w>%</w> to fire, then ";
-    if (item.slot >= 0)
+    if (item.slot >= 0 && item.slot < 52)
     {
         result += "<w>";
         result += index_to_letter(item.slot);

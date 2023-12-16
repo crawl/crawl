@@ -97,9 +97,12 @@ InvEntry::InvEntry(const item_def &i)
     }
 
     if (i.base_type != OBJ_GOLD && in_inventory(i))
-        add_hotkey(index_to_letter(i.link));
+        add_hotkey(index_to_char(i.link));
     else
         add_hotkey(' ');        // dummy hotkey
+
+    if (i.link == you.last_unequip)
+        add_hotkey(';');
 
     add_class_hotkeys(i);
 
@@ -378,12 +381,6 @@ int InvMenu::pre_process(int key)
         _mode_special_drop = !_mode_special_drop;
         key = CK_NO_KEY;
     }
-    else if (key == ';'
-             && you.last_unequip != -1
-             && (type == menu_type::drop || type == menu_type::invlist))
-    {
-        key = index_to_letter(you.last_unequip);
-    }
     else if (key == '-')
         _mode_special_drop = false;
     return key;
@@ -433,21 +430,11 @@ bool InvMenu::examine_index(int i)
     // case call on_examine.
     if (!ie || on_examine)
         return Menu::examine_index(i);
-    else if (type == menu_type::pickup)
+    else if (type == menu_type::pickup || ie->hotkeys.size())
     {
-        // item is a floor item.
         auto desc_tgt = const_cast<item_def*>(ie->item);
         ASSERT(desc_tgt);
         return describe_item(*desc_tgt, nullptr, do_actions);
-    }
-    else if (ie->hotkeys.size())
-    {
-        // default behavior: examine inv item. You must override or use on_examine
-        // if your items come from somewhere else, or this will cause crashes!
-        unsigned char select = ie->hotkeys[0];
-        const int invidx = letter_to_index(select);
-        ASSERT(you.inv[invidx].defined());
-        return describe_item(you.inv[invidx], nullptr, do_actions);
     }
     // nothing to describe, ignore
     return true;

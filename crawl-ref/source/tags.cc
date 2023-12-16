@@ -4269,7 +4269,7 @@ static void _tag_read_you_items(reader &th)
 
     // how many inventory slots?
     count = unmarshallByte(th);
-    ASSERT(count == ENDOFPACK); // not supposed to change
+    ASSERT(count <= ENDOFPACK);
 #if TAG_MAJOR_VERSION == 34
     string bad_slots;
 #endif
@@ -4285,7 +4285,7 @@ static void _tag_read_you_items(reader &th)
             // search would change the position of items in inventory.
             if (it.pos != ITEM_IN_INVENTORY)
             {
-                bad_slots += index_to_letter(i);
+                bad_slots += index_to_char(i);
                 it.pos = ITEM_IN_INVENTORY;
             }
 

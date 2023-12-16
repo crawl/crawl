@@ -472,7 +472,7 @@ auto-explore will usually save real time.
 Stashes and Searching
 ========================================
 
-Since you can only carry 52 items, you will occasionally want to stash things
+Since you can only carry 104 items, you will occasionally want to stash things
 away (by dropping them with the 'd' command). When you want to search for
 something in your stashes, you can do this with the Find command 'Ctrl-F'. The
 parser even accepts regular expressions, although you will mostly just need
@@ -756,7 +756,7 @@ unusual. When the inventory screen shows "-more-", to show you that there is
 another page of items, you can type the letter of the item you want, even if it
 is not visible, instead of pressing Space or Enter to see the next page.
 
-You can carry at most 52 items at once, and your item slot usage is printed at
+You can carry at most 104 items at once, and your item slot usage is printed at
 the top of the inventory screen.
 
 You can use the adjust command (the '=' key) to change the letters to which your
