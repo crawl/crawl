@@ -4749,7 +4749,11 @@ int gems_found()
 
 int gems_lost()
 {
-    return static_cast<int>(you.gems_shattered.count());
+    int count = 0;
+    for (int i = 0; i < NUM_GEM_TYPES; i++)
+        if (you.gems_found[i] && you.gems_shattered[i])
+            count += 1;
+    return count;
 }
 
 int gems_held_intact()
