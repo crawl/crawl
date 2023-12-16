@@ -248,11 +248,11 @@ Calls forth a minor demon from the pits of Hell, equipped with a spear with
 which to jab at the caster's enemies. The quality of the imp's weaponry rises
 with spell power.
 %%%%
-Call Lost Soul spell
+Call Lost Souls spell
 
-Summons a necromantic spectre. These lost souls can enter the bodies of more
+Summons some necromantic spectres. These lost souls can enter the bodies of more
 powerful undead to bring them back from brink of demise, or turn dying living
-creatures into spectral versions of themselves.
+creatures into ghostly versions of themselves.
 %%%%
 Call of Chaos spell
 

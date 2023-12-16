@@ -3039,7 +3039,7 @@ string summoned_poof_msg(const monster* mons, bool plural)
         break;
 
     case SPELL_SPECTRAL_CLOUD:
-    case SPELL_CALL_LOST_SOUL:
+    case SPELL_CALL_LOST_SOULS:
         msg = "fade%s away";
         break;
     }

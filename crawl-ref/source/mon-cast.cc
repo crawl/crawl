@@ -1761,7 +1761,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BATTLESPHERE:
     case SPELL_WORD_OF_RECALL:
     case SPELL_INJURY_BOND:
-    case SPELL_CALL_LOST_SOUL:
+    case SPELL_CALL_LOST_SOULS:
     case SPELL_BLINK_ALLIES_ENCIRCLE:
     case SPELL_MASS_CONFUSION:
     case SPELL_ENGLACIATION:
@@ -6267,10 +6267,15 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
-    case SPELL_CALL_LOST_SOUL:
-        create_monster(mgen_data(MONS_LOST_SOUL, SAME_ATTITUDE(mons),
-                                 mons->pos(), mons->foe)
-                       .set_summoned(mons, 2, spell_cast, god));
+    case SPELL_CALL_LOST_SOULS:
+        sumcount2 = x_chance_in_y(3, 4) ? 2 : 3;
+
+        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        {
+            create_monster(mgen_data(MONS_LOST_SOUL, SAME_ATTITUDE(mons),
+                                     mons->pos(), mons->foe)
+                           .set_summoned(mons, 2, spell_cast, god));
+        }
         return;
 
     case SPELL_BLINK_ALLIES_ENCIRCLE:

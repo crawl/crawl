@@ -2114,7 +2114,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_CALL_LOST_SOUL, "Call Lost Soul",
+    SPELL_CALL_LOST_SOULS, "Call Lost Souls",
     spschool::summoning | spschool::necromancy,
     spflag::unholy | spflag::monster,
     5,
