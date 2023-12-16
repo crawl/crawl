@@ -1174,8 +1174,11 @@ static int _player_bonus_regen()
         rr += you.props[POWERED_BY_DEATH_KEY].get_int() * 100;
 
     // Rampage healing grants a variable regen boost while active.
-    if (you.duration[DUR_RAMPAGE_HEAL])
+    if (you.get_mutation_level(MUT_ROLLPAGE) > 1
+        && you.duration[DUR_RAMPAGE_HEAL])
+    {
         rr += you.props[RAMPAGE_HEAL_KEY].get_int() * 65;
+    }
 
     return rr;
 }
@@ -1266,6 +1269,10 @@ int player_mp_regen()
         if (player_equip_unrand(UNRAND_VITALITY))
             regen_amount += 40;
     }
+
+    // Rampage healing grants a variable regen boost while active.
+    if (you.duration[DUR_RAMPAGE_HEAL])
+        regen_amount += you.props[RAMPAGE_HEAL_KEY].get_int() * 33;
 
     if (have_passive(passive_t::jelly_regen))
     {
@@ -4826,7 +4833,7 @@ void reset_rampage_heal_duration()
 
 void apply_rampage_heal()
 {
-    if (you.get_mutation_level(MUT_ROLLPAGE) < 2)
+    if (!you.has_mutation(MUT_ROLLPAGE))
         return;
 
     reset_rampage_heal_duration();
