@@ -1017,8 +1017,7 @@ prismatic gem
 [[gem]]
 
 Shining with every colour of the rainbow and a few others besides, some
-consider this gem the greatest treasure of the living world. Others term it 'a
-bit tacky'.
+consider this gem 'a bit tacky'. Preposterous!
 %%%%
 quad damage
 
