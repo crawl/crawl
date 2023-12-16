@@ -166,8 +166,8 @@ force_more_message += With a soft hiss the gate opens wide
 force_more_message += The door slams shut behind you
 
 # Gems
-force_more_message += Zot will find and shatter your .* gem
-force_more_message += Zot senses the otherworldly energies of .* gem
+force_more_message += Zot will shatter your .* gem
+force_more_message += Zot senses .* your .* gem
 
 # God gifts
 force_more_message += grants you (a gift|throwing weapons|a weapon)
