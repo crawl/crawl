@@ -1277,7 +1277,7 @@ int player_mp_regen()
     if (have_passive(passive_t::jelly_regen))
     {
         // We use piety rank to avoid leaking piety info to the player.
-        regen_amount += 25 + (25 * (piety_rank(you.piety) - 1)) / 5;
+        regen_amount += 40 + (40 * (piety_rank(you.piety) - 1)) / 5;
     }
 
     return regen_amount;
