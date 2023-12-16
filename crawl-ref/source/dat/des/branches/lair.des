@@ -3157,14 +3157,13 @@ MONS:    spectral death yak w:20 / death yak simulacrum w:20 \
 MONS:    dire elephant, patrolling necromancer, obsidian statue
 # The anaconda's name is Kaa.
 KMONS:   R = spectral anaconda
-KITEM:   R = earthy gem
 # A necromancy-themed loot item behind the obsidian statue.
 ITEM:    rapier ego:pain w:5 / rapier ego:draining w:5 \
          / quickblade ego:pain w:5 / quickblade ego:draining w:5 \
          / demon blade ego:draining / sword of zonguldruk w:1 \
          / great sword ego:draining / triple sword ego:draining \
          / demon whip ego:pain w:5 / demon whip ego:draining w:5 \
-         / eveningstar ego:draining / scetpre of torment w:1 \
+         / eveningstar ego:draining / sceptre of torment w:1 \
          / great mace ego:draining / majin-bo w:1 / lajatang ego:draining \
          / broad axe ego:draining / battleaxe ego:draining \
          / executioner's axe ego:draining / shadow dragon scales \
@@ -3173,6 +3172,7 @@ ITEM:    rapier ego:pain w:5 / rapier ego:draining w:5 \
          / book of necromancy / book of death / book of unlife \
          / randbook owner:Kikubaaqudgha disc:necromancy \
          / necronomicon w:1
+KITEM:   & = |, earthy gem
 KFEAT:   R = deep_water
 KFEAT:   s = closed_clear_door
 # Thin out elephant/dire elephant bands of central necromancers a bit.
@@ -3209,7 +3209,7 @@ xxqtq....MM..qrcc                           ccccc
 xx...qrrqr..r..rcccccccccccccccccccccccccccccaaGttq.
 xq.qttcccc++c++ccccccccccccccccccccccccccccaaaKKJttqq.
 xt7ttccccG--c..OOGcc.WWccGqqqGccqqqccQQ.....qqGKKGttt.
-cnsncccccp-pcq.OON+..WwW+.55%|cG.2..+QQQqqc.cq.Kaaatq.
+cnsncccccp-pcq.OON+..WwW+.55%&cG.2..+QQQqqc.cq.Kaaatq.
 cndnccccc-c-ccccOGcqWwwR+.56**c|$22.cPqcccc---caaccc..
 cnnnccccc+cp--pccccqwwwwcG5qqGc*%22.cccc---pc+ccccccc.
 ccccGEEqq.cccc---pcWWWWqccnnnccG62qqcp--pcccc.qqHHGcc.
