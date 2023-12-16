@@ -84,12 +84,15 @@ struct base_colour_calc
     string name;
 
     virtual int get(const coord_def& loc = coord_def(),
-                    bool non_random = false) = 0;
+                    bool non_random = false) const = 0;
+    /// If this is a sequence of colours, get the nth one (modulo), ignoring
+    /// weights. Otherwise, pick a random colour for the player's position.
+    virtual int get_nth(int n) const = 0;
 
 protected:
     int rand_max {120}; // 0-119 is the range of randomness promised to
                         // Lua colour functions.
-    int rand(bool non_random);
+    int rand(bool non_random) const;
 };
 
 
@@ -101,7 +104,8 @@ struct element_colour_calc : public base_colour_calc
     virtual ~element_colour_calc() {}
 
     int get(const coord_def& loc = coord_def(),
-            bool non_random = false) override;
+            bool non_random = false) const override;
+    int get_nth(int n) const override;
 
 protected:
     element_colour_calculator calc;
