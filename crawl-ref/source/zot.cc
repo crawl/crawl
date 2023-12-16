@@ -309,7 +309,7 @@ void incr_gem_clock()
     const int old_time_taken = time_taken;
     time_taken += you.time_taken;
 
-    //if (you.gems_found[gem])
+    if (you.gems_found[gem])
         print_gem_warnings(gem, old_time_taken);
 
     if (time_taken < limit)
