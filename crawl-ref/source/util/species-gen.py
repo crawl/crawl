@@ -124,7 +124,7 @@ class Species(MutableMapping):
         self['hp'] = validate_int_range(s['aptitudes']['hp'], 'hp', -10, 10)
         self['mp'] = validate_int_range(s['aptitudes']['mp_mod'], 'mp_mod',
                                                                         -5, 20)
-        self['mr'] = validate_int_range(s['aptitudes']['mr'], 'mr', 0, 20)
+        self['wl'] = validate_int_range(s['aptitudes']['wl'], 'wl', 0, 20)
         self['aptitudes'] = aptitudes(s['aptitudes'])
         self['habitat'] = 'HT_LAND' if not s.get('can_swim') else 'HT_WATER'
         self['undead'] = undead_type(s.get('undead_type', 'US_ALIVE'))
@@ -320,7 +320,7 @@ def fake_mutations_short(fmut_def):
 
 def aptitudes(apts):
     for apt, val in apts.items():
-        if apt not in ALL_APTITUDES and apt not in ('xp', 'hp', 'mp_mod', 'mr'):
+        if apt not in ALL_APTITUDES and apt not in ('xp', 'hp', 'mp_mod', 'wl'):
             raise ValueError("Unknown aptitude (typo?): %s" % apt)
         validate_int_range(val, apt, -10, 20)
     return apts
@@ -351,7 +351,7 @@ def generate_aptitudes_data(s, template):
     # in YAML. The latter is UNUSABLE_SKILL.
     aptitudes = {apt: 0 for apt in ALL_APTITUDES}
     for apt, val in s['aptitudes'].items():
-        if apt in ('xp', 'hp', 'mp_mod', 'mr'):
+        if apt in ('xp', 'hp', 'mp_mod', 'wl'):
             continue
         if val is False:
             aptitudes[apt] = 'UNUSABLE_SKILL'
