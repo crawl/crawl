@@ -1370,13 +1370,16 @@ static void _protean_explosion(monster* mons)
     }
 
     // Determine number of children based on the HD of what we roll.
-    // HD >= 12 generates 2
-    // HD 10-11 generates 2-3
-    // HD < 10 generates 3
+    // HD >= 12 generates 2, HD 11 generates 2-3,
+    // HD 10-9 generates 3, HD < 9 generates 4.
+    // (Going down that far should be extremely rare, but
+    //  polymorph code is weird.)
     int num_children = 2;
-    if (mons_class_hit_dice(target) < 12 && coinflip())
+    if (mons_class_hit_dice(target) < 9)
+        num_children += 2;
+    else if (mons_class_hit_dice(target) < 11)
         ++num_children;
-    else if (mons_class_hit_dice(target) < 10)
+    else if (mons_class_hit_dice(target) < 12 and coinflip())
         ++num_children;
 
     // Then create and scatter the piles around
@@ -1420,7 +1423,7 @@ static void _protean_explosion(monster* mons)
             mons_add_blame(child, "spawned from " + mons->name(DESC_A, true));
 
             // Make each one shift a little later than the last
-            delay += random_range(1, 3) * BASELINE_DELAY;
+            delay += random_range(1, 2) * BASELINE_DELAY;
         }
     }
 }

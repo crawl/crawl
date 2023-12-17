@@ -2090,7 +2090,7 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
         break;
 
     case MONS_PROTEAN_PROGENITOR:
-        if (one_chance_in(3))
+        if (x_chance_in_y(2, 3))
             band_size = 1;
         break;
 
