@@ -368,51 +368,6 @@ static const map<spschool, miscast_datum> miscast_effects = {
         },
     },
     {
-        spschool::transmutation,
-        {
-            BEAM_NONE,
-            {
-                "Multicoloured lights dance before your eyes",
-                "You feel a strange surge of energy",
-                "Strange energies run through your body",
-                "Your body is twisted painfully",
-                "Your limbs ache and wobble like jelly",
-                "Your body is flooded with distortional energies",
-                "You feel very strange",
-            },
-            {
-                "The air around @the_monster@ crackles with energy",
-                "Multicoloured lights dance around @the_monster@",
-                "There is a strange surge of energy around @the_monster@",
-                "Waves of light ripple over @the_monster@'s body",
-                "@The_monster@ twitches",
-                "@The_monster@'s body glows momentarily",
-                "@The_monster@'s body twists unnaturally",
-                "@The_monster@'s body twists and writhes",
-                "@The_monster@'s body is flooded with distortional energies",
-            },
-            {
-                "The thin air crackles with energy",
-                "Multicoloured lights dance in the air",
-                "Waves of light ripple in the air",
-            },
-            [] (actor& target, actor* /*source*/,
-                miscast_source_info /*mc_info*/, int dam, string cause) {
-
-                // Double existing contamination, plus more from the damage
-                // roll
-                if (target.is_player())
-                {
-                    contaminate_player(you.magic_contamination
-                                       + dam * MISCAST_DIVISOR, true);
-                }
-                else
-                    target.malmutate(cause);
-            }
-
-        },
-    },
-    {
         spschool::fire,
         {
             BEAM_FIRE,

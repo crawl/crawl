@@ -791,13 +791,20 @@ static void _NIGHT_unequip(item_def */*item*/, bool *show_msgs)
 
 ///////////////////////////////////////////////////
 
+static const vector<string> plutonium_player_msg = {
+    "Your body deforms painfully.",
+    "Your limbs ache and wobble like jelly.",
+    "Your body is flooded with magical radiation.",
+};
+
 static void _PLUTONIUM_SWORD_melee_effects(item_def* /*weapon*/,
                                            actor* attacker, actor* defender,
-                                           bool mondied, int dam)
+                                           bool mondied, int /*dam*/)
 {
     if (!mondied && one_chance_in(5) && defender->can_mutate())
     {
-        mpr("Mutagenic energy flows through the plutonium sword!");
+        if (you.can_see(*attacker))
+            mpr("Mutagenic energy flows through the plutonium sword!");
 
         if (attacker->is_player())
             did_god_conduct(DID_CHAOS, 3);
@@ -806,9 +813,22 @@ static void _PLUTONIUM_SWORD_melee_effects(item_def* /*weapon*/,
             defender->polymorph(0); // Low duration if applied to the player.
         else
         {
-            miscast_effect(*defender, attacker, {miscast_source::melee},
-                           spschool::transmutation, 5, random2(dam),
-                           "the plutonium sword");
+            if (defender->is_monster())
+            {
+                // Inflict damage and mutation, approximating old miscast effects.
+                int dmg = random_range(5, 25);
+                defender->malmutate("the plutonium sword");
+                defender->hurt(attacker, dmg);
+            }
+            else
+            {
+                mpr(*random_iterator(plutonium_player_msg));
+
+                // Inflict damage and mutation, approximating old miscast effects.
+                int dmg = random_range(5, 25);
+                contaminate_player(random_range(3500, 6500));
+                defender->hurt(attacker, dmg);
+            }
         }
     }
 }
