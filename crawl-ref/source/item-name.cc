@@ -2142,13 +2142,25 @@ static string _gem_parenthetical(gem_type gem)
 {
     string text = " (";
     text += branches[branch_for_gem(gem)].longname;
-    if (!gem_clock_active())
-        return text + ")";
 
     const int lim = gem_time_limit(gem);
     const int left = lim - you.gem_time_spent[gem];
+
+    // We need to check time left rather than shattered, since the latter is
+    // only set when the gem is actually broken, and we may not have loaded
+    // the relevant level since we ran out of time.
     if (left <= 0)
-        return text + ", shattered)";
+    {
+        if (Options.more_gem_info || !you.gems_found[gem])
+            return text + ", shattered)";
+        return text + ")";
+    }
+
+    if (!gem_clock_active()
+        || !Options.more_gem_info && you.gems_found[gem])
+    {
+        return text + ")";
+    }
 
     // Rescale from aut to dAut. Round up.
     text += make_stringf(", %d", (left + 9) / 10);
@@ -2300,7 +2312,7 @@ string RuneMenu::gem_title()
     const int found = gems_found();
     const int lost = gems_lost();
     string title = make_stringf("<white>Gems (%d collected", found);
-    if (lost < found)
+    if (Options.more_gem_info && lost < found)
         title += make_stringf(", %d intact", found - lost);
     // don't explicitly mention that your gems are all broken otherwise - sad!
 
@@ -2317,7 +2329,7 @@ void RuneMenu::set_footer()
             "|<w>Right-click</w>"
 #endif
             "]: %s", show_gems ? "Show Runes" : "Show Gems");
-    if (can_show_more_gems())
+    if (!Options.more_gem_info && can_show_more_gems())
         more_text += make_stringf("\n[<w>-</w>]: %s", more_gems ? "Less" : "More");
     set_more(more_text);
 }
@@ -2409,8 +2421,13 @@ void RuneMenu::set_gems()
         if (gem == NUM_GEM_TYPES)
             continue;
 
-        if (!more_gems && you.gems_shattered[gem] && !you.gems_found[gem])
+        if (!Options.more_gem_info
+            && !more_gems
+            && you.gems_shattered[gem]
+            && !you.gems_found[gem])
+        {
             continue;
+        }
 
         item_def item;
         item.base_type = OBJ_GEMS;

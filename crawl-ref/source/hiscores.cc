@@ -1996,14 +1996,17 @@ string scorefile_entry::gems_desc() const
     desc += make_stringf("... %s %d gem%s",
              (death_type == KILLED_BY_WINNING) ? "and" : "with",
               gems_found, (gems_found > 1) ? "s" : "");
-    if (gems_intact == 1 && gems_found == 1)
-        desc += " (intact!)";
-    else if (gems_intact == 2 && gems_found == 2)
-        desc += " (both intact!)";
-    else if (gems_intact == gems_found)
-        desc += " (all intact!)";
-    else
-        desc += make_stringf(" (%d intact!)", gems_intact);
+    if (Options.more_gem_info)
+    {
+        if (gems_intact == 1 && gems_found == 1)
+            desc += " (intact!)";
+        else if (gems_intact == 2 && gems_found == 2)
+            desc += " (both intact!)";
+        else if (gems_intact == gems_found)
+            desc += " (all intact!)";
+        else
+            desc += make_stringf(" (%d intact!)", gems_intact);
+    }
 
     if (num_runes < 1)
         desc += ".";

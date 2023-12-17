@@ -17,7 +17,7 @@
 #include "item-prop.h"
 #include "message.h"
 #include "notes.h" // NOTE_MESSAGE
-#include "options.h" // UA_PICKUP
+#include "options.h" // UA_PICKUP, more_gem_info
 #include "state.h"
 #include "stringutil.h" // make_stringf
 #include "view.h" // flash_view_delay
@@ -267,7 +267,7 @@ static void _shatter_floor_gem(gem_type gem, bool quiet = false)
             destroy_item(si.index());
             you.gems_shattered.set(gem);
 
-            if (!quiet && you.see_cell(*ri))
+            if (!quiet && Options.more_gem_info && you.see_cell(*ri))
             {
                 mprf("With a frightful flash, the power of Zot shatters the %s"
                      " gem into ten thousand fragments!", gem_adj(gem));
@@ -283,6 +283,9 @@ static void _shatter_floor_gem(gem_type gem, bool quiet = false)
 
 void print_gem_warnings(int gem_int, int old_time_taken)
 {
+    if (!Options.more_gem_info)
+        return;
+
     gem_type gem = static_cast<gem_type>(gem_int);
     if (gem == NUM_GEM_TYPES)
         return;
@@ -364,6 +367,9 @@ void maybe_break_floor_gem()
 
 string gem_status()
 {
+    if (!Options.more_gem_info)
+        return "";
+
     const gem_type gem = gem_for_branch(you.where_are_you);
     if (gem == NUM_GEM_TYPES
         || !you.gems_found[gem]
