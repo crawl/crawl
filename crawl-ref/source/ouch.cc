@@ -994,7 +994,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         dam = _apply_extra_harm(dam, source);
 
         if (you.duration[DUR_VITRIFIED])
-            dam = dam * 130 / 100;
+            dam = dam * 150 / 100;
     }
 
 #if TAG_MAJOR_VERSION == 34

@@ -1444,9 +1444,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_CACODEMON,
       {
-       { SPELL_ENERGY_BOLT, 13, MON_SPELL_MAGICAL },
-       { SPELL_SLOW, 13, MON_SPELL_MAGICAL },
-       { SPELL_CONFUSE, 13, MON_SPELL_MAGICAL },
+       { SPELL_ENERGY_BOLT, 20, MON_SPELL_MAGICAL },
+       { SPELL_VITRIFY, 20, MON_SPELL_MAGICAL },
        { SPELL_MALMUTATE, 13, MON_SPELL_MAGICAL },
        { SPELL_DIG, 13, MON_SPELL_MAGICAL },
       }

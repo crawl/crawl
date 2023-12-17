@@ -27,6 +27,7 @@ msc += $danger:You feel a build-up of mutagenic energy
 msc += $danger:place you under penance
 msc += $danger:cause instant excommunication
 msc += $danger:corrodes you
+msc += $danger:Your body becomes as fragile as glass
 
 # Less urgent, but still significant messages
 #

@@ -278,7 +278,7 @@ static const duration_def duration_data[] =
         {}, 1},
     { DUR_VITRIFIED,
       RED, "Fragile",
-      "fragile", "vitrified",
+      "fragile (+50% incoming damage)", "vitrified",
       "You are fragile as glass.", D_DISPELLABLE,
       {{ "You feel less fragile." }}},
     { DUR_RESISTANCE,

@@ -1584,10 +1584,10 @@ damage bypasses cold resistance.
 Throw Klown Pie spell
 
 Throws a harmful yet strangely delicious pie that can inflict its victim with a
-number of debilitating temporary effects. These include inducing vertigo,
-silence, fire vulnerability, stat drain, or an aversion to drinking potions.
-The dreaded moon pie can even turn you into a bat, a hog, or an insubstantial
-wisp!
+number of irresistable and debilitating temporary effects. These include
+inducing vertigo, silence, fire vulnerability, stat drain, or an aversion to
+drinking potions. The dreaded clear moon pie will even make any adventurer as
+fragile as its delicate flaky crust.
 %%%%
 Thunderbolt spell
 

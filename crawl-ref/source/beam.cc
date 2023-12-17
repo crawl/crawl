@@ -3563,7 +3563,7 @@ void bolt::affect_player_enchantment(bool resistible)
     case BEAM_VITRIFY:
         if (!you.duration[DUR_VITRIFIED])
             mpr("Your body becomes as fragile as glass!");
-        you.increase_duration(DUR_VITRIFIED, 10 + random2(16), 50);
+        you.increase_duration(DUR_VITRIFIED, random_range(8, 18), 50);
         obvious_effect = true;
         break;
 
@@ -3572,7 +3572,7 @@ void bolt::affect_player_enchantment(bool resistible)
             mpr("Your body becomes as fragile as glass!");
         else
             mpr("You feel your fragility will last longer.");
-        you.increase_duration(DUR_VITRIFIED, 6 + random2(5), 50);
+        you.increase_duration(DUR_VITRIFIED, random_range(4, 8), 50);
         obvious_effect = true;
         break;
 
@@ -3834,12 +3834,24 @@ static const vector<pie_effect> pie_effects = {
         6
     },
     {
-        "moon pie",
-        [](const actor &defender) {
-            return defender.can_polymorph();
-        },
+        "clear moon pie",
+        nullptr,
         [](actor &defender, const bolt &/*beam*/) {
-            defender.polymorph(100, false);
+            if (defender.is_monster())
+            {
+                monster *mons = defender.as_monster();
+                simple_monster_message(*mons,
+                    " becomes as fragile as glass!");
+            }
+            else
+            {
+                if (you.duration[DUR_VITRIFIED])
+                    mpr("You feel your fragility will last longer.");
+                else
+                    mpr("Your body becomes as fragile as glass!");
+
+                you.increase_duration(DUR_VITRIFIED, 8 + random2(11), 50);
+            }
         },
         4
     },
@@ -5814,7 +5826,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_VITRIFY:
         if (!mon->has_ench(ENCH_VITRIFIED)
             && mon->add_ench(mon_enchant(ENCH_VITRIFIED, 0, agent(),
-                                         random_range(20, 30) * BASELINE_DELAY)))
+                                         random_range(8, 16) * BASELINE_DELAY)))
         {
             if (you.can_see(*mon))
             {
@@ -5830,7 +5842,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         bool had_status = mon->has_ench(ENCH_VITRIFIED);
 
         if (mon->add_ench(mon_enchant(ENCH_VITRIFIED, 0, agent(),
-                                  random_range(6, 10) * BASELINE_DELAY)))
+                                  random_range(4, 8) * BASELINE_DELAY)))
         {
             if (you.can_see(*mon))
             {
