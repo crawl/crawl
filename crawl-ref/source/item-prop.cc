@@ -2038,8 +2038,8 @@ skill_type staff_skill(stave_type s)
         return SK_EARTH_MAGIC;
     case STAFF_FIRE:
         return SK_FIRE_MAGIC;
-    case STAFF_POISON:
-        return SK_POISON_MAGIC;
+    case STAFF_ALCHEMY:
+        return SK_ALCHEMY;
     case STAFF_DEATH:
         return SK_NECROMANCY;
     case STAFF_CONJURATION:
@@ -2932,7 +2932,7 @@ bool gives_resistance(const item_def &item)
     case OBJ_STAVES:
         if (item.sub_type == STAFF_FIRE
             || item.sub_type == STAFF_COLD
-            || item.sub_type == STAFF_POISON
+            || item.sub_type == STAFF_ALCHEMY
             || item.sub_type == STAFF_AIR
             || item.sub_type == STAFF_DEATH)
         {

@@ -935,9 +935,9 @@ no necromancy magic mutation
 
 Your Necromancy skill is 0 and you cannot train the skill.
 %%%%
-no poison magic mutation
+no alchemy magic mutation
 
-Your Poison Magic skill is 0 and you cannot train the skill.
+Your Alchemy skill is 0 and you cannot train the skill.
 %%%%
 no summoning magic mutation
 
@@ -946,8 +946,4 @@ Your Summoning skill is 0 and you cannot train the skill.
 no translocations magic mutation
 
 Your Translocations skill is 0 and you cannot train the skill.
-%%%%
-no transmutations magic mutation
-
-Your Transmutations skill is 0 and you cannot train the skill.
 %%%%

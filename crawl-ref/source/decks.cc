@@ -1589,8 +1589,7 @@ static void _wild_magic_card(int power)
                                           spschool::ice,
                                           spschool::earth,
                                           spschool::air,
-                                          spschool::poison,
-                                          spschool::transmutation,
+                                          spschool::alchemy,
                                           spschool::hexes,
                                           spschool::necromancy);
 

@@ -229,7 +229,7 @@ static void _THROATCUTTER_melee_effects(item_def* /*weapon*/, actor* attacker,
 ////////////////////////////////////////////////////
 
 // XXX: Staff giving a boost to poison spells is hardcoded in
-// player_spec_poison()
+// player_spec_alchemy()
 
 static void _OLGREB_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {

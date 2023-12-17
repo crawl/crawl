@@ -1725,7 +1725,7 @@ static void _setup_fallback_randart(const int unrand_id,
     {
         item.base_type = OBJ_STAVES;
         if (unrand_id == UNRAND_OLGREB)
-            force_type = STAFF_POISON;
+            force_type = STAFF_ALCHEMY;
         else
             force_type = OBJ_RANDOM;
         // XXX: small chance of other unrands under some circumstances...

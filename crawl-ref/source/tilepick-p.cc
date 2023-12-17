@@ -943,7 +943,7 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             break;
 
-        case JOB_VENOM_MAGE:
+        case JOB_ALCHEMIST:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_GREEN;
             parts[TILEP_PART_HAND1] = TILEP_HAND1_GANDALF;
             parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_GREEN_DIM;

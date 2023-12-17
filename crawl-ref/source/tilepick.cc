@@ -1892,7 +1892,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             // (enhancer staves are compatible with those).
             const item_def* weapon = mon.inv[MSLOT_WEAPON].get();
             if (!mon.inv[MSLOT_SHIELD] && weapon
-                && (weapon->is_type(OBJ_STAVES, STAFF_POISON)
+                && (weapon->is_type(OBJ_STAVES, STAFF_ALCHEMY)
                     || is_unrandom_artefact(*weapon, UNRAND_OLGREB)))
             {
                 return base;
@@ -3419,12 +3419,11 @@ tileidx_t tileidx_skill(skill_type skill, int train)
         ch = you.religion == GOD_KIKUBAAQUDGHA ? TILEG_NECROMANCY_K_ON
                                                : TILEG_NECROMANCY_ON; break;
     case SK_TRANSLOCATIONS: ch = TILEG_TRANSLOCATIONS_ON; break;
-    case SK_TRANSMUTATIONS: ch = TILEG_TRANSMUTATIONS_ON; break;
     case SK_FIRE_MAGIC:     ch = TILEG_FIRE_MAGIC_ON; break;
     case SK_ICE_MAGIC:      ch = TILEG_ICE_MAGIC_ON; break;
     case SK_AIR_MAGIC:      ch = TILEG_AIR_MAGIC_ON; break;
     case SK_EARTH_MAGIC:    ch = TILEG_EARTH_MAGIC_ON; break;
-    case SK_POISON_MAGIC:   ch = TILEG_POISON_MAGIC_ON; break;
+    case SK_ALCHEMY:        ch = TILEG_TRANSMUTATIONS_ON; break;
     case SK_EVOCATIONS:     ch = TILEG_EVOCATIONS_ON; break;
     case SK_SHAPESHIFTING:  ch = TILEG_SHAPESHIFTING_ON; break;
     case SK_INVOCATIONS:
@@ -4076,8 +4075,8 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_AIR_ELEMENTALIST;
         case JOB_EARTH_ELEMENTALIST:
             return TILEG_JOB_EARTH_ELEMENTALIST;
-        case JOB_VENOM_MAGE:
-            return TILEG_JOB_VENOM_MAGE;
+        case JOB_ALCHEMIST:
+            return TILEG_JOB_ALCHEMIST;
         case JOB_CHAOS_KNIGHT:
             return TILEG_JOB_CHAOS_KNIGHT;
         case JOB_SHAPESHIFTER:

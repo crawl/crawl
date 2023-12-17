@@ -141,7 +141,7 @@ static const map<job_type, job_def> job_data =
     },
     { "robe", "potion of magic", },
     WCHOICE_NONE,
-    { { SK_TRANSMUTATIONS, 1 }, { SK_EARTH_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
+    { { SK_ALCHEMY, 1 }, { SK_EARTH_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
       { SK_DODGING, 2 }, { SK_STEALTH, 2 }, }
 } },
 
@@ -330,10 +330,10 @@ static const map<job_type, job_def> job_data =
       { SK_SHAPESHIFTING, 3 }, },
 } },
 
-{ JOB_VENOM_MAGE, {
-    "VM", "Venom Mage",
+{ JOB_ALCHEMIST, {
+    "Al", "Alchemist",
     0, 7, 5,
-    { SP_DEEP_ELF, SP_SPRIGGAN, SP_NAGA, SP_MERFOLK, SP_TENGU, SP_DJINNI,
+    { SP_DEEP_ELF, SP_SPRIGGAN, SP_NAGA, SP_MERFOLK, SP_OCTOPODE, SP_DJINNI,
       SP_DEMONSPAWN, },
     {
         SPELL_STING,
@@ -343,7 +343,7 @@ static const map<job_type, job_def> job_data =
     },
     { "robe", "potion of magic" },
     WCHOICE_NONE,
-    { { SK_TRANSMUTATIONS, 1 }, { SK_POISON_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
+    { { SK_ALCHEMY, 3 }, { SK_CONJURATIONS, 1}, { SK_SPELLCASTING, 2 },
       { SK_DODGING, 2 }, { SK_STEALTH, 2 }, },
 } },
 

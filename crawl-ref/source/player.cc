@@ -1586,7 +1586,7 @@ int player_res_poison(bool allow_random, bool temp, bool items)
         rp += you.wearing(EQ_RINGS, RING_POISON_RESISTANCE);
 
         // Staves
-        rp += you.wearing(EQ_STAFF, STAFF_POISON);
+        rp += you.wearing(EQ_STAFF, STAFF_ALCHEMY);
 
         // ego armour:
         rp += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_POISON_RESISTANCE);
@@ -1745,13 +1745,13 @@ int player_spec_summ()
     return you.scan_artefacts(ARTP_ENHANCE_SUMM);
 }
 
-int player_spec_poison()
+int player_spec_alchemy()
 {
     int sp = 0;
 
-    sp += you.wearing(EQ_STAFF, STAFF_POISON);
+    sp += you.wearing(EQ_STAFF, STAFF_ALCHEMY);
 
-    sp += you.scan_artefacts(ARTP_ENHANCE_POISON);
+    sp += you.scan_artefacts(ARTP_ENHANCE_ALCHEMY);
 
     if (player_equip_unrand(UNRAND_OLGREB))
         sp++;
@@ -1762,11 +1762,6 @@ int player_spec_poison()
 int player_spec_tloc()
 {
     return you.scan_artefacts(ARTP_ENHANCE_TLOC);
-}
-
-int player_spec_tmut()
-{
-    return you.scan_artefacts(ARTP_ENHANCE_TMUT);
 }
 
 // If temp is set to false, temporary sources of resistance won't be

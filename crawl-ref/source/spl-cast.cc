@@ -532,17 +532,14 @@ static int _spell_enhancement(spell_type spell)
     if (typeflags & spschool::summoning)
         enhanced += player_spec_summ();
 
-    if (typeflags & spschool::poison)
-        enhanced += player_spec_poison();
+    if (typeflags & spschool::alchemy)
+        enhanced += player_spec_alchemy();
 
     if (typeflags & spschool::necromancy)
         enhanced += player_spec_death();
 
     if (typeflags & spschool::translocation)
         enhanced += player_spec_tloc();
-
-    if (typeflags & spschool::transmutation)
-        enhanced += player_spec_tmut();
 
     if (typeflags & spschool::fire)
         enhanced += player_spec_fire();

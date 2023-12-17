@@ -547,25 +547,29 @@ static const map<spschool, miscast_datum> miscast_effects = {
         },
     },
     {
-        spschool::poison,
+        spschool::alchemy,
         {
-            BEAM_POISON,
+            BEAM_NONE,
             {
-                "You feel odd",
-                "You feel rather nauseous for a moment",
-                "You feel incredibly sick",
+                "You are engulfed in toxic fumes",
+                "There is a flash of cinnibar",
+                "Mercury flows from your @hands@",
+                "Parts of your body briefly turn golden",
             },
             {
-                "@The_monster@ looks faint for a moment",
-                "@The_monster@ has an odd expression for a moment",
-                "@The_monster@ is briefly tinged with green",
-                "@The_monster@ looks rather nauseous for a moment",
+                "@The_monster@ is engulfed in toxic fumes",
+                "@The_monster@ is blasted with cinnibar dust",
+                "@The_monster@ starts coughing violently",
                 "@The_monster@ looks incredibly sick",
             },
             {
                 "The air has a green tinge for a moment",
             },
-            nullptr,
+            [] (actor& target, actor* source, miscast_source_info /*mc_info*/,
+                int dam, string /*cause*/)
+            {
+                target.poison(source, dam * 5 / 2);
+            },
         },
     },
 };

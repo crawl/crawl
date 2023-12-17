@@ -20,11 +20,13 @@ enum class spschool
   hexes          = 1<<1,
   fire           = 1<<2,
   ice            = 1<<3,
+#if TAG_MAJOR_VERSION == 34
   transmutation  = 1<<4,
+#endif
   necromancy     = 1<<5,
   summoning      = 1<<6,
   translocation  = 1<<7,
-  poison         = 1<<8,
+  alchemy        = 1<<8,
   earth          = 1<<9,
   air            = 1<<10,
   LAST_SCHOOL    = spschool::air,

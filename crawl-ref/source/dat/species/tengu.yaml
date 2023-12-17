@@ -27,12 +27,12 @@ aptitudes:
   summoning: 2
   necromancy: 1
   translocations: -2
-  transmutations: -2
   shapeshifting: -2
   fire_magic: 1
   ice_magic: -1
   air_magic: 3
   earth_magic: -3
+  alchemy: -1
   invocations: -1
 str: 8
 int: 8
@@ -53,7 +53,7 @@ recommended_jobs:
   - JOB_SUMMONER
   - JOB_FIRE_ELEMENTALIST
   - JOB_AIR_ELEMENTALIST
-  - JOB_VENOM_MAGE
+  - JOB_ALCHEMIST
 recommended_weapons:
   - SK_MACES_FLAILS
   - SK_AXES

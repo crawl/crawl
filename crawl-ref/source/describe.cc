@@ -427,9 +427,6 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
         { ARTP_ENHANCE_TLOC,
             "It increases the power of your Translocations spells.",
             prop_note::plain },
-        { ARTP_ENHANCE_TMUT,
-            "It increases the power of your Transmutations spells.",
-            prop_note::plain },
         { ARTP_ENHANCE_FIRE,
             "It increases the power of your Fire spells.",
             prop_note::plain },
@@ -442,8 +439,8 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
         { ARTP_ENHANCE_EARTH,
             "It increases the power of your Earth spells.",
             prop_note::plain },
-        { ARTP_ENHANCE_POISON,
-            "It increases the power of your Poison spells.",
+        { ARTP_ENHANCE_ALCHEMY,
+            "It increases the power of your Alchemy spells.",
             prop_note::plain },
     };
     return data;
@@ -535,12 +532,11 @@ static vector<string> _randart_propnames(const item_def& item,
         ARTP_ENHANCE_SUMM,
         ARTP_ENHANCE_NECRO,
         ARTP_ENHANCE_TLOC,
-        ARTP_ENHANCE_TMUT,
         ARTP_ENHANCE_FIRE,
         ARTP_ENHANCE_ICE,
         ARTP_ENHANCE_AIR,
         ARTP_ENHANCE_EARTH,
-        ARTP_ENHANCE_POISON,
+        ARTP_ENHANCE_ALCHEMY,
     };
 
     const unrandart_entry *entry = nullptr;
@@ -4229,7 +4225,7 @@ static string _miscast_damage_string(spell_type spell)
         { spschool::ice, "cold" },
         { spschool::air, "electric" },
         { spschool::earth, "fragmentation" },
-        { spschool::poison, "poison" },
+        { spschool::alchemy, "alchemy" },
     };
 
     const map <spschool, string> special_flavor = {
