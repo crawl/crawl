@@ -1551,49 +1551,67 @@ Spells
 
 Words
 %%%%
-Poison
+Alchemy
 
-Blight
+Alteration
 
-Contaminants
+Argyropoeia
+
+Chemistry
+
+Chrysopoeia
+
+Composition
+
+Compounds
+
+Concoctions
 
 Contamination
 
-Corruption
+Decomposition
 
 Degeneration
 
+Distillation
+
 Effluvium
 
-Envenoming
+Esoterica
 
-Filth
+Formulae
+
+Hermetica
 
 Impurities
 
-Infection
-
 Intoxication
-
-Nausea
-
-Pestilence
-
-Poison
-
-Poisoning
 
 Pollution
 
-Putrescence
+Reagents
 
-Putridity
+Reconfiguration
+
+Reformation
+
+Substances
+
+Synthesis
+
+Tinctures
 
 Toxicants
 
 Toxicity
 
-Toxins
+Toxicology
+
+Transfiguration
+
+Transmogrification
+
+Transmutation
 
 Venin
 
@@ -1601,26 +1619,26 @@ Venom
 
 Virulence
 
-Vitiation
-
 the Adder
 
-the Assassin
+the Alembic
 
-the Bane
+the Beaker
 
-the Black Widow
+the Catalyst
 
-the Coward
+the Crucible
 
-the Cure
+the Cucurbite
 
-the Dose
+the Elixir
 
 # Bilingual joke; "Gift" means "poison" in German
 the Gift
 
 the Hornet
+
+the Ouroboros
 
 the Panacea
 
@@ -1629,10 +1647,6 @@ the Queen Bee
 the Scorpion
 
 the Snake
-
-the Spider
-
-the Stinger
 
 the Tincture
 %%%%
@@ -1817,78 +1831,6 @@ the Vector
 the Voyage
 
 the Wayfarer
-%%%%
-Transmutation
-
-Alteration
-
-Changes
-
-Changing
-
-Composition
-
-Configuration
-
-Evolution
-
-Flesh
-
-Forms
-
-Metamorphosis
-
-Modification
-
-Moulding
-
-Permutations
-
-Reconstruction
-
-Reformation
-
-Sculpting
-
-Shapes
-
-Shapeshifting
-
-Shaping
-
-Teratogeny
-
-Therianthropy
-
-Transfiguration
-
-Transformation
-
-Transition
-
-Transmigration
-
-Transmogrification
-
-Transmutation
-
-Variation
-
-Vicissitude
-
-the Body
-
-the Gestalt
-
-the Figure
-
-the Shapeshifter
-
-the Shift
-
-the Switch
-
-the Xenotype
 %%%%
 ##############################################
 # adjectives for secondary spell school
@@ -2378,71 +2320,75 @@ Unholy
 
 Vile
 %%%%
-Poison adj
+Alchemy adj
+
+Arsenical
+
+Altered
+
+Amorphous
 
 Baneful
 
-Befouled
+Caustic
 
-Cankerous
+Changed
+
+Changing
 
 Contaminated
 
-Disgusting
+Differential
 
 Feculent
 
 Fetid
 
-Filthy
+Fluctuating
 
-Foul
+Glowing
 
-# as in the draconians
 Green
-
-w:2
-Gross
 
 Impure
 
-Infected
+Mercurial
 
-Intoxicating
+Metamorphic
 
-Nasty
+Mutable
 
-Nauseating
+Mutagenic
+
+Mutated
 
 Nocuous
 
 Noxious
 
-Peccant
-
-Pestilent
-
 Poisonous
 
 Polluted
 
-Putrid
+Reconfigured
 
-Rancid
-
-Rank
-
-Repulsive
+Reshaped
 
 Septic
 
-Sickening
-
-Tainted
+Synthesized
 
 Toxic
 
-Unclean
+Transformed
+
+Transforming
+
+Transmuted
+
+Unstable
+
+Variable
 
 Venomous
 
@@ -2561,59 +2507,6 @@ Unstable
 
 Warped
 %%%%
-Transmutation adj
-
-Altered
-
-Amorphous
-
-Changed
-
-Changing
-
-Different
-
-Evolved
-
-Evolving
-
-Fluctuating
-
-# like the shapeshifters
-Glowing
-
-Inconstant
-
-Mercurial
-
-Metamorphic
-
-Mutable
-
-Mutagenic
-
-Mutated
-
-Reformed
-
-Remoulded
-
-Reshaped
-
-Shifting
-
-Unstable
-
-Transformed
-
-Transforming
-
-Transmuted
-
-Variable
-
-Xenomorphic
-%%%%
 # potential previous owners of books
 # __NONE is parsed to the empty string
 # First, combinations.
@@ -2652,7 +2545,7 @@ Dispater
 
 __NONE
 %%%%
-Earth Transmutation owner
+Earth Alchemy owner
 
 Roxanne
 
@@ -2676,23 +2569,15 @@ Vv
 
 __NONE
 %%%%
-highlevel Necromancy Poison owner
+highlevel Necromancy Alchemy owner
 
 Gloorx Vloq
 
 __NONE
 %%%%
-Necromancy Transmutation owner
+Necromancy Alchemy owner
 
 Cigotuvi
-
-__NONE
-%%%%
-Poison Transmutation owner
-
-Alistair
-
-Eringya
 
 __NONE
 %%%%
@@ -2792,18 +2677,20 @@ Zonguldrok
 
 __NONE
 %%%%
-highlevel Poison owner
+highlevel Alchemy owner
 
 Gloorx Vloq
 
 w:30
-@Poison owner@
+@Alchemy owner@
 %%%%
-Poison owner
-
-Olgreb
+Alchemy owner
 
 Alistair
+
+Cigotuvi
+
+Olgreb
 
 Eringya
 
@@ -2837,18 +2724,6 @@ Translocation owner
 Gell
 
 Golubria
-
-__NONE
-%%%%
-Transmutation owner
-
-Alistair
-
-Cigotuvi
-
-Roxanne
-
-Eringya
 
 __NONE
 %%%%
