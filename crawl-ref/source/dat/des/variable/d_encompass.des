@@ -15,6 +15,8 @@ MONS:    fungus, plant
 KMONS:   S = 0 band
 KMONS:   # = 9 band
 KMONS:   = = draconian annihilator / draconian knight / draconian monk
+KITEM:   - = smoky gem
+KITEM:   = = midnight gem
 KFEAT:   ^ = stone_arch
 KFEAT:   - = enter_depths
 KFEAT:   = = enter_zot
@@ -111,7 +113,7 @@ ENDMAP
 ###############################################################################
 #  This vault exercises varied old ideas for the Vaults branch:
 #  a primarily humanoid-based monster set, a focus on placing groups,
-#  and a pattern-based layout emphasizing lots of distinct rooms.
+#  and a pattern-based layout emphasizing lots of discrete rooms.
 #  Of course, HangedMan twisted these ideas thoroughly.
 #  Many thanks to elliott for writing the band placement lua!
 #
@@ -165,6 +167,8 @@ kmons("s = " .. table.concat(kmonsters, " / "))
 KITEM:   ? = any ring randart w:390 / ring_of_the_octopus_king
 KITEM:   ! = ring of slaying / ring of wizardry / any good_item ring no_uniq w:75
 KITEM:   | = | / any good_item
+KITEM:   B = smoky gem
+KITEM:   Z = midnight gem
 KFEAT:   ^ = permanent teleport trap
 KFEAT:   ~ = teleport trap
 KFEAT:   aD = stone_arch
@@ -572,17 +576,18 @@ MAP
   ......
 ENDMAP
 
-NAME: grunt_runaround_depths
-TAGS: grunt_runaround_depths allow_dup unrand
+NAME:    grunt_runaround_depths
+TAGS:    grunt_runaround_depths allow_dup unrand
+MONS:    tengu warrior band w:15 / tengu conjurer band w:15 / \
+         deep troll earth mage / hell knight / vampire knight
+MONS:    ettin w:20 / stone giant w:20 / fire giant / frost giant / \
+         fire dragon w:12 / ice dragon w:8 / shadow dragon
+MONS:    very ugly thing
+KITEM:   h = smoky gem
+KFEAT:   O = enter_depths
+NSUBST:  1 = 1:2 / *:1
 SHUFFLE: O3hi
-SUBST: hi = .
-NSUBST: 1 = 1:2 / *=1
-KFEAT: O = enter_depths
-MONS: tengu warrior band w:15 / tengu conjurer band w:15 / \
-      deep troll earth mage band / hell knight band / vampire knight band
-MONS: ettin w:20 / stone giant w:20 / fire giant / frost giant / \
-      fire dragon w:12 / ice dragon w:8 / titan
-MONS: caustic shrike w:5 / very ugly thing band w:20
+SUBST:   i = .
 MAP
   ......
  ...cc...
@@ -596,28 +601,26 @@ MAP
   ......
 ENDMAP
 
-NAME: grunt_runaround_zot
-TAGS: grunt_runaround_zot allow_dup unrand
-COLOUR: .1defghijO = magenta
-FTILE: .1defghijO = floor_hall
+NAME:    grunt_runaround_zot
+TAGS:    grunt_runaround_zot allow_dup unrand
+MONS:    base draconian, nonbase draconian
+KMONS:   d = golden dragon
+KMONS:   e = quicksilver dragon
+KMONS:   f = storm dragon
+KMONS:   g = shadow dragon
+KITEM:   h = midnight gem
+KFEAT:   O = enter_zot
 SHUFFLE: defg
-SHUFFLE: Ohij
-SUBST: hij = .
-NSUBST: 1 = 1:2 / *=1
-KFEAT: O = enter_zot
-KMONS: d = golden dragon
-KMONS: e = quicksilver dragon
-KMONS: f = storm dragon
-KMONS: g = shadow dragon
-MONS: base draconian
-MONS: nonbase draconian
+NSUBST:  1 = 1:2 / *=1
+COLOUR:  .1defghO = magenta
+FTILE:   .1defghO = floor_hall
 MAP
   ......
  ..1..1..
 ..d....e..
 .1......1.
-....Oh....
-....ij....
+....O.....
+.....h....
 .1......1.
 ..f....g..
  ..1..1..

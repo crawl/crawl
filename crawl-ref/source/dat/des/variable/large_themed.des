@@ -2798,6 +2798,7 @@ MONS:    red draconian / base draconian w:5, fire giant
 MONS:    red draconian monk, tengu reaver, iron dragon
 KMONS:   6 : red draconian knight / golden dragon
 KMONS:   7 : lich / red draconian scorcher
+KITEM:   > = midnight gem
 KFEAT:   > = enter_zot
 NSUBST:  23 = 4 = 11d
 SUBST:   %*| = $

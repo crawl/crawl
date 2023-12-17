@@ -679,16 +679,16 @@ MAP
      %2A2%
 ENDMAP
 
-NAME: grunt_profane_loot
-TAGS: grunt_profane_loot no_monster_gen
+NAME:    grunt_profane_loot
+TAGS:    grunt_profane_loot no_monster_gen
 : grunt_profane_halls_setup(_G)
 SHUFFLE: KLMN
-KMONS: K = storm dragon
-KMONS: L = shadow dragon
-KMONS: M = quicksilver dragon
-KMONS: N = golden dragon
-KITEM: KLMN> = any good_item
-KITEM: 12 = any
+KMONS:   K = storm dragon
+KMONS:   L = shadow dragon
+KMONS:   M = quicksilver dragon
+KMONS:   N = golden dragon
+KITEM:   KLMN> = any good_item
+KITEM:   12 = any
 MAP
   cc+cc
  cc1%1cc
@@ -701,14 +701,15 @@ cc2%M%2cc
   cc+cc
 ENDMAP
 
-NAME: grunt_zot_portal
-TAGS: grunt_zot_portal
+NAME:   grunt_zot_portal
+TAGS:   grunt_zot_portal
+KMONS:  1 = nonbase draconian / base draconian
+KITEM:  O = midnight gem
+KFEAT:  O = enter_zot
 COLOUR: c = lightmagenta
-TILE: c = wall_zot_magenta
 COLOUR: JO.1+ = magenta
-FTILE: JO.1+ = floor_hall
-KFEAT: O = enter_zot
-KMONS: 1 = nonbase draconian / base draconian
+TILE:   c = wall_zot_magenta
+FTILE:  JO.1+ = floor_hall
 MARKER: J = lua:fog_machine { cloud_type = "magical condensation", \
                               pow_min = 3, pow_max = 5, \
                               delay_min = 5, delay_max = 15, \
@@ -978,6 +979,7 @@ MONS:    spriggan defender w:30 / titan w:30 / ancient lich w:30 / \
          draconian monk / draconian annihilator / draconian knight / \
          juggernaut w:20
 KMONS:   Z = draconian knight / draconian annihilator
+KITEM:   Z = midnight gem
 KFEAT:   z^ = zot trap w:499 / floor w:1
 KFEAT:   Z = enter_zot
 SHUFFLE: Y], {([>, HI / HI / IH, JK / JK / KJ

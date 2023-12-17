@@ -3454,7 +3454,7 @@ MONS:    deep troll shaman, dire elephant / hydra / lindwurm
 MONS:    catoblepas, death yak band
 MONS:    elephant, wolf, black bear / polar bear
 KMONS:   P = plant / fungus w:2 / bush w:1
-KITEM:   1 = earthy gem
+KITEM:   R = earthy gem
 SHUFFLE: 567
 SUBST:   C = cx.., P = P .:9 t:1
 NSUBST:  % = 2:| / 3:* / *:%
@@ -3478,7 +3478,7 @@ MAP
      xx..ccc...G..C..3..d..xx
     xx..ccc.G....CcC..4..c.x
     x.P.ccc..d..CcCcC...cc.x
-    x..ccc%.G..G.CcC...ccP.x
+    x..ccc%.G..GRCcC...ccP.x
    xx..ccc%%.2.dG.C..d.c...x
    x...cccc%%.1.....G.ccP..x
    x.P.ccccc%%.Gd.G...c..P.x
@@ -3518,7 +3518,7 @@ KMONS:   3 = snapping turtle / sea snake / manticore / wind drake / harpy \
 KMONS:   4 = dire elephant / hydra / torpor snail
 KMONS:   5 = patrolling merfolk avatar
 KFEAT:   p12345de%*| = W
-NSUBST:  % = 2=d / 2=d% / e / %%*|
+NSUBST:  % = 2=d / 2=d% / 1:e / %%*|
 # Open up squares on the fixed portions of the temple walls, on the outer
 # columns, and in the inner room.
 SUBST:   c = c:20 .:1 W:1, a = ccc-, q = cccc'
@@ -3597,7 +3597,8 @@ SUBST:   M = 6, N = ., OP = l
 SHUFFLE: ';`, -~ / -~ / ~-
 NSUBST:  ' = 3:3 / 2 = 3. / 1:5 / 2 = 15. / 1:2. / *:.
 NSUBST:  ; = 3:5 / 3 = 15. / 1:2. / *:., ` = 3 = 5 / 3 = 15. / 1:2. / .
-NSUBST:  - = 1:7 / *:", ~ = 2:8 / *:", D = R / 1:|* / 2 = *% / 3 = $% / 2:$ / *:"
+NSUBST:  - = 1:7 / *:", ~ = 2:8 / *:"
+NSUBST:  D = 1:R / 1:|* / 2 = *% / 3 = $% / 2:$ / *:"
 NSUBST:  G = 2:4 / 1:4. / *:G, l = 5:Y / l
 KMASK:   "$%*|7 = no_trap_gen
 MAP
@@ -3648,18 +3649,18 @@ PLACE:   Lair:$
 ORIENT:  northwest
 MONS:    blink frog / basilisk w:3, small abomination
 MONS:    shapeshifter / chaos spawn / smoke demon / ynoxinul
-MONS:    raiju, ugly thing / large abomination,  thrashing horror
+MONS:    raiju, ugly thing / large abomination, thrashing horror
 KMONS:   7 = spriggan ; rapier ego:distortion
+KITEM:   R = earthy gem, %
 KFEAT:   u = demonic_tree
 KFEAT:   N = enter_abyss
 KFEAT:   _ = altar_lugonu
-KITEM:   R = earthy gem
 SUBST:   " = '.
 COLOUR:  '%M = magenta
 FTILE:   '%MN_u = floor_nerves_magenta
-NSUBST:  %d = R / 2=| / 3=* / %
+NSUBST:  %d = 1:R / 2:| / 3:* / *:%
 NSUBST:  1 = 5=1 / 1.., 2 = 4=2 / 2..
-NSUBST:  4 = 4 / 3, ' = 2=6 / 2=56 / 3=O / 5=5543O. / .
+NSUBST:  4 = 4 / 3, ' = 2:6 / 2 = 56 / 3:O / 5 = 5543O. / .
 SUBST:   7M = 7O
 # 33% chance for an additional opening at the south.
 SHUFFLE: yzD / JKL / JKL

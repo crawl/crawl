@@ -90,8 +90,10 @@ function castle_lemuel_setup(e)
                    .. " / black draconian / purple draconian")
            e.kmons("6 = fire dragon / ice dragon / death drake / storm dragon"
                    .. " / shadow dragon")
+           e.kitem("R = |, midnight gem")
            e.kfeat("3 = enter_zot")
            e.subst("w : wl")
+           e.nsubst("| = 1:R / *:|")
        -- Depths uses a theme of mostly large/giant monsters.
        else
            e.mons("deep troll / iron troll / deep troll shaman / ettin"
@@ -115,7 +117,7 @@ function castle_lemuel_setup(e)
    e.colour("? = brown")
    e.ftile("? = floor_mud")
    e.tile("c = wall_stone_smooth")
-   e.ftile("DG+|*$.~ = floor_cobble_blood")
+   e.ftile("DG+$%|*.~ = floor_cobble_blood")
    e.ftile("12348 = floor_cobble_blood")
 end
 }}
