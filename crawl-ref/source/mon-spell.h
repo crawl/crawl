@@ -423,16 +423,16 @@ static const mon_spellbook mspell_list[] =
     {  MST_ARCANIST,
       {
        { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
+       { SPELL_FORCE_LANCE, 10, MON_SPELL_WIZARD },
        { SPELL_VITRIFY, 12, MON_SPELL_WIZARD },
        { SPELL_HASTE, 14, MON_SPELL_WIZARD },
-       { SPELL_BLINK, 10, MON_SPELL_WIZARD },
       }
     },
 
     {  MST_OCCULTIST,
       {
        { SPELL_FIREBALL, 12, MON_SPELL_WIZARD },
-       { SPELL_FORCE_LANCE, 12, MON_SPELL_WIZARD },
+       { SPELL_POISON_ARROW, 12, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 14, MON_SPELL_WIZARD },
        { SPELL_BANISHMENT, 10, MON_SPELL_WIZARD },
       }
