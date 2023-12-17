@@ -3851,7 +3851,7 @@ static const vector<pie_effect> pie_effects = {
                 else
                     mpr("Your body becomes as fragile as glass!");
 
-                you.increase_duration(DUR_VITRIFIED, 8 + random2(11), 50);
+                you.increase_duration(DUR_VITRIFIED, 16 + random2(21), 50);
             }
         },
         4
