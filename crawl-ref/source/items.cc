@@ -3869,12 +3869,12 @@ colour_t item_def::gem_colour() const
     case GEM_SWAMP:   return ETC_DECAY;
     case GEM_SHOALS:  return ETC_ENCHANT;
     case GEM_SNAKE:   return ETC_POISON;
-    case GEM_SPIDER:  return ETC_AIR;
+    case GEM_SPIDER:  return WHITE;
 
-    case GEM_SLIME:   return ETC_SLIME;
+    case GEM_SLIME:   return ETC_AIR;
     case GEM_VAULTS:  return ETC_STEEL;
     case GEM_CRYPT:   return ETC_BONE;
-    case GEM_TOMB:    return ETC_DWARVEN; // XXX replaceme
+    case GEM_TOMB:    return ETC_AWOKEN_FOREST; // enh
     case GEM_DEPTHS:  return ETC_DITHMENOS;
     case GEM_ZOT:     return ETC_RANDOM; // dubious
     }
