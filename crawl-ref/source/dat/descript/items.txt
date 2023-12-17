@@ -635,14 +635,6 @@ glaive
 
 A pole with a large, heavy blade on one end.
 %%%%
-glittering gem
-
-[[gem]]
-
-Sparkling with golden light, this gem was considered a sign of divine favour by
-the orcs who first unearthed it. They crushed all opposition to their new cult
-of Beogh, and to this day guard it jealously in their innermost sanctum.
-%%%%
 gold dragon scales
 
 The scales of a gold dragon. It is much heavier than most dragon scale armours,

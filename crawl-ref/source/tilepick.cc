@@ -2670,7 +2670,9 @@ static tileidx_t _tileidx_gem_base(const item_def &item)
     {
     default:
     case GEM_DUNGEON: return TILE_GEM_DUNGEON;
+#if TAG_MAJOR_VERSION == 34
     case GEM_ORC:     return TILE_GEM_ORC;
+#endif
     case GEM_ELF:     return TILE_GEM_ELF;
     case GEM_LAIR:    return TILE_GEM_LAIR;
     case GEM_SWAMP:   return TILE_GEM_SWAMP;

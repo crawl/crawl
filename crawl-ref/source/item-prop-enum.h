@@ -407,7 +407,9 @@ enum rune_type
 enum gem_type
 {
     GEM_DUNGEON,
+#if TAG_MAJOR_VERSION == 34
     GEM_ORC,
+#endif
     GEM_ELF,
     GEM_LAIR,
     GEM_SWAMP,

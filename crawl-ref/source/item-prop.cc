@@ -843,7 +843,9 @@ static int Gem_index[NUM_GEM_TYPES];
 static const gem_def Gem_prop[] =
 {
     { GEM_DUNGEON, "smoky",       BRANCH_DUNGEON, 6000 },
+#if TAG_MAJOR_VERSION == 34
     { GEM_ORC,     "glittering",  BRANCH_ORC,     6000 },
+#endif
     { GEM_ELF,     "shimmering",  BRANCH_ELF,     6000 },
     { GEM_LAIR,    "earthy",      BRANCH_LAIR,    7500 }, // travel time
 
@@ -1001,6 +1003,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_MISSILES,  MI_ARROW },
     { OBJ_MISSILES,  MI_BOLT },
     { OBJ_MISSILES,  MI_SLING_BULLET },
+    { OBJ_GEMS,      GEM_ORC },
 #endif
     { OBJ_JEWELLERY, AMU_NOTHING }, // These should only spawn as uniques
 };
@@ -2266,8 +2269,13 @@ gem_type gem_for_branch(branch_type br)
 {
     // XXX TODO: maybe bake a map in advance
     for (int i = 0; i < NUM_GEM_TYPES; i++)
-        if (Gem_prop[ Gem_index[i]].branch == br)
+    {
+        if (!item_type_removed(OBJ_GEMS, i)
+            && Gem_prop[ Gem_index[i]].branch == br)
+        {
             return static_cast<gem_type>(i);
+        }
+    }
     return NUM_GEM_TYPES;
 }
 
