@@ -2678,6 +2678,7 @@ string get_item_description(const item_def &item,
                     << " slot: " << item.slot
                     << " ident_type: "
                     << get_ident_type(item)
+                    << " value: " << item_value(item, true)
                     << "\nannotate: "
                     << stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
     }
