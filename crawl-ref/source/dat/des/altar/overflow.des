@@ -3445,6 +3445,69 @@ xxxx...xxxx
    xx+xx
 ENDMAP
 
+NAME:    regret_index_xom_buried_treasure
+TAGS:    transparent temple_overflow_1 temple_overflow_xom
+TAGS:    uniq_altar_xom extra decor
+ITEM:    stone q:1 no_pickup
+KITEM:   ? = plate armour randart plus:-12 ident:all / \
+             kite shield randart plus:-12 ident:all / \
+             mundane club / gold q:1 w:9970, large rock q:1
+KFEAT:   _ = altar_xom
+SUBST:   b : bcc, y : xx., z : xx., Y : xxd, Z : xxd
+MAP
+xx@. ..xx
+xbx...zbx
+.yxy.xxx.
+..xxxxz..
+ ..xxx..@
+..xxYxx.xxxxx
+@xxx.xccccccx
+xbx...cxdd_cx
+xx..Z.cdx?dcx
+    ..+ddxdcx@..xx
+     .cdddxc...xbx
+     .cc+cccx.xxx.
+     @.....xxYxx..
+        .Z..xxx..
+         ..zxxxx..
+         .xxx.yxy@
+         xcz...xbx
+         xx@. ..xx
+ENDMAP
+
+NAME:    regret_index_xom_of_box
+TAGS:    transparent no_monster_gen temple_overflow_1
+TAGS:    temple_overflow_xom uniq_altar_xom
+DEPTH:   D:5-12, Orc
+MONS:    fire bat, hell hound, scorpion, sky beast, orange demon, raiju
+ITEM:    box of beasts mimic
+KMONS:   p = demonic plant
+KFEAT:   P = demonic_tree
+KFEAT:   _ = altar_xom
+SHUFFLE: 12, ?!
+: if you.in_branch("Orc") or you.depth() >= 12 then
+TAGS:    extra
+SUBST:   ? = 5, ! = 6
+: elseif you.absdepth() >= 9 then
+SUBST:   ? = 3, ! = 4
+: else
+SUBST:   2 = 34, ?! = .
+: end
+SHUFFLE: xp, pPtU', xbv"
+SUBST:   d : d %:490, - : +ccc, '" = .
+NSUBST:  % = 1:% / 1:$ / *:.
+MAP
+  ccccccccccc.@.c
+  ccc.d1....c.p.c
+  c.cdx..dx.c...c
+  c.+....!d.-..c
+ c..+..._...-..c
+ c..+.d?....-.c
+c...c.xd..xdc.c
+c.p.c....2d.ccc
+c.@.ccccccccccc
+ENDMAP
+
 ### Yredelemnul overflow altars ###############################################
 
 NAME:   yredelemnul_altar_generic

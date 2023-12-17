@@ -1153,7 +1153,7 @@ xxcccDcccxx
 ENDMAP
 
 NAME: nicolae_orc_bridge_out
-TAGS: extra decor no_pool_fixup
+TAGS: extra decor no_pool_fixup uniq_orc_liquiddecor
 DEPTH: Orc
 KPROP: L = no_tele_into
 SUBST: L = lll., X = xx., Z = llx, l : lw
@@ -1195,7 +1195,7 @@ xxxxxxXXXX''''Exxx
 ENDMAP
 
 NAME: nicolae_orc_flooded_monolith
-TAGS: extra decor transparent
+TAGS: extra decor transparent uniq_orc_liquiddecor
 DEPTH: Orc
 SUBST: W = w., c : ccccbv
 MAP
@@ -1234,7 +1234,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_orc_lava_tube
-TAGS: extra decor transparent
+TAGS: extra decor transparent uniq_orc_liquiddecor
 DEPTH: Orc
 SUBST: X = xx., L = ll., Z = lx
 MAP
@@ -1256,7 +1256,7 @@ xxxX...XxxxxZZxxxxxxxx
 ENDMAP
 
 NAME: nicolae_orc_pool_cavern
-TAGS: extra decor transparent
+TAGS: extra decor transparent uniq_orc_liquiddecor
 DEPTH: Orc
 SUBST: W = ww., X = x:80 .:40 w
 MAP
@@ -1407,6 +1407,84 @@ MAP
   .x11..nwcx
    xx111nccx
     xxxxxxxx
+ENDMAP
+
+NAME:    regret_index_minedec_guest_junction
+TAGS:    transparent extra decor no_pool_fixup no_rotate uniq_orc_liquiddecor
+DEPTH:   Orc
+ITEM:    mundane shortbow no_pickup, giant club no_pickup
+SHUFFLE: ABCD, YZ
+SUBST:   A : x., B : x., CDY = ., - : +., Z : x'..
+CLEAR:   '
+MAP
+ ccYcc..cc  cc  ......
+cc.........Wccc.........
+c........Wwwccc--xxxxxxxx
+Z......Wwwwcccc.......xxxx
+c....Wwwwccccdc....CC..exx
+c...Wwwwcccc....BB....D..x.
+.............A..............
+ .x..D....BB....ccccwwwW...c
+  xxe..CC....cdccccwwwW....c
+  xxxx.......ccccwwwW......Z
+   xxxxxxxx--cccwwW........c
+    .........cccW.........cc
+      ......  cc  cc..ccYcc
+ENDMAP
+
+NAME:    regret_index_minedec_devilstone
+TAGS:    transparent extra decor
+ITEM:    mundane damaged demon trident no_pickup
+KFEAT:   A = altar_makhleb
+KFEAT:   B = altar_beogh
+KFEAT:   C = c
+SHUFFLE: XYZ, AB / VV / VV / VV, `y! / `y! / ~z&
+SUBST:   X : x', Y : x', Z : ', V : VVIIId'
+SUBST:   ` = ., Y = c, ! = @
+TILE:    C = wall_stone_dark
+FTILE:   'dABVI = floor_pebble_lightred
+CLEAR:   ~z&
+MAP
+  `yy  .@.
+  ``yy.....
+  ```ycc'cc
+  ``ccc'''cc
+  &ccC'ZBX'cc
+  cc'CC'Y'cc
+ cc'Y'CC'cc
+cc'XAZ'Ccc&
+ cc'''ccc``
+  cc'ccy```
+  .....yy``
+   .@.  yy`
+ENDMAP
+
+NAME:    regret_index_minedec_shroomtown_chain
+TAGS:    transparent extra decor
+MONS:    fungus
+ITEM:    stone no_pickup, large rock q:1 no_pickup
+SHUFFLE: ABCDEFGH, WX / WX / WW, YZ / YZ / YY
+SUBST:   ABCD = 1, EF = x, G : GIde, H : x.
+SUBST:   WY = +, X : ccx, Z : ccx
+TILE:    G : dngn_statue_axe / dngn_statue_polearm w:5 / dngn_statue_imp
+MAP
+ccccc....
+c.F.cAB...
+c...W..C..
+cXccc...D..
+..E.....E..
+..D...cccYc
+...C..Z...c
+ ...BAc.G.c
+   ...ccccccccc...
+          c.G.cED...
+          c...Z..C...
+          cYccc...B..
+          ..A.....A..
+          ..B...cccXc
+           ..C..W...c
+           ...DEc.F.c
+            ....ccccc
 ENDMAP
 
 ############################################################################
