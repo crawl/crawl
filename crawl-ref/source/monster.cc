@@ -5737,7 +5737,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         }
     }
 
-    else if (type == MONS_BAI_SUZHEN && hit_points < max_hit_points / 2
+    else if (type == MONS_BAI_SUZHEN && hit_points < max_hit_points * 2 / 3
                                      && hit_points - damage > 0)
     {
         int old_hp                = hit_points;
