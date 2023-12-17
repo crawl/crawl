@@ -4230,7 +4230,6 @@ static string _miscast_damage_string(spell_type spell)
 
     const map <spschool, string> special_flavor = {
         { spschool::summoning, "summons a nameless horror" },
-        { spschool::transmutation, "further contaminates you" },
         { spschool::translocation, "anchors you in place" },
         { spschool::hexes, "slows you" },
     };
