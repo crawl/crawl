@@ -1325,7 +1325,7 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
 
         if (mons->type == MONS_ARACHNE)
         {
-            return weapon.is_type(OBJ_STAVES, STAFF_POISON)
+            return weapon.is_type(OBJ_STAVES, STAFF_ALCHEMY)
                    || is_unrandom_artefact(weapon, UNRAND_OLGREB);
         }
 
@@ -3740,7 +3740,7 @@ int monster::res_poison(bool temp) const
             u += get_jewellery_res_poison(env.item[jewellery], false);
 
         const item_def *w = primary_weapon();
-        if (w && w->is_type(OBJ_STAVES, STAFF_POISON))
+        if (w && w->is_type(OBJ_STAVES, STAFF_ALCHEMY))
             u++;
     }
 
@@ -4021,7 +4021,7 @@ int monster::skill(skill_type sk, int scale, bool /*real*/, bool /*temp*/) const
     case SK_NECROMANCY:
         return (has_spell_of_type(spschool::necromancy)) ? hd : hd/2;
 
-    case SK_POISON_MAGIC:
+    case SK_ALCHEMY:
     case SK_FIRE_MAGIC:
     case SK_ICE_MAGIC:
     case SK_EARTH_MAGIC:

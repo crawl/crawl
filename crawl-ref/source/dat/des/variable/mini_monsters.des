@@ -920,7 +920,7 @@ DEPTH:  D:8-13
 WEIGHT: 3
 ITEM:   any potion
 ITEM:   young poisoner's handbook / book of changes / \
-        randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
+        randbook disc:Alchemy slevels:8 w:5 / \
         randbook numspells:4 title:Nature \
         spells:summon_small_mammal&call_canine_familiar&hailstorm&summon_forest / \
         randbook numspells:4 title:Nature \
@@ -970,7 +970,7 @@ TAGS:   no_monster_gen no_pool_fixup uniq_introduction_to_nature
 DEPTH:  D:8-13
 ITEM:   any potion
 ITEM:   young poisoner's handbook / book of changes / \
-        randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
+        randbook disc:Alchemy slevels:8 w:5 / \
         randbook numspells:4 title:Nature \
         spells:summon_small_mammal&call_canine_familiar&hailstorm&summon_forest / \
         randbook numspells:4 title:Nature \

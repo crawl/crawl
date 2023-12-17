@@ -341,18 +341,18 @@ static void _populate_armour_intrinsic_artps(const armour_type arm,
 }
 
 static map<stave_type, artefact_prop_type> staff_resist_artps = {
-    { STAFF_FIRE,   ARTP_FIRE },
-    { STAFF_COLD,   ARTP_COLD },
-    { STAFF_POISON, ARTP_POISON },
-    { STAFF_DEATH,  ARTP_NEGATIVE_ENERGY },
-    { STAFF_AIR,    ARTP_ELECTRICITY },
+    { STAFF_FIRE,    ARTP_FIRE },
+    { STAFF_COLD,    ARTP_COLD },
+    { STAFF_ALCHEMY, ARTP_POISON },
+    { STAFF_DEATH,   ARTP_NEGATIVE_ENERGY },
+    { STAFF_AIR,     ARTP_ELECTRICITY },
     // nothing for conj or earth
 };
 
 static map<stave_type, artefact_prop_type> staff_enhancer_artps = {
     { STAFF_FIRE,           ARTP_ENHANCE_FIRE },
     { STAFF_COLD,           ARTP_ENHANCE_ICE },
-    { STAFF_POISON,         ARTP_ENHANCE_POISON },
+    { STAFF_ALCHEMY,        ARTP_ENHANCE_ALCHEMY },
     { STAFF_DEATH,          ARTP_ENHANCE_NECRO },
     { STAFF_AIR,            ARTP_ENHANCE_AIR },
     { STAFF_CONJURATION,    ARTP_ENHANCE_CONJ },
@@ -653,12 +653,11 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_ENHANCE_SUMM:
         case ARTP_ENHANCE_NECRO:
         case ARTP_ENHANCE_TLOC:
-        case ARTP_ENHANCE_TMUT:
         case ARTP_ENHANCE_FIRE:
         case ARTP_ENHANCE_ICE:
         case ARTP_ENHANCE_AIR:
         case ARTP_ENHANCE_EARTH:
-        case ARTP_ENHANCE_POISON:
+        case ARTP_ENHANCE_ALCHEMY:
             // Maybe we should allow these for robes, too?
             // And hats? And gloves and cloaks and scarves?
             return item.base_type == OBJ_STAVES
@@ -819,8 +818,10 @@ static const artefact_prop_data artp_data[] =
         []() {return 1;}, nullptr, 0, 0},
     { "Tloc", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_TLOC,
         []() {return 1;}, nullptr, 0, 0},
+#if TAG_MAJOR_VERSION == 34
     { "Tmut", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_TMUT,
         []() {return 1;}, nullptr, 0, 0},
+#endif
     { "Fire", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_FIRE,
         []() {return 1;}, nullptr, 0, 0},
     { "Ice", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_ICE,
@@ -829,7 +830,7 @@ static const artefact_prop_data artp_data[] =
         []() {return 1;}, nullptr, 0, 0},
     { "Earth", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_EARTH,
         []() {return 1;}, nullptr, 0, 0},
-    { "Poison", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_POISON,
+    { "Alchemy", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_ALCHEMY,
         []() {return 1;}, nullptr, 0, 0},
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);

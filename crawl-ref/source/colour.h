@@ -15,7 +15,7 @@ enum element_type
     ETC_EARTH,          // earthy colours
     ETC_ELECTRICITY,    // electrical side of air
     ETC_AIR,            // non-electric and general air magic
-    ETC_POISON,         // used only for venom mage and stalker stuff
+    ETC_POISON,         // used for snakey things
     ETC_WATER,          // used only for the elemental
     ETC_MAGIC,          // general magical effect
     ETC_MUTAGENIC,      // transmute, poly, radiation effects

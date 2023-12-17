@@ -26,13 +26,12 @@ aptitudes:
   conjurations: -1
   hexes: 4
   translocations: 4
-  transmutations: 1
   shapeshifting: -2
   fire_magic: -1
   ice_magic: -1
   air_magic: -1
   earth_magic: -1
-  poison_magic: -1
+  alchemy: -1
   evocations: 1
 size: little
 str: 4
@@ -64,7 +63,7 @@ recommended_jobs:
   - JOB_AIR_ELEMENTALIST
   - JOB_CONJURER
   - JOB_SUMMONER
-  - JOB_VENOM_MAGE
+  - JOB_ALCHEMIST
 recommended_weapons:
   - SK_UNARMED_COMBAT
 

@@ -228,9 +228,6 @@ static void _THROATCUTTER_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ////////////////////////////////////////////////////
 
-// XXX: Staff giving a boost to poison spells is hardcoded in
-// player_spec_poison()
-
 static void _OLGREB_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
     if (you.can_smell())
@@ -791,25 +788,40 @@ static void _NIGHT_unequip(item_def */*item*/, bool *show_msgs)
 
 ///////////////////////////////////////////////////
 
-static void _PLUTONIUM_SWORD_melee_effects(item_def* /*weapon*/,
+static const vector<string> plutonium_player_msg = {
+};
+
+static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon,
                                            actor* attacker, actor* defender,
-                                           bool mondied, int dam)
+                                           bool mondied, int /*dam*/)
 {
     if (!mondied && one_chance_in(5) && defender->can_mutate())
     {
-        mpr("Mutagenic energy flows through the plutonium sword!");
+        if (you.can_see(*attacker))
+        {
+            mprf("Mutagenic energy flows through %s!",
+                 weapon->name(DESC_THE, false, false, false).c_str());
+        }
 
         if (attacker->is_player())
             did_god_conduct(DID_CHAOS, 3);
 
         if (one_chance_in(10))
+        {
             defender->polymorph(0); // Low duration if applied to the player.
+            return;
+        }
+
+        if (defender->is_monster())
+            defender->malmutate("the plutonium sword");
         else
         {
-            miscast_effect(*defender, attacker, {miscast_source::melee},
-                           spschool::transmutation, 5, random2(dam),
-                           "the plutonium sword");
+            mpr(random_choose("Your body deforms painfully.",
+                              "Your limbs ache and wobble like jelly.",
+                              "Your body is flooded with magical radiation."));
+            contaminate_player(random_range(3500, 6500));
         }
+        defender->hurt(attacker, random_range(5, 25));
     }
 }
 

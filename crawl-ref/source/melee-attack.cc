@@ -2373,7 +2373,7 @@ bool melee_attack::apply_staff_damage()
         }
         break;
 
-    case STAFF_POISON:
+    case STAFF_ALCHEMY:
         special_damage =
             resist_adjust_damage(defender, BEAM_POISON, staff_damage(sk));
 

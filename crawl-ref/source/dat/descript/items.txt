@@ -1344,6 +1344,13 @@ insulates them from electricity. If the wielder is skilled in Evocations and
 Air Magic, they can shock those struck by it, dealing electricity damage which
 bypasses armour.
 %%%%
+staff of alchemy
+
+A staff that increases the power of alchemy spells cast by its wielder, and
+protects them from the effects of poison. If the wielder is skilled in
+Evocations and Alchemy, they can envenom those struck by it, dealing poison
+damage which bypasses armour.
+%%%%
 staff of cold
 
 A staff that increases the power of ice spells cast by its wielder, and
@@ -1377,13 +1384,6 @@ A staff that increases the power of fire spells cast by its wielder, and
 protects them from the effects of fire. If the wielder is skilled in Evocations
 and Fire Magic, they can burn those struck by it, dealing fire damage which
 bypasses armour.
-%%%%
-staff of poison
-
-A staff that increases the power of poisoning spells cast by its wielder, and
-protects them from the effects of poison. If the wielder is skilled in
-Evocations and Poison Magic, they can envenom those struck by it, dealing
-poison damage which bypasses armour.
 %%%%
 starry gem
 

@@ -178,7 +178,7 @@ int artefact_value(const item_def &item)
         ret += 20;
 
     // Yuck!
-    for (int i = ARTP_ENHANCE_CONJ; i <= ARTP_ENHANCE_POISON; ++i)
+    for (int i = ARTP_ENHANCE_CONJ; i <= ARTP_ENHANCE_ALCHEMY; ++i)
         if (prop[i])
             ret += 8;
 

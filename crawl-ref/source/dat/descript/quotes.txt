@@ -1721,6 +1721,10 @@ staff of air
 
 <staff>
 %%%%
+staff of alchemy
+
+<staff>
+%%%%
 staff of cold
 
 <staff>
@@ -1766,10 +1770,6 @@ staff of fire
  of another man's dreams—what an incomparable humiliation, what madness!”
     -Jorge Luis Borges, _The Circular Ruins_. 1940.
     trans. Anthony Bonner, 1962.
-%%%%
-staff of poison
-
-<staff>
 %%%%
 steam dragon scales
 

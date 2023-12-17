@@ -850,16 +850,14 @@ const char* spelltype_short_name(spschool which_spelltype)
         return "Fire";
     case spschool::ice:
         return "Ice";
-    case spschool::transmutation:
-        return "Tmut";
     case spschool::necromancy:
         return "Necr";
     case spschool::summoning:
         return "Summ";
     case spschool::translocation:
         return "Tloc";
-    case spschool::poison:
-        return "Pois";
+    case spschool::alchemy:
+        return "Alch";
     case spschool::earth:
         return "Erth";
     case spschool::air:
@@ -883,16 +881,14 @@ const char* spelltype_long_name(spschool which_spelltype)
         return "Fire";
     case spschool::ice:
         return "Ice";
-    case spschool::transmutation:
-        return "Transmutation";
     case spschool::necromancy:
         return "Necromancy";
     case spschool::summoning:
         return "Summoning";
     case spschool::translocation:
         return "Translocation";
-    case spschool::poison:
-        return "Poison";
+    case spschool::alchemy:
+        return "Alchemy";
     case spschool::earth:
         return "Earth";
     case spschool::air:
@@ -912,11 +908,10 @@ skill_type spell_type2skill(spschool spelltype)
     case spschool::hexes:          return SK_HEXES;
     case spschool::fire:           return SK_FIRE_MAGIC;
     case spschool::ice:            return SK_ICE_MAGIC;
-    case spschool::transmutation:  return SK_TRANSMUTATIONS;
     case spschool::necromancy:     return SK_NECROMANCY;
     case spschool::summoning:      return SK_SUMMONINGS;
     case spschool::translocation:  return SK_TRANSLOCATIONS;
-    case spschool::poison:         return SK_POISON_MAGIC;
+    case spschool::alchemy:        return SK_ALCHEMY;
     case spschool::earth:          return SK_EARTH_MAGIC;
     case spschool::air:            return SK_AIR_MAGIC;
 
@@ -936,11 +931,10 @@ spschool skill2spell_type(skill_type spell_skill)
     case SK_HEXES:           return spschool::hexes;
     case SK_FIRE_MAGIC:      return spschool::fire;
     case SK_ICE_MAGIC:       return spschool::ice;
-    case SK_TRANSMUTATIONS:  return spschool::transmutation;
     case SK_NECROMANCY:      return spschool::necromancy;
     case SK_SUMMONINGS:      return spschool::summoning;
     case SK_TRANSLOCATIONS:  return spschool::translocation;
-    case SK_POISON_MAGIC:    return spschool::poison;
+    case SK_ALCHEMY:         return spschool::alchemy;
     case SK_EARTH_MAGIC:     return spschool::earth;
     case SK_AIR_MAGIC:       return spschool::air;
 
@@ -1758,11 +1752,10 @@ static const mutation_type arcana_sacrifice_map[] = {
     MUT_NO_HEXES_MAGIC,
     MUT_NO_FIRE_MAGIC,
     MUT_NO_ICE_MAGIC,
-    MUT_NO_TRANSMUTATION_MAGIC,
     MUT_NO_NECROMANCY_MAGIC,
     MUT_NO_SUMMONING_MAGIC,
     MUT_NO_TRANSLOCATION_MAGIC,
-    MUT_NO_POISON_MAGIC,
+    MUT_NO_ALCHEMY_MAGIC,
     MUT_NO_EARTH_MAGIC,
     MUT_NO_AIR_MAGIC
 };

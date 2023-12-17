@@ -1174,7 +1174,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     case MONS_ARACHNE:
         force_item = true;
         item.base_type = OBJ_STAVES;
-        item.sub_type = STAFF_POISON;
+        item.sub_type = STAFF_ALCHEMY;
         item.flags    |= ISFLAG_KNOW_TYPE;
         if (one_chance_in(100) && !get_unique_item_status(UNRAND_OLGREB))
             make_item_unrandart(item, UNRAND_OLGREB);
