@@ -544,8 +544,11 @@ static void _add_randart_weapon_brand(const item_def &item,
         item_props[ARTP_BRAND] = SPWPN_NORMAL;
 }
 
-static bool _talisman_conflicts(int sub_type, artefact_prop_type prop)
+static bool _talisman_conflicts(const item_def &it, artefact_prop_type prop)
 {
+    if (prop == ARTP_FLY)
+        return form_can_fly(form_for_talisman(it));
+
     // Yuck! TODO: find a way to deduplicate this.
     switch (sub_type)
     {
@@ -589,7 +592,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
     if (intrinsic_proprt[prop])
         return false; // don't duplicate intrinsic props
 
-    if (item.base_type == OBJ_TALISMANS && _talisman_conflicts(item.sub_type, prop))
+    if (item.base_type == OBJ_TALISMANS && _talisman_conflicts(item, prop))
         return false;
 
     const object_class_type item_class = item.base_type;
