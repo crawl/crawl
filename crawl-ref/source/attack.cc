@@ -1428,6 +1428,7 @@ bool attack::apply_damage_brand(const char *what)
         break;
 
     case SPWPN_DRAINING:
+    case SPWPN_REAPING:  // this probably affects chaos too
         drain_defender();
         break;
 
