@@ -157,9 +157,9 @@ schools.
 %%%%
 book of changes
 
-A student's primer to the magic arts of Transmutations. Contrary to common
-wisdom, the book has no ability to move, but it does have a nasty habit of
-disguising itself as other nearby objects.
+A student's primer to the magic arts of Alchemy. Contrary to common wisdom,
+the book has no ability to move, but it does have a nasty habit of disguising
+itself as other nearby objects.
 %%%%
 book of chaos
 
