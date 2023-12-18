@@ -13,7 +13,6 @@
 
 using std::vector;
 
-#if TAG_MAJOR_VERSION == 34
 enum class spschool
 {
   none           = 0,
@@ -31,7 +30,6 @@ enum class spschool
   random         = spschool::LAST_SCHOOL << 1,
 };
 DEF_BITFIELD(spschools_type, spschool, 9);
-#endif
 const int SPSCHOOL_LAST_EXPONENT = spschools_type::last_exponent;
 COMPILE_CHECK(spschools_type::exponent(SPSCHOOL_LAST_EXPONENT)
               == spschool::LAST_SCHOOL);
