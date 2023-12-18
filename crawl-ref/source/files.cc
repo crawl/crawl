@@ -1330,6 +1330,7 @@ static void _grab_followers()
             end_battlesphere(&mons, false);
         if (mons.type == MONS_SPECTRAL_WEAPON)
             end_spectral_weapon(&mons, false);
+        check_canid_farewell(mons, false);
         mons.flags &= ~MF_TAKING_STAIRS;
     }
 }

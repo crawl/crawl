@@ -136,8 +136,11 @@ bool canine_familiar_is_alive()
     return find_canine_familiar() != nullptr;
 }
 
-void canid_farewell(bool deadish)
+void check_canid_farewell(const monster &dog, bool deadish)
 {
+    if (&dog != find_canine_familiar())
+        return;
+
     you.props.erase(CANINE_FAMILIAR_MID);
 
     if (deadish)

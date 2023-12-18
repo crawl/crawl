@@ -2091,6 +2091,8 @@ item_def* monster_die(monster& mons, killer_type killer,
         silent = true;
     }
 
+    check_canid_farewell(mons, !wizard && !mons_reset && !was_banished);
+
     const bool death_message = !silent && !did_death_message
                                && you.can_see(mons);
     const bool exploded {mons.flags & MF_EXPLODE_KILL};
@@ -2535,8 +2537,6 @@ item_def* monster_die(monster& mons, killer_type killer,
                 killer,
                 mummy_curse_power(mons.type));
     }
-    else if (&mons == find_canine_familiar())
-        canid_farewell(!wizard && !mons_reset && !was_banished);
 
     // Necromancy
     bool corpse_consumed = false;
