@@ -5612,6 +5612,7 @@ void unmarshallItem(reader &th, item_def &item)
 
     if (th.getMinorVersion() < TAG_MINOR_ALCHEMY_MERGER
         && is_artefact(item)
+        && item.base_type != OBJ_BOOKS
         && artefact_property(item, ARTP_ENHANCE_TMUT))
     {
         artefact_set_property(item, ARTP_ENHANCE_TMUT, 0);
