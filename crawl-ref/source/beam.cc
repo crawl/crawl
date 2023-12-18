@@ -5869,7 +5869,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         {
             if (you.can_see(*mon))
             {
-                mprf("%s becomes as fragile as glass.",
+                mprf("%s becomes as fragile as glass!",
                      mon->name(DESC_THE).c_str());
                 obvious_effect = true;
             }
@@ -5892,7 +5892,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
                 }
                 else
                 {
-                    mprf("%s becomes as fragile as glass.",
+                    mprf("%s becomes as fragile as glass!",
                          mon->name(DESC_THE).c_str());
                 }
                 obvious_effect = true;
