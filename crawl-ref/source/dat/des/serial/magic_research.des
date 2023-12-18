@@ -41,7 +41,7 @@ function init_research(e, disc)
 end
 }}
 
-NAME:   serial_hangedman_research
+NAME:   serial_magic_research
 TAGS:   extra luniq_serial nolayout_encompass
 CHANCE: 0.5%
 {{
@@ -132,14 +132,14 @@ dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_toxicology
-MONS:    sea snake, redback, mana viper, tarantella
-KMONS:   5D = death drake
+MONS:    sea snake, mana viper, tarantella, death drake
+KMONS:   5D = radroach
 KITEM:   E = potion of degeneration ident:type / \
              potion of mutation ident:type
 COLOUR:  .012345DE = lightgreen
 FTILE:   .+n012345DE = floor_moss
 SHUFFLE: 12, 34
-: init_research(_G, 'poison')
+: init_research(_G, 'alchemy')
 MAP
 @'''@'''@
 abcd+dcba
@@ -173,25 +173,6 @@ a.n.%.n.a
 b3.n.n.4b
 c33nDn44c
 dcbadabcd
-ENDMAP
-
-NAME:    hangedman_research_metamorphosis
-MONS:    wolf spider, ice beast, vampire bat, hog
-KMONS:   D = fire dragon
-COLOUR:  .01234D = lightmagenta
-FTILE:   .n+01234D = floor_nerves
-SHUFFLE: 1234
-: init_research(_G, 'transmutation')
-MAP
-@'''@'''@
-abcd+dcba
-b.n...n.b
-c1n...n2c
-d3nn.nn4d
-a.0...0.a
-b.nnnnn.b
-c.0.D.0.c
-dcbadacbd
 ENDMAP
 
 NAME:   hangedman_research_quantum
