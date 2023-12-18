@@ -2535,17 +2535,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                 killer,
                 mummy_curse_power(mons.type));
     }
-    else if (mons.type == MONS_INUGAMI && you.props.exists(CANINE_FAMILIAR_MID))
-    {
-        you.props.erase(CANINE_FAMILIAR_MID);
-
-        if (!wizard && !mons_reset && !was_banished)
-        {
-            // Prevent you from resummoning it for a little while.
-            you.duration[DUR_CANINE_FAMILIAR_DEAD] = random_range(6, 11)
-                                                     * BASELINE_DELAY;
-        }
-    }
+    else if (&mons == find_canine_familiar())
+        canid_farewell(!wizard && !mons_reset && !was_banished);
 
     // Necromancy
     bool corpse_consumed = false;
