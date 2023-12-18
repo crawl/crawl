@@ -5510,7 +5510,11 @@ static string _desc_mon_resist(resists_t resist_set, mon_resist_flags res)
     const int level = get_resist(resist_set, res);
     const int max = (res == MR_RES_POISON || res == MR_RES_ELEC) ? 1 : 3; // lies
     const string desc = desc_resist(level, max, level == 3, false);
-    return make_stringf("%s: %s", _res_name(res).c_str(), desc.c_str());
+    const string prefixed_desc =
+        _padded(make_stringf("%s: %s", _res_name(res).c_str(), desc.c_str()), 16);
+    if (level)
+        return prefixed_desc;
+    return make_stringf("<darkgrey>%s</darkgrey>", prefixed_desc.c_str());
 }
 
 static void _add_resist_desc(resists_t resist_set, ostringstream &result)
@@ -5527,7 +5531,7 @@ static void _add_resist_desc(resists_t resist_set, ostringstream &result)
 
     result << "\n";
     for (mon_resist_flags rflags : common_resists)
-        result << _padded(_desc_mon_resist(resist_set, rflags), 16);
+        result << _desc_mon_resist(resist_set, rflags);
 }
 
 // Describe a monster's (intrinsic) resistances, speed and a few other
