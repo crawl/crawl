@@ -104,6 +104,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Death
+    SPELL_FUGUE_OF_THE_FALLEN,
     SPELL_ANIMATE_DEAD,
     SPELL_HAUNT,
     SPELL_INFESTATION,
@@ -116,7 +117,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Changes
-    SPELL_WEREBLOOD,
+    SPELL_STING,
     SPELL_IRRADIATE,
 },
 
@@ -194,7 +195,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Battle
-    SPELL_WEREBLOOD,
+    SPELL_FUGUE_OF_THE_FALLEN,
     SPELL_OZOCUBUS_ARMOUR,
 },
 #endif
@@ -263,8 +264,8 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Dreams
-    SPELL_JINXBITE,
     SPELL_HIBERNATION,
+    SPELL_FUGUE_OF_THE_FALLEN,
     SPELL_ANGUISH,
 },
 
@@ -430,7 +431,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Book of Blood
     SPELL_SUBLIMATION_OF_BLOOD,
-    SPELL_WEREBLOOD,
     SPELL_SUMMON_HYDRA,
 },
 
@@ -441,6 +441,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Dangerous Friends
+    SPELL_JINXBITE,
     SPELL_SUMMON_GUARDIAN_GOLEM,
     SPELL_IOOD,
     SPELL_SPELLFORGED_SERVITOR,

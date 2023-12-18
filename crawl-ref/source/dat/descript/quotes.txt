@@ -701,17 +701,6 @@ Waterstrike spell
  At the bottom of the ocean”
     -Talking Heads, “Once in a Lifetime”. 1980.
 
-%%%%
-Wereblood spell
-
-“I was not there for rehearsal, I don’t need it any more
- When I show up just in time to pop, you can clear the goddamn floor
- Empty out the locker room, let me find my space
- Let him who thinks he knows no fear look well upon my face
-
- Nameless bodies in unremembered rooms
- Know how a man becomes a beast when the wolfbane blooms”
-    -The Mountain Goats, “Werewolf Gimmick”. 2015
 ########################################
 #
 # Items

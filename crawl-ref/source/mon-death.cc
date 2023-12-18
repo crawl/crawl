@@ -60,6 +60,7 @@
 #include "spl-damage.h"
 #include "spl-other.h"
 #include "spl-summoning.h"
+#include "spl-selfench.h"
 #include "sprint.h" // SPRINT_MULTIPLIER
 #include "state.h"
 #include "stepdown.h"
@@ -2099,24 +2100,21 @@ item_def* monster_die(monster& mons, killer_type killer,
     bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
     const mon_holy_type targ_holy = mons.holiness();
 
-    // Adjust song of slaying bonus & add heals if applicable. Kills by
-    // relevant avatars are adjusted by now to KILL_YOU and are counted.
-    if (you.duration[DUR_WEREBLOOD]
-        && (killer == KILL_YOU || killer == KILL_YOU_MISSILE)
-        && gives_player_xp)
+    // Adjust fugue of the fallen bonus. This includes both kills by you and
+    // also by your allies.
+    if (you.duration[DUR_FUGUE] && gives_player_xp
+        && (killer == KILL_YOU || killer == KILL_YOU_MISSILE || pet_kill))
     {
-        const int wereblood_bonus = you.props[WEREBLOOD_KEY].get_int();
-        if (wereblood_bonus <= 8) // cap at +9 slay
-            you.props[WEREBLOOD_KEY] = wereblood_bonus + 1;
-        if (you.hp < you.hp_max
-            && !you.duration[DUR_DEATHS_DOOR]
-            && !mons_is_object(mons.type)
-            && adjacent(mons.pos(), you.pos()))
+        const int slaying_bonus = you.props[FUGUE_KEY].get_int();
+        // cap at +7 slay (at which point you do bonus negative energy damage
+        // around targets hit)
+        if (slaying_bonus < FUGUE_MAX_STACKS)
         {
-            const int hp = you.hp;
-            you.heal(random_range(1, 3));
-            if (you.hp > hp)
-                mpr("You feel a bit better.");
+            you.props[FUGUE_KEY] = slaying_bonus + 1;
+
+            // Give a message for hitting max stacks
+            if (slaying_bonus + 1 == FUGUE_MAX_STACKS)
+                mpr("The wailing of the fallen reaches a fever pitch!");
         }
     }
 

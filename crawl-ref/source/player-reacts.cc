@@ -993,20 +993,17 @@ static void _regenerate_hp_and_mp(int delay)
     _update_mana_regen_amulet_attunement();
 }
 
-static void _handle_wereblood(int delay)
+static void _handle_fugue(int delay)
 {
-    if (you.duration[DUR_WEREBLOOD]
-        && x_chance_in_y(you.props[WEREBLOOD_KEY].get_int() * delay,
+    if (you.duration[DUR_FUGUE]
+        && x_chance_in_y(you.props[FUGUE_KEY].get_int() * delay,
                          9 * BASELINE_DELAY)
         && !silenced(you.pos()))
     {
         // Keep the spam down
-        if (you.props[WEREBLOOD_KEY].get_int() < 3 || one_chance_in(5))
-        {
-            mprf("You %s as the wereblood boils in your veins!",
-                 you.shout_verb().c_str());
-        }
-        noisy(spell_effect_noise(SPELL_WEREBLOOD), you.pos());
+        if (you.props[FUGUE_KEY].get_int() < 3 || one_chance_in(5))
+            mprf("The wailing of tortured souls fills the air!");
+        noisy(spell_effect_noise(SPELL_FUGUE_OF_THE_FALLEN), you.pos());
     }
 }
 
@@ -1027,7 +1024,7 @@ void player_reacts()
     if (you.unrand_reacts.any())
         unrand_reacts();
 
-    _handle_wereblood(you.time_taken);
+    _handle_fugue(you.time_taken);
 
     if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
     {

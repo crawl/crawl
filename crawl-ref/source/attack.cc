@@ -38,6 +38,7 @@
 #include "shout.h"
 #include "skills.h"
 #include "spl-damage.h"
+#include "spl-selfench.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
@@ -145,6 +146,8 @@ bool attack::handle_phase_killed()
 
 bool attack::handle_phase_end()
 {
+    maybe_trigger_fugue_wail(defender->pos());
+
     return true;
 }
 
@@ -1768,4 +1771,13 @@ void attack::maybe_trigger_jinxbite()
 {
     if (attacker->is_player() && you.duration[DUR_JINXBITE])
         jinxbite_fineff::schedule(defender);
+}
+
+void attack::maybe_trigger_fugue_wail(const coord_def pos)
+{
+    if (attacker->is_player() && you.duration[DUR_FUGUE]
+        && (you.props[FUGUE_KEY].get_int() == FUGUE_MAX_STACKS))
+    {
+        do_fugue_wail(pos);
+    }
 }
