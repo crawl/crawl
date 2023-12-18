@@ -456,7 +456,8 @@ When evoked these clouds form around hostile monsters near the user. The
 quantity and lethality of these clouds increases with Evocations skill. At low
 power it will create noxious fumes, and as power increases this gives way to
 roaring flames, freezing vapours, and poisonous gas. At the highest tiers of
-power storm clouds, acidic fog and clouds of negative energy become available.
+power storm clouds, acidic fog and clouds of excruciating misery become
+available.
 %%%%
 corpse
 

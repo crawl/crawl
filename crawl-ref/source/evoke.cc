@@ -900,7 +900,7 @@ static const vector<random_pick_entry<cloud_type>> condenser_clouds =
   { 0,  100, 125, PEAK, CLOUD_FIRE },
   { 0,  100, 125, PEAK, CLOUD_COLD },
   { 0,  100, 125, PEAK, CLOUD_POISON },
-  { 0,  110, 50, RISE, CLOUD_NEGATIVE_ENERGY },
+  { 0,  110, 50, RISE, CLOUD_MISERY },
   { 0,  110, 50, RISE, CLOUD_STORM },
   { 0,  110, 50, RISE, CLOUD_ACID },
 };
@@ -959,7 +959,7 @@ static spret _condenser()
     {
         const cloud_type cloud = cloud_picker.pick(condenser_clouds, pow, CLOUD_NONE);
 
-        if (is_good_god(you.religion) && cloud == CLOUD_NEGATIVE_ENERGY)
+        if (is_good_god(you.religion) && cloud == CLOUD_MISERY)
         {
             suppressed = true;
             continue;
