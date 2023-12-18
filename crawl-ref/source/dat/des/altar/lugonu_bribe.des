@@ -41,7 +41,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
               phantom mirror",
          Trog="manual of Spellcasting / manual of Air Magic w:5 /\
               manual of Earth Magic w:5 / manual of Fire Magic w:5 /\
-              manual of Ice Magic w:5 / manual of Poison Magic w:5 /\
+              manual of Ice Magic w:5 / manual of Alchemy w:5 /\
               any magical staff ident:type /\
               ring of wizardry ident:type",
          Vehumet="randbook owner:Lugonu spells:magic_dart numspells:1",
