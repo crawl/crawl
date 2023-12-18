@@ -2002,7 +2002,7 @@ sharp turns to hit adjacent targets.
 %%%%
 orb of fire
 
-A globe of raw primordial fire, capable of impressive pyrotechnics, and of
+A globe of raw primordial fire, capable of impressive pyrotechnics and of
 twisting the very flesh of creatures who come into its ken.
 %%%%
 orb spider
