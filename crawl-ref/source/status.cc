@@ -493,11 +493,10 @@ bool fill_status_info(int status, status_info& inf)
     case DUR_FUGUE:
     {
         int fugue_pow = you.props[FUGUE_KEY].get_int();
-        inf.light_text
-            = make_stringf("Fugue (%s%u%s)",
-                           fugue_pow == FUGUE_MAX_STACKS ? "*" : "",
-                           fugue_pow,
-                           fugue_pow == FUGUE_MAX_STACKS ? "*" : "");
+        // Hey now / you're a damned star / get your fugue on / go slay
+        const char* fugue_star = fugue_pow == FUGUE_MAX_STACKS ? "*" : "";
+        inf.light_text = make_stringf("Fugue (%s%u%s)",
+                                      fugue_star, fugue_pow, fugue_star);
     }
     break;
 

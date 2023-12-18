@@ -195,11 +195,10 @@ void do_fugue_wail(const coord_def pos)
     }
 
     if (!affected.empty())
-    {
         mpr("The fallen lash out in pain!");
-        for (unsigned int i = 0; i < affected.size(); ++i)
-            affected[i]->hurt(&you, roll_dice(2, 5), BEAM_NEG, KILLED_BY_BEAM);
-    }
+    for (monster *m : affected)
+        if (m->alive())
+            m->hurt(&you, roll_dice(2, 5), BEAM_NEG, KILLED_BY_BEAM);
 }
 
 int silence_min_range(int pow)
