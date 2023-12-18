@@ -32,6 +32,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
+#include "transform.h" // form_for_talisman
 #include "unicode.h"
 
 // Putting this here since art-enum.h is generated.
@@ -550,7 +551,7 @@ static bool _talisman_conflicts(const item_def &it, artefact_prop_type prop)
         return form_can_fly(form_for_talisman(it));
 
     // Yuck! TODO: find a way to deduplicate this.
-    switch (sub_type)
+    switch (it.sub_type)
     {
     case TALISMAN_STATUE:
     case TALISMAN_STORM:
