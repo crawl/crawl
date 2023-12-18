@@ -507,13 +507,13 @@ static const map<spschool, miscast_datum> miscast_effects = {
             BEAM_NONE,
             {
                 "You are engulfed in toxic fumes",
-                "There is a flash of cinnibar",
+                "There is a flash of cinnabar",
                 "Mercury flows from your @hands@",
                 "Parts of your body briefly turn golden",
             },
             {
                 "@The_monster@ is engulfed in toxic fumes",
-                "@The_monster@ is blasted with cinnibar dust",
+                "@The_monster@ is blasted with cinnabar dust",
                 "@The_monster@ starts coughing violently",
                 "@The_monster@ looks incredibly sick",
             },
