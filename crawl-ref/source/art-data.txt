@@ -322,6 +322,7 @@ DBRAND:  Torment:   It occasionally torments all nearby living foes when it
  strikes in combat.
 
 NAME:    sword of Zonguldrok
+INSCRIP: drain,
 OBJ:     OBJ_WEAPONS/WPN_DOUBLE_SWORD
 PLUS:    +9
 COLOUR:  ETC_BONE
@@ -331,6 +332,10 @@ BRAND:   SPWPN_REAPING
 FB_BRAND: SPWPN_PAIN
 VALUE:   800
 BOOL:    evil
+DBRAND:  Draining:  It sometimes drains living victims (1/2 chance). This deals
+ an additional one-quarter of any damage that pierces
+ defenders' armour as well as a flat 2-4 damage, and also
+ weakens them slightly.
 
 NAME:    sword of Cerebov
 APPEAR:  great serpentine sword
