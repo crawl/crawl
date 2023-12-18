@@ -1208,9 +1208,6 @@ static void _debug_acquirement_stats(FILE *ostat)
                 "hexes",
                 "fire magic",
                 "ice magic",
-#if TAG_MAJOR_VERSION == 34
-                "transmutation",
-#endif
                 "necromancy",
                 "summoning",
                 "translocation",

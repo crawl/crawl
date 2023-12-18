@@ -915,10 +915,6 @@ skill_type spell_type2skill(spschool spelltype)
     case spschool::earth:          return SK_EARTH_MAGIC;
     case spschool::air:            return SK_AIR_MAGIC;
 
-#if TAG_MAJOR_VERSION == 34
-    case spschool::transmutation:  return SK_TRANSMUTATIONS;
-#endif
-
     default:
         dprf("spell_type2skill: called with unmapped spell school %u"
              " (name '%s')", static_cast<unsigned int>(spelltype),
@@ -1756,9 +1752,6 @@ static const mutation_type arcana_sacrifice_map[] = {
     MUT_NO_HEXES_MAGIC,
     MUT_NO_FIRE_MAGIC,
     MUT_NO_ICE_MAGIC,
-#if TAG_MAJOR_VERSION == 34
-    MUT_NO_TRANSMUTATION_MAGIC,
-#endif
     MUT_NO_NECROMANCY_MAGIC,
     MUT_NO_SUMMONING_MAGIC,
     MUT_NO_TRANSLOCATION_MAGIC,

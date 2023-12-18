@@ -597,17 +597,7 @@ void miscast_effect(actor& target, actor* source, miscast_source_info mc_info,
     }
 
     if (school == spschool::random)
-    {
         school = spschools_type::exponent(random2(SPSCHOOL_LAST_EXPONENT + 1));
-
-        #if TAG_MAJOR_VERSION == 34
-            // This technically makes alchemy miscasts twice as likely as any
-            // other, but currently this only affects Spellbinder and an arena
-            // test.
-            if (school == spschool::transmutation)
-                school = spschool::alchemy;
-        #endif
-    }
 
     // Don't summon friendly nameless horrors if they would always turn hostile.
     if (source && source->is_player()
