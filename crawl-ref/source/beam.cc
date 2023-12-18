@@ -3592,6 +3592,8 @@ void bolt::affect_player_enchantment(bool resistible)
     case BEAM_VITRIFY:
         if (!you.duration[DUR_VITRIFIED])
             mpr("Your body becomes as fragile as glass!");
+        else
+            mpr("You feel your fragility will last longer.");
         you.increase_duration(DUR_VITRIFIED, random_range(8, 18), 50);
         obvious_effect = true;
         break;
