@@ -618,6 +618,18 @@ Each victim is only ever affected by one icy wall at a time.
 
 The ice will crack and fall away if the caster moves to a new position.
 %%%%
+Fugue of the Fallen spell
+
+Calls out to the lingering remnants of the long dead. While active, each
+non-summoned enemy the caster or their allies slays attracts more vengeful
+souls into the caster's weapon, temporarily enhances their melee and ranged
+effectiveness. When this bonus reaches its maximum, every attack will inflict
+a glimmer of the dead's suffering on each adjacent foe.
+
+Recasting this spell will release your grip on the souls you've attracted, and
+the violent wailing of the fallen may also attract unwanted attention while the
+spell is active.
+%%%%
 Fulminant Prism spell
 
 Conjures a prism which unleashes a violent explosion of arcane force after a
@@ -1691,16 +1703,6 @@ Weakening Gaze spell
 
 Irresistibly weakens a creature's melee attacks for a period of time,
 requiring line of sight but not line of fire.
-%%%%
-Wereblood spell
-
-Transforms some of the caster's blood into that of a were-beast, causing them
-to occasionally howl uncontrollably. While active, each non-summoned enemy the
-caster slays in combat temporarily enhances their melee and ranged
-effectiveness, and killing adjacent enemies also provides minor healing.
-
-The bonus only lasts for the duration of a single cast; retransforming the
-caster's blood calms the were-spirit and resets the bonus.
 %%%%
 Wind Blast spell
 

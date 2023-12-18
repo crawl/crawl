@@ -2215,10 +2215,10 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_WEREBLOOD, "Wereblood",
-    spschool::alchemy,
-    spflag::utility | spflag::chaotic,
-    2,
+    SPELL_FUGUE_OF_THE_FALLEN, "Fugue of the Fallen",
+    spschool::necromancy,
+    spflag::selfench,
+    3,
     100,
     -1, -1,
     8,

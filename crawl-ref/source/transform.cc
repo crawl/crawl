@@ -1721,11 +1721,6 @@ static void _on_enter_form(transformation which_trans)
         break;
 
     case transformation::death:
-        if (you.duration[DUR_WEREBLOOD])
-        {
-            you.duration[DUR_WEREBLOOD] = 0;
-            mpr("Your lifeless body cannot sustain the wereblood!");
-        }
         you.redraw_status_lights = true;
         break;
 

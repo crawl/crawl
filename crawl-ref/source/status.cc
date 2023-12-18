@@ -490,11 +490,16 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
-    case DUR_WEREBLOOD:
+    case DUR_FUGUE:
+    {
+        int fugue_pow = you.props[FUGUE_KEY].get_int();
         inf.light_text
-            = make_stringf("Slay (%u)",
-                           you.props[WEREBLOOD_KEY].get_int());
-        break;
+            = make_stringf("Fugue (%s%u%s)",
+                           fugue_pow == FUGUE_MAX_STACKS ? "*" : "",
+                           fugue_pow,
+                           fugue_pow == FUGUE_MAX_STACKS ? "*" : "");
+    }
+    break;
 
     case STATUS_BEOGH:
         if (env.level_state & LSTATE_BEOGH && can_convert_to_beogh())

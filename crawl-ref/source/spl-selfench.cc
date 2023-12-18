@@ -164,19 +164,42 @@ int cast_selective_amnesia(const string &pre_msg)
     return -1;
 }
 
-spret cast_wereblood(int pow, bool fail)
+spret cast_fugue_of_the_fallen(int pow, bool fail)
 {
     fail_check();
 
-    if (you.duration[DUR_WEREBLOOD])
-        mpr("Your blood is freshly infused with primal strength!");
+    if (you.duration[DUR_FUGUE])
+        mpr("You release your grip on the fallen and begin the cycle anew!");
     else
-        mpr("Your blood is infused with primal strength.");
+        mpr("You call out to the remnants of the fallen!");
 
-    you.set_duration(DUR_WEREBLOOD, 20 + random2avg(pow, 2));
+    you.set_duration(DUR_FUGUE, 25 + random2avg(pow, 2));
 
-    you.props[WEREBLOOD_KEY] = 0;
+    you.props[FUGUE_KEY] = 0;
     return spret::success;
+}
+
+void do_fugue_wail(const coord_def pos)
+{
+    // Do burst of negative energy damage around the spot that was hit by an
+    // attack with max fugue stacks. Hit anything which isn't friendly and
+    // immune to negative energy.
+    vector <monster*> affected;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+    {
+        if (monster_at(*ai) && !monster_at(*ai)->wont_attack()
+            && monster_at(*ai)->res_negative_energy() < 3)
+        {
+            affected.push_back(monster_at(*ai));
+        }
+    }
+
+    if (!affected.empty())
+    {
+        mpr("The fallen lash out in pain!");
+        for (unsigned int i = 0; i < affected.size(); ++i)
+            affected[i]->hurt(&you, roll_dice(2, 5), BEAM_NEG, KILLED_BY_BEAM);
+    }
 }
 
 int silence_min_range(int pow)

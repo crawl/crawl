@@ -923,8 +923,8 @@ ITEM:   young poisoner's handbook / book of changes / \
         randbook disc:Alchemy slevels:8 w:5 / \
         randbook numspells:4 title:Nature \
         spells:summon_small_mammal&call_canine_familiar&hailstorm&summon_forest / \
-        randbook numspells:4 title:Nature \
-        spells:sting&wereblood&hailstorm&summon_forest
+        randbook numspells:3 title:Nature \
+        spells:sting&stone_arrow&hailstorm&summon_forest
 KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
 KITEM:  g = any potion q:2
 MONS:   plant, oklob sapling, ball python
@@ -974,7 +974,7 @@ ITEM:   young poisoner's handbook / book of changes / \
         randbook numspells:4 title:Nature \
         spells:summon_small_mammal&call_canine_familiar&hailstorm&summon_forest / \
         randbook numspells:4 title:Nature \
-        spells:sting&wereblood&hailstorm&summon_forest
+        spells:sting&stone_arrow&hailstorm&summon_forest
 KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
 KITEM:  g = any potion q:2 / any potion q:3
 MONS:   plant, oklob sapling, ball python

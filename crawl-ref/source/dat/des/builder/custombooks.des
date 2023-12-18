@@ -152,7 +152,7 @@ local books = {
   .. "summon_ice_beast&freezing_cloud&ozocubu's_refrigeration",
 "the_Dance owner:Terpsichore numspells:3 spells:blink&swiftness&"
   .. "tukima's_dance",
-"the_Ennead numspells:8 spells:necrotise&sandblast&wereblood&swiftness&"
+"the_Ennead numspells:8 spells:necrotise&sandblast&fugue_of_the_fallen&swiftness&"
   .. "hailstorm&irradiate&dispersal&starburst",
 "the_Full_Count numspells:5 spells:momentum_strike&airstrike&fireball&"
   .. "iskenderun's_battlesphere&conjure_ball_lightning",
@@ -175,7 +175,8 @@ local books = {
 "the_Lunargent_Thorn owner:Acanthus numspells:6 spells:slow&"
   .. "ensorcelled_hibernation&anguish&summon_forest&summon_cactus_giant&"
   .. "dragon's_call",
-"the_Monster_Mash numspells:6 spells:necrotise&wereblood&call_canine_familiar&"
+"the_Monster_Mash numspells:6 spells:necrotise&fugue_of_the_fallen&"
+  .. "call_canine_familiar&"
   .. "vampiric_draining&summon_lightning_spire&spellforged_servitor",
 "the_Nosferatu numspells:6 spells:summon_small_mammal&call_canine_familiar&"
   .. "sublimation_of_blood&vampiric_draining&cause_fear&"
@@ -185,7 +186,7 @@ local books = {
   .. "disjunction",
 "the_Seventh_Heavens numspells:7 spells:foxfire&anguish&petrify&arcjolt&"
   .. "silence&discord&shatter",
-"the_Stone_Book owner:Thyrsus numspells:6 spells:wereblood&"
+"the_Stone_Book owner:Thyrsus numspells:6 spells:fugue_of_the_fallen&"
   .. "call_canine_familiar&animate_armour&summon_mana_viper&"
   .. "monstrous_menagerie&borgnjor's_revivification",
 "the_Sum_of_Summoning numspells:8 spells:summon_small_mammal&call_imp&"

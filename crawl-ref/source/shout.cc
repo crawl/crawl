@@ -815,7 +815,10 @@ void yell(const actor* mon)
     {
         mprf(MSGCH_SOUND, "You %s%s!",
              shout_verb.c_str(),
-             you.berserk() ? " wildly" : " for attention");
+             you.berserk() ? " wildly"
+             : you.duration[DUR_FUGUE] ? " and the souls of the damned shout"
+                                         " with you"
+                                       : " for attention");
     }
 
     noisy(noise_level, you.pos());
