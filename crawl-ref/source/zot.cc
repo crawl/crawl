@@ -359,7 +359,8 @@ void maybe_break_floor_gem()
     const gem_type gem = gem_for_branch(you.where_are_you);
     if (gem != NUM_GEM_TYPES
         && !you.gems_shattered[gem]
-        && you.gem_time_spent[gem] >= gem_time_limit(gem))
+        && (crawl_state.game_is_descent() // No descent gems :(
+            || you.gem_time_spent[gem] >= gem_time_limit(gem)))
     {
         _shatter_floor_gem(gem, true);
     }
