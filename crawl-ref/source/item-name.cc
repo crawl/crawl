@@ -2423,8 +2423,11 @@ void RuneMenu::set_gems()
 
         if (!Options.more_gem_info
             && !more_gems
-            && you.gems_shattered[gem]
-            && !you.gems_found[gem])
+            && !you.gems_found[gem]
+            // We need to check time left rather than shattered, since the latter is
+            // only set when the gem is actually broken, and we may not have loaded
+            // the relevant level since we ran out of time.
+            && you.gem_time_spent[gem] >= gem_time_limit(gem))
         {
             continue;
         }
