@@ -6264,7 +6264,7 @@ KMONS:   H = reaper ; halberd itemname:scythe \
 ITEM:    potion of mutation q:4 ident:all
 ITEM:    potion of ambrosia q:4 ident:all / \
          flux talisman randart / talisman of death randart w:5 / \
-         randbook owner:Xom disc:transmutation disc2:necromancy numspells:6
+         randbook owner:Xom disc:alchemy disc2:necromancy numspells:6
 KFEAT:   _ = altar_xom
 KFEAT:   ? = altar_kikubaaqudgha mimic
 KFEAT:   ! = altar_yredelemnul mimic

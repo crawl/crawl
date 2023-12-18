@@ -2935,7 +2935,7 @@ ITEM:    any potion, any scroll
 : end
 ITEM:    any armour, any weapon, any ring, any amulet
 ITEM:    any wand charges:1, wand of digging charges:1 ident:type
-: kitem("| = randbook disc:necromancy disc2:transmutation numspells:5 " ..
+: kitem("| = randbook disc:necromancy disc2:alchemy numspells:5 " ..
 :       "slevels:" .. you.absdepth())
 KFEAT:   F = G
 SUBST:   C = c, X = xx.
