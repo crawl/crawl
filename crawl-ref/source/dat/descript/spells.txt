@@ -1373,10 +1373,9 @@ begin to form again as normal.
 %%%%
 Sting spell
 
-Briefly transforms a nearby rock or torch into a long insectoid stinger,
-which lashes out at the target. The stinger's impact will always poison a
-susceptible target. Even resistant targets have a chance to be poisoned and
-immune monsters will be damaged by the physical impact of the stinger.
+Conjures a jagged shard of crystalized toxins. The stinger's impact will always
+poison a susceptible target. Even resistant targets have a chance to be poisoned
+and immune monsters will still be damaged by the physical impact of the stinger.
 %%%%
 Stoke Flames spell
 
