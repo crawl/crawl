@@ -39,8 +39,8 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Minor Magic
     SPELL_MAGIC_DART,
+    SPELL_BLINK,
     SPELL_CALL_IMP,
-    SPELL_MEPHITIC_CLOUD,
 },
 
 {   // Book of Conjurations
@@ -104,21 +104,21 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Death
-    SPELL_FUGUE_OF_THE_FALLEN,
     SPELL_ANIMATE_DEAD,
     SPELL_HAUNT,
     SPELL_INFESTATION,
 },
 
 {   // Book of Misfortune
-    SPELL_INNER_FLAME,
+    SPELL_JINXBITE,
     SPELL_VIOLENT_UNRAVELLING,
     SPELL_ENFEEBLE,
 },
 
-{   // Book of Changes
-    SPELL_STING,
+{   // Book of Spontaneous Combustion
+    SPELL_INNER_FLAME,
     SPELL_IRRADIATE,
+    SPELL_IGNITION,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -193,12 +193,13 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Control
     SPELL_ENGLACIATION,
 },
+#endif
 
 {   // Book of Battle
     SPELL_FUGUE_OF_THE_FALLEN,
     SPELL_OZOCUBUS_ARMOUR,
+    SPELL_MANIFOLD_ASSAULT
 },
-#endif
 
 {   // Book of Geomancy
     SPELL_SANDBLAST,
@@ -225,6 +226,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Cantrips
+    SPELL_STING,
     SPELL_NECROTISE,
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_APPORTATION,
@@ -269,7 +271,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_ANGUISH,
 },
 
-{   // Book of Alchemy
+{   // Book of Transmutation
     SPELL_SUBLIMATION_OF_BLOOD,
     SPELL_PETRIFY,
     SPELL_IRRADIATE,
@@ -370,13 +372,16 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_BOMBARD,
 },
 
+#if TAG_MAJOR_VERSION == 34
 { // Ozocubu's Autobio
     SPELL_OZOCUBUS_ARMOUR,
     SPELL_OZOCUBUS_REFRIGERATION,
 },
+#endif
 
 { // Book of the Senses
     SPELL_DAZZLING_FLASH,
+    SPELL_MEPHITIC_CLOUD,
     SPELL_AGONY,
     SPELL_SILENCE,
 },
@@ -399,10 +404,12 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_LRD,
 },
 
+#if TAG_MAJOR_VERSION == 34
 { // Inescapable Atlas
     SPELL_BLINK,
     SPELL_MANIFOLD_ASSAULT,
 },
+#endif
 
 { // Book of the Tundra
     SPELL_HAILSTORM,
@@ -430,6 +437,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Blood
+    SPELL_CALL_IMP,
     SPELL_SUBLIMATION_OF_BLOOD,
     SPELL_SUMMON_HYDRA,
 },
@@ -441,7 +449,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Dangerous Friends
-    SPELL_JINXBITE,
     SPELL_SUMMON_GUARDIAN_GOLEM,
     SPELL_IOOD,
     SPELL_SPELLFORGED_SERVITOR,
@@ -461,7 +468,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Unrestrained Analects
     SPELL_OLGREBS_TOXIC_RADIANCE,
-    SPELL_IGNITION,
+    SPELL_OZOCUBUS_REFRIGERATION,
     SPELL_DISCORD,
 },
 

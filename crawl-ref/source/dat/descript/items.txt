@@ -104,11 +104,6 @@ a copy of this book while trapped atop the tower of a wizard with a particularly
 perverse sense of humor, used its pages to construct a rudimentary glider and
 soared to freedom.
 %%%%
-book of alchemy
-
-A book focusing on alchemical processes and their use in magic spells,
-collecting the wisdom of many ancient alchemists.
-%%%%
 book of annihilations
 
 A tome of arcane fury, greatly sought after by sorcerers. It allows the gifted
@@ -120,6 +115,13 @@ A book describing various magical arms and armours. It was written in the midst
 of a particularly bloody civil war, and the text is made substantially less
 helpful by its author's frequent digressions describing the crimes committed by
 the other side.
+%%%%
+book of battle
+
+An astonishingly vain and self-aggrandizing work. The author claims credit for a
+wide swathe of weapon-augmenting magics, but seems to have misunderstood or
+misrepresented most of them. Only a few of the spells described in the book
+actually work.
 %%%%
 book of beasts
 
@@ -298,6 +300,12 @@ book of spectacle
 A book covered in glittering sequins. An impromptu lightshow bursts from every
 page, clearly reserving this book for only the tackiest of wizards.
 %%%%
+book of spontaneous combustion
+
+A heavy tome whose desiccated pages smell faintly of sulfer. The ink with which
+it was written is wildly flammable and care must be taken even opening it, but
+the power of the spells described therein is undeniable.
+%%%%
 book of the spheres
 
 A book containing a well-rounded collection of sphere-related spells. Its
@@ -351,6 +359,14 @@ book of the senses
 A scholarly work, describing the senses used by living creatures to perceive the
 world around them. A handful of spells are included to demonstrate the principles
 being described.
+%%%%
+%%%%
+book of transmutation
+
+A meticulous compendium of research notes, filled with formulae for decomposing
+and reconstituting all manner of substances. The author appears to have had a
+strange obsession with becoming a spider, but even if their ultimate aim eluded
+them, many of the spells detailed therein are nonetheless quite practical.
 %%%%
 book of the tundra
 
@@ -731,13 +747,6 @@ ice dragon scales
 The scales of a cold-breathing dragon. It provides great protection from cold,
 while rendering its wearer more susceptible to fire.
 %%%%
-inescapable atlas
-
-A collection of maps, with accompanying descriptions of spells that can bring
-the user to each place. Most copies are locked up, chained down, or otherwise
-restrained, as the book has a habit of otherwise following its owner wherever
-they go.
-%%%%
 ivory gem
 
 [[gem]]
@@ -880,13 +889,6 @@ orcbow
 A recurved bow, crudely crafted from troll-bone and warg hair. The cave orcs'
 use of archery, so unlike their surface-dwelling cousins, shows the influence
 of their elvish allies.
-%%%%
-ozocubu's autobiography
-
-An astonishingly vain and self-aggrandizing work. The author claims credit
-for a wide swathe of magical inventions, but seems to have misunderstood or
-misrepresented most of them. Only a few of the spells described in the book
-actually work.
 %%%%
 pair of boots
 
