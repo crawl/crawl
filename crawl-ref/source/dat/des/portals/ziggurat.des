@@ -480,8 +480,8 @@ NAME:   ziggurat_pillar_centre_covered
 TAGS:   ziggurat_pillar centered unrand no_exits
 DEPTH:  Zig:10-
 WEIGHT: 5
-MONS:   animated armour hp:80 ; crystal plate armour | \
-        gold dragon scales | plate armour w:20
+MONS:   animated armour hp:80 ; plate armour | \
+        gold dragon scales
 MAP
 1
 ENDMAP
