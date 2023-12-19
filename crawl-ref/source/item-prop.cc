@@ -2289,10 +2289,7 @@ int gem_time_limit(gem_type gem)
     const int per_floor = Gem_prop[ Gem_index[gem]].time_per_floor;
     const branch_type br = Gem_prop[ Gem_index[gem]].branch;
     const int floors = branches[br].numlevels;
-    const int base_time = per_floor * floors;
-    if (have_passive(passive_t::slow_zot))
-        return base_time * 3 / 2;
-    return base_time;
+    return per_floor * floors;
 }
 
 //
