@@ -207,8 +207,7 @@ private:
     const char *damage_verb() const;
     string death_source_desc() const;
     string damage_string(bool terse = false) const;
-    string runes_desc(bool semiverbose) const;
-    string gems_desc() const;
+    string runes_gems_desc(bool semiverbose) const;
 
     bool parse_scoreline(const string &line);
 
