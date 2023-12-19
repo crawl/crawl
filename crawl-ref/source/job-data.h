@@ -337,7 +337,7 @@ static const map<job_type, job_def> job_data =
       SP_DEMONSPAWN, },
     {
         SPELL_STING,
-        SPELL_POISONOUS_VAPOURS,
+        SPELL_MERCURY_VAPOURS,
         SPELL_MEPHITIC_CLOUD,
         SPELL_OLGREBS_TOXIC_RADIANCE,
         SPELL_STICKY_FLAME
