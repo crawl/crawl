@@ -214,29 +214,31 @@ wwwww
  www
 ENDMAP
 
-NAME: ziggurat_pillar_centre_c
-TAGS: ziggurat_pillar centered unrand no_exits
-# This is evil. Monster sets are: summoners (1), smites (2), harmless (3).
-# This pillar has tactical implications: you will have to stay away from it,
-# and teleports are more risky.
-MONS: dread lich / shadow demon / curse skull / \
-      ironbound convoker / demonspawn corrupter / deep elf demonologist
-MONS: eye of devastation / glass eye / ghost moth / demonspawn black sun / \
-      torpor snail
-MONS: plant
-: if you.depth() > 21 then
-SUBST: 3 = 12222
-: elseif you.depth() > 15 or you.depth() > 8 and crawl.coinflip() then
-SUBST: 3 = 12
-: end
+NAME:  ziggurat_pillar_centre_c
+TAGS:  ziggurat_pillar centered unrand no_exits
+# This is evil. Monster sets are: summoners (1), smiters (2), suppressors (3),
+# harmless (4). This pillar has tactical implications: you will have to stay
+# away from it, and teleports are more risky.
+MONS:  dread lich / shadow demon / curse skull / ironbound convoker / \
+       demonspawn corrupter / deep elf demonologist / \
+       mummy priest w:5 / royal mummy w:5 / deep elf death mage
+MONS:  titan / glass eye / ghost moth / glowing orange brain / tormentor
+MONS:  demonspawn black sun / torpor snail / \
+       servant of whispers / tainted leviathan
+MONS:  plant / demonic plant / butterfly
 KFEAT: m = iron_grate
+: if you.depth() > 21 then
+SUBST: 4 = 111233
+: elseif you.depth() > 15 or you.depth() > 8 and crawl.coinflip() then
+SUBST: 4 = 123
+: end
 MAP
 mmm
-m3m
+m4m
 mmm
 ENDMAP
 
-NAME: ziggurat_pillar_centre_monster
+NAME: ziggurat_pillar_centre_statue
 TAGS: ziggurat_pillar centered no_dump unrand no_exits
 MONS: ice statue / orange crystal statue / obsidian statue
 MAP
@@ -472,6 +474,18 @@ MONS:   dancing weapon ; any weapon good_item | \
 MAP
  1
 1
+ENDMAP
+
+NAME:    ziggurat_pillar_centre_bezotted
+TAGS:    ziggurat_pillar centered unrand no_exits
+WEIGHT:  1
+KFEAT:   ^ = zot trap
+SHUFFLE: .G
+TILE:    G = dngn_statue_orb_guardian
+MAP
+G.G
+.^.
+G.G
 ENDMAP
 
 #######################################################################
