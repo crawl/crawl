@@ -777,7 +777,7 @@ static const struct spell_desc spelldata[] =
     spflag::dir_or_target | spflag::needs_tracer,
     1,
     25,
-    3, 3,
+    4, 4,
     0,
     TILEG_STING,
 },
@@ -1234,7 +1234,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_FULMINANT_PRISM, "Fulminant Prism",
-    spschool::conjuration | spschool::hexes,
+    spschool::conjuration | spschool::alchemy,
     spflag::target | spflag::area | spflag::not_self,
     4,
     200,

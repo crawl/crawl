@@ -117,7 +117,6 @@ static const map<job_type, job_def> job_data =
     {
         SPELL_MAGIC_DART,
         SPELL_SEARING_RAY,
-        SPELL_DAZZLING_FLASH,
         SPELL_FULMINANT_PRISM,
         SPELL_ISKENDERUNS_MYSTIC_BLAST,
     },
