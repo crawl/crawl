@@ -4631,26 +4631,25 @@ void dec_sticky_flame_player(int delay)
 // Greatly reduce the remaining duration whenever the player moves.
 void shake_off_sticky_flame()
 {
-    if (you.duration[DUR_STICKY_FLAME] > 0)
-    {
-        // Lose 6 turns of duration for each move
-        you.duration[DUR_STICKY_FLAME] =
-            max(0, you.duration[DUR_STICKY_FLAME] - 60);
+    int &dur = you.duration[DUR_STICKY_FLAME];
+    if (dur <= 0)
+        return;
+    // Lose 6 turns of duration for each move
+    dur = max(0, dur - 60);
 
-        // End it slightly early if it's ALMOST gone, just to avoid the common
-        // situation of losing most of its duration to movement and then it
-        // expiring 'normally' immediately afterward, without giving the message
-        // that the player helped put it out.
-        //
-        // (20 aut is picked fairly arbitrarily to include even most slowed actions)
-        if (you.duration[DUR_STICKY_FLAME] <= 20)
-        {
-            mprf(MSGCH_RECOVERY, "You shake off the liquid fire.");
-            end_sticky_flame_player();
-        }
-        else
-            mpr("You shake off the fire as you move.");
+    // End it slightly early if it's ALMOST gone, just to avoid the common
+    // situation of losing most of its duration to movement and then it
+    // expiring 'normally' immediately afterward, without giving the message
+    // that the player helped put it out.
+    //
+    // (20 aut is picked fairly arbitrarily to include even most slowed actions)
+    if (dur <= 20)
+    {
+        mprf(MSGCH_RECOVERY, "You shake off the liquid fire.");
+        end_sticky_flame_player();
     }
+    else
+        mpr("You shake off some of the fire as you move.");
 }
 
 // End the sticky flame status entirely

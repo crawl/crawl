@@ -3030,27 +3030,20 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_STICKY_FLAME:
-    {
-        if (defender->res_sticky_flame())
+        if (defender->res_sticky_flame() || !one_chance_in(3))
             break;
-
-        if (one_chance_in(3))
+    {
+        const int hd = attacker->get_hit_dice();
+        if (defender->is_player())
         {
-            if (defender->is_player())
-            {
-                const int intensity = 3 + attacker->get_hit_dice() / 3;
-                sticky_flame_player(intensity, random_range(11, 21), atk_name(DESC_A));
-            }
-            else
-            {
-                sticky_flame_monster(defender->as_monster(), attacker,
-                                     min(4, random_range(attacker->get_hit_dice() / 2,
-                                            attacker->get_hit_dice())),
-                                     true);
-            }
+            const int intensity = 3 + hd / 3;
+            sticky_flame_player(intensity, random_range(11, 21), atk_name(DESC_A));
+            break;
         }
+        const int dur = min(4, random_range(hd / 2, hd));
+        sticky_flame_monster(defender->as_monster(), attacker, dur, true);
     }
-    break;
+        break;
 
     case AF_CHAOTIC:
         chaos_affects_defender();
