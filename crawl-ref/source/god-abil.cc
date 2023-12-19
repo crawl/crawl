@@ -67,6 +67,7 @@
 #include "ouch.h"
 #include "output.h"
 #include "place.h"
+#include "player.h"
 #include "player-equip.h"
 #include "player-stats.h"
 #include "potion.h"
@@ -4813,7 +4814,7 @@ bool ru_power_leap()
     }
 
     move_player_to_grid(beam.target, false);
-    apply_barbs_damage();
+    player_did_deliberate_movement();
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
@@ -5117,7 +5118,7 @@ bool uskayaw_line_pass()
         line_pass.fire();
         you.stop_being_constricted(false);
         move_player_to_grid(beam.target, false);
-        apply_barbs_damage();
+        player_did_deliberate_movement();
     }
 
     crawl_state.cancel_cmd_again();
@@ -5788,7 +5789,7 @@ spret wu_jian_wall_jump_ability()
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
 
-    apply_barbs_damage();
+    player_did_deliberate_movement();
     return spret::success;
 }
 

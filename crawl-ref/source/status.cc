@@ -500,6 +500,22 @@ bool fill_status_info(int status, status_info& inf)
     }
     break;
 
+    case DUR_STICKY_FLAME:
+    {
+        int intensity = you.props[STICKY_FLAME_POWER_KEY].get_int();
+
+        // These thresholds are fairly arbitrary and likely could use adjusting.
+        if (intensity >= 13)
+        {
+            inf.light_colour = LIGHTRED;
+            inf.light_text = "Fire++";
+        }
+        else if (intensity > 7)
+            inf.light_text = "Fire+";
+        else
+            inf.light_text = "Fire";
+    }
+
     case STATUS_BEOGH:
         if (env.level_state & LSTATE_BEOGH && can_convert_to_beogh())
         {

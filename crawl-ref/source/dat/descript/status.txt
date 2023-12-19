@@ -162,8 +162,9 @@ are not in their vision.
 %%%%
 Fire status
 
-You are covered with sticky fire, which causes damage over a short duration.
-Entering water will extinguish the flames.
+You are covered with sticky fire, which causes damage over a moderate duration.
+Moving will quell the fire much more rapidly, and entering water will extinguish
+it immediately.
 %%%%
 Corona status
 

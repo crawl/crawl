@@ -2630,33 +2630,6 @@ bool melee_attack::mons_do_poison()
     return true;
 }
 
-void melee_attack::mons_do_napalm()
-{
-    if (defender->res_sticky_flame())
-        return;
-
-    if (one_chance_in(3))
-    {
-        if (needs_message)
-        {
-            mprf("%s %s covered in liquid flames%s",
-                 defender_name(false).c_str(),
-                 defender->conj_verb("are").c_str(),
-                 attack_strength_punctuation(special_damage).c_str());
-        }
-
-        if (defender->is_player())
-            napalm_player(random2avg(7, 3) + 1, atk_name(DESC_A));
-        else
-        {
-            napalm_monster(
-                defender->as_monster(),
-                attacker,
-                min(4, 1 + random2(attacker->get_hit_dice())/2));
-        }
-    }
-}
-
 static void _print_resist_messages(actor* defender, int base_damage,
                                    beam_type flavour)
 {
@@ -3057,7 +3030,19 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_STICKY_FLAME:
-        mons_do_napalm();
+        if (defender->res_sticky_flame() || !one_chance_in(3))
+            break;
+    {
+        const int hd = attacker->get_hit_dice();
+        if (defender->is_player())
+        {
+            const int intensity = 3 + hd / 3;
+            sticky_flame_player(intensity, random_range(11, 21), atk_name(DESC_A));
+            break;
+        }
+        const int dur = min(4, random_range(hd / 2, hd));
+        sticky_flame_monster(defender->as_monster(), attacker, dur, true);
+    }
         break;
 
     case AF_CHAOTIC:

@@ -464,7 +464,7 @@ public:
                 afflictions.push_back("magical contamination");
             if (you.duration[DUR_CORONA])
                 afflictions.push_back("corona");
-            if (you.duration[DUR_LIQUID_FLAMES])
+            if (you.duration[DUR_STICKY_FLAME])
                 afflictions.push_back("liquid flames");
             if (you.duration[DUR_QUAD_DAMAGE])
                 afflictions.push_back("!!!QUAD DAMAGE!!!");

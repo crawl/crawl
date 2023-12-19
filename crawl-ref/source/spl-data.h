@@ -672,7 +672,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_STICKY_FLAME, "Sticky Flame",
-    spschool::conjuration | spschool::fire,
+    spschool::alchemy | spschool::fire,
     spflag::dir_or_target | spflag::needs_tracer,
     4,
     100,
@@ -1519,14 +1519,13 @@ static const struct spell_desc spelldata[] =
     TILEG_SPIT_ACID,
 },
 
-// Monster version of the spell (with full range)
 {
-    SPELL_STICKY_FLAME_RANGE, "Sticky Flame Range",
+    SPELL_PYRE_ARROW, "Pyre Arrow",
     spschool::conjuration | spschool::fire,
     spflag::dir_or_target | spflag::monster | spflag::needs_tracer,
     4,
     100,
-    4, 4,
+    5, 5,
     0,
     TILEG_STICKY_FLAME_RANGE,
 },

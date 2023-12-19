@@ -1155,8 +1155,10 @@ int poison_survival();
 
 bool miasma_player(actor *who, string source_aux = "");
 
-bool napalm_player(int amount, string source, string source_aux = "");
-void dec_napalm_player(int delay);
+bool sticky_flame_player(int intensity, int duration, string source, string source_aux = "");
+void dec_sticky_flame_player(int delay);
+void shake_off_sticky_flame();
+void end_sticky_flame_player();
 
 bool spell_slow_player(int pow);
 bool slow_player(int turns);
