@@ -29,10 +29,6 @@ bolt
 
 Um virote de besta.
 %%%%
-book of alchemy
-
-Um livro levemente chamuscado, com um buraco queimado na capa.
-%%%%
 book of cantrips
 
 Um livro de magia.

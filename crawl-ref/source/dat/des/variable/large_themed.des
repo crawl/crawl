@@ -2339,7 +2339,7 @@ item("any weapon good_item w:100" .. ego .. " / cloak" .. coldres ..
      " / kite shield" .. coldres .. " / tower shield" .. coldres ..
      " / ice dragon scales / chain mail good_item" .. coldres ..
      " / plate armour" .. coldres .. " / crystal plate armour" .. coldres ..
-     " / book of ice / book of the tundra / ozocubu's autobiography" ..
+     " / book of ice / book of the tundra" ..
      " / randbook disc:ice / manual of ice magic / staff of cold ident:type" ..
      " / ring of ice ident:type / ring of protection from cold ident:type" ..
      " / wand of iceblast ident:type / phial of floods / condenser vane")

@@ -61,7 +61,7 @@
 
    function shopcontents(s)
       local i = {}
-      if s == "A" then i = { "arbalest", "book of alchemy", "book of air",
+      if s == "A" then i = { "arbalest", "book of air",
        "manual of air magic", "manual of alchemy", "book of annihilations",
        "potion of ambrosia", "scroll of acquirement q:1",
        "scroll of amnesia", "staff of air", "staff of alchemy",
@@ -69,14 +69,14 @@
        "acid dragon scales", "potion of attraction", "book of armaments" }
 
       elseif s == "B" then i = { "bardiche", "battleaxe", "beast talisman",
-       "book of burglary", "book of blasting",
+       "book of battle", "book of burglary", "book of blasting",
        "book of blood", "buckler", "boomerang", "blade talisman",
        "broad axe", "pair of boots", "potion of berserk rage",
        "potion of brilliance", "scroll of butterflies",
        "scroll of blinking", "scroll of brand weapon" }
 
       elseif s == "C" then i = { "book of callings", "book of cantrips",
-       "club", "book of changes", "book of conjurations",
+       "club", "book of conjurations",
        "chain mail", "cloak", "crystal plate armour", "potion of cancellation",
        "staff of cold", "staff of conjuration", "book of callings",
        "book of chaos", "manual of conjurations",
@@ -116,7 +116,7 @@
        "scroll of immolation", "ice dragon scales", "book of ice",
        "potion of invisibility", "ring of intelligence", "scroll of identify",
        "wand of iceblast", "manual of invocations", "manual of ice magic",
-       "inescapable atlas", "book of iron" }
+       "book of iron" }
 
       elseif s == "J" then i = { "javelin" }
 
@@ -135,7 +135,7 @@
       elseif s == "N" then i = { "book of necromancy",
        "necronomicon", "scroll of noise", "manual of necromancy" }
 
-      elseif s == "O" then i = { "orcbow", "ozocubu's autobiography" }
+      elseif s == "O" then i = { "orcbow" }
 
       elseif s == "P" then i = { "book of party tricks", "book of power",
        "pearl dragon scales",
@@ -163,7 +163,8 @@
        "manual of short blades", "manual of shields", "sling",
        "manual of spellcasting", "manual of summonings", "stone",
        "book of storms", "book of sloth", "book of the senses",
-       "book of spectacle", "book of the spheres", "book of scorching" }
+       "book of spectacle", "book of the spheres", "book of scorching",
+       "book of spontaneous combustion" }
 
       elseif s == "T" then i = { "scroll of torment",
        "scroll of teleportation", "triple sword", "talisman of death",

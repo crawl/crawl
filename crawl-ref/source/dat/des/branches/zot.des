@@ -2711,7 +2711,7 @@ MARKER:  F = lua:fog_machine { cloud_type = "freezing vapour", \
 # XXX: we should replace iceblast with something else when it's not
 # in this game's chosen item set.
 ITEM:    wand of iceblast, staff of cold, book of winter, \
-         ozocubu's autobiography
+         book of ice
 SUBST:   w = l
 SUBST:   W = l..
 : else

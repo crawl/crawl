@@ -3999,7 +3999,7 @@ NAME:   minmay_coctagon
 DEPTH:  D:10-, Elf, Depths
 ORIENT: float
 ITEM:   book of frost / book of ice / book of winter \
-        / ozocubu's autobiography / book of the tundra / manual of ice magic \
+        / book of the tundra / manual of ice magic \
         / wand of iceblast ident:all / staff of cold ident:all \
         / ring of ice ident:all / phial of floods / ice dragon scales w:5
 KITEM:  2 = frostbite / battleaxe ego:freezing randart ident:all \

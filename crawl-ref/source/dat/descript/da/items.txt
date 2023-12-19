@@ -50,13 +50,6 @@ bolt
 
 Et metalprojektil, kortere end en pil, der skal affyres med en armbrøst.
 %%%%
-book of alchemy
-
-En bog som fokuserer på alkymistiske processer og hvordan man bruger dem i
-magiske besværgelser. Den samler mange af oldtidens alkymisters visdom. Når
-bogen åbnes, kondenseres blækket ud af den blå luft ned på siderne og afslører
-teksten.
-%%%%
 book of annihilations
 
 Denne bogs lasede sider bløder, og selv analfabeter kan mærke kraften i det

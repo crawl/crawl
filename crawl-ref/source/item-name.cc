@@ -1021,11 +1021,11 @@ static const char* _book_type_name(int booktype)
     case BOOK_LIGHTNING:              return "Lightning";
     case BOOK_DEATH:                  return "Death";
     case BOOK_MISFORTUNE:             return "Misfortune";
-    case BOOK_CHANGES:                return "Changes";
+    case BOOK_SPONTANEOUS_COMBUSTION: return "Spontaneous Combustion";
 #if TAG_MAJOR_VERSION == 34
     case BOOK_TRANSFIGURATIONS:       return "Transfigurations";
-    case BOOK_BATTLE:                 return "Battle";
 #endif
+    case BOOK_BATTLE:                 return "Battle";
     case BOOK_VAPOURS:                return "Vapours";
     case BOOK_NECROMANCY:             return "Necromancy";
     case BOOK_CALLINGS:               return "Callings";
@@ -1057,7 +1057,7 @@ static const char* _book_type_name(int booktype)
     case BOOK_DRAGON:                 return "the Dragon";
     case BOOK_BURGLARY:               return "Burglary";
     case BOOK_DREAMS:                 return "Dreams";
-    case BOOK_ALCHEMY:                return "Alchemy";
+    case BOOK_TRANSMUTATION:         return "Transmutation";
     case BOOK_BEASTS:                 return "Beasts";
     case BOOK_SPECTACLE:              return "Spectacle";
     case BOOK_WINTER:                 return "Winter";
@@ -1198,16 +1198,20 @@ string sub_type_string(const item_def &item, bool known)
         case BOOK_EVERBURNING:
             // Aus. English apparently follows the US spelling, not UK.
             return "Everburning Encyclopedia";
+#if TAG_MAJOR_VERSION == 34
         case BOOK_OZOCUBU:
             return "Ozocubu's Autobiography";
+#endif
         case BOOK_MAXWELL:
             return "Maxwell's Memoranda";
         case BOOK_YOUNG_POISONERS:
             return "Young Poisoner's Handbook";
         case BOOK_FEN:
             return "Fen Folio";
+#if TAG_MAJOR_VERSION == 34
         case BOOK_NEARBY:
             return "Inescapable Atlas";
+#endif
         case BOOK_THERE_AND_BACK:
             return "There-And-Back Book";
         case BOOK_BIOGRAPHIES_II:

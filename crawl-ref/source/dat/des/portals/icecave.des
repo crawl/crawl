@@ -384,7 +384,7 @@ function ice_cave_magic_loot(e, glyphs)
         quality = " good_item"
     end
     e.kitem(glyphs .. " = book of ice / book of the tundra" ..
-        " / ozocubu's autobiography / randbook disc:ice" ..
+        " / randbook disc:ice" ..
         " / manual of ice magic / staff of cold / ring of ice" .. quality ..
         " / ring of protection from cold" .. quality ..
         " / wand of iceblast / phial of floods / condenser vane")
