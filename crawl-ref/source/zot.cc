@@ -281,6 +281,13 @@ static void _shatter_floor_gem(gem_type gem, bool quiet = false)
     }
 }
 
+int gem_time_left(int gem_int)
+{
+    gem_type gem = static_cast<gem_type>(gem_int);
+    ASSERT_RANGE(gem, 0, NUM_GEM_TYPES);
+    return gem_time_limit(gem) - you.gem_time_spent[gem];
+}
+
 void print_gem_warnings(int gem_int, int old_time_taken)
 {
     if (!Options.more_gem_info)
@@ -360,7 +367,7 @@ void maybe_break_floor_gem()
     if (gem != NUM_GEM_TYPES
         && !you.gems_shattered[gem]
         && (crawl_state.game_is_descent() // No descent gems :(
-            || you.gem_time_spent[gem] >= gem_time_limit(gem)))
+            || gem_time_left(gem) <= 0))
     {
         _shatter_floor_gem(gem, true);
     }
@@ -379,7 +386,7 @@ string gem_status()
     {
         return "";
     }
-    const int time_left = gem_time_limit(gem) - you.gem_time_spent[gem];
+    const int time_left = gem_time_left(gem);
     const int turns_left = (time_left + 9) / 10; // round up
     return make_stringf("If you linger in this branch for another %d turns, "
                         "the power of Zot will shatter your %s gem.\n",

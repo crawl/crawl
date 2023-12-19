@@ -1157,7 +1157,8 @@ static void _check_note_item(item_def &item)
 
     if (item_is_collectible(item) || is_artefact(item))
     {
-        take_note(Note(NOTE_GET_ITEM, 0, 0, item.name(DESC_A),
+        int v = item.base_type == OBJ_GEMS ? gem_time_left(item.sub_type) : 0;
+        take_note(Note(NOTE_GET_ITEM, v, 0, item.name(DESC_A),
                        origin_desc(item)));
         item.flags |= ISFLAG_NOTED_GET;
 

@@ -29,4 +29,5 @@ void incr_gem_clock();
 void print_gem_warnings(int gem, int old_time_taken);
 void maybe_break_floor_gem();
 void shatter_floor_gem(bool quiet = false);
+int gem_time_left(int gem);
 string gem_status();
