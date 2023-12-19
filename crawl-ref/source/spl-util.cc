@@ -1521,25 +1521,6 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_FROZEN_RAMPARTS:
         return minRange > you.current_vision;
 
-    case SPELL_POISONOUS_VAPOURS:
-    {
-        // can this just be turned into a zap at this point?
-        dist test_targ;
-        for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS);
-             ri; ++ri)
-        {
-            test_targ.target = *ri;
-            const monster* mons = monster_at(*ri);
-            if (mons && !mons->wont_attack()
-                && cast_poisonous_vapours(0, test_targ, true, true)
-                                                            == spret::success)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
     // Special handling for cloud spells.
     case SPELL_FREEZING_CLOUD:
     case SPELL_POISONOUS_CLOUD:
@@ -1610,6 +1591,7 @@ bool spell_no_hostile_in_range(spell_type spell)
         }
         return true;
 
+    case SPELL_MERCURY_VAPOURS:
     case SPELL_SCORCH:
         return find_near_hostiles(range, false).empty();
 

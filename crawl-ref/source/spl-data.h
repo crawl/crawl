@@ -3087,12 +3087,12 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_POISONOUS_VAPOURS, "Poisonous Vapours",
+    SPELL_MERCURY_VAPOURS, "Mercury Vapours",
     spschool::alchemy | spschool::air,
     spflag::target | spflag::not_self | spflag::destructive,
     2,
     50,
-    LOS_RADIUS, LOS_RADIUS,
+    6, 6,
     0,
     TILEG_POISONOUS_VAPOURS,
 },

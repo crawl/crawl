@@ -3506,52 +3506,56 @@ spret cast_inner_flame(coord_def target, int pow, bool fail)
     return zapping(ZAP_INNER_FLAME, pow, beam, false, nullptr, fail);
 }
 
-spret cast_poisonous_vapours(int pow, const dist &beam, bool fail, bool test)
+int get_mercury_weaken_chance(int victim_hd, int pow)
 {
-    if (cell_is_solid(beam.target))
+    return 100 - max(0, (victim_hd * 12 - pow * 2 - 10));
+}
+
+spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
+{
+    if (cell_is_solid(target))
     {
-        if (!test)
-            canned_msg(MSG_UNTHINKING_ACT);
+        canned_msg(MSG_UNTHINKING_ACT);
         return spret::abort;
     }
 
-    monster* mons = monster_at(beam.target);
-    if (!mons || !you.can_see(*mons))
-    {
-        if (test)
-            return spret::abort;
-    }
-    else if (mons->res_poison() > 0 && mons->observable())
-    {
-        if (!test)
-        {
-            mprf("%s cannot be affected by poisonous vapours!",
-                mons->name(DESC_THE).c_str());
-        }
-        return spret::abort;
-    }
-
-    if (test)
-        return spret::success;
-
+    monster* mons = monster_at(target);
     if (mons && you.can_see(*mons) && stop_attack_prompt(mons, false, you.pos()))
         return spret::abort;
 
     fail_check();
 
-    if (!mons || mons->res_poison() > 0)
+    // Attempt to poison the central monster, if there is one.
+    if (mons)
     {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return spret::success; // still losing a turn
+        mprf("Fumes of mercury billow around %s!", mons->name(DESC_THE).c_str());
+
+        // Be a little more generous with poisoning unpoisoned monsters.
+        int amount = max(1, div_rand_round(pow, 25));
+        if (!mons->has_ench(ENCH_POISON))
+            ++amount;
+
+        poison_monster(mons, &you, amount);
+
+        behaviour_event(mons, ME_WHACK, &you);
+        if (mons->alive())
+            you.pet_target = mons->mindex();
     }
 
-    const int amount = max(1, div_rand_round(pow, 15));
-    mprf("Poisonous vapours surround %s!", mons->name(DESC_THE).c_str());
-    poison_monster(mons, &you, amount);
+    // Now attempt to weaken all monsters adjacent to the target
+    for (adjacent_iterator ai(target, false); ai; ++ai)
+    {
+        actor* actor = actor_at(*ai);
+        int chance = get_mercury_weaken_chance(actor->get_hit_dice(), pow);
 
-    behaviour_event(mons, ME_WHACK, &you);
-    if (mons->alive())
-        you.pet_target = mons->mindex();
+        // Adjacent targets have moderately less chance of weakness than the
+        // central target.
+        if (*ai != target)
+            chance = chance * 2 / 3;
+
+        if (actor && x_chance_in_y(chance, 100))
+            actor->weaken(&you, 5);
+    }
 
     return spret::success;
 }

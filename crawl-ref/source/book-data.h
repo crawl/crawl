@@ -93,7 +93,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Young Poisoner's Handbook
     SPELL_STING,
-    SPELL_POISONOUS_VAPOURS,
+    SPELL_MERCURY_VAPOURS,
     SPELL_OLGREBS_TOXIC_RADIANCE,
 },
 
@@ -134,7 +134,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Vapours
-    SPELL_POISONOUS_VAPOURS,
+    SPELL_MERCURY_VAPOURS,
     SPELL_MEPHITIC_CLOUD,
     SPELL_FREEZING_CLOUD,
 },

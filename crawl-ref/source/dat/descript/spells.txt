@@ -980,6 +980,13 @@ Summons a powerful exotic creature to the caster's aid: a manticore, a lindwurm,
 or, at high power, even a sphinx. Casting the spell at higher power also
 increases the strength of the beasts themselves.
 %%%%
+Mercury Vapours spell
+
+Briefly transmutes a portion of the air around a targeted location into gaseous
+mercury. Anyone directly inhaling the fumes will be poisoned, but even those
+adjacent to the epicenter may be weakened by exposure to the chemical - whether
+they resist poison or not.
+%%%%
 Necrotise spell
 
 Agonizingly rots away the victim's flesh. Those slain by this spell (or otherwise
@@ -1089,11 +1096,6 @@ damage bypasses poison resistance.
 Poisonous Cloud spell
 
 Conjures forth a great cloud of lethal gases.
-%%%%
-Poisonous Vapours spell
-
-Turns the air around a targeted creature toxic, directly inflicting poison on
-the target before dispersing.
 %%%%
 Polar Vortex spell
 

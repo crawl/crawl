@@ -1276,8 +1276,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                             silence_max_range(pow),
                                             0, 0,
                                             silence_min_range(pow));
-    case SPELL_POISONOUS_VAPOURS:
-        return make_unique<targeter_poisonous_vapours>(&you, range);
+    case SPELL_MERCURY_VAPOURS:
+        return make_unique<targeter_smite>(&you, range, 0, 1);
 
     // at player's position only but not a selfench
     case SPELL_ROT:
@@ -1582,6 +1582,12 @@ static vector<string> _desc_airstrike_bonus(const monster_info& mi)
     return vector<string>{make_stringf("empty space bonus: %d/8", empty_spaces)};
 }
 
+static vector<string> _desc_vapor_weak_chance(const monster_info& mi, int pow)
+{
+    return vector<string>{make_stringf("chance to weaken: %d%%",
+                            get_mercury_weaken_chance(mi.hd, pow))};
+}
+
 static vector<string> _desc_meph_chance(const monster_info& mi)
 {
     if (get_resist(mi.resists(), MR_RES_POISON) >= 1 || mi.is(MB_CLARITY))
@@ -1806,6 +1812,8 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
             return bind(_desc_insubstantial, placeholders::_1, "unstickable");
         case SPELL_PLASMA_BEAM:
             return bind(_desc_plasma_hit_chance, placeholders::_1, powc);
+        case SPELL_MERCURY_VAPOURS:
+            return bind(_desc_vapor_weak_chance, placeholders::_1, powc);
         default:
             break;
     }
@@ -2469,8 +2477,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_GLACIATE:
         return cast_glaciate(&you, powc, target, fail);
 
-    case SPELL_POISONOUS_VAPOURS:
-        return cast_poisonous_vapours(powc, spd, fail);
+    case SPELL_MERCURY_VAPOURS:
+        return cast_mercury_vapours(powc, spd.target, fail);
 
     case SPELL_BLINKBOLT:
         return blinkbolt(powc, beam, fail);
