@@ -1985,7 +1985,7 @@ bool miasma_monster(monster* mons, const actor* who)
     return success;
 }
 
-// Actually applies stick flame to a monster (with message).
+// Actually applies sticky flame to a monster (with message).
 bool sticky_flame_monster(monster* mons, const actor *who, int dur, bool verbose)
 {
     if (!mons->alive())
