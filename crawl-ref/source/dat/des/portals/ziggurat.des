@@ -216,23 +216,25 @@ ENDMAP
 
 NAME: ziggurat_pillar_centre_c
 TAGS: ziggurat_pillar centered unrand no_exits
-# This is evil. Monster sets are: summoners (1), smites (2), harmless (3).
+# This is evil. Monster sets are: summoners (1), smites (2), suppressors (3), harmless (4).
 # This pillar has tactical implications: you will have to stay away from it,
 # and teleports are more risky.
 MONS: dread lich / shadow demon / curse skull / \
-      ironbound convoker / demonspawn corrupter / deep elf demonologist
-MONS: eye of devastation / glass eye / ghost moth / demonspawn black sun / \
-      torpor snail
+      ironbound convoker / demonspawn corrupter / deep elf demonologist / \
+	   mummy priest w:5 / royal mummy w:5 / deep elf death mage
+MONS: titan / glass eye / ghost moth / glowing orange brain / tormentor
+MONS: demonspawn black sun / torpor snail / nameless horror / \
+      servant of whispers / tainted leviathan
 MONS: plant
 : if you.depth() > 21 then
-SUBST: 3 = 12222
+SUBST: 4 = 12233
 : elseif you.depth() > 15 or you.depth() > 8 and crawl.coinflip() then
-SUBST: 3 = 12
+SUBST: 4 = 123
 : end
 KFEAT: m = iron_grate
 MAP
 mmm
-m3m
+m4m
 mmm
 ENDMAP
 
@@ -472,6 +474,27 @@ MONS:   dancing weapon ; any weapon good_item | \
 MAP
  1
 1
+ENDMAP
+
+NAME:   ziggurat_pillar_centre_covered
+TAGS:   ziggurat_pillar centered unrand no_exits
+DEPTH:  Zig:10-
+WEIGHT: 5
+MONS:   animated armour hp:80 ; crystal plate armour | \
+        gold dragon scales | plate armour w:20
+MAP
+1
+ENDMAP
+
+NAME:    ziggurat_pillar_centre_bezotted
+TAGS:    ziggurat_pillar centered unrand no_exits
+WEIGHT:  1
+KFEAT:   ^ = zot trap
+SHUFFLE: .G
+MAP
+G.G
+.^.
+G.G
 ENDMAP
 
 #######################################################################
