@@ -425,7 +425,7 @@ spret frog_hop(bool fail, dist *target)
     crawl_state.cancel_cmd_repeat();
     mpr("Boing!");
     you.increase_duration(DUR_NO_HOP, 12 + random2(13));
-    apply_barbs_damage();
+    player_did_deliberate_movement();
 
     return spret::success; // TODO
 }
@@ -711,7 +711,7 @@ spret electric_charge(int powc, bool fail, const coord_def &target)
 
     move_player_to_grid(dest_pos, true);
     noisy(4, you.pos());
-    apply_barbs_damage();
+    player_did_deliberate_movement();
     you.clear_far_engulf(false, true);
     _charge_cloud_trail(orig_pos);
     for (auto it = target_path.begin(); it != target_path.end() - 2; ++it)

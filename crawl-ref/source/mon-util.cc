@@ -2546,7 +2546,7 @@ int exper_value(const monster& mon, bool real, bool legacy)
                 break;
 
             case SPELL_LIGHTNING_BOLT:
-            case SPELL_STICKY_FLAME_RANGE:
+            case SPELL_PYRE_ARROW:
             case SPELL_MINDBURST:
             case SPELL_BANISHMENT:
             case SPELL_LEHUDIBS_CRYSTAL_SPEAR:

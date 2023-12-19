@@ -1126,6 +1126,14 @@ Primal Wave spell
 Conjures a torrent of water that may knock back the target, and creates a
 pool of shallow water for a short duration.
 %%%%
+Pyre Arrow spell
+
+Launches a glob of liquid fire that clings to a targeted creature, dealing
+armour-ignoring fire damage over multiple turns. The victim can put the fire out
+much more quickly by moving.
+
+If the target is insubstantial, the liquid fire will fail to stick.
+%%%%
 Pyroclastic Surge spell
 
 Draws searing flames from lava. Any enemies of the caster standing
@@ -1346,17 +1354,11 @@ Steam Ball spell
 
 Throws a ball of hot steam towards a targeted creature.
 %%%%
-Sticky Flame Range spell
-
-Launches a glob of sticky flame, covering a targeted creature with liquid fire
-for a short time.
-
-If the target is insubstantial, the liquid fire will fail to stick.
-%%%%
 Sticky Flame spell
 
-Conjures a glob of sticky flame, covering an adjacent creature with liquid fire
-for a short time.
+Unleashes a short-ranged spray of incindiary goo that clings to an adjacent
+creature and deals armour-ignoring fire damage over several turns. If the victim
+is allowed to move, it will put out the fire prematurely.
 
 If the target is insubstantial, the liquid fire will fail to stick.
 %%%%

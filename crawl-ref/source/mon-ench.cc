@@ -1578,7 +1578,8 @@ void monster::apply_enchantment(const mon_enchant &me)
             del_ench(ENCH_STICKY_FLAME);
             break;
         }
-        const int dam = resist_adjust_damage(this, BEAM_FIRE, roll_dice(2, 4));
+
+        const int dam = resist_adjust_damage(this, BEAM_FIRE, roll_dice(2, 7));
 
         if (dam > 0)
         {

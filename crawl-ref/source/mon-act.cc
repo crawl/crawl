@@ -174,8 +174,9 @@ static void _escape_water_hold(monster& mons)
     }
 }
 
-static void _handle_manticore_barbs(monster& mons)
+static void _handle_deliberate_movement(monster& mons)
 {
+    // Apply barbs damage
     if (mons.has_ench(ENCH_BARBS))
     {
         mon_enchant barbs = mons.get_ench(ENCH_BARBS);
@@ -191,6 +192,21 @@ static void _handle_manticore_barbs(monster& mons)
             barbs.duration--;
             mons.update_ench(barbs);
         }
+    }
+
+    // And then shake off sticky flame
+    if (mons.has_ench(ENCH_STICKY_FLAME))
+    {
+        mon_enchant flame = mons.get_ench(ENCH_STICKY_FLAME);
+
+        flame.duration -= 50;
+        if (flame.duration <= 0)
+        {
+            simple_monster_message(mons, " shakes off the sticky flame as it moves.");
+            mons.del_ench(ENCH_STICKY_FLAME, true);
+        }
+        else
+            mons.update_ench(flame);
     }
 }
 
@@ -300,8 +316,8 @@ static bool _swap_monsters(monster& mover, monster& moved)
              moved.name(DESC_THE).c_str());
     }
 
-    _handle_manticore_barbs(mover);
-    _handle_manticore_barbs(moved);
+    _handle_deliberate_movement(mover);
+    _handle_deliberate_movement(moved);
 
     if (moved.type == MONS_FOXFIRE)
     {
@@ -3167,8 +3183,8 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     mon->seen_context = SC_NONE;
     m2->seen_context = SC_NONE;
 
-    _handle_manticore_barbs(*mon);
-    _handle_manticore_barbs(*m2);
+    _handle_deliberate_movement(*mon);
+    _handle_deliberate_movement(*m2);
 
     // Pushing past a foxfire gets you burned regardless of alignment
     if (m2->type == MONS_FOXFIRE)
@@ -3395,7 +3411,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
         seen_monster(&mons);
     }
 
-    _handle_manticore_barbs(mons);
+    _handle_deliberate_movement(mons);
 
     _swim_or_move_energy(mons);
 

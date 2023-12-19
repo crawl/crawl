@@ -36,6 +36,7 @@
 #include "mon-place.h"
 #include "mon-tentacle.h"
 #include "notes.h" // NOTE_DREAMSHARD
+#include "player.h"
 #include "religion.h"
 #include "spl-clouds.h"
 #include "spl-util.h"
@@ -539,12 +540,10 @@ void debuff_player()
             len = 0;
             heal_flayed_effect(&you);
         }
-        else if (duration == DUR_LIQUID_FLAMES)
+        else if (duration == DUR_STICKY_FLAME)
         {
-            len = 0;
             mprf(MSGCH_DURATION, "You are no longer on fire.");
-            you.props.erase(STICKY_FLAME_AUX_KEY);
-            you.props.erase(STICKY_FLAMER_KEY);
+            end_sticky_flame_player();
         }
         else if (len > 1)
         {

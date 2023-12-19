@@ -346,6 +346,7 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define POISON_AUX_KEY "poison_aux"
 #define STICKY_FLAMER_KEY "sticky_flame_source"
 #define STICKY_FLAME_AUX_KEY "sticky_flame_aux"
+#define STICKY_FLAME_POWER_KEY "sticky_flame_pow"
 #define WATER_HOLDER_KEY "water_holder"
 #define WATER_HOLD_SUBSTANCE_KEY "water_hold_substance"
 #define CORROSION_KEY "corrosion_amount"

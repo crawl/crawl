@@ -404,6 +404,13 @@ static dice_def _spell_damage(spell_type spell, int hd)
             return resonance_strike_base_damage(hd);
         case SPELL_POLAR_VORTEX:
             return polar_vortex_dice(pow, false);
+
+        // This is the per-turn *sticky flame* damage against the player.
+        // The spell has no impact damage and otherwise uses different numbers
+        // against monsters. This is very unsatisfying, but surely we show the
+        // player *something*...
+        case SPELL_PYRE_ARROW:
+            return dice_def(2, 3 + hd * 12 / 16);
         default:
             break;
     }
@@ -511,7 +518,7 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         mult = "2x";
     else if (spell == SPELL_CONJURE_BALL_LIGHTNING)
         mult = "3x";
-    const char* asterisk = spell == SPELL_LRD ? "*" : "";
+    const char* asterisk = (spell == SPELL_LRD || spell == SPELL_PYRE_ARROW) ? "*" : "";
     return make_stringf("(%s%dd%d%s)", mult.c_str(), dam.num, dam.size, asterisk);
 }
 

@@ -39,12 +39,6 @@ static void _end_death_channel()
     }
 }
 
-static void _end_sticky_flame()
-{
-    you.props.erase("sticky_flame_source");
-    you.props.erase("sticky_flame_aux");
-}
-
 static void _redraw_armour()
 {
     you.redraw_armour_class = true;
@@ -248,11 +242,10 @@ static const duration_def duration_data[] =
       {{ "Your fiery armour burns out.", [](){
           you.redraw_armour_class = true;
       }}}, 20},
-    { DUR_LIQUID_FLAMES,
+    { DUR_STICKY_FLAME,
       RED, "Fire",
-      "on fire", "liquid flames",
-      "You are covered in liquid flames.", D_DISPELLABLE /*but special-cased*/,
-      {{ "You are no longer on fire.", _end_sticky_flame }}},
+      "on fire", "liquid fire",
+      "You are covered in liquid fire.", D_DISPELLABLE /*but special-cased*/},
     { DUR_LOWERED_WL,
       RED, "Will/2",
       "weak-willed", "lowered wl",

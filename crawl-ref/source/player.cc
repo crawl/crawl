@@ -4555,53 +4555,111 @@ bool miasma_player(actor *who, string source_aux)
     return success;
 }
 
-bool napalm_player(int amount, string source, string source_aux)
+bool sticky_flame_player(int intensity, int duration, string source, string source_aux)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (player_res_sticky_flame() || amount <= 0 || you.duration[DUR_WATER_HOLD] || feat_is_watery(env.grid(you.pos())))
+    if (player_res_sticky_flame() || duration <= 0 || you.duration[DUR_WATER_HOLD]
+        || feat_is_watery(env.grid(you.pos())))
+    {
         return false;
+    }
 
-    const int old_value = you.duration[DUR_LIQUID_FLAMES];
-    you.increase_duration(DUR_LIQUID_FLAMES, amount, 100);
+    const int old_pow = (you.duration[DUR_STICKY_FLAME] > 0
+                            ? you.props[STICKY_FLAME_POWER_KEY].get_int()
+                            : 0);
 
-    if (you.duration[DUR_LIQUID_FLAMES] > old_value)
-        mprf(MSGCH_WARN, "You are covered in liquid flames!");
+    // We use the greater of old power and new power, but always add duration.
+    if (intensity > old_pow)
+    {
+        // Only assign blame if the new sticky flame source is stronger than
+        // any previous one we had on ourselves.
+        you.props[STICKY_FLAMER_KEY] = source;
+        you.props[STICKY_FLAME_AUX_KEY] = source_aux;
+        you.props[STICKY_FLAME_POWER_KEY] = intensity;
+    }
 
-    you.props[STICKY_FLAMER_KEY] = source;
-    you.props[STICKY_FLAME_AUX_KEY] = source_aux;
+    const string intensity_str = max(intensity, old_pow) > 5 ? "intense " : "";
+
+    if (you.duration[DUR_STICKY_FLAME] > 0)
+    {
+        mprf(MSGCH_WARN, "You are even more covered in %sliquid fire!",
+                          intensity_str.c_str());
+    }
+    else
+    {
+        mprf(MSGCH_WARN, "You are covered in %sliquid fire!",
+                         intensity_str.c_str());
+    }
+
+    you.increase_duration(DUR_STICKY_FLAME, duration, 100);
 
     return true;
 }
 
-void dec_napalm_player(int delay)
+void dec_sticky_flame_player(int delay)
 {
-    delay = min(delay, you.duration[DUR_LIQUID_FLAMES]);
+    delay = min(delay, you.duration[DUR_STICKY_FLAME]);
 
     if (feat_is_watery(env.grid(you.pos())))
     {
-        if (you.ground_level())
-            mprf(MSGCH_WARN, "The flames go out!");
-        else
-            mprf(MSGCH_WARN, "You dip into the water, and the flames go out!");
-        you.duration[DUR_LIQUID_FLAMES] = 0;
-        you.props.erase(STICKY_FLAMER_KEY);
-        you.props.erase(STICKY_FLAME_AUX_KEY);
+        mprf(MSGCH_RECOVERY, "You dip into the water, and the flames go out!");
+        end_sticky_flame_player();
         return;
     }
 
-    mprf(MSGCH_WARN, "You are covered in liquid flames!");
+    mprf(MSGCH_WARN, "The liquid fire burns you!");
 
-    const int hurted = resist_adjust_damage(&you, BEAM_FIRE,
-                                            random2avg(9, 2) + 1);
+    int damage = roll_dice(2, you.props[STICKY_FLAME_POWER_KEY].get_int());
+    damage = resist_adjust_damage(&you, BEAM_FIRE, damage);
+    damage = div_rand_round(damage * delay, BASELINE_DELAY);
 
     you.expose_to_element(BEAM_STICKY_FLAME, 2);
-    maybe_melt_player_enchantments(BEAM_STICKY_FLAME, hurted * delay / BASELINE_DELAY);
+    maybe_melt_player_enchantments(BEAM_STICKY_FLAME, damage);
+    ouch(damage, KILLED_BY_BURNING);
 
-    ouch(hurted * delay / BASELINE_DELAY, KILLED_BY_BURNING);
+    you.duration[DUR_STICKY_FLAME] =
+        max(0, you.duration[DUR_STICKY_FLAME] - delay);
 
-    you.duration[DUR_LIQUID_FLAMES] =
-        max(0, you.duration[DUR_LIQUID_FLAMES] - delay);
+    if (you.duration[DUR_STICKY_FLAME == 0])
+    {
+        mprf(MSGCH_RECOVERY, "The liquid fire finally exhausts itself.");
+        end_sticky_flame_player();
+    }
+}
+
+// Greatly reduce the remaining duration whenever the player moves.
+void shake_off_sticky_flame()
+{
+    if (you.duration[DUR_STICKY_FLAME] > 0)
+    {
+        // Lose 6 turns of duration for each move
+        you.duration[DUR_STICKY_FLAME] =
+            max(0, you.duration[DUR_STICKY_FLAME] - 60);
+
+        // End it slightly early if it's ALMOST gone, just to avoid the common
+        // situation of losing most of its duration to movement and then it
+        // expiring 'normally' immediately afterward, without giving the message
+        // that the player helped put it out.
+        //
+        // (20 aut is picked fairly arbitrarily to include even most slowed actions)
+        if (you.duration[DUR_STICKY_FLAME] <= 20)
+        {
+            mprf(MSGCH_RECOVERY, "You shake off the liquid fire.");
+            end_sticky_flame_player();
+        }
+        else
+            mpr("You shake off the fire as you move.");
+    }
+}
+
+// End the sticky flame status entirely
+void end_sticky_flame_player()
+{
+    you.duration[DUR_STICKY_FLAME] = 0;
+    you.props.erase(STICKY_FLAMER_KEY);
+    you.props.erase(STICKY_FLAME_AUX_KEY);
+    you.props.erase(STICKY_FLAME_POWER_KEY);
 }
 
 bool slow_player(int turns)
@@ -7283,7 +7341,7 @@ bool player::backlit(bool self_halo, bool temp) const
 
     return temp && (player_severe_contamination()
                     || duration[DUR_CORONA]
-                    || duration[DUR_LIQUID_FLAMES]
+                    || duration[DUR_STICKY_FLAME]
                     || duration[DUR_QUAD_DAMAGE]
                     || !umbraed() && haloed()
                        && (self_halo || halo_radius() == -1))

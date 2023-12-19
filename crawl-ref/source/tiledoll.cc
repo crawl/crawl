@@ -542,7 +542,7 @@ void fill_doll_equipment(dolls_data &result)
     if (result.parts[TILEP_PART_ENCH] == TILEP_SHOW_EQUIP)
     {
         result.parts[TILEP_PART_ENCH] =
-            (you.duration[DUR_LIQUID_FLAMES] ? TILEP_ENCH_STICKY_FLAME : 0);
+            (you.duration[DUR_STICKY_FLAME] ? TILEP_ENCH_STICKY_FLAME : 0);
     }
     // Draconian head/wings.
     if (species::is_draconian(you.species))
