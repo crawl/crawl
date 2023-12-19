@@ -345,8 +345,9 @@ end), { weight = 2 }))
 mset(with_props(spec_fn(function ()
   local d = 10 + you.zigs_completed() * 2
   local e = 10 + you.zigs_completed() * 3
-  return "ice beast / ice devil / simulacrum / rime drake / " ..
-         "ice dragon w:" .. d .. " / frost giant w:" .. d .. " / " ..
+  return "ice devil w:5 / rime drake w:5 / simulacrum place:Depths:4 / " ..
+         "juggernaut simulacrum / 20-headed hydra simulacrum / " ..
+         "wendigo w:" .. d .. " / frost giant w:" .. d .. " / " ..
          "blizzard demon w:" .. d .. " / white draconian knight w:" .. e .. " / " ..
          "shard shrike w:" .. e .. " / ice fiend w:" .. e
 end), { weight = 2 }))
