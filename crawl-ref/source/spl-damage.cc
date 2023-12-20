@@ -3520,16 +3520,23 @@ spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
     }
 
     monster* mons = monster_at(target);
-    if (mons && you.can_see(*mons) && stop_attack_prompt(mons, false, you.pos()))
+    if (mons && you.can_see(*mons) && !god_protects(&you, mons)
+        && mons->res_poison() < 3
+        && stop_attack_prompt(mons, false, you.pos()))
+    {
         return spret::abort;
+    }
 
     fail_check();
+
+    if (mons && you.can_see(*mons))
+        mprf("Fumes of mercury billow around %s!", mons->name(DESC_THE).c_str());
+    else
+        mpr("Fumes of mercury billow through the air!");
 
     // Attempt to poison the central monster, if there is one.
     if (mons && !god_protects(&you, mons))
     {
-        mprf("Fumes of mercury billow around %s!", mons->name(DESC_THE).c_str());
-
         // Be a little more generous with poisoning unpoisoned monsters.
         int amount = max(1, div_rand_round(pow, 25));
         if (!mons->has_ench(ENCH_POISON))
