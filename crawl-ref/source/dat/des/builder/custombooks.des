@@ -23,7 +23,7 @@ DEPTH:  D:4-, Depths, Elf, Snake
 -- the lines below 80 characters.
 local books = {
 "Amateur_Aromatherapy numspells:4 spells:mephitic_cloud&eringya's_noxious_bog&"
-  .. "cigotuvi's_dreadful_rot&poisonous_vapours",
+  .. "cigotuvi's_dreadful_rot&mercury_vapours",
 "Aperture_Sorcery numspells:4 spells:dimensional_bullseye&passage_of_golubria&"
   .. "malign_gateway&death's_door",
 "Apprentice_Sorcery owner:Jessica numspells:4 spells:necrotise&slow&blink&"
@@ -76,7 +76,7 @@ local books = {
 "Mayhem numspells:3 spells:inner_flame&conjure_ball_lightning&discord",
 "Modern_Magic,_Vol._16 numspells:2 spells:gell's_gravitas&irradiate",
 "Modern_Magic,_Vol._19 numspells:2 spells:lesser_beckoning&infestation",
-"Modern_Magic,_Vol._20 numspells:2 spells:poisonous_vapours&ignition",
+"Modern_Magic,_Vol._20 numspells:2 spells:mercury_vapours&ignition",
 "Modern_Magic,_Vol._21 numspells:1 spells:borgnjor's_vile_clutch",
 "Modern_Magic,_Vol._25 numspells:6 spells:foxfire&dazzling_flash&"
   .. "frozen_ramparts&hailstorm&eringya's_noxious_bog&starburst",
@@ -124,7 +124,7 @@ local books = {
   .. "lee's_rapid_deconstruction&summon_forest&eringya's_noxious_bog&"
   .. "shatter",
 "Thorough_Poisoning numspells:8 spells:sting&cigotuvi's_dreadful_rot&"
-  .. "poisonous_vapours&mephitic_cloud&ignite_poison&olgreb's_toxic_radiance&"
+  .. "mercury_vapours&mephitic_cloud&ignite_poison&olgreb's_toxic_radiance&"
   .. "alistair's_intoxication&eringya's_noxious_bog",
 "Truth_and_Just_Ice numspells:5 spells:freeze&frozen_ramparts&ozocubu's_armour&"
   .. "ozocubu's_refrigeration&polar_vortex",
@@ -133,7 +133,7 @@ local books = {
 "Uncleanliness owner:Zin numspells:2 spells:cigotuvi's_dreadful_rot&"
   .. "infestation",
 "Unconjured_Destruction owner:Vehumet numspells:8 spells:"
-  .. "poisonous_vapours&scorch&frozen_ramparts&ignite_poison&"
+  .. "mercury_vapours&scorch&frozen_ramparts&ignite_poison&"
   .. "volatile_blastmotes&lee's_rapid_deconstruction&plasma_beam&ignition",
 "Unholiness owner:Zin numspells:3 spells:call_imp&malign_gateway&"
   .. "summon_horrible_things",
