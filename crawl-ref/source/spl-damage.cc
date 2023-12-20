@@ -3526,7 +3526,7 @@ spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
     fail_check();
 
     // Attempt to poison the central monster, if there is one.
-    if (mons)
+    if (mons && !god_protects(&you, mons))
     {
         mprf("Fumes of mercury billow around %s!", mons->name(DESC_THE).c_str());
 
@@ -3546,7 +3546,7 @@ spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
     for (adjacent_iterator ai(target, false); ai; ++ai)
     {
         actor* actor = actor_at(*ai);
-        if (!actor)
+        if (!actor || god_protects(&you, actor->as_monster()))
             continue;
 
         int chance = get_mercury_weaken_chance(actor->get_hit_dice(), pow);
