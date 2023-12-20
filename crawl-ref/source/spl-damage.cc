@@ -3546,6 +3546,9 @@ spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
     for (adjacent_iterator ai(target, false); ai; ++ai)
     {
         actor* actor = actor_at(*ai);
+        if (!actor)
+            continue;
+
         int chance = get_mercury_weaken_chance(actor->get_hit_dice(), pow);
 
         // Adjacent targets have moderately less chance of weakness than the
