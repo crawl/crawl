@@ -873,6 +873,7 @@ public:
 
     bool can_potion_heal(bool temp=true);
     int scale_potion_healing(int healing_amount);
+    int scale_potion_mp_healing(int healing_amount);
 
     void apply_location_effects(const coord_def &oldpos,
                                 killer_type killer = KILL_NONE,

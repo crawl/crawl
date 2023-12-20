@@ -863,7 +863,8 @@ bool weapon_multihits(const item_def *weap)
  * @param which_attack   The attack_number (default -1, which uses the default weapon).
  */
 void get_cleave_targets(const actor &attacker, const coord_def& def,
-                        list<actor*> &targets, int which_attack)
+                        list<actor*> &targets, int which_attack,
+                        bool force_cleaving)
 {
     // Prevent scanning invalid coordinates if the attacker dies partway through
     // a cleave (due to hitting explosive creatures, or perhaps other things)
@@ -873,7 +874,7 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     if (actor_at(def))
         targets.push_back(actor_at(def));
 
-    if (!attack_cleaves(attacker, which_attack))
+    if (!force_cleaving && !attack_cleaves(attacker, which_attack))
         return;
 
     const item_def* weap = attacker.weapon(which_attack);

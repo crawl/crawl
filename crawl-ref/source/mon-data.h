@@ -4219,6 +4219,19 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature",
     {TILEP_MONS_IRONBOUND_THUNDERHULK}, TILE_ERROR
 },
 
+{ // dummy; spawns in a single vault.
+    MONS_ONI, 'O', LIGHTBLUE, "oni",
+    M_WARM_BLOOD | M_SPEAKS,
+    MR_NO_FLAGS,
+    9, MONS_ONI, MONS_ONI, MH_NATURAL, 20,
+    { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    5, 275,
+    1, 6, MST_NO_SPELLS, true, S_SHOUT,
+    I_HUMAN, HT_LAND, 10, ATTACK_ENERGY(15),
+    MONUSE_STARTING_EQUIPMENT, SIZE_LARGE, MON_SHAPE_HUMANOID,
+    {TILEP_MONS_OGRE}, TILE_CORPSE_OGRE
+},
+
 // immobile plants and fungi ('P')
 {
     MONS_PLANT, 'P', GREEN, "plant",

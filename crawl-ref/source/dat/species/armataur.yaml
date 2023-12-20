@@ -9,7 +9,7 @@ species_flags:
   - SPF_BARDING
 aptitudes:
   xp: -1
-  hp: 0
+  hp: 1
   mp_mod: 0
   mr: 3
   fighting: -1
@@ -51,7 +51,6 @@ mutations:
     MUT_ROLLPAGE: 1
     MUT_ARMOURED_TAIL: 1
     MUT_DEFORMED: 1
-    MUT_LONG_TONGUE: 1
   7:
     MUT_ROLLPAGE: 1
 recommended_jobs:

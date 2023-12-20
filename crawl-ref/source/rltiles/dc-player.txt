@@ -81,8 +81,10 @@ naga_stream_f
 naga_stream_m
 naga_swamp_f
 naga_swamp_m
-ogre_m OGRE
-ogre_f
+oni_red_m ONI
+oni_red_f
+oni_blue_m
+oni_blue_f
 meteoran_f METEORAN
 meteoran_m
 troll_f TROLL

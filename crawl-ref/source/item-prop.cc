@@ -3501,3 +3501,19 @@ string item_name_for_set(item_set_type typ)
     it.sub_type = item_for_set(typ);
     return sub_type_string(it, true);
 }
+
+// Whether drinking this potion will cause a drunken swing
+bool oni_likes_potion(potion_type type)
+{
+    switch (type)
+    {
+        case POT_CURING:
+        case POT_HEAL_WOUNDS:
+        case POT_MAGIC:
+        case POT_AMBROSIA:
+            return true;
+
+        default:
+            return false;
+    }
+}

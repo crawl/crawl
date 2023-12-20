@@ -1213,6 +1213,7 @@ enum monster_type                      // env.mons[].type
     MONS_INUGAMI,
     MONS_PROTEAN_PROGENITOR,
     MONS_ASPIRING_FLESH,
+    MONS_ONI,                          // player species only
 #endif
 
     NUM_MONSTERS,               // used for polymorph

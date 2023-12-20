@@ -2944,6 +2944,18 @@ bool is_good_item(const item_def &item)
     case OBJ_POTIONS:
         if (!you.can_drink(false)) // still want to pick them up in lichform?
             return false;
+
+        // Recolor healing potions to indicate their additional goodness
+        //
+        // XX: By default, this doesn't actually change the color of anything
+        //     but !ambrosia, since yellow for 'emergency' takes priority over
+        //     cyan for 'good'. Should this get a *new* color?
+        if (you.species == SP_ONI
+            && oni_likes_potion(static_cast<potion_type>(item.sub_type)))
+        {
+            return true;
+        }
+
         switch (item.sub_type)
         {
         case POT_EXPERIENCE:

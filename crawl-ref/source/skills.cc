@@ -1970,8 +1970,6 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_SPELLCASTING:
             if (species == SP_DJINNI && skill_rank == 5)
                 result = "Wishgranter";
-            else if (species == SP_OGRE)
-                result = "Ogre Mage";
             break;
 
         case SK_CONJURATIONS:

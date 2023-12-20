@@ -2462,10 +2462,10 @@ static const mutation_def mut_data[] =
   {"You feel like a homebody.", "", ""},
 },
 
-{ MUT_LONG_TONGUE, 0, 1, mutflag::good, false, "long tongue",
-  {"Your long tongue fully drains potion bottles. (2x potion effects)", "", ""},
-  {"Your tongue grows exceptionally long.", "", ""},
-  {"Your tongue shrinks into a sad, ordinary nub.", "", ""},
+{ MUT_DOUBLE_POTION_HEAL, 0, 1, mutflag::good, false, "double potion healing",
+  {"Whenever you drink a potion that restores your health or magic, it restores twice as much.", "", ""},
+  {"You heal twice as much from potions.", "", ""},
+  {"You no longer heal twice as much from potions.", "", ""},
 },
 
 };
