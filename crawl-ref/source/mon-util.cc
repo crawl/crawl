@@ -830,7 +830,8 @@ bool mons_is_firewood(const monster& mon)
 // "body" in a purely grammatical sense.
 bool mons_has_body(const monster& mon)
 {
-    if (mon.type == MONS_FLYING_SKULL
+    if (mon.type == MONS_WEEPING_SKULL
+        || mon.type == MONS_FLYING_SKULL
         || mons_species(mon.type) == MONS_CURSE_SKULL // including Murray
         || mon.type == MONS_CURSE_TOE
         || mon.type == MONS_DEATH_COB

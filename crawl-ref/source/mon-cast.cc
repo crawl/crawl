@@ -1616,6 +1616,17 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.pierce   = true;
         break;
 
+    case SPELL_MOURNING_WAIL:
+        beam.name     = "wave of grief";
+        beam.hit_verb = "passes through";
+        beam.colour   = DARKGREY;
+        beam.damage   = dice_def(0, 0);
+        beam.hit      = AUTOMATIC_HIT;
+        beam.flavour  = BEAM_NEG;
+        beam.foe_ratio = 30;
+        beam.pierce   = true;
+        break;
+
     // Special behaviour handled in _mons_upheaval
     // Hack so beam.cc allows us to correctly use that function
     case SPELL_UPHEAVAL:
@@ -7427,6 +7438,7 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         else
             return ai_action::good();
 
+    case SPELL_MOURNING_WAIL:
     case SPELL_BOLT_OF_DRAINING:
     case SPELL_MALIGN_OFFERING:
     case SPELL_GHOSTLY_FIREBALL:

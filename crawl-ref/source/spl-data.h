@@ -2844,6 +2844,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_MOURNING_WAIL, "Mourning Wail",
+    spschool::necromancy,
+    spflag::dir_or_target | spflag::monster,
+    3,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_DEATH_RATTLE, "Death Rattle",
     spschool::conjuration | spschool::necromancy | spschool::air,
     spflag::dir_or_target | spflag::monster,

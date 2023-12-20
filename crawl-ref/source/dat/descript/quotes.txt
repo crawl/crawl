@@ -2868,13 +2868,6 @@ flayed ghost
 “Solamen miseris socios habuisse doloris.”
     -Christopher Marlowe, _Doctor Faustus_. 1604
 %%%%
-flying skull
-
-“Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most
- excellent fancy. He hath bore me on his back a thousand times, and now how
- abhorr'd in my imagination it is! My gorge rises at it.”
-    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, V, 1. 1603
-%%%%
 formless jellyfish
 
 “From this story it is evident that in former times the jellyfish once had a
@@ -4017,6 +4010,13 @@ war gargoyle
  of a candle.”
     -Victor Hugo, _The Hunchback of Notre-Dame_, 10, ch. IV. 1831.
      trans. Isabel F. Hapgood
+%%%%
+weeping skull
+
+“Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most
+ excellent fancy. He hath bore me on his back a thousand times, and now how
+ abhorr'd in my imagination it is! My gorge rises at it.”
+    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, V, 1. 1603
 %%%%
 wolf
 

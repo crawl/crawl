@@ -1965,6 +1965,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1}, true }}}},
     { MONS_THRASHING_HORROR, { {}, {{ BAND_THRASHING_HORRORS, {0, 1} }}}},
     { MONS_BRAIN_WORM, { {}, {{ BAND_BRAIN_WORMS, {0, 1} }}}},
+    { MONS_WEEPING_SKULL, { {}, {{ BAND_WEEPING_SKULLS, {0, 1} }}}},
     { MONS_PROTEAN_PROGENITOR, { {}, {{ BAND_PROTEAN_PROGENITORS, {0, 1} }}}},
 
 };
@@ -2079,6 +2080,11 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
             band_size = (one_chance_in(4) ? 3 : 2);
         break;
 
+    case MONS_WEEPING_SKULL:
+        if (player_in_branch(BRANCH_ABYSS) && you.depth > 1)
+            band_size = 1;
+        break;
+
     case MONS_BRAIN_WORM:
         if (player_in_branch(BRANCH_ABYSS))
             band_size = random2(you.depth) / 2;
@@ -2172,8 +2178,9 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_ORANGE_DEMONS,       {{{MONS_ORANGE_DEMON, 1}}}},
     { BAND_SHARD_SHRIKE,        {{{MONS_SHARD_SHRIKE, 1}}}},
     { BAND_SOJOBO,              {{{MONS_TENGU_REAVER, 1}}}},
-    { BAND_DIRE_ELEPHANTS,      {{{MONS_DIRE_ELEPHANT, 1}}}},
     { BAND_HOWLER_MONKEY,       {{{MONS_HOWLER_MONKEY, 1}}}},
+    { BAND_WEEPING_SKULLS,      {{{MONS_WEEPING_SKULL, 1}}}},
+    { BAND_DIRE_ELEPHANTS,      {{{MONS_DIRE_ELEPHANT, 1}}}},
     { BAND_CAUSTIC_SHRIKE,      {{{MONS_CAUSTIC_SHRIKE, 1}}}},
     { BAND_DANCING_WEAPONS,     {{{MONS_DANCING_WEAPON, 1}}}},
     { BAND_SLIME_CREATURES,     {{{MONS_SLIME_CREATURE, 1}}}},

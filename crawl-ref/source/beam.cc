@@ -2778,6 +2778,13 @@ void bolt::affect_place_clouds()
 
     if (origin_spell == SPELL_DEATH_RATTLE)
         place_cloud(CLOUD_MIASMA, p, random2(4) + 4, agent());
+
+    // Only place clouds on creatures who are immune to them
+    if (origin_spell == SPELL_MOURNING_WAIL)
+    {
+        if (!actor_at(p) || actor_at(p)->res_negative_energy() == 3)
+            place_cloud(CLOUD_MISERY, p, random2(4) + 2, agent());
+    }
 }
 
 void bolt::affect_place_explosion_clouds()

@@ -2850,6 +2850,12 @@ A capricious nature spirit, deeply bonded with the waters in which it lives.
 Wherever they flow, so may it, and ponds and rivers surge and leap at its
 whim.
 %%%%
+weeping skull
+
+An undead skull kept aloft by unholy clouds of collective misery, which slowly
+drift out in its wake. It mourns without end for the living, the dead, and its
+own former life all alike.
+%%%%
 wendigo
 
 A gaunt spirit of frozen hunger, so ravenous it will consume friend and foe

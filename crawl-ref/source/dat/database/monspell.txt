@@ -727,6 +727,12 @@ golden eye cast targeted
 
 @The_monster@ blinks @at@ @target@.
 %%%%
+weeping skull cast
+
+@The_monster@ [unleashes|releases] gushing sobs.
+
+@The_monster@'s misery [bubbles over|overflows].
+%%%%
 Death Rattle ushabti cast
 
 @The_monster@ shakes and rattles.

@@ -703,6 +703,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_WEEPING_SKULL,
+      {
+       { SPELL_MOURNING_WAIL, 48, MON_SPELL_MAGICAL},
+      }
+    },
+
     {  MST_CURSE_SKULL,
       {
        { SPELL_SUMMON_UNDEAD, 48, MON_SPELL_MAGICAL | MON_SPELL_NOISY },

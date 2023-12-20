@@ -988,6 +988,13 @@ mercury. Anyone directly inhaling the fumes will be poisoned, but even those
 adjacent to the epicenter may be weakened by exposure to the chemical - whether
 living or otherwise.
 %%%%
+Mourning Wail spell
+
+Exhales a stream of forgotten grief, leaving clouds of excruciating misery in
+its wake but skipping past creatures that would be vulnerable to it. These
+clouds of negative energy will rapidly drain the living of small fractions of
+their maximum health.
+%%%%
 Necrotise spell
 
 Agonizingly rots away the victim's flesh. Those slain by this spell (or otherwise

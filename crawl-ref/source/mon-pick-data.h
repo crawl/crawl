@@ -804,8 +804,9 @@ POP_DEPTHS,
 { // Abyss
   // Sorted by 'home depth', somewhat arbitrarily defined.
   // Abyss:1
-  { -1,  6, 1400, FALL, MONS_ABOMINATION_SMALL },
+  { -1,  6, 1200, FALL, MONS_ABOMINATION_SMALL },
   { -1,  6,  150, FALL, MONS_BRAIN_WORM },
+  { -1,  6,  200, FALL, MONS_WEEPING_SKULL },
 
   {  1,  4,   25, FALL, MONS_CRIMSON_IMP },
   {  1,  4,  180, FALL, MONS_WHITE_IMP },
@@ -1057,7 +1058,8 @@ POP_DEPTHS,
 },
 
 { // Ossuary
-  {  1,  1,   89, FLAT, MONS_MUMMY },
+  {  1,  1,   40, FLAT, MONS_WEEPING_SKULL },
+  {  1,  1,   90, FLAT, MONS_MUMMY },
   {  1,  1,  515, FLAT, MONS_SKELETON },
   {  1,  1,  515, FLAT, MONS_ZOMBIE },
 },

@@ -761,6 +761,9 @@ enum monster_type                      // env.mons[].type
     MONS_SHADOW_WRAITH,
     MONS_SILENT_SPECTRE,
     MONS_EIDOLON,
+#if TAG_MAJOR_VERSION > 34
+    MONS_WEEPING_SKULL,
+#endif
     MONS_FLYING_SKULL,
     MONS_SKELETAL_WARRIOR,
     MONS_PHANTASMAL_WARRIOR,
@@ -1217,8 +1220,12 @@ enum monster_type                      // env.mons[].type
     MONS_INUGAMI,
     MONS_PROTEAN_PROGENITOR,
     MONS_ASPIRING_FLESH,
+<<<<<<< HEAD
     MONS_ONI,                          // player species only
     MONS_BOMBARDIER_BEETLE,
+=======
+    MONS_WEEPING_SKULL,
+>>>>>>> 7adacefebf (New monster: weeping skulls, for Ossuaries / Abyss ( / Crypt vaults))
 #endif
 
     NUM_MONSTERS,               // used for polymorph

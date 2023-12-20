@@ -129,6 +129,7 @@ enum band_type
     BAND_PROTEAN_PROGENITORS,
     BAND_MARGERY,
     BAND_LATE_ROKA,
+    BAND_WEEPING_SKULLS,
     NUM_BANDS                   // always last
 };
 

@@ -7356,6 +7356,54 @@ _tormentor_rare_
 @The_monster@ shouts @at_foe@, "I'll tear you apart!"
 ## END _tormentor_ ##
 %%%%
+################## Weeping skull ##################################
+weeping skull
+
+w:7
+@_weeping_skull_common_@
+
+w:1
+@_weeping_skull_rare_@
+
+w:4
+__NONE
+%%%%
+_weeping_skull_common_
+
+@The_monster@ @_weeps_@ for your inevitable fate. @player_only@
+
+@The_monster@ @_weeps_@ at its own [deplorable|decrepit] state.
+
+# Slime, Swamp, Desolation...
+@The_monster@ grieves for the multitudes of fallen [empires|civilizations].
+
+# Itsumaden
+@The_monster@ begs for proper burials for the Dungeon's restless dead.
+
+%%%%
+_weeping_skull_rare_
+
+@The_monster@ @_weeps_@ over the unstoppable march of time and entropy.
+
+# Hollow Knight
+@The_monster@ asks how much longer can this world bear the weight of past lives.
+
+# Don't add literally everything to this one- only the ones with no chance.
+w:1
+@The_monster@ mourns the extinction of [gnomes|halflings|high elves|hill dwarves].
+
+# The shrieker shrieks.
+w:1
+@The_monster@ weeps.
+%%%%
+_weeps_
+
+moans
+
+wails
+
+sobs
+%%%%
 ################## Wizard ##################################
 arcanist
 
