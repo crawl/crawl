@@ -166,7 +166,7 @@ Fires a penetrating bolt of frost.
 %%%%
 Bolt of Devastation spell
 
-Fires a bolt of grief and heartache that cuts its victims willpower in half.
+Fires a bolt of grief and heartache that cuts its victims' willpower in half.
 %%%%
 Bolt of Draining spell
 
@@ -1377,7 +1377,7 @@ Throws a ball of hot steam towards a targeted creature.
 %%%%
 Sticky Flame spell
 
-Unleashes a short-ranged spray of incindiary goo that clings to an adjacent
+Unleashes a short-ranged spray of incendiary goo that clings to an adjacent
 creature and deals armour-ignoring fire damage over several turns. If the victim
 is allowed to move, it will put out the fire prematurely.
 
@@ -1392,7 +1392,7 @@ begin to form again as normal.
 %%%%
 Sting spell
 
-Conjures a jagged shard of crystalized toxins. The stinger's impact will always
+Conjures a jagged shard of crystallized toxins. The stinger's impact will always
 poison a susceptible target. Even resistant targets have a chance to be poisoned
 and immune monsters will still be damaged by the physical impact of the stinger.
 %%%%
