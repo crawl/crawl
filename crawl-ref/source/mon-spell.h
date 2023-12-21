@@ -920,7 +920,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_EYE_OF_DEVASTATION,
       {
-       { SPELL_ENERGY_BOLT, 60, MON_SPELL_MAGICAL },
+       { SPELL_BOLT_OF_DEVASTATION, 60, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1449,7 +1449,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_CACODEMON,
       {
-       { SPELL_ENERGY_BOLT, 20, MON_SPELL_MAGICAL },
+       { SPELL_BOLT_OF_DEVASTATION, 20, MON_SPELL_MAGICAL },
        { SPELL_VITRIFY, 20, MON_SPELL_MAGICAL },
        { SPELL_MALMUTATE, 13, MON_SPELL_MAGICAL },
        { SPELL_DIG, 13, MON_SPELL_MAGICAL },
@@ -2182,7 +2182,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_MANA_VIPER, 15, MON_SPELL_WIZARD },
        { SPELL_DIMENSION_ANCHOR, 15, MON_SPELL_WIZARD },
        { SPELL_BLINK_CLOSE, 15, MON_SPELL_WIZARD },
-       { SPELL_ENERGY_BOLT, 15, MON_SPELL_WIZARD },
+       { SPELL_BOLT_OF_DEVASTATION, 15, MON_SPELL_WIZARD },
       }
     },
 

@@ -6862,7 +6862,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
              agent->visible_to(this), source.c_str());
     }
 
-    if ((flavour == BEAM_DEVASTATION || flavour == BEAM_MINDBURST)
+    if ((flavour == BEAM_DESTRUCTION || flavour == BEAM_MINDBURST)
         && can_bleed())
     {
         blood_spray(pos(), type, amount / 5);

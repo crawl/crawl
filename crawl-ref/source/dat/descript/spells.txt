@@ -164,6 +164,10 @@ Bolt of Cold spell
 
 Fires a penetrating bolt of frost.
 %%%%
+Bolt of Devastation spell
+
+Fires a bolt of grief and heartache that cuts its victims willpower in half.
+%%%%
 Bolt of Draining spell
 
 Fires a penetrating bolt of negative energy which drains any living creature
@@ -507,10 +511,6 @@ Recalls woodland creatures from elsewhere on the same level.
 Electrical Bolt spell
 
 Throws a bolt of electricity at the target, with high accuracy.
-%%%%
-Energy Bolt spell
-
-Fires a bolt of highly destructive energy.
 %%%%
 Enfeeble spell
 

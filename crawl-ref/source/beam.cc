@@ -1692,6 +1692,11 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             ensnare(mons);
         break;
 
+    case BEAM_DEVASTATION:
+        if (doFlavouredEffects)
+            mons->strip_willpower(pbolt.agent(), random_range(20, 30));
+        break;
+
     default:
         break;
     }
@@ -2851,7 +2856,7 @@ void bolt::internal_ouch(int dam)
              aux_source.c_str(), true,
              source_name.empty() ? nullptr : source_name.c_str());
     }
-    else if (flavour == BEAM_MINDBURST || flavour == BEAM_DEVASTATION)
+    else if (flavour == BEAM_MINDBURST || flavour == BEAM_DESTRUCTION)
     {
         ouch(dam, KILLED_BY_DISINT, source_id, what, true,
              source_name.empty() ? nullptr : source_name.c_str());
@@ -4019,7 +4024,7 @@ void bolt::affect_player()
     if (flavour == BEAM_MIASMA && final_dam > 0)
         was_affected = miasma_player(agent(), name);
 
-    if (flavour == BEAM_DEVASTATION) // MINDBURST already handled
+    if (flavour == BEAM_DESTRUCTION) // MINDBURST already handled
         blood_spray(you.pos(), MONS_PLAYER, final_dam / 5);
 
     // Confusion effect for spore explosions
@@ -6509,7 +6514,7 @@ bool bolt::nasty_to(const monster* mon) const
     // The orbs are made of pure disintegration energy. This also has the side
     // effect of not stopping us from firing further orbs when the previous one
     // is still flying.
-    if (flavour == BEAM_DEVASTATION)
+    if (flavour == BEAM_DESTRUCTION)
         return mon->type != MONS_ORB_OF_DESTRUCTION;
 
     // Take care of other non-enchantments.
@@ -6769,7 +6774,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_ICE:                   return "ice";
     case BEAM_THUNDER:               return "thunder";
     case BEAM_STUN_BOLT:             return "stunning bolt";
-    case BEAM_DEVASTATION:           return "devastation";
+    case BEAM_DESTRUCTION:           return "destruction";
     case BEAM_RANDOM:                return "random";
     case BEAM_CHAOS:                 return "chaos";
     case BEAM_SLOW:                  return "slow";
@@ -6830,6 +6835,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_VITRIFY:               return "vitrification";
     case BEAM_VITRIFYING_GAZE:       return "vitrification";
     case BEAM_WEAKNESS:              return "weakness";
+    case BEAM_DEVASTATION:           return "devastation";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

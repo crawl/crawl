@@ -907,7 +907,7 @@ static bool _los_spell_worthwhile(const monster &mons, spell_type spell)
 /// Set up a fake beam, for noise-generating purposes (?)
 static void _setup_fake_beam(bolt& beam, const monster&, int)
 {
-    beam.flavour  = BEAM_DEVASTATION;
+    beam.flavour  = BEAM_DESTRUCTION;
     beam.pierce   = true;
     // Doesn't take distance into account, but this is just a tracer so
     // we'll ignore that. We need some damage on the tracer so the monster
@@ -1455,16 +1455,12 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_DISPEL_UNDEAD_RANGE:
     case SPELL_STUNNING_BURST:
     case SPELL_MALIGN_OFFERING:
+    case SPELL_BOLT_OF_DEVASTATION:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
     case SPELL_FREEZING_CLOUD: // battlesphere special-case
         zappy(ZAP_FREEZING_BLAST, power, true, beam);
-        break;
-
-    case SPELL_ENERGY_BOLT:
-        zappy(spell_to_zap(real_spell), power, true, beam);
-        beam.short_name = "energy";
         break;
 
     case SPELL_MALMUTATE:
