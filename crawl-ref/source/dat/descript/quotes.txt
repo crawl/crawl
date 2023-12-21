@@ -1081,6 +1081,12 @@ ice dragon scales
 
 <steam dragon scales>
 %%%%
+iron giant
+
+"You're made of metal, but you have feelings, and you think about things,
+ and that means you have a soul. And souls don't die."
+    -_The Iron Giant_. 1999
+%%%%
 javelin
 
 “Suppose you found your brother in bed with your wife, and put a javelin
