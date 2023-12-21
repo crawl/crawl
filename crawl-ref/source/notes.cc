@@ -398,6 +398,7 @@ string Note::describe(bool when, bool where, bool what) const
             result << "Lost the "
                    << gem_adj(static_cast<gem_type>(first))
                    << " gem through the power of Zot.";
+            break;
         default:
             result << "Buggy note description: unknown note type";
             break;
