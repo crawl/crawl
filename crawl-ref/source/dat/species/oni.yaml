@@ -40,7 +40,7 @@ levelup_stat_frequency: 3
 levelup_stats:
   - str
 mutations:
-  2:
+  1:
     MUT_TOUGH_SKIN: 1
     MUT_HORNS: 1
     MUT_DOUBLE_POTION_HEAL: 1
