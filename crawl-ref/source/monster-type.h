@@ -490,6 +490,9 @@ enum monster_type                      // env.mons[].type
     MONS_OGRE,
     MONS_TWO_HEADED_OGRE,
     MONS_OGRE_MAGE,
+#if TAG_MAJOR_VERSION > 34
+    MONS_ONI,
+#endif
     MONS_TROLL,
 #if TAG_MAJOR_VERSION == 34
     MONS_ROCK_TROLL,
