@@ -703,7 +703,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         u = userdb.get_user_info(self.username)
         self.username = u.username # canonicalize
         self.user_id = u.id
-        self.email = u.email
+        self.user_email = u.email
         self.user_flags = u.flags
         self.logger.extra["username"] = self.username
         if userdb.dgl_is_banned(self.user_flags):
