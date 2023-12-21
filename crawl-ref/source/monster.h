@@ -157,6 +157,7 @@ public:
     void apply_location_effects(const coord_def &oldpos,
                                 killer_type killer = KILL_NONE,
                                 int killernum = -1) override;
+    void did_deliberate_movement() override;
     void self_destruct() override;
 
     void set_position(const coord_def &c) override;

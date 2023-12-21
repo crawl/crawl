@@ -65,6 +65,9 @@ public:
                                         killer_type killer = KILL_NONE,
                                         int killernum = -1) = 0;
 
+    // Handles sticky flame / barbs on deliberate movement.
+    virtual void did_deliberate_movement() = 0;
+
     virtual void set_position(const coord_def &c);
     const coord_def& pos() const { return position; }
 

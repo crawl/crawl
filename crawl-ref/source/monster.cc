@@ -5331,6 +5331,39 @@ void monster::apply_location_effects(const coord_def &oldpos,
     }
 }
 
+void monster::did_deliberate_movement()
+{
+    // Apply barbs damage
+    if (has_ench(ENCH_BARBS))
+    {
+        mon_enchant barbs = get_ench(ENCH_BARBS);
+
+        // Save these first because hurt() might kill the monster.
+        hurt(monster_by_mid(barbs.source), roll_dice(2, barbs.degree * 2 + 2));
+        bleed_onto_floor(pos(), type, 2, false);
+        if (coinflip())
+        {
+            barbs.duration--;
+            update_ench(barbs);
+        }
+    }
+
+    // And then shake off sticky flame
+    if (has_ench(ENCH_STICKY_FLAME))
+    {
+        mon_enchant flame = get_ench(ENCH_STICKY_FLAME);
+
+        flame.duration -= 50;
+        if (flame.duration <= 0)
+        {
+            simple_monster_message(*this, " shakes off the sticky flame as it moves.");
+            del_ench(ENCH_STICKY_FLAME, true);
+        }
+        else
+            update_ench(flame);
+    }
+}
+
 void monster::self_destruct()
 {
     suicide();

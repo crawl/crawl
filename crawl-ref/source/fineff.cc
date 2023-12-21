@@ -30,6 +30,7 @@
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "movement.h"
 #include "ouch.h"
 #include "religion.h"
 #include "spl-damage.h"
@@ -271,6 +272,7 @@ void trample_follow_fineff::fire()
         const coord_def old_pos = attack->pos();
         attack->move_to_pos(posn);
         attack->apply_location_effects(old_pos);
+        attack->did_deliberate_movement();
     }
 }
 

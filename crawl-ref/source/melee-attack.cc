@@ -3659,7 +3659,6 @@ bool melee_attack::do_knockback(bool slippery)
 
 bool melee_attack::do_drag()
 {
-{
     if (defender->is_stationary())
         return false; // don't even print a message
 
@@ -3702,12 +3701,17 @@ bool melee_attack::do_drag()
     // Only move the attacker back if the defender was already adjacent and we
     // want to move them *into* the attacker's space.
     if (new_defender_pos == attacker->pos())
+    {
         attacker->move_to_pos(new_attacker_pos);
+        attacker->apply_location_effects(new_attacker_pos);
+        attacker->did_deliberate_movement();
+    }
 
     defender->move_to_pos(new_defender_pos);
+    defender->apply_location_effects(new_defender_pos);
+    defender->did_deliberate_movement();
 
     return true;
-}
 }
 
 /**

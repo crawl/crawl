@@ -880,6 +880,8 @@ public:
                                 killer_type killer = KILL_NONE,
                                 int killernum = -1) override;
 
+    void did_deliberate_movement() override;
+
     void be_agile(int pow);
 
     bool allies_forbidden();
