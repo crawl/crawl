@@ -925,6 +925,10 @@ living spell cast
 bombardier beetle cast
 
 @The_monster@ sprays incendiary fluid @at@ @target@.
+%%%%
+sun moth cast
+
+@The_monster@'s wings beat fiercely.
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.

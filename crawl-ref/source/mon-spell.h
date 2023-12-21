@@ -691,8 +691,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SUN_MOTH,
       {
-       { SPELL_PYRE_ARROW, 20, MON_SPELL_NATURAL },
-       { SPELL_ENERGY_BOLT, 20, MON_SPELL_NATURAL },
+       { SPELL_PYRE_ARROW, 35, MON_SPELL_NATURAL },
       }
     },
 

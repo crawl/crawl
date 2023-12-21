@@ -2574,7 +2574,10 @@ A demonic figure shining with the heat and fury of a fallen star.
 %%%%
 sun moth
 
-A moth of celestial beauty and grace, crackling with power.
+A moth of transcendent beauty, coated in pyrophoric scales. Tiny cinders dance
+and twirl in its wake and whenever it beats its wings, they ignite in such
+spectacular displays of incandescence that one could almost forget how far away
+the sun is from this place.
 %%%%
 swamp dragon
 

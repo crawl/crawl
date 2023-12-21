@@ -1644,7 +1644,8 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         // Purely flavor-based renames for less magical users
         if (mons->type == MONS_BOMBARDIER_BEETLE)
             beam.name = "burning spray";
-
+        else if (mons->type == MONS_SUN_MOTH)
+            beam.name = "flurry of pyrophoric scales";
         break;
 
     default:
