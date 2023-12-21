@@ -1970,7 +1970,6 @@ static const mon_spellbook mspell_list[] =
     {  MST_AZRAEL,
       {
        { SPELL_BOLT_OF_FIRE, 13, MON_SPELL_MAGICAL },
-       { SPELL_PYRE_ARROW, 13, MON_SPELL_MAGICAL },
        { SPELL_FIREBALL, 13, MON_SPELL_MAGICAL },
        { SPELL_HURL_DAMNATION, 13, MON_SPELL_MAGICAL },
        { SPELL_CALL_DOWN_DAMNATION, 13, MON_SPELL_MAGICAL },
