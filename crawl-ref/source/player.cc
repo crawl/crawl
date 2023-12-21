@@ -8079,7 +8079,7 @@ void print_potion_heal_message()
             mprf("%s enhances the healing.",
             item->name(DESC_THE, false, false, false).c_str());
         }
-        else if (you.species == SP_ONI)
+        else if (you.has_mutation(MUT_DOUBLE_POTION_HEAL))
             mpr("You savour every drop.");
         else
             mpr("The healing is enhanced."); // bad message, but this should

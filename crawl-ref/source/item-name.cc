@@ -2950,7 +2950,7 @@ bool is_good_item(const item_def &item)
         // XX: By default, this doesn't actually change the color of anything
         //     but !ambrosia, since yellow for 'emergency' takes priority over
         //     cyan for 'good'. Should this get a *new* color?
-        if (you.species == SP_ONI
+        if (you.has_mutation(MUT_DRUNKEN_BRAWLING)
             && oni_likes_potion(static_cast<potion_type>(item.sub_type)))
         {
             return true;

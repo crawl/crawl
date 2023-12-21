@@ -3055,7 +3055,7 @@ bool drink(item_def* potion)
 
     // Drunken master, swing!
     // We do this *before* actually drinking the potion for nicer messaging.
-    if (you.species == SP_ONI
+    if (you.has_mutation(MUT_DRUNKEN_BRAWLING)
         && oni_likes_potion(static_cast<potion_type>(potion->sub_type)))
     {
         _oni_drunken_swing();
