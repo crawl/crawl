@@ -881,18 +881,14 @@ static void _weeping_skull_cloud_aura(monster* mons)
             continue;
 
         if (!feat_is_solid(env.grid(*ri)) && !actor_at(*ri) && !cloud_at(*ri))
-        {
             pos.push_back(*ri);
-        }
     }
 
     shuffle_array(pos);
 
     int num_clouds = min((int)pos.size(), random_range(1, 3));
     for (int i = 0; i < num_clouds; ++i)
-    {
         place_cloud(CLOUD_MISERY, pos[i], random2(3) + 2, mons);
-    }
 }
 
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,

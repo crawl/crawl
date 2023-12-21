@@ -1152,7 +1152,7 @@ NSUBST: 4  = 2:4 / *:.
 KFEAT:  g  = iron_grate
 NSUBST: l  = 3:L / *:l
 KMONS:  G  = cacodemon
-KMONS:  L  = flying skull
+KMONS:  L  = laughing skull
 KFEAT:  GL = lava
 KITEM:  A  = any weapon good_item / any armour good_item
 : serpent_of_hell_setup(_G)

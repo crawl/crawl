@@ -1194,7 +1194,7 @@ curse_skull MONS_CURSE_SKULL
 %rim 0
 curse_toe MONS_CURSE_TOE
 weeping_skull MONS_WEEPING_SKULL
-flying_skull MONS_FLYING_SKULL
+laughing_skull MONS_LAUGHING_SKULL
 %rim 1
 %sdir mon/unique
 murray MONS_MURRAY

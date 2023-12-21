@@ -1969,17 +1969,17 @@ NSUBST:  1 = 10=1 / 8=1. / .
 MONS:    hell rat / vampire mosquito / skeleton / zombie / spectral thing w:5 \
          / simulacrum w:5
 MONS:    wolf / warg w:2 / hell hound w:2
-MONS:    flying skull
+MONS:    weeping skull
 MONS:    basilisk / spectral black mamba / black mamba simulacrum \
          / spectral boulder beetle / boulder beetle simulacrum /
 MONS:    wraith
 MONS:    shadow
 MONS:    vampire
 :    else
-MONS:    skeleton / zombie / flying skull / wraith / spectral thing \
+MONS:    skeleton / zombie / wraith / spectral thing \
          / simulacrum
 MONS:    hell hound
-MONS:    freezing wraith
+MONS:    freezing wraith / laughing skull w:2
 MONS:    spectral wolf spider / wolf spider simulacrum / spectral ice dragon \
          / ice dragon simulacrum / spectral deep troll / deep troll simulacrum
 MONS:    vampire / necromancer w:5
@@ -1987,7 +1987,7 @@ MONS:    skeletal warrior / death knight
 MONS:    vampire knight
 :    end
 : elseif you.in_branch("Crypt") then
-MONS:    skeleton / zombie / flying skull / spectral thing / simulacrum
+MONS:    skeleton / zombie / laughing skull / spectral thing / simulacrum
 MONS:    jiangshi / hell beast / doom hound w:2
 MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
 MONS:    spectre place:Crypt:$
@@ -1997,7 +1997,7 @@ MONS:    revenant / eidolon / lich w:5
 : kmons("7 = jory / " .. vamp_def .. ", " .. vamp_def)
 # Depths
 : else
-MONS:    skeleton / zombie / flying skull / spectral thing / simulacrum
+MONS:    skeleton / zombie / laughing skull / spectral thing / simulacrum
 MONS:    jiangshi / hell beast / doom hound w:2
 MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
 MONS:    spectral golden dragon / golden dragon simulacrum \
@@ -2681,9 +2681,9 @@ ENDMAP
 
 NAME:    hangedman_screamer
 TAGS:    no_monster_gen
-DEPTH:   D:9-, Depths, Crypt
+DEPTH:   D:11-, Depths, Crypt
 ORIENT:  float
-MONS:    patrolling flying skull
+MONS:    patrolling laughing skull
 MONS:    zombie / skeleton
 : if you.absdepth() > 19 then
 MONS:    vampire knight / jiangshi / flayed ghost
@@ -2711,8 +2711,8 @@ xaaxx22x5x22xxccx
 xAAx.x2x+x2x.xCCx
 xAAxx.xx*xx.xxCCx
 xAAxxx.x*x.xxxCCx
-x...1...1.......x
-x.......1...1...x
+x.......1.......x
+x.......1.......x
 xBBxxx.x*x.xxxDDx
 xBBxx.xx*xx.xxDDx
 xBBx.x2x+x2x.xDDx
@@ -6561,7 +6561,7 @@ SUBST:   ' = 1, | = *, & = |
 MONS:    tengu warrior / gargoyle / yaktaur
 MONS:    centaur warrior / ogre mage / orc knight
 MONS:    boggart band / deep elf knight / deep elf archer / ettin
-MONS:    shadow wraith, rakshasa, vampire knight
+MONS:    shadow, rakshasa, vampire knight
 MONS:    shadow / vampire w:5
 NSUBST:  4 = 3 = 77. / *:4
 :   end

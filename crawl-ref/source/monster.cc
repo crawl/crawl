@@ -5192,7 +5192,7 @@ static bool _mons_is_skeletal(int mc)
            || mc == MONS_ANCIENT_CHAMPION
            || mc == MONS_REVENANT
            || mc == MONS_WEEPING_SKULL
-           || mc == MONS_FLYING_SKULL
+           || mc == MONS_LAUGHING_SKULL
            || mc == MONS_CURSE_SKULL
            || mc == MONS_MURRAY;
 }

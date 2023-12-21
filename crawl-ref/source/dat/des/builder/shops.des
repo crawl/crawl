@@ -1917,7 +1917,8 @@ MONS:  great orb of eyes / occultist w:5 / glowing shapeshifter w:1
 SUBST: + = .
 : elseif you.in_branch("Crypt") then
 MONS:  revenant / curse skull w:5 / lich
-MONS:  vampire knight / deep elf death mage, orb spider zombie / flying skull
+MONS:  vampire knight / deep elf death mage
+MONS:  orb spider zombie / weeping skull / laughing skull
 : elseif you.in_branch("Depths") then
 MONS:  glass eye / tengu reaver, lich / fire giant w:5
 MONS:  occultist w:5 / tengu conjurer / rakshasa w:5

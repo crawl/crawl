@@ -831,7 +831,7 @@ bool mons_is_firewood(const monster& mon)
 bool mons_has_body(const monster& mon)
 {
     if (mon.type == MONS_WEEPING_SKULL
-        || mon.type == MONS_FLYING_SKULL
+        || mon.type == MONS_LAUGHING_SKULL
         || mons_species(mon.type) == MONS_CURSE_SKULL // including Murray
         || mon.type == MONS_CURSE_TOE
         || mon.type == MONS_DEATH_COB

@@ -7250,6 +7250,33 @@ VISUAL:@The_monster@ skips for a moment.
 @The_monster@ says, "Trust me, I'm a doctor."
 ## END Killer Klown ##
 %%%%
+################## Laughing skull ###########################
+laughing skull
+
+@The_monster@ @_laughs_@ at the inevitable fate of oblivion.
+
+@The_monster@ @_laughs_@ at how history will forget everybody present.
+
+@The_monster@ @_laughs_@ at the Dungeon's lack of mercy or dignity.
+
+# Kill Six Billion Demons
+@The_monster@ @_laughs_@ at the inescapable nature of violence.
+
+w:20
+__NONE
+%%%%
+laughing skull triumphant
+
+@The_monster@ crumbles to pieces from sheer joy.
+%%%%
+_laughs_
+
+cackles madly
+
+chuckles harshly
+
+gibbers darkly
+%%%%
 ################## Moth of wrath ###########################
 moth of wrath
 
@@ -7379,7 +7406,6 @@ _weeping_skull_common_
 
 # Itsumaden
 @The_monster@ begs for proper burials for the Dungeon's restless dead.
-
 %%%%
 _weeping_skull_rare_
 
@@ -7395,6 +7421,10 @@ w:1
 # The shrieker shrieks.
 w:1
 @The_monster@ weeps.
+%%%%
+weeping skull triumphant
+
+@The_monster@ crumbles to pieces from sheer guilt.
 %%%%
 _weeps_
 

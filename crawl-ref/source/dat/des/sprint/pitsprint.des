@@ -19,7 +19,7 @@ function base_monster_setup(e)
            necrophage / quasit / zombie / sky beast / bullfrog /\
            crocodile / brain worm / mummy / orc warrior band / wight band /\
            kobold brigand band / warg / wolf / black bear / river rat /\
-           flying skull / iron imp / white imp / ufetubus / fire bat")
+           weeping skull / iron imp / white imp / ufetubus / fire bat")
   e.kmons("B = steam dragon / killer bee band / hornet /\
            manticore / wyvern / troll / two-headed ogre / yak band /\
            komodo dragon / wraith / unseen horror /\
@@ -38,7 +38,7 @@ function base_monster_setup(e)
            tarantella / jumping spider / demonic crawler /\
            small abomination / guardian mummy / spriggan /\
            orange demon / hellwing / smoke demon / ynoxinul / ice devil /\
-           red devil / centaur band")
+           red devil / laughing skull / centaur band")
   e.kmons("C = eye of devastation / hydra / skeletal warrior band w:5 /\
            catoblepas / vampire / wandering mushroom /\
            guardian serpent / rakshasa w:5 / slime creature band w:5 /\

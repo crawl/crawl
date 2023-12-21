@@ -934,9 +934,9 @@ WEIGHT:     20
 ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen no_rotate
 SUBVAULT:   B : volcano_tomb_subvault
-#           The flying skulls on lava.
+#           The skulls on lava.
 KFEAT:      u = lava
-KMONS:      u = flying skull
+KMONS:      u = laughing skull
 :           volcano_setup(_G)
 : place_chained_volcano(_G)
 MAP

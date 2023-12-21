@@ -497,7 +497,7 @@ TAGS:   allow_dup
 DEPTH:  Crypt
 MONS:   necromancer
 MONS:   zombie/skeleton
-MONS:   flying skull
+MONS:   laughing skull
 MAP
   ccccccc
  cc2c2c2cc
@@ -549,7 +549,7 @@ ENDMAP
 NAME:  weyrava_ghost_lake
 DEPTH: Crypt
 TAGS:  no_monster_gen no_item_gen no_descent
-MONS:  flying skull
+MONS:  laughing skull
 MONS:  skeletal warrior ; long sword . kite shield . w:6 any beam wand | nothing /\
        skeletal warrior ; battleaxe | halberd . w:7 any beam wand | nothing
 SUBST: y = .:8 c
@@ -568,21 +568,21 @@ KMONS: S = w:25 phantasmal warrior / spectral fire dragon / spectral ice dragon 
 MAP
     cccccccccccc
   cccyy.yy..yyycccc
-  cyy..w..ww...12ycc
+  cyy..w..ww....2ycc
   cy.wwzwwzzwwwww.ycc
  cc.wzzzzzzzzzzzzw..@
 ccy1wzzzzzzzzzzzzzw.cc
 cy.wzzzzzzvvzzzzzzw.yc
-@.wzzzzzv1.11vzzzzw.yc
+@.wzzzzzv1..1vzzzzw.yc
 cy.wzzzv.c++c.vzzzzw.c
 cy.wzzz.ccSScc1zzzzw2c
 cy2wzzv.+STTS+.vzzw1yc
 c.wzzzv.+STTS+.vzzw.yc
 c.wzzzz1ccSScc.zzzw.yc
 c.wzzzzv.c++c.vzzzzw.c
-c.wzzzzzv11.1vzzzzzw.@
+c.wzzzzzv1..1vzzzzzw.@
 cy2wzzzzzzvvzzzzzzw.yc
-ccy1wzzzzzzzzzzzzw1ycc
+ccy.wzzzzzzzzzzzzw1ycc
  ccy.wzzzzzwwwwww2ycc
   cy.wzzwww......ycc
   cc.www...yyyccccc
@@ -675,7 +675,7 @@ ENDMAP
 
 NAME:   st_shrine_of_skulls
 DEPTH:  Crypt
-MONS:   flying skull band, lich
+MONS:   laughing skull band, lich
 KMONS:  3 = curse skull
 KMONS:  4 = lich w:20 / ancient lich / dread lich
 KMONS:  P = withered plant
@@ -1041,7 +1041,7 @@ MONS:    shadow wraith / phantasmal warrior / ghost crab w:4
 KMONS:   8 = eidolon / flayed ghost
 KMONS:   9 = revenant
 KMONS:   A = guardian mummy w:7 / ushabti w:3 / \
-             skeleton w:8 / flying skull band w:6
+             skeleton w:8 / laughing skull band w:6
 KMONS:   B = ancient champion
 KMONS:   C = mummy priest
 KMONS:   0 = zombie
@@ -1424,7 +1424,7 @@ KMONS:  1 = anaconda skeleton / caustic shrike skeleton / harpy skeleton / \
         20-headed hydra skeleton w:5 / alligator snapping turtle skeleton w:5 /\
         apis skeleton w:5 / dire elephant skeleton w:5 / titan skeleton w:5 / \
         golden dragon skeleton w:5 / hellephant skeleton w:5
-KMONS:  2V = skeletal warrior w:20 / flying skull / curse skull w:5 / \
+KMONS:  2V = skeletal warrior w:20 / laughing skull / curse skull w:5 / \
         ancient champion band w:5 / nothing w:20
 KMONS:  3 = bone dragon / revenant
 KFEAT:  V = V / .
@@ -1473,7 +1473,7 @@ ITEM:    mundane dagger, dagger good_item
 : local q = "quick blade randart ego:"
 : item(q .. "draining / " .. q .. "vampirism / " .. q .. "pain / " ..
 :      q .. "distortion / damaged quick blade")
-MONS:    flying skull, curse skull
+MONS:    laughing skull, curse skull
 MONS:    spectral demonic crawler, wolf spider zombie
 MONS:    culicivora zombie / redback zombie / \
          jumping spider zombie / tarantella zombie
@@ -1552,7 +1552,7 @@ MONS:   bone dragon
 MONS:   lich
 MONS:   ancient champion
 MONS:   skeletal warrior
-MONS:   flying skull
+MONS:   laughing skull
 MONS:   w:20 skeletal warrior / w:50 skeleton / nothing
 # vampire layout
 : elseif brnd > 4 then
@@ -1571,7 +1571,7 @@ MONS:   revenant
 MONS:   lich
 MONS:   eidolon / flayed ghost
 MONS:   phantasmal warrior / shadow wraith w:6
-MONS:   flying skull
+MONS:   weeping skull
 MONS:   wraith / freezing wraith / shadow wraith / spectral thing / \
         w:20 shadow / nothing
 # mummy layout - rare
@@ -1581,7 +1581,7 @@ MONS:   sphinx
 MONS:   mummy priest
 MONS:   mummy priest
 MONS:   guardian mummy w:7 / ushabti w:3
-MONS:   flying skull
+MONS:   weeping skull
 MONS:   mummy / guardian mummy / w:5 nothing
 : end
 NSUBST: / = 1:| / 2:* / *:%
@@ -1645,7 +1645,7 @@ ORIENT: encompass
 TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_vmirror
 PLACE:  Crypt:$
 KFEAT:  A = w
-KMONS:  A = flying skull
+KMONS:  A = laughing skull
 KMONS:  B = ancient lich / dread lich
 KMONS:  D = bone dragon
 KMONS:  V = vampire knight
@@ -1685,9 +1685,9 @@ vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwv
-vwwwwwwwwwwwwwwv..........................vAwwwwwwwwwwwwwv
-vwwwwwwwwwwwwwwv.........rrrrrrrr.........vAAAwwwwwwwwwwwv
-vwwwwwwwwwwwwwwv.........r//||//r.........vAAAAAAwwwwwwwwv
+vwwwwwwwwwwwwwwv..........................vwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwv.........rrrrrrrr.........vAwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwv.........r//||//r.........vAAAAwwwwwwwwwwv
 vwwwwwwvvvv?vvvv......rrarr*/O*rrarr......v?v?v?v?vwwwwwwv
 vwwwwwwv.......v......r$$*rr++rr*$$r......v.......vwwwwwwv
 vwwwwww?....H..v.....rrrrOr$$$$rOrrrr.....v.......?wwwwwwv
@@ -1705,9 +1705,9 @@ vwwwwwwv...vv....+....vv..........vv....+....N..vvvwwwwwwv
 vwwwwwwv...vNz...v.....vv........vv.....vvv.....+Mvwwwwwwv
 vwwwwww?...v.M...v....G.vv......vvI.....vM+.....vvvwwwwwwv
 vwwwwwwv...v....vv....vvvvvvvvvvvvvv....vvv.....+Mvwwwwwwv
-vwwwwwA?.......vv....vv.....ll.....vv....vvv+v..vvvwwwwwwv
+vwwwwww?.......vv....vv.....ll.....vv....vvv+v..vvvwwwwwwv
 vwwwwwAv......vv....vv..............vv....vvMv..+Mvwwwwwwv
-vwwwwAA?.....vv....vv................vv....vvv..vvvwwwwwwv
+vwwwwwA?.....vv....vv................vv....vvv..vvvwwwwwwv
 vwwwAAAv.....v....vv.......N..N.......vv....vv..+Mvwwwwwwv
 vwvvvvvvvvvvvvv+vvvvv+vv.Mzz..zzM.vv+vvvvv+vvvvvvvvvvvvvwv
 vwvv.........v..I.v....v..........v....v.........v..%Ovvwv
@@ -1720,16 +1720,16 @@ vwwvvv.......+....v....vrrrr++rrrrv....v............vvvwwv
 vwwwvv.......v....v....vrrUz..zUrrv....v............vvwwwv
 vwwwvvvvvvvvvvvvvvvv+vvvrI......Irvvv+vvvvvvvvvvvvvvvvwwwv
 vwwwwvvvP**$$v.........vrrrr++rrrrv.........v$$**Pvvvwwwwv
-vwwwwwvvv/*$$+.........vrrww..wwrrv.........+$$*/vvvwwwwwv
+vwwwwwvvv/*$$+.........vrrwA..Awrrv.........+$$*/vvvwwwwwv
 vwwwwwwvvv*$$v...X.....vrwAw..wAwrv...X.....v$$*vvvAwwwwwv
-vwwwwwwwwvvv$v....G....vwwww..wwwwv..G......v$vvvAAwwwwwwv
+vwwwwwwwwvvv$v....G....vwwww..wwwwv..G......v$vvvAwwwwwwwv
 vwwwwwwwwwvvvv.........vwwww..wwwwv.........vvvvwwwwwwwwwv
 vwwwwwwwwwwwvvvv.......vwwww..wwwwv.......vvvvwwwwwwwwwwwv
 vwwwwwwwwwwwwwvvvv.....vwwww..wwwwv.....vvvvwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwwvvvvv..vwwww..wwwwv..vvvvvwwwwwwwwwwwwwwwv
-vwwwwwwwwwwwwwwwwwwvvvvvAwww..wwwAvvvvvwwwwwwwwwwwwwwwwwwv
-vwwwwwwwwwwwwwwwwwwwwwvvAwww..wwwAvvwwwwwwwwwwwwwwwwwwwwwv
-vwwwwwwwwwwwwwwwwwwwwwwAwwww..wwwwAwwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwvvvvvwwww..wwwwvvvvvwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwvvwwww..wwwwvvwwwwwwwwwwwwwwwwwwwwwv
+vwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwv
@@ -1760,7 +1760,7 @@ KFEAT:  m = iron_grate
 KMASK:  1 = opaque
 MONS:   patrolling lich w:20 / patrolling ancient lich / patrolling dread lich
 MONS:   bone dragon / curse skull / curse toe
-MONS:   flying skull / skeletal warrior / skeleton
+MONS:   laughing skull / skeletal warrior / skeleton
 MONS:   ancient champion
 KMONS:  F = orange crystal statue / obsidian statue
 KITEM:  | = | no_pickup
@@ -1847,7 +1847,7 @@ KMONS:  S = shadow / wraith / freezing wraith / shadow wraith / wight
 : end
 ####### SW monsters (crematory). Either fiery undead or hellish.
 : if crawl.coinflip() then
-KMONS:  t = fire giant skeleton / fire dragon skeleton
+KMONS:  t = fire giant skeleton / fire dragon skeleton / laughing skull w:20
 KMONS:  X = w:1 curse skull / w:19 revenant
 : else
 KMONS:  t = w:20 hell knight / smoke demon / red devil
@@ -1901,9 +1901,9 @@ v......f.f....ffff..............v.......v...v.....I.......v
 vvvvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvv+vvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvv....v??llv??llv??llvvvvvvo.ovvvWWWWWWW.......v
 vvvvvlllvvvvv....v?.tlv?.tlv?.tlvvvv.......vvWWWWWW%.mmmm.v
-vvv.......vvv....v....v....v....vvv.........vvWWWWWWWm*|m.v
-vv.........vv....v....v....v....vv...........vWWWWWmWW*|m.v
-v..ccc.ccc..vv++vvv++vvv++vvv++vvv...R.Q.R...vvWWWWmWWZ|m.v
+vvv.......vvv....v....+....+....vvv.........vvWWWWWWWm*|m.v
+vv.........vv....v....+....+....vv...........vWWWWWmWW*|m.v
+v..ccc.ccc..vv++vvv++vvvvvvvv++vvv...R.Q.R...vvWWWWmWWZ|m.v
 v...lc.cl...v...................vo...........ovWWWWmmmmmm.v
 v..t.c.c.t..+...................+......U......+...........v
 v...........v...................vo...........ov...........v
@@ -2202,7 +2202,7 @@ NAME:    grunt_crypt_end_deaths_head
 TAGS:    patrolling no_monster_gen no_rotate no_hmirror no_vmirror
 PLACE:   Crypt:$
 ORIENT:  encompass
-MONS:    skeletal warrior / jiangshi, flying skull band
+MONS:    skeletal warrior / jiangshi, laughing skull / weeping skull w:1
 SHUFFLE: 34 / 56 / 78 / 90, AB / CD / EF / HI / JK / LM / NO / PQ
 
 KMONS:   3 = ghoul
@@ -2222,7 +2222,7 @@ KMONS:   BD = freezing wraith / shadow wraith / wraith
 KMONS:   E = deep elf death mage
 KMONS:   F = small abomination / large abomination w:5
 KMONS:   H = death knight
-KMONS:   I = death knight w:5 / nothing
+KMONS:   I = laughing skull
 KMONS:   J = profane servitor
 KMONS:   L = bone dragon
 KMONS:   KM = nothing

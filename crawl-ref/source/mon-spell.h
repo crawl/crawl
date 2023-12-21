@@ -709,6 +709,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_LAUGHING_SKULL,
+      {
+       { SPELL_BOLT_OF_DRAINING, 30, MON_SPELL_WIZARD | MON_SPELL_NOISY},
+      }
+    },
+
     {  MST_CURSE_SKULL,
       {
        { SPELL_SUMMON_UNDEAD, 48, MON_SPELL_MAGICAL | MON_SPELL_NOISY },

@@ -733,6 +733,14 @@ weeping skull cast
 
 @The_monster@'s misery [bubbles over|overflows].
 %%%%
+laughing skull cast
+
+@The_monster@ cackles spitefully.
+
+@The_monster@ gibbers with scorn.
+
+@The_monster@ lets out a vicious peel of laugher.
+%%%%
 Death Rattle ushabti cast
 
 @The_monster@ shakes and rattles.

@@ -1019,8 +1019,8 @@ ENDMAP
 # chances of wights) to get past, and then a little treasure room at the end.
 #
 # A door in the treasure room leads to another corridor flanked with a wraith
-# (a hint of what's to come) on one side, and a flying skull on the other:
-# the flying skull is basically an intelligent alarm trap, both behind glass.
+# (a hint of what's to come) on one side, and a skull on the other:
+# the skull is basically an intelligent weak alarm trap, both behind glass.
 #
 # At the end of the corridor is a second treasure room, this one also
 # containing more flying skeleton alarm traps, plus wraiths inside 3x3 rooms.
@@ -1033,12 +1033,11 @@ MONS:    centaur zombie w:1 / orc zombie / hobgoblin zombie /\
          kobold zombie / adder zombie / orc skeleton / hobgoblin skeleton /\
          ball python skeleton / nothing w:5
 MONS:    wight
-MONS:    flying skull
-MONS:    wraith
+MONS:    laughing skull
+KMONS:   3V = laughing skull
+KMONS:   4X = wraith
 ITEM:    any scroll / any potion
 ITEM:    any scroll / any potion / any wand w:4
-KMONS:   V = wraith
-KMONS:   X = flying skull
 SHUFFLE: VX
 SUBST:   x = c:20 n:8
 SUBST:   z = c:20 n:4
@@ -1065,9 +1064,9 @@ cc.......cc
   ccc...ccc                         c.c4c..x3x..c4c.c
  cc......cccccccccccccccccccccccccccc.ccc..yzy..ccc.c
 cc........cc$c$c$c$c$cc.....cccccVccc...............c
-c..........c+c+c+c+c+cc.GdG.cccccoccc.cxy..eee..yxx.c
+c..........c+c+c+c+c+cc.GdG.cccccnccc.cxy..eee..yxx.c
 c..c.......+..........+..d....+.....+.c3z..eee..z3x.c
-cc.cc......c+c+c+c+c+cc.GdG.cccccoccc.cxy..eee..yxx.c
+cc.cc......c+c+c+c+c+cc.GdG.cccccnccc.cxy..eee..yxx.c
 cc.c......cc$c$c$c$c$cc.....cccccXccc...............c
 cc.cc....cccccccccccccccccccccccccccc.ccc..yzy..ccc.c
  cc.....cc                          c.c4c..x3x..c4c.c

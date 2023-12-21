@@ -764,7 +764,7 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_WEEPING_SKULL,
 #endif
-    MONS_FLYING_SKULL,
+    MONS_LAUGHING_SKULL,
     MONS_SKELETAL_WARRIOR,
     MONS_PHANTASMAL_WARRIOR,
     MONS_LICH,

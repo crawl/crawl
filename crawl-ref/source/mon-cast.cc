@@ -1849,8 +1849,29 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     }
     }
 
-    const int power = evoke ? 30 + mons->get_hit_dice()
-                            : mons_spellpower(*mons, spell_cast);
+    int power = evoke ? 30 + mons->get_hit_dice()
+                      : mons_spellpower(*mons, spell_cast);
+
+    // Laughing skulls get a power boost based on other nearby laughing skulls.
+    // (Doing it here feels a little hacky, but I'm not sure where else it
+    // should go, unless we duplicate bolt of draining just for their trick.)
+    if (mons->type == MONS_LAUGHING_SKULL)
+    {
+        int skull_count = 0;
+        for (distance_iterator di(mons->pos(), false, true, 5); di; ++di)
+        {
+            if (monster_at(*di) && monster_at(*di)->type == MONS_LAUGHING_SKULL
+                && mons_aligned(mons, monster_at(*di))
+                && mons->see_cell_no_trans(*di))
+            {
+                ++skull_count;
+            }
+        }
+
+        // Power boost is +25% for each nearby skull, to a maximum of +100%
+        int skull_mult = 100 + min(100, skull_count * 25);
+        power = power * skull_mult / 100;
+    }
 
     bolt theBeam = mons_spell_beam(mons, spell_cast, power);
 
@@ -4329,7 +4350,7 @@ static monster_type _pick_undead_summon()
     static monster_type undead[] =
     {
         MONS_NECROPHAGE, MONS_JIANGSHI, MONS_FLAYED_GHOST, MONS_ZOMBIE,
-        MONS_SKELETON, MONS_SIMULACRUM, MONS_SPECTRAL_THING, MONS_FLYING_SKULL,
+        MONS_SKELETON, MONS_SIMULACRUM, MONS_SPECTRAL_THING, MONS_LAUGHING_SKULL,
         MONS_MUMMY, MONS_VAMPIRE, MONS_WIGHT, MONS_WRAITH, MONS_SHADOW_WRAITH,
         MONS_FREEZING_WRAITH, MONS_PHANTASMAL_WARRIOR, MONS_SHADOW
     };
