@@ -2315,12 +2315,12 @@ string RuneMenu::gem_title()
 {
     const int found = gems_found();
     const int lost = gems_lost();
-    string title = make_stringf("<white>Gems (%d collected", found);
+    string gem_title = make_stringf("<white>Gems (%d collected", found);
     if (Options.more_gem_info && lost < found)
-        title += make_stringf(", %d intact", found - lost);
+        gem_title += make_stringf(", %d intact", found - lost);
     // don't explicitly mention that your gems are all broken otherwise - sad!
 
-    return title + ")</white>";
+    return gem_title + ")</white>";
 }
 
 void RuneMenu::set_footer()
