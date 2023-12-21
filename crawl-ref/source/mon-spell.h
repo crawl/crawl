@@ -748,6 +748,12 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('B') Beetles and other insects
+    {  MST_BOMBARDIER_BEETLE,
+      {
+       { SPELL_PYRE_ARROW, 40, MON_SPELL_NATURAL},
+      }
+    },
+
     {  MST_BOULDER_BEETLE,
       {
        { SPELL_ROLL, 50, MON_SPELL_NATURAL},

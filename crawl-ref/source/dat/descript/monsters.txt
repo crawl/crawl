@@ -764,6 +764,13 @@ boggart
 A malevolent and dangerous little sprite. The shadowy illusions it summons may
 not be real, but are deadly all the same.
 %%%%
+bombardier beetle
+
+An unassuming beetle filled with an incredible amount of hypergolic fluid. The
+sticky spray it fires is capable of igniting predators and unwary adventurers
+alike, though more experienced ones know to keep moving if they wish to avoid
+a fiery grave.
+%%%%
 bone dragon
 
 A mighty undead abomination, pieced together from the broken bones of many

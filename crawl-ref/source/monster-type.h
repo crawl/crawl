@@ -239,6 +239,7 @@ enum monster_type                      // env.mons[].type
     MONS_HORNET,
 #if TAG_MAJOR_VERSION > 34
     MONS_SPARK_WASP,
+    MONS_BOMBARDIER_BEETLE,
 #endif
 #if TAG_MAJOR_VERSION == 34
     MONS_BEETLE,
@@ -1214,6 +1215,7 @@ enum monster_type                      // env.mons[].type
     MONS_PROTEAN_PROGENITOR,
     MONS_ASPIRING_FLESH,
     MONS_ONI,                          // player species only
+    MONS_BOMBARDIER_BEETLE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

@@ -921,6 +921,10 @@ Corrupting Pulse wretched star cast
 living spell cast
 
 @The_monster@ casts itself @at@ @target@.
+%%%%
+bombardier beetle cast
+
+@The_monster@ sprays incendiary fluid @at@ @target@.
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.

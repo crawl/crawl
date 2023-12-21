@@ -4040,7 +4040,7 @@ void bolt::affect_player()
         || flavour == BEAM_STICKY_FLAME)
     {
         // ench_power here is equal to 12 * caster HD for monsters, btw
-        const int intensity = 3 + ench_power / 16;
+        const int intensity = 2 + ench_power / 14;
 
         if (!player_res_sticky_flame())
         {

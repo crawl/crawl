@@ -410,7 +410,7 @@ static dice_def _spell_damage(spell_type spell, int hd)
         // against monsters. This is very unsatisfying, but surely we show the
         // player *something*...
         case SPELL_PYRE_ARROW:
-            return dice_def(2, 3 + hd * 12 / 16);
+            return dice_def(2, 2 + hd * 12 / 14);
         default:
             break;
     }

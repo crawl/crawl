@@ -237,6 +237,7 @@ jellyfish MONS_JELLYFISH
 ## Beetles ('B')
 %sdir mon/animals
 %rim 0
+bombardier_beetle MONS_BOMBARDIER_BEETLE
 boulder_beetle MONS_BOULDER_BEETLE
 boulder_beetle_rolling0 MONS_BOULDER_BEETLE_ROLLING
 boulder_beetle_rolling1
