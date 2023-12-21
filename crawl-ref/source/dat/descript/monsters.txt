@@ -2298,8 +2298,7 @@ potent venomous bite.
 searing wretch
 
 An animated corpse alight with terrible fire. The flames are fueled by its
-regenerating flesh, which bubbles and melts as it grows. Its bite leaves
-its victims covered in flaming gore.
+regenerating flesh, which bubbles and melts as it grows.
 %%%%
 seraph
 
