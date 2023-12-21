@@ -686,6 +686,11 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { { { WPN_TRIDENT,          1 },
                 { WPN_SPEAR,            2 },
         } } },
+        { MONS_KOBOLD_BLASTMINER,
+            { { { WPN_ORCBOW,           8 },
+                { WPN_ARBALEST,         31 },
+                { WPN_HAND_CANNON,      1 },
+        } } },
         { MONS_CENTAUR,
             { { { WPN_SHORTBOW,         1 },
                 { WPN_ORCBOW,           1 },
@@ -1169,7 +1174,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     case MONS_ARACHNE:
         force_item = true;
         item.base_type = OBJ_STAVES;
-        item.sub_type = STAFF_POISON;
+        item.sub_type = STAFF_ALCHEMY;
         item.flags    |= ISFLAG_KNOW_TYPE;
         if (one_chance_in(100) && !get_unique_item_status(UNRAND_OLGREB))
             make_item_unrandart(item, UNRAND_OLGREB);
@@ -1360,6 +1365,12 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
                || is_range_weapon(i))
     {
         _give_weapon(mon, level, true);
+    }
+
+    if (mon->type == MONS_ERICA && i.is_type(OBJ_WEAPONS, WPN_SCIMITAR))
+    {
+        make_item_for_monster(mon, OBJ_JEWELLERY, OBJ_RANDOM,
+                              0, 1, ISFLAG_KNOW_TYPE);
     }
 
     if (mon->type == MONS_FANNAR && i.is_type(OBJ_WEAPONS, WPN_QUARTERSTAFF))
@@ -2024,7 +2035,6 @@ int make_mons_armour(monster_type type, int level)
         break;
     }
 
-    case MONS_ERICA:
     case MONS_JOSEPHINE:
     case MONS_PSYCHE:
         if (one_chance_in(5))

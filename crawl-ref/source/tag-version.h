@@ -288,6 +288,11 @@ enum tag_minor_version
     TAG_MINOR_SLENGU,              // Split tengu mutations.
     TAG_MINOR_GLASS_EYES,          // Fixup paralysis gaze to vitrifying gaze.
     TAG_MINOR_SAVE_TALISMANS,      // Store the in-use talisman.
+    TAG_MINOR_NO_SPECIAL_ENERGY,   // Remove some unused monster energy types.
+    TAG_MINOR_MON_SH_INFO,         // Store SH in mon-info.
+    TAG_MINOR_RAMPAGE_HEAL,        // Adjust Armataur mutations for healpage.
+    TAG_MINOR_GEMS,                // Add gems.
+    TAG_MINOR_ALCHEMY_MERGER,      // Poison magic and transmuations merged.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

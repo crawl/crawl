@@ -390,12 +390,20 @@ void fill_doll_equipment(dolls_data &result)
         const int item = you.melded[EQ_WEAPON] ? -1 : you.equip[EQ_WEAPON];
         if (you.form == transformation::blade_hands)
         {
-            if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
+            const bool natasha = Options.tile_use_monster == MONS_NATASHA;
+            const auto base_tile = result.parts[TILEP_PART_BASE];
+            if (natasha
+                || is_player_tile(base_tile, TILEP_BASE_FELID)
+                || is_player_tile(base_tile, TILEP_BASE_FELID_SILLY))
+            {
+                // TODO: add variant blade hands for alt felid tiles
+                if (natasha || base_tile == TILEP_BASE_FELID)
+                    result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_FE;
+            }
+            else if (is_player_tile(base_tile, TILEP_BASE_OCTOPODE))
                 result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_OP;
-            else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID)
-                     || Options.tile_use_monster == MONS_NATASHA)
-                result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_FE;
-            else result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
+            else
+                result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
         }
         else if (item == -1)
             result.parts[TILEP_PART_HAND1] = 0;
@@ -534,7 +542,7 @@ void fill_doll_equipment(dolls_data &result)
     if (result.parts[TILEP_PART_ENCH] == TILEP_SHOW_EQUIP)
     {
         result.parts[TILEP_PART_ENCH] =
-            (you.duration[DUR_LIQUID_FLAMES] ? TILEP_ENCH_STICKY_FLAME : 0);
+            (you.duration[DUR_STICKY_FLAME] ? TILEP_ENCH_STICKY_FLAME : 0);
     }
     // Draconian head/wings.
     if (species::is_draconian(you.species))

@@ -349,7 +349,7 @@ static int moninf_get_target_weapon(lua_State *ls)
     MONINF(ls, 1, mi);
     item_def *item = (lua_isnone(ls, 2) || lua_isnil(ls, 2)) ? nullptr : *(item_def **) luaL_checkudata(ls, 2, ITEM_METATABLE);
     ostringstream result;
-    describe_to_hit(*mi, result, false, item);
+    describe_to_hit(*mi, result, item);
     lua_pushstring(ls, result.str().c_str());
     return 1;
 }

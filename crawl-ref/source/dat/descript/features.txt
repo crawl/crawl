@@ -886,7 +886,7 @@ The floor. It pulses to an unknown beat.
 # wizlab: Zonguldrok
 Zonguldrok's gravestone
 
-A gravestone. The name ‘Zonguldrok’ is engraved on it in golden letters.
+A gravestone of the house of Zonguldrok, still dripping with brackish ichor.
 %%%%
 A gravestone
 
@@ -1034,10 +1034,6 @@ A large window
 
 A window embedded in the side of an enormous metal pipe, allowing observation
 of the water flowing inside.
-%%%%
-A glass window
-
-A pockmarked, ultra-hard glass window.
 %%%%
 A petrified tree
 

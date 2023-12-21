@@ -10,7 +10,7 @@ enum class transformation
 #endif
     blade_hands,
     statue,
-    anaconda,
+    serpent,
     dragon,
     death,
     bat,

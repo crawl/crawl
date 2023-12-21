@@ -35,6 +35,8 @@
 #include "traps.h"
 #include "xom.h"
 
+#define ORIG_HD_KEY "orig_hd"
+
 bool feature_mimic_at(const coord_def &c)
 {
     return map_masked(c, MMT_MIMIC);
@@ -90,14 +92,14 @@ void monster_drop_things(monster* mons,
     }
 }
 
-static bool _valid_type_morph(const monster* mons, monster_type new_mclass)
+static bool _valid_type_morph(const monster &mons, monster_type new_mclass)
 {
     // Shapeshifters cannot polymorph into glowing shapeshifters or
     // vice versa.
     if ((new_mclass == MONS_GLOWING_SHAPESHIFTER
-             && mons->has_ench(ENCH_SHAPESHIFTER))
+             && mons.has_ench(ENCH_SHAPESHIFTER))
          || (new_mclass == MONS_SHAPESHIFTER
-             && mons->has_ench(ENCH_GLOWING_SHAPESHIFTER)))
+             && mons.has_ench(ENCH_GLOWING_SHAPESHIFTER)))
     {
         return false;
     }
@@ -111,15 +113,15 @@ static bool _valid_type_morph(const monster* mons, monster_type new_mclass)
         || mons_class_flag(new_mclass, M_UNIQUE)      // no uniques
         || !mons_class_gives_xp(new_mclass)           // no tentacle parts or
                                                       // harmless things
-        || !(mons_class_holiness(new_mclass) & mons_class_holiness(mons->type))
+        || !(mons_class_holiness(new_mclass) & mons_class_holiness(mons.type))
         // normally holiness just needs to overlap, but we don't want
         // shapeshifters to become demons
-        || mons->is_shapeshifter() && !(mons_class_holiness(new_mclass) & MH_NATURAL)
+        || mons.is_shapeshifter() && !(mons_class_holiness(new_mclass) & MH_NATURAL)
         || !mons_class_is_threatening(new_mclass)
 
         // 'morph targets are _always_ "base" classes, not derived ones.
         || new_mclass != mons_species(new_mclass)
-        || new_mclass == mons_species(mons->type)
+        || new_mclass == mons_species(mons.type)
         // They act as separate polymorph classes on their own.
         || mons_class_is_zombified(new_mclass)
 
@@ -134,8 +136,8 @@ static bool _valid_type_morph(const monster* mons, monster_type new_mclass)
 
         // The spell on Prince Ribbit can't be broken so easily.
         || (new_mclass == MONS_HUMAN
-            && (mons->type == MONS_PRINCE_RIBBIT
-                || mons->mname == "Prince Ribbit")))
+            && (mons.type == MONS_PRINCE_RIBBIT
+                || mons.mname == "Prince Ribbit")))
     {
         return false;
     }
@@ -147,7 +149,7 @@ static bool _valid_type_morph(const monster* mons, monster_type new_mclass)
 
 static bool _valid_morph(monster* mons, monster_type new_mclass)
 {
-    if (!_valid_type_morph(mons, new_mclass))
+    if (!_valid_type_morph(*mons, new_mclass))
         return false;
 
     // [hm] Lower base draconian chances since there are nine of them,
@@ -161,24 +163,6 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
 
     // Determine if the monster is happy on current tile.
     return monster_habitable_grid(new_mclass, env.grid(mons->pos()));
-}
-
-static bool _is_poly_power_unsuitable(poly_power_type power,
-                                       int src_pow, int tgt_pow, int relax)
-{
-    switch (power)
-    {
-    case PPT_LESS:
-        return tgt_pow > src_pow - 3 + relax * 3 / 2
-                || (power == PPT_LESS && tgt_pow < src_pow - relax / 2);
-    case PPT_MORE:
-        return tgt_pow < src_pow + 2 - relax
-                || (power == PPT_MORE && tgt_pow > src_pow + relax);
-    default:
-    case PPT_SAME:
-        return tgt_pow < src_pow - relax
-                || tgt_pow > src_pow + relax * 3 / 2;
-    }
 }
 
 static bool _jiyva_slime_target(monster_type targetc)
@@ -195,6 +179,7 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
 {
     ASSERT(mons); // XXX: change to monster &mons
     bool could_see     = you.can_see(*mons);
+    // NOTE(pf): This logic is wrong! FIXME!
     bool slimified = _jiyva_slime_target(targetc);
 
     // Quietly remove the old monster's invisibility before transforming
@@ -296,6 +281,8 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
         if (mons->mons_species() == MONS_HYDRA)
             mons->props[OLD_HEADS_KEY].get_int() = mons->num_heads;
     }
+    if (!mons->props.exists(ORIG_HD_KEY))
+        mons->props[ORIG_HD_KEY] = mons->get_experience_level();
 
     mon_enchant abj       = mons->get_ench(ENCH_ABJ);
     mon_enchant fabj      = mons->get_ench(ENCH_FAKE_ABJURATION);
@@ -365,8 +352,14 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     if (mons_class_flag(mons->type, M_INVIS))
         mons->add_ench(ENCH_INVIS);
 
-    mons->hit_points = mons->max_hit_points * old_hp / old_hp_max
-                       + random2(mons->max_hit_points);
+    mons->hit_points = mons->max_hit_points * old_hp / old_hp_max;
+
+    // Slimifying monsters gets you a fresh, delicious jiggly buddy.
+    if (slimified)
+        mons->hit_points = mons->max_hit_points;
+    // Shapeshifters heal when they shift. Wow, why can't players do that?
+    else if (shifter.ench != ENCH_NONE)
+        mons->hit_points += random2(mons->max_hit_points);
 
     mons->hit_points = min(mons->max_hit_points, mons->hit_points);
 
@@ -439,6 +432,79 @@ static bool _habitat_matches(bool orig_flies, habitat_type orig_hab,
     return false; // should never happen
 }
 
+static int _goal_hd(int orig_hd, poly_power_type ppt)
+{
+    switch (ppt)
+    {
+    case PPT_LESS:
+        return max(orig_hd - 3, 1);
+    case PPT_MORE:
+        return min(orig_hd + 2, 27);
+    case PPT_SAME:
+    default:
+        return orig_hd;
+    }
+}
+
+static int _poly_weight(int orig_hd, int orig_tier, monster_type new_species,
+                        poly_power_type ppt)
+{
+    const int new_tier = mons_demon_tier(new_species);
+    const int new_hd = mons_power(new_species);
+    const int goal_hd = _goal_hd(orig_hd, ppt);
+
+    int hd_delta = abs(goal_hd - new_hd);
+    if (ppt != PPT_MORE && new_hd > goal_hd)
+        hd_delta *= 2; // make upgrades less likely
+
+    const int tier_delta = abs(orig_tier - new_tier);
+    const int total_delta = hd_delta + tier_delta;
+    const int max_delta = 8;
+    if (total_delta > max_delta)
+        return 0;
+    // halve weight for each HD of difference and each demon tier level apart
+    return 1 << (max_delta - total_delta);
+}
+
+static void _fill_poly_weights(const monster &mons, poly_power_type ppt,
+                               bool hab_match,
+                               map<monster_type, int> &weights)
+{
+    const int orig_tier = mons_demon_tier(mons.type);
+    if (orig_tier == -1)
+    {
+        // panlords & hell lords get poly immunity. why? unclear to me
+        // TODO: allow polying panlords into other random panlords, ha
+        return;
+    }
+
+    const int orig_hd = mons.props.exists(ORIG_HD_KEY) ?
+                            mons.props[ORIG_HD_KEY].get_int() :
+                            mons.get_experience_level();
+    const bool orig_flies = monster_inherently_flies(mons);
+    const habitat_type orig_hab
+        = mons_habitat_type(mons.type, mons_base_type(mons), false);
+
+    for (monster_type mt = MONS_0; mt < NUM_MONSTERS; ++mt)
+    {
+        if (invalid_monster_type(mt))
+            continue; // no polying into bugs
+
+        const monster_type species = mons_species(mt);
+        if (weights.find(species) != weights.end())
+            continue; // already saw this one
+        if (!_valid_type_morph(mons, species))
+            continue; // no polying into statues, same species, etc
+
+        if (hab_match && !_habitat_matches(orig_flies, orig_hab, species))
+            continue;
+
+        const int weight = _poly_weight(orig_hd, orig_tier, species, ppt);
+        if (weight > 0)
+            weights[species] = weight;
+    }
+}
+
 void init_poly_set(monster *mons)
 {
     rng::subgenerator poly_rng;
@@ -454,45 +520,12 @@ void init_poly_set(monster *mons)
         return;
     }
 
-    const int orig_hd = mons_power(mons->type);
-    const bool orig_flies = monster_inherently_flies(*mons);
-    const habitat_type orig_hab
-        = mons_habitat_type(mons->type, mons_base_type(*mons), false);
-
     map<monster_type, int> weights;
-    for (monster_type mt = MONS_0; mt < NUM_MONSTERS; ++mt)
-    {
-        if (invalid_monster_type(mt))
-            continue; // no polying into bugs
-
-        const monster_type species = mons_species(mt);
-        if (weights.find(species) != weights.end())
-            continue; // already saw this one
-        if (!_valid_type_morph(mons, species))
-            continue; // no polying into statues, same species, etc
-
-        if (!_habitat_matches(orig_flies, orig_hab, species))
-            continue;
-
-        // OK, we're good. Let's look at weights.
-        const int new_tier = mons_demon_tier(species);
-        const int new_hd = mons_power(species);
-        // make HD upgrades less likely.
-        const int hd_delta = abs(orig_hd - new_hd) * (new_hd > orig_hd ? 2 : 1);
-        const int tier_delta = abs(orig_tier - new_tier);
-        const int total_delta = hd_delta + tier_delta;
-        const int max_delta = 8;
-        if (total_delta > max_delta)
-            continue;
-        // halve weight for each HD of difference and each demon tier level apart
-        const int weight = 1 << (max_delta - total_delta) ;
-        weights[species] = weight;
-    }
-
+    _fill_poly_weights(*mons, PPT_SAME, true, weights);
     CrawlVector &set = mons->props[POLY_SET_KEY];
     for (int i = 0; i < 3; i++)
     {
-        if (weights.size() <= 0)
+        if (weights.empty())
             return; // can't choose any more
         const monster_type *chosen = random_choose_weighted<map<monster_type,int>>(weights);
         ASSERT(chosen);
@@ -501,14 +534,36 @@ void init_poly_set(monster *mons)
     }
 }
 
-static monster_type _poly_from_set(monster *mons)
+static monster_type _poly_from_set(monster &mons)
 {
-    if (!mons->props.exists(POLY_SET_KEY))
+    if (!mons.props.exists(POLY_SET_KEY))
         return MONS_NO_MONSTER;
-    const CrawlVector &set = mons->props[POLY_SET_KEY];
+    const CrawlVector &set = mons.props[POLY_SET_KEY];
     if (set.size() <= 0)
         return MONS_NO_MONSTER;
     return (monster_type)set[random2(set.size())].get_int();
+}
+
+static monster_type _concretize_target(monster &mons, monster_type target,
+                                       poly_power_type ppt)
+{
+    switch (target)
+    {
+    case RANDOM_POLYMORPH_MONSTER:
+        return _poly_from_set(mons);
+    case RANDOM_MONSTER:
+    {
+        map<monster_type, int> weights;
+        _fill_poly_weights(mons, ppt, false, weights);
+        if (weights.empty())
+            return MONS_NO_MONSTER;
+        const monster_type *chosen = random_choose_weighted<map<monster_type,int>>(weights);
+        ASSERT(chosen);
+        return *chosen;
+    }
+    default:
+        return target;
+    }
 }
 
 // If targetc == RANDOM_MONSTER, then relpower indicates the desired
@@ -523,77 +578,23 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         return false;
     ASSERT(!(mons->flags & MF_BANISHED) || player_in_branch(BRANCH_ABYSS));
 
-    int source_power, target_power, relax;
-    int source_tier, target_tier;
-    int tries = 1000;
-
-    // Used to be mons_power, but that just returns hit_dice
-    // for the monster class. By using the current hit dice
-    // the player gets the opportunity to use draining more
-    // effectively against shapeshifters. - bwr
-    source_power = mons->get_hit_dice();
-    source_tier = mons_demon_tier(mons->type);
-
     // There's not a single valid target on the '&' demon tier, so unless we
     // make one, let's ban this outright.
-    if (source_tier == -1)
+    if (mons_demon_tier(mons->type) == -1)
     {
         return simple_monster_message(*mons,
             "'s appearance momentarily alters.");
     }
-    relax = 1;
 
-    if (targetc == RANDOM_MONSTER)
-    {
-        do
-        {
-            // Pick a monster species that's guaranteed happy at this grid.
-            targetc = random_monster_at_grid(mons->pos(), true);
-
-            target_power = mons_power(targetc);
-            // Can't compare tiers in valid_morph, since we want to affect only
-            // random polymorphs, and not absolutely, too.
-            target_tier = mons_demon_tier(targetc);
-
-            if (one_chance_in(200))
-                relax++;
-
-            if (relax > 50)
-                return simple_monster_message(*mons, " shudders.");
-        }
-        while (tries-- && (!_valid_morph(mons, targetc)
-                           || source_tier != target_tier && !x_chance_in_y(relax, 200)
-                           || _is_poly_power_unsuitable(power, source_power,
-                                                        target_power, relax)));
-    }
-
-    if (targetc == RANDOM_POLYMORPH_MONSTER)
-        targetc = _poly_from_set(mons);
+    targetc = _concretize_target(*mons, targetc, power);
+    if (targetc == MONS_NO_MONSTER)
+        return simple_monster_message(*mons, " shudders.");
 
     bool could_see = you.can_see(*mons);
     bool need_note = could_see && mons_is_notable(*mons);
     string old_name_a = mons->full_name(DESC_A);
     string old_name_the = mons->full_name(DESC_THE);
     monster_type oldc = mons->type;
-
-    if (targetc == RANDOM_TOUGHER_MONSTER)
-    {
-        vector<monster_type> target_types;
-        for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
-        {
-            const monsterentry *me = get_monster_data(mc);
-            const int delta = me->HD - mons->get_hit_dice();
-            if (delta != 1)
-                continue;
-            if (!_valid_morph(mons, mc))
-                continue;
-            target_types.push_back(mc);
-        }
-        if (target_types.empty())
-            return false;
-
-        targetc = target_types[random2(target_types.size())];
-    }
 
     if (power != PPT_SLIME && !_valid_morph(mons, targetc))
         return simple_monster_message(*mons, " looks momentarily different.");
@@ -665,28 +666,27 @@ bool mon_can_be_slimified(const monster* mons)
            && (holi & (MH_UNDEAD | MH_NATURAL) && !mons_is_slime(*mons));
 }
 
+static monster_type _slime_target(const monster &mon)
+{
+    const int hd = mon.get_hit_dice();
+    const int target = random_range(hd - 4, hd + 4);
+    if (!feat_has_solid_floor(env.grid(mon.pos())))
+        return target < 7 ? MONS_JELLY : MONS_SLIME_CREATURE; // Don't drown.
+
+    if (target < 3)
+        return MONS_ENDOPLASM;
+    if (target < 5)
+        return MONS_JELLY;
+    if (target < 12)
+        return MONS_SLIME_CREATURE;
+    if (coinflip())
+        return MONS_ACID_BLOB;
+    return MONS_AZURE_JELLY;
+}
+
 void slimify_monster(monster* mon)
 {
-    monster_type target = MONS_JELLY;
-
-    const int x = mon->get_hit_dice() + random_choose(1, -1) * random2(5);
-
-    if (x < 3)
-        target = MONS_ENDOPLASM;
-    else if (x >= 3 && x < 5)
-        target = MONS_JELLY;
-    else if (x >= 5 && x <= 11)
-        target = MONS_SLIME_CREATURE;
-    else
-    {
-        if (coinflip())
-            target = MONS_ACID_BLOB;
-        else
-            target = MONS_AZURE_JELLY;
-    }
-
-    if (feat_is_water(env.grid(mon->pos()))) // Pick something amphibious.
-        target = (x < 7) ? MONS_JELLY : MONS_SLIME_CREATURE;
+    const monster_type target = _slime_target(*mon);
 
     // Bail out if jellies can't live here.
     if (!monster_habitable_grid(target, env.grid(mon->pos())))

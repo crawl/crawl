@@ -449,8 +449,21 @@ void fire_item_no_quiver(dist *target)
         canned_msg(MSG_OK);
 }
 
-static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
-                                string &ammo_name, bool &returning)
+static string _ammo_name(const item_def &item, item_def const *launcher)
+{
+    if (launcher && is_unrandom_artefact(*launcher, UNRAND_DAMNATION))
+        return "a damnation bolt";
+    if (is_artefact(item))
+        return "the " + item.name(DESC_PLAIN);
+    return article_a(item.name(DESC_PLAIN), true);
+}
+
+static bool _returning(const item_def &item)
+{
+    return item.is_type(OBJ_MISSILES, MI_BOOMERANG);
+}
+
+static void _setup_missile_beam(const actor *agent, bolt &beam, item_def &item)
 {
     const auto cglyph = get_item_glyph(item);
     beam.glyph  = cglyph.ch;
@@ -483,30 +496,15 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     beam.aux_source.clear();
 
     beam.name = item.name(DESC_PLAIN, false, false, false);
-    ammo_name = item.name(DESC_PLAIN);
 
     const unrandart_entry* entry = launcher && is_unrandom_artefact(*launcher)
         ? get_unrand_entry(launcher->unrand_idx) : nullptr;
 
     if (entry && entry->launch)
     {
-        setup_missile_type sm =
-            entry->launch(launcher, &beam, &ammo_name,
-                                     &returning);
-
-        switch (sm)
-        {
-        case SM_CONTINUE:
-            break;
-        case SM_FINISHED:
-            return false;
-        case SM_CANCEL:
-            return true;
-        }
+        entry->launch(&beam);
+        return;
     }
-
-    returning = item.base_type == OBJ_MISSILES
-                && item.sub_type == MI_BOOMERANG;
 
     if (item.base_type == OBJ_MISSILES
         && get_ammo_brand(item) == SPMSL_EXPLODING)
@@ -533,13 +531,6 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
         beam.special_explosion = expl;
     }
-
-    if (!is_artefact(item))
-        ammo_name = article_a(ammo_name, true);
-    else
-        ammo_name = "the " + ammo_name;
-
-    return false;
 }
 
 static void _handle_cannon_fx(actor &act, const item_def &weapon, coord_def targ)
@@ -618,6 +609,9 @@ static void _throw_noise(actor* act, const item_def &ammo)
     noisy(noise, act->pos(), msg, act->mid);
 }
 
+static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher,
+                          int ammo_slot);
+
 // throw_it - handles player throwing/firing only. Monster throwing is handled
 // in mons_throw().
 // called only from ammo_action::trigger; this could probably be further
@@ -630,9 +624,6 @@ void throw_it(quiver::action &a)
     // XX can this api be simplified now that projectiles and launchers are
     // completely distinct?
     const int ammo_slot = launcher ? -1 : a.get_item();
-
-    bool returning   = false;    // Item can return to pack.
-    const bool teleport = is_bullseye_active();
 
     if (you.confused())
     {
@@ -667,30 +658,18 @@ void throw_it(quiver::action &a)
 
     // Figure out if we're thrown or launched.
     const bool is_thrown = is_throwable(&you, thrown);
-    const bool tossing = !launcher && !is_thrown;
 
-    // Making a copy of the item: changed only for venom launchers.
+    // Make a copy of the item.
     item_def item = thrown;
     item.quantity = 1;
     if (ammo_slot != -1)
         item.slot     = index_to_letter(item.link);
 
-    string ammo_name;
-
-    if (_setup_missile_beam(&you, pbolt, item, ammo_name, returning))
-    {
-        you.turn_is_over = false;
-        return;
-    }
-
-    // Get the ammo/weapon type. Convenience.
-    const object_class_type wepClass = thrown.base_type;
-    const int               wepType  = thrown.sub_type;
+    _setup_missile_beam(&you, pbolt, item);
 
     // Don't trace at all when confused.
     // Give the player a chance to be warned about helpless targets when using
     // Portaled Projectile, but obviously don't trace a path.
-    bool cancelled = false;
     if (!you.confused())
     {
         // Set values absurdly high to make sure the tracer will
@@ -706,20 +685,18 @@ void throw_it(quiver::action &a)
 
         pbolt.fire();
 
-        cancelled = pbolt.beam_cancelled;
-
         pbolt.hit    = 0;
         pbolt.damage = dice_def();
         if (pbolt.friendly_past_target)
             pbolt.aimed_at_spot = true;
-    }
 
-    // Should only happen if the player answered 'n' to one of those
-    // "Fire through friendly?" prompts.
-    if (cancelled)
-    {
-        you.turn_is_over = false;
-        return;
+        // Should only happen if the player answered 'n' to one of those
+        // "Fire through friendly?" prompts.
+        if (pbolt.beam_cancelled)
+        {
+            you.turn_is_over = false;
+            return;
+        }
     }
 
     pbolt.is_tracer = false;
@@ -730,9 +707,6 @@ void throw_it(quiver::action &a)
     // Even though direction is allowed, we're throwing so we
     // want to use tx, ty to make the missile fly to map edge.
     pbolt.set_target(a.target);
-
-    const int bow_brand = launcher ? get_weapon_brand(*launcher) : SPWPN_NORMAL;
-    const int ammo_brand = get_ammo_brand(item);
 
     if (launcher)
     {
@@ -746,21 +720,43 @@ void throw_it(quiver::action &a)
             count_action(CACT_FIRE, launcher->sub_type);
     } else if (is_thrown)
     {
-        practise_throwing((missile_type)wepType);
-        count_action(CACT_THROW, wepType, OBJ_MISSILES);
+        practise_throwing((missile_type)item.sub_type);
+        count_action(CACT_THROW, item.sub_type, OBJ_MISSILES);
     }
 
-    // check for returning ammo
-    // XXX: Is it still necessary not to do this?
-    if (teleport)
-        returning = false;
+    _player_shoot(pbolt, item, launcher, ammo_slot);
+
+    // ...any monster nearby can see that something has been thrown, even
+    // if it didn't make any noise.
+    alert_nearby_monsters();
+
+    you.turn_is_over = true;
+
+    if ((launcher || is_thrown)
+        && will_have_passive(passive_t::shadow_attacks)
+        && item.base_type == OBJ_MISSILES
+        && item.sub_type != MI_DART)
+    {
+        dithmenos_shadow_throw(a.target, item);
+    }
+}
+
+// Once the player has committed to a target, shoot/throw/toss at it.
+static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher,
+                          int ammo_slot)
+{
+    const int bow_brand = launcher ? get_weapon_brand(*launcher) : SPWPN_NORMAL;
+    const int ammo_brand = get_ammo_brand(item);
+    const bool returning = _returning(item);
+    const bool is_thrown = is_throwable(&you, item);
+    const bool tossing = !launcher && !is_thrown;
 
     you.time_taken = you.attack_delay(&item).roll();
 
     // Create message.
     mprf("You %s %s.",
           is_thrown ? "throw" : launcher ? "shoot" : "toss away",
-          ammo_name.c_str());
+          _ammo_name(item, launcher).c_str());
 
     // Ensure we're firing a 'missile'-type beam.
     pbolt.pierce    = false;
@@ -772,7 +768,7 @@ void throw_it(quiver::action &a)
 
     // Mark this item as thrown if it's a missile, so that we'll pick it up
     // when we walk over it.
-    if (wepClass == OBJ_MISSILES || wepClass == OBJ_WEAPONS)
+    if (item.base_type == OBJ_MISSILES)
         item.flags |= ISFLAG_THROWN;
     pbolt.item_mulches = !tossing && _thrown_object_destroyed(item);
     pbolt.drop_item = !pbolt.item_mulches && !returning;
@@ -801,34 +797,16 @@ void throw_it(quiver::action &a)
         update_screen();
         pbolt.fire();
     }
-    else
-    {
-        if (ammo_slot != -1)
-            dec_inv_item_quantity(ammo_slot, 1);
-    }
+    else if (ammo_slot != -1)
+        dec_inv_item_quantity(ammo_slot, 1);
 
-    _throw_noise(&you, thrown);
+    _throw_noise(&you, item);
 
     if (launcher)
         _handle_cannon_fx(you, *launcher, target);
 
-    // ...any monster nearby can see that something has been thrown, even
-    // if it didn't make any noise.
-    alert_nearby_monsters();
-
-    you.turn_is_over = true;
-
     if (pbolt.special_explosion != nullptr)
         delete pbolt.special_explosion;
-
-    if (!teleport
-        && !tossing
-        && will_have_passive(passive_t::shadow_attacks)
-        && thrown.base_type == OBJ_MISSILES
-        && thrown.sub_type != MI_DART)
-    {
-        dithmenos_shadow_throw(a.target, item);
-    }
 }
 
 void setup_monster_throw_beam(monster* mons, bolt &beam)
@@ -845,9 +823,6 @@ void setup_monster_throw_beam(monster* mons, bolt &beam)
 
 bool mons_throw(monster* mons, bolt &beam, bool teleport)
 {
-    string ammo_name;
-    bool returning = false;
-
     ASSERT(beam.item);
     item_def &missile = *beam.item;
     ASSERT(missile.base_type == OBJ_MISSILES);
@@ -867,10 +842,8 @@ bool mons_throw(monster* mons, bolt &beam, bool teleport)
     item_def item = missile;
     item.quantity = 1;
 
-    if (_setup_missile_beam(mons, beam, item, ammo_name, returning))
-        return false;
-
-    beam.aimed_at_spot |= returning;
+    _setup_missile_beam(mons, beam, item);
+    beam.aimed_at_spot |= _returning(item);
     // Avoid overshooting and potentially hitting the player.
     // Piercing beams' tracers already account for this.
     beam.aimed_at_spot |= mons->temp_attitude() == ATT_FRIENDLY

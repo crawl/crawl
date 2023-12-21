@@ -203,7 +203,7 @@ void wizard_heal(bool super_heal)
         // Clear more stuff.
         undrain_hp(9999);
         you.magic_contamination = 0;
-        you.duration[DUR_LIQUID_FLAMES] = 0;
+        you.duration[DUR_STICKY_FLAME] = 0;
         you.clear_beholders();
         you.duration[DUR_PETRIFIED] = 0;
         you.duration[DUR_PETRIFYING] = 0;
@@ -227,6 +227,16 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_LOWERED_WL] = 0;
         you.duration[DUR_VERTIGO] = 0;
         you.duration[DUR_VITRIFIED] = 0;
+        you.duration[DUR_FROZEN] = 0;
+        you.duration[DUR_SAP_MAGIC] = 0;
+        you.duration[DUR_SLOW] = 0;
+        you.duration[DUR_CANINE_FAMILIAR_DEAD] = 0;
+        you.duration[DUR_VORTEX_COOLDOWN] = 0;
+        you.duration[DUR_DRAGON_CALL_COOLDOWN] = 0;
+        you.duration[DUR_DEATHS_DOOR_COOLDOWN] = 0;
+        you.duration[DUR_BERSERK_COOLDOWN] = 0;
+        you.duration[DUR_BLINK_COOLDOWN] = 0;
+        you.duration[DUR_SIPHON_COOLDOWN] = 0;
         delete_all_temp_mutations("Super heal");
         you.stat_loss.init(0);
         you.attribute[ATTR_STAT_LOSS_XP] = 0;

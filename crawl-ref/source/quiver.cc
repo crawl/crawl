@@ -55,7 +55,7 @@ static bool _items_similar(const item_def& a, const item_def& b,
 static vector<string> _desc_hit_chance(const monster_info &mi)
 {
     ostringstream result;
-    describe_to_hit(mi, result, false, you.weapon());
+    describe_to_hit(mi, result, you.weapon());
     string str = result.str();
     if (str.empty())
         return vector<string>{};
@@ -1679,8 +1679,8 @@ namespace quiver
         {
             if (!is_valid())
                 return "Buggy";
-            return you.inv[item_slot].base_type == OBJ_SCROLLS ? "Read" :
-                   you.has_mutation(MUT_LONG_TONGUE) ? "Slurp" : "Drink";
+            return you.inv[item_slot].base_type == OBJ_SCROLLS ? "Read"
+                                                               : "Drink";
         }
 
         bool use_autofight_targeting() const override { return false; }

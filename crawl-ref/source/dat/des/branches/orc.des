@@ -74,19 +74,20 @@ ENDMAP
 ##############################################################################
 # Orcish monsters near stair
 #
-NAME: david_orc_3
-TAGS: orc_entry transparent
-MONS: orc w:50 / orc priest / orc wizard / orc warrior / nothing w:80
-MONS: orc warrior / warg / orc priest / nothing
+NAME:   david_orc_3
+TAGS:   orc_entry transparent
 ORIENT: float
-KFEAT: O = enter_orcish_mines
+MONS:   orc w:50 / orc priest / orc wizard / orc warrior / nothing w:80
+MONS:   orc warrior / orc priest, warg
+SUBST:  2 = 222., 3 = 223.
+KFEAT:  O = enter_orcish_mines
 MAP
 1.....@....11
 1............
 .............
 ......21.....
 @.....O.....@
-.....12......
+.....13......
 .............
 .............
 11..@......11
@@ -201,19 +202,19 @@ ENDMAP
 ##############################################################################
 # C'mon, you *gotta* have a *fort*!
 #
-NAME:  erik_orc_2
-TAGS:  orc_entry no_pool_fixup no_rotate
+NAME:   erik_orc_2
+TAGS:   orc_entry no_pool_fixup no_rotate
 ORIENT: float
-MONS:  orc warrior, orc priest / orc wizard, orc w:100 / orc warrior
+MONS:   orc warrior, orc priest / orc wizard, orc w:100 / orc warrior
 : if you.absdepth() >= 10 and crawl.one_chance_in(10) then
-MONS: orc knight
-SUBST: G = .
+MONS:   orc knight
+SUBST:  G = .
 : else
 MONS:  orc warrior
-SUBST: G = 4
+SUBST:  G = 4
 : end
-SUBST: c = c:1000 x
-KFEAT: O = enter_orcish_mines
+SUBST:  c = c:1000 x
+KFEAT:  O = enter_orcish_mines
 MAP
 .............................
 .Iwwwwwwwwwwwwwwwwwwwwwwwwww.
@@ -237,8 +238,8 @@ ENDMAP
 NAME:   erik_orc_3
 TAGS:   orc_entry no_item_gen
 ORIENT: float
-MONS:   orc / gnoll w:4, orc wizard / orc priest / orc warrior
-MONS:   warg / ogre / cyclops
+MONS:   orc / kobold brigand w:2, orc wizard / orc priest / orc warrior
+MONS:   ogre / troll, warg / cyclops
 KFEAT:  O = enter_orcish_mines
 SUBST:  1 = 11., 2 = 2222.
 SUBST:  ; = . $:1, ? = x . $:1
@@ -257,7 +258,7 @@ x?xx?xx.x??...x.1x.1;?x
 xx..xxx...x.x.x.1?1.xxx
 x?.2....xx2.x...xx.x;?x
 xxx??xx..xx.xx.x?..xxxx
-xx..1.x.x.3...x2.x1..xx
+xx..1.x.x.4...x2.x1..xx
 ..x??x.xxx..xxxx?;.??xx
 xx;.??.11.x;xxx..x..xxx
 x??xxxx???xx?xxx??x.?xx
@@ -267,16 +268,17 @@ ENDMAP
 ##############################################################################
 # Orc-henge
 #
-NAME: erik_orc_4
-TAGS: orc_entry no_rotate transparent
-MONS: human / gnoll / orc w:2
-MONS: orc priest, orc
-MONS: orc priest / orc wizard / w:2 goblin / nothing
-MONS: orc warrior / warg
-ITEM: dagger
+NAME:   erik_orc_4
+TAGS:   orc_entry no_rotate transparent
 ORIENT: float
-SUBST: A : c:60 ., B : c:60 ., C : c:60 ., D : c:60 ., E : c:60 .
-KFEAT: O = enter_orcish_mines
+MONS:   human / gnoll / orc w:2
+MONS:   orc priest, orc
+MONS:   orc priest / orc wizard / kobold w:2
+MONS:   orc warrior / warg
+ITEM:   dagger
+SUBST:  3 = 3:22 .
+SUBST:  A : c:60 ., B : c:60 ., C : c:60 ., D : c:60 ., E : c:60 .
+KFEAT:  O = enter_orcish_mines
 #
 MAP
   ..........................
@@ -434,9 +436,9 @@ NAME:   minmay_orc_entry_guard_dogs
 TAGS:   orc_entry transparent patrolling
 WEIGHT: 5
 ORIENT: float
-MONS:   warg
+MONS:   warg, wolf
 KFEAT:  O = enter_orcish_mines
-NSUBST: 1 = 1:1 / 1:. / * = 1 .:2
+NSUBST: 1 = 1:1 / 1:. / * = 2 .:2
 MAP
 1.1
 .O.
@@ -562,16 +564,16 @@ xx.2xx+xx2.xx
 ENDMAP
 
 ###################################
-# warg stables, with goblin stableboy
+# warg stables, with kobold stablehand
 NAME:  mines5_lemuel
-SUBST: ?: wx
-MONS:  warg / wolf,goblin
+MONS:  warg / wolf, kobold blastminer
+SUBST: ? : wx
 MAP
 x???????x
 xwwwwwwwx
 xwwwwwwwx
 x1.1.1.1x
-x.1.1.1.x
+x.1...1.x
 x1.2...1x
 xxxx+xxxx
 ENDMAP
@@ -853,40 +855,36 @@ ENDMAP
 NAME:    guppyfry_orc_lava_fort
 TAGS:    no_item_gen no_monster_gen transparent
 DEPTH:   Orc
-KMONS:   1 = orc high priest / orc sorcerer
-KMONS:   2 = orc knight
-KMONS:   3 = orc warrior / orc ; orcbow . spear | hand axe | mace
-KMONS:   4 = orc priest / orc / nothing
-KMONS:   5 = orc wizard / nothing
-KMONS:   6 = ogre / two-headed ogre / troll / deep troll / ogre mage / nothing
-KMONS:   7 = warg
+MONS:    orc high priest / orc sorcerer, orc knight
+MONS:    orc warrior / kobold blastminer w:2
+MONS:    orc wizard, orc priest, orc, warg
+KMONS:   8 = ogre / two-headed ogre / troll / deep troll / ogre mage
 KFEAT:   S = any shop
-SUBST:   ? = 3467
-SUBST:   - = S34.
-SHUFFLE: 352?
+SUBST:   ? = 45666678....,  - = SSS356...
 MAP
 llllx..xllll
 llllx..xllll
-ll5lx..xl5ll
-lll5x..x5lll
+ll4lx..xl4ll
+lll4x..x4lll
 xxxx-??-xxxx
-....?12?....
-....?21?....
+....?12.....
+.....21?....
 xxxx-??-xxxx
-lll5x..x5lll
-ll5lx..xl5ll
+lll4x..x4lll
+ll4lx..xl4ll
 llllx..xllll
 llllx..xllll
 ENDMAP
 
 ##################################################
 # The orcs dug into a natural cave and used the bats as a shooting gallery.
-NAME:   mines_bat_river
+NAME:   blackcustard_mines_bat_river
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 DEPTH:  Orc
-MONS:   bat
-MONS:   generate_awake orc ; shortbow ego:flaming | shortbow ego:freezing | shortbow ego:heavy
-NSUBST: . = 2:2 / 2:c
+MONS:   bat, kobold blastminer
+MONS:   generate_awake orc ; shortbow ego:flaming | shortbow ego:freezing | \
+                             shortbow ego:heavy
+NSUBST: . = 1:2 / 2:3 / 2:c
 NSUBST: c = *: 2 .
 # There were arrows here. They're gone now. Sorry
 NSUBST: b = 3:1 / 10:d / 4:e / *: .:20 1:1 d:2 e:2
@@ -916,14 +914,20 @@ ENDMAP
 
 ##################################################
 # The orcs piled up some loose rubble.
-NAME:   rock_pile
-TAGS:   no_item_gen no_monster_gen transparent
-DEPTH:  Orc
-MONS:   orc ; sling, boulder beetle
-KITEM:  d = w:3 stone / w:1 large rock q:1
-SUBST:  a = .:4 b
-NSUBST: b = 1:2 / 5:1 / *:d
-SUBST:  1 = 1 .
+NAME:   blackcustard_rock_pile
+TAGS:   no_item_gen no_monster_gen transparent preserve_wall vaults_hard
+DEPTH:  Orc, Vaults
+WEIGHT: 1 (Vaults), 10
+MONS:   orc ; sling, kobold blastminer, boulder beetle
+MONS:   orc knight ; plate armour . sling, stone giant
+ITEM:   stone w:30 / large rock q:1, gold q:100
+ITEM:   granite talisman / staff of earth / randbook disc:earth
+SUBST:  a = d:4 b
+: if you.in_branch("Vaults") then
+NSUBST: b = 3:2 / 2 = 3335 / 4 = 4d / 1:e / 1:f / *:d
+: else
+NSUBST: b = 1:2 / 1:3 / 4 = 1d / *:d
+: end
 MAP
      . .
    ....
@@ -944,10 +948,10 @@ ENDMAP
 #
 # Memorial with eternal flame.
 NAME:   nicolae_orc_accident_1
-TAGS:   uniq_orcaccident
+TAGS:   uniq_orcaccident patrolling
 DEPTH:  Orc
 ORIENT: southeast
-MONS:   patrolling orc warrior / patrolling orc knight w:2
+MONS:   orc warrior / kobold blastminer w:2 / orc knight w:2
 KITEM:  W = gold q:1 / gold q:2 / gold q:3 / nothing w:100
 KFEAT:  W = shallow_water
 KFEAT:  X = x
@@ -979,11 +983,11 @@ ENDMAP
 
 # Memorial altar.
 NAME:    nicolae_orc_accident_2
-TAGS:    uniq_orcaccident
+TAGS:    uniq_orcaccident patrolling
 DEPTH:   Orc
 ORIENT:  southeast
-MONS:    patrolling orc warrior / patrolling orc knight w:2
-MONS:    patrolling orc priest
+MONS:    orc warrior / kobold blastminer w:2 / orc knight w:2
+MONS:    orc priest
 KFEAT:   _ = altar_beogh
 KFEAT:   X = x
 SHUFFLE: AB
@@ -1019,10 +1023,10 @@ ENDMAP
 
 # Quarantine.
 NAME:   nicolae_orc_accident_3
-TAGS:   uniq_orcaccident
+TAGS:   uniq_orcaccident patrolling
 DEPTH:  Orc
 ORIENT: southwest
-MONS:   patrolling orc w:20 / patrolling orc warrior / patrolling orc knight w:2
+MONS:   orc w:20 / orc warrior / orc knight w:2
 MONS:   tarantella / wolf spider / redback
 KFEAT:  m = iron_grate
 KFEAT:  q = web / floor
@@ -1149,7 +1153,7 @@ xxcccDcccxx
 ENDMAP
 
 NAME: nicolae_orc_bridge_out
-TAGS: extra decor no_pool_fixup
+TAGS: extra decor no_pool_fixup uniq_orc_liquiddecor
 DEPTH: Orc
 KPROP: L = no_tele_into
 SUBST: L = lll., X = xx., Z = llx, l : lw
@@ -1191,7 +1195,7 @@ xxxxxxXXXX''''Exxx
 ENDMAP
 
 NAME: nicolae_orc_flooded_monolith
-TAGS: extra decor transparent
+TAGS: extra decor transparent uniq_orc_liquiddecor
 DEPTH: Orc
 SUBST: W = w., c : ccccbv
 MAP
@@ -1230,7 +1234,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_orc_lava_tube
-TAGS: extra decor transparent
+TAGS: extra decor transparent uniq_orc_liquiddecor
 DEPTH: Orc
 SUBST: X = xx., L = ll., Z = lx
 MAP
@@ -1252,7 +1256,7 @@ xxxX...XxxxxZZxxxxxxxx
 ENDMAP
 
 NAME: nicolae_orc_pool_cavern
-TAGS: extra decor transparent
+TAGS: extra decor transparent uniq_orc_liquiddecor
 DEPTH: Orc
 SUBST: W = ww., X = x:80 .:40 w
 MAP
@@ -1360,12 +1364,12 @@ xx...........xx
      .@@@.
 ENDMAP
 
-NAME: cheibrodos_orc_guarddog
-TAGS: no_monster_gen transparent
-DEPTH: Orc
+NAME:   cheibrodos_orc_guarddog
+TAGS:   no_monster_gen transparent
+DEPTH:  Orc
 ORIENT: float
-MONS: warg
-NSUBST: 1 = 3:1 / 4=1..
+MONS:   warg
+NSUBST: 1 = 3:1 / 4 = 1..
 MAP
 xxx..@..xxx
 x1...1...1x
@@ -1405,6 +1409,84 @@ MAP
     xxxxxxxx
 ENDMAP
 
+NAME:    regret_index_minedec_guest_junction
+TAGS:    transparent extra decor no_pool_fixup no_rotate uniq_orc_liquiddecor
+DEPTH:   Orc
+ITEM:    mundane shortbow no_pickup, giant club no_pickup
+SHUFFLE: ABCD, YZ
+SUBST:   A : x., B : x., CDY = ., - : +., Z : x'..
+CLEAR:   '
+MAP
+ ccYcc..cc  cc  ......
+cc.........Wccc.........
+c........Wwwccc--xxxxxxxx
+Z......Wwwwcccc.......xxxx
+c....Wwwwccccdc....CC..exx
+c...Wwwwcccc....BB....D..x.
+.............A..............
+ .x..D....BB....ccccwwwW...c
+  xxe..CC....cdccccwwwW....c
+  xxxx.......ccccwwwW......Z
+   xxxxxxxx--cccwwW........c
+    .........cccW.........cc
+      ......  cc  cc..ccYcc
+ENDMAP
+
+NAME:    regret_index_minedec_devilstone
+TAGS:    transparent extra decor
+ITEM:    mundane damaged demon trident no_pickup
+KFEAT:   A = altar_makhleb
+KFEAT:   B = altar_beogh
+KFEAT:   C = c
+SHUFFLE: XYZ, AB / VV / VV / VV, `y! / `y! / ~z&
+SUBST:   X : x', Y : x', Z : ', V : VVIIId'
+SUBST:   ` = ., Y = c, ! = @
+TILE:    C = wall_stone_dark
+FTILE:   'dABVI = floor_pebble_lightred
+CLEAR:   ~z&
+MAP
+  `yy  .@.
+  ``yy.....
+  ```ycc'cc
+  ``ccc'''cc
+  &ccC'ZBX'cc
+  cc'CC'Y'cc
+ cc'Y'CC'cc
+cc'XAZ'Ccc&
+ cc'''ccc``
+  cc'ccy```
+  .....yy``
+   .@.  yy`
+ENDMAP
+
+NAME:    regret_index_minedec_shroomtown_chain
+TAGS:    transparent extra decor
+MONS:    fungus
+ITEM:    stone no_pickup, large rock q:1 no_pickup
+SHUFFLE: ABCDEFGH, WX / WX / WW, YZ / YZ / YY
+SUBST:   ABCD = 1, EF = x, G : GIde, H : x.
+SUBST:   WY = +, X : ccx, Z : ccx
+TILE:    G : dngn_statue_axe / dngn_statue_polearm w:5 / dngn_statue_imp
+MAP
+ccccc....
+c.F.cAB...
+c...W..C..
+cXccc...D..
+..E.....E..
+..D...cccYc
+...C..Z...c
+ ...BAc.G.c
+   ...ccccccccc...
+          c.G.cED...
+          c...Z..C...
+          cYccc...B..
+          ..A.....A..
+          ..B...cccXc
+           ..C..W...c
+           ...DEc.F.c
+            ....ccccc
+ENDMAP
+
 ############################################################################
 # Orc endings.
 #
@@ -1418,37 +1500,35 @@ NAME:    st_orc_town
 TAGS:    no_rotate no_item_gen transparent
 PLACE:   Orc:$
 ORIENT:  float
-MONS:    orc / nothing
-#
-: local brnd = crawl.random2(8)
-: if brnd > 5 then
+MONS:    orc, warg
 MONS:    orc wizard, orc sorcerer
-: elseif brnd > 2 then
 MONS:    orc priest, orc high priest
-: else
-MONS:    orc warrior, orc knight
-: end
-#
-MONS:    warg / nothing
+MONS:    orc warrior
+KMONS:   8 = orc knight
+KMONS:   9 = ogre / two-headed ogre
+KMONS:   0 = ogre mage
 KFEAT:   S = any shop
 KFEAT:   _ = altar_beogh
-SUBST:   5 = 32, A:+, C:+, B:c, D:c
-SUBST:   T : TIII
-SHUFFLE: AC/BD
+SHUFFLE: 34? / 56! / 78` / 90~, AC / BD / BD
+SUBST:   ? = 33444, ! = 55666, ` = 77888, ~ = 990
+SUBST:   1 = 1., 2 = 222.
+SUBST:   AC = +, BD = c, T : TIII
+NSUBST:  S = 1:R / *:S
 MAP
 ...................................
 ...................................
 ..cccccc..ccc.ccc.ccccccc..cccccc..
-..cS521c..ccc.ccc.ccccccc..c125Sc..
-..c5211D..ccc.ccc4ccccccc..B.125c..
-..c2111c4....1......121..4.c..12c..
-..cccCcc...11211.4ccc1ccc..ccAccc..
-@......4..1T232T1.ccc.ccc.4.......@
-..cccCcc...112114.ccc.ccc.cccAccc..
-..c11..c4.ccc+ccc.ccc1ccc4c...11c..
-..c211.D..c1...1c...131...B..112c..
-..c5211c..c2.3.2c4ccc1ccc.c.1125c..
-..cS521c..c1._.1c.ccc.ccc.c1125Sc..
+..cS?31c..ccc.ccc.ccccccc..c15!Sc..
+..c?311D..ccc.ccc2ccccccc..B.16!c..
+..c3111c2...........151..2.c..15c..
+..cccCcc.....1...2ccc1ccc..ccAccc..
+@......2...11311..ccc.ccc.........@
+@.........1T343T1.ccc.ccc.2.......@
+..cccCcc...113112.ccc.ccc.cccAccc..
+..c11..c2.ccc+ccc.ccc1ccc2c...11c..
+..c311.D..c1...1c...161...B..115c..
+..c?311c..c3...3c2ccc1ccc.c.115!c..
+..cS?31c..c14_41c.ccc.ccc.c115!Sc..
 ..cccccc..ccccccc.ccc.ccc.ccccccc..
 ...................................
 ...................................
@@ -1489,8 +1569,9 @@ MONS:    orc warrior w:1 ; orcbow . halberd | war axe | morningstar /\
 MONS:    orc warrior ; orcbow . glaive | broad axe | battleaxe | great mace
 MONS:    orc knight ; arbalest . glaive | broad axe | great mace
 MONS:    orc warrior
-MONS:    centaur w:20 / centaur warrior w:1 / nothing w:21
+MONS:    centaur w:20 / centaur warrior w:1, kobold blastminer
 SUBST:   3 = 23
+NSUBST:  5 = 4:5 / 2:6 / 5 = 556... / 3 = 5. / *:.
 KFEAT:   S = any shop
 MAP
   ...............@...............
@@ -1501,7 +1582,7 @@ MAP
 ....5...5..wwwwcccccwwww..5...5....
 ..c....5.wwwwccccSccccwwww.5....c..
 ..c...5.wwwwcccc4.4ccccwwww.5...c..
-........1221...34S43...1221........
+........1221...34R43...1221........
 ........1221...34S43...1221........
 ..c...5.wwwwcccc4.4ccccwwww.5...c..
 ..c....5.wwwwccccSccccwwww.5....c..
@@ -1518,28 +1599,29 @@ NAME:    st_orc_mages
 TAGS:    no_item_gen no_monster_gen transparent
 PLACE:   Orc:$
 ORIENT:  float
-MONS:    orc / nothing, orc wizard / nothing, orc sorcerer
-MONS:    orc priest / nothing, orc high priest, orc warrior
+MONS:    orc, orc wizard, orc sorcerer
+MONS:    orc priest, orc high priest, orc warrior
 KFEAT:   S = any shop
-SHUFFLE: 23/45
+SHUFFLE: 23 / 45
+SUBST:   1 = 11., 2 = 22., 4 = 44.
 MAP
   ...................
  ...ccccccccccccccc...
 ...cc4.4...6...4.4cc...
 ..cc4.2.4..6..4.2.4cc..
-..c..4.2.ccccc.2.4..c..
+..c2.4.2.ccccc.2.4.2c..
 ..c.2.2.2.c.c.2.2.2.c..
 ..c..2.2c.....c2.2..c..
 ..c...2ccc.3.ccc2...c..
-..c..c..c.....c..c..c..
+..c..c..c5....c..c..c..
 ..11.cc...cSc...cc.11..
-..61.c..3.S5S.3..c.16.@
+..61.c..3.STS.3..c.16.@
 ..11.cc...cSc...cc.11..
-..c..c..c.....c..c..c..
+..c..c..c....5c..c..c..
 ..c...2ccc.3.ccc2...c..
 ..c..2.2c.....c2.2..c..
 ..c.2.2.2.c.c.2.2.2.c..
-..c..4.2.ccccc.2.4..c..
+..c2.4.2.ccccc.2.4.2c..
 ..cc4.2.4..6..4.2.4cc..
 ...cc4.4...6...4.4cc...
  ...ccccccccccccccc...
@@ -1646,22 +1728,22 @@ TAGS:    no_item_gen no_monster_gen
 PLACE:   Orc:$
 ORIENT:  float
 MONS:    orc high priest, orc sorcerer, orc knight
-MONS:    orc warrior, orc priest, orc wizard
+MONS:    kobold blastminer, orc priest, orc wizard
 KFEAT:   S = any shop
 MAP
-xxxxxxxxxxxxxxxxxxxxxxx
-xcccccccccccccccccccccx
-xccccccS.......Sccccccx
+  xxxxxxxxxxxxxxxxxxx
+ xxcccccccccccccccccxx
+xxcccccS...R...Scccccxx
 xccccS...cc.cc...Sccccx
 xccc...cc3...3cc...cccx
-xcc5.cc3...1...3cc.5ccx
+xcc4.cc3...1...3cc.4ccx
 xcc5...............5ccx
 xcc..c2..1...1..2c..ccx
 xcc..cc2.......2cc..ccx
 xc....cc.......cc....cx
 xc.c6.....c.c.....6c.cx
 xc.cc6....c.c....6cc.cx
-xc..ccc444c.c444ccc..cx
+xc..ccc5.6c.c6.5ccc..cx
 xcc..cccccc.cccccc..ccx
 xccc...cccc.cccc...cccx
 xccccc...........cccccx
@@ -1679,7 +1761,7 @@ ORIENT: float
   -- small numbers of cyclopses, ettins, and a stone giant.
   -- I have yet to decide how fair this will be, so it's a fairly low
   -- chance until I decide one way or the other if it works.
-  dgn.persist.grunt_orc_gardens_giant_problem = crawl.one_chance_in(8)
+  dgn.persist.grunt_orc_gardens_giant_problem = crawl.one_chance_in(7)
   hook("post_place", function()
     local stores = { "antique weapon shop", "antique armour shop",
                      "general shop", "book shop / jewellery shop" }
@@ -1698,8 +1780,8 @@ ORIENT: float
   end)
 }}
 
-NAME: grunt_orc_garden
-TAGS: grunt_orc_garden allow_dup transparent no_monster_gen no_item_gen
+NAME:  grunt_orc_garden
+TAGS:  grunt_orc_garden allow_dup transparent no_monster_gen no_item_gen
 {{
   if dgn.persist.grunt_orc_gardens_giant_problem then
     if dgn.persist.grunt_orc_gardens_boss then
@@ -1708,8 +1790,9 @@ TAGS: grunt_orc_garden allow_dup transparent no_monster_gen no_item_gen
       mons("ettin")
     end
     mons("cyclops")
-    mons("nothing")
-    nsubst("0 : 1:1 / 2:2 / *:.")
+    mons("kobold blastminer")
+    nsubst("0 : 1:1 / 2:2 / 1 = 3:1 .:7 / *:.")
+    subst("3 = .")
   else
     if dgn.persist.grunt_orc_gardens_boss then
        mons("orc warlord")
@@ -1718,15 +1801,14 @@ TAGS: grunt_orc_garden allow_dup transparent no_monster_gen no_item_gen
     if not dgn.persist.grunt_orc_gardens_boss then
       mons("nothing")
     end
-    mons("orc warrior / orc sorcerer w:1 / orc high priest w:1 /"
-         .. "ogre w:1 / troll w:1 / warg w:1")
+    mons("orc warrior / orc sorcerer w:1 / orc high priest w:1 / "
+         .. "kobold blastminer w:1 / ogre w:1 / troll w:1 / warg w:1")
     nsubst("0 : 1:1 / *:2")
+    nsubst("3 = 4:3 / 1:I / 4 = P / *:.")
   end
 }}
-MONS: nothing w:20 / fungus
-SUBST: . = ..4
-NSUBST: 3 = 5:3 / 1:I / 4:P / *:.
-SUBST: P = .4
+MONS:  fungus
+SUBST: . = 4 .:80, P = 4 .:50
 : if is_validating() or dgn.persist.grunt_orc_gardens_store == nil then
 KFEAT: A = any shop
 : else
@@ -1752,7 +1834,8 @@ TAGS:   transparent no_monster_gen no_item_gen
 PLACE:  Orc:$
 ORIENT: float
 KMONS:  O = Saint Roka band w:3 / orc warlord band, orc warlord band
-MONS:   orc knight / orc warrior w:30, orc sorcerer / orc wizard w:30
+MONS:   orc knight / orc warrior w:30
+MONS:   orc sorcerer / kobold blastminer w:2 / orc wizard w:30
 MONS:   orc high priest / orc priest w:30
 MONS:   orc warrior / orc w:30, orc / nothing
 KFEAT:  _ = altar_beogh
@@ -1842,10 +1925,9 @@ ENDMAP
 NAME:    grunt_orc_community_house_1
 TAGS:    grunt_orc_community_house allow_dup transparent no_monster_gen
 TAGS:    no_item_gen
-MONS:    orc warrior / orc priest / orc wizard
-MONS:    orc / nothing
+MONS:    orc warrior / orc priest / orc wizard, orc
 SHUFFLE: def, I_ / I- / -_ / _- / -I
-SUBST:   d = +, ef = c
+SUBST:   d = +, ef = c, 2 = 2.
 KFEAT:   - = floor
 KFEAT:   _ = altar_beogh
 MAP
@@ -1861,10 +1943,9 @@ ENDMAP
 NAME:    grunt_orc_community_house_2
 TAGS:    grunt_orc_community_house allow_dup transparent no_monster_gen
 TAGS:    no_item_gen
-MONS:    orc warrior / orc priest / orc wizard
-MONS:    orc / nothing
+MONS:    kobold blastminer, ogre
 SHUFFLE: de, I_ / I- / -_ / _- / -I
-SUBST:   d = +, e = c
+SUBST:   d = +, e = c, 2 = 22...
 KFEAT:   - = floor
 KFEAT:   _ = altar_beogh
 MAP
@@ -1905,12 +1986,13 @@ NAME:   grunt_orc_tribal_feast
 TAGS:   patrolling no_item_gen no_monster_gen
 PLACE:  Orc:$
 ORIENT: float
-MONS:   orc knight, orc high priest, orc sorcerer
-MONS:   orc warrior, orc priest, orc wizard, orc
+MONS:   orc knight, orc high priest, orc sorcerer / ogre mage w:2
+MONS:   orc warrior / kobold blastminer w:4 / two-headed ogre w:2
+MONS:   orc priest, orc wizard, orc
 MARKER: O = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
                               delay = 10, size = 1, excl_rad = 0 }
 : dgn.delayed_decay(_G, 'd', 'yak skeleton')
-: dgn.delayed_decay(_G, 'e', 'rat skeleton')
+: dgn.delayed_decay(_G, 'e', 'wyvern skeleton')
 KFEAT:  A = any shop
 MAP
       ccccccc
@@ -1934,25 +2016,26 @@ ENDMAP
 ##################################################
 # A lot of the opposition here comes from the band of orcs following the
 # leader; if it seems kind of sparse at first glance, think again.
-NAME:   grunt_orc_cross
-TAGS:   patrolling no_item_gen no_monster_gen transparent
-PLACE:  Orc:$
-ORIENT: float
-MONS:   orc knight, orc high priest, orc sorcerer
-MONS:   orc warrior, orc wizard, orc priest
-SHUFFLE: ABCD, EFGH
-KMONS:  A = Saint Roka band w:3 / orc warlord band, orc warlord band
-KMONS:  B = Nergalle w:3 / orc sorcerer, orc sorcerer
-KMONS:  C = Urug w:3 / orc knight, orc knight
-KMONS:  D = Blork the orc w:3 / orc wizard, orc wizard
-KFEAT:  E = general shop
-KFEAT:  F = antique armour shop
-KFEAT:  G = antique weapon shop
-KFEAT:  H = book shop / jewellery shop
-KFEAT:  _ = altar_beogh
+NAME:    grunt_orc_cross
+TAGS:    patrolling no_item_gen no_monster_gen transparent
+PLACE:   Orc:$
+ORIENT:  float
+MONS:    orc knight, orc high priest, orc sorcerer
+MONS:    orc warrior, orc wizard, orc priest
+SHUFFLE: ABCD, DE, JKLM
+KMONS:   A = Saint Roka band w:2 / orc warlord band, orc warlord band
+KMONS:   B = Nergalle w:2 / orc sorcerer, orc sorcerer
+KMONS:   C = Urug w:2 / orc knight, orc knight
+KMONS:   D = Blork the orc w:2 / orc wizard, orc wizard
+KMONS:   E = Erolcha w:2 / ogre mage band, ogre mage band
+KFEAT:   J = general shop
+KFEAT:   K = antique armour shop
+KFEAT:   L = antique weapon shop
+KFEAT:   M = book shop / jewellery shop
+KFEAT:   _ = altar_beogh
 MAP
 cccc  c..@..c  cccc
-cE6ccccI.4.Icccc5Fc
+cJ6ccccI.4.Icccc5Kc
 c5..ccc.....ccc..6c
 cc...cc.....cc...cc
  cc...c..2..c...cc
@@ -1968,7 +2051,7 @@ ccccc.........ccccc
  cc...c..3..c...cc
 cc...cc.....cc...cc
 c6..cccI...Iccc..5c
-cG5cccc..4..cccc6Hc
+cL5cccc..4..cccc6Mc
 cccc  c..@..c  cccc
 ENDMAP
 
@@ -1983,7 +2066,7 @@ PLACE: Orc:$
 ORIENT: float
 MONS: orc / nothing w:5, orc warrior / nothing w:5
 MONS: orc priest / nothing w:5, common demon / nothing w:5
-MONS: orc knight
+MONS: orc knight / kobold blastminer w:1
 MONS: demonspawn / nothing w:5
 MONS: orc high priest / orc sorcerer
 SHUFFLE: BC
@@ -2028,19 +2111,18 @@ NAME:   kennysheep_orc_mage_school
 TAGS:   patrolling no_item_gen no_monster_gen
 PLACE:  Orc:$
 ORIENT: float
-MONS:   orc sorcerer / ogre mage w:2, orc wizard, orc / ogre w:3
+MONS:   orc sorcerer / ogre mage w:2, orc wizard, orc / ogre
 KMONS:  4 = Erolcha / ogre mage, ogre mage
 KMONS:  5 = Nergalle / orc sorcerer, orc sorcerer
-NSUBST: . = 8:1 / 16:2 / 8:3
 KFEAT:  A = distillery shop / scroll shop
 KFEAT:  B = book shop / jewellery shop
 KFEAT:  C = antique weapon shop / antique armour shop
-NSUBST: Y = 1:A / 1:B / 1:C / 1:ABC / *:I
-KFEAT:  ' = floor
 KFEAT:  D = altar_beogh
 KFEAT:  E = altar_kikubaaqudgha
 KFEAT:  F = altar_vehumet
 KFEAT:  mn = rock_wall
+NSUBST: . = 8:1 / 18:2 / 10:3
+NSUBST: Y = 1:A / 1:B / 1:C / 1:ABC / *:I
 COLOUR: n = black
 TILE:   n = wall_hall_darkgray
 COLOUR: m = white
@@ -2087,15 +2169,14 @@ ORIENT: encompass
 TAGS:   patrolling no_item_gen no_monster_gen
 PLACE:  Orc:$
 WEIGHT: 5
-SUBST:  $ = $:1 .:4
 MONS:   orc w:8 / orc warrior w:1 / nothing w:1
 MONS:   orc priest, orc warrior, orc warrior band
-MONS:   ogre w:8 / two-headed ogre w:4 / troll w:1 / warg w:1 / nothing w:8
+MONS:   ogre w:8 / two-headed ogre w:4 / kobold blastminer w:4 / \
+        troll w:1 / warg w:1 / nothing w:8
 MONS:   orc knight, orc sorcerer
 KMONS:  D = orc high priest
 KMONS:  E = Saint Roka band w:1 / orc warlord band, orc warlord band
 KMONS:  P = plant / nothing
-NSUBST: u = 2:s / I
 KFEAT:  s = any shop
 KFEAT:  _ = altar_beogh
 : if you.where() == dgn.level_name(dgn.br_entrance("Elf")) then
@@ -2103,6 +2184,8 @@ KFEAT:  p = enter_elven_halls
 : else
 KFEAT:  p = abandoned_shop w:5 / fountain_blue / floor w:30
 : end
+SUBST:  $ = $:1 .:4
+NSUBST: u = 2:s / I
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx4xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2183,7 +2266,7 @@ PLACE:  Orc:$
 WEIGHT: 5
 ORIENT: southwest
 MONS:   saltling, orc-shaped pillar of salt
-MONS:   orc knight w:30 / two-headed ogre / troll / \
+MONS:   orc knight w:30 / kobold blastminer w:2 / two-headed ogre / troll / \
         orc sorcerer w:15 / cyclops / ettin w:2 / stone giant w:1
 MONS:   orc knight band / orc warlord band w:5
 KMONS:  _ = orc high priest

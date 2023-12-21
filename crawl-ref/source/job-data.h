@@ -55,7 +55,7 @@ static const map<job_type, job_def> job_data =
 { JOB_ARTIFICER, {
     "Ar", "Artificer",
     4, 3, 5,
-    { SP_METEORAN, SP_KOBOLD, SP_SPRIGGAN, SP_BASE_DRACONIAN, SP_DEMONSPAWN, },
+    { SP_KOBOLD, SP_SPRIGGAN, SP_BASE_DRACONIAN, SP_DEMONSPAWN, },
     { },
     { "club", "leather armour", "wand of flame charges:15",
       "wand of charming charges:15 no_exclude",
@@ -68,7 +68,7 @@ static const map<job_type, job_def> job_data =
 { JOB_BERSERKER, {
     "Be", "Berserker",
     9, -1, 4,
-    { SP_HILL_ORC, SP_OGRE, SP_MERFOLK, SP_MINOTAUR, SP_GARGOYLE, SP_ARMATAUR, },
+    { SP_HILL_ORC, SP_ONI, SP_MERFOLK, SP_MINOTAUR, SP_GARGOYLE, SP_ARMATAUR, },
     { },
     { "animal skin" },
     WCHOICE_PLAIN,
@@ -102,7 +102,7 @@ static const map<job_type, job_def> job_data =
 { JOB_CINDER_ACOLYTE, {
     "CA", "Cinder Acolyte",
     6, 6, 0,
-    { SP_HILL_ORC, SP_BASE_DRACONIAN, SP_OGRE, SP_DJINNI, SP_GNOLL, SP_METEORAN },
+    { SP_HILL_ORC, SP_BASE_DRACONIAN, SP_ONI, SP_DJINNI, SP_GNOLL },
     { SPELL_SCORCH },
     { "robe" },
     WCHOICE_PLAIN,
@@ -117,7 +117,6 @@ static const map<job_type, job_def> job_data =
     {
         SPELL_MAGIC_DART,
         SPELL_SEARING_RAY,
-        SPELL_DAZZLING_FLASH,
         SPELL_FULMINANT_PRISM,
         SPELL_ISKENDERUNS_MYSTIC_BLAST,
     },
@@ -141,7 +140,7 @@ static const map<job_type, job_def> job_data =
     },
     { "robe", "potion of magic", },
     WCHOICE_NONE,
-    { { SK_TRANSMUTATIONS, 1 }, { SK_EARTH_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
+    { { SK_ALCHEMY, 1 }, { SK_EARTH_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
       { SK_DODGING, 2 }, { SK_STEALTH, 2 }, }
 } },
 
@@ -164,8 +163,7 @@ static const map<job_type, job_def> job_data =
 { JOB_FIGHTER, {
     "Fi", "Fighter",
     8, 0, 4,
-    { SP_METEORAN, SP_HILL_ORC, SP_TROLL, SP_MINOTAUR, SP_GARGOYLE,
-      SP_ARMATAUR, },
+    { SP_HILL_ORC, SP_TROLL, SP_MINOTAUR, SP_GARGOYLE, SP_ARMATAUR, },
     { },
     { "scale mail", "buckler", "potion of might" },
     WCHOICE_GOOD,
@@ -194,7 +192,7 @@ static const map<job_type, job_def> job_data =
 { JOB_GLADIATOR, {
     "Gl", "Gladiator",
     6, 0, 6,
-    { SP_METEORAN, SP_HILL_ORC, SP_MERFOLK, SP_TROLL, SP_GARGOYLE, SP_GNOLL, },
+    { SP_HILL_ORC, SP_MERFOLK, SP_TROLL, SP_GARGOYLE, SP_GNOLL, },
     { },
     { "leather armour", "helmet", "throwing net q:3" },
     WCHOICE_GOOD,
@@ -261,8 +259,7 @@ static const map<job_type, job_def> job_data =
 { JOB_MONK, {
     "Mo", "Monk",
     3, 2, 7,
-    { SP_METEORAN, SP_HILL_ORC, SP_TROLL, SP_ARMATAUR, SP_MERFOLK,
-      SP_GARGOYLE, SP_DEMONSPAWN, },
+    { SP_HILL_ORC, SP_TROLL, SP_ARMATAUR, SP_MERFOLK, SP_GARGOYLE, SP_DEMONSPAWN, },
     { },
     { "robe", "potion of ambrosia", "orb ego:light" },
     WCHOICE_PLAIN,
@@ -324,7 +321,7 @@ static const map<job_type, job_def> job_data =
     "Sh", "Shapeshifter",
     6, 2, 4,
     { SP_NAGA, SP_MERFOLK, SP_BASE_DRACONIAN, SP_DEMIGOD, SP_DEMONSPAWN,
-      SP_TROLL, SP_METEORAN, },
+      SP_TROLL },
     { },
     { "animal skin", "potion of lignification", "beast talisman", "flux talisman" },
     WCHOICE_NONE,
@@ -332,28 +329,29 @@ static const map<job_type, job_def> job_data =
       { SK_SHAPESHIFTING, 3 }, },
 } },
 
-{ JOB_VENOM_MAGE, {
-    "VM", "Venom Mage",
+{ JOB_ALCHEMIST, {
+    "Al", "Alchemist",
     0, 7, 5,
-    { SP_DEEP_ELF, SP_SPRIGGAN, SP_NAGA, SP_MERFOLK, SP_TENGU, SP_DJINNI,
+    { SP_DEEP_ELF, SP_SPRIGGAN, SP_NAGA, SP_MERFOLK, SP_OCTOPODE, SP_DJINNI,
       SP_DEMONSPAWN, },
     {
         SPELL_STING,
-        SPELL_POISONOUS_VAPOURS,
+        SPELL_MERCURY_VAPOURS,
         SPELL_MEPHITIC_CLOUD,
         SPELL_OLGREBS_TOXIC_RADIANCE,
+        SPELL_STICKY_FLAME
     },
     { "robe", "potion of magic" },
     WCHOICE_NONE,
-    { { SK_TRANSMUTATIONS, 1 }, { SK_POISON_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
+    { { SK_ALCHEMY, 3 }, { SK_CONJURATIONS, 1}, { SK_SPELLCASTING, 2 },
       { SK_DODGING, 2 }, { SK_STEALTH, 2 }, },
 } },
 
 { JOB_WANDERER, {
     "Wn", "Wanderer",
     0, 0, 0, // Randomised
-    { SP_HILL_ORC, SP_METEORAN, SP_GNOLL, SP_MERFOLK, SP_BASE_DRACONIAN,
-      SP_HUMAN, SP_DEMONSPAWN, },
+    { SP_HILL_ORC, SP_GNOLL, SP_MERFOLK, SP_BASE_DRACONIAN, SP_HUMAN,
+      SP_DEMONSPAWN, },
     { }, // Randomised
     { }, // Randomised
     WCHOICE_NONE,
@@ -363,7 +361,7 @@ static const map<job_type, job_def> job_data =
 { JOB_WARPER, {
     "Wr", "Warper",
     3, 5, 4,
-    { SP_FELID, SP_METEORAN, SP_SPRIGGAN, SP_ARMATAUR, SP_BASE_DRACONIAN, },
+    { SP_FELID, SP_SPRIGGAN, SP_ARMATAUR, SP_BASE_DRACONIAN, },
     {
         SPELL_BLINK,
         SPELL_BECKONING,
@@ -382,7 +380,7 @@ static const map<job_type, job_def> job_data =
     "HW", "Hedge Wizard",
     2, 6, 4,
     { SP_DEEP_ELF, SP_NAGA, SP_BASE_DRACONIAN, SP_OCTOPODE, SP_HUMAN,
-      SP_DJINNI, SP_METEORAN, },
+      SP_DJINNI, },
     {
         SPELL_MAGIC_DART,
         SPELL_SLOW,

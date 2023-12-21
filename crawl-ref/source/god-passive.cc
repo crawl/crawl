@@ -627,9 +627,9 @@ bool god_id_item(item_def& item, bool silent)
 
     if (have_passive(passive_t::identify_items))
     {
-        // Don't identify runes or the orb, since this has no gameplay purpose
+        // Don't identify runes, gems, or the orb, since this has no purpose
         // and might mess up other things.
-        if (item.base_type == OBJ_RUNES || item_is_orb(item))
+        if (item_is_collectible(item))
             return false;
 
         if ((item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_STAVES)
@@ -794,23 +794,23 @@ void ash_scrying()
 
 void gozag_move_level_gold_to_top()
 {
-    for (rectangle_iterator ri(0); ri; ++ri)
-        gozag_move_gold_to_top(*ri);
+    if (you_worship(GOD_GOZAG))
+    {
+        for (rectangle_iterator ri(0); ri; ++ri)
+            gozag_move_gold_to_top(*ri);
+    }
 }
 
 void gozag_move_gold_to_top(const coord_def p)
 {
-    if (you_worship(GOD_GOZAG))
+    for (int gold = env.igrid(p); gold != NON_ITEM;
+         gold = env.item[gold].link)
     {
-        for (int gold = env.igrid(p); gold != NON_ITEM;
-             gold = env.item[gold].link)
+        if (env.item[gold].base_type == OBJ_GOLD)
         {
-            if (env.item[gold].base_type == OBJ_GOLD)
-            {
-                unlink_item(gold);
-                move_item_to_grid(&gold, p, true);
-                break;
-            }
+            unlink_item(gold);
+            move_item_to_grid(&gold, p, true);
+            break;
         }
     }
 }
@@ -1222,6 +1222,7 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     const coord_def target = orig_beam->target;
 
     if (orig_beam->target.origin()
+        || spell == SPELL_BOULDER
         || (orig_beam->is_enchantment() && !is_valid_mon_spell(spell))
         || orig_beam->flavour == BEAM_CHARM
            && monster_at(target) && monster_at(target)->friendly()

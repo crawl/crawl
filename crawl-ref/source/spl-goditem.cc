@@ -36,6 +36,7 @@
 #include "mon-place.h"
 #include "mon-tentacle.h"
 #include "notes.h" // NOTE_DREAMSHARD
+#include "player.h"
 #include "religion.h"
 #include "spl-clouds.h"
 #include "spl-util.h"
@@ -539,12 +540,10 @@ void debuff_player()
             len = 0;
             heal_flayed_effect(&you);
         }
-        else if (duration == DUR_LIQUID_FLAMES)
+        else if (duration == DUR_STICKY_FLAME)
         {
-            len = 0;
             mprf(MSGCH_DURATION, "You are no longer on fire.");
-            you.props.erase(STICKY_FLAME_AUX_KEY);
-            you.props.erase(STICKY_FLAMER_KEY);
+            end_sticky_flame_player();
         }
         else if (len > 1)
         {
@@ -745,14 +744,10 @@ int detect_creatures(int pow, bool telepathic)
 
 spret cast_tomb(int pow, actor* victim, int source, bool fail)
 {
-    // power guidelines:
-    // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
-    // up to 300 or so with godly assistance or end-level, and 1200
-    // as more or less the theoretical maximum.
     const coord_def& where = victim->pos();
     int number_built = 0;
 
-    // This is so dubious. Also duplicates khufu logic in mon-cast.cc.
+    // This is a very dubious set. Maybe we should just use !(feat_is_solid)?
     static const set<dungeon_feature_type> safe_tiles =
     {
         DNGN_SHALLOW_WATER, DNGN_DEEP_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR,
@@ -897,6 +892,20 @@ spret cast_tomb(int pow, actor* victim, int source, bool fail)
             {
                 temp_change_terrain(*ai, DNGN_ROCK_WALL, INFINITE_DURATION,
                                     TERRAIN_CHANGE_TOMB);
+
+                env.grid_colours(*ai) = RED;
+                tile_env.flv(*ai).feat_idx =
+                        store_tilename_get_index("wall_sandstone");
+                tile_env.flv(*ai).feat = TILE_WALL_SANDSTONE;
+                if (env.map_knowledge(*ai).seen())
+                {
+                    env.map_knowledge(*ai).set_feature(DNGN_ROCK_WALL);
+                    env.map_knowledge(*ai).clear_item();
+#ifdef USE_TILE
+                    tile_env.bk_bg(*ai) = TILE_WALL_SANDSTONE;
+                    tile_env.bk_fg(*ai) = 0;
+#endif
+                }
             }
 
             number_built++;

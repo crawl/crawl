@@ -3,6 +3,10 @@
 #
 # Content: These are the subvaults that place a large number of monsters and
 #          out of depth monsters.
+#
+# <<1>>      Abstract / generic threat
+# <<2>>      Themed threat
+#
 ################################################################################
 #
 # All of the subvaults in here should use the tag vaults_hard
@@ -31,6 +35,15 @@
 #  This is the header for st's "greater box" vaults.
 
 {{
+function init_protected_by_tso(e)
+  e.tags('uniq_protected_by_tso')
+  e.kfeat('A = altar_the_shining_one')
+  e.kfeat('- = runed_door')
+  e.kitem('A = any weapon ego:holy_wrath w:2 / nothing')
+  e.lua_marker('!', message_at_spot("You almost think you hear a voice: \"Seek not undue power, mortal.\"", "warning"))
+  e.tile('G = dngn_statue_angel')
+end
+
 function st_box_setup(e)
   e.tags("no_item_gen")
   e.subst("% = %%%**|$")
@@ -51,7 +64,11 @@ function st_box_setup(e)
 end
 }}
 
-####
+###############################################################################
+#
+# <<1>> Generic threat vaults.
+#
+###############################################################################
 
 NAME:     vaults_room_glass_cross
 TAGS:     vaults_hard
@@ -703,28 +720,6 @@ x........................x
 x.xx..xx..xx..xx..xx..xx.x
 ..xx00xx00xx00xx00xx00xx..
 xxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-NAME:   dpeg_vaults_hating_casters
-TAGS:   vaults_hard
-MONS:   ghost moth
-SUBST:  % = %%%$* , * = **|
-NSUBST: . = 6:0 / *:.
-SUBST:  0 = 00009, 8 = 889
-SUBST:  _ : x. , + : +==
-NSUBST: = = 1:+ / *=+x
-KPROP:  1 = no_tele_into
-MAP
-    @@@
-xxxx+++xxxx
-x%%.....%%x
-x%..000..%x
-x_..mmm.._x
-x_..m1m.._x
-x_..mmm.._x
-x...***...x
-x8.......8x
-xxxxxxxxxxx
 ENDMAP
 
 NAME:   dpeg_vaults_pockets_of_resistance
@@ -1469,31 +1464,6 @@ x.....x
 x.....x
 ENDMAP
 
-NAME:  nicolae_vaults_library_corner
-TAGS:  vaults_hard vaults_orient_e vaults_orient_s
-# The deep elf librarian is doing some reshelving. There might be a second
-# (or even third) librarian hanging out in the reading nooks. And of course,
-# some ironbound vault security.
-KITEM: L = any manual, any book good_item / any scroll good_item / nothing, \
-           any book / any scroll / nothing
-KITEM: RN = any book good_item / any scroll good_item
-KMONS: LN = deep elf annihilator / deep elf sorcerer / deep elf high priest / \
-           deep elf death mage / deep elf demonologist
-KMONS: R = arcanist / necromancer / lich / ogre mage / deep troll earth mage
-KMONS: S = vault sentinel / vault warden / ironbound preserver / \
-           ironbound convoker
-SUBST: R = R:80 N, S = SSS.
-TILE:  c = wall_studio
-MAP
-cRcRcRc
-R.....c
-c.....c
-R..LcS.
-c..cn..
-R..S...
-ccc....
-ENDMAP
-
 NAME: nicolae_vaults_little_guard_posts
 TAGS: vaults_hard
 MAP
@@ -1503,25 +1473,6 @@ x++..x
 x..++x
 x9.+..
 xxxx..
-ENDMAP
-
-NAME:   nicolae_vaults_loss_of_containment
-TAGS:   vaults_hard
-KMONS:  S = glowing shapeshifter
-NSUBST: ' = . / xxx., S = 3=S / S..
-SUBST:  - = x.
-MAP
-...........
-.---.S.---.
-.-S..-..S-.
-.-.'''''.-.
-...'...'...
-.S-'.S.'-S.
-...'...'...
-.-.'''''.-.
-.-S..-..S-.
-.---.S.---.
-...........
 ENDMAP
 
 NAME:  nicolae_vaults_murder_corner
@@ -1610,28 +1561,6 @@ SSSSSHS%rFrrr
  ....s...R..
   ...s...R.
     .s...
-ENDMAP
-
-NAME:    nicolae_vaults_oozy_zoo
-TAGS:    vaults_hard
-KITEM:   O = * / | w:3
-KMONS:   O = slime creature w:40 / glowing orange brain / great orb of eyes / \
-             large slime creature / very large slime creature w:5 / \
-             quicksilver ooze w:5
-KMASK:   O = no_trap_gen
-KPROP:   O = no_tele_into
-SHUFFLE: xn
-NSUBST:  n = 1== / n
-MAP
-.........
-.........
-..xnxnx..
-..nOOOn..
-..xOOOx..
-..nOOOn..
-..xnxnx..
-.........
-.........
 ENDMAP
 
 NAME:    nicolae_vaults_security_offices_1
@@ -1883,28 +1812,6 @@ MAP
             .....
 ENDMAP
 
-NAME:   nicolae_vaults_stand_back
-TAGS:   vaults_hard
-KITEM:  EH = * w:15 / | w:5
-KMONS:  E = patrolling eidolon
-KMONS:  F = patrolling ironbound frostheart
-KMONS:  H = patrolling ironbound thunderhulk
-NSUBST: F = 2=F / 0
-MAP
-x..........x
-............
-..x......x..
-............
-....x.Fx....
-....FEH.....
-.....HEF....
-....xF.x....
-............
-..x......x..
-............
-x..........x
-ENDMAP
-
 NAME:  nicolae_vaults_storing_the_good_stuff
 TAGS:  vaults_hard vaults_orient_w no_windows
 KITEM: LM = any weapon randart w:15 / any armour randart w:15 / \
@@ -2014,6 +1921,265 @@ MAP
 ..x...x...x..
 ....(..xxx...
 .............
+ENDMAP
+
+###############################################################################
+#
+# <<2>> Themed threat vaults.
+#
+###############################################################################
+
+NAME:    abrahamwl_protected_by_tso_1
+TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
+TAGS:    vaults_hard vaults_orient_e
+WEIGHT:  4
+KMONS:   1A = generate_awake angel / generate_awake daeva
+KFEAT:   A = altar_the_shining_one
+FTILE:   _1 = floor_limestone
+: init_protected_by_tso(_G)
+MAP
+ xxxxx
+ xcccx xxxxxxxxxxxxxx
+ xc|cxxxxcccccccccccx
+ xc_cxxxxc_........cx
+ xc_cxxxxc_........cxx.
+ xc_ccccxc_.G...G..cxx.
+xxc+ccGccc.........cxx.
+xcc__....+.........-xx.
+xc1__....+....A....-!+.
+xcc__....+.........-xx.
+xxc+ccGccc.........cxx.
+ xc_ccccxc_.G...G..cxx.
+ xc_cxxxxc_........cxx.
+ xc_cxxxxc_........cx
+ xc|cxxxxcccccccccccx
+ xcccx xxxxxxxxxxxxxx
+ xxxxx
+ENDMAP
+
+NAME:    abrahamwl_protected_by_tso_2
+TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
+TAGS:    vaults_hard vaults_orient_e
+WEIGHT:  4
+KMONS:   1A = generate_awake angel / generate_awake daeva
+SUBST:   T : T G:1
+SHUFFLE: %|
+COLOUR:  _ = yellow
+FTILE:   _A = floor_limestone
+: init_protected_by_tso(_G)
+MAP
+ xxxxx
+ xcccxxx
+xxc|cxcxxxxxxxxxxxx
+xcc+ccccccccccccccx
+xc_Wxxxx.........cx
+xc_wWxxx.........cxx
+xc_wwWxx..G.T.G..cxx
+xc_wwWxx.........cxx
+xc_www.+.........-xx.
+xcA____+....1....-!+.
+xc_www.+.........-xx.
+xc_wwWxx.........cxx
+xc_wwWxx..G.T.G..cxx
+xc_wWxxx.........cxx
+xc_Wxxxx.........cx
+xcc+ccccccccccccccx
+xxc%cxcxxxxxxxxxxxx
+ xcccxxx
+ xxxxx
+ENDMAP
+
+NAME:    abrahamwl_protected_by_tso_3
+TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
+TAGS:    vaults_hard vaults_orient_e
+WEIGHT:  4
+KMONS:   1A = generate_awake angel / generate_awake daeva
+SHUFFLE: |%
+SUBST:   T : T F:1
+COLOUR:  _ = yellow
+FTILE:   _A = floor_limestone
+MARKER:  F = lua:fog_machine { cloud_type = "blessed fire", \
+                pow_min = 10, pow_max = 10, delay = 10, \
+                size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+: init_protected_by_tso(_G)
+MAP
+     xxxxx
+    xxcccx
+  xxxxc%cxxxxxxxxxxxx
+ xxcccc+ccccccccccccx
+xxxcWWWWWx.........cx
+xxxcW.T.Tx.........cxx
+xxxcW....x..G...G..cxx.
+xxxcW_...x.........cxx.
+xcccT____+.........-xx.
+xc|+A____+....1....-!+.
+xcccT____+.........-xx.
+xxxcW_...x.........cxx.
+xxxcW....x..G...G..cxx.
+xxxcW.T.Tx.........cxx
+xxxcWWWWWx.........cx
+ xxcccc+ccccccccccccx
+  xxxxc*cxxxxxxxxxxxx
+    xxcccx
+     xxxxx
+ENDMAP
+
+NAME:   wander_protected_by_tso
+TAGS:   patrolling no_monster_gen no_item_gen vaults_hard vaults_orient_e
+WEIGHT: 4
+KMONS:  1A = generate_awake angel / generate_awake daeva
+COLOUR: _ : yellow
+FTILE:  _|%AU = floor_limestone
+: init_protected_by_tso(_G)
+MAP
+ xxxxxxxxxxxxxxxxx
+xxcccccccccccccccxxxx
+xcc.%.ccG..G..G.cccxx
+xc.U_U...........-cx.
+xc|_A___.....1...-!+.
+xc.U_U...........-cx.
+xcc.%.ccG..G..G.cccxx
+xxcccccxcccccccccxxxx
+ xxxxxxxxxxxxxxxxx
+ENDMAP
+
+####
+
+NAME:   dpeg_vaults_hating_casters
+TAGS:   vaults_hard
+MONS:   ghost moth
+SUBST:  % = %%%$* , * = **|
+NSUBST: . = 6:0 / *:.
+SUBST:  0 = 00009, 8 = 889
+SUBST:  _ : x. , + : +==
+NSUBST: = = 1:+ / *=+x
+KPROP:  1 = no_tele_into
+MAP
+    @@@
+xxxx+++xxxx
+x%%.....%%x
+x%..000..%x
+x_..mmm.._x
+x_..m1m.._x
+x_..mmm.._x
+x...***...x
+x8.......8x
+xxxxxxxxxxx
+ENDMAP
+
+NAME:   kennysheep_ogre_elephant_herders
+TAGS:   no_monster_gen no_trap_gen vaults_hard orient_s
+DEPTH:  Vaults, !Vaults:$
+MONS:   ogre mage, ironbound thunderhulk, dire elephant
+KMONS:  B = bush
+SUBST:  * = **%
+NSUBST: 1 = 1:1 / 1:1. / 1:2 / 1:2. / *:., 3 = 2:3 / 3 = 3. / .
+MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
+                              pow_max = 100, delay = 10, size = 1, \
+                              walk_dist = 0, excl_rad = 0 }
+MAP
+  xxxxxx
+  xBxxBx  xxxxxx
+  xB.33xxxx.1**x
+  x.3.3.3.B1.1*x
+  xB.3B.3...1.1x
+xxx.3..3.....1.x
+xB...33........x
+x.......I..I...x
+xxB...I......I.x
+ xxxx....FF....x
+    x....FF....x
+    x.I......I.x
+    x...I..I...x
+     ...........
+ENDMAP
+
+NAME:  nicolae_vaults_library_corner
+TAGS:  vaults_hard vaults_orient_e vaults_orient_s
+# The deep elf librarian is doing some reshelving. There might be a second
+# (or even third) librarian hanging out in the reading nooks. And of course,
+# some ironbound vault security.
+KITEM: L = any manual, any book good_item / any scroll good_item / nothing, \
+           any book / any scroll / nothing
+KITEM: RN = any book good_item / any scroll good_item
+KMONS: LN = deep elf annihilator / deep elf sorcerer / deep elf high priest / \
+           deep elf death mage / deep elf demonologist
+KMONS: R = arcanist / necromancer / lich / ogre mage / deep troll earth mage
+KMONS: S = vault sentinel / vault warden / ironbound preserver / \
+           ironbound convoker
+SUBST: R = R:80 N, S = SSS.
+TILE:  c = wall_studio
+MAP
+cRcRcRc
+R.....c
+c.....c
+R..LcS.
+c..cn..
+R..S...
+ccc....
+ENDMAP
+
+NAME:   nicolae_vaults_loss_of_containment
+TAGS:   vaults_hard
+KMONS:  S = glowing shapeshifter
+NSUBST: ' = . / xxx., S = 3=S / S..
+SUBST:  - = x.
+MAP
+...........
+.---.S.---.
+.-S..-..S-.
+.-.'''''.-.
+...'...'...
+.S-'.S.'-S.
+...'...'...
+.-.'''''.-.
+.-S..-..S-.
+.---.S.---.
+...........
+ENDMAP
+
+NAME:    nicolae_vaults_oozy_zoo
+TAGS:    vaults_hard
+KITEM:   O = * / | w:3
+KMONS:   O = slime creature w:40 / glowing orange brain / great orb of eyes / \
+             large slime creature / very large slime creature w:5 / \
+             quicksilver ooze w:5
+KMASK:   O = no_trap_gen
+KPROP:   O = no_tele_into
+SHUFFLE: xn
+NSUBST:  n = 1== / n
+MAP
+.........
+.........
+..xnxnx..
+..nOOOn..
+..xOOOx..
+..nOOOn..
+..xnxnx..
+.........
+.........
+ENDMAP
+
+NAME:   nicolae_vaults_stand_back
+TAGS:   vaults_hard
+KITEM:  EH = * w:15 / | w:5
+KMONS:  E = patrolling eidolon
+KMONS:  F = patrolling ironbound frostheart
+KMONS:  H = patrolling ironbound thunderhulk
+NSUBST: F = 2=F / 0
+MAP
+x..........x
+............
+..x......x..
+............
+....x.Fx....
+....FEH.....
+.....HEF....
+....xF.x....
+............
+..x......x..
+............
+x..........x
 ENDMAP
 
 NAME:  nicolae_vaults_you_can_take_it_with_you

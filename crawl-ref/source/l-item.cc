@@ -627,6 +627,19 @@ IDEF(is_throwable)
     return 1;
 }
 
+/*** Is this an elemental evoker?
+ * @field is_xp_evoker boolean
+ */
+IDEF(is_xp_evoker)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushboolean(ls, is_xp_evoker(*item));
+
+    return 1;
+}
+
 /*** Did we drop this?
  * @field dropped boolean
  */
@@ -767,6 +780,30 @@ IDEF(plus)
     }
     else
         lua_pushnil(ls);
+
+    return 1;
+}
+
+/*** Is this item enchantable?
+ * @field is_enchantable boolean
+ */
+IDEF(is_enchantable)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    if (is_artefact(*item)
+        || item->base_type != OBJ_WEAPONS && item->base_type != OBJ_ARMOUR)
+    {
+        lua_pushboolean(ls, false);
+    }
+    // We assume unidentified non-artefact items are enchantable.
+    else if (!item_ident(*item, ISFLAG_KNOW_PLUSES))
+        lua_pushboolean(ls, true);
+    else if (item->base_type == OBJ_WEAPONS)
+        lua_pushboolean(ls, is_enchantable_weapon(*item));
+    else
+        lua_pushboolean(ls, is_enchantable_armour(*item));
 
     return 1;
 }
@@ -1694,7 +1731,8 @@ static ItemAccessor item_attrs[] =
     { "branded",           l_item_branded },
     { "god_gift",          l_item_god_gift },
     { "fully_identified",  l_item_fully_identified },
-    { PLUS_KEY,              l_item_plus },
+    { PLUS_KEY,            l_item_plus },
+    { "is_enchantable",    l_item_is_enchantable },
     { "plus2",             l_item_plus2 },
     { "class",             l_item_class },
     { "subtype",           l_item_subtype },
@@ -1718,6 +1756,7 @@ static ItemAccessor item_attrs[] =
     { "reach_range",       l_item_reach_range },
     { "is_ranged",         l_item_is_ranged },
     { "is_throwable",      l_item_is_throwable },
+    { "is_xp_evoker",      l_item_is_xp_evoker },
     { "dropped",           l_item_dropped },
     { "is_melded",         l_item_is_melded },
     { "is_corpse",         l_item_is_corpse },

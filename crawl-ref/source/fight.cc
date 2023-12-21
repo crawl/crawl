@@ -823,6 +823,11 @@ bool attack_cleaves(const actor &attacker, int which_attack)
     {
         return true;
     }
+    else if (attacker.is_monster()
+             && attacker.as_monster()->has_ench(ENCH_INSTANT_CLEAVE))
+    {
+        return true;
+    }
 
     const item_def* weap = attacker.weapon(which_attack);
     return weap && weapon_cleaves(*weap);
@@ -858,7 +863,8 @@ bool weapon_multihits(const item_def *weap)
  * @param which_attack   The attack_number (default -1, which uses the default weapon).
  */
 void get_cleave_targets(const actor &attacker, const coord_def& def,
-                        list<actor*> &targets, int which_attack)
+                        list<actor*> &targets, int which_attack,
+                        bool force_cleaving)
 {
     // Prevent scanning invalid coordinates if the attacker dies partway through
     // a cleave (due to hitting explosive creatures, or perhaps other things)
@@ -868,7 +874,7 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     if (actor_at(def))
         targets.push_back(actor_at(def));
 
-    if (!attack_cleaves(attacker, which_attack))
+    if (!force_cleaving && !attack_cleaves(attacker, which_attack))
         return;
 
     const item_def* weap = attacker.weapon(which_attack);
@@ -1358,15 +1364,18 @@ int brand_adjust_weapon_damage(int base_dam, int brand, bool random)
     return base_dam * 9 / 5;
 }
 
-int unarmed_base_damage()
+int unarmed_base_damage(bool random)
 {
-    int damage = get_form()->get_base_unarmed_damage();
+    int damage = get_form()->get_base_unarmed_damage(random);
 
     if (you.has_usable_claws())
         damage += you.has_claws() * 2;
 
     if (you.form_uses_xl())
-        damage += div_rand_round(you.experience_level, 3);
+    {
+        damage += random ? div_rand_round(you.experience_level, 3)
+                         : you.experience_level / 3;
+    }
 
     return damage;
 }

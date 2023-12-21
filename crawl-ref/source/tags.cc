@@ -1780,6 +1780,11 @@ static void _tag_construct_you_items(writer &th)
     _marshallFixedBitVector<NUM_RUNE_TYPES>(th, you.runes);
     marshallByte(th, you.obtainable_runes);
 
+    _marshallFixedBitVector<NUM_GEM_TYPES>(th, you.gems_found);
+    _marshallFixedBitVector<NUM_GEM_TYPES>(th, you.gems_shattered);
+    for (const int time_spent : you.gem_time_spent)
+        marshallInt(th, time_spent);
+
     // Item descrip for each type & subtype.
     // how many types?
     marshallUByte(th, NUM_IDESC);
@@ -3058,6 +3063,19 @@ static void _tag_read_you(reader &th)
         // Based on this, reset skill distribution percentages.
         reset_training();
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_ALCHEMY_MERGER)
+    {
+        if (you.species != SP_GNOLL)
+            you.skill_points[SK_ALCHEMY] += you.skill_points[SK_TRANSMUTATIONS];
+
+        you.train[SK_ALCHEMY] = max(you.train[SK_ALCHEMY],
+                                    you.train[SK_TRANSMUTATIONS]);
+        you.train_alt[SK_ALCHEMY] = max(you.train_alt[SK_ALCHEMY],
+                                        you.train_alt[SK_TRANSMUTATIONS]);
+        you.training_targets[SK_ALCHEMY] = max(you.training_targets[SK_ALCHEMY],
+                                               you.training_targets[SK_TRANSMUTATIONS]);
+    }
 #endif
 
     EAT_CANARY;
@@ -3296,7 +3314,7 @@ static void _tag_read_you(reader &th)
     }
 
     if (th.getMinorVersion() < TAG_MINOR_SAPROVOROUS
-        && you.species == SP_OGRE)
+        && you.species == SP_ONI)
     {
         // Remove the innate level of fast metabolism
         you.mutation[MUT_FAST_METABOLISM] -= 1;
@@ -3397,6 +3415,7 @@ static void _tag_read_you(reader &th)
     SP_MUT_FIX(MUT_DAYSTALKER, SP_BARACHI);
     SP_MUT_FIX(MUT_TENGU_FLIGHT, SP_TENGU);
     SP_MUT_FIX(MUT_ACROBATIC, SP_TENGU);
+    SP_MUT_FIX(MUT_DOUBLE_POTION_HEAL, SP_ONI);
 
     if (you.has_innate_mutation(MUT_NIMBLE_SWIMMER)
         || you.species == SP_MERFOLK || you.species == SP_OCTOPODE)
@@ -3422,6 +3441,9 @@ static void _tag_read_you(reader &th)
     {
         _fixup_species_mutations(MUT_UNBREATHING);
     }
+
+    if (you.species == SP_FELID && you.has_innate_mutation(MUT_FAST))
+        _fixup_species_mutations(MUT_FAST);
 
     #undef SP_MUT_FIX
 
@@ -3540,6 +3562,15 @@ static void _tag_read_you(reader &th)
 
         if (you.mutation[MUT_TELEPORT] > 2)
             you.mutation[MUT_TELEPORT] = 2;
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_RAMPAGE_HEAL
+        && you.species == SP_ARMATAUR)
+    {
+        _fixup_species_mutations(MUT_RUGGED_BROWN_SCALES);
+        _fixup_species_mutations(MUT_TOUGH_SKIN);
+        _fixup_species_mutations(MUT_ROLLPAGE);
+        _fixup_species_mutations(MUT_AWKWARD_TONGUE);
     }
 
     // fully clean up any removed mutations
@@ -4337,6 +4368,17 @@ static void _tag_read_you_items(reader &th)
 
     _unmarshallFixedBitVector<NUM_RUNE_TYPES>(th, you.runes);
     you.obtainable_runes = unmarshallByte(th);
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_GEMS)
+#endif
+    {
+        _unmarshallFixedBitVector<NUM_GEM_TYPES>(th, you.gems_found);
+        _unmarshallFixedBitVector<NUM_GEM_TYPES>(th, you.gems_shattered);
+        for (int i = 0; i < NUM_GEM_TYPES; i++)
+            you.gem_time_spent[i] = unmarshallInt(th);
+    }
+    // Otherwise, it should be initialized to a reasonable zero value.
 
     // Item descrip for each type & subtype.
     // how many types?
@@ -5569,6 +5611,14 @@ void unmarshallItem(reader &th, item_def &item)
         artefact_set_property(item, ARTP_TWISTER, 0);
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_ALCHEMY_MERGER
+        && is_artefact(item)
+        && item.base_type != OBJ_BOOKS
+        && artefact_property(item, ARTP_ENHANCE_TMUT))
+    {
+        artefact_set_property(item, ARTP_ENHANCE_TMUT, 0);
+    }
+
     // Monsters could zap wands below zero from
     // 0.17-a0-739-g965e8eb to 0.17-a0-912-g3e33c8f.
     if (item.base_type == OBJ_WANDS && item.charges < 0)
@@ -6012,6 +6062,7 @@ void _marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallUnsigned(th, mi.ac);
     marshallUnsigned(th, mi.ev);
     marshallUnsigned(th, mi.base_ev);
+    marshallUnsigned(th, mi.sh);
     marshallInt(th, mi.mresists);
     marshallUnsigned(th, mi.mitemuse);
     marshallByte(th, mi.mbase_speed);
@@ -6020,9 +6071,6 @@ void _marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallByte(th, mi.menergy.attack);
     marshallByte(th, mi.menergy.missile);
     marshallByte(th, mi.menergy.spell);
-    marshallByte(th, mi.menergy.special);
-    marshallByte(th, mi.menergy.item);
-    marshallByte(th, mi.menergy.pickup_percent);
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
         _marshall_mi_attack(th, mi.attack[i]);
     for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
@@ -6141,6 +6189,13 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
     }
 #endif
 
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_MON_SH_INFO)
+        unmarshallUnsigned(th, mi.sh);
+    else
+#endif
+        mi.sh = 0;
+
     mi.mr = mons_class_willpower(mi.type, mi.base_type);
     mi.can_see_invis = mons_class_sees_invis(mi.type, mi.base_type);
 
@@ -6253,10 +6308,13 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
     mi.menergy.attack = unmarshallByte(th);
     mi.menergy.missile = unmarshallByte(th);
     mi.menergy.spell = unmarshallByte(th);
-    mi.menergy.special = unmarshallByte(th);
-    mi.menergy.item = unmarshallByte(th);
-    mi.menergy.pickup_percent = unmarshallByte(th);
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_NO_SPECIAL_ENERGY)
+    {
+        unmarshallByte(th); // special
+        unmarshallByte(th); // item
+        unmarshallByte(th); // pickup_percent
+    }
     }
 #endif
 

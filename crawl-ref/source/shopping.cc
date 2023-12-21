@@ -177,6 +177,11 @@ int artefact_value(const item_def &item)
     if (prop[ARTP_ARCHMAGI])
         ret += 20;
 
+    // Yuck!
+    for (int i = ARTP_ENHANCE_CONJ; i <= ARTP_ENHANCE_ALCHEMY; ++i)
+        if (prop[i])
+            ret += 8;
+
     return (ret > 0) ? ret : 0;
 }
 
@@ -724,6 +729,7 @@ unsigned int item_value(item_def item, bool ident)
         break;
 
     case OBJ_RUNES:
+    case OBJ_GEMS:
         valued = 10000;
         break;
 
@@ -813,7 +819,8 @@ static bool _purchase(shop_struct& shop, const level_pos& pos, int index)
     origin_purchased(item);
 
     if (shoptype_identifies_stock(shop.type)
-        || item_type_is_equipment(item.base_type))
+        || item_type_is_equipment(item.base_type)
+        || item.base_type == OBJ_TALISMANS)
     {
         // Identify the item and its type.
         // This also takes the ID note if necessary.

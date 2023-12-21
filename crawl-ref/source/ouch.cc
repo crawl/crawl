@@ -314,18 +314,16 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
 
     if (flavour == BEAM_COLD && slow_cold_blooded
         && (you.get_mutation_level(MUT_COLD_BLOODED)
-            || you.form == transformation::anaconda)
+            || you.form == transformation::serpent)
         && you.res_cold() <= 0 && coinflip())
     {
         you.slow_down(0, strength);
     }
 
-    if (flavour == BEAM_WATER && you.duration[DUR_LIQUID_FLAMES])
+    if (flavour == BEAM_WATER && you.duration[DUR_STICKY_FLAME])
     {
         mprf(MSGCH_WARN, "The flames go out!");
-        you.duration[DUR_LIQUID_FLAMES] = 0;
-        you.props.erase(STICKY_FLAMER_KEY);
-        you.props.erase(STICKY_FLAME_AUX_KEY);
+        end_sticky_flame_player();
     }
 }
 
@@ -994,7 +992,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         dam = _apply_extra_harm(dam, source);
 
         if (you.duration[DUR_VITRIFIED])
-            dam = dam * 130 / 100;
+            dam = dam * 150 / 100;
     }
 
 #if TAG_MAJOR_VERSION == 34

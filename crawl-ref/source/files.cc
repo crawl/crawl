@@ -1330,6 +1330,7 @@ static void _grab_followers()
             end_battlesphere(&mons, false);
         if (mons.type == MONS_SPECTRAL_WEAPON)
             end_spectral_weapon(&mons, false);
+        check_canid_farewell(mons, false);
         mons.flags &= ~MF_TAKING_STAIRS;
     }
 }
@@ -2449,6 +2450,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // exited it, have monsters lose track of where they are
     if (make_changes && you.position != env.old_player_pos)
        shake_off_monsters(you.as_player());
+
+    if (make_changes)
+        maybe_break_floor_gem();
 
 #if TAG_MAJOR_VERSION == 34
     if (make_changes && you.props.exists("zig-fixup")

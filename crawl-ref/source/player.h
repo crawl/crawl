@@ -43,7 +43,7 @@
 #define BARBS_MOVE_KEY "moved_with_barbs_status"
 #define HORROR_PENALTY_KEY "horror_penalty"
 #define POWERED_BY_DEATH_KEY "powered_by_death_strength"
-#define WEREBLOOD_KEY "wereblood_bonus"
+#define FUGUE_KEY "fugue_of_the_fallen_bonus"
 #define FORCE_MAPPABLE_KEY "force_mappable"
 #define MANA_REGEN_AMULET_ACTIVE "mana_regen_amulet_active"
 #define TEMP_WATERWALK_KEY "temp_waterwalk"
@@ -55,6 +55,8 @@
 #define DESCENT_DEBT_KEY "descent_debt"
 #define DESCENT_WATER_BRANCH_KEY "descent_water_branch"
 #define DESCENT_POIS_BRANCH_KEY "descent_poison_branch"
+#define RAMPAGE_HEAL_KEY "rampage_heal_strength"
+#define RAMPAGE_HEAL_MAX 7
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -182,6 +184,10 @@ public:
     FixedVector< item_def, ENDOFPACK > inv;
     FixedBitVector<NUM_RUNE_TYPES> runes;
     int obtainable_runes; // can be != 15 in Sprint
+
+    FixedBitVector<NUM_GEM_TYPES> gems_found;
+    FixedBitVector<NUM_GEM_TYPES> gems_shattered;
+    FixedVector<int, NUM_GEM_TYPES> gem_time_spent;
 
     FixedBitVector<NUM_SPELLS> spell_library;
     FixedBitVector<NUM_SPELLS> hidden_spells;
@@ -844,7 +850,6 @@ public:
 
     bool shielded() const override;
     int shield_bonus() const override;
-    int shield_block_penalty() const override;
     int shield_bypass_ability(int tohit) const override;
     void shield_block_succeeded(actor *attacker) override;
     bool missile_repulsion() const override;
@@ -868,6 +873,7 @@ public:
 
     bool can_potion_heal(bool temp=true);
     int scale_potion_healing(int healing_amount);
+    int scale_potion_mp_healing(int healing_amount);
 
     void apply_location_effects(const coord_def &oldpos,
                                 killer_type killer = KILL_NONE,
@@ -1001,7 +1007,7 @@ bool player_effectively_in_light_armour();
 int player_shield_racial_factor();
 int player_armour_shield_spell_penalty();
 
-int player_movement_speed(bool check_terrain = true);
+int player_movement_speed(bool check_terrain = true, bool temp = true);
 
 int player_icemail_armour_class();
 int player_condensation_shield_class();
@@ -1046,10 +1052,9 @@ int player_spec_death();
 int player_spec_earth();
 int player_spec_fire();
 int player_spec_hex();
-int player_spec_poison();
+int player_spec_alchemy();
 int player_spec_summ();
 int player_spec_tloc();
-int player_spec_tmut();
 
 int player_speed();
 
@@ -1151,8 +1156,10 @@ int poison_survival();
 
 bool miasma_player(actor *who, string source_aux = "");
 
-bool napalm_player(int amount, string source, string source_aux = "");
-void dec_napalm_player(int delay);
+bool sticky_flame_player(int intensity, int duration, string source, string source_aux = "");
+void dec_sticky_flame_player(int delay);
+void shake_off_sticky_flame();
+void end_sticky_flame_player();
 
 bool spell_slow_player(int pow);
 bool slow_player(int turns);
@@ -1165,6 +1172,8 @@ void dec_elixir_player(int delay);
 void dec_ambrosia_player(int delay);
 void dec_channel_player(int delay);
 void dec_frozen_ramparts(int delay);
+void reset_rampage_heal_duration();
+void apply_rampage_heal();
 bool invis_allowed(bool quiet = false, string *fail_reason = nullptr,
                                                         bool temp = true);
 bool flight_allowed(bool quiet = false, string *fail_reason = nullptr);

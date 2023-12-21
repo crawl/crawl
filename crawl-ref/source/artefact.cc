@@ -32,6 +32,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
+#include "transform.h" // form_for_talisman
 #include "unicode.h"
 
 // Putting this here since art-enum.h is generated.
@@ -340,18 +341,18 @@ static void _populate_armour_intrinsic_artps(const armour_type arm,
 }
 
 static map<stave_type, artefact_prop_type> staff_resist_artps = {
-    { STAFF_FIRE,   ARTP_FIRE },
-    { STAFF_COLD,   ARTP_COLD },
-    { STAFF_POISON, ARTP_POISON },
-    { STAFF_DEATH,  ARTP_NEGATIVE_ENERGY },
-    { STAFF_AIR,    ARTP_ELECTRICITY },
+    { STAFF_FIRE,    ARTP_FIRE },
+    { STAFF_COLD,    ARTP_COLD },
+    { STAFF_ALCHEMY, ARTP_POISON },
+    { STAFF_DEATH,   ARTP_NEGATIVE_ENERGY },
+    { STAFF_AIR,     ARTP_ELECTRICITY },
     // nothing for conj or earth
 };
 
 static map<stave_type, artefact_prop_type> staff_enhancer_artps = {
     { STAFF_FIRE,           ARTP_ENHANCE_FIRE },
     { STAFF_COLD,           ARTP_ENHANCE_ICE },
-    { STAFF_POISON,         ARTP_ENHANCE_POISON },
+    { STAFF_ALCHEMY,        ARTP_ENHANCE_ALCHEMY },
     { STAFF_DEATH,          ARTP_ENHANCE_NECRO },
     { STAFF_AIR,            ARTP_ENHANCE_AIR },
     { STAFF_CONJURATION,    ARTP_ENHANCE_CONJ },
@@ -544,22 +545,25 @@ static void _add_randart_weapon_brand(const item_def &item,
         item_props[ARTP_BRAND] = SPWPN_NORMAL;
 }
 
-static bool _talisman_conflicts(int sub_type, artefact_prop_type prop)
+static bool _talisman_conflicts(const item_def &it, artefact_prop_type prop)
 {
+    if (prop == ARTP_FLY)
+        return form_can_fly(form_for_talisman(it));
+
     // Yuck! TODO: find a way to deduplicate this.
-    switch (sub_type)
+    switch (it.sub_type)
     {
     case TALISMAN_STATUE:
     case TALISMAN_STORM:
         return prop == ARTP_POISON || prop == ARTP_ELECTRICITY;
     case TALISMAN_DRAGON:
+    case TALISMAN_SERPENT:
         return prop == ARTP_POISON;
     case TALISMAN_DEATH:
         return prop == ARTP_POISON || prop == ARTP_NEGATIVE_ENERGY;
     case TALISMAN_BEAST:
     case TALISMAN_FLUX:
     case TALISMAN_MAW:
-    case TALISMAN_SERPENT:
     case TALISMAN_BLADE:
     default:
         return false;
@@ -589,7 +593,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
     if (intrinsic_proprt[prop])
         return false; // don't duplicate intrinsic props
 
-    if (item.base_type == OBJ_TALISMANS && _talisman_conflicts(item.sub_type, prop))
+    if (item.base_type == OBJ_TALISMANS && _talisman_conflicts(item, prop))
         return false;
 
     const object_class_type item_class = item.base_type;
@@ -649,15 +653,15 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_ENHANCE_SUMM:
         case ARTP_ENHANCE_NECRO:
         case ARTP_ENHANCE_TLOC:
-        case ARTP_ENHANCE_TMUT:
         case ARTP_ENHANCE_FIRE:
         case ARTP_ENHANCE_ICE:
         case ARTP_ENHANCE_AIR:
         case ARTP_ENHANCE_EARTH:
-        case ARTP_ENHANCE_POISON:
+        case ARTP_ENHANCE_ALCHEMY:
             // Maybe we should allow these for robes, too?
-            // And hats? And orbs? And gloves and cloaks and scarves?
-            return item.base_type == OBJ_STAVES;
+            // And hats? And gloves and cloaks and scarves?
+            return item.base_type == OBJ_STAVES
+                   || item.is_type(OBJ_ARMOUR, ARM_ORB);
         default:
             return true;
     }
@@ -751,7 +755,7 @@ static const artefact_prop_data artp_data[] =
 #if TAG_MAJOR_VERSION == 34
     { "Hungry", ARTP_VAL_POS, 0, nullptr, nullptr, 0, 0 },// ARTP_METABOLISM,
 #endif
-    { "Contam", ARTP_VAL_POS, 20,   // ARTP_CONTAM
+    { "^Contam", ARTP_VAL_POS, 20,   // ARTP_CONTAM
         nullptr, []() { return 1; }, 0, 0 },
 #if TAG_MAJOR_VERSION == 34
     { "Acc", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_ACCURACY,
@@ -791,11 +795,11 @@ static const artefact_prop_data artp_data[] =
 #endif
     { "*Corrode", ARTP_VAL_BOOL, 25, // ARTP_CORRODE,
         nullptr, []() { return 1; }, 0, 0 },
-    { "Drain", ARTP_VAL_BOOL, 25, // ARTP_DRAIN,
+    { "^Drain", ARTP_VAL_BOOL, 25, // ARTP_DRAIN,
         nullptr, []() { return 1; }, 0, 0 },
     { "*Slow", ARTP_VAL_BOOL, 25, // ARTP_SLOW,
         nullptr, []() { return 1; }, 0, 0 },
-    { "Fragile", ARTP_VAL_BOOL, 30, // ARTP_FRAGILE,
+    { "^Fragile", ARTP_VAL_BOOL, 30, // ARTP_FRAGILE,
         nullptr, []() { return 1; }, 0, 0 },
     { "SH", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_SHIELDING,
     { "Harm", ARTP_VAL_BOOL, 25, // ARTP_HARM,
@@ -804,27 +808,29 @@ static const artefact_prop_data artp_data[] =
         []() {return 1;}, nullptr, 0, 0},
     { "Archmagi", ARTP_VAL_BOOL, 40, // ARTP_ARCHMAGI,
         []() {return 1;}, nullptr, 0, 0},
-    { "Conj", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_CONJ,
+    { "Conj", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_CONJ,
         []() {return 1;}, nullptr, 0, 0},
-    { "Hexes", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_HEXES,
+    { "Hexes", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_HEXES,
         []() {return 1;}, nullptr, 0, 0},
-    { "Summ", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_SUMM,
+    { "Summ", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_SUMM,
         []() {return 1;}, nullptr, 0, 0},
-    { "Necro", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_NECRO,
+    { "Necro", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_NECRO,
         []() {return 1;}, nullptr, 0, 0},
-    { "Tloc", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_TLOC,
+    { "Tloc", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_TLOC,
         []() {return 1;}, nullptr, 0, 0},
-    { "Tmut", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_TMUT,
+#if TAG_MAJOR_VERSION == 34
+    { "Tmut", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_TMUT,
         []() {return 1;}, nullptr, 0, 0},
-    { "Fire", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_FIRE,
+#endif
+    { "Fire", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_FIRE,
         []() {return 1;}, nullptr, 0, 0},
-    { "Ice", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_ICE,
+    { "Ice", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_ICE,
         []() {return 1;}, nullptr, 0, 0},
-    { "Air", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_AIR,
+    { "Air", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_AIR,
         []() {return 1;}, nullptr, 0, 0},
-    { "Earth", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_EARTH,
+    { "Earth", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_EARTH,
         []() {return 1;}, nullptr, 0, 0},
-    { "Poison", ARTP_VAL_BOOL, 3, // ARTP_ENHANCE_POISON,
+    { "Alchemy", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_ALCHEMY,
         []() {return 1;}, nullptr, 0, 0},
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
@@ -1281,6 +1287,13 @@ bool item_type_can_be_artefact(object_class_type typ)
     }
 }
 
+static string _base_name(const item_def &item)
+{
+    if (item.is_type(OBJ_TALISMANS, TALISMAN_DEATH))
+        return "death talisman"; // no talismans of death of foo
+    return item_base_name(item);
+}
+
 string make_artefact_name(const item_def &item, bool appearance)
 {
     ASSERT(is_artefact(item));
@@ -1321,6 +1334,7 @@ string make_artefact_name(const item_def &item, bool appearance)
     // get base type
     lookup += _get_artefact_type(item, appearance);
 
+    const string base_name = _base_name(item);
     if (appearance)
     {
         string appear = getRandNameString(lookup, " appearance");
@@ -1333,13 +1347,13 @@ string make_artefact_name(const item_def &item, bool appearance)
 
         result += appear;
         result += " ";
-        result += item_base_name(item);
+        result += base_name;
         return result;
     }
 
     if (_pick_db_name(item))
     {
-        result += item_base_name(item) + " ";
+        result += base_name + " ";
 
         int tries = 100;
         string name;
@@ -1368,7 +1382,7 @@ string make_artefact_name(const item_def &item, bool appearance)
     {
         // construct a unique name
         const string st_p = make_name();
-        result += item_base_name(item);
+        result += base_name;
 
         if (one_chance_in(3))
         {
@@ -1393,7 +1407,7 @@ static const unrandart_entry *_seekunrandart(const item_def &item)
 
 string get_artefact_base_name(const item_def &item, bool terse)
 {
-    string base_name = item_base_name(item);
+    string base_name = _base_name(item);
     const char* custom_type = _seekunrandart(item)->type_name;
     if (custom_type)
         base_name = custom_type;
@@ -1798,7 +1812,7 @@ static string _ashenzari_artefact_name(item_def &item)
 
     item.orig_monnum = old_orig;
 
-    return item_base_name(item) + " " + (name.empty() ? "of Ashenzari" : name);
+    return _base_name(item) + " " + (name.empty() ? "of Ashenzari" : name);
 }
 
 void make_ashenzari_randart(item_def &item)

@@ -1,0 +1,695 @@
+# Library by hellmonk.
+#
+# Library is a serial vault for D, Elf, Snake, Crypts, and Depths.
+# (Its individual vaults may also rarely spawn alone in Vaults.)
+# Library vaults may place spellcaster type monsters and book loot.
+#
+# Most library vaults are small niches and alcoves or rooms of varying sizes.
+# All vaults use wall_studio tiles.
+
+{{
+function init_serial_library_setup(e)
+  e.tags('serial_library')
+  e.tags('transparent')
+  e.weight('2')
+
+  if you.in_branch('D') then
+    if you.depth() < 7 then
+       e.mons('orc wizard / white imp / shadow imp')
+    elseif you.depth() < 12 then
+       e.mons('kobold demonologist / vampire / deep elf pyromancer')
+    else
+       e.mons('tengu conjurer / arcanist / occultist / boggart / ' ..
+              'ogre mage / necromancer / deep elf zephyrmancer')
+    end
+  elseif you.in_branch('Snake') then
+    e.mons('naga mage / salamander mystic / nagaraja / salamander tyrant')
+  elseif you.in_branch('Vaults') then
+    e.mons('arcanist / necromancer / great orb of eyes / ' ..
+           'ironbound frostheart / sphinx')
+    e.kmons('8 = tengu reaver / deep elf annihilator / deep elf sorcerer / ' ..
+            'deep elf death mage / lich / ancient lich / dread lich')
+  elseif you.in_branch('Crypt') then
+    e.mons('necromancer / vampire mage / deep elf death mage / lich')
+  elseif you.in_branch('Elf') then
+    e.mons('deep elf demonologist / deep elf death mage / ' ..
+           'deep elf sorcerer / deep elf annihilator / deep elf elementalist')
+  else
+    e.mons('walking crystal tome / walking divine tome / ' ..
+           'walking earthen tome / walking frostbound tome')
+  end
+
+  e.item('any book')
+  e.item('any book good_item')
+  e.item('any manual')
+  e.kfeat('B = altar_sif_muna')
+
+  if you.in_branch('Crypt') then
+     e.subst('T = V:75 c:25 t:5 G:5 Y:5 B:1')
+     e.colour('t = darkgrey / brown')
+     e.tile('t = dngn_tree_dead')
+     e.set_feature_name('tree', 'dead tree')
+  elseif you.in_branch('Vaults') then
+     e.subst('x = v')
+     e.subst('T = T:75 c:25 v:5 G:5 V:5 B:1')
+     e.clear('@')
+  else
+     e.subst('T = T:75 c:25 t:5 G:5 V:5 B:1')
+  end
+
+  e.tile('c = wall_studio')
+end
+}}
+
+default-depth: D:4-, Snake, Vaults, Elf, Crypt, Depths
+
+NAME:   serial_library
+TAGS:   allow_dup extra luniq_serial nolayout_encompass
+DEPTH:  D:4-, Snake, Elf, Crypt, Depths
+CHANCE: 0.5%
+{{
+  local c = 4 + crawl.random2(6) + crawl.random2(4)
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_library", count=c}
+  end)
+}}
+
+########################################
+#
+# <<1>> Decorative vaults.
+#
+########################################
+
+NAME:   serial_library_hellmonk_room_a
+TAGS:   allow_dup extra vaults_empty vaults_orient_s
+FTILE:  .+ = floor_studio
+: init_serial_library_setup(_G)
+MAP
+xxxxx
+xcccx
+x...x
+x...x
+x...x
+xx+xx
+  @
+ENDMAP
+
+NAME:  serial_library_hellmonk_room_b
+TAGS:  allow_dup extra vaults_empty vaults_orient_s
+FTILE: .+ = floor_studio
+: init_serial_library_setup(_G)
+MAP
+  xxx
+ xcccx
+xx...xx
+xc...cx
+xx...xx
+ xx+xx
+   @
+ENDMAP
+
+NAME:   serial_library_hellmonk_room_c
+TAGS:   allow_dup extra decor vaults_empty vaults_orient_s
+FTILE:  .+ = floor_studio
+: init_serial_library_setup(_G)
+MAP
+xxxxxxxxx
+xcccccccx
+xc.....cx
+xc.....cx
+xcc...ccx
+xxxx+xxxx
+    @
+ENDMAP
+
+NAME:   serial_library_hellmonk_hallway_a
+TAGS:   serial_library allow_dup extra decor vaults_empty
+FTILE:  .+ = floor_studio
+: init_serial_library_setup(_G)
+MAP
+   xxxxxxxxx
+ xxxcccccccxxx
+ xx..........+@
+ x...........x
+@+..........xx
+ xxxcccccccxxx
+   xxxxxxxxx
+ENDMAP
+
+NAME: serial_library_hellmonk_hallway_b
+TAGS: serial_library allow_dup extra
+: init_serial_library_setup(_G)
+MAP
+  @@
+xx..xx
+xc..cx
+xc..cx
+xc..cx
+xc..cx
+xc..cx
+xx..xx
+  @@
+ENDMAP
+
+NAME:   serial_library_hellmonk_angled_corner
+TAGS:   serial_library allow_dup extra decor vaults_empty
+: init_serial_library_setup(_G)
+MAP
+     xxxxxx
+    xc....@
+   xc.....@
+  xc..
+ xc..
+xc..
+x..
+x..
+x..
+x..
+x@@
+ENDMAP
+
+NAME:   serial_library_hellmonk_small_corner
+TAGS:   serial_library allow_dup extra
+: init_serial_library_setup(_G)
+MAP
+xxxxxx
+xccxxx
+xc...@
+xx..
+xx.
+xx@
+ENDMAP
+
+NAME:   serial_library_hellmonk_small_alcove
+TAGS:   serial_library allow_dup extra
+SUBST:  d = d:10 f:1 .:500
+: init_serial_library_setup(_G)
+MAP
+xxxxxxx
+xcccccx
+xc..dcx
+  @@@
+ENDMAP
+
+NAME:   serial_library_hellmonk_recessed_alcove
+TAGS:   serial_library allow_dup extra decor
+NSUBST: c = 1 = d:10 e:1 c:250 .:250 / * : c
+: init_serial_library_setup(_G)
+MAP
+xxxxxx
+xccccxxxxxx
+xc...xxx...@
+xc.......
+xcccx.
+xxxxx.
+   xx.
+   xx.
+   x..
+   x.
+   x.
+    @
+ENDMAP
+
+NAME:  serial_library_hellmonk_layered_room
+TAGS:  allow_dup extra decor
+FTILE: .+ = floor_studio
+: init_serial_library_setup(_G)
+MAP
+        @
+cccccccc+c
+c........c
+c.c+cccc.c
+c.c....c.c
+c.c.cc.c.c
+c.c.cc.c.c
+c.c....c.c
+c.cccc+c.c
+c........c
+c+cccccccc
+ @
+ENDMAP
+
+NAME: serial_library_hellmonk_u_bend
+TAGS: allow_dup extra decor vaults_empty
+: init_serial_library_setup(_G)
+MAP
+  xxxxxx
+ xxccccxx
+xxc....cxx
+xc......cx
+xc..cc..cx
+xc..cc..cx
+xc..cc..cx
+xx..xx..xx
+xx..xx..xx
+xx@@xx@@xx
+ENDMAP
+
+NAME: serial_library_hellmonk_h_bend
+TAGS: allow_dup extra decor vaults_empty
+: init_serial_library_setup(_G)
+MAP
+x@@xxxx@@x
+xx..xx..xx
+xc..cc..cx
+xc..cc..cx
+xc......cx
+xc......cx
+xc..cc..cx
+xc..cc..cx
+xx..xx..xx
+x@@xxxx@@x
+ENDMAP
+
+NAME: serial_library_hellmonk_junction
+TAGS: allow_dup extra decor
+: init_serial_library_setup(_G)
+MAP
+  c@@c
+ cc..cc
+ccc..ccc
+@......@
+@......@
+ cccccc
+  cccc
+   cc
+ENDMAP
+
+NAME:   serial_library_hellmonk_semicircle
+TAGS:   allow_dup extra decor vaults_empty vaults_orient_s
+: if you.in_branch('Vaults') or you.in_branch('Crypt') then
+SUBST:  t : c:15 v:5
+: else
+SUBST:  t : x:50 c:15 t:10 v:5
+: end
+: init_serial_library_setup(_G)
+MAP
+    ccccccc
+ cccc.....cccc
+cc...........cc
+c...ttttttt...c
+c..tt     tt..c
+ENDMAP
+
+NAME:   serial_library_hellmonk_open_cross
+TAGS:   allow_dup extra decor vaults_empty
+TILE:   c = wall_studio
+: init_serial_library_setup(_G)
+MAP
+    ..c..
+    c...c
+    c...c
+    .....
+.cc..c.c..cc.
+....c...c....
+c...........c
+....c...c....
+.cc..c.c..cc.
+    .....
+    c...c
+    c...c
+    ..c..
+ENDMAP
+
+NAME:   serial_library_hellmonk_long_bookcase
+TAGS:   allow_dup extra decor vaults_empty vaults_orient_w
+FTILE:  .+ = floor_studio
+: init_serial_library_setup(_G)
+MAP
+ xxxxxxxxxxxxxxxxx
+ xx.............xx
+ x...............x
+@+.c..c..c..c..c.x
+@+.c..c..c..c..c.x
+ x...............x
+ xx.............xx
+ xxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   serial_library_hellmonk_open_square
+TAGS:   allow_dup extra decor vaults_empty
+: init_serial_library_setup(_G)
+MAP
+.........
+.cc...cc.
+.cc...cc.
+.........
+ ...T...
+.........
+.cc...cc.
+.cc...cc.
+.........
+ENDMAP
+
+NAME:  serial_library_hellmonk_statue_hall
+TAGS:  extra decor vaults_orient_w
+: if you.in_branch("D") and you.depth() < 10 then
+SUBST: B = G:25 T:5 n:1
+: else
+KITEM: B = any book
+: end
+: init_serial_library_setup(_G)
+MAP
+xxxxxxxxxxxxxx
+@xGxxGxxGxcccxx
+ @..........ccx
+  @.........Bcx
+ @..........ccx
+@xGxxGxxGxcccxx
+xxxxxxxxxxxxxx
+ENDMAP
+
+NAME:  serial_library_hellmonk_double_dead_end
+TAGS:  extra
+SUBST: d = d.
+: init_serial_library_setup(_G)
+MAP
+xxxxx
+xGxcx
+x.xdx
+x.x.x
+x.x.x
+x.x.x
+x.x.x
+x.x.x
+x@@@x
+ENDMAP
+
+NAME: serial_library_hellmonk_big_corner
+TAGS: extra decor vaults_empty vaults_orient_s vaults_orient_e
+: init_serial_library_setup(_G)
+MAP
+     cccc
+    cccccc
+   cc....cc
+  cc......cc
+ cc...cc...cc
+cc...cccc...cc
+cc..cccccc....
+cc..cccccc...
+cc...cccc...
+ cc...cc...
+  cc......T
+   cc....
+    cc..
+ENDMAP
+
+NAME:   serial_library_hellmonk_filled_rooms
+TAGS:   extra decor
+NSUBST: c = 1:dc / *:c
+: init_serial_library_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxx
+xcxcxcxcxcxcxcxcx
+x+x+x+x+x+x+x+x+x
+ ...............
+ENDMAP
+
+NAME: serial_library_hellmonk_reading_circle
+TAGS: extra decor vaults_empty
+: init_serial_library_setup(_G)
+MAP
+   .....
+  ..ccc..
+ .cc...cc.
+..c.....c..
+.c...c...c.
+.c..ccc..c.
+.c...c...c.
+..c.....c..
+ .cc...cc.
+  ..ccc..
+   .....
+ENDMAP
+
+NAME:   serial_library_hellmonk_secret_room
+TAGS:   extra decor
+SUBST:  d = d.
+FTILE:  .+ = floor_studio
+: init_serial_library_setup(_G)
+MAP
+    xxx
+xxxxx>xx
+xcccc+cx
+xc..c.cx
+xc..d.cx
+xc....cx
+xc....cx
+xcc..ccx
+xxx++xxx
+   @@
+ENDMAP
+
+NAME:   serial_library_regret_index_small_wings
+TAGS:   extra decor vaults_empty
+SUBST:  X : x.., Y : xx@, Z : xx@, - : +.
+NSUBST: d = 1:dcc / *:c
+: init_serial_library_setup(_G)
+MAP
+  xxxx@@. .@@xxxx
+ xxddxxX...Xxxddxx
+xxx--xxx...xxx--xxx
+Y......+...+......Z
+Yc.c.c.+.T.+.c.c.cZ
+Y......+...+......Z
+xxx--xxx...xxx--xxx
+ xxddxxX...Xxxddxx
+  xxxx@@. .@@xxxx
+ENDMAP
+
+NAME:   serial_library_regret_index_branch_corner
+TAGS:   extra decor vaults_empty
+SUBST:  X : x+, Y : xx@, - : +x
+: init_serial_library_setup(_G)
+MAP
+xxXXXxx
+x.....x
+x.ccc.x
+x.....x
+x.....x
+x.ccc.x
+x.....x@
+xx-+-xx@@
+ x......@@
+ xc.....xxxxxxxx
+ xc..T..x......x
+ x......-.c..c.X
+ YY.....+.c..c.X
+  YY.cc.-.c..c.X
+   Yxxxxx......x
+        xxxxxxxx
+ENDMAP
+
+NAME:   serial_library_regret_index_split_case
+TAGS:   extra allow_dup
+SUBST:  X : @.+xxx, Y : x'.
+CLEAR:  '
+: init_serial_library_setup(_G)
+MAP
+xxxxxxxxxxx
+X..ccxcc..X
+xx..cxc..xx
+ xx..Y..xx
+  x  Y  x
+ENDMAP
+
+NAME:   serial_library_regret_index_double_sided
+TAGS:   extra decor allow_dup
+: init_serial_library_setup(_G)
+MAP
+      ..x
+xxx......
+xcxcxcc..
+x.....c.
+x  x..x.
+   xx.c.xx
+     .x..x  x
+     .c.....x
+    ..ccxcxcx
+    ......xxx
+    x..
+ENDMAP
+
+NAME:  serial_library_regret_index_multi
+TAGS:  extra decor allow_dup
+SUBST: X : x@
+: init_serial_library_setup(_G)
+MAP
+xxxxx
+xxccx
+@..cxxxxx
+@..xxxccx
+  .....cxxxxx
+   ....xxxccx
+      .....cx
+         ..xx
+         XXxx
+ENDMAP
+
+NAME:   serial_library_regret_index_turning
+TAGS:   extra allow_dup
+DEPTH:  Snake
+: init_serial_library_setup(_G)
+WEIGHT: 6
+MAP
+    xxxxxxxx
+    xcc..ccx
+    xc....cx
+x@@@x..x...x
+x...x..x@@@x
+xc....cx
+xcc..ccx
+xxxxxxxx
+ENDMAP
+
+NAME:   serial_library_regret_index_boxing
+TAGS:   extra allow_dup
+DEPTH:  Elf
+SUBST:  X : xc..., Y : xc...
+: init_serial_library_setup(_G)
+WEIGHT: 6
+MAP
+xxxxxxx
+x..Yc.@
+x.c.c.@
+xX..+..
+xxxxx.T.xxxxx
+      ..+..Xx
+      @.c.c.x
+      @.cY..x
+      xxxxxxx
+ENDMAP
+
+NAME:   serial_library_regret_index_closets
+TAGS:   extra allow_dup
+DEPTH:  Crypt
+NSUBST: c = 1:%d / 3 = %%c / *:c
+: dgn.delayed_decay(_G, "%", "any skeleton")
+: init_serial_library_setup(_G)
+WEIGHT: 6
+MAP
+xxxxxxx
+xcxcxcx
+x+x+x+x@@
+x........x
+x........x
+ @@x+x+x+x
+   xcxcxcx
+   xxxxxxx
+ENDMAP
+
+########################################
+#
+# <<2>> Threat vaults.
+#
+########################################
+
+NAME:   serial_library_hellmonk_metal_room
+TAGS:   vaults_hard
+: if you.in_branch('Vaults') then
+NSUBST: . = 1:8 / 1:81 / 1:1 / 3 = 1. / *:.
+: elseif you.in_branch('D') and you.depth() < 7 or
+:        you.in_branch('Depths') or you.in_branch('Elf') then
+NSUBST: . = 1:1 / 3 = 1.. / *:.
+: else
+NSUBST: . = 2:1 / 8 = 1... / *:.
+: end
+FTILE:  .e18+ = floor_studio
+: init_serial_library_setup(_G)
+MAP
+vvvvvvvvvvv
+ve.......ev
+vcccc.ccccv
+v.........v
+vcccc.ccccv
+v.........v
+vcccc.ccccv
+v.........v
+vcccc.ccccv
+v.........v
+vcccc.ccccv
+v.........v
+vvvvv+vvvvv
+     @
+ENDMAP
+
+NAME:    serial_library_hellmonk_octagon
+TAGS:    vaults_room vaults_orient_s
+SHUFFLE: DE
+SUBST:   D = c, E = .
+FTILE:   .1d+ = floor_studio
+: init_serial_library_setup(_G)
+MAP
+     ccccccccc
+    cc...d...cc
+   cc...E.E...cc
+  cc..cDcDcDc..cc
+ cc.1.E.E.E.E.1.cc
+cc....E.E.E.E....cc
+c..ccccDcDcDcccc..c
+c.......E.E.......c
+c.EEEEEEE.EEEEEEE.c
+cd.DDDDDDcDDDDDD.dc
+c.EEEEEEE.EEEEEEE.c
+c.......E.E.......c
+c..ccccDcDcDcccc..c
+cc....E.E.E.E....cc
+ cc.1.E.E.E.E.1.cc
+  cc..cDcDcDc..cc
+   cc...E.E...cc
+    cc.......cc
+     ccc+++ccc
+        @@@
+ENDMAP
+
+NAME:   serial_library_hellmonk_narrow_alcove
+TAGS:   extra vaults_room vaults_orient_s
+: if you.in_branch("Vaults") then
+NSUBST: ' = 2 = 1.. / *:.
+: else
+SUBST:  ' = .
+:   if you.absdepth() < 7 then
+SUBST:  B = cGT, e = ef
+:   elseif you.absdepth() < 12 then
+SUBST:  e = eeef
+:   end
+: end
+: init_serial_library_setup(_G)
+MAP
+   xxxxx
+  xxcccxx
+ xxccBccxx
+xxcc.'.ccxx
+xcc.cec.ccx
+xc'ccccc'cx
+xcc.c.c.ccx
+xxcc.1.ccxx
+xxxc...cxxx
+  xx...xx
+   x@@@x
+ENDMAP
+
+NAME:   serial_library_regret_index_headful
+TAGS:   vaults_hard vaults_orient_n
+: if you.in_branch('Vaults') then
+NSUBST: 1 = 1:8 / 1:811 / 4:1 / *:1
+: else
+NSUBST: 1 = 3:1 / 2 = 1. / *:.
+: end
+SUBST:  X : v., - : +vv, B = BT
+FTILE:  .e18+ = floor_studio
+: init_serial_library_setup(_G)
+MAP
+vvvvvv''' '''vvvvvv
+vc1.cvv'''''vvc.1cv
+vv...vvv-+-vvv...vv
+ vv++v.X...X.v++vv
+ vv......T......vv
+ v...cc..v..cc...v
+ vc...c.vvv.c...cv
+ vvc1...+.+...1cvv
+  vvc1.v+.+v.1cvv
+   vvc.v1.1v.cvv
+    vvcvecevcvv
+     vvvvvvvvv
+ENDMAP

@@ -1120,7 +1120,7 @@ static job_group jobs_order[] =
         coord_def(2, 0), 22,
         { JOB_HEDGE_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
           JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
-          JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE }
+          JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_ALCHEMIST }
     }
 };
 
@@ -1577,9 +1577,6 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
     {
         if (this_species == SP_UNKNOWN)
             break;
-
-        if (this_species == SP_METEORAN && ng.type == GAME_TYPE_SPRINT)
-            continue;
 
         if (ng.job == JOB_UNKNOWN && !species::is_starting_species(this_species))
             continue;

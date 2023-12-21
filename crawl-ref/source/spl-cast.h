@@ -105,7 +105,7 @@ void inspect_spells();
 bool can_cast_spells(bool quiet = false);
 void do_cast_spell_cmd(bool force);
 
-int hex_success_chance(const int mr, int powc, int scale,
+int hex_success_chance(const int wl, int powc, int scale,
                        bool round_up = false);
 class targeter;
 unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range);

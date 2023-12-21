@@ -22,7 +22,7 @@ aptitudes:
   shapeshifting: -1
   invocations: 1
   # Green Draconian specific
-  poison_magic: 2
+  alchemy: 2
 str: 10
 int: 8
 dex: 6

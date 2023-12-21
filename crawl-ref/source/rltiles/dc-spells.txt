@@ -178,7 +178,7 @@ generic GENERIC_MONSTER_SPELL
 air_elementals AIR_ELEMENTALS
 awaken_vines AWAKEN_VINES
 blink_other BLINK_OTHER
-brain_feed BRAIN_FEED
+brain_bite BRAIN_BITE
 call_down_damnation CALL_DOWN_DAMNATION
 cantrip CANTRIP
 cold_breath COLD_BREATH

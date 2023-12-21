@@ -86,11 +86,11 @@ function crypt_loot_plus(e)
   -- and one drop-off of these.
   e.kitem("h = vampires_tooth / leech / sword_of_zonguldrok / " ..
           "finisher / scythe_of_curses / majin-bo / sceptre_of_torment / " ..
-          "undeadhunter")
+          "undeadhunter, ivory gem")
   e.kitem("i = necronomicon / " .. book .. "death's_door / " .. book .. "haunt / "
-          .. book .. "borgnjor's_revivification / " .. book .. "infestation")
+          .. book .. "borgnjor's_revivification / " .. book .. "infestation, ivory gem")
   e.kitem("j = phial of floods w:20 / any area misc / any ally misc, " ..
-          "staff of death / any magical staff")
+          "staff of death / any magical staff, ivory gem")
   e.subst("d = d:20 ef g:20")
   e.subst("h = h:5 ij")
 end

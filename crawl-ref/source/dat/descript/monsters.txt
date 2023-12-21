@@ -156,7 +156,8 @@ loved ones separated by untimely death, enwreathed in the silence of the grave.
 %%%%
 Erica
 
-A wild-tempered adventuress.
+A wild-tempered adventuress. She's quite prideful for an octopode, and brandishes
+their venomous capacity and camouflage talents with cruel force.
 %%%%
 Erolcha
 
@@ -347,10 +348,10 @@ slew the ancient dragon from whose hide her strange armour is crafted.
 %%%%
 Maurice
 
-A sly, conniving thief. In his profession, Maurice is considered a legend — at
-least according to himself. He is skilled, nonetheless, and among all the
-thieves and rogues lured by the Orb, Maurice is undoubtedly the most crafty.
-He uses magic wands in addition to cloak and dagger.
+A sly, conniving thief. A self-proclaimed legend, he was one of the most skilled
+and crafty of the thieves and rogues lured by the Orb. The magical parasitic
+vines that have claimed his body still wish to continue his life's work, with a
+back-up plan of both a vicious magic-drinking maw and potent wands.
 %%%%
 Menkaure
 
@@ -386,10 +387,10 @@ A demonic skull rolling along the ground.
 %%%%
 Natasha
 
-A magical cat. Once a powerful wizard's familiar, Natasha was abandoned after
-her master was consumed by the very necromantic forces he sought to control.
-Now she patrols the dungeon, taking a bloody vengeance with spell and claw upon
-any adventurer who crosses her path.
+A fast-moving magical cat. Once a powerful wizard's familiar, Natasha was
+abandoned after her master was consumed by the very necromantic forces he sought
+to control. Now she patrols the dungeon, taking a bloody vengeance with spell
+and claw upon any adventurer who crosses her path.
 
 This cat doesn't have nine lives, but just one death isn't going to be enough
 to put her down for good.
@@ -653,6 +654,13 @@ A wizard fond of spectacle and destruction. They scorn the cowardice of other
 magicians, who hide from their foes rather than simply blasting them out of
 existence.
 %%%%
+aspiring flesh
+
+The divided and churning remains of a protean progenitor, striving desperately
+for form. Whatever they become, the last of their progenitor's power ensure it
+will be stronger and swifter than any such creature found elsewhere in the
+dungeon.
+%%%%
 azure jelly
 
 An extremely cold blob of bright blue cytoplasm, forming bits of frost in the
@@ -784,6 +792,11 @@ The soul of a living, holy, or demonic creature, captured by a dark sacrifice
 to Yredelemnul. The bound soul will follow its captor through stairs and come
 when recalled from a different level.
 %%%%
+brain worm
+
+A slimy fluorescent worm with a greatly distended head. This creature feeds on
+others' intellect as it squirms through unworldly grime.
+%%%%
 briar patch
 
 A tangled cluster of thorny briars, sharp enough to pierce thick hide and
@@ -893,6 +906,10 @@ crimson imp
 
 A small, ugly minor demon. Its fanged maw seems locked in a permanent malign
 grin, and its horns protrude obscenely from its scaly pate.
+%%%%
+crocodile
+
+A crocodilian with powerful jaws.
 %%%%
 crystal echidna
 
@@ -1375,9 +1392,8 @@ it is in fact quite susceptible to mutagenic energies.
 %%%%
 glass eye
 
-A floating eyeball as transparent and glossy as glass, said to be one of the
-servitors of Jiyva. It possesses a gaze that will render even the most
-strong-willed of adventurers as fragile as glass.
+A floating eyeball formed from living glass. Only the divine Jiyva could form
+such a curious servitor.
 %%%%
 glowing orange brain
 
@@ -1594,6 +1610,15 @@ A warrior initiated in the mysteries of a dying cult, dedicated to serve
 thrones long-fallen. Its blows strip away magical defences, leaving its foes
 vulnerable to even the simplest hexes.
 %%%%
+inugami
+
+A mystical canine, frequently bound into the service of wizards and sorcerers.
+Its eyes flicker with remarkable intelligence, but its bite is no less sharp
+than its wilder cousins.
+
+They are difficult to truly kill - when gravely wounded, they instead return to
+spiritual form to lick their wounds until ready to be summoned again.
+%%%%
 iron dragon
 
 A very heavy, slow and apparently flightless dragon. It is named for its
@@ -1699,6 +1724,12 @@ kobold brigand
 A kobold that is bigger and tougher than the ordinary kobold, with a penchant
 for underhanded tactics.
 %%%%
+kobold blastminer
+
+A kobold, ready with multiple armaments to defends itself from the many
+dangers of the depths. The blastmote-packed cannon on its shoulder bears its
+maker's mark, and is fiercely loyal; it will fire for none other.
+%%%%
 kobold demonologist
 
 A kobold in league with demonic powers, able to call forth beings from the
@@ -1716,8 +1747,8 @@ reach towards the shore and crush any who draw near.
 large abomination
 
 A hideous conglomeration of mangled body parts, possessed and altered in ways
-that challenge sanity. Each varies in speed and durability by the nature of
-whatever unfortunates were used to make it.
+that challenge sanity. Each varies in durability by the nature of whatever
+unfortunates were used to make it.
 %%%%
 lava snake
 
@@ -1971,7 +2002,7 @@ sharp turns to hit adjacent targets.
 %%%%
 orb of fire
 
-A globe of raw primordial fire, capable of impressive pyrotechnics, and of
+A globe of raw primordial fire, capable of impressive pyrotechnics and of
 twisting the very flesh of creatures who come into its ken.
 %%%%
 orb spider
@@ -2089,6 +2120,13 @@ program bug
 
 A ravenous and incredibly buggy monster. Please report its existence to the
 DevTeam.
+%%%%
+protean progenitor
+
+A gargantuan humanoid of fractured shape from the aeons when the seas were but
+primordial soup. The many shapeshifters of the dungeon once sloughed off from
+these unfathomably ancient beings, and when they themselves finally cease, even
+their remains will give birth one last time to furious monsters.
 %%%%
 putrid mouth
 
@@ -2366,8 +2404,8 @@ to do so in confined spaces.
 %%%%
 small abomination
 
-A hideous mass of body parts. Each varies in speed and durability by the nature
-of whatever unfortunates were used to make it.
+A hideous mass of body parts. Each varies in durability by the nature of
+whatever unfortunates were used to make it.
 %%%%
 smoke demon
 
@@ -2462,10 +2500,6 @@ spriggan rider
 
 A spriggan that has tamed a hornet as its mount, and is tasked with protecting
 the spriggan fens and cairns from intruders.
-%%%%
-meteoran
-
-A celestial being, descended to this earth for a brief time.
 %%%%
 starcursed mass
 
@@ -2997,9 +3031,10 @@ air elementalist statue
 A delicate statue of a tengu gliding through the air. It looks quite
 insubstantial.
 %%%%
-antique lich
+antique champion
 
-A lich who has grown expensive over countless years.
+An unfathomably expensive skeleton. It has countless sigils engraved into its
+bones, and pulses with a ghostly presence.
 %%%%
 archer statue
 

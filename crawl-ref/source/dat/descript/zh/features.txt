@@ -39,7 +39,7 @@ A white marble altar of Elyvilon
 %%%%
 A blossoming altar of Fedhas
 
-费德哈的祭坛，上面覆盖着生机盎然、色彩艳丽植物。
+费德哈·莽动的祭坛，上面覆盖着生机盎然、色彩艳丽植物。
 %%%%
 An opulent altar of Gozag
 
@@ -313,7 +313,7 @@ A gleaming silver wall
 %%%%
 A dry fountain
 
- 一个干涸的喷泉，见证过美好的岁月。
+一个干涸的喷泉，见证过美好的岁月。
 %%%%
 A fountain of clear blue water
 
@@ -826,7 +826,7 @@ The pulsating floor
 # 巫师实验室：宗古多克
 Zonguldrok's gravestone
 
-一个墓碑。上面刻有金色的字样：“宗古多克”。
+宗古多克家的一块墓碑，上面还滴着微咸的灵液。
 %%%%
 A gravestone
 
@@ -967,10 +967,6 @@ A large window
 
 一个嵌在巨大金属管道侧面的窗户，从中可以观察到管内的水流。
 %%%%
-A glass window
-
-一个极为坚硬的玻璃窗，上面有不少弹孔。
-%%%%
 A petrified tree
 
 一棵古树，很久以前就从生物学转入地质学意义。
@@ -1050,7 +1046,7 @@ liquefied
 disjunction haloed
 
 这个区域暴露在移位能量中，
-能量的发出者那里的生物会被闪送，距离施法者越近，机率就越大。
+能量的发出者那里的生物会被闪送，距离施法者越近，几率就越大。
 %%%%
 ########################################################################
 ### 其他效果

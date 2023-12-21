@@ -39,12 +39,11 @@ my %field_type = (
     ENH_SUMM => "bool",
     ENH_NECRO => "bool",
     ENH_TLOC => "bool",
-    ENH_TMUT => "bool",
     ENH_FIRE => "bool",
     ENH_ICE  => "bool",
     ENH_AIR  => "bool",
     ENH_EARTH => "bool",
-    ENH_POISON => "bool",
+    ENH_ALCH => "bool",
     EV       => "num",
     EVIL     => "bool",
     FOG      => "bool",
@@ -548,8 +547,8 @@ my @art_order = (
     "RMSL", "unused", "REGEN", "unused", "NO_UPGRADE", "RCORR", "\n",
     "RMUT", "unused", "CORRODE", "DRAIN", "SLOW", "FRAGILE", "\n",
     "SH", "HARM", "RAMPAGE", "ARCHMAGI", "ENH_CONJ", "ENH_HEXES", "\n",
-    "ENH_SUMM", "ENH_NECRO", "ENH_TLOC", "ENH_TMUT", "ENH_FIRE", "\n",
-    "ENH_ICE", "ENH_AIR", "ENH_EARTH", "ENH_POISON", "\n",
+    "ENH_SUMM", "ENH_NECRO", "ENH_TLOC", "unused", "ENH_FIRE", "\n",
+    "ENH_ICE", "ENH_AIR", "ENH_EARTH", "ENH_ALCH", "\n",
     "}",
 # end TAG_MAJOR_VERSION
 # start TAG_MAJOR_VERSION == 35
@@ -562,8 +561,8 @@ my @art_order = (
 #     "RMSL", "REGEN", "NO_UPGRADE", "RCORR", "\n",
 #     "RMUT", "CORRODE", "DRAIN", "SLOW", "FRAGILE", "\n",
 #     "SH", "HARM", "RAMPAGE", "ARCHMAGI", "ENH_CONJ", "ENH_HEXES", "\n",
-#     "ENH_SUMM", "ENH_NECRO", "ENH_TLOC", "ENH_TMUT", "ENH_FIRE", "\n",
-#     "ENH_ICE", "ENH_AIR", "ENH_EARTH", "ENH_POISON", "\n",
+#     "ENH_SUMM", "ENH_NECRO", "ENH_TLOC", "ENH_FIRE", "\n",
+#     "ENH_ICE", "ENH_AIR", "ENH_EARTH", "ENH_ALCH", "\n",
 #     "}",
 # end TAG_MAJOR_VERSION
 

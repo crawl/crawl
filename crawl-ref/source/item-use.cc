@@ -39,6 +39,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "makeitem.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -176,8 +177,6 @@ static string _default_use_title(operation_types oper)
             ? "Put on or remove which piece of jewellery?"
             : "Put on which piece of jewellery?";
     case OPER_QUAFF:
-        if (you.has_mutation(MUT_LONG_TONGUE))
-            return "Slurp which item?";
         return "Drink which item?";
     case OPER_READ:
         return "Read which item?";
@@ -422,9 +421,8 @@ bool UseItemMenu::populate_list(bool check_only)
     for (const auto *it : floor)
     {
         // ...only stuff that can go into your inventory though
-        if (!it->defined() || item_is_stationary(*it) || item_is_orb(*it)
-            || item_is_spellbook(*it) || it->base_type == OBJ_GOLD
-            || it->base_type == OBJ_RUNES)
+        if (!it->defined() || item_is_stationary(*it) || item_is_spellbook(*it)
+            || item_is_collectible(*it) || it->base_type == OBJ_GOLD)
         {
             continue;
         }
@@ -2953,6 +2951,45 @@ void prompt_inscribe_item()
     inscribe_item(you.inv[item_slot]);
 }
 
+bool has_drunken_brawl_targets()
+{
+    list<actor*> targets;
+    get_cleave_targets(you, coord_def(), targets, -1, true);
+    return !targets.empty();
+}
+
+// Perform a melee attack against every adjacent hostile target, and print a
+// special message if there are any.
+static bool _oni_drunken_swing()
+{
+    // Use the same logic for target-picking that cleaving does
+    list<actor*> targets;
+    get_cleave_targets(you, coord_def(), targets, -1, true);
+
+    if (!targets.empty())
+    {
+        if (you.weapon())
+        {
+            mprf("You take a swig of the potion and twirl %s.",
+                 you.weapon()->name(DESC_YOUR).c_str());
+        }
+        else
+            mpr("You take a swig of the potion and flex your muscles.");
+
+
+        for (actor* victim : targets)
+        {
+            melee_attack attk(&you, victim);
+            attk.never_cleave = true;
+            attk.attack();
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
 bool drink(item_def* potion)
 {
     string r = cannot_drink_item_reason(potion, true, true);
@@ -2984,6 +3021,7 @@ bool drink(item_def* potion)
         return false;
     }
 
+    const bool nearby_mons = there_are_monsters_nearby(true, true, false);
     if (player_equip_unrand(UNRAND_VICTORY, true)
         && !you.props.exists(VICTORY_CONDUCT_KEY))
     {
@@ -2994,7 +3032,7 @@ bool drink(item_def* potion)
                                                        false).c_str());
 
         if (item->props[VICTORY_STAT_KEY].get_int() > 0
-            && there_are_monsters_nearby(true, true, false)
+            && nearby_mons
             && !yesno(unrand_prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
@@ -3015,17 +3053,19 @@ bool drink(item_def* potion)
         return false;
     }
 
+    // Drunken master, swing!
+    // We do this *before* actually drinking the potion for nicer messaging.
+    if (you.species == SP_ONI
+        && oni_likes_potion(static_cast<potion_type>(potion->sub_type)))
+    {
+        _oni_drunken_swing();
+    }
+
     // Check for Delatra's gloves before potentially melding them.
     bool heal_on_id = player_equip_unrand(UNRAND_DELATRAS_GLOVES);
 
     if (!quaff_potion(*potion))
         return false;
-
-    if (you.has_mutation(MUT_LONG_TONGUE))
-    {
-        mprf("You slurp down every last drop of the %s!",
-             potion->name(DESC_QUALNAME).c_str());
-    }
 
     if (!alreadyknown)
     {
@@ -3044,11 +3084,8 @@ bool drink(item_def* potion)
     }
 
     // Drinking with hostile visible mons nearby resets unrand "Victory" stats.
-    if (player_equip_unrand(UNRAND_VICTORY, true)
-        && there_are_monsters_nearby(true, true, false))
-    {
+    if (player_equip_unrand(UNRAND_VICTORY, true) && nearby_mons)
         you.props[VICTORY_CONDUCT_KEY] = true;
-    }
 
     // We'll need this later, after destroying the item.
     const bool was_exp = potion->sub_type == POT_EXPERIENCE;
@@ -3269,8 +3306,23 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
 // Returns true if the scroll is used up.
 static bool _handle_brand_weapon(bool alreadyknown, const string &pre_msg)
 {
-    item_def* weapon = _scroll_choose_weapon(alreadyknown, pre_msg,
-                                             SCR_BRAND_WEAPON);
+    item_def* weapon = nullptr;
+    string letter = "";
+    if (!clua.callfn("c_choose_brand_weapon", ">s", &letter))
+    {
+        if (!clua.error.empty())
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+    }
+    else if (isalpha(letter.c_str()[0]))
+    {
+        item_def &item = you.inv[letter_to_index(letter.c_str()[0])];
+        if (item.defined() && is_brandable_weapon(item, true))
+            weapon = &item;
+    }
+
+    if (!weapon)
+        weapon = _scroll_choose_weapon(alreadyknown, pre_msg, SCR_BRAND_WEAPON);
+
     if (!weapon)
         return !alreadyknown;
 
@@ -3320,8 +3372,25 @@ bool enchant_weapon(item_def &wpn, bool quiet)
  */
 static bool _identify(bool alreadyknown, const string &pre_msg, int &link)
 {
-    item_def* itemp = _choose_target_item_for_scroll(alreadyknown, OSEL_UNIDENT,
-                       "Identify which item? (\\ to view known items)");
+    item_def* itemp = nullptr;
+    string letter = "";
+    if (!clua.callfn("c_choose_identify", ">s", &letter))
+    {
+        if (!clua.error.empty())
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+    }
+    else if (isalpha(letter.c_str()[0]))
+    {
+        item_def &item = you.inv[letter_to_index(letter.c_str()[0])];
+        if (item.defined() && !fully_identified(item))
+            itemp = &item;
+    }
+
+    if (!itemp)
+    {
+        itemp = _choose_target_item_for_scroll(alreadyknown, OSEL_UNIDENT,
+            "Identify which item? (\\ to view known items)");
+    }
 
     if (!itemp)
         return !alreadyknown;
@@ -3357,8 +3426,26 @@ static bool _identify(bool alreadyknown, const string &pre_msg, int &link)
 
 static bool _handle_enchant_weapon(bool alreadyknown, const string &pre_msg)
 {
-    item_def* weapon = _scroll_choose_weapon(alreadyknown, pre_msg,
-                                             SCR_ENCHANT_WEAPON);
+    item_def* weapon = nullptr;
+    string letter = "";
+    if (!clua.callfn("c_choose_enchant_weapon", ">s", &letter))
+    {
+        if (!clua.error.empty())
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+    }
+    else if (isalpha(letter.c_str()[0]))
+    {
+        item_def &item = you.inv[letter_to_index(letter.c_str()[0])];
+        if (item.defined() && is_enchantable_weapon(item, true))
+            weapon = &item;
+    }
+
+    if (!weapon)
+    {
+        weapon = _scroll_choose_weapon(alreadyknown, pre_msg,
+                                       SCR_ENCHANT_WEAPON);
+    }
+
     if (!weapon)
         return !alreadyknown;
 
@@ -3399,8 +3486,25 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 
 static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
 {
-    item_def* target = _choose_target_item_for_scroll(alreadyknown, OSEL_ENCHANTABLE_ARMOUR,
-                                                      "Enchant which item?");
+    item_def* target= nullptr;
+    string letter = "";
+    if (!clua.callfn("c_choose_enchant_armour", ">s", &letter))
+    {
+        if (!clua.error.empty())
+            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+    }
+    else if (isalpha(letter.c_str()[0]))
+    {
+        item_def &item = you.inv[letter_to_index(letter.c_str()[0])];
+        if (item.defined() && is_enchantable_armour(item, true))
+            target = &item;
+    }
+
+    if (!target)
+    {
+        target = _choose_target_item_for_scroll(alreadyknown,
+            OSEL_ENCHANTABLE_ARMOUR, "Enchant which item?");
+    }
 
     if (!target)
         return alreadyknown ? -1 : 0;
@@ -3772,6 +3876,7 @@ bool read(item_def* scroll, dist *target)
         }
     }
 
+    const bool nearby_mons = there_are_monsters_nearby(true, true, false);
     if (player_equip_unrand(UNRAND_VICTORY, true)
         && !you.props.exists(VICTORY_CONDUCT_KEY))
     {
@@ -3782,7 +3887,7 @@ bool read(item_def* scroll, dist *target)
                                                        false).c_str());
 
         if (item->props[VICTORY_STAT_KEY].get_int() > 0
-            && there_are_monsters_nearby(true, true, false)
+            && nearby_mons
             && !yesno(unrand_prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
@@ -3811,8 +3916,7 @@ bool read(item_def* scroll, dist *target)
     // For cancellable scrolls leave printing this message to their
     // respective functions.
     const string pre_succ_msg =
-            make_stringf("As you%s read the %s, it %s.",
-                         you.has_mutation(MUT_AWKWARD_TONGUE) ? " slowly" : "",
+            make_stringf("As you read the %s, it %s.",
                           scroll->name(DESC_QUALNAME).c_str(),
                          which_scroll == SCR_FOG ? "dissolves into smoke" : "crumbles to dust");
     if (!_is_cancellable_scroll(which_scroll))
@@ -4061,13 +4165,6 @@ bool read(item_def* scroll, dist *target)
             dec_mitm_item_quantity(scroll->index(), 1);
 
         count_action(CACT_USE, OBJ_SCROLLS);
-
-        if (you.has_mutation(MUT_AWKWARD_TONGUE))
-        {
-            you.time_taken = div_rand_round(you.time_taken * 3, 2);
-            if (which_scroll == SCR_REVELATION) // ew
-                you.duration[DUR_REVELATION] = you.time_taken + 1;
-        }
     }
 
     if (!alreadyknown
@@ -4102,7 +4199,7 @@ bool read(item_def* scroll, dist *target)
 
     // Reading with hostile visible mons nearby resets unrand "Victory" stats.
     if (player_equip_unrand(UNRAND_VICTORY, true)
-        && there_are_monsters_nearby(true, true, false)
+        && nearby_mons
         && !cancel_scroll)
     {
         you.props[VICTORY_CONDUCT_KEY] = true;

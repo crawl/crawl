@@ -658,8 +658,8 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const
     if (!Options.tile_menu_icons)
         return false;
 
-    // Runes + orb of zot have a special uncollected tile
-    if (quantity <= 0 && (item->base_type != OBJ_RUNES && item->base_type != OBJ_ORBS))
+    // Runes + gems + orb of zot have a special uncollected tile
+    if (quantity <= 0 && !item_is_collectible(*item))
         return false;
 
     return get_tiles_for_item(*item, tileset, show_background);
@@ -858,6 +858,7 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_CORPSES,
     OBJ_BOOKS,
     OBJ_RUNES,
+    OBJ_GEMS,
     OBJ_ORBS,
     OBJ_GOLD);
 
@@ -1058,6 +1059,7 @@ const char *item_class_name(int type, bool terse)
         case OBJ_MISCELLANY: return "Miscellaneous";
         case OBJ_CORPSES:    return "Carrion";
         case OBJ_RUNES:      return "Runes of Zot";
+        case OBJ_GEMS:       return "Ancient Gems";
         case OBJ_TALISMANS:  return "Talismans";
         }
     }
@@ -1770,7 +1772,7 @@ bool check_warning_inscriptions(const item_def& item,
             prompt += " while about to teleport";
         }
         prompt += "?";
-        if (god_despises_item(item))
+        if (god_despises_item(item, you.religion))
             prompt += " You'd be excommunicated if you did!";
         else if (penance)
             prompt += " This could place you under penance!";

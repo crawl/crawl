@@ -704,8 +704,7 @@ static bool _kikubaaqudgha_retribution()
         lose_stat(STAT_RANDOM, 2 + random2avg(you.experience_level / 3, 2));
         return true;
     }
-    const int xl = you.experience_level;
-    you.drain(nullptr, false, random_range(xl * 27, xl * 42));
+    you.drain(nullptr, false, random_range(225, 375));
     return true;
 }
 

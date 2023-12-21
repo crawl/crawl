@@ -190,9 +190,9 @@ Word of Recall cast
 
 @The_monster@ begins to recite a word of recall!
 %%%%
-Call Lost Soul cast
+Call Lost Souls cast
 
-@The_monster@ beckons forth a restless soul!
+@The_monster@ beckons forth restless souls!
 %%%%
 Haste Plants cast
 
@@ -560,6 +560,12 @@ VISUAL:@The_monster@ throws @possessive@ arms up pleadingly.
 ########################################################################
 # Individual monsters
 ########################################################################
+brain worm cast
+
+@The_monster@'s bulging head throbs.
+
+@The_monster@'s throbbing head pulsates.
+%%%%
 glowing orange brain cast
 
 @The_monster@ pulsates.
@@ -820,6 +826,10 @@ crystal echidna cast targeted
 culicivora cast targeted
 
 @The_monster@ chitters @at@ @target@.
+%%%%
+kobold blastminer cast targeted
+
+@The_monster@ blasts @possessive@ cannon @at@ @target@.
 %%%%
 ########################################################################
 # Monster species and genus messages.

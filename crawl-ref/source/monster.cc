@@ -1040,12 +1040,8 @@ bool monster::unequip(item_def &item, bool msg, bool force)
 
 void monster::lose_pickup_energy()
 {
-    if (const monsterentry* entry = find_monsterentry())
-    {
-        const int delta = speed * entry->energy_usage.pickup_percent / 100;
-        if (speed_increment > 25 && delta < speed_increment)
-            speed_increment -= delta;
-    }
+    if (speed_increment > 25 && speed < speed_increment)
+        speed_increment -= speed;
 }
 
 void monster::pickup_message(const item_def &item)
@@ -1329,7 +1325,7 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
 
         if (mons->type == MONS_ARACHNE)
         {
-            return weapon.is_type(OBJ_STAVES, STAFF_POISON)
+            return weapon.is_type(OBJ_STAVES, STAFF_ALCHEMY)
                    || is_unrandom_artefact(weapon, UNRAND_OLGREB);
         }
 
@@ -1370,14 +1366,8 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
         case UNRAND_ASMODEUS:
             return mons->type == MONS_ASMODEUS;
 
-        case UNRAND_DISPATER:
-            return mons->type == MONS_DISPATER;
-
         case UNRAND_CEREBOV:
             return mons->type == MONS_CEREBOV;
-
-        case UNRAND_MORG:
-            return mons->type == MONS_BORIS;
         }
     }
 
@@ -1397,7 +1387,8 @@ static int _ego_damage_bonus(item_def &item)
 bool monster::pickup_melee_weapon(item_def &item, bool msg)
 {
     // Draconian monks are masters of unarmed combat.
-    if (type == MONS_DRACONIAN_MONK)
+    // Dispater only wants his orb.
+    if (type == MONS_DRACONIAN_MONK || type == MONS_DISPATER)
         return false;
 
     const bool dual_wielding = mons_wields_two_weapons(*this);
@@ -1573,6 +1564,10 @@ bool monster::wants_armour(const item_def &item) const
     {
         return false;
     }
+
+    // Dispater only wants his orb.
+    if (type == MONS_DISPATER && !is_unrandom_artefact(item, UNRAND_DISPATER))
+        return false;
 
     // Returns whether this armour is the monster's size.
     return check_armour_size(item, body_size());
@@ -2934,6 +2929,7 @@ bool monster::liquefied_ground() const
 }
 
 // in units of 1/25 hp/turn
+// Please update monster_info::regen_rate if you change this.
 int monster::natural_regen_rate() const
 {
     // A HD divider ranging from 3 (at 1 HD) to 1 (at 8 HD).
@@ -2948,12 +2944,8 @@ int monster::off_level_regen_rate() const
     if (!mons_can_regenerate(*this))
         return 0;
 
-    if (type == MONS_PARGHIT)
-        return 2700; // whoosh
-    if (type == MONS_DEMONIC_CRAWLER)
-        return 600; // zoom
     if (mons_class_fast_regen(type) || type == MONS_PLAYER_GHOST)
-        return 100;
+        return mons_class_regen_amount(type) * 100;
     // Capped at 0.1 hp/turn.
     return max(natural_regen_rate() * 4, 10);
 }
@@ -2998,32 +2990,40 @@ bool monster::shielded() const
     return shield() || wearing(EQ_AMULET, AMU_REFLECTION);
 }
 
+/// I honestly don't know what this means, really. It's vaguely similar
+/// to the player equivalent.
+int monster::shield_class() const
+{
+    int sh = 0;
+    const item_def *shld = shield();
+    if (shld && is_shield(*shld))
+    {
+        // Look, this is all nonsense.
+        // First, take the item properties.
+        const int base = property(*shld, PARM_AC) + shld->plus;
+        // Double them, because we halved the size of player-visible stats many
+        // years ago but never fixed the internal math. Sorry!
+        sh += base * 2;
+        // Finally, add in monster HD as a proxy for 'shield skill'.
+        sh += get_hit_dice() * 4 / 3;
+    }
+
+    const item_def *amulet = mslot_item(MSLOT_JEWELLERY);
+    if (amulet && amulet->sub_type == AMU_REFLECTION)
+        sh += AMU_REFLECT_SH;
+
+    return sh;
+}
+
 int monster::shield_bonus() const
 {
     if (incapacitated())
         return -100;
 
-    int sh = 0;
-    const item_def *shld = shield();
-    if (shld && get_armour_slot(*shld) == EQ_SHIELD)
-    {
-
-        int shld_c = property(*shld, PARM_AC) + shld->plus * 2;
-        shld_c = shld_c * 2 + (body_size(PSIZE_TORSO) - SIZE_MEDIUM)
-                            * (shld->sub_type - ARM_TOWER_SHIELD);
-        sh = random2avg(shld_c + get_hit_dice() * 4 / 3, 2) / 2;
-    }
-    // shielding from jewellery
-    const item_def *amulet = mslot_item(MSLOT_JEWELLERY);
-    if (amulet && amulet->sub_type == AMU_REFLECTION)
-        sh += AMU_REFLECT_SH;
-
+    const int cls = shield_class();
+    // I don't know why we randomize like this.
+    const int sh = random2avg(cls, 2) / 2;
     return sh ? sh : -100;
-}
-
-int monster::shield_block_penalty() const
-{
-    return 4 * shield_blocks * shield_blocks;
 }
 
 void monster::shield_block_succeeded(actor *attacker)
@@ -3488,12 +3488,17 @@ int monster::known_chaos(bool check_spells_god) const
         || type == MONS_TIAMAT            // For her colour-changing.
         || type == MONS_BAI_SUZHEN
         || type == MONS_BAI_SUZHEN_DRAGON // For her transformation.
+        || type == MONS_PROTEAN_PROGENITOR
         || mons_genus(type) == MONS_DEMONSPAWN) // Like player demonspawn.
     {
         chaotic++;
     }
 
     if (is_shapeshifter() && (flags & MF_KNOWN_SHIFTER))
+        chaotic++;
+
+    // This includes both aspiring flesh and whatever they turn into.
+    if (has_ench(ENCH_PROTEAN_SHAPESHIFTING))
         chaotic++;
 
     // Knowing chaotic spells is not enough to make you "essentially"
@@ -3545,6 +3550,19 @@ bool monster::is_unbreathing() const
 bool monster::is_insubstantial() const
 {
     return mons_class_flag(type, M_INSUBSTANTIAL);
+}
+
+/// All resists intrinsic to a monster, including enchants, equip, etc.
+resists_t monster::all_resists() const
+{
+    resists_t resists = 0;
+    for (auto res : ALL_MON_RESISTS)
+    {
+        const int lvl = get_res(res);
+        if (lvl)
+            resists |= mrd(res, lvl);
+    }
+    return resists;
 }
 
 /// Is this monster completely immune to Damnation-flavoured damage?
@@ -3722,7 +3740,7 @@ int monster::res_poison(bool temp) const
             u += get_jewellery_res_poison(env.item[jewellery], false);
 
         const item_def *w = primary_weapon();
-        if (w && w->is_type(OBJ_STAVES, STAFF_POISON))
+        if (w && w->is_type(OBJ_STAVES, STAFF_ALCHEMY))
             u++;
     }
 
@@ -3738,7 +3756,7 @@ int monster::res_poison(bool temp) const
 
 bool monster::res_sticky_flame() const
 {
-    return is_insubstantial() || get_mons_resist(*this, MR_RES_STICKY_FLAME) > 0;
+    return is_insubstantial();
 }
 
 bool monster::res_miasma(bool /*temp*/) const
@@ -3817,8 +3835,7 @@ bool monster::res_torment() const
 
 bool monster::res_polar_vortex() const
 {
-    return has_ench(ENCH_POLAR_VORTEX)
-           || get_mons_resist(*this, MR_RES_VORTEX) > 0;
+    return has_ench(ENCH_POLAR_VORTEX);
 }
 
 bool monster::res_petrify(bool /*temp*/) const
@@ -4004,7 +4021,7 @@ int monster::skill(skill_type sk, int scale, bool /*real*/, bool /*temp*/) const
     case SK_NECROMANCY:
         return (has_spell_of_type(spschool::necromancy)) ? hd : hd/2;
 
-    case SK_POISON_MAGIC:
+    case SK_ALCHEMY:
     case SK_FIRE_MAGIC:
     case SK_ICE_MAGIC:
     case SK_EARTH_MAGIC:
@@ -4239,7 +4256,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
         // Apply damage multiplier for vitrify
         if (amount != INSTANT_DEATH && has_ench(ENCH_VITRIFIED))
-            amount = amount * 130 / 100;
+            amount = amount * 150 / 100;
 
         // Apply damage multipliers for quad damage
         if (attacker_effects && agent && agent->is_player()
@@ -4452,6 +4469,15 @@ void monster::uglything_init(bool only_mutate)
     speed           = ghost->speed;
     speed_increment = 70;
     colour          = ghost->colour;
+}
+
+void monster::inugami_init()
+{
+    hit_dice            = ghost->xl;
+    // these `max`es let an incomplete inugami be valid long enough to get
+    // fully set up
+    max_hit_points      = max(static_cast<int>(ghost->max_hp), 1);
+    hit_points          = max(max_hit_points, 1);
 }
 
 void monster::ghost_demon_init()
@@ -5450,6 +5476,8 @@ void monster::weaken(actor *attacker, int pow)
 {
     if (!has_ench(ENCH_WEAK))
         simple_monster_message(*this, " looks weaker.");
+    else
+        simple_monster_message(*this, " looks even weaker.");
 
     add_ench(mon_enchant(ENCH_WEAK, 1, attacker,
                          (pow + random2(pow + 3)) * BASELINE_DELAY));
@@ -5485,11 +5513,11 @@ int monster::action_energy(energy_use_type et) const
     // rather than here.
     case EUT_SWIM:    move_cost = mu.swim; break;
     case EUT_MISSILE: return mu.missile;
-    case EUT_ITEM:    return mu.item;
-    case EUT_SPECIAL: return mu.special;
     case EUT_SPELL:   return mu.spell;
     case EUT_ATTACK:  return mu.attack;
-    case EUT_PICKUP:  return mu.pickup_percent;
+    case EUT_ITEM:    return 10;
+    case EUT_SPECIAL: return 10;
+    case EUT_PICKUP:  return 100;
     }
 
     if (has_ench(ENCH_SWIFT))
@@ -5709,7 +5737,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         }
     }
 
-    else if (type == MONS_BAI_SUZHEN && hit_points < max_hit_points / 2
+    else if (type == MONS_BAI_SUZHEN && hit_points < max_hit_points * 2 / 3
                                      && hit_points - damage > 0)
     {
         int old_hp                = hit_points;

@@ -3843,8 +3843,8 @@ string get_monster_equipment_desc(const monster_info& mi,
     item_def* mon_wnd = mi.inv[MSLOT_WAND].get();
     item_def* mon_rng = mi.inv[MSLOT_JEWELLERY].get();
 
-#define uninteresting(x) (x && !item_is_branded(*x) && !is_artefact(*x))
-    // For "comes into view" msgs, only care about branded stuff and artefacts
+#define uninteresting(x) (x && !item_is_worth_listing(*x))
+    // For "comes into view" msgs, only list interesting items
     if (level == DESC_IDENTIFIED)
     {
         if (uninteresting(mon_arm))

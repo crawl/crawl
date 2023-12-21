@@ -28,12 +28,11 @@ aptitudes:
   summoning: -3
   necromancy: -2
   translocations: -3
-  transmutations: -3
   fire_magic: -3
   ice_magic: -3
   air_magic: -4
   earth_magic: -1
-  poison_magic: -3
+  alchemy: -3
   invocations: -1
   evocations: -3
   shapeshifting: -1

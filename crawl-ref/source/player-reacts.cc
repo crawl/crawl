@@ -579,6 +579,15 @@ static void _decrement_transform_duration(int delay)
     }
 }
 
+static void _decrement_rampage_heal_duration(int delay)
+{
+    const int heal = you.props[RAMPAGE_HEAL_KEY].get_int();
+    if (heal > 0 && _decrement_a_duration(DUR_RAMPAGE_HEAL, delay))
+    {
+        you.props[RAMPAGE_HEAL_KEY] = heal - 1;
+        reset_rampage_heal_duration();
+    }
+}
 
 /**
  * Take a 'simple' duration, decrement it, and print messages as appropriate
@@ -606,8 +615,8 @@ static void _decrement_durations()
 {
     const int delay = you.time_taken;
 
-    if (you.duration[DUR_LIQUID_FLAMES])
-        dec_napalm_player(delay);
+    if (you.duration[DUR_STICKY_FLAME])
+        dec_sticky_flame_player(delay);
 
     const bool melted = you.props.exists(MELT_ARMOUR_KEY);
     if (_decrement_a_duration(DUR_ICY_ARMOUR, delay,
@@ -658,6 +667,8 @@ static void _decrement_durations()
         you.props[POWERED_BY_DEATH_KEY] = pbd_str - 1;
         reset_powered_by_death_duration();
     }
+
+    _decrement_rampage_heal_duration(delay);
 
     dec_ambrosia_player(delay);
     dec_channel_player(delay);
@@ -982,20 +993,17 @@ static void _regenerate_hp_and_mp(int delay)
     _update_mana_regen_amulet_attunement();
 }
 
-static void _handle_wereblood(int delay)
+static void _handle_fugue(int delay)
 {
-    if (you.duration[DUR_WEREBLOOD]
-        && x_chance_in_y(you.props[WEREBLOOD_KEY].get_int() * delay,
+    if (you.duration[DUR_FUGUE]
+        && x_chance_in_y(you.props[FUGUE_KEY].get_int() * delay,
                          9 * BASELINE_DELAY)
         && !silenced(you.pos()))
     {
         // Keep the spam down
-        if (you.props[WEREBLOOD_KEY].get_int() < 3 || one_chance_in(5))
-        {
-            mprf("You %s as the wereblood boils in your veins!",
-                 you.shout_verb().c_str());
-        }
-        noisy(spell_effect_noise(SPELL_WEREBLOOD), you.pos());
+        if (you.props[FUGUE_KEY].get_int() < 3 || one_chance_in(5))
+            mprf("The wailing of tortured souls fills the air!");
+        noisy(spell_effect_noise(SPELL_FUGUE_OF_THE_FALLEN), you.pos());
     }
 }
 
@@ -1016,7 +1024,7 @@ void player_reacts()
     if (you.unrand_reacts.any())
         unrand_reacts();
 
-    _handle_wereblood(you.time_taken);
+    _handle_fugue(you.time_taken);
 
     if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
     {
@@ -1083,6 +1091,7 @@ void player_reacts()
     if (you.props[EMERGENCY_FLIGHT_KEY].get_bool())
         _handle_emergency_flight();
 
+    incr_gem_clock();
     incr_zot_clock();
 }
 

@@ -2340,7 +2340,6 @@ KITEM:  N = scroll of teleportation q:3 ident:all w:20 \
             / book of spatial translocations \
             / book of the warp \
             / there-and-back book \
-            / inescapable atlas \
             / book of displacement \
             / randbook owner:Lugonu disc:translocation ident:all w:5 \
             / manual of translocations w:2 / rift w:2
@@ -2670,4 +2669,29 @@ MAP
 ..nnn=nnn..
 .....@.....
 ...........
+ENDMAP
+
+NAME:   hellmonk_ghost_time_enough
+TAGS:   transparent no_item_gen
+DEPTH:  Depths
+ORIENT: float
+KMONS:  O = player ghost
+MONS:   walking crystal tome / walking earthen tome / walking frostbound tome /\
+        walking divine tome
+ITEM:   any book good_item / any manual w:1
+NSUBST: - = 3:d / 5 = d. / 2:1 / *=1.
+TILE:   c = wall_studio
+: ghost_setup(_G)
+MAP
+...............
+.nnnnnnnnnnnnn.
+.n-....-....-n.
+.n.ccc...ccc.n.
+.n-...-.-...-n.
+.n.ccc...ccc.n.
+.n..-..-..-..n.
+.n.ccc.O.ccc.n.
+.n-.........-n.
+.nnnnn===nnnnn.
+...............
 ENDMAP

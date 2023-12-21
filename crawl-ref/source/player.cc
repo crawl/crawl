@@ -744,8 +744,10 @@ void update_vision_range()
     // penalizing players with low LOS from items, don't shrink normal_vision.
     you.current_vision = you.normal_vision;
 
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_METEORAN)
         you.current_vision -= max(0, (bezotting_level() - 1) * 2); // spooky fx
+#endif
 
     // scarf of shadows gives -1.
     if (you.wearing_ego(EQ_CLOAK, SPARM_SHADOWS))
@@ -1171,6 +1173,13 @@ static int _player_bonus_regen()
     if (you.duration[DUR_POWERED_BY_DEATH])
         rr += you.props[POWERED_BY_DEATH_KEY].get_int() * 100;
 
+    // Rampage healing grants a variable regen boost while active.
+    if (you.get_mutation_level(MUT_ROLLPAGE) > 1
+        && you.duration[DUR_RAMPAGE_HEAL])
+    {
+        rr += you.props[RAMPAGE_HEAL_KEY].get_int() * 65;
+    }
+
     return rr;
 }
 
@@ -1261,10 +1270,14 @@ int player_mp_regen()
             regen_amount += 40;
     }
 
+    // Rampage healing grants a variable regen boost while active.
+    if (you.duration[DUR_RAMPAGE_HEAL])
+        regen_amount += you.props[RAMPAGE_HEAL_KEY].get_int() * 33;
+
     if (have_passive(passive_t::jelly_regen))
     {
         // We use piety rank to avoid leaking piety info to the player.
-        regen_amount += 25 + (25 * (piety_rank(you.piety) - 1)) / 5;
+        regen_amount += 40 + (40 * (piety_rank(you.piety) - 1)) / 5;
     }
 
     return regen_amount;
@@ -1573,7 +1586,7 @@ int player_res_poison(bool allow_random, bool temp, bool items)
         rp += you.wearing(EQ_RINGS, RING_POISON_RESISTANCE);
 
         // Staves
-        rp += you.wearing(EQ_STAFF, STAFF_POISON);
+        rp += you.wearing(EQ_STAFF, STAFF_ALCHEMY);
 
         // ego armour:
         rp += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_POISON_RESISTANCE);
@@ -1622,7 +1635,7 @@ int player_res_poison(bool allow_random, bool temp, bool items)
 
 int player_res_sticky_flame()
 {
-    return get_form()->res_sticky_flame();
+    return you.is_insubstantial();
 }
 
 int player_spec_death()
@@ -1732,13 +1745,13 @@ int player_spec_summ()
     return you.scan_artefacts(ARTP_ENHANCE_SUMM);
 }
 
-int player_spec_poison()
+int player_spec_alchemy()
 {
     int sp = 0;
 
-    sp += you.wearing(EQ_STAFF, STAFF_POISON);
+    sp += you.wearing(EQ_STAFF, STAFF_ALCHEMY);
 
-    sp += you.scan_artefacts(ARTP_ENHANCE_POISON);
+    sp += you.scan_artefacts(ARTP_ENHANCE_ALCHEMY);
 
     if (player_equip_unrand(UNRAND_OLGREB))
         sp++;
@@ -1749,11 +1762,6 @@ int player_spec_poison()
 int player_spec_tloc()
 {
     return you.scan_artefacts(ARTP_ENHANCE_TLOC);
-}
-
-int player_spec_tmut()
-{
-    return you.scan_artefacts(ARTP_ENHANCE_TMUT);
 }
 
 // If temp is set to false, temporary sources of resistance won't be
@@ -1819,7 +1827,7 @@ int player_prot_life(bool allow_random, bool temp, bool items)
 
 // Even a slight speed advantage is very good... and we certainly don't
 // want to go past 6 (see below). -- bwr
-int player_movement_speed(bool check_terrain)
+int player_movement_speed(bool check_terrain, bool temp)
 {
     int mv = you.form == transformation::none
         ? 10
@@ -1853,7 +1861,7 @@ int player_movement_speed(bool check_terrain)
     else if (player_under_penance(GOD_CHEIBRIADOS))
         mv += 2 + min(div_rand_round(you.piety_max[GOD_CHEIBRIADOS], 20), 8);
 
-    if (you.duration[DUR_FROZEN])
+    if (temp && you.duration[DUR_FROZEN])
         mv += 3;
 
     // Mutations: -2, -3, -4, unless innate and shapechanged.
@@ -1866,7 +1874,7 @@ int player_movement_speed(bool check_terrain)
         mv /= 10;
     }
 
-    if (you.duration[DUR_SWIFTNESS] > 0)
+    if (temp && you.duration[DUR_SWIFTNESS] > 0)
     {
         if (you.attribute[ATTR_SWIFTNESS] > 0)
           mv = div_rand_round(3*mv, 4);
@@ -2441,11 +2449,12 @@ static void _handle_hp_drain(int exp)
     if (!you.hp_max_adj_temp)
         return;
 
-    int loss = div_rand_round(exp, 4 * calc_skill_cost(you.skill_cost_level));
+    const int mul = you.has_mutation(MUT_PERSISTENT_DRAIN) ? 2 : 1;
+    int loss = div_rand_round(exp, 4 * mul * calc_skill_cost(you.skill_cost_level));
 
     // Make it easier to recover from very heavy levels of draining
     // (they're nasty enough as it is)
-    loss = loss * (1 + (-you.hp_max_adj_temp / 25.0f));
+    loss = loss * (1 + (-you.hp_max_adj_temp / (25.0f * mul)));
 
     dprf("Lost %d of %d draining points", loss, -you.hp_max_adj_temp);
 
@@ -3513,8 +3522,8 @@ int slaying_bonus(bool throwing, bool random)
     ret += 3 * augmentation_amount();
     ret += you.get_mutation_level(MUT_SHARP_SCALES);
 
-    if (you.duration[DUR_WEREBLOOD])
-        ret += you.props[WEREBLOOD_KEY].get_int();
+    if (you.duration[DUR_FUGUE])
+        ret += you.props[FUGUE_KEY].get_int();
 
     if (you.duration[DUR_HORROR])
         ret -= you.props[HORROR_PENALTY_KEY].get_int();
@@ -4546,53 +4555,110 @@ bool miasma_player(actor *who, string source_aux)
     return success;
 }
 
-bool napalm_player(int amount, string source, string source_aux)
+bool sticky_flame_player(int intensity, int duration, string source, string source_aux)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (player_res_sticky_flame() || amount <= 0 || you.duration[DUR_WATER_HOLD] || feat_is_watery(env.grid(you.pos())))
+    if (player_res_sticky_flame() || duration <= 0 || you.duration[DUR_WATER_HOLD]
+        || feat_is_watery(env.grid(you.pos())))
+    {
         return false;
+    }
 
-    const int old_value = you.duration[DUR_LIQUID_FLAMES];
-    you.increase_duration(DUR_LIQUID_FLAMES, amount, 100);
+    const int old_pow = (you.duration[DUR_STICKY_FLAME] > 0
+                            ? you.props[STICKY_FLAME_POWER_KEY].get_int()
+                            : 0);
 
-    if (you.duration[DUR_LIQUID_FLAMES] > old_value)
-        mprf(MSGCH_WARN, "You are covered in liquid flames!");
+    // We use the greater of old power and new power, but always add duration.
+    if (intensity > old_pow)
+    {
+        // Only assign blame if the new sticky flame source is stronger than
+        // any previous one we had on ourselves.
+        you.props[STICKY_FLAMER_KEY] = source;
+        you.props[STICKY_FLAME_AUX_KEY] = source_aux;
+        you.props[STICKY_FLAME_POWER_KEY] = intensity;
+    }
 
-    you.props[STICKY_FLAMER_KEY] = source;
-    you.props[STICKY_FLAME_AUX_KEY] = source_aux;
+    const string intensity_str = max(intensity, old_pow) > 5 ? "intense " : "";
+
+    if (you.duration[DUR_STICKY_FLAME] > 0)
+    {
+        mprf(MSGCH_WARN, "You are even more covered in %sliquid fire!",
+                          intensity_str.c_str());
+    }
+    else
+    {
+        mprf(MSGCH_WARN, "You are covered in %sliquid fire!",
+                         intensity_str.c_str());
+    }
+
+    you.increase_duration(DUR_STICKY_FLAME, duration, 100);
 
     return true;
 }
 
-void dec_napalm_player(int delay)
+void dec_sticky_flame_player(int delay)
 {
-    delay = min(delay, you.duration[DUR_LIQUID_FLAMES]);
+    delay = min(delay, you.duration[DUR_STICKY_FLAME]);
 
     if (feat_is_watery(env.grid(you.pos())))
     {
-        if (you.ground_level())
-            mprf(MSGCH_WARN, "The flames go out!");
-        else
-            mprf(MSGCH_WARN, "You dip into the water, and the flames go out!");
-        you.duration[DUR_LIQUID_FLAMES] = 0;
-        you.props.erase(STICKY_FLAMER_KEY);
-        you.props.erase(STICKY_FLAME_AUX_KEY);
+        mprf(MSGCH_RECOVERY, "You dip into the water, and the flames go out!");
+        end_sticky_flame_player();
         return;
     }
 
-    mprf(MSGCH_WARN, "You are covered in liquid flames!");
+    mprf(MSGCH_WARN, "The liquid fire burns you!");
 
-    const int hurted = resist_adjust_damage(&you, BEAM_FIRE,
-                                            random2avg(9, 2) + 1);
+    int damage = roll_dice(2, you.props[STICKY_FLAME_POWER_KEY].get_int());
+    damage = resist_adjust_damage(&you, BEAM_FIRE, damage);
+    damage = div_rand_round(damage * delay, BASELINE_DELAY);
 
     you.expose_to_element(BEAM_STICKY_FLAME, 2);
-    maybe_melt_player_enchantments(BEAM_STICKY_FLAME, hurted * delay / BASELINE_DELAY);
+    maybe_melt_player_enchantments(BEAM_STICKY_FLAME, damage);
+    ouch(damage, KILLED_BY_BURNING);
 
-    ouch(hurted * delay / BASELINE_DELAY, KILLED_BY_BURNING);
+    you.duration[DUR_STICKY_FLAME] =
+        max(0, you.duration[DUR_STICKY_FLAME] - delay);
 
-    you.duration[DUR_LIQUID_FLAMES] =
-        max(0, you.duration[DUR_LIQUID_FLAMES] - delay);
+    if (you.duration[DUR_STICKY_FLAME == 0])
+    {
+        mprf(MSGCH_RECOVERY, "The liquid fire finally exhausts itself.");
+        end_sticky_flame_player();
+    }
+}
+
+// Greatly reduce the remaining duration whenever the player moves.
+void shake_off_sticky_flame()
+{
+    int &dur = you.duration[DUR_STICKY_FLAME];
+    if (dur <= 0)
+        return;
+    // Lose 6 turns of duration for each move
+    dur = max(0, dur - 60);
+
+    // End it slightly early if it's ALMOST gone, just to avoid the common
+    // situation of losing most of its duration to movement and then it
+    // expiring 'normally' immediately afterward, without giving the message
+    // that the player helped put it out.
+    //
+    // (20 aut is picked fairly arbitrarily to include even most slowed actions)
+    if (dur <= 20)
+    {
+        mprf(MSGCH_RECOVERY, "You shake off the liquid fire.");
+        end_sticky_flame_player();
+    }
+    else
+        mpr("You shake off some of the fire as you move.");
+}
+
+// End the sticky flame status entirely
+void end_sticky_flame_player()
+{
+    you.duration[DUR_STICKY_FLAME] = 0;
+    you.props.erase(STICKY_FLAMER_KEY);
+    you.props.erase(STICKY_FLAME_AUX_KEY);
+    you.props.erase(STICKY_FLAME_POWER_KEY);
 }
 
 bool slow_player(int turns)
@@ -4768,12 +4834,10 @@ void dec_ambrosia_player(int delay)
     if (!you.duration[DUR_DEATHS_DOOR])
     {
         int heal = you.scale_potion_healing(hp_restoration);
-        if (you.has_mutation(MUT_LONG_TONGUE))
-            heal += hp_restoration;
         inc_hp(heal);
     }
 
-    inc_mp(mp_restoration * (you.has_mutation(MUT_LONG_TONGUE) ? 2 : 1));
+    inc_mp(you.scale_potion_mp_healing(mp_restoration));
 
     if (!you.duration[DUR_AMBROSIA])
         mpr("You feel less invigorated.");
@@ -4809,6 +4873,24 @@ void dec_frozen_ramparts(int delay)
         end_frozen_ramparts();
         mpr("The frozen ramparts melt away.");
     }
+}
+
+void reset_rampage_heal_duration()
+{
+    const int heal_dur = random_range(3, 6);
+    you.set_duration(DUR_RAMPAGE_HEAL, heal_dur);
+}
+
+void apply_rampage_heal()
+{
+    if (!you.has_mutation(MUT_ROLLPAGE))
+        return;
+
+    reset_rampage_heal_duration();
+
+    const int heal = you.props[RAMPAGE_HEAL_KEY].get_int();
+    if (heal < RAMPAGE_HEAL_MAX)
+        you.props[RAMPAGE_HEAL_KEY] = heal + 1;
 }
 
 bool invis_allowed(bool quiet, string *fail_reason, bool temp)
@@ -5142,6 +5224,11 @@ player::player()
         item.clear();
     runes.reset();
     obtainable_runes = 15;
+
+    gems_found.reset();
+    gems_shattered.reset();
+    for (int &t : gem_time_spent)
+        t = 0;
 
     spell_library.reset();
     spells.init(SPELL_NO_SPELL);
@@ -5492,12 +5579,10 @@ bool player::is_sufficiently_rested(bool starting) const
 
     return (!player_regenerates_hp()
                 || _should_stop_resting(hp, hp_max, !starting)
-                || !hp_interrupts
-                || you.has_mutation(MUT_EXPLORE_REGEN))
+                || !hp_interrupts)
         && (!player_regenerates_mp()
                 || _should_stop_resting(magic_points, max_magic_points, !starting)
-                || !mp_interrupts
-                || you.has_mutation(MUT_EXPLORE_REGEN))
+                || !mp_interrupts)
         && (can_freely_move || !hp_interrupts);
 }
 
@@ -5560,10 +5645,6 @@ string player::shout_verb(bool directed) const
 {
     if (!get_form()->shout_verb.empty())
         return get_form()->shout_verb;
-
-    // Overrides species, but gets overridden in turn by other forms.
-    if (you.duration[DUR_WEREBLOOD])
-        return "howl";
 
     const int screaminess = get_mutation_level(MUT_SCREAM);
     return species::shout_verb(you.species, screaminess, directed);
@@ -5695,11 +5776,6 @@ bool player::liquefied_ground() const
 {
     return liquefied(pos())
            && ground_level() && !is_insubstantial();
-}
-
-int player::shield_block_penalty() const
-{
-    return 5 * shield_blocks * shield_blocks;
 }
 
 /**
@@ -7260,7 +7336,7 @@ bool player::backlit(bool self_halo, bool temp) const
 
     return temp && (player_severe_contamination()
                     || duration[DUR_CORONA]
-                    || duration[DUR_LIQUID_FLAMES]
+                    || duration[DUR_STICKY_FLAME]
                     || duration[DUR_QUAD_DAMAGE]
                     || !umbraed() && haloed()
                        && (self_halo || halo_radius() == -1))
@@ -7984,6 +8060,9 @@ static int _get_potion_heal_factor(bool temp=true)
     if (temp)
         factor *= player_equip_unrand(UNRAND_KRYIAS) ? 2 : 1;
 
+    if (you.mutation[MUT_DOUBLE_POTION_HEAL])
+        factor *= 2;
+
     // make sure we don't turn healing negative.
     return max(0, factor);
 }
@@ -8000,6 +8079,8 @@ void print_potion_heal_message()
             mprf("%s enhances the healing.",
             item->name(DESC_THE, false, false, false).c_str());
         }
+        else if (you.species == SP_ONI)
+            mpr("You savour every drop.");
         else
             mpr("The healing is enhanced."); // bad message, but this should
                                              // never be possible anyway
@@ -8018,6 +8099,20 @@ bool player::can_potion_heal(bool temp)
 int player::scale_potion_healing(int healing_amount)
 {
     return div_rand_round(healing_amount * _get_potion_heal_factor(), 2);
+}
+
+int player::scale_potion_mp_healing(int healing_amount)
+{
+    // Slightly ugly to partially duplicate the logic of _get_potion_heal_factor()
+    // but vine stalkers shouldn't be unable to get value out of !magic, and so
+    // this must ignore MUT_NO_POTION_HEAL
+    if (player_equip_unrand(UNRAND_KRYIAS))
+        healing_amount *= 2;
+
+    if (you.mutation[MUT_DOUBLE_POTION_HEAL])
+        healing_amount *= 2;
+
+    return healing_amount;
 }
 
 void player_open_door(coord_def doorpos)

@@ -30,7 +30,7 @@ enum duration_type
 #endif
     DUR_EXHAUSTED,              // fatigue counter for berserk
 
-    DUR_LIQUID_FLAMES,
+    DUR_STICKY_FLAME,
     DUR_ICY_ARMOUR,
 #if TAG_MAJOR_VERSION == 34
     DUR_REPEL_MISSILES,
@@ -144,7 +144,7 @@ enum duration_type
     DUR_SPIRIT_HOWL,
     DUR_INFUSION,
 #endif
-    DUR_WEREBLOOD,
+    DUR_FUGUE,
 #if TAG_MAJOR_VERSION == 34
     DUR_SONG_OF_SHIELDING,
 #endif
@@ -246,5 +246,7 @@ enum duration_type
 #endif
     DUR_JINXBITE_LOST_INTEREST,
     DUR_VITRIFIED,
+    DUR_RAMPAGE_HEAL,
+    DUR_CANINE_FAMILIAR_DEAD,
     NUM_DURATIONS
 };

@@ -124,6 +124,11 @@ enum band_type
     BAND_JELLYFISH,
     BAND_SKYSHARKS,
     BAND_UFETUBI,
+    BAND_BLASTMINER,
+    BAND_BRAIN_WORMS,
+    BAND_PROTEAN_PROGENITORS,
+    BAND_MARGERY,
+    BAND_LATE_ROKA,
     NUM_BANDS                   // always last
 };
 

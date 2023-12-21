@@ -2342,18 +2342,18 @@ SHUFFLE: 16
 MONS:    centaur / centaur warrior / yaktaur / yaktaur captain
 MONS:    rat / river rat / hell rat / quokka
 MONS:    imperial myrmidon / servant of whispers / ragged hierophant
-MONS:    worm / tyrant leech
+MONS:    worm / tyrant leech / brain worm
 MONS:    komodo dragon / iguana / basilisk
 MONS:    ettin / frost giant / stone giant / fire giant
 : else
 SHUFFLE: 1234567
-MONS:    frilled lizard / iguana / snapping turtle / komodo dragon
+MONS:    iguana / crocodile / snapping turtle / komodo dragon
 MONS:    hog / jackal / wolf / hound
-MONS:    giant cockroach / scorpion / butterfly / killer bee / redback
-MONS:    swamp worm / lindwurm / worm
+MONS:    scorpion / butterfly / killer bee / boulder beetle / redback
+MONS:    swamp worm / lindwurm / brain worm
 MONS:    swamp drake / hydra / wyvern / rime drake
 MONS:    polar bear / black bear
-MONS:    black mamba / water moccasin / anaconda / salamander
+MONS:    black mamba / anaconda / mana viper
 : end
 KMASK:   ' = no_monster_gen
 SUBST:   ' = .
@@ -3942,4 +3942,27 @@ MAP
  .....mmmmm.....
    ...........
      .......
+ENDMAP
+
+NAME:   hellmonk_arrival_library
+TAGS:   arrival transparent
+ORIENT: float
+SHUFFLE: DE, FH
+SUBST:  E = ccc., H = ccc., G:Gc
+TILE:   c = wall_studio
+FTILE:  .+G>{ = floor_studio
+MAP
+cccccccccccc
+c{.........c
+c.ccccccccDc
+c.c........c
+c.c.>.cccccc
+c.c........c
+c.c.c.ccccHc
+c.c.c.c....c
+c.c.c.c.G.cc
+c.c.c.c....+@
+c.E.c.F.c..+@
+ccccccccc++c
+         @@
 ENDMAP

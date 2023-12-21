@@ -401,8 +401,6 @@ static void _make_book_randart(item_def &book)
         const string name = make_artefact_name(book, true);
         book.props[ARTEFACT_APPEAR_KEY].get_string() = name;
     }
-    // Always ID randbooks, for sanity.
-    set_ident_flags(book, ISFLAG_IDENT_MASK);
 }
 
 /**

@@ -31,6 +31,7 @@ enum show_item_type
     SHOW_ITEM_CORPSE,
     SHOW_ITEM_SKELETON,
     SHOW_ITEM_GOLD,
+    SHOW_ITEM_GEM,
     SHOW_ITEM_AMULET,
     NUM_SHOW_ITEMS
 };

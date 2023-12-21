@@ -330,6 +330,16 @@ static const mutation_def mut_data[] =
    ""},
 },
 
+{ MUT_PERSISTENT_DRAIN, 5, 1, mutflag::bad, false,
+  "persistent drain",
+
+  {"Your health recovers twice as slowly from being drained.", "", ""},
+
+  {"You begin to recover more slowly from draining effects.", "", ""},
+
+  {"You recover from draining at a normal speed again.", "", ""},
+},
+
 { MUT_STRONG_WILLED, 5, 3, mutflag::good, false,
   "strong-willed",
 
@@ -994,6 +1004,12 @@ static const mutation_def mut_data[] =
   {"You now curl defensively after being hit.", "", ""},
   {"", "", ""},
 },
+
+{ MUT_AWKWARD_TONGUE, 0, 1, mutflag::bad, false, "awkward tongue",
+  {"Your tongue gives you trouble enunciating. (1.5x scroll delay)", "", ""},
+  {"Your tongue begins to flop around amusingly.", "", ""},
+  {"Your tongue regains its customary placidity.", "", ""},
+},
 #endif
 
 { MUT_ARMOURED_TAIL, 0, 1, mutflag::good, true,
@@ -1004,12 +1020,20 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_ROLLPAGE, 0, 1, mutflag::good, false,
+{ MUT_ROLLPAGE, 0, 2, mutflag::good, false,
   "roll",
 
-  {"You roll when moving toward enemies. (Rampage)", "", ""},
-  {"", "", ""},
-  {"", "", ""},
+  {"You regenerate magic when rolling toward enemies. (Rampage MPRegen)",
+   "You regenerate magic and health when rolling toward enemies. (Rampage Regen)",
+   ""},
+
+  {"You begin to regenerate magic when rolling toward enemies.",
+   "You begin to regenerate health when rolling toward enemies.",
+   ""},
+
+  {"You can no longer roll toward enemies.",
+   "You can no longer regenerate health when rolling toward enemies.",
+   ""},
 },
 
 { MUT_SHAGGY_FUR, 2, 3, mutflag::good, true,
@@ -2059,12 +2083,12 @@ static const mutation_def mut_data[] =
   {"You can once more study and cast Necromancy magic.", "", ""},
 },
 
-{ MUT_NO_POISON_MAGIC, 0, 1, mutflag::bad, false,
-  "no poison magic",
+{ MUT_NO_ALCHEMY_MAGIC, 0, 1, mutflag::bad, false,
+  "no alchemy magic",
 
-  {"You cannot study or cast Poison magic.", "", ""},
-  {"You can no longer study or cast Poison magic.", "", ""},
-  {"You can once more study and cast Poison magic.", "", ""},
+  {"You cannot study or cast Alchemy magic.", "", ""},
+  {"You can no longer study or cast Alchemy magic.", "", ""},
+  {"You can once more study and cast Alchemy magic.", "", ""},
 },
 
 { MUT_NO_SUMMONING_MAGIC, 0, 1, mutflag::bad, false,
@@ -2083,6 +2107,7 @@ static const mutation_def mut_data[] =
   {"You can once more study and cast Translocations magic.", "", ""},
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_NO_TRANSMUTATION_MAGIC, 0, 1, mutflag::bad, false,
   "no transmutations magic",
 
@@ -2090,6 +2115,7 @@ static const mutation_def mut_data[] =
   {"You can no longer study or cast Transmutations magic.", "", ""},
   {"You can once more study and cast Transmutations magic.", "", ""},
 },
+#endif
 
 { MUT_PHYSICAL_VULNERABILITY, 0, 3, mutflag::bad, false,
   "reduced AC",
@@ -2380,12 +2406,12 @@ static const mutation_def mut_data[] =
     {"You have superior vitality. (+4 MHP)",
      "You have much superior vitality. (+8 MHP)",
      "You have exceptionally superior vitality. (+12 MHP)"},
-    {"You feel less vital.",
-     "You feel less vital.",
-     "You feel less vital."},
     {"You feel more vital.",
      "You feel more vital.",
      "You feel more vital."},
+    {"You feel less vital.",
+     "You feel less vital.",
+     "You feel less vital."},
 },
 
 { MUT_ENGULF, 0, 1, mutflag::good | mutflag::jiyva, true,
@@ -2436,16 +2462,10 @@ static const mutation_def mut_data[] =
   {"You feel like a homebody.", "", ""},
 },
 
-{ MUT_LONG_TONGUE, 0, 1, mutflag::good, false, "long tongue",
-  {"Your long tongue fully drains potion bottles. (2x potion effects)", "", ""},
-  {"Your tongue grows exceptionally long.", "", ""},
-  {"Your tongue shrinks into a sad, ordinary nub.", "", ""},
-},
-
-{ MUT_AWKWARD_TONGUE, 0, 1, mutflag::bad, false, "awkward tongue",
-  {"Your tongue gives you trouble enunciating. (1.5x scroll delay)", "", ""},
-  {"Your tongue begins to flop around amusingly.", "", ""},
-  {"Your tongue regains its customary placidity.", "", ""},
+{ MUT_DOUBLE_POTION_HEAL, 0, 1, mutflag::good, false, "double potion healing",
+  {"Whenever you drink a potion that restores your health or magic, it restores twice as much.", "", ""},
+  {"You heal twice as much from potions.", "", ""},
+  {"You no longer heal twice as much from potions.", "", ""},
 },
 
 };

@@ -250,40 +250,17 @@ static void _genus_factoring(map<const string, details> &types,
     types[name] = {mon, name, num, true};
 }
 
-static bool _is_weapon_worth_listing(const unique_ptr<item_def> &wpn)
-{
-    return wpn && (wpn->base_type == OBJ_STAVES
-                   || is_unrandom_artefact(*wpn.get())
-                   || get_weapon_brand(*wpn.get()) != SPWPN_NORMAL);
-}
-
-static bool _is_item_worth_listing(const unique_ptr<item_def> &item)
-{
-    return item && (item_is_branded(*item.get())
-                    || is_artefact(*item.get()));
-}
-
 static bool _is_mon_equipment_worth_listing(const monster_info &mi)
 {
+    for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
+    {
+        if (!mi.inv[i])
+            continue;
 
-    if (_is_weapon_worth_listing(mi.inv[MSLOT_WEAPON]))
-        return true;
-    const unique_ptr<item_def> &alt_weap = mi.inv[MSLOT_ALT_WEAPON];
-    if (mi.wields_two_weapons() && _is_weapon_worth_listing(alt_weap))
-        return true;
-    // can a wand be in the alt weapon slot? get_monster_equipment_desc seems to
-    // think so, so we'll check
-    if (alt_weap && alt_weap->base_type == OBJ_WANDS)
-        return true;
-    if (mi.inv[MSLOT_WAND])
-        return true;
-    if (mi.has_unusual_items())
-        return true;
-
-    return _is_item_worth_listing(mi.inv[MSLOT_SHIELD])
-        || _is_item_worth_listing(mi.inv[MSLOT_ARMOUR])
-        || _is_item_worth_listing(mi.inv[MSLOT_JEWELLERY])
-        || _is_item_worth_listing(mi.inv[MSLOT_MISSILE]);
+        if (item_is_worth_listing(*mi.inv[i].get()))
+            return true;
+    }
+    return false;
 }
 
 /// Return whether or not monster_info::_core_name() describes the inventory
@@ -1092,6 +1069,7 @@ static update_flags player_view_update_at(const coord_def &gc)
     {
         if (!crawl_state.game_is_arena()
             && !(branches[you.where_are_you].branch_flags & brflag::fully_map)
+            && !player_in_branch(BRANCH_ARENA)
             && you.has_mutation(MUT_EXPLORE_REGEN))
         {
             _do_explore_healing();

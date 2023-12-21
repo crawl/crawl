@@ -158,8 +158,6 @@ function species_mock(e)
     return "rat"
   elseif you.race() == "Spriggan" then
     return "unseen horror"
-  elseif you.race() == "Meteoran" then
-    return "wretched star"
   elseif you.race() == "Tengu" then
     return "caustic shrike"
   elseif you.race() == "Troll" then
@@ -352,7 +350,7 @@ NAME:  slow_altar_1
 TAGS:  patrolling no_monster_gen no_item_gen transparent
 TAGS:  uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
 : if you.in_branch("Depths") then
-KMONS: _ = iron golem
+KMONS: _ = iron dragon
 :else
 KMONS: _ = worm / mummy / iron imp
 :end
@@ -377,7 +375,7 @@ NAME:    slow_altar_2
 TAGS:    patrolling no_monster_gen no_item_gen transparent
 TAGS:    uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
 : if you.in_branch("Depths") then
-KMONS: _ = iron golem
+KMONS: _ = iron dragon
 :else
 KMONS: _ = worm / mummy / iron imp
 :end
@@ -403,7 +401,7 @@ TAGS:   temple_overflow_cheibriados transparent no_monster_gen
 TAGS:   transparent
 WEIGHT: 5
 : if you.in_branch("Depths") then
-KMONS: _ = iron golem
+KMONS: _ = iron dragon
 :else
 KMONS: _ = worm / mummy / iron imp
 :end
@@ -2568,6 +2566,29 @@ xxww.nv1vn.wwxx
        @
 ENDMAP
 
+NAME:   hellmonk_sif_muna_bookshelves
+TAGS:   temple_overflow_sif_muna temple_overflow_1 uniq_altar_sif_muna
+TAGS:   transparent decor
+DEPTH:  D, Elf, Depths
+KFEAT:  _ = altar_sif_muna
+TILE:   c = wall_studio
+FTILE:  ._c = floor_studio
+MAP
+   xxxxx
+  xxcccxx
+ xxc...cxx
+xxc.....cxx
+xc.......cx
+xc..c.c..cx
+xc.......cx
+xc..._...cx
+xc.......cx
+xc..c.c..cx
+xc.......cx
+xxc.....cxx
+ xxc...cxx
+  xx@@@xx
+ENDMAP
 
 ### Trog overflow altars ######################################################
 
@@ -3203,6 +3224,7 @@ ENDMAP
 NAME:   tgw_xom
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_xom
 TAGS:   uniq_altar_xom no_tele_into
+DEPTH:  D:5-, Depths
 KFEAT:  _ = altar_xom
 MONS:   place:D:1
 MONS:   orc ; club ego:chaos | dagger ego:chaos | spear ego:chaos
@@ -3421,6 +3443,69 @@ xxxx...xxxx
    x...x
    xG.Gx
    xx+xx
+ENDMAP
+
+NAME:    regret_index_xom_buried_treasure
+TAGS:    transparent temple_overflow_1 temple_overflow_xom
+TAGS:    uniq_altar_xom extra decor
+ITEM:    stone q:1 no_pickup
+KITEM:   ? = plate armour randart plus:-12 ident:all / \
+             kite shield randart plus:-12 ident:all / \
+             mundane club / gold q:1 w:9970, large rock q:1
+KFEAT:   _ = altar_xom
+SUBST:   b : bcc, y : xx., z : xx., Y : xxd, Z : xxd
+MAP
+xx@. ..xx
+xbx...zbx
+.yxy.xxx.
+..xxxxz..
+ ..xxx..@
+..xxYxx.xxxxx
+@xxx.xccccccx
+xbx...cxdd_cx
+xx..Z.cdx?dcx
+    ..+ddxdcx@..xx
+     .cdddxc...xbx
+     .cc+cccx.xxx.
+     @.....xxYxx..
+        .Z..xxx..
+         ..zxxxx..
+         .xxx.yxy@
+         xcz...xbx
+         xx@. ..xx
+ENDMAP
+
+NAME:    regret_index_xom_of_box
+TAGS:    transparent no_monster_gen temple_overflow_1
+TAGS:    temple_overflow_xom uniq_altar_xom
+DEPTH:   D:5-12, Orc
+MONS:    fire bat, hell hound, scorpion, sky beast, orange demon, raiju
+ITEM:    box of beasts mimic
+KMONS:   p = demonic plant
+KFEAT:   P = demonic_tree
+KFEAT:   _ = altar_xom
+SHUFFLE: 12, ?!
+: if you.in_branch("Orc") or you.depth() >= 12 then
+TAGS:    extra
+SUBST:   ? = 5, ! = 6
+: elseif you.absdepth() >= 9 then
+SUBST:   ? = 3, ! = 4
+: else
+SUBST:   2 = 34, ?! = .
+: end
+SHUFFLE: xp, pPtU', xbv"
+SUBST:   d : d %:490, - : +ccc, '" = .
+NSUBST:  % = 1:% / 1:$ / *:.
+MAP
+  ccccccccccc.@.c
+  ccc.d1....c.p.c
+  c.cdx..dx.c...c
+  c.+....!d.-..c
+ c..+..._...-..c
+ c..+.d?....-.c
+c...c.xd..xdc.c
+c.p.c....2d.ccc
+c.@.ccccccccccc
 ENDMAP
 
 ### Yredelemnul overflow altars ###############################################
@@ -4110,7 +4195,7 @@ KFEAT:   C = altar_vehumet
 ITEM:    randbook owner:Kikubaaqudgha disc:necromancy spells:necrotise \
          numspells:1
 # You already got a direct damage spell by looting the other gods' altars.
-ITEM:    randbook owner:Sif_Muna disc:transmutation numspells:1 slevels:1 / \
+ITEM:    randbook owner:Sif_Muna disc:hexes numspells:1 slevels:1 / \
          randbook owner:Sif_Muna disc:summoning numspells:1 slevels:1 / \
          randbook owner:Sif_Muna disc:translocation numspells:1 slevels:1
 ITEM:    randbook owner:Vehumet disc:conjuration spells:magic_dart numspells:1
@@ -4500,6 +4585,47 @@ xxxxx...xx
   xx...xx
   x@@@xx
 ENDMAP
+
+NAME:   hellmonk_overflow_destroyed_library
+TAGS:   temple_overflow_2 temple_overflow_trog temple_overflow_sif_muna
+TAGS:   no_item_gen no_monster_gen transparent
+KFEAT:  E = altar_trog
+KFEAT:  F = altar_sif_muna
+KFEAT:  J = closed_clear_door
+KFEAT:  H = iron_grate
+ITEM:   any book
+NSUBST: D = 1:c / *=c......
+SUBST:  -:Hmm., J:JJ., l:Lll
+MARKER:  L = lua:fog_machine { cloud_type = "flame", delay = 10, \
+                  pow_min = 100, pow_max = 100, size = 1, walk_dist = 0, \
+                  excl_rad = 0 }
+TILE:   c = wall_studio
+MAP
+      @
+    xx+xx
+    x...x
+   xx...xx
+  xxD...Dxx
+ xxD.....Dxx
+ xD.......Dx
+ xD..DDD..Dx
+xxD..DlD..Dxx
+xD....E....Dx
+xx.DD...DD.xx
+xx----J----xx
+xx.ccc.ccc.xx
+xc....F....cx
+xxc..cdc..cxx
+ xc..ccc..cx
+ xc.......cx
+ xxc.....cxx
+  xxc...cxx
+   xx...xx
+    x...x
+    xx+xx
+      @
+ENDMAP
+
 
 ### Variable overflow altars ##################################################
 

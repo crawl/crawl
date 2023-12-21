@@ -1212,6 +1212,12 @@ Eggfruit
 
 Dragonfruit
 
+Jackfruit
+
+Longan
+
+Tamarind
+
 Guava
 
 Mangosteen

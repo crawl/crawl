@@ -2285,7 +2285,7 @@ NAME:   spider_rune_water
 PLACE:  Spider:$
 WEIGHT: 20
 ORIENT: northwest
-KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
+KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot, milky-white gem
 MONS:   ghost moth, hornet, emperor scorpion / w:5 spark wasp
 MONS:   wolf spider / redback / tarantella / jumping spider / culicivora
 MONS:   redback
@@ -2342,7 +2342,7 @@ TAGS:   no_pool_fixup
 WEIGHT: 20
 PLACE:  Spider:$
 ORIENT: float
-KITEM:  O = gossamer rune of Zot
+KITEM:  O = gossamer rune of Zot, milky-white gem
 MONS:   ghost moth, moth of wrath / ghost moth, emperor scorpion
 MONS:   wolf spider / redback / tarantella / jumping spider / culicivora
 MONS:   orb spider / steelbarb worm, redback
@@ -2381,7 +2381,7 @@ NAME:   guppyfry_spider_rune
 PLACE:  Spider:$
 TAGS:   no_pool_fixup
 ORIENT: southwest
-KITEM:  O = gossamer rune of zot
+KITEM:  O = gossamer rune of Zot, milky-white gem
 KMONS:  O = ghost moth
 KITEM:  * = potion of ambrosia ident:type
 KMONS:  * = emperor scorpion
@@ -2433,7 +2433,7 @@ NAME:   grunt_spider_rune_parallel
 PLACE:  Spider:$
 ORIENT: east
 NSUBST: O = 1:O / *:d
-KITEM:  O = gossamer rune of Zot
+KITEM:  O = gossamer rune of Zot, milky-white gem
 MONS:   ghost moth, moth of wrath
 MONS:   emperor scorpion / w:5 spark wasp / w:5 radroach / w:5 broodmother
 MONS:   wolf spider / redback / tarantella / jumping spider / culicivora
@@ -2485,7 +2485,7 @@ TAGS:    no_monster_gen
 PLACE:   Spider:$
 ORIENT:  west
 NSUBST:  d = 1:O / 3:d / 3:e / *:f
-KITEM:   O = gossamer rune of Zot
+KITEM:   O = gossamer rune of Zot, milky-white gem
 MONS:    ghost moth, moth of wrath, sun moth
 MONS:    emperor scorpion / w:5 spark wasp / w:5 jorogumo
 MONS:    orb spider
@@ -2580,7 +2580,7 @@ PLACE:  Spider:$
 NSUBST: 3 = 4:j / 1:s / *=2.
 NSUBST: 2 = 6=o. / 2:m / 6=2. / *=1
 
-KITEM:  O = gossamer rune of Zot
+KITEM:  O = gossamer rune of Zot, milky-white gem
 NSUBST: O = 1:O / *=%
 
 #thin out monsters and set up loot
@@ -2643,7 +2643,7 @@ TILE:   P = dngn_sarcophagus_pedestal_left
 FTILE:  23+$OEGHNPS. = floor_sandstone:20 / none
 : setup_endvault_loot(_G)
 ITEM:   gold good_item
-KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
+KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot, milky-white gem
 MONS:   death scarab
 MONS:   wolf spider spectre / wolf spider zombie w:5 / demonic crawler w:5 \
         / emperor scorpion spectre w:2 / pharaoh ant w:3 \
@@ -2706,7 +2706,7 @@ MONS:   steelbarb worm / torpor snail / meliai / pharaoh ant / entropy weaver
 MONS:   emperor scorpion w:30 / ghost moth w:20 / moth of wrath / sun moth
 MONS:   jorogumo w:15 / radroach / spark wasp w:5
 MONS:   broodmother
-KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
+KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot, milky-white gem
 KFEAT:  ^ = web
 NSUBST: . = 96 = 1... / *:., 2 = 2:2 / *=2...
 NSUBST: 6 = 4:6 / 4 = 456. / *= 4..
@@ -2720,23 +2720,23 @@ MAP
             xxxxxxxxx
            xxxxxxxxxxxxx
          @xxxx:::::::xxxxx
-        @2'''--x.x--.:::xxxx
+        @2'''--c.c--.:::xxxx
        @'''.-xxx.xxx-..2:xxxx
       @'''..-xx...xx-....::xxx
-     @'''...xx..3..xx......:xxx
+     @'''...cx..3..xc......:xxx
     @'''........63..........:xxx
-   @'''.....xx..3..xx........:xx
+   @'''.....cx..3..xc........:xx
   x2'''.....-xx...xx-.........:xx
   xx''......-xxx.xxx-........2:xx
- xx'--x.x--..--x.x--...........:xx
+ xx'--c.x--..--c.c--...........:xx
  xx-xxx.xxx-.........3..--x.x--:xx
  x:-xx...xx-...........-xxx.xxx-:xx
- x:xx.....xx...........-x.....x-:xx
+ x:cx.....xc...........-x.....x-:xx
  x:...363..............xx..3..xx:xx
-xx:xx..3..xx..--x.x--.....363..x-:xx
+xx:cx..3..xc..--x.x--.....363..x-:xx
 xx:-xx...xx-.-xxx.xxx-.xx..3..xx-:xx
 xx:-xxx.xxx-.-xx....x-.-x.....x-.:xx
-xx:.--x.x--..xx..3..xx.-xxx.xxx-2:xx
+xx:.--c.c--..xx..3..xx.-xxx.xxx-2:xx
 xx:.............363.....--x.x--..:xx
 xx:...RR.....xx..3..xx...........:xx
 xx:..RQQR....-xx...xx-....3.....:xxx
@@ -2772,7 +2772,7 @@ MONS:   pharaoh ant / entropy weaver / torpor snail
 MONS:   ghost moth w:15 / sun moth / moth of wrath w:5
 MONS:   emperor scorpion
 MONS:   radroach / spark wasp
-KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
+KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot, milky-white gem
 NSUBST: 7 = 4:7 / *=7..
 # bias the big monsters, randomly
 : if crawl.one_chance_in(3) then

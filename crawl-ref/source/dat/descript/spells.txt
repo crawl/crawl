@@ -197,11 +197,11 @@ Calls forth hands from corpses interred beneath the dungeon floor long ago.
 Enemies caught in the area will be held in place and constricted until they
 break free.
 %%%%
-Brain Feed spell
+Brain Bite spell
 
-Drains a portion of a visible enemy's intelligence, with no direct line of fire
-required. Such a loss is only temporary, and can be recovered by gaining
-experience.
+Drains a small amount of a visible enemy's mind and a proportion of their magic,
+with no direct line of fire required. If the enemy has near-emptied magic
+reserves, they will take doubled damage.
 %%%%
 Brom's Barrelling Boulder spell
 
@@ -219,8 +219,13 @@ Brothers in Arms spell
 %%%%
 Call Canine Familiar spell
 
-Summons a solitary canine to the caster's aid. Spell power increases the chance
-of summoning a stronger breed.
+Summons an inugami to the caster's aid. These mystical canines form a bond with
+their summoner that strengthens them in direct proportion with the caster's
+spellpower.
+
+Recasting this spell while your familiar is nearby will imbue it with additional
+magic, mending some of its wounds and causing its next attack to strike more
+quickly and cleave adjacent foes.
 %%%%
 Call Down Damnation spell
 
@@ -242,11 +247,11 @@ Calls forth a minor demon from the pits of Hell, equipped with a spear with
 which to jab at the caster's enemies. The quality of the imp's weaponry rises
 with spell power.
 %%%%
-Call Lost Soul spell
+Call Lost Souls spell
 
-Summons a necromantic spectre. These lost souls can enter the bodies of more
+Summons some necromantic spectres. These lost souls can enter the bodies of more
 powerful undead to bring them back from brink of demise, or turn dying living
-creatures into spectral versions of themselves.
+creatures into ghostly versions of themselves.
 %%%%
 Call of Chaos spell
 
@@ -430,8 +435,6 @@ Dimensional Bullseye spell
 Weaves a link between the caster's weaponry and a chosen target. Whenever the
 caster fires or throws something at a *different* enemy, a matching projectile
 will be teleported at the target. Spellpower increases their accuracy.
-
-Every shot will drain a drop of magic while the link persists.
 %%%%
 Discord spell
 
@@ -614,6 +617,18 @@ icy walls will be damaged, and this may temporarily slow cold-blooded creatures.
 Each victim is only ever affected by one icy wall at a time.
 
 The ice will crack and fall away if the caster moves to a new position.
+%%%%
+Fugue of the Fallen spell
+
+Calls out to the lingering remnants of the long dead. While active, each
+non-summoned enemy the caster or their allies slays attracts more vengeful
+souls into the caster's weapon, temporarily enhances their melee and ranged
+effectiveness. When this bonus reaches its maximum, every attack will inflict
+a glimmer of the dead's suffering on each adjacent foe.
+
+Recasting this spell will release your grip on the souls you've attracted, and
+the violent wailing of the fallen may also attract unwanted attention while the
+spell is active.
 %%%%
 Fulminant Prism spell
 
@@ -965,6 +980,13 @@ Summons a powerful exotic creature to the caster's aid: a manticore, a lindwurm,
 or, at high power, even a sphinx. Casting the spell at higher power also
 increases the strength of the beasts themselves.
 %%%%
+Mercury Vapours spell
+
+Briefly transmutes a portion of the air around a targeted location into gaseous
+mercury. Anyone directly inhaling the fumes will be poisoned, but even those
+adjacent to the epicenter may be weakened by exposure to the chemical - whether
+they resist poison or not.
+%%%%
 Necrotise spell
 
 Agonizingly rots away the victim's flesh. Those slain by this spell (or otherwise
@@ -1021,7 +1043,7 @@ Prevents a creature from taking any action for a short time.
 %%%%
 Paralysis Gaze spell
 
-Irresistably prevents a creature from taking any action for a short time,
+Irresistibly prevents a creature from taking any action for a short time,
 requiring multiple charges but not line of fire.
 %%%%
 Passage of Golubria spell
@@ -1075,11 +1097,6 @@ Poisonous Cloud spell
 
 Conjures forth a great cloud of lethal gases.
 %%%%
-Poisonous Vapours spell
-
-Turns the air around a targeted creature toxic, directly inflicting poison on
-the target before dispersing.
-%%%%
 Polar Vortex spell
 
 Turns the air around the caster into a freezing vortex, doing tremendous damage
@@ -1110,6 +1127,14 @@ Primal Wave spell
 
 Conjures a torrent of water that may knock back the target, and creates a
 pool of shallow water for a short duration.
+%%%%
+Pyre Arrow spell
+
+Launches a glob of liquid fire that clings to a targeted creature, dealing
+armour-ignoring fire damage over multiple turns. The victim can put the fire out
+much more quickly by moving.
+
+If the target is insubstantial, the liquid fire will fail to stick.
 %%%%
 Pyroclastic Surge spell
 
@@ -1331,17 +1356,11 @@ Steam Ball spell
 
 Throws a ball of hot steam towards a targeted creature.
 %%%%
-Sticky Flame Range spell
-
-Launches a glob of sticky flame, covering a targeted creature with liquid fire
-for a short time.
-
-If the target is insubstantial, the liquid fire will fail to stick.
-%%%%
 Sticky Flame spell
 
-Conjures a glob of sticky flame, covering an adjacent creature with liquid fire
-for a short time.
+Unleashes a short-ranged spray of incindiary goo that clings to an adjacent
+creature and deals armour-ignoring fire damage over several turns. If the victim
+is allowed to move, it will put out the fire prematurely.
 
 If the target is insubstantial, the liquid fire will fail to stick.
 %%%%
@@ -1354,10 +1373,9 @@ begin to form again as normal.
 %%%%
 Sting spell
 
-Briefly transforms a nearby rock or torch into a long insectoid stinger,
-which lashes out at the target. The stinger's impact will always poison a
-susceptible target. Even resistant targets have a chance to be poisoned and
-immune monsters will be damaged by the physical impact of the stinger.
+Conjures a jagged shard of crystalized toxins. The stinger's impact will always
+poison a susceptible target. Even resistant targets have a chance to be poisoned
+and immune monsters will still be damaged by the physical impact of the stinger.
 %%%%
 Stoke Flames spell
 
@@ -1407,7 +1425,7 @@ dragons at once.
 %%%%
 Summon Drakes spell
 
-Summons multiple drakes, komodo dragons, and lindwurms.
+Summons multiple drakes and lindwurms.
 %%%%
 Summon Earth Elementals spell
 
@@ -1581,10 +1599,10 @@ damage bypasses cold resistance.
 Throw Klown Pie spell
 
 Throws a harmful yet strangely delicious pie that can inflict its victim with a
-number of debilitating temporary effects. These include inducing vertigo,
-silence, fire vulnerability, stat drain, or an aversion to drinking potions.
-The dreaded moon pie can even turn you into a bat, a hog, or an insubstantial
-wisp!
+number of irresistable and debilitating temporary effects. These include
+inducing vertigo, silence, fire vulnerability, stat drain, or an aversion to
+drinking potions. The dreaded clear moon pie will even make any adventurer as
+fragile as its delicate flaky crust.
 %%%%
 Thunderbolt spell
 
@@ -1661,7 +1679,7 @@ the damage they take from all sources.
 %%%%
 Vitrifying Gaze spell
 
-Irresistably renders a creature's body structure as brittle and fragile as
+Irresistibly renders a creature's body structure as brittle and fragile as
 glass, increasing the damage they take from all sources. It requires line of
 sight but not line of fire.
 %%%%
@@ -1686,18 +1704,8 @@ It can affect targets standing in or flying above water.
 %%%%
 Weakening Gaze spell
 
-Irresistably weakens a creature's melee attacks for a period of time,
+Irresistibly weakens a creature's melee attacks for a period of time,
 requiring line of sight but not line of fire.
-%%%%
-Wereblood spell
-
-Transforms some of the caster's blood into that of a were-beast, causing them
-to occasionally howl uncontrollably. While active, each non-summoned enemy the
-caster slays in combat temporarily enhances their melee and ranged
-effectiveness, and killing adjacent enemies also provides minor healing.
-
-The bonus only lasts for the duration of a single cast; retransforming the
-caster's blood calms the were-spirit and resets the bonus.
 %%%%
 Wind Blast spell
 

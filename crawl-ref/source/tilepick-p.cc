@@ -507,7 +507,7 @@ tileidx_t tileidx_player()
 #endif
     case transformation::pig:       ch = TILEP_TRAN_PIG;       break;
     // non-animals
-    case transformation::anaconda:  ch = TILEP_TRAN_ANACONDA; break;
+    case transformation::serpent:   ch = TILEP_TRAN_SERPENT;   break;
     case transformation::wisp:      ch = TILEP_MONS_INSUBSTANTIAL_WISP; break;
 #if TAG_MAJOR_VERSION == 34
     case transformation::jelly:     ch = TILEP_MONS_JELLY;     break;
@@ -518,16 +518,17 @@ tileidx_t tileidx_player()
     {
         switch (you.species)
         {
-        case SP_FELID:             ch = TILEP_TRAN_DRAGON_FELID;   break;
-        case SP_BLACK_DRACONIAN:   ch = TILEP_TRAN_DRAGON_BLACK;   break;
-        case SP_YELLOW_DRACONIAN:  ch = TILEP_TRAN_DRAGON_YELLOW;  break;
-        case SP_GREY_DRACONIAN:    ch = TILEP_TRAN_DRAGON_GREY;    break;
-        case SP_GREEN_DRACONIAN:   ch = TILEP_TRAN_DRAGON_GREEN;   break;
-        case SP_PALE_DRACONIAN:    ch = TILEP_TRAN_DRAGON_PALE;    break;
-        case SP_PURPLE_DRACONIAN:  ch = TILEP_TRAN_DRAGON_PURPLE;  break;
-        case SP_WHITE_DRACONIAN:   ch = TILEP_TRAN_DRAGON_WHITE;   break;
+        case SP_OCTOPODE:          ch = TILEP_TRAN_DRAGON_OCTOPODE; break;
+        case SP_FELID:             ch = TILEP_TRAN_DRAGON_FELID;    break;
+        case SP_BLACK_DRACONIAN:   ch = TILEP_TRAN_DRAGON_BLACK;    break;
+        case SP_YELLOW_DRACONIAN:  ch = TILEP_TRAN_DRAGON_YELLOW;   break;
+        case SP_GREY_DRACONIAN:    ch = TILEP_TRAN_DRAGON_GREY;     break;
+        case SP_GREEN_DRACONIAN:   ch = TILEP_TRAN_DRAGON_GREEN;    break;
+        case SP_PALE_DRACONIAN:    ch = TILEP_TRAN_DRAGON_PALE;     break;
+        case SP_PURPLE_DRACONIAN:  ch = TILEP_TRAN_DRAGON_PURPLE;   break;
+        case SP_WHITE_DRACONIAN:   ch = TILEP_TRAN_DRAGON_WHITE;    break;
         case SP_RED_DRACONIAN:
-        default:                   ch = TILEP_TRAN_DRAGON;         break;
+        default:                   ch = TILEP_TRAN_DRAGON;          break;
         }
         break;
     }
@@ -628,8 +629,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_MUMMY;
     case SP_NAGA:
         return TILEP_BASE_NAGA;
-    case SP_OGRE:
-        return TILEP_BASE_OGRE;
+    case SP_ONI:
+        return TILEP_BASE_ONI;
     case SP_TROLL:
         return TILEP_BASE_TROLL;
     case SP_BASE_DRACONIAN:
@@ -647,8 +648,10 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_CENTAUR:
 #endif
         return TILEP_BASE_ARMATAUR;
+#if TAG_MAJOR_VERSION == 34
     case SP_METEORAN:
         return TILEP_BASE_METEORAN;
+#endif
     case SP_DEMIGOD:
         return TILEP_BASE_DEMIGOD;
     case SP_SPRIGGAN:
@@ -940,7 +943,7 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             break;
 
-        case JOB_VENOM_MAGE:
+        case JOB_ALCHEMIST:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_GREEN;
             parts[TILEP_PART_HAND1] = TILEP_HAND1_GANDALF;
             parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_GREEN_DIM;

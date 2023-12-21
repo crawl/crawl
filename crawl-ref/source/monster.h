@@ -236,6 +236,7 @@ public:
     void set_ghost(const ghost_demon &ghost);
     void ghost_init(bool need_pos = true);
     void ghost_demon_init();
+    void inugami_init();
     void uglything_init(bool only_mutate = false);
     void uglything_mutate(colour_t force_colour = COLOUR_UNDEF);
     void destroy_inventory();
@@ -388,6 +389,7 @@ public:
     bool res_polar_vortex() const override;
     bool res_petrify(bool /*temp*/ = true) const override;
     int res_constrict() const override;
+    resists_t all_resists() const;
     int willpower() const override;
     bool no_tele(bool blink = false, bool /*temp*/ = true) const override;
     bool res_corr(bool /*allow_random*/ = true, bool temp = true) const override;
@@ -499,8 +501,8 @@ public:
 
 
     bool    shielded() const override;
+    int     shield_class() const;
     int     shield_bonus() const override;
-    int     shield_block_penalty() const override;
     void    shield_block_succeeded(actor *attacker) override;
     int     shield_bypass_ability(int tohit) const override;
     bool    missile_repulsion() const override;

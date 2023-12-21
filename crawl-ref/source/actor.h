@@ -245,8 +245,9 @@ public:
     virtual int evasion(bool ignore_helpless = false,
                         const actor *attacker = nullptr) const = 0;
     virtual bool shielded() const = 0;
+    virtual int shield_block_limit() const;
+    bool shield_exhausted() const;
     virtual int shield_bonus() const = 0;
-    virtual int shield_block_penalty() const = 0;
     virtual int shield_bypass_ability(int tohit) const = 0;
     virtual void shield_block_succeeded(actor *attacker);
     virtual bool missile_repulsion() const = 0;
@@ -283,6 +284,7 @@ public:
     virtual bool res_polar_vortex() const = 0;
     virtual bool res_petrify(bool temp = true) const = 0;
     virtual int res_constrict() const = 0;
+    int get_res(int res) const;
     virtual int willpower() const = 0;
     virtual int check_willpower(const actor* source, int power) const;
     virtual bool no_tele(bool blink = false, bool temp = true) const = 0;

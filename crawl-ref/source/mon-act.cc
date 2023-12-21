@@ -151,15 +151,11 @@ static void _monster_regenerate(monster* mons)
         return;
     }
 
-    if (mons->type == MONS_PARGHIT)
-        mons->heal(27); // go whoosh
-    else if (mons->type == MONS_DEMONIC_CRAWLER)
-        mons->heal(6); // go zoom
-    else if (mons_class_fast_regen(mons->type)
+    if (mons_class_fast_regen(mons->type)
         || mons->has_ench(ENCH_REGENERATION)
         || _mons_natural_regen_roll(mons))
     {
-        mons->heal(1);
+        mons->heal(mons_class_regen_amount(mons->type));
     }
 
     if (mons_is_hepliaklqana_ancestor(mons->type))
@@ -178,8 +174,9 @@ static void _escape_water_hold(monster& mons)
     }
 }
 
-static void _handle_manticore_barbs(monster& mons)
+static void _handle_deliberate_movement(monster& mons)
 {
+    // Apply barbs damage
     if (mons.has_ench(ENCH_BARBS))
     {
         mon_enchant barbs = mons.get_ench(ENCH_BARBS);
@@ -195,6 +192,21 @@ static void _handle_manticore_barbs(monster& mons)
             barbs.duration--;
             mons.update_ench(barbs);
         }
+    }
+
+    // And then shake off sticky flame
+    if (mons.has_ench(ENCH_STICKY_FLAME))
+    {
+        mon_enchant flame = mons.get_ench(ENCH_STICKY_FLAME);
+
+        flame.duration -= 50;
+        if (flame.duration <= 0)
+        {
+            simple_monster_message(mons, " shakes off the sticky flame as it moves.");
+            mons.del_ench(ENCH_STICKY_FLAME, true);
+        }
+        else
+            mons.update_ench(flame);
     }
 }
 
@@ -304,8 +316,8 @@ static bool _swap_monsters(monster& mover, monster& moved)
              moved.name(DESC_THE).c_str());
     }
 
-    _handle_manticore_barbs(mover);
-    _handle_manticore_barbs(moved);
+    _handle_deliberate_movement(mover);
+    _handle_deliberate_movement(moved);
 
     if (moved.type == MONS_FOXFIRE)
     {
@@ -1097,7 +1109,8 @@ static void _handle_boulder_movement(monster& boulder)
             }
 
             for (int i = push_targs.size() - 1; i >= 0; --i)
-                push_targs[i]->knockback(boulder, 1, 10, "");
+                if (push_targs[i]->alive()) // died from earlier knockback?
+                    push_targs[i]->knockback(boulder, 1, 10, "");
         }
 
         // If there is still somehow something in our way (maybe we were unable to
@@ -2263,7 +2276,7 @@ static void _post_monster_move(monster* mons)
         // TODO: implement monster spectral ego
     }
 
-    if (mons->foe != MHITNOT && mons->behaviour == BEH_BATTY)
+    if (mons->behaviour == BEH_BATTY)
     {
         int &bat_turns = mons->props[BATTY_TURNS_KEY].get_int();
         bat_turns++;
@@ -3170,8 +3183,8 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     mon->seen_context = SC_NONE;
     m2->seen_context = SC_NONE;
 
-    _handle_manticore_barbs(*mon);
-    _handle_manticore_barbs(*m2);
+    _handle_deliberate_movement(*mon);
+    _handle_deliberate_movement(*m2);
 
     // Pushing past a foxfire gets you burned regardless of alignment
     if (m2->type == MONS_FOXFIRE)
@@ -3398,7 +3411,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
         seen_monster(&mons);
     }
 
-    _handle_manticore_barbs(mons);
+    _handle_deliberate_movement(mons);
 
     _swim_or_move_energy(mons);
 

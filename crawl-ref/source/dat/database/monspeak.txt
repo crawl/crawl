@@ -1363,6 +1363,13 @@ VISUAL:@The_monster@ waves a bulging coin purse at you.
 
 @The_monster@ says, "I guess you can't buy your way into a good afterlife."
 %%%%
+Hepliaklqana player ghost
+@The_monster@ says @to_foe@, "If I can't kill you now, I'll help my descendant do it later."
+
+@The_monster@ says @to_foe@, "I'll give you a battle you'll never forget!"
+
+@The_monster@ says @to_foe@, "I'm committing your attacks to memory."
+%%%%
 Ignis player ghost
 
 @The_monster@ says, "I burned twice as bright, and look where it got me..."
@@ -1472,6 +1479,16 @@ Trog player ghost
 
 @The_monster@ screams in joy, "As in life, so in death: Kill! Kill!! Kill!!!"
 %%%%
+Uskayaw player ghost
+@The_monster@ says @to_foe@, "It's your last dance!"
+
+@The_monster@ says @to_foe@, "Let me show you true rhythm."
+
+@The_monster@ says, "You either stomp with the beat or get stomped."
+
+# La Vie Dansante, Jimmy Buffett
+@The_monster@ says, "I used to wander and follow the dancing life. Look where it got me."
+%%%%
 Vehumet player ghost
 
 @The_monster@ threatens, "I'm fresh out of hellfire, but you will end anyway."
@@ -1481,6 +1498,14 @@ Vehumet player ghost
 @The_monster@ boasts, "After taking care of you, I will research a spell that consumes the world."
 
 @The_monster@ threatens, "Do not fail me, O fires of Iskenderun!"
+%%%%
+Wu Jian player ghost
+
+@The_monster@ says @to_foe@, "You lack the discipline to defeat me."
+
+@The_monster@ says @to_foe@, "Let's see how well you move."
+
+@The_monster@ says, "I'm much more flexible now that I'm not limited by flesh."
 %%%%
 Xom player ghost
 
@@ -2167,11 +2192,13 @@ Xom Crazy Yiuf
 @The_monster@ says, "The present is the child, and the necessary child, of all the past, and the mother of all the future."
 
 # Hume
-@The_monster@ says, "Reason is nothing but a wonderful and unintelligible
-instinct in our souls."
+@The_monster@ says, "Reason is nothing but a wonderful and unintelligible instinct in our souls."
 
 # Kant
 @The_monster@ says, "It is extremely absurd to expect to be enlightened by reason, and yet to prescribe to it beforehand on which side it must incline."
+
+# The Principia Discordia
+@The_monster@ says, "The real reality is there, but everything you know about it is in your mind and yours to do with as you like."
 
 VISUAL:@The_monster@ considers dialectic materialism.
 
@@ -2986,7 +3013,7 @@ w:50
 
 @The_monster@ says, "How do you make a golem out of electricity?"
 
-@The_monster@ says, "What's an "Orb Guardian", anyway?"
+@The_monster@ says, "What's an 'Orb Guardian', anyway?"
 
 @The_monster@ says, "Orbs of fire, orbs of destruction, the Orb of Zot... what's with all the orbs?"
 
@@ -3004,7 +3031,7 @@ w:50
 
 @The_monster@ says, "Oh, so that's what those runes are for!"
 
-@The_monster@ says, "Why do the walls change color every floor? Did they keep running out of paint?"
+@The_monster@ says, "Why do the walls change colour every floor? Did they keep running out of paint?"
 
 @The_monster@ says, "What's stopping the guards from just stealing the Orb themselves?"
 
@@ -3063,6 +3090,8 @@ w:50
 @The_monster@ says, "If I give you twenty gold pieces, can you get rid of this nasty case of scales I've got?"
 
 @The_monster@ covers @possessive@ ears. "Shut up!"
+
+@The_monster@ says, "Wouldn't you get more for your money with Gozag?"
 %%%%
 the Shining One Donald
 
@@ -3101,6 +3130,16 @@ w:50
 @The_monster@ says, "I hate zombies."
 
 @The_monster@ says, "Yuck, you smell of miasma!"
+
+@The_monster@ says, "I hate wretches."
+
+@The_monster@ says, "How deep do you have to dig to get a never-ending supply of wretches?"
+
+@The_monster@ says, "You must really love pain. I hate it."
+
+@The_monster@ says, "Do you just use necromancy for everything, then?"
+
+@The_monster@ says, "Why a 'Demon-God'? Wouldn't a 'Zombie-God' be more appropriate?"
 %%%%
 friendly Yredelemnul Donald
 
@@ -3280,11 +3319,15 @@ w:50
 
 @The_monster@ says, "Why would you want to visit the Abyss? For a holiday?"
 
-@The_monster@ says, "I never knew blinking was supposed to hurt."
-
 @The_monster@ says, "Nothing ever attacks me when I'm in the Abyss."
 
 @The_monster@ says, "Are you going to banish me, too?"
+
+@The_monster@ says, "The world's bad enough without you corrupting it."
+
+@The_monster@ says, "You must really love eldritch horrors. I hate them."
+
+@The_monster@ says, "How can a god be banished to the Abyss?"
 %%%%
 Beogh Donald
 
@@ -3374,13 +3417,13 @@ w:50
 
 @The_monster@ says, "I hate [trees|plants|fungi]."
 
-@The_monster@ says, "You're like a walking fruit salad. I hate that."
-
 @The_monster@ says, "Do you like gardening? I hate gardening."
 
 @The_monster@ says, "So, how do you deal with the weeds?"
 
 @The_monster@ says, "A plant spat acid at me. I hate that."
+
+@The_monster@ says, "Better hope you don't develop allergies."
 %%%%
 Cheibriados Donald
 
@@ -3462,8 +3505,6 @@ w:50
 @The_monster@ makes a face at you and exclaims, "Curses!"
 
 @The_monster@ says, "I got nailed to the sky once. No big deal, really."
-
-@The_monster@ says, "You must love that deathly cold feeling. I hate it."
 
 @The_monster@ says, "I hate voyeurs."
 
@@ -3576,6 +3617,10 @@ w:50
 @The_monster@ says, "Would you happen to remember where the Orb is?"
 
 @The_monster@ says, "Ghost stories? Ooh, I'm so scared!"
+
+@The_monster@ says, "Isn't it convenient that your ancestor always knows how to fight?"
+
+@The_monster@ says, "I forgot what I was going to say. I hate that."
 %%%%
 Uskayaw Donald
 
@@ -3591,6 +3636,10 @@ w:50
 @The_monster@ says, "Poetry of the foot? All you're doing is stomping around."
 
 @The_monster@ says, "You look ridiculous with all that flailing around."
+
+@The_monster@ says, "That's not dancing; that's just a fancy way of killing things."
+
+@The_monster@ says, "What kind of dance blows up spectators?"
 %%%%
 Wu Jian Donald
 
@@ -4034,19 +4083,18 @@ w:5
 @_Erica_rare_@
 %%%%
 _Erica_common_
-VISUAL:@The_monster@ looks angry.
+VISUAL:@The_monster@ writhes her tentacles angrily.
 
-@The_monster@ laughs wildly.
+@The_monster@ burbles wildly.
 
 @The_monster@ says @to_foe@, "I'm so much better than you."
 
-@The_monster@ says @to_foe@, "I love to fight, but killing is better."
+@The_monster@ says @to_foe@, "I love to horrify, but killing's even better."
 
 @The_monster@ says @to_foe@, "Fast and perfect. Such is my way of killing."
 
-@The_monster@ screams @at_foe@, "Die!"
-
-@The_monster@ screams @at_foe@, "Do you want it fast or slow?!"
+# Victor Hugo
+@The_monster@ screams @at_foe@, "Your blood will spurt and your skin will burst!"
 %%%%
 _Erica_rare_
 
@@ -4056,11 +4104,16 @@ _Erica_rare_
 
 @The_monster@ screams @at_foe@, "You'll never get it!"
 
-@The_monster@ screams @at_foe@, "Coming here was suicide! For you!"
+# Victor Hugo again
+@The_monster@ says @to_foe@, "The claw is nothing compared to the sucker!"
+
+@The_monster@ boasts @to_foe@, "If terror be the object, I am a masterpiece!"
+
+@The_monster@ boasts @to_foe@, "Reason would be justified, if not for me!"
 %%%%
 Erica triumphant
 
-@The_monster@ begins laughing uncontrollably.
+@The_monster@ begins burbling mirthfully and uncontrollably.
 ## END Erica ##
 %%%%
 ############ EROLCHA ### A vicious ogre capable of casting
@@ -4377,7 +4430,7 @@ VISUAL:@The_monster@ grins, showing sharp teeth.
 
 @The_monster@ says, "DUCK!"
 
-@The_monster@ says, "FISH!"
+@The_monster@ sighs, "No one appreciates my work."
 
 @The_monster@ says, "Wait up."
 
@@ -4404,6 +4457,10 @@ VISUAL:@The_monster@ rolls @possessive@ eyes.
 Grinder triumphant
 
 @The_monster@ says, "Now the real fun starts!"
+
+@The_monster@ says, "Hey, I wasn't done torturing you yet!"
+
+@The_monster@ sighs, "Dead already? I want a refund."
 %%%%
 ############ GRUM ### A war dog-breeding gnoll
 Grum
@@ -5150,7 +5207,7 @@ VISUAL:@The_monster@ splashes a potion @at_foe@.
 
 VISUAL:@The_monster@ throws some [strange|weird|mysterious] powder @at_foe@.
 
-@The_monster@ says @to_foe@, "Odis was a nice man, you're awful."
+@The_monster@ says @to_foe@, "Odis was a nice man; you're awful."
 
 @The_monster@ holds @possessive@ sides and says @to_foe@, "You'll eat dirt beneath my feet."
 
@@ -5433,7 +5490,7 @@ _Maurice_common_
 
 VISUAL:@The_monster@ tries to hide in the shadows.
 
-@The_monster@ shouts, "HAHA!"
+VISUAL:@The_monster@ lashes his vines and gnashes his teeth.
 
 @The_monster@ says, "Nice gear. Can I borrow some?"
 
@@ -5455,7 +5512,7 @@ _Maurice_rare_
 
 @The_monster@ says to @foe@, "Money or life? Never mind, I think I'll take both."
 
-@The_monster@ says, "Killing adventurers and taking their stuff. It's what I do."
+@The_monster@ says, "Killing adventurers, taking their stuff. It's what he did, it's what I do."
 %%%%
 # Triggered when Maurice tries to steal something, but doesn't find anything.
 Maurice nonstealing
@@ -6599,7 +6656,7 @@ _Sojobo_advice_
 
 @The_monster@ says @to_foe@, "Ponder and deliberate before you make a move."
 %%%%
-Sojobo victorious
+Sojobo triumphant
 
 @The_monster@ says, "The outcome was never in doubt."
 
@@ -6641,7 +6698,7 @@ w:1
 
 @The_monster@ says @to_foe@, "Someone hired me to kill you, but I'm not supposed to say who."
 %%%%
-Sonja victorious
+Sonja triumphant
 
 VISUAL:@The_monster@ takes a bow.
 
@@ -6690,7 +6747,7 @@ _Terence_rare_
 
 @The_monster@ says @to_foe@, "Time to say good-bye..."
 %%%%
-Terence victorious
+Terence triumphant
 
 @The_monster@ says, "Rest in peace."
 
@@ -6968,6 +7025,23 @@ confused Bennu permanently killed
 
 @Bennu permanently killed@
 %%%%
+################## Brain worm ################################
+brain worm
+
+VISUAL:@The_monster@ drips [complex|unknown] stolen formulae onto the @surface@.
+
+VISUAL:@The_monster@ is briefly caught in foreign memories of distant [stars|lands|kingdoms].
+
+VISUAL:@The_monster@ twitches its length with the pilfered instincts of [wings|pincers|fins].
+
+%%%%
+Sewer brain worm
+
+w:30
+@brain worm@
+
+VISUAL:@The_monster@ stares [perplexed|with bemusement] at its reflection in a puddle.
+%%%%
 ################## Bullfrog ################################
 bullfrog
 
@@ -7097,6 +7171,16 @@ w:1
 w:2
 @_hostile_imp_@
 %%%%
+################## Kobold blastminer #######################
+kobold blastminer
+
+VISUAL:@The_monster@ bats away at the thin smoke enveloping @possessive@ cannon.
+
+VISUAL:@The_monster@'s cannon shakes and flares with a red glow.
+
+w:20
+__NONE
+%%%%
 ################## Reaper ##################################
 # The reaper has come for you!
 reaper
@@ -7176,6 +7260,20 @@ VISUAL:@The_monster@ angrily waves @possessive@ antennae.
 # speech.
 default profane servitor
 
+__NONE
+%%%%
+################## Protean progenitor ###########################
+protean progenitor
+
+VISUAL:@The_monster@'s form [briefly |][ripples|wavers] with deep exhaustion.
+
+VISUAL:@The_monster@'s [three nested|six fanged|nine smoking] eyes blink slowly.
+
+VISUAL:@The_monster@ [glitters|crackles], [sighs|grumbles], and [beckons|stomps].
+
+VISUAL:@The_monster@ unfurls and squashes hidden [antennae|spinnerets|pseudopods].
+
+w:20
 __NONE
 %%%%
 ################## Statues ##################
@@ -7261,11 +7359,25 @@ _tormentor_rare_
 ################## Wizard ##################################
 arcanist
 
+w:20
 @_wizard_@
 
+w:1
+@The_monster@ [grouses|grumbles] about occultists.
+
+w:9
+__NONE
+%%%%
 occultist
 
+w:20
 @_wizard_@
+
+w:1
+@The_monster@ [grouses|grumbles] about arcanists.
+
+w:9
+__NONE
 %%%%
 ################## Yak #####################################
 yak
@@ -8017,6 +8129,8 @@ Yredelemnul
 Beogh
 
 Lugonu
+
+Dithmenos
 %%%%
 confused zin angel
 

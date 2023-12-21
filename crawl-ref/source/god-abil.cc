@@ -67,6 +67,7 @@
 #include "ouch.h"
 #include "output.h"
 #include "place.h"
+#include "player.h"
 #include "player-equip.h"
 #include "player-stats.h"
 #include "potion.h"
@@ -2013,9 +2014,9 @@ static map<curse_type, curse_data> _ashenzari_curses =
         "Elements", "Elem",
         { SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC },
     } },
-    { CURSE_ALCHEMY, {
-        "Alchemy", "Alch",
-        { SK_POISON_MAGIC, SK_TRANSMUTATIONS },
+    { CURSE_SORCERY, {
+        "Sorcery", "Sorc",
+        { SK_CONJURATIONS, SK_ALCHEMY },
     } },
     { CURSE_COMPANIONS, {
         "Companions", "Comp",
@@ -2023,7 +2024,7 @@ static map<curse_type, curse_data> _ashenzari_curses =
     } },
     { CURSE_BEGUILING, {
         "Beguiling", "Bglg",
-        { SK_CONJURATIONS, SK_HEXES, SK_TRANSLOCATIONS },
+        { SK_HEXES, SK_TRANSLOCATIONS },
     } },
     { CURSE_SELF, {
         "Introspection", "Self",
@@ -3516,7 +3517,7 @@ static const vector<mutation_type> _major_arcane_sacrifices =
 /// School-disabling mutations that are unfortunate for most characters.
 static const vector<mutation_type> _moderate_arcane_sacrifices =
 {
-    MUT_NO_TRANSMUTATION_MAGIC,
+    MUT_NO_ALCHEMY_MAGIC,
     MUT_NO_HEXES_MAGIC,
 };
 
@@ -3527,7 +3528,6 @@ static const vector<mutation_type> _minor_arcane_sacrifices =
     MUT_NO_FIRE_MAGIC,
     MUT_NO_ICE_MAGIC,
     MUT_NO_EARTH_MAGIC,
-    MUT_NO_POISON_MAGIC,
 };
 
 /// The list of all lists of arcana sacrifice mutations.
@@ -4814,7 +4814,7 @@ bool ru_power_leap()
     }
 
     move_player_to_grid(beam.target, false);
-    apply_barbs_damage();
+    player_did_deliberate_movement();
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
@@ -5118,7 +5118,7 @@ bool uskayaw_line_pass()
         line_pass.fire();
         you.stop_being_constricted(false);
         move_player_to_grid(beam.target, false);
-        apply_barbs_damage();
+        player_did_deliberate_movement();
     }
 
     crawl_state.cancel_cmd_again();
@@ -5789,7 +5789,7 @@ spret wu_jian_wall_jump_ability()
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
 
-    apply_barbs_damage();
+    player_did_deliberate_movement();
     return spret::success;
 }
 

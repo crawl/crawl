@@ -25,7 +25,6 @@ aptitudes:
   spellcasting: -1
   necromancy: 1
   translocations: -1
-  transmutations: -1
   shapeshifting: -2
   fire_magic: -1
   ice_magic: -1
@@ -33,7 +32,7 @@ aptitudes:
   earth_magic: -1
   invocations: 3
 str: 8
-int: 9
+int: 8
 dex: 8
 levelup_stat_frequency: 4
 recommended_jobs:
@@ -43,4 +42,4 @@ recommended_jobs:
   - JOB_NECROMANCER
   - JOB_FIRE_ELEMENTALIST
   - JOB_ICE_ELEMENTALIST
-  - JOB_VENOM_MAGE
+  - JOB_ALCHEMIST

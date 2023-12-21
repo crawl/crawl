@@ -138,7 +138,7 @@ static bool _cancel_barbed_move(bool rampaging)
     return false;
 }
 
-void apply_barbs_damage(bool rampaging)
+static void _apply_barbs_damage(bool rampaging)
 {
     if (you.duration[DUR_BARBS])
     {
@@ -154,6 +154,14 @@ void apply_barbs_damage(bool rampaging)
         if (you.duration[DUR_BARBS])
             you.duration[DUR_BARBS] += (rampaging ? 0 : you.time_taken);
     }
+}
+
+// For effects that should happen whenever the player actively moves with their
+// limbs, but NOT if the player blinks/teleports or is otherwise displaced.
+void player_did_deliberate_movement(bool rampaging)
+{
+    _apply_barbs_damage(rampaging);
+    shake_off_sticky_flame();
 }
 
 static bool _cancel_ice_move()
@@ -554,6 +562,9 @@ static coord_def _rampage_destination(coord_def move, monster* target)
 /// What can the player rampage towards in the given direction, if anything?
 monster* get_rampage_target(coord_def move)
 {
+    if (!you.rampaging())
+        return nullptr;
+
     // Don't rampage if the player has status effects that should prevent it.
     if (you.is_nervous()
         || you.confused()
@@ -729,7 +740,8 @@ static spret _rampage_forward(coord_def move)
         behaviour_event(mon_target, ME_ALERT, &you, you.pos());
 
     // Lastly, apply post-move effects unhandled by move_player_to_grid().
-    apply_barbs_damage(true);
+    apply_rampage_heal();
+    player_did_deliberate_movement(true);
     remove_ice_movement();
     you.clear_far_engulf(false, true);
     apply_cloud_trail(old_pos);
@@ -898,7 +910,7 @@ void move_player_action(coord_def move)
     // XX generalize?
     const string walkverb = you.airborne()                     ? "fly"
                           : you.swimming()                     ? "swim"
-                          : you.form == transformation::anaconda ? "slither"
+                          : you.form == transformation::serpent ? "slither"
                           : you.form != transformation::none   ? "walk" // XX
                           : walk_verb_to_present(lowercase_first(species::walking_verb(you.species)));
 
@@ -1097,7 +1109,9 @@ void move_player_action(coord_def move)
             _clear_constriction_data();
             _mark_potential_pursuers(targ);
             move_player_to_grid(targ, true);
-            apply_barbs_damage();
+            if (rampaged)
+                apply_rampage_heal();
+            player_did_deliberate_movement();
             remove_ice_movement();
             you.clear_far_engulf(false, true);
             apply_cloud_trail(old_pos);

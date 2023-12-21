@@ -162,8 +162,9 @@ are not in their vision.
 %%%%
 Fire status
 
-You are covered with sticky fire, which causes damage over a short duration.
-Entering water will extinguish the flames.
+You are covered with sticky fire, which causes damage over a moderate duration.
+Moving will quell the fire much more rapidly, and entering water will extinguish
+it immediately.
 %%%%
 Corona status
 
@@ -475,9 +476,9 @@ You are unstable at a fundamental level. You inflict dangerous levels of
 magical contamination on foes with each touch. Sufficient contamination
 causes a highly localized meltdown, dealing enormous damage.
 
-However, this instability makes you unable to use weapons or shields. You
-also glow, reducing stealth and preventing invisibility, and your melee
-damage is reduced, as your limbs sometimes destabilize mid-swing.
+However, this instability makes you unable to use weapons, shields, or
+body armour. You also glow, reducing stealth and preventing invisibility,
+and you do less damage in melee, as your limbs sometimes destabilize mid-swing.
 %%%%
 Blade status
 
@@ -489,10 +490,10 @@ and reducing the effectiveness of body armour.
 
 Any equipped weapons, shields, and gloves are melded.
 %%%%
-Anaconda status
+Serpent status
 
-You have been transformed into a giant, cold-blooded anaconda, ready to wind
-your coils around foes and crush them to death.
+You have been transformed into a giant, cold-blooded, poison-resistant serpent,
+ready to wind your coils around foes and crush them to death.
 
 Any equipped weapons and armour are melded.
 %%%%
@@ -853,5 +854,8 @@ Fragile status
 
 Your body is as fragile and brittle as glass, increasing the damage you take from
 all sources.
-
 %%%%
+Ooze status
+
+Acidic ooze creeps out of the walls around you. Each turn, foes are damaged
+depending on the number of slimy walls they remain adjacent to.

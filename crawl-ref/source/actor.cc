@@ -205,6 +205,27 @@ void actor::shield_block_succeeded(actor *attacker)
     }
 }
 
+int actor::get_res(int res) const
+{
+    switch (res)
+    {
+    case MR_RES_ELEC:      return res_elec();
+    case MR_RES_POISON:    return res_poison();
+    case MR_RES_FIRE:      return res_fire();
+    case MR_RES_COLD:      return res_cold();
+    case MR_RES_NEG:       return res_negative_energy();
+    case MR_RES_MIASMA:    return res_miasma();
+    case MR_RES_ACID:      return res_acid();
+    case MR_RES_TORMENT:   return res_torment();
+    case MR_RES_PETRIFY:   return res_petrify();
+    case MR_RES_DAMNATION: return res_damnation();
+    case MR_RES_STEAM:     return res_steam();
+    default:
+        ASSERT(false);
+        return -1;
+    }
+}
+
 /// How many levels of penalties does this actor have from inaccuracy-conferring effects?
 int actor::inaccuracy() const
 {
@@ -389,6 +410,19 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule, bool for_real) 
     }
 
     return max(damage - saved, 0);
+}
+
+int actor::shield_block_limit() const
+{
+    const item_def *sh = shield();
+    if (!sh)
+        return 1;
+    return ::shield_block_limit(*sh);
+}
+
+bool actor::shield_exhausted() const
+{
+    return shield_blocks >= shield_block_limit();
 }
 
 bool actor_slime_wall_immune(const actor *act)

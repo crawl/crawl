@@ -403,6 +403,28 @@ enum rune_type
     NUM_RUNE_TYPES
 };
 
+// Order roughly matches branch_type.
+enum gem_type
+{
+    GEM_DUNGEON,
+#if TAG_MAJOR_VERSION == 34
+    GEM_ORC,
+#endif
+    GEM_ELF,
+    GEM_LAIR,
+    GEM_SWAMP,
+    GEM_SHOALS,
+    GEM_SNAKE,
+    GEM_SPIDER,
+    GEM_SLIME,
+    GEM_VAULTS,
+    GEM_CRYPT,
+    GEM_TOMB,
+    GEM_DEPTHS,
+    GEM_ZOT,
+    NUM_GEM_TYPES
+};
+
 enum scroll_type
 {
     SCR_IDENTIFY,
@@ -543,7 +565,7 @@ enum stave_type
 #endif
     STAFF_FIRE,
     STAFF_COLD,
-    STAFF_POISON,
+    STAFF_ALCHEMY,
 #if TAG_MAJOR_VERSION == 34
     STAFF_ENERGY,
 #endif

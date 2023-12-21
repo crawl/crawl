@@ -39,8 +39,8 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Minor Magic
     SPELL_MAGIC_DART,
+    SPELL_BLINK,
     SPELL_CALL_IMP,
-    SPELL_MEPHITIC_CLOUD,
 },
 
 {   // Book of Conjurations
@@ -93,7 +93,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Young Poisoner's Handbook
     SPELL_STING,
-    SPELL_POISONOUS_VAPOURS,
+    SPELL_MERCURY_VAPOURS,
     SPELL_OLGREBS_TOXIC_RADIANCE,
 },
 
@@ -110,14 +110,15 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Misfortune
-    SPELL_INNER_FLAME,
+    SPELL_JINXBITE,
     SPELL_VIOLENT_UNRAVELLING,
     SPELL_ENFEEBLE,
 },
 
-{   // Book of Changes
-    SPELL_WEREBLOOD,
+{   // Book of Spontaneous Combustion
+    SPELL_INNER_FLAME,
     SPELL_IRRADIATE,
+    SPELL_IGNITION,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -133,7 +134,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Vapours
-    SPELL_POISONOUS_VAPOURS,
+    SPELL_MERCURY_VAPOURS,
     SPELL_MEPHITIC_CLOUD,
     SPELL_FREEZING_CLOUD,
 },
@@ -192,12 +193,13 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Control
     SPELL_ENGLACIATION,
 },
+#endif
 
 {   // Book of Battle
-    SPELL_WEREBLOOD,
+    SPELL_FUGUE_OF_THE_FALLEN,
     SPELL_OZOCUBUS_ARMOUR,
+    SPELL_MANIFOLD_ASSAULT
 },
-#endif
 
 {   // Book of Geomancy
     SPELL_SANDBLAST,
@@ -224,6 +226,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Cantrips
+    SPELL_STING,
     SPELL_NECROTISE,
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_APPORTATION,
@@ -263,12 +266,12 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Dreams
-    SPELL_JINXBITE,
     SPELL_HIBERNATION,
+    SPELL_FUGUE_OF_THE_FALLEN,
     SPELL_ANGUISH,
 },
 
-{   // Book of Alchemy
+{   // Book of Transmutation
     SPELL_SUBLIMATION_OF_BLOOD,
     SPELL_PETRIFY,
     SPELL_IRRADIATE,
@@ -369,13 +372,16 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_BOMBARD,
 },
 
+#if TAG_MAJOR_VERSION == 34
 { // Ozocubu's Autobio
     SPELL_OZOCUBUS_ARMOUR,
     SPELL_OZOCUBUS_REFRIGERATION,
 },
+#endif
 
 { // Book of the Senses
     SPELL_DAZZLING_FLASH,
+    SPELL_MEPHITIC_CLOUD,
     SPELL_AGONY,
     SPELL_SILENCE,
 },
@@ -398,10 +404,12 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_LRD,
 },
 
+#if TAG_MAJOR_VERSION == 34
 { // Inescapable Atlas
     SPELL_BLINK,
     SPELL_MANIFOLD_ASSAULT,
 },
+#endif
 
 { // Book of the Tundra
     SPELL_HAILSTORM,
@@ -423,13 +431,14 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Book of Sloth
     SPELL_FROZEN_RAMPARTS,
+    SPELL_LEDAS_LIQUEFACTION,
     SPELL_PETRIFY,
     SPELL_ENGLACIATION,
 },
 
 { // Book of Blood
+    SPELL_CALL_IMP,
     SPELL_SUBLIMATION_OF_BLOOD,
-    SPELL_WEREBLOOD,
     SPELL_SUMMON_HYDRA,
 },
 
@@ -459,7 +468,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Unrestrained Analects
     SPELL_OLGREBS_TOXIC_RADIANCE,
-    SPELL_IGNITION,
+    SPELL_OZOCUBUS_REFRIGERATION,
     SPELL_DISCORD,
 },
 
@@ -485,7 +494,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SIGIL_OF_BINDING,
     SPELL_CALL_CANINE_FAMILIAR,
     SPELL_DIMENSIONAL_BULLSEYE,
-    SPELL_LEDAS_LIQUEFACTION,
 },
 
 { // Book of Scorching

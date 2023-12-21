@@ -198,7 +198,7 @@ enum use_animation_type
     UA_HP               = (1 << 2),
     // flashes the screen on attempt to travel or rest with a monster in view
     UA_MONSTER_IN_SIGHT = (1 << 3),
-    // various animations for picking up runes and the orb
+    // various animations for picking up runes, gems, and the orb
     UA_PICKUP           = (1 << 4),
     // various monster spell/ability effects (slime creature merging, etc)
     UA_MONSTER          = (1 << 5),
@@ -535,6 +535,7 @@ public:
                                         // two autofight commands
     bool        cloud_status;     // Whether to show a cloud status light
     bool        always_show_zot;  // Whether to always show the Zot timer
+    bool        more_gem_info;    // Whether to show gems breaking
 
 #ifdef USE_TILE_WEB
     vector<object_class_type> action_panel;   // types of items to show on the panel
@@ -672,9 +673,6 @@ public:
 
     // Wait for rest wait percent HP and MP before exploring.
     bool        explore_auto_rest;
-
-    // Prompt Meteorans before exploring or resting.
-    bool        fear_zot;
 
     bool        travel_key_stop;   // Travel stops on keypress.
 
