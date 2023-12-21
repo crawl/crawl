@@ -1603,14 +1603,13 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                 defender->weaken(&you, 6);
             }
 
-            if (damage_brand == SPWPN_VULNERABILITY
-                && defender->as_monster()->willpower() != WILL_INVULN)
+            if (damage_brand == SPWPN_VULNERABILITY)
             {
-                defender->as_monster()->add_ench(
-                    mon_enchant(ENCH_LOWERED_WL, 1, &you,
-                                random_range(4, 8) * BASELINE_DELAY));
-                mprf("You sap %s willpower!",
-                     defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str());
+                if (defender->strip_willpower(&you, random_range(4, 8), true))
+                {
+                    mprf("You sap %s willpower!",
+                         defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str());
+                }
             }
 
             // Normal vampiric biting attack, not if already got stabbing special.
@@ -3172,32 +3171,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_VULN:
         if (one_chance_in(3))
-        {
-            bool visible_effect = false;
-            if (defender->is_player())
-            {
-                if (!you.duration[DUR_LOWERED_WL])
-                    visible_effect = true;
-                you.increase_duration(DUR_LOWERED_WL, 20 + random2(20), 40);
-            }
-            else
-            {
-                // Halving the WL of targets with infinite wills has no effect
-                if (defender->as_monster()->willpower() == WILL_INVULN)
-                    break;
-                if (!defender->as_monster()->has_ench(ENCH_LOWERED_WL))
-                    visible_effect = true;
-                mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, attacker,
-                                       (20 + random2(20)) * BASELINE_DELAY);
-                defender->as_monster()->add_ench(lowered_wl);
-            }
-
-            if (needs_message && visible_effect)
-            {
-                mprf("%s willpower is stripped away!",
-                     def_name(DESC_ITS).c_str());
-            }
-        }
+            defender->strip_willpower(attacker, 20 + random2(20), !needs_message);
         break;
 
     case AF_SHADOWSTAB:

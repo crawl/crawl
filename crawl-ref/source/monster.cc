@@ -5483,6 +5483,19 @@ void monster::weaken(actor *attacker, int pow)
                          (pow + random2(pow + 3)) * BASELINE_DELAY));
 }
 
+bool monster::strip_willpower(actor *attacker, int dur, bool quiet)
+{
+    // Infinite will enemies are immune
+    if (willpower() == WILL_INVULN)
+        return false;
+
+    if (!quiet && !has_ench(ENCH_LOWERED_WL) && you.can_see(*this))
+        mprf("%s willpower is stripped away!", name(DESC_ITS).c_str());
+
+    mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, attacker, dur * BASELINE_DELAY);
+    return add_ench(lowered_wl);
+}
+
 void monster::check_awaken(int)
 {
     // XXX

@@ -491,6 +491,7 @@ public:
     void put_to_sleep(actor *attacker, int power = 0, bool hibernate = false)
         override;
     void weaken(actor *attacker, int pow) override;
+    bool strip_willpower(actor *attacker, int dur, bool quiet = false) override;
     void check_awaken(int disturbance) override;
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source = "")
         override;

@@ -3556,9 +3556,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_VULNERABILITY:
-        if (!you.duration[DUR_LOWERED_WL])
-            mpr("Your willpower is stripped away!");
-        you.increase_duration(DUR_LOWERED_WL, 12 + random2(18), 50);
+        you.strip_willpower(agent(), 12 + random2(18));
         obvious_effect = true;
         break;
 
@@ -5826,16 +5824,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_VULNERABILITY:
-        if (!mon->has_ench(ENCH_LOWERED_WL)
-            && mon->add_ench(mon_enchant(ENCH_LOWERED_WL, 0, agent(),
-                                         random_range(20, 30) * BASELINE_DELAY)))
+        if (!mon->has_ench(ENCH_LOWERED_WL))
         {
-            if (you.can_see(*mon))
-            {
-                mprf("%s willpower is stripped away.",
-                     mon->name(DESC_ITS).c_str());
+            if (mon->strip_willpower(agent(), random_range(20, 30)))
                 obvious_effect = true;
-            }
         }
         return MON_AFFECTED;
 

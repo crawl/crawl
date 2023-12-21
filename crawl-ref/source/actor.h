@@ -204,6 +204,8 @@ public:
     virtual void put_to_sleep(actor *attacker, int strength,
                               bool hibernate = false) = 0;
     virtual void weaken(actor *attacker, int pow) = 0;
+    virtual bool strip_willpower(actor *attacker, int dur,
+                                 bool quiet = false) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    bool slow_cold_blood = true) = 0;
     virtual void drain_stat(stat_type /*stat*/, int /*amount*/) { }

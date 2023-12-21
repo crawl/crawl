@@ -7900,6 +7900,18 @@ void player::weaken(actor */*attacker*/, int pow)
     increase_duration(DUR_WEAK, pow + random2(pow + 3), 50);
 }
 
+bool player::strip_willpower(actor */*attacker*/, int dur, bool quiet)
+{
+    // Only prints a message when you gain this status for the first time,
+    // replicating old behavior. Should this change?
+    if (!quiet && !you.duration[DUR_LOWERED_WL])
+        mpr("Your willpower is stripped away!");
+
+    you.increase_duration(DUR_LOWERED_WL, dur, 40);
+
+    return true;
+}
+
 /**
  * Check if the player is about to die from flight/form expiration.
  *
