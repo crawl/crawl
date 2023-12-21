@@ -1985,17 +1985,14 @@ string scorefile_entry::runes_gems_desc(bool semiverbose) const
                              extra ? "and" : "with",
                              gems_found,
                              (gems_found > 1) ? "s" : "");
-        if (Options.more_gem_info)
-        {
-            if (gems_intact == 1 && gems_found == 1)
-                desc += " (intact)";
-            else if (gems_intact == 2 && gems_found == 2)
-                desc += " (both intact)";
-            else if (gems_intact == gems_found)
-                desc += " (all intact)";
-            else
-                desc += make_stringf(" (%d intact)", gems_intact);
-        }
+        if (gems_intact == 1 && gems_found == 1)
+            desc += " (intact)";
+        else if (gems_intact == 2 && gems_found == 2)
+            desc += " (both intact)";
+        else if (gems_intact == gems_found)
+            desc += " (all intact)";
+        else
+            desc += make_stringf(" (%d intact)", gems_intact);
     }
     if (!semiverbose
         && death_time > 0
