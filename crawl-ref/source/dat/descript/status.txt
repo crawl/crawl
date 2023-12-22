@@ -166,6 +166,14 @@ You are covered with sticky fire, which causes damage over a moderate duration.
 Moving will quell the fire much more rapidly, and entering water will extinguish
 it immediately.
 %%%%
+Fire+ status
+
+<Fire status>
+%%%%
+Fire++ status
+
+<Fire status>
+%%%%
 Corona status
 
 You are surrounded by light, greatly reducing your stealth and making you
