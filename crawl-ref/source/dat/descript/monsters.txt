@@ -821,6 +821,11 @@ broodmother
 A giant spider swollen with eggs. Its innumerable offspring are always at its
 call.
 %%%%
+burial acolyte
+
+A masked priest in the service of Kikubaaqudgha, well-versed in choral rituals
+to both rouse the dead and send them to eternal rest.
+%%%%
 burning bush
 
 A mass of blackened twigs wreathed in orange flames, with scorch marks scarring

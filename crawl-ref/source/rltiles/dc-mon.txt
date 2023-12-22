@@ -627,6 +627,7 @@ formicid MONS_FORMICID
 human MONS_HUMAN
 human2
 human3
+burial_acolyte MONS_BURIAL_ACOLYTE
 hell_knight MONS_HELL_KNIGHT
 death_knight MONS_DEATH_KNIGHT
 necromancer MONS_NECROMANCER
@@ -1305,4 +1306,3 @@ polymoth MONS_POLYMOTH
 jack_o_lantern MONS_JACK_O_LANTERN
 gastronaut MONS_GASTRONAUT
 crawling_zombie_skyshark MONS_SKYSHARK_CRAWLING
-anubis_guard MONS_ANUBIS_GUARD

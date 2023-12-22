@@ -412,6 +412,14 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('p') Humans.
+    {  MST_BURIAL_ACOLYTE,
+      {
+       { SPELL_MALIGN_OFFERING, 16, MON_SPELL_PRIEST },
+       { SPELL_DISPEL_UNDEAD, 12, MON_SPELL_PRIEST },
+       { SPELL_FUNERAL_DIRGE, 22, MON_SPELL_PRIEST },
+      }
+    },
+
     {  MST_NECROMANCER,
       {
        { SPELL_BOLT_OF_DRAINING, 15, MON_SPELL_WIZARD },

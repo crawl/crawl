@@ -525,6 +525,9 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION == 34
     MONS_SLAVE,
 #endif
+#if TAG_MAJOR_VERSION > 34
+    MONS_BURIAL_ACOLYTE,
+#endif
     MONS_HELL_KNIGHT,
 #if TAG_MAJOR_VERSION > 34
     MONS_DEATH_KNIGHT,
@@ -1220,12 +1223,10 @@ enum monster_type                      // env.mons[].type
     MONS_INUGAMI,
     MONS_PROTEAN_PROGENITOR,
     MONS_ASPIRING_FLESH,
-<<<<<<< HEAD
     MONS_ONI,                          // player species only
     MONS_BOMBARDIER_BEETLE,
-=======
     MONS_WEEPING_SKULL,
->>>>>>> 7adacefebf (New monster: weeping skulls, for Ossuaries / Abyss ( / Crypt vaults))
+    MONS_BURIAL_ACOLYTE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

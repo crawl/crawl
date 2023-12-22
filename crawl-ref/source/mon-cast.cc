@@ -1827,6 +1827,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_HELL_SENTINEL:
     case SPELL_STOKE_FLAMES:
     case SPELL_IRRADIATE:
+    case SPELL_FUNERAL_DIRGE:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -5549,6 +5550,76 @@ static void _mons_vortex(monster *mons)
         mons->add_ench(mon_enchant(ENCH_FLIGHT, 0, mons, ench_dur));
 }
 
+static bool _cast_dirge(monster& caster, bool check_only = false)
+{
+    const actor *foe = caster.get_foe();
+
+    // Only use if the chanter has a visible enemy
+    if (!foe
+        || foe->is_player() && caster.friendly()
+        || !caster.see_cell_no_trans(foe->pos()))
+    {
+        return false;
+    }
+
+    // Don't try to make noise when silent.
+    if (caster.is_silenced())
+        return false;
+
+    vector<monster* > targs;
+    for (monster_near_iterator mi(caster.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        monster *mons = *mi;
+
+        // Exclude various invalid targets
+        if (mons == &caster
+            || mons->holiness() != MH_UNDEAD
+            || !mons_aligned(&caster, mons)
+            || mons->confused()
+            || mons->cannot_act())
+            continue;
+
+        if (mons->has_ench(ENCH_MIGHT) && mons->has_ench(ENCH_SWIFT))
+            continue;
+
+        // We found at least one valid target; this is good enough.
+        if (check_only)
+            return true;
+
+        targs.push_back(mons);
+    }
+
+    if (targs.size() == 0)
+        return false;
+
+    // Randomize targets slightly, prioritizing allies close to one's foe
+    shuffle_array(targs);
+    near_to_far_sorter sorter = {foe->pos()};
+    sort(targs.begin(), targs.end(), sorter);
+
+    int num_affected = min((int)targs.size(), random_range(2, 4));
+    for (int i = 0; i < num_affected; ++i)
+    {
+        monster* mons = targs[i];
+
+        // Both the might and the swiftness have the same duration.
+        int buffRange = random_range(3, 5);
+        mons->add_ench(mon_enchant(ENCH_MIGHT, 1, &caster, buffRange
+                                                           * BASELINE_DELAY));
+        mons->add_ench(mon_enchant(ENCH_SWIFT, 1, &caster, buffRange
+                                                           * BASELINE_DELAY));
+
+        if (mons->asleep())
+            behaviour_event(mons, ME_DISTURB, 0, caster.pos());
+
+        if (you.can_see(*mons))
+            simple_monster_message(*mons, " is empowered.");
+    }
+
+    return true;
+}
+
+
 /**
  *  Make this monster cast a spell
  *
@@ -6606,6 +6677,11 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             mons->stumble_away_from(targ, "the blast");
         return;
     }
+
+    case SPELL_FUNERAL_DIRGE:
+        _cast_dirge(*mons);
+        return;
+
     }
 
     if (spell_is_direct_explosion(spell_cast))
@@ -7675,6 +7751,9 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     case SPELL_HUNTING_CALL:
         return ai_action::good_or_bad(_battle_cry(*mon, SPELL_HUNTING_CALL,
                                       true));
+
+    case SPELL_FUNERAL_DIRGE:
+        return ai_action::good_or_bad(_cast_dirge(*mon, true));
 
     case SPELL_CONJURE_BALL_LIGHTNING:
         if (!!(mon->holiness() & MH_DEMONIC))

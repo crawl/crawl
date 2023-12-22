@@ -637,6 +637,11 @@ Conjures a prism which unleashes a violent explosion of arcane force after a
 short duration. The prism is extremely fragile and any damage caused to it may
 result in premature detonation.
 %%%%
+Funeral Dirge spell
+
+A ritual chant that briefly rouses several nearby undead allies to move more
+swiftly and strike with greater might.
+%%%%
 Gell's Gravitas spell
 
 Briefly redirects gravity around a target point, causing 'down' to be towards
