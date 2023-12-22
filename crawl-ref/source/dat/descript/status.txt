@@ -359,10 +359,12 @@ Disjoin status
 You are destabilizing space around yourself, causing nearby monsters to be
 randomly blinked away from you.
 %%%%
-Slay status
+Fugue status
 
-You have the blood of a were-beast, healing you and providing bonuses to
-your ranged and melee attacks which increase every time you slay a foe.
+Your weapon is temporarily enhanced by the souls of the damned, providing
+bonuses to your melee and ranged attacks that increase with every foe slain. At
+the maximum bonus, enemies adjacent to your target are inflicted with pain for
+each additional hit.
 %%%%
 Debt status
 
@@ -867,3 +869,28 @@ Ooze status
 
 Acidic ooze creeps out of the walls around you. Each turn, foes are damaged
 depending on the number of slimy walls they remain adjacent to.
+%%%%
+-Dog status
+
+Your canine familiar is recovering from its injuries, and cannot be summoned
+again for a short time.
+%%%%
+-Siphon status
+
+You have recently siphoned the essence of the living, and cannot do so again for
+a short time.
+%%%%
+-Word status
+
+You are fatigued from recently speaking a word of chaos, and are unable to do so
+again for a short time.
+%%%%
+Jinx status
+
+Jinxing spirits encircle you, inflicting minor damage and draining to enemies
+you attack. These spirits depart quickly when no foes are in sight.
+%%%%
+Rise status
+
+You are hovering upward toward the ceiling. After a short delay, Ignis' power
+will blast you into the level above.
