@@ -3557,9 +3557,7 @@ spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
     }
     // Trying to cast on self - presumably for the AoE weak.
     else if (you.pos() == target && !you.res_poison())
-    {
         you.poison(&you, roll_dice(2, 6));
-    }
 
     // Now attempt to weaken all monsters adjacent to the target
     for (adjacent_iterator ai(target, false); ai; ++ai)
