@@ -57,3 +57,5 @@ bool enchant_weapon(item_def &wpn, bool quiet);
 bool enchant_armour(int &ac_change, bool quiet, item_def &arm);
 
 void prompt_inscribe_item();
+
+bool has_drunken_brawl_targets();

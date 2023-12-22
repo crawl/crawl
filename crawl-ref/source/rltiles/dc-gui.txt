@@ -304,10 +304,10 @@ base/mummy_m SP_RECOMMENDED_MUMMY
 %finish SP_RECOMMENDED_NAGA
 base/octopode1 SP_RECOMMENDED_OCTOPODE
 %start
-%compose base/ogre_m
+%compose base/oni_red_m
 %compose body/animal_skin
 %compose hair/short_black
-%finish SP_RECOMMENDED_OGRE
+%finish SP_RECOMMENDED_ONI
 %start
 %compose base/orc_f
 %compose body/animal_skin
@@ -368,7 +368,7 @@ enum:SP_RECOMMENDED_MINOTAUR SP_MINOTAUR
 enum:SP_RECOMMENDED_MUMMY SP_MUMMY
 enum:SP_RECOMMENDED_NAGA SP_NAGA
 enum:SP_RECOMMENDED_OCTOPODE SP_OCTOPODE
-enum:SP_RECOMMENDED_OGRE SP_OGRE
+enum:SP_RECOMMENDED_ONI SP_ONI
 enum:SP_RECOMMENDED_HILL_ORC SP_HILL_ORC
 enum:SP_RECOMMENDED_SPRIGGAN SP_SPRIGGAN
 enum:SP_RECOMMENDED_TENGU SP_TENGU

@@ -68,7 +68,7 @@ static const map<job_type, job_def> job_data =
 { JOB_BERSERKER, {
     "Be", "Berserker",
     9, -1, 4,
-    { SP_HILL_ORC, SP_OGRE, SP_MERFOLK, SP_MINOTAUR, SP_GARGOYLE, SP_ARMATAUR, },
+    { SP_HILL_ORC, SP_ONI, SP_MERFOLK, SP_MINOTAUR, SP_GARGOYLE, SP_ARMATAUR, },
     { },
     { "animal skin" },
     WCHOICE_PLAIN,
@@ -102,7 +102,7 @@ static const map<job_type, job_def> job_data =
 { JOB_CINDER_ACOLYTE, {
     "CA", "Cinder Acolyte",
     6, 6, 0,
-    { SP_HILL_ORC, SP_BASE_DRACONIAN, SP_OGRE, SP_DJINNI, SP_GNOLL },
+    { SP_HILL_ORC, SP_BASE_DRACONIAN, SP_ONI, SP_DJINNI, SP_GNOLL },
     { SPELL_SCORCH },
     { "robe" },
     WCHOICE_PLAIN,

@@ -4773,7 +4773,6 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_DISTORT,           "distortion" },
         { AF_RIFT,              "distortion" },
         { AF_RAGE,              "drive defenders berserk" },
-        { AF_STICKY_FLAME,      "sticky flame" },
         { AF_CHAOTIC,           "chaos" },
         { AF_STEAL,             "steal items" },
         { AF_CRUSH,             "begin ongoing constriction" },

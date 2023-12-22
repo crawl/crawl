@@ -141,6 +141,11 @@ void player::apply_location_effects(const coord_def &oldpos,
     moveto_location_effects(env.grid(oldpos));
 }
 
+void player::did_deliberate_movement()
+{
+    player_did_deliberate_movement();
+}
+
 void player::set_position(const coord_def &c)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -819,9 +824,7 @@ bool player::go_berserk(bool intentional, bool potion)
 
     mpr("You feel mighty!");
 
-    int dur = 20 + random2avg(19,2);
-    if (!you.has_mutation(MUT_LONG_TONGUE))
-        dur /= 2;
+    int dur = (20 + random2avg(19,2)) / 2;
     you.increase_duration(DUR_BERSERK, dur);
 
     // Apply Berserk's +50% Current/Max HP.

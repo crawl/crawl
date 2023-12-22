@@ -2315,12 +2315,12 @@ string RuneMenu::gem_title()
 {
     const int found = gems_found();
     const int lost = gems_lost();
-    string title = make_stringf("<white>Gems (%d collected", found);
+    string gem_title = make_stringf("<white>Gems (%d collected", found);
     if (Options.more_gem_info && lost < found)
-        title += make_stringf(", %d intact", found - lost);
+        gem_title += make_stringf(", %d intact", found - lost);
     // don't explicitly mention that your gems are all broken otherwise - sad!
 
-    return title + ")</white>";
+    return gem_title + ")</white>";
 }
 
 void RuneMenu::set_footer()
@@ -2944,6 +2944,18 @@ bool is_good_item(const item_def &item)
     case OBJ_POTIONS:
         if (!you.can_drink(false)) // still want to pick them up in lichform?
             return false;
+
+        // Recolor healing potions to indicate their additional goodness
+        //
+        // XX: By default, this doesn't actually change the color of anything
+        //     but !ambrosia, since yellow for 'emergency' takes priority over
+        //     cyan for 'good'. Should this get a *new* color?
+        if (you.has_mutation(MUT_DRUNKEN_BRAWLING)
+            && oni_likes_potion(static_cast<potion_type>(item.sub_type)))
+        {
+            return true;
+        }
+
         switch (item.sub_type)
         {
         case POT_EXPERIENCE:

@@ -844,6 +844,9 @@ static void _decrement_durations()
         wu_jian_heaven_tick();
     }
 
+    if (you.duration[DUR_TEMP_CLOUD_IMMUNITY])
+        _decrement_a_duration(DUR_TEMP_CLOUD_IMMUNITY, delay);
+
     // these should be after decr_ambrosia, transforms, liquefying, etc.
     for (int i = 0; i < NUM_DURATIONS; ++i)
         if (duration_decrements_normally((duration_type) i))

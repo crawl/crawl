@@ -764,6 +764,13 @@ boggart
 A malevolent and dangerous little sprite. The shadowy illusions it summons may
 not be real, but are deadly all the same.
 %%%%
+bombardier beetle
+
+An unassuming beetle filled with an incredible amount of hypergolic fluid. The
+sticky spray it fires is capable of igniting predators and unwary adventurers
+alike, though more experienced ones know to keep moving if they wish to avoid
+a fiery grave.
+%%%%
 bone dragon
 
 A mighty undead abomination, pieced together from the broken bones of many
@@ -2291,8 +2298,7 @@ potent venomous bite.
 searing wretch
 
 An animated corpse alight with terrible fire. The flames are fueled by its
-regenerating flesh, which bubbles and melts as it grows. Its bite leaves
-its victims covered in flaming gore.
+regenerating flesh, which bubbles and melts as it grows.
 %%%%
 seraph
 
@@ -2567,7 +2573,10 @@ A demonic figure shining with the heat and fury of a fallen star.
 %%%%
 sun moth
 
-A moth of celestial beauty and grace, crackling with power.
+A moth of transcendent beauty, coated in pyrophoric scales. Tiny cinders dance
+and twirl in its wake and whenever it beats its wings, they ignite in such
+spectacular displays of incandescence that one could almost forget how far away
+the sun is from this place.
 %%%%
 swamp dragon
 

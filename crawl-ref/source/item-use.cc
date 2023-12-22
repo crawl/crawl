@@ -39,6 +39,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "makeitem.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -176,8 +177,6 @@ static string _default_use_title(operation_types oper)
             ? "Put on or remove which piece of jewellery?"
             : "Put on which piece of jewellery?";
     case OPER_QUAFF:
-        if (you.has_mutation(MUT_LONG_TONGUE))
-            return "Slurp which item?";
         return "Drink which item?";
     case OPER_READ:
         return "Read which item?";
@@ -2952,6 +2951,45 @@ void prompt_inscribe_item()
     inscribe_item(you.inv[item_slot]);
 }
 
+bool has_drunken_brawl_targets()
+{
+    list<actor*> targets;
+    get_cleave_targets(you, coord_def(), targets, -1, true);
+    return !targets.empty();
+}
+
+// Perform a melee attack against every adjacent hostile target, and print a
+// special message if there are any.
+static bool _oni_drunken_swing()
+{
+    // Use the same logic for target-picking that cleaving does
+    list<actor*> targets;
+    get_cleave_targets(you, coord_def(), targets, -1, true);
+
+    if (!targets.empty())
+    {
+        if (you.weapon())
+        {
+            mprf("You take a swig of the potion and twirl %s.",
+                 you.weapon()->name(DESC_YOUR).c_str());
+        }
+        else
+            mpr("You take a swig of the potion and flex your muscles.");
+
+
+        for (actor* victim : targets)
+        {
+            melee_attack attk(&you, victim);
+            attk.never_cleave = true;
+            attk.attack();
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
 bool drink(item_def* potion)
 {
     string r = cannot_drink_item_reason(potion, true, true);
@@ -3015,17 +3053,19 @@ bool drink(item_def* potion)
         return false;
     }
 
+    // Drunken master, swing!
+    // We do this *before* actually drinking the potion for nicer messaging.
+    if (you.has_mutation(MUT_DRUNKEN_BRAWLING)
+        && oni_likes_potion(static_cast<potion_type>(potion->sub_type)))
+    {
+        _oni_drunken_swing();
+    }
+
     // Check for Delatra's gloves before potentially melding them.
     bool heal_on_id = player_equip_unrand(UNRAND_DELATRAS_GLOVES);
 
     if (!quaff_potion(*potion))
         return false;
-
-    if (you.has_mutation(MUT_LONG_TONGUE))
-    {
-        mprf("You slurp down every last drop of the %s!",
-             potion->name(DESC_QUALNAME).c_str());
-    }
 
     if (!alreadyknown)
     {
@@ -3485,16 +3525,13 @@ static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
 static void _vulnerability_scroll()
 {
     const int dur = 30 + random2(20);
-    mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, &you, dur * BASELINE_DELAY);
 
     // Go over all creatures in LOS.
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
         if (monster* mon = monster_at(*ri))
         {
-            // If relevant, monsters have their WL halved.
-            if (!mons_invuln_will(*mon))
-                mon->add_ench(lowered_wl);
+            mon->strip_willpower(&you, dur, true);
 
             // Annoying but not enough to turn friendlies against you.
             if (!mon->wont_attack())
@@ -3502,8 +3539,8 @@ static void _vulnerability_scroll()
         }
     }
 
-    you.set_duration(DUR_LOWERED_WL, dur, 0,
-                     "Magic quickly surges around you.");
+    you.strip_willpower(&you, dur, true);
+    mpr("A wave of despondency washes over your surroundings.");
 }
 
 static bool _is_cancellable_scroll(scroll_type scroll)

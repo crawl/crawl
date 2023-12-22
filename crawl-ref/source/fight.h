@@ -52,7 +52,8 @@ bool weapon_cleaves(const item_def &item);
 int weapon_hits_per_swing(const item_def &item);
 bool weapon_multihits(const item_def *item);
 void get_cleave_targets(const actor &attacker, const coord_def& def,
-                        list<actor*> &targets, int which_attack = -1);
+                        list<actor*> &targets, int which_attack = -1,
+                        bool force_cleaving = false);
 // too many params... need to pass in a mini-struct or something
 void attack_multiple_targets(actor &attacker, list<actor*> &targets,
                              int attack_number = 0,

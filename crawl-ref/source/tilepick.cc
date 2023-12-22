@@ -4126,8 +4126,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_MUMMY;
         case SP_NAGA:
             return TILEG_SP_NAGA;
-        case SP_OGRE:
-            return TILEG_SP_OGRE;
+        case SP_ONI:
+            return TILEG_SP_ONI;
         case SP_TROLL:
             return TILEG_SP_TROLL;
         case SP_BASE_DRACONIAN:

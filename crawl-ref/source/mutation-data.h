@@ -2462,12 +2462,17 @@ static const mutation_def mut_data[] =
   {"You feel like a homebody.", "", ""},
 },
 
-{ MUT_LONG_TONGUE, 0, 1, mutflag::good, false, "long tongue",
-  {"Your long tongue fully drains potion bottles. (2x potion effects)", "", ""},
-  {"Your tongue grows exceptionally long.", "", ""},
-  {"Your tongue shrinks into a sad, ordinary nub.", "", ""},
+{ MUT_DOUBLE_POTION_HEAL, 0, 1, mutflag::good, false, "double potion healing",
+  {"You gain doubled healing and magic from potions.", "", ""},
+  {"You heal twice as much from potions.", "", ""},
+  {"You no longer heal twice as much from potions.", "", ""},
 },
 
+{ MUT_DRUNKEN_BRAWLING, 0, 1, mutflag::good, false, "drunken brawling",
+  {"Whenever you drink a healing potion, you attack all around you.", "", ""},
+  {"You brawl whenever you drink a healing potion.", "", ""},
+  {"You no longer brawl whenever you drink a healing potion.", "", ""},
+},
 };
 
 static const mutation_category_def category_mut_data[] =

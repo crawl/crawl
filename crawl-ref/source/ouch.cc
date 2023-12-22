@@ -281,6 +281,11 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
     }
 
+    case BEAM_DEVASTATION:
+        if (doEffects)
+            you.strip_willpower(beam->agent(), 12 + random2(18));
+        break;
+
     default:
         break;
     }                           // end switch

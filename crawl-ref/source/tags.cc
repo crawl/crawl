@@ -3314,7 +3314,7 @@ static void _tag_read_you(reader &th)
     }
 
     if (th.getMinorVersion() < TAG_MINOR_SAPROVOROUS
-        && you.species == SP_OGRE)
+        && you.species == SP_ONI)
     {
         // Remove the innate level of fast metabolism
         you.mutation[MUT_FAST_METABOLISM] -= 1;
@@ -3415,6 +3415,8 @@ static void _tag_read_you(reader &th)
     SP_MUT_FIX(MUT_DAYSTALKER, SP_BARACHI);
     SP_MUT_FIX(MUT_TENGU_FLIGHT, SP_TENGU);
     SP_MUT_FIX(MUT_ACROBATIC, SP_TENGU);
+    SP_MUT_FIX(MUT_DOUBLE_POTION_HEAL, SP_ONI);
+    SP_MUT_FIX(MUT_DRUNKEN_BRAWLING, SP_ONI);
 
     if (you.has_innate_mutation(MUT_NIMBLE_SWIMMER)
         || you.species == SP_MERFOLK || you.species == SP_OCTOPODE)

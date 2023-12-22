@@ -71,7 +71,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
     cleaving(is_cleaving), is_multihit(false),
-    is_riposte(false), is_projected(false), charge_pow(0),
+    is_riposte(false), is_projected(false), charge_pow(0), never_cleave(false),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1)
 {
@@ -923,7 +923,7 @@ bool melee_attack::handle_phase_end()
  */
 bool melee_attack::attack()
 {
-    if (!cleaving)
+    if (!cleaving && !never_cleave)
     {
         cleave_setup();
         if (!handle_phase_attempted())
@@ -1603,14 +1603,13 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                 defender->weaken(&you, 6);
             }
 
-            if (damage_brand == SPWPN_VULNERABILITY
-                && defender->as_monster()->willpower() != WILL_INVULN)
+            if (damage_brand == SPWPN_VULNERABILITY)
             {
-                defender->as_monster()->add_ench(
-                    mon_enchant(ENCH_LOWERED_WL, 1, &you,
-                                random_range(4, 8) * BASELINE_DELAY));
-                mprf("You sap %s willpower!",
-                     defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str());
+                if (defender->strip_willpower(&you, random_range(4, 8), true))
+                {
+                    mprf("You sap %s willpower!",
+                         defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str());
+                }
             }
 
             // Normal vampiric biting attack, not if already got stabbing special.
@@ -3029,22 +3028,6 @@ void melee_attack::mons_apply_attack_flavour()
         defender->go_berserk(false);
         break;
 
-    case AF_STICKY_FLAME:
-        if (defender->res_sticky_flame() || !one_chance_in(3))
-            break;
-    {
-        const int hd = attacker->get_hit_dice();
-        if (defender->is_player())
-        {
-            const int intensity = 3 + hd / 3;
-            sticky_flame_player(intensity, random_range(11, 21), atk_name(DESC_A));
-            break;
-        }
-        const int dur = min(4, random_range(hd / 2, hd));
-        sticky_flame_monster(defender->as_monster(), attacker, dur, true);
-    }
-        break;
-
     case AF_CHAOTIC:
         chaos_affects_defender();
         break;
@@ -3188,32 +3171,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_VULN:
         if (one_chance_in(3))
-        {
-            bool visible_effect = false;
-            if (defender->is_player())
-            {
-                if (!you.duration[DUR_LOWERED_WL])
-                    visible_effect = true;
-                you.increase_duration(DUR_LOWERED_WL, 20 + random2(20), 40);
-            }
-            else
-            {
-                // Halving the WL of targets with infinite wills has no effect
-                if (defender->as_monster()->willpower() == WILL_INVULN)
-                    break;
-                if (!defender->as_monster()->has_ench(ENCH_LOWERED_WL))
-                    visible_effect = true;
-                mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, attacker,
-                                       (20 + random2(20)) * BASELINE_DELAY);
-                defender->as_monster()->add_ench(lowered_wl);
-            }
-
-            if (needs_message && visible_effect)
-            {
-                mprf("%s willpower is stripped away!",
-                     def_name(DESC_ITS).c_str());
-            }
-        }
+            defender->strip_willpower(attacker, 20 + random2(20), !needs_message);
         break;
 
     case AF_SHADOWSTAB:
@@ -3701,7 +3659,6 @@ bool melee_attack::do_knockback(bool slippery)
 
 bool melee_attack::do_drag()
 {
-{
     if (defender->is_stationary())
         return false; // don't even print a message
 
@@ -3744,12 +3701,17 @@ bool melee_attack::do_drag()
     // Only move the attacker back if the defender was already adjacent and we
     // want to move them *into* the attacker's space.
     if (new_defender_pos == attacker->pos())
+    {
         attacker->move_to_pos(new_attacker_pos);
+        attacker->apply_location_effects(new_attacker_pos);
+        attacker->did_deliberate_movement();
+    }
 
     defender->move_to_pos(new_defender_pos);
+    defender->apply_location_effects(new_defender_pos);
+    defender->did_deliberate_movement();
 
     return true;
-}
 }
 
 /**

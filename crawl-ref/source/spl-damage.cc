@@ -3508,7 +3508,7 @@ spret cast_inner_flame(coord_def target, int pow, bool fail)
 
 int get_mercury_weaken_chance(int victim_hd, int pow)
 {
-    return 100 - max(0, (victim_hd * 12 - pow * 2 - 10));
+    return max(0, 100 - max(0, (victim_hd * 12 - pow * 3 / 2 - 17) * 115 / 100));
 }
 
 spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
@@ -3521,8 +3521,13 @@ spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
 
     monster* mons = monster_at(target);
     if (mons && you.can_see(*mons) && !god_protects(&you, mons)
-        && mons->res_poison() < 3
+        && mons->res_poison()
         && stop_attack_prompt(mons, false, you.pos()))
+    {
+        return spret::abort;
+    }
+    else if (you.pos() == target && !you.res_poison()
+             && !yesno("Really target yourself?", false, 'n'))
     {
         return spret::abort;
     }
@@ -3531,11 +3536,13 @@ spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
 
     if (mons && you.can_see(*mons))
         mprf("Fumes of mercury billow around %s!", mons->name(DESC_THE).c_str());
+    else if (target == you.pos())
+        mpr("Fumes of mercury billow around yourself!");
     else
         mpr("Fumes of mercury billow through the air!");
 
     // Attempt to poison the central monster, if there is one.
-    if (mons && !god_protects(&you, mons))
+    if (mons && !mons->res_poison() && !god_protects(&you, mons))
     {
         // Be a little more generous with poisoning unpoisoned monsters.
         int amount = max(1, div_rand_round(pow, 25));
@@ -3548,6 +3555,9 @@ spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
         if (mons->alive())
             you.pet_target = mons->mindex();
     }
+    // Trying to cast on self - presumably for the AoE weak.
+    else if (you.pos() == target && !you.res_poison())
+        you.poison(&you, roll_dice(2, 6));
 
     // Now attempt to weaken all monsters adjacent to the target
     for (adjacent_iterator ai(target, false); ai; ++ai)

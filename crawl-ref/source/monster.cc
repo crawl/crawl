@@ -4277,7 +4277,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             hit_points = max_hit_points;
         }
 
-        if (flavour == BEAM_DEVASTATION || flavour == BEAM_MINDBURST)
+        if (flavour == BEAM_DESTRUCTION || flavour == BEAM_MINDBURST)
         {
             if (can_bleed())
                 blood_spray(pos(), type, amount / 5);
@@ -5331,6 +5331,39 @@ void monster::apply_location_effects(const coord_def &oldpos,
     }
 }
 
+void monster::did_deliberate_movement()
+{
+    // Apply barbs damage
+    if (has_ench(ENCH_BARBS))
+    {
+        mon_enchant barbs = get_ench(ENCH_BARBS);
+
+        // Save these first because hurt() might kill the monster.
+        hurt(monster_by_mid(barbs.source), roll_dice(2, barbs.degree * 2 + 2));
+        bleed_onto_floor(pos(), type, 2, false);
+        if (coinflip())
+        {
+            barbs.duration--;
+            update_ench(barbs);
+        }
+    }
+
+    // And then shake off sticky flame
+    if (has_ench(ENCH_STICKY_FLAME))
+    {
+        mon_enchant flame = get_ench(ENCH_STICKY_FLAME);
+
+        flame.duration -= 50;
+        if (flame.duration <= 0)
+        {
+            simple_monster_message(*this, " shakes off the sticky flame as it moves.");
+            del_ench(ENCH_STICKY_FLAME, true);
+        }
+        else
+            update_ench(flame);
+    }
+}
+
 void monster::self_destruct()
 {
     suicide();
@@ -5481,6 +5514,19 @@ void monster::weaken(actor *attacker, int pow)
 
     add_ench(mon_enchant(ENCH_WEAK, 1, attacker,
                          (pow + random2(pow + 3)) * BASELINE_DELAY));
+}
+
+bool monster::strip_willpower(actor *attacker, int dur, bool quiet)
+{
+    // Infinite will enemies are immune
+    if (willpower() == WILL_INVULN)
+        return false;
+
+    if (!quiet && !has_ench(ENCH_LOWERED_WL) && you.can_see(*this))
+        mprf("%s willpower is stripped away!", name(DESC_ITS).c_str());
+
+    mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, attacker, dur * BASELINE_DELAY);
+    return add_ench(lowered_wl);
 }
 
 void monster::check_awaken(int)

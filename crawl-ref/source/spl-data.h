@@ -1361,10 +1361,10 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_ENERGY_BOLT, "Energy Bolt",
+    SPELL_BOLT_OF_DEVASTATION, "Bolt of Devastation",
     spschool::conjuration,
     spflag::dir_or_target | spflag::monster | spflag::needs_tracer,
-    4,
+    5,
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
@@ -3089,10 +3089,10 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_MERCURY_VAPOURS, "Mercury Vapours",
     spschool::alchemy | spschool::air,
-    spflag::target | spflag::not_self | spflag::destructive,
+    spflag::target | spflag::destructive,
     2,
     50,
-    6, 6,
+    3, 3,
     0,
     TILEG_POISONOUS_VAPOURS,
 },

@@ -27,7 +27,7 @@ enum species_type
     SP_KOBOLD,
     SP_MUMMY,
     SP_NAGA,
-    SP_OGRE,
+    SP_ONI,
     SP_TROLL,
 
     SP_RED_DRACONIAN,

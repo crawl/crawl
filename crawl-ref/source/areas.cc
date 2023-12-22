@@ -623,7 +623,6 @@ static int _mons_class_halo_radius(monster_type type)
     case MONS_SERAPH:
         return 7; // highest rank among sentient ones
     case MONS_HOLY_SWINE:
-    case MONS_SUN_MOTH:
         return 1;  // only notionally holy
     case MONS_MENNAS:
         return 2;  // ???  Low on grace or what?

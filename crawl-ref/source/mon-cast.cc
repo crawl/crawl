@@ -907,7 +907,7 @@ static bool _los_spell_worthwhile(const monster &mons, spell_type spell)
 /// Set up a fake beam, for noise-generating purposes (?)
 static void _setup_fake_beam(bolt& beam, const monster&, int)
 {
-    beam.flavour  = BEAM_DEVASTATION;
+    beam.flavour  = BEAM_DESTRUCTION;
     beam.pierce   = true;
     // Doesn't take distance into account, but this is just a tracer so
     // we'll ignore that. We need some damage on the tracer so the monster
@@ -1417,7 +1417,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_DISPEL_UNDEAD:
     case SPELL_BOLT_OF_DRAINING:
     case SPELL_STICKY_FLAME:
-    case SPELL_PYRE_ARROW:
     case SPELL_STING:
     case SPELL_IRON_SHOT:
     case SPELL_BOMBARD:
@@ -1456,16 +1455,12 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_DISPEL_UNDEAD_RANGE:
     case SPELL_STUNNING_BURST:
     case SPELL_MALIGN_OFFERING:
+    case SPELL_BOLT_OF_DEVASTATION:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
     case SPELL_FREEZING_CLOUD: // battlesphere special-case
         zappy(ZAP_FREEZING_BLAST, power, true, beam);
-        break;
-
-    case SPELL_ENERGY_BOLT:
-        zappy(spell_to_zap(real_spell), power, true, beam);
-        beam.short_name = "energy";
         break;
 
     case SPELL_MALMUTATE:
@@ -1637,6 +1632,16 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.hit         = AUTOMATIC_HIT;
         beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
         beam.ex_size     = 1;
+        break;
+
+    case SPELL_PYRE_ARROW:
+        zappy(spell_to_zap(real_spell), power, true, beam);
+
+        // Purely flavor-based renames for less magical users
+        if (mons->type == MONS_BOMBARDIER_BEETLE)
+            beam.name = "burning spray";
+        else if (mons->type == MONS_SUN_MOTH)
+            beam.name = "flurry of pyrophoric scales";
         break;
 
     default:

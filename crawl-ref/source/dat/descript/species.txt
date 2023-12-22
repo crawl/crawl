@@ -1,8 +1,8 @@
 %%%%
 Armataur
 
-Scaled mammals the size of horses, Armataurs are fast-rolling, resilient, and
-great potion drinkers, but they lack dexterity.
+Scaled mammals the size of horses, Armataurs are fast-rolling and tenacious when
+pursuing enemies, but lack dexterity.
 %%%%
 Barachi
 
@@ -102,10 +102,10 @@ Octopode
 Octopodes are a species of amphibious cephalopods. They can wear eight rings,
 but almost no armour fits them.
 %%%%
-Ogre
+Oni
 
-Large, strong, and extremely robust, Ogres are competent at all forms of melee.
-Not merely brutes, they are also quite capable spellcasters.
+Large, robust, and extremely fond of drinking, Oni make capable brawlers and
+spellcasters and gain extra benefits from healing potions.
 %%%%
 Spriggan
 
