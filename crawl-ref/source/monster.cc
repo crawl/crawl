@@ -5339,8 +5339,13 @@ void monster::did_deliberate_movement()
         mon_enchant barbs = get_ench(ENCH_BARBS);
 
         // Save these first because hurt() might kill the monster.
+        const coord_def pos = pos();
+        const monster_type typ = type;
         hurt(monster_by_mid(barbs.source), roll_dice(2, barbs.degree * 2 + 2));
-        bleed_onto_floor(pos(), type, 2, false);
+        bleed_onto_floor(pos, typ, 2, false);
+        if (!alive())
+            return;
+
         if (coinflip())
         {
             barbs.duration--;
