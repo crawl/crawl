@@ -985,7 +985,7 @@ Mercury Vapours spell
 Briefly transmutes a portion of the air around a targeted location into gaseous
 mercury. Anyone directly inhaling the fumes will be poisoned, but even those
 adjacent to the epicenter may be weakened by exposure to the chemical - whether
-they resist poison or not.
+living or otherwise.
 %%%%
 Necrotise spell
 
