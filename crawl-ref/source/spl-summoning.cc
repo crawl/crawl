@@ -2814,7 +2814,7 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool 
     // For unseen invisble enemies
     if (actor_at(pos))
     {
-        mpr("Your attempt to unleash a boulder fails!");
+        mpr("Something unseen is already there!");
         return spret::success;
     }
 
