@@ -1580,6 +1580,7 @@ void game_options::reset_options()
     autopickups.set(OBJ_BOOKS);
     autopickups.set(OBJ_JEWELLERY);
     autopickups.set(OBJ_WANDS);
+    autopickups.set(OBJ_GEMS);
 
     dump_item_origins      = IODS_ARTEFACTS;
 
