@@ -386,7 +386,7 @@ static const duration_def duration_data[] =
     { DUR_FUGUE,
       BLUE, "Fugue",
       "fugue", "fugue of the fallen",
-      "Your melee attacks are strengthened by the souls of the fallen.", D_DISPELLABLE | D_EXPIRES,
+      "Your melee and ranged attacks are strengthened by the souls of the fallen.", D_DISPELLABLE | D_EXPIRES,
       {{ "Your fugue has ended." },
         { "You are losing your grip on the fallen." }}, 6},
     { DUR_FLAYED,
