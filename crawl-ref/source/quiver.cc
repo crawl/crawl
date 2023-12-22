@@ -354,16 +354,6 @@ namespace quiver
             throw_it(*this);
         }
 
-        bool uses_mp() const override
-        {
-            return is_bullseye_active();
-        }
-
-        bool affected_by_pproj() const override
-        {
-            return true;
-        }
-
         item_def *get_launcher() const override
         {
             return you.weapon();
@@ -905,16 +895,6 @@ namespace quiver
             if (you.inv[item_slot].sub_type == MI_THROWING_NET)
                 return false;
 
-            return true;
-        }
-
-        bool uses_mp() const override
-        {
-            return is_bullseye_active();
-        }
-
-        bool affected_by_pproj() const override
-        {
             return true;
         }
 

@@ -393,10 +393,10 @@ rP- status
 
 You are more vulnerable to poison.
 %%%%
-PProj status
+Bullseye status
 
-You are teleporting fired or thrown missiles directly to their targets with
-increased accuracy, at the cost of a small amount of magic for each missile.
+You have targeted an enemy with a dimensional bullseye, causing missiles fired
+or thrown at a different enemy to also be teleported at the target.
 %%%%
 Forest status
 
