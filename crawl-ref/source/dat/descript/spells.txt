@@ -166,7 +166,7 @@ Fires a penetrating bolt of frost.
 %%%%
 Bolt of Devastation spell
 
-Fires a bolt of grief and heartache that cuts its victims willpower in half.
+Fires a bolt of grief and heartache that cuts its victims' willpower in half.
 %%%%
 Bolt of Draining spell
 
