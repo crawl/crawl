@@ -822,10 +822,10 @@ fae also reduces the caster's own willpower for a time.
 %%%%
 Volatile Blastmotes spell
 
-Brings forth a cloud of volatile blastmotes around the caster, which explode
-when something moves into them or when they're exposed to open flames. The
-explosion is concussive, knocking adjacent creatures away. Damage done rises
-with the spell's power.
+Brings forth a cloud of volatile blastmotes around the caster. These explode
+on contact with open flame or with creatures - including any caster foolish
+enough to linger in them! The explosion is concussive, knocking adjacent
+creatures away. Damage done rises with the spell's power.
 %%%%
 Leda's Liquefaction spell
 

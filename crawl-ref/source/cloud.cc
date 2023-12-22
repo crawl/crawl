@@ -33,6 +33,7 @@
 #include "player-stats.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-clouds.h" // explode_blastmotes_at
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
@@ -1179,6 +1180,12 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         }
         break;
     }
+
+    case CLOUD_BLASTMOTES:
+        if (act->props.exists(BLASTMOTE_IMMUNE_KEY))
+            return false;
+        explode_blastmotes_at(cloud.pos);
+        return true;
 
     default:
         break;

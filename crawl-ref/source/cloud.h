@@ -55,6 +55,7 @@ struct cloud_tile_info
 #define MEPH_HD_CAP 21
 
 #define BLASTMOTE_POWER_KEY "blastspark_power"
+#define BLASTMOTE_IMMUNE_KEY "blastmote_immune"
 #define MIASMA_IMMUNE_KEY "miasma_immune"
 
 cloud_struct* cloud_at(coord_def pos);

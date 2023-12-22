@@ -1055,6 +1055,9 @@ void player_reacts()
     // so erase it just after we apply clouds for the turn (above).
     if (you.props.exists(MIASMA_IMMUNE_KEY))
         you.props.erase(MIASMA_IMMUNE_KEY);
+    // Ditto for blastmotes.
+    if (you.props.exists(BLASTMOTE_IMMUNE_KEY))
+        you.props.erase(BLASTMOTE_IMMUNE_KEY);
 
     actor_apply_toxic_bog(&you);
 
