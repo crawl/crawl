@@ -52,3 +52,5 @@ recommended_jobs:
   - JOB_MONK
   - JOB_HUNTER
   - JOB_BERSERKER
+
+child_name: Calf

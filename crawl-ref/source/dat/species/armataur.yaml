@@ -63,3 +63,6 @@ recommended_weapons:
   - SK_MACES_FLAILS
   - SK_AXES
   - SK_STAVES
+
+altar_action: curl up in front of
+child_name: Pup
