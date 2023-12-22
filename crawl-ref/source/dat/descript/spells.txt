@@ -1138,9 +1138,7 @@ spells. The caster's demise will cause the transformation to end.
 %%%%
 Portal Projectile spell
 
-Allows the caster to teleport fired or thrown missiles directly to their
-targets for a short duration, spending an additional small amount of magic for
-each missile. Teleported projectiles have their accuracy greatly increased.
+Teleports a fired or thrown missile at a targeted enemy.
 %%%%
 Primal Wave spell
 

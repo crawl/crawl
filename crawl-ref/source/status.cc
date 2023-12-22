@@ -711,13 +711,6 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
-    case DUR_DIMENSIONAL_BULLSEYE:
-    {
-        if (!is_bullseye_active())
-            inf.light_colour = DARKGREY;
-        break;
-    }
-
     case STATUS_ORB:
     {
         if (player_has_orb())
