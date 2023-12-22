@@ -70,3 +70,4 @@
 # include = safe_move_shift.txt
 
 #more_gem_info = true
+always_show_gems = true

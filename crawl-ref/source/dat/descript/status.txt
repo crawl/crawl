@@ -779,6 +779,11 @@ Zot count status
 If you spend the indicated number of turns in this branch without descending to
 a new floor, Zot will find you, causing permanent health damage.
 %%%%
+Gem status
+
+If you spend the indicated number of turns in this branch, its gem will be found
+and shattered by the power of Zot.
+%%%%
 Curl status
 
 After being struck by an attack, you reflexively curled up, protecting yourself

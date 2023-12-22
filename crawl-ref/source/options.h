@@ -535,6 +535,7 @@ public:
                                         // two autofight commands
     bool        cloud_status;     // Whether to show a cloud status light
     bool        always_show_zot;  // Whether to always show the Zot timer
+    bool        always_show_gems; // Whether to always show gem timers
     bool        more_gem_info;    // Whether to show gems breaking
 
 #ifdef USE_TILE_WEB
