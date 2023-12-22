@@ -373,7 +373,7 @@ static monster_type _choose_dragon_type(int pow, god_type /*god*/, bool player)
 
 spret cast_dragon_call(int pow, bool fail)
 {
-    if (stop_summoning_prompt(MR_NO_FLAGS, M_NO_FLAGS, "call dragons"))
+    if (stop_summoning_prompt(MR_NO_FLAGS, M_FLIES, "call dragons"))
         return spret::abort;
 
     fail_check();
