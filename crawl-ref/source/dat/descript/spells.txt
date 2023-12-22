@@ -622,13 +622,14 @@ Fugue of the Fallen spell
 
 Calls out to the lingering remnants of the long dead. While active, each
 non-summoned enemy the caster or their allies slays attracts more vengeful
-souls into the caster's weapon, temporarily enhances their melee and ranged
-effectiveness. When this bonus reaches its maximum, every attack will inflict
-a glimmer of the dead's suffering on each adjacent foe.
+souls into the caster's weapon, temporarily enhancing their melee and ranged
+effectiveness. When this bonus reaches its maximum, every hit will unleash a
+glimmer of the dead's suffering, causing pain damage to each other foe adjacent
+to your target.
 
-Recasting this spell will release your grip on the souls you've attracted, and
-the violent wailing of the fallen may also attract unwanted attention while the
-spell is active.
+Recasting this spell will release your grip on the souls you've attracted,
+resetting any bonus you've accumulated, and the cacophonous wailing of the dead
+may attract unwanted attention even while you maintain it.
 %%%%
 Fulminant Prism spell
 
