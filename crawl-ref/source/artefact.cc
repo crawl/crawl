@@ -819,7 +819,7 @@ static const artefact_prop_data artp_data[] =
     { "Tloc", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_TLOC,
         []() {return 1;}, nullptr, 0, 0},
 #if TAG_MAJOR_VERSION == 34
-    { "Tmut", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_TMUT,
+    { "Tmut", ARTP_VAL_BOOL, 0, // ARTP_ENHANCE_TMUT,
         []() {return 1;}, nullptr, 0, 0},
 #endif
     { "Fire", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_FIRE,
