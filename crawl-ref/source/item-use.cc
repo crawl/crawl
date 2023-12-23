@@ -2966,6 +2966,18 @@ static bool _oni_drunken_swing()
     list<actor*> targets;
     get_cleave_targets(you, coord_def(), targets, -1, true);
 
+    // Test that we have at least one valid non-prompting attack
+    bool valid_swing = false;
+    for (actor* victim : targets)
+    {
+        melee_attack attk(&you, victim);
+        if (!attk.would_prompt_player())
+            valid_swing = true;
+    }
+
+    if (!valid_swing)
+        return false;
+
     if (!targets.empty())
     {
         if (you.weapon())
@@ -2976,12 +2988,13 @@ static bool _oni_drunken_swing()
         else
             mpr("You take a swig of the potion and flex your muscles.");
 
-
         for (actor* victim : targets)
         {
             melee_attack attk(&you, victim);
             attk.never_cleave = true;
-            attk.attack();
+
+            if (!attk.would_prompt_player())
+                attk.attack();
         }
 
         return true;
