@@ -2540,7 +2540,7 @@ static int _discharge_monsters(const coord_def &where, int pow,
     return damage;
 }
 
-bool safe_discharge(coord_def where, vector<const actor *> &exclude)
+bool safe_discharge(coord_def where, vector<const actor *> &exclude, bool check_only)
 {
     for (adjacent_iterator ai(where); ai; ++ai)
     {
@@ -2556,13 +2556,16 @@ bool safe_discharge(coord_def where, vector<const actor *> &exclude)
                 if (act->res_elec() >= 3 || god_protects(act->as_monster()))
                     continue;
 
-                if (stop_attack_prompt(act->as_monster(), false, where))
+                if (stop_attack_prompt(act->as_monster(), false, where, nullptr,
+                                       coord_def(), check_only))
+                {
                     return false;
+                }
             }
             // Don't prompt for the player, but always continue arcing.
 
             exclude.push_back(act);
-            if (!safe_discharge(act->pos(), exclude))
+            if (!safe_discharge(act->pos(), exclude, check_only))
                 return false;
         }
     }

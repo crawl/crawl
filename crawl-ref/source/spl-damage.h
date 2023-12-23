@@ -60,7 +60,7 @@ string mons_inner_flame_immune_reason(const monster *mons);
 spret cast_inner_flame(coord_def target, int pow, bool fail);
 int get_mercury_weaken_chance(int victim_hd, int pow);
 spret cast_mercury_vapours(int pow, const coord_def target, bool fail);
-bool safe_discharge(coord_def where, vector<const actor *> &exclude);
+bool safe_discharge(coord_def where, vector<const actor *> &exclude, bool check_only = false);
 spret cast_discharge(int pow, const actor &agent, bool fail = false,
                           bool prompt = true);
 int discharge_max_damage(int pow);

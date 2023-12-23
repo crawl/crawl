@@ -110,7 +110,14 @@ bool melee_attack::bad_attempt()
     return stop_attack_prompt(defender->as_monster(), false, attack_position);
 }
 
-bool melee_attack::player_unrand_bad_attempt()
+// Whether this attack, if performed, would prompt the player about damaging
+// nearby allies with an unrand property.
+bool melee_attack::would_prompt_player()
+{
+    return attacker->is_player() && player_unrand_bad_attempt(true);
+}
+
+bool melee_attack::player_unrand_bad_attempt(bool check_only)
 {
     // Unrands with secondary effects that can harm nearby friendlies.
     // Don't prompt for confirmation (and leak information about the
@@ -128,7 +135,8 @@ bool melee_attack::player_unrand_bad_attempt()
                                   [](const actor *act)
                                   {
                                       return !god_protects(act->as_monster());
-                                  }, nullptr, defender->as_monster());
+                                  }, nullptr, defender->as_monster(),
+                                  check_only);
     }
     else if (is_unrandom_artefact(*weapon, UNRAND_VARIABILITY)
              || is_unrandom_artefact(*weapon, UNRAND_SINGING_SWORD)
@@ -140,7 +148,8 @@ bool melee_attack::player_unrand_bad_attempt()
                                [](const actor *act)
                                {
                                    return !god_protects(act->as_monster());
-                               }, nullptr, defender->as_monster());
+                               }, nullptr, defender->as_monster(),
+                               check_only);
     }
     if (is_unrandom_artefact(*weapon, UNRAND_TORMENT))
     {
@@ -152,12 +161,13 @@ bool melee_attack::player_unrand_bad_attempt()
                                    return !m->res_torment()
                                        && !god_protects(m->as_monster());
                                },
-                                  nullptr, defender->as_monster());
+                                  nullptr, defender->as_monster(),
+                                check_only);
     }
     if (is_unrandom_artefact(*weapon, UNRAND_ARC_BLADE))
     {
         vector<const actor *> exclude;
-        return !safe_discharge(defender->pos(), exclude);
+        return !safe_discharge(defender->pos(), exclude, check_only);
     }
     if (is_unrandom_artefact(*weapon, UNRAND_POWER))
     {
@@ -169,7 +179,8 @@ bool melee_attack::player_unrand_bad_attempt()
                                [](const actor *act)
                                {
                                    return !god_protects(act->as_monster());
-                               }, nullptr, defender->as_monster());
+                               }, nullptr, defender->as_monster(),
+                               check_only);
     }
     return false;
 }

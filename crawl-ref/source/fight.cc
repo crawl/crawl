@@ -1077,7 +1077,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool *prompted,
-                        coord_def attack_pos)
+                        coord_def attack_pos, bool check_only)
 {
     ASSERT(mon); // XXX: change to const monster &mon
     bool penance = false;
@@ -1088,12 +1088,19 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     if (crawl_state.disables[DIS_CONFIRMATIONS])
         return false;
 
-    if (you.confused() || !you.can_see(*mon))
+    // The player is ordinarily given a different prompt before this if confused,
+    // but if we're merely testing if this attack *could* be bad, we should do
+    // the full check anyway.
+    if ((you.confused() && !check_only) || !you.can_see(*mon))
         return false;
 
     string adj, suffix;
     if (!bad_attack(mon, adj, suffix, penance, attack_pos))
         return false;
+
+    // We have already determined this attack *would* prompt, so stop here
+    if (check_only)
+        return true;
 
     // Listed in the form: "your rat", "Blork the orc".
     string mon_name = mon->name(DESC_PLAIN);
@@ -1135,7 +1142,8 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
 
 bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         function<bool(const actor *victim)> affects,
-                        bool *prompted, const monster *defender)
+                        bool *prompted, const monster *defender,
+                        bool check_only)
 {
     if (crawl_state.disables[DIS_CONFIRMATIONS])
         return false;
@@ -1143,7 +1151,10 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     if (crawl_state.which_god_acting() == GOD_XOM)
         return false;
 
-    if (you.confused())
+    // The player is ordinarily given a different prompt before this if confused,
+    // but if we're merely testing if this attack *could* be bad, we should do
+    // the full check anyway.
+    if (you.confused() && !check_only)
         return false;
 
     string adj, suffix;
@@ -1180,6 +1191,10 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
 
     if (victims.empty())
         return false;
+
+    // We have already determined that this attack *would* prompt, so stop here
+    if (check_only)
+        return true;
 
     // Listed in the form: "your rat", "Blork the orc".
     string mon_name = victims.describe(DESC_PLAIN);
