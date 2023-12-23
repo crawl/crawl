@@ -4388,7 +4388,8 @@ Okawaru Frederick triumphant
 
 @Frederick@
 %%%%
-############ FANNAR ### A cold-hearted elven sorcererFannar
+############ FANNAR ### A cold-hearted elven sorcerer
+Fannar
 
 @_Fannar_common_@
 
