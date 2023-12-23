@@ -38,10 +38,6 @@ bolt
 
 Bełt do kuszy.
 %%%%
-book of alchemy
-
-Księga czarów nadżarta chemikaliami, z wypaloną dziurą w okładce.
-%%%%
 book of annihilations
 
 Ogromna moc pała z kart tej księgi, taka że nawet niepiśmienny barbarzyńca ją

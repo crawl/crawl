@@ -1032,7 +1032,7 @@ KFEAT:  D = book shop type:Must-Have suffix:Magic greed:7 count:17 use_all ; \
             book of death | book of displacement |\
             book of the earth | book of burglary | book of annihilations |\
             grand grimoire | necronomicon | book of power | book of chaos |\
-            book of the moon | book of blasting | ozocubu's autobiography
+            book of the moon | book of blasting
 KFEAT:  EP = scroll shop greed:10 use_all count:14 ; \
             scroll of blinking q:3 | scroll of blinking q:4 | scroll of blinking q:5 |\
             scroll of fog q:3 | scroll of fog q:4 | scroll of fog q:5 |\
@@ -1080,7 +1080,7 @@ KFEAT:  M = jewellery shop type:Timeless suffix:Talismans count:8 greed:7 use_al
             dragon-blood talisman | granite talisman | storm talisman | talisman of death
 KFEAT:  N = weapon shop type:Staff suffix:Store count:9 use_all greed:30 ; \
             staff of fire | staff of air | staff of earth | staff of cold |\
-            staff of poison | staff of death | staff of conjuration
+            staff of alchemy | staff of death | staff of conjuration
 KFEAT:  Q = weapon shop type:Weapon suffix:Rack count:17 use_all greed:30 ; \
             mundane quick blade | mundane demon blade |\
             mundane triple sword | mundane broad axe |\

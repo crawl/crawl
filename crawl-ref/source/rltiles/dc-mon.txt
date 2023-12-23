@@ -237,6 +237,7 @@ jellyfish MONS_JELLYFISH
 ## Beetles ('B')
 %sdir mon/animals
 %rim 0
+bombardier_beetle MONS_BOMBARDIER_BEETLE
 boulder_beetle MONS_BOULDER_BEETLE
 boulder_beetle_rolling0 MONS_BOULDER_BEETLE_ROLLING
 boulder_beetle_rolling1
@@ -626,6 +627,7 @@ formicid MONS_FORMICID
 human MONS_HUMAN
 human2
 human3
+burial_acolyte MONS_BURIAL_ACOLYTE
 hell_knight MONS_HELL_KNIGHT
 death_knight MONS_DEATH_KNIGHT
 necromancer MONS_NECROMANCER
@@ -1192,7 +1194,8 @@ revenant MONS_REVENANT
 curse_skull MONS_CURSE_SKULL
 %rim 0
 curse_toe MONS_CURSE_TOE
-flying_skull MONS_FLYING_SKULL
+weeping_skull MONS_WEEPING_SKULL
+laughing_skull MONS_LAUGHING_SKULL
 %rim 1
 %sdir mon/unique
 murray MONS_MURRAY
@@ -1303,4 +1306,3 @@ polymoth MONS_POLYMOTH
 jack_o_lantern MONS_JACK_O_LANTERN
 gastronaut MONS_GASTRONAUT
 crawling_zombie_skyshark MONS_SKYSHARK_CRAWLING
-anubis_guard MONS_ANUBIS_GUARD

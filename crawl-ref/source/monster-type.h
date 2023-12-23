@@ -239,6 +239,7 @@ enum monster_type                      // env.mons[].type
     MONS_HORNET,
 #if TAG_MAJOR_VERSION > 34
     MONS_SPARK_WASP,
+    MONS_BOMBARDIER_BEETLE,
 #endif
 #if TAG_MAJOR_VERSION == 34
     MONS_BEETLE,
@@ -489,6 +490,9 @@ enum monster_type                      // env.mons[].type
     MONS_OGRE,
     MONS_TWO_HEADED_OGRE,
     MONS_OGRE_MAGE,
+#if TAG_MAJOR_VERSION > 34
+    MONS_ONI,
+#endif
     MONS_TROLL,
 #if TAG_MAJOR_VERSION == 34
     MONS_ROCK_TROLL,
@@ -520,6 +524,9 @@ enum monster_type                      // env.mons[].type
     MONS_HUMAN,
 #if TAG_MAJOR_VERSION == 34
     MONS_SLAVE,
+#endif
+#if TAG_MAJOR_VERSION > 34
+    MONS_BURIAL_ACOLYTE,
 #endif
     MONS_HELL_KNIGHT,
 #if TAG_MAJOR_VERSION > 34
@@ -757,7 +764,10 @@ enum monster_type                      // env.mons[].type
     MONS_SHADOW_WRAITH,
     MONS_SILENT_SPECTRE,
     MONS_EIDOLON,
-    MONS_FLYING_SKULL,
+#if TAG_MAJOR_VERSION > 34
+    MONS_WEEPING_SKULL,
+#endif
+    MONS_LAUGHING_SKULL,
     MONS_SKELETAL_WARRIOR,
     MONS_PHANTASMAL_WARRIOR,
     MONS_LICH,
@@ -1213,6 +1223,10 @@ enum monster_type                      // env.mons[].type
     MONS_INUGAMI,
     MONS_PROTEAN_PROGENITOR,
     MONS_ASPIRING_FLESH,
+    MONS_ONI,                          // player species only
+    MONS_BOMBARDIER_BEETLE,
+    MONS_WEEPING_SKULL,
+    MONS_BURIAL_ACOLYTE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

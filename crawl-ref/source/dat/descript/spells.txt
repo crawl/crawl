@@ -164,6 +164,10 @@ Bolt of Cold spell
 
 Fires a penetrating bolt of frost.
 %%%%
+Bolt of Devastation spell
+
+Fires a bolt of grief and heartache that cuts its victims willpower in half.
+%%%%
 Bolt of Draining spell
 
 Fires a penetrating bolt of negative energy which drains any living creature
@@ -221,12 +225,11 @@ Call Canine Familiar spell
 
 Summons an inugami to the caster's aid. These mystical canines form a bond with
 their summoner that strengthens them in direct proportion with the caster's
-spellpower, but that same bond will also drain the summoner's lifeforce if they
-ever allow their familiar to die on the battlefield.
+spellpower.
 
-Recasting this spell while your familiar is already present will instead imbue
-it with additional magic, mending some of its wounds and causing its next
-attack to strike more quickly and cleave adjacent foes.
+Recasting this spell while your familiar is nearby will imbue it with additional
+magic, mending some of its wounds and causing its next attack to strike more
+quickly and cleave adjacent foes.
 %%%%
 Call Down Damnation spell
 
@@ -509,10 +512,6 @@ Electrical Bolt spell
 
 Throws a bolt of electricity at the target, with high accuracy.
 %%%%
-Energy Bolt spell
-
-Fires a bolt of highly destructive energy.
-%%%%
 Enfeeble spell
 
 Overwhelms an enemy with malignant energies, irresistibly weakening their melee
@@ -619,11 +618,29 @@ Each victim is only ever affected by one icy wall at a time.
 
 The ice will crack and fall away if the caster moves to a new position.
 %%%%
+Fugue of the Fallen spell
+
+Calls out to the lingering remnants of the long dead. While active, each
+non-summoned enemy the caster or their allies slays attracts more vengeful
+souls into the caster's weapon, temporarily enhancing their melee and ranged
+effectiveness. When this bonus reaches its maximum, every hit will unleash a
+glimmer of the dead's suffering, causing pain damage to each other foe adjacent
+to your target.
+
+Recasting this spell will release your grip on the souls you've attracted,
+resetting any bonus you've accumulated, and the cacophonous wailing of the dead
+may attract unwanted attention even while you maintain it.
+%%%%
 Fulminant Prism spell
 
 Conjures a prism which unleashes a violent explosion of arcane force after a
 short duration. The prism is extremely fragile and any damage caused to it may
 result in premature detonation.
+%%%%
+Funeral Dirge spell
+
+A ritual chant that briefly rouses several nearby undead allies to move more
+swiftly and strike with greater might.
 %%%%
 Gell's Gravitas spell
 
@@ -810,10 +827,10 @@ fae also reduces the caster's own willpower for a time.
 %%%%
 Volatile Blastmotes spell
 
-Brings forth a cloud of volatile blastmotes around the caster, which explode
-when something moves into them or when they're exposed to open flames. The
-explosion is concussive, knocking adjacent creatures away. Damage done rises
-with the spell's power.
+Brings forth a cloud of volatile blastmotes around the caster. These explode
+on contact with open flame or with creatures - including any caster foolish
+enough to linger in them! The explosion is concussive, knocking adjacent
+creatures away. Damage done rises with the spell's power.
 %%%%
 Leda's Liquefaction spell
 
@@ -969,6 +986,20 @@ Summons a powerful exotic creature to the caster's aid: a manticore, a lindwurm,
 or, at high power, even a sphinx. Casting the spell at higher power also
 increases the strength of the beasts themselves.
 %%%%
+Mercury Vapours spell
+
+Briefly transmutes a portion of the air around a targeted location into gaseous
+mercury. Anyone directly inhaling the fumes will be poisoned, but even those
+adjacent to the epicenter may be weakened by exposure to the chemical - whether
+living or otherwise.
+%%%%
+Mourning Wail spell
+
+Exhales a stream of forgotten grief, leaving clouds of excruciating misery in
+its wake but skipping past creatures that would be vulnerable to it. These
+clouds of negative energy will rapidly drain the living of small fractions of
+their maximum health.
+%%%%
 Necrotise spell
 
 Agonizingly rots away the victim's flesh. Those slain by this spell (or otherwise
@@ -1079,11 +1110,6 @@ Poisonous Cloud spell
 
 Conjures forth a great cloud of lethal gases.
 %%%%
-Poisonous Vapours spell
-
-Turns the air around a targeted creature toxic, directly inflicting poison on
-the target before dispersing.
-%%%%
 Polar Vortex spell
 
 Turns the air around the caster into a freezing vortex, doing tremendous damage
@@ -1114,6 +1140,14 @@ Primal Wave spell
 
 Conjures a torrent of water that may knock back the target, and creates a
 pool of shallow water for a short duration.
+%%%%
+Pyre Arrow spell
+
+Launches a glob of liquid fire that clings to a targeted creature, dealing
+armour-ignoring fire damage over multiple turns. The victim can put the fire out
+much more quickly by moving.
+
+If the target is insubstantial, the liquid fire will fail to stick.
 %%%%
 Pyroclastic Surge spell
 
@@ -1335,17 +1369,11 @@ Steam Ball spell
 
 Throws a ball of hot steam towards a targeted creature.
 %%%%
-Sticky Flame Range spell
-
-Launches a glob of sticky flame, covering a targeted creature with liquid fire
-for a short time.
-
-If the target is insubstantial, the liquid fire will fail to stick.
-%%%%
 Sticky Flame spell
 
-Conjures a glob of sticky flame, covering an adjacent creature with liquid fire
-for a short time.
+Unleashes a short-ranged spray of incindiary goo that clings to an adjacent
+creature and deals armour-ignoring fire damage over several turns. If the victim
+is allowed to move, it will put out the fire prematurely.
 
 If the target is insubstantial, the liquid fire will fail to stick.
 %%%%
@@ -1358,10 +1386,9 @@ begin to form again as normal.
 %%%%
 Sting spell
 
-Briefly transforms a nearby rock or torch into a long insectoid stinger,
-which lashes out at the target. The stinger's impact will always poison a
-susceptible target. Even resistant targets have a chance to be poisoned and
-immune monsters will be damaged by the physical impact of the stinger.
+Conjures a jagged shard of crystalized toxins. The stinger's impact will always
+poison a susceptible target. Even resistant targets have a chance to be poisoned
+and immune monsters will still be damaged by the physical impact of the stinger.
 %%%%
 Stoke Flames spell
 
@@ -1585,10 +1612,10 @@ damage bypasses cold resistance.
 Throw Klown Pie spell
 
 Throws a harmful yet strangely delicious pie that can inflict its victim with a
-number of debilitating temporary effects. These include inducing vertigo,
-silence, fire vulnerability, stat drain, or an aversion to drinking potions.
-The dreaded moon pie can even turn you into a bat, a hog, or an insubstantial
-wisp!
+number of irresistable and debilitating temporary effects. These include
+inducing vertigo, silence, fire vulnerability, stat drain, or an aversion to
+drinking potions. The dreaded clear moon pie will even make any adventurer as
+fragile as its delicate flaky crust.
 %%%%
 Thunderbolt spell
 
@@ -1692,16 +1719,6 @@ Weakening Gaze spell
 
 Irresistibly weakens a creature's melee attacks for a period of time,
 requiring line of sight but not line of fire.
-%%%%
-Wereblood spell
-
-Transforms some of the caster's blood into that of a were-beast, causing them
-to occasionally howl uncontrollably. While active, each non-summoned enemy the
-caster slays in combat temporarily enhances their melee and ranged
-effectiveness, and killing adjacent enemies also provides minor healing.
-
-The bonus only lasts for the duration of a single cast; retransforming the
-caster's blood calms the were-spirit and resets the bonus.
 %%%%
 Wind Blast spell
 

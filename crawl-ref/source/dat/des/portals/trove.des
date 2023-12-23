@@ -261,7 +261,7 @@ function trove.weapon_skills (e)
 end
 
 function trove.spell_skills (e)
-  local spell_skills = {"Spellcasting", "Conjurations", "Hexes", "Summoning", "Necromancy", "Translocation", "Transmutation", "Fire Magic", "Ice Magic", "Air Magic", "Earth Magic", "Poison Magic"}
+  local spell_skills = {"Spellcasting", "Conjurations", "Hexes", "Summoning", "Necromancy", "Translocation", "Alchemy", "Fire Magic", "Ice Magic", "Air Magic", "Earth Magic"}
   local skill_total = 0
   local nonzero_skills = 0
   for _, skill in ipairs(spell_skills) do

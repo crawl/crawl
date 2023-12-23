@@ -28,7 +28,7 @@ ORIENT: encompass
 SHUFFLE: 12
 SUBST:  ' = '..........
 KFEAT:  ' = net trap
-MONS:   Menkaure, crocodile, kraken, flying skull
+MONS:   Menkaure, crocodile, kraken, weeping skull
 MARKER: a = lua:fog_machine { \
              pow_min = 1, pow_max = 2, delay = 3, \
              size = 2, walk_dist = 8, spread_rate= -1, \
@@ -286,8 +286,8 @@ ENDMAP
 
 NAME:   sprint2_obstacle_1
 TAGS:   sprint2_obstacle no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-MONS:   patrolling flying skull
-NSUBST: l = 12:1 / *:l
+MONS:   patrolling laughing skull
+NSUBST: l = 4:1 / 1:1l / *:l
 SHUFFLE: l.
 MARKER: a = lua:fog_machine { \
              pow_min = 2, pow_max = 4, delay = 3, \

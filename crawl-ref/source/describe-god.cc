@@ -234,7 +234,7 @@ static const char *divine_title[][8] =
         "Impassioned",        "Rapturous",             "Ecstatic",                "Rhythm of Life and Death"},
 
     // Hepliaklqana -- memory/ancestry theme
-    {"Damnatio Memoriae",       "Hazy",             "@Adj@ Child",              "Storyteller",
+    {"Damnatio Memoriae",       "Hazy",             "@Adj@ @Child@",              "Storyteller",
         "Brooding",           "Anamnesiscian",               "Grand Scion",                "Unforgettable"},
 
     // Wu Jian -- animal/chinese martial arts monk theme
@@ -265,6 +265,7 @@ string god_title(god_type which_god, species_type which_species, int piety)
         { "Genus", species::name(which_species, species::SPNAME_GENUS) },
         { "Walking", species::walking_title(which_species) + "ing" },
         { "Walker", species::walking_title(which_species) + "er" },
+        { "Child", species::child_name(which_species) },
     };
 
     return replace_keys(title, replacements);

@@ -17,7 +17,7 @@
 #include "item-prop.h"
 #include "message.h"
 #include "notes.h" // NOTE_MESSAGE
-#include "options.h" // UA_PICKUP
+#include "options.h" // UA_PICKUP, more_gem_info
 #include "state.h"
 #include "stringutil.h" // make_stringf
 #include "view.h" // flash_view_delay
@@ -267,7 +267,7 @@ static void _shatter_floor_gem(gem_type gem, bool quiet = false)
             destroy_item(si.index());
             you.gems_shattered.set(gem);
 
-            if (!quiet && you.see_cell(*ri))
+            if (!quiet && Options.more_gem_info && you.see_cell(*ri))
             {
                 mprf("With a frightful flash, the power of Zot shatters the %s"
                      " gem into ten thousand fragments!", gem_adj(gem));
@@ -281,8 +281,18 @@ static void _shatter_floor_gem(gem_type gem, bool quiet = false)
     }
 }
 
+int gem_time_left(int gem_int)
+{
+    gem_type gem = static_cast<gem_type>(gem_int);
+    ASSERT_RANGE(gem, 0, NUM_GEM_TYPES);
+    return gem_time_limit(gem) - you.gem_time_spent[gem];
+}
+
 void print_gem_warnings(int gem_int, int old_time_taken)
 {
+    if (!Options.more_gem_info)
+        return;
+
     gem_type gem = static_cast<gem_type>(gem_int);
     if (gem == NUM_GEM_TYPES)
         return;
@@ -356,7 +366,8 @@ void maybe_break_floor_gem()
     const gem_type gem = gem_for_branch(you.where_are_you);
     if (gem != NUM_GEM_TYPES
         && !you.gems_shattered[gem]
-        && you.gem_time_spent[gem] >= gem_time_limit(gem))
+        && (crawl_state.game_is_descent() // No descent gems :(
+            || gem_time_left(gem) <= 0))
     {
         _shatter_floor_gem(gem, true);
     }
@@ -364,6 +375,9 @@ void maybe_break_floor_gem()
 
 string gem_status()
 {
+    if (!Options.more_gem_info)
+        return "";
+
     const gem_type gem = gem_for_branch(you.where_are_you);
     if (gem == NUM_GEM_TYPES
         || !you.gems_found[gem]
@@ -372,7 +386,7 @@ string gem_status()
     {
         return "";
     }
-    const int time_left = gem_time_limit(gem) - you.gem_time_spent[gem];
+    const int time_left = gem_time_left(gem);
     const int turns_left = (time_left + 9) / 10; // round up
     return make_stringf("If you linger in this branch for another %d turns, "
                         "the power of Zot will shatter your %s gem.\n",

@@ -26,12 +26,12 @@ aptitudes:
   summoning: -2
   necromancy: -1
   translocations: 4
-  transmutations: 3
   shapeshifting: 2
   fire_magic: -2
   ice_magic: -2
   air_magic: -1
   earth_magic: -1
+  alchemy: 1
   evocations: 3
 size: little
 str: 4
@@ -52,6 +52,6 @@ recommended_jobs:
   - JOB_ENCHANTER
   - JOB_CONJURER
   - JOB_EARTH_ELEMENTALIST
-  - JOB_VENOM_MAGE
+  - JOB_ALCHEMIST
 recommended_weapons:
   - SK_SHORT_BLADES

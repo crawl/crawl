@@ -389,7 +389,7 @@ LUARET1(you_mesmerised, boolean, you.duration[DUR_MESMERISED])
  * @treturn boolean
  * @function on_fire
  */
-LUARET1(you_on_fire, boolean, you.duration[DUR_LIQUID_FLAMES])
+LUARET1(you_on_fire, boolean, you.duration[DUR_STICKY_FLAME])
 /*** Are you petrifying?
  * @treturn boolean
  * @function petrifying

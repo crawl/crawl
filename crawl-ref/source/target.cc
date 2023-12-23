@@ -2166,32 +2166,6 @@ bool targeter_anguish::affects_monster(const monster_info& mon)
         && !mon.is(MB_ANGUISH);
 }
 
-targeter_poisonous_vapours::targeter_poisonous_vapours(const actor* act, int r)
-    : targeter_smite(act, r, 0, 0, false, nullptr)
-{
-}
-
-bool targeter_poisonous_vapours::affects_monster(const monster_info& mon)
-{
-    return get_resist(mon.resists(), MR_RES_POISON) <= 0;
-}
-
-bool targeter_poisonous_vapours::valid_aim(coord_def a)
-{
-    if (!targeter_smite::valid_aim(a))
-        return false;
-
-    const monster_info *mon = env.map_knowledge(a).monsterinfo();
-    if (mon && !affects_monster(*mon))
-    {
-        return notify_fail(mon->full_name(DESC_THE) + " cannot be affected by "
-                           "poisonous vapours.");
-    }
-
-    return true;
-}
-
-
 targeter_boulder::targeter_boulder(const actor* caster)
     : targeter_beam(caster, LOS_MAX_RANGE, ZAP_IOOD, 0, 0, 0)
 {
@@ -2234,7 +2208,8 @@ bool targeter_boulder::valid_aim(coord_def a)
         return notify_fail("You cannot create a boulder there.");
 
     const coord_def start = ray.pos();
-    if (feat_is_solid(env.grid(start)) || actor_at(start))
+    actor* act = actor_at(start);
+    if (feat_is_solid(env.grid(start)) || (act && you.can_see(*act)))
         return notify_fail("You cannot create a boulder in an occupied space.");
     if (!feat_has_solid_floor(env.grid(start)))
         return notify_fail("You cannot create a boulder there.");

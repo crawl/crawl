@@ -764,6 +764,13 @@ boggart
 A malevolent and dangerous little sprite. The shadowy illusions it summons may
 not be real, but are deadly all the same.
 %%%%
+bombardier beetle
+
+An unassuming beetle filled with an incredible amount of hypergolic fluid. The
+sticky spray it fires is capable of igniting predators and unwary adventurers
+alike, though more experienced ones know to keep moving if they wish to avoid
+a fiery grave.
+%%%%
 bone dragon
 
 A mighty undead abomination, pieced together from the broken bones of many
@@ -813,6 +820,11 @@ broodmother
 
 A giant spider swollen with eggs. Its innumerable offspring are always at its
 call.
+%%%%
+burial acolyte
+
+A masked priest in the service of Kikubaaqudgha, well-versed in choral rituals
+to both rouse the dead and send them to eternal rest.
 %%%%
 burning bush
 
@@ -1319,10 +1331,6 @@ A hideous floating undead creature, the anguished spirit of a tortured victim,
 with torn skin hanging from an emaciated body. It restlessly stalks the
 dungeon, inflicting the anguish it felt in life upon those still living.
 %%%%
-flying skull
-
-An undead skull kept aloft and flitting swiftly about by unholy magic.
-%%%%
 frilled lizard
 
 A lizard with a giant and colourful fringe folded around its neck. It flares
@@ -1750,6 +1758,12 @@ A hideous conglomeration of mangled body parts, possessed and altered in ways
 that challenge sanity. Each varies in durability by the nature of whatever
 unfortunates were used to make it.
 %%%%
+laughing skull
+
+A blazing swift skull that cackles with the bleak malice of the dead. Fond of
+swarming, its laughter grows more spiteful and powerful for each nearby member
+of its own kind.
+%%%%
 lava snake
 
 A burning red snake which dwells in pools of lava. It spits gobs of molten rock
@@ -2002,7 +2016,7 @@ sharp turns to hit adjacent targets.
 %%%%
 orb of fire
 
-A globe of raw primordial fire, capable of impressive pyrotechnics, and of
+A globe of raw primordial fire, capable of impressive pyrotechnics and of
 twisting the very flesh of creatures who come into its ken.
 %%%%
 orb spider
@@ -2291,8 +2305,7 @@ potent venomous bite.
 searing wretch
 
 An animated corpse alight with terrible fire. The flames are fueled by its
-regenerating flesh, which bubbles and melts as it grows. Its bite leaves
-its victims covered in flaming gore.
+regenerating flesh, which bubbles and melts as it grows.
 %%%%
 seraph
 
@@ -2567,7 +2580,10 @@ A demonic figure shining with the heat and fury of a fallen star.
 %%%%
 sun moth
 
-A moth of celestial beauty and grace, crackling with power.
+A moth of transcendent beauty, coated in pyrophoric scales. Tiny cinders dance
+and twirl in its wake and whenever it beats its wings, they ignite in such
+spectacular displays of incandescence that one could almost forget how far away
+the sun is from this place.
 %%%%
 swamp dragon
 
@@ -2840,6 +2856,12 @@ water nymph
 A capricious nature spirit, deeply bonded with the waters in which it lives.
 Wherever they flow, so may it, and ponds and rivers surge and leap at its
 whim.
+%%%%
+weeping skull
+
+An undead skull kept aloft by unholy clouds of collective misery, which slowly
+drift out in its wake. It mourns without end for the living, the dead, and its
+own former life all alike.
 %%%%
 wendigo
 

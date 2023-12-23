@@ -255,7 +255,7 @@ NAME:    staff of Olgreb
 INSCRIP: rPois∞
 DESCRIP: Radiate: It can be activated via the 'a'bility menu to radiate toxic energy, with
  effectiveness depending on Evocations skill.
-+Pois: It enhances your poison magic.
++Alch: It enhances your alchemy magic.
 +rPois∞: It grants immunity to poison.
 DBRAND: Envenom: If the wielder is skilled in Evocations, they can envenom those struck
  by it, dealing poison damage which bypasses armour.
@@ -1736,6 +1736,7 @@ TILE_EQ: slippers
 PLUS:    +2
 COLOUR:  ETC_DITHMENOS
 EV:      4
+VALUE:   270
 INSCRIP: slick, slippery,
 DBRAND:  Slick:     Its wearer cannot be constricted, engulfed, netted or
  webbed.

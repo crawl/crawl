@@ -138,7 +138,7 @@ static bool _cancel_barbed_move(bool rampaging)
     return false;
 }
 
-void apply_barbs_damage(bool rampaging)
+static void _apply_barbs_damage(bool rampaging)
 {
     if (you.duration[DUR_BARBS])
     {
@@ -154,6 +154,14 @@ void apply_barbs_damage(bool rampaging)
         if (you.duration[DUR_BARBS])
             you.duration[DUR_BARBS] += (rampaging ? 0 : you.time_taken);
     }
+}
+
+// For effects that should happen whenever the player actively moves with their
+// limbs, but NOT if the player blinks/teleports or is otherwise displaced.
+void player_did_deliberate_movement(bool rampaging)
+{
+    _apply_barbs_damage(rampaging);
+    shake_off_sticky_flame();
 }
 
 static bool _cancel_ice_move()
@@ -733,7 +741,7 @@ static spret _rampage_forward(coord_def move)
 
     // Lastly, apply post-move effects unhandled by move_player_to_grid().
     apply_rampage_heal();
-    apply_barbs_damage(true);
+    player_did_deliberate_movement(true);
     remove_ice_movement();
     you.clear_far_engulf(false, true);
     apply_cloud_trail(old_pos);
@@ -1103,7 +1111,7 @@ void move_player_action(coord_def move)
             move_player_to_grid(targ, true);
             if (rampaged)
                 apply_rampage_heal();
-            apply_barbs_damage();
+            player_did_deliberate_movement();
             remove_ice_movement();
             you.clear_far_engulf(false, true);
             apply_cloud_trail(old_pos);

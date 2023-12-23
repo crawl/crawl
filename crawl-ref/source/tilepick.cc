@@ -1892,7 +1892,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             // (enhancer staves are compatible with those).
             const item_def* weapon = mon.inv[MSLOT_WEAPON].get();
             if (!mon.inv[MSLOT_SHIELD] && weapon
-                && (weapon->is_type(OBJ_STAVES, STAFF_POISON)
+                && (weapon->is_type(OBJ_STAVES, STAFF_ALCHEMY)
                     || is_unrandom_artefact(*weapon, UNRAND_OLGREB)))
             {
                 return base;
@@ -2670,7 +2670,9 @@ static tileidx_t _tileidx_gem_base(const item_def &item)
     {
     default:
     case GEM_DUNGEON: return TILE_GEM_DUNGEON;
+#if TAG_MAJOR_VERSION == 34
     case GEM_ORC:     return TILE_GEM_ORC;
+#endif
     case GEM_ELF:     return TILE_GEM_ELF;
     case GEM_LAIR:    return TILE_GEM_LAIR;
     case GEM_SWAMP:   return TILE_GEM_SWAMP;
@@ -2689,8 +2691,11 @@ static tileidx_t _tileidx_gem_base(const item_def &item)
 static tileidx_t _tileidx_gem(const item_def &item)
 {
     const tileidx_t base = _tileidx_gem_base(item);
-    if (item.sub_type < NUM_GEM_TYPES && you.gems_shattered[item.sub_type])
+    if (item.sub_type < NUM_GEM_TYPES && you.gems_shattered[item.sub_type]
+        && (Options.more_gem_info || !you.gems_found[item.sub_type]))
+    {
         return base + 1;
+    }
     return base;
 }
 
@@ -3419,12 +3424,11 @@ tileidx_t tileidx_skill(skill_type skill, int train)
         ch = you.religion == GOD_KIKUBAAQUDGHA ? TILEG_NECROMANCY_K_ON
                                                : TILEG_NECROMANCY_ON; break;
     case SK_TRANSLOCATIONS: ch = TILEG_TRANSLOCATIONS_ON; break;
-    case SK_TRANSMUTATIONS: ch = TILEG_TRANSMUTATIONS_ON; break;
     case SK_FIRE_MAGIC:     ch = TILEG_FIRE_MAGIC_ON; break;
     case SK_ICE_MAGIC:      ch = TILEG_ICE_MAGIC_ON; break;
     case SK_AIR_MAGIC:      ch = TILEG_AIR_MAGIC_ON; break;
     case SK_EARTH_MAGIC:    ch = TILEG_EARTH_MAGIC_ON; break;
-    case SK_POISON_MAGIC:   ch = TILEG_POISON_MAGIC_ON; break;
+    case SK_ALCHEMY:        ch = TILEG_TRANSMUTATIONS_ON; break;
     case SK_EVOCATIONS:     ch = TILEG_EVOCATIONS_ON; break;
     case SK_SHAPESHIFTING:  ch = TILEG_SHAPESHIFTING_ON; break;
     case SK_INVOCATIONS:
@@ -4076,8 +4080,8 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_AIR_ELEMENTALIST;
         case JOB_EARTH_ELEMENTALIST:
             return TILEG_JOB_EARTH_ELEMENTALIST;
-        case JOB_VENOM_MAGE:
-            return TILEG_JOB_VENOM_MAGE;
+        case JOB_ALCHEMIST:
+            return TILEG_JOB_ALCHEMIST;
         case JOB_CHAOS_KNIGHT:
             return TILEG_JOB_CHAOS_KNIGHT;
         case JOB_SHAPESHIFTER:
@@ -4122,8 +4126,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_MUMMY;
         case SP_NAGA:
             return TILEG_SP_NAGA;
-        case SP_OGRE:
-            return TILEG_SP_OGRE;
+        case SP_ONI:
+            return TILEG_SP_ONI;
         case SP_TROLL:
             return TILEG_SP_TROLL;
         case SP_BASE_DRACONIAN:

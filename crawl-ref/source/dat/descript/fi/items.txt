@@ -41,12 +41,6 @@ bolt
 
 Nuolta lyhyempi metallinen ammus, jonka voi ampua varsijousella.
 %%%%
-book of alchemy
-
-Monien muinaisten alkemistien viisaudet kokoava kirja, joka keskittyy
-alkemiaprosession käyttöön taikuudessa. Kun kirja aukaistaan, teksti muodostuu
-musteen tiivistyessä sivuille ilmasta.
-%%%%
 book of annihilations
 
 Veri valuu tämän kirjan repaleisilta sivuilta, ja jopa lukutaidoton tuntee sen

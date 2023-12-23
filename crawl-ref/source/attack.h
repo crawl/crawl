@@ -161,6 +161,7 @@ protected:
     void drain_defender();
     void drain_defender_speed();
     void maybe_trigger_jinxbite();
+    void maybe_trigger_fugue_wail(const coord_def pos);
 
     virtual int inflict_damage(int dam, beam_type flavour = NUM_BEAMS,
                                bool clean = false);

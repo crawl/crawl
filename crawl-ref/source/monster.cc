@@ -1325,7 +1325,7 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
 
         if (mons->type == MONS_ARACHNE)
         {
-            return weapon.is_type(OBJ_STAVES, STAFF_POISON)
+            return weapon.is_type(OBJ_STAVES, STAFF_ALCHEMY)
                    || is_unrandom_artefact(weapon, UNRAND_OLGREB);
         }
 
@@ -3740,7 +3740,7 @@ int monster::res_poison(bool temp) const
             u += get_jewellery_res_poison(env.item[jewellery], false);
 
         const item_def *w = primary_weapon();
-        if (w && w->is_type(OBJ_STAVES, STAFF_POISON))
+        if (w && w->is_type(OBJ_STAVES, STAFF_ALCHEMY))
             u++;
     }
 
@@ -4021,7 +4021,7 @@ int monster::skill(skill_type sk, int scale, bool /*real*/, bool /*temp*/) const
     case SK_NECROMANCY:
         return (has_spell_of_type(spschool::necromancy)) ? hd : hd/2;
 
-    case SK_POISON_MAGIC:
+    case SK_ALCHEMY:
     case SK_FIRE_MAGIC:
     case SK_ICE_MAGIC:
     case SK_EARTH_MAGIC:
@@ -4256,7 +4256,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
         // Apply damage multiplier for vitrify
         if (amount != INSTANT_DEATH && has_ench(ENCH_VITRIFIED))
-            amount = amount * 130 / 100;
+            amount = amount * 150 / 100;
 
         // Apply damage multipliers for quad damage
         if (attacker_effects && agent && agent->is_player()
@@ -4277,7 +4277,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             hit_points = max_hit_points;
         }
 
-        if (flavour == BEAM_DEVASTATION || flavour == BEAM_MINDBURST)
+        if (flavour == BEAM_DESTRUCTION || flavour == BEAM_MINDBURST)
         {
             if (can_bleed())
                 blood_spray(pos(), type, amount / 5);
@@ -5191,7 +5191,8 @@ static bool _mons_is_skeletal(int mc)
            || mc == MONS_SKELETAL_WARRIOR
            || mc == MONS_ANCIENT_CHAMPION
            || mc == MONS_REVENANT
-           || mc == MONS_FLYING_SKULL
+           || mc == MONS_WEEPING_SKULL
+           || mc == MONS_LAUGHING_SKULL
            || mc == MONS_CURSE_SKULL
            || mc == MONS_MURRAY;
 }
@@ -5328,6 +5329,44 @@ void monster::apply_location_effects(const coord_def &oldpos,
                 mprf("The bloodstain on %s disappears!", desc.c_str());
             }
         }
+    }
+}
+
+void monster::did_deliberate_movement()
+{
+    // Apply barbs damage
+    if (has_ench(ENCH_BARBS))
+    {
+        mon_enchant barbs = get_ench(ENCH_BARBS);
+
+        // Save these first because hurt() might kill the monster.
+        const coord_def _pos = pos();
+        const monster_type typ = type;
+        hurt(monster_by_mid(barbs.source), roll_dice(2, barbs.degree * 2 + 2));
+        bleed_onto_floor(_pos, typ, 2, false);
+        if (!alive())
+            return;
+
+        if (coinflip())
+        {
+            barbs.duration--;
+            update_ench(barbs);
+        }
+    }
+
+    // And then shake off sticky flame
+    if (has_ench(ENCH_STICKY_FLAME))
+    {
+        mon_enchant flame = get_ench(ENCH_STICKY_FLAME);
+
+        flame.duration -= 50;
+        if (flame.duration <= 0)
+        {
+            simple_monster_message(*this, " shakes off the sticky flame as it moves.");
+            del_ench(ENCH_STICKY_FLAME, true);
+        }
+        else
+            update_ench(flame);
     }
 }
 
@@ -5481,6 +5520,19 @@ void monster::weaken(actor *attacker, int pow)
 
     add_ench(mon_enchant(ENCH_WEAK, 1, attacker,
                          (pow + random2(pow + 3)) * BASELINE_DELAY));
+}
+
+bool monster::strip_willpower(actor *attacker, int dur, bool quiet)
+{
+    // Infinite will enemies are immune
+    if (willpower() == WILL_INVULN)
+        return false;
+
+    if (!quiet && !has_ench(ENCH_LOWERED_WL) && you.can_see(*this))
+        mprf("%s willpower is stripped away!", name(DESC_ITS).c_str());
+
+    mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, attacker, dur * BASELINE_DELAY);
+    return add_ench(lowered_wl);
 }
 
 void monster::check_awaken(int)
@@ -5737,7 +5789,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         }
     }
 
-    else if (type == MONS_BAI_SUZHEN && hit_points < max_hit_points / 2
+    else if (type == MONS_BAI_SUZHEN && hit_points < max_hit_points * 2 / 3
                                      && hit_points - damage > 0)
     {
         int old_hp                = hit_points;

@@ -39,12 +39,6 @@ static void _end_death_channel()
     }
 }
 
-static void _end_sticky_flame()
-{
-    you.props.erase("sticky_flame_source");
-    you.props.erase("sticky_flame_aux");
-}
-
 static void _redraw_armour()
 {
     you.redraw_armour_class = true;
@@ -248,11 +242,10 @@ static const duration_def duration_data[] =
       {{ "Your fiery armour burns out.", [](){
           you.redraw_armour_class = true;
       }}}, 20},
-    { DUR_LIQUID_FLAMES,
+    { DUR_STICKY_FLAME,
       RED, "Fire",
-      "on fire", "liquid flames",
-      "You are covered in liquid flames.", D_DISPELLABLE /*but special-cased*/,
-      {{ "You are no longer on fire.", _end_sticky_flame }}},
+      "on fire", "liquid fire",
+      "You are covered in liquid fire.", D_DISPELLABLE /*but special-cased*/},
     { DUR_LOWERED_WL,
       RED, "Will/2",
       "weak-willed", "lowered wl",
@@ -278,7 +271,7 @@ static const duration_def duration_data[] =
         {}, 1},
     { DUR_VITRIFIED,
       RED, "Fragile",
-      "fragile", "vitrified",
+      "fragile (+50% incoming damage)", "vitrified",
       "You are fragile as glass.", D_DISPELLABLE,
       {{ "You feel less fragile." }}},
     { DUR_RESISTANCE,
@@ -390,12 +383,12 @@ static const duration_def duration_data[] =
       "marked", "sentinel's mark",
       "A sentinel's mark is revealing your location to enemies.", D_DISPELLABLE | D_EXPIRES,
       {{ "The sentinel's mark upon you fades away." }}},
-    { DUR_WEREBLOOD,
-      BLUE, "Slay",
-      "wereblooded", "wereblood",
-      "Your melee attacks are strengthened by your wereblood.", D_DISPELLABLE | D_EXPIRES,
-      {{ "Your primal bloodlust has ended." },
-        { "Your primal bloodlust is almost over." }}, 6},
+    { DUR_FUGUE,
+      BLUE, "Fugue",
+      "fugue", "fugue of the fallen",
+      "Your melee attacks are strengthened by the souls of the fallen.", D_DISPELLABLE | D_EXPIRES,
+      {{ "Your fugue has ended." },
+        { "You are losing your grip on the fallen." }}, 6},
     { DUR_FLAYED,
       RED, "Flay",
       "flayed", "",
@@ -683,6 +676,7 @@ static const duration_def duration_data[] =
     { DUR_REVELATION, 0, "", "", "revelation", "", D_NO_FLAGS, {{""}}},
     { DUR_JINXBITE_LOST_INTEREST, 0, "", "", "", "", D_EXPIRES, {{"", _maybe_expire_jinxbite}}},
     { DUR_RAMPAGE_HEAL, 0, "", "", "rampage heal", "", D_NO_FLAGS},
+    { DUR_TEMP_CLOUD_IMMUNITY, 0, "", "", "temp cloud immunity", "", D_EXPIRES},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

@@ -1429,6 +1429,7 @@ static void _cloud_card(int power)
         }
     }
 
+    bool cloud_under_player = false;
     for (auto pos : cloud_pos)
     {
         const int cloud_power = 4 + random2avg(power_level * 2, 2);
@@ -1436,10 +1437,20 @@ static void _cloud_card(int power)
 
         if (you.see_cell(pos))
             something_happened = true;
+
+        if (pos == you.pos())
+            cloud_under_player = true;
     }
 
     if (something_happened)
+    {
         mpr("Clouds appear around your foes!");
+
+        // Make the player not be immediately affected by clouds that may have
+        // been created beneath them until they act again.
+        if (cloud_under_player)
+            you.duration[DUR_TEMP_CLOUD_IMMUNITY] = 1;
+    }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 }
@@ -1589,8 +1600,7 @@ static void _wild_magic_card(int power)
                                           spschool::ice,
                                           spschool::earth,
                                           spschool::air,
-                                          spschool::poison,
-                                          spschool::transmutation,
+                                          spschool::alchemy,
                                           spschool::hexes,
                                           spschool::necromancy);
 

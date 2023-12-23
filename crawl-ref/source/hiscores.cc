@@ -1961,19 +1961,44 @@ static string _append_sentence_delimiter(const string &sentence,
     return sentence + delimiter;
 }
 
-string scorefile_entry::runes_desc(bool semiverbose) const
+string scorefile_entry::runes_gems_desc(bool semiverbose) const
 {
-    if (num_runes < 1)
+    if (num_runes < 1 && gems_found < 1)
         return "";
 
-    string desc = _hiscore_newline_string();
+    string desc = "";
 
-    const bool extra = death_type == KILLED_BY_WINNING || gems_found > 0;
-    desc += make_stringf("... %s %d rune%s",
-                         extra ? "and" : "with",
-                         num_runes,
-                         (num_runes > 1) ? "s" : "");
-
+    bool extra = (death_type == KILLED_BY_WINNING);
+    if (num_runes >= 1)
+    {
+        desc += _hiscore_newline_string();
+        desc += make_stringf("... %s %d rune%s",
+                             extra ? "and" : "with",
+                             num_runes,
+                             (num_runes > 1) ? "s" : "");
+        extra = true;
+    }
+    if (gems_found >= 1)
+    {
+        desc += _hiscore_newline_string();
+        desc += make_stringf("... %s %d gem%s",
+                             extra ? "and" : "with",
+                             gems_found,
+                             (gems_found > 1) ? "s" : "");
+        // semiverbose is true here only when making the vmsg logfile field,
+        // so we always display all gem info when it is true
+        if (Options.more_gem_info || semiverbose)
+        {
+            if (gems_intact == 1 && gems_found == 1)
+                desc += " (intact)";
+            else if (gems_intact == 2 && gems_found == 2)
+                desc += " (both intact)";
+            else if (gems_intact == gems_found)
+                desc += " (all intact)";
+            else
+                desc += make_stringf(" (%d intact)", gems_intact);
+        }
+    }
     if (!semiverbose
         && death_time > 0
         && !_hiscore_same_day(birth_time, death_time))
@@ -1984,31 +2009,6 @@ string scorefile_entry::runes_desc(bool semiverbose) const
 
     desc = _append_sentence_delimiter(desc, "!");
     return desc + _hiscore_newline_string();
-}
-
-
-string scorefile_entry::gems_desc() const
-{
-    if (gems_found < 1)
-        return "";
-
-    string desc = _hiscore_newline_string();
-    desc += make_stringf("... %s %d gem%s",
-             (death_type == KILLED_BY_WINNING) ? "and" : "with",
-              gems_found, (gems_found > 1) ? "s" : "");
-    if (gems_intact == 1 && gems_found == 1)
-        desc += " (intact!)";
-    else if (gems_intact == 2 && gems_found == 2)
-        desc += " (both intact!)";
-    else if (gems_intact == gems_found)
-        desc += " (all intact!)";
-    else
-        desc += make_stringf(" (%d intact!)", gems_intact);
-
-    if (num_runes < 1)
-        desc += ".";
-
-    return desc;
 }
 
 string
@@ -2794,7 +2794,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             if (num_runes < 1 && gems_found < 1)
                 desc = _append_sentence_delimiter(desc, ".");
             else
-                desc += gems_desc() + runes_desc(semiverbose);
+                desc += runes_gems_desc(semiverbose);
         }
         else if (!_very_boring_death_type(death_type))
         {

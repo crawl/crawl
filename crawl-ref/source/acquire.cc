@@ -587,7 +587,7 @@ static vector<pair<stave_type, int>> _base_staff_weights()
         { STAFF_COLD,        _skill_rdiv(SK_ICE_MAGIC) },
         { STAFF_AIR,         _skill_rdiv(SK_AIR_MAGIC) },
         { STAFF_EARTH,       _skill_rdiv(SK_EARTH_MAGIC) },
-        { STAFF_POISON,      _skill_rdiv(SK_POISON_MAGIC) },
+        { STAFF_ALCHEMY,     _skill_rdiv(SK_ALCHEMY) },
         { STAFF_DEATH,       _skill_rdiv(SK_NECROMANCY) },
         { STAFF_CONJURATION, _skill_rdiv(SK_CONJURATIONS) },
         { NUM_STAVES,        5 },

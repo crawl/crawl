@@ -371,25 +371,25 @@ NAME:   minmay_skeleton_keep
 TAGS:   no_monster_gen
 ORIENT: northwest
 DEPTH:  Depths, Crypt
-MONS:   flying skull / nothing w:30, skeleton w:20 / nothing
+MONS:   laughing skull / nothing w:50, skeleton w:20 / nothing
 MONS:   skeletal warrior band / bone dragon w:1 / lich w:1 / curse skull w:1
 SUBST:  G : GGccV.
 MAP
 cccccccccccccccccccccccccccccccc
 c....2.....||c...+....111c|....c
-c+c.2.3...cccc...c.....11cc..3.c
+c+c.2.3...cccc...c......1cc..3.c
 c.cc...2.2.ccc...c......1ccc...c
 c..cc...2...cc...c...G...+2cc..c
 c...cc.2...2.c...c......cc2ccc.c
 c....cc...2..c...c1....cc2...+.c
-c1.3..cc.2...+...c11..cc2.2.2c.c
-c11....cc....c...c111cc2.2.22c|c
-c111....cccccc.3.ccccccccccc+ccc
-c1111....c...........c22.+11111c
-cc+cc1.3.c.G2G2G2G2G.c2..cc1111c
-c***c11..+...........+.2.2cc111c
-c***c111.c.G2G2G2G2G.c2...2cc11c
-c***c1111c...........c..22.2cc+c
+c..3..cc.2...+...c1...cc2.2.2c.c
+c1.....cc....c...c111cc2.2.22c|c
+c11.....cccccc.3.ccccccccccc+ccc
+c1111....c...........c22.+.111.c
+cc+cc1.3.c.G2G2G2G2G.c2..cc.111c
+c***c1...+...........+.2.2cc.11c
+c***c11..c.G2G2G2G2G.c2...2cc.1c
+c***c111.c...........c..22.2cc+c
 cccccccccccccccccccccccccccccc@
 ENDMAP
 
@@ -2339,7 +2339,7 @@ item("any weapon good_item w:100" .. ego .. " / cloak" .. coldres ..
      " / kite shield" .. coldres .. " / tower shield" .. coldres ..
      " / ice dragon scales / chain mail good_item" .. coldres ..
      " / plate armour" .. coldres .. " / crystal plate armour" .. coldres ..
-     " / book of ice / book of the tundra / ozocubu's autobiography" ..
+     " / book of ice / book of the tundra" ..
      " / randbook disc:ice / manual of ice magic / staff of cold ident:type" ..
      " / ring of ice ident:type / ring of protection from cold ident:type" ..
      " / wand of iceblast ident:type / phial of floods / condenser vane")
@@ -2798,6 +2798,7 @@ MONS:    red draconian / base draconian w:5, fire giant
 MONS:    red draconian monk, tengu reaver, iron dragon
 KMONS:   6 : red draconian knight / golden dragon
 KMONS:   7 : lich / red draconian scorcher
+KITEM:   > = midnight gem
 KFEAT:   > = enter_zot
 NSUBST:  23 = 4 = 11d
 SUBST:   %*| = $
@@ -2935,7 +2936,7 @@ ITEM:    any potion, any scroll
 : end
 ITEM:    any armour, any weapon, any ring, any amulet
 ITEM:    any wand charges:1, wand of digging charges:1 ident:type
-: kitem("| = randbook disc:necromancy disc2:transmutation numspells:5 " ..
+: kitem("| = randbook disc:necromancy disc2:alchemy numspells:5 " ..
 :       "slevels:" .. you.absdepth())
 KFEAT:   F = G
 SUBST:   C = c, X = xx.

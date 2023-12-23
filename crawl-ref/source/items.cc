@@ -1157,7 +1157,8 @@ static void _check_note_item(item_def &item)
 
     if (item_is_collectible(item) || is_artefact(item))
     {
-        take_note(Note(NOTE_GET_ITEM, 0, 0, item.name(DESC_A),
+        int v = item.base_type == OBJ_GEMS ? gem_time_left(item.sub_type) : 0;
+        take_note(Note(NOTE_GET_ITEM, v, 0, item.name(DESC_A),
                        origin_desc(item)));
         item.flags |= ISFLAG_NOTED_GET;
 
@@ -3860,19 +3861,21 @@ colour_t item_def::gem_colour() const
     {
     default:
     case GEM_DUNGEON: return LIGHTGREY;
+#if TAG_MAJOR_VERSION == 34
     case GEM_ORC:     return ETC_GOLD;
+#endif
     case GEM_ELF:     return ETC_ELVEN;
     case GEM_LAIR:    return GREEN;
 
     case GEM_SWAMP:   return ETC_DECAY;
     case GEM_SHOALS:  return ETC_ENCHANT;
     case GEM_SNAKE:   return ETC_POISON;
-    case GEM_SPIDER:  return ETC_AIR;
+    case GEM_SPIDER:  return WHITE;
 
-    case GEM_SLIME:   return ETC_SLIME;
+    case GEM_SLIME:   return ETC_AIR;
     case GEM_VAULTS:  return ETC_STEEL;
     case GEM_CRYPT:   return ETC_BONE;
-    case GEM_TOMB:    return ETC_DWARVEN; // XXX replaceme
+    case GEM_TOMB:    return ETC_AWOKEN_FOREST; // enh
     case GEM_DEPTHS:  return ETC_DITHMENOS;
     case GEM_ZOT:     return ETC_RANDOM; // dubious
     }
@@ -4072,8 +4075,6 @@ colour_t item_def::get_colour() const
         case OBJ_RUNES:
             return rune_colour();
         case OBJ_GEMS:
-            if (sub_type == GEM_ORC)
-                return BROWN;  // don't want yellow, that's normal gold
             return gem_colour();
         case OBJ_DETECTED:
             return Options.detected_item_colour;

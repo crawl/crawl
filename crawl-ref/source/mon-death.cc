@@ -60,6 +60,7 @@
 #include "spl-damage.h"
 #include "spl-other.h"
 #include "spl-summoning.h"
+#include "spl-selfench.h"
 #include "sprint.h" // SPRINT_MULTIPLIER
 #include "state.h"
 #include "stepdown.h"
@@ -1370,13 +1371,16 @@ static void _protean_explosion(monster* mons)
     }
 
     // Determine number of children based on the HD of what we roll.
-    // HD >= 12 generates 2
-    // HD 10-11 generates 2-3
-    // HD < 10 generates 3
+    // HD >= 12 generates 2, HD 11 generates 2-3,
+    // HD 10-9 generates 3, HD < 9 generates 4.
+    // (Going down that far should be extremely rare, but
+    //  polymorph code is weird.)
     int num_children = 2;
-    if (mons_class_hit_dice(target) < 12 && coinflip())
+    if (mons_class_hit_dice(target) < 9)
+        num_children += 2;
+    else if (mons_class_hit_dice(target) < 11)
         ++num_children;
-    else if (mons_class_hit_dice(target) < 10)
+    else if (mons_class_hit_dice(target) < 12 and coinflip())
         ++num_children;
 
     // Then create and scatter the piles around
@@ -1420,7 +1424,7 @@ static void _protean_explosion(monster* mons)
             mons_add_blame(child, "spawned from " + mons->name(DESC_A, true));
 
             // Make each one shift a little later than the last
-            delay += random_range(1, 3) * BASELINE_DELAY;
+            delay += random_range(1, 2) * BASELINE_DELAY;
         }
     }
 }
@@ -2088,30 +2092,29 @@ item_def* monster_die(monster& mons, killer_type killer,
         silent = true;
     }
 
+    check_canid_farewell(mons, !wizard && !mons_reset && !was_banished);
+
     const bool death_message = !silent && !did_death_message
                                && you.can_see(mons);
     const bool exploded {mons.flags & MF_EXPLODE_KILL};
     bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
     const mon_holy_type targ_holy = mons.holiness();
 
-    // Adjust song of slaying bonus & add heals if applicable. Kills by
-    // relevant avatars are adjusted by now to KILL_YOU and are counted.
-    if (you.duration[DUR_WEREBLOOD]
-        && (killer == KILL_YOU || killer == KILL_YOU_MISSILE)
-        && gives_player_xp)
+    // Adjust fugue of the fallen bonus. This includes both kills by you and
+    // also by your allies.
+    if (you.duration[DUR_FUGUE] && gives_player_xp
+        && (killer == KILL_YOU || killer == KILL_YOU_MISSILE || pet_kill))
     {
-        const int wereblood_bonus = you.props[WEREBLOOD_KEY].get_int();
-        if (wereblood_bonus <= 8) // cap at +9 slay
-            you.props[WEREBLOOD_KEY] = wereblood_bonus + 1;
-        if (you.hp < you.hp_max
-            && !you.duration[DUR_DEATHS_DOOR]
-            && !mons_is_object(mons.type)
-            && adjacent(mons.pos(), you.pos()))
+        const int slaying_bonus = you.props[FUGUE_KEY].get_int();
+        // cap at +7 slay (at which point you do bonus negative energy damage
+        // around targets hit)
+        if (slaying_bonus < FUGUE_MAX_STACKS)
         {
-            const int hp = you.hp;
-            you.heal(random_range(1, 3));
-            if (you.hp > hp)
-                mpr("You feel a bit better.");
+            you.props[FUGUE_KEY] = slaying_bonus + 1;
+
+            // Give a message for hitting max stacks
+            if (slaying_bonus + 1 == FUGUE_MAX_STACKS)
+                mpr("The wailing of the fallen reaches a fever pitch!");
         }
     }
 
@@ -2531,24 +2534,6 @@ item_def* monster_die(monster& mons, killer_type killer,
                 mons.name(DESC_A),
                 killer,
                 mummy_curse_power(mons.type));
-    }
-    else if (mons.type == MONS_INUGAMI && you.props.exists(CANINE_FAMILIAR_MID))
-    {
-        you.props.erase(CANINE_FAMILIAR_MID);
-
-        // Suffer backlash if your familiar actually oughtright died. If you
-        // just left a floor, there should be no penalty, and it's okay if the
-        // player can just summon them back from the abyss.
-        if (!wizard && !mons_reset && !was_banished)
-        {
-            mprf(MSGCH_WARN, "The death of your familiar leaves you staggered"
-                             " and unwell.");
-            drain_player(70, false, true);
-
-            // Prevent you from resummoning it for a little while.
-            you.duration[DUR_CANINE_FAMILIAR_DEAD] = random_range(5, 12)
-                                                     * BASELINE_DELAY;
-        }
     }
 
     // Necromancy

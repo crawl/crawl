@@ -65,6 +65,9 @@ public:
                                         killer_type killer = KILL_NONE,
                                         int killernum = -1) = 0;
 
+    // Handles sticky flame / barbs on deliberate movement.
+    virtual void did_deliberate_movement() = 0;
+
     virtual void set_position(const coord_def &c);
     const coord_def& pos() const { return position; }
 
@@ -204,6 +207,8 @@ public:
     virtual void put_to_sleep(actor *attacker, int strength,
                               bool hibernate = false) = 0;
     virtual void weaken(actor *attacker, int pow) = 0;
+    virtual bool strip_willpower(actor *attacker, int dur,
+                                 bool quiet = false) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    bool slow_cold_blood = true) = 0;
     virtual void drain_stat(stat_type /*stat*/, int /*amount*/) { }

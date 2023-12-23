@@ -230,7 +230,7 @@ KFEAT: 8 = granite_statue / fountain_sparkling / fountain_blue / w:1 floor
 KITEM: ? = scroll of vulnerability ident:type / nothing, any scroll / nothing
 : kitem("! = q:" .. crawl.random_range(1, 3) .. " potion of magic ident:type /\
 :        nothing, any potion / nothing")
-KITEM: & = book of power / book of party tricks / book of alchemy /\
+KITEM: & = book of power / book of party tricks / book of transmutation /\
            book of the senses / book of chaos / nothing
 KMONS: P = plant
 

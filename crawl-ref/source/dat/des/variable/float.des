@@ -19,17 +19,19 @@
 : crawl_require('dlua/vault.lua')
 
 {{
+-- TODO: move this to vault.lua so it doesn't desync with zot.des's version.
 function zot_entry_setup(e)
+    e.kitem("O = midnight gem")
     e.kfeat("O = enter_zot")
     e.mons("patrolling base draconian")
     e.mons("fire dragon / ice dragon / storm dragon / \
             shadow dragon / bone dragon / golden dragon")
     e.mons("patrolling nonbase draconian")
-    e.kmons("0 = ettin / yaktaur captain / glowing shapeshifter w:5 / \
-                 stone giant / spriggan berserker / hell knight w:5")
+    e.kmons("0 = ettin / rakshasa / glowing shapeshifter w:5 / \
+                 stone giant w:12 / spriggan berserker w:8 / hell knight w:5")
     e.kmons("9 = fire giant w:12 / titan w:8 / vampire knight / \
                  spriggan air mage w:8 / deep troll earth mage w:8 / \
-                 tengu reaver / deep elf high priest w:12 / lich w:2")
+                 tengu reaver w:12 / tentacled monstrosity / lich w:2")
 end
 
 function minmay_elemental_octagon_setup(e)
@@ -1967,17 +1969,17 @@ NSUBST:  1 = 10=1 / 8=1. / .
 MONS:    hell rat / vampire mosquito / skeleton / zombie / spectral thing w:5 \
          / simulacrum w:5
 MONS:    wolf / warg w:2 / hell hound w:2
-MONS:    flying skull
+MONS:    weeping skull
 MONS:    basilisk / spectral black mamba / black mamba simulacrum \
          / spectral boulder beetle / boulder beetle simulacrum /
 MONS:    wraith
 MONS:    shadow
 MONS:    vampire
 :    else
-MONS:    skeleton / zombie / flying skull / wraith / spectral thing \
+MONS:    skeleton / zombie / wraith / spectral thing \
          / simulacrum
 MONS:    hell hound
-MONS:    freezing wraith
+MONS:    freezing wraith / laughing skull w:2
 MONS:    spectral wolf spider / wolf spider simulacrum / spectral ice dragon \
          / ice dragon simulacrum / spectral deep troll / deep troll simulacrum
 MONS:    vampire / necromancer w:5
@@ -1985,7 +1987,7 @@ MONS:    skeletal warrior / death knight
 MONS:    vampire knight
 :    end
 : elseif you.in_branch("Crypt") then
-MONS:    skeleton / zombie / flying skull / spectral thing / simulacrum
+MONS:    skeleton / zombie / laughing skull / spectral thing / simulacrum
 MONS:    jiangshi / hell beast / doom hound w:2
 MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
 MONS:    spectre place:Crypt:$
@@ -1995,7 +1997,7 @@ MONS:    revenant / eidolon / lich w:5
 : kmons("7 = jory / " .. vamp_def .. ", " .. vamp_def)
 # Depths
 : else
-MONS:    skeleton / zombie / flying skull / spectral thing / simulacrum
+MONS:    skeleton / zombie / laughing skull / spectral thing / simulacrum
 MONS:    jiangshi / hell beast / doom hound w:2
 MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
 MONS:    spectral golden dragon / golden dragon simulacrum \
@@ -2679,9 +2681,9 @@ ENDMAP
 
 NAME:    hangedman_screamer
 TAGS:    no_monster_gen
-DEPTH:   D:9-, Depths, Crypt
+DEPTH:   D:11-, Depths, Crypt
 ORIENT:  float
-MONS:    patrolling flying skull
+MONS:    patrolling laughing skull
 MONS:    zombie / skeleton
 : if you.absdepth() > 19 then
 MONS:    vampire knight / jiangshi / flayed ghost
@@ -2709,8 +2711,8 @@ xaaxx22x5x22xxccx
 xAAx.x2x+x2x.xCCx
 xAAxx.xx*xx.xxCCx
 xAAxxx.x*x.xxxCCx
-x...1...1.......x
-x.......1...1...x
+x.......1.......x
+x.......1.......x
 xBBxxx.x*x.xxxDDx
 xBBxx.xx*xx.xxDDx
 xBBx.x2x+x2x.xDDx
@@ -3124,6 +3126,7 @@ PLACE:  Depths:$
   elseif you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
      colour(".+123* = magenta")
      ftile(".+123* = floor_hall")
+     kitem("1 = midnight gem")
      kfeat("1 = enter_zot")
      kmons("1 = nonbase draconian")
      kmons("2 = base draconian")
@@ -3214,9 +3217,10 @@ ITEM:    potion of invisibility ident:type
 KFEAT:   - = open_door
 SHUFFLE: })]>
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-KFEAT: } = enter_zot
 KMONS: )]> = nonbase draconian w:30 / \
              shadow dragon / golden dragon / storm dragon
+KITEM: > = midnight gem
+KFEAT: } = enter_zot
 : end
 MARKER:  O = lua:fog_machine { cloud_type = 'flame', pow_min=10, pow_max=10, \
                                delay=10, size=1, excl_rad=0 }
@@ -3786,6 +3790,7 @@ KMONS:  0 = red draconian monk / white draconian monk / black draconian monk
 KMONS:  ! = orb of fire / electric golem / ice fiend / iron giant
 KMONS:  & = ancient lich
 KITEM:  $ = $ no_pickup
+KITEM:  Z = midnight gem
 KFEAT:  ~ = .
 KFEAT:  _ = altar_qazlal
 KFEAT:  Z = enter_zot
@@ -3994,7 +3999,7 @@ NAME:   minmay_coctagon
 DEPTH:  D:10-, Elf, Depths
 ORIENT: float
 ITEM:   book of frost / book of ice / book of winter \
-        / ozocubu's autobiography / book of the tundra / manual of ice magic \
+        / book of the tundra / manual of ice magic \
         / wand of iceblast ident:all / staff of cold ident:all \
         / ring of ice ident:all / phial of floods / ice dragon scales w:5
 KITEM:  2 = frostbite / battleaxe ego:freezing randart ident:all \
@@ -6264,7 +6269,7 @@ KMONS:   H = reaper ; halberd itemname:scythe \
 ITEM:    potion of mutation q:4 ident:all
 ITEM:    potion of ambrosia q:4 ident:all / \
          flux talisman randart / talisman of death randart w:5 / \
-         randbook owner:Xom disc:transmutation disc2:necromancy numspells:6
+         randbook owner:Xom disc:alchemy disc2:necromancy numspells:6
 KFEAT:   _ = altar_xom
 KFEAT:   ? = altar_kikubaaqudgha mimic
 KFEAT:   ! = altar_yredelemnul mimic
@@ -6556,7 +6561,7 @@ SUBST:   ' = 1, | = *, & = |
 MONS:    tengu warrior / gargoyle / yaktaur
 MONS:    centaur warrior / ogre mage / orc knight
 MONS:    boggart band / deep elf knight / deep elf archer / ettin
-MONS:    shadow wraith, rakshasa, vampire knight
+MONS:    shadow, rakshasa, vampire knight
 MONS:    shadow / vampire w:5
 NSUBST:  4 = 3 = 77. / *:4
 :   end
@@ -6653,7 +6658,9 @@ MONS:    necromancer, flayed ghost
 KMONS:   8 = tengu warrior
 KMONS:   9 = brown very ugly thing
 KMONS:   0 = vampire mage
+KITEM:   R = $, smoky gem
 KFEAT:   0 = enter_depths
+NSUBST:  $ = 1:R / *:$
 :   end
 KITEM:   & = demon blade / demon whip / demon trident
 NSUBST:  2468 = 2:., 3579 = 1:.
@@ -6676,7 +6683,9 @@ MONS:    frost giant, white draconian stormcaller, shadow dragon, lich
 KMONS:   8 = caustic shrike
 KMONS:   9 = yellow draconian annihilator
 KMONS:   0 = golden dragon
+KITEM:   R = $, midnight gem
 KFEAT:   0 = enter_zot
+NSUBST:  $ = 1:R / *:$
 TILE:    v = dngn_metal_wall_magenta
 :   end
 KITEM:   & = demon blade good_item / demon whip good_item / \

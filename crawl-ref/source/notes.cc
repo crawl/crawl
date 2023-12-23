@@ -265,6 +265,12 @@ string Note::describe(bool when, bool where, bool what) const
             break;
         case NOTE_GET_ITEM:
             result << "Got " << name;
+            if (first != 0) // gems
+            {
+                const int turns = (first + 9) / 10;
+                result << " with " << turns << " turn"
+                       << (first == 1 ? "" : "s") << " to spare";
+            }
             break;
         case NOTE_ACQUIRE_ITEM:
             result << "Acquired " << name;
@@ -391,7 +397,8 @@ string Note::describe(bool when, bool where, bool what) const
         case NOTE_GEM_LOST:
             result << "Lost the "
                    << gem_adj(static_cast<gem_type>(first))
-                   << " gem through Zot's cruel spite.";
+                   << " gem through the power of Zot.";
+            break;
         default:
             result << "Buggy note description: unknown note type";
             break;

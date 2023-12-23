@@ -68,7 +68,7 @@ static const map<job_type, job_def> job_data =
 { JOB_BERSERKER, {
     "Be", "Berserker",
     9, -1, 4,
-    { SP_HILL_ORC, SP_OGRE, SP_MERFOLK, SP_MINOTAUR, SP_GARGOYLE, SP_ARMATAUR, },
+    { SP_HILL_ORC, SP_ONI, SP_MERFOLK, SP_MINOTAUR, SP_GARGOYLE, SP_ARMATAUR, },
     { },
     { "animal skin" },
     WCHOICE_PLAIN,
@@ -102,7 +102,7 @@ static const map<job_type, job_def> job_data =
 { JOB_CINDER_ACOLYTE, {
     "CA", "Cinder Acolyte",
     6, 6, 0,
-    { SP_HILL_ORC, SP_BASE_DRACONIAN, SP_OGRE, SP_DJINNI, SP_GNOLL },
+    { SP_HILL_ORC, SP_BASE_DRACONIAN, SP_ONI, SP_DJINNI, SP_GNOLL },
     { SPELL_SCORCH },
     { "robe" },
     WCHOICE_PLAIN,
@@ -117,7 +117,6 @@ static const map<job_type, job_def> job_data =
     {
         SPELL_MAGIC_DART,
         SPELL_SEARING_RAY,
-        SPELL_DAZZLING_FLASH,
         SPELL_FULMINANT_PRISM,
         SPELL_ISKENDERUNS_MYSTIC_BLAST,
     },
@@ -141,7 +140,7 @@ static const map<job_type, job_def> job_data =
     },
     { "robe", "potion of magic", },
     WCHOICE_NONE,
-    { { SK_TRANSMUTATIONS, 1 }, { SK_EARTH_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
+    { { SK_ALCHEMY, 1 }, { SK_EARTH_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
       { SK_DODGING, 2 }, { SK_STEALTH, 2 }, }
 } },
 
@@ -330,20 +329,21 @@ static const map<job_type, job_def> job_data =
       { SK_SHAPESHIFTING, 3 }, },
 } },
 
-{ JOB_VENOM_MAGE, {
-    "VM", "Venom Mage",
+{ JOB_ALCHEMIST, {
+    "Al", "Alchemist",
     0, 7, 5,
-    { SP_DEEP_ELF, SP_SPRIGGAN, SP_NAGA, SP_MERFOLK, SP_TENGU, SP_DJINNI,
+    { SP_DEEP_ELF, SP_SPRIGGAN, SP_NAGA, SP_MERFOLK, SP_OCTOPODE, SP_DJINNI,
       SP_DEMONSPAWN, },
     {
         SPELL_STING,
-        SPELL_POISONOUS_VAPOURS,
+        SPELL_MERCURY_VAPOURS,
         SPELL_MEPHITIC_CLOUD,
         SPELL_OLGREBS_TOXIC_RADIANCE,
+        SPELL_STICKY_FLAME
     },
     { "robe", "potion of magic" },
     WCHOICE_NONE,
-    { { SK_TRANSMUTATIONS, 1 }, { SK_POISON_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
+    { { SK_ALCHEMY, 3 }, { SK_CONJURATIONS, 1}, { SK_SPELLCASTING, 2 },
       { SK_DODGING, 2 }, { SK_STEALTH, 2 }, },
 } },
 

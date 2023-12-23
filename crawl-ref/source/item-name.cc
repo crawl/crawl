@@ -1021,11 +1021,11 @@ static const char* _book_type_name(int booktype)
     case BOOK_LIGHTNING:              return "Lightning";
     case BOOK_DEATH:                  return "Death";
     case BOOK_MISFORTUNE:             return "Misfortune";
-    case BOOK_CHANGES:                return "Changes";
+    case BOOK_SPONTANEOUS_COMBUSTION: return "Spontaneous Combustion";
 #if TAG_MAJOR_VERSION == 34
     case BOOK_TRANSFIGURATIONS:       return "Transfigurations";
-    case BOOK_BATTLE:                 return "Battle";
 #endif
+    case BOOK_BATTLE:                 return "Battle";
     case BOOK_VAPOURS:                return "Vapours";
     case BOOK_NECROMANCY:             return "Necromancy";
     case BOOK_CALLINGS:               return "Callings";
@@ -1057,7 +1057,7 @@ static const char* _book_type_name(int booktype)
     case BOOK_DRAGON:                 return "the Dragon";
     case BOOK_BURGLARY:               return "Burglary";
     case BOOK_DREAMS:                 return "Dreams";
-    case BOOK_ALCHEMY:                return "Alchemy";
+    case BOOK_TRANSMUTATION:         return "Transmutation";
     case BOOK_BEASTS:                 return "Beasts";
     case BOOK_SPECTACLE:              return "Spectacle";
     case BOOK_WINTER:                 return "Winter";
@@ -1117,7 +1117,7 @@ static const char* staff_type_name(int stafftype)
     {
     case STAFF_FIRE:        return "fire";
     case STAFF_COLD:        return "cold";
-    case STAFF_POISON:      return "poison";
+    case STAFF_ALCHEMY:     return "alchemy";
     case STAFF_DEATH:       return "death";
     case STAFF_CONJURATION: return "conjuration";
     case STAFF_AIR:         return "air";
@@ -1198,16 +1198,20 @@ string sub_type_string(const item_def &item, bool known)
         case BOOK_EVERBURNING:
             // Aus. English apparently follows the US spelling, not UK.
             return "Everburning Encyclopedia";
+#if TAG_MAJOR_VERSION == 34
         case BOOK_OZOCUBU:
             return "Ozocubu's Autobiography";
+#endif
         case BOOK_MAXWELL:
             return "Maxwell's Memoranda";
         case BOOK_YOUNG_POISONERS:
             return "Young Poisoner's Handbook";
         case BOOK_FEN:
             return "Fen Folio";
+#if TAG_MAJOR_VERSION == 34
         case BOOK_NEARBY:
             return "Inescapable Atlas";
+#endif
         case BOOK_THERE_AND_BACK:
             return "There-And-Back Book";
         case BOOK_BIOGRAPHIES_II:
@@ -2142,13 +2146,25 @@ static string _gem_parenthetical(gem_type gem)
 {
     string text = " (";
     text += branches[branch_for_gem(gem)].longname;
-    if (!gem_clock_active())
-        return text + ")";
 
     const int lim = gem_time_limit(gem);
     const int left = lim - you.gem_time_spent[gem];
+
+    // We need to check time left rather than shattered, since the latter is
+    // only set when the gem is actually broken, and we may not have loaded
+    // the relevant level since we ran out of time.
     if (left <= 0)
-        return text + ", shattered)";
+    {
+        if (Options.more_gem_info || !you.gems_found[gem])
+            return text + ", shattered)";
+        return text + ")";
+    }
+
+    if (!gem_clock_active()
+        || !Options.more_gem_info && you.gems_found[gem])
+    {
+        return text + ")";
+    }
 
     // Rescale from aut to dAut. Round up.
     text += make_stringf(", %d", (left + 9) / 10);
@@ -2299,12 +2315,12 @@ string RuneMenu::gem_title()
 {
     const int found = gems_found();
     const int lost = gems_lost();
-    string title = make_stringf("<white>Gems (%d collected", found);
-    if (lost < found)
-        title += make_stringf(", %d intact", found - lost);
+    string gem_title = make_stringf("<white>Gems (%d collected", found);
+    if (Options.more_gem_info && lost < found)
+        gem_title += make_stringf(", %d intact", found - lost);
     // don't explicitly mention that your gems are all broken otherwise - sad!
 
-    return title + ")</white>";
+    return gem_title + ")</white>";
 }
 
 void RuneMenu::set_footer()
@@ -2317,7 +2333,7 @@ void RuneMenu::set_footer()
             "|<w>Right-click</w>"
 #endif
             "]: %s", show_gems ? "Show Runes" : "Show Gems");
-    if (can_show_more_gems())
+    if (!Options.more_gem_info && can_show_more_gems())
         more_text += make_stringf("\n[<w>-</w>]: %s", more_gems ? "Less" : "More");
     set_more(more_text);
 }
@@ -2409,8 +2425,16 @@ void RuneMenu::set_gems()
         if (gem == NUM_GEM_TYPES)
             continue;
 
-        if (!more_gems && you.gems_shattered[gem] && !you.gems_found[gem])
+        if (!Options.more_gem_info
+            && !more_gems
+            && !you.gems_found[gem]
+            // We need to check time left rather than shattered, since the latter is
+            // only set when the gem is actually broken, and we may not have loaded
+            // the relevant level since we ran out of time.
+            && you.gem_time_spent[gem] >= gem_time_limit(gem))
+        {
             continue;
+        }
 
         item_def item;
         item.base_type = OBJ_GEMS;
@@ -2920,6 +2944,18 @@ bool is_good_item(const item_def &item)
     case OBJ_POTIONS:
         if (!you.can_drink(false)) // still want to pick them up in lichform?
             return false;
+
+        // Recolor healing potions to indicate their additional goodness
+        //
+        // XX: By default, this doesn't actually change the color of anything
+        //     but !ambrosia, since yellow for 'emergency' takes priority over
+        //     cyan for 'good'. Should this get a *new* color?
+        if (you.has_mutation(MUT_DRUNKEN_BRAWLING)
+            && oni_likes_potion(static_cast<potion_type>(item.sub_type)))
+        {
+            return true;
+        }
+
         switch (item.sub_type)
         {
         case POT_EXPERIENCE:

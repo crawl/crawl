@@ -701,17 +701,6 @@ Waterstrike spell
  At the bottom of the ocean”
     -Talking Heads, “Once in a Lifetime”. 1980.
 
-%%%%
-Wereblood spell
-
-“I was not there for rehearsal, I don’t need it any more
- When I show up just in time to pop, you can clear the goddamn floor
- Empty out the locker room, let me find my space
- Let him who thinks he knows no fear look well upon my face
-
- Nameless bodies in unremembered rooms
- Know how a man becomes a beast when the wolfbane blooms”
-    -The Mountain Goats, “Werewolf Gimmick”. 2015
 ########################################
 #
 # Items
@@ -1091,6 +1080,12 @@ horn of Geryon
 ice dragon scales
 
 <steam dragon scales>
+%%%%
+iron giant
+
+"You're made of metal, but you have feelings, and you think about things,
+ and that means you have a soul. And souls don't die."
+    -_The Iron Giant_. 1999
 %%%%
 javelin
 
@@ -1721,6 +1716,10 @@ staff of air
 
 <staff>
 %%%%
+staff of alchemy
+
+<staff>
+%%%%
 staff of cold
 
 <staff>
@@ -1766,10 +1765,6 @@ staff of fire
  of another man's dreams—what an incomparable humiliation, what madness!”
     -Jorge Luis Borges, _The Circular Ruins_. 1940.
     trans. Anthony Bonner, 1962.
-%%%%
-staff of poison
-
-<staff>
 %%%%
 steam dragon scales
 
@@ -2872,13 +2867,6 @@ flayed ghost
 
 “Solamen miseris socios habuisse doloris.”
     -Christopher Marlowe, _Doctor Faustus_. 1604
-%%%%
-flying skull
-
-“Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most
- excellent fancy. He hath bore me on his back a thousand times, and now how
- abhorr'd in my imagination it is! My gorge rises at it.”
-    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, V, 1. 1603
 %%%%
 formless jellyfish
 
@@ -4022,6 +4010,13 @@ war gargoyle
  of a candle.”
     -Victor Hugo, _The Hunchback of Notre-Dame_, 10, ch. IV. 1831.
      trans. Isabel F. Hapgood
+%%%%
+weeping skull
+
+“Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most
+ excellent fancy. He hath bore me on his back a thousand times, and now how
+ abhorr'd in my imagination it is! My gorge rises at it.”
+    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, V, 1. 1603
 %%%%
 wolf
 

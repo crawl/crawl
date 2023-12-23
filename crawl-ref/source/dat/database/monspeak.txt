@@ -7298,6 +7298,33 @@ VISUAL:@The_monster@ skips for a moment.
 @The_monster@ says, "Trust me, I'm a doctor."
 ## END Killer Klown ##
 %%%%
+################## Laughing skull ###########################
+laughing skull
+
+@The_monster@ @_laughs_@ at the inevitable fate of oblivion.
+
+@The_monster@ @_laughs_@ at how history will forget everyone present.
+
+@The_monster@ @_laughs_@ at the Dungeon's lack of mercy or dignity.
+
+# Kill Six Billion Demons
+@The_monster@ @_laughs_@ at the inescapable nature of violence.
+
+w:20
+__NONE
+%%%%
+laughing skull triumphant
+
+@The_monster@ crumbles to pieces from sheer joy.
+%%%%
+_laughs_
+
+cackles madly
+
+chuckles harshly
+
+gibbers darkly
+%%%%
 ################## Moth of wrath ###########################
 moth of wrath
 
@@ -7403,6 +7430,57 @@ _tormentor_rare_
 
 @The_monster@ shouts @at_foe@, "I'll tear you apart!"
 ## END _tormentor_ ##
+%%%%
+################## Weeping skull ##################################
+weeping skull
+
+w:7
+@_weeping_skull_common_@
+
+w:1
+@_weeping_skull_rare_@
+
+w:4
+__NONE
+%%%%
+_weeping_skull_common_
+
+@The_monster@ @_weeps_@ for your inevitable fate. @player_only@
+
+@The_monster@ @_weeps_@ at its own [deplorable|decrepit] state.
+
+# Slime, Swamp, Desolation...
+@The_monster@ grieves for the multitudes of fallen [empires|civilizations].
+
+# Itsumaden
+@The_monster@ begs for proper burials for the Dungeon's restless dead.
+%%%%
+_weeping_skull_rare_
+
+@The_monster@ @_weeps_@ over the unstoppable march of time and entropy.
+
+# Hollow Knight
+@The_monster@ asks how much longer can this world bear the weight of past lives.
+
+# Don't add literally everything to this one- only the ones with no chance.
+w:1
+@The_monster@ mourns the extinction of [gnomes|halflings|high elves|hill dwarves].
+
+# The shrieker shrieks.
+w:1
+@The_monster@ weeps.
+%%%%
+weeping skull triumphant
+
+@The_monster@ crumbles to pieces from sheer guilt.
+%%%%
+_weeps_
+
+moans
+
+wails
+
+sobs
 %%%%
 ################## Wizard ##################################
 arcanist

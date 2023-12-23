@@ -39,6 +39,8 @@ public:
     bool         is_riposte;      // fencers' retaliation attack
     bool         is_projected;    // projected weapon spell attack
     int          charge_pow;      // electric charge bonus damage
+    bool         never_cleave;    // if this attack shouldn't trigger cleave
+                                  // followups, but still do 100% damage
     wu_jian_attack_type wu_jian_attack;
     int wu_jian_number_of_targets;
     coord_def attack_position;
@@ -52,6 +54,8 @@ public:
     bool attack();
     int calc_to_hit(bool random) override;
     int post_roll_to_hit_modifiers(int mhit, bool random) override;
+
+    bool would_prompt_player();
 
     static void chaos_affect_actor(actor *victim);
 
@@ -156,7 +160,7 @@ private:
     void player_warn_miss();
     void player_weapon_upsets_god();
     bool bad_attempt();
-    bool player_unrand_bad_attempt();
+    bool player_unrand_bad_attempt(bool check_only = false);
     void _defender_die();
 
     // Added in, were previously static methods of fight.cc

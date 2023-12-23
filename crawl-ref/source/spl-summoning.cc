@@ -119,49 +119,57 @@ spret cast_summon_small_mammal(int pow, god_type god, bool fail)
     return spret::success;
 }
 
+// Mid of an active canine familiar. Should exist only so long as the player
+// has a living one.
+#define CANINE_FAMILIAR_MID "canine_familiar_mid"
+
+monster *find_canine_familiar()
+{
+    if (!you.props.exists(CANINE_FAMILIAR_MID))
+        return nullptr;
+    const int mid = you.props[CANINE_FAMILIAR_MID].get_int();
+    return monster_by_mid(mid);
+}
+
 bool canine_familiar_is_alive()
 {
-    if (you.props.exists(CANINE_FAMILIAR_MID))
+    return find_canine_familiar() != nullptr;
+}
+
+void check_canid_farewell(const monster &dog, bool deadish)
+{
+    if (&dog != find_canine_familiar())
+        return;
+
+    you.props.erase(CANINE_FAMILIAR_MID);
+
+    if (deadish)
     {
-        // Some sanity checking. This prop should already be removed whenever
-        // the dog stops existing, but sometimes this still isn't the case.
-        // So double-check the dog's existence, and remove the prop if it
-        // doesn't exist to avoid crashes elsewhere.
-        monster* dog = monster_by_mid(you.props[CANINE_FAMILIAR_MID].get_int());
-        if (!dog)
-        {
-            you.props.erase(CANINE_FAMILIAR_MID);
-            return false;
-        }
-
-        return true;
+        // Prevent you from resummoning it for a little while.
+        you.duration[DUR_CANINE_FAMILIAR_DEAD] = random_range(6, 11)
+                                                 * BASELINE_DELAY;
     }
-
-    return false;
 }
 
 spret cast_call_canine_familiar(int pow, god_type god, bool fail)
 {
     // Many parts of this spell behave differently if our familiar has already
     // been summoned.
-    bool familiar_active = canine_familiar_is_alive();
+    monster *old_dog = find_canine_familiar();
 
-    if (!familiar_active && stop_summoning_prompt())
+    if (!old_dog && stop_summoning_prompt())
         return spret::abort;
-    else if (familiar_active)
+
+    if (old_dog && !you.can_see(*old_dog))
     {
-        monster* dog = monster_by_mid(you.props[CANINE_FAMILIAR_MID].get_int());
-        if (!you.can_see(*dog))
-        {
-            mprf(MSGCH_PROMPT, "Your familiar is too far away to imbue with magic.");
-            return spret::abort;
-        }
+        mprf(MSGCH_PROMPT, "Your familiar is too far away to imbue with magic.");
+        return spret::abort;
     }
 
     fail_check();
 
     // Summon our dog if one isn't already active
-    if (!familiar_active)
+    if (!old_dog)
     {
         mgen_data mg = _pal_data(MONS_INUGAMI, 5, god, SPELL_CALL_CANINE_FAMILIAR);
 
@@ -185,16 +193,14 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
     // If it's active, instead heal and boost its next attack.
     else
     {
-        monster* dog = monster_by_mid(you.props[CANINE_FAMILIAR_MID].get_int());
-
         // Heal familiar and make its next attack (within the new few turns,
         // so that you don't just prebuff for this) an instant cleave.
         mpr("You imbue your familiar with magical energy and its fangs glint"
             " viciously.");
 
-        dog->heal(random_range(5, 9) + div_rand_round(pow, 5));
-        dog->lose_ench_levels(ENCH_POISON, 1);
-        dog->add_ench(mon_enchant(ENCH_INSTANT_CLEAVE, 1, &you, 50));
+        old_dog->heal(random_range(5, 9) + div_rand_round(pow, 5));
+        old_dog->lose_ench_levels(ENCH_POISON, 1);
+        old_dog->add_ench(mon_enchant(ENCH_INSTANT_CLEAVE, 1, &you, 50));
     }
 
     return spret::success;
@@ -367,7 +373,7 @@ static monster_type _choose_dragon_type(int pow, god_type /*god*/, bool player)
 
 spret cast_dragon_call(int pow, bool fail)
 {
-    if (stop_summoning_prompt(MR_NO_FLAGS, M_NO_FLAGS, "call dragons"))
+    if (stop_summoning_prompt(MR_NO_FLAGS, M_FLIES, "call dragons"))
         return spret::abort;
 
     fail_check();
@@ -2808,7 +2814,7 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool 
     // For unseen invisble enemies
     if (actor_at(pos))
     {
-        mpr("Your attempt to unleash a boulder fails!");
+        mpr("Something unseen is already there!");
         return spret::success;
     }
 

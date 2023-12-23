@@ -843,7 +843,9 @@ static int Gem_index[NUM_GEM_TYPES];
 static const gem_def Gem_prop[] =
 {
     { GEM_DUNGEON, "smoky",       BRANCH_DUNGEON, 6000 },
+#if TAG_MAJOR_VERSION == 34
     { GEM_ORC,     "glittering",  BRANCH_ORC,     6000 },
+#endif
     { GEM_ELF,     "shimmering",  BRANCH_ELF,     6000 },
     { GEM_LAIR,    "earthy",      BRANCH_LAIR,    7500 }, // travel time
 
@@ -852,10 +854,10 @@ static const gem_def Gem_prop[] =
     { GEM_SNAKE,   "jade",        BRANCH_SNAKE,   6000 },
     { GEM_SPIDER,  "milky-white", BRANCH_SPIDER,  6000 },
 
-    { GEM_SLIME,   "starry",      BRANCH_SLIME,   3000 }, // usually dived
+    { GEM_SLIME,   "starry",      BRANCH_SLIME,   2000 }, // usually dived fast
     { GEM_VAULTS,  "shining",     BRANCH_VAULTS,  7500 }, // big, travel time
     { GEM_CRYPT,   "ivory",       BRANCH_CRYPT,   6000 },
-    { GEM_TOMB,    "sanguine",    BRANCH_TOMB,    6000 },
+    { GEM_TOMB,    "sanguine",    BRANCH_TOMB,    7500 }, // weird
     { GEM_DEPTHS,  "midnight",    BRANCH_DEPTHS,  7500 }, // big, travel time
     { GEM_ZOT,     "prismatic",   BRANCH_ZOT,     3000 }, // often dived
 };
@@ -952,13 +954,14 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_BOOKS,     BOOK_BUGGY_DESTRUCTION },
     { OBJ_BOOKS,     BOOK_ENVENOMATIONS },
     { OBJ_BOOKS,     BOOK_AKASHIC_RECORD },
-    { OBJ_BOOKS,     BOOK_BATTLE },
     { OBJ_BOOKS,     BOOK_STONE },
     { OBJ_BOOKS,     BOOK_PAIN },
     { OBJ_BOOKS,     BOOK_MALEDICT },
     { OBJ_BOOKS,     BOOK_SKY },
     { OBJ_BOOKS,     BOOK_RIME },
     { OBJ_BOOKS,     BOOK_TRANSFIGURATIONS },
+    { OBJ_BOOKS,     BOOK_OZOCUBU },
+    { OBJ_BOOKS,     BOOK_NEARBY },
     { OBJ_RODS,      ROD_VENOM },
     { OBJ_RODS,      ROD_WARDING },
     { OBJ_RODS,      ROD_DESTRUCTION },
@@ -1001,6 +1004,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_MISSILES,  MI_ARROW },
     { OBJ_MISSILES,  MI_BOLT },
     { OBJ_MISSILES,  MI_SLING_BULLET },
+    { OBJ_GEMS,      GEM_ORC },
 #endif
     { OBJ_JEWELLERY, AMU_NOTHING }, // These should only spawn as uniques
 };
@@ -2038,8 +2042,8 @@ skill_type staff_skill(stave_type s)
         return SK_EARTH_MAGIC;
     case STAFF_FIRE:
         return SK_FIRE_MAGIC;
-    case STAFF_POISON:
-        return SK_POISON_MAGIC;
+    case STAFF_ALCHEMY:
+        return SK_ALCHEMY;
     case STAFF_DEATH:
         return SK_NECROMANCY;
     case STAFF_CONJURATION:
@@ -2266,8 +2270,13 @@ gem_type gem_for_branch(branch_type br)
 {
     // XXX TODO: maybe bake a map in advance
     for (int i = 0; i < NUM_GEM_TYPES; i++)
-        if (Gem_prop[ Gem_index[i]].branch == br)
+    {
+        if (!item_type_removed(OBJ_GEMS, i)
+            && Gem_prop[ Gem_index[i]].branch == br)
+        {
             return static_cast<gem_type>(i);
+        }
+    }
     return NUM_GEM_TYPES;
 }
 
@@ -2281,10 +2290,7 @@ int gem_time_limit(gem_type gem)
     const int per_floor = Gem_prop[ Gem_index[gem]].time_per_floor;
     const branch_type br = Gem_prop[ Gem_index[gem]].branch;
     const int floors = branches[br].numlevels;
-    const int base_time = per_floor * floors;
-    if (have_passive(passive_t::slow_zot))
-        return base_time * 3 / 2;
-    return base_time;
+    return per_floor * floors;
 }
 
 //
@@ -2932,7 +2938,7 @@ bool gives_resistance(const item_def &item)
     case OBJ_STAVES:
         if (item.sub_type == STAFF_FIRE
             || item.sub_type == STAFF_COLD
-            || item.sub_type == STAFF_POISON
+            || item.sub_type == STAFF_ALCHEMY
             || item.sub_type == STAFF_AIR
             || item.sub_type == STAFF_DEATH)
         {
@@ -3494,4 +3500,20 @@ string item_name_for_set(item_set_type typ)
     it.base_type = item_sets[typ].cls;
     it.sub_type = item_for_set(typ);
     return sub_type_string(it, true);
+}
+
+// Whether drinking this potion will cause a drunken swing
+bool oni_likes_potion(potion_type type)
+{
+    switch (type)
+    {
+        case POT_CURING:
+        case POT_HEAL_WOUNDS:
+        case POT_MAGIC:
+        case POT_AMBROSIA:
+            return true;
+
+        default:
+            return false;
+    }
 }

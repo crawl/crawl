@@ -94,11 +94,13 @@ static bool _action_is_bad(xom_event_type action)
 static const vector<spell_type> _xom_random_spells =
 {
     SPELL_SUMMON_SMALL_MAMMAL,
-    SPELL_CALL_CANINE_FAMILIAR,
+    SPELL_FUGUE_OF_THE_FALLEN,
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_SUMMON_ICE_BEAST,
+    SPELL_ANIMATE_ARMOUR,
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_CAUSE_FEAR,
+    SPELL_BATTLESPHERE,
     SPELL_INTOXICATE,
     SPELL_SUMMON_MANA_VIPER,
     SPELL_SUMMON_CACTUS,
@@ -107,6 +109,7 @@ static const vector<spell_type> _xom_random_spells =
     SPELL_DEATH_CHANNEL,
     SPELL_SUMMON_HYDRA,
     SPELL_MONSTROUS_MENAGERIE,
+    SPELL_MALIGN_GATEWAY,
     SPELL_DISCORD,
     SPELL_DISJUNCTION,
     SPELL_SUMMON_HORRIBLE_THINGS,
@@ -2375,11 +2378,17 @@ static void _xom_cloud_trail(int /*sever*/)
     you.props[XOM_CLOUD_TRAIL_TYPE_KEY] =
         // 80% chance of a useful trail
         random_choose_weighted(20, CLOUD_CHAOS,
-                               10, CLOUD_MAGIC_TRAIL,
+                               9,  CLOUD_MAGIC_TRAIL,
                                5,  CLOUD_MIASMA,
                                5,  CLOUD_PETRIFY,
                                5,  CLOUD_MUTAGENIC,
-                               5,  CLOUD_NEGATIVE_ENERGY);
+                               4,  CLOUD_MISERY,
+                               1,  CLOUD_SALT,
+                               1,  CLOUD_BLASTMOTES);
+
+    // Need to explicitly set as non-zero. Use a clean half of the power cap.
+    if (you.props[XOM_CLOUD_TRAIL_TYPE_KEY].get_int() == CLOUD_BLASTMOTES)
+        you.props[BLASTMOTE_POWER_KEY] = 25;
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "cloud trail"), true);
 

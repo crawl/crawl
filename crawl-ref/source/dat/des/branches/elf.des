@@ -1635,7 +1635,7 @@ KMONS: V = deep elf death mage / nothing
 KMONS: 2 = flayed ghost / shadow wraith / phantasmal warrior / curse skull / \
            eidolon / ghoul / skeletal warrior / ancient champion / \
            vampire / vampire mage / vampire knight / jiangshi
-KMONS: 3 = lost soul / flying skull / spectral deep elf blademaster / \
+KMONS: 3 = lost soul / weeping skull / spectral deep elf blademaster / \
            deep elf blademaster simulacrum / spectral deep elf knight / \
            deep elf knight simulacrum
 KFEAT: 1V = V
@@ -1858,7 +1858,7 @@ NAME:   nicolae_elf_shapeshifter_party
 TAGS:   transparent patrolling misc_elf_vault no_monster_gen
 DEPTH:  Elf
 ITEM:   potion of mutation / potion of lignification / wand of polymorph \
-        / randbook disc:transmutation / any potion / any wand / randbook \
+        / randbook disc:alchemy / any potion / any wand / randbook \
         / any good_item w:30
 MONS:   shapeshifter / glowing shapeshifter w:5
 SUBST:  Z = x., z = ddFFx, E = Fx, . = 1 .:90
@@ -1938,7 +1938,7 @@ ENDMAP
 NAME:   hellmonk_elf_help
 TAGS:   transparent no_item_gen
 DEPTH:  Elf
-KITEM:  ' = randbook title:Changing_Your_Life! disc:Transmutation /\
+KITEM:  ' = randbook title:Get_Rich_Quick! disc:alchemy /\
             randbook title:Seven_Elven_Habits numspells:7 /\
             randbook title:Passive_Income disc:Summoning \
                 disc2:Necromancy /\

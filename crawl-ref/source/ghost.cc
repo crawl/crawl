@@ -44,7 +44,7 @@ static spell_type search_order_aoe_conj[] =
     SPELL_FREEZING_CLOUD,
     SPELL_POISONOUS_CLOUD,
     SPELL_METAL_SPLINTERS,
-    SPELL_ENERGY_BOLT,
+    SPELL_BOLT_OF_DEVASTATION,
     SPELL_ORB_OF_ELECTRICITY,
     SPELL_CONJURE_BALL_LIGHTNING,
 };
@@ -57,7 +57,7 @@ static spell_type search_order_conj[] =
     SPELL_CORROSIVE_BOLT,
     SPELL_QUICKSILVER_BOLT,
     SPELL_IOOD,
-    SPELL_ENERGY_BOLT,
+    SPELL_BOLT_OF_DEVASTATION,
     SPELL_MINDBURST,
     SPELL_BOLT_OF_FIRE,
     SPELL_BOLT_OF_COLD,
@@ -484,7 +484,7 @@ void ghost_demon::init_player_ghost()
                 // very bad approximations
                 case STAFF_FIRE: brand = SPWPN_FLAMING; break;
                 case STAFF_COLD: brand = SPWPN_FREEZING; break;
-                case STAFF_POISON: brand = SPWPN_VENOM; break;
+                case STAFF_ALCHEMY: brand = SPWPN_VENOM; break;
                 case STAFF_DEATH: brand = SPWPN_PAIN; break;
                 case STAFF_AIR: brand = SPWPN_ELECTROCUTION; break;
                 case STAFF_EARTH: brand = SPWPN_HEAVY; break;
