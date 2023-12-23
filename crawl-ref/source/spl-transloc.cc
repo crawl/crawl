@@ -1179,14 +1179,10 @@ string weapon_unprojectability_reason()
     if (!you.weapon())
         return "";
     const item_def &it = *you.weapon();
-    // These all cause attack prompts, which are awkward to handle.
-    // TODO: support these!
+    // These don't work properly when performing attacks against non-adjacent
+    // targets. Maybe support them in future?
     static const vector<int> forbidden_unrands = {
         UNRAND_POWER,
-        UNRAND_DEVASTATOR,
-        UNRAND_VARIABILITY,
-        UNRAND_SINGING_SWORD,
-        UNRAND_TORMENT,
         UNRAND_ARC_BLADE,
     };
     for (int urand : forbidden_unrands)
@@ -1202,6 +1198,7 @@ string weapon_unprojectability_reason()
 
 spret cast_manifold_assault(int pow, bool fail, bool real)
 {
+    bool found_unsafe_target = false;
     vector<monster*> targets;
     for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
     {
@@ -1211,13 +1208,31 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
             continue;
         if (!you.can_see(**mi))
             continue;
-        targets.emplace_back(*mi);
+
+        // Make a melee attack to test if we'd need a prompt to hit this target,
+        // and ignore all such targets entirely.
+        //
+        // We only perform this test for real casts, because otherwise the game
+        // prints a misleading message to the player first (about there being
+        // no targets in range)
+        if (real)
+        {
+            melee_attack atk(&you, *mi);
+            if (!atk.would_prompt_player())
+                targets.emplace_back(*mi);
+            else
+                found_unsafe_target = true;
+        }
+        else
+            targets.emplace_back(*mi);
     }
 
     if (targets.empty())
     {
-        if (real)
+        if (real && !found_unsafe_target)
             mpr("You can't see anything to attack.");
+        else if (real && found_unsafe_target)
+            mpr("You can't see anything you can safely attack.");
         return spret::abort;
     }
 
