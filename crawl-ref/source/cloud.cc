@@ -33,6 +33,7 @@
 #include "player-stats.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-clouds.h" // explode_blastmotes_at
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
@@ -256,12 +257,10 @@ static const cloud_data clouds[] = {
       BEAM_ELECTRICITY,                         // beam_effect
       { 23, 27 },
     },
-    // CLOUD_NEGATIVE_ENERGY,
-    { "negative energy", nullptr,               // terse, verbose name
+    // CLOUD_MISERY,
+    { "excruciating misery", nullptr,           // terse, verbose name
       ETC_INCARNADINE,                          // colour
-      { TILE_CLOUD_NEG, CTVARY_DUR },           // tile
-      BEAM_NEG,                                 // beam_effect
-      NORMAL_CLOUD_DAM,                         // base, random damage
+      { TILE_CLOUD_MISERY, CTVARY_DUR },           // tile
     },
     // CLOUD_FLUFFY,
     { "white fluffiness",  nullptr,             // terse, verbose name
@@ -855,7 +854,7 @@ static bool _cloud_has_negative_side_effects(cloud_type cloud)
     case CLOUD_CHAOS:
     case CLOUD_PETRIFY:
     case CLOUD_ACID:
-    case CLOUD_NEGATIVE_ENERGY:
+    case CLOUD_MISERY:
     case CLOUD_BLASTMOTES:
         return true;
     default:
@@ -954,7 +953,7 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
             return act.res_acid() > 0;
         case CLOUD_STORM:
             return act.res_elec() >= 3;
-        case CLOUD_NEGATIVE_ENERGY:
+        case CLOUD_MISERY:
             return act.res_negative_energy() >= 3;
         case CLOUD_VORTEX:
             return act.res_polar_vortex();
@@ -1023,7 +1022,7 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
         return act->res_acid();
     case CLOUD_STORM:
         return act->res_elec();
-    case CLOUD_NEGATIVE_ENERGY:
+    case CLOUD_MISERY:
         return act->res_negative_energy();
 
     default:
@@ -1168,17 +1167,39 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         act->acid_corrode(5);
         return true;
 
-    case CLOUD_NEGATIVE_ENERGY:
+    case CLOUD_MISERY:
     {
+        int dam = 0;
         actor* agent = cloud.agent();
-        if (act->drain(agent, final_damage))
+
+        // Take 10% of player max hp per tick and 15% for monsters.
+        if (act->is_player())
+            dam = max(1, div_rand_round(get_real_hp(true, false), 10));
+        else
         {
+            monster* mon = act->as_monster();
+            dam = max(1, div_rand_round(mon->max_hit_points * 3, 20));
+        }
+
+        dam = resist_adjust_damage(act, BEAM_NEG, dam);
+        dam = timescale_damage(act, dam);
+
+        if (dam > 0)
+        {
+            act->hurt(agent, dam, BEAM_NEG, KILLED_BY_CLOUD, "", cloud.cloud_name(true));
             if (cloud.whose == KC_YOU)
                 did_god_conduct(DID_EVIL, 5 + random2(3));
-            return true;
         }
-        break;
+
+        return true;
     }
+    break;
+
+    case CLOUD_BLASTMOTES:
+        if (act->props.exists(BLASTMOTE_IMMUNE_KEY))
+            return false;
+        explode_blastmotes_at(cloud.pos);
+        return true;
 
     default:
         break;
@@ -1240,7 +1261,6 @@ static int _actor_cloud_damage(const actor *act,
     case CLOUD_STEAM:
     case CLOUD_SPECTRAL:
     case CLOUD_ACID:
-    case CLOUD_NEGATIVE_ENERGY:
     case CLOUD_STORM:
         final_damage =
             _cloud_damage_output(act, _cloud2beam(cloud.type),

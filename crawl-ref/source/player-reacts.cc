@@ -844,6 +844,9 @@ static void _decrement_durations()
         wu_jian_heaven_tick();
     }
 
+    if (you.duration[DUR_TEMP_CLOUD_IMMUNITY])
+        _decrement_a_duration(DUR_TEMP_CLOUD_IMMUNITY, delay);
+
     // these should be after decr_ambrosia, transforms, liquefying, etc.
     for (int i = 0; i < NUM_DURATIONS; ++i)
         if (duration_decrements_normally((duration_type) i))
@@ -1052,6 +1055,9 @@ void player_reacts()
     // so erase it just after we apply clouds for the turn (above).
     if (you.props.exists(MIASMA_IMMUNE_KEY))
         you.props.erase(MIASMA_IMMUNE_KEY);
+    // Ditto for blastmotes.
+    if (you.props.exists(BLASTMOTE_IMMUNE_KEY))
+        you.props.erase(BLASTMOTE_IMMUNE_KEY);
 
     actor_apply_toxic_bog(&you);
 

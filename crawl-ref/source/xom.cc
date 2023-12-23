@@ -2382,7 +2382,7 @@ static void _xom_cloud_trail(int /*sever*/)
                                5,  CLOUD_MIASMA,
                                5,  CLOUD_PETRIFY,
                                5,  CLOUD_MUTAGENIC,
-                               4,  CLOUD_NEGATIVE_ENERGY,
+                               4,  CLOUD_MISERY,
                                1,  CLOUD_SALT,
                                1,  CLOUD_BLASTMOTES);
 

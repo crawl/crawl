@@ -410,7 +410,7 @@ static dice_def _spell_damage(spell_type spell, int hd)
         // against monsters. This is very unsatisfying, but surely we show the
         // player *something*...
         case SPELL_PYRE_ARROW:
-            return dice_def(2, 3 + hd * 12 / 16);
+            return dice_def(2, 2 + hd * 12 / 14);
         default:
             break;
     }
@@ -512,6 +512,12 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         return describe_airstrike_dam(dam);
     if (spell == SPELL_RESONANCE_STRIKE)
         return describe_resonance_strike_dam(dam);
+
+    if (spell == SPELL_BOLT_OF_DRAINING && mon_owner->type == MONS_LAUGHING_SKULL)
+    {
+        return make_stringf("%dd(%d-%d)", dam.num, dam.size,
+                                          dam.size * 2);
+    }
 
     string mult = "";
     if (spell == SPELL_MARSHLIGHT || spell == SPELL_PLASMA_BEAM)

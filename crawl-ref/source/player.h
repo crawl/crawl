@@ -742,6 +742,7 @@ public:
     void slow_down(actor *, int str) override;
     void confuse(actor *, int strength) override;
     void weaken(actor *attacker, int pow) override;
+    bool strip_willpower(actor *attacker, int dur, bool quiet = false) override;
     bool heal(int amount) override;
     bool drain(const actor *, bool quiet = false, int pow = 3) override;
     void splash_with_acid(actor *evildoer) override;
@@ -878,6 +879,8 @@ public:
     void apply_location_effects(const coord_def &oldpos,
                                 killer_type killer = KILL_NONE,
                                 int killernum = -1) override;
+
+    void did_deliberate_movement() override;
 
     void be_agile(int pow);
 

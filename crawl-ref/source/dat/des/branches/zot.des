@@ -2442,12 +2442,11 @@ ENDMAP
 NAME:   lemuel_lich_library
 TAGS:   no_monster_gen no_descent
 DEPTH:  Zot, !Zot:$
-MONS:   flying skull, lich, ancient lich / dread lich, necromancer
+MONS:   laughing skull, lich, ancient lich / dread lich, necromancer
 MONS:   vampire mage
 ITEM:   any book mimic:10 w:20 / any scroll mimic:10
-SUBST:  w:w?
-SUBST:  ?=. 1:1
-SUBST:  x:xc
+SUBST:  x : xc, w : w?
+NSUBST: ? = 12 = 11. / *:.
 SUBST:  4 = 4 5:2 .:4
 MAP
 wwwwwwwwwwwwwwwwwwwwwww

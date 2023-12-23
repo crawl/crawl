@@ -1138,22 +1138,22 @@ static spell_type _vehumet_wrath_type()
                                  SPELL_STONE_ARROW);
         case 4:
             return random_choose(SPELL_STICKY_FLAME,
-                                 SPELL_THROW_ICICLE,
-                                 SPELL_ENERGY_BOLT);
+                                 SPELL_THROW_ICICLE);
         case 5:
             return random_choose(SPELL_FIREBALL,
                                  SPELL_LIGHTNING_BOLT,
                                  SPELL_BOLT_OF_MAGMA,
                                  SPELL_VENOM_BOLT,
                                  SPELL_BOLT_OF_DRAINING,
+                                 SPELL_BOLT_OF_DEVASTATION,
                                  SPELL_QUICKSILVER_BOLT,
+                                 SPELL_FREEZING_CLOUD,
+                                 SPELL_POISONOUS_CLOUD,
                                  SPELL_METAL_SPLINTERS);
         case 6:
             return random_choose(SPELL_BOLT_OF_FIRE,
                                  SPELL_BOLT_OF_COLD,
                                  SPELL_CORROSIVE_BOLT,
-                                 SPELL_FREEZING_CLOUD,
-                                 SPELL_POISONOUS_CLOUD,
                                  SPELL_POISON_ARROW,
                                  SPELL_IRON_SHOT,
                                  SPELL_CONJURE_BALL_LIGHTNING);

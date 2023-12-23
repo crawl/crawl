@@ -815,6 +815,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_ORC_SORCERER,    { { { WPN_DAGGER, 1 } } } },
         { MONS_NERGALLE,        { { { WPN_DAGGER, 1 } } } },
         { MONS_DOWAN,           { { { WPN_DAGGER, 1 } } } },
+        { MONS_BURIAL_ACOLYTE,  { { { WPN_DAGGER, 1 } } } },
         { MONS_KOBOLD_DEMONOLOGIST, { { { WPN_DAGGER, 1 } } } },
         { MONS_NECROMANCER,      { { { WPN_DAGGER, 1 } } } },
         { MONS_ARCANIST,         { { { WPN_DAGGER, 1 } } } },
@@ -2075,6 +2076,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_WIGHT:
     case MONS_SPRIGGAN_DRUID:
     case MONS_AGNES:
+    case MONS_BURIAL_ACOLYTE:
     case MONS_NECROMANCER:
     case MONS_VAMPIRE_MAGE:
     case MONS_PIKEL:

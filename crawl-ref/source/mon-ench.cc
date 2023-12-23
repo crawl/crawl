@@ -58,7 +58,7 @@ static const unordered_map<enchant_type, cloud_type, std::hash<int>> _cloud_ring
     { ENCH_RING_OF_MUTATION,    CLOUD_MUTAGENIC },
     { ENCH_RING_OF_FOG,         CLOUD_GREY_SMOKE },
     { ENCH_RING_OF_ICE,         CLOUD_COLD },
-    { ENCH_RING_OF_DRAINING,    CLOUD_NEGATIVE_ENERGY },
+    { ENCH_RING_OF_DRAINING,    CLOUD_MISERY },
     { ENCH_RING_OF_ACID,        CLOUD_ACID },
     { ENCH_RING_OF_MIASMA,      CLOUD_MIASMA },
 };

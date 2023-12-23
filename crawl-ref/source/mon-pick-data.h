@@ -82,6 +82,7 @@ static const vector<pop_entry> population[] =
   {  2,  5,  500, FALL, MONS_WORM },
   {  2,  6, 1000, FLAT, MONS_ADDER },
   {  3,  8, 1000, FLAT, MONS_ORC },
+  {  3,  7,  400, PEAK, MONS_BOMBARDIER_BEETLE},
 
 // These historically don't get kills after D:7ish.
   {  4,  7,  800, PEAK, MONS_SCORPION },
@@ -156,7 +157,7 @@ static const vector<pop_entry> population[] =
   { 15, 25,  315, FALL, MONS_OGRE_MAGE },
   { 15, 25,  275, PEAK, MONS_WOLF_SPIDER },
   { 16, 24,   89, PEAK, MONS_REDBACK },
-  { 16, 24,   25, PEAK, MONS_SHADOW_WRAITH },
+  { 16, 24,   25, PEAK, MONS_LAUGHING_SKULL },
   { 16, 27,   92, PEAK, MONS_ICE_DRAGON },
   { 17, 23,   89, PEAK, MONS_VERY_UGLY_THING },
   { 17, 24,  102, SEMI, MONS_GREAT_ORB_OF_EYES },
@@ -572,7 +573,7 @@ static const vector<pop_entry> population[] =
 #endif
 
 { // Crypt (OOD cap: 5)
-  { -4,  3,   45, PEAK, MONS_FLYING_SKULL },
+  { -4,  3,   45, PEAK, MONS_LAUGHING_SKULL },
   { -4,  3,   75, SEMI, MONS_NECROMANCER },
   { -3,  3,   75, SEMI, MONS_DEATH_KNIGHT },
   { -2,  3,  125, SEMI, MONS_WRAITH },
@@ -598,11 +599,10 @@ static const vector<pop_entry> population[] =
 },
 
 { // Tomb (OOD cap: 5)
-  {  1,  5,  200, FLAT, MONS_SKELETON },
-  {  1,  5,  185, FLAT, MONS_ZOMBIE },
-  {  1,  5,   50, SEMI, MONS_SIMULACRUM },
-  {  1,  5, 1000, FLAT, MONS_MUMMY },
-  {  1,  5,  230, FLAT, MONS_FLYING_SKULL },
+  {  1,  5,  300, FLAT, MONS_SKELETON },
+  {  1,  5,  235, FLAT, MONS_ZOMBIE },
+  {  1,  5,   80, SEMI, MONS_SIMULACRUM },
+  {  1,  5, 1050, FLAT, MONS_MUMMY },
   {  1,  5,  600, FLAT, MONS_GUARDIAN_MUMMY },
   { -1,  9,  335, SEMI, MONS_MUMMY_PRIEST },
   {  4,  5,    3, RISE, MONS_ROYAL_MUMMY },
@@ -803,8 +803,9 @@ POP_DEPTHS,
 { // Abyss
   // Sorted by 'home depth', somewhat arbitrarily defined.
   // Abyss:1
-  { -1,  6, 1400, FALL, MONS_ABOMINATION_SMALL },
+  { -1,  6, 1200, FALL, MONS_ABOMINATION_SMALL },
   { -1,  6,  150, FALL, MONS_BRAIN_WORM },
+  { -1,  6,  200, FALL, MONS_WEEPING_SKULL },
 
   {  1,  4,   25, FALL, MONS_CRIMSON_IMP },
   {  1,  4,  180, FALL, MONS_WHITE_IMP },
@@ -820,12 +821,11 @@ POP_DEPTHS,
   {  1,  5,  125, FALL, MONS_ORANGE_DEMON },
   {  1,  8,  315, FALL, MONS_YNOXINUL },
 
-  {  1,  5,  110, FALL, MONS_SKELETON },
-  {  1,  5,  104, FALL, MONS_ZOMBIE },
+  {  1,  5,  130, FALL, MONS_SKELETON },
+  {  1,  5,  124, FALL, MONS_ZOMBIE },
   {  1,  4,   35, FALL, MONS_WIGHT },
-  {  1,  8,   60, FALL, MONS_FLYING_SKULL },
-  {  1,  8,   60, FALL, MONS_WRAITH },
-  {  1,  8,   30, FALL, MONS_SHADOW },
+  {  1,  8,   70, FALL, MONS_WRAITH },
+  {  1,  8,   10, FALL, MONS_SHADOW },
   {  1,  8,   25, FALL, MONS_VAMPIRE },
 
   {  1,  5,    4, FALL, MONS_BASILISK },
@@ -884,8 +884,10 @@ POP_DEPTHS,
   {  1,  6,    8, FLAT, MONS_NECROMANCER },
   {  1,  6,    8, FLAT, MONS_OCCULTIST },
 
-  {  1,  5, 1000, FLAT, MONS_ABOMINATION_LARGE },
-  {  6,  7, 1000, FALL, MONS_ABOMINATION_LARGE },
+  {  1,  5,  150, FLAT, MONS_LAUGHING_SKULL },
+  {  6,  7,  150, FALL, MONS_LAUGHING_SKULL },
+  {  1,  5,  850, FLAT, MONS_ABOMINATION_LARGE },
+  {  6,  7,  850, FALL, MONS_ABOMINATION_LARGE },
   {  1,  5,   52, FLAT, MONS_VERY_UGLY_THING },
   {  6,  7,   52, FALL, MONS_VERY_UGLY_THING },
   {  1,  5,  300, FLAT, MONS_RAIJU },
@@ -1056,7 +1058,8 @@ POP_DEPTHS,
 },
 
 { // Ossuary
-  {  1,  1,   89, FLAT, MONS_MUMMY },
+  {  1,  1,   40, FLAT, MONS_WEEPING_SKULL },
+  {  1,  1,   90, FLAT, MONS_MUMMY },
   {  1,  1,  515, FLAT, MONS_SKELETON },
   {  1,  1,  515, FLAT, MONS_ZOMBIE },
 },

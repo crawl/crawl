@@ -141,6 +141,11 @@ void player::apply_location_effects(const coord_def &oldpos,
     moveto_location_effects(env.grid(oldpos));
 }
 
+void player::did_deliberate_movement()
+{
+    player_did_deliberate_movement();
+}
+
 void player::set_position(const coord_def &c)
 {
     ASSERT(!crawl_state.game_is_arena());

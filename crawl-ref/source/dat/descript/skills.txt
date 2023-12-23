@@ -234,8 +234,8 @@ Earth Magic
 
 Earth Magic contains spells able to deal large amounts of direct physical
 damage, which cannot be resisted like fire, cold and lightning damage can. It
-is also linked with some Transmutations, with spells to liquefy the earth
-around you, or to turn your enemies to stone.
+is also linked with Alchemy, with spells to liquefy the earth around you, or to
+turn your enemies to stone.
 
 Being skilled in Earth Magic increases the success rate and spell power of
 spells in this school. Many spells belong to a combination of several schools,

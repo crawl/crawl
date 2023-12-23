@@ -1985,7 +1985,9 @@ string scorefile_entry::runes_gems_desc(bool semiverbose) const
                              extra ? "and" : "with",
                              gems_found,
                              (gems_found > 1) ? "s" : "");
-        if (Options.more_gem_info)
+        // semiverbose is true here only when making the vmsg logfile field,
+        // so we always display all gem info when it is true
+        if (Options.more_gem_info || semiverbose)
         {
             if (gems_intact == 1 && gems_found == 1)
                 desc += " (intact)";

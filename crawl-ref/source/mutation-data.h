@@ -2463,11 +2463,16 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_DOUBLE_POTION_HEAL, 0, 1, mutflag::good, false, "double potion healing",
-  {"Whenever you drink a potion that restores your health or magic, it restores twice as much.", "", ""},
+  {"You gain doubled healing and magic from potions.", "", ""},
   {"You heal twice as much from potions.", "", ""},
   {"You no longer heal twice as much from potions.", "", ""},
 },
 
+{ MUT_DRUNKEN_BRAWLING, 0, 1, mutflag::good, false, "drunken brawling",
+  {"Whenever you drink a healing potion, you attack all around you.", "", ""},
+  {"You brawl whenever you drink a healing potion.", "", ""},
+  {"You no longer brawl whenever you drink a healing potion.", "", ""},
+},
 };
 
 static const mutation_category_def category_mut_data[] =

@@ -805,10 +805,16 @@ You instinctively roll as you move toward enemies, rampaging forward an
 additional space. This mutation grants magic regeneration when rolling; the
 second level of this mutation regenerates both magic and health.
 %%%%
-long tongue mutation
+double potion healing mutation
 
-Your tongue is extremely long. This lets you lick potion bottles dry, doubling their
-effects on you.
+Whenever a potion restores your health or magic, it restores twice as much.
+%%%%
+drunken brawling mutation
+
+Whenever you drink a potion that restores health or magic, you perform an
+immediate attack against all enemies adjacent to you.
+
+(This includes potions of curing, heal wounds, magic, and ambrosia.)
 %%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation

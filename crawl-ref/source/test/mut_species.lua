@@ -108,7 +108,7 @@ end
 
 
 species = {"hill orc", "minotaur", "merfolk", "gargoyle", "draconian", "halfling", "troll", "ghoul",
-            "human", "kobold", "centaur", "spriggan", "tengu", "deep elf", "ogre", "deep dwarf",
+            "human", "kobold", "centaur", "spriggan", "tengu", "deep elf", "oni", "deep dwarf",
             "vine stalker", "vampire", "demigod", "formicid", "naga", "octopode", "felid", "barachi",
             "mummy", "gnoll"}
 

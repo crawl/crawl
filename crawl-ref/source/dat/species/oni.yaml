@@ -40,13 +40,11 @@ levelup_stat_frequency: 3
 levelup_stats:
   - str
 mutations:
-  2:
+  1:
     MUT_TOUGH_SKIN: 1
     MUT_HORNS: 1
     MUT_DOUBLE_POTION_HEAL: 1
-fake_mutations:
-  - long: Whenever you drink a potion that restores your health or magic, you attack all enemies around you.
-    short: drunken brawling
+    MUT_DRUNKEN_BRAWLING: 1
 recommended_jobs:
   - JOB_GLADIATOR
   - JOB_BERSERKER

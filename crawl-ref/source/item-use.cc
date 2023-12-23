@@ -3055,7 +3055,7 @@ bool drink(item_def* potion)
 
     // Drunken master, swing!
     // We do this *before* actually drinking the potion for nicer messaging.
-    if (you.species == SP_ONI
+    if (you.has_mutation(MUT_DRUNKEN_BRAWLING)
         && oni_likes_potion(static_cast<potion_type>(potion->sub_type)))
     {
         _oni_drunken_swing();
@@ -3525,16 +3525,13 @@ static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
 static void _vulnerability_scroll()
 {
     const int dur = 30 + random2(20);
-    mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, &you, dur * BASELINE_DELAY);
 
     // Go over all creatures in LOS.
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
         if (monster* mon = monster_at(*ri))
         {
-            // If relevant, monsters have their WL halved.
-            if (!mons_invuln_will(*mon))
-                mon->add_ench(lowered_wl);
+            mon->strip_willpower(&you, dur, true);
 
             // Annoying but not enough to turn friendlies against you.
             if (!mon->wont_attack())
@@ -3542,8 +3539,8 @@ static void _vulnerability_scroll()
         }
     }
 
-    you.set_duration(DUR_LOWERED_WL, dur, 0,
-                     "Magic quickly surges around you.");
+    you.strip_willpower(&you, dur, true);
+    mpr("A wave of despondency washes over your surroundings.");
 }
 
 static bool _is_cancellable_scroll(scroll_type scroll)

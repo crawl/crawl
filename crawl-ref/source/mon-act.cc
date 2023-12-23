@@ -174,42 +174,6 @@ static void _escape_water_hold(monster& mons)
     }
 }
 
-static void _handle_deliberate_movement(monster& mons)
-{
-    // Apply barbs damage
-    if (mons.has_ench(ENCH_BARBS))
-    {
-        mon_enchant barbs = mons.get_ench(ENCH_BARBS);
-
-        // Save these first because hurt() might kill the monster.
-        const coord_def pos = mons.pos();
-        const monster_type type = mons.type;
-        mons.hurt(monster_by_mid(barbs.source),
-                  roll_dice(2, barbs.degree * 2 + 2));
-        bleed_onto_floor(pos, type, 2, false);
-        if (coinflip())
-        {
-            barbs.duration--;
-            mons.update_ench(barbs);
-        }
-    }
-
-    // And then shake off sticky flame
-    if (mons.has_ench(ENCH_STICKY_FLAME))
-    {
-        mon_enchant flame = mons.get_ench(ENCH_STICKY_FLAME);
-
-        flame.duration -= 50;
-        if (flame.duration <= 0)
-        {
-            simple_monster_message(mons, " shakes off the sticky flame as it moves.");
-            mons.del_ench(ENCH_STICKY_FLAME, true);
-        }
-        else
-            mons.update_ench(flame);
-    }
-}
-
 // Returns true iff the monster does nothing.
 static bool _handle_ru_melee_redirection(monster &mons, monster **new_target)
 {
@@ -316,8 +280,8 @@ static bool _swap_monsters(monster& mover, monster& moved)
              moved.name(DESC_THE).c_str());
     }
 
-    _handle_deliberate_movement(mover);
-    _handle_deliberate_movement(moved);
+    mover.did_deliberate_movement();
+    moved.did_deliberate_movement();
 
     if (moved.type == MONS_FOXFIRE)
     {
@@ -3183,8 +3147,8 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     mon->seen_context = SC_NONE;
     m2->seen_context = SC_NONE;
 
-    _handle_deliberate_movement(*mon);
-    _handle_deliberate_movement(*m2);
+    mon->did_deliberate_movement();
+    m2->did_deliberate_movement();
 
     // Pushing past a foxfire gets you burned regardless of alignment
     if (m2->type == MONS_FOXFIRE)
@@ -3411,7 +3375,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
         seen_monster(&mons);
     }
 
-    _handle_deliberate_movement(mons);
+    mons.did_deliberate_movement();
 
     _swim_or_move_energy(mons);
 

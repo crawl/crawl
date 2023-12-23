@@ -412,6 +412,14 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('p') Humans.
+    {  MST_BURIAL_ACOLYTE,
+      {
+       { SPELL_MALIGN_OFFERING, 16, MON_SPELL_PRIEST },
+       { SPELL_DISPEL_UNDEAD, 12, MON_SPELL_PRIEST },
+       { SPELL_FUNERAL_DIRGE, 22, MON_SPELL_PRIEST },
+      }
+    },
+
     {  MST_NECROMANCER,
       {
        { SPELL_BOLT_OF_DRAINING, 15, MON_SPELL_WIZARD },
@@ -691,8 +699,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SUN_MOTH,
       {
-       { SPELL_PYRE_ARROW, 20, MON_SPELL_NATURAL },
-       { SPELL_ENERGY_BOLT, 20, MON_SPELL_NATURAL },
+       { SPELL_PYRE_ARROW, 35, MON_SPELL_NATURAL },
       }
     },
 
@@ -701,6 +708,18 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_IRON_SHOT, 21, MON_SPELL_WIZARD },
        { SPELL_HASTE, 21, MON_SPELL_WIZARD },
+      }
+    },
+
+    {  MST_WEEPING_SKULL,
+      {
+       { SPELL_MOURNING_WAIL, 48, MON_SPELL_MAGICAL},
+      }
+    },
+
+    {  MST_LAUGHING_SKULL,
+      {
+       { SPELL_BOLT_OF_DRAINING, 30, MON_SPELL_MAGICAL | MON_SPELL_NOISY },
       }
     },
 
@@ -748,6 +767,12 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('B') Beetles and other insects
+    {  MST_BOMBARDIER_BEETLE,
+      {
+       { SPELL_PYRE_ARROW, 40, MON_SPELL_NATURAL},
+      }
+    },
+
     {  MST_BOULDER_BEETLE,
       {
        { SPELL_ROLL, 50, MON_SPELL_NATURAL},
@@ -915,7 +940,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_EYE_OF_DEVASTATION,
       {
-       { SPELL_ENERGY_BOLT, 60, MON_SPELL_MAGICAL },
+       { SPELL_BOLT_OF_DEVASTATION, 60, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1444,7 +1469,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_CACODEMON,
       {
-       { SPELL_ENERGY_BOLT, 20, MON_SPELL_MAGICAL },
+       { SPELL_BOLT_OF_DEVASTATION, 20, MON_SPELL_MAGICAL },
        { SPELL_VITRIFY, 20, MON_SPELL_MAGICAL },
        { SPELL_MALMUTATE, 13, MON_SPELL_MAGICAL },
        { SPELL_DIG, 13, MON_SPELL_MAGICAL },
@@ -1965,7 +1990,6 @@ static const mon_spellbook mspell_list[] =
     {  MST_AZRAEL,
       {
        { SPELL_BOLT_OF_FIRE, 13, MON_SPELL_MAGICAL },
-       { SPELL_PYRE_ARROW, 13, MON_SPELL_MAGICAL },
        { SPELL_FIREBALL, 13, MON_SPELL_MAGICAL },
        { SPELL_HURL_DAMNATION, 13, MON_SPELL_MAGICAL },
        { SPELL_CALL_DOWN_DAMNATION, 13, MON_SPELL_MAGICAL },
@@ -2178,7 +2202,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_MANA_VIPER, 15, MON_SPELL_WIZARD },
        { SPELL_DIMENSION_ANCHOR, 15, MON_SPELL_WIZARD },
        { SPELL_BLINK_CLOSE, 15, MON_SPELL_WIZARD },
-       { SPELL_ENERGY_BOLT, 15, MON_SPELL_WIZARD },
+       { SPELL_BOLT_OF_DEVASTATION, 15, MON_SPELL_WIZARD },
       }
     },
 

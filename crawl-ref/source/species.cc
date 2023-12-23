@@ -347,6 +347,18 @@ namespace species
     }
 
     /**
+     * What is an appropriate name for children of this species?
+     *
+     *  @param sp what kind of species to look at
+     *  @returns something like 'kitten' or 'child'.
+     */
+    string child_name(species_type sp)
+    {
+        auto verb = get_species_def(sp).child_name;
+        return verb ? verb : "Child";
+    }
+
+    /**
      * What message should be printed when a character of the specified species
      * prays at an altar, if not in some form?
      * To be inserted into "You %s the altar of foo."

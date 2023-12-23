@@ -3415,6 +3415,7 @@ bool player::can_burrow() const
 bool player::cloud_immune(bool items) const
 {
     return have_passive(passive_t::cloud_immunity)
+           || you.duration[DUR_TEMP_CLOUD_IMMUNITY]
            || actor::cloud_immune(items);
 }
 
@@ -6861,7 +6862,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
              agent->visible_to(this), source.c_str());
     }
 
-    if ((flavour == BEAM_DEVASTATION || flavour == BEAM_MINDBURST)
+    if ((flavour == BEAM_DESTRUCTION || flavour == BEAM_MINDBURST)
         && can_bleed())
     {
         blood_spray(pos(), type, amount / 5);
@@ -7899,6 +7900,18 @@ void player::weaken(actor */*attacker*/, int pow)
     increase_duration(DUR_WEAK, pow + random2(pow + 3), 50);
 }
 
+bool player::strip_willpower(actor */*attacker*/, int dur, bool quiet)
+{
+    // Only prints a message when you gain this status for the first time,
+    // replicating old behavior. Should this change?
+    if (!quiet && !you.duration[DUR_LOWERED_WL])
+        mpr("Your willpower is stripped away!");
+
+    you.increase_duration(DUR_LOWERED_WL, dur, 40);
+
+    return true;
+}
+
 /**
  * Check if the player is about to die from flight/form expiration.
  *
@@ -8079,7 +8092,7 @@ void print_potion_heal_message()
             mprf("%s enhances the healing.",
             item->name(DESC_THE, false, false, false).c_str());
         }
-        else if (you.species == SP_ONI)
+        else if (you.has_mutation(MUT_DOUBLE_POTION_HEAL))
             mpr("You savour every drop.");
         else
             mpr("The healing is enhanced."); // bad message, but this should

@@ -2208,7 +2208,8 @@ bool targeter_boulder::valid_aim(coord_def a)
         return notify_fail("You cannot create a boulder there.");
 
     const coord_def start = ray.pos();
-    if (feat_is_solid(env.grid(start)) || actor_at(start))
+    actor* act = actor_at(start);
+    if (feat_is_solid(env.grid(start)) || (act && you.can_see(*act)))
         return notify_fail("You cannot create a boulder in an occupied space.");
     if (!feat_has_solid_floor(env.grid(start)))
         return notify_fail("You cannot create a boulder there.");

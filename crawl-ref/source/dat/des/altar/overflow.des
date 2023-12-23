@@ -1362,17 +1362,23 @@ TAGS:   temple_overflow_1 temple_overflow_kikubaaqudgha
 TAGS:   uniq_altar_kikubaaqudgha uniq_zombie_altar
 KFEAT:  _ = altar_kikubaaqudgha
 : if you.in_branch("Depths") then
-MONS:   zombie w:20 / nothing w:90
-:else
-MONS:   rat zombie / bat zombie / nothing w:90
-:end
+MONS:   zombie, vampire mage
+: elseif you.depth() > 12 then
+MONS:   scorpion zombie / hound zombie, necromancer
+: elseif you.depth() > 4 then
+MONS:   jackal zombie / adder zombie, burial acolyte
+: else
+MONS:   frilled lizard zombie / bat zombie
+SUBST:  2 = .
+: end
+NSUBST: 1 = 2:1 / 3 = 11... / *:.
 : interest_check(_G)
 MAP
 xxxxxxxxxxxxxxxx
 xxxxwwwwwwwwxxxx
-xxxx11111111xxxx
-@............._x
-xxxx11111111xxxx
+xxxx.1111111xxxx
+@........2...._x
+xxxx.1111111xxxx
 xxxxwwwwwwwwxxxx
 xxxxxxxxxxxxxxxx
 ENDMAP
@@ -1380,17 +1386,17 @@ ENDMAP
 NAME:   lemuel_mausoleum_altar_kikubaaqudgha
 TAGS:   uniq_altar_kikubaaqudgha temple_overflow_1 transparent
 TAGS:   temple_overflow_kikubaaqudgha uniq_mausoleum_altar
-# slightly ood for wights, but where necrophages start
+# slightly ood for wights...
 # zombies scale with depth so we'll let it place in Crypt, too, but with an
 # interest check
 DEPTH:  D:4-10, Crypt
 : if you.in_branch("Crypt") then
 MONS:   zombie, guardian mummy, skeletal warrior, ghoul
 :else
-MONS:   zombie, mummy, wight, necrophage
+MONS:   zombie, mummy, wight, necrophage, burial acolyte
 :end
 NSUBST: ? = 1:_ / *:1
-SUBST:  1 = 1:30 2 3 4
+SUBST:  1 = 1:30 2 3 4 5:5
 KFEAT:  _ = altar_kikubaaqudgha
 KMONS:  _ = human zombie
 : interest_check(_G)
@@ -1517,6 +1523,37 @@ MAP
  cM...Mc
  ccc.ccc
     .
+ENDMAP
+
+NAME:    regret_index_kikubaaqudgha_part_by_part
+TAGS:    temple_overflow_kikubaaqudgha temple_overflow_1
+TAGS:    uniq_altar_kikubaaqudgha no_monster_gen transparent
+DEPTH:   D:5-8
+MONS:    burial acolyte, shadow imp
+MONS:    kobold zombie / gnoll zombie, adder zombie / hound zombie
+KFEAT:   _ = altar_kikubaaqudgha
+SHUFFLE: ABCD
+NSUBST:  A = 1:2 / *:3, B = 1:2 / *:4
+SUBST:   C = $, D = .
+SUBST:   X : x', Y : x', y : x., z : c..
+CLEAR:   '
+MAP
+ Xxxxx.....xxxxY
+XxxBBx.y.y.xCCxxY
+xxxxB+.....+Cxxxx
+xAxxxx.....xxxxxx
+xAAxxc..z..cxxxxx
+xx+xc.......xxxx
+......cc+cc
+.y....c4.3c
+......+._.c
+.y....c3.1c
+......ccccc
+xx+xc.
+xDDxxx
+xDxxxx
+Yxxxxx
+ Yxxx
 ENDMAP
 
 ### Makhleb overflow altars ###################################################
@@ -3567,19 +3604,21 @@ ENDMAP
 NAME:   yredelemnul_forgotten_temple_becter
 TAGS:   temple_overflow_1 temple_overflow_yredelemnul no_monster_gen no_item_gen
 TAGS:   transparent uniq_altar_yredelemnul
-KFEAT:  _ = altar_yredelemnul
-KFEAT:  . = web trap / .
 : if you.in_branch("Depths") then
 KMONS:  _ = spectral juggernaut
-:else
-KMONS:  _ = spectral orc
-:end
+SUBST:  1 = .
+: else
+MONS:   spectral orc
+KMONS:  _ = weeping skull
+: end
+KFEAT:  _ = altar_yredelemnul
+KFEAT:  . = web trap / .
 : interest_check(_G)
 MAP
 xxxxxxxxx
 xcccccccx
 xc.._..cx
-xcc...ccx
+xcc.1.ccx
 xc.....cx
 xcc...ccx
 xxcc+ccxx
@@ -4194,7 +4233,7 @@ KFEAT:   B = altar_sif_muna
 KFEAT:   C = altar_vehumet
 ITEM:    randbook owner:Kikubaaqudgha disc:necromancy spells:necrotise \
          numspells:1
-# You already got a direct damage spell by looting the other gods' altars.
+# You already get a direct damage spell by looting the other gods' altars.
 ITEM:    randbook owner:Sif_Muna disc:hexes numspells:1 slevels:1 / \
          randbook owner:Sif_Muna disc:summoning numspells:1 slevels:1 / \
          randbook owner:Sif_Muna disc:translocation numspells:1 slevels:1
@@ -4437,8 +4476,8 @@ KMONS: 3 = menkaure, necrophage / wight
 SUBST: 2 = 2---
 : elseif you.depth() <= 7 then
 MONS: zombie / skeleton / mummy / shadow imp / wight / necrophage / phantom
-MONS: wraith / vampire
-KMONS: 3 = menkaure, wraith / vampire
+MONS: burial acolyte / wraith / vampire
+KMONS: 3 = menkaure, burial acolyte / wraith / vampire
 SUBST: 2 = 12--
 : else
 MONS: mummy / wight / zombie / skeleton / phantom
@@ -5235,7 +5274,7 @@ MAP
 .v.Bx..xB.v.
 .v..x..x..v.
 .vT0x..x0Tv.
-.vvvx==xvvv.
+.vvvx++xvvv.
 ...Gx..xG...
 ...+....+...
 ...GxxxxG...
