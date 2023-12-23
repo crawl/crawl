@@ -1023,6 +1023,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // Death knights belong to Yredelemnul.
         else if (mg.cls == MONS_DEATH_KNIGHT)
             mon->god = GOD_YREDELEMNUL;
+        // Burial acolytes belong to Kikubaaqudgha.
+        else if (mg.cls == MONS_BURIAL_ACOLYTE)
+            mon->god = GOD_KIKUBAAQUDGHA;
         // Asterion belongs to Mahkleb.
         else if (mg.cls == MONS_ASTERION)
             mon->god = GOD_MAKHLEB;
