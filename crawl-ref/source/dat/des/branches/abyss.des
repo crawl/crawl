@@ -931,7 +931,7 @@ TAGS:    no_monster_gen patrolling allow_dup
 WEIGHT:  5
 MONS:    rakshasa / efreet / smoke demon / occultist / base draconian w:5 / \
          guardian serpent w:1 / vampire w:3 / necromancer w:3
-MONS:    thrashing horror / blink frog / ugly thing / \
+MONS:    thrashing horror / blink frog / weeping skull band / \
          large abomination / unseen horror / shapeshifter / \
          wretched star w:5 / air elemental / raiju / worldbinder
 MONS:    draconian shifter w:5 / shadow demon w:5 / lich / \
@@ -1139,7 +1139,7 @@ TAGS:   abyss_rune unrand no_monster_gen
 KMONS:  1 = glowing orange brain
 KMONS:  2 = golden eye / glass eye w:4
 KMONS:  3O = laughing skull
-KMONS:  4 = large abomination / small abomination w:7
+KMONS:  4 = small abomination / weeping skull w:2
 KMONS:  5 = cacodemon
 KMONS:  6 = executioner
 KMONS:  7 = shining eye
@@ -1291,7 +1291,8 @@ ENDMAP
 
 NAME:   doesnt_abyss_rune_brain_food
 TAGS:   abyss_rune unrand patrolling no_pool_fixup
-MONS:   neqoxec, glowing orange brain, orange crystal statue, very ugly thing
+MONS:   neqoxec / brain worm w:1, glowing orange brain
+MONS:   orange crystal statue, very ugly thing
 MONS:   starcursed mass
 KITEM:  O = abyssal rune of Zot
 KFEAT:  " = runelight
@@ -1581,7 +1582,7 @@ ENDMAP
 
 NAME:   evilmike_nicolae_abyss_rune_containment_curve
 TAGS:   abyss_rune unrand patrolling no_monster_gen no_item_gen
-MONS:   brain worm w:4 / raiju / worldbinder / \
+MONS:   brain worm w:4 / weeping skull w:2 / raiju / worldbinder / \
         thrashing horror / shapeshifter
 MONS:   tormentor / hellion / shadow demon / \
         bone dragon / iron dragon zombie w:4

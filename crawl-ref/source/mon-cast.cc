@@ -5577,7 +5577,9 @@ static bool _cast_dirge(monster& caster, bool check_only = false)
             || !mons_aligned(&caster, mons)
             || mons->confused()
             || mons->cannot_act())
+        {
             continue;
+        }
 
         if (mons->has_ench(ENCH_MIGHT) && mons->has_ench(ENCH_SWIFT))
             continue;

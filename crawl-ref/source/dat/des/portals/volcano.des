@@ -930,13 +930,14 @@ ENDMAP
 # Some forgotten emperor was buried here! His tomb is guarded by charred bones.
 # Perhaps there is loot!
 NAME:       volcano_tomb
+TAGS:       no_item_gen no_monster_gen no_rotate
 WEIGHT:     20
 ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate
-SUBVAULT:   B : volcano_tomb_subvault
 #           The skulls on lava.
-KFEAT:      u = lava
-KMONS:      u = laughing skull
+KMONS:      u = weeping skull
+KMONS:      U = laughing skull
+KFEAT:      uU = lava
+SUBVAULT:   B : volcano_tomb_subvault
 :           volcano_setup(_G)
 : place_chained_volcano(_G)
 MAP
@@ -956,7 +957,7 @@ xLl.LlllllllllllllllllllllllllllL..y.BBBBBBBBBBBBBBBBBBBBBBBBBB
 xlllllllllllllllllGllllllllllllllLLxxBBBBBBBBBBBBBBBBBBBBBBBBBB
 xxlllllllllllllGlllllGllllllllllllxx BBBBBBBBBBBBBBBBBBBBBBBBBB
  xxlllllllllllVlllllllVllllllllllxx  BBBBBBBBBBBBBBBBBBBBBBBBBB
-  xxullllllllGlllllllllGllllllluxx   BBBBBBBBBBBBBBBBBBBBBBBBBB
+  xxUllllllllGlllllllllGlllllllUxx   BBBBBBBBBBBBBBBBBBBBBBBBBB
    xxxllllllllllllllllllllllllxxx    BBBBBBBBBBBBBBBBBBBBBBBBBB
      xxllllllllGlllllGlllllllxx      BBBBBBBBBBBBBBBBBBBBBBBBBB
       xxllllllllllGlllllllllxx       BBBBBBBBBBBBBBBBBBBBBBBBBB

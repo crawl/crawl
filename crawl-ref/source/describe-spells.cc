@@ -513,6 +513,12 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
     if (spell == SPELL_RESONANCE_STRIKE)
         return describe_resonance_strike_dam(dam);
 
+    if (spell == SPELL_BOLT_OF_DRAINING && mon_owner->type == MONS_LAUGHING_SKULL)
+    {
+        return make_stringf("%dd(%d-%d)", dam.num, dam.size,
+                                          dam.size * 2);
+    }
+
     string mult = "";
     if (spell == SPELL_MARSHLIGHT || spell == SPELL_PLASMA_BEAM)
         mult = "2x";

@@ -451,11 +451,10 @@ ENDMAP
 ##############################################################################
 
 ##############################################################################
-# Dead fish
+# Dead fish. Alas, no Cocytus spawn here.
 NAME: lemuel_dead_fish_pool
-DEPTH: Crypt
-# Lemuel also had Cocytus
 TAGS: no_pool_fixup extra
+DEPTH: Crypt
 SUBST: . : .W
 SUBST: 1 = w:50 1
 KFEAT: 1 = w
@@ -476,36 +475,34 @@ ENDMAP
 ##############################################################################
 # tombs in the wall
 NAME:  tombwall_bobbens
-TAGS:  allow_dup transparent
+TAGS:  transparent
 DEPTH: Crypt
-MONS:  w:150 zombie / skeletal warrior / ghoul / \
-       large abomination / small abomination / necrophage / \
-       w:150 skeleton / w:30 nothing
+MONS:  zombie w:150 / skeleton w:150 / skeletal warrior / ghoul / \
+       large abomination / small abomination / \
+       skeleton w:150 / burial acolyte w:40
+KFEAT: _ = altar_kikubaaqudgha
 MAP
 ccccccccccccccccccccccc
 ccc1c1c1c1c1c1c1c1c1ccc
-ccc+c+c+c+c+c+c+c+c+ccc
+cccc++c+c+c+c+c+c++cccc
 .......................
-.......................
+.........._............
 .......................
 ENDMAP
 
 ##############################################################################
 #       small crypt building
 NAME:   minicrypt_bobbens
-TAGS:   allow_dup
 DEPTH:  Crypt
-MONS:   necromancer
-MONS:   zombie/skeleton
-MONS:   laughing skull
+MONS:   necromancer, zombie / skeleton, laughing skull
 MAP
   ccccccc
  cc2c2c2cc
-ccc+c+c+ccc
-c2+.....+2c
-ccc..1..ccc
-c2+.3.3.+2c
-ccc.....ccc
+ccc+++++ccc
+c2c.....c2c
+cc+..1..+cc
+c2c.3.3.c2c
+ccc..%..ccc
 c2+.....+2c
 ccc.....ccc
 c2+.....+2c
@@ -515,8 +512,8 @@ ENDMAP
 ##############################################################################
 # Lich vault
 NAME:  weyrava_lich_vault
-DEPTH: Crypt
 TAGS:  no_monster_gen no_item_gen
+DEPTH: Crypt
 ITEM:  gold
 KFEAT: Z = w:5 alarm trap / w:8 zot trap / w:50 floor
 KMONS: Y = Boris / ancient lich, ancient lich / dread lich
@@ -552,19 +549,16 @@ TAGS:  no_monster_gen no_item_gen no_descent
 MONS:  laughing skull
 MONS:  skeletal warrior ; long sword . kite shield . w:6 any beam wand | nothing /\
        skeletal warrior ; battleaxe | halberd . w:7 any beam wand | nothing
-SUBST: y = .:8 c
-SUBST: v = z .
+KMONS: ST = phantasmal warrior w:25 / spectral fire dragon / \
+            spectral ice dragon / spectral storm dragon
+SUBST: y = .:8 c, v = z .
 SUBST: w = w z:6
 KFEAT: z = deep_water
 KMASK: z = no_pool_fixup
-KFEAT: T = .
+KFEAT: ST = .
 KITEM: T = * / w:5 |
-KMONS: T = w:25 phantasmal warrior / spectral fire dragon / spectral ice dragon / \
-           spectral storm dragon
 KFEAT: S = .
 KITEM: S = $ / nothing
-KMONS: S = w:25 phantasmal warrior / spectral fire dragon / spectral ice dragon / \
-           spectral storm dragon
 MAP
     cccccccccccc
   cccyy.yy..yyycccc
@@ -593,8 +587,8 @@ ENDMAP
 ##############################################################################
 # Vampire temple
 NAME:    weyrava_vampire_temple
-DEPTH:   Crypt
 TAGS:    no_monster_gen no_item_gen no_wall_fixup
+DEPTH:   Crypt
 MONS:    col:red fungus
 MONS:    col:lightred fungus
 MONS:    fungus
@@ -825,7 +819,7 @@ DEPTH: Crypt
 MAP
 ccccc
 cG.Gc
-c...c
+c.%.c
 c...c
 cc+cc
 ENDMAP
@@ -933,7 +927,7 @@ ENDMAP
 
 NAME:    hangedman_hall_of_fallen_heroes
 TAGS:    no_monster_gen no_item_gen
-DEPTH:   Crypt:2-
+DEPTH:   Crypt
 ORIENT:  float
 MONS:    wight band, phantasmal warrior
 MONS:    skeletal warrior ; long sword | war axe | trident | flail . \
@@ -1035,7 +1029,7 @@ DEPTH:   Crypt
 # Yred nearly-all-melee set, Kiku necro-casters set, ghosts set, tomb set.
 MONS:    minotaur zombie / ettin zombie / skeletal warrior w:20
 MONS:    death knight, bone dragon w:14 / profane servitor
-MONS:    necromancer / vampire mage w:6 / soul eater w:2
+MONS:    necromancer / vampire mage w:6 / burial acolyte w:2
 MONS:    vampire mage / deep elf death mage, lich / reaper w:2
 MONS:    shadow wraith / phantasmal warrior / ghost crab w:4
 KMONS:   8 = eidolon / flayed ghost
@@ -1471,8 +1465,8 @@ WEIGHT:  5
 ITEM:    scroll of enchant weapon ident:type, blade talisman
 ITEM:    mundane dagger, dagger good_item
 : local q = "quick blade randart ego:"
-: item(q .. "draining / " .. q .. "vampirism / " .. q .. "pain / " ..
-:      q .. "distortion / damaged quick blade")
+: item(q .. "draining / " .. q .. "vampirism / " .. q ..
+:           "pain / " .. q .. "distortion")
 MONS:    laughing skull, curse skull
 MONS:    spectral demonic crawler, wolf spider zombie
 MONS:    culicivora zombie / redback zombie / \
@@ -1489,7 +1483,7 @@ SUBST:  { = {([
 : else
 SUBST:  { = {([})]
 : end
-KPROP:  7g = bloody
+KPROP:  g = bloody
 MAP
     ccccccccccccccccc
    ccccccccccccccccccc
@@ -2225,7 +2219,8 @@ KMONS:   H = death knight
 KMONS:   I = laughing skull
 KMONS:   J = profane servitor
 KMONS:   L = bone dragon
-KMONS:   KM = nothing
+KMONS:   K = nothing
+KMONS:   M = burial acolyte
 KMONS:   NO = jiangshi
 KMONS:   P = flayed ghost
 KMONS:   Q = flayed ghost / shadow w:20
