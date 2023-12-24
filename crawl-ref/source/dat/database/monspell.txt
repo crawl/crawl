@@ -407,7 +407,7 @@ Weakening Gaze cast
 # Unique monsters
 ########################################################################
 %%%%
-March of Sorrow Boris cast
+March of Sorrows Boris cast
 
 @The_monster@ [casts|pitches] forth his victims' sorrows.
 

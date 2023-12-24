@@ -2236,7 +2236,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_SPECTRAL_ORCS,     { 0, 3 } },
     { SPELL_FIRE_SUMMON,              { 0, 4 } },
     { SPELL_SUMMON_MINOR_DEMON,       { 0, 3 } },
-    { SPELL_CALL_LOST_SOULS,          { 0, 4 } },
+    { SPELL_CALL_LOST_SOULS,          { 0, 3 } },
     { SPELL_SUMMON_VERMIN,            { 0, 5 } },
     { SPELL_FORCEFUL_INVITATION,      { 0, 3 } },
     { SPELL_PLANEREND,                { 0, 6 } },

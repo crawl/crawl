@@ -41,7 +41,7 @@ static spell_type search_order_aoe_conj[] =
     SPELL_FIRE_STORM,
     SPELL_GLACIATE,
     SPELL_CHAIN_LIGHTNING,
-    SPELL_FREEZING_CLOUD,
+    SPELL_MARCH_OF_SORROWS,
     SPELL_POISONOUS_CLOUD,
     SPELL_METAL_SPLINTERS,
     SPELL_BOLT_OF_DEVASTATION,
@@ -277,14 +277,14 @@ void ghost_demon::set_pan_lord_cloud_ring()
     else if (att_flav == AF_CORRODE)
         cloud_ring_ench = ENCH_RING_OF_ACID;
     else if (brand == SPWPN_DRAINING)
-        cloud_ring_ench = ENCH_RING_OF_DRAINING;
+        cloud_ring_ench = ENCH_RING_OF_MISERY;
     else
     {
         cloud_ring_ench = random_choose_weighted(
             20, ENCH_RING_OF_THUNDER,
             20, ENCH_RING_OF_FLAMES,
             20, ENCH_RING_OF_ICE,
-            10, ENCH_RING_OF_DRAINING,
+            10, ENCH_RING_OF_MISERY,
              5, ENCH_RING_OF_CHAOS,
              5, ENCH_RING_OF_ACID,
              5, ENCH_RING_OF_MIASMA,

@@ -58,7 +58,7 @@ static const unordered_map<enchant_type, cloud_type, std::hash<int>> _cloud_ring
     { ENCH_RING_OF_MUTATION,    CLOUD_MUTAGENIC },
     { ENCH_RING_OF_FOG,         CLOUD_GREY_SMOKE },
     { ENCH_RING_OF_ICE,         CLOUD_COLD },
-    { ENCH_RING_OF_DRAINING,    CLOUD_MISERY },
+    { ENCH_RING_OF_MISERY,      CLOUD_MISERY },
     { ENCH_RING_OF_ACID,        CLOUD_ACID },
     { ENCH_RING_OF_MIASMA,      CLOUD_MIASMA },
 };
@@ -345,7 +345,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     case ENCH_RING_OF_MUTATION:
     case ENCH_RING_OF_FOG:
     case ENCH_RING_OF_ICE:
-    case ENCH_RING_OF_DRAINING:
+    case ENCH_RING_OF_MISERY:
     case ENCH_RING_OF_ACID:
     case ENCH_RING_OF_MIASMA:
         if (_has_other_cloud_ring(this, ench.ench))
@@ -2430,7 +2430,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_RING_OF_MUTATION:
     case ENCH_RING_OF_FOG:
     case ENCH_RING_OF_ICE:
-    case ENCH_RING_OF_DRAINING:
+    case ENCH_RING_OF_MISERY:
     case ENCH_RING_OF_ACID:
     case ENCH_RING_OF_MIASMA:
     case ENCH_GOZAG_INCITE:

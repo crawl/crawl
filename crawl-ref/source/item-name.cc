@@ -3363,9 +3363,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return true;
 
         if (is_unrandom_artefact(item, UNRAND_WUCAD_MU))
-        {
             return you.has_mutation(MUT_HP_CASTING) || you_worship(GOD_TROG);
-        }
 
         if (is_artefact(item))
             return false;

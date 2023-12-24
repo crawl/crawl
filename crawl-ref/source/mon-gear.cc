@@ -801,7 +801,14 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         } },
         { MONS_URUG,                    { URUG_WEAPONS } },
         { MONS_NORRIS,                  { URUG_WEAPONS } },
-        { MONS_FREDERICK,               { URUG_WEAPONS } },
+        { MONS_FREDERICK,
+            { { { WPN_DEMON_BLADE,          2 },
+                { WPN_DEMON_WHIP,           1 },
+                { WPN_DEMON_TRIDENT,        2 },
+                { WPN_DOUBLE_SWORD,         1 },
+                { WPN_BROAD_AXE,            2 },
+                { WPN_EVENINGSTAR,          2 },
+        } } },
         { MONS_FIRE_GIANT, {
             { { WPN_GREAT_SWORD,        1 } }, {},
             { { SPWPN_FLAMING, 1 } },
@@ -1115,6 +1122,11 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     case MONS_MERFOLK_JAVELINEER:
     case MONS_AGNES:
         if (!one_chance_in(3))
+            level = ISPEC_GOOD_ITEM;
+        break;
+
+    case MONS_WAR_GARGOYLE:
+        if (one_chance_in(3))
             level = ISPEC_GOOD_ITEM;
         break;
 
@@ -1607,6 +1619,16 @@ static void _give_shield(monster* mon, int level)
             set_item_ego_type(*shield, OBJ_ARMOUR, ego);
         }
         break;
+
+    case MONS_FREDERICK:
+    {
+        // Divinity or conjurer support.
+        const auto ego = random_choose(SPARM_LIGHT, SPARM_ENERGY);
+
+        give_specific_item(mon, items(false, OBJ_ARMOUR,
+                           ARM_ORB, ISPEC_RANDART, ego));
+    }
+    break;
 
     case MONS_DAEVA:
     case MONS_MENNAS:

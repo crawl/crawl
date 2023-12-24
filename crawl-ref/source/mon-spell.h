@@ -62,14 +62,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    // War gargoyles and iron dragons.
-    {  MST_SPLINTER_BREATH,
-      {
-       { SPELL_METAL_SPLINTERS, 68, MON_SPELL_NATURAL | MON_SPELL_BREATH
-                                     | MON_SPELL_NOISY },
-      }
-    },
-
     // Deep elf annihilators and draconian annihilators.
     {  MST_ANNIHILATOR,
       {
@@ -877,6 +869,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_IRON_DRAGON,
+      {
+       { SPELL_METAL_SPLINTERS, 68, MON_SPELL_NATURAL | MON_SPELL_BREATH
+                                     | MON_SPELL_NOISY },
+      }
+    },
+
     {  MST_QUICKSILVER_DRAGON,
       {
        { SPELL_QUICKSILVER_BOLT, 66, MON_SPELL_NATURAL | MON_SPELL_BREATH
@@ -1597,6 +1596,13 @@ static const mon_spellbook mspell_list[] =
     {  MST_MOLTEN_GARGOYLE,
       {
        { SPELL_BOLT_OF_MAGMA, 57, MON_SPELL_NATURAL },
+      }
+    },
+
+    {  MST_WAR_GARGOYLE,
+      {
+       { SPELL_METAL_SPLINTERS, 52, MON_SPELL_NATURAL | MON_SPELL_BREATH
+                                     | MON_SPELL_NOISY },
       }
     },
 

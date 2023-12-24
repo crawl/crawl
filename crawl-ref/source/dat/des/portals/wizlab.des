@@ -480,7 +480,7 @@ function wizlab_borgnjor_call_souls(data, triggerable, triggerer, marker, ev)
     return
   end
 
-  local msp = "lost soul seen sum:call_lost_soul dur:1 generate_awake"
+  local msp = "lost soul seen sum:call_lost_souls dur:1 generate_awake"
 
   local count = 0
   for point in iter.circle_iterator(6) do
