@@ -409,10 +409,10 @@ Weakening Gaze cast
 %%%%
 March of Sorrows Boris cast
 
-@The_monster@ [casts|pitches] forth his victims' sorrows.
+@The_monster@ [casts|pitches] forth @possessive@ victims' sorrows.
 
 w:5
-@The_monster@ rolls out his victims' [laments|suffering].
+@The_monster@ rolls out @possessive@ victims' [laments|suffering].
 %%%%
 Cantrip Dissolution cast
 
