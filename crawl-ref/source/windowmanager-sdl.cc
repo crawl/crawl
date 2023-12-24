@@ -19,8 +19,14 @@
 #  include <SDL2/SDL.h>
 # endif
 # include <SDL_image.h>
-# if defined(USE_SOUND) && !defined(WINMM_PLAY_SOUNDS)
-#  include <SDL2/SDL_mixer.h>
+# if defined(USE_SOUND)
+#   if !defined(WINMM_PLAY_SOUNDS) && !defined(DCSS_IOS)
+#       include <SDL2/SDL_mixer.h>
+#   else
+#       if defined(DCSS_IOS)
+#           include <SDL_mixer.h>
+#       endif
+#   endif
 # endif
 #endif
 

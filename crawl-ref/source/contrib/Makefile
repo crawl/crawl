@@ -40,8 +40,8 @@ $(SUBDIRS):
 	    exit 1; \
 	fi
 	@cd $@ && \
-	$(MAKE) all prefix=$(shell echo $@ | perl -pe 's/[^\/]+/../g')/$(PREFIX)/$(ARCH) && \
-	$(MAKE) install prefix=$(shell echo $@ | perl -pe 's/[^\/]+/../g')/$(PREFIX)/$(ARCH)
+	$(MAKE) all prefix=$(realpath $(shell echo $@ | perl -pe 's/[^\/]+/../g')/$(PREFIX)/$(ARCH)) && \
+	$(MAKE) install prefix=$(realpath $(shell echo $@ | perl -pe 's/[^\/]+/../g')/$(PREFIX)/$(ARCH))
 
 libpng freetype: zlib
 sdl2-image: sdl2 libpng

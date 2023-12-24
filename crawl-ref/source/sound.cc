@@ -18,7 +18,7 @@
 #        define SND_NODEFAULT 0x0002
 #    endif
 #elif defined(USE_SDL)
-#    ifdef __ANDROID__
+#    if defined(__ANDROID__) || defined(DCSS_IOS)
 #        include <SDL_mixer.h>
 #    else
 #        include <SDL2/SDL_mixer.h>
@@ -67,7 +67,12 @@ void play_sound(sound_mapping sound_data)
 {
     if (!sound_data.soundfile.empty())
     {
-        const string sf_path = catpath(Options.sound_file_path, sound_data.soundfile);
+        string sf_path = catpath(Options.sound_file_path, sound_data.soundfile);
+# if defined(DCSS_IOS)
+        // under iOS one can't simply obtain stable unchanging
+        // absolute path, so the crawl_dir is the best place for sounds
+        sf_path = catpath(SysEnv.crawl_dir, sf_path);
+# endif
         play_sound(sf_path.c_str(), sound_data.interrupt_game);
     }
 }
