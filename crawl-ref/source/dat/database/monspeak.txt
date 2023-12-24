@@ -1233,12 +1233,6 @@ VISUAL:@The_monster@ is wreathed in a cloud of translocational energy.
 
 VISUAL:@The_monster@ blinks @at_foe@.
 %%%%
-Transmutations player ghost
-
-VISUAL:@The_monster@ briefly looks inexplicably like a @_form_@.
-
-VISUAL:@The_monster@ briefly turns into a @_form_@ and back.
-%%%%
 Fire Magic player ghost
 
 @The_monster@ says, "I love the smell of burning flesh."
@@ -1271,7 +1265,7 @@ Earth Magic player ghost
 
 VISUAL:The earth trembles for a moment.
 %%%%
-Poison Magic player ghost
+Alchemy player ghost
 
 @The_monster@ says, "A minor scratch like that one is certainly harmless."
 
@@ -1305,6 +1299,10 @@ Shapeshifting player ghost
 
 # The Heart Sutra
 @The_monster@ says, "Form is emptiness; emptiness is form."
+
+VISUAL:@The_monster@ briefly looks inexplicably like a @_form_@.
+
+VISUAL:@The_monster@ briefly turns into a @_form_@ and back.
 %%%%
 Ashenzari player ghost
 
