@@ -51,7 +51,7 @@ The contents of this text are:
                 tc_forbidden, runrest_ignore_message, runrest_stop_message,
                 interrupt_<delay>, delay_safe_poison, runrest_ignore_monster,
                 rest_wait_both, rest_wait_ancestor, rest_wait_percent,
-                explore_auto_rest, auto_exclude, travel_open_doors, fear_zot
+                explore_auto_rest, auto_exclude, travel_open_doors
 3-g     Command Enhancements.
                 auto_switch, easy_unequip, equip_unequip, jewellery_prompt,
                 easy_confirm, simple_targeting, force_spell_targeter,
@@ -78,10 +78,11 @@ The contents of this text are:
                 monster_list_colour, view_delay, reduce_animations,
                 use_animations, unusual_monster_items, darken_beyond_range,
                 show_blood, force_more_message, flash_screen_message,
-                cloud_status, always_show_zot, action_panel,
-                action_panel_filter, action_panel_show_unidentified,
-                action_panel_scale, action_panel_orientation,
-                action_panel_font_family, action_panel_font_size
+                cloud_status, always_show_zot, always_show_gems,
+                more_gem_info, action_panel, action_panel_filter,
+                action_panel_show_unidentified, action_panel_scale,
+                action_panel_orientation, action_panel_font_family,
+                action_panel_font_size
 3-i     Colours (messages and menus).
                 menu_colour, message_colour
 3-j     Quivers, firing, and ammo.
@@ -360,7 +361,8 @@ type = normal
         "arena", "sprint", "descent", and "hints". If explicitly set (not just
         left to the default), this sets the default game type at the main menu.
         If the main menu is bypassed (e.g. by setting `name`), this option can
-        be used to determine the game type.
+        be used to determine the game type. "descent" is only valid in alpha
+        (development) builds.
 
 remember_name = true
         Crawl remembers the options (species, background etc.) you used
@@ -1089,11 +1091,7 @@ rest_wait_percent = 100
 
 explore_auto_rest = true
         If true, auto-explore waits until your HP and MP are both at
-        rest_wait_percent before moving. This is always disabled for Meteorans.
-
-fear_zot = false
-        If true, Meteorans will be prompted before resting or auto-exploring
-        if the Zot clock is active.
+        rest_wait_percent before moving.
 
 auto_exclude += <monster name>, <monster name>, ...
         (List option)
@@ -1806,6 +1804,13 @@ always_show_zot = false
         Whether to show the "Zot" status light at all times, even when you've
         got plenty of time left.
 
+always_show_gems = false
+        Whether to show the "Gem" status light, indicating how long until the
+        gem in the current branch shatters (if applicable).
+
+more_gem_info = true
+        Whether to show held gem time limits and sfx for shattering.
+
 action_panel_show = true
         Whether to show or hide the action panel. This option is automatically
         saved between games, and is only available on Webtiles.
@@ -1914,6 +1919,7 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
             unrand          (For non-random artefacts.)
             melee           (Melee weapons, including magical staves.)
             ranged          (Ranged weapons.)
+            evoker          (Elemental evokers.)
             identified      (The item is fully identified.)
             known           (You recognize the item's subtype.)
             unidentified    (You don't recognize the item's subtype.)

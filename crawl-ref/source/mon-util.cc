@@ -830,7 +830,8 @@ bool mons_is_firewood(const monster& mon)
 // "body" in a purely grammatical sense.
 bool mons_has_body(const monster& mon)
 {
-    if (mon.type == MONS_FLYING_SKULL
+    if (mon.type == MONS_WEEPING_SKULL
+        || mon.type == MONS_LAUGHING_SKULL
         || mons_species(mon.type) == MONS_CURSE_SKULL // including Murray
         || mon.type == MONS_CURSE_TOE
         || mon.type == MONS_DEATH_COB
@@ -1640,9 +1641,10 @@ int mons_class_regen_amount(monster_type mc)
 {
     switch (mc)
     {
-    case MONS_PARGHIT:         return 27;
-    case MONS_DEMONIC_CRAWLER: return 6;
-    default:                   return 1;
+    case MONS_PARGHIT:            return 27;
+    case MONS_DEMONIC_CRAWLER:
+    case MONS_PROTEAN_PROGENITOR: return 6;
+    default:                      return 1;
     }
 }
 
@@ -1890,6 +1892,7 @@ static const set<attack_flavour> allowed_zombie_af = {
     AF_REACH,
     AF_CRUSH,
     AF_TRAMPLE,
+    AF_DRAG,
 };
 
 static mon_attack_def _downscale_zombie_attack(const monster& mons,
@@ -2100,13 +2103,21 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
         // TODO: randomization here is not the greatest way of doing any of
         // these...
         if (attk.type == AT_RANDOM)
-            attk.type = random_choose(AT_HIT, AT_GORE);
+        {
+            attk.type = random_choose(AT_BITE, AT_STING, AT_SPORE, AT_TOUCH,
+                                      AT_PECK, AT_HEADBUTT, AT_PUNCH, AT_KICK,
+                                      AT_TENTACLE_SLAP, AT_TAIL_SLAP, AT_GORE,
+                                      AT_TRUNK_SLAP);
+        }
 
         if (attk.type == AT_CHERUB)
-            attk.type = random_choose(AT_HIT, AT_BITE, AT_PECK, AT_GORE);
+            attk.type = random_choose(AT_HEADBUTT, AT_BITE, AT_PECK, AT_GORE);
 
         if (attk.flavour == AF_DRAIN_STAT)
-            attk.flavour = random_choose(AF_DRAIN_STR, AF_DRAIN_INT,AF_DRAIN_DEX);
+        {
+            attk.flavour = random_choose(AF_DRAIN_STR, AF_DRAIN_INT,
+                                         AF_DRAIN_DEX);
+        }
     }
 
     // Slime creature attacks are multiplied by the number merged.
@@ -2279,6 +2290,10 @@ int flavour_damage(attack_flavour flavour, int HD, bool random)
             if (random)
                 return HD * 3 / 4 + random2(HD * 3 / 4);
             return HD * 3 / 2;
+        case AF_ACID:
+            if (random)
+                return roll_dice(3, 4);
+            return 12;
         default:
             return 0;
     }
@@ -2532,7 +2547,7 @@ int exper_value(const monster& mon, bool real, bool legacy)
                 break;
 
             case SPELL_LIGHTNING_BOLT:
-            case SPELL_STICKY_FLAME_RANGE:
+            case SPELL_PYRE_ARROW:
             case SPELL_MINDBURST:
             case SPELL_BANISHMENT:
             case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
@@ -3006,6 +3021,16 @@ void define_monster(monster& mons, bool friendly)
         ghost_demon ghost;
         mons.set_ghost(ghost);
         break;
+    }
+
+    case MONS_INUGAMI:
+    {
+        ghost_demon ghost;
+        mons.set_ghost(ghost);
+        mons.inugami_init();
+        // this does not finish setting up the inugami! See
+        // `cast_call_canine_familiar` for where the ghost_demon details are
+        // finalized.
     }
 
     default:
@@ -4541,6 +4566,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         "squeals",
         "roars",
         "rustles",      // dubious
+        "squeaks",
         "buggily says", // NUM_SHOUTS
         "breathes",     // S_VERY_SOFT
         "whispers",     // S_SOFT

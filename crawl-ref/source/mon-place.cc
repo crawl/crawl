@@ -1023,20 +1023,22 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // Death knights belong to Yredelemnul.
         else if (mg.cls == MONS_DEATH_KNIGHT)
             mon->god = GOD_YREDELEMNUL;
-        // Asterion belongs to Mahkleb.
-        else if (mg.cls == MONS_ASTERION)
-            mon->god = GOD_MAKHLEB;
         // Seraphim follow the Shining One.
         else if (mg.cls == MONS_SERAPH)
             mon->god = GOD_SHINING_ONE;
         // Draconian stormcallers worship Qazlal.
         else if (mg.cls == MONS_DRACONIAN_STORMCALLER)
             mon->god = GOD_QAZLAL;
-        // Classed demonspawn.
-        else if (mg.cls == MONS_DEMONSPAWN_BLOOD_SAINT)
+        else if (mg.cls == MONS_DEMONSPAWN_BLOOD_SAINT
+                 || mg.cls == MONS_ASTERION)
+        {
             mon->god = GOD_MAKHLEB;
-        else if (mg.cls == MONS_DEMONSPAWN_BLACK_SUN)
+        }
+        else if (mg.cls == MONS_DEMONSPAWN_BLACK_SUN
+                 || mg.cls == MONS_BURIAL_ACOLYTE)
+        {
             mon->god = GOD_KIKUBAAQUDGHA;
+        }
         else if (mg.cls == MONS_DEMONSPAWN_CORRUPTER
                  || mg.cls == MONS_MLIOGLOTL)
         {
@@ -1764,22 +1766,24 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_ORC_WARRIOR,     { {}, {{ BAND_ORC_WARRIOR, {2, 5} }}}},
     { MONS_ORC_WARLORD,     { {0, 0, [](){ return !player_in_branch(BRANCH_VAULTS); }},
                                          {{ BAND_ORC_KNIGHT, {8, 16}, true }}}},
-    { MONS_SAINT_ROKA,      { {}, {{ BAND_ORC_KNIGHT, {8, 16}, true }}}},
+    { MONS_SAINT_ROKA,     { {0, 0, [](){ return !player_in_branch(BRANCH_VAULTS) ||
+                                                 !player_in_branch(BRANCH_DEPTHS) ||
+                                                 !player_in_branch(BRANCH_CRYPT); }},
+                                         {{ BAND_ORC_KNIGHT, {8, 16}, true }}}},
     { MONS_ORC_KNIGHT,      { {}, {{ BAND_ORC_KNIGHT, {3, 7}, true }}}},
     { MONS_ORC_HIGH_PRIEST, { {}, {{ BAND_ORC_KNIGHT, {4, 8}, true }}}},
     { MONS_KOBOLD_BRIGAND,  { {0, 4}, {{ BAND_KOBOLDS, {2, 8} }}}},
     { MONS_KILLER_BEE,      { {}, {{ BAND_KILLER_BEES, {2, 6} }}}},
     { MONS_CAUSTIC_SHRIKE,  { {}, {{ BAND_CAUSTIC_SHRIKE, {2, 5} }}}},
     { MONS_SHARD_SHRIKE,    { {}, {{ BAND_SHARD_SHRIKE, {1, 4} }}}},
-    { MONS_FLYING_SKULL,    { {}, {{ BAND_FLYING_SKULLS, {2, 6} }}}},
     { MONS_SLIME_CREATURE,  { {}, {{ BAND_SLIME_CREATURES, {2, 6} }}}},
     { MONS_YAK,             { {}, {{ BAND_YAKS, {2, 6} }}}},
     { MONS_VERY_UGLY_THING, { {0, 19}, {{ BAND_VERY_UGLY_THINGS, {2, 6} }}}},
     { MONS_UGLY_THING,      { {0, 13}, {{ BAND_UGLY_THINGS, {2, 6} }}}},
     { MONS_HELL_HOUND,      { {}, {{ BAND_HELL_HOUNDS, {2, 5} }}}},
     { MONS_JACKAL,          { {}, {{ BAND_JACKALS, {1, 4} }}}},
-    { MONS_MARGERY,         { {}, {{ BAND_HELL_KNIGHTS, {4, 8}, true }}}},
     { MONS_HELL_KNIGHT,     { {}, {{ BAND_HELL_KNIGHTS, {4, 8} }}}},
+    { MONS_MARGERY,         { {}, {{ BAND_MARGERY, {5, 7}, true }}}},
     { MONS_AMAEMON,         { {}, {{ BAND_ORANGE_DEMONS, {1, 2}, true }}}},
     { MONS_JOSEPHINE,       { {}, {{ BAND_JOSEPHINE, {3, 6}, true }}}},
     { MONS_NECROMANCER,     { {}, {{ BAND_NECROMANCER, {3, 6}, true }}}},
@@ -1956,11 +1960,16 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_GRUNN,            { {}, {{ BAND_DOOM_HOUNDS, {2, 4}, true }}}},
     { MONS_NORRIS,           { {}, {{ BAND_SKYSHARKS, {2, 5}, true }}}},
     { MONS_UFETUBUS,         { {}, {{ BAND_UFETUBI, {1, 2} }}}},
-    { MONS_KOBOLD_BLASTMINER, { {}, {{ BAND_BLASTMINER, {1, 2} }}}},
+    { MONS_KOBOLD_BLASTMINER, { {}, {{ BAND_BLASTMINER, {0, 2} }}}},
 
     // special-cased band-sizes
     { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1}, true }}}},
     { MONS_THRASHING_HORROR, { {}, {{ BAND_THRASHING_HORRORS, {0, 1} }}}},
+    { MONS_BRAIN_WORM, { {}, {{ BAND_BRAIN_WORMS, {0, 1} }}}},
+    { MONS_LAUGHING_SKULL, { {}, {{ BAND_LAUGHING_SKULLS, {0, 1} }}}},
+    { MONS_WEEPING_SKULL, { {}, {{ BAND_WEEPING_SKULLS, {0, 1} }}}},
+    { MONS_PROTEAN_PROGENITOR, { {}, {{ BAND_PROTEAN_PROGENITORS, {0, 1} }}}},
+
 };
 
 static band_type _choose_band(monster_type mon_type, int *band_size_p,
@@ -2041,6 +2050,16 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
         }
         break;
 
+    case MONS_SAINT_ROKA:
+        if (player_in_branch(BRANCH_VAULTS) ||
+            player_in_branch(BRANCH_DEPTHS) ||
+            player_in_branch(BRANCH_CRYPT))
+        {
+            band = BAND_LATE_ROKA;
+            band_size = random_range(5, 7);
+        }
+        break;
+
     case MONS_SATYR:
         if (!one_chance_in(3))
         {
@@ -2063,9 +2082,31 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
             band_size = (one_chance_in(4) ? 3 : 2);
         break;
 
+    case MONS_LAUGHING_SKULL:
+        if (player_in_branch(BRANCH_DUNGEON))
+            band_size = 1;
+        else
+            band_size = random_range(2, 5);
+        break;
+
+    case MONS_WEEPING_SKULL:
+        if (player_in_branch(BRANCH_ABYSS) && you.depth > 1)
+            band_size = 1;
+        break;
+
+    case MONS_BRAIN_WORM:
+        if (player_in_branch(BRANCH_ABYSS))
+            band_size = random2(you.depth) / 2;
+        break;
+
     case MONS_THRASHING_HORROR:
-        // XXX: rewrite this - wrong & bad if horrors aren't in abyss
-        band_size = random2(min(brdepth[BRANCH_ABYSS], you.depth));
+        if (player_in_branch(BRANCH_ABYSS))
+            band_size = random2(min(brdepth[BRANCH_ABYSS], you.depth));
+        break;
+
+    case MONS_PROTEAN_PROGENITOR:
+        if (x_chance_in_y(2, 3))
+            band_size = 1;
         break;
 
     default: ;
@@ -2131,6 +2172,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_JELLYFISH,           {{{MONS_FORMLESS_JELLYFISH, 1}}}},
     { BAND_DEATH_YAKS,          {{{MONS_DEATH_YAK, 1}}}},
     { BAND_GREEN_RATS,          {{{MONS_RIVER_RAT, 1}}}},
+    { BAND_BRAIN_WORMS,         {{{MONS_BRAIN_WORM, 1}}}},
     { BAND_BLINK_FROGS,         {{{MONS_BLINK_FROG, 1}}}},
     { BAND_GOLDEN_EYE,          {{{MONS_GOLDEN_EYE, 1}}}},
     { BAND_HELL_HOUNDS,         {{{MONS_HELL_HOUND, 1}}}},
@@ -2141,13 +2183,14 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_UGLY_THINGS,         {{{MONS_UGLY_THING, 1}}}},
     { BAND_DREAM_SHEEP,         {{{MONS_DREAM_SHEEP, 1}}}},
     { BAND_DEATH_SCARABS,       {{{MONS_DEATH_SCARAB, 1}}}},
-    { BAND_FLYING_SKULLS,       {{{MONS_FLYING_SKULL, 1}}}},
     { BAND_ORANGE_DEMONS,       {{{MONS_ORANGE_DEMON, 1}}}},
     { BAND_SHARD_SHRIKE,        {{{MONS_SHARD_SHRIKE, 1}}}},
     { BAND_SOJOBO,              {{{MONS_TENGU_REAVER, 1}}}},
-    { BAND_DIRE_ELEPHANTS,      {{{MONS_DIRE_ELEPHANT, 1}}}},
     { BAND_HOWLER_MONKEY,       {{{MONS_HOWLER_MONKEY, 1}}}},
+    { BAND_WEEPING_SKULLS,      {{{MONS_WEEPING_SKULL, 1}}}},
+    { BAND_DIRE_ELEPHANTS,      {{{MONS_DIRE_ELEPHANT, 1}}}},
     { BAND_CAUSTIC_SHRIKE,      {{{MONS_CAUSTIC_SHRIKE, 1}}}},
+    { BAND_LAUGHING_SKULLS,     {{{MONS_LAUGHING_SKULL, 1}}}},
     { BAND_DANCING_WEAPONS,     {{{MONS_DANCING_WEAPON, 1}}}},
     { BAND_SLIME_CREATURES,     {{{MONS_SLIME_CREATURE, 1}}}},
     { BAND_SPRIGGAN_RIDERS,     {{{MONS_SPRIGGAN_RIDER, 1}}}},
@@ -2165,6 +2208,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_SPECTRALS,           {{{MONS_SPECTRAL_THING, 1}}}},
     { BAND_UFETUBI,             {{{MONS_UFETUBUS, 1}}}},
     { BAND_BLASTMINER,          {{{MONS_KOBOLD_BLASTMINER, 1}}}},
+    { BAND_PROTEAN_PROGENITORS, {{{MONS_PROTEAN_PROGENITOR, 1}}}},
     { BAND_DEEP_ELF_KNIGHT,     {{{MONS_DEEP_ELF_AIR_MAGE, 46},
                                   {MONS_DEEP_ELF_FIRE_MAGE, 46},
                                   {MONS_DEEP_ELF_KNIGHT, 24},
@@ -2191,6 +2235,18 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                   {MONS_SIMULACRUM, 1}}}},
     { BAND_HELL_KNIGHTS,        {{{MONS_HELL_KNIGHT, 3},
                                   {MONS_NECROMANCER, 1}}}},
+
+    { BAND_MARGERY,             {{{MONS_HELLEPHANT, 4},
+                                  {MONS_SEARING_WRETCH, 3}},
+
+                                {{MONS_DEEP_ELF_DEATH_MAGE, 4},
+                                 {MONS_DEEP_ELF_HIGH_PRIEST, 3}},
+
+                                {{MONS_HELL_KNIGHT, 1}},
+
+                                {{MONS_HELL_KNIGHT, 3},
+                                 {MONS_NECROMANCER, 1}}}},
+
     { BAND_POLYPHEMUS,          {{{MONS_CATOBLEPAS, 1}},
 
                                  {{MONS_DEATH_YAK, 1}}}},
@@ -2214,6 +2270,16 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
                                   {MONS_OGRE, 1},
                                   {MONS_TROLL, 1},
                                   {MONS_ORC_SORCERER, 1}}}},
+
+    { BAND_LATE_ROKA,           {{{MONS_ORC_PRIEST, 1}},
+
+                                 {{MONS_ORC_KNIGHT, 1}},
+
+                                 {{MONS_ORC_PRIEST, 2},
+                                  {MONS_ORC_KNIGHT, 3},
+                                  {MONS_ORC_SORCERER, 3},
+                                  {MONS_ORC_HIGH_PRIEST, 4}}}},
+
     { BAND_OGRE_MAGE,           {{{MONS_TWO_HEADED_OGRE, 2},
                                   {MONS_OGRE, 1}}}},
     { BAND_OGRE_MAGE_EXTERN,    {{{MONS_OGRE_MAGE, 1}},

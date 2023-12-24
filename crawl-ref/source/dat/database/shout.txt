@@ -214,6 +214,14 @@ __RUSTLE seen
 
 SOUND:@The_monster@'s pages rustle loudly.
 %%%%
+__SQUEAK unseen
+
+SOUND:You hear a loud squeak.
+%%%%
+__SQUEAK seen
+
+SOUND:@The_monster@ squeaks loudly.
+%%%%
 ############################################
 # End of default shouts
 ############################################
@@ -283,7 +291,7 @@ Earth Elementalist player ghost
 
 @player ghost@
 %%%%
-Venom Mage player ghost
+Alchemist player ghost
 
 @player ghost@
 %%%%

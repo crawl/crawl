@@ -624,43 +624,34 @@ static beam_type _chaos_beam_flavour(bolt* beam)
     flavour = random_choose_weighted(
          // SPWPN_CHAOS randomizes to brands analogous to these beam effects
          // with similar weights.
-         70, BEAM_FIRE,
-         70, BEAM_COLD,
-         70, BEAM_ELECTRICITY,
-         70, BEAM_POISON,
+         80, BEAM_FIRE,
+         80, BEAM_COLD,
+         80, BEAM_ELECTRICITY,
+         80, BEAM_POISON,
          // Combined weight from drain + vamp.
-         70, BEAM_NEG,
-         35, BEAM_HOLY,
-         14, BEAM_CONFUSION,
-         // We don't have a distortion beam, so choose from the three effects
-         // we can use, based on the lower weight distortion has.
-          5, BEAM_BANISH,
-          5, BEAM_BLINK,
-          5, BEAM_TELEPORT,
+         80, BEAM_NEG,
+         40, BEAM_HOLY,
+         40, BEAM_DRAIN_MAGIC,
          // From here are beam effects analogous to effects that happen when
          // SPWPN_CHAOS chooses itself again as the ego (roughly 1/7 chance).
          // Weights similar to those from chaos_effects in attack.cc
-         10, BEAM_SLOW,
-         10, BEAM_HASTE,
-         10, BEAM_AGILITY,
-          5, BEAM_PARALYSIS,
-          5, BEAM_PETRIFY,
           5, BEAM_BERSERK,
-         // Combined weight for poly, clone, and "shapeshifter" effects.
-          5, BEAM_POLYMORPH,
-         // Seen through miscast effects.
-          5, BEAM_ACID,
-          5, BEAM_LIGHT,
-          5, BEAM_DAMNATION,
-          5, BEAM_STICKY_FLAME,
-          5, BEAM_MINDBURST,
-         // These are not actually used by SPWPN_CHAOS, but are here to augment
-         // the list of effects, since not every SPWN_CHAOS effect has an
-         // analogous BEAM_ type.
-          4, BEAM_MIGHT,
-          4, BEAM_HEALING,
-          4, BEAM_RESISTANCE,
-          4, BEAM_ENSNARE);
+         12, BEAM_HASTE,
+         12, BEAM_MIGHT,
+         10, BEAM_RESISTANCE,
+         10, BEAM_SLOW,
+         12, BEAM_CONFUSION,
+         10, BEAM_WEAKNESS,
+         10, BEAM_VULNERABILITY,
+         10, BEAM_ACID,
+          5, BEAM_VITRIFY,
+          5, BEAM_ENSNARE,
+          3, BEAM_BLINK,
+          3, BEAM_PARALYSIS,
+          3, BEAM_PETRIFY,
+          3, BEAM_SLEEP,
+         // Combined weight for poly and clone effects.
+          4, BEAM_POLYMORPH);
 
     return flavour;
 }
@@ -1701,6 +1692,11 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             ensnare(mons);
         break;
 
+    case BEAM_DEVASTATION:
+        if (doFlavouredEffects)
+            mons->strip_willpower(pbolt.agent(), random_range(20, 30));
+        break;
+
     default:
         break;
     }
@@ -1994,24 +1990,24 @@ bool miasma_monster(monster* mons, const actor* who)
     return success;
 }
 
-// Actually napalms a monster (with message).
-bool napalm_monster(monster* mons, const actor *who, int levels, bool verbose)
+// Actually applies sticky flame to a monster (with message).
+bool sticky_flame_monster(monster* mons, const actor *who, int dur, bool verbose)
 {
     if (!mons->alive())
         return false;
 
-    if (mons->res_sticky_flame() || levels <= 0 || mons->has_ench(ENCH_WATER_HOLD))
+    if (mons->res_sticky_flame() || dur <= 0 || mons->has_ench(ENCH_WATER_HOLD))
         return false;
 
     const mon_enchant old_flame = mons->get_ench(ENCH_STICKY_FLAME);
-    mons->add_ench(mon_enchant(ENCH_STICKY_FLAME, levels, who));
+    mons->add_ench(mon_enchant(ENCH_STICKY_FLAME, 0, who, dur * BASELINE_DELAY));
     const mon_enchant new_flame = mons->get_ench(ENCH_STICKY_FLAME);
 
     // Actually do the napalming. The order is important here.
     if (new_flame.degree > old_flame.degree)
     {
         if (verbose)
-            simple_monster_message(*mons, " is covered in liquid flames!");
+            simple_monster_message(*mons, " is covered in liquid fire!");
         if (who)
             behaviour_event(mons, ME_WHACK, who);
     }
@@ -2175,6 +2171,7 @@ void bolt_parent_init(const bolt &parent, bolt &child)
 {
     child.name           = parent.name;
     child.short_name     = parent.short_name;
+    child.hit_verb       = parent.hit_verb;
     child.aux_source     = parent.aux_source;
     child.source_id      = parent.source_id;
     child.origin_spell   = parent.origin_spell;
@@ -2223,7 +2220,8 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     // The victim may die.
     coord_def c = victim->pos();
 
-    mprf("%s life force is offered up.", victim->name(DESC_ITS).c_str());
+    if (you.see_cell(c) || you.see_cell(agent->pos()))
+        mprf("%s life force is offered up.", victim->name(DESC_ITS).c_str());
     damage = victim->hurt(agent, damage, BEAM_MALIGN_OFFERING, KILLED_BY_BEAM,
                           "", "by a malign offering");
 
@@ -2515,11 +2513,6 @@ void bolt::affect_endpoint()
             // beneath them). I think this should work fine?
             drop_object();
         }
-
-        // We pay the per-shot mp cost here, so that it activates only on shots
-        // that fully trigger bullseye
-        pay_mp(1);
-        finalize_mp_cost();
     }
 
     // you like special cases, right?
@@ -2785,6 +2778,30 @@ void bolt::affect_place_clouds()
 
     if (origin_spell == SPELL_DEATH_RATTLE)
         place_cloud(CLOUD_MIASMA, p, random2(4) + 4, agent());
+
+    // Only place clouds on creatures who are immune to them
+    if (origin_spell == SPELL_MOURNING_WAIL)
+    {
+        if (!actor_at(p) || actor_at(p)->res_negative_energy() == 3)
+            place_cloud(CLOUD_MISERY, p, random2(4) + 2, agent());
+    }
+
+    if (origin_spell == SPELL_MARCH_OF_SORROWS)
+    {
+        place_cloud(CLOUD_MISERY, p, random2(5) + 8, agent());
+
+        if (actor_at(p) && !mons_aligned(actor_at(p), agent()))
+        {
+            for (adjacent_iterator ai(pos()); ai; ++ai)
+            {
+                if (feat_is_solid(env.grid(*ai)))
+                    continue;
+
+                place_cloud(CLOUD_MISERY, *ai, random2(4) + 2, agent());
+            }
+        }
+    }
+
 }
 
 void bolt::affect_place_explosion_clouds()
@@ -2805,7 +2822,7 @@ void bolt::affect_place_explosion_clouds()
         if (p == center || x_chance_in_y(125 + ench_power, 225))
         {
             place_cloud(CLOUD_MEPHITIC, p, roll_dice(2,
-                        2 + div_rand_round(ench_power, 20)), agent());
+                        8 + div_rand_round(ench_power, 20)), agent());
         }
     }
 
@@ -2863,7 +2880,7 @@ void bolt::internal_ouch(int dam)
              aux_source.c_str(), true,
              source_name.empty() ? nullptr : source_name.c_str());
     }
-    else if (flavour == BEAM_MINDBURST || flavour == BEAM_DEVASTATION)
+    else if (flavour == BEAM_MINDBURST || flavour == BEAM_DESTRUCTION)
     {
         ouch(dam, KILLED_BY_DISINT, source_id, what, true,
              source_name.empty() ? nullptr : source_name.c_str());
@@ -3431,6 +3448,11 @@ void bolt::affect_player_enchantment(bool resistible)
         obvious_effect = true;
         break;
 
+    case BEAM_WEAKNESS:
+        you.weaken(agent(), 8 + random2(4));
+        obvious_effect = true;
+        break;
+
     case BEAM_TELEPORT:
         you_teleport();
 
@@ -3563,16 +3585,16 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_VULNERABILITY:
-        if (!you.duration[DUR_LOWERED_WL])
-            mpr("Your willpower is stripped away!");
-        you.increase_duration(DUR_LOWERED_WL, 12 + random2(18), 50);
+        you.strip_willpower(agent(), 12 + random2(18));
         obvious_effect = true;
         break;
 
     case BEAM_VITRIFY:
         if (!you.duration[DUR_VITRIFIED])
             mpr("Your body becomes as fragile as glass!");
-        you.increase_duration(DUR_VITRIFIED, 10 + random2(16), 50);
+        else
+            mpr("You feel your fragility will last longer.");
+        you.increase_duration(DUR_VITRIFIED, random_range(8, 18), 50);
         obvious_effect = true;
         break;
 
@@ -3581,7 +3603,7 @@ void bolt::affect_player_enchantment(bool resistible)
             mpr("Your body becomes as fragile as glass!");
         else
             mpr("You feel your fragility will last longer.");
-        you.increase_duration(DUR_VITRIFIED, 6 + random2(5), 50);
+        you.increase_duration(DUR_VITRIFIED, random_range(4, 8), 50);
         obvious_effect = true;
         break;
 
@@ -3658,8 +3680,6 @@ void bolt::affect_player_enchantment(bool resistible)
             break;
         mprf(MSGCH_WARN, "You feel your power leaking away.");
         drain_mp(amount);
-        if (agent() && agent()->type == MONS_GHOST_MOTH)
-            agent()->heal(amount);
         obvious_effect = true;
         break;
     }
@@ -3845,12 +3865,24 @@ static const vector<pie_effect> pie_effects = {
         6
     },
     {
-        "moon pie",
-        [](const actor &defender) {
-            return defender.can_polymorph();
-        },
+        "clear moon pie",
+        nullptr,
         [](actor &defender, const bolt &/*beam*/) {
-            defender.polymorph(100, false);
+            if (defender.is_monster())
+            {
+                monster *mons = defender.as_monster();
+                simple_monster_message(*mons,
+                    " becomes as fragile as glass!");
+            }
+            else
+            {
+                if (you.duration[DUR_VITRIFIED])
+                    mpr("You feel your fragility will last longer.");
+                else
+                    mpr("Your body becomes as fragile as glass!");
+
+                you.increase_duration(DUR_VITRIFIED, 16 + random2(21), 50);
+            }
         },
         4
     },
@@ -3992,7 +4024,7 @@ void bolt::affect_player()
     {
         mprf("The %s %s %s%s%s", name.c_str(), hit_verb.c_str(),
              you.hp > 0 ? "you" : "your lifeless body",
-             final_dam ? "" : " but does no damage",
+             final_dam || damage.num == 0 ? "" : " but does no damage",
              attack_strength_punctuation(final_dam).c_str());
     }
 
@@ -4018,7 +4050,7 @@ void bolt::affect_player()
     if (flavour == BEAM_MIASMA && final_dam > 0)
         was_affected = miasma_player(agent(), name);
 
-    if (flavour == BEAM_DEVASTATION) // MINDBURST already handled
+    if (flavour == BEAM_DESTRUCTION) // MINDBURST already handled
         blood_spray(you.pos(), MONS_PLAYER, final_dam / 5);
 
     // Confusion effect for spore explosions
@@ -4034,11 +4066,15 @@ void bolt::affect_player()
 
     // Sticky flame.
     if (origin_spell == SPELL_STICKY_FLAME
-        || origin_spell == SPELL_STICKY_FLAME_RANGE)
+        || flavour == BEAM_STICKY_FLAME)
     {
+        // ench_power here is equal to 12 * caster HD for monsters, btw
+        const int intensity = 2 + ench_power / 14;
+
         if (!player_res_sticky_flame())
         {
-            napalm_player(random2avg(7, 3) + 1, get_source_name(), aux_source);
+            sticky_flame_player(intensity, random_range(11, 21),
+                                get_source_name(), aux_source);
             was_affected = true;
         }
     }
@@ -4642,12 +4678,22 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (YOU_KILL(thrower) && !mon->wont_attack() && !mons_is_firewood(*mon))
         you.pet_target = mon->mindex();
 
-    // Sticky flame.
-    if (origin_spell == SPELL_STICKY_FLAME
-        || origin_spell == SPELL_STICKY_FLAME_RANGE)
+    // We check player Sticky Flame by name and other effects by flavour, since
+    // the player spell has impact damage that the others do not, and thus is
+    // BEAM_FIRE instead.
+    //
+    // Possibly this should be refactored.
+    if (origin_spell == SPELL_STICKY_FLAME)
     {
-        const int levels = min(4, 1 + div_rand_round(random2(dmg), 2));
-        napalm_monster(mon, agent(), levels);
+        const int dur = 3 + random_range(div_rand_round(ench_power, 20),
+                                         div_rand_round(ench_power, 10));
+        sticky_flame_monster(mon, agent(), dur);
+    }
+    else if (flavour == BEAM_STICKY_FLAME)
+    {
+        // Current numbers of monster sticky flame versus other monsters are
+        // more arbitrary.
+        sticky_flame_monster(mon, agent(), 3 + random2(ench_power / 20));
     }
 
     // purple draconian breath
@@ -5087,7 +5133,7 @@ void bolt::affect_monster(monster* mon)
              name.c_str(),
              hit_verb.c_str(),
              mon->name(DESC_THE).c_str(),
-             postac ? "" : " but does no damage",
+             postac || damage.num == 0 ? "" : " but does no damage",
              attack_strength_punctuation(final).c_str());
 
     }
@@ -5182,7 +5228,7 @@ bool bolt::self_targeted() const
 
 bool bolt::has_saving_throw() const
 {
-    if (self_targeted())
+    if (self_targeted() || no_saving_throw)
         return false;
 
     switch (flavour)
@@ -5624,6 +5670,11 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         }
         return MON_AFFECTED;
 
+    case BEAM_WEAKNESS:
+        mon->weaken(agent(), 8 + random2(4));
+        obvious_effect = true;
+        return MON_AFFECTED;
+
     case BEAM_BERSERK:
         if (!mon->berserk_or_frenzied())
         {
@@ -5804,28 +5855,22 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_VULNERABILITY:
-        if (!mon->has_ench(ENCH_LOWERED_WL)
-            && mon->add_ench(mon_enchant(ENCH_LOWERED_WL, 0, agent(),
-                                         random_range(20, 30) * BASELINE_DELAY)))
+        if (!mon->has_ench(ENCH_LOWERED_WL))
         {
-            if (you.can_see(*mon))
-            {
-                mprf("%s willpower is stripped away.",
-                     mon->name(DESC_ITS).c_str());
+            if (mon->strip_willpower(agent(), random_range(20, 30)))
                 obvious_effect = true;
-            }
         }
         return MON_AFFECTED;
 
     case BEAM_VITRIFY:
         if (!mon->has_ench(ENCH_VITRIFIED)
             && mon->add_ench(mon_enchant(ENCH_VITRIFIED, 0, agent(),
-                                         random_range(20, 30) * BASELINE_DELAY)))
+                                         random_range(8, 16) * BASELINE_DELAY)))
         {
             if (you.can_see(*mon))
             {
-                mprf("%s becomes as fragile as glass.",
-                     mon->name(DESC_ITS).c_str());
+                mprf("%s becomes as fragile as glass!",
+                     mon->name(DESC_THE).c_str());
                 obvious_effect = true;
             }
         }
@@ -5836,7 +5881,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         bool had_status = mon->has_ench(ENCH_VITRIFIED);
 
         if (mon->add_ench(mon_enchant(ENCH_VITRIFIED, 0, agent(),
-                                  random_range(6, 10) * BASELINE_DELAY)))
+                                  random_range(4, 8) * BASELINE_DELAY)))
         {
             if (you.can_see(*mon))
             {
@@ -5847,8 +5892,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
                 }
                 else
                 {
-                    mprf("%s becomes as fragile as glass.",
-                         mon->name(DESC_ITS).c_str());
+                    mprf("%s becomes as fragile as glass!",
+                         mon->name(DESC_THE).c_str());
                 }
                 obvious_effect = true;
             }
@@ -6495,7 +6540,7 @@ bool bolt::nasty_to(const monster* mon) const
     // The orbs are made of pure disintegration energy. This also has the side
     // effect of not stopping us from firing further orbs when the previous one
     // is still flying.
-    if (flavour == BEAM_DEVASTATION)
+    if (flavour == BEAM_DESTRUCTION)
         return mon->type != MONS_ORB_OF_DESTRUCTION;
 
     // Take care of other non-enchantments.
@@ -6705,7 +6750,7 @@ string bolt::get_short_name() const
 
     if (flavour == BEAM_FIRE
         && (origin_spell == SPELL_STICKY_FLAME
-            || origin_spell == SPELL_STICKY_FLAME_RANGE))
+            || origin_spell == SPELL_PYRE_ARROW))
     {
         return "sticky fire";
     }
@@ -6755,7 +6800,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_ICE:                   return "ice";
     case BEAM_THUNDER:               return "thunder";
     case BEAM_STUN_BOLT:             return "stunning bolt";
-    case BEAM_DEVASTATION:           return "devastation";
+    case BEAM_DESTRUCTION:           return "destruction";
     case BEAM_RANDOM:                return "random";
     case BEAM_CHAOS:                 return "chaos";
     case BEAM_SLOW:                  return "slow";
@@ -6814,7 +6859,9 @@ static string _beam_type_name(beam_type type)
     case BEAM_NECROTISE:             return "necrotise";
     case BEAM_ROOTS:                 return "roots";
     case BEAM_VITRIFY:               return "vitrification";
-    case BEAM_VITRIFYING_GAZE:  return "vitrification";
+    case BEAM_VITRIFYING_GAZE:       return "vitrification";
+    case BEAM_WEAKNESS:              return "weakness";
+    case BEAM_DEVASTATION:           return "devastation";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

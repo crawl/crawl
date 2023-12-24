@@ -174,7 +174,8 @@ ratios 18:6:2:1.
 function ice_cave_undead_demon_monster_set(e, reaper_glyphs)
     simul = simulacrum_monsters()
 
-    local reaper_equip = " ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:freezing"
+    local reaper_equip = " ; halberd plus:-4 itemname:scythe" ..
+                         " tile:wpn_scythe wtile:scythe ego:freezing"
     -- Make sure this reaper has rC+++ so it doesn't die in freezing vapour.
     if reaper_glyphs ~= nil then
         reaper_equip = reaper_equip .. " . robe ego:cold_resistance" ..
@@ -383,7 +384,7 @@ function ice_cave_magic_loot(e, glyphs)
         quality = " good_item"
     end
     e.kitem(glyphs .. " = book of ice / book of the tundra" ..
-        " / ozocubu's autobiography / randbook disc:ice" ..
+        " / randbook disc:ice" ..
         " / manual of ice magic / staff of cold / ring of ice" .. quality ..
         " / ring of protection from cold" .. quality ..
         " / wand of iceblast / phial of floods / condenser vane")
@@ -1109,7 +1110,8 @@ KITEM:   D = any scroll
 # more. For ice fiend, minimum of one and 50% chance for another.
 : if dgn.persist.ice_cave_hard then
 : ice_cave_undead_demon_monster_set(_G)
-KMONS:   D7 = reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:freezing
+KMONS:   D7 = reaper ; halberd plus:-4 itemname:scythe \
+              tile:wpn_scythe wtile:scythe ego:freezing
 SHUFFLE: D7 / 88
 NSUBST:  7 = 7 / 7.., 8 = 8 / 8. / .
 NSUBST:  4 = 6 / 446, F = 122445

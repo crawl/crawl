@@ -190,9 +190,9 @@ Word of Recall cast
 
 @The_monster@ begins to recite a word of recall!
 %%%%
-Call Lost Soul cast
+Call Lost Souls cast
 
-@The_monster@ beckons forth a restless soul!
+@The_monster@ beckons forth restless souls!
 %%%%
 Haste Plants cast
 
@@ -407,6 +407,13 @@ Weakening Gaze cast
 # Unique monsters
 ########################################################################
 %%%%
+March of Sorrows Boris cast
+
+@The_monster@ [casts|pitches] forth @possessive@ victims' sorrows.
+
+w:5
+@The_monster@ rolls out @possessive@ victims' [laments|suffering].
+%%%%
 Cantrip Dissolution cast
 
 @The_monster@ gurgles to an absent god.
@@ -560,6 +567,12 @@ VISUAL:@The_monster@ throws @possessive@ arms up pleadingly.
 ########################################################################
 # Individual monsters
 ########################################################################
+brain worm cast
+
+@The_monster@'s bulging head throbs.
+
+@The_monster@'s throbbing head pulsates.
+%%%%
 glowing orange brain cast
 
 @The_monster@ pulsates.
@@ -721,6 +734,40 @@ golden eye cast targeted
 
 @The_monster@ blinks @at@ @target@.
 %%%%
+weeping skull cast
+
+@The_monster@ [unleashes|releases] gushing sobs.
+
+@The_monster@'s misery [bubbles over|overflows].
+%%%%
+silent weeping skull cast
+
+@The_monster@'s misery [bubbles over|overflows].
+%%%%
+unseen weeping skull cast
+
+You hear gushing sobs.
+%%%%
+laughing skull cast
+
+@The_monster@ cackles spitefully.
+
+@The_monster@ gibbers with scorn.
+
+@The_monster@ lets out a vicious peal of laugher.
+%%%%
+silent laughing skull cast
+
+@The_monster@ mockingly cackles in silence.
+
+@The_monster@ violently rattles with glee.
+%%%%
+unseen laughing skull cast
+
+You hear spiteful cackling.
+
+You hear scornful gibbering.
+%%%%
 Death Rattle ushabti cast
 
 @The_monster@ shakes and rattles.
@@ -825,6 +872,10 @@ kobold blastminer cast targeted
 
 @The_monster@ blasts @possessive@ cannon @at@ @target@.
 %%%%
+burial acolyte cast
+
+@The_monster@ [drones|recites] a funeral chant.
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
@@ -915,6 +966,14 @@ Corrupting Pulse wretched star cast
 living spell cast
 
 @The_monster@ casts itself @at@ @target@.
+%%%%
+bombardier beetle cast
+
+@The_monster@ sprays incendiary fluid @at@ @target@.
+%%%%
+sun moth cast
+
+@The_monster@'s wings beat fiercely.
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.

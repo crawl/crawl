@@ -185,7 +185,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_POLYMORPH, "Polymorph",
-    spschool::transmutation | spschool::hexes,
+    spschool::alchemy | spschool::hexes,
     spflag::dir_or_target | spflag::chaotic
         | spflag::needs_tracer | spflag::WL_check,
     4,
@@ -220,7 +220,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_PETRIFY, "Petrify",
-    spschool::transmutation | spschool::earth,
+    spschool::alchemy | spschool::earth,
     spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check,
     4,
     200,
@@ -299,7 +299,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_MEPHITIC_CLOUD, "Mephitic Cloud",
-    spschool::conjuration | spschool::poison | spschool::air,
+    spschool::conjuration | spschool::alchemy | spschool::air,
     spflag::dir_or_target | spflag::area
         | spflag::needs_tracer | spflag::cloud,
     3,
@@ -311,7 +311,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_VENOM_BOLT, "Venom Bolt",
-    spschool::conjuration | spschool::poison,
+    spschool::conjuration | spschool::alchemy,
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     5,
     200,
@@ -322,7 +322,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_OLGREBS_TOXIC_RADIANCE, "Olgreb's Toxic Radiance",
-    spschool::poison,
+    spschool::alchemy,
     spflag::area | spflag::destructive,
     4,
     100,
@@ -435,7 +435,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_POISONOUS_CLOUD, "Poisonous Cloud",
-    spschool::conjuration | spschool::poison | spschool::air,
+    spschool::conjuration | spschool::alchemy | spschool::air,
     spflag::target | spflag::area | spflag::needs_tracer | spflag::cloud
                    | spflag::monster,
     5,
@@ -672,7 +672,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_STICKY_FLAME, "Sticky Flame",
-    spschool::conjuration | spschool::fire,
+    spschool::alchemy | spschool::fire,
     spflag::dir_or_target | spflag::needs_tracer,
     4,
     100,
@@ -749,7 +749,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_POISON_ARROW, "Poison Arrow",
-    spschool::conjuration | spschool::poison,
+    spschool::conjuration | spschool::alchemy,
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     6,
     200,
@@ -773,11 +773,11 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_STING, "Sting",
-    spschool::transmutation | spschool::poison,
+    spschool::conjuration | spschool::alchemy,
     spflag::dir_or_target | spflag::needs_tracer,
     1,
     25,
-    3, 3,
+    4, 4,
     0,
     TILEG_STING,
 },
@@ -831,7 +831,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_ROT, "Cigotuvi's Dreadful Rot",
-    spschool::necromancy | spschool::air | spschool::poison,
+    spschool::necromancy | spschool::air | spschool::alchemy,
     spflag::unclean,
     2,
     50,
@@ -1010,7 +1010,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_PASSWALL, "Passwall",
-    spschool::transmutation | spschool::earth,
+    spschool::alchemy | spschool::earth,
     spflag::target | spflag::escape | spflag::not_self | spflag::utility
         | spflag::silent,
     2,
@@ -1022,9 +1022,9 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_IGNITE_POISON, "Ignite Poison",
-    spschool::fire | spschool::transmutation | spschool::poison,
+    spschool::fire | spschool::alchemy,
     spflag::area | spflag::destructive,
-    3,
+    4,
     100,
     -1, -1,
     0,
@@ -1134,7 +1134,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_INTOXICATE, "Alistair's Intoxication",
-    spschool::transmutation | spschool::poison,
+    spschool::alchemy,
     spflag::none,
     5,
     150,
@@ -1234,7 +1234,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_FULMINANT_PRISM, "Fulminant Prism",
-    spschool::conjuration | spschool::hexes,
+    spschool::conjuration | spschool::alchemy,
     spflag::target | spflag::area | spflag::not_self,
     4,
     200,
@@ -1281,7 +1281,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_WOODWEAL, "Woodweal",
-    spschool::necromancy | spschool::transmutation,
+    spschool::necromancy,
     spflag::recovery | spflag::helpful | spflag::monster | spflag::selfench
         | spflag::utility | spflag::not_evil,
     4,
@@ -1305,19 +1305,19 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_BRAIN_FEED, "Brain Feed",
-    spschool::necromancy,
+    SPELL_BRAIN_BITE, "Brain Bite",
+    spschool::necromancy | spschool::hexes,
     spflag::target | spflag::monster,
     3,
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
-    TILEG_BRAIN_FEED,
+    TILEG_BRAIN_BITE,
 },
 
 {
     SPELL_NOXIOUS_CLOUD, "Noxious Cloud",
-    spschool::conjuration | spschool::poison | spschool::air,
+    spschool::conjuration | spschool::alchemy | spschool::air,
     spflag::target | spflag::area | spflag::monster | spflag::needs_tracer
         | spflag::cloud,
     5,
@@ -1361,10 +1361,10 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_ENERGY_BOLT, "Energy Bolt",
+    SPELL_BOLT_OF_DEVASTATION, "Bolt of Devastation",
     spschool::conjuration,
     spflag::dir_or_target | spflag::monster | spflag::needs_tracer,
-    4,
+    5,
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
@@ -1373,7 +1373,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_SPIT_POISON, "Spit Poison",
-    spschool::poison,
+    spschool::alchemy,
     spflag::dir_or_target | spflag::monster | spflag::noisy
         | spflag::needs_tracer,
     2,
@@ -1497,7 +1497,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_SPIT_ACID, "Spit Acid",
-    spschool::conjuration,
+    spschool::alchemy,
     spflag::dir_or_target | spflag::monster | spflag::noisy
         | spflag::needs_tracer,
     5,
@@ -1509,7 +1509,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_ACID_SPLASH, "Acid Splash",
-    spschool::conjuration,
+    spschool::alchemy,
     spflag::dir_or_target | spflag::monster | spflag::noisy
         | spflag::needs_tracer,
     5,
@@ -1519,14 +1519,13 @@ static const struct spell_desc spelldata[] =
     TILEG_SPIT_ACID,
 },
 
-// Monster version of the spell (with full range)
 {
-    SPELL_STICKY_FLAME_RANGE, "Sticky Flame Range",
+    SPELL_PYRE_ARROW, "Pyre Arrow",
     spschool::conjuration | spschool::fire,
     spflag::dir_or_target | spflag::monster | spflag::needs_tracer,
     4,
     100,
-    4, 4,
+    5, 5,
     0,
     TILEG_STICKY_FLAME_RANGE,
 },
@@ -1604,7 +1603,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_PORKALATOR, "Porkalator",
-    spschool::hexes | spschool::transmutation,
+    spschool::hexes | spschool::alchemy,
     spflag::dir_or_target | spflag::chaotic | spflag::needs_tracer
         | spflag::WL_check | spflag::monster,
     5,
@@ -1913,7 +1912,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_LEDAS_LIQUEFACTION, "Leda's Liquefaction",
-    spschool::earth | spschool::hexes,
+    spschool::earth | spschool::alchemy,
     spflag::area,
     4,
     200,
@@ -2023,7 +2022,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_MALMUTATE, "Malmutate",
-    spschool::transmutation | spschool::hexes,
+    spschool::alchemy | spschool::hexes,
     spflag::dir_or_target | spflag::not_self | spflag::chaotic
         | spflag::needs_tracer | spflag::monster,
     6,
@@ -2114,7 +2113,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_CALL_LOST_SOUL, "Call Lost Soul",
+    SPELL_CALL_LOST_SOULS, "Call Lost Souls",
     spschool::summoning | spschool::necromancy,
     spflag::unholy | spflag::monster,
     5,
@@ -2215,10 +2214,10 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_WEREBLOOD, "Wereblood",
-    spschool::transmutation,
-    spflag::utility | spflag::chaotic,
-    2,
+    SPELL_FUGUE_OF_THE_FALLEN, "Fugue of the Fallen",
+    spschool::necromancy,
+    spflag::selfench,
+    3,
     100,
     -1, -1,
     8,
@@ -2284,7 +2283,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_VIRULENCE, "Virulence",
-    spschool::poison | spschool::hexes,
+    spschool::alchemy | spschool::hexes,
     spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check
                           | spflag::monster,
     4,
@@ -2563,7 +2562,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_CORROSIVE_BOLT, "Corrosive Bolt",
-    spschool::conjuration,
+    spschool::conjuration | spschool::alchemy,
     spflag::dir_or_target | spflag::needs_tracer,
     6,
     200,
@@ -2633,7 +2632,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_SUMMON_EMPEROR_SCORPIONS, "Summon Emperor Scorpions",
-    spschool::summoning | spschool::poison,
+    spschool::summoning | spschool::alchemy,
     spflag::mons_abjure | spflag::monster,
     7,
     100,
@@ -2644,7 +2643,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_IRRADIATE, "Irradiate",
-    spschool::conjuration | spschool::transmutation,
+    spschool::conjuration | spschool::alchemy,
     spflag::area | spflag::chaotic,
     5,
     200,
@@ -2735,6 +2734,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_FUNERAL_DIRGE, "Funeral Dirge",
+    spschool::necromancy,
+    spflag::area | spflag::monster,
+    4,
+    200,
+    -1, -1,
+    0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_SEAL_DOORS, "Seal Doors",
     spschool::hexes,
     spflag::area | spflag::monster | spflag::selfench,
@@ -2769,7 +2779,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_CORRUPTING_PULSE, "Corrupting Pulse",
-    spschool::hexes | spschool::transmutation,
+    spschool::hexes | spschool::alchemy,
     spflag::area | spflag::monster,
     6,
     200,
@@ -2845,7 +2855,29 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_MOURNING_WAIL, "Mourning Wail",
+    spschool::necromancy,
+    spflag::dir_or_target | spflag::monster,
+    3,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_DEATH_RATTLE, "Death Rattle",
+    spschool::conjuration | spschool::necromancy | spschool::air,
+    spflag::dir_or_target | spflag::monster,
+    7,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
+    SPELL_MARCH_OF_SORROWS, "March of Sorrows",
     spschool::conjuration | spschool::necromancy | spschool::air,
     spflag::dir_or_target | spflag::monster,
     7,
@@ -2901,7 +2933,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_VIOLENT_UNRAVELLING, "Yara's Violent Unravelling",
-    spschool::hexes | spschool::transmutation,
+    spschool::hexes | spschool::alchemy,
     spflag::target | spflag::no_ghost | spflag::chaotic | spflag::destructive,
     5,
     200,
@@ -3088,12 +3120,12 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_POISONOUS_VAPOURS, "Poisonous Vapours",
-    spschool::poison | spschool::air,
-    spflag::target | spflag::not_self | spflag::destructive,
+    SPELL_MERCURY_VAPOURS, "Mercury Vapours",
+    spschool::alchemy | spschool::air,
+    spflag::target | spflag::destructive,
     2,
     50,
-    LOS_RADIUS, LOS_RADIUS,
+    3, 3,
     0,
     TILEG_POISONOUS_VAPOURS,
 },
@@ -3221,7 +3253,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_NOXIOUS_BOG, "Eringya's Noxious Bog",
-    spschool::poison | spschool::transmutation,
+    spschool::alchemy,
     spflag::area | spflag::no_ghost | spflag::destructive,
     6,
     200,
@@ -3299,7 +3331,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_HURL_SLUDGE, "Hurl Sludge",
-    spschool::poison | spschool::conjuration | spschool::transmutation,
+    spschool::alchemy | spschool::conjuration,
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     6,
     200,
@@ -3354,7 +3386,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_CONCENTRATE_VENOM, "Concentrate Venom",
-    spschool::poison,
+    spschool::alchemy,
     spflag::dir_or_target | spflag::not_self | spflag::helpful
         | spflag::needs_tracer | spflag::utility | spflag::monster,
     5,
@@ -3487,7 +3519,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_SUMMON_SPIDERS, "Summon Spiders",
-    spschool::summoning | spschool::poison,
+    spschool::summoning | spschool::alchemy,
     spflag::mons_abjure | spflag::monster,
     6,
     200,
@@ -3509,7 +3541,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_SUMMON_SCORPIONS, "Summon Scorpions",
-    spschool::summoning | spschool::poison,
+    spschool::summoning | spschool::alchemy,
     spflag::mons_abjure | spflag::monster,
     4,
     200,
@@ -3621,7 +3653,7 @@ static const struct spell_desc spelldata[] =
 // Not an actual spell - dummy entry for (player) Green Draconian breath.
 {
     SPELL_MEPHITIC_BREATH, "Mephitic Breath",
-    spschool::conjuration | spschool::air | spschool:: poison,
+    spschool::conjuration | spschool::air | spschool:: alchemy,
     spflag::dir_or_target | spflag::noisy | spflag::needs_tracer,
     5,
     0,

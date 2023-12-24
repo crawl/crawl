@@ -480,7 +480,7 @@ function wizlab_borgnjor_call_souls(data, triggerable, triggerer, marker, ev)
     return
   end
 
-  local msp = "lost soul seen sum:call_lost_soul dur:1 generate_awake"
+  local msp = "lost soul seen sum:call_lost_souls dur:1 generate_awake"
 
   local count = 0
   for point in iter.circle_iterator(6) do
@@ -1317,7 +1317,7 @@ ITEM:       potion of mutation
 ITEM:       potion of mutation q:1, potion of mutation
 ITEM:       w:5 any jewellery randart / w:5 hat_of_the_alchemist / \
             cigotuvi's_embrace
-ITEM:       randbook disc:transmutation disc2:necromancy owner:Cigotuvi
+ITEM:       randbook disc:alchemy disc2:necromancy owner:Cigotuvi
 ITEM:       any talisman
 ITEM:       staff of death, scroll of poison
 SHUFFLE:    de / h~ / j|
@@ -1945,7 +1945,7 @@ MONS:       cacodemon
 MONS:       quicksilver dragon / war gargoyle / crystal guardian \
             / wretched star
 MONS:       orange crystal statue name:lunar_statue n_rpl n_des \
-                spells:brain_feed.24.magical;draining_gaze.24.magical;\
+                spells:brain_bite.24.magical;draining_gaze.24.magical;\
                        lehudib's_crystal_spear.24.magical;\
                        shadow_creatures.48.magical \
                 col:lightmagenta tile:mons_zot_statue
@@ -1955,7 +1955,7 @@ MONS:       moon troll ; moon troll leather armour
 ITEM:       potion of mutation
 # Equal chance between randart jewellery and good aux armour.
 : item("any randart jewellery w:60" .. " / " .. dgn.good_aux_armour)
-ITEM:       randbook owner:Lehudib disc:earth disc2:transmutation \
+ITEM:       randbook owner:Lehudib disc:earth disc2:alchemy \
                      spells:lehudib's_crystal_spear \
             / randbook owner:Lehudib disc:earth disc2:translocation \
                      spells:lehudib's_crystal_spear \
@@ -2354,7 +2354,7 @@ MONS:   flayed ghost / shadow wraith / eidolon
 MONS:   spriggan berserker zombie / titan zombie / spark wasp zombie /\
         harpy zombie / quicksilver dragon zombie / wolf spider zombie /\
         caustic shrike zombie / skeletal warrior w:30 / jiangshi w:30
-MONS:   ancient champion / revenant, flying skull
+MONS:   ancient champion / revenant, laughing skull
 MONS:   deep elf death mage / vampire mage / necromancer, halazid warlock
 ITEM:   randbook disc:necromancy numspells:6 owner:Borgnjor w:5 / any book /\
         necronomicon / randbook disc:necromancy / staff of death /\
@@ -2371,7 +2371,7 @@ SHUFFLE: 12/34
 NSUBST:  7 = 3:7 / 1:. / * = 775., 6 = 2:6 / * = 6.
 NSUBST:  4 = 2:4 / 1:. / *=4.., 2 = 2:2 / * = 2..
 NSUBST:  A = 1:< / *:A
-SUBST:   1 = 1.., 3 = 3.., 5 = 5.., V = VVVY
+SUBST:   1 = 1.., 3 = 3.., 5 = 55..., V = VVVY
 TILE:    c = wall_borg_stone
 LFLOORTILE: floor_borg
 {{
@@ -2395,12 +2395,12 @@ epilogue {{
 MAP
              ccccc
            ccc565ccc
-          cc55.5.55cc
-         cc..55755..cc
+          cc.5...5.cc
+         cc..5.7.5..cc
         cc5.5c+++c5.5cc
-        c6.5cc.5.cc5.6c
-       cc5.cc5.7.5cc.5cc
-       c...c5.555.5c...c
+        c6..cc...cc..6c
+       cc5.cc..7..cc.5cc
+       c...c5.5.5.5c...c
        c2.2cY57575Yc4.4c
        c.5.c.76.67.c.5.c
       ccc..cc.$$$.cc..ccc
@@ -2540,8 +2540,7 @@ KMONS:  D = stone giant / ettin
 ITEM:       potion of degeneration ident:all
 :item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
 ITEM:   scroll of acquirement ident:all q:1
-ITEM:   any book w:30 / randbook disc:poison disc2:transmutation /\
-        condenser vane w:1
+ITEM:   any book w:30 / randbook disc:alchemy / condenser vane w:1
 KITEM:  " = gold q:1 no_pickup
 KITEM:  H = any magical staff no_pickup
 KITEM:  Q = star_item

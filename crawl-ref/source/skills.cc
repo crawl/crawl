@@ -105,13 +105,15 @@ static const char *skill_titles[NUM_SKILLS][7] =
     {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Worldbinder",    "Planerender",  "Summ"},
     {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "@Genus_Short@ of Death", "Necr"},
     {"Translocations", "Grasshopper",   "Placeless @Genus@", "Blinker",       "Portalist",      "Plane @Walker@", "Tloc"},
+#if TAG_MAJOR_VERSION == 34
     {"Transmutations", "Destabilizer",  "Alchemist",       "Transmogrifier",  "Entropist",      "Reality Shaper", "Tmut"},
+#endif
 
     {"Fire Magic",     "Firebug",       "Arsonist",        "Scorcher",        "Pyromancer",     "Infernalist",  "Fire"},
     {"Ice Magic",      "Chiller",       "Frost Mage",      "Gelid",           "Cryomancer",     "Englaciator",  "Ice"},
     {"Air Magic",      "Gusty",         "Zephyrmancer",    "Stormcaller",     "Cloud Mage",     "Meteorologist", "Air"},
     {"Earth Magic",    "Digger",        "Geomancer",       "Earth Mage",      "Metallomancer",  "Petrodigitator", "Erth"},
-    {"Poison Magic",   "Stinger",       "Tainter",         "Polluter",        "Contaminator",   "Envenomancer", "Pois"},
+    {"Alchemy",        "Apothecary",    "Toxicologist",    "Hermetic",        "Philosopher",    "Quintessent", "Alch"},
 
     // These titles apply to atheists only, worshippers of the various gods
     // use the god titles instead, depending on piety or, in Gozag's case, gold.
@@ -1906,11 +1908,6 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Prickly Pangolin";
             break;
 
-        case SK_MACES_FLAILS:
-            if (species == SP_METEORAN && skill_rank == 5)
-                result = now_is_morning() ? "Morning Star" : "Evening Star";
-            break;
-
         case SK_UNARMED_COMBAT:
             if (species == SP_FELID)
                 result = claw_and_tooth_titles[skill_rank];
@@ -1956,12 +1953,6 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Black Lotus";
             else if (species == SP_GARGOYLE && skill_rank == 5 && god == GOD_JIYVA)
                 result = "Rockslime";
-            else if (species == SP_METEORAN && skill_rank == 5 && god == GOD_ZIN)
-                result = "Silver Star"; // removed dc6d6fabc (0.15), ha!
-            else if (species == SP_METEORAN && skill_rank == 5 && god == GOD_DITHMENOS)
-                result = "Starry Night"; // what a miserable god choice... challenge!
-            else if (species == SP_METEORAN && skill_rank == 5 && god == GOD_LUGONU)
-                result = "Wretched Star";
             else if (god != GOD_NO_GOD)
                 result = god_title(god, species, piety);
             else if (species == SP_BARACHI)
@@ -1974,15 +1965,11 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_RANGED_WEAPONS:
             if (species::is_elven(species) && skill_rank == 5)
                 result = "Master Archer";
-            else if (species == SP_METEORAN && skill_rank == 5)
-                result = "Shooting Star";
             break;
 
         case SK_SPELLCASTING:
             if (species == SP_DJINNI && skill_rank == 5)
                 result = "Wishgranter";
-            else if (species == SP_OGRE)
-                result = "Ogre Mage";
             break;
 
         case SK_CONJURATIONS:
@@ -2012,18 +1999,14 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_EARTH_MAGIC:
             if (species::is_draconian(species) && skill_rank == 5)
                 result = "Iron Dragon";
-            else if (species == SP_METEORAN && skill_rank == 5)
-                result = "Rock Star";
             break;
 
         case SK_AIR_MAGIC:
             if (species::is_draconian(species) && skill_rank == 5)
                 result = "Storm Dragon";
-            else if (species == SP_METEORAN && skill_rank == 5)
-                result = "Meteorite"; // meteorologist / star, ha
             break;
 
-        case SK_POISON_MAGIC:
+        case SK_ALCHEMY:
             if (species::is_draconian(species) && skill_rank == 5)
                 result = "Swamp Dragon";
             break;
@@ -2036,8 +2019,6 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_TRANSLOCATIONS:
             if (species == SP_FORMICID && skill_rank == 5)
                 result = "Teletunneler";
-            else if (species == SP_METEORAN && skill_rank == 5)
-                result = "Black Hole";
             break;
 
         case SK_NECROMANCY:
@@ -2174,6 +2155,7 @@ bool is_removed_skill(skill_type skill)
     case SK_CHARMS:
     case SK_SLINGS:
     case SK_CROSSBOWS:
+    case SK_TRANSMUTATIONS:
         return true;
     default:
         break;
@@ -2189,10 +2171,9 @@ static map<skill_type, mutation_type> skill_sac_muts = {
     { SK_FIRE_MAGIC,     MUT_NO_FIRE_MAGIC },
     { SK_EARTH_MAGIC,    MUT_NO_EARTH_MAGIC },
     { SK_ICE_MAGIC,      MUT_NO_ICE_MAGIC },
-    { SK_POISON_MAGIC,   MUT_NO_POISON_MAGIC },
+    { SK_ALCHEMY,        MUT_NO_ALCHEMY_MAGIC },
     { SK_HEXES,          MUT_NO_HEXES_MAGIC },
     { SK_TRANSLOCATIONS, MUT_NO_TRANSLOCATION_MAGIC },
-    { SK_TRANSMUTATIONS, MUT_NO_TRANSMUTATION_MAGIC },
     { SK_CONJURATIONS,   MUT_NO_CONJURATION_MAGIC },
     { SK_NECROMANCY,     MUT_NO_NECROMANCY_MAGIC },
     { SK_SUMMONINGS,     MUT_NO_SUMMONING_MAGIC },

@@ -41,15 +41,15 @@ Sth - Stealth                M&F - Maces & Flails        Hex - Hexes
 Shd - Shields                Axs - Axes                  Sum - Summonings
 Shp - Shapeshifting          Pla - Polearms              Nec - Necromancy
                              Stv - Staves                Trl - Translocations
-Inv - Invocations            UC  - Unarmed Combat        Trm - Transmutations
-Evo - Evocations
-Thr - Throwing               SBl - Short Blades          Fir - Fire Magic
-                             LBl - Long Blades           Ice - Ice Magic
-HP  - hit points             Rng - Ranged Weapons        Air - Air Magic
-MP  - magic points                                       Ear - Earth Magic
-Exp - experience                                         Poi - Poison Magic
+Inv - Invocations            UC  - Unarmed Combat        Fir - Fire Magic
+Evo - Evocations                                         Ice - Ice Magic
+Thr - Throwing               SBl - Short Blades          Air - Air Magic
+                             LBl - Long Blades           Ear - Earth Magic
+HP  - hit points             Rng - Ranged Weapons        Alc - Alchemy
+MP  - magic points
+Exp - experience
 WL  - willpower
 
 
-                 Arm Ddg Sth Shd Shp   Inv Evo Thr   HP  MP Exp  WL   Fgt M&F Axs Pla Stv UC SBl LBl Rng   Spc Coj Hex Sum Nec Trl Trm   Fir Ice Air Ear Poi
-------------------------------------------------------------------------------------------------------------------------------------------------------------
+                 Arm Ddg Sth Shd Shp   Inv Evo Thr   HP  MP Exp  WL   Fgt M&F Axs Pla Stv UC SBl LBl Rng   Spc Coj Hex Sum Nec Trl   Fir Ice Air Ear Alc
+--------------------------------------------------------------------------------------------------------------------------------------------------------

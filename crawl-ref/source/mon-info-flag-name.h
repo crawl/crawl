@@ -69,7 +69,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_CLOUD_RING_MUTATION, "clouds", "surrounded by mutagenic energy", "clouds" },
     { MB_CLOUD_RING_FOG, "clouds", "surrounded by fog", "clouds" },
     { MB_CLOUD_RING_ICE, "clouds", "surrounded by freezing clouds", "clouds" },
-    { MB_CLOUD_RING_DRAINING, "clouds", "surrounded by negative energy", "clouds" },
+    { MB_CLOUD_RING_MISERY, "clouds", "surrounded by negative energy", "clouds" },
     { MB_CLOUD_RING_ACID, "clouds", "surrounded by acidic fog", "clouds" },
     { MB_CLOUD_RING_MIASMA, "clouds", "surrounded by foul miasma", "clouds" },
     { MB_FIRE_CHAMPION, "flame-wreathed", "flame-wreathed", "flame-wreathed"},

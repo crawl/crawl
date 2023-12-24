@@ -546,7 +546,8 @@ ORIENT:    northeast
 TAGS:      mnoleg uniq_mnoleg
 : pan_lord_setup(_G, 'Mnoleg')
 TILE:      c = dngn_stone_wall_yellow
-MONS:      patrolling Mnoleg, neqoxec, cacodemon, tentacled monstrosity
+MONS:      patrolling Mnoleg, neqoxec / brain worm w:2
+MONS:      cacodemon, tentacled monstrosity
 NSUBST:    2 = 4:3 / 3 = 234 / *:2
 epilogue{{
   pan_lord_epilogue('Mnoleg')

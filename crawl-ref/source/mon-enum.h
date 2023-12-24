@@ -99,7 +99,9 @@ enum attack_flavour
 #endif
     AF_DISTORT,
     AF_RAGE,
+#if TAG_MAJOR_VERSION == 34
     AF_STICKY_FLAME,
+#endif
     AF_CHAOTIC,
     AF_STEAL,
 #if TAG_MAJOR_VERSION == 34
@@ -145,6 +147,7 @@ enum attack_flavour
     AF_SLEEP,
     AF_MINIPARA,
     AF_FLANK,
+    AF_DRAG,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -282,6 +285,7 @@ enum shout_type
     S_SQUEAL,               // pigs
     S_LOUD_ROAR,            // dragons, &c. loud!
     S_RUSTLE,               // books
+    S_SQUEAK,               // rats and similar
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt

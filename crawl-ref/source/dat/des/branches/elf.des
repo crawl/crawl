@@ -48,7 +48,7 @@ end
 function hall_of_blades_extra_rewards(e)
     e.kitem("d = scroll of enchant weapon ident:type q:1")
     e.kitem("e = scroll of brand weapon ident:type q:1")
-    e.kitem("f = blade talisman")
+    e.kitem("f = blade talisman / blade talisman randart w:2")
 end
 
 -- Lua functions to simplify Elf:$
@@ -61,9 +61,11 @@ function elf_loot_randomisation(e)
   e.kfeat("* = *")
   e.kfeat("| = |")
   e.subst("| = | *:2")
+  e.nsubst("$ = 1:R / *:$")
   e.subst("$ = $:20 *:4 |:1")
   e.subst("* = * |:3")
   e.nsubst("* = 2:$ / *:*")
+  e.kitem("R = gold, shimmering gem")
 end
 
 -- The standard Elf:$ monster set
@@ -1146,7 +1148,6 @@ ENDMAP
 # Some orcs on a diplomatic mission (Shiori)
 # They have brought some gold from their mines as a gift
 NAME:    orc_legates
-TAGS:    misc_elf_vault
 DEPTH:   Elf, !Elf:$
 SHUFFLE: AB , 34 , 12
 SUBST:   6 = 4
@@ -1398,27 +1399,28 @@ x+xx...xxxx.4.xxxxxx
 ENDMAP
 
 NAME:    hangedman_elf_represent
-TAGS:    no_monster_gen misc_elf_vault transparent
+TAGS:    no_monster_gen misc_elf_vault
 DEPTH:   Elf
-# Place two pairings of obvious descendents / ascendents.
-MONS:    deep elf pyromancer / deep elf zephyrmancer, deep elf sorcerer
-MONS:    deep elf pyromancer / deep elf zephyrmancer, deep elf high priest
-MONS:    deep elf annihilator, deep elf demonologist
+# Place two pairings of lower and higher tier elves.
+MONS:    deep elf pyromancer, deep elf elementalist
+MONS:    deep elf zephyrmancer, deep elf annihilator
+MONS:    deep elf knight, deep elf blademaster, deep elf archer
+KMONS:   8 = deep elf master archer
 NSUBST:  1 = 2 = 111.. / 1:. / 2:1, 3 = 2 = 333.. / 1:. / 2:3
-SHUFFLE: 12 / 34 / 15 / 16
-SUBST:   ' : x., " : x., - : x++
+SHUFFLE: 12 / 34, 56 / 78
+SUBST:   ' : x., " : x.
 MAP
 xxxxxxxxxxx'........
-xxx%.xxxxxx'x.x.x.x.
-xx2..1xx1...x.x.x.x.
-x%.....-............
-x......+.."...xxxxxx
-xx1..1xx....3xx..xxx
-xxx..xx.....xx3..3xx
-xxxxxx1.."..+......x
-............-.....%x
-.x.x.x.x...3xx3..4xx
-.x.x.x.x'xxxxxx.%xxx
+xxx..xxxx"x'x.x.x.x@
+xx1..2xx1...x.x.x.x@
+x......====.........
+x......=$"===5xxxxxx
+xx1..1x=.%%.=xx..xxx
+xxx..xx=.%%.=x5...xx
+xxxxxx1==="$=......x
+.........====......x
+@x.x.x.x...3xx6..5xx
+@x.x.x.x'x"xxxx..xxx
 ........'xxxxxxxxxxx
 ENDMAP
 
@@ -1542,7 +1544,7 @@ xx..1....'x
 ENDMAP
 
 NAME:   nicolae_elf_blasts_and_bolts
-TAGS:   transparent
+TAGS:   transparent misc_elf_vault
 DEPTH:  Elf
 MONS:   deep elf knight / deep elf pyromancer / deep elf zephyrmancer
 MONS:   deep elf annihilator, deep elf elementalist
@@ -1572,7 +1574,7 @@ ccc..............ccc
 ENDMAP
 
 NAME:   nicolae_elf_crossing_hall
-TAGS:   transparent
+TAGS:   transparent misc_elf_vault
 DEPTH:  Elf
 : if crawl.coinflip() then
 KFEAT:  + = closed_clear_door
@@ -1633,7 +1635,7 @@ KMONS: V = deep elf death mage / nothing
 KMONS: 2 = flayed ghost / shadow wraith / phantasmal warrior / curse skull / \
            eidolon / ghoul / skeletal warrior / ancient champion / \
            vampire / vampire mage / vampire knight / jiangshi
-KMONS: 3 = lost soul / flying skull / spectral deep elf blademaster / \
+KMONS: 3 = lost soul / weeping skull / spectral deep elf blademaster / \
            deep elf blademaster simulacrum / spectral deep elf knight / \
            deep elf knight simulacrum
 KFEAT: 1V = V
@@ -1853,10 +1855,10 @@ xx.T...T.xx
 ENDMAP
 
 NAME:   nicolae_elf_shapeshifter_party
-TAGS:   transparent patrolling no_monster_gen
+TAGS:   transparent patrolling misc_elf_vault no_monster_gen
 DEPTH:  Elf
 ITEM:   potion of mutation / potion of lignification / wand of polymorph \
-        / randbook disc:transmutation / any potion / any wand / randbook \
+        / randbook disc:alchemy / any potion / any wand / randbook \
         / any good_item w:30
 MONS:   shapeshifter / glowing shapeshifter w:5
 SUBST:  Z = x., z = ddFFx, E = Fx, . = 1 .:90
@@ -1936,7 +1938,7 @@ ENDMAP
 NAME:   hellmonk_elf_help
 TAGS:   transparent no_item_gen
 DEPTH:  Elf
-KITEM:  ' = randbook title:Changing_Your_Life! disc:Transmutation /\
+KITEM:  ' = randbook title:Get_Rich_Quick! disc:alchemy /\
             randbook title:Seven_Elven_Habits numspells:7 /\
             randbook title:Passive_Income disc:Summoning \
                 disc2:Necromancy /\

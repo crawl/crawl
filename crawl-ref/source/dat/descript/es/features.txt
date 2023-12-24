@@ -119,7 +119,3 @@ A large window
 Una ventana empotrada en el lateral de una enorme tubería metálica, que permite
 observar el flujo del agua en su interior.
 %%%%
-A glass window
-
-Un ventana picada y con cristales extremadamente duros.
-%%%%

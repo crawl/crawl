@@ -35,6 +35,8 @@
 #include "traps.h"
 #include "xom.h"
 
+#define ORIG_HD_KEY "orig_hd"
+
 bool feature_mimic_at(const coord_def &c)
 {
     return map_masked(c, MMT_MIMIC);
@@ -177,6 +179,7 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
 {
     ASSERT(mons); // XXX: change to monster &mons
     bool could_see     = you.can_see(*mons);
+    // NOTE(pf): This logic is wrong! FIXME!
     bool slimified = _jiyva_slime_target(targetc);
 
     // Quietly remove the old monster's invisibility before transforming
@@ -278,6 +281,8 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
         if (mons->mons_species() == MONS_HYDRA)
             mons->props[OLD_HEADS_KEY].get_int() = mons->num_heads;
     }
+    if (!mons->props.exists(ORIG_HD_KEY))
+        mons->props[ORIG_HD_KEY] = mons->get_experience_level();
 
     mon_enchant abj       = mons->get_ench(ENCH_ABJ);
     mon_enchant fabj      = mons->get_ench(ENCH_FAKE_ABJURATION);
@@ -347,8 +352,14 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     if (mons_class_flag(mons->type, M_INVIS))
         mons->add_ench(ENCH_INVIS);
 
-    mons->hit_points = mons->max_hit_points * old_hp / old_hp_max
-                       + random2(mons->max_hit_points);
+    mons->hit_points = mons->max_hit_points * old_hp / old_hp_max;
+
+    // Slimifying monsters gets you a fresh, delicious jiggly buddy.
+    if (slimified)
+        mons->hit_points = mons->max_hit_points;
+    // Shapeshifters heal when they shift. Wow, why can't players do that?
+    else if (shifter.ench != ENCH_NONE)
+        mons->hit_points += random2(mons->max_hit_points);
 
     mons->hit_points = min(mons->max_hit_points, mons->hit_points);
 
@@ -467,7 +478,9 @@ static void _fill_poly_weights(const monster &mons, poly_power_type ppt,
         return;
     }
 
-    const int orig_hd = mons_power(mons.type);
+    const int orig_hd = mons.props.exists(ORIG_HD_KEY) ?
+                            mons.props[ORIG_HD_KEY].get_int() :
+                            mons.get_experience_level();
     const bool orig_flies = monster_inherently_flies(mons);
     const habitat_type orig_hab
         = mons_habitat_type(mons.type, mons_base_type(mons), false);

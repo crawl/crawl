@@ -1,8 +1,8 @@
 %%%%
 Armataur
 
-Scaled mammals the size of horses, Armataurs are fast-rolling, resilient, and
-great potion drinkers, but they lack dexterity.
+Scaled mammals the size of horses, Armataurs are fast-rolling and tenacious when
+pursuing enemies, but lack dexterity.
 %%%%
 Barachi
 
@@ -64,7 +64,8 @@ they may worship the Orc god Beogh.
 %%%%
 Human
 
-Humans advance quickly in levels and have equal abilities in most skills.
+Humans are natural explorers. Discovering new places refreshes and invigorates them.
+They are otherwise completely average.
 %%%%
 Tengu
 
@@ -101,20 +102,15 @@ Octopode
 Octopodes are a species of amphibious cephalopods. They can wear eight rings,
 but almost no armour fits them.
 %%%%
-Ogre
+Oni
 
-Large, strong, and extremely robust, Ogres are competent at all forms of melee.
-Not merely brutes, they are also quite capable spellcasters.
+Large, robust, and extremely fond of drinking, Oni make capable brawlers and
+spellcasters and gain extra benefits from healing potions.
 %%%%
 Spriggan
 
 Very small, very frail and very fast, Spriggans are highly competent stabbers
 and spellcasters.
-%%%%
-Meteoran
-
-A celestial being fallen to earth, brilliant and fearsome... but with little
-time before darkness snuffs them out.
 %%%%
 Troll
 

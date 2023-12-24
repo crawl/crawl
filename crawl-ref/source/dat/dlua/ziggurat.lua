@@ -192,8 +192,8 @@ end
 -- Lair, Snake, Swamp, Shoals, Spider, Slime,
 -- Orc, Elf, Vaults, Crypt, Tomb,
 -- Abyss, Gehenna, Cocytus, Dis, Tartarus,
--- Fire, Ice, Air, Earth, Negative Energy, Holy, Chaos
--- Giants, Dragons, Draconians, Archers, Conjurers
+-- Fire, Ice, Air, Earth, Negative Energy, Holy, Chaos,
+-- Giants, Dragons, Draconians, Archers, Conjurers,
 -- Pan, Lair Roulette, Vestibule / all Hells
 -- By using spec_fn to wrap monster-spec functions, monster weights
 -- are adjusted per-set, sometimes scaling by depth and always by zig completion.
@@ -304,16 +304,16 @@ mset(with_props(spec_fn(function ()
   local d = math.max(20, 455 - you.zigs_completed() * 3)
   local e = 5 + you.zigs_completed() * 2
   local f = 10 + you.zigs_completed() * 5
-  return "place:Coc:$ w:" .. d .. " / shard shrike w:" .. e .. " / " ..
-         "titan w:" .. e .. " / ice fiend w:" .. f
+  return "place:Geh:$ w:" .. d .. " / hellion w:" .. e .. " / " ..
+         "hellephant w:" .. e .. " / brimstone fiend w:" .. f
 end), { weight = 5 }))
 
 mset(with_props(spec_fn(function ()
   local d = math.max(20, 455 - you.zigs_completed() * 3)
   local e = 5 + you.zigs_completed() * 2
   local f = 10 + you.zigs_completed() * 5
-  return "place:Geh:$ w:" .. d .. " / hellion w:" .. e .. " / " ..
-         "hellephant w:" .. e .. " / brimstone fiend w:" .. f
+  return "place:Coc:$ w:" .. d .. " / shard shrike w:" .. e .. " / " ..
+         "titan w:" .. e .. " / ice fiend w:" .. f
 end), { weight = 5 }))
 
 mset(with_props(spec_fn(function ()
@@ -373,6 +373,17 @@ mset(with_props(spec_fn(function ()
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
+  local d = math.max(2, math.floor((32 - you.depth()) / 5))
+  local e = math.min(8, math.floor((you.depth()) / 5) + 4)
+  local f = math.max(1, you.depth() + you.zigs_completed() - 5)
+  return "soul eater w:" .. d .. " / phantasmal warrior w:" .. d .. " / " ..
+         "deep elf death mage w:2 / shadow dragon w:4 / ghost crab w:4 / " ..
+         "eidolon w:" .. e .. " / revenant w:" .. e .. " / " ..
+         "demonspawn black sun w:4 / curse skull w:4 / curse toe w:2 / " ..
+         "player ghost w:" .. f
+end), { weight = 2 }))
+
+mset(with_props(spec_fn(function ()
   local d = 20 + you.zigs_completed() * 2
   local e = 0
   if you.depth() > (13 - you.zigs_completed()) then
@@ -386,23 +397,14 @@ end), { weight = 2 }))
 mset(spec_fn(function ()
   local d = math.max(2, math.floor((32 - you.depth()) / 5))
   local e = math.min(8, math.floor((you.depth()) / 5) + 4)
-  local f = math.max(1, you.depth() + you.zigs_completed() - 5)
+  local f = math.max(1, you.depth() + you.zigs_completed() - 4)
   return "chaos spawn w:" .. d .. " / very ugly thing w:" .. d .. " / " ..
          "apocalypse crab w:4 / killer klown w:8 / " ..
-         "shapeshifter hd:16 w:" .. e .. " / glowing shapeshifter w:" .. e .. " / " ..
+         "shapeshifter hd:16 w:" .. e .. " / " ..
+         "glowing shapeshifter w:" .. e / 3 .. " / " ..
+         "protean progenitor w:" .. e .. " / " ..
          "greater demon w:2 / pandemonium lord w:" .. f
 end))
-
-mset(with_props(spec_fn(function ()
-  local d = math.max(2, math.floor((32 - you.depth()) / 5))
-  local e = math.min(8, math.floor((you.depth()) / 5) + 4)
-  local f = math.max(1, you.depth() + you.zigs_completed() - 5)
-  return "soul eater w:" .. d .. " / phantasmal warrior w:" .. d .. " / " ..
-         "deep elf death mage w:2 / shadow dragon w:4 / ghost crab w:4 / " ..
-         "eidolon w:" .. e .. " / revenant w:" .. e .. " / " ..
-         "demonspawn black sun w:4 / curse skull w:4 / curse toe w:2 / " ..
-         "player ghost w:" .. f
-end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
   local d = 20 + you.zigs_completed() * 3
@@ -434,8 +436,8 @@ end))
 mset(with_props(spec_fn(function ()
   local d = 20 + you.zigs_completed() * 2
   local e = 20 + you.zigs_completed() * 3
-  return "centaur w:15 / yaktaur w:15 / cyclops w:15 / " ..
-         "centaur warrior w:" .. d .. " / faun w:" .. d .. " / " ..
+  return "centaur w:5 / centaur warrior / yaktaur w:15 / cyclops w:15 / " ..
+         "kobold blastminer w:" .. d .. " / faun w:" .. d .. " / " ..
          "yaktaur captain w:" .. d .. " / satyr w:" .. d .. " / " ..
          "stone giant w:" .. e .. " / naga sharpshooter w:" .. e .. " / " ..
          "merfolk javelineer w:" .. e .. " / deep elf master archer w:" .. e

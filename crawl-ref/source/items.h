@@ -117,6 +117,9 @@ void drop();
 
 int inv_count();
 int runes_in_pack();
+int gems_found();
+int gems_lost();
+int gems_held_intact();
 
 bool pickup_single_item(int link, int qty);
 

@@ -224,8 +224,8 @@ SUBST:   c = v
 : else
 MONS:    patrolling stone giant, patrolling frost giant, patrolling fire giant
 MONS:    cyclops, ettin
-MONS:    w:50 ogre / w:5 ogre mage / two-headed ogre
-MONS:    wolf / warg
+MONS:    ogre w:50 / ogre mage w:5 / two-headed ogre
+MONS:    wolf w:15 / warg
 SUBST:   G = '
 # Nothing / water moat / lava moat for stone / frost / fire giant chiefs.
 SHUFFLE: '1 / '1 / w2 / l3
@@ -371,25 +371,25 @@ NAME:   minmay_skeleton_keep
 TAGS:   no_monster_gen
 ORIENT: northwest
 DEPTH:  Depths, Crypt
-MONS:   flying skull / nothing w:30, skeleton w:20 / nothing
+MONS:   laughing skull / nothing w:50, skeleton w:20 / nothing
 MONS:   skeletal warrior band / bone dragon w:1 / lich w:1 / curse skull w:1
 SUBST:  G : GGccV.
 MAP
 cccccccccccccccccccccccccccccccc
 c....2.....||c...+....111c|....c
-c+c.2.3...cccc...c.....11cc..3.c
+c+c.2.3...cccc...c......1cc..3.c
 c.cc...2.2.ccc...c......1ccc...c
 c..cc...2...cc...c...G...+2cc..c
 c...cc.2...2.c...c......cc2ccc.c
 c....cc...2..c...c1....cc2...+.c
-c1.3..cc.2...+...c11..cc2.2.2c.c
-c11....cc....c...c111cc2.2.22c|c
-c111....cccccc.3.ccccccccccc+ccc
-c1111....c...........c22.+11111c
-cc+cc1.3.c.G2G2G2G2G.c2..cc1111c
-c***c11..+...........+.2.2cc111c
-c***c111.c.G2G2G2G2G.c2...2cc11c
-c***c1111c...........c..22.2cc+c
+c..3..cc.2...+...c1...cc2.2.2c.c
+c1.....cc....c...c111cc2.2.22c|c
+c11.....cccccc.3.ccccccccccc+ccc
+c1111....c...........c22.+.111.c
+cc+cc1.3.c.G2G2G2G2G.c2..cc.111c
+c***c1...+...........+.2.2cc.11c
+c***c11..c.G2G2G2G2G.c2...2cc.1c
+c***c111.c...........c..22.2cc+c
 cccccccccccccccccccccccccccccc@
 ENDMAP
 
@@ -1771,17 +1771,16 @@ xxxwxxxx......xxxw.xx..xxx..xxx
 ENDMAP
 
 NAME:    kennysheep_kobold_grotto
-DEPTH:   D:13-, !D:$
+DEPTH:   D:12-, !D:$
 TAGS:    no_monster_gen
 ORIENT:  northwest
-MONS:    kobold brigand, patrolling kobold demonologist, kobold, plant
-MONS:    lesser demon, obsidian statue
+MONS:    kobold blastminer, kobold brigand, patrolling kobold demonologist
+MONS:    kobold, plant, lesser demon, obsidian statue
 KMONS:   g = bush
 SHUFFLE: !'
-NSUBST:  ! = 3:C / 4:- / 2:5 / *:.
-NSUBST:  ' = 2:C / *:.
-NSUBST:  . = 10:3 / 4:5
-SUBST:  .z = .:200 W:35 4:20
+NSUBST:  ! = 3:C / 4:- / 2:6 / *:., ' = 2:C / *:.
+NSUBST:  . = 10:4 / 4:6
+SUBST:  .z = .:220 W:15 5:20
 : dgn.delayed_decay(_G, 'C', 'spriggan corpse / spriggan skeleton')
 KPROP:  -C = bloody
 MAP
@@ -1793,12 +1792,12 @@ xxxxx................xx!!x
 xxxx...w..............g!xx
 x'x...www.............xxx
 x'g....w.........w...xx
-x'g..........x1.wWw.1xx
-xxx....w....xx.wW6Ww..x
+x'g..........x2.wWw.2xx
+xxx....w....xx.wW7Ww..x
 xx....wGw...xx..wWw..xx
-xxx.w1.w.1wxxx...w...xx
-xxxxww.1.wwxx.1.....1xx
- xxxx2***2xxx.......xxx
+xxx.w2.w.2wxxx...w...xx
+xxxxww.2.wwxx.2.....2xx
+ xxxx3***3xxx.......xxx
  xxxx**|**1xxxx.....xxx
   xxxxxxxxxxxxx.....xxx
     xxxxxxxxxxxx....xx
@@ -2299,7 +2298,7 @@ MONS:   small abomination, demonic crawler, ugly thing, chaos spawn, neqoxec
 MONS:   large abomination / very ugly thing
 KMONS:  _ = tentacled monstrosity
 KITEM:  _ = |
-NSUBST: - = _ / 2=%%* / 3=234 / 2=234... / 5. / 2=6 / 6. / 1
+NSUBST: - = _ / 2 = %%* / 3 = 2334 / 2 = 2334.... / 1:5. / 2:6 / 1:6. / *:1
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxx-xxxxxxxxxxxxxxx
@@ -2340,7 +2339,7 @@ item("any weapon good_item w:100" .. ego .. " / cloak" .. coldres ..
      " / kite shield" .. coldres .. " / tower shield" .. coldres ..
      " / ice dragon scales / chain mail good_item" .. coldres ..
      " / plate armour" .. coldres .. " / crystal plate armour" .. coldres ..
-     " / book of ice / book of the tundra / ozocubu's autobiography" ..
+     " / book of ice / book of the tundra" ..
      " / randbook disc:ice / manual of ice magic / staff of cold ident:type" ..
      " / ring of ice ident:type / ring of protection from cold ident:type" ..
      " / wand of iceblast ident:type / phial of floods / condenser vane")
@@ -2662,7 +2661,8 @@ KMONS:   F = fungus
        " / kobold brigand w:" .. e / 2 .. " / shadow w:" .. f ..
        " / hornet w:" .. f)
   mons("water moccasin w:" .. d .. " / sleepcap w:" .. d ..
-       " / ugly thing w:" .. e .. " / gnoll bouda band w:" .. e / 3 ..
+       " / crocodile w:" .. d .. " / ugly thing w:" .. e ..
+       " / gnoll bouda band w:" .. e / 3 ..
        " / large slime creature w:" .. f ..
        " / glowing orange brain w:" .. f / 2)
   mons("two-headed ogre w:" .. d .. " / steam dragon w:".. d ..
@@ -2708,8 +2708,9 @@ FTILE:   @.fgP`12345F$%*{([})]^wtxT : floor_pebble_darkbrown / floor_moss
 MONS:    shadow dragon / green draconian w:20
 MONS:    green draconian stormcaller / green draconian monk / ghost moth
 MONS:    moth of wrath / tentacled monstrosity w:15 / death cob
-MONS:    golden dragon, curse toe
+MONS:    golden dragon, curse toe, protean progenitor
 KFEAT:   ^ = zot trap
+SHUFFLE: 456
 :   if you.depth() == 1 then
 SUBST:   { = }, ( = ), [ = ]
 :   else
@@ -2797,6 +2798,7 @@ MONS:    red draconian / base draconian w:5, fire giant
 MONS:    red draconian monk, tengu reaver, iron dragon
 KMONS:   6 : red draconian knight / golden dragon
 KMONS:   7 : lich / red draconian scorcher
+KITEM:   > = midnight gem
 KFEAT:   > = enter_zot
 NSUBST:  23 = 4 = 11d
 SUBST:   %*| = $
@@ -2914,11 +2916,12 @@ SUBST:   x = t, X = tx, " = W"", ' = WW''', . = WW., G = Gww, % = .
 KMONS:   12 = shadow dragon
 KMONS:   34 = tentacled monstrosity
 KMONS:   56 = ghost moth
-KMONS:   789 = curse toe
+KMONS:   78 = curse toe
+KMONS:   9 = protean progenitor
 KFEAT:   + = broken_door
 SUBST:   m = +, jk = .
 NSUBST:  12 = 9:. / *:1, 34 = 2:3 / 2 = 13. / *:.
-NSUBST:  56 = 3:. / *:5, 789 = 1:57 / *:.
+NSUBST:  56 = 3:. / *:5, 789 = 1:57 / 2:9 / *:.
 NSUBST:  "' = 1:7 / 1:5 / 1:3 / 1:1 / 2 = 135. / 1:1357.. / *:.
 NSUBST:  C = 10:. / *:c, dehi = 1:|. / 4:.
 NSUBST:  V = 1:] / 1 = ):4 V:1 / 1 = }:4 V:1
@@ -2933,7 +2936,7 @@ ITEM:    any potion, any scroll
 : end
 ITEM:    any armour, any weapon, any ring, any amulet
 ITEM:    any wand charges:1, wand of digging charges:1 ident:type
-: kitem("| = randbook disc:necromancy disc2:transmutation numspells:5 " ..
+: kitem("| = randbook disc:necromancy disc2:alchemy numspells:5 " ..
 :       "slevels:" .. you.absdepth())
 KFEAT:   F = G
 SUBST:   C = c, X = xx.

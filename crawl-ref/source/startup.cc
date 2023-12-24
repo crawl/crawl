@@ -448,6 +448,9 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
     for (size_t i = 0; i < entries.size(); ++i)
     {
         const auto& entry = entries[i];
+        if (entry.id == GAME_TYPE_DESCENT && Version::ReleaseType != VER_ALPHA)
+            continue;
+
         auto label = make_shared<Text>();
 
 #ifdef USE_TILE_LOCAL

@@ -324,8 +324,7 @@ ENDMAP
 NAME:     amcnicky_altar_lugonu_corruption
 TAGS:     transparent no_monster_gen
 # Lugonu cares not about moderate vault placement
-DEPTH:    D:3-, Lair, Orc, Elf, Crypt, Depths, Slime, Shoals,\
-            Spider, Snake, Swamp, Zot
+DEPTH:    D:3-, Depths, Crypt, Zot, Pan, Geh, Coc, Dis, Tar
 WEIGHT:   2
 KMONS:    q = lurking_horror
 KFEAT:    p = altar_lugonu

@@ -61,6 +61,7 @@ enum monster_type                      // env.mons[].type
     MONS_WARG,
     MONS_HELL_HOUND,
 #if TAG_MAJOR_VERSION > 34
+    MONS_INUGAMI,
     MONS_RAIJU,
     MONS_DOOM_HOUND,
 #endif
@@ -80,9 +81,7 @@ enum monster_type                      // env.mons[].type
     MONS_BABY_ALLIGATOR,
 #endif
     MONS_ALLIGATOR,
-#if TAG_MAJOR_VERSION == 34
     MONS_CROCODILE,
-#endif
     MONS_HYDRA,
 #if TAG_MAJOR_VERSION == 34
     MONS_SHEEP,
@@ -119,8 +118,8 @@ enum monster_type                      // env.mons[].type
     MONS_POLAR_BEAR,
     MONS_BLACK_BEAR,
     MONS_WORM,
-#if TAG_MAJOR_VERSION == 34
     MONS_BRAIN_WORM,
+#if TAG_MAJOR_VERSION == 34
     MONS_ROCK_WORM,
     MONS_SPINY_WORM,
 #endif
@@ -240,6 +239,7 @@ enum monster_type                      // env.mons[].type
     MONS_HORNET,
 #if TAG_MAJOR_VERSION > 34
     MONS_SPARK_WASP,
+    MONS_BOMBARDIER_BEETLE,
 #endif
 #if TAG_MAJOR_VERSION == 34
     MONS_BEETLE,
@@ -490,6 +490,9 @@ enum monster_type                      // env.mons[].type
     MONS_OGRE,
     MONS_TWO_HEADED_OGRE,
     MONS_OGRE_MAGE,
+#if TAG_MAJOR_VERSION > 34
+    MONS_ONI,
+#endif
     MONS_TROLL,
 #if TAG_MAJOR_VERSION == 34
     MONS_ROCK_TROLL,
@@ -515,10 +518,15 @@ enum monster_type                      // env.mons[].type
     MONS_IRON_GIANT,
     MONS_CACTUS_GIANT,
     MONS_TAINTED_LEVIATHAN,
+    MONS_PROTEAN_PROGENITOR,
+    MONS_ASPIRING_FLESH,
 #endif
     MONS_HUMAN,
 #if TAG_MAJOR_VERSION == 34
     MONS_SLAVE,
+#endif
+#if TAG_MAJOR_VERSION > 34
+    MONS_BURIAL_ACOLYTE,
 #endif
     MONS_HELL_KNIGHT,
 #if TAG_MAJOR_VERSION > 34
@@ -756,7 +764,10 @@ enum monster_type                      // env.mons[].type
     MONS_SHADOW_WRAITH,
     MONS_SILENT_SPECTRE,
     MONS_EIDOLON,
-    MONS_FLYING_SKULL,
+#if TAG_MAJOR_VERSION > 34
+    MONS_WEEPING_SKULL,
+#endif
+    MONS_LAUGHING_SKULL,
     MONS_SKELETAL_WARRIOR,
     MONS_PHANTASMAL_WARRIOR,
     MONS_LICH,
@@ -1209,6 +1220,13 @@ enum monster_type                      // env.mons[].type
     MONS_FLOATING_EYE,                 // genus
     MONS_ANTIQUE_CHAMPION,
     MONS_KOBOLD_BLASTMINER,
+    MONS_INUGAMI,
+    MONS_PROTEAN_PROGENITOR,
+    MONS_ASPIRING_FLESH,
+    MONS_ONI,                          // player species only
+    MONS_BOMBARDIER_BEETLE,
+    MONS_WEEPING_SKULL,
+    MONS_BURIAL_ACOLYTE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

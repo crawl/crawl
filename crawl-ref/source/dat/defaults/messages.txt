@@ -27,6 +27,7 @@ msc += $danger:You feel a build-up of mutagenic energy
 msc += $danger:place you under penance
 msc += $danger:cause instant excommunication
 msc += $danger:corrodes you
+msc += $danger:Your body becomes as fragile as glass
 
 # Less urgent, but still significant messages
 #
@@ -154,6 +155,7 @@ force_more_message += watery aura .* (staircase|hatch)
 
 # Generally exciting things that are somewhat automated
 force_more_message += You pick up the .* rune and feel its power
+force_more_message += You pick up the .* gem and feel its .* weight
 
 # Rune unlock
 force_more_message += The lock glows eerily
@@ -163,6 +165,10 @@ force_more_message += With a soft hiss the gate opens wide
 
 # Rune lock
 force_more_message += The door slams shut behind you
+
+# Gems
+force_more_message += Zot will shatter your .* gem
+force_more_message += Zot senses .* your .* gem
 
 # God gifts
 force_more_message += grants you (a gift|throwing weapons|a weapon)

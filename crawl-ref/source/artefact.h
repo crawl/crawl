@@ -39,13 +39,6 @@ enum unrand_flag_type
     // Please make sure it fits in unrandart_entry.flags (currently 16 bits).
 };
 
-enum setup_missile_type
-{
-    SM_CONTINUE,
-    SM_FINISHED,
-    SM_CANCEL,
-};
-
 struct unrandart_entry
 {
     const char *name;        // true name of unrandart
@@ -74,8 +67,7 @@ struct unrandart_entry
     void (*world_reacts_func)(item_def* item);
     void (*melee_effects)(item_def* item, actor* attacker,
                           actor* defender, bool mondied, int damage);
-    setup_missile_type (*launch)(item_def* item, bolt* beam,
-                                 string* ammo_name, bool* returning);
+    void (*launch)(bolt* beam);
     void (*death_effects)(item_def* item, monster* mons, killer_type killer);
 };
 

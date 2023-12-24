@@ -25,6 +25,7 @@
 #include "env.h"
 #include "fight.h"
 #include "fprop.h"
+#include "ghost.h"
 #include "god-conduct.h"
 #include "god-item.h"
 #include "invent.h"
@@ -118,25 +119,89 @@ spret cast_summon_small_mammal(int pow, god_type god, bool fail)
     return spret::success;
 }
 
+// Mid of an active canine familiar. Should exist only so long as the player
+// has a living one.
+#define CANINE_FAMILIAR_MID "canine_familiar_mid"
+
+monster *find_canine_familiar()
+{
+    if (!you.props.exists(CANINE_FAMILIAR_MID))
+        return nullptr;
+    const int mid = you.props[CANINE_FAMILIAR_MID].get_int();
+    return monster_by_mid(mid);
+}
+
+bool canine_familiar_is_alive()
+{
+    return find_canine_familiar() != nullptr;
+}
+
+void check_canid_farewell(const monster &dog, bool deadish)
+{
+    if (&dog != find_canine_familiar())
+        return;
+
+    you.props.erase(CANINE_FAMILIAR_MID);
+
+    if (deadish)
+    {
+        // Prevent you from resummoning it for a little while.
+        you.duration[DUR_CANINE_FAMILIAR_DEAD] = random_range(6, 11)
+                                                 * BASELINE_DELAY;
+    }
+}
+
 spret cast_call_canine_familiar(int pow, god_type god, bool fail)
 {
-    if (stop_summoning_prompt())
+    // Many parts of this spell behave differently if our familiar has already
+    // been summoned.
+    monster *old_dog = find_canine_familiar();
+
+    if (!old_dog && stop_summoning_prompt())
         return spret::abort;
 
+    if (old_dog && !you.can_see(*old_dog))
+    {
+        mprf(MSGCH_PROMPT, "Your familiar is too far away to imbue with magic.");
+        return spret::abort;
+    }
+
     fail_check();
-    monster_type mon = MONS_PROGRAM_BUG;
 
-    const int chance = pow + random_range(-10, 10);
+    // Summon our dog if one isn't already active
+    if (!old_dog)
+    {
+        mgen_data mg = _pal_data(MONS_INUGAMI, 5, god, SPELL_CALL_CANINE_FAMILIAR);
 
-    if (chance > 59)
-        mon = MONS_WARG;
-    else if (chance > 39)
-        mon = MONS_WOLF;
+        monster* dog = create_monster(mg);
+        if (!dog)
+        {
+            canned_msg(MSG_NOTHING_HAPPENS);
+            return spret::success;
+        }
+
+        // Use a ghost_demon to handle the familiar's scaling damage and stats.
+        // The ghost_demon is created, but not initialized, during the
+        // create_monster call above.
+        ASSERT(dog->ghost);
+        dog->ghost->init_inugami_from_player(pow);
+        dog->inugami_init();
+
+        mpr("You call for your canine familiar and it appears with a howl!");
+        you.props[CANINE_FAMILIAR_MID].get_int() = dog->mid;
+    }
+    // If it's active, instead heal and boost its next attack.
     else
-        mon = MONS_HOUND;
+    {
+        // Heal familiar and make its next attack (within the new few turns,
+        // so that you don't just prebuff for this) an instant cleave.
+        mpr("You imbue your familiar with magical energy and its fangs glint"
+            " viciously.");
 
-    if (!create_monster(_pal_data(mon, 3, god, SPELL_CALL_CANINE_FAMILIAR)))
-        canned_msg(MSG_NOTHING_HAPPENS);
+        old_dog->heal(random_range(5, 9) + div_rand_round(pow, 5));
+        old_dog->lose_ench_levels(ENCH_POISON, 1);
+        old_dog->add_ench(mon_enchant(ENCH_INSTANT_CLEAVE, 1, &you, 50));
+    }
 
     return spret::success;
 }
@@ -308,7 +373,7 @@ static monster_type _choose_dragon_type(int pow, god_type /*god*/, bool player)
 
 spret cast_dragon_call(int pow, bool fail)
 {
-    if (stop_summoning_prompt(MR_NO_FLAGS, M_NO_FLAGS, "call dragons"))
+    if (stop_summoning_prompt(MR_NO_FLAGS, M_FLIES, "call dragons"))
         return spret::abort;
 
     fail_check();
@@ -1363,7 +1428,7 @@ spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool t
 
     mgen_data dryad_data = _pal_data(MONS_DRYAD, 1, god,
                                      SPELL_SUMMON_FOREST);
-    dryad_data.hd = 5 + div_rand_round(pow, 18);
+    dryad_data.hd = 6 + div_rand_round(pow, 16);
 
     if (monster *dryad = create_monster(dryad_data))
     {
@@ -1460,15 +1525,12 @@ static spell_type servitor_spells[] =
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_IOOD,
     SPELL_BOMBARD,
-    SPELL_IRON_SHOT,    // left in for frederick
-    SPELL_BOLT_OF_COLD, // left in for frederick (dubious)
     SPELL_PLASMA_BEAM, // maybe should be higher?
     SPELL_FIREBALL,
     SPELL_ARCJOLT,
     SPELL_STONE_ARROW,
     SPELL_LRD,
     SPELL_AIRSTRIKE,
-    SPELL_FORCE_LANCE, // left in for frederick (dubious)
     // less desirable
     SPELL_IRRADIATE,
     SPELL_CONJURE_BALL_LIGHTNING, // but VERY funny
@@ -2174,7 +2236,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_SPECTRAL_ORCS,     { 0, 3 } },
     { SPELL_FIRE_SUMMON,              { 0, 4 } },
     { SPELL_SUMMON_MINOR_DEMON,       { 0, 3 } },
-    { SPELL_CALL_LOST_SOUL,           { 0, 3 } },
+    { SPELL_CALL_LOST_SOULS,          { 0, 3 } },
     { SPELL_SUMMON_VERMIN,            { 0, 5 } },
     { SPELL_FORCEFUL_INVITATION,      { 0, 3 } },
     { SPELL_PLANEREND,                { 0, 6 } },
@@ -2752,7 +2814,7 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool 
     // For unseen invisble enemies
     if (actor_at(pos))
     {
-        mpr("Your attempt to unleash a boulder fails!");
+        mpr("Something unseen is already there!");
         return spret::success;
     }
 

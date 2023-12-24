@@ -120,7 +120,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_RING_OF_MUTATION,MB_CLOUD_RING_MUTATION },
     { ENCH_RING_OF_FOG,     MB_CLOUD_RING_FOG },
     { ENCH_RING_OF_ICE,     MB_CLOUD_RING_ICE },
-    { ENCH_RING_OF_DRAINING,MB_CLOUD_RING_DRAINING },
+    { ENCH_RING_OF_MISERY,  MB_CLOUD_RING_MISERY },
     { ENCH_RING_OF_ACID,    MB_CLOUD_RING_ACID },
     { ENCH_CONCENTRATE_VENOM, MB_CONCENTRATE_VENOM },
     { ENCH_FIRE_CHAMPION,   MB_FIRE_CHAMPION },
@@ -682,9 +682,9 @@ monster_info::monster_info(const monster* m, int milev)
     if (!m->friendly())
     {
         const stab_type st = find_stab_type(&you, *m, false);
-        if (st == STAB_INVISIBLE && !mb[MB_BLIND])
+        if (!you.visible_to(m))
             mb.set(MB_CANT_SEE_YOU);
-        else if (st == STAB_DISTRACTED && !mb[MB_UNAWARE] && !mb[MB_WANDERING])
+        if (st == STAB_DISTRACTED && !mb[MB_UNAWARE] && !mb[MB_WANDERING])
             mb.set(MB_DISTRACTED_ONLY);
     }
 
@@ -737,6 +737,12 @@ monster_info::monster_info(const monster* m, int milev)
         if (m->props.exists(MIRRORED_GHOST_KEY))
             props[MIRRORED_GHOST_KEY] = m->props[MIRRORED_GHOST_KEY];
     }
+    // Otherwise the description lies wildly about the average hp of melee pan
+    // lords, and an average player will have no idea how durable their canine
+    // familiar really is - which matters when you want to keep it alive.
+    else if (m->type == MONS_PANDEMONIUM_LORD || m->type == MONS_INUGAMI)
+        props[KNOWN_MAX_HP_KEY] = (int)(m->ghost->max_hp);
+
     if (m->has_ghost_brand())
         props[SPECIAL_WEAPON_KEY] = m->ghost_brand();
 
@@ -1895,6 +1901,7 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
         int reach_count = 0;
         int constrict_count = 0;
         int trample_count = 0;
+        int drag_count = 0;
 
         for (int j = start; j < start + count; ++j)
         {
@@ -1912,6 +1919,8 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
                 constrict_count++;
             if (_has_attack_flavour(mi[j], AF_TRAMPLE))
                 trample_count++;
+            if (_has_attack_flavour(mi[j], AF_DRAG))
+                drag_count++;
         }
 
         if (wand_count)
@@ -1962,6 +1971,13 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
             conditions.push_back(_condition_string(trample_count, count,
                                                    {MB_UNSAFE, "trample",
                                                     "trample", "trample"}));
+        }
+
+        if (drag_count)
+        {
+            conditions.push_back(_condition_string(drag_count, count,
+                                                   {MB_UNSAFE, "drag",
+                                                    "drag", "drag"}));
         }
     }
 

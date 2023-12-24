@@ -56,6 +56,7 @@
 #include "unicode.h"
 #include "unwind.h"
 #include "viewgeom.h"
+#include "zot.h" // gem_clock_active
 
 static bool _is_consonant(char let);
 static char _random_vowel();
@@ -957,6 +958,11 @@ const char* rune_type_name(short p)
     }
 }
 
+static string gem_type_name(gem_type g)
+{
+    return string(gem_adj(g)) + " gem";
+}
+
 static string misc_type_name(int type)
 {
 #if TAG_MAJOR_VERSION == 34
@@ -1015,11 +1021,11 @@ static const char* _book_type_name(int booktype)
     case BOOK_LIGHTNING:              return "Lightning";
     case BOOK_DEATH:                  return "Death";
     case BOOK_MISFORTUNE:             return "Misfortune";
-    case BOOK_CHANGES:                return "Changes";
+    case BOOK_SPONTANEOUS_COMBUSTION: return "Spontaneous Combustion";
 #if TAG_MAJOR_VERSION == 34
     case BOOK_TRANSFIGURATIONS:       return "Transfigurations";
-    case BOOK_BATTLE:                 return "Battle";
 #endif
+    case BOOK_BATTLE:                 return "Battle";
     case BOOK_VAPOURS:                return "Vapours";
     case BOOK_NECROMANCY:             return "Necromancy";
     case BOOK_CALLINGS:               return "Callings";
@@ -1051,7 +1057,7 @@ static const char* _book_type_name(int booktype)
     case BOOK_DRAGON:                 return "the Dragon";
     case BOOK_BURGLARY:               return "Burglary";
     case BOOK_DREAMS:                 return "Dreams";
-    case BOOK_ALCHEMY:                return "Alchemy";
+    case BOOK_TRANSMUTATION:         return "Transmutation";
     case BOOK_BEASTS:                 return "Beasts";
     case BOOK_SPECTACLE:              return "Spectacle";
     case BOOK_WINTER:                 return "Winter";
@@ -1111,7 +1117,7 @@ static const char* staff_type_name(int stafftype)
     {
     case STAFF_FIRE:        return "fire";
     case STAFF_COLD:        return "cold";
-    case STAFF_POISON:      return "poison";
+    case STAFF_ALCHEMY:     return "alchemy";
     case STAFF_DEATH:       return "death";
     case STAFF_CONJURATION: return "conjuration";
     case STAFF_AIR:         return "air";
@@ -1148,6 +1154,7 @@ const char *base_type_string(object_class_type type)
     case OBJ_CORPSES: return "corpse";
     case OBJ_GOLD: return "gold";
     case OBJ_RUNES: return "rune";
+    case OBJ_GEMS: return "gem";
     case OBJ_TALISMANS: return "talisman";
     default: return "";
     }
@@ -1191,16 +1198,20 @@ string sub_type_string(const item_def &item, bool known)
         case BOOK_EVERBURNING:
             // Aus. English apparently follows the US spelling, not UK.
             return "Everburning Encyclopedia";
+#if TAG_MAJOR_VERSION == 34
         case BOOK_OZOCUBU:
             return "Ozocubu's Autobiography";
+#endif
         case BOOK_MAXWELL:
             return "Maxwell's Memoranda";
         case BOOK_YOUNG_POISONERS:
             return "Young Poisoner's Handbook";
         case BOOK_FEN:
             return "Fen Folio";
+#if TAG_MAJOR_VERSION == 34
         case BOOK_NEARBY:
             return "Inescapable Atlas";
+#endif
         case BOOK_THERE_AND_BACK:
             return "There-And-Back Book";
         case BOOK_BIOGRAPHIES_II:
@@ -1230,6 +1241,7 @@ string sub_type_string(const item_def &item, bool known)
     case OBJ_CORPSES: return "corpse";
     case OBJ_GOLD: return "gold";
     case OBJ_RUNES: return "rune of Zot";
+    case OBJ_GEMS: return gem_type_name(static_cast<gem_type>(sub_type));
     default: return "";
     }
 }
@@ -1876,6 +1888,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         buff << "rune of Zot";
         break;
 
+    case OBJ_GEMS:
+        buff << gem_type_name(static_cast<gem_type>(sub_type));
+        break;
+
     case OBJ_GOLD:
         buff << "gold piece";
         break;
@@ -2119,12 +2135,67 @@ bool get_ident_type(object_class_type basetype, int subtype)
     return you.type_ids[basetype][subtype];
 }
 
+static colour_t _gem_colour(const item_def *gem)
+{
+    if (!you.gems_found[gem->sub_type])
+        return DARKGREY;
+    return gem->gem_colour();
+}
+
+static string _gem_parenthetical(gem_type gem)
+{
+    string text = " (";
+    text += branches[branch_for_gem(gem)].longname;
+
+    const int lim = gem_time_limit(gem);
+    const int left = lim - you.gem_time_spent[gem];
+
+    // We need to check time left rather than shattered, since the latter is
+    // only set when the gem is actually broken, and we may not have loaded
+    // the relevant level since we ran out of time.
+    if (left <= 0)
+    {
+        if (Options.more_gem_info || !you.gems_found[gem])
+            return text + ", shattered)";
+        return text + ")";
+    }
+
+    if (!gem_clock_active()
+        || !Options.more_gem_info && you.gems_found[gem])
+    {
+        return text + ")";
+    }
+
+    // Rescale from aut to dAut. Round up.
+    text += make_stringf(", %d", (left + 9) / 10);
+    if (left < lim)
+        text += make_stringf("/%d", (lim + 9) / 10);
+    else
+        text += " turns"; // XXX: ?
+    return text + " until shattered)";
+}
+
+static string _gem_text(const item_def *gem_it)
+{
+    string text = gem_it->name(DESC_PLAIN);
+    const gem_type gem = static_cast<gem_type>(gem_it->sub_type);
+    text = colourize_str(text, _gem_colour(gem_it));
+    const bool in_branch = player_in_branch(branch_for_gem(gem));
+    const colour_t pcol = in_branch ? WHITE
+              : you.gems_found[gem] ? LIGHTGREY
+                                    : DARKGREY;
+    text += colourize_str(_gem_parenthetical(gem), pcol);
+    return text;
+}
+
 static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
 {
     auto entry = static_cast<InvEntry*>(me);
     ASSERT(entry);
 
-    if (entry->item->base_type == OBJ_RUNES)
+    switch (entry->item->base_type)
+    {
+    case OBJ_RUNES:
     {
         auto rune = static_cast<rune_type>(entry->item->sub_type);
         colour_t colour;
@@ -2152,87 +2223,259 @@ static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
         text += colour_to_str(colour);
         text += ">";
         entry->text = text;
+        break;
     }
-    else if (entry->item->is_type(OBJ_ORBS, ORB_ZOT))
-    {
+    case OBJ_GEMS:
+        entry->text = _gem_text(entry->item);
+        break;
+    case OBJ_ORBS:
         if (player_has_orb())
             entry->text = "<magenta>The Orb of Zot</magenta>";
         else
         {
             entry->text = "<darkgrey>The Orb of Zot"
-                          " (the Realm of Zot)</darkgrey>";
+            " (the Realm of Zot)</darkgrey>";
         }
+        break;
+    default:
+        entry->text = "Eggplant"; // bug!
+        break;
     }
 
     return entry;
 }
 
-void display_runes()
+class RuneMenu : public InvMenu
 {
+    virtual bool process_key(int keyin) override;
+
+public:
+    RuneMenu();
+
+private:
+    void populate();
+
+    string get_title();
+    string gem_title();
+
+    void fill_contents();
+    void set_normal_runes();
+    void set_sprint_runes();
+    void set_gems();
+
+    void set_footer();
+
+    bool can_show_gems();
+    bool can_show_more_gems();
+
+    bool show_gems;
+    // For player morale, default to hiding gems you've already missed.
+    bool more_gems;
+
+    vector<item_def> contents;
+};
+
+RuneMenu::RuneMenu()
+    : InvMenu(MF_NOSELECT | MF_ALLOW_FORMATTING),
+      show_gems(false), more_gems(false)
+{
+    populate();
+}
+
+void RuneMenu::populate()
+{
+    contents.clear();
+    items.clear();
+
+    set_title(get_title());
+    fill_contents();
+    // We've sorted this vector already, so disable menu sorting. Maybe we
+    // could a menu entry comparator and modify InvMenu::load_items() to allow
+    // passing this in instead of doing a sort ahead of time.
+    load_items(contents, _fixup_runeorb_entry, 0, false);
+
+    set_footer();
+}
+
+string RuneMenu::get_title()
+{
+    if (show_gems)
+        return gem_title();
+
     auto col = runes_in_pack() < ZOT_ENTRY_RUNES ?  "lightgrey" :
                runes_in_pack() < you.obtainable_runes ? "green" :
                                                    "lightgreen";
 
-    auto title = make_stringf("<white>Runes of Zot (</white>"
-                              "<%s>%d</%s><white> collected) & Orbs of Power</white>",
-                              col, runes_in_pack(), col);
+    return make_stringf("<white>Runes of Zot (</white>"
+                        "<%s>%d</%s><white> collected) & Orbs of Power</white>",
+                        col, runes_in_pack(), col);
+}
 
-    InvMenu menu(MF_NOSELECT | MF_ALLOW_FORMATTING);
+string RuneMenu::gem_title()
+{
+    const int found = gems_found();
+    const int lost = gems_lost();
+    string gem_title = make_stringf("<white>Gems (%d collected", found);
+    if (Options.more_gem_info && lost < found)
+        gem_title += make_stringf(", %d intact", found - lost);
+    // don't explicitly mention that your gems are all broken otherwise - sad!
 
-    menu.set_title(title);
+    return gem_title + ")</white>";
+}
 
-    vector<item_def> items;
+void RuneMenu::set_footer()
+{
+    if (!can_show_gems())
+        return;
 
-    if (!crawl_state.game_is_sprint())
+    string more_text = make_stringf("[<w>!</w>/<w>^</w>"
+#ifdef USE_TILE_LOCAL
+            "|<w>Right-click</w>"
+#endif
+            "]: %s", show_gems ? "Show Runes" : "Show Gems");
+    if (!Options.more_gem_info && can_show_more_gems())
+        more_text += make_stringf("\n[<w>-</w>]: %s", more_gems ? "Less" : "More");
+    set_more(more_text);
+}
+
+bool RuneMenu::can_show_gems()
+{
+    return !crawl_state.game_is_sprint() || !crawl_state.game_is_descent();
+}
+
+bool RuneMenu::can_show_more_gems()
+{
+    if (!show_gems)
+        return false;
+    for (int i = 0; i < NUM_GEM_TYPES; i++)
+        if (you.gems_shattered[i] && !you.gems_found[i])
+            return true;
+    return false;
+}
+
+void RuneMenu::fill_contents()
+{
+    if (show_gems)
     {
-        // Add the runes in order of challenge (semi-arbitrary).
-        for (branch_iterator it(branch_iterator_type::danger); it; ++it)
-        {
-            const branch_type br = it->id;
-            if (!connected_branch_can_exist(br))
-                continue;
+        set_gems();
+        return;
+    }
 
-            for (auto rune : branches[br].runes)
-            {
-                item_def item;
-                item.base_type = OBJ_RUNES;
-                item.sub_type = rune;
-                item.quantity = you.runes[rune] ? 1 : 0;
-                item_colour(item);
-                items.push_back(item);
-            }
-        }
-    }
-    else
-    {
-        // We don't know what runes are accessible in the sprint, so just show
-        // the ones you have. We can't iterate over branches as above since the
-        // elven rune and mossy rune may exist in sprint.
-        for (int i = 0; i < NUM_RUNE_TYPES; ++i)
-        {
-            if (you.runes[i])
-            {
-                item_def item;
-                item.base_type = OBJ_RUNES;
-                item.sub_type = i;
-                item.quantity = 1;
-                item_colour(item);
-                items.push_back(item);
-            }
-        }
-    }
     item_def item;
     item.base_type = OBJ_ORBS;
     item.sub_type = ORB_ZOT;
     item.quantity = player_has_orb() ? 1 : 0;
-    items.push_back(item);
+    contents.push_back(item);
 
-    // We've sorted this vector already, so disable menu sorting. Maybe we
-    // could a menu entry comparator and modify InvMenu::load_items() to allow
-    // passing this in instead of doing a sort ahead of time.
-    menu.load_items(items, _fixup_runeorb_entry, 0, false);
+    if (crawl_state.game_is_sprint())
+        set_sprint_runes();
+    else
+        set_normal_runes();
+}
 
-    menu.show();
+void RuneMenu::set_normal_runes()
+{
+    // Add the runes in order of challenge (semi-arbitrary).
+    for (branch_iterator it(branch_iterator_type::danger); it; ++it)
+    {
+        const branch_type br = it->id;
+        if (!connected_branch_can_exist(br))
+            continue;
+
+        for (auto rune : branches[br].runes)
+        {
+            item_def item;
+            item.base_type = OBJ_RUNES;
+            item.sub_type = rune;
+            item.quantity = you.runes[rune] ? 1 : 0;
+            ::item_colour(item);
+            contents.push_back(item);
+        }
+    }
+}
+
+void RuneMenu::set_sprint_runes()
+{
+    // We don't know what runes are accessible in the sprint, so just show
+    // the ones you have. We can't iterate over branches as above since the
+    // elven rune and mossy rune may exist in sprint.
+    for (int i = 0; i < NUM_RUNE_TYPES; ++i)
+    {
+        if (!you.runes[i])
+            continue;
+
+        item_def item;
+        item.base_type = OBJ_RUNES;
+        item.sub_type = i;
+        item.quantity = 1;
+        ::item_colour(item);
+        contents.push_back(item);
+    }
+}
+
+void RuneMenu::set_gems()
+{
+    // Add the gems in order of challenge (semi-arbitrary).
+    for (branch_iterator it(branch_iterator_type::danger); it; ++it)
+    {
+        const branch_type br = it->id;
+        if (!connected_branch_can_exist(br))
+            continue;
+        const gem_type gem = gem_for_branch(br);
+        if (gem == NUM_GEM_TYPES)
+            continue;
+
+        if (!Options.more_gem_info
+            && !more_gems
+            && !you.gems_found[gem]
+            // We need to check time left rather than shattered, since the latter is
+            // only set when the gem is actually broken, and we may not have loaded
+            // the relevant level since we ran out of time.
+            && you.gem_time_spent[gem] >= gem_time_limit(gem))
+        {
+            continue;
+        }
+
+        item_def item;
+        item.base_type = OBJ_GEMS;
+        item.sub_type = gem;
+        item.quantity = you.gems_found[gem] ? 1 : 0;
+        ::item_colour(item);
+        contents.push_back(item);
+    }
+}
+
+bool RuneMenu::process_key(int keyin)
+{
+    if (!can_show_gems())
+        return Menu::process_key(keyin);
+
+    switch (keyin)
+    {
+    case '!':
+    case '^':
+    case CK_MOUSE_CMD:
+        show_gems = !show_gems;
+        populate();
+        update_menu(true);
+        return true;
+    case '-':
+        if (show_gems)
+        {
+            more_gems = !more_gems;
+            populate();
+            update_menu(true);
+            return true;
+        }
+        return Menu::process_key(keyin);
+    default:
+        return Menu::process_key(keyin);
+    }
+}
+
+void display_runes()
+{
+    RuneMenu().show();
 }
 
 static string _unforbid(string name)
@@ -2701,6 +2944,18 @@ bool is_good_item(const item_def &item)
     case OBJ_POTIONS:
         if (!you.can_drink(false)) // still want to pick them up in lichform?
             return false;
+
+        // Recolor healing potions to indicate their additional goodness
+        //
+        // XX: By default, this doesn't actually change the color of anything
+        //     but !ambrosia, since yellow for 'emergency' takes priority over
+        //     cyan for 'good'. Should this get a *new* color?
+        if (you.has_mutation(MUT_DRUNKEN_BRAWLING)
+            && oni_likes_potion(static_cast<potion_type>(item.sub_type)))
+        {
+            return true;
+        }
+
         switch (item.sub_type)
         {
         case POT_EXPERIENCE:
@@ -3107,6 +3362,9 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         if (is_shield(item) && you.get_mutation_level(MUT_MISSING_HAND))
             return true;
 
+        if (is_unrandom_artefact(item, UNRAND_WUCAD_MU))
+            return you.has_mutation(MUT_HP_CASTING) || you_worship(GOD_TROG);
+
         if (is_artefact(item))
             return false;
 
@@ -3135,7 +3393,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             case SPARM_RAGE:
                 return !you.can_go_berserk(false, false, true, nullptr, temp);
             case SPARM_ENERGY:
-                return you.has_mutation(MUT_HP_CASTING);
+                return you.has_mutation(MUT_HP_CASTING) || you_worship(GOD_TROG);
             default:
                 return false;
             }
@@ -3372,6 +3630,11 @@ string item_prefix(const item_def &item, bool temp)
     case OBJ_BOOKS:
         if (item.sub_type != BOOK_MANUAL && item.sub_type != NUM_BOOKS)
             prefixes.push_back("spellbook");
+        break;
+
+    case OBJ_MISCELLANY:
+        if (is_xp_evoker(item))
+            prefixes.push_back("evoker");
         break;
 
     default:

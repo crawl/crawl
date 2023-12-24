@@ -174,26 +174,6 @@ static void _escape_water_hold(monster& mons)
     }
 }
 
-static void _handle_manticore_barbs(monster& mons)
-{
-    if (mons.has_ench(ENCH_BARBS))
-    {
-        mon_enchant barbs = mons.get_ench(ENCH_BARBS);
-
-        // Save these first because hurt() might kill the monster.
-        const coord_def pos = mons.pos();
-        const monster_type type = mons.type;
-        mons.hurt(monster_by_mid(barbs.source),
-                  roll_dice(2, barbs.degree * 2 + 2));
-        bleed_onto_floor(pos, type, 2, false);
-        if (coinflip())
-        {
-            barbs.duration--;
-            mons.update_ench(barbs);
-        }
-    }
-}
-
 // Returns true iff the monster does nothing.
 static bool _handle_ru_melee_redirection(monster &mons, monster **new_target)
 {
@@ -300,8 +280,8 @@ static bool _swap_monsters(monster& mover, monster& moved)
              moved.name(DESC_THE).c_str());
     }
 
-    _handle_manticore_barbs(mover);
-    _handle_manticore_barbs(moved);
+    mover.did_deliberate_movement();
+    moved.did_deliberate_movement();
 
     if (moved.type == MONS_FOXFIRE)
     {
@@ -3167,8 +3147,8 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     mon->seen_context = SC_NONE;
     m2->seen_context = SC_NONE;
 
-    _handle_manticore_barbs(*mon);
-    _handle_manticore_barbs(*m2);
+    mon->did_deliberate_movement();
+    m2->did_deliberate_movement();
 
     // Pushing past a foxfire gets you burned regardless of alignment
     if (m2->type == MONS_FOXFIRE)
@@ -3395,7 +3375,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
         seen_monster(&mons);
     }
 
-    _handle_manticore_barbs(mons);
+    mons.did_deliberate_movement();
 
     _swim_or_move_energy(mons);
 

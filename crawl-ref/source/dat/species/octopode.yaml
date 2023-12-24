@@ -14,7 +14,7 @@ aptitudes:
   armour: False
   stealth: 4
   spellcasting: -1
-  poison_magic: 2
+  alchemy: 1
   shapeshifting: -1
   invocations: 1
   evocations: 1
@@ -42,7 +42,8 @@ recommended_jobs:
   - JOB_BRIGAND
   - JOB_FIRE_ELEMENTALIST
   - JOB_EARTH_ELEMENTALIST
-  - JOB_VENOM_MAGE
+  - JOB_ALCHEMIST
 
 walking_verb: Wriggl
 altar_action: curl up in front of
+child_name: Fry

@@ -597,10 +597,16 @@ private:
 public:
     static const FormFlux &instance() { static FormFlux inst; return inst; }
 
-    int contam_dam(bool random = true, bool max = false) const
+    int contam_dam(bool random = true, bool max = false) const override
     {
         return divided_scaling(FormScaling().Base(30).Scaling(20), random, max, 100);
     }
+
+    int ev_bonus(bool /*get_max*/) const override
+    {
+        return 4;
+    }
+
 };
 
 class FormBlade : public Form
@@ -740,13 +746,13 @@ public:
     }
 };
 
-class FormAnaconda : public Form
+class FormSerpent : public Form
 {
 private:
-    FormAnaconda() : Form(transformation::anaconda) { }
-    DISALLOW_COPY_AND_ASSIGN(FormAnaconda);
+    FormSerpent() : Form(transformation::serpent) { }
+    DISALLOW_COPY_AND_ASSIGN(FormSerpent);
 public:
-    static const FormAnaconda &instance() { static FormAnaconda inst; return inst; }
+    static const FormSerpent &instance() { static FormSerpent inst; return inst; }
 };
 
 class FormDragon : public Form
@@ -1084,7 +1090,7 @@ static const Form* forms[] =
     &FormBlade::instance(),
     &FormStatue::instance(),
 
-    &FormAnaconda::instance(),
+    &FormSerpent::instance(),
     &FormDragon::instance(),
     &FormDeath::instance(),
     &FormBat::instance(),
@@ -1715,11 +1721,6 @@ static void _on_enter_form(transformation which_trans)
         break;
 
     case transformation::death:
-        if (you.duration[DUR_WEREBLOOD])
-        {
-            you.duration[DUR_WEREBLOOD] = 0;
-            mpr("Your lifeless body cannot sustain the wereblood!");
-        }
         you.redraw_status_lights = true;
         break;
 

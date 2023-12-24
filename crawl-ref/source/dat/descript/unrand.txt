@@ -40,14 +40,14 @@ weakness.
 %%%%
 staff of Olgreb
 
-A staff which was once wielded by the mighty wizard Olgreb.
+A staff which was once wielded by the great alchemist Olgreb.
 %%%%
 crystal ball of Wucad Mu
 
 A perfect sphere of crystal, overflowing with magical energies.
 {{
     if you.race() == "Djinni" then
-        return "It is utterly useless to Djinni."
+        return "It is utterly useless to Djinn."
     end
 }}
 %%%%

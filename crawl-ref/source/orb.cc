@@ -63,7 +63,7 @@ void orb_pickup_noise(const coord_def& where, int loudness, const char* msg, con
         if (msg)
             mprf(MSGCH_ORB, "%s", msg);
         else
-            mprf(MSGCH_ORB, "The Orb lets out a hideous shriek!");
+            mprf(MSGCH_ORB, "The Orb lets out an ear-shattering shriek!");
     }
     else
     {

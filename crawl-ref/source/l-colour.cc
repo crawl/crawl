@@ -20,13 +20,14 @@ struct lua_element_colour_calc : public base_colour_calc
         : base_colour_calc(_type, _name), function(_function) {}
 
     virtual int get(const coord_def& loc = coord_def(),
-                    bool non_random = false) override;
+                    bool non_random = false) const override;
+    int get_nth(int n) const override;
 
 protected:
     lua_datum function;
 };
 
-int lua_element_colour_calc::get(const coord_def& loc, bool non_random)
+int lua_element_colour_calc::get(const coord_def& loc, bool non_random) const
 {
     lua_State *ls = dlua.state();
 
@@ -44,6 +45,11 @@ int lua_element_colour_calc::get(const coord_def& loc, bool non_random)
     lua_pop(ls, 1);
 
     return str_to_colour(colour,-1,false,true);
+}
+
+int lua_element_colour_calc::get_nth(int /*n*/) const
+{
+    return get(coord_def()); // arbitrary - hopefully unused
 }
 
 /***

@@ -258,6 +258,14 @@ static dice_def mi_calc_iood_damage(monster* mons)
 
 static string mi_calc_smiting_damage(monster* /*mons*/) { return "7-17"; }
 
+static string mi_calc_brain_bite_damage(monster* /*mons*/) { return "4-8*"; }
+
+static string mi_calc_draining_gaze_drain(monster* mons)
+{
+    const int pow = mons_power_for_hd(SPELL_DRAINING_GAZE, mons->get_hit_dice());
+    return make_stringf("0-%d MP", pow / 8);
+}
+
 static string mi_calc_airstrike_damage(monster* mons)
 {
     const int pow = mons_power_for_hd(SPELL_AIRSTRIKE, mons->get_hit_dice());
@@ -340,6 +348,10 @@ static string mons_human_readable_spell_damage_string(monster* monster,
             return mi_calc_freeze_damage(monster);
         case SPELL_SMITING:
             return mi_calc_smiting_damage(monster);
+        case SPELL_BRAIN_BITE:
+            return mi_calc_brain_bite_damage(monster);
+        case SPELL_DRAINING_GAZE:
+            return mi_calc_draining_gaze_drain(monster);
         case SPELL_AIRSTRIKE:
             return mi_calc_airstrike_damage(monster);
         case SPELL_GLACIATE:
@@ -1038,9 +1050,6 @@ int main(int argc, char* argv[])
                         colour(LIGHTRED, damage_flavour("pure fire", hd * 3 / 2,
                                                         hd * 5 / 2 - 1));
                     break;
-                case AF_STICKY_FLAME:
-                    monsterattacks += colour(LIGHTRED, "(napalm)");
-                    break;
                 case AF_MUTATE:
                     monsterattacks += colour(LIGHTGREEN, "(mutation)");
                     break;
@@ -1139,6 +1148,9 @@ int main(int argc, char* argv[])
                     break;
                 case AF_FLANK:
                     monsterattacks += "(flank)";
+                    break;
+                case AF_DRAG:
+                    monsterattacks += colour(BROWN, "(drag)");
                     break;
                 case AF_CRUSH:
                 case AF_PLAIN:

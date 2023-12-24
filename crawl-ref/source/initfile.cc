@@ -194,6 +194,21 @@ const vector<GameOption*> base_game_options::build_options_list()
     return options; // ignored by subclass...
 }
 
+static map<string, game_type> _game_modes()
+{
+    map<string, game_type> modes = {
+        {"normal", GAME_TYPE_NORMAL},
+        {"seeded", GAME_TYPE_CUSTOM_SEED},
+        {"arena", GAME_TYPE_ARENA},
+        {"sprint", GAME_TYPE_SPRINT},
+        {"tutorial", GAME_TYPE_TUTORIAL},
+        {"hints", GAME_TYPE_HINTS}
+    };
+    if (Version::ReleaseType == VER_ALPHA)
+        modes["descent"] = GAME_TYPE_DESCENT;
+    return modes;
+}
+
 // **Adding new options**
 //
 // The main place to put a new option is in the big vector of GameOption
@@ -515,7 +530,6 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(dos_use_background_intensity), true),
         new BoolGameOption(SIMPLE_NAME(explore_greedy), true),
         new BoolGameOption(SIMPLE_NAME(explore_auto_rest), true),
-        new BoolGameOption(SIMPLE_NAME(fear_zot), false),
         new BoolGameOption(SIMPLE_NAME(travel_key_stop), true),
         new ListGameOption<string>(ON_SET_NAME(explore_stop),
             {"item", "stair", "portal", "branch", "shop", "altar",
@@ -535,6 +549,8 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(rest_wait_ancestor), false),
         new BoolGameOption(SIMPLE_NAME(cloud_status), !is_tiles()),
         new BoolGameOption(SIMPLE_NAME(always_show_zot), false),
+        new BoolGameOption(SIMPLE_NAME(always_show_gems), false),
+        new BoolGameOption(SIMPLE_NAME(more_gem_info), false),
         new BoolGameOption(SIMPLE_NAME(darken_beyond_range), true),
         new BoolGameOption(SIMPLE_NAME(show_blood), true),
         new ListGameOption<string>(ON_SET_NAME(use_animations),
@@ -738,13 +754,7 @@ const vector<GameOption*> game_options::build_options_list()
 #else
         new MultipleChoiceGameOption<game_type>(NEWGAME_NAME(type),
             GAME_TYPE_NORMAL,
-            {{"normal", GAME_TYPE_NORMAL},
-             {"descent", GAME_TYPE_DESCENT},
-             {"seeded", GAME_TYPE_CUSTOM_SEED},
-             {"arena", GAME_TYPE_ARENA},
-             {"sprint", GAME_TYPE_SPRINT},
-             {"tutorial", GAME_TYPE_TUTORIAL},
-             {"hints", GAME_TYPE_HINTS}}),
+            _game_modes()),
         new BoolGameOption(SIMPLE_NAME(name_bypasses_menu), true),
         new BoolGameOption(SIMPLE_NAME(restart_after_save), true),
         new BoolGameOption(SIMPLE_NAME(newgame_after_quit), false),
@@ -1570,6 +1580,7 @@ void game_options::reset_options()
     autopickups.set(OBJ_BOOKS);
     autopickups.set(OBJ_JEWELLERY);
     autopickups.set(OBJ_WANDS);
+    autopickups.set(OBJ_GEMS);
 
     dump_item_origins      = IODS_ARTEFACTS;
 

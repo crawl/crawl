@@ -79,7 +79,6 @@
 #include "stringutil.h" // to_string on Cygwin
 #include "tag-version.h"
 #include "terrain.h"
-#include "throw.h" // is_pproj_active for describe_to_hit
 #include "tile-flags.h"
 #include "tilepick.h"
 #ifdef USE_TILE_LOCAL
@@ -100,7 +99,7 @@ using namespace ui;
 static command_type _get_action(int key, vector<command_type> actions);
 static void _print_bar(int value, int scale, const string &name,
                        ostringstream &result, int base_value = INT_MAX);
-static string _padded(string str, int pad_to);
+static string _padded(string str, int pad_to, bool prepend = false);
 
 static void _describe_mons_to_hit(const monster_info& mi, ostringstream &result);
 static string _describe_weapon_brand(const item_def &item);
@@ -427,9 +426,6 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
         { ARTP_ENHANCE_TLOC,
             "It increases the power of your Translocations spells.",
             prop_note::plain },
-        { ARTP_ENHANCE_TMUT,
-            "It increases the power of your Transmutations spells.",
-            prop_note::plain },
         { ARTP_ENHANCE_FIRE,
             "It increases the power of your Fire spells.",
             prop_note::plain },
@@ -442,8 +438,8 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
         { ARTP_ENHANCE_EARTH,
             "It increases the power of your Earth spells.",
             prop_note::plain },
-        { ARTP_ENHANCE_POISON,
-            "It increases the power of your Poison spells.",
+        { ARTP_ENHANCE_ALCHEMY,
+            "It increases the power of your Alchemy spells.",
             prop_note::plain },
     };
     return data;
@@ -535,12 +531,11 @@ static vector<string> _randart_propnames(const item_def& item,
         ARTP_ENHANCE_SUMM,
         ARTP_ENHANCE_NECRO,
         ARTP_ENHANCE_TLOC,
-        ARTP_ENHANCE_TMUT,
         ARTP_ENHANCE_FIRE,
         ARTP_ENHANCE_ICE,
         ARTP_ENHANCE_AIR,
         ARTP_ENHANCE_EARTH,
-        ARTP_ENHANCE_POISON,
+        ARTP_ENHANCE_ALCHEMY,
     };
 
     const unrandart_entry *entry = nullptr;
@@ -1641,7 +1636,7 @@ static string _handedness_string(const item_def &item)
 
 }
 
-static string _category_string(const item_def &item)
+static string _category_string(const item_def &item, bool monster)
 {
     if (is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
         return ""; // handled in art-data DBRAND
@@ -1663,7 +1658,11 @@ static string _category_string(const item_def &item)
     switch (item_attack_skill(item))
     {
     case SK_POLEARMS:
-        description += "It has an extended reach (target with [<white>v</white>]). ";
+        // TODO(PF): maybe remove this whole section for util/monster summaries..?
+        description += "It has an extended reach";
+        if (!monster)
+            description += " (target with [<white>v</white>])";
+        description += ". ";
         break;
     case SK_AXES:
         description += "It hits all enemies adjacent to the wielder";
@@ -1842,7 +1841,7 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
 
     if (verbose)
     {
-        description += "\n\n" + _category_string(item);
+        description += "\n\n" + _category_string(item, monster);
 
 
 
@@ -2118,7 +2117,7 @@ static const char* _item_ego_desc(special_armour_type ego)
         return "it improves its wearer's accuracy and damage with "
                "thrown weapons, such as rocks and javelins (Slay +4).";
     case SPARM_REPULSION:
-        return "it protects its wearer by repelling missiles.";
+        return "it helps its wearer evade missiles.";
 #if TAG_MAJOR_VERSION == 34
     case SPARM_CLOUD_IMMUNE:
         return "it does nothing special.";
@@ -2674,6 +2673,7 @@ string get_item_description(const item_def &item,
                     << " slot: " << item.slot
                     << " ident_type: "
                     << get_ident_type(item)
+                    << " value: " << item_value(item, true)
                     << "\nannotate: "
                     << stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
     }
@@ -2922,6 +2922,7 @@ string get_item_description(const item_def &item,
     case OBJ_ORBS:
     case OBJ_GOLD:
     case OBJ_RUNES:
+    case OBJ_GEMS:
 
 #if TAG_MAJOR_VERSION == 34
     case OBJ_FOOD:
@@ -4224,12 +4225,11 @@ static string _miscast_damage_string(spell_type spell)
         { spschool::ice, "cold" },
         { spschool::air, "electric" },
         { spschool::earth, "fragmentation" },
-        { spschool::poison, "poison" },
+        { spschool::alchemy, "alchemy" },
     };
 
     const map <spschool, string> special_flavor = {
         { spschool::summoning, "summons a nameless horror" },
-        { spschool::transmutation, "further contaminates you" },
         { spschool::translocation, "anchors you in place" },
         { spschool::hexes, "slows you" },
     };
@@ -4772,7 +4772,6 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_DISTORT,           "distortion" },
         { AF_RIFT,              "distortion" },
         { AF_RAGE,              "drive defenders berserk" },
-        { AF_STICKY_FLAME,      "sticky flame" },
         { AF_CHAOTIC,           "chaos" },
         { AF_STEAL,             "steal items" },
         { AF_CRUSH,             "begin ongoing constriction" },
@@ -4794,6 +4793,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_SLEEP,             "induce sleep" },
         { AF_SWOOP,             "swoops behind the defender beforehand" },
         { AF_FLANK,             "slips behind the defender beforehand" },
+        { AF_DRAG,              "drag the defender backwards"},
         { AF_PLAIN,             "" },
     };
 
@@ -5212,10 +5212,14 @@ static int _codepoints(string str)
     return len;
 }
 
-static string _padded(string str, int pad_to)
+static string _padded(string str, int pad_to, bool prepend)
 {
     const int padding = pad_to - _codepoints(str);
-    if (padding > 0)
+    if (padding <= 0)
+        return str;
+    if (prepend)
+        str.insert(0, string(padding, ' '));
+    else
         str.append(padding, ' ');
     return str;
 }
@@ -5241,44 +5245,6 @@ static string _build_bar(int value, int scale)
 }
 
 /**
- * Returns a description of a given monster's max HP.
- *
- * @param mi[in]            Player-visible info about the monster in question.
- */
-static string _describe_monster_hp(const monster_info& mi)
-{
-    return "Max HP: " + mi.get_max_hp_desc();
-}
-
-/**
- * Returns a description of a given monster's AC.
- *
- * @param mi[in]            Player-visible info about the monster in question.
- */
-static string _describe_monster_ac(const monster_info& mi)
-{
-    return "AC: " + _build_bar(mi.ac, 5);
-}
-
-/**
- * Returns a description of a given monster's EV.
- *
- * @param mi[in]            Player-visible info about the monster in question.
- */
-static string _describe_monster_ev(const monster_info& mi)
-{
-    return "EV: " + _build_bar(mi.base_ev, 5);
-}
-
-static string _describe_monster_sh(const monster_info& mi)
-{
-    const int sh = mi.sh / 2; // rescale to match player SH
-    if (sh <= 0)
-        return "";
-    return "SH: " + _build_bar(sh, 5);
-}
-
-/**
  * Returns a description of a given monster's WL.
  *
  * @param mi[in]            Player-visible info about the monster in question.
@@ -5289,10 +5255,10 @@ static string _describe_monster_wl(const monster_info& mi)
     if (will == WILL_INVULN)
     {
         if (Options.char_set == CSET_ASCII)
-            return "Will: inf";
-        return "Will: ∞";
+            return "inf";
+        return "∞";
     }
-    return "Will: " + _build_bar(will, WL_PIP);
+    return _build_bar(will, WL_PIP);
 }
 
 /**
@@ -5416,7 +5382,7 @@ static void _add_speed_desc(const monster_info &mi, ostringstream &result)
     if (!unusual_speed && !unusual_energy && !travel_delay_diff)
         return;
 
-    result << "\nSpeed: " << speed * 10 << "%";
+    result << "Speed: " << speed * 10 << "%";
 
     vector<string> unusuals;
 
@@ -5443,7 +5409,68 @@ static void _add_speed_desc(const monster_info &mi, ostringstream &result)
         // It would be interesting to qualify this with 'on land',
         // if appropriate, but sort of annoying to get player swim speed.
     }
+
+    result << "\n";
 }
+
+struct TableCell
+{
+    string   label;
+    string   value;
+    colour_t colour;
+};
+
+class TablePrinter
+{
+private:
+    vector<vector<TableCell>> rows;
+
+public:
+    void AddRow()
+    {
+        rows.push_back({});
+    }
+
+    void AddCell(string label = "", string value = "", colour_t colour = LIGHTGREY)
+    {
+        rows[rows.size() - 1].push_back({label, value, colour});
+    }
+
+    void Print(ostringstream &result)
+    {
+        vector<int> labels_lengths_by_col;
+        for (size_t row = 0; row < rows.size(); ++row)
+        {
+            for (size_t col = 0; col < rows[row].size(); ++col)
+            {
+                const int label_len = _codepoints(rows[row][col].label);
+                if (col == labels_lengths_by_col.size())
+                    labels_lengths_by_col.push_back(label_len);
+                else
+                    labels_lengths_by_col[col] = max(labels_lengths_by_col[col], label_len);
+            }
+        }
+        const int cell_len = 80 / labels_lengths_by_col.size();
+
+        for (const auto &row : rows)
+        {
+            for (size_t col = 0; col < row.size(); ++col)
+            {
+                const TableCell &cell = row[col];
+                if (cell.label.empty())
+                    continue; // padding
+
+                const int label_len = labels_lengths_by_col[col];
+                const string label = _padded(cell.label, label_len, true);
+                const string body = make_stringf("%s: %s",
+                                                 label.c_str(),
+                                                 cell.value.c_str());
+                result << colourize_str(_padded(body, cell_len), cell.colour);
+            }
+            result << "\n";
+        }
+    }
+};
 
 // Converts a numeric resistance to its symbolic counterpart.
 // Can handle any maximum level. The default is for single level resistances
@@ -5498,15 +5525,16 @@ static string _res_name(mon_resist_flags res)
     }
 }
 
-static string _desc_mon_resist(resists_t resist_set, mon_resist_flags res)
+static void _desc_mon_resist(TablePrinter &pr,
+                             resists_t resist_set, mon_resist_flags res)
 {
     const int level = get_resist(resist_set, res);
     const int max = (res == MR_RES_POISON || res == MR_RES_ELEC) ? 1 : 3; // lies
     const string desc = desc_resist(level, max, level == 3, false);
-    return make_stringf("%s: %s", _res_name(res).c_str(), desc.c_str());
+    pr.AddCell(_res_name(res), desc, level ? LIGHTGREY : DARKGREY);
 }
 
-static void _add_resist_desc(resists_t resist_set, ostringstream &result)
+static void _add_resist_desc(TablePrinter &pr, resists_t resist_set)
 {
     const mon_resist_flags common_resists[] =
         { MR_RES_FIRE, MR_RES_COLD, MR_RES_POISON, MR_RES_NEG, MR_RES_ELEC };
@@ -5518,9 +5546,9 @@ static void _add_resist_desc(resists_t resist_set, ostringstream &result)
     if (!found)
         return;
 
-    result << "\n";
+    pr.AddRow();
     for (mon_resist_flags rflags : common_resists)
-        result << _padded(_desc_mon_resist(resist_set, rflags), 16);
+        _desc_mon_resist(pr, resist_set, rflags);
 }
 
 // Describe a monster's (intrinsic) resistances, speed and a few other
@@ -5532,16 +5560,20 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
 
     ostringstream result;
 
-    // These padding values are set to line up defenses with common resists.
-    result << _padded(_describe_monster_hp(mi), 16);  // worst case is "Max HP: ~9999"
-                                                      // len 13, then 3 spaces after
-    result << _padded(_describe_monster_wl(mi), 16);  // "Will: +++++" 11
-    result << _padded(_describe_monster_ac(mi), 16);  // "AC: ++++ ++++" 13 again
-    result << _padded(_describe_monster_ev(mi), 16);  // "EV*: ++++ ++++" 14
-    result << _describe_monster_sh(mi);
+    TablePrinter pr;
+
+    pr.AddRow();
+    pr.AddCell("Max HP", mi.get_max_hp_desc());
+    pr.AddCell("Will", _describe_monster_wl(mi));
+    pr.AddCell("AC", _build_bar(mi.ac, 5));
+    pr.AddCell("EV", _build_bar(mi.base_ev, 5));
+    if (mi.sh / 2 > 0)  // rescale to match player SH
+        pr.AddCell("SH", _build_bar(mi.sh / 2, 5));
+    else
+        pr.AddCell(); // ensure alignment
 
     const resists_t resist = mi.resists();
-    _add_resist_desc(resist, result);
+    _add_resist_desc(pr, resist);
 
     // Less important common properties. Arguably should be lower down.
     const size_type sz = mi.body_size();
@@ -5549,19 +5581,22 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     const auto holiness = mons_class_holiness(mi.type);
     const string holi = holiness == MH_NONLIVING ? "Nonliv."
                                                  : single_holiness_description(holiness);
-    result << "\n";
-    result << _padded(make_stringf("Threat: %s", _get_threat_desc(mi.threat)), 16);
-    result << _padded(make_stringf("Class: %s", uppercase_first(holi).c_str()), 16);
-    result << _padded(make_stringf("Size: %s", size_desc.c_str()), 16);
-    result << _padded(make_stringf("Int: %s", _get_int_desc(mi.intel())), 16);
+    pr.AddRow();
+    pr.AddCell("Threat", _get_threat_desc(mi.threat));
+    pr.AddCell("Class", uppercase_first(holi).c_str());
+    pr.AddCell("Size", size_desc.c_str());
+    pr.AddCell("Int", _get_int_desc(mi.intel()));
     if (mi.is(MB_SICK) || mi.is(MB_NO_REGEN))
-        result << "Regen: None";
+        pr.AddCell("Regen", "None");
     else if (mons_class_fast_regen(mi.type) || mi.is(MB_REGENERATION))
-        result << "Regen: " << mi.regen_rate(1) << "/turn"; // (Wait, what's a 'turn'?)
+        pr.AddCell("Regen", make_stringf("%d/turn", mi.regen_rate(1)));
+                                        // (Wait, what's a 'turn'?)
+
+    pr.Print(result);
 
     _add_speed_desc(mi, result);
 
-    result << "\n\n";
+    result << "\n";
 
     if (crawl_state.game_started)
     {

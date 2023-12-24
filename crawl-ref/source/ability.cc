@@ -3010,7 +3010,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
                     + random2(1 + you.skill(SK_INVOCATIONS, 2));
 
         // Since the actual beam is random, check with BEAM_MMISSILE.
-        if (!player_tracer(ZAP_ENERGY_BOLT, power, beam, beam.range))
+        if (!player_tracer(ZAP_SEARING_RAY, power, beam, beam.range))
             return spret::abort;
 
         fail_check();

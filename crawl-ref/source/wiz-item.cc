@@ -1208,11 +1208,10 @@ static void _debug_acquirement_stats(FILE *ostat)
                 "hexes",
                 "fire magic",
                 "ice magic",
-                "transmutation",
                 "necromancy",
                 "summoning",
                 "translocation",
-                "poison magic",
+                "alchemy",
                 "earth magic",
                 "air magic",
             };
@@ -1538,12 +1537,14 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_ENHANCE_SUMM",
         "ARTP_ENHANCE_NECRO",
         "ARTP_ENHANCE_TLOC",
+#if TAG_MAJOR_VERSION == 34
         "ARTP_ENHANCE_TMUT",
+#endif
         "ARTP_ENHANCE_FIRE",
         "ARTP_ENHANCE_ICE",
         "ARTP_ENHANCE_AIR",
         "ARTP_ENHANCE_EARTH",
-        "ARTP_ENHANCE_POISON",
+        "ARTP_ENHANCE_ALCHEMY",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 

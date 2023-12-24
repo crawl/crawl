@@ -418,6 +418,11 @@ Your system is resistant to potable panaceas, reducing the effectiveness of all
 kinds of healing potions. The second level of this mutation completely blocks
 potion-based healing. (Aid from the god Gozag is unaffected.)
 %%%%
+persistent drain mutation
+
+Your health recovers twice as slowly from being drained. (The total experience
+needed is doubled.)
+%%%%
 # ------ Demonspawn mutations -----
 demonic guardian mutation
 
@@ -780,7 +785,8 @@ and you cannot become invisible.
 %%%%
 explore regen mutation
 
-As you explore the dungeon, your wounds will heal and your magic will replenish.
+You are invigorated by the discovery of the unknown. As you explore the dungeon,
+your wounds will heal and your magic will replenish.
 %%%%
 faith mutation
 
@@ -796,13 +802,19 @@ and restore health.
 roll mutation
 
 You instinctively roll as you move toward enemies, rampaging forward an
-additional space. The second level of this mutation grants health regeneration
-when rolling.
+additional space. This mutation grants magic regeneration when rolling; the
+second level of this mutation regenerates both magic and health.
 %%%%
-long tongue mutation
+double potion healing mutation
 
-Your tongue is extremely long. This lets you lick potion bottles dry, doubling their
-effects on you.
+Whenever a potion restores your health or magic, it restores twice as much.
+%%%%
+drunken brawling mutation
+
+Whenever you drink a potion that restores health or magic, you perform an
+immediate attack against all enemies adjacent to you.
+
+(This includes potions of curing, heal wounds, magic, and ambrosia.)
 %%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation
@@ -929,9 +941,9 @@ no necromancy magic mutation
 
 Your Necromancy skill is 0 and you cannot train the skill.
 %%%%
-no poison magic mutation
+no alchemy magic mutation
 
-Your Poison Magic skill is 0 and you cannot train the skill.
+Your Alchemy skill is 0 and you cannot train the skill.
 %%%%
 no summoning magic mutation
 
@@ -940,8 +952,4 @@ Your Summoning skill is 0 and you cannot train the skill.
 no translocations magic mutation
 
 Your Translocations skill is 0 and you cannot train the skill.
-%%%%
-no transmutations magic mutation
-
-Your Transmutations skill is 0 and you cannot train the skill.
 %%%%

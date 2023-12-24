@@ -383,7 +383,8 @@ tier1_gauntlet_arenas = {
     liquid = "lava",
   },
   {
-    first  = {mons = "flying skull band", min = 1, max = 1},
+    first  = {mons = "laughing skull", min = 1, max = 1},
+    second = {mons = "laughing skull", min = 1, max = 2},
     plant  = "withered",
   },
   {
@@ -556,7 +557,8 @@ tier2_gauntlet_arenas = {
     plant  = "demonic",
   },
   {
-    second = {mons = "flying skull band", min = 2, max = 3},
+    first  = {mons = "weeping skull", min = 1, max = 1},
+    second = {mons = "laughing skull", min = 2, max = 4},
     plant  = "withered",
   },
   {

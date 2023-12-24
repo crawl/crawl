@@ -18,6 +18,7 @@ function depths_entry(e)
    e.place("D:$")
    e.weight("20")
    e.kfeat("O = enter_depths")
+   e.kitem("O = smoky gem")
    e.orient("float")
 end
 }}

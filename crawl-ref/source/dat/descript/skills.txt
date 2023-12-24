@@ -187,13 +187,13 @@ spells in this school. Many spells belong to a combination of several schools,
 in which case spellcasting success and power will depend on the average skill
 in these schools.
 %%%%
-Transmutations
+Alchemy
 
-Transmutations reshape the world. Spells in this school can twist objects and
-creatures into different shapes, turn one material into another, or even
+Alchemy is the art of toxins and transmutation. Spells in this school can twist
+objects and creatures into different shapes, unleash powerful poisons, or even
 unweave the fabric of magic itself.
 
-Being skilled in Transmutations increases the success rate and spell power of
+Being skilled in Alchemy increases the success rate and spell power of
 spells in this school. Many spells belong to a combination of several schools,
 in which case spellcasting success and power will depend on the average skill
 in these schools.
@@ -234,20 +234,10 @@ Earth Magic
 
 Earth Magic contains spells able to deal large amounts of direct physical
 damage, which cannot be resisted like fire, cold and lightning damage can. It
-is also linked with some Transmutations, with spells to liquefy the earth
-around you, or to turn your enemies to stone.
+is also linked with Alchemy, with spells to liquefy the earth around you, or to
+turn your enemies to stone.
 
 Being skilled in Earth Magic increases the success rate and spell power of
-spells in this school. Many spells belong to a combination of several schools,
-in which case spellcasting success and power will depend on the average skill
-in these schools.
-%%%%
-Poison Magic
-
-Poison Magic provides spells which are highly effective against many natural
-creatures.
-
-Being skilled in Poison Magic increases the success rate and spell power of
 spells in this school. Many spells belong to a combination of several schools,
 in which case spellcasting success and power will depend on the average skill
 in these schools.

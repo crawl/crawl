@@ -758,13 +758,7 @@ static bool _dump_item_origin(const item_def &item)
     if (fs(IODS_JEWELLERY) && item.base_type == OBJ_JEWELLERY)
         return true;
 
-    if (fs(IODS_RUNES) && item.base_type == OBJ_RUNES)
-        return true;
-
     if (fs(IODS_STAVES) && item.base_type == OBJ_STAVES)
-        return true;
-
-    if (fs(IODS_BOOKS) && item.base_type == OBJ_BOOKS)
         return true;
 
     const int refpr = Options.dump_item_origin_price;

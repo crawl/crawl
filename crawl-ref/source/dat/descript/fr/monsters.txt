@@ -571,6 +571,11 @@ Un petit démon mineur. Sa mâchoire dentée semble être bloquée en un rictus
 permanent, et ses cornes saillissent de façon obscène de ses plaques
 écailleuses.
 %%%%
+crocodile
+
+Un crocodile agressif avec une grande mâchoire fracassante et pleine de dents
+pointues.
+%%%%
 curse skull
 
 Un crâne carbonisé flottant dans les airs et se tournant lentement. Des
@@ -865,11 +870,6 @@ Une affreuse créature mort-vivante qui flotte dans les airs ; l'esprit angoiss
 d'une victime torturée dont la peau lacérée pend du corps décharné. Il parcours
 le donjon sans répit, en infligeant à ceux qui sont toujours vivant l'angoisse
 qu'il a ressentit pendant sa vie.
-%%%%
-flying skull
-
-Un crâne mort-vivant maintenu en l'air et voletant rapidement sur de la magie
-impure. Il émet régulièrement des cris à vous glacer le sang.
 %%%%
 freed slave
 

@@ -1694,7 +1694,7 @@ static void _experience_check()
         you.lives < 2 ?
              mprf("You'll get an extra life in %d.%02d levels' worth of XP.", perc / 100, perc % 100) :
              mprf("If you died right now, you'd get an extra life in %d.%02d levels' worth of XP.",
-             (perc / 100) + 1 , perc % 100);
+             perc / 100 , perc % 100);
     }
 
     handle_real_time();
@@ -1714,7 +1714,7 @@ static void _experience_check()
                         << " turns if you stay in this branch and explore no"
                         << " new floors.";
         }
-        msg::stream << endl;
+        msg::stream << endl << gem_status();
     }
 
 #ifdef DEBUG_DIAGNOSTICS

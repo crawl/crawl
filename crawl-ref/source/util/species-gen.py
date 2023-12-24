@@ -42,7 +42,7 @@ class Species(MutableMapping):
             'undead_type', 'size', 'str', 'int', 'dex', 'levelup_stats',
             'levelup_stat_frequency', 'recommended_jobs', 'recommended_weapons',
             'difficulty', 'difficulty_priority', 'create_enum', 'walking_verb',
-            'altar_action', 'mutations'}
+            'altar_action', 'mutations', 'child_name'}
 
     def __init__(self, yaml_dict):
         self.backing_dict = dict()
@@ -148,6 +148,7 @@ class Species(MutableMapping):
                                     s.get('create_enum', False), 'create_enum')
         self['walking_verb'] = quote_or_nullptr('walking_verb', s)
         self['altar_action'] = quote_or_nullptr('altar_action', s)
+        self['child_name']   = quote_or_nullptr('child_name', s)
 
         if 'TAG_MAJOR_VERSION' in s:
             self['tag_major_version_opener'] = (
@@ -178,8 +179,8 @@ ALL_APTITUDES = ('fighting', 'short_blades', 'long_blades', 'axes',
     'maces_and_flails', 'polearms', 'staves', 'ranged weapons',
     'throwing', 'armour', 'dodging', 'stealth', 'shields', 'unarmed_combat',
     'spellcasting', 'conjurations', 'hexes', 'summoning',
-    'necromancy', 'transmutations', 'translocations', 'fire_magic',
-    'ice_magic', 'air_magic', 'earth_magic', 'poison_magic', 'invocations',
+    'necromancy', 'translocations', 'fire_magic',
+    'ice_magic', 'air_magic', 'earth_magic', 'alchemy', 'invocations',
     'evocations', 'shapeshifting')
 UNDEAD_TYPES = ('US_ALIVE', 'US_UNDEAD', 'US_SEMI_UNDEAD')
 SIZES = ('SIZE_TINY', 'SIZE_LITTLE', 'SIZE_SMALL', 'SIZE_MEDIUM', 'SIZE_LARGE',

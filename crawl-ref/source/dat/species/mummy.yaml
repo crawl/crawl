@@ -26,13 +26,12 @@ aptitudes:
   hexes: -1
   summoning: -2
   translocations: -2
-  transmutations: -2
   shapeshifting: False
   fire_magic: -2
   ice_magic: -2
   air_magic: -2
   earth_magic: -2
-  poison_magic: -2
+  alchemy: -2
   invocations: -1
   evocations: -2
 undead_type: US_UNDEAD

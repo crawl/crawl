@@ -587,7 +587,7 @@ static vector<pair<stave_type, int>> _base_staff_weights()
         { STAFF_COLD,        _skill_rdiv(SK_ICE_MAGIC) },
         { STAFF_AIR,         _skill_rdiv(SK_AIR_MAGIC) },
         { STAFF_EARTH,       _skill_rdiv(SK_EARTH_MAGIC) },
-        { STAFF_POISON,      _skill_rdiv(SK_POISON_MAGIC) },
+        { STAFF_ALCHEMY,     _skill_rdiv(SK_ALCHEMY) },
         { STAFF_DEATH,       _skill_rdiv(SK_NECROMANCY) },
         { STAFF_CONJURATION, _skill_rdiv(SK_CONJURATIONS) },
         { NUM_STAVES,        5 },
@@ -767,6 +767,7 @@ static const acquirement_subtype_finder _subtype_finders[] =
 #endif
     0, // no runes either
     0, // no talismans... for now. TODO: add talisman acquirement
+    0, // no gems either
 };
 
 static int _find_acquirement_subtype(object_class_type &class_wanted,
@@ -1213,8 +1214,9 @@ int acquirement_create_item(object_class_type class_wanted,
 {
     ASSERT(class_wanted != OBJ_RANDOM);
 
-    // Trog/Xom gifts are generally lower quality than scroll acquirement or Oka gifts.
-    const int item_level = ((agent == GOD_TROG || agent == GOD_XOM) ? ISPEC_GIFT : ISPEC_GOOD_ITEM);
+    // Trog/Xom gifts are generally lower quality than scroll acquirement or
+    // Oka gifts. We also use lower quality for missile gifts.
+    const int item_level = ((agent == GOD_TROG || agent == GOD_XOM || class_wanted == OBJ_MISSILES) ? ISPEC_GIFT : ISPEC_GOOD_ITEM);
     int thing_created = NON_ITEM;
     int quant = 1;
 #define MAX_ACQ_TRIES 40

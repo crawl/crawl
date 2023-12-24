@@ -129,6 +129,8 @@ private:
     int         num_aut;            // quantity of aut taken
     int         num_diff_runes;     // number of rune types in inventory
     int         num_runes;          // total number of runes in inventory
+    int         gems_found;         // number of gems ever picked up
+    int         gems_intact;        // number of gems currently held intact
     int         kills;              // number of monsters killed
     string      maxed_skills;       // comma-separated list of skills
                                     // at level 27
@@ -205,6 +207,7 @@ private:
     const char *damage_verb() const;
     string death_source_desc() const;
     string damage_string(bool terse = false) const;
+    string runes_gems_desc(bool semiverbose) const;
 
     bool parse_scoreline(const string &line);
 

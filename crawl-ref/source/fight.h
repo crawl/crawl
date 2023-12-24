@@ -52,7 +52,8 @@ bool weapon_cleaves(const item_def &item);
 int weapon_hits_per_swing(const item_def &item);
 bool weapon_multihits(const item_def *item);
 void get_cleave_targets(const actor &attacker, const coord_def& def,
-                        list<actor*> &targets, int which_attack = -1);
+                        list<actor*> &targets, int which_attack = -1,
+                        bool force_cleaving = false);
 // too many params... need to pass in a mini-struct or something
 void attack_multiple_targets(actor &attacker, list<actor*> &targets,
                              int attack_number = 0,
@@ -81,12 +82,14 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool *prompted = nullptr,
-                        coord_def attack_pos = coord_def(0, 0));
+                        coord_def attack_pos = coord_def(0, 0),
+                        bool check_only = false);
 
 bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         function<bool(const actor *victim)> affects = nullptr,
                         bool *prompted = nullptr,
-                        const monster *mons = nullptr);
+                        const monster *mons = nullptr,
+                        bool check_only = false);
 
 string stop_summoning_reason(resists_t resists, monclass_flags_t flags);
 bool stop_summoning_prompt(resists_t resists = MR_NO_FLAGS,

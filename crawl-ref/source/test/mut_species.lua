@@ -108,7 +108,7 @@ end
 
 
 species = {"hill orc", "minotaur", "merfolk", "gargoyle", "draconian", "halfling", "troll", "ghoul",
-            "human", "kobold", "centaur", "spriggan", "tengu", "deep elf", "ogre", "deep dwarf",
+            "human", "kobold", "centaur", "spriggan", "tengu", "deep elf", "oni", "deep dwarf",
             "vine stalker", "vampire", "demigod", "formicid", "naga", "octopode", "felid", "barachi",
             "mummy", "gnoll"}
 
@@ -131,6 +131,6 @@ end
 
 -- the testbed doesn't really clean up much of anything.
 you.delete_all_mutations("Species mutation test")
-assert(you.change_species("human")) -- should clean up any innate mutatinos
+assert(you.change_species("hill orc")) -- should clean up any innate mutations
 assert(you.set_xl(1, false))
 you.moveto(you_x, you_y) -- restore original player pos

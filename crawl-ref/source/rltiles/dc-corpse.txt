@@ -71,6 +71,7 @@ demonic_crawler CORPSE_DEMONIC_CRAWLER
 ## Turtles and crabs ('t')
 %sdir mon/animals
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
+crocodile CORPSE_CROCODILE
 alligator CORPSE_ALLIGATOR
 snapping_turtle CORPSE_SNAPPING_TURTLE
 alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
@@ -83,6 +84,7 @@ apocalypse_crab CORPSE_APOCALYPSE_CRAB
 ## Worms and gastropods ('w')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 worm CORPSE_WORM
+brain_worm CORPSE_BRAIN_WORM
 ../aquatic/swamp_worm CORPSE_SWAMP_WORM
 tyrant_leech CORPSE_TYRANT_LEECH
 torpor_snail CORPSE_TORPOR_SNAIL
@@ -112,6 +114,7 @@ kraken_head CORPSE_KRAKEN /*'x'*/
 
 ## Beetles ('B')
 %sdir mon/animals
+bombardier_beetle CORPSE_BOMBARDIER_BEETLE
 boulder_beetle CORPSE_BOULDER_BEETLE
 %sdir mon/undead
 death_scarab CORPSE_DEATH_SCARAB

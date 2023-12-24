@@ -195,7 +195,7 @@ enum enchant_type
     ENCH_RING_OF_MUTATION,
     ENCH_RING_OF_FOG,
     ENCH_RING_OF_ICE,
-    ENCH_RING_OF_DRAINING,
+    ENCH_RING_OF_MISERY,
     ENCH_RING_OF_ACID,
     ENCH_RING_OF_MIASMA,
     ENCH_CONCENTRATE_VENOM,
@@ -208,6 +208,8 @@ enum enchant_type
     ENCH_BOUND,
     ENCH_BULLSEYE_TARGET,
     ENCH_VITRIFIED,
+    ENCH_INSTANT_CLEAVE,
+    ENCH_PROTEAN_SHAPESHIFTING,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

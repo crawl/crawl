@@ -1301,6 +1301,11 @@ Evocations player ghost
 
 @The_monster@ says @to_foe@, "Are you sure you're pointing that wand in the right direction?"
 %%%%
+Shapeshifting player ghost
+
+# The Heart Sutra
+@The_monster@ says, "Form is emptiness; emptiness is form."
+%%%%
 Ashenzari player ghost
 
 @The_monster@ says @to_foe@, "Life is a curse, you will soon understand."
@@ -1362,6 +1367,13 @@ VISUAL:@The_monster@ waves a bulging coin purse at you.
 @The_monster@ says, "You're as good as gold."
 
 @The_monster@ says, "I guess you can't buy your way into a good afterlife."
+%%%%
+Hepliaklqana player ghost
+@The_monster@ says @to_foe@, "If I can't kill you now, I'll help my descendant do it later."
+
+@The_monster@ says @to_foe@, "I'll give you a battle you'll never forget!"
+
+@The_monster@ says @to_foe@, "I'm committing your attacks to memory."
 %%%%
 Ignis player ghost
 
@@ -1472,6 +1484,16 @@ Trog player ghost
 
 @The_monster@ screams in joy, "As in life, so in death: Kill! Kill!! Kill!!!"
 %%%%
+Uskayaw player ghost
+@The_monster@ says @to_foe@, "It's your last dance!"
+
+@The_monster@ says @to_foe@, "Let me show you true rhythm."
+
+@The_monster@ says, "You either stomp with the beat or get stomped."
+
+# La Vie Dansante, Jimmy Buffett
+@The_monster@ says, "I used to wander and follow the dancing life. Look where it got me."
+%%%%
 Vehumet player ghost
 
 @The_monster@ threatens, "I'm fresh out of hellfire, but you will end anyway."
@@ -1481,6 +1503,14 @@ Vehumet player ghost
 @The_monster@ boasts, "After taking care of you, I will research a spell that consumes the world."
 
 @The_monster@ threatens, "Do not fail me, O fires of Iskenderun!"
+%%%%
+Wu Jian player ghost
+
+@The_monster@ says @to_foe@, "You lack the discipline to defeat me."
+
+@The_monster@ says @to_foe@, "Let's see how well you move."
+
+@The_monster@ says, "I'm much more flexible now that I'm not limited by flesh."
 %%%%
 Xom player ghost
 
@@ -2000,6 +2030,7 @@ _Blork_rare_
 ############ BORIS ### An ancient lich with the nasty habit of coming back
 Boris
 
+w:8
 @_Boris_common_@
 
 w:5
@@ -2023,9 +2054,11 @@ _Boris_medium_
 
 @The_monster@ says, "You want the ORB? You'll never get it." @player_only@
 
-@The_monster@ says @to_foe@, "My power is unlimited."
+@The_monster@ boasts with wailing echoes, "My power is unlimited."
 
-@The_monster@ says @to_foe@, "You can't kill me. I'm immortal."
+@The_monster@ claims, "You mortals are all unique only in the ways you'll break."
+
+@The_monster@ says @to_foe@, "You can't kill me in a way that matters."
 
 @The_monster@ says @to_foe@, "I know the secret of eternal life. Do you?"
 
@@ -2033,7 +2066,7 @@ _Boris_medium_
 
 @The_monster@ says @to_foe@, "Who wants to live forever? Me."
 
-@The_monster@ says @to_foe@, "There's only one solution for you. To die."
+@The_monster@ says @to_foe@, "There's only one solution for all of you. To die."
 
 @The_monster@ says @to_foe@, "You can never win."
 %%%%
@@ -2041,13 +2074,19 @@ _Boris_rare_
 
 @The_monster@ says @to_foe@, "I didn't invite you."
 
-@The_monster@ says @to_foe@, "The world, the flesh and the devil."
+@The_monster@ says @to_foe@, "The world, the flesh, and the devil."
+
+@The_monster@ says, "There's no good or evil. Just power and will."
+
+# Kill Six Billion Demons
+@The_monster@ says, "You have all forgotten the taste of death."
+
+# Magic: the Gathering
+@The_monster@ claims, "I care not for such insignificant forces as time or death."
 
 @The_monster@ says "Magic. You know nothing about it."
 
-@The_monster@ says @to_foe@, "I'll be back."
-
-@The_monster@ says @to_foe@, "Join the legion of my servants."
+@The_monster@ says @to_foe@, "Join my legions of the broken and the beaten."
 %%%%
 Boris killed
 
@@ -2075,6 +2114,9 @@ _Boris_return_rare_
 @The_monster@ says @to_foe@, "You cannot defeat me so easily!"
 
 @The_monster@ says @to_foe@, "We will meet again!"
+
+w:5
+@The_monster@ asks, "Do I look like the kind of man who dies?"
 %%%%
 Boris unsummoned
 
@@ -2089,6 +2131,8 @@ Boris triumphant
 @The_monster@ says, "And that's the last I'll see of you."
 
 @The_monster@ says, "I'd like to see you come back from this one."
+
+@The_monster@ says, "I'll treasure this one."
 ## END Boris ##
 %%%%
 ############ CHUCK ### An avid rock collector.
@@ -2167,11 +2211,13 @@ Xom Crazy Yiuf
 @The_monster@ says, "The present is the child, and the necessary child, of all the past, and the mother of all the future."
 
 # Hume
-@The_monster@ says, "Reason is nothing but a wonderful and unintelligible
-instinct in our souls."
+@The_monster@ says, "Reason is nothing but a wonderful and unintelligible instinct in our souls."
 
 # Kant
 @The_monster@ says, "It is extremely absurd to expect to be enlightened by reason, and yet to prescribe to it beforehand on which side it must incline."
+
+# The Principia Discordia
+@The_monster@ says, "The real reality is there, but everything you know about it is in your mind and yours to do with as you like."
 
 VISUAL:@The_monster@ considers dialectic materialism.
 
@@ -2986,7 +3032,7 @@ w:50
 
 @The_monster@ says, "How do you make a golem out of electricity?"
 
-@The_monster@ says, "What's an "Orb Guardian", anyway?"
+@The_monster@ says, "What's an 'Orb Guardian', anyway?"
 
 @The_monster@ says, "Orbs of fire, orbs of destruction, the Orb of Zot... what's with all the orbs?"
 
@@ -3004,7 +3050,7 @@ w:50
 
 @The_monster@ says, "Oh, so that's what those runes are for!"
 
-@The_monster@ says, "Why do the walls change color every floor? Did they keep running out of paint?"
+@The_monster@ says, "Why do the walls change colour every floor? Did they keep running out of paint?"
 
 @The_monster@ says, "What's stopping the guards from just stealing the Orb themselves?"
 
@@ -3063,6 +3109,8 @@ w:50
 @The_monster@ says, "If I give you twenty gold pieces, can you get rid of this nasty case of scales I've got?"
 
 @The_monster@ covers @possessive@ ears. "Shut up!"
+
+@The_monster@ says, "Wouldn't you get more for your money with Gozag?"
 %%%%
 the Shining One Donald
 
@@ -3101,6 +3149,16 @@ w:50
 @The_monster@ says, "I hate zombies."
 
 @The_monster@ says, "Yuck, you smell of miasma!"
+
+@The_monster@ says, "I hate wretches."
+
+@The_monster@ says, "How deep do you have to dig to get a never-ending supply of wretches?"
+
+@The_monster@ says, "You must really love pain. I hate it."
+
+@The_monster@ says, "Do you just use necromancy for everything, then?"
+
+@The_monster@ says, "Why a 'Demon-God'? Wouldn't a 'Zombie-God' be more appropriate?"
 %%%%
 friendly Yredelemnul Donald
 
@@ -3280,11 +3338,15 @@ w:50
 
 @The_monster@ says, "Why would you want to visit the Abyss? For a holiday?"
 
-@The_monster@ says, "I never knew blinking was supposed to hurt."
-
 @The_monster@ says, "Nothing ever attacks me when I'm in the Abyss."
 
 @The_monster@ says, "Are you going to banish me, too?"
+
+@The_monster@ says, "The world's bad enough without you corrupting it."
+
+@The_monster@ says, "You must really love eldritch horrors. I hate them."
+
+@The_monster@ says, "How can a god be banished to the Abyss?"
 %%%%
 Beogh Donald
 
@@ -3374,13 +3436,13 @@ w:50
 
 @The_monster@ says, "I hate [trees|plants|fungi]."
 
-@The_monster@ says, "You're like a walking fruit salad. I hate that."
-
 @The_monster@ says, "Do you like gardening? I hate gardening."
 
 @The_monster@ says, "So, how do you deal with the weeds?"
 
 @The_monster@ says, "A plant spat acid at me. I hate that."
+
+@The_monster@ says, "Better hope you don't develop allergies."
 %%%%
 Cheibriados Donald
 
@@ -3462,8 +3524,6 @@ w:50
 @The_monster@ makes a face at you and exclaims, "Curses!"
 
 @The_monster@ says, "I got nailed to the sky once. No big deal, really."
-
-@The_monster@ says, "You must love that deathly cold feeling. I hate it."
 
 @The_monster@ says, "I hate voyeurs."
 
@@ -3576,6 +3636,10 @@ w:50
 @The_monster@ says, "Would you happen to remember where the Orb is?"
 
 @The_monster@ says, "Ghost stories? Ooh, I'm so scared!"
+
+@The_monster@ says, "Isn't it convenient that your ancestor always knows how to fight?"
+
+@The_monster@ says, "I forgot what I was going to say. I hate that."
 %%%%
 Uskayaw Donald
 
@@ -3591,6 +3655,10 @@ w:50
 @The_monster@ says, "Poetry of the foot? All you're doing is stomping around."
 
 @The_monster@ says, "You look ridiculous with all that flailing around."
+
+@The_monster@ says, "That's not dancing; that's just a fancy way of killing things."
+
+@The_monster@ says, "What kind of dance blows up spectators?"
 %%%%
 Wu Jian Donald
 
@@ -5158,7 +5226,7 @@ VISUAL:@The_monster@ splashes a potion @at_foe@.
 
 VISUAL:@The_monster@ throws some [strange|weird|mysterious] powder @at_foe@.
 
-@The_monster@ says @to_foe@, "Odis was a nice man, you're awful."
+@The_monster@ says @to_foe@, "Odis was a nice man; you're awful."
 
 @The_monster@ holds @possessive@ sides and says @to_foe@, "You'll eat dirt beneath my feet."
 
@@ -6976,6 +7044,23 @@ confused Bennu permanently killed
 
 @Bennu permanently killed@
 %%%%
+################## Brain worm ################################
+brain worm
+
+VISUAL:@The_monster@ drips [complex|unknown] stolen formulae onto the @surface@.
+
+VISUAL:@The_monster@ is briefly caught in foreign memories of distant [stars|lands|kingdoms].
+
+VISUAL:@The_monster@ twitches its length with the pilfered instincts of [wings|pincers|fins].
+
+%%%%
+Sewer brain worm
+
+w:30
+@brain worm@
+
+VISUAL:@The_monster@ stares [perplexed|with bemusement] at its reflection in a puddle.
+%%%%
 ################## Bullfrog ################################
 bullfrog
 
@@ -7184,6 +7269,33 @@ VISUAL:@The_monster@ skips for a moment.
 @The_monster@ says, "Trust me, I'm a doctor."
 ## END Killer Klown ##
 %%%%
+################## Laughing skull ###########################
+laughing skull
+
+@The_monster@ @_laughs_@ at the inevitable fate of oblivion.
+
+@The_monster@ @_laughs_@ at how history will forget everyone present.
+
+@The_monster@ @_laughs_@ at the Dungeon's lack of mercy or dignity.
+
+# Kill Six Billion Demons
+@The_monster@ @_laughs_@ at the inescapable nature of violence.
+
+w:20
+__NONE
+%%%%
+laughing skull triumphant
+
+@The_monster@ crumbles to pieces from sheer joy.
+%%%%
+_laughs_
+
+cackles madly
+
+chuckles harshly
+
+gibbers darkly
+%%%%
 ################## Moth of wrath ###########################
 moth of wrath
 
@@ -7194,6 +7306,20 @@ VISUAL:@The_monster@ angrily waves @possessive@ antennae.
 # speech.
 default profane servitor
 
+__NONE
+%%%%
+################## Protean progenitor ###########################
+protean progenitor
+
+VISUAL:@The_monster@'s form [briefly |][ripples|wavers] with deep exhaustion.
+
+VISUAL:@The_monster@'s [three nested|six fanged|nine smoking] eyes blink slowly.
+
+VISUAL:@The_monster@ [glitters|crackles], [sighs|grumbles], and [beckons|stomps].
+
+VISUAL:@The_monster@ unfurls and squashes hidden [antennae|spinnerets|pseudopods].
+
+w:20
 __NONE
 %%%%
 ################## Statues ##################
@@ -7275,6 +7401,57 @@ _tormentor_rare_
 
 @The_monster@ shouts @at_foe@, "I'll tear you apart!"
 ## END _tormentor_ ##
+%%%%
+################## Weeping skull ##################################
+weeping skull
+
+w:7
+@_weeping_skull_common_@
+
+w:1
+@_weeping_skull_rare_@
+
+w:4
+__NONE
+%%%%
+_weeping_skull_common_
+
+@The_monster@ @_weeps_@ for your inevitable fate. @player_only@
+
+@The_monster@ @_weeps_@ at its own [deplorable|decrepit] state.
+
+# Slime, Swamp, Desolation...
+@The_monster@ grieves for the multitudes of fallen [empires|civilizations].
+
+# Itsumaden
+@The_monster@ begs for proper burials for the Dungeon's restless dead.
+%%%%
+_weeping_skull_rare_
+
+@The_monster@ @_weeps_@ over the unstoppable march of time and entropy.
+
+# Hollow Knight
+@The_monster@ asks how much longer can this world bear the weight of past lives.
+
+# Don't add literally everything to this one- only the ones with no chance.
+w:1
+@The_monster@ mourns the extinction of [gnomes|halflings|high elves|hill dwarves].
+
+# The shrieker shrieks.
+w:1
+@The_monster@ weeps.
+%%%%
+weeping skull triumphant
+
+@The_monster@ crumbles to pieces from sheer guilt.
+%%%%
+_weeps_
+
+moans
+
+wails
+
+sobs
 %%%%
 ################## Wizard ##################################
 arcanist
@@ -8049,6 +8226,8 @@ Yredelemnul
 Beogh
 
 Lugonu
+
+Dithmenos
 %%%%
 confused zin angel
 

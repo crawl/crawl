@@ -116,10 +116,10 @@ static const form_entry formdata[] =
     }
 },
 {
-    transformation::anaconda, MONS_ANACONDA, "Anaconda", "snake-form", "snake",
-    "an enormous anaconda.",
+    transformation::serpent, MONS_ANACONDA, "Serpent", "snake-form", "snake",
+    "an enormous serpent.",
     10, 19, TALISMAN_SERPENT,
-    EQF_PHYSICAL, MR_NO_FLAGS,
+    EQF_PHYSICAL, MR_RES_POISON,
     DEFAULT_DURATION, 5, 0, SIZE_LARGE, 12,
     FormScaling().Base(9).Scaling(6), true, FormScaling().Base(7),
     SPWPN_NORMAL, LIGHTGREY, "", { "hit", "lash", "body-slam", "crush" },
@@ -367,7 +367,7 @@ static const form_entry formdata[] =
     transformation::flux, MONS_SHAPESHIFTER, "Flux", "flux-form", "flux",
     "something dangerously unstable.",
     7, 14, TALISMAN_FLUX,
-    SLOTF(EQ_WEAPON) | SLOTF(EQ_SHIELD), MR_NO_FLAGS,
+    SLOTF(EQ_WEAPON) | SLOTF(EQ_SHIELD) | SLOTF(EQ_BODY_ARMOUR), MR_NO_FLAGS,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
     {}, true, {},
     SPWPN_NORMAL, CYAN, "", DEFAULT_VERBS,
