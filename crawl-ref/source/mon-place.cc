@@ -1023,20 +1023,22 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // Death knights belong to Yredelemnul.
         else if (mg.cls == MONS_DEATH_KNIGHT)
             mon->god = GOD_YREDELEMNUL;
-        // Asterion belongs to Mahkleb.
-        else if (mg.cls == MONS_ASTERION)
-            mon->god = GOD_MAKHLEB;
         // Seraphim follow the Shining One.
         else if (mg.cls == MONS_SERAPH)
             mon->god = GOD_SHINING_ONE;
         // Draconian stormcallers worship Qazlal.
         else if (mg.cls == MONS_DRACONIAN_STORMCALLER)
             mon->god = GOD_QAZLAL;
-        // Classed demonspawn.
-        else if (mg.cls == MONS_DEMONSPAWN_BLOOD_SAINT)
+        else if (mg.cls == MONS_DEMONSPAWN_BLOOD_SAINT
+                 || mg.cls == MONS_ASTERION)
+        {
             mon->god = GOD_MAKHLEB;
-        else if (mg.cls == MONS_DEMONSPAWN_BLACK_SUN)
+        }
+        else if (mg.cls == MONS_DEMONSPAWN_BLACK_SUN
+                 || mg.cls == MONS_BURIAL_ACOLYTE)
+        {
             mon->god = GOD_KIKUBAAQUDGHA;
+        }
         else if (mg.cls == MONS_DEMONSPAWN_CORRUPTER
                  || mg.cls == MONS_MLIOGLOTL)
         {
