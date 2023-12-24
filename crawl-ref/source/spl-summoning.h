@@ -12,6 +12,10 @@
 
 #define DRAGON_CALL_POWER_KEY "dragon_call_power"
 
+// Maximum turn number that the blazeheart golem will remain active without its
+// summoner being adjacent to it.
+#define BLAZEHEART_ACTIVE_TURN "blazeheart_active_turn"
+
 spret cast_summon_small_mammal(int pow, god_type god, bool fail);
 
 bool canine_familiar_is_alive();
@@ -56,7 +60,7 @@ spret cast_malign_gateway(actor* caster, int pow,
                           bool test = false);
 coord_def find_gateway_location(actor* caster);
 spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool test=false);
-spret cast_summon_guardian_golem(int pow, god_type god, bool fail);
+spret cast_summon_blazeheart_golem(int pow, god_type god, bool fail);
 
 spret cast_dragon_call(int pow, bool fail);
 void do_dragon_call(int time);

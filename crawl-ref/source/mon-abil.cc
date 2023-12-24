@@ -1135,18 +1135,6 @@ bool mon_special_ability(monster* mons)
     }
     break;
 
-    case MONS_GUARDIAN_GOLEM:
-        if (mons->hit_points * 2 < mons->max_hit_points
-             && !mons->has_ench(ENCH_INNER_FLAME))
-        {
-            simple_monster_message(*mons, " overheats!");
-            mid_t act = mons->summoner == MID_PLAYER ? MID_YOU_FAULTLESS :
-                        mons->summoner;
-            mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, actor_by_mid(act),
-                                       INFINITE_DURATION));
-        }
-        break;
-
     case MONS_WEEPING_SKULL:
         _weeping_skull_cloud_aura(mons);
         break;
@@ -1159,18 +1147,4 @@ bool mon_special_ability(monster* mons)
         mons->lose_energy(EUT_SPECIAL);
 
     return used;
-}
-
-void guardian_golem_bond(monster& mons)
-{
-    for (monster_near_iterator mi(&mons, LOS_NO_TRANS); mi; ++mi)
-    {
-        if (mons_aligned(&mons, *mi)
-            && !mi->has_ench(ENCH_CHARM)
-            && !mons_is_projectile(**mi)
-            && *mi != &mons)
-        {
-            mi->add_ench(mon_enchant(ENCH_INJURY_BOND, 1, &mons, INFINITE_DURATION));
-        }
-    }
 }

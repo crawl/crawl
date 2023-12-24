@@ -62,6 +62,21 @@ static void _setup_inferno_explosion(bolt & beam, const monster& origin)
     beam.refine_for_explosion();
 }
 
+static void _setup_blazeheart_core_explosion(bolt & beam, const monster& origin)
+{
+    _setup_base_explosion(beam, origin);
+
+    beam.flavour      = BEAM_FIRE;
+    beam.damage       = dice_def(3, 5 + origin.get_hit_dice());
+    beam.name         = "fiery explosion";
+    beam.colour       = RED;
+    beam.ex_size      = 1;
+    beam.source_name  = origin.name(DESC_PLAIN, true);
+
+    // This is so it places flame clouds under the explosion
+    beam.origin_spell = SPELL_SUMMON_BLAZEHEART_GOLEM;
+}
+
 void setup_spore_explosion(bolt & beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
@@ -170,6 +185,7 @@ static const map<monster_type, monster_explosion> explosions {
     { MONS_BENNU, { _setup_bennu_explosion, "fires are quelled" } },
     { MONS_BLOATED_HUSK, { _setup_bloated_husk_explosion } },
     { MONS_CREEPING_INFERNO, { _setup_inferno_explosion } },
+    { MONS_BLAZEHEART_CORE, { _setup_blazeheart_core_explosion } }
 };
 
 // When this monster dies, does it explode?

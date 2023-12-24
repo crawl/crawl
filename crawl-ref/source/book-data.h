@@ -148,7 +148,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Callings
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_CALL_CANINE_FAMILIAR,
-    SPELL_SUMMON_GUARDIAN_GOLEM,
+    SPELL_SUMMON_BLAZEHEART_GOLEM,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -449,7 +449,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Dangerous Friends
-    SPELL_SUMMON_GUARDIAN_GOLEM,
+    SPELL_SUMMON_BLAZEHEART_GOLEM,
     SPELL_IOOD,
     SPELL_SPELLFORGED_SERVITOR,
 },

@@ -312,7 +312,7 @@ enum monster_type                      // env.mons[].type
     MONS_TOENAIL_GOLEM,
     MONS_ELECTRIC_GOLEM, // replacing the guardian robot -- bwr
 #if TAG_MAJOR_VERSION > 34
-    MONS_GUARDIAN_GOLEM,
+    MONS_BLAZEHEART_GOLEM,
     MONS_SPELLFORGED_SERVITOR,
     MONS_USHABTI,
     MONS_NARGUN,
@@ -950,6 +950,7 @@ enum monster_type                      // env.mons[].type
     MONS_BATTLESPHERE,
     MONS_FOXFIRE,
     MONS_BOULDER,
+    MONS_BLAZEHEART_CORE,
 #endif
     MONS_PILLAR_OF_SALT,
 #if TAG_MAJOR_VERSION > 34
@@ -1102,7 +1103,7 @@ enum monster_type                      // env.mons[].type
     MONS_VASHNIA,
 
     MONS_BLOCK_OF_ICE,
-    MONS_GUARDIAN_GOLEM,
+    MONS_BLAZEHEART_GOLEM,
     MONS_SPELLFORGED_SERVITOR,
     MONS_OCTOPODE_CRUSHER,
     MONS_CRAB,
@@ -1227,6 +1228,7 @@ enum monster_type                      // env.mons[].type
     MONS_BOMBARDIER_BEETLE,
     MONS_WEEPING_SKULL,
     MONS_BURIAL_ACOLYTE,
+    MONS_BLAZEHEART_CORE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

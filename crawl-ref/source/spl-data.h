@@ -2449,10 +2449,10 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SUMMON_GUARDIAN_GOLEM, "Summon Guardian Golem",
-    spschool::summoning | spschool::hexes,
+    SPELL_SUMMON_BLAZEHEART_GOLEM, "Summon Blazeheart Golem",
+    spschool::summoning | spschool::fire,
     spflag::none,
-    3,
+    4,
     100,
     -1, -1,
     0,

@@ -892,11 +892,20 @@ bool melee_attack::handle_phase_end()
         mons_do_tendril_disarm();
     }
 
-    if (attacker->alive()
-        && attacker->is_monster()
-        && attacker->as_monster()->has_ench(ENCH_ROLLING))
+    if (attacker->alive() && attacker->is_monster())
     {
-        attacker->as_monster()->del_ench(ENCH_ROLLING);
+        monster* mon_attacker = attacker->as_monster();
+
+        if (mon_attacker->has_ench(ENCH_ROLLING))
+            mon_attacker->del_ench(ENCH_ROLLING);
+
+        // Blazeheart golems tear themselves apart on impact
+        if (mon_attacker->type == MONS_BLAZEHEART_GOLEM && did_hit)
+        {
+            mon_attacker->hurt(mon_attacker,
+                               mon_attacker->max_hit_points / 4 + 1,
+                               BEAM_MISSILE);
+        }
     }
 
     if (defender && !is_multihit)

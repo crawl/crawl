@@ -2826,6 +2826,10 @@ void bolt::affect_place_explosion_clouds()
         }
     }
 
+    // Blazeheart core detonation
+    if (origin_spell == SPELL_SUMMON_BLAZEHEART_GOLEM)
+        place_cloud(CLOUD_FIRE, p, 2 + random2avg(5,2), agent());
+
     if (origin_spell == SPELL_FIRE_STORM)
     {
         place_cloud(CLOUD_FIRE, p, 2 + random2avg(5,2), agent());

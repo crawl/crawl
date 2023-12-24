@@ -386,7 +386,9 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         return false;
     }
 
-    if (mons_is_projectile(*mons) || mons->type == MONS_BOULDER)
+    if (mons_is_projectile(*mons)
+        || mons->type == MONS_BOULDER
+        || mons->type == MONS_BLAZEHEART_CORE)
     {
         if (!quiet)
             mpr("It's unwise to walk into this.");

@@ -1091,6 +1091,39 @@ static void _handle_boulder_movement(monster& boulder)
         _swim_or_move_energy(boulder);
 }
 
+static void _check_blazeheart_golem_link(monster& mons)
+{
+    // Check distance from player. If we're non-adjacent, decrease timer
+    // (we get a turn or two's grace period to make managing this less fiddly)
+    if (grid_distance(you.pos(), mons.pos()) > 1)
+    {
+        if (you.elapsed_time > mons.props[BLAZEHEART_ACTIVE_TURN].get_int()
+            && !mons.has_ench(ENCH_PARALYSIS))
+        {
+            simple_monster_message(mons, "'s core grows cold and it stops moving.");
+            mons.add_ench(mon_enchant(ENCH_PARALYSIS, 1, &mons, INFINITE_DURATION));
+        }
+    }
+    else
+    {
+        // If we are dormant, wake up.
+        if (mons.has_ench(ENCH_PARALYSIS))
+        {
+            mons.del_ench(ENCH_PARALYSIS, true);
+            simple_monster_message(mons, "'s core flares to life once more.");
+
+            // Since we check this at the END of the golem's move, even if it
+            // started its turn with the player next to them (due to player
+            // movement), grant some instant energy to make it look like it
+            // activated first.
+            //mons.speed_increment += mons.action_energy(EUT_MOVE);
+        }
+
+        // Store when we will next become dormant if the player is not near us
+        mons.props[BLAZEHEART_ACTIVE_TURN].get_int() = you.elapsed_time + 10;
+    }
+}
+
 static void _mons_fire_wand(monster& mons, spell_type mzap, bolt &beem)
 {
     if (!simple_monster_message(mons, " zaps a wand."))
@@ -1456,6 +1489,12 @@ static void _pre_monster_move(monster& mons)
     fedhas_neutralise(&mons);
     slime_convert(&mons);
 
+    // Check for golem summoner proximity whether we have energy to act or not.
+    // (Avoids awkward situations of moving next to a dormant golem with very
+    // fast actions not appearing to wake it up until the following turn)
+    if (mons.type == MONS_BLAZEHEART_GOLEM)
+        _check_blazeheart_golem_link(mons);
+
     // Monster just summoned (or just took stairs), skip this action.
     if (testbits(mons.flags, MF_JUST_SUMMONED))
     {
@@ -1703,6 +1742,12 @@ void handle_monster_move(monster* mons)
     if (mons->type == MONS_BOULDER)
     {
         _handle_boulder_movement(*mons);
+        return;
+    }
+
+    if (mons->type == MONS_BLAZEHEART_CORE)
+    {
+        mons->suicide();
         return;
     }
 
@@ -2192,6 +2237,12 @@ static void _post_monster_move(monster* mons)
     if (mons->type == MONS_TORPOR_SNAIL)
         _torpor_snail_slow(mons);
 
+    // Check golem distance again at the END of its move (so that it won't go
+    // dormant if it is following a player who was adjacent to it at the start
+    // of the player's own move)
+    if (mons->type == MONS_BLAZEHEART_GOLEM)
+         _check_blazeheart_golem_link(*mons);
+
     if (mons->type == MONS_WATER_NYMPH
         || mons->type == MONS_ELEMENTAL_WELLSPRING
         || mons->type == MONS_NORRIS)
@@ -2213,9 +2264,6 @@ static void _post_monster_move(monster* mons)
                                     TERRAIN_CHANGE_FLOOD, mons->mid);
             }
     }
-
-    if (mons->type == MONS_GUARDIAN_GOLEM)
-        guardian_golem_bond(*mons);
 
     // A rakshasa that has regained full health dismisses its emergency clones
     // (if they're somehow still alive) and regains the ability to summon new ones.

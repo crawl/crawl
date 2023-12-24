@@ -1477,11 +1477,17 @@ Summon Greater Demon spell
 
 Calls forth one of the greater demons of Pandemonium to serve the caster.
 %%%%
-Summon Guardian Golem spell
+Summon Blazeheart Golem spell
 
-Summons a protective golem. It redirects the injuries of its allies (but not
-the caster) to itself. When sufficiently damaged, it may fill with an inner
-flame, causing it to explode if destroyed. It gains more health at high power.
+Summons a volatile elemental spark encased in a shell of slag iron. It is
+capable of raining down powerful blows on its summoner's adversaries - so
+powerful that the golem itself is often damaged by their impact.
+
+Only tenuously bound to this world, the flames within it will rapidly go dormant
+whenever its summoner leaves its side, and if its shell is ever destroyed while
+still active, the exposed core will violently detonate a moment later.
+
+It gains greater explosive damage at higher power.
 %%%%
 Summon Hell Beast spell
 

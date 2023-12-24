@@ -918,26 +918,24 @@ spret cast_summon_lightning_spire(int pow, god_type god, bool fail)
     return spret::success;
 }
 
-spret cast_summon_guardian_golem(int pow, god_type god, bool fail)
+spret cast_summon_blazeheart_golem(int pow, god_type god, bool fail)
 {
     if (stop_summoning_prompt(MR_RES_POISON))
         return spret::abort;
 
     fail_check();
 
-    mgen_data golem = _pal_data(MONS_GUARDIAN_GOLEM, 3, god,
-                                SPELL_SUMMON_GUARDIAN_GOLEM);
+    mgen_data golem = _pal_data(MONS_BLAZEHEART_GOLEM, 3, god,
+                                SPELL_SUMMON_BLAZEHEART_GOLEM);
     golem.flags &= ~MG_AUTOFOE; // !!!
-    golem.hd = 4 + div_rand_round(pow, 16);
+    golem.hd = 6 + div_rand_round(pow, 12);
 
     monster* mons = (create_monster(golem));
 
     if (mons)
     {
-        // Immediately apply injury bond
-        guardian_golem_bond(*mons);
-
-        mpr("A guardian golem appears, shielding your allies.");
+        mpr("A fiery spirit appears, bound in slag iron.");
+        mons->props[BLAZEHEART_ACTIVE_TURN].get_int() = you.elapsed_time + 10;
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -2215,7 +2213,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_MONSTROUS_MENAGERIE,      { 2, 3 } },
     { SPELL_SUMMON_HORRIBLE_THINGS,   { 8, 8 } },
     { SPELL_SUMMON_LIGHTNING_SPIRE,   { 1, 1 } },
-    { SPELL_SUMMON_GUARDIAN_GOLEM,    { 1, 1 } },
+    { SPELL_SUMMON_BLAZEHEART_GOLEM,  { 1, 1 } },
     { SPELL_SPELLFORGED_SERVITOR,     { 1, 1 } },
     { SPELL_ANIMATE_ARMOUR,           { 1, 1 } },
     { SPELL_HAUNT,                    { 8, 8 } },

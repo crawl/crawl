@@ -736,6 +736,16 @@ black mamba
 
 An astonishingly fast tropical snake whose bite bears a deadly venom.
 %%%%
+blazeheart core
+
+The exposed elemental core of a blazeheart golem. Far too unstable to remain
+without its shell, it is in the process of violently exploding.
+%%%%
+blazeheart golem
+
+A volatile elemental spark encased in a shell of slag iron. If destroyed while
+its fires still blaze, the exposed core will violently detonate a moment later.
+%%%%
 blink frog
 
 A species of frog that possesses the ability to blink at will. It can blink
@@ -1463,12 +1473,6 @@ A muscular green-scaled humanoid with a reptilian tail and small wings.
 grey draconian
 
 A muscular grey-scaled humanoid with a reptilian tail and small wings.
-%%%%
-guardian golem
-
-A large construct, designed to protect. It can take the blows dealt to others
-upon itself, though it is prone to becoming explosively unstable after heavy
-punishment.
 %%%%
 guardian mummy
 

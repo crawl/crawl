@@ -500,7 +500,8 @@ vv MONS_VV
 %sdir mon/nonliving
 crystal_guardian MONS_CRYSTAL_GUARDIAN
 electric_golem MONS_ELECTRIC_GOLEM
-guardian_golem MONS_GUARDIAN_GOLEM
+blazeheart_golem MONS_BLAZEHEART_GOLEM
+blazeheart_core MONS_BLAZEHEART_CORE
 iron_golem MONS_IRON_GOLEM
 ushabti MONS_USHABTI
 peacekeeper MONS_PEACEKEEPER

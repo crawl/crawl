@@ -69,7 +69,7 @@ local books = {
 "Legendary_Spells,_Part_XIV numspells:7 spells:tukima's_dance&ozocubu's_armour&"
   .. "passage_of_golubria&brom's_barrelling_boulder&borgnjor's_vile_clutch&"
   .. "alistair's_intoxication&maxwell's_capacitive_coupling",
-"Magical_Constructs numspells:5 spells:summon_guardian_golem&tukima's_dance&"
+"Magical_Constructs numspells:5 spells:summon_blazeheart_golem&tukima's_dance&"
   .."animate_armour&summon_lightning_spire&spellforged_servitor",
 "Magnificence owner:Eustachio numspells:3 spells:summon_small_mammal&blink&"
   .. "call_imp",
