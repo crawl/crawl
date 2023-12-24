@@ -3,7 +3,7 @@
     "{short_name}",
     "{name}", {adjective}, {genus},
     {species_flags},
-    {xp}, {hp}, {mp}, {mr},
+    {xp}, {hp}, {mp}, {wl},
     {monster_name},
     {habitat}, {undead}, {size},
     {str}, {int}, {dex},
