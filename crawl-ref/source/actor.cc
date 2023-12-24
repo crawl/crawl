@@ -1207,6 +1207,12 @@ void actor::stumble_away_from(coord_def targ, string src)
         mprf("%s is knocked back by %s.", name(DESC_THE).c_str(), src.c_str());
 
     move_to_pos(newpos);
+
+    stop_directly_constricting_all(true);
+    if (get_constrict_type() == CONSTRICT_MELEE)
+        stop_being_constricted();
+    clear_far_engulf();
+
     apply_location_effects(oldpos, is_player() ? KILL_YOU_MISSILE
                                                : KILL_MON_MISSILE,
                            actor_to_death_source(this));
