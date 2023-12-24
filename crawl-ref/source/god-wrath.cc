@@ -345,6 +345,13 @@ static bool _zin_retribution()
     return true;
 }
 
+static bool _xom_retribution()
+{
+    const int severity = abs(you.piety - HALF_MAX_PIETY);
+    const bool good = one_chance_in(10);
+    return xom_acts(severity, good) != XOM_DID_NOTHING;
+}
+
 static bool _cheibriados_retribution()
 {
     // time god/slowness theme
@@ -2221,10 +2228,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     bool do_more    = true;
     switch (god)
     {
-    // One in ten chance that Xom might do something good...
-    case GOD_XOM:
-        xom_acts(abs(you.piety - HALF_MAX_PIETY), one_chance_in(10));
-        break;
+    case GOD_XOM:           do_more = _xom_retribution(); break;
     case GOD_SHINING_ONE:   do_more = _tso_retribution(); break;
     case GOD_ZIN:           do_more = _zin_retribution(); break;
     case GOD_MAKHLEB:       do_more = _makhleb_retribution(); break;
