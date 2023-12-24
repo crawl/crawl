@@ -1650,13 +1650,6 @@ const char *shoptype_to_str(shop_type type)
     return shop_types[type];
 }
 
-void list_shop_types()
-{
-    mpr_nojoin(MSGCH_PLAIN, "Available shop types: ");
-    for (const char *type : shop_types)
-        mprf_nocap("%s", type);
-}
-
 ////////////////////////////////////////////////////////////////////////
 
 // TODO:
