@@ -4261,7 +4261,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature",
 
 { // dummy; spawns in a single vault.
     MONS_ONI, 'O', LIGHTBLUE, "oni",
-    M_WARM_BLOOD | M_SPEAKS,
+    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO | M_NO_GEN_DERIVED,
     MR_NO_FLAGS,
     9, MONS_ONI, MONS_ONI, MH_NATURAL, 20,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
