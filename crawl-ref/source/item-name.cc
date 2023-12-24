@@ -3362,6 +3362,11 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         if (is_shield(item) && you.get_mutation_level(MUT_MISSING_HAND))
             return true;
 
+        if (is_unrandom_artefact(item, UNRAND_WUCAD_MU))
+        {
+            return you.has_mutation(MUT_HP_CASTING) || you_worship(GOD_TROG);
+        }
+
         if (is_artefact(item))
             return false;
 
@@ -3390,7 +3395,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             case SPARM_RAGE:
                 return !you.can_go_berserk(false, false, true, nullptr, temp);
             case SPARM_ENERGY:
-                return you.has_mutation(MUT_HP_CASTING);
+                return you.has_mutation(MUT_HP_CASTING) || you_worship(GOD_TROG);
             default:
                 return false;
             }
