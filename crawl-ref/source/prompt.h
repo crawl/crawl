@@ -82,7 +82,7 @@ public:
     WizardEntry(string _text, int _output) // Find a symbol later.
     : WizardEntry(0, _text, _output) { }
 
-    const int output;
+    int output;
 };
 
 class WizardMenu : private PromptMenu
