@@ -1922,10 +1922,10 @@ static const mon_spellbook mspell_list[] =
     // ('L') Liches.
     {  MST_BORIS,
       {
-       { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
-       { SPELL_IRON_SHOT, 12, MON_SPELL_WIZARD },
-       { SPELL_IOOD, 12, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 24, MON_SPELL_WIZARD },
+       { SPELL_BOLT_OF_COLD, 16, MON_SPELL_WIZARD },
+       { SPELL_IRON_SHOT, 14, MON_SPELL_WIZARD },
+       { SPELL_IOOD, 14, MON_SPELL_WIZARD },
+       { SPELL_MARCH_OF_SORROWS, 14, MON_SPELL_WIZARD },
       }
     },
 

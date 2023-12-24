@@ -2785,6 +2785,23 @@ void bolt::affect_place_clouds()
         if (!actor_at(p) || actor_at(p)->res_negative_energy() == 3)
             place_cloud(CLOUD_MISERY, p, random2(4) + 2, agent());
     }
+
+    if (origin_spell == SPELL_MARCH_OF_SORROWS)
+    {
+        place_cloud(CLOUD_MISERY, p, random2(5) + 8, agent());
+
+        if (actor_at(p) && !mons_aligned(actor_at(p), agent()))
+        {
+            for (adjacent_iterator ai(pos()); ai; ++ai)
+            {
+                if (feat_is_solid(env.grid(*ai)))
+                    continue;
+
+                place_cloud(CLOUD_MISERY, *ai, random2(4) + 2, agent());
+            }
+        }
+    }
+
 }
 
 void bolt::affect_place_explosion_clouds()
@@ -2805,7 +2822,7 @@ void bolt::affect_place_explosion_clouds()
         if (p == center || x_chance_in_y(125 + ench_power, 225))
         {
             place_cloud(CLOUD_MEPHITIC, p, roll_dice(2,
-                        2 + div_rand_round(ench_power, 20)), agent());
+                        8 + div_rand_round(ench_power, 20)), agent());
         }
     }
 

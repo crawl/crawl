@@ -2025,6 +2025,7 @@ _Blork_rare_
 ############ BORIS ### An ancient lich with the nasty habit of coming back
 Boris
 
+w:8
 @_Boris_common_@
 
 w:5
@@ -2048,9 +2049,11 @@ _Boris_medium_
 
 @The_monster@ says, "You want the ORB? You'll never get it." @player_only@
 
-@The_monster@ says @to_foe@, "My power is unlimited."
+@The_monster@ boasts with wailing echoes, "My power is unlimited."
 
-@The_monster@ says @to_foe@, "You can't kill me. I'm immortal."
+@The_monster@ claims, "You mortals are all unique only in the ways you'll break."
+
+@The_monster@ says @to_foe@, "You can't kill me in a way that matters."
 
 @The_monster@ says @to_foe@, "I know the secret of eternal life. Do you?"
 
@@ -2058,7 +2061,7 @@ _Boris_medium_
 
 @The_monster@ says @to_foe@, "Who wants to live forever? Me."
 
-@The_monster@ says @to_foe@, "There's only one solution for you. To die."
+@The_monster@ says @to_foe@, "There's only one solution for all of you. To die."
 
 @The_monster@ says @to_foe@, "You can never win."
 %%%%
@@ -2066,13 +2069,19 @@ _Boris_rare_
 
 @The_monster@ says @to_foe@, "I didn't invite you."
 
-@The_monster@ says @to_foe@, "The world, the flesh and the devil."
+@The_monster@ says @to_foe@, "The world, the flesh, and the devil."
+
+@The_monster@ says, "There's no good or evil. Just power and will."
+
+# Kill Six Billion Demons
+@The_monster@ says, "You have all forgotten the taste of death."
+
+# Magic: the Gathering
+@The_monster@ claims, "I care not for such insignificant forces as time or death."
 
 @The_monster@ says "Magic. You know nothing about it."
 
-@The_monster@ says @to_foe@, "I'll be back."
-
-@The_monster@ says @to_foe@, "Join the legion of my servants."
+@The_monster@ says @to_foe@, "Join my legions of the broken and the beaten."
 %%%%
 Boris killed
 
@@ -2100,6 +2109,9 @@ _Boris_return_rare_
 @The_monster@ says @to_foe@, "You cannot defeat me so easily!"
 
 @The_monster@ says @to_foe@, "We will meet again!"
+
+w:5
+@The_monster@ asks, "Do I look like the kind of man who dies?"
 %%%%
 Boris unsummoned
 
@@ -2114,6 +2126,8 @@ Boris triumphant
 @The_monster@ says, "And that's the last I'll see of you."
 
 @The_monster@ says, "I'd like to see you come back from this one."
+
+@The_monster@ says, "I'll treasure this one."
 ## END Boris ##
 %%%%
 ############ CHUCK ### An avid rock collector.

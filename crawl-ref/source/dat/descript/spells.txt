@@ -917,6 +917,12 @@ Mara Summon spell
 Weaves illusions of the caster. Such illusions have the same physical prowess
 as the original, and can cast the same spells.
 %%%%
+March of Sorrow spell
+
+Conjures a stream of stolen suffering, leaving clouds of excruciating misery in
+its wake and around its targets. These clouds of negative energy will rapidly
+drain the living of small fractions of their maximum health.
+%%%%
 Marshlight spell
 
 Conjures two balls of burning swamp gas adjacent to the caster. The balls will

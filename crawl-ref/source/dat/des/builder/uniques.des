@@ -306,7 +306,7 @@ DEPTH:  Crypt
 # Initial placement of Boris: he may regenerate on later levels after
 # being killed.
 NAME:   uniq_boris
-DEPTH:  Depths:3-, Vaults:2-, Crypt, Tomb
+DEPTH:  Depths, Elf:$, Vaults, Crypt, Tomb
 : place_unique(_G, "Boris")
 
 NAME:   uniq_enchantress

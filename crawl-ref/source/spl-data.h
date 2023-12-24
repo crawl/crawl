@@ -2877,6 +2877,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_MARCH_OF_SORROWS, "March of Sorrows",
+    spschool::conjuration | spschool::necromancy | spschool::air,
+    spflag::dir_or_target | spflag::monster,
+    7,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_SUMMON_SCARABS, "Summon Scarabs",
     spschool::summoning | spschool::necromancy,
     spflag::mons_abjure | spflag::monster,
