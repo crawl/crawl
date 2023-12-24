@@ -1915,6 +1915,37 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     bool did_death_message = false;
 
+    // We do some of these BEFORE checking for explosions from inner flame,
+    // if we don't want to prevent inner flame from doing certain effects of
+    // cleanup.
+    //
+    // (It's possible some other things should be moved here, but dead code that
+    // deals primarily with messaging seems fine to override by exploding)
+    if (mons.type == MONS_PROTEAN_PROGENITOR && !was_banished
+        && !wizard && !mons_reset)
+    {
+        _protean_explosion(&mons);
+        silent = true;
+    }
+    else if (mons.type == MONS_BATTLESPHERE)
+    {
+        if (!wizard && !mons_reset && !was_banished
+            && !cell_is_solid(mons.pos()))
+        {
+            place_cloud(CLOUD_MAGIC_TRAIL, mons.pos(), 3 + random2(3), &mons);
+        }
+        end_battlesphere(&mons, true);
+    }
+    else if (mons.type == MONS_SPECTRAL_WEAPON)
+    {
+        end_spectral_weapon(&mons, true, killer == KILL_RESET);
+        silent = true;
+    }
+    else if (mons.type == MONS_SPRIGGAN_DRUID && !silent && !was_banished
+             && !wizard && !mons_reset)
+    {
+        _druid_final_boon(&mons);
+    }
 
     if (monster_explodes(mons))
     {
@@ -2055,24 +2086,10 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (killer == KILL_RESET)
             killer = KILL_DISMISSED;
     }
-    else if (mons.type == MONS_BATTLESPHERE)
-    {
-        if (!wizard && !mons_reset && !was_banished
-            && !cell_is_solid(mons.pos()))
-        {
-            place_cloud(CLOUD_MAGIC_TRAIL, mons.pos(), 3 + random2(3), &mons);
-        }
-        end_battlesphere(&mons, true);
-    }
     else if (mons.type == MONS_BRIAR_PATCH)
     {
         if (timeout && !silent)
             simple_monster_message(mons, " crumbles away.");
-    }
-    else if (mons.type == MONS_SPECTRAL_WEAPON)
-    {
-        end_spectral_weapon(&mons, true, killer == KILL_RESET);
-        silent = true;
     }
     else if (mons.type == MONS_DROWNED_SOUL)
     {
@@ -2080,16 +2097,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (mons.hit_points == -1000)
             silent = true;
     }
-    else if (mons.type == MONS_SPRIGGAN_DRUID && !silent && !was_banished
-             && !wizard && !mons_reset)
     {
-        _druid_final_boon(&mons);
-    }
-    else if (mons.type == MONS_PROTEAN_PROGENITOR && !was_banished
-             && !wizard && !mons_reset)
-    {
-        _protean_explosion(&mons);
-        silent = true;
     }
 
     check_canid_farewell(mons, !wizard && !mons_reset && !was_banished);
