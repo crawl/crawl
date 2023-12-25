@@ -4336,13 +4336,13 @@ Frederick triumphant
 %%%%
 Ashenzari Frederick triumphant
 
-@The_monster@ shakes @possessive@ head sadly, "Willingly shackling yourself to the bindings of a God... pitiful."
+@The_monster@ shakes @possessive@ head sadly, "Willingly shackling yourself to the bindings of a god... pitiful."
 
 @Frederick@
 %%%%
 Beogh Frederick triumphant
 
-@The_monster@ sighs, "Your brethren were only holding you back, Orc."
+@The_monster@ sighs, "Your brethren were only holding you back, @player_genus@."
 
 @Frederick@
 %%%%
@@ -4486,7 +4486,7 @@ Zin Frederick triumphant
 %%%%
 the Shining One Frederick triumphant
 
-@The_monster@ says, "You should have developed your own code of honour rather than following another's."
+@The_monster@ says, "You tried to shine brightly but instead burnt out quickly."
 
 @Frederick@
 %%%%
