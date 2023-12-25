@@ -523,9 +523,9 @@ static void _add_randart_weapon_brand(const item_def &item,
     else
     {
         item_props[ARTP_BRAND] = random_choose_weighted(
-            47, SPWPN_HEAVY,
             47, SPWPN_FLAMING,
             47, SPWPN_FREEZING,
+            26, SPWPN_HEAVY,
             26, SPWPN_VENOM,
             26, SPWPN_DRAINING,
             13, SPWPN_HOLY_WRATH,
