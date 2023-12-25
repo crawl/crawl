@@ -86,11 +86,12 @@ function crypt_loot_plus(e)
   -- and one drop-off of these.
   e.kitem("h = vampires_tooth / leech / sword_of_zonguldrok / " ..
           "finisher / scythe_of_curses / majin-bo / sceptre_of_torment / " ..
-          "undeadhunter, ivory gem")
+          "undeadhunter")
   e.kitem("i = necronomicon / " .. book .. "death's_door / " .. book .. "haunt / "
-          .. book .. "borgnjor's_revivification / " .. book .. "infestation, ivory gem")
+          .. book .. "borgnjor's_revivification / " .. book .. "infestation")
   e.kitem("j = phial of floods w:20 / any area misc / any ally misc, " ..
-          "staff of death / any magical staff, ivory gem")
+          "staff of death / any magical staff")
+  e.kitem("k = ivory gem")
   e.subst("d = d:20 ef g:20")
   e.subst("h = h:5 ij")
 end
@@ -1585,7 +1586,7 @@ MAP
 cccccccccccccccvvvvvvvvvvvvvvvvvccccccccccccccc
 ccccccccccccccvv..WWWWWWWWWWW..vvcccccccccccccc
 cccccccccccccvv..WWWWWWWWWWWWW..vvccccccccccccc
-cccccccccccccv...WWWb.b.b.bWWW...vccccccccccccc
+cccccccccccccv...WWWb.bkb.bWWW...vccccccccccccc
 cccccccccccccv...WWb$$|*|$$bWW...vccccccccccccc
 cccccccccccccv...WW.$/|1|/$.WW...vccccccccccccc
 cccccccccccccv...WWb$$|*|$$bWW...vccccccccccccc
@@ -1671,7 +1672,7 @@ SUBST:  P = |**
 KFEAT:  > = enter_tomb
 # Loot randomisation
 SUBST:  % = %$, * = *%, / = |**
-NSUBST: *| = d / 1=h
+NSUBST: *| = d / 1=h, k = k / $
 : crypt_loot_plus(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -1684,9 +1685,9 @@ vwwwwwwwwwwwwwwv.........rrrrrrrr.........vAwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv.........r//||//r.........vAAAAwwwwwwwwwwv
 vwwwwwwvvvv?vvvv......rrarr*/O*rrarr......v?v?v?v?vwwwwwwv
 vwwwwwwv.......v......r$$*rr++rr*$$r......v.......vwwwwwwv
-vwwwwww?....H..v.....rrrrOr$$$$rOrrrr.....v.......?wwwwwwv
-vwwwwwwv....H..+........rrr$$$$rrr........+.Q..H..vwwwwwwv
-vwwwwww?....H..v......L...r$$$$r...L......v....H..?wwwwwwv
+vwwwwww?....H..v.....rrrrOrkkkkrOrrrr.....v.......?wwwwwwv
+vwwwwwwv....H..+........rrrkkkkrrr........+.Q..H..vwwwwwwv
+vwwwwww?....H..v......L...rkkkkr...L......v....H..?wwwwwwv
 vwwwwwwv.Q.vvvvv...rrr....rr++rr....rrr...v....H..vwwwwwwv
 vwwwwww?...v...vv....rr.rrrU..Urrr.rr....vvv+v....?wwwwwwv
 vwwwwwwv...v.X..vv....rrr........rrr....vv...vvvvvvwwwwwwv
@@ -1774,7 +1775,7 @@ MAP
 .....................
 ..vvvvnnnnnnnnnvvvv..
 ..vlllllllllllllllv..
-..vlllllllllllllllv..
+..vlllllllklllllllv..
 ..vllll.%|||%.llllv..
 .4vll..%|||||%..llv4.
 ..vl....%|||%....lv..
@@ -1877,7 +1878,7 @@ vc.c.c.c.....c....cc..c..c.ffff.v?$$$$$$$$.vvvv...nPn$$$$$v
 vc.....ccc+ccc....Bc..cGGc.ffff.vnnnnnnnnn+vvv..H.nPn$$O$$v
 vc.....c.....c....cc..c..c.ffff.v..........vv.....nPn$$$$$v
 vc.....c?....c..A.Bc..c..m..fff.v..........vv.uvu.nPn$$$$$v
-vc.....c|?...c....cc..c..c...ff.v..vvvvvvvvv..vvv.nPnnnnnnv
+vc.....c|?...c...kcc..c..c...ff.v..vvvvvvvvv..vvv.nPnnnnnnv
 vc.....c||?EEcBcBcc...c..c....f.v..........+..uvu.nPPPPPPPv
 vc++cccccccccccccc...cc..c......v..........+......nnnnnnn+v
 vc.....G............cc...m..G...vvvvvvvvvvvv.H............v
@@ -2011,7 +2012,7 @@ ttT"TttTT..t..v---vvv.T....T..t..TTt.TTT.t....T..TtttttttTTTWWWwwwwwwwwwwwwwWttt
 tt""ttT..t...Tv--...."..ccccc...T...ccccc.T..t..TTTTtttttttTTWWWWWWwwtwwwwwWTttt
 tt""ttTt...T..vv."""....c*0-+.......+CC*c...T.T..t..TttttttttTTWWWTtttttWWW.Tttt
 tt""TtT..T..""".""".....c*-cccccccccccC*c.......t..t..ttttttttTTT.ttttttTW.Ttttt
-ttT""T.t.."""""""".....cccccc9-----Hcccccc......T....t.TTTTTtttttT.TtttT..Tttttt
+ttT""T.t.."""""""".....cccccc9--k--Hcccccc......T....t.TTTTTtttttT.TtttT..Tttttt
 tttT"""""""".......T...c------*|||*------c..555....t.....t.tTtttttT.TtT.TTtttttt
 ttttt"""""".vvvvv.....ccc--xx**|V|**xx--ccc..555...t..tt..t...TTtttT....Tttttttt
 ttttttTtT"".v--4vvv...ccc--xx-*|||*-xx--ccc.......T.....t....t..TttttT.TTttttttt
@@ -2143,7 +2144,7 @@ NSUBST:  %*| = 1:d / 1:h
 MAP
                 ccccccccccccccccccccccccccccccc
                 ccccccccccccccccccccccccccccccc
-                cc*$*c|%*.......**|c.........cc
+                cc*$*c|%*...k...**|c.........cc
                 cc$3$c|*...'2'...%|c..G.3.G..cc
                 cc...c|%|.......|%|c.........cc
                 ccc+cccccc.....ccccccc+cccBBBcc
@@ -2254,7 +2255,7 @@ MAP
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccc|*$$...R...$$*|ccccccccccccccccccccccccc
-cccccccccccccccccccccc..cc*$$.T...T.$$*cc..cccccccccccccccccccccc
+cccccccccccccccccccccc..cc*$$.T.k.T.$$*cc..cccccccccccccccccccccc
 cccccccccccccccccccc....ccc$$...T...$$ccc....cccccccccccccccccccc
 ccccccccccccccccccc.G.G.c.ccccc+++ccccc.c.G.G.ccccccccccccccccccc
 cccccccccccccccccc......c...............c......cccccccccccccccccc
@@ -2330,13 +2331,13 @@ SHUFFLE: 56, 89 / 0A
 SUBST:   5 = 5., 6 = 6., 9 = 99., A = AA.
 KFEAT:   Y = altar_yredelemnul
 KFEAT:   K = altar_kikubaaqudgha
-NSUBST:  *| = 1:d / 1:h
+NSUBST:  *| = 1:d / 1:h, k = k / $
 : crypt_loot_plus(_G)
 MAP
 cccccccccccccccccccccccc
-ccccccccccc$$ccccccccccc
-cccccccccc$$$$cccccccccc
-cccccccccc$$$$cccccccccc
+ccccccccccckkccccccccccc
+cccccccccckkkkcccccccccc
+cccccccccckkkkcccccccccc
 ccccccccccc++ccccccccccc
 ccccccc..........ccccccc
 ccc**c............c**ccc
