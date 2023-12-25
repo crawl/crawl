@@ -4332,7 +4332,6 @@ Frederick triumphant
 @The_monster@ sighs, "Killing weak @player_genus_plural@ does nothing to prove my superiority."
 
 @The_monster@ sighs, "Another waste of time."
-
 %%%%
 Ashenzari Frederick triumphant
 
