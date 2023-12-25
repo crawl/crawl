@@ -2363,6 +2363,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_ANIMATE_DEAD:
         return cast_animate_dead(powc, fail);
 
+    case SPELL_MARTYRS_KNELL:
+        return cast_martyrs_knell(&you, powc, god, fail);
+
     case SPELL_HAUNT:
         return cast_haunt(powc, beam.target, god, fail);
 

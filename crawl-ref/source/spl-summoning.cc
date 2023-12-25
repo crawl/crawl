@@ -1517,6 +1517,36 @@ spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
     return spret::success;
 }
 
+spret cast_martyrs_knell(const actor* caster, int pow, god_type god, bool fail)
+{
+    if (caster->is_player() && stop_summoning_prompt(MR_RES_POISON, M_FLIES))
+        return spret::abort;
+
+    fail_check();
+
+    mgen_data mg = _summon_data(*caster, MONS_MARTYRED_SHADE, 2, god,
+                                SPELL_MARTYRS_KNELL);
+    mg.hd = (6 + div_rand_round(pow, 11));
+
+    monster* shade = create_monster(mg);
+    if (shade)
+    {
+        if (caster->is_player())
+            mpr("You call forth a shade to shield your allies.");
+        else if (you.can_see(*shade))
+        {
+            mprf("%s calls forth a shade to shield themselves.",
+                 caster->name(DESC_THE).c_str());
+        }
+
+        martyr_injury_bond(*shade);
+    }
+    else if (caster->is_player())
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+}
+
 static spell_type servitor_spells[] =
 {
     // primary spells
@@ -2216,6 +2246,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_BLAZEHEART_GOLEM,  { 1, 1 } },
     { SPELL_SPELLFORGED_SERVITOR,     { 1, 1 } },
     { SPELL_ANIMATE_ARMOUR,           { 1, 1 } },
+    { SPELL_MARTYRS_KNELL,            { 1, 1 } },
     { SPELL_HAUNT,                    { 8, 8 } },
     { SPELL_SUMMON_CACTUS,            { 1, 1 } },
     // Monster-only spells

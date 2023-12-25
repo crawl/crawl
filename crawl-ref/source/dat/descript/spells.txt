@@ -929,6 +929,18 @@ Conjures two balls of burning swamp gas adjacent to the caster. The balls will
 rapidly seek the nearest monster and burn them. Wizards attempted to copy this
 with the spell 'Foxfire', but their version is much less powerful.
 %%%%
+Martyr's Knell
+
+Beckons forth the soul of a long-dead martyr to shield your allies by taking a
+portion of the damage they would recieve into themselves instead.
+
+If this otherwise harmless shade is made to experience the pain of death before
+it expires, it will become a flayed ghost, abandoning defense to instead inflict
+the suffering it received in life upon your enemies.
+
+Such wounds are fleeting, and will disappear when the flayed ghost departs -
+unless you kill its victims first.
+%%%%
 Mass Confusion spell
 
 Causes confusion in all who gaze upon the caster.

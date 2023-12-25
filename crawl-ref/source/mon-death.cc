@@ -1429,6 +1429,71 @@ static void _protean_explosion(monster* mons)
     }
 }
 
+static void _martyr_death_wail(monster &mons)
+{
+    if (you.can_see(mons))
+    {
+        if (mons.friendly())
+        {
+            mprf(MSGCH_FRIEND_SPELL,
+                 "%s wails in agony as it relives its own death.",
+                 mons.name(DESC_YOUR).c_str());
+        }
+        else
+        {
+            mprf(MSGCH_MONSTER_SPELL,
+                 "%s wails in agony as it relives its own death.",
+                 mons.name(DESC_THE).c_str());
+        }
+    }
+
+    // Save the HD of our shade, because it will otherwise be reset on changing
+    int old_hd = mons.get_hit_dice();
+    change_monster_type(&mons, MONS_FLAYED_GHOST);
+    mons.max_hit_points = mons.max_hit_points * old_hd / mons.get_hit_dice();
+    mons.set_hit_dice(old_hd);
+
+    // Reset duration on its summoning, but move it out of martyr's summon cap
+    mons.del_ench(ENCH_ABJ, true, false);
+    mons.del_ench(ENCH_SUMMON, true, false);
+    mons.mark_summoned(2, true, SPELL_NO_SPELL, true);
+    mons.heal(50000);
+
+    // Show brief animation
+    bolt visual;
+    visual.target = mons.pos();
+    visual.source = mons.pos();
+    visual.aimed_at_spot = true;
+    visual.colour = ETC_DARK;
+    visual.glyph      = '*';
+    visual.draw_delay = 100;
+    visual.flavour = BEAM_VISUAL;
+    visual.fire();
+
+    // Have it instantly flay a few nearby things
+    vector <actor*> targets;
+    for (actor_near_iterator ai(mons.pos(), LOS_NO_TRANS); ai; ++ai)
+    {
+        if (!mons_aligned(&mons, *ai) && !!(ai->holiness() & MH_NATURAL))
+            targets.push_back(*ai);
+    }
+    shuffle_array(targets);
+
+    int num_victims = min((int)targets.size(), random_range(2, 3));
+
+    // Dummy arguments
+    mon_spell_slot slot = { SPELL_FLAY, 0, MON_SPELL_MAGICAL };
+    bolt _bolt;
+
+    for (int i = 0; i < num_victims; ++i)
+    {
+        mons.foe = targets[i]->mindex();
+        mons_cast_flay(mons, slot ,_bolt);
+    }
+
+    return;
+}
+
 static bool _mons_reaped(actor &killer, monster& victim)
 {
     beh_type beh;
@@ -2126,6 +2191,14 @@ item_def* monster_die(monster& mons, killer_type killer,
                                          " goes out.");
             silent = true;
         }
+    }
+    else if (mons.type == MONS_MARTYRED_SHADE && !silent && !mons_reset
+             && !was_banished && !wizard)
+    {
+        _martyr_death_wail(mons);
+
+        // Short-circuit this death
+        return nullptr;
     }
 
     check_canid_farewell(mons, !wizard && !mons_reset && !was_banished);

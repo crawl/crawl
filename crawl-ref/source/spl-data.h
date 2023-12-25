@@ -638,6 +638,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_MARTYRS_KNELL, "Martyr's Knell",
+    spschool::summoning | spschool::necromancy,
+    spflag::none,
+    4,
+    100,
+    -1, -1,
+    0,
+    TILEG_HAUNT,
+},
+
+{
     SPELL_BORGNJORS_REVIVIFICATION, "Borgnjor's Revivification",
     spschool::necromancy,
     spflag::utility,

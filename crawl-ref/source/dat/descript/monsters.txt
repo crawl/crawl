@@ -1831,6 +1831,12 @@ A hideous cross-breed, bearing the features of a human and a lion, with great
 bat-like wings. Its tail bristles with spikes that can be loosed at potential
 prey.
 %%%%
+martyred shade
+
+The wandering shade of a long-dead soul who died for a forgotten cause. Though
+their memories have turned to mist, something deep within still compels them to
+serve and sacrifice - no matter the cost.
+%%%%
 meliai
 
 A nymphal hybrid, with a winged torso of a human atop the stinging abdomen

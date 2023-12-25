@@ -1167,6 +1167,7 @@ silent_spectre MONS_SILENT_SPECTRE
 lost_soul MONS_LOST_SOUL /*'*'*/
 drowned_soul MONS_DROWNED_SOUL
 flayed_ghost MONS_FLAYED_GHOST
+martyred_shade MONS_MARTYRED_SHADE
 %sdir mon/nonliving
 %rim 0
 will_o_the_wisp MONS_WILL_O_THE_WISP

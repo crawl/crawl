@@ -1810,7 +1810,10 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_INJURY_BOND:
         // It's hard to absorb someone else's injuries when you're dead
         if (!me.agent() || !me.agent()->alive()
-            || me.agent()->mid == MID_ANON_FRIEND)
+            || me.agent()->mid == MID_ANON_FRIEND
+            // XXX: A bit of a hack to end injury bond on allies of a martyred
+            //      shade that became a flayed ghost.
+            || me.agent()->type == MONS_FLAYED_GHOST)
         {
             del_ench(ENCH_INJURY_BOND, true, false);
         }

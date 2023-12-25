@@ -784,6 +784,7 @@ enum monster_type                      // env.mons[].type
     MONS_ANTIQUE_CHAMPION,
     MONS_REVENANT,
     MONS_LOST_SOUL,
+    MONS_MARTYRED_SHADE,
     MONS_JIANGSHI,
     MONS_SEARING_WRETCH,
     MONS_STOKER,
@@ -1229,6 +1230,7 @@ enum monster_type                      // env.mons[].type
     MONS_WEEPING_SKULL,
     MONS_BURIAL_ACOLYTE,
     MONS_BLAZEHEART_CORE,
+    MONS_MARTYRED_SHADE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

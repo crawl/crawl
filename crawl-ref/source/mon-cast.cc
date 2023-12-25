@@ -137,7 +137,6 @@ static void _cast_resonance_strike(monster &mons, mon_spell_slot, bolt&);
 static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt&);
 static void _cast_call_down_lightning(monster &caster, mon_spell_slot, bolt&);
 static void _cast_pyroclastic_surge(monster &caster, mon_spell_slot, bolt&);
-static void _cast_flay(monster &caster, mon_spell_slot, bolt&);
 static void _flay(const monster &caster, actor &defender, int damage);
 static void _cast_still_winds(monster &caster, mon_spell_slot, bolt&);
 static void _mons_summon_elemental(monster &caster, mon_spell_slot, bolt&);
@@ -374,7 +373,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             ASSERT(foe);
             return ai_action::good_or_impossible(!!(foe->holiness() & MH_NATURAL));
         },
-        _cast_flay,
+        mons_cast_flay,
     } },
     { SPELL_PARALYSIS_GAZE, {
         _caster_sees_foe,
@@ -1200,6 +1199,7 @@ static int _mons_power_hd_factor(spell_type spell)
 
         case SPELL_SUMMON_DRAGON:
         case SPELL_SUMMON_HYDRA:
+        case SPELL_MARTYRS_KNELL:
             return 5;
 
         case SPELL_CHAIN_OF_CHAOS:
@@ -1815,6 +1815,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CLEANSING_FLAME:
     case SPELL_DRAINING_GAZE:
     case SPELL_CONFUSION_GAZE:
+    case SPELL_MARTYRS_KNELL:
     case SPELL_HAUNT:
     case SPELL_SUMMON_SPECTRAL_ORCS:
     case SPELL_BRAIN_BITE:
@@ -5088,7 +5089,7 @@ static void _cast_marshlight(monster &mons, mon_spell_slot, bolt&)
     cast_foxfire(mons, pow, GOD_NO_GOD, false, true);
 }
 
-static void _cast_flay(monster &caster, mon_spell_slot, bolt&)
+void mons_cast_flay(monster &caster, mon_spell_slot, bolt&)
 {
     actor* defender = caster.get_foe();
     ASSERT(defender);
@@ -5818,6 +5819,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         else
             mpr("You sense an evil presence.");
         _mons_cast_haunt(mons);
+        return;
+
+    case SPELL_MARTYRS_KNELL:
+        cast_martyrs_knell(mons, splpow, GOD_NO_GOD, false);
         return;
 
     // SPELL_SLEEP_GAZE ;)

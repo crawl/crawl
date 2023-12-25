@@ -1139,6 +1139,10 @@ bool mon_special_ability(monster* mons)
         _weeping_skull_cloud_aura(mons);
         break;
 
+    case MONS_MARTYRED_SHADE:
+        martyr_injury_bond(*mons);
+        break;
+
     default:
         break;
     }
@@ -1147,4 +1151,18 @@ bool mon_special_ability(monster* mons)
         mons->lose_energy(EUT_SPECIAL);
 
     return used;
+}
+
+void martyr_injury_bond(monster& mons)
+{
+    for (monster_near_iterator mi(&mons, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mons_aligned(&mons, *mi)
+            && !mi->has_ench(ENCH_CHARM)
+            && !mons_is_projectile(**mi)
+            && *mi != &mons)
+        {
+            mi->add_ench(mon_enchant(ENCH_INJURY_BOND, 1, &mons, INFINITE_DURATION));
+        }
+    }
 }

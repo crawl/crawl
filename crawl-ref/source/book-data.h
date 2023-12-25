@@ -142,7 +142,9 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Necromancy
     SPELL_NECROTISE,
     SPELL_VAMPIRIC_DRAINING,
+    SPELL_MARTYRS_KNELL,
     SPELL_AGONY,
+
 },
 
 {   // Book of Callings
@@ -344,6 +346,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of Decay
     SPELL_ROT,
     SPELL_DISPEL_UNDEAD,
+    SPELL_MARTYRS_KNELL,
     SPELL_DEATH_CHANNEL,
 },
 
