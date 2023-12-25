@@ -4402,13 +4402,13 @@ Kikubaaqudgha Frederick triumphant
 %%%%
 Lugonu Frederick triumphant
 
-@The_monster@ says, "FOO"
+@The_monster@ says, "A more permanent form of banishment for you, mortal."
 
 @Frederick@
 %%%%
 Makhleb Frederick triumphant
 
-@The_monster@ says, "FOO"
+@The_monster@ says, "And take your demons with you."
 
 @Frederick@
 %%%%
@@ -4426,7 +4426,7 @@ Okawaru Frederick triumphant
 %%%%
 Qazlal Frederick triumphant
 
-@The_monster@ says, "FOO"
+@The_monster@ says, "Finally, I'll be able to get some peace and quiet."
 
 @Frederick@
 %%%%
@@ -4480,13 +4480,13 @@ Yredelemnul Frederick triumphant
 %%%%
 Zin Frederick triumphant
 
-@The_monster@ says, "FOO"
+@The_monster@ says, "The only thing more annoying than a worshipper is a proselytizer."
 
 @Frederick@
 %%%%
 the Shining One Frederick triumphant
 
-@The_monster@ says, "FOO"
+@The_monster@ says, "You should have developed your own code of honour rather than following another's."
 
 @Frederick@
 %%%%
