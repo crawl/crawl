@@ -4414,7 +4414,7 @@ Makhleb Frederick triumphant
 %%%%
 Nemelex Xobeh Frederick triumphant
 
-@The_monster@ says, "FOO"
+@The_monster@ says, "Looks like you fold, gambler."
 
 @Frederick@
 %%%%
@@ -4432,7 +4432,7 @@ Qazlal Frederick triumphant
 %%%%
 Ru Frederick triumphant
 
-@The_monster@ says, "You gave up too much of yourself. That's why you lost."
+@The_monster@ says, "You gave up too much of yourself."
 
 @Frederick@
 %%%%
