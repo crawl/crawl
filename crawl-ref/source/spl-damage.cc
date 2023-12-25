@@ -3524,12 +3524,12 @@ spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
 
     monster* mons = monster_at(target);
     if (mons && you.can_see(*mons) && !god_protects(&you, mons)
-        && mons->res_poison()
+        && mons->res_poison() <= 0
         && stop_attack_prompt(mons, false, you.pos()))
     {
         return spret::abort;
     }
-    else if (you.pos() == target && !you.res_poison()
+    else if (you.pos() == target && you.res_poison() <= 0
              && !yesno("Really target yourself?", false, 'n'))
     {
         return spret::abort;
@@ -3545,7 +3545,7 @@ spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
         mpr("Fumes of mercury billow through the air!");
 
     // Attempt to poison the central monster, if there is one.
-    if (mons && !mons->res_poison() && !god_protects(&you, mons))
+    if (mons && mons->res_poison() <= 0 && !god_protects(&you, mons))
     {
         // Be a little more generous with poisoning unpoisoned monsters.
         int amount = max(1, div_rand_round(pow, 25));
@@ -3559,7 +3559,7 @@ spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
             you.pet_target = mons->mindex();
     }
     // Trying to cast on self - presumably for the AoE weak.
-    else if (you.pos() == target && !you.res_poison())
+    else if (you.pos() == target && you.res_poison() <= 0)
         you.poison(&you, roll_dice(2, 6));
 
     // Now attempt to weaken all monsters adjacent to the target
