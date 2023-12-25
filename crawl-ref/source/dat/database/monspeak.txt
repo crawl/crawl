@@ -4382,9 +4382,111 @@ Hepliaklqana Frederick triumphant
 
 @Frederick@
 %%%%
+Ignis Frederick triumphant
+
+@The_monster@ says, "Worshipping a god whose flame burns even lower than your own... that was foolish."
+
+@Frederick@
+%%%%
+Jivya Frederick triumphant
+
+@The_monster@ says, "Our battle was as dull and shapeless as your god."
+
+@Frederick@
+%%%%
+Kikubaaqudgha Frederick triumphant
+
+@The_monster@ sighs, "Join the corpses you idolize, mortal."
+
+@Frederick@
+%%%%
+Lugonu Frederick triumphant
+
+@The_monster@ says, "FOO"
+
+@Frederick@
+%%%%
+Makhleb Frederick triumphant
+
+@The_monster@ says, "FOO"
+
+@Frederick@
+%%%%
+Nemelex Xobeh Frederick triumphant
+
+@The_monster@ says, "FOO"
+
+@Frederick@
+%%%%
 Okawaru Frederick triumphant
 
 @The_monster@ says, "Now do you deem me a worthy opponent?"
+
+@Frederick@
+%%%%
+Qazlal Frederick triumphant
+
+@The_monster@ says, "FOO"
+
+@Frederick@
+%%%%
+Ru Frederick triumphant
+
+@The_monster@ says, "You gave up too much of yourself. That's why you lost."
+
+@Frederick@
+%%%%
+Sif Muna Frederick triumphant
+
+@The_monster@ sighs, "Relying on the knowledge of others got you nowhere, mortal."
+
+@Frederick@
+%%%%
+Trog Frederick triumphant
+
+@The_monster@ says, "You should have learned to control yourself rather than giving into your rage."
+
+@Frederick@
+%%%%
+Uskayaw Frederick triumphant
+
+@The_monster@ says, "You lost yourself in dance instead of focusing on self-improvement."
+
+@Frederick@
+%%%%
+Vehumet Frederick triumphant
+
+@The_monster@ says, "A mage should rely only on their own abilities."
+
+@Frederick@
+%%%%
+Wu Jian Frederick triumphant
+
+@The_monster@ says, "You should only rely on techniques you've developed yourself."
+
+@Frederick@
+%%%%
+Xom Frederick triumphant
+
+@The_monster@ frowns, "Willingly giving yourself over as a plaything to Xom... strange behaviour."
+
+@Frederick@
+%%%%
+Yredelemnul Frederick triumphant
+
+@The_monster@ says, "Find comfort in joining the legions you worship."
+
+@Frederick@
+%%%%
+Zin Frederick triumphant
+
+@The_monster@ says, "FOO"
+
+@Frederick@
+%%%%
+the Shining One Frederick triumphant
+
+@The_monster@ says, "FOO"
 
 @Frederick@
 %%%%
