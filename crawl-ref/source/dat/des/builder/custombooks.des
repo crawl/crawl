@@ -50,8 +50,8 @@ local books = {
 "Feline_Knowledge owner:Natasha numspells:3 spells:magic_dart&slow&call_imp",
 "Gerundive_Groundings numspells:4 spells:lesser_beckoning&vampiric_draining&"
   .. "yara's_violent_unravelling&maxwell's_capacitive_coupling",
-"Getting_Closer_Than_Before numspells:3 spells:agony&confusing_touch&"
-  .. "dispel_undead",
+"Getting_Closer_Than_Before numspells:3 spells:confusing_touch&"
+  .. "sticky_flame&dispel_undead",
 "Hitting_the_Bricks numspells:4 spells:blink&passwall&swiftness&"
   .. "passage_of_golubria",
 "Honourable_Companions owner:Okawaru numspells:5 spells:foxfire&"
@@ -118,8 +118,8 @@ local books = {
   .. "enfeeble",
 "Servitor_Tips_and_Tricks numspells:6 spells:plasma_beam&fireball&arcjolt&"
   .. "bombard&orb_of_destruction&lehudib's_crystal_spear",
-"Standing_By numspells:8 spells:freeze&kiss_of_death&static_discharge&"
-  .. "vampiric_draining&dispel_undead&sticky_flame&agony&irradiate",
+"Standing_By numspells:7 spells:freeze&kiss_of_death&static_discharge&"
+  .. "vampiric_draining&dispel_undead&sticky_flame&irradiate",
 "Terraforming numspells:6 spells:frozen_ramparts&leda's_liquefaction&"
   .. "lee's_rapid_deconstruction&summon_forest&eringya's_noxious_bog&"
   .. "shatter",
@@ -146,7 +146,7 @@ local books = {
   .. "plasma_beam&maxwell's_capacitive_coupling",
 "Yoinking numspells:3 spells:apportation&lesser_beckoning&tukima's_dance",
 "the_Age_of_Ice numspells:8 spells:freeze&ensorcelled_hibernation&"
-  .. "ozocubu's_armour&hailstorm&freezing_cloud&simulacrum&"
+  .. "ozocubu's_armour&hailstorm&freezing_cloud&sculpt_simulacrum&"
   .. "ozocubu's_refrigeration&polar_vortex",
 "the_Cold_Heart owner:Fannar numspells:5 spells:blink&ozocubu's_armour&"
   .. "summon_ice_beast&freezing_cloud&ozocubu's_refrigeration",
@@ -167,9 +167,9 @@ local books = {
   .. "lesser_beckoning&manifold_assault&summon_forest&dispersal&malign_gateway&"
   .. "disjunction",
 "the_Iron_Gauntlet owner:Mastigos numspells:6 spells:call_imp&cause_fear&"
-  .. "manifold_assault&passage_of_golubria&agony&discord",
+  .. "manifold_assault&passage_of_golubria&curse_of_agony&discord",
 "the_Lead_Coin owner:Moros numspells:6 spells:necrotise&passwall&"
-  .. "leda's_liquefaction&death_channel&simulacrum&haunt",
+  .. "leda's_liquefaction&death_channel&sculpt_simulacrum&haunt",
 "the_Lords_of_Pandemonium numspells:4 spells:fire_storm&summon_horrible_things&"
   .. "conjure_ball_lightning&dispel_undead",
 "the_Lunargent_Thorn owner:Acanthus numspells:6 spells:slow&"
@@ -181,7 +181,7 @@ local books = {
 "the_Nosferatu numspells:6 spells:summon_small_mammal&call_canine_familiar&"
   .. "sublimation_of_blood&vampiric_draining&cause_fear&"
   .. "borgnjor's_revivification",
-"the_Pentagrammaton numspells:5 spells:shock&sting&blink&agony&haunt",
+"the_Pentagrammaton numspells:5 spells:shock&sting&blink&curse_of_agony&haunt",
 "the_Secrets_of_Dis numspells:4 spells:dispel_undead&dispersal&discord&"
   .. "disjunction",
 "the_Seventh_Heavens numspells:7 spells:foxfire&anguish&petrify&arcjolt&"
