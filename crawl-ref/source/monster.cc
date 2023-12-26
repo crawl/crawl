@@ -3513,9 +3513,7 @@ int monster::known_chaos(bool check_spells_god) const
     }
 
     if (has_attack_flavour(AF_CHAOTIC))
-    {
         chaotic++;
-    }
 
     if (is_chaotic_god(god))
         chaotic++;
