@@ -706,7 +706,7 @@ A small axe.
 %%%%
 hand cannon
 
-A machine that fires bolts via applied alchemy. Some enchant their projectiles
+A machine that fires bolts via applied thaumaturgy. Some enchant their projectiles
 to fall forward instead of down, others bewitch the bolts with a fatal attraction
 to their targets. All are slow, loud, and blast out thick smoke with each shot.
 %%%%
