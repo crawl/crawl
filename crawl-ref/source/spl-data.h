@@ -696,7 +696,7 @@ static const struct spell_desc spelldata[] =
     SPELL_SUMMON_ICE_BEAST, "Summon Ice Beast",
     spschool::ice | spschool::summoning,
     spflag::none,
-    4,
+    3,
     100,
     -1, -1,
     0,
