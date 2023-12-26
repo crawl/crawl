@@ -1177,6 +1177,8 @@ int main(int argc, char* argv[])
                 case AF_ROT:
                 case AF_KLOWN:
                 case AF_KITE:
+                case AF_STICKY_FLAME:
+                case AF_MUTATE:
                     monsterattacks += colour(LIGHTRED, "(?\?\?)");
                     break;
 #endif
