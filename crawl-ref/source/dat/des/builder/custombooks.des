@@ -197,7 +197,7 @@ local books = {
 "the_Unknown_Variable numspells:6 spells:foxfire&olgreb's_toxic_radiance&"
   .. "alistair's_intoxication&eringya's_noxious_bog&"
   .. "maxwell's_capacitive_coupling&polar_vortex",
-"the_Vowels numspells:6 spells:summon_guardian_golem&animate_armour&"
+"the_Vowels numspells:6 spells:summon_blazeheart_golem&animate_armour&"
   .. "summon_ice_beast&monstrous_menagerie&summon_mana_viper&"
   .. "conjure_ball_lightning"
 }
