@@ -134,7 +134,6 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_ALLY_TARGET, "ally target", "ally target", "ally target"},
     { MB_ANTIMAGIC, "magic disrupted", "magic disrupted", "magic disrupted"},
     { MB_ANGUISH, "anguished", "anguished", "anguished"},
-    { MB_SIMULACRUM, "simulacrum", "simulacrum", "simulacrum"},
     { MB_REFLECTING, "reflecting", "reflecting blocked projectiles", "reflecting"},
     { MB_TELEPORTING, "teleporting", "about to teleport", "teleporting"},
     { MB_BOUND, "bound", "bound in place", "bound" },

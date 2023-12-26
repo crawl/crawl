@@ -1214,6 +1214,19 @@ Scorch spell
 Scorches a random foe. Those injured by this have their resistance to fire
 burned away for a short time.
 %%%%
+Sculpt Simulacrum spell
+
+Assays the biology of a touched living, demonic, or holy creature and uses trace
+amounts of its blood or ichor to sculpt crude facsilimes out of elemental ice.
+These fragile simulacra will take shape over a short period of time, eventually
+gaining the ability to move and attack the caster's enemies.
+
+Many an alchemist has argued there is nothing inherantly unethical about this
+spell, as no harm is done to its subject. The good gods nonetheless take a dim
+view of using the blood of any living being in the creation of unnatural life.
+
+You can maintain up to 5 simulacra simultaneously.
+%%%%
 Seal Doors spell
 
 Imparts seals on nearby doors and stairs, preventing those not allied with
@@ -1296,12 +1309,6 @@ usable while silenced.
 
 The effect starts out with a radius depending on power, which will then shrink,
 eventually covering only the caster, before it times out.
-%%%%
-Simulacrum spell
-
-Grips a creature's soul in chains of ice. When it dies, its corpse freezes and
-splits, transforming into icy replicas which serve the caster. Simulacra cannot
-leave the level they were created on. The number created depends on spell power.
 %%%%
 Siren Song spell
 

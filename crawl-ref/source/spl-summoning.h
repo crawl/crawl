@@ -16,6 +16,8 @@
 // summoner being adjacent to it.
 #define BLAZEHEART_ACTIVE_TURN "blazeheart_active_turn"
 
+#define SIMULACRUM_TYPE_KEY "simulacrum_type"
+
 spret cast_summon_small_mammal(int pow, god_type god, bool fail);
 
 bool canine_familiar_is_alive();
@@ -122,3 +124,6 @@ spret summon_spiders(actor &agent, int pow, god_type god, bool fail = false);
 spret summon_butterflies();
 
 spret cast_broms_barrelling_boulder(actor& agent, coord_def pos, int pow, bool fail);
+
+string mons_simulacrum_immune_reason(const monster *mons);
+spret cast_simulacrum(coord_def target, int pow, bool fail);

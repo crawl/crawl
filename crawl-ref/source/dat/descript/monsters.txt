@@ -2390,7 +2390,7 @@ spells or reading scrolls.
 %%%%
 simulacrum
 
-An ice replica of a monster, animated by the powers of necromancy.
+An icy replica of a monster, animated by heretical magics.
 %%%%
 sixfirhy
 

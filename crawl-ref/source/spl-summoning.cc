@@ -2870,3 +2870,71 @@ spret cast_broms_barrelling_boulder(actor& agent, coord_def targ, int pow, bool 
     mpr("You send a boulder barrelling forward!");
     return spret::success;
 }
+
+string mons_simulacrum_immune_reason(const monster *mons)
+{
+    if (!mons || !you.can_see(*mons))
+        return "You can't see anything there.";
+
+    if (!mons_can_be_spectralised(*mons))
+        return "You can't make a simulacrum of that!";
+
+    return "";
+}
+
+spret cast_simulacrum(coord_def target, int pow, bool fail)
+{
+    if (cell_is_solid(target))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+
+    monster* mons = monster_at(target);
+    if (!mons || !you.can_see(*mons))
+    {
+        fail_check();
+        canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
+        // If there's no monster there, you still pay the costs in
+        // order to prevent locating invisible/submerged monsters.
+        return spret::success;
+    }
+
+    if (!mons_can_be_spectralised(*mons))
+    {
+        mpr("You can't make simulacra of that!");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    mprf("You sublimate a sliver of %s essence and reconstitute it in ice.",
+         apostrophise(mons->name(DESC_THE)).c_str());
+
+    int num_simulacra = 2;
+    if (x_chance_in_y(pow, 200))
+        num_simulacra = 3;
+
+    int delay = random_range(3, 5) * BASELINE_DELAY;
+    for (int i = 0; i < num_simulacra; ++i)
+    {
+        // Note that this *not* marked as coming from SPELL_SIMULACRUM
+        mgen_data mg = _pal_data(MONS_BLOCK_OF_ICE, 0, GOD_NO_GOD, SPELL_NO_SPELL);
+        mg.base_type = mons->type;
+        mg.hd = 2; // lower hp
+        monster *ice = create_monster(mg);
+
+        if (ice)
+        {
+            ice->props[SIMULACRUM_TYPE_KEY] = mons->type;
+            ice->add_ench(mon_enchant(ENCH_SHORT_LIVED, 0, &you, delay));
+            ice->add_ench(mon_enchant(ENCH_SIMULACRUM_SCULPTING, 0, &you, INFINITE_DURATION));
+            ice->flags |= MF_WAS_IN_VIEW;
+
+            // Make each one shift a little later than the last
+            delay += random_range(1, 3) * BASELINE_DELAY;
+        }
+    }
+
+    return spret::success;
+}

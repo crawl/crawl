@@ -23,7 +23,7 @@
 #include "ray.h"
 #include "spl-damage.h"
 #include "spl-goditem.h" // player_is_debuffable
-#include "spl-monench.h" // mons_simulacrum_immune_reason
+#include "spl-summoning.h"
 #include "spl-other.h"
 #include "spl-transloc.h"
 #include "stringutil.h"

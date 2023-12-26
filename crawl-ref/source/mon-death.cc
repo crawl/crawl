@@ -1203,7 +1203,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
     bool requires_corpse = which_z == MONS_ZOMBIE || which_z == MONS_SKELETON;
     // This function is used by several different sorts of things, each with
     // their own validity conditions that are enforced here
-    // - Simulacrum, Death Channel and Yred reaping of unzombifiable things:
+    // - Bind Souls, Death Channel and Yred reaping of unzombifiable things:
     if (!requires_corpse
         && !mons_can_be_spectralised(*mons, god == GOD_YREDELEMNUL))
     {
@@ -1273,17 +1273,6 @@ static void _make_derived_undead(monster* mons, bool quiet,
                            _derived_undead_message(*mons, which_z, mist);
     make_derived_undead_fineff::schedule(mons->pos(), mg,
             mons->get_experience_level(), agent_name, message);
-}
-
-static void _make_simulacra(monster* mons, int pow, god_type god)
-{
-    const int count = 1 + random2(1 + div_rand_round(pow, 40));
-    for (int i = 0; i < count; ++i)
-    {
-        _make_derived_undead(mons, false, MONS_SIMULACRUM, BEH_FRIENDLY,
-                SPELL_SIMULACRUM, god);
-    }
-    mpr("A freezing mist starts to gather...");
 }
 
 static void _druid_final_boon(const monster* mons)
@@ -1592,18 +1581,10 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool corpse_gone,
         return false;
 
     // Yred takes priority over everything but Infestation.
-    // (Maybe Simulacrum should also be allowed? Or Infestation shouldn't?)
     if (in_los && have_passive(passive_t::reaping))
     {
         if (yred_reap_chance())
             _yred_reap(mons, corpse_gone);
-        return true;
-    }
-
-    if (mons.has_ench(ENCH_SIMULACRUM) && !have_passive(passive_t::goldify_corpses))
-    {
-        const int simu_pow = mons.props[SIMULACRUM_POWER_KEY].get_int();
-        _make_simulacra(&mons, simu_pow, GOD_NO_GOD);
         return true;
     }
 
@@ -2010,6 +1991,29 @@ item_def* monster_die(monster& mons, killer_type killer,
              && !wizard && !mons_reset)
     {
         _druid_final_boon(&mons);
+    }
+    // Only transform if we 'died' to timeout. Something simply dealing damage
+    // to us can still shatter us.
+    else if (mons.type == MONS_BLOCK_OF_ICE
+             && mons.has_ench(ENCH_SIMULACRUM_SCULPTING)
+             && timeout)
+    {
+        mgen_data simu = mgen_data(MONS_SIMULACRUM, BEH_COPY, mons.pos(),
+                            BEH_FRIENDLY, MG_AUTOFOE | MG_FORCE_PLACE)
+                         .set_summoned(&you, 0, SPELL_SIMULACRUM, GOD_NO_GOD);
+
+        simu.base_type = (monster_type)mons.props[SIMULACRUM_TYPE_KEY].get_int();
+
+
+        string msg = "Your " + mons_type_name(simu.base_type, DESC_PLAIN) +
+                     " simulacrum begins to move.";
+        make_derived_undead_fineff::schedule(mons.pos(), simu,
+                                             get_monster_data(simu.base_type)->HD,
+                                             "the player",
+                                             msg.c_str(),
+                                             SPELL_SIMULACRUM);
+
+        silent = true;
     }
 
     if (monster_explodes(mons))

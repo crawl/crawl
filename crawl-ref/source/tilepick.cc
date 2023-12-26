@@ -2226,7 +2226,6 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_IDEALISED, TILEI_IDEALISED },
     { MB_WRETCHED, TILEI_MALMUTATED },
     { MB_BOUND_SOUL, TILEI_BOUND_SOUL },
-    { MB_SIMULACRUM, TILEI_BOUND_SOUL }, //for now
     { MB_INFESTATION, TILEI_INFESTED },
     { MB_CORROSION, TILEI_CORRODED },
     { MB_SWIFT, TILEI_SWIFT },
@@ -2241,7 +2240,6 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_WEAK, TILEI_WEAKENED },
     { MB_WATERLOGGED, TILEI_WATERLOGGED },
     { MB_STILL_WINDS, TILEI_STILL_WINDS },
-    { MB_SIMULACRUM, TILEI_SIMULACRUM },
     { MB_ANTIMAGIC, TILEI_ANTIMAGIC },
     { MB_DAZED, TILEI_DAZED },
     { MB_PARTIALLY_CHARGED, TILEI_PARTIALLY_CHARGED },

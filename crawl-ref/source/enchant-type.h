@@ -201,7 +201,9 @@ enum enchant_type
     ENCH_CONCENTRATE_VENOM,
     ENCH_FIRE_CHAMPION,
     ENCH_ANGUISH,
+#if TAG_MAJOR_VERSION == 34
     ENCH_SIMULACRUM,
+#endif
     ENCH_NECROTISE,
     ENCH_CONTAM,
     ENCH_PURSUING,
@@ -210,6 +212,7 @@ enum enchant_type
     ENCH_VITRIFIED,
     ENCH_INSTANT_CLEAVE,
     ENCH_PROTEAN_SHAPESHIFTING,
+    ENCH_SIMULACRUM_SCULPTING,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

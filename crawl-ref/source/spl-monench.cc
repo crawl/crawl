@@ -169,47 +169,6 @@ spret cast_vile_clutch(int pow, bolt &beam, bool fail)
     return result;
 }
 
-string mons_simulacrum_immune_reason(const monster *mons)
-{
-    if (!mons || !you.can_see(*mons))
-        return "You can't see anything there.";
-
-    if (mons->has_ench(ENCH_SIMULACRUM) || mons->has_ench(ENCH_BOUND_SOUL))
-    {
-        return make_stringf("%s's soul is already gripped in ice!",
-                            mons->name(DESC_THE).c_str());
-    }
-
-    if (!mons_can_be_spectralised(*mons))
-        return "You can't make simulacra of that!";
-
-    return "";
-}
-
-spret cast_simulacrum(coord_def target, int pow, bool fail)
-{
-    if (cell_is_solid(target))
-    {
-        canned_msg(MSG_UNTHINKING_ACT);
-        return spret::abort;
-    }
-
-    monster* mons = monster_at(target);
-    const string immune_reason = mons_simulacrum_immune_reason(mons);
-    if (!immune_reason.empty())
-    {
-        mprf("%s", immune_reason.c_str());
-        return spret::abort;
-    }
-
-    fail_check();
-    int dur = 20 + random2(1 + div_rand_round(pow, 10));
-    mprf("You freeze %s soul.", apostrophise(mons->name(DESC_THE)).c_str());
-    mons->add_ench(mon_enchant(ENCH_SIMULACRUM, 0, &you, dur * BASELINE_DELAY));
-    mons->props[SIMULACRUM_POWER_KEY] = pow;
-    return spret::success;
-}
-
 void grasp_with_roots(actor &caster, actor &target, int turns)
 {
     if (target.is_player())

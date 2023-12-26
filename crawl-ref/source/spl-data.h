@@ -1178,12 +1178,12 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SIMULACRUM, "Simulacrum",
-    spschool::ice | spschool::necromancy,
-    spflag::dir_or_target | spflag::needs_tracer,
+    SPELL_SIMULACRUM, "Sculpt Simulacrum",
+    spschool::ice | spschool::alchemy,
+    spflag::dir_or_target | spflag::not_self | spflag::needs_tracer,
     6,
     200,
-    LOS_RADIUS, LOS_RADIUS,
+    1, 1,
     0,
     TILEG_SIMULACRUM,
 },
