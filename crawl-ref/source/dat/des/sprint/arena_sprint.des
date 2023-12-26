@@ -746,16 +746,17 @@ function arena_sprint_init_boss_table()
     bs[7] = {"place:Tar:$", "ereshkigal", "bone rune of zot"}
     bs[8] = {"place:Geh:$", "asmodeus", "obsidian rune of zot"}
     bs[9] = {"place:Coc:$", "antaeus", "icy rune of zot"}
-    -- Pan sets are based on those in pan.des
-    bs[10] = {"neqoxec / cacodemon / tormentor / tentacled monstrosity / " ..
-              "glass eye / golden eye / eye of devastation / " ..
-              "shining eye", "mnoleg", "glowing rune of zot"}
+    -- Pan sets are very roughly based on those in pan.des
+    bs[10] = {"shadow demon / cacodemon / protean progenitor / " ..
+              "tentacled monstrosity / glass eye / golden eye / " ..
+              "eye of devastation / shining eye", "mnoleg", "glowing rune of zot"}
     bs[11] = {"smoke demon / blizzard demon / green death / rakshasa / " ..
-              "glowing orange brain / titan / lich / draconian annihilator / " ..
+              "nagaraja / merfolk aquamancer / jorogumo / " ..
+              "fenstrider witch / titan / lich / draconian annihilator / " ..
               "deep elf annihilator", "lom lobon", "magical rune of zot"}
-    bs[12] = {"efreet / sun demon / ynoxinul / balrug / brimstone fiend",
+    bs[12] = {"efreet / sun moth / ynoxinul / balrug / brimstone fiend",
               "cerebov", "fiery rune of zot"}
-    bs[13] = {"soul eater / lorocyproca / executioner / shadow wraith",
+    bs[13] = {"soul eater / reaper / executioner / entropy weaver",
               "gloorx vloq", "dark rune of zot"}
     bs[14] = {"guardian mummy w:15 / mummy priest w:3 / royal mummy w:2",
                "khufu hp:500", "golden rune of zot"}
