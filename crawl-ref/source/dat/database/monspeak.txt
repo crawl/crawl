@@ -4352,7 +4352,7 @@ Frederick triumphant
 %%%%
 Ashenzari Frederick triumphant
 
-@The_monster@ shakes @possessive@ head sadly, "Willingly shackling yourself to the bindings of a god... pitiful."
+@The_monster@ shakes @possessive@ head sadly, "Willingly donning a god's shackles... pitiful."
 
 @Frederick@
 %%%%
@@ -4364,19 +4364,19 @@ Beogh Frederick triumphant
 %%%%
 Cheibriados Frederick triumphant
 
-@The_monster@ says, "Look at all you gave up for Cheibriados. And what did it get you?"
+@The_monster@ says, "Be happy - you can't get any slower than dead."
 
 @Frederick@
 %%%%
 Dithmenos Frederick triumphant
 
-@The_monster@ scoffs, "Willingly snuffing out the glorious light of your own radiance... and for what?"
+@The_monster@ says, "Time for you to vanish into the darkness."
 
 @Frederick@
 %%%%
 Elyvilon Frederick triumphant
 
-@The_monster@ says, "The denizens of this place deserve your pity, perhaps, but not your aid."
+@The_monster@ says, "Healer, heal thyself."
 
 @Frederick@
 %%%%
@@ -4400,7 +4400,7 @@ Hepliaklqana Frederick triumphant
 %%%%
 Ignis Frederick triumphant
 
-@The_monster@ says, "Worshipping a god whose flame burns even lower than your own... that was foolish."
+@The_monster@ says, "Foolish to worship a god whose flame is even dimmer than you."
 
 @Frederick@
 %%%%
@@ -4460,13 +4460,13 @@ Sif Muna Frederick triumphant
 %%%%
 Trog Frederick triumphant
 
-@The_monster@ says, "You should have learned to control yourself rather than giving into your rage."
+@The_monster@ says, "I'm sure you'll make a fine angry ghost."
 
 @Frederick@
 %%%%
 Uskayaw Frederick triumphant
 
-@The_monster@ says, "You lost yourself in dance instead of focusing on self-improvement."
+@The_monster@ says, "You've danced your last steps."
 
 @Frederick@
 %%%%
@@ -4502,7 +4502,7 @@ Zin Frederick triumphant
 %%%%
 the Shining One Frederick triumphant
 
-@The_monster@ says, "You tried to shine brightly but instead burnt out quickly."
+@The_monster@ says, "The adventurer who shines twice as bright burns out twice as fast."
 
 @Frederick@
 %%%%
