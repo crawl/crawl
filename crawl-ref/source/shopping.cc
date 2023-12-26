@@ -839,10 +839,8 @@ static bool _purchase(shop_struct& shop, const level_pos& pos, int index)
 
 enum shopping_order
 {
-    ORDER_ORIGINAL,
-    // default order must be original (stock) order, or index_to_letter breaks
-    ORDER_DEFAULT = ORDER_ORIGINAL,
     ORDER_TYPE,
+    ORDER_DEFAULT = ORDER_TYPE,
     ORDER_PRICE,
     ORDER_ALPHABETICAL,
     NUM_ORDERS
@@ -850,8 +848,7 @@ enum shopping_order
 
 static const char * const shopping_order_names[NUM_ORDERS] =
 {
-    // XXX no name longer than 6 letters
-    "none", "type", "price", "name"
+    "type", "price", "name"
 };
 
 static shopping_order operator++(shopping_order &x)
@@ -1241,9 +1238,6 @@ void ShopMenu::resort()
 {
     switch (order)
     {
-    case ORDER_ORIGINAL:
-        // noop
-        break;
     case ORDER_TYPE:
     {
         const bool id = shoptype_identifies_stock(shop.type);
