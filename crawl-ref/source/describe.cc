@@ -2137,7 +2137,7 @@ static const char* _item_ego_desc(special_armour_type ego)
                "invisible creatures, increasing accuracy against all within "
                "it other than the wearer, and reducing the wearer's stealth.";
     case SPARM_RAGE:
-        return "it berserks the wearer when making melee attacks (20% chance).";
+        return "it berserks the wearer when making melee attacks (25% chance).";
     case SPARM_MAYHEM:
         return "it causes witnesses of the wearer's kills to go into a frenzy,"
                " attacking everything nearby with great strength and speed.";

@@ -852,7 +852,7 @@ TILE:     urand_bear
 TILE_EQ:  bear
 # TODO: why isn't this brand working on the fallback?
 BRAND:    SPARM_SPIRIT_SHIELD
-ANGRY:    20
+ANGRY:    25
 WILL:     2
 DBRAND:   Bear:      Going berserk makes the wearer exceptionally tough, and
  they are slowed for a shorter time afterward.
