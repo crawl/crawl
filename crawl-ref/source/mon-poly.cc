@@ -125,10 +125,8 @@ static bool _valid_type_morph(const monster &mons, monster_type new_mclass)
         // They act as separate polymorph classes on their own.
         || mons_class_is_zombified(new_mclass)
 
-        // These require manual setting of the ghost demon struct to
-        // indicate their characteristics, which we currently aren't
-        // smart enough to handle.
-        || mons_is_ghost_demon(new_mclass)
+        // Pan lords aren't uniques, but they might as well be.
+        || new_mclass == MONS_PANDEMONIUM_LORD
 
         // Other poly-unsuitable things.
         || mons_is_statue(new_mclass)

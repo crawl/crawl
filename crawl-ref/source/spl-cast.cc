@@ -1679,6 +1679,14 @@ static string _mon_threat_string(const CrawlStoreValue &mon_store)
     int col;
     string desc;
     monster_info(&dummy).to_string(1, desc, col, true, nullptr, false);
+
+    // Ghost demons need their underlying monster name. Without this,
+    // we'll get e.g. a specific ugly thing colour based on what the
+    // dummy monster rolled, which may not match what the actual monster
+    // rolls.
+    if (mons_is_ghost_demon(dummy.type))
+        desc = get_monster_data(dummy.type)->name;
+
     const string col_name = colour_to_str(col);
 
     return "<" + col_name + ">" + article_a(desc) + "</" + col_name + ">";
