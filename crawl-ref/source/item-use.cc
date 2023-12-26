@@ -3474,7 +3474,7 @@ static bool _handle_enchant_weapon(bool alreadyknown, const string &pre_msg)
     return true;
 }
 
-bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
+bool enchant_armour(item_def &arm, bool quiet)
 {
     ASSERT(arm.defined());
     ASSERT(arm.base_type == OBJ_ARMOUR);
@@ -3482,7 +3482,6 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     // Cannot be enchanted.
     if (!is_enchantable_armour(arm))
     {
-        ac_change = 0;
         if (!quiet)
             canned_msg(MSG_NOTHING_HAPPENS);
         return false;
@@ -3490,23 +3489,22 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 
     string name = _item_name(arm);
 
-    arm.plus++;
-    ac_change = 1;
+    ++arm.plus;
 
-    // Output message before changing enchantment and curse status.
     if (!quiet)
     {
         const bool plural = armour_is_hide(arm)
                             && arm.sub_type != ARM_TROLL_LEATHER_ARMOUR;
         string glow = conjugate_verb("glow", plural);
-        auto time = is_enchantable_armour(arm) ? "moment" : "while";
-        mprf("%s %s green for a %s.", name.c_str(), glow.c_str(), time);
+        const char* dur = is_enchantable_armour(arm) ? "moment" : "while";
+        mprf("%s %s green for a %s.", name.c_str(), glow.c_str(), dur);
     }
 
     return true;
 }
 
-static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
+/// Returns whether the scroll is used up.
+static bool _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
 {
     item_def* target= nullptr;
     string letter = "";
@@ -3529,26 +3527,24 @@ static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
     }
 
     if (!target)
-        return alreadyknown ? -1 : 0;
+        return !alreadyknown;
 
     // Okay, we may actually (attempt to) enchant something.
     if (alreadyknown)
         mpr(pre_msg);
 
-    int ac_change;
-    bool result = enchant_armour(ac_change, false, *target);
+    const bool success = enchant_armour(*target, false);
+    if (!success)
+        return true;
 
-    if (ac_change)
+    you.redraw_armour_class = true;
+    if (!is_enchantable_armour(*target))
     {
-        you.redraw_armour_class = true;
-        if (!is_enchantable_armour(*target))
-        {
-            crawl_state.cancel_cmd_again();
-            crawl_state.cancel_cmd_repeat();
-        }
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
     }
 
-    return result ? 1 : 0;
+    return true;
 }
 
 static void _vulnerability_scroll()
@@ -4117,8 +4113,7 @@ bool read(item_def* scroll, dist *target)
             mpr("It is a scroll of enchant armour.");
             // included in default force_more_message (to show it before menu)
         }
-        cancel_scroll =
-            (_handle_enchant_armour(alreadyknown, pre_succ_msg) == -1);
+        cancel_scroll = !_handle_enchant_armour(alreadyknown, pre_succ_msg);
         break;
 #if TAG_MAJOR_VERSION == 34
     case SCR_CURSE_WEAPON:
