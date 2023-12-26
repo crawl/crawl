@@ -1210,7 +1210,12 @@ string monster_info::common_name(description_level_type desc) const
 
 bool monster_info::has_proper_name() const
 {
-    return !mname.empty() && !mons_is_ghost_demon(type)
+    // Some ghost demon monsters (Pan lords, player ghosts, and player
+    // illusions) have name overrides.
+    return !mname.empty()
+            && type != MONS_PANDEMONIUM_LORD
+            && type != MONS_PLAYER_GHOST
+            && type != MONS_PLAYER_ILLUSION
             && !is(MB_NAME_REPLACE) && !is(MB_NAME_ADJECTIVE) && !is(MB_NAME_SUFFIX);
 }
 
