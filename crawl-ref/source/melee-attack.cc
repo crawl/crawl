@@ -37,6 +37,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-damage.h"
+#include "spl-goditem.h"
 #include "spl-summoning.h" //AF_SPIDER
 #include "state.h"
 #include "stepdown.h"
@@ -619,6 +620,20 @@ bool melee_attack::handle_phase_hit()
         blood_spray(defender->pos(), defender->as_monster()->type,
                     damage_done / 5);
         defender->as_monster()->flags |= MF_EXPLODE_KILL;
+    }
+
+    // Trigger Curse of Agony after most normal damage is already applied
+    if (attacker->is_player() && defender->alive() && defender->is_monster()
+        && defender->as_monster()->has_ench(ENCH_CURSE_OF_AGONY))
+    {
+        mon_enchant agony = defender->as_monster()->get_ench(ENCH_CURSE_OF_AGONY);
+        torment_cell(defender->pos(), &you, TORMENT_AGONY);
+        agony.degree -= 1;
+
+        if (agony.degree == 0)
+            defender->as_monster()->del_ench(ENCH_CURSE_OF_AGONY);
+        else
+            defender->as_monster()->update_ench(agony);
     }
 
     if (check_unrand_effects())

@@ -415,7 +415,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_NECROMANCER,
       {
        { SPELL_BOLT_OF_DRAINING, 15, MON_SPELL_WIZARD },
-       { SPELL_AGONY_RANGE, 15, MON_SPELL_WIZARD },
+       { SPELL_AGONY, 15, MON_SPELL_WIZARD },
        { SPELL_BIND_SOULS, 30, MON_SPELL_WIZARD },
       }
     },
@@ -440,7 +440,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_DEATH_KNIGHT,
       {
-       { SPELL_AGONY_RANGE, 15, MON_SPELL_PRIEST },
+       { SPELL_AGONY, 15, MON_SPELL_PRIEST },
        { SPELL_INJURY_MIRROR, 20, MON_SPELL_PRIEST },
       }
     },
@@ -490,7 +490,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_SLOW, 13, MON_SPELL_WIZARD },
        { SPELL_CONFUSE, 13, MON_SPELL_WIZARD },
-       { SPELL_AGONY_RANGE, 13, MON_SPELL_WIZARD },
+       { SPELL_AGONY, 13, MON_SPELL_WIZARD },
       }
     },
 
@@ -977,7 +977,7 @@ static const mon_spellbook mspell_list[] =
     { MST_FENSTRIDER_WITCH,
       {
        { SPELL_PARALYSE, 15, MON_SPELL_WIZARD },
-       { SPELL_AGONY, 30, MON_SPELL_WIZARD },
+       { SPELL_AGONIZING_TOUCH, 30, MON_SPELL_WIZARD },
        { SPELL_HURL_SLUDGE, 15, MON_SPELL_WIZARD },
       }
     },
@@ -2055,7 +2055,7 @@ static const mon_spellbook mspell_list[] =
     // ('1') Greater demons.
     {  MST_IGNACIO,
       {
-       { SPELL_AGONY_RANGE, 21, MON_SPELL_MAGICAL },
+       { SPELL_AGONY, 21, MON_SPELL_MAGICAL },
        { SPELL_HASTE, 41, MON_SPELL_MAGICAL },
       }
     },

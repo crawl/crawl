@@ -918,13 +918,25 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_AGONY, "Agony",
+    SPELL_AGONIZING_TOUCH, "Agonizing Touch",
+    spschool::necromancy,
+    spflag::dir_or_target | spflag::not_self | spflag::needs_tracer
+        | spflag::WL_check | spflag::monster,
+    5,
+    200,
+    1, 1,
+    0,
+    TILEG_AGONY,
+},
+
+{
+    SPELL_CURSE_OF_AGONY, "Curse of Agony",
     spschool::necromancy,
     spflag::dir_or_target | spflag::not_self | spflag::needs_tracer
         | spflag::WL_check,
     5,
-    200,
-    1, 1,
+    100,
+    3, 3,
     0,
     TILEG_AGONY,
 },
@@ -3274,7 +3286,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_AGONY_RANGE, "Agony Range",
+    SPELL_AGONY, "Agony",
     spschool::necromancy,
     spflag::dir_or_target | spflag::not_self | spflag::needs_tracer
         | spflag::monster | spflag::WL_check,

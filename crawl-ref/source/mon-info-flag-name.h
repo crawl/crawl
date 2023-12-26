@@ -139,4 +139,5 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_BOUND, "bound", "bound in place", "bound" },
     { MB_BULLSEYE_TARGET, "bullseye target", "targeted by your dimensional bullseye", "bullseye target" },
     { MB_VITRIFIED, "vitrified", "fragile as glass", "vitrified" },
+    { MB_CURSE_OF_AGONY, "agonized", "cursed with the promise of agony", "cursed with agony" },
 };

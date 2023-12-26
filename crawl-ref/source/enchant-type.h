@@ -213,6 +213,7 @@ enum enchant_type
     ENCH_INSTANT_CLEAVE,
     ENCH_PROTEAN_SHAPESHIFTING,
     ENCH_SIMULACRUM_SCULPTING,
+    ENCH_CURSE_OF_AGONY,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

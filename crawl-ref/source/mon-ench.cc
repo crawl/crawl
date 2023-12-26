@@ -1059,6 +1059,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     }
     break;
 
+    case ENCH_CURSE_OF_AGONY:
+        simple_monster_message(*this, " is freed from its curse.");
+        break;
+
     default:
         break;
     }
@@ -1465,6 +1469,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_VITRIFIED:
     case ENCH_INSTANT_CLEAVE:
     case ENCH_PROTEAN_SHAPESHIFTING:
+    case ENCH_CURSE_OF_AGONY:
         decay_enchantment(en);
         break;
 
@@ -2152,7 +2157,7 @@ static const char *enchant_names[] =
 #endif
     "necrotizing", "glowing", "pursuing",
     "bound", "bullseye_target", "vitrified", "cleaving_attack",
-    "protean_shapeshifting", "simulacrum_sculpting",
+    "protean_shapeshifting", "simulacrum_sculpting", "curse_of_agony",
     "buggy", // NUM_ENCHANTMENTS
 };
 

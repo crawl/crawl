@@ -8,12 +8,12 @@ Acid Splash spell
 Spits a glob of acid at a nearby creature, covering it in corrosive slime
 for a short time. It may also splash onto other nearby creatures on impact.
 %%%%
-Agony spell
+Agonizing Touch spell
 
 Cuts the health of an adjacent creature in half. This damage is never
 directly lethal.
 %%%%
-Agony Range spell
+Agony spell
 
 Cuts the health of a target creature in half. This damage is never directly
 lethal.
@@ -394,6 +394,13 @@ Crystal Bolt spell
 Projects a penetrating projectile with peculiar magical properties. It is
 randomly imbued with either fire or ice, and additionally will reflect from
 walls of any material due to the crystal embedded in the shot.
+%%%%
+Curse of Agony spell
+
+Curses a nearby target to experience excrutiating pain whenever they are struck
+by the caster. The next two successful melee attacks the caster performs against
+a victim of this curse will cut their current health in half. This
+damage is never directly lethal.
 %%%%
 Dazzling Flash spell
 

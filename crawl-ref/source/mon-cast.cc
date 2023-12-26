@@ -471,13 +471,13 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_TELEPORT_OTHER, _hex_logic(SPELL_TELEPORT_OTHER,
                                          _foe_tele_goodness) },
     { SPELL_DIMENSION_ANCHOR, _hex_logic(SPELL_DIMENSION_ANCHOR, nullptr, 6)},
-    { SPELL_AGONY_RANGE, _hex_logic(SPELL_AGONY_RANGE, [](const monster &caster) {
+    { SPELL_AGONY, _hex_logic(SPELL_AGONY, [](const monster &caster) {
             const actor* foe = caster.get_foe();
             ASSERT(foe);
             return ai_action::good_or_impossible(_torment_vulnerable(foe));
         }, 6)
     },
-    { SPELL_AGONY, _hex_logic(SPELL_AGONY, [](const monster &caster) {
+    { SPELL_AGONIZING_TOUCH, _hex_logic(SPELL_AGONIZING_TOUCH, [](const monster &caster) {
             const actor* foe = caster.get_foe();
             ASSERT(foe);
             return ai_action::good_or_impossible(_torment_vulnerable(foe));

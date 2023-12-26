@@ -200,6 +200,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
     case BEAM_INFESTATION:
     case BEAM_PAIN:
     case BEAM_AGONY:
+    case BEAM_CURSE_OF_AGONY:
     case BEAM_VILE_CLUTCH:
     case BEAM_VAMPIRIC_DRAINING:
     case BEAM_NECROTISE:
@@ -5305,6 +5306,7 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
         break;
 
     case BEAM_AGONY:
+    case BEAM_CURSE_OF_AGONY:
         rc = !mon->res_torment();
         break;
 
@@ -5595,6 +5597,22 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_AGONY:
         torment_cell(mon->pos(), agent(), TORMENT_AGONY);
         obvious_effect = true;
+        return MON_AFFECTED;
+
+    case BEAM_CURSE_OF_AGONY:
+        // Don't allow stacking number of charges in a opaque fashion
+        // by recasting the spell on already-cursed enemies.
+        // (But allow refreshing duration, if someone wants)
+        if (mon->has_ench(ENCH_CURSE_OF_AGONY))
+            mon->del_ench(ENCH_CURSE_OF_AGONY, true, false);
+
+        if (mon->add_ench(mon_enchant(ENCH_CURSE_OF_AGONY, 2, agent(),
+                      random_range(6, 8) * BASELINE_DELAY)))
+        {
+            obvious_effect = true;
+            simple_monster_message(*mon, " is cursed with the promise of agony.");
+
+        }
         return MON_AFFECTED;
 
     case BEAM_MINDBURST:
@@ -6580,6 +6598,7 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_DISPEL_UNDEAD:
         case BEAM_PAIN:
         case BEAM_AGONY:
+        case BEAM_CURSE_OF_AGONY:
         case BEAM_HIBERNATION:
         case BEAM_MINDBURST:
         case BEAM_VAMPIRIC_DRAINING:
@@ -6822,6 +6841,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_BANISH:                return "banishment";
     case BEAM_PAIN:                  return "pain";
     case BEAM_AGONY:                 return "agony";
+    case BEAM_CURSE_OF_AGONY:        return "curse of agony";
     case BEAM_DISPEL_UNDEAD:         return "dispel undead";
     case BEAM_MINDBURST:             return "mindburst";
     case BEAM_BLINK:                 return "blink";

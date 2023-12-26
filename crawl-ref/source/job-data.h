@@ -275,7 +275,7 @@ static const map<job_type, job_def> job_data =
         SPELL_NECROTISE,
         SPELL_VAMPIRIC_DRAINING,
         SPELL_ANIMATE_DEAD,
-        SPELL_AGONY,
+        SPELL_CURSE_OF_AGONY,
     },
     { "robe", "potion of magic" },
     WCHOICE_NONE,

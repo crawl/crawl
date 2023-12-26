@@ -143,8 +143,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_NECROTISE,
     SPELL_VAMPIRIC_DRAINING,
     SPELL_MARTYRS_KNELL,
-    SPELL_AGONY,
-
+    SPELL_CURSE_OF_AGONY,
 },
 
 {   // Book of Callings
@@ -216,7 +215,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Wizardry
-    SPELL_AGONY,
+    SPELL_CURSE_OF_AGONY,
     SPELL_SPELLFORGED_SERVITOR,
 },
 #endif
@@ -339,7 +338,7 @@ static const vector<spell_type> spellbook_templates[] =
 #if TAG_MAJOR_VERSION == 34
 { // Book of Pain
     SPELL_NECROTISE,
-    SPELL_AGONY,
+    SPELL_CURSE_OF_AGONY,
 },
 #endif
 
@@ -385,7 +384,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of the Senses
     SPELL_DAZZLING_FLASH,
     SPELL_MEPHITIC_CLOUD,
-    SPELL_AGONY,
+    SPELL_CURSE_OF_AGONY,
     SPELL_SILENCE,
 },
 

@@ -1570,7 +1570,7 @@ static bool _give_kiku_gift(bool forced)
     {
         spell_options = {SPELL_ANGUISH,
                          SPELL_DISPEL_UNDEAD,
-                         SPELL_AGONY,
+                         SPELL_CURSE_OF_AGONY,
                          SPELL_BORGNJORS_VILE_CLUTCH,
                          SPELL_DEATH_CHANNEL,
                          SPELL_SIMULACRUM};

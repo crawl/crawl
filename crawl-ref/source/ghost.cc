@@ -807,6 +807,8 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
         return SPELL_PAIN;
     case SPELL_CONFUSING_TOUCH:
         return SPELL_CONFUSE;
+    case SPELL_CURSE_OF_AGONY:
+        return SPELL_AGONY;
     default:
         break;
     }
