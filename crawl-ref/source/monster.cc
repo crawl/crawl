@@ -3512,8 +3512,7 @@ int monster::known_chaos(bool check_spells_god) const
         chaotic++;
     }
 
-    if (has_attack_flavour(AF_MUTATE)
-        || has_attack_flavour(AF_CHAOTIC))
+    if (has_attack_flavour(AF_CHAOTIC))
     {
         chaotic++;
     }

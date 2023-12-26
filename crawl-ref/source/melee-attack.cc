@@ -2760,15 +2760,6 @@ void melee_attack::mons_apply_attack_flavour()
         defender->expose_to_element(BEAM_MISSILE, 2);
         break;
 
-    case AF_MUTATE:
-        if (one_chance_in(4))
-        {
-            defender->malmutate(you.can_see(*attacker) ?
-                apostrophise(attacker->name(DESC_PLAIN)) + " mutagenic touch" :
-                "mutagenic touch");
-        }
-        break;
-
     case AF_POISON:
     case AF_POISON_STRONG:
     case AF_REACH_STING:

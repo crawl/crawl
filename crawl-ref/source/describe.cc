@@ -4763,7 +4763,6 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_ELEC,              "electric damage" },
         { AF_FIRE,              "fire damage" },
         { AF_SEAR,              "remove fire resistance" },
-        { AF_MUTATE,            "cause mutations" },
         { AF_MINIPARA,          "poison and momentary paralysis" },
         { AF_POISON_PARALYSE,   "poison and paralysis/slowing" },
         { AF_POISON,            "poison" },

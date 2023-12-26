@@ -77,8 +77,8 @@ enum attack_flavour
     AF_FIRE,
 #if TAG_MAJOR_VERSION == 34
     AF_HUNGER,
-#endif
     AF_MUTATE,
+#endif
     AF_POISON_PARALYSE,
     AF_POISON,
 #if TAG_MAJOR_VERSION == 34
