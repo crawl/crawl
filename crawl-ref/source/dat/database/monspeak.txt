@@ -4412,7 +4412,7 @@ Jivya Frederick triumphant
 %%%%
 Kikubaaqudgha Frederick triumphant
 
-@The_monster@ sighs, "Join the corpses you idolize, mortal."
+@The_monster@ sighs, "Join the corpses you idolise, mortal."
 
 @Frederick@
 %%%%
@@ -4496,7 +4496,7 @@ Yredelemnul Frederick triumphant
 %%%%
 Zin Frederick triumphant
 
-@The_monster@ says, "The only thing more annoying than a worshipper is a proselytizer."
+@The_monster@ says, "The only thing more annoying than a worshipper is a proselytiser."
 
 @Frederick@
 %%%%
@@ -5516,7 +5516,7 @@ VISUAL:@The_monster@ smiles, but it's obviously fake.
 
 @The_monster@ says @to_foe@, "Leave now, and tell all of Margery's mercy!"
 
-@The_monster@ says @to_foe@, "Fear not. I will immortalize you in the tale of my first kill."
+@The_monster@ says @to_foe@, "Fear not. I will immortalise you in the tale of my first kill."
 
 VISUAL:@The_monster@ gives herself a magical halo, but it quickly sputters out.
 
