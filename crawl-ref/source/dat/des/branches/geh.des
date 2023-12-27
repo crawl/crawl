@@ -780,6 +780,28 @@ cLLLl...lMMMcl.lc
 ccccc.@.ccccccccc
 ENDMAP
 
+NAME:    tekkud_geh_sculpture_garden
+TAGS:    transparent
+DEPTH:   Geh
+MONS:    red draconian shifter, salamander mystic
+MONS:    balrug, hellephant, searing wretch, hellion
+MONS:    salamander tyrant
+SUBST:   G=GGx. / .'
+KPROP:   G' = bloody
+SHUFFLE: 127, 3456
+MAP
+GGG.GGGG
+G4....3G
+G.G.5G.G
+G6G67G.G
+G.G21G..
+..G7.G.G
+..G.5G.G
+GGG6.G4G
+G35....G
+GGGG.GGG
+ENDMAP
+
 ##############################################################################
 # Asmodeus (Gehenna) - the original
 ##############################################################################
