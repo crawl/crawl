@@ -960,6 +960,8 @@ static bool _acquire_manual(item_def &book)
 
         // Greatly reduce the chances of getting a manual for a skill
         // you couldn't use unless you switched your religion.
+        // Note: manuals that gods actively hate, e.g. spellcasting under
+        // Trog, will be mulched and replaced later. This is silly!
         if (_skill_useless_with_god(sk))
             w /= 2;
 
