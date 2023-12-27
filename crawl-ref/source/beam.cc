@@ -4596,8 +4596,6 @@ static void _add_petrify_chain_candidates(const bolt& beam, coord_def pos,
     }
 }
 
-static const size_t MAX_PETRIFY_BOUNCES = 2;
-
 void fill_petrify_chain_targets(const bolt& beam, coord_def centre,
                                 vector<coord_def> &targs, bool random)
 {
@@ -4607,6 +4605,7 @@ void fill_petrify_chain_targets(const bolt& beam, coord_def centre,
     if (candidates.empty())
         return;
 
+    const size_t MAX_PETRIFY_BOUNCES = 2;
     if (candidates.size() >= MAX_PETRIFY_BOUNCES)
     {
         for (coord_def candidate : candidates)
