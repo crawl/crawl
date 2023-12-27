@@ -3747,8 +3747,7 @@ void bolt::affect_player_enchantment(bool resistible)
         }
     }
 
-    // Handle bouncing to other targets if this is petrify
-    handle_petrify_chaining(you);
+    handle_petrify_chaining(you.pos());
 
     // Regardless of effect, we need to know if this is a stopper
     // or not - it seems all of the above are.
@@ -4567,81 +4566,102 @@ void bolt::enchantment_affect_monster(monster* mon)
             beogh_follower_convert(mon, true);
     }
 
-    // Handle bouncing to other targets if this is petrify
-    handle_petrify_chaining(*mon);
+    handle_petrify_chaining(mon->pos());
 
     extra_range_used += range_used_on_hit();
 }
 
-static void _add_petrify_chain_candidates(const bolt& beam, const actor& orig_targ,
-                                        coord_def spot, vector<actor*>& candidates)
+static void _add_petrify_chain_candidates(const bolt& beam, coord_def pos,
+                                          set<coord_def> &candidates)
 {
-    for (adjacent_iterator ai(spot); ai; ++ai)
+    for (adjacent_iterator ai(pos); ai; ++ai)
     {
+        if (!cell_see_cell(beam.source, *ai, LOS_NO_TRANS))
+            continue;
+
         actor* act = actor_at(*ai);
 
         // Ignore friendlies, firewood, and things we can fire through.
-        if (!act || !cell_see_cell(beam.source, *ai, LOS_NO_TRANS)
-            || mons_aligned(beam.agent(), act)
-            || (act->is_monster()
-                && (shoot_through_monster(beam, monster_at(*ai))
-                    || mons_is_firewood(*monster_at(*ai)))))
+        if (!act || mons_aligned(beam.agent(), act))
+            continue;
+
+        monster *mon = act->as_monster();
+        if (mon && (shoot_through_monster(beam, mon)
+                    || mons_is_firewood(*mon)))
         {
             continue;
         }
 
-        // Ensure this actor isn't already in the list
-        for (unsigned int i = 0; i < candidates.size(); ++i)
-        {
-            if (candidates[i] == act || candidates[i] == &orig_targ)
-                continue;
-        }
-
-        candidates.push_back(act);
+        candidates.insert(*ai);
     }
 }
 
-void fill_petrify_chain_targets(const bolt& beam, const actor& first, int num,
-                                vector<actor*>& targs)
+static const size_t MAX_PETRIFY_BOUNCES = 2;
+
+void fill_petrify_chain_targets(const bolt& beam, coord_def centre,
+                                vector<coord_def> &targs, bool random)
 {
     int count = 0;
-    vector<actor*> candidates;
+    set<coord_def> candidates;
+    _add_petrify_chain_candidates(beam, centre, candidates);
+    if (candidates.empty())
+        return;
 
-    _add_petrify_chain_candidates(beam, first, first.pos(), candidates);
-
-    while (count < num && !candidates.empty())
+    if (candidates.size() >= MAX_PETRIFY_BOUNCES)
     {
-        int rand = random2(candidates.size());
-        targs.push_back(candidates[rand]);
-        _add_petrify_chain_candidates(beam, first, candidates[rand]->pos(), candidates);
+        for (coord_def candidate : candidates)
+            targs.push_back(candidate);
+        if (!random)
+            return;
 
-        // XX: Ugly, but this vector should be too small for this inefficiency to matter
-        candidates.erase(candidates.begin() + rand);
-        ++count;
+        shuffle_array(targs);
+        targs.resize(MAX_PETRIFY_BOUNCES);
+        return;
     }
+
+    // OK. Can we bounce further out?
+    set<coord_def> scs;
+    for (coord_def candidate : candidates) // only runs once
+    {
+        targs.push_back(candidate);
+        // Ensure adjacent targets show up before later-ring ones.
+        _add_petrify_chain_candidates(beam, candidate, scs);
+    }
+    if (random)
+        shuffle_array(targs);
+
+    scs.erase(centre);
+    if (scs.empty())
+        return;
+
+    // OK, we found some later bounces.
+    if (random)
+    {
+        vector<coord_def> subcand_array(scs.begin(), scs.end());
+        // Assumes MAX_PETRIFY_BOUNCES = 2. Sorry!
+        targs.push_back(*random_iterator(subcand_array));
+        return;
+    }
+
+    for (coord_def sc : scs)
+        targs.push_back(sc);
 }
 
-void bolt::handle_petrify_chaining(actor& origin_targ)
+void bolt::handle_petrify_chaining(coord_def centre)
 {
     // Handle ray bounces
-    if (origin_spell == SPELL_PETRIFY && hit_count.size() == 1)
-    {
-        vector<actor*> chain_targs;
-        fill_petrify_chain_targets(*this, origin_targ, 2, chain_targs);
+    if (origin_spell != SPELL_PETRIFY || hit_count.size() != 1)
+        return;
 
-        if (!chain_targs.empty())
-        {
-            // Bounces are at 2/3 power
-            int saved_ench_power = ench_power;
-            ench_power = ench_power * 2 / 3;
+    vector<coord_def> chain_targs;
+    fill_petrify_chain_targets(*this, centre, chain_targs, true);
+    if (chain_targs.empty())
+        return;
 
-            shuffle_array(chain_targs);
-            for (int i = 0; i < min(static_cast<int>(chain_targs.size()), 2); ++i)
-                affect_actor(chain_targs[i]);
-
-            ench_power = saved_ench_power;
-        }
-    }
+    // Bounces are at 2/3 power
+    unwind_var<int> ep(ench_power, ench_power * 2 / 3);
+    for (coord_def c : chain_targs)
+        affect_actor(actor_at(c));
 }
 
 static void _print_pre_death_message(const monster &mon, bool goldify,

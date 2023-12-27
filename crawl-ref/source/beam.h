@@ -299,7 +299,7 @@ public:
 private:
     void apply_bolt_paralysis(monster* mons);
     void apply_bolt_petrify(monster* mons);
-    void handle_petrify_chaining(actor& origin_targ);
+    void handle_petrify_chaining(coord_def centre);
     void monster_post_hit(monster* mon, int dmg);
     // for players
     void affect_player();
@@ -383,6 +383,7 @@ int omnireflect_chance_denom(int SH);
 void glaciate_freeze(monster* mon, killer_type englaciator,
                              int kindex);
 
-void fill_petrify_chain_targets(const bolt& beam, const actor& first, int num, vector<actor*>& targs);
+void fill_petrify_chain_targets(const bolt& beam, coord_def centre,
+                                vector<coord_def> &targs, bool random);
 
 bolt setup_targeting_beam(const monster &mons);

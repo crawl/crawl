@@ -587,5 +587,5 @@ public:
     aff_type is_affected(coord_def loc) override;
 
 private:
-    vector<coord_def> chain_targ;
+    set<coord_def> chain_targ;
 };

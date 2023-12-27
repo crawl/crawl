@@ -2230,16 +2230,14 @@ bool targeter_petrify::set_aim(coord_def a)
 
     chain_targ.clear();
 
-    monster* targ = monster_at(path_taken[path_taken.size() - 1]);
-    if (targ && agent->can_see(*targ))
-    {
-        vector<actor*> chain_targ_mons;
-        fill_petrify_chain_targets(tempbeam, *targ, 1000, chain_targ_mons);
+    const coord_def pos = path_taken[path_taken.size() - 1];
+    monster* targ = monster_at(pos);
+    if (!targ || !agent->can_see(*targ))
+        return true;
 
-        for (unsigned int i = 0; i < chain_targ_mons.size(); ++i)
-            chain_targ.push_back(chain_targ_mons[i]->pos());
-    }
-
+    vector<coord_def> chain_targs;
+    fill_petrify_chain_targets(tempbeam, pos, chain_targs, false);
+    chain_targ.insert(chain_targs.begin(), chain_targs.end());
     return true;
 }
 
@@ -2256,11 +2254,7 @@ aff_type targeter_petrify::is_affected(coord_def loc)
         }
     }
 
-    for (unsigned int i = 0; i < chain_targ.size(); ++i)
-    {
-        if (chain_targ[i] == loc)
-            return AFF_MAYBE;
-    }
-
+    if (chain_targ.count(loc) > 0)
+        return AFF_MAYBE;
     return AFF_NO;
 }
