@@ -1150,6 +1150,25 @@ FHFHFHFHF.
 ..........
 ENDMAP
 
+NAME:  tekkud_tar_snaking_path
+TAGS:  transparent
+DEPTH: Tar
+MONS:  lich / ancient lich , spectral anaconda
+MAP
+xx@@@xx
+ xx...xx
+  xx...xx
+   xx.2.xx
+    xx222xx
+     xx212xx
+      xx222xx
+       xx.2.xx
+        xx.2.xx
+         xx2..xx
+          xx...xx
+           xx@@@xx
+ENDMAP
+
 ##############################################################################
 # Ereshkigal (Tartarus)
 ##############################################################################
