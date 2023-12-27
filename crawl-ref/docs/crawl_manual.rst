@@ -1556,7 +1556,7 @@ Hill Orcs (HO)
   convert to Beogh even without an altar whenever an orc priest is in sight.
 
 Minotaurs (Mi)
-  The Minotaurs are a species of hybrids, possessing human bodies with bovine
+  The Minotaurs are a species of hybrids, possessing Human bodies with bovine
   heads. They delve into the Dungeon because of their instinctive love of
   twisting passageways.
 
@@ -1566,7 +1566,7 @@ Minotaurs (Mi)
   dare attack them.
 
 Merfolk (Mf)
-  The Merfolk are a hybrid species of half-human, half-fish that typically live
+  The Merfolk are a hybrid species of half-Human, half-fish that typically live
   in the oceans and rivers, seldom venturing toward land. However, Merfolk
   aren't as limited on land as some myths suggest; their tails will quickly
   reform into legs once they leave the water (and, likewise, their legs will
@@ -1599,8 +1599,8 @@ Gargoyles (Gr)
   earth-based conjurers.
 
 Draconians (Dr)
-  Draconians are human-dragon hybrids: humanoid in form and approximately
-  human-sized, with wings, tails and scaly skins. Draconians start out in an
+  Draconians are Human-dragon hybrids: humanoid in form and approximately
+  Human-sized, with wings, tails and scaly skins. Draconians start out in an
   immature form with brown scales, but as they grow in power they take on a
   variety of colours. This happens at an early stage in their career, and the
   colour is determined by chromosomes, not by behaviour.
@@ -1860,12 +1860,12 @@ Nagas (Na)
 
 Octopodes (Op)
   These land-capable relatives of common octopuses can move about as fast as
-  humans and yet retain the ability to swim underwater, although their dual
+  Humans and yet retain the ability to swim underwater, although their dual
   adaptation is not as good as that of the shapechanging Merfolk.
 
   Octopodes have eight tentacle-shaped legs, and need four of them to move.
   While a tentacle lacks fingers, two tentacles are a rough equivalent of a
-  human's arm where item manipulation is concerned - including wielding
+  Human's arm where item manipulation is concerned - including wielding
   two-handed weapons with four. They can use no armour other than loose hats,
   but can handle shields just fine. Another peculiarity they have is the ability
   to wear eight rings, one on each tentacle.
