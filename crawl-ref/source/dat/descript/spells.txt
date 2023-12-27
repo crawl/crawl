@@ -224,7 +224,7 @@ Brothers in Arms spell
 Call Canine Familiar spell
 
 Summons an inugami to the caster's aid. These mystical canines form a bond with
-their summoner that strengthens them in direct proportion with the caster's
+their summoner, strengthening them in direct proportion with the caster's
 spellpower.
 
 Recasting this spell while your familiar is nearby will imbue it with additional
@@ -397,10 +397,8 @@ walls of any material due to the crystal embedded in the shot.
 %%%%
 Curse of Agony spell
 
-Curses a nearby target to experience excruciating pain whenever they are struck
-by the caster. The next two successful melee attacks the caster performs against
-a victim of this curse will cut their current health in half. This
-damage is never directly lethal.
+Curses a foe, halving their remaining health after the next two times that
+the caster strikes them in melee.
 %%%%
 Dazzling Flash spell
 
@@ -641,8 +639,7 @@ may attract unwanted attention even while you maintain it.
 Fulminant Prism spell
 
 Conjures a prism which unleashes a violent explosion of arcane force after a
-short duration. The prism is extremely fragile and any damage caused to it may
-result in premature detonation.
+short duration. If destroyed prematurely, its blast will be much weaker.
 %%%%
 Funeral Dirge spell
 
@@ -938,15 +935,12 @@ with the spell 'Foxfire', but their version is much less powerful.
 %%%%
 Martyr's Knell spell
 
-Beckons forth the soul of a long-dead martyr to shield your allies by taking a
-portion of the damage they would receive into themselves instead.
+Beckons forth the soul of a long-dead martyr to shield your allies for a time.
+This soul suffers a portion of the damage your allies would otherwise receive.
 
-If this otherwise harmless shade is made to experience the pain of death before
-it expires, it will become a flayed ghost, abandoning defense to instead inflict
-the suffering it received in life upon your enemies.
-
-Such wounds are fleeting, and will disappear when the flayed ghost departs -
-unless you kill its victims first.
+If it is slain (again!), it will transform into a flayed ghost, inflicting
+illusory wounds on foes. Such wounds are fleeting, and will disappear when the
+ghost departs - unless you kill its victims first.
 %%%%
 Mass Confusion spell
 
@@ -1013,10 +1007,9 @@ increases the strength of the beasts themselves.
 %%%%
 Mercury Vapours spell
 
-Briefly transmutes a portion of the air around a targeted location into gaseous
-mercury. Anyone directly inhaling the fumes will be poisoned, but even those
-adjacent to the epicenter may be weakened by exposure to the chemical - whether
-living or otherwise.
+Briefly transmutes the air around a target into gaseous mercury, poisoning those
+who breathe it in. Further, the target and adjacent creatures (living or otherwise)
+may be weakened by mere exposure to the alchemical substance.
 %%%%
 Mourning Wail spell
 
@@ -1099,13 +1092,10 @@ be helpless.
 %%%%
 Petrify spell
 
-Petrifies a targeted creature and up to two other hostile creatures physically
-connected to them. If successful, each creature is slowed down briefly and then
-temporarily turned to stone. In this state, they will be unable to act, but also
-take less damage.
-
-The chance of success against secondary targets is 2/3 that of the primary
-target.
+Petrifies a targeted creature and up to two other foes in a chain. Those which
+do not muster the Will to resist are briefly slowed, and then turned to stone.
+Until they return to flesh, they are unable to act, but also take half damage.
+The spell's power is lessened against secondary targets.
 %%%%
 Petrifying Cloud spell
 
@@ -1227,14 +1217,12 @@ burned away for a short time.
 %%%%
 Sculpt Simulacrum spell
 
-Assays the biology of a touched living, demonic, or holy creature and uses trace
-amounts of its blood or ichor to sculpt crude facsimiles out of elemental ice.
-These fragile simulacra will take shape over a short period of time, eventually
+Forms icy simulacrula of an adjacent living, demonic, or holy creature. These
+fragile doppelgangers will take shape over a short period of time, eventually
 gaining the ability to move and attack the caster's enemies.
 
-Many an alchemist has argued there is nothing inherently unethical about this
-spell, as no harm is done to its subject. The good gods nonetheless take a dim
-view of using the blood of any living being in the creation of unnatural life.
+The good gods frown on this spell, as it works blood and ichor into unnatural
+fascimiles.
 
 You can maintain up to 5 simulacra simultaneously.
 %%%%
@@ -1513,9 +1501,9 @@ Summons a volatile elemental spark encased in a shell of slag iron. It is
 capable of raining down powerful blows on its summoner's adversaries - so
 powerful that the golem itself is often damaged by their impact.
 
-Only tenuously bound to this world, the flames within it will rapidly go dormant
-whenever its summoner leaves its side, and if its shell is ever destroyed while
-still active, the exposed core will violently detonate a moment later.
+Only tenuously bound to this world, the flames within it will rapidly go
+dormant whenever its summoner leaves its side. If its shell is ever destroyed
+while still active, the exposed core will violently detonate a moment later.
 
 It gains greater explosive damage at higher power.
 %%%%
