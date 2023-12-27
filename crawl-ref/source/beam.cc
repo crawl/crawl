@@ -4599,7 +4599,6 @@ static void _add_petrify_chain_candidates(const bolt& beam, coord_def pos,
 void fill_petrify_chain_targets(const bolt& beam, coord_def centre,
                                 vector<coord_def> &targs, bool random)
 {
-    int count = 0;
     set<coord_def> candidates;
     _add_petrify_chain_candidates(beam, centre, candidates);
     if (candidates.empty())
