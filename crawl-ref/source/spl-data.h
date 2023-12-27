@@ -573,7 +573,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_ANIMATE_DEAD, "Animate Dead",
     spschool::necromancy,
-    spflag::helpful | spflag::utility | spflag::selfench,
+    spflag::helpful | spflag::utility | spflag::selfench
+        | spflag::no_ghost,
     4,
     100,
     -1, -1,
