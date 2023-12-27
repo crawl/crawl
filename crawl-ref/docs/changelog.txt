@@ -188,7 +188,7 @@ Tiles and Other Art
 * New art for Volatile Blastmotes (spell icon and clouds).
 * New art for short sword and eveningstar artefacts.
 * New art for the Orb of Zot.
-* New art for blink frogs, ancient lichen, rakshashas, and shrike simulacra.
+* New art for blink frogs, ancient lichen, rakshasas, and shrike simulacra.
 * New art for Dithmenos's altar.
 * New Dragon Form and dragon monster art.
 * Icons added for many mutations.
