@@ -2510,7 +2510,7 @@ static spret _siphon_essence(bool fail)
     for (monster* mon : _get_siphon_victims(false))
     {
         const int dam = mon->hit_points / 2;
-        mon->hurt(&you, mon->hit_points/2, BEAM_TORMENT_DAMAGE /*dubious*/);
+        mon->hurt(&you, dam, BEAM_TORMENT_DAMAGE /*dubious*/);
         damage += dam;
         if (damage && mon->observable())
         {
@@ -2539,7 +2539,7 @@ static spret _siphon_essence(bool fail)
     // no death's door check because death form is incompatible with doors
     // TODO: move this into transform.cc, use proper scaling and scale meaningfully
     const int skillcap = 19 + get_form()->get_level(3);
-    const int healing = div_rand_round(min(damage, skillcap), 2); // max 50
+    const int healing = div_rand_round(min(damage, skillcap) * 2, 3); // max 67
     inc_hp(healing);
     canned_msg(MSG_GAIN_HEALTH);
     return spret::success;
