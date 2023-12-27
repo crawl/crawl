@@ -936,7 +936,7 @@ Conjures two balls of burning swamp gas adjacent to the caster. The balls will
 rapidly seek the nearest monster and burn them. Wizards attempted to copy this
 with the spell 'Foxfire', but their version is much less powerful.
 %%%%
-Martyr's Knell
+Martyr's Knell spell
 
 Beckons forth the soul of a long-dead martyr to shield your allies by taking a
 portion of the damage they would recieve into themselves instead.
