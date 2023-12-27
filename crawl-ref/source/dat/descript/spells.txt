@@ -397,7 +397,7 @@ walls of any material due to the crystal embedded in the shot.
 %%%%
 Curse of Agony spell
 
-Curses a nearby target to experience excrutiating pain whenever they are struck
+Curses a nearby target to experience excruciating pain whenever they are struck
 by the caster. The next two successful melee attacks the caster performs against
 a victim of this curse will cut their current health in half. This
 damage is never directly lethal.
@@ -939,7 +939,7 @@ with the spell 'Foxfire', but their version is much less powerful.
 Martyr's Knell spell
 
 Beckons forth the soul of a long-dead martyr to shield your allies by taking a
-portion of the damage they would recieve into themselves instead.
+portion of the damage they would receive into themselves instead.
 
 If this otherwise harmless shade is made to experience the pain of death before
 it expires, it will become a flayed ghost, abandoning defense to instead inflict
@@ -1228,11 +1228,11 @@ burned away for a short time.
 Sculpt Simulacrum spell
 
 Assays the biology of a touched living, demonic, or holy creature and uses trace
-amounts of its blood or ichor to sculpt crude facsilimes out of elemental ice.
+amounts of its blood or ichor to sculpt crude facsimiles out of elemental ice.
 These fragile simulacra will take shape over a short period of time, eventually
 gaining the ability to move and attack the caster's enemies.
 
-Many an alchemist has argued there is nothing inherantly unethical about this
+Many an alchemist has argued there is nothing inherently unethical about this
 spell, as no harm is done to its subject. The good gods nonetheless take a dim
 view of using the blood of any living being in the creation of unnatural life.
 
@@ -1652,7 +1652,7 @@ damage bypasses cold resistance.
 Throw Klown Pie spell
 
 Throws a harmful yet strangely delicious pie that can inflict its victim with a
-number of irresistable and debilitating temporary effects. These include
+number of irresistible and debilitating temporary effects. These include
 inducing vertigo, silence, fire vulnerability, stat drain, or an aversion to
 drinking potions. The dreaded clear moon pie will even make any adventurer as
 fragile as its delicate flaky crust.
