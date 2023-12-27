@@ -737,6 +737,28 @@ ww~M....M~ww
   ww~WW~ww
 ENDMAP
 
+NAME:  tekkud_coc_lazy_river
+TAGS:  transparent no_pool_fixup
+DEPTH: Coc
+KFEAT: 1234567 = shallow_water
+KMONS: 1 = necromancer
+KMONS: 2 = wendigo
+KMONS: 3 = juggernaut
+KMONS: 4 = frost giant / titan
+KMONS: 5 = shard shrike / azure jelly
+MAP
+      wwwww
+     WwwwwwwWw
+    wWWWw5W6WWw
+   www54W2Wwwwww
+  www5314wwwww
+ www5255w5ww
+wwwW4Ww3WwWww
+wWW5WwwwwwWW
+WWwWwwww
+  ww
+ENDMAP
+
 ##############################################################################
 # Antaeus; bottom of Cocytus.
 ##############################################################################
