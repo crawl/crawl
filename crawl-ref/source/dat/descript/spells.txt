@@ -1212,7 +1212,7 @@ burned away for a short time.
 %%%%
 Sculpt Simulacrum spell
 
-Forms icy simulacrula of an adjacent living, demonic, or holy creature. These
+Forms icy simulacra of an adjacent living, demonic, or holy creature. These
 fragile doppelgangers will take shape over a short period of time, eventually
 gaining the ability to move and attack the caster's enemies.
 
