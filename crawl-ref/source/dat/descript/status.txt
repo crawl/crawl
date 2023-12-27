@@ -45,6 +45,11 @@ temporary regeneration.
 
 Your health has stopped regenerating due to the presence of nearby monsters.
 %%%%
+MPRegen status
+
+You regenerate health and magic at an unnaturally fast rate. This is only shown
+for temporary regeneration.
+%%%%
 Touch status
 
 Your attacks deal no damage, but have a chance of confusing monsters that they
