@@ -6,6 +6,7 @@
 #include "libutil.h"
 #include "options.h"
 #include "unicode.h"
+#include "initfile.h"
 
 #ifdef USE_SOUND
 
@@ -62,6 +63,7 @@ sound_mapping check_sound_patterns(const string& message)
 
     return matched_sound;
 }
+
 
 void play_sound(sound_mapping sound_data)
 {

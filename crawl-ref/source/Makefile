@@ -277,7 +277,7 @@ endif
 	NEED_APPKIT = YesPlease
 	LIBNCURSES_IS_UNICODE = Yes
 	ifdef TILES
-		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework CoreAudio -framework ForceFeedback -framework Carbon -framework IOKit -framework OpenGL -framework AudioToolbox -framework CoreVideo
+		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework CoreAudio -framework ForceFeedback -framework Carbon -framework IOKit -framework OpenGL -framework AudioToolbox -framework CoreVideo -framework Metal
 		COPY_FONTS = yes
 	endif
 	ifndef FORCE_PKGCONFIG

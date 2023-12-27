@@ -22,12 +22,12 @@
 [submodule "crawl-ref/source/contrib/fonts"]
 	path = crawl-ref/source/contrib/fonts
 	url = https://github.com/crawl/crawl-fonts.git
-[submodule "crawl-ref/source/contrib/sdl2"]
-	path = crawl-ref/source/contrib/sdl2
-	url = https://github.com/crawl/crawl-sdl2.git
 [submodule "crawl-ref/source/contrib/sdl2-image"]
 	path = crawl-ref/source/contrib/sdl2-image
 	url = https://github.com/crawl/crawl-sdl2-image.git
 [submodule "crawl-ref/source/contrib/sdl2-mixer"]
 	path = crawl-ref/source/contrib/sdl2-mixer
 	url = https://github.com/crawl/crawl-sdl2-mixer.git
+[submodule "crawl-ref/source/contrib/sdl2"]
+	path = crawl-ref/source/contrib/sdl2
+	url = git@github.com:apollovy/SDL.git
