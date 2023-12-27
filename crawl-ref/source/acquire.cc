@@ -890,6 +890,9 @@ static bool _skill_useless_with_god(int skill)
     case GOD_TROG:
         return _is_magic_skill(skill);
     case GOD_ZIN:
+        if (skill == SK_SHAPESHIFTING)
+            return true;
+        // fallthrough to other good gods
     case GOD_SHINING_ONE:
     case GOD_ELYVILON:
         return skill == SK_NECROMANCY;
