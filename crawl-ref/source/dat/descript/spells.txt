@@ -1217,7 +1217,7 @@ fragile doppelgangers will take shape over a short period of time, eventually
 gaining the ability to move and attack the caster's enemies.
 
 The good gods frown on this spell, as it works blood and ichor into unnatural
-fascimiles.
+facsimiles.
 
 You can maintain up to 5 simulacra simultaneously.
 %%%%
