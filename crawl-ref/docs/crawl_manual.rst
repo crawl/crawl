@@ -1641,8 +1641,8 @@ Armataurs (At)
   Armataurs instinctively roll when moving toward foes, getting a free move and
   regenerating magic. They have great aptitudes with armour and shields, though
   their body shape reduces the protection offered by body armour early on. At
-  higher levels they also regenerate health when rolling, making them truly
-  resilient.
+  higher levels they also regenerate health and magic when rolling, making them
+  truly resilient.
 
 Gnolls (Gn)
   Gnolls are a species of caniform humanoids originally hailing from the arid
