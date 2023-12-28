@@ -269,7 +269,7 @@ Willpower
 
 Size
   Different species have different sizes: Spriggans and Felids are very small;
-  Kobolds are small; Ogres and Trolls are large; Nagas and Armataurs are large
+  Kobolds are small; Oni and Trolls are large; Nagas and Armataurs are large
   with a medium torso; all other species are medium-sized. Many talismans will
   change your size. Size affects your evasion: the smaller your character, the
   more evasive it is. On the other hand, characters of larger than medium size
@@ -1022,10 +1022,9 @@ There are many skills related to magic, the principal one being Spellcasting.
 Spellcasting determines the number of Magic Points available; it also helps to
 cast any spell, though less so than schools associated with a spell. Next, there
 are several general magical schools (Conjuration, Hexes, Summoning, Necromancy,
-Translocation and Transmutation) as well as several elemental schools (Fire,
-Ice, Air and Earth) and, finally, Poison. A particular spell can belong to up
-to three schools. Being skilled in a spell's schools improves the casting
-chance and the power of that spell.
+Translocation and Alchemy) as well as several elemental schools (Fire, Ice, Air
+and Earth). A particular spell can belong to up to three schools. Being skilled
+in a spell's schools improves the casting chance and the power of that spell.
 
 Spells are stored in books, which you will occasionally find in the dungeon.
 Once you have picked up a book and added its contents to your spell library, you
@@ -1580,11 +1579,10 @@ Merfolk (Mf)
   they can also use longer swords quite well.
 
   As spellcasters, they tend to be quite good in specific areas. Their mystical
-  relationship with water makes it easier for them to use poison and ice magic,
+  relationship with water makes it easier for them to use alchemy and ice magic,
   which use water occasionally as a material component. The legendary water
   magic of the Merfolk was lost in ancient times, but some of that affinity
-  still remains. The instability of their own morphogenic matrix has made them
-  very accomplished transmuters, but most other magic seems foreign to them.
+  still remains. Most other magic seems foreign to them.
 
 Gargoyles (Gr)
   A cross between ordinary stone gargoyles and living beings, Gargoyles are
@@ -1739,7 +1737,7 @@ Ghouls (Gh)
 
   They learn most skills slowly, although they make decent unarmed fighters
   with their claws. Due to their contact with the grave they can also learn to
-  use ice, earth, poison and necromantic magic without too many difficulties.
+  use ice, earth, and necromantic magic without too many difficulties.
 
   Like other undead, ghouls are naturally immune to poisons, negative energy
   and torment; have little warmth left to be affected by cold; and are not
@@ -1758,16 +1756,18 @@ Tengu (Te)
   Tengu do not appreciate any form of servitude, and so are poor at using
   invocations. Their light avian bodies cannot sustain a great deal of injury.
 
-Ogres (Og)
-  Ogres are huge, chunky creatures who are very strong and robust, but are not
-  nimble at all. They possess a raw talent for magic, but are poor at making
-  use of magical devices. Ogres mature almost as quickly as Humans.
+Oni (On)
+  Oni are large, rowdy creatures who love a good fight. They are exceptionally
+  strong and robust, and their fondness for drink allows them to heal twice as
+  much from healing potions and even perform free melee swings around themselves
+  while they chug them.
 
-  Their preferred methods of avoiding beatings are dodging and the use of
-  shields. Their large size prevents them from wearing most forms of armour.
-  Ogres are proficient at using all types of melee weapons, but all
-  sophisticated forms of missile combat are awkward for them. They are, however,
-  good at throwing things, in particular boulders.
+  They are proficient with most melee weapons and forms of magic, but lack the
+  dexterity or inclination to use ranged weapons or magical devices well. They
+  are, however, good at throwing things, in particular large rocks.
+
+  Their large size prevents them from wearing most forms of armour, and are poor
+  at dodging, relying on their enormous bulk to survive battles instead.
 
 Advanced Species
 ================
@@ -1834,12 +1834,13 @@ Formicids (Fo)
   of nasty hexes and maledictions.
 
   With the ability to lift ten times their own weight, the Formicids have
-  strength rivaling that of Ogres. This, along with the fact that they have four
+  strength rivaling that of Oni. This, along with the fact that they have four
   arms, allows Formicid warriors to equip both a shield and a two-handed weapon
   at the same time.
 
-  Formicids make good earth and venom mages, but are quite capable at both melee
-  and ranged combat too. They are naturally bad at air magic and conjurations.
+  Formicids make good earth mages and alchemists, but are quite capable at both
+  melee and ranged combat too. They are naturally bad at air magic and
+  conjurations.
 
 Nagas (Na)
   Nagas are a hybrid species: Human from the waist up with a large snake tail
@@ -1871,7 +1872,7 @@ Octopodes (Op)
   to wear eight rings, one on each tentacle.
 
   Their natural camouflage makes them excel at stealth, and they have good
-  knowledge of poisons as well. They are also able to use their tentacles to
+  knowledge of alchemy as well. They are also able to use their tentacles to
   constrict enemies - potentially several at a time!
 
 Felids (Fe)
@@ -1930,7 +1931,7 @@ White Draconians
 
 Green Draconians
   are used to venomous surroundings and breathe clouds of mephitic vapours. They
-  are especially good in the arts of poison and without deficiencies in other
+  are especially good in the arts of alchemy and without deficiencies in other
   magic realms. Later on, they will develop a poisonous stinger.
 
 Yellow Draconians
@@ -2090,7 +2091,7 @@ Mage backgrounds
 
 A mage is not an available character background by itself, but a type of
 background, encompassing Hedge Wizards, Conjurers, Summoners, Necromancers,
-various Elementalists and Venom Mages. Mages are the best at using magic.
+various Elementalists and Alchemists. Mages are the best at using magic.
 Among other things, they start with a robe, a potion of magic, and spells
 which should see them through the first several levels of the Dungeon.
 
@@ -2133,9 +2134,10 @@ Elementalists
   Earth Magic
     offers direct effects, some destructive and some debilitating.
 
-Venom Mages
-  Venom Mages specialise in poison magic, which is extremely useful in the
-  shallower levels of the Dungeon where few creatures are immune to it.
+Alchemist
+  Alchemists start with knowledge of poison-based magic, which is extremely
+  useful in the shallower levels of the Dungeon where few creatures are immune
+  to it.
 
 ****************************************
 3. List of skills
