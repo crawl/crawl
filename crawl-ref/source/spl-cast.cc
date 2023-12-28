@@ -2094,13 +2094,6 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
 
     dprf("Spell #%d, power=%d", spell, powc);
 
-    // Have to set aim first, in case the spellcast kills its first target
-    if (you.props.exists(BATTLESPHERE_KEY)
-        && (actual_spell || you.divine_exegesis))
-    {
-        aim_battlesphere(&you, spell);
-    }
-
     const coord_def orig_target_pos = beam.target;
     const auto orig_target = monster_at(beam.target);
     const bool self_target = you.pos() == beam.target;

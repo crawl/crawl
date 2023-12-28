@@ -4232,10 +4232,8 @@ bool handle_mon_spell(monster* mons)
     if (!(get_spell_flags(spell_cast) & spflag::utility))
         make_mons_stop_fleeing(mons);
 
-    if (battlesphere)
-        aim_battlesphere(mons, spell_cast);
     mons_cast(mons, beem, spell_cast, flags);
-    if (battlesphere)
+    if (battlesphere && battlesphere_can_mirror(spell_cast))
         trigger_battlesphere(mons);
     if (flags & MON_SPELL_WIZARD && mons->has_ench(ENCH_SAP_MAGIC))
     {

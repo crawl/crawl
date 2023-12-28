@@ -3659,7 +3659,6 @@ void handle_flame_wave()
         return;
     }
 
-    aim_battlesphere(&you, SPELL_FLAME_WAVE);
     beam.apply_beam_conducts();
     beam.refine_for_explosion();
     beam.explode(true, true);
@@ -3771,7 +3770,6 @@ void handle_searing_ray()
 
     zappy(zap, pow, false, beam);
 
-    aim_battlesphere(&you, SPELL_SEARING_RAY);
     beam.fire();
     trigger_battlesphere(&you);
 

@@ -84,7 +84,6 @@ spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail);
 void end_battlesphere(monster* mons, bool killed);
 bool battlesphere_can_mirror(spell_type spell);
 vector<spell_type> player_battlesphere_spells();
-bool aim_battlesphere(actor* agent, spell_type spell);
 bool trigger_battlesphere(actor* agent);
 bool fire_battlesphere(monster* mons);
 void reset_battlesphere(monster* mons);
