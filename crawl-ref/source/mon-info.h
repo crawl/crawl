@@ -216,7 +216,9 @@ enum monster_info_flags
     MB_TELEPORTING,
     MB_CONTAM_LIGHT,
     MB_CONTAM_HEAVY,
+#if TAG_MAJOR_VERSION == 34
     MB_PURSUING,
+#endif
     MB_BOUND,
     MB_BULLSEYE_TARGET,
     MB_VITRIFIED,

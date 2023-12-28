@@ -206,7 +206,9 @@ enum enchant_type
 #endif
     ENCH_NECROTISE,
     ENCH_CONTAM,
+#if TAG_MAJOR_VERSION == 34
     ENCH_PURSUING,
+#endif
     ENCH_BOUND,
     ENCH_BULLSEYE_TARGET,
     ENCH_VITRIFIED,

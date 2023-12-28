@@ -43,7 +43,9 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_PARTIALLY_CHARGED, "charging", "partially charged", "charging"},
     { MB_AGILE, "agile", "unusually agile", "agile"},
     { MB_SWIFT, "swift", "covering ground quickly", "swift"},
+#if TAG_MAJOR_VERSION == 34
     { MB_PURSUING, "pursuing", "pursuing quickly", "pursuing"},
+#endif
     { MB_STILL_WINDS, "stilling wind", "stilling the winds", "stilling wind"},
     { MB_SILENCING, "silencing", "radiating silence", "silencing"},
     { MB_READY_TO_HOWL, "can howl", "ready to howl", "can howl"},

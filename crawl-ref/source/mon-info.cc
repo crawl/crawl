@@ -67,7 +67,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_PETRIFYING,      MB_PETRIFYING },
     { ENCH_LOWERED_WL,      MB_LOWERED_WL },
     { ENCH_SWIFT,           MB_SWIFT },
-    { ENCH_PURSUING,        MB_PURSUING },
     { ENCH_SILENCE,         MB_SILENCING },
     { ENCH_PARALYSIS,       MB_PARALYSED },
     { ENCH_SOUL_RIPE,       MB_POSSESSABLE },
@@ -138,9 +137,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
     // Suppress silly-looking combinations, even if they're
     // internally valid.
     if (mons.paralysed() && (ench == ENCH_SLOW || ench == ENCH_HASTE
-                      || ench == ENCH_SWIFT || ench == ENCH_PURSUING
-                      || ench == ENCH_PETRIFIED
-                      || ench == ENCH_PETRIFYING))
+                      || ench == ENCH_SWIFT
+                      || ench == ENCH_PETRIFIED || ench == ENCH_PETRIFYING))
     {
         return NUM_MB_FLAGS;
     }

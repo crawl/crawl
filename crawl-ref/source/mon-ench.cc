@@ -502,7 +502,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_SWIFT:
-    case ENCH_PURSUING:
         if (!quiet)
         {
             if (type == MONS_ALLIGATOR)
@@ -1411,7 +1410,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SLOW:
     case ENCH_HASTE:
     case ENCH_SWIFT:
-    case ENCH_PURSUING:
     case ENCH_MIGHT:
     case ENCH_FEAR:
     case ENCH_PARALYSIS:
@@ -2155,7 +2153,10 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "simulacra",
 #endif
-    "necrotizing", "glowing", "pursuing",
+    "necrotizing", "glowing",
+#if TAG_MAJOR_VERSION == 34
+    "pursuing",
+#endif
     "bound", "bullseye_target", "vitrified", "cleaving_attack",
     "protean_shapeshifting", "simulacrum_sculpting", "curse_of_agony",
     "buggy", // NUM_ENCHANTMENTS
@@ -2303,11 +2304,6 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_BOUND_SOUL:
     case ENCH_ANGUISH:
         cturn = 1000 / _mod_speed(25, mons->speed);
-        break;
-    case ENCH_PURSUING:
-        // This is about 20 turns, or enough time for a same-speed monster to
-        // get four space closer before it expires.
-        cturn = 500 / _mod_speed(25, mons->speed);
         break;
     case ENCH_LIQUEFYING:
     case ENCH_SILENCE:
