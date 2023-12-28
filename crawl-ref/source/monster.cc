@@ -5548,6 +5548,28 @@ const monsterentry *monster::find_monsterentry() const
                                                     : get_monster_data(type);
 }
 
+bool monster::matches_player_speed() const
+{
+    if (!mons_is_recallable(&you, *this) || is_summoned())
+        return false;
+    // Are there any hostiles around? If so, look slow.
+    // Only look at radius 5 for performance.
+    // Reduces worst-case tiles examined by ~6x.
+    for (radius_iterator ri(pos(), 5, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    {
+        const monster* m = monster_at(*ri);
+        if (m && !m->wont_attack() && m->visible_to(this))
+            return false;
+    }
+    return true;
+}
+
+int monster::player_speed_energy() const
+{
+    const int pmove = player_movement_speed() * player_speed();
+    return div_rand_round(speed * pmove, 100);
+}
+
 int monster::action_energy(energy_use_type et) const
 {
     if (!find_monsterentry())
@@ -5588,6 +5610,11 @@ int monster::action_energy(energy_use_type et) const
     // penalty when leaving it.
     if (floundering() || has_ench(ENCH_LIQUEFYING))
         move_cost += 6;
+
+    // To avoid UI annoyance, make long-term allies match the player's speed
+    // if there are no enemies around.
+    if ((et == EUT_MOVE || et == EUT_SWIM) && matches_player_speed())
+        move_cost = min(move_cost, player_speed_energy());
 
     // Never reduce the cost to zero
     return max(move_cost, 1);

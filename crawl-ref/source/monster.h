@@ -153,6 +153,8 @@ public:
     bool is_perm_summoned() const override;
     bool has_action_energy() const;
     void drain_action_energy();
+    bool matches_player_speed() const;
+    int  player_speed_energy() const;
     void check_redraw(const coord_def &oldpos, bool clear_tiles = true) const;
     void apply_location_effects(const coord_def &oldpos,
                                 killer_type killer = KILL_NONE,
