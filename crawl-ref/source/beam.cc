@@ -3872,7 +3872,7 @@ static const vector<pie_effect> pie_effects = {
         6
     },
     {
-        "clear moon pie",
+        "peanut brittle",
         nullptr,
         [](actor &defender, const bolt &/*beam*/) {
             if (defender.is_monster())
