@@ -73,6 +73,11 @@ static void _setup_blazeheart_core_explosion(bolt & beam, const monster& origin)
     beam.ex_size      = 1;
     beam.source_name  = origin.name(DESC_PLAIN, true);
 
+    // Don't place the player under penance for their golem exploding,
+    // but DO give them xp for its kills.
+    beam.thrower      = KILL_MON;
+    beam.source_id    = MID_PLAYER;
+
     // This is so it places flame clouds under the explosion
     beam.origin_spell = SPELL_SUMMON_BLAZEHEART_GOLEM;
 }
