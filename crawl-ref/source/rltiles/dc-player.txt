@@ -85,6 +85,12 @@ oni_red_m ONI
 oni_red_f
 oni_blue_m
 oni_blue_f
+oni_yellow_m
+oni_yellow_f
+oni_green_m
+oni_green_f
+oni_black_m
+oni_black_f
 meteoran_f METEORAN
 meteoran_m
 troll_f TROLL
