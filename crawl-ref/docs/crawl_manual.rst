@@ -1021,7 +1021,7 @@ character can make use of magical spells.
 There are many skills related to magic, the principal one being Spellcasting.
 Spellcasting determines the number of Magic Points available; it also helps to
 cast any spell, though less so than schools associated with a spell. Next, there
-are several general magical schools (Conjuration, Hexes, Summoning, Necromancy,
+are several general magical schools (Conjuration, Hexes, Summonings, Necromancy,
 Translocation and Alchemy) as well as several elemental schools (Fire, Ice, Air
 and Earth). A particular spell can belong to up to three schools. Being skilled
 in a spell's schools improves the casting chance and the power of that spell.

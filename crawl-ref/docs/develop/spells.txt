@@ -78,13 +78,13 @@ a given monster's holiness.
 
 Notably, this also includes vampiric draining, revivification, and directly
 staving off death. All of these are flavoured as necromantic energy regenerating
-one's wounds, and are thus considered unholy by their very nature. 
+one's wounds, and are thus considered unholy by their very nature.
 
 Summonings
 ==========
 
 Summonings involves the magical transportation of creatures and terrain from
-another place to here. This is specifically not the creation of these beings: 
+another place to here. This is specifically not the creation of these beings:
 when they are "killed", or if the summoning finishes while they are still alive,
 these beings return to wherever they came from.
 
@@ -137,7 +137,7 @@ provide non-poison damage, they have notable limitations and caveats of player
 risk even at higher spell levels, and the overall school still has level
 limitations compared to all other schools.
 
-Note: Most of the self-warping spells were moved over to the Shapeshifting 
+Note: Most of the self-warping spells were moved over to the Shapeshifting
 skill, which uses talismans. To keep the identity of both this school and those
 talismans clean and separate, keep self-transmutation out of these spells.
 
@@ -152,7 +152,7 @@ Compared to other schools, Fire's damage offers some of the largest and most
 controlled area-of-effect spells, but is unfriendly to allies and can still
 catch the caster in their own blasts. Fire also cannot produce non-damage,
 'utility' effects without other schools being involved, but can be used to
-create fiery clouds or, potentially, temporary lava. 
+create fiery clouds or, potentially, temporary lava.
 
 Ice
 ===

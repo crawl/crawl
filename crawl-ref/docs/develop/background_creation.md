@@ -97,7 +97,7 @@ herd-watcher:
     WCHOICE_NONE,
 
     // and just a couple skill points in stuff you might do around a field.
-    { { SK_FIGHTING, 6 }, { SK_SUMMONING, 8 }, { SK_SPELLCASTING, 3 },
+    { { SK_FIGHTING, 6 }, { SK_SUMMONINGS, 8 }, { SK_SPELLCASTING, 3 },
       { SK_DODGING, 3 }, { SK_ARMOUR, 4 } { SK_STEALTH, 1 }, },
 } },
 ~~~
@@ -138,7 +138,7 @@ in the second column (where X == 1). In the example below, the Y coordinate of
 Warrior-mage has been incremented to 5 (from a default of 4) to allow room for a
 new background (JOB_CUSTOM) added to the Zealot section.
 
-~~~ 
+~~~
 {
         "Zealot",
         coord_def(1, 0), 25,
@@ -202,4 +202,4 @@ the Monk)
 
 ## Version history
 
-Written by Cerol, 07 FEB 2017  Updates by Sam Willett, 14 NOV 2023  
+Written by Cerol, 07 FEB 2017  Updates by Sam Willett, 14 NOV 2023
