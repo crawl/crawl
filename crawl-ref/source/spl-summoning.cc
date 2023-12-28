@@ -1556,8 +1556,8 @@ static spell_type servitor_spells[] =
     SPELL_PLASMA_BEAM, // maybe should be higher?
     SPELL_FIREBALL,
     SPELL_ARCJOLT,
-    SPELL_STONE_ARROW,
     SPELL_LRD,
+    SPELL_STONE_ARROW,
     SPELL_AIRSTRIKE,
     // less desirable
     SPELL_IRRADIATE,
@@ -1575,7 +1575,7 @@ static spell_type servitor_spells[] =
 spell_type player_servitor_spell()
 {
     for (const spell_type spell : servitor_spells)
-        if (you.has_spell(spell) && raw_spell_fail(spell) < 50)
+        if (you.has_spell(spell) && failure_rate_to_int(raw_spell_fail(spell)) <= 20)
             return spell;
     return SPELL_NO_SPELL;
 }
@@ -1600,7 +1600,7 @@ static void _init_servitor_monster(monster &mon, const actor& caster, int pow)
 {
     const monster* caster_mon = caster.as_monster();
 
-    mon.set_hit_dice(9 + div_rand_round(pow, 14));
+    mon.set_hit_dice(7 + div_rand_round(pow, 14));
     mon.max_hit_points = mon.hit_points = 60 + roll_dice(7, 5); // 67-95
                                             // mhp doesn't vary with HD
     int spell_levels = 0;
@@ -1608,7 +1608,7 @@ static void _init_servitor_monster(monster &mon, const actor& caster, int pow)
     for (const spell_type spell : servitor_spells)
     {
         if (caster.has_spell(spell)
-            && (caster_mon || raw_spell_fail(spell) < 50))
+            && (caster_mon || failure_rate_to_int(raw_spell_fail(spell)) <= 20))
         {
             mon.spells.emplace_back(spell, 0, MON_SPELL_WIZARD);
             spell_levels += spell_difficulty(spell);
