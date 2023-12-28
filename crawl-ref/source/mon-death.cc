@@ -2199,10 +2199,16 @@ item_def* monster_die(monster& mons, killer_type killer,
     else if (mons.type == MONS_MARTYRED_SHADE && !silent && !mons_reset
              && !was_banished && !wizard)
     {
-        _martyr_death_wail(mons);
+        // Don't cause transformation on the player killing their own shade.
+        // (Angering them will normally make them disappear, but if you do
+        // enough damage in one hit, you can still get here)
+        if (!YOU_KILL(killer) || mons.summoner != MID_PLAYER)
+        {
+            _martyr_death_wail(mons);
 
-        // Short-circuit this death
-        return nullptr;
+            // Short-circuit this death
+            return nullptr;
+        }
     }
 
     check_canid_farewell(mons, !wizard && !mons_reset && !was_banished);
