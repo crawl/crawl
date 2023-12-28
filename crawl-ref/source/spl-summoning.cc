@@ -1841,8 +1841,8 @@ vector<spell_type> player_battlesphere_spells()
 
 static bool _is_valid_battlesphere_target(actor* caster, actor* targ)
 {
-    return (targ && targ->alive() && !mons_aligned(caster, targ)
-            && caster->can_see(*targ));
+    return targ && targ->alive() && !mons_aligned(caster, targ)
+           && caster->can_see(*targ);
 }
 
 static actor* _find_battlesphere_target(monster* battlesphere)
