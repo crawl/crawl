@@ -2001,13 +2001,17 @@ item_def* monster_die(monster& mons, killer_type killer,
         mgen_data simu = mgen_data(MONS_SIMULACRUM, BEH_COPY, mons.pos(),
                             BEH_FRIENDLY, MG_AUTOFOE | MG_FORCE_PLACE)
                          .set_summoned(&you, 0, SPELL_SIMULACRUM, GOD_NO_GOD);
-
         simu.base_type = (monster_type)mons.props[SIMULACRUM_TYPE_KEY].get_int();
 
+        // If the monster we want to create cannot occupy the tile the block of
+        // ice is on, try to find some nearby spot where it can.
+        // (Mostly this is an issue with kraken simulacra, at present.)
+        if (!monster_habitable_grid(simu.base_type, env.grid(mons.pos())))
+            find_habitable_spot_near(mons.pos(), simu.base_type, 3, true, simu.pos);
 
         string msg = "Your " + mons_type_name(simu.base_type, DESC_PLAIN) +
                      " simulacrum begins to move.";
-        make_derived_undead_fineff::schedule(mons.pos(), simu,
+        make_derived_undead_fineff::schedule(simu.pos, simu,
                                              get_monster_data(simu.base_type)->HD,
                                              "the player",
                                              msg.c_str(),
