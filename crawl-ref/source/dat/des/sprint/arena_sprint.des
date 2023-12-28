@@ -756,7 +756,7 @@ function arena_sprint_init_boss_table()
               "deep elf annihilator", "lom lobon", "magical rune of zot"}
     bs[12] = {"efreet / sun moth / ynoxinul / balrug / brimstone fiend",
               "cerebov", "fiery rune of zot"}
-    bs[13] = {"soul eater / reaper / executioner / entropy weaver",
+    bs[13] = {"soul eater / reaper / executioner / curse skull",
               "gloorx vloq", "dark rune of zot"}
     bs[14] = {"guardian mummy w:15 / mummy priest w:3 / royal mummy w:2",
                "khufu hp:500", "golden rune of zot"}

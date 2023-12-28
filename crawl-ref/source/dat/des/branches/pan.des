@@ -65,7 +65,7 @@ function pan_lord_setup(_G, name)
                  "caustic shrike skeleton w:100 / " ..
                  "hellephant skeleton w:100 / soul eater w:200 / " ..
                  "reaper w:200 / executioner w:300 / " ..
-                 "entropy weaver / shadow wraith / " ..
+                 "flayed ghost / laughing skull band / shadow wraith / " ..
                  "demonspawn black sun"
     }
 
@@ -1390,7 +1390,7 @@ NAME:   gloorx_vloq_st
 TAGS:   gloorx_vloq uniq_gloorx_vloq
 ORIENT: southeast
 MONS:   patrolling Gloorx Vloq, Executioner, curse skull
-MONS:   soul eater, entropy weaver
+MONS:   soul eater, flayed ghost
 MONS:   caustic shrike skeleton / juggernaut skeleton / hellephant skeleton
 : pan_lord_setup(_G, 'Gloorx Vloq')
 epilogue{{
@@ -1401,8 +1401,8 @@ xxxxxxxxxxxxxxxxxx.@.xxxxxxxxxxxxxxxxxx
 xxxxx.............................xxxxx
 xxxx...xxx.x.xxx.x.x.x.xxx.x.xxx...xxxx
 xxx....xxx.x.xxx.x5x5x.xxx.x.xxx....xxx
-xx...................................xx
-x..6..ccccccccccccccccccccccccccc..6..x
+xx.................6.................xx
+x..4..ccccccccccccccccccccccccccc..4..x
 xx.3.xcxxxxxxxxxxxxxxxxxxxxxxxxxcx.3.xx
 x.x.x.cx.x4x.x.x.x.x.x.x.x.x4x.xc.x.x.x
 x..x..cxx.x.x.x.x.xOx.x.x.x.x.xxc..x..x
@@ -1413,9 +1413,9 @@ x..x..cxx.x.x.x.x.....x.x.x.x.xxc..x..x
 x.x.x.cx.x.x2x.x.x...x.x.x2x.x.xc.x.x.x
 xx...xcxx.x.x.x.x.....x.x.x.x.xxcx...xx
 x.x.x.cx.x.x.x.x.x.1.x.x.x.x.x.xc.x.x.x
-x5.x.5cxx.x.x.x.x.....x.x.x.x.xxc5.x.5x
+x5.x.6cxx.x.x.x.x.....x.x.x.x.xxc6.x.5x
 x.x.x.cx2x.x.x.x.x...x.x.x.x.x2xc.x.x.x
-xx.4.xcxx.x.x.x.x.....x.x.x.x.xxcx.4.xx
+xx.5.xcxx.x.x.x.x.....x.x.x.x.xxcx.5.xx
 x.x.x.cx.x.x.x.x.x...x.x.x.x.x.xc.x.x.x
 x..x..cxx.x.x.x.x4...4x.x.x.x.xxc..x..x
 x.x.x.cx.x.x.x.x.x...x.x.x.x.x.xc.x.x.x
@@ -1437,7 +1437,7 @@ MONS:     patrolling Gloorx Vloq
 MONS:     executioner, curse skull, reaper
 MONS:     shadow wraith, spectral emperor scorpion
 MONS:     caustic shrike skeleton / juggernaut skeleton / hellephant skeleton
-KMONS:    O = entropy weaver
+KMONS:    O = flayed ghost
 SHUFFLE:  Cd / De
 SUBST:    Cd = c, D = ., e = +, X : xx., V : x.
 : pan_lord_setup(_G, 'Gloorx Vloq')
@@ -1484,7 +1484,7 @@ TAGS:     gloorx_vloq uniq_gloorx_vloq
 ORIENT:   west
 MONS:     patrolling Gloorx Vloq, Executioner, curse skull, reaper
 MONS:     caustic shrike skeleton / juggernaut skeleton / hellephant skeleton
-MONS:     entropy weaver
+MONS:     laughing skull
 : pan_lord_setup(_G, 'Gloorx Vloq')
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
@@ -1493,37 +1493,37 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxx.......................xxxxxx
-xxxxx...4.x...x...x...x...x.4...xxxx
-xxxx.6...........................xxx
-xxx...x..ccccccccccccccccc....x...xx
-xxx.4....c...x...x...x...cc....x..xx
+xxxxx.6.4.x...x...x...x...x.4...xxxx
+xxxx.6.6.........................xxx
+xxx.6.x..ccccccccccccccccc....x...xx
+xxx.4..6.c...x...x...x...cc....x..xx
 xx......6c....x.x.x.x.x.x.cc.......x
-xx.x.x.x.c.....x...x...x...cc....4.x
-xx....5..+......x.x.x.x.x.x.cc.....x
-xx..3....+.......x...x.2.x...cc..x.x
+xx.x.x.x.c.....x...x...x.2.cc....4.x
+xx.......+......x.x.x.x.x.x.cc.....x
+xx.......+.......x...x...x...cc..x.x
 xx....5..+......x.x.x.x.x.x.x.cc...x
-xx.x.x.x.c.....x...x...x...x...c...x
-xxx.....xc....ccccccccc.x.x.x.xc...x
+xx.x3x.x.c.....x...x...x...x...c...x
+xxx...5.xc....ccccccccc.x.x.x.xc...x
 xx.x...x.c...ccccc.2.x...x.2.xcc.x.x
 xxx.x&x&xccccc....x.x.x.x.x.x.xc...x
-xx.x.x.x.cc........x...x...x...c.5.x
-xxx.x.x.xc.c......x.x.x.x.x.x.xc....
-xx.x.x.x.cOc.1...x...x.2.x.2.xcc.x.@
-xxx.x.x.xc.c......x.x.x.x.x.x.xc....
-xx.x.x.x.cc........x...x...x...c.5.x
+xx.x.x.x.cc........x...x...x62.c.5.x
+xxx.x.x.xc.c......x.x.x.x.x6x.xc....
+xx.x.x.x.cOc.1...x...x.2.x6.6xcc.x.@
+xxx.x.x.xc.c......x.x.x.x.x6x.xc....
+xx.x.x.x.cc........x...x...x62.c.5.x
 xxx.x&x&xccccc....x.x.x.x.x.x.xc...x
 xx.x...x.c...ccccc.2.x...x.2.xcc.x.x
-xxx.....xc....ccccccccc.x.x.x.xc...x
-xx.x.x.x.c.....x...x...x...x...c...x
+xxx...5.xc....ccccccccc.x.x.x.xc...x
+xx.x3x.x.c.....x...x...x...x...c...x
 xx....5..+......x.x.x.x.x.x.x.cc...x
-xx..3....+.......x...x.2.x...cc..x.x
-xx....5..+......x.x.x.x.x.x.cc.....x
-xx.x.x.x.c.....x...x...x...cc....4.x
+xx.......+.......x...x...x...cc..x.x
+xx.......+......x.x.x.x.x.x.cc.....x
+xx.x.x.x.c.....x...x...x.2.cc....4.x
 xx......6c....x.x.x.x.x.x.cc.......x
-xxx.4....c...x...x...x...cc....x..xx
-xxx...x..ccccccccccccccccc....x...xx
-xxxx.6...........................xxx
-xxxxx...4.x...x...x...x...x.4...xxxx
+xxx.4..6.c...x...x...x...cc....x..xx
+xxx.6.x..ccccccccccccccccc....x...xx
+xxxx.6.6.........................xxx
+xxxxx.6.4.x...x...x...x...x.4...xxxx
 xxxxxxx.......................xxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1534,7 +1534,7 @@ TAGS:     gloorx_vloq uniq_gloorx_vloq
 ORIENT:   centre
 MONS:     patrolling Gloorx Vloq, Executioner, curse skull, reaper
 MONS:     caustic shrike skeleton / juggernaut skeleton / hellephant skeleton
-MONS:     entropy weaver
+MONS:     laughing skull
 : pan_lord_setup(_G, 'Gloorx Vloq')
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
@@ -1553,15 +1553,15 @@ x.x....c...c...c...c...c...c....x.x
 x...cccccccccccccccccccc+++cccc...x
 x...c..c...c...c...c...c...c..c...x
 x...c..c....2..c.......c.2....c...x
-x...c.6c.....cccc+cccc.c......c...x
-x...c..c..4..c.c.....c.c...4..c...x
-x...c........c.1...2.c........c...x
-x&..+........c...cc..c........+..&x
-x...+.2..3...c..cOc..c...3..2.+...x
-x&..+........c..cc...c........+..&x
-x...c........c.2...2.c........c...x
-x...c..4...c.c.....c.c..4..c..c...x
-x...c......c.cccc+cccc.....c6.c...x
+x...c..c.....cccc+cccc.c......c...x
+x6..c..c..4..c.c.....c.c...4..c..6x
+x&..c........c.1...2.c........c..&x
+x6..+........c...cc..c........+..6x
+x66.+..2.3...c..cOc..c...3.2..+.66x
+x6..+........c..cc...c........+..6x
+x&..c........c.2...2.c........c..&x
+x6..c..4...c.c.....c.c..4..c..c..6x
+x...c......c.cccc+cccc.....c..c...x
 x...c....2.c.......c..2....c..c...x
 x...c..c...c...c...c...c...c..c...x
 x...cccc+++cccccccccccccccccccc...x
