@@ -556,10 +556,6 @@ Ghostly Sacrifice spell
 在这个过程中，被用来为法术提供燃料的，
 无论是生物还是造物，都会被衰竭或破坏。
 %%%%
-Throw Ally spell
-
-将附近的一个友方投向怪物敌人，对其造成极少伤害，并使所扔出的怪物落在附近。
-%%%%
 Glaciate spell
 
 生成一个巨大的冰爆。在其锥形效果区内的生物会受到伤害，
@@ -1377,6 +1373,10 @@ Symbol of Torment spell
 Teleport Other spell
 
 随机传送一个目标生物。
+%%%%
+Throw Ally spell
+
+将附近的一个友方投向怪物敌人，对其造成极少伤害，并使所扔出的怪物落在附近。
 %%%%
 Throw Barbs spell
 

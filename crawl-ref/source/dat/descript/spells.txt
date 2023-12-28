@@ -663,11 +663,6 @@ Uses an ally's motivating essence to create a blast of negative energy,
 draining any living creature it engulfs. The being used to fuel the spell, no
 matter whether living or construct, is consumed and unmade in the process.
 %%%%
-Throw Ally spell
-
-Throws a nearby ally at the monster's foe, doing minimal damage and landing the
-thrown monster nearby.
-%%%%
 Glaciate spell
 
 Conjures forth a mighty blast of ice. Creatures within its cone-shaped area of
@@ -1618,6 +1613,11 @@ never directly lethal.
 Teleport Other spell
 
 Randomly translocates a targeted creature.
+%%%%
+Throw Ally spell
+
+Throws a nearby ally at the monster's foe, doing minimal damage and landing the
+thrown monster nearby.
 %%%%
 Throw Barbs spell
 
