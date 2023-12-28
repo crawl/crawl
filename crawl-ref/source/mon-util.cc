@@ -1778,6 +1778,7 @@ bool mons_can_be_spectralised(const monster& mon, bool divine)
 {
     return mons_class_can_be_spectralised(mon.type, divine)
            && !mon.is_summoned()
+           && !mons_is_tentacle_or_tentacle_segment(mon.type)
            && (!testbits(mon.flags, MF_NO_REWARD)
                || mon.props.exists(KIKU_WRETCH_KEY))
            && (mons_has_attacks(mon, true)
