@@ -1026,6 +1026,8 @@ object_class_type item_class_by_sym(char32_t c)
     case '\\': // Compat break: used to be staves (why not '|'?).
         return OBJ_RODS;
 #endif
+    case U'\x2666': // ♦
+        return OBJ_GEMS;
     default:
         return NUM_OBJECT_CLASSES;
     }

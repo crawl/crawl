@@ -572,7 +572,7 @@ one_SDL_sound_channel = false
 3-a     Picking up and Dropping.
 --------------------------------
 
-autopickup = $?!+"/
+autopickup = $?!+"/♦
         The above is the default list. The valid symbols are
         )       Weapons
         (       Missiles
@@ -586,6 +586,7 @@ autopickup = $?!+"/
         0       Orbs
         }       Misc. items
         $       Gold
+        ♦       Gems
         Note that _whether_ items are picked up automatically or not, is
         controlled by the in-game toggle Ctrl-A. Also note that picking
         up takes a turn, but only one turn (regardless of the number of
