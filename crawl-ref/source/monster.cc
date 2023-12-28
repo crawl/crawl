@@ -6340,6 +6340,7 @@ bool monster::angered_by_attacks() const
             && !mons_class_is_zombified(type)
             && type != MONS_BOUND_SOUL
             && type != MONS_SPELLFORGED_SERVITOR
+            && type != MONS_BLOCK_OF_ICE
             && !mons_is_conjured(type)
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
             // allied fed plants, hep ancestor:
