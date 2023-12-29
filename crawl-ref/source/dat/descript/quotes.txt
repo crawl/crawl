@@ -921,6 +921,18 @@ dire flail
 when they see their doughty knight's skull beaten in by our brave countryman.’”
     -_Tales of Chivalry; or, Perils by Flood and Field_. 1830.
 %%%%
+dreamdust necklace
+
+<dreamshard necklace>
+%%%%
+dreamshard necklace
+
+“I never knew, I never thought,
+ Such bliss as this could fill me with a love divine,
+ I'm afraid I'll wake and find it was only in my mind,
+ Was it a dream, or are you really mine?”
+    -Dick Powell, "Was It a Dream?". 1928.
+%%%%
 eudemon blade
 
 <demon blade>
