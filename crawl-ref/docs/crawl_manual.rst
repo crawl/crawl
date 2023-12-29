@@ -1684,8 +1684,8 @@ Kobolds (Ko)
   They are competent in combat, especially with short blades, maces or ranged
   weapons, and are comfortable with all forms of magic. They are also very
   adept at using magical devices. Their small size makes them unable to wield
-  large weapons, but they are agile and stealthy, and advance in levels as
-  quickly as Humans.
+  large weapons, but they are agile and stealthy, and advance in levels slightly
+  more quickly than Humans.
 
 Demonspawn (Ds)
   Demonspawn are horrible half-mortal, half-infernal creatures. Demonspawn can
@@ -1845,8 +1845,8 @@ Nagas (Na)
   Nagas are a hybrid species: Human from the waist up with a large snake tail
   instead of legs.
 
-  They are reasonably good at most things and advance in experience levels
-  slightly slower than Humans. They are naturally resistant to poisons, can see
+  They are reasonably good at most things and advance in experience levels at
+  the same rate as Humans. They are naturally resistant to poisons, can see
   invisible creatures, and have tough skin, but their tails are relatively slow
   and cannot move them around as quickly as can other creatures' legs (this only
   affects their movement rate; all other actions are at normal speed). Like

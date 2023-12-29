@@ -26,7 +26,7 @@ There are four special values: HP, MP, Experience and Willpower.
   level, 100% being the Human standard.
 - The MP value indicates a fixed additive modifier to magic points.
 - The Experience value indicates how much experience has to be earned in
-  order to gain a new experience level, +1 being the Human standard. These
+  order to gain a new experience level, +0 being the Human standard. These
   values use the same scale as the skill aptitudes.
 - The Willpower value indicates resistance to many magical effects per
   experience level, +3 being the Human standard.
