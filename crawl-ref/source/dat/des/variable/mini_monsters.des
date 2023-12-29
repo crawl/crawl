@@ -109,7 +109,7 @@ TAGS:   no_trap_gen transparent no_descent
 DEPTH:  D:9-, Spider
 MONS:   killer bee, meliai, queen bee, hornet
 KMASK:  1234*R = opaque
-KMONS:  *R = worm
+KMONS:  *R = ribbon worm
 KITEM:  * = *
 KITEM:  R = potion of ambrosia ident:type
 SUBST:  ? : .w
@@ -393,7 +393,7 @@ ENDMAP
 NAME:    nicolae_wormholes
 TAGS:    transparent
 DEPTH:   D:1-5
-KMONS:   1 = worm
+KMONS:   1 = ribbon worm
 KFEAT:   ^ = shaft trap
 NSUBST:  - = } / `
 SUBST:   D = x, E = x.
@@ -1020,13 +1020,13 @@ NAME:    hangedman_parallel_progression
 TAGS:    patrolling no_monster_gen transparent
 TAGS:    layout_rooms layout_corridors
 DEPTH:   D:11-
-MONS:    rat, bat, frilled lizard, worm, endoplasm
+MONS:    rat, bat, frilled lizard, ribbon worm, endoplasm
 MONS:    giant cockroach, jackal
 KMONS:   8 = ball python / adder w:8
 KMONS:   A = river rat
 KMONS:   B = vampire bat / fire bat w:8
 KMONS:   C = iguana / basilisk w:8
-KMONS:   D = worm / tyrant leech
+KMONS:   D = ribbon worm / tyrant leech
 KMONS:   E = jelly
 KMONS:   F = scorpion
 KMONS:   G = hound / wolf w:3

@@ -177,7 +177,7 @@ ENDMAP
 
 NAME:   nicolae_spider_entry_non_spiders
 TAGS:   spider_entry ruin_lair transparent
-MONS:   scorpion w:20 / worm / giant cockroach
+MONS:   scorpion w:20 / ribbon worm / giant cockroach
 MONS:   demonic crawler / boulder beetle / torpor snail
 KFEAT:  O = enter_spider_nest
 NSUBST: 1 = 1:21 / *:1
@@ -908,7 +908,7 @@ TAGS:    no_monster_gen patrolling
 ORIENT:  float
 DEPTH:   Spider, !Spider:$
 WEIGHT:  5
-KMONS:   1 = scorpion w:55 / hornet w:13 / giant cockroach w:1 / worm w:1
+KMONS:   1 = scorpion w:55 / hornet w:13 / giant cockroach w:1 / ribbon worm w:1
 KMONS:   2 = redback w:15 / vampire mosquito
 KMONS:   3aAdD = boulder beetle
 KMONS:   4bB = demonic crawler

@@ -73,7 +73,7 @@ SUBST:  1 = 2234..........
 MONS:   nothing
 MONS:   rat / river rat w:5
 MONS:   ball python / adder w:2
-MONS:   giant cockroach / worm w:3
+MONS:   giant cockroach / ribbon worm w:3
 MAP
 .........
 ...111...
@@ -91,7 +91,7 @@ ORIENT: float
 : sewer_portal(_G)
 SUBST:  ' = W. , W = WW1
 KMONS:  1 = rat w:20 / river rat / ball python / adder w:2 / \
-            giant cockroach / worm w:3
+            giant cockroach / ribbon worm w:3
 MAP
 xxxxxx
 xOWWW'
@@ -108,7 +108,7 @@ NSUBST: W = 8 = 111W / *:W
 NSUBST: n = 1:+ / 2:n / *:c
 TILE:   c = wall_stone_mossy
 KMONS:  1 = rat w:20 / river rat / ball python / adder w:2 / \
-            giant cockroach / worm w:3
+            giant cockroach / ribbon worm w:3
 MAP
 .........
 .nnnnnnn.
@@ -137,7 +137,7 @@ NSUBST: X = 2:+ / *:x
 SUBST:  w = WW.
 NSUBST: W = 8:111W / *:W
 KMONS:  1 = rat w:20 / river rat / ball python / adder w:2 / \
-            giant cockroach / worm w:3
+            giant cockroach / ribbon worm w:3
 MAP
 xxxxxxxxx
 xWWWXWww.
@@ -186,7 +186,7 @@ NAME:   gup_sewer_entry_spiral
 TAGS:   patrolling
 : sewer_portal(_G)
 KMONS:  1 = rat / river rat w:5 / adder w:5 / giant cockroach / \
-            quokka / worm w:5 / nothing
+            quokka / ribbon worm w:5 / nothing
 NSUBST: - : 8:1 / 8:. / *:W
 MAP
 xxxxxxxxxx
@@ -206,7 +206,7 @@ NAME:   gup_sewer_entry_bubbles
 TAGS:   patrolling
 : sewer_portal(_G)
 KMONS:  1 = rat / river rat w:5 / adder w:5 / giant cockroach / \
-            quokka / worm w:5 / nothing
+            quokka / ribbon worm w:5 / nothing
 NSUBST: - = 8:1 / *:W
 MAP
  xxx    xxx
@@ -226,7 +226,7 @@ ENDMAP
 NAME:   gup_sewer_entry_bowl
 : sewer_portal(_G)
 KMONS:  1 = rat / river rat w:5 / \
-            giant cockroach / quokka / worm w:3 / nothing
+            giant cockroach / quokka / ribbon worm w:3 / nothing
 MAP
 ..........
 .xxx.xxxx..
@@ -254,7 +254,7 @@ ENDMAP
 NAME: lightli_sewer_entry_pipes
 NSUBST: o = 1:O / *:W
 SUBST: W = WWWWW1
-KMONS: 1 = river rat / adder / rat / worm
+KMONS: 1 = river rat / adder / rat / ribbon worm
 : sewer_portal(_G)
 MAP
 vvvvvvvvvv
@@ -277,7 +277,7 @@ ENDMAP
 NAME: cheibrodos_sewer_entry_bend
 TAGS: no_monster_gen
 ORIENT: northeast
-KMONS: 1 = worm
+KMONS: 1 = ribbon worm
 NSUBST: - = 1:1 / 1=1.. / 1=1...
 KFEAT: A = iron_grate
 : sewer_portal(_G)
@@ -301,7 +301,7 @@ ENDMAP
 NAME: cheibrodos_sewer_entry_drain
 TAGS: no_monster_gen
 ORIENT: float
-KMONS: 1 = rat / ball python / giant cockroach / worm
+KMONS: 1 = rat / ball python / giant cockroach / ribbon worm
 NSUBST: 1 = 2:1 / 2=1.. / *:.
 : sewer_portal(_G)
 MAP
@@ -321,7 +321,7 @@ ENDMAP
 NAME: cheibrodos_sewer_entry_sluice
 TAGS: no_monster_gen
 ORIENT: float
-KMONS: 1 = ball python / worm / bat / w:5 river rat
+KMONS: 1 = ball python / ribbon worm / bat / w:5 river rat
 SHUFFLE: AB
 SUBST: A = w, B = .
 NSUBST: . = 2:1 / 2=1.
@@ -342,7 +342,7 @@ ENDMAP
 
 NAME:    mainiacjoe_sewer_entry_somewhere_in_here_1
 KMONS:   1 = frilled lizard / rat / giant cockroach / ball python / \
-             river rat w:2 / worm w:3 / adder w:4
+             river rat w:2 / ribbon worm w:3 / adder w:4
 KMONS:   2 = iguana
 KFEAT:   @2 = shallow_water
 NSUBST:  O = 1:O / 5:1 / 1:1W / *:W
@@ -366,7 +366,7 @@ ENDMAP
 
 NAME:    mainiacjoe_sewer_entry_somewhere_in_here_2
 KMONS:   1 = frilled lizard / rat / giant cockroach / ball python / \
-             river rat w:2 / worm w:3 / adder w:4
+             river rat w:2 / ribbon worm w:3 / adder w:4
 KMONS:   2 = iguana
 KFEAT:   @2 = shallow_water
 : if you.depth() > 4 then
@@ -954,8 +954,8 @@ TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 KMONS:   " = bat
 KMONS:   ? = bat / frilled lizard / ball python / giant cockroach / \
-             quokka / endoplasm w:4 / worm w:4 / adder w:2
-MONS:    worm w:2 / ball python / jackal / adder w:5 / river rat w:5
+             quokka / endoplasm w:4 / ribbon worm w:4 / adder w:2
+MONS:    ribbon worm w:2 / ball python / jackal / adder w:5 / river rat w:5
 MONS:    adder, river rat, brain worm, jelly
 ITEM:    any scroll, potion of enlightenment ident:type
 : item(dgn.aux_armour)
@@ -1074,7 +1074,7 @@ NAME:    sewer_co_15_rooms
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 MONS:    kobold / w:7 kobold brigand
-MONS:    kobold / adder / ball python / w:7 worm / w:7 endoplasm / \
+MONS:    kobold / adder / ball python / w:7 ribbon worm / w:7 endoplasm / \
          rat / river rat w:5
 MONS:    crocodile
 SUBST:   . = W.., X = xx.
@@ -1151,7 +1151,7 @@ NAME:   sewer_co_tree
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
 MONS:   kobold / kobold brigand
-MONS:   adder / ball python / worm / brain worm w:1
+MONS:   adder / ball python / ribbon worm / brain worm w:1
 MONS:   endoplasm / rat / river rat w:5
 : kitem("e = " .. dgn.loot_potions)
 : kitem("f =  " .. dgn.loot_scrolls)
@@ -1426,7 +1426,7 @@ TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
 : item(dgn.loot_potions .. " / any scroll w:30 / any armour / any weapon")
 MONS:   endoplasm w:25 / rat / ball python / giant cockroach / adder w:5 /\
-        river rat w:5 / frilled lizard / worm w:2
+        river rat w:5 / frilled lizard / ribbon worm w:2
 KMONS:  2 = jelly
 SUBST:  . = W..
 NSUBST: - = 32 = 1W.. / * = W..

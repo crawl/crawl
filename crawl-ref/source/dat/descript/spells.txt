@@ -525,7 +525,7 @@ that fails to resist the full force of the curse.
 %%%%
 Ensnare spell
 
-Shoots a stream of webbing at a creature, ensnaring the target in a spider web.
+Shoots a stream of webbing at a creature, ensnaring the target in a sticky web.
 %%%%
 Ensorcelled Hibernation spell
 

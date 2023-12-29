@@ -230,7 +230,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "zombie / skeleton / wight w:5 / necrophage / phantom w:5",
                 "scorpion / water moccasin w:2 / redback w:1 / killer bee w:2",
                 "endoplasm / w:5 jelly",
-                "giant cockroach w:20 / scorpion / worm"
+                "giant cockroach w:20 / scorpion / ribbon worm"
             }
         elseif round <= 5 then
             mon_set = {
@@ -312,7 +312,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Misc
                 "centaur w:20 / centaur warrior w:2 / nessos w:1",
                 "ugly thing",
-                "tyrant leech / worm / brain worm w:5",
+                "tyrant leech / ribbon worm / brain worm w:5",
                 "ogre w:15 / two-headed ogre / ogre mage w:5 / w:1 erolcha",
                 "troll / deep troll w:12 / iron troll w:2",
                 "rime drake / swamp drake / steam dragon / swamp dragon /\

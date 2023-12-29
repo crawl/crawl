@@ -352,7 +352,7 @@ TAGS:  uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
 : if you.in_branch("Depths") then
 KMONS: _ = iron dragon
 :else
-KMONS: _ = worm / mummy / iron imp
+KMONS: _ = ribbon worm / mummy / iron imp
 :end
 KFEAT: _ = altar_cheibriados
 SUBST: x : xxxcccmnvb
@@ -377,7 +377,7 @@ TAGS:    uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
 : if you.in_branch("Depths") then
 KMONS: _ = iron dragon
 :else
-KMONS: _ = worm / mummy / iron imp
+KMONS: _ = ribbon worm / mummy / iron imp
 :end
 KFEAT:   _ = altar_cheibriados
 SUBST:   x : xxxcccvb
@@ -403,7 +403,7 @@ WEIGHT: 5
 : if you.in_branch("Depths") then
 KMONS: _ = iron dragon
 :else
-KMONS: _ = worm / mummy / iron imp
+KMONS: _ = ribbon worm / mummy / iron imp
 :end
 NSUBST: ' = 1:a / *:.
 KFEAT:  _ = altar_cheibriados
@@ -427,7 +427,7 @@ TAGS:   temple_overflow_cheibriados uniq_altar_cheibriados
 DEPTH:  D:3-
 WEIGHT: 5
 KFEAT:  _ = altar_cheibriados
-MONS:   worm
+MONS:   ribbon worm
 : interest_check(_G)
 MAP
 .............
@@ -2669,7 +2669,7 @@ TAGS:   temple_overflow_1 temple_overflow_trog uniq_altar_trog
 KFEAT:  _ = altar_trog
 KPROP:  1 = no_tele_into
 : if you.absdepth() < 16 then
-MONS:   moth of wrath, rat / worm w:5
+MONS:   moth of wrath, rat / ribbon worm w:5
 : else
 MONS:   moth of wrath, dire elephant / boulder beetle w:5
 : end

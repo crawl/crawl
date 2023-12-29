@@ -291,6 +291,14 @@ unseen Acid Splash cast
 
 You hear a spitting sound.
 %%%%
+Ensnare natural cast
+
+@The_monster@ expels a string of sticky webbing.
+%%%%
+unseen Ensnare natural cast
+
+A string of sticky webbing shoots out from thin air.
+%%%%
 unseen Cold Breath cast
 
 You hear a roar.

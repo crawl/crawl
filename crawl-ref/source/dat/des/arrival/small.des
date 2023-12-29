@@ -1887,7 +1887,7 @@ ENDMAP
 ##############################################################################
 NAME:    dpeg_arrival_brainrot
 TAGS:    arrival no_monster_gen
-MONS:    jackal / worm
+MONS:    jackal / ribbon worm
 ORIENT:  float
 SUBST:   l = l.
 NSUBST:  { = 1:{ / *:.
@@ -2342,7 +2342,7 @@ SHUFFLE: 16
 MONS:    centaur / centaur warrior / yaktaur / yaktaur captain
 MONS:    rat / river rat / hell rat / quokka
 MONS:    imperial myrmidon / servant of whispers / ragged hierophant
-MONS:    worm / tyrant leech / brain worm
+MONS:    ribbon worm / tyrant leech / brain worm
 MONS:    komodo dragon / iguana / basilisk
 MONS:    ettin / frost giant / stone giant / fire giant
 : else

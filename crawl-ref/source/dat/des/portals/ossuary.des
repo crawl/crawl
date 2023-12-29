@@ -101,7 +101,7 @@ ENDMAP
 NAME:   enter_ossuary_3
 TAGS:   transparent
 SUBST:  . = ' .
-MONS:   rat zombie / jackal zombie / worm zombie
+MONS:   rat zombie / jackal zombie / ribbon worm zombie
 MONS:   kobold zombie / goblin zombie / hobgoblin zombie
 MONS:   orc zombie / gnoll zombie / human zombie
 SUBST:  . = .:100 11 2 3

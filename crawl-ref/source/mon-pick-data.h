@@ -79,7 +79,7 @@ static const vector<pop_entry> population[] =
   {  1,  8,  200, PEAK, MONS_GNOLL },
 
 // Shouldn't show up on D:1.
-  {  2,  5,  500, FALL, MONS_WORM },
+  {  2,  5,  500, FALL, MONS_RIBBON_WORM },
   {  2,  6, 1000, FLAT, MONS_ADDER },
   {  3,  8, 1000, FLAT, MONS_ORC },
   {  3,  7,  400, PEAK, MONS_BOMBARDIER_BEETLE},
@@ -1050,7 +1050,7 @@ POP_DEPTHS,
   {  1,  1, 1000, FLAT, MONS_BAT },
   {  1,  1,  515, FLAT, MONS_BALL_PYTHON },
   {  1,  1,  515, FLAT, MONS_ADDER },
-  {  1,  1,  515, FLAT, MONS_WORM },
+  {  1,  1,  515, FLAT, MONS_RIBBON_WORM },
   {  1,  1,  515, FLAT, MONS_ENDOPLASM },
   {  1,  1,  515, FLAT, MONS_GIANT_COCKROACH },
   {  1,  1,   55, FLAT, MONS_BRAIN_WORM },

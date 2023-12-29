@@ -2246,6 +2246,11 @@ revenant
 An animated skeleton wreathed in cold blue fire, standing astride this life and
 the next. Echoes of the lingering dead flicker within its ghostly flames.
 %%%%
+ribbon worm
+
+A giant annelid, glistening with slime, with unusually large teeth. It expels
+fragments of its own innards to ensnare unsuspecting prey.
+%%%%
 rime drake
 
 A small but dangerous dragon. Its breath is visible even on the warmest days.
@@ -2921,10 +2926,6 @@ A cloud of thick fog, with faint, feeble claws constantly reaching out and then
 fading back into the fog. When threatened, it calls forth creatures banished to
 the void between realities, using them to defend itself.
 %%%%
-worm
-
-A giant annelid, glistening with slime, with unusually large teeth.
-%%%%
 wraith
 
 A cloud of black mist surrounding an insubstantial skeletal form. Its eyes burn
@@ -3292,6 +3293,10 @@ A plant whose life has been drained away, but with its physical form still
 intact. It looks like it died many {{ if you.branch("Crypt") or
 you.branch("Tomb") then return "centuries"; else return "years"; end }}
 ago.
+%%%%
+worm
+
+A giant annelid, glistening with slime, with unusually large teeth.
 %%%%
 zin angel
 

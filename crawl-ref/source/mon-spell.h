@@ -631,6 +631,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_RIBBON_WORM,
+      {
+       { SPELL_ENSNARE, 60, MON_SPELL_NATURAL },
+      }
+    },
+
     { MST_BRAIN_WORM,
       {
         { SPELL_BRAIN_BITE, 32, MON_SPELL_NATURAL },
