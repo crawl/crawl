@@ -1442,12 +1442,10 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             _strip_to(indirectkiller, "ed to "); // "attached to" and similar
             _strip_to(indirectkiller, "ed from "); // "spawned from" and similar
 
-            killerpath = "";
-
+            vector<string> path_parts;
             for (const auto &bl : blame)
-                killerpath = killerpath + ":" + _xlog_escape(bl.get_string());
-
-            killerpath.erase(killerpath.begin());
+                path_parts.push_back(_xlog_escape(bl.get_string()));
+            killerpath = join_strings(path_parts.begin(), path_parts.end(), ":");
         }
         else
         {
