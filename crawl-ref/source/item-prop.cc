@@ -849,17 +849,17 @@ static const gem_def Gem_prop[] =
     { GEM_ELF,     "shimmering",  BRANCH_ELF,     6000 },
     { GEM_LAIR,    "earthy",      BRANCH_LAIR,    7500 }, // travel time
 
-    { GEM_SWAMP,   "mossy",       BRANCH_SWAMP,   6000 },
-    { GEM_SHOALS,  "azure",       BRANCH_SHOALS,  6000 },
+    { GEM_SWAMP,   "mossy",       BRANCH_SWAMP,   4500 }, // small layouts
+    { GEM_SHOALS,  "azure",       BRANCH_SHOALS,  4500 }, // seems faster
     { GEM_SNAKE,   "jade",        BRANCH_SNAKE,   6000 },
     { GEM_SPIDER,  "milky-white", BRANCH_SPIDER,  6000 },
 
-    { GEM_SLIME,   "starry",      BRANCH_SLIME,   2000 }, // usually dived fast
+    { GEM_SLIME,   "starry",      BRANCH_SLIME,   1200 }, // usually dived fast
     { GEM_VAULTS,  "shining",     BRANCH_VAULTS,  7500 }, // big, travel time
     { GEM_CRYPT,   "ivory",       BRANCH_CRYPT,   6000 },
-    { GEM_TOMB,    "sanguine",    BRANCH_TOMB,    7500 }, // weird
+    { GEM_TOMB,    "sanguine",    BRANCH_TOMB,    6000 },
     { GEM_DEPTHS,  "midnight",    BRANCH_DEPTHS,  7500 }, // big, travel time
-    { GEM_ZOT,     "prismatic",   BRANCH_ZOT,     3000 }, // often dived
+    { GEM_ZOT,     "prismatic",   BRANCH_ZOT,     2000 }, // often dived
 };
 
 struct item_set_def
