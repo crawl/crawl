@@ -5370,7 +5370,6 @@ player::player()
     travel_z         = level_id();
 
     running.clear();
-    travel_ally_pace = false;
     received_weapon_warning = false;
     received_noskill_warning = false;
     wizmode_teleported_into_rock = false;

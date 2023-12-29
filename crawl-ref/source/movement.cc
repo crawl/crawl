@@ -757,13 +757,6 @@ static void _apply_move_time_taken()
 {
     you.time_taken *= player_movement_speed();
     you.time_taken = div_rand_round(you.time_taken, 10);
-
-    if (you.running && you.running.travel_speed)
-    {
-        you.time_taken = max(you.time_taken,
-                             div_round_up(100, you.running.travel_speed));
-    }
-
     if (you.duration[DUR_NO_HOP])
         you.duration[DUR_NO_HOP] += you.time_taken;
 }

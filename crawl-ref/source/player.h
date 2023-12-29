@@ -391,7 +391,6 @@ public:
     level_id travel_z;
 
     runrest running;                    // Nonzero if running/traveling.
-    bool travel_ally_pace;
 
     bool received_weapon_warning;
     bool received_noskill_warning;

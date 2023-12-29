@@ -5093,16 +5093,6 @@ bool mons_is_recallable(const actor* caller, const monster& targ)
            && mons_class_is_threatening(targ.type);
 }
 
-vector<monster* > get_on_level_followers()
-{
-    vector<monster* > mon_list;
-    for (monster_iterator mi; mi; ++mi)
-        if (mons_is_recallable(&you, **mi) && mi->foe == MHITYOU)
-            mon_list.push_back(*mi);
-
-    return mon_list;
-}
-
 bool mons_stores_tracking_data(const monster& mons)
 {
     return mons.type == MONS_THORN_HUNTER

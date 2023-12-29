@@ -293,6 +293,7 @@ enum tag_minor_version
     TAG_MINOR_RAMPAGE_HEAL,        // Adjust Armataur mutations for healpage.
     TAG_MINOR_GEMS,                // Add gems.
     TAG_MINOR_ALCHEMY_MERGER,      // Poison magic and transmuations merged.
+    TAG_MINOR_UNTRAVEL_ALLY_PACE,  // Cut pace travel to slowest ally setting
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

@@ -1085,9 +1085,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
 #ifdef USE_SOUND
     _add_command(cols, 1, CMD_TOGGLE_SOUND, "mute/unmute sound effects");
 #endif
-    _add_command(cols, 1, CMD_TOGGLE_TRAVEL_SPEED, "set your travel speed to your");
-    cols.add_formatted(1, "         slowest ally\n",
-                           false);
 #ifdef USE_TILE_LOCAL
     _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : zoom out/in",
                         { CMD_ZOOM_OUT, CMD_ZOOM_IN });

@@ -639,24 +639,9 @@ bool is_resting()
     return you.running.is_rest();
 }
 
-static int _slowest_ally_speed()
-{
-    vector<monster* > followers = get_on_level_followers();
-    int min_speed = INT_MAX;
-    for (auto fol : followers)
-    {
-        int speed = fol->speed * BASELINE_DELAY
-                    / fol->action_energy(EUT_MOVE);
-        if (speed < min_speed)
-            min_speed = speed;
-    }
-    return min_speed;
-}
-
 static void _start_running()
 {
     _userdef_run_startrunning_hook();
-    you.running.init_travel_speed();
     you.running.turns_passed = 0;
     const bool unsafe = Options.travel_one_unsafe_move &&
                         (you.running == RMODE_TRAVEL
@@ -1141,8 +1126,6 @@ command_type travel()
 
         if (!_find_transtravel_square(level_target) || !you.running.pos.x)
             stop_running();
-        else
-            you.running.init_travel_speed();
     }
 
     if (you.running < 0)
@@ -4542,7 +4525,6 @@ void runrest::initialise(int dir, int mode)
     notified_mp_full = false;
     notified_ancestor_hp_full = false;
     turns_passed = 0;
-    init_travel_speed();
 
     if (dir == RDIR_REST)
     {
@@ -4570,14 +4552,6 @@ void runrest::initialise(int dir, int mode)
         start_delay<RestDelay>();
     else
         start_delay<RunDelay>();
-}
-
-void runrest::init_travel_speed()
-{
-    if (you.travel_ally_pace)
-        travel_speed = _slowest_ally_speed();
-    else
-        travel_speed = 0;
 }
 
 runrest::operator int () const
@@ -4763,7 +4737,7 @@ void runrest::clear()
 {
     runmode = RMODE_NOT_RUNNING;
     pos.reset();
-    mp = hp = travel_speed = 0;
+    mp = hp = 0;
     turns_passed = 0;
     notified_hp_full = false;
     notified_mp_full = false;
