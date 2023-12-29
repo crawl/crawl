@@ -127,6 +127,9 @@ def load_games(reloading=False):
             if os.path.exists(base_path):
                 for file_name in sorted(os.listdir(base_path)):
                     path = os.path.join(base_path, file_name)
+                    if not path.endswith(".yaml"):
+                        logging.info("Ignoring non-.yaml file %s", path)
+                        continue
                     accum = merge_games(accum, load_from_yaml(path))
             else:
                 logging.warn("Skipping non-existent YAML configuration directory: '%s'" % base_path)
