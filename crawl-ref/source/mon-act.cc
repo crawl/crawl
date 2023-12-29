@@ -1106,8 +1106,8 @@ static void _check_blazeheart_golem_link(monster& mons)
     // (we get a turn or two's grace period to make managing this less fiddly)
     if (grid_distance(you.pos(), mons.pos()) > 1)
     {
-        if (you.elapsed_time > mons.props[BLAZEHEART_ACTIVE_TURN].get_int()
-            && !mons.has_ench(ENCH_PARALYSIS))
+        mons.blazeheart_heat -= 1;
+        if (mons.blazeheart_heat <= 0 && !mons.has_ench(ENCH_PARALYSIS))
         {
             simple_monster_message(mons, "'s core grows cold and it stops moving.");
             mons.add_ench(mon_enchant(ENCH_PARALYSIS, 1, &mons, INFINITE_DURATION));
@@ -1128,8 +1128,8 @@ static void _check_blazeheart_golem_link(monster& mons)
             //mons.speed_increment += mons.action_energy(EUT_MOVE);
         }
 
-        // Store when we will next become dormant if the player is not near us
-        mons.props[BLAZEHEART_ACTIVE_TURN].get_int() = you.elapsed_time + 10;
+        // Give the golem another turn before it goes cold.
+        mons.blazeheart_heat = 2;
     }
 }
 

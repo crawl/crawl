@@ -12,10 +12,6 @@
 
 #define DRAGON_CALL_POWER_KEY "dragon_call_power"
 
-// Maximum turn number that the blazeheart golem will remain active without its
-// summoner being adjacent to it.
-#define BLAZEHEART_ACTIVE_TURN "blazeheart_active_turn"
-
 #define SIMULACRUM_TYPE_KEY "simulacrum_type"
 
 spret cast_summon_small_mammal(int pow, god_type god, bool fail);

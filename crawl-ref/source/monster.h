@@ -95,6 +95,7 @@ public:
         int battlecharge;      ///< Charges of battlesphere
         int move_spurt;        ///< Sixfirhy/jiangshi/kraken black magic
         int steps_remaining;   ///< Foxfire remaining moves
+        int blazeheart_heat;   ///< Number of checks before golem cools
         mid_t tentacle_connect;///< mid of monster this tentacle is
                                //   connected to: for segments, this is the
                                //   tentacle; for tentacles, the head.

@@ -935,7 +935,9 @@ spret cast_summon_blazeheart_golem(int pow, god_type god, bool fail)
     if (mons)
     {
         mpr("A fiery spirit appears, bound in slag iron.");
-        mons->props[BLAZEHEART_ACTIVE_TURN].get_int() = you.elapsed_time + 10;
+
+        // Give an extra turn of grace period on the turn it is summoned.
+        mons->blazeheart_heat = 4;
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
