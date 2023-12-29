@@ -482,7 +482,7 @@ static map<tileidx_t, int> status_icon_sizes = {
     { TILEI_WEAKENED,       6 },
     { TILEI_WATERLOGGED,    10 },
     { TILEI_STILL_WINDS,    10 },
-    { TILEI_SIMULACRUM,     8 },
+    { TILEI_GHOSTLY,        8 },
     { TILEI_ANTIMAGIC,      10 },
     { TILEI_DAZED,          6 },
     { TILEI_PARTIALLY_CHARGED, 6 },

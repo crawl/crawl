@@ -68,7 +68,7 @@ injury_bond INJURY_BOND
 partially_charged PARTIALLY_CHARGED
 fully_charged FULLY_CHARGED
 repel_missiles REPEL_MISSILES
-simulacrum SIMULACRUM
+ghostly GHOSTLY
 still_winds STILL_WINDS
 waterlogged WATERLOGGED
 weakened WEAKENED
