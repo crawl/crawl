@@ -1440,6 +1440,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             indirectkiller = blame[blame.size() - 1].get_string();
             _strip_to(indirectkiller, " by ");
             _strip_to(indirectkiller, "ed to "); // "attached to" and similar
+            _strip_to(indirectkiller, "ed from "); // "spawned from" and similar
 
             killerpath = "";
 
