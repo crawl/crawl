@@ -860,29 +860,33 @@ void move_player_action(coord_def move)
     }
 
     bool rampaged = false;
+    bool did_wu_jian_attack = false;
 
     if (you.rampaging())
     {
         switch (_rampage_forward(move))
         {
             // Check the player's position again; rampage may have moved us.
+            ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
+                   || you.wizmode_teleported_into_rock);
 
             // Cancel the move entirely if rampage was aborted from a prompt.
             case spret::abort:
-                ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
-                       || you.wizmode_teleported_into_rock);
                 return;
 
             case spret::success:
                 rampaged = true;
+                if (you_worship(GOD_WU_JIAN))
+                {
+                    did_wu_jian_attack
+                        = wu_jian_post_move_effects(false, initial_position);
+                }
                 // If we've rampaged, reset initial_position for the second
                 // move.
                 initial_position = you.pos();
-                // intentional fallthrough
-            default:
+                break;
             case spret::fail:
-                ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
-                       || you.wizmode_teleported_into_rock);
+            default:
                 break;
         }
     }
@@ -1198,11 +1202,10 @@ void move_player_action(coord_def move)
         did_god_conduct(DID_HASTY, 1, true);
     }
 
-    bool did_wu_jian_attack = false;
-    if (you_worship(GOD_WU_JIAN) && !attacking && !dug && !rampaged)
+    if (you_worship(GOD_WU_JIAN) && !attacking && !dug)
         did_wu_jian_attack = wu_jian_post_move_effects(false, initial_position);
 
-    // If you actually moved you are eligible for amulet of the acrobat.
+    // If you actually moved without attacking, acrobatics may kick in.
     if (!attacking && moving && !did_wu_jian_attack)
         update_acrobat_status();
 }

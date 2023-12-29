@@ -5561,10 +5561,9 @@ bool player::airborne() const
 
 bool player::rampaging() const
 {
-    return !you_worship(GOD_WU_JIAN)
-        && (player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS)
+    return player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS)
             || you.has_mutation(MUT_ROLLPAGE)
-            || actor::rampaging());
+            || actor::rampaging();
 }
 
 bool player::is_banished() const

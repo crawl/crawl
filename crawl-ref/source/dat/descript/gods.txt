@@ -693,7 +693,4 @@ Wu Jian extra
 
 These prevent enemies from getting free attacks on you while you move away.
 You cannot launch martial attacks while digging.
-
-Worshipping the Council prevents you from rampaging or rolling: These martial
-attacks suppress such ungainly movement.
 %%%%
