@@ -1290,7 +1290,8 @@ act and dodge normally but unable to move away. When the effect wears off,
 their movement speed will rebound, giving them temporary swiftness and preventing
 subsequent binding effects.
 
-Only one set of sigils can be maintained at a time.
+Only one set of sigils can be maintained at a time and they will expire
+prematurely if they leave your sight.
 %%%%
 Silence spell
 

@@ -1001,7 +1001,8 @@ void timeout_terrain_changes(int duration, bool force)
             continue;
         }
 
-        if (marker->change_type == TERRAIN_CHANGE_BOG
+        if ((marker->change_type == TERRAIN_CHANGE_BOG
+             || marker->change_type == TERRAIN_CHANGE_BINDING_SIGIL)
             && !you.see_cell(marker->pos))
         {
             marker->duration = 0;
