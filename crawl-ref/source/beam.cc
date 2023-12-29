@@ -2624,8 +2624,9 @@ void bolt::drop_object()
 bool bolt::found_player() const
 {
     const bool needs_fuzz = is_tracer
-            && !can_see_invis && you.invisible()
             && !YOU_KILL(thrower)
+            && !can_see_invis && you.invisible()
+            && (!agent() || !agent()->as_monster()->friendly())
             // No point in fuzzing to a position that could never be hit.
             && you.see_cell_no_trans(pos());
     const int dist = needs_fuzz? 2 : 0;
@@ -3133,7 +3134,8 @@ void bolt::tracer_affect_player()
     if (flavour == BEAM_UNRAVELLING && player_is_debuffable())
         is_explosion = true;
 
-    if (flavour == BEAM_ROOTS && !agent()->can_constrict(you, CONSTRICT_ROOTS))
+    const actor* ag = agent();
+    if (flavour == BEAM_ROOTS && !ag->can_constrict(you, CONSTRICT_ROOTS))
         return; // this should probably go elsewhere
 
     // Check whether thrower can see player, unless thrower == player.
@@ -3159,7 +3161,10 @@ void bolt::tracer_affect_player()
             }
         }
     }
-    else if (can_see_invis || !you.invisible() || fuzz_invis_tracer())
+    else if (can_see_invis
+             || !you.invisible()
+             || ag && ag->as_monster()->friendly()
+             || fuzz_invis_tracer())
     {
         if (mons_att_wont_attack(attitude))
         {
