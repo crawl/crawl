@@ -1508,65 +1508,6 @@ ENDMAP
 ###############################################################################
 
 ###############################################################################
-# Let's go, Overflow!
-#
-# You don't have much time to get the loot, as the Volcano is spitting out lava
-# like there's no tomorrow! Of course, if you can fly, you've got a good chance
-# of getting everything. If you get stuck, you can just wait it out.
-#
-# Original idea by dpeg.
-NAME:    volcano_overflow
-TAGS:    no_item_gen no_monster_gen no_rotate
-ORIENT:  encompass
-WEIGHT:  10
-MONS:    gargoyle / fire elemental
-MONS:    efreet / molten gargoyle
-{{
--- So we know what to convert.
-lua_marker("A", portal_desc { lava_phase=2 })
-lua_marker("B", portal_desc { lava_phase=4 })
-lua_marker("C", portal_desc { lava_phase=6 })
-
--- And finally, let's convert it
-local sink_marker = TriggerableFunction:new {
-  func = "volcano_overflow_convert_lava",
-  repeated = true,
-  data = {lava_phase=0}
-}
-
-sink_marker:add_triggerer(DgnTriggerer:new {
-  type="turn",
-  delay_min=200,
-  delay_max=400, })
-
-lua_marker("M", sink_marker)
-}}
-SUBST:  M = c
-NSUBST: ABC = 6:d / 6:e / 3:f / 3:* / 6:g / 6:h / *:.
-NSUBST: 1 = 2:2 / *:1
-: volcano_setup(_G)
-MAP
-                xxxx         xxx xxx                   xxx
-        xxxxx  xx..xxx     xxx.xxx.xxxx xxxxx xxx     xx.xx
-       xx...xxxx.CC..xxx xxx..C.1.C...xxxx..xxx.xxx xxx.C.xx
-     xxx.CBB....CBBCC..xxx..CCBBCCBBCB....CC...C..xxx..CBC.xx
-   xxx..CBABCCCCBAABBB......BBAABBBABBBCCCCBCCBBCC...CCBBBC.xx
- xxx..CBAAlABBBBAllAAABBBBBBAAllAAAlAAABBBBBBBBBBBCCCBAABC.xx
-xx.1CBAAllllAAAAllllllAAAAAAlllllllllllAAABBC...CBBAAlABC.xx
- xx..CBAlllllllllllllllllllllllllllllllllABC.xxx..CBAllBC.xx
-  xxx.CBAlllllllllllllllllAAAlllllllllllABC.xxAxxx.CBlllBC.xx
-    xx.CBAlllAAllllllllAAABBBAAAlllllllABC.xx<...xx.CBAllBC.xx
-     xx.CBAlABBAllllllABCC...CCBAlllllllABC.xxx...xx.CAllABC.x
-      x.CBAABCCBAllllABCC.xxx.CBBAllllllABBC..x......CBllAAB.xx
-    xxx.CBAB...CBAAAABC..xx xx.CCBAllllAAABC.xx...xx.CBAAABC.xx
-   xx..CBB..xxx..CBBBC1xxx   xx..CBAAAABBC......xxx.CCBBBC.1xx
-   x..CC..xxx xxx..C..xx      xxx..CBBBC..xxxxxxx xx..CC..xxx
-   xxx1.xxx     xxx.xxx    M    xxx..C..xxx        xxx..xxx
-     xxxx         xxx             xxx.xxx            xxxx
-                                    xxx
-ENDMAP
-
-###############################################################################
 # Venture into the center of the Earth! Or a volcano. The dinosaurs await...
 NAME:    pf_volcano_lost_world
 TAGS:    no_item_gen no_monster_gen
