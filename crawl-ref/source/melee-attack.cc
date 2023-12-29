@@ -120,8 +120,8 @@ bool melee_attack::would_prompt_player()
         return false;
 
     bool penance;
-    return (weapon && needs_handle_warning(*weapon, OPER_ATTACK, penance)
-            || player_unrand_bad_attempt(true));
+    return weapon && needs_handle_warning(*weapon, OPER_ATTACK, penance)
+           || player_unrand_bad_attempt(true);
 }
 
 bool melee_attack::player_unrand_bad_attempt(bool check_only)
