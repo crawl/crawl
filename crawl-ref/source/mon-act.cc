@@ -1015,6 +1015,15 @@ static coord_def _wobble_dir(coord_def dir)
 
 static void _handle_boulder_movement(monster& boulder)
 {
+    // If we don't have a movement direction (probably from a vault-placed
+    // decorative boulder), don't crash by assuming we do
+    if (!boulder.props.exists(BOULDER_DIRECTION_KEY))
+    {
+        // Have to use energy anyway, or we cause an infinite loop.
+        _swim_or_move_energy(boulder);
+        return;
+    }
+
     place_cloud(CLOUD_DUST, boulder.pos(), 2 + random2(3), &boulder);
 
     // First, find out where we intend to move next
