@@ -53,6 +53,9 @@
 #include "teleport.h"
 #include "terrain.h"
 #include "tiledoll.h"
+#ifdef USE_TILE
+#include "tilepick.h"
+#endif
 #include "traps.h"
 #include "view.h"
 #include "viewmap.h"
