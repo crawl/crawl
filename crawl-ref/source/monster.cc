@@ -5550,8 +5550,12 @@ const monsterentry *monster::find_monsterentry() const
 
 bool monster::matches_player_speed() const
 {
-    if (!mons_is_recallable(&you, *this) || is_summoned())
+    if (crawl_state.game_is_arena()
+        || !mons_is_recallable(&you, *this)
+        || is_summoned())
+    {
         return false;
+    }
     // Are there any hostiles around? If so, look slow.
     // Only look at radius 5 for performance.
     // Reduces worst-case tiles examined by ~6x.
