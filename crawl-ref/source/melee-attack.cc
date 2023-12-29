@@ -27,6 +27,7 @@
 #include "god-item.h"
 #include "god-passive.h" // passive_t::convert_orcs
 #include "hints.h"
+#include "invent.h"
 #include "item-prop.h"
 #include "mapdef.h"
 #include "message.h"
@@ -115,7 +116,12 @@ bool melee_attack::bad_attempt()
 // nearby allies with an unrand property.
 bool melee_attack::would_prompt_player()
 {
-    return attacker->is_player() && player_unrand_bad_attempt(true);
+    if (!attacker->is_player())
+        return false;
+
+    bool penance;
+    return (weapon && needs_handle_warning(*weapon, OPER_ATTACK, penance)
+            || player_unrand_bad_attempt(true));
 }
 
 bool melee_attack::player_unrand_bad_attempt(bool check_only)
