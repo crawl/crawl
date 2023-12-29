@@ -2834,7 +2834,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             else if (needs_called_by_monster_line)
             {
                 desc += make_stringf("... %s by %s",
-                         death_type == KILLED_BY_COLLISION ? "caused" :
+                         death_type == KILLED_BY_COLLISION ? "after being knocked back" :
                          auxkilldata == "by angry trees"   ? "awakened" :
                          auxkilldata == "by Freeze"        ? "generated"
                                                            : "invoked",
