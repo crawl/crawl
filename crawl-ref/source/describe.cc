@@ -5398,6 +5398,7 @@ struct TableCell
     colour_t colour;
 };
 
+// TODO: This is similar to column_composer. Deduplicate?
 class TablePrinter
 {
 private:
