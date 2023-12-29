@@ -377,7 +377,7 @@ Animate Dead spell
 %%%%
 Awaken Forest spell
 
- • Hel: [died to] Infection! She's mine!
+ • Hel: [She died to] Infection! She's mine!
  — Thor: From a splinter that she got bravely fighting an elm!
  • Hel: Trees are inanimate plants, you buffoon!
  — Thor: Bravery knows no limits!
@@ -1363,8 +1363,8 @@ ring of ice
 %%%%
 ring of intelligence
 
-“HOBBES: Did it work?
- CALVIN: I think so.
+“Hobbes: Did it work?
+ Calvin: I think so.
          I feel smarter already.”
     -Bill Watterson, _Calvin and Hobbes_. November 19, 1993.
 %%%%
@@ -1531,11 +1531,11 @@ scroll of fear
 %%%%
 scroll of fog
 
-“I used to hate writing assignments, but now I enjoy them. I realized that the
- purpose of writing is to inflate weak ideas, obscure poor reasoning, and
- inhibit clarity. With a little practice, writing can be an intimidating and
- impenetrable fog!”
-    -Bill Watterson, _Calvin and Hobbes_. February 11th, 1993
+“Calvin: I used to hate writing assignments, but now I enjoy them. I realized
+         that the purpose of writing is to inflate weak ideas, obscure poor
+         reasoning, and inhibit clarity. With a little practice, writing can be
+         an intimidating and impenetrable fog!”
+    -Bill Watterson, _Calvin and Hobbes_. February 11th, 1993.
 %%%%
 scroll of identify
 
