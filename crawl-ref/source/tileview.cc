@@ -1324,6 +1324,11 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_STONE_WALL_SHOALS;
     }
+    else if (player_in_branch(BRANCH_DEPTHS))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_STONE_WALL_DEPTHS;
+    }
 
     if (orig == TILE_FLOOR_NORMAL)
         *bg = flv.floor;

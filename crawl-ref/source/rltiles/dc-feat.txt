@@ -261,6 +261,10 @@ crumbled_column_4
 crumbled_column_5
 crumbled_column_6
 
+# depths statues, damaged or not
+depths_column DEPTHS_COLUMN
+depths_crumbled_column DEPTHS_CRUMBLED_COLUMN
+
 # Statues in Dis
 statue_iron DNGN_STATUE_IRON
 

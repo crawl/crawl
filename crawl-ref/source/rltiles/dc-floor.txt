@@ -325,6 +325,14 @@ rect_gray1
 rect_gray2
 rect_gray3
 
+%weight 10
+depthstone_floor0 FLOOR_DEPTHSTONE
+%weight 7
+depthstone_floor1
+depthstone_floor2
+%weight 3
+depthstone_floor3
+
 floor_vines0 FLOOR_VINES
 floor_vines1
 floor_vines2
