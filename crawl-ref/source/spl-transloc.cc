@@ -1196,6 +1196,19 @@ string weapon_unprojectability_reason()
     return "";
 }
 
+static void _animate_manass_hit(const coord_def p)
+{
+    if (!in_los_bounds_v(grid2view(p)))
+        return; // needed..?
+
+    const colour_t colour = LIGHTMAGENTA;
+#ifdef USE_TILE
+    view_add_tile_overlay(p, tileidx_zap(colour));
+#endif
+    view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
+                                static_cast<unsigned short>(colour)});
+}
+
 spret cast_manifold_assault(int pow, bool fail, bool real)
 {
     bool found_unsafe_target = false;
@@ -1261,6 +1274,7 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
         mpr("Space momentarily warps into an impossible shape!");
 
     const int initial_time = you.time_taken;
+    const bool animate = (Options.use_animations & UA_BEAM) != UA_NONE;
 
     shuffle_array(targets);
     // UC is worse at launching multiple manifold assaults, since
@@ -1273,6 +1287,9 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
         // attack ends up actually setting time taken. (No quadratic effects.)
         you.time_taken = initial_time;
 
+        if (animate)
+            _animate_manass_hit(targets[i]->pos());
+
         melee_attack atk(&you, targets[i]);
         atk.is_projected = true;
         atk.attack();
@@ -1280,6 +1297,8 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
         if (you.hp <= 0 || you.pending_revival)
             break;
     }
+    if (animate)
+        animation_delay(50, true);
 
     return spret::success;
 }
