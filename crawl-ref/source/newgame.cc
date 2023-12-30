@@ -648,10 +648,14 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
         switch (id)
         {
             case '*':
+                if (overwrite_prompt)
+                    break; // too weird
                 reader.putkey(CK_END);
                 reader.putkey(CONTROL('U'));
                 for (char ch : newgame_random_name())
                     reader.putkey(ch);
+                good_name = is_good_name(buf, true);
+                ok_switcher->current() = good_name ? 0 : 1;
                 break;
             case CK_ESCAPE: // redundant with key_exits_popup check below
                 done = cancel = true;
