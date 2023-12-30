@@ -180,17 +180,22 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             // used with this beam type (as it does not provide a valid beam).
             ASSERT(beam);
 
+            int pois = div_rand_round(beam->damage.num * beam->damage.size, 2);
+            pois = 3 + random_range(pois * 2 / 3, pois * 4 / 3);
+
+            // If Concentrate Venom is active, we apply the normal amount of
+            // poison this beam would have applied on TOP of the curare effect.
+            //
+            // This is all done through the curare_actor method for better messaging.
             if (beam->origin_spell == SPELL_SPIT_POISON &&
                 beam->agent(true)->is_monster() &&
                 beam->agent(true)->as_monster()->has_ench(ENCH_CONCENTRATE_VENOM))
             {
-                curare_actor(beam->agent(), &you, 2, "concentrated venom",
-                             beam->agent(true)->name(DESC_PLAIN));
+                curare_actor(beam->agent(), &you, "concentrated venom",
+                             beam->agent(true)->name(DESC_PLAIN), pois);
             }
             else
             {
-                int pois = div_rand_round(beam->damage.num * beam->damage.size, 3);
-                pois = 3 + random_range(pois * 2 / 3, pois * 4 / 3);
                 poison_player(pois, source, kaux);
 
                 if (player_res_poison() > 0)
@@ -207,7 +212,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             // See also melee-attack.cc:_print_resist_messages() which cannot be
             // used with this beam type (as it does not provide a valid beam).
             ASSERT(beam);
-            int pois = div_rand_round(beam->damage.num * beam->damage.size, 3);
+            int pois = div_rand_round(beam->damage.num * beam->damage.size, 2);
             pois = 3 + random_range(pois * 2 / 3, pois * 4 / 3);
 
             const int resist = player_res_poison();

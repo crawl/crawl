@@ -2653,8 +2653,9 @@ bool melee_attack::mons_do_poison()
 
     if (attacker->as_monster()->has_ench(ENCH_CONCENTRATE_VENOM))
     {
-        return curare_actor(attacker, defender, 2, "concentrated venom",
-                            attacker->name(DESC_PLAIN));
+        // Attach our base poison damage to the curare effect
+        return curare_actor(attacker, defender, "concentrated venom",
+                            attacker->name(DESC_PLAIN), amount);
     }
 
     if (!defender->poison(attacker, amount))
@@ -2793,8 +2794,12 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_POISON:
     case AF_POISON_STRONG:
     case AF_REACH_STING:
-        if (one_chance_in(3))
+        if (attacker->as_monster()->has_ench(ENCH_CONCENTRATE_VENOM)
+            ? coinflip()
+            : one_chance_in(3))
+        {
             mons_do_poison();
+        }
         break;
 
     case AF_FIRE:

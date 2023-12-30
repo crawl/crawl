@@ -2303,6 +2303,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_IDEALISED:
     case ENCH_BOUND_SOUL:
     case ENCH_ANGUISH:
+    case ENCH_CONCENTRATE_VENOM:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;
     case ENCH_LIQUEFYING:
@@ -2312,7 +2313,6 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_MIRROR_DAMAGE:
     case ENCH_SAP_MAGIC:
     case ENCH_STILL_WINDS:
-    case ENCH_CONCENTRATE_VENOM:
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:

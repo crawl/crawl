@@ -347,8 +347,8 @@ bool poison_monster(monster* mons, const actor* who, int levels = 1,
 bool miasma_monster(monster* mons, const actor* who);
 bool sticky_flame_monster(monster* mons, const actor* who, int dur,
                     bool verbose = true);
-bool curare_actor(actor* source, actor* target, int levels, string name,
-                  string source_name);
+bool curare_actor(actor* source, actor* target, string name,
+                  string source_name, int bonus_poison = 0);
 int silver_damages_victim(actor* victim, int damage, string &dmg_msg);
 void fire_tracer(const monster* mons, bolt &pbolt,
                   bool explode_only = false, bool explosion_hole = false);

@@ -1526,11 +1526,15 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         {
             if (pbolt.origin_spell == SPELL_SPIT_POISON &&
                 pbolt.agent(true)->is_monster() &&
-                pbolt.agent(true)->as_monster()->has_ench(ENCH_CONCENTRATE_VENOM))
+                pbolt.agent(true)->as_monster()->has_ench(ENCH_CONCENTRATE_VENOM)
+                && mons->res_poison() <= 0)
             {
                 // set the cause to the reflected agent for piety &c.
-                curare_actor(pbolt.agent(), mons, 2, "concentrated venom",
-                             pbolt.agent(true)->name(DESC_PLAIN));
+                //
+                // (7 bonus poison will apply exactly 1 additional level of
+                // poison to monsters, mirroring the normal effect of BEAM_POISON)
+                curare_actor(pbolt.agent(), mons, "concentrated venom",
+                             pbolt.agent(true)->name(DESC_PLAIN), 7);
             }
             else
                 poison_monster(mons, pbolt.agent());
@@ -1889,7 +1893,7 @@ void bolt::apply_bolt_petrify(monster* mons)
     }
 }
 
-static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
+static bool _curare_hits_monster(actor *agent, monster* mons, int bonus_poison)
 {
     if (!mons->alive())
         return false;
@@ -1897,15 +1901,10 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
     if (mons->res_poison() > 0)
         return false;
 
-    poison_monster(mons, agent, levels, false);
+    poison_monster(mons, agent, 2 + (bonus_poison / 7), true);
 
-    int hurted = roll_dice(levels, 6);
-
-    if (hurted)
-    {
-        simple_monster_message(*mons, " convulses.");
-        mons->hurt(agent, hurted, BEAM_POISON);
-    }
+    simple_monster_message(*mons, " struggles to breathe.");
+    mons->hurt(agent, roll_dice(2, 6), BEAM_POISON);
 
     if (mons->alive())
     {
@@ -1915,19 +1914,10 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
                                          ? " seems to be slow for longer."
                                          : " seems to slow down.");
         }
-        // FIXME: calculate the slow duration more cleanly
-        mon_enchant me(ENCH_SLOW, 0, agent);
-        levels -= 2;
-        while (levels > 0)
-        {
-            mon_enchant me2(ENCH_SLOW, 0, agent);
-            me.set_duration(mons, &me2);
-            levels -= 2;
-        }
-        mons->add_ench(me);
+        mons->add_ench(mon_enchant (ENCH_SLOW, 0, agent));
     }
 
-    return hurted > 0;
+    return true;
 }
 
 // Actually poisons a monster (with message).
@@ -2016,41 +2006,36 @@ bool sticky_flame_monster(monster* mons, const actor *who, int dur, bool verbose
     return new_flame.degree > old_flame.degree;
 }
 
-static bool _curare_hits_player(actor* agent, int levels, string name,
-                                string source_name)
+static bool _curare_hits_player(actor* agent, string name,
+                                string source_name, int bonus_poison)
 {
     ASSERT(!crawl_state.game_is_arena());
 
     if (player_res_poison() >= 3
         || player_res_poison() > 0 && !one_chance_in(3))
     {
+        canned_msg(MSG_YOU_RESIST);
         return false;
     }
 
-    poison_player(roll_dice(levels, 12) + 1, source_name, name);
+    // We force apply this poison, since the 1-in-3 chance was already passed
+    poison_player(roll_dice(2, 12) + bonus_poison + 1, source_name, name, true);
 
-    int hurted = roll_dice(levels, 6);
+    mpr("You have difficulty breathing.");
+    ouch(roll_dice(2, 6), KILLED_BY_CURARE, agent->mid, "curare-induced apnoea");
+    slow_player(10 + random2(2 + random2(6)));
 
-    if (hurted)
-    {
-        mpr("You have difficulty breathing.");
-        ouch(hurted, KILLED_BY_CURARE, agent->mid,
-             "curare-induced apnoea");
-    }
-
-    slow_player(10 + random2(levels + random2(3 * levels)));
-
-    return hurted > 0;
+    return true;
 }
 
 
-bool curare_actor(actor* source, actor* target, int levels, string name,
-                  string source_name)
+bool curare_actor(actor* source, actor* target, string name,
+                  string source_name, int bonus_poison)
 {
     if (target->is_player())
-        return _curare_hits_player(source, levels, name, source_name);
+        return _curare_hits_player(source, name, source_name, bonus_poison);
     else
-        return _curare_hits_monster(source, target->as_monster(), levels);
+        return _curare_hits_monster(source, target->as_monster(), bonus_poison);
 }
 
 // XXX: This is a terrible place for this, but it at least does go with
@@ -6157,11 +6142,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     }
 
     case BEAM_CONCENTRATE_VENOM:
-        dprf("trying to ench");
         if (!mon->has_ench(ENCH_CONCENTRATE_VENOM)
             && mon->add_ench(ENCH_CONCENTRATE_VENOM))
         {
-            if (simple_monster_message(*mon, " seems to grow toxic."))
+            if (simple_monster_message(*mon, "'s venom grows more potent."))
                 obvious_effect = true;
         }
         return MON_AFFECTED;
