@@ -110,7 +110,7 @@ MIRET1(number, threat, threat)
  * @function mname
  */
 MIRET1(string, mname, mname.c_str())
-/*** Monster turns counter (when you first saw it).
+/*** Monster turns counter (when you last saw it at this location).
  * @treturn int
  * @function type
  */
