@@ -63,22 +63,27 @@ static const string _get_title_image()
 
 void loading_screen_open()
 {
+    if (!crawl_state.title_screen || in_headless_mode())
+        return;
     auto splash = make_shared<UIShrinkableImage>(_get_title_image());
     loading_text = make_shared<Text>();
     loading_text->set_margin_for_sdl(15, 0, 0, 0);
     auto vbox = make_shared<Box>(Widget::VERT);
     vbox->set_cross_alignment(Widget::CENTER);
-    vbox->add_child(move(splash));
+    vbox->add_child(std::move(splash));
     vbox->add_child(loading_text);
     FontWrapper *font = tiles.get_crt_font();
     vbox->min_size().width = font->string_width(load_complete_msg.c_str());
-    popup = make_shared<ui::Popup>(move(vbox));
+    popup = make_shared<ui::Popup>(std::move(vbox));
     ui::push_layout(popup);
 }
 
 void loading_screen_close()
 {
-    bool done = Options.tile_skip_title || crawl_state.test;
+    if (!crawl_state.title_screen || in_headless_mode())
+        return;
+    bool done = Options.tile_skip_title
+        || crawl_state.test || crawl_state.script;
     popup->on_keydown_event([&](const KeyEvent&) { return done = true; });
     if (!done)
         loading_screen_update_msg(load_complete_msg);
@@ -91,6 +96,8 @@ void loading_screen_close()
 
 void loading_screen_update_msg(string message)
 {
+    if (!crawl_state.title_screen || in_headless_mode())
+        return;
     loading_text->set_text(message);
     ui::pump_events(0);
 }

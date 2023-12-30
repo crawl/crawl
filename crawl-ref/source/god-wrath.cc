@@ -11,6 +11,7 @@
 #include <queue>
 #include <sstream>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "attitude-change.h"
@@ -21,6 +22,7 @@
 #include "death-curse.h"
 #include "decks.h"
 #include "env.h"
+#include "fineff.h"
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-passive.h" // shadow_monster
@@ -343,6 +345,13 @@ static bool _zin_retribution()
     return true;
 }
 
+static bool _xom_retribution()
+{
+    const int severity = abs(you.piety - HALF_MAX_PIETY);
+    const bool good = one_chance_in(10);
+    return xom_acts(severity, good) != XOM_DID_NOTHING;
+}
+
 static bool _cheibriados_retribution()
 {
     // time god/slowness theme
@@ -403,6 +412,49 @@ static bool _cheibriados_retribution()
     }
 
     return true;
+}
+
+void lucy_check_meddling()
+{
+    if (!have_passive(passive_t::wrath_banishment))
+        return;
+
+    vector<monster*> potential_banishees;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        monster *mon = *mi;
+        if (!mon
+            || mon->attitude != ATT_HOSTILE
+            || mons_is_conjured(mon->type)
+            || mons_is_firewood(*mon))
+        {
+            continue;
+        }
+        potential_banishees.push_back(mon);
+    }
+    if (potential_banishees.empty())
+        return;
+
+    bool banished = false;
+    shuffle_array(begin(potential_banishees), end(potential_banishees));
+    for (monster *mon : potential_banishees)
+    {
+        // We might have banished a summoner and poofed its summons, etc.
+        if (invalid_monster(mon) || !mon->alive())
+            continue;
+        // 80% chance of banishing god wrath summons, 30% chance of banishing
+        // other creatures nearby. Lazily assume that any perma summoned mons
+        // is a god wrath summon.
+        if (x_chance_in_y(mon->is_perm_summoned() ? 8 : 3, 10))
+        {
+            if (!banished)
+            {
+                simple_god_message(" does not welcome meddling.");
+                banished = true;
+            }
+            mon->banish(&you);
+        }
+    }
 }
 
 static void _spell_retribution(monster* avatar, spell_type spell, god_type god,
@@ -640,31 +692,26 @@ static bool _kikubaaqudgha_retribution()
     god_speaks(god, coinflip() ? "You hear Kikubaaqudgha cackling."
                                : "Kikubaaqudgha's malice focuses upon you.");
 
-    if (x_chance_in_y(you.experience_level, 27))
+    const bool sil = silenced(you.pos());
+    const bool rtorm = you.res_torment();
+    if (one_chance_in(3) && (!sil || !rtorm))
     {
-        // torment, or 3 death curses of maximum power
-        if (!you.res_torment())
+        if (!rtorm)
             torment(nullptr, TORMENT_KIKUBAAQUDGHA, you.pos());
-        else
+        if (!sil)
         {
-            for (int i = 0; i < 3; ++i)
-            {
-                death_curse(you, nullptr,
-                            _god_wrath_name(god), you.experience_level);
-            }
+            mprf(MSGCH_GOD, god, "Wails of torment echo through the air!");
+            noisy(25, you.pos());
         }
-    }
-    else if (random2(you.experience_level) >= 4)
-    {
-        // death curse, 25% chance of additional curse
-        const int num_curses = one_chance_in(4) ? 2 : 1;
-        for (int i = 0; i < num_curses; i++)
-        {
-                death_curse(you, nullptr,
-                            _god_wrath_name(god), you.experience_level);
-        }
+        return true;
     }
 
+    if (coinflip())
+    {
+        lose_stat(STAT_RANDOM, 2 + random2avg(you.experience_level / 3, 2));
+        return true;
+    }
+    you.drain(nullptr, false, random_range(225, 375));
     return true;
 }
 
@@ -1084,14 +1131,12 @@ static spell_type _vehumet_wrath_type()
     const int severity = min(random_range(1 + you.experience_level / 5,
                                           1 + you.experience_level / 3),
                              9);
-    // Mostly player-castable conjurations with a couple of additions.
     switch (severity)
     {
         case 1:
             return random_choose(SPELL_MAGIC_DART,
                                  SPELL_STING,
-                                 SPELL_SHOCK,
-                                 SPELL_FLAME_TONGUE);
+                                 SPELL_SHOCK);
         case 2:
             return random_choose(SPELL_THROW_FLAME,
                                  SPELL_THROW_FROST);
@@ -1100,22 +1145,22 @@ static spell_type _vehumet_wrath_type()
                                  SPELL_STONE_ARROW);
         case 4:
             return random_choose(SPELL_STICKY_FLAME,
-                                 SPELL_THROW_ICICLE,
-                                 SPELL_ENERGY_BOLT);
+                                 SPELL_THROW_ICICLE);
         case 5:
             return random_choose(SPELL_FIREBALL,
                                  SPELL_LIGHTNING_BOLT,
                                  SPELL_BOLT_OF_MAGMA,
                                  SPELL_VENOM_BOLT,
                                  SPELL_BOLT_OF_DRAINING,
+                                 SPELL_BOLT_OF_DEVASTATION,
                                  SPELL_QUICKSILVER_BOLT,
+                                 SPELL_FREEZING_CLOUD,
+                                 SPELL_POISONOUS_CLOUD,
                                  SPELL_METAL_SPLINTERS);
         case 6:
             return random_choose(SPELL_BOLT_OF_FIRE,
                                  SPELL_BOLT_OF_COLD,
                                  SPELL_CORROSIVE_BOLT,
-                                 SPELL_FREEZING_CLOUD,
-                                 SPELL_POISONOUS_CLOUD,
                                  SPELL_POISON_ARROW,
                                  SPELL_IRON_SHOT,
                                  SPELL_CONJURE_BALL_LIGHTNING);
@@ -1224,7 +1269,7 @@ static void _jiyva_transform()
         you.transform_uncancellable = true;
 }
 /**
- * Make Jiyva contaminate tha player.
+ * Make Jiyva contaminate that player.
  */
 static void _jiyva_contaminate()
 {
@@ -1239,7 +1284,7 @@ static void _jiyva_summon_slimes()
 
     const monster_type slimes[] =
     {
-        MONS_FLOATING_EYE,
+        MONS_GLASS_EYE,
         MONS_EYE_OF_DEVASTATION,
         MONS_GREAT_ORB_OF_EYES,
         MONS_SHINING_EYE,
@@ -1930,7 +1975,7 @@ static int _wu_jian_summon_weapons()
         const int subtype = random_choose(WPN_DIRE_FLAIL, WPN_QUARTERSTAFF,
                                           WPN_BROAD_AXE, WPN_GREAT_SWORD,
                                           WPN_RAPIER, WPN_GLAIVE);
-        const int ego = random_choose(SPWPN_VORPAL, SPWPN_FLAMING,
+        const int ego = random_choose(SPWPN_HEAVY, SPWPN_FLAMING,
                                       SPWPN_FREEZING, SPWPN_ELECTROCUTION,
                                       SPWPN_SPEED);
 
@@ -2022,10 +2067,10 @@ static bool _ignis_shaft()
 
     simple_god_message(" burns the ground from beneath your feet!", GOD_IGNIS);
 
-    // This way, if you're wearing the rDislodge boots, the other Ignis wrath
-    // effects won't become more prevalent, encouraging players to boot-swap
-    // while under Ignis wrath.
-    ASSERT(you.resists_dislodge("falling") || you.do_shaft());
+    // player::do_shaft() already checks resist_dislodge, but the message is a
+    // bit worse.
+    if (!you.resists_dislodge("falling"))
+        you.do_shaft();
     return true;
 }
 
@@ -2183,11 +2228,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     bool do_more    = true;
     switch (god)
     {
-    // One in ten chance that Xom might do something good...
-    case GOD_XOM:
-        xom_acts(abs(you.piety - HALF_MAX_PIETY),
-                 frombool(one_chance_in(10)));
-        break;
+    case GOD_XOM:           do_more = _xom_retribution(); break;
     case GOD_SHINING_ONE:   do_more = _tso_retribution(); break;
     case GOD_ZIN:           do_more = _zin_retribution(); break;
     case GOD_MAKHLEB:       do_more = _makhleb_retribution(); break;
@@ -2228,6 +2269,8 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
         return false;
     }
 
+    lucy_check_meddling();
+
     if (no_bonus)
         return true;
 
@@ -2245,7 +2288,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
         else
         {
             mprf(MSGCH_WARN, "The divine experience drains your vigour!");
-            slow_player(random2(20));
+            slow_player(10 + random2(5));
         }
     }
 
@@ -2344,5 +2387,6 @@ void gozag_incite(monster *mon)
     {
         mon->add_ench(ENCH_GOZAG_INCITE);
         view_update_at(mon->pos());
+        lugonu_meddle_fineff::schedule();
     }
 }

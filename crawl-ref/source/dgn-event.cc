@@ -32,7 +32,7 @@ void dgn_event_dispatcher::move_listeners(
     const coord_def &from, const coord_def &to)
 {
     // Any existing listeners at to will be discarded. YHBW.
-    grid_triggers[to.x][to.y] = move(grid_triggers[from.x][from.y]);
+    grid_triggers[to.x][to.y] = std::move(grid_triggers[from.x][from.y]);
 }
 
 bool dgn_event_dispatcher::has_listeners_at(const coord_def &pos) const

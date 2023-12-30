@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 from __future__ import absolute_import
 
-import os
+import os, sys
 
 import webtiles, webtiles.server, webtiles.config
 
 def server_main():
+    if sys.version_info.major < 3:
+        sys.exit("Python 2 is not supported, please upgrade!")
     # load config values from the traditional module location, which should
     # be in the same directory as this file
     import config as server_config

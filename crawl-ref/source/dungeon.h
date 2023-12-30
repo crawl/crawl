@@ -35,6 +35,8 @@ COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t));
 #define TRANSPORTER_NAME_PROP "_transporter_name"
 #define TRANSPORTER_DEST_NAME_PROP "_transporter_dest_name"
 
+#define DESCENT_STAIRS_KEY "descent_stairs_gone"
+
 const unsigned short INVALID_MAP_INDEX = 10000;
 
 // Should be the larger of GXM/GYM
@@ -296,7 +298,7 @@ vector<coord_def> dgn_join_the_dots_pathfind(const coord_def &from,
 
 bool join_the_dots(const coord_def &from, const coord_def &to,
                    unsigned mmask,
-                   bool (*overwriteable)(dungeon_feature_type) = nullptr);
+                   bool (*overwritable)(dungeon_feature_type) = nullptr);
 int count_feature_in_box(int x0, int y0, int x1, int y1,
                          dungeon_feature_type feat);
 bool door_vetoed(const coord_def pos);

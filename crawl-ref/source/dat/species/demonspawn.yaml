@@ -9,7 +9,7 @@ aptitudes:
   xp: -1
   hp: 0
   mp_mod: 0
-  mr: 3
+  wl: 3
   short_blades: -1
   long_blades: -1
   axes: -1
@@ -25,22 +25,21 @@ aptitudes:
   spellcasting: -1
   necromancy: 1
   translocations: -1
-  transmutations: -1
+  shapeshifting: -2
   fire_magic: -1
   ice_magic: -1
   air_magic: -1
   earth_magic: -1
   invocations: 3
 str: 8
-int: 9
+int: 8
 dex: 8
 levelup_stat_frequency: 4
 recommended_jobs:
   - JOB_GLADIATOR
   - JOB_BERSERKER
-  - JOB_ABYSSAL_KNIGHT
   - JOB_HEDGE_WIZARD
   - JOB_NECROMANCER
   - JOB_FIRE_ELEMENTALIST
   - JOB_ICE_ELEMENTALIST
-  - JOB_VENOM_MAGE
+  - JOB_ALCHEMIST

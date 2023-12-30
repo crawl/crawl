@@ -55,7 +55,7 @@ static void slurp_output()
 int main(int argc, char * const *argv)
 {
     struct winsize ws;
-    int slave;
+    int replica;
     int ret;
 
     if (argc <= 1)
@@ -69,7 +69,7 @@ int main(int argc, char * const *argv)
     ws.ws_xpixel = ws.ws_ypixel = 0;
 
     // We want to let stderr through, thus can't use forkpty().
-    if (openpty(&tty, &slave, 0, 0, &ws))
+    if (openpty(&tty, &replica, 0, 0, &ws))
     {
         fprintf(stderr, "Can't create a pty: %s\n", strerror(errno));
         return 1;
@@ -83,9 +83,9 @@ int main(int argc, char * const *argv)
 
     case 0:
         close(tty);
-        dup2(slave, 0);
-        dup2(slave, 1); // but _not_ stderr!
-        close(slave);
+        dup2(replica, 0);
+        dup2(replica, 1); // but _not_ stderr!
+        close(replica);
         execvp(argv[1], argv + 1);
         fprintf(stderr, "Can't run '%s': %s\n", argv[1], strerror(errno));
         return 1;
@@ -99,7 +99,7 @@ int main(int argc, char * const *argv)
         sigaction(SIGTERM, &sa, NULL);
 
         /* Handle error */;
-        close(slave);
+        close(replica);
         slurp_output();
         if (waitpid(crawl, &ret, 0) != crawl)
             return 1; // can't happen

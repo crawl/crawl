@@ -1059,7 +1059,7 @@ ENDMAP
 
 # 6 gods
 NAME:   nicolae_temple_stand_before_the_council
-TAGS:   temple_altar_6
+TAGS:   temple_altars_6
 PLACE:  Temple
 ORIENT: encompass
 FTILE:  `B = floor_limestone
@@ -1201,6 +1201,66 @@ xpWT...TWWWWT...TWWWWT...TWpx
 xpWWWWWWWppWWWWWWWppWWWWWWWpx
 xpppppppppppppppppppppppppppx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 8 gods
+NAME:   pf_temple_reverse_labyrinth
+TAGS:   temple_altars_8 no_pool_fixup
+PLACE:  Temple
+ORIENT: encompass
+KFEAT:  a = x
+# Make a path through the walls
+NSUBST: a = 1:. / a
+NSUBST: p = . / c
+NSUBST: q = . / v
+NSUBST: r = . / b
+# Place a few dead-ends
+NSUBST: ' = c / .
+NSUBST: " = v / .
+TILE:   c = wall_lab_stone
+TILE:   v = wall_lab_metal
+FTILE:  -."apqvcbT{ = floor_gauntlet
+FTILE:  B` = floor_grass
+: set_border_fill_type("open_sea")
+MAP
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwxxxxxxxxxxxxxxxxxxwwwwwww
+wwwwwwwwx..'.'.'.'.'.'.'.xwwwwwww
+wwwwwwwwx'ccpcpcpcpcpcpc.xwwwwwww
+wwwwwwwwx.p..".".".".".c'xwwwwwww
+wwwwwwwwx'c"vvqvqvqvqv.p.xwwwwwww
+wwwwwwwwx.p.q........v"c'xwwwwwww
+wwwwwwwwx'c"v.TbrrbT.q.p.xwwwwwww
+wwwwwwwwx.p.q.bb..bb.v"c'xwwwwwww
+wwwwwwwwx'c"v.r.{..r.q.p.xwwwwwww
+wwwwwwwwx.p.q.r....r.v"c'xwwwwwww
+wwwwwwwwx'c"v.bb..bb.q.p.xwwwwwww
+wwwwwwwwx.p.q.TbrrbT.v"c'xwwwwwww
+wwwwwwwwx'c"v........q.p.xwwwwwww
+wwwwwwwwx.p.vqvqvqvqvv"c'xwwwwwww
+wwwwwwwwx'c."."."."."..p.xwwwwwww
+wwwwwwwwx.cpcpcpcpcpcpcc'xwwwwwww
+wwwwwwwwx.'.'.'.'.'.'.'..xwwwwwww
+wwwwwwwwxxxaaaaaaaaaaaaxxxwwwwwww
+wwwwwwwww````````````````wwwwwwww
+wwwwwwwwww`B``````````B``wwwwwwww
+wwwwwwwww`````B````B`````wwwwwwww
+wwwwwwwww`B````````````B`wwwwwwww
+wwwwwwwwww``````````````wwwwwwwww
+wwwwwwwwwwww```B``B``wwwwwwwwwwww
+wwwwwwwwwwwwww``````wwwwwwwwwwwww
+wwwwwwwwwwwwwww```wwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 ENDMAP
 
 ##############################################################################
@@ -3329,11 +3389,11 @@ SHUFFLE: CDEF
 SUBST:      C = B, E = G, DH<IJ = .
 NSUBST:     F = 1:{ / *:.
 : elseif altar_count == "14" then
-SUBST:      CDEF = B, CHIJ = ., < = {
+SUBST:      DEF = B, CHIJ = ., < = {
 : elseif altar_count == "18" then
-SUBST:      BDCEFH = ., IJ = B, < = {
-: elseif altar_count == "21" then
 SUBST:      BDCEFI = ., HJ = B, < = {
+: elseif altar_count == "21" then
+SUBST:      BDCEFH = ., IJ = B, < = {
 : end
 SUBST:   W : mvbG w:160
 # Chances for filled (1/6), absent (3/6),
@@ -3865,58 +3925,56 @@ SUBST:  - = .W, x = .:5 Wx, G = .:20 G, z = wW
 COLOUR: -S = green
 : set_border_fill_type("open_sea")
 MAP
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwzxxxxxzwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwzxG-Gxzwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwzx-{-xzwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzzzxG-Gxzzzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzxxx---xxxzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzxG-----Gxzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzxO-----Oxzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzxG-----Gxzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzxO-----Oxzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzxG-----Gxzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzxO-----Oxzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzxG-----Gxzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzxO-----Oxzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzxG-----Gxzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzxO-----Oxzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzxG-----Gxzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzxO-----Oxzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzx-------xzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzxG-----Gxzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzxxxxxxxxxzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwzzzzzzzzzzzwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwzxxxxxzwwwwwwwwwww
+wwwwwwwwwwwzxG-Gxzwwwwwwwwwww
+wwwwwwwwwwwzx-{-xzwwwwwwwwwww
+wwwwwwwwwzzzxG-Gxzzzwwwwwwwww
+wwwwwwwwwzxxx---xxxzwwwwwwwww
+wwwwwwwwwzxG-----Gxzwwwwwwwww
+wwwwwwwwwzx-------xzwwwwwwwww
+wwwwwwwwwzxO-----Oxzwwwwwwwww
+wwwwwwwwwzx-------xzwwwwwwwww
+wwwwwwwwwzxG-----Gxzwwwwwwwww
+wwwwwwwwwzx-------xzwwwwwwwww
+wwwwwwwwwzxO-----Oxzwwwwwwwww
+wwwwwwwwwzx-------xzwwwwwwwww
+wwwwwwwwwzxG-----Gxzwwwwwwwww
+wwwwwwwwwzx-------xzwwwwwwwww
+wwwwwwwwwzxO-----Oxzwwwwwwwww
+wwwwwwwwwzx-------xzwwwwwwwww
+wwwwwwwwwzxG-----Gxzwwwwwwwww
+wwwwwwwwwzx-------xzwwwwwwwww
+wwwwwwwwwzxO-----Oxzwwwwwwwww
+wwwwwwwwwzx-------xzwwwwwwwww
+wwwwwwwwwzxG-----Gxzwwwwwwwww
+wwwwwwwwwzx-------xzwwwwwwwww
+wwwwwwwwwzxO-----Oxzwwwwwwwww
+wwwwwwwwwzx-------xzwwwwwwwww
+wwwwwwwwwzxG-----Gxzwwwwwwwww
+wwwwwwwwwzx-------xzwwwwwwwww
+wwwwwwwwwzxO-----Oxzwwwwwwwww
+wwwwwwwwwzx-------xzwwwwwwwww
+wwwwwwwwwzxG-----Gxzwwwwwwwww
+wwwwwwwwwzxxxxxxxxxzwwwwwwwww
+wwwwwwwwwzzzzzzzzzzzwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 ENDMAP
 
 # 6 through 14 gods

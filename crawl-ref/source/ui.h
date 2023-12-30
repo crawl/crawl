@@ -34,6 +34,9 @@ struct wm_keyboard_event;
 
 namespace ui {
 
+command_type get_action(int keyin);
+bool key_exits_popup(int keyin, bool extended=false);
+
 struct SizeReq
 {
     int min, nat;
@@ -165,7 +168,7 @@ public:
 
     shared_ptr<Widget>& target() { return m_target; }
     shared_ptr<Widget> target() const { return m_target; }
-    void set_target(shared_ptr<Widget> _target) { m_target = move(_target); }
+    void set_target(shared_ptr<Widget> _target) { m_target = std::move(_target); }
 
 protected:
     Type m_type;
@@ -238,7 +241,7 @@ public:
             if (pred(it.first))
             {
                 HandlerSig func = it.second;
-                if (func(forward<Args>(args)...))
+                if (func(std::forward<Args>(args)...))
                     return true;
             }
         return false;
@@ -249,7 +252,7 @@ public:
         for (auto it = i.first; it != i.second; ++it)
         {
             HandlerSig func = it->second;
-            if (func(forward<Args>(args)...))
+            if (func(std::forward<Args>(args)...))
                 return true;
         }
         return false;
@@ -380,7 +383,7 @@ public:
     void set_margin_for_crt(Args&&... args)
     {
 #ifndef USE_TILE_LOCAL
-        margin = Margin(forward<Args>(args)...);
+        margin = Margin(std::forward<Args>(args)...);
         _invalidate_sizereq();
 #else
         UNUSED(args...);
@@ -391,7 +394,7 @@ public:
     void set_margin_for_sdl(Args&&... args)
     {
 #ifdef USE_TILE_LOCAL
-        margin = Margin(forward<Args>(args)...);
+        margin = Margin(std::forward<Args>(args)...);
         _invalidate_sizereq();
 #else
         UNUSED(args...);
@@ -403,7 +406,7 @@ public:
     template<class F>
     void on_any_event(F&& cb)
     {
-        slots.event.on(this, forward<F>(cb));
+        slots.event.on(this, std::forward<F>(cb));
     }
 
     template<class F>
@@ -481,8 +484,8 @@ protected:
     template<class F>
     void for_each_child_including_internal(F&& cb)
     {
-        for_each_internal_child(forward<F>(cb));
-        for_each_child(forward<F>(cb));
+        for_each_internal_child(std::forward<F>(cb));
+        for_each_child(std::forward<F>(cb));
     }
 
     /**
@@ -742,7 +745,7 @@ public:
     template<class... Args>
     explicit Text(Args&&... args) : Text()
     {
-        set_text(forward<Args>(args)...);
+        set_text(std::forward<Args>(args)...);
     }
 
     void set_text(const formatted_string &fs);
@@ -1020,7 +1023,7 @@ protected:
 class Popup : public Layout
 {
 public:
-    explicit Popup(shared_ptr<Widget> child) : Layout(move(child)) {}
+    explicit Popup(shared_ptr<Widget> child) : Layout(std::move(child)) {}
 
     void _render() override;
     SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
@@ -1112,12 +1115,12 @@ public:
 
     template<typename T>
     void set_input_history(T&& fn) {
-        m_line_reader.set_input_history(forward<T>(fn));
+        m_line_reader.set_input_history(std::forward<T>(fn));
     }
 
     template<typename T>
     void set_keyproc(T&& fn) {
-        m_line_reader.set_keyproc(forward<T>(fn));
+        m_line_reader.set_keyproc(std::forward<T>(fn));
     }
 
 protected:

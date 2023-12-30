@@ -35,6 +35,8 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-tentacle.h"
+#include "notes.h" // NOTE_DREAMSHARD
+#include "player.h"
 #include "religion.h"
 #include "spl-clouds.h"
 #include "spl-util.h"
@@ -400,8 +402,11 @@ static void _dispellable_player_buffs(player_debuff_effects &buffs)
         const int dur = you.duration[i];
         if (dur <= 0 || !duration_dispellable((duration_type) i))
             continue;
-        if (i == DUR_TRANSFORMATION && you.form == transformation::shadow)
+        if (i == DUR_TRANSFORMATION && (you.form == transformation::shadow
+                                        || you.form == you.default_form))
+        {
             continue;
+        }
         buffs.durations.push_back((duration_type) i);
         // this includes some buffs that won't be reduced in duration -
         // anything already at 1 aut, or flight/transform while <= 11 aut
@@ -535,12 +540,10 @@ void debuff_player()
             len = 0;
             heal_flayed_effect(&you);
         }
-        else if (duration == DUR_LIQUID_FLAMES)
+        else if (duration == DUR_STICKY_FLAME)
         {
-            len = 0;
             mprf(MSGCH_DURATION, "You are no longer on fire.");
-            you.props.erase(STICKY_FLAME_AUX_KEY);
-            you.props.erase(STICKY_FLAMER_KEY);
+            end_sticky_flame_player();
         }
         else if (len > 1)
         {
@@ -741,14 +744,10 @@ int detect_creatures(int pow, bool telepathic)
 
 spret cast_tomb(int pow, actor* victim, int source, bool fail)
 {
-    // power guidelines:
-    // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
-    // up to 300 or so with godly assistance or end-level, and 1200
-    // as more or less the theoretical maximum.
     const coord_def& where = victim->pos();
     int number_built = 0;
 
-    // This is so dubious. Also duplicates khufu logic in mon-cast.cc.
+    // This is a very dubious set. Maybe we should just use !(feat_is_solid)?
     static const set<dungeon_feature_type> safe_tiles =
     {
         DNGN_SHALLOW_WATER, DNGN_DEEP_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR,
@@ -893,6 +892,20 @@ spret cast_tomb(int pow, actor* victim, int source, bool fail)
             {
                 temp_change_terrain(*ai, DNGN_ROCK_WALL, INFINITE_DURATION,
                                     TERRAIN_CHANGE_TOMB);
+
+                env.grid_colours(*ai) = RED;
+                tile_env.flv(*ai).feat_idx =
+                        store_tilename_get_index("wall_sandstone");
+                tile_env.flv(*ai).feat = TILE_WALL_SANDSTONE;
+                if (env.map_knowledge(*ai).seen())
+                {
+                    env.map_knowledge(*ai).set_feature(DNGN_ROCK_WALL);
+                    env.map_knowledge(*ai).clear_item();
+#ifdef USE_TILE
+                    tile_env.bk_bg(*ai) = TILE_WALL_SANDSTONE;
+                    tile_env.bk_fg(*ai) = 0;
+#endif
+                }
             }
 
             number_built++;
@@ -1313,8 +1326,10 @@ void majin_bo_vampirism(monster &mon, int damage)
 void dreamshard_shatter()
 {
     ASSERT(player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE));
-
+    you.slot_item(EQ_AMULET, true)->unrand_idx = UNRAND_DREAMDUST_NECKLACE;
     mpr("Your necklace shatters, unleashing a wave of protective dreams!");
+    mark_milestone("dreamshard", "was saved by the dreamshard necklace!");
+    take_note(NOTE_DREAMSHARD);
 
     for (int i = 0; i < 5; i++)
     {
@@ -1322,9 +1337,11 @@ void dreamshard_shatter()
         scaled_delay(200);
     }
 
-    vector<string> dreams;
-    if (you.heal(random_range(you.hp_max*0.5, you.hp_max)))
-        dreams.push_back("health");
+    // Don't die until your next turn.
+    you.duration[DUR_POISONING] = 0;
+    set_hp(1);
+    you.props[DREAMSHARD_KEY] = true;
+    vector<string> dreams = {"life"};
 
     if (!you.allies_forbidden())
     {
@@ -1355,7 +1372,4 @@ void dreamshard_shatter()
     // put it here after the dream message so that a sleeping player who
     // gets dreamsharded gets a nice message order
     you.check_awaken(500);
-
-    dec_inv_item_quantity(you.slot_item(EQ_AMULET,1)->link, 1);
-    ash_check_bondage();
 }

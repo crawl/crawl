@@ -131,14 +131,25 @@ bool ugly_thing_mutate(monster& ugly, bool force)
     return true;
 }
 
+// Returns whether an enchantment should be given to split monsters and inherited on merge.
+// TODO: This list is definitely incomplete.
+static bool _should_share_ench(enchant_type type)
+{
+    return type != ENCH_HELD
+           && type != ENCH_GRASPING_ROOTS
+           && type != ENCH_VILE_CLUTCH
+           && type != ENCH_BULLSEYE_TARGET;
+}
+
 // Inflict any enchantments the parent slime has on its offspring,
 // leaving durations unchanged, I guess. -cao
 static void _split_ench_durations(monster* initial_slime, monster* split_off)
 {
     for (const auto &entry : initial_slime->enchantments)
-        // Don't let new slimes inherit being held by a web or net
-        if (entry.second.ench != ENCH_HELD)
+    {
+        if (_should_share_ench(entry.second.ench))
             split_off->add_ench(entry.second);
+    }
 }
 
 // What to do about any enchantments these two creatures may have?
@@ -154,6 +165,9 @@ void merge_ench_durations(monster& initial, monster& merge_to, bool usehd)
 
     for (auto &entry : from_ench)
     {
+        if (!_should_share_ench(entry.second.ench))
+            continue;
+
         // Does the other creature have this enchantment as well?
         const mon_enchant temp = merge_to.get_ench(entry.first);
         // If not, use duration 0 for their part of the average.
@@ -365,7 +379,8 @@ static bool _disabled_merge(monster* thing)
     return !thing
            || mons_is_fleeing(*thing)
            || mons_is_confused(*thing)
-           || thing->paralysed();
+           || thing->paralysed()
+           || thing->has_ench(ENCH_FRENZIED);
 }
 
 // See if there are any appropriate adjacent slime creatures for 'thing'
@@ -851,6 +866,31 @@ static coord_def _find_nearer_tree(coord_def cur_loc, coord_def target)
     return p;
 }
 
+static void _weeping_skull_cloud_aura(monster* mons)
+{
+    actor *foe = mons->get_foe();
+    if (!foe || !mons->can_see(*foe))
+        return;
+
+    // Generate list of valid cloud spots.
+    vector<coord_def> pos;
+
+    for (radius_iterator ri(mons->pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        if (grid_distance(mons->pos(), *ri) > 2)
+            continue;
+
+        if (!feat_is_solid(env.grid(*ri)) && !actor_at(*ri) && !cloud_at(*ri))
+            pos.push_back(*ri);
+    }
+
+    shuffle_array(pos);
+
+    int num_clouds = min((int)pos.size(), random_range(1, 3));
+    for (int i = 0; i < num_clouds; ++i)
+        place_cloud(CLOUD_MISERY, pos[i], random2(3) + 2, mons);
+}
+
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
                                    spell_type spell_cast)
 {
@@ -996,7 +1036,7 @@ bool mon_special_ability(monster* mons)
             actor *foe = mons->get_foe();
             if (foe && mons->can_see(*foe))
             {
-                bolt beem = setup_targetting_beam(*mons);
+                bolt beem = setup_targeting_beam(*mons);
                 beem.target = foe->pos();
                 setup_mons_cast(mons, beem, SPELL_THORN_VOLLEY);
 
@@ -1036,6 +1076,7 @@ bool mon_special_ability(monster* mons)
     break;
 
     case MONS_WATER_NYMPH:
+    case MONS_NORRIS:
     {
         if (!one_chance_in(5))
             break;
@@ -1094,16 +1135,12 @@ bool mon_special_ability(monster* mons)
     }
     break;
 
-    case MONS_GUARDIAN_GOLEM:
-        if (mons->hit_points * 2 < mons->max_hit_points
-             && !mons->has_ench(ENCH_INNER_FLAME))
-        {
-            simple_monster_message(*mons, " overheats!");
-            mid_t act = mons->summoner == MID_PLAYER ? MID_YOU_FAULTLESS :
-                        mons->summoner;
-            mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, actor_by_mid(act),
-                                       INFINITE_DURATION));
-        }
+    case MONS_WEEPING_SKULL:
+        _weeping_skull_cloud_aura(mons);
+        break;
+
+    case MONS_MARTYRED_SHADE:
+        martyr_injury_bond(*mons);
         break;
 
     default:
@@ -1116,11 +1153,13 @@ bool mon_special_ability(monster* mons)
     return used;
 }
 
-void guardian_golem_bond(monster& mons)
+void martyr_injury_bond(monster& mons)
 {
     for (monster_near_iterator mi(&mons, LOS_NO_TRANS); mi; ++mi)
     {
-        if (mons_aligned(&mons, *mi) && !mi->has_ench(ENCH_CHARM)
+        if (mons_aligned(&mons, *mi)
+            && !mi->has_ench(ENCH_CHARM)
+            && !mons_is_projectile(**mi)
             && *mi != &mons)
         {
             mi->add_ench(mon_enchant(ENCH_INJURY_BOND, 1, &mons, INFINITE_DURATION));

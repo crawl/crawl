@@ -56,8 +56,9 @@ ENDMAP
 
 NAME:   spider_nest_entry_a
 TAGS:   spider_entry patrolling no_monster_gen transparent
+MONS:   redback / jumping spider
 KFEAT:  O = enter_spider_nest
-MONS:   redback w:5 / jumping spider w:5 / nothing w:30
+NSUBST: 1 = 2:1 / 3:. / * = 1.
 MAP
 .WWW.WWW.
 W.WW.WW.W
@@ -72,9 +73,10 @@ ENDMAP
 
 NAME:   spider_nest_entry_webs
 TAGS:   spider_entry patrolling no_monster_gen transparent
+MONS:   redback
 KFEAT:  O = enter_spider_nest
 KFEAT:  ^ = web
-MONS:   redback / nothing
+NSUBST: 1 = 1:1 / * = 1.
 MAP
 .......x.....
 ..^...xxx.^..
@@ -92,18 +94,20 @@ ENDMAP
 
 NAME:   spider_nest_entry_funnel_web
 TAGS:   spider_entry patrolling no_monster_gen
+MONS:   redback / culicivora, wolf spider / jumping spider w:20
 KFEAT:  O = enter_spider_nest
-KFEAT:  ^ = web / floor
-MONS:   w:5 wolf spider / jumping spider / redback / culicivora / w:15 nothing
+KFEAT:  ^ = web
+SUBST:  ^ = ^.
+NSUBST: 1 = 1:1 / 1:11222 / 2:1.. / *:.
 MAP
       xxxxxx
-     xx11.1x
+     xx1111x
    xxx.1O1xx
    x^^^...x
   xx^^^^^xx
  xx^^^^^xx
 xx^^^^^xx
-@.^^^xxx
+@..^^xxx
 @.^xxx
 @.xx
 @@x
@@ -131,7 +135,7 @@ ENDMAP
 NAME:   spider_nest_entry_rubble
 TAGS:   spider_entry patrolling no_monster_gen transparent
 KFEAT:  O = enter_spider_nest
-KMONS:  O = wolf spider / tarantella / redback / jumping spider / culicivora
+KMONS:  1O = wolf spider / tarantella / redback / jumping spider / culicivora
 SUBST:  x = ..xx^
 KFEAT:  ^ = web
 MAP
@@ -141,29 +145,29 @@ MAP
 xxx.xxxxxxx
 xxxx.xxxxxx
 xxxxxOxxxxx
-xxxxxxxxxxx
+xxxxxx1xxxx
 xxxxxxxxxxx
  xxxxxxxxx
  xxxxxxxxx
    xxxxx
 ENDMAP
 
-NAME: nicolae_spider_entry_tight_spaces
-TAGS: spider_entry no_pool_fixup no_monster_gen no_trap_gen
-KFEAT: O = enter_spider_nest
-NSUBST: A = 2:x / '
-SUBST: X = xxx', ' = .....^^1
-KFEAT: ^ = web
-KMONS: 1 = redback / jumping spider / culicivora
+NAME:   nicolae_spider_entry_tight_spaces
+TAGS:   spider_entry no_pool_fixup no_monster_gen no_trap_gen
+MONS:   redback / jumping spider / culicivora
+KFEAT:  O = enter_spider_nest
+KFEAT:  ^ = web
+NSUBST: A = 2:x / ', 1 = 1:. / *:1
+SUBST:  X = xxx', ' = .....^^1
 MAP
  xxxxxxxxx
 xxXxXxXxXxx
 xXx'x'x'xXx
 xx'x'xAx'xxx
 x'xXxXxXx'xx
-@..x'xAx.1.w@
-@..'x'x'1O1w@
-@..x'xAx.1.w@
+@..x'xAx.1.m@
+@..'x'x'1O1m@
+@..x'xAx.1.m@
 x'xXxXxXx'xx
 xx'x'xAx'xxx
 xXx'x'x'xXx
@@ -171,12 +175,12 @@ xxXxXxXxXxx
  xxxxxxxxx
 ENDMAP
 
-NAME: nicolae_spider_entry_non_spiders
-TAGS: spider_entry ruin_lair transparent
-NSUBST: 1 = 21 / 1
-KFEAT: O = enter_spider_nest
-KMONS: 1 = scorpion w:20 / worm / giant cockroach
-KMONS: 2 = demonic crawler / boulder beetle / torpor snail
+NAME:   nicolae_spider_entry_non_spiders
+TAGS:   spider_entry ruin_lair transparent
+MONS:   scorpion w:20 / ribbon worm / giant cockroach
+MONS:   demonic crawler / boulder beetle / torpor snail
+KFEAT:  O = enter_spider_nest
+NSUBST: 1 = 1:21 / *:1
 MAP
 ...........
 ..xx...xx..
@@ -193,12 +197,12 @@ ENDMAP
 
 NAME: nicolae_spider_entry_orb_guardian
 TAGS: spider_entry no_monster_gen no_pool_fixup no_trap_gen
+KMONS: O = orb spider
+KFEAT: O = enter_spider_nest
+KFEAT: ^ = web
 KPROP: 'W = no_tele_into
 NSUBST: a = ..x / .
 SUBST: W = w', X = x., Q = xxx@, ' = ...x, . = .....^
-KFEAT: O = enter_spider_nest
-KFEAT: ^ = web
-KMONS: O = orb spider
 MAP
    QQQX@@XX
  xxxxxXX..XX
@@ -235,14 +239,14 @@ MAP
  .;;;;;;;.
 ENDMAP
 
-NAME: hellmonk_spider_entry_life_and_decay
-TAGS: spider_entry no_monster_gen no_trap_gen ruin
+NAME:  hellmonk_spider_entry_life_and_decay
+TAGS:  spider_entry no_monster_gen no_trap_gen ruin
 MONS:  culicivora
 :      dgn.delayed_decay(_G, '%', 'redback corpse')
 KFEAT: O = enter_spider_nest
 KFEAT: ^ = web
 SUBST: . = ^:1 .:25
-NSUBST: % = 1:1 / *=1%%%
+NSUBST: % = 1:1 / 1:% / * = 1%%%
 MAP
   xxxxxxx@@@xxxxxxx
   xxxxxxxx.xxxxxxxx
@@ -257,6 +261,33 @@ xxx....x.x.x.x....xxx
       xxx...xxx
        xxxOxxx
         xxxxx
+ENDMAP
+
+NAME:    nicolae_spider_entry_lesser_pyramids
+TAGS:    spider_entry transparent patrolling
+MONS:    scorpion, redback / tarantella / jumping spider
+KMONS:   O = pharaoh ant
+KFEAT:   O = enter_spider_nest
+NSUBST:  S = 1:1 / 1:2 / 2 = 112.. / .
+SUBST:   x = xx.
+MAP
+       ...
+       .x.
+      ..x..
+      .xxx.
+     .......
+     .x.S.x.
+    ..x...x..
+    .xxx.xxx.
+   ...........
+   .x.S...S.x.
+  ..x.......x..
+  .xxx..O..xxx.
+ ...............
+ .x.S.x.S.x.S.x.
+..x...x...x...x..
+.xxx.xxx.xxx.xxx.
+.................
 ENDMAP
 
 ###############################################################################
@@ -463,7 +494,7 @@ ENDMAP
 NAME:   nicolae_spider_cling_halls
 DEPTH:  Spider:2-, !Spider:$
 ORIENT: float
-TAGS:   no_pool_fixup extra
+TAGS:   no_pool_fixup extra no_descent
 NSUBST: D = 2=w / x, E = 2=w / x, F = 2=w / x
 SUBST:  ' = ..wx, . = W...., [ = [{()}], H = x_, J = xw
 KMASK:  Ww = no_monster_gen
@@ -488,7 +519,7 @@ HxxxxxxxxxxxxxH
 ENDMAP
 
 NAME:    nicolae_spider_cling_ruins
-TAGS:    no_pool_fixup extra
+TAGS:    no_pool_fixup extra no_descent
 DEPTH:   Spider:2-
 SHUFFLE: [{(
 NSUBST:  D = wx / x, E = wx / x, F = wx / x, H = wx / x
@@ -877,7 +908,7 @@ TAGS:    no_monster_gen patrolling
 ORIENT:  float
 DEPTH:   Spider, !Spider:$
 WEIGHT:  5
-KMONS:   1 = scorpion w:55 / hornet w:13 / giant cockroach w:1 / worm w:1
+KMONS:   1 = scorpion w:55 / hornet w:13 / giant cockroach w:1 / ribbon worm w:1
 KMONS:   2 = redback w:15 / vampire mosquito
 KMONS:   3aAdD = boulder beetle
 KMONS:   4bB = demonic crawler
@@ -1290,7 +1321,7 @@ ENDMAP
 NAME:    lemuel_spider_zombies
 DEPTH:   Spider, !Spider:$
 ORIENT:  float
-TAGS:    no_monster_gen
+TAGS:    no_monster_gen no_descent
 MONS:    redback zombie / wolf spider zombie / tarantella zombie /\
             culicivora zombie
 MONS:    necromancer
@@ -2091,6 +2122,157 @@ xx...x...xx
     xxx
 ENDMAP
 
+NAME:   nicolae_spider_broodchamber
+TAGS:   transparent patrolling
+DEPTH:  Spider
+ORIENT: south
+KITEM:  M = * / | w:3
+KITEM:  PD = % / $ w:5 / * w:5 / nothing w:20
+KITEM:  Q = % / nothing
+KMONS:  M = broodmother
+KMONS:  P = pharaoh ant
+KMONS:  D = culicivora
+KMONS:  Q = entropy weaver / torpor snail / moth of wrath / ghost moth / \
+            orb spider / spark wasp / jumping spider / jorogumo / sun moth / \
+            boulder beetle
+KFEAT:  MPDQ! = web / . w:50
+KMASK:  MPDQ! = no_monster_gen
+SUBST:  ` = xx!, - = xxs
+NSUBST: S = 1=M / 2=M! / !, s = 2=P / 2=D / 1=Q / 2=PDQ! / !
+MAP
+    xxxxxxxx@@xx
+   xx```````..`x
+   x`!!.......`x
+   x`!!.......`x
+   x`!!```````xx
+  xxx!!xxxxxxxx
+ xx-!!!!-xx
+xx-ssssss-xx
+x-ssssssss-x
+x-ssssssss-x
+x-ssssssss-x
+x-ssssssss-x
+xx-sSSSSs-xx
+ xx-SSSS-xx
+  xxxxxxxx
+ENDMAP
+
+NAME:   nicolae_spider_brood_tunnel
+TAGS:   transparent patrolling
+DEPTH:  Spider
+ORIENT: float
+KMONS:  M = broodmother band
+SUBST:  - = x., ` = x..., % = %:60 .:30 *:20 |, S = 009...
+MAP
+ xxxxx  xxxxxx   xxxxx
+xx---xxxxx---xxxxx---xx
+x--%--xxx--%--xxx--%--x
+x-%M%--x--%M%--x--%M%-x
+x--%`.---.`%`.---.`%--x
+xx--.`.-.`.-.`.-.`.--xx
+ xx--.`.`.---.`.`.--xx
+ xxx--S`.--x--.`S--xxx
+ xx--.`.--xxx--.`.--xx
+xx--.`.--xxxxx--.`.--xx
+x--.`.--xxxxxxx--.`.--x
+x-.`S--xxxxxxxxx--S`.-x
+x--.`.--xxxxxxx--.`.--x
+xx--.`.--xxxxx--.`.--xx
+ xx--.`.--xxx--.`.--xx
+ xxx--S`.-xxx-.`S--xxx
+ xx--.`.--xxx--.`.--xx
+xx--.`.--xxxxx--.`.--xx
+x--.`.--xxxxxxx--.`.--x
+x-.`S--xxxxxxxxx--S`.-x
+ @..--xxxxxxxxxxx--..@
+  @--xxxx     xxxx--@
+   xxxx         xxxx
+ENDMAP
+
+NAME:   nicolae_spider_obnoxious_hallway
+TAGS:   transparent
+DEPTH:  Spider
+ORIENT: float
+KMONS:  S = jorogumo / steelbarb worm / tarantella / \
+            jumping spider / torpor snail / nothing w:30
+KFEAT:  @ = W / .
+SUBST:  M = Wx, ' = x.
+MAP
+ xxxxxxxxxxxxxxxxxxxxxx
+ MMxx''xxxxxxxxxx''xxMM
+@WWMMSSxxxxxxxxxxSSMMWW@
+@WWWWWMxx''xx''xxMWWWWW@
+ MMWWWWMMSSxxSSMMWWWWMM
+ xxMWWWWWWMxxMWWWWWWMxx
+ xxSSMWWWWWMMWWWWMMSSxx
+ xx''xxMWWWWWWWWMxx''xx
+  xxxxxSSMMWWMMSSxxxxx
+   xxxx''xxMMxx''xxxx
+    xxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_spider_solar_radiation
+TAGS:   transparent
+DEPTH:  Spider
+KMONS:  R = radroach
+KMONS:  S = sun moth
+NSUBST: q = R / S / p
+SUBST:  x = xxx., p = RS....
+MAP
+    .......
+   ..xx.xx..
+  ..x..x..x..
+ ..x.p.x.p.x..
+..x.x..x..x.x..
+.x.p.xxqxx.p.x.
+.x...x%.%x...x.
+..xxxq.q.qxxx..
+.x...x%.%x...x.
+.x.p.xxqxx.p.x.
+..x.x..x..x.x..
+ ..x.p.x.p.x..
+  ..x..x..x..
+   ..xx.xx..
+    .......
+ENDMAP
+
+NAME:  nicolae_spider_world_wide_web
+TAGS:  transparent patrolling
+DEPTH: Spider
+KITEM: S = % w:5 / nothing
+KMONS: S = jumping spider / jorogumo w:5
+KFEAT: ^ = web
+SUBST: ` = xx^., S = SSS^., . = .:12 ^:1
+MAP
+           xxxxx
+          xx```xx
+         xx`.S.`xx
+         x`.....`x
+         x...`...x
+         x..`x`..x
+        @..SxxxS...
+       @.`..xxx..`..
+      @.x`..`x`..`x..
+  xxxx.```S`xxx`S```.xxxx
+ xx`.....S``xxx``S.....`xx
+xx`...S..``xxxxx``..S...`xx
+x`...`xx`xxxxxxxxx`xx`...`x
+x`S.`xxxxxxxxxxxxxxxxx`.S`x
+x`...`xx`xxxxxxxxx`xx`...`x
+xx`...S..``xxxxx``..S...`xx
+ xx`.....S``xxx``S.....`xx
+  xxxx.```S`xxx`S```.xxxx
+      ..x`..`x`..`x.@
+       ..`..xxx..`.@
+        ...SxxxS..@
+         x...x...x
+         x.......x
+         x`.....`x
+         xx`.S.`xx
+          xx```xx
+           xxxxx
+ENDMAP
+
 ###############################################################################
 #
 # <<4>> Spider ending vaults
@@ -2103,7 +2285,7 @@ NAME:   spider_rune_water
 PLACE:  Spider:$
 WEIGHT: 20
 ORIENT: northwest
-KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
+KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot, milky-white gem
 MONS:   ghost moth, hornet, emperor scorpion / w:5 spark wasp
 MONS:   wolf spider / redback / tarantella / jumping spider / culicivora
 MONS:   redback
@@ -2160,7 +2342,7 @@ TAGS:   no_pool_fixup
 WEIGHT: 20
 PLACE:  Spider:$
 ORIENT: float
-KITEM:  O = gossamer rune of Zot
+KITEM:  O = gossamer rune of Zot, milky-white gem
 MONS:   ghost moth, moth of wrath / ghost moth, emperor scorpion
 MONS:   wolf spider / redback / tarantella / jumping spider / culicivora
 MONS:   orb spider / steelbarb worm, redback
@@ -2199,7 +2381,7 @@ NAME:   guppyfry_spider_rune
 PLACE:  Spider:$
 TAGS:   no_pool_fixup
 ORIENT: southwest
-KITEM:  O = gossamer rune of zot
+KITEM:  O = gossamer rune of Zot, milky-white gem
 KMONS:  O = ghost moth
 KITEM:  * = potion of ambrosia ident:type
 KMONS:  * = emperor scorpion
@@ -2251,7 +2433,7 @@ NAME:   grunt_spider_rune_parallel
 PLACE:  Spider:$
 ORIENT: east
 NSUBST: O = 1:O / *:d
-KITEM:  O = gossamer rune of Zot
+KITEM:  O = gossamer rune of Zot, milky-white gem
 MONS:   ghost moth, moth of wrath
 MONS:   emperor scorpion / w:5 spark wasp / w:5 radroach / w:5 broodmother
 MONS:   wolf spider / redback / tarantella / jumping spider / culicivora
@@ -2303,7 +2485,7 @@ TAGS:    no_monster_gen
 PLACE:   Spider:$
 ORIENT:  west
 NSUBST:  d = 1:O / 3:d / 3:e / *:f
-KITEM:   O = gossamer rune of Zot
+KITEM:   O = gossamer rune of Zot, milky-white gem
 MONS:    ghost moth, moth of wrath, sun moth
 MONS:    emperor scorpion / w:5 spark wasp / w:5 jorogumo
 MONS:    orb spider
@@ -2398,7 +2580,7 @@ PLACE:  Spider:$
 NSUBST: 3 = 4:j / 1:s / *=2.
 NSUBST: 2 = 6=o. / 2:m / 6=2. / *=1
 
-KITEM:  O = gossamer rune of Zot
+KITEM:  O = gossamer rune of Zot, milky-white gem
 NSUBST: O = 1:O / *=%
 
 #thin out monsters and set up loot
@@ -2461,7 +2643,7 @@ TILE:   P = dngn_sarcophagus_pedestal_left
 FTILE:  23+$OEGHNPS. = floor_sandstone:20 / none
 : setup_endvault_loot(_G)
 ITEM:   gold good_item
-KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
+KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot, milky-white gem
 MONS:   death scarab
 MONS:   wolf spider spectre / wolf spider zombie w:5 / demonic crawler w:5 \
         / emperor scorpion spectre w:2 / pharaoh ant w:3 \
@@ -2524,7 +2706,7 @@ MONS:   steelbarb worm / torpor snail / meliai / pharaoh ant / entropy weaver
 MONS:   emperor scorpion w:30 / ghost moth w:20 / moth of wrath / sun moth
 MONS:   jorogumo w:15 / radroach / spark wasp w:5
 MONS:   broodmother
-KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
+KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot, milky-white gem
 KFEAT:  ^ = web
 NSUBST: . = 96 = 1... / *:., 2 = 2:2 / *=2...
 NSUBST: 6 = 4:6 / 4 = 456. / *= 4..
@@ -2538,23 +2720,23 @@ MAP
             xxxxxxxxx
            xxxxxxxxxxxxx
          @xxxx:::::::xxxxx
-        @2'''--x.x--.:::xxxx
+        @2'''--c.c--.:::xxxx
        @'''.-xxx.xxx-..2:xxxx
       @'''..-xx...xx-....::xxx
-     @'''...xx..3..xx......:xxx
+     @'''...cx..3..xc......:xxx
     @'''........63..........:xxx
-   @'''.....xx..3..xx........:xx
+   @'''.....cx..3..xc........:xx
   x2'''.....-xx...xx-.........:xx
   xx''......-xxx.xxx-........2:xx
- xx'--x.x--..--x.x--...........:xx
+ xx'--c.x--..--c.c--...........:xx
  xx-xxx.xxx-.........3..--x.x--:xx
  x:-xx...xx-...........-xxx.xxx-:xx
- x:xx.....xx...........-x.....x-:xx
+ x:cx.....xc...........-x.....x-:xx
  x:...363..............xx..3..xx:xx
-xx:xx..3..xx..--x.x--.....363..x-:xx
+xx:cx..3..xc..--x.x--.....363..x-:xx
 xx:-xx...xx-.-xxx.xxx-.xx..3..xx-:xx
 xx:-xxx.xxx-.-xx....x-.-x.....x-.:xx
-xx:.--x.x--..xx..3..xx.-xxx.xxx-2:xx
+xx:.--c.c--..xx..3..xx.-xxx.xxx-2:xx
 xx:.............363.....--x.x--..:xx
 xx:...RR.....xx..3..xx...........:xx
 xx:..RQQR....-xx...xx-....3.....:xxx
@@ -2590,7 +2772,7 @@ MONS:   pharaoh ant / entropy weaver / torpor snail
 MONS:   ghost moth w:15 / sun moth / moth of wrath w:5
 MONS:   emperor scorpion
 MONS:   radroach / spark wasp
-KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
+KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot, milky-white gem
 NSUBST: 7 = 4:7 / *=7..
 # bias the big monsters, randomly
 : if crawl.one_chance_in(3) then

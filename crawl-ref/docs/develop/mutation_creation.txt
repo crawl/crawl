@@ -201,7 +201,7 @@ in addition to the files we handled at the beginning.
 transform.cc handles gaining MUT_HORNS via the Beastly Appendage spell,
 so we won't need to copy that part. All of the mutation.cc entries
 involve conflicting mutations and gear slots, and the item-use.cc
-entires stop you from equipping gear that won't fit over horns. This is
+entries stop you from equipping gear that won't fit over horns. This is
 worth taking a look at, especially if you want to do similar body mods
 like new scale mutations, or blade-hands, or something else that should
 replace a piece of gear. We'll assume that beards can be tucked through

@@ -268,8 +268,6 @@ static string _get_seen_branches(bool display)
     }
     disp += "\n";
 
-    const bool in_death_range = zot_clock_fatal();
-
     bool zot_clock_shown = false;
     vector<string> cells;
 
@@ -317,25 +315,17 @@ static string _get_seen_branches(bool display)
                 {
                     const int zturns = turns_until_zot_in(branch);
                     zot_clock_shown = true;
-                    // bzot > 0 is not urgent enough for meteorae. (Should this
-                    // be even higher? They still get the overall warning on
-                    // this popup if they could die.)
-                    const bool urgent = in_death_range
-                                            && (bzot > 0 || zturns < 600);
                     const char *zcol =
-                            urgent ? (bzot <= 2 ? "red" : "lightmagenta")
                             // 3k is somewhat arbitrary, but looks better to
                             // mostly gray this out for non-meteorae chars
                             // with always_show_zot on:
-                          : bzot == 0 && zturns > 3000 ? "darkgrey"
+                            bzot == 0 && zturns > 3000 ? "darkgrey"
                           : bzot == 0 ? "lightgray"
                           : bzot <= 1 ? "yellow"
                           : bzot == 2 ? "red"
                           : "lightmagenta";
-                    zclock_desc = make_stringf(" Zot: <%s>%d%s</%s>",
-                                    zcol, zturns,
-                                    urgent ? "!" : "",
-                                    zcol);
+                    zclock_desc = make_stringf(" Zot: <%s>%d</%s>",
+                                    zcol, zturns, zcol);
                 }
 
                 const string main_desc = make_stringf(
@@ -434,13 +424,7 @@ static string _get_unseen_branches()
 
 static string _get_branches(bool display)
 {
-    string r = _get_seen_branches(display) + _get_unseen_branches();
-
-    // XX does it make sense to show this unconditionally? Maybe for
-    // non-meteorans, should require a bezotting level of 1 or higher somewhere?
-    if (zot_clock_fatal())
-        r += "\n<red>You are so drained that the power of Zot will kill you!</red>\n";
-    return r;
+    return _get_seen_branches(display) + _get_unseen_branches();
 }
 
 // iterate through every god and display their altar's discovery state by colour
@@ -708,8 +692,8 @@ class dgn_overview : public formatted_scroller
 public:
     dgn_overview(const string& text = "") : formatted_scroller(FS_PREWRAPPED_TEXT, text) {};
 
-private:
-    bool process_key(int ch) override
+protected:
+    maybe_bool process_key(int ch) override
     {
         // We handle these after exiting dungeon overview window
         // to prevent menus from stacking on top of each other.
@@ -738,6 +722,7 @@ static void _process_command(const char keypress)
         case '_':
             if (!altars_present.empty())
             {
+                // XX fix this
                 macro_sendkeys_end_add_expanded('_');
                 do_interlevel_travel();
             }
@@ -1172,10 +1157,10 @@ static int _prompt_annotate_branch(level_id lid)
     while (true)
     {
         int keyin = get_ch();
+        if (ui::key_exits_popup(keyin, false))
+            return ID_CANCEL;
         switch (keyin)
         {
-        CASE_ESCAPE
-            return ID_CANCEL;
         case '?':
             show_annotate_help();
             break;
@@ -1226,7 +1211,7 @@ void do_annotate()
             annotate_level(lid);
             return;
         case ID_UP:
-            // level_id() is the error vallue of find_up_level(lid)
+            // level_id() is the error value of find_up_level(lid)
             if (find_up_level(lid) == level_id())
                 mpr("There is no level above you.");
             else

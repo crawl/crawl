@@ -187,14 +187,13 @@ spells in this school. Many spells belong to a combination of several schools,
 in which case spellcasting success and power will depend on the average skill
 in these schools.
 %%%%
-Transmutations
+Alchemy
 
-Transmutations deal with changing shapes. Many Transmutations involve changing
-your own form, but the school also contains spells to cause changes in your
-enemies. Form changing spells will last longer with higher spell power, in
-addition to form-specific perks that might scale with power.
+Alchemy is the art of toxins and transmutation. Spells in this school can twist
+objects and creatures into different shapes, unleash powerful poisons, or even
+unweave the fabric of magic itself.
 
-Being skilled in Transmutations increases the success rate and spell power of
+Being skilled in Alchemy increases the success rate and spell power of
 spells in this school. Many spells belong to a combination of several schools,
 in which case spellcasting success and power will depend on the average skill
 in these schools.
@@ -235,20 +234,10 @@ Earth Magic
 
 Earth Magic contains spells able to deal large amounts of direct physical
 damage, which cannot be resisted like fire, cold and lightning damage can. It
-is also linked with some Transmutations, with spells to liquefy the earth
-around you, or to turn your enemies to stone.
+is also linked with Alchemy, with spells to liquefy the earth around you, or to
+turn your enemies to stone.
 
 Being skilled in Earth Magic increases the success rate and spell power of
-spells in this school. Many spells belong to a combination of several schools,
-in which case spellcasting success and power will depend on the average skill
-in these schools.
-%%%%
-Poison Magic
-
-Poison Magic provides spells which are highly effective against many natural
-creatures.
-
-Being skilled in Poison Magic increases the success rate and spell power of
 spells in this school. Many spells belong to a combination of several schools,
 in which case spellcasting success and power will depend on the average skill
 in these schools.
@@ -271,4 +260,11 @@ Evocations
 
 Evocations skill affects your ability to use magical items like wands and other
 uncommon objects, increasing the power or success rate of such items.
+%%%%
+Shapeshifting
+
+Shapeshifting enables the use of magical talismans to change oneself into other
+forms. Sufficient skill allows one to use more powerful forms without gravely
+damaging one's health. Being skilled in Shapeshifting also makes most forms
+somewhat stronger, in ways which vary between forms.
 %%%%

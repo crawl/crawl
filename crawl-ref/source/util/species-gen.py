@@ -42,7 +42,7 @@ class Species(MutableMapping):
             'undead_type', 'size', 'str', 'int', 'dex', 'levelup_stats',
             'levelup_stat_frequency', 'recommended_jobs', 'recommended_weapons',
             'difficulty', 'difficulty_priority', 'create_enum', 'walking_verb',
-            'altar_action', 'mutations'}
+            'altar_action', 'mutations', 'child_name'}
 
     def __init__(self, yaml_dict):
         self.backing_dict = dict()
@@ -124,7 +124,7 @@ class Species(MutableMapping):
         self['hp'] = validate_int_range(s['aptitudes']['hp'], 'hp', -10, 10)
         self['mp'] = validate_int_range(s['aptitudes']['mp_mod'], 'mp_mod',
                                                                         -5, 20)
-        self['mr'] = validate_int_range(s['aptitudes']['mr'], 'mr', 0, 20)
+        self['wl'] = validate_int_range(s['aptitudes']['wl'], 'wl', 0, 20)
         self['aptitudes'] = aptitudes(s['aptitudes'])
         self['habitat'] = 'HT_LAND' if not s.get('can_swim') else 'HT_WATER'
         self['undead'] = undead_type(s.get('undead_type', 'US_ALIVE'))
@@ -148,6 +148,7 @@ class Species(MutableMapping):
                                     s.get('create_enum', False), 'create_enum')
         self['walking_verb'] = quote_or_nullptr('walking_verb', s)
         self['altar_action'] = quote_or_nullptr('altar_action', s)
+        self['child_name']   = quote_or_nullptr('child_name', s)
 
         if 'TAG_MAJOR_VERSION' in s:
             self['tag_major_version_opener'] = (
@@ -178,9 +179,9 @@ ALL_APTITUDES = ('fighting', 'short_blades', 'long_blades', 'axes',
     'maces_and_flails', 'polearms', 'staves', 'ranged weapons',
     'throwing', 'armour', 'dodging', 'stealth', 'shields', 'unarmed_combat',
     'spellcasting', 'conjurations', 'hexes', 'summoning',
-    'necromancy', 'transmutations', 'translocations', 'fire_magic',
-    'ice_magic', 'air_magic', 'earth_magic', 'poison_magic', 'invocations',
-    'evocations')
+    'necromancy', 'translocations', 'fire_magic',
+    'ice_magic', 'air_magic', 'earth_magic', 'alchemy', 'invocations',
+    'evocations', 'shapeshifting')
 UNDEAD_TYPES = ('US_ALIVE', 'US_UNDEAD', 'US_SEMI_UNDEAD')
 SIZES = ('SIZE_TINY', 'SIZE_LITTLE', 'SIZE_SMALL', 'SIZE_MEDIUM', 'SIZE_LARGE',
     'SIZE_GIANT')
@@ -319,9 +320,9 @@ def fake_mutations_short(fmut_def):
 
 def aptitudes(apts):
     for apt, val in apts.items():
-        if apt not in ALL_APTITUDES and apt not in ('xp', 'hp', 'mp_mod', 'mr'):
+        if apt not in ALL_APTITUDES and apt not in ('xp', 'hp', 'mp_mod', 'wl'):
             raise ValueError("Unknown aptitude (typo?): %s" % apt)
-        validate_int_range(val, apt, -10, 10)
+        validate_int_range(val, apt, -10, 20)
     return apts
 
 
@@ -350,7 +351,7 @@ def generate_aptitudes_data(s, template):
     # in YAML. The latter is UNUSABLE_SKILL.
     aptitudes = {apt: 0 for apt in ALL_APTITUDES}
     for apt, val in s['aptitudes'].items():
-        if apt in ('xp', 'hp', 'mp_mod', 'mr'):
+        if apt in ('xp', 'hp', 'mp_mod', 'wl'):
             continue
         if val is False:
             aptitudes[apt] = 'UNUSABLE_SKILL'

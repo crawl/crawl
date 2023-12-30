@@ -14,6 +14,7 @@
 #include "mpr.h"
 #include "operation-types.h"
 #include "seen-context-type.h"
+#include "transformation.h"
 
 using std::vector;
 
@@ -701,12 +702,36 @@ public:
     }
 };
 
+class TransformDelay : public Delay
+{
+    transformation form;
+    const item_def *talisman;
+
+    bool was_prompted = false;
+
+    void start() override;
+    void tick() override;
+    bool invalidated() override;
+    void finish() override;
+public:
+    TransformDelay(transformation f, const item_def *t) :
+                   Delay(3), form(f), talisman(t)
+    { }
+
+    bool try_interrupt(bool force = false) override;
+
+    const char* name() const override
+    {
+        return "transform";
+    }
+};
+
 void push_delay(shared_ptr<Delay> delay);
 
 template<typename T, typename... Args>
 shared_ptr<Delay> start_delay(Args&&... args)
 {
-    auto delay = make_shared<T>(forward<Args>(args)...);
+    auto delay = make_shared<T>(std::forward<Args>(args)...);
     push_delay(delay);
     return delay;
 }

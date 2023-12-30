@@ -184,6 +184,7 @@ ENDMAP
 
 # Safe 2
 NAME:    bzr_entry_islet
+TAGS:    no_descent
 SHUFFLE: wwlW
 : place_bazaar_portal(_G)
 MAP

@@ -1887,7 +1887,7 @@ ENDMAP
 ##############################################################################
 NAME:    dpeg_arrival_brainrot
 TAGS:    arrival no_monster_gen
-MONS:    jackal / worm
+MONS:    jackal / ribbon worm
 ORIENT:  float
 SUBST:   l = l.
 NSUBST:  { = 1:{ / *:.
@@ -2043,9 +2043,9 @@ NAME:    onia_arrival_mini_maze
 TAGS:    arrival
 WEIGHT:  5
 ORIENT:  float
-ITEM:    nothing w:20 / stone
+ITEM:    nothing / stone
 SHUFFLE: Aa, Bb, Cc, Ee, Ff
-MONS:    w:30 nothing / w:10 plant / w:5 fungus / w:10 rat
+MONS:    nothing / rat
 SUBST:   A=x, B=x, C=x, E=x, F=x, a=., b=., c=., e=., f=.
 SUBST:   X = xxxxxxxxxxxxxxxxx+
 NSUBST:  { = 1:{ / *:.
@@ -2069,20 +2069,18 @@ NAME:    onia_arrival_mini_maze_b
 TAGS:    arrival
 WEIGHT:  5
 ORIENT:  float
-ITEM:    nothing w:50 / stone
 SHUFFLE: AB
 SUBST:   A : x , B = +., X = x+
-MONS:    w:30 nothing / w:10 plant / w:3 fungus / w:1 worm
 NSUBST:  { = 1:{ / *:.
 MAP
 xxxxxxxxx@xxxxxxx
 x.......A.B.....x
 x.xxxxxBxxxAxxx.x
-x.xd1........dx.x
+x.xd.........dx.x
 x.xxxxxxxxxxx1x.x
 x.x...B.......x.x
 x.x.x.x.xxxxxAx.x
-x...x.x...1dx...x
+x...x.x....dx...x
 xxxxx.xxxxxxxx.xx
 x...............x
 x.xx.xxX.Xxx.xx.x
@@ -2344,18 +2342,18 @@ SHUFFLE: 16
 MONS:    centaur / centaur warrior / yaktaur / yaktaur captain
 MONS:    rat / river rat / hell rat / quokka
 MONS:    imperial myrmidon / servant of whispers / ragged hierophant
-MONS:    worm / tyrant leech
+MONS:    ribbon worm / tyrant leech / brain worm
 MONS:    komodo dragon / iguana / basilisk
 MONS:    ettin / frost giant / stone giant / fire giant
 : else
 SHUFFLE: 1234567
-MONS:    frilled lizard / iguana / snapping turtle / komodo dragon
+MONS:    iguana / crocodile / snapping turtle / komodo dragon
 MONS:    hog / jackal / wolf / hound
-MONS:    giant cockroach / scorpion / butterfly / killer bee / redback
-MONS:    swamp worm / lindwurm / worm
+MONS:    scorpion / butterfly / killer bee / boulder beetle / redback
+MONS:    swamp worm / lindwurm / brain worm
 MONS:    swamp drake / hydra / wyvern / rime drake
 MONS:    polar bear / black bear
-MONS:    black mamba / water moccasin / anaconda / salamander
+MONS:    black mamba / anaconda / mana viper
 : end
 KMASK:   ' = no_monster_gen
 SUBST:   ' = .
@@ -2616,7 +2614,7 @@ MAP
 ENDMAP
 
 ##############################################################################
-#The maze will allways contain an exit to the rest of D:1, the player won't be
+#The maze will always contain an exit to the rest of D:1, the player won't be
 #forced to D:2.
 NAME:    co_arrival_random_square_maze
 TAGS:    arrival
@@ -2929,7 +2927,7 @@ KPROP:  q = no_tele_into
 SUBST:  p = Pw, q = Pw
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxx
-xqwqqwqqqqqqwqqp.p.p...x
+xqwqqwqqqqqqwqqp.p.....x
 xwwwwwwqqqqqwwqpp..w...x
 xwwwwwwwqwqwwwwqpwwwwp.x
 xwwwwwwwwwwwwwwwwww..w.+
@@ -3505,14 +3503,14 @@ NAME:     amcnicky_arrival_blooded_trapdoor
 TAGS:     arrival no_monster_gen no_pool_fixup no_trap_gen
 ORIENT:   float
 SHUFFLE:  pqr
-SUBST:    s:xxxtw, p:x, q:x, r:@
-SUBST:    ' = '..
-KPROP:    ' = bloody
+SUBST:    p : x, q : x, r:@, s : xxxtw
+NSUBST:   " = 1:" / * = ".., ' = 1:" / * = "..
+KPROP:    " = bloody
 MAP
    xpppx
    x'''x
-xxxx'>'xxxxxqqq
-x...'''.......q
+xxxx">'xxxxxqqq
+x...""".......q
 x.{........ss.q
 x.............x
 xxxxxxxxrrrrxxx
@@ -3624,7 +3622,7 @@ WEIGHT:  5
 TILE:    G = dngn_statue_sigmund
 : set_feature_name("granite_statue", "a statue of a dreadful foe")
 # Bunch of player species
-KITEM:   ? = palentonga skeleton / deep elf skeleton / demigod skeleton / \
+KITEM:   ? = armataur skeleton / deep elf skeleton / demigod skeleton / \
              demonspawn skeleton / draconian skeleton / felid skeleton / \
              formicid skeleton / ghoul skeleton / gnoll skeleton / \
              orc skeleton / human skeleton / kobold skeleton / \
@@ -3790,7 +3788,7 @@ MAP
 ENDMAP
 
 NAME:    spicycebolla_arrival_ecumenical
-TAGS:    arrival uniq_ecumenical_altar transparent
+TAGS:    arrival uniq_ecumenical_altar transparent no_descent
 KMASK:   -_Tt)n = opaque
 ORIENT:  float
 KFEAT:   _ = altar_ecumenical
@@ -3811,4 +3809,160 @@ MAP
  ccn.n.n.ncc
 ''cc+c+c+cc''
 '''''''''''''
+ENDMAP
+
+# The other upstair outside of the first room is so Delvers can still find
+# an exit even if they haven't found the wall of mimics.
+NAME:   nicolae_arrival_escape_room
+TAGS:   arrival no_monster_gen no_trap_gen no_item_gen
+ORIENT: float
+WEIGHT: 1
+KFEAT:  M = c mimic
+SUBST:  G : GT, [ : [(
+MAP
+cccccccc@@@cc
+cG...GcG...Gc
+c.....M.....c
+c{...>M..[..c
+c.....M.....c
+cG...GcG...Gc
+cccccccc@@@cc
+ENDMAP
+
+NAME: orjb1_lava_funnel
+TAGS: arrival transparent no_monster_gen no_trap_gen
+ORIENT: float
+SUBST: G : GTt123
+MONS: fungus , plant , bush
+MAP
+.................
+.................
+.....l.....l.....
+....Gl.....lG....
+.....l.....l.....
+.....l..{..l.....
+....Gl.....lG....
+.....l.....l.....
+......l...l......
+.....Gl...lG.....
+......l...l......
+......l...l......
+.....Gl...lG.....
+......l...l......
+.......l.l.......
+......Gl.lG......
+.......l.l.......
+.......l.l.......
+......Gl.lG......
+.......l.l.......
+.................
+ENDMAP
+
+##############################################################################
+NAME:    roadster_arrival_rocket_small
+TAGS:    arrival no_monster_gen no_trap_gen transparent
+ORIENT:  float
+MONS:    plant, bush
+SUBST:   t : 12tt
+MARKER:  F = lua:fog_machine{ cloud_type = "black smoke", \
+             pow_min = 24, pow_max = 32, delay_min = 280, delay_max = 320, \
+             size_min = 1, size_max = 2, start_clouds = 2, size_buildup_amnt = 2 }
+MARKER:  l = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 1000, pow_max = 1000, delay = 1, \
+             size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+MAP
+  t@.v.@t
+  t.vvv.t
+  tFm{mFt
+  tvv.vvt
+  vv...vv
+  v.....v
+  v.....v
+  v.....v
+  v.....v
+  v.....v
+  v..F..v
+  v.....v
+vvv+v+v+vvv
+ ...lFl...
+  @.....@
+ENDMAP
+
+NAME:    roadster_arrival_rocket_large
+TAGS:    arrival no_monster_gen no_trap_gen transparent
+ORIENT:  float
+MONS:    plant, bush
+SUBST:   t : 12tt
+MARKER:  F = lua:fog_machine{ cloud_type = "black smoke", \
+             pow_min = 24, pow_max = 32, delay_min = 280, delay_max = 320, \
+             size_min = 1, size_max = 2, start_clouds = 2, size_buildup_amnt = 2 }
+MARKER:  l = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 1000, pow_max = 1000, delay = 1, \
+             size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+MAP
+      v
+   t@vvv@t
+   t.m{m.t
+   tvv.vvt
+  Fvv...vvF
+  vv.....vv
+  v.......v
+  v.......v
+  v.......v
+  v.......v
+  v.......v
+  v...F...v
+ vv.......vv
+vvv+v+v+v+vvv
+...Fl.l.lF...
+ @.........@
+ENDMAP
+
+##############################################################################
+
+NAME:   mainiacjoe_arrival_oval_in_oval
+TAGS:   arrival transparent
+TAGS:   no_monster_gen no_pool_fixup
+ORIENT: float
+SUBST:  m : m#lw
+KFEAT:  # = iron_grate
+SUBST:  T : TGbt123V
+MONS:   fungus, plant, bush
+MAP
+     .......
+   ...........
+ .....mmmmm.....
+....mmm...mmm....
+..mmm...T...mmm..
+..m...T...T...m..
+....T...{...T....
+..m...T...T...m..
+..mmm...T...mmm..
+....mmm...mmm....
+ .....mmmmm.....
+   ...........
+     .......
+ENDMAP
+
+NAME:   hellmonk_arrival_library
+TAGS:   arrival transparent
+ORIENT: float
+SHUFFLE: DE, FH
+SUBST:  E = ccc., H = ccc., G:Gc
+TILE:   c = wall_studio
+FTILE:  .+G>{ = floor_studio
+MAP
+cccccccccccc
+c{.........c
+c.ccccccccDc
+c.c........c
+c.c.>.cccccc
+c.c........c
+c.c.c.ccccHc
+c.c.c.c....c
+c.c.c.c.G.cc
+c.c.c.c....+@
+c.E.c.F.c..+@
+ccccccccc++c
+         @@
 ENDMAP

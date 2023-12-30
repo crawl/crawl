@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <unordered_set>
 #include <vector>
+#include <functional>
 
 #include "ability-type.h"
 #include "activity-interrupt-type.h"
@@ -11,15 +12,18 @@
 #include "easy-confirm-type.h"
 #include "explore-greedy-options.h"
 #include "feature.h"
+#include "fixedp.h"
 #include "flang-t.h"
 #include "flush-reason-type.h"
 #include "kill-dump-options-type.h"
 #include "lang-t.h"
 #include "level-gen-type.h"
 #include "maybe-bool.h"
+#include "mon-dam-level-type.h"
 #include "mpr.h"
 #include "newgame-def.h"
 #include "pattern.h"
+#include "rc-line-type.h"
 #include "screen-mode.h"
 #include "skill-focus-mode.h"
 #include "slot-select-mode.h"
@@ -39,17 +43,37 @@ enum autosac_type
     AS_PROMPT_IGNORE,
 };
 
+enum monster_list_colour_type
+{
+    MLC_FRIENDLY,
+    MLC_NEUTRAL,
+    MLC_GOOD_NEUTRAL,
+    MLC_TRIVIAL,
+    MLC_EASY,
+    MLC_TOUGH,
+    MLC_NASTY,
+    MLC_UNUSUAL,
+    NUM_MLC
+};
+
 struct message_filter
 {
     int             channel;        // Use -1 to match any channel.
     text_pattern    pattern;        // Empty pattern matches any message
+
+    message_filter()
+        : channel(-1), pattern("")
+    {
+    }
 
     message_filter(int ch, const string &s)
         : channel(ch), pattern(s)
     {
     }
 
-    message_filter(const string &s) : channel(-1), pattern(s, true) { }
+    message_filter(const text_pattern &p) : channel(-1), pattern(p) { }
+
+    message_filter(const string &s);
 
     bool operator== (const message_filter &mf) const
     {
@@ -67,6 +91,13 @@ struct message_filter
 
 struct sound_mapping
 {
+    sound_mapping()
+        : interrupt_game(false)
+    {
+    }
+
+    sound_mapping(const string &s);
+
     text_pattern pattern;
     string       soundfile;
     bool         interrupt_game;
@@ -81,6 +112,13 @@ struct sound_mapping
 
 struct colour_mapping
 {
+    colour_mapping()
+        : tag("none"), colour(WHITE)
+    {
+    }
+
+    colour_mapping(const string &s);
+
     string tag;
     text_pattern pattern;
     colour_t colour;
@@ -92,12 +130,55 @@ struct colour_mapping
 
 struct message_colour_mapping
 {
+    message_colour_mapping()
+        : colour(MSGCOL_NONE)
+    {
+    }
+
+    message_colour_mapping(const message_filter &f, msg_colour_type c)
+        : message(f), colour(c)
+    {
+    }
+
+    bool valid() const { return colour != MSGCOL_NONE; }
+
+    message_colour_mapping(const string &s);
+
     message_filter message;
     msg_colour_type colour;
     bool operator== (const message_colour_mapping &o) const
     {
         return message == o.message && colour == o.colour;
     }
+};
+
+struct mlc_mapping
+{
+    mlc_mapping()
+        : category(NUM_MLC), colour(-1)
+    {
+    }
+
+    mlc_mapping(monster_list_colour_type t, int c)
+        : category(t), colour(c)
+    {
+    }
+
+    mlc_mapping(const string &s);
+
+    bool operator== (const mlc_mapping &o) const
+    {
+        return category == o.category
+            && (colour == o.colour
+                // match -1 to make `-=` work a little more smoothly
+                || o.colour == -1
+                || colour == -1);
+    }
+
+    bool valid() const { return category >= 0 && category < NUM_MLC; }
+
+    monster_list_colour_type category;
+    int colour;
 };
 
 struct flang_entry
@@ -117,7 +198,7 @@ enum use_animation_type
     UA_HP               = (1 << 2),
     // flashes the screen on attempt to travel or rest with a monster in view
     UA_MONSTER_IN_SIGHT = (1 << 3),
-    // various animations for picking up runes and the orb
+    // various animations for picking up runes, gems, and the orb
     UA_PICKUP           = (1 << 4),
     // various monster spell/ability effects (slime creature merging, etc)
     UA_MONSTER          = (1 << 5),
@@ -133,37 +214,188 @@ DEF_BITFIELD(use_animations_type, use_animation_type);
 
 class LineInput;
 class GameOption;
-struct game_options
-{
-public:
-    game_options();
-    ~game_options();
-    void reset_options();
-    void reset_paths();
 
-    void read_option_line(const string &s, bool runscripts = false);
+struct opt_parse_state
+{
+    string raw; // raw input line
+    bool valid = false;
+
+    string key;
+    string subkey;
+    string raw_field; // keeps case
+    string field; // normalized for case
+
+    rc_line_type line_type = RCFILE_LINE_EQUALS;
+
+    bool plus_equal() const
+    {
+        return line_type == RCFILE_LINE_PLUS;
+    }
+
+    bool caret_equal() const
+    {
+        return line_type == RCFILE_LINE_CARET;
+    }
+
+    void ignore_prepend()
+    {
+        if (line_type == RCFILE_LINE_CARET)
+            line_type = RCFILE_LINE_PLUS;
+    }
+
+    bool add_equal() const
+    {
+        return line_type == RCFILE_LINE_PLUS || line_type == RCFILE_LINE_CARET;
+    }
+
+    bool minus_equal() const
+    {
+        return line_type == RCFILE_LINE_MINUS;
+    }
+
+    bool plain() const
+    {
+        return line_type == RCFILE_LINE_EQUALS;
+    }
+
+    bool is_valid_option_line() const
+    {
+        return valid && line_type != RCFILE_LINE_DIRECTIVE;
+    }
+
+    // for some reason lua uses a completely distinct set of enum values, I've
+    // just pasted this slightly weird code in mostly unmodified
+    int lua_mode() const
+    {
+        int setmode = 0;
+        if (plus_equal())
+            setmode = 1;
+        if (minus_equal())
+            setmode = -1;
+        if (caret_equal())
+            setmode = 2;
+        return setmode;
+    }
+};
+
+/// This class is used to separate out general option handling (parsing,
+/// meta-state, include file loading, lua handling) from specific option field
+/// handling; the latter should be implemented on the subclass `game_options`.
+struct base_game_options
+{
+    // actual game state goes in game_options, option parsing and state here
+
+    base_game_options();
+    ~base_game_options();
+    virtual void reset_options();
+
+    base_game_options(base_game_options const& other);
+    base_game_options(base_game_options &&other) noexcept;
+    base_game_options& operator=(base_game_options const& other);
+
     void read_options(LineInput &, bool runscripts,
                       bool clear_aliases = true);
+    void read_option_line(const string &s, bool runscripts = false);
+    virtual bool read_custom_option(opt_parse_state &state, bool runscripts);
+    opt_parse_state parse_option_line(const string &str);
 
-    void include(const string &file, bool resolve, bool runscript);
-    void report_error(PRINTF(1, ));
+    // store for option settings that do not match a defined option value, and
+    // are not handled by `c_process_lua_option`. They are still stored, and
+    // can be used by lua scripts.
+    map<string, string> named_options;
 
-    string resolve_include(const string &file, const char *type = "");
-
-    bool was_included(const string &file) const;
-
-    static string resolve_include(string including_file, string included_file,
-                            const vector<string> *rcdirs = nullptr);
-
-#ifdef USE_TILE_WEB
-    void write_webtiles_options(const string &name);
-#endif
-
-public:
+    bool prefs_dirty;
     string      filename;     // The name of the file containing options.
     string      basefilename; // Base (pathless) file name
     int         line_num;     // Current line number being processed.
 
+    // Fix option values if necessary, specifically file paths.
+    void reset_loaded_state();
+    vector<GameOption*> get_option_behaviour() const
+    {
+        return option_behaviour;
+    }
+    void merge(const base_game_options &other);
+    GameOption *option_from_name(string name) const
+    {
+        auto o = options_by_name.find(name);
+        if (o == options_by_name.end())
+            return nullptr;
+        return o->second;
+    }
+
+    // silly c++ standard approach to has_key
+    int count(const string &name) const
+    {
+        return options_by_name.count(name);
+    }
+
+    GameOption &operator[] (const string &name) const
+    {
+        auto o = option_from_name(name);
+        ASSERT(o);
+        return *o;
+    }
+
+    virtual void reset_aliases(bool clear=true);
+    void include(const string &file, bool resolve, bool runscripts);
+    string resolve_include(const string &file, const char *type = "");
+    bool was_included(const string &file) const;
+    static string resolve_include(string including_file, string included_file,
+                            const vector<string> *rcdirs = nullptr);
+    void set_from_defaults(const string &opt);
+
+    void report_error(PRINTF(1, ));
+
+    // arguable which class this should be on
+    vector<string> terp_files; // Lua files to load for luaterp
+    vector<string> additional_macro_files;
+
+protected:
+    map<string, string> aliases;
+    map<string, string> variables;
+    set<string> constants; // Variables that can't be changed
+    set<string> included;  // Files we've included already.
+
+    vector<GameOption*> option_behaviour;
+    map<string, GameOption*> options_by_name;
+    virtual const vector<GameOption*> build_options_list();
+    map<string, GameOption*> build_options_map(const vector<GameOption*> &opts);
+
+    string unalias(const string &key) const;
+    string expand_vars(const string &field) const;
+    void add_alias(const string &alias, const string &name);
+    void set_option_fragment(const string &s, bool prepend);
+};
+
+/// This class implements most of crawl's options as well as their state.
+/// (Parsing, option handling state, etc. is separated out into the superclass.)
+/// An instance with the current options is canonically available via the static
+/// `Options`.
+struct game_options : public base_game_options
+{
+public:
+    game_options();
+    void reset_options() override;
+    void reset_paths();
+    void reset_aliases(bool clear=true) override;
+    void fixup_options();
+    const vector<GameOption*> build_options_list() override;
+
+    bool read_custom_option(opt_parse_state &state, bool runscripts) override;
+
+    void split_parse(const opt_parse_state &state,
+                    const string &separator,
+                    void (game_options::*add)(const string &, bool),
+                    void (game_options::*remove)(const string &),
+                    bool case_sensitive);
+
+#ifdef USE_TILE_WEB
+    void write_webtiles_options(const string &name);
+#endif
+    void write_prefs(FILE *f); // should be in superclass
+
+public:
     // View options
     map<dungeon_feature_type, feature_def> feature_colour_overrides;
     map<dungeon_feature_type, FixedVector<char32_t, 2> > feature_symbol_overrides;
@@ -173,6 +405,10 @@ public:
     vector<item_glyph_override_type > item_glyph_overrides;
     map<string, cglyph_t> item_glyph_cache;
 
+
+    string crawl_dir_option;
+    string save_dir_option;
+    string macro_dir_option;
     string      save_dir;       // Directory where saves and bones go.
     string      macro_dir;      // Directory containing macro.txt
     string      morgue_dir;     // Directory where character dumps and morgue
@@ -180,9 +416,9 @@ public:
     string      shared_dir;     // Directory where the logfile, scores and bones
                                 // are stored. On a multi-user system, this dir
                                 // should be accessible by different people.
-    vector<string> additional_macro_files;
 
     uint64_t    seed;           // Non-random games.
+    string game_seed; // string version of the rc option
     uint64_t    seed_from_rc;
     level_gen_type pregen_dungeon;
 
@@ -268,9 +504,16 @@ public:
     int         colour[16];      // macro fg colours to other colours
     unsigned    background_colour; // select default background colour
     unsigned    foreground_colour; // select default foreground colour
+    bool        use_terminal_default_colours; // inherit default colors from terminal
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
+    vector<string> use_animations_option;
     use_animations_type use_animations; // which animations to show
     bool        darken_beyond_range; // whether to darken squares out of range
+    bool        show_blood; // whether to show blood or not
+    bool        reduce_animations;   // if true, don't show interim steps for animations
+
+    vector<text_pattern> unusual_monster_items; // which monster items to
+                                                // highlight as unusual
 
     int         hp_warning;      // percentage hp for danger warning
     int         magic_point_warning;    // percentage mp for danger warning
@@ -279,6 +522,8 @@ public:
     bool        small_more;       // Show one-char more prompts.
     unsigned    friend_highlight;     // Attribute for highlighting friendly monsters
     unsigned    neutral_highlight;    // Attribute for highlighting neutral monsters
+    unsigned    unusual_highlight;    // Attribute for highlighting hostile
+                                      // monsters with unusual items
     bool        blink_brightens_background; // Assume blink will brighten bg.
     maybe_bool  bold_brightens_foreground; // Assume bold will brighten fg.
     bool        best_effort_brighten_background; // Allow bg brighten attempts.
@@ -290,6 +535,8 @@ public:
                                         // two autofight commands
     bool        cloud_status;     // Whether to show a cloud status light
     bool        always_show_zot;  // Whether to always show the Zot timer
+    bool        always_show_gems; // Whether to always show gem timers
+    bool        more_gem_info;    // Whether to show gems breaking
 
 #ifdef USE_TILE_WEB
     vector<object_class_type> action_panel;   // types of items to show on the panel
@@ -326,7 +573,6 @@ public:
     wizard_option_type wiz_mode;      // no, never, start in wiz mode
     wizard_option_type explore_mode;  // no, never, start in explore mode
 
-    vector<string> terp_files; // Lua files to load for luaterp
     bool           no_save;    // don't use persistent save files
     bool           no_player_bones;   // don't save player's info in bones files
 
@@ -337,7 +583,8 @@ public:
     vector<pair<int, int> > hp_colour;
     vector<pair<int, int> > mp_colour;
     vector<pair<int, int> > stat_colour;
-    vector<int> enemy_hp_colour;
+    string enemy_hp_colour_option;
+    FixedVector<int, MDAM_DEAD> enemy_hp_colour;
 
     string map_file_name;   // name of mapping file to use
     vector<pair<text_pattern, bool> > force_autopickup;
@@ -355,6 +602,11 @@ public:
     int         travel_delay;   // How long to pause between travel moves
     int         explore_delay;  // How long to pause between explore moves
     int         rest_delay;     // How long to pause between rest moves
+
+    vector<string> travel_avoid_terrain_option;
+    // Map of terrain types that are forbidden.
+    FixedVector<int8_t,NUM_FEATURES> travel_avoid_terrain;
+
 
     bool        show_travel_trail;
 
@@ -400,16 +652,19 @@ public:
     // you show summary (one-line) information
     int         item_stack_summary_minimum;
 
+    // explore_stop etc is stored as a simple vector of strings, and on updating
+    // is parsed down into a bitfield
+    vector<string> explore_stop_option;
     int         explore_stop;      // Stop exploring if a previously unseen
                                    // item comes into view
+    vector<string> explore_greedy_visit_option;
+    int explore_greedy_visit; // Set what type of items explore_greedy visits.
 
     // Don't stop greedy explore when picking up an item which matches
     // any of these patterns.
     vector<text_pattern> explore_stop_pickup_ignore;
 
     bool        explore_greedy;    // Explore goes after items as well.
-
-    int explore_greedy_visit; // Set what type of items explore_greedy visits.
 
     // How much more eager greedy-explore is for items than to explore.
     int         explore_item_greed;
@@ -428,8 +683,13 @@ public:
     string sound_file_path;
     vector<colour_mapping> menu_colour_mappings;
     vector<message_colour_mapping> message_colour_mappings;
+    vector<mlc_mapping> monster_list_colours_option;
+    FixedVector<int, NUM_MLC> monster_list_colours;
 
+    string sort_menus_option;
     vector<menu_sort_condition> sort_menus;
+
+    bool        single_column_item_menus;
 
     bool        dump_on_save;       // Automatically dump character when saving.
     kill_dump_options dump_kill_places;   // How to dump place information for kills.
@@ -438,12 +698,12 @@ public:
     int         dump_item_origins;  // Show where items came from?
     int         dump_item_origin_price;
 
-    unordered_set<string> dump_fields;
     // Order of sections in the character dump.
     vector<string> dump_order;
 
     int         pickup_menu_limit;  // Over this number of items, menu for
                                     // pickup
+    bool        prompt_menu;        // yesno prompt uses a menu popup
     bool        ability_menu;       // 'a'bility starts with a full-screen menu
     bool        spell_menu;         // 'z' starts with a full-screen menu
     bool        easy_floor_use;     // , selects the floor item if there's 1
@@ -504,8 +764,10 @@ public:
     bool        autopickup_search; // whether to annotate stash items with
                                    // autopickup status
 
+    string language_option;
     lang_t              language;         // Translation to use.
     const char*         lang_name;        // Database name of the language.
+    string fake_lang;
     vector<flang_entry> fake_langs;       // The fake language(s) in use.
     bool has_fake_lang(flang_t flang)
     {
@@ -559,6 +821,18 @@ public:
     VColour     tile_transporter_landing_col;
     VColour     tile_explore_horizon_col;
 
+    string      tile_display_mode;
+
+    bool tile_show_player_species;
+    tileidx_t   tile_player_tile;
+    string tile_player_tile_option;
+    pair<int, int> tile_weapon_offsets;
+    pair<int, int> tile_shield_offsets;
+    string tile_weapon_offsets_option;
+    string tile_shield_offsets_option;
+    string tile_tag_pref_option;
+    tag_pref tile_tag_pref;
+
     VColour     tile_window_col;
 #ifdef USE_TILE_LOCAL
     int         game_scale;
@@ -568,7 +842,6 @@ public:
     string      tile_font_stat_file;
     string      tile_font_lbl_file;
     string      tile_font_tip_file;
-    bool        tile_single_column_menus;
 #endif
 #ifdef USE_TILE_WEB
     string      tile_font_crt_family;
@@ -592,12 +865,13 @@ public:
     int         tile_window_width;
     int         tile_window_height;
     int         tile_window_ratio;
+    bool        tile_window_limit_size;
     maybe_bool  tile_use_small_layout;
 #endif
     int         tile_sidebar_pixels;
     int         tile_cell_pixels;
-    int         tile_viewport_scale;
-    int         tile_map_scale;
+    fixedp<>    tile_viewport_scale;
+    fixedp<>    tile_map_scale;
     bool        tile_filter_scaling;
     int         tile_map_pixels;
 
@@ -609,7 +883,6 @@ public:
     int         tile_runrest_rate;
     int         tile_key_repeat_delay;
     int         tile_tooltip_ms;
-    tag_pref    tile_tag_pref;
 
     bool        tile_show_minihealthbar;
     bool        tile_show_minimagicbar;
@@ -619,12 +892,9 @@ public:
     bool        tile_misc_anim;
     vector<string> tile_layout_priority;
     monster_type tile_use_monster;
-    tileidx_t   tile_player_tile;
-    pair<int, int> tile_weapon_offsets;
-    pair<int, int> tile_shield_offsets;
+    bool        tile_grinch;
 #ifdef USE_TILE_WEB
     bool        tile_realtime_anim;
-    string      tile_display_mode;
     bool        tile_level_map_hide_messages;
     bool        tile_level_map_hide_sidebar;
     bool        tile_web_mouse_control;
@@ -632,54 +902,17 @@ public:
 #endif
 #endif // USE_TILE
 
-    typedef map<string, string> opt_map;
-    opt_map     named_options;          // All options not caught above are
-                                        // recorded here.
-
     newgame_def game;      // Choices for new game.
 
 private:
-    typedef map<string, string> string_map;
-    string_map     aliases;
-    string_map     variables;
-    set<string>    constants; // Variables that can't be changed
-    set<string>    included;  // Files we've included already.
-
-public:
-    bool prefs_dirty;
-    // Fix option values if necessary, specifically file paths.
-    void fixup_options();
-    void reset_loaded_state();
-    vector<GameOption*> get_option_behaviour() const
-    {
-        return option_behaviour;
-    }
-    void merge(const game_options &other);
-    GameOption *option_from_name(string name) const
-    {
-        auto o = options_by_name.find(name);
-        if (o == options_by_name.end())
-            return nullptr;
-        return o->second;
-    }
-
-    void write_prefs(FILE *f);
-
-    void reset_aliases(bool clear=true);
-private:
-    string unalias(const string &key) const;
-    string expand_vars(const string &field) const;
-    void add_alias(const string &alias, const string &name);
-
     void clear_feature_overrides();
     void clear_cset_overrides();
     void add_cset_override(dungeon_char_type dc, int symbol);
     void add_feature_override(const string &, bool prepend);
-    void remove_feature_override(const string &, bool prepend);
+    void remove_feature_override(const string &);
 
     void add_message_colour_mappings(const string &, bool, bool);
     void add_message_colour_mapping(const string &, bool, bool);
-    message_filter parse_message_filter(const string &s);
 
     void set_default_activity_interrupts();
     void set_activity_interrupt(FixedBitVector<NUM_ACTIVITY_INTERRUPTS> &eints,
@@ -692,39 +925,33 @@ private:
     void add_fire_order_slot(const string &s, bool prepend);
     void set_fire_order_spell(const string &s, bool append, bool remove);
     void set_fire_order_ability(const string &s, bool append, bool remove);
-    void set_menu_sort(string field);
-    void str_to_enemy_hp_colour(const string &, bool);
+    void set_menu_sort(const string &field);
+    void update_enemy_hp_colour();
     void new_dump_fields(const string &text, bool add = true,
                          bool prepend = false);
     void do_kill_map(const string &from, const string &to);
-    int  read_explore_stop_conditions(const string &) const;
-    int  read_explore_greedy_visit_conditions(const string &) const;
-    use_animations_type read_use_animations(const string &) const;
 
-    void split_parse(const string &s, const string &separator,
-                     void (game_options::*add)(const string &, bool),
-                     bool prepend = false);
+    void update_explore_stop_conditions();
+    void update_explore_greedy_visit_conditions();
+    void update_use_animations();
+    void update_travel_terrain();
+
     void add_mon_glyph_override(const string &, bool prepend);
-    void remove_mon_glyph_override(const string &, bool prepend);
+    void remove_mon_glyph_override(const string &);
     cglyph_t parse_mon_glyph(const string &s) const;
     void add_item_glyph_override(const string &, bool prepend);
-    void remove_item_glyph_override(const string &, bool prepend);
-    void set_option_fragment(const string &s, bool prepend);
+    void remove_item_glyph_override(const string &);
     bool set_lang(const char *s);
     void set_fake_langs(const string &input);
     void set_player_tile(const string &s);
     void set_tile_offsets(const string &s, bool set_shield);
     void add_force_spell_targeter(const string &s, bool prepend);
-    void remove_force_spell_targeter(const string &s, bool prepend);
+    void remove_force_spell_targeter(const string &s);
     void add_force_ability_targeter(const string &s, bool prepend);
-    void remove_force_ability_targeter(const string &s, bool prepend);
+    void remove_force_ability_targeter(const string &s);
 
     static const string interrupt_prefix;
 
-    vector<GameOption*> option_behaviour;
-    map<string, GameOption*> options_by_name;
-    const vector<GameOption*> build_options_list();
-    map<string, GameOption*> build_options_map(const vector<GameOption*> &opts);
 };
 
 char32_t get_glyph_override(int c);
@@ -734,6 +961,8 @@ object_class_type item_class_by_sym(char32_t c);
 #define Options (*real_Options)
 #endif
 extern game_options  Options;
+
+game_options &get_default_options();
 
 static inline short macro_colour(short col)
 {

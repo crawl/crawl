@@ -52,6 +52,7 @@ public:
     FontBuffer(FontWrapper *font);
     void add(const formatted_string &fs, float x, float y);
     void add(const string &s, const VColour &col, float x, float y);
+    void add(const char32_t &g, const VColour &col, float x, float y);
     FontWrapper &get_font_wrapper();
 protected:
     FontWrapper *m_font;

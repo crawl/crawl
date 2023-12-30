@@ -15,7 +15,7 @@ NORETURN void end(int exit_code, bool print_err = false, PRINTF(2, = nullptr));
 NORETURN void end_game(scorefile_entry &se);
 NORETURN void game_ended(game_exit exit, const string &message = "");
 NORETURN void game_ended_with_error(const string &message);
-NORETURN void screen_end_game(string text);
+NORETURN void screen_end_game(string text, game_exit exit);
 void cio_cleanup();
 bool fatal_error_notification(string error_msg);
 

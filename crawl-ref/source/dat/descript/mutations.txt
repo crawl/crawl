@@ -216,8 +216,8 @@ weakness stinger mutation
 
 You have a thin, red tail, allowing you to tail-slap foes when launching melee
 attacks. Each level of this mutation increases your tail's strength as it turns
-into a sharp stinger. The third level of this mutation causes the stinger to
-inflict brief weakness on those unfortunate enough to be struck by it.
+into a sharp stinger. The third level of this mutation prevents wearing cloaks
+or scarves, and causes the stinger to inflict brief weakness on those struck.
 %%%%
 armoured tail mutation
 
@@ -418,6 +418,11 @@ Your system is resistant to potable panaceas, reducing the effectiveness of all
 kinds of healing potions. The second level of this mutation completely blocks
 potion-based healing. (Aid from the god Gozag is unaffected.)
 %%%%
+persistent drain mutation
+
+Your health recovers twice as slowly from being drained. (The total experience
+needed is doubled.)
+%%%%
 # ------ Demonspawn mutations -----
 demonic guardian mutation
 
@@ -513,13 +518,14 @@ miscast spells.
 ignite blood mutation
 
 Whenever you see blood spilled (yours or others'), it may ignite, bursting into
-a cloud of flame. Each level of this mutation makes this more likely.
+a cloud of flame. Each level of this mutation makes this more likely. This
+mutation also grants you immunity to clouds of flame.
 # XXX: also mention that this makes people more likely to bleed?
 %%%%
 corrupting presence mutation
 
 When you injure a foe, your presence may intensify the damage, corroding their
-weapons and defenses. The second level of this mutation makes matters even
+weapons and defences. The second level of this mutation makes matters even
 worse, adding a chance that your wretched victims may become mutated and
 deformed.
 %%%%
@@ -570,10 +576,14 @@ in touch with death mutation
 Your Necromancy spells are more powerful. The second level of this mutation
 enhances your Necromancy spellpower further.
 %%%%
-nimble flight mutation
+acrobatic mutation
 
-You fly quickly through the air, covering ground more quickly than you would on
-foot. Your evasion is also multiplied by this effect.
+Your magical nature helps you tumble your hollow bones around acrobatically,
+allowing you to evade attacks while moving or waiting.
+%%%%
+evasive flight mutation
+
+You fly evasively through the air, increasing your evasion somewhat.
 %%%%
 big wings mutation
 
@@ -588,8 +598,7 @@ innate caster mutation
 You cannot learn spells from books. Instead, as you gain experience, spells
 of higher and higher level bubble up from your fiery heart. These spells are
 unpredictable and unaffected by your choice of god. You cannot train specific
-spell schools - the Spellcasting skill alone determines these spells' success
-rate and power.
+spell schools - you can either train all spell schools at once, or none.
 %%%%
 hp casting mutation
 
@@ -608,18 +617,6 @@ You have big, strong legs, allowing you to hop about with
 <input>$cmd[CMD_USE_ABILITY]</input>, though you can't perfectly aim where you
 land. The second level of this mutation allows you to hop farther. Each time
 you hop, you need to rest for a bit before you can hop again.
-%%%%
-roll mutation
-
-You can roll at nearby foes to attack with <input>$cmd[CMD_USE_ABILITY]</input>.
-Each level of this mutation increases the distance you can roll, though not the
-damage dealt.
-%%%%
-reflexive curl mutation
-
-You curl up when struck, giving you protection against further attacks until
-your next action. This effect is guaranteed to happen in response to any
-direct damage.
 %%%%
 forlorn mutation
 
@@ -641,8 +638,7 @@ You are immune to petrification.
 %%%%
 cold-blooded mutation
 
-You are endothermic. When struck by a cold attack, you may be slowed until your
-blood warms again.
+When struck by a cold attack, you may be slowed until your blood warms again.
 %%%%
 stealthy paws mutation
 
@@ -665,10 +661,9 @@ gore your attacker with your horns.
 multi-lived mutation
 
 Every third experience level, you gain an extra life. If you are slain while
-you still have a life remaining, you will reappear on another part of the
-current floor, losing an experience level in the process. You can continue to
-gain extra lives even once you reach the maximum experience level, but you
-can't have more than two extra lives in reserve at any given time.
+you still have a life remaining, you will reappear elsewhere on the current
+floor. You can continue to gain extra lives even once you reach the maximum
+experience level, but you can't have more than two extra lives at a time.
 %%%%
 distributed training mutation
 
@@ -780,29 +775,57 @@ Those foes will be silenced and unable to breathe.
 otherworldly mutation
 
 You are foreign to this world, easily perceived by dark forces. You have only
-one-tenth the normal time on each dungeon floor before Zot finds and ends you.
+one-tenth the normal time on each dungeon floor before Zot finds you and
+permanently reduces your health.
 %%%%
 glowing mutation
 
 You glow in the dark. Foes hit you more often, your stealth is badly impaired,
-and your outline is easily seen even while you are otherwise invisible.
+and you cannot become invisible.
 %%%%
 explore regen mutation
 
-As you explore the dungeon, your wounds will heal and your magic will replenish.
+You are invigorated by the discovery of the unknown. As you explore the dungeon,
+your wounds will heal and your magic will replenish.
+%%%%
+faith mutation
+
+You were embalmed with holy oils and sacred spices and bound about with blessed
+cloth. Now you have a special connection with the divine, allowing you to gain
+favor with your chosen god more quickly.
+%%%%
+devour on kill mutation
+
+When you kill living creatures you have a chance to devour their life force
+and restore health.
+%%%%
+roll mutation
+
+You instinctively roll as you move toward enemies, rampaging forward an
+additional space. This mutation grants magic regeneration when rolling; the
+second level of this mutation regenerates both magic and health.
+%%%%
+double potion healing mutation
+
+Whenever a potion restores your health or magic, it restores twice as much.
+%%%%
+drunken brawling mutation
+
+Whenever you drink a potion that restores health or magic, you perform an
+immediate attack against all enemies adjacent to you.
+
+(This includes potions of curing, heal wounds, magic, and ambrosia.)
 %%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation
 
 When you are harmed, there is a chance that you will become temporarily unable
-to drink potions. The greater the mutation level, damage done and the closer
-you are to death, the greater the odds.
+to drink potions. Each level of this mutation increases this chance by 1%.
 %%%%
 inability to read after injury mutation
 
 When you are harmed, there is a chance that you will become temporarily unable
-to read. The greater the mutation level, damage done and the closer you are to
-death, the greater the odds.
+to read scrolls. Each level of this mutation increases this chance by 1%.
 %%%%
 missing a hand mutation
 
@@ -812,14 +835,20 @@ one magical ring at a time.
 %%%%
 no stealth mutation
 
-Your have no Stealth. You will always alert monsters when they see you, and
+You have no Stealth. You will always alert monsters when they see you, and
 they will track you very effectively.
+%%%%
+no forms mutation
+
+You cannot voluntarily change forms, via talismans, potions, or any other means.
+You may still be involuntarily transformed by effects such as wands of polymorph.
 %%%%
 inability to use devices mutation
 
 You cannot use magical devices. This includes wands and most items evoked with
-<input>$cmd[CMD_EVOKE]</input>, excepting reaching weapons and ziggurat
-figurines. This also renders magical staves much less effective in melee.
+<input>$cmd[CMD_EVOKE]</input>, excepting reaching weapons, talismans, and
+ziggurat figurines. This also renders magical staves much less effective in
+melee.
 %%%%
 hated by all mutation
 
@@ -912,9 +941,9 @@ no necromancy magic mutation
 
 Your Necromancy skill is 0 and you cannot train the skill.
 %%%%
-no poison magic mutation
+no alchemy magic mutation
 
-Your Poison Magic skill is 0 and you cannot train the skill.
+Your Alchemy skill is 0 and you cannot train the skill.
 %%%%
 no summoning magic mutation
 
@@ -923,13 +952,4 @@ Your Summoning skill is 0 and you cannot train the skill.
 no translocations magic mutation
 
 Your Translocations skill is 0 and you cannot train the skill.
-%%%%
-no transmutations magic mutation
-
-Your Transmutations skill is 0 and you cannot train the skill.
-%%%%
-devour on kill mutation
-
-When you kill living creatures you have a chance to devour their life force
-and restore hit points.
 %%%%

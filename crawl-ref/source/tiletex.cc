@@ -205,4 +205,9 @@ const TilesTexture &ImageManager::get_texture(TextureID t) const
     return m_textures[t];
 }
 
+FontWrapper *ImageManager::get_glyph_font() const
+{
+    return tiles.get_glyph_font();
+}
+
 #endif

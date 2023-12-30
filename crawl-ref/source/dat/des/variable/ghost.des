@@ -28,7 +28,7 @@ function setup_hydra_weapon(e)
                      ["war axe"] = 8, ["broad axe"] = 12, ["lajatang"] = 2}
 
     -- Basic set of egos with weights.
-    local egos = {["none"] = 30, ["vorpal"] = 15, ["freezing"] = 15,
+    local egos = {["none"] = 30, ["heavy"] = 15, ["freezing"] = 15,
             ["electrocution"] = 10, ["venom"] = 10, ["protection"] = 10,
             ["vampirism"] = 5, ["holy_wrath"] = 5, ["draining"] = 5,
             ["pain"] = 2, ["distortion"] = 2, ["antimagic"] = 2, ["speed"] = 1}
@@ -41,13 +41,13 @@ end
 function wrathful_weapon(class, quality)
     local egos
     -- Only the egos Trog gifts, using equal weights for good_item but giving
-    -- the more desireable antimagic brand for randarts, which are trying to be
+    -- the more desirable antimagic brand for randarts, which are trying to be
     -- better quality.
     if quality == "good_item" then
-        egos = {["antimagic"] = 10, ["vorpal"] = 10, ["flaming"] = 10}
+        egos = {["antimagic"] = 10, ["heavy"] = 10, ["flaming"] = 10}
     elseif quality == "randart" then
         -- Increased chance for antimagic.
-        egos = {["antimagic"] = 25, ["vorpal"] = 10, ["flaming"] = 10}
+        egos = {["antimagic"] = 25, ["heavy"] = 10, ["flaming"] = 10}
     else
         error("Unknown weapon quality: " .. quality)
     end
@@ -745,7 +745,7 @@ ORIENT: float
 KMONS:  O = player ghost
 MONS:   jelly, slime creature, glowing orange brain / great orb of eyes
 MONS:   eye of devastation / rockslime / quicksilver ooze
-MONS:   floating eye / shining eye / golden eye band
+MONS:   glass eye / shining eye / golden eye band
 MONS:   azure jelly / acid blob
 : ghost_good_loot(_G)
 : if you.in_branch("D") then
@@ -1480,7 +1480,7 @@ ORIENT: float
 DEPTH:  D:3-6
 KMONS:  O = player_ghost
 KMONS:  1 = quokka / giant cockroach / rat / ball python
-KMONS:  2 = adder / worm / river rat
+KMONS:  2 = adder / ribbon worm / river rat
 KMONS:  3 = bullfrog
 KFEAT:  O = expired_portal
 KFEAT:  123*%$ = W
@@ -1683,9 +1683,9 @@ KMONS:   H = frost giant ; great mace ego:freezing w:20 \
 KMONS:   J = frost giant ; great mace ego:freezing randart w:20 \
             | giant club ego:freezing randart w:3 \
             | giant spiked club ego:freezing randart w:2
-KMONS:   K = iron giant ; great mace ego:vorpal randart w:20 \
-            | giant club ego:vorpal randart w:3 \
-            | giant spiked club ego:vorpal randart w:2
+KMONS:   K = iron giant ; great mace ego:heavy randart w:20 \
+            | giant club ego:heavy randart w:3 \
+            | giant spiked club ego:heavy randart w:2
 # Use one of the two inner wall patterns.
 SHUFFLE: xv
 SUBST:   v = -, x : xcbv
@@ -2127,8 +2127,7 @@ MONS:   glowing shapeshifter
 SUBST:  D = FH, fg = |*, h = *, i = $%, j= -
 NSUBST: - = 1 / 2=1. / 4=2 / 4=2. / 2=3 / 2=3. / .
 : elseif you.in_branch("Depths") then
-MONS:   spark wasp / very ugly thing / fire dragon / ice dragon \
-        / floating eye w:5
+MONS:   spark wasp / very ugly thing / fire dragon / ice dragon / glass eye w:5
 MONS:   storm dragon / shadow dragon / quicksilver dragon / golden dragon \
         / iron dragon
 MONS:   caustic shrike
@@ -2337,11 +2336,10 @@ ORIENT: float
 KMASK:  -DEFHNOQRdeqrsyuz1234|*%$^ = opaque
 KITEM:  N = scroll of teleportation q:3 ident:all w:20 \
             / scroll of blinking ident:all w:20 \
-            / boomerang ego:dispersal ident:all \
+            / dart ego:dispersal ident:all \
             / book of spatial translocations \
             / book of the warp \
             / there-and-back book \
-            / inescapable atlas \
             / book of displacement \
             / randbook owner:Lugonu disc:translocation ident:all w:5 \
             / manual of translocations w:2 / rift w:2
@@ -2404,13 +2402,13 @@ NSUBST: - = qrs / 2=1 / 2=1- / 2--- / -
 MONS:   any lesser demon w:5 / small abomination
 MONS:   toenail golem / ancient zyme / any common demon / ugly thing
 MONS:   worldbinder / large abomination / raiju / shapeshifter / rakshasa \
-        / wizard / hell hog / thrashing horror
+        / arcanist / occultist / hell hog / thrashing horror
 SUBST:  d = *, e = *%, f = %$, ghij= -
 NSUBST: - = suy / 2=1 / 2=1- / 2=2- / 3--- / -
 :     elseif you.depth() < 12 then
 MONS:   small abomination / toenail golem / any common demon w:5
-MONS:   ugly thing / large abomination / raiju / shapeshifter / wizard \
-        / hell hog / thrashing horror
+MONS:   ugly thing / large abomination / raiju / shapeshifter / arcanist \
+        / occultist / hell hog / thrashing horror
 MONS:   ancient zyme / worldbinder / rakshasa
 MONS:   great orb of eyes / glowing orange brain / very ugly thing \
         / lurking horror / wretched star / tentacled starspawn
@@ -2418,8 +2416,8 @@ SUBST:  e = *, f = *%, g = %$--, hij= -
 NSUBST: - = uyz / 2=1 / 2=1- / 2 / 2- / 3- / 4--- / -
 :     elseif you.depth() < 14 then
 MONS:   any common demon / ugly thing / large abomination / worldbinder
-MONS:   raiju / shapeshifter / thrashing horror / wizard / hell hog \
-        / very ugly thing
+MONS:   raiju / shapeshifter / thrashing horror / arcanist / occultist \
+        / hell hog / very ugly thing
 MONS:   ancient zyme / rakshasa / great orb of eyes / glowing orange brain
 MONS:   lurking horror / wretched star / tentacled starspawn / cacodemon \
         / hellion / apocalypse crab / glowing shapeshifter / crystal guardian \
@@ -2429,8 +2427,8 @@ SUBST:  f = |*, g = *%, h = %$--, ij= -
 NSUBST: - = yzDF / 2=1 / 3=1- / 2 / 2=2- / 3 / 4- / -
 :     else
 MONS:   ugly thing / large abomination / worldbinder / raiju / shapeshifter \
-        / rakshasa / thrashing horror / wizard
-MONS:   wizard / hell hog / great orb of eyes / very ugly thing \
+        / rakshasa / thrashing horror / arcanist / occultist
+MONS:   arcanist / occultist / hell hog / great orb of eyes / very ugly thing \
         / glowing orange brain / tentacled starspawn / cacodemon
 MONS:   lurking horror / wretched star / hellion / apocalypse crab
 MONS:   glowing shapeshifter / crystal guardian / tentacled monstrosity \
@@ -2456,7 +2454,7 @@ NSUBST: - = qE / 2=1 / 2=1- / 2 / 2=2- / 3- / 4- / -
 FTILE:  'PSncbv = floor_nerves_green
 : elseif you.in_branch("Orc") then
 MONS:   any common demon / ugly thing / large abomination / worldbinder / raiju
-MONS:   shapeshifter / rakshasa / thrashing horror / wizard / hell hog \
+MONS:   shapeshifter / rakshasa / thrashing horror / occultist / hell hog \
         / very ugly thing
 MONS:   ancient zyme / great orb of eyes / glowing orange brain
 MONS:   lurking horror / wretched star / tentacled starspawn / cacodemon \
@@ -2472,7 +2470,7 @@ FTILE:  'PSncbv = floor_nerves_brown
 :        or you.in_branch("Spider") then
 # Use the same basic monster list for all 4 Lair branches.
 MONS:   ugly thing / large abomination / worldbinder / raiju \
-        / thrashing horror / wizard / hell hog
+        / thrashing horror / occultist / hell hog
 MONS:   great orb of eyes / glowing orange brain / very ugly thing \
         / tentacled starspawn / cacodemon
 MONS:   lurking horror / wretched star / hellion / apocalypse crab
@@ -2627,7 +2625,7 @@ NAME:   hellmonk_ghost_big_iron
 TAGS:   vaults_orient_s
 DEPTH:  D:8-13, Elf, Vaults, !Vaults:$, Crypt, Depths, Zot
 ORIENT: float
-ITEM:   randbook disc:earth spells:iron_shot, javelin q:1
+ITEM:   book of iron, javelin q:1
 KMONS:  O = player ghost
 KMONS:  p = plant
 KMONS:  - = bush
@@ -2671,4 +2669,29 @@ MAP
 ..nnn=nnn..
 .....@.....
 ...........
+ENDMAP
+
+NAME:   hellmonk_ghost_time_enough
+TAGS:   transparent no_item_gen
+DEPTH:  Depths
+ORIENT: float
+KMONS:  O = player ghost
+MONS:   walking crystal tome / walking earthen tome / walking frostbound tome /\
+        walking divine tome
+ITEM:   any book good_item / any manual w:1
+NSUBST: - = 3:d / 5 = d. / 2:1 / *=1.
+TILE:   c = wall_studio
+: ghost_setup(_G)
+MAP
+...............
+.nnnnnnnnnnnnn.
+.n-....-....-n.
+.n.ccc...ccc.n.
+.n-...-.-...-n.
+.n.ccc...ccc.n.
+.n..-..-..-..n.
+.n.ccc.O.ccc.n.
+.n-.........-n.
+.nnnnn===nnnnn.
+...............
 ENDMAP

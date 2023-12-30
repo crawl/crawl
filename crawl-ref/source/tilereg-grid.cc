@@ -148,6 +148,7 @@ void GridRegion::render()
 #endif
     set_transform();
     m_buf.draw();
+    // XX implement glyph modes for sidebar UI
 
     draw_tag();
 }

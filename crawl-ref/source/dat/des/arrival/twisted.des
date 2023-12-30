@@ -46,11 +46,11 @@ SUBST:  Zz=., V=x
 : end
 MARKER: { = lua:props_marker { arrival_stairs=1 }
 veto {{
-  local slave = dgn.find_marker_positions_by_prop( "arrival_stairs", 1 )
-  if slave == nil then return false end
-  if slave[1] == nil then return false end
-  crawl.mpr("(".. slave[1].x .. "," .. slave[1].y .. ")")
-  return not dgn.has_exit_from(slave[1])
+  local replica = dgn.find_marker_positions_by_prop( "arrival_stairs", 1 )
+  if replica == nil then return false end
+  if replica[1] == nil then return false end
+  crawl.mpr("(".. replica[1].x .. "," .. replica[1].y .. ")")
+  return not dgn.has_exit_from(replica[1])
 }}
 MAP
             xxxxxx@xxxxxx
@@ -82,13 +82,12 @@ ENDMAP
 NAME:    kb_arrival_jail
 TAGS:    arrival no_monster_gen no_trap_gen
 ORIENT:  north
-SUBST:   - = apqrsuyzDEFHJKLMNOPQRSTZ
-SHUFFLE: apqrsuyzDEFHJKLMNOPQRSTZ
-KPROP:   apqrsuyzDEFHJKLMNOPQRSTZ = no_tele_into
-KMASK:   apqrsuyzDEFHJKLMNOPQRSTZ = no_item_gen
+SUBST:   - = aprsuyzDEFHJKLMNOPQRSTZ
+SHUFFLE: aprsuyzDEFHJKLMNOPQRSTZ
+KPROP:   aprsuyzDEFHJKLMNOPQRSTZ = no_tele_into
+KMASK:   aprsuyzDEFHJKLMNOPQRSTZ = no_item_gen
 KMONS:   a = human ; nothing
 KMONS:   p = elf ; nothing
-KMONS:   q = meteoran ; nothing
 KMONS:   r = orc ; nothing
 KMONS:   s = merfolk ; nothing
 KMONS:   u = naga ; nothing
@@ -108,7 +107,7 @@ KMONS:   P = demigod ; nothing
 KMONS:   Q = octopode ; nothing
 KMONS:   R = formicid ; nothing
 KMONS:   S = gargoyle ; nothing
-KMONS:   T = palentonga ; nothing
+KMONS:   T = armataur ; nothing
 KMONS:   Z = vine stalker ; nothing
 MAP
  ccccc
@@ -489,43 +488,41 @@ ENDMAP
 # may delegate it to another branch, where less caution measures are
 # demanded. But I'd like to keep it on D:1 (dp).
 NAME:    shiori_arrival_elements
-TAGS:    arrival no_monster_gen no_tele_into
+TAGS:    arrival no_monster_gen no_pool_fixup no_tele_into
 ORIENT:  float
+KFEAT:   DIO = .
+KFEAT:   H = w
+KFEAT:   K = l
+# Poison and Earth get random extra glass not blocking off the edges.
+# Ice and Fire randomly set all liquid, next to none, or mix up both.
+SUBST:   X : c., E = E n:1, R = R n:1
+SUBST:   w : IJWw, J = IWww, K = w
+SUBST:   l : MNNl, N = Lll, O = l
 MARKER:  D = lua:fog_machine { \
-             pow_max = 10, delay_min = 50, delay_max = 300, \
-             size = 8, start_clouds = 1, \
-             cloud_type = "noxious fumes" }
-SUBST:   D = E
-FTILE:   EF = floor_slime
-COLOUR:  EF = lightgreen
-SUBST:   E = E n:1
-MARKER:  W = lua:fog_machine{\
-             pow_max = 10, delay_min = 50, delay_max = 300, \
-             size = 8, start_clouds = 1, \
-             cloud_type = "freezing vapour"}
-SUBST:   W = w, w : HIWw, I = HWww
-FTILE:   H = floor_rough_blue
-COLOUR:  H = blue
-SUBST:   J = w
-MARKER:  K = lua:fog_machine {\
-             pow_max = 10, delay_min = 50, delay_max = 300, \
-             size = 8, start_clouds = 1, \
-             cloud_type = "flame"}
-SUBST:   K = l, l : LMMl , M = Lll
-FTILE:   L = floor_rough_red
-COLOUR:  L = red
-SUBST:   N = l
-MARKER:  O = lua:fog_machine{\
+             pow_min = 20, pow_max = 30, delay_min = 50, delay_max = 150, \
+             size_min = 4, size_max = 8, spread_rate = 10, start_clouds = 8, \
+             walk_dist = 1, cloud_type = "noxious fumes" }
+MARKER:  H = lua:fog_machine{\
+             pow_min = 20, pow_max = 30, delay_min = 50, delay_max = 150, \
+             size_min = 4, size_max = 8, spread_rate = 10, start_clouds = 8, \
+             walk_dist = 1, cloud_type = "freezing vapour"}
+MARKER:  L = lua:fog_machine {\
+             pow_min = 20, pow_max = 30, delay_min = 50, delay_max = 150, \
+             size_min = 4, size_max = 8, spread_rate = 10, start_clouds = 8, \
+             walk_dist = 1, cloud_type = "flame"}
+MARKER:  P = lua:fog_machine{\
              pow_max = 20, delay_min = 50, delay_max = 300, \
-             size = 12, start_clouds = 1, \
-             cloud_type = "black smoke"}
-SUBST:   O = P
+             size_min = 4, size_max = 8, start_clouds = 4, \
+             walk_dist = 1, cloud_type = "black smoke"}
+KMASK:   DEFIMW = no_item_gen
+FTILE:   DEF = floor_slime
+FTILE:   I = floor_rough_blue
+FTILE:   M = floor_rough_red
 FTILE:   PQ = floor_mud
-COLOUR:  PQ = brown
-SUBST:   P = P n:1
-SUBST:   X : c.
-NSUBST:  > : 1:> / *:.
-KMASK:   EFHLW = no_item_gen
+COLOUR:  DEF = lightgreen
+COLOUR:  H = blue
+COLOUR:  M = red
+COLOUR:  OPQ = brown
 MAP
           ...
        cccnnnccc
@@ -534,20 +531,20 @@ MAP
       cFFEEEEEFFc
       ccFFFEFFFcc
   cccccccnnnnnccccccc
- ccHHccccc...cccccLLcc
- cHwHHccccc+cccccLLlLc
- cHwwHnccX...XccnLllLc
-.nwwwHnJc..>..cNnLllln.
-.nwWwwn.+.>{>.+.nllKln.
-.nwwwHnJc..>..cNnLllln.
- cHwwHnccX...XccnLllLc
- cHwHHccccc+cccccLLlLc
- ccHHcccccG.GcccccLLcc
+ ccIIccccc...cccccMMcc
+ cIwIIccccc+cccccMMlMc
+ cIwwInccX...XccnMllMc
+.nwwwInKc.....cOnMllln.
+.nwHwwn.+..{..+.nllLln.
+.nwwwInKc.....cOnMllln.
+ cIwwInccX...XccnMllMc
+ cIwIIccccc+cccccMMlMc
+ ccIIcccccG.GcccccMMcc
   cccccccnn+nnccccccc
-      ccQQQPQQQcc
-      cQQPPPPPQQc
-      cQPPPOPPPQc
-      ccQQPPPQQcc
+      ccRRRQRRRcc
+      cRRQQQQQRRc
+      cRQQQPQQQRc
+      ccRRQQQRRcc
        ccc+++ccc
 ENDMAP
 
@@ -649,10 +646,10 @@ ENDMAP
 ##############################################################################
 NAME:    dpeg_arrival_caged_fury
 TAGS:    arrival no_rotate
-MONS:    w:30 nothing / giant cockroach / w:2 worm
+MONS:    w:30 nothing / giant cockroach / w:2 ribbon worm
 MONS:    w:30 nothing / endoplasm
 MONS:    w:20 nothing / jackal / rat
-MONS:    w:30 nothing / endoplasm / w:2 jelly / giant cockroach / w:2 worm / \
+MONS:    w:30 nothing / endoplasm / w:2 jelly / giant cockroach / w:2 ribbon worm / \
          w:5 jackal / w:5 rat
 ORIENT:  float
 FTILE:   1234ABCDEabcdem = floor_dirt

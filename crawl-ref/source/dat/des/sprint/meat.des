@@ -46,7 +46,7 @@
     "vampire knight hp:500 hd:40 name:destroyer n_rpl n_des n_spe " ..
     "never_corpse col:red tile:mons_destroyer generate_awake " ..
     "spells:blink_close.90.wizard " ..
-    "; ring of slaying plus:200 . great sword plus:9 ego:vorpal"
+    "; ring of slaying plus:200 . great sword plus:9 ego:heavy"
 
   local plague =
     "sea snake hp:500 hd:30 name:scourge n_rpl n_des n_spe " ..
@@ -104,13 +104,13 @@
     "sigmund hp:850 hd:40 name:The_Captor n_rpl col:lightcyan " ..
     "generate_awake never_corpse " ..
     "spells:sentinel's_mark.30.wizard;haste.30.wizard;ensnare.30.wizard " ..
-    "; ring of slaying plus:200 . triple sword plus:9 ego:vorpal"
+    "; ring of slaying plus:200 . triple sword plus:9 ego:heavy"
 
   local defiler =
     "edmund hp:1000 hd:50 name:The_Defiler n_rpl col:white " ..
     "generate_awake never_corpse " ..
     "spells:fireball.60.natural;poisonous_cloud.20.natural " ..
-    "; ring of slaying plus:250 . demon whip plus:9 ego:vorpal . tower shield plus:12 ego:none"
+    "; ring of slaying plus:250 . demon whip plus:9 ego:heavy . tower shield plus:12 ego:none"
 
   -- Meatlord shadow creatures will be tzitzimimeh
   local meatlord =

@@ -125,6 +125,9 @@ static COLOURS FG_COL = LIGHTGREY;
 /** @brief The current background @em colour. */
 static COLOURS BG_COL = BLACK;
 
+void enter_headless_mode() { }
+bool in_headless_mode() { return false; }
+
 void writeChar(char32_t c)
 {
     if (c == '\t')
@@ -613,7 +616,9 @@ static unsigned short _dos_highlight(unsigned short colour, unsigned highlight)
 // XX code duplication
 static inline unsigned get_highlight(int col)
 {
-    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_highlight :
+    return ((col & COLFLAG_UNUSUAL_MASK) == COLFLAG_UNUSUAL_MASK) ?
+                                              Options.unusual_highlight :
+           (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_highlight :
            (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_highlight :
            (col & COLFLAG_ITEM_HEAP)        ? Options.heap_highlight :
            (col & COLFLAG_WILLSTAB)         ? Options.stab_highlight :

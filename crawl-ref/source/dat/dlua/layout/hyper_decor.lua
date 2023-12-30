@@ -76,7 +76,7 @@ function hyper.rooms.decorate_walls(state, connections, door_required, has_windo
      or state.options.no_windows or not crawl.one_chance_in(5) then return end
 
   -- Choose feature for window
-  -- TODO: Pick other features in way that's similarly overrideable at multiple levels
+  -- TODO: Pick other features in way that's similarly overridable at multiple levels
   local window_feature = "clear_stone_wall"
   if state.options.layout_window_type ~= nil then window_feature = state.options.layout_window_type end
   if state.room.generator_used.window_type ~= nil then window_feature = state.room.generator_used.window_type end

@@ -48,36 +48,62 @@ maybe_bool read_maybe_bool(const string &field)
 {
     // TODO: check for "maybe" explicitly or something?
     if (field == "true" || field == "1" || field == "yes")
-        return MB_TRUE;
+        return true;
 
     if (field == "false" || field == "0" || field == "no")
-        return MB_FALSE;
+        return false;
 
-    return MB_MAYBE;
+    return maybe_bool::maybe;
 }
 
 bool read_bool(const string &field, bool def_value)
 {
     const maybe_bool result = read_maybe_bool(field);
-    if (result != MB_MAYBE)
-        return tobool(result, false);
+    if (result.is_bool())
+        return bool(result);
 
     Options.report_error("Bad boolean: %s (should be true or false)", field.c_str());
     return def_value;
 }
 
+string GameOption::loadFromString(const std::string &, rc_line_type)
+{
+    loaded = true;
+    if (on_set)
+        on_set();
+    return "";
+}
+
+string GameOption::loadFromParseState(const opt_parse_state &state)
+{
+    // if an override doesn't call loadFromString here, make sure to call
+    // on_set() directly
+    return loadFromString(
+        case_sensitive ? state.raw_field : state.field,
+        state.line_type);
+}
+
+string DisabledGameOption::loadFromParseState(const opt_parse_state &state)
+{
+    // use the parse state key: this lets this class group together
+    // multiple unrelated options for convenience
+    if (on_set)
+        on_set();
+    return make_stringf("Option '%s' is disabled in this build.",
+            state.key.c_str());
+}
 
 string BoolGameOption::loadFromString(const string &field, rc_line_type ltyp)
 {
     string error;
     const maybe_bool result = read_maybe_bool(field);
-    if (result == MB_MAYBE)
+    if (!result.is_bool())
     {
         return make_stringf("Bad %s value: %s (should be true or false)",
                             name().c_str(), field.c_str());
     }
 
-    value = tobool(result, false);
+    value = bool(result);
     return GameOption::loadFromString(field, ltyp);
 }
 
@@ -119,11 +145,28 @@ string IntGameOption::loadFromString(const string &field, rc_line_type ltyp)
 {
     int val = default_value;
     if (!parse_int(field.c_str(), val))
-        return make_stringf("Bad %s: \"%s\"", name().c_str(), field.c_str());
+        return make_stringf("Couldn't parse integer option %s: \"%s\"", name().c_str(), field.c_str());
     if (val < min_value)
         return make_stringf("Bad %s: %d should be >= %d", name().c_str(), val, min_value);
     if (val > max_value)
-        return make_stringf("Bad %s: %d should be <<= %d", name().c_str(), val, max_value);
+        return make_stringf("Bad %s: %d should be <= %d", name().c_str(), val, max_value);
+    value = val;
+    return GameOption::loadFromString(field, ltyp);
+}
+
+string FixedpGameOption::loadFromString(const string &field, rc_line_type ltyp)
+{
+    // is this still the best way to handle this with error checking in 2023??
+    // strtod doesn't give good error checking, maybe std::stod?
+    float tmp_float;
+    if (!sscanf(field.c_str(), "%f", &tmp_float))
+        return make_stringf("Couldn't parse decimal option %s: \"%s\"", name().c_str(), field.c_str());
+    fixedp<> val = tmp_float; // implicit cast
+    if (val < min_value)
+        return make_stringf("Bad %s: %g should be >= %g", name().c_str(), (float) val, (float) min_value);
+    if (val > max_value)
+        return make_stringf("Bad %s: %g should be <= %g", name().c_str(), (float) val, (float) max_value);
+
     value = val;
     return GameOption::loadFromString(field, ltyp);
 }
@@ -157,6 +200,7 @@ string ColourThresholdOption::loadFromString(const string &field,
                 remove_matching(value, entry);
             break;
         default:
+            // XX should this really be a die?
             die("Unknown rc line type for %s: %d!", name().c_str(), ltyp);
     }
     return GameOption::loadFromString(field, ltyp);
@@ -176,6 +220,8 @@ colour_thresholds
             const string failure = make_stringf("Bad %s pair: '%s'",
                                                 name().c_str(),
                                                 pair_str.c_str());
+            // XX should this really be a `die`? I *think* it can only be
+            // triggered by someone setting a bad default in this file...
             if (!error)
                 die("%s", failure.c_str());
             *error = failure;
@@ -191,6 +237,7 @@ colour_thresholds
             const string failure = make_stringf("Bad %s: '%s'",
                                                 name().c_str(),
                                                 colstr.c_str());
+            // see note above
             if (!error)
                 die("%s", failure.c_str());
             *error = failure;

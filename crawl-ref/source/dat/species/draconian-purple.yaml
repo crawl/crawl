@@ -11,12 +11,13 @@ aptitudes:
   xp: -1
   hp: 1
   mp_mod: 0
-  mr: 6
+  wl: 6
   fighting: 1
   ranged weapons: -1
   throwing: -1
   armour: False
   dodging: -1
+  shapeshifting: -1
   invocations: 1
   # Purple Draconian specific
   spellcasting: 1

@@ -53,7 +53,6 @@ enum command_type
     CMD_GO_DOWNSTAIRS,
     CMD_TOGGLE_AUTOPICKUP,
     CMD_TOGGLE_SOUND,
-    CMD_TOGGLE_TRAVEL_SPEED,
     CMD_PICKUP,
     CMD_PICKUP_QUANTITY,
     CMD_DROP,
@@ -134,6 +133,9 @@ enum command_type
     CMD_AUTOFIGHT_NOMOVE,
     CMD_AUTOFIRE,
 
+    CMD_EQUIP,
+    CMD_UNEQUIP,
+
 #ifdef USE_TILE
     CMD_ZOOM_IN,
     CMD_ZOOM_OUT,
@@ -143,9 +145,11 @@ enum command_type
     CMD_MAX_TILE = CMD_EDIT_PLAYER_TILE,
 #endif
 
-#ifdef TOUCH_UI
-    // bring up the on-screen keyboard if needed
-    CMD_SHOW_KEYBOARD,
+#ifdef __ANDROID__
+    // toggle the tab icons visibility in the small layout
+    CMD_TOGGLE_TAB_ICONS,
+    // toggle the on-screen keyboard visibility
+    CMD_TOGGLE_KEYBOARD,
 #endif
 
     // Repeat previous command
@@ -306,6 +310,8 @@ enum command_type
     CMD_MENU_UP,      // move hover or menu scroll, depending on options
     CMD_MIN_MENU = CMD_MENU_UP,
     CMD_MENU_DOWN,
+    CMD_MENU_LEFT, // for multi-col menus, left/right move between columns, otherwise they cycle mode
+    CMD_MENU_RIGHT,
     CMD_MENU_LINE_UP, // move menu scroll no matter what
     CMD_MENU_LINE_DOWN,
     CMD_MENU_PAGE_UP,

@@ -161,14 +161,17 @@ const vector<vector<god_power>> & get_all_god_powers()
 
         // Okawaru
         {   { 1, ABIL_OKAWARU_HEROISM, "gain great but temporary skills" },
-            { 3, "Okawaru will now gift you throwing weapons as you gain piety.",
-                 "Okawaru will no longer gift you throwing weapons.",
-                 "Okawaru will gift you throwing weapons as you gain piety." },
             { 4, ABIL_OKAWARU_FINESSE, "speed up your combat" },
             { 5, ABIL_OKAWARU_DUEL, "enter into single combat with a foe"},
-            { 5, "Okawaru will now gift you equipment as you gain piety.",
-                 "Okawaru will no longer gift you equipment.",
-                 "Okawaru will gift you equipment as you gain piety." },
+            { 5, "Okawaru will now gift you throwing weapons as you gain piety.",
+                 "Okawaru will no longer gift you throwing weapons.",
+                 "Okawaru will gift you throwing weapons as you gain piety." },
+            { 6, ABIL_OKAWARU_GIFT_WEAPON,
+                 "Okawaru will grant you a choice of weapons... once.",
+                 "Okawaru is no longer ready to gift you weaponry." },
+            { 6, ABIL_OKAWARU_GIFT_ARMOUR,
+                 "Okawaru will grant you a choice of armour... once.",
+                 "Okawaru is no longer ready to gift you armour." },
         },
 
         // Makhleb
@@ -231,8 +234,7 @@ const vector<vector<god_power>> & get_all_god_powers()
         {   { 1, ABIL_LUGONU_ABYSS_EXIT,
                  "depart the Abyss",
                  "depart the Abyss at will" },
-            { 2, ABIL_LUGONU_BEND_SPACE, "bend space around yourself" },
-            { 3, ABIL_LUGONU_BANISH, "banish your foes" },
+            { 2, ABIL_LUGONU_BANISH, "banish your foes" },
             { 4, ABIL_LUGONU_CORRUPT, "corrupt the fabric of space" },
             { 5, ABIL_LUGONU_ABYSS_ENTER, "gate yourself to the Abyss" },
             { 7, ABIL_LUGONU_BLESS_WEAPON,
@@ -283,11 +285,7 @@ const vector<vector<god_power>> & get_all_god_powers()
 
         // Ashenzari
         {   { 0, "Ashenzari warns you of distant threats and treasures.\n"
-                 "Ashenzari reveals the structure of the dungeon to you.\n"
                  "Ashenzari shows you where magical portals lie." },
-            { 1, "Ashenzari will now protect you from malevolent surprises.",
-                 "Ashenzari no longer protects you from malevolent surprises.",
-                 "Ashenzari protects you from malevolent surprises." },
             { 1, "Ashenzari will now identify your possessions.",
                  "Ashenzari will no longer identify your possesions.",
                  "Ashenzari identifies your possessions." },
@@ -297,9 +295,11 @@ const vector<vector<god_power>> & get_all_god_powers()
             { 3, "Ashenzari will now keep your mind clear.",
                  "Ashenzari will no longer keep your mind clear.",
                  "Ashenzari keeps your mind clear." },
-            { 4, "Ashenzari will now grant you astral sight.",
-                 "Ashenzari will no longer grant you astral sight.",
-                 "Ashenzari grants you astral sight." },
+            { 4, "Ashenzari will now protect you from the dungeon's malevolent forces.",
+                 "Ashenzari no longer protects you from the dungeon's malevolent forces.",
+                 "Ashenzari protects you from the dungeon's malevolent forces." },
+            { 4, "Ashenzari reveals the structure of the nearby dungeon.",
+                 "Ashenzari no longer reveals the structure of the nearby dungeon." },
         },
 
         // Dithmenos
@@ -376,7 +376,9 @@ const vector<vector<god_power>> & get_all_god_powers()
             { 1, ABIL_HEPLIAKLQANA_IDENTITY, "remember your ancestor's identity" },
             { 3, ABIL_HEPLIAKLQANA_TRANSFERENCE, "swap creatures with your ancestor" },
             { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
-            { 5, "drain nearby creatures when transferring your ancestor"},
+            { 5, "You now drain nearby creatures when transferring your ancestor.",
+                 "You no longer drain nearby creatures when transferring your ancestor.",
+                 "You drain nearby creatures when transferring your ancestor." },
         },
 
         // Wu Jian
@@ -768,8 +770,10 @@ bool ignis_is_dead()
 /// Is there any penalty from your god for removing an amulet of faith?
 bool faith_has_penalty()
 {
-    return ignore_faith_reason().empty()
+    return !you.has_mutation(MUT_FAITH)
+        && ignore_faith_reason().empty()
         && !you_worship(GOD_XOM)
+        && !you_worship(GOD_USKAYAW)
         && !you_worship(GOD_NO_GOD);
 }
 
@@ -885,6 +889,12 @@ static void _inc_penance(god_type god, int val)
                 you.duration[DUR_SLIMIFY] = 0;
             if (you.duration[DUR_OOZEMANCY])
                 jiyva_end_oozemancy();
+            if (slime_wall_neighbour(you.pos()))
+            {
+                // lose slime wall immunity
+                you.wield_change = true;
+                you.redraw_armour_class = true;
+            }
         }
         else if (god == GOD_QAZLAL)
         {
@@ -976,15 +986,15 @@ static void _inc_gift_timeout(int val)
 }
 
 // These are sorted in order of power.
-// monsteres here come from genera: n, z, V and W
+// monsters here come from genera: n, z, V and W
 // - Vampire mages are excluded because they worship scholarly Kiku
 // - M genus is all Kiku's domain
 // - Curse *, putrid mouths, and bloated husks left out as they might
-//   do too much collatoral damage
+//   do too much collateral damage
 static monster_type _yred_servants[] =
 {
     MONS_WIGHT, MONS_NECROPHAGE, MONS_SHADOW, MONS_PHANTOM, MONS_WRAITH,
-    MONS_FLYING_SKULL, MONS_FREEZING_WRAITH, MONS_VAMPIRE, MONS_SHADOW_WRAITH,
+    MONS_VAMPIRE, MONS_FREEZING_WRAITH, MONS_LAUGHING_SKULL, MONS_SHADOW_WRAITH,
     MONS_PHANTASMAL_WARRIOR, MONS_BOG_BODY, MONS_SKELETAL_WARRIOR,
     MONS_JIANGSHI, MONS_FLAYED_GHOST, MONS_VAMPIRE_KNIGHT, MONS_EIDOLON,
     MONS_DEATH_COB, MONS_ANCIENT_CHAMPION, MONS_GHOUL, MONS_REVENANT,
@@ -1046,7 +1056,7 @@ static void _calculate_yred_piety()
 
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!is_yred_undead_slave(**mi) || mi->is_summoned()
+        if (!is_yred_undead_follower(**mi) || mi->is_summoned()
             || mons_is_tentacle_or_tentacle_segment(mi->type))
         {
             continue;
@@ -1094,29 +1104,29 @@ bool yred_reap_chance()
 }
 
 // When under penance or after removing faith,
-// Yredelemnulites can lose many nearby undead slaves.
+// Yredelemnulites can lose many nearby undead followers.
 bool yred_reclaim_souls(bool all)
 {
     int num_reclaim = 0;
-    int num_slaves = 0;
+    int num_followers = 0;
 
     // no hiding them in a closet to take of faith halfway through a level
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!is_yred_undead_slave(**mi) || mi->is_summoned()
+        if (!is_yred_undead_follower(**mi) || mi->is_summoned()
             || mons_is_tentacle_or_tentacle_segment(mi->type)
             || mons_bound_soul(**mi))
         {
             continue;
         }
 
-        num_slaves++;
+        num_followers++;
         const int hd = mi->get_hit_dice();
 
         // the player gets to keep a few, particularly weaklings,
         // but always loses at least one
         if (!all && num_reclaim > 0
-            && (one_chance_in(num_slaves) || random2(20) < hd))
+            && (one_chance_in(num_followers) || random2(20) < hd))
         {
             continue;
         }
@@ -1128,9 +1138,9 @@ bool yred_reclaim_souls(bool all)
 
     if (num_reclaim > 0)
     {
-        if (num_reclaim == 1 && num_slaves > 1)
+        if (num_reclaim == 1 && num_followers > 1)
             simple_god_message(" reclaims one of your reaped souls!", GOD_YREDELEMNUL);
-        else if (num_reclaim == num_slaves)
+        else if (num_reclaim == num_followers)
             simple_god_message(" reclaims your reaped souls!", GOD_YREDELEMNUL);
         else
             simple_god_message(" reclaims some of your reaped souls!", GOD_YREDELEMNUL);
@@ -1147,7 +1157,7 @@ bool pay_yred_souls(unsigned int how_many, bool just_check)
     unsigned int seen = 0;
     for (monster_near_iterator mi(you.pos(), LOS_DEFAULT); mi; ++mi)
     {
-        if (!is_yred_undead_slave(**mi) || mi->is_summoned()
+        if (!is_yred_undead_follower(**mi) || mi->is_summoned()
             || mons_is_tentacle_or_tentacle_segment(mi->type)
             || mons_bound_soul(**mi))
         {
@@ -1179,14 +1189,6 @@ bool pay_yred_souls(unsigned int how_many, bool just_check)
     return true;
 }
 
-static bool _want_missile_gift()
-{
-    return you.piety >= piety_breakpoint(2)
-           && random2(you.piety) > 70
-           && one_chance_in(8)
-           && x_chance_in_y(1 + you.skills[SK_THROWING], 12);
-}
-
 static bool _want_nemelex_gift()
 {
     if (you.piety < piety_breakpoint(0))
@@ -1213,8 +1215,6 @@ static bool _give_nemelex_gift(bool forced = false)
         simple_god_message(" deals you some cards!");
         mprf(MSGCH_GOD, "You now have %s.", deck_summary().c_str());
     }
-    else
-        simple_god_message(" goes to deal, but finds you have enough cards.");
     _inc_gift_timeout(5 + random2avg(9, 2));
     you.num_current_gifts[you.religion]++;
     you.num_total_gifts[you.religion]++;
@@ -1394,30 +1394,23 @@ static bool _give_trog_oka_gift(bool forced)
 
     // No use for anything below. (No guarantees this will work right if these
     // mutations can ever appear separately.)
-    if (you.has_mutation(MUT_NO_GRASPING) && you.has_mutation(MUT_NO_ARMOUR))
+    if (you.has_mutation(MUT_NO_GRASPING))
         return false;
 
-    const bool want_equipment = forced
-                                || (you.piety >= piety_breakpoint(4)
-                                    && random2(you.piety) > 120
-                                    && one_chance_in(4));
-    // Oka can gift throwing weapons, but if equipment is successful, we choose
-    // equipment unless the gift was forced by wizard mode. In that case,
-    // throwing weapons, other weapons, and armour all get equal weight below.
+    const bool want_weapons = you_worship(GOD_TROG)
+                              && (forced || you.piety >= piety_breakpoint(4)
+                                            && random2(you.piety) > 120
+                                            && one_chance_in(4));
     const bool want_missiles = you_worship(GOD_OKAWARU)
-                               && (forced
-                                   || !want_equipment && _want_missile_gift());
+                               && (forced || you.piety >= piety_breakpoint(4)
+                                             && random2(you.piety) > 120
+                                             && x_chance_in_y(2,5));
     object_class_type gift_type;
 
-    if (you_worship(GOD_TROG) && want_equipment)
+    if (want_weapons)
         gift_type = OBJ_WEAPONS;
-    else if (you_worship(GOD_OKAWARU) && (want_equipment || want_missiles))
-    {
-        gift_type = random_choose_weighted(
-                want_equipment, OBJ_WEAPONS,
-                want_equipment, OBJ_ARMOUR,
-                want_missiles,  OBJ_MISSILES);
-    }
+    else if (want_missiles)
+        gift_type = OBJ_MISSILES;
     else
         return false;
 
@@ -1428,9 +1421,6 @@ static bool _give_trog_oka_gift(bool forced)
         break;
     case OBJ_WEAPONS:
         simple_god_message(" grants you a weapon!");
-        break;
-    case OBJ_ARMOUR:
-        simple_god_message(" grants you armour!");
         break;
     default:
         simple_god_message(" grants you bugs!");
@@ -1448,12 +1438,8 @@ static bool _give_trog_oka_gift(bool forced)
     switch (gift_type)
     {
     case OBJ_MISSILES:
-        _inc_gift_timeout(4 + roll_dice(2, 4));
+        _inc_gift_timeout(26 + random2avg(19, 2));
         break;
-    case OBJ_ARMOUR:
-        if (you_worship(GOD_OKAWARU) && gift_type == OBJ_ARMOUR)
-            _inc_gift_timeout(30 + random2avg(15, 2));
-        // intentionally fallthrough to OBJ_WEAPONS
     case OBJ_WEAPONS:
         _inc_gift_timeout(30 + random2avg(19, 2));
         break;
@@ -1518,7 +1504,7 @@ static bool _give_sif_gift(bool forced)
         return false;
 
     if (!forced && (you.piety < piety_breakpoint(4)
-                    || random2(you.piety) < 101 || coinflip()))
+                    || random2(you.piety) < 121 || one_chance_in(4)))
     {
         return false;
     }
@@ -1566,57 +1552,42 @@ static bool _give_kiku_gift(bool forced)
         return false;
     }
 
+    vector<spell_type> spell_options;
     vector<spell_type> chosen_spells;
-    spell_type spell;
 
-    // The first set should guarantee the player at least one ally spell, to
-    // complement the bonus undead passive.
+    // The first set guarantees the player at least one mid-level spell that
+    // benefits from wretches.
     if (first_gift)
     {
-        chosen_spells.push_back(SPELL_NECROTISE);
-        do
-        {
-            spell = random_choose(SPELL_SUBLIMATION_OF_BLOOD,
-                                  SPELL_VAMPIRIC_DRAINING,
-                                  SPELL_ANGUISH,
-                                  SPELL_ANIMATE_DEAD
-                                  );
+        if (coinflip())
+            chosen_spells.push_back(SPELL_ANIMATE_DEAD);
+        else
+            chosen_spells.push_back(SPELL_FUGUE_OF_THE_FALLEN);
 
-            if (!you.can_bleed(false) && spell == SPELL_SUBLIMATION_OF_BLOOD)
-                spell = SPELL_NO_SPELL;
-
-            if (find(begin(chosen_spells), end(chosen_spells), spell)
-                != end(chosen_spells))
-            {
-                spell = SPELL_NO_SPELL;
-            }
-
-            if (spell != SPELL_NO_SPELL)
-                chosen_spells.push_back(spell);
-        }
-        while (chosen_spells.size() < 4);
+        spell_options = {SPELL_NECROTISE,
+                         SPELL_KISS_OF_DEATH,
+                         SPELL_SUBLIMATION_OF_BLOOD,
+                         SPELL_ROT,
+                         SPELL_VAMPIRIC_DRAINING};
     }
     else
     {
-        do
-        {
-            spell = random_choose(SPELL_DISPEL_UNDEAD,
-                                  SPELL_CORPSE_ROT,
-                                  SPELL_AGONY,
-                                  SPELL_BORGNJORS_VILE_CLUTCH,
-                                  SPELL_DEATH_CHANNEL,
-                                  SPELL_SIMULACRUM);
+        spell_options = {SPELL_ANGUISH,
+                         SPELL_MARTYRS_KNELL,
+                         SPELL_DISPEL_UNDEAD,
+                         SPELL_CURSE_OF_AGONY,
+                         SPELL_BORGNJORS_VILE_CLUTCH,
+                         SPELL_DEATH_CHANNEL};
+    }
 
-            if (find(begin(chosen_spells), end(chosen_spells), spell)
-                != end(chosen_spells))
-            {
-                spell = SPELL_NO_SPELL;
-            }
-
-            if (spell != SPELL_NO_SPELL)
-                chosen_spells.push_back(spell);
-        }
-        while (chosen_spells.size() < 5);
+    shuffle_array(spell_options);
+    for (spell_type spell : spell_options)
+    {
+        if (spell_is_useless(spell, false))
+            continue;
+        chosen_spells.push_back(spell);
+        if (chosen_spells.size() >= 4)
+            break;
     }
 
     bool new_spell = false;
@@ -1723,7 +1694,7 @@ bool mons_is_god_gift(const monster& mon, god_type god)
     return (mon.flags & MF_GOD_GIFT) && mon.god == god;
 }
 
-bool is_yred_undead_slave(const monster& mon)
+bool is_yred_undead_follower(const monster& mon)
 {
     return mon.alive() && mon.holiness() & MH_UNDEAD
            && mon.attitude == ATT_FRIENDLY
@@ -1752,7 +1723,7 @@ static bool _is_plant_follower(const monster* mon)
 bool is_follower(const monster& mon)
 {
     if (you_worship(GOD_YREDELEMNUL))
-        return is_yred_undead_slave(mon);
+        return is_yred_undead_follower(mon);
     else if (will_have_passive(passive_t::convert_orcs))
         return is_orcish_follower(mon);
     else if (you_worship(GOD_JIYVA))
@@ -2545,7 +2516,8 @@ static void _gain_piety_point()
             auto_id_inventory();
 
         // TODO: add one-time ability check in have_passive
-        if (have_passive(passive_t::unlock_slime_vaults) && can_do_capstone_ability(you.religion))
+        if (have_passive(passive_t::unlock_slime_vaults)
+            && can_do_capstone_ability(you.religion))
         {
             simple_god_message(" will now unseal the treasures of the "
                                "Slime Pits.");
@@ -2553,8 +2525,11 @@ static void _gain_piety_point()
                         "fix_slime_vaults", true);
             // If we're on Slime:$, pretend we just entered the level
             // in order to bring down the vault walls.
-            if (level_id::current() == level_id(BRANCH_SLIME, brdepth[BRANCH_SLIME]))
+            if (level_id::current() == level_id(BRANCH_SLIME,
+                                                brdepth[BRANCH_SLIME]))
+            {
                 dungeon_events.fire_event(DET_ENTERED_LEVEL);
+            }
 
             you.one_time_ability_used.set(you.religion);
         }
@@ -3028,7 +3003,7 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_YREDELEMNUL:
         yred_reclaim_souls(true);
         for (monster_iterator mi; mi; ++mi)
-            if (is_yred_undead_slave(**mi))
+            if (is_yred_undead_follower(**mi))
                 monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
         remove_all_companions(GOD_YREDELEMNUL);
         add_daction(DACT_OLD_CHARMD_SOULS_POOF);
@@ -3047,6 +3022,7 @@ void excommunication(bool voluntary, god_type new_god)
         if (you.duration[DUR_TROGS_HAND])
             trog_remove_trogs_hand();
         make_god_gifts_disappear();
+        you.skills_to_show.insert(SK_SPELLCASTING);
         break;
 
     case GOD_BEOGH:
@@ -3219,12 +3195,18 @@ void excommunication(bool voluntary, god_type new_god)
         {
             you.duration[DUR_FIERY_ARMOUR] = 0;
             mpr("Your cloak of flame burns out.");
+            you.redraw_armour_class = true;
         }
         if (you.duration[DUR_RISING_FLAME])
         {
             you.duration[DUR_RISING_FLAME] = 0;
             mpr("Your rising flame fizzles out.");
         }
+        break;
+
+    case GOD_RU:
+        if (!you.props[AVAILABLE_SAC_KEY].get_vector().empty())
+            ru_reset_sacrifice_timer();
         break;
 
     default:
@@ -3305,7 +3287,7 @@ static bool _transformed_player_can_join_god(god_type which_god)
     if (which_god == GOD_ZIN && you.form != transformation::none)
         return false; // zin hates everything
 
-    if (is_good_god(which_god) && you.form == transformation::lich)
+    if (is_good_god(which_god) && you.form == transformation::death)
         return false;
 
     return true;
@@ -3386,6 +3368,7 @@ static void _god_welcome_handle_gear()
     // Check for amulets of faith.
     item_def *amulet = you.slot_item(EQ_AMULET, false);
     if (amulet && amulet->sub_type == AMU_FAITH
+        && !you.has_mutation(MUT_FAITH)
         && ignore_faith_reason().empty())
     {
         mprf(MSGCH_GOD, "Your amulet flashes!");
@@ -3642,13 +3625,14 @@ static void _set_initial_god_piety()
         // monk bonus...
         you.props[RU_SACRIFICE_PROGRESS_KEY] = 0;
         // offer the first sacrifice faster than normal
+        if (!you.props.exists(RU_SACRIFICE_DELAY_KEY))
         {
             int delay = 50;
             if (crawl_state.game_is_sprint())
                 delay /= SPRINT_MULTIPLIER;
             you.props[RU_SACRIFICE_DELAY_KEY] = delay;
+            you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
         }
-        you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
         break;
 
     case GOD_IGNIS:
@@ -3716,7 +3700,7 @@ static void _join_gozag()
 #endif
     }
 
-    // Move gold to top of piles & detect it.
+    // Move gold to top of piles.
     add_daction(DACT_GOLD_ON_TOP);
 }
 
@@ -3753,8 +3737,8 @@ static void _join_ru()
 void join_trog_skills()
 {
     if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
-        for (int sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
-            you.train[sk] = you.train_alt[sk] = TRAINING_DISABLED;
+        set_magic_training(TRAINING_DISABLED);
+    you.skills_to_hide.insert(SK_SPELLCASTING);
 }
 
 // Setup for joining the orderly ascetics of Zin.
@@ -3797,13 +3781,17 @@ static const map<god_type, function<void ()>> on_join = {
     }},
     { GOD_GOZAG, _join_gozag },
     { GOD_LUGONU, []() {
-        if (you.worshipped[GOD_LUGONU] == 0)
-            gain_piety(20, 1, false);  // allow instant access to first power
+        if (!player_in_branch(BRANCH_ABYSS)) return;
+        // If this is your first time with Lucy, jump straight to 2* for a big power boost.
+        // Otherwise, give just enough for 'exit the abyss'.
+        const int bonus = you.worshipped[GOD_LUGONU] ? 20 : 40;
+        gain_piety(bonus, 1, false);
     }},
     { GOD_OKAWARU, _join_okawaru },
     { GOD_RU, _join_ru },
     { GOD_TROG, join_trog_skills },
     { GOD_ZIN, _join_zin },
+    { GOD_JIYVA, []() { you.redraw_armour_class = true; /* slime wall immunity */ }}
 };
 
 void join_religion(god_type which_god)
@@ -3897,8 +3885,6 @@ void god_pitch(god_type which_god)
     }
     // these are included in default force_more_message
 
-    const int fee = (which_god == GOD_GOZAG) ? gozag_service_fee() : 0;
-
     // Note: using worship we could make some gods not allow followers to
     // return, or not allow worshippers from other religions. - bwr
 
@@ -3906,39 +3892,7 @@ void god_pitch(god_type which_god)
     if (!player_can_join_god(which_god))
     {
         you.turn_is_over = false;
-        if (which_god == GOD_GOZAG)
-        {
-            simple_god_message(" does not accept service from beggars like you!",
-                               which_god);
-            if (you.gold == 0)
-            {
-                mprf("The service fee for joining is currently %d gold; you have"
-                     " none.", fee);
-            }
-            else
-            {
-                mprf("The service fee for joining is currently %d gold; you only"
-                     " have %d.", fee, you.gold);
-            }
-        }
-        else if (you.get_mutation_level(MUT_NO_LOVE)
-                 && _god_rejects_loveless(which_god))
-        {
-            simple_god_message(" does not accept worship from the loveless!",
-                               which_god);
-        }
-        else if (!_transformed_player_can_join_god(which_god))
-        {
-            simple_god_message(" says: How dare you approach in such a "
-                               "loathsome form!",
-                               which_god);
-        }
-        else
-        {
-            simple_god_message(" does not accept worship from those such as"
-                               " you!",
-                               which_god);
-        }
+        print_god_rejection(which_god);
         return;
     }
 
@@ -3957,6 +3911,43 @@ void god_pitch(god_type which_god)
         redraw_screen();
         update_screen();
     }
+}
+
+void print_god_rejection(god_type which_god)
+{
+
+    if (which_god == GOD_GOZAG)
+    {
+        simple_god_message(" does not accept service from beggars like you!",
+                           which_god);
+        const int fee = gozag_service_fee();
+        if (you.gold == 0)
+        {
+            mprf("The service fee for joining is currently %d gold; you have"
+                 " none.", fee);
+        }
+        else
+        {
+            mprf("The service fee for joining is currently %d gold; you only"
+                 " have %d.", fee, you.gold);
+        }
+        return;
+    }
+    if (you.get_mutation_level(MUT_NO_LOVE) && _god_rejects_loveless(which_god))
+    {
+        simple_god_message(" does not accept worship from the loveless!",
+                           which_god);
+        return;
+    }
+    if (!_transformed_player_can_join_god(which_god))
+    {
+        simple_god_message(" says: How dare you approach in such a loathsome "
+                           "form!", which_god);
+        return;
+    }
+
+    simple_god_message(" does not accept worship from those such as you!",
+                       which_god);
 }
 
 /** Ask the user for a god by name.
@@ -3987,6 +3978,33 @@ god_type choose_god(god_type def_god)
     return find_earliest_match(spec, GOD_NO_GOD, NUM_GODS,
                                always_true<god_type>,
                                bind(god_name, placeholders::_1, false));
+}
+
+static void _choose_ecu_gods(CrawlVector &gods)
+{
+    vector<god_type> possible_gods;
+    for (int i = GOD_NO_GOD + 1; i < NUM_GODS; ++i)
+    {
+        const god_type god = static_cast<god_type>(i);
+        if (!is_unavailable_god(god) && player_can_join_god(god, false))
+            possible_gods.push_back(god);
+    }
+    shuffle_array(possible_gods); // inefficient but who cares
+    for (int i = 0; i < 3 && i < int(possible_gods.size()); ++i)
+        gods.push_back(possible_gods[i]);
+}
+
+/// Returns a list of gods the player might get from the ecu altar at the given position.
+vector<god_type> get_ecu_gods(coord_def pos)
+{
+    const string key = make_stringf("ecu-%d,%d", pos.x, pos.y);
+    CrawlVector &saved_gods = env.properties[key].get_vector();
+    if (saved_gods.empty())
+        _choose_ecu_gods(saved_gods);
+    vector<god_type> gods;
+    for (int i = 0; i < int(saved_gods.size()); ++i)
+        gods.push_back(static_cast<god_type>(saved_gods[i].get_int()));
+    return gods;
 }
 
 int had_gods()
@@ -4099,22 +4117,8 @@ bool god_hates_spell(spell_type spell, god_type god, bool fake_spell)
 }
 
 /**
- * Will your god excommunicate you if you actually cast spell?
- *
- * @param spell         The spell to check against
- * @param god           The god to check against
- * @return              Whether the god loathes the spell
- */
-bool god_loathes_spell(spell_type spell, god_type god)
-{
-    if (spell == SPELL_NECROMUTATION && is_good_god(god))
-        return true;
-    return false;
-}
-
-/**
- * Checks to see if your god hates or loathes this spell,
- * or just hates spellcasting in general, and returns a warning string
+ * Checks to see if your god hates this spell (or spellcasting generally).
+ * Returns a warning string if so.
  *
  * @param spell         The spell to check against
  * @param god           The god to check against
@@ -4123,14 +4127,11 @@ bool god_loathes_spell(spell_type spell, god_type god)
  */
 string god_spell_warn_string(spell_type spell, god_type god)
 {
-    if (god_loathes_spell(spell, god))
-        return "Your god extremely despises this spell!";
-    else if (god_hates_spellcasting(god))
+    if (god_hates_spellcasting(god))
         return "Your god hates spellcasting!";
-    else if (god_hates_spell(spell, god))
+    if (god_hates_spell(spell, god))
         return "Your god hates this spell!";
-    else
-        return "";
+    return "";
 }
 
 bool god_protects_from_harm()
@@ -4528,7 +4529,7 @@ int get_monster_tension(const monster& mons, god_type god)
         exper /= 4;
     }
 
-    if (mons.berserk_or_insane())
+    if (mons.berserk_or_frenzied())
     {
         // in addition to haste and might bonuses above
         exper *= 3;

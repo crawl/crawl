@@ -7,7 +7,7 @@ aptitudes:
   xp: 1
   hp: -1
   mp_mod: 0
-  mr: 3
+  wl: 3
   fighting: -1
   short_blades: 2
   maces_and_flails: -1
@@ -25,7 +25,6 @@ aptitudes:
   summoning: -2
   necromancy: -2
   translocations: 1
-  transmutations: -4
   invocations: 1
 size: small
 str: 9

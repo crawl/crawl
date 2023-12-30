@@ -80,10 +80,138 @@
         e.subst("z = 7 8:30")
         e.subst("x = x:595 b:405")
         e.marker("A = lua:props_marker { portal=1 }")
+        e.tile("G = depths_column")
+        e.lfloortile("floor_depthstone")
         e.set_random_mon_list(
             "glowing shapeshifter w:100 / air elemental / water elemental / " ..
             "earth elemental / crystal guardian / molten gargoyle / " ..
             "war gargoyle / dancing weapon / very ugly thing band")
+    end
+
+    function hex_setup(e)
+        e.tags("hex_subvault unrand no_rotate no_monster_gen no_item_gen")
+
+        local set_weight = crawl.random2(14)
+        if set_weight == 1 then
+            e.mons("ogre mage band / ironbound thunderhulk / ettin / "..
+                   "stone giant w:5")
+            e.mons("fire giant / frost giant / stone giant")
+            e.mons("titan / juggernaut / iron giant w:3")
+            e.kfeat("A = granite_statue")
+            e.kfeat("B = stone_arch")
+            e.subst("x = c")
+        elseif set_weight == 2 then
+            e.mons("deep elf zephyrmancer / deep elf knight / deep elf archer")
+            e.mons("deep elf high priest / deep elf elementalist / " ..
+                   "deep elf demonologist / deep elf death mage")
+            e.mons("deep elf annihilator / deep elf blademaster / "..
+                   "deep elf master archer / deep elf sorcerer")
+            e.kfeat("A = fountain_blue")
+            e.kfeat("B = fountain_sparkling")
+        elseif set_weight == 3 then
+            e.mons("any common demon / raiju / demonic crawler")
+            e.mons("rakshasa / hell hog / greater demon w:5")
+            e.mons("ice fiend / brimstone fiend / hell sentinel / " ..
+                   "tzitzimitl / greater demon w:200")
+            e.subst("A : ....l")
+            e.subst("B = Y")
+        elseif set_weight == 4 then
+            e.mons("zombie / simulacrum / spectral thing / freezing wraith")
+            e.mons("vampire mage / jiangshi / ghoul / ancient champion / " ..
+                   "flayed ghost / vampire knight / mummy priest w:2")
+            e.mons("lich / ancient lich / dread lich / royal mummy w:2")
+            e.kfeat("A = granite_statue")
+            e.subst("B = V")
+            e.tile("A = depths_column / depths_crumbled_column")
+            e.tile("x = wall_catacombs")
+        elseif set_weight == 5 and crawl.one_chance_in(4) then
+            e.mons("cherub / sun moth / apis")
+            e.mons("angel / daeva")
+            e.mons("ophan / pearl dragon w:5")
+            e.kfeat("A : fountain_sparkling")
+            e.kfeat("B = altar_zin / altar_the_shining_one / " ..
+                        " altar_elyvilon")
+            e.subst("x = c")
+            e.tile("c = wall_church")
+            e.ftile("c.+123AB = floor_limestone")
+        elseif set_weight == 6 then
+            e.mons("acid dragon / swamp dragon / fire dragon / ice dragon")
+            e.mons("storm dragon / shadow dragon / bone dragon")
+            e.mons("golden dragon w:15 / quicksilver dragon / iron dragon / " ..
+                   "pearl dragon w:1")
+            e.subst("+ = ...+")
+            e.subst("A = $")
+            e.subst("B = $")
+        elseif set_weight == 7 then
+            e.mons("tengu conjurer / tengu warrior / harpy band w:3 / " ..
+                   "wind drake")
+            e.mons("tengu reaver")
+            e.mons("caustic shrike w:15 / shard shrike")
+            e.kfeat("A = iron_grate")
+            e.kfeat("B = granite_statue")
+        elseif set_weight == 8 then
+            e.mons("shock serpent / tengu conjurer / ironbound thunderhulk")
+            e.mons("spark wasp / spriggan air mage / blizzard demon")
+            e.mons("titan / spark wasp band / storm dragon")
+            e.subst("A = v")
+            e.subst("B = b")
+        elseif set_weight == 9 then
+            e.mons("hell knight / hell hog / occultist / molten gargoyle")
+            e.mons("fire giant / hell knight band / fire dragon / balrug / " ..
+                   "salamander tyrant")
+            e.mons("hellephant / brimstone fiend w:2")
+            e.subst("A = ..l")
+            e.subst("B = l")
+            e.tile("x = wall_pebble_red")
+            e.colour("x123.+ = red")
+            e.ftile("x123.+ = floor_volcanic")
+        elseif set_weight == 10 then
+            e.mons("spriggan rider")
+            e.mons("spriggan air mage / spriggan berserker / spriggan defender")
+            e.mons("spriggan defender")
+            e.kmons("D = the Enchantress")
+            e.subst("3 = D3")
+            e.subst("A = t")
+            e.subst("B = tT")
+            e.subst("x:xxxxxxt")
+            e.ftile("xtT123D.+ = floor_grass")
+            e.colour("xtT123D.+ = green")
+        elseif set_weight == 11 then
+            e.mons("simulacrum / freezing wraith")
+            e.mons("frost giant / ice dragon / blizzard demon / azure jelly")
+            e.mons("walking frostbound tome / shard shrike / ice fiend w:4")
+            e.subst("A : ...W")
+            e.subst("B = wT")
+            e.tile("x = wall_ice")
+            e.colour("x+.123 = white")
+            e.ftile("xT+.123 = floor_ice")
+        elseif set_weight == 12 then
+            e.mons("rakshasa / occultist / necromancer")
+            e.mons("fenstrider witch / deep troll earth mage / sphinx w:5 / " ..
+                   "spriggan air mage / tengu reaver w:5 / vampire mage band")
+            e.mons("walking frostbound tome / walking earthen tome / lich / " ..
+                   "walking crystal tome / walking divine tome / " ..
+                   "ancient lich / dread lich / deep elf annihilator")
+            e.subst("A = b")
+            e.subst("B = b")
+            e.subst("x = c")
+            e.tile("c = wall_studio")
+        elseif set_weight == 13 then
+            e.mons("deep troll / deep troll earth mage / deep troll shaman")
+            e.mons("iron troll / crystal guardian / war gargoyle")
+            e.mons("walking earthen tome / hell sentinel w:4 / " ..
+                   "iron dragon / caustic shrike band / iron giant w:2")
+            e.kfeat("A = iron_grate")
+            e.kfeat("B = stone_arch")
+            e.subst("x:xc")
+        else
+            e.subst("3 = 8")
+            e.subst("2 = 990")
+            e.subst("1 = 0")
+            e.subst("A = .")
+            e.subst("B = B...")
+            e.kfeat("B = any shop")
+        end
     end
 }}
 
@@ -93,13 +221,13 @@ default-depth: Depths:2-, !Depths:$
 # The River Lethe
 #
 # The two orange statues are placed for maximum pain -- one you're likely to
-# first see while flying, the other aided by a floating eye and protective
+# first see while flying, the other aided by a glass eye and protective
 # plants.
 #
 # Lemuel
 #
 NAME:    lemuel_river_lethe
-TAGS:    no_rotate no_monster_gen no_item_gen uniq_d_encompass
+TAGS:    no_rotate no_monster_gen no_item_gen uniq_d_encompass no_descent
 ORIENT:  encompass
 KITEM:   r = any scroll
 KITEM:   e = any / any good_item w:4
@@ -118,7 +246,7 @@ KMONS:   DE = patrolling glowing orange brain
 KMONS:   F = 0 band
 KMONS:   H = patrolling water elemental / patrolling spectral place:Depths:4 \
              / patrolling simulacrum place:Depths:4
-KMONS:   P = floating eye
+KMONS:   P = glass eye
 SHUFFLE: qr / su / yz / JK, 7N
 SUBST:   q = +, syJ = x, N = xw, p = pp.
 NSUBST:  L = + / x, M = + / x, u = u / * / %, z = u / %, K = u / %
@@ -127,18 +255,20 @@ NSUBST:  . = 13=F / 4=F. / ., w = 6=H / 4=Hw / w
 KFEAT:   Du = >
 KFEAT:   H = w
 MARKER:  O = lua:props_marker { portal=1 }
+TILE:    G = depths_crumbled_column
+LFLOORTILE: floor_depthstone
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccccxxxxxx
 xxDE.L$xxxwwwxxxxcccccccccccccccccccccccccccxxxxxxxxcc..p.....Ocxxxxxx
 xwEE.L$$Mwwwwxxxxc%.b..+...+..........%c***c;;xxxxx;cc.....p...cxxxxxx
 xw..OL$$Mxwwwxxxxc..6..ccccc...........c***c;;;xxx;;cc.p.p...p.cxxxxxx
-xww..L$$Mxwwwwxxxc.....cxxxc...........c***c;;;;xx;;;+.....p..pcxxxxxx
-xww..xxxMwwww;xxxc%.}.%cxxxc...........c...c;;;;xx;;cc..p.ppp..cxxxxxx
-xwww.xxxwww;;;;xxccccccccxxcc+ccc+ccccccc+cc;;;;xx;;cc.ppppp7..cxxxxxx
-xwwwxxxwwww;;;;;xxxxxxxxxxxc...c...c.......c;;;;x;;;cc..pppN..pcxxxxxx
+xww..L$$Mxwwwwxxxc.....cxxxc...........c***c;;;;xx;;;+....Gp..pcxxxxxx
+xww..xxxMwwww;xxxc%.}.%cxxxc...........c...c;;;;xx;;cc..pGppp..cxxxxxx
+xwww.xxxwww;;;;xxccccccccxxcc+ccc+ccccccc+cc;;;;xx;;cc.pGppp7..cxxxxxx
+xwwwxxxwwww;;;;;xxxxxxxxxxxc...c...c.......c;;;;x;;;cc.ppppN..pcxxxxxx
 xwwwxxxwwwww;;5;;xxxxxxxxxxc...c...c.w.....c;;;;;;;;cc.pppppp|*cxxxxxx
-xwwwxxxwwwww;;;;;;;xxxxxxxxc...+...c.w.....+;;;;;;;;cc..ppp5.*Pcxxxxxx
+xwwwxxxwwwww;;;;;;;xxxxxxxxc...+...c.w.....+;;;;;;;;cc..pppP5*.cxxxxxx
 xwwwxxxwwww;;5;;;;;;;;xxx;;c...c...c.w.....c;;;;;;;;ccccccccccccxxxxxx
 xwwwxxxwww;;;;;;;;;;;;;;;;;cc+ccc+cc..w....c;;;;;;;;;;xxxxxxxxxxxxxxxx
 xwwwxxxwww;;;;;;;;;;;;;;;;;+.......+..w....cccc;;;;;;xxxxxxxxxxxxxxxxx
@@ -218,6 +348,8 @@ TILE:    a = wall_wax
 SUBST:   a = x
 MARKER:  P = lua:props_marker { portal=1 }
 KFEAT:   P = stone_arch
+TILE:    G = depths_column
+LFLOORTILE: floor_depthstone
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.......xccccccxxxxxxx.........................................w"..xxx
@@ -281,40 +413,40 @@ ENDMAP
 #
 default-depth:
 
-NAME: grunt_profane_halls
-TAGS: no_monster_gen uniq_d_encompass
-PLACE: Depths:$
-DEPTH: Depths:2-
-WEIGHT: 1 (Depths:$), 10
-ORIENT: encompass
-SHUFFLE: {[(<
+NAME:     grunt_profane_halls
+TAGS:     no_monster_gen uniq_d_encompass
+PLACE:    Depths:$
+DEPTH:    Depths:2-
+WEIGHT:   1 (Depths:$), 10
+ORIENT:   encompass
+KMONS:    0 = 0 band w:15 / nothing
+KMONS:    9 = 9 band / 0 band
+KFEAT:    GC = granite_statue
+SHUFFLE:  {[(<
+KMASK:    1290KLMN = !no_monster_gen
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-SUBST: }])> = G
+KMONS:    K = storm dragon
+KMONS:    L = shadow dragon
+KMONS:    M = quicksilver dragon
+KMONS:    N = golden dragon
+SUBST:    }])> = G
+NSUBST:   D = 1:K / 1:L / 1:M / 1:N
+SUBVAULT: H : grunt_zot_portal
 : else
-SHUFFLE: }])>
+KMONS:    D = 8 band
+SHUFFLE:  }])>
+SUBVAULT: H : grunt_profane_loot
 : end
 SUBVAULT: d : grunt_profane_temple
 SUBVAULT: e : grunt_profane_temple
 SUBVAULT: f : grunt_profane_temple
 SUBVAULT: g : grunt_profane_temple
 : grunt_profane_halls_setup(_G)
-: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-NSUBST: D = 1:K / 1:L / 1:M / 1:N
-KMONS: K = storm dragon
-KMONS: L = shadow dragon
-KMONS: M = quicksilver dragon
-KMONS: N = golden dragon
-: else
-KMONS: D = 8 band
-: end
-KMONS: 0 = 0 band w:15 / nothing
-KMONS: 9 = 9 band / 0 band
-KMASK: 1290KLMN = !no_monster_gen
-: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-SUBVAULT: H : grunt_zot_portal
-: else
-SUBVAULT: H : grunt_profane_loot
-: end
+TILE:     G = dngn_statue_imp / dngn_statue_dragon / dngn_statue_maw / \
+              dngn_statue_demonic_bust / dngn_statue_tentacles / \
+              dngn_statue_wraith / dngn_statue_sigmund
+TILE:     C = depths_column
+LFLOORTILE: floor_depthstone
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -324,17 +456,17 @@ ccccccccccccccccccccccccccccccccdddddddddddddddcccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccccccdddddddddddddddcccccccccccccccccccccccccccccccc
 ccccccccccccccc.ccccccccccccccccdddddddddddddddcccccccccccccccc.ccccccccccccccc
 cccccccccccccc..ccccccccccccccccdddddddddddddddcccccccccccccccc..cccccccccccccc
-ccccccccccccc.G.cccGcGcGGcGcGcccdddddddddddddddcccGcGcGGcGcGccc.G.ccccccccccccc
+ccccccccccccc.C.cccCcGcGGcGcGcccdddddddddddddddcccGcGcGGcGcCccc.C.ccccccccccccc
 ccccccccc.......c..............cdddddddddddddddc..............c.......ccccccccc
 ccccccccc.{.....+......0.......+ddddddddddddddd+.......0......+.....[.ccccccccc
 ccccccccc.......+......0.......+ddddddddddddddd+.......0......+.......ccccccccc
 ccccccccc...U...c..............cdddddddddddddddc..............c...U...ccccccccc
-cccccccc........cccGcGcGGcGcGcccdddddddddddddddcccGcGcGGcGcGccc........cccccccc
-ccccccc.G.....}.ccccccccccccccccdddddddddddddddcccccccccccccccc.].....G.ccccccc
+cccccccc........cccCcGcGGcGcGcccdddddddddddddddcccGcGcGGcGcCccc........cccccccc
+ccccccc.C.....}.ccccccccccccccccdddddddddddddddcccccccccccccccc.].....C.ccccccc
 cccccc..........cccccccccccccccccdddddddddddddccccccccccccccccc..........cccccc
 cccccccccc++ccccccccccccccccc...cdddddddddddddc...ccccccccccccccccc++cccccccccc
 ccccccccc....ccccccccccccc......+ddddddddddddd+......ccccccccccccc....ccccccccc
-ccccccccG....Gccccccccccc.......++ddddddddddd++.......cccccccccccG....Gcccccccc
+ccccccccC....Cccccccccccc.......++ddddddddddd++.......cccccccccccC....Ccccccccc
 ccccccccc....cccccccccc%...9.....+ddddddddddd+.....9...%cccccccccc....ccccccccc
 ccccccccG....GccccccccU*.........ccdddddddddcc.........*UccccccccG....Gcccccccc
 ccccccccc.00.cccccccc%*.......cccccdddddddddccccc.......*%cccccccc.00.ccccccccc
@@ -343,21 +475,21 @@ ccccccccc....cccccc.......++c......ccdddddcc......c++.......cccccc....ccccccccc
 ccccccccG....Gcccc...9...c+.........ccccccc.........+c...9...ccccG....Gcccccccc
 ccccccccc....cccc.......cc........1....:....1........cc.......cccc....ccccccccc
 cccccccccc++ccccc......cc..............1..............cc......ccccc++cccccccccc
-cccceeeeeeeeeeecc++...cc.....G.......G...G.......G.....cc...++ccfffffffffffcccc
-cccceeeeeeeeeeeeee++ccc%.........1.G...D...G.1.........%ccc++ffffffffffffffcccc
+cccceeeeeeeeeeecc++...cc.....G.......C...C.......G.....cc...++ccfffffffffffcccc
+cccceeeeeeeeeeeeee++ccc%.........1.C...D...C.1.........%ccc++ffffffffffffffcccc
 cccceeeeeeeeeeeeeeeeccc%.....1....2.........2....1.....%cccffffffffffffffffcccc
-cccceeeeeeeeeeeeeeeeeecc.........G.:%HHHHH%:.G.........ccffffffffffffffffffcccc
+cccceeeeeeeeeeeeeeeeeecc.........C.:%HHHHH%:.C.........ccffffffffffffffffffcccc
 cccceeeeeeeeeeeeeeeeeeecc..........%HHHHHHH%..........ccfffffffffffffffffffcccc
-cccceeeeeeeeeeeeeeeeeeeec.......G..HHHHHHHHH..G.......cffffffffffffffffffffcccc
+cccceeeeeeeeeeeeeeeeeeeec.......C..HHHHHHHHH..C.......cffffffffffffffffffffcccc
 cccceeeeeeeeeeeeeeeeeeeec..........HHHHHHHHH..........cffffffffffffffffffffcccc
 cccceeeeeeeeeeeeeeeeeeeec:.G..1..D.HHHHHHHHH.D..1..G.:cffffffffffffffffffffcccc
 cccceeeeeeeeeeeeeeeeeeeec..........HHHHHHHHH..........cffffffffffffffffffffcccc
-cccceeeeeeeeeeeeeeeeeeeec.......G..HHHHHHHHH..G.......cffffffffffffffffffffcccc
+cccceeeeeeeeeeeeeeeeeeeec.......C..HHHHHHHHH..C.......cffffffffffffffffffffcccc
 cccceeeeeeeeeeeeeeeeeeecc..........%HHHHHHH%..........ccfffffffffffffffffffcccc
-cccceeeeeeeeeeeeeeeeeecc.........G.:%HHHHH%:.G.........ccffffffffffffffffffcccc
+cccceeeeeeeeeeeeeeeeeecc.........C.:%HHHHH%:.C.........ccffffffffffffffffffcccc
 cccceeeeeeeeeeeeeeeeccc%.....1....2.........2....1.....%cccffffffffffffffffcccc
-cccceeeeeeeeeeeeee++ccc%.........1.G...D...G.1.........%ccc++ffffffffffffffcccc
-cccceeeeeeeeeeecc++...cc.....G.......G...G.......G.....cc...++ccfffffffffffcccc
+cccceeeeeeeeeeeeee++ccc%.........1.C...D...C.1.........%ccc++ffffffffffffffcccc
+cccceeeeeeeeeeecc++...cc.....G.......C...C.......G.....cc...++ccfffffffffffcccc
 cccccccccc++ccccc......cc..............1..............cc......ccccc++cccccccccc
 ccccccccc....cccc.......cc........1....:....1........cc.......cccc....ccccccccc
 ccccccccG....Gcccc...9...c+.........ccccccc.........+c...9...ccccG....Gcccccccc
@@ -366,17 +498,17 @@ ccccccccG....Gcccccc........ccc%%.ccgggggggcc.%%ccc........ccccccG....Gcccccccc
 ccccccccc.00.cccccccc%*.......cccccgggggggggccccc.......*%cccccccc.00.ccccccccc
 ccccccccG....GccccccccU*.........ccgggggggggcc.........*UccccccccG....Gcccccccc
 ccccccccc....cccccccccc%...9.....+ggggggggggg+.....9...%cccccccccc....ccccccccc
-ccccccccG....Gccccccccccc.......++ggggggggggg++.......cccccccccccG....Gcccccccc
+ccccccccC....Cccccccccccc.......++ggggggggggg++.......cccccccccccC....Ccccccccc
 ccccccccc....ccccccccccccc......+ggggggggggggg+......ccccccccccccc....ccccccccc
 cccccccccc++ccccccccccccccccc...cgggggggggggggc...ccccccccccccccccc++cccccccccc
 cccccc..........cccccccccccccccccgggggggggggggccccccccccccccccc..........cccccc
-ccccccc.G.....).ccccccccccccccccgggggggggggggggcccccccccccccccc.>.....G.ccccccc
-cccccccc........cccGcGcGGcGcGcccgggggggggggggggccGcGccGGcGcGccc........cccccccc
+ccccccc.C.....).ccccccccccccccccgggggggggggggggcccccccccccccccc.>.....C.ccccccc
+cccccccc........cccCcGcGGcGcGcccgggggggggggggggccGcGccGGcGcCccc........cccccccc
 ccccccccc...U...c..............cgggggggggggggggc..............c...U...ccccccccc
 ccccccccc.......+......0.......+ggggggggggggggg+.......0......+.......ccccccccc
 ccccccccc.(.....+......0.......+ggggggggggggggg+.......0......+.....<.ccccccccc
 ccccccccc.......c..............cgggggggggggggggc..............c.......ccccccccc
-ccccccccccccc.G.cccGcGcGGcGcGcccgggggggggggggggccGcGccGGcGcGccc.G.ccccccccccccc
+ccccccccccccc.C.cccCcGcGGcGcGcccgggggggggggggggccGcGccGGcGcCccc.C.ccccccccccccc
 cccccccccccccc..ccccccccccccccccgggggggggggggggcccccccccccccccc..cccccccccccccc
 ccccccccccccccc.ccccccccccccccccgggggggggggggggcccccccccccccccc.ccccccccccccccc
 ccccccccccccccccccccccccccccccccgggggggggggggggcccccccccccccccccccccccccccccccc
@@ -418,16 +550,16 @@ MAP
      %2A2%
 ENDMAP
 
-NAME: grunt_profane_temple_geh
-TAGS: grunt_profane_temple no_monster_gen
+NAME:   grunt_profane_temple_geh
+TAGS:   grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
-NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
-KMONS: 4 = hell hog / nothing
-KMONS: 5 = sun demon
-KMONS: 6 = balrug
-KFEAT: A = stone_arch
+KMONS:  4 = hell hog
+KMONS:  5 = sun demon
+KMONS:  6 = balrug
+KFEAT:  A = stone_arch
+NSUBST: 4 = 8 = 4. / *:., 5 = 1:6 / *:5
 MARKER: A = lua:props_marker { portal=1 }
-KMASK: 12345 = !no_monster_gen
+KMASK:  12345 = !no_monster_gen
 MAP
 ll...l%%%l...ll
 l....l%%%l....l
@@ -451,17 +583,17 @@ l....l%%%l....l
      %2A2%
 ENDMAP
 
-NAME: grunt_profane_temple_coc
-TAGS: grunt_profane_temple no_monster_gen
+NAME:   grunt_profane_temple_coc
+TAGS:   grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
+KMONS:  4 = ice devil / ettin simulacrum w:20 / freezing wraith
+KMONS:  5 = quicksilver dragon simulacrum
+KMONS:  6 = blizzard demon
+KMONS:  8 = ice statue
+KFEAT:  A = stone_arch
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
-KMONS: 4 = ice devil / ettin simulacrum w:20 / freezing wraith
-KMONS: 5 = quicksilver dragon simulacrum
-KMONS: 6 = blizzard demon
-KMONS: 8 = ice statue
-KFEAT: A = stone_arch
 MARKER: A = lua:props_marker { portal=1 }
-KMASK: 12345 = !no_monster_gen
+KMASK:  12345 = !no_monster_gen
 MAP
 wwww.......wwww
 www....5....www
@@ -485,15 +617,17 @@ w...4.www.4...w
      %2A2%
 ENDMAP
 
-NAME: grunt_profane_temple_tar
-TAGS: grunt_profane_temple no_monster_gen
+NAME:   grunt_profane_temple_tar
+TAGS:   grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
+KMONS:  4 = shadow wraith / nothing w:30
+KMONS:  5 = soul eater
+KMONS:  6 = reaper w:18 / lich w:5 / bone dragon w:4
+KFEAT:  A = stone_arch
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
-KMONS: 4 = shadow wraith / nothing w:30
-KMONS: 5 = soul eater
-KMONS: 6 = reaper w:18 / lich w:5 / bone dragon w:4
-KFEAT: A = stone_arch
 MARKER: A = lua:props_marker { portal=1 }
+TILE:   G = dngn_gravestone
+: set_feature_name("granite_statue", "a gravestone")
 KMASK: 12345 = !no_monster_gen
 MAP
 .%%%.......%%%.
@@ -518,19 +652,19 @@ MAP
      %2A2%
 ENDMAP
 
-NAME: grunt_profane_temple_dis
-TAGS: grunt_profane_temple no_monster_gen
+NAME:   grunt_profane_temple_dis
+TAGS:   grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
-NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
-KMONS: 4 = iron troll / nothing
-KMONS: 5 = skeletal warrior / iron troll w:1
-KMONS: 6 = iron dragon / war gargoyle
-KFEAT: A = stone_arch
+KMONS:  4 = iron troll / nothing
+KMONS:  5 = skeletal warrior / iron troll w:1
+KMONS:  6 = iron dragon / war gargoyle
+KFEAT:  A = stone_arch
 MARKER: A = lua:props_marker { portal=1 }
+NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
+KMASK:  12345 = !no_monster_gen
 COLOUR: G = cyan
-TILE: G = dngn_statue_iron_golem
+TILE:   G = dngn_statue_iron_golem
 : set_feature_name("granite_statue", "iron statue")
-KMASK: 12345 = !no_monster_gen
 MAP
 %%.5.......5.%%
 %G...........G%
@@ -554,16 +688,16 @@ MAP
      %2A2%
 ENDMAP
 
-NAME: grunt_profane_loot
-TAGS: grunt_profane_loot no_monster_gen
+NAME:    grunt_profane_loot
+TAGS:    grunt_profane_loot no_monster_gen
 : grunt_profane_halls_setup(_G)
+KMONS:   K = storm dragon
+KMONS:   L = shadow dragon
+KMONS:   M = quicksilver dragon
+KMONS:   N = golden dragon
+KITEM:   KLMN> = any good_item
+KITEM:   12 = any
 SHUFFLE: KLMN
-KMONS: K = storm dragon
-KMONS: L = shadow dragon
-KMONS: M = quicksilver dragon
-KMONS: N = golden dragon
-KITEM: KLMN> = any good_item
-KITEM: 12 = any
 MAP
   cc+cc
  cc1%1cc
@@ -576,14 +710,15 @@ cc2%M%2cc
   cc+cc
 ENDMAP
 
-NAME: grunt_zot_portal
-TAGS: grunt_zot_portal
+NAME:   grunt_zot_portal
+TAGS:   grunt_zot_portal
+KMONS:  1 = nonbase draconian / base draconian
+KITEM:  g = midnight gem
+KFEAT:  O = enter_zot
 COLOUR: c = lightmagenta
-TILE: c = wall_zot_magenta
 COLOUR: JO.1+ = magenta
-FTILE: JO.1+ = floor_hall
-KFEAT: O = enter_zot
-KMONS: 1 = nonbase draconian / base draconian
+TILE:   c = wall_zot_magenta
+FTILE:  JO.1+ = floor_hall
 MARKER: J = lua:fog_machine { cloud_type = "magical condensation", \
                               pow_min = 3, pow_max = 5, \
                               delay_min = 5, delay_max = 15, \
@@ -595,7 +730,7 @@ MAP
 ccJ.1.Jcc
 c.......c
 +.1.O.1.+
-c.......c
+c...g...c
 ccJ.1.Jcc
  cc...cc
   cc+cc
@@ -829,7 +964,7 @@ DEPTH:   Depths:2-
 WEIGHT:  1 (Depths:$), 10
 # everything here (bar the very top) spawns regularly in depths,
 # if possibly as part of a band.
-MONS:    wizard w:8 / necromancer w:8 / tengu warrior / \
+MONS:    occultist w:8 / necromancer w:8 / tengu warrior / \
          spriggan defender w:2 / tengu conjurer / nothing w:2
 MONS:    rakshasa / hell knight / stone giant w:5 / \
          vampire mage / ettin / spriggan berserker / \
@@ -853,6 +988,7 @@ MONS:    spriggan defender w:30 / titan w:30 / ancient lich w:30 / \
          draconian monk / draconian annihilator / draconian knight / \
          juggernaut w:20
 KMONS:   Z = draconian knight / draconian annihilator
+KITEM:   Z = midnight gem
 KFEAT:   z^ = zot trap w:499 / floor w:1
 KFEAT:   Z = enter_zot
 SHUFFLE: Y], {([>, HI / HI / IH, JK / JK / KJ
@@ -875,6 +1011,7 @@ NSUBST: ' = 1:Z / 2:^ / *:`
 SUBST:  ' = .
 MARKER: Y = lua:props_marker { portal=1 }
 FTILE:  Z`^ = floor_marble
+LFLOORTILE: floor_depthstone
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1064,4 +1201,855 @@ xxM...xxxxxxx.xxxxxxMM.t.xxxx............xxxxxxx.Kllxx<xxxllllxxxxxxx
 xxs.x.xxxxxxx....xxx.......xx.xxx.[..xxx.xx.....t.Kllxxxlllxxxxxxxxxx
 xxssx..M.....xxxx...xxxxxx....xx.{.(.}xx....xxxxxxxxlllllxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+################################################################################
+# A subvaulted hexagon encompass by hellmonk.
+# Each subvault may place one of several themed monster sets with corresponding
+# "special" features or terrain changes. The sets available are giants, elves,
+# demons, undead, holy beings, dragons, birds, lightning, fire, spriggans, ice,
+# spellcasters, earth/iron. Generic depths monster set can also place.
+
+NAME:     hellmonk_hyper_hexagons
+TAGS:     no_monster_gen no_item_gen
+ORIENT:   encompass
+NSUBST:   | = 4:| / 8:* / 4:H / 32 = |*.. / .
+NSUBST:   { = { / [ / ( / } / ] / ) / 3 = > / .
+KITEM:    H = any good_item
+SUBST:    9 = 8990....
+SUBVAULT: A : hex_subvault
+SUBVAULT: B : hex_subvault
+SUBVAULT: C : hex_subvault
+SUBVAULT: E : hex_subvault
+SUBVAULT: F : hex_subvault
+SUBVAULT: G : hex_subvault
+: if crawl.coinflip() then
+SUBST:    D- = c, ' = +
+:else
+SUBVAULT: D : hex_subvault
+SUBST:    - = +, ': +++c
+:end
+SUBST:    c : cccccccccb
+LFLOORTILE: floor_depthstone
+MAP
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+cccccccccccccccccccccAAAccc.............cccBBBccccccccccccccccccccc
+cccccccccccccccccccAAAAAAAccc...{.{...cccBBBBBBBccccccccccccccccccc
+cccccccccccccccccAAAAAAAAAAA++c.....c++BBBBBBBBBBBccccccccccccccccc
+cccccccccccccccAAAAAAAAAAAAAAAccc.cccBBBBBBBBBBBBBBBccccccccccccccc
+cccccccccccccAAAAAAAAAAAAAAAAAAAcccBBBBBBBBBBBBBBBBBBBccccccccccccc
+ccccccccccccAAAAAAAAAAAAAAAAAAAAAcBBBBBBBBBBBBBBBBBBBBBcccccccccccc
+ccccccccccccAAAAAAAAAAAAAAAAAAAAAcBBBBBBBBBBBBBBBBBBBBBcccccccccccc
+ccccccccccccAAAAAAAAAAAAAAAAAAAAAcBBBBBBBBBBBBBBBBBBBBBcccccccccccc
+ccccc||||||cAAAAAAAAAAAAAAAAAAAAAcBBBBBBBBBBBBBBBBBBBBBc||||||ccccc
+ccccc|9....cAAAAAAAAAAAAAAAAAAAAAcBBBBBBBBBBBBBBBBBBBBBc....9|ccccc
+ccccc|9....+AAAAAAAAAAAAAAAAAAAAA'BBBBBBBBBBBBBBBBBBBBB+....9|ccccc
+ccccc|9....cAAAAAAAAAAAAAAAAAAAAAcBBBBBBBBBBBBBBBBBBBBBc....9|ccccc
+ccccc||||||cAAAAAAAAAAAAAAAAAAAAAcBBBBBBBBBBBBBBBBBBBBBc||||||ccccc
+ccccccccccccAAAAAAAAAAAAAAAAAAAAAcBBBBBBBBBBBBBBBBBBBBBcccccccccccc
+ccccc......cAAAAAAAAAAAAAAAAAAAAAcBBBBBBBBBBBBBBBBBBBBBc......ccccc
+ccccc.{.{..cAAAAAAAAAAAAAAAAAAAAAcBBBBBBBBBBBBBBBBBBBBBc..{.{.ccccc
+ccccc......ccAAAAAAAAAAAAAAAAAAAcccBBBBBBBBBBBBBBBBBBBcc......ccccc
+ccccc....ccccccAAAAAAAAAAAAAAAcccccccBBBBBBBBBBBBBBBcccccc....ccccc
+ccccc..cccCCCccccAAAAAAAAAAAccccDDDccccBBBBBBBBBBBccccEEEccc..ccccc
+cccccc++CCCCCCCc''cAAAAAAAc--cDDDDDDDc--cBBBBBBBc''cEEEEEEE++cccccc
+ccccccCCCCCCCCCCCccccAAAccccDDDDDDDDDDDccccBBBccccEEEEEEEEEEEcccccc
+ccccCCCCCCCCCCCCCCCcccccccDDDDDDDDDDDDDDDcccccccEEEEEEEEEEEEEEEcccc
+ccCCCCCCCCCCCCCCCCCCCcccDDDDDDDDDDDDDDDDDDDcccEEEEEEEEEEEEEEEEEEEcc
+cCCCCCCCCCCCCCCCCCCCCCcDDDDDDDDDDDDDDDDDDDDDcEEEEEEEEEEEEEEEEEEEEEc
+cCCCCCCCCCCCCCCCCCCCCCcDDDDDDDDDDDDDDDDDDDDDcEEEEEEEEEEEEEEEEEEEEEc
+cCCCCCCCCCCCCCCCCCCCCCcDDDDDDDDDDDDDDDDDDDDDcEEEEEEEEEEEEEEEEEEEEEc
+cCCCCCCCCCCCCCCCCCCCCCcDDDDDDDDDDDDDDDDDDDDDcEEEEEEEEEEEEEEEEEEEEEc
+cCCCCCCCCCCCCCCCCCCCCCcDDDDDDDDDDDDDDDDDDDDDcEEEEEEEEEEEEEEEEEEEEEc
+cCCCCCCCCCCCCCCCCCCCCC-DDDDDDDDDDDDDDDDDDDDD-EEEEEEEEEEEEEEEEEEEEEc
+cCCCCCCCCCCCCCCCCCCCCCcDDDDDDDDDDDDDDDDDDDDDcEEEEEEEEEEEEEEEEEEEEEc
+cCCCCCCCCCCCCCCCCCCCCCcDDDDDDDDDDDDDDDDDDDDDcEEEEEEEEEEEEEEEEEEEEEc
+cCCCCCCCCCCCCCCCCCCCCCcDDDDDDDDDDDDDDDDDDDDDcEEEEEEEEEEEEEEEEEEEEEc
+cCCCCCCCCCCCCCCCCCCCCCcDDDDDDDDDDDDDDDDDDDDDcEEEEEEEEEEEEEEEEEEEEEc
+cCCCCCCCCCCCCCCCCCCCCCcDDDDDDDDDDDDDDDDDDDDDcEEEEEEEEEEEEEEEEEEEEEc
+ccCCCCCCCCCCCCCCCCCCCcccDDDDDDDDDDDDDDDDDDDcccEEEEEEEEEEEEEEEEEEEcc
+ccccCCCCCCCCCCCCCCCcccccccDDDDDDDDDDDDDDDcccccccEEEEEEEEEEEEEEEcccc
+ccccccCCCCCCCCCCCccccFFFccccDDDDDDDDDDDccccGGGccccEEEEEEEEEEEcccccc
+cccccc++CCCCCCCc''cFFFFFFFc--cDDDDDDDc--cGGGGGGGc''cEEEEEEE++cccccc
+ccccc..cccCCCccccFFFFFFFFFFFccccDDDccccGGGGGGGGGGGccccEEEccc..ccccc
+ccccc....ccccccFFFFFFFFFFFFFFFcccccccGGGGGGGGGGGGGGGcccccc....ccccc
+ccccc......ccFFFFFFFFFFFFFFFFFFFcccGGGGGGGGGGGGGGGGGGGcc......ccccc
+ccccc.{.{..cFFFFFFFFFFFFFFFFFFFFFcGGGGGGGGGGGGGGGGGGGGGc..{.{.ccccc
+ccccc......cFFFFFFFFFFFFFFFFFFFFFcGGGGGGGGGGGGGGGGGGGGGc......ccccc
+ccccccccccccFFFFFFFFFFFFFFFFFFFFFcGGGGGGGGGGGGGGGGGGGGGcccccccccccc
+ccccc||||||cFFFFFFFFFFFFFFFFFFFFFcGGGGGGGGGGGGGGGGGGGGGc||||||ccccc
+ccccc|9....cFFFFFFFFFFFFFFFFFFFFFcGGGGGGGGGGGGGGGGGGGGGc....9|ccccc
+ccccc|9....+FFFFFFFFFFFFFFFFFFFFF'GGGGGGGGGGGGGGGGGGGGG+....9|ccccc
+ccccc|9....cFFFFFFFFFFFFFFFFFFFFFcGGGGGGGGGGGGGGGGGGGGGc....9|ccccc
+ccccc||||||cFFFFFFFFFFFFFFFFFFFFFcGGGGGGGGGGGGGGGGGGGGGc||||||ccccc
+ccccccccccccFFFFFFFFFFFFFFFFFFFFFcGGGGGGGGGGGGGGGGGGGGGcccccccccccc
+ccccccccccccFFFFFFFFFFFFFFFFFFFFFcGGGGGGGGGGGGGGGGGGGGGcccccccccccc
+ccccccccccccFFFFFFFFFFFFFFFFFFFFFcGGGGGGGGGGGGGGGGGGGGGcccccccccccc
+cccccccccccccFFFFFFFFFFFFFFFFFFFcccGGGGGGGGGGGGGGGGGGGccccccccccccc
+cccccccccccccccFFFFFFFFFFFFFFFccc.cccGGGGGGGGGGGGGGGccccccccccccccc
+cccccccccccccccccFFFFFFFFFFF++c.....c++GGGGGGGGGGGccccccccccccccccc
+cccccccccccccccccccFFFFFFFccc...{.{...cccGGGGGGGccccccccccccccccccc
+cccccccccccccccccccccFFFccc.............cccGGGccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+NAME:   hex_subvault_empty
+TAGS:   allow_dup
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         ...
+       .......
+     ...........
+   ...............
+ ...................
+.....................
+.....................
+.....................
+.....................
+.....................
+.....................
+.....................
+.....................
+.....................
+.....................
+.....................
+ ...................
+   ...............
+     ...........
+       .......
+         ...
+ENDMAP
+
+NAME:   hex_subvault_big_grid
+NSUBST: 3 = 1:3 / * = 3.., 2 = 2:2 / * = 2.., . = 4 = 2... / 28 = 1... / *:.
+: hex_setup(_G)
+MAP
+         ...
+       .......
+     ...........
+   ......xxx......
+ ......2.xxx.2......
+.........xxx.........
+......xxx...xxx......
+....2.xxx.3.xxx.2....
+......xxx...xxx......
+...xxx...AAA...xxx...
+...xxx.3.AAA.3.xxx...
+...xxx...AAA...xxx...
+......xxx...xxx......
+....2.xxx.3.xxx.2....
+......xxx...xxx......
+.........xxx.........
+ ......2.xxx.2......
+   ......xxx......
+     ...........
+       .......
+         ...
+ENDMAP
+
+NAME:   hex_subvault_open_curves
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         ...
+       .......
+     ...........
+   ..xx.......xx..
+ ......x.....x......
+........x...x........
+........x...x........
+.........x.x.........
+.........x.x.........
+.........x.x.........
+.xxxxxxxx.x.xxxxxxxx.
+.........x.x.........
+.........x.x.........
+.........x.x.........
+........x...x........
+........x...x........
+ ......x.....x......
+   ..xx.......xx..
+     ...........
+       .......
+         ...
+ENDMAP
+
+NAME:   hex_subvault_bowtie
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         ...
+       .......
+     ...........
+   ...............
+ ...................
+.....................
+..x...............x..
+..xxx...........xxx..
+..xxxxx.......xxxxx..
+..xxxxxxx...xxxxxxx..
+..xxxxxxxx+xxxxxxxx..
+..xxxxxxx...xxxxxxx..
+..xxxxx.......xxxxx..
+..xxx...........xxx..
+..x...............x..
+.....................
+ ...................
+   ...............
+     ...........
+       .......
+         ...
+ENDMAP
+
+NAME:   hex_subvault_four_corners
+NSUBST: 3 = 1:3 / * = 3.., 2 = 2:2 / * = 2.., . = 4 = 2... / 28 = 1... / *:.
+: hex_setup(_G)
+MAP
+         ...
+       .......
+     ...........
+   .....x...x.....
+ ......xx...xx......
+.......xx...xx.......
+......2xx.3.xx2......
+..xxxxxxx...xxxxxxx..
+..xxxxxxx...xxxxxxx..
+.........2.2.........
+......3...B...3......
+.........2.2.........
+..xxxxxxx...xxxxxxx..
+..xxxxxxx...xxxxxxx..
+......2xx...xx2......
+.......xx.3.xx.......
+ ......xx...xx......
+   .....x...x.....
+     ...........
+       .......
+         ...
+ENDMAP
+
+NAME:   hex_subvault_ellipse_pattern
+NSUBST: 3 = 1:3 / * = 3.., 2 = 2:2 / * = 2.., . = 4 = 2... / 28 = 1... / *:.
+SUBST:  C = AB.
+: hex_setup(_G)
+MAP
+         ...
+       .......
+     ...........
+   ......xxx......
+ .......xx2xx.......
+...xx..xx...xx..xx...
+....x...........x....
+....xx2.......2xx....
+...xx..xxx3xxx..xx...
+..xx...x.....x...xx..
+..x2...3..C..3...2x..
+..xx...x.....x...xx..
+...xx..xxx3xxx..xx...
+....xx2.......2xx....
+....x...........x....
+...xx..xx...xx..xx...
+ .......xx2xx.......
+   ......xxx......
+     ...........
+       .......
+         ...
+ENDMAP
+
+NAME:   hex_subvault_fishy
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         xxx
+       xxxxxxx
+     ...xxxxx...
+   ......xxx......
+ xx.......x.......xx
+xxxxx.....x.....xxxxx
+xxxxxx....x....xxxxxx
+xxxxxxx..xxx..xxxxxxx
+..xxxx..xx.xx..xxxx..
+...x....x...x....x...
+......A...A...A......
+...x....x...x....x...
+..xxxx..xx.xx..xxxx..
+xxxxxxx..xxx..xxxxxxx
+xxxxxx....x....xxxxxx
+xxxxx.....x.....xxxxx
+ xx.......x.......xx
+   ......xxx......
+     ...xxxxx...
+       xxxxxxx
+         xxx
+ENDMAP
+
+NAME:   hex_subvault_narrow
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         ...
+       ......x
+     x.......x..
+   ..x.xxxx..x...x
+ x...x.x.....x...x..
+.x.x.x.x..xxxx.x.x...
+.x.x.x.x.....x.x.x.x.
+.x.x.x.xxxx..x.x.x.x.
+.x.x.x.x.....x.x.x.x.
+.x.x.x.x..xxxx.x.x.x.
+.x.x.x.x.....x.x.x.x.
+.x.x.x.xxxx..x.x.x.x.
+.x.x.x.x.....x.x.x.x.
+.x.x.x.x..xxxx.x.x.x.
+.x.x.x.x.....x.x.x.x.
+...x.x.xxxx..x.x...x.
+ ..x.x.x.....x.x...x
+   x...x..xxxx.x..
+     ..x.......x
+       x......
+         ...
+ENDMAP
+
+NAME:   hex_subvault_octagon
+NSUBST: 3 = 1:3 / * = 3.., 2 = 2:2 / * = 2.., . = 4 = 2... / 28 = 1... / *:.
+: hex_setup(_G)
+MAP
+         ...
+       .......
+     ...........
+   .......2.......
+ ......Axx+xxA......
+......Axx...xxA......
+.....Axx.....xxA.....
+....Axx.......xxA....
+....xx..A.3.A..xx....
+....x....2.2....x....
+...2+...3.B.3...+2...
+....x....2.2....x....
+....xx..A.3.A..xx....
+....Axx.......xxA....
+.....Axx.....xxA.....
+......Axx...xxA......
+ ......Axx+xxA......
+   .......2.......
+     ...........
+       .......
+         ...
+ENDMAP
+
+NAME:   hex_subvault_one_slice
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         ...
+       .x.....
+     ...xx......
+   ......xx.......
+ ........xx.........
+x.........x....x.....
+xxx.......x...xxx....
+..xx......xx...x.....
+...xxx.....+.........
+.....xx....+.....x...
+......xx...xx...xxx..
+.......xxx..x....x...
+..x......xx.x........
+.xxx......xxxx..x....
+..x....x....xx.xxx...
+......xxx.......x....
+ ......x...x........
+   .......xxx.....
+     ......x....
+       .......
+         ...
+ENDMAP
+
+NAME:   hex_subvault_rings
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         ...
+       .......
+     ..xxxxxxx..
+   ..xx.......xx..
+ ...x...........x...
+...x....xxxxx....x...
+..x...xx.....xx...x..
+..x..x.........x..x..
+.x...x...xxx...x...x.
+.x..x..xx...xx..x..x.
+.x..x..x.....x..x..x.
+.x..x..xx...xx..x..x.
+.x...x...xxx...x...x.
+..x..x.........x..x..
+..x...xx.....xx...x..
+...x....xxxxx....x...
+ ...x...........x...
+   ..xx.......xx..
+     ..xxxxxxx..
+       .......
+         ...
+ENDMAP
+
+NAME:   hex_subvault_roundabout
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         xxx
+       xxxxxxx
+     .xxxxxxxxx.
+   x..xxxxxxxxx..x
+ xxxx..xxxxxxx..xxxx
+xxxxxx..xxxxx..xxxxxx
+xxxxxxx..xxx..xxxxxxx
+xxxxxxxx.xxx.xxxxxxxx
+xxxxxxxx.xxx.xxxxxxxx
+.........xxx.........
+......xxxxxxxxx......
+.........xxx.........
+xxxxxxxx.....xxxxxxxx
+xxxxxxxx.....xxxxxxxx
+xxxxxxx..xxx..xxxxxxx
+xxxxxx..xxxxx..xxxxxx
+ xxxx..xxxxxxx..xxxx
+   x..xxxxxxxxx..x
+     .xxxxxxxxx.
+       xxxxxxx
+         xxx
+ENDMAP
+
+NAME:   hex_subvault_dug_out
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: A = 1:B / *:A
+: hex_setup(_G)
+MAP
+         ...
+       .......
+     .....x.....
+   ....x..xx......
+ ...xxxx..xxAxxx....
+...xxxxx..xxxxxxx....
+..xxxxxx.............
+..xxxxxx.............
+..xxxxxx..xxx..xxx...
+..........xxx..xxxx..
+.........Axxx..xxxx..
+...xxxxxxxxxx..xxxx..
+...xxxxxxxxxx..xxx...
+...xxxxxA......xxA...
+....xxxx.......xx....
+.......x..xxx..xx....
+ ......x..xx...x....
+   .......x.......
+     ...........
+       .......
+         ...
+ENDMAP
+
+NAME:   hex_subvault_village
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         ...
+       .......
+     ....xxx....
+   .....xx.xx.....
+ .......x...x.......
+..xxxx..x...x..xxxx..
+..x..x..x...x..x..x..
+..x..x..xx+xx..x..x..
+..xxx+.........+xxx..
+.....................
+..........B..........
+.....................
+..xxx+.........+xxx..
+..x..x..xx+xx..x..x..
+..x..x..x...x..x..x..
+..xxxx..x...x..xxxx..
+ .......x...x.......
+   .....xx.xx.....
+     ....xxx....
+       .......
+         ...
+ENDMAP
+
+NAME:   hex_subvault_spokes
+NSUBST: 3 = 1:3 / 2:2 / 4 = 3... / *:., . = 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         ...
+       ...x...
+     .....x.....
+   ....A..x..A....
+ ...x.....x.....x...
+.....x....x....x.....
+......x...x...x......
+...A...x..x..x...A...
+........x3x3x........
+........3xxx3........
+.xxxxxxxxxxxxxxxxxxx.
+........3xxx3........
+........x3x3x........
+...A...x..x..x...A...
+......x...x...x......
+.....x....x....x.....
+ ...x.....x.....x...
+   ....A..x..A....
+     .....x.....
+       ...x...
+         ...
+ENDMAP
+
+NAME:   hex_subvault_bell
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         xxx
+       xxxxxxx
+     ..xxxxxxx..
+   ...xxxxxxxxx...
+ .....xxxxxxxxx.....
+.....xxxxxxxxxxx.....
+.....xxxxxxxxxxx.....
+....xxxxxxxxxxxxx....
+....xxxxxxxxxxxxx....
+...xxxxxxxxxxxxxxx...
+...xxxxxxxxxxxxxxx...
+..xxxxxxxxxxxxxxxxx..
+..xxxxxxxxxxxxxxxxx..
+....xxxxxxxxxxxxx....
+......xxxxxxxxx......
+........xxxxx........
+ ........xxx........
+   .......B.......
+     ...........
+       .......
+         ...
+ENDMAP
+
+NAME:   hex_subvault_channel
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         ...
+       .......
+     ...........
+   .....xx+xx.....
+ ......xx...xx......
+....xxxxA...Axxxx....
+..xxxxxxx...xxxxxxx..
+..xxxxxxA...Axxxxxx..
+..xxxxxxx...xxxxxxx..
+..xxxxxxA...Axxxxxx..
+..xxxxxxx...xxxxxxx..
+..xxxxxxA...Axxxxxx..
+..xxxxxxx...xxxxxxx..
+..xxxxxxA...Axxxxxx..
+..xxxxxxx...xxxxxxx..
+....xxxxA...Axxxx....
+ ......xx...xx......
+   .....xx+xx.....
+     ...........
+       .......
+         ...
+ENDMAP
+
+NAME:   hex_subvault_orbs
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         xxx
+       xxxxxxx
+     ..xxxxxxx..
+   ....xxxxxxx....
+ .......xxxxx.......
+.........xAx.........
+.....................
+.....................
+...xxx...xxx...xxx...
+..xxxxx.xxxxx.xxxxx..
+..xxxxA.xxxxx.Axxxx..
+..xxxxx.xxxxx.xxxxx..
+...xxx...xxx...xxx...
+.....................
+.....................
+.........xAx.........
+ .......xxxxx.......
+   ....xxxxxxx....
+     ..xxxxxxx..
+       xxxxxxx
+         xxx
+ENDMAP
+
+NAME:   hex_subvault_rooms
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         x..
+       ..x....
+     ....+.....x
+   ......x.....+..
+ ........x.....x....
+xxx+xxx+xxxx+xxx.....
+.....x.........x.....
+.....x.........x.....
+.....x.........x.....
+.....x.........+.....
+.....xx+xx+xx+xxxx+xx
+.....x...x..x........
+.....x...+..x........
+.....+...x..x........
+.....x...x..+........
+xxx+xxx+xx..x........
+ ........+..x.......
+   ......x..x.....
+     ....xx+xxxx
+       ..x....
+         x..
+ENDMAP
+
+NAME:   hex_subvault_rooms_two
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         ...
+       .x.....
+     ...x.......
+   x....+.........
+ ..x....x.........+.
+...+....xx+xxxx+xxx..
+...x....x...x.....x..
+...x....x...x.....x..
+x+xxx+xxx...x.....x..
+........x...+.....+..
+........+...x.....x..
+........x...x.....x..
+xxx+xxxxxx+xx.....x..
+......x.....x.....x..
+......x.....xxx+xxx..
+......+.....x.....+..
+ .....x.....x.....x.
+   ...x.....+.....
+     .x.....x...
+       .....x.
+         ...
+ENDMAP
+
+NAME:   hex_subvault_small_grid
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+SUBST:  x = xxx.
+: hex_setup(_G)
+MAP
+         ...
+       .......
+     ...x.x.x...
+   ....x.x.x.x....
+ ...x.x.x.x.x.x.x...
+...x.x.x.x.x.x.x.x...
+..x.x.x.x.x.x.x.x.x..
+.x.x.x.x.x.x.x.x.x.x.
+..x.x.x.x.x.x.x.x.x..
+.x.x.x.x.x.x.x.x.x.x.
+..x.x.x.x.B.x.x.x.x..
+.x.x.x.x.x.x.x.x.x.x.
+..x.x.x.x.x.x.x.x.x..
+.x.x.x.x.x.x.x.x.x.x.
+..x.x.x.x.x.x.x.x.x..
+...x.x.x.x.x.x.x.x...
+ ...x.x.x.x.x.x.x...
+   ....x.x.x.x....
+     ...x.x.x...
+       .......
+         ...
+ENDMAP
+
+NAME:   hex_subvault_two_sheets
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         ...
+       .......
+     .....x.....
+   .....xxx.......
+ .....xxxxx.........
+.....xxxxxx..........
+...xxxxxxxx..........
+..xxxxxxxxx..........
+..xxxxxxxx.......xx..
+..xxxxxx.......xxxx..
+..xxxx.......xxxxxx..
+..xxx......xxxxxxxx..
+..x......xxxxxxxxxx..
+.........xxxxxxxxxx..
+.........xxxxxxxx....
+.........xxxxxx......
+ ........xxxx.......
+   ......xx.......
+     ...........
+       .......
+         ...
+ENDMAP
+
+NAME:   hex_subvault_filled
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         ...
+       ...x...
+     ...xxxxx...
+   ...xxxxxxxxx...
+ ...xxxxxxxxxxxxx...
+..xxxxxxxxxxxxxxxxx..
+.xxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxx.
+.xxxxxxxxxxxxxxxxxxx.
+..xxxxxxxxxxxxxxxxx..
+ ...xxxxxxxxxxxxx...
+   ...xxxxxxxxx...
+     ...xxxxx...
+       ...x...
+         ...
+ENDMAP
+
+NAME:   hex_subvault_double_channel
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         xxx
+       ..xxx..
+     ....xxx....
+   .......x.......
+ .xxxxxx..x..xxxxxx.
+..xxx.....x.....xxx..
+.xxxxx..xxxxx..xxxxx.
+.xxxxxx..xxx..xxxxxx.
+.xxxxxx...B...xxxxxx.
+.xxxxxxx.....xxxxxxx.
+.xxxxxxxx...xxxxxxxx.
+.xxxxxxxxx.xxxxxxxxx.
+.xxxxxxxxx.xxxxxxxxx.
+.xxxxxxxxx.xxxxxxxxx.
+.xxxxxxxxx.xxxxxxxxx.
+..xxxxxxxx.xxxxxxxx..
+ ...xxxxxx.xxxxxx...
+   ...xxxx.xxxx...
+     ...xx.xx...
+       .......
+         ...
+ENDMAP
+
+NAME:   hex_subvault_uneven
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         xxx
+       .xxxxx.
+     ...xxxxx...
+   ......xxx......
+ xx.......x.......xx
+..xx......x......xx..
+...xx.....x.....xx...
+....xx....x....xx....
+......x...x...x......
+.......x.....x.......
+........xx.xx........
+........xxBxx........
+.......xxxAxxx.......
+....xxx..xAx..xxx....
+..xxx....xAx....xxx..
+xxx.......x.......xxx
+ .........x.........
+   .......x.......
+     .....x.....
+       ..xxx..
+         xxx
+ENDMAP
+
+NAME:   hex_subvault_angles
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         ...
+       .......
+     ....xx.....
+   .....xx..xx....
+ ......xx....xx..xx.
+xxxxxxxxxxx...xxxx...
+xxxxxxxxxxx....xx....
+..xxA.........xx.....
+..xx.........xx...x..
+..xx........xx...xx..
+..xx....xx.xx....xx..
+..xx...xx........xx..
+..x...xx.........xx..
+.....xx.........Axx..
+....xx....xxxxxxxxxxx
+...xxxx...xxxxxxxxxxx
+ .xx..xx....xx......
+   ....xx..xx.....
+     .....xx....
+       .......
+         ...
+ENDMAP
+
+NAME:   hex_subvault_crossings
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+NSUBST: x = 1:Bx / 12 = Axxx / x
+: hex_setup(_G)
+MAP
+         ..x
+       ..xx...
+     ..x.xx...x.
+   x....x..x.x...x
+ ...x..x.x..x...x...
+x....xx...xx.x.x.....
+.x...xx...xx..x.....x
+..x.x..x.x..xx.x...x.
+...x....x...xx..x.x..
+x.x.x..x.x.x..x..x..x
+.x...xx...x....xx.xx.
+x.x..xx..x.x...xx.xx.
+...xx..xx...x.x..x..x
+...xx..xx....x..x.x..
+..x..xx..x..x.xx...x.
+.x...xx...xx..xx....x
+ ...x..x..xx.x..x...
+   x....xx..x....x
+     ...xx.x.x..
+       x..x...
+         x.x
+ENDMAP
+
+NAME:   hex_subvault_bug
+NSUBST: . = 1:3 / 4 = 3... / 2:2 / 12 = 2... / 3:1 / 16 = 1... / *:.
+: hex_setup(_G)
+MAP
+         xxx
+       .......
+     ....xxx....
+   ......x.x......
+ ...x....x.x....x...
+x..xx...xx.xx...xx..x
+x...x.xxxx.xxxx.x...x
+x.....xxxx.xxxx.....x
+x+xxxxxxxx.xxxxxxxxxx
+....xxxxx...xxxxx....
+..........B..........
+....xxxxx...xxxxx....
+xxxxxxxxxx.xxxxxxx+xx
+x.....xxxx.xxxx.....x
+x...x.xxxx.xxxx.x...x
+x..xx...xx.xx...xx..x
+ ...x....x.x....x...
+   ......x.x......
+     ....xxx....
+       .......
+         xxx
 ENDMAP

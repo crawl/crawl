@@ -125,9 +125,6 @@ of @_place_name_@
 w:5
 of @_discomfort_weapon_@
 
-w:3
-of @_mental_illness_weapon_@
-
 w:4
 of the @_item_name_@
 
@@ -180,12 +177,10 @@ of @god_name@
 ######################################################
 # 2. ARMOUR
 ######################################################
-robe
-
-@armour@
 %%%%
-body armour
+talisman
 
+# TODO?
 @armour@
 %%%%
 armour
@@ -240,9 +235,6 @@ of the @_adjective_@ @_critter_name_@
 
 w:5
 of @_evil_being_@
-
-w:5
-of @_mental_illness_armour_@
 
 of @_discomfort_and_inaction_@
 
@@ -318,9 +310,6 @@ of @_balance_or_order_@
 
 w:14
 of @_philosophy_name_@
-
-w:7
-of @_mental_illness_weapon_@
 
 of @other_weapon_name@
 
@@ -451,8 +440,6 @@ w:20
 of @_number_or_qualifier_@ @_thing_names_@
 
 of @_discomfort_weapon_@
-
-of @_mental_illness_weapon_@
 
 of the @_item_name_@
 
@@ -1222,6 +1209,8 @@ jade
 pearl
 
 tiger eye
+
+ametrine
 %%%%
 ######################################################
 # Jewellery appearance
@@ -1332,6 +1321,8 @@ lapis lazuli
 
 glass
 
+carnelian
+
 w:2
 gossamer
 %%%%
@@ -1376,8 +1367,6 @@ garnet
 ruby
 
 jade
-
-ruby
 
 crystal
 

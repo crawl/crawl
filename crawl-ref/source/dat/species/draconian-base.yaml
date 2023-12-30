@@ -2,14 +2,14 @@ enum: SP_BASE_DRACONIAN
 monster: MONS_DRACONIAN
 name: "Draconian"
 difficulty: Simple
-difficulty_priority: 50
+difficulty_priority: 60
 species_flags:
   - SPF_DRACONIAN
 aptitudes:
   xp: -1
   hp: 1
   mp_mod: 0
-  mr: 3
+  wl: 3
   fighting: 1
   ranged weapons: -1
   throwing: -1
@@ -17,6 +17,7 @@ aptitudes:
   dodging: -1
   spellcasting: -1
   hexes: -1
+  shapeshifting: -1
   invocations: 1
 str: 10
 int: 8
@@ -27,10 +28,10 @@ mutations:
     MUT_COLD_BLOODED: 1
 recommended_jobs:
   - JOB_BERSERKER
-  - JOB_TRANSMUTER
+  - JOB_SHAPESHIFTER
   - JOB_CONJURER
   - JOB_FIRE_ELEMENTALIST
   - JOB_ICE_ELEMENTALIST
   - JOB_AIR_ELEMENTALIST
   - JOB_EARTH_ELEMENTALIST
-  - JOB_VENOM_MAGE
+  - JOB_ALCHEMIST

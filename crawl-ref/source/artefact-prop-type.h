@@ -2,8 +2,9 @@
 
 #include "tag-version.h"
 
-// Be sure to update artefact_prop_data[] in artefact.cc. Also,
-// _randart_propnames() in describe.cc, but order doesn't matter there.
+// Be sure to update artp_data[] in artefact.cc. Also, _randart_propnames() in
+// describe.cc, but order doesn't matter there. Also util/art-data.pl.
+// Also wiz-item.cc rap_names.
 enum artefact_prop_type
 {
     ARTP_BRAND,
@@ -27,7 +28,9 @@ enum artefact_prop_type
 #endif
     ARTP_NOISE,
     ARTP_PREVENT_SPELLCASTING,
+#if TAG_MAJOR_VERSION == 34
     ARTP_CAUSE_TELEPORTATION,
+#endif
     ARTP_PREVENT_TELEPORTATION,
     ARTP_ANGRY,
 #if TAG_MAJOR_VERSION == 34
@@ -70,5 +73,18 @@ enum artefact_prop_type
     ARTP_HARM,
     ARTP_RAMPAGING,
     ARTP_ARCHMAGI,
+    ARTP_ENHANCE_CONJ,
+    ARTP_ENHANCE_HEXES,
+    ARTP_ENHANCE_SUMM,
+    ARTP_ENHANCE_NECRO,
+    ARTP_ENHANCE_TLOC,
+#if TAG_MAJOR_VERSION == 34
+    ARTP_ENHANCE_TMUT,
+#endif
+    ARTP_ENHANCE_FIRE,
+    ARTP_ENHANCE_ICE,
+    ARTP_ENHANCE_AIR,
+    ARTP_ENHANCE_EARTH,
+    ARTP_ENHANCE_ALCHEMY,
     ARTP_NUM_PROPERTIES
 };

@@ -5,6 +5,8 @@
 class actor;
 class dist;
 
+const int GOLUBRIA_FUZZ_RANGE = 2;
+
 spret cast_disjunction(int pow, bool fail);
 void disjunction_spell();
 
@@ -15,9 +17,12 @@ void wizard_blink();
 
 int frog_hop_range();
 spret frog_hop(bool fail, dist *target = nullptr);
-bool palentonga_charge_possible(bool quiet, bool ignore_safe_monsters);
-spret palentonga_charge(bool fail, dist *target = nullptr);
-int palentonga_charge_range();
+
+string electric_charge_impossible_reason(bool allow_safe_monsters);
+spret electric_charge(int powc, bool fail, const coord_def &target);
+bool find_charge_target(vector<coord_def> &target_path, int max_range,
+                                targeter *hitfunc, dist &target);
+string movement_impossible_reason();
 
 void you_teleport();
 void you_teleport_now(bool wizard_tele = false, bool teleportitis = false,
@@ -27,15 +32,14 @@ bool you_teleport_to(const coord_def where,
 bool cell_vetoes_teleport(coord_def cell, bool check_monsters = true,
                           bool wizard_tele = false);
 
-spret cast_portal_projectile(int pow, bool fail);
+spret cast_dimensional_bullseye(int pow, monster *target, bool fail);
 
 spret cast_manifold_assault(int pow, bool fail, bool real = true);
 string weapon_unprojectability_reason();
 
 struct bolt;
 spret cast_apportation(int pow, bolt& beam, bool fail);
-int golubria_fuzz_range();
-bool golubria_valid_cell(coord_def p);
+bool golubria_valid_cell(coord_def p, bool just_check = false);
 spret cast_golubrias_passage(int pow, const coord_def& where, bool fail);
 
 spret cast_dispersal(int pow, bool fail);

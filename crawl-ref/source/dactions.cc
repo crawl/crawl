@@ -35,7 +35,7 @@ static const char *daction_names[] =
     "unholy/evil go hostile",
     "unclean/chaotic go hostile",
     "spellcasters go hostile",
-    "yred slaves go hostile",
+    "yred bound souls go hostile",
     "beogh orcs and their summons go hostile",
     "fellow slimes go hostile",
     "plants go hostile (allowing reconversion)",
@@ -309,7 +309,7 @@ static void _apply_daction(daction_type act)
                 item.freshness = 1; // thoroughly rotten
         break;
     case DACT_GOLD_ON_TOP:
-        gozag_detect_level_gold(false);
+        gozag_move_level_gold_to_top();
         break;
     case DACT_REMOVE_GOZAG_SHOPS:
     {
@@ -345,7 +345,7 @@ static void _apply_daction(daction_type act)
     case DACT_ALLY_UNHOLY_EVIL:
     case DACT_ALLY_UNCLEAN_CHAOTIC:
     case DACT_ALLY_SPELLCASTER:
-    case DACT_ALLY_YRED_SLAVE:
+    case DACT_ALLY_YRED_RELEASE_SOULS:
 #endif
     case NUM_DACTION_COUNTERS:
     case NUM_DACTIONS:

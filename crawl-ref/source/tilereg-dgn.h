@@ -32,6 +32,7 @@ public:
     virtual bool update_tip_text(string &tip) override;
     virtual bool update_alt_text(string &alt) override;
     virtual void on_resize() override;
+    void config_glyph_font();
     virtual bool inside(int px, int py) override;
 
     void load_dungeon(const crawl_view_buffer &vbuf, const coord_def &gc);
@@ -43,17 +44,19 @@ public:
                       const coord_def &gc);
 
     const coord_def &get_cursor() const { return m_cursor[CURSOR_MOUSE]; }
+    void to_screen_coords(const coord_def &gc, coord_def *pc) const;
 
     int tile_iw, tile_ih;
 
 protected:
+    void recalculate() override;
     void pack_buffers();
+    void pack_glyph_at(screen_cell_t *vbuf_cell, int vx, int vy);
     void pack_cursor(cursor_type type, unsigned int tile);
 
     void draw_minibars();
 
     int get_buffer_index(const coord_def &gc);
-    void to_screen_coords(const coord_def &gc, coord_def *pc) const;
 
     crawl_view_buffer m_vbuf;
     int m_cx_to_gx;
@@ -64,6 +67,8 @@ protected:
 
     DungeonCellBuffer m_buf_dngn;
     ShapeBuffer m_buf_flash;
+    int m_font_dx;
+    int m_font_dy;
 };
 
 #endif

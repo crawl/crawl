@@ -1317,7 +1317,7 @@ static void emit_number(SB *out, double num)
      * like 0.3 -> 0.299999999999999988898 .
      */
     char buf[64];
-    sprintf(buf, "%.16g", num);
+    snprintf(buf, sizeof(buf), "%.16g", num);
 
     if (number_is_valid(buf))
         sb_puts(out, buf);

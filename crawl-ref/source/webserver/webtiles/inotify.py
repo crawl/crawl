@@ -15,6 +15,8 @@ try:
 except ImportError:
     pass
 
+from webtiles import util
+
 # compatibility stuff for certain FD management calls.
 # these calls require py3.5+ if used on tornado 6.1.0. However, Tornado 6.0
 # already requires py3.5+, so all should be good.

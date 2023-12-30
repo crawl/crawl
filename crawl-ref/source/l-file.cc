@@ -82,7 +82,22 @@ static int file_unmarshall_string(lua_State *ls)
     if (lua_gettop(ls) != 1)
         luaL_error(ls, "Need reader as one argument");
     reader &th(*static_cast<reader*>(lua_touserdata(ls, 1)));
+#if TAG_MAJOR_VERSION == 34
+    string str = unmarshallString(th).c_str();
+    if (th.getMinorVersion() < TAG_MINOR_LANGUAGE_FIX)
+    {
+        str = replace_all(str, "master_name", "primary_name");
+        str = replace_all(str, "slaved_to", "replica_to");
+        str = replace_all(str, "marker_slave", "marker_replica");
+        str = replace_all(str, "only_at_slave", "only_at_replica");
+        str = replace_all(str, "single_random_slave", "single_random_replica");
+        str = replace_all(str, "listen_to_slaves", "listen_to_replicas");
+        str = replace_all(str, "slave_name", "replica_name");
+    }
+    lua_pushstring(ls, str.c_str());
+#else
     lua_pushstring(ls, unmarshallString(th).c_str());
+#endif
     return 1;
 }
 

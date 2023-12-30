@@ -65,11 +65,14 @@ void get_feature_desc(const coord_def &gc, describe_info &inf, bool include_extr
 command_type describe_item_popup(const item_def &item,
                                  function<void (string&)> fixup_desc = nullptr,
                                  bool do_actions = false);
-bool describe_item(item_def &item, function<void (string&)> fixup_desc = nullptr);
+bool describe_item(item_def &item, function<void (string&)> fixup_desc = nullptr,
+    bool do_actions = true);
 string describe_item_rarity(const item_def &item);
 void get_item_desc(const item_def &item, describe_info &inf);
 void inscribe_item(item_def &item);
 void target_item(item_def &item);
+void desc_randart_props(const item_def &item, vector<string> &lines);
+string damage_rating(const item_def *item, int *rating_value = nullptr);
 
 int describe_monsters(const monster_info &mi, const string& footer = "");
 
@@ -97,7 +100,7 @@ void describe_skill(skill_type skill);
 
 int hex_chance(const spell_type spell, const monster_info* mon_owner);
 void describe_to_hit(const monster_info& mi, ostringstream &result,
-                     bool parenthesize = false, const item_def* weapon = nullptr);
+                     const item_def* weapon = nullptr);
 
 string get_command_description(const command_type cmd, bool terse);
 
@@ -116,6 +119,9 @@ string full_trap_name(trap_type trap);
 int str_to_trap(const string &s);
 
 string extra_cloud_info(cloud_type cloud_type);
+
+string desc_resist(int level, int max = 1,
+                   bool immune = false, bool allow_spacing = true);
 
 /* Public for testing purposes only: do not use elsewhere. */
 string _monster_habitat_description(const monster_info& mi);

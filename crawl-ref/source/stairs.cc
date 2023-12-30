@@ -381,6 +381,7 @@ static bool _check_fall_down_stairs(const dungeon_feature_type ftype, bool going
     if (!you.airborne()
         && you.confused()
         && !feat_is_escape_hatch(ftype)
+        && !crawl_state.game_is_descent()
         && coinflip())
     {
         const char* fall_where = "down the stairs";
@@ -408,48 +409,64 @@ static bool _check_fall_down_stairs(const dungeon_feature_type ftype, bool going
 
 static void _rune_effect(dungeon_feature_type ftype)
 {
-    // Nothing even remotely flashy for Zig.
-    if (ftype != DNGN_ENTER_ZIGGURAT)
+    vector<int> runes;
+    for (int i = 0; i < NUM_RUNE_TYPES; i++)
+        if (you.runes[i])
+            runes.push_back(i);
+
+    ASSERT(runes.size() >= 1);
+    shuffle_array(runes);
+
+    // Zot is extra flashy.
+    if (ftype == DNGN_ENTER_ZOT)
     {
-        vector<int> runes;
-        for (int i = 0; i < NUM_RUNE_TYPES; i++)
-            if (you.runes[i])
-                runes.push_back(i);
+        ASSERT(runes.size() >= 3);
 
-        ASSERT(runes.size() >= 1);
-        shuffle_array(runes);
-
-        // Zot is extra flashy.
-        if (ftype == DNGN_ENTER_ZOT)
-        {
-            ASSERT(runes.size() >= 3);
-
-            mprf("You insert the %s rune into the lock.", rune_type_name(runes[2]));
+        mprf("You insert the %s rune into the lock.", rune_type_name(runes[2]));
 #ifdef USE_TILE_LOCAL
-            view_add_tile_overlay(you.pos(), tileidx_zap(rune_colour(runes[2])));
-            viewwindow(false);
-            update_screen();
+        view_add_tile_overlay(you.pos(), tileidx_zap(rune_colour(runes[2])));
+        viewwindow(false);
+        update_screen();
 #else
-            flash_view(UA_BRANCH_ENTRY, rune_colour(runes[2]));
+        flash_view(UA_BRANCH_ENTRY, rune_colour(runes[2]));
 #endif
-            mpr("The lock glows eerily!");
-            // included in default force_more_message
+        mpr("The lock glows eerily!");
+        // included in default force_more_message
 
-            mprf("You insert the %s rune into the lock.", rune_type_name(runes[1]));
-            big_cloud(CLOUD_BLUE_SMOKE, &you, you.pos(), 20, 7 + random2(7));
-            viewwindow();
-            update_screen();
-            mpr("Heavy smoke blows from the lock!");
-            // included in default force_more_message
+        mprf("You insert the %s rune into the lock.", rune_type_name(runes[1]));
+        big_cloud(CLOUD_BLUE_SMOKE, &you, you.pos(), 20, 7 + random2(7));
+        viewwindow();
+        update_screen();
+        mpr("Heavy smoke blows from the lock!");
+        // included in default force_more_message
+    }
+
+    mprf("You insert the %s rune into the lock.", rune_type_name(runes[0]));
+
+    if (silenced(you.pos()))
+        mpr("The gate opens wide!");
+    else
+        mpr("With a soft hiss the gate opens wide!");
+    // these are included in default force_more_message
+}
+
+static void _maybe_use_runes(dungeon_feature_type ftype)
+{
+    switch (ftype)
+    {
+    case DNGN_ENTER_ZOT:
+        if (!you.level_visited(level_id(BRANCH_ZOT, 1)) && !crawl_state.game_is_descent())
+            _rune_effect(ftype);
+        break;
+    case DNGN_EXIT_VAULTS:
+        if (vaults_is_locked())
+        {
+            unlock_vaults();
+            _rune_effect(ftype);
         }
-
-        mprf("You insert the %s rune into the lock.", rune_type_name(runes[0]));
-
-        if (silenced(you.pos()))
-            mpr("The gate opens wide!");
-        else
-            mpr("With a soft hiss the gate opens wide!");
-        // these are included in default force_more_message
+        break;
+    default:
+        break;
     }
 }
 
@@ -561,7 +578,7 @@ static level_id _travel_destination(const dungeon_feature_type how,
     level_id dest;
     if (shaft)
     {
-        if (!is_valid_shaft_level())
+        if (!is_valid_shaft_level(false))
         {
             if (known_shaft)
                 mpr("The shaft disappears in a puff of logic!");
@@ -638,19 +655,7 @@ static level_id _travel_destination(const dungeon_feature_type how,
 
     // Maybe perform the entry sequence (we check that they have enough runes
     // in main.cc: _can_take_stairs())
-    for (branch_iterator it; it; ++it)
-    {
-        if (how != it->entry_stairs)
-            continue;
-
-        if (!you.level_visited(level_id(it->id, 1))
-            && runes_for_branch(it->id) > 0)
-        {
-            _rune_effect(how);
-        }
-
-        break;
-    }
+    _maybe_use_runes(how);
 
     // Markers might be deleted when removing portals.
     const string dst = env.markers.property_at(you.pos(), MAT_ANY, "dst");
@@ -744,7 +749,7 @@ void floor_transition(dungeon_feature_type how,
 
     // We "stepped".
     if (!forced)
-        apply_barbs_damage();
+        player_did_deliberate_movement();
 
     // Magical level changes (which currently only exist "downwards") need this.
     clear_trapping_net();
@@ -758,6 +763,12 @@ void floor_transition(dungeon_feature_type how,
         jiyva_end_oozemancy();
     if (you.duration[DUR_NOXIOUS_BOG])
         you.duration[DUR_NOXIOUS_BOG] = 0;
+    if (you.duration[DUR_DIMENSIONAL_BULLSEYE])
+    {
+        monster* targ = monster_by_mid(you.props[BULLSEYE_TARGET_KEY].get_int());
+        if (targ)
+            targ->del_ench(ENCH_BULLSEYE_TARGET);
+    }
 
     // Fire level-leaving trigger.
     leaving_level_now(how);
@@ -786,8 +797,7 @@ void floor_transition(dungeon_feature_type how,
         mark_milestone("abyss.enter", "escaped (hah) into the Abyss!");
         take_note(Note(NOTE_MESSAGE, 0, 0, "Took an exit into the Abyss."), true);
     }
-    else if (how == DNGN_EXIT_ABYSS
-             && you.chapter != CHAPTER_POCKET_ABYSS)
+    else if (how == DNGN_EXIT_ABYSS)
     {
         mark_milestone("abyss.exit", "escaped from the Abyss!");
         you.attribute[ATTR_BANISHMENT_IMMUNITY] = you.elapsed_time + 100
@@ -934,8 +944,10 @@ void floor_transition(dungeon_feature_type how,
                 mpr("Zot already knows this place too well. Descend or flee this branch!");
             else
                 mpr("Zot's attention fixes on you again. Descend or flee this branch!");
+#if TAG_MAJOR_VERSION == 34
             if (you.species == SP_METEORAN)
                 update_vision_range();
+#endif
         }
         else if (was_bezotted)
         {
@@ -943,8 +955,17 @@ void floor_transition(dungeon_feature_type how,
                 mpr("Zot has no power in the Abyss.");
             else
                 mpr("You feel Zot lose track of you.");
+#if TAG_MAJOR_VERSION == 34
             if (you.species == SP_METEORAN)
                 update_vision_range();
+#endif
+        }
+        print_gem_warnings(gem_for_branch(branch), 0);
+
+        if (how == DNGN_ENTER_VAULTS && !runes_in_pack())
+        {
+            lock_vaults();
+            mpr("The door slams shut behind you.");
         }
 
         if (branch == BRANCH_GAUNTLET)
@@ -985,7 +1006,7 @@ void floor_transition(dungeon_feature_type how,
 
     // Warn Formicids if they cannot shaft here
     if (player_has_ability(ABIL_SHAFT_SELF, true)
-                                && !is_valid_shaft_level())
+                                && !is_valid_shaft_level(false))
     {
         mpr("Beware, you cannot shaft yourself on this level.");
     }
@@ -998,6 +1019,10 @@ void floor_transition(dungeon_feature_type how,
         _new_level_amuses_xom(how, whence, shaft,
                               (shaft ? whither.depth - old_level.depth : 1),
                               !forced);
+
+        // scary hack!
+        if (crawl_state.game_is_descent() && !env.properties.exists(DESCENT_STAIRS_KEY))
+            load_level(how, LOAD_RESTART_GAME, old_level);
     }
 
     // This should maybe go in load_level?
@@ -1207,9 +1232,9 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
         return level_id(BRANCH_VESTIBULE);
 
     case DNGN_EXIT_ABYSS:
-        if (you.chapter == CHAPTER_POCKET_ABYSS)
-            return level_id(BRANCH_DUNGEON, 1);
 #if TAG_MAJOR_VERSION == 34
+        if (you.char_class == JOB_ABYSSAL_KNIGHT && you.level_stack.empty())
+            return level_id(BRANCH_DUNGEON, 1);
     case DNGN_EXIT_PORTAL_VAULT:
 #endif
     case DNGN_EXIT_PANDEMONIUM:
@@ -1245,7 +1270,6 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
     return level_id();
 }
 
-// TODO(Zannick): Fully merge with up_stairs into take_stairs.
 void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft, bool update_travel_cache)
 {
     take_stairs(force_stair, false, force_known_shaft, update_travel_cache);

@@ -340,14 +340,14 @@ local function analyse_vault_post_placement(usage_grid,room,result,options)
     if dgn.in_bounds(p.x,p.y) and
       (feat.is_stone_stair(p.x,p.y)) or
       -- On V:1 the branch entrant stairs don't count as stone_stair; we need to check specifically for the V exit stairs
-      -- to avoid overwriting e.g. Crypt or Blade entrance stairs!
+      -- to avoid overwriting the Crypt entrance stairs!
       dgn.feature_name(dgn.grid(p.x,p.y)) == "exit_vaults" then
       -- Remove the stair and remember it
       dgn.grid(p.x,p.y,"floor") --TODO: Be more intelligent about how to replace it
       table.insert(result.stairs, { pos = { x = p.x, y = p.y } })
     end
     -- Substitute rock walls for surrounding wall type
-    if dgn.feature_name(dgn.grid(p.x,p.y)) == "rock_wall" then
+    if perform_subst and dgn.feature_name(dgn.grid(p.x,p.y)) == "rock_wall" then
       dgn.grid(p.x,p.y,room.wall_type)
     end
   end
@@ -371,7 +371,7 @@ function place_vaults_rooms(e, data, room_count, options)
         placed = true
         rooms_placed = rooms_placed + 1  -- Increment # rooms placed
         times_failed = 0 -- Reset fail count
-        -- Perform analysis for stairs (and perform inner wall substituion if applicable)
+        -- Perform analysis for stairs (and perform inner wall substitution if applicable)
         analyse_vault_post_placement(data,room,result,options)
         table.insert(results,result)
         -- Increment the count of rooms of this type
@@ -579,7 +579,7 @@ function vaults_maybe_place_vault(e, pos, usage_grid, usage, room, options)
     v_normal_dir = v_normal.dir
   end
 
-  -- If placing a room in an existing wall we have the normal stored alredy in the usage data
+  -- If placing a room in an existing wall we have the normal stored already in the usage data
   if usage.usage == "eligible" or usage.usage == "eligible_open" then
     v_normal = usage.normal
     v_normal_dir = usage.normal.dir

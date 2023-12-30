@@ -82,7 +82,7 @@
 #include "viewchar.h"
 #include "view.h"
 #include "xom.h"
-#include "zot.h" // bezotted
+#include "zot.h" // bezotted, print_gem_warnings
 
 static int _autopickup_subtype(const item_def &item);
 static void _autoinscribe_item(item_def& item);
@@ -173,11 +173,9 @@ void link_items()
 
 static bool _item_ok_to_clean(int item)
 {
-    // Never clean zigfigs, Orbs, or runes.
+    // Never clean misc items, Orbs, gems, or runes.
     if (env.item[item].base_type == OBJ_MISCELLANY
-            && env.item[item].sub_type == MISC_ZIGGURAT
-        || item_is_orb(env.item[item])
-        || env.item[item].base_type == OBJ_RUNES)
+        || item_is_collectible(env.item[item]))
     {
         return false;
     }
@@ -420,7 +418,7 @@ bool dec_inv_item_quantity(int obj, int amount)
 // Reduce quantity of a monster/grid item, do cleanup if item goes away.
 //
 // Returns true if stack of items no longer exists.
-bool dec_mitm_item_quantity(int obj, int amount)
+bool dec_mitm_item_quantity(int obj, int amount, bool player_action)
 {
     item_def &item = env.item[obj];
     if (amount > item.quantity)
@@ -429,11 +427,14 @@ bool dec_mitm_item_quantity(int obj, int amount)
     if (item.quantity == amount)
     {
         destroy_item(obj);
-        // If we're repeating a command, the repetitions used up the
-        // item stack being repeated on, so stop rather than move onto
-        // the next stack.
-        crawl_state.cancel_cmd_repeat();
-        crawl_state.cancel_cmd_again();
+        if (player_action)
+        {
+            // If we're repeating a command, the repetitions used up the
+            // item stack being repeated on, so stop rather than move onto
+            // the next stack.
+            crawl_state.cancel_cmd_repeat();
+            crawl_state.cancel_cmd_again();
+        }
         return true;
     }
 
@@ -448,7 +449,7 @@ void inc_inv_item_quantity(int obj, int amount)
 
     you.inv[obj].quantity += amount;
     if (you.inv[obj].quantity == amount) // not currently possible?
-        quiver::on_actions_changed(true);
+        quiver::on_actions_changed();
 }
 
 void inc_mitm_item_quantity(int obj, int amount)
@@ -647,6 +648,8 @@ void destroy_item(item_def &item, bool never_created)
     {
         if (is_unrandom_artefact(item))
             set_unique_item_status(item, UNIQ_NOT_EXISTS);
+        if (item.base_type == OBJ_MISCELLANY)
+            you.generated_misc.erase((misc_item_type)item.sub_type);
     }
 
     item.clear();
@@ -765,6 +768,34 @@ bool item_is_branded(const item_def& item)
         return get_ammo_brand(item) != SPMSL_NORMAL;
     default:
         return false;
+    }
+}
+
+bool item_is_unusual(const item_def& item)
+{
+    const auto &patterns = Options.unusual_monster_items;
+    const string name = item.name(DESC_A, false, false, true, false);
+
+    return any_of(begin(patterns), end(patterns),
+                  [&](const text_pattern &p) -> bool
+                  { return p.matches(name); });
+}
+
+bool item_is_worth_listing(const item_def& item)
+{
+    if (item_is_unusual(item))
+        return true;
+
+    switch (item.base_type)
+    {
+    case OBJ_STAVES:
+    case OBJ_WANDS:
+        return true;
+    case OBJ_WEAPONS:
+        return is_unrandom_artefact(item)
+               || get_weapon_brand(item) != SPWPN_NORMAL;
+    default:
+        return item_is_branded(item) || is_artefact(item);
     }
 }
 
@@ -951,7 +982,8 @@ static bool _id_floor_item(item_def &item)
             return true;
         }
     }
-    else if (item_type_is_equipment(item.base_type))
+    else if (item_type_is_equipment(item.base_type)
+             || item.base_type == OBJ_TALISMANS)
     {
         if (fully_identified(item))
             return false;
@@ -985,13 +1017,7 @@ void pickup_menu(int item_link)
     auto items = const_item_list_on_square(item_link);
     ASSERT(items.size());
 
-    string prompt = "Pick up what? " + slot_description()
-#ifdef TOUCH_UI
-                  + " (<Enter> or tap header to pick up)"
-#else
-                  + " (_ for help)"
-#endif
-                  ;
+    string prompt = "Pick up what? " + slot_description() + " (_ for help)";
 
     if (items.size() == 1 && items[0]->quantity > 1)
         prompt = "Select pick up quantity by entering a number, then select the item";
@@ -1109,7 +1135,7 @@ void origin_acquired(item_def &item, int agent)
     item.orig_monnum = -agent;
 }
 
-static string _milestone_rune(const item_def &item)
+static string _milestone_collectible(const item_def &item)
 {
     return string("found ") + item.name(DESC_A) + ".";
 }
@@ -1117,7 +1143,9 @@ static string _milestone_rune(const item_def &item)
 static void _milestone_check(const item_def &item)
 {
     if (item.base_type == OBJ_RUNES)
-        mark_milestone("rune", _milestone_rune(item));
+        mark_milestone("rune", _milestone_collectible(item));
+    else if (item.base_type == OBJ_GEMS)
+        mark_milestone("gem.found", _milestone_collectible(item));
     else if (item_is_orb(item))
         mark_milestone("orb", "found the Orb of Zot!");
 }
@@ -1127,9 +1155,10 @@ static void _check_note_item(item_def &item)
     if (item.flags & (ISFLAG_NOTED_GET | ISFLAG_NOTED_ID))
         return;
 
-    if (item.base_type == OBJ_RUNES || item_is_orb(item) || is_artefact(item))
+    if (item_is_collectible(item) || is_artefact(item))
     {
-        take_note(Note(NOTE_GET_ITEM, 0, 0, item.name(DESC_A),
+        int v = item.base_type == OBJ_GEMS ? gem_time_left(item.sub_type) : 0;
+        take_note(Note(NOTE_GET_ITEM, v, 0, item.name(DESC_A),
                        origin_desc(item)));
         item.flags |= ISFLAG_NOTED_GET;
 
@@ -1399,11 +1428,6 @@ void pickup(bool partial_quantity)
 
     if (o == NON_ITEM)
         mpr("There are no items here.");
-    else if (you.form == transformation::ice_beast
-             && env.grid(you.pos()) == DNGN_DEEP_WATER)
-    {
-        mpr("You can't reach the bottom while floating on water.");
-    }
     else if (num_items == 1) // just one movable item?
     {
         // Get the link to the movable item in the pile.
@@ -1514,16 +1538,7 @@ bool is_stackable_item(const item_def &item)
 #endif
             return true;
         case OBJ_MISCELLANY:
-            switch (item.sub_type)
-            {
-                case MISC_ZIGGURAT:
-#if TAG_MAJOR_VERSION == 34
-                case MISC_SACK_OF_SPIDERS:
-#endif
-                    return true;
-                default:
-                    break;
-            }
+            return item.sub_type == MISC_ZIGGURAT;
         default:
             break;
     }
@@ -1536,7 +1551,7 @@ bool items_similar(const item_def &item1, const item_def &item2)
     if (item1.base_type != item2.base_type || item1.sub_type != item2.sub_type)
         return false;
 
-    if (item1.base_type == OBJ_GOLD || item1.base_type == OBJ_RUNES)
+    if (item1.base_type == OBJ_GOLD || item_is_collectible(item1))
         return true;
 
     if (is_artefact(item1) != is_artefact(item2))
@@ -1770,7 +1785,7 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
     bool actually_went_in = false;
     const bool keep_going = _put_item_in_inv(it, quant_got, quiet, actually_went_in);
 
-    if ((it.base_type == OBJ_RUNES || item_is_orb(it) || in_bounds(old_item_pos))
+    if ((item_is_collectible(it) || in_bounds(old_item_pos))
         && actually_went_in)
     {
         dungeon_events.fire_position_event(dgn_event(DET_ITEM_PICKUP,
@@ -1802,6 +1817,8 @@ static void _get_book(item_def& it)
             return;
         }
         mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
+        if (is_artefact(it) && !item_ident(it, ISFLAG_KNOW_PROPERTIES))
+            mprf("It was %s.", it.name(DESC_A, false, true).c_str());
 
         if (!library_add_spells(spells_in_book(it)))
             mpr("Unfortunately, you learned nothing new.");
@@ -1851,6 +1868,14 @@ void add_held_books_to_library()
     }
 }
 
+static bool _got_all_pan_runes()
+{
+    for (int rune = RUNE_DEMONIC; rune <= RUNE_GLOORX_VLOQ; ++rune)
+        if (!you.runes[rune])
+            return false;
+    return true;
+}
+
 /**
  * Place a rune into the player's inventory.
  *
@@ -1877,13 +1902,31 @@ static void _get_rune(const item_def& it, bool quiet)
                  nrunes);
         }
         else if (nrunes > 1)
+        {
+            if (player_in_branch(BRANCH_PANDEMONIUM) && _got_all_pan_runes())
+                mprf("You've emptied out Pandemonium! Nothing left here but demons.");
             mprf("You now have %d runes.", nrunes);
+        }
 
         mpr("Press } to see all the runes you have collected.");
     }
 
     if (it.sub_type == RUNE_ABYSSAL)
         mpr("You feel the abyssal rune guiding you out of this place.");
+}
+
+static void _get_gem(const item_def& it, bool quiet)
+{
+    you.gems_found.set(it.sub_type);
+    if (quiet)
+        return;
+
+    flash_view_delay(UA_PICKUP, it.gem_colour(), 300);
+    // XXX: consider customizing this message per-gem
+    mprf("You pick up %s and feel its impossibly delicate weight in your %s.",
+         it.name(DESC_THE).c_str(), you.hand_name(true).c_str());
+    mpr("Press } and ! to see all the gems you have collected.");
+    print_gem_warnings(it.sub_type, 0);
 }
 
 /**
@@ -1903,6 +1946,11 @@ static void _get_orb()
 
     start_orb_run(CHAPTER_ESCAPING, "Now all you have to do is get back out "
                                     "of the dungeon!");
+
+#if TAG_MAJOR_VERSION == 34
+    if (you.species == SP_METEORAN)
+        update_vision_range();
+#endif
 }
 
 /**
@@ -2012,6 +2060,7 @@ item_def *auto_assign_item_slot(item_def& item)
     // check to see whether we've chosen an automatic label:
     for (auto& mapping : Options.auto_item_letters)
     {
+        // `matches` has a validity check
         if (!mapping.first.matches(item.name(DESC_QUALNAME))
             && !mapping.first.matches(item_prefix(item)
                                       + " " + item.name(DESC_A)))
@@ -2095,7 +2144,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
         taken_new_item(item.base_type);
 
     you.last_pickup[item.link] = quant_got;
-    quiver::on_actions_changed(true);
+    quiver::on_actions_changed();
     item_skills(item, you.skills_to_show);
 
     if (const item_def* newitem = auto_assign_item_slot(item))
@@ -2143,10 +2192,15 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
         _get_book(it);
         return true;
     }
-    // Runes are also massless.
+    // Runes and gems are also massless.
     if (it.base_type == OBJ_RUNES)
     {
         _get_rune(it, quiet);
+        return true;
+    }
+    if (it.base_type == OBJ_GEMS)
+    {
+        _get_gem(it, quiet);
         return true;
     }
     // The Orb is also handled specially.
@@ -2197,24 +2251,6 @@ void mark_items_non_pickup_at(const coord_def &pos)
 void clear_item_pickup_flags(item_def &item)
 {
     item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED | ISFLAG_NO_PICKUP);
-}
-
-// Move gold to the the top of a pile if following Gozag.
-static void _gozag_move_gold_to_top(const coord_def p)
-{
-    if (have_passive(passive_t::detect_gold))
-    {
-        for (int gold = env.igrid(p); gold != NON_ITEM;
-             gold = env.item[gold].link)
-        {
-            if (env.item[gold].base_type == OBJ_GOLD)
-            {
-                unlink_item(gold);
-                move_item_to_grid(&gold, p, true);
-                break;
-            }
-        }
-    }
 }
 
 // Moves env.item[obj] to p... will modify the value of obj to
@@ -2268,7 +2304,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
                 inc_mitm_item_quantity(si->index(), item.quantity);
                 destroy_item(ob);
                 ob = si->index();
-                _gozag_move_gold_to_top(p);
+                gozag_move_gold_to_top(p);
                 if (you.see_cell(p))
                 {
                     // XXX: Is it actually necessary to identify when the
@@ -2314,7 +2350,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
         env.orb_pos = p;
 
     if (item.base_type != OBJ_GOLD)
-        _gozag_move_gold_to_top(p);
+        gozag_move_gold_to_top(p);
 
     if (you.see_cell(p))
     {
@@ -2571,7 +2607,7 @@ bool drop_item(int item_dropped, int quant_drop)
     // like temporary brands. -- bwr
     if (item_dropped == you.equip[EQ_WEAPON] && quant_drop >= item.quantity)
     {
-        if (!wield_weapon(true, SLOT_BARE_HANDS, true, true, true, false))
+        if (!wield_weapon(SLOT_BARE_HANDS, false))
             return false;
         // May have been destroyed by removal. Returning true because we took
         // time to swap away.
@@ -2765,6 +2801,7 @@ static void _multidrop(vector<SelItem> tmp_items)
     for (SelItem& si : tmp_items)
     {
         const int item_quant = si.item->quantity;
+        ASSERT(item_quant > 0);
 
         // EVIL HACK: Fix item quantity to match the quantity we will drop,
         // in order to prevent misleading messages when dropping
@@ -2907,6 +2944,7 @@ static int _autopickup_subtype(const item_def &item)
 #endif
     case OBJ_GOLD:
     case OBJ_RUNES:
+    case OBJ_GEMS:
         return max_type;
     default:
         return item.sub_type;
@@ -2938,11 +2976,8 @@ static bool _is_option_autopickup(const item_def &item, bool ignore_force)
              clua.error.c_str());
     }
 
-    if (res == MB_TRUE)
-        return true;
-
-    if (res == MB_FALSE)
-        return false;
+    if (res.is_bool())
+        return bool(res);
 
     // Check for initial settings
     for (const pair<text_pattern, bool>& option : Options.force_autopickup)
@@ -2960,6 +2995,9 @@ static bool _is_option_autopickup(const item_def &item, bool ignore_force)
  */
 bool item_needs_autopickup(const item_def &item, bool ignore_force)
 {
+    if (crawl_state.game_is_arena())
+        return false;
+
     if (in_inventory(item))
         return false;
 
@@ -3134,6 +3172,7 @@ static bool _interesting_explore_pickup(const item_def& item)
     case OBJ_JEWELLERY:
         return _item_different_than_inv(item, _similar_jewellery);
 
+    case OBJ_TALISMANS:
     case OBJ_MISCELLANY:
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
@@ -3145,12 +3184,10 @@ static bool _interesting_explore_pickup(const item_def& item)
         // Books always start out unidentified.
         return true;
 
-    case OBJ_ORBS:
-        // Orb is always interesting.
-        return true;
-
     case OBJ_RUNES:
-        // Runes are always interesting.
+    case OBJ_GEMS:
+    case OBJ_ORBS:
+        // Always interesting.
         return true;
 
     default:
@@ -3293,6 +3330,8 @@ int get_max_subtype(object_class_type base_type)
         NUM_RODS,
 #endif
         NUM_RUNE_TYPES,
+        NUM_TALISMANS,
+        NUM_GEM_TYPES,
     };
     COMPILE_CHECK(ARRAYSZ(max_subtype) == NUM_OBJECT_CLASSES);
 
@@ -3303,7 +3342,7 @@ int get_max_subtype(object_class_type base_type)
 
 equipment_type item_equip_slot(const item_def& item)
 {
-    if (!in_inventory(item))
+    if (!item.defined() || !in_inventory(item))
         return EQ_NONE;
 
     for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
@@ -3784,9 +3823,6 @@ colour_t item_def::rune_colour() const
         case RUNE_SHOALS:                   // barnacled
             return ETC_WATER;
 
-            // This one is hardly unique, but colour isn't used for
-            // stacking, so we don't have to worry too much about this.
-            // - bwr
         case RUNE_DEMONIC:                  // random Pandemonium lords
         {
             static const element_type types[] =
@@ -3816,6 +3852,35 @@ colour_t item_def::rune_colour() const
     }
 }
 
+/**
+ * Assuming this item is a gem, what colour is it?
+ */
+colour_t item_def::gem_colour() const
+{
+    switch (sub_type)
+    {
+    default:
+    case GEM_DUNGEON: return LIGHTGREY;
+#if TAG_MAJOR_VERSION == 34
+    case GEM_ORC:     return ETC_GOLD;
+#endif
+    case GEM_ELF:     return ETC_ELVEN;
+    case GEM_LAIR:    return GREEN;
+
+    case GEM_SWAMP:   return ETC_DECAY;
+    case GEM_SHOALS:  return ETC_ENCHANT;
+    case GEM_SNAKE:   return ETC_POISON;
+    case GEM_SPIDER:  return WHITE;
+
+    case GEM_SLIME:   return ETC_AIR;
+    case GEM_VAULTS:  return ETC_STEEL;
+    case GEM_CRYPT:   return ETC_BONE;
+    case GEM_TOMB:    return ETC_AWOKEN_FOREST; // enh
+    case GEM_DEPTHS:  return ETC_DITHMENOS;
+    case GEM_ZOT:     return ETC_RANDOM; // dubious
+    }
+}
+
 static colour_t _zigfig_colour()
 {
     const int zigs = you.zigs_completed;
@@ -3825,10 +3890,40 @@ static colour_t _zigfig_colour()
            zigs >=  1 ? ETC_SHIMMER_BLUE :
                         ETC_BONE;
 }
+/**
+ * Assuming this item is a talisman, what colour is it?
+ */
+colour_t item_def::talisman_colour() const
+{
+    ASSERT(base_type == OBJ_TALISMANS);
+
+    switch (sub_type)
+    {
+    case TALISMAN_BEAST:
+        return YELLOW; // brown taken by staves
+    case TALISMAN_FLUX:
+        return CYAN; // could maybe swap this and death
+    case TALISMAN_MAW:
+        return ETC_BLOOD;
+    case TALISMAN_SERPENT:
+        return ETC_POISON;
+    case TALISMAN_BLADE:
+        return ETC_IRON;
+    case TALISMAN_STATUE:
+        return ETC_EARTH;
+    case TALISMAN_DRAGON:
+        return ETC_FIRE;
+    case TALISMAN_DEATH:
+        return MAGENTA;
+    case TALISMAN_STORM:
+        return ETC_ELECTRICITY;
+    default:
+        return LIGHTGREEN;
+    }
+}
 
 /**
- * Assuming this item is a miscellaneous item (evocations item or a rune), what
- * colour is it?
+ * Assuming this item is a misc (non-wand evocable) item, what colour is it?
  */
 colour_t item_def::miscellany_colour() const
 {
@@ -3860,11 +3955,11 @@ colour_t item_def::miscellany_colour() const
 #endif
         case MISC_HORN_OF_GERYON:
             return LIGHTRED;
+        case MISC_SACK_OF_SPIDERS:
+            return WHITE;
 #if TAG_MAJOR_VERSION == 34
         case MISC_LAMP_OF_FIRE:
             return YELLOW;
-        case MISC_SACK_OF_SPIDERS:
-            return WHITE;
         case MISC_BUGGY_LANTERN_OF_SHADOWS:
         case MISC_BUGGY_EBONY_CASKET:
             return DARKGREY;
@@ -3873,8 +3968,10 @@ colour_t item_def::miscellany_colour() const
             return BROWN;
         case MISC_CONDENSER_VANE:
             return WHITE;
+#if TAG_MAJOR_VERSION == 34
         case MISC_XOMS_CHESSBOARD:
             return ETC_RANDOM;
+#endif
         case MISC_QUAD_DAMAGE:
             return ETC_DARK;
         case MISC_ZIGGURAT:
@@ -3971,10 +4068,14 @@ colour_t item_def::get_colour() const
             return corpse_colour();
         case OBJ_MISCELLANY:
             return miscellany_colour();
+        case OBJ_TALISMANS:
+            return talisman_colour();
         case OBJ_GOLD:
             return YELLOW;
         case OBJ_RUNES:
             return rune_colour();
+        case OBJ_GEMS:
+            return gem_colour();
         case OBJ_DETECTED:
             return Options.detected_item_colour;
         case NUM_OBJECT_CLASSES:
@@ -3993,7 +4094,6 @@ bool item_type_has_unidentified(object_class_type base_type)
         || base_type == OBJ_POTIONS
         || base_type == OBJ_BOOKS
         || base_type == OBJ_STAVES
-        || base_type == OBJ_MISCELLANY
 #if TAG_MAJOR_VERSION == 34
         || base_type == OBJ_RODS
 #endif
@@ -4234,13 +4334,12 @@ bool get_item_by_name(item_def *item, const char* specs,
             case OBJ_ARMOUR:
             case OBJ_JEWELLERY:
             {
-                // XXX: if we ever allow ?/ lookup of unrands, change this,
-                // since at present, it'll mark any matching unrands as
-                // created & prevent them from showing up in the game!
                 for (int unrand = 0; unrand < NUM_UNRANDARTS; ++unrand)
                 {
                     int index = unrand + UNRAND_START;
                     const unrandart_entry* entry = get_unrand_entry(index);
+                    unwind_var<unique_item_status_type> status(you.unique_items[unrand], UNIQ_NOT_EXISTS);
+                    unwind_var<uint8_t> octo(you.octopus_king_rings, 0x0); // easier to do unconditionally
 
                     size_t pos = lowercase_string(entry->name).find(specs);
                     if (pos != string::npos && entry->base_type == class_wanted)
@@ -4386,6 +4485,31 @@ bool get_item_by_name(item_def *item, const char* specs,
     return true;
 }
 
+static bool _locate_manual_by_exact_name(item_def &item, const char *lc_name)
+{
+    // lookup manual names. We need to line up pluses with names to get this
+    // right; in contrast to the regular strategy for exact name lookup, this
+    // call just checks the item name cache directly.
+
+    // preconditions: we already have a manual, just need to find the right
+    // plus value
+    if (item.base_type != OBJ_BOOKS || item.sub_type != BOOK_MANUAL)
+        return false;
+
+    // XX can/should any other name lookups be done via the item name cache?
+    // any mismatch between the name cache and the exact name lookup will lead
+    // to errors when querying by glyph.
+    auto item_kind = item_kind_by_name(lc_name);
+    if (item_kind.base_type == OBJ_UNASSIGNED // not found (here for clarity, 2nd disjunct covers this)
+        || item_kind.base_type != item.base_type // not a book
+        || item_kind.sub_type != item.sub_type) // not a manual
+    {
+        return false;
+    }
+    item.plus = item_kind.plus;
+    return true;
+}
+
 bool get_item_by_exact_name(item_def &item, const char* name)
 {
     item.clear();
@@ -4395,6 +4519,8 @@ bool get_item_by_exact_name(item_def &item, const char* name)
 
     string name_lc = lowercase_string(string(name));
 
+    // XX could we just use the item name cache instead of iterating through
+    // every name?
     for (int i = 0; i < NUM_OBJECT_CLASSES; ++i)
     {
         if (i == OBJ_RUNES) // runes aren't shown in ?/I
@@ -4409,6 +4535,9 @@ bool get_item_by_exact_name(item_def &item, const char* name)
             {
                 item.sub_type = j;
                 if (lowercase_string(item.name(DESC_DBNAME)) == name_lc)
+                    return true;
+                // if it's a manual, we also need to find the plus value:
+                if (_locate_manual_by_exact_name(item, name_lc.c_str()))
                     return true;
             }
         }
@@ -4558,17 +4687,12 @@ item_def get_item_known_info(const item_def& item)
         ii.sub_type = item_type_known(item) ? item.sub_type : int{NUM_STAVES};
         ii.subtype_rnd = item.subtype_rnd;
         break;
+    case OBJ_TALISMANS:
     case OBJ_MISCELLANY:
-        if (item_type_known(item))
-            ii.sub_type = item.sub_type;
-        else
-            ii.sub_type = item.sub_type;
-        break;
     case OBJ_GOLD:
-        ii.sub_type = item.sub_type;
-        break;
     case OBJ_ORBS:
     case OBJ_RUNES:
+    case OBJ_GEMS:
     default:
         ii.sub_type = item.sub_type;
         break;
@@ -4592,14 +4716,6 @@ item_def get_item_known_info(const item_def& item)
     for (const char *prop : copy_props)
         if (item.props.exists(prop))
             ii.props[prop] = item.props[prop];
-
-    static const char* copy_ident_props[] = {"spell_list"};
-    if (item_ident(item, ISFLAG_KNOW_TYPE))
-    {
-        for (const char *prop : copy_ident_props)
-            if (item.props.exists(prop))
-                ii.props[prop] = item.props[prop];
-    }
 
     if (item.props.exists(ARTEFACT_PROPS_KEY))
     {
@@ -4626,11 +4742,31 @@ int runes_in_pack()
     return static_cast<int>(you.runes.count());
 }
 
+/// Includes destroyed gems.
+int gems_found()
+{
+    return static_cast<int>(you.gems_found.count());
+}
+
+int gems_lost()
+{
+    int count = 0;
+    for (int i = 0; i < NUM_GEM_TYPES; i++)
+        if (you.gems_found[i] && you.gems_shattered[i])
+            count += 1;
+    return count;
+}
+
+int gems_held_intact()
+{
+    return gems_found() - gems_lost();
+}
+
 object_class_type get_random_item_mimic_type()
 {
    return random_choose(OBJ_GOLD, OBJ_WEAPONS, OBJ_ARMOUR, OBJ_SCROLLS,
                         OBJ_POTIONS, OBJ_BOOKS, OBJ_STAVES,
-                        OBJ_MISCELLANY, OBJ_JEWELLERY);
+                        OBJ_MISCELLANY, OBJ_TALISMANS, OBJ_JEWELLERY);
 }
 
 /**
@@ -4712,7 +4848,8 @@ static void _identify_last_item(item_def &item)
 
 /**
  * Check to see if there's only one unidentified subtype left in the given
- * item's object type. If so, automatically identify it.
+ * item's object type. If so, automatically identify it. Also mark item sets
+ * known, if appropriate.
  *
  * @param item  The item in question.
  * @return      Whether the item was identified.
@@ -4721,6 +4858,9 @@ bool maybe_identify_base_type(item_def &item)
 {
     if (is_artefact(item))
         return false;
+
+    maybe_mark_set_known(item.base_type, item.sub_type);
+
     if (get_ident_type(item))
         return false;
 

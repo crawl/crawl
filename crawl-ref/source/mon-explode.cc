@@ -62,6 +62,26 @@ static void _setup_inferno_explosion(bolt & beam, const monster& origin)
     beam.refine_for_explosion();
 }
 
+static void _setup_blazeheart_core_explosion(bolt & beam, const monster& origin)
+{
+    _setup_base_explosion(beam, origin);
+
+    beam.flavour      = BEAM_FIRE;
+    beam.damage       = dice_def(3, 5 + origin.get_hit_dice());
+    beam.name         = "fiery explosion";
+    beam.colour       = RED;
+    beam.ex_size      = 1;
+    beam.source_name  = origin.name(DESC_PLAIN, true);
+
+    // Don't place the player under penance for their golem exploding,
+    // but DO give them xp for its kills.
+    beam.thrower      = KILL_MON;
+    beam.source_id    = MID_PLAYER;
+
+    // This is so it places flame clouds under the explosion
+    beam.origin_spell = SPELL_SUMMON_BLAZEHEART_GOLEM;
+}
+
 void setup_spore_explosion(bolt & beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
@@ -72,9 +92,10 @@ void setup_spore_explosion(bolt & beam, const monster& origin)
     beam.ex_size = 1;
 }
 
-dice_def ball_lightning_damage(int hd)
+dice_def ball_lightning_damage(int hd, bool random)
 {
-    return dice_def(3, 5 + hd * 5 / 4);
+    const int plus = random ? div_rand_round(hd * 5, 4) : hd * 5 / 4;
+    return dice_def(3, 5 + plus);
 }
 
 static void _setup_lightning_explosion(bolt & beam, const monster& origin)
@@ -96,7 +117,7 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
 dice_def prism_damage(int hd, bool fully_powered)
 {
     const int dice = fully_powered ? 3 : 2;
-    return dice_def(dice, 6 + hd * 7 / 4);
+    return dice_def(dice, 5 + div_rand_round(hd * 7, 4));
 }
 
 static void _setup_prism_explosion(bolt& beam, const monster& origin)
@@ -169,6 +190,7 @@ static const map<monster_type, monster_explosion> explosions {
     { MONS_BENNU, { _setup_bennu_explosion, "fires are quelled" } },
     { MONS_BLOATED_HUSK, { _setup_bloated_husk_explosion } },
     { MONS_CREEPING_INFERNO, { _setup_inferno_explosion } },
+    { MONS_BLAZEHEART_CORE, { _setup_blazeheart_core_explosion } }
 };
 
 // When this monster dies, does it explode?
@@ -296,7 +318,11 @@ bool explode_monster(monster* mons, killer_type killer,
         flash_view_delay(UA_MONSTER, DARKGRAY, 300, &hitfunc);
     }
     else
-        explosion_fineff::schedule(beam, boom_msg, sanct_msg, inner_flame, agent);
+    {
+        const auto typ = inner_flame ? EXPLOSION_FINEFF_INNER_FLAME
+                                     : EXPLOSION_FINEFF_GENERIC;
+        explosion_fineff::schedule(beam, boom_msg, sanct_msg, typ, agent);
+    }
 
     // Monster died in explosion, so don't re-attach it to the grid.
     return true;

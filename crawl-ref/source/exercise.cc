@@ -15,6 +15,7 @@
 #include "item-prop.h"
 #include "skills.h"
 #include "spl-util.h"
+#include "transform.h" // get_form
 
 /// Skill training for when the player casts or miscasts a spell.
 void practise_casting(spell_type spell, bool success)
@@ -25,6 +26,8 @@ void practise_casting(spell_type spell, bool success)
     spschools_type disciplines = get_spell_disciplines(spell);
 
     int skillcount = count_bits(disciplines);
+    if (!skillcount)
+        return; // not a real spell (wizmode casting?)
 
     if (!success)
         skillcount += 4 + random2(10);
@@ -163,9 +166,24 @@ static void _practise_weapon_use(const item_def &weapon)
         exercise(SK_FIGHTING, 1);
 }
 
+static void _maybe_practice_shapeshifting()
+{
+    if (coinflip())
+        return; // train shapeshifting less than UC/weapon skills
+    if (you.form == transformation::none || you.form != you.default_form)
+        return;
+    const int to_max = get_form()->max_skill - you.skill(SK_SHAPESHIFTING);
+    if (to_max <= 0)
+        return;
+    if (to_max <= 5 && coinflip())
+        return;
+    exercise(SK_SHAPESHIFTING, 1);
+}
+
 /// Skill training when the player hits a monster in melee combat.
 void practise_hitting(const item_def *weapon)
 {
+    _maybe_practice_shapeshifting();
     if (!weapon)
     {
         exercise(SK_UNARMED_COMBAT, 1);

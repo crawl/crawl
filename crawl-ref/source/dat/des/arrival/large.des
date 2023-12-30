@@ -16,7 +16,7 @@ SHUFFLE: {[(
 SUBST:   [( = .
 SUBST:   c : cx
 TILE:    c = wall_stone_smooth
-FTILE:   . = floor_cobble_blood
+FTILE:   .{0$+ = floor_cobble_blood
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xcccccccxxxxxxxxxxxxxxxxxxxcccccccx
@@ -1166,4 +1166,72 @@ cccccccc+c+c+cccccccc
         ccncc
         ctttc
         ccccc
+ENDMAP
+
+NAME:   tekkud_arrival_beachfront_property
+TAGS:   arrival no_monster_gen no_trap_gen no_pool_fixup
+ORIENT: north
+KMASK:  .T = no_item_gen
+KFEAT:  z = open_sea
+KFEAT:  _ = abandoned_shop
+KFEAT:  D = W
+MARKER: W = lua:fog_machine { pow_max = 8, delay_min = 50, delay_max = 200, \
+                              size = 4, start_clouds = 1 }
+FTILE:  '_t{ = floor_sand
+COLOUR: ' = yellow
+MAP
+       zzzzzzzzzzzzzzzzzzzzz
+      xzwwwwwwwwwwwwwwwwwwwzx
+    xxxwwwwwwDWWWDWWWDwwwwwwxxx
+   xxxxwwwWWWWWWWWWWWWWWWDwwwxxxxxx
+  xxxxxwWDWWWWW'''''''WWWWWWDxxxxxxx
+ xxxxxWWWWWWW''''''''''''WWWWWxxxxxxx
+ xxxxDWWW'''''''''{''t'_'''WWWWDxxxxx
+xxxxWWW''''''_'''''''''''''''''WWWxxxx
+xxx'''''''_'''''t'''t''''_''t''''''xx
+xx''t''_''''''''''''''''''''''_''''xx
+ x''''''''''.............''''''''t'xx
+xx''_''''..................''t'''''x
+xxx'''........................'''''x
+ @@................................@
+  @@..............................@@
+   xxxx........................xxxx
+    xxxx......T........T.....xxxxx
+     xxxxxx................xxxxxx
+      xxxxxxxxxx......xxxxxxxxx
+          xxxxxxxx++xxxxxxx
+ENDMAP
+
+# 25 x 25
+NAME:   orjb1_clovarrival
+TAGS:   arrival transparent no_monster_gen no_trap_gen
+ORIENT: float
+MONS:   bush
+FTILE:  _1Wt = floor_grass
+MAP
+.......tttt...tttt
+......t____t.t____t
+.....t______t______t
+.....t_____________t
+.....t_____________t
+..tttWt____11_____tWttt
+.t___tWt__1111___tWt___t
+t_____tWt1111111tWt_____t
+t______tWt11111tWt______t
+t______1tWt111tWt1______t
+t______11tWtttWt111_____t
+.t____1111tWWWt11111___t
+..t__11111tW{Wt11111__t
+.t___11111tWWWt1111____t
+t_____111tWtttWt11______t
+t______1tWt111tWt1______t
+t______tWt11111tWt______t
+t_____tWt1111111tWt_____t
+.t___tWt__1111___tWt___t
+..tttWt____11_____tWttt
+.....t_____________t
+.....t_____________t
+.....t______t______t
+......t____t.t____t
+.......tttt...tttt
 ENDMAP

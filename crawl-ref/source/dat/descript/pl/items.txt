@@ -38,10 +38,6 @@ bolt
 
 Bełt do kuszy.
 %%%%
-book of alchemy
-
-Księga czarów nadżarta chemikaliami, z wypaloną dziurą w okładce.
-%%%%
 book of annihilations
 
 Ogromna moc pała z kart tej księgi, taka że nawet niepiśmienny barbarzyńca ją
@@ -370,7 +366,7 @@ potion of experience
 
 Prawdziwie cudowny napitek, który trwale zwiększa umiejętności pijącego.
 %%%%
-potion of flight
+potion of enlightenment
 
 Eliksir który daje zdolność lotu.
 %%%%
@@ -543,7 +539,7 @@ scroll of immolation
 
 Ten zwój napełnia stworzenia wokół czytającego niestabilnym wewnętrznym ogniem.
 %%%%
-scroll of magic mapping
+scroll of revelation
 
 Ten zwój tworzy mapę poziomu lochów wokół czytającego.
 %%%%

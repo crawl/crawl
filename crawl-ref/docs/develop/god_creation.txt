@@ -327,7 +327,7 @@ look there. Here each type of delay has been class-ified, so we can
 implement our own pretty easily.
 
         // in delay.h:
-        // Copied from AscnedingStairsDelay
+        // Copied from AscendingStairsDelay
         class RalphDelay : public Delay
         {
             void finish() override;
@@ -362,7 +362,7 @@ implement our own pretty easily.
         }
 
 Now this should only need one small change into ability.cc to activate:
-a case in the _do_abilty switch:
+a case in the _do_ability switch:
 
         case ABIL_RALPH_NOTHING:
             start_delay<RalphDelay>(500);

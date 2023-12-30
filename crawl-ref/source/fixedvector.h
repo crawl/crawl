@@ -12,6 +12,10 @@
 
 using std::vector;
 
+// TODO: this class precedes std::array and is quite redundant with it, except
+// for the bounds check in operator[] (which std::array only has on `at`).
+// Should we replace / subclass / use as an underlying implementation?
+
 template <class TYPE, int SIZE> class FixedVector
 {
 
@@ -49,6 +53,8 @@ public:
     size_t size() const { return SIZE; }
 
     // ----- Access -----
+    // why don't these use size_t??
+    // these are more like std::array::at than std::array::operator[]
     TYPE& operator[](unsigned long index)
     {
 #ifdef ASSERTS
@@ -86,6 +92,9 @@ public:
     const_iterator end() const { return begin() + size(); }
     void init(const TYPE& def);
 
+    // std::array api
+    void fill(const TYPE& def) { init(def); }
+
 protected:
     TYPE    mData[SIZE];
 };
@@ -111,5 +120,5 @@ FixedVector<TYPE, SIZE>::FixedVector(TYPE value0, TYPE value1, ...)
 template <class TYPE, int SIZE>
 void FixedVector<TYPE, SIZE>::init(const TYPE& def)
 {
-    fill(std::begin(mData), std::end(mData), def);
+    std::fill(std::begin(mData), std::end(mData), def);
 }

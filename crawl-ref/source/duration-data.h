@@ -6,7 +6,9 @@
 
 #include "act-iter.h"
 #include "god-passive.h"
+#include "spl-selfench.h"
 #include "tag-version.h"
+#include "timed-effects.h"
 
 static void _end_invis()
 {
@@ -37,28 +39,30 @@ static void _end_death_channel()
     }
 }
 
-static void _end_animate_dead()
-{
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->type == MONS_ZOMBIE && mi->summoner == MID_PLAYER)
-        {
-            mon_enchant abj = mi->get_ench(ENCH_FAKE_ABJURATION);
-            abj.duration = 0;
-            mi->update_ench(abj);
-        }
-    }
-}
-
-static void _end_sticky_flame()
-{
-    you.props.erase("sticky_flame_source");
-    you.props.erase("sticky_flame_aux");
-}
-
 static void _redraw_armour()
 {
     you.redraw_armour_class = true;
+}
+
+static void _end_bullseye()
+{
+    if (you.props.exists(BULLSEYE_TARGET_KEY))
+    {
+        monster* targ = monster_by_mid(you.props[BULLSEYE_TARGET_KEY].get_int());
+        if (targ)
+            targ->del_ench(ENCH_BULLSEYE_TARGET);
+
+        you.props.erase(BULLSEYE_TARGET_KEY);
+    }
+}
+
+static void _maybe_expire_jinxbite()
+{
+    if (!jinxbite_targets_available())
+    {
+        mprf(MSGCH_DURATION, "The sprites lose interest in your situation.");
+        you.duration[DUR_JINXBITE] = 0;
+    }
 }
 
 // properties of the duration.
@@ -238,11 +242,10 @@ static const duration_def duration_data[] =
       {{ "Your fiery armour burns out.", [](){
           you.redraw_armour_class = true;
       }}}, 20},
-    { DUR_LIQUID_FLAMES,
+    { DUR_STICKY_FLAME,
       RED, "Fire",
-      "on fire", "liquid flames",
-      "You are covered in liquid flames.", D_DISPELLABLE /*but special-cased*/,
-      {{ "You are no longer on fire.", _end_sticky_flame }}},
+      "on fire", "liquid fire",
+      "You are covered in liquid fire.", D_DISPELLABLE /*but special-cased*/},
     { DUR_LOWERED_WL,
       RED, "Will/2",
       "weak-willed", "lowered wl",
@@ -266,6 +269,11 @@ static const duration_def duration_data[] =
       "petrifying", "",
       "You are turning to stone.", D_DISPELLABLE /*but special-cased*/ | D_EXPIRES,
         {}, 1},
+    { DUR_VITRIFIED,
+      RED, "Fragile",
+      "fragile (+50% incoming damage)", "vitrified",
+      "You are fragile as glass.", D_DISPELLABLE,
+      {{ "You feel less fragile." }}},
     { DUR_RESISTANCE,
       BLUE, "Resist",
       "resistant", "resistance",
@@ -303,7 +311,9 @@ static const duration_def duration_data[] =
       LIGHTGREY, "DDoor",
       "in death's door", "deaths door",
       "You are standing in death's doorway.", D_EXPIRES,
-      {{ "Your life is in your own hands again!", []() {
+      {{ "", []() {
+            mprf(MSGCH_DURATION, "Your life is in your own %s again!",
+                 you.hand_name(true).c_str());
             you.duration[DUR_DEATHS_DOOR_COOLDOWN] = random_range(10, 30);
       }}, { "Your time is quickly running out!", 5 }}, 10},
     { DUR_DEATHS_DOOR_COOLDOWN,
@@ -373,12 +383,12 @@ static const duration_def duration_data[] =
       "marked", "sentinel's mark",
       "A sentinel's mark is revealing your location to enemies.", D_DISPELLABLE | D_EXPIRES,
       {{ "The sentinel's mark upon you fades away." }}},
-    { DUR_WEREBLOOD,
-      BLUE, "Slay",
-      "wereblooded", "wereblood",
-      "Your melee attacks are strengthened by your wereblood.", D_DISPELLABLE | D_EXPIRES,
-      {{ "Your primal bloodlust has ended." },
-        { "Your primal bloodlust is almost over." }}, 6},
+    { DUR_FUGUE,
+      BLUE, "Fugue",
+      "fugue", "fugue of the fallen",
+      "Your melee and ranged attacks are strengthened by the souls of the fallen.", D_DISPELLABLE | D_EXPIRES,
+      {{ "Your fugue has ended." },
+        { "You are losing your grip on the fallen." }}, 6},
     { DUR_FLAYED,
       RED, "Flay",
       "flayed", "",
@@ -393,11 +403,16 @@ static const duration_def duration_data[] =
       "untranslocatable", "dimension anchor",
       "You are firmly anchored to this plane.", D_DISPELLABLE,
       {{ "You are no longer firmly anchored in space." }}},
-    { DUR_LOCKED_DOWN,
+    { DUR_NO_MOMENTUM,
       RED, "-Move",
-      "immobile", "",
-      "You are magically locked in place.", D_DISPELLABLE,
-      {{ "You are no longer locked in place." }}},
+      "immotile", "",
+      "You are unable to move around.", D_DISPELLABLE,
+      {{ "You are no longer robbed of momentum." }}},
+    { DUR_ENLIGHTENED,
+      BLUE, "Will+",
+      "enlightened", "",
+      "You are enlightened. (Will+)", D_DISPELLABLE,
+      {{ "Your enlightenment fades." }}},
     { DUR_TOXIC_RADIANCE,
       MAGENTA, "Toxic",
       "radiating poison", "toxic radiance",
@@ -431,12 +446,11 @@ static const duration_def duration_data[] =
       "frozen", "",
       "You are partly encased in ice.", D_DISPELLABLE,
       {{ "The ice encasing you melts away." }, {}, true }},
-    { DUR_PORTAL_PROJECTILE,
-      LIGHTBLUE, "PProj",
-      "portalling projectiles", "portal projectile",
-      "You are teleporting projectiles to their destination.", D_DISPELLABLE,
-      {{ "You are no longer teleporting projectiles to their destination.",
-         []() { you.attribute[ATTR_PORTAL_PROJECTILE] = 0; }}}},
+    { DUR_DIMENSIONAL_BULLSEYE,
+      LIGHTBLUE, "Bullseye",
+      "portalling projectiles", "bullseye",
+      "You are teleporting projectiles at a target.", D_DISPELLABLE,
+      {{ "Your dimensional bullseye dissipates.", _end_bullseye}}},
     { DUR_FORESTED,
       GREEN, "Forest",
       "forested", "",
@@ -577,19 +591,25 @@ static const duration_def duration_data[] =
       YELLOW, "-Blink",
       "on blink cooldown", "blink cooldown",
       "You are unable to blink.", D_NO_FLAGS,
-      {{ "You feel stable enough to blink again."}}},
+      {{ "You feel ready to blink again."}}},
     { DUR_ANIMATE_DEAD,
       MAGENTA, "Reap",
       "animating dead", "animating dead",
       "You are reanimating the dead.", D_DISPELLABLE | D_EXPIRES,
-      {{ "Your reaping aura expires.", _end_animate_dead },
+      {{ "Your reaping aura expires."},
       { "Your reaping aura is weakening.", 1 }}, 6},
-    { DUR_CORPSE_ROT,
-      MAGENTA, "Rot",
-      "producing miasma", "corpse rot",
-      "You are producing miasma from the slain.", D_DISPELLABLE | D_EXPIRES,
-      {{ "Your miasmic aura fades." },
-      { "Your miasmic aura is weakening.", 1 }}, 6},
+    { DUR_SIPHON_COOLDOWN,
+      YELLOW, "-Siphon",
+      "on siphon cooldown", "siphon cooldown",
+      "You are unable to siphon essence.", D_NO_FLAGS,
+      {{ "You are ready to siphon essence again." }}},
+    { DUR_JINXBITE, LIGHTBLUE, "Jinx",
+      "jinxed", "jinxbite",
+      "You are surrounded by jinxing sprites.", D_DISPELLABLE | D_EXPIRES,
+      {{ "The jinxing sprites lose interest in you." }}},
+    { DUR_CANINE_FAMILIAR_DEAD, YELLOW, "-Dog", "unable to call your familiar",
+      "You are unable to call your canine familiar.", "", D_EXPIRES, {{ "",
+        [](){mprf(MSGCH_RECOVERY, "Your familiar recovers from its injuries.");}}}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -653,6 +673,10 @@ static const duration_def duration_data[] =
           if (!you.duration[DUR_BRAINLESS] && !player_in_branch(BRANCH_GEHENNA))
               mprf(MSGCH_RECOVERY, "You can read scrolls again.");
       }}}},
+    { DUR_REVELATION, 0, "", "", "revelation", "", D_NO_FLAGS, {{""}}},
+    { DUR_JINXBITE_LOST_INTEREST, 0, "", "", "", "", D_EXPIRES, {{"", _maybe_expire_jinxbite}}},
+    { DUR_RAMPAGE_HEAL, 0, "", "", "rampage heal", "", D_NO_FLAGS},
+    { DUR_TEMP_CLOUD_IMMUNITY, 0, "", "", "temp cloud immunity", "", D_EXPIRES},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
@@ -701,5 +725,8 @@ static const duration_def duration_data[] =
     { DUR_MIRROR_DAMAGE, 0, "", "", "old injury mirror", "", D_NO_FLAGS},
     { DUR_SHAFT_IMMUNITY, 0, "", "", "old shaft immunity", "", D_NO_FLAGS, {{""}}},
     { DUR_EXCRUCIATING_WOUNDS, 0, "", "", "old excruciating wounds", "", D_NO_FLAGS },
+    { DUR_CORPSE_ROT, 0, "", "", "old corpse rot", "", D_NO_FLAGS },
+    { DUR_LOCKED_DOWN, 0, "", "", "old stuck", "", D_NO_FLAGS },
+    { DUR_BINDING_SIGIL_WARNING, 0, "", "", "old binding sigil", "", D_NO_FLAGS },
 #endif
 };

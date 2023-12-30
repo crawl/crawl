@@ -9,13 +9,16 @@
 using std::vector;
 
 #define ANIMATE_DEAD_POWER_KEY "animate_dead_power"
-#define CORPSE_ROT_POWER_KEY "corpse_rot_power"
 
 class actor;
 
 spret cast_sublimation_of_blood(int pow, bool fail);
 spret cast_death_channel(int pow, god_type god, bool fail);
 spret cast_animate_dead(int pow, bool fail);
+
+vector<coord_def> find_sigil_locations(bool tracer);
+spret cast_sigil_of_binding(int pow, bool fail, bool tracer);
+void trigger_binding_sigil(actor& actor);
 
 enum class recall_t
 {

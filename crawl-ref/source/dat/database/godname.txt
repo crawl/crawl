@@ -92,6 +92,9 @@ Xom lastname
 w:280
 Xom of Chaos
 
+w:20
+Xom the Chaotic
+
 w:5
 Xom the Random
 
@@ -126,12 +129,6 @@ Xom of Malevolent Giggling
 
 w:5
 Xom of Malicious Giggling
-
-w:5
-Xom the Psychotic
-
-w:5
-Xom the Psychopath
 
 w:2
 Xom of Gnomic Intent

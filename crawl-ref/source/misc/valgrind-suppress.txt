@@ -13,7 +13,7 @@
    fun:*end*
 }
 
-# An SDL "conditional jump or move" error, with the unitialized value
+# An SDL "conditional jump or move" error, with the initialized value
 # being supplied by Nvidia's OpenGL library.
 {
    tiles_SDL_Nvida_GL_cond

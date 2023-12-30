@@ -281,7 +281,9 @@ static string _get_speak_string(const vector<string> &prefixes,
                                 bool unseen)
 {
     int duration = 1;
-    if ((mons->flags & MF_BANISHED) && !player_in_branch(BRANCH_ABYSS))
+    if (you.hp <= 0)
+        key += " triumphant";
+    else if ((mons->flags & MF_BANISHED) && !player_in_branch(BRANCH_ABYSS))
         key += " banished";
     else if (mons->hit_points <= 0)
     {
@@ -427,6 +429,7 @@ bool mons_speaks(monster* mons)
     const bool force_speak = !mons->alive()
         || (mons->flags & MF_BANISHED) && !player_in_branch(BRANCH_ABYSS)
         || (mons->is_summoned(&duration) && duration <= 0)
+        || you.hp <= 0 // your death counts too
         || crawl_state.prev_cmd == CMD_LOOK_AROUND; // Wizard testing
 
     const bool unseen   = !you.can_see(*mons);
@@ -451,7 +454,7 @@ bool mons_speaks(monster* mons)
         }
 
         // Berserk monsters just want your hide.
-        if (mons->berserk_or_insane())
+        if (mons->berserk_or_frenzied())
             return false;
 
         // Rolling beetles shouldn't twitch antennae
@@ -682,7 +685,7 @@ bool mons_speaks(monster* mons)
     {
         string key = "'";
 
-        // Database keys are case-insensitve.
+        // Database keys are case-insensitive.
         if (isaupper(mons_base_char(mons->type)))
             key += "cap-";
 

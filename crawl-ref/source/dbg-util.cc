@@ -23,6 +23,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
+#include "syscalls.h"
 
 monster_type debug_prompt_for_monster()
 {
@@ -516,7 +517,7 @@ void debuglog(const char *format, ...)
 
     if (!debugf)
     {
-        debugf = fopen("debuglog.txt", "w");
+        debugf = fopen_u("debuglog.txt", "w");
         ASSERT(debugf);
     }
 

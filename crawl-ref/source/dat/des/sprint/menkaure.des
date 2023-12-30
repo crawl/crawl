@@ -28,7 +28,7 @@ ORIENT: encompass
 SHUFFLE: 12
 SUBST:  ' = '..........
 KFEAT:  ' = net trap
-MONS:   Menkaure, water moccasin, kraken, flying skull
+MONS:   Menkaure, crocodile, kraken, weeping skull
 MARKER: a = lua:fog_machine { \
              pow_min = 1, pow_max = 2, delay = 3, \
              size = 2, walk_dist = 8, spread_rate= -1, \
@@ -39,7 +39,7 @@ MARKER: d = lua:fog_machine { \
              size = 2, walk_dist = 16, spread_rate= -1, \
              cloud_type= "grey smoke" }
 KFEAT:  dV = shallow_water
-KMONS:  V = water moccasin
+KMONS:  V = crocodile
 KMONS:  b = hell rat / scorpion / vampire mosquito / blink frog
 KITEM:  b = star_item
 SUBVAULT: A : sprint2_stairs_cluster
@@ -156,7 +156,7 @@ ENDMAP
 
 NAME:   sprint2_early_5
 TAGS:   sprint2_early no_item_gen no_trap_gen no_pool_fixup
-MONS:   worm
+MONS:   ribbon worm
 KITEM:  $ = gold q:243
 COLOUR: x = magenta
 MAP
@@ -270,7 +270,7 @@ ENDMAP
 NAME:   sprint2_basic_supplies
 TAGS:   sprint2_basic_supplies no_item_gen no_trap_gen no_monster_gen no_pool_fixup
 NSUBST: % = 1:a / 1:b / 1:c / *:%
-KITEM:  a = potion of flight q:3
+KITEM:  a = potion of enlightenment q:3
 KITEM:  b = potion of resistance q:3
 KITEM:  c = potion of magic q:3
 MAP
@@ -286,8 +286,8 @@ ENDMAP
 
 NAME:   sprint2_obstacle_1
 TAGS:   sprint2_obstacle no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-MONS:   patrolling flying skull
-NSUBST: l = 12:1 / *:l
+MONS:   patrolling laughing skull
+NSUBST: l = 4:1 / 1:1l / *:l
 SHUFFLE: l.
 MARKER: a = lua:fog_machine { \
              pow_min = 2, pow_max = 4, delay = 3, \
@@ -427,7 +427,7 @@ KITEM:  m = gold q:81
 KMONS:  m = patrolling yaktaur
 KMONS:  b = patrolling death drake
 KMONS:  n = patrolling death drake
-KITEM:  n = potion of flight q:3
+KITEM:  n = potion of enlightenment q:3
 KMONS:  d = patrolling electric golem
 KITEM:  d = gold q:243
 KMONS:  p = earth elemental
@@ -543,7 +543,7 @@ ENDMAP
 
 NAME:   sprint2_smallroom_1
 TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-MONS:   water moccasin
+MONS:   crocodile
 KITEM:  $ = gold q:81
 MAP
 11
@@ -727,7 +727,7 @@ NSUBST: | = 1:a / 2:b / 1:d / 6:$ / *:|
 KITEM:  $ = gold q:81
 KITEM:  a = scroll of acquirement q:3 / potion of mutation q:3 / potion of experience q:1
 KITEM:  b = scroll of acquirement q:1 / potion of magic q:9 / potion of haste q:3
-KITEM:  d = potion of flight q:3
+KITEM:  d = potion of enlightenment q:3
 SUBVAULT: A : sprint2_smallroom
 SUBVAULT: B : sprint2_smallroom
 SUBVAULT: D : sprint2_smallroom
@@ -760,7 +760,7 @@ NSUBST: f = 1:a / 2:b / 1:h / 9:$ / *:|
 KITEM:  a = scroll of acquirement q:3 / potion of mutation q:3 / potion of experience q:1
 KITEM:  $ = gold q:81
 KITEM:  b = scroll of acquirement q:1 / potion of magic q:9 / potion of haste q:3
-KITEM:  h = potion of flight q:3
+KITEM:  h = potion of enlightenment q:3
 MONS:   Nessos, jelly, sixfirhy, Gastronok, orc sorcerer, dire elephant
 SUBST:  . = '.........
 KFEAT:  ' = net trap
@@ -801,7 +801,7 @@ ENDMAP
 NAME:   sprint2_mutation_trap_area_1
 TAGS:   sprint2_mutation_trap_area no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 MARKER: + = lua:restrict_door()
-MONS:   floating eye, shining eye
+MONS:   glass eye, shining eye
 NSUBST: | = 1:a / *:|
 KITEM:  a = potion of mutation q:27
 MAP
@@ -831,7 +831,7 @@ local mons_gen_marker = TriggerableFunction:new {
     },
     func = "sprint2_forest_area_1_mons_gen",
     repeated = true,
-    props = {listen_to_slaves = true, only_at_slave = true }
+    props = {listen_to_replicas = true, only_at_replica = true }
     }
 mons_gen_marker:add_triggerer(DgnTriggerer:new {
     type = "player_move" })
@@ -865,7 +865,7 @@ NSUBST: 1 = 1:1 / *:e
 NSUBST: f = 1:f / 1:3 / *:4
 KITEM:  a = scroll of acquirement q:3 / potion of mutation q:3 / potion of experience q:1
 KFEAT:  e = any shop
-KITEM:  f = potion of flight q:3
+KITEM:  f = potion of enlightenment q:3
 SHUFFLE: 12
 MONS:   golden dragon, storm dragon, necrophage, iron imp
 SUBVAULT: A : sprint2_smallroom

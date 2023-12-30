@@ -159,17 +159,19 @@ level-map
 <w>[</w> or <w>]</w>     : Examine the next higher or lower level.
              (Moves cursor to the staircase destination if a known staircase is
              highlighted.)
-<w>G</w>          : Go to another level by branch and depth.
+<w>G</w>          : View another level by choosing a branch and depth.
 <w>o</w>          : Move the cursor to the next autoexplore target.
 <w>{</w> or <w>}</w>     : Zoom out or in (tiles only).
 
 <h>Travel exclusions</h>
 <w>e</w>          : Create a travel exclusion, change its radius, or remove it.
+<w>R#</w>         : Create a travel exclusion with a specified radius or change
+             its radius to #, where # is a number from 1 to 8.
 <w>E</w>          : Cycle through travel exclusions.
 <w>Ctrl-E</w>     : Erase all travel exclusions on the level.
 
 <h>Waypoints</h>
-<w>Ctrl-W</w>     : Set waypoint to current position.
+<w>w</w>          : Set waypoint to current position.
 <w>W</w>          : Cycle through all waypoints on the level.
 
 <h>Cycle through features</h>
@@ -201,7 +203,7 @@ interlevel-travel.branch.prompt
  Once you select a branch, you will be prompted for a depth in that
  branch (more help is available there).
 
- <w>Enter</w>  : Repeat last interlevel travel.
+ <w>Tab</w>    : Repeat last interlevel travel.
  <w>.</w>      : Travel to a level in the current branch.
  <w><<</w>      : Go up the nearest stairs.
  <w>></w>      : Go down the nearest stairs.

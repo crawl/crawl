@@ -11,7 +11,7 @@ aptitudes:
   xp: -1
   hp: 1
   mp_mod: 0
-  mr: 3
+  wl: 3
   fighting: 1
   ranged weapons: -1
   throwing: -1
@@ -19,6 +19,7 @@ aptitudes:
   dodging: -1
   spellcasting: -1
   hexes: -1
+  shapeshifting: -1
   invocations: 1
   # Black Draconian specific
   air_magic: 2

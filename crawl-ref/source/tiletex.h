@@ -67,6 +67,7 @@ protected:
     tile_info_func *m_info_func;
 };
 
+class FontWrapper;
 
 class ImageManager
 {
@@ -78,6 +79,7 @@ public:
     void unload_textures();
     inline const tile_info &tile_def_info(tile_def tile) const;
     const TilesTexture &get_texture(TextureID t) const;
+    FontWrapper *get_glyph_font() const;
 
 private:
     // XX just use vector??

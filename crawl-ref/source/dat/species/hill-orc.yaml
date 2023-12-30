@@ -8,7 +8,7 @@ aptitudes:
   xp: 0
   hp: 1
   mp_mod: 0
-  mr: 3
+  wl: 3
   fighting: 2
   long_blades: 1
   axes: 3
@@ -24,11 +24,11 @@ aptitudes:
   unarmed_combat: 1
   spellcasting: -3
   translocations: -2
-  transmutations: -3
+  shapeshifting: -2
   fire_magic: 1
   ice_magic: -1
   air_magic: -2
-  poison_magic: -1
+  alchemy: -2
   invocations: 3
 str: 10
 int: 8
@@ -40,10 +40,12 @@ recommended_jobs:
   - JOB_FIGHTER
   - JOB_MONK
   - JOB_BERSERKER
-  - JOB_ABYSSAL_KNIGHT
   - JOB_CINDER_ACOLYTE
+  - JOB_REAVER
   - JOB_FIRE_ELEMENTALIST
 recommended_weapons:
   - SK_MACES_FLAILS
   - SK_AXES
   - SK_POLEARMS
+# if you add any mutations here: you'll need to fix test/mut_species.lua, which
+# relies on HO having none.

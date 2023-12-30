@@ -52,12 +52,6 @@ bolt
 
 일반적인 화살보다 짧은 금속 투사체로, 석궁을 이용해서 발사한다.
 %%%%
-book of alchemy
-
-연금술을 마법 주문에 응용하는 방법이 담긴 책으로, 수많은 고대 연금술사들의
-지혜가 담겨있다. 책을 열 때마다, 주변의 대기가 잉크로 응축되어 책의 글씨들을
-만들어낸다.
-%%%%
 book of annihilations
 
 이 낡을 대로 낡은 책에서는 피 냄새가 끊임없이 새어나오고 있어, 마법의 ‘마’
@@ -443,7 +437,7 @@ potion of experience
 매우 희귀하고 굉장한 물약이다. 마시면 머릿속에 자신이 겪어보지 못했던 희귀한
 경험들이 들어온다.
 %%%%
-potion of flight
+potion of enlightenment
 
 복용한 이에게 대단한 부양력을 주는 포션
 %%%%
@@ -624,7 +618,7 @@ scroll of immolation
 이 두루마리는 사용자의 주변에 있는 존재들에게 불안정하고 매우 강력한 잠재의
 불꽃을 심는다.
 %%%%
-scroll of magic mapping
+scroll of revelation
 
 이 두루마리를 읽으면 주변의 지형을 볼 수 있다.
 

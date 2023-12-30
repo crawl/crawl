@@ -46,6 +46,23 @@
 #include "travel.h"
 #include "wiz-you.h"
 
+
+/*** Helper function to get a skill by name or raise an error
+ * @treturn skill_type
+ */
+static skill_type l_skill(lua_State *ls)
+{
+    string sk_name = luaL_checkstring(ls, 1);
+    skill_type sk = str_to_skill(lua_tostring(ls, 1));
+    if (sk > NUM_SKILLS)
+    {
+        string err = make_stringf("Unknown skill name `%s`.", sk_name.c_str());
+        luaL_argerror(ls, 1, err.c_str());
+    }
+    return sk;
+}
+
+
 //
 // Bindings to get information on the player (clua).
 //
@@ -60,6 +77,11 @@ LUARET1(you_turn_is_over, boolean, you.turn_is_over)
  * @function name
  */
 LUARET1(you_name, string, you.your_name.c_str())
+/*** Get name of player's species.
+ * @treturn string
+ * @function species
+ */
+LUARET1(you_species, string, species::name(you.species).c_str())
 /*** Get name of player's race.
  * @treturn string
  * @function race
@@ -124,6 +146,22 @@ LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
  * @function base_mp
  */
 LUARET1(you_base_mp, number, get_real_mp(false))
+/*** Armour class.
+ * @treturn int
+ * @function ac
+ */
+LUARET1(you_ac, number, you.armour_class())
+/*** Evasion.
+ * @treturn int
+ * @function ev
+ */
+LUARET1(you_ev, number, you.evasion())
+/*** Shield class.
+ * @treturn int
+ * @function sh
+ */
+LUARET1(you_sh, number, player_displayed_shield_class())
+
 /*** How much drain.
  * @treturn int
  * @function drain
@@ -175,14 +213,10 @@ LUARET1(you_xl_progress, number, get_exp_progress())
  */
 LUAFN(you_skill_progress)
 {
-    string sk_name = luaL_checkstring(ls, 1);
-    skill_type sk = str_to_skill(lua_tostring(ls, 1));
+    skill_type sk = l_skill(ls);
     if (sk > NUM_SKILLS)
-    {
-        string err = make_stringf("Unknown skill name `%s`.", sk_name.c_str());
-        return luaL_argerror(ls, 1, err.c_str());
-    }
-    PLUARET(number, get_skill_percentage(str_to_skill(lua_tostring(ls, 1))));
+        return 0;
+    PLUARET(number, get_skill_percentage(sk));
 }
 
 /*** Can a skill be trained?
@@ -192,13 +226,9 @@ LUAFN(you_skill_progress)
  */
 LUAFN(you_can_train_skill)
 {
-    string sk_name = luaL_checkstring(ls, 1);
-    skill_type sk = str_to_skill(lua_tostring(ls, 1));
+    skill_type sk = l_skill(ls);
     if (sk > NUM_SKILLS)
-    {
-        string err = make_stringf("Unknown skill name `%s`.", sk_name.c_str());
-        return luaL_argerror(ls, 1, err.c_str());
-    }
+        return 0;
     PLUARET(boolean, you.can_currently_train[sk]);
 }
 
@@ -368,7 +398,7 @@ LUARET1(you_mesmerised, boolean, you.duration[DUR_MESMERISED])
  * @treturn boolean
  * @function on_fire
  */
-LUARET1(you_on_fire, boolean, you.duration[DUR_LIQUID_FLAMES])
+LUARET1(you_on_fire, boolean, you.duration[DUR_STICKY_FLAME])
 /*** Are you petrifying?
  * @treturn boolean
  * @function petrifying
@@ -887,16 +917,6 @@ static int you_gold(lua_State *ls)
     PLUARET(number, you.gold);
 }
 
-/*** Can you eat chunks?
- * @treturn boolean
- * @function you_can_consume_corpses
- */
-static int you_can_consume_corpses(lua_State *ls)
-{
-    lua_pushboolean(ls, false);
-    return 1;
-}
-
 static int _you_have_rune(lua_State *ls)
 {
     int which_rune = NUM_RUNE_TYPES;
@@ -1066,8 +1086,9 @@ LUAFN(you_is_level_on_stack)
  */
 LUAFN(you_skill)
 {
-    skill_type sk = str_to_skill_safe(luaL_checkstring(ls, 1));
-
+    skill_type sk = l_skill(ls);
+    if (sk > NUM_SKILLS)
+        return 0;
     PLUARET(number, you.skill(sk, 10) * 0.1);
 }
 
@@ -1078,8 +1099,9 @@ LUAFN(you_skill)
  */
 LUAFN(you_base_skill)
 {
-    skill_type sk = str_to_skill_safe(luaL_checkstring(ls, 1));
-
+    skill_type sk = l_skill(ls);
+    if (sk > NUM_SKILLS)
+        return 0;
     PLUARET(number, you.skill(sk, 10, true) * 0.1);
 }
 
@@ -1098,12 +1120,14 @@ LUAFN(you_base_skill)
  */
 LUAFN(you_train_skill)
 {
-    skill_type sk = str_to_skill_safe(luaL_checkstring(ls, 1));
+    skill_type sk = l_skill(ls);
+    if (sk > NUM_SKILLS)
+        return 0;
     if (lua_gettop(ls) >= 2 && can_enable_skill(sk))
     {
-        you.train[sk] = min(max((training_status)luaL_safe_checkint(ls, 2),
+        set_training_status(sk, min(max((training_status)luaL_safe_checkint(ls, 2),
                                                  TRAINING_DISABLED),
-                                             TRAINING_FOCUSED);
+                                             TRAINING_FOCUSED));
         reset_training();
     }
 
@@ -1117,14 +1141,9 @@ LUAFN(you_train_skill)
  */
 LUAFN(you_get_training_target)
 {
-    string sk_name = luaL_checkstring(ls, 1);
-    skill_type sk = str_to_skill(sk_name);
-    if (sk == SK_NONE)
-    {
-        string err = make_stringf("Unknown skill name `%s`", sk_name.c_str());
-        return luaL_argerror(ls, 1, err.c_str());
-    }
-
+    skill_type sk = l_skill(ls);
+    if (sk > NUM_SKILLS)
+        return 0;
     PLUARET(number, (double) you.get_training_target(sk) * 0.1);
 }
 
@@ -1136,14 +1155,10 @@ LUAFN(you_get_training_target)
  */
 LUAFN(you_set_training_target)
 {
-    string sk_name = luaL_checkstring(ls, 1);
-    skill_type sk = str_to_skill(sk_name);
-    if (sk == SK_NONE)
-    {
-        string err = make_stringf("Unknown skill name `%s`", sk_name.c_str());
-        return luaL_argerror(ls, 1, err.c_str());
-    }
-    else if (!you.set_training_target(sk, luaL_checknumber(ls, 2), true))
+    skill_type sk = l_skill(ls);
+    if (sk > NUM_SKILLS)
+        return 0;
+    if (!you.set_training_target(sk, luaL_checknumber(ls, 2), true))
         return 0; // not a full-on error
     return 1;
 }
@@ -1155,7 +1170,9 @@ LUAFN(you_set_training_target)
  */
 LUAFN(you_skill_cost)
 {
-    skill_type sk = str_to_skill_safe(luaL_checkstring(ls, 1));
+    skill_type sk = l_skill(ls);
+    if (sk > NUM_SKILLS)
+        return 0;
     float cost = scaled_skill_cost(sk);
     if (cost == 0)
     {
@@ -1240,6 +1257,7 @@ static const struct luaL_reg you_clib[] =
     { "ability_table", l_you_abil_table },
     { "known_items" , you_known_items },
     { "name"        , you_name },
+    { "species"     , you_species },
     { "race"        , you_race },
     { "hand"        , you_hand },
     { "class"       , you_class },
@@ -1254,6 +1272,9 @@ static const struct luaL_reg you_clib[] =
     { "hp"          , you_hp },
     { "mp"          , you_mp },
     { "base_mp"     , you_base_mp },
+    { "ac"          , you_ac },
+    { "ev"          , you_ev },
+    { "sh"          , you_sh },
     { "drain"       , you_drain },
     { "strength"    , you_strength },
     { "intelligence", you_intelligence },
@@ -1322,8 +1343,6 @@ static const struct luaL_reg you_clib[] =
     { "constricting", you_constricting },
     { "status",       you_status },
     { "immune_to_hex", you_immune_to_hex },
-
-    { "can_consume_corpses",      you_can_consume_corpses },
 
     { "stop_activity", you_stop_activity },
     { "taking_stairs", you_taking_stairs },
@@ -1621,10 +1640,10 @@ LUAWRAP(you_enter_wizard_mode, you.wizard = true)
 #endif
 
 LUARET1(you_exp_needed, number, exp_needed(luaL_safe_checkint(ls, 1)))
-LUAWRAP(you_exercise, exercise(str_to_skill(luaL_checkstring(ls, 1)), 1))
+LUAWRAP(you_exercise, exercise(l_skill(ls), 1))
 LUARET1(you_skill_cost_level, number, you.skill_cost_level)
 LUARET1(you_skill_points, number,
-        you.skill_points[str_to_skill(luaL_checkstring(ls, 1))])
+        you.skill_points[l_skill(ls)])
 LUARET1(you_zigs_completed, number, you.zigs_completed)
 
 static const struct luaL_reg you_dlib[] =

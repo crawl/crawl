@@ -219,6 +219,12 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size)
     return configure_font();
 }
 
+bool FTFontWrapper::resize(unsigned int size)
+{
+    fsize = size;
+    return configure_font();
+}
+
 FTFontWrapper::GlyphInfo& FTFontWrapper::get_glyph_info(char32_t ch)
 {
     // cache glyph info in a single large buffer by unicode codepoint
@@ -909,11 +915,7 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     const float bg_width = this_width * density_mult;
     const float bg_height = char_height(false) * density_mult;
 
-    // glyph position. But we want to put the background rect at x, unlike
-    // when rendering the glyph.
-    const float pos_sx = x + glyph.offset * density_mult;
-
-    GLWPrim bg_rect(x, y, pos_sx + bg_width, y + bg_height);
+    GLWPrim bg_rect(x, y, x + bg_width, y + bg_height);
     bg_rect.set_col(bg_col);
     buf.add_primitive(bg_rect);
 

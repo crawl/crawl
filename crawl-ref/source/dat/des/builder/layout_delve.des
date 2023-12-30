@@ -1,5 +1,5 @@
 ###############################################################################
-# layout_geoelf.des: Layouts buit around the delve command
+# layout_geoelf.des: Layouts built around the delve command
 ###############################################################################
 
 : crawl_require("dlua/layout/zonify.lua")
@@ -130,7 +130,7 @@ TAGS:   no_rotate no_vmirror no_hmirror uniq_layout_twisted_delve
     --
     -- roughen the borders
     --  -> this stops delve from making straight paths
-    --  -> these will bever be seen in-game
+    --  -> these will never be seen in-game
     --
 
     smear_map { onto = "cvmn", smear = "X", iterations = 200 }

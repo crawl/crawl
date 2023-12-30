@@ -1,15 +1,15 @@
+TAG_MAJOR_VERSION: 34
 enum: SP_METEORAN
 monster: MONS_METEORAN
 name: "Meteoran"
 short_name: "Me"
 adjective: "Meteoric"
-difficulty: Advanced
-difficulty_priority: 30
+difficulty: False
 aptitudes:
   xp: 2
   hp: 1
   mp_mod: 1
-  mr: 5
+  wl: 5
   fighting: 1
   short_blades: 1
   long_blades: 2
@@ -19,10 +19,10 @@ aptitudes:
   staves: 2
   ranged weapons: 1
   throwing: 2
-  armour: 2
-  dodging: 2
+  armour: 1
+  dodging: 1
   stealth: -2
-  shields: 2
+  shields: 1
   unarmed_combat: 2
   spellcasting: 2
   conjurations: 2
@@ -30,14 +30,14 @@ aptitudes:
   necromancy: 1
   summoning: 2
   translocations: 2
-  transmutations: 2
   fire_magic: 2
   ice_magic: 1
   earth_magic: 2
   air_magic: 2
-  poison_magic: 2
+  alchemy: 2
   invocations: 3
   evocations: 2
+  shapeshifting: 1
 str: 9
 int: 9
 dex: 9
@@ -56,15 +56,3 @@ mutations:
     MUT_PASSIVE_MAPPING: 1
   18:
     MUT_PASSIVE_MAPPING: 1
-recommended_jobs:
-  - JOB_FIGHTER
-  - JOB_WANDERER
-  - JOB_CINDER_ACOLYTE
-  - JOB_TRANSMUTER
-  - JOB_EARTH_ELEMENTALIST
-recommended_weapons:
-  - SK_MACES_FLAILS
-  - SK_POLEARMS
-  - SK_AXES
-  - SK_STAVES
-  - SK_LONG_BLADES

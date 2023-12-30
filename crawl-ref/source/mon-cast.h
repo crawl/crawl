@@ -23,7 +23,7 @@ void aura_of_brilliance(monster* agent);
 bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos);
 
 dice_def waterstrike_damage(int spell_hd);
-dice_def resonance_strike_base_damage(const monster &caster);
+dice_def resonance_strike_base_damage(int spell_hd);
 
 dice_def eruption_damage();
 
@@ -46,6 +46,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
                      bool check_validity = false);
 
 void mons_cast_haunt(monster* mons);
+void mons_cast_flay(monster &caster, mon_spell_slot, bolt&);
 bool mons_word_of_recall(monster* mons, int recall_target);
 void mons_cast_spectral_orcs(monster* mons);
 void setup_breath_timeout(monster* mons);

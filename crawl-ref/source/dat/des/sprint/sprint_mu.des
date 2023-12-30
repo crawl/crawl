@@ -166,7 +166,7 @@ MONS: patrolling rat w:20 / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
       patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35
-KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
+KITEM: * = potion of enlightenment ident:all q:2 / potion of enlightenment q:1 / any potion, \
  potion of mutation ident:all q:2 / potion of mutation q:1 / any potion, \
  scroll of identify ident:all q:2/ scroll of identify q:1 / any scroll, \
  scroll of torment / scroll of poison / scroll of immolation, \
@@ -197,7 +197,7 @@ MONS: patrolling rat w:20 / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
       patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35
-KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
+KITEM: * = potion of enlightenment ident:all q:2 / potion of enlightenment q:1 / any potion, \
  potion of mutation ident:all q:2 / potion of mutation q:1 / any potion, \
  scroll of identify ident:all q:2 / scroll of identify q:1 / any scroll, \
  scroll of torment / scroll of poison / scroll of immolation, \
@@ -235,9 +235,9 @@ KFEAT: O = altar_okawaru
 KFEAT: T = altar_trog
 KFEAT: U = altar_uskayaw
 KFEAT: o = altar_wu_jian
-KMONS: o = patrolling human ; potion of might ident:all
+KMONS: o = patrolling human perm_ench:might
 KITEM: o = any armour
-KMONS: t = patrolling human ; potion of berserk rage ident:all
+KMONS: t = patrolling human perm_ench:berserk
 KITEM: t = any weapon
 KFEAT: D = altar_dithmenos
 KFEAT: R = altar_ru
@@ -252,7 +252,7 @@ KMONS: W = water elemental hd:4
 KFEAT: V = altar_vehumet
 KFEAT: S = altar_sif_muna
 KFEAT: K = altar_kikubaaqudgha
-KMONS: s = patrolling wizard hd:3
+KMONS: s = patrolling arcanist hd:3
 KITEM: s = any book
 KMONS: 5 = patrolling kobold demonologist hd:2
 KITEM: 5 = any book / gold
@@ -553,7 +553,7 @@ ENDMAP
 # Slime 1, circle
 NAME: sprint_mu_slime_circle
 TAGS: sprint_mu_slime no_rotate no_hmirror no_vmirror
-MONS: the Royal Jelly, shining eye, floating eye, acid blob, azure jelly
+MONS: the Royal Jelly, shining eye, glass eye, acid blob, azure jelly
 SHUFFLE: 234
 SUBST: 4 = 45
 KFEAT: M = slimy_wall
@@ -793,12 +793,12 @@ ENDMAP
 # D2_1, wish-granting genie
 NAME: sprint_mu_d2_genie
 TAGS: sprint_mu_d2 no_rotate no_hmirror no_vmirror
-MONS: yaktaur / yaktaur captain, floating eye, orc priest / \
+MONS: yaktaur / yaktaur captain, glass eye, orc priest / \
  orc high priest hd:5 hp:70
 MONS: spriggan defender hd:5 hp:55 ; dagger
 MONS: obsidian statue / orange crystal statue
 MONS: crystal guardian hd:10 hp:45, skeletal warrior
-KMONS: 2 = floating eye
+KMONS: 2 = glass eye
 KITEM: 2 = q:10 scroll of identify ident:all
 KMONS: P = plant
 SUBST: P = PPPPPPPPP.
@@ -906,7 +906,7 @@ NAME: sprint_mu_vaults_butterflies
 TAGS: sprint_mu_vaults no_rotate no_hmirror no_vmirror
 MONS: centaur warrior, lich, shadow dragon, ogre mage
 MONS: vault guard ; short sword ego:electrocution | long sword ego:flaming |\
-      dire flail ego:vampirism | war axe ego:freezing | spear ego:vorpal |\
+      dire flail ego:vampirism | war axe ego:freezing | spear ego:heavy |\
       great mace ego:pain | great sword ego:venom .\
       chain mail ego:poison_resistance | chain mail ego:cold_resistance |\
       scale mail ego:poison_resistance | scale mail ego:cold_resistance |\
@@ -917,7 +917,7 @@ MONS: stone giant / shadow dragon / quicksilver dragon / golden dragon /\
 MONS: skeletal warrior
 KMONS: 8 = obsidian statue
 KMONS: f = butterfly
-KMONS: U = Sojobo ; morningstar ego:vorpal . tower shield ego:reflection / \
+KMONS: U = Sojobo ; morningstar ego:heavy . tower shield ego:reflection / \
            Frederick ; trident ego:freezing . tower shield ego:reflection
 KMONS: C = generate_awake Chuck
 KMONS: k = yaktaur captain ; arbalest ego:chaos
@@ -939,7 +939,7 @@ SUBST: f = f..
 NSUBST: . = 15:M / *:.
 KMONS: M = ugly thing / slime creature / glowing shapeshifter
 KITEM: % = silver rune of zot
-KITEM: " = ring of flight ident:all, potion of flight ident:all q:3, \
+KITEM: " = ring of flight ident:all, potion of enlightenment ident:all q:3, \
  scroll of acquirement q:1 ident:all, wand of digging / \
  any blast wand, acquire gold, ring of protection from fire ident:all
 
@@ -1141,8 +1141,8 @@ KMONS: d = col:lightgrey generate_awake statue name:air_elementalist name_adject
 KMONS: e = ancient champion \
        spells:venom_bolt.21.wizard;haste.21.wizard;haunt.21.wizard \
        ; plate armour ego:fire_resistance | plate armour ego:cold_resistance . \
-       battleaxe ego:vorpal | battleaxe ego:pain | \
-       w:3 executioner's axe ego:vorpal
+       battleaxe ego:heavy | battleaxe ego:pain | \
+       w:3 executioner's axe ego:heavy
 KITEM: e = superb_item, superb_item
 KMONS: p = plant
 KMONS: 1 = patrolling vampire knight
@@ -1159,7 +1159,7 @@ KMONS: A = col:magenta plant / w:2 deep elf blademaster
 KMONS: B = col:lightmagenta plant
 SUBST: A = AAB
 KFEAT: AB = zot trap w:2 / floor
-KMONS: i = patrolling floating eye
+KMONS: i = patrolling glass eye
 KMONS: j = patrolling golden eye
 KMONS: k = patrolling shining eye
 KMONS: m = patrolling glowing orange brain
@@ -1190,7 +1190,7 @@ SUBST: J = Jh
 KFEAT: h = deep_water
 KMONS: h = electric eel
 KMONS: K = executioner
-KMONS: M = patrolling yaktaur ; boomerang ego:dispersal q:10
+KMONS: M = patrolling yaktaur ; dart ego:dispersal q:10
 KMONS: N = patrolling nessos
 KFEAT: ^ = net trap
 KFEAT: " = floor
@@ -1461,7 +1461,7 @@ local mons_gen_marker = TriggerableFunction:new {
     },
     func = "sprint_mu_zot_mons_gen",
     repeated = true,
-    props = {listen_to_slaves = true, only_at_slave = true }
+    props = {listen_to_replicas = true, only_at_replica = true }
     }
 mons_gen_marker:add_triggerer(DgnTriggerer:new {
     type = "player_move" })

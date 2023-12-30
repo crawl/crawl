@@ -10,7 +10,7 @@ aptitudes:
   xp: -1
   hp: 2
   mp_mod: 0
-  mr: 6
+  wl: 6
   fighting: -1
   short_blades: -1
   axes: 1
@@ -29,12 +29,11 @@ aptitudes:
   summoning: -1
   necromancy: 1
   translocations: 1
-  transmutations: -1
   fire_magic: -1
   ice_magic: -1
   air_magic: -3
   earth_magic: 3
-  poison_magic: -2
+  alchemy: -2
   invocations: 3
   evocations: 3
 str: 11

@@ -108,9 +108,17 @@ end
 
 
 species = {"hill orc", "minotaur", "merfolk", "gargoyle", "draconian", "halfling", "troll", "ghoul",
-            "human", "kobold", "centaur", "spriggan", "tengu", "deep elf", "ogre", "deep dwarf",
+            "human", "kobold", "centaur", "spriggan", "tengu", "deep elf", "oni", "deep dwarf",
             "vine stalker", "vampire", "demigod", "formicid", "naga", "octopode", "felid", "barachi",
             "mummy", "gnoll"}
+
+local you_x, you_y = you.pos() -- probably out of bounds
+-- move to a guaranteed real position. This is because losing some mutations
+-- can trigger things like landing the player, which will crash if out of
+-- bounds.
+local place = dgn.point(20, 20)
+dgn.grid(place.x, place.y, "floor")
+you.moveto(place.x, place.y) -- assumes other tests have properly cleaned up...
 
 test_random_mutations_species("demonspawn", ds_tries, ds_mut_iterations, chance_temporary, chance_clear)
 random_level_change("demonspawn", ds_tries, ds_mut_iterations, chance_temporary, chance_clear)
@@ -123,5 +131,6 @@ end
 
 -- the testbed doesn't really clean up much of anything.
 you.delete_all_mutations("Species mutation test")
-assert(you.change_species("human")) -- should clean up any innate mutatinos
+assert(you.change_species("hill orc")) -- should clean up any innate mutations
 assert(you.set_xl(1, false))
+you.moveto(you_x, you_y) -- restore original player pos

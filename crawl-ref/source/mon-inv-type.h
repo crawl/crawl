@@ -22,8 +22,10 @@ enum mon_inv_type           // env.mons[].inv[]
     // the monster; i.e. the last slot that goes into monster_info.
     MSLOT_LAST_VISIBLE_SLOT = MSLOT_MISCELLANY,
 
+#if TAG_MAJOR_VERSION == 34
     MSLOT_POTION,
     MSLOT_SCROLL,
+#endif
     MSLOT_GOLD,
     NUM_MONSTER_SLOTS
 };

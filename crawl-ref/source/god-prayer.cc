@@ -48,70 +48,95 @@ string god_prayer_reaction()
     return result;
 }
 
-/**
- * Determine the god this game's ecumenical altar is for.
- * Replaces the ecumenical altar with the God's real altar.
- * Assumes you can worship at least one god (ie are not a
- * demigod), and that you're standing on the altar.
- *
- * @return The god this altar is for.
- */
-static god_type _altar_identify_ecumenical_altar()
+static bool _prompt_ecu_worship(const vector<god_type> &gods)
 {
-    god_type god;
-    do
+    vector<string> god_name_list;
+    for (size_t i = 0; i < gods.size(); ++i)
     {
-        god = random_god();
+        god_name_list.push_back(make_stringf("(%c) %s", char('a' + i),
+                                             god_name(gods[i]).c_str()));
     }
-    while (!player_can_join_god(god));
-    dungeon_terrain_changed(you.pos(), altar_for_god(god));
-    return god;
+    const string god_names = comma_separated_line(god_name_list.begin(),
+                                                  god_name_list.end(), " or ");
+    // This should be a proper menu, but I absolutely cannot be bothered with
+    // webtiles menu code.
+    mprf(MSGCH_PROMPT, "This altar belongs to %s, but you can't tell which.\n"
+         "Press the corresponding letter to learn more about a god, "
+         "or press enter to convert or escape to cancel.", god_names.c_str());
+    while (true) {
+        flush_prev_message();
+        int ch = getch_ck();
+        switch (ch)
+        {
+        case CK_ENTER:
+        case 'y':
+        case 'Y':
+            return true;
+        case 'n':
+        case 'N':
+        case CK_ESCAPE:
+        case CK_REDRAW:
+            return false;
+        default:
+            break;
+        }
+        int god_idx = ch - 'a';
+        if (god_idx >= 0 && god_idx < int(gods.size()))
+            describe_god(gods[god_idx]);
+    }
 }
 
 static bool _pray_ecumenical_altar()
 {
-    if (yesno("You cannot tell which god this altar belongs to. Convert to "
-              "them anyway?", false, 'n')
-        && (you_worship(GOD_NO_GOD)
-            || yesno(make_stringf("Really abandon %s for an unknown god?",
-                                  god_name(you.religion).c_str()).c_str(),
-                                  false, 'n')))
-    {
-        {
-            // Don't check for or charge a Gozag service fee.
-            unwind_var<int> fakepoor(you.attribute[ATTR_GOLD_GENERATED], 0);
-
-            god_type altar_god = _altar_identify_ecumenical_altar();
-            take_note(Note(NOTE_MESSAGE, 0, 0,
-                           "Prayed at the altar of an unknown god."));
-            mprf(MSGCH_GOD, "%s accepts your prayer!",
-                            god_name(altar_god).c_str());
-            you.turn_is_over = true;
-            if (!you_worship(altar_god))
-                join_religion(altar_god);
-            else
-                return true;
-        }
-
-        if (you_worship(GOD_RU))
-            you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
-        else if (you_worship(GOD_ASHENZARI))
-            you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 9999;
-        else if (you_worship(GOD_XOM))
-            xom_is_stimulated(200, XM_INTRIGUED, true);
-        else if (you_worship(GOD_YREDELEMNUL))
-            give_yred_bonus_zombies(1);
-        else
-            gain_piety(20, 1, false);
-
-        mark_milestone("god.ecumenical", "prayed at an ecumenical altar.");
-        return true;
-    }
-    else
+    const vector<god_type> gods = get_ecu_gods(you.pos());
+    if (!_prompt_ecu_worship(gods))
     {
         canned_msg(MSG_OK);
         return false;
     }
+    if (!you_worship(GOD_NO_GOD)
+        && !yesno(make_stringf("Really abandon %s for an unknown god?",
+                               god_name(you.religion).c_str()).c_str(),
+                               false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    const god_type altar_god = *random_iterator(gods);
+    dungeon_terrain_changed(you.pos(), altar_for_god(altar_god));
+    take_note(Note(NOTE_MESSAGE, 0, 0,
+                   "Prayed at the altar of an unknown god."));
+    you.turn_is_over = true;
+    {
+        // Don't check for or charge a Gozag service fee.
+        unwind_var<int> fakepoor(you.attribute[ATTR_GOLD_GENERATED], 0);
+        if (!player_can_join_god(altar_god))
+        {
+            print_god_rejection(altar_god);
+            return true;
+        }
+
+        mprf(MSGCH_GOD, "%s accepts your prayer!",
+                        god_name(altar_god).c_str());
+        if (you_worship(altar_god))
+            return true;
+        join_religion(altar_god);
+    }
+
+    if (you_worship(GOD_RU))
+        you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
+    else if (you_worship(GOD_ASHENZARI))
+        you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 9999;
+    else if (you_worship(GOD_XOM))
+        xom_is_stimulated(200, XM_INTRIGUED, true);
+    else if (you_worship(GOD_YREDELEMNUL))
+        give_yred_bonus_zombies(1);
+    else
+        gain_piety(20, 1, false);
+
+    mark_milestone("god.ecumenical", "prayed at an ecumenical altar.");
+    return true;
 }
 
 /**

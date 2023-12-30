@@ -37,7 +37,7 @@
 #  never choose this serial vault (even with PLACE) on early
 #  levels (I did not test deeper levels).  I believe this is
 #  because they were detected to have unreachable floor cells
-#  and thus failed an implicit accesibility validation of some
+#  and thus failed an implicit accessibility validation of some
 #  sort.  Taking out transparent solved the problem.
 #
 # advil: I've readded transparent, in combination with explicit

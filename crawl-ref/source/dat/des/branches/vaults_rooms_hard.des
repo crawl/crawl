@@ -3,6 +3,10 @@
 #
 # Content: These are the subvaults that place a large number of monsters and
 #          out of depth monsters.
+#
+# <<1>>      Abstract / generic threat
+# <<2>>      Themed threat
+#
 ################################################################################
 #
 # All of the subvaults in here should use the tag vaults_hard
@@ -31,6 +35,15 @@
 #  This is the header for st's "greater box" vaults.
 
 {{
+function init_protected_by_tso(e)
+  e.tags('uniq_protected_by_tso')
+  e.kfeat('A = altar_the_shining_one')
+  e.kfeat('- = runed_door')
+  e.kitem('A = any weapon ego:holy_wrath w:2 / nothing')
+  e.lua_marker('!', message_at_spot("You almost think you hear a voice: \"Seek not undue power, mortal.\"", "warning"))
+  e.tile('G = dngn_statue_angel')
+end
+
 function st_box_setup(e)
   e.tags("no_item_gen")
   e.subst("% = %%%**|$")
@@ -39,8 +52,8 @@ function st_box_setup(e)
                golden dragon w:5 / storm dragon / quicksilver dragon w:2 /\
                iron dragon w:2 / swamp dragon / fire dragon / ice dragon /\
                catoblepas / moth of wrath w:1 / ghost moth /\
-               floating eye / eye of devastation /\
-               glowing orange brain / nagaraja / guardian serpent /\
+               glass eye / eye of devastation / glowing orange brain /\
+               nagaraja / guardian serpent /\
                vampire knight / vampire mage / deep elf sorcerer /\
                deep elf death mage / deep elf demonologist /\
                deep elf annihilator / deep elf high priest / orc warlord /\
@@ -51,7 +64,11 @@ function st_box_setup(e)
 end
 }}
 
-####
+###############################################################################
+#
+# <<1>> Generic threat vaults.
+#
+###############################################################################
 
 NAME:     vaults_room_glass_cross
 TAGS:     vaults_hard
@@ -705,28 +722,6 @@ x.xx..xx..xx..xx..xx..xx.x
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:   dpeg_vaults_hating_casters
-TAGS:   vaults_hard
-MONS:   ghost moth
-SUBST:  % = %%%$* , * = **|
-NSUBST: . = 6:0 / *:.
-SUBST:  0 = 00009, 8 = 889
-SUBST:  _ : x. , + : +==
-NSUBST: = = 1:+ / *=+x
-KPROP:  1 = no_tele_into
-MAP
-    @@@
-xxxx+++xxxx
-x%%.....%%x
-x%..000..%x
-x_..mmm.._x
-x_..m1m.._x
-x_..mmm.._x
-x...***...x
-x8.......8x
-xxxxxxxxxxx
-ENDMAP
-
 NAME:   dpeg_vaults_pockets_of_resistance
 TAGS:   vaults_hard
 NSUBST: 0 = 3 = 899 / 12 = 099 / * = 0
@@ -1321,4 +1316,888 @@ vv.cc|...|cc.vv
   vv.......vv
    vvv999vvv
      vv.vv
+ENDMAP
+
+NAME:  nicolae_vaults_antechamber_and_loot_room
+TAGS:  vaults_hard vaults_orient_s vaults_orient_n vaults_orient_e
+KITEM: 8 = |
+KMONS: 8 = 8 band
+SUBST: 0 = .00009, % = ..%%%**
+MAP
+xxxx0...0
+%%%x.....
+%8.+..9..
+%%%x.....
+xxxx0...0
+ENDMAP
+
+NAME:   nicolae_vaults_corpse_flower
+TAGS:   vaults_hard
+KMONS:  0 = 0 band
+KMONS:  9 = 9 band
+KMONS:  8 = 8 band
+SUBST:  0 = 0009, 9 = 9998, * = ***|
+NSUBST: D = + / x, E = + / x, F = + / x, H = + / x
+MAP
+          ...
+         ..(..
+         .....
+        .......
+        ...0...
+        .......
+        .......
+         xDDDx
+   .... xx...xx ....
+ ......xx*...*xx......
+.......H.......E.......
+.(..0..H...9...E..0..(.
+.......H.......E.......
+ ......xx*...*xx......
+   .... xx...xx ....
+         xFFFx
+        .......
+        .......
+        ...0...
+        .......
+         .....
+         ..(..
+          ...
+ENDMAP
+
+NAME:   nicolae_vaults_corridor_and_loot_room
+TAGS:   vaults_hard vaults_orient_e
+KITEM:  8 = |
+KMONS:  0 = 0 / 0 band w:5
+KMONS:  8 = 8 band
+NSUBST: D = + / n
+SUBST:  0 = .0, % = ..%%%**
+MAP
+.......x%%%x
+.0...9.+.8%x
+.......x%%%x
+...xxxxxnnnx
+...x...x....
+.0.x.0.+.0..
+...x...x....
+...xxDxxx+xx
+.......x...x
+.0...0.D.0.x
+.......x...x
+ENDMAP
+
+NAME:   nicolae_vaults_crenellated_ambush
+TAGS:   vaults_hard
+NSUBST: ' = 4=0 / 4=.0 / ..%
+SUBST:  0 = 0000998
+MAP
+x'x'x'x
+'.....'
+x.....x
+'..(..'
+x.....x
+'.....'
+x'x'x'x
+ENDMAP
+
+NAME:  nicolae_vaults_diffraction_hallways
+TAGS:  vaults_hard
+SUBST: 0 = .009, 9 = .998, * = .**|
+MAP
+..........
+x.xxxxxx.x
+x...00...x
+x.x.xx.x.x
+x.x9**9x.x
+x.x9**9x.x
+x.x.xx.x.x
+x...00...x
+x.xxxxxx.x
+..........
+ENDMAP
+
+NAME:    nicolae_vaults_disappearing_quadrants
+TAGS:    vaults_hard
+SHUFFLE: FMNS, DEH, JKL, OPQ, RZ-
+SUBST:   FJORD = ., MEKPZ = x, N : xx., S : xx., H : xx., L : xx., Q : xx., \
+         - : xx., 0 = .0, 9 = ...9, 0 = 0009, 9 = 9998, * = ***|
+MAP
+......................
+.(..DDEE......JJKK..(.
+..DDD..EEE..JJJ..KKK..
+..D......E..J......K..
+.DD.0..0.EEJJ.0..0.KK.
+.D...xx...EJ...xx...K.
+.H...xx...FM...xx...L.
+.HH.0..0.FFMM.0..0.LL.
+..H......F..M......L..
+..HHH..FFF99MMM..LLL..
+....HHFF.9**9.MMLL....
+....RRSS.9**9.NNOO....
+..RRR..SSS99NNN..OOO..
+..R......S..N......O..
+.RR.0..0.SSNN.0..0.OO.
+.R...xx...SN...xx...O.
+.-...xx...ZQ...xx...P.
+.--.0..0.ZZQQ.0..0.PP.
+..-......Z..Q......P..
+..---..ZZZ..QQQ..PPP..
+.(..--ZZ......QQPP..(.
+......................
+ENDMAP
+
+NAME:  nicolae_vaults_enemy_cabinets
+TAGS:  vaults_hard vaults_orient_s
+KITEM: 0 = %
+KITEM: 9 = *
+KITEM: 8 = |
+KMONS: 0 = 0
+KMONS: 9 = 9
+KMONS: 8 = 8
+SUBST: 0 = 099988
+MAP
+0x0x0x0
+.......
+..x.x..
+.......
+x..x..x
+x.....x
+x.....x
+ENDMAP
+
+NAME: nicolae_vaults_little_guard_posts
+TAGS: vaults_hard
+MAP
+..xxxx
+..+.9x
+x++..x
+x..++x
+x9.+..
+xxxx..
+ENDMAP
+
+NAME:  nicolae_vaults_murder_corner
+TAGS:  vaults_hard vaults_orient_s vaults_orient_w
+KITEM: 9 = *
+KITEM: 8 = |
+KMONS: 9 = 9
+KMONS: 8 = 8
+MAP
+x9.x.8
+x.....
+xx.0.x
+......
+...x.9
+...xxx
+ENDMAP
+
+NAME:   nicolae_vaults_museum
+TAGS:   vaults_hard
+WEIGHT: 3
+KITEM:  M = any weapon randart / any armour randart / any jewellery randart / \
+            any magical staff randart / any randbook
+KMONS:  R = vault warden band
+KMONS:  S = vault sentinel
+KMONS:  s = vault guard w:40 / ironbound preserver / ironbound convoker
+KFEAT:  M = alarm trap
+KMASK:  M = no_monster_gen
+KMASK:  M = opaque
+KPROP:  M = no_tele_into
+NSUBST: ! = R / S / s0..., D = m / n
+SUBST:  0 = 009, 9 = 998
+MAP
+.............
+.!....!....!.
+..nnn...nnn..
+..nMn.0.nMn..
+..nnm...mnn..
+.....DDD.....
+.!.0.DMD.0.!.
+.....DDD.....
+..nnm...mnn..
+..nMn.0.nMn..
+..nnn...nnn..
+.!....!....!.
+.............
+ENDMAP
+
+NAME:  nicolae_vaults_mush_room
+TAGS:  vaults_hard vaults_orient_s
+KMONS: 8 = 8 band
+KMONS: 9 = 9 band
+SUBST: * = **|, 0 = ...0000
+MAP
+    0...0
+  .........
+ ...........
+..0...9...0..
+.............
+.............
++xx.0...0.xx+
+..xx.....xx..
+...xx...xx...
+....x.0.x....
+.8..x...x..8.
+x***x...x***x
+xxxxx...xxxxx
+ENDMAP
+
+
+NAME:    nicolae_vaults_off_center_swirl
+TAGS:    vaults_hard
+SHUFFLE: PQRS/pqrs
+NSUBST:  PD = + / x, QE = + / x, RF = + / x, SH = + / x, 0 = 9 / 0.
+SUBST:   pqrs = .
+MAP
+    .P...
+  ..0P.0.q0
+ ppppDp%QEQQ
+ ....Pxxxq..
+....0%xxx%0..
+.....sxxxR...
+SSSSSHS%rFrrr
+....0s.0.R0..
+.....s...R...
+ ....s...R..
+ ....s...R..
+  ...s...R.
+    .s...
+ENDMAP
+
+NAME:    nicolae_vaults_security_offices_1
+TAGS:    vaults_hard vaults_orient_n
+SHUFFLE: DEF
+SUBST:   D = +, EF = n, 0 = ...000998
+MAP
+.....
+.....
+DEFED
+.....
+00000
+ENDMAP
+
+NAME:  nicolae_vaults_security_offices_2
+TAGS:  vaults_hard vaults_orient_e
+KITEM: L = % w:5 / * / | w:5
+KMONS: L = 0 / 9 / 9 band / 8
+MAP
+........x
+........x
+........x
++xnxx...x
+...Ln....
+...Ln.(..
+...Ln....
+ENDMAP
+
+NAME:  nicolae_vaults_security_offices_3
+TAGS:  vaults_hard
+SUBST: 0 = 000998, * = **|
+MAP
+...xxxxx...
+.(.xxxxx.(.
+...xx*xx...
+...+.0.x...
+...n...n...
+...n0*0n...
+...n...n...
+...x.0.+...
+...xx*xx...
+.(.xxxxx.(.
+...xxxxx...
+ENDMAP
+
+NAME:    nicolae_vaults_security_offices_4
+TAGS:    vaults_hard
+SHUFFLE: DE, FH
+SUBST:   D : xxn .:5, E : xnn .:5, F : xxn .:5, H : xnn .:5, 9 = 9998
+MAP
+x...xxxxx
+..D..+.9x
+.DED.n..x
+..D0.xnnx
+x.......x
+xnnx.0F..
+x..n.FHF.
+x9.+..F..
+xxxxx...x
+ENDMAP
+
+NAME:  nicolae_vaults_security_offices_5
+TAGS:  vaults_hard
+SUBST: 0 = .0009
+MAP
+...xxxxx...
+.(.xx..+...
+...xx..x...
+...xx+xx...
+...n0.0n...
+...n.0.n...
+...n0.0n...
+...xnnnx...
+...........
+.(.......(.
+...........
+ENDMAP
+
+NAME:   nicolae_vaults_security_offices_6
+TAGS:   vaults_hard
+NSUBST: D = + / x, E = + / x
+SUBST:  O = .0
+MAP
+.............
+.O....(....O.
+.............
+xDnnx...xnnEx
+x.0%n...n*9.x
+x.9*n...n%0.x
+xDnnx...xnnEx
+.............
+.O....(....O.
+.............
+ENDMAP
+
+NAME:    nicolae_vaults_shipping_containers_1
+TAGS:    vaults_hard
+SHUFFLE: DE, FH, JK, LM, NO
+SUBST:   DFJLN = +, E : xxxx+, H : xxxx+, K : xxxx+, M : xxxx+, O : xxxx+, \
+         - = ......%0, % = %%%**|, 0 = 000998
+MAP
+........................
+......xFFx..............
+..xDDxx--xxJJxxLLx.xNNx.
+..x--xx--xx--xx--x.x--x.
+..x--xx--xx--xx--x.x--x.
+..x--xx--xx--xx--x.x--x.
+..x--xxHHxx--xx--x.x--x.
+..xEEx....xKKxxMMx.xOOx.
+........................
+........................
+ENDMAP
+
+NAME:    nicolae_vaults_shipping_containers_2
+TAGS:    vaults_hard
+SHUFFLE: DE, FH, JK, LM
+SUBST:   DFJL = +, E : xxxx+, H : xxxx+, K : xxxx+, M : xxxx+, \
+         - = ......%0, % = %%%**|, 0 = 000998
+MAP
+.......xxxxxx.
+.xDDx..J----K.
+.x--x..J----K.
+.x--x..xxxxxx.
+.x--x.........
+.x--xxxxxxx...
+.xEExF----H...
+.....F----H...
+.....xxxxxx...
+.......xxxxxx.
+xxxxxx.L----M.
+x----+.L----M.
+x----+.xxxxxx.
+xxxxxx........
+ENDMAP
+
+NAME:    nicolae_vaults_shipping_containers_3
+TAGS:    vaults_hard
+SHUFFLE: DE, FH, JK
+SUBST:   DFJ = +, E : xxxx+, H : xxxx+, K : xxxx+, \
+         - = ......%0, % = %%%**|, 0 = 000998
+MAP
+..............
+......xxxxxx..
+xDDx..F----H..
+x--x..F----H..
+x--x..xxxxxx..
+x--x..........
+x--x..........
+xEEx.xxxxxx...
+.....J----K...
+.....J----K...
+.....xxxxxx...
+ENDMAP
+
+NAME:    nicolae_vaults_shipping_containers_4
+TAGS:    vaults_hard
+SHUFFLE: DE, FH
+SUBST:   DF = +, E : xxxx+, H : xxxx+, \
+         - = ......%0, % = %%%**|, 0 = 000998
+MAP
+.xxxxxx..
+.D----E..
+.D----E..
+.xxxxxx..
+..xxxxxx.
+..F----H.
+..F----H.
+..xxxxxx.
+.........
+ENDMAP
+
+NAME:    nicolae_vaults_shipping_containers_5
+TAGS:    vaults_hard
+SHUFFLE: DEFH
+SUBST:   DEF = +, H : xxxx+, - = ......%0, % = %%%**|, 0 = 000998
+MAP
+xxxxxx.......
+x----+.......
+x----+.......
+xxxxxx.......
+.........xFFx
+...xxxxxxx--x
+...+----xx--x
+...+----xx--x
+...xxxxxxx--x
+...xxxxxxxHHx
+...D----E....
+...D----E....
+...xxxxxx....
+ENDMAP
+
+NAME:    nicolae_vaults_shipping_containers_6
+TAGS:    vaults_hard
+SHUFFLE: DE, FH, JK/ML, LM
+SUBST:   DFJL = +, E : xxxx+, H : xxxx+, K = x, M : ++++x, \
+         - = ......%0, % = %%%**|, 0 = 000998
+MAP
+................
+................
+.xxxxxx.xxxxxx..
+.D----E.F----H..
+.D----E.F----H..
+.xxxxxx.xxxxxx..
+..xxxxxxxxxxxx..
+..+----xx----+..
+..+----xx----+..
+..xxxxxxxxxxxx..
+..xxxxxx........
+..J----Kxxxxxx..
+..J----KL----M..
+..xxxxxxL----M..
+........xxxxxx..
+................
+ENDMAP
+
+NAME:    nicolae_vaults_shipping_containers_7
+TAGS:    vaults_hard
+SHUFFLE: DE/FH/JK, FH, JK
+SUBST:   DEFJ = +, H : xxxx+, K : xxxx+, \
+         - = ......%0, % = %%%**|, 0 = 000998
+MAP
+.....xxxxxx.
+.....D----E.
+.....D----E.
+.....xxxxxx.
+...xxxxxx...
+...F----H...
+...F----H...
+...xxxxxx...
+..xxxxxx....
+..J----K....
+..J----K....
+..xxxxxx....
+ENDMAP
+
+NAME:  nicolae_vaults_shock_wave
+TAGS:  vaults_hard vaults_orient_w
+SUBST: 0 = ..0009, 9 = 9998, % = %%%*, * = ***|
+MAP
+            .....
+        .....xxx.
+    .....xxx.x*x.
+......xx.x%x.x+x.
+..0x..0x..0x..9x.
+..0x..0x..0x..9x.
+......xx.x%x.x+x.
+    .....xxx.x*x.
+        .....xxx.
+            .....
+ENDMAP
+
+NAME:  nicolae_vaults_storing_the_good_stuff
+TAGS:  vaults_hard vaults_orient_w no_windows
+KITEM: LM = any weapon randart w:15 / any armour randart w:15 / \
+            any jewellery randart w:15 / any magical staff randart w:5 / \
+            gold good_item w:5 / | w:5
+KMONS: L = 9
+KMONS: M = 8
+SUBST: 0 = .009
+MAP
+.....xLM
+....0x**
+..n++x++
+.0n.0+.0
+.0n.0+.0
+..n++x++
+....0x**
+.....xLM
+ENDMAP
+
+NAME:  nicolae_vaults_surprise_closet_hard
+TAGS:  vaults_hard allow_dup
+KITEM: 9 = *
+KITEM: 8 = |
+KMONS: 9 = 9
+KMONS: 8 = 8
+SUBST: 9 : 998
+MAP
+8
+ENDMAP
+
+NAME:  nicolae_vaults_tangent_ellipses
+TAGS:  vaults_hard
+KMONS: 8 = 8 band
+SUBST: * = ***|, 0 = ...0, 9 = ..9, 0 = 0009
+MAP
+.....xxxxxxxxxxxxxxx.....
+.....xx...........xx.....
+..0.0.+..0.0.0.0..+.0.0..
+......xx.........xx......
+..0.0..xxx.....xxx..0.0..
+xx.......xxx+xxx.......xx
+xx+x....xx.....xx....x+xx
+x..xx..xx...9...xx..xx..x
+x...x.xx.........xx.x...x
+x.0.xxx..9.xxx.9..xxx.0.x
+x....x....xx*xx....x....x
+x.0..x...xx*.*xx...x..0.x
+x....+.9.x*.8.*x.9.+....x
+x.0..x...xx*.*xx...x..0.x
+x....x....xx.xx....x....x
+x.0.xxx..9.x+x.9..xxx.0.x
+x...x.xx.........xx.x...x
+x..xx..xx...9...xx..xx..x
+xx+x....xx.....xx....x+xx
+xx.......xxx+xxx.......xx
+..0.0..xxx.....xxx..0.0..
+......xx.........xx......
+..0.0.+..0.0.0.0..+.0.0..
+.....xx...........xx.....
+.....xxxxxxxxxxxxxxx.....
+ENDMAP
+
+NAME:   nicolae_vaults_thirteen_compartments
+TAGS:   vaults_hard
+NSUBST: D = + / x, E = + / x, F = + / x, H = + / x, \
+        p = p / x, q = q / x, r = r / x, s = s / x, \
+        Jp = + / x, Kp = + / x, Lq = + / x, Mq = + / x, \
+        Nr = + / x, Or = + / x, Ps = + / x, Qs = + / x, - = + / x
+SUBST:  9 = 999., 0 = ...%0009, 9 = 99998, * = ***|
+MAP
+.................
+.................
+..xDDxJJxKKxEEx..
+..D..J..p..K..E..
+..D.0J.0p0.K0.E..
+..xQQx--x--xLLx..
+..Q..-.....-..L..
+..Q.0-.9*9.-0.L..
+..xssx.*x*.xqqx..
+..P.0-.9*9.-0.M..
+..P..-.....-..M..
+..xPPx--x--xMMx..
+..H.0O.0r0.N0.F..
+..H..O..r..N..F..
+..xHHxOOxNNxFFF..
+.................
+.................
+ENDMAP
+
+NAME:  nicolae_vaults_whirlpool_walls
+TAGS:  vaults_hard
+KITEM: L = * w:15 / | w:5
+KMONS: 0 = 0 band
+KMONS: L = 9 w:15 / 8 w:5
+SUBST: ( = .(0
+MAP
+.............
+...xxx..(....
+..x...x...x..
+....(..x...x.
+.(.....x.(.x.
+...xxxLx...x.
+..x..LxL..x..
+.x...xLxxx...
+.x.(.x.....(.
+.x...x..(....
+..x...x...x..
+....(..xxx...
+.............
+ENDMAP
+
+###############################################################################
+#
+# <<2>> Themed threat vaults.
+#
+###############################################################################
+
+NAME:    abrahamwl_protected_by_tso_1
+TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
+TAGS:    vaults_hard vaults_orient_e
+WEIGHT:  4
+KMONS:   1A = generate_awake angel / generate_awake daeva
+KFEAT:   A = altar_the_shining_one
+FTILE:   _1 = floor_limestone
+: init_protected_by_tso(_G)
+MAP
+ xxxxx
+ xcccx xxxxxxxxxxxxxx
+ xc|cxxxxcccccccccccx
+ xc_cxxxxc_........cx
+ xc_cxxxxc_........cxx.
+ xc_ccccxc_.G...G..cxx.
+xxc+ccGccc.........cxx.
+xcc__....+.........-xx.
+xc1__....+....A....-!+.
+xcc__....+.........-xx.
+xxc+ccGccc.........cxx.
+ xc_ccccxc_.G...G..cxx.
+ xc_cxxxxc_........cxx.
+ xc_cxxxxc_........cx
+ xc|cxxxxcccccccccccx
+ xcccx xxxxxxxxxxxxxx
+ xxxxx
+ENDMAP
+
+NAME:    abrahamwl_protected_by_tso_2
+TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
+TAGS:    vaults_hard vaults_orient_e
+WEIGHT:  4
+KMONS:   1A = generate_awake angel / generate_awake daeva
+SUBST:   T : T G:1
+SHUFFLE: %|
+COLOUR:  _ = yellow
+FTILE:   _A = floor_limestone
+: init_protected_by_tso(_G)
+MAP
+ xxxxx
+ xcccxxx
+xxc|cxcxxxxxxxxxxxx
+xcc+ccccccccccccccx
+xc_Wxxxx.........cx
+xc_wWxxx.........cxx
+xc_wwWxx..G.T.G..cxx
+xc_wwWxx.........cxx
+xc_www.+.........-xx.
+xcA____+....1....-!+.
+xc_www.+.........-xx.
+xc_wwWxx.........cxx
+xc_wwWxx..G.T.G..cxx
+xc_wWxxx.........cxx
+xc_Wxxxx.........cx
+xcc+ccccccccccccccx
+xxc%cxcxxxxxxxxxxxx
+ xcccxxx
+ xxxxx
+ENDMAP
+
+NAME:    abrahamwl_protected_by_tso_3
+TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
+TAGS:    vaults_hard vaults_orient_e
+WEIGHT:  4
+KMONS:   1A = generate_awake angel / generate_awake daeva
+SHUFFLE: |%
+SUBST:   T : T F:1
+COLOUR:  _ = yellow
+FTILE:   _A = floor_limestone
+MARKER:  F = lua:fog_machine { cloud_type = "blessed fire", \
+                pow_min = 10, pow_max = 10, delay = 10, \
+                size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+: init_protected_by_tso(_G)
+MAP
+     xxxxx
+    xxcccx
+  xxxxc%cxxxxxxxxxxxx
+ xxcccc+ccccccccccccx
+xxxcWWWWWx.........cx
+xxxcW.T.Tx.........cxx
+xxxcW....x..G...G..cxx.
+xxxcW_...x.........cxx.
+xcccT____+.........-xx.
+xc|+A____+....1....-!+.
+xcccT____+.........-xx.
+xxxcW_...x.........cxx.
+xxxcW....x..G...G..cxx.
+xxxcW.T.Tx.........cxx
+xxxcWWWWWx.........cx
+ xxcccc+ccccccccccccx
+  xxxxc*cxxxxxxxxxxxx
+    xxcccx
+     xxxxx
+ENDMAP
+
+NAME:   wander_protected_by_tso
+TAGS:   patrolling no_monster_gen no_item_gen vaults_hard vaults_orient_e
+WEIGHT: 4
+KMONS:  1A = generate_awake angel / generate_awake daeva
+COLOUR: _ : yellow
+FTILE:  _|%AU = floor_limestone
+: init_protected_by_tso(_G)
+MAP
+ xxxxxxxxxxxxxxxxx
+xxcccccccccccccccxxxx
+xcc.%.ccG..G..G.cccxx
+xc.U_U...........-cx.
+xc|_A___.....1...-!+.
+xc.U_U...........-cx.
+xcc.%.ccG..G..G.cccxx
+xxcccccxcccccccccxxxx
+ xxxxxxxxxxxxxxxxx
+ENDMAP
+
+####
+
+NAME:   dpeg_vaults_hating_casters
+TAGS:   vaults_hard
+MONS:   ghost moth
+SUBST:  % = %%%$* , * = **|
+NSUBST: . = 6:0 / *:.
+SUBST:  0 = 00009, 8 = 889
+SUBST:  _ : x. , + : +==
+NSUBST: = = 1:+ / *=+x
+KPROP:  1 = no_tele_into
+MAP
+    @@@
+xxxx+++xxxx
+x%%.....%%x
+x%..000..%x
+x_..mmm.._x
+x_..m1m.._x
+x_..mmm.._x
+x...***...x
+x8.......8x
+xxxxxxxxxxx
+ENDMAP
+
+NAME:   kennysheep_ogre_elephant_herders
+TAGS:   no_monster_gen no_trap_gen vaults_hard orient_s
+DEPTH:  Vaults, !Vaults:$
+MONS:   ogre mage, ironbound thunderhulk, dire elephant
+KMONS:  B = bush
+SUBST:  * = **%
+NSUBST: 1 = 1:1 / 1:1. / 1:2 / 1:2. / *:., 3 = 2:3 / 3 = 3. / .
+MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
+                              pow_max = 100, delay = 10, size = 1, \
+                              walk_dist = 0, excl_rad = 0 }
+MAP
+  xxxxxx
+  xBxxBx  xxxxxx
+  xB.33xxxx.1**x
+  x.3.3.3.B1.1*x
+  xB.3B.3...1.1x
+xxx.3..3.....1.x
+xB...33........x
+x.......I..I...x
+xxB...I......I.x
+ xxxx....FF....x
+    x....FF....x
+    x.I......I.x
+    x...I..I...x
+     ...........
+ENDMAP
+
+NAME:  nicolae_vaults_library_corner
+TAGS:  vaults_hard vaults_orient_e vaults_orient_s
+# The deep elf librarian is doing some reshelving. There might be a second
+# (or even third) librarian hanging out in the reading nooks. And of course,
+# some ironbound vault security.
+KITEM: L = any manual, any book good_item / any scroll good_item / nothing, \
+           any book / any scroll / nothing
+KITEM: RN = any book good_item / any scroll good_item
+KMONS: LN = deep elf annihilator / deep elf sorcerer / deep elf high priest / \
+           deep elf death mage / deep elf demonologist
+KMONS: R = arcanist / necromancer / lich / ogre mage / deep troll earth mage
+KMONS: S = vault sentinel / vault warden / ironbound preserver / \
+           ironbound convoker
+SUBST: R = R:80 N, S = SSS.
+TILE:  c = wall_studio
+MAP
+cRcRcRc
+R.....c
+c.....c
+R..LcS.
+c..cn..
+R..S...
+ccc....
+ENDMAP
+
+NAME:   nicolae_vaults_loss_of_containment
+TAGS:   vaults_hard
+KMONS:  S = glowing shapeshifter
+NSUBST: ' = . / xxx., S = 3=S / S..
+SUBST:  - = x.
+MAP
+...........
+.---.S.---.
+.-S..-..S-.
+.-.'''''.-.
+...'...'...
+.S-'.S.'-S.
+...'...'...
+.-.'''''.-.
+.-S..-..S-.
+.---.S.---.
+...........
+ENDMAP
+
+NAME:    nicolae_vaults_oozy_zoo
+TAGS:    vaults_hard
+KITEM:   O = * / | w:3
+KMONS:   O = slime creature w:40 / glowing orange brain / great orb of eyes / \
+             large slime creature / very large slime creature w:5 / \
+             quicksilver ooze w:5
+KMASK:   O = no_trap_gen
+KPROP:   O = no_tele_into
+SHUFFLE: xn
+NSUBST:  n = 1== / n
+MAP
+.........
+.........
+..xnxnx..
+..nOOOn..
+..xOOOx..
+..nOOOn..
+..xnxnx..
+.........
+.........
+ENDMAP
+
+NAME:   nicolae_vaults_stand_back
+TAGS:   vaults_hard
+KITEM:  EH = * w:15 / | w:5
+KMONS:  E = patrolling eidolon
+KMONS:  F = patrolling ironbound frostheart
+KMONS:  H = patrolling ironbound thunderhulk
+NSUBST: F = 2=F / 0
+MAP
+x..........x
+............
+..x......x..
+............
+....x.Fx....
+....FEH.....
+.....HEF....
+....xF.x....
+............
+..x......x..
+............
+x..........x
+ENDMAP
+
+NAME:  nicolae_vaults_you_can_take_it_with_you
+TAGS:  vaults_hard vaults_orient_w
+KMONS: L = patrolling dread lich / patrolling ancient lich
+KMONS: P = necromancer / hell knight / phantasmal warrior / lich / \
+           shadow wraith / freezing wraith / flayed ghost / eidolon
+SUBST: p = P.., * = **|
+MAP
+....n...n**|.
+.p..n.p.n**P.
+..x+x...xxx..
+xxx...x..px+x
+xp....n......
+x..p..n..P.L.
+xp....n......
+xxx...x..px+x
+..x+x...xxx..
+.p..n.p.n**P.
+....n...n**|.
 ENDMAP

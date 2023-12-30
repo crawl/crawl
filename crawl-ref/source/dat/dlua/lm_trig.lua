@@ -18,41 +18,41 @@
 -- A triggerable class just needs to subclass Triggerable and define an
 -- "on_trigger" method.
 --
--- If a triggerable marker has the property "master_name" with the value
+-- If a triggerable marker has the property "primary_name" with the value
 -- "FOO", then when triggered on_trigger() will be called at each marker
--- on the level which has the property "slaved_to" equal to "FOO". A
--- master marker can be slaved to itself to cause on_trigger() to be called
--- at its location. If the master marker has the property
--- "single_random_slave" set to anything but the empty string ("") then
--- on each triggering only a single, randomly chosen slave will have
+-- on the level which has the property "replica_to" equal to "FOO". A
+-- primary marker can replica to itself to cause on_trigger() to be called
+-- at its location. If the primary marker has the property
+-- "single_random_replica" set to anything but the empty string ("") then
+-- on each triggering only a single, randomly chosen replica will have
 -- on_trigger() called.
 --
--- Ordinarily, a master marker which listens to position-dependent events will
--- only be triggered by events which happen at the master's position. To make
--- the master marker also listen to events which happen at the locations of the
--- slave markers, set the property "listen_to_slaves" to anything but the empty
--- string true. This will cause all of the slave markers to be triggered
--- whenever any of the slave markers are triggered. To only trigger the slave
--- where the event happened, also set the property "only_at_slave" to anything
--- but the empty string.
+-- Ordinarily, a primary marker which listens to position-dependent events will
+-- only be triggered by events which happen at the primary's position. To make
+-- the primary marker also listen to events which happen at the locations of the
+-- replica markers, set the property "listen_to_replicas" to anything but the
+-- empty string true. This will cause all of the replica markers to be triggered
+-- whenever any of the replica markers are triggered. To only trigger the
+-- replica where the event happened, also set the property "only_at_replica" to
+-- anything but the empty string.
 --
--- on_trigger() shouldn't have to worry about the master/slave business,
+-- on_trigger() shouldn't have to worry about the primary/replica business,
 -- and should have the same code regardless of whether or not it's a
--- master or just a plain triggerable. If on_trigger() calls
--- self:remove() while it's acting on a slave marker then the slave marker
--- will be removed, and if called on the master while the master is slaved
--- to itself it will stop acting as a slave, with the master marker being
--- automatically removed when all slaves are gone.
+-- primary or just a plain triggerable. If on_trigger() calls
+-- self:remove() while it's acting on a replica marker then the replica marker
+-- will be removed, and if called on the primary while the primary is a replica
+-- to itself it will stop acting as a replica, with the primary marker being
+-- automatically removed when all replicas are gone.
 ------------------------------------------------------------------------------
 
--- XXX: Listeners and the whole master/slave business could be more
+-- XXX: Listeners and the whole primary/replica business could be more
 -- generally and more flexibly done by implementing a framework for
 -- Lua defined/fired events, making Triggerable fire a Lua event every
 -- time it's triggered, and then registering listeners for those Lua
 -- events. However, we don't need that much flexibility yet, so it's
 -- all handled inside of the Triggerable class.
 
-crawl_require('dlua/lm_mslav.lua')
+crawl_require('dlua/lm_replica.lua')
 
 Triggerable = { CLASS = "Triggerable" }
 Triggerable.__index = Triggerable
@@ -159,7 +159,7 @@ function Triggerable:remove(marker)
     return
   end
 
-  if self.calling_slaves then
+  if self.calling_replicas then
     self.want_remove = true
     return
   end
@@ -198,26 +198,26 @@ function Triggerable:activate(marker)
 
   self.activating = true
 
-  -- NOTE: The master marker can be slaved to itself.
-  local listen_to_slaves = self:property(marker, "listen_to_slaves")
-  local master_name      = self:property(marker, "master_name")
+  -- NOTE: The primary marker can be a replica to itself.
+  local listen_to_replicas = self:property(marker, "listen_to_replicas")
+  local primary_name       = self:property(marker, "primary_name")
 
-  local slaves
-  if listen_to_slaves ~= "" and master_name ~= ""  then
-    slaves = dgn.find_markers_by_prop("slaved_to", master_name)
-    if #slaves == 0 then
-      error("Triggerable has no slaves to listen to")
+  local replicas
+  if listen_to_replicas ~= "" and primary_name ~= ""  then
+    replicas = dgn.find_markers_by_prop("replica_to", primary_name)
+    if #replicas == 0 then
+      error("Triggerable has no replicas to listen to")
     end
   else
-    slaves = { marker }
+    replicas = { marker }
   end
 
   for _, trig in ipairs(self.triggerers) do
     local et = dgn.dgn_event_type(trig.type)
 
     if (dgn.dgn_event_is_position(et)) then
-      for _, slave_marker in ipairs(slaves) do
-        trig:activate(self, marker, slave_marker:pos())
+      for _, replica_marker in ipairs(replicas) do
+        trig:activate(self, marker, replica_marker:pos())
       end
     else
       trig:activate(self, marker)
@@ -258,75 +258,75 @@ function Triggerable:do_trigger(triggerer, marker, ev)
     return
   end
 
-  local master_name = self:property(marker, "master_name")
+  local primary_name = self:property(marker, "primary_name")
 
-  if master_name == "" then
+  if primary_name == "" then
     self:on_trigger(triggerer, marker, ev)
     return
   end
 
-  -- NOTE: The master marker can be slaved to itself.
-  local slaves
+  -- NOTE: The primary marker can be a replica to itself.
+  local replicas
 
-  if self:property(marker, "only_at_slave") ~= '' then
-    local slave_marker = dgn.marker_at_pos(ev:pos())
-    if not slave_marker then
-      error("No slave marker at event position")
+  if self:property(marker, "only_at_replica") ~= '' then
+    local replica_marker = dgn.marker_at_pos(ev:pos())
+    if not replica_marker then
+      error("No replica marker at event position")
     end
 
-    slaves = { slave_marker }
+    replicas = { replica_marker }
   else
-    slaves = dgn.find_markers_by_prop("slaved_to", master_name)
+    replicas = dgn.find_markers_by_prop("replica_to", primary_name)
   end
 
-  -- If all slaves are gone, we're done.
-  if #slaves == 0 then
+  -- If all replicas are gone, we're done.
+  if #replicas == 0 then
     self:remove(marker)
     return
   end
 
-  local master_pos = dgn.point(marker:pos())
-  local num_slaves = #slaves
+  local primary_pos = dgn.point(marker:pos())
+  local num_replicas = #replicas
 
-  if self:property(marker, "single_random_slave") ~= '' then
-    slaves = { slaves[ crawl.random2(#slaves) + 1 ] }
+  if self:property(marker, "single_random_replica") ~= '' then
+    replicas = { replicas[ crawl.random2(#replicas) + 1 ] }
   end
 
   local num_want_remove = 0
-  self.calling_slaves = true
-  for _, slave_marker in ipairs(slaves) do
+  self.calling_replicas = true
+  for _, replica_marker in ipairs(replicas) do
     self.want_remove = false
 
-    self:on_trigger(triggerer, slave_marker, ev)
+    self:on_trigger(triggerer, replica_marker, ev)
 
     if self.want_remove then
       num_want_remove = num_want_remove + 1
 
-      if dgn.point(slave_marker:pos()) == master_pos then
-        -- The master marker shouldn't be removed until the end, so
-        -- simply stop being slaved to itself.
-        self.props.slaved_to = nil
-        if self:property("listen_to_slaves") ~= "" then
+      if dgn.point(replica_marker:pos()) == primary_pos then
+        -- The primary marker shouldn't be removed until the end, so
+        -- simply stop being a replica to itself.
+        self.props.replica_to = nil
+        if self:property("listen_to_replicas") ~= "" then
           local et = dgn.dgn_event_type(triggerer.type)
 
           if (dgn.dgn_event_is_position(et)) then
-            triggerer:remove(self, slave_marker)
+            triggerer:remove(self, replica_marker)
           end
         end
       else
-        triggerer:remove(self, slave_marker)
-        dgn.remove_marker(slave_marker)
+        triggerer:remove(self, replica_marker)
+        dgn.remove_marker(replica_marker)
       end
     end
   end
-  self.calling_slaves = false
+  self.calling_replicas = false
 
-  if num_want_remove >= num_slaves then
+  if num_want_remove >= num_replicas then
     -- Make sure they're really all gone.
-    slaves =
-      dgn.find_markers_by_prop("slaved_to", master_name)
+    replicas =
+      dgn.find_markers_by_prop("replica_to", primary_name)
 
-    if #slaves == 0 then
+    if #replicas == 0 then
       self:remove(marker)
     end
   end
@@ -370,37 +370,37 @@ end
 
 --------------------------
 
--- Convenience functions, similar to the lmark ones in lm_mslav.lua
+-- Convenience functions, similar to the lmark ones in lm_replica.lua
 
-Triggerable.slave_cookie = 0
+Triggerable.replica_cookie = 0
 
-function Triggerable.next_slave_id()
-  local slave_id = "marker_slave" .. Triggerable.slave_cookie
-  Triggerable.slave_cookie = Triggerable.slave_cookie + 1
-  return slave_id
+function Triggerable.next_replica_id()
+  local replica_id = "marker_replica" .. Triggerable.replica_cookie
+  Triggerable.replica_cookie = Triggerable.replica_cookie + 1
+  return replica_id
 end
 
-function Triggerable.make_master(lmarker, slave_id)
-  -- NOTE: The master marker is slaved to itself.
-  lmarker:set_property("master_name", slave_id)
-  lmarker:set_property("slaved_to",   slave_id)
+function Triggerable.make_primary(lmarker, replica_id)
+  -- NOTE: The primary marker is a replica to itself.
+  lmarker:set_property("primary_name", replica_id)
+  lmarker:set_property("replica_to",   replica_id)
 
   return lmarker
 end
 
-function Triggerable.make_slave(slave_id)
-  return props_marker { slaved_to = slave_id }
+function Triggerable.make_replica(replica_id)
+  return props_marker { replica_to = replica_id }
 end
 
-function Triggerable.synchronized_markers(master)
+function Triggerable.synchronized_markers(primary)
   local first = true
-  local slave_id = lmark.next_slave_id()
+  local replica_id = lmark.next_replica_id()
   return function ()
            if first then
              first = false
-             return Triggerable.make_master(master, slave_id)
+             return Triggerable.make_primary(primary, replica_id)
            else
-             return Triggerable.make_slave(slave_id)
+             return Triggerable.make_replica(replica_id)
            end
          end
 end
@@ -552,7 +552,7 @@ end
 --
 -- * monster_dies: Waits for a monster to die. Needs the parameter
 --       "target", who's value is the name of the monster who's death
---       we're wating for, or "any" for any monster. Doesn't matter where
+--       we're waiting for, or "any" for any monster. Doesn't matter where
 --       the triggerable/marker is placed.
 --
 -- * feat_change: Waits for a cell's feature to change. Accepts the

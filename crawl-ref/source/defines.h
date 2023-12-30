@@ -234,6 +234,7 @@ typedef uint8_t colour_t;
 
 #define COLFLAG_FRIENDLY_MONSTER         0x0100
 #define COLFLAG_NEUTRAL_MONSTER          0x0200
+#define COLFLAG_UNUSUAL_MASK             0x0300
 #define COLFLAG_WILLSTAB                 0x0400
 #define COLFLAG_MAYSTAB                  0x0800
 #define COLFLAG_ITEM_HEAP                0x1000
@@ -306,7 +307,11 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define SPECTRAL_WEAPON_KEY "spectral_weapon"
 #define FAKE_MON_KEY "fake"
 #define MMOV_KEY "mmov"
-#define MON_FOE_KEY "foe"
+#define BATTLESPHERE_KEY "battlesphere"
+#define BATTLESPHERE_FOE_KEY "bs_foe"
+#define BATTLESPHERE_IS_FIRING_KEY "bs_firing"
+#define BATTLESPHERE_IS_TRACKING_KEY "bs_tracking"
+#define TRACKING_TARGET_KEY "tracking_target"
 #define FOE_APPROACHING_KEY "foe_approaching"
 #define FAUX_PAS_KEY "foe_pos"
 #define SWOOP_COOLDOWN_KEY "swoop_cooldown"
@@ -316,8 +321,6 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define INWARDS_KEY "inwards"
 #define BASE_POSITION_KEY "base_position"
 #define SUMMON_ID_KEY "summon_id"
-#define TRACKING_TARGET_KEY "tracking_target"
-#define BATTLESPHERE_KEY "battlesphere"
 #define FLAY_BLOOD_KEY "flay_blood"
 #define IDEAL_RANGE_KEY "ideal_range"
 #define LAST_POS_KEY "last_pos"
@@ -334,17 +337,23 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define KIRKE_BAND_KEY "kirke_band"
 #define CHARMED_DEMON_KEY "charmed_demon"
 #define EMERGENCY_CLONE_KEY "emergency_clone"
+#define BINDING_SIGIL_DURATION_KEY "binding_sigil_duration"
+#define BULLSEYE_TARGET_KEY "bullseye_target"
+#define BOULDER_DIRECTION_KEY "boulder_direction"
+#define BOULDER_POWER_KEY "boulder_power"
+#define PROTEAN_TARGET_KEY "protean_target"
+#define PASSWALL_ARMOUR_KEY "passwall_armour"
 
 #define HELPLESS_KEY "helpless"
 #define POISONER_KEY "poisoner"
 #define POISON_AUX_KEY "poison_aux"
 #define STICKY_FLAMER_KEY "sticky_flame_source"
 #define STICKY_FLAME_AUX_KEY "sticky_flame_aux"
+#define STICKY_FLAME_POWER_KEY "sticky_flame_pow"
 #define WATER_HOLDER_KEY "water_holder"
 #define WATER_HOLD_SUBSTANCE_KEY "water_hold_substance"
 #define CORROSION_KEY "corrosion_amount"
 #define CONFUSING_TOUCH_KEY "confusing touch power"
-#define CFLAME_DUR_KEY "cflame_dur"
 #define NUM_SACRIFICES_KEY "num_sacrifice_muts"
 #define FLAY_DAMAGE_KEY "flay_damage"
 #define POLAR_VORTEX_KEY "polar_vortex_since"

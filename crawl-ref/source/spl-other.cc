@@ -23,6 +23,7 @@
 #include "religion.h"
 #include "spl-util.h"
 #include "terrain.h"
+#include "timed-effects.h"
 
 spret cast_sublimation_of_blood(int pow, bool fail)
 {
@@ -73,7 +74,8 @@ spret cast_death_channel(int pow, god_type god, bool fail)
     fail_check();
     mpr("Malign forces permeate your being, awaiting release.");
 
-    you.increase_duration(DUR_DEATH_CHANNEL, 30 + random2(1 + 2*pow/3), 200);
+    you.increase_duration(DUR_DEATH_CHANNEL,
+                          30 + random2(1 + div_rand_round(2 * pow, 3)), 200);
 
     if (god != GOD_NO_GOD)
         you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = static_cast<int>(god);
@@ -94,7 +96,7 @@ static bool _dismiss_dead()
             || !mon.friendly()
             || mon.type != MONS_ZOMBIE
             || mon.is_summoned()
-            || is_yred_undead_slave(mon))
+            || is_yred_undead_follower(mon))
         {
             continue;
         }
@@ -200,32 +202,27 @@ bool try_recall(mid_t mid)
     // Either it's dead or off-level.
     if (!mons)
         return recall_offlevel_ally(mid);
-    else if (mons->alive())
+    if (!mons->alive())
+        return false;
+    // Don't recall monsters that are already close to the player
+    if (mons->pos().distance_from(you.pos()) < 3
+        && mons->see_cell_no_trans(you.pos()))
     {
-        // Don't recall monsters that are already close to the player
-        if (mons->pos().distance_from(you.pos()) < 3
-            && mons->see_cell_no_trans(you.pos()))
-        {
-            recall_orders(mons);
-            return false;
-        }
-        else
-        {
-            coord_def empty;
-            if (find_habitable_spot_near(you.pos(), mons_base_type(*mons), 3, false, empty)
-                && mons->move_to_pos(empty))
-            {
-                recall_orders(mons);
-                simple_monster_message(*mons, " is recalled.");
-                mons->apply_location_effects(mons->pos());
-                // mons may have been killed, shafted, etc,
-                // but they were still recalled!
-                return true;
-            }
-        }
+        recall_orders(mons);
+        return false;
     }
-
-    return false;
+    coord_def empty;
+    if (!find_habitable_spot_near(you.pos(), mons->type, 3, false, empty)
+        || !mons->move_to_pos(empty))
+    {
+        return false;
+    }
+    recall_orders(mons);
+    simple_monster_message(*mons, " is recalled.");
+    mons->apply_location_effects(mons->pos());
+    // mons may have been killed, shafted, etc,
+    // but they were still recalled!
+    return true;
 }
 
 // Attempt to recall a number of allies proportional to how much time
@@ -454,6 +451,11 @@ spret cast_passwall(const coord_def& c, int pow, bool fail)
     else if (p.check_moveto())
     {
         start_delay<PasswallDelay>(p.actual_walls() + 1, p.actual_dest);
+
+        // Give bonus AC while moving through the wall.
+        you.props[PASSWALL_ARMOUR_KEY].get_int() = 5 + div_rand_round(pow, 10);
+        you.redraw_armour_class = true;
+
         return spret::success;
     }
 
@@ -490,7 +492,7 @@ static int _intoxicate_monsters(coord_def where, int pow, bool tracer)
     if (!tracer && monster_resists_this_poison(*mons))
         return 0;
 
-    if (!tracer && x_chance_in_y(40 + pow/3, 100))
+    if (!tracer && x_chance_in_y(40 + div_rand_round(pow, 3), 100))
     {
         mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you));
         simple_monster_message(*mons, " looks rather confused.");
@@ -526,4 +528,142 @@ spret cast_intoxicate(int pow, bool fail, bool tracer)
     }
 
     return spret::success;
+}
+
+vector<coord_def> find_sigil_locations(bool tracer)
+{
+    vector<coord_def> positions;
+    for (radius_iterator ri(you.pos(), 2, C_SQUARE); ri; ++ri)
+    {
+        if (you.see_cell(*ri) && env.grid(*ri) == DNGN_FLOOR
+            && (!actor_at(*ri) || (actor_at(*ri) && tracer
+                                   && !you.can_see(*actor_at(*ri)))))
+        {
+            positions.push_back(*ri);
+        }
+    }
+
+    return positions;
+}
+
+spret cast_sigil_of_binding(int pow, bool fail, bool tracer)
+{
+    // Fill list of viable locations to create the sigil (keeping separate lists
+    // for distance 1 and 2)
+    vector<coord_def> positions = find_sigil_locations(tracer);
+    vector<coord_def> sigil_pos_d1;
+    vector<coord_def> sigil_pos_d2;
+    for (auto p : positions)
+    {
+        if (grid_distance(you.pos(), p) == 1)
+            sigil_pos_d1.push_back(p);
+        else
+            sigil_pos_d2.push_back(p);
+    }
+
+    // If the player knows there are no valid places for a sigil, abort. But if
+    // invisible monsters are standing on the only valid locations, we will need
+    // to simply fail at cast time.
+    bool success = !(sigil_pos_d1.empty() && sigil_pos_d2.empty());
+    if (tracer)
+        return success ? spret::success : spret::abort;
+
+    fail_check();
+    if (!success)
+    {
+        mpr("There was nowhere nearby to inscribe sigils!");
+        return spret::success;
+    }
+
+    // Remove any old sigil that may still be active.
+    timeout_binding_sigils();
+
+    int dur = BASELINE_DELAY * random_range(5 + div_rand_round(pow, 4),
+                                            8 + div_rand_round(pow, 2));
+    // Now select a random spot for each range and put the sigil there -
+    // attempting to favor placing the sigils in two positions that are
+    // non-adjacent.
+    shuffle_array(sigil_pos_d1);
+    shuffle_array(sigil_pos_d2);
+
+    if (!sigil_pos_d1.empty())
+    {
+        temp_change_terrain(sigil_pos_d1[0], DNGN_BINDING_SIGIL, dur,
+                            TERRAIN_CHANGE_BINDING_SIGIL, you.mid);
+    }
+
+    if (!sigil_pos_d2.empty())
+    {
+        // If this is in fact the second sigil, try to place it non-adjacent to
+        // the first one.
+        bool non_adj = false;
+        if (!sigil_pos_d1.empty())
+        {
+            for (unsigned int i = 0; i < sigil_pos_d2.size(); ++i)
+            {
+                // Skip adjacent grids on first pass
+                if (grid_distance(sigil_pos_d1[0], sigil_pos_d2[i]) <= 1)
+                    continue;
+
+                temp_change_terrain(sigil_pos_d2[i], DNGN_BINDING_SIGIL, dur,
+                                    TERRAIN_CHANGE_BINDING_SIGIL, you.mid);
+                non_adj = true;
+                break;
+            }
+        }
+
+        // If we couldn't find a non-adjacent position to put the second sigil,
+        // or if this is the only sigil, just take any viable space instead.
+        if (!non_adj)
+        {
+            temp_change_terrain(sigil_pos_d2[0], DNGN_BINDING_SIGIL, dur,
+                                TERRAIN_CHANGE_BINDING_SIGIL, you.mid);
+        }
+    }
+
+    if (!sigil_pos_d1.empty() && !sigil_pos_d2.empty())
+        mpr("You inscribe a pair of binding sigils.");
+    else
+        mpr("You inscribe a binding sigil.");
+
+    return spret::success;
+}
+
+void trigger_binding_sigil(actor& actor)
+{
+    if (actor.is_player())
+    {
+        mprf(MSGCH_WARN, "You move over your own binding sigil and are bound in place!");
+        you.increase_duration(DUR_NO_MOMENTUM, random_range(3, 6));
+        revert_terrain_change(you.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
+    }
+    else
+    {
+        monster* m = actor.as_monster();
+        if (m->has_ench(ENCH_SWIFT))
+        {
+            simple_monster_message(*m,
+                " has too much momentum for your sigil to bind in place!");
+        }
+        else
+        {
+            int pow = calc_spell_power(SPELL_SIGIL_OF_BINDING);
+            int dur = max(2, random_range(4 + div_rand_round(pow, 12),
+                                          7 + div_rand_round(pow, 8))
+                          - div_rand_round(m->get_hit_dice(), 4))
+                        * BASELINE_DELAY;
+
+            if (m->add_ench(mon_enchant(ENCH_BOUND, 0, &you, dur)))
+            {
+                simple_monster_message(*m,
+                    " moves over your binding sigil and is bound in place!",
+                    MSGCH_FRIEND_SPELL);
+
+                // The enemy will gain swift for twice as long as it was bound
+                m->props[BINDING_SIGIL_DURATION_KEY] = dur * 2;
+            }
+
+            revert_terrain_change(actor.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
+        }
+    }
 }

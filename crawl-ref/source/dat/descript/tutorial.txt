@@ -6,6 +6,16 @@ You can reread all messages at any time with
 <localtiles> or <input>left click</input> with mouse</localtiles> to clear the
 <cyan>--more--</cyan> prompts.
 %%%%
+tutorial death
+
+You die...
+
+In Crawl, death is a sad but common occurrence. Note that there's usually
+something you could have done to survive, for example by using some kind of
+item, running away, resting between fights, or by avoiding combat entirely.
+Keep trying, eventually you'll prevail!
+
+%%%%
 ##############################################
 # Tutorial map 1: Movement and exploration   #
 ##############################################
@@ -116,6 +126,8 @@ with <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> or by
 tutorial1 exit
 
 :nowrap
+<white>Tutorial 1 summary: Movement</white>
+
 <yellow>Movement commands</yellow>
    Numpad:       <w>7 8 9</w>           vi-keys:    <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
                   \|/                         \|/
@@ -131,16 +143,13 @@ tutorial1 exit
   <input>$cmd[CMD_GO_DOWNSTAIRS]</input>  enter the next level
   <input>$cmd[CMD_DISPLAY_MAP]></input>/<input>$cmd[CMD_DISPLAY_MAP]<<</input> travel to the nearest up/downstairs
 
-<yellow>Doors</yellow>
-  can be opened by walking into them
+<yellow>Doors</yellow> can be opened by walking into them
   <input>$cmd[CMD_CLOSE_DOOR]</input>  close an open door
 
 <yellow>Travel</yellow><localtiles>
   mouseclick on the <w>minimap</w></localtiles><nomouse>
   <input>$cmd[CMD_DISPLAY_MAP]</input>  enter the level map, travel with <input>Enter</input></nomouse>
   <input>$cmd[CMD_EXPLORE]</input>  autoexplore
-
-                                 <cyan>Press <input>any key</input> to clear this screen...</cyan>
 %%%%
 ##############################################
 # Tutorial map 2: Monsters and combat        #
@@ -155,7 +164,7 @@ tutorial2 pickup_weapon
 Pick up this weapon<localtiles> by clicking on it in the inventory panel, and
 then wield it by clicking on it again. Alternatively, pick it up</localtiles>
 with <input>$cmd[CMD_PICKUP]</input> or <input>g</input> and then wield it with
-<input>$cmd[CMD_WIELD_WEAPON]</input>.
+<input>$cmd[CMD_EQUIP]</input>.
 %%%%
 tutorial2 melee
 
@@ -218,7 +227,7 @@ this and fire at the closest monster with <input>shift-tab</input> or <input>p</
 %%%%
 tutorial2 wield_bow
 
-Pick up this shortbow and wield it with <input>$cmd[CMD_WIELD_WEAPON]</input>
+Pick up this shortbow and wield it with <input>$cmd[CMD_EQUIP]</input>
 <localtiles> or by <input>mouseclick</input></localtiles>.
 %%%%
 tutorial2 firing
@@ -249,9 +258,11 @@ tutorial, simply go down these stairs.
 tutorial2 exit
 
 :nowrap
+<white>Tutorial 2 summary: Combat</white>
+
 <yellow>Weapons<console> <cyan>)</cyan></console></yellow>
   <input>$cmd[CMD_PICKUP]</input>  pick up an item
-  <input>$cmd[CMD_WIELD_WEAPON]</input>  wield a weapon<localtiles>
+  <input>$cmd[CMD_EQUIP]</input>  equip an item<localtiles>
   You can also do this by <input>clicking</input> on the weapon in your inventory.</localtiles>
   <input>$cmd[CMD_QUIVER_ITEM]</input>  adjust your quiver
 
@@ -269,8 +280,6 @@ tutorial2 exit
 <yellow>Resting</yellow>
   <input>$cmd[CMD_WAIT]</input>  wait and rest a single turn
   <input>$cmd[CMD_REST]</input>  wait and rest up to 100 turns
-
-                                 <cyan>Press <input>any key</input> to clear this screen...</cyan>
 %%%%
 #######################################
 # Tutorial map 3: Items and Inventory #
@@ -282,8 +291,8 @@ In this lesson you're going to learn about items and how to use them.
 tutorial3 armour
 
 Pick up these boots with <input>$cmd[CMD_PICKUP]</input> and wear them with
-<input>$cmd[CMD_WEAR_ARMOUR]</input>.<localtiles> Or simply
-<input>mouseclick</input> on them in the inventory panel.</localtiles>
+<input>$cmd[CMD_EQUIP]</input>.<localtiles> Or simply <input>mouseclick</input>
+on them in the inventory panel.</localtiles>
 %%%%
 tutorial3 autopickup
 
@@ -360,14 +369,13 @@ desirable effects. You can quaff this potion with
 tutorial3 artefact_armour
 
 # TODO: Replace unrandart with a real randart. Needs some safeguarding against
-#       things that would throw the tutorial off rails (cursed, Cursing,
-#       mutations, activatable abilities..)
+#       things that would throw the tutorial off rails (fragile, Contam...)
 Items with <w>unusual names</w> are artefacts. Artefacts can have a number of
 special properties. Some unique artefacts (such as this cloak) are always
 identified and may have special properties that cannot be found anywhere else!
 Others are generated with a random selection of properties, and are
 unidentified until you step on top of them. Try equipping this cloak with
-<input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> or <input>mouseclick</input>
+<input>$cmd[CMD_EQUIP]</input><localtiles> or <input>mouseclick</input>
 in the inventory panel</localtiles>.
 %%%%
 tutorial3 wand_fire
@@ -385,7 +393,7 @@ types.
 %%%%
 tutorial3 amulet
 
-Jewellery is put on with <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles>
+Jewellery is put on with <input>$cmd[CMD_EQUIP]</input><localtiles>
 or with <input>mouseclick</input> in the inventory panel</localtiles>.
 %%%%
 tutorial3 drop
@@ -445,18 +453,18 @@ tutorial3 exit
 
 # A single screen recapping all commands.
 :nowrap
+<white>Tutorial 3 summary: Items</white>
+
 <yellow>Item commands</yellow>
   <input>$cmd[CMD_PICKUP]</input>  pick up an item
-  <input>$cmd[CMD_WEAR_ARMOUR]</input>  wear a piece of armour
+  <input>$cmd[CMD_DROP]</input>  drop an item
+  <input>$cmd[CMD_EQUIP]</input>  equip armour, weapons, and jewellery
+  <input>$cmd[CMD_UNEQUIP]</input>  unequip armour, weapons, and jewellery
   <input>$cmd[CMD_READ]</input>  read a scroll
-  <input>$cmd[CMD_WIELD_WEAPON]</input>  wield a weapon
   <input>$cmd[CMD_QUAFF]</input>  quaff a potion
   <input>$cmd[CMD_EVOKE]</input>  evoke a wand
-  <input>$cmd[CMD_WEAR_JEWELLERY]</input>  put on jewellery
-  <input>$cmd[CMD_REMOVE_JEWELLERY]</input>  remove jewellery
-  <input>$cmd[CMD_DROP]</input>  drop an item
-  Usage commands are also available from the inventory menu (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), as are the
-  item descriptions.<localtiles>
+
+  Use and (un)equip commands are also available from item descriptions in the inventory menu (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>).<localtiles>
   And of course, <input>mouseclicks</input> also work.</localtiles>
 
 <yellow>Other</yellow>
@@ -464,8 +472,6 @@ tutorial3 exit
   <input>$cmd[CMD_EXPLORE]</input>  explore automatically
   <input>$cmd[CMD_SEARCH_STASHES]</input> search for items/features previously seen<localtiles>
   Several of these commands can also be executed by clicking in the <w>command panel</w>.</localtiles>
-
-                                 <cyan>Press <input>any key</input> to clear this screen...</cyan>
 %%%%
 ##############################################
 # Tutorial map 4: Magic and Spellcasting     #
@@ -504,7 +510,7 @@ rest icon in the command panel</localtiles>.
 %%%%
 tutorial4 ring_power
 
-Put on this ring with <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles> or
+Put on this ring with <input>$cmd[CMD_EQUIP]</input><localtiles> or
 by <input>clicking</input> it in the inventory panel</localtiles>, and then
 rest up to your new full potential.
 %%%%
@@ -579,11 +585,11 @@ tutorial4 heavy_armour
 
 # TODO: Split taking off into separate item.
 Heavy armour really hampers spellcasting. Try putting on that mail and shield
-(with <input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> or by
+(with <input>$cmd[CMD_EQUIP]</input><localtiles> or by
 <input>clicking</input> on them</localtiles>), and compare your spellcasting
 failure rates with <input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> or by
 <input>mouseovering</input> your memorised spells</localtiles>. You can take
-armour off again with <input>$cmd[CMD_REMOVE_ARMOUR]</input><localtiles> or,
+armour off again with <input>$cmd[CMD_UNEQUIP]</input><localtiles> or,
 again, via <input>mouseclick</input></localtiles>.
 %%%%
 tutorial4 resting_reminder
@@ -606,6 +612,8 @@ tutorial4 exit
 
 # A single screen recapping all commands.
 :nowrap
+<white>Tutorial 4 summary: Magic</white>
+
 <yellow>Spellcasting commands</yellow>
   <input>$cmd[CMD_MEMORISE_SPELL]</input>  learn a new spell
   <input>$cmd[CMD_DISPLAY_SPELLS]</input>  check spell proficiency
@@ -616,9 +624,7 @@ tutorial4 exit
 
   <input>$cmd[CMD_REST]</input>  rest up to 100 turns to regain magic points and health
   <input>$cmd[CMD_SHOUT]</input>  order allies
-  <input>$cmd[CMD_REMOVE_ARMOUR]</input>  take off armour
-
-                                 <cyan>Press <input>any key</input> to clear this screen...</cyan>
+  <input>$cmd[CMD_UNEQUIP]</input>  take off equipment
 %%%%
 ##############################################
 # Tutorial map 5: Gods and divine abilities  #
@@ -689,6 +695,8 @@ tutorial5 exit
 
 # A single screen recapping all commands.
 :nowrap
+<white>Tutorial 5 summary: Religion</white>
+
 <yellow>Religious commands</yellow>
   <input>$cmd[CMD_GO_DOWNSTAIRS]</input>  pray at an altar to join a god
   <input>$cmd[CMD_USE_ABILITY]</input>  use a divine ability
@@ -702,6 +710,4 @@ tutorial5 exit
 <yellow>Other commands</yellow>
   <input>$cmd[CMD_DISPLAY_OVERMAP]</input> display an overview of the dungeon
   <input>$cmd[CMD_DISPLAY_COMMANDS]/</input>  search the description database
-
-                                 <cyan>Press <input>any key</input> to clear this screen...</cyan>
 %%%%

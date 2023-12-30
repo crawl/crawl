@@ -20,7 +20,7 @@ bool OuterMenu::focus_button_on_mouseenter = false;
 MenuButton::MenuButton()
 {
     on_hotkey_event([this](const KeyEvent& event) {
-        if (numpad_to_regular(event.key()) == hotkey)
+        if (numpad_to_regular(event.key(), true) == hotkey)
             return activate();
         return false;
     });
@@ -94,7 +94,7 @@ void MenuButton::recolour_descendants(const shared_ptr<Widget>& node)
         formatted_string new_contents;
         new_contents.textcolour(fg);
         new_contents.cprintf("%s", tw->get_text().tostring().c_str());
-        tw->set_text(move(new_contents));
+        tw->set_text(std::move(new_contents));
         tw->set_bg_colour(static_cast<COLOURS>(bg));
         return;
     }
@@ -151,7 +151,7 @@ bool MenuButton::on_event(const Event& event)
         return activate();
     else if (event.type() == Event::Type::KeyDown)
     {
-        const auto key = static_cast<const KeyEvent&>(event).key();
+        const auto key = numpad_to_regular(static_cast<const KeyEvent&>(event).key(), true);
         if (key == CK_ENTER || key == ' ')
             return activate();
     }
@@ -215,7 +215,7 @@ OuterMenu::OuterMenu(bool can_shrink, int width, int height)
     {
         auto scroller = make_shared<Scroller>();
         scroller->set_child(m_grid);
-        m_root = move(scroller);
+        m_root = std::move(scroller);
     }
     else
         m_root = m_grid;
@@ -275,7 +275,7 @@ void OuterMenu::add_label(shared_ptr<Text> label, int x, int y)
     ASSERT(y >= 0 && y < m_height);
     ASSERT(m_buttons[y*m_width + x] == nullptr);
     m_labels.emplace_back(label->get_text(), coord_def(x, y));
-    m_grid->add_child(move(label), x, y);
+    m_grid->add_child(std::move(label), x, y);
 }
 
 void OuterMenu::add_button(shared_ptr<MenuButton> btn, int x, int y)
@@ -307,13 +307,14 @@ void OuterMenu::add_button(shared_ptr<MenuButton> btn, int x, int y)
     {
         auto desc_text = make_shared<Text>(formatted_string(btn->description, WHITE));
         desc_text->set_wrap_text(true);
-        descriptions->add_child(move(desc_text));
+        descriptions->add_child(std::move(desc_text));
         m_description_indexes[y*m_width + x] = descriptions->num_children()-1;
     }
 
-    Widget *r;
+    Widget *r = nullptr;
     for (Widget *p = btn.get(); p; p = p->_get_parent())
         r = p;
+    ASSERT(r);
     m_grid->add_child(r->get_shared(), x, y);
 }
 
@@ -390,7 +391,7 @@ bool OuterMenu::scroller_event_hook(const Event& ev)
     if (ev.type() != Event::Type::KeyDown)
         return false;
 
-    const auto key = static_cast<const KeyEvent&>(ev).key();
+    const auto key = numpad_to_regular(static_cast<const KeyEvent&>(ev).key(), true);
 
     if (key == CK_DOWN || key == CK_UP || key == CK_LEFT || key == CK_RIGHT
             || key == CK_HOME || key == CK_END || key == CK_PGUP || key == CK_PGDN)

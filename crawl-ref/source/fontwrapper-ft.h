@@ -33,6 +33,7 @@ public:
     // font loading
     virtual bool load_font(const char *font_name, unsigned int font_size) override;
     virtual bool configure_font() override;
+    virtual bool resize(unsigned int size) override;
 
     // render just text
     virtual void render_textblock(unsigned int x, unsigned int y,
@@ -104,13 +105,7 @@ protected:
     struct GlyphInfo
     {
         // offset before drawing glyph; can be negative
-#ifdef __ANDROID__
-        // signed int in android port
-        int offset;
-#else
         int8_t offset;
-#endif
-
         // per-glyph horizontal advance
         int8_t advance;
         // per-glyph width

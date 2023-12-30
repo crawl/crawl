@@ -33,16 +33,18 @@
 #include "english.h"       // For apostrophise
 #include "exercise.h"      // For practise_evoking
 #include "fight.h"
+#include "fineff.h"        // For the Storm Queen's Shield
 #include "god-conduct.h"   // did_god_conduct
-#include "mgen-data.h"     // For Sceptre of Asmodeus evoke
+#include "mgen-data.h"     // For Sceptre of Asmodeus
 #include "melee-attack.h"  // For autumn katana
 #include "message.h"
 #include "monster.h"
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
-#include "mon-place.h"     // For Sceptre of Asmodeus evoke
+#include "mon-place.h"     // For Sceptre of Asmodeus
 #include "nearby-danger.h" // For Zhor
 #include "output.h"
 #include "player.h"
+#include "player-reacts.h" // For the consecrated labrys
 #include "player-stats.h"
 #include "showsymb.h"      // For Cigotuvi's Embrace
 #include "spl-cast.h"      // For evokes
@@ -226,9 +228,6 @@ static void _THROATCUTTER_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ////////////////////////////////////////////////////
 
-// XXX: Staff giving a boost to poison spells is hardcoded in
-// player_spec_poison()
-
 static void _OLGREB_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
     if (you.can_smell())
@@ -248,10 +247,10 @@ static void _OLGREB_unequip(item_def */*item*/, bool *show_msgs)
 // Based on melee_attack::staff_damage(), but using only evocations skill.
 static int _calc_olgreb_damage(actor* attacker, actor* defender)
 {
-    int base_dam = 0;
-    if (x_chance_in_y(attacker->skill(SK_EVOCATIONS, 100), 1000))
-        base_dam = random2(attacker->skill(SK_EVOCATIONS, 150) / 80);
+    if (!x_chance_in_y(attacker->skill(SK_EVOCATIONS, 100), 1000))
+        return 0;
 
+    const int base_dam = random2(attacker->skill(SK_EVOCATIONS, 150) / 80);
     return resist_adjust_damage(defender, BEAM_POISON_ARROW, base_dam);
 }
 
@@ -287,7 +286,13 @@ static void _POWER_equip(item_def * /* item */, bool *show_msgs,
 static void _POWER_melee_effects(item_def* /*weapon*/, actor* attacker,
                                  actor* defender, bool mondied, int /*dam*/)
 {
-    if (!mondied && x_chance_in_y(min(attacker->stat_hp() / 10, 27), 27))
+    if (mondied)
+        return;
+
+    const int num_beams = div_rand_round(attacker->stat_hp(), 270);
+    coord_def targ = defender->pos();
+
+    for (int i = 0; i < num_beams; i++)
     {
         bolt beam;
         beam.thrower   = attacker->is_player() ? KILL_YOU : KILL_MON;
@@ -295,10 +300,24 @@ static void _POWER_melee_effects(item_def* /*weapon*/, actor* attacker,
         beam.source_id = attacker->mid;
         beam.attitude  = attacker->temp_attitude();
         beam.range = 4;
-        beam.target = defender->pos();
+        beam.target = targ;
         zappy(ZAP_SWORD_BEAM, 100, false, beam);
         beam.fire();
     }
+}
+
+////////////////////////////////////////////////////
+
+static void _HOLY_AXE_world_reacts(item_def *item)
+{
+    const int horror_level = current_horror_level();
+    // Caps at the obsidian axe's base enchant.
+    const int plus = min(horror_level * 3 + 4, 16);
+    if (item->plus == plus)
+        return;
+
+    item->plus = plus;
+    you.wield_change = true;
 }
 
 ////////////////////////////////////////////////////
@@ -513,10 +532,32 @@ static void _GONG_melee_effects(item_def* /*item*/, actor* wearer,
 
 ///////////////////////////////////////////////////
 
+static void _STORM_QUEEN_melee_effects(item_def* /*item*/, actor* wearer,
+                                       actor* attacker, bool /*dummy*/,
+                                       int /*dam*/)
+{
+    // Discharge does 3d(4 + pow*3/2) damage, so each point of power does
+    // an average of another 9/4 points of retaliation damage (~2).
+    // Let's try 3d7 damage at 1/3 chance. This is broadly comparable to
+    // elec brand - same average damage per trigger, higher trigger chance,
+    // but checks (half) AC - and triggers on block instead of attack :)
+    if (!attacker || !one_chance_in(3)) return;
+    shock_discharge_fineff::schedule(wearer, *attacker,
+                                     wearer->pos(), 3,
+                                     "shield");
+
+}
+
+///////////////////////////////////////////////////
+
 static void _DEMON_AXE_melee_effects(item_def* /*item*/, actor* attacker,
-                                     actor* /*defender*/, bool /*mondied*/,
+                                     actor* defender, bool /*mondied*/,
                                      int /*dam*/)
 {
+    const monster* mon = defender->as_monster();
+    if (mon && (mons_is_firewood(*mon) || mons_is_conjured(mon->type)))
+        return;
+
     if (one_chance_in(10))
     {
         if (monster* mons = attacker->as_monster())
@@ -728,7 +769,7 @@ static void _DRAGONSKIN_unequip(item_def */*item*/, bool *show_msgs)
 ///////////////////////////////////////////////////
 static void _BLACK_KNIGHT_HORSE_world_reacts(item_def */*item*/)
 {
-    if (one_chance_in(10))
+    if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
         did_god_conduct(DID_EVIL, 1);
 }
 
@@ -747,25 +788,40 @@ static void _NIGHT_unequip(item_def */*item*/, bool *show_msgs)
 
 ///////////////////////////////////////////////////
 
-static void _PLUTONIUM_SWORD_melee_effects(item_def* /*weapon*/,
+static const vector<string> plutonium_player_msg = {
+};
+
+static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon,
                                            actor* attacker, actor* defender,
-                                           bool mondied, int dam)
+                                           bool mondied, int /*dam*/)
 {
     if (!mondied && one_chance_in(5) && defender->can_mutate())
     {
-        mpr("Mutagenic energy flows through the plutonium sword!");
+        if (you.can_see(*attacker))
+        {
+            mprf("Mutagenic energy flows through %s!",
+                 weapon->name(DESC_THE, false, false, false).c_str());
+        }
 
         if (attacker->is_player())
             did_god_conduct(DID_CHAOS, 3);
 
         if (one_chance_in(10))
+        {
             defender->polymorph(0); // Low duration if applied to the player.
+            return;
+        }
+
+        if (defender->is_monster())
+            defender->malmutate("the plutonium sword");
         else
         {
-            miscast_effect(*defender, attacker, {miscast_source::melee},
-                           spschool::transmutation, 5, random2(dam),
-                           "the plutonium sword");
+            mpr(random_choose("Your body deforms painfully.",
+                              "Your limbs ache and wobble like jelly.",
+                              "Your body is flooded with magical radiation."));
+            contaminate_player(random_range(3500, 6500));
         }
+        defender->hurt(attacker, random_range(5, 25));
     }
 }
 
@@ -775,10 +831,7 @@ static void _SNAKEBITE_melee_effects(item_def* /*weapon*/, actor* attacker,
                                      actor* defender, bool mondied, int /*dam*/)
 {
     if (!mondied && x_chance_in_y(2, 5))
-    {
-        curare_actor(attacker, defender, 2, "curare",
-                     attacker->name(DESC_PLAIN));
-    }
+        curare_actor(attacker, defender, "curare", attacker->name(DESC_PLAIN));
 }
 
 ///////////////////////////////////////////////////
@@ -791,7 +844,7 @@ static void _WOE_melee_effects(item_def* /*weapon*/, actor* attacker,
     {
     case 0: verb = "cleave", adv = " in twain"; break;
     case 1: verb = "pulverise", adv = " into a thin bloody mist"; break;
-    case 2: verb = "hew", adv = " savagely"; break;
+    case 2: verb = "hew", adv = " violently"; break;
     case 3: verb = "fatally mangle", adv = ""; break;
     case 4: verb = "dissect", adv = " like a pig carcass"; break;
     case 5: verb = "chop", adv = " into pieces"; break;
@@ -820,8 +873,7 @@ static void _WOE_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static setup_missile_type _DAMNATION_launch(item_def* /*item*/, bolt* beam,
-                                           string* ammo_name, bool* /*returning*/)
+static void _DAMNATION_launch(bolt* beam)
 {
     ASSERT(beam->item
            && beam->item->base_type == OBJ_MISSILES
@@ -829,7 +881,6 @@ static setup_missile_type _DAMNATION_launch(item_def* /*item*/, bolt* beam,
     beam->item->props[DAMNATION_BOLT_KEY].get_bool() = true;
 
     beam->name    = "damnation bolt";
-    *ammo_name    = "a damnation bolt";
     beam->colour  = LIGHTRED;
     beam->glyph   = DCHAR_FIRED_ZAP;
 
@@ -840,7 +891,6 @@ static setup_missile_type _DAMNATION_launch(item_def* /*item*/, bolt* beam,
     expl->name   = "damnation";
 
     beam->special_explosion = expl;
-    return SM_FINISHED;
 }
 
 ///////////////////////////////////////////////////
@@ -1013,6 +1063,17 @@ static void _FIRESTARTER_melee_effects(item_def* /*weapon*/, actor* attacker,
     }
 }
 
+////////////////////////////////////////////////////
+static void _FORCE_LANCE_melee_effects(item_def* /*weapon*/, actor* attacker,
+                                       actor* defender, bool mondied, int dam)
+{
+    if (mondied || !dam || !one_chance_in(3)) return;
+    // max power around a !!! hit (ie ~2d11 on collide from a 34+ damage hit)
+    // no real justification for this, just vibes
+    const int collide_power = min(100, dam * 3);
+    defender->knockback(*attacker, 1, collide_power, "blow");
+}
+
 ///////////////////////////////////////////////////
 
 #if TAG_MAJOR_VERSION == 34
@@ -1072,10 +1133,10 @@ static void _FLAMING_DEATH_melee_effects(item_def* /*weapon*/, actor* attacker,
     if (!mondied && (dam > 2 && one_chance_in(3)))
     {
         if (defender->is_player())
-            napalm_player(random2avg(7, 3) + 1, attacker->name(DESC_A, true));
+            sticky_flame_player(5, 10, attacker->name(DESC_A, true));
         else
         {
-            napalm_monster(
+            sticky_flame_monster(
                 defender->as_monster(),
                 attacker,
                 min(4, 1 + random2(attacker->get_hit_dice())/2));
@@ -1353,6 +1414,9 @@ static void _THERMIC_ENGINE_world_reacts(item_def *item)
 
 static void _ZHOR_world_reacts(item_def */*item*/)
 {
+    if (!you.time_taken)
+        return;
+
     if (there_are_monsters_nearby(true, false, false)
         && one_chance_in(7 * div_rand_round(BASELINE_DELAY, you.time_taken)))
     {
@@ -1361,9 +1425,6 @@ static void _ZHOR_world_reacts(item_def */*item*/)
 }
 
 ////////////////////////////////////////////////////
-
-// XXX: Staff of Battle giving a boost to conjuration spells is hardcoded in
-// player_spec_conj().
 
 static void _BATTLE_unequip(item_def */*item*/, bool */*show_msgs*/)
 {
@@ -1376,19 +1437,9 @@ static void _BATTLE_world_reacts(item_def */*item*/)
         && there_are_monsters_nearby(true, true, false)
         && stop_summoning_reason(MR_RES_POISON, M_FLIES).empty())
     {
-        cast_battlesphere(&you, calc_spell_power(SPELL_BATTLESPHERE, true),
-                          GOD_NO_GOD, false);
+        const int pow = div_rand_round(15 + you.skill(SK_CONJURATIONS, 15), 3);
+        cast_battlesphere(&you, pow, GOD_NO_GOD, false);
         did_god_conduct(DID_WIZARDLY_ITEM, 10);
-    }
-}
-
-static void _BATTLE_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                  actor* /*defender*/, bool /*mondied*/, int /*dam*/)
-{
-    if (attacker)
-    {
-        aim_battlesphere(attacker, SPELL_MAGIC_DART);
-        trigger_battlesphere(attacker);
     }
 }
 
@@ -1538,7 +1589,7 @@ static void _WUCAD_MU_equip(item_def */*item*/, bool *show_msgs,
 {
     if (you.has_mutation(MUT_HP_CASTING))
     {
-        _equip_mpr(show_msgs, "The staff is unable to connect with your "
+        _equip_mpr(show_msgs, "The crystal ball is unable to connect with your "
                               "magical essence.");
     }
 }
@@ -1566,7 +1617,7 @@ static void _RCLOUDS_world_reacts(item_def */*item*/)
         monster* m = monster_at(*ri);
         if (m && !m->wont_attack() && mons_is_threatening(*m)
             && !cell_is_solid(*ri) && !cloud_at(*ri)
-            && one_chance_in(7))
+            && x_chance_in_y(you.time_taken, 7 * BASELINE_DELAY))
         {
             mprf("Storm clouds gather above %s.", m->name(DESC_THE).c_str());
             place_cloud(CLOUD_STORM, *ri, random_range(4, 8), &you);
@@ -1594,6 +1645,8 @@ static void _POWER_GLOVES_unequip(item_def * /*item*/, bool *show_msgs)
         _equip_mpr(show_msgs, "The surge of magic dissipates.");
 }
 
+////////////////////////////////////////////////////
+
 static void _DREAMSHARD_NECKLACE_equip(item_def * /*item*/, bool *show_msgs,
                                       bool /*unmeld*/)
 {
@@ -1605,7 +1658,7 @@ static void _DREAMSHARD_NECKLACE_unequip(item_def * /* item */, bool * show_msgs
     _equip_mpr(show_msgs, "The world feels relentlessly logical and grey.");
 }
 
-//
+////////////////////////////////////////////////////
 
 static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
     actor* defender, bool /*mondied*/, int /*dam*/)
@@ -1665,12 +1718,118 @@ static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
 }
 
 ///////////////////////////////////////////////////
-static void _VITALITY_world_reacts(item_def */*item*/)
+
+static void _FINGER_AMULET_world_reacts(item_def */*item*/)
 {
-    // once it starts regenerating you, you're doin evil
-    if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1
-        || you.activated[EQ_AMULET])
+    did_god_conduct(DID_EVIL, 1);
+}
+
+///////////////////////////////////////////////////
+
+static void _reset_victory_stats(item_def *item)
+{
+    int &bonus_stats = item->props[VICTORY_STAT_KEY].get_int();
+    if (bonus_stats > 0)
     {
-        did_god_conduct(DID_EVIL, 1);
+        bonus_stats = 0;
+        item->plus = get_unrand_entry(item->unrand_idx)->plus;
+        artefact_set_property(*item, ARTP_SLAYING, bonus_stats);
+        artefact_set_property(*item, ARTP_INTELLIGENCE, bonus_stats);
+        mprf(MSGCH_WARN, "%s stops glowing.", item->name(DESC_THE, false, true,
+                                                         false).c_str());
+
+        you.redraw_armour_class = true;
+        notify_stat_change();
+    }
+}
+
+static void _VICTORY_unequip(item_def *item, bool */*show_msgs*/)
+{
+    if (!player_equip_unrand(UNRAND_VICTORY, true))
+        _reset_victory_stats(item);
+}
+
+#define VICTORY_STAT_CAP 7
+
+static void _VICTORY_death_effects(item_def *item, monster* mons,
+                                   killer_type killer)
+{
+    // No bonus for killing friendlies, neutrals, summons, etc.
+    if (killer != KILL_YOU && killer != KILL_YOU_MISSILE
+        || !mons_gives_xp(*mons, you))
+    {
+        return;
+    }
+
+    const mon_threat_level_type threat = mons_threat_level(*mons);
+
+    // Increased chance of victory bonus from more dangerous mons.
+    // Using threat for this is kludgy, but easily visible to players.
+    if (threat == MTHRT_NASTY || (threat == MTHRT_TOUGH && x_chance_in_y(1, 4)))
+    {
+        int &bonus_stats = item->props[VICTORY_STAT_KEY].get_int();
+        if (bonus_stats < VICTORY_STAT_CAP)
+        {
+            bonus_stats++;
+            item->plus = bonus_stats;
+            artefact_set_property(*item, ARTP_SLAYING, bonus_stats);
+            artefact_set_property(*item, ARTP_INTELLIGENCE, bonus_stats);
+            mprf(MSGCH_GOD, GOD_OKAWARU, "%s glows%s.",
+                 item->name(DESC_THE, false, true, false).c_str(),
+                 bonus_stats == VICTORY_STAT_CAP ? " brightly" : "");
+
+            you.redraw_armour_class = true;
+            notify_stat_change();
+        }
+    }
+}
+
+static void _VICTORY_world_reacts(item_def *item)
+{
+    if (you.props.exists(VICTORY_CONDUCT_KEY))
+    {
+        _reset_victory_stats(item);
+        you.props.erase(VICTORY_CONDUCT_KEY);
+    }
+}
+
+static void _VICTORY_equip(item_def *item, bool */*show_msgs*/, bool /*unmeld*/)
+{
+    _VICTORY_world_reacts(item);
+}
+
+////////////////////////////////////////////////////
+
+static void _ASMODEUS_melee_effects(item_def* /*weapon*/, actor* attacker,
+                                    actor* defender, bool /*mondied*/,
+                                    int /*dam*/)
+{
+    if (!attacker->is_player() || you.allies_forbidden())
+        return;
+
+    const monster* mon = defender->as_monster();
+    if (mons_is_firewood(*mon)
+        || mons_is_conjured(mon->type)
+        || mon->is_summoned())
+    {
+        return;
+    }
+
+    if (one_chance_in(10))
+    {
+        const monster_type demon = random_choose_weighted(
+                                       3, MONS_BALRUG,
+                                       2, MONS_HELLION,
+                                       1, MONS_BRIMSTONE_FIEND);
+
+        mgen_data mg(demon, BEH_FRIENDLY, you.pos(), MHITYOU,
+                     MG_FORCE_BEH | MG_AUTOFOE);
+        mg.set_summoned(&you, 4, SPELL_FIRE_SUMMON);
+
+        if (create_monster(mg))
+        {
+            mpr("The sceptre summons one of its terrible servants.");
+            did_god_conduct(DID_EVIL, 3);
+        }
     }
 }

@@ -16,6 +16,7 @@
 #include "fineff.h"
 #include "fprop.h"
 #include "god-conduct.h"
+#include "god-passive.h" // passive_t::shoot_through_plants
 #include "libutil.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -24,6 +25,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-goditem.h" // majin_bo_vampirism
 #include "target.h"
 #include "terrain.h"
 #include "transform.h"
@@ -139,8 +141,6 @@ spret cast_polar_vortex(int powc, bool fail)
     you.props[POLAR_VORTEX_KEY].get_int() = you.elapsed_time;
     you.props[VORTEX_POWER_KEY] = powc;
     _set_vortex_durations();
-    if (you.has_mutation(MUT_TENGU_FLIGHT))
-        you.redraw_evasion = true;
 
     return spret::success;
 }
@@ -235,6 +235,13 @@ static int _age_needed(int r)
     return sqr(r) * 7 / 5;
 }
 
+dice_def polar_vortex_dice(int pow, bool random)
+{
+    if (random)
+        return dice_def(12, div_rand_round(pow, 15));
+    return dice_def(12, pow / 15);
+}
+
 void polar_vortex_damage(actor *caster, int dur)
 {
     if (!dur)
@@ -301,16 +308,17 @@ void polar_vortex_damage(actor *caster, int dur)
             bool veto =
                 env.markers.property_at(*dam_i, MAT_ANY, "veto_destroy") == "veto";
 
-            if ((feat_is_tree(env.grid(*dam_i)) && !is_temp_terrain(*dam_i))
-                && !veto && dur > 0
+            if (feat_is_tree(env.grid(*dam_i))
+                && !have_passive(passive_t::shoot_through_plants)
+                && !is_temp_terrain(*dam_i)
+                && !veto
+                && dur > 0
                 && bernoulli(rdur * 0.01, 0.05)) // 5% chance per 10 aut
             {
                 env.grid(*dam_i) = DNGN_FLOOR;
                 set_terrain_changed(*dam_i);
                 if (you.see_cell(*dam_i))
                     mpr("A tree falls to the furious winds!");
-                if (caster->is_player())
-                    did_god_conduct(DID_KILL_PLANT, 1);
             }
 
             if (!winds.has_wind(*dam_i))
@@ -371,12 +379,14 @@ void polar_vortex_damage(actor *caster, int dur)
                             || !victim->is_monster()
                             || !god_protects(caster, victim->as_monster(), true)))
                     {
-                        const int base_dmg = div_rand_round(roll_dice(12, rpow), 15);
+                        const int base_dmg = polar_vortex_dice(rpow, true).roll();
                         const int post_res_dmg
                             = resist_adjust_damage(victim, BEAM_ICE, base_dmg);
                         const int post_ac_dmg
                             = victim->apply_ac(post_res_dmg, 0, ac_type::proportional);
                         dprf("damage done: %d", post_ac_dmg);
+                        if (caster->is_player())
+                            majin_bo_vampirism(*victim->as_monster(), post_ac_dmg);
                         victim->hurt(caster, post_ac_dmg, BEAM_ICE, KILLED_BY_BEAM,
                                      "", "vortex");
                     }
@@ -489,8 +499,6 @@ void cancel_polar_vortex(bool tloc)
             // Vortex ended by using something stairslike, so the destination
             // is safe
             you.duration[DUR_FLIGHT] = 0;
-            if (you.has_mutation(MUT_TENGU_FLIGHT))
-                you.redraw_evasion = true;
         }
     }
     you.duration[DUR_VORTEX] = 0;

@@ -352,7 +352,8 @@ static const map<spschool, miscast_datum> miscast_effects = {
                 {
                     // number arbitrarily chosen & needs more playtesting
                     const int dur = div_rand_round(dam, 2);
-                    you.set_duration(DUR_LOCKED_DOWN, dur, dur,
+                    you.set_duration(DUR_DIMENSION_ANCHOR, dur, dur);
+                    you.set_duration(DUR_NO_MOMENTUM, dur, dur,
                                      "You are magically locked in place.");
                 }
                 else
@@ -362,51 +363,6 @@ static const map<spschool, miscast_datum> miscast_effects = {
                          mon_enchant(ENCH_DIMENSION_ANCHOR,
                                      0, source, dam * BASELINE_DELAY));
                 }
-            }
-
-        },
-    },
-    {
-        spschool::transmutation,
-        {
-            BEAM_NONE,
-            {
-                "Multicoloured lights dance before your eyes",
-                "You feel a strange surge of energy",
-                "Strange energies run through your body",
-                "Your body is twisted painfully",
-                "Your limbs ache and wobble like jelly",
-                "Your body is flooded with distortional energies",
-                "You feel very strange",
-            },
-            {
-                "The air around @the_monster@ crackles with energy",
-                "Multicoloured lights dance around @the_monster@",
-                "There is a strange surge of energy around @the_monster@",
-                "Waves of light ripple over @the_monster@'s body",
-                "@The_monster@ twitches",
-                "@The_monster@'s body glows momentarily",
-                "@The_monster@'s body twists unnaturally",
-                "@The_monster@'s body twists and writhes",
-                "@The_monster@'s body is flooded with distortional energies",
-            },
-            {
-                "The thin air crackles with energy",
-                "Multicoloured lights dance in the air",
-                "Waves of light ripple in the air",
-            },
-            [] (actor& target, actor* /*source*/,
-                miscast_source_info /*mc_info*/, int dam, string cause) {
-
-                // Double existing contamination, plus more from the damage
-                // roll
-                if (target.is_player())
-                {
-                    contaminate_player(you.magic_contamination
-                                       + dam * MISCAST_DIVISOR, true);
-                }
-                else
-                    target.malmutate(cause);
             }
 
         },
@@ -546,25 +502,29 @@ static const map<spschool, miscast_datum> miscast_effects = {
         },
     },
     {
-        spschool::poison,
+        spschool::alchemy,
         {
-            BEAM_POISON,
+            BEAM_NONE,
             {
-                "You feel odd",
-                "You feel rather nauseous for a moment",
-                "You feel incredibly sick",
+                "You are engulfed in toxic fumes",
+                "There is a flash of cinnabar",
+                "Mercury flows from your @hands@",
+                "Parts of your body briefly turn golden",
             },
             {
-                "@The_monster@ looks faint for a moment",
-                "@The_monster@ has an odd expression for a moment",
-                "@The_monster@ is briefly tinged with green",
-                "@The_monster@ looks rather nauseous for a moment",
+                "@The_monster@ is engulfed in toxic fumes",
+                "@The_monster@ is blasted with cinnabar dust",
+                "@The_monster@ starts coughing violently",
                 "@The_monster@ looks incredibly sick",
             },
             {
                 "The air has a green tinge for a moment",
             },
-            nullptr,
+            [] (actor& target, actor* source, miscast_source_info /*mc_info*/,
+                int dam, string /*cause*/)
+            {
+                target.poison(source, dam * 5 / 2);
+            },
         },
     },
 };
@@ -596,6 +556,14 @@ void miscast_effect(spell_type spell, int fail)
     for (const auto bit : spschools_type::range())
         if (spell_typematch(spell, bit))
             school_list.push_back(bit);
+
+    // only monster spells should lack schools altogether, and they should
+    // only be castable under wizmode
+    ASSERT(you.wizard && (get_spell_flags(spell) & spflag::monster)
+            || !school_list.empty());
+
+    if (school_list.empty())
+        return;
 
     spschool school = *random_iterator(school_list);
 

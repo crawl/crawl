@@ -40,10 +40,6 @@ bolt
 
 Un virote para ballesta.
 %%%%
-book of alchemy
-
-Un libro, algo chamuscado, con un orificio que atraviesa su tapa.
-%%%%
 book of annihilations
 
 Las andrajosas páginas de este libro rezuman sangre. Incluso un analfabeto
@@ -507,7 +503,7 @@ cualquier objeto, y ocasionalmente permitirá múltiples identificaciones.
 
 Si es usado en un mazo de cartas, este pergamino revelará la carta superior.
 %%%%
-scroll of magic mapping
+scroll of revelation
 
 Este pergamino revela los alrededores del lector.
 

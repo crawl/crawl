@@ -51,11 +51,6 @@ bolt
 
 クロスボウで射撃するための、矢よりも短い金属の投射物だ。
 %%%%
-book of alchemy
-
-これは古の錬金術師達の知恵を結集した、錬金術の作法や呪文の使用に注目した本だ。
-本を開くと、大気からそのページへインクが濃縮されることで文字が明らかになる。
-%%%%
 book of annihilations
 
 この本のぼろぼろのページの隙間から血が滴り落ちる。
@@ -379,7 +374,7 @@ potion of experience
 
 実に素晴らしく非常に貴重な飲み物だ。
 %%%%
-potion of flight
+potion of enlightenment
 
 これは水薬だ。これは飲んだ者に大きな浮力を与える。
 %%%%
@@ -532,7 +527,7 @@ scroll of immolation
 
 この巻物は読み手の周囲にいる者を不規則で強力な内なる炎に包む。
 %%%%
-scroll of magic mapping
+scroll of revelation
 
 この巻き物は読んだ者の周辺の地形を明らかにする。
 %%%%

@@ -45,13 +45,6 @@ bolt
 Ein Metallprojektil. Es ist kürzer als ein Pfeil und zum verschießen mit einer
 Armbrust vorgesehen.
 %%%%
-book of alchemy
-
-Ein Buch, das sich auf alchemistische Prozesse und ihre Benutzung in
-Zaubersprüchen konzentriert. In ihm ist die Weisheit vieler antiker Alchemisten
-gesammelt. Wenn das Buch geöffnet wird, kommt der Text ans Licht, indem die
-Tinte aus der Luft auf den Seiten kondensiert.
-%%%%
 book of annihilations
 
 Blut tropft von den zerschlissenen Seiten dieses Buches, und selbst ein
@@ -407,7 +400,7 @@ potion of experience
 
 Ein wirklich wundervoller und sehr seltenes Getränk.
 %%%%
-potion of flight
+potion of enlightenment
 
 Ein Trank, welcher eine große Beschwingtheit, auf denjenigen der ihn trinkt,
 überträgt.
@@ -575,7 +568,7 @@ erlauben.
 Wenn verwendet, auf einem Deck von Karten wird diese Schriftrolle auch die
 Spitzenkarte weggeben.
 %%%%
-scroll of magic mapping
+scroll of revelation
 
 Diese Schriftrolle offenbart die Umgebungen von demjenigen, der es liest.
 %%%%

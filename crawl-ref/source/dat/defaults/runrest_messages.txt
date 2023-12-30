@@ -12,15 +12,16 @@ ignore += A.*toadstool withers and dies
 ignore += toadstools? grows
 ignore += You walk carefully through the
 ignore += The winds around you calm down.
-ignore += Lightning arcs down from a storm cloud
 ignore += (crumbles|melts) away\.
+ignore += wailing of tortured souls fills the air!
 
 stop += You feel you are being watched
 stop += [Ss]omething.* misses you.
+stop += from outside your range of vision
 stop += emerges from the mists of memory
 
 # Traps and doors
-stop += A sourceless malevolence
+stop += A malevolent force
 stop += A sentinel's mark forms upon you\.
 stop += it creaks loudly
 stop += flies open with a bang

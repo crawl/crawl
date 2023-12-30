@@ -45,53 +45,72 @@ function pan_lord_setup(_G, name)
     _G.tags("unrand")
 
     local monsters = {
-        Mnoleg = "large abomination w:200 / " ..
+        Mnoleg = "shadow demon w:200 / " ..
                  "neqoxec w:200 / chaos spawn w:200 / " ..
                  "cacodemon w:300 / tormentor / " ..
-                 "tentacled monstrosity w:5 / " ..
-                 "floating eye / golden eye band / eye of devastation / " ..
-                 "shining eye / very ugly thing band / "..
-                 "demonspawn corrupter",
+                 "tentacled monstrosity / protean progenitor band / " ..
+                 "very ugly thing / glass eye band / " ..
+                 "golden eye band / eye of devastation / "..
+                 "shining eye / demonspawn corrupter",
         ['Lom Lobon'] = "hellwing w:300 / sixfirhy w:100 / " ..
-                 "smoke demon w:300 / blizzard demon w:100 / " ..
+                 "smoke demon w:200 / blizzard demon w:200 / " ..
                  "green death w:200 / glowing orange brain / rakshasa / " ..
-                 "wizard / draconian annihilator / deep elf annihilator / " ..
-                 "titan w:5 / lich w:5 / demonspawn blood saint",
-        Cerebov = "efreet / orange demon / sun demon / ynoxinul / balrug / " ..
+                 "nagaraja / merfolk aquamancer / jorogumo / " ..
+                 "fenstrider witch / draconian annihilator / " ..
+                 "deep elf annihilator / titan w:5 / lich w:5 / " ..
+                 "demonspawn blood saint",
+        Cerebov = "sun moth / efreet / sun demon / ynoxinul / balrug / " ..
                   "brimstone fiend w:1 / demonspawn warmonger w:1",
-        ['Gloorx Vloq'] = "skeleton w:400 / soul eater w:200 / " ..
-                 "lorocyproca w:100 / executioner w:300 / " ..
-                 "demonic crawler / shadow wraith / " ..
-                 "unseen horror / demonspawn black sun"
+        ['Gloorx Vloq'] = "juggernaut skeleton w:100 / " ..
+                 "caustic shrike skeleton w:100 / " ..
+                 "hellephant skeleton w:100 / soul eater w:200 / " ..
+                 "reaper w:200 / executioner w:300 / " ..
+                 "flayed ghost / laughing skull band / shadow wraith / " ..
+                 "demonspawn black sun"
     }
 
     _G.set_random_mon_list(monsters[name])
 
-    -- Set level colours / tiles, and the rune.
+    -- Set level colours / tiles, the rune, and vengeful demonspawn.
     if name == "Mnoleg" then
         _G.lfloorcol("lightred")
         _G.lrockcol("yellow")
         _G.lfloortile("floor_nerves")
         _G.lrocktile("wall_zot_yellow")
+        _G.tile ("c = dngn_stone_wall_yellow")
         _G.kitem("O = glowing rune of Zot")
+        _G.kmons("& = patrolling demonspawn corrupter")
     elseif name == "Lom Lobon" then
         _G.lfloorcol("lightgrey")
         _G.lrockcol("white")
         _G.lfloortile("floor_rough_lightgray")
         _G.lrocktile("wall_hall_white")
+        _G.tile ("c = stone_wall_shoals")
         _G.kitem("O = magical rune of Zot")
+        _G.kmons("& = patrolling demonspawn blood saint")
     elseif name == "Cerebov" then
         _G.lfloorcol("red")
         _G.lrockcol("red")
         _G.lfloortile("floor_volcanic")
         _G.lrocktile("wall_zot_red")
         _G.kitem("O = fiery rune of Zot")
+        _G.tile ("v = dngn_metal_wall_brown")
+        _G.kmons("& = patrolling demonspawn warmonger")
     elseif name == "Gloorx Vloq" then
         _G.lfloorcol("blue")
         _G.lrockcol("blue")
-        _G.lfloortile("floor_grey_dirt")
+        _G.lfloortile("floor_nerves_darkgray")
         _G.lrocktile("wall_hall_darkgray")
+        _G.tile ("c = dngn_stone_dark")
         _G.kitem("O = dark rune of Zot")
+        _G.kmons("& = patrolling demonspawn black sun")
+    end
+
+    -- Make each rune a little bit harder for each one you get.
+    if count_pan_runes() > 0 then
+        _G.nsubst("& = " .. count_pan_runes() .. ":& / *:.")
+    else
+        _G.subst("& = .")
     end
 end
 
@@ -207,17 +226,22 @@ end
 
 function pan_entry_vault_contents(e, glyph)
     e.tags("patrolling no_monster_gen nolayout_encompass")
-    e.mons("common demon")
-    e.mons("common demon / nothing")
+    local tierthree = "sixfirhy / smoke demon / soul eater / " ..
+                      "sun demon / ynoxinul w:5"
+    local tiertwo = "balrug / blizzard demon / cacodemon w:5 / " ..
+                    "green death / hell beast / hellion / lorocyproca / " ..
+                    "reaper / shadow demon / tormentor"
+
     if e.is_validating() then return end
     if crawl.x_chance_in_y(you.depth() + 3, you.depth() + 5) then
         e.tags("luniq_hellpanabyss_threat_entry")
-        e.kmons(glyph .. " = green death / blizzard demon / balrug / "
-                      .. "   cacodemon / hell beast / hellion / reaper / "
-                      .. "   lorocyproca / tormentor / shadow demon")
+        e.kmons(glyph .. "1 = " .. tiertwo)
+        e.kmons("2 = " .. tierthree)
+        e.nsubst("2 = 2 = 22. / *:.")
+        e.nsubst("1 = 1:112 / *:.")
     else
         e.subst("12 = .")
-        e.kmons(glyph .. " = common demon / nothing")
+        e.kmons(glyph .. " = " .. tiertwo .. " / " .. tierthree .. " / " .. tierthree)
     end
 end
 
@@ -284,7 +308,6 @@ ENDMAP
 # Other entries; these ones are derived from rand_demon Pan vaults.
 NAME:   rand_demon_pan_entry_1
 TAGS:   transparent
-MONS:   common demon
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
@@ -293,7 +316,7 @@ x..1...x..x
 x..x...x..x
 x..x...x..x
 x..x.1.x..x
-x..x.O.x..x
+x..x2O2x..x
 x..x.1.x..x
 x..x...x..x
 x..x...1..x
@@ -308,11 +331,11 @@ MAP
 ............
 .x.x.x.x.x..
 ..x.x.x.x.x.
-.x.x.x.x.x..
+.x.x.x2x.x..
 ..x.x1x1x.x.
-.x.x.xOx.x..
+.x.x2xOx2x..
 ..x.x1x1x.x.
-.x.x.x.x.x..
+.x.x.x2x.x..
 ..x.x.x.x.x.
 .x.x.x.x.x..
 ..x.x.x.x.x.
@@ -328,9 +351,9 @@ MAP
 .xxxxxxxxx.
 .x...x1+.x.
 .x+x+x+x.x.
-.x1x...x.x.
+.x1x..2x2x.
 .x+xxx+x.x.
-.x...x1xOx.
+.x2..x1xOx.
 .x+x.xxxxx.
 .x1x.....+.
 .xxxxxxxxx.
@@ -346,10 +369,10 @@ MAP
 ...xx++xx...
 ..xx....xx..
 .xx......xx.
-.x........x.
+.x..2.....x.
 .+...1O...+.
 .+...11...+.
-.x........x.
+.x..2..2..x.
 .xx......xx.
 ..xx....xx..
 ...xx++xx...
@@ -358,7 +381,7 @@ ENDMAP
 
 NAME:   rand_demon_pan_entry_7
 TAGS:   transparent
-NSUBST: ? = 1:O / 4:1 / *:.
+NSUBST: ? = 1:O / 4:1 / 2:2 /*:.
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
@@ -387,17 +410,17 @@ MAP
 .xx..1..O.x.
 .x........x.
 .xx.......x.
-..xx.1..1.x.
-.........xx.
+..xx21..1.x.
+....22...xx.
 .....x...x..
-.....xx.xx..
+..x..xx.xx..
  @....xxx...
   ........
 ENDMAP
 
 NAME:   rand_demon_pan_entry_9
 TAGS:   transparent
-NSUBST: ^ = 4:1 / *:.
+NSUBST: ^ = 4:1 / 2:2 / *:.
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
@@ -410,7 +433,7 @@ MAP
 .x.x^^^^x.x.
 .x.x^^^^x.x.
 .x.xxxx+x.x.
-.xx.....x.x.
+.xx....2x.x.
 .xxxxxxxx+x.
 ............
 ENDMAP
@@ -420,13 +443,12 @@ ENDMAP
 
 NAME:  grunt_pan_entry_in_and_out
 TAGS:  transparent
-SUBST: d = 112
-: pan_entry_feature(_G, 'e')
-: pan_entry_vault_contents(_G, 'e')
+: pan_entry_feature(_G, 'O')
+: pan_entry_vault_contents(_G, 'O')
 MAP
 ............
 .x+xxxxxx+x.
-.x.x.de.x.x.
+.x.x.2O.x.x.
 .x2x....x2x.
 .x.x.11.x.x.
 .x2x....x2x.
@@ -440,17 +462,16 @@ ENDMAP
 
 NAME:  grunt_pan_entry_spiral
 TAGS:  transparent
-SUBST: d = 112
-: pan_entry_feature(_G, 'e')
-: pan_entry_vault_contents(_G, 'e')
+: pan_entry_feature(_G, 'O')
+: pan_entry_vault_contents(_G, 'O')
 MAP
 ............
 .x+xxxxxxxx.
 .x.xx2.2..+.
 .x.x.xxxxxx.
 .x2x1x.1.xx.
-.x.x.dexx2x.
-.x2xxfg.x.x.
+.x.x.2Oxx2x.
+.x2xx$$.x.x.
 .xx.1.x1x2x.
 .xxxxxx.x.x.
 .+..2.2xx.x.
@@ -460,17 +481,16 @@ ENDMAP
 
 NAME:  grunt_pan_entry_zigzag
 TAGS:  transparent
-SUBST: d = 112
-: pan_entry_feature(_G, 'e')
-: pan_entry_vault_contents(_G, 'e')
+: pan_entry_feature(_G, 'O')
+: pan_entry_vault_contents(_G, 'O')
 MAP
 ............
 .xxxxxxxxxx.
 .x..2..2..+.
 .x.2.xxxxxx.
 .xx.1.xx....
-..xx.d1xx...
-...xx1e.xx..
+..xx.21xx...
+...xx1O.xx..
 ....xx.1.xx.
 .xxxxxx.2.x.
 .+..2..2..x.
@@ -479,19 +499,18 @@ MAP
 ENDMAP
 
 NAME:  grunt_pan_entry_sceptre
-SUBST: d = 112
-: pan_entry_feature(_G, 'e')
-: pan_entry_vault_contents(_G, 'e')
+: pan_entry_feature(_G, 'O')
+: pan_entry_vault_contents(_G, 'O')
 MAP
  @........@
-@2.xxxxxx.2@
-..xx.de.xx..
+@..xxxxxx..@
+..xx.2O.xx..
 x+x......x+x
 x.x.1..1.x.x
 x.x......x.x
 x.x..22..x.x
 x2xx....xx2x
-x..xx++xx..x
+x.2xx++xx2.x
 xx..2..2..xx
  xxx.11.xxx
    xxxxxx
@@ -541,123 +560,122 @@ ENDMAP
 ###########################################################################
 # Mnoleg
 #
-NAME:      mnoleg
-ORIENT:    northeast
-TAGS:      mnoleg uniq_mnoleg
+NAME:     mnoleg
+TAGS:     mnoleg uniq_mnoleg
+ORIENT:   northeast
+TILE:     c = dngn_stone_wall_yellow
+MONS:     patrolling Mnoleg, neqoxec / chaos spawn w:2 / brain worm w:2
+MONS:     cacodemon, tentacled monstrosity w:30 / shadow demon / tormentor
+MONS:     protean progenitor band
+ITEM:     potion of mutation q:1
+NSUBST:   2 = 4:3 / 1:4 / 3:5 / 3 = 234 / *:2
 : pan_lord_setup(_G, 'Mnoleg')
-TILE:      c = dngn_stone_wall_yellow
-MONS:      patrolling Mnoleg, neqoxec, cacodemon, tentacled monstrosity
-NSUBST:    2 = 4:3 / 3 = 234 / *:2
 epilogue{{
   pan_lord_epilogue('Mnoleg')
 }}
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x.................2............xxxx
-x.....2........................xxxx
-x..ccccccccc.....cccc..ccccccc.xxxx
-x..ccccccccc.2...ccccc..cccccc.xxxx
-x..ccccccccc.......cccc..ccccc.xxxx
-x..ccccccccc...1..cOcccc..cccc.xxxx
-x2.ccccccccc..2....cccccc2.ccc.xxxx
-x..ccccccccc.....ccccccccc..cc.xxxx
-x..cccccccc.......ccccccccc..c.xxxx
-x..ccccccc...ccc...ccccccccc...xxxx
-x..cccccc...ccccc...ccccccccc..xxxx
-x..ccccc...ccccccc...ccccccccc.xxxx
-x..cccc...ccccccccc...ccccccc..xxxx
-x..ccc.2.ccccccccccc.2.ccccc...xxxx
-x..cc.....ccccccccccc...ccc....xxxx
-x..c...c...ccccccccccc...c.2...xxxx
-x.....ccc.2.ccccccccccc......c.xxxx
-x....ccccc...ccccccccccc....cc.xxxx
-x.2.ccccccc...ccccccccccc..ccc.xxxx
-x.................2.......cccc.xxxx
-x...c..ccccccc.ccccccc...ccccc.xxxx
-x..ccc......2c.c2cccc...cccccc.xxxx
-x.ccccc..ccc.c.c2ccc.2.ccccccc.xxxx
-x.cccccc..cc.c.c.cc...cccccccc.xxxx
-x.ccccccc..c.c.c.c...ccccccccc.xxxx
-x.cccccccc...c.c....cccccccccc.xxxx
-x.ccccccccc..c.c...ccccccccccc.xxxx
-x..............................xxxx
-xxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x..................2.............xxxx
+x.....2..........................xxxx
+x..ccccccccc......cccc..ccccccc..xxxx
+x..ccccccccc.2....ccccc..cccccc..xxxx
+x..ccccccccc........cccc..ccccc..xxxx
+x..ccccccccc....1.dcOcccc..cccc..xxxx
+x2.ccccccccc...2....cccccc2.ccc..xxxx
+x..ccccccccc......ccccccccc..cc..xxxx
+x..cccccccc........ccccccccc..c..xxxx
+x..ccccccc...ccc....ccccccccc....xxxx
+x..cccccc...ccccc....ccccccccc...xxxx
+x..ccccc...ccccccc....ccccccccc..xxxx
+x..cccc...ccccccccc....ccccccc...xxxx
+x..ccc.2.ccccccccccc..2.ccccc....xxxx
+x..cc.....ccccccccccc....ccc.....xxxx
+x..c...c...ccccccccccc....c.2....xxxx
+x.....ccc.2.ccccccccccc.......c..xxxx
+x....ccccc..&ccccccccccc.....cc..xxxx
+x.2.ccccccc&.&ccccccccccc...ccc..xxxx
+x...........&.....2........cccc..xxxx
+x...c..ccccccc..ccccccc...ccccc..xxxx
+x..ccc......2c..c2cccc...cccccc..xxxx
+x.ccccc..ccc.c..c2ccc.2.ccccccc..xxxx
+x.cccccc..cc.c..c.cc...cccccccc..xxxx
+x.ccccccc..c.c..c.c...ccccccccc..xxxx
+x.cccccccc...c..c....cccccccccc..xxxx
+x.ccccccccc..c..c...ccccccccccc..xxxx
+x................................xxxx
+x................................xxxx
+xxxxxxxxxxxxxx@@xxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:      mnoleg_st
-ORIENT:    southwest
-TAGS:      mnoleg uniq_mnoleg
+NAME:     mnoleg_st
+TAGS:     mnoleg uniq_mnoleg
+ORIENT:   southwest
+MONS:     patrolling Mnoleg
+MONS:     neqoxec / chaos spawn w:2, very ugly thing, brain worm
+MONS:     shadow demon, tentacled monstrosity, tormentor
+KMONS:    A = cacodemon
+KMONS:    B = protean progenitor
+ITEM:     potion of mutation q:1 ident:type
+SUBST:    D = 5:20 6 7 A B
+SHUFFLE:  qep
+NSUBST:   q = 2:6 / 1:7 / *:.,  e = 2:A / *:., p = 3:B / *:.
 : pan_lord_setup(_G, 'Mnoleg')
-TILE:      c = dngn_stone_wall_yellow
-MONS:      patrolling Mnoleg
-MONS:      neqoxec, ugly thing, large abomination, neqoxec
-MONS:      very ugly thing, tormentor
-KMONS:     A = cacodemon
-KMONS:     B = tentacled monstrosity
-SUBST:     D = 5:20 6 7 A B
-NSUBST:    q = 2:6 / *:.
-NSUBST:    e = 2:6 / *:.
-NSUBST:    p = 3:6 / *:.
 epilogue{{
   pan_lord_epilogue('Mnoleg')
 }}
 MAP
-xxxxxxxxxxxxxxxxxxxxxx@xxxxxxxx
-xc...........................cx
-xc..ccccccc..c..c.c.c.c.c.c.ccx
-xc...ccccc..ccc..c.........c.cx
-xc.c5.ccc.5ccccc..c.5.5.5.c..cx
-xc.cc..c..ccccccc..c.2.2.c...cx
-xc.ccc...ccccccccc..c.2.c..c.cx
-xc.cccc...ccccccccc..c.c..cc.cx
-xc.cc.cc...ccccccccc..c..ccc.cx
-xc.ccqqcc...ccccccccc...cccc.cx
-xc.ccqqqcc...ccccccccc.ccccc.cx
-xc.ccqqq..c...ccccc..ccccccc.cx
-xc.ccqq...cc...ccc....c...c..cx
-xc5cc......cc...c...cc.....cccx
-xc.cc3......cc..5..cc...4...ccx
-xc..cc....eeecc...ccc..4B4..ccx
-xc...cc3.eeecc...ccccc..4..cccx
-xcc...cceeecc...cc..ccc...ccccx
-xccc...ccecc...cc....cccccccccx
-xc.cc...ccc...cc......ccccccccx
-xcp.cc...c............5cccccccx
-xc.pp.c.....c...........ccccccx
-xcppppcc...cc............cccccx
-xc.ppppcc4cc..............ccccx
-xcp.pp.pccc........1....7..cccx
-xc....3ccc.................cccx
-xc3...cccc...............A.cccx
-xc..3cccccc..........cc....cccx
-xc..cccccccc.........cOc..ccccx
-xc.cccccccccc5....A...cc.cccccx
-xccccccccccccc..........ccccccx
-xcccccccccccccccccccccccccccccx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxx
+xxc...........................cxx
+xxc..ccccccc..c..c.c.c.c.c.c.ccxx
+xxc...ccccc..ccc..c.........c.cxx
+xxc.c5.ccc.5ccccc..c.2.7.2.c..cxx
+xcc.cc..c..ccccccc..c.2.2.c...cxx
+xc..ccc...ccccccccc..c.5.c..c.cxx
+xcc.cccc...ccccccccc..c.c..cc.cxx
+xxc..c.cc...ccccccccc..c..cc..cxx
+xcc.ccqqcc...ccccccccc...cccc.ccx
+xc..ccqqqcc...ccccccccc.ccccc..cx
+xcc.ccqqq..c...ccccc..ccccccc.ccx
+xxc..cqq...c....ccc....c...c..cxx
+xcc3cc......cc...c...cc.....c.cxx
+xc..cc3......cc.....c....4...ccxx
+xcc..cc....eeecc...ccc..4B4..ccxx
+xxc...cc3.eeecc&..ccccc..4..cccxx
+xxcc...cceeecc&..cc..ccc...ccccxx
+xxccc...ccecc...cc....cccccccccxx
+xxc.c....ccc&..cc......ccccccccxx
+xxcp.cc...c&...........4cccccccxx
+xxc.pp.c.....c...........ccccccxx
+xxcppppcc...cc............cccccxx
+xxc.ppppcc4cc..............ccccxx
+xxcp.pp.pccc........1....7..cccxx
+xxc....3ccc.................cccxx
+xxc3...cccc..........d....A.cccxx
+xxc..3cccccc..........cc....cccxx
+xxc..cccccccc.........cOc..ccccxx
+xxc.cccccccccc5....A...cc.cccccxx
+xxccccccccccccc..........ccccccxx
+xxcccccccccccccccccccccccccccccxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # The eyes probably make this vault harder than the others, but it's still Mnoleg.
-NAME:       evilmike_mnoleg_eyes
-ORIENT:     northwest
-TAGS:       mnoleg uniq_mnoleg
+NAME:     evilmike_mnoleg_eyes
+TAGS:     mnoleg uniq_mnoleg
+ORIENT:   northwest
+MONS:     patrolling mnoleg
+MONS:     glass eye / eye of devastation / golden eye w:2
+MONS:     protean progenitor, shadow demon / tentacled monstrosity
+MONS:     cacodemon, neqoxec / chaos spawn w:2 / great orb of eyes w:2
+ITEM:     potion of mutation ident:type
+SHUFFLE:  '-
+NSUBST:   O = 1:O / 1:d / *:|
+NSUBST:   C = 1:4 / *:N, N = 2:4 / *:6
+NSUBST:   M = 2:3 / 2 = 34. / *:., E = 2:2 / 2 = 22. / *:.
+NSUBST:   ' = 2:3 / 2 = 34. / 1:5 / 2:6 / *:.
+NSUBST:   - = 3:2 / 2 = 2. / 1:5 / 2:6 / *:.
 : pan_lord_setup(_G, 'Mnoleg')
-NSUBST:     O = 1:O / *:|
-TILE:       c = dngn_stone_wall_yellow
-MONS:       patrolling mnoleg
-MONS:       floating eye / golden eye / eye of devastation / \
-            shining eye
-MONS:       w:3 large abomination / w:2 tentacled monstrosity
-MONS:       cacodemon
-MONS:       neqoxec
-NSUBST:     C = 1:4 / *:N
-NSUBST:     N = 2:4 / *:5
-NSUBST:     M = 5:3 / 2=3. / *:.
-NSUBST:     E = 3:2 / 2=22. / 2=2.. / *:.
-SHUFFLE:    '-
-NSUBST:     ' = 5:3 / 2=3. / 1:4 / 3:5 / *:.
-NSUBST:     - = 5:2 / 2=2. / 1:4 / 3:5 / *:.
 epilogue{{
   pan_lord_epilogue('Mnoleg')
 }}
@@ -681,10 +699,10 @@ xcccccccc.........cc'''cccc'''cc....@
 xccccccc...........cc'''cc'''cc......
 xcccccc.............cc''''''cc.....cc
 xccccc.....ccccc.....cc''''cc.....ccx
-xcccc.....ccccccc.....cc''cc.....ccxx
-xcccMMC..ccccc--cc.....cccc.....ccxxx
-xcc.ccM.ccccc----cc.....cc.....ccxxxx
-xcc.ccMccccc------cc..........ccxxxxx
+xcccc.....ccccccc..c..cc''cc.....ccxx
+xcccMMC..ccccc--cc..c.&cccc.....ccxxx
+xcc.ccM.ccccc----cc..&..cc.....ccxxxx
+xcc.ccMccccc------cc&.&.......ccxxxxx
 xcc...ccccc---cc---cc........cccxxxxx
 xcOccccccc---cccc---cc......ccccxxxxx
 xcccccccc----cccc---cc......ccccxxxxx
@@ -692,7 +710,7 @@ xccccccc------cc---cc........cccxxxxx
 xcccccc-----------cc........N.ccxxxxx
 xcccccc----------cc.....cc.N2..cxxxxx
 xccccccc--------cc.....cccc..N.cxxxxx
-xcccccccc------cc.....cccccc...cxxxxx
+xcccccccc------cc.....cccccc..Ncxxxxx
 xccccccccc-----c.....cccccccccccxxxxx
 xcccccccccc---......ccxxxxxxxxxxxxxxx
 xccccccccccc-......ccxxxxxxxxxxxxxxxx
@@ -701,101 +719,102 @@ xccccccccccccc...ccxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxc.@.cxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    mnoleg_grunt
-ORIENT:  west
-TAGS:    mnoleg uniq_mnoleg
+NAME:     mnoleg_grunt
+TAGS:     mnoleg uniq_mnoleg
+ORIENT:   west
+MONS:     patrolling Mnoleg, patrolling cacodemon
+MONS:     neqoxec / chaos spawn w:2, protean progenitor
+MONS:     shadow demon, tentacled monstrosity, very ugly thing
+ITEM:     potion of mutation ident:type q:1
+SHUFFLE:  Od, 1e
+SUBST:    e = 4
 : pan_lord_setup(_G, 'Mnoleg')
-TILE:    c = dngn_stone_wall_yellow
-SHUFFLE: Od, 1e
-KFEAT:   d = .
-KFEAT:   e = .
-MONS:    patrolling Mnoleg, patrolling cacodemon
-MONS:    neqoxec, tentacled monstrosity, large abomination, very ugly thing band
 epilogue{{
   pan_lord_epilogue('Mnoleg')
 }}
 MAP
-xxxxx@.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx@@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxc..cccc.............cccccccccccc..cx
-xxxxc..ccc.......2.......cccccccccc...cx
+xxxxc..ccc...........2...cccccccccc...cx
 xxxxc..cc....ccccc...cc.3.cccccccc..2.cx
 xxxxc........cccc...cccc..ccccccc.....cx
-xxxxc.3......ccc...ccccc..cccccc......cx
+xxxxc.7......ccc...ccccc..cccccc......cx
 xxxxc....cc..cc...ccccc...ccccc...cc..cx
 xxxxc...ccc..c...ccccc...ccccc...ccc..cx
 xxxxc..ccc...c..cccccc..ccccc...ccc...cx
 xxxxccccc...cc..cccccc..cccc...ccc...ccx
 xxxxcccc...ccc.6.ccccc...cc...ccc...cccx
-xxxxccc...ccccc...ccccc......ccc...ccccx
-xxxxcc...ccccccc...ccccc.3..ccc...cccccx
-xxxxc...ccc..cccc..5..ccc..ccc...ccc..cx
-xxxxc..ccc....ccc.2....cccccc...ccc...cx
+xxxxccc...ccccc...ccccc...4..ccc...ccccx
+xxxxcc...ccccccc..5ccccc.3..ccc...cccccx
+xxxxc...ccc..cccc.....ccc..ccc...ccc..cx
+xxxxc..ccc....ccc.2....cccccc5..ccc...cx
 xxxxc..cc.6....cc..cc.3..ccc...ccc..3.cx
-xxxxc.5....cc.5..4.cd1cc...5..ccc.....cx
-xxxxc.....ccc..5...cceOc.4..5.cc....5.cx
+xxxxc.5....cc....4.cd1cc...7..ccc.....cx
+xxxxc.....ccc..7...cceOc.4....cc....5.cx
 xxxxc.3..ccc...ccc..3.cc..cc....6.cc..cx
-xxxxc...ccc...cccccc....2.ccc....ccc..cx
-xxxxc..ccc...ccc..ccc..5..cccc..ccc...cx
-xxxxccccc...ccc..3.ccccc...ccccccc...ccx
-xxxxcccc...ccc......ccccc...ccccc...cccx
+xxxxc...ccc..5cccccc....2.ccc....ccc..cx
+xxxxc..ccc...ccc..ccc.....cccc..ccc...cx
+xxxxccccc...ccc..3.ccccc5..ccccccc...ccx
+xxxxcccc...ccc..4...ccccc...ccccc...cccx
 xxxxccc...ccc...cc...ccccc.6.ccc...ccccx
 xxxxcc...ccc...cccc..cccccc..cc...cccccx
 xxxxc...ccc...ccccc..cccccc..c...ccc..cx
 xxxxc..ccc...ccccc...ccccc...c..ccc...cx
 xxxxc..cc...ccccc...ccccc...cc..cc....cx
-xxxxc......cccccc..ccccc...ccc......3.cx
+xxxxc......cccccc..ccccc...ccc......7.cx
 xxxxc.....ccccccc..cccc...cccc........cx
 xxxxc.2..cccccccc.3.cc...ccccc....cc..cx
-xxxxc...cccccccccc.......2.......ccc..cx
+xxxxc...cccccccccc...2...........ccc..cx
 xxxxc..cccccccccccc.............cccc..cx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.@xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@@xx
 ENDMAP
 
-NAME:    mnoleg_grunt_wretched_star
-ORIENT:  centre
-TAGS:    mnoleg uniq_mnoleg
+NAME:     mnoleg_grunt_wretched_star
+TAGS:     mnoleg uniq_mnoleg
+ORIENT:   centre
+MONS:     patrolling Mnoleg, patrolling cacodemon
+MONS:     neqoxec / chaos spawn w:2, protean progenitor
+MONS:     shadow demon / tentacled monstrosity
+MONS:     very ugly thing / glass eye band w:15 / golden eye band w:5 / \
+          eye of devastation / great orb of eyes
+ITEM:     potion of mutation ident:type q:1
+NSUBST:   O = 1:O / 1:d / *:|
 : pan_lord_setup(_G, 'Mnoleg')
-NSUBST:  O = 1:O / *:|
-TILE:    c = dngn_stone_wall_yellow
-MONS:    patrolling Mnoleg, patrolling cacodemon
-MONS:    neqoxec, tentacled monstrosity, large abomination
-MONS:    very ugly thing band w:20 / floating eye / golden eye band / \
-         great orb of eyes / shining eye
 epilogue{{
   pan_lord_epilogue('Mnoleg')
 }}
 MAP
               .@.@.
            xx.......xx
-         xxx...ccc...xxx
+         xxx..&ccc...xxx
        xxxc...ccOcc...cxxx
       xx.ccc..c.c.c..ccc.xx
      xx.3.....cc.cc.....3.xx
     xxcc......c...c......ccxx
-   xx.cccc.6.cc...cc.6.cccc.xx
+   xx.cccc.5.cc...cc.6.cccc.xx
    x.3.ccc...c.....c...ccc.3.x
   xxc..cccc..c..2..c..cccc..cxx
   xcc....cc..c.....c..cc....ccx
- xx.c..6.................6..c.xx
+ xx.c..6.............5...4..c.xx
  x..........3.......3..........x
  ......cccc..cc...cc..cccc......
-...ccccc.....c..4..c.....ccccc...
-@.cc.c........5...5........c.cc.@
+..&ccccc.....c..4..c.....ccccc...
+@.cc.c........5............c.cc.@
 ..cOc....2......1......2....cOc..
-@.cc.c........5...5........c.cc.@
-...ccccc.....c..4..c.....ccccc...
+@.cc.c............5........c.cc.@
+...ccccc.....c..4..c.....ccccc&..
  ......cccc..cc...cc..cccc......
  x..........3.......3..........x
- xx.c..6.................6..c.xx
+ xx.c..4...5.............6..c.xx
   xcc....cc..c.....c..cc....ccx
   xxc..cccc..c..2..c..cccc..cxx
    x.3.ccc...c.....c...ccc.3.x
-   xx.cccc.6.cc...cc.6.cccc.xx
+   xx.cccc.6.cc...cc.5.cccc.xx
     xxcc......c...c......ccxx
      xx.3.....cc.cc.....3.xx
       xx.ccc..c.c.c..ccc.xx
        xxxc...ccOcc...cxxx
-         xxx...ccc...xxx
+         xxx...ccc&..xxx
            xx.......xx
               .@.@.
 ENDMAP
@@ -804,12 +823,14 @@ ENDMAP
 #######################################################################
 # Lom Lobon
 #
-NAME:      lom_lobon
-TAGS:      lom_lobon uniq_lom_lobon no_rotate
-ORIENT:    north
+NAME:     lom_lobon
+TAGS:     lom_lobon uniq_lom_lobon no_rotate no_pool_fixup
+ORIENT:   north
+MONS:     patrolling Lom Lobon, glowing orange brain, rakshasa
+MONS:     nagaraja w:5 / merfolk aquamancer w:5 / jorogumo w:5 / \
+          fenstrider witch w:5 / lich / \
+          draconian annihilator / deep elf annihilator
 : pan_lord_setup(_G, 'Lom Lobon')
-MONS:      patrolling Lom Lobon, glowing orange brain, rakshasa
-MONS:      wizard w:20 / lich / draconian annihilator / deep elf annihilator
 epilogue{{
   pan_lord_epilogue('Lom Lobon')
 }}
@@ -828,9 +849,9 @@ xxxxxxxxxxxwwbb........1O.......bbww...........bbwwww..............wwxxxxxxxxxxx
 xxxxxxxxxxwwwb...................bw......2......bwww.....U....2.....wwxxxxxxxxxx
 xxxxxxxxxxwwbb...................bb.............bww.................wwxxxxxxxxxx
 xxxxxxxxxxwwbb..3................bbb............bbw..............4..wwxxxxxxxxxx
-xxxxxxxxxwwbbb...................b.b............4....................wwxxxxxxxxx
+xxxxxxxxxwwbbb...................b.b....&.&.....4....................wwxxxxxxxxx
 xxxxxxxxxwwbwbb.................bb.......U......4..........U..........wxxxxxxxxx
-xxxxxxxxxwwbwwbb...............bb..b............bbw..............4.....xxxxxxxxx
+xxxxxxxxxwwbwwbb...............bb..b....&.&.....bbw..............4.....xxxxxxxxx
 xxxxxxxxxwwbbwwbbb...........bbb..bb............bwww...................xxxxxxxxx
 xxxxxxxxxwwwbwwwwb..b..2..bbbb....b.............bwww...................xxxxxxxxx
 xxxxxxxxxxwwbwwww...bbbbbbb.......bw.....3.....bbwwww...U.....3.......xxxxxxxxxx
@@ -847,17 +868,18 @@ xxxxxxxxxxxxxxxxxxxxxxxxxwwwwwww......................xxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...@.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:      lom_lobon_st
-TAGS:      lom_lobon no_pool_fixup uniq_lom_lobon
-ORIENT:    northwest
+NAME:     lom_lobon_st
+TAGS:     lom_lobon no_pool_fixup uniq_lom_lobon
+ORIENT:   northwest
+MONS:     patrolling Lom Lobon
+MONS:     blizzard demon, green death
+MONS:     nagaraja / merfolk aquamancer / jorogumo / fenstrider witch
+MONS:     draconian annihilator, sixfirhy
+SUBST:    0 = 2344444556
+NSUBST:   Q = 1:O / *:4, 9 = 2 = 2233455 / *:.
+NSUBST:   B = 1:. / *:b
+TILE:     v = dngn_metal_wall_blue
 : pan_lord_setup(_G, 'Lom Lobon')
-MONS:      patrolling Lom Lobon
-MONS:      blizzard demon, green death, wizard, draconian annihilator
-MONS:      sixfirhy
-SUBST:     0 = 23444445566
-NSUBST:    Q = 1:O / *:4
-NSUBST:    B = 1:. / *:b
-TILE:      v = dngn_metal_wall_blue
 epilogue{{
   pan_lord_epilogue('Lom Lobon')
 }}
@@ -869,7 +891,7 @@ xxxxxxxwwwwwbbbb...bbbbwwwbbbb...bbbbwwwxxwxxxxxx
 xxxxwxxwwwwbb....0....bbwbb....0....bbwwwwwwxxxxx
 xxxwwwwwwwbb...........bbb...........bbwwwwwwxxxx
 xxxwwwwwwbb...wwwwwww.......wwwwwww...bbwwwwxxxxx
-xxxxwwwwbb...wwwwwwwww.....wwwwwwwww...bbwwwwxxxx
+xxxxwwwwbb...wwwwwwwww..9..wwwwwwwww...bbwwwwxxxx
 xxwwwwwbb...wwbbbbbbbww...wwbbbbbbbww...bbwwwwxxx
 xxxwwwbb...wwbbwwwwwbbw...wbbwwwwwbbww...bbwwwxxx
 xxxwwbb...wwbbwwwwwwwbb...bbwwwwwwwbbww...bbwwwxx
@@ -883,7 +905,7 @@ xxwwbb...wwbbwwwwwww.........wwwwwwwbbww...bbwxxx
 xwwwwbb...wwbbwwwwwb.........bwwwwwbbww...bbwwxxx
 xxxwwwbb...wwbbwwwbb.........bbwwwbbww...bbwwxxxx
 xxxxwwwbb.....bbbbb...........bbbbb.....bbwwwwxxx
-xxxwwwwwb.....B.........1.........B.....bwwwwwxxx
+xxxwwwwwb.9...B.........1.........B...9.bwwwwwxxx
 xxxwwwwbb.....bbbbb...........bbbbb.....bbwwwwwxx
 xxwwwwbb...wwbbwwwbb.........bbwwwbbww...bbwwwxxx
 xwwwwbb...wwbbwwwwwb.........bwwwwwbbww...bbwwwxx
@@ -895,9 +917,9 @@ xxwbb...wwbwwwv.Q.vwwwwb.bwwwwv.Q.vwwwbww...bbwwx
 xxxwbb..wwbbwwvv.vvwwwwb.bwwwwvv.vvwwbbww..bbwwxx
 xxwwbb...wwbbwwvvvwwwwbbBbbwwwwvvvwwbbww...bbwwxx
 xxxxwbb...wwbbwwwwwwwbb...bbwwwwwwwbbww...bbwwwxx
-xxxxwwbb...wwbbwwwwwbbw...wbbwwwwwbbww...bbwwwxxx
-xxxxxwwbb...wwbbbbbbbww...wwbbbbbbbww...bbwwwwxxx
-xxxxwwwwbb...wwwwwwwww.....wwwwwwwww.......wwwxxx
+xxxxwwbb...wwbbwwwwwbbw...wbbwwwwwbbww&..bbwwwxxx
+xxxxxwwbb...wwbbbbbbbww...wwbbbbbbbww&.&bbwwwwxxx
+xxxxwwwwbb...wwwwwwwww..9..wwwwwwwww..&....wwwxxx
 xxxwwwwwwbb...wwwwwww.......wwwwwww...b.....wwwxx
 xxxxwwwwwwbb...........bbb...........bb.......wxx
 xxxxxxwwwwwbb....0....bbwbb....0....bbw....6....x
@@ -908,18 +930,19 @@ xxxxxxxxxxxxxxxxwwxxxxxxxxxxxxxxwwxwxxxxxx.......
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..@..
 ENDMAP
 
-NAME:      lom_lobon_spiral_st
-TAGS:      lom_lobon no_pool_fixup patrolling uniq_lom_lobon
-ORIENT:    northeast
+NAME:     lom_lobon_spiral_st
+TAGS:     lom_lobon no_pool_fixup patrolling uniq_lom_lobon
+ORIENT:   northeast
+MONS:     Lom Lobon, titan, shock serpent
+MONS:     nagaraja / merfolk aquamancer / jorogumo / fenstrider witch
+KMONS:    S = storm dragon
+KMONS:    d = draconian annihilator
+KMONS:    e = deep elf annihilator
+KFEAT:    S = deep_water
+KPROP:    'eF = no_tele_into
+SUBST:    F = 4, z = b..
+NSUBST:   D = 1:S / *:w
 : pan_lord_setup(_G, 'Lom Lobon')
-MONS:      patrolling Lom Lobon, titan, shock serpent, wizard
-KMONS:     S = storm dragon
-KMONS:     d = draconian annihilator
-KMONS:     e = deep elf annihilator
-COLOUR:    c = white
-KFEAT:     S = deep_water
-NSUBST:    D = 1:S / *:w
-TILE:      c = dngn_stone_wall_white
 epilogue{{
   pan_lord_epilogue('Lom Lobon')
 }}
@@ -928,58 +951,59 @@ cccccccccccccccccccccccccccccccccccccccc
 cbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbc
 cbbbbbb.....bb+..2..bbbbbwwwbbbbbbbbbbbc
 cbbbb.........bb...bbbwwwwwwwwwbbbbbbbbc
-cbbb...........bbObbwww.....wwwwwbbbbbbc
-cbb.............bbbww.........wwwwbbbbbc
-cbb.............bbww.....w......wwwbbbbc
+cbbb...........bbObbwww&...&wwwwwbbbbbbc
+cbb.............bbbww...&.&...wwwwbbbbbc
+cbb.............bbww.....w..z...wwwbbbbc
 cb.......1.......bw....www.......wwbbbbc
 cb...............bw...wwwww...V..wwwbbbc
 cb...............bb..wwwwwww......wwbbbc
-cbb.............bbb.....wwwww.....wwbbbc
+cbb.............bbb.....wwwww...z.wwbbbc
 cbb.............bbbb...2..wwwww....wwbbc
 cbbb...........bbbbbbb.......www...wwwbc
-cbbbbb.......bbbbbbbbbbbbbb...bbb...wwwc
+cbbbbb.......bbbbbbbbbbbbbb.z.bbb...wwwc
 cbbbbbbb...bbbbbbbbbbbbbwwww....bb..wwwc
 cbbbbbb...bbbbbbbbbbbwwwwwwwww...bb..wwc
 cbbbbb..wbbbbbbbbbbwwwwwwwwwwww...b..wwc
 cbbb...wwwbbbbbbbbwwwwwwwwwwwwww..bb.wwc
-cbb...wwwwwbbbbbbbwwwwww..wwwwww...b..wc
-cbb.d..wwwwwbbbbb.wwwww.ee.wwwww...b..wc
-cbb.....wwwwwwbbb.wwwwww..wwwwww...b..wc
-cbb...d.wwww....2..wwwwwwwwwwwww..bb..Dc
-cwb.........www.....wwwwwwwwwww...bw..wc
+cbb...wwwwwbbbbbbbwwwwww''wwwwww...bz.wc
+cbb....wwwwwbbbbb.wwwww'Fe'wwwww...b.zwc
+cbb.z...wwwwwwbbb.wwwwww''wwwwww...bz.wc
+cbb...z.wwww...z2..wwwwwwwwwwwww..bb..Dc
+cwb.d.......www.z...wwwwwwwwwww...bw..wc
 cwbb...wwwwwwwwbbb...wwwwwwwww...bbw..wc
 cwbbbdwwwwwwwwbbbbb....wwww.....bbww.wwc
-cwwbbbbwwwwbbbbwwwbbb.........bbbww..wwc
-cwwSbbbbbbbbwwwwwwwwbbb....bbbbwww...wwc
+cwSbbbbwwwwbbbbwwwbbb.........bbbww..wwc
+cwwwbbbbbbbbwwwwwwwwbbb....bbbbwww...wwc
 cwwwwwbbbbwwwwwwwwwwwwbbbbbbwwwDww...wwc
 cwwwwwwwwwwwww.4.wwwwwwwwwwwwwwwww....wc
 cwwwwwwwwww........wwwwwwwwwwwwww.....wc
 cwwwwwwww...........wwwwwwwwwwww.....wwc
 cwwwwwww.....U...U......wwwwwwww.....wwc
-cwwwwbbbb..................wwww.....wwwc
-cwwbbb..............ww..............wwDc
-cwbb..3...........wwwwww.....2.....wwwwc
+cwwwwbbbb..................wwww..z..wwwc
+cwwbbb.........z....ww...z..........wwDc
+cwbb..3...z.......wwwwww...........wwwwc
 cwb$.........ww..wwwwwwwww.......wwwwwwc
 cwb$..3.....wwww..wwwwwwwww....wwwwwwwwc
 cwbb....3.bbwwww...wwwwwwwwwwwwwwwwwwwcc
 cwwbbb$$bbbwwwwww....wwwwwwwwwwwwwwwwccc
 ccwwwbbbbwwwww...w....wwwwwwwwwwwwwwcccc
 cccwwwwwwwwww..4.....4.wwwwwwwwwwwcccccc
-cccccwwwwww............wwwwwwwwwcccccccc
+cccccwwwwww......z.z...wwwwwwwwwcccccccc
 cccccccccccccccc..@..ccccccccccccccccccc
 ENDMAP
 
-NAME:    lom_lobon_grunt
-TAGS:    lom_lobon no_pool_fixup uniq_lom_lobon
-ORIENT:  north
+NAME:     lom_lobon_grunt
+TAGS:     lom_lobon no_pool_fixup uniq_lom_lobon
+ORIENT:   north
+MONS:     patrolling Lom Lobon
+MONS:     nagaraja w:5 / merfolk aquamancer w:5 / fenstrider witch w:5 / \
+          rakshasa w:20 / glowing orange brain / green death
+MONS:     jorogumo w:5 / blizzard demon / spriggan air mage w:5
+MONS:     deep elf annihilator / draconian annihilator / titan w:4 / lich w:4
+KPROP:    ?U$"W~ = no_tele_into
+NSUBST:   2? = 5:2 / 7:3 / 6:4 / * = 22234
+SUBST:    W = ww., -' = ..w, ~ = .
 : pan_lord_setup(_G, 'Lom Lobon')
-MONS: patrolling Lom Lobon
-MONS: draconian annihilator / deep elf annihilator / \
-      wizard w:20 / rakshasa w:20 / glowing orange brain / \
-      blizzard demon / green death / titan w:5 / \
-      spriggan air mage w:5 / lich w:5
-SUBST:   W = ww.
-SUBST:   - = ..w
 epilogue{{
   pan_lord_epilogue('Lom Lobon')
 }}
@@ -990,27 +1014,27 @@ xxxxxxxxxxxxwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxwwwwwwbbbbbbbbbwwwwwwxxxxxxxxwwwwwxxxxxxxxxxxxx
 xxxxxxxxxwwwwbbbbwwwwwwwbbbbwwwwwwwwwwwwwwwwwwwxxxxxxxxxx
 xxxxxxxxwwwbbbwwwwWWWWWWwwwbbbwwwwwwwwwWWWwwwwwwxxxxxxxxx
-xxxxxxxwwwbbwwwwWW------WWWwwbbwwwwwwwW---Wwwwwwwwwxxxxxx
-xxxxxxwwwbbwwwWW--..2...---WWwbbwwwwwW-$$$-Wwwwwwwwwwxxxx
-xxxxxwwwbbwwwW--...........--WwbbwwwwW-.U.-Wwwwwwwwwwxxxx
-xxxxwwwbbwwwW-...------......-WwbbwwwW-2.2-Wwwwwwwwwwwxxx
-xxxwwwbbwwwW-..--WWWWWW----.2.-WwbbwwwW---Wwwwwwwwwwwwwxx
+xxxxxxxwwwbbwwwwWW------WWWwwbbwwwwwwwW'''Wwwwwwwwwxxxxxx
+xxxxxxwwwbbwwwWW--..2...---WWwbbwwwwwW'$$$'Wwwwwwwwwwxxxx
+xxxxxwwwbbwwwW--...........--WwbbwwwwW'~U~'Wwwwwwwwwwxxxx
+xxxxwwwbbwwwW-...------......-WwbbwwwW'?~?'Wwwwwwwwwwwxxx
+xxxwwwbbwwwW-..--WWWWWW----.2.-WwbbwwwW'''Wwwwwwwwwwwwwxx
 xxxwwbbwwwW-..-WWwwwwwwWWWW--..-WwbbwwwWWWwwwwwwwwwwwwwwx
 xxwwwbwwwbb...bbwwwwwwwwwwwWW-..-WwbwwwwwwwwWWWWwwwwwwwwx
 xxwwbbwbbb..2..bbbwwwwwwwwwwW-..-WwbbwwwwwWW----WWwwwwwwx
-xxwwbwbb.........bbwwwwwwwwwwW-..-WwbwwwwW--.2.2--Wwwwwwx
+xxwwbwbb.........bbwwwwwwwwwwW-2.-WwbwwwwW--.2.2--Wwwwwwx
 xwwwbbb...........bbwwwwwwwwwW-..-WwbwwwwW-.......-Wwwwwx
 xwwbbb.............bwwwwwwwwwW-..-WwbbwwwW-...U....-Wwwwx
-xwwbbbbb...........bbwwwWWWwwwW-2.-WwwwwW-...2.2...-Wwwwx
-xwwbb..bb...........bwwW---WwwW-...-WWWW-.2..---....-Wwwx
-xwwbb...b...........bwW-$.2-WwW-....----....-WWW-...-Wwwx
-xwwbbO2.+.2...1...2.bwW-$U.-WwW-.U.2.......-WwwwW-...-Wwx
-xwwbb...b...........bwW-$.2-WwW-....-------WwwwwwW-2.-Wwx
-xwwbb..bb...........bwwW---WwwW-...-WWWWWWWwwwwwwW-..-Wwx
-xwwbbbbb...........bbwwwWWWwwwW-2.-WwwwwwwwwwwwwwW-..-Wwx
+xwwbbbbb...........bbwwwWWWwwwW-..-WwwwwW-...2.2...-Wwwwx
+xwwbb..bb...........bwwW'''WwwW-...-WWWW-.2..---....-Wwwx
+xwwbb...b...........bwW'$~?'WwW-&.&.----....-WWW-...-Wwwx
+xwwbbO2.+.2...1...2.bwW'$U~'WwW-.U.2.......-WwwwW-...-Wwx
+xwwbb...b...........bwW'$~?'WwW-&.&.-------WwwwwwW-2.-Wwx
+xwwbb..bb...........bwwW'''WwwW-...-WWWWWWWwwwwwwW-..-Wwx
+xwwbbbbb...........bbwwwWWWwwwW-..-WwwwwwwwwwwwwwW-..-Wwx
 xwwbbb.............bwwwwwwwwwW-..-WwbbwwxxxxxxwwwW-..-Wwx
 xwwwbbb...........bbwwwwwwwwwW-..-WwbwwwxxxxxxxwwW-.2-Wwx
-xxwwbwbb.........bbwwwwwwwwwwW-..-WwbwwxxxxxxxxxwW-..-Wwx
+xxwwbwbb.........bbwwwwwwwwwwW-2.-WwbwwxxxxxxxxxwW-..-Wwx
 xxwwbbwbbb..2..bbbwwwwwwwwwwW-..-WwbbwwxxxxxxxxxwW-..-Wwx
 xxwwwbwwwbb...bbwwwwwwwwwwwWW-..-WwbwwwxxxxxxxxxW-...-Wxx
 xxxwwbbwwwW-..-WWwwwwwwWWWW--..-WwbbwwxxxxxxxxxW-.2.-Wxxx
@@ -1027,17 +1051,19 @@ xxxxxxxxxxxxxxxwwwwwwwwwwwxxxxxxxxxxxxxxxxxxW-..-Wxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-.@@.-xxxxxxx
 ENDMAP
 
-NAME:    lom_lobon_grunt_wind_tunnels
-TAGS:    lom_lobon no_pool_fixup uniq_lom_lobon
-ORIENT:  west
+NAME:     lom_lobon_grunt_wind_tunnels
+TAGS:     lom_lobon no_pool_fixup uniq_lom_lobon
+ORIENT:   west
+MONS:     patrolling Lom Lobon, patrolling titan, patrolling wind drake
+MONS:     blizzard demon / titan / spriggan air mage / storm dragon
+MONS:     draconian annihilator / deep elf annihilator / \
+          nagaraja w:5 / merfolk aquamancer w:5 / jorogumo w:5 / \
+          fenstrider witch w:5 / rakshasa w:20 / glowing orange brain / \
+          blizzard demon / green death / lich w:5
+SHUFFLE:  O2
+KPROP:    13'F = no_tele_into
+SUBST:    F = 4
 : pan_lord_setup(_G, 'Lom Lobon')
-SHUFFLE: O2
-MONS:    patrolling Lom Lobon, patrolling titan, patrolling wind drake
-MONS:    blizzard demon / titan / spriggan air mage / storm dragon
-MONS:    draconian annihilator / deep elf annihilator / \
-         wizard w:20 / rakshasa w:20 / glowing orange brain / \
-         blizzard demon / green death / titan w:5 / \
-         spriggan air mage w:5 / lich w:5
 epilogue{{
   pan_lord_epilogue('Lom Lobon')
 }}
@@ -1046,8 +1072,8 @@ ccccccccccccccccccccccccccccccccccccccccccc
 cbbbbbbbbbbwwwwwwwwwwwwwwwwwwwwwccccccccccc
 cbbbbbbbb..5..........5........wwwwwccccccc
 cbbbbb......wwwwwwwwwwwwwww........wwwccccc
-cbbb........ww.3....4.....ww.........wwcccc
-cbbb...5.....ww....4.....3.ww.......5.wwccc
+cbbb........ww'3''''F'''''ww.........wwcccc
+cbbb...5.....ww''''F'''''3'ww.......5.wwccc
 cbb......5....wwwwwwwwwwwwwww..........wccc
 cbb.......bb......5..........5....5....wwcc
 cbb......bbbbb..........................wcc
@@ -1059,12 +1085,12 @@ cbb......3....5..wwwbbbbbccw.........wwcccc
 cbb................wwbbbbcww...3...wwwccccc
 cbbb...3............wwbbbcw......wwwccccccc
 cbbbb................wbbbcw..U...cccccccccc
-cbbbbbb......ww......wwbbcw..........cccccc
+cbbbbbb......ww......wwbbcw.&........cccccc
 cbbb..bb....wwww....5.wbbcw....5..........c
-cbb.O......ww.4ww.....wwbcw...............@
-cbb.2......ww1.ww.....wwbcw...............@
+cbb.O......ww'Fww.....wwbcw.&.............@
+cbb.2......ww1'ww.....wwbcw.&.............@
 cbbb..bb....wwww....5.wbbcw....5..........c
-cbbbbbb......ww......wwbbcw..........cccccc
+cbbbbbb......ww......wwbbcw.&........cccccc
 cbbbb................wbbbcw..U...cccccccccc
 cbbb...3............wwbbbcw......wwwccccccc
 cbb................wwbbbbcww...3...wwwccccc
@@ -1076,8 +1102,8 @@ cb.3..3.bbbbbbbbwwwwwwwwwwwwwwwww.......wcc
 cbb......bbbbb..........................wcc
 cbb.......bb.....5...........5....5....wwcc
 cbb......5....wwwwwwwwwwwwwww..........wccc
-cbbb...5.....ww....4.....3.ww.......5.wwccc
-cbbb........ww.3....4.....ww.........wwcccc
+cbbb...5.....ww''''F'''''3'ww.......5.wwccc
+cbbb........ww'3''''F'''''ww.........wwcccc
 cbbbbb......wwwwwwwwwwwwwww........wwwccccc
 cbbbbbbbb..5..........5........wwwwwccccccc
 cbbbbbbbbbbwwwwwwwwwwwwwwwwwwwwwccccccccccc
@@ -1091,12 +1117,11 @@ ENDMAP
 NAME:      cerebov
 TAGS:      cerebov uniq_cerebov
 ORIENT:    northeast
-: pan_lord_setup(_G, 'Cerebov')
 MONS:      patrolling Cerebov, Balrug, brimstone fiend
+: pan_lord_setup(_G, 'Cerebov')
 epilogue{{
   pan_lord_epilogue('Cerebov')
 }}
-TILE:       v = dngn_metal_wall_brown
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1114,18 +1139,18 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ...v.vvvv....vv1vv....vvvv.v...xxxx
 ...v.vv......v...v......vv.v...xxxx
 ...v.vvvv.............vvvv.v...xxxx
-...v...vv..2.......2..vv...v...xxxx
+...v...vv.............vv...v...xxxx
 .vvvvv.vv..2.......2..vv.vvvvv.xxxx
-.v|$|v.vv.............vv.v$|$v.xxxx
+.v|$|v.vv..2.......2..vv.v$|$v.xxxx
 .v|$|+.vv...vv...vv...vv.+$|$v.xxxx
 .v|$|v.vv...vv+++vv...vv.v$|$v.xxxx
-.vvvvv.vvvvvvv...vvvvvvv.vvvvv.xxxx
+.vvvvv.vvvvvvv+++vvvvvvv.vvvvv.xxxx
 ....v..vvvvvvv...vvvvvvv..v....xxxx
 ....vv...................vv....xxxx
-.....vv.vv+vv..2..vv+vv.vv.....xxxx
-......vvv|||v.....v$$$vvv......xxxx
-........v|$|vv...vv$|$v........xxxx
-........v|||v.....v$$$v........xxxx
+.....vv.vv+vv.....vv+vv.vv.....xxxx
+......vvv|||v..&..v$$$vvv......xxxx
+........v|$|vv&.&vv$|$v........xxxx
+......2.v|||v..&..v$$$v.2......xxxx
 ........vvvvv.....vvvvv........xxxx
 ...............................xxxx
 ...............@...............xxxx
@@ -1134,10 +1159,9 @@ ENDMAP
 NAME:      cerebov_st
 TAGS:      cerebov patrolling uniq_cerebov
 ORIENT:    north
-: pan_lord_setup(_G, 'Cerebov')
-TILE:      v = dngn_metal_wall_brown
 MONS:      patrolling Cerebov, balrug, brimstone fiend
-MONS:      red devil, sun demon, crimson imp
+MONS:      red devil, sun demon, sun moth
+: pan_lord_setup(_G, 'Cerebov')
 epilogue{{
   pan_lord_epilogue('Cerebov')
 }}
@@ -1145,7 +1169,7 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx.....................................................................xx
-xx...............................6.....6...............................xx
+xx...............................5.....5...............................xx
 xx..................................6..................................xx
 xx.............................vvv.....vvv.............................xx
 xx...vvvvv.....................vvv.v.v.vvv.....................vvvvv...xx
@@ -1157,13 +1181,13 @@ xx....vv...vvvvvvvvvvvvvvvvvvvvv+vvv.vvv+vvvvvvvvvvvvvvvvvvvvv...vv....xx
 xx.....v.vvvvvvv...........v.......v.v.......v.v.....5..5.+..vvv.v.....xx
 xx....vv.vvvvvvv+v+vvvvvvv+v.v.v.v.....v.v.v.v.v..v..v..v.v.$||v.vv....xx
 xx....vv.vv||v.......v$$vv+v.................v.+.........3v.$||v.vv....xx
-xx.....v.vv||v.v.1.v.v$$v6.v.v.............v.v.v..v..v..v.v.$$$v.v.....xx
-xx....vv.vv||v.v...v.v$$vO3v......2...2......v.v.....5..5.+.$$$v.vv....xx
-xx....vv.vv+vv.......vv+vvvv.v.............v.v.vvvvvvvvvvvvvvvvv.vv....xx
+xx.....v.vv||v.v.1.v.v$$v4.v.v...2.....2...v.v.v..v..v..v.v.$$$v.v.....xx
+xx....vv.vv||v.v...v.v$$vO3v.................v.v.....5..5.+.$$$v.vv....xx
+xx....vv.vv+vv.......vv+vvvv.v.....&.&.....v.v.vvvvvvvvvvvvvvvvv.vv....xx
 xx.....v.vv..2.......2..v..+.................+.............+...v.v.....xx
-xx....vv.vv..2.......2..v..v.v.............v.vvvvvvvvvvvvvvv...v.vv....xx
-xx....vv.vv.............v..v......2...2......v...v..4..v$|$v.6.v.vv....xx
-xx.....v.vv....v...v....v..v.v.............v.v...+..2..+|$|v.2.v.v.....xx
+xx....vv.vv..2.......2..v..v.v.....&.&.....v.vvvvvvvvvvvvvvv...v.vv....xx
+xx....vv.vv.............v..v.................v...v..4..v$|$v.6.v.vv....xx
+xx.....v.vv....v...v....v..v.v...2.....2...v.v...+..2..+|$|v.2.v.v.....xx
 xx....vv.vv...vv+++vv...v..v.................v.4.v..4..v$|$v...v.vv....xx
 xx....vv.vvvvvv.....vvvvv..v.v.v.v.....v.v.v.v.4.vvvvvvvvvvv...v.vv....xx
 xx.....v.vvv...............v.......v.v.......v...vvvvvvvvvvv+vvv.v.....xx
@@ -1174,26 +1198,22 @@ xx...v|||vvvvvvvvvvvvvvvvvvvvvvvvvvv.vvvvvvvvvvvvvvvvvvvvvvvvvvv$|$v...xx
 xx...v$$$v..vv..vv..vv..vv..vv.vvv.....vvv.vv..vv..vv..vv..vv..v$$$v...xx
 xx...vvvvv.....................vvv.v.v.vvv.....................vvvvv...xx
 xx.............................vvv.....vvv.............................xx
-xx..................................6..................................xx
+xx..................................5..................................xx
 xx...............................6.....6...............................xx
 xx.....................................................................xx
 xx.................................@@@.................................xx
 ENDMAP
 
-NAME:       evilmike_cerebov_lava
-TAGS:       cerebov patrolling uniq_cerebov
-ORIENT:     northwest
+NAME:     evilmike_cerebov_lava
+TAGS:     cerebov patrolling uniq_cerebov
+ORIENT:   northwest
+MONS:     Cerebov, balrug, brimstone fiend, sun demon, sun moth
+SUBST:    X : v, Y : .v, L : lll.
+SUBST:    U : W., W : V., V : v.
+SHUFFLE:  XY
+NSUBST:   Q = 1:3 / 2:|, B = 3:2 / 2:5 / *:4, C = 2:2 / 2:|
+KPROP:    l = no_cloud_gen
 : pan_lord_setup(_G, 'Cerebov')
-SHUFFLE:    XY
-SUBST:      X : v, Y : .v
-SUBST:      L : lll.
-SUBST:      U : W., W : V., V : v.
-KPROP:      l = no_cloud_gen
-TILE:       v = dngn_metal_wall_brown
-MONS:       Cerebov, balrug, brimstone fiend, sun demon
-NSUBST:     Q = 1:3 / 2:|
-NSUBST:     B = 3:2 / 3:4
-NSUBST:     C = 2:2 / 2:|
 epilogue{{
   pan_lord_epilogue('Cerebov')
 }}
@@ -1214,15 +1234,15 @@ xx.....vv.vvB.............Bvv.vv.....lll....
 xx.....vv.V.....LLL.lll.....V.vv............
 xx.....vv.v....LLLL.llll....v.vv............
 xx.....vv.W...LLLL...llll...W.vvvvvvvvvv....
-xx.....vv.v...LLLL...llll...v.vvvvvvvvvvvv..
-xx..vvvvv.U..LLLL.....llll..........vllvvv..
+xx.....vv.v...LLLL...llll...v2vvvvvvvvvvvv..
+xx..vvvvv.U..LLLL.....llll.....&....vllvvv..
 xx..v%%%v...LLvvv......llll...vWvWv.v4...vv.
-xx..v|||v..LLvv.v.Y....llll...2.....+.....4.
-xx..v|Q|+..LLvOX3.Y...1lllll.4......+.2....@
-xx..v|||v..LLvv.v.Y....llll...2.....+.....4.
+xx..v|||v..LLvv.v.Y....llll...&.....+.......
+xx..v|Q|+..LLvOX3.Y...1lllll.4......+.5.2..@
+xx..v|||v..LLvv.v.Y....llll...&.....+.......
 xx..v%%%v...LLvvv......llll...vWvWv.v4...vv.
-xx..vvvvv.U..LLLL.....llll..........vllvvv..
-xx.....vv.v...LLLL...llll...v.vvvvvvvvvvvv..
+xx..vvvvv.U..LLLL.....llll.....&....vllvvv..
+xx.....vv.v...LLLL...llll...v2vvvvvvvvvvvv..
 xx.....vv.W...LLLL...llll...W.vvvvvvvvvv....
 xx.....vv.v....LLLL.llll....v.vv............
 xx.....vv.V.....LLL.lll.....V.vv............
@@ -1239,62 +1259,61 @@ xx..........................................
 xx..........................................
 ENDMAP
 
-NAME:   cerebov_grunt
-TAGS:   cerebov uniq_cerebov
-ORIENT: northwest
+NAME:     cerebov_grunt
+TAGS:     cerebov uniq_cerebov
+ORIENT:   northwest
+MONS:     patrolling Cerebov, balrug, brimstone fiend
+MONS:     sun demon, red devil, sun moth
+NSUBST:   5 = 2:6 / * = 44455
 : pan_lord_setup(_G, 'Cerebov')
-MONS:   patrolling Cerebov, balrug, brimstone fiend
-MONS:   sun demon, red devil / crimson imp w:20
 epilogue{{
   pan_lord_epilogue('Cerebov')
 }}
-TILE:   v = dngn_metal_wall_brown
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxx...........................
-xxxx...........vvvvv...........
-xxxx...........v|||v...........
-xxxx...........v|||v...........
-xxxx.........vvv|||vvv.........
-xxxx........vvvvv+vvvvv........
-xxxx.......vvv...4...vvv.......
-xxxx......vvv.........vvv......
-xxxx.....vvv....vvv....vvv.....
-xxxx.vvvvvv..2.vvOvv.2..vvvvvv.
-xxxx.v|$$v....vv$3$vv....v$||v.
-xxxx.v||$+4.vvv$vvv$vvv.4+$$|v.
-xxxx.v|$$v..vll2$$$2llv..v$||v.
-xxxx.vvvvv..vll$.1.$llv..vvvvv.
-xxxx....vv..vvl.2.2.lvv..vv....
-xxxx....vv...vl.vvv.lv...vv....
-xxxx....vvv..v.lllll.v..vvv....
-xxxx.....vv.2..lllll..2.vv.....
-xxxx.....vvv....lll....vvv.....
-xxxx......vv...........vv......
-xxxx......vv.4.......4.vv......
-xxxx.....vvv+v.......v+vvv.....
-xxxx.....v$$$vvv...vvv|||v.....
-xxxx.....v$|$vvv+++vvv|$|v.....
-xxxx.....v$$$vvv...vvv|||v.....
-xxxx.....vvvvv.5...5.vvvvv.....
-xxxx...........................
-xxxx..........5..2..5..........
-xxxx...........................
-xxxx...........5...5...........
-xxxx.............@.............
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx.............................
+xxxx............vvvvv............
+xxxx............v|||v............
+xxxx............v|||v............
+xxxx..........vvv|||vvv..........
+xxxx.........vvvvv+vvvvv.........
+xxxx........vvv...4...vvv........
+xxxx.......vvv.........vvv.......
+xxxx......vvv2...vvv...2vvv......
+xxxx.vvvvvv.....vvOvv.....vvvvvv.
+xxxx.v|$$v.....vv$3$vv.....v$||v.
+xxxx.v||$+4..vvv$vvv$vvv..4+$$|v.
+xxxx.v|$$v...vll.$1$.llv...v$||v.
+xxxx.vvvvv...vll$.2.$llv...vvvvv.
+xxxx....vv...vvl.2.2.lvv...vv....
+xxxx....vv....vl.vvv.lv....vv....
+xxxx....vvv...v.lllll.v...vvv....
+xxxx.....vv2....lllll....2vv.....
+xxxx.....vvv...vvlllvv...vvv.....
+xxxx......vv....v...v....vv......
+xxxx......vv.............vv......
+xxxx.....vvv+v4.......4v+vvv.....
+xxxx.....v$$$vvv.....vvv|||v.....
+xxxx.....v$|$vvvv+++vvvv|$|v.....
+xxxx.....v$$$vvv.....vvv|||v.....
+xxxx.....vvvvv..5...5..vvvvv.....
+xxxx.............................
+xxxx...........5.&.&.5...........
+xxxx.............................
+xxxx............&.5.&............
+xxxx..............@..............
 ENDMAP
 
-NAME:   cerebov_grunt_fire_and_steel
-TAGS:   cerebov uniq_cerebov
-ORIENT: north
+NAME:     cerebov_grunt_fire_and_steel
+TAGS:     cerebov uniq_cerebov
+ORIENT:   north
+MONS:     patrolling Cerebov, balrug, brimstone fiend, sun demon, sun moth
+NSUBST:   O = 1:O / *:|, 4 = 3:5 / *:4
 : pan_lord_setup(_G, 'Cerebov')
-NSUBST: O = 1:O / *:|
-MONS:   patrolling Cerebov, balrug, brimstone fiend, sun demon
 epilogue{{
   pan_lord_epilogue('Cerebov')
 }}
-TILE:   v = dngn_metal_wall_brown
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1307,9 +1326,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 .lvvv....4....vvllvvv+vvvlllvvv+vvvllvvvv+vvvvll....
 .lvv..4.....2..vvvvvl.lvvvvvvvl.lvvvvvvl...lvvvllll.
 .llv...vvvvv...vlllll4lllllllll4lllllvll...llvvvvvl.
-...+.4.v|$|v...+.....................+..4.2..v$|$vl.
-...+...v$|$+...+.....2.........2.....+...1.3.+|O$vl.
-...+.4.v|$|v...+.....................+..4.2..v$|$vl.
+...+.4.v|$|v...+.........&.&.........+..4.2..v$|$vl.
+...+...v$|$+.2.+...2.........2.......+...1.3.+|O$vl.
+...+.4.v|$|v...+.........&.&.........+..4.2..v$|$vl.
 .llv...vvvvv...vlllll4lllllllll4lllllvll...llvvvvvl.
 .lvv..4.....2..vvvvvl.lvvvvvvvl.lvvvvvvl...lvvvllll.
 .lvvv....4....vvllvvv+vvvlllvvv+vvvllvvvv+vvvvll....
@@ -1325,19 +1344,18 @@ ENDMAP
 ##############################################################################
 # Gloorx Vloq
 #
-NAME:      gloorx_vloq
-TAGS:      gloorx_vloq uniq_gloorx_vloq
-ORIENT:    southwest
+NAME:     gloorx_vloq
+TAGS:     gloorx_vloq uniq_gloorx_vloq
+ORIENT:   southwest
+MONS:     patrolling Gloorx Vloq, Executioner, curse skull, reaper
+MONS:     caustic shrike skeleton / juggernaut skeleton / hellephant skeleton
+SHUFFLE:  1O
 : pan_lord_setup(_G, 'Gloorx Vloq')
-TILE:      c = dngn_stone_wall_darkgray
-SHUFFLE:   1O
-MONS:      patrolling Gloorx Vloq, Executioner, curse skull
-MONS:      demonic crawler, shadow wraith
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
 }}
 MAP
-xxxxxxxxxxxxxxxxxx@.xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx@@xxxxxxxxxxxxxxx
 xxxx..............................x
 xxxx..............................x
 xxxx..............................x
@@ -1357,10 +1375,10 @@ xxxx.x.x.c.c.2...cccc...2.c.c.x.x.x
 xxxx...x.c.cc.....cc.....cc.c.x...x
 xxxx.x.x.c..ccccc.cc.ccccc..c.x.x.x
 xxxx...x.cc.4.....3......4.cc.x...x
-xxxx.x.x..ccccc..5..5..ccccc..+.x.x
+xxxx.x.x..ccccc..5..5..ccccc..x.x.x
 xxxx...xx....................xx...x
-xxxx.x.xxxx+xxxx+xxxxxxxx+xxxxx.x.x
-xxxx..............................x
+xxxx.x.xxxxxx+xxxxxxxxxxxx+xxxx.x.x
+xxxx...........&..&&..&...........x
 xxxx.x.x.x.x.x.x.x..x.x.x.x.x.x.x.x
 xxxx..............................x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1368,13 +1386,13 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:      gloorx_vloq_st
-TAGS:      gloorx_vloq uniq_gloorx_vloq
-ORIENT:    southeast
+NAME:   gloorx_vloq_st
+TAGS:   gloorx_vloq uniq_gloorx_vloq
+ORIENT: southeast
+MONS:   patrolling Gloorx Vloq, Executioner, curse skull
+MONS:   soul eater, flayed ghost
+MONS:   caustic shrike skeleton / juggernaut skeleton / hellephant skeleton
 : pan_lord_setup(_G, 'Gloorx Vloq')
-TILE:      c = dngn_stone_wall_darkgray
-MONS:      patrolling Gloorx Vloq, Executioner, curse skull
-MONS:      soul eater, shadow wraith, unseen horror
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
 }}
@@ -1383,21 +1401,21 @@ xxxxxxxxxxxxxxxxxx.@.xxxxxxxxxxxxxxxxxx
 xxxxx.............................xxxxx
 xxxx...xxx.x.xxx.x.x.x.xxx.x.xxx...xxxx
 xxx....xxx.x.xxx.x5x5x.xxx.x.xxx....xxx
-xx...................................xx
-x..6..ccccccccccccccccccccccccccc..6..x
-xx...xcxxxxxxxxxxxxxxxxxxxxxxxxxcx...xx
+xx.................6.................xx
+x..4..ccccccccccccccccccccccccccc..4..x
+xx.3.xcxxxxxxxxxxxxxxxxxxxxxxxxxcx.3.xx
 x.x.x.cx.x4x.x.x.x.x.x.x.x.x4x.xc.x.x.x
 x..x..cxx.x.x.x.x.xOx.x.x.x.x.xxc..x..x
 x.x.x.cx.x.x.x.x.xxxxx.x.x.x.x.xc.x.x.x
-xx...xcxx.x.x.x.x4...4x.x.x.x.xxcx...xx
-x.x.x.cx3x.x.x.x.x...x.x.x.x.x3xc.x.x.x
+xx...xcxx.x.x.x.x.....x.x.x.x.xxcx...xx
+x.x.x.cx.x.x.x.x.x...x.x.x.x.x.xc.x.x.x
 x..x..cxx.x.x.x.x.....x.x.x.x.xxc..x..x
 x.x.x.cx.x.x2x.x.x...x.x.x2x.x.xc.x.x.x
 xx...xcxx.x.x.x.x.....x.x.x.x.xxcx...xx
 x.x.x.cx.x.x.x.x.x.1.x.x.x.x.x.xc.x.x.x
-x5.x.5cxx.x.x.x.x.....x.x.x.x.xxc5.x.5x
+x5.x.6cxx.x.x.x.x.....x.x.x.x.xxc6.x.5x
 x.x.x.cx2x.x.x.x.x...x.x.x.x.x2xc.x.x.x
-xx...xcxx.x.x.x.x.....x.x.x.x.xxcx...xx
+xx.5.xcxx.x.x.x.x.....x.x.x.x.xxcx.5.xx
 x.x.x.cx.x.x.x.x.x...x.x.x.x.x.xc.x.x.x
 x..x..cxx.x.x.x.x4...4x.x.x.x.xxc..x..x
 x.x.x.cx.x.x.x.x.x...x.x.x.x.x.xc.x.x.x
@@ -1408,26 +1426,21 @@ xxxxx.....cccc.x.x...x.x.cccc.....xxxxx
 xxxxxxx......ccccx...xcccc......xxxxxxx
 xxxxxxxxx.......cc+++cc.......xxxxxxxxx
 xxxxxxxxxxxx.......2.......xxxxxxxxxxxx
-xxxxxxxxxxxxxxx.........xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx.&.&.&.&.xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:       evilmike_gloorx_vloq_box
-TAGS:       gloorx_vloq uniq_gloorx_vloq
-ORIENT:     southeast
+NAME:     evilmike_gloorx_vloq_box
+TAGS:     gloorx_vloq uniq_gloorx_vloq
+ORIENT:   southeast
+MONS:     patrolling Gloorx Vloq
+MONS:     executioner, curse skull, reaper
+MONS:     shadow wraith, spectral emperor scorpion
+MONS:     caustic shrike skeleton / juggernaut skeleton / hellephant skeleton
+KMONS:    O = flayed ghost
+SHUFFLE:  Cd / De
+SUBST:    Cd = c, D = ., e = +, X : xx., V : x.
 : pan_lord_setup(_G, 'Gloorx Vloq')
-SUBST:      X : xx.
-SUBST:      V : x.
-: if crawl.coinflip() then
-SUBST:      C : c, d : c
-: else
-SUBST:      C : ., d : +
-: end
-TILE:       c = dngn_stone_wall_darkgray
-MONS:       patrolling Gloorx Vloq
-MONS:       executioner, curse skull, shadow demon
-MONS:       shadow wraith, demonic crawler
-KMONS:      O = demonic crawler
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
 }}
@@ -1440,21 +1453,21 @@ x.V.........................x..xx
 x..x.........................x.xx
 x.x....ccccccccccccccccccc..V..xx
 x..V...cxxxxxxxxxxxxxxxxxc...x.xx
-x.x....cxxxxxxxxxxxxxx...c..x..xx
-x..x...cxxxxxxxxxxxxx3.X.c...V.xx
+x.x....cxxxxxxxxxxxxxx..3c..x..xx
+x..x...cxxxxxxxxxxxxx..X.c...V.xx
 x.V....cxxxxxxxxxxx......c..x..xx
-x..x...cxxxxxxxx.....X.X.c...x.xx
-x.x..cccxxxx.............c..V..xx
-x...4c6+.2.........X.X.X.cc..x.xx
-....cc6c.................+4.x..xx
+x4.x...cxxxxxxxx.....X.X.c...x.xx
+x.x..cccxxxx2............c..V..xx
+x....c7+...........X.X.X.cc&.x.xx
+....cc6c.................+4.x&.xx
 @...cO6c1....2...X.X.X.X.dC..V.xx
-....cc6c.................+4.x..xx
-x...4c6+.2.........X.X.X.cc..x.xx
-x.x..cccxxxx.............c..V..xx
-x..x...cxxxxxxxx.....X.X.c...x.xx
+....cc6c.................+4.x&.xx
+x....c7+...........X.X.X.cc&.x.xx
+x.x..cccxxxx2............c..V..xx
+x4.x...cxxxxxxxx.....X.X.c...x.xx
 x.V....cxxxxxxxxxxx......c..x..xx
-x..x...cxxxxxxxxxxxxx3.X.c...V.xx
-x.x....cxxxxxxxxxxxxxx...c..x..xx
+x..x...cxxxxxxxxxxxxx..X.c...V.xx
+x.x....cxxxxxxxxxxxxxx..3c..x..xx
 x..V...cxxxxxxxxxxxxxxxxxc...x.xx
 x.x....ccccccccccccccccccc..V..xx
 x..x.........................x.xx
@@ -1466,12 +1479,13 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:   gloorx_vloq_grunt
-TAGS:   gloorx_vloq uniq_gloorx_vloq
-ORIENT: west
+NAME:     gloorx_vloq_grunt
+TAGS:     gloorx_vloq uniq_gloorx_vloq
+ORIENT:   west
+MONS:     patrolling Gloorx Vloq, Executioner, curse skull, reaper
+MONS:     caustic shrike skeleton / juggernaut skeleton / hellephant skeleton
+MONS:     laughing skull
 : pan_lord_setup(_G, 'Gloorx Vloq')
-TILE:   c = dngn_stone_wall_darkgray
-MONS:   patrolling Gloorx Vloq, Executioner, curse skull, demonic crawler, shadow wraith
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
 }}
@@ -1479,49 +1493,49 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxx.......................xxxxxx
-xxxxx...4.x...x...x...x...x.4...xxxx
-xxxx.............................xxx
-xxx...x..ccccccccccccccccc....x...xx
-xxx.4....c...x...x...x...cc....x..xx
-xx.......c....x.x.x.x.x.x.cc.......x
-xx.x.x.x.c.....x...x...x...cc....4.x
-xx....5..+......x.x.x.x.x.x.cc.....x
-xx.......+.......x...x.2.x.3.cc..x.x
+xxxxx.6.4.x...x...x...x...x.4...xxxx
+xxxx.6.6.........................xxx
+xxx.6.x..ccccccccccccccccc....x...xx
+xxx.4..6.c...x...x...x...cc....x..xx
+xx......6c....x.x.x.x.x.x.cc.......x
+xx.x.x.x.c.....x...x...x.2.cc....4.x
+xx.......+......x.x.x.x.x.x.cc.....x
+xx.......+.......x...x...x...cc..x.x
 xx....5..+......x.x.x.x.x.x.x.cc...x
-xx.x.x.x.c.....x...x...x...x...c...x
-xxx.....xc....ccccccccc.x.x.x.xc...x
+xx.x3x.x.c.....x...x...x...x...c...x
+xxx...5.xc....ccccccccc.x.x.x.xc...x
 xx.x...x.c...ccccc.2.x...x.2.xcc.x.x
-xxx.x.x.xccccc....x.x.x.x.x.x.xc...x
-xx.x.x.x.cc........x...x...x...c.5.x
-xxx.x.x.xc.c......x.x.x.x.x.x.xc....
-xx.x.x.x.cOc.1...x...x.2.x...xcc.x.@
-xxx.x.x.xc.c......x.x.x.x.x.x.xc....
-xx.x.x.x.cc........x...x...x...c.5.x
-xxx.x.x.xccccc....x.x.x.x.x.x.xc...x
+xxx.x&x&xccccc....x.x.x.x.x.x.xc...x
+xx.x.x.x.cc........x...x...x62.c.5.x
+xxx.x.x.xc.c......x.x.x.x.x6x.xc....
+xx.x.x.x.cOc.1...x...x.2.x6.6xcc.x.@
+xxx.x.x.xc.c......x.x.x.x.x6x.xc....
+xx.x.x.x.cc........x...x...x62.c.5.x
+xxx.x&x&xccccc....x.x.x.x.x.x.xc...x
 xx.x...x.c...ccccc.2.x...x.2.xcc.x.x
-xxx.....xc....ccccccccc.x.x.x.xc...x
-xx.x.x.x.c.....x...x...x...x...c...x
+xxx...5.xc....ccccccccc.x.x.x.xc...x
+xx.x3x.x.c.....x...x...x...x...c...x
 xx....5..+......x.x.x.x.x.x.x.cc...x
-xx.......+.......x...x.2.x.3.cc..x.x
-xx....5..+......x.x.x.x.x.x.cc.....x
-xx.x.x.x.c.....x...x...x...cc....4.x
-xx.......c....x.x.x.x.x.x.cc.......x
-xxx.4....c...x...x...x...cc....x..xx
-xxx...x..ccccccccccccccccc....x...xx
-xxxx.............................xxx
-xxxxx...4.x...x...x...x...x.4...xxxx
+xx.......+.......x...x...x...cc..x.x
+xx.......+......x.x.x.x.x.x.cc.....x
+xx.x.x.x.c.....x...x...x.2.cc....4.x
+xx......6c....x.x.x.x.x.x.cc.......x
+xxx.4..6.c...x...x...x...cc....x..xx
+xxx.6.x..ccccccccccccccccc....x...xx
+xxxx.6.6.........................xxx
+xxxxx.6.4.x...x...x...x...x.4...xxxx
 xxxxxxx.......................xxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:   gloorx_vloq_grunt_torture_chamber
-TAGS:   gloorx_vloq uniq_gloorx_vloq
-ORIENT: centre
+NAME:     gloorx_vloq_grunt_torture_chamber
+TAGS:     gloorx_vloq uniq_gloorx_vloq
+ORIENT:   centre
+MONS:     patrolling Gloorx Vloq, Executioner, curse skull, reaper
+MONS:     caustic shrike skeleton / juggernaut skeleton / hellephant skeleton
+MONS:     laughing skull
 : pan_lord_setup(_G, 'Gloorx Vloq')
-TILE:   c = dngn_stone_wall_darkgray
-MONS:   patrolling Gloorx Vloq, Executioner, curse skull
-MONS:   demonic crawler, shadow wraith
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
 }}
@@ -1536,21 +1550,21 @@ xc.........c.......c.......c.....cx
 x..4.x.x.x.c.x.x.x.c.x.x.x.c.x..4.x
 x..........c.......c.......c......x
 x.x....c...c...c...c...c...c....x.x
-x...ccccccccccccccccccccc+ccccc...x
+x...cccccccccccccccccccc+++cccc...x
 x...c..c...c...c...c...c...c..c...x
-x...c..c.......c.......c.2....c...x
+x...c..c....2..c.......c.2....c...x
 x...c..c.....cccc+cccc.c......c...x
-x...c..c..4..c.c.....c.c...4..c...x
-x...c........c.1...2.c........c...x
-x...c........c...cc..c........c...x
-x...+.2.3....c..cOc..c...3..2.+...x
-x...c........c..cc...c........c...x
-x...c........c.2...2.c........c...x
-x...c..4...c.c.....c.c..4..c..c...x
+x6..c..c..4..c.c.....c.c...4..c..6x
+x&..c........c.1...2.c........c..&x
+x6..+........c...cc..c........+..6x
+x66.+..2.3...c..cOc..c...3.2..+.66x
+x6..+........c..cc...c........+..6x
+x&..c........c.2...2.c........c..&x
+x6..c..4...c.c.....c.c..4..c..c..6x
 x...c......c.cccc+cccc.....c..c...x
-x...c....2.c.......c.......c..c...x
+x...c....2.c.......c..2....c..c...x
 x...c..c...c...c...c...c...c..c...x
-x...ccccc+ccccccccccccccccccccc...x
+x...cccc+++cccccccccccccccccccc...x
 x.x....c...c...c...c...c...c....x.x
 x......c.......c.......c..........x
 x.4..x.c.x.x.x.c.x.x.x.c.x.x.x..4.x
@@ -2598,8 +2612,8 @@ FTILE:   HJKLMNOPQRSTUYZcx-+_. = floor_limestone
 epilogue {{
 if not you.have_rune("demonic") then
     crawl.mpr("A powerful Pandemonium lord resides here.", "warning")
-    crawl.mpr("<yellow>It is willing to " ..
-              "make a deal for the demonic rune of Zot.</yellow>")
+    crawl.mpr("<yellow>A demonic rune of Zot can be found here... " ..
+              "for a price.</yellow>")
 end
 }}
 MAP
@@ -2637,11 +2651,7 @@ ENDMAP
 # Place (two) big, fancy demonic rune vaults, (with an announced guarantee of
 # the demonic rune's presence) in some fixed thematic threats and a few
 # essentially-decorative small vaults.
-# FIXME:
-#  * dgn.place_maps can't guarantee the double-up vault placement for
-#    these relatively large floating vaults (and die_on_error, aside
-#    from being insufficient, shows player-visible error messages) -
-#    some validator check is needed for the concept to work.
+# TODO: use subvaults of layout_pan_divisions to accomplish this.
 NAME:   pan_demonic_rune_highlights
 # mark this as removed so that it doesn't get tested, remove if this ever is
 # made to work:
@@ -2663,7 +2673,7 @@ KMONS:  6O = ghost moth
 : if demonic_rune_vault_is_decoy() then
 KITEM:  O = superb_item / demonic rune of zot mimic
 : else
-KITEM:  O = demonic rune of zot
+KITEM:  O = potion of mutation ident:type, demonic rune of zot
 epilogue{{
 if not you.have_rune("demonic") then
   pan_declare_demonic_rune()
@@ -2758,14 +2768,14 @@ KMONS:   O = pandemonium lord
 : if demonic_rune_vault_is_decoy() then
 KITEM:   O = superb_item / demonic rune of zot mimic
 : else
-KITEM:   O = demonic rune of zot
+KITEM:   O = potion of mutation ident:type, demonic rune of zot
+KFEAT:   { = {
 epilogue{{
 if not you.have_rune("demonic") then
   pan_declare_demonic_rune()
 end
 }}
 : end
-KFEAT:   { = {
 SHUFFLE: Aa / Bb / Cc / Dd / Ee / Ff / Gg / Hh
 SUBST:   ABCabc = l, DEFdef = .
 SUBST:   G : l., g : l., H : l., h : l.
@@ -2836,7 +2846,7 @@ MONS:    tormentor, smoke demon, any demon
 : if demonic_rune_vault_is_decoy() then
 KITEM:   O = superb_item / demonic rune of zot mimic
 : else
-KITEM:   O = demonic rune of zot
+KITEM:   O = potion of mutation ident:type, demonic rune of zot
 epilogue{{
 if not you.have_rune("demonic") then
   pan_declare_demonic_rune()
@@ -2901,13 +2911,14 @@ TAGS:   pan_fixed_rune_frozen pan_fixed_lure_frozen
 TAGS:   no_pool_fixup no_monster_gen transparent
 ORIENT: float
 MONS:   blizzard demon, demonspawn black sun
-MONS:   juggernaut simulacrum, ice devil
+MONS:   walking frostbound tome, ice devil
 KMONS:  56 = ice statue
+KMONS:  7 = executioner simulacrum
 KMONS:  P = pandemonium lord
 : if demonic_rune_vault_is_decoy() then
 KITEM:  O = superb_item / demonic rune of zot mimic
 : else
-KITEM:  O = demonic rune of zot
+KITEM:  O = potion of mutation ident:type, demonic rune of zot
 epilogue{{
 if not you.have_rune("demonic") then
   pan_declare_demonic_rune()
@@ -2920,14 +2931,14 @@ KFEAT: { = {
 SUBST: A : wWW., B : wWW., C : WW., D : WW.
 MAP
 ccccccccccccccccccc
-.AwcwA1*1O1*1AwcwA.
-4AwcwB%12P21%BwcwA4
-.AwccwB%1.1%BwccwA.
- .BwccwA%1%AwccwB.
+4AwcwA1*1O1*1AwcwA4
+.AwcwB*12P21*BwcwA.
+4AwccwB%131%BwccwA4
+ 7BwccwA313AwccwB7
  .Bwwcc65556ccwwB.
-  3CCwDDwwwDDwCC3
-   ..CwwwwwwwC.
-     ..DDDDD..
+  .CCwwDwwwDwwCC.
+   ..CCwwwwwCC..
+     .7DDDDD7.
        .4.4.
 ENDMAP
 
@@ -3001,7 +3012,7 @@ ITEM:    any potion
 : if demonic_rune_vault_is_decoy() then
 KITEM:   O = superb_item / demonic rune of zot mimic
 : else
-KITEM:   O = demonic rune of zot
+KITEM:   O = potion of mutation ident:type, demonic rune of zot
 epilogue{{
 if not you.have_rune("demonic") then
   pan_declare_demonic_rune()
@@ -3013,7 +3024,7 @@ KFEAT:   X = rock_wall
 KFEAT:   _ = floor
 KFEAT: { = {
 # Previously a raw average of 9.2 place:Pan spawns.
-NSUBST:  - = 2:7 / 8:0 / 4 = 00. / *:.
+NSUBST:  - = 2:7 / 7:0 / 5 = 00. / *:.
 SHUFFLE: 123, 456
 COLOUR:  D = random
 COLOUR:  P.xp01234567dO = disco
@@ -4102,10 +4113,11 @@ MONS:   angel
 MONS:   ophan
 MONS:   ophan
 MONS:   daeva
-#  8 was phoenix but they were removed.
+KMONS:  8 = pearl dragon
 KMONS:  9 = pearl dragon
 KMONS:  0 = apis
 KMONS:  A = apis
+KMONS:  E = apis
 KMONS:  B = daeva god:Zin
 KMONS:  Z = daeva god:Zin
 KMONS:  S = patrolling seraph
@@ -4118,10 +4130,11 @@ TILE:   v = dngn_metal_wall_white
 COLOUR: v& = white
 TILE:   GH = dngn_golden_statue
 FTILE:  _124SDcG|*'O = floor_limestone
-FTILE:  "E0 = floor_grass
-COLOUR: "0 = green
+FTILE:  "E80;$ = floor_grass
+COLOUR: "80;$ = green
 FTILE:  -ZBghi&v = floor_vault
-SUBST:  D& = +, '"- = ., H = G, C = c
+KPROP:  ;E80$ = no_tele_into
+SUBST:  D& = +, '"-; = ., H = G, C = c
 : set_feature_name("granite_statue", "golden statue")
 : set_feature_name("metal_wall", "silver wall")
 : set_random_mon_list("angel w:20 / cherub / ophan / daeva / apis w:20")
@@ -4134,19 +4147,19 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxCCCCCxxxxxxxxxxxxwwwwxxxxxxxxxwwwxxxwwwxxxxxxCCCCCCCCCCCCCCCCCxxxxxxxxxxx
 xxxxxxxC%%%CxxxxxxxxxxwwwwwwwwwxxxwwwxwwwwwwwwxxxxxxCCCCC.......CCCCCxxxxxxxxxxx
-xxxxxxxC%.%CxxxxxxxxxxwwwwwwwwwwwwxxxwwwwwwwwxxxxxxxC...+.{.[.(.+...Cxxxxxxxxxxx
+xxxxxxxC%.%CxxxxxxxxxxwwwwwwwwwwwwxxxwwwwwwwwxxxxxxxC...+..{.(..+...Cxxxxxxxxxxx
 xxxxxxCCC+CCCxxxxxx""""wwwwwwwwwwwwwwwwwwwwCCCCCCCCCC.CCC.......CCC.Cxxxxxxxxxxx
-xxxCCCC.....Cxxxx""0"""wwwwwwwwwww"wwwwwwww+........+.CCCCCC+CCCCCC.Cxxxxxxxxxxx
-xxxCddC.A...CCC"""""""""wwwwwwww""0"wwwwwwwCCCCCCCCCC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
-xxxCd.+9......+""0"www0"""wwwww""E""wwwwwwwxxxxxxxxxC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
-xxxCddC.A...CCCx""""ww"""""wwwww"""wwwwwwwxxxxxxxxxxC.C6CCCC+CCCC6C.Cxxxxxxxxxxx
-xxxCCCC.....Cxxxxx""""""""""wwwww""wwwwwxxxxxxxxxxxxC.CC.........CC.Cxxxxxxxxxxx
+xxxCCCC.....Cxxxx""0"""wwwwwwwwwww;wwwwwwww+........+.CCCCCC+CCCCCC.Cxxxxxxxxxxx
+xxxCddC.A...CCC"""""""""wwwwwwww;;;;wwwwwwwCCCCCCCCCC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
+xxxCd[+9......+""0"www0"""wwwww;;E;;wwwwwwwxxxxxxxxxC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
+xxxCddC.A...CCCx""""ww"""""wwwww;;;wwwwwwwxxxxxxxxxxC.C6CCCC+CCCC6C.Cxxxxxxxxxxx
+xxxCCCC.....Cxxxxx""""""""""wwwww;;wwwwwxxxxxxxxxxxxC.CC.........CC.Cxxxxxxxxxxx
 xxxxxxCCC+CCCxxxxx""0"""xx"""wwwwwwwwwwxxxxxxxxxxxxxC..+.C.C.C.C.+..Cxxxxxxxxxxx
-xxxxxxxCe.eCxxxxxxx""""xxxxxx""wwwwwwwxxxxxxxxxxxxxxCCCC.........CCCCxxxxxxxxxxx
+xxxxxxxCe.eCxxxxxxx""""xxxxxx"wwwwwwwwxxxxxxxxxxxxxxCCCC.........CCCCxxxxxxxxxxx
 xxxxxxxCeeeCxxxxxxxxx"xxxxxx""wwwwwwwxxxxxxxxxxxxxxxCCCCCCCC+CCCCCCCCxxxxxxxxxxx
 xxxxxxxCCCCCxxxxxxxxxxxxxxxx"wwwwwwwwww.xxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwxwwwww.xxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwww..xxxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx.wwwwwxwwwww.xxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx.wwwwwwwwww..xxxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx..wwwwwwwwwwww.xxxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
 xCCCCCCCCCCCxxxxxxxxxxx..wwwwxwwwwwww.xx..xxxxx..xxx..xxxxxC+Cx..xxxxxxxxxxxxxxx
 xCf63......Cxxxxxxx.....wwwwxxwwwww........xx..........xxxx........xxxxxxxxxxxxx
@@ -4191,13 +4204,13 @@ xxxxx.....vv------vvvvvvvvvvvvvv......xx....H.......H.....xxx.....xx..x..xxxxxxx
 xxxxx.....vv---------vBv-v-v-v-v.v...xxxx.......................xxxxx....xxxxxxx
 xxxxx.....vg-Z---vvv-&---------&......xxxx..................xxxxxxxxxxxx...x.Axx
 xxxxxx....vv---------vBv-v-v-v-v.v.....xxx.............xxxxxxxxxxxxxxxx........x
-xxxxxx....vv------vvvvvvvvvvvvvv...............xxxxxxxxxxxxxxx$$$xxxxx..xxxx...x
-xxxxxxx...vvi-----v-----iv........v......xxxxxxxxxxxxxxxxxxxx$.AAxxxxA.xxxx..xxx
-xxxxxxxx..vvv-Bv-----vvBiv.vv.........xxxxxxxxxxxxxx$$$$$xxxxxxA...xxxxxxx....xx
-xxxxxxxx...vvv----v-----iv.v......xxxxxxxxxxxxxxxxx$$$9$$$xxxxxx..x..xxx....x..x
-xxxxxxxx..v.vvvvvvvvvvvvvv....xxxxxxxxxxxxxxxxxxxxx$$$$$$..xxxxxxx........xxxxAx
-xxxxxxxxx..................xxxxxxxxxxxxxxxxxxxxxxxxx$$$.....xxxxxxx......xxxxxxx
-xxxxxxxxxxx..............xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx....wwxxx....xxxxxxxxxxx
+xxxxxx....vv------vvvvvvvvvvvvvv...............xxxxxxxxxxxxxxx.A.xxxxx..xxxx...x
+xxxxxxx...vvi-----v-----iv........v......xxxxxxxxxxxxxxxxxxxx.A..xxxxA.xxxx..xxx
+xxxxxxxx..vvv-Bv-----vvBiv.vv.........xxxxxxxxxxxxxx$$$$$xxxxxx.A..xxxxxxx....xx
+xxxxxxxx...vvv----v-----iv.v......xxxxxxxxxxxxxxxxx$$$8$$$xxxxxx..x..xxx....x..x
+xxxxxxxx..v.vvvvvvvvvvvvvv....xxxxxxxxxxxxxxxxxxxxx$$$$$$$$xxxxxxx........xxxxAx
+xxxxxxxxx..................xxxxxxxxxxxxxxxxxxxxxxxxx$$$$$;;;xxxxxxx......xxxxxxx
+xxxxxxxxxxx..............xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;;;;wwxxx....xxxxxxxxxxx
 xxxxxxxxxxxxx........xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

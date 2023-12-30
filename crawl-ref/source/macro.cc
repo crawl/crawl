@@ -676,8 +676,6 @@ void macro_clear_buffers()
     SendKeysBuffer.clear();
     expanded_keys_left = 0;
     macro_keys_left = -1;
-
-    crawl_state.show_more_prompt = true;
 }
 
 bool is_processing_macro()
@@ -2268,9 +2266,6 @@ static bool _allow_rebinding(int key, KeymapContext context)
         CASE_ESCAPE
         case CK_MOUSE_CLICK:
         case CK_MOUSE_B2:
-#ifdef TOUCH_UI
-        case CK_TOUCH_DUMMY:
-#endif
             return false;
         default:
             break;

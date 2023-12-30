@@ -10,6 +10,7 @@
 #include "art-enum.h"
 #include "attack.h"
 #include "chardump.h"
+#include "delay.h"
 #include "directn.h"
 #include "env.h"
 #include "fight.h" // apply_chunked_ac
@@ -117,7 +118,7 @@ int actor::skill_rdiv(skill_type sk, int mult, int div) const
     return div_rand_round(skill(sk, mult * 256), div * 256);
 }
 
-int actor::check_willpower(const actor* source, int power)
+int actor::check_willpower(const actor* source, int power) const
 {
     int wl = willpower();
 
@@ -187,7 +188,7 @@ bool actor::can_sleep(bool holi_only) const
     return true;
 }
 
-void actor::shield_block_succeeded()
+void actor::shield_block_succeeded(actor *attacker)
 {
     item_def *sh = shield();
     const unrandart_entry *unrand_entry;
@@ -200,14 +201,42 @@ void actor::shield_block_succeeded()
         && (unrand_entry = get_unrand_entry(sh->unrand_idx))
         && unrand_entry->melee_effects)
     {
-        unrand_entry->melee_effects(sh, this, nullptr, false, 0);
+        unrand_entry->melee_effects(sh, this, attacker, false, 0);
     }
 }
 
+int actor::get_res(int res) const
+{
+    switch (res)
+    {
+    case MR_RES_ELEC:      return res_elec();
+    case MR_RES_POISON:    return res_poison();
+    case MR_RES_FIRE:      return res_fire();
+    case MR_RES_COLD:      return res_cold();
+    case MR_RES_NEG:       return res_negative_energy();
+    case MR_RES_MIASMA:    return res_miasma();
+    case MR_RES_ACID:      return res_acid();
+    case MR_RES_TORMENT:   return res_torment();
+    case MR_RES_PETRIFY:   return res_petrify();
+    case MR_RES_DAMNATION: return res_damnation();
+    case MR_RES_STEAM:     return res_steam();
+    default:
+        ASSERT(false);
+        return -1;
+    }
+}
+
+/// How many levels of penalties does this actor have from inaccuracy-conferring effects?
 int actor::inaccuracy() const
 {
     const item_def *amu = slot_item(EQ_AMULET);
     return amu && is_unrandom_artefact(*amu, UNRAND_AIR);
+}
+
+/// How great are the penalties to this actor's to-hit from any inaccuracy effects they have?
+int actor::inaccuracy_penalty() const
+{
+    return inaccuracy() * 5;
 }
 
 bool actor::res_corr(bool /*allow_random*/, bool temp) const
@@ -280,10 +309,14 @@ bool actor::reflection(bool items) const
             || wearing_ego(EQ_ALL_ARMOUR, SPARM_REFLECTION));
 }
 
-bool actor::extra_harm(bool items) const
+int actor::extra_harm(bool items) const
 {
-    return items &&
-           (wearing_ego(EQ_CLOAK, SPARM_HARM) || scan_artefacts(ARTP_HARM));
+    if (!items)
+        return 0;
+
+    int harm = wearing_ego(EQ_CLOAK, SPARM_HARM) + scan_artefacts(ARTP_HARM);
+
+    return harm > 2 ? 2 : harm;
 }
 
 bool actor::rmut_from_item() const
@@ -325,12 +358,10 @@ int actor::spirit_shield(bool items) const
     return ss;
 }
 
-bool actor::rampaging(bool items) const
+bool actor::rampaging() const
 {
-    return items &&
-           (wearing_ego(EQ_ALL_ARMOUR, SPARM_RAMPAGING)
-            || scan_artefacts(ARTP_RAMPAGING)
-            || is_player() && player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS));
+    return wearing_ego(EQ_ALL_ARMOUR, SPARM_RAMPAGING)
+           || scan_artefacts(ARTP_RAMPAGING);
 }
 
 int actor::apply_ac(int damage, int max_damage, ac_type ac_rule, bool for_real) const
@@ -369,7 +400,7 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule, bool for_real) 
     }
 
     saved = max(saved, min(gdr * max_damage / 100, div_rand_round(ac, 2)));
-    if (for_real && (damage > 0) && (saved >= damage) && is_player())
+    if (for_real && (damage > 0) && is_player())
     {
         const item_def *body_armour = slot_item(EQ_BODY_ARMOUR);
         if (body_armour)
@@ -379,6 +410,19 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule, bool for_real) 
     }
 
     return max(damage - saved, 0);
+}
+
+int actor::shield_block_limit() const
+{
+    const item_def *sh = shield();
+    if (!sh)
+        return 1;
+    return ::shield_block_limit(*sh);
+}
+
+bool actor::shield_exhausted() const
+{
+    return shield_blocks >= shield_block_limit();
 }
 
 bool actor_slime_wall_immune(const actor *act)
@@ -574,15 +618,15 @@ bool actor::has_invalid_constrictor(bool move) const
 
     // Direct constriction (e.g. by nagas and octopode players or AT_CONSTRICT)
     // must happen between adjacent squares.
-    if (get_constrict_type() == CONSTRICT_MELEE)
+    const auto typ = get_constrict_type();
+    if (typ == CONSTRICT_MELEE)
         return !ignoring_player && !adjacent(attacker->pos(), pos());
 
     // Indirect constriction requires the defender not to move.
     return move
-        // Indirect constriction requires reachable ground.
-        || !feat_has_solid_floor(env.grid(pos()))
-        // Constriction doesn't work out of LOS.
-        || !ignoring_player && !attacker->see_cell(pos());
+        // Constriction doesn't work out of LOS, to avoid sauciness.
+        || !ignoring_player && !attacker->see_cell(pos())
+        || !feat_has_solid_floor(env.grid(pos()));
 }
 
 /**
@@ -682,8 +726,9 @@ bool actor::can_engulf(const actor &defender) const
 
 bool actor::can_constrict(const actor &defender, constrict_type typ) const
 {
-    if (defender.is_constricted())
+    if (defender.is_constricted() || defender.res_constrict() >= 3)
         return false;
+
 
     if (typ == CONSTRICT_MELEE)
     {
@@ -691,10 +736,10 @@ bool actor::can_constrict(const actor &defender, constrict_type typ) const
             && (!is_constricting() || has_usable_tentacle());
     }
 
-    return can_see(defender)
-        && defender.res_constrict() < 3
-        // All current indrect forms of constriction require reachable ground.
-        && feat_has_solid_floor(env.grid(defender.pos()));
+    if (!see_cell_no_trans(defender.pos()))
+        return false;
+
+    return feat_has_solid_floor(env.grid(defender.pos()));
 }
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -718,13 +763,12 @@ void actor::constriction_damage_defender(actor &defender, int duration)
     int damage = constriction_damage(typ);
 
     DIAG_ONLY(const int basedam = damage);
-    damage += div_rand_round(damage * stepdown((float)duration, 50.0),
-                             BASELINE_DELAY * 5);
+    damage += div_rand_round(damage * duration, BASELINE_DELAY * 5);
     if (is_player() && typ == CONSTRICT_MELEE)
         damage = div_rand_round(damage * (27 + 2 * you.experience_level), 81);
 
     DIAG_ONLY(const int durdam = damage);
-    damage -= random2(1 + (defender.armour_class() / 2));
+    damage -= random2(1 + (div_rand_round(defender.armour_class(), 2)));
     DIAG_ONLY(const int acdam = damage);
     damage = timescale_damage(this, damage);
     DIAG_ONLY(const int timescale_dam = damage);
@@ -793,8 +837,12 @@ void actor::constriction_damage_defender(actor &defender, int duration)
          defender.name(DESC_PLAIN, true).c_str(),
          basedam, durdam, acdam, timescale_dam, infdam);
 
-    if (defender.is_monster() && defender.as_monster()->hit_points < 1)
+    if (defender.is_monster()
+        && defender.type != MONS_NO_MONSTER // already dead and reset
+        && defender.as_monster()->hit_points < 1)
+    {
         monster_die(*defender.as_monster(), this);
+    }
 }
 
 // Deal damage over time
@@ -906,7 +954,8 @@ bool actor::torpor_slowed() const
         const monster *mons = *ri;
         if (mons && mons->type == MONS_TORPOR_SNAIL
             && !is_sanctuary(mons->pos())
-            && !mons_aligned(mons, this))
+            && !mons_aligned(mons, this)
+            && !mons->props.exists(KIKU_WRETCH_KEY))
         {
             return true;
         }
@@ -957,7 +1006,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     if (is_monster() && !god_prot)
         behaviour_event(as_monster(), ME_WHACK, agent);
 
-    dice_def damage(2, 1 + pow / 10);
+    dice_def damage(2, 1 + div_rand_round(pow, 10));
 
     if (other && other->alive())
     {
@@ -1029,6 +1078,144 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
         if (dam && is_monster())
             print_wounds(*as_monster());
     }
+}
+
+/**
+ * @brief Attempts to knock this actor away from a specific tile,
+ *        using repeated one-tile knockbacks. Any LOS requirements
+ *        must be checked by the calling function.
+ * @param cause The actor responsible for the knockback.
+ * @param dist How far back to try to push this actor.
+ * @param pow Determines damage done to us if we hit something. If -1, don't do damage.
+ * @param source_name The name of the thing that's pushing this actor.
+ * @returns True if this actor is moved from their initial position; false otherwise.
+ */
+
+bool actor::knockback(const actor &cause, int dist, int pow, string source_name)
+{
+    if (is_stationary() || resists_dislodge("being knocked back"))
+        return false;
+
+    const coord_def source = cause.pos();
+    const coord_def oldpos = pos();
+
+    if (source == oldpos)
+        return false;
+
+    ray_def ray;
+    fallback_ray(source, oldpos, ray);
+    while (ray.pos() != oldpos)
+        ray.advance();
+
+    coord_def newpos = oldpos;
+    for (int dist_travelled = 0; dist_travelled < dist; ++dist_travelled)
+    {
+        const ray_def oldray(ray);
+
+        ray.advance();
+
+        newpos = ray.pos();
+        if (newpos == oldray.pos()
+            || !in_bounds(newpos)
+            || cell_is_solid(newpos)
+            || actor_at(newpos)
+            || !can_pass_through(newpos)
+            || !is_habitable(newpos))
+        {
+            ray = oldray;
+            break;
+        }
+
+        move_to_pos(newpos);
+        if (is_player())
+            stop_delay(true);
+    }
+
+    if (newpos == oldpos)
+        return false;
+
+    if (you.can_see(*this))
+    {
+        mprf("%s %s knocked back%s%s.",
+             name(DESC_THE).c_str(),
+             conj_verb("are").c_str(),
+             !source_name.empty() ? " by the " : "",
+             source_name.c_str());
+    }
+
+    if (pow != -1 && pos() != newpos)
+        collide(newpos, &cause, pow);
+
+    // Stun the monster briefly so that it doesn't look as though it wasn't
+    // knocked back at all
+    if (is_monster())
+        as_monster()->speed_increment -= random2(6) + 4;
+
+    apply_location_effects(oldpos, cause.is_player()? KILL_YOU_MISSILE : KILL_MON_MISSILE,
+                                actor_to_death_source(&cause));
+
+    return true;
+}
+
+coord_def actor::stumble_pos(coord_def targ) const
+{
+    if (is_stationary() || resists_dislodge("") || targ == pos())
+        return coord_def();
+
+    const coord_def oldpos = pos();
+    ray_def ray;
+    fallback_ray(oldpos, targ, ray);
+    if (!ray.advance()) // !?
+        return coord_def();
+
+    const coord_def back_dir = oldpos - ray.pos();
+    const coord_def newpos = oldpos + back_dir;
+    if (!adjacent(newpos, oldpos)) // !?
+        return coord_def();
+
+    // copied from actor::knockback, ew
+    if (!in_bounds(newpos)
+        || cell_is_solid(newpos)
+        || !can_pass_through(newpos)
+        || !is_habitable(newpos))
+    {
+        return coord_def();
+    }
+
+    const actor* other = actor_at(newpos);
+    if (other && can_see(*other))
+        return coord_def();
+
+    return newpos;
+}
+
+void actor::stumble_away_from(coord_def targ, string src)
+{
+    const coord_def oldpos = pos();
+    const coord_def newpos = stumble_pos(targ);
+
+    if (newpos.origin()
+        || actor_at(newpos)
+        || resists_dislodge("being knocked back"))
+    {
+        return;
+    }
+
+    if (is_player())
+        mprf("%s sends you backwards.", uppercase_first(src).c_str());
+    else if (you.can_see(*this))
+        mprf("%s is knocked back by %s.", name(DESC_THE).c_str(), src.c_str());
+
+    move_to_pos(newpos);
+
+    stop_directly_constricting_all(true);
+    if (get_constrict_type() == CONSTRICT_MELEE)
+        stop_being_constricted();
+    clear_far_engulf();
+
+    apply_location_effects(oldpos, is_player() ? KILL_YOU_MISSILE
+                                               : KILL_MON_MISSILE,
+                           actor_to_death_source(this));
 }
 
 /// Is this creature despised by the so-called 'good gods'?

@@ -588,7 +588,7 @@ static void _dump_options(FILE *file)
 {
     fprintf(file, "RC options:\n");
     fprintf(file, "restart_after_game = %s\n",
-            maybe_to_string(Options.restart_after_game).c_str());
+            Options.restart_after_game.to_string().c_str());
     fprintf(file, "\n\n");
 }
 
@@ -637,15 +637,20 @@ void do_crash_dump()
 
     if (!crawl_state.test && !cause_msg.empty())
         fprintf(stderr, "\n%s", cause_msg.c_str());
-    // This message is parsed by the WebTiles server.
+    // This message is parsed by the WebTiles server. In particular, if you
+    // change the line that prints the crash report filename, you must update
+    // CrawlProcessHandler._on_process_error.
     fprintf(stderr,
-            "\n\nWe crashed! This is likely due to a bug in Crawl. "
-            "\nPlease submit a bug report at https://github.com/crawl/crawl/issues or at"
-            "\nhttps://crawl.develz.org/mantis/ and include:"
+            "\n\nWe crashed! This is likely due to a bug in " CRAWL_SHORT "."
+            "\nPlease submit a bug report to:"
+            "\n    " CRAWL_BUG_REPORT
+            "\nand include at least:"
             "\n- The crash report: %s"
             "\n- Your save file: %s"
+            "\n- Information about your computer and game version: %s %s (%s)"
             "\n- A description of what you were doing when this crash occurred.\n\n",
-            name, get_savedir_filename(you.your_name).c_str());
+            name, get_savedir_filename(you.your_name).c_str(),
+            CRAWL, Version::Long, CRAWL_BUILD_NAME);
     errno = 0;
     // TODO: this freopen of stderr persists into a recursive crash, making it
     // hard to directly log in webtiles...
@@ -694,7 +699,7 @@ void do_crash_dump()
     // generation info if the crash happened during level generation.
     _dump_level_info(file);
 
-    // Dumping information on marker inconsistancy is unlikely to crash,
+    // Dumping information on marker inconsistency is unlikely to crash,
     // as is dumping the descriptions of non-Lua markers.
     fprintf(file, "Markers:\n");
     fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<\n");

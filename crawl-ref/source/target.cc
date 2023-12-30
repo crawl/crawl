@@ -13,6 +13,7 @@
 #include "env.h"
 #include "fight.h"
 #include "god-abil.h"
+#include "god-passive.h"
 #include "items.h"
 #include "libutil.h"
 #include "los-def.h"
@@ -22,7 +23,7 @@
 #include "ray.h"
 #include "spl-damage.h"
 #include "spl-goditem.h" // player_is_debuffable
-#include "spl-monench.h" // mons_simulacrum_immune_reason
+#include "spl-summoning.h"
 #include "spl-other.h"
 #include "spl-transloc.h"
 #include "stringutil.h"
@@ -119,7 +120,7 @@ targeting_iterator targeter::affected_iterator(aff_type threshold)
     return targeting_iterator(*this, threshold);
 }
 
-// Is the given location a valid endpoint for a Palentonga charge?
+// Is the given location a valid endpoint for an electric charge?
 // That is, is there an enemy there which is visible to the player and
 // is not firewood? If not, why not?
 // Note that this does NOT handle checking the intervening path for
@@ -145,24 +146,13 @@ static bool _ok_charge_target(coord_def a)
     return bad_charge_target(a) == "";
 }
 
-// Can a player (for targeting purposes) charge through a given grid
-// with a Palentonga rolling charge?
-// We only check for monsters, not terrain.
-bool can_charge_through_mons(coord_def a)
-{
-    const monster* mons = monster_at(a);
-    return !mons
-           || !you.can_see(*mons)
-           || fedhas_passthrough(mons);
-}
-
 targeter_charge::targeter_charge(const actor *act, int r)
+    : targeter(), range(r)
 {
     ASSERT(act);
     ASSERT(r > 0);
     agent = act;
-    range = r;
-    obeys_mesmerise = true;
+    obeys_mesmerise = true; // override superclass constructor
 }
 
 bool targeter_charge::valid_aim(coord_def a)
@@ -171,7 +161,8 @@ bool targeter_charge::valid_aim(coord_def a)
         return notify_fail("You can't charge at yourself.");
     if (adjacent(agent->pos(), a))
         return notify_fail("You're already next to there.");
-    if (grid_distance(agent->pos(), a) > range)
+    const int dist_to_targ = grid_distance(agent->pos(), a);
+    if (dist_to_targ > range)
         return notify_fail("That's out of range!");
 
     ray_def ray;
@@ -186,18 +177,20 @@ bool targeter_charge::valid_aim(coord_def a)
                 return notify_fail(bad);
             return true;
         }
-        else if (is_feat_dangerous(env.grid(ray.pos())))
+        if (grid_distance(ray.pos(), agent->pos()) == dist_to_targ -1)
         {
-            return notify_fail("There's "
-                               + feature_description_at(ray.pos())
-                               + " in the way.");
-        }
-        else if (!can_charge_through_mons(ray.pos()))
-        {
-            return notify_fail("There's "
-                               + monster_at(ray.pos())->name(DESC_A)
-                               + " in the way.");
-
+            if (is_feat_dangerous(env.grid(ray.pos())))
+            {
+                return notify_fail("There's "
+                                   + feature_description_at(ray.pos())
+                                   + " there.");
+            }
+            const monster* mon = monster_at(ray.pos());
+            if (mon && you.can_see(*mon) && mons_class_is_stationary(mon->type))
+            {
+                return notify_fail(mon->name(DESC_THE)
+                                   + " is immovably fixed there.");
+            }
         }
     }
     die("Ray never reached the end?");
@@ -215,11 +208,6 @@ bool targeter_charge::set_aim(coord_def a)
         path_taken.push_back(ray.pos());
         if (grid_distance(agent->pos(), ray.pos()) >= range || ray.pos() == a)
             break;
-
-        if (!can_charge_through_mons(ray.pos()))
-            break;
-        if (is_feat_dangerous(env.grid(ray.pos())))
-            return false;
     }
     return true;
 }
@@ -565,7 +553,8 @@ aff_type targeter_walljump::is_affected(coord_def loc)
     if (loc == wall_jump_landing_spot)
         return AFF_YES;
 
-    if (loc.distance_from(wall_jump_landing_spot) == 1 && monster_at(loc))
+    auto d = loc.distance_from(wall_jump_landing_spot);
+    if (d == 1 && wu_jian_wall_jump_monster_at(loc))
         return AFF_YES;
 
     return AFF_NO;
@@ -740,7 +729,11 @@ bool targeter_inner_flame::valid_aim(coord_def a)
 {
     if (!targeter_smite::valid_aim(a))
         return false;
-    return mons_inner_flame_immune_reason(monster_at(a)).empty();
+
+    if (!mons_inner_flame_immune_reason(monster_at(a)).empty())
+        return notify_fail(mons_inner_flame_immune_reason(monster_at(a)));
+
+    return true;
 }
 
 targeter_simulacrum::targeter_simulacrum(const actor* act, int r) :
@@ -752,7 +745,11 @@ bool targeter_simulacrum::valid_aim(coord_def a)
 {
     if (!targeter_smite::valid_aim(a))
         return false;
-    return mons_simulacrum_immune_reason(monster_at(a)).empty();
+
+    if (!mons_simulacrum_immune_reason(monster_at(a)).empty())
+        return notify_fail(mons_simulacrum_immune_reason(monster_at(a)));
+
+    return true;
 }
 
 targeter_unravelling::targeter_unravelling()
@@ -880,10 +877,10 @@ aff_type targeter_passage::is_affected(coord_def loc)
     if (!valid_aim(aim))
         return AFF_NO;
 
-    if (golubria_valid_cell(loc))
+    if (golubria_valid_cell(loc, true))
     {
-        bool p1 = grid_distance(loc, origin) <= golubria_fuzz_range();
-        bool p2 = grid_distance(loc, aim) <= golubria_fuzz_range()
+        bool p1 = grid_distance(loc, origin) <= GOLUBRIA_FUZZ_RANGE;
+        bool p2 = grid_distance(loc, aim) <= GOLUBRIA_FUZZ_RANGE
                   && loc != you.pos();
 
         if (p1 && p2)
@@ -997,8 +994,19 @@ targeter_cleave::targeter_cleave(const actor* act, coord_def target, int rng)
 
 bool targeter_cleave::valid_aim(coord_def a)
 {
-    if ((origin - a).rdist() > range)
+    const coord_def delta = a - origin;
+    if (delta.rdist() > range)
         return notify_fail("Your weapon can't reach that far!");
+    if (range == 2)
+    {
+        const coord_def first_middle(origin + delta / 2);
+        const coord_def second_middle(a - delta / 2);
+        if (!feat_is_reachable_past(env.grid(first_middle))
+             && !feat_is_reachable_past(env.grid(second_middle)))
+        {
+            return notify_fail("There's something in the way.");
+        }
+    }
     return true;
 }
 
@@ -1024,9 +1032,9 @@ aff_type targeter_cleave::is_affected(coord_def loc)
     return targets.count(loc) ? AFF_YES : AFF_NO;
 }
 
-targeter_cloud::targeter_cloud(const actor* act, int r,
-                                 int count_min, int count_max) :
-    range(r), cnt_min(count_min), cnt_max(count_max), avoid_clouds(true)
+targeter_cloud::targeter_cloud(const actor* act, cloud_type ct, int r,
+                               int count_min, int count_max) :
+    ctype(ct), range(r), cnt_min(count_min), cnt_max(count_max)
 {
     ASSERT(cnt_min > 0);
     ASSERT(cnt_max > 0);
@@ -1036,12 +1044,13 @@ targeter_cloud::targeter_cloud(const actor* act, int r,
         origin = aim = act->pos();
 }
 
-static bool _cloudable(coord_def loc, bool avoid_clouds)
+static bool _cloudable(coord_def loc, cloud_type ctype)
 {
+    const cloud_struct *cloud = cloud_at(loc);
     return in_bounds(loc)
            && !cell_is_solid(loc)
-           && !(avoid_clouds && cloud_at(loc)
-           && !is_sanctuary(loc))
+           && (!cloud || cloud_is_stronger(ctype, *cloud))
+           && (!is_sanctuary(loc) || is_harmless_cloud(ctype))
            && cell_see_cell(you.pos(), loc, LOS_NO_TRANS);
 }
 
@@ -1063,11 +1072,15 @@ bool targeter_cloud::valid_aim(coord_def a)
         return notify_fail(_wallmsg(a));
     if (agent)
     {
-        if (cloud_at(a) && avoid_clouds)
+        const cloud_struct *cloud = cloud_at(a);
+        if (cloud && !cloud_is_stronger(ctype, *cloud))
             return notify_fail("There's already a cloud there.");
-        else if (is_sanctuary(a))
-            return notify_fail("You can't place clouds in a sanctuary.");
-        ASSERT(_cloudable(a, avoid_clouds));
+        else if (is_sanctuary(a) && !is_harmless_cloud(ctype))
+        {
+            return notify_fail("You can't place harmful clouds in a "
+                               "sanctuary.");
+        }
+        ASSERT(_cloudable(a, ctype));
     }
     return true;
 }
@@ -1091,7 +1104,7 @@ bool targeter_cloud::set_aim(coord_def a)
         for (coord_def c : queue[d1])
         {
             for (adjacent_iterator ai(c); ai; ++ai)
-                if (_cloudable(*ai, avoid_clouds) && !seen.count(*ai))
+                if (_cloudable(*ai, ctype) && !seen.count(*ai))
                 {
                     unsigned int d2 = d1 + 1;
                     if (d2 >= queue.size())
@@ -1235,44 +1248,21 @@ aff_type targeter_flame_wave::is_affected(coord_def loc)
     return AFF_MAYBE;
 }
 
-static int _corpse_rot_cells(coord_def p, int radius = 1)
-{
-    int valid_cells = 0;
-    for (radius_iterator ri(p, radius, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
-        if (!cell_is_solid(*ri) && !cloud_at(*ri))
-            valid_cells++;
-
-    return valid_cells;
-}
-
-targeter_corpse_rot::targeter_corpse_rot()
+targeter_siphon_essence::targeter_siphon_essence()
     : targeter_radius(&you, LOS_NO_TRANS, 2, 0, 1)
 { }
 
-aff_type targeter_corpse_rot::is_affected(coord_def loc)
+aff_type targeter_siphon_essence::is_affected(coord_def loc)
 {
-    const int dist = (loc - origin).rdist();
-    int num_corpses = 0;
-    for (radius_iterator ri(origin, LOS_NO_TRANS); ri; ++ri)
-        for (stack_iterator si(*ri); si; ++si)
-            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
-                num_corpses++;
-
-    if (targeter_radius::is_affected(loc) == AFF_NO
-        || !num_corpses
-        || cloud_at(loc))
-    {
+    const aff_type base_aff = targeter_radius::is_affected(loc);
+    if (base_aff == AFF_NO)
         return AFF_NO;
-    }
-
-    if (dist > 1)
-    {
-        return num_corpses >= _corpse_rot_cells(origin, dist) ? AFF_YES :
-               2 * num_corpses > _corpse_rot_cells(origin)    ? AFF_MAYBE
-                                                              : AFF_NO;
-    }
-    else
-        return num_corpses >= _corpse_rot_cells(origin) ? AFF_YES : AFF_MAYBE;
+    monster* mons = monster_at(loc);
+    if (!mons || !you.can_see(*mons))
+        return AFF_MAYBE;
+    if (!siphon_essence_affects(*mons))
+        return AFF_NO;
+    return AFF_YES;
 }
 
 aff_type targeter_shatter::is_affected(coord_def loc)
@@ -1617,26 +1607,13 @@ aff_type targeter_refrig::is_affected(coord_def loc)
     const actor* act = actor_at(loc);
     if (!act || act == agent || !agent->can_see(*act))
         return AFF_NO;
-
-    int adj = 0;
-    for (adjacent_iterator ai(loc); ai; ++ai)
+    if (god_protects(agent, act->as_monster(), true))
+        return AFF_NO;
+    switch (adjacent_huddlers(loc))
     {
-        const actor* adj_act = actor_at(*ai);
-        if (adj_act
-            && agent->can_see(*adj_act)
-            && !mons_is_conjured(adj_act->type))
-        {
-            ++adj;
-        }
-    }
-    switch (adj)
-    {
-    case 0:
-        return AFF_MULTIPLE;
-    case 1:
-        return AFF_YES;
-    default:
-        return AFF_MAYBE;
+    case 0:  return AFF_MULTIPLE;
+    case 1:  return AFF_YES;
+    default: return AFF_MAYBE;
     }
 }
 
@@ -1730,98 +1707,6 @@ aff_type targeter_cone::is_affected(coord_def loc)
         return AFF_NO;
 
     return zapped[loc];
-}
-
-targeter_shotgun::targeter_shotgun(const actor* act, size_t beam_count,
-                                     int r, bool clouds)
-{
-    ASSERT(act);
-    agent = act;
-    origin = act->pos();
-    num_beams = beam_count;
-    for (size_t i = 0; i < num_beams; i++)
-        rays.emplace_back();
-    range = r;
-    uses_clouds = clouds;
-}
-
-bool targeter_shotgun::valid_aim(coord_def a)
-{
-    if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
-    {
-        if (agent->see_cell(a))
-            return notify_fail("There's something in the way.");
-        return notify_fail("You cannot see that place.");
-    }
-    if ((origin - a).rdist() > range)
-        return notify_fail("Out of range.");
-    return true;
-}
-
-bool targeter_shotgun::set_aim(coord_def a)
-{
-    zapped.clear();
-
-    // confused monster targeting might be fuzzed across a wall, so
-    // skip the validation in the parent function and set aim directly.
-    // N.B. We assume this targeter can actually handle an invalid aim
-    // (not all targeters can).
-    if (!agent || agent->is_monster())
-        aim = a;
-    // ... but for UI consistency, players should be restricted to LOS.
-    else if (!targeter::set_aim(a))
-        return false;
-
-    if (a == origin)
-        return false;
-
-    ray_def orig_ray;
-    _make_ray(orig_ray, origin, a);
-    coord_def p;
-
-    const double spread_range = (double)(num_beams - 1) * PI / 40.0;
-    for (size_t i = 0; i < num_beams; i++)
-    {
-        double spread = (num_beams == 1)
-                        ? 0.0
-                        : -(spread_range / 2.0)
-                          + (spread_range * (double)i)
-                                          / (double)(num_beams - 1);
-        rays[i] = ray_def();
-        rays[i].r.start = orig_ray.r.start;
-        rays[i].r.dir.x =
-             orig_ray.r.dir.x * cos(spread) + orig_ray.r.dir.y * sin(spread);
-        rays[i].r.dir.y =
-            -orig_ray.r.dir.x * sin(spread) + orig_ray.r.dir.y * cos(spread);
-        ray_def tempray = rays[i];
-        p = tempray.pos();
-        while ((origin - (p = tempray.pos())).rdist() <= range
-               && map_bounds(p) && opc_solid_see(p) < OPC_OPAQUE)
-        {
-            if (p != origin
-                && (!uses_clouds || !cloud_at(p) && !is_sanctuary(p)))
-            {
-                zapped[p] = zapped[p] + 1;
-            }
-            tempray.advance();
-        }
-    }
-
-    zapped[origin] = 0;
-    return true;
-}
-
-aff_type targeter_shotgun::is_affected(coord_def loc)
-{
-    if ((loc - origin).rdist() > range
-         || uses_clouds && (cloud_at(loc) || is_sanctuary(loc)))
-    {
-        return AFF_NO;
-    }
-
-    return (zapped[loc] >= num_beams) ? AFF_YES :
-           (zapped[loc] > 0)          ? AFF_MAYBE
-                                      : AFF_NO;
 }
 
 targeter_monster_sequence::targeter_monster_sequence(const actor *act, int pow, int r) :
@@ -1992,6 +1877,8 @@ targeter_multiposition::targeter_multiposition(const actor *a,
     : targeter(), positive(_positive)
 {
     agent = a;
+    if (agent)
+        origin = agent->pos();
     for (auto &c : seeds)
         affected_positions.insert(c);
 }
@@ -2001,6 +1888,8 @@ targeter_multiposition::targeter_multiposition(const actor *a,
     : targeter(), positive(_positive)
 {
     agent = a;
+    if (agent)
+        origin = agent->pos();
     for (monster *m : seeds)
         if (m)
             affected_positions.insert(m->pos());
@@ -2025,6 +1914,19 @@ aff_type targeter_multiposition::is_affected(coord_def loc)
 
     // is this better with maybe or yes?
     return affected_positions.count(loc) > 0 ? positive : AFF_NO;
+}
+
+targeter_scorch::targeter_scorch(const actor &a, int _range, bool affect_invis)
+    : targeter_multiposition(&a,
+                        find_near_hostiles(_range, affect_invis), AFF_MAYBE),
+      range(_range)
+{ }
+
+bool targeter_scorch::valid_aim(coord_def a)
+{
+    if ((a - origin).rdist() > range)
+        return notify_fail("Out of range.");
+    return true;
 }
 
 targeter_chain_lightning::targeter_chain_lightning()
@@ -2247,4 +2149,112 @@ bool targeter_anguish::affects_monster(const monster_info& mon)
         && mon.willpower() != WILL_INVULN
         && !mons_atts_aligned(agent->temp_attitude(), mon.attitude)
         && !mon.is(MB_ANGUISH);
+}
+
+targeter_boulder::targeter_boulder(const actor* caster)
+    : targeter_beam(caster, LOS_MAX_RANGE, ZAP_IOOD, 0, 0, 0)
+{
+}
+
+bool targeter_boulder::set_aim(coord_def a)
+{
+    if (!targeter::set_aim(a))
+        return false;
+
+    bolt tempbeam = beam;
+
+    tempbeam.target = a;
+    tempbeam.aimed_at_spot = false;
+    tempbeam.path_taken.clear();
+    tempbeam.fire();
+    path_taken = tempbeam.path_taken;
+
+    return true;
+}
+
+bool targeter_boulder::valid_aim(coord_def a)
+{
+    if (!in_bounds(a))
+        return false;
+
+    if (a == agent->pos())
+        return notify_fail("There's a thick-headed creature in the way.");
+
+    // make sure it's a true cardinal
+    const coord_def delta = a - agent->pos();
+    if (delta.x && delta.y && abs(delta.x) != abs(delta.y))
+        return notify_fail("Boulders only roll along the cardinals.");
+
+    ray_def ray;
+    if (!find_ray(agent->pos(), a, ray, opc_solid))
+        return notify_fail("There's something in the way.");
+    if (!ray.advance())
+        return notify_fail("You cannot create a boulder there.");
+
+    const coord_def start = ray.pos();
+    actor* act = actor_at(start);
+    if (feat_is_solid(env.grid(start)) || (act && you.can_see(*act)))
+        return notify_fail("You cannot create a boulder in an occupied space.");
+    if (!feat_has_solid_floor(env.grid(start)))
+        return notify_fail("You cannot create a boulder there.");
+
+    return true;
+}
+
+aff_type targeter_boulder::is_affected(coord_def loc)
+{
+    for (auto pc : path_taken)
+        if (pc == loc)
+            return cell_is_solid(pc) ? AFF_NO : AFF_YES;
+
+    return AFF_NO;
+}
+
+targeter_petrify::targeter_petrify(const actor* caster, int r)
+    : targeter_beam(caster, r, ZAP_PETRIFY, 0, 0, 0)
+{
+}
+
+bool targeter_petrify::set_aim(coord_def a)
+{
+    if (!targeter::set_aim(a))
+        return false;
+
+    bolt tempbeam = beam;
+
+    tempbeam.target = a;
+    tempbeam.aimed_at_spot = false;
+    tempbeam.path_taken.clear();
+    tempbeam.fire();
+    path_taken = tempbeam.path_taken;
+
+    chain_targ.clear();
+
+    const coord_def pos = path_taken[path_taken.size() - 1];
+    monster* targ = monster_at(pos);
+    if (!targ || !agent->can_see(*targ))
+        return true;
+
+    vector<coord_def> chain_targs;
+    fill_petrify_chain_targets(tempbeam, pos, chain_targs, false);
+    chain_targ.insert(chain_targs.begin(), chain_targs.end());
+    return true;
+}
+
+aff_type targeter_petrify::is_affected(coord_def loc)
+{
+    for (auto pc : path_taken)
+    {
+        if (pc == loc)
+        {
+            if (cell_is_solid(pc))
+                return AFF_NO;
+
+            return AFF_YES;
+        }
+    }
+
+    if (chain_targ.count(loc) > 0)
+        return AFF_MAYBE;
+    return AFF_NO;
 }

@@ -8,7 +8,7 @@ aptitudes:
   xp: 0
   hp: -3
   mp_mod: 1
-  mr: 5
+  wl: 5
   fighting: -1
   short_blades: -1
   long_blades: -1
@@ -22,6 +22,7 @@ aptitudes:
   dodging: -2
   stealth: 3
   shields: -1
+  shapeshifting: -1
   evocations: -1
 str: 10
 int: 8
@@ -36,7 +37,6 @@ mutations:
     MUT_MANA_SHIELD: 1
     MUT_ANTIMAGIC_BITE: 1
     MUT_NO_POTION_HEAL: 2
-  4:
     MUT_REGENERATION: 1
   8:
     MUT_FANGS: 1

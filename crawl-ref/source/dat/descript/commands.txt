@@ -377,13 +377,13 @@ CMD_ZOOM_OUT verbose
 
 Zooms out on dungeon area.
 %%%%
-CMD_SHOW_KEYBOARD
+CMD_TOGGLE_KEYBOARD
 
-Show keyboard
+Toggle keyboard
 %%%%
-CMD_SHOW_KEYBOARD verbose
+CMD_TOGGLE_KEYBOARD verbose
 
-Brings up the on-screen keyboard, if applicable.
+Toggles the on-screen keyboard visibility.
 %%%%
 CMD_GAME_MENU
 

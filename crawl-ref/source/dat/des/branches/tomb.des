@@ -162,7 +162,7 @@ function tomb_3_rune_setup(e)
   tomb_mummy_priest_set(e)
 
   e.kmask("O = no_item_gen")
-  e.kitem("O = golden rune of Zot")
+  e.kitem("O = golden rune of Zot, sanguine gem")
 
   tomb_3_khufu(e, "K")
 
@@ -1405,7 +1405,7 @@ TAGS:  tomb_3_rune_stone_stairs unrand
 : tomb_guardian_set(_G)
 : tomb_mummy_priest_set(_G)
 KMASK: O = no_item_gen
-KITEM: O = golden rune of Zot
+KITEM: O = golden rune of Zot, sanguine gem
 KMONS: K = Khufu w:3 / royal mummy, royal mummy
 MAP
 ccccccccccccccccccccccccccccccccccccccccc

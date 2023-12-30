@@ -62,7 +62,7 @@ commit title. Example: `Simplify Cleansing Flame description (Yermak)`.
 
 **Why**: clean diffs, consistent readability patterns across a large
 codebase, and making life easier for others: e.g. contributors with
-low vision or other accessability constraints, future (perhaps very
+low vision or other accessibility constraints, future (perhaps very
 distant future) contributors who may need to decipher your code out
 of context.
 
@@ -265,7 +265,7 @@ There's no convention for class/struct names (yet?)
     };
 
 
-But structures tend to use underscores
+But structures tend to use underscores.
 
     struct coord_def
     {

@@ -146,6 +146,9 @@ public:
     /** Is this item of a type that should not be generated enchanted? */
     bool is_mundane() const;
 
+    /// If this is a gem, what colour is it in console?
+    colour_t gem_colour() const;
+
 private:
     string name_aux(description_level_type desc, bool terse, bool ident,
                     bool with_inscription, iflags_t ignore_flags) const;
@@ -165,6 +168,7 @@ private:
     colour_t potion_colour() const;
     colour_t book_colour() const;
     colour_t miscellany_colour() const;
+    colour_t talisman_colour() const;
     colour_t corpse_colour() const;
 };
 

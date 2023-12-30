@@ -30,7 +30,7 @@ void monster_drop_things(
     bool mark_item_origins = false,
     bool (*suitable)(const item_def& item) = always_true<const item_def &>);
 
-void change_monster_type(monster* mons, monster_type targetc);
+void change_monster_type(monster* mons, monster_type targetc, bool do_seen=true);
 void init_poly_set(monster *mons);
 bool monster_polymorph(monster* mons, monster_type targetc,
                        poly_power_type power = PPT_SAME);

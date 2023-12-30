@@ -10,7 +10,7 @@ aptitudes:
   xp: 1
   hp: 0
   mp_mod: 0
-  mr: 4
+  wl: 4
   fighting: 1
   armour: 1
   dodging: -1
@@ -19,10 +19,10 @@ aptitudes:
   conjurations: -1
   hexes: 2
   translocations: -1
-  transmutations: 1
+  shapeshifting: 0
   air_magic: -2
   earth_magic: 2
-  poison_magic: 3
+  alchemy: 3
   invocations: 2
   evocations: 1
 str: 12
@@ -44,12 +44,13 @@ fake_mutations:
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_HUNTER
-  - JOB_ABYSSAL_KNIGHT
-  - JOB_ARCANE_MARKSMAN
+  - JOB_HEXSLINGER
   - JOB_EARTH_ELEMENTALIST
-  - JOB_VENOM_MAGE
+  - JOB_ALCHEMIST
 recommended_weapons:
   - SK_MACES_FLAILS
   - SK_AXES
   - SK_POLEARMS
   - SK_STAVES
+
+child_name: Larva

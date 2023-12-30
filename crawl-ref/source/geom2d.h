@@ -15,7 +15,7 @@ struct vector
 
     const vector& operator+=(const vector &v);
 
-    // TODO Figure out MSVC compatability with
+    // TODO Figure out MSVC compatibility with
     // PURE definitions in this and hash.h
 
     vector operator+(const vector &v) const PURE;

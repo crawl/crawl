@@ -27,6 +27,7 @@ msc += $danger:You feel a build-up of mutagenic energy
 msc += $danger:place you under penance
 msc += $danger:cause instant excommunication
 msc += $danger:corrodes you
+msc += $danger:Your body becomes as fragile as glass
 
 # Less urgent, but still significant messages
 #
@@ -58,12 +59,11 @@ msc += $warning:slides
 msc += $warning:settles down
 
 msc += lightcyan:LOW MAGIC WARNING
-msc += $warning:fails to return
 msc += $warning:no longer ripe
 msc += $warning:This .* contains the .* runes? of Zot
 msc += $warning:guards? the .* runes? of Zot
 msc += $warning:rune of Zot may be found here
-msc += $warning:Beware\, you cannot shaft yourself on this level
+msc += $warning:Beware. you cannot shaft yourself on this level
 
 # Unimportant messages and combat clutter
 #
@@ -77,8 +77,6 @@ msc += $boring:shimmers and vanishes
 #
 msc += $boring:plain:miss(es)? (the|you|it)
 msc += $boring:but (do no|doesn't do any) damage
-msc += $boring:(prevent|prevents) you from hitting
-msc += $boring:nimbly evade
 msc += $boring:waved at by a branch
 msc += $boring:lunges up near
 
@@ -157,6 +155,7 @@ force_more_message += watery aura .* (staircase|hatch)
 
 # Generally exciting things that are somewhat automated
 force_more_message += You pick up the .* rune and feel its power
+force_more_message += You pick up the .* gem and feel its .* weight
 
 # Rune unlock
 force_more_message += The lock glows eerily
@@ -164,13 +163,21 @@ force_more_message += Heavy smoke blows from the lock
 force_more_message += The gate opens wide
 force_more_message += With a soft hiss the gate opens wide
 
+# Rune lock
+force_more_message += The door slams shut behind you
+
+# Gems
+force_more_message += Zot will shatter your .* gem
+force_more_message += Zot senses .* your .* gem
+
 # God gifts
-force_more_message += grants you (a gift|ammunition|armour|a weapon)
-force_more_message += offers you knowledge of
+force_more_message += grants you (a gift|throwing weapons|a weapon)
+force_more_message += offers you (knowledge of|a choice of)
+force_more_message += will grant you a choice
 force_more_message += believes you are ready to make a new sacrifice
 force_more_message += may now remember your ancestor
 force_more_message += deals you some cards
-force_more_message += finds you have enough cards
+force_more_message += deal. but finds you have enough
 force_more_message += partake of a vision and a curse
 
 # Show passwall message while still in the starting position
@@ -190,6 +197,3 @@ force_more_message += It is a scroll of identify
 force_more_message += You feel more experienced
 force_more_message += A flood of memories washes over you
 force_more_message += There's only one card left
-force_more_message += The deck only has .* cards
-force_more_message += The deck has exactly five cards
-force_more_message += You draw the first five cards

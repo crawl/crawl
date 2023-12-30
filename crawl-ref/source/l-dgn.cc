@@ -1100,7 +1100,7 @@ static int dgn_random_walk(lua_State *ls)
     if (!in_bounds(x, y))
     {
         char buf[80];
-        sprintf(buf, "Point (%d,%d) isn't in bounds.", x, y);
+        snprintf(buf, sizeof(buf), "Point (%d,%d) isn't in bounds.", x, y);
         luaL_argerror(ls, 1, buf);
         return 0;
     }
@@ -1151,7 +1151,7 @@ static int dgn_apply_area_cloud(lua_State *ls)
     if (!in_bounds(x, y))
     {
         char buf[80];
-        sprintf(buf, "Point (%d,%d) isn't in bounds.", x, y);
+        snprintf(buf, sizeof(buf), "Point (%d,%d) isn't in bounds.", x, y);
         luaL_argerror(ls, 1, buf);
         return 0;
     }
@@ -1251,7 +1251,7 @@ static int dgn_place_cloud(lua_State *ls)
     if (!in_bounds(x, y))
     {
         char buf[80];
-        sprintf(buf, "Point (%d,%d) isn't in bounds.", x, y);
+        snprintf(buf, sizeof(buf), "Point (%d,%d) isn't in bounds.", x, y);
         luaL_argerror(ls, 1, buf);
         return 0;
     }
@@ -1774,6 +1774,12 @@ LUAFN(dgn_fill_grd_area)
 
 LUAWRAP(dgn_apply_tide, shoals_apply_tides(0, true))
 
+LUAFN(dgn_state_is_descent)
+{
+    lua_pushboolean(ls, crawl_state.game_is_descent());
+    return 1;
+}
+
 const struct luaL_reg dgn_dlib[] =
 {
 { "reset_level", _dgn_reset_level },
@@ -1889,6 +1895,8 @@ const struct luaL_reg dgn_dlib[] =
 { "fill_grd_area", dgn_fill_grd_area },
 
 { "apply_tide", dgn_apply_tide },
+
+{ "is_descent", dgn_state_is_descent },
 
 { nullptr, nullptr }
 };

@@ -18,6 +18,7 @@
 #include "kills.h"
 #include "level-state-type.h"
 #include "mon-util.h"
+#include "movement.h"
 #include "options.h"
 #include "pcg.h"
 #include "player.h"
@@ -1028,7 +1029,14 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
     if (!mons_class_gives_xp(mon.type))
         return;
 
-    const tag_pref pref = Options.tile_tag_pref;
+    const tag_pref pref =
+        Options.tile_tag_pref == TAGPREF_AUTO
+            ? ((crawl_state.game_is_tutorial() || crawl_state.game_is_hints())
+                    ? TAGPREF_TUTORIAL
+                    : crawl_state.game_is_arena()
+                    ? TAGPREF_NAMED
+                    : TAGPREF_ENEMY)
+            : Options.tile_tag_pref;
     if (pref == TAGPREF_NONE)
         return;
     else if (pref == TAGPREF_TUTORIAL)
@@ -1039,10 +1047,10 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
         if (!mon.is_named() && kills > limit)
             return;
     }
-    else if (!mon.is_named())
+    else if (pref != TAGPREF_ALL && !mon.is_named())
         return;
 
-    if (pref != TAGPREF_NAMED && mon.attitude == ATT_FRIENDLY)
+    if (pref != TAGPREF_NAMED && pref != TAGPREF_ALL &&  mon.attitude == ATT_FRIENDLY)
         return;
 
     tiles.add_text_tag(TAG_NAMED_MONSTER, mon);
@@ -1316,6 +1324,11 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_STONE_WALL_SHOALS;
     }
+    else if (player_in_branch(BRANCH_DEPTHS))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_STONE_WALL_DEPTHS;
+    }
 
     if (orig == TILE_FLOOR_NORMAL)
         *bg = flv.floor;
@@ -1448,16 +1461,14 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (mc.flags & MAP_ORB_HALOED)
         cell.orb_glow = get_orb_phase(gc) ? 2 : 1;
 
-#if TAG_MAJOR_VERSION == 34
-    if (mc.flags & MAP_HOT)
-        cell.heat_aura = 1 + random2(3);
-#endif
-
     if (mc.flags & MAP_QUAD_HALOED)
         cell.quad_glow = true;
 
     if (mc.flags & MAP_DISJUNCT)
         cell.disjunct = get_disjunct_phase(gc);
+
+    if (you.rampage_hints.count(gc) > 0)
+        cell.bg |= TILE_FLAG_RAMPAGE;
 
     if (Options.show_travel_trail)
     {

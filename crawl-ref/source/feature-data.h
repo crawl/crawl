@@ -185,21 +185,21 @@ static feature_def feat_defs[] =
     DNGN_OPEN_SEA, "the open sea", "open_sea",
     DCHAR_WALL, NUM_DCHAR_TYPES,
     COLOUR_IS(BLUE),
-    FFT_SOLID, MF_DEEP_WATER,
+    FFT_WALL | FFT_SOLID, MF_DEEP_WATER,
 },
 
 {
     DNGN_LAVA_SEA, "the endless lava", "endless_lava",
     DCHAR_WALL, NUM_DCHAR_TYPES,
     COLOUR_IS(RED),
-    FFT_SOLID, MF_LAVA,
+    FFT_WALL | FFT_SOLID, MF_LAVA,
 },
 
 {
     DNGN_ENDLESS_SALT, "endless expanse of salt", "endless_salt",
     DCHAR_WALL, NUM_DCHAR_TYPES,
     COLOUR_IS(WHITE),
-    FFT_SOLID, MF_FLOOR,
+    FFT_WALL | FFT_SOLID, MF_FLOOR,
 },
 
 {
@@ -249,6 +249,13 @@ static feature_def feat_defs[] =
     DCHAR_SHALLOW_WAVY, NUM_DCHAR_TYPES,
     COLOUR_IS(ETC_POISON),
     FFT_NONE, MF_WATER,
+},
+
+{
+    DNGN_MUD, "some mud", "mud",
+    DCHAR_SHALLOW_WAVY, NUM_DCHAR_TYPES,
+    COLOUR_IS(BROWN),
+    FFT_NONE, MF_FLOOR,
 },
 
 {
@@ -676,6 +683,13 @@ FOUNTAIN(DNGN_RUNELIGHT, "runelight", "runelight", ETC_DISJUNCTION),
     DCHAR_STAIRS_DOWN, NUM_DCHAR_TYPES,
     COLOUR_AND_MAP(LIGHTCYAN),
     FFT_NONE, MF_STAIR_BRANCH,
+},
+
+{
+    DNGN_BINDING_SIGIL, "a binding sigil", "binding_sigil",
+    DCHAR_TRAP, NUM_DCHAR_TYPES,
+    COLOUR_AND_MAP(RED),
+    FFT_NONE, MF_FLOOR,
 },
 
 };

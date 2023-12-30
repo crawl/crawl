@@ -31,7 +31,7 @@ TabbedRegion::~TabbedRegion()
 
 void TabbedRegion::set_icon_pos(int idx)
 {
-    if (!m_tabs[idx].enabled)
+    if (!m_tabs[idx].enabled && !m_use_small_layout)
         return;
 
     int start_y = 0;
@@ -43,7 +43,10 @@ void TabbedRegion::set_icon_pos(int idx)
         start_y = max(m_tabs[i].max_y + 1, start_y);
     }
     m_tabs[idx].min_y = start_y;
-    m_tabs[idx].max_y = start_y + m_tabs[idx].height;
+    if (!m_use_small_layout)
+        m_tabs[idx].max_y = start_y + m_tabs[idx].height;
+    else
+        m_tabs[idx].max_y = start_y + m_tabs[idx].height*2; // spread half size tabs
 }
 
 void TabbedRegion::reset_icons(int from_idx)
@@ -81,13 +84,21 @@ int TabbedRegion::_push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_ta
     inf.min_y = 0;
     inf.max_y = 0;
     inf.height = 0;
+    inf.orig_dx = 0;
+    inf.orig_dy = 0;
     inf.enabled = true;
     m_tabs.push_back(inf);
 
     tileidx_t actual_tile_tab = (cmd==CMD_NO_CMD) ? tile_tab
                                                   : tileidx_t{TILEG_TAB_BLANK};
     const tile_info &tinf = tile_gui_info(actual_tile_tab);
-    ox = max((int)tinf.width, ox);
+    _icon_width = max((int)tinf.width, ox);
+    ox = _icon_width;
+#ifndef __ANDROID__
+    _show_tab_icons = true;
+#else
+    _show_tab_icons = false;
+#endif
 
     // All tabs should be the same size.
     for (int i = 1; i < TAB_OFS_MAX; ++i)
@@ -102,6 +113,8 @@ int TabbedRegion::_push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_ta
     m_tabs[idx].cmd = cmd;
     m_tabs[idx].tile_tab = tile_tab;
     m_tabs[idx].height = tinf.height;
+    m_tabs[idx].orig_dx = reg->dx;
+    m_tabs[idx].orig_dy = reg->dy;
     set_icon_pos(idx);
 
     recalculate();
@@ -130,17 +143,12 @@ void TabbedRegion::activate_tab(int idx)
     if (invalid_index(idx))
         return;
 
-    if (!m_tabs[idx].enabled)
+    if (!m_tabs[idx].enabled && !m_use_small_layout)
         return;
 
     if (m_active == idx)
-        if (m_use_small_layout)
-        {
-            if (!m_is_deactivated)
-                return deactivate_tab();
-        }
-        else
-            return;
+        if (m_use_small_layout && !m_is_deactivated)
+            return deactivate_tab();
 
     m_active = idx;
     m_dirty  = true;
@@ -163,6 +171,13 @@ void TabbedRegion::deactivate_tab()
 
     if (m_tabs[m_active].reg)
         m_tabs[m_active].reg->clear();
+
+    if (m_use_small_layout)
+    {
+        if (m_tabs[0].reg)
+            m_tabs[0].reg->clear();
+        m_active = 0;
+    }
 }
 
 int TabbedRegion::active_tab() const
@@ -214,7 +229,7 @@ bool TabbedRegion::active_is_valid() const
 {
     if (invalid_index(m_active))
         return false;
-    if (!m_tabs[m_active].enabled)
+    if (!m_tabs[m_active].enabled && !m_use_small_layout)
         return false;
     if (!m_tabs[m_active].reg)
         return false;
@@ -246,7 +261,7 @@ void TabbedRegion::pack_buffers()
     for (int i = 0; i < (int)m_tabs.size(); ++i)
     {
         int ofs;
-        if (!m_tabs[i].enabled)
+        if (!m_tabs[i].enabled && !m_use_small_layout)
             continue;
         else if (m_active == i)
             ofs = TAB_OFS_SELECTED;
@@ -284,7 +299,8 @@ void TabbedRegion::render()
     cprintf("rendering TabbedRegion\n");
 #endif
     set_transform();
-    m_buf_gui.draw();
+    if (ox > 0)
+        m_buf_gui.draw();
 
     m_tabs[m_active].reg->render();
 
@@ -307,7 +323,7 @@ int TabbedRegion::min_height_for_items() const
 {
     for (int i = (int)m_tabs.size()-1; i >= 0; --i)
     {
-        if (m_tabs[i].enabled)
+        if (m_tabs[i].enabled || m_use_small_layout)
             return m_tabs[i].max_y;
     }
     return 0;
@@ -326,9 +342,14 @@ void TabbedRegion::on_resize()
         // on small layout we want to draw tab from top-right corner inwards (down and left)
         if (m_use_small_layout)
         {
-            reg_sx = (sx+ox) - ox*dx/32 - mx*tab.reg->dx;
+            reg_sx = 0;
             tab.reg->dx = dx;
             tab.reg->dy = dy;
+        }
+        else
+        {
+            tab.reg->dx = tab.orig_dx;
+            tab.reg->dy = tab.orig_dy;
         }
 
         tab.reg->place(reg_sx, reg_sy);
@@ -445,15 +466,46 @@ int TabbedRegion::find_tab(string tab_name) const
 
 void TabbedRegion::set_small_layout(bool use_small_layout, const coord_def &windowsz)
 {
-    m_use_small_layout = use_small_layout;
+    if (m_use_small_layout != use_small_layout)
+    {
+        activate_tab(0);
+        if (use_small_layout)
+        {
+            deactivate_tab();
+            if (!_show_tab_icons)
+                ox = 0;
+        }
+        else
+            ox = _icon_width;
+        m_use_small_layout = use_small_layout;
+    }
 
     if (m_tabs.size() == 0 || !use_small_layout)
-        return;
+    {
+        dx = Options.tile_sidebar_pixels;
+        dy = Options.tile_sidebar_pixels;
+    }
+    else
+    {
+        // original dx (32) * region height (240) / num tabs (7) / height of tab (20)
+        int scale = (Options.tile_sidebar_pixels-1) * windowsz.y/num_tabs()/m_tabs[m_active].height -1;
+        scale /= 2; // half size fits better
+        dx = scale;
+        dy = scale;
+    }
 
-    // original dx (32) * region height (240) / num tabs (7) / height of tab (20)
-    int scale = 32 * windowsz.y/num_tabs()/m_tabs[m_active].height -1;
-    dx = scale;
-    dy = scale;
+    reset_icons(0);
+    m_dirty = true;
+    tiles.set_need_redraw();
+}
+
+void TabbedRegion::toggle_tab_icons()
+{
+    _show_tab_icons = !_show_tab_icons;
+    if (_show_tab_icons)
+      ox = _icon_width;
+    else
+      ox = 0;
 }
 
 #endif

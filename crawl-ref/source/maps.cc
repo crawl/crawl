@@ -892,13 +892,16 @@ bool map_selector::depth_selectable(const map_def &mapdef) const
 
 static bool _is_extra_compatible(maybe_bool want_extra, bool have_extra)
 {
-    return want_extra == MB_MAYBE
-           || (want_extra == MB_TRUE && have_extra)
-           || (want_extra == MB_FALSE && !have_extra);
+    return want_extra == maybe_bool::maybe
+           || (bool(want_extra) && have_extra)
+           || (bool(!want_extra) && !have_extra);
 }
 
 bool map_selector::accept(const map_def &mapdef) const
 {
+    if (crawl_state.game_is_descent() && mapdef.has_tag("no_descent"))
+        return false;
+
     switch (sel)
     {
     case PLACE:
@@ -1377,6 +1380,9 @@ static bool _load_map_index(const string& cache, const string &base,
 static bool _load_map_cache(const string &filename, const string &cachename)
 {
     _check_des_index_dir();
+    if (!crawl_state.use_des_cache)
+        return false;
+
     const string descache_base = get_descache_path(cachename, "");
 
     file_lock deslock(descache_base + ".lk", "rb", false);
@@ -1613,7 +1619,7 @@ static weighted_map_names _find_random_vaults(
 
     map_count_t map_counts;
 
-    map_selector sel = map_selector::by_depth(place, wantmini, MB_MAYBE);
+    map_selector sel = map_selector::by_depth(place, wantmini, maybe_bool::maybe);
     sel.preserve_dummy = true;
 
     msg::suppress mx;

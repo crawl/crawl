@@ -15,27 +15,29 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_S_UNDER      = 0x00040000ULL,
     TILE_FLAG_FLYING       = 0x00080000ULL,
 
-    // 3 mutually exclusive flags for behaviour.
-    TILE_FLAG_BEH_MASK     = 0x00300000ULL,
+    // 4 mutually exclusive flags for behaviour.
+    TILE_FLAG_BEH_MASK     = 0x00700000ULL,
     TILE_FLAG_STAB         = 0x00100000ULL,
     TILE_FLAG_MAY_STAB     = 0x00200000ULL,
     TILE_FLAG_FLEEING      = 0x00300000ULL,
-    TILE_FLAG_NET          = 0x00400000ULL,
-    // 0x00800000ULL is used by TILE_FLAG_POISON lower in the file.
+    TILE_FLAG_PARALYSED    = 0x00400000ULL,
+
+    TILE_FLAG_NET          = 0x00800000ULL,
     TILE_FLAG_WEB          = 0x01000000ULL,
     // Other icons were previously stored here. Lots of space now.
     // Different levels of poison are mutually exclusive, so we can encode them in 2 bits.
-    TILE_FLAG_POISON_MASK  = 0x1000000000800000ULL,
-    TILE_FLAG_POISON       = 0x0000000000800000ULL,
+    TILE_FLAG_POISON_MASK  = 0x1800000000000000ULL,
+    TILE_FLAG_POISON       = 0x0800000000000000ULL,
     TILE_FLAG_MORE_POISON  = 0x1000000000000000ULL,
-    TILE_FLAG_MAX_POISON   = 0x1000000000800000ULL,
+    TILE_FLAG_MAX_POISON   = 0x1800000000000000ULL,
 
-    // 4 mutually exclusive flags for threat level.
+    // 5 mutually exclusive flags for threat level.
     TILE_FLAG_THREAT_MASK  = 0xE000000000000000ULL,
     TILE_FLAG_TRIVIAL      = 0x2000000000000000ULL,
     TILE_FLAG_EASY         = 0x4000000000000000ULL,
     TILE_FLAG_TOUGH        = 0x6000000000000000ULL,
     TILE_FLAG_NASTY        = 0x8000000000000000ULL,
+    TILE_FLAG_UNUSUAL      = 0xE000000000000000ULL,
 
     // MDAM has 5 possibilities, so uses 3 bits.
     TILE_FLAG_MDAM_MASK    = 0x1C0000000ULL,
@@ -84,13 +86,12 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_TENTACLE_STARSPAWN = 0x0800000000ULL,
     TILE_FLAG_TENTACLE_VINE      = 0x1000000000ULL,
 
-#if TAG_MAJOR_VERSION == 34
+    TILE_FLAG_RAMPAGE = 0x02000000000ULL,
+
     // Starspawn tentacle overlays. Obviated by the above.
-    TILE_FLAG_STARSPAWN_NW = 0x02000000000ULL,
-    TILE_FLAG_STARSPAWN_NE = 0x04000000000ULL,
-    TILE_FLAG_STARSPAWN_SE = 0x08000000000ULL,
-    TILE_FLAG_STARSPAWN_SW = 0x10000000000ULL,
-#endif
+    // 0x04000000000ULL was TILE_FLAG_STARSPAWN_NE
+    // 0x08000000000ULL was TILE_FLAG_STARSPAWN_SE
+    // 0x10000000000ULL was TILE_FLAG_STARSPAWN_SW
 
     //// General
 

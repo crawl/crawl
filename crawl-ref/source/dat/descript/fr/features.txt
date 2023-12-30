@@ -668,10 +668,6 @@ A pulsating floor
 
 Ce plancher lisse semble pulser à un rythme inconnu.
 %%%%
-Zonguldrok's gravestone
-
-Une pierre tombale. Le nom “Zonguldrok” est gravé dessus en lettres d'or.
-%%%%
 A gravestone
 
 Une pierre tombale vierge.

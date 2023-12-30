@@ -10,7 +10,7 @@ aptitudes:
   xp: 0
   hp: -2
   mp_mod: 0
-  mr: 3
+  wl: 3
   fighting: 1
   short_blades: -1
   long_blades: -1
@@ -27,9 +27,10 @@ aptitudes:
   summoning: -1
   necromancy: -2
   translocations: -1
-  transmutations: -2
+  shapeshifting: -3
   air_magic: -2
   earth_magic: 2
+  alchemy: -2
   invocations: 1
   evocations: -1
 str: 11
@@ -56,9 +57,9 @@ recommended_jobs:
   - JOB_MONK
   - JOB_BERSERKER
   - JOB_FIRE_ELEMENTALIST
-  - JOB_ICE_ELEMENTALIST
   - JOB_EARTH_ELEMENTALIST
-  - JOB_VENOM_MAGE
+  - JOB_ALCHEMIST
+  - JOB_REAVER
 recommended_weapons:
   - SK_MACES_FLAILS
   - SK_STAVES

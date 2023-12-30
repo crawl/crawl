@@ -49,14 +49,19 @@ int stab_bonus_denom(stab_type stab);
 bool force_player_cleave(coord_def target);
 bool attack_cleaves(const actor &attacker, int which_attack = -1);
 bool weapon_cleaves(const item_def &item);
+int weapon_hits_per_swing(const item_def &item);
+bool weapon_multihits(const item_def *item);
 void get_cleave_targets(const actor &attacker, const coord_def& def,
-                        list<actor*> &targets, int which_attack = -1);
-void attack_cleave_targets(actor &attacker, list<actor*> &targets,
-                           int attack_number = 0,
-                           int effective_attack_number = 0,
-                           wu_jian_attack_type wu_jian_attack
+                        list<actor*> &targets, int which_attack = -1,
+                        bool force_cleaving = false);
+// too many params... need to pass in a mini-struct or something
+void attack_multiple_targets(actor &attacker, list<actor*> &targets,
+                             int attack_number = 0,
+                             int effective_attack_number = 0,
+                             wu_jian_attack_type wu_jian_attack
                                = WU_JIAN_ATTACK_NONE,
-                           bool is_projected = false);
+                             bool is_projected = false,
+                             bool is_cleave = true);
 
 class attack;
 int to_hit_pct(const monster_info& mi, attack &atk, bool melee);
@@ -67,6 +72,7 @@ int mon_beat_sh_pct(int shield_bypass, int shield_class);
 
 int weapon_min_delay_skill(const item_def &weapon);
 int weapon_min_delay(const item_def &weapon, bool check_speed = true);
+int weapon_adjust_delay(const item_def &weapon, int base_delay, bool random = true);
 
 int mons_weapon_damage_rating(const item_def &launcher);
 
@@ -76,15 +82,18 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool *prompted = nullptr,
-                        coord_def attack_pos = coord_def(0, 0));
+                        coord_def attack_pos = coord_def(0, 0),
+                        bool check_only = false);
 
 bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         function<bool(const actor *victim)> affects = nullptr,
                         bool *prompted = nullptr,
-                        const monster *mons = nullptr);
+                        const monster *mons = nullptr,
+                        bool check_only = false);
 
 string stop_summoning_reason(resists_t resists, monclass_flags_t flags);
 bool stop_summoning_prompt(resists_t resists = MR_NO_FLAGS,
+                           monclass_flags_t flags = M_NO_FLAGS,
                            string verb = "summon");
 
 bool can_reach_attack_between(coord_def source, coord_def target,
@@ -99,3 +108,7 @@ int stat_modify_damage(int base_dam, skill_type wpn_skill, bool using_weapon);
 int apply_weapon_skill(int base_dam, skill_type wpn_skill, bool random);
 int apply_fighting_skill(int base_dam, bool aux, bool random);
 int throwing_base_damage_bonus(const item_def &projectile);
+int brand_adjust_weapon_damage(int base_dam, int brand, bool random);
+
+int unarmed_base_damage(bool random);
+int unarmed_base_damage_bonus(bool random);

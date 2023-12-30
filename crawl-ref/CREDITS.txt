@@ -105,6 +105,7 @@
     Beargit
     Bill Beher
     Alexander Beisig
+    benadryl
     biasface
     bjobae
     Stu Black
@@ -125,6 +126,7 @@
     Andre Bubel
     Trent W. Buck
     Joe Buzzelli
+    Micah C
     Policarpo Caballero
     Ian Caltabiano
     David Candido
@@ -143,6 +145,7 @@
     Tom Conrad
     Vitor 'Baconkid' Costa
     RJ Cunningham
+    Cureja
     Aaron Curtis
     Simon Curtis
     cut1less
@@ -150,6 +153,7 @@
     David Damerell
     Paul Dejean
     Denzi
+    Sean Dewar
     Ed Dewey
     dicedlemming
     Lothar Dierkes
@@ -187,6 +191,7 @@
     Gittourarmy
     Ben Goetter
     Aaron Golden
+    Gompami
     Ed Gonzalez
     Gopall
     Goratrix
@@ -212,7 +217,6 @@
     ICC
     Icy Lich
     Ilyak
-    Implojin
     Matthew Ince
     Mitsuhiro Itakura
     Jeekaroose
@@ -224,6 +228,7 @@
     Dominic 'dk' Kexel
     Jarmo Kielosto
     Brandon Kime
+    King7artist
     Kornel Kisielewicz
     Vesa Kivimäki
     Daniel Klein
@@ -240,7 +245,6 @@
     Christopher Landry
     Lantier
     Maciej Lapinski
-    Nikolai Lavsky
     Lamil Lerran
     Jordan Lewis
     Sami Liedes
@@ -297,11 +301,13 @@
     Heinrich Ody
     Chris Oelmueller
     John Olender
+    Nephila Hirsch Oliveira
     Aaron Olowin
     Andrew O'Neill
     Oneirical
     Justin Clark Ong
     Yuuma Oohara
+    orjb1
     Julian Ospald
     Malwyn P
     palyth
@@ -338,9 +344,11 @@
     Andy Roche
     rockygargoyle
     Will Rogers
+    RollingRubic
     Nate Rook
     David Rose
     runrin
+    rypofalem
     Risto Saarelma
     Sebastian Salman
     Petri Salminen
@@ -395,6 +403,7 @@
     Steven Wheeler
     WhiteShark
     Thomas Willem
+    Sam Willett
     Evan Williams
     Mara Williamson
     Jeremey Wilson
@@ -431,16 +440,19 @@ The Dungeon Crawl Stone Soup development team is:
     Brendan Hickey
     Aidan Holm
     Pete Hurst
+    Implojin
     Eino Keskitalo
     Vsevolod Kozlov
     Janne Lahdenperä
     Pekka Lampila
     Raphaël Langella
     Nat Lanza
+    Nikolai Lavsky
     Jesse Luehrs
     Alan Malloy
     Shmuale Mark
     John McCartney
+    Félix Medrano
     Steve Melenchuk
     Neil Middleton
     Seve Monahan

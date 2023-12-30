@@ -11,39 +11,52 @@ correctly. As with most Android applications, the build process is
 somewhat different from the traditional "./configure; make; make install"
 that you might expect.
 
-The Android port is known to build with the NDK's GCC 4.8 toolchain and
-clang toolchains.
+The Android port is known to build with the SDK for Android 11 (API level 30)
+and NDK version r22b.
 
 
 Build Process
 -------------
-
- * Get the latest Android SDK from http://developer.android.com/sdk/index.html
- * Run "android" and fetch the files for the android-12 platform
- * Get the latest Android NDK, r10c at time of writing:
-   http://developer.android.com/sdk/ndk/index.html
- * Configure your PATH. Assuming you've installed the SDK in $SDK and the
-   NDK in $NDK: export PATH=$SDK/tools:$SDK/platform-tools:$NDK:$PATH
+ * Download and install Android Studio:
+   https://developer.android.com/studio/
+ * Install the latest Android SDK and NDK in Android Studio.
+ * Enter the path to your installed SDK in the local.properties file:
+   crawl/crawl-ref/source/android-project/local.properties
  * Ensure that you have all of the dependent host libraries required to
-   use the SDK, NDK and build crawl's host tools. For a recent Ubuntu host
-   these are:
+   build crawl's host tools. For a recent Ubuntu host these are:
      - ia32-libs
      - build-essential
      - libpng-dev
- * If you don't have them already, you need Oracle's JDK and ant installed.
- * Run "NDK_TOOLCHAIN_VERSION=<version> make ANDROID=1 android", where
-   <version> is either a gcc version or clang (or clang-<version>).
+ * Run "make ANDROID=1 android" where 1 is the Android version code.
 
-
-Project Structure
------------------
-At a high level, the SDL library and DCSS are laid out on disk as
-follows:
-
+The previous step will generate all the files and folders required for a
+complete Android project. You can use Android Studio to generate APK(s)
+or further development. Just open the project folder located in
 crawl-ref/source/android-project
-  bin/                # Where the final .apk is generated.
-  src/                # Java code that wraps the native game and libs
-  jni/                # Where contrib libraries live, including SDL.
+
+Command line build process
+--------------------------
+
+Prerequisites: java/jdk, gradle, android sdk and command line tools,
+other standard dcss prerequisites
+* The necessary android packages are available in many package management
+  systems, and via installing Android Studio (probably the most reliable).
+* package names may differ slightly depending on installation method. But for
+  example, `apt install default-jdk gradle android-sdk` on Ubuntu.
+* Ensure that `ANDROID_SDK_ROOT` is set properly (and perhaps `ANDROID_HOME`),
+  and that the jdk version you want to use is in your path.
+* If you install android from a package manager, the installation will be
+  minimal, and you will need to use the android sdk manager tool to install
+  further pieces and accept licenses. `sdkmanager --update` is a start. The
+  initial app configure process below will most likely install a specific
+  version of the NDK, that will need its license accepted, and if you are
+  operating entirely via the command line, `sdkmanager` is the utility for
+  doing this.
+
+Build:
+1. Build the tiles toolchain: make ANDROID=1 android
+2. change directory to `crawl-ref/source/android-project`
+3. Build the app: `gradle :app:assembleBuildTest`
 
 Technical Notes
 ---------------

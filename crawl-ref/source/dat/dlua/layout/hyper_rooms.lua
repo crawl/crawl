@@ -111,10 +111,6 @@ function hyper.rooms.make_room(options,generator)
     profiler.push("AnalyseRoomInternal")
   end
 
-  if generator.analyse_interal then
-    hyper.usage.analyse_grid_usage(room.grid,options)
-  end
-
   if hyper.profile then
     profiler.pop()
   end
@@ -342,7 +338,7 @@ function hyper.rooms.add_walls(room, options)
         end
         if any_open then
           -- There was at least one open square so we need to make a wall which *could* be carvable.
-          -- Note: carvable doesn't mean this can necessarily be used as a door, e.g. Fort crennelations ... that will still happen in room analysys. It
+          -- Note: carvable doesn't mean this can necessarily be used as a door, e.g. Fort crennelations ... that will still happen in room analysis. It
           -- makes the logic overall much simpler.
           -- TODO: Allow diagonal doors here too. Diagonals are problematic (in the previous loop and in analyse_room) because we'd get overlapping anchors
           --       with adjacent walls, this really doesn't sound good.

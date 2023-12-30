@@ -24,6 +24,7 @@
 #include "english.h"
 #include "env.h" // LSTATE_STILL_WINDS
 #include "errors.h" // sysfail
+#include "evoke.h"
 #include "god-item.h"
 #include "god-passive.h" // passive_t::want_curses, no_haste
 #include "invent.h"
@@ -38,6 +39,7 @@
 #include "options.h"
 #include "orb-type.h"
 #include "player.h"
+#include "potion.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
@@ -47,12 +49,14 @@
 #include "spl-goditem.h"
 #include "state.h"
 #include "stringutil.h"
+#include "syscalls.h"
 #include "tag-version.h"
 #include "throw.h"
 #include "transform.h"
 #include "unicode.h"
 #include "unwind.h"
 #include "viewgeom.h"
+#include "zot.h" // gem_clock_active
 
 static bool _is_consonant(char let);
 static char _random_vowel();
@@ -101,14 +105,15 @@ static string _item_inscription(const item_def &item)
 
     if (const char *orig = _interesting_origin(item))
     {
-        if (Options.show_god_gift == MB_TRUE
-            || Options.show_god_gift == MB_MAYBE && !fully_identified(item))
+        if (bool(Options.show_god_gift)
+            || Options.show_god_gift == maybe_bool::maybe
+                && !fully_identified(item))
         {
             insparts.push_back(orig);
         }
     }
 
-    if (is_artefact(item))
+    if (is_artefact(item) && item_ident(item, ISFLAG_KNOW_PROPERTIES))
     {
         const string part = artefact_inscription(item);
         if (!part.empty())
@@ -159,7 +164,11 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
             descrip = DESC_A;
     }
 
-    if (base_type == OBJ_BOOKS && book_has_title(*this))
+    // XXX EVIL HACK: randbooks are always ID'd..?
+    if (base_type == OBJ_BOOKS && is_random_artefact(*this))
+        ident = true;
+
+    if (base_type == OBJ_BOOKS && book_has_title(*this, ident))
     {
         if (descrip != DESC_DBNAME)
             descrip = DESC_PLAIN;
@@ -180,9 +189,10 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
               && !(corpse_flags & MF_NAME_DEFINITE))
          && !(corpse_flags & MF_NAME_SUFFIX)
          && !starts_with(get_corpse_name(*this), "shaped "))
-        || item_is_orb(*this) || item_is_horn_of_geryon(*this)
-        || (ident || item_type_known(*this)) && is_artefact(*this)
-            && special != UNRAND_OCTOPUS_KING_RING)
+        || item_is_orb(*this)
+        || item_is_horn_of_geryon(*this)
+        || (ident || item_ident(*this, ISFLAG_KNOW_PROPERTIES))
+           && is_artefact(*this) && special != UNRAND_OCTOPUS_KING_RING)
     {
         // Artefacts always get "the" unless we just want the plain name.
         switch (descrip)
@@ -299,6 +309,11 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 }
             }
         }
+        else if (base_type == OBJ_TALISMANS
+                 && you.using_talisman(*this))
+        {
+                buff << " (active)";
+        }
         else if (you.quiver_action.item_is_quivered(*this))
             buff << " (quivered)";
     }
@@ -403,7 +418,7 @@ static const char *weapon_brands_terse[] =
 #if TAG_MAJOR_VERSION == 34
     "obsolete", "obsolete",
 #endif
-    "venom", "protect", "drain", "speed", "vorpal",
+    "venom", "protect", "drain", "speed", "heavy",
 #if TAG_MAJOR_VERSION == 34
     "obsolete", "obsolete",
 #endif
@@ -415,7 +430,7 @@ static const char *weapon_brands_terse[] =
 #if TAG_MAJOR_VERSION == 34
     "evade", "confuse",
 #endif
-    "penet", "reap", "spect", "vorpal", "acid",
+    "penet", "reap", "spect", "num_special", "acid",
 #if TAG_MAJOR_VERSION > 34
     "confuse",
 #endif
@@ -430,7 +445,7 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION == 34
     "orc slaying", "dragon slaying",
 #endif
-    "venom", "protection", "draining", "speed", "vorpality",
+    "venom", "protection", "draining", "speed", "heavy",
 #if TAG_MAJOR_VERSION == 34
     "flame", "frost",
 #endif
@@ -442,7 +457,7 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION == 34
     "evasion", "confusion",
 #endif
-    "penetration", "reaping", "spectralizing", "vorpal", "acid",
+    "penetration", "reaping", "spectralizing", "num_special", "acid",
 #if TAG_MAJOR_VERSION > 34
     "confusion",
 #endif
@@ -457,7 +472,7 @@ static const char *weapon_brands_adj[] =
 #if TAG_MAJOR_VERSION == 34
     "orc-killing", "dragon-slaying",
 #endif
-    "venomous", "protective", "draining", "fast", "vorpal",
+    "venomous", "protective", "draining", "fast", "heavy",
 #if TAG_MAJOR_VERSION == 34
     "flaming", "freezing",
 #endif
@@ -469,7 +484,7 @@ static const char *weapon_brands_adj[] =
 #if TAG_MAJOR_VERSION == 34
     "evasive", "confusing",
 #endif
-    "penetrating", "reaping", "spectral", "vorpal", "acidic",
+    "penetrating", "reaping", "spectral", "num_special", "acidic",
 #if TAG_MAJOR_VERSION > 34
     "confusing",
 #endif
@@ -483,7 +498,7 @@ COMPILE_CHECK(ARRAYSZ(weapon_brands_verbose) == NUM_SPECIAL_WEAPONS);
 COMPILE_CHECK(ARRAYSZ(weapon_brands_adj) == NUM_SPECIAL_WEAPONS);
 
 static const set<brand_type> brand_prefers_adj =
-            { SPWPN_VAMPIRISM, SPWPN_ANTIMAGIC, SPWPN_VORPAL, SPWPN_SPECTRAL };
+            { SPWPN_VAMPIRISM, SPWPN_ANTIMAGIC, SPWPN_HEAVY, SPWPN_SPECTRAL };
 
 /**
  * What's the name of a type of weapon brand?
@@ -674,7 +689,7 @@ const char* potion_type_name(int potiontype)
     case POT_MIGHT:             return "might";
     case POT_ATTRACTION:        return "attraction";
     case POT_BRILLIANCE:        return "brilliance";
-    case POT_FLIGHT:            return "flight";
+    case POT_ENLIGHTENMENT:     return "enlightenment";
     case POT_CANCELLATION:      return "cancellation";
     case POT_AMBROSIA:          return "ambrosia";
     case POT_INVISIBILITY:      return "invisibility";
@@ -709,7 +724,7 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_POISON:             return "poison";
     case SCR_BUTTERFLIES:        return "butterflies";
     case SCR_BLINKING:           return "blinking";
-    case SCR_MAGIC_MAPPING:      return "magic mapping";
+    case SCR_REVELATION:         return "revelation";
     case SCR_FOG:                return "fog";
     case SCR_ACQUIREMENT:        return "acquirement";
     case SCR_BRAND_WEAPON:       return "brand weapon";
@@ -943,6 +958,11 @@ const char* rune_type_name(short p)
     }
 }
 
+static string gem_type_name(gem_type g)
+{
+    return string(gem_adj(g)) + " gem";
+}
+
 static string misc_type_name(int type)
 {
 #if TAG_MAJOR_VERSION == 34
@@ -971,12 +991,12 @@ static string misc_type_name(int type)
 #endif
     case MISC_QUAD_DAMAGE:               return "quad damage";
     case MISC_PHIAL_OF_FLOODS:           return "phial of floods";
-#if TAG_MAJOR_VERSION == 34
-    case MISC_SACK_OF_SPIDERS:           return "removed sack of spiders";
-#endif
+    case MISC_SACK_OF_SPIDERS:           return "sack of spiders";
     case MISC_PHANTOM_MIRROR:            return "phantom mirror";
     case MISC_ZIGGURAT:                  return "figurine of a ziggurat";
-    case MISC_XOMS_CHESSBOARD:           return "piece from Xom's chessboard";
+#if TAG_MAJOR_VERSION == 34
+    case MISC_XOMS_CHESSBOARD:           return "removed chess piece";
+#endif
     case MISC_TIN_OF_TREMORSTONES:       return "tin of tremorstones";
     case MISC_CONDENSER_VANE:            return "condenser vane";
 
@@ -1001,17 +1021,21 @@ static const char* _book_type_name(int booktype)
     case BOOK_LIGHTNING:              return "Lightning";
     case BOOK_DEATH:                  return "Death";
     case BOOK_MISFORTUNE:             return "Misfortune";
-    case BOOK_CHANGES:                return "Changes";
-    case BOOK_TRANSFIGURATIONS:       return "Transfigurations";
+    case BOOK_SPONTANEOUS_COMBUSTION: return "Spontaneous Combustion";
 #if TAG_MAJOR_VERSION == 34
-    case BOOK_BATTLE:                 return "Battle";
+    case BOOK_TRANSFIGURATIONS:       return "Transfigurations";
 #endif
+    case BOOK_BATTLE:                 return "Battle";
     case BOOK_VAPOURS:                return "Vapours";
     case BOOK_NECROMANCY:             return "Necromancy";
     case BOOK_CALLINGS:               return "Callings";
+#if TAG_MAJOR_VERSION == 34
     case BOOK_MALEDICT:               return "Maledictions";
+#endif
     case BOOK_AIR:                    return "Air";
+#if TAG_MAJOR_VERSION == 34
     case BOOK_SKY:                    return "the Sky";
+#endif
     case BOOK_WARP:                   return "the Warp";
 #if TAG_MAJOR_VERSION == 34
     case BOOK_ENVENOMATIONS:          return "Envenomations";
@@ -1033,7 +1057,7 @@ static const char* _book_type_name(int booktype)
     case BOOK_DRAGON:                 return "the Dragon";
     case BOOK_BURGLARY:               return "Burglary";
     case BOOK_DREAMS:                 return "Dreams";
-    case BOOK_ALCHEMY:                return "Alchemy";
+    case BOOK_TRANSMUTATION:         return "Transmutation";
     case BOOK_BEASTS:                 return "Beasts";
     case BOOK_SPECTACLE:              return "Spectacle";
     case BOOK_WINTER:                 return "Winter";
@@ -1044,8 +1068,8 @@ static const char* _book_type_name(int booktype)
 #endif
     case BOOK_DECAY:                  return "Decay";
     case BOOK_DISPLACEMENT:           return "Displacement";
-    case BOOK_RIME:                   return "Rime";
 #if TAG_MAJOR_VERSION == 34
+    case BOOK_RIME:                   return "Rime";
     case BOOK_STONE:                  return "Stone";
 #endif
     case BOOK_SENSES:                 return "the Senses";
@@ -1093,7 +1117,7 @@ static const char* staff_type_name(int stafftype)
     {
     case STAFF_FIRE:        return "fire";
     case STAFF_COLD:        return "cold";
-    case STAFF_POISON:      return "poison";
+    case STAFF_ALCHEMY:     return "alchemy";
     case STAFF_DEATH:       return "death";
     case STAFF_CONJURATION: return "conjuration";
     case STAFF_AIR:         return "air";
@@ -1130,6 +1154,8 @@ const char *base_type_string(object_class_type type)
     case OBJ_CORPSES: return "corpse";
     case OBJ_GOLD: return "gold";
     case OBJ_RUNES: return "rune";
+    case OBJ_GEMS: return "gem";
+    case OBJ_TALISMANS: return "talisman";
     default: return "";
     }
 }
@@ -1172,14 +1198,20 @@ string sub_type_string(const item_def &item, bool known)
         case BOOK_EVERBURNING:
             // Aus. English apparently follows the US spelling, not UK.
             return "Everburning Encyclopedia";
+#if TAG_MAJOR_VERSION == 34
         case BOOK_OZOCUBU:
             return "Ozocubu's Autobiography";
+#endif
+        case BOOK_MAXWELL:
+            return "Maxwell's Memoranda";
         case BOOK_YOUNG_POISONERS:
             return "Young Poisoner's Handbook";
         case BOOK_FEN:
             return "Fen Folio";
+#if TAG_MAJOR_VERSION == 34
         case BOOK_NEARBY:
             return "Inescapable Atlas";
+#endif
         case BOOK_THERE_AND_BACK:
             return "There-And-Back Book";
         case BOOK_BIOGRAPHIES_II:
@@ -1203,11 +1235,13 @@ string sub_type_string(const item_def &item, bool known)
     case OBJ_RODS:   return "removed rod";
 #endif
     case OBJ_MISCELLANY: return misc_type_name(sub_type);
+    case OBJ_TALISMANS: return talisman_type_name(sub_type);
     // these repeat as base_type_string
     case OBJ_ORBS: return "orb of Zot";
     case OBJ_CORPSES: return "corpse";
     case OBJ_GOLD: return "gold";
     case OBJ_RUNES: return "rune of Zot";
+    case OBJ_GEMS: return gem_type_name(static_cast<gem_type>(sub_type));
     default: return "";
     }
 }
@@ -1230,7 +1264,7 @@ string ghost_brand_name(brand_type brand, monster_type mtype)
     const bool weapon = mtype != MONS_PANDEMONIUM_LORD;
     if (weapon)
     {
-        // n.b. vorpal only works if it is adjectival
+        // n.b. heavy only works if it is adjectival
         if (brand_prefers_adj.count(brand))
             return make_stringf("%s weapon", brand_type_adj(brand));
         else
@@ -1734,6 +1768,12 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (is_randart && !dbname)
         {
             buff << get_artefact_name(*this, ident);
+            if (!ident
+                && !item_ident(*this, ISFLAG_KNOW_PROPERTIES)
+                && item_type_known(*this))
+            {
+                buff << " of " << jewellery_effect_name(item_typ);
+            }
             break;
         }
 
@@ -1782,10 +1822,17 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         break;
     }
 
+    case OBJ_TALISMANS:
+        if (is_random_artefact(*this) && !dbname && !basename)
+            buff << get_artefact_name(*this, ident);
+        else
+            buff << talisman_type_name(item_typ);
+        break;
+
     case OBJ_BOOKS:
         if (is_random_artefact(*this) && !dbname && !basename)
         {
-            buff << get_artefact_name(*this, ident);
+            buff << get_artefact_name(*this, true);
             break;
         }
         if (basename)
@@ -1804,7 +1851,16 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (!terse && cursed())
             buff << "cursed ";
 
-        if (!know_type)
+        if (is_artefact(*this) && !dbname)
+        {
+            if (know_type)
+                buff << "staff";
+            // TODO: crop long artefact names when not controlled by webtiles
+            buff << get_artefact_name(*this, ident);
+            if (!know_type)
+                buff << "staff";
+        }
+        else if (!know_type)
         {
             if (!basename)
             {
@@ -1830,6 +1886,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (!dbname)
             buff << rune_type_name(sub_type) << " ";
         buff << "rune of Zot";
+        break;
+
+    case OBJ_GEMS:
+        buff << gem_type_name(static_cast<gem_type>(sub_type));
         break;
 
     case OBJ_GOLD:
@@ -2075,12 +2135,67 @@ bool get_ident_type(object_class_type basetype, int subtype)
     return you.type_ids[basetype][subtype];
 }
 
+static colour_t _gem_colour(const item_def *gem)
+{
+    if (!you.gems_found[gem->sub_type])
+        return DARKGREY;
+    return gem->gem_colour();
+}
+
+static string _gem_parenthetical(gem_type gem)
+{
+    string text = " (";
+    text += branches[branch_for_gem(gem)].longname;
+
+    const int lim = gem_time_limit(gem);
+    const int left = lim - you.gem_time_spent[gem];
+
+    // We need to check time left rather than shattered, since the latter is
+    // only set when the gem is actually broken, and we may not have loaded
+    // the relevant level since we ran out of time.
+    if (left <= 0)
+    {
+        if (Options.more_gem_info || !you.gems_found[gem])
+            return text + ", shattered)";
+        return text + ")";
+    }
+
+    if (!gem_clock_active()
+        || !Options.more_gem_info && you.gems_found[gem])
+    {
+        return text + ")";
+    }
+
+    // Rescale from aut to dAut. Round up.
+    text += make_stringf(", %d", (left + 9) / 10);
+    if (left < lim)
+        text += make_stringf("/%d", (lim + 9) / 10);
+    else
+        text += " turns"; // XXX: ?
+    return text + " until shattered)";
+}
+
+static string _gem_text(const item_def *gem_it)
+{
+    string text = gem_it->name(DESC_PLAIN);
+    const gem_type gem = static_cast<gem_type>(gem_it->sub_type);
+    text = colourize_str(text, _gem_colour(gem_it));
+    const bool in_branch = player_in_branch(branch_for_gem(gem));
+    const colour_t pcol = in_branch ? WHITE
+              : you.gems_found[gem] ? LIGHTGREY
+                                    : DARKGREY;
+    text += colourize_str(_gem_parenthetical(gem), pcol);
+    return text;
+}
+
 static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
 {
     auto entry = static_cast<InvEntry*>(me);
     ASSERT(entry);
 
-    if (entry->item->base_type == OBJ_RUNES)
+    switch (entry->item->base_type)
+    {
+    case OBJ_RUNES:
     {
         auto rune = static_cast<rune_type>(entry->item->sub_type);
         colour_t colour;
@@ -2108,87 +2223,281 @@ static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
         text += colour_to_str(colour);
         text += ">";
         entry->text = text;
+        break;
     }
-    else if (entry->item->is_type(OBJ_ORBS, ORB_ZOT))
-    {
+    case OBJ_GEMS:
+        entry->text = _gem_text(entry->item);
+        break;
+    case OBJ_ORBS:
         if (player_has_orb())
             entry->text = "<magenta>The Orb of Zot</magenta>";
         else
         {
             entry->text = "<darkgrey>The Orb of Zot"
-                          " (the Realm of Zot)</darkgrey>";
+            " (the Realm of Zot)</darkgrey>";
         }
+        break;
+    default:
+        entry->text = "Eggplant"; // bug!
+        break;
     }
 
     return entry;
 }
 
-void display_runes()
+class RuneMenu : public InvMenu
 {
+    virtual bool process_key(int keyin) override;
+
+public:
+    RuneMenu();
+
+private:
+    void populate();
+
+    string get_title();
+    string gem_title();
+
+    void fill_contents();
+    void set_normal_runes();
+    void set_sprint_runes();
+    void set_gems();
+
+    void set_footer();
+
+    bool can_show_gems();
+    bool can_show_more_gems();
+
+    bool show_gems;
+    // For player morale, default to hiding gems you've already missed.
+    bool more_gems;
+
+    vector<item_def> contents;
+};
+
+RuneMenu::RuneMenu()
+    : InvMenu(MF_NOSELECT | MF_ALLOW_FORMATTING),
+      show_gems(false), more_gems(false)
+{
+    populate();
+}
+
+void RuneMenu::populate()
+{
+    contents.clear();
+    items.clear();
+
+    set_title(get_title());
+    fill_contents();
+    // We've sorted this vector already, so disable menu sorting. Maybe we
+    // could a menu entry comparator and modify InvMenu::load_items() to allow
+    // passing this in instead of doing a sort ahead of time.
+    load_items(contents, _fixup_runeorb_entry, 0, false);
+
+    set_footer();
+}
+
+string RuneMenu::get_title()
+{
+    if (show_gems)
+        return gem_title();
+
     auto col = runes_in_pack() < ZOT_ENTRY_RUNES ?  "lightgrey" :
                runes_in_pack() < you.obtainable_runes ? "green" :
                                                    "lightgreen";
 
-    auto title = make_stringf("<white>Runes of Zot (</white>"
-                              "<%s>%d</%s><white> collected) & Orbs of Power</white>",
-                              col, runes_in_pack(), col);
+    return make_stringf("<white>Runes of Zot (</white>"
+                        "<%s>%d</%s><white> collected) & Orbs of Power</white>",
+                        col, runes_in_pack(), col);
+}
 
-    InvMenu menu(MF_NOSELECT | MF_ALLOW_FORMATTING);
+string RuneMenu::gem_title()
+{
+    const int found = gems_found();
+    const int lost = gems_lost();
+    string gem_title = make_stringf("<white>Gems (%d collected", found);
+    if (Options.more_gem_info && lost < found)
+        gem_title += make_stringf(", %d intact", found - lost);
+    // don't explicitly mention that your gems are all broken otherwise - sad!
 
-    menu.set_title(title);
+    return gem_title + ")</white>";
+}
 
-    vector<item_def> items;
+void RuneMenu::set_footer()
+{
+    if (!can_show_gems())
+        return;
 
-    if (!crawl_state.game_is_sprint())
+    string more_text = make_stringf("[<w>!</w>/<w>^</w>"
+#ifdef USE_TILE_LOCAL
+            "|<w>Right-click</w>"
+#endif
+            "]: %s", show_gems ? "Show Runes" : "Show Gems");
+    if (!Options.more_gem_info && can_show_more_gems())
+        more_text += make_stringf("\n[<w>-</w>]: %s", more_gems ? "Less" : "More");
+    set_more(more_text);
+}
+
+bool RuneMenu::can_show_gems()
+{
+    return !crawl_state.game_is_sprint() || !crawl_state.game_is_descent();
+}
+
+bool RuneMenu::can_show_more_gems()
+{
+    if (!show_gems)
+        return false;
+    for (int i = 0; i < NUM_GEM_TYPES; i++)
+        if (you.gems_shattered[i] && !you.gems_found[i])
+            return true;
+    return false;
+}
+
+void RuneMenu::fill_contents()
+{
+    if (show_gems)
     {
-        // Add the runes in order of challenge (semi-arbitrary).
-        for (branch_iterator it(branch_iterator_type::danger); it; ++it)
-        {
-            const branch_type br = it->id;
-            if (!connected_branch_can_exist(br))
-                continue;
+        set_gems();
+        return;
+    }
 
-            for (auto rune : branches[br].runes)
-            {
-                item_def item;
-                item.base_type = OBJ_RUNES;
-                item.sub_type = rune;
-                item.quantity = you.runes[rune] ? 1 : 0;
-                item_colour(item);
-                items.push_back(item);
-            }
-        }
-    }
-    else
-    {
-        // We don't know what runes are accessible in the sprint, so just show
-        // the ones you have. We can't iterate over branches as above since the
-        // elven rune and mossy rune may exist in sprint.
-        for (int i = 0; i < NUM_RUNE_TYPES; ++i)
-        {
-            if (you.runes[i])
-            {
-                item_def item;
-                item.base_type = OBJ_RUNES;
-                item.sub_type = i;
-                item.quantity = 1;
-                item_colour(item);
-                items.push_back(item);
-            }
-        }
-    }
     item_def item;
     item.base_type = OBJ_ORBS;
     item.sub_type = ORB_ZOT;
     item.quantity = player_has_orb() ? 1 : 0;
-    items.push_back(item);
+    contents.push_back(item);
 
-    // We've sorted this vector already, so disable menu sorting. Maybe we
-    // could a menu entry comparator and modify InvMenu::load_items() to allow
-    // passing this in instead of doing a sort ahead of time.
-    menu.load_items(items, _fixup_runeorb_entry, 0, false);
+    if (crawl_state.game_is_sprint())
+        set_sprint_runes();
+    else
+        set_normal_runes();
+}
 
-    menu.show();
+void RuneMenu::set_normal_runes()
+{
+    // Add the runes in order of challenge (semi-arbitrary).
+    for (branch_iterator it(branch_iterator_type::danger); it; ++it)
+    {
+        const branch_type br = it->id;
+        if (!connected_branch_can_exist(br))
+            continue;
+
+        for (auto rune : branches[br].runes)
+        {
+            item_def item;
+            item.base_type = OBJ_RUNES;
+            item.sub_type = rune;
+            item.quantity = you.runes[rune] ? 1 : 0;
+            ::item_colour(item);
+            contents.push_back(item);
+        }
+    }
+}
+
+void RuneMenu::set_sprint_runes()
+{
+    // We don't know what runes are accessible in the sprint, so just show
+    // the ones you have. We can't iterate over branches as above since the
+    // elven rune and mossy rune may exist in sprint.
+    for (int i = 0; i < NUM_RUNE_TYPES; ++i)
+    {
+        if (!you.runes[i])
+            continue;
+
+        item_def item;
+        item.base_type = OBJ_RUNES;
+        item.sub_type = i;
+        item.quantity = 1;
+        ::item_colour(item);
+        contents.push_back(item);
+    }
+}
+
+void RuneMenu::set_gems()
+{
+    // Add the gems in order of challenge (semi-arbitrary).
+    for (branch_iterator it(branch_iterator_type::danger); it; ++it)
+    {
+        const branch_type br = it->id;
+        if (!connected_branch_can_exist(br))
+            continue;
+        const gem_type gem = gem_for_branch(br);
+        if (gem == NUM_GEM_TYPES)
+            continue;
+
+        if (!Options.more_gem_info
+            && !more_gems
+            && !you.gems_found[gem]
+            // We need to check time left rather than shattered, since the latter is
+            // only set when the gem is actually broken, and we may not have loaded
+            // the relevant level since we ran out of time.
+            && you.gem_time_spent[gem] >= gem_time_limit(gem))
+        {
+            continue;
+        }
+
+        item_def item;
+        item.base_type = OBJ_GEMS;
+        item.sub_type = gem;
+        item.quantity = you.gems_found[gem] ? 1 : 0;
+        ::item_colour(item);
+        contents.push_back(item);
+    }
+}
+
+bool RuneMenu::process_key(int keyin)
+{
+    if (!can_show_gems())
+        return Menu::process_key(keyin);
+
+    switch (keyin)
+    {
+    case '!':
+    case '^':
+    case CK_MOUSE_CMD:
+        show_gems = !show_gems;
+        populate();
+        update_menu(true);
+        return true;
+    case '-':
+        if (show_gems)
+        {
+            more_gems = !more_gems;
+            populate();
+            update_menu(true);
+            return true;
+        }
+        return Menu::process_key(keyin);
+    default:
+        return Menu::process_key(keyin);
+    }
+}
+
+void display_runes()
+{
+    RuneMenu().show();
+}
+
+static string _unforbid(string name)
+{
+    // Ironically, the ROT13'd versions can be pretty good names.
+    set<string> forbidden_words = set<string>{
+        "puvax", "snt", "avt", "avttre",
+        "xvxr", "ovgpu", "juber", "tvzc",
+        "ergneq", "phag", "pbba", "fdhnj",
+        "jbt", "qlxr", "ubzb", "genaal"
+    };
+    auto parts = split_string(" ", name);
+    for (size_t i = 0; i < parts.size(); i++)
+    {
+        string part = parts[i];
+        string rot13d = "";
+        for (size_t j = 0; j < part.size(); j++)
+            rot13d += ((part[j] + 13 - 'a') % 26) + 'a';
+        if (forbidden_words.count(rot13d))
+            parts[i] = rot13d;
+    }
+    return join_strings(parts.begin(), parts.end());
 }
 
 // Seed ranges for _random_consonant_set: (B)eginning and one-past-the-(E)nd
@@ -2374,6 +2683,7 @@ string make_name(uint32_t seed, makename_type name_type)
 
         name = "plog";
     }
+    name = _unforbid(name);
 
     string uppercased_name;
     for (size_t i = 0; i < name.length(); i++)
@@ -2470,7 +2780,7 @@ static string _random_consonant_set(size_t c)
  */
 static void _test_scroll_names(const string& fname)
 {
-    FILE *f = fopen(fname.c_str(), "w");
+    FILE *f = fopen_u(fname.c_str(), "w");
     if (!f)
         sysfail("can't write test output");
 
@@ -2497,7 +2807,7 @@ static void _test_scroll_names(const string& fname)
  */
 static void _test_jiyva_names(const string& fname)
 {
-    FILE *f = fopen(fname.c_str(), "w");
+    FILE *f = fopen_u(fname.c_str(), "w");
     if (!f)
         sysfail("can't write test output");
 
@@ -2584,9 +2894,10 @@ bool is_emergency_item(const item_def &item)
                 && !you.stasis();
         case POT_HEAL_WOUNDS:
             return you.can_potion_heal();
+        case POT_MAGIC:
+            return !you.has_mutation(MUT_HP_CASTING);
         case POT_CURING:
         case POT_RESISTANCE:
-        case POT_MAGIC:
             return true;
         default:
             return false;
@@ -2633,6 +2944,18 @@ bool is_good_item(const item_def &item)
     case OBJ_POTIONS:
         if (!you.can_drink(false)) // still want to pick them up in lichform?
             return false;
+
+        // Recolor healing potions to indicate their additional goodness
+        //
+        // XX: By default, this doesn't actually change the color of anything
+        //     but !ambrosia, since yellow for 'emergency' takes priority over
+        //     cyan for 'good'. Should this get a *new* color?
+        if (you.has_mutation(MUT_DRUNKEN_BRAWLING)
+            && oni_likes_potion(static_cast<potion_type>(item.sub_type)))
+        {
+            return true;
+        }
+
         switch (item.sub_type)
         {
         case POT_EXPERIENCE:
@@ -2659,24 +2982,6 @@ bool is_bad_item(const item_def &item)
 
     switch (item.base_type)
     {
-    case OBJ_SCROLLS:
-        switch (item.sub_type)
-        {
-#if TAG_MAJOR_VERSION == 34
-        case SCR_CURSE_ARMOUR:
-            if (you.has_mutation(MUT_NO_ARMOUR))
-                return false;
-        case SCR_CURSE_WEAPON:
-            if (you.has_mutation(MUT_NO_GRASPING))
-                return false;
-        case SCR_CURSE_JEWELLERY:
-            return !have_passive(passive_t::want_curses);
-#endif
-        case SCR_NOISE:
-            return true;
-        default:
-            return false;
-        }
     case OBJ_POTIONS:
         // Can't be bad if you can't use them.
         if (!you.can_drink(false))
@@ -2690,24 +2995,6 @@ bool is_bad_item(const item_def &item)
             return false;
         CASE_REMOVED_POTIONS(item.sub_type);
         }
-    case OBJ_JEWELLERY:
-        // Potentially useful. TODO: check the properties.
-        if (is_artefact(item))
-            return false;
-
-        switch (item.sub_type)
-        {
-        case RING_EVASION:
-        case RING_PROTECTION:
-        case RING_STRENGTH:
-        case RING_DEXTERITY:
-        case RING_INTELLIGENCE:
-        case RING_SLAYING:
-            return item_ident(item, ISFLAG_KNOW_PLUSES) && item.plus <= 0;
-        default:
-            return false;
-        }
-
     default:
         return false;
     }
@@ -2725,6 +3012,10 @@ bool is_bad_item(const item_def &item)
  */
 bool is_dangerous_item(const item_def &item, bool temp)
 {
+    // can't assume there is a sensible `you` for various checks here
+    if (crawl_state.game_is_arena())
+        return false;
+
     if (!item_type_known(item))
         return false;
 
@@ -2739,11 +3030,13 @@ bool is_dangerous_item(const item_def &item, bool temp)
         {
         case SCR_IMMOLATION:
         case SCR_VULNERABILITY:
+        case SCR_NOISE:
             return true;
-        case SCR_POISON:
-            return !player_res_poison(false, temp, true);
         case SCR_TORMENT:
             return !you.res_torment();
+        case SCR_POISON:
+            return player_res_poison(false, temp, true) <= 0
+                   && !you.cloud_immune();
         default:
             return false;
         }
@@ -2775,12 +3068,211 @@ bool is_dangerous_item(const item_def &item, bool temp)
     }
 }
 
-static bool _invisibility_is_useless(const bool temp)
+/**
+ * If the player has no items matching the given selector, give an appropriate
+ * response to print. Otherwise, if they do have such items, return the empty
+ * string.
+ */
+static string _no_items_reason(object_selector type, bool check_floor = false)
 {
-    // Always useless if you're a Meteoran or have a halo from TSO.
-    return you.backlit(temp)
-           || you.has_mutation(MUT_GLOWING)
-           || you.haloed() && will_have_passive(passive_t::halo);
+    if (!any_items_of_type(type, -1, check_floor))
+        return no_selectables_message(type);
+    return "";
+}
+
+static string _general_cannot_read_reason()
+{
+    // general checks
+    if (player_in_branch(BRANCH_GEHENNA))
+        return "You cannot see clearly; the smoke and ash is too thick!";
+
+    if (you.berserk())
+        return "You are too berserk!";
+
+    if (you.confused())
+        return "You are too confused!";
+
+    // no reading while threatened (Ru/random mutation)
+    if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS])
+        return "You cannot read scrolls in your current state!";
+
+    if (silenced(you.pos()))
+        return "Magic scrolls do not work when you're silenced!";
+
+    // water elementals
+    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+        return "You cannot read scrolls while unable to breathe!";
+
+    return "";
+}
+
+/**
+ * If the player is unable to (r)ead the item in the given slot, return the
+ * reason why. Otherwise (if they are able to read it), returns "", the empty
+ * string. If item is nullptr, do only general reading checks.
+ */
+string cannot_read_item_reason(const item_def *item, bool temp, bool ident)
+{
+    // convoluted ordering is because the general checks below need to go before
+    // the item id check, but non-temp messages go before general checks
+    if (item && item->base_type == OBJ_SCROLLS
+        && (ident || item_type_known(*item)))
+    {
+        // this function handles a few cases of perma-uselessness. For those,
+        // be sure to print the message first. (XX generalize)
+        switch (item->sub_type)
+        {
+        case SCR_AMNESIA:
+            if (you.has_mutation(MUT_INNATE_CASTER))
+                return "You don't have control over your spell memory.";
+            // XX possibly amnesia should be allowed to work under Trog, despite
+            // being marked useless..
+            if (you_worship(GOD_TROG))
+                return "Trog doesn't allow you to memorise spells!";
+            break;
+        case SCR_ENCHANT_WEAPON:
+        case SCR_BRAND_WEAPON:
+            if (you.has_mutation(MUT_NO_GRASPING))
+                return "There's no point in enhancing weapons you can't use!";
+            break;
+        case SCR_ENCHANT_ARMOUR:
+            if (you.has_mutation(MUT_NO_GRASPING))
+                return "There's no point in enchanting armour you can't use!";
+            break;
+
+        case SCR_IDENTIFY:
+            if (you.props.exists(IDENTIFIED_ALL_KEY))
+                return "There is nothing left to identify.";
+            if (have_passive(passive_t::identify_items))
+                return "You have no need of identification.";
+            break;
+
+        case SCR_SUMMONING:
+        case SCR_BUTTERFLIES:
+            if (you.allies_forbidden())
+                return "You cannot coerce anything to answer your summons.";
+            break;
+        case SCR_BLINKING:
+        case SCR_TELEPORTATION:
+            // XX code duplication with you.no_tele_reason
+            if (you.stasis())
+                return you.no_tele_reason(item->sub_type == SCR_BLINKING);
+            break;
+        default:
+            break;
+        }
+    }
+
+    if (temp)
+    {
+        const string gen = _general_cannot_read_reason();
+        if (gen.size())
+            return gen;
+    }
+
+    if (!item)
+        return "";
+
+    // item-specific checks
+
+    // still possible to use * at the `r` prompt. (Why do we allow this now?)
+    if (item->base_type != OBJ_SCROLLS)
+        return "You can't read that!";
+
+    // temp uselessness only below this check
+    if (!temp || (!ident && !item_type_known(*item)))
+        return "";
+
+    // don't waste the player's time reading known scrolls in situations where
+    // they'd be useless
+    switch (item->sub_type)
+    {
+        case SCR_BLINKING:
+        case SCR_TELEPORTATION:
+            // note: stasis handled separately above
+            return you.no_tele_reason(item->sub_type == SCR_BLINKING);
+
+        case SCR_AMNESIA:
+            if (you.spell_no == 0)
+                return "You have no spells to forget.";
+            return "";
+
+        case SCR_ENCHANT_ARMOUR:
+            return _no_items_reason(OSEL_ENCHANTABLE_ARMOUR, true);
+
+        case SCR_ENCHANT_WEAPON:
+            return _no_items_reason(OSEL_ENCHANTABLE_WEAPON, true);
+
+        case SCR_BRAND_WEAPON:
+            return _no_items_reason(OSEL_BRANDABLE_WEAPON, true);
+
+        case SCR_IDENTIFY:
+            return _no_items_reason(OSEL_UNIDENT, true);
+
+        case SCR_FOG:
+        case SCR_POISON:
+            if (env.level_state & LSTATE_STILL_WINDS)
+                return "The air is too still for clouds to form.";
+            return "";
+
+        case SCR_REVELATION:
+            if (!is_map_persistent())
+                return "This place cannot be mapped!";
+            return "";
+
+        default:
+            return "";
+    }
+}
+
+string cannot_drink_item_reason(const item_def *item, bool temp,
+                                bool use_check, bool ident)
+{
+    // general permanent reasons
+    if (!you.can_drink(false))
+        return "You can't drink.";
+
+    const bool valid = item && item->base_type == OBJ_POTIONS
+                            && (item_type_known(*item) || ident);
+    const potion_type ptyp = valid
+        ? static_cast<potion_type>(item->sub_type)
+        : NUM_POTIONS;
+    string r;
+
+    if (valid)
+    {
+        // For id'd potions, print temp=false message before temp=true messages
+        get_potion_effect(ptyp)->can_quaff(&r, false);
+        if (!r.empty())
+            return r;
+    }
+
+    // general temp reasons
+    if (temp)
+    {
+        if (!you.can_drink(true))
+            return "You cannot drink potions in your current state!";
+
+        if (you.berserk())
+            return "You are too berserk!";
+
+        if (player_in_branch(BRANCH_COCYTUS))
+            return "It's too cold; everything's frozen solid!";
+    }
+
+    if (item && item->base_type != OBJ_POTIONS)
+        return "You can't drink that!";
+
+    // !valid now means either no item, or unid'd item.
+    if (!temp || !valid)
+        return "";
+
+    // potion of invis can be used even if temp useless, a warning is printed
+    if (use_check && ptyp == POT_INVISIBILITY)
+        return "";
+
+    get_potion_effect(ptyp)->can_quaff(&r, true);
+    return r;
 }
 
 /**
@@ -2807,8 +3299,13 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     // During game startup, no item is useless. If someone re-glyphs an item
     // based on its uselessness, the glyph-to-item cache will use the useless
     // value even if your god or species can make use of it.
-    if (you.species == SP_UNKNOWN)
+    // similarly for arena: bugs will ensue if the game tries to check any of
+    // this
+    if (you.species == SP_UNKNOWN // is this really the best way to check this?
+        || crawl_state.game_is_arena())
+    {
         return false;
+    }
 
     // An ash item that is already being worn and is cursed, counts as useful
     // even if it would otherwise be useless.
@@ -2821,6 +3318,9 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         // if it's melded, just fall through. This might not be accurate in
         // all cases.
     }
+
+    if (temp && you.cannot_act())
+        return true;
 
     switch (item.base_type)
     {
@@ -2838,7 +3338,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
         if (you.undead_or_demonic() && is_holy_item(item, false))
         {
-            if (!temp && you.form == transformation::lich
+            if (!temp && you.form == transformation::death
                 && you.species != SP_DEMONSPAWN)
             {
                 return false;
@@ -2862,6 +3362,9 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         if (is_shield(item) && you.get_mutation_level(MUT_MISSING_HAND))
             return true;
 
+        if (is_unrandom_artefact(item, UNRAND_WUCAD_MU))
+            return you.has_mutation(MUT_HP_CASTING) || you_worship(GOD_TROG);
+
         if (is_artefact(item))
             return false;
 
@@ -2877,7 +3380,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
                        || you.get_mutation_level(MUT_DISTORTION_FIELD) == 3;
             case SPARM_INVISIBILITY:
                 return you.has_mutation(MUT_NO_ARTIFICE)
-                       || _invisibility_is_useless(temp);
+                       || !invis_allowed(true, nullptr, temp);
             default:
                 return false;
             }
@@ -2890,7 +3393,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             case SPARM_RAGE:
                 return !you.can_go_berserk(false, false, true, nullptr, temp);
             case SPARM_ENERGY:
-                return you.has_mutation(MUT_HP_CASTING);
+                return you.has_mutation(MUT_HP_CASTING) || you_worship(GOD_TROG);
             default:
                 return false;
             }
@@ -2898,69 +3401,36 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return false;
 
     case OBJ_SCROLLS:
-        if (temp && silenced(you.pos()))
-            return true; // can't use scrolls while silenced
+    {
+        // general reasons: player is berserk, in gehenna, drowning, etc.
+        // even unid'd items count as useless under these circumstances
+        if (cannot_read_item_reason(nullptr, temp).size())
+            return true;
 
+        // otherwise, unid'd items can always be read
         if (!ident && !item_type_known(item))
             return false;
 
-        // A bad item is always useless.
+        // An (id'd) bad item is always useless.
         if (is_bad_item(item))
             return true;
 
-        switch (item.sub_type)
-        {
-        case SCR_TELEPORTATION:
-            return you.stasis()
-                   || crawl_state.game_is_sprint()
-                   || temp && player_in_branch(BRANCH_GAUNTLET);
-        case SCR_BLINKING:
-            return you.stasis();
-        case SCR_AMNESIA:
-            return you_worship(GOD_TROG) || you.has_mutation(MUT_INNATE_CASTER);
-#if TAG_MAJOR_VERSION == 34
-        case SCR_CURSE_WEAPON: // for non-Ashenzari, already handled
-        case SCR_CURSE_ARMOUR:
-#endif
-        case SCR_ENCHANT_WEAPON:
-        case SCR_ENCHANT_ARMOUR:
-        case SCR_BRAND_WEAPON:
-            return you.has_mutation(MUT_NO_GRASPING);
-        case SCR_SUMMONING:
-        case SCR_BUTTERFLIES:
-            return you.allies_forbidden();
-        case SCR_FOG:
-        case SCR_POISON:
-            return temp && (env.level_state & LSTATE_STILL_WINDS);
-        case SCR_IDENTIFY:
-            return you.props.exists(IDENTIFIED_ALL_KEY)
-                   || have_passive(passive_t::identify_items);
-        default:
-            return false;
-        }
+        const string reasons = cannot_read_item_reason(&item, temp, ident);
+        return reasons.size();
+    }
 
+    case OBJ_TALISMANS:
+    case OBJ_MISCELLANY:
     case OBJ_WANDS:
-        if (you.get_mutation_level(MUT_NO_ARTIFICE))
-            return true;
-
-#if TAG_MAJOR_VERSION == 34
-        if (is_known_empty_wand(item))
-            return true;
-#endif
-        if (!ident && !item_type_known(item))
-            return false;
-
-        if (item.sub_type == WAND_CHARMING)
-            return you.allies_forbidden();
-
-        return false;
+        return cannot_evoke_item_reason(&item, temp, ident || item_type_known(item)).size();
 
     case OBJ_POTIONS:
     {
-        // Mummies and liches can't use potions.
-        if (!you.can_drink(temp))
+        // general reasons: player is a mummy, player in cocytus, etc.
+        if (cannot_drink_item_reason(nullptr, temp).size())
             return true;
 
+        // always allow drinking unid'd potions if the player can drink at all
         if (!ident && !item_type_known(item))
             return false;
 
@@ -2968,33 +3438,13 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         if (is_bad_item(item))
             return true;
 
-        switch (item.sub_type)
-        {
-        case POT_BERSERK_RAGE:
-            return !you.can_go_berserk(true, true, true, nullptr, temp);
-        case POT_HASTE:
-            return you.stasis();
-        case POT_MUTATION:
-            return !you.can_safely_mutate(temp);
-        case POT_LIGNIFY:
-            return you.is_lifeless_undead(temp);
-        case POT_FLIGHT:
-            return you.permanent_flight();
-        case POT_HEAL_WOUNDS:
-            return !you.can_potion_heal();
-        case POT_INVISIBILITY:
-            return _invisibility_is_useless(temp);
-        case POT_BRILLIANCE:
-            return you_worship(GOD_TROG)
-                   || temp && player_equip_unrand(UNRAND_FOLLY);
-        case POT_MAGIC:
-            return you.has_mutation(MUT_HP_CASTING);
-        CASE_REMOVED_POTIONS(item.sub_type)
-        }
-
-        return false;
+        // specific reasons
+        return cannot_drink_item_reason(&item, temp, false, ident).size();
     }
     case OBJ_JEWELLERY:
+        if (temp && bool(!you_can_wear(get_item_slot(item))))
+            return true;
+
         if (!ident && !item_type_known(item))
             return false;
 
@@ -3010,8 +3460,12 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case RING_RESIST_CORROSION:
             return you.res_corr(false, false);
 
+        case AMU_ACROBAT:
+            return you.has_mutation(MUT_ACROBATIC);
+
         case AMU_FAITH:
             return (you.has_mutation(MUT_FORLORN) && !you.religion) // ??
+                    || you.has_mutation(MUT_FAITH)
                     || !ignore_faith_reason().empty();
 
         case AMU_GUARDIAN_SPIRIT:
@@ -3021,8 +3475,11 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return player_prot_life(false, temp, false) == 3;
 
         case AMU_REGENERATION:
-            return you.get_mutation_level(MUT_NO_REGENERATION) > 0
-                   || (temp
+            return
+#if TAG_MAJOR_VERSION == 34
+                   you.get_mutation_level(MUT_NO_REGENERATION) > 0 ||
+#endif
+                     (temp
                        && (you.get_mutation_level(MUT_INHIBITED_REGENERATION) > 0
                            || you.has_mutation(MUT_VAMPIRISM))
                        && regeneration_is_inhibited());
@@ -3073,36 +3530,6 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
     case OBJ_CORPSES:
         return true;
-
-    case OBJ_MISCELLANY:
-        switch (item.sub_type)
-        {
-#if TAG_MAJOR_VERSION == 34
-        case MISC_BUGGY_EBONY_CASKET:
-            return item_type_known(item);
-#endif
-        // These can always be used.
-#if TAG_MAJOR_VERSION == 34
-        case MISC_BUGGY_LANTERN_OF_SHADOWS:
-#endif
-        case MISC_ZIGGURAT:
-            return false;
-
-        // Purely summoning misc items don't work w/ sac love
-        case MISC_BOX_OF_BEASTS:
-        case MISC_HORN_OF_GERYON:
-        case MISC_PHANTOM_MIRROR:
-            return you.allies_forbidden()
-                   || you.get_mutation_level(MUT_NO_ARTIFICE);
-
-        case MISC_CONDENSER_VANE:
-            if (temp && (env.level_state & LSTATE_STILL_WINDS))
-                return true;
-            // Intentional fallthrough to check artifice
-
-        default:
-            return you.get_mutation_level(MUT_NO_ARTIFICE);
-        }
 
     case OBJ_BOOKS:
         if (you.has_mutation(MUT_INNATE_CASTER) && item.sub_type != BOOK_MANUAL)
@@ -3188,6 +3615,9 @@ string item_prefix(const item_def &item, bool temp)
 
     case OBJ_ARMOUR:
     case OBJ_JEWELLERY:
+    case OBJ_TALISMANS:
+        if (is_unrandom_artefact(item))
+            prefixes.push_back("unrand");
         if (is_artefact(item))
             prefixes.push_back("artefact");
         // fall through
@@ -3200,6 +3630,11 @@ string item_prefix(const item_def &item, bool temp)
     case OBJ_BOOKS:
         if (item.sub_type != BOOK_MANUAL && item.sub_type != NUM_BOOKS)
             prefixes.push_back("spellbook");
+        break;
+
+    case OBJ_MISCELLANY:
+        if (is_xp_evoker(item))
+            prefixes.push_back("evoker");
         break;
 
     default:
@@ -3223,10 +3658,10 @@ string item_prefix(const item_def &item, bool temp)
  */
 string menu_colour_item_name(const item_def &item, description_level_type desc)
 {
-    const string cprf      = item_prefix(item);
+    const string cprf      = item_prefix(item, false);
     const string item_name = item.name(desc);
 
-    const int col = menu_colour(item_name, cprf, "pickup");
+    const int col = menu_colour(item_name, cprf, "pickup", false);
     if (col == -1)
         return item_name;
 
@@ -3263,6 +3698,8 @@ void init_item_name_cache()
             }
 
             int npluses = 0;
+            // this iterates through all skills for manuals, caching the
+            // resulting names. Weird.
             if (base_type == OBJ_BOOKS && sub_type == BOOK_MANUAL)
                 npluses = NUM_SKILLS;
 
@@ -3271,6 +3708,8 @@ void init_item_name_cache()
             item.sub_type = sub_type;
             for (int plus = 0; plus <= npluses; plus++)
             {
+                // strange logic: this seems to be designed to put both "Manual"
+                // and "Manual of fighting" in the cache for item.plus == 0
                 if (plus > 0)
                     item.plus = max(0, plus - 1);
                 string name = item.name(plus || item.base_type == OBJ_RUNES ? DESC_PLAIN : DESC_DBNAME,
@@ -3289,12 +3728,19 @@ void init_item_name_cache()
                                                                 name.c_str());
                     continue;
                 }
+                const bool removed = item_type_removed(base_type, sub_type)
+                    || base_type == OBJ_BOOKS && sub_type == BOOK_MANUAL
+                        && is_removed_skill(static_cast<skill_type>(item.plus));
 
                 if (!item_names_cache.count(name))
                 {
+                    // what would happen if we don't put removed items in the
+                    // item name cache?
                     item_names_cache[name] = { base_type, (uint8_t)sub_type,
                                                (int8_t)item.plus, 0 };
-                    if (g.ch)
+
+                    // only used for help lookup, skip removed items
+                    if (g.ch && !removed)
                         item_names_by_glyph_cache[g.ch].push_back(name);
                 }
             }

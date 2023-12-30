@@ -50,13 +50,6 @@ bolt
 
 Et metalprojektil, kortere end en pil, der skal affyres med en armbrøst.
 %%%%
-book of alchemy
-
-En bog som fokuserer på alkymistiske processer og hvordan man bruger dem i
-magiske besværgelser. Den samler mange af oldtidens alkymisters visdom. Når
-bogen åbnes, kondenseres blækket ud af den blå luft ned på siderne og afslører
-teksten.
-%%%%
 book of annihilations
 
 Denne bogs lasede sider bløder, og selv analfabeter kan mærke kraften i det
@@ -457,7 +450,7 @@ potion of experience
 
 En virkeligt vidunderlig og særdeles sjælden drik.
 %%%%
-potion of flight
+potion of enlightenment
 
 En drik, som giver stor opdrift til den, der drikker den.
 %%%%
@@ -673,7 +666,7 @@ scroll of immolation
 Den skriftrulle fylder væsener omkring læseren med en ustabil og kraftfuld
 indre flamme.
 %%%%
-scroll of magic mapping
+scroll of revelation
 
 Denne skriftrulle afslører læserens omgivelser.
 %%%%

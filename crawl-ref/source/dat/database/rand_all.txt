@@ -429,6 +429,9 @@ the Thirteen
 w:5
 the Twenty
 
+w:1
+the Twenty-Seven
+
 the Fifty
 
 w:5
@@ -1208,6 +1211,12 @@ Breadfruit
 Eggfruit
 
 Dragonfruit
+
+Jackfruit
+
+Longan
+
+Tamarind
 
 Guava
 

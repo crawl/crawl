@@ -41,7 +41,7 @@ static void _actor_apply_noise(actor *act,
                                const coord_def &apparent_source,
                                int noise_intensity_millis);
 
-/// By default, what databse lookup key corresponds to each shout type?
+/// By default, what database lookup key corresponds to each shout type?
 static const map<shout_type, string> default_msg_keys = {
     { S_SILENT,         "" },
     { S_SHOUT,          "__SHOUT" },
@@ -67,6 +67,7 @@ static const map<shout_type, string> default_msg_keys = {
     { S_SQUEAL,         "__SQUEAL" },
     { S_LOUD_ROAR,      "__LOUD_ROAR" },
     { S_RUSTLE,         "__RUSTLE" },
+    { S_SQUEAK,         "__SQUEAK" },
 };
 
 /**
@@ -178,7 +179,7 @@ void monster_shout(monster* mons, int shout)
         // same glyph/symbol
         string glyph_key = "'";
 
-        // Database keys are case-insensitve.
+        // Database keys are case-insensitive.
         if (isaupper(mchar))
             glyph_key += "cap-";
 
@@ -265,8 +266,8 @@ void monster_shout(monster* mons, int shout)
 
 bool check_awaken(monster* mons, int stealth)
 {
-    // Usually redundant because we iterate over player LOS,
-    // but e.g. for passive_t::xray_vision.
+    // Usually redundant because we iterate over player LOS.
+    // Maybe can be removed now that xray_vision is gone?
     if (!mons->see_cell(you.pos()))
         return false;
 
@@ -449,7 +450,7 @@ static bool _follows_orders(monster* mon)
 {
     return mon->friendly()
            && mon->type != MONS_BALLISTOMYCETE_SPORE
-           && !mon->berserk_or_insane()
+           && !mon->berserk_or_frenzied()
            && !mons_is_conjured(mon->type)
            && !mon->has_ench(ENCH_HAUNTING);
 }
@@ -565,7 +566,7 @@ static bool _allies_can_see(const monster &mon)
  * Issue the order specified by the given key.
  *
  * @param keyn              The key the player just pressed.
- * @param mons_targd[out]   Who the player's allies should be targetting as a
+ * @param mons_targd[out]   Who the player's allies should be targeting as a
  *                          result of this command.
  * @return                  Whether a command actually executed (and the value
  *                          of mons_targd should be used).
@@ -812,9 +813,12 @@ void yell(const actor* mon)
     }
     else
     {
-        mprf(MSGCH_SOUND, "You %s%s!",
+        const char *fugue_suff = you.duration[DUR_FUGUE] ?
+            ", and the damned howl along" : "";
+        mprf(MSGCH_SOUND, "You %s%s%s!",
              shout_verb.c_str(),
-             you.berserk() ? " wildly" : " for attention");
+             you.berserk() ? " wildly" : " for attention",
+             fugue_suff);
     }
 
     noisy(noise_level, you.pos());
@@ -1336,7 +1340,7 @@ void noise_grid::write_noise_grid(FILE *outf) const
 
 void noise_grid::dump_noise_grid(const string &filename) const
 {
-    FILE *outf = fopen(filename.c_str(), "w");
+    FILE *outf = fopen_u(filename.c_str(), "w");
     fprintf(outf, "<!DOCTYPE html><html><head>");
     _write_noise_grid_css(outf);
     fprintf(outf, "</head>\n<body>\n");
