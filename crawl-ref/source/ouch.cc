@@ -288,7 +288,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
     case BEAM_DEVASTATION:
         if (doEffects)
-            you.strip_willpower(beam->agent(), 12 + random2(18));
+            you.strip_willpower(beam->agent(), random_range(8, 14));
         break;
 
     default:
