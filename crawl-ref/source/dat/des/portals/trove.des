@@ -120,7 +120,11 @@ function trove.get_trove_item(e, value, base_item)
        {base="armour", type="fire dragon scales", quant=d(3)+d(3)},
        {base="armour", type="ice dragon scales", quant=d(3)+d(3)} }
 
-  if you.race() ~= "Felid" and you.race() ~= "Octopode" then
+  local is_armour_user = you.race() ~= "Felid"
+      and you.race() ~= "Octopode"
+      and you.genus() ~= "draconian"
+
+  if is_armour_user then
     for _, toll in ipairs(arm) do
       table.insert(prices, toll)
     end
