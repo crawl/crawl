@@ -864,6 +864,7 @@ void move_player_action(coord_def move)
 
     if (you.rampaging())
     {
+        const monster *rampage_targ = get_rampage_target(move);
         switch (_rampage_forward(move))
         {
             // Check the player's position again; rampage may have moved us.
@@ -876,10 +877,16 @@ void move_player_action(coord_def move)
 
             case spret::success:
                 rampaged = true;
-                if (you_worship(GOD_WU_JIAN))
+                if (you_worship(GOD_WU_JIAN)
+                    && wu_jian_post_move_effects(false, initial_position))
                 {
-                    did_wu_jian_attack
-                        = wu_jian_post_move_effects(false, initial_position);
+                    did_wu_jian_attack = true;
+                    // If you kill something with a lunge, don't continue
+                    // rampaging into its space. That could be a nasty surprise
+                    // for players who land on traps, clouds, exclusions, etc,
+                    // even if we prevented moving into solid terrain or lava.
+                    if (rampage_targ && !rampage_targ->alive())
+                        moving = false;
                 }
                 // If we've rampaged, reset initial_position for the second
                 // move.
