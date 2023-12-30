@@ -2628,7 +2628,6 @@ vector<mon_spell_slot> get_unique_spells(const monster_info &mi,
                                mon_spell_slot_flags flags)
 {
     vector<mon_spell_slot> slots;
-    // the rest of this function crashes if mi has no spells
     if (!mi.has_spells())
         return slots;
 
