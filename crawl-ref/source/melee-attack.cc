@@ -2378,16 +2378,16 @@ bool melee_attack::apply_staff_damage()
         break;
 
     case STAFF_EARTH:
-        special_damage = staff_damage(sk) * 4 / 3;
-        special_damage = apply_defender_ac(special_damage, 0, ac_type::triple);
+        special_damage = staff_damage(sk) * 5 / 4;
+        special_damage = apply_defender_ac(special_damage, 0);
+        if (defender->airborne())
+            special_damage /= 3;
 
         if (special_damage > 0)
         {
             special_damage_message =
                 make_stringf(
-                    "%s %s %s%s",
-                    attacker->name(DESC_THE).c_str(),
-                    attacker->conj_verb("shatter").c_str(),
+                    "The ground beneath %s fractures%s",
                     defender->name(DESC_THE).c_str(),
                     attack_strength_punctuation(special_damage).c_str());
         }
