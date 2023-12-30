@@ -146,7 +146,7 @@ void check_canid_farewell(const monster &dog, bool deadish)
     if (deadish)
     {
         // Prevent you from resummoning it for a little while.
-        you.duration[DUR_CANINE_FAMILIAR_DEAD] = random_range(6, 11)
+        you.duration[DUR_CANINE_FAMILIAR_DEAD] = random_range(13, 21)
                                                  * BASELINE_DELAY;
     }
 }

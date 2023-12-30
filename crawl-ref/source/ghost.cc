@@ -754,7 +754,7 @@ void ghost_demon::init_inugami_from_player(int power)
     speed = stats->speed;
     ev = stats->ev;
     ac = stats->AC + div_rand_round(power, 10);
-    damage = 5 + div_rand_round(power, 6);
+    damage = 5 + div_rand_round(power, 7);
     max_hp = 14 + div_rand_round(power, 4);
     xl = 3 + div_rand_round(power, 15);
     move_energy = stats->energy_usage.move;
