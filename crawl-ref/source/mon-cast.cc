@@ -496,7 +496,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             const actor* foe = caster.get_foe();
             ASSERT(foe);
             return ai_action::good_or_impossible(foe->res_poison(false) < 3);
-    }, 6) },
+    }, 8) },
     { SPELL_GRASPING_ROOTS, {
         [](const monster &caster)
         {
@@ -1186,7 +1186,6 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_CALL_DOWN_LIGHTNING:
             return 16;
 
-        case SPELL_OLGREBS_TOXIC_RADIANCE:
         case SPELL_IOOD:
         case SPELL_FREEZE:
             return 8;

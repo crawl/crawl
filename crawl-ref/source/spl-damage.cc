@@ -3345,7 +3345,7 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
     if (agent->is_player())
         pow = you.props[TOXIC_RADIANCE_POWER_KEY].get_int();
     else
-        pow = agent->as_monster()->get_hit_dice() * 8;
+        pow = agent->as_monster()->get_hit_dice() * 12;
 
     for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
     {
@@ -3369,8 +3369,15 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
                     "by Olgreb's Toxic Radiance", true,
                     agent->as_monster()->name(DESC_A).c_str());
 
-                poison_player(roll_dice(2, 3), agent->name(DESC_A),
-                              "toxic radiance", false);
+                int poison = roll_dice(2, 3 + div_rand_round(pow, 24));
+
+                // rPois = 1/3 poison each tick instead of a 1/3 chance
+                // of full poison each tick. Looks smoother.
+                if (you.res_poison() > 0)
+                    poison /= 3;
+
+                poison_player(poison, agent->name(DESC_A),
+                              "toxic radiance", true);
             }
         }
         else
