@@ -924,7 +924,7 @@ bool melee_attack::handle_phase_end()
         if (mon_attacker->type == MONS_BLAZEHEART_GOLEM && did_hit)
         {
             mon_attacker->hurt(mon_attacker,
-                               mon_attacker->max_hit_points / 4 + 1,
+                               mon_attacker->max_hit_points / 3 + 1,
                                BEAM_MISSILE);
         }
     }
