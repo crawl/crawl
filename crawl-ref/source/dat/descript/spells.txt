@@ -968,8 +968,7 @@ shorter time.
 %%%%
 Metal Splinters spell
 
-Fires a directed stream of sharp metal splinters. Its damage is strongly
-reduced by armour.
+Fires a burst of metal splinters. Its damage is strongly reduced by armour.
 %%%%
 Miasma Breath spell
 
@@ -1359,8 +1358,7 @@ Spit Poison spell
 %%%%
 Splinterspray spell
 
-Fires a directed stream of sharp wooden splinters. Its damage is strongly
-reduced by armour.
+Fires a burst of wooden splinters. Its damage is strongly reduced by armour.
 %%%%
 Sporulate spell
 

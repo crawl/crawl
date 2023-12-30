@@ -109,7 +109,7 @@ static const zap_info zap_data[] =
     false,
     BEAM_FRAG,
     DCHAR_FIRED_ZAP,
-    true,
+    false,
     false,
 },
 
@@ -125,7 +125,7 @@ static const zap_info zap_data[] =
     false,
     BEAM_FRAG,
     DCHAR_FIRED_MISSILE,
-    true,
+    false,
     false,
 },
 
