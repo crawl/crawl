@@ -2991,9 +2991,9 @@ bool bolt::is_harmless(const monster* mon) const
     }
 }
 
-// N.b. only called for player-originated beams; if that is changed,
-// be sure to adjust various assumptions based on the spells/abilities
-// available to the player.
+// N.b. only called for player-originated beams and those used by the
+// player's allies. This may not currently be comprehensive with ally spells
+// that could affect some, but not all, players.
 bool bolt::harmless_to_player() const
 {
     dprf(DIAG_BEAM, "beam flavour: %d", flavour);
@@ -3143,7 +3143,7 @@ void bolt::tracer_affect_player()
              || ag && ag->as_monster()->friendly()
              || fuzz_invis_tracer())
     {
-        if (mons_att_wont_attack(attitude))
+        if (mons_att_wont_attack(attitude) && !harmless_to_player())
         {
             friend_info.count++;
             friend_info.power += you.experience_level;
@@ -3895,6 +3895,17 @@ void bolt::affect_player()
 
     if (ignores_player())
         return;
+
+    // If this is a friendly monster, firing a penetrating beam in the player's
+    // direction, always stop immediately before them if this attack wouldn't
+    // be harmless to them.
+    if (agent()->is_monster() && mons_att_wont_attack(attitude)
+        && !harmless_to_player() && pierce && !is_explosion)
+    {
+        ray.regress();
+        finish_beam();
+        return;
+    }
 
     // Explosions only have an effect during their explosion phase.
     // Special cases can be handled here.
