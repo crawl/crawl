@@ -55,11 +55,29 @@ static void _setup_base_explosion(bolt & beam, const monster& origin)
     beam.attitude = origin.attitude;
 }
 
+static int _inferno_power(int /*hd*/)
+{
+    return 100; // dubious
+}
+
+static dice_def _inferno_damage(int hd)
+{
+    bolt beam;
+    zappy(ZAP_FIRE_STORM, _inferno_power(hd), true, beam);
+    return beam.damage;
+}
+
 static void _setup_inferno_explosion(bolt & beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
-    setup_fire_storm(&origin, 100, beam);
+    const int power = _inferno_power(origin.get_hit_dice());
+    setup_fire_storm(&origin, power, beam);
     beam.refine_for_explosion();
+}
+
+static dice_def _blazeheart_damage(int hd)
+{
+    return dice_def(3, 5 + hd);
 }
 
 static void _setup_blazeheart_core_explosion(bolt & beam, const monster& origin)
@@ -67,7 +85,7 @@ static void _setup_blazeheart_core_explosion(bolt & beam, const monster& origin)
     _setup_base_explosion(beam, origin);
 
     beam.flavour      = BEAM_FIRE;
-    beam.damage       = dice_def(3, 5 + origin.get_hit_dice());
+    beam.damage       = _blazeheart_damage(origin.get_hit_dice());
     beam.name         = "fiery explosion";
     beam.colour       = RED;
     beam.ex_size      = 1;
@@ -82,11 +100,16 @@ static void _setup_blazeheart_core_explosion(bolt & beam, const monster& origin)
     beam.origin_spell = SPELL_SUMMON_BLAZEHEART_GOLEM;
 }
 
+static dice_def _spore_damage(int hd)
+{
+    return dice_def(3, 5 + hd);
+}
+
 void setup_spore_explosion(bolt & beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
     beam.flavour = BEAM_SPORE;
-    beam.damage  = dice_def(3, 5 + origin.get_hit_dice());
+    beam.damage  = _spore_damage(origin.get_hit_dice());
     beam.name    = "explosion of spores";
     beam.colour  = LIGHTGREY;
     beam.ex_size = 1;
@@ -120,6 +143,11 @@ dice_def prism_damage(int hd, bool fully_powered)
     return dice_def(dice, 5 + div_rand_round(hd * 7, 4));
 }
 
+/*static dice_def _max_prism_damage(int hd)
+{
+    return prism_damage(hd, true);
+}*/ // XXX DELETEME
+
 static void _setup_prism_explosion(bolt& beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
@@ -134,11 +162,16 @@ static void _setup_prism_explosion(bolt& beam, const monster& origin)
          beam.damage.num, beam.damage.size);
 }
 
+static dice_def _bennu_damage(int hd)
+{
+    return dice_def(3, 5 + hd * 5 / 4);
+}
+
 static void _setup_bennu_explosion(bolt& beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
     beam.flavour = BEAM_NEG;
-    beam.damage  = dice_def(3, 5 + origin.get_hit_dice() * 5 / 4);
+    beam.damage  = _bennu_damage(origin.get_hit_dice());
     beam.name    = "pyre of ghostly fire";
     beam.explode_noise_msg = "You hear an otherworldly crackling!";
     beam.colour  = CYAN;
@@ -165,11 +198,16 @@ static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
         beam.source_id = agent->mid;
 }
 
+static dice_def _bloated_husk_damage(int hd)
+{
+    return dice_def(8, hd);
+}
+
 static void _setup_bloated_husk_explosion(bolt & beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
     beam.flavour = BEAM_MMISSILE;
-    beam.damage  = dice_def(8, origin.get_hit_dice());
+    beam.damage  = _bloated_husk_damage(origin.get_hit_dice());
     beam.name    = "blast of putrescent gases";
     beam.explode_noise_msg = "You hear an high-pitched explosion!";
     beam.colour  = GREEN;
@@ -179,18 +217,45 @@ static void _setup_bloated_husk_explosion(bolt & beam, const monster& origin)
 
 struct monster_explosion {
     function<void(bolt&, const monster&)> prep_explode;
+    function<dice_def(int)> damage;
     string sanct_effect;
 };
 
 static const map<monster_type, monster_explosion> explosions {
-    { MONS_BALLISTOMYCETE_SPORE, { setup_spore_explosion } },
-    { MONS_BALL_LIGHTNING, { _setup_lightning_explosion } },
-    { MONS_LURKING_HORROR, { nullptr, "torment is averted" } },
-    { MONS_FULMINANT_PRISM, { _setup_prism_explosion } },
-    { MONS_BENNU, { _setup_bennu_explosion, "fires are quelled" } },
-    { MONS_BLOATED_HUSK, { _setup_bloated_husk_explosion } },
-    { MONS_CREEPING_INFERNO, { _setup_inferno_explosion } },
-    { MONS_BLAZEHEART_CORE, { _setup_blazeheart_core_explosion } }
+    { MONS_BALLISTOMYCETE_SPORE, {
+        setup_spore_explosion,
+        _spore_damage,
+    } },
+    { MONS_BALL_LIGHTNING, {
+        _setup_lightning_explosion,
+        [](int hd) { return ball_lightning_damage(hd, false); },
+    } },
+    { MONS_LURKING_HORROR, {
+        nullptr,
+        nullptr,
+        "torment is averted",
+    } },
+    { MONS_FULMINANT_PRISM, {
+        _setup_prism_explosion,
+        [](int hd){ return prism_damage(hd, true); }
+    } },
+    { MONS_BENNU, {
+        _setup_bennu_explosion,
+        _bennu_damage,
+        "fires are quelled",
+    } },
+    { MONS_BLOATED_HUSK, {
+        _setup_bloated_husk_explosion,
+        _bloated_husk_damage,
+    } },
+    { MONS_CREEPING_INFERNO, {
+        _setup_inferno_explosion,
+        _inferno_damage,
+    } },
+    { MONS_BLAZEHEART_CORE, {
+        _setup_blazeheart_core_explosion,
+        _blazeheart_damage,
+    } }
 };
 
 // When this monster dies, does it explode?
@@ -208,6 +273,13 @@ bool monster_explodes(const monster &mons)
     if (mons.type == MONS_FULMINANT_PRISM && mons.prism_charge <= 0)
         return false;
     return true;
+}
+
+dice_def mon_explode_dam(monster_type mc, int hd)
+{
+    auto it = explosions.find(mc);
+    ASSERT(it != explosions.end());
+    return it->second.damage(hd);
 }
 
 bool explode_monster(monster* mons, killer_type killer,

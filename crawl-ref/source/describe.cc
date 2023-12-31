@@ -57,6 +57,7 @@
 #include "mon-behv.h"
 #include "mon-cast.h" // mons_spell_range
 #include "mon-death.h"
+#include "mon-explode.h" // mon_explode_dam/on_death
 #include "mon-tentacle.h"
 #include "movement.h"
 #include "mutation.h" // mutation_name, get_mutation_desc
@@ -5530,6 +5531,15 @@ static void _add_resist_desc(TablePrinter &pr, resists_t resist_set)
         _desc_mon_resist(pr, resist_set, rflags);
 }
 
+static void _desc_mon_death_explosion(ostringstream &result,
+                                      const monster_info &mi)
+{
+    if (mi.type == MONS_LURKING_HORROR)
+        return; // no damage number
+    const dice_def dam = mon_explode_dam(mi.type, mi.hd);
+    result << "Explosion damage: " << dam.num << "d" << dam.size << "\n";
+}
+
 // Describe a monster's (intrinsic) resistances, speed and a few other
 // attributes.
 static string _monster_stat_description(const monster_info& mi, bool mark_spells)
@@ -5790,6 +5800,9 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
         }
         result << "\n";
     }
+
+    if (mon_explodes_on_death(mi.type))
+        _desc_mon_death_explosion(result, mi);
 
     result << _monster_missiles_description(mi);
     result << _monster_habitat_description(mi);
