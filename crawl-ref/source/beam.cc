@@ -3899,7 +3899,7 @@ void bolt::affect_player()
     // If this is a friendly monster, firing a penetrating beam in the player's
     // direction, always stop immediately before them if this attack wouldn't
     // be harmless to them.
-    if (agent()->is_monster() && mons_att_wont_attack(attitude)
+    if (agent() && agent()->is_monster() && mons_att_wont_attack(attitude)
         && !harmless_to_player() && pierce && !is_explosion)
     {
         ray.regress();
