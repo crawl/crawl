@@ -685,7 +685,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_STICKY_FLAME, "Sticky Flame",
     spschool::alchemy | spschool::fire,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::destructive,
     4,
     100,
     1, 1,
