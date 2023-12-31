@@ -11,7 +11,9 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
         return txt
             // convert double linebreaks into paragraph markers
             .split("\n\n")
-            .map(function (s) { return "<pre>" + s + "</pre>"; })
+            .map(function (s) {
+                return "<pre>" + util.formatted_string_to_html(s) + "</pre>";
+            })
             .filter(function (s) { return s !== "<pre></pre>"; })
             .join("")
             // replace single linebreaks with manual linebreaks
@@ -266,7 +268,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
         if (parts == null || parts.length != 4)
             return fmt_body_txt(desc);
         parts[2] = parts[2].replace(/ /g, '&nbsp;');
-        return fmt_body_txt(parts[1]+parts[2]+parts[3])
+        return fmt_body_txt(parts[1]) + parts[2] + fmt_body_txt(parts[3]);
     }
 
     function describe_spell(desc)
@@ -326,7 +328,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
         var $body = $popup.find(".body");
         var $footer = $popup.find(".footer");
         var $muts = $body.children().first(), $vamp = $body.children().last();
-        $muts.html(fmt_body_txt(util.formatted_string_to_html(desc.mutations)));
+        $muts.html(fmt_body_txt(desc.mutations));
         var s = scroller($muts[0]);
         $popup.on("keydown keypress", function (event) {
             scroller_handle_key(s, event);
@@ -421,7 +423,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
                 +power+"</div><div>"+cost+"</div></div>");
         }
 
-        desc.powers = fmt_body_txt(util.formatted_string_to_html(desc.powers));
+        desc.powers = fmt_body_txt(desc.powers);
         if (desc.info_table.length !== "")
         {
             desc.powers += "<div class=tbl>"
@@ -431,7 +433,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
         $panes.eq(1).html(desc.powers);
 
         $panes.eq(2).html(
-                    fmt_body_txt(util.formatted_string_to_html(desc.wrath)));
+                    fmt_body_txt(desc.wrath));
         if (use_extra_pane)
         {
             $panes.eq(3).html("<div class=tbl>"
@@ -955,7 +957,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
     {
         var $popup = $(".templates > .game-over").clone();
         $popup.find(".header > span").html(desc.title);
-        $popup.children(".body").html(fmt_body_txt(util.formatted_string_to_html(desc.body)));
+        $popup.children(".body").html(fmt_body_txt(desc.body));
         var s = scroller($popup.children(".body")[0]);
         $popup.on("keydown keypress", function (event) {
             scroller_handle_key(s, event);
