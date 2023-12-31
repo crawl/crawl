@@ -140,7 +140,7 @@ static const map<job_type, job_def> job_data =
     },
     { "robe", "potion of magic", },
     WCHOICE_NONE,
-    { { SK_ALCHEMY, 1 }, { SK_EARTH_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
+    { { SK_CONJURATIONS, 1 }, { SK_EARTH_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
       { SK_DODGING, 2 }, { SK_STEALTH, 2 }, }
 } },
 
