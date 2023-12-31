@@ -143,11 +143,6 @@ dice_def prism_damage(int hd, bool fully_powered)
     return dice_def(dice, 5 + div_rand_round(hd * 7, 4));
 }
 
-/*static dice_def _max_prism_damage(int hd)
-{
-    return prism_damage(hd, true);
-}*/ // XXX DELETEME
-
 static void _setup_prism_explosion(bolt& beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
