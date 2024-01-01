@@ -3093,7 +3093,15 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ANTIMAGIC:
-        antimagic_affects_defender(attacker->get_hit_dice() * 12);
+
+        // Apply extra stacks of the effect to monsters that have none.
+        if (defender->is_monster()
+            && !defender->as_monster()->has_ench(ENCH_ANTIMAGIC))
+        {
+            antimagic_affects_defender(attacker->get_hit_dice() * 18);
+        }
+        else
+            antimagic_affects_defender(attacker->get_hit_dice() * 12);
 
         if (mons_genus(attacker->type) == MONS_VINE_STALKER
             && attacker->is_monster())
