@@ -577,7 +577,7 @@ spret cast_summon_mana_viper(int pow, god_type god, bool fail)
 
     mgen_data viper = _pal_data(MONS_MANA_VIPER, 2, god,
                                 SPELL_SUMMON_MANA_VIPER);
-    viper.hd = (6 + div_rand_round(pow, 12));
+    viper.hd = (7 + div_rand_round(pow, 12));
 
     if (create_monster(viper))
         mpr("A mana viper appears with a sibilant hiss.");
