@@ -5282,8 +5282,18 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     if (!custom_name.empty())
         result.props[ITEM_NAME_KEY] = custom_name;
 
+    string original = s;
     const int plus = strip_number_tag(s, "plus:");
-    if (plus != TAG_UNFOUND)
+    if (plus == TAG_UNFOUND)
+    {
+        const string num = strip_tag_prefix(original, "plus:");
+        if (!num.empty())
+        {
+            error = make_stringf("Bad item plus: %s", num.c_str());
+            return false;
+        }
+    }
+    else
         result.props[PLUS_KEY].get_int() = plus;
 
     if (strip_tag(s, "no_uniq"))
@@ -5494,6 +5504,16 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     // Check for actual item names.
     else
         parse_raw_name(s, result);
+
+    // XXX: Ideally we'd have a common function to check validate plus values
+    // by item type and subtype.
+    if ((result.base_type == OBJ_ARMOUR || result.base_type == OBJ_WEAPONS)
+        && plus != TAG_UNFOUND
+        && abs(plus) > 30)
+    {
+        error = make_stringf("Item plus too high: %d", plus);
+        return false;
+    }
 
     if (!error.empty())
         return false;

@@ -882,7 +882,7 @@ int monster::armour_bonus(const item_def &item) const
     // where skill may be HD.
 
     const int armour_plus = item.plus;
-    ASSERT(abs(armour_plus) < 30); // sanity check
+    ASSERT(abs(armour_plus) <= 30); // sanity check
     return armour_ac + armour_plus;
 }
 
