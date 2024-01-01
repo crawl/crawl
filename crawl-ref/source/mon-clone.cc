@@ -220,10 +220,9 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
 
 bool mons_clonable(const monster* mon, bool needs_adjacent)
 {
-    // No uniques. Also, figuring out the name for the clone of a named
-    // monster isn't worth it, duplicate battlespheres with the same
-    // owner cause problems with the spell, and duplicate inugami don't
-    // give you the usual penalty if they die.
+    // No uniques or inugami. Also, figuring out the name for the clone
+    // of a named monster isn't worth it, and duplicate battlespheres
+    // with the same owner cause problems with the spell.
     if (mons_is_unique(mon->type)
         || mon->type == MONS_INUGAMI
         || mon->is_named()
