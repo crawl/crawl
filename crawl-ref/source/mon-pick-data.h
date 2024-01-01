@@ -147,7 +147,7 @@ static const vector<pop_entry> population[] =
   { 13, 19,  285, SEMI, MONS_EFREET },
   { 13, 23,  675, SEMI, MONS_SHAPESHIFTER },
   { 13, 27,   89, FALL, MONS_CATOBLEPAS },
-  { 14, 22,   40, SEMI, MONS_LAUGHING_SKULL },
+  { 13, 22,  245, SEMI, MONS_LAUGHING_SKULL },
   { 14, 22,  240, SEMI, MONS_FREEZING_WRAITH },
   { 14, 22,  270, SEMI, MONS_SIMULACRUM },
   { 14, 22,  115, SEMI, MONS_BOGGART },
@@ -573,7 +573,7 @@ static const vector<pop_entry> population[] =
 #endif
 
 { // Crypt (OOD cap: 5)
-  { -4,  3,   45, PEAK, MONS_LAUGHING_SKULL },
+  { -4,  3,  125, SEMI, MONS_LAUGHING_SKULL },
   { -4,  3,   75, SEMI, MONS_NECROMANCER },
   { -3,  3,   75, SEMI, MONS_DEATH_KNIGHT },
   { -2,  3,  125, SEMI, MONS_WRAITH },
