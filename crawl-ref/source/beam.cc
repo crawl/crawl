@@ -6080,8 +6080,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
                  apostrophise(mon->name(DESC_THE)).c_str());
         }
 
-        if (agent() && agent()->type == MONS_GHOST_MOTH)
-            agent()->heal(dur / BASELINE_DELAY);
         obvious_effect = true;
         break;
     }
