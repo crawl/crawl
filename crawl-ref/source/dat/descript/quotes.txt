@@ -359,10 +359,7 @@ Tomb
 %%%%
 Agony spell
 
-“Unbearable, isn't it? The suffering of strangers, the agony of friends. There
- is a secret song at the center of the world, Joey, and its sound is like
- razors through flesh.”
-    -Pinhead, _Hellraiser 3: Hell on Earth_. 1992.
+<Curse of Agony spell>
 %%%%
 Animate Dead spell
 
@@ -450,6 +447,13 @@ Corrupt ability
   With broken boot heels stained in many gutters]
  And as he sang the world began to fall apart . . .”
     -T.S. Eliot, “Prufrock's Pervigilium”. 1912 (published 1996).
+%%%%
+Curse of Agony spell
+
+“Unbearable, isn't it? The suffering of strangers, the agony of friends. There
+ is a secret song at the center of the world, Joey, and its sound is like
+ razors through flesh.”
+    -Pinhead, _Hellraiser 3: Hell on Earth_. 1992.
 %%%%
 Dragon's Call spell
 
