@@ -2470,7 +2470,7 @@ DUMMY(MONS_INSUBSTANTIAL_WISP, 'v', LIGHTGREY, "insubstantial wisp",
 // worms and slugs ('w')
 {
     MONS_RIBBON_WORM, 'w', LIGHTRED, "ribbon worm",
-    M_NO_SKELETON,
+    M_NO_SKELETON | M_FAST_REGEN,
     MR_NO_FLAGS,
     1, MONS_RIBBON_WORM, MONS_RIBBON_WORM, MH_NATURAL, 10,
     { {AT_BITE, AF_PLAIN, 9}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
