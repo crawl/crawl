@@ -1080,9 +1080,10 @@ gateways close a short time after being opened, or immediately once entered.
 %%%%
 Passwall spell
 
-Tunes the caster's body such that it can instantly pass through solid rock.
-It takes some time for the caster to attune to the rock, during which they will
-be helpless.
+Allows the caster to travel a short distance through an adjacent rock wall and
+emerge again on the other side. This spell takes an unusally long time to cast,
+during which the caster will be unable to act, but also gain increased armour
+from their attunement to the rock.
 %%%%
 Petrify spell
 
