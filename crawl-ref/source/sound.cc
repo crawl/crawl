@@ -116,10 +116,8 @@ void play_sound(const char *file, bool interrupt_game)
         {
             Mix_HaltChannel(last_channel);
         }
-# if !defined(DCSS_IOS)
-        if (sdl_sound_to_play != nullptr)
+        if (Options.interrupt_sounds && sdl_sound_to_play != nullptr)
             Mix_FreeChunk(sdl_sound_to_play);
-# endif
 
         sdl_sound_to_play = Mix_LoadWAV(OUTS(file));
         last_channel = Mix_PlayChannel(-1, sdl_sound_to_play, 0);

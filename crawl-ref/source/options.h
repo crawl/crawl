@@ -557,6 +557,7 @@ public:
 
     bool        sounds_on;              // Allow sound effects to play
     bool        one_SDL_sound_channel;  // Limit to one SDL sound at once
+    bool        interrupt_sounds;  // Allow playing sounds while other sounds are playing
 
     char_set_type  char_set;
     FixedVector<char32_t, NUM_DCHAR_TYPES> char_table;
