@@ -41,30 +41,30 @@ static spell_type search_order_aoe_conj[] =
     SPELL_FIRE_STORM,
     SPELL_GLACIATE,
     SPELL_CHAIN_LIGHTNING,
-    SPELL_MARCH_OF_SORROWS,
-    SPELL_POISONOUS_CLOUD,
-    SPELL_METAL_SPLINTERS,
-    SPELL_BOLT_OF_DEVASTATION,
     SPELL_ORB_OF_ELECTRICITY,
     SPELL_CONJURE_BALL_LIGHTNING,
+    SPELL_MARCH_OF_SORROWS,
+    SPELL_POISONOUS_CLOUD,
 };
 
 // Pan lord conjuration spell list.
 static spell_type search_order_conj[] =
 {
     SPELL_CALL_DOWN_DAMNATION,
-    SPELL_LEHUDIBS_CRYSTAL_SPEAR,
-    SPELL_CORROSIVE_BOLT,
     SPELL_QUICKSILVER_BOLT,
-    SPELL_IOOD,
     SPELL_BOLT_OF_DEVASTATION,
-    SPELL_MINDBURST,
+    SPELL_IOOD,
     SPELL_BOLT_OF_FIRE,
     SPELL_BOLT_OF_COLD,
-    SPELL_IRON_SHOT,
-    SPELL_POISON_ARROW,
-    SPELL_BOLT_OF_DRAINING,
+    SPELL_BOMBARD,
+    SPELL_METAL_SPLINTERS,
+    SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_LIGHTNING_BOLT,
+    SPELL_PLASMA_BEAM,
+    SPELL_BOLT_OF_DRAINING,
+    SPELL_POISON_ARROW,
+    SPELL_CORROSIVE_BOLT,
+    SPELL_MINDBURST,
 };
 
 // Pan lord self-enchantment spell list.
@@ -93,15 +93,16 @@ static spell_type search_order_misc[] =
 {
     SPELL_DISPEL_UNDEAD_RANGE,
     SPELL_PARALYSE,
+    SPELL_VITRIFY,
     SPELL_SLEEP,
     SPELL_MASS_CONFUSION,
     SPELL_DRAIN_MAGIC,
     SPELL_PETRIFY,
     SPELL_POLYMORPH,
-    SPELL_FORCE_LANCE,
     SPELL_SLOW,
     SPELL_SENTINEL_MARK,
     SPELL_DIMENSION_ANCHOR,
+    SPELL_FORCE_LANCE,
 };
 
 /**
@@ -238,6 +239,7 @@ void ghost_demon::set_pan_lord_special_attack()
         20, _flavour_attack(AF_DRAIN_SPEED),
         20, _flavour_attack(AF_CORRODE),
         20, _flavour_attack(AF_WEAKNESS),
+        20, _flavour_attack(AF_DRAG),
         // High chance
         40, _brand_attack(SPWPN_ANTIMAGIC),
         40, _brand_attack(SPWPN_DISTORTION),

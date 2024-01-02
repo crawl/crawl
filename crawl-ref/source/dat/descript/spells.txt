@@ -1593,7 +1593,7 @@ and other lesser undead.
 %%%%
 Summon Vermin spell
 
-Summons multiple rats, spiders and worms.
+Summons multiple rats, spiders, worms, and frogs.
 %%%%
 Summon Water Elementals spell
 

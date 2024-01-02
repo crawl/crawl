@@ -4369,8 +4369,9 @@ static monster_type _pick_undead_summon()
 
 static monster_type _pick_vermin()
 {
-    return random_choose_weighted(8, MONS_HELL_RAT,
-                                  5, MONS_REDBACK,
+    return random_choose_weighted(6, MONS_HELL_RAT,
+                                  3, MONS_SWAMP_WORM,
+                                  2, MONS_GOLIATH_FROG,
                                   2, MONS_TARANTELLA,
                                   2, MONS_JUMPING_SPIDER,
                                   3, MONS_DEMONIC_CRAWLER);

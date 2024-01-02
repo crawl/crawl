@@ -1353,10 +1353,6 @@ Summon Undead spell
 
 召唤多个亡灵怪物，生成各种鬼魂、吸血鬼、幽灵和其他次要的亡灵生物。
 %%%%
-Summon Vermin spell
-
-召唤多只老鼠，蜘蛛和蠕虫。
-%%%%
 Summon Water Elementals spell
 
 召唤一个或多个水元素。

@@ -2534,11 +2534,12 @@ int exper_value(const monster& mon, bool real, bool legacy)
             case SPELL_CALL_DOWN_DAMNATION:
             case SPELL_HURL_DAMNATION:
             case SPELL_SYMBOL_OF_TORMENT:
-            case SPELL_GLACIATE:
             case SPELL_FIRE_STORM:
-            case SPELL_SHATTER:
-            case SPELL_CHAIN_LIGHTNING:
+            case SPELL_GLACIATE:
             case SPELL_POLAR_VORTEX:
+            case SPELL_SHATTER:
+            case SPELL_ORB_OF_ELECTRICITY:
+            case SPELL_CHAIN_LIGHTNING:
             case SPELL_LEGENDARY_DESTRUCTION:
             case SPELL_SUMMON_ILLUSION:
             case SPELL_SPELLFORGED_SERVITOR:
@@ -2553,26 +2554,31 @@ int exper_value(const monster& mon, bool real, bool legacy)
                 diff += 20;
                 break;
 
-            case SPELL_LIGHTNING_BOLT:
+            case SPELL_VITRIFY:
+            case SPELL_BANISHMENT:
+            case SPELL_FAKE_MARA_SUMMON:
             case SPELL_PYRE_ARROW:
             case SPELL_MINDBURST:
-            case SPELL_BANISHMENT:
-            case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
-            case SPELL_IRON_SHOT:
-            case SPELL_BOMBARD:
             case SPELL_IOOD:
             case SPELL_FIREBALL:
-            case SPELL_AGONY:
+            case SPELL_PLASMA_BEAM:
+            case SPELL_IRON_SHOT:
+            case SPELL_BOMBARD:
+            case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
             case SPELL_LRD:
+            case SPELL_LIGHTNING_BOLT:
+            case SPELL_CONJURE_BALL_LIGHTNING:
+            case SPELL_MARCH_OF_SORROWS:
+            case SPELL_AGONY:
             case SPELL_DIG:
-            case SPELL_FAKE_MARA_SUMMON:
                 diff += 10;
                 break;
 
-            case SPELL_HAUNT:
             case SPELL_SUMMON_DRAGON:
             case SPELL_SUMMON_HORRIBLE_THINGS:
+            case SPELL_HAUNT:
             case SPELL_PLANEREND:
+            case SPELL_MALIGN_GATEWAY:
             case SPELL_SUMMON_EMPEROR_SCORPIONS:
                 diff += 7;
                 break;
