@@ -616,7 +616,7 @@ static const vector<chaos_effect> chaos_effects = {
         },
     },
     {
-        "polymorph", 3, _is_chaos_polyable, BEAM_POLYMORPH,
+        "polymorph", 2, _is_chaos_polyable, BEAM_POLYMORPH,
     },
     {
         "rage", 5, [](const actor &defender) {
