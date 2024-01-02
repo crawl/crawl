@@ -906,8 +906,13 @@ static void _god_death_message(kill_method_type death_type, const actor *killer)
         else if (death_type != KILLED_BY_DISINT
               && death_type != KILLED_BY_LAVA)
         {
-            mprf(MSGCH_GOD, "Your body rises from the dead as a mindless "
-                 "zombie.");
+            const mon_holy_type holi = you.holiness();
+
+            if (holi & MH_NONLIVING)
+                mprf(MSGCH_GOD, "Your body becomes fuel for the black torch.");
+            else
+                mprf(MSGCH_GOD, "Your body rises from the dead as a mindless "
+                     "zombie.");
         }
         // No message if you're not undead and your corpse is lost.
         break;
