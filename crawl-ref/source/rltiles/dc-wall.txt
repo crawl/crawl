@@ -430,10 +430,10 @@ vault_stone15
 wall_stone_depths0 STONE_WALL_DEPTHS
 %weight 7
 wall_stone_depths1
+%weight 5
 wall_stone_depths2
 %weight 3
 wall_stone_depths3
-%weight 1
 wall_stone_depths4
 
 # ssssssss

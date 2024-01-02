@@ -1329,6 +1329,19 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_STONE_WALL_DEPTHS;
     }
+    else if (player_in_branch(BRANCH_ZOT))
+    {
+        /* Matches hall_of_zot 2 through 5. */
+        if (orig == TILE_DNGN_STONE_WALL)
+            if (you.depth == 2)
+                orig = TILE_DNGN_STONE_WALL_BLUE;
+            else if (you.depth == 3)
+                orig = TILE_DNGN_STONE_WALL_LIGHTBLUE;
+            else if (you.depth == 4)
+                orig = TILE_DNGN_STONE_WALL_MAGENTA;
+            else if (you.depth == 5)
+                orig = TILE_DNGN_STONE_WALL_LIGHTMAGENTA;
+    }
 
     if (orig == TILE_FLOOR_NORMAL)
         *bg = flv.floor;
