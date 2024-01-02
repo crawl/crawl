@@ -288,12 +288,6 @@ DEPTH:  D:14-, Elf, !Elf:$, Snake, Spider
 # Uniques which can appear in the Depths:
 ################################################################################
 
-NAME:   uniq_aizul
-DEPTH:  Depths:1-2, Elf, Swamp, Snake, Shoals, Spider, Vaults, !Vaults:$
-DEPTH:  Crypt:1
-WEIGHT: 50(Snake), 10
-: place_unique(_G, "Aizul")
-
 NAME:   uniq_asterion
 DEPTH:  Depths:1-2, Elf, Snake, Spider, Vaults:1-3
 : place_unique(_G, "Asterion")
@@ -391,6 +385,11 @@ DEPTH:  Depths:2-, Zot:1-4, Crypt
 ################################################################################
 # Uniques which appear in neither the Dungeon nor the Depths:
 ################################################################################
+
+NAME:   uniq_aizul
+DEPTH:  Elf, Swamp, Snake, Shoals, Spider, Vaults:1-2
+WEIGHT: 50 (Snake), 10
+: place_unique(_G, "Aizul")
 
 NAME:   uniq_donald
 DEPTH:  Swamp, Snake, Shoals, Spider, Slime, Vaults, !Vaults:$
