@@ -58,7 +58,6 @@ recommended_jobs:
   - JOB_BERSERKER
   - JOB_FIRE_ELEMENTALIST
   - JOB_EARTH_ELEMENTALIST
-  - JOB_ALCHEMIST
   - JOB_REAVER
 recommended_weapons:
   - SK_MACES_FLAILS

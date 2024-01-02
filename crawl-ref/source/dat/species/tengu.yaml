@@ -53,7 +53,6 @@ recommended_jobs:
   - JOB_SUMMONER
   - JOB_FIRE_ELEMENTALIST
   - JOB_AIR_ELEMENTALIST
-  - JOB_ALCHEMIST
 recommended_weapons:
   - SK_MACES_FLAILS
   - SK_AXES

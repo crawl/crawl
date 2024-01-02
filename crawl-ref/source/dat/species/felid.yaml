@@ -63,7 +63,6 @@ recommended_jobs:
   - JOB_AIR_ELEMENTALIST
   - JOB_CONJURER
   - JOB_SUMMONER
-  - JOB_ALCHEMIST
 recommended_weapons:
   - SK_UNARMED_COMBAT
 
