@@ -4898,7 +4898,7 @@ static string _monster_attacks_description(const monster_info& mi)
         const bool needs_dam = !flavour_triggers_damageless(attack.flavour)
                             && !flavour_has_mobility(attack.flavour)
                             && !flavour_has_reach(attack.flavour);
-        if (!needs_dam)
+        if (!needs_dam && attack.flavour != AF_REACH_TONGUE)
             flavour_without_dam = true;
     }
 

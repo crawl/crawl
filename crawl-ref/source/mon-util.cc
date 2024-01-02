@@ -2292,9 +2292,13 @@ int flavour_damage(attack_flavour flavour, int HD, bool random)
             if (random)
                 return HD * 3 / 4 + random2(HD * 3 / 4);
             return HD * 3 / 2;
+        // Note: This value is only used for displaying monster damage with xv
+        //       and is a lie against non-player targets.
+        //       Actual attacks call actor->splash_with_acid() directly.
         case AF_ACID:
+        case AF_REACH_TONGUE:
             if (random)
-                return roll_dice(3, 4);
+                return roll_dice(4, 3);
             return 12;
         default:
             return 0;
