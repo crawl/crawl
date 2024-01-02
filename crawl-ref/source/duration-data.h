@@ -656,7 +656,7 @@ static const duration_def duration_data[] =
       MAGENTA, "Bog",
       "spewing sludge", "noxious bog",
       "You are spewing a noxious bog.", D_DISPELLABLE,
-      {{ "Your noxious spew wanes." }}},
+      {{ "Your noxious spew wanes.", end_toxic_bog }}},
     { DUR_FROZEN_RAMPARTS, LIGHTBLUE, "Ramparts", "freezing walls",
         "frozen ramparts", "You have covered nearby walls with an icy ambush.",
         D_DISPELLABLE},

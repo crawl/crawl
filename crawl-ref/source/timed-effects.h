@@ -15,6 +15,7 @@ int count_malign_gateways();
 void timeout_malign_gateways(int duration);
 
 void timeout_binding_sigils();
+void end_toxic_bog();
 
 void timeout_terrain_changes(int duration, bool force = false);
 
