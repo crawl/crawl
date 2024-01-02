@@ -53,7 +53,7 @@ CHANCE: 0.5%
 
 ################################################################################
 NAME:    hangedman_research_pyrotechnics
-MONS:    molten gargoyle, fire crab, lava snake, lindwurm
+MONS:    molten gargoyle, fire crab, lava snake, sun moth
 KMONS:   D = will-o-the-wisp
 COLOUR:  .01234D = red
 FTILE:   .+01234D = floor_volcanic

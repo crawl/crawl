@@ -231,7 +231,8 @@ function fiery_guardians (e, intelligent, village)
             e.mons("two-headed ogre ; " .. ogrestuff .. " . " .. ogrestuff ..
                    " / centaur ; " .. centaurstuff ..
                    " / salamander w:15 ; spear " .. flame .. " | trident " .. flame)
-            e.mons("fire bat / hell hound / hell hog w:2")
+            e.mons("fire bat / hell hound")
+            e.mons("fire crab / hell hog")
             return
         end
         local set_weight = crawl.random2(3)
@@ -1125,9 +1126,9 @@ ORIENT:     encompass
 WEIGHT:     20
 SUBST:      p = lw, W = wW`, q = ll`, r = lx
 SHUFFLE:    JK / LM / NO
-NSUBST:     J = 4=. / $def
-NSUBST:     L = 3=1 / 12. / 2=2 / 3=$def / .
-NSUBST:     N = 2=1 / 12. / 1=2 / 1=$def / .
+NSUBST:     J = 4:. / * = $def
+NSUBST:     L = 3:1 / 1:12. / 1:2 / 1:23 / 3 = $def / *:.
+NSUBST:     N = 2:1 / 1:12. / 1:23 / 1 = $def / *:.
 SUBST:      K = ^, MO = ., . = .:99 ^:1
 KPROP:      ` = no_tele_into
 :           fiery_guardians(_G, true, true)

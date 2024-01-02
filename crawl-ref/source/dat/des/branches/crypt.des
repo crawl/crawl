@@ -480,7 +480,7 @@ TAGS:  transparent
 DEPTH: Crypt
 MONS:  zombie w:150 / skeleton w:150 / skeletal warrior / ghoul / \
        large abomination / small abomination / \
-       skeleton w:150 / burial acolyte w:40
+       skeleton w:150 / patrolling burial acolyte w:40
 KFEAT: _ = altar_kikubaaqudgha
 MAP
 ccccccccccccccccccccccc
@@ -1279,37 +1279,36 @@ NAME: cheibrodos_crypt_cold_storage
 TAGS: no_item_gen no_monster_gen
 DEPTH: Crypt
 ORIENT: east
-MONS: freezing wraith, shadow wraith
-KMONS: | = ancient lich / dread lich
-KITEM: | = plate armour good_item ego:cold_resistance \
-           / ice dragon scales good_item \
-           / crystal plate armour good_item ego:cold_resistance w:5 \
-           / executioner's axe good_item ego:freezing w:5 \
-           / battleaxe good_item ego:freezing \
-           / lajatang good_item ego:freezing \
-           / triple sword good_item ego:freezing w:5 \
-           / great sword good_item ego:freezing \
-           / double sword good_item ego:freezing \
-           / great mace good_item ego:freezing \
-           / eveningstar good_item ego:freezing \
-           / bardiche good_item ego:freezing \
-           / quick blade good_item  ego:freezing w:5
+MONS:   freezing wraith, shadow wraith
+KMONS:  | = ancient lich / dread lich
+: local rc = "good_item ego:cold_resistance ident:type"
+: local f = "good_item ego:freezing ident:type"
+: local lt = "plate armour " .. rc .. " / " ..
+:            "ice dragon scales good_item / " ..
+:            "crystal plate armour " .. rc .. " w:5 / " ..
+:            "executioner's axe " .. f .. " w:5 / battleaxe " .. f .. " / " ..
+:            "lajatang " .. f .. " / triple sword " .. f .. " / " ..
+:            "great sword " .. f .. " / double sword " .. f .. " / " ..
+:            "great mace " .. f .. " / eveningstar " .. f .. " / " ..
+:            "bardiche " .. f .. " / quick blade " .. f .. " w:5"
+: kitem("| = " .. lt .. ", " .. lt)
+NSUBST: " = 4:1 / 3=1.. / 2:2 / 2=2..
+KPROP:  `V = no_tele_into
 MARKER: V = lua:fog_machine { cloud_type = "freezing vapour", pow_min = 0, \
-                              pow_max = 10, delay = 20, size = 3, \
-                              walk_dist = 0, excl_rad = 0 }
-NSUBST: " = 3:1 / 3=1.. / 2:2 / 2=2..
+                              pow_max = 10, delay = 20, size_min = 3, \
+                              size_max = 3, walk_dist = 2, excl_rad = 0 }
 MAP
           cccccccccccc
           cccccccccccc
-  ccccccc cc"""""n..cc
-  cccccccccc"""""n.Vcc
-.ccc...ccccc"""""n..cc
+  ccccccc cc"""""n``cc
+  cccccccccc"""""n`Vcc
+.ccc...ccccc"""""n``cc
 .......""""""""""ccccc
 @....G.""""""""""=|ccc
 .......""""""""""ccccc
-.ccc...ccccc"""""n..cc
-  cccccccccc"""""n.Vcc
-  ccccccc cc"""""n..cc
+.ccc...ccccc"""""n``cc
+  cccccccccc"""""n`Vcc
+  ccccccc cc"""""n``cc
           cccccccccccc
           cccccccccccc
 ENDMAP
@@ -1842,11 +1841,11 @@ KMONS:  S = shadow / wraith / freezing wraith / shadow wraith / wight
 : end
 ####### SW monsters (crematory). Either fiery undead or hellish.
 : if crawl.coinflip() then
-KMONS:  t = fire giant skeleton / fire dragon skeleton / laughing skull w:20
+KMONS:  t = ghost crab / fire dragon skeleton / laughing skull w:20
 KMONS:  X = w:1 curse skull / w:19 revenant
 : else
-KMONS:  t = w:20 hell knight / smoke demon / red devil
-KMONS:  X = w:1 curse skull / w:19 hell knight
+KMONS:  t = w:20 hell knight / smoke demon / laughing skull
+KMONS:  X = w:1 curse skull / w:19 balrug
 : end
 ####### Randomisation of doors
 NSUBST: K = 1:+ / *:v
@@ -1915,18 +1914,18 @@ v....lml....vvwwwwwwwwwwwwwwwwwwwwwwwwvvv.v..Wvvvvv...vvv.v
 v....lll....vwwwwwwwwwwwwwwwwwwwwwwwwwwvv.v.vvvvvvvv...vv.v
 v...........vwwwwwwwwwwwwwwwwwwwwwwwwwwvv.v.v%R.Wv%vv...vvv
 vvvv++vvvvvvvwwwwwww..8..wwwwwwwwwwwwwwvv.v.v...WvRWvv...vv
-v........+tvwwwwww.........wwwwwwwwwwwwwv.v+v+vvvv+vvvv...v
-v...ll...v+vwwwww...........wwwwwwwwwwwwv............vvv..v
+v........vtvwwwwww.........wwwwwwwwwwwwwv.v+v+vvvv+vvvv...v
+v...ll...+.vwwwww...........wwwwwwwwwwwwv............vvv..v
 v...ll...+tvwwww.............wwwwwwwwwwwvvvvvvvvvvvvvvvvv+v
-v...ll...v+vwwww.............wwww.......+........R......v.v
+v...ll...+.vwwww.............wwww.......+........R......v.v
 v...ll...+tvwww...............ww........+....V.S.R.V....v.v
-v.llllll.v+vwww...................wwwwwwv......S........v.v
+v.llllll.+.vwww...................wwwwwwv......S........v.v
 v.llllll.+tvwww8.............8...wwwwwwwv....V.S.R.V....v.v
-v...ll...v+vwww.................wwwwwwwwv........R......v.v
+v...ll...v.vwww.................wwwwwwwwv........R......v.v
 v.t.ll...vtvvww...............wwwwwwwwwvvvvvv''vvvvvvv+vv+v
-v.t.ll...v.*vwww.{...........wwwwwwwwwwv.......'o$.....vv.v
+v.X.ll...v.*vwww.{...........wwwwwwwwwwv.......'o$.....vv.v
 v...ll...v.%vwww..[..........wwwwwwwwwwv.......v$.....vvv.v
-v........+.*vvwww..(........wwwwwwwwwwvv..W....v.....vvv..v
+v........v.*vvwww..(........wwwwwwwwwwvv..W....v.....vvv..v
 vvvvvvvvvvvvvvvwww.........wwwwwwwwwwvv..SW....v.S..vvv.S.v
 vvvvvvvvvvvvvvvwwwww..8..wwwwwwwwwwwwv..WWWWW..'...vvv....v
 vvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwwwwwvv....W....v..vvv.....v

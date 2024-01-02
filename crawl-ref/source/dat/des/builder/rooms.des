@@ -217,10 +217,10 @@ function sroom_jelly_pit(e)
     if e.is_validating() then return end
 
     if you.in_branch("Lair") then
-        mons = "jelly w:60 / large slime creature w:20" ..
+        mons = "jelly w:60 / large slime creature w:25" ..
             " / quicksilver ooze / great orb of eyes w:5" ..
-            " / azure jelly w:5 / rockslime w:2 / acid blob w:2"
-        lord_mon = "azure jelly / rockslime / acid blob"
+            " / azure jelly w:5"
+        lord_mon = "quicksilver ooze / azure jelly"
     elseif you.in_branch("Slime") then
         mons = "large slime creature w:20 / great orb of eyes" ..
             " / golden eye w:5 / shining eye w:5 / quicksilver ooze" ..

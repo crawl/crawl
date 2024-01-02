@@ -226,8 +226,8 @@ end
 
 function pan_entry_vault_contents(e, glyph)
     e.tags("patrolling no_monster_gen nolayout_encompass")
-    local tierthree = "sixfirhy / smoke demon / soul eater / " ..
-                      "sun demon / ynoxinul w:5"
+    local tierthree = "rust devil w:5 / sixfirhy / smoke demon / " ..
+                      "soul eater / sun demon / ynoxinul w:5"
     local tiertwo = "balrug / blizzard demon / cacodemon w:5 / " ..
                     "green death / hell beast / hellion / lorocyproca / " ..
                     "reaper / shadow demon / tormentor"
@@ -241,7 +241,8 @@ function pan_entry_vault_contents(e, glyph)
         e.nsubst("1 = 1:112 / *:.")
     else
         e.subst("12 = .")
-        e.kmons(glyph .. " = " .. tiertwo .. " / " .. tierthree .. " / " .. tierthree)
+        e.kmons(glyph .. " = " .. tiertwo .. " / " ..
+                tierthree .. " / " .. tierthree)
     end
 end
 

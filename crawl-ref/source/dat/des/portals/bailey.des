@@ -1229,25 +1229,27 @@ ccWWc+c+c!!!!!!cc
 ENDMAP
 
 # A short but intense spriggan/ogre bailey
-# Nine items, with a chance for some delicious dragon scales
+# Nine items, with chances for some delicious dragon scales
 NAME:   bailey_polearm_enchanted_keep_hellmonk
-ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup
-: item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
-ITEM:   any weapon good_item w:40 / good_item ice dragon scales w:3 /\
-        good_item fire dragon scales w:3 / good_item swamp dragon scales w:3 /\
-        good_item acid dragon scales w:3 / good_item steam dragon scales w:3 /\
-        good_item quicksilver dragon scales w:3
+ORIENT: encompass
 MONS:   ogre ; halberd | glaive w:3
 MONS:   spriggan ; spear | trident
 MONS:   two-headed ogre ; halberd | glaive w:3 | bardiche w:1 . \
                           halberd | glaive w:3 | bardiche w:1
 KMONS:  D = steam dragon / acid dragon w:3
+: item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
+ITEM:   rapier good_item / quarterstaff good_item / lajatang good_item w:5 / \
+        broad axe good_item w:5 / scimitar good_item w:5
+ITEM:   good_item ice dragon scales w:3 /\
+        good_item fire dragon scales w:3 / good_item swamp dragon scales w:3 /\
+        good_item acid dragon scales w:3 / good_item steam dragon scales w:3 /\
+        good_item quicksilver dragon scales w:3
 KFEAT:  D = deep_water
 SUBST:  ! = t:20 x c:3, - = t c:30 x
 NSUBST: ' = 20 = 1... / 2 = 2... / *:.
 NSUBST: " = 1:2 / 12 = 2... / *:., 3 = 1:3 / *:.
-NSUBST:  d = 1:e / * = ddddddde
+NSUBST: d = 1:d / 1:e / 1:ef / * = d:14 e:1 f:1
 FTILE:  ;tA< = floor_grass
 : bailey_setup(_G)
 MAP

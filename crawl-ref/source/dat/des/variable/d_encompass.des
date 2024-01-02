@@ -139,22 +139,20 @@ KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
 {{
 local bands = {
     [65 - you.absdepth() * 3] =
-        { "boggart", "tengu warrior", "centaur warrior", },
+        { "boggart", "tengu conjurer", "centaur warrior", "laughing skull" },
     [42 - you.absdepth() * 2] =
-        { "kobold demonologist", "tengu conjurer", "deep elf pyromancer",
-          "deep elf zephyrmancer", "necromancer", "yaktaur", "Azrael",
-          "Kirke", },
+        { "death knight", "harpy", "ogre mage", "meliai", "orc high priest",
+          "yaktaur", "skeletal warrior", "Azrael", "Kirke", },
     [26 - you.absdepth()] =
-        { "glowing orange brain", "spriggan berserker", "occultist",
-          "skeletal warrior", "salamander tyrant", "rakshasa", },
+        { "glass eye", "necromancer", "rakshasa", },
     [you.absdepth() * 2 - 37] =
-        { "deep elf death mage", "spriggan air mage", "deep troll shaman", },
+        { "salamander tyrant", "spriggan air mage",
+          "deep troll shaman", "hell knight", },
     [you.absdepth() * 2 - 42] =
-        { "spark wasp", "hell knight", "naga sharpshooter", "vampire mage",
-          "orc warlord", "vampire knight", "stone giant",
-          "deep elf high priest", "spriggan defender", },
+        { "naga sharpshooter", "vampire mage", "vampire knight",
+          "merfolk javelineer", "spriggan defender", },
     [you.absdepth() - 18] =
-        { "lich", "ancient champion", "tengu reaver", "Margery",
+        { "spark wasp", "ancient champion", "Margery",
           "Saint Roka", "Sojobo", },
 }
 local kmonsters = {}
@@ -293,6 +291,263 @@ vvg'c..LM~~~~~..ccccbbbbl""_"U"""lbbbbck'cc..~~~ONO..+'''v
                          vvvvvvv
 ENDMAP
 
+default-depth: D:$, Depths:2-, !Depths:$
+
+################################################################################
+# An imposing crystal structure, luring in and altering many mystics and
+# monsters to feast upon and be empowered by the radiant great elemental magic.
+# Vaguely, vaguely inspired by Crawl Alternative's Jade Caves
+# and the non-livings sets for the old proposed Radiant Caverns.
+NAME:     hangedman_crystal_crosses_colossus
+TAGS:     no_monster_gen no_item_gen no_pool_fixup uniq_d_encompass
+ORIENT:   encompass
+DEPTH:    Depths:2-
+PLACE:    D:$
+WEIGHT:   999999 (D:$), 10
+: if you.in_branch("D") then
+MONS:     gargoyle ; mace ego:freezing | mace ego:electrocution w:20 / \
+          yaktaur ; arbalest ego:flaming | arbalest ego:freezing / \
+          salamander ; spear ego:electrocution | spear ego:heavy / \
+          arcanist / boggart w:2 / deep elf pyromancer
+MONS:     fire crab / rime drake / air elemental / \
+          raiju w:5 / raiju perm_ench:shapeshifter w:5 / \
+          basilisk w:5 / basilisk perm_ench:shapeshifter w:5 / \
+          ugly thing w:15 / rust devil / meliai simulacrum / water elemental
+MONS:     molten gargoyle ; flail ego:electrocution / \
+          efreet ; scimitar ego:electrocution / \
+          tengu conjurer / deep elf zephyrmancer / \
+          ogre mage / deep elf knight / occultist / \
+          rakshasa ; robe . whip ego:freezing | whip ego:electrocution
+MONS:     lindwurm / lindwurm perm_ench:shapeshifter w:5 / \
+          boulder beetle / boulder beetle perm_ench:shapeshifter w:5 / \
+          wind drake w:5 / wind drake perm_ench:shapeshifter w:5 / \
+          catoblepas / wolf spider simulacrum / \
+          freezing wraith / sun demon / sixfirhy
+KMONS:    5 = naga sharpshooter ; fire dragon scales . longbow ego:freezing
+KMONS:    6 = hell knight ; ice dragon scales . demon blade good_item
+KMONS:    7 = fire dragon
+KMONS:    8 = frost giant
+KMONS:    A = Azrael band w:2 / salamander mystic band, salamander mystic band
+KMONS:    B = shock serpent perm_ench:glowing_shapeshifter
+KMONS:    CD = crystal guardian
+KITEM:    R = smoky gem
+KFEAT:    O = enter_depths
+NSUBST:   { = 1:{ / 1:[ / 1:( / 2:< / *:T, 1 = 4:. / *:1
+NSUBST:   | = 1:R / 1:O
+: _G.set_random_mon_list("place:" .. you.where() .. " w:170 / " ..
+:   "arcanist / shapeshifter / ugly thing band")
+: else
+MONS:     tengu conjurer / deep elf elementalist / occultist w:2 / \
+          hell knight / rakshasa w:5 ; robe . wand of iceblast charges:1 | \
+                        any beam wand . trident ego:freezing | trident ego:flaming
+MONS:     fire dragon w:5 / fire dragon perm_ench:shapeshifter w:5 / \
+          ice dragon w:5 / ice dragon perm_ench:shapeshifter w:5 / \
+          very ugly thing w:20 / spark wasp / war gargoyle / crystal guardian / \
+          spriggan defender simulacrum w:4 / quicksilver dragon simulacrum w:6 / \
+          dancing weapon w:8 ; trident ego:flaming | trident ego:freezing | \
+                               war axe ego:flaming | war axe ego:freezing
+MONS:     fire giant ; battleaxe ego:freezing / \
+          frost giant ; great sword ego:flaming / \
+          deep troll earth mage / salamander tyrant / tengu reaver / \
+          ettin ; great mace ego:flaming . great mace ego:freezing / \
+          spriggan air mage / lich / sphinx w:5 / \
+          deep elf annihilator ; ice dragon scales | fire dragon scales . \
+                                 scimitar ego:flaming | scimitar ego:freezing
+MONS:     iron dragon w:5 / iron dragon perm_ench:shapeshifter w:5 / \
+          storm dragon w:5 / storm dragon perm_ench:shapeshifter w:5 / \
+          juggernaut simulacrum w:5 / balrug w:5 / blizzard demon w:5 / \
+          sun moth w:5 / glowing shapeshifter hd:11 w:15 / \
+          dancing weapon ; glaive ego:flaming | glaive ego:freezing | \
+                           battleaxe ego:flaming | battleaxe ego:freezing
+KMONS:    5 = deep elf blademaster ; mundane crystal plate armour . \
+                                     rapier ego:flaming . rapier ego:freezing
+KMONS:    6 = deep elf master archer ; ice dragon scales . longbow ego:flaming / \
+              deep elf master archer ; fire dragon scales . longbow ego:freezing
+KMONS:    7 = Vv w:2 / ancient lich / dread lich w:6, \
+              ancient lich / dread lich w:6
+KMONS:    8 = Frederick / titan / draconian annihilator w:5, \
+              titan / draconian annihilator w:5
+KMONS:    A = golden dragon w:19 / golden dragon perm_ench:shapeshifter w:1 / \
+              quicksilver dragon w:14 / \
+              quicksilver dragon perm_ench:shapeshifter w:1
+KMONS:    B = glowing shapeshifter hd:16 / glowing shapeshifter hd:15
+KMONS:    C = Josephina band w:5 / walking frostbound tome, \
+              walking frostbound tome
+KMONS:    D = walking crystal tome
+NSUBST:   { = 1:{ / 1:[ / 1:( / 1:} / 1:] / 1:) / 1:<<> / 1:>>< / *:T
+: _G.set_random_mon_list("place:" .. you.where() .. " w:210 / " ..
+:   "rakshasa / dancing weapon / glowing shapeshifter / very ugly thing band")
+: end
+: local bookEle = util.random_from({"numspells:4 disc:air disc2:earth",
+:                                   "numspells:4 disc:fire disc2:ice"})
+: kitem("| = randbook " .. bookEle .. " w:24 / staff of fire randart / " ..
+:       "staff of cold randart / staff of air randart / " ..
+:       "staff of earth randart / granite talisman w:1 / storm talisman w:1")
+# Randomized: Entryways across arms, stair and portal placement,
+# "boss" center versus arm distribution, center openness,
+# pillars across halves, monsters sets versus depth,
+# item quality and decorative lining.
+SHUFFLE:  defghi
+SUBVAULT: d : crystal_crosses_four
+SUBVAULT: e : crystal_crosses_four
+SUBVAULT: f : crystal_crosses_two
+SUBVAULT: g : crystal_crosses_two
+SUBVAULT: h : crystal_crosses_one
+SUBVAULT: i : crystal_crosses_one
+NSUBST:   5 = 1:5 / *:1, 6 = 1:6 / *:1, 7 = 1:774 / *:1, 8 = 1:8 / 1:AA4 / *:1
+SUBST:    1 = 1:99 .:1, j : b:3 ~:2
+SHUFFLE:  5678ABCD, XYZ, -=~
+SUBST:    X = bbX.., Y = bbY.., Z : bb.
+SUBST:    X : w:60 l ., Y : l:40 w ., l = lll.
+SUBST:    - = ., = = +:3 .:1, ~ = +:9 .:1
+SUBST:    * = *:4 |:1, % = %:14 *:5 .:1
+SUBST:    v : v:3 b:2, k : c:3 b:2
+KPROP:    l = no_cloud_gen
+: local Z = you.absdepth()
+: if you.absdepth() > 1 then
+:   subst("1 = 1:" .. math.max(62 - Z * 2, 2) ..
+:            " 2:" .. math.max(60 - Z * 2, 2) ..
+:            " 3:" .. math.max(Z * 5 - 74, 8) ..
+:            " 4:" ..  math.max(Z * 5 - 78, 8))
+: end
+MARKER:   T = lua:props_marker { portal=1 }
+TILE:     b = wall_emerald
+TILE:     c = wall_crystal_squares
+TILE:     v = dngn_metal_wall_darkgray
+FTILE:    ' = floor_depthstone
+LFLOORTILE: floor_pebble_green
+LFLOORCOL:  white
+MAP
+                                          bbb
+                                         bbYbb
+                                         b.%.b
+                                         b.Y.b
+          bbb                            b.6.b    bbb
+         bbXbb                       bbbbk...kbbbebYbb
+         b.*.b                      bb...........e...b
+         b.X.b                      bY.Y...Y...Y.e.Y.b
+         b.5.b    bbb               bb...........e.1.b
+     bbbbk...kbbbdbXbb               eeeee...eeeee...kbbbb
+    bb...........d...b               b...e.1.e...........bb
+    bX.X1..X...X.d.X.b               b.Y.e.Y.e%Y1..Y..6Y*Yb
+    bb...........d...b    bbb        b...e.%.e...........bb
+     ddddd...ddddd...bbbbbbXbb   bbbbb...eeeeveeee...kbbbb
+     b...d.1.d....1......b...b  bb......1....e.%.e...b
+     b.X.d.X.d%X...X...X.-.X.b  bY.Y...Y...Y%e...e.Y.b
+     b...b.%.d......1....b...b  bb....1......e...e...b
+ bbbbk...ddddvdddd...bbbbb...bbbbbb-bb...eeeee...eeeee
+bb...........d.%.d...b....1......b...b...b......1....bb
+bX%X5..X..1X%d.X.d.X.b%{...X...X.-.Z.b.{.b%Y...Y...Y.Yb
+bb...........d...d.%.b......1....b...b.%.b....1......bb
+ bbbbk...ddddd...dbbbvbbbb...bbjbb...bbbbvbbbb...bbbbb
+     b...d....1......b.%.b...b......1....b.%.b...b
+     b.X.d.X...X...{%b.Z.b.{.b.Z...Z...Z%b.{.b.Y.b
+     b...d......1....b...b.%.b....6......b...b...b
+     bbXbdbbbb...bbbbb...bbbbv+c+b...bbbbb...bb-bb
+      bbb    b...b....1......j...b...b......1....bb
+             b.X.-.Z...Z...Z%b.Z.b.Z.b%{...Y...Y.Yb
+             b...b......5....j...b.%.b....1......bb
+             bbXbbb-bb...bbbbb'''bjbjvbbbb...bbbbb
+              bbbb...b...+...'5*6'...+...b...b
+                 b.Y.j.Z.c.Z.'|z|'.Z.c.Z.j.Y.b
+                 b...b...+...'8*7'...+...b...bbbb
+             bbbbb...bbbbvjbjb'''bbbbb...bb-bbbXbb
+            bb......1....b.%.b...j....7......b...b
+            bY.Y...Y...{%b.Z.b.Z.b%Z...Z...Z.-.XXb
+            bb....1......b...b...j......1....b...b    bbb
+             bb-bb...bbbbb...b+c+vbbbb...bXXXb...bbbbbbXbb
+             b...b...b......8....b.%.b...b....1......w...b
+             b.Y.b.{.b%Z...Z...Z.b.{.b.Z.b%{...X...X.w.X.b
+             b...b.%.b....1......b...b.%.b......1....w...b
+         bbbbb...bbbbvbbbb...bbjbb...bbbbvbbbw...wwwww...kbbbb
+        bb......1....b.%.b...b....1......b.%.w...w...........bb
+        bY.Y...Y...Y%b.Y.b.Z.-.X...X...{%b.X.w.X.w%X1..X..7X%Xb
+        bb....1......b.{.b...b......1....b...w.%.w...........bb
+         fffff...fbbbb...bb-bbbbbb...bwwwb...wwww.wwww...kbbbb
+         b...f...f......1....bb  b...b....1......w.%.w...b
+         b.Y.f.Y.f%Y...Y...Y.Yb  b.X.-.w...X...X%w.X.w.X.b
+         b...f.%.f....1......bb  b...b.w....1....w.1.w...b
+     bbbbk...ffffvffff...bbbbb   bbXbbbbbb...wwwww...wwwwb
+    bb...........f.%.f...b        bbb    b...w...........bb
+    bY*Y8..Y..1Y%f.Y.f.Y.b               b.X.w.X...X..1X.Xb
+    bb...........f.1.f...b               b...w...........bb
+     bbbbk...fffff...fffff               bbXbbbbbk...kbbbb
+         b.1.f...........bb               bbb    b.7.b
+         b.Y.f.Y...Y...Y.Yb                      b.X.b
+         b...f...........bb                      b.*.b
+         bbYbfbbbk...kbbbb                       bbXbb
+          bbb    b.8.b                            bbb
+                 b.Y.b
+                 b.%.b
+                 bbYbb
+                  bbb
+ENDMAP
+
+
+# Precision arm randomization. No more than two of a specific divider style
+# per spawning, with specific chances on each style's doors.
+NAME:    crystal_crosses_arms_four
+TAGS:    unrand allow_dup crystal_crosses_four
+SUBST:   + : +++.
+TILE:    b = wall_emerald
+MAP
+b+b.b   bbbbb
+    .   b
+    b   b
+    b   b
+    b+bb bb+b
+        b   b
+        b   b
+        b   .
+    b.b+b   b.b+b
+    .
+    b
+    +
+    b
+ENDMAP
+
+NAME:    crystal_crosses_arms_two
+TAGS:    unrand allow_dup crystal_crosses_two
+SHUFFLE: +. / +. / .+
+SUBST:   + : ++.
+TILE:    b = wall_emerald
+MAP
+bb+bb   bbbbb
+    b   b
+    .   b
+    b   b
+    bbbb bbbb
+        b   b
+        b   .
+        b   b
+    bb.bb   bb+bb
+    b
+    +
+    b
+    b
+ENDMAP
+
+NAME:    crystal_crosses_arms_one
+TAGS:    unrand allow_dup crystal_crosses_one
+SHUFFLE: B+ / B+ / B+ / +B
+SUBST:   B = b, + : +.., b : bbn
+TILE:    b = wall_emerald
+MAP
+bb+bb   bbbbb
+    b   b
+    B   b
+    b   b
+    bbbb bbbb
+        b   b
+        b   B
+        b   b
+    bbBbb   bb+bb
+    b
+    +
+    b
+    b
+ENDMAP
+
 ################################################################################
 # Giving players the runaround...
 
@@ -398,12 +653,12 @@ cc....c.N..cc.0..ccZ..9G.EE.G9..Zcc..0.cc..K.c....cc
                   cccccccccccccccc
 ENDMAP
 
-NAME: grunt_runaround_doors_1
-TAGS: grunt_runaround_doors_1 allow_dup unrand
+NAME:    grunt_runaround_doors_1
+TAGS:    grunt_runaround_doors_1 allow_dup unrand
 SHUFFLE: ABCDEFGH
 SHUFFLE: IJKLMNOPQRSTUVWX
-SUBST: ABCDEFGIJ : +, HKLMNOPQRSTUVWX : c
-CLEAR: _
+SUBST:   ABCDEFGIJ : +, HKLMNOPQRSTUVWX : c
+CLEAR:   _
 MAP
             AA                BB
                 II        JJ
@@ -451,12 +706,12 @@ _
             FF                EE
 ENDMAP
 
-NAME: grunt_runaround_doors_2
-TAGS: grunt_runaround_doors_2 allow_dup unrand
+NAME:    grunt_runaround_doors_2
+TAGS:    grunt_runaround_doors_2 allow_dup unrand
 SHUFFLE: ABCDEFGH
 SHUFFLE: IJKLMNOPQRSTUVWX
-SUBST: ABCDEFGIJ : +, HKLMNOPQRSTUVWX : c
-CLEAR: _
+SUBST:   ABCDEFGIJ : +, HKLMNOPQRSTUVWX : c
+CLEAR:   _
 MAP
                   AA
                   AA
@@ -498,12 +753,12 @@ _
                   EE
 ENDMAP
 
-NAME: grunt_runaround_doors_3
-TAGS: grunt_runaround_doors_3 allow_dup unrand
+NAME:    grunt_runaround_doors_3
+TAGS:    grunt_runaround_doors_3 allow_dup unrand
 SHUFFLE: ABCDEFGH
 SHUFFLE: IJKLMNOPQRSTUVWX
-SUBST: ABCDEFGIJ : +, HKLMNOPQRSTUVWX : c
-CLEAR: _
+SUBST:   ABCDEFGIJ : +, HKLMNOPQRSTUVWX : c
+CLEAR:   _
 MAP
        AA        BB
 _
@@ -597,15 +852,16 @@ MONS:    very ugly thing
 KITEM:   h = smoky gem
 KFEAT:   O = enter_depths
 NSUBST:  1 = 1:2 / *:1
-SHUFFLE: O3hi
-SUBST:   i = .
+SHUFFLE: O3hG
+TILE:    G = depths_column
+FTILE:   .123OhG = floor_depthstone
 MAP
   ......
  ...cc...
 ..1....1..
 ..........
 .c..Oh..c.
-.c..i3..c.
+.c..G3..c.
 ..........
 ..1....1..
  ...cc...

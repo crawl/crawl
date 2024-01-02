@@ -36,11 +36,19 @@
 
 {{
 function init_protected_by_tso(e)
+  local h = "ego:holy_wrath good_item"
   e.tags('uniq_protected_by_tso')
+  e.kmons('A = angel')
+  e.kmons('1 = generate_awake daeva')
+  e.kmons('2 = vault warden ; great sword ' .. h .. ' | battleaxe .. ' .. h ..
+                             'glaive ' .. h .. ' | great mace ' .. h .. ' . ' ..
+                             ' . chain mail | plate armour')
+  e.kmons('3 = generate_awake vault guard')
   e.kfeat('A = altar_the_shining_one')
-  e.kfeat('- = runed_door')
-  e.kitem('A = any weapon ego:holy_wrath w:2 / nothing')
-  e.lua_marker('!', message_at_spot("You almost think you hear a voice: \"Seek not undue power, mortal.\"", "warning"))
+  e.kitem('A = any weapon ego:holy_wrath w:2 no_pickup / $')
+  e.lua_marker('!', message_at_spot("You almost think you hear a voice: " ..
+                                    "\"Seek not undue power, mortal.\"",
+                                    "warning"))
   e.tile('G = dngn_statue_angel')
 end
 
@@ -1933,24 +1941,23 @@ NAME:    abrahamwl_protected_by_tso_1
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
 TAGS:    vaults_hard vaults_orient_e
 WEIGHT:  4
-KMONS:   1A = generate_awake angel / generate_awake daeva
-KFEAT:   A = altar_the_shining_one
-FTILE:   _1 = floor_limestone
+COLOUR:  _2 = yellow
+FTILE:   _A2| = floor_limestone
 : init_protected_by_tso(_G)
 MAP
  xxxxx
  xcccx xxxxxxxxxxxxxx
  xc|cxxxxcccccccccccx
  xc_cxxxxc_........cx
- xc_cxxxxc_........cxx.
+ xc_cxxxxc_......3.cxx.
  xc_ccccxc_.G...G..cxx.
 xxc+ccGccc.........cxx.
-xcc__....+.........-xx.
-xc1__....+....A....-!+.
-xcc__....+.........-xx.
+xcc__....+.........=xx.
+xcA2_....+....1....=!+.
+xcc__....+.........=xx.
 xxc+ccGccc.........cxx.
  xc_ccccxc_.G...G..cxx.
- xc_cxxxxc_........cxx.
+ xc_cxxxxc_......3.cxx.
  xc_cxxxxc_........cx
  xc|cxxxxcccccccccccx
  xcccx xxxxxxxxxxxxxx
@@ -1961,11 +1968,10 @@ NAME:    abrahamwl_protected_by_tso_2
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
 TAGS:    vaults_hard vaults_orient_e
 WEIGHT:  4
-KMONS:   1A = generate_awake angel / generate_awake daeva
 SUBST:   T : T G:1
 SHUFFLE: %|
-COLOUR:  _ = yellow
-FTILE:   _A = floor_limestone
+COLOUR:  _2 = yellow
+FTILE:   _A2 = floor_limestone
 : init_protected_by_tso(_G)
 MAP
  xxxxx
@@ -1973,15 +1979,15 @@ MAP
 xxc|cxcxxxxxxxxxxxx
 xcc+ccccccccccccccx
 xc_Wxxxx.........cx
-xc_wWxxx.........cxx
+xc_wWxxx.......3.cxx
 xc_wwWxx..G.T.G..cxx
 xc_wwWxx.........cxx
-xc_www.+.........-xx.
-xcA____+....1....-!+.
-xc_www.+.........-xx.
+xc_www.+.........=xx.
+xcA_2__+.....1...=!+.
+xc_www.+.........=xx.
 xc_wwWxx.........cxx
 xc_wwWxx..G.T.G..cxx
-xc_wWxxx.........cxx
+xc_wWxxx.......3.cxx
 xc_Wxxxx.........cx
 xcc+ccccccccccccccx
 xxc%cxcxxxxxxxxxxxx
@@ -1993,11 +1999,10 @@ NAME:    abrahamwl_protected_by_tso_3
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
 TAGS:    vaults_hard vaults_orient_e
 WEIGHT:  4
-KMONS:   1A = generate_awake angel / generate_awake daeva
 SHUFFLE: |%
 SUBST:   T : T F:1
-COLOUR:  _ = yellow
-FTILE:   _A = floor_limestone
+COLOUR:  _2 = yellow
+FTILE:   _A2 = floor_limestone
 MARKER:  F = lua:fog_machine { cloud_type = "blessed fire", \
                 pow_min = 10, pow_max = 10, delay = 10, \
                 size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
@@ -2007,17 +2012,17 @@ MAP
     xxcccx
   xxxxc%cxxxxxxxxxxxx
  xxcccc+ccccccccccccx
-xxxcWWWWWx.........cx
+xxxcWWWWWx....3....cx
 xxxcW.T.Tx.........cxx
 xxxcW....x..G...G..cxx.
 xxxcW_...x.........cxx.
-xcccT____+.........-xx.
-xc|+A____+....1....-!+.
-xcccT____+.........-xx.
+xcccT____+.........=xx.
+xc|+A_2__+....1....=!+.
+xcccT____+.........=xx.
 xxxcW_...x.........cxx.
 xxxcW....x..G...G..cxx.
 xxxcW.T.Tx.........cxx
-xxxcWWWWWx.........cx
+xxxcWWWWWx....3....cx
  xxcccc+ccccccccccccx
   xxxxc*cxxxxxxxxxxxx
     xxcccx
@@ -2027,18 +2032,17 @@ ENDMAP
 NAME:   wander_protected_by_tso
 TAGS:   patrolling no_monster_gen no_item_gen vaults_hard vaults_orient_e
 WEIGHT: 4
-KMONS:  1A = generate_awake angel / generate_awake daeva
-COLOUR: _ : yellow
-FTILE:  _|%AU = floor_limestone
+COLOUR: _2 = yellow
+FTILE:  _|%AU2 = floor_limestone
 : init_protected_by_tso(_G)
 MAP
- xxxxxxxxxxxxxxxxx
-xxcccccccccccccccxxxx
-xcc.%.ccG..G..G.cccxx
-xc.U_U...........-cx.
-xc|_A___.....1...-!+.
-xc.U_U...........-cx.
-xcc.%.ccG..G..G.cccxx
+ xxxxxxxxxxxxxxxxxx
+xxcccccxccccccccccxxxx
+xcc.%.cccG..G.3G.cccxx
+xc.U_U..+.........=cx.
+xc|_A_2_+.....1...=!+.
+xc.U_U..+.........=cx.
+xcc.%.cccG..G.3G.cccxx
 xxcccccxcccccccccxxxx
  xxxxxxxxxxxxxxxxx
 ENDMAP

@@ -10,7 +10,7 @@
 
 function base_monster_setup(e)
   e.kmons("A = goblin / frilled lizard / giant cockroach / endoplasm / ball python /\
-           bat / kobold / rat / gnoll band /\
+           bat / kobold / rat / dart slug / gnoll band /\
            hobgoblin / jackal band / ribbon worm / adder / quokka /\
            gnoll bouda band / orc band / orc priest band /\
            glass eye / hound / iguana / ogre / orc wizard band /\

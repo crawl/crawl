@@ -899,16 +899,17 @@ ENDMAP
 NAME:    guppyfry_shop_earth
 TAGS:    no_monster_gen transparent
 DEPTH:   D:11-, Depths
-KMONS:   1 = gargoyle / basilisk / earth elemental / cyclops w:3
-KMONS:   2 = stone giant / catoblepas / deep troll earth mage / boulder beetle / \
+KMONS:   1 = gargoyle / basilisk / boulder beetle / cyclops w:3
+KMONS:   2 = stone giant / catoblepas / deep troll earth mage / \
              iron dragon w:4
 ITEM:    stone
-KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \
-         w:15 stone | w:15 large rock | w:8 sling | \
-         w:7 tin of tremorstones | w:8 wand of digging | \
-         w:5 randbook disc:earth | w:2 book of the earth | \
-         w:2 book of geomancy | w:2 book of iron | w:2 book of the moon | \
-         w:2 book of blasting | w:4 staff of earth | w:1 crystal plate armour
+KFEAT:   S = general shop type:Pet suffix:Rocks count:7 ; \
+             stone w:15 | large rock w:15 | sling w:8  | \
+             tin of tremorstones w:7 | wand of digging w:8 | \
+             staff of earth w:4 | granite talisman w:4 | \
+             randbook disc:earth w:5 | book of the earth w:2 | \
+             book of geomancy w:2 | book of iron w:2 | book of the moon w:2 | \
+             book of blasting w:2 | crystal plate armour w:1
 SUBST:   ? = 2d.
 : if you.absdepth() < 16 then
 SUBST:   2 = 1
@@ -917,7 +918,7 @@ MAP
 .......
 .xx+xx.
 .x???x.
-.m?v?m.
+.m?S?m.
 .x???x.
 .xx+xx.
 .......
@@ -931,8 +932,8 @@ DEPTH:   D:12-, Depths
 KMONS:   1 = vampire / bat
 KMONS:   2 = vampire / vampire mage / vampire knight
 KFEAT:   v = general shop type:Blood suffix:Bar count:7 ; \
-         w:70 nothing | w:10 any weapon ego:vampirism | \
-         w:9 randbook disc:necromancy | w:1 book of annihilations
+             nothing w:70 | any weapon ego:vampirism w:10 | \
+             randbook disc:necromancy w:9 | w:1 book of annihilations
 SUBST:   ? = 2.Y
 : if you.in_branch("D") then
 SUBST:   2 = 1
@@ -947,11 +948,11 @@ ENDMAP
 
 #####################################################
 # Sells only evil items.
-NAME: nicolae_evil_shop
+NAME:   nicolae_evil_shop
+TAGS:   transparent
 WEIGHT: 2
-TAGS: transparent
-DEPTH: D:6-, Depths
-SUBST: G : YlG
+DEPTH:  D:6-, Depths
+SUBST:  G : YlG
 # I couldn't decide on just one alliterative name.
 : local shopname = util.random_from({"type:Blasphemy suffix:Boutique",
 :   "type:Evil suffix:Emporium", "type:Profane suffix:Products",
@@ -1166,15 +1167,15 @@ MAP
 ENDMAP
 
 # Eat the purple.
-NAME: nicolae_transmutations_shop
-TAGS: transparent no_item_gen no_monster_gen extra
-DEPTH: D:8-, Depths, Zot
+NAME:   nicolae_transmutations_shop
+TAGS:   transparent no_item_gen no_monster_gen extra
+DEPTH:  D:8-, Depths, Zot
 COLOUR: m = magenta
-TILE: m = dngn_transparent_wall_magenta
-KFEAT: S = general shop type:Changing suffix:Room count:7 ; \
-   potion of mutation | potion of lignification | book of transmutation w:5 | \
-   wand of polymorph | any talisman w:30 \
-   | randbook disc:alchemy w:5 | plutonium_sword w:1
+TILE:   m = dngn_transparent_wall_magenta
+KFEAT:  S = general shop type:Changing suffix:Room count:7 ; \
+            potion of mutation | potion of lignification | wand of polymorph | \
+            book of transmutation w:5 | any talisman w:30 | \
+            randbook disc:alchemy w:5 | plutonium_sword w:1
 MARKER: F = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 50, \
    pow_max = 50, delay = 1, size = 1, walk_dist = 0, start_clouds = 1, \
    spread_rate = 0, excl_rad = 0 }
@@ -1440,7 +1441,7 @@ ENDMAP
 NAME:    nicolae_shop_gadgets
 TAGS:    transparent
 DEPTH:   D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
-KFEAT:   S = general shop type:Gadget suffix:Gallery count:8 ; \
+KFEAT:   S = general shop type:Gadget suffix:Gallery count:4 ; \
          any wand | any misc
 SHUFFLE: cvmb
 MAP

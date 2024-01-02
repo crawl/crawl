@@ -30,6 +30,7 @@
 {{
 -- Functionality for some Grunt vaults.
 function grunt_ministairs_setup(e, hatches)
+  e.tags("luniq_generic_threat_stair")
   if you.in_branch("Crypt") or you.in_branch("Zot") then
     e.shuffle("GT")
     if you.in_branch("Crypt") then
@@ -415,10 +416,10 @@ xxxxE.Exxxx
 ENDMAP
 
 NAME:   dreamdust_wasp_nest
-TAGS:   no_monster_gen
+TAGS:   no_monster_gen uniq_hornetnest
 DEPTH:  D:12-, Lair, Spider, Depths
 WEIGHT: 5
-NSUBST: . = 6=11. / 6=1.. / .
+NSUBST: . = 6 = 11. / 6 = 1.. / *:.
 : if you.in_branch("Depths") then
 SUBST:  x = b
 COLOUR: b = silver
@@ -1020,7 +1021,7 @@ NAME:    hangedman_parallel_progression
 TAGS:    patrolling no_monster_gen transparent
 TAGS:    layout_rooms layout_corridors
 DEPTH:   D:11-
-MONS:    rat, bat, frilled lizard, ribbon worm, endoplasm
+MONS:    rat, bat, frilled lizard, dart slug, endoplasm
 MONS:    giant cockroach, jackal
 KMONS:   8 = ball python / adder w:8
 KMONS:   A = river rat

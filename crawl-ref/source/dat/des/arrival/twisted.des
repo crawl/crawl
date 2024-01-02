@@ -646,12 +646,12 @@ ENDMAP
 ##############################################################################
 NAME:    dpeg_arrival_caged_fury
 TAGS:    arrival no_rotate
+ORIENT:  float
 MONS:    w:30 nothing / giant cockroach / w:2 ribbon worm
 MONS:    w:30 nothing / endoplasm
 MONS:    w:20 nothing / jackal / rat
 MONS:    w:30 nothing / endoplasm / w:2 jelly / giant cockroach / w:2 ribbon worm / \
          w:5 jackal / w:5 rat
-ORIENT:  float
 FTILE:   1234ABCDEabcdem = floor_dirt
 SHUFFLE: abcde / fghij
 SUBST:   f=A, g=B, h=C, i=D, j=E

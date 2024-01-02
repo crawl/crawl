@@ -570,7 +570,7 @@ SHUFFLE:  |de
 : item(dgn.loot_scrolls)
 ITEM:     scroll of blinking ident:all
 MONS:     frilled lizard w:20 / ball python / giant cockroach w:20 / \
-          quokka / adder w:8
+          dart slug / adder w:8
 NSUBST:   . = 72 = 1.. / *:.
 NSUBST:   ! = 1:! / 1:!!!!. / *:w
 KFEAT:    ! = w
@@ -616,17 +616,16 @@ TAGS:     no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
 SUBST:    - = WWWW.
 KMONS:    1 = frilled lizard / ball python / giant cockroach / \
-              quokka / endoplasm / adder w:4
-NSUBST:   W = 160 = 1WWW / *:W
-KFEAT:    1 = W
-KFEAT:    W = W
-NSUBST:   ! = 1:! / 1:!!!!. / *:w
-KFEAT:    ! = w
-COLOUR:   1! = green
+              dart slug / endoplasm / adder w:4
 KMONS:    ! = bullfrog
-SHUFFLE:  ed|
 : item(dgn.loot_scrolls)
 ITEM:     scroll of blinking ident:all
+KFEAT:    1W = W
+KFEAT:    ! = w
+NSUBST:   W = 160 = 1WWW / *:W
+NSUBST:   ! = 1:! / 1:!!!!. / *:w
+COLOUR:   1! = green
+SHUFFLE:  ed|
 : sewer_setup(_G)
 MAP
            ccccccccccccc
@@ -909,15 +908,15 @@ ENDMAP
 NAME:   sewer_hellmonk_bad_rat
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
+MONS:   rat, river rat
+KMONS:  3 = hell rat
 ITEM:   any potion / any scroll
 : item(dgn.loot_potions)
 : item(dgn.loot_scrolls)
-MONS:   rat, river rat
-KMONS:  3 = hell rat
+KFEAT:  3 = shallow_water
 NSUBST: - = 20 = 1... / 8 = 2... / *:.
 SUBST:  . = WWW..
 SUBST:  d = ddddef*
-KFEAT:  3 = shallow_water
 COLOUR: 3 = lightgreen
 : sewer_setup(_G)
 MAP
@@ -956,7 +955,7 @@ KMONS:   " = bat
 KMONS:   ? = bat / frilled lizard / ball python / giant cockroach / \
              quokka / endoplasm w:4 / ribbon worm w:4 / adder w:2
 MONS:    ribbon worm w:2 / ball python / jackal / adder w:5 / river rat w:5
-MONS:    adder, river rat, brain worm, jelly
+MONS:    adder, river rat, brain worm, dart slug
 ITEM:    any scroll, potion of enlightenment ident:type
 : item(dgn.aux_armour)
 : item(dgn.loot_potions)
@@ -964,9 +963,9 @@ ITEM:    any scroll, potion of enlightenment ident:type
 KFEAT:   " = w
 KFEAT:   ? = W
 SHUFFLE: QED$ de
-NSUBST:  Q = 1:442 / 2 = 2.. / * = ., E = 1:553 / 2 = 33. / * = .
+NSUBST:  Q = 1:442 / 2 = 2.. / * = ., E = 3 = 3355. / * = .
 SUBST:   D : fgh, - = WW.
-NSUBST:  e = 2:e / * = e$$$, f = 1:f / *:', g = 2:g / *:', h = 2:h / *:'
+NSUBST:  e = 2:e / *:$, f = 1:f / *:', g = 2:g / *:', h = 2:h / *:'
 NSUBST:  w = 10 = "w / *:w, W = 42 = ?WWW / *:W, ! = 32 = 1... / *:.
 COLOUR:  " = green
 COLOUR:  ? = lightgreen
@@ -1017,13 +1016,13 @@ KMONS:  K = crocodile
 KFEAT:  gsh = W
 KFEAT:  GnHJ = w
 KFEAT:  O = open_sea
-NSUBST: 1 = 1:K / *:1.
+NSUBST: 1 = 1:K / 2:. / * = 1.
 SUBST:  2 = 2., J = Jn, h = hW, g = gggW
 COLOUR: gh = lightgreen
 COLOUR: HJ = blue
 COLOUR: G = green
 COLOUR: s = cyan
-KITEM:  M = potion of enlightenment q:4 ident:type
+KITEM:  M = potion of enlightenment q:3 ident:type
 KITEM:  N = scroll of teleportation q:2 ident:type
 : sewer_setup(_G)
 MAP

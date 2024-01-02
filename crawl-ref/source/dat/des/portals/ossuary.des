@@ -713,7 +713,7 @@ MONS:    generate_awake ball python zombie / generate_awake hound zombie /\
          generate_awake howler monkey zombie / generate_awake bullfrog zombie /\
          w:5 generate_awake mummy
 MONS:    w:15 withered plant /\
-         mummy name:bog n_adj col:green \
+         mummy name:bog n_adj col:green tile:mons_bog_mummy \
          spells:throw_frost.18.wizard;slow.27.wizard / \
          w:5 nothing
 MONS:    crocodile zombie / killer bee zombie w:4
@@ -977,7 +977,7 @@ KMONS:  6 = spectral bullfrog / spectral scorpion
 ITEM:   any potion / any scroll / nothing w:1
 KFEAT:  IP`" = floor
 KFEAT:  ^ = alarm trap
-NSUBST: I = 1:5i / 8:I / 5 = I` / *:`, P = 1:6p / 8:P / 5 = P" / *:"
+NSUBST: I = 1:5i / 7:I / 5 = I` / *:`, P = 1:6p / 7:P / 5 = P" / *:"
 COLOUR: I` = cyan
 COLOUR: P" = green
 SUBST:  ' = ^ .:70
@@ -1028,7 +1028,7 @@ KFEAT:   ^ = teleport trap
 KFEAT:   t = petrified_tree
 NSUBST:  B : 1:+ / 1:+ccc / *:c, C : 1:+ / 1:+ccc / *:c
 SHUFFLE: VX, yzYZ
-NSUBST:  y = 1:n / * = c:20 n:8, z = 1:n / * = c:20 n:4
+NSUBST:  y = 1:n / * = c:20 n:8, z = 2:n / * = c:20 n:4
 NSUBST:  Y = 1:n / * = c:20 n:4, Z = 1:n / * = c:20 n:1
 NSUBST:  4 = 1:4 / 1:42 / *:2
 SUBST:   0 = 1:10 2:1

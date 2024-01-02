@@ -1313,16 +1313,18 @@ KMONS:      0 = col:red iron golem hd:5 spells:corrupting_pulse.36.magical \
                 tile:mons_flesh_golem name_descriptor
 KMONS:      & = col:mutagenic primal ox-ox-weird mutant beast \
                 name:Cigotuvi's_Monster name_replace tile:mons_cigotuvis_monster
-ITEM:       potion of mutation
-ITEM:       potion of mutation q:1, potion of mutation
+ITEM:       potion of mutation q:1 ident:type
+ITEM:       randbook disc:alchemy disc2:necromancy owner:Cigotuvi
+ITEM:       flux talisman randart / maw talisman randart / \
+            serpent talisman randart / statue talisman w:8 / \
+            dragon-blood talisman / storm talisman w:8 / \
+            talisman of death w:2
+ITEM:       staff of death ident:type, scroll of poison ident:type
 ITEM:       w:5 any jewellery randart / w:5 hat_of_the_alchemist / \
             cigotuvi's_embrace
-ITEM:       randbook disc:alchemy disc2:necromancy owner:Cigotuvi
-ITEM:       any talisman
-ITEM:       staff of death, scroll of poison
-SHUFFLE:    de / h~ / j|
-NSUBST:     de = 1:e / 1:f / *:d, g = 1:g / *:$
-NSUBST:     h = 1:h / 2:i / *:., j = 1:j / *:k
+SHUFFLE:    d^ / e~ / g|
+NSUBST:     ^ = 2:d / 2:. / * = dd., e = 1:e / 2:f / *:.
+NSUBST:     g = 1:g / *:h, i = 1:i / *:$
 SUBST:      4 = 4 5:2, " = 6:1 .:16, |~ = .
 KPROP:      -FGHIJKPR = no_tele_into
 SUBST:      - = ., F = 1, G = 2, H = 3, I = 4, J = 6, K = 7, P = !, R = W
@@ -1368,21 +1370,21 @@ epilogue{{
 }}
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccc
-ccjjjcccc|cccccccccccAccccccccccccWWWW~5hcccc
-c|...|c....|ccc---ccc+cccccccccccWh~~~.45hccc
-c|8........|cc-I---m...m--ccccccW~.....845hcc
-c.&5.......cc---G--m.7.m-F-cccccW~........hcc
+ccgggcccc|cccccccccccAccccccccccccWWWW~5ecccc
+c|...|c....|ccc---ccc+cccccccccccWe~~~.45eccc
+c|8........|cc-I---m...m--ccccccW~.....845ecc
+c.&5.......cc---G--m.7.m-F-cccccW~........ecc
 c.8........cc---H--m...m-I--ccccW~.......~Wcc
 c|.........cc-cccccm...mc---ccccc.......~Wccc
-c|...|ccc+ccccc--cccc+cccccccccccc.....hWcccc
-ccjjjccc..ccccIII-cm...m--H--ccccc+cccccccccc
+c|...|ccc+ccccc--cccc+cccccccccccc.....eWcccc
+ccgggccc..ccccIII-cm...m--H--ccccc+cccccccccc
 cccccccc..ccc--P---m.7.m-F--cccccc""ccccccccc
-cceecccc..ccc-III--m...m---ccccccc""cc$$g$$cc
-ceddecc...cccc----cm...m-cccRccccc""c...c...c
-cedde+...cccccc--cccc+cccc---Rcccc""c...c...c
-ceddec...ccccccccc-m...m-KK---Rccc""ccc+c+ccc
-cceccccc+cccccccc--m.7.m---I--Rccc""c...9...c
-ccccccc...cccc---F-m...m----K-ccgc""c...6...c
+cc^^cccc..ccc-III--m...m---ccccccc""cc$$i$$cc
+c^dd^cc...cccc----cm...m-cccRccccc""c...c...c
+c^dd^+...cccccc--cccc+cccc---Rcccc""c...c...c
+c^dd^c...ccccccccc-m...m-KK---Rccc""ccc+c+ccc
+cc^ccccc+cccccccc--m.7.m---I--Rccc""c...9...c
+ccccccc...cccc---F-m...m----K-ccic""c...6...c
 cccc.........c--G--m...mc----cc$$c""c..6669.c
 c.67...ccc...cc--cccc+cccc--ccc+cc""c..66..cc
 c...ccccccc+cccccc.m.....cccc.666c""+.....ccc

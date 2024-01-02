@@ -5088,9 +5088,10 @@ ORIENT:   encompass
 WEIGHT:   8
 KMONS:    P = demonic plant
 KFEAT:    L = altar_lugonu
+KFEAT:    T = demonic_tree
 SUBST:    . = .:70 x:15 w l:5, ' = ., x = xxxcv
 : local altar_count = get_altar_count(_G, 11)
-: nsubst("O = " .. altar_count .. ":B / 6:L / * = LP")
+: nsubst("O = " .. altar_count .. ":B / 6:L / * = L:50 P:50 T")
 : local crnd = crawl.random2(4)
 : if crnd == 0 then
 LROCKCOL: magenta

@@ -877,6 +877,7 @@ menkaure MONS_MENKAURE
 khufu MONS_KHUFU
 %sdir mon/undead
 mummy MONS_MUMMY
+mon/vault/bog_mummy MONS_BOG_MUMMY
 guardian_mummy MONS_GUARDIAN_MUMMY
 royal_mummy MONS_ROYAL_MUMMY
 mummy_priest MONS_MUMMY_PRIEST

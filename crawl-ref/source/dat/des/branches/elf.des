@@ -57,15 +57,15 @@ function elf_setup(e)
 end
 
 function elf_loot_randomisation(e)
-  e.kfeat("$ = $")
-  e.kfeat("* = *")
-  e.kfeat("| = |")
+  e.kitem("$ = $")
+  e.kitem("* = *")
+  e.kitem("| = |")
+  e.kitem("R = gold, shimmering gem")
   e.subst("| = | *:2")
   e.nsubst("$ = 1:R / *:$")
   e.subst("$ = $:20 *:4 |:1")
   e.subst("* = * |:3")
   e.nsubst("* = 2:$ / *:*")
-  e.kitem("R = gold, shimmering gem")
 end
 
 -- The standard Elf:$ monster set

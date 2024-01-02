@@ -390,8 +390,7 @@ mset(with_props(spec_fn(function ()
     e = math.max(1, math.floor(you.depth() / 3) + you.zigs_completed() - 8)
   end
   return "ophan w:20 / apis w:20 / cherub w:20 / angel w:20 / " ..
-         "sun moth / daeva w:" .. d .. " / " ..
-         "pearl dragon w:" .. d .. " / seraph w:" .. e
+         "daeva w:" .. d .. " / pearl dragon w:" .. d .. " / seraph w:" .. e
 end), { weight = 2 }))
 
 mset(spec_fn(function ()

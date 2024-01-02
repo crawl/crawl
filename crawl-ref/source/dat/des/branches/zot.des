@@ -3117,15 +3117,16 @@ NAME:    zot_minivault_1
 TAGS:    transparent
 WEIGHT:  20
 DEPTH:   Zot, !Zot:$
+FTILE:   .@0 = floor_rough_lightmagenta
 MAP
  xxxxxxxxxxx
-xxx...0...xxx
-xx..0...0..xx
+xxx...0...cxx
+xx..0...0..cx
 x0.........0x
 @..0..0..0..@
 x0.........0x
-xx..0...0..xx
-xxx...0...xxx
+xc..0...0..xx
+xxc...0...xxx
  xxxxxxxxxxx
 ENDMAP
 
@@ -3134,17 +3135,18 @@ NAME:    zot_minivault_2
 TAGS:    transparent
 WEIGHT:  5
 DEPTH:   Zot, !Zot:$
-SUBST:   > = }]}
+SUBST:   > = }}]
+FTILE:   .@0}] = floor_rough_lightmagenta
 MAP
  xxxxxxxxxxx
 xxx0.....0xxx
 xx....0....xx
 x0...xxx...0x
-@...xxxxx...@
+@...cxxxc...@
 x0...xxx...0x
 xx....0....xx
 xxx0.....0xxx
- xxxxx.xxxxx
+ xxxxc.cxxxx
 xx...0.0...xx
 x...........x
 x.....>.....x
@@ -3157,25 +3159,26 @@ NAME:    zot_minivault_3
 TAGS:    transparent
 WEIGHT:  5
 DEPTH:   Zot, !Zot:$
-SUBST:   < = ([{000
+SUBST:   < = {[(TUV
+FTILE:   .@0{[(TUV = floor_rough_lightmagenta
 MAP
  xxxxxxxxxxx
 xxxx.....xxxx
-xx....x...xxx
+xx....c...xxx
 xx.<.xxx..xxx
 xx...xx..xxxx
 xxxxxx..xxxxx
 xxxx.....xxxx
 xxx..0x0..xxx
 x0...xxx...0x
-@..0xxxxx0..@
+@..0cxxxc0..@
 x0...xxx...0x
 xxx..0x0..xxx
 xxxx.....xxxx
 xxxxx..xxxxxx
 xxxx..xx...xx
 xxx..xxx.<.xx
-xxx...x....xx
+xxx...c....xx
 xxxx.....xxxx
  xxxxxxxxxxx
 ENDMAP
@@ -3186,15 +3189,16 @@ TAGS:    transparent
 DEPTH:   Zot, !Zot:$
 COLOUR:  n = magenta
 TILE:    n = dngn_transparent_stone_magenta
+FTILE:   .@0n = floor_rough_lightmagenta
 MAP
  xxxxxxxxxxx
-xxx0.....0xxx
-xx..nn0nn..xx
+xxx0.....0cxx
+xx..nn0nn..cx
 x..n0...0n..x
 @..n.0.0.n..@
 x..n0...0n..x
-xx..nn0nn..xx
-xxx0.....0xxx
+xc..nn0nn..xx
+xxc0.....0xxx
  xxxxxxxxxxx
 ENDMAP
 
@@ -3202,50 +3206,50 @@ ENDMAP
 NAME:    zot_minivault_5
 TAGS:    transparent
 DEPTH:   Zot, !Zot:$
-COLOUR:  n = magenta
+COLOUR:  .n = magenta
 TILE:    n = dngn_transparent_stone_magenta
+FTILE:   .@0n = floor_rough_lightmagenta
 MAP
  xxxxxxxxxxx
-xxxnn...0.xxx
-xxnn0.0.n..xx
+xxxnn...0.cxx
+xxnn0.0.n..cx
 xnnn....nn.0x
 @.nn0.0.0nn.@
 x0.nn....nnnx
-xx..n.0.0nnxx
-xxx.0...nnxxx
+xc..n.0.0nnxx
+xxc.0...nnxxx
  xxxxxxxxxxx
 ENDMAP
 
 # Based on orb_nicolae_swirls
-# Guarantees an upstairs and downstairs, and makes sure the player can see
-# them both from one side.
-# Stone is bordered by rock to make it stand out less and not look ugly.
+# Guarantees an upstairs and downstairs,
+# and makes sure the player can see them both from one side.
 NAME:    zot_minivault_6
 TAGS:    transparent
 DEPTH:   Zot, !Zot:$
-SUBST:   < = ([{
-SUBST:   > = }]}
+SUBST:   < = {{[, > = }}]
 COLOUR:  n = magenta
 TILE:    n = dngn_transparent_stone_magenta
+FTILE:   .@0{[}]n = floor_rough_lightmagenta
 MAP
  xxxxxxxxxxxxx
 xxcccccccccccxx
 xccxxxxxxxxxccx
-xcxx.......xxcx
-xcx0...>...0xcx
-xcx.........xcx
-xcxx0.....0xxcx
-xcxxxxx...xxxxx
+xcxx.......xncx
+xcx0...>...0ncx
+xcx.........ncx
+xcxx0.....0cccx
+xcxxxxx...xcxxx
 xcxxxx..0nnn.
-xxxx...0nnn0@
+xnxx...0nnn0@
   ...0nnn....
-  @0nnn0...xxxx
+  @0nnn0...xxnx
   .nnn...xxxxcx
-xxxxx0..xxxxxcx
-xcxx.......xxcx
-xcx.........xcx
-xcx0...<...0xcx
-xcxx.......xxcx
+xxxcx0..xxxxxcx
+xccc.......xxcx
+xcn.........xcx
+xcn0...<...0xcx
+xcnx.......xxcx
 xccxxxxxxxxxccx
 xxcccccccccccxx
  xxxxxxxxxxxxx
@@ -3256,12 +3260,13 @@ NAME:    zot_minivault_7
 TAGS:    transparent
 WEIGHT:  5
 DEPTH:   Zot, !Zot:$
-SUBST:   > = }]}
+SUBST:   > = }}]
+FTILE:   .@0}] = floor_rough_lightmagenta
 MAP
  xxxxxxxxx
 xx...0...xx
 x0.0...0.0x
-x..xx.xx..x
+x..xc.cx..x
 x..x...x..x
 x..x.0.x..x
 x..x...x..x
@@ -3275,7 +3280,7 @@ x..xx.xx..x
 x..x...x..x
 x..x.0.x..x
 x..x...x..x
-x..xx.xx..x
+x..xc.cx..x
 x0.0...0.0x
 xx...0...xx
  xxxxxxxxx
@@ -3286,14 +3291,15 @@ NAME:    zot_minivault_8
 TAGS:    transparent
 WEIGHT:  5
 DEPTH:   Zot, !Zot:$
-SUBST:   > = }]}
+SUBST:   > = }}]
+FTILE:   .@0}] = floor_rough_lightmagenta
 MAP
  xxxxxxxxx
 xxxx...xxxx
 xxx0...0xxx
 xxx..>..xxx
 xxx0...0xxx
-xxxx...xxxx
+xxxc...cxxx
 xxxx0.0xxxx
 x00x...x00x
 x..x...x..x
@@ -3304,7 +3310,7 @@ x..x0.0x..x
 x.0x...x0.x
 x.0x...x0.x
 x..x0.0x..x
-x..x...x..x
+x..c...c..x
 x.........x
 xx.......xx
  xxxxxxxxx
@@ -3541,12 +3547,14 @@ NAME:   grunt_zot_stairs_mandelzot
 TAGS:   no_monster_gen
 DEPTH:  Zot, !Zot:$
 ORIENT: east
-SUBST:  } = }:80 >, ] = ]:80 >, ) = ):80 >
-MONS:   nonbase draconian, base draconian w:30 / nothing, moth of wrath
+MONS:   nonbase draconian, base draconian, moth of wrath
 MONS:   fire dragon w:30 / ice dragon w:30 / shadow dragon w:20 / \
         storm dragon w:50 / bone dragon w:30 / golden dragon w:35
-MONS:   Killer Klown / electric golem w:5 / curse toe w:5 / nothing
+MONS:   Killer Klown / electric golem w:5 / \
+        curse toe w:5 / protean progenitor w:5
 MONS:   orb of fire
+SUBST:  2 = 222., 5 = 55.
+SUBST:  } = }:80 >, ] = ]:80 >, ) = ):80 >
 MAP
                    xxxx
                    xllxxx
@@ -3632,19 +3640,18 @@ MAP
    ..@..
 ENDMAP
 
-
-NAME: nicolae_zot_stationary_front
-TAGS: transparent no_pool_fixup patrolling
-DEPTH: Zot
-ORIENT: float
+NAME:    nicolae_zot_stationary_front
+TAGS:    transparent no_pool_fixup patrolling
+DEPTH:   Zot
+ORIENT:  float
+KMONS:   R = red draconian scorcher
+KMONS:   C = white draconian stormcaller
+KMONS:   D = golden dragon
+KMONS:   B = blizzard demon
+KFEAT:   r = c
 SHUFFLE: Gg/Gg/Gg/Hh, Pp/Pp/Pp/Qq
-SUBST: GP = x, g = r, p = c, HQ = @, hq = .
-COLOUR: r = red, c = blue
-KMONS: R = red draconian scorcher
-KMONS: C = white draconian stormcaller
-KMONS: D = fire dragon
-KMONS: I = ice dragon
-KFEAT: r = c
+SUBST:   GP = x, g = r, p = c, HQ = @, hq = .
+COLOUR:  r = red, c = blue
 MAP
     xxx                   xxx
    xxrxx                 xxrxx
@@ -3653,21 +3660,21 @@ MAP
 xxrrlllrrxx           xxrrlllrrxx
 xrrllDllrrxxxxxxPxxxxxxrrllDllrrxxxxxxPxxxxx
 rrll...llrrcccccpcccccrrll...llrrcccccpccccc
-@....R..........C..........R..........C....@
+@....R..........C...C..R...R..........C....@
 rrrrrgrrrrrccw.....wccrrrrrgrrrrrccw.....wcc
 xxxxxGxxxxxxcww...wwcxxxxxxGxxxxxxcww...wwcx
-           xccwwIwwccx           xccwwIwwccx
+           xccwwBwwccx           xccwwBwwccx
            xxccwwwccxx           xxccwwwccxx
             xxcccccxx             xxcccccxx
              xxxxxxx               xxxxxxx
 ENDMAP
 
-NAME: amethyst_zot_foddershock
-TAGS: no_monster_gen transparent
-DEPTH: Zot, !Zot:$
-MONS: lightning spire, patrolling electric golem
+NAME:   amethyst_zot_foddershock
+TAGS:   no_monster_gen transparent
+DEPTH:  Zot, !Zot:$
+MONS:   lightning spire, patrolling electric golem
+KMONS:  ! = patrolling death cob
 NSUBST: % = 2:!, % = 2:a
-KMONS: ! = patrolling death cob
 :dgn.delayed_decay(_G, 'a', 'random draconian corpse')
 MAP
 @xxxxx@

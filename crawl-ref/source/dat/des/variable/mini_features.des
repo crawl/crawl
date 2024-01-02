@@ -4219,16 +4219,15 @@ ENDMAP
 # Little wisps of steam around the lava, and then occasionally a big
 # eruption. No warning needed here - the steam does very little damage.
 NAME:   lemuel_old_faithful
-DEPTH:  D:11-, Depths, Lair, Geh
 TAGS:   uniq_geyser no_monster_gen transparent
-MONS:   nothing,nothing
-MARKER: 1 = lua:fog_machine { cloud_type="steam", \
+DEPTH:  D:11-, Depths, Lair, Geh
+MARKER: s = lua:fog_machine { cloud_type="steam", \
             pow_min = 2, pow_max = 5, delay = 25, \
             size = 2, walk_dist = 3, spread_rate= 10 }
-MARKER: 2 = lua:fog_machine { cloud_type="steam", \
+MARKER: S = lua:fog_machine { cloud_type="steam", \
             pow_min = 10, pow_max = 20, delay = 750, \
             size = 10, walk_dist = 1, spread_rate= 75 }
-SUBST:  1 = l, 2 = l
+SUBST:  s = l, S = l
 SUBST:  l = l w:20
 SUBST:  ? : w. , ! : w. , & : w.
 :  if you.in_branch("Geh") then
@@ -4242,8 +4241,8 @@ MAP
 &&&&&wwwww.....
 &&&wwwwwwwww&&.
 .wwwwwlwwwwwww&
-..&wwl1lwwwww&&
-...wwwl2lwww&&.
+..&wwlslwwwww&&
+...wwwlSlwww&&.
 ....wwwlww&&...
 ..!!wwwww......
 ..!!!www.......
@@ -4256,13 +4255,13 @@ NAME:   lemuel_another_geyser
 DEPTH:  D:11-, Depths, Lair
 TAGS:   uniq_geyser no_monster_gen layout_rooms transparent no_descent
 MONS:   nothing,nothing
-MARKER: 1 = lua:fog_machine { cloud_type="steam", \
+MARKER: s = lua:fog_machine { cloud_type="steam", \
             pow_min = 2, pow_max = 5, delay = 25, \
             size = 3, walk_dist = 3, spread_rate= 20 }
-MARKER: 2 = lua:fog_machine { cloud_type="steam", \
+MARKER: S = lua:fog_machine { cloud_type="steam", \
             pow_min = 15, pow_max = 30, delay = 750, \
             size = 12, walk_dist = 1, spread_rate= 99 }
-SUBST:  1 = l, 2 = l
+SUBST:  s = l, S = l
 SUBST:  l = lw
 SUBST:  ? : wlx
 MAP
@@ -4274,9 +4273,9 @@ xxxxxwwxxxx
 xxxxxxxwxxx
 xxxxxxxwxxx
 xx??xxwxxxx
-xx??lw1wxxx
+xx??lwswxxx
 xxxxxlwwwxx
-xxxxxl2xxxx
+xxxxxlSxxxx
 xxxxxxxxxxx
 ENDMAP
 
@@ -4295,12 +4294,11 @@ ENDMAP
 
 NAME:   lemuel_flame_loot_1
 TAGS:   no_tele_into
-DEPTH:  D, Depths, Elf, Zot
-ITEM:   nothing
+DEPTH:  D, Depths, Elf, Zot, !Zot:$
 SUBST:  * = *.
 SUBST:  * : *$
 NSUBST: @ = 2:@ / *:@.
-MARKER: d = lua:fog_machine { cloud_type = "flame", \
+MARKER: f = lua:fog_machine { cloud_type = "flame", \
              pow_min = 10, pow_max = 10, delay = 10, \
              size = 2, walk_dist = 0, spread_rate= 0 }
 SUBST:  ' = .
@@ -4310,15 +4308,15 @@ TAGS:   extra
 MAP
 ccccc.@.ccccc
 ccccc'''ccccc
-ccccc'd'ccccc
+ccccc'f'ccccc
 ccccc'''ccccc
 ccccc...ccccc
 .'''.***.'''.
-@'d'.***.'d'@
+@'f'.***.'f'@
 .'''.***.'''.
 ccccc...ccccc
 ccccc'''ccccc
-ccccc'd'ccccc
+ccccc'f'ccccc
 ccccc'''ccccc
 ccccc.@.ccccc
 ENDMAP

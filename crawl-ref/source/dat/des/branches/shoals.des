@@ -325,6 +325,57 @@ MAP
   ...
 ENDMAP
 
+NAME:   nicolae_shoals_former_cling_halls
+TAGS:   no_pool_fixup extra no_descent
+DEPTH:  Shoals:2-, !Spider:$
+ORIENT: float
+NSUBST: D = 2=w / x, E = 2=w / x, F = 2=w / x
+SUBST:  ' = ..wx, . = W...., H = x_, J = xw
+KMASK:  Ww = no_monster_gen
+CLEAR: _
+MAP
+ Hxx.......xxH
+Hxxww'w'w'wwxxH
+HxJwwDwEwFwwJxH
+HxJwwDwEwFwwJxH
+HxJwwDwEwFwwJxH
+HxJwwDwEwFwwJxH
+HxJwwDwEwFwwJxH
+HxJww'w.w'wwJxH
+HxJww.$>$.wwJxH
+HxJww.....wwJxH
+HxJwwwwwwwwwJxH
+HxJwwwwwwwwwJxH
+HxJJJJJJJJJJJxH
+HxxxxxxxxxxxxxH
+ HHHHHHHHHHHHH
+ENDMAP
+
+NAME:    nicolae_shoals_former_cling_ruins
+TAGS:    no_pool_fixup extra no_descent
+DEPTH:   Shoals:2-
+NSUBST:  D = 1:wx / *:x, E = wx / x, F = wx / x, H = wx / x
+NSUBST:  J = 2:w / *:x, K = 2=w / x, L = 2=w / x, M = 2=w / x, N = ' / 'x / x
+SUBST:   O = x', ' = W..., P = xw
+KMASK:   Ww = no_monster_gen
+MAP
+xxxO'''''''Oxxx
+x'O'wwwwwww'O'x
+xO'OwJJJJJwO'Ox
+O'OOwwwwwwwOO'O
+'wwwPwDDDwPwww'
+'wMwwwwwwwwwKw'
+'wMwHw$N'wEwKw'
+'wMwHwN>NwEwKw'
+'wMwHw'N$wEwKw'
+'wMwwwwwwwwwKw'
+'wwwPwFFFwPwww'
+O'OOwwwwwwwOO'O
+xO'OwLLLLLwO'Ox
+x'O'wwwwwww'O'x
+xxxO'''''''Oxxx
+ENDMAP
+
 NAME: nicolae_shoals_seven_spires
 TAGS: transparent water_ok extra
 MAP
