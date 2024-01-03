@@ -1318,13 +1318,22 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mg.behaviour > NUM_BEHAVIOURS)
     {
         if (mg.behaviour == BEH_FRIENDLY)
+        {
             mon->attitude = ATT_FRIENDLY;
+            mon->flags   |= MF_NO_REWARD;
+        }
 
         if (mg.behaviour == BEH_GOOD_NEUTRAL)
+        {
             mon->attitude = ATT_GOOD_NEUTRAL;
+            mon->flags   |= MF_WAS_NEUTRAL;
+        }
 
         if (mg.behaviour == BEH_NEUTRAL)
+        {
             mon->attitude = ATT_NEUTRAL;
+            mon->flags   |= MF_WAS_NEUTRAL;
+        }
 
         mon->behaviour = BEH_WANDER;
     }

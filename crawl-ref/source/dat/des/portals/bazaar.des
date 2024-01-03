@@ -99,7 +99,18 @@ function bazaar_setup(e, randomise_tileset, shop_halo)
   e.kmons("K = " .. cust)
   e.kfeat("< = stone_arch")
   e.kfeat("> = exit_bazaar")
-  e.nsubst(". = 1:K / 2 = K. / 3 : K .:260 / *:.")
+
+  -- Don't place any other customers if you'd hate them, or if they'd hate you.
+  if you.get_base_mutation_level("hated by all") == 1 then
+      crawl.mpr("Upon your arrival, your hatred by all makes the other customers disperse.")
+  elseif you.god() == "Okawaru" then
+      crawl.mpr("Upon your arrival, your lonesome duelist's vow makes the other customers flee.")
+  else
+      if you.silenced() == false then
+          crawl.mpr("You hear the chatter and bustle of other customers!")
+      end
+      e.nsubst(". = 1:K / 2 = K. / 3 : K .:260 / *:.")
+  end
 
   -- Note: (false, true) makes no sense because of how the floor halos work.
   -- In most cases, they would look out of place.
@@ -1492,7 +1503,8 @@ WEIGHT:     5
 ORIENT:     encompass
 MONS:       plant / bush w:5
 KFEAT:      ! = any shop
-SUBST:      " = ....111t
+SUBST:      " = """"111t
+KPROP:      "1t = no_tele_into
 LFLOORTILE: floor_grass
 LFLOORCOL:  green
 : bazaar_setup(_G, false, false)
