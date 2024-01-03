@@ -1,0 +1,17 @@
+name: "wyvern"
+glyph: {char: "k", colour: lightgreen}
+flags: [flies, warm_blood]
+xp_mult: 15
+will: 20
+attacks:
+ - {type: bite, damage: 20}
+hd: 5
+hp_10x: 275
+ac: 5
+ev: 10
+has_corpse: true
+shout: hiss
+intelligence: animal
+speed: 15
+size: large
+shape: quadruped_winged

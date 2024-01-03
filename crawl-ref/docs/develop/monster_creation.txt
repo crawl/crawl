@@ -28,10 +28,9 @@ then this is all you need to do!
         - In the '// Add new monsters here:' block, at the end of that block
         add another entry for the monster. This entry should come right above
         the 'num_monsters' line.
-- /source/mon-data.h
+- /source/dat/mons/
         - Define the base statistics and flags for the monster. HD, speed, etc.
-        - Follow the conventions in the large comment block at the head of the file.
-        - Add an entry here near other similar monsters.
+        - Copy an existing yaml file and tweak it.
 - /source/mon-pick-data.h
         - Determines where and how often monster will spawn.
         - See random-pick.h to understand the variables.

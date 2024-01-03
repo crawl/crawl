@@ -1,0 +1,18 @@
+name: "fire vortex"
+glyph: {char: "v", colour: red}
+flags: [flies, confused, insubstantial, no_exp_gain, conjured]
+resists: {elec: 1, fire: 3, cold: -1}
+xp_mult: 5
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, flavour: pure_fire, damage: 0}
+hd: 10
+hp_10x: 300
+ac: 0
+ev: 5
+intelligence: brainless
+speed: 15
+size: large
+shape: misc
+tile_variance: cycle

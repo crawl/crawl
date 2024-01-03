@@ -1,0 +1,19 @@
+name: "Azrael"
+glyph: {char: "R", colour: lightred}
+flags: [flies, speaks, unique, male]
+resists: {poison: 1, fire: 3, cold: -1, damnation: 1}
+xp_mult: 12
+species: efreet
+holiness: [demonic]
+will: 40
+attacks:
+ - {type: hit, damage: 17}
+hd: 11
+hp_10x: 880
+ac: 10
+ev: 5
+spells: azrael
+intelligence: human
+uses: weapons_armour
+size: large
+shape: humanoid

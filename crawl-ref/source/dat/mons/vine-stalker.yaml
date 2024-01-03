@@ -1,0 +1,16 @@
+name: "vine stalker"
+glyph: {char: "f", colour: green}
+flags: [speaks, warm_blood, fast_regen, no_skeleton, no_poly_to]
+will: 40
+attacks:
+ - {type: hit, damage: 10}
+ - {type: bite, flavour: antimagic, damage: 10}
+hd: 8
+hp_10x: 360
+ac: 2
+ev: 12
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

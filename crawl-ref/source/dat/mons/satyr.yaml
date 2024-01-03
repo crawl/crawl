@@ -1,0 +1,18 @@
+name: "satyr"
+glyph: {char: "c", colour: lightgreen}
+flags: [speaks, warm_blood, archer, prefer_ranged]
+genus: faun
+will: 40
+attacks:
+ - {type: hit, damage: 25}
+hd: 12
+hp_10x: 660
+ac: 2
+ev: 12
+spells: satyr
+has_corpse: true
+shout: shout
+intelligence: human
+uses: starting_equipment
+size: medium
+shape: humanoid_tailed

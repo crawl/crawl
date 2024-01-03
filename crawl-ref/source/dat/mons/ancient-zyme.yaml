@@ -1,0 +1,16 @@
+name: "ancient zyme"
+glyph: {char: "x", colour: green}
+flags: [flies]
+xp_mult: 8
+holiness: [nonliving]
+will: 60
+attacks:
+ - {type: hit, damage: 16}
+ - {type: hit, damage: 16}
+hd: 8
+hp_10x: 520
+ac: 6
+ev: 6
+intelligence: animal
+size: medium
+shape: misc

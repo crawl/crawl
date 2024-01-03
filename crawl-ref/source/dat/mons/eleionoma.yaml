@@ -1,0 +1,17 @@
+name: "eleionoma"
+glyph: {char: "R", colour: green}
+flags: [speaks, warm_blood]
+will: 100
+attacks:
+ - {type: hit, damage: 25}
+hd: 16
+hp_10x: 800
+ac: 2
+ev: 10
+spells: eleionoma
+has_corpse: true
+shout: shout
+intelligence: human
+uses: starting_equipment
+size: medium
+shape: humanoid

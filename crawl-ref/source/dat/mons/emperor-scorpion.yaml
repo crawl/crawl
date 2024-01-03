@@ -1,0 +1,20 @@
+name: "emperor scorpion"
+glyph: {char: "s", colour: lightgray}
+flags: [web_immune, no_skeleton]
+resists: {poison: 1}
+xp_mult: 11
+genus: scorpion
+will: 60
+attacks:
+ - {type: sting, flavour: poison, damage: 30}
+ - {type: claw, damage: 10}
+ - {type: claw, damage: 10}
+hd: 14
+hp_10x: 1090
+ac: 18
+ev: 7
+has_corpse: true
+intelligence: animal
+speed: 12
+size: giant
+shape: arachnid

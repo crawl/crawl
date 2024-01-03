@@ -1,0 +1,17 @@
+name: "death yak"
+glyph: {char: "Y", colour: yellow}
+flags: [warm_blood, herd]
+xp_mult: 8
+genus: yak
+will: 100
+attacks:
+ - {type: gore, damage: 30}
+hd: 14
+hp_10x: 770
+ac: 9
+ev: 5
+has_corpse: true
+shout: bellow
+intelligence: animal
+size: large
+shape: quadruped

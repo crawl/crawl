@@ -1,0 +1,15 @@
+name: "glass eye"
+glyph: {char: "G", colour: white}
+flags: [flies, see_invis, no_skeleton]
+xp_mult: 6
+genus: floating_eye
+will: 60
+attacks:
+hd: 9
+hp_10x: 490
+ac: 2
+ev: 12
+spells: glass_eye
+intelligence: brainless
+size: medium
+shape: orb

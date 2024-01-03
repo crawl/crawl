@@ -1,0 +1,19 @@
+name: "black mamba"
+glyph: {char: "S", colour: blue}
+flags: [cold_blood]
+resists: {poison: 1}
+xp_mult: 12
+genus: snake
+will: 20
+attacks:
+ - {type: bite, flavour: poison, damage: 20}
+hd: 7
+hp_10x: 385
+ac: 4
+ev: 15
+has_corpse: true
+shout: hiss
+intelligence: animal
+speed: 18
+size: medium
+shape: snake

@@ -1,0 +1,20 @@
+name: "culicivora"
+glyph: {char: "s", colour: brown}
+flags: [web_immune, no_skeleton]
+resists: {poison: -1}
+xp_mult: 5
+genus: spider
+will: 20
+attacks:
+ - {type: bite, flavour: vampiric, damage: 27}
+hd: 8
+hp_10x: 390
+ac: 2
+ev: 16
+spells: culicivora
+has_corpse: true
+shout: faint_skitter
+intelligence: animal
+speed: 15
+size: small
+shape: arachnid

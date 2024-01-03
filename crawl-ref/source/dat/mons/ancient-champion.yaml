@@ -1,0 +1,18 @@
+name: "ancient champion"
+glyph: {char: "z", colour: lightcyan}
+flags: [fighter]
+resists: {cold: 1}
+xp_mult: 24
+holiness: [undead]
+will: 120
+attacks:
+ - {type: hit, damage: 32}
+hd: 14
+hp_10x: 700
+ac: 15
+ev: 10
+spells: ancient_champion
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

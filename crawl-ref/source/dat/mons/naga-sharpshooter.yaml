@@ -1,0 +1,22 @@
+name: "naga sharpshooter"
+glyph: {char: "N", colour: lightgray}
+flags: [see_invis, speaks, warm_blood, archer, prefer_ranged]
+resists: {poison: 1}
+xp_mult: 14
+species: naga
+will: 80
+attacks:
+ - {type: hit, damage: 17}
+ - {type: constrict, flavour: crush, damage: 5}
+hd: 9
+hp_10x: 720
+ac: 6
+ev: 10
+spells: naga_sharpshooter
+has_corpse: true
+shout: shout
+intelligence: human
+energy: {move: 14}
+uses: weapons_armour
+size: large
+shape: naga

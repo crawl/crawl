@@ -1,0 +1,19 @@
+name: "Parghit"
+glyph: {char: "T", colour: green}
+flags: [speaks, warm_blood, unique, fast_regen, male]
+species: troll
+will: 140
+attacks:
+ - {type: bite, damage: 50}
+ - {type: claw, damage: 40}
+ - {type: claw, damage: 40}
+hd: 27
+hp_10x: 1200
+ac: 1
+ev: 12
+has_corpse: true
+shout: shout
+intelligence: human
+uses: starting_equipment
+size: large
+shape: humanoid

@@ -1,0 +1,18 @@
+name: "yaktaur captain"
+glyph: {char: "c", colour: lightred}
+flags: [fighter, speaks, warm_blood, archer]
+xp_mult: 9
+species: yaktaur
+will: 60
+attacks:
+ - {type: hit, damage: 30}
+hd: 14
+hp_10x: 770
+ac: 5
+ev: 5
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: large
+shape: centaur

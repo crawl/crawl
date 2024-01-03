@@ -1,0 +1,16 @@
+name: "rat"
+glyph: {char: "r", colour: brown}
+flags: [warm_blood]
+xp_mult: 1
+will: 0
+attacks:
+ - {type: bite, damage: 3}
+hd: 1
+hp_10x: 25
+ac: 1
+ev: 10
+has_corpse: true
+shout: squeak
+intelligence: animal
+size: tiny
+shape: quadruped

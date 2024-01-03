@@ -1,0 +1,12 @@
+{{
+    {enum}, '{glyph.char}', {glyph.colour}, "{name}",
+    {joined_flags},
+    {joined_resists},
+    {xp_mult}, {genus}, {species}, {joined_holiness}, {will},
+    {{ {joined_attacks} }},
+    {hd}, {hp_10x},
+    {ac}, {ev}, {spells}, {has_corpse}, {shout},
+    {intelligence}, {habitat}, {speed}, {energy_desc},
+    {uses}, {size}, {shape},
+    {{ {tile_desc} }}, {tile_corpse}
+}},

@@ -1,0 +1,22 @@
+name: "Sonja"
+glyph: {char: "K", colour: red}
+flags: [speaks, warm_blood, unique, female]
+xp_mult: 40
+species: kobold
+will: 10
+attacks:
+ - {type: hit, damage: 9}
+ - {type: hit, damage: 5}
+ - {type: hit, damage: 5}
+hd: 6
+hp_10x: 300
+ac: 2
+ev: 24
+spells: sonja
+has_corpse: true
+shout: shout
+intelligence: human
+speed: 14
+uses: weapons_armour
+size: small
+shape: humanoid

@@ -1,0 +1,19 @@
+name: "Jorgrun"
+glyph: {char: "g", colour: lightmagenta}
+flags: [speaks, warm_blood, unique, male]
+xp_mult: 18
+species: dwarf
+will: 120
+attacks:
+ - {type: hit, damage: 20}
+hd: 15
+hp_10x: 1200
+ac: 2
+ev: 15
+spells: jorgrun
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

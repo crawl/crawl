@@ -1,0 +1,19 @@
+name: "revenant"
+glyph: {char: "z", colour: magenta}
+flags: [see_invis, speaks]
+resists: {cold: 2}
+xp_mult: 18
+holiness: [undead]
+will: invuln
+attacks:
+ - {type: hit, damage: 26}
+hd: 18
+hp_10x: 810
+ac: 8
+ev: 12
+spells: revenant
+shout: shout
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid

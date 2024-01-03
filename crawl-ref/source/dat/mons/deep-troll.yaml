@@ -1,0 +1,20 @@
+name: "deep troll"
+glyph: {char: "T", colour: yellow}
+flags: [see_invis, unblindable, speaks, warm_blood, fast_regen]
+xp_mult: 9
+genus: troll
+will: 40
+attacks:
+ - {type: bite, damage: 27}
+ - {type: claw, damage: 20}
+ - {type: claw, damage: 20}
+hd: 10
+hp_10x: 550
+ac: 6
+ev: 10
+has_corpse: true
+shout: shout
+intelligence: human
+uses: open_doors
+size: large
+shape: humanoid

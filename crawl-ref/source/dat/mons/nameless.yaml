@@ -1,0 +1,18 @@
+name: "nameless horror"
+enum: nameless
+glyph: {char: "X", colour: cyan}
+flags: [see_invis, no_poly_to, no_gen_derived]
+xp_mult: 11
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, flavour: antimagic, damage: 30}
+hd: 15
+hp_10x: 600
+ac: 8
+ev: 2
+spells: nameless
+intelligence: brainless
+size: giant
+shape: misc
+tile: nameless_horror

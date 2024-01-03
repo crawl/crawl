@@ -1,0 +1,20 @@
+name: "green draconian"
+glyph: {char: "d", colour: green}
+flags: [speaks, cold_blood]
+resists: {poison: 1}
+genus: draconian
+will: 40
+attacks:
+ - {type: hit, damage: 20}
+ - {type: tail_slap, flavour: poison, damage: 15}
+hd: 14
+hp_10x: 980
+ac: 9
+ev: 10
+has_corpse: true
+shout: roar
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid_tailed
+tile: program_bug

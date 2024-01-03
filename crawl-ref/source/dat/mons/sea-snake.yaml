@@ -1,0 +1,19 @@
+name: "sea snake"
+glyph: {char: "S", colour: lightred}
+flags: [cold_blood]
+genus: snake
+will: 40
+attacks:
+ - {type: bite, flavour: poison_strong, damage: 24}
+hd: 10
+hp_10x: 650
+ac: 2
+ev: 15
+has_corpse: true
+shout: hiss
+intelligence: animal
+habitat: amphibious
+speed: 12
+energy: {swim: 4}
+size: medium
+shape: snake

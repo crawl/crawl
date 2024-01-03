@@ -1,0 +1,19 @@
+name: "Zenata"
+glyph: {char: "a", colour: lightgray}
+flags: [speaks, warm_blood, unique, female]
+xp_mult: 15
+species: human
+will: 100
+attacks:
+ - {type: hit, damage: 35}
+hd: 15
+hp_10x: 1800
+ac: 10
+ev: 10
+spells: zenata
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

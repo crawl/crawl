@@ -1,0 +1,20 @@
+name: "Josephine"
+glyph: {char: "@", colour: white}
+flags: [speaks, warm_blood, unique, female]
+resists: {neg: 3}
+xp_mult: 20
+species: human
+will: 60
+attacks:
+ - {type: hit, damage: 11}
+hd: 10
+hp_10x: 700
+ac: 0
+ev: 10
+spells: josephine
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

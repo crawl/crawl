@@ -1,0 +1,17 @@
+name: "scorpion"
+glyph: {char: "s", colour: yellow}
+flags: [no_skeleton]
+resists: {poison: -1}
+xp_mult: 13
+will: 20
+attacks:
+ - {type: sting, flavour: poison, damage: 8}
+hd: 4
+hp_10x: 180
+ac: 5
+ev: 10
+has_corpse: true
+intelligence: animal
+speed: 12
+size: small
+shape: arachnid

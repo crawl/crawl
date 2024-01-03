@@ -1,0 +1,17 @@
+name: "ribbon worm"
+glyph: {char: "w", colour: lightred}
+flags: [fast_regen, no_skeleton]
+xp_mult: 1
+will: 10
+attacks:
+ - {type: bite, damage: 9}
+hd: 4
+hp_10x: 180
+ac: 1
+ev: 5
+spells: ribbon_worm
+has_corpse: true
+intelligence: animal
+speed: 8
+size: small
+shape: snake

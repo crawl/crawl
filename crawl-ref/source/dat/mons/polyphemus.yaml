@@ -1,0 +1,20 @@
+name: "Polyphemus"
+glyph: {char: "C", colour: blue}
+flags: [speaks, warm_blood, unique, male]
+species: cyclops
+genus: giant
+will: 60
+attacks:
+ - {type: hit, damage: 45}
+ - {type: hit, damage: 30}
+hd: 16
+hp_10x: 1520
+ac: 10
+ev: 3
+spells: polyphemus
+has_corpse: true
+shout: shout
+intelligence: human
+uses: starting_equipment
+size: giant
+shape: humanoid

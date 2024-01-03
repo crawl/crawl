@@ -1,0 +1,20 @@
+name: "merfolk"
+glyph: {char: "m", colour: lightred}
+flags: [speaks, warm_blood]
+xp_mult: 4
+will: 40
+attacks:
+ - {type: hit, damage: 22}
+hd: 10
+hp_10x: 550
+ac: 4
+ev: 12
+has_corpse: true
+shout: shout
+intelligence: human
+habitat: amphibious
+energy: {swim: 6}
+uses: weapons_armour
+size: medium
+shape: humanoid
+tile_variance: water

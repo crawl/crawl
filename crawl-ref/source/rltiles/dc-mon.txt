@@ -167,7 +167,7 @@ sideburnok
 %sdir mon/animals
 rat MONS_RAT
 green_rat MONS_RIVER_RAT
-orange_rat MONS_ORANGE_RAT
+orange_rat MONS_HELL_RAT
 crystal_echidna MONS_CRYSTAL_ECHIDNA
 %rim 1
 quokka MONS_QUOKKA
@@ -229,7 +229,7 @@ sun_moth MONS_SUN_MOTH
 %sdir mon/aquatic
 %rim 0
 electric_eel MONS_ELECTRIC_EEL
-jellyfish MONS_JELLYFISH
+jellyfish MONS_FORMLESS_JELLYFISH
 %rim 1
 
 %include dc-tentacles.txt
@@ -939,7 +939,7 @@ bush MONS_BUSH
 bush2
 bush3
 bush4
-bush_burning MONS_BUSH_BURNING
+bush_burning MONS_BURNING_BUSH
 %rim 1
 oklob_sapling MONS_OKLOB_SAPLING
 oklob_plant MONS_OKLOB_PLANT
@@ -1135,7 +1135,7 @@ bog_body MONS_BOG_BODY
 necrophage MONS_NECROPHAGE
 %rim 0
 bloated_husk MONS_BLOATED_HUSK
-searing_wretch SEARING_WRETCH
+searing_wretch MONS_SEARING_WRETCH
 %rim 1
 ghoul MONS_GHOUL
 
@@ -1233,12 +1233,12 @@ draco-base-white
 draco-base-grey
 draco-base-pale
 %rim 0
-draco-job-annihilator DRACO_ANNIHILATOR
-draco-job-stormcaller DRACO_STORMCALLER
-draco-job-knight DRACO_KNIGHT
-draco-job-monk DRACO_MONK
-draco-job-scorcher DRACO_SCORCHER
-draco-job-shifter DRACO_SHIFTER
+draco-job-annihilator MONS_DRACONIAN_ANNIHILATOR
+draco-job-stormcaller MONS_DRACONIAN_STORMCALLER
+draco-job-knight MONS_DRACONIAN_KNIGHT
+draco-job-monk MONS_DRACONIAN_MONK
+draco-job-scorcher MONS_DRACONIAN_SCORCHER
+draco-job-shifter MONS_DRACONIAN_SHIFTER
 ## From the Wucad Mu wizard laboratory
 mon/vault/draconian_monk_ghost MONS_FAINT_GREY_DRACONIAN_MONK
 

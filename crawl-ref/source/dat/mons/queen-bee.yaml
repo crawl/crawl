@@ -1,0 +1,19 @@
+name: "queen bee"
+glyph: {char: "y", colour: lightmagenta}
+flags: [flies, no_skeleton]
+resists: {poison: -1}
+xp_mult: 14
+genus: killer_bee
+will: 20
+attacks:
+ - {type: sting, flavour: poison, damage: 20}
+hd: 7
+hp_10x: 385
+ac: 10
+ev: 10
+spells: queen_bee
+has_corpse: true
+shout: buzz
+intelligence: animal
+size: little
+shape: insect_winged

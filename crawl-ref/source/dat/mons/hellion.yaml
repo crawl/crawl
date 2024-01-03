@@ -1,0 +1,19 @@
+name: "hellion"
+glyph: {char: "2", colour: lightred}
+resists: {poison: 1, damnation: 1}
+xp_mult: 12
+holiness: [demonic]
+will: 60
+attacks:
+ - {type: hit, damage: 10}
+hd: 7
+hp_10x: 385
+ac: 5
+ev: 10
+spells: hellion
+shout: scream
+intelligence: human
+speed: 12
+uses: open_doors
+size: medium
+shape: humanoid

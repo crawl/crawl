@@ -1,0 +1,18 @@
+name: "caustic shrike"
+glyph: {char: "b", colour: lightgreen}
+flags: [flies, warm_blood]
+resists: {fire: 1, cold: 1}
+xp_mult: 15
+will: 80
+attacks:
+ - {type: claw, flavour: acid, damage: 36}
+hd: 18
+hp_10x: 1080
+ac: 8
+ev: 18
+has_corpse: true
+shout: screech
+intelligence: animal
+speed: 20
+size: tiny
+shape: bird

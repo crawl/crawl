@@ -1,0 +1,17 @@
+name: "foxfire"
+glyph: {char: "v", colour: lightred}
+flags: [flies, see_invis, insubstantial, no_exp_gain, no_poly_to, conjured, no_threat]
+resists: {fire: 3}
+xp_mult: 0
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, damage: 1}
+hd: 1
+hp_10x: 10
+ac: 0
+ev: 10
+intelligence: brainless
+speed: 50
+size: little
+shape: orb

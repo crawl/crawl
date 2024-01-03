@@ -1,0 +1,18 @@
+name: "sixfirhy"
+glyph: {char: "3", colour: lightblue}
+resists: {elec: 3}
+xp_mult: 6
+holiness: [demonic]
+will: 60
+attacks:
+ - {type: hit, flavour: elec, damage: 15}
+hd: 9
+hp_10x: 385
+ac: 2
+ev: 20
+intelligence: human
+speed: 40
+energy: {move: 6}
+uses: open_doors
+size: little
+shape: humanoid

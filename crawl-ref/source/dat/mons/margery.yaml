@@ -1,0 +1,19 @@
+name: "Margery"
+glyph: {char: "@", colour: lightred}
+flags: [see_invis, speaks, warm_blood, unique, female]
+xp_mult: 14
+species: human
+will: 140
+attacks:
+ - {type: hit, damage: 30}
+hd: 22
+hp_10x: 1650
+ac: 0
+ev: 10
+spells: margery
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

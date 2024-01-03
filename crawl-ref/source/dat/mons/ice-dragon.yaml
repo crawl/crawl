@@ -1,0 +1,20 @@
+name: "ice dragon"
+glyph: {char: "D", colour: white}
+flags: [flies, cold_blood]
+resists: {poison: 1, fire: -1, cold: 2}
+genus: dragon
+will: 40
+attacks:
+ - {type: bite, damage: 17}
+ - {type: claw, damage: 17}
+ - {type: trample, flavour: trample, damage: 17}
+hd: 12
+hp_10x: 900
+ac: 10
+ev: 8
+spells: ice_dragon_breath
+has_corpse: true
+shout: loud_roar
+intelligence: animal
+size: giant
+shape: quadruped_winged

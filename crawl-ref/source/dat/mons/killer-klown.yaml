@@ -1,0 +1,21 @@
+name: "Killer Klown"
+glyph: {char: "p", colour: etc_random}
+flags: [see_invis, speaks, warm_blood, no_poly_to, no_gen_derived]
+xp_mult: 17
+genus: human
+will: 160
+attacks:
+ - {type: hit, damage: 30}
+hd: 20
+hp_10x: 1500
+ac: 10
+ev: 15
+spells: killer_klown
+has_corpse: true
+shout: shout
+intelligence: human
+speed: 13
+uses: starting_equipment
+size: medium
+shape: humanoid
+tile_variance: random

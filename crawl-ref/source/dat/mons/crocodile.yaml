@@ -1,0 +1,17 @@
+name: "crocodile"
+glyph: {char: "l", colour: brown}
+flags: [cold_blood]
+xp_mult: 11
+will: 20
+attacks:
+ - {type: bite, flavour: drag, damage: 18}
+hd: 5
+hp_10x: 300
+ac: 4
+ev: 12
+has_corpse: true
+intelligence: animal
+habitat: amphibious
+energy: {swim: 6}
+size: large
+shape: quadruped

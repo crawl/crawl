@@ -1,0 +1,20 @@
+name: "hellephant"
+glyph: {char: "Y", colour: lightred}
+flags: [warm_blood]
+genus: elephant
+holiness: [demonic]
+will: 140
+attacks:
+ - {type: trample, flavour: trample, damage: 45}
+ - {type: bite, damage: 20}
+ - {type: gore, damage: 15}
+hd: 20
+hp_10x: 1700
+ac: 13
+ev: 10
+spells: hellephant
+has_corpse: true
+shout: trumpet
+intelligence: animal
+size: giant
+shape: quadruped

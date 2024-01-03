@@ -1,0 +1,18 @@
+name: "deep elf annihilator"
+glyph: {char: "e", colour: lightblue}
+flags: [see_invis, speaks, warm_blood]
+species: elf
+will: 120
+attacks:
+ - {type: hit, damage: 12}
+hd: 15
+hp_10x: 675
+ac: 0
+ev: 13
+spells: annihilator
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

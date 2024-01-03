@@ -1,0 +1,19 @@
+name: "bullfrog"
+glyph: {char: "F", colour: green}
+flags: [cold_blood]
+genus: frog
+will: 20
+attacks:
+ - {type: hit, damage: 9}
+hd: 4
+hp_10x: 220
+ac: 0
+ev: 12
+has_corpse: true
+shout: croak
+intelligence: animal
+habitat: amphibious
+speed: 15
+energy: {swim: 6}
+size: medium
+shape: quadruped_tailless

@@ -1,0 +1,19 @@
+name: "adder"
+glyph: {char: "S", colour: lightgreen}
+flags: [cold_blood]
+genus: snake
+will: 10
+attacks:
+ - {type: bite, flavour: poison, damage: 4}
+hd: 2
+hp_10x: 110
+ac: 1
+ev: 15
+has_corpse: true
+shout: hiss
+intelligence: animal
+habitat: amphibious
+speed: 13
+energy: {swim: 6}
+size: little
+shape: snake

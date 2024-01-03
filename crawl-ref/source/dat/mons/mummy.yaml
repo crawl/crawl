@@ -1,0 +1,17 @@
+name: "mummy"
+glyph: {char: "M", colour: lightgray}
+resists: {fire: -1, cold: 1}
+xp_mult: 21
+holiness: [undead]
+will: 20
+attacks:
+ - {type: hit, damage: 20}
+hd: 3
+hp_10x: 195
+ac: 3
+ev: 6
+intelligence: human
+speed: 6
+uses: open_doors
+size: medium
+shape: humanoid

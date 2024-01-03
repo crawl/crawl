@@ -1,0 +1,22 @@
+name: "naga mage"
+glyph: {char: "N", colour: magenta}
+flags: [see_invis, speaks, warm_blood]
+resists: {poison: 1}
+xp_mult: 14
+species: naga
+will: 60
+attacks:
+ - {type: hit, damage: 14}
+ - {type: constrict, flavour: crush, damage: 4}
+hd: 7
+hp_10x: 385
+ac: 6
+ev: 10
+spells: naga_mage
+has_corpse: true
+shout: shout
+intelligence: human
+energy: {move: 14}
+uses: weapons_armour
+size: large
+shape: naga

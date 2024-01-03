@@ -1,0 +1,19 @@
+name: "howler monkey"
+glyph: {char: "h", colour: lightgreen}
+flags: [warm_blood]
+xp_mult: 15
+will: 10
+attacks:
+ - {type: hit, damage: 8}
+hd: 3
+hp_10x: 185
+ac: 1
+ev: 11
+spells: howler_monkey
+has_corpse: true
+shout: howl
+intelligence: animal
+speed: 12
+uses: open_doors
+size: small
+shape: humanoid_tailed

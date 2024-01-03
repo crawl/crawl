@@ -1,0 +1,16 @@
+name: "lemure"
+glyph: {char: "5", colour: yellow}
+flags: [speaks]
+holiness: [demonic]
+will: 20
+attacks:
+ - {type: hit, damage: 10}
+hd: 5
+hp_10x: 275
+ac: 4
+ev: 12
+shout: shout
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid
