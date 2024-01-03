@@ -1,0 +1,19 @@
+name: "kobold demonologist"
+glyph: {char: "K", colour: magenta}
+flags: [speaks, warm_blood]
+xp_mult: 18
+species: kobold
+will: 40
+attacks:
+ - {type: hit, damage: 4}
+hd: 6
+hp_10x: 390
+ac: 2
+ev: 13
+spells: kobold_demonologist
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: small
+shape: humanoid

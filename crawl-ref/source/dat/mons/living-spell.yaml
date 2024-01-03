@@ -1,0 +1,13 @@
+name: "living spell"
+glyph: {char: "*", colour: lightblue}
+flags: [flies, insubstantial, no_exp_gain]
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 1
+hp_10x: 3
+ac: 0
+ev: 5
+intelligence: brainless
+size: tiny
+shape: orb

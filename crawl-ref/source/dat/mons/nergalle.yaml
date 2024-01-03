@@ -1,0 +1,19 @@
+name: "Nergalle"
+glyph: {char: "o", colour: white}
+flags: [see_invis, speaks, warm_blood, unique, female]
+xp_mult: 12
+species: orc
+will: 60
+attacks:
+ - {type: hit, damage: 6}
+hd: 10
+hp_10x: 600
+ac: 9
+ev: 11
+spells: nergalle
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

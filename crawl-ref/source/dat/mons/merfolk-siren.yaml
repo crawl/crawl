@@ -1,0 +1,21 @@
+name: "merfolk siren"
+glyph: {char: "m", colour: cyan}
+flags: [speaks, warm_blood]
+species: merfolk
+will: 60
+attacks:
+ - {type: hit, damage: 19}
+hd: 9
+hp_10x: 405
+ac: 4
+ev: 12
+spells: merfolk_siren
+has_corpse: true
+shout: shout
+intelligence: human
+habitat: amphibious
+energy: {swim: 6}
+uses: weapons_armour
+size: medium
+shape: humanoid
+tile_variance: water

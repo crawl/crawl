@@ -1,0 +1,22 @@
+name: "merfolk aquamancer"
+glyph: {char: "m", colour: green}
+flags: [see_invis, speaks, warm_blood]
+xp_mult: 8
+species: merfolk
+will: 80
+attacks:
+ - {type: hit, damage: 15}
+hd: 14
+hp_10x: 630
+ac: 0
+ev: 12
+spells: merfolk_aquamancer
+has_corpse: true
+shout: shout
+intelligence: human
+habitat: amphibious
+energy: {swim: 6}
+uses: weapons_armour
+size: medium
+shape: humanoid
+tile_variance: water

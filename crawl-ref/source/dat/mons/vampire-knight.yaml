@@ -1,0 +1,21 @@
+name: "vampire knight"
+glyph: {char: "V", colour: cyan}
+flags: [fighter, see_invis, speaks, warm_blood]
+resists: {cold: 1}
+xp_mult: 16
+species: vampire
+holiness: [undead]
+will: 80
+attacks:
+ - {type: hit, damage: 33}
+ - {type: bite, flavour: vampiric, damage: 15}
+hd: 11
+hp_10x: 715
+ac: 10
+ev: 10
+spells: vampire_knight
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

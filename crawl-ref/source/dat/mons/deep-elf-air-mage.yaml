@@ -1,0 +1,20 @@
+name: "deep elf zephyrmancer"
+enum: deep_elf_air_mage
+glyph: {char: "e", colour: cyan}
+flags: [speaks, warm_blood]
+xp_mult: 12
+species: elf
+will: 40
+attacks:
+ - {type: hit, damage: 5}
+hd: 9
+hp_10x: 405
+ac: 0
+ev: 13
+spells: deep_elf_air_mage
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

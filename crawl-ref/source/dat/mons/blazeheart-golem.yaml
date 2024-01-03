@@ -1,0 +1,18 @@
+name: "blazeheart golem"
+glyph: {char: "9", colour: magenta}
+flags: [fighter, no_exp_gain]
+resists: {elec: 1, fire: 2, cold: 1}
+genus: golem
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: punch, damage: 27}
+hd: 6
+hp_10x: 400
+ac: 9
+ev: 2
+intelligence: brainless
+energy: {attack: 20}
+uses: open_doors
+size: large
+shape: humanoid

@@ -1,0 +1,16 @@
+name: "saltling"
+glyph: {char: "9", colour: white}
+genus: golem
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, damage: 20}
+hd: 8
+hp_10x: 270
+ac: 15
+ev: 5
+intelligence: brainless
+speed: 12
+uses: open_doors
+size: small
+shape: humanoid

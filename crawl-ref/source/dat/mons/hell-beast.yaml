@@ -1,0 +1,19 @@
+name: "hell beast"
+glyph: {char: "2", colour: brown}
+flags: [fighter]
+xp_mult: 17
+holiness: [demonic]
+will: 20
+attacks:
+ - {type: bite, damage: 28}
+ - {type: trample, flavour: trample, damage: 20}
+hd: 7
+hp_10x: 840
+ac: 5
+ev: 14
+shout: random
+intelligence: human
+speed: 15
+uses: open_doors
+size: large
+shape: quadruped

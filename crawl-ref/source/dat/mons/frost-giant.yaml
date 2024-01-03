@@ -1,0 +1,20 @@
+name: "frost giant"
+glyph: {char: "C", colour: lightblue}
+flags: [fighter, see_invis, speaks, warm_blood]
+resists: {cold: 2}
+xp_mult: 11
+genus: giant
+will: 80
+attacks:
+ - {type: hit, damage: 35}
+hd: 16
+hp_10x: 1040
+ac: 9
+ev: 3
+spells: frost_giant
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: giant
+shape: humanoid

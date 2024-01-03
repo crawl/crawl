@@ -1,0 +1,14 @@
+name: "shapeshifter"
+glyph: {char: "p", colour: lightred}
+will: 40
+attacks:
+ - {type: hit, damage: 5}
+hd: 7
+hp_10x: 385
+ac: 0
+ev: 10
+has_corpse: true
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid

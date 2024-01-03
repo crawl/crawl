@@ -1,0 +1,18 @@
+name: "redback"
+glyph: {char: "s", colour: lightred}
+flags: [web_immune, no_skeleton]
+resists: {poison: -1}
+xp_mult: 4
+genus: spider
+will: 20
+attacks:
+ - {type: bite, flavour: poison_strong, damage: 18}
+hd: 9
+hp_10x: 270
+ac: 2
+ev: 12
+has_corpse: true
+intelligence: animal
+speed: 15
+size: tiny
+shape: arachnid

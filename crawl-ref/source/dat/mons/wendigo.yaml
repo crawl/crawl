@@ -1,0 +1,18 @@
+name: "wendigo"
+glyph: {char: "R", colour: blue}
+flags: [see_invis]
+resists: {poison: 1, fire: -1, cold: 3}
+holiness: [demonic]
+will: 140
+attacks:
+ - {type: claw, flavour: cold, damage: 30}
+ - {type: bite, flavour: vampiric, damage: 20}
+hd: 15
+hp_10x: 880
+ac: 4
+ev: 20
+spells: wendigo
+shout: howl
+intelligence: human
+size: medium
+shape: humanoid

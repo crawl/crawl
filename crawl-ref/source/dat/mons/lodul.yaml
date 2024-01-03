@@ -1,0 +1,20 @@
+name: "Lodul"
+glyph: {char: "O", colour: cyan}
+flags: [speaks, warm_blood, unique, male]
+xp_mult: 25
+species: ogre
+will: 40
+attacks:
+ - {type: hit, damage: 30}
+hd: 6
+hp_10x: 700
+ac: 3
+ev: 7
+spells: lodul
+has_corpse: true
+shout: shout
+intelligence: human
+energy: {attack: 15}
+uses: weapons_armour
+size: large
+shape: humanoid

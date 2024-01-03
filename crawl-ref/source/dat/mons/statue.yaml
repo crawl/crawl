@@ -1,0 +1,17 @@
+name: "statue"
+glyph: {char: "I", colour: lightgray}
+flags: [speaks, stationary, archer, no_poly_to, prefer_ranged]
+resists: {elec: 1, fire: 2, cold: 2, petrify: 1}
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: weap_only, damage: 20}
+hd: 8
+hp_10x: 720
+ac: 12
+ev: 1
+intelligence: human
+uses: starting_equipment
+size: large
+shape: humanoid
+tile: obsidian_statue

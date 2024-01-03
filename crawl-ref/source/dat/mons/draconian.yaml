@@ -1,0 +1,18 @@
+name: "draconian"
+glyph: {char: "d", colour: brown}
+flags: [speaks, cold_blood, no_poly_to]
+will: 10
+attacks:
+ - {type: hit, damage: 15}
+hd: 8
+hp_10x: 640
+ac: 10
+ev: 11
+has_corpse: true
+shout: roar
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid_tailed
+tile: tilep_draco_base
+corpse_tile: brown_draconian

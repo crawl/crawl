@@ -1,0 +1,20 @@
+name: "Tzitzimitl"
+glyph: {char: "1", colour: magenta}
+flags: [flies, see_invis]
+resists: {elec: 1, poison: 1, cold: 2}
+xp_mult: 13
+holiness: [demonic]
+will: invuln
+attacks:
+ - {type: engulf, flavour: drain_speed, damage: 25}
+ - {type: bite, flavour: drain, damage: 25}
+hd: 22
+hp_10x: 1050
+ac: 12
+ev: 16
+spells: tzitzimitl
+shout: roar
+intelligence: human
+uses: open_doors
+size: large
+shape: humanoid

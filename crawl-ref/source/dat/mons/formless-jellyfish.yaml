@@ -1,0 +1,18 @@
+name: "formless jellyfish"
+glyph: {char: "J", colour: white}
+flags: [unblindable, web_immune, no_skeleton]
+resists: {poison: 1}
+genus: jelly
+will: 60
+attacks:
+ - {type: sting, flavour: minipara, damage: 37}
+ - {type: constrict, flavour: crush, damage: 5}
+hd: 15
+hp_10x: 1200
+ac: 0
+ev: 3
+spells: blink_close
+intelligence: brainless
+habitat: amphibious
+size: large
+shape: blob

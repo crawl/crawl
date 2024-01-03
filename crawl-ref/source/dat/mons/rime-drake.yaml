@@ -1,0 +1,20 @@
+name: "rime drake"
+glyph: {char: "k", colour: blue}
+flags: [flies, warm_blood]
+resists: {cold: 1}
+xp_mult: 22
+genus: drake
+will: 20
+attacks:
+ - {type: bite, damage: 8}
+hd: 6
+hp_10x: 330
+ac: 3
+ev: 12
+spells: rime_drake
+has_corpse: true
+shout: hiss
+intelligence: animal
+speed: 12
+size: large
+shape: quadruped_winged

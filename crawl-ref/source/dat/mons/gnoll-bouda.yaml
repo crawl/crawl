@@ -1,0 +1,18 @@
+name: "gnoll bouda"
+glyph: {char: "g", colour: white}
+flags: [speaks, warm_blood]
+species: gnoll
+will: 20
+attacks:
+ - {type: hit, damage: 10}
+hd: 3
+hp_10x: 195
+ac: 2
+ev: 9
+spells: bouda
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

@@ -1,0 +1,19 @@
+name: "water elemental"
+glyph: {char: "E", colour: etc_water}
+flags: [unblindable]
+resists: {elec: 1, fire: -1}
+xp_mult: 12
+genus: elemental
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, flavour: engulf, damage: 22}
+hd: 6
+hp_10x: 420
+ac: 4
+ev: 7
+intelligence: brainless
+habitat: amphibious
+energy: {swim: 6}
+size: large
+shape: misc

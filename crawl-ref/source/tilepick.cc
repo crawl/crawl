@@ -1967,7 +1967,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
 
         case MONS_BUSH:
             if (env.map_knowledge(mon.pos).cloud() == CLOUD_FIRE)
-                return TILEP_MONS_BUSH_BURNING;
+                return TILEP_MONS_BURNING_BUSH;
             return base;
 
         case MONS_BOULDER_BEETLE:

@@ -1,0 +1,19 @@
+name: "catoblepas"
+glyph: {char: "Y", colour: magenta}
+flags: [warm_blood]
+resists: {petrify: 1}
+xp_mult: 8
+genus: yak
+will: 100
+attacks:
+ - {type: gore, damage: 36}
+hd: 14
+hp_10x: 770
+ac: 10
+ev: 2
+spells: catoblepas
+has_corpse: true
+shout: bellow
+intelligence: animal
+size: large
+shape: quadruped

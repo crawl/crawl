@@ -1,0 +1,17 @@
+name: "elephant"
+glyph: {char: "Y", colour: green}
+flags: [warm_blood]
+xp_mult: 9
+will: 60
+attacks:
+ - {type: trample, flavour: trample, damage: 20}
+ - {type: trunk_slap, damage: 5}
+hd: 9
+hp_10x: 675
+ac: 8
+ev: 2
+has_corpse: true
+shout: trumpet
+intelligence: animal
+size: giant
+shape: quadruped

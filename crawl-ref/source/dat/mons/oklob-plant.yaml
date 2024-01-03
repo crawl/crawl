@@ -1,0 +1,16 @@
+name: "oklob plant"
+glyph: {char: "P", colour: lightgreen}
+flags: [stationary]
+resists: {poison: 1, acid: 3}
+genus: plant
+holiness: [plant]
+will: 40
+attacks:
+hd: 10
+hp_10x: 550
+ac: 10
+ev: 0
+spells: acid_spit
+intelligence: brainless
+size: small
+shape: plant

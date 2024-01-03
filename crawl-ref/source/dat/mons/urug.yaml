@@ -1,0 +1,18 @@
+name: "Urug"
+glyph: {char: "o", colour: red}
+flags: [fighter, speaks, warm_blood, unique, female]
+xp_mult: 15
+species: orc
+will: 40
+attacks:
+ - {type: hit, damage: 25}
+hd: 9
+hp_10x: 675
+ac: 2
+ev: 13
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

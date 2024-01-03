@@ -1,0 +1,20 @@
+name: "Ice Fiend"
+glyph: {char: "1", colour: white}
+flags: [flies, see_invis]
+resists: {poison: 1, fire: -1, cold: 3}
+xp_mult: 17
+holiness: [demonic]
+will: invuln
+attacks:
+ - {type: claw, flavour: cold, damage: 25}
+ - {type: claw, flavour: cold, damage: 25}
+hd: 18
+hp_10x: 990
+ac: 15
+ev: 6
+spells: ice_fiend
+shout: roar
+intelligence: human
+uses: open_doors
+size: large
+shape: humanoid_winged

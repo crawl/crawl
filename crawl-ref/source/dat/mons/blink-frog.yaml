@@ -1,0 +1,21 @@
+name: "blink frog"
+glyph: {char: "F", colour: lightgreen}
+flags: [cold_blood]
+xp_mult: 13
+genus: frog
+will: 40
+attacks:
+ - {type: hit, flavour: blink, damage: 20}
+hd: 6
+hp_10x: 330
+ac: 0
+ev: 16
+spells: blinker
+has_corpse: true
+shout: croak
+intelligence: animal
+habitat: amphibious
+speed: 14
+energy: {swim: 6}
+size: medium
+shape: quadruped_tailless

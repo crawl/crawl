@@ -1,0 +1,22 @@
+name: "Jeremiah"
+glyph: {char: "F", colour: magenta}
+flags: [speaks, unique, gender_neutral]
+xp_mult: 7
+species: barachi
+genus: frog
+will: 40
+attacks:
+ - {type: hit, damage: 6}
+hd: 8
+hp_10x: 450
+ac: 2
+ev: 12
+spells: jeremiah
+has_corpse: true
+shout: shout
+intelligence: human
+habitat: amphibious
+energy: {move: 12}
+uses: weapons_armour
+size: medium
+shape: humanoid

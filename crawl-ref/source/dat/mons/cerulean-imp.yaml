@@ -1,0 +1,19 @@
+name: "cerulean imp"
+glyph: {char: "5", colour: lightblue}
+flags: [flies, speaks]
+resists: {elec: 1, poison: 1}
+xp_mult: 13
+holiness: [demonic]
+will: 40
+attacks:
+ - {type: hit, damage: 1}
+hd: 3
+hp_10x: 135
+ac: 3
+ev: 14
+shout: shout
+intelligence: human
+energy: {move: 7}
+uses: weapons_armour
+size: little
+shape: humanoid_winged

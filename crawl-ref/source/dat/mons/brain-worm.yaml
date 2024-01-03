@@ -1,0 +1,17 @@
+name: "brain worm"
+glyph: {char: "w", colour: lightmagenta}
+flags: [fast_regen, no_skeleton]
+xp_mult: 9
+genus: ribbon_worm
+will: 20
+attacks:
+ - {type: bite, damage: 6}
+hd: 5
+hp_10x: 200
+ac: 1
+ev: 5
+spells: brain_worm
+has_corpse: true
+intelligence: human
+size: small
+shape: snake

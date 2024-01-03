@@ -1,0 +1,17 @@
+name: "orc"
+glyph: {char: "o", colour: lightred}
+flags: [speaks, warm_blood]
+xp_mult: 15
+will: 0
+attacks:
+ - {type: hit, damage: 2}
+hd: 1
+hp_10x: 70
+ac: 0
+ev: 10
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

@@ -1,0 +1,19 @@
+name: "orc knight"
+glyph: {char: "o", colour: cyan}
+flags: [fighter, speaks, warm_blood]
+xp_mult: 9
+species: orc
+will: 40
+attacks:
+ - {type: hit, damage: 20}
+hd: 9
+hp_10x: 675
+ac: 2
+ev: 13
+spells: orc_knight
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

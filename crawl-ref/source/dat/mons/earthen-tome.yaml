@@ -1,0 +1,18 @@
+name: "walking earthen tome"
+enum: earthen_tome
+glyph: {char: ";", colour: magenta}
+xp_mult: 7
+genus: walking_tome
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, damage: 50}
+hd: 27
+hp_10x: 1000
+ac: 20
+ev: 5
+spells: walking_tome
+shout: rustle
+intelligence: brainless
+size: small
+shape: misc

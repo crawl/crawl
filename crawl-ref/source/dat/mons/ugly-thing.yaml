@@ -1,0 +1,18 @@
+name: "ugly thing"
+glyph: {char: "u", colour: colour_undef}
+flags: [warm_blood, ghost_demon, herd, no_gen_derived]
+xp_mult: 6
+will: 40
+attacks:
+ - {type: hit, damage: 17}
+hd: 12
+hp_10x: 660
+ac: 4
+ev: 10
+has_corpse: true
+shout: gurgle
+intelligence: animal
+energy: {move: 9}
+uses: open_doors
+size: medium
+shape: misc

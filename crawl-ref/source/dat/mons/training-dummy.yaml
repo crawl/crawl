@@ -1,0 +1,16 @@
+name: "training dummy"
+glyph: {char: "I", colour: lightgray}
+flags: [stationary]
+resists: {petrify: 1}
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: weap_only, damage: 1}
+hd: 1
+hp_10x: 60
+ac: 0
+ev: 0
+intelligence: human
+uses: starting_equipment
+size: large
+shape: humanoid

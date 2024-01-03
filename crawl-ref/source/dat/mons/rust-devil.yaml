@@ -1,0 +1,17 @@
+name: "rust devil"
+glyph: {char: "4", colour: brown}
+resists: {elec: 1, poison: 1, fire: 3, cold: 1}
+xp_mult: 15
+holiness: [demonic]
+will: 60
+attacks:
+ - {type: hit, flavour: corrode, damage: 12}
+hd: 8
+hp_10x: 440
+ac: 10
+ev: 8
+shout: screech
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid

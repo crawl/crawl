@@ -206,28 +206,25 @@ void init_mon_name_cache()
 
     for (const monsterentry &me : mondata)
     {
-        string name = me.name;
-        lowercase(name);
-
         const int          mtype = me.mc;
         const monster_type mon   = monster_type(mtype);
 
         // Deal sensibly with duplicate entries; refuse or allow the
         // insert, depending on which should take precedence. Some
         // uniques of multiple forms can get away with this, though.
-        if (Mon_Name_Cache.count(name))
+        if (mon == MONS_PLAYER_SHADOW
+            || mon == MONS_BAI_SUZHEN_DRAGON
+            || mon != MONS_SERPENT_OF_HELL
+               && mons_species(mon) == MONS_SERPENT_OF_HELL)
         {
-            if (mon == MONS_PLAYER_SHADOW
-                || mon == MONS_BAI_SUZHEN_DRAGON
-                || mon != MONS_SERPENT_OF_HELL
-                   && mons_species(mon) == MONS_SERPENT_OF_HELL)
-            {
-                // Keep previous entry.
-                continue;
-            }
-            else
-                die("Un-handled duplicate monster name: %s", name.c_str());
+            continue;
         }
+
+        string name = me.name;
+        lowercase(name);
+
+        if (Mon_Name_Cache.count(name))
+            die("Un-handled duplicate monster name: %s", name.c_str());
 
         Mon_Name_Cache[name] = mon;
     }

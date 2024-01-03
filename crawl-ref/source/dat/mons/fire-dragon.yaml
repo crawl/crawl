@@ -1,0 +1,21 @@
+name: "fire dragon"
+glyph: {char: "D", colour: lightred}
+flags: [flies, warm_blood]
+resists: {poison: 1, fire: 2, cold: -1}
+xp_mult: 12
+genus: dragon
+will: 60
+attacks:
+ - {type: bite, damage: 20}
+ - {type: claw, damage: 13}
+ - {type: trample, flavour: trample, damage: 13}
+hd: 12
+hp_10x: 900
+ac: 10
+ev: 8
+spells: fire_dragon_breath
+has_corpse: true
+shout: loud_roar
+intelligence: animal
+size: giant
+shape: quadruped_winged

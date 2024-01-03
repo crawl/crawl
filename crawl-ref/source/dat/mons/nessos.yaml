@@ -1,0 +1,21 @@
+name: "Nessos"
+glyph: {char: "c", colour: magenta}
+flags: [speaks, warm_blood, unique, archer, gender_neutral]
+xp_mult: 18
+species: centaur
+will: 20
+attacks:
+ - {type: hit, damage: 13}
+ - {type: kick, damage: 5}
+hd: 9
+hp_10x: 720
+ac: 4
+ev: 8
+spells: nessos
+has_corpse: true
+shout: shout
+intelligence: human
+speed: 15
+uses: weapons_armour
+size: large
+shape: centaur

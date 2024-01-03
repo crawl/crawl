@@ -1,0 +1,16 @@
+name: "plant"
+glyph: {char: "P", colour: green}
+flags: [fragile, stationary, no_exp_gain, no_threat]
+resists: {poison: 1}
+holiness: [plant]
+will: invuln
+attacks:
+hd: 10
+hp_10x: 2000
+ac: 0
+ev: 0
+intelligence: brainless
+speed: 0
+size: small
+shape: plant
+tile_variance: mod

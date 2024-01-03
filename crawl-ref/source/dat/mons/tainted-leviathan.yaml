@@ -1,0 +1,21 @@
+name: "tainted leviathan"
+glyph: {char: "C", colour: magenta}
+flags: [fighter, see_invis, speaks, warm_blood, no_zombie, miasma_ring]
+resists: {cold: 1}
+genus: giant
+holiness: [undead]
+will: 120
+attacks:
+ - {type: hit, damage: 50}
+ - {type: hit, flavour: drain, damage: 30}
+hd: 18
+hp_10x: 1500
+ac: 15
+ev: 2
+spells: tainted_leviathan
+has_corpse: true
+shout: shout
+intelligence: human
+uses: starting_equipment
+size: giant
+shape: humanoid

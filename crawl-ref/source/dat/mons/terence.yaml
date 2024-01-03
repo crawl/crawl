@@ -1,0 +1,18 @@
+name: "Terence"
+glyph: {char: "@", colour: lightcyan}
+flags: [speaks, warm_blood, unique, male]
+xp_mult: 20
+species: human
+will: 10
+attacks:
+ - {type: hit, damage: 5}
+hd: 2
+hp_10x: 200
+ac: 0
+ev: 10
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

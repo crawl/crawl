@@ -1,0 +1,17 @@
+name: "boulder beetle"
+glyph: {char: "B", colour: lightgray}
+flags: [web_immune, no_skeleton]
+resists: {poison: -1}
+xp_mult: 12
+will: 40
+attacks:
+ - {type: bite, damage: 27}
+hd: 12
+hp_10x: 765
+ac: 20
+ev: 2
+spells: boulder_beetle
+has_corpse: true
+intelligence: animal
+size: large
+shape: insect

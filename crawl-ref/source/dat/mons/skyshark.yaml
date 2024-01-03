@@ -1,0 +1,17 @@
+name: "skyshark"
+glyph: {char: "F", colour: white}
+flags: [flies, cold_blood, no_skeleton]
+will: 40
+attacks:
+ - {type: bite, flavour: bloodzerk, damage: 20}
+ - {type: tail_slap, damage: 10}
+ - {type: tail_slap, damage: 10}
+hd: 10
+hp_10x: 750
+ac: 6
+ev: 8
+has_corpse: true
+intelligence: animal
+energy: {move: 7}
+size: large
+shape: fish

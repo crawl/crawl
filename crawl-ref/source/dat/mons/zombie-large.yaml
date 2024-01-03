@@ -1,0 +1,19 @@
+name: "large zombie"
+enum: zombie_large
+glyph: {char: "Z", colour: yellow}
+flags: [no_regen]
+resists: {cold: 2}
+xp_mult: 9
+species: zombie
+holiness: [undead]
+will_per_hd: 1
+attacks:
+ - {type: hit, damage: 23}
+hd: 6
+hp_10x: 330
+ac: 8
+ev: 5
+intelligence: brainless
+speed: 5
+size: large
+shape: misc

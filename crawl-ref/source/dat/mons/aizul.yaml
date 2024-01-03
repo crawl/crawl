@@ -1,0 +1,20 @@
+name: "Aizul"
+glyph: {char: "S", colour: lightmagenta}
+flags: [see_invis, speaks, warm_blood, unique, female]
+resists: {poison: 1}
+species: guardian_serpent
+will: 120
+attacks:
+ - {type: hit, damage: 25}
+hd: 14
+hp_10x: 1400
+ac: 8
+ev: 18
+spells: aizul
+has_corpse: true
+shout: shout
+intelligence: human
+speed: 15
+uses: starting_equipment
+size: large
+shape: snake
