@@ -303,7 +303,7 @@ TAGS:     no_monster_gen no_item_gen no_pool_fixup uniq_d_encompass
 ORIENT:   encompass
 DEPTH:    Depths:2-
 PLACE:    D:$
-WEIGHT:   999999 (D:$), 10
+WEIGHT:   1 (D:$), 10
 : if you.in_branch("D") then
 MONS:     gargoyle ; mace ego:freezing | mace ego:electrocution w:20 / \
           yaktaur ; arbalest ego:flaming | arbalest ego:freezing / \
