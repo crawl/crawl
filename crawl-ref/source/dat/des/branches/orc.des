@@ -2,11 +2,17 @@
 # orc.des: Entries to the Orcish Mines, and (mini)vaults which appear _only_
 #          in the Mines. General (mini)vaults, which can also appear in the
 #          Mines, should go to vaults.des.
+#
+# <<1>>    Entries
+# <<2>>    Decorative vaults
+# <<3>>    Monster vaults
+# <<4>>    End vaults
+#
 ##############################################################################
 
-##############################################################################
-# Orcish Mines entries
-##############################################################################
+###############################################################################
+# <<1>> Orcish Mines entries.
+###############################################################################
 # Dummy Orc entry
 
 NAME:   orc_0_dummy
@@ -525,12 +531,395 @@ xxx+xxx
 xxxxxxx
 ENDMAP
 
-
-############################################################################
-# (Mini)vaults specific to the Orcish Mines
-############################################################################
-
 default-depth: Orc
+
+###############################################################################
+# <<2>> Orcish Mines decorative vaults.
+###############################################################################
+
+# luniq_orc_cave, a series of small vaults with things the orcs have dug into.
+# feel free to add your own - nicolae
+NAME: nicolae_orc_rich_vein
+TAGS: no_item_gen no_trap_gen luniq_orc_cave
+DEPTH: Orc
+WEIGHT: 3
+SUBST: X = $xxx, $ = $$$..
+KITEM: S = nothing / gold q:1 / gold q:2 / gold q:3
+MAP
+    xxxx
+ xxxxXXxx
+xxXXX$$Xx
+xX$$X$$Xxx
+xX$$$$$Xxx
+xXxx$$$Xxx
+xxxSSxXxx
+ @SSxxxx
+  .xxx
+ENDMAP
+
+NAME: nicolae_orc_tapped_out
+TAGS: no_item_gen no_trap_gen luniq_orc_cave
+DEPTH: Orc
+SUBST: X = 'xx, ' = .:5 d:4 ^:1
+: if you.depth() == dgn.br_depth(you.branch()) then
+SUBST: ^ = .:5 d:4
+: end
+KITEM: d = stone q:1 / large rock q:1 w:3 / gold q:1 w:3
+KFEAT: ^ = shaft trap
+MAP
+   xxx.
+ xxxX...@
+xxXX''Xxx
+xXX''''Xxx
+xX''''''Xx
+xX'''''Xxx
+xxX'''Xxx
+ xxXXXxx
+  xxxxx
+ENDMAP
+
+NAME:   nicolae_orc_crystal_geode
+TAGS:   no_item_gen no_trap_gen luniq_orc_cave
+DEPTH:  Orc
+KITEM:  d = nothing w:49 / crystal plate armour w:1
+SUBST:  B = b'
+NSUBST: ' = 1 = d:1 .:49 / *:.
+MAP
+ xxxxxxxx
+xx....xxxx
+...x...bbxx
+@xxxB...bbxx
+ xbbB'''Bbxx
+ xbB'''BBbxx
+ xbbBBBBbbxx
+ xxbbbbbbxx
+  xxxxxxxx
+ENDMAP
+
+NAME:  nicolae_orc_lava_room
+TAGS:  no_item_gen no_trap_gen luniq_orc_cave
+DEPTH: Orc
+SUBST: L = l., X = lx
+MAP
+   x.@xx
+ xxx..xxx
+xxx....Xxx
+xX.....Llxx
+xXLLLLLLlXx
+xxllllllXxx
+ xxXXXXXxx
+  xxxxxxx
+ENDMAP
+
+NAME: nicolae_orc_lost_temple
+TAGS: no_item_gen no_trap_gen luniq_orc_cave
+DEPTH: Orc
+KFEAT: _ = altar_beogh
+NSUBST: D = + / c
+SUBST: C = c.
+MAP
+ xxxxxx.
+xxcccDCC.@
+xxcI...I..
+xxc.....Cx
+xxD.._..Dxx
+xxc.....cxx
+xxcI...Icxx
+xxcccDcccxx
+ xxxxxxxxx
+   xxxxx
+ENDMAP
+
+NAME: nicolae_orc_bridge_out
+TAGS: extra decor no_pool_fixup uniq_orc_liquiddecor
+DEPTH: Orc
+KPROP: L = no_tele_into
+SUBST: L = lll., X = xx., Z = llx, l : lw
+MAP
+       xxxx
+    xxxxxxxxx
+  xxxxZZxxxxxx
+ xxxxZllZZxX.@
+xxxxllllllx..@
+xxX..LLLL....x
+xX...LLLL..Xxx
+@..xllllllxxx
+@.XxZlllZxxxx
+xxxxxZZZxxxx
+   xxxxxxx
+      xxxx
+ENDMAP
+
+NAME:  nicolae_orc_damp_corner
+TAGS:  transparent decor extra
+DEPTH: Orc
+KMONS: 1 = fungus / nothing w:3
+KFEAT: 1 = W / . w:20
+SUBST: E = 1X, ' = ...WW11, X = xx.
+MAP
+  x@@xx
+  x..Xxxx
+ xxX...Xxxxxxxx
+ xxxXX...Xxxxxxxx
+xxxxxxXX...'EExxxx
+xxxxxxxxxX''''Exxxx
+xxxxxxxxxx'''''Exxx
+xxxxxxXXXX''''Exxx
+ xxxXX....''EExxx
+ xxX...XXxxxxxxx
+  x..Xxxxxxxx
+  x..Xxxxx
+   @@xx
+ENDMAP
+
+NAME: nicolae_orc_flooded_monolith
+TAGS: extra decor transparent uniq_orc_liquiddecor
+DEPTH: Orc
+SUBST: W = w., c : ccccbv
+MAP
+  .......
+ ..WWWWW..
+..WWwwwWW..
+.WWwwwwwWW.
+.WwwcccwwW.
+.WwwcccwwW.
+.WwwcccwwW.
+.WWwwwwwWW.
+..WWwwwWW..
+ ..WWWWW..
+  .......
+ENDMAP
+
+# http://www.youtube.com/watch?v=-w-58hQ9dLk
+NAME: nicolae_orc_jurassic_orc
+TAGS: transparent extra decor no_rotate no_vmirror
+WEIGHT: 1
+DEPTH: Orc
+MAP
+      .........xxx
+    ......cc....xxxx
+  .....ccc.cc.c..xxxx
+ ...ccc..c.ccc.c.xxxxx
+..cc.c...cc.ccc.cxxxxx
+..cccccccccccccc.cxxxx
+..c.c.c.c.ccc.cccxxxxx
+@..c.c.c.ccc...ccxxxx
+...cccccccc.....cxxxx
+...............xxxxx
+ .............xxxxx
+    .........xxxxx
+       ....xxxx
+ENDMAP
+
+NAME: nicolae_orc_lava_tube
+TAGS: extra decor transparent uniq_orc_liquiddecor
+DEPTH: Orc
+SUBST: X = xx., L = ll., Z = lx
+MAP
+                 xxxx@@@xx
+           xxxxxxxxxZ...xxx
+       xxxxxxxxxxxxxx...lZxx
+    xxxxxZZZZxxxxxxxZ...llZx
+  xxxxxxXLllllxxxxxZ...LllZx
+ xxxxXXX...LLXXxxxxX...LlZxx
+xxxxX....X.....XZxX...XXxxx
+xZllL...XxZxx........Xxxxx
+xZll...XxxxxllL.....Xxxxx
+xZll..XXxxxxlllxZXXXxxx
+xxxX...XxxxxZZxxxxxxxx
+ xxxX...Zxxxxxxxxxxx
+ xxxX...XXxxxxxxxx
+  xxxZ...Xxxxxxx
+   xxx@@@xxxx
+ENDMAP
+
+NAME: nicolae_orc_pool_cavern
+TAGS: extra decor transparent uniq_orc_liquiddecor
+DEPTH: Orc
+SUBST: W = ww., X = x:80 .:40 w
+MAP
+       xxx@@x
+    xxxxxx..xx
+   xxxxxxX..Xxx
+  xxxxxxX...Xxxx
+ xxxxXXX..Xxxxxx
+ xxxX.......Xxxxx
+xxxX..WWWW..Xxxxx
+xxxX..WwwW.Xxxxxx
+xxxX..WwwW.Xxxxxx
+xxxX..WWWW..Xxxx
+@.xX.........Xxx
+@......XX.....Xxx
+x.....XxxXX...Xxx
+xxxxXXxxxxxX....@
+ xxxxxxxxxxxX...@
+   xxxxxxxxxxxxxx
+      xxxxxxxxx
+ENDMAP
+
+NAME: nicolae_orc_rockfall
+TAGS: transparent extra decor no_item_gen
+DEPTH: Orc
+: dgn.delayed_decay_extra(_G, 'o', 'orc corpse', 'stone q:1 / nothing, large rock q:1')
+KITEM: r = stone q:1 / nothing w:5 / large rock q:1 w:3
+KITEM: R = stone q:1 / stone q:2 / large rock q:1 w:5
+MAP
+ .....
+..rrr..
+.rRRRr.
+.rRoRr.
+.rRRRr.
+..rrr..
+ .....
+ENDMAP
+
+NAME: nicolae_orc_sculptors_studio
+TAGS: extra decor no_item_gen
+DEPTH: Orc
+# Makeshift hammer and chisel
+KITEM: H = club
+KITEM: C = dagger
+KITEM: r = stone q:1 / nothing w:5
+NSUBST: r = 1:H / 1:C / *:r
+SUBST: G = GGGI
+MAP
+...xxxxxx
+.G.x..rrx
+...x.rrrx
+.G.+.rrGx
+...x.rrrx
+.G.x..rrx
+...xxxxxx
+ENDMAP
+
+NAME: nicolae_orc_stony_grotto
+TAGS: extra decor transparent
+DEPTH: Orc
+SUBST: X = xxxc...., C = xc, D = ...c
+MAP
+  @Cxxxx
+ @..xCcxxxx
+ Cx...xxxxxxx
+ xxC...CXXxxxx
+ xxX..xx..DXxxx
+xxxC..xD.c..XCxx
+xxxX....cccD.Xxxx
+xxC.c....c..ccxxx
+xxXccc..D...ccXxx
+xxxxc.Dcc.....Cxx
+xxxxX..cc..C..XCx
+ xxxxX....CC...xx
+   xxxxXXXxxx..C
+     xxxxxxxC..@
+         xxxxC@
+ENDMAP
+
+NAME:   mainiacjoe_minedec_watcher_in_the_water
+TAGS:   transparent extra no_pool_fixup luniq_staircase
+DEPTH:  Orc, !Orc:$
+WEIGHT: 5
+MONS:   fungus
+KMONS:  K = kraken
+KFEAT:  K = w
+SUBST:  d = dd., 1 = 1., X = x., } = })]
+: dgn.delayed_decay(_G, 'd', 'orc skeleton')
+MAP
+    xxxxxxxx
+   xx111nccx
+  .x11..nwcxx
+  .x1..dnwccx
+..11.Xd.nnwcx
+..1.1X.d.nwcx
+@..11x.}.nKn@
+..1.1X.d.nwcx
+..11.Xd.nnwcx
+  .x1..dnwccx
+  .x11..nwcx
+   xx111nccx
+    xxxxxxxx
+ENDMAP
+
+NAME:    regret_index_minedec_guest_junction
+TAGS:    transparent extra decor no_pool_fixup no_rotate uniq_orc_liquiddecor
+DEPTH:   Orc
+ITEM:    mundane shortbow no_pickup, giant club no_pickup
+SHUFFLE: ABCD, YZ
+SUBST:   A : x., B : x., CDY = ., - : +., Z : x'..
+CLEAR:   '
+MAP
+ ccYcc..cc  cc  ......
+cc.........Wccc.........
+c........Wwwccc--xxxxxxxx
+Z......Wwwwcccc.......xxxx
+c....Wwwwccccdc....CC..exx
+c...Wwwwcccc....BB....D..x.
+.............A..............
+ .x..D....BB....ccccwwwW...c
+  xxe..CC....cdccccwwwW....c
+  xxxx.......ccccwwwW......Z
+   xxxxxxxx--cccwwW........c
+    .........cccW.........cc
+      ......  cc  cc..ccYcc
+ENDMAP
+
+NAME:    regret_index_minedec_devilstone
+TAGS:    transparent extra decor
+ITEM:    mundane damaged demon trident no_pickup
+KFEAT:   A = altar_makhleb
+KFEAT:   B = altar_beogh
+KFEAT:   C = c
+SHUFFLE: XYZ, AB / VV / VV / VV, `y! / `y! / ~z&
+SUBST:   X : x', Y : x', Z : ', V : VVIIId'
+SUBST:   ` = ., Y = c, ! = @
+TILE:    C = wall_stone_dark
+FTILE:   'dABVI = floor_pebble_lightred
+CLEAR:   ~z&
+MAP
+  `yy  .@.
+  ``yy.....
+  ```ycc'cc
+  ``ccc'''cc
+  &ccC'ZBX'cc
+  cc'CC'Y'cc
+ cc'Y'CC'cc
+cc'XAZ'Ccc&
+ cc'''ccc``
+  cc'ccy```
+  .....yy``
+   .@.  yy`
+ENDMAP
+
+NAME:    regret_index_minedec_shroomtown_chain
+TAGS:    transparent extra decor
+MONS:    fungus
+ITEM:    stone no_pickup, large rock q:1 no_pickup
+SHUFFLE: ABCDEFGH, WX / WX / WW, YZ / YZ / YY
+SUBST:   ABCD = 1, EF = x, G : GIde, H : x.
+SUBST:   WY = +, X : ccx, Z : ccx
+TILE:    G : dngn_statue_axe / dngn_statue_polearm w:5 / dngn_statue_imp
+MAP
+ccccc....
+c.F.cAB...
+c...W..C..
+cXccc...D..
+..E.....E..
+..D...cccYc
+...C..Z...c
+ ...BAc.G.c
+   ...ccccccccc...
+          c.G.cED...
+          c...Z..C...
+          cYccc...B..
+          ..A.....A..
+          ..B...cccXc
+           ..C..W...c
+           ...DEc.F.c
+            ....ccccc
+ENDMAP
+
+############################################################################
+# <<3>> Monster (mini)vaults specific to the Orcish Mines
+############################################################################
 
 ##################################
 # Dummy Orc minivault balancer.
@@ -1059,283 +1448,6 @@ xXccccccccccXxxx
 xXccccccccccXxxx
 ENDMAP
 
-# luniq_orc_cave, a series of small vaults with things the orcs have dug into.
-# feel free to add your own - nicolae
-NAME: nicolae_orc_rich_vein
-TAGS: no_item_gen no_trap_gen luniq_orc_cave
-DEPTH: Orc
-WEIGHT: 3
-SUBST: X = $xxx, $ = $$$..
-KITEM: S = nothing / gold q:1 / gold q:2 / gold q:3
-MAP
-    xxxx
- xxxxXXxx
-xxXXX$$Xx
-xX$$X$$Xxx
-xX$$$$$Xxx
-xXxx$$$Xxx
-xxxSSxXxx
- @SSxxxx
-  .xxx
-ENDMAP
-
-NAME: nicolae_orc_tapped_out
-TAGS: no_item_gen no_trap_gen luniq_orc_cave
-DEPTH: Orc
-SUBST: X = 'xx, ' = .:5 d:4 ^:1
-: if you.depth() == dgn.br_depth(you.branch()) then
-SUBST: ^ = .:5 d:4
-: end
-KITEM: d = stone q:1 / large rock q:1 w:3 / gold q:1 w:3
-KFEAT: ^ = shaft trap
-MAP
-   xxx.
- xxxX...@
-xxXX''Xxx
-xXX''''Xxx
-xX''''''Xx
-xX'''''Xxx
-xxX'''Xxx
- xxXXXxx
-  xxxxx
-ENDMAP
-
-NAME: nicolae_orc_crystal_geode
-TAGS: no_item_gen no_trap_gen luniq_orc_cave
-DEPTH: Orc
-SUBST: B = b'
-NSUBST: ' = d / '
-KITEM: d = nothing w:49 / crystal plate armour w:1
-MAP
- xxxxxxxx
-xx....xxxx
-...x...bbxx
-@xxxB...bbxx
- xbbB'''Bbxx
- xbB'''BBbxx
- xbbBBBBbbxx
- xxbbbbbbxx
-  xxxxxxxx
-ENDMAP
-
-NAME: nicolae_orc_lava_room
-TAGS: no_item_gen no_trap_gen luniq_orc_cave
-DEPTH: Orc
-SUBST: L = l., X = lx
-MAP
-   x.@xx
- xxx..xxx
-xxx....Xxx
-xX.....Llxx
-xXLLLLLLlXx
-xxllllllXxx
- xxXXXXXxx
-  xxxxxxx
-ENDMAP
-
-NAME: nicolae_orc_lost_temple
-TAGS: no_item_gen no_trap_gen luniq_orc_cave
-DEPTH: Orc
-NSUBST: D = + / c
-SUBST: C = c.
-KFEAT: _ = altar_beogh
-MAP
- xxxxxx.
-xxcccDCC.@
-xxcI...I..
-xxc.....Cx
-xxD.._..Dxx
-xxc.....cxx
-xxcI...Icxx
-xxcccDcccxx
- xxxxxxxxx
-   xxxxx
-ENDMAP
-
-NAME: nicolae_orc_bridge_out
-TAGS: extra decor no_pool_fixup uniq_orc_liquiddecor
-DEPTH: Orc
-KPROP: L = no_tele_into
-SUBST: L = lll., X = xx., Z = llx, l : lw
-MAP
-       xxxx
-    xxxxxxxxx
-  xxxxZZxxxxxx
- xxxxZllZZxX.@
-xxxxllllllx..@
-xxX..LLLL....x
-xX...LLLL..Xxx
-@..xllllllxxx
-@.XxZlllZxxxx
-xxxxxZZZxxxx
-   xxxxxxx
-      xxxx
-ENDMAP
-
-NAME: nicolae_orc_damp_corner
-TAGS: transparent decor extra
-DEPTH: Orc
-SUBST: E = 1X, ' = ...WW11, X = xx.
-KMONS: 1 = fungus / nothing w:3
-KFEAT: 1 = W / . w:20
-MAP
-  x@@xx
-  x..Xxxx
- xxX...Xxxxxxxx
- xxxXX...Xxxxxxxx
-xxxxxxXX...'EExxxx
-xxxxxxxxxX''''Exxxx
-xxxxxxxxxx'''''Exxx
-xxxxxxXXXX''''Exxx
- xxxXX....''EExxx
- xxX...XXxxxxxxx
-  x..Xxxxxxxx
-  x..Xxxxx
-   @@xx
-ENDMAP
-
-NAME: nicolae_orc_flooded_monolith
-TAGS: extra decor transparent uniq_orc_liquiddecor
-DEPTH: Orc
-SUBST: W = w., c : ccccbv
-MAP
-  .......
- ..WWWWW..
-..WWwwwWW..
-.WWwwwwwWW.
-.WwwcccwwW.
-.WwwcccwwW.
-.WwwcccwwW.
-.WWwwwwwWW.
-..WWwwwWW..
- ..WWWWW..
-  .......
-ENDMAP
-
-# http://www.youtube.com/watch?v=-w-58hQ9dLk
-NAME: nicolae_orc_jurassic_orc
-TAGS: transparent extra decor no_rotate no_vmirror
-WEIGHT: 1
-DEPTH: Orc
-MAP
-      .........xxx
-    ......cc....xxxx
-  .....ccc.cc.c..xxxx
- ...ccc..c.ccc.c.xxxxx
-..cc.c...cc.ccc.cxxxxx
-..cccccccccccccc.cxxxx
-..c.c.c.c.ccc.cccxxxxx
-@..c.c.c.ccc...ccxxxx
-...cccccccc.....cxxxx
-...............xxxxx
- .............xxxxx
-    .........xxxxx
-       ....xxxx
-ENDMAP
-
-NAME: nicolae_orc_lava_tube
-TAGS: extra decor transparent uniq_orc_liquiddecor
-DEPTH: Orc
-SUBST: X = xx., L = ll., Z = lx
-MAP
-                 xxxx@@@xx
-           xxxxxxxxxZ...xxx
-       xxxxxxxxxxxxxx...lZxx
-    xxxxxZZZZxxxxxxxZ...llZx
-  xxxxxxXLllllxxxxxZ...LllZx
- xxxxXXX...LLXXxxxxX...LlZxx
-xxxxX....X.....XZxX...XXxxx
-xZllL...XxZxx........Xxxxx
-xZll...XxxxxllL.....Xxxxx
-xZll..XXxxxxlllxZXXXxxx
-xxxX...XxxxxZZxxxxxxxx
- xxxX...Zxxxxxxxxxxx
- xxxX...XXxxxxxxxx
-  xxxZ...Xxxxxxx
-   xxx@@@xxxx
-ENDMAP
-
-NAME: nicolae_orc_pool_cavern
-TAGS: extra decor transparent uniq_orc_liquiddecor
-DEPTH: Orc
-SUBST: W = ww., X = x:80 .:40 w
-MAP
-       xxx@@x
-    xxxxxx..xx
-   xxxxxxX..Xxx
-  xxxxxxX...Xxxx
- xxxxXXX..Xxxxxx
- xxxX.......Xxxxx
-xxxX..WWWW..Xxxxx
-xxxX..WwwW.Xxxxxx
-xxxX..WwwW.Xxxxxx
-xxxX..WWWW..Xxxx
-@.xX.........Xxx
-@......XX.....Xxx
-x.....XxxXX...Xxx
-xxxxXXxxxxxX....@
- xxxxxxxxxxxX...@
-   xxxxxxxxxxxxxx
-      xxxxxxxxx
-ENDMAP
-
-NAME: nicolae_orc_rockfall
-TAGS: transparent extra decor no_item_gen
-DEPTH: Orc
-: dgn.delayed_decay_extra(_G, 'o', 'orc corpse', 'stone q:1 / nothing, large rock q:1')
-KITEM: r = stone q:1 / nothing w:5 / large rock q:1 w:3
-KITEM: R = stone q:1 / stone q:2 / large rock q:1 w:5
-MAP
- .....
-..rrr..
-.rRRRr.
-.rRoRr.
-.rRRRr.
-..rrr..
- .....
-ENDMAP
-
-NAME: nicolae_orc_sculptors_studio
-TAGS: extra decor no_item_gen
-DEPTH: Orc
-NSUBST: r = 1:H / 1:C / *:r
-SUBST: G = GGGI
-# Makeshift hammer and chisel
-KITEM: H = club
-KITEM: C = dagger
-KITEM: r = stone q:1 / nothing w:5
-MAP
-...xxxxxx
-.G.x..rrx
-...x.rrrx
-.G.+.rrGx
-...x.rrrx
-.G.x..rrx
-...xxxxxx
-ENDMAP
-
-NAME: nicolae_orc_stony_grotto
-TAGS: extra decor transparent
-DEPTH: Orc
-SUBST: X = xxxc...., C = xc, D = ...c
-MAP
-  @Cxxxx
- @..xCcxxxx
- Cx...xxxxxxx
- xxC...CXXxxxx
- xxX..xx..DXxxx
-xxxC..xD.c..XCxx
-xxxX....cccD.Xxxx
-xxC.c....c..ccxxx
-xxXccc..D...ccXxx
-xxxxc.Dcc.....Cxx
-xxxxX..cc..C..XCx
- xxxxX....CC...xx
-   xxxxXXXxxx..C
-     xxxxxxxC..@
-         xxxxC@
-ENDMAP
-
 NAME: cheibrodos_orc_arena
 TAGS: no_item_gen no_monster_gen
 DEPTH: Orc
@@ -1384,111 +1496,8 @@ x1...1...1x
 xxx..@..xxx
 ENDMAP
 
-NAME:   mainiacjoe_minedec_watcher_in_the_water
-TAGS:   transparent extra no_pool_fixup luniq_staircase
-DEPTH:  Orc, !Orc:$
-WEIGHT: 5
-MONS:   fungus
-KMONS:  K = kraken
-KFEAT:  K = w
-SUBST:  d = dd., 1 = 1., X = x., } = })]
-: dgn.delayed_decay(_G, 'd', 'orc skeleton')
-MAP
-    xxxxxxxx
-   xx111nccx
-  .x11..nwcxx
-  .x1..dnwccx
-..11.Xd.nnwcx
-..1.1X.d.nwcx
-@..11x.}.nKn@
-..1.1X.d.nwcx
-..11.Xd.nnwcx
-  .x1..dnwccx
-  .x11..nwcx
-   xx111nccx
-    xxxxxxxx
-ENDMAP
-
-NAME:    regret_index_minedec_guest_junction
-TAGS:    transparent extra decor no_pool_fixup no_rotate uniq_orc_liquiddecor
-DEPTH:   Orc
-ITEM:    mundane shortbow no_pickup, giant club no_pickup
-SHUFFLE: ABCD, YZ
-SUBST:   A : x., B : x., CDY = ., - : +., Z : x'..
-CLEAR:   '
-MAP
- ccYcc..cc  cc  ......
-cc.........Wccc.........
-c........Wwwccc--xxxxxxxx
-Z......Wwwwcccc.......xxxx
-c....Wwwwccccdc....CC..exx
-c...Wwwwcccc....BB....D..x.
-.............A..............
- .x..D....BB....ccccwwwW...c
-  xxe..CC....cdccccwwwW....c
-  xxxx.......ccccwwwW......Z
-   xxxxxxxx--cccwwW........c
-    .........cccW.........cc
-      ......  cc  cc..ccYcc
-ENDMAP
-
-NAME:    regret_index_minedec_devilstone
-TAGS:    transparent extra decor
-ITEM:    mundane damaged demon trident no_pickup
-KFEAT:   A = altar_makhleb
-KFEAT:   B = altar_beogh
-KFEAT:   C = c
-SHUFFLE: XYZ, AB / VV / VV / VV, `y! / `y! / ~z&
-SUBST:   X : x', Y : x', Z : ', V : VVIIId'
-SUBST:   ` = ., Y = c, ! = @
-TILE:    C = wall_stone_dark
-FTILE:   'dABVI = floor_pebble_lightred
-CLEAR:   ~z&
-MAP
-  `yy  .@.
-  ``yy.....
-  ```ycc'cc
-  ``ccc'''cc
-  &ccC'ZBX'cc
-  cc'CC'Y'cc
- cc'Y'CC'cc
-cc'XAZ'Ccc&
- cc'''ccc``
-  cc'ccy```
-  .....yy``
-   .@.  yy`
-ENDMAP
-
-NAME:    regret_index_minedec_shroomtown_chain
-TAGS:    transparent extra decor
-MONS:    fungus
-ITEM:    stone no_pickup, large rock q:1 no_pickup
-SHUFFLE: ABCDEFGH, WX / WX / WW, YZ / YZ / YY
-SUBST:   ABCD = 1, EF = x, G : GIde, H : x.
-SUBST:   WY = +, X : ccx, Z : ccx
-TILE:    G : dngn_statue_axe / dngn_statue_polearm w:5 / dngn_statue_imp
-MAP
-ccccc....
-c.F.cAB...
-c...W..C..
-cXccc...D..
-..E.....E..
-..D...cccYc
-...C..Z...c
- ...BAc.G.c
-   ...ccccccccc...
-          c.G.cED...
-          c...Z..C...
-          cYccc...B..
-          ..A.....A..
-          ..B...cccXc
-           ..C..W...c
-           ...DEc.F.c
-            ....ccccc
-ENDMAP
-
 ############################################################################
-# Orc endings.
+# <<4>> Orc end vaults.
 #
 # These generally place four random stores; particularly difficult endings
 # might consider placing four good quality stores.
@@ -1582,7 +1591,7 @@ MAP
 ....5...5..wwwwcccccwwww..5...5....
 ..c....5.wwwwccccSccccwwww.5....c..
 ..c...5.wwwwcccc4.4ccccwwww.5...c..
-........1221...34R43...1221........
+........1221...34S43...1221........
 ........1221...34S43...1221........
 ..c...5.wwwwcccc4.4ccccwwww.5...c..
 ..c....5.wwwwccccSccccwwww.5....c..

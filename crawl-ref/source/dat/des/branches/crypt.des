@@ -1,8 +1,11 @@
 ##############################################################################
 # crypt.des: Maps for the Crypt.
-# - entry vaults
-# - minivaults
-# - branch end vaults
+#
+# <<1>>      Entries
+# <<2>>      Arrival vaults
+# <<3>>      Decorative vaults
+# <<4>>      Monster-placing vaults
+# <<5>>      End vaults
 ##############################################################################
 
 {{
@@ -98,7 +101,7 @@ end
 }}
 
 ##############################################################################
-# Crypt entry vaults
+# <<1>> Crypt entry vaults
 ##############################################################################
 
 ##############################################################################
@@ -339,7 +342,7 @@ cccc@cccc
 ENDMAP
 
 ##############################################################################
-# Crypt arrival vaults
+# <<2>> Crypt arrival vaults
 ##############################################################################
 
 # It's been undisturbed for so long, cobwebs are starting to form.
@@ -448,7 +451,226 @@ xxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# Crypt minivaults
+# <<3>> Crypt decorative vaults
+##############################################################################
+
+NAME:    nicolae_crypt_ancient_font
+TAGS:    transparent extra
+DEPTH:   Crypt
+SHUFFLE: HIJ
+NSUBST:  A = @ / ., B = @ / ., C = @ / ., D = @ / .
+SUBST:   HI = c, J : Gcc
+MAP
+cccAcHcAccc
+ccc.....ccc
+ccIcc.ccIcc
+D.cJc.cJc.B
+c.cc...cc.c
+H....V....H
+c.cc...cc.c
+D.cJc.cJc.B
+ccIcc.ccIcc
+ccc.....ccc
+cccCcHcCccc
+ENDMAP
+
+NAME:  nicolae_crypt_small_crypt
+TAGS:  allow_dup extra
+DEPTH: Crypt
+MAP
+ccccc
+cG.Gc
+c.%.c
+c...c
+cc+cc
+ENDMAP
+
+NAME:   nicolae_crypt_fedhas_prevails
+TAGS:   transparent extra
+DEPTH:  Crypt
+WEIGHT: 3
+TAGS:   no_monster_gen no_item_gen no_trap_gen
+SUBST:  D = dw, W = wp
+KMONS:  d = withered plant / nothing w:20
+KMONS:  w = withered plant / nothing
+KMONS:  p = plant
+KFEAT:  _ = altar_fedhas
+MAP
+cccccccccc
+cddDwwWppc
+cddDwwWppc
++......_pc
+cddDwwWppc
+cddDwwWppc
+cccccccccc
+ENDMAP
+
+NAME:    nicolae_crypt_twisting_catacombs
+TAGS:    transparent extra
+DEPTH:   Crypt
+SHUFFLE: Aa / Bb / Dd / Ee / Ff / Jj / Hh / Ii, {[(<
+SUBST:   ABDE = @, abd = G, efjhi = ., FJHI = c
+MAP
+ccccccccccIIcccccc
+H..h.....iiic..a.A
+H..h........c..a.A
+cccccccc..ccc..ccc
+J....ccc..ccc..ccc
+J....ccc..ccc....c
+cjjccc{....[c....c
+c..ccc......ccc..c
+c.......cc.......c
+c.......cc.......c
+c..ccc......ccc..c
+c....c(....<cccbbc
+c....ccc..ccc....B
+ccc..ccc..ccc....B
+F.f..ccc..cccccccc
+F.f..c......d..ccc
+ccceec......d..ccc
+cccEEccccccccDDccc
+ENDMAP
+
+NAME:   nicolae_crypt_niches
+TAGS:   allow_dup extra
+DEPTH:  Crypt
+NSUBST: A = + / A
+SUBST:  A = c:30 +
+MAP
+ccccAcccc
+cc.c.c.cc
+c.......c
+cc.c.c.cc
+A.......A
+cc.c.c.cc
+c.......c
+cc.c.c.cc
+ccccAcccc
+ENDMAP
+
+NAME:    nicolae_crypt_stairs_room
+TAGS:    extra allow_dup luniq
+DEPTH:   Crypt, !Crypt:1, !Crypt:$
+SHUFFLE: AB, CDE, FH/FH/HF
+SUBST:   + = +@, BCD = c, A : GGGc.., E : Gc., F : GV..
+NSUBST:  H = { / }
+SHUFFLE: {}[]()
+MAP
+ccccccccccc
+ccECDEDCEcc
+cc.......cc
+cF.cc.cc..c
+cH.AB.BA..+
+cF.cc.cc..c
+cc.......cc
+ccECDEDCEcc
+ccccccccccc
+ENDMAP
+
+NAME: nicolae_crypt_statuary_hall
+TAGS: no_item_gen no_monster_gen extra luniq_staircase
+DEPTH: Crypt, !Crypt:1, !Crypt:$
+SHUFFLE: {[(, }])
+MAP
+      x@x
+      x.x
+      x.x
+   xxxx.xxxx
+   x..G.G..x
+   x..x.x..x
+xxxx..G.G..xxxx
+@....{x.x}....@
+xxxx..G.G..xxxx
+   x..x.x..x
+   x..G.G..x
+   xxxx.xxxx
+      x.x
+      x.x
+      x@x
+ENDMAP
+
+NAME: nicolae_crypt_cryptocurrency
+DEPTH: Crypt
+TAGS: extra decor no_item_gen no_trap_gen no_monster_gen no_descent
+KPROP: $-c = no_tele_into
+KMASK: .@ = !opaque
+KITEM: $ = $ / $ good_item w:3
+KFEAT: m = iron_grate
+MAP
+xxxxxxxxx
+xxxcccxxx@
+xxcc$ccxx.x
+xcc---ccx.x
+xc$-c--m..x
+xcc---ccx.x
+xxcc$ccxx.x
+xxxcccxxx@
+xxxxxxxxx
+ENDMAP
+
+NAME: nicolae_crypt_little_mausoleum
+DEPTH: Crypt
+TAGS: transparent allow_dup
+SHUFFLE: ab/ab/ab/ab/ba
+SUBST: b = ., G : G:60 xV0 .:5 t:2 P:2, a = sGVe0 _:5 $:5 %:5
+: if you.depth() == 1 then
+SUBST: s = ]})>
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST: s = [{(<
+: else
+SUBST: s = ]})>[{(<
+: end
+KFEAT: _ = altar_kikubaaqudgha w:15 / altar_yredelemnul w:15 / \
+           altar_dithmenos w:5 / altar_the_shining_one w:1
+KMONS: 0 = zombie / skeleton
+KMONS: P = withered plant
+: dgn.delayed_decay(_G, 'e', 'human skeleton / orc skeleton / elf skeleton')
+TILE: t = dngn_tree_dead
+: set_feature_name("tree", "dead tree")
+MAP
+xxxxx
+xbabx
+x...x
+xx.xx
+Gx+xG
+.....
+ENDMAP
+
+NAME:  nicolae_crypt_crumbling_hall
+TAGS:  transparent no_wall_fixup extra decor
+DEPTH: Crypt
+SUBST: - = x..., _ = x___, . = .:150 0, 0 = 0:90 9:30 8
+TILE:  x = wall_spider
+CLEAR: _
+MAP
+      ............
+      .........-.._
+ _    ..ccc++ccc.._xx_
+ xxx  .-cxxx...c.._xxx_
+ xxxx_-xc-c..c.c.. xxxx
+  _xxxxxx.-..-xx..  xxx
+....-xxxx.c..cxx-...xx-.
+..--xxxxc.x..-xcxx.-xxx.
+.-cxxxxcc.c..c-ccccccc-.
+.xxxxx-...---...-.-..c..
+.xxxc-c.c.c..cxc.c.c.c.-
+.-xx....-...---x--...+..
+..+.-..---...-.xx-...+..
+..c.c.c.c.c.-c.cxc.c-c-.
+..c-.------...-xx-..-cxx_
+..cccxxxxxc-.cxcccccccxx_
+..-xxxxxxx-.x.-c....--xxx_
+..-xxxxxx-c-.c-c......-x_
+   _xxxxx-..x-xc.-x-   _
+    _xxxc.c-.c-c.xxx_
+    xx--cx....-c.-xx
+   xxx..ccc++ccc.-x_
+   xx ..-x-...-..xx
+      ..........xx
+ENDMAP
+
+##############################################################################
+# <<4>> Crypt monster vaults
 ##############################################################################
 
 ##############################################################################
@@ -545,8 +767,8 @@ ENDMAP
 ##############################################################################
 # Ghost lake
 NAME:  weyrava_ghost_lake
-DEPTH: Crypt
 TAGS:  no_monster_gen no_item_gen no_descent
+DEPTH: Crypt
 MONS:  laughing skull
 MONS:  skeletal warrior ; long sword . kite shield . w:6 any beam wand | nothing /\
        skeletal warrior ; battleaxe | halberd . w:7 any beam wand | nothing
@@ -794,100 +1016,6 @@ ccww..ww44ww..wwcc
     cccc@@cccc
 ENDMAP
 
-NAME: nicolae_crypt_ancient_font
-TAGS: transparent extra
-DEPTH: Crypt
-SHUFFLE: HIJ
-NSUBST: A = @ / ., B = @ / ., C = @ / ., D = @ / .
-SUBST: HI = c, J : Gcc
-MAP
-cccAcHcAccc
-ccc.....ccc
-ccIcc.ccIcc
-D.cJc.cJc.B
-c.cc...cc.c
-H....V....H
-c.cc...cc.c
-D.cJc.cJc.B
-ccIcc.ccIcc
-ccc.....ccc
-cccCcHcCccc
-ENDMAP
-
-NAME: nicolae_crypt_small_crypt
-TAGS: allow_dup extra
-DEPTH: Crypt
-MAP
-ccccc
-cG.Gc
-c.%.c
-c...c
-cc+cc
-ENDMAP
-
-NAME: nicolae_crypt_fedhas_prevails
-TAGS: transparent extra
-DEPTH: Crypt
-WEIGHT: 3
-TAGS: no_monster_gen no_item_gen no_trap_gen
-SUBST: D = dw, W = wp
-KMONS: d = withered plant / nothing w:20
-KMONS: w = withered plant / nothing
-KMONS: p = plant
-KFEAT: _ = altar_fedhas
-MAP
-cccccccccc
-cddDwwWppc
-cddDwwWppc
-+......_pc
-cddDwwWppc
-cddDwwWppc
-cccccccccc
-ENDMAP
-
-NAME: nicolae_crypt_twisting_catacombs
-TAGS: transparent extra
-DEPTH: Crypt
-SHUFFLE: Aa/Bb/Dd/Ee/Ff/Jj/Hh/Ii, {[(<
-SUBST: ABDE = @, abd = G, efjhi = ., FJHI = c
-MAP
-ccccccccccIIcccccc
-H..h.....iiic..a.A
-H..h........c..a.A
-cccccccc..ccc..ccc
-J....ccc..ccc..ccc
-J....ccc..ccc....c
-cjjccc{....[c....c
-c..ccc......ccc..c
-c.......cc.......c
-c.......cc.......c
-c..ccc......ccc..c
-c....c(....<cccbbc
-c....ccc..ccc....B
-ccc..ccc..ccc....B
-F.f..ccc..cccccccc
-F.f..c......d..ccc
-ccceec......d..ccc
-cccEEccccccccDDccc
-ENDMAP
-
-NAME: nicolae_crypt_niches
-TAGS: allow_dup extra
-DEPTH: Crypt
-NSUBST: A = + / A
-SUBST: A = c:30 +
-MAP
-ccccAcccc
-cc.c.c.cc
-c.......c
-cc.c.c.cc
-A.......A
-cc.c.c.cc
-c.......c
-cc.c.c.cc
-ccccAcccc
-ENDMAP
-
 NAME: nicolae_crypt_soggy_tomb
 TAGS: no_pool_fixup extra
 DEPTH: Crypt
@@ -905,25 +1033,6 @@ c....c
 c.2.2c
 c....c
 cAAAAc
-ENDMAP
-
-NAME: nicolae_crypt_stairs_room
-TAGS: extra allow_dup luniq
-DEPTH: Crypt, !Crypt:1, !Crypt:$
-SHUFFLE: AB, CDE, FH/FH/HF
-SUBST: + = +@, BCD = c, A : GGGc.., E : Gc., F : GV..
-NSUBST: H = { / }
-SHUFFLE: {}[]()
-MAP
-ccccccccccc
-ccECDEDCEcc
-cc.......cc
-cF.cc.cc..c
-cH.AB.BA..+
-cF.cc.cc..c
-cc.......cc
-ccECDEDCEcc
-ccccccccccc
 ENDMAP
 
 NAME:    hangedman_hall_of_fallen_heroes
@@ -1109,8 +1218,8 @@ cc.ccccc.cc...c+WWWWWcc...cc
 ENDMAP
 
 NAME: cheibrodos_crypt_eye_of_stone
-DEPTH: Crypt, !Crypt:$
 TAGS: no_item_gen no_monster_gen
+DEPTH: Crypt, !Crypt:$
 ORIENT: float
 MONS: glass eye / curse skull, obsidian statue / orange crystal statue
 MONS: ancient champion, skeletal warrior
@@ -1138,81 +1247,10 @@ cc.4.cAc...cV...
           cccc
 ENDMAP
 
-NAME: nicolae_crypt_statuary_hall
-DEPTH: Crypt, !Crypt:1, !Crypt:$
-TAGS: decor transparent
-SHUFFLE: {[(, }])
-MAP
-      x@x
-      x.x
-      x.x
-   xxxx.xxxx
-   x..G.G..x
-   x..x.x..x
-xxxx..G.G..xxxx
-@....{x.x}....@
-xxxx..G.G..xxxx
-   x..x.x..x
-   x..G.G..x
-   xxxx.xxxx
-      x.x
-      x.x
-      x@x
-ENDMAP
-
-
-NAME: nicolae_crypt_cryptocurrency
-DEPTH: Crypt
-TAGS: extra decor no_item_gen no_trap_gen no_monster_gen no_descent
-KPROP: $-c = no_tele_into
-KMASK: .@ = !opaque
-KITEM: $ = $ / $ good_item w:3
-KFEAT: m = iron_grate
-MAP
-xxxxxxxxx
-xxxcccxxx@
-xxcc$ccxx.x
-xcc---ccx.x
-xc$-c--m..x
-xcc---ccx.x
-xxcc$ccxx.x
-xxxcccxxx@
-xxxxxxxxx
-ENDMAP
-
-
-NAME: nicolae_crypt_little_mausoleum
-DEPTH: Crypt
-TAGS: transparent allow_dup
-SHUFFLE: ab/ab/ab/ab/ba
-SUBST: b = ., G : G:60 xV0 .:5 t:2 P:2, a = sGVe0 _:5 $:5 %:5
-: if you.depth() == 1 then
-SUBST: s = ]})>
-: elseif you.depth() == dgn.br_depth(you.branch()) then
-SUBST: s = [{(<
-: else
-SUBST: s = ]})>[{(<
-: end
-KFEAT: _ = altar_kikubaaqudgha w:15 / altar_yredelemnul w:15 / \
-           altar_dithmenos w:5 / altar_the_shining_one w:1
-KMONS: 0 = zombie / skeleton
-KMONS: P = withered plant
-: dgn.delayed_decay(_G, 'e', 'human skeleton / orc skeleton / elf skeleton')
-TILE: t = dngn_tree_dead
-: set_feature_name("tree", "dead tree")
-MAP
-xxxxx
-xbabx
-x...x
-xx.xx
-Gx+xG
-.....
-ENDMAP
-
 # deep troll shamans will buff undead trolls too!
 NAME:    skrybe_necro_troll_1
-DEPTH:   Crypt, !Crypt:$
 TAGS:    no_monster_gen uniq_necro_troll
+DEPTH:   Crypt, !Crypt:$
 KMONS:   S = deep troll shaman
 KFEAT:   S = ] / } / )
 # either all spectrals, or regular necromancer band
@@ -1234,8 +1272,8 @@ cccc+++cccc
 ENDMAP
 
 NAME:    skrybe_necro_troll_2
-DEPTH:   Crypt
 TAGS:    uniq_necro_troll
+DEPTH:   Crypt
 KMONS:   1 = deep troll shaman
 # just spectral trolls, since they aren't affected by the water
 KMONS:   2 = spectral deep troll w:30 / spectral iron troll
@@ -1275,9 +1313,9 @@ cc---cc.....cc---cc
  ccccc...@...ccccc
 ENDMAP
 
-NAME: cheibrodos_crypt_cold_storage
-TAGS: no_item_gen no_monster_gen
-DEPTH: Crypt
+NAME:   cheibrodos_crypt_cold_storage
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  Crypt
 ORIENT: east
 MONS:   freezing wraith, shadow wraith
 KMONS:  | = ancient lich / dread lich
@@ -1349,39 +1387,6 @@ xxlxx`xx'llxxx""--------"""xx
  xllxxxGllxxxx"""""""""""""xx
  xxllllllxxxxxx""""""""""""xx
   xxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-NAME:  nicolae_crypt_crumbling_hall
-DEPTH: Crypt
-TAGS:  transparent no_wall_fixup
-SUBST: - = x..., _ = x___, . = .:150 0, 0 = 0:90 9:30 8
-TILE:  x = wall_spider
-CLEAR: _
-MAP
-      ............
-      .........-.._
- _    ..ccc++ccc.._xx_
- xxx  .-cxxx...c.._xxx_
- xxxx_-xc-c..c.c.. xxxx
-  _xxxxxx.-..-xx..  xxx
-....-xxxx.c..cxx-...xx-.
-..--xxxxc.x..-xcxx.-xxx.
-.-cxxxxcc.c..c-ccccccc-.
-.xxxxx-...---...-.-..c..
-.xxxc-c.c.c..cxc.c.c.c.-
-.-xx....-...---x--...+..
-..+.-..---...-.xx-...+..
-..c.c.c.c.c.-c.cxc.c-c-.
-..c-.------...-xx-..-cxx_
-..cccxxxxxc-.cxcccccccxx_
-..-xxxxxxx-.x.-c....--xxx_
-..-xxxxxx-c-.c-c......-x_
-   _xxxxx-..x-xc.-x-   _
-    _xxxc.c-.c-c.xxx_
-    xx--cx....-c.-xx
-   xxx..ccc++ccc.-x_
-   xx ..-x-...-..xx
-      ..........xx
 ENDMAP
 
 NAME:    nicolae_crypt_knee_deep_in_the_dead
@@ -1514,7 +1519,7 @@ cccc..2...d...d...2..cccc
 ENDMAP
 
 ##############################################################################
-# Crypt ends
+# <<5>> Crypt end vaults
 ##############################################################################
 
 ##############################################################################
