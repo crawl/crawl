@@ -395,26 +395,24 @@ bool TilesFramework::initialise()
                                          ARRAYSZ(ct_map_commands),
                                          "Navigation", "Navigate around map");
 
-#if !defined(DCSS_IOS)
-    m_region_inv  = new InventoryRegion(m_init);
+//    m_region_inv  = new InventoryRegion(m_init);
     m_region_spl  = new SpellRegion(m_init);
-    m_region_mem  = new MemoriseRegion(m_init);
+//    m_region_mem  = new MemoriseRegion(m_init);
     m_region_abl  = new AbilityRegion(m_init);
-    m_region_skl  = new SkillRegion(m_init);
-    TAB_ITEM    = m_region_tab->push_tab_region(m_region_inv, TILEG_TAB_ITEM);
+//    m_region_skl  = new SkillRegion(m_init);
+//    TAB_ITEM    = m_region_tab->push_tab_region(m_region_inv, TILEG_TAB_ITEM);
     TAB_SPELL   = m_region_tab->push_tab_region(m_region_spl, TILEG_TAB_SPELL);
-    m_region_tab->push_tab_region(m_region_mem, TILEG_TAB_MEMORISE);
+//    m_region_tab->push_tab_region(m_region_mem, TILEG_TAB_MEMORISE);
     
     TAB_ABILITY = m_region_tab->push_tab_region(m_region_abl, TILEG_TAB_ABILITY);
-    m_region_tab->push_tab_region(m_region_skl, TILEG_TAB_SKILL);
-#endif
+//    m_region_tab->push_tab_region(m_region_skl, TILEG_TAB_SKILL);
     m_region_tab->push_tab_region(m_region_mon, TILEG_TAB_MONSTER);
     TAB_COMMAND = m_region_tab->push_tab_region(m_region_cmd, TILEG_TAB_COMMAND);
     m_region_tab->push_tab_region(m_region_cmd_meta,
                                   TILEG_TAB_COMMAND2);
     TAB_NAVIGATION = m_region_tab->push_tab_region(m_region_cmd_map,
                                                    TILEG_TAB_NAVIGATION);
-    m_region_tab->activate_tab(TAB_ITEM);
+    m_region_tab->activate_tab(TAB_COMMAND);
 
     m_region_msg  = new MessageRegion(m_msg_font);
     m_region_stat = new StatRegion(m_stat_font);
