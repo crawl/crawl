@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <fstream> // XXX DEBUG
 #include <sstream>
 
 #include "act-iter.h"
@@ -273,6 +274,1598 @@ void init_monsters()
             entry = mon_entry[MONS_PROGRAM_BUG];
 
     init_monster_symbols();
+}
+
+static const char* mon_enum_names[] = {
+    "program_bug",
+     "frilled_lizard",
+     "leopard_gecko",
+     "iguana",
+     "komodo_dragon",
+     "basilisk",
+     "bat",
+     "fire_bat",
+     "ball_python",
+     "adder",
+     "water_moccasin",
+     "black_mamba",
+     "anaconda",
+     "sea_snake",
+     "rat",
+     "grey_rat",
+     "river_rat",
+     "hell_rat",
+     "laboratory_rat",
+     "quokka",         // quokka are a type of wallaby", returned -- bwr 382
+     "porcupine",
+     "jackal",
+     "hound",
+     "war_dog",
+     "wolf",
+     "warg",
+     "hell_hound",
+     "hog",
+     "hell_hog",
+     "holy_swine",            // porkalator
+     "giant_slug",
+     "agate_snail",
+     "elephant_slug",
+     "tyrant_leech",
+     "baby_alligator",
+     "alligator",
+     "crocodile",
+     "hydra",
+     "sheep",
+     "yak",
+     "death_yak",
+     "catoblepas",
+     "elephant",
+     "dire_elephant",
+     "hellephant",
+     "manticore",
+     "hippogriff",
+     "griffon",
+     "bullfrog",
+     "cane_toad",
+     "blink_frog",
+     "grizzly_bear",
+     "polar_bear",
+     "black_bear",
+     "ribbon_worm",
+     "brain_worm",
+     "rock_worm",
+     "spiny_worm",
+     "wyvern",
+     "lindwurm",
+     "rime_drake",
+     "swamp_drake",
+     "death_drake",
+     "steam_dragon",
+     "acid_dragon",
+     "swamp_dragon",
+     "fire_dragon",
+     "ice_dragon",
+     "shadow_dragon",
+     "storm_dragon",
+     "bone_dragon",
+     "quicksilver_dragon",
+     "iron_dragon",
+     "golden_dragon",
+     "pearl_dragon",
+
+     "endoplasm",
+     "jelly",
+     "brown_ooze",
+     "giant_amoeba",
+     "azure_jelly",
+     "death_ooze",
+     "acid_blob",
+     "slime_creature",
+     "pulsating_lump",
+     "glass_eye",
+     "eye_of_draining",
+     "shining_eye",
+     "eye_of_devastation",
+     "great_orb_of_eyes",
+     "glowing_orange_brain",
+
+     "dancing_weapon",
+     "harpy",
+     "raven",
+
+     "fire_crab",
+     "homunculus",
+     "soupling",
+
+     "butterfly",
+     "ant_larva",
+     "worker_ant",
+     "soldier_ant",
+     "queen_ant",
+     "killer_bee",
+     "queen_bee",
+     "vampire_mosquito",
+     "bumblebee",
+     "wasp",
+     "hornet",
+     "beetle",
+     "boring_beetle",
+     "boulder_beetle",
+     "giant_cockroach",
+     "giant_centipede",
+     "giant_mite",
+     "spider",
+     "wolf_spider",
+     "trapdoor_spider",
+     "jumping_spider",
+     "orb_spider",
+     "tarantella",
+     "redback",
+     "scorpion",
+     "emperor_scorpion",
+     "moth",                  // genus
+     "moth_of_suppression",
+     "ghost_moth",
+     "moth_of_wrath",
+     "demonic_crawler",
+     "snapping_turtle",
+     "alligator_snapping_turtle",
+     "gnome",
+     "halfling",              // recolouring + single vault.
+     "felid",                 // recolouring + single vault. miaow!
+     "vampire_bat",           // recolouring + vaults
+     "demigod",               // recolouring + single vault
+     "demonspawn",
+     "gargoyle",
+     "war_gargoyle",
+     "molten_gargoyle",
+     "ugly_thing",
+     "very_ugly_thing",
+     "ice_beast",
+     "sky_beast",
+     "sphinx",
+     "orb_guardian",
+
+     "golem",                 // genus
+     "clay_golem",
+     "wood_golem",
+     "stone_golem",
+     "iron_golem",
+     "crystal_guardian",
+     "toenail_golem",
+     "electric_golem", // replacing the guardian robot -- bwr
+     "orb_of_fire",    // swords renamed to fit -- bwr
+     "earth_elemental",
+     "fire_elemental",
+     "air_elemental",
+     "twister",        // air miscasts
+     "golden_eye",
+     "fire_vortex",
+     "spatial_vortex",
+     "insubstantial_wisp",
+     "vapour",
+
+     // mimics:
+     "inept_item_mimic",
+     "item_mimic",
+     "ravenous_item_mimic",
+     "monstrous_item_mimic",
+     "inept_feature_mimic",
+     "feature_mimic",
+     "ravenous_feature_mimic",
+     "monstrous_feature_mimic", // unused
+
+     // plants:
+     "toadstool",
+     "fungus",
+     "wandering_mushroom",
+     "plant",
+     "oklob_sapling",
+     "oklob_plant",
+     "bush",
+     "burning_bush",
+     "ballistomycete_spore",
+     "ballistomycete",
+     "hyperactive_ballistomycete",
+
+     "goblin",
+     "hobgoblin",
+     "gnoll",
+     "gnoll_bouda",
+     "gnoll_sergeant",
+     "boggart",
+     "kobold",
+     "kobold_brigand",
+     "kobold_demonologist",
+     "orc",
+     "orc_warrior",
+     "orc_priest",
+     "orc_high_priest",
+     "orc_wizard",
+     "orc_knight",
+     "orc_sorcerer",
+     "orc_warlord",
+     "dwarf",
+     "deep_dwarf",
+     "deep_dwarf_scion",
+     "deep_dwarf_artificer",
+     "deep_dwarf_necromancer",
+     "deep_dwarf_berserker",
+     "death_knight",
+     "unborn",
+     "elf",
+     "deep_elf_soldier",
+     "deep_elf_fighter",
+     "deep_elf_knight",
+     "deep_elf_fire_mage",
+     "deep_elf_summoner",
+     "deep_elf_conjurer",
+     "deep_elf_priest",
+     "deep_elf_high_priest",
+     "deep_elf_demonologist",
+     "deep_elf_annihilator",
+     "deep_elf_sorcerer",
+     "deep_elf_death_mage",
+     "deep_elf_blademaster",
+     "deep_elf_master_archer",
+     "spriggan",
+     "spriggan_druid",
+     "spriggan_assassin",
+     "spriggan_rider",
+     "spriggan_berserker",
+     "spriggan_defender",
+     "spriggan_air_mage",
+     "firefly",
+     "tengu",
+     "minotaur",
+     "naga",
+     "naga_warrior",
+     "naga_mage",
+     "nagaraja",
+     "guardian_serpent",
+     "octopode",
+     "merfolk",
+     "merfolk_siren",
+     "merfolk_avatar",
+     "merfolk_impaler",
+     "merfolk_aquamancer",
+     "merfolk_javelineer",
+     "centaur",
+     "centaur_warrior",
+     "yaktaur",
+     "yaktaur_captain",
+     "ogre",
+     "two_headed_ogre",
+     "ogre_mage",
+     "troll",
+     "rock_troll",
+     "iron_troll",
+     "deep_troll",
+     "giant",                 // genus
+     "hill_giant",
+     "cyclops",
+     "ettin",
+     "stone_giant",
+     "fire_giant",
+     "frost_giant",
+     "titan",
+     "human",
+     "slave",
+     "hell_knight",
+     "necromancer",
+     "occultist",
+     "vault_guard",
+     "killer_klown",
+     "shapeshifter",
+     "glowing_shapeshifter",
+
+     // draconians:
+     "draconian",
+
+     // if adding more drac colours", sync up colour names in
+     // mon-util.cc.
+     "black_draconian",
+     "mottled_draconian",
+     "yellow_draconian",
+     "green_draconian",
+     "purple_draconian",
+     "red_draconian",
+     "white_draconian",
+     "grey_draconian",
+     "pale_draconian",
+
+     // sync up with mon-place.cc's draconian selection if adding more.
+     "draconian_stormcaller",
+     "draconian_monk",
+     "draconian_zealot",
+     "draconian_shifter",
+     "draconian_annihilator",
+     "draconian_knight",
+     "draconian_scorcher",
+
+     // lava monsters:
+     "lava_worm",
+     "lava_fish",
+     "lava_snake",
+     "salamander",
+
+     // water monsters:
+     "big_fish",
+     "giant_goldfish",
+     "electric_eel",
+     "jellyfish",
+     "water_elemental",
+     "swamp_worm",
+     "shark",
+     "kraken",
+     "kraken_tentacle",
+     "kraken_tentacle_segment",
+
+     // statuary
+     "orange_statue",
+     "obsidian_statue",
+     "ice_statue",
+     "statue",
+     "training_dummy",
+     "lightning_spire",
+
+     // demons:
+     "crimson_imp",
+     "quasit",
+     "white_imp",
+     "lemure",
+     "ufetubus",
+     "iron_imp",
+     "shadow_imp",
+     "red_devil",
+     "rotting_devil",
+     "hellwing",
+     "sixfirhy",
+     "neqoxec",
+     "orange_demon",
+     "smoke_demon",
+     "ynoxinul",
+     "chaos_spawn",
+     "hellion",
+     "lorocyproca",
+     "tormentor",
+     "reaper",
+     "soul_eater",
+     "ice_devil",
+     "blue_devil",
+     "hell_beast",
+     "rust_devil",
+     "executioner",
+     "green_death",
+     "blizzard_demon",
+     "balrug",
+     "cacodemon",
+     "sun_demon",
+     "shadow_demon",
+     "hell_sentinel",
+     "brimstone_fiend",
+     "ice_fiend",
+     "tzitzimitl",
+     "pandemonium_lord",
+
+     // spiritual beings ('r')
+     "efreet",
+     "rakshasa",
+     "rakshasa_fake",
+
+     // abyssals
+     "unseen_horror",
+     "tentacled_starspawn",
+     "lurking_horror",
+     "thrashing_horror",
+     "starcursed_mass",
+     "ancient_zyme",
+     "wretched_star",
+     "eldritch_tentacle",
+     "eldritch_tentacle_segment",
+     "tentacled_monstrosity",
+     "abomination_small",
+     "abomination_large",
+     "crawling_corpse",
+     "macabre_mass",
+
+     // undead:
+     "plague_shambler",
+     "necrophage",
+     "ghoul",
+     "flaming_corpse",
+     "mummy",
+     "bog_body",
+     "guardian_mummy",
+     "royal_mummy",
+     "mummy_priest",
+     "vampire",
+     "vampire_knight",
+     "vampire_mage",
+     "ghost",                 // common genus for monster and player ghosts
+     "phantom",
+     "shadow",
+     "hungry_ghost",
+     "flayed_ghost",
+     "wight",
+     "wraith",
+     "freezing_wraith",
+     "shadow_wraith",
+     "silent_spectre",
+     "eidolon",
+     "laughing_skull",
+     "skeletal_warrior",
+     "phantasmal_warrior",
+     "lich",
+     "ancient_lich",
+     "death_cob",
+     "curse_toe",
+     "curse_skull",
+     "profane_servitor",
+     "skeleton_small",   // recolouring only
+     "skeleton_large",   // recolouring only
+     "zombie_small",     // recolouring only
+     "zombie_large",     // recolouring only
+     "spectral_thing",
+     "simulacrum_small", // recolouring only
+     "simulacrum_large", // recolouring only
+
+
+     // holies:
+     "angel",
+     "daeva",
+     "cherub",
+     "seraph",
+     "phoenix",
+     "silver_star",
+     "blessed_toe",
+     "shedu",
+     "ophan",
+     "spirit",
+     "paladin",
+     "apis",
+
+     // fixed uniques:
+     "geryon",
+     "dispater",
+     "asmodeus",
+     "antaeus",
+     "ereshkigal",
+     "royal_jelly",
+     "the_enchantress",
+     // the four pan lords", order must match runes
+     "mnoleg",
+     "lom_lobon",
+     "cerebov",
+     "gloorx_vloq",
+     "serpent_of_hell",
+     // random uniques:
+     "ijyb",
+     "jessica",
+     "sigmund",
+     "terence",
+     "blork_the_orc",
+     "edmund",
+     "psyche",
+     "erolcha",
+     "donald",
+     "urug",
+     "joseph",
+     "snorg", // was anita - 16jan2000 {dlb}
+     "erica",
+     "josephine",
+     "harold",
+     "agnes",
+     "maud",
+     "louise",
+     "frances",
+     "rupert",
+     "wiglaf",
+     "xtahua",
+     "norris",
+     "frederick",
+     "margery",
+     "boris",
+     "polyphemus",
+     "murray",
+     "tiamat",
+     "roxanne",
+     "sonja",
+     "eustachio",
+     "azrael",
+     "ilsuiw",
+     "prince_ribbit",
+     "nergalle",
+     "saint_roka",
+     "nessos",
+     "lernaean_hydra",
+     "dissolution",
+     "kirke",
+     "grum",
+     "pargi",
+     "menkaure",
+     "duvessa",
+     "dowan",
+     "gastronok",
+     "maurice",
+     "khufu",
+     "nikola",
+     "aizul",
+     "pikel",
+     "crazy_yiuf",
+     "mennas",
+     "mara",
+     "mara_fake",
+     "grinder",
+     "jory",
+     "ignacio",
+     "arachne",
+     // sprint uniques:
+     "chuck",
+     "iron_giant",
+     "nellie",
+     "iron_elemental",
+
+     // specials:
+     "player_illusion",
+     "player_ghost",
+     "ball_lightning",
+     "orb_of_destruction",    // a projectile", not a real mon
+     "pillar_of_salt",
+     "hell_lord",             // genus
+     "merged_slime_creature", // used only for recolouring
+     "sensed",                // dummy monster for unspecified sensed mons
+     "sensed_trivial",
+     "sensed_easy",
+     "sensed_tough",
+     "sensed_nasty",
+     "sensed_friendly",
+     "player",                // a certain ugly creature
+     "test_spawner",
+
+     // add new monsters here:
+     "serpent_of_hell_cocytus",
+     "serpent_of_hell_dis",
+     "serpent_of_hell_tartarus",
+
+     "hellbinder",
+     "cloud_mage",
+     "animated_tree",
+
+     "bear",                  // genus
+     "elemental",             // genus
+
+     "fannar",
+     "apocalypse_crab",
+     "starspawn_tentacle",
+     "starspawn_tentacle_segment",
+
+     "spatial_maelstrom",
+     "chaos_butterfly",
+
+     "jorgrun",
+     "lamia",
+
+     "fulminant_prism",
+     "battlesphere",
+
+     "giant_lizard",          // genus
+     "drake",                 // genus
+     "player_shadow",         // dithmenos / god wrath
+
+     "deep_troll_earth_mage",
+     "deep_troll_shaman",
+     "diamond_obelisk",
+
+     "vault_sentinel",
+     "vault_warden",
+     "ironbound_convoker",
+     "ironbound_preserver",
+
+     "zombie",
+     "skeleton",
+     "simulacrum",
+
+     "ancient_champion",
+     "revenant",
+     "lost_soul",
+     "jiangshi",
+
+     "djinni",
+     "lava_orc",
+
+     "dryad",
+     "wind_drake",
+     "faun",
+     "satyr",
+
+     "pan",
+
+     "tengu_warrior",
+     "tengu_conjurer",
+     "tengu_reaver",
+
+     "spriggan_enchanter",
+
+     "sojobo",
+
+     "chimera",
+
+     "snaplasher_vine",
+     "snaplasher_vine_segment",
+     "thorn_hunter",
+     "briar_patch",
+     "spirit_wolf",
+     "ancient_bear",
+     "water_nymph",
+     "shambling_mangrove",
+     "thorn_lotus",
+     "spectral_weapon",
+     "elemental_wellspring",
+     "polymoth",
+
+     "deathcap",
+     "ignis",
+
+     "formicid",
+     "formicid_drone",
+     "formicid_venom_mage",
+
+     "raiju",
+
+     "dragon",                // genus
+     "snake",                 // genus
+
+     "monstrous_demonspawn",  // removed
+     "gelid_demonspawn",      // removed
+     "infernal_demonspawn",   // removed
+     "putrid_demonspawn",     // removed
+     "torturous_demonspawn",  // removed
+     "demonspawn_blood_saint",
+     "chaos_champion",        // removed
+     "demonspawn_warmonger",
+     "demonspawn_corrupter",
+     "demonspawn_black_sun",
+
+     "worldbinder",
+     "grand_avatar",
+     "vine_stalker",
+
+     "drowned_soul",
+
+     "shock_serpent",
+     "mana_viper",
+     "naga_ritualist",
+     "naga_sharpshooter",
+
+     "salamander_firebrand",
+     "salamander_mystic",
+
+     "asterion",
+     "natasha",
+     "vashnia",
+
+     "block_of_ice",
+     "blazeheart_golem",
+     "spellforged_servitor",
+     "octopode_crusher",
+     "crab",
+     "ghost_crab",
+     "torpor_snail",
+     "mnoleg_tentacle",
+     "mnoleg_tentacle_segment",
+     "bennu",
+     "ushabti",
+     "death_scarab",
+     "anubis_guard",
+     "caustic_shrike",
+
+     "robin",
+
+     "shard_shrike",
+     "singularity",
+     "salamander_stormcaller",
+     "entropy_weaver",
+     "moon_troll",
+     "mutant_beast",
+     "juggernaut",
+     "spark_wasp",
+     "doom_hound",
+     "deep_elf_elementalist",
+     "deep_elf_archer",
+     "demonic_plant",
+     "withered_plant",
+     "dart_slug",
+     "howler_monkey",
+     "ancestor",
+     "ancestor_knight",
+     "ancestor_battlemage",
+     "ancestor_hexer",
+     "meliai",
+     "bai_suzhen",
+     "bai_suzhen_dragon",
+     "saltling",
+     "imperial_myrmidon",
+     "servant_of_whispers",
+     "peacekeeper",
+     "ragged_hierophant",
+     "halazid_warlock",
+     "dream_sheep",
+     "frog",
+     "barachi",
+     "bultungin",             // remove this someday
+     "test_statue",
+     "foxfire",
+     "maggie",
+     "nameless",
+     "armataur",
+     "bloated_husk",
+     "bunyip",
+     "goliath_frog",
+     "eleionoma",
+     "fenstrider_witch",
+     "will_o_the_wisp",
+     "test_blob",
+     "dread_lich",
+     "deep_elf_air_mage",
+     "animated_armour",
+     "rockslime",
+     "quicksilver_ooze",
+     "ironbound_frostheart",
+     "ironbound_thunderhulk",
+     "ironbound_beastmaster",
+     "salamander_tyrant",
+     "mlioglotl",
+     "cactus_giant",
+     "creeping_inferno",
+     "searing_wretch",
+     "stoker",
+     "quicksilver_elemental",
+     "crystal_echidna",
+     "putrid_mouth",
+     "tainted_leviathan",
+     "wendigo",
+     "nargun",
+     "headmaster",
+     "living_spell",
+     "walking_tome",
+     "earthen_tome",
+     "crystal_tome",
+     "divine_tome",
+     "frostbound_tome",
+     "strange_machine",
+     "spectator",
+     "bound_soul",
+     "pharaoh_ant",
+     "steelbarb_worm",
+     "jorogumo",
+     "broodmother",
+     "culicivora",
+     "sun_moth",
+     "radroach",
+     "parghit",
+     "josephina",
+     "amaemon",
+     "lodul",
+     "vv",
+     "zenata",
+     "meteoran",
+     "grunn",
+     "starflower",
+     "sickly_merfolk_siren",
+     "malarious_merfolk_avatar",
+     "skyshark",
+     "sleepcap",
+     "cerulean_imp",
+     "formless_jellyfish",
+     "jeremiah",
+     "boulder",
+     "arcanist",
+     "floating_eye",                 // genus
+     "antique_champion",
+     "kobold_blastminer",
+     "inugami",
+     "protean_progenitor",
+     "aspiring_flesh",
+     "oni",                          // player species only
+     "bombardier_beetle",
+     "weeping_skull",
+     "burial_acolyte",
+     "blazeheart_core",
+     "martyred_shade",
+};
+
+static string _mon_fname(const monsterentry *me)
+{
+    return replace_all(mon_enum_names[me->mc], "_", "-");
+}
+
+static const char* term_colours[] = {
+    "colour_undef",
+    "blue",
+    "green",
+    "cyan",
+    "red",
+    "magenta",
+    "brown",
+    "lightgray",
+    "darkgray",
+    "lightblue",
+    "lightgreen",
+    "lightcyan",
+    "lightred",
+    "lightmagenta",
+    "yellow",
+    "white",
+};
+
+static const char* etc_colours[] = {
+    "etc_fire",
+    "etc_ice",
+    "etc_earth",
+    "etc_electricity",
+    "etc_air",
+    "etc_poison",
+    "etc_water",
+    "etc_magic",
+    "etc_mutagenic",
+    "etc_warp",
+    "etc_enchant",
+    "etc_heal",
+    "etc_holy",
+    "etc_dark",
+    "etc_death",
+    "etc_unholy",
+    "etc_vehumet",
+    "etc_beogh",
+    "etc_crystal",
+    "etc_blood",
+    "etc_smoke",
+    "etc_slime",
+    "etc_jewel",
+    "etc_elven",
+    "etc_dwarven",
+    "etc_orcish",
+    "etc_flash",
+    "etc_floor",
+    "etc_rock",
+    "etc_mist",
+    "etc_shimmer_blue",
+    "etc_decay",
+    "etc_silver",
+    "etc_gold",
+    "etc_iron",
+    "etc_bone",
+    "etc_elven_brick",
+    "etc_waves",
+    "etc_tree",
+    "etc_random",
+    "etc_vortex",
+    "etc_liquefied",
+    "etc_mangrove",
+    "etc_orb_glow",
+    "etc_disjunction",
+    "etc_dithmenos",
+    "etc_elemental",
+    "etc_incarnadine",
+};
+
+static const char* _colour_name(colour_t c)
+{
+    if (c < ARRAYSZ(term_colours))
+        return term_colours[c];
+    ASSERT(c >= 32);
+    const auto etc_idx = c - 32;
+    ASSERT((size_t)etc_idx < ARRAYSZ(etc_colours));
+    return etc_colours[etc_idx];
+}
+
+static const char* shout_names[] = {
+    "silent",
+    "shout",
+    "bark",
+    "howl",
+    "shout2",
+    "roar",
+    "scream",
+    "bellow",
+    "bleat",
+    "trumpet",
+    "screech",
+    "buzz",
+    "moan",
+    "gurgle",
+    "croak",
+    "growl",
+    "hiss",
+    "skitter",
+    "faint_skitter",
+    "demon_taunt",
+    "cherub",
+    "squeal",
+    "loud_roar",
+    "rustle",
+    "squeak",
+    "num_shouts",
+    "very_soft",
+    "soft",
+    "normal",
+    "loud",
+    "very_loud",
+    "num_loudness",
+    "random",
+};
+
+static const char* flag_names[] = {
+    "eat_doors",
+    "crash_doors",
+    "flies",
+    "fighter",
+    "no_wand",
+    "no_ht_wand",
+    "invis",
+    "see_invis",
+    "unblindable",
+    "speaks",
+    "confused",
+    "batty",
+    "splits",
+    "fragile",
+    "stationary",
+    "web_immune",
+    "cold_blood",
+    "warm_blood",
+    "ghost_demon",
+    "burrows",
+    "submerges",
+    "unique",
+    "acid_splash",
+    "archer",
+    "insubstantial",
+    "two_weapons",
+    "fast_regen",
+    "no_regen",
+    "male",
+    "female",
+    "no_skeleton",
+    "no_exp_gain",
+    "spiny",
+    "unused(33),",
+    "no_poly_to",
+    "ancestor",
+    "always_named",
+    "prefer_ranged",
+    "remnant",
+    "unbreathing",
+    "unfinished",
+    "herd",
+    "tall_tile",
+    "unused(43),",
+    "maintain_range",
+    "no_zombie",
+    "cant_spawn",
+    "no_gen_derived",
+    "unused(48),",
+    "unused(49),",
+    "unused(50),",
+    "projectile",
+    "avatar",
+    "unused(53),",
+    "conjured",
+    "no_threat",
+    "always_wand",
+    "gender_neutral",
+    "thunder_ring",
+    "fire_ring",
+    "miasma_ring",
+};
+
+struct resisttyp
+{
+    const char* name;
+    mon_resist_flags start;
+};
+static vector<resisttyp> named_resists = {
+    { "elec", MR_RES_ELEC, },
+    { "poison", MR_RES_POISON },
+    { "fire", MR_RES_FIRE },
+    { "cold", MR_RES_COLD },
+    { "neg", MR_RES_NEG },
+    { "miasma", MR_RES_MIASMA },
+    { "acid", MR_RES_ACID },
+
+    { "torment", MR_RES_TORMENT },
+    { "petrify", MR_RES_PETRIFY },
+    { "damnation", MR_RES_DAMNATION },
+    { "steam", MR_RES_STEAM },
+};
+
+static vector<string> _get_resists(const monsterentry *me)
+{
+    vector<string> resists;
+    for (auto &rt : named_resists)
+    {
+        const int res = get_resist(me->resists, rt.start);
+        if (res)
+            resists.push_back(make_stringf("%s: %d", rt.name, res));
+    }
+    return resists;
+}
+
+static const char* holiness_names[] = {
+    "holy",
+    "natural",
+    "undead",
+    "demonic",
+    "nonliving",
+    "plant",
+};
+
+static vector<string> get_holinesses(const monsterentry *me)
+{
+    vector<string> holinesses;
+    for (size_t i = 0; i < ARRAYSZ(holiness_names); ++i)
+        if (me->holiness & (mon_holy_type_flags)(1<<i))
+            holinesses.push_back(holiness_names[i]);
+    return holinesses;
+}
+
+static const char* attack_names[] = {
+    "none",
+    "hit",
+    "bite",
+    "sting",
+    "spore",
+    "touch",
+    "engulf",
+    "claw",
+    "peck",
+    "headbutt",
+    "punch",
+    "kick",
+    "tentacle_slap",
+    "tail_slap",
+    "gore",
+    "constrict",
+    "trample",
+    "trunk_slap",
+    "snap",
+    "splash",
+    "pounce",
+    "reach_sting",
+    "cherub",
+    "shoot",
+    "weap_only",
+    "random",
+};
+
+static const char* flavour_names[] = {
+    "plain",
+    "acid",
+    "blink",
+    "cold",
+    "confuse",
+    "disease",
+    "drain_str",
+    "drain_int",
+    "drain_dex",
+    "drain_stat",
+    "drain",
+    "elec",
+    "fire",
+    "hunger",
+    "mutate",
+    "poison_paralyse",
+    "poison",
+    "poison_nasty",
+    "poison_medium",
+    "poison_strong",
+    "poison_str",
+    "poison_int",
+    "poison_dex",
+    "poison_stat",
+    "rot",
+    "vampiric",
+    "klown",
+    "distort",
+    "rage",
+    "sticky_flame",
+    "chaotic",
+    "steal",
+    "steal_food",
+    "crush",
+    "reach",
+    "holy",
+    "antimagic",
+    "pain",
+    "ensnare",
+    "engulf",
+    "pure_fire",
+    "drain_speed",
+    "vuln",
+    "plague",
+    "reach_sting",
+    "shadowstab",
+    "drown",
+    "firebrand",
+    "corrode",
+    "scarab",
+    "kite",
+    "swoop",
+    "trample",
+    "weakness",
+    "miasmata",
+    "reach_tongue",
+    "blink_with",
+    "sear",
+    "barbs",
+    "spider",
+    "rift",
+    "bloodzerk",
+    "sleep",
+    "minipara",
+    "flank",
+    "drag",
+};
+
+static void _desc_attacks(const monsterentry *me, ofstream &out)
+{
+    out << "attacks:" << endl;
+    for (size_t i = 0; i < MAX_NUM_ATTACKS; ++i)
+    {
+        auto &atk = me->attack[i];
+        if (atk.type == AT_NONE)
+            return;
+        out << " - {type: " << attack_names[atk.type];
+        if (atk.flavour != AF_PLAIN)
+            out << ", flavour: " << flavour_names[atk.flavour];
+        out << ", damage: " << make_stringf("%d", atk.damage);
+        out << "}" << endl;
+    }
+}
+
+static void _desc_energy_usage(const mon_energy_usage &en, ofstream &out)
+{
+    vector<string> descs;
+    if (en.move != 10 && en.swim == en.move)
+        descs.push_back(make_stringf("move: %d", en.move));
+    else
+    {
+        if (en.move != 10)
+            descs.push_back(make_stringf("walk: %d", en.move));
+        if (en.swim != 10)
+            descs.push_back(make_stringf("swim: %d", en.swim));
+    }
+    if (en.attack != 10)
+        descs.push_back(make_stringf("attack: %d", en.attack));
+    if (en.missile != 10)
+        descs.push_back(make_stringf("missile: %d", en.missile));
+    if (en.spell != 10)
+        descs.push_back(make_stringf("spell: %d", en.spell));
+    if (descs.empty())
+        return;
+
+    out << "energy: {";
+    out << join_strings(descs.begin(), descs.end(), ", ");
+    out << "}" << endl;
+}
+
+static const char* intel_names[] = { "brainless", "animal", "human", };
+static const char* habitat_names[] = {"land", "amphibious", "water", "lava", "amphibious_lava"};
+static const char* use_names[] = {"nothing", "open_doors", "starting_equipment", "weapons_armour"};
+static const char* size_names[] = {"tiny", "little", "small", "medium", "large", "giant"};
+static const char* shape_names[] = {
+     "buggy",
+     "humanoid",
+     "humanoid_winged",
+     "humanoid_tailed",
+     "humanoid_winged_tailed",
+     "centaur",
+     "naga",
+     "quadruped",
+     "quadruped_tailless",
+     "quadruped_winged",
+     "bat",
+     "bird",
+     "snake",
+     "fish",
+     "insect",
+     "insect_winged",
+     "arachnid",
+     "centipede",
+     "snail",
+     "plant",
+     "fungus",
+     "orb",
+     "blob",
+     "misc"
+};
+static const char* tvary_names[] = {
+    "none", "mod", "cycle", "random", "water",
+};
+
+static const char* mst_names[] = {
+    "blinker",
+    "blink_close",
+    "battlecry",
+    "zapper",
+    "acid_spit",
+    "annihilator",
+    "entropy_weaver",
+    "shard_shrike",
+    "faun",
+    "satyr",
+    "deep_elf_fire_mage",
+    "deep_elf_air_mage",
+    "deep_elf_knight",
+    "deep_elf_archer",
+    "deep_elf_elementalist",
+    "deep_elf_sorcerer",
+    "deep_elf_high_priest",
+    "deep_elf_demonologist",
+    "deep_elf_death_mage",
+    "thorn_hunter",
+    "deathcap",
+    "shambling_mangrove",
+    "bouda",
+    "boggart",
+    "bear",
+    "howler_monkey",
+    "hell_hound",
+    "raiju",
+    "hell_hog",
+    "doom_hound",
+    "spriggan_berserker",
+    "spriggan_druid",
+    "spriggan_air_mage",
+    "rime_drake",
+    "swamp_drake",
+    "wind_drake",
+    "lindwurm",
+    "death_drake",
+    "basilisk",
+    "merfolk_siren",
+    "water_nymph",
+    "merfolk_avatar",
+    "merfolk_aquamancer",
+    "bog_body",
+    "orc_priest",
+    "orc_wizard",
+    "orc_knight",
+    "orc_high_priest",
+    "orc_sorcerer",
+    "burial_acolyte",
+    "necromancer",
+    "arcanist",
+    "occultist",
+    "death_knight",
+    "hell_knight",
+    "vault_sentinel",
+    "ironbound_preserver",
+    "ironbound_convoker",
+    "vault_warden",
+    "ironbound_frostheart",
+    "imperial_myrmidon",
+    "servant_of_whispers",
+    "ragged_hierophant",
+    "halazid_warlock",
+    "killer_klown",
+    "draconian_scorcher",
+    "draconian_knight",
+    "draconian_stormcaller",
+    "draconian_shifter",
+    "crystal_echidna",
+    "jumping_spider",
+    "orb_spider",
+    "broodmother",
+    "culicivora",
+    "fire_crab",
+    "ghost_crab",
+    "apocalypse_crab",
+    "will_o_the_wisp",
+    "dart_slug",
+    "ribbon_worm",
+    "brain_worm",
+    "swamp_worm",
+    "worldbinder",
+    "bunyip",
+    "meliai",
+    "queen_bee",
+    "spark_wasp",
+    "moth_of_wrath",
+    "ghost_moth",
+    "sun_moth",
+    "ancient_champion",
+    "weeping_skull",
+    "laughing_skull",
+    "curse_skull",
+    "curse_toe",
+    "ophan",
+    "angel",
+    "daeva",
+    "seraph",
+    "bombardier_beetle",
+    "boulder_beetle",
+    "radroach",
+    "fire_giant",
+    "frost_giant",
+    "titan",
+    "iron_giant",
+    "tainted_leviathan",
+    "protean_progenitor",
+    "steam_dragon",
+    "acid_dragon",
+    "swamp_dragon",
+    "fire_dragon_breath",
+    "ice_dragon_breath",
+    "storm_dragon",
+    "shadow_dragon",
+    "iron_dragon",
+    "quicksilver_dragon",
+    "golden_dragon",
+    "pearl_dragon",
+    "air_elemental",
+    "elemental_wellspring",
+    "iron_elemental",
+    "glass_eye",
+    "golden_eye",
+    "eye_of_devastation",
+    "shining_eye",
+    "great_orb_of_eyes",
+    "glowing_orange_brain",
+    "manticore",
+    "fenstrider_witch",
+    "sphinx",
+    "jorogumo",
+    "kobold_demonologist",
+    "kobold_blastminer",
+    "revenant",
+    "lich",
+    "ancient_lich",
+    "dread_lich",
+    "stoker",
+    "mummy_priest",
+    "royal_mummy",
+    "naga",
+    "naga_warrior",
+    "naga_mage",
+    "nagaraja",
+    "naga_sharpshooter",
+    "naga_ritualist",
+    "salamander_mystic",
+    "salamander_tyrant",
+    "ogre_mage",
+    "ironbound_thunderhulk",
+    "burning_bush",
+    "oklob_sapling",
+    "ballistomycete",
+    "starflower",
+    "tengu_conjurer",
+    "tengu_reaver",
+    "rakshasa",
+    "efreet",
+    "dryad",
+    "eleionoma",
+    "wendigo",
+    "lava_snake",
+    "guardian_serpent",
+    "shock_serpent",
+    "deep_troll_earth_mage",
+    "deep_troll_shaman",
+    "vampire",
+    "vampire_mage",
+    "vampire_knight",
+    "shadow",
+    "eidolon",
+    "flayed_ghost",
+    "putrid_mouth",
+    "kraken",
+    "thrashing_horror",
+    "tentacled_starspawn",
+    "nameless",
+    "mlioglotl",
+    "catoblepas",
+    "dream_sheep",
+    "hellephant",
+    "white_imp",
+    "shadow_imp",
+    "ynoxinul",
+    "smoke_demon",
+    "soul_eater",
+    "neqoxec",
+    "shadow_demon",
+    "green_death",
+    "balrug",
+    "blizzard_demon",
+    "cacodemon",
+    "hellion",
+    "tormentor",
+    "executioner",
+    "brimstone_fiend",
+    "ice_fiend",
+    "tzitzimitl",
+    "hell_sentinel",
+    "demonspawn_warmonger",
+    "demonspawn_blood_saint",
+    "demonspawn_corrupter",
+    "demonspawn_black_sun",
+    "ice_statue",
+    "obsidian_statue",
+    "orange_crystal_statue",
+    "strange_machine",
+    "gargoyle",
+    "molten_gargoyle",
+    "war_gargoyle",
+    "ushabti",
+    "peacekeeper",
+    "crystal_guardian",
+    "electric_golem",
+    "nargun",
+    "wretched_star",
+    "orb_of_fire",
+    "walking_tome",
+    "zenata",
+    "nessos",
+    "bai_suzhen",
+    "dowan",
+    "fannar",
+    "robin",
+    "jorgrun",
+    "natasha",
+    "the_enchantress",
+    "ilsuiw",
+    "blork",
+    "nergalle",
+    "saint_roka",
+    "gastronok",
+    "murray",
+    "antique_champion",
+    "mennas",
+    "polyphemus",
+    "xtahua",
+    "bai_suzhen_dragon",
+    "serpent_of_hell_geh",
+    "serpent_of_hell_coc",
+    "serpent_of_hell_dis",
+    "serpent_of_hell_tar",
+    "jeremiah",
+    "arachne",
+    "asterion",
+    "endoplasm",
+    "dissolution",
+    "sonja",
+    "boris",
+    "menkaure",
+    "khufu",
+    "vashnia",
+    "erolcha",
+    "lodul",
+    "sojobo",
+    "azrael",
+    "mara",
+    "aizul",
+    "snorg",
+    "moon_troll",
+    "jory",
+    "grinder",
+    "ignacio",
+    "amaemon",
+    "roxanne",
+    "vv",
+    "jessica",
+    "eustachio",
+    "erica",
+    "maurice",
+    "harold",
+    "josephine",
+    "josephina",
+    "rupert",
+    "louise",
+    "frances",
+    "kirke",
+    "donald",
+    "hellbinder",
+    "cloud_mage",
+    "headmaster",
+    "nikola",
+    "maggie",
+    "margery",
+    "norris",
+    "frederick",
+    "psyche",
+    "geryon",
+    "asmodeus",
+    "antaeus",
+    "ereshkigal",
+    "dispater",
+    "mnoleg",
+    "lom_lobon",
+    "cerebov",
+    "gloorx_vloq",
+    "test_spawner",
+    "ghost",
+};
+
+static void _write_mon(const monsterentry *me)
+{
+    if (me->bitfields & M_UNFINISHED)
+        return;
+
+    const string fname = _mon_fname(me);
+    const char* dir = "/Users/nick/src/crawl/crawl-ref/source/dat/mons/";
+    const string path = make_stringf("%s%s.yaml", dir, fname.c_str());
+    ofstream out(path.c_str());
+
+    out << "name: \"" << me->name << '"' << endl;
+    const string enum_from_name = replace_all(lowercase_string(me->name), " ", "_");
+    const string enum_name = mon_enum_names[me->mc];
+    if (enum_from_name != enum_name)
+        out << "enum: " << enum_name << endl;
+    out << "glyph: {char: \"" << me->basechar
+        << "\", colour: " << _colour_name(me->colour) << "}" << endl;
+
+    vector<string> flags;
+    for (size_t i = 0; i < ARRAYSZ(flag_names); ++i)
+        if (me->bitfields & (monclass_flag_type)((uint64_t)1<<(i)))
+            flags.push_back(flag_names[i]);
+    if (!flags.empty())
+        out << "flags: [" << join_strings(flags.begin(), flags.end(), ", ") << "]" << endl;
+
+    vector<string> resists = _get_resists(me);
+    if (!resists.empty())
+        out << "resists: {" << join_strings(resists.begin(), resists.end(), ", ") << "}" << endl;
+
+
+    if (me->exp_mod != 10)
+        out << "xp_mult: " << make_stringf("%d", me->exp_mod) << endl;
+    if (me->species != me->mc)
+        out << "species: " << mon_enum_names[me->species] << endl;
+    if (me->genus != me->species)
+        out << "genus: " << mon_enum_names[me->genus] << endl;
+
+    vector<string> holinesses = get_holinesses(me);
+    ASSERT(!holinesses.empty());
+    if (holinesses.size() != 1 || holinesses[0] != "natural")
+        out << "holiness: [" << join_strings(holinesses.begin(), holinesses.end(), ", ") << "]" << endl;
+
+    out << "will: ";
+    if (me->willpower == WILL_INVULN)
+        out << "invuln";
+    else
+        out << make_stringf("%d", me->willpower);
+    out << endl;
+
+    _desc_attacks(me, out);
+
+    out << "hd: " << make_stringf("%d", me->HD) << endl;
+    out << "hp_10x: " << make_stringf("%d", me->avg_hp_10x) << endl;
+
+    out << "ac: " << make_stringf("%d", me->AC) << endl;
+    out << "ev: " << make_stringf("%d", me->ev) << endl;
+    if (me->sec != MST_NO_SPELLS)
+        out << "spells: " << mst_names[me->sec] << endl;
+    if (me->leaves_corpse)
+        out << "has_corpse: true" << endl;
+    if (me->shouts != S_SILENT)
+        out << "shout: " << shout_names[me->shouts] << endl;
+
+    out << "intelligence: " << intel_names[me->intel] << endl;
+    if (me->habitat != HT_LAND)
+        out << "habitat: " << habitat_names[me->habitat] << endl;
+    if (me->speed != 10)
+        out << "speed: " << make_stringf("%d", me->speed) << endl;
+    _desc_energy_usage(me->energy_usage, out);
+    if (me->gmon_use != MONUSE_NOTHING)
+        out << "uses: " << use_names[me->gmon_use] << endl;
+    out << "size: " << size_names[me->size] << endl;
+    out << "shape: " << shape_names[me->shape] << endl;
+
+    if (me->tile.variation != TVARY_NONE)
+        out << "tile_variance: " << tvary_names[me->tile.variation] << endl;
+
+    // assume corpse and tile data is all sane. exciting!
+
+    out.close();
 }
 
 void init_monster_symbols()
