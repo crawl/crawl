@@ -734,6 +734,10 @@ static spret _rampage_forward(coord_def move)
     // stepped = true, we're flavouring this as movement, not a blink.
     move_player_to_grid(rampage_destination, true);
 
+    // Verify the new position is valid, in case something unexpected happened.
+    ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
+            || you.wizmode_teleported_into_rock);
+
     you.clear_far_engulf(false, true);
     // No full-LOS stabbing.
     if (enhanced)
@@ -864,10 +868,6 @@ void move_player_action(coord_def move)
 
     if (you.rampaging())
     {
-        // Check the player's position again; rampage may have moved us.
-        ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
-                || you.wizmode_teleported_into_rock);
-
         const monster *rampage_targ = get_rampage_target(move);
         switch (_rampage_forward(move))
         {
