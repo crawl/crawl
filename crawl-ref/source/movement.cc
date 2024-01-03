@@ -1211,6 +1211,8 @@ void move_player_action(coord_def move)
 
     if (you_worship(GOD_WU_JIAN) && !attacking && !dug)
         did_wu_jian_attack = wu_jian_post_move_effects(false, initial_position);
+    else if (you_worship(GOD_WU_JIAN) && attacking && rampaged)
+        wu_jian_trigger_serpents_lash(false, initial_position);
 
     // If you actually moved without attacking, acrobatics may kick in.
     if (!attacking && moving && !did_wu_jian_attack)

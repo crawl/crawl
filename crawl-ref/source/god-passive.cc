@@ -1262,8 +1262,7 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     shadow_monster_reset(mon);
 }
 
-static void _wu_jian_trigger_serpents_lash(const coord_def& old_pos,
-                                           bool wall_jump)
+void wu_jian_trigger_serpents_lash(bool wall_jump, const coord_def& old_pos)
 {
     if (you.attribute[ATTR_SERPENTS_LASH] == 0)
        return;
@@ -1601,7 +1600,7 @@ bool wu_jian_post_move_effects(bool did_wall_jump,
         attacked = _wu_jian_trigger_martial_arts(old_pos, you.pos());
 
     if (you.turn_is_over)
-        _wu_jian_trigger_serpents_lash(old_pos, did_wall_jump);
+        wu_jian_trigger_serpents_lash(did_wall_jump, old_pos);
 
     return attacked;
 }
