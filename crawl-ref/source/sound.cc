@@ -70,11 +70,9 @@ void play_sound(sound_mapping sound_data)
     if (!sound_data.soundfile.empty())
     {
         string sf_path = catpath(Options.sound_file_path, sound_data.soundfile);
-# if defined(DCSS_IOS)
-        // under iOS one can't simply obtain stable unchanging
-        // absolute path, so the crawl_dir is the best place for sounds
-        sf_path = catpath(SysEnv.crawl_dir, sf_path);
-# endif
+        if (!is_absolute_path(sf_path)) {
+            sf_path = catpath(SysEnv.crawl_dir, sf_path);
+        }
         play_sound(sf_path.c_str(), sound_data.interrupt_game);
     }
 }
