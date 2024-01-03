@@ -140,7 +140,7 @@ CFOTHERS += -mfpmath=sse -msse2
 endif
 
 CFWARN :=
-CFWARN_L := -Wall -Wformat-security -Wundef
+CFWARN_L := -Wall -Wformat-security -Wundef -Wno-unqualified-std-cast-call
 
 # Exceptions:
 #  -Wmissing-field-initializers: need c++14 to set default struct fields
