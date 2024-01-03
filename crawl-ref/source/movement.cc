@@ -864,13 +864,13 @@ void move_player_action(coord_def move)
 
     if (you.rampaging())
     {
+        // Check the player's position again; rampage may have moved us.
+        ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
+                || you.wizmode_teleported_into_rock);
+
         const monster *rampage_targ = get_rampage_target(move);
         switch (_rampage_forward(move))
         {
-            // Check the player's position again; rampage may have moved us.
-            ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
-                   || you.wizmode_teleported_into_rock);
-
             // Cancel the move entirely if rampage was aborted from a prompt.
             case spret::abort:
                 return;
