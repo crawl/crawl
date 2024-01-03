@@ -1,0 +1,17 @@
+name: "boulder"
+glyph: {char: "*", colour: brown}
+flags: [no_exp_gain, no_poly_to, conjured]
+resists: {elec: 1, fire: 1, cold: 1}
+xp_mult: 0
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 10
+hp_10x: 270
+ac: 10
+ev: 0
+intelligence: brainless
+speed: 20
+size: giant
+shape: orb
+tile: boulder_beetle

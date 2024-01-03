@@ -1,0 +1,19 @@
+name: "swamp drake"
+glyph: {char: "k", colour: brown}
+flags: [flies, warm_blood]
+resists: {poison: 1}
+xp_mult: 20
+genus: drake
+will: 20
+attacks:
+ - {type: bite, damage: 14}
+hd: 4
+hp_10x: 300
+ac: 3
+ev: 11
+spells: swamp_drake
+has_corpse: true
+shout: roar
+intelligence: animal
+size: large
+shape: quadruped_winged

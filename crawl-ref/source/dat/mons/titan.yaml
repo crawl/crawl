@@ -1,0 +1,20 @@
+name: "titan"
+glyph: {char: "C", colour: lightcyan}
+flags: [fighter, see_invis, speaks, warm_blood]
+resists: {elec: 3}
+xp_mult: 12
+genus: giant
+will: 180
+attacks:
+ - {type: hit, damage: 55}
+hd: 20
+hp_10x: 1100
+ac: 10
+ev: 3
+spells: titan
+has_corpse: true
+shout: shout
+intelligence: human
+uses: open_doors
+size: giant
+shape: humanoid

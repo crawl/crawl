@@ -1,0 +1,16 @@
+name: "inugami"
+glyph: {char: "h", colour: red}
+flags: [see_invis, unblindable, warm_blood, ghost_demon, no_poly_to, no_zombie, no_gen_derived]
+genus: hound
+will: 40
+attacks:
+ - {type: bite, damage: 14}
+hd: 4
+hp_10x: 55
+ac: 5
+ev: 13
+shout: bark
+intelligence: animal
+speed: 13
+size: small
+shape: quadruped

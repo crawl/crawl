@@ -1,0 +1,15 @@
+name: "quokka"
+glyph: {char: "r", colour: white}
+flags: [warm_blood]
+will: 0
+attacks:
+ - {type: bite, damage: 5}
+hd: 1
+hp_10x: 55
+ac: 2
+ev: 13
+has_corpse: true
+intelligence: animal
+speed: 12
+size: little
+shape: quadruped

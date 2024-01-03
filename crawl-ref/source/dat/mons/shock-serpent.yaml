@@ -1,0 +1,20 @@
+name: "shock serpent"
+glyph: {char: "S", colour: lightblue}
+flags: [cold_blood]
+resists: {elec: 3}
+xp_mult: 12
+genus: snake
+will: 40
+attacks:
+ - {type: bite, flavour: elec, damage: 20}
+hd: 10
+hp_10x: 550
+ac: 2
+ev: 15
+spells: shock_serpent
+has_corpse: true
+shout: hiss
+intelligence: animal
+speed: 15
+size: medium
+shape: snake

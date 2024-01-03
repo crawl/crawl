@@ -1,0 +1,16 @@
+name: "formicid"
+glyph: {char: "B", colour: green}
+flags: [see_invis, speaks, warm_blood, no_skeleton, no_poly_to, no_gen_derived]
+will: 40
+attacks:
+ - {type: hit, damage: 15}
+hd: 6
+hp_10x: 420
+ac: 3
+ev: 10
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

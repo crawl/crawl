@@ -1,0 +1,18 @@
+name: "broodmother"
+glyph: {char: "s", colour: lightcyan}
+flags: [web_immune, no_skeleton]
+genus: spider
+will: 60
+attacks:
+ - {type: bite, flavour: spider, damage: 40}
+hd: 12
+hp_10x: 1400
+ac: 2
+ev: 4
+spells: broodmother
+has_corpse: true
+shout: skitter
+intelligence: animal
+speed: 12
+size: giant
+shape: arachnid

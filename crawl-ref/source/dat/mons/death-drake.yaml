@@ -1,0 +1,19 @@
+name: "death drake"
+glyph: {char: "k", colour: lightgray}
+flags: [flies, cold_blood]
+resists: {poison: 1, miasma: 1}
+genus: drake
+will: 40
+attacks:
+ - {type: bite, damage: 12}
+hd: 9
+hp_10x: 765
+ac: 6
+ev: 14
+spells: death_drake
+has_corpse: true
+shout: hiss
+intelligence: animal
+speed: 13
+size: large
+shape: quadruped_winged

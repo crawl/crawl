@@ -1,0 +1,20 @@
+name: "Lom Lobon"
+glyph: {char: "&", colour: lightblue}
+flags: [flies, fighter, see_invis, speaks, unique, tall_tile, gender_neutral]
+resists: {elec: 3, poison: 1, fire: 1, cold: 3}
+xp_mult: 15
+genus: pandemonium_lord
+holiness: [demonic]
+will: invuln
+attacks:
+ - {type: hit, flavour: antimagic, damage: 40}
+hd: 19
+hp_10x: 3895
+ac: 10
+ev: 20
+spells: lom_lobon
+shout: scream
+intelligence: human
+uses: open_doors
+size: large
+shape: humanoid

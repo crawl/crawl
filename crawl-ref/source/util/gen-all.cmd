@@ -8,8 +8,6 @@ perl FAQ2html.pl
 cd ..
 :: art-enum.h ,art-data.h
 perl util/art-data.pl
-:: mon-mst.h
-perl util/gen-mst.pl
 :: cmd-name.h
 perl util/cmd-name.pl
 :: dat/dlua/tags.lua
@@ -24,6 +22,10 @@ perl util/gen-apt.pl ../docs/aptitudes-wide.txt ../docs/template/apt-tmpl-wide.t
 :: docs/species-type.h
 :: pip install pyyaml
 python util/species-gen.py dat/species/ util/species-gen/ species-data.h aptitudes.h species-groups.h species-type.h
+:: mon-data.h
+python util/species-gen.py dat/mons/ util/mon-gen/ mon-data.h
+:: mon-mst.h - must run after mon-data.h
+perl util/gen-mst.pl
 
 ::Change encoding to UTF-8
 ::which cuts the size in half

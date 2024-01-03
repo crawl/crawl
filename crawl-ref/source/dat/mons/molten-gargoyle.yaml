@@ -1,0 +1,19 @@
+name: "molten gargoyle"
+glyph: {char: "9", colour: lightred}
+flags: [flies]
+resists: {elec: 1, fire: 3, petrify: 1}
+xp_mult: 18
+genus: golem
+holiness: [nonliving]
+will: 60
+attacks:
+ - {type: hit, flavour: fire, damage: 20}
+hd: 7
+hp_10x: 315
+ac: 14
+ev: 7
+spells: molten_gargoyle
+intelligence: human
+uses: starting_equipment
+size: medium
+shape: humanoid_winged_tailed

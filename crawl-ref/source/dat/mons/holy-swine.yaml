@@ -1,0 +1,17 @@
+name: "holy swine"
+glyph: {char: "h", colour: yellow}
+flags: [flies]
+genus: hog
+holiness: [holy]
+will: 40
+attacks:
+ - {type: bite, flavour: holy, damage: 20}
+hd: 11
+hp_10x: 605
+ac: 2
+ev: 9
+shout: squeal
+intelligence: animal
+speed: 14
+size: small
+shape: quadruped

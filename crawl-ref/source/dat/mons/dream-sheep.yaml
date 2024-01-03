@@ -1,0 +1,16 @@
+name: "dream sheep"
+glyph: {char: "Y", colour: cyan}
+flags: [warm_blood, herd]
+will: 30
+attacks:
+ - {type: headbutt, damage: 13}
+hd: 9
+hp_10x: 220
+ac: 2
+ev: 10
+spells: dream_sheep
+has_corpse: true
+shout: bleat
+intelligence: animal
+size: medium
+shape: quadruped_tailless

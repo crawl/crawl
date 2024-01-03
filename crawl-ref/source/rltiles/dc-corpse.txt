@@ -50,8 +50,8 @@ skyshark CORPSE_SKYSHARK
 ## Rodents ('r')
 rat CORPSE_RAT
 quokka CORPSE_QUOKKA
-green_rat CORPSE_GREEN_RAT
-orange_rat CORPSE_ORANGE_RAT
+green_rat CORPSE_RIVER_RAT
+orange_rat CORPSE_HELL_RAT
 %sdir mon/animals
 
 ## Spiders and insects ('s')
@@ -204,6 +204,7 @@ orcs/orc CORPSE_ORC
 ## Human shaped ('p')
 halfling CORPSE_HALFLING
 meteoran CORPSE_METEORAN
+demigod CORPSE_DEMIGOD
 %sdir mon/humanoids/humans
 human CORPSE_HUMAN
 killer_klown_blue CORPSE_KILLER_KLOWN
@@ -315,47 +316,47 @@ bunyip CORPSE_BUNYIP
 %start
 %compose drcwing/drcwing_black
 %compose base/draconian_black
-%finish CORPSE_DRACONIAN_BLACK
+%finish CORPSE_BLACK_DRACONIAN
 
 %start
 %compose drcwing/drcwing_brown
 %compose base/draconian
-%finish CORPSE_DRACONIAN_BROWN
+%finish CORPSE_BROWN_DRACONIAN
 
 %start
 %compose drcwing/drcwing_green
 %compose base/draconian_green
-%finish CORPSE_DRACONIAN_GREEN
+%finish CORPSE_GREEN_DRACONIAN
 
 %start
 %compose drcwing/drcwing_grey
 %compose base/draconian_grey
-%finish CORPSE_DRACONIAN_GREY
+%finish CORPSE_GREY_DRACONIAN
 
 %start
 %compose drcwing/drcwing_pale
 %compose base/draconian_pale
-%finish CORPSE_DRACONIAN_PALE
+%finish CORPSE_PALE_DRACONIAN
 
 %start
 %compose drcwing/drcwing_purple
 %compose base/draconian_purple
-%finish CORPSE_DRACONIAN_PURPLE
+%finish CORPSE_PURPLE_DRACONIAN
 
 %start
 %compose drcwing/drcwing_red
 %compose base/draconian_red
-%finish CORPSE_DRACONIAN_RED
+%finish CORPSE_RED_DRACONIAN
 
 %start
 %compose drcwing/drcwing_white
 %compose base/draconian_white
-%finish CORPSE_DRACONIAN_WHITE
+%finish CORPSE_WHITE_DRACONIAN
 
 %start
 %compose drcwing/drcwing_yellow
 %compose base/draconian_yellow
-%finish CORPSE_DRACONIAN_YELLOW
+%finish CORPSE_YELLOW_DRACONIAN
 
 # Demonspawn ('6')
 %sdir mon/humanoids/demonspawn

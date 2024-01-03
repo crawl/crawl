@@ -78,7 +78,7 @@ static const form_entry formdata[] =
     transformation::spider, MONS_SPIDER, "Spider", "spider-form", "spider",
     "a venomous arachnid creature.",
     0, 27, NUM_TALISMANS,
-    EQF_PHYSICAL, MR_VUL_POISON,
+    EQF_PHYSICAL, mrd(MR_RES_POISON, -1),
     FormDuration(10, PS_DOUBLE, 60), 0, 5, SIZE_TINY, 10,
     {}, true, {},
     SPWPN_VENOM, LIGHTGREEN, "Fangs", ANIMAL_VERBS,

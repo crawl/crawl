@@ -1,0 +1,18 @@
+name: "spriggan defender"
+glyph: {char: "i", colour: yellow}
+flags: [fighter, see_invis, speaks, warm_blood]
+species: spriggan
+will: 140
+attacks:
+ - {type: hit, damage: 30}
+hd: 15
+hp_10x: 675
+ac: 3
+ev: 22
+has_corpse: true
+shout: shout
+intelligence: human
+speed: 16
+uses: weapons_armour
+size: little
+shape: humanoid

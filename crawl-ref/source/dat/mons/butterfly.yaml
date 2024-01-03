@@ -1,0 +1,15 @@
+name: "butterfly"
+glyph: {char: "b", colour: etc_jewel}
+flags: [flies, confused, no_skeleton, no_exp_gain, no_threat]
+resists: {poison: -1}
+will: 0
+attacks:
+hd: 1
+hp_10x: 10
+ac: 0
+ev: 20
+intelligence: brainless
+speed: 25
+size: tiny
+shape: insect_winged
+tile_variance: mod

@@ -1,0 +1,23 @@
+name: "Mnoleg"
+glyph: {char: "&", colour: lightgreen}
+flags: [fighter, see_invis, speaks, unique, tall_tile, gender_neutral]
+resists: {elec: 1, poison: 1, fire: 1}
+xp_mult: 15
+genus: pandemonium_lord
+holiness: [demonic]
+will: invuln
+attacks:
+ - {type: random, flavour: chaotic, damage: 47}
+ - {type: random, damage: 41}
+ - {type: random, flavour: blink, damage: 37}
+hd: 17
+hp_10x: 4210
+ac: 11
+ev: 29
+spells: mnoleg
+shout: buzz
+intelligence: human
+speed: 13
+uses: open_doors
+size: large
+shape: humanoid

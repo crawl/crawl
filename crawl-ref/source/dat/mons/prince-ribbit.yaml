@@ -1,0 +1,22 @@
+name: "Prince Ribbit"
+glyph: {char: "F", colour: lightcyan}
+flags: [speaks, cold_blood, unique, male]
+xp_mult: 12
+species: human
+genus: frog
+will: 40
+attacks:
+ - {type: hit, damage: 20}
+hd: 6
+hp_10x: 390
+ac: 0
+ev: 16
+spells: blinker
+has_corpse: true
+shout: croak
+intelligence: human
+habitat: amphibious
+speed: 14
+energy: {swim: 6}
+size: medium
+shape: quadruped_tailless

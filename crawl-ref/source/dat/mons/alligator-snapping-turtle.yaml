@@ -1,0 +1,19 @@
+name: "alligator snapping turtle"
+glyph: {char: "t", colour: lightgreen}
+flags: [cold_blood]
+genus: snapping_turtle
+will: 60
+attacks:
+ - {type: bite, flavour: reach, damage: 50}
+hd: 16
+hp_10x: 1440
+ac: 19
+ev: 1
+has_corpse: true
+shout: hiss
+intelligence: animal
+habitat: amphibious
+speed: 8
+energy: {swim: 6}
+size: large
+shape: quadruped_tailless

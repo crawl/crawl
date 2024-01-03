@@ -1,0 +1,19 @@
+name: "bloated husk"
+glyph: {char: "n", colour: yellow}
+flags: [no_zombie]
+resists: {cold: 1}
+genus: ghoul
+holiness: [undead]
+will: 40
+attacks:
+ - {type: hit, damage: 1}
+hd: 8
+hp_10x: 250
+ac: 5
+ev: 5
+intelligence: human
+habitat: amphibious
+speed: 14
+uses: open_doors
+size: medium
+shape: humanoid

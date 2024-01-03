@@ -1,0 +1,22 @@
+name: "Gastronok"
+glyph: {char: "w", colour: magenta}
+flags: [no_wand, see_invis, speaks, unique, male]
+xp_mult: 16
+species: elephant_slug
+will: 80
+attacks:
+ - {type: bite, damage: 40}
+hd: 20
+hp_10x: 1500
+ac: 2
+ev: 1
+spells: gastronok
+has_corpse: true
+shout: gurgle
+intelligence: human
+habitat: amphibious
+speed: 5
+uses: starting_equipment
+size: giant
+shape: snail
+tile_variance: mod

@@ -1,0 +1,21 @@
+name: "demonspawn warmonger"
+glyph: {char: "6", colour: lightcyan}
+flags: [fighter, speaks, warm_blood]
+species: demonspawn
+holiness: [natural, demonic]
+will: 60
+attacks:
+ - {type: hit, damage: 40}
+ - {type: claw, damage: 20}
+ - {type: gore, damage: 20}
+hd: 15
+hp_10x: 1250
+ac: 3
+ev: 12
+spells: demonspawn_warmonger
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

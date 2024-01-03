@@ -1,0 +1,21 @@
+name: "tengu reaver"
+glyph: {char: "Q", colour: lightmagenta}
+flags: [flies, fighter, see_invis, speaks, warm_blood]
+xp_mult: 13
+species: tengu
+will: 60
+attacks:
+ - {type: hit, damage: 27}
+ - {type: peck, damage: 11}
+ - {type: claw, damage: 11}
+hd: 17
+hp_10x: 850
+ac: 2
+ev: 17
+spells: tengu_reaver
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

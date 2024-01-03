@@ -1,0 +1,19 @@
+name: "drowned soul"
+glyph: {char: "W", colour: lightcyan}
+flags: [flies, see_invis, speaks, insubstantial]
+resists: {cold: 3}
+xp_mult: 8
+genus: phantom
+holiness: [undead]
+will: 60
+attacks:
+ - {type: touch, flavour: drown, damage: 0}
+hd: 13
+hp_10x: 195
+ac: 0
+ev: 13
+intelligence: human
+speed: 12
+uses: open_doors
+size: medium
+shape: humanoid

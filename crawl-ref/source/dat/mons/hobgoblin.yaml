@@ -1,0 +1,17 @@
+name: "hobgoblin"
+glyph: {char: "g", colour: brown}
+flags: [speaks, warm_blood]
+genus: goblin
+will: 0
+attacks:
+ - {type: hit, damage: 5}
+hd: 1
+hp_10x: 55
+ac: 2
+ev: 10
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

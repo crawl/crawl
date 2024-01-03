@@ -1,0 +1,19 @@
+name: "Rupert"
+glyph: {char: "@", colour: lightred}
+flags: [speaks, warm_blood, unique, male]
+xp_mult: 18
+species: human
+will: 100
+attacks:
+ - {type: hit, damage: 21}
+hd: 16
+hp_10x: 1200
+ac: 0
+ev: 10
+spells: rupert
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

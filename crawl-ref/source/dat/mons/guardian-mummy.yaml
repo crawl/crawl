@@ -1,0 +1,19 @@
+name: "guardian mummy"
+glyph: {char: "M", colour: yellow}
+flags: [fighter]
+resists: {cold: 1}
+xp_mult: 13
+species: mummy
+holiness: [undead]
+will: 40
+attacks:
+ - {type: hit, damage: 30}
+hd: 7
+hp_10x: 455
+ac: 6
+ev: 9
+intelligence: human
+speed: 8
+uses: weapons_armour
+size: large
+shape: humanoid

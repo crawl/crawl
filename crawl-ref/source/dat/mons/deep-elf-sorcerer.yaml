@@ -1,0 +1,19 @@
+name: "deep elf sorcerer"
+glyph: {char: "e", colour: lightmagenta}
+flags: [see_invis, speaks, warm_blood]
+xp_mult: 17
+species: elf
+will: 120
+attacks:
+ - {type: hit, damage: 12}
+hd: 14
+hp_10x: 630
+ac: 0
+ev: 13
+spells: deep_elf_sorcerer
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

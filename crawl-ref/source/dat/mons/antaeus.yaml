@@ -1,0 +1,22 @@
+name: "Antaeus"
+glyph: {char: "C", colour: white}
+flags: [fighter, see_invis, speaks, warm_blood, unique, male, tall_tile]
+resists: {elec: 3, fire: -1, cold: 2}
+species: titan
+genus: giant
+holiness: [demonic]
+will: invuln
+attacks:
+ - {type: hit, flavour: cold, damage: 75}
+ - {type: hit, flavour: cold, damage: 30}
+hd: 22
+hp_10x: 6820
+ac: 28
+ev: 4
+spells: antaeus
+shout: demon_taunt
+intelligence: human
+habitat: amphibious
+uses: weapons_armour
+size: giant
+shape: humanoid

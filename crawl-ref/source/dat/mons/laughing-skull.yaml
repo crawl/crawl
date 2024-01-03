@@ -1,0 +1,19 @@
+name: "laughing skull"
+glyph: {char: "z", colour: lightred}
+flags: [flies]
+resists: {fire: 2}
+xp_mult: 9
+holiness: [undead]
+will: 20
+attacks:
+ - {type: headbutt, damage: 16}
+hd: 5
+hp_10x: 240
+ac: 4
+ev: 18
+spells: laughing_skull
+shout: scream
+intelligence: human
+speed: 15
+size: tiny
+shape: misc

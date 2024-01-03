@@ -1,0 +1,19 @@
+name: "shard shrike"
+glyph: {char: "b", colour: lightblue}
+flags: [flies, batty, warm_blood]
+resists: {cold: 2}
+xp_mult: 12
+will: 80
+attacks:
+ - {type: claw, flavour: cold, damage: 21}
+hd: 21
+hp_10x: 1050
+ac: 2
+ev: 18
+spells: shard_shrike
+has_corpse: true
+shout: screech
+intelligence: animal
+speed: 30
+size: tiny
+shape: bird

@@ -1,0 +1,17 @@
+name: "chaos spawn"
+glyph: {char: "4", colour: etc_random}
+xp_mult: 12
+holiness: [demonic]
+will: 60
+attacks:
+ - {type: random, flavour: chaotic, damage: 19}
+hd: 6
+hp_10x: 300
+ac: 4
+ev: 12
+shout: random
+intelligence: animal
+uses: open_doors
+size: large
+shape: misc
+tile_variance: random

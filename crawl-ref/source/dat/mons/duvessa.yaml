@@ -1,0 +1,18 @@
+name: "Duvessa"
+glyph: {char: "e", colour: blue}
+flags: [fighter, speaks, warm_blood, unique, female]
+xp_mult: 15
+species: elf
+will: 40
+attacks:
+ - {type: hit, damage: 10}
+hd: 4
+hp_10x: 360
+ac: 2
+ev: 9
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

@@ -1,0 +1,18 @@
+name: "killer bee"
+glyph: {char: "y", colour: brown}
+flags: [flies, no_skeleton]
+resists: {poison: -1}
+xp_mult: 11
+will: 10
+attacks:
+ - {type: sting, flavour: poison, damage: 10}
+hd: 3
+hp_10x: 165
+ac: 2
+ev: 18
+has_corpse: true
+shout: buzz
+intelligence: animal
+speed: 20
+size: tiny
+shape: insect_winged

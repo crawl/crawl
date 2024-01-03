@@ -1,0 +1,17 @@
+name: "electric eel"
+glyph: {char: "S", colour: lightcyan}
+flags: [cold_blood, no_gen_derived]
+resists: {elec: 3}
+xp_mult: 19
+will: 10
+attacks:
+hd: 3
+hp_10x: 165
+ac: 1
+ev: 15
+spells: zapper
+has_corpse: true
+intelligence: animal
+habitat: water
+size: small
+shape: snake

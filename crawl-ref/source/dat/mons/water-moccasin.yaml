@@ -1,0 +1,21 @@
+name: "water moccasin"
+glyph: {char: "S", colour: brown}
+flags: [cold_blood]
+resists: {poison: 1}
+xp_mult: 11
+genus: snake
+will: 20
+attacks:
+ - {type: bite, flavour: poison, damage: 10}
+hd: 5
+hp_10x: 275
+ac: 2
+ev: 15
+has_corpse: true
+shout: hiss
+intelligence: animal
+habitat: amphibious
+speed: 14
+energy: {swim: 6}
+size: small
+shape: snake

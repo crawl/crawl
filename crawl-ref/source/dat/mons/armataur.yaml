@@ -1,0 +1,17 @@
+name: "armataur"
+glyph: {char: "H", colour: yellow}
+flags: [speaks, no_poly_to, no_gen_derived]
+will: 10
+attacks:
+ - {type: hit, damage: 18}
+ - {type: tail_slap, damage: 12}
+hd: 8
+hp_10x: 450
+ac: 15
+ev: 5
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: large
+shape: humanoid

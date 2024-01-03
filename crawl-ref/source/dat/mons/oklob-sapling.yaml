@@ -1,0 +1,17 @@
+name: "oklob sapling"
+glyph: {char: "P", colour: lightcyan}
+flags: [stationary]
+resists: {poison: 1, acid: 3}
+species: oklob_plant
+genus: plant
+holiness: [plant]
+will: 20
+attacks:
+hd: 4
+hp_10x: 220
+ac: 10
+ev: 0
+spells: oklob_sapling
+intelligence: brainless
+size: small
+shape: plant

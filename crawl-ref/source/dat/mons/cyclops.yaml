@@ -1,0 +1,19 @@
+name: "cyclops"
+glyph: {char: "C", colour: yellow}
+flags: [speaks, warm_blood]
+xp_mult: 14
+genus: giant
+will: 40
+attacks:
+ - {type: hit, damage: 35}
+hd: 9
+hp_10x: 495
+ac: 5
+ev: 3
+has_corpse: true
+shout: shout
+intelligence: human
+speed: 7
+uses: starting_equipment
+size: giant
+shape: humanoid

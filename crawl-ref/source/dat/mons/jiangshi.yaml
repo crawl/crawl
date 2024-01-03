@@ -1,0 +1,20 @@
+name: "jiangshi"
+glyph: {char: "V", colour: yellow}
+flags: [fighter]
+resists: {cold: 1}
+species: vampire
+genus: jiangshi
+holiness: [undead]
+will: 80
+attacks:
+ - {type: claw, flavour: vampiric, damage: 27}
+ - {type: claw, flavour: vampiric, damage: 27}
+hd: 10
+hp_10x: 650
+ac: 10
+ev: 10
+intelligence: animal
+speed: 18
+energy: {move: 6}
+size: medium
+shape: humanoid

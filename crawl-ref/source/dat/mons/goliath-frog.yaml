@@ -1,0 +1,18 @@
+name: "goliath frog"
+glyph: {char: "F", colour: lightgray}
+flags: [cold_blood]
+genus: frog
+will: 60
+attacks:
+ - {type: hit, flavour: reach_tongue, damage: 27}
+hd: 12
+hp_10x: 420
+ac: 3
+ev: 16
+has_corpse: true
+intelligence: animal
+habitat: amphibious
+speed: 12
+energy: {swim: 6}
+size: little
+shape: quadruped_tailless

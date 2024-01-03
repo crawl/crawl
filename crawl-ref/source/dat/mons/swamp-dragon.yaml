@@ -1,0 +1,21 @@
+name: "swamp dragon"
+glyph: {char: "D", colour: brown}
+flags: [flies, warm_blood]
+resists: {poison: 1}
+xp_mult: 11
+genus: dragon
+will: 40
+attacks:
+ - {type: bite, damage: 20}
+ - {type: claw, damage: 11}
+ - {type: trample, flavour: trample, damage: 11}
+hd: 9
+hp_10x: 675
+ac: 7
+ev: 7
+spells: swamp_dragon
+has_corpse: true
+shout: loud_roar
+intelligence: animal
+size: giant
+shape: quadruped_winged

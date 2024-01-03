@@ -1,0 +1,17 @@
+name: "phantom"
+glyph: {char: "W", colour: blue}
+flags: [flies, insubstantial]
+resists: {cold: 2}
+xp_mult: 7
+holiness: [undead]
+will: 40
+attacks:
+ - {type: hit, flavour: blink_with, damage: 8}
+hd: 6
+hp_10x: 270
+ac: 3
+ev: 13
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid

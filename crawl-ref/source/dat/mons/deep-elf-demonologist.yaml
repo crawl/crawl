@@ -1,0 +1,19 @@
+name: "deep elf demonologist"
+glyph: {char: "e", colour: yellow}
+flags: [see_invis, speaks, warm_blood]
+xp_mult: 20
+species: elf
+will: 100
+attacks:
+ - {type: hit, damage: 12}
+hd: 12
+hp_10x: 540
+ac: 0
+ev: 13
+spells: deep_elf_demonologist
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

@@ -1,0 +1,19 @@
+name: "harpy"
+glyph: {char: "H", colour: green}
+flags: [flies, batty, warm_blood]
+resists: {poison: 1}
+xp_mult: 9
+will: 20
+attacks:
+ - {type: claw, damage: 19}
+ - {type: claw, damage: 14}
+hd: 7
+hp_10x: 385
+ac: 2
+ev: 10
+has_corpse: true
+shout: screech
+intelligence: human
+speed: 25
+size: medium
+shape: humanoid_winged

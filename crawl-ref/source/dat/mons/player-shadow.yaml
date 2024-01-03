@@ -1,0 +1,18 @@
+name: "shadow"
+enum: player_shadow
+glyph: {char: "W", colour: magenta}
+flags: [flies, insubstantial, no_exp_gain, cant_spawn]
+species: human
+holiness: [nonliving]
+will: -3
+attacks:
+ - {type: hit, damage: 0}
+hd: 1
+hp_10x: 10
+ac: 3
+ev: 13
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid
+tile: program_bug

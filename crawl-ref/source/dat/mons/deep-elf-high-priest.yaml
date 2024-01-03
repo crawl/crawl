@@ -1,0 +1,19 @@
+name: "deep elf high priest"
+glyph: {char: "e", colour: lightgreen}
+flags: [speaks, warm_blood]
+xp_mult: 15
+species: elf
+will: 80
+attacks:
+ - {type: hit, damage: 14}
+hd: 11
+hp_10x: 495
+ac: 3
+ev: 13
+spells: deep_elf_high_priest
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

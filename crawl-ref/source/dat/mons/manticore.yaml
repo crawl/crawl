@@ -1,0 +1,17 @@
+name: "manticore"
+glyph: {char: "H", colour: red}
+flags: [flies, warm_blood]
+will: 40
+attacks:
+ - {type: bite, damage: 26}
+ - {type: claw, damage: 14}
+ - {type: claw, damage: 14}
+hd: 9
+hp_10x: 495
+ac: 5
+ev: 7
+spells: manticore
+has_corpse: true
+intelligence: animal
+size: large
+shape: quadruped
