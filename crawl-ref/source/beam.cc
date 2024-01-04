@@ -3856,12 +3856,15 @@ static const vector<pie_effect> pie_effects = {
     {
         "peanut brittle",
         nullptr,
-        [](actor &defender, const bolt &/*beam*/) {
+        [](actor &defender, const bolt &beam) {
             if (defender.is_monster())
             {
                 monster *mons = defender.as_monster();
                 simple_monster_message(*mons,
                     " becomes as fragile as glass!");
+
+                mons->add_ench(mon_enchant(ENCH_VITRIFIED, 0, beam.agent(),
+                                           random_range(16, 36) * BASELINE_DELAY));
             }
             else
             {
@@ -3870,7 +3873,7 @@ static const vector<pie_effect> pie_effects = {
                 else
                     mpr("Your body becomes as fragile as glass!");
 
-                you.increase_duration(DUR_VITRIFIED, 16 + random2(21), 50);
+                you.increase_duration(DUR_VITRIFIED, random_range(16, 36), 50);
             }
         },
         4
@@ -5975,7 +5978,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_VITRIFY:
         if (!mon->has_ench(ENCH_VITRIFIED)
             && mon->add_ench(mon_enchant(ENCH_VITRIFIED, 0, agent(),
-                                         random_range(8, 16) * BASELINE_DELAY)))
+                                         random_range(8, 18) * BASELINE_DELAY)))
         {
             if (you.can_see(*mon))
             {
