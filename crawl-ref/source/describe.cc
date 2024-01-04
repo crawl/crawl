@@ -4226,13 +4226,13 @@ static string _miscast_damage_string(spell_type spell)
         { spschool::ice, "cold" },
         { spschool::air, "electric" },
         { spschool::earth, "fragmentation" },
-        { spschool::alchemy, "alchemy" },
     };
 
     const map <spschool, string> special_flavor = {
         { spschool::summoning, "summons a nameless horror" },
         { spschool::translocation, "anchors you in place" },
         { spschool::hexes, "slows you" },
+        { spschool::alchemy, "poisons you" },
     };
 
     spschools_type disciplines = get_spell_disciplines(spell);
