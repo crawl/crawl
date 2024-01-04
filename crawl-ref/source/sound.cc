@@ -60,6 +60,18 @@ sound_mapping check_sound_patterns(const string& message)
             break;
         }
     }
+    if (Options.debug_sounds && Options.debug_sound_file != nullptr)
+    {
+        if (matched_sound.soundfile == "")
+        {
+            fprintf(Options.debug_sound_file, "NO MATCH:::%s\n", message.c_str());
+        }
+        else
+        {
+            fprintf(Options.debug_sound_file, "GOT MATCH:::%s:::%s:::%s\n", message.c_str(),
+                    matched_sound.pattern.tostring().c_str(), matched_sound.soundfile.c_str());
+        }
+    }
 
     return matched_sound;
 }

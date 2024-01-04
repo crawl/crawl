@@ -799,7 +799,7 @@ public:
             // needs to, i.e. an sound that interrupts the game. Otherwise it is
             // more efficent to print text together.
 #ifdef USE_SOUND
-            play_sound(check_sound_patterns(orig_full_text));
+            parse_sound(orig_full_text);
 #endif
     }
 

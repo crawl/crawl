@@ -547,6 +547,12 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(default_manual_training), false),
         new BoolGameOption(SIMPLE_NAME(one_SDL_sound_channel), false),
         new BoolGameOption(SIMPLE_NAME(interrupt_sounds), true),
+        new BoolGameOption(SIMPLE_NAME(debug_sounds), false, [this](){
+            if (this->debug_sound_file == nullptr)
+            {
+                this->debug_sound_file = std::fopen(catpath(SysEnv.crawl_dir, "sound_debug.log").c_str(), "a");
+            }
+        }),
         new BoolGameOption(SIMPLE_NAME(sounds_on), true),
         new BoolGameOption(SIMPLE_NAME(quiver_menu_focus), false),
         new BoolGameOption(SIMPLE_NAME(launcher_autoquiver), true),
