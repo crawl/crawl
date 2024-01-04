@@ -917,6 +917,141 @@ cXccc...D..
             ....ccccc
 ENDMAP
 
+NAME:    nicolae_orc_beogh_chapel
+TAGS:    transparent extra decor
+DEPTH:   Orc
+KFEAT:   _ = altar_beogh
+SHUFFLE: IT
+MAP
+.........
+.cc.T.cc.
+.cI...Ic.
+.........
+.T.._..T.
+.........
+.cI...Ic.
+.cc.T.cc.
+.........
+ENDMAP
+
+NAME:   nicolae_orc_crystal_seam
+TAGS:   no_exits extra decor
+DEPTH:  Orc
+: if crawl.one_chance_in(5) then
+NSUBST: - = 2=@ / -
+: else
+NSUBST: b = 2=@ / bbbbbbbb-
+: end
+CLEAR:  -
+MAP
+   b
+ -b
+ b-  bb
+b  -b
+  bb-   bb
+ b   -bb
+    bb-   bbb
+  bb   -bb
+     bbb-    bbb
+   bb    -bbb
+       bbb-    bbbb
+    bbb    -bbb
+        bbbb-     bbbb
+     bbb     -bbbb
+          bbbb-
+      bbbb
+ENDMAP
+
+NAME:   nicolae_orc_found_a_spring
+TAGS:   transparent no_pool_fixup extra decor uniq_orc_liquiddecor
+DEPTH:  Orc
+SUBST:  M = wx, ~ = Ww
+NSUBST: D = 1:W / *:_, E = 1:W / *:_, F = 1:W / *:_
+NSUBST: H = 1:W / *:_, J = 1:W / *:_, K = 1:W / *:_
+CLEAR:  _
+MAP
+ xxxxxx..@
+xxxMMxx...   EWWWDxxxx
+xxMww~...   FWE DWWxxx
+xMwwww~WWJ HWF    xwwx
+xxMww~..JWWWH     xxxx
+xxxMMxx...
+ xxxxxx..@
+ENDMAP
+
+# so that's what happened to the dwarves...
+NAME:   nicolae_orc_hostile_takeover
+TAGS:   transparent extra decor
+DEPTH:  Orc
+SUBST:  - = xxx'
+NSUBST: ' = 7=D / $..
+: dgn.delayed_decay(_G, 'D', 'dwarf corpse')
+MAP
+ xxxxxxxx
+xxxxx-''xx.
+xx--x-''.x.
+x-''xxx....
+x-''.....x.
+xx-x...xxxx
+xxxx...''-x
+xx-''xx''xx
+xx-''-x-xx
+ xxxxxxxx
+ENDMAP
+
+NAME:   nicolae_orc_quarried_blocks
+TAGS:   transparent no_exits decor
+DEPTH:  Orc
+NSUBST: @ = @ / 2=@___ / _
+SUBST:  D : xxxx_, E : xxxx_, F : xxxx_, H : xxxx_, J : xxxx_, K : xxxx_
+SUBST:  L : xxxx_, M : xxxx_, N : xxxx_, O : xxxx_, P : xxxx_, Q : xxxx_
+SUBST:  R : xxxx_, S : xxxx_, Z : xxxx_, - : xxxx_
+CLEAR:  _
+MAP
+DDD EEE FFF HHH JJJ
+DDD EEE FFF HHH JJJ
+DDD EEE FFF HHH JJJ
+       @   @
+KKK xxx xxx xxx LLL
+KKK xxx xxx xxx LLL
+KKK xxx xxx xxx LLL
+   @   @   @   @
+MMM xxx xxx xxx NNN
+MMM xxx xxx xxx NNN
+MMM xxx xxx xxx NNN
+   @   @   @   @
+OOO xxx xxx xxx PPP
+OOO xxx xxx xxx PPP
+OOO xxx xxx xxx PPP
+       @   @
+QQQ RRR SSS ZZZ ---
+QQQ RRR SSS ZZZ ---
+QQQ RRR SSS ZZZ ---
+ENDMAP
+
+# yes i know that's not a word
+NAME:  nicolae_orc_stalacmites
+TAGS:  transparent extra decor
+DEPTH: Orc
+SUBST: ' = x.
+MAP
+xx        xxx        xx
+'xxx    xxx'xxx    xxx'
+.x'xxxxxx'x.x'xxxxxx'x.
+.x.x'xx'x.x.x.x'xx'x.x.
+.x.x.''.x.x.x.x.''.x.x.
+.x.'....'.x.x.'....'.x.
+.'........'.'........'.
+@.....................@
+'..........'..........'
+x.'......'.x.'......'.x
+x.x.'..'.x.x.x.'..'.x.x
+x.x.x''x.x.x.x.x''x.x.x
+x.x'xxxx'x.x.x'xxxx'x.x
+x'xxx  xxx'x'xxx  xxx'x
+xxx      xxxxx      xxx
+ENDMAP
+
 ############################################################################
 # <<3>> Monster (mini)vaults specific to the Orcish Mines
 ############################################################################
@@ -1494,6 +1629,91 @@ x.........x
 x.........x
 x1...1...1x
 xxx..@..xxx
+ENDMAP
+
+NAME:    nicolae_orc_all_along_the_watchtower
+TAGS:    transparent no_descent
+DEPTH:   Orc, !Orc:$
+WEIGHT:  5
+KMONS:   1 = orc wizard / orc priest
+KMONS:   2 = orc warrior ; chain mail | plate armour . arbalest | longbow
+KFEAT:   - = iron_grate
+SHUFFLE: c1, !I, -Ic`
+SUBST:   } = }]), ! = 1
+NSUBST:  1 = 2:1 / 2:2 / 2 = 12``` / `
+KPROP:   l = no_cloud_gen
+KMASK:   `Ic-}])12 = opaque
+KMASK:   `Ic-}])12 = no_monster_gen
+MAP
+  ...@...
+ .........
+...lllll...
+..llI!Ill..
+..lIc1cIl..
+@.l!1}1!l.@
+..lIc1cIl..
+..llI!Ill..
+...lllll...
+ .........
+  ...@...
+ENDMAP
+
+NAME:  nicolae_orc_minecarts
+TAGS:  transparent
+DEPTH: Orc
+KITEM: L = stone, stone / nothing, stone / nothing, gold / nothing, \
+           gold / nothing, gold good_item w:1 / nothing w:24, \
+           large rock / nothing w:20
+KFEAT: - = iron_grate
+SUBST: 0 = 9000...., ` = ..xx_
+CLEAR: _
+MAP
+ `````````````
+`.............`
+...............
+.0v+v0v+v0v+v0.
+v-vLv-vLv-vLv-v
+.0v+v0v+v0v+v0.
+...............
+`.............`
+ `````````````
+ENDMAP
+
+# I don't want to be buried / in an orc seminary
+# wait that's not how the song goes
+NAME:  nicolae_orc_seminary
+TAGS:  transparent
+DEPTH: Orc
+MONS:  orc priest
+KMONS: _ = orc high priest
+KITEM: _ = manual of invocations ident:all / amulet of faith ident:all w:40
+KFEAT: _ = altar_beogh
+SUBST: 1 = 1 .:15
+MAP
+ccccccccc
+cc.1.1.cc
+cI.....1c
+c..1.1..+
+c_......+
+c..1.1..+
+cI.....1c
+cc.1.1.cc
+ccccccccc
+ENDMAP
+
+# Boss makes a dollar / I make a dime / That's why I go / On company time
+NAME:  nicolae_orc_takin'_care_of_business
+TAGS:  transparent
+DEPTH: Orc, !Orc:$
+KITEM: % = any scroll
+KMONS: %1 = patrolling orc / nothing w:15
+KFEAT: ^ = shaft trap
+MAP
+xxxxxxxxxx
+x^%x^%x^%x
+x..x..x..x
+xx+xx+xx+x
+.1..1..1..
 ENDMAP
 
 ############################################################################
