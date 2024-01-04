@@ -453,20 +453,20 @@ bb...........d...d.%.b......1....b...b.%.b....1......bb
                  b...b...+...'8*7'...+...b...bbbb
              bbbbb...bbbbvjbjb'''bbbbb...bb-bbbXbb
             bb......1....b.%.b...j....7......b...b
-            bY.Y...Y...{%b.Z.b.Z.b%Z...Z...Z.-.XXb
+            bY.Y...Y...{%b.Z.b.Z.b%Z...Z...Z.-.w.b
             bb....1......b...b...j......1....b...b    bbb
-             bb-bb...bbbbb...b+c+vbbbb...bXXXb...bbbbbbXbb
+             bb-bb...bbbbb...b+c+vbbbb...bbwbb...bbbbbbXbb
              b...b...b......8....b.%.b...b....1......w...b
              b.Y.b.{.b%Z...Z...Z.b.{.b.Z.b%{...X...X.w.X.b
              b...b.%.b....1......b...b.%.b......1....w...b
-         bbbbb...bbbbvbbbb...bbjbb...bbbbvbbbw...wwwww...kbbbb
-        bb......1....b.%.b...b....1......b.%.w...w...........bb
-        bY.Y...Y...Y%b.Y.b.Z.-.X...X...{%b.X.w.X.w%X1..X..7X%Xb
-        bb....1......b.{.b...b......1....b...w.%.w...........bb
-         fffff...fbbbb...bb-bbbbbb...bwwwb...wwww.wwww...kbbbb
-         b...f...f......1....bb  b...b....1......w.%.w...b
-         b.Y.f.Y.f%Y...Y...Y.Yb  b.X.-.w...X...X%w.X.w.X.b
-         b...f.%.f....1......bb  b...b.w....1....w.1.w...b
+         bbbbb...bbbbvbbbb...bbjbb...bbbbvwwww...wwwww...kbbbb
+        bb......1....b.%.b...b....1......b.%.w...............bb
+        bY.Y...Y...Y%b.Y.b.Z.-.X...X...{%b.X.w.X..%X1..X..7X%Xb
+        bb....1......b.{.b...b......1....b...w.%b.b..........bb
+         fffff...fbbbb...bb-bbbbbb...bbwbb...w...w...w...kbbbb
+         b...f...f......1....bb  b...b....1.....b.b%.w...b
+         b.Y.f.Y.f%Y...Y...Y.Yb  b.X.-.w...X...X%..X.w.X.b
+         b...f.%.f....1......bb  b...b......1......1.w...b
      bbbbk...ffffvffff...bbbbb   bbXbbbbbb...wwwww...wwwwb
     bb...........f.%.f...b        bbb    b...w...........bb
     bY*Y8..Y..1Y%f.Y.f.Y.b               b.X.w.X...X..1X.Xb

@@ -146,7 +146,7 @@
             e.mons("tengu conjurer / tengu warrior / harpy band w:3 / " ..
                    "wind drake")
             e.mons("tengu reaver")
-            e.mons("caustic shrike w:15 / shard shrike")
+            e.mons("caustic shrike w:20 / shard shrike")
             e.kfeat("A = iron_grate")
             e.kfeat("B = granite_statue")
         elseif set_weight == 8 then
@@ -179,7 +179,7 @@
         elseif set_weight == 11 then
             e.mons("simulacrum / freezing wraith")
             e.mons("frost giant / ice dragon / blizzard demon / azure jelly")
-            e.mons("walking frostbound tome / shard shrike / ice fiend w:4")
+            e.mons("walking frostbound tome / shard shrike w:4 / ice fiend w:4")
             e.subst("A : ...W")
             e.subst("B = wT")
             e.tile("x = wall_ice")

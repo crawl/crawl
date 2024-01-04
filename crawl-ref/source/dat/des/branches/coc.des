@@ -1218,7 +1218,7 @@ MONS:     patrolling ice fiend, patrolling titan
 KMONS:    8 = ice statue
 KMONS:    9 = elemental wellspring
 KFEAT:    9 = w
-KFEAT:   X = open_sea
+KFEAT:    X = open_sea
 : serpent_of_hell_setup(_G)
 SHUFFLE:  ABCEF
 SUBVAULT: A : coc_grunt_cove_antaeus

@@ -167,19 +167,11 @@ function wizlab_doroklohe_convert_boxes(data, triggerable, triggerer,
 
   if data.phase == 1 then
     data.phase = data.phase + 1
-    if you.silenced() then
-      crawl.mpr("The ground shakes.", "warning")
-    else
-      crawl.mpr("There is a faint hissing noise.", "warning")
-    end
+    crawl.mpr("The walls briefly shake.", "warning")
     return
   elseif data.phase == 2 then
     data.phase = data.phase + 1
-    if you.silenced() then
-      crawl.mpr("The ground shakes.", "warning")
-    else
-      crawl.mpr("There is a loud grinding noise.", "warning")
-    end
+    crawl.mpr("The walls violently shake.", "warning")
     return
   elseif data.phase == 3 then
     data.phase = data.phase + 1
@@ -1170,15 +1162,20 @@ KMONS:      | = hell sentinel / brimstone fiend / tzitzimitl /\
 KMONS:      0% = place:Depths:1 zombie / guardian mummy w:4
 KMONS:      * = zombie / mummy priest w:6
 KMONS:      | = ancient lich / dread lich / royal mummy w:20
-:           set_random_mon_list("place:Depths:1 zombie / zombie / guardian mummy")
+:           set_random_mon_list("place:Depths:1 zombie / guardian mummy")
 :           end
+
+#           Hints.
+KITEM:      ' = wand of digging charges:1 ident:type
+KITEM:      " = scroll of revelation q:1 ident:type
 #           Loot.
 #           0 = scrolls. 1 = armours. 2 = mixed.
 :           local lrnd = crawl.random2(3)
 :           if lrnd == 0 then
 KITEM:      % = any scroll / any scroll q:2 w:3 / any scroll q:3 w:1
 :           kitem("* = " .. dgn.good_scrolls)
-KITEM:      | = scroll of acquirement q:1 ident:type / scroll of enchant weapon q:3 ident:type /\
+KITEM:      | = scroll of acquirement q:1 ident:type / \
+                scroll of enchant weapon q:3 ident:type / \
                 scroll of blinking q:2 ident:type, scroll of fog q:2 ident:type
 :           elseif lrnd == 1 then
 KITEM:      % = any armour
@@ -1249,7 +1246,7 @@ MAP
 ^____________...................____________^
 ^________________...........________________^
 ^^^^^^^^^^^^^^^^^^^^^^#^^^^^^^^^^^^^^^^^^^^^^
-                ^____...____^
+                ^____'."____^
                 ^__.......__^
                 ^_...!+!..._^
                 ^_.<.+A+.<._^

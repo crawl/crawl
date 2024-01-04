@@ -1997,6 +1997,11 @@ oklob sapling
 A young oklob plant. It is more fragile than the mature specimen, but the acid
 it sprays is just as deadly.
 %%%%
+oni
+
+A large, rowdy, and drink-loving creature. When they're not busy with their
+duties serving any number of gods, oni mostly love a good fight.
+%%%%
 ophan
 
 A creature from the heavenly realms. It consists of a wheel within a wheel, and

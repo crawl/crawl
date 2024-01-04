@@ -152,8 +152,8 @@ function species_mock(e)
     return "torpor snail"
   elseif you.race() == "Octopode" then
     return "tentacled monstrosity"
-  elseif you.race() == "Ogre" then
-    return "ettin skeleton"
+  elseif you.race() == "Oni" then
+    return "ogre"
   elseif you.race() == "Armataur" then
     return "rat"
   elseif you.race() == "Spriggan" then
@@ -3553,6 +3553,7 @@ SUBST:   2 = 34, ?! = .
 SHUFFLE: xp, pPtU', xbv"
 SUBST:   d : d %:490, - : +ccc, '" = .
 NSUBST:  % = 1:% / 1:$ / *:.
+TILE:    c = dngn_stone_wall_darkgray
 MAP
   ccccccccccc.@.c
   ccc.d1....c.p.c

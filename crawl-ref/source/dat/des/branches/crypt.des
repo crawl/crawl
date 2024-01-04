@@ -92,11 +92,11 @@ function crypt_loot_plus(e)
           "undeadhunter")
   e.kitem("i = necronomicon / " .. book .. "death's_door / " .. book .. "haunt / "
           .. book .. "borgnjor's_revivification / " .. book .. "infestation")
-  e.kitem("j = phial of floods w:20 / any area misc / any ally misc, " ..
-          "staff of death / any magical staff")
+  e.kitem("j = talisman of death / talisman of death randart w:1, " ..
+          "staff of death randart / any magical staff randart")
   e.kitem("k = ivory gem")
   e.subst("d = d:20 ef g:20")
-  e.subst("h = h:5 ij")
+  e.subst("h = h:5 i:15 j")
 end
 }}
 
@@ -695,7 +695,7 @@ ENDMAP
 NAME:   nicolae_crypt_fancy_cubbyholes
 TAGS:   transparent extra decor
 DEPTH:  Crypt
-NSUBST: - = @ / -
+NSUBST: - = 1:@ / *:-
 SUBST:  ' = x:40 ., ` = x:70 ., - = x:100 .
 MAP
 xxxx-x-x-x-xxxx

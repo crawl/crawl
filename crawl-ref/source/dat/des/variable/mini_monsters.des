@@ -8886,8 +8886,7 @@ MONS:   deep elf elementalist w:40 / fire giant / frost giant / iron dragon \
 : master_elementalist_setup(_G, "6")
 SUBST:  1 = 1..., 2 = 2..., 3 = 3..., 4 = 4...
 CLEAR:  @>
-# Depths
-: else
+: else -- Depths
 MONS:   fire dragon / fire giant
 MONS:   ice dragon / frost giant
 MONS:   stone giant / iron troll / deep troll earth mage / iron dragon

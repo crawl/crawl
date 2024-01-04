@@ -2393,15 +2393,17 @@ ENDMAP
 
 ###################################
 
-NAME: nicolae_pan_performance_anxiety
-TAGS: no_trap_gen
+NAME:   nicolae_pan_performance_anxiety
+TAGS:   no_trap_gen
 WEIGHT: 1
-KMONS:  p = human / elf / orc; nothing / naga; nothing / draconian; nothing / \
-            ogre; nothing / minotaur; nothing / troll / kobold; nothing / \
-            mummy / ghoul / spriggan; nothing / dwarf; nothing / felid / \
-            octopode; nothing / vampire spells:. / formicid; nothing / \
-            gargoyle; nothing / vine stalker; nothing / merfolk; nothing / \
-            gnoll; nothing / demonspawn / demigod / tengu; nothing
+KMONS:  p = human / elf / orc ; nothing / kobold ; nothing / mummy / \
+            naga ; nothing / troll / draconian / demigod ; nothing / \
+            spriggan ; nothing / minotaur ; nothing / demonspawn ; nothing / \
+            ghoul / tengu ; nothing / merfolk ; nothing / vampire ; nothing / \
+            felid / octopode ; nothing / djinni ; nothing / \
+            gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
+            barachi ; nothing / gnoll ; nothing / armataur ; nothing / \
+            oni ; nothing
 NSUBST: t = 10:p / *:', b = 10:p / *:'
 KPROP:  p' = no_tele_into
 : pan_demonic_rune(_G, 'P', true)

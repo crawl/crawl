@@ -2380,7 +2380,7 @@ MONS:   orange crystal statue
 MONS:   frost giant / reaper ; halberd itemname:scythe tile:wpn_scythe \
         wtile:scythe ego:freezing / blizzard demon
 MONS:   titan / wendigo / nargun
-MONS:   ice fiend / shard shrike band
+MONS:   ice fiend / walking frostbound tome
 : end
 # Monster, loot, and terrain handling common to all depths.
 NSUBST: . = 3=1 / 6=1. / 2=2 / 4=2. / 2=4 / 2=4. / 5 / 2=5. / .

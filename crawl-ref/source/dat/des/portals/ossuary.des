@@ -717,12 +717,13 @@ MONS:    w:15 withered plant /\
          mummy name:bog n_adj col:green tile:mons_bog_mummy \
          spells:throw_frost.18.wizard;slow.27.wizard / \
          w:5 nothing
-MONS:    crocodile zombie / killer bee zombie w:4
+MONS:    crocodile zombie / killer bee zombie w:3
 ITEM:    any potion / any scroll / any jewellery w:1
 SHUFFLE: ABI/CDJ/EFK/GHL
 SUBST:   A : ., B : A, I : <
 SUBST:   EFKGHL : d
 SUBST:   CDJ = 1112
+NSUBST:  1 = 5:. / *:1
 KPROP:   w = no_tele_into
 : ossuary_setup_features(_G)
 : lrockcol('brown')
@@ -826,10 +827,12 @@ ORIENT:  encompass
 MONS:    kobold skeleton / orc skeleton / gnoll skeleton
 MONS:    mummy
 KMONS:   3X = wight
-KMONS:   4 = burial acolyte
+KMONS:   4C = burial acolyte
 KITEM:   34d = any scroll / any potion
+KFEAT:   C = altar_kikubaaqudgha
 NSUBST:  - = 1:+ / *:c, = = 1:+ / *:c
-SUBST:   d = dd.
+SUBST:   d = dd., 4 = 444C
+KPROP:   X = no_tele_into
 : ossuary_setup_features(_G)
 MAP
 ccccccccccccccccccccccccccccc
@@ -839,11 +842,11 @@ cc.<.....................<.cc
 cc.......ccccc=ccccc.......cc
 cc......cc.........cc......cc
 cc.....cc...cc-cc...cc.....cc
-cc....cc...cm.1.mc...cc....cc
+cc....cc...cm...mc...cc....cc
 cc....c...cm.3dd.mc...c....cc
 cc....=...-.dd4dd.-...=....cc
 cc....c...cm.dd3.mc...c....cc
-cc....cc...cm.1.mc...cc....cc
+cc....cc...cm...mc...cc....cc
 cc1....cc...cc-cc...cc....1cc
 cc......cc.........cc......cc
 cc1......ccccccccccc......1cc
@@ -882,12 +885,13 @@ MONS:    crocodile zombie / weeping skull w:2
 KMONS:   4x = mummy / wight w:2 / spectral scorpion w:2
 KMONS:   y = spectral rat
 KFEAT:   ! = alarm trap
+KFEAT:   ? = altar_yredelemnul
 ITEM:    any scroll / any potion
 KITEM:   x = any scroll / any potion
 KITEM:   y = any scroll w:5 / any potion w:5 / nothing w:10
 SHUFFLE: Bb / Zz, Dd / Ww, Ee / Vv
 SUBST:   ZzWwVv = c, BDE = X
-NSUBST:  X = 1:4 / 1:x / * = x4
+NSUBST:  X = 1:4 / 1:x / 1: xxxx? / * = x4
 NSUBST:  b = 1:+ / c, d = 1:+ / c, e = 1:+ / c
 NSUBST:  ^ = 1:! / *:., ~ = 1:! / *:.
 : ossuary_setup_features(_G)
@@ -1017,9 +1021,9 @@ NAME:    ossuary_due_cavern
 TAGS:    no_item_gen no_monster_gen
 WEIGHT:  10
 ORIENT:  encompass
-MONS:    centaur zombie w:1 / orc zombie / hobgoblin zombie /\
-         kobold zombie / adder zombie / orc skeleton / hobgoblin skeleton /\
-         ball python skeleton / nothing w:5
+MONS:    centaur skeleton w:1 / orc skeleton w:15 / hobgoblin skeleton /\
+         kobold skeleton w:15 / adder skeleton / \
+         ball python skeleton w:15 / nothing w:5
 KMONS:   2V = wight
 KMONS:   3X = laughing skull
 KMONS:   4 = burial acolyte
@@ -1031,7 +1035,7 @@ NSUBST:  B : 1:+ / 1:+ccc / *:c, C : 1:+ / 1:+ccc / *:c
 SHUFFLE: VX, yzYZ
 NSUBST:  y = 1:n / * = c:20 n:8, z = 2:n / * = c:20 n:4
 NSUBST:  Y = 1:n / * = c:20 n:4, Z = 1:n / * = c:20 n:1
-NSUBST:  4 = 1:4 / 1:42 / *:2
+NSUBST:  3 = 1:113 / *:3, 4 = 1:4 / 1:42 / *:2
 SUBST:   0 = 1:10 2:1
 KPROP:   VX = no_tele_into
 : ossuary_setup_features(_G)
@@ -1080,7 +1084,7 @@ MONS:   bullfrog simulacrum / spectral scorpion / \
         killer bee zombie w:5 / crocodile zombie w:35
 MONS:   mummy
 ITEM:   any scroll / any potion / any scroll q:2 w:2 / any potion q:2 w:2
-NSUBST: 2 = 1:. / 2 = 112 / *:1
+NSUBST: 2 = 1:. / 2 = 12 / *:1
 : ossuary_setup_features(_G)
 MAP
             ccc
@@ -1229,11 +1233,12 @@ KMONS:   4 = hound zombie / gnoll zombie / orc zombie
 KMONS:   5 = human zombie / elf zombie / centaur zombie
 KITEM:   123d = any potion / any scroll / any jewellery w:1
 KFEAT:   ^ = alarm trap
+KFEAT:   C = altar_kikubaaqudgha / altar_hepliaklqana w:2
 SHUFFLE: HIJKLMNOPQRSTUVW
 NSUBST:  4 = 3:4 / 2:. / * = 4:3 5:1 .:6
 NSUBST:  H = 1:1 / 1:2 / *:d, I = 1:3 / *:4
 NSUBST:  J = 1:3 / *:4, K = 1:2 / *:d
-SUBST:   L = 4, MNOPQ = ., RS = $, TUVW = d
+SUBST:   L = 4, M = 5, NOPQ = ., RS = $, TUVW = d, C = CGG
 KPROP:   w = no_tele_into
 : ossuary_setup_features(_G)
 MAP
@@ -1252,7 +1257,7 @@ c..xL+...4..x+++x..4...+Nx..c
 c..xxxx.....x...x.....xxxx..c
 c...........................c
 c......xxxxx..4..xxxxx......c
-c^.....xOO+..4G4..+PPx.....^c
+c^.....xOO+..4C4..+PPx.....^c
 c......xxxxx..4..xxxxx......c
 c...........................c
 c..xxxx.....x...x.....xxxx..c

@@ -98,12 +98,13 @@ WEIGHT:  1 (D:$), 10
 MONS:    shapeshifter, ugly thing, glowing shapeshifter
 MONS:    obsidian statue, 0 band / 9 band
 KITEM:   R = smoky gem
+KITEM:   ? = stone no_pickup / gold q:1 no_pickup
 KFEAT:   O = enter_depths
 KFEAT:   S = stone_arch
-NSUBST:  O = 1:O / *:S, R = 1:R / *:'
-SUBST:   * = *%, I = G
+NSUBST:  O = 1:O / *:S, R = 1:R / *:?
+SUBST:   * = *%, | = |*, I = G
 TILE:    G = depths_column
-FTILE:   'ROS = floor_depthstone
+FTILE:   'ROS? = floor_depthstone
 : else
 MONS:    very ugly thing, glowing shapeshifter, glass eye band
 MONS:    orange crystal statue, 9 band / 8 band

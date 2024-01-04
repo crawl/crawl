@@ -682,6 +682,9 @@ end
 map("wSw")
 map("www")
 subst("w : wwwwttl")
+if you.in_branch("Orc") or you.in_branch("Snake") then
+    subst("t = l")
+end
 }}
 
 NAME:  nicolae_shop_pleasant_corner_grove

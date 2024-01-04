@@ -2372,8 +2372,7 @@ KMONS:  5 = water elemental / elemental wellspring
 KMONS:  6 = frost giant
 KMONS:  7 = air elemental / deep elf zephyrmancer
 KMONS:  E = storm dragon
-# Depths
-: else
+: else -- Depths
 KMONS:  1 = fire giant
 KMONS:  2 = hellephant
 KMONS:  3 = war gargoyle / stone giant / iron dragon
@@ -3004,29 +3003,29 @@ ENDMAP
 ###############################################################################
 
 NAME:    lightli_eight_chambers
+TAGS:    no_monster_gen
 ORIENT:  float
 DEPTH:   Depths, !Depths:$
-TAGS:    no_monster_gen
-KMONS:   D = ice dragon / frost giant / blizzard demon / shard shrike w:3 \
-         / ice fiend w:2
+KMONS:   D = ice dragon / frost giant / blizzard demon / \
+             walking frostbound tome w:3 / ice fiend w:2
 KMONS:   E = storm dragon / spriggan air mage / spark wasp / titan w:5
-KMONS:   F = fire dragon / fire giant / salamander tyrant / smoke demon \
-         / balrug / hellephant w:5
-KMONS:   H = stone giant w:20 / iron dragon / walking earthen tome \
-         / juggernaut w:5 / walking crystal tome w:5
-KMONS:   J = death scarab w:20 / guardian mummy / sphinx / reaper \
-         / mummy priest w:5 / royal mummy w:5
-KMONS:   K = deep elf demonologist / deep elf sorcerer / deep elf death mage \
-         / deep elf annihilator / deep elf high priest \
-         / deep elf blademaster w:5 / deep elf master archer w:5
-KMONS:   L = great orb of eyes / rockslime / quicksilver ooze / azure jelly \
-         / acid blob w:5
-KMONS:   M = ancient champion / vampire mage / vampire knight \
-         / eidolon / revenant / bone dragon / lich w:5
+KMONS:   F = fire dragon / fire giant / salamander tyrant / smoke demon / \
+             balrug / hellephant w:5
+KMONS:   H = stone giant w:20 / iron dragon / walking earthen tome / \
+             juggernaut w:5 / walking crystal tome w:5
+KMONS:   J = death scarab w:20 / guardian mummy / sphinx / reaper / \
+             mummy priest w:5 / royal mummy w:5
+KMONS:   K = deep elf demonologist / deep elf sorcerer / deep elf death mage / \
+             deep elf annihilator / deep elf high priest / \
+             deep elf blademaster w:5 / deep elf master archer w:5
+KMONS:   L = great orb of eyes / rockslime / quicksilver ooze / azure jelly / \
+             acid blob w:5
+KMONS:   M = ancient champion / vampire mage / vampire knight / \
+             eidolon / revenant / bone dragon / lich w:5
 KMONS:   N = tengu warrior / tengu conjurer / tengu reaver
 KMONS:   O = spriggan berserker / spriggan air mage / spriggan defender
-KMONS:   P = balrug / blizzard demon / shadow demon / hell beast / hellion \
-         / lorocyproca / reaper / tormentor
+KMONS:   P = balrug / blizzard demon / shadow demon / hell beast / hellion / \
+             lorocyproca / reaper / tormentor
 SHUFFLE: DEFHJKLMNOP
 MAP
 xxvvvvvvvvvvvvvxx
@@ -4015,10 +4014,9 @@ KMONS: 2 = ice dragon / frost giant
 MONS:  deep elf blademaster simulacrum / freezing wraith / ice dragon \
        / deep elf knight
 KMONS: 2 = frost giant / shard shrike
-# Depths
-: else
+: else -- Depths
 MONS:   simulacrum w:20 / ice dragon / frost giant
-KMONS:  2 = ice fiend / shard shrike band
+KMONS:  2 = ice fiend / walking frostbound tome
 : end
 : minmay_elemental_octagon_setup(_G)
 MAP

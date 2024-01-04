@@ -571,11 +571,13 @@ SHUFFLE:  |de
 ITEM:     scroll of blinking ident:all
 MONS:     frilled lizard w:20 / ball python / giant cockroach w:20 / \
           dart slug / adder w:8
-NSUBST:   . = 72 = 1.. / *:.
-NSUBST:   ! = 1:! / 1:!!!!. / *:w
-KFEAT:    ! = w
-COLOUR:   ! = green
+KMONS:    ? = dart slug
 KMONS:    ! = bullfrog
+KFEAT:    ? = W
+KFEAT:    ! = w
+NSUBST:   . = 80 = 1.. / *:.
+NSUBST:   ! = 1:! / 1:!!!!. / *:w
+COLOUR:   ! = green
 SUBST:    ~ = .
 : sewer_setup(_G)
 MAP
@@ -587,14 +589,14 @@ c.WwwWccccccccccccccccccccccc.WwW.c
 c.WwW.ccccccccccccccccccccccc.WwW-c
 c.WwwWccccccc!!!!!!cccccccccc-WwW-c
 c.Wwwwccccwwwwwwwww!!!ccccccc-WwW-c
-c-WwwwccwwwWwwwwwwwwww!cccccc-WwW-c
+c-Wwwwccwww?wwwwwwwwww!cccccc-WwW-c
 c-WwwwcwwWW<-wwwwwwwwww!ccccc-WwW-c
 c-Wwwwwwww-..-ww.--wwwww!cccc-WwW-c
 c-WwWwwWww---.-e*.--wwwwwcccc-WwW-c
 c-WwWWWwWww-.--***.wwwwwwcccc-WwW.c
 c-WwWWwwwWww.---d-wwwwwwwcccc-WwW.c
 c-WwWWWwwwW------wwwwwwwwcccc.WwW.c
-c-WwWWWwwwwW---wwwwwwWwwccccc.WwW.c
+c-WwWWWwwww?---wwwwww?wwccccc.WwW.c
 c-WwW.WwwwwwwwwwwwwwWwwwccccc-WwW.c
 c.WwW.WwwwwwWWwwwwwwwWccccccc-WwW-c
 c.WwWW..WWWWwwWwWW.........---Www-c
@@ -622,7 +624,7 @@ KMONS:    ! = bullfrog
 ITEM:     scroll of blinking ident:all
 KFEAT:    1W = W
 KFEAT:    ! = w
-NSUBST:   W = 160 = 1WWW / *:W
+NSUBST:   W = 175 = 1WWW / *:W
 NSUBST:   ! = 1:! / 1:!!!!. / *:w
 COLOUR:   1! = green
 SHUFFLE:  ed|
@@ -675,8 +677,8 @@ MONS:    bullfrog
 ITEM:    any scroll / any potion
 SUBST:   y : yyyyyyW., Y : YYYYYYWw, z = x., Z = wwwxx
 SUBST:   y = W., Y = Ww, c = c x:1
-NSUBST:  d = 2:d / *=d..., e = 2:e / *=e...
-NSUBST:  - = 92 = 1... / *:.
+NSUBST:  d = 2:d / * = d..., e = 2:e / * = e...
+NSUBST:  - = 84 = 1... / *:.
 SUBST:   2 = 2.
 : sewer_setup(_G)
 MAP
@@ -1007,7 +1009,7 @@ NAME:   sewer_sea
 TAGS:   no_item_gen no_monster_gen no_rotate no_pool_fixup
 ORIENT: encompass
 WEIGHT: 5
-MONS:   rat, rat / river rat w:5
+MONS:   rat, rat / river rat w:4
 KMONS:  G = sickly merfolk siren
 KMONS:  H = malarious merfolk avatar
 KMONS:  hJ = frilled lizard / ball python / adder
@@ -1220,7 +1222,7 @@ NAME:    sewer_co_cracked_pipes
 TAGS:    no_item_gen no_monster_gen no_pool_fixup no_rotate no_vmirror
 ORIENT:  encompass
 MONS:    frilled lizard / ball python w:6 / adder w:4
-MONS:    rat / river rat w:4
+MONS:    rat / river rat w:6
 KMONS:   3 = adder
 KMONS:   4 = brain worm
 : item(dgn.loot_potions)
@@ -1243,7 +1245,7 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xcccccccccccccccccccccccccccccccccccccccccccccccx
 xwwwwwwwwmwWd.....1.....1--------.......1...4.<cx
-xwwwwwwwwmwWd..1......1...---3---..1......1...dcx
+xwwwwwwwwmwWd..1......1...---3---..1......1..1dcx
 xccccccccccccIIIIIIccccccccccKccccccMMMcccccMMMcx
 xxxxxxxxxxxxxx`xx`xxxxxxxxxxc!cxxxxxx~xxxxxxx~xxx
             xxx``xxxxxxxxxxxc!cxxxxxxx~x~xxx~xx
@@ -1255,7 +1257,7 @@ xxxxxxxxxxxxxx`xx`xxxxxxxxxxc!cxxxxxx~xxxxxxx~xxx
 xxxxxxxxxxxxxxxxx`xxxxx`xxxxc!cxxxxxxxxxxx~~x~xxxxxxxxxxxxx
 xcccccccccccccccHHHcccHHHccccJcccccccccccLLLLLLcccccccccccx
 xwwwwwwwwmwWd....1..1....---------4...1...1...dWwmwwwwwwwwx
-xwwwwwwwwmwWd.1.......1..---------..1.......1.dWwmwwwwwwwwx
+xwwwwwwwwmwWd.1....1..1..---------..1.......1.dWwmwwwwwwwwx
 xccccccccccCCCccCCCccccccccccEccccccccccGGGcGGGcccccccccccx
 xxxxxxxxxxxx'xxxx'xxxxxxxxxxc?cxxxxxxxxxx"xxx"xxxxxxxxxxxxx
          xxxx'xx'xxxxxxxxxxxc?cxxxxxxxxxxx"x"xx
@@ -1373,7 +1375,7 @@ KMONS:   6 = Grinder / shadow imp w:5, shadow imp
 : item(dgn.loot_potions .. " / any scroll w:30 / any armour / any weapon")
 KITEM:   456 = star_item
 SHUFFLE: 456
-NSUBST:  1 = 2:1 / 3:. / * = 1:13 .:15, . = 18 = 2. / *:.
+NSUBST:  1 = 2:1 / 5:. / * = 1:13 .:15, . = 14 = 2. / *:.
 NSUBST:  d = 1:* / *:d
 SUBST:   W = WWWWW., - = wwwWW
 : sewer_setup(_G)
@@ -1383,7 +1385,7 @@ MAP
                                          ccdcc
                                         ccd4dcc
                                         c-111-c
-               xxxxxxxxxxxxxxxxxxxxxxxxxc-.1.-c
+               xxxxxxxxxxxxxxxxxxxxxxxxxc-...-c
                xwwwwwwwwwwwwwwww-W.+1W-xc-...-c
                xwwwwwwwwwwwwwwww-W.x1W-xc-...-c
                x---wwwwwwwwwwwww-W.x1W-xc-...-c
@@ -1392,7 +1394,7 @@ MAP
                xWWW----ww-ww---W...x.W-xc.....ccccccccc
                xxWxxxxWxxWxxWxxx1xxxx.xcc..F...c------cc
                x-W.x............1w-x...c..2.2F.+.....1dccc
-               x-W.............1www-...+.F.B3..+....115d<c
+               x-W.............1www-...+.F.B3..+.....15d<c
                x-W.x............1w-x...c..2.2F.+.....1dccc
                x-W.xxxxWxWWxxx-x1xxxx.xcc..F...c------cc
                x-W.xww------w-WW...x.W-xc.....ccccccccc
@@ -1401,7 +1403,7 @@ MAP
                x-W.xwwwwwwwwwwww-W.x1W-xc-...-c
                x-W.xwwwwwwwwwwww-W.x1W-xc-...-c
                x-W1xwwwwwwwwwwww-W.+1W-xc-...-c
-xxxxxxxxxxxxxxxx-W.xxxxxxxxxxxxxxxxxxWxxc-.1.-c
+xxxxxxxxxxxxxxxx-W.xxxxxxxxxxxxxxxxxxWxxc-...-c
 x----------------w1xWW-wwwwwww-WWWWWWW-xc-111-c
 xWWWWWWWWWWWWWWWww.WWW-wwwwwww--WWWWWW-xccd6dcc
 x...............1.1xW-wwwwwwwwww-------x ccdcc

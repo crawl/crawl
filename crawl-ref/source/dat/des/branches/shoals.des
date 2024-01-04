@@ -2610,23 +2610,25 @@ WEIGHT: 4
 NAME:      shoalhut_rune
 TAGS:      shoal_rune_simple shoal_mimic_simple water_ok no_dump transparent \
            allow_dup
-NSUBST:    A = 1:+ / 1 = x:19 +:1 / *:x
-SUBST:     0 = 0.
-SUBST:     e = e.
 KMONS:     ge = merfolk impaler / merfolk javelineer / merfolk aquamancer
 : if shoals_vault_is_mimic() then
+KITEM:     R = azure gem mimic
 KITEM:     O = barnacled rune of Zot mimic
 : else
-KITEM:     O = barnacled rune of Zot, azure gem
+KITEM:     R = azure gem
+KITEM:     O = barnacled rune of Zot
 : end
+NSUBST:    A = 1:+ / 1 = x:19 +:1 / *:x
+NSUBST:    1 = 1:0 / 1:R / * = 0
+SUBST:     0 = 0., e = e.
 KPROP:     O = no_tide
 LROCKTILE: wall_pebble_lightgray
 MAP
  xxAxx
 xx.0.xx
-xe0g0ex
+xe1g1ex
 A0gOg0A
-xe0g0ex
+xe1g1ex
 xx.0.xx
  xxAxx
 ENDMAP
@@ -2679,7 +2681,8 @@ KMONS:     d = merfolk avatar / water nymph w:5
 : if shoals_vault_is_mimic() then
 KITEM:     d = barnacled rune of zot mimic
 : else
-KITEM:     d = barnacled rune of Zot, azure gem
+KITEM:     d = barnacled rune of Zot
+KITEM:     e = azure gem
 : end
 KFEAT:     123 = w
 KPROP:     d = no_tide
@@ -2691,9 +2694,9 @@ FHEIGHT: .d0@ = 15
 MAP
   xxxxxxx
  xx12wwwxx
-xx2x..00Wxx
+xx2xe.00Wxx
 x1xd02w..Wx
-x2.03Awx..x
+x2$03Awx..x
 xw.2AxBw..x
 xw0wwBw.D.x
 xw0.xw..C.x
@@ -2761,13 +2764,15 @@ MONS:   merfolk impaler ; trident ego:freezing good_item . robe w:7 / \
         merfolk impaler w:2 / merfolk javelineer / merfolk aquamancer
 KMONS:  K = kraken simulacrum / frost giant w:20
 : if shoals_vault_is_mimic() then
+KITEM:  R = azure gem mimic
 KITEM:  O = barnacled rune of Zot mimic
 : else
-KITEM:  O = barnacled rune of Zot, azure gem
+KITEM:  R = azure gem
+KITEM:  O = barnacled rune of Zot
 : end
 KFEAT:  K = deep_water
 NSUBST: A = 1:. / 1:xxxx. / *:x
-NSUBST: 1 = 4:1 / 4 = 1., 0 = 2:0 / 2:. / * = 00...
+NSUBST: 2 = 1:R / *:1, 1 = 4:1 / * = 1., 0 = 2:0 / 2:. / * = 0..
 NSUBST: w = 1:K / *:w
 : shoals_ice_setup(_G)
 KPROP:  O = no_tide
@@ -2777,9 +2782,9 @@ MAP
  ..xxxxxxx..
 .-xA.---.Ax-.
 .-x.10w01.x-.
-.-x-0x1x0-x-.
-.-x-w1O1w-x-.
-.-x-0x1x0-x-.
+.-x-0x2x0-x-.
+.-x-w2O2w-x-.
+.-x-0x2x0-x-.
 .-x.10w01.x-.
 .-xA.---.Ax-.
  ..xxxxxxx..
@@ -2846,11 +2851,13 @@ MONS:    satyr w:18 / merfolk impaler / merfolk javelineer / merfolk aquamancer
 MONS:    faun w:6 / 0
 KMONS:   P = plant
 : if shoals_vault_is_mimic() then
+KITEM:   R = azure gem mimic
 KITEM:   O = barnacled rune of Zot mimic
 : else
-KITEM:   O = barnacled rune of Zot, azure gem
+KITEM:   R = azure gem
+KITEM:   O = barnacled rune of Zot
 : end
-NSUBST:  1 = 4:1 / 2:1. / 2:1. / 2:2 / 2:2. / 2:2. / *:.
+NSUBST:  R = 1:R / *:1, 1 = 4:1 / 2:1. / 2:1. / 2:2 / 2:2. / 2:2. / *:.
 SHUFFLE: abcdefghijk, ABCDEFGH
 SUBST:   abAB = x, cdeCDE = P, g : xP, h : P., ijkGH = .
 KPROP:   O = no_tide
@@ -2859,9 +2866,9 @@ MAP
  kkaBAAdee
  jCCB1HHGf
 ijD11111Gfg
-iED11111FFg
-hE111O111Eh
-gFF11111DEi
+iED1RRR1FFg
+hE11ROR11Eh
+gFF1RRR1DEi
 gfG11111Dji
  fGHH1BCCj
  eedAABakk
@@ -2900,18 +2907,21 @@ ENDMAP
 
 NAME:   shoals_end_hellmonk_lost_city
 : set_border_fill_type("open_sea")
-ORIENT: encompass
-PLACE:  Shoals:$
-WEIGHT: 3
-KITEM:  O = barnacled rune of Zot, azure gem
-MONS:   faun w:15 / manticore / harpy, satyr, minotaur, sphinx
-KMONS:  O = sphinx
-KMONS:  P = plant
-SUBST:  1 = 1.., 2 = 2.., 3 = 334, G = G.
-SUBST:  ; : W.., p : W.., q : W.., r : W.., s : W.., y : W.., z : W..
-NSUBST: | = 1:O / *:|, . = 16 = 0. / *=.........W
-SUBST:  D = x., c = ccc.
-NSUBST: ' = 1:( / 1:[ / 1:{ / 2 = <.. / *=P......
+ORIENT:  encompass
+PLACE:   Shoals:$
+WEIGHT:  3
+MONS:    faun w:15 / manticore / harpy, satyr, minotaur, sphinx
+KMONS:   O = sphinx
+KMONS:   P = plant
+KITEM:   f = azure gem
+KITEM:   O = barnacled rune of Zot
+SHUFFLE: d% / e* / f|
+NSUBST:  | = 1:O / *:|
+SUBST:   de = ., %* = |, 1 = 1.., 2 = 2.., 3 = 334, G = G.
+SUBST:   ; : W.., p : W.., q : W.., r : W.., s : W.., y : W.., z : W..
+NSUBST:  . = 16 = 0. / *=.........W
+SUBST:   D = x., c = ccc.
+NSUBST:  ' = 1:( / 1:[ / 1:{ / 2 = <.. / *=P......
 MAP
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
@@ -2923,9 +2933,9 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwxDx1112xxxxwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwxDx2.....rrrxwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwxxD...xxxrrrccccccwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwxxDpppDDxrrrccc1..1cccwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwxDDpppxDDrrrrcc.......|ccDDDwwwwwwwwwwwwww
-wwwwwwwwwwWWWWWWWWWDDpppxDD...xrr+...2...3.cc1.xxwwwwwwwwwwwww
-wwwwwwwwwWWWWWWWWWDxpppxD...xxxrrcc.......|cc...xxwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwxDDpppxDDrrrrcc.......%ccDDDwwwwwwwwwwwwww
+wwwwwwwwwwWWWWWWWWWDDpppxDD...xrr+...2.d.3.cc1.xxwwwwwwwwwwwww
+wwwwwwwwwWWWWWWWWWDxpppxD...xxxrrcc.......%cc...xxwwwwwwwwwwww
 wwwwwwwwWWWWWWWWWDxpppxx...xxxxrrrccc1..1ccc.....xDwwwwwwwwwww
 wwwwwwwWWWWWWWWWDxpppxx...xxxxxxxrrrcccccc....2..2Dwwwwwwwwwww
 wwwwwwWWW'''WWWDxpppxx.....yyyy2DDDrrrr......2GD..Dwwwwwwwwwww
@@ -2936,9 +2946,9 @@ wwwwwwW''cc''.WDD..pDx1....1+yy...2xD....D...2.2.1Dwwwwwwwwwww
 wwwwwwW''''''.W+...pDx......Dyy.....D....D...ccccccccwwwwwwwww
 wwwwwwW'''''..W+...ppxD1..1DxyyDD1..x1..2x.ccc1....1cccwwwwwww
 wwwwwwW''''..ccccc..pxDDDDxxxxxDD...xD++Dxcc1.........ccwwwwww
-wwwwwwW'''..cc..1cc..G....G.....G....G....Gc.....2.....|cwwwww
-wwwwwwW'''..+....2+;;;;;;;;;;;;;;;;;;;;;;;;+..2......3.|cwwwww
-wwwwwwW'''..cc..1cc..G....G.....G....G....Gc.....2.....|cwwwww
+wwwwwwW'''..cc..1cc..G....G.....G....G....Gc.....2.....*cwwwww
+wwwwwwW'''..+....2+;;;;;;;;;;;;;;;;;;;;;;;;+..2.....e3.*cwwwww
+wwwwwwW'''..cc..1cc..G....G.....G....G....Gc.....2.....*cwwwww
 wwwwwwW''''..ccccc..qxDDDDxxxxxDD...xD++Dxcc1.........ccwwwwww
 wwwwwwW'''''..W+...qqxD1..1DxzzDD1..x1..2x.ccc1....1cccwwwwwww
 wwwwwwW''''''.W+...qDx......Dzz.....D....D...ccccccccwwwwwwwww
@@ -2950,7 +2960,7 @@ wwwwwwWWW'''WWWDxqqqxx.....zzzz2DDDssss1.....2GD..Dwwwwwwwwwww
 wwwwwwWWWWWWWWWWDxqqqxx...xxxxxxxssscccccc....2..2Dwwwwwwwwwww
 wwwwwwwWWWWWWWWWWDxqqqxx...xxxxsssccc1..1ccc.....xDwwwwwwwwwww
 wwwwwwwwWWWWWWWWWWDxqqqxD...xxxsscc.......|cc...xxwwwwwwwwwwww
-wwwwwwwwwWWWWWWWWWWDDqqqxDD...xss+...2...3.cc1.xxwwwwwwwwwwwww
+wwwwwwwwwWWWWWWWWWWDDqqqxDD...xss+...2.f.3.cc1.xxwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwxDDqqqxDDsssscc.......|ccDDDwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwxxD...DDxsssccc1..1cccwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwxxD2..xxxsssccccccwwwwwwwwwwwwwwwwwwww
@@ -2965,35 +2975,36 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 ENDMAP
 
 NAME:    shoals_end_hellmonk_holy_island
-: set_border_fill_type("open_sea")
 TAGS:    no_trap_gen
 ORIENT:  encompass
 PLACE:   Shoals:$
 WEIGHT:  3
-KITEM:   O = barnacled rune of Zot, azure gem
 MONS:    cyclops
-MONS:    death yak / dream sheep / yak / holy swine w:3 / apis w:3
+MONS:    death yak / dream sheep / yak / holy swine w:1 / apis w:3
 MONS:    w:15 merfolk impaler ; trident ego:flaming good_item |\
             trident ego:freezing good_item | trident ego:protection good_item |\
             trishula w:5 . robe w:15 | pearl dragon scales w:1 / \
          merfolk javelineer ; javelin ego:silver w:20 | javelin /\
          merfolk aquamancer
 MONS:    cherub
-KMONS:   O = angel / daeva w:3
+KMONS:   H = angel / daeva w:3
 KMONS:   P = plant
+KITEM:   H = barnacled rune of Zot
+KITEM:   h = azure gem
+KFEAT:   D = altar_zin
+KFEAT:   E = altar_elyvilon
+KFEAT:   F = altar_the_shining_one
+SHUFFLE: Hh / Ii / Jj, DEF
+SUBST:   IJ = |, ij = .
 NSUBST:  < = 1:( / 1:[ / 1:{ / *: <''
 SUBST:   - = W:30 ' P:1, _ = W:5 ':15 P:1
 SUBST:   3 = 330, 0 = 0...
 NSUBST:  4 = 2:4 / * = 4...
 NSUBST:  ' = 8 = 1''' / 24 = 2''' / * = P''''''''''
-NSUBST:  H = 1:O / *:|
-SHUFFLE: DEF
-KFEAT:   D = altar_zin
-KFEAT:   E = altar_elyvilon
-KFEAT:   F = altar_the_shining_one
 TILE:    G = dngn_statue_angel
 FTILE:   12P'~([{< = floor_grass
 FTILE:   034|DEFGOc+. = floor_limestone
+: set_border_fill_type("open_sea")
 MAP
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
@@ -3003,7 +3014,7 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwww-----wwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwww---ccc----wwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwww------cccHccc------wwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwww------cc|3.3|cc------wwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwww------cc|3h3|cc------wwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwww----___c3.000.3c___----wwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwww----__'cc...3...cc''__---wwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwww---__''c3.0ccc0.3c''__---wwwwwwwwwwwwwwww
@@ -3043,8 +3054,8 @@ wwwwwww-c40ccEcc04c''''cc_-www--_c''''c40ccFcc04c-wwwwwww
 wwwwwww-c3.0ccc0.3c''ccc__-www-__ccc''c3.0ccc0.3c-wwwwwww
 wwwwwww-cc...3...cc'_____--www-______'cc...3...cc-wwwwwww
 wwwwwwww-c3.000.3c_______-www-_________c3.000.3c-wwwwwwww
-wwwwwwww-cc|3.3|cc___-----www-------___cc|3.3|cc-wwwwwwww
-wwwwwwwww-cccHccc---------www-----------cccHccc-wwwwwwwww
+wwwwwwww-cc|3i3|cc___-----www-------___cc|3j3|cc-wwwwwwww
+wwwwwwwww-cccIccc---------www-----------cccJccc-wwwwwwwww
 wwwwwwwwww--ccc----------www--------------ccc--wwwwwwwwww
 wwwwwwwwwww--------------www------------------wwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
@@ -3123,12 +3134,13 @@ ENDMAP
 
 NAME:   storm_palace_center_square
 TAGS:   storm_palace_rune
-KITEM:  O = barnacled rune of Zot, azure gem
-KITEM:  | = superb_item
 MONS:   merfolk aquamancer / merfolk javelineer / merfolk impaler
 KMONS:  O = patrolling storm dragon / patrolling titan
-KFEAT:  |O = shallow_water
-NSUBST: | = 1:O / *:|, 1 = 4 = 8. / * = 1..
+KITEM:  O = barnacled rune of Zot
+KITEM:  R = |, azure gem
+KITEM:  | = superb_item
+KFEAT:  |RO = shallow_water
+NSUBST: | = 1:O / 1:R / *:|, 1 = 4 = 8. / * = 1..
 SUBST:  p : W., q : W., r : W., S : W.
 MAP
 cccc..pppppppppp..cccc
@@ -3157,11 +3169,12 @@ ENDMAP
 
 NAME:   storm_palace_center_circular
 TAGS:   storm_palace_rune no_pool_fixup
-KITEM:  O = barnacled rune of Zot, azure gem
 MONS:   merfolk aquamancer / merfolk javelineer / merfolk impaler
 KMONS:  O = patrolling storm dragon / patrolling titan
 KMONS:  P = plant
-NSUBST: | = 1:O / *:|, 1 = 4 = 8. / * = 1..
+KITEM:  O = barnacled rune of Zot
+KITEM:  R = |, azure gem
+NSUBST: | = 1:O / 1:R / *:|, 1 = 4 = 8. / * = 1..
 SUBST:  . = P......
 MAP
 c....................c
@@ -3190,10 +3203,11 @@ ENDMAP
 
 NAME:   storm_palace_center_ruins
 TAGS:   storm_palace_rune
-KITEM:  O = barnacled rune of Zot, azure gem
 MONS:   merfolk aquamancer / merfolk javelineer / merfolk impaler
 KMONS:  O = patrolling storm dragon / patrolling titan
-NSUBST: | = 1:O / *:|, 1 = 4 = 8. / * = 1..
+KITEM:  O = barnacled rune of Zot
+KITEM:  R = |, azure gem
+NSUBST: | = 1:O / 1:R / *:|, 1 = 4 = 8. / * = 1..
 SUBST:  p : W., q: W., . = W..., c = cc.
 MAP
 c....................c

@@ -2228,19 +2228,17 @@ default-depth:
 
 NAME:   spider_rune_water
 PLACE:  Spider:$
-WEIGHT: 20
+WEIGHT: 15
 ORIENT: northwest
-KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot, milky-white gem
 MONS:   ghost moth, hornet, emperor scorpion / w:5 spark wasp
 MONS:   wolf spider / redback / tarantella / jumping spider / culicivora
 MONS:   redback
 MONS:   orb spider
 MONS:   moth of wrath / ghost moth / sun moth
+KITEM:  R = milky-white gem
+KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
 NSUBST: 1 = 2:1 / 1:41 / *:4
 SUBST:  4 = 444.., 5 = 55..., 6 = 6.
-COLOUR: c = white
-COLOUR: 18O+'def = lightgrey
-FTILE:  18cO+'def = floor_pebble_lightgray
 NSUBST: ' = 3:3 / 4:2 / 4=32'' / 2:d / 4 = dee / 4 = ff' / *:'
 SUBST:  x : cccx
 SUBST:  X = x
@@ -2252,6 +2250,9 @@ SUBST:  W = W..
 KFEAT:  Ww = shallow_water
 SUBST:  = : .+
 : setup_endvault_loot(_G)
+COLOUR: c = white
+COLOUR: 18O+'def = lightgrey
+FTILE:  18cO+'def = floor_pebble_lightgray
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
@@ -2265,7 +2266,7 @@ xxxxxxxxxxxxxW..Wxcccc..ccccxW.5.Wxxw444xxxxxxX
 xxxxxxxxxxxxxW.Wxxc1'c++c'7cxxWW..Wxxxx4xxxxxxX
 xxxxxxxxxxxxW.Wxxxc'''cc'''cxxxxW.WxxxxxxxxxxxX
 xxxxxxxxxxxW5Wxxxxc''''''''ccccxxW.WWxxxxxxxxxX
-xxxxxxxxxxxW.Wx44xc''''''''+'OcxxWW5.WxxxxxxxxX
+xxxxxxxxxxxW.Wx44xc''''''''+ROcxxWW5.WxxxxxxxxX
 xxxxxxxxxxx.Wwww4xcccccccccccccxxxwW..WxxxxxxxX
 xxxxxxxxxWW.Wwww4xxxxxxxxxxxxxx44wwwW.WxxxxxxxX
 xxxxxxxxW..Wxx41xxxWWWWxxWWWxxx444xxxW.WWxxxxxX
@@ -2286,13 +2287,14 @@ TAGS:   no_pool_fixup
 WEIGHT: 20
 PLACE:  Spider:$
 ORIENT: float
-KITEM:  O = gossamer rune of Zot, milky-white gem
 MONS:   ghost moth, moth of wrath / ghost moth, emperor scorpion
 MONS:   wolf spider / redback / tarantella / jumping spider / culicivora
 MONS:   orb spider / steelbarb worm, redback
+KITEM:  R = milky-white gem
+KITEM:  O = gossamer rune of Zot
 NSUBST: 4 = 3:3 / * = 44.
 NSUBST: 7 = 3 = 111.. / 1:2
-NSUBST: d = 3:d / 3:e / *:f
+NSUBST: d = 1:R / 3:d / 3:e / *:f
 SUBST:  5 = 5., 6 = 66...
 SUBST:  W = W..
 SUBST:  - = ....WWW^
@@ -2307,7 +2309,7 @@ W54.x6W6WcWWW.4..........444.ccccxx
 wW.xcccW666....W5.W....WWWWW..cccxx
  4Wxcc66..wwwwcccccccc..444....cccxx
 @WxxcW-..wwcccc--575dccccc..-.-.cccxx
-  xxcW-4.wcc-d575dwww4d--ccc.-..cccxx
+  xxcW-4.wccdd575dwww4d--ccc.-..cccxx
   WxcW-..5cd4wwwww3Oww474-3c..W5cccxxx
   xxccW.4.c-74.wwwwwww4ddccc6-.Wcccxx
    xxccW4Wcccc...4.dd4---6-6-6ccccxx
@@ -2320,28 +2322,28 @@ wW.xcccW666....W5.W....WWWWW..cccxx
                    xxx
 ENDMAP
 
-NAME:   guppyfry_spider_rune
-PLACE:  Spider:$
-TAGS:   no_pool_fixup
-ORIENT: southwest
-KITEM:  O = gossamer rune of Zot, milky-white gem
-KMONS:  O = ghost moth
-KITEM:  * = potion of ambrosia ident:type
-KMONS:  * = emperor scorpion
-MONS:   ghost moth / sun moth, ghost moth / moth of wrath
-MONS:   demonic crawler / steelbarb worm / wolf spider
-MONS:   w:2 broodmother / w:4 emperor scorpion / w:1 spark wasp
-MONS:   tarantella / wolf spider / jumping spider / culicivora
-MONS:   redback
-MONS:   orb spider
-NSUBST: 8 = 2:c / *:7, " = 1:. / 1:c. / *:c
-NSUBST: d = 1:e / * = def
-SUBST:  3 = 3., 4 = 4., 5 = 55., 6 = 66..., 7 = 777.
-SUBST:  - = .....WWW^
-KFEAT:  ^ = web trap
-SHUFFLE: O12*
-TILE:   C = wall_brick_gray
-SUBST:  C = c
+NAME:    guppyfry_spider_rune
+PLACE:   Spider:$
+ORIENT:  southwest
+MONS:    ghost moth / sun moth, ghost moth / moth of wrath
+MONS:    demonic crawler / steelbarb worm / wolf spider
+MONS:    w:2 broodmother / w:4 emperor scorpion / w:1 spark wasp
+MONS:    tarantella / wolf spider / jumping spider / culicivora
+MONS:    redback
+MONS:    orb spider
+KMONS:   * = emperor scorpion
+KMONS:   O = ghost moth
+KITEM:   * = potion of ambrosia ident:type
+KITEM:   P = milky-white gem
+KITEM:   O = gossamer rune of Zot
+KFEAT:   C = c
+SHUFFLE: OP / 1p / 2Q / *q
+NSUBST:  8 = 2:c / *:7, " = 1:. / 1:c. / *:c
+NSUBST:  d = 1:e / * = def
+SUBST:   3 = 3., 4 = 4., 5 = 55., 6 = 66..., 7 = 777.
+SUBST:   - = .....WWW^, pQq = .
+KFEAT:   ^ = web trap
+TILE:    C = wall_brick_gray
 : setup_endvault_loot(_G)
 MAP
 xxxxxxxxxxxxxxxxxxx@@@@@@@@@@xxxxxxxxxxxx
@@ -2351,7 +2353,7 @@ xxxxxxxxxxccccccccccccc..cccccccccccccxxxxxx
 xxxxxxxxxxcccccccccccc-..-ccccccccccccxxxxxxx
 xxxxxxxxxxcdWccccccccc-x.-cccccccccWdcxxxxxxxx
 xxxxxxxxxxc66.c..4CCCcx..xcCCC4..c.66cxxxxxxxx
-xxxxxxxxxxcW.-..c.45Oc6..6c154.c..-.Wcxxxxxxxx
+xxxxxxxxxxcW.-..cP45Oc6..6c154pc..-.Wcxxxxxxxx
 xxxxxxxxxxcc..-c"c55Ccx..xcC55c"c-..ccxxxxxxxx
 xxxxxxxxxxcccW.-ccCCCc-..-cCCCcc-.Wcccxxxxxxxx
 xxxxxxxxxxcccc..-cccccx.-xccccc-..ccccxxxxxxxx
@@ -2365,7 +2367,7 @@ xxxxxxxxxxccccxW.-c8cc-.--cc8c-.Wxccccxxxxxxxx
 xxxxxxxxxxcccc..-cccccx-.xccccc-..ccccxxxxxxxx
 xxxxxxxxxxcccW.-ccCCCc-4.4cCCCcc-.Wcccxxxxxxxx
 xxxxxxxxxxcc..-c"c55Ccx-.xcC55c"c-..ccxxxxxxxx
-xxxxxxxxxxcW.-..c.45*c7--7c254.c..-.Wcxxxxxxxx
+xxxxxxxxxxcW.-..cq45*c7--7c254Qc..-.Wcxxxxxxxx
 xxxxxxxxxxc66.c..4CCCccffccCCC4..c.66cxxxxxxxx
 xxxxxxxxxxcdWccccccccccccccccccccccWdcxxxxxxxx
 xxxxxxxxxxccccccccccccccccccccccccccccxxxxxxxx
@@ -2375,14 +2377,15 @@ ENDMAP
 NAME:   grunt_spider_rune_parallel
 PLACE:  Spider:$
 ORIENT: east
-NSUBST: O = 1:O / *:d
-KITEM:  O = gossamer rune of Zot, milky-white gem
+WEIGHT: 15
 MONS:   ghost moth, moth of wrath
-MONS:   emperor scorpion / w:5 spark wasp / w:5 radroach / w:5 broodmother
+MONS:   emperor scorpion / spark wasp w:6 / radroach w:6 / broodmother w:6
 MONS:   wolf spider / redback / tarantella / jumping spider / culicivora
 MONS:   meliai / steelbarb worm / orb spider, redback
+KITEM:  R = milky-white gem
+KITEM:  O = gossamer rune of Zot
 NSUBST: 1 = 2:1 / 1:1.. / *:4
-NSUBST: d = 3:d / 3:e / *:f
+NSUBST: O = 1:O / *:d, d = 3:d / 3:e / *:f
 SUBST:  2 = 12, 4 = 44..., 5 = 55. " = ^^...6, - = .....w^^
 SUBST:  6 = 6.
 KFEAT:  ^ = web trap
@@ -2403,7 +2406,7 @@ CCCCCC-----------.C......5.4.4.4...----cccxxxxx
 @-------------......CC--ccc---cc--cc-..4..4..--cxx
 @-ccccccccccc--------cccc---.--cc----.4..44.dd-cxx
 @--------------cccccccc---.4.4----.......4..dOdcxx
-@"".......4...----------....4.4........3.4.412Ocxx
+@"".......4...----------....4.4........3.4R412Ocxx
 @""5.....4.4....""""".5x.4.4.4.5.........4..dO-cxx
 @"".....4.4.....""""".1...4...4...----4..44.dd-cxx
 @---------.4..."""""..5x...4-------cc-.4..4.--ccxx
@@ -2427,12 +2430,13 @@ TAGS:    no_monster_gen
 PLACE:   Spider:$
 ORIENT:  west
 NSUBST:  d = 1:O / 3:d / 3:e / *:f
-KITEM:   O = gossamer rune of Zot, milky-white gem
 MONS:    ghost moth, moth of wrath, sun moth
 MONS:    emperor scorpion / w:5 spark wasp / w:5 jorogumo
 MONS:    orb spider
 MONS:    wolf spider / redback / tarantella / culicivora / jumping spider
 MONS:    demonic crawler / steelbarb worm / torpor snail / meliai
+KITEM:   R = milky-white gem
+KITEM:   O = gossamer rune of Zot
 NSUBST:  h = 2:9 / 2 = 4. / *= 6667....
 NSUBST:  9 = 3:13 / 1:2 / * = 6..
 SUBST:   5 = 5.., g = 6667....
@@ -2457,7 +2461,7 @@ xcc..h....5.WWwwwwwwwwwWWW....5-"-
 xcc...h.h..WWwwwwwwwwwwwwWW..g.-"@
 xcc....h..WWwwwCCCCCCwwwwwW...g-"-
 xcch.5...hWwwwCC----CCCwwwW...g-"-
-xc-......_WwwCC--0.---CwwwW....-"-
+xc-......_WwwCC--0R---CwwwW....-"-
 xc-..h.._-WwwC--409__-CCwwW..0.-"-
 xc-.h.h_-"-"wC-0ddd0_--CwwW.5..-"-
 xc-..._-"---_+49dddd9-CCwwW...g-"-
@@ -2480,12 +2484,12 @@ ENDMAP
 # Arachne Lair Rune Vault
 NAME:   johnstein_spider_rune_arachne_lair
 TAGS:   no_monster_gen
+ORIENT: float
+PLACE:  Spider:$
 KMONS:  j = emperor scorpion / spark wasp w:5 / jorogumo
 KMONS:  m = moth of wrath / ghost moth w:40 / sun moth
 KMONS:  o = orb spider w:40 / demonic crawler
 KMONS:  s = torpor snail / entropy weaver
-ORIENT: float
-PLACE:  Spider:$
 # '"-_!?^
 # ABCDEFG
 #pick 1 of 3 different flavors
@@ -2517,18 +2521,15 @@ PLACE:  Spider:$
                 culicivora
     KMONS:  2 = meliai / spark wasp w:5
 : end
-
-NSUBST: 3 = 4:j / 1:s / *=2.
-NSUBST: 2 = 6=o. / 2:m / 6=2. / *=1
-
-KITEM:  O = gossamer rune of Zot, milky-white gem
-NSUBST: O = 1:O / *=%
-
-#thin out monsters and set up loot
-NSUBST: % = 2:d / 2:e / 2:f / *=def...
-SUBST: 1 = 1..
-
-KFEAT: Y = web / floor w:40
+KITEM:   O = gossamer rune of Zot
+KITEM:   P = milky-white gem
+KFEAT:   Y = web / floor w:40
+SHUFFLE: OP / QR
+# thin out monsters and set up loot
+SUBST:   QR = %, 1 = 1..
+NSUBST:  % = 2:d / 2:e / 2:f / * = def...
+NSUBST:  3 = 4:j / 1:s / *=2.
+NSUBST:  2 = 6=o. / 2:m / 6=2. / *=1
 : setup_endvault_loot(_G)
 MAP
     .......@@@@@.......
@@ -2545,7 +2546,7 @@ xc.1..'''"???^???"'''..1.cx
 xc..c..'1c??^^^??c1'..c..cx
 xc.2c..1ccc?^^^?ccc1..c2.cx
 xc1.cc..1c'!^^^!'c1..cc.1cx
-xc.3Oc..1''!^^^!''1..cO3.cx
+xcP3Oc..1''!^^^!''1..cQ3Rcx
 xc1.cc..1c'!^^^!'c1..cc.1cx
 xc.2c..1ccc?^^^?ccc1..c2.cx
 xc..c..'1c"?^^^?"c1'..c..cx
@@ -2649,11 +2650,12 @@ MONS:   steelbarb worm / torpor snail / meliai / pharaoh ant / entropy weaver
 MONS:   emperor scorpion w:30 / ghost moth w:20 / moth of wrath / sun moth
 MONS:   jorogumo w:15 / radroach / spark wasp w:5
 MONS:   broodmother
-KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot, milky-white gem
+KITEM:  P = milky-white gem
+KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
 KFEAT:  ^ = web
 NSUBST: . = 96 = 1... / *:., 2 = 2:2 / *=2...
 NSUBST: 6 = 4:6 / 4 = 456. / *= 4..
-NSUBST: d = 1:O / 3:d / 3:e / 3:f
+NSUBST: d = 1:O / 1:P / 3:d / 3:e / 3:f
 SUBST:  3 = 3....
 SUBST:  ; : ;;;;;c
 SUBST:  : = ...xxW^, - = ....W^, Q : xWW, R = ...W^, ; = ...^
@@ -2692,8 +2694,8 @@ xx:...RR...3...........ccc+ccc..:xxx
   xxx:..xx.....xx...+..;;ccc;;6dcx
    xx:.....363......c...;;c;;33dc
    xxx:.xx..3..xx...cc...;;;36dcc
-    xx:.-xx...xx-....c3...633ddc
-    xxx:-xxx.xxx-....ccc3ddddccc
+    xx:.-xx...xx-....c33..633ddc
+    xxx:-xxx.xxx-....cccdddddccc
      xxx:--x.x--..6....cccccccx
       xx::...........2..:xxxxx
        xxx::.2......::::xxxxx
@@ -2714,8 +2716,9 @@ MONS:   pharaoh ant / entropy weaver / torpor snail
 MONS:   ghost moth w:15 / sun moth / moth of wrath w:5
 MONS:   emperor scorpion
 MONS:   radroach / spark wasp
-KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot, milky-white gem
-NSUBST: 7 = 4:7 / *=7..
+KITEM:  R = milky-white gem
+KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
+NSUBST: 7 = 4:7 / * = 7..
 # bias the big monsters, randomly
 : if crawl.one_chance_in(3) then
     SUBST:  7 = 44456
@@ -2734,12 +2737,12 @@ NSUBST: ' = 12 = 1... / 16 = 2... / 1:3 / 1:3. / *:.
 : else
     SUBST:  A = c..
 : end
-NSUBST: d = 3:d / 3:e / *:f
+NSUBST: d = 3:d / 3:e / *:f, R = 1:R / *:$
 : setup_endvault_loot(_G)
 MAP
         cccc     cccc
        ccddcccccccddcc
-       cd7..ccOcc..7dc
+       cd7.RccOccR.7dc
        cc..AcdddcA..cc
         cc..cc7cc..cc
          c....7....c
