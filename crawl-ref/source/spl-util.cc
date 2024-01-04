@@ -1348,7 +1348,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_ANIMATE_DEAD:
-    case SPELL_SIMULACRUM:
         if (have_passive(passive_t::goldify_corpses))
             return "necromancy does not work on golden corpses.";
         if (have_passive(passive_t::reaping))
