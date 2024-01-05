@@ -716,8 +716,9 @@ allies will avoid stepping on it.
 %%%%
 A net trap
 
-A large concealed net launcher hanging from the dungeon's ceiling, enchanted
-by the powers of Zot to land only on intruders.
+A large concealed net launcher hanging from the dungeon's ceiling. Enchanted by
+the power of Zot, whenever an intelligent creature steps here - whether friend
+or foe - the net will land only on you.
 %%%%
 A pressure plate
 
