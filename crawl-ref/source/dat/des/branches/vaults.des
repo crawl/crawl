@@ -617,6 +617,10 @@ ENDMAP
 
 ###############################################################################
 # Vaults:$ quadrants
+#
+# Each of these quadrants, after randomization transformations, should have a
+# single O and a single k to place the rune and the gem, respectively.
+#
 # TODO: Recount and consistently count *s / |s / monsters for each subvault,
 # acknowledge the gem subvault chance of lowering the * count (but not always).
 ###############################################################################
@@ -642,7 +646,7 @@ xx......x.........x......xx
 xx....xxU.........Uxx....xx
 xx..-.x....xxxxx....x....xx
 xx....x.-.Vx$$$xx...x.-..xx
-xx....x..xx$k**$xx..x....xx
+xx....x..xx$**k$xx..x....xx
 xx.-..x..x$$*O*$$x-.x....xx
 xx....x..xx$***$xx..x....xx
 xx....x...Vx$$$xV...x..-.xx
@@ -846,9 +850,9 @@ ENDMAP
 # about 8 |
 NAME:    vaults_end_mu_long
 TAGS:    vaults_end_quadrant unrand
+SHUFFLE: Oo / Pp / Qq / Rr / Ss
 SUBST:   9 = 8 9 .:10
-SHUFFLE: Aa / Bb / Cc / Dd / Ee
-SUBST:   A = O, a = k, bcdeBCDE = $
+SUBST:   o = k, pqrsPQRS = $
 SUBST:   $ = |**$
 SUBST:   a = x.
 : vaults_end_loot(_G)
@@ -859,23 +863,23 @@ MAP
 a.........................a
 x.........................x
 x..xxxxxxxxxxxxxxxxxxxxx..x
-x....999............$a$x..x
-x....999............$$Ax..x
+x....999............$o$x..x
+x....999............$$Ox..x
 x..xxxxxxxxxxxxxxxxxxxxx..x
-x..x$b$............999....x
-x..xB$$............999....x
+x..x$p$............999....x
+x..xP$$............999....x
 x..xxxxxxxxxxxxxxxxxxxxx..x
-x....999............$c$x..x
-x....999............$$Cx..x
+x....999............$q$x..x
+x....999............$$Qx..x
 x..xxxxxxxxxxxxxxxxxxxxx..x
-x..x$d$............999....x
-x..xD$$............999....x
+x..x$r$............999....x
+x..xR$$............999....x
 x..xxxxxxxxxxxxxxxxxxxxx..x
-x....999............$e$x..x
-x....999............$$Ex..x
+x....999............$s$x..x
+x....999............$$Sx..x
 x..xxxxxxxxxxxxxxxxxxxxx..x
 a.........................a
-  .......................
+ .........................
   axxxxxxxxxxxxxxxxxxxxxa
 ENDMAP
 
@@ -884,7 +888,8 @@ ENDMAP
 NAME:    vaults_end_minmay_circular_pillars
 TAGS:    vaults_end_quadrant unrand
 SHUFFLE: Oo / Pp / Qq / Rr
-SUBST:   o = k, pqrPQR = *
+NSUBST:  o = 1:k / *:*
+SUBST:   pqrPQR = *
 NSUBST:  a = 1:+ / *:x, b = 1:+ / *:x, c = 1:+ / *:x, d = 1:+ / *:x
 SUBST:   9 = 8 9 .:20
 : vaults_end_loot(_G)
@@ -933,9 +938,9 @@ xx....x...xxx.xxx...x....xx
 xx...xx..xx9...9xx..xx...xx
 xx..xx...x.......x...xx..xx
 x9..x9..xx..***..xx..9x..9x
-x..xx..xx9.*k***.9xx..xx..x
-x..........**O**..........x
 x..xx..xx9.*****.9xx..xx..x
+x..........**O**..........x
+x..xx..xx9.*k***.9xx..xx..x
 x9..x9..xx..***..xx..9x..9x
 xx..xx...x.......x...xx..xx
 xx...xx..xx9...9xx..xx...xx
@@ -1242,8 +1247,8 @@ x.x9..xxx...xx...x........x
 x.xx...xxx..*xx...x.......x
 x..xx...xxx..*xx...x......x
 x...xx...xxx..*xx...x.....x
-xx...xx...xxx..*xx...x9...x
-x9x...xx*..xxx9.kxx...x...x
+xx...xx...xxx..kxx...x9...x
+x9x...xx*..xxx9.*xx...x...x
 x..x...xx*..9O9..*xx...x..x
 x...x...xx*.9xxx..*xx...x9x
 x...9x...xxk..xxx...xx...xx
@@ -1617,7 +1622,6 @@ ENDMAP
 # 12 *, 11 monsters
 NAME:   vaults_end_minmay_oval
 TAGS:   vaults_end_quadrant unrand
-NSUBST: k = 1:k / *:*
 SUBST:  9 = 8 9 .:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -1638,7 +1642,7 @@ x..x....9xxxxxx9......9x..x
 x......*xxxx9.*.......xx..x
 x......*xx9..........9xx..x
 x..x...O**..........9xxx..x
-x..xk..............9xxxx..x
+x..x...............9xxxx..x
 x..xxk............9xxxxx..x
 x..xxx..........9xxxxxxx..x
 x..xxxxx......xxxxxxxxxx..x
@@ -2398,14 +2402,14 @@ KFEAT:   R = general shop / book shop / scroll shop / \
 KFEAT:   U = stone_arch
 NSUBST:  ' = 22:9 / *:., . = 2:9 / *:.
 SUBST:   9 = 89
-SUBST:   a : x.
+SUBST:   z : x.
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
 MAP
-  aaxxxxxxxxxxxxxxxxxxxaa
+  zzxxxxxxxxxxxxxxxxxxxzz
  .........................
-a.........................a
-a..................xxx....a
+z.........................z
+z..................xxx....z
 x..............x+++xxx....x
 x..........x+++x'''xxx....x
 x..........x'''D'I'xx.....x
@@ -2421,10 +2425,10 @@ x....xxe''C'F'x...........x
 x....xx'E'C'''x...........x
 x...xxx'''x+++x...........x
 x...xxx+++x...............x
-a...xxx...................a
-a.........................a
+z...xxx...................z
+z.........................z
  ........................
-  aaxxxxxxxxxxxxxxxxxxxaa
+  zzxxxxxxxxxxxxxxxxxxxzz
 ENDMAP
 
 ############################################################
