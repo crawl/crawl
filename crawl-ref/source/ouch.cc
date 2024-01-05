@@ -879,6 +879,25 @@ static void _god_death_message(kill_method_type death_type, const actor *killer)
                            "ecosystem.");
         break;
 
+    case GOD_JIYVA:
+        simple_god_message(" sends a jelly to digest your remains.");
+        break;
+
+    case GOD_CHEIBRIADOS:
+        simple_god_message(" appreciates the motionlessness of death.");
+        break;
+        
+    case GOD_USKAYAW:
+        if (death_type != KILLED_BY_DISINT
+              && death_type != KILLED_BY_LAVA) {
+            mprf(MSGCH_GOD, "Your body falls in perfect tune with the rhythm.");
+        }
+        break;
+
+    case GOD_RU:
+        simple_god_message(" respects your ultimate sacrifice.");
+        break;
+        
     case GOD_NEMELEX_XOBEH:
         nemelex_death_message();
         break;
