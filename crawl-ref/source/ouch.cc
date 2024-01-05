@@ -880,7 +880,11 @@ static void _god_death_message(kill_method_type death_type, const actor *killer)
         break;
 
     case GOD_JIYVA:
-        simple_god_message(" sends a jelly to digest your remains.");
+        const mon_holy_type holi = you.holiness();
+        if (holi & MH_NONLIVING)
+            simple_god_message(" sends a jelly to digest your equipment.");
+        else
+            simple_god_message(" sends a jelly to digest your remains.");
         break;
 
     case GOD_CHEIBRIADOS:
