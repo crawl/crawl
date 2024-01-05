@@ -1768,6 +1768,17 @@ Oni (On)
   Their large size prevents them from wearing most forms of armour, and are poor
   at dodging, relying on their enormous bulk to survive battles instead.
 
+Barachim (Ba)
+  Barachim are an amphibious humanoid species, spawned at the dawn of time as
+  servants for the gods. Inevitably, they rebelled and fled into the mortal
+  world; but even uncounted years later, the darkness still flees at their
+  approach, remembering those who they once served.
+
+  Barachim's most remarkable trait is their grossly overmuscled legs, which
+  allow them to leap great distances. When not leaping, they are somewhat
+  slow-moving, and the long sight-lines that their heritage creates can be a
+  major disadvantage, but they can master almost any skill.
+
 Advanced Species
 ================
 
@@ -1889,17 +1900,6 @@ Felids (Fe)
 
   Felids start with an extra life, and gain more as they increase in levels.
   Upon death, they will be resurrected in a safe place.
-
-Barachim (Ba)
-  Barachim are an amphibious humanoid species, spawned at the dawn of time as
-  servants for the gods. Inevitably, they rebelled and fled into the mortal
-  world; but even uncounted years later, the darkness still flees at their
-  approach, remembering those who they once served.
-
-  Barachim's most remarkable trait is their grossly overmuscled legs, which
-  allow them to leap great distances. When not leaping, they are somewhat
-  slow-moving, and the long sight-lines that their heritage creates can be a
-  major disadvantage, but they can master almost any skill.
 
 Mummies (Mu)
   These are undead creatures who travel into the depths in search of revenge,
