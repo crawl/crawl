@@ -244,6 +244,8 @@ boulder_beetle_rolling1
 boulder_beetle_rolling2
 
 ## Frogs and flying fish ('F')
+%sdir mon/demihumanoids
+barachi MONS_BARACHI
 %sdir mon/unique
 prince_ribbit MONS_PRINCE_RIBBIT
 jeremiah MONS_JEREMIAH
@@ -900,13 +902,14 @@ salamander_mystic MONS_SALAMANDER_MYSTIC
 salamander_tyrant MONS_SALAMANDER_TYRANT
 guardian_serpent MONS_GUARDIAN_SERPENT
 
-## Ogres ('O')
+## Ogres and oni ('O')
 %sdir mon/unique
 %rim 0
 erolcha MONS_EROLCHA
 lodul MONS_LODUL
-%rim 1
 %sdir mon/humanoids
+oni MONS_ONI
+%rim 1
 ogre MONS_OGRE
 two_headed_ogre MONS_TWO_HEADED_OGRE
 %rim 0

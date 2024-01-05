@@ -45,7 +45,6 @@ frilled_lizard CORPSE_FRILLED_LIZARD
 iguana CORPSE_IGUANA
 basilisk CORPSE_BASILISK
 komodo_dragon CORPSE_KOMODO_DRAGON
-skyshark CORPSE_SKYSHARK
 
 ## Rodents ('r')
 rat CORPSE_RAT
@@ -119,13 +118,16 @@ boulder_beetle CORPSE_BOULDER_BEETLE
 %sdir mon/undead
 death_scarab CORPSE_DEATH_SCARAB
 
-## Frogs ('F')
+## Frogs and flying fish ('F')
+%sdir mon/demihumanoids
+barachi CORPSE_BARACHI
 %sdir mon/animals
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 bullfrog CORPSE_BULLFROG
 blink_frog CORPSE_BLINK_FROG
 cane_toad CORPSE_CANE_TOAD
 goliath_frog CORPSE_GOLIATH_FROG
+skyshark CORPSE_SKYSHARK
 
 ## Snakes ('S')
 ball_python CORPSE_BALL_PYTHON
@@ -293,8 +295,9 @@ naga/naga CORPSE_NAGA
 guardian_serpent CORPSE_GUARDIAN_SERPENT
 salamander CORPSE_SALAMANDER
 
-## Ogres ('O')
+## Ogres and oni ('O')
 %sdir mon/humanoids
+oni CORPSE_ONI
 ogre CORPSE_OGRE
 two_headed_ogre CORPSE_TWO_HEADED_OGRE
 
