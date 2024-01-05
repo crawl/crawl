@@ -317,6 +317,7 @@ private:
     void tracer_affect_monster(monster* mon);
     void tracer_enchantment_affect_monster(monster* mon);
     void tracer_nonenchantment_affect_monster(monster* mon);
+    bool has_relevant_side_effect(monster* mon);
 
     // methods to change the path
     void bounce();

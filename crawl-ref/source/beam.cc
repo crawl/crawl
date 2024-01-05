@@ -4403,20 +4403,54 @@ void bolt::handle_stop_attack_prompt(monster* mon)
     }
 }
 
+// Whether or not this non-enchantment effect would have a relevant non-damage
+// side effect when used on a given monster.
+//
+// XXX: This function is a stop-gap! It is knowingly incomplete, but addresses
+//      the immediate problem of monsters refusing to use certain spells on
+//      other monsters, even though they would be useful.
+// TODO: Expand and unify this with actually applying beam side-effects
+bool bolt::has_relevant_side_effect(monster* mon)
+{
+    if (flavour == BEAM_STICKY_FLAME
+        && !mon->res_sticky_flame() && mon->res_fire() < 3)
+    {
+        return true;
+    }
+
+    if ((origin_spell == SPELL_NOXIOUS_CLOUD || origin_spell == SPELL_POISONOUS_CLOUD)
+        && mon->res_poison() < 1)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 {
-    int preac, post, final;
+    int preac, post, final = 0;
 
-    if (!determine_damage(mon, preac, post, final))
+    bool side_effect = has_relevant_side_effect(mon);
+
+    // The projectile applying sticky flame often does no damage, but this
+    // doesn't mean it's harmless.
+    if (!side_effect && !determine_damage(mon, preac, post, final))
         return;
 
     // Check only if actual damage and the monster is worth caring about.
     // Living spells do count as threats, but are fine being collateral damage.
-    if (final > 0
+    if ((final > 0 || side_effect)
         && (mons_is_threatening(*mon) || mons_class_is_test(mon->type))
         && mon->type != MONS_LIVING_SPELL)
     {
-        ASSERT(preac > 0);
+        ASSERT(side_effect || preac > 0);
+
+        // Add some 'fake damage' for a relevant side-effect, so tracer power
+        // will actually see it.
+        // XXX: This is ugly and numerically arbitrary...
+        if (side_effect)
+            final += 10;
 
         // Monster could be hurt somewhat, but only apply the
         // monster's power based on how badly it is affected.
