@@ -879,45 +879,36 @@ static void _god_death_message(kill_method_type death_type, const actor *killer)
     const bool was_undead = bool(holi & MH_UNDEAD);
     const bool was_nonliving = bool(holi & MH_NONLIVING);
 
+    string key = god_name(you.religion) + " death";
+
+    string key_extended = key;
+    if (left_corpse)
+        key_extended += " corpse";
+    if (was_undead)
+        key_extended += " undead";
+    if (was_nonliving)
+        key_extended += " nonliving";
+
+    // For gods with death messages in the database, first try key_extended.
+    // If that doesn't produce anything, try key.
+    //
+    // This means that the default god death message is "@God_name@ death".
     switch (you.religion)
     {
     case GOD_FEDHAS:
+    case GOD_KIKUBAAQUDGHA:
+    case GOD_YREDELEMNUL:
     {
-        const string result = getSpeakString("Fedhas death");
-        god_speaks(GOD_FEDHAS, result.c_str());
+        string result = getSpeakString(key_extended);
+        if (result.empty())
+            result = getSpeakString(key);
+        if (!result.empty())
+            god_speaks(you.religion, result.c_str());
         break;
     }
 
     case GOD_NEMELEX_XOBEH:
         nemelex_death_message();
-        break;
-
-    case GOD_KIKUBAAQUDGHA:
-    {
-        string result;
-        if (was_undead)
-            result = getSpeakString("Kikubaaqudgha death undead");
-        else if (was_nonliving)
-            result = getSpeakString("Kikubaaqudgha death nonliving");
-        else
-            result = getSpeakString("Kikubaaqudgha death");
-        god_speaks(GOD_KIKUBAAQUDGHA, result.c_str());
-        break;
-    }
-
-    case GOD_YREDELEMNUL:
-        if (was_undead)
-            result = getSpeakString("Yredelemnul death undead");
-        else if (left_corpse)
-        {
-            if (was_nonliving)
-                result = getSpeakString("Yredelemnul death corpse nonliving");
-            else
-                result = getSpeakString("Yredelemnul death corpse");
-        }
-        if (!result.empty())
-            god_speaks(GOD_YREDELEMNUL, result.c_str());
-        // No message if you're not undead and your corpse is lost.
         break;
 
     case GOD_BEOGH:
