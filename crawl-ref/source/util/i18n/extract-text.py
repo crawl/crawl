@@ -271,25 +271,36 @@ for filename in files:
             if re.search(r'}\s*;', line):
                 in_map = False
 
-            if len(lines) > 0:        
-                last = lines[-1]
+            if len(lines) == 0 or line.startswith('#'):
+               lines.append(line)
+               continue
 
-                # join strings distributed over several lines
-                if line[0] == '"' and last[-1] == '"':
-                    lines[-1] = last[0:-1] + line[1:]
-                    continue
+            last = lines[-1]
 
+            # join strings distributed over several lines
+            if line[0] == '"' and last[-1] == '"':
+                lines[-1] = last[0:-1] + line[1:]
+                continue
+
+            join = False
+            if last.endswith(';'):
+                join = False
+            elif last.endswith(':') and re.match(r'^(case|public|protected|private)\b', last):
+                join = False
+            elif '(' in last and last.count('(') > last.count(')'):
                 # join function calls split over multiple lines (because we want to filter out some function calls)
-                if '(' in last:
-                    if last[-1] == ',' or last[-1] == ':' or last[-1] == '?' or \
-                        last[-1] == '(' or last[-1] == '*' or \
-                        line[0] == ',' or line[0] == ':' or line[0] == '?':
-                        lines[-1] = last + line
-                        continue
+                join = True
+            elif last[-1] == '?' or line[0] == '?' or last[-1] == ':' or line[0] == ':':
+                # join ternary operator split over multiple lines
+                join = True
 
-            lines.append(line)
+            if join:
+                lines[-1] = last + line
+            else:
+                lines.append(line)
 
         for line in lines:
+            #sys.stderr.write(line + "\n")
 
             if 'locnote' in line:
                 note = re.sub(r'^.*locnote: *', '# locnote: ', line)

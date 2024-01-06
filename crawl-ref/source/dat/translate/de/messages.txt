@@ -19993,7 +19993,7 @@ Ein kleiner Teufel erscheint in einer Flammenwolke.
 A demon appears!
 Ein Dämon erscheint!
 %%%%
-# note: it = demon
+# note: summoned demon is not friendly
 It doesn't seem very happy.
 Er scheint nicht sehr glücklich zu sein.
 %%%%
@@ -20382,9 +20382,6 @@ Shock über Euren Durchtritt
 ##################
 # spl-util.cc
 ##################
-%%%%
-targeted/directed spell '%s' has invalid range
-
 %%%%
 Spell assigned to '%c'.
 Zauber '%c' zugewiesen.

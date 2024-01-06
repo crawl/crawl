@@ -1001,8 +1001,8 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
 
         if (!friendly)
         {
+            // @locnote: summoned demon is not friendly
             mpr(charmed ? "You don't feel so good about this..."
-                        // @locnote: it = demon
                         : "It doesn't seem very happy.");
         }
         else if (mon == MONS_CRIMSON_IMP || mon == MONS_WHITE_IMP
