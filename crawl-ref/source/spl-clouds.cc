@@ -45,7 +45,7 @@ spret cast_dreadful_rot(int pow, bool fail)
     you.props[MIASMA_IMMUNE_KEY] = true;
     place_cloud(CLOUD_MIASMA, you.pos(), random_range(min_dur, max_dur), &you);
     mpr("A part of your flesh rots into a cloud of miasma!");
-    drain_player(65, true, true);
+    drain_player(27, true, true);
 
     return spret::success;
 }
@@ -64,8 +64,9 @@ spret kindle_blastmotes(int pow, bool fail)
     // between successive blastmote casts that often.
     you.props[BLASTMOTE_POWER_KEY] = pow;
     // Longish duration to support setting up silly traps.
+    you.props[BLASTMOTE_IMMUNE_KEY] = true;
     place_cloud(CLOUD_BLASTMOTES, you.pos(), random_range(20, 30), &you);
-    mpr("A cloud of volatile blastmotes flares up around you!");
+    mpr("A cloud of volatile blastmotes flares up around you! Run!");
 
     return spret::success;
 }

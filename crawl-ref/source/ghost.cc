@@ -41,30 +41,30 @@ static spell_type search_order_aoe_conj[] =
     SPELL_FIRE_STORM,
     SPELL_GLACIATE,
     SPELL_CHAIN_LIGHTNING,
-    SPELL_FREEZING_CLOUD,
-    SPELL_POISONOUS_CLOUD,
-    SPELL_METAL_SPLINTERS,
-    SPELL_ENERGY_BOLT,
     SPELL_ORB_OF_ELECTRICITY,
     SPELL_CONJURE_BALL_LIGHTNING,
+    SPELL_MARCH_OF_SORROWS,
+    SPELL_POISONOUS_CLOUD,
 };
 
 // Pan lord conjuration spell list.
 static spell_type search_order_conj[] =
 {
     SPELL_CALL_DOWN_DAMNATION,
-    SPELL_LEHUDIBS_CRYSTAL_SPEAR,
-    SPELL_CORROSIVE_BOLT,
     SPELL_QUICKSILVER_BOLT,
+    SPELL_BOLT_OF_DEVASTATION,
     SPELL_IOOD,
-    SPELL_ENERGY_BOLT,
-    SPELL_MINDBURST,
     SPELL_BOLT_OF_FIRE,
     SPELL_BOLT_OF_COLD,
-    SPELL_IRON_SHOT,
-    SPELL_POISON_ARROW,
-    SPELL_BOLT_OF_DRAINING,
+    SPELL_BOMBARD,
+    SPELL_METAL_SPLINTERS,
+    SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_LIGHTNING_BOLT,
+    SPELL_PLASMA_BEAM,
+    SPELL_BOLT_OF_DRAINING,
+    SPELL_POISON_ARROW,
+    SPELL_CORROSIVE_BOLT,
+    SPELL_MINDBURST,
 };
 
 // Pan lord self-enchantment spell list.
@@ -93,15 +93,16 @@ static spell_type search_order_misc[] =
 {
     SPELL_DISPEL_UNDEAD_RANGE,
     SPELL_PARALYSE,
+    SPELL_VITRIFY,
     SPELL_SLEEP,
     SPELL_MASS_CONFUSION,
     SPELL_DRAIN_MAGIC,
     SPELL_PETRIFY,
     SPELL_POLYMORPH,
-    SPELL_FORCE_LANCE,
     SPELL_SLOW,
     SPELL_SENTINEL_MARK,
     SPELL_DIMENSION_ANCHOR,
+    SPELL_FORCE_LANCE,
 };
 
 /**
@@ -238,6 +239,7 @@ void ghost_demon::set_pan_lord_special_attack()
         20, _flavour_attack(AF_DRAIN_SPEED),
         20, _flavour_attack(AF_CORRODE),
         20, _flavour_attack(AF_WEAKNESS),
+        20, _flavour_attack(AF_DRAG),
         // High chance
         40, _brand_attack(SPWPN_ANTIMAGIC),
         40, _brand_attack(SPWPN_DISTORTION),
@@ -277,14 +279,14 @@ void ghost_demon::set_pan_lord_cloud_ring()
     else if (att_flav == AF_CORRODE)
         cloud_ring_ench = ENCH_RING_OF_ACID;
     else if (brand == SPWPN_DRAINING)
-        cloud_ring_ench = ENCH_RING_OF_DRAINING;
+        cloud_ring_ench = ENCH_RING_OF_MISERY;
     else
     {
         cloud_ring_ench = random_choose_weighted(
             20, ENCH_RING_OF_THUNDER,
             20, ENCH_RING_OF_FLAMES,
             20, ENCH_RING_OF_ICE,
-            10, ENCH_RING_OF_DRAINING,
+            10, ENCH_RING_OF_MISERY,
              5, ENCH_RING_OF_CHAOS,
              5, ENCH_RING_OF_ACID,
              5, ENCH_RING_OF_MIASMA,
@@ -754,7 +756,7 @@ void ghost_demon::init_inugami_from_player(int power)
     speed = stats->speed;
     ev = stats->ev;
     ac = stats->AC + div_rand_round(power, 10);
-    damage = 5 + div_rand_round(power, 6);
+    damage = 5 + div_rand_round(power, 7);
     max_hp = 14 + div_rand_round(power, 4);
     xl = 3 + div_rand_round(power, 15);
     move_energy = stats->energy_usage.move;
@@ -807,6 +809,8 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
         return SPELL_PAIN;
     case SPELL_CONFUSING_TOUCH:
         return SPELL_CONFUSE;
+    case SPELL_CURSE_OF_AGONY:
+        return SPELL_AGONY;
     default:
         break;
     }

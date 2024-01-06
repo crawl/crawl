@@ -65,7 +65,6 @@ const enchant_type dispellable_enchantments[] =
     ENCH_DAZED,
     ENCH_ANTIMAGIC,
     ENCH_ANGUISH,
-    ENCH_SIMULACRUM,
     ENCH_CONTAM,
     ENCH_BOUND,
     ENCH_BULLSEYE_TARGET,

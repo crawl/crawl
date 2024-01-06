@@ -142,13 +142,14 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Necromancy
     SPELL_NECROTISE,
     SPELL_VAMPIRIC_DRAINING,
-    SPELL_AGONY,
+    SPELL_MARTYRS_KNELL,
+    SPELL_CURSE_OF_AGONY,
 },
 
 {   // Book of Callings
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_CALL_CANINE_FAMILIAR,
-    SPELL_SUMMON_GUARDIAN_GOLEM,
+    SPELL_SUMMON_BLAZEHEART_GOLEM,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -214,7 +215,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Wizardry
-    SPELL_AGONY,
+    SPELL_CURSE_OF_AGONY,
     SPELL_SPELLFORGED_SERVITOR,
 },
 #endif
@@ -260,9 +261,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Burglary
-    SPELL_PASSWALL,
     SPELL_HIBERNATION,
     SPELL_SWIFTNESS,
+    SPELL_PASSWALL,
 },
 
 {   // Book of Dreams
@@ -337,13 +338,14 @@ static const vector<spell_type> spellbook_templates[] =
 #if TAG_MAJOR_VERSION == 34
 { // Book of Pain
     SPELL_NECROTISE,
-    SPELL_AGONY,
+    SPELL_CURSE_OF_AGONY,
 },
 #endif
 
 { // Book of Decay
     SPELL_ROT,
     SPELL_DISPEL_UNDEAD,
+    SPELL_MARTYRS_KNELL,
     SPELL_DEATH_CHANNEL,
 },
 
@@ -382,7 +384,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of the Senses
     SPELL_DAZZLING_FLASH,
     SPELL_MEPHITIC_CLOUD,
-    SPELL_AGONY,
+    SPELL_CURSE_OF_AGONY,
     SPELL_SILENCE,
 },
 
@@ -449,7 +451,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Dangerous Friends
-    SPELL_SUMMON_GUARDIAN_GOLEM,
+    SPELL_SUMMON_BLAZEHEART_GOLEM,
     SPELL_IOOD,
     SPELL_SPELLFORGED_SERVITOR,
 },

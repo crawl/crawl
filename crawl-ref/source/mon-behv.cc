@@ -443,6 +443,7 @@ void handle_behaviour(monster* mon)
         case BEH_SLEEP:
             // default sleep state
             mon->target = mon->pos();
+            mon->firing_pos = mon->pos();
             new_foe = MHITNOT;
             break;
 

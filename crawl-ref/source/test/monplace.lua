@@ -21,7 +21,7 @@ assert_place_monster_on("rat", "shallow water")
 
 -- [ds] One wonders why due has this morbid fetish involving flying
 -- skulls and lava...
-assert_place_monster_on("flying skull", "lava")
+assert_place_monster_on("laughing skull", "lava")
 assert_place_monster_on("dryad", "tree")
 assert_place_monster_on("cyan ugly thing")
 assert_place_monster_on("purple very ugly thing")

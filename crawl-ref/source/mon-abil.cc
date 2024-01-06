@@ -866,6 +866,31 @@ static coord_def _find_nearer_tree(coord_def cur_loc, coord_def target)
     return p;
 }
 
+static void _weeping_skull_cloud_aura(monster* mons)
+{
+    actor *foe = mons->get_foe();
+    if (!foe || !mons->can_see(*foe))
+        return;
+
+    // Generate list of valid cloud spots.
+    vector<coord_def> pos;
+
+    for (radius_iterator ri(mons->pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        if (grid_distance(mons->pos(), *ri) > 2)
+            continue;
+
+        if (!feat_is_solid(env.grid(*ri)) && !actor_at(*ri) && !cloud_at(*ri))
+            pos.push_back(*ri);
+    }
+
+    shuffle_array(pos);
+
+    int num_clouds = min((int)pos.size(), random_range(1, 3));
+    for (int i = 0; i < num_clouds; ++i)
+        place_cloud(CLOUD_MISERY, pos[i], random2(3) + 2, mons);
+}
+
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
                                    spell_type spell_cast)
 {
@@ -1110,16 +1135,12 @@ bool mon_special_ability(monster* mons)
     }
     break;
 
-    case MONS_GUARDIAN_GOLEM:
-        if (mons->hit_points * 2 < mons->max_hit_points
-             && !mons->has_ench(ENCH_INNER_FLAME))
-        {
-            simple_monster_message(*mons, " overheats!");
-            mid_t act = mons->summoner == MID_PLAYER ? MID_YOU_FAULTLESS :
-                        mons->summoner;
-            mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, actor_by_mid(act),
-                                       INFINITE_DURATION));
-        }
+    case MONS_WEEPING_SKULL:
+        _weeping_skull_cloud_aura(mons);
+        break;
+
+    case MONS_MARTYRED_SHADE:
+        martyr_injury_bond(*mons);
         break;
 
     default:
@@ -1132,7 +1153,7 @@ bool mon_special_ability(monster* mons)
     return used;
 }
 
-void guardian_golem_bond(monster& mons)
+void martyr_injury_bond(monster& mons)
 {
     for (monster_near_iterator mi(&mons, LOS_NO_TRANS); mi; ++mi)
     {

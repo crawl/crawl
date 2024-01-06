@@ -9,7 +9,7 @@ aptitudes:
   xp: -1
   hp: 0
   mp_mod: 0
-  mr: 4
+  wl: 4
   fighting: -1
   short_blades: +1
   axes: -1
@@ -55,6 +55,7 @@ recommended_jobs:
   - JOB_NECROMANCER
   - JOB_EARTH_ELEMENTALIST
   - JOB_ICE_ELEMENTALIST
+  - JOB_ALCHEMIST
 recommended_weapons:
   - SK_SHORT_BLADES
   - SK_AXES

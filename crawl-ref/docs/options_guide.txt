@@ -78,10 +78,11 @@ The contents of this text are:
                 monster_list_colour, view_delay, reduce_animations,
                 use_animations, unusual_monster_items, darken_beyond_range,
                 show_blood, force_more_message, flash_screen_message,
-                cloud_status, always_show_zot, more_gem_info, action_panel,
-                action_panel_filter, action_panel_show_unidentified,
-                action_panel_scale, action_panel_orientation,
-                action_panel_font_family, action_panel_font_size
+                cloud_status, always_show_zot, always_show_gems,
+                more_gem_info, action_panel, action_panel_filter,
+                action_panel_show_unidentified, action_panel_scale,
+                action_panel_orientation, action_panel_font_family,
+                action_panel_font_size
 3-i     Colours (messages and menus).
                 menu_colour, message_colour
 3-j     Quivers, firing, and ammo.
@@ -571,7 +572,7 @@ one_SDL_sound_channel = false
 3-a     Picking up and Dropping.
 --------------------------------
 
-autopickup = $?!+"/
+autopickup = $?!+"/♦
         The above is the default list. The valid symbols are
         )       Weapons
         (       Missiles
@@ -585,6 +586,7 @@ autopickup = $?!+"/
         0       Orbs
         }       Misc. items
         $       Gold
+        ♦       Gems
         Note that _whether_ items are picked up automatically or not, is
         controlled by the in-game toggle Ctrl-A. Also note that picking
         up takes a turn, but only one turn (regardless of the number of
@@ -1802,6 +1804,10 @@ cloud_status = true
 always_show_zot = false
         Whether to show the "Zot" status light at all times, even when you've
         got plenty of time left.
+
+always_show_gems = false
+        Whether to show the "Gem" status light, indicating how long until the
+        gem in the current branch shatters (if applicable).
 
 more_gem_info = true
         Whether to show held gem time limits and sfx for shattering.

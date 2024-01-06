@@ -890,6 +890,9 @@ static bool _skill_useless_with_god(int skill)
     case GOD_TROG:
         return _is_magic_skill(skill);
     case GOD_ZIN:
+        if (skill == SK_SHAPESHIFTING)
+            return true;
+        // fallthrough to other good gods
     case GOD_SHINING_ONE:
     case GOD_ELYVILON:
         return skill == SK_NECROMANCY;
@@ -957,6 +960,8 @@ static bool _acquire_manual(item_def &book)
 
         // Greatly reduce the chances of getting a manual for a skill
         // you couldn't use unless you switched your religion.
+        // Note: manuals that gods actively hate, e.g. spellcasting under
+        // Trog, will be mulched and replaced later. This is silly!
         if (_skill_useless_with_god(sk))
             w /= 2;
 

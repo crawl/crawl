@@ -20,7 +20,6 @@ function geh_setup(e)
 end
 }}
 
-
 ##############################################################################
 # Gehenna
 ##############################################################################
@@ -780,6 +779,29 @@ cLLLl...lMMMcl.lc
 ccccc.@.ccccccccc
 ENDMAP
 
+NAME:    tekkud_geh_sculpture_garden
+TAGS:    transparent
+DEPTH:   Geh
+MONS:    red draconian scorcher, salamander tyrant, salamander mystic
+MONS:    hellion, balrug, hellephant, searing wretch
+SUBST:   G = GGx, g = GGx..
+SHUFFLE: 123, 4567
+KPROP:   G' = bloody
+TILE:    G = dngn_statue_demonic_bust / dngn_statue_imp / \
+             dngn_statue_ancient_evil / dngn_statue_dragon w:30
+MAP
+GGG'GGGG
+G5....4G
+G.g.6g.G
+G7g73g.G
+G.g1.g.'
+'.g.2g.G
+'.g37g7G
+Ggg6.g.G
+G4....5G
+GGGG'GGG
+ENDMAP
+
 ##############################################################################
 # Asmodeus (Gehenna) - the original
 ##############################################################################
@@ -1152,7 +1174,7 @@ NSUBST: 4  = 2:4 / *:.
 KFEAT:  g  = iron_grate
 NSUBST: l  = 3:L / *:l
 KMONS:  G  = cacodemon
-KMONS:  L  = flying skull
+KMONS:  L  = laughing skull
 KFEAT:  GL = lava
 KITEM:  A  = any weapon good_item / any armour good_item
 : serpent_of_hell_setup(_G)
@@ -1226,7 +1248,7 @@ SUBST:   X : ^<>, ^ = xxx., < = xx., > = x.
 SUBST:   ` : `'", ` = ll., ' = l., " = l..
 SUBST:   =! = +, -? = ., dg = v, efhi = ~
 SUBST:   EGIPRT = x, FHJQSU = l
-KMASK:   l = no_monster_gen
+KMASK:   ~Ml = no_monster_gen
 KPROP:   ~MZ = no_tele_into
 : serpent_of_hell_setup(_G)
 : set_border_fill_type("endless_lava")

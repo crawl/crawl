@@ -96,7 +96,7 @@ COLOUR:  deABCDEF = lightblue
 FTILE:   deABCDEF = tutorial_pad
 MONS:    training dummy hp:2 ; stone q:10
 MONS:    rat always_corpse
-MONS:    worm
+MONS:    ribbon worm spells:none name:worm n_rpl
 ITEM:    boomerang mundane q:10
 ITEM:    shortbow mundane
 MARKER:  d = lua:tutorial2.msg("boomerangs")

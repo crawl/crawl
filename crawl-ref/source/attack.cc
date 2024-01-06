@@ -616,7 +616,7 @@ static const vector<chaos_effect> chaos_effects = {
         },
     },
     {
-        "polymorph", 3, _is_chaos_polyable, BEAM_POLYMORPH,
+        "polymorph", 2, _is_chaos_polyable, BEAM_POLYMORPH,
     },
     {
         "rage", 5, [](const actor &defender) {
@@ -637,7 +637,11 @@ static const vector<chaos_effect> chaos_effects = {
         },
     },
     { "hasting", 12, _is_chaos_slowable, BEAM_HASTE },
-    { "mighting", 12, nullptr, BEAM_MIGHT },
+    { "mighting", 12, [](const actor &defender) {
+        return !defender.is_monster()
+               || (mons_has_attacks(*(defender.as_monster()))
+                   && !defender.as_monster()->has_ench(ENCH_MIGHT));
+    }, BEAM_MIGHT },
     { "resistance", 10, [](const actor &defender) {
         return defender.res_fire() < 3 && defender.res_cold() < 3 &&
                defender.res_elec() < 3 && defender.res_poison() < 3 &&
@@ -645,7 +649,10 @@ static const vector<chaos_effect> chaos_effects = {
     { "slowing", 10, _is_chaos_slowable, BEAM_SLOW },
     { "confusing", 12, [](const actor &defender) {
         return !(defender.clarity()); }, BEAM_CONFUSION },
-    { "weakening", 10, nullptr, BEAM_WEAKNESS, },
+    { "weakening", 10, [](const actor & defender) {
+        return !defender.is_monster()
+               || mons_has_attacks(*(defender.as_monster()));
+    }, BEAM_WEAKNESS, },
     { "will-halving", 10, [](const actor &defender) {
        return !defender.is_monster()
               || mons_invuln_will(*(defender.as_monster()));

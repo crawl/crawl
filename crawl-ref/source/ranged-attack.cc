@@ -656,7 +656,6 @@ bool ranged_attack::apply_missile_brand()
         break;
     case SPMSL_CURARE:
         obvious_effect = curare_actor(attacker, defender,
-                                      damage_done,
                                       projectile->name(DESC_PLAIN),
                                       atk_name(DESC_A));
         break;

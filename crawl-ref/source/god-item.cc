@@ -220,7 +220,8 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
                             && !have_passive(passive_t::cleanse_mut_potions))
                  || item.sub_type == POT_LIGNIFY;
     case OBJ_BOOKS:
-        return _is_book_type(item, is_chaotic_spell);
+        return item.sub_type == BOOK_MANUAL && item.plus == SK_SHAPESHIFTING
+               || _is_book_type(item, is_chaotic_spell);
     case OBJ_MISCELLANY:
         return item.sub_type == MISC_BOX_OF_BEASTS;
     case OBJ_TALISMANS:

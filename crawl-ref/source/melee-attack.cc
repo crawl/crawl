@@ -27,6 +27,7 @@
 #include "god-item.h"
 #include "god-passive.h" // passive_t::convert_orcs
 #include "hints.h"
+#include "invent.h"
 #include "item-prop.h"
 #include "mapdef.h"
 #include "message.h"
@@ -37,6 +38,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-damage.h"
+#include "spl-goditem.h"
 #include "spl-summoning.h" //AF_SPIDER
 #include "state.h"
 #include "stepdown.h"
@@ -110,7 +112,19 @@ bool melee_attack::bad_attempt()
     return stop_attack_prompt(defender->as_monster(), false, attack_position);
 }
 
-bool melee_attack::player_unrand_bad_attempt()
+// Whether this attack, if performed, would prompt the player about damaging
+// nearby allies with an unrand property.
+bool melee_attack::would_prompt_player()
+{
+    if (!attacker->is_player())
+        return false;
+
+    bool penance;
+    return weapon && needs_handle_warning(*weapon, OPER_ATTACK, penance)
+           || player_unrand_bad_attempt(true);
+}
+
+bool melee_attack::player_unrand_bad_attempt(bool check_only)
 {
     // Unrands with secondary effects that can harm nearby friendlies.
     // Don't prompt for confirmation (and leak information about the
@@ -128,7 +142,8 @@ bool melee_attack::player_unrand_bad_attempt()
                                   [](const actor *act)
                                   {
                                       return !god_protects(act->as_monster());
-                                  }, nullptr, defender->as_monster());
+                                  }, nullptr, defender->as_monster(),
+                                  check_only);
     }
     else if (is_unrandom_artefact(*weapon, UNRAND_VARIABILITY)
              || is_unrandom_artefact(*weapon, UNRAND_SINGING_SWORD)
@@ -140,7 +155,8 @@ bool melee_attack::player_unrand_bad_attempt()
                                [](const actor *act)
                                {
                                    return !god_protects(act->as_monster());
-                               }, nullptr, defender->as_monster());
+                               }, nullptr, defender->as_monster(),
+                               check_only);
     }
     if (is_unrandom_artefact(*weapon, UNRAND_TORMENT))
     {
@@ -152,12 +168,13 @@ bool melee_attack::player_unrand_bad_attempt()
                                    return !m->res_torment()
                                        && !god_protects(m->as_monster());
                                },
-                                  nullptr, defender->as_monster());
+                                  nullptr, defender->as_monster(),
+                                check_only);
     }
     if (is_unrandom_artefact(*weapon, UNRAND_ARC_BLADE))
     {
         vector<const actor *> exclude;
-        return !safe_discharge(defender->pos(), exclude);
+        return !safe_discharge(defender->pos(), exclude, check_only);
     }
     if (is_unrandom_artefact(*weapon, UNRAND_POWER))
     {
@@ -169,7 +186,8 @@ bool melee_attack::player_unrand_bad_attempt()
                                [](const actor *act)
                                {
                                    return !god_protects(act->as_monster());
-                               }, nullptr, defender->as_monster());
+                               }, nullptr, defender->as_monster(),
+                               check_only);
     }
     return false;
 }
@@ -610,6 +628,20 @@ bool melee_attack::handle_phase_hit()
         defender->as_monster()->flags |= MF_EXPLODE_KILL;
     }
 
+    // Trigger Curse of Agony after most normal damage is already applied
+    if (attacker->is_player() && defender->alive() && defender->is_monster()
+        && defender->as_monster()->has_ench(ENCH_CURSE_OF_AGONY))
+    {
+        mon_enchant agony = defender->as_monster()->get_ench(ENCH_CURSE_OF_AGONY);
+        torment_cell(defender->pos(), &you, TORMENT_AGONY);
+        agony.degree -= 1;
+
+        if (agony.degree == 0)
+            defender->as_monster()->del_ench(ENCH_CURSE_OF_AGONY);
+        else
+            defender->as_monster()->update_ench(agony);
+    }
+
     if (check_unrand_effects())
         return false;
 
@@ -881,11 +913,20 @@ bool melee_attack::handle_phase_end()
         mons_do_tendril_disarm();
     }
 
-    if (attacker->alive()
-        && attacker->is_monster()
-        && attacker->as_monster()->has_ench(ENCH_ROLLING))
+    if (attacker->alive() && attacker->is_monster())
     {
-        attacker->as_monster()->del_ench(ENCH_ROLLING);
+        monster* mon_attacker = attacker->as_monster();
+
+        if (mon_attacker->has_ench(ENCH_ROLLING))
+            mon_attacker->del_ench(ENCH_ROLLING);
+
+        // Blazeheart golems tear themselves apart on impact
+        if (mon_attacker->type == MONS_BLAZEHEART_GOLEM && did_hit)
+        {
+            mon_attacker->hurt(mon_attacker,
+                               mon_attacker->max_hit_points / 3 + 1,
+                               BEAM_MISSILE);
+        }
     }
 
     if (defender && !is_multihit)
@@ -1603,14 +1644,13 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                 defender->weaken(&you, 6);
             }
 
-            if (damage_brand == SPWPN_VULNERABILITY
-                && defender->as_monster()->willpower() != WILL_INVULN)
+            if (damage_brand == SPWPN_VULNERABILITY)
             {
-                defender->as_monster()->add_ench(
-                    mon_enchant(ENCH_LOWERED_WL, 1, &you,
-                                random_range(4, 8) * BASELINE_DELAY));
-                mprf("You sap %s willpower!",
-                     defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str());
+                if (defender->strip_willpower(&you, random_range(4, 8), true))
+                {
+                    mprf("You sap %s willpower!",
+                         defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str());
+                }
             }
 
             // Normal vampiric biting attack, not if already got stabbing special.
@@ -2338,16 +2378,16 @@ bool melee_attack::apply_staff_damage()
         break;
 
     case STAFF_EARTH:
-        special_damage = staff_damage(sk) * 4 / 3;
-        special_damage = apply_defender_ac(special_damage, 0, ac_type::triple);
+        special_damage = staff_damage(sk) * 5 / 4;
+        special_damage = apply_defender_ac(special_damage, 0);
+        if (defender->airborne())
+            special_damage /= 3;
 
         if (special_damage > 0)
         {
             special_damage_message =
                 make_stringf(
-                    "%s %s %s%s",
-                    attacker->name(DESC_THE).c_str(),
-                    attacker->conj_verb("shatter").c_str(),
+                    "The ground beneath %s fractures%s",
                     defender->name(DESC_THE).c_str(),
                     attack_strength_punctuation(special_damage).c_str());
         }
@@ -2613,8 +2653,9 @@ bool melee_attack::mons_do_poison()
 
     if (attacker->as_monster()->has_ench(ENCH_CONCENTRATE_VENOM))
     {
-        return curare_actor(attacker, defender, 2, "concentrated venom",
-                            attacker->name(DESC_PLAIN));
+        // Attach our base poison damage to the curare effect
+        return curare_actor(attacker, defender, "concentrated venom",
+                            attacker->name(DESC_PLAIN), amount);
     }
 
     if (!defender->poison(attacker, amount))
@@ -2750,20 +2791,15 @@ void melee_attack::mons_apply_attack_flavour()
         defender->expose_to_element(BEAM_MISSILE, 2);
         break;
 
-    case AF_MUTATE:
-        if (one_chance_in(4))
-        {
-            defender->malmutate(you.can_see(*attacker) ?
-                apostrophise(attacker->name(DESC_PLAIN)) + " mutagenic touch" :
-                "mutagenic touch");
-        }
-        break;
-
     case AF_POISON:
     case AF_POISON_STRONG:
     case AF_REACH_STING:
-        if (one_chance_in(3))
+        if (attacker->as_monster()->has_ench(ENCH_CONCENTRATE_VENOM)
+            ? coinflip()
+            : one_chance_in(3))
+        {
             mons_do_poison();
+        }
         break;
 
     case AF_FIRE:
@@ -3029,22 +3065,6 @@ void melee_attack::mons_apply_attack_flavour()
         defender->go_berserk(false);
         break;
 
-    case AF_STICKY_FLAME:
-        if (defender->res_sticky_flame() || !one_chance_in(3))
-            break;
-    {
-        const int hd = attacker->get_hit_dice();
-        if (defender->is_player())
-        {
-            const int intensity = 3 + hd / 3;
-            sticky_flame_player(intensity, random_range(11, 21), atk_name(DESC_A));
-            break;
-        }
-        const int dur = min(4, random_range(hd / 2, hd));
-        sticky_flame_monster(defender->as_monster(), attacker, dur, true);
-    }
-        break;
-
     case AF_CHAOTIC:
         chaos_affects_defender();
         break;
@@ -3073,7 +3093,15 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ANTIMAGIC:
-        antimagic_affects_defender(attacker->get_hit_dice() * 12);
+
+        // Apply extra stacks of the effect to monsters that have none.
+        if (defender->is_monster()
+            && !defender->as_monster()->has_ench(ENCH_ANTIMAGIC))
+        {
+            antimagic_affects_defender(attacker->get_hit_dice() * 18);
+        }
+        else
+            antimagic_affects_defender(attacker->get_hit_dice() * 12);
 
         if (mons_genus(attacker->type) == MONS_VINE_STALKER
             && attacker->is_monster())
@@ -3188,32 +3216,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_VULN:
         if (one_chance_in(3))
-        {
-            bool visible_effect = false;
-            if (defender->is_player())
-            {
-                if (!you.duration[DUR_LOWERED_WL])
-                    visible_effect = true;
-                you.increase_duration(DUR_LOWERED_WL, 20 + random2(20), 40);
-            }
-            else
-            {
-                // Halving the WL of targets with infinite wills has no effect
-                if (defender->as_monster()->willpower() == WILL_INVULN)
-                    break;
-                if (!defender->as_monster()->has_ench(ENCH_LOWERED_WL))
-                    visible_effect = true;
-                mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, attacker,
-                                       (20 + random2(20)) * BASELINE_DELAY);
-                defender->as_monster()->add_ench(lowered_wl);
-            }
-
-            if (needs_message && visible_effect)
-            {
-                mprf("%s willpower is stripped away!",
-                     def_name(DESC_ITS).c_str());
-            }
-        }
+            defender->strip_willpower(attacker, 20 + random2(20), !needs_message);
         break;
 
     case AF_SHADOWSTAB:
@@ -3701,7 +3704,6 @@ bool melee_attack::do_knockback(bool slippery)
 
 bool melee_attack::do_drag()
 {
-{
     if (defender->is_stationary())
         return false; // don't even print a message
 
@@ -3744,12 +3746,17 @@ bool melee_attack::do_drag()
     // Only move the attacker back if the defender was already adjacent and we
     // want to move them *into* the attacker's space.
     if (new_defender_pos == attacker->pos())
+    {
         attacker->move_to_pos(new_attacker_pos);
+        attacker->apply_location_effects(new_attacker_pos);
+        attacker->did_deliberate_movement();
+    }
 
     defender->move_to_pos(new_defender_pos);
+    defender->apply_location_effects(new_defender_pos);
+    defender->did_deliberate_movement();
 
     return true;
-}
 }
 
 /**

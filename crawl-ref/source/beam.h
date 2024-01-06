@@ -299,6 +299,7 @@ public:
 private:
     void apply_bolt_paralysis(monster* mons);
     void apply_bolt_petrify(monster* mons);
+    void handle_petrify_chaining(coord_def centre);
     void monster_post_hit(monster* mon, int dmg);
     // for players
     void affect_player();
@@ -316,6 +317,7 @@ private:
     void tracer_affect_monster(monster* mon);
     void tracer_enchantment_affect_monster(monster* mon);
     void tracer_nonenchantment_affect_monster(monster* mon);
+    bool has_relevant_side_effect(monster* mon);
 
     // methods to change the path
     void bounce();
@@ -346,8 +348,8 @@ bool poison_monster(monster* mons, const actor* who, int levels = 1,
 bool miasma_monster(monster* mons, const actor* who);
 bool sticky_flame_monster(monster* mons, const actor* who, int dur,
                     bool verbose = true);
-bool curare_actor(actor* source, actor* target, int levels, string name,
-                  string source_name);
+bool curare_actor(actor* source, actor* target, string name,
+                  string source_name, int bonus_poison = 0);
 int silver_damages_victim(actor* victim, int damage, string &dmg_msg);
 void fire_tracer(const monster* mons, bolt &pbolt,
                   bool explode_only = false, bool explosion_hole = false);
@@ -381,5 +383,8 @@ int omnireflect_chance_denom(int SH);
 
 void glaciate_freeze(monster* mon, killer_type englaciator,
                              int kindex);
+
+void fill_petrify_chain_targets(const bolt& beam, coord_def centre,
+                                vector<coord_def> &targs, bool random);
 
 bolt setup_targeting_beam(const monster &mons);

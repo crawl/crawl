@@ -269,7 +269,7 @@ Willpower
 
 Size
   Different species have different sizes: Spriggans and Felids are very small;
-  Kobolds are small; Ogres and Trolls are large; Nagas and Armataurs are large
+  Kobolds are small; Oni and Trolls are large; Nagas and Armataurs are large
   with a medium torso; all other species are medium-sized. Many talismans will
   change your size. Size affects your evasion: the smaller your character, the
   more evasive it is. On the other hand, characters of larger than medium size
@@ -1022,10 +1022,9 @@ There are many skills related to magic, the principal one being Spellcasting.
 Spellcasting determines the number of Magic Points available; it also helps to
 cast any spell, though less so than schools associated with a spell. Next, there
 are several general magical schools (Conjuration, Hexes, Summoning, Necromancy,
-Translocation and Transmutation) as well as several elemental schools (Fire,
-Ice, Air and Earth) and, finally, Poison. A particular spell can belong to up
-to three schools. Being skilled in a spell's schools improves the casting
-chance and the power of that spell.
+Translocation and Alchemy) as well as several elemental schools (Fire, Ice, Air
+and Earth). A particular spell can belong to up to three schools. Being skilled
+in a spell's schools improves the casting chance and the power of that spell.
 
 Spells are stored in books, which you will occasionally find in the dungeon.
 Once you have picked up a book and added its contents to your spell library, you
@@ -1556,7 +1555,7 @@ Hill Orcs (HO)
   convert to Beogh even without an altar whenever an orc priest is in sight.
 
 Minotaurs (Mi)
-  The Minotaurs are a species of hybrids, possessing human bodies with bovine
+  The Minotaurs are a species of hybrids, possessing Human bodies with bovine
   heads. They delve into the Dungeon because of their instinctive love of
   twisting passageways.
 
@@ -1566,7 +1565,7 @@ Minotaurs (Mi)
   dare attack them.
 
 Merfolk (Mf)
-  The Merfolk are a hybrid species of half-human, half-fish that typically live
+  The Merfolk are a hybrid species of half-Human, half-fish that typically live
   in the oceans and rivers, seldom venturing toward land. However, Merfolk
   aren't as limited on land as some myths suggest; their tails will quickly
   reform into legs once they leave the water (and, likewise, their legs will
@@ -1580,11 +1579,10 @@ Merfolk (Mf)
   they can also use longer swords quite well.
 
   As spellcasters, they tend to be quite good in specific areas. Their mystical
-  relationship with water makes it easier for them to use poison and ice magic,
+  relationship with water makes it easier for them to use alchemy and ice magic,
   which use water occasionally as a material component. The legendary water
   magic of the Merfolk was lost in ancient times, but some of that affinity
-  still remains. The instability of their own morphogenic matrix has made them
-  very accomplished transmuters, but most other magic seems foreign to them.
+  still remains. Most other magic seems foreign to them.
 
 Gargoyles (Gr)
   A cross between ordinary stone gargoyles and living beings, Gargoyles are
@@ -1599,8 +1597,8 @@ Gargoyles (Gr)
   earth-based conjurers.
 
 Draconians (Dr)
-  Draconians are human-dragon hybrids: humanoid in form and approximately
-  human-sized, with wings, tails and scaly skins. Draconians start out in an
+  Draconians are Human-dragon hybrids: humanoid in form and approximately
+  Human-sized, with wings, tails and scaly skins. Draconians start out in an
   immature form with brown scales, but as they grow in power they take on a
   variety of colours. This happens at an early stage in their career, and the
   colour is determined by chromosomes, not by behaviour.
@@ -1641,11 +1639,10 @@ Armataurs (At)
   terrorize the lands outside the Dungeon.
 
   Armataurs instinctively roll when moving toward foes, getting a free move and
-  regenerating magic. Their long, nimble tongues drink every last drop from
-  potions, doubling their effects. They have great aptitudes with armour and
-  shields, though their body shape reduces the protection offered by body armour
-  early on. At higher levels they regenerate health when rolling, making them
-  truly resilient.
+  regenerating magic. They have great aptitudes with armour and shields, though
+  their body shape reduces the protection offered by body armour early on. At
+  higher levels they also regenerate both health and magic when rolling, making
+  them truly resilient.
 
 Gnolls (Gn)
   Gnolls are a species of caniform humanoids originally hailing from the arid
@@ -1687,8 +1684,8 @@ Kobolds (Ko)
   They are competent in combat, especially with short blades, maces or ranged
   weapons, and are comfortable with all forms of magic. They are also very
   adept at using magical devices. Their small size makes them unable to wield
-  large weapons, but they are agile and stealthy, and advance in levels as
-  quickly as Humans.
+  large weapons, but they are agile and stealthy, and advance in levels slightly
+  more quickly than Humans.
 
 Demonspawn (Ds)
   Demonspawn are horrible half-mortal, half-infernal creatures. Demonspawn can
@@ -1739,7 +1736,7 @@ Ghouls (Gh)
 
   They learn most skills slowly, although they make decent unarmed fighters
   with their claws. Due to their contact with the grave they can also learn to
-  use ice, earth, poison and necromantic magic without too many difficulties.
+  use ice, earth, and necromantic magic without too many difficulties.
 
   Like other undead, ghouls are naturally immune to poisons, negative energy
   and torment; have little warmth left to be affected by cold; and are not
@@ -1758,16 +1755,29 @@ Tengu (Te)
   Tengu do not appreciate any form of servitude, and so are poor at using
   invocations. Their light avian bodies cannot sustain a great deal of injury.
 
-Ogres (Og)
-  Ogres are huge, chunky creatures who are very strong and robust, but are not
-  nimble at all. They possess a raw talent for magic, but are poor at making
-  use of magical devices. Ogres mature almost as quickly as Humans.
+Oni (On)
+  Oni are large, rowdy creatures who love a good fight. They are exceptionally
+  strong and robust, and their fondness for drink allows them to heal twice as
+  much from healing potions and even perform free melee swings around themselves
+  while they chug them.
 
-  Their preferred methods of avoiding beatings are dodging and the use of
-  shields. Their large size prevents them from wearing most forms of armour.
-  Ogres are proficient at using all types of melee weapons, but all
-  sophisticated forms of missile combat are awkward for them. They are, however,
-  good at throwing things, in particular boulders.
+  They are proficient with most melee weapons and forms of magic, but lack the
+  dexterity or inclination to use ranged weapons or magical devices well. They
+  are, however, good at throwing things, in particular large rocks.
+
+  Their large size prevents them from wearing most forms of armour, and are poor
+  at dodging, relying on their enormous bulk to survive battles instead.
+
+Barachim (Ba)
+  Barachim are an amphibious humanoid species, spawned at the dawn of time as
+  servants for the gods. Inevitably, they rebelled and fled into the mortal
+  world; but even uncounted years later, the darkness still flees at their
+  approach, remembering those who they once served.
+
+  Barachim's most remarkable trait is their grossly overmuscled legs, which
+  allow them to leap great distances. When not leaping, they are somewhat
+  slow-moving, and the long sight-lines that their heritage creates can be a
+  major disadvantage, but they can master almost any skill.
 
 Advanced Species
 ================
@@ -1834,19 +1844,20 @@ Formicids (Fo)
   of nasty hexes and maledictions.
 
   With the ability to lift ten times their own weight, the Formicids have
-  strength rivaling that of Ogres. This, along with the fact that they have four
+  strength rivaling that of Oni. This, along with the fact that they have four
   arms, allows Formicid warriors to equip both a shield and a two-handed weapon
   at the same time.
 
-  Formicids make good earth and venom mages, but are quite capable at both melee
-  and ranged combat too. They are naturally bad at air magic and conjurations.
+  Formicids make good earth mages and alchemists, but are quite capable at both
+  melee and ranged combat too. They are naturally bad at air magic and
+  conjurations.
 
 Nagas (Na)
   Nagas are a hybrid species: Human from the waist up with a large snake tail
   instead of legs.
 
-  They are reasonably good at most things and advance in experience levels
-  slightly slower than Humans. They are naturally resistant to poisons, can see
+  They are reasonably good at most things and advance in experience levels at
+  the same rate as Humans. They are naturally resistant to poisons, can see
   invisible creatures, and have tough skin, but their tails are relatively slow
   and cannot move them around as quickly as can other creatures' legs (this only
   affects their movement rate; all other actions are at normal speed). Like
@@ -1860,18 +1871,18 @@ Nagas (Na)
 
 Octopodes (Op)
   These land-capable relatives of common octopuses can move about as fast as
-  humans and yet retain the ability to swim underwater, although their dual
+  Humans and yet retain the ability to swim underwater, although their dual
   adaptation is not as good as that of the shapechanging Merfolk.
 
   Octopodes have eight tentacle-shaped legs, and need four of them to move.
   While a tentacle lacks fingers, two tentacles are a rough equivalent of a
-  human's arm where item manipulation is concerned - including wielding
+  Human's arm where item manipulation is concerned - including wielding
   two-handed weapons with four. They can use no armour other than loose hats,
   but can handle shields just fine. Another peculiarity they have is the ability
   to wear eight rings, one on each tentacle.
 
   Their natural camouflage makes them excel at stealth, and they have good
-  knowledge of poisons as well. They are also able to use their tentacles to
+  knowledge of alchemy as well. They are also able to use their tentacles to
   constrict enemies - potentially several at a time!
 
 Felids (Fe)
@@ -1889,17 +1900,6 @@ Felids (Fe)
 
   Felids start with an extra life, and gain more as they increase in levels.
   Upon death, they will be resurrected in a safe place.
-
-Barachim (Ba)
-  Barachim are an amphibious humanoid species, spawned at the dawn of time as
-  servants for the gods. Inevitably, they rebelled and fled into the mortal
-  world; but even uncounted years later, the darkness still flees at their
-  approach, remembering those who they once served.
-
-  Barachim's most remarkable trait is their grossly overmuscled legs, which
-  allow them to leap great distances. When not leaping, they are somewhat
-  slow-moving, and the long sight-lines that their heritage creates can be a
-  major disadvantage, but they can master almost any skill.
 
 Mummies (Mu)
   These are undead creatures who travel into the depths in search of revenge,
@@ -1930,7 +1930,7 @@ White Draconians
 
 Green Draconians
   are used to venomous surroundings and breathe clouds of mephitic vapours. They
-  are especially good in the arts of poison and without deficiencies in other
+  are especially good in the arts of alchemy and without deficiencies in other
   magic realms. Later on, they will develop a poisonous stinger.
 
 Yellow Draconians
@@ -2090,7 +2090,7 @@ Mage backgrounds
 
 A mage is not an available character background by itself, but a type of
 background, encompassing Hedge Wizards, Conjurers, Summoners, Necromancers,
-various Elementalists and Venom Mages. Mages are the best at using magic.
+various Elementalists and Alchemists. Mages are the best at using magic.
 Among other things, they start with a robe, a potion of magic, and spells
 which should see them through the first several levels of the Dungeon.
 
@@ -2133,9 +2133,10 @@ Elementalists
   Earth Magic
     offers direct effects, some destructive and some debilitating.
 
-Venom Mages
-  Venom Mages specialise in poison magic, which is extremely useful in the
-  shallower levels of the Dungeon where few creatures are immune to it.
+Alchemist
+  Alchemists start with knowledge of poison-based magic, which is extremely
+  useful in the shallower levels of the Dungeon where few creatures are immune
+  to it.
 
 ****************************************
 3. List of skills

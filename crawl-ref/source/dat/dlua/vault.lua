@@ -154,7 +154,7 @@ function door_vault_setup(e)
   e.lua_marker('+',  props_marker { connected_exclude="true" })
   e.lua_marker('a',
                props_marker { stop_explore="strange structure made of doors" })
-  e.kfeat("a = runed_door")
+  e.kfeat("a = runed_clear_door")
 end
 
 --[[

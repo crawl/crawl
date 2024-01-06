@@ -47,7 +47,7 @@ end
 
 function grunt_megastairs_setup(e)
   e.orient("float")
-  e.tags("extra luniq_grunt_megastairs transparent ruin_lair")
+  e.tags("extra luniq_generic_threat_stair transparent ruin_lair")
   e.depth("Lair, Depths, Crypt, Elf, Snake, Zot")
   e.nsubst("0 = 2:0 / 2:0. / *:.")
   e.subst("@ = @+")
@@ -1291,8 +1291,7 @@ ORIENT: float
 :if crawl.one_chance_in(4) and you.in_branch("D") then
 TILE:   x = wall_brick_brown_vines
 :elseif crawl.one_chance_in(4) then
-SUBST:  x : c
-TILE:   c = wall_sandstone
+TILE:   x = wall_sandstone
 :end
 :if you.in_branch("Lair") then
 SUBST:  ' = WW...
@@ -1969,17 +1968,17 @@ NSUBST:  1 = 10=1 / 8=1. / .
 MONS:    hell rat / vampire mosquito / skeleton / zombie / spectral thing w:5 \
          / simulacrum w:5
 MONS:    wolf / warg w:2 / hell hound w:2
-MONS:    flying skull
+MONS:    weeping skull
 MONS:    basilisk / spectral black mamba / black mamba simulacrum \
          / spectral boulder beetle / boulder beetle simulacrum /
 MONS:    wraith
 MONS:    shadow
 MONS:    vampire
 :    else
-MONS:    skeleton / zombie / flying skull / wraith / spectral thing \
+MONS:    skeleton / zombie / wraith / spectral thing \
          / simulacrum
 MONS:    hell hound
-MONS:    freezing wraith
+MONS:    freezing wraith / laughing skull w:2
 MONS:    spectral wolf spider / wolf spider simulacrum / spectral ice dragon \
          / ice dragon simulacrum / spectral deep troll / deep troll simulacrum
 MONS:    vampire / necromancer w:5
@@ -1987,7 +1986,7 @@ MONS:    skeletal warrior / death knight
 MONS:    vampire knight
 :    end
 : elseif you.in_branch("Crypt") then
-MONS:    skeleton / zombie / flying skull / spectral thing / simulacrum
+MONS:    skeleton / zombie / laughing skull / spectral thing / simulacrum
 MONS:    jiangshi / hell beast / doom hound w:2
 MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
 MONS:    spectre place:Crypt:$
@@ -1997,7 +1996,7 @@ MONS:    revenant / eidolon / lich w:5
 : kmons("7 = jory / " .. vamp_def .. ", " .. vamp_def)
 # Depths
 : else
-MONS:    skeleton / zombie / flying skull / spectral thing / simulacrum
+MONS:    skeleton / zombie / laughing skull / spectral thing / simulacrum
 MONS:    jiangshi / hell beast / doom hound w:2
 MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
 MONS:    spectral golden dragon / golden dragon simulacrum \
@@ -2373,8 +2372,7 @@ KMONS:  5 = water elemental / elemental wellspring
 KMONS:  6 = frost giant
 KMONS:  7 = air elemental / deep elf zephyrmancer
 KMONS:  E = storm dragon
-# Depths
-: else
+: else -- Depths
 KMONS:  1 = fire giant
 KMONS:  2 = hellephant
 KMONS:  3 = war gargoyle / stone giant / iron dragon
@@ -2681,9 +2679,9 @@ ENDMAP
 
 NAME:    hangedman_screamer
 TAGS:    no_monster_gen
-DEPTH:   D:9-, Depths, Crypt
+DEPTH:   D:11-, Depths, Crypt
 ORIENT:  float
-MONS:    patrolling flying skull
+MONS:    patrolling laughing skull
 MONS:    zombie / skeleton
 : if you.absdepth() > 19 then
 MONS:    vampire knight / jiangshi / flayed ghost
@@ -2711,8 +2709,8 @@ xaaxx22x5x22xxccx
 xAAx.x2x+x2x.xCCx
 xAAxx.xx*xx.xxCCx
 xAAxxx.x*x.xxxCCx
-x...1...1.......x
-x.......1...1...x
+x.......1.......x
+x.......1.......x
 xBBxxx.x*x.xxxDDx
 xBBxx.xx*xx.xxDDx
 xBBx.x2x+x2x.xDDx
@@ -3005,29 +3003,29 @@ ENDMAP
 ###############################################################################
 
 NAME:    lightli_eight_chambers
+TAGS:    no_monster_gen
 ORIENT:  float
 DEPTH:   Depths, !Depths:$
-TAGS:    no_monster_gen
-KMONS:   D = ice dragon / frost giant / blizzard demon / shard shrike w:3 \
-         / ice fiend w:2
+KMONS:   D = ice dragon / frost giant / blizzard demon / \
+             walking frostbound tome w:3 / ice fiend w:2
 KMONS:   E = storm dragon / spriggan air mage / spark wasp / titan w:5
-KMONS:   F = fire dragon / fire giant / salamander tyrant / smoke demon \
-         / balrug / hellephant w:5
-KMONS:   H = stone giant w:20 / iron dragon / walking earthen tome \
-         / juggernaut w:5 / walking crystal tome w:5
-KMONS:   J = death scarab w:20 / guardian mummy / sphinx / reaper \
-         / mummy priest w:5 / royal mummy w:5
-KMONS:   K = deep elf demonologist / deep elf sorcerer / deep elf death mage \
-         / deep elf annihilator / deep elf high priest \
-         / deep elf blademaster w:5 / deep elf master archer w:5
-KMONS:   L = great orb of eyes / rockslime / quicksilver ooze / azure jelly \
-         / acid blob w:5
-KMONS:   M = ancient champion / vampire mage / vampire knight \
-         / eidolon / revenant / bone dragon / lich w:5
+KMONS:   F = fire dragon / fire giant / salamander tyrant / smoke demon / \
+             balrug / hellephant w:5
+KMONS:   H = stone giant w:20 / iron dragon / walking earthen tome / \
+             juggernaut w:5 / walking crystal tome w:5
+KMONS:   J = death scarab w:20 / guardian mummy / sphinx / reaper / \
+             mummy priest w:5 / royal mummy w:5
+KMONS:   K = deep elf demonologist / deep elf sorcerer / deep elf death mage / \
+             deep elf annihilator / deep elf high priest / \
+             deep elf blademaster w:5 / deep elf master archer w:5
+KMONS:   L = great orb of eyes / rockslime / quicksilver ooze / azure jelly / \
+             acid blob w:5
+KMONS:   M = ancient champion / vampire mage / vampire knight / \
+             eidolon / revenant / bone dragon / lich w:5
 KMONS:   N = tengu warrior / tengu conjurer / tengu reaver
 KMONS:   O = spriggan berserker / spriggan air mage / spriggan defender
-KMONS:   P = balrug / blizzard demon / shadow demon / hell beast / hellion \
-         / lorocyproca / reaper / tormentor
+KMONS:   P = balrug / blizzard demon / shadow demon / hell beast / hellion / \
+             lorocyproca / reaper / tormentor
 SHUFFLE: DEFHJKLMNOP
 MAP
 xxvvvvvvvvvvvvvxx
@@ -4016,10 +4014,9 @@ KMONS: 2 = ice dragon / frost giant
 MONS:  deep elf blademaster simulacrum / freezing wraith / ice dragon \
        / deep elf knight
 KMONS: 2 = frost giant / shard shrike
-# Depths
-: else
+: else -- Depths
 MONS:   simulacrum w:20 / ice dragon / frost giant
-KMONS:  2 = ice fiend / shard shrike band
+KMONS:  2 = ice fiend / walking frostbound tome
 : end
 : minmay_elemental_octagon_setup(_G)
 MAP
@@ -6561,7 +6558,7 @@ SUBST:   ' = 1, | = *, & = |
 MONS:    tengu warrior / gargoyle / yaktaur
 MONS:    centaur warrior / ogre mage / orc knight
 MONS:    boggart band / deep elf knight / deep elf archer / ettin
-MONS:    shadow wraith, rakshasa, vampire knight
+MONS:    shadow, rakshasa, vampire knight
 MONS:    shadow / vampire w:5
 NSUBST:  4 = 3 = 77. / *:4
 :   end
@@ -6745,7 +6742,7 @@ ENDMAP
 ##############################################################################
 # Elevator
 NAME:    lemuel_elevator
-TAGS:    allow_dup extra luniq_staircase no_descent
+TAGS:    extra luniq_staircase luniq_generic_threat_stair no_descent
 DEPTH:   D:2-, !D:$, Elf:2, Crypt:2-, !Crypt:$, Zot:2-, !Zot:$
 ORIENT:  float
 WEIGHT:  10 (D), 5
@@ -6822,12 +6819,12 @@ ENDMAP
 ##############################################################################
 # Klotski a.k.a. what we learned from the elders.
 NAME:    minmay_klotski
-TAGS:    no_descent
-SHUFFLE: }])>
+TAGS:    no_descent luniq_generic_threat_stair
 DEPTH:   D:6-12
 ORIENT:  float
-SUBST:   0 = 0.., 9 = 9., 8 = 88.
 MONS:    bush
+SUBST:   0 = 0.., 9 = 9., 8 = 88.
+SHUFFLE: }])>
 MAP
 xxxxxxxxxxxxxxxxxxxxx
 x....+.........+...9x
@@ -6974,12 +6971,12 @@ ENDMAP
 
 ##############################################################################
 # An old-fashioned vault, by Lemuel
-NAME:  lemuel_traditional_vault
-TAGS:  no_descent
-DEPTH: D:12-, Depths
+NAME:   lemuel_traditional_vault
+TAGS:   no_pool_fixup no_descent
+DEPTH:  D:12-, Depths
 ORIENT: float
-SUBST: 9 = 9 0 8:2
-SUBST: 0 = 0 .
+SUBST:  9 = 9 0 8:2
+SUBST:  0 = 0 .
 MAP
 ........................
 wwwwwwwwwwwwwwwwwwwwwwww
@@ -7002,7 +6999,7 @@ wc..c..cccccccccc..c..cw
 wc..c......99......c..cw
 wc0.c$............$c.0cw
 wc..ccccccc++ccccccc..cw
-wc.........00.........cw
+wc.>.......00.......>.cw
 wc$........00........$cw
 wccccccccccccccccccccccw
 wwwwwwwwwwwwwwwwwwwwwwww
@@ -7012,14 +7009,13 @@ ENDMAP
 ##############################################################################
 # An Ice Statue vault
 NAME:    lemuel_ice_statue
-MONS:    ice statue
 TAGS:    no_pool_fixup no_descent
 ORIENT:  float
 DEPTH:   D:7-
-SUBST:   * : *$
-SUBST:   * = |:5 * .
+MONS:    ice statue
+SUBST:   * : *$, * = |:5 * .
 SUBST:   T = TU
-SHUFFLE: xb/cc, ABC
+SHUFFLE: xb / cc, ABC
 : if crawl.coinflip() then
 KFEAT:   X = < / >
 KITEM:   X = any good_item
@@ -7977,7 +7973,7 @@ cc..c..cc..cc...ccc+cccc..c..c...c..c
 ENDMAP
 
 NAME: grunt_deathspiral_small
-TAGS: patrolling uniq_deathspiral transparent
+TAGS: patrolling uniq_deathspiral luniq_generic_threat_stair transparent
 DEPTH: Depths, !Depths:$, Crypt, !Crypt:$, Zot, !Zot:$
 ORIENT: centre
 SHUFFLE: )]}>

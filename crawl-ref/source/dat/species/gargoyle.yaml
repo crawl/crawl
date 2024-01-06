@@ -10,7 +10,7 @@ aptitudes:
   xp: 0
   hp: -2
   mp_mod: 0
-  mr: 3
+  wl: 3
   fighting: 1
   short_blades: -1
   long_blades: -1
@@ -58,7 +58,6 @@ recommended_jobs:
   - JOB_BERSERKER
   - JOB_FIRE_ELEMENTALIST
   - JOB_EARTH_ELEMENTALIST
-  - JOB_ALCHEMIST
   - JOB_REAVER
 recommended_weapons:
   - SK_MACES_FLAILS

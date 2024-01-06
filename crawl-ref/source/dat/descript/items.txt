@@ -456,7 +456,8 @@ When evoked these clouds form around hostile monsters near the user. The
 quantity and lethality of these clouds increases with Evocations skill. At low
 power it will create noxious fumes, and as power increases this gives way to
 roaring flames, freezing vapours, and poisonous gas. At the highest tiers of
-power storm clouds, acidic fog and clouds of negative energy become available.
+power storm clouds, acidic fog and clouds of excruciating misery become
+available.
 %%%%
 corpse
 
@@ -705,7 +706,7 @@ A small axe.
 %%%%
 hand cannon
 
-A machine that fires bolts via applied alchemy. Some enchant their projectiles
+A machine that fires bolts via applied thaumaturgy. Some enchant their projectiles
 to fall forward instead of down, others bewitch the bolts with a fatal attraction
 to their targets. All are slow, loud, and blast out thick smoke with each shot.
 %%%%
@@ -1370,9 +1371,9 @@ dealing negative energy damage which bypasses armour.
 staff of earth
 
 A staff that increases the power of earth spells cast by its wielder. If the
-wielder is skilled in Evocations and Earth magic, they can shatter those struck
-by it, dealing substantial irresistible damage which is strongly reduced by
-armour.
+wielder is skilled in Evocations and Earth magic, they can fracture the ground
+beneath those struck by it, dealing substantial damage - though much less to
+creatures which fly.
 %%%%
 staff of fire
 

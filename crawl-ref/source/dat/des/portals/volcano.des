@@ -231,7 +231,8 @@ function fiery_guardians (e, intelligent, village)
             e.mons("two-headed ogre ; " .. ogrestuff .. " . " .. ogrestuff ..
                    " / centaur ; " .. centaurstuff ..
                    " / salamander w:15 ; spear " .. flame .. " | trident " .. flame)
-            e.mons("fire bat / hell hound / hell hog w:2")
+            e.mons("fire bat / hell hound")
+            e.mons("fire crab / hell hog")
             return
         end
         local set_weight = crawl.random2(3)
@@ -774,8 +775,8 @@ ENDMAP
 ###############################################################################
 # "Lava lake Temple"
 #
-# Somehow, some priests have constructed a temple right over the lava! Who
-# Who kows what magic spells keep this structure afloat,
+# Somehow, some priests have constructed a temple right over the lava!
+# Who knows what magic spells keep this structure afloat,
 # and its occupants from roasting to death!
 #
 # XXX: volcano_lake subvaults, akin to volcano_grotto, would be nice.
@@ -930,13 +931,14 @@ ENDMAP
 # Some forgotten emperor was buried here! His tomb is guarded by charred bones.
 # Perhaps there is loot!
 NAME:       volcano_tomb
+TAGS:       no_item_gen no_monster_gen no_rotate
 WEIGHT:     20
 ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate
+#           The skulls on lava.
+KMONS:      u = weeping skull
+KMONS:      U = laughing skull
+KFEAT:      uU = lava
 SUBVAULT:   B : volcano_tomb_subvault
-#           The flying skulls on lava.
-KFEAT:      u = lava
-KMONS:      u = flying skull
 :           volcano_setup(_G)
 : place_chained_volcano(_G)
 MAP
@@ -956,7 +958,7 @@ xLl.LlllllllllllllllllllllllllllL..y.BBBBBBBBBBBBBBBBBBBBBBBBBB
 xlllllllllllllllllGllllllllllllllLLxxBBBBBBBBBBBBBBBBBBBBBBBBBB
 xxlllllllllllllGlllllGllllllllllllxx BBBBBBBBBBBBBBBBBBBBBBBBBB
  xxlllllllllllVlllllllVllllllllllxx  BBBBBBBBBBBBBBBBBBBBBBBBBB
-  xxullllllllGlllllllllGllllllluxx   BBBBBBBBBBBBBBBBBBBBBBBBBB
+  xxUllllllllGlllllllllGlllllllUxx   BBBBBBBBBBBBBBBBBBBBBBBBBB
    xxxllllllllllllllllllllllllxxx    BBBBBBBBBBBBBBBBBBBBBBBBBB
      xxllllllllGlllllGlllllllxx      BBBBBBBBBBBBBBBBBBBBBBBBBB
       xxllllllllllGlllllllllxx       BBBBBBBBBBBBBBBBBBBBBBBBBB
@@ -1124,9 +1126,9 @@ ORIENT:     encompass
 WEIGHT:     20
 SUBST:      p = lw, W = wW`, q = ll`, r = lx
 SHUFFLE:    JK / LM / NO
-NSUBST:     J = 4=. / $def
-NSUBST:     L = 3=1 / 12. / 2=2 / 3=$def / .
-NSUBST:     N = 2=1 / 12. / 1=2 / 1=$def / .
+NSUBST:     J = 4:. / * = $def
+NSUBST:     L = 3:1 / 1:12. / 1:2 / 1:23 / 3 = $def / *:.
+NSUBST:     N = 2:1 / 1:12. / 1:23 / 1 = $def / *:.
 SUBST:      K = ^, MO = ., . = .:99 ^:1
 KPROP:      ` = no_tele_into
 :           fiery_guardians(_G, true, true)
@@ -1505,65 +1507,6 @@ llllll....4...ccccc....4....llll
      llllllllllllllllllllll
 ENDMAP
 ###############################################################################
-
-###############################################################################
-# Let's go, Overflow!
-#
-# You don't have much time to get the loot, as the Volcano is spitting out lava
-# like there's no tomorrow! Of course, if you can fly, you've got a good chance
-# of getting everything. If you get stuck, you can just wait it out.
-#
-# Original idea by dpeg.
-NAME:    volcano_overflow
-TAGS:    no_item_gen no_monster_gen no_rotate
-ORIENT:  encompass
-WEIGHT:  10
-MONS:    gargoyle / fire elemental
-MONS:    efreet / molten gargoyle
-{{
--- So we know what to convert.
-lua_marker("A", portal_desc { lava_phase=2 })
-lua_marker("B", portal_desc { lava_phase=4 })
-lua_marker("C", portal_desc { lava_phase=6 })
-
--- And finally, let's convert it
-local sink_marker = TriggerableFunction:new {
-  func = "volcano_overflow_convert_lava",
-  repeated = true,
-  data = {lava_phase=0}
-}
-
-sink_marker:add_triggerer(DgnTriggerer:new {
-  type="turn",
-  delay_min=200,
-  delay_max=400, })
-
-lua_marker("M", sink_marker)
-}}
-SUBST:  M = c
-NSUBST: ABC = 6:d / 6:e / 3:f / 3:* / 6:g / 6:h / *:.
-NSUBST: 1 = 2:2 / *:1
-: volcano_setup(_G)
-MAP
-                xxxx         xxx xxx                   xxx
-        xxxxx  xx..xxx     xxx.xxx.xxxx xxxxx xxx     xx.xx
-       xx...xxxx.CC..xxx xxx..C.1.C...xxxx..xxx.xxx xxx.C.xx
-     xxx.CBB....CBBCC..xxx..CCBBCCBBCB....CC...C..xxx..CBC.xx
-   xxx..CBABCCCCBAABBB......BBAABBBABBBCCCCBCCBBCC...CCBBBC.xx
- xxx..CBAAlABBBBAllAAABBBBBBAAllAAAlAAABBBBBBBBBBBCCCBAABC.xx
-xx.1CBAAllllAAAAllllllAAAAAAlllllllllllAAABBC...CBBAAlABC.xx
- xx..CBAlllllllllllllllllllllllllllllllllABC.xxx..CBAllBC.xx
-  xxx.CBAlllllllllllllllllAAAlllllllllllABC.xxAxxx.CBlllBC.xx
-    xx.CBAlllAAllllllllAAABBBAAAlllllllABC.xx<...xx.CBAllBC.xx
-     xx.CBAlABBAllllllABCC...CCBAlllllllABC.xxx...xx.CAllABC.x
-      x.CBAABCCBAllllABCC.xxx.CBBAllllllABBC..x......CBllAAB.xx
-    xxx.CBAB...CBAAAABC..xx xx.CCBAllllAAABC.xx...xx.CBAAABC.xx
-   xx..CBB..xxx..CBBBC1xxx   xx..CBAAAABBC......xxx.CCBBBC.1xx
-   x..CC..xxx xxx..C..xx      xxx..CBBBC..xxxxxxx xx..CC..xxx
-   xxx1.xxx     xxx.xxx    M    xxx..C..xxx        xxx..xxx
-     xxxx         xxx             xxx.xxx            xxxx
-                                    xxx
-ENDMAP
 
 ###############################################################################
 # Venture into the center of the Earth! Or a volcano. The dinosaurs await...

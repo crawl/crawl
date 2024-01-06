@@ -364,13 +364,6 @@ bool fire_warn_if_impossible(bool silent, item_def *weapon)
     return false;
 }
 
-// Dimensional Bullseye requires MP per shot.
-bool is_bullseye_active()
-{
-    return !you.confused() && you.duration[DUR_DIMENSIONAL_BULLSEYE]
-           && enough_mp(1, true, false);
-}
-
 class ammo_only_action_cycler : public quiver::action_cycler
 {
 public:

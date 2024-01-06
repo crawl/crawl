@@ -293,6 +293,7 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 void uskayaw_prepares_audience();
 void uskayaw_bonds_audience();
 
+void wu_jian_trigger_serpents_lash(bool wall_jump, const coord_def& old_pos);
 void wu_jian_heaven_tick();
 void wu_jian_decrement_heavenly_storm();
 void wu_jian_end_heavenly_storm();

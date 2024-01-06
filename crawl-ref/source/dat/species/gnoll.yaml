@@ -7,7 +7,7 @@ aptitudes:
   xp: 0
   hp: 0
   mp_mod: 0
-  mr: 3
+  wl: 3
   fighting: 8
   short_blades: 8
   long_blades: 8
@@ -52,3 +52,5 @@ recommended_jobs:
   - JOB_HEXSLINGER
   - JOB_SHAPESHIFTER
   - JOB_WANDERER
+
+child_name: Pup

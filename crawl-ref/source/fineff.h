@@ -427,21 +427,24 @@ public:
     void fire() override;
 
     static void schedule(coord_def pos, mgen_data mg, int xl,
-                         const string &agent, const string &msg)
+                         const string &agent, const string &msg,
+                         spell_type spell = SPELL_NO_SPELL)
     {
-        final_effect::schedule(new make_derived_undead_fineff(pos, mg, xl, agent, msg));
+        final_effect::schedule(new make_derived_undead_fineff(pos, mg, xl, agent, msg, spell));
     }
 protected:
     make_derived_undead_fineff(coord_def pos, mgen_data _mg, int _xl,
-                               const string &_agent, const string &_msg)
+                               const string &_agent, const string &_msg,
+                               spell_type _spell)
         : final_effect(0, 0, pos), mg(_mg), experience_level(_xl),
-          agent(_agent), message(_msg)
+          agent(_agent), message(_msg), spell(_spell)
     {
     }
     mgen_data mg;
     int experience_level;
     string agent;
     string message;
+    spell_type spell;
 };
 
 class mummy_death_curse_fineff : public final_effect

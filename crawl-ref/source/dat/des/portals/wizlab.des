@@ -167,19 +167,11 @@ function wizlab_doroklohe_convert_boxes(data, triggerable, triggerer,
 
   if data.phase == 1 then
     data.phase = data.phase + 1
-    if you.silenced() then
-      crawl.mpr("The ground shakes.", "warning")
-    else
-      crawl.mpr("There is a faint hissing noise.", "warning")
-    end
+    crawl.mpr("The walls briefly shake.", "warning")
     return
   elseif data.phase == 2 then
     data.phase = data.phase + 1
-    if you.silenced() then
-      crawl.mpr("The ground shakes.", "warning")
-    else
-      crawl.mpr("There is a loud grinding noise.", "warning")
-    end
+    crawl.mpr("The walls violently shake.", "warning")
     return
   elseif data.phase == 3 then
     data.phase = data.phase + 1
@@ -480,7 +472,7 @@ function wizlab_borgnjor_call_souls(data, triggerable, triggerer, marker, ev)
     return
   end
 
-  local msp = "lost soul seen sum:call_lost_soul dur:1 generate_awake"
+  local msp = "lost soul seen sum:call_lost_souls dur:1 generate_awake"
 
   local count = 0
   for point in iter.circle_iterator(6) do
@@ -1170,15 +1162,20 @@ KMONS:      | = hell sentinel / brimstone fiend / tzitzimitl /\
 KMONS:      0% = place:Depths:1 zombie / guardian mummy w:4
 KMONS:      * = zombie / mummy priest w:6
 KMONS:      | = ancient lich / dread lich / royal mummy w:20
-:           set_random_mon_list("place:Depths:1 zombie / zombie / guardian mummy")
+:           set_random_mon_list("place:Depths:1 zombie / guardian mummy")
 :           end
+
+#           Hints.
+KITEM:      ' = wand of digging charges:1 ident:type
+KITEM:      " = scroll of revelation q:1 ident:type
 #           Loot.
 #           0 = scrolls. 1 = armours. 2 = mixed.
 :           local lrnd = crawl.random2(3)
 :           if lrnd == 0 then
 KITEM:      % = any scroll / any scroll q:2 w:3 / any scroll q:3 w:1
 :           kitem("* = " .. dgn.good_scrolls)
-KITEM:      | = scroll of acquirement q:1 ident:type / scroll of enchant weapon q:3 ident:type /\
+KITEM:      | = scroll of acquirement q:1 ident:type / \
+                scroll of enchant weapon q:3 ident:type / \
                 scroll of blinking q:2 ident:type, scroll of fog q:2 ident:type
 :           elseif lrnd == 1 then
 KITEM:      % = any armour
@@ -1249,7 +1246,7 @@ MAP
 ^____________...................____________^
 ^________________...........________________^
 ^^^^^^^^^^^^^^^^^^^^^^#^^^^^^^^^^^^^^^^^^^^^^
-                ^____...____^
+                ^____'."____^
                 ^__.......__^
                 ^_...!+!..._^
                 ^_.<.+A+.<._^
@@ -1313,16 +1310,18 @@ KMONS:      0 = col:red iron golem hd:5 spells:corrupting_pulse.36.magical \
                 tile:mons_flesh_golem name_descriptor
 KMONS:      & = col:mutagenic primal ox-ox-weird mutant beast \
                 name:Cigotuvi's_Monster name_replace tile:mons_cigotuvis_monster
-ITEM:       potion of mutation
-ITEM:       potion of mutation q:1, potion of mutation
+ITEM:       potion of mutation q:1 ident:type
+ITEM:       randbook disc:alchemy disc2:necromancy owner:Cigotuvi
+ITEM:       flux talisman randart / maw talisman randart / \
+            serpent talisman randart / statue talisman w:8 / \
+            dragon-blood talisman / storm talisman w:8 / \
+            talisman of death w:2
+ITEM:       staff of death ident:type, scroll of poison ident:type
 ITEM:       w:5 any jewellery randart / w:5 hat_of_the_alchemist / \
             cigotuvi's_embrace
-ITEM:       randbook disc:alchemy disc2:necromancy owner:Cigotuvi
-ITEM:       any talisman
-ITEM:       staff of death, scroll of poison
-SHUFFLE:    de / h~ / j|
-NSUBST:     de = 1:e / 1:f / *:d, g = 1:g / *:$
-NSUBST:     h = 1:h / 2:i / *:., j = 1:j / *:k
+SHUFFLE:    d^ / e~ / g|
+NSUBST:     ^ = 2:d / 2:. / * = dd., e = 1:e / 2:f / *:.
+NSUBST:     g = 1:g / *:h, i = 1:i / *:$
 SUBST:      4 = 4 5:2, " = 6:1 .:16, |~ = .
 KPROP:      -FGHIJKPR = no_tele_into
 SUBST:      - = ., F = 1, G = 2, H = 3, I = 4, J = 6, K = 7, P = !, R = W
@@ -1368,21 +1367,21 @@ epilogue{{
 }}
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccc
-ccjjjcccc|cccccccccccAccccccccccccWWWW~5hcccc
-c|...|c....|ccc---ccc+cccccccccccWh~~~.45hccc
-c|8........|cc-I---m...m--ccccccW~.....845hcc
-c.&5.......cc---G--m.7.m-F-cccccW~........hcc
+ccgggcccc|cccccccccccAccccccccccccWWWW~5ecccc
+c|...|c....|ccc---ccc+cccccccccccWe~~~.45eccc
+c|8........|cc-I---m...m--ccccccW~.....845ecc
+c.&5.......cc---G--m.7.m-F-cccccW~........ecc
 c.8........cc---H--m...m-I--ccccW~.......~Wcc
 c|.........cc-cccccm...mc---ccccc.......~Wccc
-c|...|ccc+ccccc--cccc+cccccccccccc.....hWcccc
-ccjjjccc..ccccIII-cm...m--H--ccccc+cccccccccc
+c|...|ccc+ccccc--cccc+cccccccccccc.....eWcccc
+ccgggccc..ccccIII-cm...m--H--ccccc+cccccccccc
 cccccccc..ccc--P---m.7.m-F--cccccc""ccccccccc
-cceecccc..ccc-III--m...m---ccccccc""cc$$g$$cc
-ceddecc...cccc----cm...m-cccRccccc""c...c...c
-cedde+...cccccc--cccc+cccc---Rcccc""c...c...c
-ceddec...ccccccccc-m...m-KK---Rccc""ccc+c+ccc
-cceccccc+cccccccc--m.7.m---I--Rccc""c...9...c
-ccccccc...cccc---F-m...m----K-ccgc""c...6...c
+cc^^cccc..ccc-III--m...m---ccccccc""cc$$i$$cc
+c^dd^cc...cccc----cm...m-cccRccccc""c...c...c
+c^dd^+...cccccc--cccc+cccc---Rcccc""c...c...c
+c^dd^c...ccccccccc-m...m-KK---Rccc""ccc+c+ccc
+cc^ccccc+cccccccc--m.7.m---I--Rccc""c...9...c
+ccccccc...cccc---F-m...m----K-ccic""c...6...c
 cccc.........c--G--m...mc----cc$$c""c..6669.c
 c.67...ccc...cc--cccc+cccc--ccc+cc""c..66..cc
 c...ccccccc+cccccc.m.....cccc.666c""+.....ccc
@@ -2354,7 +2353,7 @@ MONS:   flayed ghost / shadow wraith / eidolon
 MONS:   spriggan berserker zombie / titan zombie / spark wasp zombie /\
         harpy zombie / quicksilver dragon zombie / wolf spider zombie /\
         caustic shrike zombie / skeletal warrior w:30 / jiangshi w:30
-MONS:   ancient champion / revenant, flying skull
+MONS:   ancient champion / revenant, laughing skull
 MONS:   deep elf death mage / vampire mage / necromancer, halazid warlock
 ITEM:   randbook disc:necromancy numspells:6 owner:Borgnjor w:5 / any book /\
         necronomicon / randbook disc:necromancy / staff of death /\
@@ -2371,7 +2370,7 @@ SHUFFLE: 12/34
 NSUBST:  7 = 3:7 / 1:. / * = 775., 6 = 2:6 / * = 6.
 NSUBST:  4 = 2:4 / 1:. / *=4.., 2 = 2:2 / * = 2..
 NSUBST:  A = 1:< / *:A
-SUBST:   1 = 1.., 3 = 3.., 5 = 5.., V = VVVY
+SUBST:   1 = 1.., 3 = 3.., 5 = 55..., V = VVVY
 TILE:    c = wall_borg_stone
 LFLOORTILE: floor_borg
 {{
@@ -2395,12 +2394,12 @@ epilogue {{
 MAP
              ccccc
            ccc565ccc
-          cc55.5.55cc
-         cc..55755..cc
+          cc.5...5.cc
+         cc..5.7.5..cc
         cc5.5c+++c5.5cc
-        c6.5cc.5.cc5.6c
-       cc5.cc5.7.5cc.5cc
-       c...c5.555.5c...c
+        c6..cc...cc..6c
+       cc5.cc..7..cc.5cc
+       c...c5.5.5.5c...c
        c2.2cY57575Yc4.4c
        c.5.c.76.67.c.5.c
       ccc..cc.$$$.cc..ccc

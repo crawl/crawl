@@ -57,6 +57,7 @@
 #include "mon-behv.h"
 #include "mon-cast.h" // mons_spell_range
 #include "mon-death.h"
+#include "mon-explode.h" // mon_explode_dam/on_death
 #include "mon-tentacle.h"
 #include "movement.h"
 #include "mutation.h" // mutation_name, get_mutation_desc
@@ -79,7 +80,6 @@
 #include "stringutil.h" // to_string on Cygwin
 #include "tag-version.h"
 #include "terrain.h"
-#include "throw.h" // is_pproj_active for describe_to_hit
 #include "tile-flags.h"
 #include "tilepick.h"
 #ifdef USE_TILE_LOCAL
@@ -100,7 +100,6 @@ using namespace ui;
 static command_type _get_action(int key, vector<command_type> actions);
 static void _print_bar(int value, int scale, const string &name,
                        ostringstream &result, int base_value = INT_MAX);
-static string _padded(string str, int pad_to, bool prepend = false);
 
 static void _describe_mons_to_hit(const monster_info& mi, ostringstream &result);
 static string _describe_weapon_brand(const item_def &item);
@@ -844,11 +843,12 @@ static string _format_dbrand(string dbrand)
             out.push_back(brand[0]);
         else
         {
-            // XX this padding technique breaks with wide chars, e.g. Will-∞
-            out.push_back(make_stringf("%-*s %s",
-                    MAX_ARTP_NAME_LEN + 1,
-                    (brand[0] + ":").c_str(),
-                    brand[1].c_str()));
+            ASSERT(brand.size() == 2);
+            const string &desc = brand[1];
+            const int prefix_len = max(MAX_ARTP_NAME_LEN, (int)brand[0].size());
+            const string pre = padded_str(brand[0] + ":", prefix_len + 2);
+                                                          // +2 for ": "
+            out.push_back(pre + desc);
         }
     }
     return join_strings(out.begin(), out.end(), "\n");
@@ -4226,13 +4226,13 @@ static string _miscast_damage_string(spell_type spell)
         { spschool::ice, "cold" },
         { spschool::air, "electric" },
         { spschool::earth, "fragmentation" },
-        { spschool::alchemy, "alchemy" },
     };
 
     const map <spschool, string> special_flavor = {
         { spschool::summoning, "summons a nameless horror" },
         { spschool::translocation, "anchors you in place" },
         { spschool::hexes, "slows you" },
+        { spschool::alchemy, "poisons you" },
     };
 
     spschools_type disciplines = get_spell_disciplines(spell);
@@ -4764,7 +4764,6 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_ELEC,              "electric damage" },
         { AF_FIRE,              "fire damage" },
         { AF_SEAR,              "remove fire resistance" },
-        { AF_MUTATE,            "cause mutations" },
         { AF_MINIPARA,          "poison and momentary paralysis" },
         { AF_POISON_PARALYSE,   "poison and paralysis/slowing" },
         { AF_POISON,            "poison" },
@@ -4773,7 +4772,6 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_DISTORT,           "distortion" },
         { AF_RIFT,              "distortion" },
         { AF_RAGE,              "drive defenders berserk" },
-        { AF_STICKY_FLAME,      "sticky flame" },
         { AF_CHAOTIC,           "chaos" },
         { AF_STEAL,             "steal items" },
         { AF_CRUSH,             "begin ongoing constriction" },
@@ -4900,7 +4898,7 @@ static string _monster_attacks_description(const monster_info& mi)
         const bool needs_dam = !flavour_triggers_damageless(attack.flavour)
                             && !flavour_has_mobility(attack.flavour)
                             && !flavour_has_reach(attack.flavour);
-        if (!needs_dam)
+        if (!needs_dam && attack.flavour != AF_REACH_TONGUE)
             flavour_without_dam = true;
     }
 
@@ -4910,8 +4908,8 @@ static string _monster_attacks_description(const monster_info& mi)
     _describe_mons_to_hit(mi, result);
 
     // Table header.
-    result << _padded(plural ? "Attacks" : "Attack", 12)
-           << _padded("Max Damage", 20);
+    result << padded_str(plural ? "Attacks" : "Attack", 12)
+           << padded_str("Max Damage", 20);
     if (has_any_flavour)
         result << (flavour_without_dam ? "Bonus" : "After Damaging Hits");
     result << "\n";
@@ -4932,7 +4930,7 @@ static string _monster_attacks_description(const monster_info& mi)
         string attk_desc = attk_name;
         if (attk_mult > 1)
             attk_desc = make_stringf("%dx %s", attk_mult, attk_desc.c_str());
-        result << _padded(attk_desc, 12);
+        result << padded_str(attk_desc, 12);
 
         const int flav_dam = flavour_damage(attack.flavour, mi.hd, false);
 
@@ -4948,10 +4946,10 @@ static string _monster_attacks_description(const monster_info& mi)
                 dam += info.weapon->plus;
         }
 
-        result << _padded(make_stringf("%d%s%s", dam,
-                                       attk_mult > 1 ? " each" : "",
-                                       info.weapon ? " (w/weapon)" : ""),
-                          20);
+        result << padded_str(make_stringf("%d%s%s", dam,
+                                          attk_mult > 1 ? " each" : "",
+                                          info.weapon ? " (w/weapon)" : ""),
+                             20);
 
         if (special_flavour != SPWPN_NORMAL)
         {
@@ -5205,27 +5203,6 @@ static void _print_bar(int value, int scale, const string &name,
 #endif
 }
 
-static int _codepoints(string str)
-{
-    int len = 0;
-    for (char c : str)
-        if ((c & 0xc0) != 0x80)
-            ++len;
-    return len;
-}
-
-static string _padded(string str, int pad_to, bool prepend)
-{
-    const int padding = pad_to - _codepoints(str);
-    if (padding <= 0)
-        return str;
-    if (prepend)
-        str.insert(0, string(padding, ' '));
-    else
-        str.append(padding, ' ');
-    return str;
-}
-
 static string _build_bar(int value, int scale)
 {
     // Round up.
@@ -5422,6 +5399,7 @@ struct TableCell
     colour_t colour;
 };
 
+// TODO: This is similar to column_composer. Deduplicate?
 class TablePrinter
 {
 private:
@@ -5445,7 +5423,7 @@ public:
         {
             for (size_t col = 0; col < rows[row].size(); ++col)
             {
-                const int label_len = _codepoints(rows[row][col].label);
+                const int label_len = codepoints(rows[row][col].label);
                 if (col == labels_lengths_by_col.size())
                     labels_lengths_by_col.push_back(label_len);
                 else
@@ -5463,11 +5441,11 @@ public:
                     continue; // padding
 
                 const int label_len = labels_lengths_by_col[col];
-                const string label = _padded(cell.label, label_len, true);
+                const string label = padded_str(cell.label, label_len, true);
                 const string body = make_stringf("%s: %s",
                                                  label.c_str(),
                                                  cell.value.c_str());
-                result << colourize_str(_padded(body, cell_len), cell.colour);
+                result << colourize_str(padded_str(body, cell_len), cell.colour);
             }
             result << "\n";
         }
@@ -5551,6 +5529,15 @@ static void _add_resist_desc(TablePrinter &pr, resists_t resist_set)
     pr.AddRow();
     for (mon_resist_flags rflags : common_resists)
         _desc_mon_resist(pr, resist_set, rflags);
+}
+
+static void _desc_mon_death_explosion(ostringstream &result,
+                                      const monster_info &mi)
+{
+    if (mi.type == MONS_LURKING_HORROR)
+        return; // no damage number
+    const dice_def dam = mon_explode_dam(mi.type, mi.hd);
+    result << "Explosion damage: " << dam.num << "d" << dam.size << "\n";
 }
 
 // Describe a monster's (intrinsic) resistances, speed and a few other
@@ -5813,6 +5800,9 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
         }
         result << "\n";
     }
+
+    if (mon_explodes_on_death(mi.type))
+        _desc_mon_death_explosion(result, mi);
 
     result << _monster_missiles_description(mi);
     result << _monster_habitat_description(mi);

@@ -1906,16 +1906,15 @@ ENDMAP
 NAME:   nicolae_vaults_storage_room_doors
 TAGS:   vaults_empty no_windows
 WEIGHT: 5
-SUBST: + = .+++
-:lua_marker('+', props_marker { connected_exclude="true" })
+: lua_marker('+', props_marker { connected_exclude="true" })
 MAP
 +++...+++
 +++...+++
-+++++++++
+.+++++++.
 ..+++++..
+..++.++..
 ..+++++..
-..+++++..
-+++++++++
+.+++++++.
 +++...+++
 +++...+++
 ENDMAP

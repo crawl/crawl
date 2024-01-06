@@ -359,10 +359,7 @@ Tomb
 %%%%
 Agony spell
 
-“Unbearable, isn't it? The suffering of strangers, the agony of friends. There
- is a secret song at the center of the world, Joey, and its sound is like
- razors through flesh.”
-    -Pinhead, _Hellraiser 3: Hell on Earth_. 1992.
+<Curse of Agony spell>
 %%%%
 Animate Dead spell
 
@@ -377,7 +374,7 @@ Animate Dead spell
 %%%%
 Awaken Forest spell
 
- • Hel: [died to] Infection! She's mine!
+ • Hel: [She died to] Infection! She's mine!
  — Thor: From a splinter that she got bravely fighting an elm!
  • Hel: Trees are inanimate plants, you buffoon!
  — Thor: Bravery knows no limits!
@@ -401,6 +398,12 @@ Bend Time ability
  Time is fleeting
  Madness takes its toll”
     -Richard O'Brien, “Time Warp”. 1975.
+%%%%
+Brain Bite spell
+
+“Lister: I know what you want. It's pink and it's moist and it's in my head. And
+         that's where it's staying.”
+    -Red Dwarf, _Psirens_. 1993.
 %%%%
 Call Canine Familiar spell
 
@@ -444,6 +447,13 @@ Corrupt ability
   With broken boot heels stained in many gutters]
  And as he sang the world began to fall apart . . .”
     -T.S. Eliot, “Prufrock's Pervigilium”. 1912 (published 1996).
+%%%%
+Curse of Agony spell
+
+“Unbearable, isn't it? The suffering of strangers, the agony of friends. There
+ is a secret song at the center of the world, Joey, and its sound is like
+ razors through flesh.”
+    -Pinhead, _Hellraiser 3: Hell on Earth_. 1992.
 %%%%
 Dragon's Call spell
 
@@ -915,6 +925,18 @@ dire flail
 when they see their doughty knight's skull beaten in by our brave countryman.’”
     -_Tales of Chivalry; or, Perils by Flood and Field_. 1830.
 %%%%
+dreamdust necklace
+
+<dreamshard necklace>
+%%%%
+dreamshard necklace
+
+“I never knew, I never thought,
+ Such bliss as this could fill me with a love divine,
+ I'm afraid I'll wake and find it was only in my mind,
+ Was it a dream, or are you really mine?”
+    -Dick Powell, "Was It a Dream?". 1928.
+%%%%
 eudemon blade
 
 <demon blade>
@@ -1080,6 +1102,12 @@ horn of Geryon
 ice dragon scales
 
 <steam dragon scales>
+%%%%
+iron giant
+
+"You're made of metal, but you have feelings, and you think about things,
+ and that means you have a soul. And souls don't die."
+    -_The Iron Giant_. 1999
 %%%%
 javelin
 
@@ -1351,8 +1379,8 @@ ring of ice
 %%%%
 ring of intelligence
 
-“HOBBES: Did it work?
- CALVIN: I think so.
+“Hobbes: Did it work?
+ Calvin: I think so.
          I feel smarter already.”
     -Bill Watterson, _Calvin and Hobbes_. November 19, 1993.
 %%%%
@@ -1519,11 +1547,11 @@ scroll of fear
 %%%%
 scroll of fog
 
-“I used to hate writing assignments, but now I enjoy them. I realized that the
- purpose of writing is to inflate weak ideas, obscure poor reasoning, and
- inhibit clarity. With a little practice, writing can be an intimidating and
- impenetrable fog!”
-    -Bill Watterson, _Calvin and Hobbes_. February 11th, 1993
+“Calvin: I used to hate writing assignments, but now I enjoy them. I realized
+         that the purpose of writing is to inflate weak ideas, obscure poor
+         reasoning, and inhibit clarity. With a little practice, writing can be
+         an intimidating and impenetrable fog!”
+    -Bill Watterson, _Calvin and Hobbes_. February 11th, 1993.
 %%%%
 scroll of identify
 
@@ -2862,13 +2890,6 @@ flayed ghost
 “Solamen miseris socios habuisse doloris.”
     -Christopher Marlowe, _Doctor Faustus_. 1604
 %%%%
-flying skull
-
-“Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most
- excellent fancy. He hath bore me on his back a thousand times, and now how
- abhorr'd in my imagination it is! My gorge rises at it.”
-    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, V, 1. 1603
-%%%%
 formless jellyfish
 
 “From this story it is evident that in former times the jellyfish once had a
@@ -4012,6 +4033,13 @@ war gargoyle
     -Victor Hugo, _The Hunchback of Notre-Dame_, 10, ch. IV. 1831.
      trans. Isabel F. Hapgood
 %%%%
+weeping skull
+
+“Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most
+ excellent fancy. He hath bore me on his back a thousand times, and now how
+ abhorr'd in my imagination it is! My gorge rises at it.”
+    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, V, 1. 1603
+%%%%
 wolf
 
 “Teacher: How does a dog smell?
@@ -4090,4 +4118,8 @@ zombie
  around the habitation or the farm, setting it dull heavy tasks, and beating it
  like a dumb beast if it slackens.”
     -William Seabrook, _The Magic Island_. 1929.
+
+“They’re not afraid! No matter what we do, no matter how many we kill, they will
+ never, ever be afraid!”
+    -Max Brooks, _World War Z: An Oral History of the Zombie War_. 2006.
 %%%%

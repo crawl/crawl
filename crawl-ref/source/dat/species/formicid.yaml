@@ -10,7 +10,7 @@ aptitudes:
   xp: 1
   hp: 0
   mp_mod: 0
-  mr: 4
+  wl: 4
   fighting: 1
   armour: 1
   dodging: -1
@@ -52,3 +52,5 @@ recommended_weapons:
   - SK_AXES
   - SK_POLEARMS
   - SK_STAVES
+
+child_name: Larva

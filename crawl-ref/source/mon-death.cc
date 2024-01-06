@@ -1203,7 +1203,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
     bool requires_corpse = which_z == MONS_ZOMBIE || which_z == MONS_SKELETON;
     // This function is used by several different sorts of things, each with
     // their own validity conditions that are enforced here
-    // - Simulacrum, Death Channel and Yred reaping of unzombifiable things:
+    // - Bind Souls, Death Channel and Yred reaping of unzombifiable things:
     if (!requires_corpse
         && !mons_can_be_spectralised(*mons, god == GOD_YREDELEMNUL))
     {
@@ -1273,17 +1273,6 @@ static void _make_derived_undead(monster* mons, bool quiet,
                            _derived_undead_message(*mons, which_z, mist);
     make_derived_undead_fineff::schedule(mons->pos(), mg,
             mons->get_experience_level(), agent_name, message);
-}
-
-static void _make_simulacra(monster* mons, int pow, god_type god)
-{
-    const int count = 1 + random2(1 + div_rand_round(pow, 40));
-    for (int i = 0; i < count; ++i)
-    {
-        _make_derived_undead(mons, false, MONS_SIMULACRUM, BEH_FRIENDLY,
-                SPELL_SIMULACRUM, god);
-    }
-    mpr("A freezing mist starts to gather...");
 }
 
 static void _druid_final_boon(const monster* mons)
@@ -1429,6 +1418,71 @@ static void _protean_explosion(monster* mons)
     }
 }
 
+static void _martyr_death_wail(monster &mons)
+{
+    if (you.can_see(mons))
+    {
+        if (mons.friendly())
+        {
+            mprf(MSGCH_FRIEND_SPELL,
+                 "%s wails in agony as it relives its own death.",
+                 mons.name(DESC_YOUR).c_str());
+        }
+        else
+        {
+            mprf(MSGCH_MONSTER_SPELL,
+                 "%s wails in agony as it relives its own death.",
+                 mons.name(DESC_THE).c_str());
+        }
+    }
+
+    // Save the HD of our shade, because it will otherwise be reset on changing
+    int old_hd = mons.get_hit_dice();
+    change_monster_type(&mons, MONS_FLAYED_GHOST);
+    mons.max_hit_points = mons.max_hit_points * old_hd / mons.get_hit_dice();
+    mons.set_hit_dice(old_hd);
+
+    // Reset duration on its summoning, but move it out of martyr's summon cap
+    mons.del_ench(ENCH_ABJ, true, false);
+    mons.del_ench(ENCH_SUMMON, true, false);
+    mons.mark_summoned(2, true, SPELL_NO_SPELL, true);
+    mons.heal(50000);
+
+    // Show brief animation
+    bolt visual;
+    visual.target = mons.pos();
+    visual.source = mons.pos();
+    visual.aimed_at_spot = true;
+    visual.colour = ETC_DARK;
+    visual.glyph      = '*';
+    visual.draw_delay = 100;
+    visual.flavour = BEAM_VISUAL;
+    visual.fire();
+
+    // Have it instantly flay a few nearby things
+    vector <actor*> targets;
+    for (actor_near_iterator ai(mons.pos(), LOS_NO_TRANS); ai; ++ai)
+    {
+        if (!mons_aligned(&mons, *ai) && !!(ai->holiness() & MH_NATURAL))
+            targets.push_back(*ai);
+    }
+    shuffle_array(targets);
+
+    int num_victims = min((int)targets.size(), random_range(2, 3));
+
+    // Dummy arguments
+    mon_spell_slot slot = { SPELL_FLAY, 0, MON_SPELL_MAGICAL };
+    bolt _bolt;
+
+    for (int i = 0; i < num_victims; ++i)
+    {
+        mons.foe = targets[i]->mindex();
+        mons_cast_flay(mons, slot ,_bolt);
+    }
+
+    return;
+}
+
 static bool _mons_reaped(actor &killer, monster& victim)
 {
     beh_type beh;
@@ -1527,18 +1581,10 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool corpse_gone,
         return false;
 
     // Yred takes priority over everything but Infestation.
-    // (Maybe Simulacrum should also be allowed? Or Infestation shouldn't?)
     if (in_los && have_passive(passive_t::reaping))
     {
         if (yred_reap_chance())
             _yred_reap(mons, corpse_gone);
-        return true;
-    }
-
-    if (mons.has_ench(ENCH_SIMULACRUM) && !have_passive(passive_t::goldify_corpses))
-    {
-        const int simu_pow = mons.props[SIMULACRUM_POWER_KEY].get_int();
-        _make_simulacra(&mons, simu_pow, GOD_NO_GOD);
         return true;
     }
 
@@ -1915,6 +1961,64 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     bool did_death_message = false;
 
+    // We do some of these BEFORE checking for explosions from inner flame,
+    // if we don't want to prevent inner flame from doing certain effects of
+    // cleanup.
+    //
+    // (It's possible some other things should be moved here, but dead code that
+    // deals primarily with messaging seems fine to override by exploding)
+    if (mons.type == MONS_PROTEAN_PROGENITOR && !was_banished
+        && !wizard && !mons_reset)
+    {
+        _protean_explosion(&mons);
+        silent = true;
+    }
+    else if (mons.type == MONS_BATTLESPHERE)
+    {
+        if (!wizard && !mons_reset && !was_banished
+            && !cell_is_solid(mons.pos()))
+        {
+            place_cloud(CLOUD_MAGIC_TRAIL, mons.pos(), 3 + random2(3), &mons);
+        }
+        end_battlesphere(&mons, true);
+    }
+    else if (mons.type == MONS_SPECTRAL_WEAPON)
+    {
+        end_spectral_weapon(&mons, true, killer == KILL_RESET);
+        silent = true;
+    }
+    else if (mons.type == MONS_SPRIGGAN_DRUID && !silent && !was_banished
+             && !wizard && !mons_reset)
+    {
+        _druid_final_boon(&mons);
+    }
+    // Only transform if we 'died' to timeout. Something simply dealing damage
+    // to us can still shatter us.
+    else if (mons.type == MONS_BLOCK_OF_ICE
+             && mons.has_ench(ENCH_SIMULACRUM_SCULPTING)
+             && timeout)
+    {
+        mgen_data simu = mgen_data(MONS_SIMULACRUM, BEH_COPY, mons.pos(),
+                            BEH_FRIENDLY, MG_AUTOFOE | MG_FORCE_PLACE)
+                         .set_summoned(&you, 0, SPELL_SIMULACRUM, GOD_NO_GOD);
+        simu.base_type = (monster_type)mons.props[SIMULACRUM_TYPE_KEY].get_int();
+
+        // If the monster we want to create cannot occupy the tile the block of
+        // ice is on, try to find some nearby spot where it can.
+        // (Mostly this is an issue with kraken simulacra, at present.)
+        if (!monster_habitable_grid(simu.base_type, env.grid(mons.pos())))
+            find_habitable_spot_near(mons.pos(), simu.base_type, 3, true, simu.pos);
+
+        string msg = "Your " + mons_type_name(simu.base_type, DESC_PLAIN) +
+                     " simulacrum begins to move.";
+        make_derived_undead_fineff::schedule(simu.pos, simu,
+                                             get_monster_data(simu.base_type)->HD,
+                                             "the player",
+                                             msg.c_str(),
+                                             SPELL_SIMULACRUM);
+
+        silent = true;
+    }
 
     if (monster_explodes(mons))
     {
@@ -2055,24 +2159,10 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (killer == KILL_RESET)
             killer = KILL_DISMISSED;
     }
-    else if (mons.type == MONS_BATTLESPHERE)
-    {
-        if (!wizard && !mons_reset && !was_banished
-            && !cell_is_solid(mons.pos()))
-        {
-            place_cloud(CLOUD_MAGIC_TRAIL, mons.pos(), 3 + random2(3), &mons);
-        }
-        end_battlesphere(&mons, true);
-    }
     else if (mons.type == MONS_BRIAR_PATCH)
     {
         if (timeout && !silent)
             simple_monster_message(mons, " crumbles away.");
-    }
-    else if (mons.type == MONS_SPECTRAL_WEAPON)
-    {
-        end_spectral_weapon(&mons, true, killer == KILL_RESET);
-        silent = true;
     }
     else if (mons.type == MONS_DROWNED_SOUL)
     {
@@ -2080,16 +2170,49 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (mons.hit_points == -1000)
             silent = true;
     }
-    else if (mons.type == MONS_SPRIGGAN_DRUID && !silent && !was_banished
-             && !wizard && !mons_reset)
+    else if (mons.type == MONS_BLAZEHEART_GOLEM && !silent && !mons_reset
+             && !was_banished && !wizard)
     {
-        _druid_final_boon(&mons);
+        // Only blow up if non-dormant
+        if (grid_distance(mons.pos(), you.pos()) <= 1)
+        {
+            mprf(MSGCH_WARN, "%s falls apart, revealing its core!",
+                 mons.name(DESC_YOUR).c_str());
+            change_monster_type(&mons, MONS_BLAZEHEART_CORE);
+
+            // Cores should not count as summons and either expire or be removed
+            // by recasting golem itself.
+            mons.del_ench(ENCH_ABJ, true, false);
+            mons.heal(50000);
+
+            // Give exactly enough energy to act immediately after the player's
+            // next action, but never blow up during the same action that the
+            // golem died.
+            mons.speed_increment = 79;
+
+            // Short-circuiting death, since we didn't 'die'
+            return nullptr;
+        }
+        else
+        {
+            simple_monster_message(mons, " falls apart and the last of its fire"
+                                         " goes out.");
+            silent = true;
+        }
     }
-    else if (mons.type == MONS_PROTEAN_PROGENITOR && !was_banished
-             && !wizard && !mons_reset)
+    else if (mons.type == MONS_MARTYRED_SHADE && !silent && !mons_reset
+             && !was_banished && !wizard)
     {
-        _protean_explosion(&mons);
-        silent = true;
+        // Don't cause transformation on the player killing their own shade.
+        // (Angering them will normally make them disappear, but if you do
+        // enough damage in one hit, you can still get here)
+        if (!YOU_KILL(killer) || mons.summoner != MID_PLAYER)
+        {
+            _martyr_death_wail(mons);
+
+            // Short-circuit this death
+            return nullptr;
+        }
     }
 
     check_canid_farewell(mons, !wizard && !mons_reset && !was_banished);
@@ -2102,8 +2225,10 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     // Adjust fugue of the fallen bonus. This includes both kills by you and
     // also by your allies.
-    if (you.duration[DUR_FUGUE] && gives_player_xp
-        && (killer == KILL_YOU || killer == KILL_YOU_MISSILE || pet_kill))
+    if (you.duration[DUR_FUGUE]
+        && (gives_player_xp
+            && (killer == KILL_YOU || killer == KILL_YOU_MISSILE || pet_kill))
+        || mons.props.exists(KIKU_WRETCH_KEY))
     {
         const int slaying_bonus = you.props[FUGUE_KEY].get_int();
         // cap at +7 slay (at which point you do bonus negative energy damage

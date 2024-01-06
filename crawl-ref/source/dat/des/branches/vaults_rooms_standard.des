@@ -2000,15 +2000,15 @@ KMONS:  L = 0 / nothing w:15
 NSUBST: p = + / x, q = + / x, r = + / x, s = + / x
 MAP
 ...........
-.(.xppx..(.
-...p..pL...
-..Lp.xxqqx.
-.xsxLpL..q.
-.s.xxxqx.q.
-.s..LrLxqx.
-.xssxx.rL..
-...Lr..r...
-.(..xrrx.(.
+.(.xpx...(.
+...p.pL....
+...p.xxqqx.
+..LxLpL..q.
+.xsxxxqxqx.
+.s..LrLxL..
+.xssxx.r...
+....Lr.r...
+.(...xrx.(.
 ...........
 ENDMAP
 

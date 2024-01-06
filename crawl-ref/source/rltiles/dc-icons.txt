@@ -68,7 +68,7 @@ injury_bond INJURY_BOND
 partially_charged PARTIALLY_CHARGED
 fully_charged FULLY_CHARGED
 repel_missiles REPEL_MISSILES
-simulacrum SIMULACRUM
+ghostly GHOSTLY
 still_winds STILL_WINDS
 waterlogged WATERLOGGED
 weakened WEAKENED
@@ -82,6 +82,7 @@ pain_bond PAIN_BOND
 paralysed PARALYSED
 bullseye BULLSEYE
 vitrified VITRIFIED
+curse_of_agony CURSE_OF_AGONY
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

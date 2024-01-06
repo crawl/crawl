@@ -353,14 +353,25 @@ NAME:   nicolae_hells_titanomachy
 TAGS:   no_monster_gen no_pool_fixup patrolling
 DEPTH:  Dis, !Dis:$, Geh, !Geh:$, Coc, !Coc:$, Tar, !Tar:$
 ORIENT: encompass
+WEIGHT: 5
 KMONS:  }1 = titan
-KMONS:  2 = tainted leviathan / iron giant / juggernaut
-KMONS:  3 = fire giant / frost giant / stone giant
 KFEAT:  } = }
 SUBST:  ` = L., - = Lx, S = 12, Z = 23, 1 = 11., 2 = 22., 3 = 33.
-: if you.in_branch("Dis") or you.in_branch("Geh") then
+: if you.in_branch("Dis") then
+KMONS:  2 = iron giant / juggernaut w:15
+KMONS:  3 = fire giant / frost giant / stone giant
 SUBST:  L = l
-: elseif you.in_branch("Coc") or you.in_branch("Tar") then
+: elseif you.in_branch("Geh") then
+KMONS:  2 = juggernaut
+KMONS:  3 = fire giant / frost giant skeleton / stone giant skeleton
+SUBST:  L = l
+: elseif you.in_branch("Coc") then
+KMONS:  2 = juggernaut
+KMONS:  3 = fire giant simulacrum / frost giant / stone giant simulacrum
+SUBST:  L = w
+: elseif you.in_branch("Tar") then
+KMONS:  2 = tainted leviathan / spectral juggernaut
+KMONS:  3 = fire giant zombie / frost giant zombie / stone giant
 SUBST:  L = w
 : end
 MAP

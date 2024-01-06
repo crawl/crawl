@@ -661,13 +661,21 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
     return hurted;
 }
 
-static int _count_adj_actors(coord_def pos)
+/**
+ * Returns the number of monsters adjacent to the given position which other
+ * monsters can huddle against. (Reducing damage taken from Refrigeration.)
+ */
+int adjacent_huddlers(coord_def pos)
 {
     int adj_count = 0;
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
         const actor* act = actor_at(*ai);
-        if (act && !mons_is_conjured(act->type))
+        if (!act || !act->is_monster())
+            continue;
+
+        const monster* mon = act->as_monster();
+        if (!mons_is_firewood(*mon) && !mons_is_conjured(mon->type))
             ++adj_count;
     }
     return adj_count;
@@ -806,7 +814,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
 
         // For perf, don't count when running tracers.
         if (spell == SPELL_OZOCUBUS_REFRIGERATION)
-            ozo_adj_count[*ai] = actual ? _count_adj_actors(ai->pos()) : 0;
+            ozo_adj_count[*ai] = actual ? adjacent_huddlers(ai->pos()) : 0;
     }
 
     const int avg_damage = (1 + beam.damage.num * beam.damage.size) / 2;
@@ -2540,7 +2548,7 @@ static int _discharge_monsters(const coord_def &where, int pow,
     return damage;
 }
 
-bool safe_discharge(coord_def where, vector<const actor *> &exclude)
+bool safe_discharge(coord_def where, vector<const actor *> &exclude, bool check_only)
 {
     for (adjacent_iterator ai(where); ai; ++ai)
     {
@@ -2556,13 +2564,16 @@ bool safe_discharge(coord_def where, vector<const actor *> &exclude)
                 if (act->res_elec() >= 3 || god_protects(act->as_monster()))
                     continue;
 
-                if (stop_attack_prompt(act->as_monster(), false, where))
+                if (stop_attack_prompt(act->as_monster(), false, where, nullptr,
+                                       coord_def(), check_only))
+                {
                     return false;
+                }
             }
             // Don't prompt for the player, but always continue arcing.
 
             exclude.push_back(act);
-            if (!safe_discharge(act->pos(), exclude))
+            if (!safe_discharge(act->pos(), exclude, check_only))
                 return false;
         }
     }
@@ -2999,7 +3010,7 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     beam.colour            = LIGHTCYAN;
     beam.range             = 1;
     beam.hit               = AUTOMATIC_HIT;
-    beam.ac_rule           = ac_type::proportional;
+    beam.ac_rule           = ac_type::half;
     beam.loudness          = spell_effect_noise(SPELL_THUNDERBOLT);
     beam.set_agent(caster);
 #ifdef USE_TILE
@@ -3334,7 +3345,7 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
     if (agent->is_player())
         pow = you.props[TOXIC_RADIANCE_POWER_KEY].get_int();
     else
-        pow = agent->as_monster()->get_hit_dice() * 8;
+        pow = agent->as_monster()->get_hit_dice() * 12;
 
     for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
     {
@@ -3358,8 +3369,15 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
                     "by Olgreb's Toxic Radiance", true,
                     agent->as_monster()->name(DESC_A).c_str());
 
-                poison_player(roll_dice(2, 3), agent->name(DESC_A),
-                              "toxic radiance", false);
+                int poison = roll_dice(2, 3 + div_rand_round(pow, 24));
+
+                // rPois = 1/3 poison each tick instead of a 1/3 chance
+                // of full poison each tick. Looks smoother.
+                if (you.res_poison() > 0)
+                    poison /= 3;
+
+                poison_player(poison, agent->name(DESC_A),
+                              "toxic radiance", true);
             }
         }
         else
@@ -3508,7 +3526,7 @@ spret cast_inner_flame(coord_def target, int pow, bool fail)
 
 int get_mercury_weaken_chance(int victim_hd, int pow)
 {
-    return 100 - max(0, (victim_hd * 12 - pow * 2 - 10));
+    return max(0, 100 - max(0, (victim_hd * 12 - pow * 3 / 2 - 17) * 115 / 100));
 }
 
 spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
@@ -3521,8 +3539,13 @@ spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
 
     monster* mons = monster_at(target);
     if (mons && you.can_see(*mons) && !god_protects(&you, mons)
-        && mons->res_poison() < 3
+        && mons->res_poison() <= 0
         && stop_attack_prompt(mons, false, you.pos()))
+    {
+        return spret::abort;
+    }
+    else if (you.pos() == target && you.res_poison() <= 0
+             && !yesno("Really target yourself?", false, 'n'))
     {
         return spret::abort;
     }
@@ -3531,11 +3554,13 @@ spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
 
     if (mons && you.can_see(*mons))
         mprf("Fumes of mercury billow around %s!", mons->name(DESC_THE).c_str());
+    else if (target == you.pos())
+        mpr("Fumes of mercury billow around yourself!");
     else
         mpr("Fumes of mercury billow through the air!");
 
     // Attempt to poison the central monster, if there is one.
-    if (mons && !god_protects(&you, mons))
+    if (mons && mons->res_poison() <= 0 && !god_protects(&you, mons))
     {
         // Be a little more generous with poisoning unpoisoned monsters.
         int amount = max(1, div_rand_round(pow, 25));
@@ -3548,6 +3573,9 @@ spret cast_mercury_vapours(int pow, const coord_def target, bool fail)
         if (mons->alive())
             you.pet_target = mons->mindex();
     }
+    // Trying to cast on self - presumably for the AoE weak.
+    else if (you.pos() == target && you.res_poison() <= 0)
+        you.poison(&you, roll_dice(2, 6));
 
     // Now attempt to weaken all monsters adjacent to the target
     for (adjacent_iterator ai(target, false); ai; ++ai)
@@ -3638,7 +3666,6 @@ void handle_flame_wave()
         return;
     }
 
-    aim_battlesphere(&you, SPELL_FLAME_WAVE);
     beam.apply_beam_conducts();
     beam.refine_for_explosion();
     beam.explode(true, true);
@@ -3750,7 +3777,6 @@ void handle_searing_ray()
 
     zappy(zap, pow, false, beam);
 
-    aim_battlesphere(&you, SPELL_SEARING_RAY);
     beam.fire();
     trigger_battlesphere(&you);
 

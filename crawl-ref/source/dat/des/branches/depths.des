@@ -16,24 +16,26 @@
 function depths_entry(e)
    e.tags("depths_entry uniq_depths_entry chance_depths_entry no_monster_gen")
    e.place("D:$")
-   e.weight("20")
-   e.kfeat("O = enter_depths")
-   e.kitem("O = smoky gem")
    e.orient("float")
+   e.weight("20")
+   e.kitem("g = smoky gem")
+   e.kfeat("O = enter_depths")
+   e.tile("G = depths_column")
 end
 }}
 
-NAME: grunt_enter_depths_snipers
-TAGS: no_pool_fixup
-MONS: tengu warrior ; longbow | arbalest . ring mail
+NAME:  grunt_enter_depths_snipers
+TAGS:  no_pool_fixup
+MONS:  tengu warrior ; longbow | arbalest . ring mail
 KMONS: O = stone giant / frost giant w:4
 SUBST: - = ++c
+FTILE: 'gOG = floor_depthstone
 : depths_entry(_G)
 MAP
 ccccccccc
-c.+...+.c
-c1c.O.c1c
-c.c...c.c
+c.+'''+.c
+c1cGOGc1c
+c.c'g'c.c
 c.cc-cc.c
 c.w...w.c
 c.w...w.c
@@ -46,26 +48,27 @@ ENDMAP
 
 # The idea here is to keep the giant on the island until the player is ready to
 # deal with it, and therefore proceed to the Depths.
-NAME: grunt_enter_depths_giant_problem
-TAGS: transparent
+NAME:    grunt_enter_depths_giant_problem
+TAGS:    transparent
+KMONS:   O = patrolling stone giant / patrolling fire giant
 SHUFFLE: JKLMN
-SUBST: J = l, K : ll., L : l., M : l.., N = .
-KMONS: O = patrolling stone giant / patrolling fire giant
+SUBST:   J = l, K : ll., L : l., M : l.., N = .
+FTILE:   'gO = floor_depthstone
 : depths_entry(_G)
-WEIGHT: 12
+WEIGHT:  12
 MAP
   ....@....
- ..LJLJLJL..
+ G.LJLJLJL.G
 ..KKllxllKK..
 .LKxlllllxKL.
 .JlllMNMlllJ.
-..l.l...MllL.
-@l.l..O.NlxJ@
-..lll...MllL.
+.'l'l'''MllL.
+@l'l'gO'NlxJ@
+.'lll'''MllL.
 .JlllMNMlllJ.
 .LKxlllllxKL.
 ..KKllxllKK..
- ..LJLJLJL..
+ G.LJLJLJL.G
   ....@....
 ENDMAP
 
@@ -73,14 +76,15 @@ NAME:    grunt_enter_depths_hoard
 MONS:    fire dragon, ice dragon
 ITEM:    $ no_pickup
 SHUFFLE: 12 / 12 / 11 / 22
+TILE:    'd12oG = floor_depthstone
 : depths_entry(_G)
 MAP
   ccccccc
- ccdddd.cc
-cc...1...ccccc
-cO.ccccc.....cc
-cc...2...cc...cc
- ccdddd.ccc.G..cc
+ ccdddd'cc
+cc'''1'''ccccc
+cOgccccc'....cc
+cc'''2'''cc...cc
+ ccdddd'ccc.G..cc
   cccccccc.@.@..c
 ENDMAP
 
@@ -89,26 +93,28 @@ MONS:   occultist / deep elf pyromancer w:5 / deep elf zephyrmancer w:5 / \
         orc sorcerer / tengu conjurer
 MONS:   rakshasa, necromancer band
 NSUBST: 1 = 1:112 / *:1
+TILE:   '3og = floor_depthstone
 : depths_entry(_G)
 MAP
   bbbbbbb
  bb..2..bb
 bb.......bb
 b..bb+bb..b
-b.1b...b1.b
-b..b.O.b..b
-b..b.3.b..b
+b.1b'g'b1.b
+bG.b'O'b.Gb
+b..b'3'b..b
 b..bbbbb..b
 bb..1.1..bb
  bb.....bb
   bbb+bbb
 ENDMAP
 
-NAME: gammafunk_enter_depths_forms
-MONS: ugly thing w:16 / very ugly thing w:2 / rakshasa w:4
-MONS: glowing orange brain / great orb of eyes, slime creature band
-MONS: glowing shapeshifter
+NAME:   gammafunk_enter_depths_forms
+MONS:   ugly thing w:16 / very ugly thing w:2 / rakshasa w:4
+MONS:   glowing orange brain / great orb of eyes, slime creature band
+MONS:   glowing shapeshifter
 NSUBST: . = 3:1 / 1:1. / *:., 3 = 1:2 / 1:3
+FTILE:  .34gOG = floor_depthstone
 : depths_entry(_G)
 MAP
  xxxxxx
@@ -120,37 +126,38 @@ x....xxb....bb
 xxbb.bbbb..bb
  bb...bbbbbb
 bb.....bb
-b4.....3b
+b4..g..3b
 bb.....bb
  bbbObbb
    bbb
 ENDMAP
 
-NAME: gammafunk_depths_entry_grave
-TAGS: patrolling transparent
-KMONS: t = withered plant
+NAME:   gammafunk_depths_entry_grave
+TAGS:   patrolling transparent
+KMONS:  t = withered plant
 # Was place:Depths:1 undead. Specified list is both speed >= 10
 # and also avoids undead juggernauts / caustic shrikes.
-MONS: sphinx skeleton / sphinx zombie / \
-      spriggan berserker skeleton / spriggan berserker zombie / \
-      storm dragon skeleton / storm dragon zombie / \
-      quicksilver dragon zombie / spark wasp zombie
-MONS: necromancer, skeletal warrior
-KMONS: O = vampire mage w:15 / flayed ghost
+MONS:   sphinx skeleton / sphinx zombie / \
+        spriggan berserker skeleton / spriggan berserker zombie / \
+        storm dragon skeleton / storm dragon zombie / \
+        quicksilver dragon zombie / spark wasp zombie
+MONS:   necromancer, skeletal warrior
+KMONS:  O = vampire mage w:15 / flayed ghost
 NSUBST: . = 2:1 / 1:2 / 2:3 / 1:13 / *:.
-SUBST: . = .....--__tG
-TILE: G = dngn_gravestone
-FTILE: - = floor_pebble_brown
-FTILE: _ = floor_pebble_darkgray
-: set_feature_name("granite_statue", "a gravestone")
+SUBST:  . = .....--__tG
+FTILE:  - = floor_pebble_brown
+FTILE:  _ = floor_pebble_darkgray
+FTILE:  .123Og = floor_depthstone
 : depths_entry(_G)
+: set_feature_name("granite_statue", "a gravestone")
+TILE:   G = dngn_gravestone
 MAP
   ....@....
  ...........
 .............
 .............
 .............
-.............
+.....g.......
 @.....O.....@
 .............
 .............
@@ -168,18 +175,19 @@ MONS:    very large slime creature / great orb of eyes w:3
 KMONS:   O = dire elephant / glowing shapeshifter w:4
 SHUFFLE: 12345, +'X / XX'
 SUBST:   XY = x, '" = .
+FTILE:   -12345gO = floor_depthstone
 : depths_entry(_G)
 MAP
 xxxx'''x..@
-x1.x.w.X.w.
-x..X...x...
+x1-x.w.X.G.
+x--X...x...
 xxx'Xxx+xXx
- xxx..2x..'
- xxx.w.x.w'
- xcc...X..'
+ xxx--2x..'
+ xxx-w-x.w'
+ xccg--X..'
  xcOcxx'Xxx
- xcccxxx..x
- xxxxxxx.3x
+ xcccxxx--x
+ xxxxxxx-3x
        xxxx
 ENDMAP
 
@@ -191,19 +199,20 @@ KMONS:   O = ettin w:14 / stone giant w:2 / glowing shapeshifter w:2
 SHUFFLE: -~
 SUBST:   - = +, ~ = ., c : c:9 v:2 b:1
 NSUBST:  1 = 3:1 / *:.
+FTILE:   '2TgO = floor_depthstone
 : depths_entry(_G)
 MAP
          x.x...
          x...1.
      x.....x...
      x.cccc-ccc
-      .cO..x...
- xxxxx~c.....x
- x1....c...x.x
+      .cO''x...
+ xxxxx~c'g'..x
+ x1....c'''x.x
  x..x.x+x.x..x
- x.x...c....1x
- x...2.c~xxxxx
-...x..Tc.
+ x.x'''c....1x
+ x..'2'c~xxxxx
+...x''Tc.
 ccc-cccc.x
 ...x.....x
 .1...x
@@ -216,13 +225,14 @@ KMONS:  O = deep troll earth mage
 SUBST:  A = c:25 .:4 G:1
 SUBST:  B : b:30 n:15 T:3 G:2 V:1
 SUBST:  c : c:15 v:1
-NSUBST: - = 12 = 0... / *=., ' = 1:899 / 8 = 0... / *=.
+NSUBST: - = 12 = 0... / *:., ' = 1:899 / 8 = 0... / *:.
+FTILE:  .098TVgOG = floor_depthstone
 : depths_entry(_G)
 MAP
  ccccccccccccc
 ccBA'AA'AA'ABcc
 cB'''''O'''''Bc
-c'''''''''''''c
+c''''''g''''''c
 cA'''-A'A-'''Ac
 cA---BcccB---Ac
 cA--Acc ccA--Ac

@@ -174,42 +174,6 @@ static void _escape_water_hold(monster& mons)
     }
 }
 
-static void _handle_deliberate_movement(monster& mons)
-{
-    // Apply barbs damage
-    if (mons.has_ench(ENCH_BARBS))
-    {
-        mon_enchant barbs = mons.get_ench(ENCH_BARBS);
-
-        // Save these first because hurt() might kill the monster.
-        const coord_def pos = mons.pos();
-        const monster_type type = mons.type;
-        mons.hurt(monster_by_mid(barbs.source),
-                  roll_dice(2, barbs.degree * 2 + 2));
-        bleed_onto_floor(pos, type, 2, false);
-        if (coinflip())
-        {
-            barbs.duration--;
-            mons.update_ench(barbs);
-        }
-    }
-
-    // And then shake off sticky flame
-    if (mons.has_ench(ENCH_STICKY_FLAME))
-    {
-        mon_enchant flame = mons.get_ench(ENCH_STICKY_FLAME);
-
-        flame.duration -= 50;
-        if (flame.duration <= 0)
-        {
-            simple_monster_message(mons, " shakes off the sticky flame as it moves.");
-            mons.del_ench(ENCH_STICKY_FLAME, true);
-        }
-        else
-            mons.update_ench(flame);
-    }
-}
-
 // Returns true iff the monster does nothing.
 static bool _handle_ru_melee_redirection(monster &mons, monster **new_target)
 {
@@ -316,8 +280,8 @@ static bool _swap_monsters(monster& mover, monster& moved)
              moved.name(DESC_THE).c_str());
     }
 
-    _handle_deliberate_movement(mover);
-    _handle_deliberate_movement(moved);
+    mover.did_deliberate_movement();
+    moved.did_deliberate_movement();
 
     if (moved.type == MONS_FOXFIRE)
     {
@@ -1051,6 +1015,15 @@ static coord_def _wobble_dir(coord_def dir)
 
 static void _handle_boulder_movement(monster& boulder)
 {
+    // If we don't have a movement direction (probably from a vault-placed
+    // decorative boulder), don't crash by assuming we do
+    if (!boulder.props.exists(BOULDER_DIRECTION_KEY))
+    {
+        // Have to use energy anyway, or we cause an infinite loop.
+        _swim_or_move_energy(boulder);
+        return;
+    }
+
     place_cloud(CLOUD_DUST, boulder.pos(), 2 + random2(3), &boulder);
 
     // First, find out where we intend to move next
@@ -1125,6 +1098,39 @@ static void _handle_boulder_movement(monster& boulder)
     // If we're still here, actually move. (But consume energy, even if we somehow don't)
     if (!_do_move_monster(boulder, dir))
         _swim_or_move_energy(boulder);
+}
+
+static void _check_blazeheart_golem_link(monster& mons)
+{
+    // Check distance from player. If we're non-adjacent, decrease timer
+    // (we get a turn or two's grace period to make managing this less fiddly)
+    if (grid_distance(you.pos(), mons.pos()) > 1)
+    {
+        mons.blazeheart_heat -= 1;
+        if (mons.blazeheart_heat <= 0 && !mons.has_ench(ENCH_PARALYSIS))
+        {
+            simple_monster_message(mons, "'s core grows cold and it stops moving.");
+            mons.add_ench(mon_enchant(ENCH_PARALYSIS, 1, &mons, INFINITE_DURATION));
+        }
+    }
+    else
+    {
+        // If we are dormant, wake up.
+        if (mons.has_ench(ENCH_PARALYSIS))
+        {
+            mons.del_ench(ENCH_PARALYSIS, true);
+            simple_monster_message(mons, "'s core flares to life once more.");
+
+            // Since we check this at the END of the golem's move, even if it
+            // started its turn with the player next to them (due to player
+            // movement), grant some instant energy to make it look like it
+            // activated first.
+            //mons.speed_increment += mons.action_energy(EUT_MOVE);
+        }
+
+        // Give the golem another turn before it goes cold.
+        mons.blazeheart_heat = 2;
+    }
 }
 
 static void _mons_fire_wand(monster& mons, spell_type mzap, bolt &beem)
@@ -1492,6 +1498,12 @@ static void _pre_monster_move(monster& mons)
     fedhas_neutralise(&mons);
     slime_convert(&mons);
 
+    // Check for golem summoner proximity whether we have energy to act or not.
+    // (Avoids awkward situations of moving next to a dormant golem with very
+    // fast actions not appearing to wake it up until the following turn)
+    if (mons.type == MONS_BLAZEHEART_GOLEM)
+        _check_blazeheart_golem_link(mons);
+
     // Monster just summoned (or just took stairs), skip this action.
     if (testbits(mons.flags, MF_JUST_SUMMONED))
     {
@@ -1739,6 +1751,12 @@ void handle_monster_move(monster* mons)
     if (mons->type == MONS_BOULDER)
     {
         _handle_boulder_movement(*mons);
+        return;
+    }
+
+    if (mons->type == MONS_BLAZEHEART_CORE)
+    {
+        mons->suicide();
         return;
     }
 
@@ -2228,6 +2246,12 @@ static void _post_monster_move(monster* mons)
     if (mons->type == MONS_TORPOR_SNAIL)
         _torpor_snail_slow(mons);
 
+    // Check golem distance again at the END of its move (so that it won't go
+    // dormant if it is following a player who was adjacent to it at the start
+    // of the player's own move)
+    if (mons->type == MONS_BLAZEHEART_GOLEM)
+         _check_blazeheart_golem_link(*mons);
+
     if (mons->type == MONS_WATER_NYMPH
         || mons->type == MONS_ELEMENTAL_WELLSPRING
         || mons->type == MONS_NORRIS)
@@ -2249,9 +2273,6 @@ static void _post_monster_move(monster* mons)
                                     TERRAIN_CHANGE_FLOOD, mons->mid);
             }
     }
-
-    if (mons->type == MONS_GUARDIAN_GOLEM)
-        guardian_golem_bond(*mons);
 
     // A rakshasa that has regained full health dismisses its emergency clones
     // (if they're somehow still alive) and regains the ability to summon new ones.
@@ -3183,8 +3204,8 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     mon->seen_context = SC_NONE;
     m2->seen_context = SC_NONE;
 
-    _handle_deliberate_movement(*mon);
-    _handle_deliberate_movement(*m2);
+    mon->did_deliberate_movement();
+    m2->did_deliberate_movement();
 
     // Pushing past a foxfire gets you burned regardless of alignment
     if (m2->type == MONS_FOXFIRE)
@@ -3411,7 +3432,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
         seen_monster(&mons);
     }
 
-    _handle_deliberate_movement(mons);
+    mons.did_deliberate_movement();
 
     _swim_or_move_energy(mons);
 

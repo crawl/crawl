@@ -7,7 +7,7 @@ aptitudes:
   xp: 1
   hp: -2
   mp_mod: 0
-  mr: 3
+  wl: 3
   fighting: 1
   short_blades: 3
   long_blades: -2
@@ -39,7 +39,7 @@ recommended_jobs:
   - JOB_HEXSLINGER
   - JOB_ENCHANTER
   - JOB_CONJURER
-  - JOB_SUMMONER
+  - JOB_EARTH_ELEMENTALIST
 recommended_weapons:
   - SK_SHORT_BLADES
   - SK_MACES_FLAILS

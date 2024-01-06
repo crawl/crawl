@@ -320,8 +320,7 @@ void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
         mpr("You feel a build-up of mutagenic energy.");
 
     if (proprt[ARTP_RAMPAGING] && msg && !unmeld
-        && !you.has_mutation(MUT_ROLLPAGE)
-        && !you_worship(GOD_WU_JIAN))
+        && !you.has_mutation(MUT_ROLLPAGE))
     {
         mpr("You feel ready to rampage towards enemies.");
     }
@@ -395,8 +394,7 @@ void unequip_artefact_effect(item_def &item,  bool *show_msgs, bool meld,
     }
 
     if (proprt[ARTP_RAMPAGING] && msg && !meld
-        && !you.rampaging()
-        && !you_worship(GOD_WU_JIAN))
+        && !you.rampaging())
     {
         mpr("You no longer feel able to rampage towards enemies.");
     }
@@ -841,7 +839,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             break;
 
         case SPARM_RAMPAGING:
-            if (!you.has_mutation(MUT_ROLLPAGE) && !you_worship(GOD_WU_JIAN))
+            if (!you.has_mutation(MUT_ROLLPAGE))
                 mpr("You feel ready to rampage towards enemies.");
             break;
 
@@ -984,7 +982,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
 
     case SPARM_RAMPAGING:
-        if (!you.rampaging() && !you_worship(GOD_WU_JIAN))
+        if (!you.rampaging())
             mpr("You no longer feel able to rampage towards enemies.");
         break;
 

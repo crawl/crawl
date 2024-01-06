@@ -337,6 +337,8 @@ SUBST:    ' = x'.
 : if you.in_branch("Swamp") then
 SUBST:    x = t
 KFEAT:    t = demonic_tree
+TILE:     t = dngn_demonic_tree_11 w:6 / dngn_demonic_tree_12 w:6 / \
+              dngn_demonic_tree_13 / dngn_demonic_tree_14
 : end
 SUBST:    z = zz.
 # Ordered chaos, like the abyss builder

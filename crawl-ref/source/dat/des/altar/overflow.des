@@ -152,8 +152,8 @@ function species_mock(e)
     return "torpor snail"
   elseif you.race() == "Octopode" then
     return "tentacled monstrosity"
-  elseif you.race() == "Ogre" then
-    return "ettin skeleton"
+  elseif you.race() == "Oni" then
+    return "ogre"
   elseif you.race() == "Armataur" then
     return "rat"
   elseif you.race() == "Spriggan" then
@@ -352,7 +352,7 @@ TAGS:  uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
 : if you.in_branch("Depths") then
 KMONS: _ = iron dragon
 :else
-KMONS: _ = worm / mummy / iron imp
+KMONS: _ = ribbon worm / bombardier beetle
 :end
 KFEAT: _ = altar_cheibriados
 SUBST: x : xxxcccmnvb
@@ -377,7 +377,7 @@ TAGS:    uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
 : if you.in_branch("Depths") then
 KMONS: _ = iron dragon
 :else
-KMONS: _ = worm / mummy / iron imp
+KMONS: _ = ribbon worm / bombardier beetle
 :end
 KFEAT:   _ = altar_cheibriados
 SUBST:   x : xxxcccvb
@@ -403,7 +403,7 @@ WEIGHT: 5
 : if you.in_branch("Depths") then
 KMONS: _ = iron dragon
 :else
-KMONS: _ = worm / mummy / iron imp
+KMONS: _ = ribbon worm / bombardier beetle
 :end
 NSUBST: ' = 1:a / *:.
 KFEAT:  _ = altar_cheibriados
@@ -427,7 +427,7 @@ TAGS:   temple_overflow_cheibriados uniq_altar_cheibriados
 DEPTH:  D:3-
 WEIGHT: 5
 KFEAT:  _ = altar_cheibriados
-MONS:   worm
+MONS:   ribbon worm
 : interest_check(_G)
 MAP
 .............
@@ -1362,17 +1362,23 @@ TAGS:   temple_overflow_1 temple_overflow_kikubaaqudgha
 TAGS:   uniq_altar_kikubaaqudgha uniq_zombie_altar
 KFEAT:  _ = altar_kikubaaqudgha
 : if you.in_branch("Depths") then
-MONS:   zombie w:20 / nothing w:90
-:else
-MONS:   rat zombie / bat zombie / nothing w:90
-:end
+MONS:   zombie, patrolling vampire mage
+: elseif you.depth() > 12 then
+MONS:   scorpion zombie / hound zombie, patrolling necromancer
+: elseif you.depth() > 4 then
+MONS:   jackal zombie / adder zombie, patrolling burial acolyte
+: else
+MONS:   frilled lizard zombie / bat zombie
+SUBST:  2 = .
+: end
+NSUBST: 1 = 2:1 / 3 = 11... / *:.
 : interest_check(_G)
 MAP
 xxxxxxxxxxxxxxxx
 xxxxwwwwwwwwxxxx
-xxxx11111111xxxx
-@............._x
-xxxx11111111xxxx
+xxxx.1111111xxxx
+@........2...._x
+xxxx.1111111xxxx
 xxxxwwwwwwwwxxxx
 xxxxxxxxxxxxxxxx
 ENDMAP
@@ -1380,17 +1386,21 @@ ENDMAP
 NAME:   lemuel_mausoleum_altar_kikubaaqudgha
 TAGS:   uniq_altar_kikubaaqudgha temple_overflow_1 transparent
 TAGS:   temple_overflow_kikubaaqudgha uniq_mausoleum_altar
-# slightly ood for wights, but where necrophages start
-# zombies scale with depth so we'll let it place in Crypt, too, but with an
-# interest check
+# zombies scale with depth so we'll let it place in Crypt, too,
+# but with an interest check
 DEPTH:  D:4-10, Crypt
 : if you.in_branch("Crypt") then
 MONS:   zombie, guardian mummy, skeletal warrior, ghoul
-:else
-MONS:   zombie, mummy, wight, necrophage
-:end
+NSUBST: ? = 1:* / *:?
+: else
+:   if you.depth() < 6 then
+MONS:   zombie, skeleton, necrophage, shadow imp
+:   else
+MONS:   zombie, skeleton, wight, burial acolyte
+:   end
+: end
 NSUBST: ? = 1:_ / *:1
-SUBST:  1 = 1:30 2 3 4
+SUBST:  1 = 1:30 2 3 4:5
 KFEAT:  _ = altar_kikubaaqudgha
 KMONS:  _ = human zombie
 : interest_check(_G)
@@ -1519,6 +1529,37 @@ MAP
     .
 ENDMAP
 
+NAME:    regret_index_kikubaaqudgha_part_by_part
+TAGS:    temple_overflow_kikubaaqudgha temple_overflow_1
+TAGS:    uniq_altar_kikubaaqudgha no_monster_gen transparent
+DEPTH:   D:5-8
+MONS:    patrolling burial acolyte, patrolling shadow imp
+MONS:    kobold zombie / gnoll zombie, adder zombie / hound zombie
+KFEAT:   _ = altar_kikubaaqudgha
+SHUFFLE: ABCD
+NSUBST:  A = 1:2 / *:3, B = 1:2 / *:4
+SUBST:   C = $, D = .
+SUBST:   X : x', Y : x', y : x., z : c..
+CLEAR:   '
+MAP
+ Xxxxx.....xxxxY
+XxxBBx.y.y.xCCxxY
+xxxxB+.....+Cxxxx
+xAxxxx.....xxxxxx
+xAAxxc..z..cxxxxx
+xx+xc.......xxxx
+......cc+cc
+.y....c4.3c
+......+._.c
+.y....c3.1c
+......ccccc
+xx+xc.
+xDDxxx
+xDxxxx
+Yxxxxx
+ Yxxx
+ENDMAP
+
 ### Makhleb overflow altars ###################################################
 
 NAME:    demons_altar
@@ -1639,7 +1680,7 @@ TAGS:   no_monster_gen temple_overflow_1 temple_overflow_makhleb
 TAGS:   uniq_altar_makhleb transparent
 # white imp depth
 DEPTH:  D:5-8
-MONS:   iron imp w:1 / shadow imp w:1 / crimson imp
+MONS:   shadow imp w:2 / crimson imp
 KFEAT:  _ = altar_makhleb
 TILE:   c = wall_hall
 FTILE:  A_'1 = floor_grey_dirt
@@ -2334,28 +2375,28 @@ ENDMAP
 
 NAME: nicolae_ru_sacrificial_ziggurat
 TAGS: temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent decor
-: interest_check(_G)
+KFEAT: _ = altar_ru
 SUBST: b = B.., @ = %@@
 KPROP: B% = bloody
 SUBST: B = ., % = @
+TILE:  x = wall_sandstone
 FTILE: ' = floor_sandstone
 FTILE: .@_ = floor_limestone
-TILE: c = wall_sandstone
-KFEAT: _ = altar_ru
+: interest_check(_G)
 MAP
-cccccc@cccccc
-c'''''b'''''c
-c'ccccbcccc'c
-c'c'''b'''c'c
-c'c'ccbcc'c'c
-c'c'cBBBc'c'c
+xxxxxx@xxxxxx
+x'''''b'''''x
+x'xxxxbxxxx'x
+x'x'''b'''x'x
+x'x'xxbxx'x'x
+x'x'xBBBx'x'x
 @bbbbB_Bbbbb@
-c'c'cBBBc'c'c
-c'c'ccbcc'c'c
-c'c'''b'''c'c
-c'ccccbcccc'c
-c'''''b'''''c
-cccccc@cccccc
+x'x'xBBBx'x'x
+x'x'xxbxx'x'x
+x'x'''b'''x'x
+x'xxxxbxxxx'x
+x'''''b'''''x
+xxxxxx@xxxxxx
 ENDMAP
 
 NAME: nicolae_ru_path_of_blood
@@ -2632,7 +2673,7 @@ TAGS:   temple_overflow_1 temple_overflow_trog uniq_altar_trog
 KFEAT:  _ = altar_trog
 KPROP:  1 = no_tele_into
 : if you.absdepth() < 16 then
-MONS:   moth of wrath, rat / worm w:5
+MONS:   moth of wrath, rat / ribbon worm w:5
 : else
 MONS:   moth of wrath, dire elephant / boulder beetle w:5
 : end
@@ -2670,6 +2711,7 @@ KMONS:  1 = ogre god:trog ; giant club ego:antimagic ident:type | w:3 giant club
         flail ego:antimagic ident:type | great mace ego:antimagic ident:type | any weapon / \
         kobold brigand god:trog ; short sword ego:antimagic ident:type | dagger ego:antimagic ident:type | \
         rapier ego:antimagic ident:type | rapier
+SUBST:  2 = 1
 : else
 KMONS:  1 = orc god:trog ; spear ego:antimagic ident:type | hand axe ego:antimagic ident:type | \
         war axe ego:antimagic ident:type | any weapon / \
@@ -2678,11 +2720,13 @@ KMONS:  1 = orc god:trog ; spear ego:antimagic ident:type | hand axe ego:antimag
         goblin god:trog ; dagger ego:antimagic ident:type | short sword ego:antimagic ident:type / \
         gnoll god:trog ; spear ego:antimagic ident:type | trident ego:antimagic ident:type | \
         halberd ego:antimagic ident:type | whip ego:antimagic ident:type | halberd | any weapon
+KMONS:  2 = brain worm
+SUBST:  2 = 112
 : end
 KFEAT:  _ = altar_trog
 MAP
   xxxxx
- xx.1.xx
+ xx.2.xx
 xx.._..xx
 x..1.1..x
 x.......x
@@ -3225,6 +3269,7 @@ NAME:   tgw_xom
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_xom
 TAGS:   uniq_altar_xom no_tele_into
 DEPTH:  D:5-, Depths
+WEIGHT: 5
 KFEAT:  _ = altar_xom
 MONS:   place:D:1
 MONS:   orc ; club ego:chaos | dagger ego:chaos | spear ego:chaos
@@ -3279,19 +3324,25 @@ ENDMAP
 
 NAME:    xom_butterflies
 TAGS:    temple_overflow_1 temple_overflow_xom transparent patrolling
-KFEAT:   _ = altar_xom
+MONS:    butterfly, demonic plant
+KMONS:   C = brain worm
+KFEAT:   _C = altar_xom
 COLOUR:  . = random
-NSUBST:  . = 2: 1/ *: .
-MONS:    butterfly
+: if you.absdepth() > 3 and you.absdepth() < 7 then
+SUBST:   _ = ____C
+: else
+SUBST:   t = .
+: end
+NSUBST:  . = 2:1 / 2 : 2...... / *:.
 : interest_check(_G)
 MAP
-...
+..t
 ._.
-...
+t..
 ENDMAP
 
 NAME:    xom_shifter_show
-TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom no_descent
+TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom no_descent decor
 DEPTH:   D:7-
 MONS:    shapeshifter hd:1
 KFEAT:   _ = altar_xom
@@ -3314,13 +3365,14 @@ MAP
 ENDMAP
 
 NAME:    xom_confusion_cloud
-TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom transparent
+TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom
+TAGS:    no_pool_fixup transparent
 KFEAT:   _ = altar_xom
 MARKER:  _ = lua:fog_machine { cloud_type = "noxious fumes", \
                pow_min = 6, pow_max = 8, delay_min = 35, delay_max = 55, \
                size = 3, walk_dist = 0, spread_rate= 0 }
 SUBST:   . = 1.
-SHUFFLE: wW/l.
+SHUFFLE: wW / l.
 MONS:    random
 MAP
   wwwww
@@ -3336,17 +3388,21 @@ ENDMAP
 # for avoiding vetoes if this guaranteed a path somehow...
 NAME:    xom_redecorated
 TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom decor no_descent
+KMONS:   C = brain worm
+KFEAT:   _C = altar_xom
+KFEAT:   ^ = teleport trap
+: if you.depth() == dgn.br_depth(you.branch()) then
+KFEAT:  ~ = teleport trap / alarm trap / dispersal trap
+: else
+KFEAT:  ~ = shaft trap / teleport trap / alarm trap / dispersal trap
+: end
 SUBST:   c = ccbbbv
+: if you.absdepth() > 3 and you.absdepth() < 7 then
+SUBST: _ = ____C
+: end
 NSUBST:  . = 2=^ / .
 SUBST:   . = lWwtm_~......
 NSUBST:  ^ = 3=^ / .
-KFEAT:   _ = altar_xom
-KFEAT:   ^ = teleport trap
-:  if you.depth() == dgn.br_depth(you.branch()) then
-KFEAT:  ~ = teleport trap / alarm trap / dispersal trap
-:  else
-KFEAT:  ~ = shaft trap / teleport trap / alarm trap / dispersal trap
-:  end
 : interest_check(_G)
 MAP
       @
@@ -3364,9 +3420,9 @@ ENDMAP
 
 NAME:   led_xom_imps
 TAGS:   temple_overflow_1 temple_overflow_xom uniq_altar_xom
-MONS:   crimson imp, crimson imp ; dagger ego:chaos
+MONS:   crimson imp ; stone, crimson imp ; dagger ego:chaos
 KPROP:  1 = no_tele_into
-NSUBST: 1 = 2 / 1
+NSUBST: 1 = 1:2 / *:1
 KFEAT:  _ = altar_xom
 KFEAT:  ^ = teleport trap / dispersal trap
 : interest_check(_G)
@@ -3378,12 +3434,12 @@ x1^...^1x
 xxxx+xxxx
 ENDMAP
 
-NAME: nicolae_xom_altar_mimics
-TAGS: temple_overflow_1 temple_overflow_xom uniq_altar_xom decor transparent
+NAME:   nicolae_xom_altar_mimics
+TAGS:   temple_overflow_1 temple_overflow_xom uniq_altar_xom decor transparent
 WEIGHT: 1
 NSUBST: _ = 1:_ / 2:XXX_ / *:X
-KFEAT: _ = altar_xom
-KFEAT: X = altar_xom mimic
+KFEAT:  _ = altar_xom
+KFEAT:  X = altar_xom mimic
 : interest_check(_G)
 MAP
   .......
@@ -3425,6 +3481,7 @@ ENDMAP
 
 NAME:   doesnt_xom_only_xom
 TAGS:   temple_overflow_1 temple_overflow_xom uniq_altar_xom transparent decor
+WEIGHT: 2
 KFEAT:  _ = altar_xom
 KFEAT:  C = C mimic
 NSUBST: C = 1:_ / *:C
@@ -3496,6 +3553,7 @@ SUBST:   2 = 34, ?! = .
 SHUFFLE: xp, pPtU', xbv"
 SUBST:   d : d %:490, - : +ccc, '" = .
 NSUBST:  % = 1:% / 1:$ / *:.
+TILE:    c = dngn_stone_wall_darkgray
 MAP
   ccccccccccc.@.c
   ccc.d1....c.p.c
@@ -3567,19 +3625,21 @@ ENDMAP
 NAME:   yredelemnul_forgotten_temple_becter
 TAGS:   temple_overflow_1 temple_overflow_yredelemnul no_monster_gen no_item_gen
 TAGS:   transparent uniq_altar_yredelemnul
-KFEAT:  _ = altar_yredelemnul
-KFEAT:  . = web trap / .
 : if you.in_branch("Depths") then
 KMONS:  _ = spectral juggernaut
-:else
-KMONS:  _ = spectral orc
-:end
+SUBST:  1 = .
+: else
+MONS:   spectral orc
+KMONS:  _ = weeping skull
+: end
+KFEAT:  _ = altar_yredelemnul
+KFEAT:  . = web trap / .
 : interest_check(_G)
 MAP
 xxxxxxxxx
 xcccccccx
 xc.._..cx
-xcc...ccx
+xcc.1.ccx
 xc.....cx
 xcc...ccx
 xxcc+ccxx
@@ -3927,14 +3987,14 @@ SUBST: c = ccc' s:2 z:2, + = ++'
 NSUBST: ' = 2:s / 2:z / 2:sz'' / *:'
 COLOUR: 'sz = yellow / none w:5
 COLOUR: c = white
-TILE: c = wall_sandstone
+TILE: c = wall_church
 FTILE: +'_sz = floor_sandstone / none w:5
 KMONS: s = orc skeleton / kobold skeleton / goblin skeleton / hobgoblin zombie
 KMONS: z = orc zombie / kobold zombie / goblin zombie / hobgoblin zombie
 : if you.absdepth() <= 4 then
 KMONS: _ = crimson imp / white imp w:5
 : else
-KMONS: _ = crimson imp / white imp / shadow imp / iron imp / quasit
+KMONS: _ = crimson imp / white imp / shadow imp / quasit
 : end
 KFEAT: _ = altar_the_shining_one
 MAP
@@ -4194,7 +4254,7 @@ KFEAT:   B = altar_sif_muna
 KFEAT:   C = altar_vehumet
 ITEM:    randbook owner:Kikubaaqudgha disc:necromancy spells:necrotise \
          numspells:1
-# You already got a direct damage spell by looting the other gods' altars.
+# You already get a direct damage spell by looting the other gods' altars.
 ITEM:    randbook owner:Sif_Muna disc:hexes numspells:1 slevels:1 / \
          randbook owner:Sif_Muna disc:summoning numspells:1 slevels:1 / \
          randbook owner:Sif_Muna disc:translocation numspells:1 slevels:1
@@ -4437,8 +4497,8 @@ KMONS: 3 = menkaure, necrophage / wight
 SUBST: 2 = 2---
 : elseif you.depth() <= 7 then
 MONS: zombie / skeleton / mummy / shadow imp / wight / necrophage / phantom
-MONS: wraith / vampire
-KMONS: 3 = menkaure, wraith / vampire
+MONS: burial acolyte / wraith / vampire
+KMONS: 3 = menkaure, burial acolyte / wraith / vampire
 SUBST: 2 = 12--
 : else
 MONS: mummy / wight / zombie / skeleton / phantom
@@ -5235,7 +5295,7 @@ MAP
 .v.Bx..xB.v.
 .v..x..x..v.
 .vT0x..x0Tv.
-.vvvx==xvvv.
+.vvvx++xvvv.
 ...Gx..xG...
 ...+....+...
 ...GxxxxG...

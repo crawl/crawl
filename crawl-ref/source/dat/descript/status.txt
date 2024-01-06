@@ -45,6 +45,11 @@ temporary regeneration.
 
 Your health has stopped regenerating due to the presence of nearby monsters.
 %%%%
+MPRegen status
+
+You regenerate health and magic at an unnaturally fast rate. This is only shown
+for temporary regeneration.
+%%%%
 Touch status
 
 Your attacks deal no damage, but have a chance of confusing monsters that they
@@ -165,6 +170,14 @@ Fire status
 You are covered with sticky fire, which causes damage over a moderate duration.
 Moving will quell the fire much more rapidly, and entering water will extinguish
 it immediately.
+%%%%
+Fire+ status
+
+<Fire status>
+%%%%
+Fire++ status
+
+<Fire status>
 %%%%
 Corona status
 
@@ -351,10 +364,11 @@ Disjoin status
 You are destabilizing space around yourself, causing nearby monsters to be
 randomly blinked away from you.
 %%%%
-Slay status
+Fugue status
 
-You have the blood of a were-beast, healing you and providing bonuses to
-your ranged and melee attacks which increase every time you slay a foe.
+Your weapon is temporarily enhanced by the souls of the damned, providing slaying
+bonuses that increase with every enemy killed. At the maximum bonus, foes adjacent
+to your attacks' targets suffer pain damage.
 %%%%
 Debt status
 
@@ -385,10 +399,10 @@ rP- status
 
 You are more vulnerable to poison.
 %%%%
-PProj status
+Bullseye status
 
-You are teleporting fired or thrown missiles directly to their targets with
-increased accuracy, at the cost of a small amount of magic for each missile.
+You have targeted an enemy with a dimensional bullseye, causing missiles fired
+or thrown at a different enemy to also be teleported at the target.
 %%%%
 Forest status
 
@@ -771,6 +785,11 @@ Zot count status
 If you spend the indicated number of turns in this branch without descending to
 a new floor, Zot will find you, causing permanent health damage.
 %%%%
+Gem status
+
+If you spend the indicated number of turns in this branch, its gem will be found
+and shattered by the power of Zot.
+%%%%
 Curl status
 
 After being struck by an attack, you reflexively curled up, protecting yourself
@@ -859,3 +878,29 @@ Ooze status
 
 Acidic ooze creeps out of the walls around you. Each turn, foes are damaged
 depending on the number of slimy walls they remain adjacent to.
+%%%%
+-Dog status
+
+Your canine familiar is recovering from its injuries, and cannot be summoned
+again for a short time.
+%%%%
+-Siphon status
+
+You have recently siphoned the essence of the living, and cannot do so again for
+a short time.
+%%%%
+-Word status
+
+You are fatigued from recently speaking a word of chaos, and are unable to do so
+again for a short time.
+%%%%
+Jinx status
+
+Jinxing spirits encircle you. When you attack foes, those who fail a Will check
+are jinxed, taking damage and becoming drained. The spirits depart quickly when
+no foes are in sight.
+%%%%
+Rise status
+
+You are hovering upward toward the ceiling. After a short delay, Ignis' power
+will blast you into the level above.

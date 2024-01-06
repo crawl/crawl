@@ -578,3 +578,14 @@ public:
     bool set_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
 };
+
+class targeter_petrify : public targeter_beam
+{
+public:
+    targeter_petrify(const actor *act, int r);
+    bool set_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+
+private:
+    set<coord_def> chain_targ;
+};

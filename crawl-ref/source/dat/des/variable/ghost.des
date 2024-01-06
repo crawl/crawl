@@ -1480,7 +1480,7 @@ ORIENT: float
 DEPTH:  D:3-6
 KMONS:  O = player_ghost
 KMONS:  1 = quokka / giant cockroach / rat / ball python
-KMONS:  2 = adder / worm / river rat
+KMONS:  2 = adder / ribbon worm / river rat
 KMONS:  3 = bullfrog
 KFEAT:  O = expired_portal
 KFEAT:  123*%$ = W

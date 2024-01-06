@@ -1181,6 +1181,25 @@ l.....N...L.....l
 vlvlvlv...vlvlvlv
 ENDMAP
 
+NAME:   tekkud_dis_hexagon_chokepoint
+TAGS:   no_rotate
+DEPTH:  Dis:2-
+ORIENT: centre
+MONS:   crystal guardian, iron golem, orange crystal statue
+MAP
+     vvv@vvv
+    vvvv.vvvv
+   vvvv...vvvv
+  vvv.......vvv
+ vv1.........1vv
+vv2832..3..2382vv
+ vv1.........1vv
+  vvv.......vvv
+   vvvv...vvvv
+    vvvv.vvvv
+     vvv@vvv
+ENDMAP
+
 default-depth:
 ##############################################################################
 # Dispater's castle - subvaulted, with three main versions

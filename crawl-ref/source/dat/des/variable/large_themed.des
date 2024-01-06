@@ -371,25 +371,25 @@ NAME:   minmay_skeleton_keep
 TAGS:   no_monster_gen
 ORIENT: northwest
 DEPTH:  Depths, Crypt
-MONS:   flying skull / nothing w:30, skeleton w:20 / nothing
+MONS:   laughing skull / nothing w:50, skeleton w:20 / nothing
 MONS:   skeletal warrior band / bone dragon w:1 / lich w:1 / curse skull w:1
 SUBST:  G : GGccV.
 MAP
 cccccccccccccccccccccccccccccccc
 c....2.....||c...+....111c|....c
-c+c.2.3...cccc...c.....11cc..3.c
+c+c.2.3...cccc...c......1cc..3.c
 c.cc...2.2.ccc...c......1ccc...c
 c..cc...2...cc...c...G...+2cc..c
 c...cc.2...2.c...c......cc2ccc.c
 c....cc...2..c...c1....cc2...+.c
-c1.3..cc.2...+...c11..cc2.2.2c.c
-c11....cc....c...c111cc2.2.22c|c
-c111....cccccc.3.ccccccccccc+ccc
-c1111....c...........c22.+11111c
-cc+cc1.3.c.G2G2G2G2G.c2..cc1111c
-c***c11..+...........+.2.2cc111c
-c***c111.c.G2G2G2G2G.c2...2cc11c
-c***c1111c...........c..22.2cc+c
+c..3..cc.2...+...c1...cc2.2.2c.c
+c1.....cc....c...c111cc2.2.22c|c
+c11.....cccccc.3.ccccccccccc+ccc
+c1111....c...........c22.+.111.c
+cc+cc1.3.c.G2G2G2G2G.c2..cc.111c
+c***c1...+...........+.2.2cc.11c
+c***c11..c.G2G2G2G2G.c2...2cc.1c
+c***c111.c...........c..22.2cc+c
 cccccccccccccccccccccccccccccc@
 ENDMAP
 
@@ -2380,7 +2380,7 @@ MONS:   orange crystal statue
 MONS:   frost giant / reaper ; halberd itemname:scythe tile:wpn_scythe \
         wtile:scythe ego:freezing / blizzard demon
 MONS:   titan / wendigo / nargun
-MONS:   ice fiend / shard shrike band
+MONS:   ice fiend / walking frostbound tome
 : end
 # Monster, loot, and terrain handling common to all depths.
 NSUBST: . = 3=1 / 6=1. / 2=2 / 4=2. / 2=4 / 2=4. / 5 / 2=5. / .
@@ -2784,6 +2784,7 @@ KMONS:   6 : hell knight / phantasmal warrior / efreet w:5
 KMONS:   7 : fire giant / deep troll earth mage / deep elf high priest
 KMONS:   L = molten gargoyle
 :   end
+TILE:    v = dngn_metal_wall_darkgray
 : elseif you.in_branch("Depths") then
 KMONS:   L = fire dragon
 :   if you.where() ~= dgn.level_name(dgn.br_entrance("Zot")) then
@@ -2792,6 +2793,7 @@ MONS:    vampire knight, deep troll earth mage, tengu reaver
 KMONS:   6 : juggernaut w:15 / iron dragon
 KMONS:   7 : ancient lich / dread lich
 NSUBST:  V> = 1:} / 1 = ) >:6 / 1 = ] >:6
+TILE:    v = dngn_metal_wall_brown
 :   else
 TAGS:    patrolling
 MONS:    red draconian / base draconian w:5, fire giant
@@ -2813,6 +2815,7 @@ KMONS:   7 : dread lich / orb of fire
 KMONS:   L = moth of wrath
 NSUBST:  V> = 1:} / 1 = ):6 >:1 / 1 = ]:6 >:1
 SUBST:   " = 1
+TILE:    v = dngn_metal_wall_red
 : end
 KITEM:   & = demon whip / demon blade / demon trident / \
              plate armor ego:fire_resistance ident:type / \
@@ -2907,9 +2910,9 @@ KMONS:   8 = death drake
 KMONS:   9 = fenstrider witch
 KFEAT:   13579 = W / w
 KFEAT:   - = broken_door
-NSUBST:  1 = 1:., 2 = 3:., 345 = 1:., 67 = 1:., 89 = 1:., defghij = 3:.
-NSUBST:  . = 2:12 / 1:5 / 2 = 778 / 16:. / 3:t / * = WW.
-NSUBST:  ' = 1:6 / 24:. / 3:t / * = WW..., " = 2 = 233 / 6:. / 1:t / * = W..
+NSUBST:  1 = 2:., 2 = 3:., 345 = 2:., 67 = 1:., 89 = 1:., defghij = 3:.
+NSUBST:  . = 2:12 / 1:5 / 2 = 778 / 20:. / 3:t / * = WW.
+NSUBST:  ' = 1:6 / 30:. / 3:t / * = WW..., " = 2 = 233 / 6:. / 1:t / * = W..
 NSUBST:  C = 12:W / 3:t / *:c
 SUBST:   x = t, X = tx, " = W"", ' = WW''', . = WW., G = Gww, % = .
 : else   -- Zot
@@ -3089,7 +3092,7 @@ KFEAT:    Pp = W
 NSUBST:   A = 1:1 / 1:248 / 1:7, B = 2:2 / 1:347, C = 2:3 / 1:247
 NSUBST:   D = 2:4 / 1:237, E = 1:2 / 1:4 / 1:8
 NSUBST:   F = 1:5 / 1:8 / 1:9, G = 2:5 / 1:90, HI = *:w
-NSUBST:   7 = 4:7 / 2:8 / 1:9 / 1:0 / 3 = 123489 / *:.
+NSUBST:   7 = 4:7 / 2:8 / 1:890 / 3 = 12348 / *:.
 SUBST:    + = W, x = t, v = x
 SUBST:    })] = **|, ! = +, ? = c, ` = W:40 ., . = .:60 W
 : elseif you.branch() == "Depths" then
@@ -3106,7 +3109,7 @@ NSUBST:  D = 2:4 / 1:123, E = 2:5 / 1:34
 NSUBST:  F = 1:2 / 1:8 / 1:9, G = 3 = 89, HI = *:.
 SHUFFLE: })]!?'"X- / {([?!"'~~ / {([?!"'~~
 SUBST:   ( = (:40 <, [ = [:40 <, ) = ):40 >, ] = ]:40 >, ~ = P
-: else
+: else -- Zot
 KMONS:   123 = shadow dragon
 KMONS:   45 = death cob
 KMONS:   6 = curse toe

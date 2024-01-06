@@ -259,6 +259,24 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
 
     if (!_check_moveto_dangerous(p, msg))
         return false;
+    if (env.grid(p) == DNGN_BINDING_SIGIL)
+    {
+        string prompt;
+        if (prompted)
+            *prompted = true;
+
+        if (!msg.empty())
+            prompt = msg + " ";
+
+        prompt += "Are you sure you want to " + move_verb
+                + " onto a binding sigil?";
+
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
     if (!you.airborne() && !you.duration[DUR_NOXIOUS_BOG]
         && env.grid(you.pos()) != DNGN_TOXIC_BOG
         && env.grid(p) == DNGN_TOXIC_BOG)
@@ -386,7 +404,9 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         return false;
     }
 
-    if (mons_is_projectile(*mons) || mons->type == MONS_BOULDER)
+    if (mons_is_projectile(*mons)
+        || mons->type == MONS_BOULDER
+        || mons->type == MONS_BLAZEHEART_CORE)
     {
         if (!quiet)
             mpr("It's unwise to walk into this.");
@@ -2564,7 +2584,7 @@ bool will_gain_life(int lev)
     return you.lives - 1 + you.deaths < (lev - 1) / 3;
 }
 
-static void _felid_extra_life()
+static bool _felid_extra_life()
 {
     if (will_gain_life(you.max_level)
         && you.lives < 2)
@@ -2573,7 +2593,9 @@ static void _felid_extra_life()
         mprf(MSGCH_INTRINSIC_GAIN, "Extra life!");
         you.attribute[ATTR_LIFE_GAINED] = you.max_level;
         // Should play the 1UP sound from SMB...
+        return true;
     }
+    return false;
 }
 
 static void _gain_and_note_hp_mp()
@@ -2747,6 +2769,7 @@ void level_change(bool skip_attribute_increase)
     while (you.experience_level < you.get_max_xl()
            && you.experience >= exp_needed(you.experience_level + 1))
     {
+        bool gained_felid_life = false;
         if (!skip_attribute_increase)
         {
             crawl_state.cancel_cmd_all();
@@ -2956,7 +2979,7 @@ void level_change(bool skip_attribute_increase)
             }
 
             if (you.has_mutation(MUT_MULTILIVED))
-                _felid_extra_life();
+                gained_felid_life = _felid_extra_life();
 
             give_level_mutations(you.species, you.experience_level);
 
@@ -2969,6 +2992,9 @@ void level_change(bool skip_attribute_increase)
         }
         if (!updated_maxhp)
             _gain_and_note_hp_mp();
+
+        if (gained_felid_life)
+            take_note(Note(NOTE_GAIN_LIFE, you.lives));
 
         if (you.has_mutation(MUT_INNATE_CASTER))
             _gain_innate_spells();
@@ -2985,8 +3011,8 @@ void level_change(bool skip_attribute_increase)
         ASSERT(you.experience_level == you.get_max_xl());
         ASSERT(you.max_level < 127); // marshalled as an 1-byte value
         you.max_level++;
-        if (you.has_mutation(MUT_MULTILIVED))
-            _felid_extra_life();
+        if (you.has_mutation(MUT_MULTILIVED) && _felid_extra_life())
+            take_note(Note(NOTE_GAIN_LIFE, you.lives));
     }
 
     you.redraw_title = true;
@@ -3415,6 +3441,7 @@ bool player::can_burrow() const
 bool player::cloud_immune(bool items) const
 {
     return have_passive(passive_t::cloud_immunity)
+           || you.duration[DUR_TEMP_CLOUD_IMMUNITY]
            || actor::cloud_immune(items);
 }
 
@@ -5361,7 +5388,6 @@ player::player()
     travel_z         = level_id();
 
     running.clear();
-    travel_ally_pace = false;
     received_weapon_warning = false;
     received_noskill_warning = false;
     wizmode_teleported_into_rock = false;
@@ -5553,10 +5579,9 @@ bool player::airborne() const
 
 bool player::rampaging() const
 {
-    return !you_worship(GOD_WU_JIAN)
-        && (player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS)
+    return player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS)
             || you.has_mutation(MUT_ROLLPAGE)
-            || actor::rampaging());
+            || actor::rampaging();
 }
 
 bool player::is_banished() const
@@ -6318,6 +6343,9 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
             AC += _meek_bonus() * scale;
     }
 
+    if (you.props.exists(PASSWALL_ARMOUR_KEY))
+        AC += you.props[PASSWALL_ARMOUR_KEY].get_int() * scale;
+
     AC -= 400 * corrosion_amount();
 
     AC += sanguine_armour_bonus();
@@ -6861,7 +6889,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
              agent->visible_to(this), source.c_str());
     }
 
-    if ((flavour == BEAM_DEVASTATION || flavour == BEAM_MINDBURST)
+    if ((flavour == BEAM_DESTRUCTION || flavour == BEAM_MINDBURST)
         && can_bleed())
     {
         blood_spray(pos(), type, amount / 5);
@@ -7899,6 +7927,18 @@ void player::weaken(actor */*attacker*/, int pow)
     increase_duration(DUR_WEAK, pow + random2(pow + 3), 50);
 }
 
+bool player::strip_willpower(actor */*attacker*/, int dur, bool quiet)
+{
+    // Only prints a message when you gain this status for the first time,
+    // replicating old behavior. Should this change?
+    if (!quiet && !you.duration[DUR_LOWERED_WL])
+        mpr("Your willpower is stripped away!");
+
+    you.increase_duration(DUR_LOWERED_WL, dur, 40);
+
+    return true;
+}
+
 /**
  * Check if the player is about to die from flight/form expiration.
  *
@@ -8079,7 +8119,7 @@ void print_potion_heal_message()
             mprf("%s enhances the healing.",
             item->name(DESC_THE, false, false, false).c_str());
         }
-        else if (you.species == SP_ONI)
+        else if (you.has_mutation(MUT_DOUBLE_POTION_HEAL))
             mpr("You savour every drop.");
         else
             mpr("The healing is enhanced."); // bad message, but this should

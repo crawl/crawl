@@ -169,6 +169,7 @@ static void _describe_stat_zero(status_info& inf, stat_type st);
 static void _describe_terrain(status_info& inf);
 static void _describe_invisible(status_info& inf);
 static void _describe_zot(status_info& inf);
+static void _describe_gem(status_info& inf);
 
 bool fill_status_info(int status, status_info& inf)
 {
@@ -235,6 +236,10 @@ bool fill_status_info(int status, status_info& inf)
 
     case STATUS_ZOT:
         _describe_zot(inf);
+        break;
+
+    case STATUS_GEM:
+        _describe_gem(inf);
         break;
 
     case STATUS_AIRBORNE:
@@ -706,13 +711,6 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
-    case DUR_DIMENSIONAL_BULLSEYE:
-    {
-        if (!is_bullseye_active())
-            inf.light_colour = DARKGREY;
-        break;
-    }
-
     case STATUS_ORB:
     {
         if (player_has_orb())
@@ -812,6 +810,39 @@ bool fill_status_info(int status, status_info& inf)
             break;
     }
     return true;
+}
+
+static colour_t _gem_light_colour(int d_aut_left)
+{
+    if (d_aut_left < 100)
+        return LIGHTMAGENTA;
+    if (d_aut_left < 250)
+        return RED;
+    if (d_aut_left < 500)
+        return YELLOW;
+    return WHITE;
+}
+
+static void _describe_gem(status_info& inf)
+{
+    if (!Options.always_show_gems || !gem_clock_active())
+        return;
+
+    const gem_type gem = gem_for_branch(you.where_are_you);
+    if (gem == NUM_GEM_TYPES)
+        return;
+
+    if (!Options.more_gem_info && you.gems_found[gem])
+        return;
+
+    const int time_taken = you.gem_time_spent[gem];
+    const int limit = gem_time_limit(gem);
+    if (time_taken >= limit)
+        return; // already lost...
+
+    const int d_aut_left = (limit - time_taken + 9) / 10;
+    inf.light_text = make_stringf("Gem (%d)", d_aut_left);
+    inf.light_colour = _gem_light_colour(d_aut_left);
 }
 
 static void _describe_zot(status_info& inf)

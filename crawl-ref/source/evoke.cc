@@ -77,6 +77,10 @@
 
 static bool _evoke_horn_of_geryon()
 {
+    if (stop_summoning_prompt(MR_NO_FLAGS, M_NO_FLAGS, "toot the horn"))
+        return false;
+    // Fool! Geryon toots as he pleases!
+
     bool created = false;
 
     mprf(MSGCH_SOUND, "You produce a hideous howling noise!");
@@ -294,6 +298,9 @@ string manual_skill_names(bool short_text)
 
 static bool _box_of_beasts()
 {
+    if (stop_summoning_prompt(MR_NO_FLAGS, M_NO_FLAGS, "open the box"))
+        return false;
+
     mpr("You open the lid...");
 
     // two rolls to reduce std deviation - +-6 so can get < max even at 27 sk
@@ -415,6 +422,9 @@ static bool _spill_out_spiders()
 
 static bool _sack_of_spiders()
 {
+    if (stop_summoning_prompt(MR_NO_FLAGS, M_NO_FLAGS, "reach into the sack"))
+        return false;
+
     mpr("You reach into the sack...");
 
     const bool made_mons = !you.allies_forbidden() && _spill_out_spiders();
@@ -685,6 +695,13 @@ static spret _phantom_mirror(dist *target)
         return spret::abort;
     }
 
+    monster_info mi(victim);
+    monclass_flags_t mf = M_NO_FLAGS;
+    if (mi.airborne())
+        mf |= M_FLIES;
+    if (stop_summoning_prompt(mi.mresists, mf, "use the mirror"))
+        return spret::abort;
+
     monster* mon = clone_mons(victim, true, nullptr, ATT_FRIENDLY);
     if (!mon)
     {
@@ -883,7 +900,7 @@ static const vector<random_pick_entry<cloud_type>> condenser_clouds =
   { 0,  100, 125, PEAK, CLOUD_FIRE },
   { 0,  100, 125, PEAK, CLOUD_COLD },
   { 0,  100, 125, PEAK, CLOUD_POISON },
-  { 0,  110, 50, RISE, CLOUD_NEGATIVE_ENERGY },
+  { 0,  110, 50, RISE, CLOUD_MISERY },
   { 0,  110, 50, RISE, CLOUD_STORM },
   { 0,  110, 50, RISE, CLOUD_ACID },
 };
@@ -942,7 +959,7 @@ static spret _condenser()
     {
         const cloud_type cloud = cloud_picker.pick(condenser_clouds, pow, CLOUD_NONE);
 
-        if (is_good_god(you.religion) && cloud == CLOUD_NEGATIVE_ENERGY)
+        if (is_good_god(you.religion) && cloud == CLOUD_MISERY)
         {
             suppressed = true;
             continue;
@@ -1164,35 +1181,28 @@ bool evoke_item(item_def& item, dist *preselect)
             break;
 
         case MISC_HORN_OF_GERYON:
-            if (_evoke_horn_of_geryon())
-            {
-                expend_xp_evoker(item.sub_type);
-                practise_evoking(3);
-            }
-            else
+            if (!_evoke_horn_of_geryon())
                 return false;
+            expend_xp_evoker(item.sub_type);
+            practise_evoking(3);
             break;
 
         case MISC_BOX_OF_BEASTS:
-            if (_box_of_beasts())
-            {
-                expend_xp_evoker(item.sub_type);
-                if (!evoker_charges(item.sub_type))
-                    mpr("The box is emptied!");
-                practise_evoking(1);
-            }
+            if (!_box_of_beasts())
+                return false;
+            expend_xp_evoker(item.sub_type);
+            if (!evoker_charges(item.sub_type))
+                mpr("The box is emptied!");
+            practise_evoking(1);
             break;
 
         case MISC_SACK_OF_SPIDERS:
-            if (_sack_of_spiders())
-            {
-                expend_xp_evoker(item.sub_type);
-                if (!evoker_charges(item.sub_type))
-                    mpr("The sack is emptied!");
-                practise_evoking(1);
-            }
-            else
+            if (!_sack_of_spiders())
                 return false;
+            expend_xp_evoker(item.sub_type);
+            if (!evoker_charges(item.sub_type))
+                mpr("The sack is emptied!");
+            practise_evoking(1);
             break;
 
         case MISC_LIGHTNING_ROD:

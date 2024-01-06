@@ -426,6 +426,16 @@ vault_stone13
 vault_stone14
 vault_stone15
 
+%weight 10
+wall_stone_depths0 STONE_WALL_DEPTHS
+%weight 7
+wall_stone_depths1
+%weight 5
+wall_stone_depths2
+%weight 3
+wall_stone_depths3
+wall_stone_depths4
+
 # ssssssss
 %weight 10
 wall_stone_spider0 STONE_WALL_SPIDER
@@ -453,6 +463,7 @@ wall_stone_shoals3
 %weight 10
 wall_stone_shoals4
 
+%weight 10
 wall_oozing0 WALL_OOZING
 wall_oozing1
 %weight 4

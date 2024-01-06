@@ -57,16 +57,16 @@ end
 
 --[[
 Determine if we're placing a hard difficulty ice cave map. Possible depths for
-easy ice caves are D:11-13, Lair, Orc. Hard ice caves are placed in D:14-15,
-Elf and the Lair roulette branches. This function must be updated if the depth
-range of ice cave changes, which is set by the default-depth statement of the
-entry vault section or by the entry maps themselves.
+easy ice caves are D:11-13, Lair, Orc. Hard ice caves are placed in Elf and the
+Lair roulette branches. This function must be updated if the depth range of ice
+cave changes, which is set by the default-depth statement of the entry vault
+section or by the entry maps themselves.
 
 treturn bool True for hard difficulty, false for easy.
 ]]
 function hard_ice_cave_difficulty()
 
-    if you.in_branch("D") and you.depth() < 14 or you.in_branch("Lair") or
+    if you.in_branch("D") or you.in_branch("Lair") or
        you.in_branch("Orc") then
         return false
     end
@@ -444,7 +444,7 @@ end
 ###############################################################################
 # Entry vaults that place for both ice cave difficulties.
 
-default-depth: D:11-, Lair, Orc, Elf, Swamp, Shoals, Snake, Spider
+default-depth: D:11-13, Lair, Orc, Elf, Swamp, Shoals, Snake, Spider
 
 NAME:   portal_ice_cave_entry_pillars_1
 TAGS:   transparent
@@ -579,7 +579,7 @@ ENDMAP
 ###############################################################################
 # Entry vaults that only place hard ice cave entrances
 
-default-depth: D:14-, Elf, Swamp, Shoals, Snake, Spider
+default-depth: Elf, Swamp, Shoals, Snake, Spider
 
 NAME:   portal_ice_cave_entry_pillars_three
 TAGS:   transparent
@@ -611,7 +611,7 @@ ENDMAP
 
 NAME:   portal_ice_cave_entry_horrid_things
 TAGS:   patrolling no_monster_gen transparent
-DEPTH:  D:14-, Elf, Snake, Swamp
+DEPTH:  Elf, Snake, Swamp
 WEIGHT: 5
 : ice_cave_portal(_G)
 MONS:   white ugly thing, freezing wraith, azure jelly / white very ugly thing

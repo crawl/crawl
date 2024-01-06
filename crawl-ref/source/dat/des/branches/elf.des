@@ -57,15 +57,15 @@ function elf_setup(e)
 end
 
 function elf_loot_randomisation(e)
-  e.kfeat("$ = $")
-  e.kfeat("* = *")
-  e.kfeat("| = |")
+  e.kitem("$ = $")
+  e.kitem("* = *")
+  e.kitem("| = |")
+  e.kitem("R = gold, shimmering gem")
   e.subst("| = | *:2")
   e.nsubst("$ = 1:R / *:$")
   e.subst("$ = $:20 *:4 |:1")
   e.subst("* = * |:3")
   e.nsubst("* = 2:$ / *:*")
-  e.kitem("R = gold, shimmering gem")
 end
 
 -- The standard Elf:$ monster set
@@ -1635,7 +1635,7 @@ KMONS: V = deep elf death mage / nothing
 KMONS: 2 = flayed ghost / shadow wraith / phantasmal warrior / curse skull / \
            eidolon / ghoul / skeletal warrior / ancient champion / \
            vampire / vampire mage / vampire knight / jiangshi
-KMONS: 3 = lost soul / flying skull / spectral deep elf blademaster / \
+KMONS: 3 = lost soul / weeping skull / spectral deep elf blademaster / \
            deep elf blademaster simulacrum / spectral deep elf knight / \
            deep elf knight simulacrum
 KFEAT: 1V = V
@@ -2717,15 +2717,17 @@ SUBST:   4=4., 2=2., 5=5., 3=3.
 KMONS:   $ = weight:115 nothing / deep elf annihilator
 KMONS:   * = weight:105 nothing / deep elf death mage
 KMONS:   | = weight:290 nothing / deep elf sorcerer
-KFEAT:   $ = $
-KFEAT:   * = *
+KITEM:   $ = $
+KITEM:   R = gold, shimmering gem
+NSUBST:  $ = 1:R / *:$
+KITEM:   * = *
 KFEAT:   | = |
 SUBST:   | = | *:2
 SUBST:   * = * |:3
 KMONS:   A = deep elf master archer
-KFEAT:   A = |
+KITEM:   A = |
 KMONS:   B = deep elf blademaster
-KFEAT:   B = |
+KITEM:   B = |
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xccccccccccccccccccccccccccx
@@ -2770,9 +2772,11 @@ SUBST:   N=@, n=., Z=c, z=c
 KMONS:   $ = weight:115 nothing / deep elf annihilator
 KMONS:   * = weight:105 nothing / deep elf death mage
 KMONS:   | = weight:290 nothing / deep elf sorcerer
-KFEAT:   $ = $
-KFEAT:   * = *
-KFEAT:   | = |
+KITEM:   R = gold, shimmering gem
+NSUBST:  $ = 1:R / *:$"
+KITEM:   $ = $
+KITEM:   * = *
+KITEM:   | = |
 SUBST:   | = | *:2
 SUBST:   * = * |:3
 KITEM:   6 = |
@@ -2808,8 +2812,7 @@ xxxxxxxxxxxNncnNxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-## minmay's Elf hall
-##
+
 NAME:    minmay_elf_hall
 TAGS:    nolayout_halls
 PLACE:   Elf:$
@@ -2859,8 +2862,6 @@ xcccccccccxxxxxxxxxxxxxxxxxxxcccccccccx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-##############################################################################
-## minmay's more circular hall
 ##
 NAME:    minmay_elf_hall_circle
 PLACE:   Elf:$
@@ -2906,8 +2907,6 @@ xxxxxxxxccc.........cccxxxxxxxxx
 xxxxxxxxxxccccc@cccccxxxxxxxxxxx
 ENDMAP
 
-##############################################################################
-## minmay
 # Before transforms: 32x$, 27x*, 29x|, 4x1, 13x2, 10x3, 6x4, 9x5, 4x6, 2x7
 #
 NAME:    minmay_elf_hall_hex
@@ -3498,7 +3497,7 @@ xxxxxxxxcc...ccxxxxxxxxxx
 xxxxxxxxxcc@ccxxxxxxxxxxx
 ENDMAP
 
-# Before transforms: 27x*, 31x|, 6x1, 8x2, 8x3, 4x4, 8x5, 2x6, 2x7
+# Before transforms: 1x$, 27x*, 31x|, 6x1, 8x2, 8x3, 4x4, 8x5, 2x6, 2x7
 NAME:    minmay_elf_hall_curves
 PLACE:   Elf:$
 ORIENT:  northwest
@@ -3535,8 +3534,8 @@ xc.......cccc..3..bbbbbb...c|*|c
 xc...5.4....ccc...bbbbbb...c**|c
 xc....v.....5.cc..bbbbbb.2cc||*c
 xcc..vvv.......c.6.bbbb...c||*cc
-xxc...vvvv.2...cc........cc**|cx
-xxc....vvvvv....c.U...4.cc||*|cx
+xxc...vvvv.2...cc.......ccc**|cx
+xxc....vvvvv....c.U...4.c$||*|cx
 xxcc.....vvvv...c..3.7ccc***|ccx
 xxxc..5....vvv..cc+cccc|*||**cxx
 xxxcc.......v....c**||**|*|*ccxx
@@ -3583,7 +3582,7 @@ xxxxxxxxxcccc...ccccxxxxxxxxx
 xxxxxxxxxxxxcc@ccxxxxxxxxxxxx
 ENDMAP
 
-# Before transforms: 44x|, 4x1, 4x2, 4x3, 4x4, 12x5, 4x6, 4x7
+# Before transforms: 1x$, 44x|, 4x1, 4x2, 4x3, 4x4, 12x5, 4x6, 4x7
 NAME:    minmay_elf_hall_statues
 TAGS:    nolayout_halls
 PLACE:   Elf:$
@@ -3614,12 +3613,12 @@ xcnnncc...+..U.6b..1....vv..cc..5c
 xc...c..7.bb....bn.......v...c.G.c
 xc.v.c.....bb6...nnbbb.....G1c5..c
 xc...c......bbb.G.bb6bbb..1..c...c
-xc.v.+..vv....nn..|||||bb....+.G.c
+xc.v.+..vv....nn.||||||bb....+.G.c
 xc.4.c..2vv....nb|||||||b...4c..5c
 xc.v.c....vv...bb|||||||bb.G.c...c
 xc...c.....vv..b6|||U|||7b...c.G.c
 xc.v.cc......2.bb|||||||bb..cc...c
-xc....c...vv..3.b|||||||b...c5...c
+xc....c...vv..3.b|||||$|b...c5...c
 xc....cc...vv...bb|||||bb..cc....c
 xcc....c....vv...bbb7bbb...c...5.c
 xxc....cc....vv....bbb....cc.v...c

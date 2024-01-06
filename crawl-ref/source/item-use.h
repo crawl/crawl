@@ -54,7 +54,7 @@ bool use_an_item(operation_types oper, item_def *target=nullptr);
 bool item_is_worn(int inv_slot);
 
 bool enchant_weapon(item_def &wpn, bool quiet);
-bool enchant_armour(int &ac_change, bool quiet, item_def &arm);
+bool enchant_armour(item_def &arm, bool quiet);
 
 void prompt_inscribe_item();
 

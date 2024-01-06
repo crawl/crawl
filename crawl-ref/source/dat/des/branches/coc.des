@@ -737,6 +737,29 @@ ww~M....M~ww
   ww~WW~ww
 ENDMAP
 
+NAME:   tekkud_coc_lazy_river
+TAGS:   transparent no_pool_fixup
+DEPTH:  Coc:2-
+KMONS:  1 = pharaoh ant
+KMONS:  2 = wendigo
+KMONS:  3 = juggernaut
+KMONS:  4 = frost giant / titan
+KMONS:  5 = shard shrike / azure jelly
+KFEAT:  12345 = shallow_water
+NSUBST: 5 = 3:5 / 2:W / * = 55W
+MAP
+      wwwww
+     WwwwwwwWw
+    wWWWw516WWw
+   www54W2Wwwwww
+  www5314wwwww
+ www5255w5ww
+wwwW4Ww3WwWww
+wW15WwwwwwWW
+WWwWwwww
+  ww
+ENDMAP
+
 ##############################################################################
 # Antaeus; bottom of Cocytus.
 ##############################################################################
@@ -1195,7 +1218,7 @@ MONS:     patrolling ice fiend, patrolling titan
 KMONS:    8 = ice statue
 KMONS:    9 = elemental wellspring
 KFEAT:    9 = w
-KFEAT:   X = open_sea
+KFEAT:    X = open_sea
 : serpent_of_hell_setup(_G)
 SHUFFLE:  ABCEF
 SUBVAULT: A : coc_grunt_cove_antaeus

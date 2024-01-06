@@ -830,7 +830,8 @@ bool mons_is_firewood(const monster& mon)
 // "body" in a purely grammatical sense.
 bool mons_has_body(const monster& mon)
 {
-    if (mon.type == MONS_FLYING_SKULL
+    if (mon.type == MONS_WEEPING_SKULL
+        || mon.type == MONS_LAUGHING_SKULL
         || mons_species(mon.type) == MONS_CURSE_SKULL // including Murray
         || mon.type == MONS_CURSE_TOE
         || mon.type == MONS_DEATH_COB
@@ -1642,7 +1643,9 @@ int mons_class_regen_amount(monster_type mc)
     {
     case MONS_PARGHIT:            return 27;
     case MONS_DEMONIC_CRAWLER:
-    case MONS_PROTEAN_PROGENITOR: return 6;
+    case MONS_PROTEAN_PROGENITOR:
+    case MONS_ASPIRING_FLESH:
+    case MONS_MARTYRED_SHADE:     return 6;
     default:                      return 1;
     }
 }
@@ -1776,6 +1779,7 @@ bool mons_can_be_spectralised(const monster& mon, bool divine)
 {
     return mons_class_can_be_spectralised(mon.type, divine)
            && !mon.is_summoned()
+           && !mons_is_tentacle_or_tentacle_segment(mon.type)
            && (!testbits(mon.flags, MF_NO_REWARD)
                || mon.props.exists(KIKU_WRETCH_KEY))
            && (mons_has_attacks(mon, true)
@@ -2289,9 +2293,13 @@ int flavour_damage(attack_flavour flavour, int HD, bool random)
             if (random)
                 return HD * 3 / 4 + random2(HD * 3 / 4);
             return HD * 3 / 2;
+        // Note: This value is only used for displaying monster damage with xv
+        //       and is a lie against non-player targets.
+        //       Actual attacks call actor->splash_with_acid() directly.
         case AF_ACID:
+        case AF_REACH_TONGUE:
             if (random)
-                return roll_dice(3, 4);
+                return roll_dice(4, 3);
             return 12;
         default:
             return 0;
@@ -2526,11 +2534,12 @@ int exper_value(const monster& mon, bool real, bool legacy)
             case SPELL_CALL_DOWN_DAMNATION:
             case SPELL_HURL_DAMNATION:
             case SPELL_SYMBOL_OF_TORMENT:
-            case SPELL_GLACIATE:
             case SPELL_FIRE_STORM:
-            case SPELL_SHATTER:
-            case SPELL_CHAIN_LIGHTNING:
+            case SPELL_GLACIATE:
             case SPELL_POLAR_VORTEX:
+            case SPELL_SHATTER:
+            case SPELL_ORB_OF_ELECTRICITY:
+            case SPELL_CHAIN_LIGHTNING:
             case SPELL_LEGENDARY_DESTRUCTION:
             case SPELL_SUMMON_ILLUSION:
             case SPELL_SPELLFORGED_SERVITOR:
@@ -2545,26 +2554,31 @@ int exper_value(const monster& mon, bool real, bool legacy)
                 diff += 20;
                 break;
 
-            case SPELL_LIGHTNING_BOLT:
+            case SPELL_VITRIFY:
+            case SPELL_BANISHMENT:
+            case SPELL_FAKE_MARA_SUMMON:
             case SPELL_PYRE_ARROW:
             case SPELL_MINDBURST:
-            case SPELL_BANISHMENT:
-            case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
-            case SPELL_IRON_SHOT:
-            case SPELL_BOMBARD:
             case SPELL_IOOD:
             case SPELL_FIREBALL:
-            case SPELL_AGONY_RANGE:
+            case SPELL_PLASMA_BEAM:
+            case SPELL_IRON_SHOT:
+            case SPELL_BOMBARD:
+            case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
             case SPELL_LRD:
+            case SPELL_LIGHTNING_BOLT:
+            case SPELL_CONJURE_BALL_LIGHTNING:
+            case SPELL_MARCH_OF_SORROWS:
+            case SPELL_AGONY:
             case SPELL_DIG:
-            case SPELL_FAKE_MARA_SUMMON:
                 diff += 10;
                 break;
 
-            case SPELL_HAUNT:
             case SPELL_SUMMON_DRAGON:
             case SPELL_SUMMON_HORRIBLE_THINGS:
+            case SPELL_HAUNT:
             case SPELL_PLANEREND:
+            case SPELL_MALIGN_GATEWAY:
             case SPELL_SUMMON_EMPEROR_SCORPIONS:
                 diff += 7;
                 break;
@@ -5090,16 +5104,6 @@ bool mons_is_recallable(const actor* caller, const monster& targ)
            && mons_class_is_threatening(targ.type);
 }
 
-vector<monster* > get_on_level_followers()
-{
-    vector<monster* > mon_list;
-    for (monster_iterator mi; mi; ++mi)
-        if (mons_is_recallable(&you, **mi) && mi->foe == MHITYOU)
-            mon_list.push_back(*mi);
-
-    return mon_list;
-}
-
 bool mons_stores_tracking_data(const monster& mons)
 {
     return mons.type == MONS_THORN_HUNTER
@@ -5151,7 +5155,11 @@ bool mons_is_player_shadow(const monster& mon)
 bool mons_has_attacks(const monster& mon, bool allow_damageless)
 {
     const mon_attack_def attk = mons_attack_spec(mon, 0);
-    return attk.type != AT_NONE && (allow_damageless || attk.damage > 0);
+    return attk.type != AT_NONE
+           && (attk.type != AT_WEAP_ONLY || mon.weapon(0))
+           && (allow_damageless
+               || attk.damage > 0
+               || (attk.type == AT_WEAP_ONLY && mon.weapon(0)));
 }
 
 // The default suitable() function for choose_random_nearby_monster().

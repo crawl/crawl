@@ -994,7 +994,7 @@ static void _inc_gift_timeout(int val)
 static monster_type _yred_servants[] =
 {
     MONS_WIGHT, MONS_NECROPHAGE, MONS_SHADOW, MONS_PHANTOM, MONS_WRAITH,
-    MONS_FLYING_SKULL, MONS_FREEZING_WRAITH, MONS_VAMPIRE, MONS_SHADOW_WRAITH,
+    MONS_VAMPIRE, MONS_FREEZING_WRAITH, MONS_LAUGHING_SKULL, MONS_SHADOW_WRAITH,
     MONS_PHANTASMAL_WARRIOR, MONS_BOG_BODY, MONS_SKELETAL_WARRIOR,
     MONS_JIANGSHI, MONS_FLAYED_GHOST, MONS_VAMPIRE_KNIGHT, MONS_EIDOLON,
     MONS_DEATH_COB, MONS_ANCIENT_CHAMPION, MONS_GHOUL, MONS_REVENANT,
@@ -1555,25 +1555,29 @@ static bool _give_kiku_gift(bool forced)
     vector<spell_type> spell_options;
     vector<spell_type> chosen_spells;
 
-    // The first set should guarantee the player at least one ally spell, to
-    // complement the Wretches ability.
+    // The first set guarantees the player at least one mid-level spell that
+    // benefits from wretches.
     if (first_gift)
     {
-        chosen_spells.push_back(SPELL_NECROTISE);
-        spell_options = {SPELL_KISS_OF_DEATH,
+        if (coinflip())
+            chosen_spells.push_back(SPELL_ANIMATE_DEAD);
+        else
+            chosen_spells.push_back(SPELL_FUGUE_OF_THE_FALLEN);
+
+        spell_options = {SPELL_NECROTISE,
+                         SPELL_KISS_OF_DEATH,
                          SPELL_SUBLIMATION_OF_BLOOD,
                          SPELL_ROT,
-                         SPELL_VAMPIRIC_DRAINING,
-                         SPELL_ANIMATE_DEAD};
+                         SPELL_VAMPIRIC_DRAINING};
     }
     else
     {
         spell_options = {SPELL_ANGUISH,
+                         SPELL_MARTYRS_KNELL,
                          SPELL_DISPEL_UNDEAD,
-                         SPELL_AGONY,
+                         SPELL_CURSE_OF_AGONY,
                          SPELL_BORGNJORS_VILE_CLUTCH,
-                         SPELL_DEATH_CHANNEL,
-                         SPELL_SIMULACRUM};
+                         SPELL_DEATH_CHANNEL};
     }
 
     shuffle_array(spell_options);

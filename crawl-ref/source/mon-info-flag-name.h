@@ -43,7 +43,9 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_PARTIALLY_CHARGED, "charging", "partially charged", "charging"},
     { MB_AGILE, "agile", "unusually agile", "agile"},
     { MB_SWIFT, "swift", "covering ground quickly", "swift"},
+#if TAG_MAJOR_VERSION == 34
     { MB_PURSUING, "pursuing", "pursuing quickly", "pursuing"},
+#endif
     { MB_STILL_WINDS, "stilling wind", "stilling the winds", "stilling wind"},
     { MB_SILENCING, "silencing", "radiating silence", "silencing"},
     { MB_READY_TO_HOWL, "can howl", "ready to howl", "can howl"},
@@ -69,7 +71,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_CLOUD_RING_MUTATION, "clouds", "surrounded by mutagenic energy", "clouds" },
     { MB_CLOUD_RING_FOG, "clouds", "surrounded by fog", "clouds" },
     { MB_CLOUD_RING_ICE, "clouds", "surrounded by freezing clouds", "clouds" },
-    { MB_CLOUD_RING_DRAINING, "clouds", "surrounded by negative energy", "clouds" },
+    { MB_CLOUD_RING_MISERY, "clouds", "surrounded by negative energy", "clouds" },
     { MB_CLOUD_RING_ACID, "clouds", "surrounded by acidic fog", "clouds" },
     { MB_CLOUD_RING_MIASMA, "clouds", "surrounded by foul miasma", "clouds" },
     { MB_FIRE_CHAMPION, "flame-wreathed", "flame-wreathed", "flame-wreathed"},
@@ -134,10 +136,10 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_ALLY_TARGET, "ally target", "ally target", "ally target"},
     { MB_ANTIMAGIC, "magic disrupted", "magic disrupted", "magic disrupted"},
     { MB_ANGUISH, "anguished", "anguished", "anguished"},
-    { MB_SIMULACRUM, "simulacrum", "simulacrum", "simulacrum"},
     { MB_REFLECTING, "reflecting", "reflecting blocked projectiles", "reflecting"},
     { MB_TELEPORTING, "teleporting", "about to teleport", "teleporting"},
     { MB_BOUND, "bound", "bound in place", "bound" },
     { MB_BULLSEYE_TARGET, "bullseye target", "targeted by your dimensional bullseye", "bullseye target" },
     { MB_VITRIFIED, "vitrified", "fragile as glass", "vitrified" },
+    { MB_CURSE_OF_AGONY, "agonized", "cursed with the promise of agony", "cursed with agony" },
 };

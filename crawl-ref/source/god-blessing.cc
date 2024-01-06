@@ -253,7 +253,7 @@ static string _beogh_bless_ranged_weapon(monster* mon)
     _gift_weapon_to_orc(mon, WPN_ORCBOW);
     if (mon->launcher() == nullptr)
     {
-        dprf("Couldn't give crossbow to follower!");
+        dprf("Couldn't give orcbow to follower!");
         return ""; // ?
     }
 
@@ -380,9 +380,8 @@ static string _beogh_bless_armour(monster* mon)
     }
 
     // And enchant or uncurse it. (Lower chance for higher enchantment.)
-    int ac_change;
     const bool enchanted = !x_chance_in_y(arm.plus, armour_max_enchant(arm))
-                           && enchant_armour(ac_change, true, arm);
+                           && enchant_armour(arm, true);
 
     if (enchanted)
         set_ident_flags(arm, ISFLAG_KNOW_PLUSES);

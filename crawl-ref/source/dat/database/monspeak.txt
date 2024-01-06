@@ -1233,12 +1233,6 @@ VISUAL:@The_monster@ is wreathed in a cloud of translocational energy.
 
 VISUAL:@The_monster@ blinks @at_foe@.
 %%%%
-Transmutations player ghost
-
-VISUAL:@The_monster@ briefly looks inexplicably like a @_form_@.
-
-VISUAL:@The_monster@ briefly turns into a @_form_@ and back.
-%%%%
 Fire Magic player ghost
 
 @The_monster@ says, "I love the smell of burning flesh."
@@ -1271,7 +1265,7 @@ Earth Magic player ghost
 
 VISUAL:The earth trembles for a moment.
 %%%%
-Poison Magic player ghost
+Alchemy player ghost
 
 @The_monster@ says, "A minor scratch like that one is certainly harmless."
 
@@ -1300,6 +1294,15 @@ VISUAL:@The_monster@ prays.
 Evocations player ghost
 
 @The_monster@ says @to_foe@, "Are you sure you're pointing that wand in the right direction?"
+%%%%
+Shapeshifting player ghost
+
+# The Heart Sutra
+@The_monster@ says, "Form is emptiness; emptiness is form."
+
+VISUAL:@The_monster@ briefly looks inexplicably like a @_form_@.
+
+VISUAL:@The_monster@ briefly turns into a @_form_@ and back.
 %%%%
 Ashenzari player ghost
 
@@ -2025,6 +2028,7 @@ _Blork_rare_
 ############ BORIS ### An ancient lich with the nasty habit of coming back
 Boris
 
+w:8
 @_Boris_common_@
 
 w:5
@@ -2048,9 +2052,11 @@ _Boris_medium_
 
 @The_monster@ says, "You want the ORB? You'll never get it." @player_only@
 
-@The_monster@ says @to_foe@, "My power is unlimited."
+@The_monster@ boasts with wailing echoes, "My power is unlimited."
 
-@The_monster@ says @to_foe@, "You can't kill me. I'm immortal."
+@The_monster@ claims, "You mortals are all unique only in the ways you'll break."
+
+@The_monster@ says @to_foe@, "You can't kill me in a way that matters."
 
 @The_monster@ says @to_foe@, "I know the secret of eternal life. Do you?"
 
@@ -2058,7 +2064,7 @@ _Boris_medium_
 
 @The_monster@ says @to_foe@, "Who wants to live forever? Me."
 
-@The_monster@ says @to_foe@, "There's only one solution for you. To die."
+@The_monster@ says @to_foe@, "There's only one solution for all of you. To die."
 
 @The_monster@ says @to_foe@, "You can never win."
 %%%%
@@ -2066,13 +2072,19 @@ _Boris_rare_
 
 @The_monster@ says @to_foe@, "I didn't invite you."
 
-@The_monster@ says @to_foe@, "The world, the flesh and the devil."
+@The_monster@ says @to_foe@, "The world, the flesh, and the devil."
+
+@The_monster@ says, "There's no good or evil. Just power and will."
+
+# Kill Six Billion Demons
+@The_monster@ says, "You have all forgotten the taste of death."
+
+# Magic: the Gathering
+@The_monster@ claims, "I care not for such insignificant forces as time or death."
 
 @The_monster@ says "Magic. You know nothing about it."
 
-@The_monster@ says @to_foe@, "I'll be back."
-
-@The_monster@ says @to_foe@, "Join the legion of my servants."
+@The_monster@ says @to_foe@, "Join my legions of the broken and the beaten."
 %%%%
 Boris killed
 
@@ -2100,6 +2112,9 @@ _Boris_return_rare_
 @The_monster@ says @to_foe@, "You cannot defeat me so easily!"
 
 @The_monster@ says @to_foe@, "We will meet again!"
+
+w:5
+@The_monster@ asks, "Do I look like the kind of man who dies?"
 %%%%
 Boris unsummoned
 
@@ -2114,6 +2129,8 @@ Boris triumphant
 @The_monster@ says, "And that's the last I'll see of you."
 
 @The_monster@ says, "I'd like to see you come back from this one."
+
+@The_monster@ says, "I'll treasure this one."
 ## END Boris ##
 %%%%
 ############ CHUCK ### An avid rock collector.
@@ -4328,6 +4345,166 @@ Frederick triumphant
 @The_monster@ says, "What a chore."
 
 @The_monster@ says, "You don't even know how to die right."
+
+@The_monster@ sighs, "Killing weak @player_genus_plural@ does nothing to prove my superiority."
+
+@The_monster@ sighs, "Another waste of time."
+%%%%
+Ashenzari Frederick triumphant
+
+@The_monster@ shakes @possessive@ head sadly, "Willingly donning a god's shackles... pitiful."
+
+@Frederick@
+%%%%
+Beogh Frederick triumphant
+
+@The_monster@ sighs, "Your brethren were only holding you back, @player_genus@."
+
+@Frederick@
+%%%%
+Cheibriados Frederick triumphant
+
+@The_monster@ says, "Be happy - you can't get any slower than dead."
+
+@Frederick@
+%%%%
+Dithmenos Frederick triumphant
+
+@The_monster@ says, "Time for you to vanish into the darkness."
+
+@Frederick@
+%%%%
+Elyvilon Frederick triumphant
+
+@The_monster@ says, "Healer, heal thyself."
+
+@Frederick@
+%%%%
+Fedhas Frederick triumphant
+
+@The_monster@ says, "You're grass, mortal."
+
+@Frederick@
+%%%%
+Gozag Frederick triumphant
+
+@The_monster@ says, "Your greed held you back."
+
+@Frederick@
+%%%%
+Hepliaklqana Frederick triumphant
+
+@The_monster@ says, "Relying on the deeds of your ancestors brought you no glory."
+
+@Frederick@
+%%%%
+Ignis Frederick triumphant
+
+@The_monster@ says, "Foolish to worship a god whose flame is even dimmer than you."
+
+@Frederick@
+%%%%
+Jivya Frederick triumphant
+
+@The_monster@ says, "Our battle was as dull and shapeless as your god."
+
+@Frederick@
+%%%%
+Kikubaaqudgha Frederick triumphant
+
+@The_monster@ sighs, "Join the corpses you idolise, mortal."
+
+@Frederick@
+%%%%
+Lugonu Frederick triumphant
+
+@The_monster@ says, "A more permanent form of banishment for you, mortal."
+
+@Frederick@
+%%%%
+Makhleb Frederick triumphant
+
+@The_monster@ says, "And take your demons with you."
+
+@Frederick@
+%%%%
+Nemelex Xobeh Frederick triumphant
+
+@The_monster@ says, "Looks like you fold, gambler."
+
+@Frederick@
+%%%%
+Okawaru Frederick triumphant
+
+@The_monster@ says, "Now do you deem me a worthy opponent?"
+
+@Frederick@
+%%%%
+Qazlal Frederick triumphant
+
+@The_monster@ says, "Finally, I'll be able to get some peace and quiet."
+
+@Frederick@
+%%%%
+Ru Frederick triumphant
+
+@The_monster@ says, "You gave up too much of yourself."
+
+@Frederick@
+%%%%
+Sif Muna Frederick triumphant
+
+@The_monster@ sighs, "Relying on the knowledge of others got you nowhere, mortal."
+
+@Frederick@
+%%%%
+Trog Frederick triumphant
+
+@The_monster@ says, "I'm sure you'll make a fine angry ghost."
+
+@Frederick@
+%%%%
+Uskayaw Frederick triumphant
+
+@The_monster@ says, "You've danced your last steps."
+
+@Frederick@
+%%%%
+Vehumet Frederick triumphant
+
+@The_monster@ says, "A mage should rely only on their own abilities."
+
+@Frederick@
+%%%%
+Wu Jian Frederick triumphant
+
+@The_monster@ says, "You should only rely on techniques you've developed yourself."
+
+@Frederick@
+%%%%
+Xom Frederick triumphant
+
+@The_monster@ frowns, "Willingly giving yourself over as a plaything to Xom... strange behaviour."
+
+@Frederick@
+%%%%
+Yredelemnul Frederick triumphant
+
+@The_monster@ says, "Find comfort in joining the legions you worship."
+
+@Frederick@
+%%%%
+Zin Frederick triumphant
+
+@The_monster@ says, "The only thing more annoying than a worshipper is a proselytiser."
+
+@Frederick@
+%%%%
+the Shining One Frederick triumphant
+
+@The_monster@ says, "The adventurer who shines twice as bright burns out twice as fast."
+
+@Frederick@
 %%%%
 ############ FANNAR ### A cold-hearted elven sorcerer
 Fannar
@@ -5339,7 +5516,7 @@ VISUAL:@The_monster@ smiles, but it's obviously fake.
 
 @The_monster@ says @to_foe@, "Leave now, and tell all of Margery's mercy!"
 
-@The_monster@ says @to_foe@, "Fear not. I will immortalize you in the tale of my first kill."
+@The_monster@ says @to_foe@, "Fear not. I will immortalise you in the tale of my first kill."
 
 VISUAL:@The_monster@ gives herself a magical halo, but it quickly sputters out.
 
@@ -7250,6 +7427,33 @@ VISUAL:@The_monster@ skips for a moment.
 @The_monster@ says, "Trust me, I'm a doctor."
 ## END Killer Klown ##
 %%%%
+################## Laughing skull ###########################
+laughing skull
+
+@The_monster@ @_laughs_@ at the inevitable fate of oblivion.
+
+@The_monster@ @_laughs_@ at how history will forget everyone present.
+
+@The_monster@ @_laughs_@ at the Dungeon's lack of mercy or dignity.
+
+# Kill Six Billion Demons
+@The_monster@ @_laughs_@ at the inescapable nature of violence.
+
+w:20
+__NONE
+%%%%
+laughing skull triumphant
+
+@The_monster@ crumbles to pieces from sheer joy.
+%%%%
+_laughs_
+
+cackles madly
+
+chuckles harshly
+
+gibbers darkly
+%%%%
 ################## Moth of wrath ###########################
 moth of wrath
 
@@ -7355,6 +7559,57 @@ _tormentor_rare_
 
 @The_monster@ shouts @at_foe@, "I'll tear you apart!"
 ## END _tormentor_ ##
+%%%%
+################## Weeping skull ##################################
+weeping skull
+
+w:7
+@_weeping_skull_common_@
+
+w:1
+@_weeping_skull_rare_@
+
+w:4
+__NONE
+%%%%
+_weeping_skull_common_
+
+@The_monster@ @_weeps_@ for your inevitable fate. @player_only@
+
+@The_monster@ @_weeps_@ at its own [deplorable|decrepit] state.
+
+# Slime, Swamp, Desolation...
+@The_monster@ grieves for the multitudes of fallen [empires|civilizations].
+
+# Itsumaden
+@The_monster@ begs for proper burials for the Dungeon's restless dead.
+%%%%
+_weeping_skull_rare_
+
+@The_monster@ @_weeps_@ over the unstoppable march of time and entropy.
+
+# Hollow Knight
+@The_monster@ asks how much longer can this world bear the weight of past lives.
+
+# Don't add literally everything to this one- only the ones with no chance.
+w:1
+@The_monster@ mourns the extinction of [gnomes|halflings|high elves|hill dwarves].
+
+# The shrieker shrieks.
+w:1
+@The_monster@ weeps.
+%%%%
+weeping skull triumphant
+
+@The_monster@ crumbles to pieces from sheer guilt.
+%%%%
+_weeps_
+
+moans
+
+wails
+
+sobs
 %%%%
 ################## Wizard ##################################
 arcanist

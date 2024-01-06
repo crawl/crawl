@@ -99,7 +99,7 @@ public:
         if (!you.can_potion_heal(true) || temp && you.hp == you.hp_max)
         {
             // It's not useless to drink at full health if you could hit things.
-            if (you.species == SP_ONI && has_drunken_brawl_targets())
+            if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && has_drunken_brawl_targets())
                 return true;
 
             if (reason)
@@ -179,7 +179,7 @@ public:
         if (temp && you.hp == you.hp_max)
         {
             // It's not useless to drink at full health if you could hit things.
-            if (you.species == SP_ONI && has_drunken_brawl_targets())
+            if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && has_drunken_brawl_targets())
                 return true;
 
             if (reason)
@@ -394,7 +394,7 @@ public:
         debuff_player();
         mpr("You feel magically purged.");
         const int old_contam_level = get_contamination_level();
-        contaminate_player(-1 * 1000 + random2(4000));
+        contaminate_player(-1 * (1000 + random2(4000)));
         if (old_contam_level && old_contam_level == get_contamination_level())
             mpr("You feel slightly less contaminated with magical energies.");
         return true;
@@ -579,7 +579,7 @@ public:
         else if (temp && you.magic_points == you.max_magic_points)
         {
             // It's not useless to drink at full health if you could hit things.
-            if (you.species == SP_ONI && has_drunken_brawl_targets())
+            if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && has_drunken_brawl_targets())
                 return true;
 
             if (reason)

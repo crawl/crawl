@@ -523,9 +523,9 @@ static void _add_randart_weapon_brand(const item_def &item,
     else
     {
         item_props[ARTP_BRAND] = random_choose_weighted(
-            47, SPWPN_HEAVY,
             47, SPWPN_FLAMING,
             47, SPWPN_FREEZING,
+            26, SPWPN_HEAVY,
             26, SPWPN_VENOM,
             26, SPWPN_DRAINING,
             13, SPWPN_HOLY_WRATH,
@@ -819,7 +819,7 @@ static const artefact_prop_data artp_data[] =
     { "Tloc", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_TLOC,
         []() {return 1;}, nullptr, 0, 0},
 #if TAG_MAJOR_VERSION == 34
-    { "Tmut", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_TMUT,
+    { "Tmut", ARTP_VAL_BOOL, 0, // ARTP_ENHANCE_TMUT,
         []() {return 1;}, nullptr, 0, 0},
 #endif
     { "Fire", ARTP_VAL_BOOL, 20, // ARTP_ENHANCE_FIRE,

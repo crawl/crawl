@@ -2966,6 +2966,18 @@ static bool _oni_drunken_swing()
     list<actor*> targets;
     get_cleave_targets(you, coord_def(), targets, -1, true);
 
+    // Test that we have at least one valid non-prompting attack
+    bool valid_swing = false;
+    for (actor* victim : targets)
+    {
+        melee_attack attk(&you, victim);
+        if (!attk.would_prompt_player())
+            valid_swing = true;
+    }
+
+    if (!valid_swing)
+        return false;
+
     if (!targets.empty())
     {
         if (you.weapon())
@@ -2976,12 +2988,13 @@ static bool _oni_drunken_swing()
         else
             mpr("You take a swig of the potion and flex your muscles.");
 
-
         for (actor* victim : targets)
         {
             melee_attack attk(&you, victim);
             attk.never_cleave = true;
-            attk.attack();
+
+            if (!attk.would_prompt_player())
+                attk.attack();
         }
 
         return true;
@@ -3055,7 +3068,7 @@ bool drink(item_def* potion)
 
     // Drunken master, swing!
     // We do this *before* actually drinking the potion for nicer messaging.
-    if (you.species == SP_ONI
+    if (you.has_mutation(MUT_DRUNKEN_BRAWLING)
         && oni_likes_potion(static_cast<potion_type>(potion->sub_type)))
     {
         _oni_drunken_swing();
@@ -3345,7 +3358,10 @@ bool enchant_weapon(item_def &wpn, bool quiet)
         wpn.plus++;
         success = true;
         if (!quiet)
-            mprf("%s glows red for a moment.", iname.c_str());
+        {
+            const char* dur = wpn.plus < MAX_WPN_ENCHANT ? "moment" : "while";
+            mprf("%s glows red for a %s.", iname.c_str(), dur);
+        }
     }
 
     if (!success && !quiet)
@@ -3449,16 +3465,19 @@ static bool _handle_enchant_weapon(bool alreadyknown, const string &pre_msg)
     if (!weapon)
         return !alreadyknown;
 
-    enchant_weapon(*weapon, false);
+    const bool success = enchant_weapon(*weapon, false);
+    if (success && weapon->plus == MAX_WPN_ENCHANT)
+    {
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+    }
     return true;
 }
 
-bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
+bool enchant_armour(item_def &arm, bool quiet)
 {
     ASSERT(arm.defined());
     ASSERT(arm.base_type == OBJ_ARMOUR);
-
-    ac_change = 0;
 
     // Cannot be enchanted.
     if (!is_enchantable_armour(arm))
@@ -3468,23 +3487,24 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         return false;
     }
 
-    // Output message before changing enchantment and curse status.
+    string name = _item_name(arm);
+
+    ++arm.plus;
+
     if (!quiet)
     {
         const bool plural = armour_is_hide(arm)
                             && arm.sub_type != ARM_TROLL_LEATHER_ARMOUR;
-        mprf("%s %s green for a moment.",
-             _item_name(arm).c_str(),
-             conjugate_verb("glow", plural).c_str());
+        string glow = conjugate_verb("glow", plural);
+        const char* dur = is_enchantable_armour(arm) ? "moment" : "while";
+        mprf("%s %s green for a %s.", name.c_str(), glow.c_str(), dur);
     }
-
-    arm.plus++;
-    ac_change++;
 
     return true;
 }
 
-static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
+/// Returns whether the scroll is used up.
+static bool _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
 {
     item_def* target= nullptr;
     string letter = "";
@@ -3507,34 +3527,36 @@ static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
     }
 
     if (!target)
-        return alreadyknown ? -1 : 0;
+        return !alreadyknown;
 
     // Okay, we may actually (attempt to) enchant something.
     if (alreadyknown)
         mpr(pre_msg);
 
-    int ac_change;
-    bool result = enchant_armour(ac_change, false, *target);
+    const bool success = enchant_armour(*target, false);
+    if (!success)
+        return true;
 
-    if (ac_change)
-        you.redraw_armour_class = true;
+    you.redraw_armour_class = true;
+    if (!is_enchantable_armour(*target))
+    {
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+    }
 
-    return result ? 1 : 0;
+    return true;
 }
 
 static void _vulnerability_scroll()
 {
     const int dur = 30 + random2(20);
-    mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, &you, dur * BASELINE_DELAY);
 
     // Go over all creatures in LOS.
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
         if (monster* mon = monster_at(*ri))
         {
-            // If relevant, monsters have their WL halved.
-            if (!mons_invuln_will(*mon))
-                mon->add_ench(lowered_wl);
+            mon->strip_willpower(&you, dur, true);
 
             // Annoying but not enough to turn friendlies against you.
             if (!mon->wont_attack())
@@ -3542,8 +3564,8 @@ static void _vulnerability_scroll()
         }
     }
 
-    you.set_duration(DUR_LOWERED_WL, dur, 0,
-                     "Magic quickly surges around you.");
+    you.strip_willpower(&you, dur, true);
+    mpr("A wave of despondency washes over your surroundings.");
 }
 
 static bool _is_cancellable_scroll(scroll_type scroll)
@@ -4091,8 +4113,7 @@ bool read(item_def* scroll, dist *target)
             mpr("It is a scroll of enchant armour.");
             // included in default force_more_message (to show it before menu)
         }
-        cancel_scroll =
-            (_handle_enchant_armour(alreadyknown, pre_succ_msg) == -1);
+        cancel_scroll = !_handle_enchant_armour(alreadyknown, pre_succ_msg);
         break;
 #if TAG_MAJOR_VERSION == 34
     case SCR_CURSE_WEAPON:

@@ -1440,13 +1440,12 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             indirectkiller = blame[blame.size() - 1].get_string();
             _strip_to(indirectkiller, " by ");
             _strip_to(indirectkiller, "ed to "); // "attached to" and similar
+            _strip_to(indirectkiller, "ed from "); // "spawned from" and similar
 
-            killerpath = "";
-
+            vector<string> path_parts;
             for (const auto &bl : blame)
-                killerpath = killerpath + ":" + _xlog_escape(bl.get_string());
-
-            killerpath.erase(killerpath.begin());
+                path_parts.push_back(_xlog_escape(bl.get_string()));
+            killerpath = join_strings(path_parts.begin(), path_parts.end(), ":");
         }
         else
         {
@@ -1985,7 +1984,9 @@ string scorefile_entry::runes_gems_desc(bool semiverbose) const
                              extra ? "and" : "with",
                              gems_found,
                              (gems_found > 1) ? "s" : "");
-        if (Options.more_gem_info)
+        // semiverbose is true here only when making the vmsg logfile field,
+        // so we always display all gem info when it is true
+        if (Options.more_gem_info || semiverbose)
         {
             if (gems_intact == 1 && gems_found == 1)
                 desc += " (intact)";
@@ -2831,7 +2832,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             else if (needs_called_by_monster_line)
             {
                 desc += make_stringf("... %s by %s",
-                         death_type == KILLED_BY_COLLISION ? "caused" :
+                         death_type == KILLED_BY_COLLISION ? "after being knocked back" :
                          auxkilldata == "by angry trees"   ? "awakened" :
                          auxkilldata == "by Freeze"        ? "generated"
                                                            : "invoked",

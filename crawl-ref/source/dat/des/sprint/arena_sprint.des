@@ -230,7 +230,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "zombie / skeleton / wight w:5 / necrophage / phantom w:5",
                 "scorpion / water moccasin w:2 / redback w:1 / killer bee w:2",
                 "endoplasm / w:5 jelly",
-                "giant cockroach w:20 / scorpion / worm"
+                "giant cockroach w:20 / scorpion / ribbon worm"
             }
         elseif round <= 5 then
             mon_set = {
@@ -312,7 +312,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Misc
                 "centaur w:20 / centaur warrior w:2 / nessos w:1",
                 "ugly thing",
-                "tyrant leech / worm / brain worm w:5",
+                "tyrant leech / ribbon worm / brain worm w:5",
                 "ogre w:15 / two-headed ogre / ogre mage w:5 / w:1 erolcha",
                 "troll / deep troll w:12 / iron troll w:2",
                 "rime drake / swamp drake / steam dragon / swamp dragon /\
@@ -746,16 +746,17 @@ function arena_sprint_init_boss_table()
     bs[7] = {"place:Tar:$", "ereshkigal", "bone rune of zot"}
     bs[8] = {"place:Geh:$", "asmodeus", "obsidian rune of zot"}
     bs[9] = {"place:Coc:$", "antaeus", "icy rune of zot"}
-    -- Pan sets are based on those in pan.des
-    bs[10] = {"neqoxec / cacodemon / tormentor / tentacled monstrosity / " ..
-              "glass eye / golden eye / eye of devastation / " ..
-              "shining eye", "mnoleg", "glowing rune of zot"}
+    -- Pan sets are very roughly based on those in pan.des
+    bs[10] = {"shadow demon / cacodemon / protean progenitor / " ..
+              "tentacled monstrosity / glass eye / golden eye / " ..
+              "eye of devastation / shining eye", "mnoleg", "glowing rune of zot"}
     bs[11] = {"smoke demon / blizzard demon / green death / rakshasa / " ..
-              "glowing orange brain / titan / lich / draconian annihilator / " ..
+              "nagaraja / merfolk aquamancer / jorogumo / " ..
+              "fenstrider witch / titan / lich / draconian annihilator / " ..
               "deep elf annihilator", "lom lobon", "magical rune of zot"}
-    bs[12] = {"efreet / sun demon / ynoxinul / balrug / brimstone fiend",
+    bs[12] = {"efreet / sun moth / ynoxinul / balrug / brimstone fiend",
               "cerebov", "fiery rune of zot"}
-    bs[13] = {"soul eater / lorocyproca / executioner / shadow wraith",
+    bs[13] = {"soul eater / reaper / executioner / curse skull",
               "gloorx vloq", "dark rune of zot"}
     bs[14] = {"guardian mummy w:15 / mummy priest w:3 / royal mummy w:2",
                "khufu hp:500", "golden rune of zot"}

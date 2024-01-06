@@ -224,7 +224,7 @@ static const struct spell_desc spelldata[] =
     spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check,
     4,
     200,
-    LOS_RADIUS, LOS_RADIUS,
+    6, 6,
     0,
     TILEG_PETRIFY,
 },
@@ -573,7 +573,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_ANIMATE_DEAD, "Animate Dead",
     spschool::necromancy,
-    spflag::helpful | spflag::utility | spflag::selfench,
+    spflag::helpful | spflag::utility | spflag::selfench
+        | spflag::no_ghost,
     4,
     100,
     -1, -1,
@@ -638,6 +639,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_MARTYRS_KNELL, "Martyr's Knell",
+    spschool::summoning | spschool::necromancy,
+    spflag::none,
+    4,
+    100,
+    -1, -1,
+    0,
+    TILEG_HAUNT,
+},
+
+{
     SPELL_BORGNJORS_REVIVIFICATION, "Borgnjor's Revivification",
     spschool::necromancy,
     spflag::utility,
@@ -673,7 +685,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_STICKY_FLAME, "Sticky Flame",
     spschool::alchemy | spschool::fire,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::destructive,
     4,
     100,
     1, 1,
@@ -685,7 +697,7 @@ static const struct spell_desc spelldata[] =
     SPELL_SUMMON_ICE_BEAST, "Summon Ice Beast",
     spschool::ice | spschool::summoning,
     spflag::none,
-    4,
+    3,
     100,
     -1, -1,
     0,
@@ -907,13 +919,25 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_AGONY, "Agony",
+    SPELL_AGONIZING_TOUCH, "Agonizing Touch",
+    spschool::necromancy,
+    spflag::dir_or_target | spflag::not_self | spflag::needs_tracer
+        | spflag::WL_check | spflag::monster,
+    5,
+    200,
+    1, 1,
+    0,
+    TILEG_AGONY,
+},
+
+{
+    SPELL_CURSE_OF_AGONY, "Curse of Agony",
     spschool::necromancy,
     spflag::dir_or_target | spflag::not_self | spflag::needs_tracer
         | spflag::WL_check,
     5,
-    200,
-    1, 1,
+    100,
+    3, 3,
     0,
     TILEG_AGONY,
 },
@@ -1010,12 +1034,12 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_PASSWALL, "Passwall",
-    spschool::alchemy | spschool::earth,
+    spschool::earth,
     spflag::target | spflag::escape | spflag::not_self | spflag::utility
         | spflag::silent,
-    2,
-    120,
-    1, 7,
+    3,
+    100,
+    3, 3,
     0,
     TILEG_PASSWALL,
 },
@@ -1167,12 +1191,13 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SIMULACRUM, "Simulacrum",
-    spschool::ice | spschool::necromancy,
-    spflag::dir_or_target | spflag::needs_tracer,
+    SPELL_SIMULACRUM, "Sculpt Simulacrum",
+    spschool::ice | spschool::alchemy,
+    spflag::dir_or_target | spflag::not_self | spflag::needs_tracer
+        | spflag::unholy,
     6,
     200,
-    LOS_RADIUS, LOS_RADIUS,
+    1, 1,
     0,
     TILEG_SIMULACRUM,
 },
@@ -1361,10 +1386,10 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_ENERGY_BOLT, "Energy Bolt",
+    SPELL_BOLT_OF_DEVASTATION, "Bolt of Devastation",
     spschool::conjuration,
     spflag::dir_or_target | spflag::monster | spflag::needs_tracer,
-    4,
+    5,
     0,
     LOS_RADIUS, LOS_RADIUS,
     0,
@@ -2449,10 +2474,10 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SUMMON_GUARDIAN_GOLEM, "Summon Guardian Golem",
-    spschool::summoning | spschool::hexes,
+    SPELL_SUMMON_BLAZEHEART_GOLEM, "Summon Blazeheart Golem",
+    spschool::summoning | spschool::fire,
     spflag::none,
-    3,
+    4,
     100,
     -1, -1,
     0,
@@ -2734,6 +2759,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_FUNERAL_DIRGE, "Funeral Dirge",
+    spschool::necromancy,
+    spflag::area | spflag::monster,
+    4,
+    200,
+    -1, -1,
+    0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_SEAL_DOORS, "Seal Doors",
     spschool::hexes,
     spflag::area | spflag::monster | spflag::selfench,
@@ -2844,7 +2880,29 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_MOURNING_WAIL, "Mourning Wail",
+    spschool::necromancy,
+    spflag::dir_or_target | spflag::monster,
+    3,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_DEATH_RATTLE, "Death Rattle",
+    spschool::conjuration | spschool::necromancy | spschool::air,
+    spflag::dir_or_target | spflag::monster,
+    7,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
+    SPELL_MARCH_OF_SORROWS, "March of Sorrows",
     spschool::conjuration | spschool::necromancy | spschool::air,
     spflag::dir_or_target | spflag::monster,
     7,
@@ -3089,10 +3147,10 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_MERCURY_VAPOURS, "Mercury Vapours",
     spschool::alchemy | spschool::air,
-    spflag::target | spflag::not_self | spflag::destructive,
+    spflag::target | spflag::destructive,
     2,
     50,
-    6, 6,
+    3, 3,
     0,
     TILEG_POISONOUS_VAPOURS,
 },
@@ -3230,7 +3288,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_AGONY_RANGE, "Agony Range",
+    SPELL_AGONY, "Agony",
     spschool::necromancy,
     spflag::dir_or_target | spflag::not_self | spflag::needs_tracer
         | spflag::monster | spflag::WL_check,

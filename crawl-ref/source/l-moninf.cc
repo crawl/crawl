@@ -340,16 +340,14 @@ static int moninf_get_target_desc(lua_State *ls)
 }
 
 /*** Returns the string displayed if you target this monster with a weapon (or unarmed attack).
- * @tparam[opt] weapon (item object) to use; omit for unarmed attack.
  * @treturn string (such as "about 18% to evade your dagger")
  * @function target_weapon
  */
 static int moninf_get_target_weapon(lua_State *ls)
 {
     MONINF(ls, 1, mi);
-    item_def *item = (lua_isnone(ls, 2) || lua_isnil(ls, 2)) ? nullptr : *(item_def **) luaL_checkudata(ls, 2, ITEM_METATABLE);
     ostringstream result;
-    describe_to_hit(*mi, result, item);
+    describe_to_hit(*mi, result, you.weapon());
     lua_pushstring(ls, result.str().c_str());
     return 1;
 }

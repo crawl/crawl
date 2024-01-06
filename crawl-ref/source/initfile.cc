@@ -549,6 +549,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(rest_wait_ancestor), false),
         new BoolGameOption(SIMPLE_NAME(cloud_status), !is_tiles()),
         new BoolGameOption(SIMPLE_NAME(always_show_zot), false),
+        new BoolGameOption(SIMPLE_NAME(always_show_gems), false),
         new BoolGameOption(SIMPLE_NAME(more_gem_info), false),
         new BoolGameOption(SIMPLE_NAME(darken_beyond_range), true),
         new BoolGameOption(SIMPLE_NAME(show_blood), true),
@@ -1025,6 +1026,8 @@ object_class_type item_class_by_sym(char32_t c)
     case '\\': // Compat break: used to be staves (why not '|'?).
         return OBJ_RODS;
 #endif
+    case U'\x2666': // ♦
+        return OBJ_GEMS;
     default:
         return NUM_OBJECT_CLASSES;
     }
@@ -1579,6 +1582,7 @@ void game_options::reset_options()
     autopickups.set(OBJ_BOOKS);
     autopickups.set(OBJ_JEWELLERY);
     autopickups.set(OBJ_WANDS);
+    autopickups.set(OBJ_GEMS);
 
     dump_item_origins      = IODS_ARTEFACTS;
 

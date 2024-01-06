@@ -140,7 +140,7 @@ static const map<job_type, job_def> job_data =
     },
     { "robe", "potion of magic", },
     WCHOICE_NONE,
-    { { SK_ALCHEMY, 1 }, { SK_EARTH_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
+    { { SK_CONJURATIONS, 1 }, { SK_EARTH_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
       { SK_DODGING, 2 }, { SK_STEALTH, 2 }, }
 } },
 
@@ -163,7 +163,7 @@ static const map<job_type, job_def> job_data =
 { JOB_FIGHTER, {
     "Fi", "Fighter",
     8, 0, 4,
-    { SP_HILL_ORC, SP_TROLL, SP_MINOTAUR, SP_GARGOYLE, SP_ARMATAUR, },
+    { SP_HILL_ORC, SP_TROLL, SP_MINOTAUR, SP_GARGOYLE, SP_ARMATAUR, SP_FORMICID, },
     { },
     { "scale mail", "buckler", "potion of might" },
     WCHOICE_GOOD,
@@ -192,7 +192,7 @@ static const map<job_type, job_def> job_data =
 { JOB_GLADIATOR, {
     "Gl", "Gladiator",
     6, 0, 6,
-    { SP_HILL_ORC, SP_MERFOLK, SP_TROLL, SP_GARGOYLE, SP_GNOLL, },
+    { SP_HILL_ORC, SP_MERFOLK, SP_TROLL, SP_GARGOYLE, SP_GNOLL, SP_VINE_STALKER, },
     { },
     { "leather armour", "helmet", "throwing net q:3" },
     WCHOICE_GOOD,
@@ -231,7 +231,7 @@ static const map<job_type, job_def> job_data =
 { JOB_ICE_ELEMENTALIST, {
     "IE", "Ice Elementalist",
     0, 7, 5,
-    { SP_MERFOLK, SP_NAGA, SP_BASE_DRACONIAN, SP_DEMIGOD,
+    { SP_MERFOLK, SP_BARACHI, SP_BASE_DRACONIAN, SP_DEMIGOD,
       SP_GARGOYLE, SP_DJINNI, },
     {
         SPELL_FREEZE,
@@ -275,7 +275,7 @@ static const map<job_type, job_def> job_data =
         SPELL_NECROTISE,
         SPELL_VAMPIRIC_DRAINING,
         SPELL_ANIMATE_DEAD,
-        SPELL_AGONY,
+        SPELL_CURSE_OF_AGONY,
     },
     { "robe", "potion of magic" },
     WCHOICE_NONE,
@@ -308,7 +308,7 @@ static const map<job_type, job_def> job_data =
         SPELL_SUMMON_SMALL_MAMMAL,
         SPELL_CALL_IMP,
         SPELL_CALL_CANINE_FAMILIAR,
-        SPELL_SUMMON_GUARDIAN_GOLEM,
+        SPELL_SUMMON_BLAZEHEART_GOLEM,
         SPELL_SUMMON_LIGHTNING_SPIRE,
     },
     { "robe", "potion of magic" },
@@ -351,7 +351,7 @@ static const map<job_type, job_def> job_data =
     "Wn", "Wanderer",
     0, 0, 0, // Randomised
     { SP_HILL_ORC, SP_GNOLL, SP_MERFOLK, SP_BASE_DRACONIAN, SP_HUMAN,
-      SP_DEMONSPAWN, },
+      SP_DEMONSPAWN, SP_BARACHI, },
     { }, // Randomised
     { }, // Randomised
     WCHOICE_NONE,

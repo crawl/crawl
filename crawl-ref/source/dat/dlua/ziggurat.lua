@@ -344,9 +344,11 @@ end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
   local d = 10 + you.zigs_completed() * 2
-  local e = 10 + you.zigs_completed() * 3
-  return "ice beast / ice devil / simulacrum / rime drake / " ..
-         "ice dragon w:" .. d .. " / frost giant w:" .. d .. " / " ..
+  local e = 10 + you.zigs_completed() * 4
+  return "ice devil w:5 / rime drake w:5 / azure jelly / " ..
+         "caustic shrike simulacrum w:5 / spriggan defender simulacrum w:5 / " ..
+         "juggernaut simulacrum w:5 / ironbound frostheart w:5 / " ..
+         "walking frostbound tome w:" .. d .. " / frost giant w:" .. d .. " / " ..
          "blizzard demon w:" .. d .. " / white draconian knight w:" .. e .. " / " ..
          "shard shrike w:" .. e .. " / ice fiend w:" .. e
 end), { weight = 2 }))
@@ -390,8 +392,7 @@ mset(with_props(spec_fn(function ()
     e = math.max(1, math.floor(you.depth() / 3) + you.zigs_completed() - 8)
   end
   return "ophan w:20 / apis w:20 / cherub w:20 / angel w:20 / " ..
-         "sun moth / daeva w:" .. d .. " / " ..
-         "pearl dragon w:" .. d .. " / seraph w:" .. e
+         "daeva w:" .. d .. " / pearl dragon w:" .. d .. " / seraph w:" .. e
 end), { weight = 2 }))
 
 mset(spec_fn(function ()

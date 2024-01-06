@@ -10,7 +10,7 @@ aptitudes:
   xp: 0
   hp: -1
   mp_mod: 0
-  mr: 3
+  wl: 3
   armour: False
   stealth: 4
   spellcasting: -1
@@ -46,3 +46,4 @@ recommended_jobs:
 
 walking_verb: Wriggl
 altar_action: curl up in front of
+child_name: Fry

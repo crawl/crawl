@@ -74,6 +74,8 @@ Boris
 
 An ancient and powerful lich. Like all true liches, Boris is immortal, and will
 regenerate his desiccated skeletal remains even if completely disintegrated.
+The same cannot be said for his many victims over his many centuries, from
+which he collects and channels their dying woes and regrets.
 %%%%
 Cerebov
 
@@ -734,6 +736,16 @@ black mamba
 
 An astonishingly fast tropical snake whose bite bears a deadly venom.
 %%%%
+blazeheart core
+
+The exposed elemental core of a blazeheart golem. Far too unstable to remain
+without its shell, it is in the process of violently exploding.
+%%%%
+blazeheart golem
+
+A volatile elemental spark encased in a shell of slag iron. If destroyed while
+its fires still blaze, the exposed core will violently detonate a moment later.
+%%%%
 blink frog
 
 A species of frog that possesses the ability to blink at will. It can blink
@@ -763,6 +775,13 @@ boggart
 
 A malevolent and dangerous little sprite. The shadowy illusions it summons may
 not be real, but are deadly all the same.
+%%%%
+bombardier beetle
+
+An unassuming beetle filled with an incredible amount of hypergolic fluid. The
+sticky spray it fires is capable of igniting predators and unwary adventurers
+alike, though more experienced ones know to keep moving if they wish to avoid
+a fiery grave.
 %%%%
 bone dragon
 
@@ -813,6 +832,11 @@ broodmother
 
 A giant spider swollen with eggs. Its innumerable offspring are always at its
 call.
+%%%%
+burial acolyte
+
+A masked priest in the service of Kikubaaqudgha, well-versed in choral rituals
+to both rouse the dead and send them to eternal rest.
 %%%%
 burning bush
 
@@ -1319,10 +1343,6 @@ A hideous floating undead creature, the anguished spirit of a tortured victim,
 with torn skin hanging from an emaciated body. It restlessly stalks the
 dungeon, inflicting the anguish it felt in life upon those still living.
 %%%%
-flying skull
-
-An undead skull kept aloft and flitting swiftly about by unholy magic.
-%%%%
 frilled lizard
 
 A lizard with a giant and colourful fringe folded around its neck. It flares
@@ -1453,12 +1473,6 @@ A muscular green-scaled humanoid with a reptilian tail and small wings.
 grey draconian
 
 A muscular grey-scaled humanoid with a reptilian tail and small wings.
-%%%%
-guardian golem
-
-A large construct, designed to protect. It can take the blows dealt to others
-upon itself, though it is prone to becoming explosively unstable after heavy
-punishment.
 %%%%
 guardian mummy
 
@@ -1750,6 +1764,12 @@ A hideous conglomeration of mangled body parts, possessed and altered in ways
 that challenge sanity. Each varies in durability by the nature of whatever
 unfortunates were used to make it.
 %%%%
+laughing skull
+
+A blazing swift skull that cackles with the bleak malice of the dead. Fond of
+swarming, its laughter grows more spiteful and powerful for each nearby member
+of its own kind.
+%%%%
 lava snake
 
 A burning red snake which dwells in pools of lava. It spits gobs of molten rock
@@ -1810,6 +1830,12 @@ manticore
 A hideous cross-breed, bearing the features of a human and a lion, with great
 bat-like wings. Its tail bristles with spikes that can be loosed at potential
 prey.
+%%%%
+martyred shade
+
+The wandering shade of a long-dead soul who died for a forgotten cause. Though
+their memories have turned to mist, something deep within still compels them to
+serve and sacrifice - no matter the cost.
 %%%%
 meliai
 
@@ -1970,6 +1996,11 @@ oklob sapling
 
 A young oklob plant. It is more fragile than the mature specimen, but the acid
 it sprays is just as deadly.
+%%%%
+oni
+
+A large, rowdy, and drink-loving creature. When they're not busy with their
+duties serving any number of gods, oni mostly love a good fight.
 %%%%
 ophan
 
@@ -2220,6 +2251,11 @@ revenant
 An animated skeleton wreathed in cold blue fire, standing astride this life and
 the next. Echoes of the lingering dead flicker within its ghostly flames.
 %%%%
+ribbon worm
+
+A giant annelid, glistening with slime, with unusually large teeth. It expels
+fragments of its own innards to ensnare unsuspecting prey.
+%%%%
 rime drake
 
 A small but dangerous dragon. Its breath is visible even on the warmest days.
@@ -2291,8 +2327,7 @@ potent venomous bite.
 searing wretch
 
 An animated corpse alight with terrible fire. The flames are fueled by its
-regenerating flesh, which bubbles and melts as it grows. Its bite leaves
-its victims covered in flaming gore.
+regenerating flesh, which bubbles and melts as it grows.
 %%%%
 seraph
 
@@ -2365,7 +2400,7 @@ spells or reading scrolls.
 %%%%
 simulacrum
 
-An ice replica of a monster, animated by the powers of necromancy.
+An icy replica of a monster, animated by heretical magics.
 %%%%
 sixfirhy
 
@@ -2567,7 +2602,10 @@ A demonic figure shining with the heat and fury of a fallen star.
 %%%%
 sun moth
 
-A moth of celestial beauty and grace, crackling with power.
+A moth of transcendent beauty, coated in pyrophoric scales. Tiny cinders dance
+and twirl in its wake and whenever it beats its wings, they ignite in such
+spectacular displays of incandescence that one could almost forget how far away
+the sun is from this place.
 %%%%
 swamp dragon
 
@@ -2841,6 +2879,12 @@ A capricious nature spirit, deeply bonded with the waters in which it lives.
 Wherever they flow, so may it, and ponds and rivers surge and leap at its
 whim.
 %%%%
+weeping skull
+
+An undead skull kept aloft by unholy clouds of collective misery, which slowly
+drift out in its wake. It mourns without end for the living, the dead, and its
+own former life all alike.
+%%%%
 wendigo
 
 A gaunt spirit of frozen hunger, so ravenous it will consume friend and foe
@@ -2886,10 +2930,6 @@ worldbinder
 A cloud of thick fog, with faint, feeble claws constantly reaching out and then
 fading back into the fog. When threatened, it calls forth creatures banished to
 the void between realities, using them to defend itself.
-%%%%
-worm
-
-A giant annelid, glistening with slime, with unusually large teeth.
 %%%%
 wraith
 
@@ -3258,6 +3298,10 @@ A plant whose life has been drained away, but with its physical form still
 intact. It looks like it died many {{ if you.branch("Crypt") or
 you.branch("Tomb") then return "centuries"; else return "years"; end }}
 ago.
+%%%%
+worm
+
+A giant annelid, glistening with slime, with unusually large teeth.
 %%%%
 zin angel
 

@@ -95,6 +95,7 @@ public:
         int battlecharge;      ///< Charges of battlesphere
         int move_spurt;        ///< Sixfirhy/jiangshi/kraken black magic
         int steps_remaining;   ///< Foxfire remaining moves
+        int blazeheart_heat;   ///< Number of checks before golem cools
         mid_t tentacle_connect;///< mid of monster this tentacle is
                                //   connected to: for segments, this is the
                                //   tentacle; for tentacles, the head.
@@ -153,10 +154,13 @@ public:
     bool is_perm_summoned() const override;
     bool has_action_energy() const;
     void drain_action_energy();
+    bool matches_player_speed() const;
+    int  player_speed_energy() const;
     void check_redraw(const coord_def &oldpos, bool clear_tiles = true) const;
     void apply_location_effects(const coord_def &oldpos,
                                 killer_type killer = KILL_NONE,
                                 int killernum = -1) override;
+    void did_deliberate_movement() override;
     void self_destruct() override;
 
     void set_position(const coord_def &c) override;
@@ -491,6 +495,7 @@ public:
     void put_to_sleep(actor *attacker, int power = 0, bool hibernate = false)
         override;
     void weaken(actor *attacker, int pow) override;
+    bool strip_willpower(actor *attacker, int dur, bool quiet = false) override;
     void check_awaken(int disturbance) override;
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source = "")
         override;

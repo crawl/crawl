@@ -82,12 +82,14 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool *prompted = nullptr,
-                        coord_def attack_pos = coord_def(0, 0));
+                        coord_def attack_pos = coord_def(0, 0),
+                        bool check_only = false);
 
 bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         function<bool(const actor *victim)> affects = nullptr,
                         bool *prompted = nullptr,
-                        const monster *mons = nullptr);
+                        const monster *mons = nullptr,
+                        bool check_only = false);
 
 string stop_summoning_reason(resists_t resists, monclass_flags_t flags);
 bool stop_summoning_prompt(resists_t resists = MR_NO_FLAGS,

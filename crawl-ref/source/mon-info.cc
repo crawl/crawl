@@ -67,7 +67,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_PETRIFYING,      MB_PETRIFYING },
     { ENCH_LOWERED_WL,      MB_LOWERED_WL },
     { ENCH_SWIFT,           MB_SWIFT },
-    { ENCH_PURSUING,        MB_PURSUING },
     { ENCH_SILENCE,         MB_SILENCING },
     { ENCH_PARALYSIS,       MB_PARALYSED },
     { ENCH_SOUL_RIPE,       MB_POSSESSABLE },
@@ -120,17 +119,17 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_RING_OF_MUTATION,MB_CLOUD_RING_MUTATION },
     { ENCH_RING_OF_FOG,     MB_CLOUD_RING_FOG },
     { ENCH_RING_OF_ICE,     MB_CLOUD_RING_ICE },
-    { ENCH_RING_OF_DRAINING,MB_CLOUD_RING_DRAINING },
+    { ENCH_RING_OF_MISERY,  MB_CLOUD_RING_MISERY },
     { ENCH_RING_OF_ACID,    MB_CLOUD_RING_ACID },
     { ENCH_CONCENTRATE_VENOM, MB_CONCENTRATE_VENOM },
     { ENCH_FIRE_CHAMPION,   MB_FIRE_CHAMPION },
     { ENCH_ANTIMAGIC,       MB_ANTIMAGIC },
     { ENCH_ANGUISH,         MB_ANGUISH },
-    { ENCH_SIMULACRUM,      MB_SIMULACRUM },
     { ENCH_TP,              MB_TELEPORTING },
     { ENCH_BOUND,           MB_BOUND },
-    { ENCH_BULLSEYE_TARGET, MB_BULLSEYE_TARGET},
-    { ENCH_VITRIFIED,       MB_VITRIFIED},
+    { ENCH_BULLSEYE_TARGET, MB_BULLSEYE_TARGET },
+    { ENCH_VITRIFIED,       MB_VITRIFIED },
+    { ENCH_CURSE_OF_AGONY,  MB_CURSE_OF_AGONY },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -138,9 +137,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
     // Suppress silly-looking combinations, even if they're
     // internally valid.
     if (mons.paralysed() && (ench == ENCH_SLOW || ench == ENCH_HASTE
-                      || ench == ENCH_SWIFT || ench == ENCH_PURSUING
-                      || ench == ENCH_PETRIFIED
-                      || ench == ENCH_PETRIFYING))
+                      || ench == ENCH_SWIFT
+                      || ench == ENCH_PETRIFIED || ench == ENCH_PETRIFYING))
     {
         return NUM_MB_FLAGS;
     }
@@ -1212,7 +1210,12 @@ string monster_info::common_name(description_level_type desc) const
 
 bool monster_info::has_proper_name() const
 {
-    return !mname.empty() && !mons_is_ghost_demon(type)
+    // Some ghost demon monsters (Pan lords, player ghosts, and player
+    // illusions) have name overrides.
+    return !mname.empty()
+            && type != MONS_PANDEMONIUM_LORD
+            && type != MONS_PLAYER_GHOST
+            && type != MONS_PLAYER_ILLUSION
             && !is(MB_NAME_REPLACE) && !is(MB_NAME_ADJECTIVE) && !is(MB_NAME_SUFFIX);
 }
 

@@ -1099,7 +1099,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.ANGUISH:
                 case icons.FIRE_VULN:
                 case icons.RESISTANCE:
-                case icons.SIMULACRUM:
+                case icons.GHOSTLY:
                 case icons.MALMUTATED:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 8;
@@ -1118,6 +1118,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.GLOW_LIGHT:
                 case icons.GLOW_HEAVY:
                 case icons.BULLSEYE:
+                case icons.CURSE_OF_AGONY:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 10;
                 case icons.CONSTRICTED:

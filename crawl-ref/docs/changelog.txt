@@ -188,7 +188,7 @@ Tiles and Other Art
 * New art for Volatile Blastmotes (spell icon and clouds).
 * New art for short sword and eveningstar artefacts.
 * New art for the Orb of Zot.
-* New art for blink frogs, ancient lichen, rakshashas, and shrike simulacrae.
+* New art for blink frogs, ancient lichen, rakshasas, and shrike simulacra.
 * New art for Dithmenos's altar.
 * New Dragon Form and dragon monster art.
 * Icons added for many mutations.
@@ -552,7 +552,7 @@ Items
   - Fustibali are removed. Hunting slings are renamed to slings.
   - Launchers have had their stats adjusted across the board. In particular,
     hand crossbows are made much rarer and more powerful.
-  - Launchers all use the Ranged Combat skill.
+  - Launchers all use the Ranged Weapons skill.
 * Launcher, long blade, and short blade damage scale with Dex instead of Str.
 * New concept: "alternate items". Some item types are grouped into 'sets',
   and only one type from each 'set' can generate in a game. Background
@@ -2962,11 +2962,11 @@ Monsters
   - Nergalle can no longer enter Death's Door.
   - Gloorx Vloq can no longer cast Black Mark.
   - Various uniques have had their genders changed.
-* Zombies, skeletons, and simulacrula no longer hide damage taken, and display
+* Zombies, skeletons, and simulacra no longer hide damage taken, and display
   the full names of the monster they were created from.
 * Battlecry has been simplified, affecting all monsters of the same genus.
 * Blood Saints's Legendary Destruction now casts two spells at a time.
-* Necromancers gain Bind Soul, reviving slain monsters as simulacrula.
+* Necromancers gain Bind Soul, reviving slain monsters as simulacra.
 * Ghostly Fireball is now completely resistible by rN and causes draining.
 * Obsidian statues can Mesmerise.
 * Wizards and Ogre Mages have split up and re-arranged their many spell sets

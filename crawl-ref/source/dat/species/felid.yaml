@@ -9,7 +9,7 @@ aptitudes:
   xp: -1
   hp: -3
   mp_mod: 1
-  mr: 6
+  wl: 6
   short_blades: False
   long_blades: False
   axes: False
@@ -63,8 +63,8 @@ recommended_jobs:
   - JOB_AIR_ELEMENTALIST
   - JOB_CONJURER
   - JOB_SUMMONER
-  - JOB_ALCHEMIST
 recommended_weapons:
   - SK_UNARMED_COMBAT
 
 altar_action: sit before
+child_name: Kitten

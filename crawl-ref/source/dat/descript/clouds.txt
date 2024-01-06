@@ -147,11 +147,11 @@ thunder cloud
 A dark storm cloud. It will intermittently strike those within with lightning,
 dealing severe damage to those without resistance to electricity.
 %%%%
-negative energy cloud
+excruciating misery cloud
 
-A cloud of necromantic energy. Living creatures trapped within will find
-themselves drained of their life energies, though protection from negative
-energy will mitigate the effects.
+A cloud of lingering despair and necromantic energy. Living creatures trapped
+within will repeatedly lose small fractions of their maximum health, though
+protection from negative energy will mitigate the effects.
 %%%%
 white fluffiness cloud
 
@@ -184,9 +184,8 @@ into one will rapidly lose strength, dexterity, and intelligence.
 %%%%
 blastmotes cloud
 
-A cloud of volatile blastmotes. These explode when exposed to open flame or when
-anything disturbs them by moving into them. The explosion is concussive, knocking
-adjacent creatures away.
+A cloud of volatile blastmotes. These explode on contact with flame or creatures.
+The explosion is concussive, knocking adjacent creatures away.
 %%%%
 sparks cloud
 

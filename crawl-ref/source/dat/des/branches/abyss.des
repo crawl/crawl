@@ -77,10 +77,14 @@ ENDMAP
 
 NAME:    abyss_entry_crystal
 TAGS:    nolayout_encompass
-: abyss_entry(_G, 'O')
+KFEAT:   t = demonic_tree
 SHUFFLE: AB
 SUBST:   A : .:50 G:50 T U V Y t
 SUBST:   B : .:100 G
+TILE:    t : dngn_demonic_tree_1 / dngn_demonic_tree_7 / \
+             dngn_demonic_tree_9 / dngn_demonic_tree_11
+TILE:    b : dngn_crystal_blue / dngn_crystal_cyan
+: abyss_entry(_G, 'O')
 MAP
   xxxxx
  xxbbbxx
@@ -130,9 +134,12 @@ ENDMAP
 
 NAME:    hangedman_abyss_entry_splay
 TAGS:    nolayout_encompass transparent
+KFEAT:   t = demonic_tree
 SHUFFLE: ABCDE
-SUBST:   A : cxxx.., B : cxxx.., CDE = x, F : ccxxb
+SUBST:   A : tcxx.., B : tcxx.., CDE = x, F : ccxxb
 : abyss_entry(_G, 'O')
+TILE:   t : dngn_demonic_tree_1 / dngn_demonic_tree_7 / \
+            dngn_demonic_tree_9 / dngn_demonic_tree_11
 MAP
         xx..
         x.A.
@@ -149,20 +156,18 @@ x.x.x.F.xxx
      ..xx
 ENDMAP
 
-NAME: nicolae_abyss_entry_one_way_or_another
-TAGS: nolayout_encompass patrolling transparent
-: abyss_entry(_G, 'O')
-NSUBST: 1 = 1111111112 / .
-# All of these are guaranteed to have banishment in their spell sets.
+NAME:   nicolae_abyss_entry_one_way_or_another
+TAGS:   nolayout_encompass patrolling transparent
+# All of these have banishment in their spell sets.
 # One in ten chance they get a distortion weapon too.
-: local elfweapon = "long sword ego:distortion w:20 | short sword " ..
-:  "ego:distortion | rapier ego:distortion | dagger ego:distortion"
-: local louiseweapon = "long sword ego:distortion | short sword " ..
-:  "ego:distortion | battleaxe ego:distortion | hand axe ego:distortion | " ..
-:  "mace ego:distortion | dire flail ego:distortion | glaive ego:distortion w:2"
-KMONS: 1 = Louise, deep elf demonologist / deep elf sorcerer w:5
-: kmons( "2 = Louise ; " .. louiseweapon .. " , deep elf demonologist ; " ..
-: elfweapon .. " / deep elf sorcerer w:5 ; " .. elfweapon)
+: local elfgear = "long sword ego:distortion w:20 | dagger ego:distortion | " ..
+:  "short sword ego:distortion | rapier ego:distortion"
+MONS:   occultist, occultist ; robe . dagger ego:distortion / orc wizard
+MONS:   deep elf demonologist / deep elf sorcerer w:5
+: mons("deep elf demonologist ; robe . " .. elfgear .. " / " ..
+:      "deep elf sorcerer w:5 ; robe . " .. elfgear)
+NSUBST: 1 = 1:1 / 1 = 1:90 2 / 1 = 3:90 4 / *:.
+: abyss_entry(_G, 'O')
 MAP
    ......
   ..bbbb..
@@ -232,45 +237,47 @@ ENDMAP
 # 'cuz the fun haters removed overflow temples from the Abyss...
 NAME:    abyss_greek_temple
 TAGS:    no_rotate
+KMONS:   p = plant
+KMONS:   b = bush
+KFEAT:   g = granite_statue
+KFEAT:   A = altar_ashenzari
+KFEAT:   C = altar_cheibriados
+KFEAT:   D = altar_dithmenos
+KFEAT:   E = altar_elyvilon
+KFEAT:   F = altar_fedhas
+KFEAT:   G = altar_gozag
+KFEAT:   H = altar_hepliaklqana
+KFEAT:   K = altar_kikubaaqudgha
+KFEAT:   M = altar_makhleb
+KFEAT:   N = altar_nemelex_xobeh
+KFEAT:   O = altar_okawaru
+KFEAT:   Q = altar_qazlal
+KFEAT:   R = altar_ru
+KFEAT:   S = altar_sif_muna
+KFEAT:   T = altar_trog
+KFEAT:   U = altar_uskayaw
+KFEAT:   V = altar_vehumet
+KFEAT:   W = altar_wu_jian
+KFEAT:   X = altar_xom
+KFEAT:   Y = altar_yredelemnul
+KFEAT:   Z = altar_zin
+KFEAT:   1 = altar_the_shining_one
+SHUFFLE: ACDEFGHKMNOQRSTUVWXYZ1
+FTILE:   "ACDEFGHKMNOQRSTUVWXYZ1 : floor_limestone w:5 / floor_nerves
 NSUBST:  . = 3:1 / 2:2 / *:.
 SUBST:   ' = .
-COLOUR:  " : white w:5 / none
-FTILE:   "ABCDEFGHIJKLMNOPRQSTUV : floor_limestone w:5 / floor_nerves
 SUBST:   " = .
-MONS:    plant, bush
-SHUFFLE: ABCDEFGHIJKLMNOPQRSTUV
-KFEAT:   A = altar_makhleb
-KFEAT:   B = altar_xom
-KFEAT:   C = altar_zin
-KFEAT:   D = altar_the_shining_one
-KFEAT:   E = altar_kikubaaqudgha
-KFEAT:   F = altar_yredelemnul
-KFEAT:   G = altar_gozag
-KFEAT:   H = altar_vehumet
-KFEAT:   I = altar_okawaru
-KFEAT:   J = altar_sif_muna
-KFEAT:   K = altar_trog
-KFEAT:   L = altar_nemelex_xobeh
-KFEAT:   M = altar_elyvilon
-KFEAT:   N = altar_fedhas
-KFEAT:   O = altar_cheibriados
-KFEAT:   P = altar_ashenzari
-KFEAT:   Q = altar_dithmenos
-KFEAT:   R = altar_ru
-KFEAT:   S = altar_qazlal
-KFEAT:   T = altar_uskayaw
-KFEAT:   U = altar_hepliaklqana
-KFEAT:   V = altar_wu_jian
+COLOUR:  " : white w:5 / none
 MAP
 ''''''.................
 ''ccccccccccccccccccc..
-''G'c"""D"""""""P"""c..
-''''c"A"""I"""L"""S"c..
-''G'c"""E"""V"""Q"""ct.
-''''+"B"""J"""N"""T"c..
-''G'c"""F"""R"""R"""c..
-''''c"C"""K"""O"""U"c.t
-''G'c"""H"""""""S"""c..
+''g'c"""E"""""""U"""c..
+''''c"A"""K"""R"""Y"c..
+''g'c"""F"""O"""V"""ct.
+''''+"C"""M"""S"""Z"c..
+''g'c"""G"""Q"""W"""c..
+''''c"D"""N"""T"""1"c.t
+''g'c"""H"""""""X"""c..
 ''ccccccccccccccccccc..
 .......t........ttt....
 ENDMAP
@@ -931,7 +938,7 @@ TAGS:    no_monster_gen patrolling allow_dup
 WEIGHT:  5
 MONS:    rakshasa / efreet / smoke demon / occultist / base draconian w:5 / \
          guardian serpent w:1 / vampire w:3 / necromancer w:3
-MONS:    thrashing horror / blink frog / ugly thing / \
+MONS:    thrashing horror / blink frog / weeping skull band / \
          large abomination / unseen horror / shapeshifter / \
          wretched star w:5 / air elemental / raiju / worldbinder
 MONS:    draconian shifter w:5 / shadow demon w:5 / lich / \
@@ -1138,8 +1145,8 @@ NAME:   hangedman_abyss_rune_macabre_mess
 TAGS:   abyss_rune unrand no_monster_gen
 KMONS:  1 = glowing orange brain
 KMONS:  2 = golden eye / glass eye w:4
-KMONS:  3O = flying skull
-KMONS:  4 = large abomination / small abomination w:7
+KMONS:  3O = laughing skull
+KMONS:  4 = small abomination / weeping skull w:2
 KMONS:  5 = cacodemon
 KMONS:  6 = executioner
 KMONS:  7 = shining eye
@@ -1291,7 +1298,8 @@ ENDMAP
 
 NAME:   doesnt_abyss_rune_brain_food
 TAGS:   abyss_rune unrand patrolling no_pool_fixup
-MONS:   neqoxec, glowing orange brain, orange crystal statue, very ugly thing
+MONS:   neqoxec / brain worm w:1, glowing orange brain
+MONS:   orange crystal statue, very ugly thing
 MONS:   starcursed mass
 KITEM:  O = abyssal rune of Zot
 KFEAT:  " = runelight
@@ -1581,7 +1589,7 @@ ENDMAP
 
 NAME:   evilmike_nicolae_abyss_rune_containment_curve
 TAGS:   abyss_rune unrand patrolling no_monster_gen no_item_gen
-MONS:   brain worm w:4 / raiju / worldbinder / \
+MONS:   brain worm w:4 / weeping skull w:2 / raiju / worldbinder / \
         thrashing horror / shapeshifter
 MONS:   tormentor / hellion / shadow demon / \
         bone dragon / iron dragon zombie w:4
@@ -1658,33 +1666,35 @@ KMONS:   CD = dire elephant
 KMONS:   EF = satyr
 KMONS:   G = water elemental
 KMONS:   H = water nymph
+KITEM:   O = abyssal rune of Zot
 KFEAT:   G = w
 KFEAT:   H = W
 KFEAT:   a = stone_arch
 KFEAT:   ' = runelight
-KITEM:   O = abyssal rune of Zot
 # Exclude one of the deep elves / tengu and one of the Forest denizens.
 SHUFFLE: 34 / 56 / 78, 90 / AB / CD / EF
-SUBST:   T = t., X = ttWw
+SUBST:   T = t., X = t:20 d:2 W w
 NSUBST:  . = 1:2 / *:., w = 2:G / *:w, W = 2:H / *:W
-RTILE:   x = wall_hall
+COLOUR:  1 = lightmagenta
 COLOUR:  x = elven_brick
 FTILE:   -+U4680BDFO = floor_hall
 FTILE:   .t23579ACE = floor_grass
 FTILE:   a1 = floor_crystal_squares
-COLOUR:  1 = lightmagenta
+TILE:    x = wall_hall
+TILE:    t = dngn_demonic_tree_1 / dngn_demonic_tree_8 / \
+             dngn_demonic_tree_9 / dngn_demonic_tree_16
 MAP
     ..'.'.
   ....XXX....
  ..XWwtttwWX..
  .X.Tt.w.tT1X..'..
-..WT.WXAXW.xxxxxxx.
+'.WT.WXAXW.xxxxxxx.
 1.wt.tt'xxxxcccccx'
 .Xt.Xt3'x0--c6--cx.
-aXtw...'+-U-+-O4cx1
+aXtw....+-U-+-O4cx1
 .Xt.Xt2'x6--c0--cx.
 1.wt.tt'xxxxcccccx'
-..WT..XCX..xxxxxxx.
+'.WT..XCXW.xxxxxxx.
  .X.Tt.w.tT1X..'..
  ..XWwtttwWX..
   ....XXX....

@@ -53,6 +53,9 @@
 #include "teleport.h"
 #include "terrain.h"
 #include "tiledoll.h"
+#ifdef USE_TILE
+#include "tilepick.h"
+#endif
 #include "traps.h"
 #include "view.h"
 #include "viewmap.h"
@@ -1179,14 +1182,10 @@ string weapon_unprojectability_reason()
     if (!you.weapon())
         return "";
     const item_def &it = *you.weapon();
-    // These all cause attack prompts, which are awkward to handle.
-    // TODO: support these!
+    // These don't work properly when performing attacks against non-adjacent
+    // targets. Maybe support them in future?
     static const vector<int> forbidden_unrands = {
         UNRAND_POWER,
-        UNRAND_DEVASTATOR,
-        UNRAND_VARIABILITY,
-        UNRAND_SINGING_SWORD,
-        UNRAND_TORMENT,
         UNRAND_ARC_BLADE,
     };
     for (int urand : forbidden_unrands)
@@ -1200,8 +1199,22 @@ string weapon_unprojectability_reason()
     return "";
 }
 
+static void _animate_manass_hit(const coord_def p)
+{
+    if (!in_los_bounds_v(grid2view(p)))
+        return; // needed..?
+
+    const colour_t colour = LIGHTMAGENTA;
+#ifdef USE_TILE
+    view_add_tile_overlay(p, tileidx_zap(colour));
+#endif
+    view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
+                                static_cast<unsigned short>(colour)});
+}
+
 spret cast_manifold_assault(int pow, bool fail, bool real)
 {
+    bool found_unsafe_target = false;
     vector<monster*> targets;
     for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
     {
@@ -1211,13 +1224,31 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
             continue;
         if (!you.can_see(**mi))
             continue;
-        targets.emplace_back(*mi);
+
+        // Make a melee attack to test if we'd need a prompt to hit this target,
+        // and ignore all such targets entirely.
+        //
+        // We only perform this test for real casts, because otherwise the game
+        // prints a misleading message to the player first (about there being
+        // no targets in range)
+        if (real)
+        {
+            melee_attack atk(&you, *mi);
+            if (!atk.would_prompt_player())
+                targets.emplace_back(*mi);
+            else
+                found_unsafe_target = true;
+        }
+        else
+            targets.emplace_back(*mi);
     }
 
     if (targets.empty())
     {
-        if (real)
+        if (real && !found_unsafe_target)
             mpr("You can't see anything to attack.");
+        else if (real && found_unsafe_target)
+            mpr("You can't see anything you can safely attack.");
         return spret::abort;
     }
 
@@ -1246,6 +1277,7 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
         mpr("Space momentarily warps into an impossible shape!");
 
     const int initial_time = you.time_taken;
+    const bool animate = (Options.use_animations & UA_BEAM) != UA_NONE;
 
     shuffle_array(targets);
     // UC is worse at launching multiple manifold assaults, since
@@ -1258,6 +1290,9 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
         // attack ends up actually setting time taken. (No quadratic effects.)
         you.time_taken = initial_time;
 
+        if (animate)
+            _animate_manass_hit(targets[i]->pos());
+
         melee_attack atk(&you, targets[i]);
         atk.is_projected = true;
         atk.attack();
@@ -1265,6 +1300,8 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
         if (you.hp <= 0 || you.pending_revival)
             break;
     }
+    if (animate)
+        animation_delay(50, true);
 
     return spret::success;
 }

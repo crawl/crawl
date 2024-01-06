@@ -386,7 +386,7 @@ static const duration_def duration_data[] =
     { DUR_FUGUE,
       BLUE, "Fugue",
       "fugue", "fugue of the fallen",
-      "Your melee attacks are strengthened by the souls of the fallen.", D_DISPELLABLE | D_EXPIRES,
+      "Your melee and ranged attacks are strengthened by the souls of the fallen.", D_DISPELLABLE | D_EXPIRES,
       {{ "Your fugue has ended." },
         { "You are losing your grip on the fallen." }}, 6},
     { DUR_FLAYED,
@@ -656,7 +656,7 @@ static const duration_def duration_data[] =
       MAGENTA, "Bog",
       "spewing sludge", "noxious bog",
       "You are spewing a noxious bog.", D_DISPELLABLE,
-      {{ "Your noxious spew wanes." }}},
+      {{ "Your noxious spew wanes.", end_toxic_bog }}},
     { DUR_FROZEN_RAMPARTS, LIGHTBLUE, "Ramparts", "freezing walls",
         "frozen ramparts", "You have covered nearby walls with an icy ambush.",
         D_DISPELLABLE},
@@ -676,6 +676,7 @@ static const duration_def duration_data[] =
     { DUR_REVELATION, 0, "", "", "revelation", "", D_NO_FLAGS, {{""}}},
     { DUR_JINXBITE_LOST_INTEREST, 0, "", "", "", "", D_EXPIRES, {{"", _maybe_expire_jinxbite}}},
     { DUR_RAMPAGE_HEAL, 0, "", "", "rampage heal", "", D_NO_FLAGS},
+    { DUR_TEMP_CLOUD_IMMUNITY, 0, "", "", "temp cloud immunity", "", D_EXPIRES},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

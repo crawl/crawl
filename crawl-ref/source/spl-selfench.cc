@@ -187,18 +187,26 @@ void do_fugue_wail(const coord_def pos)
     vector <monster*> affected;
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
-        if (monster_at(*ai) && !monster_at(*ai)->wont_attack()
+        if (monster_at(*ai) && !mons_is_firewood(*monster_at(*ai))
+            && !monster_at(*ai)->wont_attack()
             && monster_at(*ai)->res_negative_energy() < 3)
         {
             affected.push_back(monster_at(*ai));
         }
     }
 
+    int pow = calc_spell_power(SPELL_FUGUE_OF_THE_FALLEN);
+
     if (!affected.empty())
         mpr("The fallen lash out in pain!");
     for (monster *m : affected)
+    {
         if (m->alive())
-            m->hurt(&you, roll_dice(2, 5), BEAM_NEG, KILLED_BY_BEAM);
+        {
+            m->hurt(&you, roll_dice(2, 3 + div_rand_round(pow, 25)),
+                    BEAM_NEG, KILLED_BY_BEAM);
+        }
+    }
 }
 
 int silence_min_range(int pow)
