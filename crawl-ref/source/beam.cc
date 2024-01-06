@@ -4429,13 +4429,13 @@ bool bolt::has_relevant_side_effect(monster* mon)
 
 void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 {
-    int preac, post, final = 0;
+    int preac = 0, post = 0, final = 0;
 
     bool side_effect = has_relevant_side_effect(mon);
 
     // The projectile applying sticky flame often does no damage, but this
     // doesn't mean it's harmless.
-    if (!side_effect && !determine_damage(mon, preac, post, final))
+    if (!determine_damage(mon, preac, post, final) && !side_effect)
         return;
 
     // Check only if actual damage and the monster is worth caring about.
