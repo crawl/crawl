@@ -262,7 +262,7 @@ Fünf vorsortieren
 
 %%%%
 Smiting
-Niederstrecken
+Zerschlagen
 %%%%
 Recall Orcish Followers
 Orkische Gefolgsleute zurückrufen

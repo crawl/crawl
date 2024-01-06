@@ -4356,7 +4356,7 @@ You cannot memorise this spell because %s
 
 %%%%
 This spell would have no effect right now because %s
-
+Dieser Zauber würde im Moment keine Wirkung haben, denn %s
 %%%%
 " spell"
 
@@ -20390,169 +20390,172 @@ Spell assigned to '%c'.
 Zauber '%c' zugewiesen.
 %%%%
 Your memory of %s unravels.
-Eure Erinnerung an%s löst sich auf.
+Eure Erinnerung an {acc}%s löst sich auf.
 %%%%
+# note: prompt for Apportation
 Apport
-
+Apporten
 %%%%
+# note: prompt for Smiting
 Smite
-
+Zerschlagen
 %%%%
+# note: prompt for Lee's Rapid Destruction
 Fragment what (e.g. wall or brittle monster)?
-
+Was fragmentieren (z.B. Wand oder zerbrechliches Monster)?
 %%%%
 Rndm
-
+Zufl
 %%%%
 you're too confused to cast spells.
-
+Ihr seid zu verwirrt, um zu zaubern.
 %%%%
 you aren't experienced enough to cast this spell.
-
+Ihr seid nicht erfahren genug, um diesen Zauber zu wirken.
 %%%%
 you cannot pay life while functionally dead.
-
+Ihr könnt nicht mit Leben bezahlen, wenn Ihr funktionell tot seid.
 %%%%
 you don't have enough health to cast this spell.
-
+Ihr habt nicht genug Gesundheit, um diesen Zauber zu wirken.
 %%%%
 you don't have enough magic to cast this spell.
-
+Ihr habt nicht genug Magie, um diesen Zauber zu wirken.
 %%%%
 your magic and health are inextricable.
-
+Eure Magie und Eure Gesundheit sind untrennbar miteinander verbunden.
 %%%%
 your reserves of magic are already full.
-
+Eure Magiereserven sind bereits voll.
 %%%%
 you cannot use spells of this school.
-
+Ihr könnt keine Zaubersprüche dieser Schule anwenden.
 %%%%
 you cannot coerce anything to answer your summons.
-
+Ihr könnt nichts dazu zwingen, Eure Beschwörung zu folgen.
 %%%%
 you cannot coerce anything to obey you.
-
+Ihr könnt nichts dazu zwingen, Euch zu gehorchen.
 %%%%
 you can't cast spells right now.
-
+Ihr könnt im Moment keine Zaubersprüche wirken.
 %%%%
 you can't see any hostile targets that would be affected.
-
+Ihr könnt keine feindlichen Ziele sehen, die davon betroffen wären.
 %%%%
 your stasis prevents you from teleporting.
-
+Eure Stasis hindert Euch daran, Euch zu teleportieren.
 %%%%
 your stasis precludes magical swiftness.
-
+Eure Stasis schließt magische Schnelligkeit aus.
 %%%%
 this spell is already in effect.
-
+Dieser Zauber ist bereits in Kraft.
 %%%%
 you're already traveling as fast as you can.
-
+Ihr bewegt Euch bereits so schnell, wie Ihr könnt.
 %%%%
 you can't move.
-
+Ihr könnt Euch nicht bewegen.
 %%%%
 invisibility won't help you when you glow in the dark.
-
+Unsichtbarkeit wird Euch nicht helfen, wenn Ihr im Dunkeln leuchtet.
 %%%%
 you're already a statue.
-
+Ihr seid bereits eine Statue.
 %%%%
 your undead flesh cannot be transformed.
-
+Euer untotes Fleisch kann nicht verwandelt werden.
 %%%%
 your current blood level is not sufficient.
-
+Euer aktueller Blutspiegel ist nicht ausreichend.
 %%%%
 you lack the necromantic skill to inflict true pain.
-
+Euch fehlt die nekromantische Fähigkeit, echten Schmerz zuzufügen.
 %%%%
 you aren't wielding a brandable weapon.
-
+Ihr habt keine brennbare Waffe in der Hand.
 %%%%
 this spell is useless without hands.
-
+dieser Zauber ist ohne Hände nutzlos.
 %%%%
 you need to wait for the ground to become solid again.
-
+Ihr müsst warten, bis der Boden wieder fest wird.
 %%%%
 you cannot be healed further.
-
+Ihr könnt nicht weiter geheilt werden.
 %%%%
 you lack the resilience to cast this spell.
-
+Euch fehlt die Widerstandskraft, um diesen Zauber zu wirken.
 %%%%
 you're too dead.
-
+Ihr seid zu tot.
 %%%%
 you are already standing in death's doorway.
-
+Ihr steht bereits an der Schwelle des Todes.
 %%%%
 you are still too close to death's doorway.
-
+Ihr steht noch zu nahe an der Schwelle des Todes.
 %%%%
 the film of ice won't work on stone.
-
+Der Eisfilm wirkt nicht auf Stein.
 %%%%
 your ring of flames would instantly melt the ice.
-
+Euer Ring aus Flammen würde das Eis sofort schmelzen.
 %%%%
 you have no blood to sublime.
-
+Ihr habt kein Blut, das Ihr sublimieren könnt.
 %%%%
 you need to wait for the winds to calm down.
-
+Ihr müsst warten, bis sich der Wind gelegt hat.
 %%%%
 the dungeon can only cope with one malign gateway at a time.
-
+der Kerker kann nur ein bösartiges Tor auf einmal verkraften.
 %%%%
 you can only summon one forest at a time.
-
+Ihr könnt nur einen Wald auf einmal beschwören.
 %%%%
 you need more open space to fit a forest.
-
+Ihr braucht mehr Platz, um einen Wald unterzubringen.
 %%%%
 you aren't next to any passable walls.
-
+Ihr seid nicht in der Nähe von begehbaren Wände.
 %%%%
 there is nothing nearby to animate!
-
+in der Nähe gibt es nichts zu beleben!
 %%%%
 there is nothing here to animate!
-
+es gibt hier nichts zu beleben!
 %%%%
 there is nothing fresh enough to decay nearby.
-
+In der Nähe gibt es nichts, was frisch genug ist, um zu verrotten.
 %%%%
 the air is too still for clouds to form.
-
+die Luft ist zu ruhig, um Wolken zu bilden.
 %%%%
 a magic seal in the Gauntlet prevents this spell from working.
-
+ein magisches Siegel in der Spießrute verhindert die Wirkung dieses Zaubers.
 %%%%
 you cannot issue another dragon's call so soon.
-
+Ihr könnt so schnell keinen weiteren Drachenruf aussprechen.
 %%%%
 you cannot sustain more frozen ramparts right now.
-
+Ihr könnt im Moment keine weiteren gefrorenen Wälle ertragen.
 %%%%
 you lack blood to transform.
-
+Euch fehlt Blut zum Verwandeln.
 %%%%
 you don't have any stones to cast with.
-
+Ihr habt keine Steine, um damit zu zaubern.
 %%%%
 you cannot sustain more bogs right now.
-
+Ihr könnt im Moment keine weiteren Sümpfe ertragen.
 %%%%
 you cannot wear body armour.
-
+Ihr könnt keine Körperpanzerung tragen.
 %%%%
 you have no body armour to summon the spirit of.
-
+Ihr habt keine Körperpanzerung, deren Geist Ihr beschwören könnt.
 %%%%
 
 ##################

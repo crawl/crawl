@@ -549,10 +549,13 @@ const char *get_spell_target_prompt(spell_type which_spell)
     switch (which_spell)
     {
     case SPELL_APPORTATION:
+        // @locnote: prompt for Apportation
         return "Apport";
     case SPELL_SMITING:
+        // @locnote: prompt for Smiting
         return "Smite";
     case SPELL_LRD:
+        // @locnote: prompt for Lee's Rapid Destruction
         return "Fragment what (e.g. wall or brittle monster)?";
     default:
         return nullptr;

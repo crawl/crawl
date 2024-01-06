@@ -92,7 +92,7 @@ Massenverwirrung
 %%%%
 # duplicate of ability
 #Smiting
-#Niederstrecken
+#Zerschlagen
 %%%%
 Summon Small Mammal
 Kleines Säugetier beschwören
