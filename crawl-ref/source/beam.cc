@@ -4450,7 +4450,10 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
         // will actually see it.
         // XXX: This is ugly and numerically arbitrary...
         if (side_effect)
+        {
             final += 10;
+            preac += 10;
+        }
 
         // Monster could be hurt somewhat, but only apply the
         // monster's power based on how badly it is affected.
