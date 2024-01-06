@@ -601,13 +601,21 @@ Kikubaaqudgha death
 
 Kikubaaqudgha rasps: You have failed me! Welcome... death!
 %%%%
-Kikubaaqudgha death undead
+Kikubaaqudgha death corpse undead
 
 Kikubaaqudgha rasps: You have failed me! Welcome... oblivion!
 %%%%
+Kikubaaqudgha death corpse nonliving
+
+<Kikubaaqudgha death corpse undead>
+%%%%
+Kikubaaqudgha death undead
+
+<Kikubaaqudgha death corpse undead>
+%%%%
 Kikubaaqudgha death nonliving
 
-<Kikubaaqudgha death undead>
+<Kikubaaqudgha death corpse undead>
 %%%%
 Lugonu welcome
 
@@ -829,13 +837,17 @@ Yredelemnul death corpse
 
 Your body rises from the dead as a mindless zombie.
 %%%%
+Yredelemnul death corpse undead
+
+You join the legions of the undead harvest.
+%%%%
 Yredelemnul death corpse nonliving
 
 Your body becomes fuel for the black torch.
 %%%%
 Yredelemnul death undead
 
-You join the legions of the undead harvest.
+<Yredelemnul death corpse undead>
 %%%%
 Zin penance
 
