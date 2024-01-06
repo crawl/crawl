@@ -221,7 +221,8 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
 
 bool check_old_item_warning(const item_def& item, operation_types oper,
                             bool check_melded = false);
-bool check_warning_inscriptions(const item_def& item, operation_types oper);
+bool check_warning_inscriptions(const item_def& item, operation_types oper,
+                                bool *asked = nullptr);
 
 void init_item_sort_comparators(item_sort_comparators &list,
                                 const string &set);
