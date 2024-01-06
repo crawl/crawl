@@ -36,6 +36,12 @@ function ice_cave_portal(e)
 
     dgn.persist.ice_cave_hard = hard_ice_cave_difficulty()
 
+    if dgn.persist.ice_cave_hard then
+        gone = "dngn_portal_glacial_chasm_gone"
+    else
+        gone = "dngn_portal_ice_cave_gone"
+    end
+
     e.lua_marker('O',
         timed_marker {
           disappear = "The archway melts and disappears.",
@@ -43,11 +49,17 @@ function ice_cave_portal(e)
           turns = timeout_turns,
           single_timed = true,
           floor = "expired_portal",
-          feat_tile = "dngn_portal_ice_cave_gone",
+          feat_tile = gone,
           msg = messager })
     e.tags("uniq_icecv chance_icecave")
     e.chance(500)
+
     e.kfeat("O = enter_ice_cave")
+    if dgn.persist.ice_cave_hard then
+        e.tile("O = dngn_portal_glacial_chasm")
+        e.set_feature_name("enter_ice_cave", "a glacial archway")
+    end
+
     e.colour("a = white")
     e.kfeat("a = x")
     e.rtile("a = wall_ice_block")

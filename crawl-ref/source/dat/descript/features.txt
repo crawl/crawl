@@ -778,6 +778,12 @@ A frozen archway
 
 A portal leading to an ice cave. The archway is gradually melting away.
 %%%%
+A glacial archway
+
+A portal leading to a glacial chasm, far more dangerous than the icy caverns
+found in the shallower reaches of the Dungeon. The archway is gradually melting
+away.
+%%%%
 A sand-covered staircase
 
 A staircase leading to an ossuary. Sand is continuously pouring onto it,
