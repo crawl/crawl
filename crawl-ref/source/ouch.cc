@@ -878,9 +878,11 @@ static void _god_death_message(kill_method_type death_type, const actor *killer)
     switch (you.religion)
     {
     case GOD_FEDHAS:
-        simple_god_message(" appreciates your contribution to the "
-                           "ecosystem.");
+    {
+        const string result = getSpeakString("Fedhas death");
+        god_speaks(GOD_FEDHAS, result.c_str());
         break;
+    }
 
     case GOD_NEMELEX_XOBEH:
         nemelex_death_message();
