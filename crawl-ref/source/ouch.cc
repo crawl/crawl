@@ -875,6 +875,10 @@ static void _god_death_message(kill_method_type death_type, const actor *killer)
     const bool left_corpse = death_type != KILLED_BY_DISINT
                              && death_type != KILLED_BY_LAVA;
 
+    const mon_holy_type holi = you.holiness();
+    const bool was_undead = bool(holi & MH_UNDEAD);
+    const bool was_nonliving = bool(holi & MH_NONLIVING);
+
     switch (you.religion)
     {
     case GOD_FEDHAS:
@@ -889,30 +893,20 @@ static void _god_death_message(kill_method_type death_type, const actor *killer)
         break;
 
     case GOD_KIKUBAAQUDGHA:
-    {
-        const mon_holy_type holi = you.holiness();
-
-        if (holi & (MH_NONLIVING | MH_UNDEAD))
-        {
+        if (was_undead || was_nonliving)
             simple_god_message(" rasps: \"You have failed me! "
                                "Welcome... oblivion!\"");
-        }
         else
-        {
             simple_god_message(" rasps: \"You have failed me! "
                                "Welcome... death!\"");
-        }
         break;
-    }
 
     case GOD_YREDELEMNUL:
-        if (you.undead_state() != US_ALIVE)
+        if (was_undead)
             mprf(MSGCH_GOD, "You join the legions of the undead harvest.");
         else if (left_corpse)
         {
-            const mon_holy_type holi = you.holiness();
-
-            if (holi & MH_NONLIVING)
+            if (was_nonliving)
                 mprf(MSGCH_GOD, "Your body becomes fuel for the black torch.");
             else
                 mprf(MSGCH_GOD, "Your body rises from the dead as a mindless "
