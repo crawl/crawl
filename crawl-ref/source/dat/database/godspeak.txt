@@ -597,6 +597,18 @@ Kikubaaqudgha welcome
 
 Kikubaaqudgha says: Spread unending torment and darkness!
 %%%%
+Kikubaaqudgha death
+
+Kikubaaqudgha rasps: You have failed me! Welcome... death!
+%%%%
+Kikubaaqudgha death undead
+
+Kikubaaqudgha rasps: You have failed me! Welcome... oblivion!
+%%%%
+Kikubaaqudgha death nonliving
+
+<Kikubaaqudgha death undead>
+%%%%
 Lugonu welcome
 
 Lugonu says: Spread carnage and corruption!
@@ -812,6 +824,18 @@ Yredelemnul says: All are equal in death! Holy martyrdom means nothing!
 Yredelemnul welcome
 
 Yredelemnul says: Carry the black torch! Rouse the idle dead!
+%%%%
+Yredelemnul death corpse
+
+Your body rises from the dead as a mindless zombie.
+%%%%
+Yredelemnul death corpse nonliving
+
+Your body becomes fuel for the black torch.
+%%%%
+Yredelemnul death undead
+
+You join the legions of the undead harvest.
 %%%%
 Zin penance
 

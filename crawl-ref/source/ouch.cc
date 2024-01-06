@@ -893,25 +893,30 @@ static void _god_death_message(kill_method_type death_type, const actor *killer)
         break;
 
     case GOD_KIKUBAAQUDGHA:
-        if (was_undead || was_nonliving)
-            simple_god_message(" rasps: \"You have failed me! "
-                               "Welcome... oblivion!\"");
+    {
+        string result;
+        if (was_undead)
+            result = getSpeakString("Kikubaaqudgha death undead");
+        else if (was_nonliving)
+            result = getSpeakString("Kikubaaqudgha death nonliving");
         else
-            simple_god_message(" rasps: \"You have failed me! "
-                               "Welcome... death!\"");
+            result = getSpeakString("Kikubaaqudgha death");
+        god_speaks(GOD_KIKUBAAQUDGHA, result.c_str());
         break;
+    }
 
     case GOD_YREDELEMNUL:
         if (was_undead)
-            mprf(MSGCH_GOD, "You join the legions of the undead harvest.");
+            result = getSpeakString("Yredelemnul death undead");
         else if (left_corpse)
         {
             if (was_nonliving)
-                mprf(MSGCH_GOD, "Your body becomes fuel for the black torch.");
+                result = getSpeakString("Yredelemnul death corpse nonliving");
             else
-                mprf(MSGCH_GOD, "Your body rises from the dead as a mindless "
-                     "zombie.");
+                result = getSpeakString("Yredelemnul death corpse");
         }
+        if (!result.empty())
+            god_speaks(GOD_YREDELEMNUL, result.c_str());
         // No message if you're not undead and your corpse is lost.
         break;
 
