@@ -872,6 +872,9 @@ static void _god_death_message(kill_method_type death_type, const actor *killer)
 {
     xom_death_message(death_type);
 
+    const bool left_corpse = death_type != KILLED_BY_DISINT
+                             && death_type != KILLED_BY_LAVA;
+
     switch (you.religion)
     {
     case GOD_FEDHAS:
@@ -903,8 +906,7 @@ static void _god_death_message(kill_method_type death_type, const actor *killer)
     case GOD_YREDELEMNUL:
         if (you.undead_state() != US_ALIVE)
             mprf(MSGCH_GOD, "You join the legions of the undead harvest.");
-        else if (death_type != KILLED_BY_DISINT
-              && death_type != KILLED_BY_LAVA)
+        else if (left_corpse)
         {
             const mon_holy_type holi = you.holiness();
 
@@ -937,12 +939,9 @@ static void _god_death_message(kill_method_type death_type, const actor *killer)
 #endif
 
     default:
-        if (will_have_passive(passive_t::goldify_corpses)
-            && death_type != KILLED_BY_DISINT
-            && death_type != KILLED_BY_LAVA)
-        {
+        if (will_have_passive(passive_t::goldify_corpses) && left_corpse)
             mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
-        }
+
         // Doesn't depend on Okawaru worship - you can still lose the duel
         // after abandoning.
         if (killer && killer->props.exists(OKAWARU_DUEL_TARGET_KEY))
