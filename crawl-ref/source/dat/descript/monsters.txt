@@ -3295,8 +3295,8 @@ be swamp ooze, cauldron soot and brew ingredients.
 withered plant
 
 A plant whose life has been drained away, but with its physical form still
-intact. It looks like it died many {{ if you.branch("Crypt") or
-you.branch("Tomb") then return "centuries"; else return "years"; end }}
+intact. It looks like it died many {{ if you.branch() == "Crypt" or
+you.branch() == "Tomb" then return "centuries"; else return "years"; end }}
 ago.
 %%%%
 worm
