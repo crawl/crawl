@@ -518,7 +518,11 @@ static void _set_mons_move_dir(const monster* mons,
     }
     else
     {
-        *delta = (mons->firing_pos.zero() ? mons->target : mons->firing_pos)
+        const bool use_firing_pos = !mons->firing_pos.zero()
+                                    && !mons_is_fleeing(*mons)
+                                    && !mons_is_confused(*mons)
+                                    && !mons->berserk_or_frenzied();
+        *delta = (use_firing_pos ? mons->firing_pos : mons->target)
                  - mons->pos();
     }
 
