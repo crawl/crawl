@@ -111,6 +111,7 @@ vampiric_draining VAMPIRIC_DRAINING
 infestation INFESTATION
 borgnjors_vile_clutch BORGNJORS_VILE_CLUTCH
 kiss_of_death KISS_OF_DEATH
+martyrs_knell MARTYRS_KNELL
 
 %sdir gui/spells/poison
 alistairs_intoxication ALISTAIRS_INTOXICATION
