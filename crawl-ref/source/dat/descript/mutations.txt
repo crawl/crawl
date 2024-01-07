@@ -699,12 +699,9 @@ melee. Each tentacle can wear a ring, but you need four of them to move around,
 and either two or four tentacles to hold a weapon depending on its size, and
 two tentacles to hold a shield.
 
-A constriction attack has a 66% chance of automatically triggering on any
-melee attack. When triggered, it will attempt to begin or renew constriction
-of a targeted enemy; the maximum number of enemies that can be constricted is
-determined by the number of free tentacles. Whether a constriction attempt
-succeeds when triggered is determined primarily by Dexterity, Fighting skill,
-and any slaying bonuses.
+Your tentacles will try to constrict foes which you attack in melee. (You cannot
+constrict monsters larger than you.) Independently, you have a two-thirds chance
+of launching a damaging 'squeeze' attack whenever you attack in melee.
 %%%%
 mertail mutation
 
