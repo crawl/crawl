@@ -2890,6 +2890,16 @@ bool monster::sleepwalking() const
     return asleep() && has_ench(ENCH_CONFUSION);
 }
 
+/// Can't be swapped with by either players or monsters.
+bool monster::unswappable() const
+{
+    return is_stationary()
+        || cannot_act()
+        || has_ench(ENCH_BOUND)
+        || caught()
+        || mons_is_projectile(*this);
+}
+
 bool monster::backlit(bool self_halo, bool /*temp*/) const
 {
     if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME)

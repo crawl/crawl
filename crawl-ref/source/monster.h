@@ -423,6 +423,7 @@ public:
     bool caught() const override;
     bool asleep() const override;
     bool sleepwalking() const;
+    bool unswappable() const;
     bool backlit(bool self_halo = true, bool /*temp*/ = true) const override;
     bool umbra() const override;
     int halo_radius() const override;

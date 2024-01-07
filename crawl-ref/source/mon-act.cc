@@ -2774,14 +2774,11 @@ static bool _mons_can_displace(const monster* mpusher,
     // can't push. Note that sleeping monsters can't be pushed
     // past, either, but they may be woken up by a crowd trying to
     // elbow past them, and the wake-up check happens downstream.
-    // Monsters caught in a net also can't be pushed past.
-    if (mons_is_confused(*mpusher) || mons_is_confused(*mpushee)
-        || mpusher->cannot_act() || mpusher->is_stationary()
-        || mpusher->is_constricted() || mpushee->is_constricted()
-        || mpusher->has_ench(ENCH_BOUND) || mpushee->has_ench(ENCH_BOUND)
-        || (!_same_tentacle_parts(mpusher, mpushee)
-           && (mpushee->cannot_act() || mpushee->is_stationary()))
-        || mpusher->asleep() || mpushee->caught())
+    if (mons_is_confused(*mpusher)
+        || mons_is_confused(*mpushee)
+        || !_same_tentacle_parts(mpusher, mpushee) && mpushee->unswappable()
+        || mpusher->unswappable()
+        || mpusher->asleep())
     {
         return false;
     }
