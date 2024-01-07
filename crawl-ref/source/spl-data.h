@@ -646,7 +646,7 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     0,
-    TILEG_HAUNT,
+    TILEG_MARTYRS_KNELL,
 },
 
 {
