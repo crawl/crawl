@@ -20788,14 +20788,11 @@ Vorsicht, Ihr könnt nicht in den Boden dieser Ebene graben.
 {gold}
 
 %%%%
-" {autopickup}"
-
+autopickup
+Autoabholung
 %%%%
-"[Stash: "
-
-%%%%
-\t
-
+Stash:
+Versteck:
 %%%%
 %s%s (%d gold)
 
@@ -20804,13 +20801,13 @@ Vorsicht, Ihr könnt nicht in den Boden dieser Ebene graben.
 
 %%%%
 Enter for "%s"
-
+Enter für "%s"
 %%%%
 ? for help
-
+? für Hilfe
 %%%%
 "Search for what%s? "
-
+"Was suchen%s? "
 %%%%
 Your search expression is invalid.
 Euer Suchausdruck ist ungültig.
@@ -20821,47 +20818,47 @@ Kann nichts passendes finden.
 Too many matches; use a more specific search.
 Zu viele Übereinstimmungen; verwende eine spezifischere Suche.
 %%%%
-%d match%s
-
+1 match
+1 Treffer
 %%%%
-es
-
+%d matches
+%d Treffer
 %%%%
-<lightgrey>: only useless items found; press <w>=</w> to show.                    </lightgrey>
-
-%%%%
-<lightgrey>: <w>%s</w> [toggle: <w>!</w>], by <w>%s</w> [<w>/</w>], <w>%s</w> useless & duplicates [<w>=</w>]</lightgrey>
-
+only useless items found; press <w>=</w> to show.
+nur nutzlose Gegenstände gefunden; <w>=</w> zu zeigen.
 %%%%
 travel
-
+reisen
 %%%%
-"view  "
-
+view
+schauen
 %%%%
-dist
-
+toggle
+umschalten
 %%%%
-hide
-
+by <w>name</w>
+nach <w>Name</w>
 %%%%
-show
-
+by <w>dist</w>
+nach <w>Distanz</w>
 %%%%
-match
-
+<w>show</w> useless & duplicates
+Nutzlose und Duplikate <w>zeigen</w>
 %%%%
-" further duplicate"
-
+<w>hide</w> useless & duplicates
+Nutzlose und Duplikate <w>verstecken</w>
 %%%%
-" in "
-
+1 further duplicate
+1 weiteres Duplikat
 %%%%
-" pile"
-
+%d further duplicates
+%d weitere Duplikate
 %%%%
-lightcyan
-
+" in 1 pile"
+" in 1 Haufen"
+%%%%
+" in %d piles"
+" in %d Haufen"
 %%%%
 
 ##################
@@ -20926,9 +20923,6 @@ sprint/
 ##################
 %%%%
 <lightred>ERROR: string above had unterminated tag</lightred>
-
-%%%%
-" \t"
 
 %%%%
 \r
@@ -22266,6 +22260,9 @@ Ihr habt {acc}%s gefunden.
 
 %%%%
 " back to "
+
+%%%%
+" in "
 
 %%%%
 " out of"

@@ -94,8 +94,11 @@ string stash_annotate_item(const char *s, const item_def *item)
     // item_needs_autopickup while trying to decide if the item needs to be
     // autopickedup leads to infinite recursion
     if (Options.autopickup_search && item_needs_autopickup(*item))
-        text += " {autopickup}";
-
+    {
+        text += " {";
+        text += "autopickup";
+        text += "}";
+    }
     return text;
 }
 
@@ -121,7 +124,7 @@ string get_stash_desc(const coord_def& c)
         {
             const string desc = s->description();
             if (!desc.empty())
-                return "[Stash: " + desc + "]";
+                return "[" + localise("Stash:") + " " + desc + "]";
         }
     }
     return "";
@@ -131,7 +134,7 @@ void describe_stash(const coord_def& c)
 {
     string desc = get_stash_desc(c);
     if (!desc.empty())
-        mprf(MSGCH_EXAMINE_FILTER, "%s", desc.c_str());
+        mpr_nolocalise(MSGCH_EXAMINE_FILTER, desc);
 }
 
 vector<item_def> Stash::get_items() const
@@ -1121,19 +1124,21 @@ string StashTracker::stash_search_prompt()
     if (!lastsearch.empty())
     {
         const string disp = replace_all(lastsearch, "<", "<<");
-        opts.push_back(
-            make_stringf("Enter for \"%s\"", disp.c_str()));
+        string redo = localise("Enter for \"%s\"");
+        opts.push_back(make_stringf(redo.c_str(), disp.c_str()));
     }
     if (lastsearch != ".")
-        opts.emplace_back("? for help");
+        opts.emplace_back(localise("? for help"));
 
+    string sep = localise(", or ");
     string prompt_qual =
-        comma_separated_line(opts.begin(), opts.end(), ", or ", ", or ");
+        comma_separated_line(opts.begin(), opts.end(), sep, sep);
 
     if (!prompt_qual.empty())
         prompt_qual = " [" + prompt_qual + "]";
 
-    return make_stringf("Search for what%s? ", prompt_qual.c_str());
+    string fmt = localise("Search for what%s? ");
+    return make_stringf(fmt.c_str(), prompt_qual.c_str());
 }
 
 void StashTracker::remove_shop(const level_pos &pos)
@@ -1550,10 +1555,10 @@ formatted_string StashSearchMenu::calc_title()
     formatted_string fs;
     fs.textcolour(title->colour);
     string prefixes[] = {
-        make_stringf("%d match%s",
-            num_alt_matches, num_alt_matches == 1 ? "" : "es"),
-        make_stringf("%d match%s",
-            num_matches, num_matches == 1 ? "" : "es"),
+        num_alt_matches == 1 ? localise("1 match")
+                             : localise("%d matches", num_alt_matches), 
+        num_matches == 1 ? localise("1 match")
+                         : localise("%d matches", num_matches)
     };
     const bool f = num_matches != num_alt_matches;
     fs.cprintf(prefixes[f]);
@@ -1562,24 +1567,44 @@ formatted_string StashSearchMenu::calc_title()
         // TODO: it might be better to just force filtered=false in the
         // display loop if only useless items are found.
         fs += formatted_string::parse_string(
-            "<lightgrey>"
-            ": only useless items found; press <w>=</w> to show."
-            "                    "
+            "<lightgrey>" + string(": ") +
+            localise("only useless items found; press <w>=</w> to show.") +
             "</lightgrey>");
+        fs.chop(80, true);
     }
     else
     {
-        fs += formatted_string::parse_string(make_stringf(
-            "<lightgrey>"
-            ": <w>%s</w> [toggle: <w>!</w>],"
-            " by <w>%s</w> [<w>/</w>],"
-            " <w>%s</w> useless & duplicates [<w>=</w>]"
-            "</lightgrey>",
-            menu_action == ACT_EXECUTE ? "travel" : "view  ",
-            sort_style, filtered));
+        // @noloc section start
+        const string fmt = "<lightgrey>"
+                           ": <w>%s</w> [%s: <w>!</w>], %s [<w>/</w>],"
+                           " %s [<w>=</w>]"
+                           "</lightgrey>";
+        // @noloc section end
+        
+        const string travel = localise("travel");
+        const string view = localise("view");
+
+        // give action string a constant display width
+        const int action_width = max(strwidth(travel), strwidth(view));
+        string actn = chop_string(menu_action == ACT_EXECUTE ? travel : view, action_width);
+
+        const string toggle = localise("toggle");
+
+        string sort;
+        if (sort_style && strcmp(sort_style, "name") == 0)
+            sort = localise("by <w>name</w>");
+        else
+            sort = localise("by <w>dist</w>");
+        
+        string filter;
+        if (filtered && strcmp(filtered, "show") == 0)
+            filter = localise("<w>show</w> useless & duplicates");
+        else
+            filter = localise("<w>hide</w> useless & duplicates");
+
+        string text = make_stringf(fmt.c_str(), actn.c_str(), toggle.c_str(), sort.c_str(), filter.c_str());
+        fs += formatted_string::parse_string(text);
     }
-    fs.cprintf(string(max(0, strwidth(prefixes[!f])-strwidth(prefixes[f])),
-                      ' '));
     return fs;
 }
 
@@ -1616,6 +1641,7 @@ bool StashTracker::display_search_results(
     else
         stable_sort(results->begin(), results->end(), _compare_by_name);
 
+    // @noloc section start
     StashSearchMenu stashmenu(sort_by_dist ? "dist" : "name",
                               filter_useless ? "hide" : "show");
     stashmenu.set_tag("stash");
@@ -1623,6 +1649,7 @@ bool StashTracker::display_search_results(
     stashmenu.menu_action  = default_execute ? Menu::ACT_EXECUTE
                                              : Menu::ACT_EXAMINE;
     string title = "match";
+    // @noloc section end
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
     // Abuse of the quantity field.
@@ -1643,14 +1670,19 @@ bool StashTracker::display_search_results(
         matchtitle << res.match;
         if (res.duplicates > 0)
         {
-            matchtitle << " (" << res.duplicates << " further duplicate" <<
-                (res.duplicates == 1 ? "" : "s");
+            matchtitle << " (";
+            if (res.duplicates == 1)
+                matchtitle << localise("1 further duplicate");
+            else
+                matchtitle << localise("%d further duplicates", res.duplicates);
             if (res.duplicates != res.duplicate_piles  // piles are only
                                                        // meaningful for items
                 && res.match_type == MATCH_ITEM)
             {
-                matchtitle << " in " << res.duplicate_piles
-                           << " pile" << (res.duplicate_piles == 1 ? "" : "s");
+                if (res.duplicate_piles == 1)
+                    matchtitle << localise(" in 1 pile");
+                else
+                    matchtitle << localise(" in %d piles", res.duplicate_piles);
             }
             matchtitle << ")";
         }

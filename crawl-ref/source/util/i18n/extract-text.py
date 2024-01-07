@@ -432,6 +432,8 @@ for filename in files:
                     continue
                 if re.search(r'strip_tag_prefix *\(', line):
                     continue
+                if 'annotate_string' in line:
+                    continue
                 if 'json_' in line:
                     continue
                 if 'serialize' in line:
@@ -597,7 +599,7 @@ for filename in files:
             continue
 
         # ignore strings that are just whitespace
-        if re.match(r'^(\\n|\s)*$', string):
+        if re.match(r'^(\\t|\\n|\s)*$', string):
             continue
 
         # ignore opengl functions
@@ -605,7 +607,7 @@ for filename in files:
             continue
         
         # ignore HTML and formatted text tags
-        if re.match(r'^[\n\s\]\)\(]*</?[^<>/]+>[\n\s\[\(\)]*$', string):
+        if re.match(r'^(\\n|\s|\[|\]|\(|\))*</?[^<>/]+>(\\n|\s|\[|\]|\(|\))*$', string):
             continue
 
         # ignore variable names
