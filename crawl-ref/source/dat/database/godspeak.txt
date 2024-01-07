@@ -582,9 +582,17 @@ Hepliaklqana welcome
 
 Hepliaklqana says: Your past becomes your present!
 %%%%
+Hepliaklqana death
+
+Hepliaklqana delivers you to your ancestors.
+%%%%
 Ignis welcome
 
 The flames of Ignis gently warm you.
+%%%%
+Ignis death
+
+Ignis goes out, and joins you in death.
 %%%%
 Jiyva welcome
 
