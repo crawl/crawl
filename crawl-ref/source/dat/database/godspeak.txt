@@ -546,6 +546,10 @@ Cheibriados welcome
 
 Cheibriados says: Take it easy.
 %%%%
+Cheibriados death
+
+Cheibriados appreciates the motionlessness of death.
+%%%%
 Dithmenos penance
 
 Dithmenos says: Return to the darkness!
@@ -600,6 +604,18 @@ Slime for the Slime God!
 
 w:1
 Long live the new flesh!
+%%%%
+Jiyva death corpse
+
+Jiyva sends a jelly to digest your remains.
+%%%%
+Jiyva death corpse undead
+
+<Jiyva death corpse>
+%%%%
+Jiyva death corpse nonliving
+
+Jiyva sends a jelly to digest your equipment.
 %%%%
 Kikubaaqudgha welcome
 
@@ -706,6 +722,10 @@ Ru welcome
 
 Ru says: Cut away your false body!
 %%%%
+Ru death
+
+Ru respects your ultimate sacrifice.
+%%%%
 Sif Muna penance
 
 Sif Muna says: Seek out more knowledge and wisdom.
@@ -733,6 +753,18 @@ Trog says: Kill them all!
 Uskayaw welcome
 
 Uskayaw says: Surrender yourself to the rhythm!
+%%%%
+Uskayaw death corpse
+
+Your body falls in perfect tune with the rhythm.
+%%%%
+Uskayaw death corpse undead
+
+<Uskayaw death corpse>
+%%%%
+Uskayaw death corpse nonliving
+
+<Uskayaw death corpse>
 %%%%
 Vehumet welcome
 
