@@ -20576,14 +20576,6 @@ Vorsicht! Ihr fliegt jetzt über {dat}%s.
 %%%%
 
 ##################
-# spl-wpnench.h
-##################
-%%%%
-orig brand
-
-%%%%
-
-##################
 # spl-wpnench.cc
 ##################
 %%%%

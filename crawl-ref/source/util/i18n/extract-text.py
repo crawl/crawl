@@ -458,6 +458,8 @@ for filename in files:
                     continue
                 if re.search(r'compare_item', line):
                     continue
+                if re.search(r'^# *define.*KEY', line):
+                    continue
 
                 # find or compare
                 if re.search(r'\bstrstr\s*\(', line):
