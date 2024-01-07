@@ -1993,10 +1993,11 @@ ENDMAP
 
 ############################################################
 # 16 * (2.667 |), 10 monsters, 8 $
-NAME:   johnstein_vaults_end_maze
-TAGS:   vaults_end_quadrant unrand
-SUBST:  9 = 8 9 .:20
-NSUBST: k = 1:k / *:*
+NAME:    johnstein_vaults_end_maze
+TAGS:    vaults_end_quadrant unrand
+SHUFFLE: Oo / Pp / Qq / Rr / Ss
+NSUBST:  o = 1:k / *:.
+SUBST:   pqrs = ., PQRS = *, 9 = 8 9 .:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
 MAP
@@ -2007,15 +2008,15 @@ x.x*xxxxxxx.....xxxxxxx*x.x
 x.xx*$9...xx.9.xx...9$*xx.x
 x..x$.................$x..x
 x..x9...xxx..9..xxx...9x..x
-x..xx...xOxxx.xxxOx...xx..x
-x...xx..xx..xxx..xx..xx...x
+x..xx...xOxxx.xxxPx...xx..x
+x...xx..xxo.xxx.pxx..xx...x
 x....x..x..x.9.x..x..x....x
-x.......x.x9kxk9x.x.......x
-x....9....x.xOx.x....9....x
-x.......x.x9kxk9x.x.......x
+x.......x.x9qxq9x.x.......x
+x....9....x.xQx.x....9....x
+x.......x.x9qxq9x.x.......x
 x....x..x..x.9.x..x..x....x
-x...xx..xx..xxx..xx..xx...x
-x..xx...xOxxx.xxxOx...xx..x
+x...xx..xxr.xxx.sxx..xx...x
+x..xx...xRxxx.xxxSx...xx..x
 x..x9...xxx..9..xxx...9x..x
 x..x$.................$x..x
 x.xx*$9...xx.9.xx...9$*xx.x
