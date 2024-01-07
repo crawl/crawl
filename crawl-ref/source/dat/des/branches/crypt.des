@@ -695,8 +695,8 @@ ENDMAP
 NAME:   nicolae_crypt_fancy_cubbyholes
 TAGS:   transparent extra decor
 DEPTH:  Crypt
-NSUBST: - = 1:@ / *:-
-SUBST:  ' = x:40 ., ` = x:70 ., - = x:100 .
+NSUBST: - = 1:@ / *:~
+SUBST:  ' = x:40 ., ` = x:70 ., ~ = x:100 .
 MAP
 xxxx-x-x-x-xxxx
 xxx'.`.'.`.'xxx
@@ -704,9 +704,9 @@ xxxx...'...xxxx
 x'xx`.`x`.`xx'x
 -..`.......`..-
 x`....`.`....`x
--..`.`x-x`.`..-
-x''x..-x-..x''x
--..`.`x-x`.`..-
+-..`.`x~x`.`..-
+x''x..~x~..x''x
+-..`.`x~x`.`..-
 x`....`.`....`x
 -..`.......`..-
 x'xx`.`x`.`xx'x
