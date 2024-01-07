@@ -7597,12 +7597,6 @@ Die göttliche Erfahrung erschöpft Eure Kraft!
 <lightred>ERROR: unterminated <input></lightred>
 
 %%%%
-<w>[
-
-%%%%
-]</w>
-
-%%%%
 See you next game!
 Bis zum nächsten Spiel!
 %%%%
@@ -20786,22 +20780,6 @@ Vorsicht, Ihr könnt nicht in den Boden dieser Ebene graben.
 ##################
 # startup.cc
 ##################
-%%%%
-Non-debug Crawl cannot run tests. Please use a debug build (defined FULLDEBUG, DEBUG_DIAGNOSTIC or DEBUG_TESTS)
-
-%%%%
-<white>[
-
-%%%%
-"]</white> "
-
-%%%%
-" (<red>"
-
-%%%%
-</red>)
-
-%%%%
 
 ##################
 # stash.cc

@@ -337,7 +337,7 @@ for filename in files:
                  or 'yes_or_no' in line:
                 # extract prompts
                 extract = True
-            elif re.match(r'\s*end *\(', line):
+            elif re.match(r'\s*end *\(', line) and not 'DEBUG' in line:
                 extract = True
             elif re.search(r'\bsave_game *\(', line):
                 extract = True
@@ -605,7 +605,7 @@ for filename in files:
             continue
         
         # ignore HTML and formatted text tags
-        if re.match(r'^(\\n|\s)*</?[^<>/]+>(\\n|\s)*$', string):
+        if re.match(r'^[\n\s\]\)\(]*</?[^<>/]+>[\n\s\[\(\)]*$', string):
             continue
 
         # ignore variable names
