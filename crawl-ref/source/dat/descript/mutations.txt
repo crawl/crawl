@@ -502,7 +502,8 @@ level of this mutation increases the healing further.
 sturdy frame mutation
 
 Your movements are less encumbered by armour, mitigating penalties to spell
-success and accuracy. Each level of this mutation reduces armour ER by 2.
+success, evasion, and ranged weapon attack speed. Each level of this mutation
+reduces armour ER by 2.
 %%%%
 sanguine armour mutation
 
