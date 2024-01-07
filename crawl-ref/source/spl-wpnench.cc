@@ -11,6 +11,7 @@
 #include "god-item.h"
 #include "god-passive.h"
 #include "item-prop.h"
+#include "localise.h"
 #include "message.h"
 #include "player-equip.h"
 #include "prompt.h"
@@ -82,7 +83,7 @@ spret cast_excruciating_wounds(int power, bool fail)
     if (dangerous_disto)
     {
         const string prompt =
-              "Really brand " + weapon.name(DESC_INVENTORY) + "?";
+              localise("Really brand %s?", weapon.name(DESC_INVENTORY));
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
@@ -96,8 +97,10 @@ spret cast_excruciating_wounds(int power, bool fail)
         unwield_distortion(true);
 
     noisy(spell_effect_noise(SPELL_EXCRUCIATING_WOUNDS), you.pos());
-    mprf("%s %s in agony.", weapon.name(DESC_YOUR).c_str(),
-                            silenced(you.pos()) ? "writhes" : "shrieks");
+    if (silenced(you.pos()))
+        mprf("%s writhes in agony.", weapon.name(DESC_YOUR).c_str());
+    else
+        mprf("%s shrieks in agony.", weapon.name(DESC_YOUR).c_str());
 
     if (!has_temp_brand)
     {

@@ -20591,29 +20591,26 @@ Mit diesem Zauber könnt Ihr keine Fernkampfwaffen brandmarken.
 This weapon is already branded with pain.
 Diese Waffe ist bereits mit Schmerzen gebrandmarkt.
 %%%%
-"Really brand "
-
+Really brand %s?
+Wirklich {acc}%s brandmarkieren?"
 %%%%
-%s %s in agony.
-%s%s in Qual.
+%s writhes in agony.
+%s windet sich vor Schmerzen.
 %%%%
-writhes
-
-%%%%
-shrieks
-
+%s shrieks in agony.
+%s schreit vor Schmerzen.
 %%%%
 %s begins to glow brighter.
-
+%s beginnt heller zu glühen.
 %%%%
 %s begin to glow brighter.
-
+%s beginnen heller zu glühen.
 %%%%
 %s begins to glow red.
-
+%s beginnt rot zu glühen.
 %%%%
 %s begin to glow red.
-
+%s beginnen rot zu glühen.
 %%%%
 
 ##################
