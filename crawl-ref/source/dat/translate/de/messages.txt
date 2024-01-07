@@ -20559,23 +20559,20 @@ Ihr habt keine Körperpanzerung, deren Geist Ihr beschwören könnt.
 # spl-vortex.cc
 ##################
 %%%%
-A great freezing vortex %s.
-
+A great freezing vortex appears around you.
+Ein großer Gefrierwirbel erscheint um Euch herum.
 %%%%
-appears around you
-
-%%%%
-appears and lifts you up
-
+A great freezing vortex appears and lifts you up.
+Ein großer Gefrierwirbel erscheint und hebt Euch hoch.
 %%%%
 A tree falls to the furious winds!
-
+Ein Baum fällt in den wilden Winden!
 %%%%
 The freezing vortex lifts you up.
-
+Der große Gefrierwirbel hebt Euch hoch.
 %%%%
 Careful! You are now flying above %s.
-Vorsicht! Ihr fliegt jetzt über%s.
+Vorsicht! Ihr fliegt jetzt über {dat}%s.
 %%%%
 
 ##################
