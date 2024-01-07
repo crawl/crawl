@@ -105,6 +105,7 @@ fugue_of_the_fallen FUGUE_OF_THE_FALLEN
 haunt HAUNT
 infestation INFESTATION
 kiss_of_death KISS_OF_DEATH
+martyrs_knell MARTYRS_KNELL
 necromutation NECROMUTATION
 necrotise NECROTISE
 pain PAIN
