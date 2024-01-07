@@ -1166,7 +1166,7 @@ TAGS:    vaults_end_quadrant unrand
 SHUFFLE: Oo / Pp / Qq / Rr
 SUBST:   o = k, pqrPQR = *
 SUBST:   9 = 8 9 .:20
-NSUBST:  * = 1:O / 14:* / *:.
+NSUBST:  * = 14:* / *:.
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
 MAP
