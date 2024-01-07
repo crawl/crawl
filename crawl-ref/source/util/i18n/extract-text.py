@@ -271,7 +271,7 @@ for filename in files:
             if re.search(r'}\s*;', line):
                 in_map = False
 
-            if len(lines) == 0 or line.startswith('#'):
+            if len(lines) == 0 or line.startswith('#') or line == "{" or line == "}":
                lines.append(line)
                continue
 
@@ -283,7 +283,7 @@ for filename in files:
                 continue
 
             join = False
-            if last.endswith(';'):
+            if last.endswith(';') or last == "{" or last == "}":
                 join = False
             elif last.endswith(':') and re.match(r'^(case|public|protected|private)\b', last):
                 join = False
