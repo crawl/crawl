@@ -25,6 +25,7 @@
 #include "item-name.h"
 #include "items.h"
 #include "level-state-type.h"
+#include "localise.h"
 #include "losglobal.h"
 #include "mapmark.h"
 #include "message.h"
@@ -59,15 +60,18 @@ static string _annotation_exclusion_warning(level_id next_level_id)
         && is_connected_branch(next_level_id))
     {
         crawl_state.level_annotation_shown = true;
-        return make_stringf("Warning, next level annotated: <yellow>%s</yellow>",
-                            get_level_annotation(next_level_id).c_str());
+        string result = localise("Warning, next level annotated: ");
+        result += "<yellow>";
+        result += get_level_annotation(next_level_id); // already localised
+        result += "</yellow>";
+        return result;
     }
 
     if (is_exclude_root(you.pos())
              && feat_is_travelable_stair(env.grid(you.pos()))
              && !strstr(get_exclusion_desc(you.pos()).c_str(), "cloud"))
     {
-        return "This staircase is marked as excluded!";
+        return localise("This staircase is marked as excluded!");
     }
 
     return "";
@@ -87,7 +91,7 @@ static string _target_exclusion_warning()
         return "";
 
     if (stairs_destination_is_excluded(*si))
-        return "This staircase leads to a travel-excluded area!";
+        return localise("This staircase leads to a travel-excluded area!");
 
     return "";
 }
@@ -98,7 +102,7 @@ static string _bezotting_warning(branch_type branch)
         return "";
 
     const int turns = turns_until_zot_in(branch);
-    return make_stringf("You have just %d turns in %s to find a new floor before Zot consumes you.",
+    return localise("You have just %d turns in %s to find a new floor before Zot consumes you.",
                         turns, branches[branch].longname);
 }
 
@@ -113,11 +117,11 @@ bool check_next_floor_warning()
     const string bezotting_warning = _bezotting_warning(next_level_id.branch);
 
     if (annotation_warning != "")
-        mprf(MSGCH_PROMPT, "%s", annotation_warning.c_str());
+        mpr_nolocalise(MSGCH_PROMPT, annotation_warning);
     if (target_warning != "")
-        mprf(MSGCH_PROMPT, "%s", target_warning.c_str());
+        mpr_nolocalise(MSGCH_PROMPT, target_warning);
     if (bezotting_warning != "")
-        mprf(MSGCH_PROMPT, "%s", bezotting_warning.c_str());
+        mpr_nolocalise(MSGCH_PROMPT, bezotting_warning);
 
     const bool might_be_dangerous = annotation_warning != ""
                                  || target_warning != ""
@@ -214,22 +218,32 @@ static void _climb_message(dungeon_feature_type stair, bool going_up,
             mpr("A mysterious force pulls you upwards.");
         else
         {
-            mprf("You %s downwards.",
-                 you.airborne() ? "fly" : "slide");
+            mpr(you.airborne() ? "You fly downwards."
+                               : "You slide downwards.");
         }
         mpr("The hatch slams shut behind you.");
     }
     else if (feat_is_gate(stair))
     {
-        mprf("You %s %s through the gate.",
-             you.airborne() ? "fly" : "go",
-             going_up ? "up" : "down");
+        if (you.airborne() && going_up)
+            mpr("You fly up through the gate.");
+        else if (going_up)
+            mpr("You go up through the gate.");
+        else if (you.airborne())
+            mpr("You fly down through the gate.");
+         else
+            mpr("You go down through the gate.");
     }
     else
     {
-        mprf("You %s %swards.",
-             you.airborne() ? "fly" : "climb",
-             going_up ? "up" : "down");
+        if (you.airborne() && going_up)
+            mpr("You fly upwards.");
+        else if (going_up)
+            mpr("You go upwards.");
+        else if (you.airborne())
+            mpr("You fly downwards.");
+         else
+            mpr("You go downwards.");
     }
 }
 
@@ -375,12 +389,21 @@ static bool _check_fall_down_stairs(const dungeon_feature_type ftype, bool going
         && !feat_is_escape_hatch(ftype)
         && coinflip())
     {
-        const char* fall_where = "down the stairs";
-        if (!feat_is_staircase(ftype))
-            fall_where = "through the gate";
+        if (feat_is_staircase(ftype))
+        {
+            if (going_up)
+                mpr("In your confused state, you trip and fall back down the stairs.");
+            else
+                mpr("In your confused state, you trip and fall down the stairs.");
+        }
+        else
+        {
+            if (going_up)
+                mpr("In your confused state, you trip and fall back through the gate.");
+            else
+                mpr("In your confused state, you trip and fall through the gate.");
+        }
 
-        mprf("In your confused state, you trip and fall %s%s.",
-             going_up ? "back " : "", fall_where);
         if (!feat_is_staircase(ftype))
             ouch(1, KILLED_BY_FALLING_THROUGH_GATE);
         else
@@ -581,10 +604,14 @@ static level_id _travel_destination(const dungeon_feature_type how,
                                     + shaft_dest.describe() + ".");
         }
 
-        mprf("You %s into a shaft and drop %d floor%s!",
-             you.airborne() ? "are sucked" : "fall",
-             shaft_depth,
-             shaft_depth > 1 ? "s" : "");
+        if (you.airborne() && shaft_depth == 1)
+            mpr("You are sucked into a shaft and drop 1 floor!");
+        else if (you.airborne())
+            mprf("You are sucked into a shaft and drop %d floors!", shaft_depth);
+        if (shaft_depth == 1)
+            mpr("You fall into a shaft and drop 1 floor!");
+        else
+            mprf("You fall into a shaft and drop %d floors!", shaft_depth);
 
         // Shafts are one-time-use.
         mpr("The shaft crumbles and collapses.");

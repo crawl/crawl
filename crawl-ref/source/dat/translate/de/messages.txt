@@ -4918,7 +4918,7 @@ That's not a valid depth.
 
 %%%%
 Cleared annotation.
-Bemerkung gelöscht.
+Anmerkung gelöscht.
 %%%%
 
 ##################
@@ -20617,23 +20617,23 @@ Wirklich {acc}%s brandmarkieren?"
 # stairs.cc
 ##################
 %%%%
-Warning, next level annotated: <yellow>%s</yellow>
-Warnung, nächste Stufe kommentiert: <yellow>%s </yellow>
+"Warning, next level annotated: "
+"Warnung, nächste Ebene hat Anmerkung: "
 %%%%
 This staircase is marked as excluded!
 Diese Treppe ist als ausgeschlossen markiert!
 %%%%
 This staircase leads to a travel-excluded area!
-
+Diese Treppe führt zu einem ausgeschlossenen Gebiet!
 %%%%
 You have just %d turns in %s to find a new floor before Zot consumes you.
-
+Ihr habt nur %d Runden in {dat}%s, um eine neue Ebene zu finden, bevor Zot euch verschlingt.
 %%%%
 Enter next level anyway?
-
+Nächste Eben trotzdem eintreten?
 %%%%
 %s moves away as you attempt to %s it!
-%s bewegt sich weg, als Ihr versucht, es zu %s!
+%s bewegt sich weg, als Ihr in der Nähe kommt!
 %%%%
 The world spins around you as you enter the gateway.
 Die Welt dreht sich um Euch, als Ihr das Tor betretet.
@@ -20641,53 +20641,56 @@ Die Welt dreht sich um Euch, als Ihr das Tor betretet.
 A mysterious force pulls you upwards.
 Eine mysteriöse Kraft zieht Euch nach oben.
 %%%%
-You %s downwards.
-Ihr %s runter.
+You fly downwards.
+Ihr fliegt nach unten.
 %%%%
-slide
-
+You slide downwards.
+Ihr rutscht nach unten.
 %%%%
 The hatch slams shut behind you.
 Die Luke knallt hinter Euch zu.
 %%%%
-You %s %s through the gate.
-Ihr %s %s durch das Tor.
+You fly up through the gate.
+Ihr fliegt durch das Tor nach oben.
 %%%%
-go
-
+You go up through the gate.
+Ihr geht durch das Tor nach oben.
 %%%%
-up
-
+You fly down through the gate.
+Ihr fliegt durch das Tor nach unten.
 %%%%
-down
-
+You go down through the gate.
+Ihr geht durch das Tor nach unten.
 %%%%
-You %s %swards.
-Ihr %s %swards.
+You fly upwards.
+Ihr fliegt nach oben.
 %%%%
-climb
-
+You go upwards.
+Ihr geht nach oben.
+%%%%
+You go downwards.
+Ihr geht nach unten.
 %%%%
 You have passed through the Ziggurat. Zot will hunt you nevermore.
-
+Ihr habt die Zikkurat durchschritten. Zot wird Euch nie mehr jagen.
 %%%%
 This shop has been abandoned, nothing of value remains.
 Dieser Laden wurde aufgegeben, nichts von Wert bleibt übrig.
 %%%%
-down the stairs
-
+In your confused state, you trip and fall back down the stairs.
+In Eurem verwirrten Zustand stolpert Ihr und fallt die Treppe wieder hinunter.
 %%%%
-through the gate
-
+In your confused state, you trip and fall down the stairs.
+In Eurem verwirrten Zustand stolpert Ihr und fallt die Treppe hinunter.
 %%%%
-In your confused state, you trip and fall %s%s.
-In Eurem verwirrten Zustand stolpert Ihr und fallt %s%s.
+In your confused state, you trip and fall back through the gate.
+In Eurem verwirrten Zustand stolpert Ihr und fallt zurück durch das Tor.
 %%%%
-"back "
-
+In your confused state, you trip and fall through the gate.
+In Eurem verwirrten Zustand stolpert Ihr und fallt durch das Tor.
 %%%%
 You insert %s into the lock.
-Ihr steckt {acc}%s in das Schloss.
+Ihr steckt {acc}%s in das Schloss ein.
 %%%%
 The lock glows eerily!
 Das Schloss leuchtet unheimlich!
@@ -20705,31 +20708,34 @@ The nature of this place prevents you from teleporting.
 Die Natur dieses Ortes hindert Euch daran, Euch zu teleportieren.
 %%%%
 You feel stable on this floor.
-Ihr fühlt Euch auf dieser Etage stabil.
+Ihr fühlt Euch auf dieser Ebene stabil.
 %%%%
 The shaft disappears in a puff of logic!
-Die Welle verschwindet in einem Hauch von Logik!
+Der Schacht verschwindet in einem Hauch von Logik!
 %%%%
 Strange, the shaft seems to lead back to this level.
-Seltsam, der Schaft scheint auf dieses Niveau zurück zu führen.
+Seltsam, der Schacht scheint auf diese Ebene zurück zu führen.
 %%%%
 The strain on the space-time continuum destroys the shaft!
-
+Die Belastung des Raum-Zeit-Kontinuums zerstört den Schacht!
 %%%%
-You %s into a shaft and drop %d floor%s!
-Ihr %s in einen Schacht und Fallt %d Ebene%s!
+You are sucked into a shaft and drop 1 floor!
+Ihr werdet in einen Schacht gesaugt und fallt 1 Ebene tiefer!
 %%%%
-are sucked
-
+You are sucked into a shaft and drop %d floors!
+Ihr werdet in einen Schacht gesaugt und fallt %d Ebenen tiefer!
 %%%%
-fall
-
+You fall into a shaft and drop 1 floor!
+Ihr fallt in einen Schacht und fallt 1 Ebene tiefer!
+%%%%
+You fall into a shaft and drop %d floors!
+Ihr fallt in einen Schacht und fallt %d Ebenen tiefer!
 %%%%
 The shaft crumbles and collapses.
-Die Welle bröckelt und kollabiert.
+Der Schacht bröckelt und kollabiert.
 %%%%
 You have escaped!
-Ihr seid geflohen!
+Ihr seid entkommen!
 %%%%
 Thank you for visiting Hell. Please come again soon.
 Danke, dass Ihr die Hölle besucht habt. Bitte kommt bald wieder.
@@ -20741,40 +20747,40 @@ You plunge deeper into the Abyss.
 Ihr taucht tiefer in den Abgrund ein.
 %%%%
 The abyssal rune of Zot can be found at this depth.
-Die abgrundtiefe Rune von Zot befindet sich in dieser Tiefe.
+Die Abgrundsrune von Zot befindet sich in dieser Tiefe.
 %%%%
 You enter the Abyss!
 Ihr betrittt den Abgrund!
 %%%%
 Killing monsters will force the Abyss to allow you passage.
-Das Töten von Monstern wird den Abyss zwingen, Euch den Durchgang zu erlauben.
+Das Töten von Monstern wird den Abgrund zwingen, Euch den Durchgang zu erlauben.
 %%%%
 You feel %s slowing down the madness of this place.
-
+Ihr spürt, dass %s den Wahnsinn in diesem Ort verlangsamt.
 %%%%
 You pass into a different region of Pandemonium.
-Ihr geht in eine andere Region von Pandemonium.
+Ihr passiert in eine andere Region von Pandemonium.
 %%%%
 Welcome back to %s!
-Willkommen zurück bei%s!
+Willkommen zurück bei {dat}%s!
 %%%%
 Welcome to %s!
 Willkommen bei {dat}%s!
 %%%%
 Zot already knows this place too well. Descend or flee this branch!
-
+Zot kennt diesen Ort bereits zu gut. Steigt ab oder flieht aus diesem Zweig!
 %%%%
 Zot's attention fixes on you again. Descend or flee this branch!
-
+Die Aufmerksamkeit von Zot richtet sich wieder auf Euch. Steigt ab oder flieht aus diesem Zweig!
 %%%%
 Zot has no power in the Abyss.
-
+Zot hat im Abgrund keine Macht.
 %%%%
 You feel Zot lose track of you.
-
+Ihr spürt, dass Zot Euch aus den Augen verliert.
 %%%%
 Beware, you cannot shaft yourself on this level.
-Vorsicht, Ihr könnt Euch auf dieser Ebene nicht bewegen.
+Vorsicht, Ihr könnt nicht in den Boden dieser Ebene graben.
 %%%%
 
 ##################
@@ -21185,6 +21191,9 @@ over
 
 %%%%
 beneath
+
+%%%%
+climb
 
 %%%%
 use
@@ -22504,6 +22513,12 @@ Fehler beim Bestimmen des Level-Exits.
 %%%%
 Creating %sstairs.
 %streppen erstellen.
+%%%%
+down
+
+%%%%
+up
+
 %%%%
 "Create what kind of feature mimic? "
 Welche Art von Feature-Mimik erstellen?
