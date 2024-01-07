@@ -5834,7 +5834,18 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         int8_t old_ench_countdown = ench_countdown;
         string old_name = mname;
 
-        monster_drop_things(this, mons_aligned(oppressor, &you));
+        monster_drop_things(this, true, [](const item_def &item) {
+            switch (item_to_mslot(item)) {
+            case MSLOT_WEAPON:
+            case MSLOT_ALT_WEAPON:
+            case MSLOT_MISSILE:
+            case MSLOT_ARMOUR:
+            case MSLOT_SHIELD:
+                return true;
+            default:
+                return false;
+            }
+        });
 
         type = MONS_BAI_SUZHEN_DRAGON;
         define_monster(*this);
