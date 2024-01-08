@@ -1002,17 +1002,20 @@ Fertigkeiten
 Spells
 Zaubersprüche
 %%%%
+Commands
+Befehle
+%%%%
 System Commands
 Systembefehle
 %%%%
 Navigation
 Navigation
 %%%%
-Commands
-Befehle
-%%%%
 Execute commands
 Befehle ausführen
+%%%%
+Execute system commands
+Systembefehle ausführen
 %%%%
 Navigate around map
 Auf der Karte navigieren

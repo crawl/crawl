@@ -21271,21 +21271,6 @@ Es hat keinen Sinn mehr, diese Fertigkeit umzuschalten.
 # tilesdl.cc
 ##################
 %%%%
-AttachConsole
-
-%%%%
-CONOUT$
-
-%%%%
-wb
-
-%%%%
-FreeConsole
-
-%%%%
-Execute system commands
-
-%%%%
 Couldn't find font '%s', falling back on '%s'
 Die Schriftart '%s' konnte nicht gefunden werden, da auf '%s' zurückgegriffen wurde.
 %%%%

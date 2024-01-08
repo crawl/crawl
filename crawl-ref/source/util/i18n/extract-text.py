@@ -402,7 +402,9 @@ for filename in files:
                     continue
 
                 # ignore file operations (any strings will be paths/filenames/modes)
-                if 'fopen' in line or '_hs_open' in line or 'lk_open' in line:
+                if 'fopen' in line or 'freopen' in line:
+                    continue
+                if '_hs_open' in line or 'lk_open' in line:
                     continue
                 if 'catpath' in line or 'sscanf' in line:
                     continue
@@ -469,6 +471,8 @@ for filename in files:
                 if re.search(r'compare_item', line):
                     continue
                 if re.search(r'^# *define.*KEY', line):
+                    continue
+                if 'GetModuleHandle' in line:
                     continue
 
                 # find or compare
