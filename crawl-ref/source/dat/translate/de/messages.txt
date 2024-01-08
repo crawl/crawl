@@ -20878,26 +20878,6 @@ TP wiederhergestellt
 ##################
 
 ##################
-# syscalls.cc
-##################
-%%%%
-org/libsdl/app/SDLActivity
-
-%%%%
-getContext
-
-%%%%
-()Landroid/content/Context;
-
-%%%%
-getAssets
-
-%%%%
-()Landroid/content/res/AssetManager;
-
-%%%%
-
-##################
 # tags.cc
 ##################
 %%%%

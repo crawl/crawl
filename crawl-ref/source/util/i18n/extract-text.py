@@ -161,7 +161,7 @@ SKIP_FILES = [
     'fontwrapper-ft.cc', 'game-options.h', 'game-options.cc', 'glwrapper-ogl.cc',
     'libw32c.h', 'libw32c.cc', 'package.cc',
     # utils
-    'stringutil.cc',
+    'stringutil.cc', 'syscalls.h', 'syscalls.cc',
     # nonsense
     'lang-fake.h', 'lang-fake.cc'
 ]
