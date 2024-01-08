@@ -1352,30 +1352,51 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
             dest_actor = m->name(DESC_THE);
     }
 
-    ostringstream str;
-    str << orig_name << " ";
     if (you.see_cell(orig_pos) && !you.see_cell(dest_pos))
     {
-        str << "suddenly disappears";
-        if (!orig_actor.empty())
-            str << " from " << prep << " " << orig_actor;
+        if (orig_actor.empty())
+            mprf("%s suddenly disappears!", orig_name.c_str());
+        else
+        {
+            // @locnote: @feature@ suddenly disappears from beside/under/etc. @monster@
+            mprf("%s suddenly disappears from %s %s!",
+                 orig_name.c_str(), prep.c_str(), orig_actor.c_str());
+        }
     }
     else if (!you.see_cell(orig_pos) && you.see_cell(dest_pos))
     {
-        str << "suddenly appears";
-        if (!dest_actor.empty())
-            str << " " << prep << " " << dest_actor;
+        if (dest_actor.empty())
+            mprf("%s suddenly appears!", orig_name.c_str());
+        else
+        {
+            // @locnote: @feature@ suddenly appears beside/under/etc. @monster@
+            mprf("%s suddenly appears %s %s!",
+                 orig_name.c_str(), prep.c_str(), dest_actor.c_str());
+        }
     }
     else
     {
-        str << "moves";
-        if (!orig_actor.empty())
-            str << " from " << prep << " " << orig_actor;
-        if (!dest_actor.empty())
-            str << " to " << prep << " " << dest_actor;
+        if (orig_actor.empty() && dest_actor.empty())
+            mprf("%s moves!", orig_name.c_str());
+        else if (!orig_actor.empty() && !dest_actor.empty())
+        {
+            // @locnote: @feature@ moves from beside/under/etc. @monster1@ to beside/under/etc. @monster2@
+            mprf("%s moves from %s %s to %s %s!", orig_name.c_str(),
+                 prep.c_str(), orig_actor.c_str(),
+                 prep.c_str(), dest_actor.c_str());
+        }
+        else if (!orig_actor.empty())
+        {
+            mprf("%s moves from %s %s!", orig_name.c_str(),
+                 prep.c_str(), orig_actor.c_str());
+        }
+        else if (!dest_actor.empty())
+        {
+            mprf("%s moves to %s %s!", orig_name.c_str(),
+                 prep.c_str(), dest_actor.c_str());
+        }
+
     }
-    str << "!";
-    mpr(str.str());
 }
 
 static void _announce_swap(coord_def pos1, coord_def pos2)

@@ -21009,20 +21009,32 @@ Die Wände brennen %s!
 You hear a sizzling splash.
 Ihr hört ein brutzelndes Plätschern.
 %%%%
-suddenly disappears
-
+%s suddenly disappears!
+%s verschwindet plötzlich!
 %%%%
-" from "
-
+# note: @feature@ suddenly disappears from beside/under/etc. @monster@
+%s suddenly disappears from %s %s!
+%s verschwindet plötzlich von %s {dat}%s!
 %%%%
-suddenly appears
-
+%s suddenly appears!
+%s erscheint plötzlich!
 %%%%
-moves
-
+# note: @feature@ suddenly appears beside/under/etc. @monster@
+%s suddenly appears %s %s!
+%s erscheint plötzlich %s {dat}%s!
 %%%%
-" to "
-
+%s moves!
+%s bewegt sich!
+%%%%
+# note: @feature@ moves from beside/under/etc. @monster1@ to beside/under/etc. @monster2@
+%s moves from %s %s to %s %s!
+%s bewegt sich von %s {dat}%s zu %s {dat}%s!
+%%%%
+%s moves from %s %s!
+%s bewegt sich von %s {dat}%s!
+%%%%
+%s moves to %s %s!
+%s bewegt sich %s {acc}%s!
 %%%%
 You fall into the lava!
 Ihr fallt in die Lava!
@@ -21031,31 +21043,31 @@ You fall into the water!
 Ihr fallt ins Wasser!
 %%%%
 beside
-
+neben
 %%%%
 inside
-
+innerhab
 %%%%
 around
-
+herum
 %%%%
 into
-
+in
 %%%%
 onto
-
+auf
 %%%%
 under
-
+unter
 %%%%
 above
-
+über
 %%%%
 over
-
+ober
 %%%%
 beneath
-
+unter
 %%%%
 climb
 
@@ -22133,10 +22145,16 @@ Ihr habt {acc}%s gefunden.
 " back to "
 
 %%%%
+" to "
+
+%%%%
 " in "
 
 %%%%
 " out of"
+
+%%%%
+" from "
 
 %%%%
 " back into "
