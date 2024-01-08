@@ -28,6 +28,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "item-use.h"
+#include "localise.h"
 #include "macro.h"
 #include "message.h"
 #include "misc.h"
@@ -162,7 +163,7 @@ void fire_target_behaviour::set_prompt()
         internal_prompt = action.quiver_description().tostring();
 
         if (!targeted())
-            internal_prompt = string("Non-targeted ") + lowercase_first(internal_prompt);
+            internal_prompt += localise(" (non-targeted)");
     }
 
     // Write it out.
@@ -191,7 +192,7 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
         return descs;
 
     ranged_attack attk(&you, nullptr, item, is_pproj_active());
-    descs.emplace_back(make_stringf("%d%% to hit", to_hit_pct(mi, attk, false)));
+    descs.emplace_back(localise("%d%% to hit", to_hit_pct(mi, attk, false)));
 
     if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
         descs.emplace_back("chaotic");
@@ -200,7 +201,7 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
             || mons_class_is_stationary(mi.type)
             || mons_class_flag(mi.type, M_INSUBSTANTIAL)))
     {
-        descs.emplace_back("immune to nets");
+        descs.emplace_back(localise("immune to nets"));
     }
 
     // Display the chance for a dart of para/confuse/sleep/frenzy
@@ -215,11 +216,14 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
             if (mi.holi & (MH_UNDEAD | MH_NONLIVING))
                 immune = true;
 
-            string verb = brand == SPMSL_FRENZY ? "frenzy" : "blind";
+            string chance_string;
+            if (immune)
+                chance_string = localise("immune");
+            else if (brand == SPMSL_FRENZY)
+                chance_string = localise("chance to frenzy on hit: %d%%", chance);
+            else
+                chance_string = localise("chance to blind on hit: %d%%", chance);
 
-            string chance_string = immune ? "immune" :
-                                   make_stringf("chance to %s on hit: %d%%",
-                                                verb.c_str(), chance);
             descs.emplace_back(chance_string);
         }
     }
@@ -299,12 +303,13 @@ static bool _fire_validate_item(int slot, string &err)
         && is_weapon(you.inv[slot])
         && you.inv[slot].cursed())
     {
-        err = "That weapon is stuck to your " + you.hand_name(false) + "!";
+        string your_hand = "your " + you.hand_name(false);
+        err = localise("That weapon is stuck to %s!", your_hand);
         return false;
     }
     else if (item_is_worn(slot))
     {
-        err = "You are wearing that object!";
+        err = localise("You are wearing that object!");
         return false;
     }
     return true;
@@ -336,8 +341,9 @@ bool fire_warn_if_impossible(bool silent, item_def *weapon)
         {
             if (!silent)
             {
-                mprf("You cannot shoot with your %s while %s.",
-                     weapon->name(DESC_BASENAME).c_str(), held_status());
+                string weapon_str = "your " + weapon->name(DESC_BASENAME);
+                mprf("You cannot shoot with %s while %s.",
+                     weapon_str.c_str(), held_status());
             }
             return true;
         }
@@ -418,7 +424,8 @@ void throw_item_no_quiver(dist *target)
 
     if (a->get_item() >= 0 && !_fire_validate_item(a->get_item(), warn))
     {
-        mpr(warn);
+        // i18n: warn already localised by _fire_validate_item()
+        mpr_nolocalise(warn);
         return;
     }
     // This is kind of inelegant, but the following has two effects:
@@ -788,11 +795,24 @@ void throw_it(quiver::action &a)
     you.time_taken = you.attack_delay(&item).roll();
 
     // Create message.
-    mprf("You %s%s %s.",
-          teleport ? "magically " : "",
-          (projected == launch_retval::FUMBLED ? "toss away" :
-           projected == launch_retval::LAUNCHED ? "shoot" : "throw"),
-          ammo_name.c_str());
+    if (!teleport)
+    {
+        if (projected == launch_retval::FUMBLED)
+            mprf("You toss away %s.", ammo_name.c_str());
+        else if (projected == launch_retval::LAUNCHED)
+            mprf("You shoot %s.", ammo_name.c_str());
+        else
+            mprf("You throw %s.", ammo_name.c_str());
+    }
+    else
+    {
+        if (projected == launch_retval::FUMBLED)
+            mprf("You magically toss away %s.", ammo_name.c_str());
+        else if (projected == launch_retval::LAUNCHED)
+            mprf("You magically shoot %s.", ammo_name.c_str());
+        else
+            mprf("You magically throw %s.", ammo_name.c_str());
+    }
 
     // Ensure we're firing a 'missile'-type beam.
     pbolt.pierce    = false;
@@ -949,27 +969,37 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
 
     // Now, if a monster is, for some reason, throwing something really
     // stupid, it will have baseHit of 0 and damage of 0. Ah well.
-    string msg = mons->name(DESC_THE);
-    if (teleport)
-        msg += " magically";
-    msg += ((projected == launch_retval::LAUNCHED) ? " shoots " : " throws ");
-
+    string subject = mons->name(DESC_THE);
+    string object;
     if (!beam.name.empty() && projected == launch_retval::LAUNCHED)
-        msg += article_a(beam.name);
+        object = article_a(beam.name);
     else
     {
         // build shoot message
-        msg += item.name(DESC_A, false, false, false);
+        object = item.name(DESC_A, false, false, false);
 
         // build beam name
         beam.name = item.name(DESC_PLAIN, false, false, false);
     }
-    msg += ".";
 
     if (mons->observable())
     {
         mons->flags |= MF_SEEN_RANGED;
-        mpr(msg);
+
+        if (!teleport)
+        {
+            if (projected == launch_retval::LAUNCHED)
+                mprf("%s shoots %s.", subject.c_str(), object.c_str());
+            else
+                mprf("%s throws %s.", subject.c_str(), object.c_str());
+        }
+        else
+        {
+            if (projected == launch_retval::LAUNCHED)
+                mprf("%s magically shoots %s.", subject.c_str(), object.c_str());
+            else
+                mprf("%s magically throws %s.", subject.c_str(), object.c_str());
+        }
     }
 
     _throw_noise(mons, item);

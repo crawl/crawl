@@ -21085,37 +21085,37 @@ Die Wand gefriert %s
 ##################
 %%%%
 You are confused and cannot control your aim.
-
+Ihr seid verwirrt und könnt euer Ziel nicht kontrollieren.
 %%%%
 No action selected
-
+Keine Aktion ausgewählt
 %%%%
-"Non-targeted "
-
+" (non-targeted)"
+" (nicht zielgerichtet)"
 %%%%
 immune to nets
-
+immun gegen Netze
 %%%%
-frenzy
-
+chance to frenzy on hit: %d%%
+Chance auf Raserei bei Treffer: %d%%
 %%%%
-chance to %s on hit: %d%%
-
+chance to blind on hit: %d%%
+Chance auf Blendung bei Treffer: %d%%
 %%%%
 Fire/throw which item? (* to show all)
-
+Welchen Gegenstand abfeuern/werfen? (* um alle anzuzeigen)
 %%%%
 Fire/throw which item? (Showing full inventory)
-
+Welchen Gegenstand abfeuern/werfen? (Vollständiger Bestand wird angezeigt)
 %%%%
-"That weapon is stuck to your "
-
+That weapon is stuck to %s!
+Diese Waffe klebt an {dat}%s!
 %%%%
 You cannot throw anything while %s.
-Ihr könnt nichts werfen, solange%s.
+Ihr könnt nichts werfen, solange Ihr %s seid.
 %%%%
-You cannot shoot with your %s while %s.
-Ihr könnt nicht mit Euren %s schießen, während %s.
+You cannot shoot with %s while %s.
+Ihr könnt nicht mit {dat}%s schießen, solange Ihr %s seid.
 %%%%
 " fragments"
 
@@ -21124,52 +21124,58 @@ Ihr könnt nicht mit Euren %s schießen, während %s.
 
 %%%%
 You hear a whirring sound.
-
+Ihr hört ein surrendes Geräusch.
 %%%%
 You hear a loud whirring sound.
-
+Ihr hört ein lautes surrendes Geräusch.
 %%%%
 You hear a twanging sound.
-
+Ihr hört ein klirrendes Geräusch.
 %%%%
 You hear a loud twanging sound.
-
+Ihr hört ein lautes, klirrendes Geräusch.
 %%%%
 You hear a quiet thunk.
-
+Ihr hört ein leises dumpfes Geräusch.
 %%%%
 You hear a thunk.
-
+Ihr hört ein dumpfes Geräusch.
 %%%%
 You hear a triplet of thunks.
-
+Ihr hört drei dumpfe Geräusche.
 %%%%
 That is likely to hit you. Continue anyway?
-
+Das wird Euch wahrscheinlich treffen. Trotzdem weitermachen?
 %%%%
-You %s%s %s.
-Ihr %s%s %s.
+You toss away %s.
+Ihr werft {acc}%s weg.
 %%%%
-"magically "
-
+You shoot %s.
+Ihr schießt {acc}%s.
 %%%%
-toss away
-
+You throw %s.
+Ihr werft {acc}%s.
 %%%%
-shoot
-
+You magically toss away %s.
+Ihr werft auf magische Weise {acc}%s weg.
 %%%%
-throw
-
+You magically shoot %s.
+Ihr schießt auf magische Weise {acc}%s.
 %%%%
-" magically"
-
+You magically throw %s.
+Ihr werft auf magische Weise {acc}%s.
 %%%%
-" shoots "
-
+%s shoots %s.
+%s schießt {acc}%s.
 %%%%
-" throws "
-
+%s throws %s.
+%s wirft {acc}%s.
+%%%%
+%s magically shoots %s.
+%s schießt auf magische Weise {acc}%s.
+%%%%
+%s magically throws %s.
+%s wirft auf magische Weise {acc}%s.
 %%%%
 
 ##################
