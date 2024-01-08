@@ -1190,3 +1190,11 @@ dunkle Rune
 {adj-er}%sRing des Krakenkönigs
 %%%%
 
+#################################
+# Gold
+#################################
+%%%%
+gold piece
+Goldmünze
+%%%%
+

@@ -1177,3 +1177,11 @@ a %sring of the Octopus King
 ein {adj-er}%sRing des Krakenkönigs
 %%%%
 
+#################################
+# Gold
+#################################
+%%%%
+a gold piece
+eine Goldmünze
+%%%%
+
