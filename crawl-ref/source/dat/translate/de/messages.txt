@@ -21197,46 +21197,6 @@ Ihr werft auf magische Weise {acc}%s.
 ##################
 # tilereg-dgn.cc
 ##################
-%%%%
-GC(%d, %d) EP(%d, %d)
-
-%%%%
-HEIGHT(%d)
-
-%%%%
-GC(%d, %d) [%s]
-
-%%%%
-Vault: %s (%d,%d)-(%d,%d) (%dx%d)
-
-%%%%
-FLV: floor: %d (%s) (%d)
-
-%%%%
-"     wall:  %d (%s) (%d)"
-
-%%%%
-"     feat:  %d (%s) (%d)"
-
-%%%%
-"  special:  %d"
-
-%%%%
-[L-Click] Move
-
-%%%%
-[L-Click] Attack
-
-%%%%
-[L-Click] Move towards
-
-%%%%
-[L-Click / Shift + L-Click]
-
-%%%%
-Move towards
-
-%%%%
 
 ##################
 # tilereg-doll.cc

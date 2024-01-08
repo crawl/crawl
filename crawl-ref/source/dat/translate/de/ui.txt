@@ -1057,6 +1057,9 @@ Auf der Karte navigieren
 [Ctrl-Shift + L-Click]
 [Strg-Shift + L-Klick]
 %%%%
+[L-Click / Shift + L-Click]
+[L-Klick / Shift + L-Klick]
+%%%%
 Display abilities
 Fähigkeiten zeigen
 %%%%
@@ -1087,6 +1090,9 @@ Zauberstab benutzen
 # move one square
 Move
 Bewegen
+%%%%
+Move towards
+In Richtung bewegen
 %%%%
 # move a longer distance
 Travel

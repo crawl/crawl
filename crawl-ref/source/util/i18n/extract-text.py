@@ -180,7 +180,7 @@ SPECIAL_FILES = [
 # as opposed to extracting all strings unless we have a reason to ignore them.
 LAZY_FILES = [
     'dgn-overview.cc', 'end.cc', 'files.cc','fineff.cc', 'god-passive.cc', 
-    'god-prayer.cc', 'macro.cc', 'main.cc'
+    'god-prayer.cc', 'macro.cc', 'main.cc', 'tilereg-dgn.cc'
 ]
 
 IGNORE_STRINGS = [

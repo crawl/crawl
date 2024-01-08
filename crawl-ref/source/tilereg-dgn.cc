@@ -626,7 +626,8 @@ bool DungeonRegion::update_tip_text(string &tip)
         }
         else
         {
-            tip += localise("GC(%d, %d) [%s]\n", gc.x, gc.y, "out of sight");
+            string oos = localise("out of sight");
+            tip += make_stringf("GC(%d, %d) [%s]\n", gc.x, gc.y, oos.c_str());
             if (env.heightmap)
                 tip += make_stringf("HEIGHT(%d)\n", dgn_height_at(gc));
             tip += "\n";
@@ -712,7 +713,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
             has_monster = true;
             // TODO: is see_cell_no_trans too strong?
             if (mon->friendly())
-                _add_tip(tip, "[L-Click] Move");
+                _add_tip(tip, localise("%s %s", "[L-Click]", "Move"));
             else if (you.see_cell_no_trans(mon->pos()))
             {
                 tip = localise(mon->name(DESC_A));
@@ -731,9 +732,9 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
                     // else case: tip handled below
                 }
                 else if ((gc - you.pos()).rdist() <= melee_dist)
-                    _add_tip(tip, "[L-Click] Attack"); // show weapon?
+                    _add_tip(tip, localise("%s %s", "[L-Click]", "Attack")); // show weapon?
                 else
-                    _add_tip(tip, "[L-Click] Move towards");
+                    _add_tip(tip, localise("%s %s", "[L-Click]", "Move towards"));
 
                 if (quiver::get_secondary_action()->is_valid())
                 {
