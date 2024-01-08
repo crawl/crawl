@@ -433,7 +433,7 @@ bool InventoryRegion::update_tip_text(string& tip)
                 }
                 break;
             case OBJ_WANDS:
-                tmp += "Evoke (%)";
+                tmp += localise("%s (%%)", "Evoke");
                 cmd.push_back(CMD_EVOKE);
                 if (wielded)
                     _handle_wield_tip(tmp, cmd, localise("\n%s ", "[Ctrl + L-Click]"), true);

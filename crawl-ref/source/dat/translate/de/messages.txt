@@ -21216,10 +21216,6 @@ Ihr werft auf magische Weise {acc}%s.
 ##################
 # tilereg-inv.cc
 ##################
-%%%%
-Evoke (%)
-
-%%%%
 
 ##################
 # tilereg-map.cc
