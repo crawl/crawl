@@ -1677,7 +1677,11 @@ static bool _write_dump(const string &fname, const dump_params &par, bool quiet)
     string stash_file_name;
     stash_file_name = file_name;
     stash_file_name += ".lst";
+
+    // i18n: stash file contents should always be in English
+    pause_localisation();
     StashTrack.dump(stash_file_name.c_str(), par.full_id);
+    unpause_localisation();
 
     file_name += ".txt";
     FILE *handle = fopen_replace(file_name.c_str());
