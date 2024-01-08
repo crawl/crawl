@@ -11,6 +11,9 @@
 unseen
 ungesehen
 %%%%
+unknown terrain
+unbekanntes Terrain
+%%%%
 explore horizon
 Erkundungshorizont
 %%%%
@@ -62,6 +65,9 @@ durchsichtige Steinwand
 translucent unnaturally hard rock wall
 durchsichtige unnatürlich harte Felswand
 %%%%
+grate
+Gitter
+%%%%
 iron grate
 Eisengitter
 %%%%
@@ -79,6 +85,9 @@ orkisches Idol
 %%%%
 granite statue
 Granitstatue
+%%%%
+portal
+Portal
 %%%%
 portal to somewhere
 Portal nach irgendwo
@@ -167,11 +176,17 @@ leerer Bogen aus uraltem Stein
 detected shop or portal
 entdeckter Laden oder Portal
 %%%%
+staircase
+Treppe
+%%%%
 stone staircase leading down
 Steintreppe, die nach unten führt
 %%%%
 stone staircase leading up
 Steintreppe, die nach oben führt
+%%%%
+escape hatch
+Fluchtluke
 %%%%
 escape hatch in the floor
 Fluchtluke im Boden
@@ -338,6 +353,9 @@ Krabbelloch zurück zum Versteck
 staircase to the Depths
 Treppe zu den Tiefen
 %%%%
+altar
+Altar
+%%%%
 detected altar
 entdeckter Altar
 %%%%
@@ -422,6 +440,9 @@ dunstiger Altar von Hepliaklqana
 ornate altar of the Wu Jian Council
 verschnörkelter Altar des Wu-Jian-Rates
 %%%%
+fountain
+Brunnen
+%%%%
 fountain of clear blue water
 Brunnen klaren blauen Wassers
 %%%%
@@ -459,6 +480,9 @@ Tor, das tiefer in den Abgrund führt
 ################################
 # Definite article
 ################################
+%%%%
+the unknown terrain
+das unbekannte Terrain
 %%%%
 the travel trail
 die Reiseroute
@@ -508,6 +532,9 @@ die durchsichtige Steinwand
 the translucent unnaturally hard rock wall
 die durchsichtige unnatürlich harte Felswand
 %%%%
+the grate
+das Gitter
+%%%%
 the iron grate
 das Eisengitter
 %%%%
@@ -525,6 +552,9 @@ das orkische Idol
 %%%%
 the granite statue
 die Granitstatue
+%%%%
+the portal
+das Portal
 %%%%
 the portal to somewhere
 das Portal nach irgendwo
@@ -613,11 +643,17 @@ der leere Bogen aus uraltem Stein
 the detected shop or portal
 der entdeckte Laden oder das Portal
 %%%%
+the staircase
+die Treppe
+%%%%
 the stone staircase leading down
 die Steintreppe, die nach unten führt
 %%%%
 the stone staircase leading up
 die Steintreppe, die nach oben führt
+%%%%
+the escape hatch
+die Fluchtluke
 %%%%
 the escape hatch in the floor
 die Fluchtluke im Boden
@@ -784,6 +820,9 @@ das Krabbelloch zurück zum Versteck
 the staircase to the Depths
 die Treppe zu den Tiefen
 %%%%
+the altar
+der Altar
+%%%%
 the detected altar
 der entdeckte Altar
 %%%%
@@ -867,6 +906,9 @@ der dunstige Altar von Hepliaklqana
 %%%%
 the ornate altar of the Wu Jian Council
 der verschnörkelte Altar des Wu-Jian-Rates
+%%%%
+the fountain
+der Brunnen
 %%%%
 the fountain of clear blue water
 der Brunnen klaren blauen Wassers
@@ -957,6 +999,9 @@ eine durchsichtige Steinwand
 a translucent unnaturally hard rock wall
 eine durchsichtige unnatürlich harte Felswand
 %%%%
+a grate
+{n}ein Gitter
+%%%%
 an iron grate
 {n}ein Eisengitter
 %%%%
@@ -968,6 +1013,9 @@ ein orkisches Idol
 %%%%
 a granite statue
 eine Granitstatue
+%%%%
+a portal
+{n}ein Portal
 %%%%
 a portal to somewhere
 {n}ein Portal nach irgendwo
@@ -1053,11 +1101,17 @@ ein leerer Bogen aus uraltem Stein
 a detected shop or portal
 ein entdeckter Laden oder ein Portal
 %%%%
+a staircase
+eine Treppe
+%%%%
 a stone staircase leading down
 eine Steintreppe, die nach unten führt
 %%%%
 a stone staircase leading up
 eine Steintreppe, die nach oben führt
+%%%%
+an escape hatch
+eine Fluchtluke
 %%%%
 an escape hatch in the floor
 eine Fluchtluke im Boden
@@ -1224,6 +1278,9 @@ a crawl-hole back to the Lair
 a staircase to the Depths
 eine Treppe zu den Tiefen
 %%%%
+an altar
+ein Altar
+%%%%
 a detected altar
 ein entdeckter Altar
 %%%%
@@ -1307,6 +1364,9 @@ ein dunstiger Altar von Hepliaklqana
 %%%%
 an ornate altar of the Wu Jian Council
 ein verschnörkelter Altar des Wu-Jian-Rates
+%%%%
+a fountain
+ein Brunnen
 %%%%
 a fountain of clear blue water
 ein Brunnen klaren blauen Wassers

@@ -12005,9 +12005,6 @@ haucht
 whispers
 flüstert
 %%%%
-the altar
-der Altar
-%%%%
 the ground
 der Boden
 %%%%
@@ -20997,17 +20994,17 @@ Dort könnt Ihr nichts wachsen lassen.
 "miniscule "
 
 %%%%
-melt
-
+The wall melts %s!
+Die Wand schmilzt %s!
 %%%%
-burn
-
+The wall burns %s!
+Die Wand brennt %s!
 %%%%
-The walls %s %s!
-
+The walls melt %s!
+Die Wände schmilzen %s!
 %%%%
-The wall %ss %s!
-
+The walls burn %s!
+Die Wände brennen %s!
 %%%%
 You hear a sizzling splash.
 Ihr hört ein brutzelndes Plätschern.
@@ -21027,11 +21024,11 @@ moves
 " to "
 
 %%%%
-You fall into the %s!
-Ihr fallt in die %s!
+You fall into the lava!
+Ihr fallt in die Lava!
 %%%%
-programming rift
-
+You fall into the water!
+Ihr fallt ins Wasser!
 %%%%
 beside
 
@@ -21069,29 +21066,8 @@ use
 pass through
 
 %%%%
-grate
-
-%%%%
-altar
-
-%%%%
-escape hatch
-
-%%%%
-portal
-
-%%%%
-staircase
-
-%%%%
-fountain
-
-%%%%
-unknown terrain
-
-%%%%
 The wall freezes %s
-
+Die Wand gefriert %s
 %%%%
 
 ##################

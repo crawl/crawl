@@ -896,9 +896,14 @@ void slime_wall_damage(actor* act, int delay)
                                              roll_dice(2, strength));
         if (dam > 0 && you.can_see(*mon))
         {
-            const char *verb = act->is_icy() ? "melt" : "burn";
-            mprf((walls > 1) ? "The walls %s %s!" : "The wall %ss %s!",
-                  verb, mon->name(DESC_THE).c_str());
+            if (walls == 1 && act->is_icy())
+                mprf("The wall melts %s!", mon->name(DESC_THE).c_str());
+            else if (walls == 1)
+                mprf("The wall burns %s!", mon->name(DESC_THE).c_str());
+            else if (act->is_icy())
+                mprf("The walls melt %s!", mon->name(DESC_THE).c_str());
+            else
+                mprf("The walls burn %s!", mon->name(DESC_THE).c_str());
         }
         mon->hurt(nullptr, dam, BEAM_ACID);
     }
@@ -1685,10 +1690,11 @@ void fall_into_a_pool(dungeon_feature_type terrain)
         }
     }
 
-    mprf("You fall into the %s!",
-         (terrain == DNGN_LAVA)       ? "lava" :
-         (terrain == DNGN_DEEP_WATER) ? "water"
-                                      : "programming rift");
+    if (terrain == DNGN_LAVA)
+        mpr("You fall into the lava!");
+    else if (terrain == DNGN_DEEP_WATER)
+        mpr("You fall into the water!");
+
     // included in default force_more_message
     enable_emergency_flight();
 }
