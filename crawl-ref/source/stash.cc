@@ -69,8 +69,11 @@ string stash_annotate_item(const char *s, const item_def *item)
     // the special-casing of gold here is for the sake of gozag players in
     // extreme circumstances. It does mean that custom annotation code can't
     // do anything with gold, but I'm not sure why you'd want to.
-    string text = item->base_type == OBJ_GOLD
-                            ? "{gold}" : userdef_annotate_item(s, item);
+    string text;
+    if (item->base_type == OBJ_GOLD)
+        text = "{" + localise("gold") + "}";
+    else
+        text = userdef_annotate_item(s, item);
 
     if (item->has_spells())
     {
@@ -84,7 +87,7 @@ string stash_annotate_item(const char *s, const item_def *item)
     if (item->quantity > 1)
     {
         text += " {";
-        text += item->name(DESC_QUALNAME);
+        text += localise(item->name(DESC_QUALNAME));
         text += "}";
     }
 
@@ -96,7 +99,7 @@ string stash_annotate_item(const char *s, const item_def *item)
     if (Options.autopickup_search && item_needs_autopickup(*item))
     {
         text += " {";
-        text += "autopickup";
+        text += localise("autopickup");
         text += "}";
     }
     return text;
@@ -571,7 +574,8 @@ ShopInfo::ShopInfo(const shop_struct& shop_)
 
 string ShopInfo::shop_item_name(const item_def &it) const
 {
-    return make_stringf("%s%s (%d gold)",
+    // @locnote: shop item entry - item name + " (unknown)" if applicable + price
+    return localise("%s%s (%d gold)",
                         Stash::stash_item_name(it).c_str(),
                         shop_item_unknown(it) ? " (unknown)" : "",
                         item_price(it, shop));

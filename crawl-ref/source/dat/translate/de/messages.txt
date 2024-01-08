@@ -17968,9 +17968,6 @@ Name
 %4d gold
 %4d Gold
 %%%%
-" (unknown)"
-" (unbekannt)"
-%%%%
 Welcome to %s! What would you like to do?
 Willkommen bei {dat}%s! Was wollt Ihr machen?
 %%%%
@@ -20785,20 +20782,18 @@ Vorsicht, Ihr könnt nicht in den Boden dieser Ebene graben.
 # stash.cc
 ##################
 %%%%
-{gold}
-
-%%%%
 autopickup
 Autoabholung
 %%%%
 Stash:
 Versteck:
 %%%%
+# note: shop item entry - item name + " (unknown)" if applicable + price
 %s%s (%d gold)
-
+%s%s (%d Gold)
 %%%%
 " {shop}"
-
+" {Laden}"
 %%%%
 Enter for "%s"
 Enter für "%s"
