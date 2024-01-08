@@ -647,7 +647,7 @@ for filename in files:
             continue
 
         # ignore debug stuff
-        if 'gdb' in string:
+        if 'gdb' in string or 'Git' in string:
             continue
 
         filtered_strings.append(string)

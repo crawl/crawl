@@ -20882,34 +20882,10 @@ TP wiederhergestellt
 ##################
 %%%%
 Incomplete read of "%s" - aborting.
-
+Unvollständiges Einlesen von "%s" - Abbruch.
 %%%%
 Error writing to %s
-
-%%%%
-Failed to save Lua data: %s
-Fehler beim Speichern der Lua-Daten:%s
-%%%%
-Git:
-
-%%%%
-Dead monster %s in transit list in saved game, ignoring.
-
-%%%%
-Mountain Dwarf
-
-%%%%
-The Shining One
-
-%%%%
-Marduk
-
-%%%%
-Failed to load Lua persist table: %s
-Fehler beim Laden der Lua-Persist-Tabelle:%s
-%%%%
-Bones file has an invalid ghost count (
-
+Fehler beim Schreiben in %s
 %%%%
 
 ##################

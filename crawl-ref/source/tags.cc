@@ -250,6 +250,9 @@ void writer::check_ok(bool ok)
     }
 }
 
+// @noloc section start
+// (from here on, there's a bunch of technical error messages that wouldn't mean anything to an end user)
+
 void writer::writeByte(unsigned char ch)
 {
     if (failed)
@@ -7525,3 +7528,5 @@ void tag_write_ghosts(writer &th, const vector<ghost_demon> &ghosts)
     global_ghosts = ghosts;
     tag_write(TAG_GHOST, th);
 }
+
+// @noloc section end
