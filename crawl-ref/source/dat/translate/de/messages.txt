@@ -20991,9 +20991,6 @@ Dort könnt Ihr nichts wachsen lassen.
 # terrain.cc
 ##################
 %%%%
-"miniscule "
-
-%%%%
 The wall melts %s!
 Die Wand schmilzt %s!
 %%%%
@@ -21069,14 +21066,15 @@ ober
 beneath
 unter
 %%%%
+# note: infinitive verbs as used in "@feature@ moves away as you attempt to @verb@ it"
 climb
-
+klettern
 %%%%
 use
-
+benutzen
 %%%%
 pass through
-
+passieren
 %%%%
 The wall freezes %s
 Die Wand gefriert %s

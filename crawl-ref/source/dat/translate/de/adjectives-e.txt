@@ -354,6 +354,9 @@
 "huge "
 "riesige "
 %%%%
+"miniscule "
+"winzige "
+%%%%
 
 ################################
 # body parts

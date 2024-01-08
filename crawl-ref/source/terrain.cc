@@ -1821,6 +1821,7 @@ string stair_climb_verb(dungeon_feature_type feat)
 {
     ASSERT(feat_stair_direction(feat) != CMD_NO_CMD);
 
+    // @locnote: infinitive verbs as used in "@feature@ moves away as you attempt to @verb@ it"
     if (feat_is_staircase(feat))
         return "climb";
     else if (feat_is_escape_hatch(feat))
