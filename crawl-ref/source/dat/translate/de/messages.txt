@@ -20900,65 +20900,56 @@ Welche Richtung?
 # target.cc
 ##################
 %%%%
-"There is "
-
-%%%%
-" there."
-
-%%%%
 You can't see anything there to charge at.
-
+Ihr könnt dort nichts sehen, was Ihr anstürmen könnt.
 %%%%
 You can't charge at yourself.
-
+Man kann sich selbst nicht anstürmen.
 %%%%
 You're already next to there.
-
+Ihr seid bereits in der Nähe.
 %%%%
-"There's "
-
-%%%%
-" in the way."
-
+There's %s in the way.
+%s ist im Weg.
 %%%%
 You cannot see that place.
-
+Ihr könnt diesen Ort nicht sehen.
 %%%%
 Please select a direction to dig.
-
+Bitte eine Richtung zum Graben wählen.
 %%%%
 Digging in that direction won't affect any walls.
-
+Wenn man in dieser Richtung gräbt, werden keine Wände beeinträchtigt.
 %%%%
-"You can't transfer your ancestor with "
-
+You can't swap your ancestor with themself.
+Ihr könnt Euren Ahnen nicht mit sich selbst austauschen.
 %%%%
 You cannot affect that.
-
+Das könnt Ihr nicht beeinflussen.
 %%%%
 You can't get through.
-
+Ihr kommt nicht durch.
 %%%%
 There's already a cloud there.
-
+Dort ist bereits eine Wolke.
 %%%%
 You can't place clouds in a sanctuary.
-
+Man kann keine Wolken in einem Heiligtum stellen.
 %%%%
 The effect is blocked.
-
+Die Wirkung wird blockiert.
 %%%%
 You cannot target yourself.
-
+Ihr könnt nicht auf Euch selbst zielen.
 %%%%
 There is no safe place near that location.
-
+In der Nähe dieses Ortes gibt es keinen sicheren Ort.
 %%%%
 There isn't a shadow there.
-
+Es gibt dort keinen Schatten.
 %%%%
 You cannot grow anything here.
-
+Dort könnt Ihr nichts wachsen lassen.
 %%%%
 
 ##################

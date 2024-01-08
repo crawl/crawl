@@ -14,6 +14,7 @@
 #include "fight.h"
 #include "god-abil.h"
 #include "libutil.h"
+#include "localise.h"
 #include "los-def.h"
 #include "losglobal.h"
 #include "mon-tentacle.h"
@@ -31,7 +32,7 @@ static string _wallmsg(coord_def c)
 {
     ASSERT(map_bounds(c)); // there'd be an information leak
     const char *wall = feat_type_name(env.grid(c));
-    return "There is " + article_a(wall) + " there.";
+    return localise("There is %s there.", article_a(wall));
 }
 
 static void _copy_explosion_map(explosion_map &source, explosion_map &dest)
@@ -152,15 +153,13 @@ bool targeter_charge::valid_aim(coord_def a)
         }
         else if (is_feat_dangerous(env.grid(ray.pos())))
         {
-            return notify_fail("There's "
-                               + feature_description_at(ray.pos())
-                               + " in the way.");
+            return notify_fail(localise("There's %s in the way.",
+                                        feature_description_at(ray.pos())));
         }
         else if (!can_charge_through_mons(ray.pos()))
         {
-            return notify_fail("There's "
-                               + monster_at(ray.pos())->name(DESC_A)
-                               + " in the way.");
+            return notify_fail(localise("There's %s in the way.",
+                                        monster_at(ray.pos())->name(DESC_A)));
 
         }
     }
@@ -728,8 +727,7 @@ bool targeter_transference::valid_aim(coord_def a)
     {
         if (mons_is_hepliaklqana_ancestor(victim->type))
         {
-            return notify_fail("You can't transfer your ancestor with "
-                               + victim->pronoun(PRONOUN_REFLEXIVE) + ".");
+            return notify_fail("You can't swap your ancestor with themself.");
         }
         if (mons_is_tentacle_or_tentacle_segment(victim->type)
             || victim->is_stationary())
