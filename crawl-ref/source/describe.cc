@@ -5437,8 +5437,11 @@ public:
             for (size_t col = 0; col < row.size(); ++col)
             {
                 const TableCell &cell = row[col];
-                if (cell.label.empty())
-                    continue; // padding
+                if (cell.label.empty())  // padding
+                {
+                    result << string(cell_len, ' ');
+                    continue;
+                }
 
                 const int label_len = labels_lengths_by_col[col];
                 const string label = padded_str(cell.label, label_len, true);
@@ -5571,7 +5574,10 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     const string holi = holiness == MH_NONLIVING ? "Nonliv."
                                                  : single_holiness_description(holiness);
     pr.AddRow();
-    pr.AddCell("Threat", _get_threat_desc(mi.threat));
+    if (mi.threat != MTHRT_UNDEF)
+        pr.AddCell("Threat", _get_threat_desc(mi.threat));
+    else // ?/m
+        pr.AddCell(); // ensure alignment
     pr.AddCell("Class", uppercase_first(holi).c_str());
     pr.AddCell("Size", size_desc.c_str());
     pr.AddCell("Int", _get_int_desc(mi.intel()));
