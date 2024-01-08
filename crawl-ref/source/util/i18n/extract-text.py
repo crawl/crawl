@@ -403,7 +403,7 @@ for filename in files:
                 # ignore file operations (any strings will be paths/filenames/modes)
                 if 'fopen' in line or '_hs_open' in line or 'lk_open' in line:
                     continue
-                if 'catpath' in line:
+                if 'catpath' in line or 'sscanf' in line:
                     continue
 
                 # internal scorefile stuff that is never displayed
