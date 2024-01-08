@@ -20957,37 +20957,37 @@ Dort könnt Ihr nichts wachsen lassen.
 ##################
 %%%%
 %s struggles to leap free from constriction.
-
+%s kämpft darum, sich aus der Einschnürung zu befreien.
 %%%%
 %s struggles to blink free from constriction.
-
+%s kämpft darum, sich aus der Einschnürung zu blinzeln.
 %%%%
 %s jumps free!
-
+%s springt frei!
 %%%%
 %s blinks free!
-
+%s blinzelt frei!
 %%%%
 %s jumps!
-
+%s springt!
 %%%%
 %s blinks!
-
+%s blinzelt!
 %%%%
 %s seems more stable.
-
+%s scheint stabiler zu sein.
 %%%%
 %s looks slightly unstable.
-
+%s sieht leicht instabil aus.
 %%%%
 %s flickers for a moment.
-
+%s flackert einen Moment lang.
 %%%%
 %s disappears!
-
+%s verwchwindet!
 %%%%
 %s reappears nearby!
-
+%s erscheint wieder in der Nähe!
 %%%%
 
 ##################
