@@ -160,6 +160,8 @@ SKIP_FILES = [
     # error messages that probably aren't worth translating
     'fontwrapper-ft.cc', 'game-options.h', 'game-options.cc', 'glwrapper-ogl.cc',
     'libw32c.h', 'libw32c.cc', 'package.cc',
+    # utils
+    'stringutil.cc',
     # nonsense
     'lang-fake.h', 'lang-fake.cc'
 ]

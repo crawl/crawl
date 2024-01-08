@@ -20878,17 +20878,6 @@ TP wiederhergestellt
 ##################
 
 ##################
-# stringutil.cc
-##################
-%%%%
-<lightred>ERROR: string above had unterminated tag</lightred>
-
-%%%%
-\r
-
-%%%%
-
-##################
 # syscalls.cc
 ##################
 %%%%
