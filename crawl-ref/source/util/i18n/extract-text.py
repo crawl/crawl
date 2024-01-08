@@ -157,6 +157,7 @@ SKIP_FILES = [
     'mapmark.h', 'mapmark.cc', 'maps.h', 'maps.cc', 'mon-gear.h', 'mon-gear.cc',
     'mon-pathfind.cc', 'ng-init.cc', 'ng-input.cc', 'precision-menu.h',
     'precision-menu.cc', 'randbook.h', 'randbook.cc', 'sound.h', 'sound.cc',
+    'tilepick.cc',
     # error messages that probably aren't worth translating
     'fontwrapper-ft.cc', 'game-options.h', 'game-options.cc', 'glwrapper-ogl.cc',
     'libw32c.h', 'libw32c.cc', 'package.cc',

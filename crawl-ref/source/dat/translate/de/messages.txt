@@ -21179,29 +21179,6 @@ Ihr werft auf magische Weise {acc}%s.
 %%%%
 
 ##################
-# tilepick.cc
-##################
-%%%%
-mc:
-
-%%%%
-[invalid index]
-
-%%%%
-[not found]
-
-%%%%
-%cFG: %4
-
-%%%%
-" | 0x%8"
-
-%%%%
-%cBG: %4
-
-%%%%
-
-##################
 # tilereg-abl.h
 ##################
 
