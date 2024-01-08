@@ -13,6 +13,7 @@
 #include "tilefont.h"
 #include "tilepick-p.h"
 #include "ui.h"
+#include "unicode.h"
 
 using namespace ui;
 
@@ -296,28 +297,38 @@ void DollEditRegion::render()
         const int height = m_font->char_height();
         const float start_y = doll_name_y + height * 3;
         const float start_x = 0;
+        // @noloc section start
+        const string fmt = "%-18.18s %-23.23s %-19.19s %s";
+        const string mode_cmd = "m";
+        const string quit_cmd = "q";
+        const string toggle_cmd = "*";
+        // @noloc section end
         m_font_buf.add(
-            localise("%-18.18s %-23.23s %-19.19s %s",
+            localise(fmt,
                      "Change parts", "left/right", "Confirm choice", "Enter"),
             VColour::white, start_x, start_y);
         m_font_buf.add(
-            localise("%-18.18s %-23.23s %-19.19s %s",
+            localise(fmt,
                      "Change category", "up/down", "Copy doll", "Ctrl-C"),
             VColour::white, start_x, start_y + height * 1);
         m_font_buf.add(
-            localise("%-18.18s 0-9, %-18.18s %-19.19s %s",
+            localise(fmt,
                      "Change doll", "Shift + arrows", "Paste copied doll", "Ctrl-V"),
             VColour::white, start_x, start_y + height * 2);
         m_font_buf.add(
-            localise("%-18.18s m                       %-19.19s %s",
-                     "Change doll mode", "Randomise doll", "Ctrl-R"),
+            localise(fmt,
+                     "Change doll mode", mode_cmd, "Randomise doll", "Ctrl-R"),
             VColour::white, start_x, start_y + height * 3);
         m_font_buf.add(
-            localise("%-18.18s %-23.23s %-19.19s %s",
-                     "Save menu", "Escape, Ctrl-S", "Toggle equipment", "*"),
+            chop_string(localise("Save menu"), 18) + " "
+            + chop_string(localise("Escape") + localise(", ") + localise("Ctrl-S"), 23)
+            + " " 
+            + chop_string(localise("Toggle equipment"), 19) + " "
+            + toggle_cmd,
             VColour::white, start_x, start_y + height * 4);
         m_font_buf.add(
-            localise("%-18.18s q, %s", "Quit menu", "Ctrl-Q"),
+            chop_string(localise("Quit menu"), 18) + " "
+            + quit_cmd + localise(", ") + localise("Ctrl-Q"),
             VColour::white, start_x, start_y + height * 5);
     }
 

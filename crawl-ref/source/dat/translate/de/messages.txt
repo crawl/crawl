@@ -21203,19 +21203,10 @@ Ihr werft auf magische Weise {acc}%s.
 ##################
 %%%%
 (none)
-
+(nichts)
 %%%%
 (show equip)
-
-%%%%
-%-18.18s m                       %-19.19s %s
-
-%%%%
-Escape, Ctrl-S
-
-%%%%
-%-18.18s q, %s
-
+(Ausrüstung zeigen)
 %%%%
 
 ##################
