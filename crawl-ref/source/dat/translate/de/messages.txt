@@ -21246,13 +21246,13 @@ Ihr werft auf magische Weise {acc}%s.
 ##################
 %%%%
 You cannot train this skill.
-Ihr könnt diese Fruchtbarkeit nicht trainieren.
+Ihr könnt diese Fertigkeit nicht trainieren.
 %%%%
 You can't change your training allocations!
-
+Ihr könnt Eure Trainingszuweisungen nicht ändern!
 %%%%
 There's no point to toggling this skill anymore.
-Es hat keinen Sinn mehr, diese Fruchtbarkeit umzuschalten.
+Es hat keinen Sinn mehr, diese Fertigkeit umzuschalten.
 %%%%
 
 ##################
