@@ -130,6 +130,22 @@ ctrl-p
 %s der %s
 %%%%
 
+# Game types used in savegame descriptions
+%%%%
+Seeded
+Seeded
+%%%%
+Tutorial
+Tutorial
+%%%%
+Arena
+Arena
+%%%%
+Unknown
+Unbekannt
+%%%%
+
+
 ##############################
 # New Game Menu
 ##############################

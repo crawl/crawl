@@ -20860,53 +20860,17 @@ Nutzlose und Duplikate <w>verstecken</w>
 # state.cc
 ##################
 %%%%
-Non-UNIX Platform -> not running gdb.
-
-%%%%
-gdb not executable.
-
-%%%%
 Can't repeat that command.
-
+Befehl kann nicht wiederholt werden.
 %%%%
 Can't redo that command.
-
+Befehl kann nicht wiederholt werden.
 %%%%
 Command repetition interrupted.
-
-%%%%
-) in view: (%d,%d), see_cell: %s
-
+Befehlswiederholung unterbrochen.
 %%%%
 HP restored
-
-%%%%
-Seeded
-
-%%%%
-Tutorial
-
-%%%%
-Arena
-
-%%%%
-Unknown
-
-%%%%
-sprint/
-
-%%%%
--seeded
-
-%%%%
--sprint
-
-%%%%
--tutorial
-
-%%%%
--hints
-
+TP wiederhergestellt
 %%%%
 
 ##################

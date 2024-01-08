@@ -98,6 +98,10 @@ def strip_uncompiled(lines):
                     if len(skips) < 2 or skips[-2] == False:
                         skip = False
                         skips[-1] = False
+                elif 'DEBUG' in ifs[-1]:
+                    # the if block is the non-debug part, so the else block is the debug part
+                    skip = True
+                    skips[-1] = True
                 if is_skippable_if(ifs[-1]):
                     continue
             elif re.search(r'^\s*#\s*endif', line):
@@ -112,6 +116,7 @@ def strip_uncompiled(lines):
 
         if not skip:
             result.append(line)
+            #sys.stderr.write(line + "\n")
 
     return result
 
@@ -637,6 +642,10 @@ for filename in files:
         if 'INVALID' in string or re.search(r'bugg(il)?y', string, re.I) or \
            'DUMMY' in string or 'eggplant' in string or \
            re.search(r'bugginess', string, re.I):
+            continue
+
+        # ignore debug stuff
+        if 'gdb' in string:
             continue
 
         filtered_strings.append(string)

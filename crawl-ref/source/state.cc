@@ -623,6 +623,8 @@ string game_state::game_type_name_for(game_type _type)
     }
 }
 
+// @noloc section start (file paths)
+
 string game_state::game_savedir_path() const
 {
     if (!game_is_valid_type())
@@ -642,3 +644,5 @@ string game_state::game_type_qualifier() const
         return "-hints";
     return "";
 }
+
+// @noloc section end
