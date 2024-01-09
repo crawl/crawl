@@ -2798,6 +2798,9 @@ item_def* monster_die(monster& mons, killer_type killer,
             && !mons.props.exists(KIKU_WRETCH_KEY))
         {
             const monster_type orig = static_cast<monster_type>(corpse->orig_monnum);
+            // Avoid a possible crash with level excursions
+            // (See previous code block comment ^)
+            unwind_var<int> fakehp(mons.hit_points, 1);
             maybe_drop_monster_organ(corpse->mon_type, orig,
                                      item_pos(*corpse), silent);
         }
