@@ -33,10 +33,6 @@ CMD_USE_ABILITY
 
 Benutze göttliche oder angeborene Fähigkeiten
 %%%%
-CMD_PRAY
-
-Bete Euren Gott an
-%%%%
 CMD_SEARCH_STASHES
 
 Suche nach Gegenständen/Besonderheiten
@@ -122,6 +118,27 @@ CMD_DISPLAY_COMMANDS verbose
 
 Liste von Kommandos, Optionen, etc.
 %%%%
+CMD_SHOW_CHARACTER_DUMP
+
+Charakter-Dump schreiben und zeigen
+%%%%
+CMD_SHOW_CHARACTER_DUMP verbose
+
+Speichert detaillierte Informationen über den Charakter in die Datei
+'playername.txt' im Verzeichnis 'morgue' und zeigt die Datei im Spiel an. Das 
+enthält die Hauptstatistiken, Ausrüstung, Zaubersprüche, Fertigkeiten, Notizen,
+etc.
+%%%%
+CMD_CHARACTER_DUMP
+
+Charakter-Dump schreiben
+%%%%
+CMD_CHARACTER_DUMP verbose
+
+Speichert detaillierte Informationen über den Charakter in die Datei
+'playername.txt' im Verzeichnis 'morgue'. Das enthält die Hauptstatistiken,
+Ausrüstung, Zaubersprüche, Fertigkeiten, Notizen, etc.
+%%%%
 CMD_AUTOFIGHT
 
 Bekämpfe das nächst stehende Monster
@@ -146,6 +163,14 @@ Warte eine Runde
 CMD_WAIT verbose
 
 Verbringe wartend und rastend eine einzige Runde.
+%%%%
+CMD_SAFE_WAIT
+
+Eine Runde warten, wenn Sicher
+%%%%
+CMD_SAFE_WAIT verbose
+
+Eine Runde lang warten und ausruhen, aber nur, wenn keine feindlichen Monster in Sicht sind.
 %%%%
 CMD_DISPLAY_INVENTORY
 
@@ -172,6 +197,14 @@ CMD_MEMORISE_SPELL verbose
 Präge Euch einen Zauber in Euer Gedächtnis ein, lese von einem Buch das Ihr im
 Besitz habt oder auf dem Ihr steht.
 %%%%
+CMD_LOOKUP_HELP
+
+Hilfetext nachschlagen
+%%%%
+CMD_LOOKUP_HELP verbose
+
+Beschreibungen von Monstern, Zaubern, Fähigkeiten, Gegenständen und mehr nachschlagen.
+%%%%
 CMD_DROP
 
 Gegenstand ablegen
@@ -182,11 +215,15 @@ Legen einen oder mehrere Gegenstände, die Ihr gerade bei Euch habt, ab.
 %%%%
 CMD_DISPLAY_MAP
 
-Betreten den Karten-Modus
+Kartenmodus aufrufen
+%%%%
+CMD_MAP_EXIT_MAP
+
+Kartenmodus verlassen
 %%%%
 CMD_DISPLAY_MAP verbose
 
-Navigieren in der zuvor erkundeten Karte.
+Eine Karte der aktuellen Ebene anzeigen.
 %%%%
 CMD_MAP_GOTO_TARGET
 
@@ -195,6 +232,14 @@ Bewege Euch bis zum Cursor
 CMD_MAP_GOTO_TARGET verbose
 
 Starte Bewegung zur aktuellen Position des Cursors
+%%%%
+CMD_MAP_EXPLORE
+
+Nächstes Autoexplorationsziel finden
+%%%%
+CMD_MAP_EXPLORE verbose
+
+Den Cursor zum nächsten Ort bewegen, zu dem die automatische Erkundung führen soll.
 %%%%
 CMD_MAP_ADD_WAYPOINT
 
@@ -332,3 +377,18 @@ CMD_ZOOM_OUT verbose
 
 Aus dem Kerker Gebiet heraus zoomen
 %%%%
+CMD_SHOW_KEYBOARD
+
+Tastetur zeigen
+%%%%
+CMD_SHOW_KEYBOARD verbose
+
+Rufe die Bildschirmtastatur auf, sofern vorhanden.
+%%%%
+CMD_GAME_MENU
+
+Spielmenü anzeigen
+%%%%
+CMD_GAME_MENU verbose
+
+Zeige das Spielmenü an
