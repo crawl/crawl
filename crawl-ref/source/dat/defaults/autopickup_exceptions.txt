@@ -27,22 +27,6 @@ ae += scroll of noise
 
 ae += <good_item
 
-# Don't pick up misc items when duplication doesn't help.
-:add_autopickup_func(function (it, name)
-:  if it.class(true) ~= "misc" then
-:    return
-:  end
-:  local itname = it.name(true) -- Not the name parameter, which includes prefixes.
-:  if not string.find(itname, "ziggurat") then
-:    for inv in iter.invent_iterator:new(items.inventory()) do
-:      if itname == inv.name() then
-:        return false
-:      end
-:    end
-:  end
-:  return
-:end)
-
 # If you've sacrificed a hand, don't pick up pointless duplicate rings
 :add_autopickup_func(function (it, name)
 :  local itsubtype = it.subtype()
@@ -52,7 +36,6 @@ ae += <good_item
 :   or itsubtype == "ring of flight"
 :   or itsubtype == "ring of poison resistance"
 :   or itsubtype == "ring of wizardry"
-:   or itsubtype == "ring of teleportation"
 :   or itsubtype == "ring of protection from fire"
 :   or itsubtype == "ring of protection from cold"
 :   or itsubtype == "ring of resist corrosion"
