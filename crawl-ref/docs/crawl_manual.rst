@@ -2194,9 +2194,13 @@ attack an opponent two squares away, and even reach over monsters. Use the 'v'
 command to target a specific monster with a reaching attack, or use Autofight
 ('tab') to reach automatically.
 
-Finally, Unarmed Combat skill increases the accuracy, damage, and speed of attacks
-made while unarmed. Note that auxiliary attacks (such as a Armataur's tail-slap or
-a Minotaur's headbutt) are not affected by Unarmed Combat.
+Unarmed Combat is a special fighting skill. It allows your character to make a
+powerful attack when unarmed and also to punch with the off hand as an
+additional melee attack. The Unarmed Combat skill continues to increase your
+attack speed while unarmed until it can be raised no more.
+
+Note that auxiliary attacks (such as a Armataur's tail-slap or a Minotaur's
+headbutt) are not affected by the Unarmed Combat skill.
 
 Ranged combat skills
 ========================================
