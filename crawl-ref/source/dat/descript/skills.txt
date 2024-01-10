@@ -108,9 +108,7 @@ evasion, attack speed and spellcasting success.
 Unarmed Combat
 
 Being skilled in Unarmed Combat increases your accuracy, damage and attack
-speed in melee combat when barehanded. It also allows you to occasionally punch
-with your off hand as an additional melee attack, provided your hand is free to
-do so.
+speed in melee combat when barehanded.
 %%%%
 Spellcasting
 
