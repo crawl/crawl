@@ -15,6 +15,7 @@
 #include "dgn-event.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
+#include "god-companions.h" // Beogh Blood for Blood markers
 #include "item-prop.h"
 #include "level-state-type.h"
 #include "libutil.h"
@@ -177,6 +178,14 @@ static void _update_feat_at(const coord_def &gp)
                 && you.see_cell_no_trans(gp)))
     {
         env.map_knowledge(gp).flags |= MAP_ICY;
+    }
+
+    // XXX: This feels like is should be more separated somehow...
+    if (you.religion == GOD_BEOGH
+        && you.props.exists(BEOGH_RES_PIETY_NEEDED_KEY)
+        && tile_has_valid_bfb_corpse(gp))
+    {
+        env.map_knowledge(gp).flags |= MAP_BFB_CORPSE;
     }
 
     if (emphasise(gp))

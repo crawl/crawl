@@ -1523,6 +1523,9 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
         }
     }
 
+    if (ygrd != DNGN_TRANSPORTER && beogh_cancel_leaving_floor())
+        return false;
+
     if (Options.warn_hatches)
     {
         if (feat_is_escape_hatch(ygrd))

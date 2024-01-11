@@ -2260,6 +2260,8 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_SPECTRALISED, TILEI_GHOSTLY},
     { MB_REGENERATION, TILEI_REGENERATION },
     { MB_RETREATING, TILEI_RETREAT  },
+    { MB_TOUCH_OF_BEOGH, TILEI_TOUCH_OF_BEOGH },
+    { MB_VENGEANCE_TARGET, TILEI_VENGEANCE_TARGET },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -3815,8 +3817,6 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_NEMELEX_DRAW_STACK:
         return TILEG_ABILITY_NEMELEX_DRAW_STACK;
     // Beogh
-    case ABIL_BEOGH_GIFT_ITEM:
-        return TILEG_ABILITY_BEOGH_GIFT_ITEM;
     case ABIL_BEOGH_SMITING:
         return TILEG_ABILITY_BEOGH_SMITE;
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:

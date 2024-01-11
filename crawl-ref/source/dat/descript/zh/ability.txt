@@ -375,10 +375,6 @@ Stop Recall ability
 
 停止召回你的随从。
 %%%%
-Give Item to Named Follower ability
-
-给一位有名字的兽人随从一件武器或防具。一个兽人只能收到其中一件礼物。
-%%%%
 Resurrection ability
 
 使一具兽人尸体复活。这个兽人将会是盟友，即使他在死亡前还不是盟友。

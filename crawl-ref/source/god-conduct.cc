@@ -361,8 +361,15 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_BEOGH,
     {
-        { DID_DESECRATE_ORCISH_REMAINS, { "you desecrate orcish remains", true, 1 } },
-        { DID_ATTACK_FRIEND, _on_attack_friend("you attack allied orcs") },
+        { DID_ATTACK_NEUTRAL, {
+            "you attack non-hostile orcs", true,
+            1, 1, nullptr, nullptr, [] (const monster* victim) -> bool {
+                return victim
+                    && mons_genus(victim->type) == MONS_ORC
+                    && !victim->is_shapeshifter();
+            }
+        } },
+        { DID_ATTACK_FRIEND, _on_attack_friend("you attack your followers") },
     },
     // GOD_JIYVA,
     {
@@ -1137,6 +1144,12 @@ void did_hurt_conduct(conduct_type thing_done,
 
         you.props[USKAYAW_NUM_MONSTERS_HURT].get_int() += 1;
         you.props[USKAYAW_MONSTER_HURT_VALUE].get_int() += value;
+    }
+    else if (you_worship(GOD_BEOGH) && you.piety >= piety_breakpoint(2))
+    {
+        // Cap the damage we give points for by the target's max hp to reduce rat value
+        int bonus = min(victim.hit_points, min(damage_done, victim.max_hit_points / 2));
+        you.props[BEOGH_DAMAGE_DONE_KEY].get_int() += bonus;
     }
 }
 

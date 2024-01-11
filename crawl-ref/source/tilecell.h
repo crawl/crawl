@@ -42,6 +42,7 @@ struct packed_cell
     uint8_t travel_trail;
     bool quad_glow;
     uint8_t disjunct;
+    bool has_bfb_corpse;
 
     bool operator ==(const packed_cell &other) const;
     bool operator !=(const packed_cell &other) const { return !(*this == other); }
@@ -52,7 +53,7 @@ struct packed_cell
                     is_liquefied(false), mangrove_water(false),
                     awakened_forest(false), orb_glow(0), blood_rotation(0),
                     old_blood(false), travel_trail(0),
-                    quad_glow(false), disjunct(false)
+                    quad_glow(false), disjunct(false), has_bfb_corpse(false)
                     {}
 
     packed_cell(const packed_cell* c) : num_dngn_overlay(c->num_dngn_overlay),
@@ -72,7 +73,8 @@ struct packed_cell
                                         old_blood(c->old_blood),
                                         travel_trail(c->travel_trail),
                                         quad_glow(c->quad_glow),
-                                        disjunct(c->disjunct)
+                                        disjunct(c->disjunct),
+                                        has_bfb_corpse(c->has_bfb_corpse)
                                         {}
 
     void clear();

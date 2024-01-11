@@ -153,7 +153,6 @@ mon-death.o \
 mon-ench.o \
 mon-explode.o \
 mon-gear.o \
-mon-grow.o \
 mon-info.o \
 mon-movetarget.o \
 mon-pathfind.o \

@@ -39,7 +39,8 @@ bool actor::will_trigger_shaft() const
     return is_valid_shaft_level()
            // let's pretend that they always make their saving roll
            && !(is_monster()
-                && mons_is_elven_twin(static_cast<const monster* >(this)));
+                && (mons_is_elven_twin(static_cast<const monster* >(this))
+                    || as_monster()->type == MONS_ORC_APOSTLE));
 }
 
 level_id actor::shaft_dest() const

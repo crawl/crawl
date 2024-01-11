@@ -4956,6 +4956,8 @@ static string _monster_attacks_description(const monster_info& mi)
             real_dam = real_dam * 2;
         if (mi.is(MB_WEAK))
             real_dam = real_dam * 2 / 3;
+        if (mi.is(MB_TOUCH_OF_BEOGH))
+            real_dam = real_dam * 4 / 3;
 
         string dam_str;
         if (dam != real_dam)

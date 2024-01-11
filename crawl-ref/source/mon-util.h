@@ -421,8 +421,8 @@ bool mons_is_projectile(const monster& mon);
 bool mons_is_object(monster_type mc);
 bool mons_has_blood(monster_type mc);
 bool mons_is_sensed(monster_type mc);
-bool mons_allows_beogh(const monster& mon);
-bool mons_allows_beogh_now(const monster& mon);
+bool mons_offers_beogh_conversion(const monster& mon);
+bool mons_offers_beogh_conversion_now(const monster& mon);
 
 bool invalid_monster(const monster* mon);
 bool invalid_monster_type(monster_type mt);
@@ -519,16 +519,12 @@ void debug_monspells();
 
 bool choose_any_monster(const monster& mon);
 monster *choose_random_nearby_monster(
-    int weight,
     bool (*suitable)(const monster& mon) =
-        choose_any_monster,
-    bool prefer_named_or_priest = false);
+        choose_any_monster);
 
 monster *choose_random_monster_on_level(
-    int weight,
     bool (*suitable)(const monster& mon) =
-        choose_any_monster,
-    bool prefer_named_or_priest = false);
+        choose_any_monster);
 
 int spell_freq_for_hd(int hd);
 void normalize_spell_freq(monster_spells &spells, int total_freq);

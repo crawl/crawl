@@ -188,8 +188,8 @@ static const char *divine_title[][8] =
         "Agent of Entropy",   "Schismatic",            "Envoy of Void",            "Corrupter of Planes"},
 
     // Beogh -- messiah theme.
-    {"Apostate",           "Messenger",             "Proselytiser",             "Priest",
-        "Missionary",         "Evangelist",            "Apostle",                  "Messiah"},
+    {"Apostate",           "Convert",               "Proselytiser",             "Priest",
+        "Missionary",         "Evangelist",            "Unifier",                  "Messiah"},
 
     // Jiyva -- slime and jelly theme.
     {"Scum",               "Squelcher",             "Ooze",                     "Jelly",
@@ -533,7 +533,7 @@ static formatted_string _beogh_extra_description()
 {
     formatted_string desc;
 
-    _add_par(desc, "Named Followers:");
+    _add_par(desc, "Apostles:");
 
     vector<monster*> followers;
 
@@ -544,9 +544,6 @@ static formatted_string _beogh_extra_description()
         // if not elsewhere, follower already seen by monster_iterator
         if (companion_is_elsewhere(entry.second.mons.mons.mid, true))
             followers.push_back(&entry.second.mons.mons);
-
-    sort(followers.begin(), followers.end(),
-        [] (monster* a, monster* b) { return a->experience > b->experience;});
 
     bool has_named_followers = false;
     for (auto mons : followers)
@@ -560,27 +557,6 @@ static formatted_string _beogh_extra_description()
         {
             desc += formatted_string::parse_string(
                             " (<blue>on another level</blue>)");
-        }
-        else if (given_gift(mons))
-        {
-            mon_inv_type slot =
-                mons->props.exists(BEOGH_SH_GIFT_KEY) ? MSLOT_SHIELD :
-                mons->props.exists(BEOGH_ARM_GIFT_KEY) ? MSLOT_ARMOUR :
-                mons->props.exists(BEOGH_RANGE_WPN_GIFT_KEY) ? MSLOT_ALT_WEAPON :
-                MSLOT_WEAPON;
-
-            // An orc can still lose its gift, e.g. by being turned into a
-            // shapeshifter via a chaos cloud. TODO: should the gift prop be
-            // deleted at that point?
-            if (mons->inv[slot] != NON_ITEM)
-            {
-                desc.cprintf(" (");
-
-                item_def &gift = env.item[mons->inv[slot]];
-                desc += formatted_string::parse_string(
-                                    menu_colour_item_name(gift,DESC_PLAIN));
-                desc.cprintf(")");
-            }
         }
         desc.cprintf("\n");
     }
@@ -809,6 +785,18 @@ static formatted_string _describe_god_powers(god_type which_god)
 
     switch (which_god)
     {
+    case GOD_BEOGH:
+    {
+        if (piety >= piety_breakpoint(5))
+            desc.cprintf("Orcs frequently recognize you as Beogh's chosen one.\n");
+        else if (piety >= piety_breakpoint(1))
+            desc.cprintf("Orcs sometimes recognize you as one of their own.\n");
+
+        if (piety >= piety_breakpoint(2))
+            desc.cprintf("Your orcish followers are sometimes invigorated when you deal damage.\n");
+    }
+    break;
+
     case GOD_ZIN:
     {
         have_any = true;
@@ -993,6 +981,14 @@ static formatted_string _describe_god_powers(god_type which_god)
             desc.textcolour(DARKGREY);
 
         string buf = power.general;
+
+        // Skip listing powers with no description (they are intended to be hidden)
+        if (buf.length() == 0)
+        {
+            have_any = false;
+            continue;
+        }
+
         if (!isupper(buf[0])) // Complete sentence given?
             buf = "You can " + buf + ".";
         const int desc_len = buf.size();

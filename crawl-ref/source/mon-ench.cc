@@ -368,6 +368,10 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
     }
 
+    case ENCH_TOUCH_OF_BEOGH:
+        scale_hp(3, 2);
+        break;
+
     default:
         break;
     }
@@ -1060,6 +1064,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_CURSE_OF_AGONY:
         simple_monster_message(*this, " is freed from its curse.");
+        break;
+
+    case ENCH_TOUCH_OF_BEOGH:
+        scale_hp(2, 3);
         break;
 
     default:
@@ -2170,6 +2178,7 @@ static const char *enchant_names[] =
     "bound", "bullseye_target", "vitrified", "cleaving_attack",
     "protean_shapeshifting", "simulacrum_sculpting", "curse_of_agony",
     "channel_searing_ray",
+    "touch_of_beogh", "vengeance_target",
     "buggy", // NUM_ENCHANTMENTS
 };
 

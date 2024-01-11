@@ -266,12 +266,7 @@ static const vector<god_passive> god_passives[] =
 
     // Beogh
     {
-        { -1, passive_t::share_exp, "share experience with your followers" },
-        {  3, passive_t::convert_orcs, "inspire orcs to join your side" },
-        {  3, passive_t::bless_followers,
-              "GOD will bless your followers",
-              "GOD will no longer bless your followers"
-        },
+        {  1, passive_t::convert_orcs, "Orcs sometimes recognize you as one of their own" },
         {  5, passive_t::water_walk, "walk on water" },
     },
 

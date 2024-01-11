@@ -20,6 +20,7 @@
 #include "env.h"
 #include "fight.h"
 #include "god-abil.h"
+#include "god-companions.h"
 #include "god-wrath.h" // lucy_check_meddling
 #include "libutil.h"
 #include "losglobal.h"
@@ -945,6 +946,11 @@ void jinxbite_fineff::fire()
     actor* defend = defender();
     if (defend && defend->alive())
         attempt_jinxbite_hit(*defend);
+}
+
+void beogh_resurrection_fineff::fire()
+{
+    beogh_resurrect_followers();
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

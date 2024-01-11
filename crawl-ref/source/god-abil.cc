@@ -57,8 +57,10 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-gear.h" // H: give_weapon()/give_armour()
+#include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-poly.h"
+#include "mon-speak.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
 #include "movement.h"
@@ -1418,246 +1420,6 @@ void trog_remove_trogs_hand()
     you.duration[DUR_TROGS_HAND] = 0;
 }
 
-/**
- * Has the monster been given a Beogh gift?
- *
- * @param mon the orc in question.
- * @returns whether you have given the monster a Beogh gift before now.
- */
-bool given_gift(const monster* mon)
-{
-    return mon->props.exists(BEOGH_RANGE_WPN_GIFT_KEY)
-            || mon->props.exists(BEOGH_MELEE_WPN_GIFT_KEY)
-            || mon->props.exists(BEOGH_ARM_GIFT_KEY)
-            || mon->props.exists(BEOGH_SH_GIFT_KEY);
-}
-
-/**
- * Checks whether the target monster is a valid target for beogh item-gifts.
- *
- * @param mons[in]  The monster to consider giving an item to.
- * @param quiet     Whether to print messages if the target is invalid.
- * @return          Whether the player can give an item to the monster.
- */
-bool beogh_can_gift_items_to(const monster* mons, bool quiet)
-{
-    if (!mons || !mons->visible_to(&you))
-    {
-        if (!quiet)
-            canned_msg(MSG_NOTHING_THERE);
-        return false;
-    }
-
-    if (!is_orcish_follower(*mons) || mons_genus(mons->type) != MONS_ORC)
-    {
-        if (!quiet)
-            mpr("That's not an orcish ally!");
-        return false;
-    }
-
-    if (!mons->is_named())
-    {
-        if (!quiet)
-            mpr("That orc has not proved itself worthy of your gift.");
-        return false;
-    }
-
-    if (given_gift(mons))
-    {
-        if (!quiet)
-        {
-            mprf("%s has already been given a gift.",
-                 mons->name(DESC_THE, false).c_str());
-        }
-        return false;
-    }
-
-    return true;
-}
-
-/**
- * Checks whether there are any valid targets for beogh gifts in LOS.
- */
-static bool _valid_beogh_gift_targets_in_sight()
-{
-    for (monster_near_iterator rad(you.pos(), LOS_NO_TRANS); rad; ++rad)
-        if (beogh_can_gift_items_to(*rad))
-            return true;
-    return false;
-}
-
-/**
- * Allow the player to give an item to a named orcish ally that hasn't
- * been given a gift before
- *
- * @returns whether an item was given.
- */
-bool beogh_gift_item()
-{
-    if (!_valid_beogh_gift_targets_in_sight())
-    {
-        mpr("No worthy followers in sight.");
-        return false;
-    }
-
-    dist spd;
-
-    direction_chooser_args args;
-    args.restricts = DIR_TARGET;
-    args.mode = TARG_BEOGH_GIFTABLE;
-    args.range = LOS_RADIUS;
-    args.needs_path = false;
-    args.self = confirm_prompt_type::cancel;
-    args.show_floor_desc = true;
-    args.top_prompt = "Select a follower to give a gift to.";
-
-    direction(spd, args);
-
-    if (!spd.isValid)
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-
-    monster* mons = monster_at(spd.target);
-    if (!beogh_can_gift_items_to(mons, false))
-        return false;
-
-    int item_slot = prompt_invent_item("Give which item?",
-                                       menu_type::invlist, OSEL_BEOGH_GIFT);
-
-    if (item_slot == PROMPT_ABORT || item_slot == PROMPT_NOTHING)
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-
-    item_def& gift = you.inv[item_slot];
-
-    const bool shield = is_offhand(gift);
-    const bool body_armour = gift.base_type == OBJ_ARMOUR
-                             && get_armour_slot(gift) == EQ_BODY_ARMOUR;
-    const bool weapon = gift.base_type == OBJ_WEAPONS;
-    const bool range_weapon = weapon && is_range_weapon(gift);
-    const item_def* mons_weapon = mons->weapon();
-    const item_def* mons_alt_weapon = mons->mslot_item(MSLOT_ALT_WEAPON);
-
-    if (weapon && !mons->could_wield(gift)
-        || body_armour && !check_armour_size(gift, mons->body_size())
-        || !item_is_selected(gift, OSEL_BEOGH_GIFT))
-    {
-        mprf("You can't give that to %s.", mons->name(DESC_THE, false).c_str());
-
-        return false;
-    }
-    else if (shield
-             && (mons_weapon && mons->hands_reqd(*mons_weapon) == HANDS_TWO
-                 || mons_alt_weapon
-                    && mons->hands_reqd(*mons_alt_weapon) == HANDS_TWO))
-    {
-        mprf("%s can't equip that with a two-handed weapon.",
-             mons->name(DESC_THE, false).c_str());
-        return false;
-    }
-
-    // if we're giving a ranged weapon to an orc holding a melee weapon in
-    // their hands, or vice versa, put it in their carried slot instead.
-    // this will of course drop anything that's there.
-    const bool use_alt_slot = weapon && mons_weapon
-                              && is_range_weapon(gift) !=
-                                 is_range_weapon(*mons_weapon);
-
-    const auto mslot = body_armour ? MSLOT_ARMOUR :
-                                    shield ? MSLOT_SHIELD :
-                              use_alt_slot ? MSLOT_ALT_WEAPON :
-                                             MSLOT_WEAPON;
-
-    item_def *floor_item = mons->take_item(item_slot, mslot);
-    if (!floor_item)
-    {
-        // this probably means move_to_grid in drop_item failed?
-        mprf(MSGCH_ERROR, "Gift failed: %s is unable to take %s.",
-                                        mons->name(DESC_THE, false).c_str(),
-                                        gift.name(DESC_THE, false).c_str());
-        return false;
-    }
-    if (use_alt_slot)
-        mons->swap_weapons();
-
-    if (shield)
-        mons->props[BEOGH_SH_GIFT_KEY] = true;
-    else if (body_armour)
-        mons->props[BEOGH_ARM_GIFT_KEY] = true;
-    else if (range_weapon)
-        mons->props[BEOGH_RANGE_WPN_GIFT_KEY] = true;
-    else
-        mons->props[BEOGH_MELEE_WPN_GIFT_KEY] = true;
-
-    return true;
-}
-
-bool beogh_resurrect()
-{
-    item_def* corpse = nullptr;
-    bool found_any = false;
-    for (stack_iterator si(you.pos()); si; ++si)
-        if (si->props.exists(ORC_CORPSE_KEY))
-        {
-            found_any = true;
-            if (yesno(("Resurrect "
-                       + si->props[ORC_CORPSE_KEY].get_monster().full_name(DESC_THE)
-                       + "?").c_str(), true, 'n'))
-            {
-                corpse = &*si;
-                break;
-            }
-        }
-    if (!corpse)
-    {
-        mprf("There's nobody %shere you can resurrect.",
-             found_any ? "else " : "");
-        return false;
-    }
-
-    coord_def pos;
-    ASSERT(corpse->props.exists(ORC_CORPSE_KEY));
-    for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
-    {
-        if (!actor_at(*ai)
-            && corpse->props[ORC_CORPSE_KEY].get_monster().is_location_safe(*ai))
-        {
-            pos = *ai;
-        }
-    }
-    if (pos.origin())
-    {
-        mpr("There's no room!");
-        return false;
-    }
-
-    monster* mon = get_free_monster();
-    *mon = corpse->props[ORC_CORPSE_KEY];
-    destroy_item(corpse->index());
-    env.mid_cache[mon->mid] = mon->mindex();
-    mon->hit_points = mon->max_hit_points;
-    mon->inv.init(NON_ITEM);
-    for (stack_iterator si(you.pos()); si; ++si)
-    {
-        if (!si->props.exists(DROPPER_MID_KEY)
-            || si->props[DROPPER_MID_KEY].get_int() != int(mon->mid))
-        {
-            continue;
-        }
-        unwind_var<int> save_speedinc(mon->speed_increment);
-        mon->pickup_item(*si, false, true);
-    }
-    mon->move_to_pos(pos);
-    mon->timeout_enchantments(100);
-    beogh_convert_orc(mon, conv_t::resurrection);
-
-    return true;
-}
-
 bool yred_can_bind_soul(monster* mon)
 {
     return mons_can_be_spectralised(*mon, true)
@@ -2294,7 +2056,7 @@ bool can_convert_to_beogh()
         return false;
 
     for (monster* m : monster_near_iterator(you.pos(), LOS_NO_TRANS))
-        if (mons_allows_beogh_now(*m))
+        if (mons_offers_beogh_conversion_now(*m))
             return true;
 
     return false;
@@ -2326,7 +2088,7 @@ void spare_beogh_convert()
 
         // Anyone who has seen the priest perform the ceremony will spare you
         // as well.
-        if (mons_allows_beogh(*mon))
+        if (mons_offers_beogh_conversion(*mon))
         {
             for (radius_iterator pi(you.pos(), LOS_DEFAULT); pi; ++pi)
             {
@@ -2357,13 +2119,268 @@ void spare_beogh_convert()
     you.religion = GOD_BEOGH;
     you.one_time_ability_used.set(GOD_BEOGH);
 
-    if (witc == 1)
-        mpr("The priest welcomes you and lets you live.");
+    // Grant the player succor for accepting the Shepherd as their god
+    you.heal(random_range(10, 20));
+    you.duration[DUR_CONF] = 0;
+
+    mpr("The priest grants you succor and welcomes you into the fold.");
+    if (witc > 1)
+        mpr("The other orcs roar their approval!");
+}
+
+static monster_type _get_orc_reinforcement_type(int pow)
+{
+    // 2/7 split between priests and fighters.
+    // (Sorcerers tend to be less useful in among such a swarm)
+    if (x_chance_in_y(5, 7))
+    {
+        if (x_chance_in_y(pow, 255))
+            return MONS_ORC_WARLORD;
+        else if (x_chance_in_y(pow, 110))
+            return MONS_ORC_KNIGHT;
+        else if (x_chance_in_y(pow, 75))
+            return MONS_ORC_WARRIOR;
+    }
     else
     {
-        mpr("With a roar of approval, the orcs welcome you as one of their own,"
-            " and spare your life.");
+        if (x_chance_in_y(pow, 135))
+            return MONS_ORC_HIGH_PRIEST;
+        else
+            return MONS_ORC_PRIEST;
     }
+
+    return MONS_ORC;
+}
+
+void beogh_blood_for_blood()
+{
+    // Mark all corpses at our feet as having already been used, in case this
+    // blood oath fails to generate enough piety to revive them.
+    string apostle_name;
+    for (stack_iterator si(you.pos()); si; ++si)
+    {
+        if (si->is_type(OBJ_CORPSES, CORPSE_BODY)
+            && si->props.exists(BEOGH_BFB_VALID_KEY))
+        {
+            si->props.erase(BEOGH_BFB_VALID_KEY);
+            apostle_name = si->props[CORPSE_NAME_KEY].get_string();
+        }
+    }
+
+    mprf("You place your %s atop %s's lifeless body and utter a vengeful prayer.",
+         you.hand_name(false).c_str(), apostle_name.c_str());
+
+    you.duration[DUR_BLOOD_FOR_BLOOD] = random_range(130, 180) * BASELINE_DELAY;
+
+    // Summon a bunch of high level orcs immediately around the player (based on
+    // invocations)
+    bool orc_spoke = false;
+    int pow = you.skill(SK_INVOCATIONS, 5);
+    int num_orcs = min(3 + you.skill_rdiv(SK_INVOCATIONS, 3, 4), 24);
+    for (distance_iterator di(you.pos(), false, true, 2); di && num_orcs > 0; ++di)
+    {
+        if (actor_at(*di) || !feat_has_solid_floor(env.grid(*di))
+            || !you.see_cell_no_trans(*di))
+        {
+            continue;
+        }
+
+        mgen_data mg(_get_orc_reinforcement_type(pow), BEH_FRIENDLY, *di,
+                     MHITNOT, MG_AUTOFOE | MG_FORCE_PLACE);
+        mg.set_summoned(&you, 0, MON_SUMM_AID, GOD_BEOGH);
+        monster* orc = create_monster(mg);
+        if (orc)
+        {
+            orc->flags |= MF_HARD_RESET;
+            orc->mark_summoned(0, true, MON_SUMM_AID, false);
+            orc->god = GOD_BEOGH;
+            num_orcs -= 1;
+
+            // At least one orc will always speak, but more may also do so
+            if (!orc_spoke || one_chance_in(12))
+            {
+                mons_speaks_msg(orc, getSpeakString("friendly bfb orc"), MSGCH_TALK);
+                orc_spoke = true;
+            }
+        }
+    }
+}
+
+static int _count_orcish_reinforcements()
+{
+    int count = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->has_ench(ENCH_SUMMON)
+            && mi->get_ench(ENCH_SUMMON).degree == MON_SUMM_AID
+            && mons_genus(mi->type) == MONS_ORC)
+        {
+            count += 1;
+        }
+    }
+
+    return count;
+}
+
+static void _place_orcish_reinforcement()
+{
+    // Find placement spot
+    coord_def pos;
+    int tries_left = 5;
+    for (distance_iterator di(you.pos(), true, true, 9); di && tries_left > 0; ++di)
+    {
+        if (grid_distance(you.pos(), *di) < 8
+            || !feat_has_solid_floor(env.grid(*di))
+            || actor_at(*di))
+        {
+            continue;
+        }
+
+        // We're at least marginally viable, so let's try the more expensive checks
+        tries_left -= 1;
+
+        // Finally, test that we can reach the player from here
+        monster_pathfind mp;
+        mp.set_range(10);   // Don't search further than this
+        if (mp.init_pathfind(*di, you.pos()))
+        {
+            pos = *di;
+            break;
+        }
+    }
+
+    // If we found no suitable placement spot, bail out
+    if (pos.origin())
+        return;
+
+    // Otherwise, generate an orc!
+
+    mgen_data mg(MONS_ORC_PRIEST, BEH_FRIENDLY, pos, MHITNOT, MG_AUTOFOE);
+    mg.set_summoned(&you, 0, MON_SUMM_AID, GOD_BEOGH);
+    mg.cls = _get_orc_reinforcement_type(you.skill_rdiv(SK_INVOCATIONS, 7, 2));
+
+    monster* orc = create_monster(mg);
+    if (orc)
+    {
+        orc->flags |= MF_HARD_RESET;
+        orc->mark_summoned(0, true, MON_SUMM_AID, false);
+        orc->god = GOD_BEOGH;
+    }
+}
+
+void beogh_blood_for_blood_tick(int delay)
+{
+    // This isn't scaled by delay, since I'm not really sure how. We could make
+    // it probabilistic, but then there's the chance of going several turns
+    // without making any noise at all. Not sure...
+    noisy(12, you.pos());
+
+    // Cap the number of orcs we can summon at once (based on invocations)
+    int count = _count_orcish_reinforcements();
+    int max = 7 + you.skill_rdiv(SK_INVOCATIONS, 3, 4);
+    if (count >= max)
+        return;
+
+    // Summon orcs faster, the fewer of them we have.
+    // Scales from ~1 orc per 6 aut at 0, up to ~1 orc per 50 aut near max
+    int rate = 10 + 30 * (10 - (count * 10 / max)) / 10;
+    if (count * 3 <= max)
+        rate *= 2;
+
+    int num_to_summon = div_rand_round(rate, delay * 5);
+
+    for (int i = 0; i < num_to_summon; ++i)
+        _place_orcish_reinforcement();
+}
+
+void beogh_end_blood_for_blood()
+{
+    mprf(MSGCH_DURATION,
+         "You reach the end of your prayer and your brethren are recalled.");
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->has_ench(ENCH_SUMMON)
+            && mi->get_ench(ENCH_SUMMON).degree == MON_SUMM_AID
+            && mons_genus(mi->type) == MONS_ORC)
+        {
+            place_cloud(CLOUD_TLOC_ENERGY, mi->pos(), 1 + random2(3), *mi);
+            monster_die(**mi, KILL_RESET, -1, true);
+        }
+    }
+    you.duration[DUR_BLOOD_FOR_BLOOD] = 0;
+}
+
+void beogh_ally_healing()
+{
+    if (!you.props.exists(BEOGH_DAMAGE_DONE_KEY)
+        || x_chance_in_y(2, 5))
+    {
+        you.props.erase(BEOGH_DAMAGE_DONE_KEY);
+        return;
+    }
+
+    int value = you.props[BEOGH_DAMAGE_DONE_KEY].get_int();
+    you.props.erase(BEOGH_DAMAGE_DONE_KEY);
+
+    value = value * 4 / 10;
+
+    // Skip small heals
+    if (value < 5)
+        return;
+
+    vector<monster*> heal_list;
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (mi->is_divine_companion() && mi->hit_points < mi->max_hit_points)
+            heal_list.push_back(*mi);
+    }
+
+    if (heal_list.empty())
+        return;
+
+    value = max(1, (int)(value / heal_list.size()));
+    int healing_done = 0;
+    for (auto mon : heal_list)
+    {
+        healing_done += min(value, mon->max_hit_points - mon->hit_points);
+        mon->heal(value);
+    }
+
+    mprf("%s %s%sinvigorated by your prowess.",
+          heal_list.size() == 1 ? heal_list[0]->name(DESC_THE).c_str()
+                                : "Your followers are",
+          heal_list.size() == 1 ? "is" : "",
+          healing_done > 25 ? " greatly " : "");
+}
+
+// Prompts the player for reasons they may not wish to leave a floor.
+// Returns whether the player decided to cancel the move.
+bool beogh_cancel_leaving_floor()
+{
+    if (!you_worship(GOD_BEOGH))
+        return false;
+
+    if (you.duration[DUR_BEOGH_DIVINE_CHALLENGE])
+    {
+        if (!yesno("Are you sure you wish to flee a divine trial? This will "
+                   "place you under penance!", false, 'n'))
+        {
+            mpr("Beogh appreciates your bravery.");
+            return true;
+        }
+    }
+
+    if (you.duration[DUR_BLOOD_FOR_BLOOD])
+    {
+        if (!yesno("Your vengeful prayer will end if you leave here."
+                   " Continue?", false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return true;
+        }
+    }
+
+    return false;
 }
 
 spret dithmenos_shadow_step(bool fail)

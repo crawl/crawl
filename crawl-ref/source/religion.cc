@@ -243,12 +243,14 @@ const vector<vector<god_power>> & get_all_god_powers()
         },
 
         // Beogh
-        {   { 2, ABIL_BEOGH_SMITING, "smite your foes" },
-            { 3, "gain orcish followers" },
-            { 4, ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "recall your orcish followers" },
+        {   { 3, ABIL_BEOGH_DISMISS_APOSTLE_1, ""},
+            { 3, ABIL_BEOGH_DISMISS_APOSTLE_2, ""},
+            { 3, ABIL_BEOGH_DISMISS_APOSTLE_3, ""},
+            { 2, ABIL_BEOGH_SMITING, "smite your foes" },
+            { 3, ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "recall your orcish followers" },
+            { 3, ABIL_BEOGH_RECRUIT_APOSTLE, "recruit orcish followers" },
             { 5, "walk on water" },
-            { 5, ABIL_BEOGH_GIFT_ITEM, "give items to your followers" },
-            { 6, ABIL_BEOGH_RESURRECTION, "revive fallen orcs" },
+            { 5, ABIL_BEOGH_BLOOD_FOR_BLOOD, "rally a vengeful horde" },
         },
 
         // Jiyva
@@ -465,6 +467,11 @@ void god_power::display(bool gaining, const char* fmt) const
     }
 
     const char* str = gaining ? gain : loss;
+
+    // Don't print empty messages about 'hidden' abilities
+    if (str[0] == '\0')
+        return;
+
     if (isupper(str[0]))
         god_speaks(you.religion, str);
     else
@@ -706,6 +713,9 @@ void dec_penance(god_type god, int val)
                 for (monster_iterator mi; mi; ++mi)
                      mi->del_ench(ENCH_AWAKEN_FOREST);
             }
+
+            if (god == GOD_BEOGH)
+                beogh_end_ostracism();
         }
         else if (god == GOD_HEPLIAKLQANA)
         {
@@ -945,6 +955,8 @@ static void _inc_penance(god_type god, int val)
             if (you.duration[DUR_FINESSE])
                 okawaru_remove_finesse();
         }
+        else if (god == GOD_BEOGH)
+            beogh_do_ostracism();
 
         if (you_worship(god))
         {
@@ -2315,7 +2327,7 @@ void religion_turn_end()
  * @param piety_loss The amount of penance imposed; may be scaled.
  * @param penance The amount of penance imposed; may be scaled.
  */
-void dock_piety(int piety_loss, int penance)
+void dock_piety(int piety_loss, int penance, bool no_lecture)
 {
     static int last_piety_lecture   = -1;
     static int last_penance_lecture = -1;
@@ -2346,13 +2358,13 @@ void dock_piety(int piety_loss, int penance)
         excommunication();
     else if (penance)       // only if still in religion
     {
-        if (last_penance_lecture != you.num_turns)
+        if (last_penance_lecture != you.num_turns && !no_lecture)
         {
             god_speaks(you.religion,
                        you.religion == GOD_JIYVA ? "Furious gurgling surrounds you!"
                        : "\"You will pay for your transgression, mortal!\"");
+            last_penance_lecture = you.num_turns;
         }
-        last_penance_lecture = you.num_turns;
 
         // Yred piety doesn't work on a time scale compatible with traditional
         // penance, instead immediate retribution.
@@ -2417,17 +2429,24 @@ static void _gain_piety_point()
 
         // Slow down piety gain to account for the fact that gifts
         // no longer have a piety cost for getting them.
-        // Jiyva is an exception because there's usually a time-out and
-        // the gifts aren't that precious.
         if (!one_chance_in(4) && !you_worship(GOD_JIYVA)
             && !you_worship(GOD_NEMELEX_XOBEH)
-            && !you_worship(GOD_ELYVILON))
+            && !you_worship(GOD_ELYVILON)
+            && !you_worship(GOD_BEOGH))
         {
 #ifdef DEBUG_PIETY
             mprf(MSGCH_DIAGNOSTICS, "Piety slowdown due to gift timeout.");
 #endif
             return;
         }
+    }
+
+    // Increment our progress to the next companion resurrection, as well as
+    // next apostle challenge. (Note: Does NOT happen slower at higher piety.)
+    if (you_worship(GOD_BEOGH))
+    {
+        beogh_progress_resurrection(1);
+        you.props[BEOGH_CHALLENGE_PROGRESS_KEY].get_int() += 1;
     }
 
     // slow down gain at upper levels of piety
@@ -2538,6 +2557,12 @@ static void _gain_piety_point()
         {
            god_speaks(you.religion,
                       "You may now remember your ancestor's life.");
+        }
+        // Qualify for an immediate apostle challenge upon hitting 3* the first time
+        if (you_worship(GOD_BEOGH)
+            && rank == 2 && you.num_current_gifts[you.religion] == 0)
+        {
+            you.props[BEOGH_CHALLENGE_PROGRESS_KEY] = 25;
         }
     }
 
@@ -3026,14 +3051,19 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_BEOGH:
-        if (query_daction_counter(DACT_ALLY_BEOGH))
-        {
-            simple_god_message("'s voice booms out, \"Who do you think you "
-                               "are?\"", old_god);
-            mprf(MSGCH_MONSTER_ENCHANT, "All of your followers decide to abandon you.");
-            add_daction(DACT_ALLY_BEOGH);
-            remove_all_companions(GOD_BEOGH);
-        }
+        simple_god_message("'s voice booms out, \"Traitor to your kin!\"", old_god);
+        mprf(MSGCH_MONSTER_ENCHANT, "All of your followers decide to abandon you.");
+
+        add_daction(DACT_ALLY_BEOGH);
+        remove_all_companions(GOD_BEOGH);
+
+        // End statuses without normal messages.
+        // (This will let a hostile apostle stay around, but that is intentional)
+        you.duration[DUR_BEOGH_DIVINE_CHALLENGE] = 0;
+        you.duration[DUR_BLOOD_FOR_BLOOD] = 0;
+        you.duration[DUR_BEOGH_SEEKING_VENGEANCE] = 0;
+        you.duration[DUR_BEOGH_CAN_ANNOINT] = 0;
+        add_daction(DACT_BEOGH_VENGEANCE_CLEANUP);
 
         env.level_state |= LSTATE_BEOGH;
         break;
@@ -3346,9 +3376,6 @@ bool player_can_join_god(god_type which_god, bool temp)
     {
         return false;
     }
-
-    if (which_god == GOD_BEOGH && !species::is_orcish(you.species))
-        return false;
 
     if (which_god == GOD_GOZAG && temp && you.gold < gozag_service_fee())
         return false;
@@ -4184,7 +4211,6 @@ void handle_god_time(int /*time_delta*/)
         case GOD_TROG:
         case GOD_OKAWARU:
         case GOD_MAKHLEB:
-        case GOD_BEOGH:
         case GOD_LUGONU:
         case GOD_DITHMENOS:
         case GOD_QAZLAL:
@@ -4209,6 +4235,12 @@ void handle_god_time(int /*time_delta*/)
         case GOD_NEMELEX_XOBEH:
             if (one_chance_in(35))
                 lose_piety(1);
+            break;
+
+        case GOD_BEOGH:
+            if (one_chance_in(17))
+                lose_piety(1);
+            maybe_generate_apostle_challenge();
             break;
 
         case GOD_ASHENZARI:

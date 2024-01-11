@@ -535,4 +535,21 @@ protected:
     }
 };
 
+class beogh_resurrection_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &/*a*/) const override { return true; };
+    void fire() override;
+
+    static void schedule()
+    {
+        final_effect::schedule(new beogh_resurrection_fineff());
+    }
+protected:
+    beogh_resurrection_fineff()
+        : final_effect(nullptr, nullptr, coord_def())
+    {
+    }
+};
+
 void fire_final_effects();

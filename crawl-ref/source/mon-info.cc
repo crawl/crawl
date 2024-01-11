@@ -130,6 +130,8 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_BULLSEYE_TARGET, MB_BULLSEYE_TARGET },
     { ENCH_VITRIFIED,       MB_VITRIFIED },
     { ENCH_CURSE_OF_AGONY,  MB_CURSE_OF_AGONY },
+    { ENCH_TOUCH_OF_BEOGH,  MB_TOUCH_OF_BEOGH },
+    { ENCH_VENGEANCE_TARGET, MB_VENGEANCE_TARGET },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -738,8 +740,12 @@ monster_info::monster_info(const monster* m, int milev)
     // Otherwise the description lies wildly about the average hp of melee pan
     // lords, and an average player will have no idea how durable their canine
     // familiar really is - which matters when you want to keep it alive.
-    else if (m->type == MONS_PANDEMONIUM_LORD || m->type == MONS_INUGAMI)
+    else if (m->type == MONS_PANDEMONIUM_LORD
+             || m->type == MONS_INUGAMI
+             || m->type == MONS_ORC_APOSTLE)
+    {
         props[KNOWN_MAX_HP_KEY] = (int)(m->ghost->max_hp);
+    }
 
     if (m->has_ghost_brand())
         props[SPECIAL_WEAPON_KEY] = m->ghost_brand();
@@ -752,7 +758,7 @@ monster_info::monster_info(const monster* m, int milev)
     // book loading for player ghost and vault monsters
     spells.clear();
     if (m->props.exists(CUSTOM_SPELLS_KEY) || mons_is_pghost(type)
-        || type == MONS_PANDEMONIUM_LORD)
+        || type == MONS_PANDEMONIUM_LORD || type == MONS_ORC_APOSTLE)
     {
         spells = m->spells;
     }
@@ -957,6 +963,9 @@ string monster_info::db_name() const
         return inv[MSLOT_WEAPON]->name(DESC_DBNAME, false, false, use_inscrip, false,
                          ignore_flags);
     }
+
+    if (type == MONS_ORC_APOSTLE && attitude == ATT_FRIENDLY)
+        return "orc apostle follower";
 
     if (type == MONS_SENSED)
         return get_monster_data(base_type)->name;
@@ -1729,7 +1738,7 @@ bool monster_info::has_spells() const
         return false;
 
     // Ghosts / pan lords may have custom spell lists, so check spells directly
-    if (book == MST_GHOST || type == MONS_PANDEMONIUM_LORD)
+    if (book == MST_GHOST || type == MONS_PANDEMONIUM_LORD || type == MONS_ORC_APOSTLE)
         return spells.size() > 0;
 
     return true;

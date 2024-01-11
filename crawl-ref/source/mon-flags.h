@@ -285,6 +285,9 @@ enum monster_flag_type : uint64_t
     /// possibly got piety with TSO
     MF_TSO_SEEN           = BIT(38),
 
+    /// Part of an orc apostle band
+    MF_APOSTLE_BAND       = BIT(39),
+
     /// Created as the leader of a band
     MF_BAND_LEADER        = BIT(40),
 
