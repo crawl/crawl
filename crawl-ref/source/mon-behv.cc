@@ -273,8 +273,6 @@ void handle_behaviour(monster* mon)
     bool isScared   = mon->has_ench(ENCH_FEAR);
     bool isPacified = mon->pacified();
     bool patrolling = mon->is_patrolling();
-    static vector<level_exit> e;
-    static int                e_index = -1;
 
     //mprf("AI debug: mon %d behv=%d foe=%d pos=%d %d target=%d %d",
     //     mon->mindex(), mon->behaviour, mon->foe, mon->pos().x,
@@ -634,38 +632,39 @@ void handle_behaviour(monster* mon)
         case BEH_BATTY:
             if (isPacified)
             {
-                // If a pacified monster isn't travelling toward
-                // someplace from which it can leave the level, make it
-                // start doing so. If there's no such place, either
-                // search the level for such a place again, or travel
-                // randomly.
-                if (mon->travel_target != MTRAV_PATROL)
+                // If a pacified monster isn't travelling toward some place from
+                // which it can leave the level (either because it was just
+                // pacified, or something later interfered with it exiting),
+                // make it start doing so.
+                //
+                // If it cannot find a path to any exit at all, wander randomly
+                // instead.
+                if ((mon->travel_target != MTRAV_PATROL
+                     || mon->target != mon->patrol_point)
+                    && !mon->props.exists(PACIFY_LEAVE_FAIL_KEY))
                 {
                     new_foe = MHITNOT;
-                    mon->travel_path.clear();
-
-                    e_index = mons_find_nearest_level_exit(mon, e);
-
-                    if (e_index == -1 || one_chance_in(20))
-                        e_index = mons_find_nearest_level_exit(mon, e, true);
-
-                    if (e_index != -1)
-                    {
-                        mon->travel_target = MTRAV_PATROL;
+                    if (mons_path_to_nearest_level_exit(mon))
                         patrolling = true;
-                        mon->patrol_point = e[e_index].target;
-                        mon->target = e[e_index].target;
-                    }
+                    // Failed to find any reachable stair. Wander randomly and
+                    // don't try again, since this is unlikely to be temporary.
+                    // (This should almost never happen in practice; mostly for
+                    // pacified monsters stuck behind liquids. While technically
+                    // they could get blinked out again and then ought to find
+                    // a stair, if they look a little dumb in this random
+                    // situation, it's probably okay. (They will disappear once
+                    // the player gets far enough away anyway).
                     else
                     {
                         mon->travel_target = MTRAV_NONE;
                         patrolling = false;
                         mon->patrol_point.reset();
                         set_random_target(mon);
+                        mon->props[PACIFY_LEAVE_FAIL_KEY] = true;
                     }
                 }
 
-                if (pacified_leave_level(mon, e, e_index))
+                if (pacified_leave_level(mon))
                     return;
             }
 
@@ -698,7 +697,9 @@ void handle_behaviour(monster* mon)
                 break;
             }
 
-            check_wander_target(mon, isPacified);
+            // Pacified monsters who have 'given up' on leaving should wander
+            check_wander_target(mon, isPacified
+                                      && !mon->props.exists(PACIFY_LEAVE_FAIL_KEY));
 
             // During their wanderings, monsters will eventually relax
             // their guard (stupid ones will do so faster, smart
@@ -707,21 +708,16 @@ void handle_behaviour(monster* mon)
             // leave the level, in case their current choice is blocked.
             if (!proxFoe && !mons_is_avatar(mon->type) && mon->foe != MHITNOT
                    && one_chance_in(isSmart ? 60 : 20)
-                   && !mons_foe_is_marked(*mon)
-                || isPacified && one_chance_in(isSmart ? 40 : 120))
+                   && !mons_foe_is_marked(*mon))
             {
                 new_foe = MHITNOT;
-                if (mon->is_travelling() && mon->travel_target != MTRAV_PATROL
-                    || isPacified)
+                if (mon->is_travelling() && mon->travel_target != MTRAV_PATROL)
                 {
 #ifdef DEBUG_PATHFIND
                     mpr("It's been too long! Stop travelling.");
 #endif
                     mon->travel_path.clear();
                     mon->travel_target = MTRAV_NONE;
-
-                    if (isPacified && e_index != -1)
-                        e[e_index].unreachable = true;
                 }
             }
             break;

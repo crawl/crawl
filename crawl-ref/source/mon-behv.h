@@ -25,17 +25,6 @@ enum mon_event_type
     ME_CORNERED,                        // cannot flee
 };
 
-struct level_exit
-{
-    coord_def target;
-    bool unreachable;
-
-    level_exit(coord_def t = coord_def(-1, -1), bool u = true)
-        : target(t), unreachable(u)
-    {
-    }
-};
-
 class monster;
 struct coord_def;
 
