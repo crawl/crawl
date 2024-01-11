@@ -2246,7 +2246,7 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     8,
-    TILEG_WEREBLOOD,
+    TILEG_FUGUE_OF_THE_FALLEN,
 },
 
 {
@@ -2481,7 +2481,7 @@ static const struct spell_desc spelldata[] =
     100,
     -1, -1,
     0,
-    TILEG_SUMMON_GUARDIAN_GOLEM,
+    TILEG_SUMMON_BLAZEHEART_GOLEM,
 },
 
 {
@@ -2733,7 +2733,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     0,
-    TILEG_GENERIC_MONSTER_SPELL,
+    TILEG_BATTLECRY,
 },
 
 {
