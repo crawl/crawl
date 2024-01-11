@@ -4946,7 +4946,22 @@ static string _monster_attacks_description(const monster_info& mi)
                 dam += info.weapon->plus;
         }
 
-        result << padded_str(make_stringf("%d%s%s", dam,
+        // Show damage modified by effects, if applicable
+        int real_dam = dam;
+        if (mi.is(MB_STRONG) || mi.is(MB_BERSERK))
+            real_dam = real_dam * 3 / 2;
+        if (mi.is(MB_IDEALISED))
+            real_dam = real_dam * 2;
+        if (mi.is(MB_WEAK))
+            real_dam = real_dam * 2 / 3;
+
+        string dam_str;
+        if (dam != real_dam)
+            dam_str = make_stringf("%d (base %d)", real_dam, dam);
+        else
+            dam_str = make_stringf("%d", dam);
+
+        result << padded_str(make_stringf("%s%s%s", dam_str.c_str(),
                                           attk_mult > 1 ? " each" : "",
                                           info.weapon ? " (w/weapon)" : ""),
                              20);
