@@ -8,9 +8,6 @@ ae = <rune of Zot
 # Make it harder to miss out on zigfigs.
 ae += <figurine of a ziggurat
 
-# Autopickup elemental evokers by default, excluding the horn of Geryon.
-ae += >horn of Geryon, <evoker
-
 ### exclusions ###
 
 # Exclude items useless in general or for your current character (such as
@@ -22,6 +19,10 @@ ae += forbidden
 
 # ?noise is pretty useless.
 ae += scroll of noise
+
+# Autopickup elemental evokers after useless and forbidden exclusions,
+# so that autopickup for these items will respect god conducts.
+ae += >horn of Geryon, <evoker
 
 ### good_item backstop (keep last) ###
 
