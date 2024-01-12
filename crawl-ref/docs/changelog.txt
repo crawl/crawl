@@ -1,4 +1,4 @@
-Stone Soup 0.31-a0 (through 0.31-a0-1181-g57eb4e83fd)
+Stone Soup 0.31-a0 (through 0.31-a0-1364-gd47e5fa42b)
 ----------------------------------------------------
 
 Artefacts
@@ -17,6 +17,10 @@ Artefacts
 Branches, Environment
 ---------------------
 * The Slime Pits now have many new endings, instead of one fixed ending.
+* Fast-moving adventurers can find gems at the bottom of many branches.
+  These have no use, but are great for bragging rights.
+* Negative energy clouds have been replaced with clouds of excruciating
+  misery, which deal damage based on max HP %.
 * The Ecumenical Temple is now fully mapped on entry.
 
 Character
@@ -24,24 +28,18 @@ Character
 * New skill: Shapeshifting, used for talismans.
 * New background: Shapeshifter, replacing Transmuter. Shapeshifters enter the
   dungeon with a beast talisman, a potion of lignification, and an animal skin.
+* Merged skills: Poison Magic and Transmutations have been merged into Alchemy.
+* Reworked background: Venom Mage has become Alchemist, which has the reworked
+  spells Mercury Vapours and Sticky Flame, along with Sting, Mephitic Cloud,
+  and Olgreb's Toxic Radiance.
 * Reworked Hexslinger, which now starts with new spells Jinxbite, Sigil of
   Binding, and Dimensional Bullseye, along with Inner Flame and Cause Fear.
-* At XL 7, Armataurs regenerate when rampaging. Their max HP is reduced.
-* Felids now get an extra life at XL 1, and don't lose XLs on dying.
-  They also have higher base health, but no longer have fast movement.
-* Tengu now have inherent Acrobat (+15 EV after moving/waiting) at XL 1.
-  They now gain +4 EV at XL7 instead of a 20% EV bonus.
-* Mummies now get their first necromancy enhancer at XL 1, not 3.
-* Vine Stalkers now get regeneration at XL 1, not 4.
-* Djinn now use all magic skills, instead of only Spellcasting. Djinn can
-  only choose to train all magic skills or none.
-* Ghouls start with an additional +4 Int.
+* Conjurers no longer start with Dazzling Flash.
 * Shields no longer degrade in effectiveness with each hit taken per-turn.
   Instead, they now have a limit on per-turn blocks, based on shield type.
 * New mutation: persistent drain, which makes HP drain take more XP to cure.
 * Unarmed combat is now more accurate for players.
 * Players no longer get an accuracy bonus from being in certain forms.
-* Formicids can no longer be involuntarily shafted.
 * Hunters and Chaos Knights now start with scrolls of butterflies instead
   of immolation and xom's chesspieces, respectively.
 
@@ -123,8 +121,12 @@ Monsters
     gang of skysharks.
   - Maurice is now a vine stalker, with high regen and antimagic bites.
   - Erica is now an octopode, with constriction and a more focused spell set.
-  - Frederick has a new spell set.
+  - Xtahua is considerably stronger.
+  - Frederick has a new spell set, and is much stronger.
+  - Azrael no longer casts Sticky Flame.
 * Other new and returned monsters:
+  - Bombardier beetles, an early monster that shoots sticky flame.
+  - Protean progenitors, which split into shapeshifting fragments when slain.
   - Kobold blastminers, who blast enemies with alchemical cannons and get sent
     flying backwards by the recoil.
   - Brain worms, which eat magic and minds alike.
@@ -134,12 +136,20 @@ Monsters
   - Crocodiles, which drag victims backward.
 * Other changes to individual monsters:
   - Alligators and reapers are a bit weaker, but drag victims backward.
-  - Ufetubi and tengu warriors now slip behind their foe before meleeing.
+  - Ufetubi, tengu warriors, and draconian monks now slip behind their foes
+    before meleeing.
   - Tengu reavers now have rMsl.
-  - 'Wizard' has been renamed to 'occulist' and is now somewhat stronger.
+  - 'Wizard' has been renamed to 'occulist' and has a new spell set.
   - Great orbs of eyes have a new spell set, and are slightly stronger.
+  - Cacodemons now Vitrify instead of casting Slow/Confuse.
+  - Killer Klowns now Vitrify instead of Polymorphing.
+  - Monsters which cast Energy Bolt now instead cast Bolt of Devastation,
+    which applies Will/2 temporarily.
   - Deep Elf Elementalists now cast LRD instead of Awaken Earth.
+  - Deep Elf Death Mages are tougher and summon many more lost souls.
   - Red very ugly things now do direct fire damage instead of sticky flame.
+  - Sun moths have a different spellset and melee attack effects.
+  - Wargs are now notably stronger and faster.
   - Abominations' speed is no longer randomized.
 * Attacks of opportunity have been reworked.
   - Monsters now have a chance to attack when moving into melee with a player
@@ -152,12 +162,46 @@ Monsters
   - Giant monsters can now be ensnared by webs and nets.
   - Jellies can no longer be netted or constricted.
   - Allied undead no longer become angry when damaged.
+  - Polymorphing monsters no longer heals them.
   - Monsters no longer use up charges when zapping wands.
   - Monsters can no longer use scrolls or potions.
 * Some monsters now have special dialogue after killing the player.
 
+Species
+-------
+* Ogres have been renamed to Oni.
+  - They heal twice as much from potions, and launch a 'drunken brawling'
+    melee attack against all adjacent foes when drinking healing potions.
+  - Some apts have been improved or tweaked.
+  - They now have Horns 1.
+* Armataurs:
+  - At XL7 and higher, armataurs now regenerate HP and MP when rampaging.
+  - Their 'double potion' effect has been removed.
+  - Their max HP is reduced.
+* Felids now get an extra life at XL 1, and don't lose XLs on dying.
+  They also have higher base health, but no longer have fast movement.
+* Tengu now have inherent Acrobat (+15 EV after moving/waiting) at XL 1.
+  They now gain +4 EV at XL7 instead of a 20% EV bonus.
+* Humans now heal while exploring, but their XP apt is now average.
+* Mummies now get their first necromancy enhancer at XL 1, not 3.
+* Vine Stalkers now get regeneration at XL 1, not 4.
+* Djinn now use all magic skills, instead of only Spellcasting. Djinn can
+  only choose to train all magic skills or none.
+* Ghouls start with an additional +4 Int and +1 MP.
+* Formicids can no longer be involuntarily shafted.
+* Meteorans have been removed.
+
 Spells
 ------
+* Poison Magic and Transmutations have merged into a new Alchemy school.
+  - Poisonous Vapours has been replaced by Mercury Vapours, which can now
+    inflict Weak on the target and other creatures nearby, but has short range.
+  - Sticky Flame is now L4 Fire/Alch (was L4 Fire/Cj), does much more damage,
+    but can be shaken off by non-forced movement.
+  - Ignite Poison is now L4 Fire/Alch (was L3 Fire/Poison/Tmut).
+  - Leda's Liquefaction is now L3 Earth / Alch (was L4 Earth / Hexes).
+  - Sting is now Cj/Alch (was Pois/Tmut), and has more range and damage.
+  - Fulminant Prism is now Cj/Alch (was Cj/Hex).
 * New spells:
   - Jinxbite (L2 Hex): deals additional Will-checking damage to foes attacked
     while its duration lasts, but also halves the caster's will.
@@ -166,9 +210,15 @@ Spells
   - Brom's Barrelling Boulder (L4 Earth/Conj): creates a boulder, which crushes
     and knocks back foes and explodes when hitting walls.
 * Replaced spells:
+  - Fugue of the Fallen (replacing Wereblood): Now L3 Necro (was L2 Tmut),
+    triggers on ally kills as well as the player's, inflicts pain on nearby
+    foes at max power, caps at +7 (was +9), and no longer gives minor healing.
   - Dimensional Bullseye (replacing Portal Projectile): targets a foe and
     teleports all shots fired at other foes to also hit the chosen unfortunate.
   - Iron Shot replaced with Bombard, which sometimes knocks back the caster.
+* Call Canine Familiar now summons inugami, dog spirits which scale with power.
+  Recasting the spell heals the dogs and gives them a free cleaving attack, but
+  if the inugami is defeated, it can't be resummoned for some time.
 * Plasma Beam no longer has limited range, but does 10% less damage.
 * Arcjolt now initially arcs to foes within two tiles of the caster.
 * Static Discharge now does more damage, but checks half AC instead of none.
@@ -176,6 +226,7 @@ Spells
 * Swiftness now works in water.
 * Borgnjor's Vile Clutch (and Fastroot) now work on invisible enemies.
 * Borgnjor's Vile Clutch does less damage.
+* Blastmotes now explode when waited in.
 * Many summons now have a shorter duration.
 * Removed: Beastly Appendage, Spider Form, Ice Form, Blade Hands, Statue
   Form, Dragon Form, Storm Form, Necromutation.
