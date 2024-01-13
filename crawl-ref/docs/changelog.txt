@@ -82,7 +82,6 @@ Interface and Options
 * Monster resists from equipment is now used for display and targeting.
 * For many list options, commas can now be escaped with backslash.
 * Polar Vortex and Noxious Bog damage is now displayed.
-* Meteorans can now choose to be warned before exploring or resting.
 * The ctrl-T "toggle travel speed" option has been removed.
 
 Items
