@@ -4821,7 +4821,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (origin_spell == SPELL_STICKY_FLAME)
     {
         const int dur = 3 + random_range(div_rand_round(ench_power, 20),
-                                         div_rand_round(ench_power, 10));
+                                         max(1, div_rand_round(ench_power, 10)));
         sticky_flame_monster(mon, agent(), dur);
     }
     else if (flavour == BEAM_STICKY_FLAME)
