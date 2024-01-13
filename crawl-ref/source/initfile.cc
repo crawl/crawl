@@ -2121,7 +2121,6 @@ string find_crawlrc()
         { "..", "init.txt" },
         { "../settings", "init.txt" },
 #endif
-        { nullptr, nullptr }                // placeholder to mark end
     };
 
     // We'll look for these files in any supplied -rcdirs.
@@ -2148,16 +2147,11 @@ string find_crawlrc()
     }
 
     // Check all possibilities for init.txt
-    for (int i = 0; locations_data[i][1] != nullptr; ++i)
+    for (const auto& row : locations_data)
     {
-        // Don't look at unset options
-        if (locations_data[i][0] != nullptr)
-        {
-            const string rc = catpath(locations_data[i][0],
-                                      locations_data[i][1]);
-            if (file_exists(rc))
-                return rc;
-        }
+        const string rc = catpath(row[0], row[1]);
+        if (file_exists(rc))
+            return rc;
     }
 
     // Last attempt: pick up init.txt from datafile_path, which will
@@ -2249,8 +2243,7 @@ void read_init_file(bool runscripts)
     }
 
     // Load init.txt.
-    const string crawl_rc = find_crawlrc();
-    const string init_file_name(crawl_rc);
+    const string init_file_name = find_crawlrc();
     const string base_file_name = get_base_filename(init_file_name);
 
     /**
@@ -2264,7 +2257,8 @@ void read_init_file(bool runscripts)
     char *cwd = getcwd(NULL, 0);
     if (cwd)
     {
-        const string absolute_crawl_rc = is_absolute_path(crawl_rc) ? crawl_rc : catpath(cwd, crawl_rc);
+        const string absolute_crawl_rc
+            = is_absolute_path(init_file_name) ? init_file_name : catpath(cwd, init_file_name);
         char *resolved = realpath(absolute_crawl_rc.c_str(), NULL);
         if (resolved)
         {
