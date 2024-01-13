@@ -2251,6 +2251,7 @@ void read_init_file(bool runscripts)
     // Load init.txt.
     const string crawl_rc = find_crawlrc();
     const string init_file_name(crawl_rc);
+    const string base_file_name = get_base_filename(init_file_name);
 
     /**
      Mac OS X apps almost always put their user-modifiable configuration files
@@ -2278,12 +2279,8 @@ void read_init_file(bool runscripts)
     FileLineInput f(init_file_name.c_str());
 
     Options.filename = init_file_name;
+    Options.basefilename = base_file_name;
     Options.line_num = 0;
-#ifdef UNIX
-    Options.basefilename = "~/.crawlrc";
-#else
-    Options.basefilename = "init.txt";
-#endif
 
     if (f.error())
         return;
@@ -2310,7 +2307,7 @@ void read_init_file(bool runscripts)
     }
 
     Options.filename     = init_file_name;
-    Options.basefilename = get_base_filename(init_file_name);
+    Options.basefilename = base_file_name;
     Options.line_num     = -1;
 
 #ifdef DEBUG_DIAGNOSTICS
