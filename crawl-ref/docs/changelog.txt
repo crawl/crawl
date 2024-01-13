@@ -154,7 +154,7 @@ Monsters
   - Ufetubi, tengu warriors, and draconian monks now slip behind their foes
     before meleeing.
   - Tengu reavers now have rMsl.
-  - 'Wizard' has been renamed to 'occulist' and has a new spell set.
+  - 'Wizard' has been renamed to 'occultist' and has a new spell set.
   - Worms have turned into ribbon worms, doing less damage but ensnaring.
   - Great orbs of eyes have a new spell set, and are slightly stronger.
   - Cacodemons now Vitrify instead of casting Slow/Confuse.
