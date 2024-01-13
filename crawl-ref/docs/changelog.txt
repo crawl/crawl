@@ -52,8 +52,6 @@ Character
 * Shields no longer degrade in effectiveness with each hit taken per-turn.
   Instead, they now have a limit on per-turn blocks, based on shield type.
 * New mutation: persistent drain, which makes HP drain take more XP to cure.
-* Unarmed combat is now more accurate for players.
-* Players no longer get an accuracy bonus from being in certain forms.
 * Hunters and Chaos Knights now start with scrolls of butterflies instead
   of immolation and xom's chesspieces, respectively.
 
@@ -81,7 +79,6 @@ Interface and Options
 * Monster descriptions have been compacted and made more informative.
 * Monster resists from equipment is now used for display and targeting.
 * For many list options, commas can now be escaped with backslash.
-* Polar Vortex and Noxious Bog damage is now displayed.
 * The ctrl-T "toggle travel speed" option has been removed.
 
 Items
@@ -119,7 +116,6 @@ Items
 * Boomerangs of dispersal have been replaced with darts.
 * Condenser vanes are now more effective at low power.
 * Spectral weapons now share 70% of damage taken (from 50%).
-* Reaching weapons will no longer fail to reach over spectral weapons.
 * Staves of earth now check only 1x AC, but deal 1/3rd damage to fliers.
 * The 'chaos' brand has a new set of possible effects.
 * Wands of light no longer affect undead, plant and nonliving monsters.
