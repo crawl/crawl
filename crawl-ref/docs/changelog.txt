@@ -225,7 +225,7 @@ Spells
   - Sticky Flame is now L4 Fire/Alch (was L4 Fire/Cj), does much more damage,
     but can be shaken off by non-forced movement.
   - Ignite Poison is now L4 Fire/Alch (was L3 Fire/Poison/Tmut).
-  - Leda's Liquefaction is now L3 Earth / Alch (was L4 Earth / Hexes).
+  - Leda's Liquefaction is now L4 Earth / Alch (was L4 Earth / Hexes)
   - Sting is now Cj/Alch (was Pois/Tmut), and has more range and damage.
   - Fulminant Prism is now Cj/Alch (was Cj/Hex).
 * New spells:
@@ -240,21 +240,22 @@ Spells
     triggers on ally kills as well as the player's, inflicts pain on nearby
     foes at max power, caps at +7 (was +9), and no longer gives minor healing.
   - Blazeheart Golem (replacing Guardian Golem): Now L4 Summ/Fire (was L3
-    Summ/Hex). Now has slow, powerful, self-damaging fire melee, and blows up
-    one turn after dying. Only functions when the player is adjacent.
+    Summ/Hex). Now has slow, powerful, self-damaging melee, and blows up one
+    turn after dying. Only functions when the player is adjacent.
   - Martyr's Knell (replacing Guardian Golem): L4 Summ/Necro. Summons a shade
     that absorbs damage taken by other allies. Becomes a flayed ghost on death.
   - Dimensional Bullseye (replacing Portal Projectile): targets a foe and
     teleports all shots fired at other foes to also hit the chosen unfortunate.
   - Curse of Agony (replacing Agony). Hexed foes have their health halved after
-    the next two attacks the caster launches against them.
+    each of the next two melee attacks the caster lands against them.
   - Bombard (replacing Iron Shot). Sometimes knocks back the caster.
   - Sculpt Simulacrum (replacing Simulacrum). L6 Ice/Alch (was L6 Ice/Necro).
     Creates simulacra of an adjacent foe after a few turns.
 * Call Canine Familiar now summons inugami, dog spirits which scale with power.
   Recasting the spell heals the dogs and gives them a free cleaving attack, but
   if the inugami is defeated, it can't be resummoned for some time.
-* Passwall is now L3 (was L2). It now has fixed range and gives temporary AC.
+* Passwall is now L3 Earth (was L2 Earth/Tmut). It now has fixed range and gives
+  temporary AC.
 * Petrify can now chain two up to two nearby foes.
 * Summon Ice Beast is now L3 (was L4).
 * Plasma Beam no longer has limited range, but does 10% less damage.
