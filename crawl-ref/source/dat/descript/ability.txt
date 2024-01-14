@@ -269,6 +269,16 @@ Enters you into single combat with a worthy foe. On success, you and the
 challenged foe will be transported to Okawaru's Arena to fight to the death,
 with no escape until you either emerge victorious or are slain.
 %%%%
+Receive Weapon ability
+
+Acquires a weapon from a choice of four. This blessing may only be redeemed
+once.
+%%%%
+Receive Armour ability
+
+Acquires a piece of armour from a choice of four. This blessing may only be
+redeemed once.
+%%%%
 # Makhleb
 Minor Destruction ability
 
