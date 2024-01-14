@@ -2524,9 +2524,9 @@ KMONS:  s = torpor snail / entropy weaver
 KITEM:   O = gossamer rune of Zot
 KITEM:   P = milky-white gem
 KFEAT:   Y = web / floor w:40
-SHUFFLE: OP / QR
+NSUBST:  O = 1:O / 1:P / *:Q
 # thin out monsters and set up loot
-SUBST:   QR = %, 1 = 1..
+SUBST:   Q = %, 1 = 1..
 NSUBST:  % = 2:d / 2:e / 2:f / * = def...
 NSUBST:  3 = 4:j / 1:s / *=2.
 NSUBST:  2 = 6=o. / 2:m / 6=2. / *=1
@@ -2546,7 +2546,7 @@ xc.1..'''"???^???"'''..1.cx
 xc..c..'1c??^^^??c1'..c..cx
 xc.2c..1ccc?^^^?ccc1..c2.cx
 xc1.cc..1c'!^^^!'c1..cc.1cx
-xcP3Oc..1''!^^^!''1..cQ3Rcx
+xcO3Oc..1''!^^^!''1..cO3Ocx
 xc1.cc..1c'!^^^!'c1..cc.1cx
 xc.2c..1ccc?^^^?ccc1..c2.cx
 xc..c..'1c"?^^^?"c1'..c..cx
