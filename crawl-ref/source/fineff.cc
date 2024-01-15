@@ -763,9 +763,9 @@ void make_derived_undead_fineff::fire()
         {
             int dur = undead->type == MONS_SKELETON ? 3 : 5;
 
-            // Sculpt Simulacrum has a shorter duration
+            // Sculpt Simulacrum has a shorter duration than Bind Soul simulacra
             if (spell == SPELL_SIMULACRUM)
-                dur = 2;
+                dur = 3;
 
             undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
         }
