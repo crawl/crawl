@@ -4314,7 +4314,9 @@ static string _player_spell_desc(spell_type spell)
     if (limit)
     {
         description << "You can sustain at most " + number_in_words(limit)
-                    << " creature" << (limit > 1 ? "s" : "")
+                    // Attempt to clarify that flayed ghosts are NOT included in the cap
+                    << (spell == SPELL_MARTYRS_KNELL ? " martyred shade" : " creature")
+                    << (limit > 1 ? "s" : "")
                     << " summoned by this spell.\n";
     }
 
