@@ -2486,56 +2486,54 @@ NAME:   johnstein_spider_rune_arachne_lair
 TAGS:   no_monster_gen
 ORIENT: float
 PLACE:  Spider:$
-KMONS:  j = emperor scorpion / spark wasp w:5 / jorogumo
-KMONS:  m = moth of wrath / ghost moth w:40 / sun moth
-KMONS:  o = orb spider w:40 / demonic crawler
-KMONS:  s = torpor snail / entropy weaver
-# '"-_!?^
-# ABCDEFG
-#pick 1 of 3 different flavors
+# Decorative floor glyphs: '"-_!?^
+# Picks 1 of 3 different flavors.
 : if crawl.one_chance_in(3) then
-    SUBST:  "-? = .
-    SUBST:  '_!^ = Y
-    FTILE:  Y = FLOOR_HALL
-    COLOUR: Y = blue
-    KMONS:  Z = Arachne, jorogumo
-    KMONS:  1 = tarantella / wolf spider / redback w:20 / jumping spider w:30 /\
-                culicivora
-    KMONS:  2 = torpor snail / pharaoh ant
+KMONS:   1 = tarantella / wolf spider / redback w:20 / \
+             jumping spider w:30 / culicivora
+KMONS:   2 = torpor snail / pharaoh ant
+SUBST:   "-? = .
+SUBST:   '_!^ = Y
+FTILE:   Y = FLOOR_HALL
+COLOUR:  Y = blue
 : elseif crawl.one_chance_in(2) then
-    SUBST:  '-! = .
-    SUBST:  "_?^ = Y
-    FTILE:  Y = FLOOR_ROUGH_RED
-    COLOUR: Y = red
-    KMONS:  Z = Arachne, jorogumo
-    KMONS:  1 = redback w:20 / wolf spider / tarantella w:30 / jumping spider /\
-                culicivora
-    KMONS:  2 = entropy weaver / steelbarb worm
+KMONS:   1 = redback w:20 / wolf spider / tarantella w:30 / \
+             jumping spider / culicivora
+KMONS:   2 = entropy weaver / steelbarb worm
+SUBST:   '-! = .
+SUBST:   "_?^ = Y
+COLOUR:  Y = red
+FTILE:   Y = FLOOR_ROUGH_RED
 : else
-    SUBST:  '"_ = .
-    SUBST:  -!?^ = Y
-    FTILE:  Y = FLOOR_SANDSTONE
-    COLOUR: Y = brown
-    KMONS:  Z = Arachne, jorogumo
-    KMONS:  1 = tarantella / wolf spider w:30 / redback w:20 / jumping spider /\
-                culicivora
-    KMONS:  2 = meliai / spark wasp w:5
+KMONS:   1 = tarantella / wolf spider w:30 / redback w:20 / \
+             jumping spider / culicivora
+KMONS:   2 = meliai / spark wasp w:5
+SUBST:   '"_ = .
+SUBST:   -!?^ = Y
+COLOUR:  Y = brown
+FTILE:   Y = FLOOR_SANDSTONE
 : end
+KMONS:   3 = emperor scorpion / spark wasp w:5 / jorogumo
+KMONS:   4 = moth of wrath / ghost moth w:40 / sun moth
+KMONS:   5 = orb spider w:40 / demonic crawler
+KMONS:   6 = torpor snail / entropy weaver
+KMONS:   Z = Arachne, jorogumo
 KITEM:   O = gossamer rune of Zot
-KITEM:   P = milky-white gem
+KITEM:   o = milky-white gem
 KFEAT:   Y = web / floor w:40
-NSUBST:  O = 1:O / 1:P / *:Q
+SHUFFLE: Gg / Hh / Ii / Jj / Kk / Ll
+SUBST:   G = O, g = o, HhIiJKL = %, jkl = .
 # thin out monsters and set up loot
-SUBST:   Q = %, 1 = 1..
+SUBST:   1 = 1..
 NSUBST:  % = 2:d / 2:e / 2:f / * = def...
-NSUBST:  3 = 4:j / 1:s / *=2.
-NSUBST:  2 = 6=o. / 2:m / 6=2. / *=1
+NSUBST:  2 = 6 = 5. / 2:4 / 6 = 2. / *:1
+NSUBST:  3 = 4:3 / 1:6 / * = 2.
 : setup_endvault_loot(_G)
 MAP
     .......@@@@@.......
-   ..cccccco...occcccc..
-   .cc.Occcc+++ccccO.cc.
-   cc.m.c..2.2.2..c.m.cc
+   ..cccccc5...5cccccc..
+   .cc.Gcccc+++ccccH.cc.
+   ccg4.c..2.2.2..c.4hcc
   cc..3cc.2.2Z2.2.cc3..cc
  xc...cc.2'''''''2.cc...cx
  xc.2cc..1c''!''c1..cc2.cx
@@ -2546,7 +2544,7 @@ xc.1..'''"???^???"'''..1.cx
 xc..c..'1c??^^^??c1'..c..cx
 xc.2c..1ccc?^^^?ccc1..c2.cx
 xc1.cc..1c'!^^^!'c1..cc.1cx
-xcO3Oc..1''!^^^!''1..cO3Ocx
+xcI3ic..1''!^^^!''1..cj3Jcx
 xc1.cc..1c'!^^^!'c1..cc.1cx
 xc.2c..1ccc?^^^?ccc1..c2.cx
 xc..c..'1c"?^^^?"c1'..c..cx
@@ -2564,8 +2562,8 @@ xcc.1''''_""???""_''''1.ccx
    c..cc1.cc.1.cc.1cc..c
    cc1.cc..c111c..cc.1cc
     cc.3cc%c.1.c%cc3.cc
-     cc.mccc...cccm.cc
-     .cc.Occo.occO.cc.
+     cck4ccc...ccc4lcc
+     .cc.Kcc5.5ccL.cc.
      ..ccccc...ccccc..
       .....@@@@@.....
 ENDMAP
