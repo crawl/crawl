@@ -554,7 +554,7 @@ static void _recap_ability_keys(vector<string> &keys)
     {
         strip_suffix(key, "ability");
         // get the real name
-        key = make_stringf("%s ability", ability_name(ability_by_name(key)));
+        key = make_stringf("%s ability", ability_name(ability_by_name(key)).c_str());
     }
 }
 

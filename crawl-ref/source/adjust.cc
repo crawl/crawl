@@ -175,7 +175,7 @@ static void _adjust_ability()
 
     char old_key = static_cast<char>(talents[selected].hotkey);
 
-    mprf_nocap("%c - %s", old_key, ability_name(talents[selected].which));
+    mprf_nocap("%c - %s", old_key, ability_name(talents[selected].which).c_str());
 
     const int index1 = letter_to_index(old_key);
 
