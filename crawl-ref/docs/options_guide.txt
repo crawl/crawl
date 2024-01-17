@@ -1809,7 +1809,7 @@ always_show_gems = false
         Whether to show the "Gem" status light, indicating how long until the
         gem in the current branch shatters (if applicable).
 
-more_gem_info = true
+more_gem_info = false
         Whether to show held gem time limits and sfx for shattering.
 
 action_panel_show = true
