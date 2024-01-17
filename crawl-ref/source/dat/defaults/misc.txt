@@ -13,7 +13,7 @@ note_messages += protects you from harm
 note_messages += You (fall|are sucked) into a shaft
 note_monsters += orb of fire, ancient lich, dread lich, Sigmund
 
-monster_item_view_features += stair, trap
+monster_item_view_features += stair, trap, runelight
 
 # Dangerous and non-tactical items
 action_panel_filter  = attraction,degeneration,experience,mutation
