@@ -4,7 +4,7 @@ Stone Soup 0.31 (20240119)
 Highlights
 ----------
 * New skill and background: Shapeshifters, using Talismans to change forms.
-* New skill and background: Alchemists, melding Venom Magic and Transmutation.
+* New skill and background: Alchemists, melding Poison Magic and Transmutation.
 * A variety of exciting new spells for sorcerers and sword-slingers alike.
 * Many dangerous new monsters, from the early Dungeon to the Realm of Zot.
 * Major changes to many species.
@@ -217,12 +217,12 @@ Spells
 * Poison Magic and Transmutations have merged into a new Alchemy school.
   - Poisonous Vapours has been replaced by Mercury Vapours, which can now
     inflict Weak on the target and other creatures nearby, but has short range.
-  - Sticky Flame is now L4 Fire/Alch (was L4 Fire/Cj), does much more damage,
-    but can be shaken off by non-forced movement.
+  - Sticky Flame is now L4 Fire/Alch (was L4 Fire/Conj), does much more
+    damage, but can be shaken off by non-forced movement.
   - Ignite Poison is now L4 Fire/Alch (was L3 Fire/Poison/Tmut).
   - Leda's Liquefaction is now L4 Earth / Alch (was L4 Earth / Hexes)
-  - Sting is now Cj/Alch (was Pois/Tmut), and has more range and damage.
-  - Fulminant Prism is now Cj/Alch (was Cj/Hex).
+  - Sting is now Conj/Alch (was Pois/Tmut), and has more range and damage.
+  - Fulminant Prism is now Conj/Alch (was Conj/Hex).
 * New spells:
   - Jinxbite (L2 Hex): deals additional Will-checking damage to foes attacked
     while its duration lasts, but also halves the caster's will.
@@ -230,6 +230,8 @@ Spells
     temporarily bind hapless victims in place.
   - Brom's Barrelling Boulder (L4 Earth/Conj): creates a boulder, which crushes
     and knocks back foes and explodes when hitting walls.
+  - Martyr's Knell: L4 Summ/Necro. Summons a shade that absorbs damage taken
+    by other allies. Becomes a flayed ghost on death.
 * Replaced spells:
   - Fugue of the Fallen (replacing Wereblood): Now L3 Necro (was L2 Tmut),
     triggers on ally kills as well as the player's, inflicts pain on nearby
@@ -237,8 +239,6 @@ Spells
   - Blazeheart Golem (replacing Guardian Golem): Now L4 Summ/Fire (was L3
     Summ/Hex). Now has slow, powerful, self-damaging melee, and blows up one
     turn after dying. Only functions when the player is adjacent.
-  - Martyr's Knell (replacing Guardian Golem): L4 Summ/Necro. Summons a shade
-    that absorbs damage taken by other allies. Becomes a flayed ghost on death.
   - Dimensional Bullseye (replacing Portal Projectile): targets a foe and
     teleports all shots fired at other foes to also hit the chosen unfortunate.
   - Curse of Agony (replacing Agony). Hexed foes have their health halved after
@@ -251,7 +251,8 @@ Spells
   if the inugami is defeated, it can't be resummoned for some time.
 * Passwall is now L3 Earth (was L2 Earth/Tmut). It now has fixed range and gives
   temporary AC.
-* Petrify can now chain two up to two nearby foes.
+* Petrify can now chain its effect on up to two other adjacent foes, but has
+  its range reduced to 6.
 * Summon Ice Beast is now L3 (was L4).
 * Plasma Beam no longer has limited range, but does 10% less damage.
 * Arcjolt now initially arcs to foes within two tiles of the caster.
