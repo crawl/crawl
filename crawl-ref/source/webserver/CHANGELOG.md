@@ -7,7 +7,28 @@ organizing principle, though it is important to know that the webtiles server
 as normally installed (e.g on dgamelaunch-config setups) always runs trunk
 code. This file is updated at least at major releases.
 
-## [0.30-a0 through 0.30-a0-740-g6493da8e45]
+## [0.31-a0 through 0.32-a0-22-g6ae6769602]
+
+## [0.31.0] - 2023-01-18
+
+Major changes:
+- **Breaking change**: Python versions past end of life are **not supported**
+  by webtiles server. (This is a policy change as well as a practical change.)
+  As of the 0.31 release, this means that all webtiles servers must ensure that
+  a Python version of at least 3.8 (end of life: *2024-10*) must be used to
+  run the webtiles server (with associated library available in a chroot).
+
+  See https://devguide.python.org/versions/.
+
+New features:
+- Webtiles lobby idle timer, defaulting to 3 hours. This can be configured via
+  the option `max_lobby_idle_time`.
+
+Fixes, improvements, changes:
+- Fixes to handling of idle crawl processes, process cleanup
+- Fixes to handling of a full disk
+
+## [0.30.0] - The Reavers Return - 2023-05-05
 
 Major changes:
 - Major revamp of game definitions, with the aim of supporting most of the
