@@ -12,6 +12,7 @@ code. This file is updated at least at major releases.
 ## [0.31.0] - 2023-01-18
 
 Major changes:
+
 - **Breaking change**: Python versions past end of life are **not supported**
   by webtiles server. (This is a policy change as well as a practical change.)
   As of the 0.31 release, this means that all webtiles servers must ensure that
@@ -21,16 +22,19 @@ Major changes:
   See https://devguide.python.org/versions/.
 
 New features:
+
 - Webtiles lobby idle timer, defaulting to 3 hours. This can be configured via
   the option `max_lobby_idle_time`.
 
 Fixes, improvements, changes:
+
 - Fixes to handling of idle crawl processes, process cleanup
 - Fixes to handling of a full disk
 
 ## [0.30.0] - The Reavers Return - 2023-05-05
 
 Major changes:
+
 - Major revamp of game definitions, with the aim of supporting most of the
   dgl-config templating techniques (in slightly different ways) directly in
   the webserver. (This revamp is backwards compatible.)
@@ -43,6 +47,7 @@ Major changes:
   versions.
 
 New features:
+
 - Game definition improvements (see `config.py` and `games.d/base.yaml` for
   documentation and examples)
     * Enhanced templating. Game definitions now support templating via version
@@ -90,6 +95,7 @@ New features:
   information. (Not yet game version information.)
 
 Fixes, improvements, changes:
+
 - The webserver will now attempt to impose a `UNIQUE` constraint on the
   username index. For reasons that still remain unclear, extant userdbs may
   violate this constraint. If this happens, the server will still load fine,
@@ -121,15 +127,18 @@ Fixes, improvements, changes:
 ## [0.29.0] - Shooting Stars - 2022-08-23
 
 Major changes:
+
 - **Python 2.7 is officially deprecated.** It is highly recommended to move to
   a recent Python 3 + Tornado version (tested through Python 3.10 and
   Tornado 6.2).
 - Many new community management features developed during the 0.29 cycle.
 
 Documentation:
+
 - Changelog added. (Notes back to 0.25.0 are retroactive)
 
 New features:
+
 - Community management changes:
   * new config option `nick_check_fun` that, if defined, takes a nickname and
     returns a boolean to indicate whether it is (dis)allowed. This supplements
@@ -151,6 +160,7 @@ New features:
   historically dgamelaunch-config setups used SIGHUP for restarting the server.)
 
 Fixes, improvements, changes:
+
 - New account logging is clearer, and more easily extracted from the overall
   log: filter on `Registered`. Also, most account-related log messages now
   include the string `[Account]`.
@@ -159,6 +169,7 @@ Fixes, improvements, changes:
 ## [0.28.0] - The Rise and Fall of Ignis Zotdust and the Spiders from Hell - 2022-02-04
 
 Major changes:
+
 - Major internal code refactor: the server is now its own package (in the python
   sense) and config is separated into a flexible config module that handles
   defaults, and the server-specific `config.py` of old.
@@ -167,6 +178,7 @@ Major changes:
   separate tool (`wtutil.py`) rather than the server script.
 
 New features:
+
 - Command line options via `wtutil.py`:
   * This script now handles any administrative feature accessible via the
     webtiles code that does not involve starting the server. Run it as you
@@ -178,6 +190,7 @@ New features:
   use bad passwords to ban players. This flag works for both ssh and webtiles.
 
 Fixes, improvements, changes:
+
 - Improvements to lobby rendering/messaging and its impact on I/O
 - Log spam on some error conditions has been reduced
 - Lobby glitches on some error conditions have been fixed
@@ -185,11 +198,13 @@ Fixes, improvements, changes:
 ## [0.27.0] - The Cursed Flame - 2021-07-30
 
 Fixes, improvements, changes:
+
 - fixed various bugs that should improve performance and reduce lag
 
 ## [0.26.0] - Roll Around the Clock - 2021-01-08
 
 New features:
+
 - Added command line and web interfaces for manually setting and clearing
   password reset tokens, for use on servers that do not have reset-by email
   enabled. The web interface is in the admin panel, and is disabled by default.
@@ -198,11 +213,13 @@ New features:
 - `lobby_remove` messages now contain information about why the game exited.
 
 Fixes, improvements, changes:
+
 - Compatibility with Tornado 6.1
 
 ## [0.25.0] - Magic Surges Out of Thin Air - 2020-06-12
 
 Major changes:
+
 - The webtiles server now supports python 3 and Tornado 4+. Patched Tornado
   2.4 (used on many servers) is now (soft) deprecated, and backwards
   compatibility will be maintained for a while.
@@ -211,6 +228,7 @@ Major changes:
 - YAML game configuration is supported.
 
 New features:
+
 - "live-debug" mode: call `server.py` with the options `--live-debug` and an
   explicit port (e.g. `-p 8081`) to start up a test-instance designed to run
   side-by-side with a production webtiles server, with the same config. You
@@ -225,5 +243,6 @@ New features:
   a collapsible admin panel in the lobby visible to admin users.
 
 Fixes, improvements, changes:
+
 - Various fixes to login and error handling
 - stuck processes are now killed with SIGABRT, rather than SIGTERM
