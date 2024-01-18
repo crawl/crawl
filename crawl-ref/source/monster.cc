@@ -5573,7 +5573,8 @@ bool monster::matches_player_speed() const
     for (radius_iterator ri(pos(), 5, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
     {
         const monster* m = monster_at(*ri);
-        if (m && !m->wont_attack() && m->visible_to(this))
+        if (m && !m->wont_attack() && !mons_is_firewood(*m)
+              && m->visible_to(this))
             return false;
     }
     return true;
