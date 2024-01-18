@@ -3616,8 +3616,9 @@ ENDMAP
 NAME:   water_maze_lemuel
 TAGS:   no_pool_fixup uniq_water_maze_lemuel no_descent
 WEIGHT: 5
-ITEM:   scroll of teleportation ident:type q:3
 DEPTH:  D:5-, Depths
+KITEM:  > = scroll of teleportation ident:type q:3
+KFEAT:  > = >
 MAP
    wwwwwwwww
   wwcccccccww
