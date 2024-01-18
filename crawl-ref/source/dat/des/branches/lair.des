@@ -2062,22 +2062,22 @@ SUBST:  d = $:3 d:2
 SUBST:  ' = l:15 x:9 c:3
 SUBST:  z = x:3 c:1
 SUBST:  ; = x:3 c:1 .:4
-SUBST:  y = l1:3 .:1
+SUBST:  y = l 1:3 .:1
 SUBST:  % = %:1 .:3
 MAP
 xxxxxzzzzzzzzzxxxxx
 xxxzzzzz..yyzzzxxxx
 xxzzz'...yzydzzzzxx
 xzzz;.B.yzzzddzzzxx
-xzz;.A..y;zzddzzzxx
-xzz;...y''zzzd>zzxx
+xzz;.A..yzzzddzzzxx
+xzz;...y'zzzzd>zzxx
 xzz;'...y'zzzzzzzxx
 xzzz;y..zzzzzzzxxxx
 xzzzzzz;.zzzzzxxxxx
 xxzzzzz.;zzzzzxxxxx
 xxzzzz.yzzzzzzxxlxx
 xxzzzz.;%zzzzxxxlxx
-xxz.y'.Byyyzzzxzxlx
+xxz.y'.Byllzzzxzxlx
 xzyy..y.yyyyxzzxlyx
 ..%....yy..yyzxyy..
 ..y.y...G.y..yy....
