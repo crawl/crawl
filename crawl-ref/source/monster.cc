@@ -5575,7 +5575,9 @@ bool monster::matches_player_speed() const
         const monster* m = monster_at(*ri);
         if (m && !m->wont_attack() && !mons_is_firewood(*m)
               && m->visible_to(this))
+        {
             return false;
+        }
     }
     return true;
 }
