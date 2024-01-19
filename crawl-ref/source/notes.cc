@@ -430,6 +430,9 @@ bool Note::hidden() const
                  || second <= 27 && Options.note_skill_levels[second]
                  || Options.note_skill_max && _is_highest_skill(first));
     }
+    // Hide gems being shattered by default.
+    if (type == NOTE_GEM_LOST)
+        return !Options.more_gem_info;
     return false;
 }
 
