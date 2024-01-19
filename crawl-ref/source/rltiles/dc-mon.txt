@@ -486,6 +486,7 @@ unseen_horror MONS_UNSEEN_HORROR
 %sdir mon/aberrations
 abomination_small MONS_ABOMINATION_SMALL
 abomination_small1
+abomination_small2
 %sdir mon/aquatic
 %rim 0
 octopode MONS_OCTOPODE
