@@ -344,15 +344,19 @@ void incr_gem_clock()
     // lose it!
     if (you.gems_found[gem])
     {
-        mprf("With a frightful flash, the power of Zot shatters your %s gem "
-             "into ten thousand fragments!", gem_adj(gem));
         take_note(Note(NOTE_GEM_LOST, gem));
         mark_milestone("gem.lost", make_stringf("lost the %s gem!",
                                                 gem_adj(gem)));
         you.gems_shattered.set(gem);
-        // Using UA_PICKUP here is dubious.
-        flash_view_delay(UA_PICKUP, MAGENTA, 100);
-        flash_view_delay(UA_PICKUP, LIGHTMAGENTA, 100);
+
+        if (Options.more_gem_info)
+        {
+            mprf("With a frightful flash, the power of Zot shatters your %s gem "
+                 "into ten thousand fragments!", gem_adj(gem));
+            // Using UA_PICKUP here is dubious.
+            flash_view_delay(UA_PICKUP, MAGENTA, 100);
+            flash_view_delay(UA_PICKUP, LIGHTMAGENTA, 100);
+        }
         return;
     }
 
