@@ -6863,10 +6863,19 @@ actor* bolt::agent(bool ignore_reflection) const
         nominal_source = reflector;
     }
 
-    // Check for whether this is actually a dith shadow or wrath avatar, not you
+    // Check for whether this is actually a dith player shadow, not you.
+    // Dith player shadows also have MID_PLAYER and ranged attacks will get
+    // confused and look at the player's launcher if we don't short-circuit here.
+    //
+    // Todo: Not this.
     if (monster* shadow = monster_at(you.pos()))
-        if (shadow->type == MONS_PLAYER_SHADOW && nominal_source == MID_PLAYER)
+    {
+        if (shadow->type == MONS_PLAYER_SHADOW
+            && nominal_source == MID_PLAYER && shadow->mid == MID_PLAYER)
+        {
             return shadow;
+        }
+    }
 
     if (YOU_KILL(nominal_ktype))
         return &you;
