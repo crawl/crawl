@@ -235,6 +235,14 @@ Duel ability
 成功使用这个能力，你和被挑战的敌人将被运送到奥卡瓦鲁的角斗场战斗至死，
 除非你取得胜利或被杀，否则无法逃脱。
 %%%%
+Receive Weapon ability
+
+从四把武器中选取其中一把。这个福泽只能承蒙一次。
+%%%%
+Receive Armour ability
+
+从四件防具中选取其中一件。这个福泽只能承蒙一次。
+%%%%
 # 马科列布
 Minor Destruction ability
 
@@ -314,8 +322,8 @@ Heal Self ability
 %%%%
 Divine Vigour ability
 
-根据祈祷技能，极大地提高你的最大生命和魔法值。
-你当前的生命和魔法值也会成比例增加。
+根据祈祷技能，极大地提高你的最大生命和魔力值。
+你当前的生命和魔力值也会成比例增加。
 %%%%
 # 卢格努
 Depart the Abyss ability
