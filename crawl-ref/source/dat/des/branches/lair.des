@@ -1930,7 +1930,7 @@ NSUBST: 3 = 3 / ., 4 = 4 / ., . = ..`
 KPROP:  ` = bloody
 {{
 if crawl.coinflip() then
-    dgn.delayed_decay(_G, 'a', "dire elephant skeleton")
+    _G.kitem('a = dire elephant skeleton')
 else
     dgn.delayed_decay(_G, 'a', "dire elephant corpse")
 end
@@ -2833,7 +2833,7 @@ KPROP:   ` = bloody
 MARKER:  F = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
          pow_max = 3, delay = 10, start_clouds = 1, size_min = 2, \
          size_max = 3, spread_rate = 33 }
-: dgn.delayed_decay(_G, 'S', "human skeleton")
+KITEM: S = human skeleton
 CLEAR:   _
 MAP
    _____________________
@@ -3468,12 +3468,9 @@ NSUBST:  % = 2:| / 3:* / *:%
 NSUBST:  5 = 2:5 / 3 = 5. / *:.
 NSUBST:  6 = 3:6 / 4 = 6. / *:.
 NSUBST:  7 = 1:7 / 2 = 7. / *:.
-{{
-  dgn.delayed_decay(_G, 'd', "human skeleton / orc skeleton / elf skeleton"
-                             .. " / dwarf skeleton / ogre skeleton w:1"
-                             .. " / naga skeleton w:1 / minotaur skeleton w:1"
-                             .. " / merfolk skeleton w:1")
-}}
+ITEM:    human skeleton / orc skeleton / elf skeleton / dwarf skeleton /\
+         ogre skeleton w:1 / naga skeleton w:1 / minotaur skeleton w:1 /\
+         merfolk skeleton w:1
 MAP
                 xxxxxxxxxxxxxx
           xxxxxxx5P.Pxxxxxxxxx
@@ -3676,11 +3673,8 @@ SUBST:   y = @, zD= ., JK = t, L = p
 SHUFFLE: EFH / JKL / JKL
 SUBST:   E = @, FH= ., JK = t, L = p
 SUBST:   a = tt..., q = pp..., p = tttu, s = rr..., r = tu
-{{
-  dgn.delayed_decay(_G, 'O', "spriggan skeleton / wolf skeleton w:3"
-                             .. " / polar bear skeleton w:2"
-                             .. " / black bear skeleton w:2")
-}}
+KITEM:   O = spriggan skeleton / wolf skeleton w:3 /\
+             polar bear skeleton w:2 / black bear skeleton w:2
 MAP
 ttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttpppppppppppttpppptt

@@ -1126,7 +1126,8 @@ FTILE:  `t = floor_grass, 1'G_> = floor_limestone
 COLOUR: ` = green, 1'G = white
 KPROP:  ` = no_tele_into
 SUBST:  V = VVVT, H = ....H
-: dgn.delayed_decay(_G, 'H', 'human skeleton / elf skeleton')
+# Why elves..?
+KITEM:  H = human skeleton / elf skeleton
 MAP
        ccccccc
        ctttttc

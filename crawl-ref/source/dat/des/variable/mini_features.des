@@ -3681,7 +3681,7 @@ TAGS:   extra transparent no_descent
 WEIGHT: 1
 DEPTH:  D:5-, Depths, Lair, Elf, !Elf:$, Orc
 SUBST:  X = m.
- : dgn.delayed_decay(_G,'A', 'human skeleton')
+KITEM:  A = human skeleton
 # Prevent random teleportation getting you stuck
 KMASK:  AB = opaque
 KPROP:  AB = no_tele_into

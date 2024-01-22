@@ -234,7 +234,7 @@ MONS: sun demon / smoke demon
 : hell_entry_feature(_G, 'H')
 SUBST: y = x..
 SUBST: ; = %A.....l
-: dgn.delayed_decay(_G, '%', 'dwarf skeleton')
+KITEM: % = dwarf skeleton
 KITEM: A = any weapon w:20 / chain mail w:60 / plate armour w:19 / \
            crystal plate armour w:1
 : hell_entry_tier(_G, "mid")

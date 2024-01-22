@@ -977,7 +977,7 @@ FTILE:  Xzvc = floor_orc
 TILE:   X = wall_orc
 TILE:   c = wall_stone_smooth
 COLOUR: Xv = brown
-: dgn.delayed_decay(_G, 'v', 'orc skeleton')
+KITEM:  v = orc skeleton
 MAP
 xxxxxxxxxxxxxxx
 xxxxxxxx......xx
@@ -1015,7 +1015,7 @@ FTILE:  XzvcI_ = floor_orc
 TILE:   X = wall_orc
 TILE:   c = wall_stone_smooth
 COLOUR: Xzv = brown
-: dgn.delayed_decay(_G, 'v', 'orc skeleton')
+KITEM:  v = orc skeleton
 MAP
      xxxxxxxxxxxxx
      @.....xxxxxxx
@@ -1051,7 +1051,7 @@ FTILE:  XzvQ = floor_orc
 TILE:   X = wall_orc
 TILE:   c = wall_stone_smooth
 COLOUR: Xzv = brown
-: dgn.delayed_decay(_G, 'v', 'orc skeleton')
+KITEM:  v = orc skeleton
 MAP
          xxxxxxxxx
 xxxxxxxxxxXXXXXXXxx

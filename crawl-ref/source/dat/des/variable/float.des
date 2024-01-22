@@ -4586,9 +4586,8 @@ MONS:   kobold / kobold brigand w:6, endoplasm / jelly, slime creature
 : else
 MONS:   kobold, endoplasm, jelly
 : end
-: dgn.delayed_decay(_G, 'd', 'goblin skeleton / hobgoblin skeleton ' ..
-:                          '/ rat skeleton / bat skeleton')
-: dgn.delayed_decay_extra(_G, 'e', 'human skeleton', 'star_item')
+ITEM:   goblin skeleton / hobgoblin skeleton / rat skeleton / bat skeleton
+ITEM:   human skeleton, star_item
 NSUBST: ' = 3:1 / 5 = 1. / 1:% / 2 = %.
 NSUBST: " = 5:2 / 5 = 2' / 1:3 / 2 = 3` / 2:d / 3 = d` / *:`
 NSUBST: A = 2 = dAA` / 1:`, B = 2 = dAA. / 1:`
@@ -5246,10 +5245,8 @@ SUBST: = = +, E = D
 : end
 SUBST: D = 1., E = 2.
 NSUBST: 3 = 2:3 / 3.
-{{
-dgn.delayed_decay(_G, '-', 'troll skeleton / minotaur skeleton ' ..
-                           '/ deep dwarf skeleton / ogre skeleton')
-}}
+KITEM: - = troll skeleton / minotaur skeleton / deep dwarf skeleton /\
+           ogre skeleton
 MAP
 ccccccccccc
 =.-...1.-.c
@@ -5391,7 +5388,6 @@ KMONS:  2 = shadow imp
 KMONS:  k = kobold / kobold brigand w:3
 KMONS:  u = kobold skeleton / kobold zombie
 KITEM:  ?1 = kobold skeleton
-: dgn.delayed_decay(_G, '?1', 'kobold skeleton')
 KPROP:  ?A1 = bloody
 KFEAT:  O = altar_kikubaaqudgha
 NSUBST: ' = 1:* / 4:%%- / *:-
@@ -11146,7 +11142,7 @@ KMONS:   2 = deep troll w:15 / spriggan berserker w:15 / stone giant \
 KMONS:   3 = tengu conjurer / deep elf annihilator / deep elf demonologist \
          / titan / deep elf sorcerer / spriggan air mage / lich / vampire mage
 : end
-: dgn.delayed_decay(_G, "DE", "human skeleton")
+KITEM:   DE = human skeleton
 FTILE:   E = floor_rough_lightred
 MARKER:  E = lua:fog_machine { \
                cloud_type = "flame", pow_min = 10, pow_max = 10, delay = 10, \

@@ -824,7 +824,7 @@ NAME:   evilmike_swamp_ruin_house_1
 NSUBST: x = 1:+ / *:x
 SUBST:  yx = xxxxx-, - = ----.
 NSUBST: - = 1:d / *:-
-: dgn.delayed_decay(_G, 'd', 'human skeleton')
+ITEM:   human skeleton
 : swamp_ruins(_G)
 MAP
   ........
@@ -861,7 +861,7 @@ NAME:   evilmike_swamp_ruin_house_3
 NSUBST: x = 1:+ / *:x
 SUBST:  y = x, x = xxxxx-, - = ----.
 NSUBST: - = 1:d / *:-
-: dgn.delayed_decay(_G, 'd', 'human skeleton')
+ITEM:   human skeleton
 : swamp_ruins(_G)
 MAP
     .....
@@ -899,7 +899,7 @@ NAME:   evilmike_swamp_ruin_house_5
 NSUBST: x = 1:+ / *:x
 SUBST:  yx = xxxxx-, - = ----.
 NSUBST: - = 2:d / *:-
-: dgn.delayed_decay(_G, 'd', 'human skeleton')
+ITEM:   human skeleton
 : swamp_ruins(_G)
 MAP
   ............
@@ -1778,11 +1778,7 @@ MARKER: K = lua:fog_machine { cloud_type="black smoke", \
 MARKER: L = lua:fog_machine { cloud_type="flame", \
                               pow_min = 100, pow_max = 100, delay = 100, \
                               size = 1, excl_rad = 0, walk_dist = 0 }
-{{
-  dgn.delayed_decay(_G, 'd',
-                    'human skeleton / elf skeleton / dwarf skeleton' ..
-                    ' / orc skeleton')
-}}
+ITEM:   human skeleton / elf skeleton / dwarf skeleton / orc skeleton
 MAP
      wwwwww
     wwxxxxww
@@ -2373,6 +2369,8 @@ NAME:   nzn_swamp_weyward_sisters
 TAGS:   no_pool_fixup
 DEPTH:  Swamp:2-
 MONS:   patrolling fenstrider witch, fungus, human att:good_neutral
+: dgn.delayed_decay(_G, 'd', 'human corpse')
+KITEM:  e = human skeleton
 KITEM:  f = any good_item no_pickup
 KFEAT:  n = iron_grate
 SUBST:  e = ddee. *:5
@@ -2381,8 +2379,6 @@ NSUBST: 3 = 3 / f / .
 MARKER: O = lua:fog_machine {   cloud_type = "flame", pow_min = 10, \
                                 pow_max = 10, delay = 10, size = 1, \
                                 walk_dist = 0, excl_rad = 0 }
-: dgn.delayed_decay(_G, 'd', 'human corpse')
-: dgn.delayed_decay(_G, 'e', 'human skeleton')
 MAP
     xxxxx@t
     xxOxxWt
@@ -2967,7 +2963,7 @@ KFEAT:   1 = w
 SHUFFLE: LMN, OPQ, RSZ
 NSUBST:  `- = 2=H / 2=H. / .
 SUBST:   LOR = @, MNPQSZ = t, - = .W, ` = wW, D = tww
-: dgn.delayed_decay(_G, 'H', 'hydra skeleton')
+KITEM:   H = hydra skeleton
 MAP
      LLLLM
    ZZLLLLMMM

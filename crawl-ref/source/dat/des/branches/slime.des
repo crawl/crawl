@@ -291,7 +291,7 @@ KMONS: F = fungus
 KMONS: JO_ = jelly / nothing w:5
 KFEAT: O = enter_slime_pits
 KFEAT: _ = altar_jiyva / G w:5
-: dgn.delayed_decay(_G, 'd', 'human skeleton')
+ITEM:  human skeleton
 MAP
 ...J..J...
 ....FF....

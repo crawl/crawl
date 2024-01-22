@@ -2117,7 +2117,7 @@ TAGS:   arrival no_monster_gen
 MONS:   plant
 ORIENT: float
 SUBST:  s = hhh..
-: dgn.delayed_decay(_G, 'h', 'human skeleton')
+KITEM:  h = human skeleton
 MAP
 xxxxxxxxxxxxxx.xxxxxxxxxxxxxx
  tt.......................tt

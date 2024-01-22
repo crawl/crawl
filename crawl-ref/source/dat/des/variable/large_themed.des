@@ -2937,7 +2937,7 @@ KMONS:   8 = glass eye
 KMONS:   9 = tentacled monstrosity
 NSUBST:  127 = 1:., . = 4 = 126. / 2 = 7789 / *:.
 NSUBST:  ' = 1:5 / 1:5' / *:', " = 2 = 34 / *:"
-:     dgn.delayed_decay(_G, "%", "any skeleton")
+KITEM:   % = any skeleton
 :   end
 :   if crawl.coinflip() then
 FTILE:   "defghijk34 = floor_tomb

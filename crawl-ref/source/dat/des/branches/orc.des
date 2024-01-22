@@ -822,7 +822,7 @@ MONS:   fungus
 KMONS:  K = kraken
 KFEAT:  K = w
 SUBST:  d = dd., 1 = 1., X = x., } = })]
-: dgn.delayed_decay(_G, 'd', 'orc skeleton')
+ITEM:   orc skeleton
 MAP
     xxxxxxxx
    xx111nccx
@@ -2220,8 +2220,8 @@ MONS:   orc warrior / kobold blastminer w:4 / two-headed ogre w:2
 MONS:   orc priest, orc wizard, orc
 MARKER: O = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
                               delay = 10, size = 1, excl_rad = 0 }
-: dgn.delayed_decay(_G, 'd', 'yak skeleton')
-: dgn.delayed_decay(_G, 'e', 'wyvern skeleton')
+ITEM:   yak skeleton
+ITEM:   wyvern skeleton
 KFEAT:  A = any shop
 MAP
       ccccccc

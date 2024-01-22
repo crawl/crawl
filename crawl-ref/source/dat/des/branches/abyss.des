@@ -434,7 +434,7 @@ SUBST:   o = t, p = G, q = w, r = W, s = l
 SUBST:   J = x, K = c, L = v, MN = m, O = 1, P = 2, Q = 3, RS = b
 CLEAR:   -
 SHUFFLE: AACCTTUUVYYdeefghi, tGGwWlI, xxccvvbbmm+123
-: dgn.delayed_decay(_G, '%', 'human skeleton')
+KITEM:   % = human skeleton
 MAP
         .....
         .LqL.

@@ -445,7 +445,7 @@ TAGS:   transparent
 MONS:   plant
 SUBST:  z = t111
 SUBST:  1 = 11'
-KITEM:  E = never_decay gnoll bouda skeleton / never_decay gnoll skeleton
+KITEM:  E = gnoll bouda skeleton / gnoll skeleton
 KPROP:  E = no_tele_into
 KMASK:  E = opaque
 FTILE:  1Et'_  = floor_grass
@@ -864,18 +864,14 @@ SUBST:  . = .:90 '
 SUBST:  T = TV Y:1
 KPROP:  ' = bloody
 KITEM:  _ = stone q:1 / large rock q:1 w:3
+ITEM:   human skeleton / kobold skeleton / elf skeleton / gnoll skeleton /\
+        ogre skeleton / naga skeleton / minotaur skeleton / merfolk skeleton /\
+        tengu skeleton / draconian skeleton
 : if you.absdepth() > 1 then
 MONS: orc
 : else
 MONS: rat / giant cockroach / dart slug
 : end
-{{
-  dgn.delayed_decay(_G, 'd', "human skeleton / kobold skeleton / elf skeleton"
-                             .. " / gnoll skeleton / ogre skeleton"
-                             .. " / naga skeleton / minotaur skeleton"
-                             .. " / merfolk skeleton / tengu skeleton"
-                             .. " / draconian skeleton")
-}}
 : ecumenical_altar_setup(_G)
 MAP
        xxx
@@ -947,7 +943,7 @@ COLOUR: G = lightgrey
 TILE:   G = dngn_crumbled_column
 : set_feature_name("granite_statue", "ash-covered pillar")
 NSUBST: ' = 10=..C / 5=.C
-: dgn.delayed_decay(_G, "C", "human skeleton w:20 / minotaur skeleton w:1")
+KITEM:  C = human skeleton w:20 / minotaur skeleton w:1
 : ecumenical_altar_setup(_G)
 MAP
 xxxxxxx
@@ -1012,13 +1008,13 @@ ENDMAP
 NAME:   dreamdust_ecumenical_altar_hidden_monk_grotto
 TAGS:   transparent
 KMONS:  p = plant / fungus
-: dgn.delayed_decay_extra(_G, "!", "human skeleton", "robe mundane")
+KITEM:  h = human skeleton, robe mundane
 SUBST:  ? = pW
 : ecumenical_altar_setup(_G)
 MAP
    xxxxx
  xxxt_txxx
-xxp.!...pxx
+xxp.h...pxx
 xp..?W?..px
 xx..?W?..xx
  xxp...pxx

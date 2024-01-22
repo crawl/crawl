@@ -2204,7 +2204,7 @@ SHUFFLE: qrs
 SUBST:   q = ., rs = x
 SUBST:   + : ++., Z : Z.., { = {([})]CC<>dd$VVV
 TILE:    m = dngn_transparent_wall_darkgray
-: dgn.delayed_decay(_G, 'd', 'any skeleton')
+ITEM:    any skeleton
 MAP
    ..x..x..x..x..
   ...............

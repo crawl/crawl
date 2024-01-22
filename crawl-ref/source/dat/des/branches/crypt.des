@@ -624,7 +624,7 @@ KFEAT: _ = altar_kikubaaqudgha w:15 / altar_yredelemnul w:15 / \
            altar_dithmenos w:5 / altar_the_shining_one w:1
 KMONS: 0 = zombie / skeleton
 KMONS: P = withered plant
-: dgn.delayed_decay(_G, 'e', 'human skeleton / orc skeleton / elf skeleton')
+KITEM: e = human skeleton / orc skeleton / elf skeleton
 TILE: t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
 MAP

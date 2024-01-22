@@ -165,7 +165,7 @@ MARKER:  % = lua:fog_machine { cloud_type = "black smoke", pow_min = 10, \
 COLOUR:  .012345D% = w:20 lightgrey / w:5 darkgrey
 FTILE:   .+n012345D% = floor_tomb
 SHUFFLE: 1234
-: dgn.delayed_decay(_G, '%', 'ugly thing skeleton')
+KITEM:   % = ugly thing skeleton
 : init_research(_G, 'necromancy')
 MAP
 @'''@'''@
