@@ -1290,6 +1290,11 @@ static int _describe_mutation(const string &key, const string &suffix,
     const string mutation_name = key.substr(0, key.size() - suffix.size());
     const mutation_type mutation = mutation_from_name(mutation_name.c_str(),
                                                       false);
+    if (mutation == NUM_MUTATIONS) // oops! someone messed up!
+    {
+        ui::error(make_stringf("Unable to get '%s' by name", key.c_str()));
+        return 0;
+    }
     describe_mutation(mutation);
     return 0;
 }
