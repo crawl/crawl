@@ -891,7 +891,7 @@ w:1
 @The_weapon@呻吟着：“你不过是依仗{{ if you.god() == "No God" then return "我的剑刃"
 else return "@player_god@"; end }}的力量罢了，你自己只是个[懦夫|胆小鬼|怯夫|窝囊废|孱头|脓包]。”
 
-@The_weapon@想弄明白：“谁更无能	——是你还是敌人？”
+@The_weapon@想弄明白：“谁更无能——是你还是敌人？”
 
 @The_weapon@说：“他们的哭声，他们的眼泪，我再也受不了了。”
 
