@@ -410,7 +410,7 @@ demonic magic mutation
 效果会更为强大，但具有更强意志力的怪物能够抵御它。这个变异每升一级，
 就能影响更远的怪物。这个变异达到第三级，你在挥动魔杖时也能麻痹怪物。
 %%%%
-noise dampening mutation
+noise suppression mutation
 
 你的周围环境更安静，在视线中的任何地方减少了噪音传播的距离。
 %%%%
@@ -547,7 +547,7 @@ nightstalker mutation
 
 你适应了阴影，减小了你能看到和被看到的距离。
 %%%%
-daystalker mutation
++LOS mutation
 
 你生来就向着光，增加了你能看到和被看到的距离。
 %%%%
