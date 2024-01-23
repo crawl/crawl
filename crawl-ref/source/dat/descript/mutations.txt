@@ -120,11 +120,6 @@ camouflage mutation
 Your skin changes colour to match your surroundings. Each level of this
 mutation provides Stealth+.
 %%%%
-noise suppression mutation
-
-You passively dampen all noise in your surroundings, making it easier to avoid
-drawing attention to your activities.
-%%%%
 # ------ Auxes -----
 horns mutation
 
