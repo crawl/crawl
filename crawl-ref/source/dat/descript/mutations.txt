@@ -478,7 +478,7 @@ monsters with greater Willpower can resist it. Each level of this mutation
 allows more distant monsters to be affected. The third level of this mutation
 also allows you to paralyse monsters in the same way while zapping wands.
 %%%%
-noise dampening mutation
+noise suppression mutation
 
 Your surroundings are quieter, reducing the distance that noise will travel
 from any place you can see.
@@ -628,7 +628,7 @@ nightstalker mutation
 You are attuned to the shadows, reducing the distance that you can see or be
 seen from.
 %%%%
-daystalker mutation
++LOS mutation
 
 You are born to the light, increasing the distance that you can see and be seen
 from.
