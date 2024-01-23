@@ -489,7 +489,12 @@ static bool _status_filter(string key, string /*body*/)
 
 static bool _mutation_filter(string key, string /*body*/)
 {
-    return !strip_suffix(lowercase(key), " mutation");
+    lowercase(key);
+
+    if (!strip_suffix(key, " mutation"))
+        return true;
+
+    return starts_with(key, "potion of"); // hack alert!
 }
 
 static bool _passive_filter(string key, string /*body*/)
