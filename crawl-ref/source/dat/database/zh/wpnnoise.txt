@@ -95,7 +95,6 @@ w:1
 # 聒噪的武器喜欢饶舌，模仿地牢的声音。
 #
 # 下面的所有语句（除了“SOUND:你听到@weapon_noise@”）也适用于唱歌剑。
-#
 # 请注意@Your_weapon@会被分别解析为“唱歌剑”或“Your [武器]”
 # （根据shouts.cc中的noisy_equipment()函数）。
 #
@@ -887,7 +886,7 @@ w:1
 
 @The_weapon@评判道：“你不是个艺术家，顶多是个工匠。”
 
-@The_weapon@说:“他们得撬开你那冰冷、僵硬手，才能夺走我。”
+@The_weapon@说：“他们得撬开你那冰冷、僵硬手，才能夺走我。”
 
 @The_weapon@呻吟着：“你不过是依仗{{ if you.god() == "No God" then return "我的剑刃"
 else return "@player_god@"; end }}的力量罢了，你自己只是个[懦夫|胆小鬼|怯夫|窝囊废|孱头|脓包]。”
@@ -944,7 +943,7 @@ _speaking_low-high_tension_
 @The_weapon@叫道：“慷慨赴义，就在今天！”
 
 # 《昭和歌谣大全集》（村上龙所著的一部小说）
-@The_weapon@说：“谋杀就是这些天里唯一有意义的事。"
+@The_weapon@说：“谋杀就是这些天里唯一有意义的事。”
 
 w:1
 @The_weapon@说：“他们身体破裂，我的血脉深处在狂喜。”
@@ -960,7 +959,7 @@ w:1
 %%%%
 _speaking_high_tension_
 
-@The_weapon@喊道:“我在此以鲜血祝圣这些殿堂！”
+@The_weapon@喊道：“我在此以鲜血祝圣这些殿堂！”
 
 # 在圣战士发出“上帝所愿”的战吼之后
 @The_weapon@吼道：“这是{{ if you.god() == "No God" then return "@_godless_sorter_@"; else return "@player_god@"; end }}的旨意！”
@@ -1386,7 +1385,7 @@ w:1
 @The_weapon@用雷鸣般的男低音唱道：“嘿哒！嘿哒！嘿哆！”
 
 w:1
-@The_weapon@用低沉的男低音唱道：“劫掠的符文藏在……它的红光之中……”
+@The_weapon@用低沉的男低音唱道：“劫掠的符文藏在……它的闪光之中……”
 
 w:1
 @The_weapon@用嘲弄的男高音唱道：“随你的命令，我乐意带领你——我们深入地底：可要寻求宝珠？”
