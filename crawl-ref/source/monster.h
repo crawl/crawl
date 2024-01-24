@@ -563,6 +563,11 @@ public:
     bool has_facet(int facet) const;
     bool angered_by_attacks() const;
 
+    bool is_band_follower_of(const monster& leader) const;
+    bool is_band_leader_of(const monster& follower) const;
+    monster* get_band_leader() const;
+    void set_band_leader(const monster& leader);
+
 private:
     int hit_dice;
 

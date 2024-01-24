@@ -101,7 +101,6 @@ bool mons_matches_daction(const monster* mon, daction_type act)
     // Not a stored counter:
     case DACT_PIKEL_MINIONS:
         return mon->type == MONS_LEMURE
-               && testbits(mon->flags, MF_BAND_MEMBER)
                && mon->props.exists(PIKEL_BAND_KEY);
 
     case DACT_OLD_CHARMD_SOULS_POOF:

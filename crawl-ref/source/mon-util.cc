@@ -3975,19 +3975,11 @@ bool monster_senior(const monster& m1, const monster& m2, bool fleeing)
 
     // Band leaders can displace followers regardless of type considerations.
     // -cao
-    if (m2.props.exists(BAND_LEADER_KEY))
-    {
-        unsigned leader_mid = m2.props[BAND_LEADER_KEY].get_int();
-        if (leader_mid == m1.mid)
-            return true;
-    }
+    if (m1.is_band_leader_of(m2))
+        return true;
     // And prevent followers to displace the leader to avoid constant swapping.
-    else if (m1.props.exists(BAND_LEADER_KEY))
-    {
-        unsigned leader_mid = m1.props[BAND_LEADER_KEY].get_int();
-        if (leader_mid == m2.mid)
-            return false;
-    }
+    else if (m1.is_band_follower_of(m2))
+        return false;
 
     // Monsters smart enough to use stairs can push past monsters too stupid
     // to use stairs (so that e.g. non-zombified or spectral zombified undead

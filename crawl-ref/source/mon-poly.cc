@@ -216,7 +216,7 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     // the actual polymorphing:
     auto flags =
         mons->flags & ~(MF_SEEN | MF_ATT_CHANGE_ATTEMPT
-                           | MF_WAS_IN_VIEW | MF_BAND_MEMBER | MF_KNOWN_SHIFTER
+                           | MF_WAS_IN_VIEW | MF_BAND_FOLLOWER | MF_KNOWN_SHIFTER
                            | MF_MELEE_MASK);
     flags |= MF_POLYMORPHED;
     string name;
