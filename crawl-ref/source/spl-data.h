@@ -3512,7 +3512,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SCORCH, "Scorch",
     spschool::fire,
-    spflag::no_ghost | spflag::destructive,
+    spflag::destructive,
     2,
     50,
     3, 3,

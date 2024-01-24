@@ -126,6 +126,7 @@ static ai_action::goodness _foe_wl_lower_goodness(const monster &caster);
 static ai_action::goodness _foe_vitrify_goodness(const monster &caster);
 static ai_action::goodness _still_winds_goodness(const monster &caster);
 static ai_action::goodness _arcjolt_goodness(const monster &caster);
+static ai_action::goodness _scorch_goodness(const monster& caster);
 static ai_action::goodness _foe_near_wall(const monster &caster);
 static ai_action::goodness _foe_not_nearby(const monster &caster);
 static ai_action::goodness _foe_near_lava(const monster &caster);
@@ -359,6 +360,12 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         [](monster &caster, mon_spell_slot, bolt&) {
             const int pow = mons_spellpower(caster, SPELL_ARCJOLT);
             cast_arcjolt(pow, caster, false);
+        },
+    } },
+    { SPELL_SCORCH, { _scorch_goodness,
+        [](monster &caster, mon_spell_slot, bolt&) {
+            const int pow = mons_spellpower(caster, SPELL_SCORCH);
+            cast_scorch(caster, pow, false);
         },
     } },
     { SPELL_SMITING, { _always_worthwhile, _cast_smiting, } },
@@ -2759,6 +2766,18 @@ static ai_action::goodness _arcjolt_goodness(const monster &caster)
     }
 
     return mons_should_fire(tracer) ? ai_action::good() : ai_action::bad();
+}
+
+static ai_action::goodness _scorch_goodness(const monster& caster)
+{
+    auto targeter = make_unique<targeter_scorch>(caster, 3, true);
+    for (auto ti = targeter->affected_iterator(AFF_MAYBE); ti; ++ti)
+    {
+        if (actor_at(*ti)->res_fire() < 3)
+            return ai_action::good();
+    }
+
+    return ai_action::impossible();
 }
 
 /// Should the given monster cast Still Winds?
