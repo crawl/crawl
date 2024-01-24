@@ -134,9 +134,9 @@ dice_def ramparts_damage(int pow, bool random = true);
 
 bool wait_spell_active(spell_type spell);
 
-spret cast_searing_ray(int pow, bolt &beam, bool fail);
-void handle_searing_ray();
-void end_searing_ray();
+spret cast_searing_ray(actor& agent, int pow, bolt &beam, bool fail);
+bool handle_searing_ray(actor& agent);
+void end_searing_ray(actor& agent);
 
 vector<monster *> find_maxwells_possibles();
 spret cast_maxwells_coupling(int pow, bool fail, bool tracer = false);

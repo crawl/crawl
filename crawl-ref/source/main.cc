@@ -2815,7 +2815,7 @@ static void _do_berserk_no_combat_penalty()
  */
 static void _do_wait_spells()
 {
-    handle_searing_ray();
+    handle_searing_ray(you);
     handle_maxwells_coupling();
     handle_flame_wave();
 }
