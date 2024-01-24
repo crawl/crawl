@@ -147,6 +147,7 @@ static void _setup_fake_beam(bolt& beam, const monster&, int = -1);
 static void _branch_summon(monster &caster, mon_spell_slot slot, bolt&);
 static void _branch_summon_helper(monster* mons, spell_type spell_cast);
 static void _cast_marshlight(monster &caster, mon_spell_slot slot, bolt&);
+static void _cast_foxfire(monster &caster, mon_spell_slot slot, bolt&);
 static bool _prepare_ghostly_sacrifice(monster &caster, bolt &beam);
 static void _setup_ghostly_beam(bolt &beam, int power, int dice);
 static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
@@ -354,6 +355,10 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_MARSHLIGHT, {
        _always_worthwhile,
        _cast_marshlight,
+    } },
+    { SPELL_FOXFIRE, {
+       _always_worthwhile,
+       _cast_foxfire,
     } },
     { SPELL_STILL_WINDS, { _still_winds_goodness, _cast_still_winds } },
     { SPELL_ARCJOLT, { _arcjolt_goodness,
@@ -1201,6 +1206,7 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_BATTLESPHERE:
         case SPELL_IGNITE_POISON:
         case SPELL_IRRADIATE:
+        case SPELL_FOXFIRE:
             return 6;
 
         case SPELL_SUMMON_DRAGON:
@@ -5103,6 +5109,12 @@ static void _cast_marshlight(monster &mons, mon_spell_slot, bolt&)
 {
     const int pow = mons_spellpower(mons, SPELL_MARSHLIGHT);
     cast_foxfire(mons, pow, GOD_NO_GOD, false, true);
+}
+
+static void _cast_foxfire(monster &mons, mon_spell_slot, bolt&)
+{
+    const int pow = mons_spellpower(mons, SPELL_FOXFIRE);
+    cast_foxfire(mons, pow, GOD_NO_GOD, false, false);
 }
 
 void mons_cast_flay(monster &caster, mon_spell_slot, bolt&)
