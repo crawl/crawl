@@ -1358,10 +1358,10 @@ NAME:    dis_grunt
 MONS:    patrolling Dispater, Hell Sentinel, crystal echidna / iron dragon w:5
 MONS:    caustic shrike / ancient champion w:20
 MONS:    iron golem, quicksilver dragon, cacodemon
-SHUFFLE: AP / BQ / CR / DS / ET
-SUBST:   A = 1, BC = 2, DE = 7
+SHUFFLE: AP / BQ / CR / SY / ET
+SUBST:   A = 1, BC = 2, SE = 7, Y = D
 SUBST:   P = O, QRST = .
-NSUBST:  G = 4:8 / *:G
+NSUBST:  D = 1:D / *:., G = 4:8 / *:G
 TILE:    G = dngn_statue_iron_golem
 COLOUR:  G = cyan
 KMONS:   8 = iron golem
@@ -1400,7 +1400,7 @@ MAP
 ......9v.5.4.+....4...5....vvvvvvv...v54v.........vvvvvv.........v..
 ......vv.....+......3......+.....vvvvv++v........vvvvvvvv........v..
 ......vvvvvvvv.............+...4.v$$$v$$v........vvvvvvvv........v..
-.........vvvvv.G.G.G.G.G.G.v..3..v$$$v$$v..D.....vvvvvvvv.....C..v..
+.........vvvvv.G.G.G.G.G.G.v..3..v$$$v$$v..Y.....vvvvvvvv.....C..v..
 ...........vvv.............v.4.5.+$J$vK|v........vvvvvvvv........v..
 .............vvvvvvvvvvvvvvv.....+|||v||vS......vvvvvvvvvv......Rv..
 ...............vv9.vv4.vv9.vvvvvvvvvvvvvvvvvvvvvv.9v.4v.9vvvvvvvvv..
