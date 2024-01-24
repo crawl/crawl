@@ -886,7 +886,13 @@ void move_player_action(coord_def move)
                     // for players who land on traps, clouds, exclusions, etc,
                     // even if we prevented moving into solid terrain or lava.
                     if (rampage_targ && !rampage_targ->alive())
-                        moving = false;
+                    {
+                        you.time_taken = you.attack_delay().roll();
+                        you.turn_is_over = true;
+                        you.berserk_penalty = 0;
+                        wu_jian_trigger_serpents_lash(false, initial_position);
+                        return;
+                    }
                 }
                 // If we've rampaged, reset initial_position for the second
                 // move.
