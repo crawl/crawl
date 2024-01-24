@@ -360,6 +360,14 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
        _always_worthwhile,
        _cast_foxfire,
     } },
+    { SPELL_SEARING_RAY, {
+       _always_worthwhile,
+       [](monster &caster, mon_spell_slot, bolt& beam) {
+            const int pow = mons_spellpower(caster, SPELL_SEARING_RAY);
+            cast_searing_ray(caster, pow, beam, false);
+        },
+        _zap_setup(SPELL_SEARING_RAY)
+    } },
     { SPELL_STILL_WINDS, { _still_winds_goodness, _cast_still_winds } },
     { SPELL_ARCJOLT, { _arcjolt_goodness,
         [](monster &caster, mon_spell_slot, bolt&) {

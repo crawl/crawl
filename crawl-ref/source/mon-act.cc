@@ -1824,6 +1824,17 @@ void handle_monster_move(monster* mons)
         return;
     }
 
+    if (mons->has_ench(ENCH_CHANNEL_SEARING_RAY))
+    {
+        // If we are continuing to fire searing ray, remain in place.
+        if (handle_searing_ray(*mons))
+        {
+            mons->speed_increment -= non_move_energy;
+            return;
+        }
+        // Otherwise (if it was cancelled or interrupted), take turn as normal
+    }
+
     if (mons->has_ench(ENCH_DAZED) && one_chance_in(4))
     {
         simple_monster_message(*mons, " is lost in a daze.");

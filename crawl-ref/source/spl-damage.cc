@@ -37,6 +37,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-tentacle.h"
 #include "mutation.h"
@@ -3701,115 +3702,176 @@ void end_flame_wave()
     you.props.erase(FLAME_WAVE_KEY);
 }
 
-spret cast_searing_ray(int pow, bolt &beam, bool fail)
+spret cast_searing_ray(actor& agent, int pow, bolt &beam, bool fail)
 {
-    const spret ret = zapping(ZAP_SEARING_RAY, pow, beam, true, nullptr,
-                                   fail);
+    spret ret = spret::success;
+
+    if (agent.is_player())
+        ret = zapping(ZAP_SEARING_RAY, pow, beam, true, nullptr, fail);
+    else
+    {
+        zappy(ZAP_SEARING_RAY, pow, false, beam);
+        beam.fire();
+    }
 
     if (ret == spret::success)
     {
-        monster * mons = monster_at(beam.target);
-        // Special value, used to avoid terminating ray immediately, since we
-        // took a non-wait action on this turn (ie: casting it)
-        you.attribute[ATTR_SEARING_RAY] = -1;
-        you.props[SEARING_RAY_AIM_SPOT_KEY].get_bool() = beam.aimed_at_spot
-                                                            || !mons;
-        you.props[SEARING_RAY_TARGET_KEY].get_coord() = beam.target;
-        you.props[SEARING_RAY_POWER_KEY].get_int() = pow;
+        actor* targ = actor_at(beam.target);
+        agent.props[SEARING_RAY_AIM_SPOT_KEY].get_bool() = beam.aimed_at_spot
+                                                           || !targ;
+        agent.props[SEARING_RAY_TARGET_KEY].get_coord() = beam.target;
+        agent.props[SEARING_RAY_POWER_KEY].get_int() = pow;
 
-        if (mons)
-            you.props[SEARING_RAY_MID_KEY].get_int() = mons->mid;
+        if (targ)
+            agent.props[SEARING_RAY_MID_KEY].get_int() = targ->mid;
 
-        string msg = "(Press <w>%</w> to maintain the ray.)";
-        insert_commands(msg, { CMD_WAIT });
-        mpr(msg);
+        if (agent.is_player())
+        {
+            // Special value, used to avoid terminating ray immediately, since we
+            // took a non-wait action on this turn (ie: casting it)
+            you.attribute[ATTR_SEARING_RAY] = -1;
+
+            string msg = "(Press <w>%</w> to maintain the ray.)";
+            insert_commands(msg, { CMD_WAIT });
+            mpr(msg);
+        }
+        else
+        {
+            int dur = min(3 + pow / 60, 5);
+            mon_enchant ench(ENCH_CHANNEL_SEARING_RAY, 0, &agent, dur);
+            agent.as_monster()->add_ench(ench);
+        }
     }
 
     return ret;
 }
 
-void handle_searing_ray()
+static bool _handle_player_searing_ray()
 {
     if (you.attribute[ATTR_SEARING_RAY] == 0)
-        return;
+        return false;
 
     // Convert prepping value into stage one value (so it can fire next turn)
     if (you.attribute[ATTR_SEARING_RAY] == -1)
     {
         you.attribute[ATTR_SEARING_RAY] = 1;
-        return;
+        return false;
     }
 
     if (crawl_state.prev_cmd != CMD_WAIT)
     {
-        end_searing_ray();
-        return;
+        end_searing_ray(you);
+        return false;
     }
 
     ASSERT_RANGE(you.attribute[ATTR_SEARING_RAY], 1, 4);
 
     if (!can_cast_spells(true))
     {
-        end_searing_ray();
-        return;
+        end_searing_ray(you);
+        return false;
     }
 
     if (!enough_mp(1, true))
     {
         mpr("Without enough magic to sustain it, your searing ray dissipates.");
-        end_searing_ray();
-        return;
+        end_searing_ray(you);
+        return false;
     }
 
-    const zap_type zap = zap_type(ZAP_SEARING_RAY);
-    const int pow = you.props[SEARING_RAY_POWER_KEY].get_int();
+    return true;
+}
 
-    if (!you.props[SEARING_RAY_AIM_SPOT_KEY].get_bool())
+// Returns true if the searing ray still fired this turn
+bool handle_searing_ray(actor& agent)
+{
+    // If a player ray was cancelled or unable to continue, do nothing
+    if (agent.is_player() && !_handle_player_searing_ray())
+        return false;
+
+    const zap_type zap = zap_type(ZAP_SEARING_RAY);
+    const int pow = agent.props[SEARING_RAY_POWER_KEY].get_int();
+
+    if (!agent.props[SEARING_RAY_AIM_SPOT_KEY].get_bool())
     {
-        monster* mons = nullptr;
-        mons = monster_by_mid(you.props[SEARING_RAY_MID_KEY].get_int());
+        actor* targ = actor_by_mid(agent.props[SEARING_RAY_MID_KEY].get_int());
         // homing targeting, save the target location in case it dies or
         // disappears
-        if (mons && mons->alive() && you.can_see(*mons))
-            you.props[SEARING_RAY_TARGET_KEY].get_coord() = mons->pos();
+        if (targ && targ->alive() && agent.can_see(*targ))
+            agent.props[SEARING_RAY_TARGET_KEY].get_coord() = targ->pos();
         else
-            you.props[SEARING_RAY_AIM_SPOT_KEY] = true;
+            agent.props[SEARING_RAY_AIM_SPOT_KEY] = true;
     }
 
     bolt beam;
-    beam.thrower = KILL_YOU_MISSILE;
+    beam.thrower = agent.is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
     beam.range   = calc_spell_range(SPELL_SEARING_RAY, pow);
-    beam.source  = you.pos();
-    beam.target  = you.props[SEARING_RAY_TARGET_KEY].get_coord();
+    beam.source  = agent.pos();
+    beam.target  = agent.props[SEARING_RAY_TARGET_KEY].get_coord();
 
     // If friendlies have moved into the beam path, give a chance to abort
-    if (!player_tracer(zap, pow, beam))
+    if (agent.is_player() && !player_tracer(zap, pow, beam))
     {
         mpr("You stop channelling your searing ray.");
-        end_searing_ray();
-        return;
+        end_searing_ray(you);
+        return false;
     }
 
     zappy(zap, pow, false, beam);
 
-    beam.fire();
-    trigger_battlesphere(&you);
-
-    pay_mp(1);
-    finalize_mp_cost();
-
-    if (++you.attribute[ATTR_SEARING_RAY] > 3)
+    // If a channelling monster no longer has a good shot, cancel it and let
+    // it do something else.
+    if (agent.is_monster())
     {
-        mpr("You finish channelling your searing ray.");
-        end_searing_ray();
+        fire_tracer(agent.as_monster(), beam);
+        if (!mons_should_fire(beam))
+        {
+            simple_monster_message(*agent.as_monster(), " stops channelling.");
+            agent.as_monster()->del_ench(ENCH_CHANNEL_SEARING_RAY);
+            end_searing_ray(agent);
+            return false;
+        }
     }
+
+    beam.fire();
+    trigger_battlesphere(&agent);
+
+    if (agent.is_player())
+    {
+        pay_mp(1);
+        finalize_mp_cost();
+
+        if (++you.attribute[ATTR_SEARING_RAY] > 3)
+        {
+            mpr("You finish channelling your searing ray.");
+            end_searing_ray(agent);
+        }
+    }
+    else
+    {
+        monster* mons = agent.as_monster();
+
+        mon_enchant me = mons->get_ench(ENCH_CHANNEL_SEARING_RAY);
+        mons->lose_ench_duration(me, 1);
+        if (!mons->has_ench(ENCH_CHANNEL_SEARING_RAY))
+        {
+            simple_monster_message(*mons, " finishes channelling their searing ray.");
+            end_searing_ray(agent);
+        }
+    }
+
+    return true;
 }
 
-void end_searing_ray()
+void end_searing_ray(actor& agent)
 {
-    you.attribute[ATTR_SEARING_RAY] = 0;
-    you.props.erase(SEARING_RAY_TARGET_KEY);
-    you.props.erase(SEARING_RAY_AIM_SPOT_KEY);
+    if (agent.is_player())
+        you.attribute[ATTR_SEARING_RAY] = 0;
+    else
+        agent.as_monster()->del_ench(ENCH_CHANNEL_SEARING_RAY);
+
+    agent.props.erase(SEARING_RAY_TARGET_KEY);
+    agent.props.erase(SEARING_RAY_AIM_SPOT_KEY);
 }
 
 /**

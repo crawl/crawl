@@ -218,6 +218,12 @@ enum enchant_type
     ENCH_PROTEAN_SHAPESHIFTING,
     ENCH_SIMULACRUM_SCULPTING,
     ENCH_CURSE_OF_AGONY,
+<<<<<<< HEAD
+=======
+    ENCH_TOUCH_OF_BEOGH,
+    ENCH_VENGEANCE_TARGET,
+    ENCH_CHANNEL_SEARING_RAY,
+>>>>>>> 5cd5743e6b (Searing Ray monster implementation)
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

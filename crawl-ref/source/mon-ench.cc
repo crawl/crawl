@@ -1782,6 +1782,16 @@ void monster::apply_enchantment(const mon_enchant &me)
             simple_monster_message(*this, " is no longer haunted by guilt.");
         break;
 
+    case ENCH_CHANNEL_SEARING_RAY:
+        // If we've gotten incapacitated since we started, cancel the spell
+        if (is_silenced() || cannot_act() || confused() || asleep() || has_ench(ENCH_FEAR))
+        {
+            del_ench(en, true, false);
+            if (you.can_see(*this))
+                mprf("%s searing ray is interrupted.", name(DESC_ITS).c_str());
+        }
+        break;
+
     default:
         break;
     }
@@ -2028,6 +2038,7 @@ static const char *enchant_names[] =
 #endif
     "bound", "bullseye_target", "vitrified", "cleaving_attack",
     "protean_shapeshifting", "simulacrum_sculpting", "curse_of_agony",
+    "channel_searing_ray",
     "buggy", // NUM_ENCHANTMENTS
 };
 

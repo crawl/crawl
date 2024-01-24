@@ -2467,7 +2467,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_fulminating_prism(&you, powc, beam.target, fail);
 
     case SPELL_SEARING_RAY:
-        return cast_searing_ray(powc, beam, fail);
+        return cast_searing_ray(you, powc, beam, fail);
 
     case SPELL_FLAME_WAVE:
         return cast_flame_wave(powc, fail);
