@@ -382,6 +382,8 @@ static dice_def _spell_damage(spell_type spell, int hd)
     {
         case SPELL_FREEZE:
             return freeze_damage(pow, false);
+        case SPELL_SCORCH:
+            return scorch_damage(pow, false);
         case SPELL_WATERSTRIKE:
             return waterstrike_damage(hd);
         case SPELL_IOOD:
@@ -442,6 +444,7 @@ static colour_t _spell_colour(spell_type spell)
             return LIGHTBLUE;
         case SPELL_IOOD:
             return LIGHTMAGENTA;
+        case SPELL_SCORCH:
         case SPELL_ERUPTION:
             return RED;
         default:

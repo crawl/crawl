@@ -2274,7 +2274,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_shatter(powc, fail);
 
     case SPELL_SCORCH:
-        return cast_scorch(powc, fail);
+        return cast_scorch(you, powc, fail);
 
     case SPELL_IRRADIATE:
         return cast_irradiate(powc, you, fail);

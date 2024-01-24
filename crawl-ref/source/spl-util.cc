@@ -1593,10 +1593,10 @@ bool spell_no_hostile_in_range(spell_type spell)
     // Check slightly beyond our target range, in case someone wants to catch
     // something in the AoE at the edge of range.
     case SPELL_MERCURY_VAPOURS:
-        return find_near_hostiles(range + 1, false).empty();
+        return find_near_hostiles(range + 1, false, you).empty();
 
     case SPELL_SCORCH:
-        return find_near_hostiles(range, false).empty();
+        return find_near_hostiles(range, false, you).empty();
 
     case SPELL_ANGUISH:
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)

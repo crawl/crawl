@@ -323,6 +323,12 @@ static string mi_calc_freeze_damage(monster* mons)
     return dice_def_string(freeze_damage(pow, false));
 }
 
+static string mi_calc_scorch_damage(monster* mons)
+{
+    const int pow = mons_power_for_hd(SPELL_SCORCH, mons->get_hit_dice());
+    return dice_def_string(scorch_damage(pow, false));
+}
+
 static string mi_calc_irradiate_damage(const monster &mon)
 {
     const int pow = mons_power_for_hd(SPELL_IRRADIATE, mon.get_hit_dice());
@@ -351,6 +357,8 @@ static string mons_human_readable_spell_damage_string(monster* monster,
             return ""; // Fake damage beam
         case SPELL_FREEZE:
             return mi_calc_freeze_damage(monster);
+        case SPELL_SCORCH:
+            return mi_calc_scorch_damage(monster);
         case SPELL_SMITING:
             return mi_calc_smiting_damage(monster);
         case SPELL_BRAIN_BITE:

@@ -1775,17 +1775,17 @@ static void _animate_scorch(coord_def p)
     animation_delay(50, true);
 }
 
-spret cast_scorch(int pow, bool fail)
+spret cast_scorch(const actor& agent, int pow, bool fail)
 {
     fail_check();
 
     const int range = spell_range(SPELL_SCORCH, pow);
-    auto targeter = make_unique<targeter_scorch>(you, range, true);
-    monster *targ = nullptr;
+    auto targeter = make_unique<targeter_scorch>(agent, range, true);
+    actor *targ = nullptr;
     int seen = 0;
     for (auto ti = targeter->affected_iterator(AFF_MAYBE); ti; ++ti)
         if (one_chance_in(++seen))
-            targ = monster_at(*ti);
+            targ = actor_at(*ti);
 
     if (!targ)
     {
@@ -1803,8 +1803,15 @@ spret cast_scorch(int pow, bool fail)
 
     bolt beam;
     beam.flavour = BEAM_FIRE;
-    const int damage = mons_adjust_flavoured(targ, beam, post_ac_dam);
-    _player_hurt_monster(*targ, damage, beam.flavour);
+
+    const int damage = (targ->is_monster())
+                        ? mons_adjust_flavoured(targ->as_monster(), beam, post_ac_dam)
+                        : check_your_resists(post_ac_dam, BEAM_FIRE, "scorch", &beam);
+
+    if (agent.is_player())
+        _player_hurt_monster(*targ->as_monster(), damage, beam.flavour);
+    else
+        targ->hurt(&agent, damage, BEAM_FIRE);
 
     // XXX: interact with clouds of cold?
     // XXX: dedup with beam::affect_place_clouds()?
@@ -1817,35 +1824,45 @@ spret cast_scorch(int pow, bool fail)
         return spret::success;
     }
 
-    you.pet_target = targ->mindex();
+    if (agent.is_player())
+        you.pet_target = targ->mindex();
 
     if (damage > 0)
     {
-        if (you.can_see(*targ) && !targ->has_ench(ENCH_FIRE_VULN))
-        {
-            mprf("%s fire resistance burns away.",
-                 targ->name(DESC_ITS).c_str());
-        }
         const int dur = 3 + div_rand_round(damage, 3);
-        targ->add_ench(mon_enchant(ENCH_FIRE_VULN, 1, &you,
-                                   dur * BASELINE_DELAY));
-
+        if (targ->is_monster())
+        {
+            monster* mon = targ->as_monster();
+            if (you.can_see(*mon) && !mon->has_ench(ENCH_FIRE_VULN))
+            {
+                mprf("%s fire resistance burns away.",
+                    mon->name(DESC_ITS).c_str());
+            }
+            mon->add_ench(mon_enchant(ENCH_FIRE_VULN, 1, &agent,
+                                      dur * BASELINE_DELAY));
+        }
+        else
+        {
+            mprf(MSGCH_DANGER, "Your fire resistance burns away!");
+            you.duration[DUR_FIRE_VULN] += dur * 3 / 2;
+        }
     }
+
     _animate_scorch(targ->pos());
     return spret::success;
 }
 
 /// Scorch's target selection (see targeter_scorch)
-vector<coord_def> find_near_hostiles(int range, bool affect_invis)
+vector<coord_def> find_near_hostiles(int range, bool affect_invis, const actor& agent)
 {
     vector<coord_def> hostiles;
-    for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+    for (radius_iterator ri(agent.pos(), range, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
     {
-        monster *mons = monster_at(*ri);
-        if (mons
-            && !mons->wont_attack()
-            && _act_worth_targeting(you, *mons)
-            && (affect_invis || you.can_see(*mons)))
+        actor *act = actor_at(*ri);
+        if (act
+            && !mons_aligned(&agent, act)
+            && _act_worth_targeting(agent, *act)
+            && (affect_invis || agent.can_see(*act)))
         {
             hostiles.push_back(*ri);
         }
