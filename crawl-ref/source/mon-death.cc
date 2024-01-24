@@ -3231,7 +3231,6 @@ void pikel_band_neutralise()
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->type == MONS_LEMURE
-            && testbits(mi->flags, MF_BAND_MEMBER)
             && mi->props.exists(PIKEL_BAND_KEY)
             && mi->observable())
         {

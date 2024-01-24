@@ -732,25 +732,12 @@ void set_random_target(monster* mon)
     }
 }
 
-// Try to find a band leader for the given monster
-static monster * _active_band_leader(monster * mon)
-{
-    // Not a band member
-    if (!mon->props.exists(BAND_LEADER_KEY))
-        return nullptr;
-
-    // Try to find our fearless leader.
-    unsigned leader_mid = mon->props[BAND_LEADER_KEY].get_int();
-
-    return monster_by_mid(leader_mid);
-}
-
 // Return true if a target still needs to be set. If returns false, mon->target
 // was set.
 static bool _band_wander_target(monster * mon)
 {
     int dist_thresh = LOS_DEFAULT_RANGE + HERD_COMFORT_RANGE;
-    monster * band_leader = _active_band_leader(mon);
+    monster * band_leader = mon->get_band_leader();
     if (band_leader == nullptr)
         return true;
 
@@ -889,7 +876,7 @@ static bool _band_ok(monster * mon)
 {
     // Don't have to worry about being close to the leader if no leader can be
     // found.
-    monster * leader = _active_band_leader(mon);
+    monster * leader = mon->get_band_leader();
 
     if (!leader)
         return true;
@@ -909,7 +896,7 @@ static bool _band_ok(monster * mon)
 
 void check_wander_target(monster* mon, bool isPacified)
 {
-    const monster *band_leader = _active_band_leader(mon);
+    const monster *band_leader = mon->get_band_leader();
     // default wander behaviour
     if (mon->pos() == mon->target
             // for batty bands, we want the logic in _band_ok to take

@@ -1175,8 +1175,7 @@ spret summon_shadow_creatures()
             // summon IDs
             for (monster_iterator mi; mi; ++mi)
             {
-                if (testbits(mi->flags, MF_BAND_MEMBER)
-                    && (mid_t) mi->props[BAND_LEADER_KEY].get_int() == mons->mid)
+                if (mi->is_band_follower_of(*mons))
                 {
                     if (god_hates_monster(**mi))
                         monster_die(**mi, KILL_RESET, NON_MONSTER);
@@ -1772,7 +1771,9 @@ spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
                 }
                 else if (you.can_see(*battlesphere))
                     simple_monster_message(*battlesphere, " appears!");
-                battlesphere->props[BAND_LEADER_KEY].get_int() = agent->mid;
+
+                if (agent->is_monster())
+                    battlesphere->set_band_leader(*(agent->as_monster()));
             }
             battlesphere->battlecharge = 4 + random2(pow + 10) / 10;
             battlesphere->foe = agent->mindex();
