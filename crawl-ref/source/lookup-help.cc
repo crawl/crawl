@@ -463,7 +463,9 @@ static bool _spell_filter(string key, string /*body*/)
 
 static bool _item_filter(string key, string /*body*/)
 {
-    return item_kind_by_name(key).base_type == OBJ_UNASSIGNED
+    item_kind ik = item_kind_by_name(key);
+    return ik.base_type == OBJ_UNASSIGNED
+        && !item_type_removed(ik.base_type, ik.sub_type)
         && !extant_unrandart_by_exact_name(key);
 }
 
