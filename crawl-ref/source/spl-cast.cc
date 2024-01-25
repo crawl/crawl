@@ -38,6 +38,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "menu.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -1613,6 +1614,14 @@ static vector<string> _desc_momentum_strike_hit_chance(const monster_info& mi, i
     return _desc_hit_chance(mi, beam.hit, false);
 }
 
+static vector<string> _desc_electric_charge_hit_chance(const monster_info& mi)
+{
+    melee_attack attk(&you, nullptr);
+    attk.charge_pow = 1; // to give the accuracy bonus
+    const int acc_pct = to_hit_pct(mi, attk, true);
+    return vector<string>{make_stringf("%d%% to hit", acc_pct)};
+}
+
 static vector<string> _desc_insubstantial(const monster_info& mi, string desc)
 {
     if (mons_class_flag(mi.type, M_INSUBSTANTIAL))
@@ -1814,6 +1823,8 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
             return bind(_desc_hailstorm_hit_chance, placeholders::_1, powc);
         case SPELL_MOMENTUM_STRIKE:
             return bind(_desc_momentum_strike_hit_chance, placeholders::_1, powc);
+        case SPELL_ELECTRIC_CHARGE:
+            return bind(_desc_electric_charge_hit_chance, placeholders::_1);
         case SPELL_FASTROOT:
             return bind(_desc_insubstantial, placeholders::_1, "immune to roots");
         case SPELL_STICKY_FLAME:
@@ -1928,19 +1939,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
                || Options.always_use_static_spell_targeters
                || Options.force_spell_targeter.count(spell) > 0);
 
-    if (use_targeter && spell == SPELL_ELECTRIC_CHARGE)
-    {
-        // would be nice to do away with this special casing, can this be
-        // rolled into more generic code?
-        vector<coord_def> target_path; // unused here
-        if (!find_charge_target(target_path, range, hitfunc.get(), *target))
-            return spret::abort;
-        ASSERT(target->isValid);
-        // code dup with spell_direction...
-        beam.set_target(*target);
-        beam.source = you.pos();
-    }
-    else if (use_targeter)
+    if (use_targeter)
     {
         const targ_mode_type targ =
               testbits(flags, spflag::neutral)    ? TARG_ANY :
@@ -2488,7 +2487,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return blinkbolt(powc, beam, fail);
 
     case SPELL_ELECTRIC_CHARGE:
-        return electric_charge(powc, fail, beam.target); // hack - should take beam?
+        return electric_charge(you, powc, fail, beam.target);
 
     case SPELL_STARBURST:
         return cast_starburst(powc, fail);

@@ -19,10 +19,17 @@ int frog_hop_range();
 spret frog_hop(bool fail, dist *target = nullptr);
 
 string electric_charge_impossible_reason(bool allow_safe_monsters);
-spret electric_charge(int powc, bool fail, const coord_def &target);
+spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target);
 bool find_charge_target(vector<coord_def> &target_path, int max_range,
                                 targeter *hitfunc, dist &target);
 string movement_impossible_reason();
+
+coord_def get_electric_charge_landing_spot(const actor& agent,
+                                           coord_def target,
+                                           string* fail_reason = nullptr);
+
+bool valid_electric_charge_target(const actor& agent, coord_def target,
+                                  string* fail_reason = nullptr);
 
 void you_teleport();
 void you_teleport_now(bool wizard_tele = false, bool teleportitis = false,
