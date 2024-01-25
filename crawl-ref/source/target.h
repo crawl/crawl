@@ -406,8 +406,6 @@ private:
     vector<coord_def> path_taken; // Path the charge took.
 };
 
-string bad_charge_target(coord_def a);
-
 // a fixed los targeter matching how it is called for shatter, with a custom
 // tweak to affect walls.
 class targeter_shatter : public targeter_radius

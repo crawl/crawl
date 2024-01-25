@@ -433,180 +433,20 @@ spret frog_hop(bool fail, dist *target)
     return spret::success; // TODO
 }
 
-static vector<string> _desc_electric_charge_hit_chance(const monster_info& mi)
-{
-    melee_attack attk(&you, nullptr);
-    attk.charge_pow = 1; // to give the accuracy bonus
-    const int acc_pct = to_hit_pct(mi, attk, true);
-    return vector<string>{make_stringf("%d%% to hit", acc_pct)};
-}
-
-bool find_charge_target(vector<coord_def> &target_path, int max_range,
-                                targeter *hitfunc, dist &target)
-{
-    // Check for unholy weapons, breadswinging, etc
-    if (!wielded_weapon_check(you.weapon(), "charge"))
-        return false;
-
-    // TODO: move into generic spell targeting somehow?
-    // TODO: can't this all be done within a single direction call?
-    while (true)
-    {
-        // query for location {dlb}:
-        direction_chooser_args args;
-        args.restricts = DIR_TARGET;
-        args.mode = TARG_HOSTILE;
-        args.prefer_farthest = true;
-        args.top_prompt = "Charge where?";
-        args.hitfunc = hitfunc;
-        args.get_desc_func = bind(_desc_electric_charge_hit_chance, placeholders::_1);
-        direction(target, args);
-
-        // TODO: deduplicate with _find_cblink_target
-        if (crawl_state.seen_hups)
-        {
-            mpr("Cancelling electric charge due to HUP.");
-            return false;
-        }
-
-        if (!target.isValid || target.target == you.pos())
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-
-        const monster* beholder = you.get_beholder(target.target);
-        if (beholder)
-        {
-            mprf("You cannot charge away from %s!",
-                beholder->name(DESC_THE, true).c_str());
-            if (target.interactive)
-                continue;
-            else
-                return false;
-        }
-
-        const monster* fearmonger = you.get_fearmonger(target.target);
-        if (fearmonger)
-        {
-            mprf("You cannot charge closer to %s!",
-                fearmonger->name(DESC_THE, true).c_str());
-            if (target.interactive)
-                continue;
-            else
-                return false;
-        }
-
-        if (!you.see_cell_no_trans(target.target))
-        {
-            clear_messages();
-            if (you.trans_wall_blocking(target.target))
-                canned_msg(MSG_SOMETHING_IN_WAY);
-            else
-                canned_msg(MSG_CANNOT_SEE);
-            if (target.interactive)
-                continue;
-            else
-                return false;
-        }
-
-        if (grid_distance(you.pos(), target.target) > max_range)
-        {
-            mpr("That's out of range!"); // ! targeting
-            if (target.interactive)
-                continue;
-            else
-                return false;
-        }
-
-        ray_def ray;
-        if (!find_ray(you.pos(), target.target, ray, opc_solid))
-        {
-            mpr("You can't charge through that!");
-            if (target.interactive)
-                continue;
-            else
-                return false;
-        }
-
-        // done with hard vetos; now we're on a mix of prompts and vetos.
-        // (Ideally we'd like to split these up and do all the vetos before
-        // the prompts, but...)
-
-        target_path.clear();
-        while (ray.advance())
-        {
-            target_path.push_back(ray.pos());
-            if (ray.pos() == target.target)
-                break;
-        }
-
-        // DON'T use beam.target here - we might have used ! targeting to
-        // target something behind another known monster
-        const monster* target_mons = monster_at(ray.pos());
-        const string bad_charge = bad_charge_target(ray.pos());
-        if (bad_charge != "")
-        {
-            mpr(bad_charge.c_str());
-            return false;
-        }
-
-        if (adjacent(you.pos(), ray.pos()))
-        {
-            mprf("You're already next to %s!",
-                 target_mons->name(DESC_THE).c_str());
-            return false;
-        }
-
-        // adjacency check should ensure this...
-        ASSERT(target_path.size() >= 2);
-        const coord_def dest_pos = target_path.at(target_path.size() - 2);
-        monster* dest_mon = monster_at(dest_pos);
-        const bool invalid_dest = dest_mon && mons_class_is_stationary(dest_mon->type);
-        if (invalid_dest && you.can_see(*dest_mon))
-        {
-            mprf("%s is immovably fixed there.", dest_mon->name(DESC_THE).c_str());
-            return false;
-        }
-
-        // prompt to make sure the player really wants to attack the monster
-        // (if extant and not hostile)
-        // Intentionally don't use the real attack position here - that's only
-        // used for sanctuary,
-        // so it's more accurate if we use our current pos, since sanctuary
-        // should move with us.
-        if (stop_attack_prompt(target_mons, false, target_mons->pos()))
-            return false;
-
-        ray.regress();
-        // confirm movement for the final square only
-        if (!check_moveto(ray.pos(), "charge"))
-            return false;
-
-        return true;
-    }
-}
-
-static void _charge_cloud_trail(const coord_def pos)
-{
-    if (!cell_is_solid(pos) && !apply_cloud_trail(pos))
-        place_cloud(CLOUD_ELECTRICITY, pos, 2 + random2(3), &you);
-}
-
 string electric_charge_impossible_reason(bool allow_safe_monsters)
 {
     // General movement checks are handled elsewhere.
-    targeter_charge tgt(&you, spell_range(SPELL_ELECTRIC_CHARGE, 0));
     int nearby_mons = 0;
     string example_reason = "";
+    string fail_reason;
     for (monster_near_iterator mi(&you); mi; ++mi)
     {
         ++nearby_mons;
-        if (!tgt.valid_aim(mi->pos()))
+        if (get_electric_charge_landing_spot(you, mi->pos(), &fail_reason).origin())
         {
             example_reason = make_stringf("you can't charge at %s because %s",
                                           mi->name(DESC_THE).c_str(),
-                                          tgt.why_not.c_str());
+                                          fail_reason.c_str());
         }
         else if (allow_safe_monsters
                  || !mons_is_safe(*mi, false)
@@ -631,25 +471,191 @@ string movement_impossible_reason()
     return "";
 }
 
-static void _displace_charge_blocker(monster &mon)
+bool valid_electric_charge_target(const actor& agent, coord_def target, string* fail_reason)
 {
-    const coord_def orig = mon.pos();
-    coord_def targ;
-    if (random_near_space(&mon, mon.pos(), targ, true)
-        && mon.blink_to(targ, true, false)) // XXX: should ignore constrict
+    string msg;
+
+    const actor* act = actor_at(target);
+
+    // Target must be in range and non-adjacent
+    if (agent.pos() == target)
     {
-        return;
+        if (fail_reason)
+            *fail_reason = "You can't charge at yourself.";
+
+        return false;
+    }
+    else if (adjacent(agent.pos(), target))
+    {
+        if (fail_reason)
+            *fail_reason = "You're already next to there.";
+
+        return false;
+    }
+    else if (grid_distance(agent.pos(), target)
+             > spell_range(SPELL_ELECTRIC_CHARGE, 50))
+    {
+        if (fail_reason)
+            *fail_reason = "That's out of range!";
+
+        return false;
     }
 
-    monster_teleport(&mon, true);
-    if (mon.pos() != orig)
-        return;
+    // No charging at things the caster cannot see.
+    if (!act || !agent.can_see(*act)
+        || agent.is_player() && act->is_monster()
+           && fedhas_passthrough(act->as_monster()))
+    {
+        if (fail_reason)
+            *fail_reason = "You can't see anything there to charge at.";
 
-    mon.banish(&you, "electric charge", -1, true);
-    if (!mon.alive())
-        return;
+        return false;
+    }
 
-    monster_die(mon, KILL_BANISHED, NON_MONSTER);
+    // No charging at friends or firewood.
+    if (mons_aligned(act, &agent)
+        || act->is_monster() && mons_is_firewood(*act->as_monster()))
+    {
+        if (fail_reason)
+            *fail_reason = "Why would you want to do that?";
+
+        return false;
+    }
+
+    // The remaining checks concern only the player.
+    if (agent.is_monster())
+        return true;
+
+    const monster* beholder = you.get_beholder(target);
+    if (beholder)
+    {
+        if (fail_reason)
+        {
+            *fail_reason = make_stringf("You cannot charge away from %s!",
+                                        beholder->name(DESC_THE, true).c_str());
+        }
+
+        return false;
+    }
+
+    const monster* fearmonger = you.get_fearmonger(target);
+    if (fearmonger)
+    {
+        if (fail_reason)
+        {
+            *fail_reason = make_stringf("You cannot charge closer to %s!",
+                                        fearmonger->name(DESC_THE, true).c_str());
+        }
+
+        return false;
+    }
+
+    return true;
+}
+
+// Gets the tile the agent would land on if they tried to charge towards target.
+// Returns (0, 0) if this charge is invalid for any reason.
+// (fail_reason will get set to an appropriate error message)
+coord_def get_electric_charge_landing_spot(const actor& agent, coord_def target,
+                                           string* fail_reason)
+{
+    // Double-check that this is a valid thing to try to charge at at all
+    if (!valid_electric_charge_target(agent, target, fail_reason))
+        return coord_def(0, 0);
+
+    ray_def ray;
+    if (!find_ray(agent.pos(), target, ray, opc_solid))
+    {
+        if (fail_reason)
+            *fail_reason = "There's something in the way.";
+
+        return coord_def(0, 0);
+    }
+
+    const int dist_to_targ = grid_distance(agent.pos(), target);
+    while (ray.advance())
+    {
+         // We've reached the spot immediately before our target, which should
+        // be our landing spot (if it's valid)
+        if (grid_distance(ray.pos(), agent.pos()) == dist_to_targ -1)
+        {
+            if (is_feat_dangerous(env.grid(ray.pos())))
+            {
+                if (fail_reason)
+                {
+                    *fail_reason = "There's "
+                                   + feature_description_at(ray.pos())
+                                   + " in the way.";
+                }
+
+                return coord_def(0, 0);
+            }
+
+            const monster* mon = monster_at(ray.pos());
+            if (mon && agent.can_see(*mon) && mons_class_is_stationary(mon->type))
+            {
+                if (fail_reason)
+                {
+                    *fail_reason = mon->name(DESC_THE)
+                                   + " is immovably fixed in your path.";
+                }
+
+                return coord_def(0, 0);
+            }
+
+            // We've already verified that our target is okay, and now we know
+            // that our landing spot is also. So we should be done here.
+            return ray.pos();
+        }
+    }
+
+    // Should be unreachable, but return a negative result anyway.
+    return coord_def(0, 0);
+}
+
+// Tries to push any creature out of the way of an electric charge landing spot,
+// using increasingly strong measures. Will usually keep trying until it
+// succeeds in creating open space, but in a few situations (mostly involving
+// the player being the one in the way) may fail (and return false)
+static bool _displace_charge_blocker(actor& agent, coord_def pos)
+{
+    // Try 10 times to move the obstacle out of our way. It should only be the
+    // most contrived and impossible of circumstances that require this, but
+    // let's try not to crash just in case.
+    for (int tries = 0; tries < 10; ++tries)
+    {
+        actor* blocker = actor_at(pos);
+        if (!blocker)
+            return true;
+
+        const coord_def orig = blocker->pos();
+        coord_def targ;
+        if (random_near_space(blocker, blocker->pos(), targ, true)
+            && blocker->blink_to(targ, true)) // XXX: should ignore constrict
+        {
+            continue;
+        }
+
+        // Don't teleport (or banish!) the player when something tries to Vhi's
+        // something immediately behind them. In this case, just make the monster
+        // abort.
+        if (blocker->is_player())
+            return false;
+
+        monster* mon = blocker->as_monster();
+        monster_teleport(mon, true);
+        if (mon->pos() != orig)
+            continue;
+
+        mon->banish(&agent, "electric charge", -1, true);
+        if (!mon->alive())
+            continue;
+
+        monster_die(*mon, KILL_BANISHED, NON_MONSTER);
+    }
+
+    // Against all odds, there's something still here.
+    return false;
 }
 
 /**
@@ -659,93 +665,133 @@ static void _displace_charge_blocker(monster &mon)
  *                      therefore fail after selecting a target)
  * @return              Whether the charge succeeded, aborted, or was miscast.
  */
-spret electric_charge(int powc, bool fail, const coord_def &target)
+spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target)
 {
-    const coord_def initial_pos = you.pos();
-
-    vector<coord_def> target_path;
-    const int range = spell_range(SPELL_ELECTRIC_CHARGE, powc);
-    targeter_charge tgt(&you, range);
-    dist targ;
-    ASSERT(in_bounds(target));
-    targ.target = target;
-    targ.interactive = false; // target should already be provided
-
-    // re-run target finding non-interactively in order to get the full path
-    // again (ugh)
-    if (!find_charge_target(target_path, range, &tgt, targ))
+    // Check for unholy weapons, breadswinging, etc
+    if (agent.is_player() && !wielded_weapon_check(you.weapon(), "charge"))
         return spret::abort;
 
-    const coord_def dest_pos = target_path.at(target_path.size() - 2);
-    monster* dest_mon = monster_at(dest_pos);
+    coord_def dest_pos = get_electric_charge_landing_spot(agent, target);
+
+    // Should be impossible, but bail out if there's no valid landing pos
+    if (dest_pos.origin())
+        return spret::abort;
+
+    // Prompt to make sure the player really wants to attack the monster they're
+    // charging at.
+    monster* target_mon = monster_at(target);
+    if (agent.is_player() && target_mon && stop_attack_prompt(target_mon, false, target))
+        return spret::abort;
+
+    // Test dangerous terrain at our destination
+    if (agent.is_player() && !check_moveto(dest_pos, "charge"))
+        return spret::abort;
 
     fail_check();
 
-    // at this point it should be an invisible monster; visible monsters get
-    // filtered at the targeting stage
+    // This should virtually never happen, since the spell is vetoed for stationary
+    // blockers before this; this requires a stationary blocker who is also
+    // invisible to the agent.
+    monster* dest_mon = monster_at(dest_pos);
     const bool invalid_dest = dest_mon && mons_class_is_stationary(dest_mon->type);
     if (invalid_dest)
     {
-        mprf("%s is immovably fixed there.", dest_mon->name(DESC_THE).c_str());
+        if (agent.is_player())
+            mprf("%s is immovably fixed there.", dest_mon->name(DESC_THE).c_str());
         return spret::success;
     }
 
-    if (!you.attempt_escape(1)) // prints its own messages
+    if (!agent.attempt_escape(1)) // prints its own messages
         return spret::success;
 
-    const coord_def target_pos = target_path.back();
-    monster* target_mons = monster_at(target_pos);
-    if (fedhas_passthrough(target_mons))
-        target_mons = nullptr;
-    ASSERT(target_mons != nullptr);
+    const coord_def orig_pos = agent.pos();
+    actor* target_actor = actor_at(target);
 
-    crawl_state.cancel_cmd_again();
-    crawl_state.cancel_cmd_repeat();
+    if (agent.is_player())
+    {
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
 
-    const coord_def orig_pos = you.pos();
+        // Monster cast messages are handled through monspell.txt
+        if (silenced(dest_pos))
+            mpr("You charge forward in eerie silence!");
+        else
+            mpr("You charge forward with an electric crackle!");
+    }
 
-    if (silenced(dest_pos))
-        mpr("You charge forward in eerie silence!");
+    // Trying to clear space at our destination by moving actors away from it.
+    // Very rarely, this may fail. If it does, abort.
+    if (!_displace_charge_blocker(agent, dest_pos))
+    {
+        if (agent.is_player() || (agent.is_monster() && you.can_see(agent)))
+        {
+            mprf("...but somehow remain%s in the same place.",
+                                                agent.is_monster() ? "s" : "");
+        }
+
+        return spret::success;
+    }
+
+    // Actually move the agent
+    const coord_def initial_pos = agent.pos();
+    if (agent.is_player())
+        move_player_to_grid(dest_pos, true);
     else
-        mpr("You charge forward with an electric crackle!");
+    {
+        agent.move_to_pos(dest_pos);
+        agent.apply_location_effects(orig_pos);
+    }
 
-    if (dest_mon)
-        _displace_charge_blocker(*dest_mon);
+    noisy(4, agent.pos());
+    agent.did_deliberate_movement();
+    agent.clear_far_engulf(false, true);
 
-    move_player_to_grid(dest_pos, true);
-    noisy(4, you.pos());
-    player_did_deliberate_movement();
-    you.clear_far_engulf(false, true);
-    _charge_cloud_trail(orig_pos);
-    for (auto it = target_path.begin(); it != target_path.end() - 2; ++it)
-        _charge_cloud_trail(*it);
+    // Draw a cloud trail behind the charging agent
+    ray_def ray;
+    if (find_ray(orig_pos, target, ray, opc_solid))
+    {
+        while (ray.advance() && ray.pos() != target)
+        {
+            if (!cell_is_solid(ray.pos()) &&
+                (!agent.is_player() || !apply_cloud_trail(ray.pos())))
+            {
+                place_cloud(CLOUD_ELECTRICITY, ray.pos(), 2 + random2(3), &agent);
+            }
+        }
+    }
 
-    if (you.pos() != dest_pos) // polar vortex and trap nonsense
+    if (agent.pos() != dest_pos) // polar vortex and trap nonsense
         return spret::success; // of a sort
 
     // Maybe we hit a trap and something weird happened.
-    if (!target_mons->alive() || !adjacent(you.pos(), target_mons->pos()))
+    if (!target_actor->alive() || !adjacent(agent.pos(), target_actor->pos()))
         return spret::success;
 
     // manually apply noise
     // this silence check feels kludgy - perhaps could check along the whole route..?
-    if (!silenced(target_pos))
-        behaviour_event(target_mons, ME_ALERT, &you, you.pos()); // shout + set you as foe
+    if (!silenced(target) && target_actor->is_monster())
+        behaviour_event(target_actor->as_monster(), ME_ALERT, &agent, agent.pos()); // shout + set you as foe
 
     // We got webbed/netted at the destination, bail on the attack.
-    if (you.attribute[ATTR_HELD])
+    if (agent.is_player() && you.attribute[ATTR_HELD])
+        return spret::success;
+    // Todo: Be more comprehensive?
+    else if (agent.is_monster() && agent.as_monster()->has_ench(ENCH_HELD))
         return spret::success;
 
-    const int base_delay =
-        div_rand_round(you.time_taken * player_movement_speed(), 10);
-
-    melee_attack charge_atk(&you, target_mons);
-    charge_atk.charge_pow = powc + 50 * grid_distance(initial_pos, you.pos());
+    melee_attack charge_atk(&agent, target_actor);
+    charge_atk.charge_pow = powc + 50 * grid_distance(initial_pos, agent.pos());
     charge_atk.attack();
 
-    // Normally this is 10 aut (times haste, chei etc), but slow weapons
-    // take longer. Most relevant for low-skill players and Dark Maul.
-    you.time_taken = max(you.time_taken, base_delay);
+    // Monsters will already use up attack energy via the melee attack itself,
+    // so we only need to handle delay for players.
+    if (agent.is_player())
+    {
+        const int base_delay = div_rand_round(you.time_taken * player_movement_speed(), 10);
+        // Normally this is 10 aut (times haste, chei etc), but slow weapons
+        // take longer. Most relevant for low-skill players and Dark Maul.
+        you.time_taken = max(you.time_taken, base_delay);
+    }
 
     return spret::success;
 }

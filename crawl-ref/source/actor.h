@@ -404,6 +404,8 @@ public:
                                         bool quiet = false);
     void stop_being_constricted(bool quiet = false);
 
+    virtual bool attempt_escape(int attempts = 1) = 0;
+
     bool can_constrict(const actor &defender, constrict_type typ) const;
     bool can_engulf(const actor &defender) const;
     bool has_invalid_constrictor(bool move = false) const;

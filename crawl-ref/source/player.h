@@ -920,7 +920,7 @@ public:
     void set_duration(duration_type dur, int turns, int cap = 0,
                       const char *msg = nullptr);
 
-    bool attempt_escape(int attempts = 1);
+    bool attempt_escape(int attempts = 1) override;
     int usable_tentacles() const;
     bool has_usable_tentacle() const override;
 

@@ -537,7 +537,7 @@ public:
 
     void bind_melee_flags();
     void calc_speed();
-    bool attempt_escape(int attempts = 1);
+    bool attempt_escape(int attempts = 1) override;
     void struggle_against_net();
     void catch_breath();
     bool has_usable_tentacle() const override;

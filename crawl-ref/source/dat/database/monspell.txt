@@ -884,6 +884,10 @@ burial acolyte cast
 
 @The_monster@ [drones|recites] a funeral chant.
 %%%%
+vhi's electric charge cast
+
+@The_monster@ charges forward with an electric crackle.
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
