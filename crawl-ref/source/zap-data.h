@@ -734,12 +734,12 @@ _mon_hex_zap(ZAP_POLYMORPH, BEAM_POLYMORPH),
 
 {
     ZAP_KISS_OF_DEATH,
-    "negative energy",
+    "fragment of death",
     25,
     new calcdice_calculator<2, 11, 3, 5>, // caps at 2d13... spooky
     new tohit_calculator<AUTOMATIC_HIT>, // XXX: should we let this miss?
-    nullptr,
-    nullptr,
+    new calcdice_calculator<2, 13, 2, 7>,
+    new tohit_calculator<AUTOMATIC_HIT>,
     DARKGREY,
     false,
     BEAM_NEG,
