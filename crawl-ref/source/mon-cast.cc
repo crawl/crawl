@@ -381,6 +381,13 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             cast_scorch(caster, pow, false);
         },
     } },
+    { SPELL_KISS_OF_DEATH, { _always_worthwhile,
+        [](monster &caster, mon_spell_slot slot, bolt& beam) {
+            _fire_simple_beam(caster, slot, beam);
+            caster.add_ench(mon_enchant(ENCH_DRAINED, 3, &caster, random_range(100, 200)));
+        },
+        _zap_setup(SPELL_KISS_OF_DEATH)
+    } },
     { SPELL_SMITING, { _always_worthwhile, _cast_smiting, } },
     { SPELL_BRAIN_BITE, { _always_worthwhile, _cast_brain_bite, } },
     { SPELL_CALL_DOWN_LIGHTNING, { _foe_not_nearby, _cast_call_down_lightning, _zap_setup(SPELL_CALL_DOWN_LIGHTNING) } },
