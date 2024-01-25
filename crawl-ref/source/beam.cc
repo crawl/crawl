@@ -597,7 +597,9 @@ bool bolt::can_affect_actor(const actor *act) const
     else if (item
             && item->props.exists(DAMNATION_BOLT_KEY)
             && act->mid == source_id)
+    {
         return false;
+    }
     auto cnt = hit_count.find(act->mid);
     if (cnt != hit_count.end() && cnt->second >= 2)
     {
@@ -2580,20 +2582,20 @@ void bolt::drop_object()
     ASSERT(item != nullptr);
     ASSERT(item->defined());
 
-    if (item->sub_type == MI_THROWING_NET)
+    const int idx = copy_item_to_grid(*item, pos(), 1);
+
+    if (idx != NON_ITEM
+        && idx != -1
+        && item->sub_type == MI_THROWING_NET)
     {
         monster* m = monster_at(pos());
         // Player or monster at position is caught in net.
         if (you.pos() == pos() && you.attribute[ATTR_HELD]
             || m && m->caught())
         {
-            // If no trapping net found mark this one.
-            if (get_trapping_net(pos(), true) == NON_ITEM)
-                set_net_stationary(*item);
+            set_net_stationary(env.item[idx]);
         }
     }
-
-    copy_item_to_grid(*item, pos(), 1);
 }
 
 // Returns true if the beam hits the player, fuzzing the beam if necessary
@@ -3940,7 +3942,8 @@ void bolt::affect_player()
 
     if (flavour == BEAM_MISSILE && item)
     {
-        ranged_attack attk(agent(true), &you, item, use_target_as_pos,
+        ranged_attack attk(agent(true), &you, launcher,
+                           item, use_target_as_pos,
                            agent(), item_mulches);
         attk.attack();
         // fsim purposes - throw_it detects if an attack connected through
@@ -5117,7 +5120,8 @@ void bolt::affect_monster(monster* mon)
         if (!ag)
             ag = &env.mons[YOU_FAULTLESS];
         ASSERT(ag);
-        ranged_attack attk(ag, mon, item, use_target_as_pos, agent(), item_mulches);
+        ranged_attack attk(ag, mon, launcher,
+                           item, use_target_as_pos, agent(), item_mulches);
         attk.attack();
         // fsim purposes - throw_it detects if an attack connected through
         // hit_verb

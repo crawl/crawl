@@ -79,7 +79,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 {
     attack_occurred = false;
     damage_brand = attacker->damage_brand(attack_number);
-    weapon = attacker->weapon(attack_number);
+    weapon = mutable_wpn = attacker->weapon(attack_number);
     init_attack(SK_UNARMED_COMBAT, attack_number);
     if (weapon && !using_weapon())
         wpn_skill = SK_FIGHTING;
@@ -863,8 +863,8 @@ bool melee_attack::handle_phase_killed()
     // avoided triggering Wyrmbane's death effect earlier in the attack.
     if (unrand_entry && weapon && weapon->unrand_idx == UNRAND_WYRMBANE)
     {
-        unrand_entry->melee_effects(weapon, attacker, defender,
-                                               true, special_damage);
+        unrand_entry->melee_effects(mutable_wpn, attacker, defender,
+                                    true, special_damage);
     }
 
     return attack::handle_phase_killed();
@@ -997,8 +997,8 @@ bool melee_attack::attack()
     {
         saved_gyre_name = get_artefact_name(*weapon);
         const bool gimble = effective_attack_number % 2;
-        set_artefact_name(*weapon, gimble ? "quick blade \"Gimble\""
-                                          : "quick blade \"Gyre\"");
+        set_artefact_name(*mutable_wpn, gimble ? "quick blade \"Gimble\""
+                                                  : "quick blade \"Gyre\"");
     }
 
     // Restore gyre's name before we return. We cannot use an unwind_var here
@@ -1009,7 +1009,7 @@ bool melee_attack::attack()
         if (!saved_gyre_name.empty() && weapon
                 && is_unrandom_artefact(*weapon, UNRAND_GYRE))
         {
-            set_artefact_name(*weapon, saved_gyre_name);
+            set_artefact_name(*mutable_wpn, saved_gyre_name);
         }
     };
 
@@ -1157,7 +1157,7 @@ bool melee_attack::check_unrand_effects()
             return true;
 
         // Recent merge added damage_done to this method call
-        unrand_entry->melee_effects(weapon, attacker, defender,
+        unrand_entry->melee_effects(mutable_wpn, attacker, defender,
                                     died, damage_done);
         return !defender->alive(); // may have changed
     }

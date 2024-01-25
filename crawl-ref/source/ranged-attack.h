@@ -11,7 +11,8 @@ public:
 
 // Public Methods
 public:
-    ranged_attack(actor *attacker, actor *defender, item_def *projectile,
+    ranged_attack(actor *attacker, actor *defender,
+                  const item_def *wpn, const item_def *projectile,
                   bool teleport, actor *blame = 0, bool mulched = false);
 
     // Applies attack damage and other effects.

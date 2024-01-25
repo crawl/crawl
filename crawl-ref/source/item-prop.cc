@@ -2210,6 +2210,8 @@ void populate_fake_projectile(const item_def &wep, item_def &fake_proj)
     fake_proj.sub_type  = Weapon_prop[Weapon_index[wep.sub_type]].ammo;
     fake_proj.quantity  = 1;
     fake_proj.rnd       = 1;
+    if (is_unrandom_artefact(wep, UNRAND_DAMNATION))
+        fake_proj.props[DAMNATION_BOLT_KEY] = true;
 }
 
 /**

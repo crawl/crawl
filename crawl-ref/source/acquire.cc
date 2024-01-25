@@ -1531,7 +1531,7 @@ static void _create_acquirement_item(item_def &item, string items_key)
 
     set_ident_type(item, true);
 
-    if (copy_item_to_grid(item, you.pos()))
+    if (copy_item_to_grid(item, you.pos()) != NON_ITEM)
         canned_msg(MSG_SOMETHING_APPEARS);
     else
         canned_msg(MSG_NOTHING_HAPPENS);

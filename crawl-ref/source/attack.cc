@@ -1601,14 +1601,6 @@ bool attack::apply_damage_brand(const char *what)
     if (special_damage > 0)
         inflict_damage(special_damage, special_damage_flavour);
 
-    if (obvious_effect && attacker_visible && using_weapon())
-    {
-        if (is_artefact(*weapon))
-            artefact_learn_prop(*weapon, ARTP_BRAND);
-        else
-            set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
-    }
-
     return ret;
 }
 

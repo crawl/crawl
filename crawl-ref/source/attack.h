@@ -60,7 +60,7 @@ public:
     attack_flavour  attk_flavour;
     int             attk_damage;
 
-    item_def        *weapon;
+    const item_def  *weapon;
     brand_type      damage_brand;
     skill_type      wpn_skill;
 
