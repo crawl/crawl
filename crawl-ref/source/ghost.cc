@@ -770,7 +770,7 @@ void ghost_demon::add_spells()
 {
     spells.clear();
 
-    for (int i = 0; i < you.spell_no; i++)
+    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
     {
         const int chance = max(0, 50 - failure_rate_to_int(raw_spell_fail(you.spells[i])));
         const spell_type spell = translate_spell(you.spells[i]);
