@@ -223,6 +223,18 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _setup_minor_healing,
     } },
     { SPELL_SLUG_DART, _conjuration_logic(SPELL_SLUG_DART) },
+    { SPELL_BECKONING, {
+        [](const monster &caster)
+        {
+            const actor* foe = caster.get_foe();
+            ASSERT(foe);
+            return ai_action::good_or_impossible(
+                                !adjacent(caster.pos(), foe->pos())
+                                && !foe->is_stationary());
+        },
+        _fire_simple_beam,
+        _zap_setup(SPELL_BECKONING)
+    } },
     { SPELL_VAMPIRIC_DRAINING, {
         [](const monster &caster)
         {
