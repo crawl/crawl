@@ -7824,7 +7824,8 @@ bool player::attempt_escape(int attempts)
 
     const auto constr_typ = get_constrict_type();
     const string object
-        = constr_typ == CONSTRICT_ROOTS ? "the roots"
+        = constr_typ == CONSTRICT_ROOTS ? "the roots'"
+          : constr_typ == CONSTRICT_BVC ? "the zombie hands'"
                                         : themonst->name(DESC_ITS, true);
     // player breaks free if (4+n)d13 >= 5d(8+HD/4)
     const int escape_score = roll_dice(4 + escape_attempts, 13);

@@ -469,6 +469,12 @@ void player_reacts_to_monsters()
         mprf("The grasping roots release their grip on you.");
         you.stop_being_constricted(true);
     }
+    if (_decrement_a_duration(DUR_VILE_CLUTCH, you.time_taken)
+        && you.is_constricted())
+    {
+        mprf("The zombie hands release their grip on you.");
+        you.stop_being_constricted(true);
+    }
 
     _handle_jinxbite_interest();
 

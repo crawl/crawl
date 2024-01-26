@@ -3048,6 +3048,9 @@ bool bolt::harmless_to_player() const
     case BEAM_ROOTS:
         return mons_att_wont_attack(attitude) || !agent()->can_constrict(you, CONSTRICT_ROOTS);
 
+    case BEAM_VILE_CLUTCH:
+        return mons_att_wont_attack(attitude) || !agent()->can_constrict(you, CONSTRICT_BVC);
+
     default:
         return false;
     }
@@ -3116,6 +3119,8 @@ void bolt::tracer_affect_player()
     const actor* ag = agent();
     if (flavour == BEAM_ROOTS && !ag->can_constrict(you, CONSTRICT_ROOTS))
         return; // this should probably go elsewhere
+    else if (flavour == BEAM_VILE_CLUTCH && ! ag->can_constrict(you, CONSTRICT_BVC))
+        return;
 
     // Check whether thrower can see player, unless thrower == player.
     if (YOU_KILL(thrower))
@@ -3350,7 +3355,6 @@ void bolt::affect_player_enchantment(bool resistible)
 
     // Never affects the player.
     if (flavour == BEAM_INFESTATION
-        || flavour == BEAM_VILE_CLUTCH
         || flavour == BEAM_ENFEEBLE)
     {
         return;
@@ -3619,6 +3623,22 @@ void bolt::affect_player_enchantment(bool resistible)
         const int turns = 2 + random2avg(div_rand_round(ench_power, 10), 2);
         dprf("Roots duration: %d", turns);
         grasp_with_roots(*agent(), you, turns);
+        obvious_effect = true;
+        break;
+    }
+
+    case BEAM_VILE_CLUTCH:
+    {
+        // No friendly fire from BVC.
+        if (mons_att_wont_attack(attitude))
+            return;
+        if (!agent()->can_constrict(you, CONSTRICT_BVC))
+            return;
+        const int turns = 4 + random2avg(div_rand_round(ench_power, 10), 2);
+        dprf("BVC duration: %d", turns);
+        you.increase_duration(DUR_VILE_CLUTCH, turns);
+        agent()->start_constricting(you);
+        mprf(MSGCH_WARN, "You are grabbed by zombie hands!");
         obvious_effect = true;
         break;
     }
