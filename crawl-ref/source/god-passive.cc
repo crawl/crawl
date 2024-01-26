@@ -1363,17 +1363,7 @@ static int _wu_jian_number_of_attacks(bool wall_jump)
                            ? 100
                            : player_movement_speed() * player_speed();
 
-    int attack_delay;
-
-    {
-        // attack_delay() is dependent on you.time_taken, which won't be set
-        // appropriately during a movement turn. This temporarily resets
-        // you.time_taken to the initial value (see `_prep_input`) used for
-        // basic, simple, melee attacks.
-        // TODO: can `attack_delay` be changed to not depend on you.time_taken?
-        unwind_var<int> reset_speed(you.time_taken, player_speed());
-        attack_delay = you.attack_delay().roll();
-    }
+    int attack_delay = you.attack_delay().roll();
 
     return div_rand_round(wall_jump ? 2 * move_delay : move_delay,
                           attack_delay * BASELINE_DELAY);

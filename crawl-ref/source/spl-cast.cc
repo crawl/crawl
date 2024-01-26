@@ -2457,7 +2457,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_disjunction(powc, fail);
 
     case SPELL_MANIFOLD_ASSAULT:
-        return cast_manifold_assault(powc, fail);
+        return cast_manifold_assault(you, powc, fail);
 
     case SPELL_GOLUBRIAS_PASSAGE:
         return cast_golubrias_passage(powc, beam.target, fail);

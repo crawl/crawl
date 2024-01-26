@@ -1412,7 +1412,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_MANIFOLD_ASSAULT:
         if (temp)
         {
-            const string unproj_reason = weapon_unprojectability_reason();
+            const string unproj_reason = weapon_unprojectability_reason(you.weapon());
             if (unproj_reason != "")
                 return unproj_reason;
         }
@@ -1566,7 +1566,7 @@ bool spell_no_hostile_in_range(spell_type spell)
          return cast_intoxicate(-1, false, true) == spret::abort;
 
     case SPELL_MANIFOLD_ASSAULT:
-         return cast_manifold_assault(-1, false, false) == spret::abort;
+         return cast_manifold_assault(you, -1, false, false) == spret::abort;
 
     case SPELL_OZOCUBUS_REFRIGERATION:
          return trace_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION, pow, &you)
