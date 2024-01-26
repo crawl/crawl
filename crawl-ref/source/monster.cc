@@ -2839,6 +2839,9 @@ int monster::constriction_damage(constrict_type typ) const
     case CONSTRICT_ROOTS:
         return roll_dice(2, div_rand_round(40 +
                     mons_spellpower(*this, SPELL_GRASPING_ROOTS), 20));
+    case CONSTRICT_BVC:
+        return roll_dice(2, div_rand_round(60 +
+                    mons_spellpower(*this, SPELL_BORGNJORS_VILE_CLUTCH), 20));
     default:
         return 0;
     }
