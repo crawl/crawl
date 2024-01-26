@@ -184,12 +184,13 @@ ORIENT: float
 WEIGHT: 8
 SUBST:  b: v.., v: c.
 TILE:   X = wall_zot_magenta
-FTILE:  -OD = floor_hall
-COLOUR: -D = magenta
+FTILE:  -ROD = floor_hall
+COLOUR: -RD = magenta
 COLOUR: X = lightmagenta
-KPROP:  O-X = no_tele_into
+KPROP:  RO-X = no_tele_into
 SUBST:  X = x
 SUBST:  - = ., D = +
+KITEM:  R = midnight gem
 KFEAT:  O = enter_zot
 # easy: 1, 2
 : if crawl.coinflip() then
@@ -234,7 +235,7 @@ cvb.bvcccXX-XXcccvb.bvc
 cb...bccXX---XXccb.8.bc
 c.3.3.ccX--O--Xcc.7.7.c
 cb444bccXX---XXccb...bc
-cvb.bvcccXX-XXcccvb.bvc
+cvb.bvcccXXRXXcccvb.bvc
 ccc+ccccccXXXcccccc+ccc
 ccc..ccccccccccccc..ccc
 cccc..ccccccccccc..cccc
