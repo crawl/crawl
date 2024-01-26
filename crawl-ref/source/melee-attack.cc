@@ -233,8 +233,11 @@ bool melee_attack::handle_phase_attempted()
     }
     else
     {
-        // Only the first attack costs any energy.
-        if (!effective_attack_number)
+        // Only the first attack costs any energy normally.
+        // Projected attacks will have already had their energy costs paid
+        // elsewhere (ie: from casting Manifold Assault or making a normal attack
+        // with the Autumn Katana)
+        if (!effective_attack_number && !is_projected)
         {
             int energy = attacker->as_monster()->action_energy(EUT_ATTACK);
             int delay = attacker->attack_delay().roll();
@@ -1076,7 +1079,7 @@ bool melee_attack::attack()
     else
     {
         if (attacker != defender
-            && (adjacent(defender->pos(), attack_position) || is_projected)
+            && (adjacent(defender->pos(), attack_position))
             && !is_riposte)
         {
             // Check for defender Spines
@@ -2740,8 +2743,8 @@ bool melee_attack::mons_attack_effects()
                           && adjacent(attacker->pos(), defender->pos())
                           && !player_stair_delay() // feet otherwise occupied
                           && player_equip_unrand(UNRAND_SLICK_SLIPPERS);
-    if (attacker != defender && (attk_flavour == AF_TRAMPLE ||
-                                 slippery && attk_flavour != AF_DRAG))
+    if (attacker != defender && !is_projected
+        && (attk_flavour == AF_TRAMPLE || slippery && attk_flavour != AF_DRAG))
     {
         do_knockback(slippery);
     }

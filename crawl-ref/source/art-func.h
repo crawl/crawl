@@ -22,7 +22,6 @@
 
 #define ART_FUNC_H
 
-#include "act-iter.h"      // For autumn katana
 #include "areas.h"         // For silenced() and invalidate_agrid()
 #include "attack.h"        // For attack_strength_punctuation()
 #include "beam.h"          // For Lajatang of Order's silver damage
@@ -36,7 +35,6 @@
 #include "fineff.h"        // For the Storm Queen's Shield
 #include "god-conduct.h"   // did_god_conduct
 #include "mgen-data.h"     // For Sceptre of Asmodeus
-#include "melee-attack.h"  // For autumn katana
 #include "message.h"
 #include "monster.h"
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
@@ -53,6 +51,7 @@
 #include "spl-miscast.h"   // For Spellbinder and plutonium sword miscasts
 #include "spl-monench.h"   // For Zhor's aura
 #include "spl-summoning.h" // For Zonguldrok animating dead
+#include "spl-transloc.h"  // For Autumn Katana's Manifold Assault
 #include "tag-version.h"
 #include "terrain.h"       // For storm bow
 #include "unwind.h"        // For autumn katana
@@ -1667,46 +1666,17 @@ static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
 
     unwind_bool nonrecursive_space(_slicing, true);
 
-    vector<actor *> targets;
-    for (actor_near_iterator ai(attacker, LOS_NO_TRANS); ai; ++ai)
-    {
-        if (defender->pos() == ai->pos())
-            continue;
-
-        if (mons_aligned(attacker, *ai))
-            continue;
-        if (attacker->is_player()
-            && (ai->wont_attack()
-                || mons_attitude(*ai->as_monster()) == ATT_NEUTRAL))
-        {
-            continue;
-        }
-        if (ai->is_monster() && (mons_is_firewood(*ai->as_monster())
-                                 || mons_is_projectile(*ai->as_monster())))
-        {
-            continue;
-        }
-        targets.emplace_back(*ai);
-    }
-
-    if (targets.empty())
+    // If attempting to cast manifold assault would abort (likely because of no
+    // valid targets in range), do nothing
+    if (cast_manifold_assault(*attacker, 100, false, false, defender) == spret::abort)
         return;
 
     mprf("%s slice%s through the folds of space itself!",
          attacker->name(DESC_THE).c_str(),
          attacker->is_player() ? "" : "s");
 
-    shuffle_array(targets);
-    const size_t max_targets = 4;
-    for (size_t i = 0; i < max_targets && i < targets.size(); i++)
-    {
-        melee_attack atk(attacker, targets[i]);
-        atk.is_projected = true;
-        atk.attack();
-
-        if (!attacker->alive())
-            break;
-    }
+    // Casting with 100 power = up to 4 targets hit
+    cast_manifold_assault(*attacker, 100, false, true, defender);
 }
 
 ///////////////////////////////////////////////////

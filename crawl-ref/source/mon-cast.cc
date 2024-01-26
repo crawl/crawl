@@ -1234,6 +1234,7 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_IGNITE_POISON:
         case SPELL_IRRADIATE:
         case SPELL_FOXFIRE:
+        case SPELL_MANIFOLD_ASSAULT:
             return 6;
 
         case SPELL_SUMMON_DRAGON:
@@ -1878,6 +1879,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_STOKE_FLAMES:
     case SPELL_IRRADIATE:
     case SPELL_FUNERAL_DIRGE:
+    case SPELL_MANIFOLD_ASSAULT:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -6754,6 +6756,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _cast_dirge(*mons);
         return;
 
+    case SPELL_MANIFOLD_ASSAULT:
+        cast_manifold_assault(*mons, mons_spellpower(*mons, SPELL_MANIFOLD_ASSAULT), false);
+        return;
+
     }
 
     if (spell_is_direct_explosion(spell_cast))
@@ -8019,6 +8025,10 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
                 && !delta.origin()
                 && mon_can_move_to_pos(mon, delta));
     }
+
+    case SPELL_MANIFOLD_ASSAULT:
+        return ai_action::good_or_impossible(
+                cast_manifold_assault(*mon, -1, false, false) != spret::abort);
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_SWARM:

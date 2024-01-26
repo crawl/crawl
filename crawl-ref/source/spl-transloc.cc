@@ -1229,11 +1229,11 @@ spret cast_dimensional_bullseye(int pow, monster *target, bool fail)
     return spret::success;
 }
 
-string weapon_unprojectability_reason()
+string weapon_unprojectability_reason(const item_def* wpn)
 {
-    if (!you.weapon())
+    if (!wpn)
         return "";
-    const item_def &it = *you.weapon();
+
     // These don't work properly when performing attacks against non-adjacent
     // targets. Maybe support them in future?
     static const vector<int> forbidden_unrands = {
@@ -1242,7 +1242,7 @@ string weapon_unprojectability_reason()
     };
     for (int urand : forbidden_unrands)
     {
-        if (is_unrandom_artefact(it, urand))
+        if (is_unrandom_artefact(*wpn, urand))
         {
             return make_stringf("%s would react catastrophically with paradoxical space!",
                                 you.weapon()->name(DESC_THE, false, false, false, false, ISFLAG_KNOW_PLUSES).c_str());
@@ -1264,52 +1264,68 @@ static void _animate_manass_hit(const coord_def p)
                                 static_cast<unsigned short>(colour)});
 }
 
-spret cast_manifold_assault(int pow, bool fail, bool real)
+// Mildly hacky: If this was triggered via Autumn Katana, katana_defender is the
+//               target it first triggered on. If nullptr, this is a normal cast.
+spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
+                            actor* katana_defender)
 {
     bool found_unsafe_target = false;
-    vector<monster*> targets;
-    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+    vector<actor*> targets;
+    for (actor_near_iterator ai(&agent, LOS_NO_TRANS); ai; ++ai)
     {
-        if (mi->friendly() || mi->neutral())
+        monster* mon = ai->is_monster() ? ai->as_monster() : nullptr;
+        if (mons_aligned(&agent, *ai) || mon && mon->neutral())
             continue; // this should be enough to avoid penance?
-        if (mons_is_firewood(**mi) || mons_is_projectile(**mi))
+        if (mon && (mons_is_firewood(*mon) || mons_is_projectile(*mon)))
             continue;
-        if (!you.can_see(**mi))
+        if (!agent.can_see(**ai))
             continue;
 
-        // Make a melee attack to test if we'd need a prompt to hit this target,
-        // and ignore all such targets entirely.
+        // If this was triggered by the Autumn Katana, don't hit the original
+        // target a second time
+        if (*ai == katana_defender)
+            continue;
+
+        // If the player is casting, make a melee attack to test if we'd
+        // ordinarily need a prompt to hit this target, and ignore all such
+        // targets entirely.
         //
         // We only perform this test for real casts, because otherwise the game
         // prints a misleading message to the player first (about there being
         // no targets in range)
-        if (real)
+        if (agent.is_player() && real)
         {
-            melee_attack atk(&you, *mi);
+            melee_attack atk(&you, *ai);
             if (!atk.would_prompt_player())
-                targets.emplace_back(*mi);
+                targets.emplace_back(*ai);
             else
                 found_unsafe_target = true;
         }
         else
-            targets.emplace_back(*mi);
+            targets.emplace_back(*ai);
     }
 
     if (targets.empty())
     {
-        if (real && !found_unsafe_target)
-            mpr("You can't see anything to attack.");
-        else if (real && found_unsafe_target)
-            mpr("You can't see anything you can safely attack.");
+        if (agent.is_player() && !katana_defender)
+        {
+            if (real && !found_unsafe_target)
+                mpr("You can't see anything to attack.");
+            else if (real && found_unsafe_target)
+                mpr("You can't see anything you can safely attack.");
+        }
         return spret::abort;
     }
 
+    const item_def *weapon = agent.weapon();
+
     if (real)
     {
-        const string unproj_reason = weapon_unprojectability_reason();
+        const string unproj_reason = weapon_unprojectability_reason(weapon);
         if (unproj_reason != "")
         {
-            mprf("%s", unproj_reason.c_str());
+            if (agent.is_player())
+                mprf("%s", unproj_reason.c_str());
             return spret::abort;
         }
     }
@@ -1317,16 +1333,18 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
     if (!real)
         return spret::success;
 
-    const item_def *weapon = you.weapon();
-    if (!wielded_weapon_check(weapon))
+    if (agent.is_player() && !katana_defender && !wielded_weapon_check(weapon))
         return spret::abort;
 
     fail_check();
 
-    if (player_equip_unrand(UNRAND_AUTUMN_KATANA))
-        mpr("Space folds impossibly around your blade!");
-    else
-        mpr("Space momentarily warps into an impossible shape!");
+    if ((agent.is_player() || you.can_see(agent)) && !katana_defender)
+    {
+        if (weapon && is_unrandom_artefact(*weapon, UNRAND_AUTUMN_KATANA))
+            mprf("Space folds impossibly around %s blade!", agent.name(DESC_ITS).c_str());
+        else
+            mpr("Space momentarily warps into an impossible shape!");
+    }
 
     const bool animate = (Options.use_animations & UA_BEAM) != UA_NONE;
 
@@ -1340,15 +1358,15 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
         if (animate)
             _animate_manass_hit(targets[i]->pos());
 
-        melee_attack atk(&you, targets[i]);
+        melee_attack atk(&agent, targets[i]);
         atk.is_projected = true;
         atk.attack();
 
-        // Only apply delay once, not quadratically.
-        if (i == 0)
-            you.time_taken = atk.roll_delay();
-
-        if (you.hp <= 0 || you.pending_revival)
+        // Stop further attacks if we somehow died in the process.
+        // (Unclear how this is possible?)
+        if (agent.is_player() && you.hp <= 0 || you.pending_revival)
+            break;
+        else if (agent.is_monster() && !agent.alive())
             break;
     }
 
