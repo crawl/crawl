@@ -142,6 +142,7 @@ static void _flay(const monster &caster, actor &defender, int damage);
 static void _cast_still_winds(monster &caster, mon_spell_slot, bolt&);
 static void _mons_summon_elemental(monster &caster, mon_spell_slot, bolt&);
 static void _mons_summon_dancing_weapons(monster &caster, mon_spell_slot, bolt&);
+static void _mons_sticks_to_snakes(monster& mons, mon_spell_slot slot, bolt&);
 static bool _los_spell_worthwhile(const monster &caster, spell_type spell);
 static void _setup_fake_beam(bolt& beam, const monster&, int = -1);
 static void _branch_summon(monster &caster, mon_spell_slot slot, bolt&);
@@ -446,6 +447,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_EARTH_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
     { SPELL_AIR_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
     { SPELL_FIRE_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
+    { SPELL_STICKS_TO_SNAKES, { _always_worthwhile, _mons_sticks_to_snakes } },
     { SPELL_SHEZAS_DANCE, { _always_worthwhile, _mons_summon_dancing_weapons } },
     { SPELL_HASTE_OTHER, {
         _always_worthwhile,
@@ -1255,6 +1257,7 @@ static int _mons_power_hd_factor(spell_type spell)
             return 5;
 
         case SPELL_CHAIN_OF_CHAOS:
+        case SPELL_STICKS_TO_SNAKES:
             return 4;
 
         default:
@@ -4494,6 +4497,22 @@ static void _mons_summon_elemental(monster &mons, mon_spell_slot slot, bolt&)
 
     for (int i = 0; i < count; i++)
         _summon(mons, *mtyp, 3, slot);
+}
+
+static void _mons_sticks_to_snakes(monster& mons, mon_spell_slot slot, bolt&)
+{
+    const int pow = mons_spellpower(mons, SPELL_STICKS_TO_SNAKES);
+    monster_type type = MONS_WATER_MOCCASIN;
+
+    // HD > 15
+    if (pow > 60)
+        type = MONS_ANACONDA;
+    // HD > 8
+    else if (pow > 32)
+        type = MONS_BLACK_MAMBA;
+
+    for (int i = 0; i < 2; ++i)
+        _summon(mons, type, 2, slot);
 }
 
 static void _mons_summon_dancing_weapons(monster &mons, mon_spell_slot slot, bolt&)

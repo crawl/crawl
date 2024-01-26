@@ -3154,6 +3154,10 @@ string summoned_poof_msg(const monster* mons, bool plural)
     case SPELL_CALL_LOST_SOULS:
         msg = "fade%s away";
         break;
+
+    case SPELL_STICKS_TO_SNAKES:
+        msg = "turns back into a lifeless stick";
+        break;
     }
 
     if (valid_mon)

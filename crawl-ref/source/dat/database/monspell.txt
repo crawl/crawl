@@ -901,6 +901,10 @@ vhi's electric charge cast
 
 @The_monster@ charges forward with an electric crackle.
 %%%%
+sticks to snakes cast
+
+@The_monster@ drops a branch and it wriggles to life!
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
