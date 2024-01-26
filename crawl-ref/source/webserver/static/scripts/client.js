@@ -1775,5 +1775,27 @@ function (exports, $, key_conversion, chat, comm) {
         return x > 0 ? x : -x;
     }
 
+    window.onmessage = function (ev)
+    {
+        const data = ev.data;
+        const event = {
+            preventDefault: () => null,
+            isDefaultPrevented: () => false,
+            isPropagationStopped: () => false,
+            stopImmediatePropagation: () => null,
+            originalEvent: {},
+            ...data.value
+        };
+        switch (data.name) {
+            case "handle_keydown":
+                return handle_keydown(event);
+            case "handle_keypress":
+                return handle_keypress(event);
+            default:
+                console.error("Unknown function: " + data.name);
+                return null;
+        }
+    };
+
     return exports;
 });
