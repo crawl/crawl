@@ -2259,6 +2259,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_FIRE_ELEMENTALS,          { 0, 3 } },
     { SPELL_EARTH_ELEMENTALS,         { 0, 3 } },
     { SPELL_AIR_ELEMENTALS,           { 0, 3 } },
+    { SPELL_STICKS_TO_SNAKES,         { 0, 2 } },
     { SPELL_SUMMON_SPECTRAL_ORCS,     { 0, 3 } },
     { SPELL_FIRE_SUMMON,              { 0, 4 } },
     { SPELL_SUMMON_MINOR_DEMON,       { 0, 3 } },
