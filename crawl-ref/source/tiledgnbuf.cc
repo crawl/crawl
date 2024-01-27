@@ -501,6 +501,7 @@ static map<tileidx_t, int> status_icon_sizes = {
     { TILEI_BULLSEYE,       10 },
     { TILEI_VITRIFIED,      6 },
     { TILEI_CURSE_OF_AGONY, 10 },
+    { TILEI_REGENERATION,   8 },
 
     // These are in the bottom right, so don't need to shift.
     { TILEI_BERSERK,        FIXED_LOC_ICON },

@@ -151,11 +151,13 @@ static void _monster_regenerate(monster* mons)
     }
 
     if (mons_class_fast_regen(mons->type)
-        || mons->has_ench(ENCH_REGENERATION)
         || _mons_natural_regen_roll(mons))
     {
         mons->heal(mons_class_regen_amount(mons->type));
     }
+
+    if (mons->has_ench(ENCH_REGENERATION))
+        mons->heal(3 + div_rand_round(mons->max_hit_points, 20));
 
     if (mons_is_hepliaklqana_ancestor(mons->type))
     {

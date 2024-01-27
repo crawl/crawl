@@ -325,7 +325,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             simple_monster_message(caster, msg.c_str(), MSGCH_MONSTER_SPELL);
             // Not spell_hd(spell_cast); this is an invocation
             const int dur = BASELINE_DELAY
-                * min(5 + roll_dice(2, (caster.get_hit_dice() * 10) / 3 + 1),
+                * min(4 + roll_dice(2, (caster.get_hit_dice() * 4) / 3 + 1),
                       100);
             caster.add_ench(mon_enchant(ENCH_STRONG_WILLED, 0, &caster, dur));
             caster.add_ench(mon_enchant(ENCH_REGENERATION, 0, &caster, dur));
@@ -948,6 +948,42 @@ static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&)
     mpr("Roots burst forth from the earth!");
     grasp_with_roots(caster, *foe, turns);
 }
+
+static void _cast_regenerate_other(monster* caster)
+{
+    int seen = 0;
+    monster* targ = nullptr;
+    for (monster_near_iterator mi(caster, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mons_aligned(caster, *mi) && mi->hit_points < mi->max_hit_points
+            && !mi->has_ench(ENCH_REGENERATION))
+        {
+            if (one_chance_in(++seen))
+                targ = *mi;
+        }
+    }
+
+    if (targ != nullptr)
+    {
+        simple_monster_message(*targ, "'s wounds begin to rapidly close.");
+
+        const int pow = mons_spellpower(*caster, SPELL_REGENERATE_OTHER);
+        int dur = (4 + roll_dice(2, pow / 20)) * BASELINE_DELAY;
+        targ->add_ench(mon_enchant(ENCH_REGENERATION, 0, caster, dur));
+
+        // Animate visuals
+        bolt beam;
+        beam.source = targ->pos();
+        beam.target = targ->pos();
+        beam.colour = ETC_HOLY;
+        beam.range = LOS_RADIUS;
+        beam.aimed_at_spot = true;
+        beam.flavour = BEAM_VISUAL;
+        beam.draw_delay = 3;
+        beam.fire();
+    }
+}
+
 
 /// Is the given full-LOS attack spell worth casting for the given monster?
 static bool _los_spell_worthwhile(const monster &mons, spell_type spell)
@@ -1896,6 +1932,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_IRRADIATE:
     case SPELL_FUNERAL_DIRGE:
     case SPELL_MANIFOLD_ASSAULT:
+    case SPELL_REGENERATE_OTHER:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -6792,6 +6829,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         cast_manifold_assault(*mons, mons_spellpower(*mons, SPELL_MANIFOLD_ASSAULT), false);
         return;
 
+    case SPELL_REGENERATE_OTHER:
+        _cast_regenerate_other(mons);
+        return;
+
     }
 
     if (spell_is_direct_explosion(spell_cast))
@@ -8029,6 +8070,17 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
             if (mons_can_bind_soul(mon, *mi))
                 return ai_action::good();
+        return ai_action::bad();
+
+    case SPELL_REGENERATE_OTHER:
+        for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
+        {
+            if (mons_aligned(mon, *mi) && mi->hit_points < mi->max_hit_points
+                && !mi->has_ench(ENCH_REGENERATION))
+            {
+                return ai_action::good();
+            }
+        }
         return ai_action::bad();
 
     case SPELL_POISONOUS_CLOUD:
