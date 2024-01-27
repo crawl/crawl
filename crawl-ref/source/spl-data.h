@@ -3686,6 +3686,18 @@ static const struct spell_desc spelldata[] =
     TILEG_LEES_RAPID_DECONSTRUCTION, // close enough
 },
 
+{
+    SPELL_REGENERATE_OTHER, "Regenerate Other",
+    spschool::necromancy,
+    spflag::monster | spflag::not_self | spflag::helpful,
+    4,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+
 // Not an actual spell - dummy entry for (player) Green Draconian breath.
 {
     SPELL_MEPHITIC_BREATH, "Mephitic Breath",
