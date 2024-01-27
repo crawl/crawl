@@ -6821,6 +6821,14 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
+    case SPELL_SANDBLAST:
+    {
+        _fire_simple_beam(*mons, slot, pbolt);
+        if (mons->alive())
+            mons->lose_energy(EUT_SPELL, 2);
+        return;
+    }
+
     case SPELL_FUNERAL_DIRGE:
         _cast_dirge(*mons);
         return;
