@@ -1791,6 +1791,8 @@ function (exports, $, key_conversion, chat, comm) {
                 return handle_keydown(event);
             case "handle_keypress":
                 return handle_keypress(event);
+            case "text":
+                return comm.send_message("input", data.value);
             default:
                 console.error("Unknown function: " + data.name);
                 return null;
