@@ -326,7 +326,7 @@ void handle_behaviour(monster* mon)
         if (you.pet_target != MHITNOT)
             mon->foe = you.pet_target;
         else
-            set_nearest_monster_foe(mon);
+            set_nearest_monster_foe(mon, true);
     }
 
     // Instead, berserkers attack nearest monsters.
@@ -892,7 +892,7 @@ void handle_behaviour(monster* mon)
 }
 
 static bool _mons_check_foe(monster* mon, const coord_def& p,
-                            bool friendly, bool neutral, bool ignore_sight)
+                            bool friendly, bool neutral)
 {
     // We don't check for the player here because otherwise wandering
     // monsters will always attack you.
@@ -901,7 +901,7 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
 
     monster* foe = monster_at(p);
     return foe && foe != mon
-           && (ignore_sight || mon->can_see(*foe))
+           && foe->visible_to(mon)
            && (foe->friendly() != friendly
                || neutral && !foe->neutral()
                || mon->has_ench(ENCH_FRENZIED))
@@ -913,8 +913,8 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
            || p == you.pos() && mon->has_ench(ENCH_FRENZIED);
 }
 
-// Choose random nearest monster as a foe.
-void set_nearest_monster_foe(monster* mon, bool near_player)
+// Set a monster's foe to the nearest valid hostile monster (ties chosen randomly)
+void set_nearest_monster_foe(monster* mon, bool also_use_player_vision)
 {
     // These don't look for foes.
     if (mon->good_neutral()
@@ -930,22 +930,16 @@ void set_nearest_monster_foe(monster* mon, bool near_player)
 
     coord_def center = mon->pos();
     bool second_pass = false;
-    vector<coord_def> monster_pos;
 
     while (true)
     {
-        for (auto di = distance_iterator(center, true, true,
-                                         second_pass ? you.current_vision :
-                                         LOS_DEFAULT_RANGE);
+        for (auto di = distance_iterator(center, true, true, you.current_vision);
              di; ++di)
         {
-            if (!cell_see_cell(center, *di, LOS_NO_TRANS)
-                || (near_player && !you.see_cell(*di)))
-            {
+            if (!cell_see_cell(center, *di, LOS_NO_TRANS))
                 continue;
-            }
 
-            if (_mons_check_foe(mon, *di, friendly, neutral, second_pass))
+            if (_mons_check_foe(mon, *di, friendly, neutral))
             {
                 if (*di == you.pos())
                     mon->foe = MHITYOU;
@@ -955,10 +949,10 @@ void set_nearest_monster_foe(monster* mon, bool near_player)
             }
         }
 
-        // If we're selecting a new summon's autofoe and we were unable to
-        // find a foe in los of the monster, try a second pass using the
+        // If we're selecting a friendly creature's autofoe and we were unable
+        // to find a foe in los of the monster, try a second pass using the
         // player's los instead.
-        if (near_player && !second_pass)
+        if (also_use_player_vision && !second_pass)
         {
             center = you.pos();
             second_pass = true;
