@@ -3012,7 +3012,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
             return false; // blocks square
         }
 
-        if (!summon_can_attack(mons, targ))
+        if (!monster_los_is_valid(mons, targ))
             return false;
 
         // Cut down plants only when no alternative, or they're

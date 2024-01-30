@@ -46,9 +46,9 @@ void make_mons_leave_level(monster* mon);
 
 bool monster_can_hit_monster(monster* mons, const monster* targ);
 
-bool summon_can_attack(const monster* mons);
-bool summon_can_attack(const monster* mons, const coord_def &p);
-bool summon_can_attack(const monster* mons, const actor* targ);
+bool monster_needs_los(const monster* mons);
+bool monster_los_is_valid(const monster* mons, const coord_def &p);
+bool monster_los_is_valid(const monster* mons, const actor* targ);
 
 void shake_off_monsters(const actor* target);
 
