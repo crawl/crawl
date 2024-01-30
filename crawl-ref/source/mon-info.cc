@@ -789,6 +789,9 @@ monster_info::monster_info(const monster* m, int milev)
     if (is_ally_target(*m))
         mb.set(MB_ALLY_TARGET);
 
+    if (m->behaviour == BEH_WITHDRAW)
+        mb.set(MB_RETREATING);
+
     // this must be last because it provides this structure to Lua code
     if (milev > MILEV_SKIP_SAFE)
     {

@@ -84,6 +84,7 @@ bullseye BULLSEYE
 vitrified VITRIFIED
 curse_of_agony CURSE_OF_AGONY
 regeneration REGENERATION
+retreat RETREAT
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

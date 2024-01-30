@@ -2262,6 +2262,7 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_CURSE_OF_AGONY, TILEI_CURSE_OF_AGONY},
     { MB_SPECTRALISED, TILEI_GHOSTLY},
     { MB_REGENERATION, TILEI_REGENERATION },
+    { MB_RETREATING, TILEI_RETREAT  },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)

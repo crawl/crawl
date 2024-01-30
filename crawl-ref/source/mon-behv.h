@@ -54,3 +54,5 @@ void set_nearest_monster_foe(monster* mon, bool near_player = false);
 
 vector<monster *> find_allies_targeting(const actor &a);
 bool is_ally_target(const actor &a);
+
+void mons_end_withdraw_order(monster& mons);
