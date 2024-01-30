@@ -679,6 +679,7 @@ static const duration_def duration_data[] =
     { DUR_JINXBITE_LOST_INTEREST, 0, "", "", "", "", D_EXPIRES, {{"", _maybe_expire_jinxbite}}},
     { DUR_RAMPAGE_HEAL, 0, "", "", "rampage heal", "", D_NO_FLAGS},
     { DUR_TEMP_CLOUD_IMMUNITY, 0, "", "", "temp cloud immunity", "", D_EXPIRES},
+    { DUR_ALLY_RESET_TIMER, 0, "", "", "ally reset timer", "", D_NO_FLAGS},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

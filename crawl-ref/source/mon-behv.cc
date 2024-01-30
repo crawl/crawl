@@ -1036,9 +1036,15 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             mon->del_ench(ENCH_GOLD_LUST);
 
         // Will turn monster against <src>.
-        // Orders to withdraw take precedence over interruptions
-        if (mon->behaviour == BEH_WITHDRAW && src != &you)
+
+        // Allies who are retreating or who have been ordered not to attack
+        // should not respond to this event.
+        if (src != &you
+            && (mon->behaviour == BEH_WITHDRAW
+                || mon->friendly() && you.pet_target == MHITYOU))
+        {
             break;
+        }
 
         // Monster types that you can't gain experience from cannot
         // fight back, so don't bother having them do so. If you
