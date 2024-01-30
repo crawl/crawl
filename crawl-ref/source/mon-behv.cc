@@ -806,72 +806,27 @@ void handle_behaviour(monster* mon)
                 // Reached rally point, stop withdrawing
                 else
                     stop_retreat = true;
-
-            }
-            else if (grid_distance(mon->pos(), you.pos()) >
-                     LOS_DEFAULT_RANGE + 2)
-            {
-                // We're too far from the player. Idle around and wait for
-                // them to catch up.
-                if (!mon->props.exists(IDLE_POINT_KEY))
-                {
-                    mon->props[IDLE_POINT_KEY] = mon->pos();
-                    mon->props[IDLE_DEADLINE_KEY] = you.elapsed_time + 200;
-                }
-
-                coord_def target_rnd;
-                target_rnd.x = random_range(-2, 2);
-                target_rnd.y = random_range(-2, 2);
-                mon->target = clamp_in_bounds(
-                                    mon->props[IDLE_POINT_KEY].get_coord()
-                                    + target_rnd);
-
-                if (you.elapsed_time >= mon->props[IDLE_DEADLINE_KEY].get_int())
-                    stop_retreat = true;
             }
             else
             {
-                // Be more lenient about player distance if a monster is
-                // idling (to prevent it from repeatedly resetting idle
-                // time if its own wanderings bring it closer to the player)
-                if (mon->props.exists(IDLE_POINT_KEY)
-                    && grid_distance(mon->pos(), you.pos()) < LOS_DEFAULT_RANGE)
-                {
-                    mon->props.erase(IDLE_POINT_KEY);
-                    mon->props.erase(IDLE_DEADLINE_KEY);
-                    mon->target = mon->patrol_point;
-                }
-
-                if (mon->pos() == mon->props[LAST_POS_KEY].get_coord())
+                // If we appear to be standing in place (possibly because we're
+                // blocked by a wall or something else), eventually cancel the
+                // retreat order and return to the player.
+                if (mon->props.exists(LAST_POS_KEY)
+                     && mon->pos() == mon->props[LAST_POS_KEY].get_coord())
                 {
                     if (!mon->props.exists(BLOCKED_DEADLINE_KEY))
                         mon->props[BLOCKED_DEADLINE_KEY] = you.elapsed_time + 30;
 
-                    if (!mon->props.exists(IDLE_DEADLINE_KEY))
-                        mon->props[IDLE_DEADLINE_KEY] = you.elapsed_time + 200;
-
-                    if (you.elapsed_time >= mon->props[BLOCKED_DEADLINE_KEY].get_int()
-                        || you.elapsed_time >= mon->props[IDLE_DEADLINE_KEY].get_int())
-                    {
+                    if (you.elapsed_time >= mon->props[BLOCKED_DEADLINE_KEY].get_int())
                         stop_retreat = true;
-                    }
                 }
                 else
-                {
                     mon->props.erase(BLOCKED_DEADLINE_KEY);
-                    mon->props.erase(IDLE_DEADLINE_KEY);
-                }
             }
 
             if (stop_retreat)
-            {
-                new_beh = BEH_SEEK;
-                new_foe = MHITYOU;
-                mon->props.erase(LAST_POS_KEY);
-                mon->props.erase(IDLE_POINT_KEY);
-                mon->props.erase(BLOCKED_DEADLINE_KEY);
-                mon->props.erase(IDLE_DEADLINE_KEY);
-            }
+                mons_end_withdraw_order(*mon);
             else
                 mon->props[LAST_POS_KEY] = mon->pos();
 
@@ -1492,4 +1447,17 @@ bool is_ally_target(const actor &a)
         if (m->friendly() && m->foe == a.mindex())
             return true;
     return false;
+}
+
+// Make a player ally stop retreating and return to you
+void mons_end_withdraw_order(monster& mons)
+{
+    if (mons.behaviour != BEH_WITHDRAW)
+        return;
+
+    mons.behaviour = BEH_SEEK;
+    mons.foe = MHITYOU;
+    mons.patrol_point.reset();
+    mons.props.erase(LAST_POS_KEY);
+    mons.props.erase(BLOCKED_DEADLINE_KEY);
 }

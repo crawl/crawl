@@ -223,6 +223,7 @@ enum monster_info_flags
     MB_BULLSEYE_TARGET,
     MB_VITRIFIED,
     MB_CURSE_OF_AGONY,
+    MB_RETREATING,
     NUM_MB_FLAGS
 };
 

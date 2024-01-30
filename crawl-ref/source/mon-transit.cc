@@ -18,6 +18,7 @@
 #include "god-passive.h" // passive_t::convert_orcs
 #include "items.h"
 #include "libutil.h" // map_find
+#include "mon-behv.h"
 #include "mon-place.h"
 #include "mpr.h"
 #include "religion.h"
@@ -347,7 +348,7 @@ static bool _mons_can_follow_player_from(const monster &mons,
     // seeking the player will follow up/down stairs.
     if (!mons.friendly()
           && (!mons_is_seeking(mons) || mons.foe != MHITYOU)
-        || mons.foe == MHITNOT)
+        || mons.foe == MHITNOT && mons.behaviour != BEH_WITHDRAW)
     {
         return false;
     }
@@ -391,6 +392,7 @@ static bool _tag_follower_at(const coord_def &pos, const coord_def &from,
     fol->patrol_point.reset();
     fol->travel_path.clear();
     fol->travel_target = MTRAV_NONE;
+    mons_end_withdraw_order(*fol);
 
     dprf("%s is marked for following.", fol->name(DESC_THE, true).c_str());
     return true;
