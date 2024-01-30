@@ -293,9 +293,6 @@ void init_monster_symbols()
 
     // Let those follow the feature settings, unless specifically overridden.
     monster_symbols[MONS_ANIMATED_TREE].glyph = get_feat_symbol(DNGN_TREE);
-    for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
-        if (get_monster_data(mc)->genus == MONS_STATUE)
-            monster_symbols[mc].glyph = get_feat_symbol(DNGN_GRANITE_STATUE);
 
     // Validate all glyphs, even those which didn't come from an override.
     for (monster_type i = MONS_PROGRAM_BUG; i < NUM_MONSTERS; ++i)

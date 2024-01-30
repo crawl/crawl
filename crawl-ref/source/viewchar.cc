@@ -20,7 +20,7 @@ static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
             U'\x2320', //⌠
             U'\x2248', //≈
             '~', // sadly, ∼ (U+223C, not ascii ~) and ≃ are not in WGL4
-            '8',  '{',
+            U'\x00df',  '{',
 #if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)
          U'\x2302', //⌂ // CP437 but "optional" in WGL4
 #else
@@ -71,7 +71,7 @@ static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
         // wall .. altar
          '#',  '#',  '*',  '.',  ',', '\'',  '+',  '^',  '>',  '<',  '#',  '_',
         // arch .. item_wand
-        '\\',  '}',  '~', '~', '8',  '{',  '{',  '{',  '}',  ')',  '[',  '/',
+        '\\',  '-',  '~', '~', '8',  '{',  '{',  '{',  '}',  ')',  '[',  '/',
 #if TAG_MAJOR_VERSION == 34
         '%', // food
 #endif

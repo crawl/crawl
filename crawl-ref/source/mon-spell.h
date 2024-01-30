@@ -1005,6 +1005,39 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    // ('I') Immotile non-plants - statues, machines.
+    {  MST_ICE_STATUE,
+      {
+       { SPELL_BOLT_OF_COLD, 20, MON_SPELL_MAGICAL },
+       { SPELL_THROW_ICICLE, 20, MON_SPELL_MAGICAL },
+       { SPELL_FREEZING_CLOUD, 20, MON_SPELL_MAGICAL },
+       { SPELL_SUMMON_ICE_BEAST, 40, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_OBSIDIAN_STATUE,
+      {
+       { SPELL_SUMMON_MINOR_DEMON, 33, MON_SPELL_MAGICAL },
+       { SPELL_SUMMON_DEMON, 33, MON_SPELL_MAGICAL },
+       { SPELL_MESMERISE, 33, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_ORANGE_CRYSTAL_STATUE,
+      {
+       { SPELL_SHADOW_CREATURES, 50, MON_SPELL_MAGICAL },
+       { SPELL_DRAINING_GAZE, 25, MON_SPELL_MAGICAL },
+       { SPELL_MASS_CONFUSION, 25, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_STRANGE_MACHINE,
+      {
+       { SPELL_SUMMON_ILLUSION, 50, MON_SPELL_MAGICAL },
+       { SPELL_SHADOW_CREATURES, 20, MON_SPELL_MAGICAL },
+      }
+    },
+
     // ('K') Kobolds.
     {  MST_KOBOLD_DEMONOLOGIST,
       {
@@ -1559,39 +1592,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    // ('8') Statues.
-    {  MST_ICE_STATUE,
-      {
-       { SPELL_BOLT_OF_COLD, 20, MON_SPELL_MAGICAL },
-       { SPELL_THROW_ICICLE, 20, MON_SPELL_MAGICAL },
-       { SPELL_FREEZING_CLOUD, 20, MON_SPELL_MAGICAL },
-       { SPELL_SUMMON_ICE_BEAST, 40, MON_SPELL_MAGICAL },
-      }
-    },
-
-    {  MST_OBSIDIAN_STATUE,
-      {
-       { SPELL_SUMMON_MINOR_DEMON, 33, MON_SPELL_MAGICAL },
-       { SPELL_SUMMON_DEMON, 33, MON_SPELL_MAGICAL },
-       { SPELL_MESMERISE, 33, MON_SPELL_MAGICAL },
-      }
-    },
-
-    {  MST_ORANGE_CRYSTAL_STATUE,
-      {
-       { SPELL_SHADOW_CREATURES, 50, MON_SPELL_MAGICAL },
-       { SPELL_DRAINING_GAZE, 25, MON_SPELL_MAGICAL },
-       { SPELL_MASS_CONFUSION, 25, MON_SPELL_MAGICAL },
-      }
-    },
-
-    {  MST_STRANGE_MACHINE,
-      {
-       { SPELL_SUMMON_ILLUSION, 50, MON_SPELL_MAGICAL },
-       { SPELL_SHADOW_CREATURES, 20, MON_SPELL_MAGICAL },
-      }
-    },
-
     // ('9') Animate statuary, golems, gargoyles.
     {  MST_GARGOYLE,
       {
@@ -1911,6 +1911,16 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    // ('I') Statues and other immotile non-plants.
+    { MST_ROXANNE,
+      {
+       { SPELL_BOLT_OF_MAGMA, 13, MON_SPELL_WIZARD },
+       { SPELL_IRON_SHOT, 13, MON_SPELL_WIZARD },
+       { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 13, MON_SPELL_WIZARD },
+       { SPELL_BLINK_OTHER_CLOSE, 13, MON_SPELL_WIZARD },
+      }
+    },
+
     // ('J') Jellies.
     { MST_ENDOPLASM,
       {
@@ -2071,16 +2081,6 @@ static const mon_spellbook mspell_list[] =
       {
         { SPELL_CONCENTRATE_VENOM, 30, MON_SPELL_WIZARD },
         { SPELL_SUMMON_SCORPIONS, 15, MON_SPELL_WIZARD },
-      }
-    },
-
-    // ('8') Statues.
-    { MST_ROXANNE,
-      {
-       { SPELL_BOLT_OF_MAGMA, 13, MON_SPELL_WIZARD },
-       { SPELL_IRON_SHOT, 13, MON_SPELL_WIZARD },
-       { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 13, MON_SPELL_WIZARD },
-       { SPELL_BLINK_OTHER_CLOSE, 13, MON_SPELL_WIZARD },
       }
     },
 
