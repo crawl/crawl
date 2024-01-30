@@ -250,5 +250,6 @@ enum duration_type
     DUR_CANINE_FAMILIAR_DEAD,
     DUR_TEMP_CLOUD_IMMUNITY,
     DUR_VILE_CLUTCH,
+    DUR_ALLY_RESET_TIMER,       // 5-turn buffer to cancel 'stop attack' order
     NUM_DURATIONS
 };
