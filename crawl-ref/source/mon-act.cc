@@ -1998,7 +1998,7 @@ void handle_monster_move(monster* mons)
             && mons->behaviour != BEH_WITHDRAW
             && (!(mons_aligned(mons, targ) || targ->type == MONS_FOXFIRE)
                 || mons->has_ench(ENCH_FRENZIED))
-            && monster_can_hit_monster(mons, targ))
+            && monster_los_is_valid(mons, targ))
         {
             // Maybe they can swap places?
             if (_swap_monsters(*mons, *targ))
@@ -2995,7 +2995,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
             return false; // blocks square
         }
 
-        if (!summon_can_attack(mons, targ))
+        if (!monster_los_is_valid(mons, targ))
             return false;
 
         // Cut down plants only when no alternative, or they're

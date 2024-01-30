@@ -68,7 +68,7 @@ static void _mon_check_foe_invalid(monster* mon)
         if (actor *foe = mon->get_foe())
         {
             const monster* foe_mons = foe->as_monster();
-            if (foe_mons->alive() && summon_can_attack(mon, foe)
+            if (foe_mons->alive() && monster_los_is_valid(mon, foe)
                 && (mon->has_ench(ENCH_FRENZIED)
                     || mon->friendly() != foe_mons->friendly()
                     || mon->neutral() != foe_mons->neutral()))
@@ -360,8 +360,9 @@ void handle_behaviour(monster* mon)
         set_nearest_monster_foe(mon);
     }
 
-    // Friendly summons will come back to the player if they go out of sight.
-    if (!summon_can_attack(mon))
+    // Friendly allies will come back to the player if they go out of sight
+    // (and haven't been commanded to run away).
+    if (isFriendly && monster_needs_los(mon) && mon->behaviour != BEH_WITHDRAW)
         mon->target = you.pos();
 
     // Monsters do not attack themselves. {dlb}
@@ -906,7 +907,7 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
                || neutral && !foe->neutral()
                || mon->has_ench(ENCH_FRENZIED))
            && !mons_is_projectile(*foe)
-           && summon_can_attack(mon, p)
+           && monster_los_is_valid(mon, p)
            && (friendly || !is_sanctuary(p))
            && !mons_is_firewood(*foe)
            && !foe->props.exists(KIKU_WRETCH_KEY)
@@ -1424,53 +1425,31 @@ void make_mons_leave_level(monster* mon)
     }
 }
 
-// Given an adjacent monster, returns true if the monster can hit it
-bool monster_can_hit_monster(monster* mons, const monster* targ)
+// Summons and perma-friendly allies can't attack out of the player's LOS
+bool monster_needs_los(const monster* mons)
 {
-    return summon_can_attack(mons, targ);
+    return !crawl_state.game_is_arena()
+           && mons->attitude == ATT_FRIENDLY;
 }
 
-static bool _mons_attacks_outside_los(const monster &mon)
-{
-    return !mon.is_summoned()
-        && !mon.has_ench(ENCH_FAKE_ABJURATION)
-        && !mon.has_ench(ENCH_PORTAL_PACIFIED)
-        && mon.god != GOD_YREDELEMNUL
-        && !mons_is_hepliaklqana_ancestor(mon.type)
-        && !mon.props.exists(ANIMATE_DEAD_KEY);
-}
-
-// Friendly summons can't attack out of the player's LOS, it's too abusable.
-bool summon_can_attack(const monster* mons)
-{
-    return crawl_state.game_is_arena()
-        || !mons->friendly()
-        || _mons_attacks_outside_los(*mons)
-        || you.see_cell_no_trans(mons->pos());
-}
-
-bool summon_can_attack(const monster* mons, const coord_def &p)
+// Check whether the player has line of sight to both the attacker and defender,
+// if this is a monster that requires that to attack.
+//
+// Returns true if the monster can attack the specified target.
+bool monster_los_is_valid(const monster* mons, const coord_def &p)
 {
     if (crawl_state.game_is_arena())
         return true;
 
-    // Spectral weapons only attack their target
-    if (mons->type == MONS_SPECTRAL_WEAPON)
-        return false;
-
-    if (!mons->friendly()
-        // XXX: can we merge foxfire in?
-        || _mons_attacks_outside_los(*mons) && mons->type != MONS_FOXFIRE)
-    {
+    if (!monster_needs_los(mons))
         return true;
-    }
 
     return you.see_cell_no_trans(mons->pos()) && you.see_cell_no_trans(p);
 }
 
-bool summon_can_attack(const monster* mons, const actor* targ)
+bool monster_los_is_valid(const monster* mons, const actor* targ)
 {
-    return summon_can_attack(mons, targ->pos());
+    return monster_los_is_valid(mons, targ->pos());
 }
 
 vector<monster *> find_allies_targeting(const actor &a)

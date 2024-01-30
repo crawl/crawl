@@ -763,18 +763,13 @@ void make_derived_undead_fineff::fire()
 
     if (mg.god != GOD_YREDELEMNUL)
     {
-        if (undead->type == MONS_ZOMBIE)
-            undead->props[ANIMATE_DEAD_KEY] = true;
-        else
-        {
-            int dur = undead->type == MONS_SKELETON ? 3 : 5;
+        int dur = undead->type == MONS_SKELETON ? 3 : 5;
 
-            // Sculpt Simulacrum has a shorter duration than Bind Soul simulacra
-            if (spell == SPELL_SIMULACRUM)
-                dur = 3;
+        // Sculpt Simulacrum has a shorter duration than Bind Soul simulacra
+        if (spell == SPELL_SIMULACRUM)
+            dur = 3;
 
-            undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
-        }
+        undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
     }
     if (!agent.empty())
         mons_add_blame(undead, "animated by " + agent);

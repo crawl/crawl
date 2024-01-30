@@ -3473,7 +3473,7 @@ void melee_attack::do_spines()
             // Dithmenos' shadow can't take damage, don't spam.
             || attacker->type == MONS_PLAYER_SHADOW
             // Don't let spines kill things out of LOS.
-            || !summon_can_attack(defender->as_monster(), attacker))
+            || !monster_los_is_valid(defender->as_monster(), attacker))
         {
             return;
         }
