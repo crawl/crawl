@@ -2760,7 +2760,12 @@ static ai_action::goodness _mons_likes_blinking(const monster &caster)
     if (caster.no_tele())
         return ai_action::impossible();
     // Prefer to keep a polar vortex going rather than blink.
-    return ai_action::good_or_bad(!caster.has_ench(ENCH_POLAR_VORTEX));
+    if (caster.has_ench(ENCH_POLAR_VORTEX))
+        return ai_action::bad();
+
+    // Prefer not to blink if a friendly monster is targeting the player so that
+    // they won't constantly blink while resting/travelling
+    return ai_action::good_or_bad(caster.get_foe());
 }
 
 /// Can the caster see the given target's cell and lava next to (or under) them?
@@ -7772,7 +7777,8 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         return ai_action::good_or_bad(forest_near_enemy(mon));
 
     case SPELL_BATTLESPHERE:
-        return ai_action::good_or_bad(!find_battlesphere(mon));
+        return ai_action::good_or_bad((!mon->friendly() || mon->get_foe())
+                                      && !find_battlesphere(mon));
 
     case SPELL_INJURY_BOND:
         for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
