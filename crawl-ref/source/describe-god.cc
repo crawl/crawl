@@ -538,7 +538,7 @@ static formatted_string _beogh_extra_description()
     vector<monster*> followers;
 
     for (monster_iterator mi; mi; ++mi)
-        if (is_orcish_follower(**mi))
+        if (is_apostle_follower(**mi))
             followers.push_back(*mi);
     for (auto &entry : companion_list)
         // if not elsewhere, follower already seen by monster_iterator

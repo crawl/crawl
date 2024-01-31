@@ -531,7 +531,7 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_BEOGH_SMITING, "Smiting",
             3, 0, 2, LOS_MAX_RANGE,
             {fail_basis::invo, 40, 5, 20}, abflag::none },
-        { ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "Recall Orcish Followers",
+        { ABIL_BEOGH_RECALL_APOSTLES, "Recall Apostles",
             2, 0, 0, -1, {fail_basis::invo, 30, 6, 20}, abflag::none },
         { ABIL_BEOGH_RECRUIT_APOSTLE, "Recruit Apostle",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
@@ -699,8 +699,6 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_IGNIS_RISING_FLAME, "Rising Flame",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
 
-        { ABIL_STOP_RECALL, "Stop Recall",
-            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
         { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
         { ABIL_CONVERT_TO_BEOGH, "Convert to Beogh",
@@ -1083,12 +1081,6 @@ ability_type fixup_ability(ability_type ability)
 {
     switch (ability)
     {
-    case ABIL_YRED_RECALL_UNDEAD_HARVEST:
-    case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
-        if (!you.recall_list.empty())
-            return ABIL_STOP_RECALL;
-        return ability;
-
     case ABIL_TROG_BERSERK:
         if (you.is_lifeless_undead() || you.stasis())
             return ABIL_NON_ABILITY;
@@ -2280,7 +2272,7 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_NEMELEX_DRAW_SUMMONING:
     case ABIL_NEMELEX_DRAW_STACK:
     case ABIL_NEMELEX_STACK_FIVE:
-    case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
+    case ABIL_BEOGH_RECALL_APOSTLES:
     case ABIL_JIYVA_SLIMIFY:
     case ABIL_CHEIBRIADOS_TIME_STEP:
     case ABIL_CHEIBRIADOS_DISTORTION:
@@ -2292,7 +2284,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_WU_JIAN_SERPENTS_LASH:
     case ABIL_IGNIS_FIERY_ARMOUR:
     case ABIL_IGNIS_RISING_FLAME:
-    case ABIL_STOP_RECALL:
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
 
     case ABIL_HEPLIAKLQANA_IDEALISE:
@@ -2924,7 +2915,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_YRED_RECALL_UNDEAD_HARVEST:
         fail_check();
-        start_recall(recall_t::yred);
+        do_player_recall(recall_t::yred);
         break;
 
     case ABIL_YRED_DARK_BARGAIN:
@@ -3276,14 +3267,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         return your_spells(SPELL_SMITING, 12 + skill_bump(SK_INVOCATIONS, 6),
                            false, nullptr, target, fail);
 
-    case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
+    case ABIL_BEOGH_RECALL_APOSTLES:
         fail_check();
-        start_recall(recall_t::beogh);
-        break;
-
-    case ABIL_STOP_RECALL:
-        mpr("You stop recalling your allies.");
-        end_recall();
+        do_player_recall(recall_t::beogh);
         break;
 
     case ABIL_BEOGH_RECRUIT_APOSTLE:

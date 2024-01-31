@@ -133,23 +133,6 @@ void update_companions()
     }
 }
 
-void populate_offlevel_recall_list(vector<pair<mid_t, int> > &recall_list)
-{
-    for (auto &entry : companion_list)
-    {
-        int mid = entry.first;
-        companion &comp = entry.second;
-        if (companion_is_elsewhere(mid, true))
-        {
-            // Recall can't pull monsters out of the Abyss
-            if (comp.level.branch == BRANCH_ABYSS)
-                continue;
-
-            recall_list.emplace_back(mid, comp.mons.mons.get_experience_level());
-        }
-    }
-}
-
 /**
  * Attempt to recall an ally from offlevel.
  *

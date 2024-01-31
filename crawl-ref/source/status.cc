@@ -529,16 +529,6 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
-    case STATUS_RECALL:
-        if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
-        {
-            inf.light_colour = WHITE;
-            inf.light_text   = "Recall";
-            inf.short_text   = "recalling";
-            inf.long_text    = "You are recalling your allies.";
-        }
-        break;
-
     case DUR_WATER_HOLD:
         inf.light_text   = "Engulf";
         if (you.res_water_drowning())

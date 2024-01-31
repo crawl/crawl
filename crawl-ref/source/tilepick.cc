@@ -3822,7 +3822,7 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Beogh
     case ABIL_BEOGH_SMITING:
         return TILEG_ABILITY_BEOGH_SMITE;
-    case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
+    case ABIL_BEOGH_RECALL_APOSTLES:
         return TILEG_ABILITY_BEOGH_RECALL;
     case ABIL_CONVERT_TO_BEOGH:
         return TILEG_ABILITY_CONVERT_TO_BEOGH;

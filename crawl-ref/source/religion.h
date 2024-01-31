@@ -128,7 +128,7 @@ bool yred_reap_chance();
 bool yred_reclaim_souls(bool all = false);
 bool pay_yred_souls(unsigned int how_many, bool just_check = false);
 bool is_yred_undead_follower(const monster& mon);
-bool is_orcish_follower(const monster& mon);
+bool is_apostle_follower(const monster& mon);
 bool is_fellow_slime(const monster& mon);
 bool is_follower(const monster& mon);
 
