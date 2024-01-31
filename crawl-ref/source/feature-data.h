@@ -210,6 +210,13 @@ static feature_def feat_defs[] =
 },
 
 {
+    DNGN_METAL_STATUE, "metal statue", "metal_statue",
+    DCHAR_STATUE, NUM_DCHAR_TYPES,
+    COLOUR_IS(DARKGREY),
+    FFT_SOLID, MF_WALL,
+},
+
+{
     DNGN_GRANITE_STATUE, "granite statue", "granite_statue",
     DCHAR_STATUE, NUM_DCHAR_TYPES,
     COLOUR_IS(DARKGREY),

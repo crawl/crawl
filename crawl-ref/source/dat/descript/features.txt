@@ -937,6 +937,11 @@ A dead mangrove
 
 The dry remains of a long-dead mangrove.
 %%%%
+A metal statue
+
+A base type statue for other statue flavours. If you see this, file a bug
+report.
+%%%%
 # Dis:7
 An iron statue
 

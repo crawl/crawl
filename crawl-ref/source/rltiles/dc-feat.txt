@@ -203,6 +203,7 @@ stone_arch DNGN_STONE_ARCH
 
 %sdir dngn/statues
 orcish_idol DNGN_ORCISH_IDOL
+metal_statue DNGN_METAL_STATUE
 # dungeon statues
 %weight 5
 statue_dwarf DNGN_GRANITE_STATUE

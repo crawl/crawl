@@ -1180,8 +1180,9 @@ KITEM:  | = gold good_item
 KITEM:  12 = gold
 KFEAT:  B = altar_gozag
 KFEAT:  D = granite_statue
+KFEAT:  G = metal_statue
 TILE:   GD = dngn_golden_statue
-: set_feature_name("granite_statue", "golden statue")
+: set_feature_name("metal_statue", "golden statue")
 COLOUR: cGD = yellow
 FTILE:  $|B}+nc12-D = floor_limestone
 FTILE:  " = floor_hall

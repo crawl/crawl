@@ -948,11 +948,12 @@ NAME:   grunt_gozag_statues
 TAGS:   transparent no_item_gen no_monster_gen no_trap_gen temple_overflow_1
 TAGS:   temple_overflow_gozag uniq_altar_gozag decor
 KFEAT:  _ = altar_gozag
+KFEAT:  G = metal_statue
 TILE:   G = dngn_golden_statue
 FTILE:  _-G = floor_limestone
 RTILE:  x = wall_sandstone
 COLOUR: xG = yellow
-: set_feature_name("granite_statue", "golden statue")
+: set_feature_name("metal_statue", "golden statue")
 : interest_check(_G)
 MAP
      @
@@ -974,11 +975,12 @@ TAGS:   temple_overflow_gozag uniq_altar_gozag decor
 KFEAT:  _ = altar_gozag
 ITEM:   gold q:1
 KITEM:  e = gold q:1
+KFEAT:  G = metal_statue
 TILE:   G = dngn_golden_statue
 FTILE:  _-Ge = floor_limestone
 RTILE:  x = wall_sandstone
 COLOUR: xG = yellow
-: set_feature_name("granite_statue", "golden statue")
+: set_feature_name("metal_statue", "golden statue")
 : interest_check(_G)
 MAP
         xxxxx
@@ -1045,12 +1047,13 @@ KMASK:  $ = opaque
 KMASK:  $ = no_monster_gen
 KITEM:  $ = gold
 KFEAT:  _ = altar_gozag
+KFEAT:  G = metal_statue
 TILE:   G = dngn_golden_statue
 TILE:   n = dngn_transparent_stone_yellow
 TILE:   m = dngn_transparent_wall_yellow
 FTILE:  ._Gmn$U = floor_limestone
 COLOUR: .Gmn$U = yellow
-: set_feature_name("granite_statue", "golden statue")
+: set_feature_name("metal_statue", "golden statue")
 MAP
     .....
  G...._....G
@@ -3954,6 +3957,7 @@ ENDMAP
 NAME: nicolae_tso_carved_into_rock
 TAGS: temple_overflow_the_shining_one uniq_altar_the_shining_one
 TAGS: temple_overflow_1 transparent decor
+KFEAT: G = metal_statue
 SUBST: X = xxx.
 COLOUR: ' = yellow
 COLOUR: c = white
@@ -3962,6 +3966,7 @@ TILE: c = wall_church
 FTILE: G'_ = floor_limestone
 KFEAT: _ = altar_the_shining_one
 : interest_check(_G)
+: set_feature_name("metal_statue", "golden statue")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxXXXXxxxxxxxxxxxxx
@@ -4319,11 +4324,12 @@ TAGS:    transparent
 SHUFFLE: GU, _O
 KFEAT:   _ = altar_gozag
 KFEAT:   O = altar_nemelex_xobeh
+KFEAT:   G = metal_statue
 TILE:    G = dngn_golden_statue
 FTILE:   ._GOU+ = floor_limestone
 RTILE:   x = wall_sandstone
 COLOUR:  xG = yellow
-: set_feature_name("granite_statue", "golden statue")
+: set_feature_name("metal_statue", "golden statue")
 MAP
   xxxxxxx
  xx.....xx
@@ -4342,18 +4348,19 @@ TAGS:   transparent
 KITEM:  $ = gold q:1 / gold q:2
 KFEAT:  _ = altar_gozag
 KFEAT:  O = altar_zin
+KFEAT:  G = metal_statue
 TILE:   G = dngn_golden_statue
 COLOUR: G = yellow
 TILE:   v = dngn_metal_wall_white
 COLOUR: v = white
 FTILE:  +._O$ = floor_limestone
-: set_feature_name("granite_statue", "golden statue")
+: set_feature_name("metal_statue", "golden statue")
 : set_feature_name("metal_wall", "silver wall")
 MAP
 vvvvvvvvv
 v..$$$..v
-v._.$.O.v
-v.......v
+v._.G.O.v
+v...$...v
 vv.....vv
  vvv+vvv
 ENDMAP

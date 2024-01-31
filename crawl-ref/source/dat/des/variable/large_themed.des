@@ -883,13 +883,13 @@ DEPTH:  Depths, !Depths:$
 MONS:   flayed ghost w:5 / phantasmal warrior w:5 / shadow wraith / eidolon
 MONS:   ghost moth, Jory, vampire knight
 MONS:   vampire mosquito
+KFEAT:  G = metal_statue
 NSUBST: A = 3:v / *:+, B = 3:v / *:+
 NSUBST: C = 2:v / *:+, D = 2:v / *:+
-# Colouring
+TILE:   G = dngn_statue_iron_golem
 COLOUR: G = cyan
 COLOUR: 5M% = white
 # Making things other things.
-SUBST:  I = G
 # Markers:
 MARKER: V = lua:fog_machine { \
                 pow_max = 10, delay_min = 5, delay_max = 30, \
@@ -898,7 +898,7 @@ MARKER: V = lua:fog_machine { \
             }
 # Final subst
 SUBST:  MV = .
-:       set_feature_name("granite_statue", "iron statue")
+:       set_feature_name("metal_statue", "iron statue")
 :       dgn.delayed_decay(_G, '%', 'human corpse / human skeleton')
 veto {{
     if you.uniques("Jory") then
@@ -933,7 +933,7 @@ xxvvvvvvvvvvv...v.3.v...vvvvvvvvvvvxxxxxxxxxxxxxxxxxx
 xxxvvvvvvvvvvv+vv...vv+vvvvvvvvvvvvxxxxxxxxxxxxxxxxxx
 xxvvMMMMMMMvvv.vv.Y.vv.v...v...vvvvxxxxxxxxxxxxxxxxxx
 xxv555%%%MMMvv.vv...vv.+.2.".2.+..vxxxxxxxxxxxxxxxxxx
-xxv555%I%MMM+..vv+++vvvv...v...vv.vxxxxxxxxxxxxxxxxxx
+xxv555%G%MMM+..vv+++vvvv...v...vv.vxxxxxxxxxxxxxxxxxx
 xxv555%%%MMMvvvv.....vvvvvvvvvvvv.vxxxxxxxxxxxxxxxxxx
 xxvvMMMMMMMv+.+..111..+.........+.vxxxxxxxxxxxxxxxxxx
 xxvvvvvvvvvvvvvv..V..vvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxx

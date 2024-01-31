@@ -1237,6 +1237,7 @@ static const map<dungeon_feature_type, feature_frag> fraggable_terrain = {
     { DNGN_BROKEN_CLEAR_DOOR, { "rock", "stone door frame" } },
     { DNGN_STONE_ARCH, { "rock", "stone arch" } },
     // Metal -- small but nasty explosion
+    { DNGN_METAL_STATUE, { "metal", "metal statue", frag_damage_type::metal } },
     { DNGN_METAL_WALL, { "metal", "metal wall", frag_damage_type::metal } },
     { DNGN_GRATE, { "metal", "iron grate", frag_damage_type::metal } },
     // Crystal -- large & nasty explosion
@@ -1490,6 +1491,7 @@ static const map<dungeon_feature_type, int> terrain_shatter_chances = {
     { DNGN_TREE,             33 }, // also applies to all other types of tree
     { DNGN_CLEAR_STONE_WALL, 25 },
     { DNGN_STONE_WALL,       25 },
+    { DNGN_METAL_STATUE,     15 },
     { DNGN_METAL_WALL,       15 },
 };
 
