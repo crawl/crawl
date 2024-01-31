@@ -431,14 +431,10 @@ Smiting ability
 Beogh will not allow you to use this directly against another apostle during a
 divine trial.
 %%%%
-Recall Orcish Followers ability
+Recall Orcish Apostles ability
 
-Recalls your orcish followers from anywhere in the dungeon to your immediate
+Recalls your apostles from anywhere in the dungeon to your immediate
 surroundings.
-%%%%
-Stop Recall ability
-
-Stops recalling your followers.
 %%%%
 Dismiss Apostle ability
 

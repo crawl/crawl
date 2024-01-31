@@ -1737,10 +1737,6 @@ static void _tag_construct_you(writer &th)
         marshallInt(th, unc.second);
     }
 
-    marshallUnsigned(th, you.recall_list.size());
-    for (mid_t recallee : you.recall_list)
-        _marshall_as_int(th, recallee);
-
     marshallUByte(th, 1); // number of seeds, for historical reasons: always 1
     marshallUnsigned(th, you.game_seed);
     marshallBoolean(th, you.fully_seeded); // TODO: remove on major version inc?
@@ -4057,16 +4053,13 @@ static void _tag_read_you(reader &th)
     }
     }
 
-    if (th.getMinorVersion() >= TAG_MINOR_INCREMENTAL_RECALL)
+    if (th.getMinorVersion() >= TAG_MINOR_INCREMENTAL_RECALL
+        && th.getMinorVersion() < TAG_MINOR_NO_INCREMENTAL_RECALL)
     {
-#endif
-    count = unmarshallUnsigned(th);
-    you.recall_list.resize(count);
-    for (int i = 0; i < count; i++)
-        you.recall_list[i] = unmarshall_int_as<mid_t>(th);
-#if TAG_MAJOR_VERSION == 34
+        count = unmarshallUnsigned(th);
+        for (int i = 0; i < count; i++)
+            unmarshallInt(th);
     }
-
 
     if (th.getMinorVersion() < TAG_MINOR_SEEDS)
     {

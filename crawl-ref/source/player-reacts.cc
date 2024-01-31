@@ -835,9 +835,6 @@ static void _decrement_durations()
             _handle_recitation(new_recite);
     }
 
-    if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
-        do_recall(delay);
-
     if (you.duration[DUR_DRAGON_CALL])
         do_dragon_call(delay);
 

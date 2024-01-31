@@ -247,8 +247,8 @@ const vector<vector<god_power>> & get_all_god_powers()
             { 3, ABIL_BEOGH_DISMISS_APOSTLE_2, ""},
             { 3, ABIL_BEOGH_DISMISS_APOSTLE_3, ""},
             { 2, ABIL_BEOGH_SMITING, "smite your foes" },
-            { 3, ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "recall your orcish followers" },
             { 3, ABIL_BEOGH_RECRUIT_APOSTLE, "recruit orcish followers" },
+            { 3, ABIL_BEOGH_RECALL_APOSTLES, "recall your orcish followers" },
             { 5, "walk on water" },
             { 5, ABIL_BEOGH_BLOOD_FOR_BLOOD, "rally a vengeful horde" },
         },
@@ -1713,10 +1713,10 @@ bool is_yred_undead_follower(const monster& mon)
            && mons_is_god_gift(mon, GOD_YREDELEMNUL);
 }
 
-bool is_orcish_follower(const monster& mon)
+bool is_apostle_follower(const monster& mon)
 {
     return mon.alive() && mon.attitude == ATT_FRIENDLY
-           && mons_is_god_gift(mon, GOD_BEOGH);
+           && mon.type == MONS_ORC_APOSTLE;
 }
 
 bool is_fellow_slime(const monster& mon)
@@ -1736,8 +1736,8 @@ bool is_follower(const monster& mon)
 {
     if (you_worship(GOD_YREDELEMNUL))
         return is_yred_undead_follower(mon);
-    else if (will_have_passive(passive_t::convert_orcs))
-        return is_orcish_follower(mon);
+    else if (you_worship(GOD_BEOGH))
+        return is_apostle_follower(mon);
     else if (you_worship(GOD_JIYVA))
         return is_fellow_slime(mon);
     else if (you_worship(GOD_FEDHAS))

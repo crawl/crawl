@@ -1346,7 +1346,6 @@ namespace quiver
         case ABIL_ASHENZARI_CURSE:
         case ABIL_RU_REJECT_SACRIFICES:
         case ABIL_HEPLIAKLQANA_IDENTITY:
-        case ABIL_STOP_RECALL:
         case ABIL_RENOUNCE_RELIGION:
         case ABIL_CONVERT_TO_BEOGH:
         case ABIL_OKAWARU_GIFT_WEAPON:

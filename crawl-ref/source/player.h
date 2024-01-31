@@ -368,9 +368,6 @@ public:
     // A stack -- back() is the first to go.
     vector<pair<uncancellable_type, int> > uncancel;
 
-    // A list of allies awaiting an active recall
-    vector<mid_t> recall_list;
-
     // Hash seed for deterministic stuff.
     uint64_t game_seed;
     bool fully_seeded; // true on all games started since 0.23 seeding changes
