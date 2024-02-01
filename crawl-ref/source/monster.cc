@@ -738,6 +738,8 @@ void monster::bind_melee_flags()
         flags |= MF_TWO_WEAPONS;
     if (mons_class_flag(type, M_ARCHER))
         flags |= MF_ARCHER;
+    if (mons_class_flag(type, M_CAUTIOUS))
+        flags |= MF_CAUTIOUS;
 }
 
 static bool _needs_ranged_attack(const monster* mon)

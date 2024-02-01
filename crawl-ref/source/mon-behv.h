@@ -12,6 +12,8 @@
 #include "enum.h"
 #include "mon-attitude-type.h"
 
+#define MON_SPELL_USABLE_KEY "mon_spell_usable"
+
 class actor;
 
 enum mon_event_type

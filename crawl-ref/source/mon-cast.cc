@@ -4237,6 +4237,22 @@ static mon_spell_slot _choose_spell_to_cast(monster &mons,
     return { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS };
 }
 
+static bool _valid_caution_spell(spell_type type)
+{
+    switch (type)
+    {
+        // Don't consider being able to blink a valid reason to wait in place.
+        // We might not be in range for anything else, and moving close is still
+        // often better than doing nothing here.
+        case SPELL_BLINK:
+        case SPELL_BLINK_CLOSE:
+            return false;
+
+        default:
+            return true;
+    }
+}
+
 /**
  * Give a monster a chance to cast a spell.
  *
@@ -4324,7 +4340,30 @@ bool handle_mon_spell(monster* mons)
 
     // Should the monster *still* not have a spell, well, too bad {dlb}:
     if (spell_cast == SPELL_NO_SPELL)
+    {
+        // If we didn't choose to cast a spell this turn and we're cautious,
+        // let's see if there's an aggressive spell that we *could* have.
+        if (mons->flags & MF_CAUTIOUS)
+        {
+            mons->props.erase(MON_SPELL_USABLE_KEY);
+
+            for (unsigned int i = 0; i < hspell_pass.size(); ++i)
+            {
+                bolt test_beam = beem;
+
+                if (_valid_caution_spell(hspell_pass[i].spell)
+                    && !_spell_flags_invalid_for_situation(*mons, hspell_pass[i])
+                    && _target_and_justify_spell(*mons, test_beam, hspell_pass[i].spell,
+                                                ignore_good_idea))
+                {
+                    mons->props[MON_SPELL_USABLE_KEY] = true;
+                    break;
+                }
+            }
+        }
+
         return false;
+    }
 
     // Check for antimagic if casting a spell spell.
     if (mons->has_ench(ENCH_ANTIMAGIC) && flags & MON_SPELL_ANTIMAGIC_MASK
