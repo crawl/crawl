@@ -3519,6 +3519,17 @@ static bool _monster_move(monster* mons)
         return _do_move_monster(*mons, newpos - mons->pos());
     }
 
+    // If we're cautious, can see our foe, and already have a valid spell we
+    // could have cast, often hold position instead of advancing closer
+    if (mons->flags & MF_CAUTIOUS
+        && mons->props.exists(MON_SPELL_USABLE_KEY)
+        && mons->get_foe() && mons->can_see(*mons->get_foe())
+        && !one_chance_in(3))
+    {
+        mons->props.erase(MON_SPELL_USABLE_KEY);
+        mmov.reset();
+    }
+
     // Let's not even bother with this if mmov is zero.
     if (mmov.origin() && !mons->confused())
         return false;
