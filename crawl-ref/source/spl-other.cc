@@ -152,20 +152,17 @@ void do_player_recall(recall_t type)
     }
 
     // Then search for recallable companions on any floor
-    if (branch_allows_followers(you.where_are_you))
+    for (auto &entry : companion_list)
     {
-        for (auto &entry : companion_list)
+        const int mid = entry.first;
+        if (companion_is_elsewhere(mid, true))
         {
-            const int mid = entry.first;
-            if (companion_is_elsewhere(mid, true))
-            {
-                // Recall can't pull monsters out of the Abyss
-                if (entry.second.level.branch == BRANCH_ABYSS)
-                    continue;
+            // Recall can't pull monsters out of the Abyss
+            if (entry.second.level.branch == BRANCH_ABYSS)
+                continue;
 
-                if (try_recall(mid))
-                    did_recall = true;
-            }
+            if (try_recall(mid))
+                did_recall = true;
         }
     }
 

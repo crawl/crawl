@@ -1187,17 +1187,13 @@ static void _clear_env_map()
     env.map_forgotten.reset();
 }
 
-static bool _grab_follower_at(const coord_def &pos, bool can_follow)
+static bool _grab_follower_at(const coord_def &pos)
 {
     if (pos == you.pos())
         return false;
 
     monster* fol = monster_at(pos);
     if (!fol || !fol->alive() || fol->incapacitated())
-        return false;
-
-    // only H's ancestors can follow into portals & similar.
-    if (!can_follow && !mons_is_hepliaklqana_ancestor(fol->type))
         return false;
 
     // The monster has to already be tagged in order to follow.
@@ -1227,8 +1223,6 @@ static bool _grab_follower_at(const coord_def &pos, bool can_follow)
 
 static void _grab_followers()
 {
-    const bool can_follow = branch_allows_followers(you.where_are_you);
-
     int non_stair_using_allies = 0;
     int non_stair_using_undead = 0;
     int non_stair_using_summons = 0;
@@ -1280,7 +1274,7 @@ static void _grab_followers()
             duvessa->flags &= ~MF_TAKING_STAIRS;
     }
 
-    if (can_follow && non_stair_using_allies > 0)
+    if (non_stair_using_allies > 0)
     {
         // Summons won't follow and will time out.
         if (non_stair_using_summons > 0)
@@ -1313,7 +1307,7 @@ static void _grab_followers()
                     continue;
 
                 visited[ai->x][ai->y] = true;
-                if (_grab_follower_at(*ai, can_follow))
+                if (_grab_follower_at(*ai))
                     places[!place_set].push_back(*ai);
             }
         }
