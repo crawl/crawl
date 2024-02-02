@@ -171,26 +171,44 @@ xxxwwwWwWxxxx
 xxx...@..xxxx
 ENDMAP
 
-NAME:  lemuel_angel_altar
-DEPTH: Depths
-TAGS:  no_trap_gen no_descent
-MONS: patrolling Daeva / patrolling Angel
-KFEAT:  n = iron_grate
-KFEAT: _ = altar_elyvilon / altar_zin / altar_the_shining_one
-KPROP: >"1_ = no_tele_into
-KMASK: . = !opaque
+NAME:    lemuel_angel_altar
+TAGS:    no_trap_gen no_descent vaults_empty no_wall_fixup
+DEPTH:   Vaults, !Vaults:$, Depths
+MONS:    patrolling Angel, patrolling Daeva
+KFEAT:   A = altar_elyvilon
+KFEAT:   B = altar_zin
+KFEAT:   C = altar_the_shining_one
+KFEAT:   g = metal_statue
+KFEAT:   n = iron_grate
+SHUFFLE: AG / Bg / CG
+SUBST:   - = c
+: if you.in_branch("Depths") then
+SHUFFLE: 1m= / 2n-
+CLEAR:   '
+: else
+SUBST:   ' = ., = = c
+: end
+KPROP:   >"12ABC = no_tele_into
+KMASK:   . = !opaque
+KMASK:   x = no_wall_fixup
+COLOUR:  g = silver
+TILE:    G = dngn_statue_angel
+TILE:    g = dngn_silver_statue
+: set_feature_name("granite_statue", "silver statue")
 MAP
-   .....
-  ..cnc..
- ..xc>cx..
-..xxc"cxx..
-.ccc=1cccc.
-.n>""_"">n.
-.cccc"cccc.
-..xxc"cxx..
- ..xc>cx..
-  ..cnc..
-   .....
+    '''''
+    .....
+   ..cmc..
+  ..xc>cx..
+'..xxc"cGx..'
+'.ccc=1cccc.'
+'.m>""A"">m.'
+'.cccc"cccc.'
+'..xGc"cxx..'
+  ..xc>cx..
+   ..cmc..
+    .....
+    '''''
 ENDMAP
 
 ##############################################################################

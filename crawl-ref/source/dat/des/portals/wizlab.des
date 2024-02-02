@@ -1340,7 +1340,7 @@ LFLOORTILE: floor_nerves
 LROCKTILE:  wall_flesh
 TILE:       c = wall_flesh
 TILE:       m = wall_transparent_flesh
-TILE:       + = no_random dngn_fleshy_orifice
+TILE:       + = dngn_fleshy_orifice
 COLOUR:     m = yellow
 COLOUR:     c+ = lightred
 COLOUR:     W = green

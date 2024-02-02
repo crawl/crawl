@@ -976,11 +976,24 @@ Frost-covered floor
 Earth locked within perpetual frost and cold. It seems ageless and changeless,
 as though it has existed in this state for an eternity.
 %%%%
-# Pan: the holy level
+# Gozag and TSO vaults.
 A golden statue
 
 A solid gold statue of a saint.
 %%%%
+# Zin vaults and Vaults branch.
+A silver statue
+
+A geometric statue of solid silver, in both material and form championing
+security and stasis.
+%%%%
+# Xom, Nemelex, and klown vaults.
+A scintillating statue
+
+A magically shifting statue seemingly content to glimmer and dance in place,
+dedicated to the ineffable cosmic games of chaos.
+%%%%
+# Holy Pan.
 A silver wall
 
 A wall made of pure silver.

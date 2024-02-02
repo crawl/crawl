@@ -289,8 +289,15 @@ ENDMAP
 
 NAME:    ziggurat_pillar_centre_l
 TAGS:    ziggurat_pillar centered no_dump unrand no_exits
-SHUFFLE: X' / X' / 'X
-SUBST:   xX : bcmvxG, ' = .
+KFEAT:   g = metal_statue
+SHUFFLE: X' / X' / G' / 'X
+SUBST:   xX : bcmvx, ' = .
+NSUBST:  G = 1:g / *:G
+COLOUR:  G = mountain, g = silver
+TILE:    G = dngn_scintillating_statue
+TILE:    g = dngn_silver_statue
+: set_feature_name("granite_statue", "scintillating statue")
+: set_feature_name("metal_statue", "silver statue")
 MAP
   x
  ...
@@ -302,23 +309,32 @@ ENDMAP
 NAME:    ziggurat_pillar_centre_m
 TAGS:    ziggurat_pillar centered no_dump unrand no_exits
 DEPTH:   Zig:18-
+WEIGHT:  5
 SHUFFLE: X'" / X'" / 'X" / '"X
-SUBST:   x : bcmvxG, X : bcmvxG, '" = .
+SUBST:   x : bcmvx, X : bcmvx G:5, '" = .
+NSUBST:  G = 1:G / *:g
+COLOUR:  G = mountain, g = silver
+TILE:    G = dngn_scintillating_statue
+TILE:    g = dngn_silver_statue
+: set_feature_name("granite_statue", "scintillating statue")
+: set_feature_name("metal_statue", "silver statue")
 MAP
-  x.x
- .....
+  x x
 x."...x
-..'X'..
+ .'X'.
 x...".x
- .....
   x.x
 ENDMAP
 
 NAME:    ziggurat_pillar_centre_n
-TAGS:    ziggurat_pillar centered no_dump unrand no_exits
+TAGS:    ziggurat_pillar centered no_dump unrand no_exits no_pool_fixup
 DEPTH:   Zig:18-
-WEIGHT:  5
-SUBST:   x : w:40 bcmvxG
+SUBST:   x : w:40 bcmvx G:5
+NSUBST:  G = 1:g / *:G
+TILE:    G = dngn_scintillating_statue
+TILE:    g = dngn_silver_statue
+: set_feature_name("granite_statue", "scintillating statue")
+: set_feature_name("metal_statue", "silver statue")
 MAP
  ...
 .wxw.
@@ -427,21 +443,29 @@ xx9.9xx
   xax
 ENDMAP
 
-NAME:  ziggurat_pillar_centre_dispersal
-TAGS:  ziggurat_pillar centered generate_awake unrand no_exits
-KFEAT: ^ = dispersal trap
+NAME:   ziggurat_pillar_centre_dispersal
+TAGS:   ziggurat_pillar centered generate_awake unrand no_exits
+KFEAT:  ^ = dispersal trap
+KFEAT:  a = iron_grate
+COLOUR: G = mountain
+TILE:   G = dngn_scintillating_statue
+: set_feature_name("granite_statue", "scintillating statue")
 MAP
-^G.G^
-GG.GG
+^a.a^
+aG.Ga
 .....
-GG.GG
-^G.G^
+aG.Ga
+^a.a^
 ENDMAP
 
 NAME:   ziggurat_pillar_centre_mark
 TAGS:   ziggurat_pillar centered unrand no_exits
 WEIGHT: 5
 KFEAT:  ^ = alarm trap
+KFEAT:  G = metal_statue
+COLOUR: G = silver
+TILE:   G = dngn_silver_statue
+: set_feature_name("metal_statue", "silver statue")
 MAP
  G.G
 G^.^G

@@ -2851,13 +2851,17 @@ MONS:   pearl dragon
 : else
 KMONS:  4 = Mennas, angel god:Zin dbname:zin_angel
 : end
+KFEAT:  G = metal_statue
 NSUBST: A = 3 / '
 KFEAT:  _ = altar_zin
 FTILE:  '+_!$%*|1234 = floor_vault
 TILE:   v = dngn_metal_wall_white
 TILE:   n = dngn_transparent_stone_white
+TILE:   G = dngn_silver_statue
 COLOUR: vn = white
+COLOUR: G = silver
 SUBST:  !' = .
+: set_feature_name("metal_statue", "silver statue")
 MAP
 ............@@@@@@@............
 ....vvvvvvv...T.T...vvvvvvv....
@@ -2876,14 +2880,14 @@ MAP
 ..vv'''''+'''''''''''+'''''vv..
 .v.vv''vvv'v'v'''v'v'vvv''vv.v.
 .vv.vv''vv'''''''''''vv''vv.vv.
-.....vv''vvvv'''''vvvv''vv.....
+.....vv''vvGv'''''vGvv''vv.....
 ...v.vvv''vvv'2'1'vvv''vvv.v...
 .v...vvvv''vvv'''vvv''vvvv...v.
 ...v.vvvvv'3vvvnvvv3'vvvvv.v...
 .v...vvvvvv+v'''''+vvvvvvv...v.
 ...v.v$$$$v''''4''''v****v.v...
 .v...v$$$$+'''v_v'''+*||*v...v.
-...v.v$$$$vvvvvvvvvvv****v.v...
+...v.v$$$$vGvvvvvvvGv****v.v...
 .....vvvvvvvvvvvvvvvvvvvvv.....
 ...............................
 ENDMAP
@@ -3279,28 +3283,31 @@ MONS:   kobold demonologist
 KMONS:  P = demonic plant
 KMONS:  p = plant
 KFEAT:  C = altar_lugonu
-NSUBST: p = 3 = xcbtvmW.' / 5:P, x = 15 = xcbtvm / *:x
-NSUBST: - = 20 = PxcbtvmW / 15:' / *:., . = 9:', ` = 3:'
+NSUBST: p = 3 = xctvmW.' / 5:P, x = 15 = xxctvm / *:x
+NSUBST: - = 30 = Pxxxcctvm / 5:' / *:., . = 9:', ` = 3:'
 SUBST:  mn : mn
 MARKER: C = lua:fog_machine { cloud_type= "purple smoke", \
              pow_min = 2, pow_max = 4, delay = 15, \
              size = 2, walk_dist = 20, spread_rate= 33 }
 FTILE:  'P1vbtmn = floor_pebble_red
+COLOUR:  G = mountain
+TILE:    G = dngn_scintillating_statue
+: set_feature_name("granite_statue", "scintillating statue")
 MAP
-    ----.----
+    ---------
   --....-....--
   -.-xxxxxxx-.-
- -.-.x-----x.-.-
+ -.-.x--G--x.-.-
  -..-x-.-.-x-..-
 -.xxxx-...-xxxx.-
 -.x--p.-1-.p--x.-
 .-x-...1C1...-x-.
-.-xp...-`-...px-.
+.-xp.-.-`-.-.px-.
 -.x--p..`..p--x.-
 -.xxxxx+++xxxxx.-
  -.p--p.`.p--p.-
  -..pp..`..pp..-
-  -....-`-....-
+  --...-`-...--
   -.--.-`-.--.-
    -----`-----
         @
@@ -6270,6 +6277,7 @@ ITEM:    potion of ambrosia q:4 ident:all / \
 KFEAT:   _ = altar_xom
 KFEAT:   ? = altar_kikubaaqudgha mimic
 KFEAT:   ! = altar_yredelemnul mimic
+KFEAT:   g = granite_statue
 NSUBST:  9 = 3:0 / 1:1 / 2:2 / 1:E / 5 = 1E 0:30 / *:., I = 1:4 / 1:6 / *:.
 NSUBST:  A = 2:8 / 2 = 8. / *:., 8 = 1:3 / 1:4 / 1:6 / 1:7 / 2:H / * = 36E 0:30
 SHUFFLE: BCD
@@ -6278,10 +6286,13 @@ NSUBST:  ; = 1:d / 3:| / * = $% .:20, | = 1:e / *:|
 SUBST:   v : xv
 # Mashing up Crypt, Yred, and Kiku colours in both tiles and console.
 COLOUR:  ` = magenta
+COLOUR:  g = mountain
 TILE:    x = wall_undead_magenta / wall_undead_darkgray
 TILE:    v = dngn_metal_wall_red / dngn_metal_wall_cyan
+TILE:    g = dngn_scintillating_statue
 FTILE:   `+ = floor_pebble_magenta / floor_pebble_red
 FTILE:   ._$%*|?!12345670BCDEF = floor_tomb
+: set_feature_name("granite_statue", "scintillating statue")
 MAP
   ccccccccccccccccccccccccccccccccc
   ccccccccccccccccccccccccccccccccc
@@ -6295,7 +6306,7 @@ ccc.....vv.......`.`.......vv.....ccc
 ccc.....vv......`...`......vv.....ccc
 ccc..........cc`.....`cc..........ccc
 cccc........ccccc...ccccc........cccc
-cccccc``ccccc...........ccccc``cccccc
+ccgccc``ccccc...........ccccc``cccgcc
 ccc........c;....vvv....;c........ccc
 ccc.......cc;...vvvvv...;cc.......ccc
 ccc....9cccc*...9vvv9...*cccc9....ccc
@@ -6306,7 +6317,7 @@ ccc........cc...ccccc...cc........ccc
 ccc........`......c......`........ccc
 cccccc.09..`....$$c$$....`..90.cccccc
 ccccccccc..c...$$1c1$$...c..ccccccccc
-cccccc.....c...5$$c$$5...c.....cccccc
+cccgcc.....c...5$$c$$5...c.....ccgccc
 cccc.......cc....ccc....cc.......cccc
 ccccc....9ccccccccccccccccc9....ccccc
 ccccc....ccccccccccccccccccc....ccccc
@@ -6353,22 +6364,25 @@ SUBST:   T = tt.
 SHUFFLE: 678
 COLOUR:  x = yellow
 COLOUR:  b = white
+COLOUR:  G = mountain
 TILE:    x = wall_wax
 TILE:    b = dngn_crystal_white
+TILE:    G = dngn_scintillating_statue
 FTILE:   '*|67890 = floor_pebble_darkgray
+: set_feature_name("granite_statue", "scintillating statue")
 MAP
  XXXXXXXXXX
-XX..T........
+XX..T..T.....
 X.............     @.....
-X..t.tt.tttt..   ....bb...
+X..G.tt.tttt..   ....bb...
 XT.....t...tt..t....bbbb...
 X..t...t.?t.ttttt.bbbbbbb..
 X..t..t.??..ttttttbbb*|bbb..
-X...tt.???..tx''xbbb6''8bbb.
+XT..tt.???..tx''xbbb6''8bbb.
 X..t..????..t...'bb''bb'*bb.
 X..t.?????tt..T..wb'b''7bbb.
 X..t?????t..t....w'b'''bbb..
- ..t.t..t...t....9b'bbbbbb..
+ ..t.t..t...t....9G'bbbbbb..
  ..tt...t........!9llbbb....
   ..tttt.tt.T.......'bbt...
   ..ttb........U.....'xtt..
@@ -6377,16 +6391,16 @@ X..t?????t..t....w'b'''bbb..
   ...txx........T.tt.tttt..
  ....xxx...4........t...tt..
  ..xxxxx.x......t...t..t.t..
- ..xxx..xxx.....t..t????.t..X
+ ..xxx..xGx.....t..t????.t..X
  .xxx1..1x....T..tt?????.t..X
  .xxd.xx..xx....t..????..t..X
- .xxx2..1xxxb..bt..???.tt...X
+ .xxx2..1xxxb..bt..???.tt..TX
  ..xxxddxxxtttttt..??.t..t..X
   ..xxxxxxx.ttttt.t?.t...t..X
   ...xxxx....t..tt...t.....TX
-   ...xx....   ..tttt.tt.t..X
+   ...xx....   ..tttt.tt.G..X
      .....@    .............X
-                ........T..XX
+                .....T..T..XX
                   XXXXXXXXXX
 ENDMAP
 

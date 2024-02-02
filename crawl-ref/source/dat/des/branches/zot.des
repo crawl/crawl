@@ -1563,14 +1563,18 @@ KFEAT:   no = m
 KFEAT:   A = altar_the_shining_one
 KFEAT:   B = altar_zin
 KFEAT:   C = altar_elyvilon
-SHUFFLE: mno, AG / Bv / CT
+KFEAT:   g = metal_statue
+SHUFFLE: mno, AG / Bg / CT
 SUBST:   } = {([}}))]]<>, y : x.., z : x..
 SUBST:   X : xx., Y : xx., Z : xx., + = +++.
+COLOUR:  g = silver
 FTILE:   'ABC : floor_w_marble
 TILE:    m : dngn_transparent_wall_white
 TILE:    n : dngn_transparent_wall_yellow
 TILE:    o : dngn_transparent_wall_brown
 TILE:    G = dngn_statue_angel
+TILE:    g = dngn_silver_statue
+: set_feature_name("metal_statue", "silver statue")
 MAP
            xxxxxxx..
           xxxx.Txc..
@@ -1583,9 +1587,9 @@ MAP
    xx..'G.xxx..Yc.....xxx
   xx........xX.oYZ...xxGx
  xx..y..x...x....x...x..x
-xxm.....x...v..X..x.x..xx
-xxxxZx.xxxxx+vxxxxxxxxxxx
-xxxxxxx..Y'vx...x.....nxx
+xxm.....x...x..X..x.x..xx
+xxxxZx.xxxxx+xxxxxxxxxxxx
+xxxxxxx..Y'gx...x.....nxx
     xx.x.'B'x...x..z..xx
     xx..x.'Yx........xx
     xx..cx..xxx.T'..xx
@@ -3397,13 +3401,17 @@ KMONS:   Z = killer klown ; club randart plus:12 ego:chaos / \
 KITEM:   BEHKN = $ w:15 / % w:25 / *
 KITEM:   z = any good_item
 KITEM:   Z = superb_item
+KFEAT:   ? = granite_statue
 # Rotates out loot, upstairs, downstairs,
 # both (in an enclosed bubble), or nothing, at either end.
 SHUFFLE: defg{>Z' / defg{<'' / fgde>{'Z / fgde<{'' / defg'|Z' / fgde|''Z / \
          fgfgZ'() / fgfg'Z)( / dede'''' / dede'''' / dede''''
 SHUFFLE: ABC / DEF / GHI / JKL / MNO
-SUBST:   d = @, e = ., f = x, g = c, c : ccb, Z = z Z:6, {' = .
+SUBST:   d = @, e = ., f = x, g = c, c : ccb, Z = z Z:6, {' = ., ? : ?.
 NSUBST:  < = 1:{ / 1:[, > = 1:} / 1:]
+COLOUR:  ? = mountain
+TILE:    ? = dngn_scintillating_statue
+: set_feature_name("granite_statue", "scintillating statue")
 MAP
               xxxxxxxfffff
               xcccccgggggff
@@ -3412,7 +3420,7 @@ MAP
           xcccccc..+..Z.>gf
           xcHHccc..ccc...gf
       xxxxxcG.Gcc..Lcc...gx
-      xcccccc..++...Lc++ccx
+      xcccccc..++..?Lc++ccx
       xcEEccc..++......Jccx
   xxxxxcD.Dcc..ccc......Kcx
   xcccccc..cc..Icc++cccJKcx
@@ -3424,7 +3432,7 @@ MAP
   xxc..++........Dccxxxx
 xxxxc..ccc........Ecx
 xcccc..Ccc++cccccDEcx
-xcc.+...Cc++ccccccccx
+xcc.+..?Cc++ccccccccx
 xe..+.........Acccccx
 de{.cc..........Bcxxx
 de..'c++ccccccA.Bcx
@@ -3452,6 +3460,7 @@ MONS:    titan / lich / deep elf annihilator w:3 / deep elf high priest w:4 / \
 MONS:    nonbase draconian w:20 / protean progenitor / killer klown / \
          death cob / curse toe w:5 / ancient lich / dread lich / \
          electric golem / orb of fire w:5
+KFEAT:   G = metal_statue
 SHUFFLE: EF
 SUBST:   E : .
 SHUFFLE: ABCDF, GH / GH / GH / HG
@@ -3460,9 +3469,12 @@ NSUBST:  3 = 3:3 / 2:4 / 2:334 / 1:344, 6 = 3:5 / 2:6 / 2:556 / 1:566
 SUBST:   % = $%, * = %:3 *:1, | = %:60 *:25 |:15, 1 = 1:3 .:2
 SUBST:   2 = 2:2 .:1, 3 = 3:4 .:1, 4 = 4:6 .:1, 5 = 5:6 .:1, 6 = 6:5 .:1
 SUBST:   A : v:4 .:1, B : v:7 .:3, C : v:1 .:4, DFH = .
-SUBST:   G : v:9 .:1, - : +., + : +:5 .:1, { : {:2 }:3 .:2
+SUBST:   G : v:7 G:2 .:1, - : +., + : +:5 .:1, { : {:2 }:3 .:2
 NSUBST:  { = 1:{ / 1:( / 1:[ / 1:<, } = 1:} / 1:) / 1:] / 1:>
 SUBST:   ( = (:14 >:1 <:1 ):2, [ = [:14 >:1 <:1 ]:2, ) = ):70 >(, ] = ]:70 >[
+COLOUR:  G = silver
+TILE:    G = dngn_silver_statue
+: set_feature_name("metal_statue", "silver statue")
 MAP
        xx@@vvvvv@@xx
       xx..vvvvvvv..xx
@@ -3716,7 +3728,7 @@ SUBST:   az = bbvc
 NSUBST:  2 = 4 = 2223 / 2 = 122 / 1 = 1.. / *:1
 NSUBST:  . = 1:3 / 4:4 / 4:% / *:.
 # 1/15 chance for two downward staircases, 9/15 for (only) one.
-SHUFFLE: ])defG, fGCD~
+SHUFFLE: ])defG, fGHCD~
 # Invert the normal Zot colours.
 : local wallc = "darkgray"
 : local floorc = "white"
@@ -3732,9 +3744,13 @@ SHUFFLE: ])defG, fGCD~
 : end
 : tile("y = wall_zot_" .. wallc)
 : tile("b = dngn_crystal_" .. wallc)
+: tile("v = dngn_metal_wall_" .. wallc)
+: tile("c = dngn_stone_wall_" .. wallc)
 # : tile("n = dngn_transparent_stone_" .. wallc)
-: ftile(".123409def%CD~+ = floor_rough_" .. floorc)
-TILE:  G = dngn_statue_orb
+: ftile(".123409def%CDG~+ = floor_rough_" .. floorc)
+COLOUR: G = mountain
+TILE:   G = dngn_scintillating_statue
+: set_feature_name("granite_statue", "scintillating statue")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -3745,18 +3761,18 @@ xzXX......XyyyyyyyyyyyX......XXyyyyyyyyyyyyXX''''
 xyyXX.....XXyxxxxxxxyXX.....XXyyxxxxxxxxxxyyXX'''
 xxyyXX.....XyxxxxxxxyX1....XXyyxxxxxxxxxxxxyyXX''
 xxxyyX....1zzxxxxxxxzz.....XyyxxxxxxxxxxxxxxyyX''
-xxxxyX.....zxxxxxxxxxz1....XyxxxxxxxxxxxxxxxxyX'
-xxxxyX....Xzx...2...xzX....XyxxxxxxxxxxxxxxxxyX'
-xxxyyX....Xzx1x.].x1xzX....XyyxxxxxxxxxxxxxxxyX''
-xxyyXX...Xzzzzzz+zzzzzzX...XXyyxxxxxxxxxxxxxzzX''
-xxyXX...zzz1....2....1zzz...XXyxxxxd......2zzX'''
+xxxxyX.....zyyyyyyyyyyz1....XyxxxxxxxxxxxxxxxxyX'
+xxxxyX....Xzy...2...yzX....XyxxxxxxxxxxxxxxxxyX'
+xxxyyX....Xzy1y.].y1yzX....XyyxxxxxxxxxxxxxxxyX''
+xxyyXX...Xzzzzzz+zzzzzzX...XXyyxxxyyyyyyyyyyzzX''
+xxyXX...zzz1....2....1zzz...XXyxxyyd......2zzX'''
 xxyX...zzX1...........1Xzz...Xyyyyyyyy1..1zzX''''
 xxXX+++z.................z+++XXXXXXXzzzz+zzX''''
 xx1....................................112z1'''
 xxXX.........................XXXXXXXzzzz+zzX''''
 xxyXXXX...................XXXXyyyyyyy1...1zzX''''
-xxxyyyXXX...............XXXyyyyxxxe.......2zzX'''
-xxxxxyyyXX.............XXyyyxxxxxxxxxxxxxxxxzzX'
+xxxyyyXXX...............XXXyyyyyyye.......2zzX'''
+xxxxxyyyXX.............XXyyyxxxxyyyyyyyyyyyyzzX'
 xxxxxxxyyX...zzz1zzz...XyyxxxxxxxxxxxxxxxxxyyXX'
 xxxxxxxxyX..Xz1z+z1zX..XyxxxxxxxxxxxxxxxxxxyXX'''
 xxxxxxxxyX.2zzX%%%Xzz2.XyxxxxxxxxxxxxxxxxxyyX'''
@@ -3894,9 +3910,11 @@ TAGS:    no_monster_gen no_trap_gen
 DEPTH:   Zot, !Zot:$
 ORIENT:  float
 MONS:    killer klown, ancient lich / dread lich, death cob
+KFEAT:   a = iron_grate
+KFEAT:   ^ = dispersal trap
 NSUBST:  - = 2 / 3 = 3.. / *:.
 : if (crawl.coinflip()) then
-NSUBST:  > = 1 = }:80 > / 1 = ):80 > / 1 = ]:80 >
+NSUBST:  > = 1 = }:80 > / 1 = ):80 > / 1 = ]:80 >, G = 4:G / *:U
 SUBST:   1 = 1 0:30 .
 : else
 NSUBST:  G = 3={[( / *:G
@@ -3905,9 +3923,10 @@ NSUBST:  > = >. / *:.
 : end
 NSUBST:  ^ = 4:^ / *=^..
 SUBST:   a = aaax.
-KFEAT:   a = iron_grate
-KFEAT:   ^ = dispersal trap
+COLOUR:  G = mountain
+TILE:    G = dngn_scintillating_statue
 : coloured_glass(_G)
+: set_feature_name("granite_statue", "scintillating statue")
 MAP
          ...........
        ...............
@@ -3974,6 +3993,9 @@ KMONS:   a = draconian shifter
 # Those laffy daffy Klowns
 NSUBST:  I = 8 = k. / *:.
 KMONS:   k = killer klown
+COLOUR:  G = mountain
+TILE:    G = dngn_scintillating_statue
+: set_feature_name("granite_statue", "scintillating statue")
 MAP
                xxx
              xxxlxxx
@@ -4059,24 +4081,29 @@ KMONS:  f = butterfly
 KFEAT:  _ = altar_zin
 KFEAT:  O = altar_xom
 KFEAT:  ^ = dispersal trap
+KFEAT:  t = demonic_tree
+KFEAT:  g = metal_statue
 NSUBST: - = 4=s / 4=s- / -
-NSUBST: ? = O / 2=^ / 2=2 / 2=2? / 2=t / ?
+NSUBST: ? = O / 2=^ / 2=2 / 2=2? / 2:tG / ?
 SUBST:  ? = ":400 n:30 x:40 v b ^
-SUBST:  " = ":200 W:100 O:30 f 3 4 T U V Y
-COLOUR: " = random
+SUBST:  " = .:200 W:100 O:30 f 3 4 T U V Y
 COLOUR: v = white
+COLOUR: G = mountain, g = silver
 FTILE:  _`1 = floor_w_marble
-TILE:   G = dngn_statue_angel
+TILE:   G = dngn_scintillating_statue
+TILE:   g = dngn_silver_statue
 TILE:   v = dngn_metal_wall_white
+: set_feature_name("granite_statue", "scintillating statue")
+: set_feature_name("metal_statue", "silver statue")
 MAP
 xxxxxxxxx@xxxxxxxxx
 x........."?"?"?"?x
 x.......---"?"?"?"x
-xvvvvnG.---?"?"?"?x
+xvvvvng.---?"?"?"?x
 xv`1`vv.---"?"?"?"x
 xv_`1`1.---?"?"?"?x
 xv`1`vv.---"?"?"?"x
-xvvvvnG.---?"?"?"?x
+xvvvvng.---?"?"?"?x
 x.......---"?"?"?"x
 x........."?"?"?"?x
 xxxxxxxxx@xxxxxxxxx

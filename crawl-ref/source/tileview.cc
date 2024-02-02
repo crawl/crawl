@@ -1144,7 +1144,10 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
     {
         flv->special = random2(256);
     }
-    else if (bg_idx >= TILE_DNGN_ENTER_ZOT_CLOSED && bg_idx < TILE_BLOOD
+    // This includes branch / portal entries and exits, altars, runelights,
+    // and fountains in the first range, and some vault statues in the second.
+    else if (((bg_idx >= TILE_DNGN_ENTER_ZOT_CLOSED && bg_idx < TILE_BLOOD)
+             || (bg_idx >= TILE_DNGN_SILVER_STATUE && bg_idx < TILE_DNGN_SARCOPHAGUS_SEALED))
              && Options.tile_misc_anim)
     {
         flv->special = random2(256);

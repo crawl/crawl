@@ -696,11 +696,15 @@ G...........G
 ..xxxxxxxxx..
 ENDMAP
 
-NAME: ontoclasm_vaults_echo
+NAME:   ontoclasm_vaults_echo
+TAGS:   vaults_hard no_rotate vaults_orient_s
 WEIGHT: 3
-TAGS: vaults_hard no_rotate vaults_orient_s
+KFEAT:  g = metal_statue
 NSUBST: % = 2=% / 1=* / *=.
-SUBST: G : GGGTUY
+SUBST:  G : GGgTUY
+COLOUR: g = silver
+TILE:   g = dngn_silver_statue
+: set_feature_name("metal_statue", "silver statue")
 MAP
 x%..x.x..%x
 ..8..|..8..

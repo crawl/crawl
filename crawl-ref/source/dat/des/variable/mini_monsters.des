@@ -3123,24 +3123,28 @@ ITEM:    potion of curing ident:type / potion of heal wounds ident:type
 KFEAT:   A = altar_the_shining_one
 KFEAT:   B = altar_elyvilon
 KFEAT:   C = altar_zin
+KFEAT:   g = metal_statue
+SHUFFLE: ABC
 COLOUR:  c = white
 TILE:    c = wall_church
-FTILE:   .+23GtABC = floor_limestone
-COLOUR:  .23 = white
-SHUFFLE: ABC
-SUBST:   ' = .
+FTILE:   .+d12GgtABC = floor_limestone
+COLOUR:  .123 = white
+COLOUR:  g = silver
+TILE:    G = dngn_statue_angel
+TILE:    g = dngn_silver_statue
+: set_feature_name("metal_statue", "silver statue")
 MAP
 xxxxxxxxx
 xcccccccx
-xcGdBdGcx
-xcd.3.dcx
-xcA...Ccx
+xcGdBdgcx
+xcd.1.dcx
+xcA.1.Ccx
 xcd...dcx4''
-xcG...Gcx'''''
+xcg...Gcx'''''
 xccc+cccx4''''''
 xct...tcx''''''''
 xc..2..cx'''''''''xx
-xc.....+'''11'''''cx
+xc..2..+'''33'''''cx
 xct....c'''''''''4cx
 xccccccccccccccccccx
 xxxxxxxxxxxxxxxxxxxx
