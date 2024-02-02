@@ -397,7 +397,7 @@ function choose_mset_3(e)
     e.kmons("1 = place:Tomb:$ w:100 / royal mummy")
 -- Elf
   elseif rnd < 98 then
-    e.kmons("1 = place:Elf:$ w:100 / deep elf sorcerer / deep elf blademaster /\
+    e.kmons("1 = place:Elf:$ w:100 / deep elf sorcerer / steel elf blademaster /\
                deep elf master archer / deep elf annihilator / deep elf high priest")
 -- Orc
   elseif rnd < 103 then
@@ -532,7 +532,7 @@ local rnd = crawl.random2(142)
     e.kmons("1 = place:Tomb:$ w:100 / royal mummy")
 -- Elf
   elseif rnd < 114 then
-    e.kmons("1 = place:Elf:$ w:50 / deep elf sorcerer / deep elf blademaster /\
+    e.kmons("1 = place:Elf:$ w:50 / deep elf sorcerer / steel elf blademaster /\
                deep elf master archer / deep elf annihilator / deep elf high priest")
 -- Orc
   elseif rnd < 119 then

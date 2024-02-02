@@ -104,7 +104,7 @@
             e.mons("deep elf zephyrmancer / deep elf knight / deep elf archer")
             e.mons("deep elf high priest / deep elf elementalist / " ..
                    "deep elf demonologist / deep elf death mage")
-            e.mons("deep elf annihilator / deep elf blademaster / "..
+            e.mons("deep elf annihilator / steel elf blademaster / "..
                    "deep elf master archer / deep elf sorcerer")
             e.kfeat("A = fountain_blue")
             e.kfeat("B = fountain_sparkling")
@@ -780,7 +780,7 @@ MONS:    sphinx / entropy weaver / spark wasp / flayed ghost / \
          iron dragon w:4 / golden dragon w:4 / caustic shrike / \
          tentacled monstrosity / juggernaut zombie w:2
 MONS:    spriggan defender w:30 / titan w:30 / ancient lich w:30 / \
-         deep elf blademaster / deep elf master archer / \
+         steel elf blademaster / deep elf master archer / \
          draconian monk / draconian annihilator / draconian knight / \
          juggernaut w:20
 KMONS:   Z = draconian knight / draconian annihilator

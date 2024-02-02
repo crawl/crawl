@@ -633,7 +633,7 @@ Un elfe profond qui se réjouit du désordre et de la destruction. Il est
 largement haï et craint, à la fois pour son pouvoir et pour sa précision dans
 la magie destructive.
 %%%%
-deep elf blademaster
+steel elf blademaster
 
 Un champion des elfes profonds, qui méprise la magie et qui est dévoué à
 l'apprentissage des lames. Ce maître d'arme tient deux armes avec une dextérité

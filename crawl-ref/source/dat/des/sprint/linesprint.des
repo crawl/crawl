@@ -967,9 +967,9 @@ ENDMAP
 NAME:     elf_end
 TAGS:     elf_end
 KMONS:    1 = deep elf annihilator / deep elf high priest / deep elf sorcerer /\
-          deep elf master archer / deep elf blademaster /\
+          deep elf master archer / steel elf blademaster /\
           deep elf demonologist / deep elf death mage
-KMONS:    2 = deep elf blademaster
+KMONS:    2 = steel elf blademaster
 KITEM:    2 = elven rune of zot
 COLOUR:   # = elven_brick
 COLOUR:   12 = white

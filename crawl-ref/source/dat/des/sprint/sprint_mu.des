@@ -416,7 +416,7 @@ MONS: deep elf annihilator ; robe ego:poison_resistance | robe ego:resistance | 
       w:2 deep elf zephyrmancer ; robe ego:poison_resistance | robe ego:cold_resistance | robe
 MONS: deep elf death mage ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
       deep elf high priest ; robe ego:poison_resistance | robe ego:cold_resistance | robe
-MONS: deep elf blademaster ; chain mail ego:cold_resistance /\
+MONS: steel elf blademaster ; chain mail ego:cold_resistance /\
       deep elf master archer ; chain mail ego:poison_resistance . longbow
 NSUBST: $ = 1:b / 1:s / *:|
 : acq_on_sight(_G, 'b', {"book","book","wand"})
@@ -1155,7 +1155,7 @@ KMONS: 6 = shadow wraith
 KMONS: g = ball lightning / ballistomycete spore
 KMONS: 7 = patrolling storm dragon
 KMONS: 8 = patrolling nikola
-KMONS: A = col:magenta plant / w:2 deep elf blademaster
+KMONS: A = col:magenta plant / w:2 steel elf blademaster
 KMONS: B = col:lightmagenta plant
 SUBST: A = AAB
 KFEAT: AB = zot trap w:2 / floor

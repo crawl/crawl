@@ -4985,7 +4985,7 @@ static branch_summon_pair _planerend_summons[] =
     { // Elf enemies
       {  1,   1,  100, FLAT, MONS_DEEP_ELF_SORCERER },
       {  1,   1,  100, FLAT, MONS_DEEP_ELF_HIGH_PRIEST },
-      {  1,   1,   60, FLAT, MONS_DEEP_ELF_BLADEMASTER },
+      {  1,   1,   60, FLAT, MONS_STEEL_ELF_BLADEMASTER },
     }},
   { BRANCH_VAULTS,
     { // Vaults enemies

@@ -173,7 +173,7 @@ static const vector<pop_entry> _okawaru_servants =
   { 11, 21,   1, FLAT, MONS_ORC_WARLORD },
   { 11, 27,   2, FLAT, MONS_FIRE_GIANT },
   { 11, 27,   2, FLAT, MONS_FROST_GIANT },
-  { 13, 27,   1, FLAT, MONS_DEEP_ELF_BLADEMASTER },
+  { 13, 27,   1, FLAT, MONS_STEEL_ELF_BLADEMASTER },
   { 13, 27,   1, FLAT, MONS_DEEP_ELF_MASTER_ARCHER },
   { 13, 27,   1, FLAT, RANDOM_BASE_DRACONIAN },
   { 15, 27,   2, FLAT, MONS_TITAN },

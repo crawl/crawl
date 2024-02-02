@@ -758,7 +758,7 @@ static bool _needs_ranged_attack(const monster* mon)
         return false;
 
     // Blademasters don't want to throw stuff.
-    if (mon->type == MONS_DEEP_ELF_BLADEMASTER)
+    if (mon->type == MONS_STEEL_ELF_BLADEMASTER)
         return false;
 
     return true;
@@ -1501,7 +1501,7 @@ bool monster::wants_weapon(const item_def &weap) const
 
     // Blademasters and master archers like their starting weapon and
     // don't want another, thank you.
-    if (type == MONS_DEEP_ELF_BLADEMASTER
+    if (type == MONS_STEEL_ELF_BLADEMASTER
         || type == MONS_DEEP_ELF_MASTER_ARCHER)
     {
         return false;

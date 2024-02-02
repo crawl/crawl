@@ -433,7 +433,7 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_DEEP_ELF_ELEMENTALIST,
 #endif
-    MONS_DEEP_ELF_BLADEMASTER,
+    MONS_STEEL_ELF_BLADEMASTER,
     MONS_DEEP_ELF_MASTER_ARCHER,
     MONS_SPRIGGAN,
     MONS_SPRIGGAN_DRUID,

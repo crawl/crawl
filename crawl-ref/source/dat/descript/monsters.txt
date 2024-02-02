@@ -1022,11 +1022,6 @@ deep elf archer
 
 An experienced deep elf fighter with a penchant for ranged combat.
 %%%%
-deep elf blademaster
-
-A champion of the deep elves, who scorns magic and is devoted to the study of
-the sword. It wields two weapons with astonishing dexterity and speed.
-%%%%
 deep elf death mage
 
 A deep elf surrounded by a shimmering aura of negative energy, as a result of
@@ -2570,6 +2565,11 @@ steam dragon
 
 A relatively small grey dragon, with a resilient-looking scaly hide and steam
 pouring from its mouth.
+%%%%
+steel elf blademaster
+
+A champion of the steel elves, who scorn magic and are devoted to the study of
+the sword. It wields two weapons with astonishing dexterity and speed.
 %%%%
 steelbarb worm
 

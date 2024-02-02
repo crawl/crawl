@@ -1,4 +1,4 @@
-name: "deep elf blademaster"
+name: "steel elf blademaster"
 glyph: {char: "e", colour: lightcyan}
 flags: [fighter, speaks, warm_blood, two_weapons]
 species: elf

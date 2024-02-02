@@ -3029,7 +3029,7 @@ KMONS:   J = death scarab w:20 / guardian mummy / sphinx / reaper / \
              mummy priest w:5 / royal mummy w:5
 KMONS:   K = deep elf demonologist / deep elf sorcerer / deep elf death mage / \
              deep elf annihilator / deep elf high priest / \
-             deep elf blademaster w:5 / deep elf master archer w:5
+             steel elf blademaster w:5 / deep elf master archer w:5
 KMONS:   L = great orb of eyes / rockslime / quicksilver ooze / azure jelly / \
              acid blob w:5
 KMONS:   M = ancient champion / vampire mage / vampire knight / \
@@ -3186,7 +3186,7 @@ NAME:   grunt_double_whammy
 ORIENT: float
 DEPTH:  Depths, !Depths:$
 MONS:   ettin / deep troll
-MONS:   deep elf blademaster / ettin
+MONS:   steel elf blademaster / ettin
 MAP
    cccccccc     cccccccc
   cc|*2...ccccccc......cc
@@ -4036,7 +4036,7 @@ MONS:  simulacrum place:D:$ / rime drake / freezing wraith
 KMONS: 2 = ice dragon / frost giant
 :     end
 : elseif you.in_branch("Elf") then
-MONS:  deep elf blademaster simulacrum / freezing wraith / ice dragon \
+MONS:  steel elf blademaster simulacrum / freezing wraith / ice dragon \
        / deep elf knight
 KMONS: 2 = frost giant / shard shrike
 : else -- Depths
@@ -6085,7 +6085,7 @@ KMONS:   1 = elf ; ring mail . \
              falchion good_item | long sword good_item
 KMONS:   2 = deep elf knight ; leather armour . \
              scimitar good_item | great sword good_item
-KMONS:   3 = deep elf blademaster ; leather armour . \
+KMONS:   3 = steel elf blademaster ; leather armour . \
              autumn katana w:1 | demon blade good_item | \
              double sword good_item | great sword good_item | \
              triple sword good_item | great sword ego:spectral

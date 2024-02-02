@@ -75,7 +75,7 @@ function base_monster_setup(e)
            spriggan defender / base draconian w:70 / nonbase draconian w:5 /\
            base draconian band w:5 / lorocyproca / daeva / angel /\
            profane servitor / soul eater / hell beast / cherub / apis / ophan /\
-           balrug / green death / blizzard demon / deep elf blademaster /\
+           balrug / green death / blizzard demon / steel elf blademaster /\
            deep elf master archer / war gargoyle")
   e.kmons("E = lich / tentacled monstrosity / golden dragon /\
            iron dragon / quicksilver dragon / titan / acid blob /\
@@ -83,7 +83,7 @@ function base_monster_setup(e)
            rockslime / reaper / royal mummy w:3 / curse toe / ghost moth /\
            killer klown / nonbase draconian w:15 /\
            nonbase draconian band w:15 / storm dragon / shadow dragon /\
-           hellephant / balrug w:5 / deep elf blademaster / cacodemon /\
+           hellephant / balrug w:5 / steel elf blademaster / cacodemon /\
            deep elf master archer / blizzard demon / executioner /\
            green death / hellion / tormentor / iron elemental w:3 /\
            death drake w:2 / hell sentinel w:2 / brimstone fiend w:2 /\
@@ -119,10 +119,10 @@ function base_monster_setup(e)
            deep elf annihilator / deep elf knight band / deep elf death mage /\
            deep elf high priest / deep elf knight / deep elf sorcerer /\
            deep elf demonologist /\
-           deep elf master archer w:3 / deep elf blademaster w:3")
+           deep elf master archer w:3 / steel elf blademaster w:3")
   e.kmons("P = deep elf annihilator / deep elf death mage /\
            deep elf sorcerer / deep elf high priest / deep elf demonologist /\
-           deep elf master archer / deep elf blademaster")
+           deep elf master archer / steel elf blademaster")
   e.kmons("Q = skeleton / zombie / skeletal warrior band /\
            ghoul / vampire knight / vampire mage band / lich w:5 / eidolon /\
            guardian mummy / mummy priest w:5")
@@ -399,7 +399,7 @@ function armoury_setup(e)
   e.kmons("8 = orc warlord")
   e.kmons("9 = orc knight")
   e.kmons("0 = orc knight / vault guard / naga warrior / deep elf knight /\
-             deep elf blademaster w:1 / yaktaur captain band w:5")
+             steel elf blademaster w:1 / yaktaur captain band w:5")
   e.kitem("a = any weapon level:27 ident:all /\
           broad axe plus:5 ident:all /\
           battleaxe plus:3 ident:all /\

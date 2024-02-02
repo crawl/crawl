@@ -1160,13 +1160,13 @@ MONS:    orc knight w:8 / deep elf knight w:1 / deep elf archer w:5 / \
          / yaktaur captain w:2
 MONS:    orc knight w:8 / deep elf knight w:1 / deep elf archer w:1 / \
          stone giant w:6
-MONS:    orc warlord, patrolling deep elf blademaster
+MONS:    orc warlord, patrolling steel elf blademaster
 : else
 MONS:    orc knight w:8 / deep elf knight w:1 / deep elf archer w:1 / \
          stone giant w:6
-MONS:    orc warlord w:4 / deep elf blademaster w:1 / \
+MONS:    orc warlord w:4 / steel elf blademaster w:1 / \
          deep elf master archer w:3
-MONS:    deep elf blademaster, patrolling draconian knight
+MONS:    steel elf blademaster, patrolling draconian knight
 : end
 KFEAT:   _ = altar_okawaru
 # Lots of loot in this one. In true Okawaru fashion, most of it is junk!

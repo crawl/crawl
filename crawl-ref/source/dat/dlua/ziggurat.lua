@@ -266,7 +266,7 @@ mset(spec_fn(function ()
   local d = math.max(2, 300 - 10 * you.depth() - you.zigs_completed())
   local e = math.max(2, math.floor(10 - you.zigs_completed() / 3))
   return "place:Elf:$ w:" .. d .. " / deep elf high priest / " ..
-         "deep elf blademaster / deep elf master archer / " ..
+         "steel elf blademaster / deep elf master archer / " ..
          "deep elf annihilator w:" .. e .. " / deep elf demonologist w:" .. e
 end))
 

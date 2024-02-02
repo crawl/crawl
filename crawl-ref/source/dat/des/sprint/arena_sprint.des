@@ -379,7 +379,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Orc:$ / orc sorcerer w:3 / orc knight / orc warlord w:3 /\
                     iron troll w:5 / stone giant w:5 / orc high priest w:4",
                 "deep elf high priest / deep elf demonologist / deep elf annihilator /\
-                    deep elf sorcerer / deep elf death mage / deep elf blademaster /\
+                    deep elf sorcerer / deep elf death mage / steel elf blademaster /\
                     deep elf master archer / place:Elf:$ w:200",
                 "place:Shoals:$ w:30 / merfolk javelineer / merfolk impaler /\
                     merfolk aquamancer",
@@ -448,7 +448,7 @@ function arena_sprint_get_monster_set(round, boss)
                     iron troll w:5 / stone giant w:5 / orc high priest w:4 /\
                     moth of wrath",
                 "deep elf high priest / deep elf demonologist / deep elf annihilator /\
-                    deep elf sorcerer / deep elf death mage / deep elf blademaster /\
+                    deep elf sorcerer / deep elf death mage / steel elf blademaster /\
                     deep elf master archer / place:Elf:$ w:70",
                 "place:Shoals:$ / merfolk javelineer / merfolk impaler /\
                     merfolk aquamancer",
@@ -522,7 +522,7 @@ function arena_sprint_get_monster_set(round, boss)
                     iron troll w:5 / stone giant w:5 / orc high priest /\
                     moth of wrath",
                 "deep elf high priest / deep elf demonologist / deep elf annihilator /\
-                    deep elf sorcerer / deep elf death mage / deep elf blademaster /\
+                    deep elf sorcerer / deep elf death mage / steel elf blademaster /\
                     deep elf master archer / place:Elf:$ w:20",
                 "place:Shoals:$ / merfolk javelineer / merfolk impaler /\
                     merfolk aquamancer",
@@ -596,7 +596,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "orc sorcerer / orc warlord w:20 / stone giant w:5 /\
                     orc high priest / moth of wrath",
                 "deep elf high priest / deep elf demonologist / deep elf annihilator /\
-                    deep elf sorcerer / deep elf blademaster w:20 /\
+                    deep elf sorcerer / steel elf blademaster w:20 /\
                     deep elf master archer w:20",
                 "merfolk javelineer / merfolk impaler / merfolk aquamancer /\
                     blizzard demon / ice fiend",
@@ -716,7 +716,7 @@ function arena_sprint_init_boss_table()
 
     if crawl.coinflip() then
         -- Elementalist boss is from mu_elemental_laboratory
-        bs[3] = {"place:Elf w:300 / deep elf sorcerer / deep elf blademaster / " ..
+        bs[3] = {"place:Elf w:300 / deep elf sorcerer / steel elf blademaster / " ..
                  "deep elf master archer / deep elf annihilator / deep elf high priest",
                  "fannar hp:400 hd:14 / " ..
                  "deep elf elementalist hp:400 " ..

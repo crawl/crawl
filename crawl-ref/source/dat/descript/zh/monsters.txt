@@ -909,7 +909,7 @@ deep elf archer
 
 一个经验丰富的地底精灵战士，喜欢远程战斗。
 %%%%
-deep elf blademaster
+steel elf blademaster
 
 地底精灵的勇士之一，他蔑视魔法，毕生致力于剑术。
 他能以难以置信的敏捷和速度持两把武器作战。

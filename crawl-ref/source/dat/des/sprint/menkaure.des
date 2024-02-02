@@ -899,7 +899,7 @@ ENDMAP
 NAME:   sprint2_near_end_vault_1
 TAGS:   sprint2_near_end_vault no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 SHUFFLE: 123
-MONS:   deep elf blademaster, eye of devastation, harpy
+MONS:   steel elf blademaster, eye of devastation, harpy
 MARKER: d = lua:fog_machine { \
              pow_min = 3, pow_max = 6, delay = 3, \
              size = 2, walk_dist = 8, spread_rate= -1, \
