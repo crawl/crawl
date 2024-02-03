@@ -98,8 +98,6 @@ static TextDB AllDBs[] =
             "rand_arm.txt", // mostly armour
             "rand_all.txt", // jewellery and general
             "randbook.txt", // artefact books
-            // This doesn't really belong here, but they *are* god gifts...
-            "monname.txt"   // orcish names for Beogh to choose from
             }),
 
     TextDB("speak", "database/",
@@ -108,7 +106,8 @@ static TextDB AllDBs[] =
             "monflee.txt",  // monster fleeing speech
             "wpnnoise.txt", // noisy weapon speech
             "insult.txt",   // imp/demon taunts
-            "godspeak.txt"  // god speech
+            "godspeak.txt", // god speech
+            "monname.txt"   // names for Beogh apostles and Hep ancestors
             }),
 
     TextDB("shout", "database/",
@@ -837,6 +836,13 @@ string getSpeakString(const string &key)
     _execute_embedded_lua(txt);
 
     return txt;
+}
+
+string getRandMonNameString(const string &montype)
+{
+    int num_replacements = 0;
+
+    return _getRandomisedStr(SpeakDB, montype, " name", num_replacements);
 }
 
 /////////////////////////////////////////////////////////////////////////////

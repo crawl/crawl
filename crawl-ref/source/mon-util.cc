@@ -3212,12 +3212,11 @@ static string _get_proper_monster_name(const monster& mon)
     if (!me)
         return "";
 
-    string name = getRandNameString(me->name, " name");
+    string name = getRandMonNameString(me->name);
     if (!name.empty())
         return name;
 
-    return getRandNameString(get_monster_data(mons_genus(mon.type))->name,
-                             " name");
+    return getRandMonNameString(get_monster_data(mons_genus(mon.type))->name);
 }
 
 // Names a previously unnamed monster.
