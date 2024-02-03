@@ -727,9 +727,6 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     damage  = 2 * damg;
     max_hp  = delay * 2;
 
-    // Don't allow the speed to become too low.
-    speed = max(3, (speed / 2) * (1 + power / 100));
-
     ev    = max(3, ev * power / 100);
     ac = ac * power / 100;
     max_hp = max(5, max_hp * power / 100);
