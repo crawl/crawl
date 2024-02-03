@@ -3609,6 +3609,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_DIVINE_ARMAMENT, "Divine Armament",
+    spschool::summoning,
+    spflag::monster,
+    4,
+    200,
+    -1, -1,
+    0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_KISS_OF_DEATH, "Kiss of Death",
     spschool::conjuration | spschool::necromancy,
     spflag::dir_or_target | spflag::needs_tracer | spflag::not_self,

@@ -474,6 +474,14 @@ creature with the Will to resist will still be irresistibly blinked a shorter
 distance, and any monster it affects at all has a separate Will-based chance
 of being confused by the warping of space.
 %%%%
+Divine Armament spell
+
+Manifest's the caster's faith as a spiritual weapon, which will fight and slay
+the caster's enemies under its own power.
+
+As it is a direct reflection of the caster's unique zeal, the weapon they
+receive from their god will be the same each time.
+%%%%
 Doom Howl spell
 
 Unleashes a piercing howl that catches and echoes in victims' minds. While

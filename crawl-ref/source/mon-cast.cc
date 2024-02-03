@@ -32,6 +32,7 @@
 #include "exclude.h"
 #include "fight.h"
 #include "fprop.h"
+#include "ghost.h"
 #include "god-passive.h"
 #include "items.h"
 #include "item-def.h"
@@ -145,6 +146,7 @@ static void _flay(const monster &caster, actor &defender, int damage);
 static void _cast_still_winds(monster &caster, mon_spell_slot, bolt&);
 static void _mons_summon_elemental(monster &caster, mon_spell_slot, bolt&);
 static void _mons_summon_dancing_weapons(monster &caster, mon_spell_slot, bolt&);
+static void _cast_divine_armament(monster& mons, mon_spell_slot slot, bolt&);
 static void _mons_sticks_to_snakes(monster& mons, mon_spell_slot slot, bolt&);
 static bool _los_spell_worthwhile(const monster &caster, spell_type spell);
 static void _setup_fake_beam(bolt& beam, const monster&, int = -1);
@@ -452,6 +454,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_FIRE_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
     { SPELL_STICKS_TO_SNAKES, { _always_worthwhile, _mons_sticks_to_snakes } },
     { SPELL_SHEZAS_DANCE, { _always_worthwhile, _mons_summon_dancing_weapons } },
+    { SPELL_DIVINE_ARMAMENT, { _always_worthwhile, _cast_divine_armament } },
     { SPELL_HASTE_OTHER, {
         _always_worthwhile,
         _fire_simple_beam,
@@ -4569,6 +4572,54 @@ static void _mons_summon_dancing_weapons(monster &mons, mon_spell_slot slot, bol
         monster* mon = _summon(mons, MONS_DANCING_WEAPON, 3, slot);
         if (mon)
             mon->add_ench(ENCH_HASTE);
+    }
+}
+
+static void _cast_divine_armament(monster& mons, mon_spell_slot slot, bolt&)
+{
+    monster* weapon = _summon(mons, MONS_DANCING_WEAPON, 2, slot);
+
+    // If we created a base weapon, adjust it to match the caster
+    if (weapon)
+    {
+        const int tier = mons.get_experience_level() > 17 ? 3
+                         : mons.get_experience_level() > 11 ? 2
+                         : 1;
+
+        int pow = min(100, mons.get_experience_level() * 5);
+
+        // Choose weapon type consistently based on the caster
+        item_def& wpn(*weapon->weapon());
+
+        switch (tier)
+        {
+            case 3:
+                wpn.sub_type = mons.mid % 2 == 0 ? WPN_EXECUTIONERS_AXE : WPN_BARDICHE;
+                set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_SPEED);
+                wpn.plus = 0;
+                pow = 100;
+                break;
+
+            case 2:
+                wpn.sub_type = mons.mid % 2 == 0 ? WPN_BATTLEAXE : WPN_GLAIVE;
+                set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
+                wpn.plus = 0;
+                pow = 70 + mons.get_experience_level();
+                break;
+
+            default:
+            case 1:
+                wpn.sub_type = mons.mid % 2 == 0 ? WPN_WAR_AXE : WPN_TRIDENT;
+                set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_NORMAL);
+                wpn.plus = 0;
+                pow = 50 + mons.get_experience_level() * 2;
+                break;
+        }
+
+        ghost_demon newstats;
+        newstats.init_dancing_weapon(wpn, pow);
+        weapon->set_ghost(newstats);
+        weapon->ghost_demon_init();
     }
 }
 
