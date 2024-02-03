@@ -377,6 +377,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     case TILEP_MONS_SKELETON_LARGE:
     case TILEP_MONS_ORC_WARLORD:
+    case TILEP_MONS_FALLEN_ORC_WARLORD:
     case TILEP_MONS_KOBOLD_BRIGAND:
     case TILEP_MONS_KOBOLD:
     case TILEP_MONS_EFREET:
@@ -651,6 +652,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = 1;
         break;
     case TILEP_MONS_ORC_KNIGHT:
+    case TILEP_MONS_FALLEN_ORC_KNIGHT:
     case TILEP_MONS_ORC_WIZARD:
     case TILEP_MONS_ORC_SORCERER:
     case TILEP_MONS_NERGALLE:
@@ -819,6 +821,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_CHAOS_SPAWN_3:
     case TILEP_MONS_ORC:
     case TILEP_MONS_ORC_WARRIOR:
+    case TILEP_MONS_FALLEN_ORC_WARRIOR:
         *ofs_x = -2;
         *ofs_y = -1;
         break;

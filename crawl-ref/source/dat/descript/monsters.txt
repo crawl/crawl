@@ -405,8 +405,14 @@ be seen again.
 %%%%
 Nergalle
 
-A withered sorceress, exceptionally cruel even by orc standards. The living
-fear her; the dead obey her every command. She has a soft spot for the latter.
+A shrewd and wizened orc who has devoted her life to chronicling the bloody
+history of her people. She claims to know the names and deeds of every last orc
+who lost their life in their great exodus into the Dungeon, and even if this is
+a lie, she nonetheless seems to be on a first-name basis with many of them.
+
+More than any other orc still breathing, she knows the blood and sacrifice it
+took to make this place a refuge for her kind. She will not brook it being
+intruded upon by anyone - least of all you.
 %%%%
 Nessos
 

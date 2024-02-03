@@ -34,9 +34,11 @@
 #include "fprop.h"
 #include "god-passive.h"
 #include "items.h"
+#include "item-def.h"
 #include "level-state-type.h"
 #include "libutil.h"
 #include "losglobal.h"
+#include "makeitem.h"
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
@@ -74,6 +76,7 @@
 #include "terrain.h"
 #ifdef USE_TILE
 #include "rltiles/tiledef-dngn.h"
+#include "rltiles/tiledef-player.h"
 #endif
 #include "tileview.h"
 #include "timed-effects.h"
@@ -1909,7 +1912,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CONFUSION_GAZE:
     case SPELL_MARTYRS_KNELL:
     case SPELL_HAUNT:
-    case SPELL_SUMMON_SPECTRAL_ORCS:
+    case SPELL_VANQUISHED_VANGUARD:
     case SPELL_BRAIN_BITE:
     case SPELL_HOLY_FLAMES:
     case SPELL_CALL_OF_CHAOS:
@@ -4588,47 +4591,51 @@ static void _mons_cast_summon_illusion(monster* mons, spell_type spell)
     mons_summon_illusion_from(mons, foe, spell);
 }
 
-static void _mons_cast_spectral_orcs(monster* mons)
+static void _cast_vanquished_vanguard(monster* mons)
 {
     ASSERT(mons->get_foe());
     const coord_def fpos = mons->get_foe()->pos();
 
-    const int abj = 3;
+    int pow = mons->get_experience_level();
 
-    for (int i = random2(3) + 1; i > 0; --i)
+    for (int i = 0; i < 3; ++i)
     {
-        monster_type mon = MONS_ORC;
-        if (coinflip())
-            mon = MONS_ORC_WARRIOR;
-        else if (one_chance_in(3))
-            mon = MONS_ORC_KNIGHT;
-        else if (one_chance_in(10))
-            mon = MONS_ORC_WARLORD;
+        monster_type type = MONS_ORC_WARRIOR;
+        if (x_chance_in_y(max(0, pow - 10), 20))
+            type = MONS_ORC_WARLORD;
+        else if (x_chance_in_y(max(0, pow - 5), 20))
+            type = MONS_ORC_KNIGHT;
 
-        // Use the original monster type as the zombified type here, to
-        // get the proper stats from it.
         if (monster *orc = create_monster(
                 mgen_data(MONS_SPECTRAL_THING, SAME_ATTITUDE(mons), fpos,
                           mons->foe)
-                .set_summoned(mons, abj, SPELL_SUMMON_SPECTRAL_ORCS, mons->god)
-                .set_base(mon)))
+                .set_summoned(mons, 3, SPELL_VANQUISHED_VANGUARD, mons->god)
+                .set_base(type)))
         {
-            // set which base type this orc is pretending to be for gear
-            // purposes
-            if (mon != MONS_ORC)
+            weapon_type wpn = WPN_TRIDENT;
+            armour_type arm = ARM_SCALE_MAIL;
+#ifdef USE_TILE
+            orc->props[MONSTER_TILE_KEY] = TILEP_MONS_FALLEN_ORC_WARRIOR;
+#endif
+            if (type == MONS_ORC_KNIGHT)
             {
-                orc->mname = mons_type_name(mon, DESC_PLAIN);
-                orc->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR;
+                wpn = WPN_HALBERD;
+                arm = ARM_CHAIN_MAIL;
+#ifdef USE_TILE
+                orc->props[MONSTER_TILE_KEY] = TILEP_MONS_FALLEN_ORC_KNIGHT;
+#endif
+            }
+            else if (type == MONS_ORC_WARLORD)
+            {
+                wpn = WPN_BARDICHE;
+                arm = ARM_PLATE_ARMOUR;
+#ifdef USE_TILE
+                orc->props[MONSTER_TILE_KEY] = TILEP_MONS_FALLEN_ORC_WARLORD;
+#endif
             }
 
-            // give gear using the base type
-            const int lvl = env.absdepth0;
-            give_specific_item(orc, make_mons_weapon(orc->base_monster, lvl));
-            give_specific_item(orc, make_mons_armour(orc->base_monster, lvl));
-            // XXX: and a shield, for warlords...? (wasn't included before)
-
-            // set gear as summoned
-            orc->mark_summoned(abj, true, SPELL_SUMMON_SPECTRAL_ORCS);
+            give_specific_item(orc, items(false, OBJ_WEAPONS, wpn, 0, SPWPN_FORBID_BRAND));
+            give_specific_item(orc, items(false, OBJ_ARMOUR, arm, 0, SPARM_FORBID_EGO));
         }
     }
 }
@@ -5933,15 +5940,15 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         holy_flames(mons, foe);
         return;
 
-    case SPELL_SUMMON_SPECTRAL_ORCS:
+    case SPELL_VANQUISHED_VANGUARD:
         // Wizard mode creates a dummy friendly monster, with no foe.
         if (!foe)
             return;
         if (foe->is_player())
-            mpr("Orcish apparitions take form around you.");
-        else
-            simple_monster_message(*foe->as_monster(), " is surrounded by Orcish apparitions.");
-        _mons_cast_spectral_orcs(mons);
+            mpr("The long-dead rise up around you.");
+        else if (you.can_see(*foe))
+            mprf("The long-dead rise up around %s.", foe->name(DESC_THE).c_str());
+        _cast_vanquished_vanguard(mons);
         return;
 
     case SPELL_HAUNT:

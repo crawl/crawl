@@ -6003,30 +6003,32 @@ w:2
 
 @The_monster@ says, "I think I remember you..."
 %%%%
-############ NERGALLE ### ugly orc sorceress
+############ NERGALLE ### orcish lorekeeper
 Nergalle
 
-@_Nergalle_common_@
+@The_monster@ says, "You have no idea what it means to truly have nothing. We will teach you."
 
-@_Nergalle_rare_@
+@The_monster@ says, "I've lived long enough to see a hundred people like you fail."
+
+VISUAL:@The_monster@ consults an enormous parchment and nods.
+
+VISUAL:@The_monster@ engages in an animated conversation with the air beside them.
+
+@The_monster@ says, "Orcish loyalty transcends such trifles as death."
+
+@The_monster@ says, "Take it from an old woman: your time is up."
+
+@The_monster@ says, "You'll be just another bloodstain on the stones of this place."
+
 %%%%
-_Nergalle_common_
+confused Nergalle
 
-VISUAL:@The_monster@ grimaces horribly.
+@The_monster@ mutters, "Now, where did I put that quill..."
 
-@The_monster@ mutters something.
+@The_monster@ mumbles, "Leave me be, @orc name@. I told you I'm busy..."
 
-@The_monster@ asks @foe,@ "There's a tasty morsel, hm?"
-%%%%
-_Nergalle_rare_
+@The_monster@ mumbles, "Stop that blasted singing, @orc name@. You were always terrible."
 
-@The_monster@ yells @at_foe@, "What are YOU looking at?"
-
-@The_monster@ shouts @at_foe@, "Kill, kill, my pretties!"
-
-@The_monster@ says @to_foe@, "THAT's why. How awful. You!"
-
-@The_monster@ blows @possessive@ nose.
 ## END Nergalle ##
 %%%%
 ############ NESSOS ### evil centaur

@@ -1569,11 +1569,6 @@ Summon Small Mammal spell
 Summons a rat, bat, or quokka to the caster's aid. Spell power increases the
 chance of summoning a quokka.
 %%%%
-Summon Spectral Orcs spell
-
-Summons between one and three spectral orcs, specialised for melee combat
-and equipped with spectral weaponry and armour.
-%%%%
 Summon Spiders spell
 
 Summons one or more spiders.
@@ -1688,6 +1683,14 @@ or rubble.
 Vampiric Draining spell
 
 Steals the life of an adjacent living creature and grants it to the caster.
+%%%%
+Vanquished Vanguard spell
+
+Calls out to the lingering souls of orcs who died in earlier age and for a brief
+moment gives them purpose in battle once again.
+
+More anchored to their past lives than most spectrals, they wield polearms with
+living skill and will encircle their quarry with cold efficiency.
 %%%%
 Venom Bolt spell
 
