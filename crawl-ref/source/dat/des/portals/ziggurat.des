@@ -331,6 +331,7 @@ TAGS:    ziggurat_pillar centered no_dump unrand no_exits no_pool_fixup
 DEPTH:   Zig:18-
 SUBST:   x : w:40 bcmvx G:5
 NSUBST:  G = 1:g / *:G
+COLOUR:  G = mountain, g = silver
 TILE:    G = dngn_scintillating_statue
 TILE:    g = dngn_silver_statue
 : set_feature_name("granite_statue", "scintillating statue")

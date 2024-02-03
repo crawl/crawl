@@ -3237,15 +3237,22 @@ KITEM:   A = superb_item no_pickup, any good_item no_pickup \
              / no_pickup gold good_item w:15, % no_pickup \
              / nothing, % no_pickup / nothing
 KITEM:   _ = earthy gem
+KFEAT:   g = metal_statue
 KFEAT:   A = enter_hell
 KFEAT:   _ = altar_makhleb
 KFEAT:   L = endless_lava
 NSUBST:  1 = 3 = 11122 / * = 1h, 4 = 5:4 / 1:4H / *:H
+SHUFFLE: gb
 SUBST:   T = ttt.
 KPROP:   ` = bloody
 KMASK:   '"`456H = no_item_gen
 FTILE:   "_A456H = floor_cage
 COLOUR:  "456H = red
+COLOUR:  g = warp
+TILE:    g = dimensional_conduit
+TILE:    b = bedeviled_crystal_gehenna
+: set_feature_name("metal_statue", "dimensional conduit")
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 MAP
   ...TTTT....  .............................
  ..TttttttT.......Tt.TtT....TT..TT......Tt....
@@ -3262,12 +3269,12 @@ MAP
 ...tttttttttt.1ttttttt0ttFtttttttttcccccc++cccccccxx
 ..Tttttttttt..tttttttttttt+ccccccccc'''''''''''''clL
 ..Ttttttttt.0t..ttttttttttc''''''''c'''G````G''''clL
-.Tttttttttt..tt..tttttttttc''G'G'''+'''''''''''''clL
-..Tttttttt..tttt.tttttttttc'''c'G''ccccccccccccccclL
+.Tttttttttt..tt..tttttttttc''G'g'''+'''''''''''''clL
+..Tttttttt..tttt.tttttttttc'''c'b''ccccccccccccccclL
 .Tttttttt..ttttt..ttttttttc''c'G'''c"""""""4lllllllL
 ..Ttttt.0ttttttt...tttttttc'''G'c''c""""""""44lllllL
-....T..tttttttt....tttttttc''G'c'''+""""_""654AllllL
-...T0tttttttttt*Q1ttttttttc'''G'G''c"""""4444llllllL
+....T..tttttttt....tttttttc''b'c'''+""""_""654AllllL
+...T0tttttttttt*Q1ttttttttc'''g'G''c"""""4444llllllL
 ..Ttttttttttttttttttttttttc'''''''3c""""4llllllllllL
 ttttttttttttttttttttttttttcccccccccccccllllllllllllL
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxllllllllllllllllllL

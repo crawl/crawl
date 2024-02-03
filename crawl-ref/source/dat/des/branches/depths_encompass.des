@@ -256,7 +256,9 @@ KFEAT:   Du = >
 KFEAT:   H = w
 MARKER:  O = lua:props_marker { portal=1 }
 TILE:    G = depths_crumbled_column
+TILE:    b = bedeviled_crystal_tartarus
 LFLOORTILE: floor_depthstone
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccccxxxxxx
@@ -446,6 +448,7 @@ TILE:     G = dngn_statue_imp / dngn_statue_dragon / dngn_statue_maw / \
               dngn_statue_demonic_bust / dngn_statue_tentacles / \
               dngn_statue_wraith / dngn_statue_sigmund
 TILE:     C = depths_column
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 : set_feature_name("metal_statue", "iron statue")
 LFLOORTILE: floor_depthstone
 MAP
@@ -561,10 +564,11 @@ KFEAT:  A = stone_arch
 NSUBST: 4 = 8 = 4. / *:., 5 = 1:6 / *:5
 MARKER: A = lua:props_marker { portal=1 }
 KMASK:  12345 = !no_monster_gen
+TILE:   b = bedeviled_crystal_gehenna
 MAP
-ll...l%%%l...ll
+ll...l%b%l...ll
 l....l%%%l....l
-...............
+.......%.......
 ..ll...5...ll..
 ..l4..lll..4l..
 ..l..lllll..l..
@@ -595,8 +599,9 @@ KFEAT:  A = stone_arch
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
 MARKER: A = lua:props_marker { portal=1 }
 KMASK:  12345 = !no_monster_gen
+TILE:   b = bedeviled_crystal_cocytus
 MAP
-wwww.......wwww
+wwww...b...wwww
 www....5....www
 ww...........ww
 w...4.www.4...w
@@ -627,13 +632,14 @@ KMONS:  6 = reaper w:18 / lich w:5 / bone dragon w:4
 KFEAT:  A = stone_arch
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
 MARKER: A = lua:props_marker { portal=1 }
+TILE:   b = bedeviled_crystal_tartarus
 TILE:   G = dngn_gravestone
 # FIXME: this doesn't work for encompass subvaults.
 # Lots of statues elsewhere in the level, maybe trim them down?
 : set_feature_name("granite_statue", "a gravestone")
 KMASK: 12345 = !no_monster_gen
 MAP
-.%%%.......%%%.
+.%%%...b...%%%.
 .ccc...4...ccc.
 ...............
 .4....ccc....4.
@@ -668,8 +674,9 @@ NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
 KMASK:  12345 = !no_monster_gen
 COLOUR: G = cyan
 TILE:   G = dngn_statue_iron_golem
+TILE:   b = bedeviled_crystal_dis
 MAP
-%%.5.......5.%%
+%%.5...b...5.%%
 %G...........G%
 .....4...4.....
 ....4.v.v.4....

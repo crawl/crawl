@@ -1539,17 +1539,21 @@ DEPTH:   D:5-8
 MONS:    patrolling burial acolyte, patrolling shadow imp
 MONS:    kobold zombie / gnoll zombie, adder zombie / hound zombie
 KFEAT:   _ = altar_kikubaaqudgha
+KFEAT:   G = metal_statue
 SHUFFLE: ABCD
 NSUBST:  A = 1:2 / *:3, B = 1:2 / *:4
 SUBST:   C = $, D = .
-SUBST:   X : x', Y : x', y : x., z : c..
+SUBST:   X : x', Y : x', y : x., z : c.., G : Gxx
+COLOUR:  G = smoke
+TILE:    G = soul_conduit
+: set_feature_name("metal_statue", "soul conduit")
 CLEAR:   '
 MAP
  Xxxxx.....xxxxY
 XxxBBx.y.y.xCCxxY
 xxxxB+.....+Cxxxx
 xAxxxx.....xxxxxx
-xAAxxc..z..cxxxxx
+xAAxGc..z..cxxxxx
 xx+xc.......xxxx
 ......cc+cc
 .y....c4.3c
@@ -3019,14 +3023,25 @@ NAME:    vehumet_crystals
 TAGS:    temple_overflow_1 temple_overflow_vehumet transparent decor
 TAGS:    uniq_altar_vehumet
 KFEAT:   _ = altar_vehumet
+KFEAT:   G = metal_statue
+SUBST:   G : Gbb
 : interest_check(_G)
+: if crawl.coinflip() then
+COLOUR:  G = vehumet
+TILE:    G = arcane_conduit
+:   set_feature_name("metal_statue", "arcane conduit")
+: else
+COLOUR:  G = fire
+TILE:    G = fiery_conduit
+:   set_feature_name("metal_statue", "fiery conduit")
+: end
 MAP
 .........
 ..b...b..
 .bbb.bbb.
-..b...b..
+..b...G..
 ...._....
-..b...b..
+..G...b..
 .bbb.bbb.
 ..b...b..
 .........
@@ -4931,7 +4946,7 @@ ENDMAP
 
 NAME:   mainiacjoe_overflow_brackets
 TAGS:   temple_overflow_generic_1 transparent
-SUBST:  c : cnvbt
+SUBST:  c : ccnvt
 NSUBST: w = 1:. / *:w
 SUBST:  w : wl
 KMASK:  lw = no_monster_gen
@@ -4965,7 +4980,7 @@ ENDMAP
 
 NAME:  mainiacjoe_overflow_six_doors_small
 TAGS:  temple_overflow_generic_1 transparent
-SUBST: c : cvbt
+SUBST: c : cvt
 SUBST: P : cnvbtwl
 KMASK: wl = no_monster_gen
 KMASK: w = no_pool_fixup

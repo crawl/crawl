@@ -1063,8 +1063,10 @@ SUBST:   a = ., pq = w, z = x
 # Replace this glyph with floor so we can re-use it.
 SUBST:   ! = .
 SHUFFLE: rsu / rr! / zzz / zzz
-SUBST:   r = ., su = w, z = x
+SUBST:   r = ., su = w, z = x, b = bbccc
 : place_freezing_vapour_machine(_G, 8)
+TILE:    b = bedeviled_crystal_cocytus
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 : ice_cave_appearance(_G)
 MAP
                     xxxxxx
@@ -1095,7 +1097,7 @@ xx............xxxsssxxxxxxx...xx
  x-------xxxxxc...cccFccc...c
  xx--<--xxxxxxc.f...FEF...h.c
   xx---xxxxxxxc...cc*i*cc...c
-   xxxxxxxxxxxccccccccccccccc
+   xxxxxxxxxxxcccccccbccccccc
          xxxxx
 ENDMAP
 
@@ -1138,6 +1140,12 @@ SUBST:   4 = 4:70 6, F = .12244
 # items to possibly be at other locations and to possibly include magical loot.
 SHUFFLE: fghi, defgh
 SUBST:   d = d*, e = e*, f = f*, g = g*, h = h*
+# A little extra decor opportunity...
+KFEAT:   S = metal_statue
+SUBST:   S : SSG
+COLOUR:  S = ice
+TILE:    S = icy_conduit
+:   set_feature_name("metal_statue", "icy conduit")
 : ice_cave_appearance(_G)
 MAP
       xxxxx
@@ -1181,7 +1189,7 @@ c.ccc.G...G.ccc.c
 c.c5+.......+5c.c
 c+cccccc+cccccc+c
 c...............c
-ccccG.ccccc.Gcccc
+ccccS.ccccc.Scccc
    cc.cfDgc.cc
     c.c7U7c.c
     c.ch7ic.c

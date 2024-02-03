@@ -1237,11 +1237,14 @@ KITEM:  4 = scroll of fog q:2 ident:all w:20 / condensation vane / \
 SUBST:  a = ..xxl, p = ..'xl, q = .x, ' = '.
 NSUBST: 1 = 1:1 / 2:. / * = 1.., D2 = 1:., $ = 1:4 / *:$
 SUBST:  D = 2., 2 : 22333
-SUBST:  $ = $$deef
+SUBST:  $ = $$deef, b : bbGGG
 MARKER: ' = lua:fog_machine { cloud_type = "black smoke",  walk_dist=3, \
                               pow_min=4, pow_max=10, delay=25, size=2, \
                               spread_rate=0, }
-:volcano_setup(_G)
+TILE:   b = bedeviled_crystal_gehenna
+TILE:   G = dngn_statue_dragon
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
+: volcano_setup(_G)
 MAP
             xxxxxxxxxxxxxxxx
            xxxqqqqqqqqqqqqqxxx
@@ -1262,7 +1265,7 @@ MAP
  cc......ccxxx..1..xxxxx...1..xx
 cc........ccx.....xxxxxa......xx
 c...llll...cx..'..xxxxxxa.....xx
-cG.llllll.Gcxq....xxxxxa.....xx
+cb.llllll.bcxq....xxxxxa.....xx
 c$..llll..$cxq.1..xxxx..'...xx
 cc$$....$$ccxq....qqq....1.xx
  cc$$$$$$ccxxq....q'.....xxx
@@ -1350,10 +1353,14 @@ ORIENT: encompass
 MONS:   fire elemental / hell hound, deep elf pyromancer
 MONS:   deep elf archer ; shortbow ego:flaming . short sword ego:flaming . \
                           leather armour ego:fire_resistance
-KPROP:  - = no_tele_into
 KFEAT:  - = l
-SUBST:  $ = $$$defg
+KFEAT:  G = metal_statue
+SUBST:  $ = $$$defg, G : GG.
 NSUBST: 2 = 1:3 / * = 22., 1 = 1:2 / * = 11.
+KPROP:  - = no_tele_into
+COLOUR: G = fire
+TILE:   G = fiery_conduit
+: set_feature_name("metal_statue", "fiery conduit")
 : volcano_setup(_G)
 MAP
          ----
@@ -1376,7 +1383,7 @@ x--n...c....+..l.2n--
 --n2.1.+...n.2...12n--
 -ccccccccccccccccc+cc-
 -n$$$$$$$$+2..1.....n-
--c$$$$$$$$+32..1....c-
+-c$$$$$$$$+32..1.G.Gc-
 -cccccccccccccccccccc-
 ENDMAP
 

@@ -302,7 +302,7 @@ teleporter_ice_cave DNGN_TELEPORTER_ICE_CAVE
 golden_statue_1 DNGN_GOLDEN_STATUE
 golden_statue_2
 
-#### Tile animation for statuary starts here.
+#### Random tile animation for statuary starts here.
 
 ## silver statues for Zin and the Vaults
 %weight 10
@@ -320,7 +320,52 @@ scintillating_statue_2
 scintillating_statue_3
 scintillating_statue_4
 
-#### Tile animation for statuary ends here.
+#### Random tile animation for statuary ends here.
+#### Cycling tile animation for statuary starts here.
+#### Weights need to be weight 1 for that code to work properly
+
+## magical conduits for themed magic branches, portals, vaults
+## conj, hex, summ / tloc, necro, alch, fire, ice, air, earth
+
+%weight 1
+arcane_conduit_0 ARCANE_CONDUIT
+arcane_conduit_1
+arcane_conduit_2
+arcane_conduit_3
+misfortune_conduit_0 MISFORTUNE_CONDUIT
+misfortune_conduit_1
+misfortune_conduit_2
+misfortune_conduit_3
+dimensional_conduit_0 DIMENSIONAL_CONDUIT
+dimensional_conduit_1
+dimensional_conduit_2
+dimensional_conduit_3
+soul_conduit_0 SOUL_CONDUIT
+soul_conduit_1
+soul_conduit_2
+soul_conduit_3
+alchemical_conduit_0 ALCHEMICAL_CONDUIT
+alchemical_conduit_1
+alchemical_conduit_2
+alchemical_conduit_3
+fiery_conduit_0 FIERY_CONDUIT
+fiery_conduit_1
+fiery_conduit_2
+fiery_conduit_3
+icy_conduit_0 ICY_CONDUIT
+icy_conduit_1
+icy_conduit_2
+icy_conduit_3
+earthen_conduit_0 EARTHEN_CONDUIT
+earthen_conduit_1
+earthen_conduit_2
+earthen_conduit_3
+storm_conduit_0 STORM_CONDUIT
+storm_conduit_1
+storm_conduit_2
+storm_conduit_3
+
+#### Cycling tile animation for statuary ends here.
 
 ## sarcophagus for ragdoll_tomb_raider
 sarcophagus_sealed DNGN_SARCOPHAGUS_SEALED
