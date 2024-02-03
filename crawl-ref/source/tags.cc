@@ -5013,9 +5013,7 @@ static void _tag_construct_level(writer &th)
     env.markers.write(th);
     env.properties.write(th);
 
-    // number of completed dactions. Assume, apparently, that a level can only
-    // be saved if they're complete? TODO: logic is kind of weird.
-    marshallInt(th, you.dactions.size());
+    marshallInt(th, env.dactions_done);
 
     // Save heightmap, if present.
     marshallByte(th, !!env.heightmap);
