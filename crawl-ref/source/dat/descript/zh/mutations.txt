@@ -102,10 +102,6 @@ camouflage mutation
 
 你的皮肤会根据周围环境而变色。这个变异每升一级会提升潜行。
 %%%%
-noise suppression mutation
-
-你消极地抑制着周围环境中的所有噪音，这样怪物就更难察觉到你的行动。
-%%%%
 # ------ 生长 -----
 horns mutation
 
@@ -412,7 +408,7 @@ demonic magic mutation
 %%%%
 noise suppression mutation
 
-你的周围环境更安静，在视线中的任何地方减少了噪音传播的距离。
+你周围的环境更安静了，噪音从你视线以内的任何地方向外传播的距离减少了。
 %%%%
 icemail mutation
 
