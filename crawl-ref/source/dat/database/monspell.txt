@@ -208,6 +208,10 @@ Sheza's Dance cast
 
 @The_monster@ gestures, and weapons take to the air!
 %%%%
+Divine Armament cast
+
+@The_monster@ beseeches @My_God@ to grant them a weapon.
+%%%%
 Druid's Call cast
 
 @The_monster@ calls out to the beasts of the wild!
