@@ -905,6 +905,13 @@ sticks to snakes cast
 
 @The_monster@ drops a branch and it wriggles to life!
 %%%%
+Vanquished Vanguard Nergalle cast
+
+@The_monster@ calls out: "@orc name@, @orc name@, @orc name@ - to me!"
+
+@The_monster@ cries out, "Spectres! Fight for the home you helped make!"
+
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
