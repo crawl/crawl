@@ -2878,6 +2878,9 @@ string mons_simulacrum_immune_reason(const monster *mons)
     if (!mons_can_be_spectralised(*mons))
         return "You can't make a simulacrum of that!";
 
+    if (mons->friendly() || mons->neutral())
+        return "That would be terribly rude!";
+
     return "";
 }
 
