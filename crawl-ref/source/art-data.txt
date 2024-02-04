@@ -667,7 +667,7 @@ FALLBACK: OBJ_WEAPONS/WPN_LONGBOW
 PLUS:    +6
 COLOUR:  ETC_DEATH
 TILE:    urand_blowgun
-TILE_EQ: blowgun
+TILE_EQ: great_bow
 STEALTH: 2
 BOOL:    inv, tilerim, nogen
 # end TAG_MAJOR_VERSION
