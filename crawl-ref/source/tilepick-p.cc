@@ -49,45 +49,6 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         return TILEP_HAND1_STAFF_LARGE + desc;
     }
 
-#if TAG_MAJOR_VERSION == 34
-    if (item.base_type == OBJ_RODS)
-        return _mon_mod(TILEP_HAND1_ROD_FIRST, item.rnd);
-#endif
-
-    if (item.base_type == OBJ_MISCELLANY)
-    {
-        switch (item.sub_type)
-        {
-#if TAG_MAJOR_VERSION == 34
-        case MISC_BOTTLED_EFREET:             return TILEP_HAND1_BOTTLE;
-        case MISC_FAN_OF_GALES:               return TILEP_HAND1_FAN;
-        case MISC_STONE_OF_TREMORS:           return TILEP_HAND1_STONE;
-#endif
-        case MISC_LIGHTNING_ROD:              return 0;
-
-#if TAG_MAJOR_VERSION == 34
-        case MISC_CRYSTAL_BALL_OF_ENERGY:     return TILEP_HAND1_CRYSTAL;
-        case MISC_LAMP_OF_FIRE:               return TILEP_HAND1_LANTERN;
-        case MISC_BUGGY_LANTERN_OF_SHADOWS:   return TILEP_HAND1_BONE_LANTERN;
-#endif
-        case MISC_HORN_OF_GERYON:             return TILEP_HAND1_HORN;
-        case MISC_BOX_OF_BEASTS:              return TILEP_HAND1_BOX;
-
-#if TAG_MAJOR_VERSION == 34
-        case MISC_DECK_OF_ESCAPE:
-        case MISC_DECK_OF_DESTRUCTION:
-        case MISC_DECK_OF_DUNGEONS:
-        case MISC_DECK_OF_SUMMONING:
-        case MISC_DECK_OF_WONDERS:
-        case MISC_DECK_OF_PUNISHMENT:
-        case MISC_DECK_OF_WAR:
-        case MISC_DECK_OF_CHANGES:
-        case MISC_DECK_OF_DEFENCE:
-            return 0;
-#endif
-        }
-    }
-
     if (item.base_type != OBJ_WEAPONS)
         return 0;
 
@@ -249,15 +210,12 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_TRIPLE_CROSSBOW:
         tile = TILEP_HAND1_TRIPLE_CROSSBOW;
         break;
-#if TAG_MAJOR_VERSION == 34
-    case WPN_BLOWGUN:
-        tile = TILEP_HAND1_BLOWGUN;
-        break;
-#endif
     case WPN_LONGBOW:
         tile = TILEP_HAND1_ORCBOW;
         break;
-
+#if TAG_MAJOR_VERSION == 34
+    case WPN_BLOWGUN:
+#endif
     default: tile = 0;
     }
 
