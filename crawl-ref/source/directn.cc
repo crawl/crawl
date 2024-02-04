@@ -3329,9 +3329,13 @@ string raw_feature_description(const coord_def &where)
     if (mapi == INVALID_MAP_INDEX)
         mapi = 0;
 
-    const auto &renames = env.level_vaults[mapi]->map.feat_renames;
-    if (const string *rename = map_find(renames, feat))
-        return *rename;
+    const auto &lv = env.level_vaults[mapi];
+    if (lv)
+    {
+        const auto &renames = lv->map.feat_renames;
+        if (const string *rename = map_find(renames, feat))
+            return *rename;
+    }
 
     return _base_feature_desc(feat, get_trap_type(where));
 }
