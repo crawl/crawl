@@ -6,7 +6,7 @@ resists: {cold: 2}
 xp_mult: 9
 species: skeleton
 holiness: [undead]
-will: -1
+will: 1
 attacks:
 hd: 0
 hp_10x: 0

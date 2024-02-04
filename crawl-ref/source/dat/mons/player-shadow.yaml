@@ -4,7 +4,7 @@ glyph: {char: "W", colour: magenta}
 flags: [flies, insubstantial, no_exp_gain, cant_spawn]
 species: human
 holiness: [nonliving]
-will: -3
+will_per_hd: 3
 attacks:
  - {type: hit, damage: 0}
 hd: 1

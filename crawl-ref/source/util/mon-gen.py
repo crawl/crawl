@@ -114,6 +114,13 @@ class Monster(MutableMapping):
         if 'genus' not in self:
             self['genus'] = self['species']
 
+        if 'will' not in self:
+            if 'will_per_hd' not in self:
+                raise ValueError("set exactly one of 'will' and 'will_per_hd'")
+            # Yuck, we still use negative will for this?
+            self['will'] = -self['will_per_hd']
+        elif 'will_per_hd' in self:
+            raise ValueError("set exactly one of 'will' and 'will_per_hd'")
 
         self["joined_flags"] = ' | '.join(self["flags"])
         # Could try to concatenate together resists at the same level, but why?
@@ -222,7 +229,7 @@ def parse_resist(name, value):
 def parse_will(s):
     if s == 'invuln':
         return "WILL_INVULN"
-    return parse_num(s, -10, 200) # yuck, negative will mults still?!
+    return parse_num(s, 0, 200)
 
 class Attack:
     def __init__(self, type, damage, flavour):
@@ -336,7 +343,8 @@ keyfns = {
     'species': Field(lambda s: "MONS_" + s.upper()),
     'genus': Field(lambda s: "MONS_" + s.upper()),
     'holiness': Field(parse_holiness),
-    'will': Field(parse_will, required = True),
+    'will': Field(parse_will),
+    'will_per_hd': Field(lambda s: parse_num(s, 1, 27)),
 
     'attacks': Field(parse_attacks, required = True),
 

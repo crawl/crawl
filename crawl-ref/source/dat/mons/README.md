@@ -72,8 +72,10 @@ Relevant enums are noted with a (filename ➡ enum).
 - uses (string): The monster's ability to manipulate items and terrain.
   Defaults to "nothing".
   (mon-enum.h ➡ mon_itemuse_type)
-- ✨will✨ (int): If positive, the monster's Willpower. If negative, a
-  multiplier for the monster's `hd` that determines its Willpower.
+- will (int): The monster's Willpower, or "invuln".
+  Exactly one of this and `will_per_hd` must be set.
+- will_per_hd (int): A multiplier for the monster's `hd` to get its Willpower.
+  Exactly one of this and `will` must be set.
 - xp_mult (int): A multiplier for the monster's XP value, in addition to the
   base XP derived from the monster's HP, speed, etc. Defaults to 10.
 

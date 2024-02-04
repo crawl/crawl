@@ -4,7 +4,7 @@ flags: [no_regen]
 resists: {cold: 2}
 xp_mult: 9
 holiness: [undead]
-will: -1
+will_per_hd: 1
 attacks:
  - {type: hit, damage: 10}
 hd: 1

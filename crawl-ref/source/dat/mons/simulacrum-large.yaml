@@ -6,7 +6,7 @@ resists: {fire: -1, cold: 3}
 xp_mult: 9
 species: simulacrum
 holiness: [undead]
-will: -1
+will_per_hd: 1
 attacks:
  - {type: hit, damage: 14}
 hd: 5

@@ -6,7 +6,7 @@ resists: {cold: 2}
 xp_mult: 9
 species: zombie
 holiness: [undead]
-will: -1
+will_per_hd: 1
 attacks:
  - {type: hit, damage: 23}
 hd: 6
