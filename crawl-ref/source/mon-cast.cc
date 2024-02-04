@@ -4962,7 +4962,7 @@ static branch_summon_pair _invitation_summons[] =
   { BRANCH_VAULTS,
     { // Vaults enemies
       {  1,   1,   60, FLAT, MONS_VERY_UGLY_THING },
-      {  1,   1,   40, FLAT, MONS_IRONBOUND_THUNDERHULK },
+      {  1,   1,   40, FLAT, MONS_IRONBOUND_FROSTHEART },
       {  1,   1,   20, FLAT, MONS_VAULT_SENTINEL },
     }},
   { BRANCH_CRYPT,
@@ -4989,7 +4989,7 @@ static branch_summon_pair _planerend_summons[] =
     }},
   { BRANCH_VAULTS,
     { // Vaults enemies
-      {  1,   1,   80, FLAT, MONS_VAULT_SENTINEL },
+      {  1,   1,   80, FLAT, MONS_IRONBOUND_THUNDERHULK },
       {  1,   1,   40, FLAT, MONS_IRONBOUND_CONVOKER },
       {  1,   1,  100, FLAT, MONS_WAR_GARGOYLE },
     }},
