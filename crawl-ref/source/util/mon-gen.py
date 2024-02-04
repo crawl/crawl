@@ -365,7 +365,7 @@ keyfns = {
     'uses': Field(parse_use),
     'size': Field(parse_size, required = True),
     'shape': Field(parse_shape, required = True),
-    
+
     'tile': Field(parse_str),
     'tile_variance': Field(parse_tile_variants),
     'corpse_tile': Field(parse_str),

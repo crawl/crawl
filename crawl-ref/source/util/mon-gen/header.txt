@@ -1,5 +1,5 @@
 #pragma once
- 
+
 #include "enum.h"
 #include "tag-version.h"
 
@@ -156,4 +156,3 @@ static monsterentry mondata[] =
 #endif
 
 // Real monsters begin here {dlb}:
-
