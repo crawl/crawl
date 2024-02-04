@@ -768,6 +768,13 @@ void floor_transition(dungeon_feature_type how,
         if (targ)
             targ->del_ench(ENCH_BULLSEYE_TARGET);
     }
+    if (yred_torch_is_raised())
+        yred_end_conquest();
+    if (you.duration[DUR_FATHOMLESS_SHACKLES])
+    {
+        you.duration[DUR_FATHOMLESS_SHACKLES] = 0;
+        yred_end_blasphemy();
+    }
 
     if (you.duration[DUR_BEOGH_DIVINE_CHALLENGE])
         flee_apostle_challenge();

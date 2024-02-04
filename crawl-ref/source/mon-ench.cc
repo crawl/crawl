@@ -661,11 +661,9 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_SOUL_RIPE:
+        // Print message notifying the player, even if they cannot see us
         if (!quiet)
-        {
-            simple_monster_message(*this,
-                                   "'s soul is no longer ripe for the taking.");
-        }
+            mprf("You lose your grip on %s soul.", name(DESC_ITS, true).c_str());
         break;
 
     case ENCH_AWAKEN_FOREST:
@@ -901,11 +899,17 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_BOUND:
-        if (!quiet)
-            simple_monster_message(*this, "'s lost momentum returns!");
-        add_ench(mon_enchant(ENCH_SWIFT, 1, &you,
-                 props[BINDING_SIGIL_DURATION_KEY].get_int()));
-        props.erase(BINDING_SIGIL_DURATION_KEY);
+        // From Sigil of Binding
+        if (props.exists(BINDING_SIGIL_DURATION_KEY))
+        {
+            if (!quiet)
+                simple_monster_message(*this, "'s lost momentum returns!");
+            add_ench(mon_enchant(ENCH_SWIFT, 1, &you,
+                                 props[BINDING_SIGIL_DURATION_KEY].get_int()));
+            props.erase(BINDING_SIGIL_DURATION_KEY);
+        }
+        // Fathomless Shackles doesn't need messages for removal
+
         break;
 
     case ENCH_BULLSEYE_TARGET:
@@ -1308,7 +1312,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_CHARM:
     case ENCH_SLEEP_WARY:
     case ENCH_LOWERED_WL:
-    case ENCH_SOUL_RIPE:
     case ENCH_TIDE:
     case ENCH_REGENERATION:
     case ENCH_STRONG_WILLED:
@@ -1349,7 +1352,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_WATERLOGGED:
     case ENCH_NECROTISE:
     case ENCH_CONCENTRATE_VENOM:
-    case ENCH_BOUND:
     case ENCH_VITRIFIED:
     case ENCH_INSTANT_CLEAVE:
     case ENCH_PROTEAN_SHAPESHIFTING:
@@ -1798,6 +1800,23 @@ void monster::apply_enchantment(const mon_enchant &me)
             if (you.can_see(*this))
                 mprf("%s searing ray is interrupted.", name(DESC_ITS).c_str());
         }
+        break;
+
+    case ENCH_BOUND:
+        // Remove Yred binding as soon as we're not in the effect area
+        if (!props.exists(BINDING_SIGIL_DURATION_KEY)
+            && (!is_blasphemy(pos()) || !is_blasphemy(you.pos())
+                || !you.duration[DUR_FATHOMLESS_SHACKLES]))
+        {
+            del_ench(en, true, true);
+        }
+        else
+            decay_enchantment(en);
+        break;
+
+    case ENCH_SOUL_RIPE:
+        if (!cell_see_cell(you.pos(), pos(), LOS_NO_TRANS))
+            del_ench(en, false, true);
         break;
 
     default:

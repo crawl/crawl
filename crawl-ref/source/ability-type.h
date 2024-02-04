@@ -129,9 +129,18 @@ enum ability_type
 #else
     ABIL_YRED_RECALL_UNDEAD_HARVEST = 1030,
 #endif
+#if TAG_MAJOR_VERSION == 34
     ABIL_YRED_DRAIN_LIFE,
+#endif
     ABIL_YRED_BIND_SOUL,
+#if TAG_MAJOR_VERSION == 34
     ABIL_YRED_DARK_BARGAIN,
+#endif
+
+    ABIL_YRED_LIGHT_THE_TORCH,
+    ABIL_YRED_HURL_TORCHLIGHT,
+    ABIL_YRED_FATHOMLESS_SHACKLES,
+
     // Vehumet
     // = 1040
     // Okawaru

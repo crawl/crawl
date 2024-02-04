@@ -651,6 +651,33 @@ static const like_response _fedhas_kill_living_response()
     };
 }
 
+static const like_response _yred_kill_response()
+{
+    return
+    {
+        nullptr, false,
+        _piety_bonus_for_holiness(MH_NATURAL), 18, 0,
+        nullptr, [] (int &piety, int &, const monster* victim)
+        {
+            if (!yred_torch_is_raised() || victim->has_ench(ENCH_SOUL_RIPE))
+                piety = 0;
+            else if (victim)
+            {
+                mprf(MSGCH_GOD, "%s %ssoul becomes fuel for the torch.",
+                                you.can_see(*victim) ? "Their" : "A",
+                                mons_is_unique(victim->type) ? "potent "
+                                : victim->holiness() & MH_HOLY ? "unsullied " : "");
+
+                if (mons_is_unique(victim->type))
+                    piety *= 3;
+
+                if (victim->holiness() & MH_HOLY)
+                    piety *= 2;
+            }
+        }
+    };
+}
+
 static const like_response EXPLORE_RESPONSE = {
     "you explore the world", false,
     0, 0, 0, nullptr,
@@ -702,7 +729,11 @@ static like_map divine_likes[] =
         { DID_KILL_NONLIVING, KILL_NONLIVING_RESPONSE },
     },
     // GOD_YREDELEMNUL,
-    like_map(),
+    {
+        { DID_KILL_LIVING, _yred_kill_response() },
+        { DID_KILL_DEMON, _yred_kill_response() },
+        { DID_KILL_HOLY, _yred_kill_response() },
+    },
     // GOD_XOM,
     like_map(),
     // GOD_VEHUMET,
@@ -1062,7 +1093,8 @@ string get_god_likes(god_type which_god)
         likes.emplace_back("you make personal sacrifices");
         break;
     case GOD_YREDELEMNUL:
-        likes.emplace_back("you surround yourself with harvested souls");
+        likes.emplace_back("you kill living or demonic beings while their torch is lit");
+        really_likes.emplace_back("you kill holy or unique beings while their torch is lit");
         break;
     case GOD_ZIN:
         likes.emplace_back("you donate money");

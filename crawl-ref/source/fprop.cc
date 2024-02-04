@@ -32,6 +32,11 @@ bool is_icecovered(const coord_def& p)
     return feat_is_wall(env.grid(p)) && testbits(env.pgrid(p), FPROP_ICY);
 }
 
+bool is_blasphemy(const coord_def& p)
+{
+    return testbits(env.pgrid(p), FPROP_BLASPHEMY);
+}
+
 bool is_tide_immune(const coord_def &p)
 {
     return bool(env.pgrid(p) & FPROP_NO_TIDE);

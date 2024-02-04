@@ -70,6 +70,11 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define ASHENZARI_BASE_PIETY 2
 #define ASHENZARI_PIETY_SCALE 168
 
+#define YRED_TORCH_POWER_KEY "yred_torch_power"
+#define YRED_TORCH_USED_KEY "yred_torch_used"
+#define YRED_KILLS_LOGGED_KEY "yred_souls_scoured"
+#define YRED_BLASPHEMY_CENTER_KEY "blasphemy_center"
+
 struct bolt;
 class stack_iterator;
 
@@ -104,8 +109,18 @@ bool vehumet_supports_spell(spell_type spell);
 void trog_do_trogs_hand(int power);
 void trog_remove_trogs_hand();
 
+string yred_cannot_light_torch_reason();
+bool yred_light_the_torch();
+void yred_end_conquest();
+int yred_get_torch_power();
+bool yred_torch_is_raised();
+void yred_feed_torch(const monster* mons);
+void yred_fathomless_shackles_effect(int delay);
+int yred_get_bound_soul_hp(monster_type mt);
 bool yred_can_bind_soul(monster* mon);
 void yred_make_bound_soul(monster* mon, bool force_hostile = false);
+void yred_make_blasphemy();
+void yred_end_blasphemy();
 
 bool kiku_gift_capstone_spells();
 

@@ -3940,6 +3940,8 @@ static bool _print_cloud_desc(const coord_def where)
         areas.emplace_back("is covered in magical glow");
     if (disjunction_haloed(where))
         areas.emplace_back("is bathed in translocational energy");
+    if (is_blasphemy(where))
+        areas.emplace_back("within the grip of Yredelemnul");
     if (!areas.empty())
     {
         mprf("This square %s.",

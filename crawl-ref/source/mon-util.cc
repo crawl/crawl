@@ -1592,7 +1592,7 @@ mon_itemuse_type mons_class_itemuse(monster_type mc)
 
 mon_itemuse_type mons_itemuse(const monster& mon)
 {
-    if (mons_bound_soul(mon))
+    if (mon.type == MONS_BOUND_SOUL)
         return mons_class_itemuse(mons_zombie_base(mon));
 
     return mons_class_itemuse(mon.type);
@@ -1755,7 +1755,7 @@ bool mons_can_be_zombified(const monster& mon)
 {
     return mons_class_can_be_zombified(mon.type)
            && !mon.is_summoned()
-           && !mons_bound_body_and_soul(mon)
+           && !mon.has_ench(ENCH_SOUL_RIPE)
            && mons_has_attacks(mon, true);
 }
 
@@ -1816,16 +1816,6 @@ bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
 
     // Everything else is fine
     return true;
-}
-
-bool mons_bound_body_and_soul(const monster& mon)
-{
-    return mon.has_ench(ENCH_SOUL_RIPE);
-}
-
-bool mons_bound_soul(const monster& mon)
-{
-    return mon.type == MONS_BOUND_SOUL;
 }
 
 void name_zombie(monster& mon, monster_type mc, const string &mon_name)
@@ -3363,7 +3353,7 @@ mon_intel_type mons_intel(const monster& m)
 {
     const monster& mon = get_tentacle_head(m);
 
-    if (mons_bound_soul(mon))
+    if (mon.type == MONS_BOUND_SOUL)
         return mons_class_intel(mons_zombie_base(mon));
 
     return mons_class_intel(mon.type);

@@ -824,6 +824,9 @@ static void _decrement_durations()
     if (you.duration[DUR_TOXIC_RADIANCE])
         toxic_radiance_effect(&you, min(delay, you.duration[DUR_TOXIC_RADIANCE]));
 
+    if (you.duration[DUR_FATHOMLESS_SHACKLES])
+        yred_fathomless_shackles_effect(min(delay, you.duration[DUR_FATHOMLESS_SHACKLES]));
+
     if (you.duration[DUR_RECITE] && _check_recite())
     {
         const int old_recite =

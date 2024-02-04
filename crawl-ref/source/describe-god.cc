@@ -147,9 +147,9 @@ static const char *divine_title[][8] =
     {"Tormented",          "Purveyor of Pain",      "Scholar of Death",         "Merchant of Misery",
         "Artisan of Death",   "Dealer of Despair",     "Black Sun",                "Lord of Darkness"},
 
-    // Yredelemnul -- zombie death.
-    {"Traitor",            "Tainted",                "Torchbearer",             "Fey @Genus@",
-        "Black Crusader",     "Sculptor of Flesh",     "Harbinger of Death",       "Grim Reaper"},
+    // Yredelemnul
+    {"Traitor",            "Torchbearer",            "Despoiler",               "Black Crusader",
+     "Fallen @Genus@",     "Harbinger of Doom",      "Inexorable Tide",         "Bringer of Blasphemy"},
 
     // Xom.
     {"Toy",                "Toy",                   "Toy",                      "Toy",
@@ -252,7 +252,7 @@ string god_title(god_type which_god, species_type which_species, int piety)
     string title;
     if (player_under_penance(which_god))
         title = divine_title[which_god][0];
-    else if (which_god == GOD_USKAYAW || which_god == GOD_YREDELEMNUL)
+    else if (which_god == GOD_USKAYAW)
         title = divine_title[which_god][_invocations_level()];
     else if (which_god == GOD_GOZAG)
         title = divine_title[which_god][_gold_level()];
@@ -896,6 +896,11 @@ static formatted_string _describe_god_powers(god_type which_god)
             desc.textcolour(DARKGREY);
             desc.cprintf("You can memorise some of Vehumet's spells.\n");
         }
+        break;
+
+    case GOD_YREDELEMNUL:
+        desc.cprintf("You are surrounded by an umbra.\n"
+                     "Foes that die within your umbra may be raised as undead servants.\n");
         break;
 
     case GOD_DITHMENOS:

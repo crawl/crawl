@@ -2202,3 +2202,35 @@ aff_type targeter_petrify::is_affected(coord_def loc)
         return AFF_MAYBE;
     return AFF_NO;
 }
+
+targeter_bind_soul::targeter_bind_soul() :
+    targeter_smite(&you, LOS_MAX_RANGE, 0, 0, false, nullptr)
+{
+}
+
+bool targeter_bind_soul::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    monster* targ = monster_at(a);
+    if (!targ || !agent->can_see(*targ))
+        return notify_fail("You can't see anything there.");
+
+    if (!yred_can_bind_soul(targ))
+    {
+        if (targ->type == MONS_PANDEMONIUM_LORD)
+            return notify_fail("You are unable to grasp such an alien soul.");
+        else if (targ->is_summoned())
+            return notify_fail("You cannot bind the soul of a summoned being.");
+        else if (targ->friendly())
+            return notify_fail("You cannot bind the soul of an ally.");
+        else
+            return notify_fail("That does not possess a soul you can bind.");
+    }
+
+    if (mons_get_damage_level(*targ) > MDAM_LIGHTLY_DAMAGED)
+        return notify_fail("Their soul is too badly injured.");
+
+    return true;
+}

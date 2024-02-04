@@ -193,6 +193,7 @@ static const vector<god_passive> god_passives[] =
 
     // Yredelemnul
     {
+        {  -1, passive_t::umbra, "are NOW surrounded by an aura of darkness" },
         {  -1, passive_t::reaping, "can NOW harvest souls to fight along side you" },
         {  -1, passive_t::nightvision, "can NOW see well in the dark" },
         {  -1, passive_t::r_spectral_mist, "are NOW immune to spectral mist" },

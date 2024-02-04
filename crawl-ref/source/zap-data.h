@@ -1857,4 +1857,20 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     false,
 },
 
+{
+    ZAP_HURL_TORCHLIGHT,
+    "umbral torchlight",
+    200,
+    new dicedef_calculator<3, 7, 1, 5>,
+    new tohit_calculator<40>,
+    new dicedef_calculator<3, 6, 1, 13>,
+    new tohit_calculator<40>,
+    CYAN,
+    false,
+    BEAM_UMBRAL_TORCHLIGHT,
+    DCHAR_FIRED_ZAP,
+    false,
+    true,
+},
+
 };

@@ -77,7 +77,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_FIRE_CHAMPION, "flame-wreathed", "flame-wreathed", "flame-wreathed"},
     { MB_SILENCE_IMMUNE, "unsilenced", "unaffected by silence", "unsilenced" },
     // Vulnerabilities
-    { MB_POSSESSABLE, "possessable", "possessable", "possessable"},
+    { MB_POSSESSABLE, "soul-gripped", "soul-gripped", "soul-gripped"},
     { MB_CAUGHT, "caught", "entangled in a net", "caught"},
     { MB_WEBBED, "webbed", "entangled in a web", "webbed"},
     { MB_PARALYSED, "paralysed", "paralysed", "paralysed"},

@@ -676,7 +676,7 @@ bool monster::can_throw_large_rocks() const
            || species == MONS_CYCLOPS
            || species == MONS_OGRE
            || type == MONS_PARGHIT // he's stronger than your average troll
-           || mons_bound_soul(*this);
+           || type == MONS_BOUND_SOUL;
 }
 
 bool monster::can_speak()

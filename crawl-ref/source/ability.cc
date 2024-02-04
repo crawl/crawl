@@ -265,11 +265,6 @@ struct ability_def
         return cost;
     }
 
-    int get_souls_cost() const
-    {
-        return flags & abflag::souls ? mp_cost / 2 : 0;
-    }
-
     int avg_piety_cost() const
     {
         if (!piety_cost)
@@ -424,15 +419,17 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {fail_basis::invo}, abflag::pain },
 
         // Yredelemnul
+        { ABIL_YRED_LIGHT_THE_TORCH, "Light the Black Torch",
+            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
         { ABIL_YRED_RECALL_UNDEAD_HARVEST, "Recall Undead Harvest",
             2, 0, 0, -1, {fail_basis::invo, 20, 4, 25}, abflag::none },
-        { ABIL_YRED_DARK_BARGAIN, "Dark Bargain",
-            4, 0, 0, -1, {fail_basis::invo, 40, 4, 25}, abflag::souls },
-        { ABIL_YRED_DRAIN_LIFE, "Drain Life",
-            6, 0, 0, -1, {fail_basis::invo, 60, 4, 25}, abflag::souls },
+        { ABIL_YRED_HURL_TORCHLIGHT, "Hurl Torchlight",
+            4, 0, 2, 4, {fail_basis::invo, 30, 5, 25}, abflag::torchlight },
         { ABIL_YRED_BIND_SOUL, "Bind Soul",
-            8, 0, 0, LOS_MAX_RANGE, {fail_basis::invo, 80, 4, 25},
-            abflag::target | abflag::not_self | abflag::souls },
+            6, 0, 8, LOS_MAX_RANGE, {fail_basis::invo, 50, 5, 25},
+            abflag::target | abflag::pain },
+        { ABIL_YRED_FATHOMLESS_SHACKLES, "Fathomless Shackles",
+            8, 0, 20, -1, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
         // Okawaru
         { ABIL_OKAWARU_HEROISM, "Heroism",
@@ -969,8 +966,8 @@ const string make_cost_description(ability_type ability)
         ret += nemelex_card_text(ability);
     }
 
-    if (abil.flags & abflag::souls)
-        ret += make_stringf(", %d Souls", abil.get_souls_cost());
+    if (abil.flags & abflag::torchlight)
+        ret += ", Torchlight";
 
     // If we haven't output anything so far, then the effect has no cost
     if (ret.empty())
@@ -1027,11 +1024,10 @@ static const string _detailed_cost_description(ability_type ability)
         ret << "\nOne cursed item";
     }
 
-    if (abil.flags & abflag::souls)
+    if (abil.flags & abflag::torchlight)
     {
         have_cost = true;
-        ret << "\nSouls  : ";
-        ret << abil.get_mp_cost() / 2;
+        ret << "\nTorchlight";
     }
 
     if (!have_cost)
@@ -1649,16 +1645,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return false;
     }
 
-    if (!pay_yred_souls(abil.get_souls_cost(), true))
-    {
-        if (!quiet)
-        {
-            mprf("You lack nearby souls to offer %s!",
-                 god_name(you.religion).c_str());
-        }
-        return false;
-    }
-
     if (!quiet)
     {
         vector<text_pattern> &actions = Options.confirm_action;
@@ -2114,6 +2100,48 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
+    case ABIL_YRED_LIGHT_THE_TORCH:
+    {
+        if (yred_torch_is_raised())
+        {
+            if (!quiet)
+                mpr("The black torch is already ablaze!");
+            return false;
+        }
+        const string reason = yred_cannot_light_torch_reason();
+        if (!reason.empty())
+        {
+            if (!quiet)
+                mpr(reason.c_str());
+            return false;
+        }
+        return true;
+    }
+
+    case ABIL_YRED_HURL_TORCHLIGHT:
+        if (!yred_torch_is_raised())
+        {
+            if (!quiet)
+                mpr("The black torch is unlit!");
+            return false;
+        }
+        if (yred_get_torch_power() < 1)
+        {
+            if (!quiet)
+                mpr("You must stoke the torch's fire more first .");
+            return false;
+        }
+        return true;
+
+    case ABIL_YRED_FATHOMLESS_SHACKLES:
+        if (you.duration[DUR_FATHOMLESS_SHACKLES])
+        {
+            if (!quiet)
+                mpr("You are already invoking the grip of Yredulemnul!");
+            return false;
+        }
+        return true;
+
     case ABIL_BEOGH_RECRUIT_APOSTLE:
         if (you.props[BEOGH_NUM_FOLLOWERS_KEY].get_int() == 3)
         {
@@ -2188,12 +2216,20 @@ private:
     ability_type abil;
 };
 
+static vector<string> _desc_bind_soul_hp(const monster_info& mi)
+{
+    if (!monster_at(mi.pos) || !yred_can_bind_soul(monster_at(mi.pos)))
+        return vector<string>{};
+    return vector<string>{make_stringf("hp as a bound soul: ~%d", yred_get_bound_soul_hp(mi.type))};
+}
+
 unique_ptr<targeter> find_ability_targeter(ability_type ability)
 {
     switch (ability)
     {
     // Limited radius:
     case ABIL_ZIN_SANCTUARY:
+    case ABIL_YRED_FATHOMLESS_SHACKLES:
         return make_unique<targeter_radius>(&you, LOS_DEFAULT, 4);
     case ABIL_TSO_CLEANSING_FLAME:
     case ABIL_WU_JIAN_HEAVENLY_STORM:
@@ -2223,7 +2259,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
                                  // hitting areas behind glass/statues.
         return make_unique<targeter_maybe_radius>(&you, LOS_SOLID, LOS_RADIUS);
     case ABIL_KIKU_TORMENT:
-    case ABIL_YRED_DRAIN_LIFE:
     case ABIL_CHEIBRIADOS_SLOUCH:
     case ABIL_QAZLAL_DISASTER_AREA: // Doesn't account for explosions hitting
                                     // areas behind glass.
@@ -2238,7 +2273,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
     case ABIL_TROG_BROTHERS_IN_ARMS:
     case ABIL_KIKU_UNEARTH_WRETCHES:
-    case ABIL_YRED_DARK_BARGAIN:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
     case ABIL_IGNIS_FOXFIRE:
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
@@ -2294,6 +2328,9 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
         else
             return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
     }
+
+    case ABIL_YRED_BIND_SOUL:
+        return make_unique<targeter_bind_soul>();
 
     default:
         break;
@@ -2356,6 +2393,8 @@ bool activate_talent(const talent& tal, dist *target)
         targeter_beam* beamfunc = dynamic_cast<targeter_beam*>(hitfunc.get());
         if (beamfunc && beamfunc->beam.hit > 0 && !beamfunc->beam.is_explosion)
             args.get_desc_func = bind(desc_beam_hit_chance, placeholders::_1, hitfunc.get());
+        else if (abil.ability == ABIL_YRED_BIND_SOUL)
+            args.get_desc_func = bind(_desc_bind_soul_hp, placeholders::_1);
 
         if (abil.failure.base_chance)
         {
@@ -2918,57 +2957,31 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         do_player_recall(recall_t::yred);
         break;
 
-    case ABIL_YRED_DARK_BARGAIN:
-    {
-        fail_check();
-
-        // XXX: call rude_summon_prompt()?
-        // a reason not to: the only rude summon things that damage
-        // undead would have made the souls used to pay the ability cost
-        // hostile already, rendering the player unable to use this ability.
-        fail_check();
-
-        if (yred_random_servant(you.skill_rdiv(SK_INVOCATIONS)))
-            simple_god_message(" sends a servant to aid you.");
-        else
-        {
-            // this is technically an information leak, but in the situation
-            // where there's an invisible monster the player has enough zombies
-            // to locate it; I guess it could reveal if the player was
-            // completely surrounded by unseen invisible foes but that edge
-            // case is punishing enough that I'd rather have this ability be
-            // nice to players surrounded by their own zombies. -ebering
-            simple_god_message(" has nowhere to place a servant.");
-            return spret::abort;
-        }
-
+    case ABIL_YRED_LIGHT_THE_TORCH:
+        yred_light_the_torch();
         break;
+
+    case ABIL_YRED_HURL_TORCHLIGHT:
+    {
+        int charges = yred_get_torch_power();
+        spret result = your_spells(SPELL_HURL_TORCHLIGHT,
+                                   12 + you.skill(SK_INVOCATIONS, 4),
+                                   false, nullptr, target, fail);
+
+        if (result == spret::success)
+            you.props[YRED_TORCH_POWER_KEY] = (charges - 1);
+
+        return result;
     }
 
-    case ABIL_YRED_DRAIN_LIFE:
-    {
-        int damage = 0;
-        const int pow = you.skill_rdiv(SK_INVOCATIONS);
-
-        if (trace_los_attack_spell(SPELL_DRAIN_LIFE, pow, &you) == spret::abort
-            && !yesno("There are no drainable targets visible. Drain Life "
-                      "anyway?", true, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return spret::abort;
-        }
-
+    case ABIL_YRED_FATHOMLESS_SHACKLES:
         fail_check();
-
-        fire_los_attack_spell(SPELL_DRAIN_LIFE, pow, &you, false, &damage);
-
-        if (damage > 0)
-        {
-            mpr("You feel life flooding into your body.");
-            inc_hp(damage);
-        }
+        mprf(MSGCH_DURATION, "You call down the inexorable grip of Yredelemnul.");
+        // XXX: Some invo formula
+        you.duration[DUR_FATHOMLESS_SHACKLES] = random_range(15, 25) * BASELINE_DELAY;
+        yred_make_blasphemy();
+        invalidate_agrid(true);
         break;
-    }
 
     case ABIL_YRED_BIND_SOUL:
     {
@@ -2984,25 +2997,14 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             return spret::success;
         }
 
-        if (mons == nullptr || !you.can_see(*mons)
-            || !yred_can_bind_soul(mons))
-        {
-            mpr("You see nothing there you can bind the soul of!");
-            return spret::abort;
-        }
-
-        // The monster can be no more than lightly wounded/damaged.
-        if (mons_get_damage_level(*mons) > MDAM_LIGHTLY_DAMAGED)
-        {
-            simple_monster_message(*mons, "'s soul is too badly injured.");
-            return spret::abort;
-        }
         fail_check();
 
-        const int duration = you.skill_rdiv(SK_INVOCATIONS, 3, 2) + 4;
-        mons->add_ench(mon_enchant(ENCH_SOUL_RIPE, 0, &you,
-                                   duration * BASELINE_DELAY));
-        simple_monster_message(*mons, "'s soul is now ripe for the taking.");
+        int pain = you.hp / 3;
+        dec_hp(pain, false);
+        mons->add_ench(mon_enchant(ENCH_SOUL_RIPE, pain, &you,
+                                   INFINITE_DURATION));
+        mprf("You wrap your dark will around %s soul!",
+              mons->name(DESC_ITS).c_str());
         break;
     }
 
@@ -3618,9 +3620,6 @@ static void _pay_ability_costs(const ability_def& abil)
 
     if (piety_cost)
         lose_piety(piety_cost);
-
-    if (abil.get_souls_cost())
-        pay_yred_souls(abil.get_souls_cost());
 }
 
 int choose_ability_menu(const vector<talent>& talents)

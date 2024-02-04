@@ -587,3 +587,10 @@ public:
 private:
     set<coord_def> chain_targ;
 };
+
+class targeter_bind_soul : public targeter_smite
+{
+public:
+    targeter_bind_soul();
+    bool valid_aim(coord_def a) override;
+};

@@ -545,7 +545,7 @@ static string _milestone_kill_verb(killer_type killer)
 {
     return killer == KILL_BANISHED ? "banished" :
            killer == KILL_PACIFIED ? "pacified" :
-           killer == KILL_CHARMD ? "charmed" :
+           killer == KILL_BOUND ? "bound" :
            killer == KILL_SLIMIFIED ? "slimified" : "killed";
 }
 
@@ -700,15 +700,15 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
     return true;
 }
 
-static bool _yred_bound_soul(monster* mons, killer_type killer)
+static bool _yred_bind_soul(monster* mons, killer_type killer)
 {
-    if (you_worship(GOD_YREDELEMNUL) && mons_bound_body_and_soul(*mons)
+    if (you_worship(GOD_YREDELEMNUL) && mons->has_ench(ENCH_SOUL_RIPE)
         && you.see_cell(mons->pos()) && killer != KILL_RESET
         && killer != KILL_DISMISSED
         && killer != KILL_BANISHED)
     {
         record_monster_defeat(mons, killer);
-        record_monster_defeat(mons, KILL_CHARMD);
+        record_monster_defeat(mons, KILL_BOUND);
         yred_make_bound_soul(mons, player_under_penance());
         return true;
     }
@@ -805,7 +805,7 @@ static bool _monster_avoided_death(monster* mons, killer_type killer,
         return true;
 
     // Yredelemnul special.
-    if (_yred_bound_soul(mons, killer))
+    if (_yred_bind_soul(mons, killer))
         return true;
 
     // Beogh special.
@@ -1083,8 +1083,8 @@ static string _killer_type_name(killer_type killer)
 #endif
     case KILL_PACIFIED:
         return "pacified";
-    case KILL_CHARMD:
-        return "charmed";
+    case KILL_BOUND:
+        return "bound";
     case KILL_SLIMIFIED:
         return "slimified";
     }
@@ -1522,7 +1522,8 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool corpse_gone,
         return false;
 
     // Yred takes priority over everything but Infestation.
-    if (in_los && have_passive(passive_t::reaping))
+    if (in_los && have_passive(passive_t::reaping)
+        && mons.umbraed())
     {
         if (yred_reap_chance())
             _yred_reap(mons, corpse_gone);
@@ -2630,6 +2631,9 @@ item_def* monster_die(monster& mons, killer_type killer,
                                  static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
         }
 
+        if (in_los && corpseworthy && yred_torch_is_raised())
+            yred_feed_torch(&mons);
+
         corpse_consumed = _apply_necromancy(mons, !death_message, corpse_gone,
                                             in_los, corpseworthy);
     }
@@ -3016,7 +3020,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 
     // Yredelemnul special, redux: It's the only one that can
     // work on drowned monsters.
-    if (!_yred_bound_soul(mons, killer))
+    if (!_yred_bind_soul(mons, killer))
         monster_die(*mons, killer, killnum, true);
 }
 
@@ -3105,6 +3109,8 @@ string summoned_poof_msg(const monster* mons, bool plural)
             msg      = "dissolve%s into sparkling lights";
             no_chaos = true;
         }
+        else if (valid_mon && mons->god == GOD_YREDELEMNUL)
+            msg      = "returns to the grave";
         break;
 
     case SPELL_SPECTRAL_CLOUD:

@@ -52,6 +52,7 @@
 #include "message.h"
 #include "mon-death.h"
 #include "mon-gear.h" // give_shield
+#include "mon-pick.h"
 #include "mon-place.h"
 #include "mon-tentacle.h"
 #include "mutation.h"
@@ -139,11 +140,11 @@ const vector<vector<god_power>> & get_all_god_powers()
         },
 
         // Yredelemnul
-        {   { 0, "reap souls" },
+        {   { 0, ABIL_YRED_LIGHT_THE_TORCH, "light the black torch and reap souls in the name of Yredelemnul" },
             { 0, ABIL_YRED_RECALL_UNDEAD_HARVEST, "recall your undead harvest" },
-            { 2, ABIL_YRED_DARK_BARGAIN, "trade souls for undead servants" },
-            { 4, ABIL_YRED_DRAIN_LIFE, "drain ambient life force" },
-            { 5, ABIL_YRED_BIND_SOUL, "bind living souls" },
+            { 2, ABIL_YRED_HURL_TORCHLIGHT, "hurl gouts of umbral torchlight" },
+            { 4, ABIL_YRED_BIND_SOUL, "bind living souls" },
+            { 5, ABIL_YRED_FATHOMLESS_SHACKLES, "engulf your surroundings in Yredelemnul's grip" },
         },
 
         // Xom
@@ -458,13 +459,10 @@ void god_power::display(bool gaining, const char* fmt) const
         return;
     }
 
-    // these gods use short-time-scale piety where the gain/loss messasges
+    // Uskayaw uses short-time-scale piety where the gain/loss messasges
     // are not informative while running
-    if (you.running
-        && (you_worship(GOD_YREDELEMNUL) || you_worship(GOD_USKAYAW)))
-    {
+    if (you.running && you_worship(GOD_USKAYAW))
         return;
-    }
 
     const char* str = gaining ? gain : loss;
 
@@ -958,6 +956,12 @@ static void _inc_penance(god_type god, int val)
         }
         else if (god == GOD_BEOGH)
             beogh_do_ostracism();
+        else if (god == GOD_YREDELEMNUL)
+        {
+            you.props.erase(YRED_TORCH_POWER_KEY);
+            you.duration[DUR_FATHOMLESS_SHACKLES] = 0;
+            yred_end_blasphemy();
+        }
 
         if (you_worship(god))
         {
@@ -1004,202 +1008,94 @@ static void _inc_gift_timeout(int val)
 // - M genus is all Kiku's domain
 // - Curse *, putrid mouths, and bloated husks left out as they might
 //   do too much collateral damage
-static monster_type _yred_servants[] =
+static const vector<random_pick_entry<monster_type>> _yred_servants =
 {
-    MONS_WIGHT, MONS_NECROPHAGE, MONS_SHADOW, MONS_PHANTOM, MONS_WRAITH,
-    MONS_VAMPIRE, MONS_FREEZING_WRAITH, MONS_LAUGHING_SKULL, MONS_SHADOW_WRAITH,
-    MONS_PHANTASMAL_WARRIOR, MONS_BOG_BODY, MONS_SKELETAL_WARRIOR,
-    MONS_JIANGSHI, MONS_FLAYED_GHOST, MONS_VAMPIRE_KNIGHT, MONS_EIDOLON,
-    MONS_DEATH_COB, MONS_ANCIENT_CHAMPION, MONS_GHOUL, MONS_REVENANT,
-    MONS_SEARING_WRETCH, MONS_PROFANE_SERVITOR, MONS_BONE_DRAGON
+  { -2,  4,   80, PEAK, MONS_NECROPHAGE },
+  { -1,  5,   75, PEAK, MONS_PHANTOM },
+  {  2,  9,  145, SEMI, MONS_WIGHT },
+  {  6,  12,  90, SEMI, MONS_SHADOW },
+  {  7,  14,  110, SEMI, MONS_WRAITH },
+  {  9,  15,  90, SEMI, MONS_VAMPIRE },
+  { 10,  16,  110, SEMI, MONS_FREEZING_WRAITH },
+  { 13,  20,  150, SEMI, MONS_SKELETAL_WARRIOR },
+  { 13,  20,  55, SEMI, MONS_SHADOW_WRAITH },
+  { 14,  20,  100, SEMI, MONS_PHANTASMAL_WARRIOR },
+  { 13,  22,  60, FLAT, MONS_FLAYED_GHOST },
+  { 13,  23,  150, SEMI, MONS_LAUGHING_SKULL },
+  { 14,  21,  120, SEMI, MONS_BOG_BODY },
+  { 16,  23,  180, SEMI, MONS_JIANGSHI },
+  { 18,  25,  120, SEMI, MONS_EIDOLON },
+  { 20,  25,  120, SEMI, MONS_VAMPIRE_KNIGHT },
+  { 20,  25,  150, SEMI, MONS_GHOUL },
+  { 20,  27,   80, SEMI, MONS_REVENANT },
+  { 22,  27,   60, FLAT, MONS_DEATH_COB },
+  { 23,  27,  180, SEMI, MONS_ANCIENT_CHAMPION },
+  { 24,  30,  110, SEMI, MONS_SEARING_WRETCH },
+  { 24,  30,  220, SEMI, MONS_PROFANE_SERVITOR },
+  { 25,  32,  100, SEMI, MONS_BONE_DRAGON },
 };
 
-#define MIN_YRED_SERVANT_THRESHOLD 3
-#define MAX_YRED_SERVANT_THRESHOLD (int) ARRAYSZ(_yred_servants)
-
-bool yred_random_servant(unsigned int pow, bool force_hostile)
+bool yred_random_servant(unsigned int pow, bool force_hostile, int num)
 {
-    int top_threshold;
+    monster_picker yred_picker;
 
-    if (force_hostile)
+    monster_type mon_type = yred_picker.pick(_yred_servants, pow, MONS_NECROPHAGE);
+
+    if ((mon_type == MONS_WIGHT || mon_type == MONS_SKELETAL_WARRIOR) && coinflip())
+        num *= 2;
+    else if (mon_type == MONS_LAUGHING_SKULL)
+        num *= random_range(2, 3);
+
+    bool created = false;
+    for (int i = 0; i < num; ++i)
     {
-        // This implies wrath - scale the threshold with XL.
-        top_threshold =
-            MIN_YRED_SERVANT_THRESHOLD
-            + (MAX_YRED_SERVANT_THRESHOLD - MIN_YRED_SERVANT_THRESHOLD)
-              * you.experience_level / 21;
-    }
-    else
-    {
-        top_threshold =
-            MIN_YRED_SERVANT_THRESHOLD
-            + (MAX_YRED_SERVANT_THRESHOLD - MIN_YRED_SERVANT_THRESHOLD)
-              * pow / 21;
-    }
+        mgen_data mg(mon_type, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
+                 you.pos(), MHITYOU, MG_AUTOFOE);
 
-    // Skip some of the weakest servants, once the threshold is high.
-    const int bot_threshold = top_threshold <= 6 ? 0 : top_threshold / 2 + 3;
-    top_threshold = min(top_threshold, MAX_YRED_SERVANT_THRESHOLD - 1);
-
-    const unsigned int servant = random_range(bot_threshold, top_threshold);
-
-    monster_type mon_type = _yred_servants[servant];
-
-    mgen_data mg(mon_type, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                 you.pos(), MHITYOU);
-    mg.set_summoned(!force_hostile ? &you : 0, !force_hostile ? 6 : 0,
-                    0, GOD_YREDELEMNUL);
-
-    if (force_hostile)
-    {
-        mg.non_actor_summoner = "the anger of Yredelemnul";
-        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-    }
-
-    return create_monster(mg);
-}
-
-
-static void _calculate_yred_piety()
-{
-    if (!you_worship(GOD_YREDELEMNUL))
-        return;
-
-    int soul_harvest = 0;
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (!is_yred_undead_follower(**mi) || mi->is_summoned()
-            || mons_is_tentacle_or_tentacle_segment(mi->type))
+        if (force_hostile)
         {
-            continue;
+            mg.set_summoned(0, 0, 0, GOD_YREDELEMNUL);
+            mg.non_actor_summoner = "the anger of Yredelemnul";
+            mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
         }
+        else
+            mg.set_summoned(&you, 5, MON_SUMM_AID, GOD_YREDELEMNUL);
 
-
-        // To smooth out yred piety fluctuations count zombies for piety
-        // as lont as they've been recently seen
-        if (you.can_see(**mi))
-            mi->props[YRED_SEEN_ZOMBIE_KEY] = you.elapsed_time;
-
-        if (mi->props.exists(YRED_SEEN_ZOMBIE_KEY) &&
-            mi->props[YRED_SEEN_ZOMBIE_KEY].get_int()
-            > you.elapsed_time - 5 * BASELINE_DELAY)
-        {
-            soul_harvest += 2 * mi->get_hit_dice() + 2;
-        }
+        if (create_monster(mg))
+            created = true;
     }
 
-    set_piety(min(200, 15 + soul_harvest));
-}
-
-static bool _give_one_yred_bonus_zombie()
-{
-    mgen_data mg(MONS_ZOMBIE, BEH_FRIENDLY, you.pos(), MHITYOU);
-    mg.set_summoned(&you, 0, 0, GOD_YREDELEMNUL);
-    return create_monster(mg);
-}
-
-// Always try to place at least one zombie when called, so that
-// monks get a little extra at an ecumenical altar.
-void give_yred_bonus_zombies(int stars)
-{
-    bool placed = false;
-    do
-    {
-        placed = _give_one_yred_bonus_zombie();
-        _calculate_yred_piety();
-    } while (placed && you.piety < piety_breakpoint(stars - 1));
+    return created;
 }
 
 bool yred_reap_chance()
 {
-    return coinflip() || (you.faith() && one_chance_in(3));
-}
-
-// When under penance or after removing faith,
-// Yredelemnulites can lose many nearby undead followers.
-bool yred_reclaim_souls(bool all)
-{
-    int num_reclaim = 0;
-    int num_followers = 0;
-
-    // no hiding them in a closet to take of faith halfway through a level
+    // Count how many reaped allies we already have.
+    int hd = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!is_yred_undead_follower(**mi) || mi->is_summoned()
-            || mons_is_tentacle_or_tentacle_segment(mi->type)
-            || mons_bound_soul(**mi))
-        {
+        if (!mi->friendly() || mi->is_summoned())
             continue;
-        }
 
-        num_followers++;
-        const int hd = mi->get_hit_dice();
-
-        // the player gets to keep a few, particularly weaklings,
-        // but always loses at least one
-        if (!all && num_reclaim > 0
-            && (one_chance_in(num_followers) || random2(20) < hd))
-        {
-            continue;
-        }
-
-        monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
-
-        num_reclaim++;
+        if (mi->type == MONS_ZOMBIE || mi->type == MONS_SPECTRAL_THING)
+            hd += mi->get_experience_level();
     }
 
-    if (num_reclaim > 0)
-    {
-        if (num_reclaim == 1 && num_followers > 1)
-            simple_god_message(" reclaims one of your reaped souls!", GOD_YREDELEMNUL);
-        else if (num_reclaim == num_followers)
-            simple_god_message(" reclaims your reaped souls!", GOD_YREDELEMNUL);
-        else
-            simple_god_message(" reclaims some of your reaped souls!", GOD_YREDELEMNUL);
-        return true;
-    }
-
-    // Nothing to reclaim, apply other punishments for penance.
-    return false;
-}
-
-bool pay_yred_souls(unsigned int how_many, bool just_check)
-{
-    vector<monster *> selected;
-    unsigned int seen = 0;
-    for (monster_near_iterator mi(you.pos(), LOS_DEFAULT); mi; ++mi)
-    {
-        if (!is_yred_undead_follower(**mi) || mi->is_summoned()
-            || mons_is_tentacle_or_tentacle_segment(mi->type)
-            || mons_bound_soul(**mi))
-        {
-            continue;
-        }
-
-        ++seen;
-        if (selected.size() < how_many)
-        {
-            selected.push_back(*mi);
-            continue;
-        }
-
-        unsigned int swap = random2(seen);
-
-        if (swap < how_many)
-            selected[swap] = *mi;
-    }
-
-    if (selected.size() < how_many)
-        return false;
-    else if (just_check)
+    // Always reap if we have no minions. Otherwise, use a sliding scale based
+    // on total HD of allies, with a rate boosted by piety.
+    if (hd == 0)
         return true;
 
-    simple_god_message(" accepts your bounty of souls!");
-    for (auto m : selected)
-        monster_die(*m, KILL_DISMISSED, NON_MONSTER);
+    // Minimum chance scales from 15% at 0 piety to 40% at 6 stars
+    int ratio = min(piety_breakpoint(6), (int)you.piety) * 100 / piety_breakpoint(6);
+    int min_chance = 15 + (25 * ratio / 100);
 
-    return true;
+    ratio = min(100, (hd * 100 / you.piety * 4));
+    int chance = (ratio * min_chance / 100) + ((100 - ratio));
+
+    //mprf("Min chance: %d, Ratio: %d, Chance: %d", min_chance, ratio, chance);
+
+    return x_chance_in_y(chance, 100);
 }
 
 static bool _want_nemelex_gift()
@@ -2312,14 +2208,12 @@ void religion_turn_start()
     if (you.turn_is_over)
         religion_turn_end();
 
-    _calculate_yred_piety();
     crawl_state.clear_god_acting();
 }
 
 void religion_turn_end()
 {
     ASSERT(you.turn_is_over);
-    _calculate_yred_piety();
     _place_delayed_monsters();
 }
 
@@ -2367,12 +2261,7 @@ void dock_piety(int piety_loss, int penance, bool no_lecture)
             last_penance_lecture = you.num_turns;
         }
 
-        // Yred piety doesn't work on a time scale compatible with traditional
-        // penance, instead immediate retribution.
-        if (you_worship(GOD_YREDELEMNUL))
-            divine_retribution(GOD_YREDELEMNUL, true, true);
-        else
-            _inc_penance(penance);
+        _inc_penance(penance);
     }
 }
 
@@ -3027,7 +2916,9 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_YREDELEMNUL:
-        yred_reclaim_souls(true);
+        you.props.erase(YRED_TORCH_POWER_KEY);
+        you.duration[DUR_FATHOMLESS_SHACKLES] = 0;
+        yred_end_blasphemy();
         for (monster_iterator mi; mi; ++mi)
             if (is_yred_undead_follower(**mi))
                 monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
@@ -3519,9 +3410,7 @@ static void _apply_monk_bonus()
         you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 19;
     }
     else if (you_worship(GOD_USKAYAW))  // Gaining piety past this point does nothing
-        gain_piety(15, 1, false); // of value with this god and looks weird.
-    else if (you_worship(GOD_YREDELEMNUL))
-        give_yred_bonus_zombies(2); // top up to **
+        gain_piety(15, 1, false);       // of value with this god and looks weird.
     else
         gain_piety(35, 1, false);
 }
@@ -4224,6 +4113,7 @@ void handle_god_time(int /*time_delta*/)
         case GOD_JIYVA:
         case GOD_WU_JIAN:
         case GOD_SIF_MUNA:
+        case GOD_YREDELEMNUL:
             if (one_chance_in(17))
                 lose_piety(1);
             break;
@@ -4277,7 +4167,6 @@ void handle_god_time(int /*time_delta*/)
             // trying to get polytheist with Ignis. Almost impossible.
         case GOD_USKAYAW:
             // We handle Uskayaw elsewhere because this func gets called rarely
-        case GOD_YREDELEMNUL:
         case GOD_GOZAG:
         case GOD_XOM:
             // Gods without normal piety do nothing each tick.
@@ -4309,7 +4198,6 @@ int god_colour(god_type god) // mv - added
     case GOD_FEDHAS:
         return CYAN;
 
-    case GOD_YREDELEMNUL:
     case GOD_KIKUBAAQUDGHA:
     case GOD_MAKHLEB:
     case GOD_VEHUMET:
@@ -4338,6 +4226,7 @@ int god_colour(god_type god) // mv - added
     case GOD_HEPLIAKLQANA:
         return LIGHTCYAN;
 
+    case GOD_YREDELEMNUL:
     case GOD_DITHMENOS:
     case GOD_USKAYAW:
         return MAGENTA;
