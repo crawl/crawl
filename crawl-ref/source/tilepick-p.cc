@@ -26,14 +26,6 @@ static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
     return first + mod % (last - first + 1);
 }
 
-#if TAG_MAJOR_VERSION == 34
-static tileidx_t _mon_mod(tileidx_t tile, int offset)
-{
-    int count = tile_player_count(tile);
-    return tile + offset % count;
-}
-#endif
-
 tileidx_t tilep_equ_weapon(const item_def &item)
 {
     if (item.base_type == OBJ_STAVES)
