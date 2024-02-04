@@ -387,7 +387,7 @@ static bool _allied_monster_at(monster* mon, coord_def delta)
         return false;
     }
 
-    return (mons_aligned(mon, ally));
+    return mons_aligned(mon, ally);
 }
 
 // Altars as well as branch entrances are considered interesting for
