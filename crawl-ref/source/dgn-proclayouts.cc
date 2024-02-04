@@ -210,6 +210,8 @@ dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
             return DNGN_CLEAR_ROCK_WALL;
         case DNGN_SLIMY_WALL:
             return DNGN_CRYSTAL_WALL; // !?
+        case DNGN_METAL_STATUE:
+            return DNGN_GRANITE_STATUE;
         case DNGN_UNSEEN:
         case DNGN_ENDLESS_SALT:
             return DNGN_FLOOR;
