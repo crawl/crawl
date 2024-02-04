@@ -1376,6 +1376,7 @@ KFEAT:  S = general shop type:Last-Chance suffix:Deals greed:0 count:7 ; \
  triple sword randart | triple crossbow randart | longbow randart | \
  hand cannon randart | bardiche randart | eveningstar randart | \
  crystal plate armour randart | any armour good_item randart w:50
+KFEAT:  t = petrified_tree
 MAP
   t
  ...

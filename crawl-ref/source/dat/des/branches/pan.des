@@ -3023,6 +3023,7 @@ end
 }}
 : end
 KFEAT:   D = granite_statue
+KFEAT:   S = metal_statue
 KFEAT:   X = rock_wall
 KFEAT:   _ = floor
 KFEAT: { = {
@@ -3034,9 +3035,12 @@ COLOUR:  P.xp01234567dO = disco
 # WALL_ZOT_BLUE and FLOOR_PEBBLE are the bases
 # for disco-coloured variants of the tiles thereof.
 RTILE:   x = wall_zot_blue
-FTILE:   D.xp01234567dO = floor_pebble
-FTILE:   _{+ = floor_hall
+FTILE:   D.xpP01234567dO = floor_pebble
+FTILE:   _{+S = floor_hall
+COLOUR:  S = warp
+TILE:    S = dimensional_conduit
 TILE:    D = dngn_disco_ball
+: set_feature_name("metal_statue", "dimensional conduit")
 : set_feature_name("granite_statue", "weirdly glowing ball")
 MARKER:  D = lua:props_marker { veto_destroy="veto" }
 MAP
@@ -3045,9 +3049,9 @@ MAP
                x...x
    xxxxxxxxxxxxxx_xxxxxxxxxxxxxxxxxxxxxxx
    x....................x1-------------3x
-   x.x.x.x.x.x.x.x.x.x..x-------------2-x
+   x.x.S.x.x.x.S.x.x.x..x-------------2-x
    x.0...............0..x---------------xxxxxxXXX
-   x.x.x.x.x.x.x.x.x.x..x---------------_....xXXX
+   x.x.x.x.S.x.x.x.S.x..x---------------_....xXXX
 xxxx.....................---------------_.d4.xXXX
 xp.x.....................---------------_....xXXX
 +.._.........{..........D-------P-------_.O5.xXXX

@@ -2688,6 +2688,9 @@ TAGS:    no_monster_gen no_trap_gen no_pool_fixup no_descent
 DEPTH:   D:7-, !D:$, Lair, !Lair:$, Depths, !Depths:$, Zot, !Zot:$
 ORIENT:  north
 KMONS:   F = fungus
+SHUFFLE: op, qr
+SUBST:   o = w, p = t, q : tw., r = .
+SUBST:   ^ = ^TTTTT, T = wtxF, P = ~~ttttFFFF
 : if you.in_branch("D") then
 {{
   -- Three tiers scaling alongside depth: D:7-9, D:9-13, D:12-14.
@@ -2756,6 +2759,7 @@ MONS:    shadow dragon / green draconian w:20
 MONS:    green draconian stormcaller / green draconian monk / ghost moth
 MONS:    moth of wrath / tentacled monstrosity w:15 / death cob
 MONS:    golden dragon, curse toe, protean progenitor
+KFEAT:   t = demonic_tree
 KFEAT:   ^ = zot trap
 SHUFFLE: 456
 :   if you.depth() == 1 then
@@ -2764,6 +2768,9 @@ SUBST:   { = }, ( = ), [ = ]
 SHUFFLE: {([ / })] / })], })]
 :   end
 SUBST:   } = }:70 >, ) = ):70 >
+TILE:    t = dngn_demonic_tree_1 w:3 / dngn_demonic_tree_16 w:3 / \
+             dngn_demonic_tree_8 w:12 / dngn_demonic_tree_9 w:12 / \
+             dngn_demonic_tree_10 / dngn_demonic_tree_11
 : end
 # Swamp flavour loot: dragon scales, witch / elei wands, consumables, rings.
 KITEM:   & = swamp dragon scales randart / swamp dragon scales good_item / \
@@ -2771,9 +2778,6 @@ KITEM:   & = swamp dragon scales randart / swamp dragon scales good_item / \
              potion of lignification q:4 ident:type / \
              ring of poison resistance randart / ring of flight randart
 KFEAT:   ~ = w
-SHUFFLE: op, qr
-SUBST:   o = w, p = t, q : tw., r = .
-SUBST:   ^ = ^TTTTT, T = wtxF, P = ~~ttttFFFF
 NSUBST:  1 = 1:. / 3 = 1. / *:1, 2 = 2 = 2. / *:2
 NSUBST:  3 = 2 = 3. / *:3, | = 1:&| / *:*
 MARKER:  ~ = lua:fog_machine { cloud_type = "thin mist", pow_min = 20, \

@@ -1647,6 +1647,7 @@ TAGS:    extra no_pool_fixup no_trap_gen zotdec luniq_zotdec_rune
 DEPTH:   Zot, !Zot:$
 ITEM:    swamp dragon scales, spear, wand of flame ident:type charges:1
 KFEAT:   ^ = shaft trap
+KFEAT:   t = petrified_tree
 KFEAT:   C = altar_fedhas
 SHUFFLE: pqrs
 SUBST:   p : wxb., q : xb.., rs = .
@@ -2127,6 +2128,7 @@ SUBST:   MNn : ., V = m, { = {([})]
 NSUBST:  B = 2:. / *:b
 SUBST:   p = ., q : w.., r : w.., s = w, w : ww.
 TILE:    m = dngn_transparent_wall_white
+TILE:    b = wall_emerald
 MAP
     ........ .........
    ...ss.........rrr...
@@ -3691,7 +3693,7 @@ TAGS: no_monster_gen transparent
 DEPTH: Zot, !Zot:1
 SHUFFLE: {[(
 NSUBST: p = 2:2 / 1:12 / 1
-MONS: plant, death cob
+MONS: withered plant, death cob
 MAP
    ..@..
   .......
@@ -4330,9 +4332,10 @@ NSUBST:  5 = 2:5 / 2:6 / 4 = 556. / *:., 7 = 1:7 / 1:8 / 3 = 7.. / 2 = 8.. / *:.
 SHUFFLE: {([}
 SUBST:   ( = (:40 U, [ = [:40 Y
 SUBST:   a = b.., d = c.., u = v.., y = x..
-# fudged a little for Lom, admittedly.
+# fudged a bunch for Lom, admittedly.
 TILE:    V = dngn_metal_wall_brown
 TILE:    B = dngn_crystal_white
+TILE:    b = wall_emerald
 TILE:    X = wall_hall_darkgray
 TILE:    C = dngn_stone_wall_yellow
 SUBST:   V = v, X = x, B = b, C = c
