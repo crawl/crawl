@@ -758,9 +758,12 @@ int player::umbra_radius() const
 
     if (have_passive(passive_t::umbra))
     {
-        // The cap is reached at piety 160 = ******.
-        size = min((int)piety, piety_breakpoint(5)) * you.normal_vision
-                                                    / piety_breakpoint(5);
+        if (piety >= piety_breakpoint(4))
+            size = 4;
+        else if (piety >= piety_breakpoint(3))
+            size = 3;
+        else
+            size = 2;
     }
 
     if (player_equip_unrand(UNRAND_SHADOWS))
@@ -779,7 +782,7 @@ int monster::umbra_radius() const
         return -1;
 
     // Bound holies get an umbra.
-    if (mons_bound_soul(*this))
+    if (type == MONS_BOUND_SOUL)
         return _mons_class_halo_radius(base_monster);
 
     switch (type)

@@ -6979,7 +6979,7 @@ void unmarshallMonster(reader &th, monster& m)
             m.del_ench(ENCH_SPELL_CHARGED);
         }
 
-        if (mons_is_zombified(m) && !mons_bound_soul(m)
+        if (mons_is_zombified(m) && m.type != MONS_BOUND_SOUL
             && slot.spell != SPELL_CREATE_TENTACLES)
         {
             // zombies shouldn't have (most) spells

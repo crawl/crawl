@@ -11,6 +11,7 @@
 #include <numeric>
 #include <sstream>
 
+#include "ability.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
@@ -1420,17 +1421,299 @@ void trog_remove_trogs_hand()
     you.duration[DUR_TROGS_HAND] = 0;
 }
 
+// Return whether the player can light the torch on their current floor
+// (ie: it is a valid place to do so and it has never been lit here before)
+string yred_cannot_light_torch_reason()
+{
+    // First check invalid locations
+    if (player_in_branch(BRANCH_TEMPLE))
+    {
+        return "There are no souls to scour here; only the pathetic idols"
+               " of powerless gods.";
+    }
+    else if (player_in_branch(BRANCH_BAZAAR) || player_in_branch(BRANCH_TROVE))
+        return "There are no souls worth scouring here.";
+
+    if (you.props.exists(YRED_TORCH_USED_KEY))
+        return "";
+
+    CrawlHashTable &levels = you.props[YRED_TORCH_USED_KEY].get_table();
+    if (levels.exists(level_id::current().describe()))
+    {
+        return "You have raised the torch once already on this floor."
+               " Yredelemnul offers no second-chances.";
+    }
+
+    return "";
+}
+
+bool yred_light_the_torch()
+{
+    mprf("You lift the black torch aloft and begin your conquest of %s in "
+         "Yredelemnul's name!",
+            level_id::current().describe(true, true).c_str());
+
+    bool aid = false;
+
+    // The power of the allies you get is based on the player's xl, but capped
+    // by their current piety. 5* allows fully uncapped servants.
+    int cap = div_rand_round(min((int)you.piety, piety_breakpoint(4)) * 27, piety_breakpoint(4));
+    int pow = min(you.experience_level, cap);
+
+    // Summon one stronger servant and two lesser ones.
+    // (Note that a 'single' servant can be multiple monsters, depending on what
+    // type we roll)
+    if (yred_random_servant(pow))
+        aid = true;
+    if (yred_random_servant(div_rand_round(pow * 7, 10), false, 2))
+        aid = true;
+    // At very high power, a chance for additional servants
+    if (x_chance_in_y(max(0, pow - 20), 10))
+    {
+        if (yred_random_servant(div_rand_round(pow * random_range(6, 9), 10), false, 2))
+            aid = true;
+    }
+
+    if (aid)
+        mpr("Yredelemnul sends servants to aid you!");
+
+    // Determine number of torch charges based on piety stars.
+    // Note: You are given 'hidden' internal torchlight charges even below the
+    // piety threshold to hurl torchlight, in case you gain that ability on the
+    // current floor.
+    if (you.piety >= piety_breakpoint(4))
+        you.props[YRED_TORCH_POWER_KEY] = 5;
+    if (you.piety >= piety_breakpoint(3))
+        you.props[YRED_TORCH_POWER_KEY] = 4;
+    if (you.piety >= piety_breakpoint(2))
+        you.props[YRED_TORCH_POWER_KEY] = 3;
+    else
+        you.props[YRED_TORCH_POWER_KEY] = 2;
+
+    // Mark the torch as having been used on this level
+    you.props[YRED_TORCH_USED_KEY].get_table()
+        [level_id::current().describe()] = true;
+
+    return true;
+}
+
+// Called whenever you leave a floor with the black torch lit.
+// Handles cleanup, prints messages, and gives bonus piety based on how
+// thoroughly the player scoured the floor.
+void yred_end_conquest()
+{
+    // Calculate how cleared the floor is:
+    int souls_remaining = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (!mi->wont_attack() && !mons_is_firewood(**mi)
+            && mons_can_be_spectralised(**mi, true)
+            // Ignore monsters in no-tele-into areas, since these are often
+            // literally unreachable, and we also don't want Yred to be unhappy
+            // whenever there was a ghost vault on the floor.
+            && !(env.pgrid(mi->pos()) & FPROP_NO_TELE_INTO))
+        {
+            ++souls_remaining;
+        }
+    }
+
+    int kills = you.props[YRED_KILLS_LOGGED_KEY].get_int();
+
+    int ratio = kills * 100 / (kills + souls_remaining + 1);
+
+    //mprf("Kills: %d, Remain: %d, Ratio: %d", kills, souls_remaining, ratio);
+
+    // Cash souls in for piety and print a message about how happy Yred is
+    string msg = "You return your torch's flame to Yredelmnul";
+    int piety = 0;
+
+    if (ratio > 90)
+    {
+        msg+= " and they are glorified by your conquest!";
+        piety = random_range(3, 5);
+    }
+    else if (ratio > 65)
+    {
+        msg+= " and they are satisfied with your conquest.";
+        piety = random_range(2, 3);
+    }
+    else if (ratio > 30)
+    {
+        msg+= " and feel their disappointment in your meagre crusade.";
+        piety = random_range(1, 1);
+    }
+    else
+        msg+= " and feel their distain for your failure.";
+
+    mprf(MSGCH_GOD, "%s", msg.c_str());
+    gain_piety(piety);
+
+    // Actually end the torch effect
+    you.props.erase(YRED_TORCH_POWER_KEY);
+    you.props.erase(YRED_KILLS_LOGGED_KEY);
+}
+
+bool yred_torch_is_raised()
+{
+    return yred_get_torch_power() > -1;
+}
+
+// Whether the black torch is currently raised, and how many uses of
+// Hurl Torchlight it has remaining. (Returns -1 if the torch is unlit, and
+// the number of remaining charges otherwise)
+int yred_get_torch_power()
+{
+    if (!you.props.exists(YRED_TORCH_POWER_KEY))
+        return -1;
+    else
+        return you.props[YRED_TORCH_POWER_KEY].get_int();
+}
+
+// Feed a slain enemy to fuel our torch (maybe)
+void yred_feed_torch(const monster* mons)
+{
+    if (!mons_can_be_spectralised(*mons, true))
+        return;
+
+    // Track any valid kill, so we can tell how throughly the player scoured
+    // the floor afterward
+    you.props[YRED_KILLS_LOGGED_KEY].get_int() += 1;
+
+    // Only gain fuel from uniques we could raise, and will not bind
+    if (!mons_is_unique(mons->type)
+        || mons->has_ench(ENCH_SOUL_RIPE))
+    {
+        return;
+    }
+
+    if (!player_has_ability(ABIL_YRED_HURL_TORCHLIGHT))
+        return;
+
+    // Gain one torchlight charge for each unique killed
+    mprf(MSGCH_GOD, "The black torch howls with new intensity!");
+    you.props[YRED_TORCH_POWER_KEY].get_int() += 1;
+}
+
+// Determine if this enemy is adjacent to at least one ally
+static bool _is_isolated_soul(monster* mons)
+{
+    for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+    {
+        const actor* act = actor_at(*ai);
+        if (!act || !act->is_monster())
+            continue;
+
+        const monster* mon = act->as_monster();
+        if (!mons_is_firewood(*mon) && mons_aligned(mons, mon))
+            return false;
+    }
+    return true;
+}
+
+#define YRED_BLASPEMY_MAX_RADIUS 4
+
+static void _set_blasphemy_radius(int radius)
+{
+    const coord_def p = you.props[YRED_BLASPHEMY_CENTER_KEY].get_coord();
+
+    for (distance_iterator di(p, false, false, YRED_BLASPEMY_MAX_RADIUS); di; ++di)
+        env.pgrid(*di) &= ~FPROP_BLASPHEMY;
+
+    for (distance_iterator di(p, false, false, radius); di; ++di)
+        env.pgrid(*di) |= FPROP_BLASPHEMY;
+}
+
+void yred_make_blasphemy()
+{
+    you.props[YRED_BLASPHEMY_CENTER_KEY] = you.pos();
+    _set_blasphemy_radius(YRED_BLASPEMY_MAX_RADIUS);
+}
+
+void yred_end_blasphemy()
+{
+    if (!you.props.exists(YRED_BLASPHEMY_CENTER_KEY))
+        return;
+
+    _set_blasphemy_radius(-1);
+}
+
+static int _calc_blasphemy_radius()
+{
+    if (you.duration[DUR_FATHOMLESS_SHACKLES] < 20)
+        return 0;
+    else if (you.duration[DUR_FATHOMLESS_SHACKLES] < 50)
+        return 1;
+    else if (you.duration[DUR_FATHOMLESS_SHACKLES] < 90)
+        return 2;
+    if (you.duration[DUR_FATHOMLESS_SHACKLES] < 150)
+        return 3;
+    else
+        return 4;
+}
+
+void yred_fathomless_shackles_effect(int delay)
+{
+    // Adjust blasphemy size based on duration
+    int radius = _calc_blasphemy_radius();
+    _set_blasphemy_radius(radius);
+
+    // You're not standing in the zone. Release all bound monsters and skip effects.
+    if (!is_blasphemy(you.pos()))
+        radius = 0;
+
+    int total_drained = 0;
+    const coord_def p = you.props[YRED_BLASPHEMY_CENTER_KEY].get_coord();
+    int pow = div_rand_round((7 + you.skill_rdiv(SK_INVOCATIONS, 7, 5)) * 5, delay);
+    for (monster_near_iterator mi(p); mi; ++mi)
+    {
+        if (grid_distance(mi->pos(), p) > radius
+            || mi->wont_attack() || mons_is_firewood(**mi))
+        {
+            continue;
+        }
+
+        if (!mi->has_ench(ENCH_BOUND))
+            mi->add_ench(mon_enchant(ENCH_BOUND, 0, &you, INFINITE_DURATION));
+
+        // Cache this first, since damage might kill them
+        bool can_drain = actor_is_susceptible_to_vampirism(**mi, false);
+
+        int dam = resist_adjust_damage(*mi, BEAM_NEG, random2avg(pow, 2));
+        if (_is_isolated_soul(*mi))
+            dam *= 3/2;
+
+        // You can't drain life from summons, but you can still hurt them.
+        int dam_done = mi->hurt(&you, dam, BEAM_NEG, KILLED_BY_BEAM);
+        if (can_drain)
+            total_drained += dam_done;
+
+        behaviour_event(*mi, ME_WHACK, &you);
+    }
+
+    // Cap healing so that we can make this still worth using against moderate
+    // numbers of enemies without making it complete invincibility against large
+    // numbers.
+    you.heal(min(total_drained / 2, delay * 2));
+}
+
 bool yred_can_bind_soul(monster* mon)
 {
     return mons_can_be_spectralised(*mon, true)
-           && !mons_bound_body_and_soul(*mon)
+           && !mon->has_ench(ENCH_SOUL_RIPE)
            && mon->attitude != ATT_FRIENDLY;
+}
+
+int yred_get_bound_soul_hp(monster_type mt)
+{
+    return get_monster_data(mt)->avg_hp_10x
+           * (7 + you.skill_rdiv(SK_INVOCATIONS, 1, 5)) / 100
+           + 15;
 }
 
 void yred_make_bound_soul(monster* mon, bool force_hostile)
 {
     ASSERT(mon); // XXX: change to monster &mon
-    ASSERT(mons_bound_body_and_soul(*mon));
+    ASSERT(mon->has_ench(ENCH_SOUL_RIPE));
 
     add_daction(DACT_OLD_CHARMD_SOULS_POOF);
     remove_bound_soul_companion();
@@ -1438,8 +1721,8 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     const string whose = you.can_see(*mon) ? apostrophise(mon->name(DESC_THE))
                                            : mon->pronoun(PRONOUN_POSSESSIVE);
 
-    // Remove the monster's soul-enslaving enchantment, as it's no
-    // longer needed.
+    // Heal the health we paid wrestling for this soul
+    you.heal(mon->get_ench(ENCH_SOUL_RIPE).degree);
     mon->del_ench(ENCH_SOUL_RIPE, false, false);
 
     // Remove the monster's invisibility enchantment. If we don't do
@@ -1471,6 +1754,10 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     // the proper stats from it.
     define_zombie(mon, mon->type, MONS_BOUND_SOUL);
 
+    // Modify phealth based on invocations skill
+    mon->max_hit_points = yred_get_bound_soul_hp(orig.type);
+    mon->hit_points = mon->max_hit_points;
+
     mon->flags |= MF_NO_REWARD;
 
     // If the original monster type has melee abilities, make sure
@@ -1482,6 +1769,8 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
             mon->spells.push_back(slot);
     if (mon->spells.size())
         mon->props[CUSTOM_SPELLS_KEY] = true;
+
+    mon->props[KNOWN_MAX_HP_KEY] = mon->max_hit_points;
 
     name_zombie(*mon, orig);
 

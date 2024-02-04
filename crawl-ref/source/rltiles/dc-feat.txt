@@ -767,6 +767,7 @@ travel_exclusion_centre TRAVEL_EXCLUSION_CENTRE_BG
 
 effect/sanctuary SANCTUARY
 effect/blood_for_blood BLOOD_FOR_BLOOD
+effect/blasphemy BLASPHEMY
 mold_small1 MOLD
 mold_small2
 mold_small3

@@ -74,6 +74,11 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     }
     else if (cell.flags & MAP_BFB_CORPSE)
         colour = LIGHTRED;
+    else if (!feat_is_solid(feat)
+             && (cell.flags & MAP_BLASPHEMY))
+    {
+        colour = LIGHTMAGENTA;
+    }
     else if (cell.flags & MAP_BLOODY && !norecolour && Options.show_blood)
         colour = RED;
     else if (cell.flags & MAP_CORRODING && feat == DNGN_FLOOR)

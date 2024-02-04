@@ -81,7 +81,7 @@ void remove_bound_soul_companion()
         monster* mons = monster_by_mid(entry.first);
         if (!mons)
             mons = &entry.second.mons.mons;
-        if (mons_bound_soul(*mons))
+        if (mons->type == MONS_BOUND_SOUL)
         {
             remove_companion(mons);
             return;

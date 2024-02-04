@@ -67,6 +67,12 @@ static void _maybe_expire_jinxbite()
     }
 }
 
+static void _post_shackles_effect()
+{
+    mprf(MSGCH_DURATION, "You lose your grip on the chains of life and death.");
+    yred_end_blasphemy();
+}
+
 // properties of the duration.
 enum duration_flags : uint32_t
 {
@@ -354,6 +360,11 @@ static const duration_def duration_data[] =
       "chanting a vengeful prayer", "blood for blood",
       "You are chanting a vengeful prayer.", D_EXPIRES,
       {{"", beogh_end_blood_for_blood}, { "Your prayer is nearing its end.", 1}}, 6},
+    { DUR_FATHOMLESS_SHACKLES,
+      WHITE, "Shackles",
+      "enshackling", "fathomless shackles",
+      "You are channelling the inexorable grasp of Yredelemnul.", D_NO_FLAGS,
+      {{"", _post_shackles_effect}}},
     { DUR_LIQUEFYING,
       LIGHTBLUE, "Liquid",
       "liquefying", "",

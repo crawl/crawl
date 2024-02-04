@@ -128,29 +128,6 @@ static mgen_data _wrath_mon_data(monster_type mtyp, god_type god)
     return mg;
 }
 
-static bool _yred_random_zombified_hostile()
-{
-    const bool skel = one_chance_in(4);
-
-    monster_type z_base;
-
-    do
-    {
-        // XXX: better zombie selection?
-        level_id place(BRANCH_DUNGEON,
-                       min(27, you.experience_level + 5));
-        z_base = pick_local_zombifiable_monster(place, RANDOM_MONSTER,
-                                                you.pos());
-    }
-    while (skel && !mons_skeleton(z_base));
-
-    mgen_data temp = _wrath_mon_data(skel ? MONS_SKELETON : MONS_ZOMBIE,
-                                     GOD_YREDELEMNUL)
-                     .set_base(z_base);
-
-    return create_monster(temp, false);
-}
-
 static const vector<pop_entry> _okawaru_servants =
 { // warriors
   {  1,  3,   3, FALL, MONS_ORC },
@@ -717,53 +694,24 @@ static bool _kikubaaqudgha_retribution()
 
 static bool _yredelemnul_retribution()
 {
-    // undead theme
     const god_type god = GOD_YREDELEMNUL;
+
+    int how_many = random_range(2, 4);
+    int count = 0;
+    for (int i = 0; i < how_many; ++i)
+    {
+        if (yred_random_servant(you.experience_level), true)
+            ++count;
+    }
+
+    simple_god_message(count > 1 ? " sends servants to punish you." :
+                        count > 0 ? " sends a servant to punish you."
+                                    : "'s servants fail to arrive.", god);
 
     if (coinflip())
     {
-        if (you_worship(god) && coinflip() && yred_reclaim_souls())
-            ;
-        else
-        {
-            int how_many = 1 + random2avg(1 + (you.experience_level / 5), 2);
-            int count = 0;
-
-            for (; how_many > 0; --how_many)
-            {
-                if (one_chance_in(you.experience_level))
-                {
-                    if (_yred_random_zombified_hostile())
-                        ++count;
-                }
-                else
-                {
-                    if (yred_random_servant(0, true))
-                        ++count;
-                    else
-                        ++how_many;
-                }
-            }
-
-            simple_god_message(count > 1 ? " sends servants to punish you." :
-                               count > 0 ? " sends a servant to punish you."
-                                         : "'s servants fail to arrive.", god);
-        }
-    }
-    else
-    {
-        monster* avatar = get_avatar(god);
-        // can't be const because mons_cast() doesn't accept const monster*
-
-        if (avatar == nullptr)
-        {
-            simple_god_message(" has no time to deal with you just now.", god);
-            return false;
-        }
-
-        _spell_retribution(avatar, SPELL_BOLT_OF_DRAINING, god,
-                           "'s anger turns toward you for a moment.");
-        _reset_avatar(*avatar);
+        simple_god_message(" binds you in chains!", god);
+        you.increase_duration(DUR_NO_MOMENTUM, random_range(3, 8));
     }
 
     return true;

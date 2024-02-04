@@ -803,6 +803,8 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 {
                     if (cell.sanctuary)
                         this.draw_dngn(dngn.SANCTUARY, x, y);
+                    if (cell.blasphemy)
+                        this.draw_dngn(dngn.BLASPHEMY, x, y);
                     if (cell.has_bfb_corpse)
                         this.draw_dngn(dngn.BLOOD_FOR_BLOOD, x, y);
                     if (cell.silenced)

@@ -1219,7 +1219,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     }
 
     if (mons_itemuse(*mons) < MONUSE_STARTING_EQUIPMENT
-        && !mons_bound_soul(*mons)
+        && mons->type != MONS_BOUND_SOUL
         && !mons_class_is_animated_object(mons->type))
     {
         return false;

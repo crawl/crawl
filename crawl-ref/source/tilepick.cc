@@ -3323,6 +3323,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     case CYAN:
         if (bolt.name == "slug dart")
             return TILE_BOLT_STONE_ARROW + dir;
+        else if (bolt.name == "umbral torchlight")
+            return TILE_BOLT_UMBRAL_TORCHLIGHT;
         break;
 
     case ETC_MUTAGENIC:
@@ -3740,10 +3742,6 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Yredelemnul
     case ABIL_YRED_RECALL_UNDEAD_HARVEST:
         return TILEG_ABILITY_YRED_RECALL;
-    case ABIL_YRED_DARK_BARGAIN:
-        return TILEG_ABILITY_YRED_DARK_BARGAIN;
-    case ABIL_YRED_DRAIN_LIFE:
-        return TILEG_ABILITY_YRED_DRAIN_LIFE;
     case ABIL_YRED_BIND_SOUL:
         return TILEG_ABILITY_YRED_BIND_SOUL;
     // Xom, Vehumet = 90

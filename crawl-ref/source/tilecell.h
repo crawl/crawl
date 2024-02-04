@@ -33,6 +33,7 @@ struct packed_cell
     bool is_silenced;
     char halo;
     bool is_sanctuary;
+    bool is_blasphemy;
     bool is_liquefied;
     bool mangrove_water;
     bool awakened_forest;
@@ -50,7 +51,7 @@ struct packed_cell
     packed_cell() : num_dngn_overlay(0), fg(0), bg(0), cloud(0),
                     is_highlighted_summoner(false), is_bloody(false),
                     is_silenced(false), halo(HALO_NONE), is_sanctuary(false),
-                    is_liquefied(false), mangrove_water(false),
+                    is_blasphemy(false), is_liquefied(false), mangrove_water(false),
                     awakened_forest(false), orb_glow(0), blood_rotation(0),
                     old_blood(false), travel_trail(0),
                     quad_glow(false), disjunct(false), has_bfb_corpse(false)
@@ -65,6 +66,7 @@ struct packed_cell
                                         is_silenced(c->is_silenced),
                                         halo(c->halo),
                                         is_sanctuary(c->is_sanctuary),
+                                        is_blasphemy(c->is_blasphemy),
                                         is_liquefied(c->is_liquefied),
                                         mangrove_water(c->mangrove_water),
                                         awakened_forest(c->awakened_forest),

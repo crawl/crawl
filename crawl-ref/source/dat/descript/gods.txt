@@ -208,11 +208,11 @@ capricious. There is nothing a follower can do to influence Xom's mood.
 %%%%
 Yredelemnul
 
-Yredelemnul the Dark is a god worshipped by those who seek powers over death
-and the soul. Followers can reap legions of servile undead, and gain a
-number of other useful powers with which to make better use of the souls of
-the living. Yredelemnul especially favours those who would surround themselves
-with a bounty of collected souls.
+Cast down by the good gods eons ago, Yredelemnul seeks to despoil their
+creations and chain all living souls within their inexorable grip. Followers who
+would conquer in their name are granted the power to reap an army of the dead
+and bind powerful souls into eternal service - provided they can sweep across
+the land in a tide as inexorable as the god themself.
 %%%%
 Zin
 
@@ -469,12 +469,14 @@ playthings...
 %%%%
 Yredelemnul powers
 
-Yredelemnul gives followers the power to raise slain foes from the dead and
-bind them into service. Followers also can recall undead followers to them,
-heal by draining life from the living, and exchange members of their undead
-army for Yredelemnul's more powerful servants. With a large and powerful enough
-mass of the dead, followers can fully bind a foe's soul and make it fight for
-them in death with the full capacities it held in life.
+Followers of Yredelemnul carry the Black Torch, allowing them to gather souls
+and surround themselves in darkness. They can raise foes who die in the light of
+the torch as mindless servants, hurl torchlight to scour the living and empower
+the dead, and bind especially noteworthy souls to fight for them in death with
+the full capacities they held in life. Especially devout worshippers can even
+call down the inescapable grip of The Fallen directly, binding foes helplessly
+in place as the very life is sucked from them. Yredelemnul will also dispatch
+undead servants to aid their followers at the start of each new conquest.
 %%%%
 Zin powers
 
@@ -668,11 +670,9 @@ remains; the unfaithful are rewarded just as the faithful are punished.
 %%%%
 Yredelemnul wrath
 
-Those who anger Yredelemnul find themselves beset by legions of the dead.
-Novice adventurers will be assaulted by zombies and skeletons; veterans by the
-strongest of Yredelemnul's undead servants. The victims' own undead servants
-desert them and crumble into dust. Yredelemnul's ire may instead drain the lives
-of the unfaithful.
+Those who anger Yredelemnul find themselves beset by legions of the dead and
+sometimes the god will also intervene directly, binding the unfaithful in
+inescapable chains as their dark army demonstrates the price of betrayal.
 %%%%
 Zin wrath
 

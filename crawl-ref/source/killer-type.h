@@ -20,6 +20,6 @@ enum killer_type                       // monster_die(), thing_thrown
 #endif
     KILL_TIMEOUT,                      // non-summoned monsters whose times ran out
     KILL_PACIFIED,                     // only used by milestones and notes
-    KILL_CHARMD,                     // only used by milestones and notes
+    KILL_BOUND,                        // only used by milestones and notes
     KILL_SLIMIFIED,                    // only used by milestones and notes
 };

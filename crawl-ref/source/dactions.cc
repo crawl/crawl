@@ -105,7 +105,7 @@ bool mons_matches_daction(const monster* mon, daction_type act)
                && mon->props.exists(PIKEL_BAND_KEY);
 
     case DACT_OLD_CHARMD_SOULS_POOF:
-        return mons_bound_soul(*mon);
+        return mon->type == MONS_BOUND_SOUL;
 
     case DACT_SLIME_NEW_ATTEMPT:
         return mons_is_slime(*mon);

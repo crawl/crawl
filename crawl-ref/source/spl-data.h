@@ -3734,6 +3734,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_HURL_TORCHLIGHT, "Hurl Torchlight",
+    spschool::conjuration | spschool::necromancy,
+    spflag::dir_or_target | spflag::needs_tracer,
+    4,
+    200,
+    4, 4,
+    0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

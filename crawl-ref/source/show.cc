@@ -147,6 +147,9 @@ static void _update_feat_at(const coord_def &gp)
             env.map_knowledge(gp).flags |= MAP_SANCTUARY_2;
     }
 
+    if (is_blasphemy(gp))
+        env.map_knowledge(gp).flags |= MAP_BLASPHEMY;
+
     if (you.get_beholder(gp))
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 

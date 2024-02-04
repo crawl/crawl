@@ -26,7 +26,7 @@ enum class abflag
     breath              = 0x00000001, // ability uses DUR_BREATH_WEAPON
     delay               = 0x00000002, // ability has its own delay
     pain                = 0x00000004, // ability must hurt player (ie torment)
-    souls               = 0x00000008, // ability costs reaped allies
+    quiet_fail          = 0x00000008, // no message on failure
     exhaustion          = 0x00000010, // fails if you.exhausted
     instant             = 0x00000020, // doesn't take time to use
     conf_ok             = 0x00000040, // can use even if confused
@@ -38,7 +38,7 @@ enum class abflag
     hostile             = 0x00001000, // failure summons a hostile (Makhleb)
     berserk_ok          = 0x00002000, // can use even if berserk
     card                = 0x00004000, // deck drawing (Nemelex)
-    quiet_fail          = 0x00008000, // no message on failure
+    torchlight          = 0x00008000, // costs torchlight (Yred)
 
     // targeting flags
     dir_or_target       = 0x10000000, // uses DIR_NONE targeting

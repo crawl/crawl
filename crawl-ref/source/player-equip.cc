@@ -1026,13 +1026,6 @@ static void _remove_amulet_of_faith(item_def &item)
         return;
     }
 
-    if (you_worship(GOD_YREDELEMNUL))
-    {
-        mprf(MSGCH_GOD, "The black torch dims.");
-        yred_reclaim_souls();
-        return;
-    }
-
     simple_god_message(" seems less interested in you.");
 
     const int piety_loss = div_rand_round(you.piety, 3);
@@ -1173,11 +1166,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         const string ignore_reason = ignore_faith_reason();
         if (!ignore_reason.empty())
             simple_god_message(ignore_reason.c_str());
-        else if (you_worship(GOD_YREDELEMNUL))
-        {
-            mprf(MSGCH_GOD, "The black torch glows! You feel the dead"
-                            " draw near.");
-        }
         else
         {
             mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",

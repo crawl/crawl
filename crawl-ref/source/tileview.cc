@@ -1464,6 +1464,9 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if ((mc.flags & MAP_SANCTUARY_1) || (mc.flags & MAP_SANCTUARY_2))
         cell.is_sanctuary = true;
 
+    if (mc.flags & MAP_BLASPHEMY)
+        cell.is_blasphemy = true;
+
     if (mc.flags & MAP_SILENCED)
         cell.is_silenced = true;
 
