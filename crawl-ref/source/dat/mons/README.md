@@ -26,7 +26,7 @@ Relevant enums are noted with a (filename ➡ enum).
 - genus (string): The genus to which this monster's species belongs. Mainly
   used for some corner cases of monster behavior. Defaults to `species`.
   (monster-type.h ➡ monster-type).
-- ✨glyph✨ (char): The console glyph for the monster.
+- ✨glyph✨ (`glyph` entry): See below.
 - habitat (string): The monster's native terrain type. Defaults to "land".
   (mon-enum.h ➡ habitat_type)
 - ✨has_corpse✨ (bool): Whether the monster leaves a corpse behind on death.
@@ -79,7 +79,8 @@ Relevant enums are noted with a (filename ➡ enum).
 - xp_mult (int): A multiplier for the monster's XP value, in addition to the
   base XP derived from the monster's HP, speed, etc. Defaults to 10.
 
-`attack` entries are associative arrays, with the following possible fields:
+`attack` entries are lists of associative arrays, each of which may have the
+following fields:
 
 - ✨type✨ (string): The description of the attack. Largely cosmetic, but note
   that only `hit` and `weap_only`-type attacks can use weapons.
@@ -89,6 +90,15 @@ Relevant enums are noted with a (filename ➡ enum).
 - flavour: (string): Special effects associated with the attack.
   Defaults to `none`.
   (mon-enum.h ➡ attack_flavour)
+
+`glyph` entries are associative arrays with the following fields:
+
+- ✨char✨ (char): The ASCII character which represents this monster in console
+  versions of the game.
+- ✨colour✨ (string): The colour for this monster in console versions of the
+  game. Should be either one of the standard 16 console colours or one of our
+  elemental colours.
+  (defines.h ➡ COLOURS, or colour.h ➡ element_type)
 
 Monsters may have at most four attacks.
 
