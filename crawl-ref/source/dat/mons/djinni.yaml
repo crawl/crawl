@@ -1,0 +1,18 @@
+name: "djinni"
+glyph: {char: "R", colour: magenta}
+flags: [flies, speaks]
+resists: {fire: 2, cold: -1}
+holiness: [nonliving]
+will: 30
+attacks:
+ - {type: hit, damage: 10}
+hd: 8
+hp_10x: 400
+ac: 5
+ev: 5
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid
+tile: efreet

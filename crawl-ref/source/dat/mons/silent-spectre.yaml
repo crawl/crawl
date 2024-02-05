@@ -1,0 +1,17 @@
+name: "silent spectre"
+glyph: {char: "W", colour: cyan}
+flags: [flies, see_invis, speaks, insubstantial]
+resists: {cold: 3}
+genus: wraith
+holiness: [undead]
+will: 40
+attacks:
+ - {type: hit, damage: 15}
+hd: 8
+hp_10x: 440
+ac: 5
+ev: 15
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid

@@ -1,0 +1,20 @@
+name: "Donald"
+glyph: {char: "@", colour: blue}
+flags: [fighter, speaks, warm_blood, unique, male]
+xp_mult: 20
+species: human
+will: 100
+attacks:
+ - {type: hit, damage: 26}
+hd: 14
+hp_10x: 840
+ac: 3
+ev: 10
+spells: donald
+has_corpse: true
+shout: shout
+intelligence: human
+habitat: amphibious
+uses: weapons_armour
+size: medium
+shape: humanoid

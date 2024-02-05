@@ -204,7 +204,7 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
     if (!targeted() || !item || item->base_type != OBJ_MISSILES)
         return descs;
 
-    ranged_attack attk(&you, nullptr, item, false);
+    ranged_attack attk(&you, nullptr, launcher, item, false);
     descs.emplace_back(make_stringf("%d%% to hit", to_hit_pct(mi, attk, false)));
 
     if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
@@ -482,6 +482,7 @@ static void _setup_missile_beam(const actor *agent, bolt &beam, item_def &item)
 
     beam.range        = you.current_vision;
     beam.source_id    = agent->mid;
+    beam.launcher     = launcher;
     beam.item         = &item;
     beam.source       = agent->pos();
     beam.flavour      = BEAM_MISSILE;
@@ -817,7 +818,7 @@ void setup_monster_throw_beam(monster* mons, bolt &beam)
 bool mons_throw(monster* mons, bolt &beam, bool teleport)
 {
     ASSERT(beam.item);
-    item_def &missile = *beam.item;
+    const item_def &missile = *beam.item;
     ASSERT(missile.base_type == OBJ_MISSILES);
 
     // Energy is already deducted for the spell cast, if using portal projectile

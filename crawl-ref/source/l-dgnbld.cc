@@ -2246,7 +2246,6 @@ LUAFN(dgn_farthest_from)
     FixedArray<bool, GXM, GYM> visited;
     visited.init(false);
     vector<coord_def> queue;
-    unsigned int dc_prev = 0, dc_next; // indices where dist changes to the next value
 
     for (int x = lines.width(); x >= 0; x--)
         for (int y = lines.height(); y >= 0; y--)
@@ -2259,36 +2258,40 @@ LUAFN(dgn_farthest_from)
             }
         }
 
-    dc_next = queue.size();
-    if (!dc_next)
+    if (queue.empty())
     {
         // Not a single beacon, nowhere to go.
+        // 😿
         lua_pushnil(ls);
         lua_pushnil(ls);
         return 2;
     }
 
-    for (unsigned int dc = 0; dc < queue.size(); dc++)
+    vector<coord_def> next_frontier;
+    while (true)
     {
-        if (dc >= dc_next)
+        for (coord_def c : queue)
         {
-            dc_prev = dc_next;
-            dc_next = dc;
-        }
-
-        coord_def c = queue[dc];
-        for (adjacent_iterator ai(c); ai; ++ai)
-            if (lines.in_map(*ai) && !visited(*ai)
-                && strchr(traversable_glyphs, lines(*ai)))
+            for (adjacent_iterator ai(c); ai; ++ai)
             {
-                queue.push_back(*ai);
-                visited(*ai) = true;
+                if (lines.in_map(*ai)
+                    && !visited(*ai)
+                    && strchr(traversable_glyphs, lines(*ai)))
+                {
+                    next_frontier.push_back(*ai);
+                    visited(*ai) = true;
+                }
             }
+        }
+        if (next_frontier.empty())
+            break;
+        queue = next_frontier;
+        next_frontier.clear();
     }
 
-    ASSERT(dc_next > dc_prev);
+    ASSERT(!queue.empty());
     // There may be multiple farthest cells, pick one at random.
-    coord_def loc = queue[random_range(dc_prev, dc_next - 1)];
+    coord_def loc = *random_iterator(queue);
     lua_pushnumber(ls, loc.x);
     lua_pushnumber(ls, loc.y);
     return 2;

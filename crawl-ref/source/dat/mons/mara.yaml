@@ -1,0 +1,19 @@
+name: "Mara"
+glyph: {char: "R", colour: lightmagenta}
+flags: [see_invis, speaks, unique, male]
+resists: {poison: 1, fire: 2}
+xp_mult: 35
+species: rakshasa
+holiness: [demonic]
+will: 140
+attacks:
+ - {type: hit, damage: 30}
+hd: 18
+hp_10x: 1440
+ac: 10
+ev: 14
+spells: mara
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

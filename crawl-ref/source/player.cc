@@ -430,7 +430,9 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         return false;
     }
 
-    if (mons->is_stationary() || mons->asleep() || mons->cannot_act())
+    // TODO: consider waking up sleeping monsters when you push em?
+    // (That's what happens for monsters pushing monsters...)
+    if (mons->unswappable() || mons->asleep())
     {
         if (!quiet)
             simple_monster_message(*mons, " cannot move out of your way!");

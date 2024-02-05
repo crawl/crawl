@@ -801,16 +801,18 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
     case SPELL_CONTROLLED_BLINK:
         return SPELL_BLINK;
 #endif
-    case SPELL_DRAGON_CALL:
-        return SPELL_SUMMON_DRAGON;
-    case SPELL_SWIFTNESS:
-        return SPELL_SPRINT;
     case SPELL_NECROTISE:
         return SPELL_PAIN;
+    case SPELL_SWIFTNESS:
+        return SPELL_SPRINT;
     case SPELL_CONFUSING_TOUCH:
         return SPELL_CONFUSE;
     case SPELL_CURSE_OF_AGONY:
         return SPELL_AGONY;
+    case SPELL_STARBURST:
+        return SPELL_BOLT_OF_FIRE;
+    case SPELL_DRAGON_CALL:
+        return SPELL_SUMMON_DRAGON;
     default:
         break;
     }

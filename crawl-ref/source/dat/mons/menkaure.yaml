@@ -1,0 +1,21 @@
+name: "Menkaure"
+glyph: {char: "M", colour: magenta}
+flags: [see_invis, speaks, unique, male]
+resists: {fire: -1, cold: 1}
+xp_mult: 48
+species: mummy
+holiness: [undead]
+will: 20
+attacks:
+ - {type: hit, damage: 25}
+hd: 3
+hp_10x: 240
+ac: 3
+ev: 6
+spells: menkaure
+shout: shout
+intelligence: human
+speed: 8
+uses: open_doors
+size: medium
+shape: humanoid

@@ -868,91 +868,76 @@ static void _triumphant_mons_speech(actor *killer)
         mons_speaks(mon);  // They killed you and they meant to.
 }
 
-static void _god_death_message(kill_method_type death_type, const actor *killer)
+static void _god_death_messages(kill_method_type death_type,
+                                const actor *killer)
 {
+    const bool left_corpse = death_type != KILLED_BY_DISINT
+                             && death_type != KILLED_BY_LAVA;
+
+    const mon_holy_type holi = you.holiness();
+    const bool was_undead = bool(holi & MH_UNDEAD);
+    const bool was_nonliving = bool(holi & MH_NONLIVING);
+
+    string key = god_name(you.religion) + " death";
+
+    string key_extended = key;
+    if (left_corpse)
+        key_extended += " corpse";
+    if (was_undead)
+        key_extended += " undead";
+    if (was_nonliving)
+        key_extended += " nonliving";
+
+    // For gods with death messages in the database, first try key_extended.
+    // If that doesn't produce anything, try key.
+    //
+    // This means that the default god death message is "@God_name@ death".
+    string result = getSpeakString(key_extended);
+    if (result.empty())
+        result = getSpeakString(key);
+    if (!result.empty())
+        god_speaks(you.religion, result.c_str());
+
     xom_death_message(death_type);
 
-    switch (you.religion)
+    if (left_corpse)
     {
-    case GOD_FEDHAS:
-        simple_god_message(" appreciates your contribution to the "
-                           "ecosystem.");
-        break;
-
-    case GOD_NEMELEX_XOBEH:
-        nemelex_death_message();
-        break;
-
-    case GOD_KIKUBAAQUDGHA:
-    {
-        const mon_holy_type holi = you.holiness();
-
-        if (holi & (MH_NONLIVING | MH_UNDEAD))
-        {
-            simple_god_message(" rasps: \"You have failed me! "
-                               "Welcome... oblivion!\"");
-        }
-        else
-        {
-            simple_god_message(" rasps: \"You have failed me! "
-                               "Welcome... death!\"");
-        }
-        break;
-    }
-
-    case GOD_YREDELEMNUL:
-        if (you.undead_state() != US_ALIVE)
-            mprf(MSGCH_GOD, "You join the legions of the undead harvest.");
-        else if (death_type != KILLED_BY_DISINT
-              && death_type != KILLED_BY_LAVA)
-        {
-            const mon_holy_type holi = you.holiness();
-
-            if (holi & MH_NONLIVING)
-                mprf(MSGCH_GOD, "Your body becomes fuel for the black torch.");
-            else
-                mprf(MSGCH_GOD, "Your body rises from the dead as a mindless "
-                     "zombie.");
-        }
-        // No message if you're not undead and your corpse is lost.
-        break;
-
-    case GOD_BEOGH:
-        if (killer && killer->is_monster() && killer->deity() == GOD_BEOGH)
-        {
-            const string msg = " appreciates "
-                + killer->name(DESC_ITS)
-                + " killing of a heretic priest.";
-            simple_god_message(msg.c_str());
-        }
-        break;
-
-#if TAG_MAJOR_VERSION == 34
-    case GOD_PAKELLAS:
-    {
-        const string result = getSpeakString("Pakellas death");
-        god_speaks(GOD_PAKELLAS, result.c_str());
-        break;
-    }
-#endif
-
-    default:
-        if (will_have_passive(passive_t::goldify_corpses)
-            && death_type != KILLED_BY_DISINT
-            && death_type != KILLED_BY_LAVA)
-        {
+        if (will_have_passive(passive_t::goldify_corpses))
             mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
+
+        if (you.religion == GOD_NEMELEX_XOBEH)
+            nemelex_death_message();
+    }
+
+    if (killer)
+    {
+        // If you ever worshipped Beogh, and you get killed by a Beogh
+        // worshipper, Beogh will appreciate it.
+        if (you.worshipped[GOD_BEOGH] && killer->is_monster()
+            && killer->deity() == GOD_BEOGH)
+        {
+            string msg;
+            if (you.religion == GOD_BEOGH)
+            {
+                msg = " appreciates " + killer->name(DESC_ITS)
+                        + " killing of a heretic priest.";
+            }
+            else
+            {
+                msg = " appreciates " + killer->name(DESC_ITS)
+                        + " killing of an apostate.";
+            }
+            simple_god_message(msg.c_str(), GOD_BEOGH);
         }
+
         // Doesn't depend on Okawaru worship - you can still lose the duel
         // after abandoning.
-        if (killer && killer->props.exists(OKAWARU_DUEL_TARGET_KEY))
+        if (killer->props.exists(OKAWARU_DUEL_TARGET_KEY))
         {
-            const string msg = " crowns "
-                + killer->name(DESC_THE, true)
-                + " victorious!";
+            const string msg = " crowns " + killer->name(DESC_THE, true)
+                                + " victorious!";
             simple_god_message(msg.c_str(), GOD_OKAWARU);
         }
-        break;
     }
 }
 
@@ -970,7 +955,7 @@ static void _print_endgame_messages(scorefile_entry &se)
 
     actor* killer = se.killer();
     _triumphant_mons_speech(killer);
-    _god_death_message(death_type, killer);
+    _god_death_messages(death_type, killer);
 
     flush_prev_message();
     viewwindow(); // don't do for leaving/winning characters

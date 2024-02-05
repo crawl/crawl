@@ -1,0 +1,19 @@
+name: "thrashing horror"
+glyph: {char: "X", colour: yellow}
+flags: [batty, no_poly_to]
+resists: {elec: 1, fire: 1, cold: 1}
+holiness: [nonliving]
+will: 60
+attacks:
+ - {type: trample, flavour: trample, damage: 17}
+ - {type: trample, flavour: trample, damage: 9}
+hd: 9
+hp_10x: 495
+ac: 5
+ev: 10
+spells: thrashing_horror
+shout: roar
+intelligence: animal
+speed: 25
+size: large
+shape: misc

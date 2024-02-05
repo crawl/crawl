@@ -559,17 +559,28 @@ xx.......xxx.......xx
        xxbbbxx
 ENDMAP
 
-NAME:  nicolae_snake_biting_tails
-TAGS:  transparent extra
-SUBST: G : GT
+NAME:   nicolae_snake_biting_tails
+TAGS:   transparent extra
+KFEAT:  g = metal_statue
+SUBST:  g : ggG, G : GT
+: if crawl.x_chance_in_y(2, 3) then
+COLOUR: g = poison
+TILE:   g = alchemical_conduit
+:   set_feature_name("metal_statue", "alchemical conduit")
+: else
+COLOUR: g = fire
+TILE:   g = fiery_conduit
+:   set_feature_name("metal_statue", "fiery conduit")
+: end
+TILE:   G = dngn_statue_naga
 MAP
 xxxxx     xxxxxxx     xxxxxxx     xxxxxxx
 @...xxxxxxx.....xxx xxx.....xxx xxx.....xxxxxxxx
 xx....xx..........xxx.........xxx.........xx...x
  xxx.x......xxx....x....xxx....x....xxx..x.....x
-   xx.G....xxxxxx.x...xxxxxxx.x...xxxxxxx.G....x
+   xx.g....xxxxxx.x...xxxxxxx.x...xxxxxxx.G....x
    xx.....xxxxxxxx...xxxxxxxxx...xxxxxxxx.....xx
-   x....G.xxxxxxx...x.xxxxxxx...x.xxxxxx....G.xx
+   x....G.xxxxxxx...x.xxxxxxx...x.xxxxxx....g.xx
    x.....x..xxx....x....xxx....x....xxx......x.xxx
    x...xx.........xxx.........xxx..........xx....xx
    xxxxxxxx.....xxx xxx.....xxx xxx.....xxxxxxx...@
@@ -614,9 +625,21 @@ MAP
     ............
 ENDMAP
 
-NAME:  nicolae_snake_slithery_corners
-TAGS:  extra transparent
-SUBST: D : TGG., E : TGG., F : TGG.
+NAME:    nicolae_snake_slithery_corners
+TAGS:    extra transparent
+KFEAT:   g = metal_statue
+SHUFFLE: DEF
+SUBST:   D : ggG., E : TG., F : T.
+: if crawl.x_chance_in_y(2, 3) then
+COLOUR:  g = poison
+TILE:    g = alchemical_conduit
+:   set_feature_name("metal_statue", "alchemical conduit")
+: else
+COLOUR:  g = fire
+TILE:    g = fiery_conduit
+:   set_feature_name("metal_statue", "fiery conduit")
+: end
+TILE:  G : dngn_statue_naga / dngn_statue_archer
 MAP
      ccc
 c@@@ccccc@@@cc
@@ -640,9 +663,21 @@ cc....ccc.......ccc
     ccccccccccccccc
 ENDMAP
 
-NAME:  nicolae_snake_slithery_hallway
-TAGS:  extra transparent
-SUBST: D : TGG., E : TGG., F : TGG.
+NAME:    nicolae_snake_slithery_hallway
+TAGS:    extra transparent
+KFEAT:   g = metal_statue
+SHUFFLE: DEF
+SUBST:   D : ggG., E : TG., F : T.
+: if crawl.x_chance_in_y(2, 3) then
+COLOUR:  g = poison
+TILE:    g = alchemical_conduit
+:   set_feature_name("metal_statue", "alchemical conduit")
+: else
+COLOUR:  g = fire
+TILE:    g = fiery_conduit
+:   set_feature_name("metal_statue", "fiery conduit")
+: end
+TILE:  G : dngn_statue_naga / dngn_statue_archer
 MAP
   cccccccccccccccccccccccccccccccccc
  cc..F..ccccc..D..ccccc..E..ccccc..@
@@ -2466,9 +2501,14 @@ MONS:   anaconda / guardian serpent
 MONS:   naga warrior
 KITEM:  R = jade gem
 KITEM:  O = serpentine rune of Zot
-KFEAT:  A = altar_okawaru / altar_makhleb / altar_trog
+KFEAT:  A = altar_okawaru
+KFEAT:  S = metal_statue
 NSUBST: 1 = 4:1 / *=1., 2 = 2:2 / *=2., 5 = 2:5 / *=5..
-SUBST:  3 = 3.., 4 = 4.
+SUBST:  3 = 3.., 4 = 4., S : SG
+COLOUR: S = poison
+TILE:   G = dngn_statue_naga
+TILE:   S = alchemical_conduit
+: set_feature_name("metal_statue", "alchemical conduit")
 MAP
      xxxxxxx
      ccccccc
@@ -2476,17 +2516,17 @@ MAP
   cc4.3...3.4cc
   c..1.ccc.1..c
  cc.3.ccRcc.3.cc
- c...cc._.cc...c
+ c...cc.A.cc...c
 cc......L......cc
 c..5..G...G..5..c
 c..T.2.1.1.2.T..c
-c...3.G...G.3...c
+c...3.S...G.3...c
 c..4.2.1.1.2.4..c
-c.4.3.G...G.3.4.c
+c.4.3.G...S.3.4.c
 c..4T2.1.1.2T4..c
-c.4.3.G...G.3.4.c
+c.4.3.S...G.3.4.c
 c..4.2.1.1.2.4..c
-c...3.G...G.3...c
+c...3.G...S.3...c
 cc.T.2.....2.T.cc
  c....G.5.G....c
  cc.5..5.5..5.cc

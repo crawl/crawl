@@ -1,0 +1,17 @@
+name: "trivial sensed monster"
+enum: sensed_trivial
+glyph: {char: "{", colour: blue}
+flags: [cant_spawn]
+xp_mult: 0
+species: sensed
+holiness: [nonliving]
+will: 0
+attacks:
+hd: 1
+hp_10x: 10
+ac: 0
+ev: 0
+intelligence: animal
+size: medium
+shape: misc
+tile: tile_mons_sensed_trivial

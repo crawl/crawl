@@ -4127,6 +4127,7 @@ KMONS:  S = patrolling seraph
 KFEAT:  _ = altar_the_shining_one
 KFEAT:  E = altar_elyvilon
 KFEAT:  Z = altar_zin
+KFEAT:  G = metal_statue
 TILE:   c = wall_church
 COLOUR: cGH = yellow
 TILE:   v = dngn_metal_wall_white
@@ -4138,7 +4139,7 @@ COLOUR: "80;$ = green
 FTILE:  -ZBghi&v = floor_vault
 KPROP:  ;E80$ = no_tele_into
 SUBST:  D& = +, '"-; = ., H = G, C = c
-: set_feature_name("granite_statue", "golden statue")
+: set_feature_name("metal_statue", "golden statue")
 : set_feature_name("metal_wall", "silver wall")
 : set_random_mon_list("angel w:20 / cherub / ophan / daeva / apis w:20")
 epilogue{{

@@ -1,0 +1,21 @@
+name: "the Lernaean hydra"
+enum: lernaean_hydra
+glyph: {char: "D", colour: yellow}
+flags: [cold_blood, unique, fast_regen, tall_tile]
+resists: {poison: 1}
+xp_mult: 11
+species: hydra
+will: 120
+attacks:
+ - {type: bite, damage: 18}
+hd: 30
+hp_10x: 1500
+ac: 0
+ev: 5
+has_corpse: true
+shout: loud_roar
+intelligence: animal
+habitat: amphibious
+energy: {swim: 6}
+size: giant
+shape: quadruped

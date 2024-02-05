@@ -471,7 +471,9 @@ bool cell_is_runed(const coord_def &p)
  */
 bool feat_is_statuelike(dungeon_feature_type feat)
 {
-    return feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE;
+    return feat == DNGN_ORCISH_IDOL
+      || feat == DNGN_GRANITE_STATUE
+      || feat == DNGN_METAL_STATUE;
 }
 
 /** Is this feature permanent, unalterable rock?

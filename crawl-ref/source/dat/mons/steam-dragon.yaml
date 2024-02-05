@@ -1,0 +1,20 @@
+name: "steam dragon"
+glyph: {char: "D", colour: blue}
+flags: [flies, warm_blood]
+resists: {steam: 1}
+xp_mult: 29
+genus: dragon
+will: 20
+attacks:
+ - {type: bite, damage: 12}
+ - {type: claw, damage: 6}
+hd: 4
+hp_10x: 300
+ac: 5
+ev: 10
+spells: steam_dragon
+has_corpse: true
+shout: hiss
+intelligence: animal
+size: large
+shape: quadruped_winged

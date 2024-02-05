@@ -1325,7 +1325,7 @@ smoky gem
 
 [[gem]]
 
-Swirls of dark smoke seem to swirl in the depths of this gem. Countless dark
+Swirls of dark smoke seem to lurk in the depths of this gem. Countless dark
 deeds were done in the Dungeon even before Zot seized and remade it, and their
 dreadful residue now taints every hint of beauty trapped within its confines.
 %%%%

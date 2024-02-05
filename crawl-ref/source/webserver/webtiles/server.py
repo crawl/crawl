@@ -70,20 +70,25 @@ def load_version():
 
 
 def version_data():
+    v = sys.version_info
+    supported = 8 # minimum version, see https://devguide.python.org/versions/
     return dict(
         webtiles=_crawl_version,
         tornado=tornado.version,
-        python="%d.%d.%d" % (sys.version_info[0], sys.version_info[1], sys.version_info[2]))
+        python="%d.%d.%d" % (v[0], v[1], v[2]),
+        python_supported=v[0] >= 3 and v[1] >= supported)
 
 
 def version():
     vdata = version_data()
     # TODO convert to f string some day...
-    return "Webtiles (%s) running with Tornado %s and Python %s" % (
+    result = "Webtiles (%s) running with Tornado %s and Python %s" % (
         vdata["webtiles"],
         vdata["tornado"],
         vdata["python"])
-
+    if not vdata['python_supported']:
+        result = result + "\nUnsupported Python version! Please use a supported version: https://devguide.python.org/versions/"
+    return result
 
 def err_exit(errmsg, exc_info=False):
     if exc_info or config.get('logging_config').get('filename'):

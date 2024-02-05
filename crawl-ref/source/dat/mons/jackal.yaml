@@ -1,0 +1,17 @@
+name: "jackal"
+glyph: {char: "h", colour: brown}
+flags: [warm_blood]
+genus: hound
+will: 0
+attacks:
+ - {type: bite, damage: 3}
+hd: 1
+hp_10x: 55
+ac: 2
+ev: 12
+has_corpse: true
+shout: bark
+intelligence: animal
+speed: 14
+size: small
+shape: quadruped

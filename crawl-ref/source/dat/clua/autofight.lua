@@ -401,7 +401,7 @@ function af_mp_is_low()
   return (100*mp <= AUTOMAGIC_STOP*mmp)
 end
 
-function autofight_check_preconditions()
+function autofight_check_preconditions(check_caught)
   local caught = you.caught()
   if af_hp_is_low() then
     crawl.mpr("You are too injured to fight recklessly!")
@@ -409,22 +409,20 @@ function autofight_check_preconditions()
   elseif you.confused() then
     crawl.mpr("You are too confused!")
     return false
-  elseif caught then
-    if not AUTOFIGHT_CAUGHT then
-      crawl.mpr("You are " .. caught .. "!")
-      return false
-    end
+  elseif caught and check_caught and not AUTOFIGHT_CAUGHT then
+    crawl.mpr("You are " .. caught .. "!")
+    return false
   end
   return true
 end
 
-function attack(allow_movement)
+function attack(allow_movement, check_caught)
   local x, y, info = get_target(not allow_movement)
-  if not autofight_check_preconditions() then
+  if not autofight_check_preconditions(check_caught) then
     return
   end
 
-  if you.caught() then
+  if check_caught and you.caught() then
     crawl.do_commands({delta_to_cmd(1, 0)}) -- Direction doesn't matter.
     return
   end
@@ -458,7 +456,7 @@ function hit_closest()
   if AUTOMAGIC_ACTIVE and you.spell_table()[AUTOMAGIC_SPELL_SLOT] then
     mag_attack(true)
   else
-    attack(true)
+    attack(true, true)
   end
 end
 
@@ -466,7 +464,7 @@ function hit_closest_nomove()
   if AUTOMAGIC_ACTIVE and you.spell_table()[AUTOMAGIC_SPELL_SLOT] then
     mag_attack(false)
   else
-    attack(false)
+    attack(false, true)
   end
 end
 
@@ -476,17 +474,17 @@ function fire_closest()
   else
     local old = AUTOFIGHT_FORCE_FIRE
     AUTOFIGHT_FORCE_FIRE = true
-    attack(false)
+    attack(false, false)
     AUTOFIGHT_FORCE_FIRE = old
   end
 end
 
 function hit_nonmagic()
-  attack(true)
+  attack(true, true)
 end
 
 function hit_nonmagic_nomove()
-  attack(false)
+  attack(false, true)
 end
 
 function hit_magic()

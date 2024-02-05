@@ -1,0 +1,21 @@
+name: "Jory"
+glyph: {char: "V", colour: lightred}
+flags: [fighter, see_invis, speaks, warm_blood, unique, male]
+resists: {cold: 1}
+xp_mult: 13
+species: vampire
+holiness: [undead]
+will: 160
+attacks:
+ - {type: hit, damage: 40}
+ - {type: bite, flavour: vampiric, damage: 15}
+hd: 18
+hp_10x: 1800
+ac: 10
+ev: 15
+spells: jory
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

@@ -696,11 +696,15 @@ G...........G
 ..xxxxxxxxx..
 ENDMAP
 
-NAME: ontoclasm_vaults_echo
+NAME:   ontoclasm_vaults_echo
+TAGS:   vaults_hard no_rotate vaults_orient_s
 WEIGHT: 3
-TAGS: vaults_hard no_rotate vaults_orient_s
+KFEAT:  g = metal_statue
 NSUBST: % = 2=% / 1=* / *=.
-SUBST: G : GGGTUY
+SUBST:  G : GGgTUY
+COLOUR: g = silver
+TILE:   g = dngn_silver_statue
+: set_feature_name("metal_statue", "silver statue")
 MAP
 x%..x.x..%x
 ..8..|..8..
@@ -1180,8 +1184,9 @@ KITEM:  | = gold good_item
 KITEM:  12 = gold
 KFEAT:  B = altar_gozag
 KFEAT:  D = granite_statue
+KFEAT:  G = metal_statue
 TILE:   GD = dngn_golden_statue
-: set_feature_name("granite_statue", "golden statue")
+: set_feature_name("metal_statue", "golden statue")
 COLOUR: cGD = yellow
 FTILE:  $|B}+nc12-D = floor_limestone
 FTILE:  " = floor_hall

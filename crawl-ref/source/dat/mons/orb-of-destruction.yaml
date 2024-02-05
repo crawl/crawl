@@ -1,0 +1,17 @@
+name: "orb of destruction"
+glyph: {char: "*", colour: white}
+flags: [flies, insubstantial, no_exp_gain, no_poly_to, projectile, no_threat]
+resists: {elec: 3, fire: 3, cold: 3, acid: 3, damnation: 1}
+xp_mult: 0
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 5
+hp_10x: 50000
+ac: 0
+ev: 10
+intelligence: brainless
+speed: 30
+size: little
+shape: orb
+tile_variance: random

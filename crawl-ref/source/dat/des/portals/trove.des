@@ -1253,24 +1253,30 @@ KITEM:   M = any weapon randart ego:vampirism / \
              any useful weapon good_item ego:vampirism / \
              any weapon ego:vampirism w:2
 KFEAT:   + = closed_clear_door
+KFEAT:   g = granite_statue
+KFEAT:   S = metal_statue
 SHUFFLE: apDE, apqrsyz, DEFHJKLM
+TILE:    g = dngn_scintillating_statue
+TILE:    S = dngn_golden_statue
+: set_feature_name("granite_statue", "scintillating statue")
+: set_feature_name("metal_statue", "golden statue")
 : trove.setup_features(_G)
 MAP
 xxxxxxxxxxxxxxxxxx
 x................x
 x.....mmmmmm.....x
-x..G..mDDDDm..G..x
+x..v..mDDDDm..v..x
 x.....m++++m.....x
 x................x
 x.mmm........mmm.x
-x.mp+..G..<..+Em.x
+x.mp+..g..<..+Em.x
 x.mp+........+Em.x
 x.mp+........+Em.x
-x.mp+..A..G..+Em.x
+x.mp+..A..S..+Em.x
 x.mmm........mmm.x
 x................x
 x.....m++++m.....x
-x..G..maaaam..G..x
+x..v..maaaam..v..x
 x.....mmmmmm.....x
 x................x
 xxxxxxxxxxxxxxxxxx

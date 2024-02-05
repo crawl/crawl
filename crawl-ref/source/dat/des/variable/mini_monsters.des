@@ -1169,7 +1169,7 @@ MONS:   frilled lizard
 NSUBST:  $ = $ / 4=$.. / *:.
 NSUBST:  D = 3:d / 3=d.. / *:.
 NSUBST:  E = e / 2=e. / .
-: dgn.delayed_decay(_G, 'd', 'human skeleton')
+ITEM:    human skeleton
 : dgn.delayed_decay(_G, 'e', 'human corpse')
 MAP
    xxxxx
@@ -1285,7 +1285,7 @@ KFEAT:  t = mangrove
 NSUBST: O = s / O
 SUBST:  L = tp, M = tq, N = tr, O = ts
 NSUBST: p = 27:P / 7:$ / `, q = 9:Q / 5:% / `, r = 3:R / 3:* / `, s = S / - / s
-: dgn.delayed_decay(_G, 'P', 'one-headed hydra skeleton')
+KITEM:  P = one-headed hydra skeleton
 MAP
 ccccccccccc
 cpppppppppccccccccc
@@ -1558,8 +1558,8 @@ MONS:    kobold ; dagger . stone
 MONS:    kobold brigand ; dagger . throwing net q:2
 : end
 SUBST:   . = e f .:150
-: dgn.delayed_decay(_G, 'e', 'rat skeleton')
-: dgn.delayed_decay(_G, 'f', 'frilled lizard skeleton')
+KITEM:   e = rat skeleton
+KITEM:   f = frilled lizard skeleton
 MONS:    rat / frilled lizard
 KFEAT:   m = iron_grate
 MARKER:  P = lua:fog_machine { cloud_type = "flame", \
@@ -2414,7 +2414,7 @@ MARKER: P = lua:fog_machine { cloud_type = "flame", \
 MARKER: P = lua:fog_machine { cloud_type = "grey smoke", \
             pow_min = 3, pow_max = 3, delay = 100, \
             size = 1, walk_dist = 1, start_clouds = 1 }
-: dgn.delayed_decay(_G, 'P', 'rat skeleton')
+KITEM:  P = rat skeleton
 MAP
     xx.@.xxx
     xt----tx
@@ -2488,10 +2488,9 @@ DEPTH:  D:7-14
   else
     mons("ogre w:" .. onechance .. " / two-headed ogre w:" .. twochance)
   end
-  dgn.delayed_decay(_G, 'g', 'orc skeleton / human skeleton / elf skeleton'
-                             .. ' / dwarf skeleton')
 }}
 ITEM:   throwing net
+KITEM:  g = orc skeleton / human skeleton / elf skeleton / dwarf skeleton
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
                               pow_max = 10, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = 0 }
@@ -3078,6 +3077,7 @@ MONS:   balrug / hellion, blizzard demon
 MONS:   sun demon / smoke demon w:5, ice devil
 MONS:   crimson imp
 KMONS:  8 = white imp
+KFEAT:  yz = crystal_wall
 # Demote each grouping down the paired tiers above,
 # and downgrade the loot, depending on depth.
 : if you.branch() ~= "D" and you.depth() > 2 then
@@ -3102,13 +3102,18 @@ SUBST:  '56 = ., " = %
 SUBST:  '3456 = ., 1 = 7, 2 = 8, " = %
 :   end
 : end
+SHUFFLE: yz / CC / CC
+SUBST:   C = c
+TILE:    y = bedeviled_crystal_gehenna
+TILE:    z = bedeviled_crystal_cocytus
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 MAP
 ............. .............
 ..ccccccc.........ccccccc..
 .cc'3553ccc.....ccc4664'cc.
-.c"'lll..5cc...cc6..www'"c.
+.c"'lll..5cy...cc6..www'"c.
 .c1lllll..5..>..6..wwwww2c.
-.c"'lll..5cc...cc6..www'"c.
+.c"'lll..5cc...zc6..www'"c.
 .cc'3553ccc.....ccc4664'cc.
 ..ccccccc.........ccccccc..
 ............. .............
@@ -3123,24 +3128,28 @@ ITEM:    potion of curing ident:type / potion of heal wounds ident:type
 KFEAT:   A = altar_the_shining_one
 KFEAT:   B = altar_elyvilon
 KFEAT:   C = altar_zin
+KFEAT:   g = metal_statue
+SHUFFLE: ABC
 COLOUR:  c = white
 TILE:    c = wall_church
-FTILE:   .+23GtABC = floor_limestone
-COLOUR:  .23 = white
-SHUFFLE: ABC
-SUBST:   ' = .
+FTILE:   .+d12GgtABC = floor_limestone
+COLOUR:  .123 = white
+COLOUR:  g = silver
+TILE:    G = dngn_statue_angel
+TILE:    g = dngn_silver_statue
+: set_feature_name("metal_statue", "silver statue")
 MAP
 xxxxxxxxx
 xcccccccx
-xcGdBdGcx
-xcd.3.dcx
-xcA...Ccx
+xcGdBdgcx
+xcd.1.dcx
+xcA.1.Ccx
 xcd...dcx4''
-xcG...Gcx'''''
+xcg...Gcx'''''
 xccc+cccx4''''''
 xct...tcx''''''''
 xc..2..cx'''''''''xx
-xc.....+'''11'''''cx
+xc..2..+'''33'''''cx
 xct....c'''''''''4cx
 xccccccccccccccccccx
 xxxxxxxxxxxxxxxxxxxx
@@ -3227,15 +3236,18 @@ KITEM:   | = superb_item / any good_item / randbook disc:summoning w:5
 SUBST:   2 = 3, 4 = 5
 NSUBST:  3 = 1:5 / *:3
 : end
+SUBST:   b = bbv
 SHUFFLE: {( / <<
 KPROP:   2345*| = no_tele_into
+TILE:    b = bedeviled_crystal_pandemonium
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 MAP
 xxxxxxxxxxxx@@x
 @.lxlll.l.l...x
 @..xl..l.l.l.lx
 x.{xl%vvvvvvvvx
 x..m$.v2234*vvx
-xl.m2|123334|vx
+xl.m2|123334|bx
 x..m$.v2234*vvx
 x.(xl%vvvvvvvvx
 @..xl..l.l.l.lx
@@ -3625,13 +3637,16 @@ KMONS: 4 = ice fiend / blizzard demon
 KMONS: 5 = shard shrike
 KFEAT: 1 = >
 : if you.absdepth() > 20 then
-SUBST:  3 = 4, 2 = ..3
+SUBST:  3 = 4, 2 = ..3,  b = bwww
 NSUBST: | = 1:1 / *:|
+: else
+SUBST:  b = w
 : end
 SUBST: | = ||****%%%%
-SUBST: T = TU
-SUBST: W = w:20 W .:5
+SUBST: T = TU, W = w:20 W .:5
 SUBST: ' = W
+TILE:  b = bedeviled_crystal_cocytus
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 MAP
 T.WWW..........WWW.T
 .'WWW..........WWW'.
@@ -3639,10 +3654,10 @@ WW'W.Wwww..wwwW.W'WW
 WWW2WwwwwwwwwwwW2WWW
 WW222wwwwwwwwww222WW
 ..W2WwwwwwwwwwwW2W..
-.WWWWwwwwwwwwwwWWWW.
-..WWWwww||||wwwWWW..
-...WWwww|13|wwwwW...
-..WWWwww||||wwwWWW..
+.WWWWwwwwwwwwwwwWWW.
+..WWwwww||||wwwWWW..
+...WWwwb|13|wwwwW...
+..WWwwww||||wwwwWW..
 .WWWWwwwwwwwwwwWWWW.
 ..W2WwwwwwwwwwwW2W..
 WW222wwwwwwwwww222WW
@@ -7506,7 +7521,7 @@ DEPTH: D:12-, Lair:2-, Orc:1
 MONS:   eight-headed hydra / goliath frog
 ITEM:   maw talisman / maw talisman randart w:1
 SUBST:  " : ., . = . %:1
-:   dgn.delayed_decay(_G, '%', 'yak skeleton')
+KITEM:  % = yak skeleton
 : elseif r == 2 then
 MONS:   anaconda
 KMONS:  " = water moccasin
@@ -7836,6 +7851,7 @@ MONS:   sun demon / soul eater / smoke demon / neqoxec / \
         ynoxinul / chaos spawn
 MONS:   ice devil / rust devil / orange demon / red devil / hellwing / \
         sixfirhy
+SUBST:  b : bbc
 KPROP:  ._-cGO12345 = bloody / nothing w:20
 KFEAT:  _ = altar_makhleb
 KFEAT:  - = altar_makhleb
@@ -7843,6 +7859,8 @@ KITEM:  - = obsidian_axe no_pickup
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
                               pow_max = 10, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = 0}
+TILE:   b = bedeviled_crystal_gehenna / bedeviled_crystal_dis
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 MAP
       ccccc
       cO1Oc
@@ -7855,7 +7873,7 @@ MAP
 .c4.c.......c.4c.
 @+.2+.G.3.G.+2.+@
 .c4.c..._...c.4c.
-.ccOcc.O1O.ccOcc.
+.ccOcb.O1O.bcOcc.
 ..ccccccccccccc..
  ...............
 ENDMAP
@@ -8343,20 +8361,21 @@ ITEM:   damnation no_pickup
 MONS:   deep elf sorcerer / deep elf high priest, hellion
 KFEAT:  a = iron_grate
 NSUBST: D = 2=2 / 1.
-# D:13-
-: else
+: else  -- D:13-
 MONS:   efreet, hellion
 NSUBST: D = 2 / 1..
 SUBST:  a = c
-:end
-SUBST:  c : cv
+: end
+SUBST:  b = bc, c : cv
+TILE:   b = bedeviled_crystal_gehenna
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 MAP
            ccc    ccccccc
  ccc       cDcccccccc..Dcc
  c.cc      c.......D.....cc
  c..cccccccc..ccac..cac...cc
  c.c..c..c......c....c.....cc
-@+..c......DccccacdccacccD.Dcc
+@+..c......DccccacdccaccbD.Dcc
  c.c..c..c......c....c.....cc
  c..cccccccc..ccac..cac...cc
  c.cc      c.......D.....cc
@@ -9048,10 +9067,8 @@ NSUBST: 1 = 2--, 2 = 223
 SUBST:  " = "..., - = -., x = axx, c = pcc
 KPROP:  ap = bloody
 TILE:   cp = DNGN_STONE_DARK
-{{
- dgn.delayed_decay(_G, '"-', 'orc skeleton / goblin skeleton' ..
-     ' / hobgoblin skeleton / gnoll skeleton')
-}}
+KITEM:  "- = orc skeleton / goblin skeleton / hobgoblin skeleton /\
+             gnoll skeleton
 MAP
    ccccc
   cc...cc
@@ -9445,7 +9462,7 @@ KMONS:  56 = bloated husk / hydra skeleton
 KMONS:  7 = ghost crab / will-o-the-wisp
 NSUBST: w = 1:3 / 4:6 / 1:67 / 1:7 / *:w
 SUBST:  ~ = t, ? = 4
-:   dgn.delayed_decay(_G, "Z", "human skeleton / spriggan skeleton" )
+KITEM: Z = human skeleton / spriggan skeleton
 : elseif you.in_branch("Shoals") then
 TAGS:   water_ok no_pool_fixup
 # Shoals doesn't have any default undead themes, so instead have
@@ -9458,7 +9475,7 @@ KMONS:  7 = alligator snapping turtle
 KMONS:  0 = harpy / sea snake / snapping turtle
 NSUBST: w = 2:3 / 3:6 / 1:77w / *:w, 4 = 4:0 / 2:Z / *:4
 SUBST:  ~ = @, ? = 0
-:   dgn.delayed_decay(_G, "Z", "human skeleton / merfolk skeleton" )
+KITEM: Z = human skeleton / merfolk skeleton
 : elseif you.in_branch("Crypt") then
 MONS:   ancient champion ; captain's cutlass . scale mail . kite shield
 MONS:   shard shrike simulacrum / spectral shard shrike, spectral kraken
@@ -9468,7 +9485,7 @@ KMONS:  56 = flayed ghost / vampire mage
 KMONS:  7 = curse skull
 SUBST:  ~ = xw, ? = 2
 NSUBST: w = 2:3 / 2:6 / 1:7 / 1:6w / *:w, . = 2:4
-:   dgn.delayed_decay(_G, "Z", "spriggan skeleton / merfolk skeleton")
+KITEM: Z = spriggan skeleton / merfolk skeleton
 : else -- Depths
 MONS:   ancient champion ; captain's cutlass . plate armour
 MONS:   caustic shrike simulacrum / spectral caustic shrike
@@ -9478,7 +9495,7 @@ KMONS:  56 = phantasmal warrior / storm dragon skeleton
 KMONS:  7 = flayed ghost / merfolk javelineer
 NSUBST: w = 3:3 / 3:6 / 3:7 / 4 = 67w / *:w
 SUBST:  ~ = xw, ? = 2
-:   dgn.delayed_decay(_G, "Z", "any skeleton")
+KITEM:  Z = any skeleton
 : end
 ITEM:   potion of degeneration ident:type, potion of ambrosia ident:type
 ITEM:   scroll of immolation ident:type / % w:20

@@ -131,7 +131,7 @@ end
 function lair_small_ending(e)
     e.tags('lair_end_small')
     e.weight(5)
-    if dgn.persist.lair_second_ending_built then
+    if not dgn.persist.lair_second_ending_built then
       e.kitem("R = earthy gem")
     end
 
@@ -1930,7 +1930,7 @@ NSUBST: 3 = 3 / ., 4 = 4 / ., . = ..`
 KPROP:  ` = bloody
 {{
 if crawl.coinflip() then
-    dgn.delayed_decay(_G, 'a', "dire elephant skeleton")
+    _G.kitem('a = dire elephant skeleton')
 else
     dgn.delayed_decay(_G, 'a', "dire elephant corpse")
 end
@@ -2062,22 +2062,22 @@ SUBST:  d = $:3 d:2
 SUBST:  ' = l:15 x:9 c:3
 SUBST:  z = x:3 c:1
 SUBST:  ; = x:3 c:1 .:4
-SUBST:  y = l1:3 .:1
+SUBST:  y = l 1:3 .:1
 SUBST:  % = %:1 .:3
 MAP
 xxxxxzzzzzzzzzxxxxx
 xxxzzzzz..yyzzzxxxx
 xxzzz'...yzydzzzzxx
 xzzz;.B.yzzzddzzzxx
-xzz;.A..y;zzddzzzxx
-xzz;...y''zzzd>zzxx
+xzz;.A..yzzzddzzzxx
+xzz;...y'zzzzd>zzxx
 xzz;'...y'zzzzzzzxx
 xzzz;y..zzzzzzzxxxx
 xzzzzzz;.zzzzzxxxxx
 xxzzzzz.;zzzzzxxxxx
 xxzzzz.yzzzzzzxxlxx
 xxzzzz.;%zzzzxxxlxx
-xxz.y'.Byyyzzzxzxlx
+xxz.y'.Byllzzzxzxlx
 xzyy..y.yyyyxzzxlyx
 ..%....yy..yyzxyy..
 ..y.y...G.y..yy....
@@ -2833,7 +2833,7 @@ KPROP:   ` = bloody
 MARKER:  F = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
          pow_max = 3, delay = 10, start_clouds = 1, size_min = 2, \
          size_max = 3, spread_rate = 33 }
-: dgn.delayed_decay(_G, 'S', "human skeleton")
+KITEM: S = human skeleton
 CLEAR:   _
 MAP
    _____________________
@@ -2908,7 +2908,7 @@ SHUFFLE: ABC, GU, HhIi5 / JjKk6
 NSUBST:  1 = 1:1 / *:., 4 = 3:4 / *:.
 NSUBST:  A = 3:4 / 1:23 / * = ....4
 NSUBST:  B = 2:2 / 1:1 / * = ....4
-NSUBST:  C = 1:1 / 1:2 / 1:3 / *:., $ = 1:$$$$d / 1:$R / *:$
+NSUBST:  C = 1:1 / 1:2 / 1:3 / *:., $ = 1:$$$$d / 1:R / *:$
 SUBST:   Hi = -, h6 = $, I = p, JjK = x, k = c
 SUBST:   0 = 1, P = pp-, X = x., z = x'
 CLEAR:   '
@@ -3237,15 +3237,22 @@ KITEM:   A = superb_item no_pickup, any good_item no_pickup \
              / no_pickup gold good_item w:15, % no_pickup \
              / nothing, % no_pickup / nothing
 KITEM:   _ = earthy gem
+KFEAT:   g = metal_statue
 KFEAT:   A = enter_hell
 KFEAT:   _ = altar_makhleb
 KFEAT:   L = endless_lava
 NSUBST:  1 = 3 = 11122 / * = 1h, 4 = 5:4 / 1:4H / *:H
+SHUFFLE: gb
 SUBST:   T = ttt.
 KPROP:   ` = bloody
 KMASK:   '"`456H = no_item_gen
 FTILE:   "_A456H = floor_cage
 COLOUR:  "456H = red
+COLOUR:  g = warp
+TILE:    g = dimensional_conduit
+TILE:    b = bedeviled_crystal_gehenna
+: set_feature_name("metal_statue", "dimensional conduit")
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 MAP
   ...TTTT....  .............................
  ..TttttttT.......Tt.TtT....TT..TT......Tt....
@@ -3262,12 +3269,12 @@ MAP
 ...tttttttttt.1ttttttt0ttFtttttttttcccccc++cccccccxx
 ..Tttttttttt..tttttttttttt+ccccccccc'''''''''''''clL
 ..Ttttttttt.0t..ttttttttttc''''''''c'''G````G''''clL
-.Tttttttttt..tt..tttttttttc''G'G'''+'''''''''''''clL
-..Tttttttt..tttt.tttttttttc'''c'G''ccccccccccccccclL
+.Tttttttttt..tt..tttttttttc''G'g'''+'''''''''''''clL
+..Tttttttt..tttt.tttttttttc'''c'b''ccccccccccccccclL
 .Tttttttt..ttttt..ttttttttc''c'G'''c"""""""4lllllllL
 ..Ttttt.0ttttttt...tttttttc'''G'c''c""""""""44lllllL
-....T..tttttttt....tttttttc''G'c'''+""""_""654AllllL
-...T0tttttttttt*Q1ttttttttc'''G'G''c"""""4444llllllL
+....T..tttttttt....tttttttc''b'c'''+""""_""654AllllL
+...T0tttttttttt*Q1ttttttttc'''g'G''c"""""4444llllllL
 ..Ttttttttttttttttttttttttc'''''''3c""""4llllllllllL
 ttttttttttttttttttttttttttcccccccccccccllllllllllllL
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxllllllllllllllllllL
@@ -3461,12 +3468,9 @@ NSUBST:  % = 2:| / 3:* / *:%
 NSUBST:  5 = 2:5 / 3 = 5. / *:.
 NSUBST:  6 = 3:6 / 4 = 6. / *:.
 NSUBST:  7 = 1:7 / 2 = 7. / *:.
-{{
-  dgn.delayed_decay(_G, 'd', "human skeleton / orc skeleton / elf skeleton"
-                             .. " / dwarf skeleton / ogre skeleton w:1"
-                             .. " / naga skeleton w:1 / minotaur skeleton w:1"
-                             .. " / merfolk skeleton w:1")
-}}
+ITEM:    human skeleton / orc skeleton / elf skeleton / dwarf skeleton /\
+         ogre skeleton w:1 / naga skeleton w:1 / minotaur skeleton w:1 /\
+         merfolk skeleton w:1
 MAP
                 xxxxxxxxxxxxxx
           xxxxxxx5P.Pxxxxxxxxx
@@ -3669,11 +3673,8 @@ SUBST:   y = @, zD= ., JK = t, L = p
 SHUFFLE: EFH / JKL / JKL
 SUBST:   E = @, FH= ., JK = t, L = p
 SUBST:   a = tt..., q = pp..., p = tttu, s = rr..., r = tu
-{{
-  dgn.delayed_decay(_G, 'O', "spriggan skeleton / wolf skeleton w:3"
-                             .. " / polar bear skeleton w:2"
-                             .. " / black bear skeleton w:2")
-}}
+KITEM:   O = spriggan skeleton / wolf skeleton w:3 /\
+             polar bear skeleton w:2 / black bear skeleton w:2
 MAP
 ttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttpppppppppppttpppptt

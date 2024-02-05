@@ -1,0 +1,21 @@
+name: "cane toad"
+glyph: {char: "F", colour: yellow}
+flags: [cold_blood]
+resists: {poison: 1}
+xp_mult: 16
+genus: frog
+will: 20
+attacks:
+ - {type: sting, flavour: poison, damage: 26}
+hd: 7
+hp_10x: 385
+ac: 6
+ev: 9
+has_corpse: true
+shout: croak
+intelligence: animal
+habitat: amphibious
+speed: 12
+energy: {swim: 6}
+size: medium
+shape: quadruped_tailless

@@ -219,8 +219,12 @@ MONS:    ettin, stone giant w:40 / fire giant / frost giant
 MONS:    ogre mage band / deep troll shaman band w:5 / \
          deep troll earth mage band w:5
 MONS:    death yak / catoblepas w:2
+KFEAT:   G = metal_statue
 NSUBST:  6 = 2:6 / *:.
 SUBST:   c = v
+COLOUR:  G = earth
+TILE:    G = earthen_conduit
+:   set_feature_name("metal_statue", "earthen conduit")
 : else
 MONS:    patrolling stone giant, patrolling frost giant, patrolling fire giant
 MONS:    cyclops, ettin
@@ -371,15 +375,19 @@ NAME:   minmay_skeleton_keep
 TAGS:   no_monster_gen
 ORIENT: northwest
 DEPTH:  Depths, Crypt
-MONS:   laughing skull / nothing w:50, skeleton w:20 / nothing
+MONS:   laughing skull / nothing w:20, skeleton w:20 / nothing
 MONS:   skeletal warrior band / bone dragon w:1 / lich w:1 / curse skull w:1
+KFEAT:  S = metal_statue
 SUBST:  G : GGccV.
+COLOUR: S = smoke
+TILE:   S = soul_conduit
+: set_feature_name("metal_statue", "soul conduit")
 MAP
 cccccccccccccccccccccccccccccccc
 c....2.....||c...+....111c|....c
 c+c.2.3...cccc...c......1cc..3.c
 c.cc...2.2.ccc...c......1ccc...c
-c..cc...2...cc...c...G...+2cc..c
+c..cc...2...cc...c...S...+2cc..c
 c...cc.2...2.c...c......cc2ccc.c
 c....cc...2..c...c1....cc2...+.c
 c..3..cc.2...+...c1...cc2.2.2c.c
@@ -690,31 +698,35 @@ KMONS:  C = deep elf zephyrmancer
 KMONS:  D = deep elf sorcerer
 KMONS:  E = lich
 KMONS:  F = ancient lich / Boris w:2, ancient lich / dread lich
+KFEAT:  S = metal_statue
 KFEAT:  yz = .
 COLOUR: y = yellow
 COLOUR: z = lightblue
 FTILE:  y = floor_rough_red
 FTILE:  z = floor_rough_blue
+COLOUR: S = earth
+TILE:   S = earthen_conduit
+:   set_feature_name("metal_statue", "earthen conduit")
 MAP
  cccccccccccccccccccccccccccccc
  cccccccccccccccccccccccccccccc
  cc......+.....cc......+....$cc
  ccycccccc.....cczcccccc...6$cc
- cc.....cc*.E5.cc.....cc..F.$cc
+ cc.....cc*.E5.cc.....cc..F.$Sc
  ccccccycc|.5..cccccczcc.6.>$cc
  cc.....cc*$$..+......cc|||||cc
  cc.ccccccccccccccccccccccccccc
  cc+ccccccccccccccccccccccccccc
  cc.....cllllllcc%$$..cwwwwwwcc
  cc...4.clcccclcc$>.3.cwccccwcc
- cc..D..+.cllllcc$3C..+.cwwwwcc
+ cS..D..+.cllllcc$3C..+.cwwwwcc
  cc%4...ccclccccc..3..cccwccccc
  cc$$$%%ccclllll+.....cccwwwwcc
  cccccccccccccccccccccccccccwcc
  ccccccccccccccccccccccccccc+cc
 .cc......+...$$ccWWWWWW+.....cc
 .cc.cccccc..1.$ccWcccccc...2.cc
-.cc.....cc..A..ccWWWWWWc..B..cc
+.cc.....cc..A..ccWWWWWWc..B..Gc
 Gcccccc.cc..1..cccccccWc.2.1$cc
 @+......cc.....+WWWWWWWc...$%cc
 Gcccccccccccccccccccccccccccccc
@@ -883,13 +895,13 @@ DEPTH:  Depths, !Depths:$
 MONS:   flayed ghost w:5 / phantasmal warrior w:5 / shadow wraith / eidolon
 MONS:   ghost moth, Jory, vampire knight
 MONS:   vampire mosquito
+KFEAT:  G = metal_statue
 NSUBST: A = 3:v / *:+, B = 3:v / *:+
 NSUBST: C = 2:v / *:+, D = 2:v / *:+
-# Colouring
+TILE:   G = dngn_statue_iron_golem
 COLOUR: G = cyan
 COLOUR: 5M% = white
 # Making things other things.
-SUBST:  I = G
 # Markers:
 MARKER: V = lua:fog_machine { \
                 pow_max = 10, delay_min = 5, delay_max = 30, \
@@ -898,7 +910,7 @@ MARKER: V = lua:fog_machine { \
             }
 # Final subst
 SUBST:  MV = .
-:       set_feature_name("granite_statue", "iron statue")
+:       set_feature_name("metal_statue", "iron statue")
 :       dgn.delayed_decay(_G, '%', 'human corpse / human skeleton')
 veto {{
     if you.uniques("Jory") then
@@ -933,7 +945,7 @@ xxvvvvvvvvvvv...v.3.v...vvvvvvvvvvvxxxxxxxxxxxxxxxxxx
 xxxvvvvvvvvvvv+vv...vv+vvvvvvvvvvvvxxxxxxxxxxxxxxxxxx
 xxvvMMMMMMMvvv.vv.Y.vv.v...v...vvvvxxxxxxxxxxxxxxxxxx
 xxv555%%%MMMvv.vv...vv.+.2.".2.+..vxxxxxxxxxxxxxxxxxx
-xxv555%I%MMM+..vv+++vvvv...v...vv.vxxxxxxxxxxxxxxxxxx
+xxv555%G%MMM+..vv+++vvvv...v...vv.vxxxxxxxxxxxxxxxxxx
 xxv555%%%MMMvvvv.....vvvvvvvvvvvv.vxxxxxxxxxxxxxxxxxx
 xxvvMMMMMMMv+.+..111..+.........+.vxxxxxxxxxxxxxxxxxx
 xxvvvvvvvvvvvvvv..V..vvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxx
@@ -1212,15 +1224,21 @@ KMONS:  5 = frederick / boris, ancient lich
 : end
 KFEAT:  _ = altar_vehumet
 KFEAT:  a = c
+KFEAT:  S = metal_statue
 NSUBST: D = 4=2 / 2=2*. / | / A
-NSUBST: E = 1 / G, F = 1 / G
+NSUBST: E = 1:1 / *:G, F = 1:1 / *:G, G = 2:S / *:G
 MARKER: ! = lua:fog_machine { pow_max = 10, delay_min = 10, delay_max = 20, \
                 size = 8, size_buildup_amnt = 5, size_buildup_time = 10, \
                 cloud_type = "flame" }
 COLOUR: a'4! = red
-TILE:   a = dngn_stone_wall_red
+COLOUR: S = vehumet
 FTILE:  a'4! = floor_pebble_red
-FTILE:  G1 = floor_vault
+FTILE:  GS1 = floor_vault
+TILE:   a = dngn_stone_wall_red
+TILE:   S = arcane_conduit
+TILE:   G = dngn_statue_cat / dngn_statue_dragon / dngn_statue_tengu / \
+            dngn_statue_princess / dngn_statue_triangle
+: set_feature_name("metal_statue", "arcane conduit")
 MAP
 xccccccccccccccccccccccccccccc
 xcG....+....Dc...D..GccGccGccc
@@ -1270,35 +1288,41 @@ MONS:   reaper / executioner, tzitzimitl
 : end
 KFEAT:  a = c
 KFEAT:  _ = altar_kikubaaqudgha
+KFEAT:  G = metal_statue
 # 66% chance that there are no one width corridors in the inner part. Also give
 # a 50% chance of there being at least one shortcut in this vault.
 SUBST:  D = 1., p : a.., q = c:8 +:1
+NSUBST: G = 2 = G. / *:.
 MARKER: V = lua:fog_machine { cloud_type = "foul pestilence", \
             pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
             size = 1, walk_dist = 1, spread_rate= 33 }
 COLOUR: a = white
+COLOUR: G = white
 TILE:   c = wall_brick_gray
 TILE:   a = wall_stone_gray
+TILE:   G = soul_conduit
+: set_feature_name("metal_statue", "soul conduit")
 MAP
-xxxx......@@@......xxxxxxxxxxxxxxxxxxxxxxxxx
-xccc......1.1......ccccccccccccccccccccccccc
-xccc..a..1c+c1..a..c*%c...3...cccccccccccccc
-xccc.....cc.cc.....q*%+...V...+..cc.cccccccc
-xccc..a.2c...c2.a..c*%c.......cc....ccc1.1cc
-xccc.....c...c.....cccc.......cc.aa.ccc.c.cc
-xcccqccccc...ccccccccccccc+ccccc.pp.ccc.c.cc
-xca%%ac.........ca%%ac....3....c....ccc.c.cc
-xc1..Dc.pa...ap.cD..1c.a.ccc.a.c3pp3cc....cc
-xca..ac.aa...aa.ca..ac.a.ccc.a.c.aa.cc.c.ccc
-xcD...+.........+...Dq..2...2..q.4..cc.c.ccc
-xca..ac.aa...aa.ca..accccc.ccccc.cc..+.c.ccc
-xc1..Dc.pa...ap.cD..1qDDDc.cDDDccccccccc+ccc
-xca$$ac...3_4...ca$$acD|Dc.cD|Dccccccc.....c
-xcccqccccc...cccccccccD2Dc+cD2Dccccccc$4.4$c
-xcc|*2ccccc+ccccccccccc+cc.cc+ccDDDccc$%5%$c
-xcc$$.+..........D.1.D.........+2|Dccc*****c
-xcc2..c...........D.12D........cDDDccc|||||c
-xccccccccccccccccccccccccccccccccccccccccccc
+xxxx......@@@......xxxxxxxxxxxxxxxxxxxxxxxxxx
+xccc......1.1......cccccccccccccccccccccccccx
+xccc..a..1c+c1..a..c*%c...3...ccccccccccccccx
+xccc.....cc.cc.....q*%+...V...+..cc.ccccccccx
+xccc..a.2c...c2.a..c*%c...G...cc....ccc1.1ccx
+xccc.....c...c.....cccc.......cc.aa.ccc.c.ccx
+xcccqccccc...ccccccccccccc+ccccc.pp.ccc.c.ccx
+xca%%ac.........ca%%ac....3....c....ccc.c.ccx
+xc1..Dc.pa...ap.cD..1c.a.ccc.a.c3pp3cc....ccx
+xca..ac.aa...aa.ca..ac.a.ccc.a.c.aa.cc.c.cccx
+xcD...+....G....+...Dq..2...2..q.4..cc.c.cccx
+xca..ac.aa...aa.ca..accccc.ccccc.cc..+.c.cccx
+xc1..Dc.pa...ap.cD..1qDDDc.cDDDccccccccc+cccx
+xca$$ac...3_4...ca$$acD|Dc.cD|Dccccccc.....cx
+xcccqccccc...cccccccccD2Dc+cD2Dccccccc$4.4$cx
+xcc|*2ccccc+ccccccccccc+cc.cc+ccDDDccc$%5%$cx
+xcc$$.+..........D.1.D.........+2|Dccc*****cx
+xcc2..c....G......D.12D...G....cDDDccc|||||cx
+xcccccccccccccccccccccccccccccccccccccccccccx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ###############################################################################
@@ -1471,24 +1495,27 @@ DEPTH:  Depths:2-
 MONS:   common demon, hell knight
 MONS:   shadow demon / green death / blizzard demon / balrug / cacodemon / \
         hell beast / hellion / reaper / lorocyproca / tormentor
+SUBST:  b : bv
 NSUBST: . = 7:1 / 7:2 / *:.
 FTILE:  .|#+G123 = floor_pebble_darkgray
 KPROP:  1Y = no_tele_into
 KFEAT:  # = iron_grate
+TILE:   b = bedeviled_crystal_dis
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxvvvvvvvvxxxxxx
 xxxvvvvvvvvvxxv||v.3.vxxxxxx
 xxxv1v1v1v1vxxv||+.3.vxxxxxx
-xvvv#v#v#v#vvvvvvv...vxxxxxx
+xvvv#v#b#v#vvvvvvv...vxxxxxx
 xv*+.........llllv...vvvvvvv
-xvvv#v#v#v#vl..l.+...+.....v
+xvvb#v#b#v#vl..l.+...+.....v
 xxxv1v1v1v1vl....vvvvv.GlG.v
-xxxvvvvvvvvv.l.........lYl.v
+xxx1vvvvvvvvv.l.........lYl.v
 xxxv1v1v1v1v.ll........GlG.v
-xvvv#v#v#v#v.lll.v+++v.....v
+xvvv#v#b#v#v.lll.v+++v.....v
 xv*+..........l..v   vvvvvvv
-xvvv#v#v#v#vvvvvvv
+xvvv#v#b#v#vvvvvvv
 xxxv1v1v1v1v
 xxxvvvvvvvvv
 ENDMAP
@@ -1643,20 +1670,29 @@ xwwwxx+++xxwwwwww
     ww@@@ww
 ENDMAP
 
-NAME:   kennysheep_tiny_hell
-TAGS:   no_monster_gen no_descent
-ORIENT: centre
-DEPTH:  D:13-14
-WEIGHT: 5
-FTILE:  *|c.12${} = floor_infernal_blank
-TILE:   c = dngn_stone_dark
-SUBST:  *=*|
-MONS:   ice devil w:1 / hellwing w:3 / rust devil w:1 / orange demon w:1 /\
-        red devil w:1 / demonic crawler / sixfirhy w:1
-MONS:   lesser demon, river rat / giant cockroach
-NSUBST: . = 6:3 / 6:! / 56:' / .
-KPROP:  !' = bloody
+NAME:    kennysheep_tiny_hell
+TAGS:    no_monster_gen no_descent
+ORIENT:  centre
+DEPTH:   D:12-14
+WEIGHT:  5
+TILE:    c = dngn_stone_dark
+SUBST:   *=*|
+MONS:    ice devil / hellwing w:20 / rust devil / red devil
+MONS:    lesser demon, hell rat / hell hound
+KFEAT:   yYzZ = b
+SHUFFLE: pqrs
+SUBST:   pq = c, r : c., s = ., b : b..
+NSUBST:  b = 1:y / 1:Y / 1:z / 1:Z
+NSUBST:  . = 6:3 / 6:! / 56:' / .
+KPROP:   !' = bloody
 : dgn.delayed_decay(_G, '!', 'human corpse / human skeleton')
+FTILE:   *|c.12${} = floor_infernal_blank
+TILE:    y = bedeviled_crystal_gehenna
+TILE:    Y = bedeviled_crystal_cocytus
+TILE:    z = bedeviled_crystal_tartarus
+TILE:    Z = bedeviled_crystal_dis
+: set_feature_name("granite_statue", "a gravestone")
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 MAP
               cccccccccc
               c...$$...c
@@ -1671,18 +1707,18 @@ MAP
              cc........cc
             cc..........cc
            cc............cc
-          cc..............cc
+          cc..b........b..cc
 ccccccccccc................ccccccccccc
-c................................2...c
-c...2................................c
-c....................................c
-c$*1.....2........{.........2....2.*$c
-c$*.2..............}..............1*$c
-c....................................c
-c................................2...c
-c...2................................c
+c.................r..............2...c
+c...2...........q....................c
+c...................s................c
+c$*1.....2.....p..{.........2....2.*$c
+c$*.2..............}..p...........1*$c
+c................s...................c
+c....................q...........2...c
+c...2..............r.................c
 ccccccccccc................ccccccccccc
-          cc..............cc
+          cc..b........b..cc
            cc............cc
             cc..........cc
              cc........cc
@@ -1729,20 +1765,27 @@ ppptc.......c..........c...c...ctpt''
                         @@@
 ENDMAP
 
-NAME: cheibrodos_hippocracy
-DEPTH: D:12-
-TAGS: no_item_gen no_monster_gen no_pool_fixup
+NAME:   cheibrodos_hippocracy
+DEPTH:  D:12-
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: north
-MONS: glowing orange brain, small abomination, glass eye, demonic crawler
-ITEM: randbook
+MONS:   glowing orange brain, small abomination, glass eye, demonic crawler
+ITEM:   randbook
+KFEAT:  G = metal_statue
 NSUBST: ' = 3:4 / *:.
 NSUBST: " = 4:0 / 1:9 / *:.
 NSUBST: ? = 1:9 / *:0
+SUBST:  G = Gbx
+COLOUR: G = warp
+TILE:   G = dimensional_conduit
+TILE:   b = bedeviled_crystal_abyss
+: set_feature_name("metal_statue", "dimensional conduit")
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 MAP
       xxxxxxxxxxxxxxxxxxxxxxx
      xxxxxxxxxxxxxxxxxxxxxxxxx
     xxxwwwwwxxxxxxxxx......xxxx
-  xxxxwxxxxx...xxxx...xxxx..xxx
+  xxxxwxxxxx...Gxxx...xxxx..xxx
  xxxwwxx.........x..xxx..xx..xx
 xxxwxxx............xx.....xx.xx
 xxwxx*...?.?......xx..xx..2x.xx
@@ -2245,25 +2288,29 @@ c........c
 cccc==cccc
 ENDMAP
 
-NAME: cheibrodos_cascadia
+NAME:   cheibrodos_cascadia
 # this vault would be better as transparent, but the internal masking is very
 # complicated...
-TAGS: no_item_gen no_monster_gen no_pool_fixup
-DEPTH: Depths
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
+DEPTH:  Depths
 ORIENT: northwest
-MONS: occultist, freezing wraith, ice dragon, frost giant, blizzard demon, lich
-KPROP: -Tp =  no_tele_into
-KMONS: I = ice statue
-KMONS: " = ancient lich / dread lich
-KMONS: B = blizzard demon
-KMONS: C = lich
-KITEM: " = %
-KITEM: B = %
-KITEM: C = %
-NSUBST: q = 2=1 / 2=1.. / 2=2, p = 2=34 / 34...
+MONS:   occultist, freezing wraith, ice dragon
+MONS:   frost giant, blizzard demon, lich
+KMONS:  I = ice statue
+KMONS:  " = ancient lich / dread lich
+KMONS:  B = blizzard demon
+KMONS:  C = lich
+KITEM:  "BC = %
+KFEAT:  G = metal_statue
+NSUBST: q = 2=1 / 2=1.. / 2=2, p = 2=34 / * = 34...
 NSUBST: _ = 3=1 / 2=1. / 3=2 / 2. / 1=6, - = 6=34, q = 2=BBBC / *:`
 NSUBST: ` = 4=| / 2=|* / 4=* / 2=*% / 4=% / 10=%.
-KMASK: ' = !opaque
+NSUBST: T = 2:GGT / *:T
+KPROP:  34T =  no_tele_into
+KMASK:  ' = !opaque
+COLOUR: G = ice
+TILE:   G = icy_conduit
+:   set_feature_name("metal_statue", "icy conduit")
 MAP
 ccccccccccccccccccccccc
 cccccccccccccccwwww-ccc
@@ -2826,12 +2873,14 @@ KFEAT:   L = l
 KFEAT:   - = broken_door
 KFEAT:   _ = altar_ecumenical / altar_ignis
 SHUFFLE: ABCDEF
-SUBST:   A = v, B : v., C : v., DEF" = ., d = xldd, ~ = lld.
+SUBST:   A = v, B : v., C : v., DEF" = ., d = xldd, ~ = lld., _ = __b
 NSUBST:  0 = 1:56 / 2:1 / 2:2 / 2:3 / 2:5 / * = 1123.
 NSUBST:  1 = 2:. / 2:L / *:1, | = 1:& / *:|
 SHUFFLE: 23, 23 / 23 / 23 / 24 / 34
 KPROP:   lL_ = no_tele_into
 KMASK:   lL_ = opaque
+TILE:    b = bedeviled_crystal_dis
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 MAP
         xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2888,7 +2937,7 @@ KMONS:   8 = glass eye
 KMONS:   9 = tentacled monstrosity
 NSUBST:  127 = 1:., . = 4 = 126. / 2 = 7789 / *:.
 NSUBST:  ' = 1:5 / 1:5' / *:', " = 2 = 34 / *:"
-:     dgn.delayed_decay(_G, "%", "any skeleton")
+KITEM:   % = any skeleton
 :   end
 :   if crawl.coinflip() then
 FTILE:   "defghijk34 = floor_tomb

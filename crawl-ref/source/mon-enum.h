@@ -239,10 +239,6 @@ enum mon_resist_flags
 #if TAG_MAJOR_VERSION == 34
     MR_VUL_WATER         = 1 << 29,
 #endif
-    MR_VUL_ELEC          = mrd(MR_RES_ELEC, -1),
-    MR_VUL_POISON        = mrd(MR_RES_POISON, -1),
-    MR_VUL_FIRE          = mrd(MR_RES_FIRE, -1),
-    MR_VUL_COLD          = mrd(MR_RES_COLD, -1),
 };
 
 const mon_resist_flags ALL_MON_RESISTS[] = {

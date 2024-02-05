@@ -1,0 +1,22 @@
+name: "nagaraja"
+glyph: {char: "N", colour: lightmagenta}
+flags: [fighter, see_invis, speaks, warm_blood]
+resists: {poison: 1}
+xp_mult: 15
+species: naga
+will: 140
+attacks:
+ - {type: hit, damage: 27}
+ - {type: constrict, flavour: crush, damage: 7}
+hd: 15
+hp_10x: 825
+ac: 6
+ev: 10
+spells: nagaraja
+has_corpse: true
+shout: shout
+intelligence: human
+energy: {move: 14}
+uses: weapons_armour
+size: large
+shape: naga

@@ -1182,7 +1182,7 @@ KMONS:  c = patrolling wraith
 NSUBST: f = 1:g / 2:f / *:.
 KITEM:  g = gold
 KITEM:  f = gold / nothing w:10
-: dgn.delayed_decay(_G, 'c', 'human skeleton')
+KITEM:  c = human skeleton
 SUBST:  Z = yY
 KFEAT:  y = w
 KFEAT:  Y = W
@@ -1934,8 +1934,8 @@ ITEM:   scroll of revelation / any scroll
 MONS:   shadow wraith
 NSUBST: ' = d / e / f / g / h / 1 / z / } / .
 SUBST:  } = }]), - = x_, x = x:70 c
-CLEAR: _
-: dgn.delayed_decay( _G, "z", "human skeleton" )
+CLEAR:  _
+KITEM:  z = human skeleton
 MAP
   -xx-
  -xxxx-
@@ -1971,7 +1971,7 @@ NSUBST: . = Q / *=% M:30 .:150, ' = Q / '
 MARKER: L = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
             pow_max = 10, delay = 10, size = 1, walk_dist = 0, \
             start_clouds = 1, excl_rad = 0 }
-: dgn.delayed_decay( _G, "Q", "human skeleton" )
+KITEM:  Q = human skeleton
 MAP
 ~~~~~~~~~~~~~~~~~~~~~~~
 ~wwwwwwwwwwwwwwwwwwwwww
@@ -2311,12 +2311,10 @@ MARKER:  P = lua:transp_loc("davey_jones_entry")
 MARKER:  Q = lua:transp_dest_loc("davey_jones_entry")
 MARKER:  R = lua:transp_loc("davey_jones_exit")
 MARKER:  S = lua:transp_dest_loc("davey_jones_exit")
-{{
-dgn.delayed_decay(_G, "-", "minotaur skeleton / elf skeleton" ..
-  " / dwarf skeleton / human skeleton / kobold skeleton" ..
-  " / felid skeleton / orc skeleton / ogre skeleton")
-ghost_setup(_G)
-}}
+KITEM:   - = minotaur skeleton / elf skeleton / dwarf skeleton /\
+             human skeleton / kobold skeleton / felid skeleton /\
+             orc skeleton / ogre skeleton
+: ghost_setup(_G)
 MAP
  WWssssSssssWW
 WWcccccccccccWW

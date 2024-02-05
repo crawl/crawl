@@ -1,0 +1,20 @@
+name: "Asmodeus"
+glyph: {char: "&", colour: lightred}
+flags: [flies, fighter, see_invis, speaks, unique, male, tall_tile, fire_ring]
+resists: {elec: 1, poison: 1, fire: 3, damnation: 1}
+xp_mult: 25
+genus: hell_lord
+holiness: [demonic]
+will: invuln
+attacks:
+ - {type: hit, damage: 40}
+hd: 17
+hp_10x: 4505
+ac: 30
+ev: 7
+spells: asmodeus
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: large
+shape: humanoid

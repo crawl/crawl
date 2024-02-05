@@ -570,7 +570,7 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
     vector<const item_def *> tobeshown;
     _get_inv_items_to_show(tobeshown, item_selector, excluded_slot);
 
-    load_items(tobeshown, procfn);
+    load_items(tobeshown, procfn, 'a', true, true);
 
     if (!item_count())
         set_title(no_selectables_message(item_selector));
@@ -864,18 +864,20 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
 
 menu_letter InvMenu::load_items(const vector<item_def>& mitems,
                                 function<MenuEntry* (MenuEntry*)> procfn,
-                                menu_letter ckey, bool sort)
+                                menu_letter ckey, bool sort, bool subkeys)
 {
     vector<const item_def*> xlatitems;
     for (const item_def &item : mitems)
         xlatitems.push_back(&item);
-    return load_items(xlatitems, procfn, ckey, sort);
+    return load_items(xlatitems, procfn, ckey, sort, subkeys);
 }
 
 menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                                 function<MenuEntry* (MenuEntry*)> procfn,
-                                menu_letter ckey, bool sort)
+                                menu_letter ckey, bool sort, bool subkeys)
 {
+    subkeys |= is_set(MF_MULTISELECT); // XXX Can the caller do this?
+
     FixedVector< int, NUM_OBJECT_CLASSES > inv_class(0);
     for (const item_def * const mitem : mitems)
         inv_class[mitem->base_type]++;
@@ -884,6 +886,18 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
     const menu_sort_condition *cond = nullptr;
     if (sort)
         cond = find_menu_sort_condition();
+
+    string select_all;
+    if (subkeys)
+    {
+        // Mention the class selection shortcuts.
+        if (is_set(MF_SECONDARY_SCROLL))
+            select_all = "go to first";
+        else if (is_set(MF_MULTISELECT))
+            select_all = "select all";
+        else
+            select_all = "select first";
+    }
 
     for (int obj = 0; obj < NUM_OBJECT_CLASSES; ++obj)
     {
@@ -894,8 +908,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
 
         string subtitle = item_class_name(i);
 
-        // Mention the class selection shortcuts.
-        if (is_set(MF_MULTISELECT))
+        if (subkeys)
         {
             vector<char> glyphs;
             get_class_hotkeys(i, glyphs);
@@ -905,7 +918,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                 const string str = "Magical Staves ";
                 subtitle += string(strwidth(str) - strwidth(subtitle),
                                    ' ');
-                subtitle += "(select all with <w>";
+                subtitle += "("+select_all+" with <w>";
                 for (char gly : glyphs)
                     subtitle += gly;
                 subtitle += "</w><blue>)";
@@ -922,6 +935,8 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                 continue;
 
             InvEntry * const ie = new InvEntry(*mitem);
+            if (!subkeys)
+                ie->hotkeys.resize(1);
             if (mitem->sub_type == get_max_subtype(mitem->base_type))
                 forced_first = ie;
             else

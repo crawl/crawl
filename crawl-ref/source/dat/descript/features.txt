@@ -778,6 +778,12 @@ A frozen archway
 
 A portal leading to an ice cave. The archway is gradually melting away.
 %%%%
+A glacial archway
+
+A portal leading to a glacial chasm, far more dangerous than the icy caverns
+found in the shallower reaches of the Dungeon. The archway is gradually melting
+away.
+%%%%
 A sand-covered staircase
 
 A staircase leading to an ossuary. Sand is continuously pouring onto it,
@@ -931,6 +937,11 @@ A dead mangrove
 
 The dry remains of a long-dead mangrove.
 %%%%
+A metal statue
+
+A base type statue for other statue flavours. If you see this, file a bug
+report.
+%%%%
 # Dis:7
 An iron statue
 
@@ -965,11 +976,87 @@ Frost-covered floor
 Earth locked within perpetual frost and cold. It seems ageless and changeless,
 as though it has existed in this state for an eternity.
 %%%%
-# Pan: the holy level
+# Gozag and TSO vaults.
 A golden statue
 
 A solid gold statue of a saint.
 %%%%
+# Zin vaults and Vaults branch.
+A silver statue
+
+A geometric statue of solid silver, in both material and form championing
+security and stasis.
+%%%%
+# Xom, Nemelex, and klown vaults.
+A scintillating statue
+
+A magically shifting statue seemingly content to glimmer and dance in place,
+dedicated to the ineffable cosmic games of chaos.
+%%%%
+# Themed magic branches / portals / vaults.
+An arcane conduit
+
+A strange but sturdy metal construct, collecting and analyzing raw ambient
+magical energy. If destroyed and disrupted by sufficiently mighty magic, its
+destructive mystic energy will harmlessly disperse.
+%%%%
+A misfortune conduit
+
+A strange but sturdy metal construct, collecting and analyzing raw ambient
+magical energy. If destroyed and disrupted by sufficiently mighty magic, its
+malevolent cursed energy will harmlessly disperse.
+%%%%
+A dimensional conduit
+
+A strange but sturdy metal construct, collecting and analyzing raw ambient
+magical energy. If destroyed and disrupted by sufficiently mighty magic, its
+extraplanar warp energy will harmlessly disperse.
+%%%%
+A soul conduit
+
+A strange but sturdy metal construct, collecting and analyzing raw ambient
+magical energy. If destroyed and disrupted by sufficiently mighty magic, its
+negative energy will harmlessly disperse.
+%%%%
+An alchemical conduit
+
+A strange but sturdy metal construct, collecting and analyzing raw ambient
+magical energy. If destroyed and disrupted by sufficiently mighty magic, its
+venomous churning energy will harmlessly disperse.
+%%%%
+A fiery conduit
+
+A strange but sturdy metal construct, collecting and analyzing raw ambient
+magical energy. If destroyed and disrupted by sufficiently mighty magic, its
+ever-burning energy will harmlessly disperse.
+%%%%
+An icy conduit
+
+A strange but sturdy metal construct, collecting and analyzing raw ambient
+magical energy. If destroyed and disrupted by sufficiently mighty magic, its
+chilling cold energy will harmlessly disperse.
+%%%%
+An earthen conduit
+
+A strange but sturdy metal construct, collecting and analyzing raw ambient
+magical energy. If destroyed and disrupted by sufficiently mighty magic, its
+seismic energy will harmlessly disperse.
+%%%%
+A storm conduit
+
+A strange but sturdy metal construct, collecting and analyzing raw ambient
+magical energy. If destroyed and disrupted by sufficiently mighty magic, its
+crackling energy will harmlessly disperse.
+%%%%
+# Vaults with extraplanar contents.
+A bedeviled crystal wall
+
+A wall made from shimmering crystal, from which some demonic plane peers out.
+While its composition both make it resist destruction plus reflect both fire and
+cold, the otherworldy forces within it seem to be entirely harmless... from this
+end, anyway.
+%%%%
+# Holy Pan.
 A silver wall
 
 A wall made of pure silver.

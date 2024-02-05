@@ -494,6 +494,7 @@ bool is_chaotic_god(god_type god)
 {
     return god == GOD_XOM
            || god == GOD_MAKHLEB
+           || god == GOD_NEMELEX_XOBEH
            || god == GOD_LUGONU
            || god == GOD_JIYVA;
 }

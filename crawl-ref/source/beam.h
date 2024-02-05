@@ -68,7 +68,8 @@ struct bolt
                                            // changes
     bool        drop_item = false;     // should drop an item when done
     bool        item_mulches = false;  // item will mulch on hit
-    item_def*   item = nullptr;        // item to drop
+    const item_def*   item = nullptr;  // item to drop
+    const item_def*   launcher = nullptr; // origin launcher, if any
     coord_def   source = {0,0};           // beam origin
     coord_def   target = {0,0};           // intended target
     dice_def    damage = dice_def(0,0);

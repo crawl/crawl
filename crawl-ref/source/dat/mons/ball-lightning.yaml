@@ -1,0 +1,17 @@
+name: "ball lightning"
+glyph: {char: "*", colour: lightcyan}
+flags: [flies, insubstantial, no_exp_gain, conjured]
+resists: {elec: 3, fire: 3, cold: 3}
+xp_mult: 20
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, damage: 5}
+hd: 1
+hp_10x: 10
+ac: 0
+ev: 10
+intelligence: brainless
+speed: 20
+size: little
+shape: orb

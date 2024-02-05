@@ -1,0 +1,19 @@
+name: "spectral thing"
+glyph: {char: "Z", colour: green}
+flags: [flies, see_invis, insubstantial]
+resists: {cold: 1}
+xp_mult: 11
+genus: wraith
+holiness: [undead]
+will: invuln
+attacks:
+ - {type: hit, damage: 20}
+hd: 8
+hp_10x: 440
+ac: 8
+ev: 5
+intelligence: brainless
+speed: 7
+size: medium
+shape: misc
+tile: spectral_large

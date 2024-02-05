@@ -597,7 +597,9 @@ bool bolt::can_affect_actor(const actor *act) const
     else if (item
             && item->props.exists(DAMNATION_BOLT_KEY)
             && act->mid == source_id)
+    {
         return false;
+    }
     auto cnt = hit_count.find(act->mid);
     if (cnt != hit_count.end() && cnt->second >= 2)
     {
@@ -2580,20 +2582,20 @@ void bolt::drop_object()
     ASSERT(item != nullptr);
     ASSERT(item->defined());
 
-    if (item->sub_type == MI_THROWING_NET)
+    const int idx = copy_item_to_grid(*item, pos(), 1);
+
+    if (idx != NON_ITEM
+        && idx != -1
+        && item->sub_type == MI_THROWING_NET)
     {
         monster* m = monster_at(pos());
         // Player or monster at position is caught in net.
         if (you.pos() == pos() && you.attribute[ATTR_HELD]
             || m && m->caught())
         {
-            // If no trapping net found mark this one.
-            if (get_trapping_net(pos(), true) == NON_ITEM)
-                set_net_stationary(*item);
+            set_net_stationary(env.item[idx]);
         }
     }
-
-    copy_item_to_grid(*item, pos(), 1);
 }
 
 // Returns true if the beam hits the player, fuzzing the beam if necessary
@@ -3940,7 +3942,8 @@ void bolt::affect_player()
 
     if (flavour == BEAM_MISSILE && item)
     {
-        ranged_attack attk(agent(true), &you, item, use_target_as_pos,
+        ranged_attack attk(agent(true), &you, launcher,
+                           item, use_target_as_pos,
                            agent(), item_mulches);
         attk.attack();
         // fsim purposes - throw_it detects if an attack connected through
@@ -4417,6 +4420,8 @@ bool bolt::has_relevant_side_effect(monster* mon)
     {
         return true;
     }
+    else if (flavour == BEAM_ENSNARE)
+        return true;
 
     if ((origin_spell == SPELL_NOXIOUS_CLOUD || origin_spell == SPELL_POISONOUS_CLOUD)
         && mon->res_poison() < 1)
@@ -4429,13 +4434,13 @@ bool bolt::has_relevant_side_effect(monster* mon)
 
 void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 {
-    int preac, post, final = 0;
+    int preac = 0, post = 0, final = 0;
 
     bool side_effect = has_relevant_side_effect(mon);
 
     // The projectile applying sticky flame often does no damage, but this
     // doesn't mean it's harmless.
-    if (!side_effect && !determine_damage(mon, preac, post, final))
+    if (!determine_damage(mon, preac, post, final) && !side_effect)
         return;
 
     // Check only if actual damage and the monster is worth caring about.
@@ -4819,7 +4824,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (origin_spell == SPELL_STICKY_FLAME)
     {
         const int dur = 3 + random_range(div_rand_round(ench_power, 20),
-                                         div_rand_round(ench_power, 10));
+                                         max(1, div_rand_round(ench_power, 10)));
         sticky_flame_monster(mon, agent(), dur);
     }
     else if (flavour == BEAM_STICKY_FLAME)
@@ -5115,7 +5120,8 @@ void bolt::affect_monster(monster* mon)
         if (!ag)
             ag = &env.mons[YOU_FAULTLESS];
         ASSERT(ag);
-        ranged_attack attk(ag, mon, item, use_target_as_pos, agent(), item_mulches);
+        ranged_attack attk(ag, mon, launcher,
+                           item, use_target_as_pos, agent(), item_mulches);
         attk.attack();
         // fsim purposes - throw_it detects if an attack connected through
         // hit_verb
@@ -6861,10 +6867,19 @@ actor* bolt::agent(bool ignore_reflection) const
         nominal_source = reflector;
     }
 
-    // Check for whether this is actually a dith shadow or wrath avatar, not you
+    // Check for whether this is actually a dith player shadow, not you.
+    // Dith player shadows also have MID_PLAYER and ranged attacks will get
+    // confused and look at the player's launcher if we don't short-circuit here.
+    //
+    // Todo: Not this.
     if (monster* shadow = monster_at(you.pos()))
-        if (shadow->type == MONS_PLAYER_SHADOW && nominal_source == MID_PLAYER)
+    {
+        if (shadow->type == MONS_PLAYER_SHADOW
+            && nominal_source == MID_PLAYER && shadow->mid == MID_PLAYER)
+        {
             return shadow;
+        }
+    }
 
     if (YOU_KILL(nominal_ktype))
         return &you;

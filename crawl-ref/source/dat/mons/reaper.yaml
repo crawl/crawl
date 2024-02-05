@@ -1,0 +1,17 @@
+name: "reaper"
+glyph: {char: "2", colour: lightgray}
+flags: [fighter, see_invis, speaks]
+resists: {poison: 1, cold: 1}
+xp_mult: 16
+holiness: [demonic]
+will: 100
+attacks:
+ - {type: hit, flavour: drag, damage: 36}
+hd: 14
+hp_10x: 710
+ac: 15
+ev: 10
+intelligence: human
+uses: starting_equipment
+size: medium
+shape: humanoid

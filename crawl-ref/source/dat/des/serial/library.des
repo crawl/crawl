@@ -564,7 +564,7 @@ NAME:   serial_library_regret_index_closets
 TAGS:   extra allow_dup
 DEPTH:  Crypt
 NSUBST: c = 1:%d / 3 = %%c / *:c
-: dgn.delayed_decay(_G, "%", "any skeleton")
+KITEM:  % = any skeleton
 : init_serial_library_setup(_G)
 WEIGHT: 6
 MAP

@@ -446,10 +446,7 @@ void inc_inv_item_quantity(int obj, int amount)
 {
     if (you.equip[EQ_WEAPON] == obj)
         you.wield_change = true;
-
     you.inv[obj].quantity += amount;
-    if (you.inv[obj].quantity == amount) // not currently possible?
-        quiver::on_actions_changed();
 }
 
 void inc_mitm_item_quantity(int obj, int amount)
@@ -2144,6 +2141,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
         taken_new_item(item.base_type);
 
     you.last_pickup[item.link] = quant_got;
+    quiver::on_item_pickup(freeslot);
     quiver::on_actions_changed();
     item_skills(item, you.skills_to_show);
 
@@ -2386,14 +2384,15 @@ void move_item_stack_to_grid(const coord_def& from, const coord_def& to)
     env.igrid(from) = NON_ITEM;
 }
 
-// Returns false if no items could be dropped.
-bool copy_item_to_grid(item_def &item, const coord_def& p,
+// Returns the mitm index of the item. If the item was copied but destroyed,
+// returns -1. If there was no space to copy it, returns NON_ITEM.
+int copy_item_to_grid(const item_def &item, const coord_def& p,
                         int quant_drop, bool mark_dropped, bool silent)
 {
     ASSERT_IN_BOUNDS(p);
 
     if (quant_drop == 0)
-        return false;
+        return NON_ITEM;
 
     if (!silenced(p) && !silent)
         feat_splash_noise(env.grid(p));
@@ -2401,7 +2400,7 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
     if (feat_destroys_items(env.grid(p)))
     {
         item_was_destroyed(item);
-        return true;
+        return -1;
     }
 
     // default quant_drop == -1 => drop all
@@ -2428,7 +2427,7 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
                     si->flags |= ISFLAG_DROPPED;
                     si->flags &= ~ISFLAG_THROWN;
                 }
-                return true;
+                return si->index();
             }
         }
     }
@@ -2436,7 +2435,7 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
     // Item not found in current stack, add new item to top.
     int new_item_idx = get_mitm_slot(10);
     if (new_item_idx == NON_ITEM)
-        return false;
+        return NON_ITEM;
     item_def& new_item = env.item[new_item_idx];
 
     // Copy item.
@@ -2457,7 +2456,7 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
 
     move_item_to_grid(&new_item_idx, p, true);
 
-    return true;
+    return new_item_idx;
 }
 
 coord_def item_pos(const item_def &item)
@@ -2617,7 +2616,7 @@ bool drop_item(int item_dropped, int quant_drop)
 
     ASSERT(item.defined());
 
-    if (!copy_item_to_grid(item, you.pos(), quant_drop, true, true))
+    if (copy_item_to_grid(item, you.pos(), quant_drop, true, true) == NON_ITEM)
     {
         mpr("Too many items on this level, not dropping the item.");
         return false;

@@ -2890,6 +2890,16 @@ bool monster::sleepwalking() const
     return asleep() && has_ench(ENCH_CONFUSION);
 }
 
+/// Can't be swapped with by either players or monsters.
+bool monster::unswappable() const
+{
+    return is_stationary()
+        || cannot_act()
+        || has_ench(ENCH_BOUND)
+        || caught()
+        || mons_is_projectile(*this);
+}
+
 bool monster::backlit(bool self_halo, bool /*temp*/) const
 {
     if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME)
@@ -2973,7 +2983,8 @@ bool monster::wont_attack() const
 
 bool monster::pacified() const
 {
-    return attitude == ATT_NEUTRAL && testbits(flags, MF_PACIFIED);
+    return (attitude == ATT_NEUTRAL || attitude == ATT_GOOD_NEUTRAL)
+           && testbits(flags, MF_PACIFIED);
 }
 
 bool monster::can_feel_fear(bool /*include_unknown*/) const
@@ -5562,8 +5573,11 @@ bool monster::matches_player_speed() const
     for (radius_iterator ri(pos(), 5, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
     {
         const monster* m = monster_at(*ri);
-        if (m && !m->wont_attack() && m->visible_to(this))
+        if (m && !m->wont_attack() && !mons_is_firewood(*m)
+              && m->visible_to(this))
+        {
             return false;
+        }
     }
     return true;
 }
@@ -5824,7 +5838,18 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         int8_t old_ench_countdown = ench_countdown;
         string old_name = mname;
 
-        monster_drop_things(this, mons_aligned(oppressor, &you));
+        monster_drop_things(this, true, [](const item_def &item) {
+            switch (item_to_mslot(item)) {
+            case MSLOT_WEAPON:
+            case MSLOT_ALT_WEAPON:
+            case MSLOT_MISSILE:
+            case MSLOT_ARMOUR:
+            case MSLOT_SHIELD:
+                return true;
+            default:
+                return false;
+            }
+        });
 
         type = MONS_BAI_SUZHEN_DRAGON;
         define_monster(*this);

@@ -1,0 +1,19 @@
+name: "stoker"
+glyph: {char: "L", colour: etc_fire}
+flags: [no_skeleton]
+resists: {fire: 3}
+genus: lich
+holiness: [undead]
+will: 120
+attacks:
+ - {type: touch, flavour: fire, damage: 15}
+hd: 13
+hp_10x: 800
+ac: 5
+ev: 12
+spells: stoker
+shout: shout
+intelligence: human
+habitat: amphibious_lava
+size: medium
+shape: humanoid

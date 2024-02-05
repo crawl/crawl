@@ -1,0 +1,18 @@
+name: "oni"
+glyph: {char: "O", colour: lightblue}
+flags: [speaks, warm_blood, no_poly_to, no_gen_derived]
+xp_mult: 9
+will: 20
+attacks:
+ - {type: hit, damage: 20}
+hd: 5
+hp_10x: 275
+ac: 1
+ev: 6
+has_corpse: true
+shout: shout
+intelligence: human
+energy: {attack: 15}
+uses: starting_equipment
+size: large
+shape: humanoid

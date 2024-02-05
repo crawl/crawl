@@ -1,0 +1,15 @@
+name: "diamond obelisk"
+glyph: {char: "I", colour: white}
+flags: [stationary, no_exp_gain, no_poly_to, no_threat]
+resists: {petrify: 1}
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 8
+hp_10x: 96000
+ac: 12
+ev: 1
+intelligence: human
+uses: starting_equipment
+size: large
+shape: misc

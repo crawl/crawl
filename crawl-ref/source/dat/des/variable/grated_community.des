@@ -165,10 +165,9 @@ MARKER: + = lua:restrict_door()
 KFEAT:  ~ = closed_door
 SUBST: * = *:35 -:1
 KITEM: - = animal skin
-: dgn.delayed_decay_extra(_G, '*', 'human skeleton / yak skeleton /\
-:                            elf skeleton / kobold skeleton /\
-:                            elephant skeleton / dream sheep skeleton /\
-:                            manticore skeleton', 'animal skin')
+KITEM: * = human skeleton / yak skeleton / elf skeleton / kobold skeleton /\
+           elephant skeleton / dream sheep skeleton / manticore skeleton,\
+           animal skin
 KFEAT:  8 = granite_statue / orcish_idol / w:5 altar_trog /\
             w:5 altar_beogh / w:1 altar_makhleb / w:4 floor
 KITEM:  $ = giant spiked club / giant club / nothing
@@ -303,7 +302,7 @@ MONS: patrolling iron troll / patrolling deep troll
 FTILE:   1.c~+#$%& = floor_dirt
 KITEM:   $ = animal skin
 NSUBST:  . = 7:% / 2:$ / *:.
-: dgn.delayed_decay_extra(_G, '%', 'w:20 any skeleton', 'any / nothing')
+KITEM:   % = any skeleton, any / nothing
 KFEAT:   ~ = floor
 MARKER:  # = lua:fog_machine { cloud_type = "flame", \
                  pow_min = 10, pow_max = 10, delay = 10, \

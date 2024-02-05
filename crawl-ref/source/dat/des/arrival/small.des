@@ -3349,9 +3349,8 @@ COLOUR:  .c = white
 : end
 :
 : local axis = util.random_from({"goblin", "gnoll", "kobold", "orc"})
-:
-: dgn.delayed_decay(_G, 'u', ally .. " skeleton")
-: dgn.delayed_decay(_G, 'v', axis .. " skeleton")
+: _G.kitem('u = ' .. ally .. " skeleton")
+: _G.kitem('v = ' .. axis .. " skeleton")
 MAP
 cc+ccc+cc
 cc-ccc-cc
@@ -3544,7 +3543,7 @@ NAME:     amcnicky_arrival_wind_blow
 TAGS:     arrival no_monster_gen no_trap_gen
 ORIENT:   float
 NSUBST:   _ = 4:p / 4=p:2 . / *=.
-: dgn.delayed_decay(_G, 'p', 'deep dwarf skeleton')
+KITEM:    p = deep dwarf skeleton
 MAP
       xxxxx
       x__{xxx
@@ -3566,7 +3565,7 @@ NAME:     amcnicky_arrival_abandoned_market
 TAGS:     arrival no_monster_gen no_trap_gen
 ORIENT:   float
 NSUBST:   _ = 4:q / 4=q:2 . / *=.
-: dgn.delayed_decay(_G, 'q', 'deep dwarf skeleton')
+KITEM:    q = deep dwarf skeleton
 NSUBST:   - = 6=p / 6=p. / 6=px / *=.x
 SUBST:    r = x.
 KFEAT:    p = abandoned_shop

@@ -1129,8 +1129,15 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 {
 #ifndef USE_TILE_WEB
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
-    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB && Options.tile_misc_anim)
+
+    // Wizlab entries and conduits both have spinning sequential cycle
+    // tile animations.
+    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB ||
+        (bg_idx >= TILE_ARCANE_CONDUIT && bg_idx < TILE_DNGN_SARCOPHAGUS_SEALED)
+        && Options.tile_misc_anim)
+    {
         flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);
+    }
     else if (bg_idx == TILE_DNGN_LAVA && Options.tile_water_anim)
     {
         // Lava tiles are four sets of four tiles (the second and fourth
@@ -1144,7 +1151,11 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
     {
         flv->special = random2(256);
     }
-    else if (bg_idx >= TILE_DNGN_ENTER_ZOT_CLOSED && bg_idx < TILE_BLOOD
+    // This includes branch / portal entries and exits, altars, runelights, and
+    // fountains in the first range, and some randomly-animated weighted
+    // vault statues in the second statues.
+    else if (((bg_idx >= TILE_DNGN_ENTER_ZOT_CLOSED && bg_idx < TILE_BLOOD)
+             || (bg_idx >= TILE_DNGN_SILVER_STATUE && bg_idx < TILE_ARCANE_CONDUIT))
              && Options.tile_misc_anim)
     {
         flv->special = random2(256);

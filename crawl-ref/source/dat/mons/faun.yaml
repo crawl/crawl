@@ -1,0 +1,18 @@
+name: "faun"
+glyph: {char: "c", colour: green}
+flags: [speaks, warm_blood]
+xp_mult: 8
+will: 40
+attacks:
+ - {type: hit, damage: 23}
+hd: 10
+hp_10x: 500
+ac: 2
+ev: 10
+spells: faun
+has_corpse: true
+shout: shout
+intelligence: human
+uses: starting_equipment
+size: medium
+shape: humanoid_tailed

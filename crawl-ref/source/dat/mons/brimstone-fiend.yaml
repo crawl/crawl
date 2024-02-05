@@ -1,0 +1,21 @@
+name: "Brimstone Fiend"
+glyph: {char: "1", colour: lightred}
+flags: [flies, see_invis]
+resists: {poison: 1, fire: 3, cold: -1, damnation: 1}
+xp_mult: 17
+holiness: [demonic]
+will: invuln
+attacks:
+ - {type: hit, damage: 25}
+ - {type: hit, damage: 15}
+ - {type: hit, damage: 15}
+hd: 18
+hp_10x: 990
+ac: 15
+ev: 6
+spells: brimstone_fiend
+shout: roar
+intelligence: human
+uses: open_doors
+size: large
+shape: humanoid_winged

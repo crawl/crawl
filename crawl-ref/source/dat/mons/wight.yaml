@@ -1,0 +1,16 @@
+name: "wight"
+glyph: {char: "z", colour: green}
+resists: {cold: 2}
+xp_mult: 20
+holiness: [undead]
+will: 20
+attacks:
+ - {type: hit, flavour: drain, damage: 8}
+hd: 3
+hp_10x: 165
+ac: 4
+ev: 10
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

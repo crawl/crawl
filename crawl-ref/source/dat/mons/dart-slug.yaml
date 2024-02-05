@@ -1,0 +1,19 @@
+name: "dart slug"
+glyph: {char: "w", colour: cyan}
+flags: [no_skeleton]
+resists: {poison: -1}
+xp_mult: 40
+genus: elephant_slug
+will: 0
+attacks:
+ - {type: bite, damage: 3}
+hd: 1
+hp_10x: 100
+ac: 1
+ev: 1
+spells: dart_slug
+has_corpse: true
+intelligence: animal
+speed: 7
+size: little
+shape: snail

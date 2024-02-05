@@ -27,16 +27,15 @@
 #include "traps.h"
 #include "xom.h"
 
-ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
+ranged_attack::ranged_attack(actor *attk, actor *defn,
+                             const item_def *wpn, const item_def *proj,
                              bool tele, actor *blame, bool mulch)
     : ::attack(attk, defn, blame), range_used(0), reflected(false),
       projectile(proj), teleport(tele), orig_to_hit(0), mulched(mulch)
 {
-    if (is_launcher_ammo(*projectile))
-    {
-        weapon = attacker->weapon(0); // else null
+    weapon = wpn;
+    if (weapon)
         damage_brand = get_weapon_brand(*weapon);
-    }
 
     init_attack(SK_THROWING, 0);
     kill_type = KILLED_BY_BEAM;

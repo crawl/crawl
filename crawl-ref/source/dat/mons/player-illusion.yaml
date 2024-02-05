@@ -1,0 +1,19 @@
+name: "player illusion"
+glyph: {char: "@", colour: white}
+flags: [flies, fighter, speaks, ghost_demon, insubstantial, no_poly_to]
+resists: {poison: 1}
+xp_mult: 15
+will_per_hd: 5
+attacks:
+ - {type: hit, damage: 5}
+hd: 4
+hp_10x: 140
+ac: 1
+ev: 2
+spells: ghost
+shout: shout
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid
+tile: player_ghost

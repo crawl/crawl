@@ -1,0 +1,19 @@
+name: "anaconda"
+glyph: {char: "S", colour: lightgray}
+flags: [cold_blood]
+genus: snake
+will: 40
+attacks:
+ - {type: constrict, flavour: crush, damage: 6}
+ - {type: bite, damage: 20}
+hd: 11
+hp_10x: 605
+ac: 4
+ev: 16
+has_corpse: true
+shout: hiss
+intelligence: animal
+habitat: amphibious
+speed: 18
+size: large
+shape: snake

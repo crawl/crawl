@@ -7306,12 +7306,7 @@ frilled lizard
 
 @The_monster@ hisses @at_foe@.
 %%%%
-################## Ice statue ##############################
-default ice statue
-
-VISUAL:@The_monster@ glitters chillingly in the dim dungeon light.
-%%%%
-################## Hell lords ##############################
+################## Hell lords and imps ##########################
 hell lord
 
 @_hell_lord_taunt_@
@@ -7348,6 +7343,11 @@ w:1
 w:2
 @_hostile_imp_@
 %%%%
+################## Ice statue ##############################
+default ice statue
+
+VISUAL:@The_monster@ glitters chillingly in the dim dungeon light.
+%%%%
 ################## Kobold blastminer #######################
 kobold blastminer
 
@@ -7357,28 +7357,6 @@ VISUAL:@The_monster@'s cannon shakes and flares with a red glow.
 
 w:20
 __NONE
-%%%%
-################## Reaper ##################################
-# The reaper has come for you!
-reaper
-
-@The_monster@ whispers, "Time's up, @foe_name@!"
-
-VISUAL:@The_monster@ beckons to @foe@.
-
-VISUAL:@The_monster@ smiles without lips.
-
-@The_monster@ shouts @at_foe@, "I have come for you, @foe_name@!"
-
-@The_monster@ shouts @at_foe@, "Death awaits you!"
-
-@The_monster@ says @to_foe@, "Everyone has to die sometime, and your time is now."
-
-VISUAL:@The_monster@ draws a finger across @possessive@ throat.
-
-@The_monster@ shouts @at_foe@, "You must die NOW!"
-
-@The_monster@ shouts @at_foe@, "Die, @foe_name@!"
 %%%%
 ################## Killer Klown ############################
 # Welcome to the circus!
@@ -7442,6 +7420,13 @@ laughing skull
 w:20
 __NONE
 %%%%
+friendly laughing skull
+
+@laughing skull@
+
+w:20
+__NONE
+%%%%
 laughing skull triumphant
 
 @The_monster@ crumbles to pieces from sheer joy.
@@ -7452,12 +7437,23 @@ cackles madly
 
 chuckles harshly
 
+w:6
 gibbers darkly
 %%%%
 ################## Moth of wrath ###########################
 moth of wrath
 
 VISUAL:@The_monster@ angrily waves @possessive@ antennae.
+%%%%
+################## Obsidian statue #########################
+default obsidian statue
+
+VISUAL:@The_monster@ slips into the dungeon's darkness for a moment.
+%%%%
+################## Orange crystal statue ###################
+default orange crystal statue
+
+VISUAL:@The_monster@ glitters topaz in the dim dungeon light.
 %%%%
 ################## Profane servitor ########################
 # Empty, to prevent falling back to holy-specific cap-A
@@ -7473,6 +7469,7 @@ VISUAL:@The_monster@'s form [briefly |][ripples|wavers] with deep exhaustion.
 
 VISUAL:@The_monster@'s [three nested|six fanged|nine smoking] eyes blink slowly.
 
+# A mash-up of several other monster dialogue lines.
 VISUAL:@The_monster@ [glitters|crackles], [sighs|grumbles], and [beckons|stomps].
 
 VISUAL:@The_monster@ unfurls and squashes hidden [antennae|spinnerets|pseudopods].
@@ -7480,14 +7477,27 @@ VISUAL:@The_monster@ unfurls and squashes hidden [antennae|spinnerets|pseudopods
 w:20
 __NONE
 %%%%
-################## Statues ##################
-default orange crystal statue
+################## Reaper ##################################
+# The reaper has come for you!
+reaper
 
-VISUAL:@The_monster@ glitters topaz in the dim dungeon light.
-%%%%
-default obsidian statue
+@The_monster@ whispers, "Time's up, @foe_name@!"
 
-VISUAL:@The_monster@ slips into the dungeon's darkness for a moment.
+VISUAL:@The_monster@ beckons to @foe@.
+
+VISUAL:@The_monster@ smiles without lips.
+
+@The_monster@ shouts @at_foe@, "I have come for you, @foe_name@!"
+
+@The_monster@ shouts @at_foe@, "Death awaits you!"
+
+@The_monster@ says @to_foe@, "Everyone has to die sometime, and your time is now."
+
+VISUAL:@The_monster@ draws a finger across @possessive@ throat.
+
+@The_monster@ shouts @at_foe@, "You must die NOW!"
+
+@The_monster@ shouts @at_foe@, "Die, @foe_name@!"
 %%%%
 ################## Silent spectre ##########################
 silenced silent spectre
@@ -7611,7 +7621,7 @@ wails
 
 sobs
 %%%%
-################## Wizard ##################################
+################## Wizards #################################
 arcanist
 
 w:20
@@ -8368,6 +8378,8 @@ _chaotic_god_
 Xom
 
 Makhleb
+
+Nemelex Xobeh
 
 Lugonu
 

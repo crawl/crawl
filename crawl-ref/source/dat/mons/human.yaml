@@ -1,0 +1,17 @@
+name: "human"
+glyph: {char: "p", colour: lightgray}
+flags: [speaks, warm_blood]
+will: 20
+attacks:
+ - {type: hit, damage: 10}
+hd: 6
+hp_10x: 330
+ac: 3
+ev: 13
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid
+tile_variance: mod

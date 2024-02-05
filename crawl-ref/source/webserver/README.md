@@ -127,7 +127,19 @@ pyyaml:
     sudo apt-get install build-essential bzip2 python-minimal ncurses-term locales-all sqlite3 libpcre3 liblua5.1-0 locales autoconf build-essential lsof bison libncursesw5-dev libsqlite3-dev flex sudo libbot-basicbot-perl git python3-yaml lua5.1 liblua5.1-dev man libpng-dev python3-tornado
 
 At this point, you should have enough to build and run the server following the
-usual linux instructions. For a more detailed rundown of this process, see:
+usual linux instructions. One caveat is that depending on the version of WSL,
+you may need to use a different IP address than `127.0.0.1` (aka `localhost`)
+to access the webtiles server from a browser. The IP address to use can be
+discovered by running from within a WSL shell:
+
+    ifconfig
+
+and looking for the `inet` value. This IP address will *not* be usable outside
+of the machine running webtiles server, and configuring it for LAN or internet
+use is beyond the scope of this document; for more information, see:
+https://github.com/microsoft/WSL/issues/4150.
+
+For a more detailed rundown of this process, see:
 [http://crawl.montres.org.uk/wsl-webtiles.txt](http://crawl.montres.org.uk/wsl-webtiles.txt).
 
 ## Running a production server

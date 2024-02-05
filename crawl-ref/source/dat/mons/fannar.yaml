@@ -1,0 +1,19 @@
+name: "Fannar"
+glyph: {char: "e", colour: lightblue}
+flags: [speaks, warm_blood, unique, gender_neutral]
+xp_mult: 16
+species: elf
+will: 80
+attacks:
+ - {type: hit, damage: 8}
+hd: 10
+hp_10x: 800
+ac: 4
+ev: 15
+spells: fannar
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

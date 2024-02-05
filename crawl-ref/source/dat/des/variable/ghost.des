@@ -415,11 +415,12 @@ SUBST:  D = DF
 : setup_gozag_gold(_G)
 KFEAT:  ODEJ = abandoned_shop
 KFEAT:  FH = antiques shop
+KFEAT:  G = metal_statue
 KFEAT:  _ = altar_gozag
 TILE:   G = dngn_golden_statue
 FTILE:  -_DEFHJ$0189OG = floor_limestone
 COLOUR: G = yellow
-: set_feature_name("granite_statue", "golden statue")
+: set_feature_name("metal_statue", "golden statue")
 : set_feature_name("stone_wall", "golden wall")
 : ghost_setup(_G, true)
 MAP

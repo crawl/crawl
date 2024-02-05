@@ -1,0 +1,18 @@
+name: "tengu"
+glyph: {char: "Q", colour: lightblue}
+flags: [flies, speaks, warm_blood]
+will: 20
+attacks:
+ - {type: hit, damage: 10}
+ - {type: peck, damage: 5}
+ - {type: claw, damage: 5}
+hd: 5
+hp_10x: 225
+ac: 2
+ev: 12
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

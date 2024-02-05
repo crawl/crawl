@@ -400,6 +400,7 @@ string Note::describe(bool when, bool where, bool what) const
             result << "Lost the "
                    << gem_adj(static_cast<gem_type>(first))
                    << " gem through the power of Zot.";
+            break;
         case NOTE_GAIN_LIFE:
             result << "Gained a life (" << first << (first == 1 ? " life " : " lives ") << "remaining)";
             break;
@@ -429,6 +430,9 @@ bool Note::hidden() const
                  || second <= 27 && Options.note_skill_levels[second]
                  || Options.note_skill_max && _is_highest_skill(first));
     }
+    // Hide gems being shattered by default.
+    if (type == NOTE_GEM_LOST)
+        return !Options.more_gem_info;
     return false;
 }
 

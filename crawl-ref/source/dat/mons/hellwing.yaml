@@ -1,0 +1,19 @@
+name: "hellwing"
+glyph: {char: "4", colour: lightgray}
+flags: [flies]
+resists: {poison: 1}
+xp_mult: 12
+holiness: [demonic]
+will: 60
+attacks:
+ - {type: hit, flavour: swoop, damage: 17}
+ - {type: hit, damage: 10}
+hd: 7
+hp_10x: 455
+ac: 16
+ev: 10
+shout: moan
+intelligence: human
+uses: open_doors
+size: large
+shape: humanoid_winged

@@ -55,6 +55,9 @@ enum dungeon_feature_type
     DNGN_ENDLESS_SALT,                 // Desolation equivalent for permarock
 #endif
     DNGN_ORCISH_IDOL,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_METAL_STATUE,                 // Vault statues that aren't rock
+#endif
     DNGN_GRANITE_STATUE,
     DNGN_MALIGN_GATEWAY,
 
@@ -353,6 +356,7 @@ enum dungeon_feature_type
     DNGN_RUNELIGHT,
     DNGN_MUD,
     DNGN_BINDING_SIGIL,
+    DNGN_METAL_STATUE,
 #endif
 
     NUM_FEATURES

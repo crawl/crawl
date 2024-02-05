@@ -1210,6 +1210,7 @@ static cloud_type _cloud_from_feat(const dungeon_feature_type &ft)
         case DNGN_BROKEN_CLEAR_DOOR:
             return CLOUD_MIST;
         case DNGN_ORCISH_IDOL:
+        case DNGN_METAL_STATUE:
         case DNGN_GRANITE_STATUE:
         case DNGN_LAVA:
             return CLOUD_BLACK_SMOKE;

@@ -1,0 +1,20 @@
+name: "balrug"
+glyph: {char: "2", colour: red}
+flags: [flies, fighter, see_invis]
+resists: {poison: 1, fire: 3, cold: -1}
+xp_mult: 12
+holiness: [demonic]
+will: 160
+attacks:
+ - {type: hit, flavour: fire, damage: 25}
+hd: 14
+hp_10x: 770
+ac: 5
+ev: 12
+spells: balrug
+shout: shout
+intelligence: human
+speed: 12
+uses: weapons_armour
+size: large
+shape: humanoid_winged

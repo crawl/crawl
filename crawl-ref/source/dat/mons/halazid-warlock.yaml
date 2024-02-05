@@ -1,0 +1,19 @@
+name: "halazid warlock"
+glyph: {char: "L", colour: green}
+flags: [see_invis, speaks]
+resists: {cold: 2}
+species: lich
+holiness: [undead]
+will: 100
+attacks:
+ - {type: touch, flavour: pain, damage: 20}
+hd: 18
+hp_10x: 750
+ac: 8
+ev: 12
+spells: halazid_warlock
+shout: shout
+intelligence: human
+uses: open_doors
+size: medium
+shape: humanoid

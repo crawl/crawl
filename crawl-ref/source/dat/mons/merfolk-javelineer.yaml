@@ -1,0 +1,21 @@
+name: "merfolk javelineer"
+glyph: {char: "m", colour: white}
+flags: [speaks, warm_blood, archer, prefer_ranged]
+xp_mult: 12
+species: merfolk
+will: 60
+attacks:
+ - {type: hit, damage: 12}
+hd: 13
+hp_10x: 730
+ac: 0
+ev: 12
+has_corpse: true
+shout: shout
+intelligence: human
+habitat: amphibious
+energy: {swim: 6}
+uses: weapons_armour
+size: medium
+shape: humanoid
+tile_variance: water

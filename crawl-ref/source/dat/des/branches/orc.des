@@ -822,7 +822,7 @@ MONS:   fungus
 KMONS:  K = kraken
 KFEAT:  K = w
 SUBST:  d = dd., 1 = 1., X = x., } = })]
-: dgn.delayed_decay(_G, 'd', 'orc skeleton')
+ITEM:   orc skeleton
 MAP
     xxxxxxxx
    xx111nccx
@@ -2220,8 +2220,8 @@ MONS:   orc warrior / kobold blastminer w:4 / two-headed ogre w:2
 MONS:   orc priest, orc wizard, orc
 MARKER: O = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
                               delay = 10, size = 1, excl_rad = 0 }
-: dgn.delayed_decay(_G, 'd', 'yak skeleton')
-: dgn.delayed_decay(_G, 'e', 'wyvern skeleton')
+ITEM:   yak skeleton
+ITEM:   wyvern skeleton
 KFEAT:  A = any shop
 MAP
       ccccccc
@@ -2289,22 +2289,25 @@ ENDMAP
 # A combination dark temple / marketplace. (Wasn't someone supposed to throw
 # those moneychangers out, anyway...?)
 # Outer shops are for common orc pilgrims, inner shops only for the initiated.
-NAME: pf_orc_diabolical
-TAGS: patrolling no_item_gen no_monster_gen transparent
-PLACE: Orc:$
-ORIENT: float
-MONS: orc / nothing w:5, orc warrior / nothing w:5
-MONS: orc priest / nothing w:5, common demon / nothing w:5
-MONS: orc knight / kobold blastminer w:1
-MONS: demonspawn / nothing w:5
-MONS: orc high priest / orc sorcerer
+NAME:    pf_orc_diabolical
+TAGS:    patrolling no_item_gen no_monster_gen transparent
+PLACE:   Orc:$
+ORIENT:  float
+MONS:    orc / nothing w:5, orc warrior / nothing w:5
+MONS:    orc priest / nothing w:5, common demon / nothing w:5
+MONS:    orc knight / kobold blastminer w:1
+MONS:    demonspawn / nothing w:5
+MONS:    orc high priest / orc sorcerer
+KFEAT:   A = w:20 general shop / distillery shop / scroll shop
+KFEAT:   B = book shop / jewellery shop
+KFEAT:   C = antique weapon shop / antique armour shop
+KFEAT:   P = enter_pandemonium
 SHUFFLE: BC
-KFEAT: A = w:20 general shop / distillery shop / scroll shop
-KFEAT: B = book shop / jewellery shop
-KFEAT: C = antique weapon shop / antique armour shop
-KFEAT: P = enter_pandemonium
-TILE:  c = wall_stone_dark
-FTILE: .1234567@ = floor_pebble_lightred
+TILE:    c = wall_stone_dark
+FTILE:  .1234567@ = floor_pebble_lightred
+SUBST:   b = bc
+TILE:    b = bedeviled_crystal_pandemonium
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 MAP
              cc2@2c
             ccc33ccc
@@ -2319,7 +2322,7 @@ MAP
    ccc.1.1c.3.cc..c..cc...ccc
   ccc123c32..cc..ccc.3cc.c.ccc
  cccA2c1211.cc6.cB7cc32.2.27ccc
-ccc5.11.c1.cc77.76.Pcc.c....5ccc
+ccc5.11.c1.cc77.76.Pbc.c....5ccc
  cccA2c1211.cc6.cC7cc32.2.27ccc
   ccc123c32..cc..ccc.3cc.c.ccc
    ccc.1.1c.3.cc..c..cc...ccc

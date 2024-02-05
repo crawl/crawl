@@ -842,18 +842,14 @@ KMASK:  DEFH = no_item_gen
 KMASK:  DEFH = no_trap_gen
 KMASK:  DEFH = opaque
 {{
--- The skellingtons are purely decorative, but also the only decorations, and
--- unlike other kinds of vaults, it's likely that the player will come back to a
--- shop after a long time on other levels. So, set them to be fully never_decay
--- rather than using a delayed_decay trigger. That way, players don't come back
--- to empty gibbets once they've gone and rounded up some cash.
+-- The skellingtons are purely decorative.
 local skeletons = {"human", "elf", "orc", "ogre", "merfolk", "naga", "kobold",
                    "gnoll", "minotaur", "spriggan", "troll", "felid",
                    "draconian", "tengu", "demonspawn", "demigod"}
-kitem("D = never_decay " .. util.random_from(skeletons) .. " skeleton" )
-kitem("E = never_decay " .. util.random_from(skeletons) .. " skeleton" )
-kitem("F = never_decay " .. util.random_from(skeletons) .. " skeleton" )
-kitem("H = never_decay " .. util.random_from(skeletons) .. " skeleton" )
+kitem("D = " .. util.random_from(skeletons) .. " skeleton" )
+kitem("E = " .. util.random_from(skeletons) .. " skeleton" )
+kitem("F = " .. util.random_from(skeletons) .. " skeleton" )
+kitem("H = " .. util.random_from(skeletons) .. " skeleton" )
 }}
 MAP
    .---

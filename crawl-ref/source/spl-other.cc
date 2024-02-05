@@ -636,34 +636,32 @@ void trigger_binding_sigil(actor& actor)
         mprf(MSGCH_WARN, "You move over your own binding sigil and are bound in place!");
         you.increase_duration(DUR_NO_MOMENTUM, random_range(3, 6));
         revert_terrain_change(you.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
+        return;
     }
-    else
+
+    monster* m = actor.as_monster();
+    if (m->has_ench(ENCH_SWIFT))
     {
-        monster* m = actor.as_monster();
-        if (m->has_ench(ENCH_SWIFT))
-        {
-            simple_monster_message(*m,
-                " has too much momentum for your sigil to bind in place!");
-        }
-        else
-        {
-            int pow = calc_spell_power(SPELL_SIGIL_OF_BINDING);
-            int dur = max(2, random_range(4 + div_rand_round(pow, 12),
-                                          7 + div_rand_round(pow, 8))
-                          - div_rand_round(m->get_hit_dice(), 4))
-                        * BASELINE_DELAY;
-
-            if (m->add_ench(mon_enchant(ENCH_BOUND, 0, &you, dur)))
-            {
-                simple_monster_message(*m,
-                    " moves over your binding sigil and is bound in place!",
-                    MSGCH_FRIEND_SPELL);
-
-                // The enemy will gain swift for twice as long as it was bound
-                m->props[BINDING_SIGIL_DURATION_KEY] = dur * 2;
-            }
-
-            revert_terrain_change(actor.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
-        }
+        mprf("%s has too much momentum for your sigil to bind %s!",
+             m->name(DESC_THE).c_str(), m->pronoun(PRONOUN_OBJECTIVE).c_str());
+        return;
     }
+
+    const int pow = calc_spell_power(SPELL_SIGIL_OF_BINDING);
+    const int dur = max(2, random_range(4 + div_rand_round(pow, 12),
+                                        7 + div_rand_round(pow, 8))
+                        - div_rand_round(m->get_hit_dice(), 4))
+                    * BASELINE_DELAY;
+
+    if (m->add_ench(mon_enchant(ENCH_BOUND, 0, &you, dur)))
+    {
+        simple_monster_message(*m,
+            " moves over your binding sigil and is bound in place!",
+            MSGCH_FRIEND_SPELL);
+
+        // The enemy will gain swift for twice as long as it was bound
+        m->props[BINDING_SIGIL_DURATION_KEY] = dur * 2;
+    }
+
+    revert_terrain_change(actor.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
 }

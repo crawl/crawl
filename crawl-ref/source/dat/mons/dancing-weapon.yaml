@@ -1,0 +1,17 @@
+name: "dancing weapon"
+glyph: {char: "(", colour: colour_undef}
+flags: [flies, fighter, unblindable, ghost_demon, prefer_ranged]
+resists: {elec: 3, fire: 2, cold: 2}
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, damage: 30}
+hd: 15
+hp_10x: 150
+ac: 10
+ev: 20
+intelligence: brainless
+speed: 15
+size: small
+shape: misc
+tile: tile_unseen_weapon

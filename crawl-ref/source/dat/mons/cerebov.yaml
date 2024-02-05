@@ -1,0 +1,20 @@
+name: "Cerebov"
+glyph: {char: "&", colour: red}
+flags: [fighter, see_invis, speaks, unique, tall_tile, gender_neutral]
+resists: {poison: 1, fire: 3, damnation: 1}
+xp_mult: 15
+genus: pandemonium_lord
+holiness: [demonic]
+will: invuln
+attacks:
+ - {type: hit, damage: 60}
+hd: 21
+hp_10x: 6510
+ac: 30
+ev: 8
+spells: cerebov
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: giant
+shape: humanoid

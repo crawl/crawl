@@ -1,0 +1,19 @@
+name: "deep elf death mage"
+glyph: {char: "e", colour: white}
+flags: [see_invis, speaks, warm_blood]
+xp_mult: 9
+species: elf
+will: 120
+attacks:
+ - {type: hit, damage: 12}
+hd: 17
+hp_10x: 775
+ac: 0
+ev: 13
+spells: deep_elf_death_mage
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

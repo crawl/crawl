@@ -203,6 +203,7 @@ stone_arch DNGN_STONE_ARCH
 
 %sdir dngn/statues
 orcish_idol DNGN_ORCISH_IDOL
+metal_statue DNGN_METAL_STATUE
 # dungeon statues
 %weight 5
 statue_dwarf DNGN_GRANITE_STATUE
@@ -297,9 +298,74 @@ zshrine DNGN_ZONGULDROK_SHRINE
 teleporter_ice_cave DNGN_TELEPORTER_ICE_CAVE
 # end TAG_MAJOR_VERSION
 
-## golden statues for the holy Pan level
+## golden statues for Gozag and TSO
 golden_statue_1 DNGN_GOLDEN_STATUE
 golden_statue_2
+
+#### Random tile animation for statuary starts here.
+
+## silver statues for Zin and the Vaults
+%weight 10
+silver_statue_0 DNGN_SILVER_STATUE
+%weight 1
+silver_statue_1
+silver_statue_2
+
+## chaotic scintillating statues for Xom, Nem, and Klowns
+%weight 10
+scintillating_statue_0 DNGN_SCINTILLATING_STATUE
+scintillating_statue_1
+%weight 3
+scintillating_statue_2
+scintillating_statue_3
+scintillating_statue_4
+
+#### Random tile animation for statuary ends here.
+#### Cycling tile animation for statuary starts here.
+#### Weights need to be weight 1 for that code to work properly
+
+## magical conduits for themed magic branches, portals, vaults
+## conj, hex, summ / tloc, necro, alch, fire, ice, air, earth
+
+%weight 1
+arcane_conduit_0 ARCANE_CONDUIT
+arcane_conduit_1
+arcane_conduit_2
+arcane_conduit_3
+misfortune_conduit_0 MISFORTUNE_CONDUIT
+misfortune_conduit_1
+misfortune_conduit_2
+misfortune_conduit_3
+dimensional_conduit_0 DIMENSIONAL_CONDUIT
+dimensional_conduit_1
+dimensional_conduit_2
+dimensional_conduit_3
+soul_conduit_0 SOUL_CONDUIT
+soul_conduit_1
+soul_conduit_2
+soul_conduit_3
+alchemical_conduit_0 ALCHEMICAL_CONDUIT
+alchemical_conduit_1
+alchemical_conduit_2
+alchemical_conduit_3
+fiery_conduit_0 FIERY_CONDUIT
+fiery_conduit_1
+fiery_conduit_2
+fiery_conduit_3
+icy_conduit_0 ICY_CONDUIT
+icy_conduit_1
+icy_conduit_2
+icy_conduit_3
+earthen_conduit_0 EARTHEN_CONDUIT
+earthen_conduit_1
+earthen_conduit_2
+earthen_conduit_3
+storm_conduit_0 STORM_CONDUIT
+storm_conduit_1
+storm_conduit_2
+storm_conduit_3
+
+#### Cycling tile animation for statuary ends here.
 
 ## sarcophagus for ragdoll_tomb_raider
 sarcophagus_sealed DNGN_SARCOPHAGUS_SEALED
@@ -406,6 +472,8 @@ shop_gadgets SHOP_GADGETS
 %shrink 1
 abandoned_shop DNGN_ABANDONED_SHOP
 
+#### Automatic animation starts here.
+
 %sdir dngn/gateways
 %rim 0
 enter_zot_closed DNGN_ENTER_ZOT_CLOSED
@@ -475,7 +543,6 @@ transit_pandemonium DNGN_TRANSIT_PANDEMONIUM
 exit_pandemonium DNGN_EXIT_PANDEMONIUM
 exit_pandemonium_flickering
 
-
 # portal vault entrances
 volcano_portal DNGN_PORTAL_VOLCANO
 volcano_gone DNGN_PORTAL_VOLCANO_GONE
@@ -484,6 +551,8 @@ sewer_portal DNGN_PORTAL_SEWER
 sewer_portal_rusted DNGN_PORTAL_SEWER_RUSTED
 ice_cave_portal DNGN_PORTAL_ICE_CAVE
 ice_cave_gone DNGN_PORTAL_ICE_CAVE_GONE
+glacial_chasm_portal DNGN_PORTAL_GLACIAL_CHASM
+glacial_chasm_gone DNGN_PORTAL_GLACIAL_CHASM_GONE
 wizlab_portal0 DNGN_PORTAL_WIZARD_LAB
 wizlab_portal1
 wizlab_portal2
@@ -618,6 +687,7 @@ teleporter DNGN_TELEPORTER
 transporter DNGN_TRANSPORTER
 transporter_landing_site DNGN_TRANSPORTER_LANDING
 
+#### Automatic animation ends here.
 ## Miscellaneous entries that get drawn on the background.
 ## Flavour is fixed again.
 %sdir misc/blood

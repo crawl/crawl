@@ -1,0 +1,19 @@
+name: "orc warlord"
+glyph: {char: "o", colour: lightcyan}
+flags: [fighter, speaks, warm_blood]
+xp_mult: 11
+species: orc
+will: 60
+attacks:
+ - {type: hit, damage: 27}
+hd: 15
+hp_10x: 1125
+ac: 3
+ev: 10
+spells: battlecry
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

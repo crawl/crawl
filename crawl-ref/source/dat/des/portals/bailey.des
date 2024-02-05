@@ -1124,7 +1124,7 @@ NSUBST:  ! = 6 / G
 SHUFFLE: A<
 TILE:    t = dngn_tree_dead, G = dngn_gravestone
 COLOUR:  t = w:5 lightgrey / w:5 darkgrey / brown
-: dgn.delayed_decay(_G, 'f', 'orc skeleton')
+KITEM:   f = orc skeleton
 : set_feature_name("tree", "dead tree")
 : set_feature_name("granite_statue", "a gravestone")
 : bailey_setup(_G)

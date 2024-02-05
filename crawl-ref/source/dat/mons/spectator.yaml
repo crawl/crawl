@@ -1,0 +1,18 @@
+name: "spectator"
+glyph: {char: "p", colour: lightgray}
+flags: [speaks, warm_blood, no_exp_gain, no_poly_to, no_gen_derived, no_threat]
+genus: human
+will: 20
+attacks:
+hd: 20
+hp_10x: 1000
+ac: 0
+ev: 10
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid
+tile: human
+tile_variance: mod

@@ -1,0 +1,21 @@
+name: "pearl dragon"
+glyph: {char: "D", colour: etc_holy}
+flags: [flies, see_invis, warm_blood]
+xp_mult: 16
+genus: dragon
+holiness: [holy]
+will: 160
+attacks:
+ - {type: bite, flavour: holy, damage: 35}
+ - {type: claw, flavour: holy, damage: 20}
+hd: 18
+hp_10x: 1170
+ac: 10
+ev: 15
+spells: pearl_dragon
+has_corpse: true
+shout: loud_roar
+intelligence: animal
+speed: 12
+size: giant
+shape: quadruped_winged

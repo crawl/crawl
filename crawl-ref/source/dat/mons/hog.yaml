@@ -1,0 +1,16 @@
+name: "hog"
+glyph: {char: "h", colour: lightmagenta}
+flags: [warm_blood]
+will: 20
+attacks:
+ - {type: bite, damage: 14}
+hd: 6
+hp_10x: 330
+ac: 2
+ev: 9
+has_corpse: true
+shout: squeal
+intelligence: animal
+speed: 13
+size: small
+shape: quadruped

@@ -1,0 +1,17 @@
+name: "elf"
+glyph: {char: "e", colour: lightred}
+flags: [speaks, warm_blood, no_poly_to]
+xp_mult: 6
+will: 40
+attacks:
+ - {type: hit, damage: 10}
+hd: 8
+hp_10x: 290
+ac: 1
+ev: 16
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

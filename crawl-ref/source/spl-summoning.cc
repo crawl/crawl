@@ -2917,7 +2917,7 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
         // Note that this *not* marked as coming from SPELL_SIMULACRUM
         mgen_data mg = _pal_data(MONS_BLOCK_OF_ICE, 0, GOD_NO_GOD, SPELL_NO_SPELL);
         mg.base_type = mons->type;
-        mg.hd = 2; // lower hp
+        mg.hd = 8; // make them more durable
         monster *ice = create_monster(mg);
 
         if (ice)

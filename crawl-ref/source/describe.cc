@@ -4314,7 +4314,9 @@ static string _player_spell_desc(spell_type spell)
     if (limit)
     {
         description << "You can sustain at most " + number_in_words(limit)
-                    << " creature" << (limit > 1 ? "s" : "")
+                    // Attempt to clarify that flayed ghosts are NOT included in the cap
+                    << (spell == SPELL_MARTYRS_KNELL ? " martyred shade" : " creature")
+                    << (limit > 1 ? "s" : "")
                     << " summoned by this spell.\n";
     }
 
@@ -4946,7 +4948,22 @@ static string _monster_attacks_description(const monster_info& mi)
                 dam += info.weapon->plus;
         }
 
-        result << padded_str(make_stringf("%d%s%s", dam,
+        // Show damage modified by effects, if applicable
+        int real_dam = dam;
+        if (mi.is(MB_STRONG) || mi.is(MB_BERSERK))
+            real_dam = real_dam * 3 / 2;
+        if (mi.is(MB_IDEALISED))
+            real_dam = real_dam * 2;
+        if (mi.is(MB_WEAK))
+            real_dam = real_dam * 2 / 3;
+
+        string dam_str;
+        if (dam != real_dam)
+            dam_str = make_stringf("%d (base %d)", real_dam, dam);
+        else
+            dam_str = make_stringf("%d", dam);
+
+        result << padded_str(make_stringf("%s%s%s", dam_str.c_str(),
                                           attk_mult > 1 ? " each" : "",
                                           info.weapon ? " (w/weapon)" : ""),
                              20);
@@ -5074,7 +5091,7 @@ void describe_to_hit(const monster_info& mi, ostringstream &result,
         // TODO: handle throwing to-hit somehow?
         item_def fake_proj;
         populate_fake_projectile(*weapon, fake_proj);
-        ranged_attack attk(&you, nullptr, &fake_proj, false);
+        ranged_attack attk(&you, nullptr, weapon, &fake_proj, false);
         acc_pct = to_hit_pct(mi, attk, false);
     }
 
@@ -5437,8 +5454,11 @@ public:
             for (size_t col = 0; col < row.size(); ++col)
             {
                 const TableCell &cell = row[col];
-                if (cell.label.empty())
-                    continue; // padding
+                if (cell.label.empty())  // padding
+                {
+                    result << string(cell_len, ' ');
+                    continue;
+                }
 
                 const int label_len = labels_lengths_by_col[col];
                 const string label = padded_str(cell.label, label_len, true);
@@ -5571,7 +5591,10 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     const string holi = holiness == MH_NONLIVING ? "Nonliv."
                                                  : single_holiness_description(holiness);
     pr.AddRow();
-    pr.AddCell("Threat", _get_threat_desc(mi.threat));
+    if (mi.threat != MTHRT_UNDEF)
+        pr.AddCell("Threat", _get_threat_desc(mi.threat));
+    else // ?/m
+        pr.AddCell(); // ensure alignment
     pr.AddCell("Class", uppercase_first(holi).c_str());
     pr.AddCell("Size", size_desc.c_str());
     pr.AddCell("Int", _get_int_desc(mi.intel()));

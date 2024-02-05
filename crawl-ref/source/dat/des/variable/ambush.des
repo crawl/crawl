@@ -63,7 +63,8 @@ WEIGHT: 25
 SUBST:  G : Gx..
 SUBST:  x : xcbwnm
 : if you.in_branch("Dis") then
-TILE: G = dngn_statue_iron
+KFEAT:  G = metal_statue
+TILE:   G = dngn_statue_iron
 : end
 MAP
  ...G...
@@ -82,7 +83,8 @@ TAGS:    evilmike_ambush_outer allow_dup unrand
 SHUFFLE: x.
 SUBST:   x : xxxccvvbmG
 : if you.in_branch("Dis") then
-TILE: G = dngn_statue_iron
+KFEAT:  G = metal_statue
+TILE:   G = dngn_statue_iron
 : end
 MAP
  .x.x.x.
@@ -136,7 +138,8 @@ WEIGHT:  25
 SHUFFLE: <AB
 SUBST:   AB = .
 : if you.in_branch("Dis") then
-TILE: G = dngn_statue_iron
+KFEAT:   G = metal_statue
+TILE:    G = dngn_statue_iron
 : end
 : ambush_stairs(_G)
 MAP
@@ -197,7 +200,8 @@ TAGS:    evilmike_ambush_inner allow_dup
 SUBST:   w : wwwWWlm...
 SUBST:   > : >..
 : if you.in_branch("Dis") then
-TILE: G = dngn_statue_iron
+KFEAT:  G = metal_statue
+TILE:   G = dngn_statue_iron
 : end
 : ambush_stairs(_G)
 MAP

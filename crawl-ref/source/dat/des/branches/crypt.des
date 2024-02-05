@@ -624,7 +624,7 @@ KFEAT: _ = altar_kikubaaqudgha w:15 / altar_yredelemnul w:15 / \
            altar_dithmenos w:5 / altar_the_shining_one w:1
 KMONS: 0 = zombie / skeleton
 KMONS: P = withered plant
-: dgn.delayed_decay(_G, 'e', 'human skeleton / orc skeleton / elf skeleton')
+KITEM: e = human skeleton / orc skeleton / elf skeleton
 TILE: t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
 MAP
@@ -695,8 +695,8 @@ ENDMAP
 NAME:   nicolae_crypt_fancy_cubbyholes
 TAGS:   transparent extra decor
 DEPTH:  Crypt
-NSUBST: - = 1:@ / *:-
-SUBST:  ' = x:40 ., ` = x:70 ., - = x:100 .
+NSUBST: - = 1:@ / *:~
+SUBST:  ' = x:40 ., ` = x:70 ., ~ = x:100 .
 MAP
 xxxx-x-x-x-xxxx
 xxx'.`.'.`.'xxx
@@ -704,9 +704,9 @@ xxxx...'...xxxx
 x'xx`.`x`.`xx'x
 -..`.......`..-
 x`....`.`....`x
--..`.`x-x`.`..-
-x''x..-x-..x''x
--..`.`x-x`.`..-
+-..`.`x~x`.`..-
+x''x..~x~..x''x
+-..`.`x~x`.`..-
 x`....`.`....`x
 -..`.......`..-
 x'xx`.`x`.`xx'x
@@ -2407,9 +2407,13 @@ KMONS:  S = shadow / wraith / freezing wraith / shadow wraith / wight
 : if crawl.coinflip() then
 KMONS:  t = ghost crab / fire dragon skeleton / laughing skull w:20
 KMONS:  X = w:1 curse skull / w:19 revenant
+SUBST:  ~ = m
 : else
 KMONS:  t = w:20 hell knight / smoke demon / laughing skull
 KMONS:  X = w:1 curse skull / w:19 balrug
+KFEAT:  ~ = crystal_wall
+TILE:   ~ = bedeviled_crystal_gehenna
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 : end
 ####### Randomisation of doors
 NSUBST: K = 1:+ / *:v
@@ -2474,7 +2478,7 @@ v..ccc.ccc..vRRKvvwwwwwwwwwwwwwwwwvvvvv+vvvv.vv...vv...$v.v
 v..lc...cl..vvvvwwwwwwwwwwwwwwwwwwwwvvv<v....vvv...vvv+vv.v
 v.t.......t.vvvwwwwwwwwwwwwwwwwwwwwwwvvvv.vvvvvvv...vv....v
 v....lll....vvvwwwwwwwwwwwwwwwwwwwwwwvvvv.v%RWvvvv...vvvv.v
-v....lml....vvwwwwwwwwwwwwwwwwwwwwwwwwvvv.v..Wvvvvv...vvv.v
+v....l~l....vvwwwwwwwwwwwwwwwwwwwwwwwwvvv.v..Wvvvvv...vvv.v
 v....lll....vwwwwwwwwwwwwwwwwwwwwwwwwwwvv.v.vvvvvvvv...vv.v
 v...........vwwwwwwwwwwwwwwwwwwwwwwwwwwvv.v.v%R.Wv%vv...vvv
 vvvv++vvvvvvvwwwwwww..8..wwwwwwwwwwwwwwvv.v.v...WvRWvv...vv

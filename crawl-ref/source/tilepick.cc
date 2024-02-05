@@ -213,6 +213,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_PETRIFIED_TREE;
     case DNGN_DEMONIC_TREE:
         return TILE_DNGN_DEMONIC_TREE;
+    case DNGN_METAL_STATUE:
+        return TILE_DNGN_METAL_STATUE;
     case DNGN_GRANITE_STATUE:
         return TILE_DNGN_GRANITE_STATUE;
     case DNGN_LAVA:
@@ -1965,7 +1967,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
 
         case MONS_BUSH:
             if (env.map_knowledge(mon.pos).cloud() == CLOUD_FIRE)
-                return TILEP_MONS_BUSH_BURNING;
+                return TILEP_MONS_BURNING_BUSH;
             return base;
 
         case MONS_BOULDER_BEETLE:

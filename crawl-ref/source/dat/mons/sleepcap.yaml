@@ -1,0 +1,15 @@
+name: "sleepcap"
+glyph: {char: "f", colour: blue}
+resists: {poison: 1}
+genus: fungus
+holiness: [plant]
+will: 10
+attacks:
+ - {type: spore, flavour: sleep, damage: 9}
+hd: 3
+hp_10x: 270
+ac: 5
+ev: 0
+intelligence: brainless
+size: tiny
+shape: fungus

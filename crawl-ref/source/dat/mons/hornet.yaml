@@ -1,0 +1,18 @@
+name: "hornet"
+glyph: {char: "y", colour: yellow}
+flags: [flies, no_skeleton]
+resists: {poison: -1}
+xp_mult: 13
+will: 30
+attacks:
+ - {type: sting, flavour: poison_paralyse, damage: 18}
+hd: 6
+hp_10x: 330
+ac: 6
+ev: 14
+has_corpse: true
+shout: buzz
+intelligence: animal
+speed: 15
+size: tiny
+shape: insect_winged

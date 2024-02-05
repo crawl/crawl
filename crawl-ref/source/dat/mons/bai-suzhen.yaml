@@ -1,0 +1,21 @@
+name: "Bai Suzhen"
+glyph: {char: "d", colour: lightblue}
+flags: [see_invis, speaks, cold_blood, unique, female]
+resists: {elec: 3, poison: 1, cold: 1}
+xp_mult: 15
+species: storm_dragon
+genus: dragon
+will: 100
+attacks:
+ - {type: hit, damage: 24}
+ - {type: tail_slap, damage: 14}
+hd: 20
+hp_10x: 2050
+ac: 14
+ev: 8
+spells: bai_suzhen
+shout: roar
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid_tailed

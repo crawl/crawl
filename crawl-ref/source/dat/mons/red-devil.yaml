@@ -1,0 +1,17 @@
+name: "red devil"
+glyph: {char: "4", colour: red}
+flags: [flies, fighter]
+resists: {poison: 1, fire: 3, cold: -1}
+xp_mult: 13
+holiness: [demonic]
+will: 60
+attacks:
+ - {type: hit, flavour: barbs, damage: 19}
+hd: 7
+hp_10x: 315
+ac: 7
+ev: 13
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid_winged

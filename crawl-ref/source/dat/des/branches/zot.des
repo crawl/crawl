@@ -184,12 +184,13 @@ ORIENT: float
 WEIGHT: 8
 SUBST:  b: v.., v: c.
 TILE:   X = wall_zot_magenta
-FTILE:  -OD = floor_hall
-COLOUR: -D = magenta
+FTILE:  -ROD = floor_hall
+COLOUR: -RD = magenta
 COLOUR: X = lightmagenta
-KPROP:  O-X = no_tele_into
+KPROP:  RO-X = no_tele_into
 SUBST:  X = x
 SUBST:  - = ., D = +
+KITEM:  R = midnight gem
 KFEAT:  O = enter_zot
 # easy: 1, 2
 : if crawl.coinflip() then
@@ -234,7 +235,7 @@ cvb.bvcccXX-XXcccvb.bvc
 cb...bccXX---XXccb.8.bc
 c.3.3.ccX--O--Xcc.7.7.c
 cb444bccXX---XXccb...bc
-cvb.bvcccXX-XXcccvb.bvc
+cvb.bvcccXXRXXcccvb.bvc
 ccc+ccccccXXXcccccc+ccc
 ccc..ccccccccccccc..ccc
 cccc..ccccccccccc..cccc
@@ -1562,14 +1563,18 @@ KFEAT:   no = m
 KFEAT:   A = altar_the_shining_one
 KFEAT:   B = altar_zin
 KFEAT:   C = altar_elyvilon
-SHUFFLE: mno, AG / Bv / CT
+KFEAT:   g = metal_statue
+SHUFFLE: mno, AG / Bg / CT
 SUBST:   } = {([}}))]]<>, y : x.., z : x..
 SUBST:   X : xx., Y : xx., Z : xx., + = +++.
+COLOUR:  g = silver
 FTILE:   'ABC : floor_w_marble
 TILE:    m : dngn_transparent_wall_white
 TILE:    n : dngn_transparent_wall_yellow
 TILE:    o : dngn_transparent_wall_brown
 TILE:    G = dngn_statue_angel
+TILE:    g = dngn_silver_statue
+: set_feature_name("metal_statue", "silver statue")
 MAP
            xxxxxxx..
           xxxx.Txc..
@@ -1582,9 +1587,9 @@ MAP
    xx..'G.xxx..Yc.....xxx
   xx........xX.oYZ...xxGx
  xx..y..x...x....x...x..x
-xxm.....x...v..X..x.x..xx
-xxxxZx.xxxxx+vxxxxxxxxxxx
-xxxxxxx..Y'vx...x.....nxx
+xxm.....x...x..X..x.x..xx
+xxxxZx.xxxxx+xxxxxxxxxxxx
+xxxxxxx..Y'gx...x.....nxx
     xx.x.'B'x...x..z..xx
     xx..x.'Yx........xx
     xx..cx..xxx.T'..xx
@@ -1674,10 +1679,14 @@ DEPTH:   Zot, !Zot:$
 WEIGHT:  5
 ITEM:    mundane barding
 KFEAT:   C = altar_cheibriados
+KFEAT:   G = metal_statue
 SHUFFLE: pqrs, yz
-SUBST:   p : xbCV, q : xb.., X rs = ., y : cb., z = c
+SUBST:   G : GGc, p : xbCV, q : xb.., X rs = ., y : cb., z = c
 SUBST:   { = {([})]<$d>>>CCC
 TILE:    m = dngn_transparent_wall_green
+COLOUR:  G = poison
+TILE:    G = alchemical_conduit
+:   set_feature_name("metal_statue", "alchemical conduit")
 MAP
      ..cc@@cc.....
     ...c....c.cccc.
@@ -1686,7 +1695,7 @@ MAP
 .c.................@
 .c...ccc.p..cc....cc
 c...cmxc....c.cccc..
-y.s.ccxc....z.....
+y.s.Gcxc....z.....
 c...cmxc....c....
 .c...ccc..q.cccc..
 .c..............cc.
@@ -1699,7 +1708,7 @@ c...cmxc....c....
 .c..............cc..
 .c...ccc.q..cccc...
 c...cmxc....c...
-y.s.ccxc....z..
+y.s.Gcxc....z..
 c...cmxc....c...
 .c...ccc..p.cccc...
 .c..............cc..
@@ -1712,11 +1721,15 @@ TAGS:    extra transparent zotdec luniq_zot_rune
 DEPTH:   Zot, !Zot:$
 ITEM:    mundane barding
 KFEAT:   C = altar_cheibriados
+KFEAT:   G = metal_statue
 SHUFFLE: ABCDEF, no / pq / rs / tu / vw
-SUBST:   ABC = x, D : xx., E : xx., F = .
+SUBST:   ABC = x, D : xx., E : xx., F = ., G : GGx
 SUBST:   npr = @, tuvw = x, { = {([})]<$d>>>CCC
 TILE:    m = dngn_transparent_wall_green
 CLEAR:   ors
+COLOUR:  G = poison
+TILE:    G = alchemical_conduit
+:   set_feature_name("metal_statue", "alchemical conduit")
 MAP
 fffxxxxxxxxxxxxxxxxxxxxxxxxxxxhhh
 fee..xxxxxxxxxxxxxxxxxxxxxxx..ggh
@@ -1724,7 +1737,7 @@ x..A....xmx...........xmx....E..x
 xx..B..xx.xx.........xx.xx..D..xx
 xxx....x...x..xxcxx..x...x....xxx
  xxx.........xxx{xxx.........xxx
-  xxx...C...xxx...xxx...C....xxx
+  xxG...C...xxx...xxx...C...Gxx
    xxx...D.............B...xxx
     xxx...E...........A...xxx
      xxx.....xx...xx.....xxx
@@ -1901,12 +1914,14 @@ KFEAT:   C = altar_lugonu
 KFEAT:   mn = m
 SUBST:   C = {([})]>>>CCC<d$
 NSUBST:  m = 2:m / 2:n / 1:mn
-NSUBST:  z = 1:. / 2:x / 2:b / * = xb, c = 6 : xxb / 2:. / *:c
+NSUBST:  z = 1:. / 2 = bxx / *:x, c = 6 : xxv / 2:. / *:c
 NSUBST:  + = 2:+ / *:c
 TILE:    m : dngn_transparent_wall_red / dngn_transparent_wall_brown / \
              dngn_transparent_wall_green
 TILE:    n : dngn_transparent_wall_magenta / dngn_transparent_wall_blue / \
              dngn_transparent_wall_cyan
+TILE:    b = bedeviled_crystal_abyss
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 MAP
       ..  ccc  ..
  ..@....cccmccc....@..
@@ -1932,23 +1947,28 @@ WEIGHT:  5
 ITEM:    dagger ego:distortion ident:type no_pickup
 KFEAT:   C = altar_lugonu
 KFEAT:   mn = m
-SUBST:   X = xxxcb......, { = {([})]>>>CC<d$
+KFEAT:   - = +
+SUBST:   X = xxxcc......, { = {([})]>>>CC<d$
+NSUBST:  b = 1:bcc / *:c
+FTILE:   - = floor_nerves
 TILE:    m : dngn_transparent_wall_red / dngn_transparent_wall_brown / \
              dngn_transparent_wall_green
 TILE:    n : dngn_transparent_wall_magenta / dngn_transparent_wall_blue / \
              dngn_transparent_wall_white
+TILE:    b = bedeviled_crystal_abyss
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 MAP
 x x x x
  x.xxxxxxxxxxxxxxx
 x.x.x...xxxnnmmxxxxx
 ...x..X....mmnnmmxxxxx
- .........X..mmnncccxxx
- .....X..cc.xxxxcc+cccx
-  ......Xc..x...c...+cx
+ .........X..mmnncbcxxx
+ .....X..cc.xxxxcc-cccx
+  ......Xc..x...c...-bx
    .X.V.....+...+.{.ccx
-  ......Xc..x...c...+cx
- .....X..cc.xxxxcc+cccx
- .........X..mmnncccxxx
+  ......Xc..x...c...-bx
+ .....X..cc.xxxxcc-cccx
+ .........X..mmnncbcxxx
 ...x..X....mmnnmmxxxxx
 x.x.x...xxxnnmmxxxxx
  x.xxxxxxxxxxxxxxx
@@ -2184,7 +2204,7 @@ SHUFFLE: qrs
 SUBST:   q = ., rs = x
 SUBST:   + : ++., Z : Z.., { = {([})]CC<>dd$VVV
 TILE:    m = dngn_transparent_wall_darkgray
-: dgn.delayed_decay(_G, 'd', 'any skeleton')
+ITEM:    any skeleton
 MAP
    ..x..x..x..x..
   ...............
@@ -2222,7 +2242,7 @@ KFEAT:    k = l
 SHUFFLE:  ABCDEF
 SUBST:    AB = w, C : w., D : w., EF = .
 SHUFFLE:  lk / uw, ~-, G' / Y' / C' / >"
-SUBST:    ~ : ++-, - : +vv, o : n.
+SUBST:    ~ : ++-, - : +vv, o : n., b = bcc
 NSUBST:   < = 1:{([})]>w$d / *:.
 KMASK:    uk = no_monster_gen
 KMASK:    'YC = opaque
@@ -2231,6 +2251,8 @@ KPROP:    l = no_cloud_gen
 TILE:     m : dngn_transparent_wall_red / dngn_transparent_wall_yellow
 TILE:     n : dngn_transparent_wall_green / dngn_transparent_wall_blue
 TILE:     G = dngn_statue_ancient_evil
+TILE:     b = bedeviled_crystal_pandemonium
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 MAP
            ....@...
           ..Dww.wwC..
@@ -2248,7 +2270,7 @@ MAP
 .wcc...v...llc''ll.c..lv..
 .wc.w..v...ll'G'cl.c..lv..
 @..w...~...ll''>ll.c..lv..
-.wv.w..-....llclcl.c..lv..
+.wv.w..-....llclbl.c..lv..
 .wvv...v.....llll..c..vv..
 .Cwvv.vvv.........<c..v...
 ..Cwvvvun.cccccccccc.....@
@@ -2267,8 +2289,10 @@ DEPTH:   Zot, !Zot:$
 ITEM:    mundane trident ego:flaming plus:0
 SHUFFLE: opqr, fg
 SUBST:   op = l, qr = ., f = v, g = ., l : ll.
-SUBST:   } = {([})]<G$>>>
+SUBST:   } = {([})]<b$>>>
 TILE:    m = dngn_transparent_wall_red
+TILE:    b = bedeviled_crystal_gehenna
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 MAP
 xxxxxxxxxxx
 c......col.
@@ -2307,9 +2331,11 @@ TAGS:    luniq_zotdec_rune luniq_zotdec_large luniq_zotdec_liquid
 DEPTH:   Zot, !Zot:$
 SHUFFLE: HIJKLM, pqr, CT{([<$
 SUBST:   HI = x, J : xw, K : xw, LM = w
-SUBST:   p : xww., qr = ., - : ++., w : www..
+SUBST:   p : xww., qr = ., - : ++., w : www.., C : CCb
 CLEAR:   '
 TILE:    m = dngn_transparent_wall_blue
+TILE:    b = bedeviled_crystal_cocytus
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 MAP
    .............
  .......www......
@@ -2343,11 +2369,14 @@ NAME:    regret_index_zotdec_bone_old
 TAGS:    extra transparent zotdec luniq_zotdec_rune no_rotate
 DEPTH:   Zot, !Zot:$
 ITEM:    maw talisman
+KFEAT:   C = altar_yredelemnul
 KFEAT:   ^ = shaft trap
 SHUFFLE: opqrst
 SUBST:   op = x, q : xx., r : x.., st = .
-SUBST:   - : +c, { = {([})]++CC^^..
+SUBST:   - : +c, { = {([})]++CC^^.., b = bxx
 TILE:    G = dngn_statue_wraith
+TILE:    b = bedeviled_crystal_tartarus
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
 MAP
            s
    ........s........
@@ -2357,7 +2386,7 @@ MAP
   c......x...x......c
 cccccccccxx{xxccccccccc
   cd...............dc
-  cx.x.r.x.x.x.r.x.xc
+  cx.x.r.x.b.x.r.x.xc
   c.................c
   c.x.x.x.x.x.x.x.x.c
   c.................c
@@ -2374,6 +2403,12 @@ SHUFFLE: opqrst, P- / Q~ / R' / S"
 SUBST:   o : v.., p : vG., r : vGb, s : vb, t = v
 SUBST:   P = CCC>>><$d{([})], ~QRS = e, -'" = v, G : Gvv
 TILE:    G = dngn_statue_imp
+: if crawl.coinflip() then
+TILE:    b = bedeviled_crystal_dis
+: set_feature_name("crystal_wall", "bedeviled crystal wall")
+: else
+TILE:    b = wall_emerald
+: end
 MAP
   ........................
   ........................
@@ -2445,9 +2480,15 @@ DEPTH:  Zot, !Zot:$
 MONS:   laughing skull, lich, ancient lich / dread lich, necromancer
 MONS:   vampire mage
 ITEM:   any book mimic:10 w:20 / any scroll mimic:10
-SUBST:  x : xc, w : w?
+KFEAT:  g = metal_statue
+SUBST:  x : xv, w : w?, G : Gg
 NSUBST: ? = 12 = 11. / *:.
 SUBST:  4 = 4 5:2 .:4
+COLOUR: g = smoke
+TILE:   G = dngn_statue_wraith / dngn_statue_demonic_bust
+TILE:   c = wall_studio
+TILE:   g = soul_conduit
+: set_feature_name("metal_statue", "soul conduit")
 MAP
 wwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwww
@@ -2456,20 +2497,20 @@ wwx....x.......x....xww
 wwx....+...G...+....xww
 wwx.4..x.......x..4.xww
 wwx4.4.xxxx+xxxx.4.4xww
-wwx.4.4xxx...xxx4.4.xww
+wwx.4.4xxx...xxc4.4.xww
 wwx4.4.xxx.2.xxx.4.4xww
-wwxxxxxxxxx+xxxxxxx+xww
-wwxxxxxxxxx.xxxxxx$$xww
+wwxxcxxxxxx+xxxxxxx+xww
+wwxcxcxxxxx.xxxxxx$$xww
 wwxdddxxxxx.x...xx$$xww
 wwx.2.xxxxx.+.G.xxxxxww
 wwx...xxxxx.x...xxxxxww
 wwx...xxxxx.xxxxxxxxxww
-wwxx+xxxxxx.xxxdddddxww
-wwxx.xxxxxx.xxxd232dxww
+wwxx+xxxxxx.xxcdddddxww
+wwxx.xxxxxx.xxcd232dxww
 wwxx.xxxxxx.xxxd...dxww
 wwxx......+...+....dxww
 wwxxxxxxxxxmxxxd...dxww
-wwxxxxxxxxxGxxxdddddxww
+wwxxxxxxxxxGxxcdddddxww
 wwxxxxxxxxxxxxxxxxxxxww
 wwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwww
@@ -2586,17 +2627,20 @@ ENDMAP
 NAME:   lemuel_firehouse
 DEPTH:  Zot, !Zot:$
 ORIENT: centre
-MONS:   orb of fire
-MONS:   fire elemental
-MONS:   red draconian
-MONS:   any nonbase red draconian
+MONS:   orb of fire, fire elemental
+MONS:   red draconian, any nonbase red draconian
 MONS:   efreet
+KFEAT:  G = metal_statue
 SUBST:  1=122, 3=322
 SUBST:  4 = 2:20 4:5 3:15 .:20
+SUBST:  G : G.
+COLOUR: G = fire
+TILE:   G = fiery_conduit
+: set_feature_name("metal_statue", "fiery conduit")
 MAP
           lllll
        lllllllllll
-     lllll.....lllll
+     lllll..<..lllll
     llll....x....llll
    llll....xxx....llll
    llll...xx}xx...llll
@@ -2605,7 +2649,7 @@ MAP
  llll..xx...5...xx..llll
  llll..x...2.2...x..llll
 llll...x.2xx+xx2.x...llll
-llll...x.xx444xx.x...llll
+llll..Gx.xx444xx.xG..llll
 llll...x.x44444x.x...llll
  llll..x.x44F44x.x..llll
  llll..x.x44444x.x..llll
@@ -2697,10 +2741,15 @@ NAME:    minmay_elemental_castle
 TAGS:    no_rotate no_descent
 ORIENT:  southwest
 DEPTH:   Zot, !Zot:$
+KFEAT:   G = metal_statue
+SHUFFLE: GHIJ
 : if crawl.coinflip() then
 MONS:    titan, storm dragon, electric golem
 SUBST:   F = 3
 ITEM:    lightning rod, book of lightning, staff of air, book of storms
+COLOUR:  G = electricity
+TILE:    G = storm_conduit
+:   set_feature_name("metal_statue", "storm conduit")
 : elseif crawl.coinflip() then
 MONS:    frost giant, ice dragon
 KMONS:   F = shard shrike
@@ -2713,6 +2762,9 @@ ITEM:    wand of iceblast, staff of cold, book of winter, \
          book of ice
 SUBST:   w = l
 SUBST:   W = l..
+COLOUR:  G = ice
+TILE:    G = icy_conduit
+:   set_feature_name("metal_statue", "icy conduit")
 : else
 MONS:    fire giant, fire dragon
 KMONS:   F = balrug
@@ -2720,10 +2772,13 @@ MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 5, \
               pow_max = 15, delay = 10, size = 2, walk_dist = 0, \
               spread_rate= 0 }
 ITEM:    book of the dragon, staff of fire, book of fire, book of annihilations
+COLOUR:  G = fire
+TILE:    G = fiery_conduit
+:   set_feature_name("metal_statue", "fiery conduit")
 : end
-SUBST:   1 = 112.
-SUBST:   2 = 221.
 SHUFFLE: defg
+SUBST:   HIJ = c
+SUBST:   1 = 112., 2 = 221.
 MAP
 xx...................@@...................
 xx.WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW.
@@ -2735,26 +2790,26 @@ xx.Wwc%....ccccccccc++++ccccccccc....%cwW.
 xx.Wwc................................cwW.
 xx.Wwc1........2............2........1cwW.
 xx.Wwcccc..........................ccccwW.
-xx.Wwwwwc...cccccccccccccccccccc...cwwwwW.
-xx.Wwwwwc...cccccccccccccccccccc...cwwwwW.
+xx.Wwwwwc...ccccccccGccGcccccccc...cwwwwW.
+xx.Wwwwwc...HccccccccccccccccccH...cwwwwW.
 xx.Wwwwwc...cccccccccccccccccccc...cwwwwW.
 xx.Wwwwwc.2.ccc*|*cccccccc*|*ccc.2.cwwwwW.
 xx.Wwwwwc...ccc...cccccccc...ccc...cwwwwW.
 xx.Wwwwwc...ccc...cccccccc...ccc...cwwwwW.
 xx.Wwwwwc...ccc.F.cccccccc.F.ccc...cwwwwW.
-xx.Wwwwwc...ccc...cccccccc...ccc...cwwwwW.
-xx.Wwwwwc...ccc...cccccccc...ccc...cwwwwW.
+xx.Wwwwwc...Icc...cccccccc...ccI...cwwwwW.
+xx.Wwwwwc...ccc...cJccccJc...ccc...cwwwwW.
 xx.Wwwwwc..........................cwwwwW.
 xx.Wwwwwc..........................cwwwwW.
 xx.Wwwwwc...ccc..............ccc...cwwwwW.
-xx.Wwwwwc...ccc....2....2....ccc...cwwwwW.
+xx.Wwwwwc...Icc....2....2....ccI...cwwwwW.
 xx.Wwwwwc...ccc..............ccc...cwwwwW.
 xx.Wwwwwc...ccc..............ccc...cwwwwW.
 xx.Wwwwwc...ccc..............ccc...cwwwwW.
 xx.Wwwwwc.2.ccc1............1ccc.2.cwwwwW.
-xx.Wwwwwc...ccccccccc..ccccccccc...cwwwwW.
-xx.Wwwwwc...ccccccccc..ccccccccc...cwwwwW.
-xx.Wwwwwc...ccccccccc..ccccccccc...cwwwwW.
+xx.Wwwwwc...cccccccJc..cJccccccc...cwwwwW.
+xx.Wwwwwc...Hcccccccc..ccccccccH...cwwwwW.
+xx.Wwwwwc...cccccccGc..cGccccccc...cwwwwW.
 xx.Wwcccc..........................ccccwW.
 xx.Wwc1........2............2........1cwW.
 xx.Wwc................................cwW.
@@ -3325,13 +3380,15 @@ ORIENT:  float
 MONS:    draconian monk / base draconian w:15
 MONS:    patrolling draconian stormcaller, patrolling draconian knight
 MONS:    patrolling draconian scorcher
+KFEAT:   S = metal_statue
+KFEAT:   rybgmq = n
 SHUFFLE: ]}), rybgmq, DZF
 MARKER:  + = lua:restrict_door()
 # The choice of altar might matter more if monster gods meant much.
 # Till then, it's just a style thing.
 KFEAT:   _ = altar_qazlal w:40 / altar_xom / altar_lugonu / \
              altar_makhleb / altar_yredelemnul
-SUBST:   1 = 1.
+SUBST:   1 = 1., g : gG
 # What kind of holy books would draconians have?
 KITEM: D = book of the Dragon
 KITEM: Z = randbook numspells:4 spells:ignition&fireball&animate_dead&airstrike \
@@ -3340,19 +3397,20 @@ KITEM: F = randbook numspells:4 spells:starburst&fireball&sticky_flame&flame_wav
            title:Fire_and_Brimstone
 KITEM: _ = manual of invocations
 COLOUR:    r = red, y = yellow, b = blue, g = green, \
-           m = magenta, q = cyan, c = magenta
+           m = magenta, q = cyan, c = magenta, S = electricity
 TILE:      r = dngn_transparent_stone_red, y = dngn_transparent_stone_yellow, \
            b = dngn_transparent_stone_blue, m = dngn_transparent_stone_magenta, \
            g = dngn_transparent_stone_green, q = dngn_transparent_stone
-KFEAT: rybgmq = n
+TILE:      S = storm_conduit
+: set_feature_name("metal_statue", "storm conduit")
 MAP
            @.......................@
 ccccccccccccqqcrrcyycbbcggcmmcqqcrrccccccccccc
-cG............G..G..G..G..G..G..G..ccc.ccc.ccc
+cS............G..G..G..G..G..G..G..ccc.ccc.ccc
 c...ccccc..T.......................cc...c...ccl
 c]2.cccDccccc..1..1..1..1..1..1..1.c..1...1..cl
 c...cc...cc........................cc.......ccll
-cG..+..2....c.cc.cc.cc.cc.cc.cc.cc.cT........clll
+cS..+..2....c.cc.cc.cc.cc.cc.cc.cc.cT........clll
 cccccc...cccc.cc.cc.cc.cc.cc.cc.cc.ccc.......clllll
 ccccTc...cccc......................ccc..1..1.c....l
 @qc......1.........................+.........+..3.@
@@ -3360,11 +3418,11 @@ ccccTc...cccc......................ccc..1..1.c....l
 @qc......1.........................+.........+..3.@
 ccccTc...cccc......................ccc..1..1.c....l
 cccccc...cccc.cc.cc.cc.cc.cc.cc.cc.ccc.......clllll
-cG..+..2....c.cc.cc.cc.cc.cc.cc.cc.cT........clll
+cS..+..2....c.cc.cc.cc.cc.cc.cc.cc.cT........clll
 c...cc...cc........................cc.......ccll
 c}2.cccZccccc..1..1..1..1..1..1..1.c..1...1..cl
 c...ccccc..T.......................cc...c...ccl
-cG............G..G..G..G..G..G..G..ccc.ccc.ccc
+cS............G..G..G..G..G..G..G..ccc.ccc.ccc
 ccccccccccccqqcrrcyycbbcggcmmcqqcrrccccccccccc
            @.......................@
 ENDMAP
@@ -3396,13 +3454,17 @@ KMONS:   Z = killer klown ; club randart plus:12 ego:chaos / \
 KITEM:   BEHKN = $ w:15 / % w:25 / *
 KITEM:   z = any good_item
 KITEM:   Z = superb_item
+KFEAT:   ? = granite_statue
 # Rotates out loot, upstairs, downstairs,
 # both (in an enclosed bubble), or nothing, at either end.
 SHUFFLE: defg{>Z' / defg{<'' / fgde>{'Z / fgde<{'' / defg'|Z' / fgde|''Z / \
          fgfgZ'() / fgfg'Z)( / dede'''' / dede'''' / dede''''
 SHUFFLE: ABC / DEF / GHI / JKL / MNO
-SUBST:   d = @, e = ., f = x, g = c, c : ccb, Z = z Z:6, {' = .
+SUBST:   d = @, e = ., f = x, g = c, c : ccb, Z = z Z:6, {' = ., ? : ?.
 NSUBST:  < = 1:{ / 1:[, > = 1:} / 1:]
+COLOUR:  ? = mountain
+TILE:    ? = dngn_scintillating_statue
+: set_feature_name("granite_statue", "scintillating statue")
 MAP
               xxxxxxxfffff
               xcccccgggggff
@@ -3411,7 +3473,7 @@ MAP
           xcccccc..+..Z.>gf
           xcHHccc..ccc...gf
       xxxxxcG.Gcc..Lcc...gx
-      xcccccc..++...Lc++ccx
+      xcccccc..++..?Lc++ccx
       xcEEccc..++......Jccx
   xxxxxcD.Dcc..ccc......Kcx
   xcccccc..cc..Icc++cccJKcx
@@ -3423,7 +3485,7 @@ MAP
   xxc..++........Dccxxxx
 xxxxc..ccc........Ecx
 xcccc..Ccc++cccccDEcx
-xcc.+...Cc++ccccccccx
+xcc.+..?Cc++ccccccccx
 xe..+.........Acccccx
 de{.cc..........Bcxxx
 de..'c++ccccccA.Bcx
@@ -3451,6 +3513,7 @@ MONS:    titan / lich / deep elf annihilator w:3 / deep elf high priest w:4 / \
 MONS:    nonbase draconian w:20 / protean progenitor / killer klown / \
          death cob / curse toe w:5 / ancient lich / dread lich / \
          electric golem / orb of fire w:5
+KFEAT:   G = metal_statue
 SHUFFLE: EF
 SUBST:   E : .
 SHUFFLE: ABCDF, GH / GH / GH / HG
@@ -3459,9 +3522,12 @@ NSUBST:  3 = 3:3 / 2:4 / 2:334 / 1:344, 6 = 3:5 / 2:6 / 2:556 / 1:566
 SUBST:   % = $%, * = %:3 *:1, | = %:60 *:25 |:15, 1 = 1:3 .:2
 SUBST:   2 = 2:2 .:1, 3 = 3:4 .:1, 4 = 4:6 .:1, 5 = 5:6 .:1, 6 = 6:5 .:1
 SUBST:   A : v:4 .:1, B : v:7 .:3, C : v:1 .:4, DFH = .
-SUBST:   G : v:9 .:1, - : +., + : +:5 .:1, { : {:2 }:3 .:2
+SUBST:   G : v:7 G:2 .:1, - : +., + : +:5 .:1, { : {:2 }:3 .:2
 NSUBST:  { = 1:{ / 1:( / 1:[ / 1:<, } = 1:} / 1:) / 1:] / 1:>
 SUBST:   ( = (:14 >:1 <:1 ):2, [ = [:14 >:1 <:1 ]:2, ) = ):70 >(, ] = ]:70 >[
+COLOUR:  G = silver
+TILE:    G = dngn_silver_statue
+: set_feature_name("metal_statue", "silver statue")
 MAP
        xx@@vvvvv@@xx
       xx..vvvvvvv..xx
@@ -3715,7 +3781,7 @@ SUBST:   az = bbvc
 NSUBST:  2 = 4 = 2223 / 2 = 122 / 1 = 1.. / *:1
 NSUBST:  . = 1:3 / 4:4 / 4:% / *:.
 # 1/15 chance for two downward staircases, 9/15 for (only) one.
-SHUFFLE: ])defG, fGCD~
+SHUFFLE: ])defG, fGHCD~
 # Invert the normal Zot colours.
 : local wallc = "darkgray"
 : local floorc = "white"
@@ -3731,9 +3797,13 @@ SHUFFLE: ])defG, fGCD~
 : end
 : tile("y = wall_zot_" .. wallc)
 : tile("b = dngn_crystal_" .. wallc)
+: tile("v = dngn_metal_wall_" .. wallc)
+: tile("c = dngn_stone_wall_" .. wallc)
 # : tile("n = dngn_transparent_stone_" .. wallc)
-: ftile(".123409def%CD~+ = floor_rough_" .. floorc)
-TILE:  G = dngn_statue_orb
+: ftile(".123409def%CDG~+ = floor_rough_" .. floorc)
+COLOUR: G = mountain
+TILE:   G = dngn_scintillating_statue
+: set_feature_name("granite_statue", "scintillating statue")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -3744,18 +3814,18 @@ xzXX......XyyyyyyyyyyyX......XXyyyyyyyyyyyyXX''''
 xyyXX.....XXyxxxxxxxyXX.....XXyyxxxxxxxxxxyyXX'''
 xxyyXX.....XyxxxxxxxyX1....XXyyxxxxxxxxxxxxyyXX''
 xxxyyX....1zzxxxxxxxzz.....XyyxxxxxxxxxxxxxxyyX''
-xxxxyX.....zxxxxxxxxxz1....XyxxxxxxxxxxxxxxxxyX'
-xxxxyX....Xzx...2...xzX....XyxxxxxxxxxxxxxxxxyX'
-xxxyyX....Xzx1x.].x1xzX....XyyxxxxxxxxxxxxxxxyX''
-xxyyXX...Xzzzzzz+zzzzzzX...XXyyxxxxxxxxxxxxxzzX''
-xxyXX...zzz1....2....1zzz...XXyxxxxd......2zzX'''
+xxxxyX.....zyyyyyyyyyyz1....XyxxxxxxxxxxxxxxxxyX'
+xxxxyX....Xzy...2...yzX....XyxxxxxxxxxxxxxxxxyX'
+xxxyyX....Xzy1y.].y1yzX....XyyxxxxxxxxxxxxxxxyX''
+xxyyXX...Xzzzzzz+zzzzzzX...XXyyxxxyyyyyyyyyyzzX''
+xxyXX...zzz1....2....1zzz...XXyxxyyd......2zzX'''
 xxyX...zzX1...........1Xzz...Xyyyyyyyy1..1zzX''''
 xxXX+++z.................z+++XXXXXXXzzzz+zzX''''
 xx1....................................112z1'''
 xxXX.........................XXXXXXXzzzz+zzX''''
 xxyXXXX...................XXXXyyyyyyy1...1zzX''''
-xxxyyyXXX...............XXXyyyyxxxe.......2zzX'''
-xxxxxyyyXX.............XXyyyxxxxxxxxxxxxxxxxzzX'
+xxxyyyXXX...............XXXyyyyyyye.......2zzX'''
+xxxxxyyyXX.............XXyyyxxxxyyyyyyyyyyyyzzX'
 xxxxxxxyyX...zzz1zzz...XyyxxxxxxxxxxxxxxxxxyyXX'
 xxxxxxxxyX..Xz1z+z1zX..XyxxxxxxxxxxxxxxxxxxyXX'''
 xxxxxxxxyX.2zzX%%%Xzz2.XyxxxxxxxxxxxxxxxxxyyX'''
@@ -3789,6 +3859,7 @@ MONS:   patrolling black draconian annihilator ; cloak good_item . \
         rapier ego:electrocution
 KMONS:  O = diamond obelisk
 KMONS:  S = lightning spire
+KFEAT:  G = metal_statue
 ITEM:   lightning rod, book of lightning
 : local e = "ego:electrocution good_item ident:type"
 : item("quickblade " .. e .. " w:5 / double sword " .. e .. " w:5 / " ..
@@ -3803,14 +3874,17 @@ KFEAT:  yz = w
 KFEAT:  YZ" = W
 KFEAT:  # = iron_grate
 NSUBST: . = 4:1 / 4:2 / 3:3 / 3 = 123. / *:., ' = 2:3 / 6:4 / 4 = 34455 / *:.
-NSUBST: d = 1:d / 1:|ee / *:f, f = 2:f / *:g
+NSUBST: d = 1:d / 1:|ee / *:f, f = 2:f / *:g, G = 2:G. / *:.
 SUBST:  ` = ., ) = )>>
 KPROP:  -_ly"O> = no_tele_into
 MARKER: - = lua:fog_machine { cloud_type = "steam", walk_dist = 3, \
                               pow_max = 100, pow_min = 10, delay = 20, \
                               size = 1, start_clouds = 5, excl_rad = 0 }
+COLOUR: G = electricity
 TILE:   v = dngn_metal_iron
+TILE:   G = storm_conduit
 FTILE:  -_ = floor_pebble_darkgray
+: set_feature_name("metal_statue", "storm conduit")
 MAP
                  vvvvvvvvv
                  vd`d`d`dv
@@ -3822,16 +3896,16 @@ MAP
    v..............```````v         vyyyv
    v.S...S...S...S```'```vvvvvvvvvvv###vvv@vvv
    v...'...'...'..`````````````````#www#.....v
-   v.'...}...)...'```'```````````f`#www#..'..v
+   v.'...}.G.)...'```'``````````Gf.#www#..'..v
    v..............`````````````````#www#.....v
    vvvvvvWWvvvvvvvvvvvvvvv##########www#.....v
    vyywwwWWwwwwwwwwwwwwwwwwwwwwwwwwwwww#..'..v
  vvvy#ww#WW##########wwwwwwwwwwwwwwwwww#.'.'.v
  vyyy#yy#...........#w################w#..'..v
- vyyy#yy#...........#w#..............#w#.....v
- vyyy#yy#...........#w#..............#w#.....v
+ vyyy#yy#......G....#w#..............#w#.....v
+ vyyy#yy#...........#w#.....G........#w#.....v
  v__-#yyvvv.........#w#5.............#w#..'..v
-vvvvv#yyyyvv5...WWvvvwvvvWW..........WWW.....v
+vvvvv#yyyyvv5...WWvvvwvvvWW..........WWW..G..v
 vllll-yy###vvvvvvWWWvwvWWW#########..WWW.....v
 vllll_y##"""""""vvWWvwvWW##"""""""#vvvwvvvv..v
 vvvvvv##"""""""""vvWvwvW##"""""""""vvvwwwwv..v
@@ -3893,9 +3967,11 @@ TAGS:    no_monster_gen no_trap_gen
 DEPTH:   Zot, !Zot:$
 ORIENT:  float
 MONS:    killer klown, ancient lich / dread lich, death cob
+KFEAT:   a = iron_grate
+KFEAT:   ^ = dispersal trap
 NSUBST:  - = 2 / 3 = 3.. / *:.
 : if (crawl.coinflip()) then
-NSUBST:  > = 1 = }:80 > / 1 = ):80 > / 1 = ]:80 >
+NSUBST:  > = 1 = }:80 > / 1 = ):80 > / 1 = ]:80 >, G = 4:G / *:U
 SUBST:   1 = 1 0:30 .
 : else
 NSUBST:  G = 3={[( / *:G
@@ -3904,9 +3980,10 @@ NSUBST:  > = >. / *:.
 : end
 NSUBST:  ^ = 4:^ / *=^..
 SUBST:   a = aaax.
-KFEAT:   a = iron_grate
-KFEAT:   ^ = dispersal trap
+COLOUR:  G = mountain
+TILE:    G = dngn_scintillating_statue
 : coloured_glass(_G)
+: set_feature_name("granite_statue", "scintillating statue")
 MAP
          ...........
        ...............
@@ -3973,6 +4050,9 @@ KMONS:   a = draconian shifter
 # Those laffy daffy Klowns
 NSUBST:  I = 8 = k. / *:.
 KMONS:   k = killer klown
+COLOUR:  G = mountain
+TILE:    G = dngn_scintillating_statue
+: set_feature_name("granite_statue", "scintillating statue")
 MAP
                xxx
              xxxlxxx
@@ -4058,24 +4138,29 @@ KMONS:  f = butterfly
 KFEAT:  _ = altar_zin
 KFEAT:  O = altar_xom
 KFEAT:  ^ = dispersal trap
+KFEAT:  t = demonic_tree
+KFEAT:  g = metal_statue
 NSUBST: - = 4=s / 4=s- / -
-NSUBST: ? = O / 2=^ / 2=2 / 2=2? / 2=t / ?
+NSUBST: ? = O / 2=^ / 2=2 / 2=2? / 2:tG / ?
 SUBST:  ? = ":400 n:30 x:40 v b ^
-SUBST:  " = ":200 W:100 O:30 f 3 4 T U V Y
-COLOUR: " = random
+SUBST:  " = .:200 W:100 O:30 f 3 4 T U V Y
 COLOUR: v = white
+COLOUR: G = mountain, g = silver
 FTILE:  _`1 = floor_w_marble
-TILE:   G = dngn_statue_angel
+TILE:   G = dngn_scintillating_statue
+TILE:   g = dngn_silver_statue
 TILE:   v = dngn_metal_wall_white
+: set_feature_name("granite_statue", "scintillating statue")
+: set_feature_name("metal_statue", "silver statue")
 MAP
 xxxxxxxxx@xxxxxxxxx
 x........."?"?"?"?x
 x.......---"?"?"?"x
-xvvvvnG.---?"?"?"?x
+xvvvvng.---?"?"?"?x
 xv`1`vv.---"?"?"?"x
 xv_`1`1.---?"?"?"?x
 xv`1`vv.---"?"?"?"x
-xvvvvnG.---?"?"?"?x
+xvvvvng.---?"?"?"?x
 x.......---"?"?"?"x
 x........."?"?"?"?x
 xxxxxxxxx@xxxxxxxxx

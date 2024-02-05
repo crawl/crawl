@@ -1,0 +1,19 @@
+name: "spark wasp"
+glyph: {char: "y", colour: lightcyan}
+flags: [flies, web_immune, no_skeleton]
+resists: {elec: 3, poison: -1}
+xp_mult: 12
+will: 40
+attacks:
+ - {type: sting, flavour: elec, damage: 33}
+hd: 12
+hp_10x: 660
+ac: 9
+ev: 14
+spells: spark_wasp
+has_corpse: true
+shout: buzz
+intelligence: animal
+speed: 15
+size: tiny
+shape: insect_winged

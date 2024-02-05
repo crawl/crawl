@@ -1,0 +1,19 @@
+name: "Maggie"
+glyph: {char: "@", colour: lightred}
+flags: [speaks, warm_blood, unique, female]
+xp_mult: 20
+species: human
+will: 20
+attacks:
+ - {type: hit, damage: 10}
+hd: 5
+hp_10x: 600
+ac: 0
+ev: 10
+spells: maggie
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

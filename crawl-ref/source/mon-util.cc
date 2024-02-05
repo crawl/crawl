@@ -206,28 +206,25 @@ void init_mon_name_cache()
 
     for (const monsterentry &me : mondata)
     {
-        string name = me.name;
-        lowercase(name);
-
         const int          mtype = me.mc;
         const monster_type mon   = monster_type(mtype);
 
         // Deal sensibly with duplicate entries; refuse or allow the
         // insert, depending on which should take precedence. Some
         // uniques of multiple forms can get away with this, though.
-        if (Mon_Name_Cache.count(name))
+        if (mon == MONS_PLAYER_SHADOW
+            || mon == MONS_BAI_SUZHEN_DRAGON
+            || mon != MONS_SERPENT_OF_HELL
+               && mons_species(mon) == MONS_SERPENT_OF_HELL)
         {
-            if (mon == MONS_PLAYER_SHADOW
-                || mon == MONS_BAI_SUZHEN_DRAGON
-                || mon != MONS_SERPENT_OF_HELL
-                   && mons_species(mon) == MONS_SERPENT_OF_HELL)
-            {
-                // Keep previous entry.
-                continue;
-            }
-            else
-                die("Un-handled duplicate monster name: %s", name.c_str());
+            continue;
         }
+
+        string name = me.name;
+        lowercase(name);
+
+        if (Mon_Name_Cache.count(name))
+            die("Un-handled duplicate monster name: %s", name.c_str());
 
         Mon_Name_Cache[name] = mon;
     }
@@ -293,9 +290,6 @@ void init_monster_symbols()
 
     // Let those follow the feature settings, unless specifically overridden.
     monster_symbols[MONS_ANIMATED_TREE].glyph = get_feat_symbol(DNGN_TREE);
-    for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
-        if (get_monster_data(mc)->genus == MONS_STATUE)
-            monster_symbols[mc].glyph = get_feat_symbol(DNGN_GRANITE_STATUE);
 
     // Validate all glyphs, even those which didn't come from an override.
     for (monster_type i = MONS_PROGRAM_BUG; i < NUM_MONSTERS; ++i)

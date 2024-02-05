@@ -629,9 +629,19 @@ ENDMAP
 NAME:    nicolae_elf_big_sculpture_2
 TAGS:    transparent extra allow_dup luniq
 DEPTH:   Elf
+KFEAT:   G = metal_statue
 SHUFFLE: mlk/mkl/nnn, abcdefghij
 SUBST:   ka = ., nbcd = v, e : .v, f : .v, g : .v, h : .v, i : .v, j : .v
-SUBST:   l : .v, m : .v, v : vbcx
+SUBST:   l : .v, m : GGGv., v : vbcx
+: if crawl.coinflip() then
+COLOUR:  G = warp
+TILE:    G = dimensional_conduit
+:   set_feature_name("metal_statue", "dimensional conduit")
+: else
+COLOUR:  G = electricity
+TILE:    G = storm_conduit
+:   set_feature_name("metal_statue", "storm conduit")
+: end
 MAP
   ...........
   .abcd.dcba.
@@ -653,6 +663,7 @@ ENDMAP
 NAME:    nicolae_elf_big_sculpture_3
 TAGS:    transparent extra allow_dup luniq
 DEPTH:   Elf
+KFEAT:   G = metal_statue
 : if crawl.coinflip() then
 SHUFFLE: bcegh
 SUBST:   b = .
@@ -662,7 +673,16 @@ SUBST:   f = v
 SHUFFLE: abcdeghi
 : end
 SUBST:   acd = v, b : .v, e : .v, f : .v, g : .v, h : .v, i : .v
-SUBST:   j : .v, v : vbcx
+SUBST:   j : GGGv., v : vbcx
+: if crawl.coinflip() then
+COLOUR:  G = warp
+TILE:    G = dimensional_conduit
+:   set_feature_name("metal_statue", "dimensional conduit")
+: else
+COLOUR:  G = vehumet
+TILE:    G = arcane_conduit
+:   set_feature_name("metal_statue", "arcane conduit")
+: end
 MAP
         .
        ...
@@ -749,7 +769,17 @@ ENDMAP
 NAME:    hangedman_elf_targeted_burst
 TAGS:    transparent extra
 DEPTH:   Elf
-SUBST:   x : xxc, Y : yycvb, y : xxcbv, z : cbv, Z = cbvwl
+KFEAT:   G = metal_statue
+SUBST:   x : xxc, Y : yycvb, y : xxcbv, z : cbv, Z = cbvGG
+: if crawl.coinflip() then
+COLOUR:  G = vehumet
+TILE:    G = arcane_conduit
+:   set_feature_name("metal_statue", "arcane conduit")
+: else
+COLOUR:  G = fire
+TILE:    G = fiery_conduit
+:   set_feature_name("metal_statue", "fiery conduit")
+: end
 MAP
         x
    .x...y...x
@@ -798,6 +828,7 @@ NAME:    nicolae_elf_glassroom_feature
 TAGS:    transparent
 DEPTH:   Elf
 KFEAT:   O = any shop
+KFEAT:   G = metal_statue
 SHUFFLE: x_/m-
 SUBST:   S = GTOSSS
 : if you.depth() == 1 then
@@ -808,6 +839,15 @@ SUBST:   S = (){}[]
 SUBST:   S = ({[
 : end
 CLEAR:   _
+: if crawl.coinflip() then
+COLOUR:  G = warp
+TILE:    G = dimensional_conduit
+:   set_feature_name("metal_statue", "dimensional conduit")
+: else
+COLOUR:  G = fire
+TILE:    G = fiery_conduit
+:   set_feature_name("metal_statue", "fiery conduit")
+: end
 MAP
 ---__.__---
 -mmxx.xxmm-
@@ -1011,16 +1051,20 @@ x11...1xxxx
 xxxxxxxxxxx
 ENDMAP
 
-NAME:  minmay_elf_sorcery
-TAGS:  misc_elf_vault transparent
-DEPTH: Elf
-MONS:  deep elf pyromancer w:15 / deep elf zephyrmancer w:15 / nothing
-KMONS: 2 = deep elf sorcerer w:90 / deep elf annihilator / deep elf demonologist
-KITEM: 2 = randbook disc:conjuration disc2:summoning slevels:16
-SUBST: x : xxc, m : mmcxb
+NAME:   minmay_elf_sorcery
+TAGS:   misc_elf_vault transparent
+DEPTH:  Elf
+MONS:   deep elf pyromancer w:15 / deep elf zephyrmancer w:15 / nothing
+KMONS:  2 = deep elf sorcerer w:90 / deep elf annihilator / deep elf demonologist
+KITEM:  2 = randbook disc:conjuration disc2:summoning slevels:16
+SUBST:  x : xxc, G : Gm, m : mmcxb
+KFEAT:  G = metal_statue
+COLOUR: G = vehumet
+TILE:   G = arcane_conduit
+: set_feature_name("metal_statue", "arcane conduit")
 MAP
 ...........1............
-.mmm.x..x......x..x.mmm.
+.Gmm.x..x......x..x.mmG.
 .mmm...........1....mmm.
 .mmm1.x..x....x..x.1mmm.
 1mmmm.....1......1.mmmm.
@@ -1548,15 +1592,19 @@ TAGS:   transparent misc_elf_vault
 DEPTH:  Elf
 MONS:   deep elf knight / deep elf pyromancer / deep elf zephyrmancer
 MONS:   deep elf annihilator, deep elf elementalist
+KFEAT:  G = metal_statue
 NSUBST: D = 2 / 3 / * = 1:60 .:60 1 2
-SUBST:  E = 1:140 .:140 1 2, % = %%%*.
+SUBST:  E = 1:140 .:140 1 2, % = %%%*., G : GGx
+COLOUR: G = vehumet
+TILE:   G = arcane_conduit
+: set_feature_name("metal_statue", "arcane conduit")
 MAP
 ccc..............ccc
 ccc..cc..cc..cc..ccc
 ccc..cc..cc..cc..ccc
 ...E......E.....E...
 ....................
-.cc..xxx.D..xxx..cc.
+.cc..Gxx.D..xxx..cc.
 .cc..xxx....xxx..cc.
 .....xxxx%%xxxx.....
 .......xxxxxx.......
@@ -1565,7 +1613,7 @@ ccc..cc..cc..cc..ccc
 .......xxxxxx.......
 .....xxxx%%xxxx.....
 .cc..xxx....xxx..cc.
-.cc..xxx..D.xxx..cc.
+.cc..xxx..D.xxG..cc.
 ....................
 ...E.....E......E...
 ccc..cc..cc..cc..ccc
@@ -1881,27 +1929,30 @@ xxZ.......Zxx
     xxxxx
 ENDMAP
 
-NAME:  nicolae_elf_theology_debate
-TAGS:  transparent
-DEPTH: Elf
-MONS:  orc knight
-MONS:  deep elf knight
+NAME:   nicolae_elf_theology_debate
+TAGS:   transparent
+DEPTH:  Elf
+MONS:   orc knight, deep elf knight
 : if crawl.coinflip() then
-KMONS: 3 = orc high priest
-KMONS: 4 = deep elf high priest
-KFEAT: 4 = altar_vehumet / altar_makhleb / altar_sif_muna
+KMONS:  3 = orc high priest
+KMONS:  4 = deep elf high priest
+KFEAT:  4 = altar_vehumet / altar_makhleb / altar_sif_muna
+SUBST:  b = G
 : else
-KMONS: 3 = orc sorcerer
-KMONS: 4 = deep elf sorcerer
-KFEAT: 4 = altar_lugonu
+KMONS:  3 = orc sorcerer
+KMONS:  4 = deep elf sorcerer
+KFEAT:  4 = altar_lugonu
+SUBST:  b = GGb
+TILE:   b = bedeviled_crystal_abyss
+:   set_feature_name("crystal_wall", "bedeviled crystal wall")
 : end
-KFEAT: 3 = altar_beogh
-SUBST: % = %%*, * = **|, S = 12, 1 = 11., 2 = 22.
+KFEAT:  3 = altar_beogh
+SUBST:  % = %%*, * = **|, S = 12, 1 = 11., 2 = 22.
 MAP
 xxxxxxxxxxxxxxxxx
 xx...xx...xx...xx
 x..2....S....1..x
-x.2G2..SGS..1G1.x
+x.2b2..SGS..1G1.x
 x..2....S....1..x
 xx...xx+++xx...xx
 xx.2.xx...xx.1.xx

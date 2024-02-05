@@ -1,0 +1,19 @@
+name: "ettin"
+glyph: {char: "C", colour: brown}
+flags: [speaks, warm_blood, two_weapons]
+xp_mult: 12
+genus: giant
+will: 40
+attacks:
+ - {type: hit, damage: 40}
+ - {type: hit, damage: 40}
+hd: 12
+hp_10x: 660
+ac: 9
+ev: 4
+has_corpse: true
+shout: shout2
+intelligence: human
+uses: starting_equipment
+size: giant
+shape: humanoid

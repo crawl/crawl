@@ -1,0 +1,17 @@
+name: "fire bat"
+glyph: {char: "b", colour: lightred}
+flags: [flies, see_invis, unblindable, batty, warm_blood]
+resists: {fire: 3, cold: -1}
+xp_mult: 8
+genus: bat
+will: 10
+attacks:
+ - {type: bite, flavour: fire, damage: 6}
+hd: 5
+hp_10x: 225
+ac: 1
+ev: 14
+intelligence: animal
+speed: 30
+size: tiny
+shape: bat

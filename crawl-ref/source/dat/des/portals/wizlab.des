@@ -915,14 +915,40 @@ NAME:       wizlab_demon
 TAGS:       no_rotate no_hmirror no_vmirror
 KFEAT:      _ = altar_makhleb
 KFEAT:      p = granite_statue
-LFLOORTILE: floor_pebble_lightred
-LFLOORCOL:  red
-LROCKCOL:   red
-COLOUR:     c = darkgrey
-COLOUR:     -|/\o[]CDEFGHIJKLMNOPQRSTUVWXYZu = yellow
 KFEAT:      -|/\o[]CDEFGHIJKLMNOPQRSTUVWXYZu = floor
 KFEAT:      u = fountain_blood
+MARKER:     h = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 40, \
+                size = 2, size_buildup_amnt = 5, \
+                size_buildup_time = 25, cloud_type = "flame", \
+                excl_rad = 0 }
+KMONS:      1 = orange demon / hellwing / red devil / rust devil / \
+                sixfirhy / sun demon / soul eater / smoke demon / hell beast
+KMONS:      2 = balrug / blizzard demon / cacodemon / green death / \
+                hellion / lorocyproca / shadow demon / tormentor
+KMONS:      3 = hellephant / dread lich w:4 / tentacled monstrosity w:1
+{{
+wizname = crawl.make_name()
+kmons("4 = patrolling Hellbinder dbname:Hellbinder name:"
+      .. string.gsub(wizname, " ", "_") .. " ; majin-bo")
+}}
+KITEM:      d = scroll of summoning / w:5 scroll of torment / \
+                / any scroll w:20 / potion of haste \
+                / potion of heal wounds / any potion w:20
+KITEM:      e = any beam wand / any blast wand / \
+                ring of fire / ring of ice / randbook disc:summoning
+KITEM:      f = demon blade w:1 / demon whip w:1 / demon trident w:1 \
+                / manual of summonings w:3 / any randart jewellery w:5 \
+                / damnation w:1 / star_item w:25 / superb_item
+KITEM:      g = randbook disc:summoning
+NSUBST:     d = e / d, ' = 2:1 / 4=12...., " = 2:1 / 4=12....
+NSUBST:     ` = 2:1 / 2:2 / 3=12...., ; = 2:1 / 2:2 / 3=12....
+NSUBST:     3 = 1:3 / 1, ~ = 3:1 / 4:2 / 1:3 / 1:4 / 8=12.... / ., f = 1:g / f
+COLOUR:     c = darkgrey
+COLOUR:     -|/\o[]CDEFGHIJKLMNOPQRSTUVWXYZu = yellow
 TILE:       c = wall_stone_dark
+TILE:       b = bedeviled_crystal_gehenna / bedeviled_crystal_cocytus / \
+                bedeviled_crystal_dis / bedeviled_crystal_pandemonium
 TILE:       p = dngn_statue_demonic_bust / dngn_statue_imp \
                 / dngn_statue_cerebov / dngn_statue_ancient_evil
 # symbols roughly corresponding to sigil shape
@@ -958,34 +984,10 @@ FTILE:      L = sigil_straight_N_SE
 FTILE:      M = sigil_straight_N_SW
 FTILE:      N = sigil_straight_E_NW
 FTILE:      P = sigil_straight_W_NE
-RTILE:      x = wall_undead
-MARKER:     h = lua:fog_machine { \
-                pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 2, size_buildup_amnt = 5, \
-                size_buildup_time = 25, cloud_type = "flame", \
-                excl_rad = 0 }
-KMONS:      1 = orange demon / hellwing / red devil / rust devil / \
-                sixfirhy / sun demon / soul eater / smoke demon / hell beast
-KMONS:      2 = balrug / blizzard demon / cacodemon / green death / \
-                hellion / lorocyproca / shadow demon / tormentor
-KMONS:      3 = hellephant / dread lich w:5
-{{
-wizname = crawl.make_name()
-kmons("4 = patrolling Hellbinder dbname:Hellbinder name:"
-      .. string.gsub(wizname, " ", "_") .. " ; majin-bo")
-}}
-KITEM:      d = scroll of summoning / w:5 scroll of torment / \
-                / any scroll w:20 / potion of haste \
-                / potion of heal wounds / any potion w:20
-KITEM:      e = any beam wand / any blast wand / \
-                ring of fire / ring of ice / randbook disc:summoning
-KITEM:      f = demon blade w:1 / demon whip w:1 / demon trident w:1 \
-                / manual of summonings w:2 / any randart jewellery w:5 \
-                / cloak good_item w:5 / star_item w:25 / superb_item
-KITEM:      g = randbook disc:summoning
-NSUBST:     d = e / d, ' = 4:1 / 3=12...., " = 4:1 / 3=12....
-NSUBST:     ` = 2:1 / 2:2 / 3=12...., ; = 2:1 / 2:2 / 3=12....
-NSUBST:     3 = 1:3 / 1, ~ = 2:1 / 3:2 / 4 / 9=12.... / ., f = 1:g / f
+TILE:       x = wall_undead
+LFLOORTILE: floor_pebble_lightred
+LFLOORCOL:  red
+LROCKCOL:   red
 {{
 set_random_mon_list("common demon w:200 / balrug / blizzard demon / \
                      cacodemon / green death / hell beast / hellion / \
@@ -994,36 +996,37 @@ set_random_mon_list("common demon w:200 / balrug / blizzard demon / \
 wizlab_setup(_G)
 set_feature_name("stone_wall", "black wall")
 set_feature_name("rock_wall", "carved rock wall")
+set_feature_name("crystal_wall", "bedeviled crystal wall")
 }}
 epilogue{{ wizlab_milestone(_G, "The Hall of the Hellbinder") }}
 MAP
 cccccccccccccccccccccccccccccccccccc
-ccccccc'ccccccp...A...pcccccc'cccccc
-ccccc'''''cccc.........cccc"""""cccc
-cccc''G'H''ccc..cc.cc..ccc"""o"""ccc
-ccc''/'''\''cc.cc...cc.cc""|"""""/cc
-ccc'I'''''J'cc....c....cc"-O-"""/"cc
-ccd'|''U''|.....c...c....."|"""/""dc
-ccd'|''Y''|.......<.......""""/"""dc
-ccc'L'''''M.cc..c...c..cc."""K----cc
-ccc''\'''/''cc....c....cc"""/"""""cc
-cccc''N'P''ccc.cc...cc.ccc"/"""""ccc
-ccccc'''''cccc..cc.cc..cccc"""""cccc
-cccccc..cccccu.........uccccc..ccccc
-cccccc..cccccc..cc.cc..cccccc..ccccc
-cccccc..cc`ccc.cc...cc.ccc,cc..ccccc
-ccccccc``````c.c.\./.c.c;;Z;;;cccccc
-ccccccc```o````...Y...;;;/;;O;cccccc
-cccccc``\```/``c..|..c;;/;;OTO;ccccc
-cccccc```\`/```ccd3dcc;/;;;;U;;ccccc
-ccccc``\`CXD`/``cc.cc;/;;;;;;;;;cccc
-cccccc``\|`|/```.....S--------Zccccc
-cccccc```Q3R```.cc.cc;;;;;3;;/;ccccc
-ccccccc``ETF```ccd3dcc;;;;;;/;cccccc
-cccccccc```````c..|..c;;;;;S;ccccccc
+ccccccc'ccccccp...A...pcccccc"cccccc
+ccccc'''..cccc.........cccc.."""cccc
+cccc''G'H..ccc..cc.cc..ccc.."o"""ccc
+ccc''/'''\..cc.cc...cc.cc..|"""""/cc
+ccc'I''''.J.cc....c....cc.-O-"""/"cc
+ccd'|''U'.|.++..c...c..++..|"""/""dc
+ccd'|''Y'.|.++....<....++...""/"""dc
+ccc'L''''.M.cc..c...c..cc..."K----cc
+ccc''\'''/..cc....c....cc.../"""""cc
+cccc''N'P'.ccc.cc...cc.ccc./"""""ccc
+ccccc'''..cccc..cc.cc..cccc.."""cccc
+cccccc++cccccu.........uccccc++ccccc
+ccccccc+cccccc++ccccc++cccccc+cccccc
+cccccc++cc.ccc+cc...cc+ccc.cc++ccccc
+ccccccc......c+c.\./.c+c..Z...cccccc
+ccccccc...o.......Y....../..O.cccccc
+cccccc..\.../..c..|..c../..OTO.ccccc
+cccccc```\`/``.ccd.dcc./;;;;U;;ccccc
+ccccc``\`CXD`/..cc.cc./;;;;;;;;;cccc
+cccccc``\|`|/`.......S--------Zccccc
+cccccc```Q`R``..cc.cc..;;;;;;/;ccccc
+ccccccc``ETF``.ccd.dcc.;;;;;/;cccccc
+cccccccc``3``..c..|..c..;;3S;ccccccc
 cccccccccc........U........ccccccccc
 ccccccccccc....c./.\.c....cccccccccc
-ccccccccccc....cc...cc....cccccccccc
+ccccccccccc....cc3.3cc....cccccccccc
 cccccccccccc....cc.cc....ccccccccccc
 ccccccccccccc.\./...\,/.cccccccccccc
 ccccccccccccc..V.....W..cccccccccccc
@@ -1035,16 +1038,16 @@ cccccccccccccc...G.H...ccccccccccccc
 cccccccccccc...GP...NH...ccccccccccc
 ccccccccccc..G[.......]H..cccccccccc
 cccccccccc../..NxxxxxP..\..ccccccccc
-cccccccccc.I...xxpupxx...J.ccccccccc
+cccccccccc.I...bxpupxb...J.ccccccccc
 ccccccccc..U..xx~G~H~xx..U..cccccccc
-ccccccccc.I.J.~~/~~~\~~.I.J.cccccccc
-cccccccc~~|~~~~/~~~~~\~~~~|~~ccccccc
-cccccccc~~|~~~/\~~~~~/\~~~|~~ccccccc
-cccccccc~~|~~/~~\~~~/~~\~~|~~ccccccc
-ccccccc~~~L~/~xx~N~P~xx~\~M~~~cccccc
+ccccccccc.I.J..~/~~~\~..I.J.cccccccc
+cccccccc..|.~~~/~~~~~\~~~.|..ccccccc
+cccccccc.~|~~~/\~~~~~/\~~~|~.ccccccc
+cccccccc.~|~~/~~\~~~/~~\~~|~.ccccccc
+ccccccc..~L~/~xx~N~P~xx~\~M~..cccccc
 cccccccf~~~W~~Gxxp_pxxH~~V~~~fcccccc
-cccccccff~~~NP~~xxxxx~~NP~~~ffcccccc
-ccccccpfff~~~~~~~~~~~~~~~~~fffpccccc
+cccccccff~~~NP~~xxbxx~~NP~~~ffcccccc
+ccccccpfff~~~~~.......~~~~~fffpccccc
 cccccccccccccccccccccccccccccccccccc
 ENDMAP
 
@@ -1340,7 +1343,7 @@ LFLOORTILE: floor_nerves
 LROCKTILE:  wall_flesh
 TILE:       c = wall_flesh
 TILE:       m = wall_transparent_flesh
-TILE:       + = no_random dngn_fleshy_orifice
+TILE:       + = dngn_fleshy_orifice
 COLOUR:     m = yellow
 COLOUR:     c+ = lightred
 COLOUR:     W = green
@@ -1409,10 +1412,8 @@ ENDMAP
 ###############################################################################
 # Iskenderun's Mystic Tower
 #
-# TODO: Could use more unique tiles.
-#       A previous commit labeled this one as boring, though acceptable;
-#       hopefully emphasizing the orbs and terrain more than previously
-#       should help, though more unique contents could certainly be tried.
+# TODO: Implement monster IMB and give it to the statues in exchange for
+#       less overall statues, try out some small number of orb spiders.
 #
 NAME:       wizlab_iskenderun
 TAGS:       no_rotate patrolling
@@ -1428,18 +1429,22 @@ KITEM:      F = any book good_item, any book good_item, any book
 KMONS:      DEF = purple draconian
 KMONS:      H = purple draconian scorcher / purple draconian annihilator /\
                 purple draconian knight / purple draconian stormcaller
-COLOUR:     v = magenta
-TILE:       v = dngn_metal_wall_magenta
 MARKER:     " = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 15, cloud_type = "purple smoke" }
 NSUBST:     1 = 4 = 1:1 3:19 / 6 = 1:2 3:3 / * = 1:15 ., H = 1:H / 1:H. / *:.
 SHUFFLE:    '=F- / '=F- / '=F- / F-'= / F-'=, DEF
 SUBST:      - = v, ' = ., = = +
+COLOUR:     v = magenta
+COLOUR:     G = vehumet
+TILE:       v = dngn_metal_wall_magenta
+TILE:       G = arcane_conduit
+TILE:       c = STONE_WALL_DEPTHS
 LROCKTILE:  wall_zot_magenta
 LROCKCOL:   lightmagenta
 LFLOORTILE: floor_rough_magenta
 LFLOORCOL:  magenta
+:           set_feature_name("metal_statue", "arcane conduit")
 :           set_random_mon_list("purple draconian / tengu conjurer")
 :           wizlab_setup(_G)
 epilogue{{
@@ -1450,33 +1455,33 @@ vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxv
 vxxx..x.x.x.x.x.x.xx"xx.x.x.x.x.x.xx.xxxv
 vxx<xxAx.x.x.x.x.x.x.x.x.x.x.x.x.x.xx.xxv
-vx.x"xxx.x..........x.............xx"x.xv
+vx.x"xxx.x..........G.............xx"x.xv
 vx.xx...............................xxxxv
 vxxAx...............................x.xxv
 vx.xx................................x.xv
-vxx.......2.......v...v.......2.......xxv
+vxx.......2.......c...c.......2.......xxv
 vx.xx...........v.vv.vv.v............x.xv
 vxx............vvv11.11vvv............xxv
-vx.x..........v.v1vvvvv1v.v..........x.xv
+vx.x..........c.v1vvvvv1v.c..........x.xv
 vxx..........v.v1vvvEvvv1v.v..........xxv
 vx.x........vvv1vvvv+vvvv1vvv........x.xv
 vxx..........v1vvvH...Hvvv1v..........xxv
-vx.x.......vv1vvvH......vvv1vv.......x.xv
+vx.x.......cv1vvvH......vvv1vc.......x.xv
 vxxx........v1vvv.......vvv1v........xxxv
-vx".x...2.....vD+.H.2...+'=.....2...x."xv
+vx".G...2.....vD+.H.2...+'=.....2...G."xv
 vxxx........v1vvv.......vvv1v........xxxv
-vx.x.......vv1vvvH......vvv1vv.......x.xv
+vx.x.......cv1vvvH......vvv1vc.......x.xv
 vxx..........v1vvvH...Hvvv1v..........xxv
 vx.x........vvv1vvvv+vvvv1vvv........x.xv
 vxx..........v.v1vvvFvvv1v.v..........xxv
-vx.x..........v.v1vv-vv1v.v..........x.xv
+vx.x..........c.v1vv-vv1v.c..........x.xv
 vxx............vvv11.11vvv............xxv
 vx.x............v.vv.vv.v............x.xv
-vxx.......2.......v...v.......2.......xxv
+vxx.......2.......c...c.......2.......xxv
 vx.x.................................x.xv
 vxx.x...............................x.xxv
 vxxxx...............................xxxxv
-vx.x"xx.............x.............xx"x.xv
+vx.x"xx.............G.............xx"x.xv
 vxx.xx.x.x.x.x.x.x.x.x.x.x.x.x.x.x.xx.xxv
 vxxx.xx.x.x.x.x.x.xx"xx.x.x.x.x.x.xx.xxxv
 vxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxv
@@ -2278,15 +2283,19 @@ kmons("5 = patrolling Head Instructor dbname:Head_Instructor name:"
       .. string.gsub(wizname, " ", "_") .. " ; triple sword ego:antimagic \
             . triple sword ego:antimagic . plate armour ego:willpower")
 }}
+KFEAT:  S = metal_statue
 ITEM:   any book w:15 / randbook disc:hexes owner:Yara w:4 / spellbinder w:1
 ITEM:   scroll of enchant armour ident:all / scroll of enchant weapon ident:all
 NSUBST: * = 4:d / 4:e / *=*., 5 = 1:5 / *:1, D = 1:2 / *=G1
 NSUBST: E = 1:2 / *:1, 3 = 1:4 / * = 3", A = 1:< / *:A
 SUBST:  P : Pt", F = 211111, 1 = 1...., x = xxxx., - = x
-FTILE:  125.*de$G+ = floor_limestone
+FTILE:  125.*de$GS+ = floor_limestone
 FTILE:  Tt"PA<34 = floor_dirt / floor_grass:15
 TILE:   x = wall_brick
 TILE:   c = wall_church
+COLOUR: S = shimmer_blue
+TILE:   S = misfortune_conduit
+:           set_feature_name("metal_statue", "misfortune conduit")
 :           set_random_mon_list(
 :               "mana viper / tengu conjurer / ogre mage / " ..
 :               "deep elf knight / arcanist / occultist / naga mage / " ..
@@ -2298,7 +2307,7 @@ epilogue {{
 }}
 MAP
           cccccccccccccccccccc
-          c***cGF.1..1.FGc***c
+          c***cSF.1..1.FSc***c
           c***c..........c***c
           cFFFc..1....1..cFFFc
           c...c..cc55cc..c...c

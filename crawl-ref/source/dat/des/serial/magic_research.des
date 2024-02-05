@@ -29,6 +29,7 @@ function init_research(e, disc)
   else
      e.kmons('0 = arcanist w:5 / occultist w:5 / ogre mage / naga mage w:8 / deep elf pyromancer w:5 / deep elf zephyrmancer w:5')
   end
+  e.kfeat('G = metal_statue')
   e.kmask('@, = !no_monster_gen')
   e.shuffle('abcdefghi')
   e.subst('abcd = c')
@@ -118,6 +119,9 @@ KMONS:   D = caustic shrike
 COLOUR:  .x012345D = brown
 FTILE:   .+x012345D = floor_pebble_brown
 TILE:    x = wall_pebble_brown
+COLOUR:  G = earth
+TILE:    G = earthen_conduit
+: set_feature_name("metal_statue", "earthen conduit")
 : init_research(_G, 'earth')
 MAP
 @'''@'''@
@@ -127,7 +131,7 @@ c0x1.1x0c
 d.2xxx2.d
 a.xxDxx.a
 b.x3.3x.b
-cx..x..xc
+cx..G..xc
 dcbadabcd
 ENDMAP
 
@@ -161,7 +165,7 @@ MARKER:  % = lua:fog_machine { cloud_type = "black smoke", pow_min = 10, \
 COLOUR:  .012345D% = w:20 lightgrey / w:5 darkgrey
 FTILE:   .+n012345D% = floor_tomb
 SHUFFLE: 1234
-: dgn.delayed_decay(_G, '%', 'ugly thing skeleton')
+KITEM:   % = ugly thing skeleton
 : init_research(_G, 'necromancy')
 MAP
 @'''@'''@
@@ -223,6 +227,9 @@ MARKER: V = lua:fog_machine { cloud_type = "seething chaos", pow_min = 3, \
                 pow_max = 10, delay = 50, size = 1, walk_dist = 1 }
 COLOUR: .01234D = blue
 FTILE:  .Vn+01234D = floor_marble
+COLOUR:  G = shimmer_blue
+TILE:    G = misfortune_conduit
+: set_feature_name("metal_statue", "misfortune conduit")
 : init_research(_G, 'hexes')
 MAP
 @'''@'''@
@@ -231,7 +238,7 @@ b....n4Db
 c.V..n23c
 d....n12d
 a....n..a
-b.V..n..b
+b.V..G..b
 c.....00c
 dcbadabcd
 ENDMAP

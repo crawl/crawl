@@ -375,7 +375,7 @@ static int moninf_get_target_throw(lua_State *ls)
 {
     MONINF(ls, 1, mi);
     item_def *item = *(item_def **) luaL_checkudata(ls, 2, ITEM_METATABLE);
-    ranged_attack attk(&you, nullptr, item, false);
+    ranged_attack attk(&you, nullptr, nullptr, item, false);
     string d = make_stringf("%d%% to hit", to_hit_pct(*mi, attk, false));
     lua_pushstring(ls, d.c_str());
     return 1;

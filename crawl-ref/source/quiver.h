@@ -142,6 +142,7 @@ namespace quiver
         bool cycle(int dir = 0, bool allow_disabled=true);
         bool clear();
         void on_actions_changed();
+        void on_item_pickup(int slot);
         virtual void set_needs_redraw();
         shared_ptr<action> find_last_valid();
 
@@ -161,6 +162,7 @@ namespace quiver
     bool set_to_quiver(shared_ptr<quiver::action> s, action_cycler &cur_quiver);
     void on_actions_changed();
     void on_weapon_changed();
+    void on_item_pickup(int slot);
     void on_newchar();
 
     // TODO: perhaps this should be rolled into action_cycler?

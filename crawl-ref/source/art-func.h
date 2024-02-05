@@ -875,10 +875,6 @@ static void _WOE_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 static void _DAMNATION_launch(bolt* beam)
 {
-    ASSERT(beam->item
-           && beam->item->base_type == OBJ_MISSILES
-           && !is_artefact(*(beam->item)));
-    beam->item->props[DAMNATION_BOLT_KEY].get_bool() = true;
 
     beam->name    = "damnation bolt";
     beam->colour  = LIGHTRED;

@@ -546,6 +546,10 @@ Cheibriados welcome
 
 Cheibriados says: Take it easy.
 %%%%
+Cheibriados death
+
+Cheibriados appreciates the motionlessness of death.
+%%%%
 Dithmenos penance
 
 Dithmenos says: Return to the darkness!
@@ -570,6 +574,10 @@ Fedhas welcome
 
 Fedhas says: Spread life and death.
 %%%%
+Fedhas death
+
+Fedhas appreciates your contribution to the ecosystem.
+%%%%
 Gozag welcome
 
 Gozag says: Greed is good.
@@ -578,9 +586,17 @@ Hepliaklqana welcome
 
 Hepliaklqana says: Your past becomes your present!
 %%%%
+Hepliaklqana death
+
+Hepliaklqana delivers you to your ancestors.
+%%%%
 Ignis welcome
 
 The flames of Ignis gently warm you.
+%%%%
+Ignis death
+
+Ignis goes out, and joins you in death.
 %%%%
 Jiyva welcome
 
@@ -589,9 +605,41 @@ Slime for the Slime God!
 w:1
 Long live the new flesh!
 %%%%
+Jiyva death corpse
+
+Jiyva sends a jelly to digest your remains.
+%%%%
+Jiyva death corpse undead
+
+<Jiyva death corpse>
+%%%%
+Jiyva death corpse nonliving
+
+Jiyva sends a jelly to digest your equipment.
+%%%%
 Kikubaaqudgha welcome
 
 Kikubaaqudgha says: Spread unending torment and darkness!
+%%%%
+Kikubaaqudgha death
+
+Kikubaaqudgha rasps: You have failed me! Welcome... death!
+%%%%
+Kikubaaqudgha death corpse undead
+
+Kikubaaqudgha rasps: You have failed me! Welcome... oblivion!
+%%%%
+Kikubaaqudgha death corpse nonliving
+
+<Kikubaaqudgha death corpse undead>
+%%%%
+Kikubaaqudgha death undead
+
+<Kikubaaqudgha death corpse undead>
+%%%%
+Kikubaaqudgha death nonliving
+
+<Kikubaaqudgha death corpse undead>
 %%%%
 Lugonu welcome
 
@@ -674,6 +722,10 @@ Ru welcome
 
 Ru says: Cut away your false body!
 %%%%
+Ru death
+
+Ru respects your ultimate sacrifice.
+%%%%
 Sif Muna penance
 
 Sif Muna says: Seek out more knowledge and wisdom.
@@ -701,6 +753,18 @@ Trog says: Kill them all!
 Uskayaw welcome
 
 Uskayaw says: Surrender yourself to the rhythm!
+%%%%
+Uskayaw death corpse
+
+Your body falls in perfect tune with the rhythm.
+%%%%
+Uskayaw death corpse undead
+
+<Uskayaw death corpse>
+%%%%
+Uskayaw death corpse nonliving
+
+<Uskayaw death corpse>
 %%%%
 Vehumet welcome
 
@@ -808,6 +872,22 @@ Yredelemnul says: All are equal in death! Holy martyrdom means nothing!
 Yredelemnul welcome
 
 Yredelemnul says: Carry the black torch! Rouse the idle dead!
+%%%%
+Yredelemnul death corpse
+
+Your body rises from the dead as a mindless zombie.
+%%%%
+Yredelemnul death corpse undead
+
+You join the legions of the undead harvest.
+%%%%
+Yredelemnul death corpse nonliving
+
+Your body becomes fuel for the black torch.
+%%%%
+Yredelemnul death undead
+
+<Yredelemnul death corpse undead>
 %%%%
 Zin penance
 

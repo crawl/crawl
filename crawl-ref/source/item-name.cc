@@ -1889,7 +1889,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         break;
 
     case OBJ_GEMS:
-        buff << gem_type_name(static_cast<gem_type>(sub_type));
+        if (sub_type == NUM_GEM_TYPES)
+            buff << "gem";
+        else
+            buff << gem_type_name(static_cast<gem_type>(sub_type));
         break;
 
     case OBJ_GOLD:
