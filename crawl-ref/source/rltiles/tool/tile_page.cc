@@ -107,6 +107,24 @@ int tile_page::find(const string &enumname) const
     return -1;
 }
 
+int tile_page::find_ctg_start(const string &ctgname) const
+{
+    for (size_t i = 0; i < m_tiles.size(); ++i)
+        if (m_tiles[i]->parts_ctg() == ctgname)
+            return i;
+
+    return -1;
+}
+
+int tile_page::find_ctg_end(const string &ctgname) const
+{
+    for (size_t i = m_tiles.size() - 1; i >= 0; --i)
+        if (m_tiles[i]->parts_ctg() == ctgname)
+            return i;
+
+    return -1; // dubious...
+}
+
 bool tile_page::add_synonym(int idx, const string &syn)
 {
     if (idx < 0 || idx >= (int)m_tiles.size())
