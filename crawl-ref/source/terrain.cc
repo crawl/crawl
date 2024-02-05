@@ -886,7 +886,7 @@ int slime_wall_corrosion(actor* act)
     if (actor_slime_wall_immune(act))
         return 0;
 
-    return count_adjacent_slime_walls(act->pos());
+    return count_adjacent_slime_walls(act->pos()) * 4;
 }
 
 // slime wall damage under Jiyva's oozemancy; this should only affect monsters

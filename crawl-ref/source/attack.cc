@@ -1096,7 +1096,7 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
                         || (weapon && is_range_weapon(*weapon)
                                    && using_weapon());
     damage_plus += slaying_bonus(throwing);
-    damage_plus -= 4 * you.corrosion_amount();
+    damage_plus -= you.corrosion_amount();
 
     // XXX: should this also trigger on auxes?
     if (!aux && !ranged)
