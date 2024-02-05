@@ -214,13 +214,6 @@ bool melee_attack::handle_phase_attempted()
 
     if (attacker->is_player())
     {
-        // Set delay now that we know the attack won't be cancelled.
-        if (!is_riposte && !is_multihit && !cleaving
-            && wu_jian_attack == WU_JIAN_ATTACK_NONE)
-        {
-            you.time_taken = you.attack_delay().roll();
-        }
-
         const caction_type cact_typ = is_riposte ? CACT_RIPOSTE : CACT_MELEE;
         if (weapon)
         {
@@ -876,6 +869,11 @@ static void _handle_spectral_brand(actor &attacker, const actor &defender)
         return;
     attacker.triggered_spectral = true;
     spectral_weapon_fineff::schedule(attacker, defender);
+}
+
+int melee_attack::roll_delay() const
+{
+    return you.attack_delay_with(nullptr, true, weapon).roll();
 }
 
 bool melee_attack::handle_phase_end()

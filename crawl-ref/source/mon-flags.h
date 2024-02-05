@@ -215,8 +215,8 @@ enum monster_flag_type : uint64_t
     /// Was in view during previous turn.
     MF_WAS_IN_VIEW        = BIT(10),
 
-    /// Created as a member of a band
-    MF_BAND_MEMBER        = BIT(11),
+    /// Created as a member of a band (and not the leader)
+    MF_BAND_FOLLOWER      = BIT(11),
     /// Monter has been pacified
     MF_PACIFIED           = BIT(12),
     /// Consider this monster to have MH_UNDEAD holiness, regardless
@@ -282,6 +282,8 @@ enum monster_flag_type : uint64_t
     MF_JUST_SLEPT         = BIT(37),
     /// possibly got piety with TSO
     MF_TSO_SEEN           = BIT(38),
+
+    // MF_BAND_LEADER      = BIT(40) // Created as the leader of a band
 };
 DEF_BITFIELD(monster_flags_t, monster_flag_type);
 

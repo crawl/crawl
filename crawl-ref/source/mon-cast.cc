@@ -7248,6 +7248,11 @@ static monster* _find_ally_to_throw(const monster &mons)
         if (throwee->is_constricted())
             continue;
 
+        // Don't try to throw tentacles or their parts.
+        // Both too big and too easy to disconnect.
+        if (mons_is_tentacle_or_tentacle_segment(throwee->type))
+            continue;
+
         // otherwise throw whoever's furthest from our target.
         const int dist = grid_distance(throwee->pos(), foe->pos());
         if (dist > furthest_dist)

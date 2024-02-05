@@ -376,8 +376,6 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
     // TODO: does this really have to depend on `you.time_taken`?  In basic
     // cases at least, `you.time_taken` is just `player_speed()`. See
     // `_prep_input`.
-    // We could simplify some code elsewhere if we fixed this,
-    // e.g. cast_manifold_assault().
     return rv::max(div_rand_round(attk_delay * you.time_taken, BASELINE_DELAY),
                    random_var(1));
 }

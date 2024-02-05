@@ -1571,6 +1571,10 @@ crystal_wall_yellow DNGN_CRYSTAL_YELLOW
 crystal_wall_white DNGN_CRYSTAL_WHITE
 
 %sdir dngn/wall
+crystal_wall_zot_0 CRYSTAL_WALL_ZOT
+crystal_wall_zot_1
+crystal_wall_zot_2
+
 emerald1 WALL_EMERALD
 emerald2
 emerald3

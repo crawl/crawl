@@ -363,7 +363,7 @@ void maybe_mons_speaks(monster* mons)
     if (mons->wont_attack())
         chance *= 15;
     else if (!mons_is_unique(mons->type)
-             && testbits(mons->flags, MF_BAND_MEMBER))
+             && testbits(mons->flags, MF_BAND_FOLLOWER))
     {
         // Band members are a lot less likely to speak, since there's
         // a lot of them. Except for uniques.

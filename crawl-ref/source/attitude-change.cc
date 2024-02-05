@@ -353,11 +353,7 @@ void gozag_set_bribe(monster* traitor)
     if (bribability <= 0 || traitor->friendly() || traitor->is_summoned())
         return;
 
-    const monster* leader =
-        traitor->props.exists(BAND_LEADER_KEY)
-        ? monster_by_mid(traitor->props[BAND_LEADER_KEY].get_int())
-        : nullptr;
-
+    const monster* leader = traitor->get_band_leader();
     if (leader)
     {
         if (leader->has_ench(ENCH_FRIENDLY_BRIBED)

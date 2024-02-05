@@ -774,9 +774,6 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (mon->mindex() >= MAX_MONSTERS - 30)
         return mon;
 
-    if (band_size > 1)
-        mon->flags |= MF_BAND_MEMBER;
-
     const bool priest = mon->is_priest();
 
     mgen_data band_template = mg;
@@ -806,8 +803,8 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
         if (monster *member = _place_monster_aux(band_template, mon, place))
         {
-            member->flags |= MF_BAND_MEMBER;
-            member->props[BAND_LEADER_KEY].get_int() = mon->mid;
+            member->flags |= MF_BAND_FOLLOWER;
+            member->set_band_leader(*mon);
             member->set_originating_map(mon->originating_map());
 
             // Priestly band leaders should have an entourage of the

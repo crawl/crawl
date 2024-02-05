@@ -810,7 +810,7 @@ void treant_release_fauna(monster& mons)
 
         if (fauna)
         {
-            fauna->props[BAND_LEADER_KEY].get_int() = mons.mid;
+            fauna->set_band_leader(mons);
 
             // Give released fauna the same summon duration as their 'parent'
             if (abj.ench != ENCH_NONE)

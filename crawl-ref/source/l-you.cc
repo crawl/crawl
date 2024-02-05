@@ -785,10 +785,10 @@ static int l_you_abils(lua_State *ls)
 {
     lua_newtable(ls);
 
-    vector<const char *>abils = get_ability_names();
+    vector<string>abils = get_ability_names();
     for (int i = 0, size = abils.size(); i < size; ++i)
     {
-        lua_pushstring(ls, abils[i]);
+        lua_pushstring(ls, abils[i].c_str());
         lua_rawseti(ls, -2, i + 1);
     }
     return 1;
@@ -830,7 +830,7 @@ static int l_you_abil_table(lua_State *ls)
     {
         buf[0] = tal.hotkey;
         lua_pushstring(ls, buf);
-        lua_pushstring(ls, ability_name(tal.which));
+        lua_pushstring(ls, ability_name(tal.which).c_str());
         lua_rawset(ls, -3);
     }
     return 1;

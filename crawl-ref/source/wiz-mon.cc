@@ -273,8 +273,6 @@ void debug_list_monsters()
         {
             continue;
         }
-        if (mi->flags & MF_PACIFIED)
-            exp /= 2;
 
         total_adj_exp += exp;
     }

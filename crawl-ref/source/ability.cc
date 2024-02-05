@@ -1210,14 +1210,14 @@ talent get_talent(ability_type ability, bool check_confused)
     return result;
 }
 
-const char* ability_name(ability_type ability)
+string ability_name(ability_type ability)
 {
     return get_ability_def(ability).name;
 }
 
-vector<const char*> get_ability_names()
+vector<string> get_ability_names()
 {
-    vector<const char*> result;
+    vector<string> result;
     for (const talent &tal : your_talents(false))
         result.push_back(ability_name(tal.which));
     return result;
@@ -1617,12 +1617,12 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         vector<text_pattern> &actions = Options.confirm_action;
         if (!actions.empty())
         {
-            const char* name = ability_name(abil.ability);
+            string name = ability_name(abil.ability);
             for (const text_pattern &action : actions)
             {
                 if (action.matches(name))
                 {
-                    string prompt = "Really use " + string(name) + "?";
+                    string prompt = "Really use " + name + "?";
                     if (!yesno(prompt.c_str(), false, 'n'))
                     {
                         canned_msg(MSG_OK);
@@ -2276,7 +2276,7 @@ bool activate_talent(const talent& tal, dist *target)
         args.needs_path = !testbits(abil.flags, abflag::target);
         args.top_prompt = make_stringf("%s: <w>%s</w>",
                                        is_targeted ? "Aiming" : "Activating",
-                                       ability_name(abil.ability));
+                                       ability_name(abil.ability).c_str());
         targeter_beam* beamfunc = dynamic_cast<targeter_beam*>(hitfunc.get());
         if (beamfunc && beamfunc->beam.hit > 0 && !beamfunc->beam.is_explosion)
             args.get_desc_func = bind(desc_beam_hit_chance, placeholders::_1, hitfunc.get());
@@ -4153,7 +4153,7 @@ void swap_ability_slots(int index1, int index2, bool silent)
     if (!silent)
     {
         mprf_nocap("%c - %s", index_to_letter(index2),
-                   ability_name(you.ability_letter_table[index2]));
+                   ability_name(you.ability_letter_table[index2]).c_str());
     }
 
 }

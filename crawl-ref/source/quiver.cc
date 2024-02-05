@@ -1559,7 +1559,7 @@ namespace quiver
             }
             else
 #endif
-                qdesc.cprintf("%s", ability_name(ability));
+                qdesc.cprintf("%s", ability_name(ability).c_str());
 
             if (is_card_ability(ability))
                 qdesc.cprintf(" %s", nemelex_card_text(ability).c_str());
