@@ -283,8 +283,7 @@ enum monster_flag_type : uint64_t
     /// possibly got piety with TSO
     MF_TSO_SEEN           = BIT(38),
 
-    /// Created as the leader of a band
-    MF_BAND_LEADER        = BIT(40)
+    // MF_BAND_LEADER      = BIT(40) // Created as the leader of a band
 };
 DEF_BITFIELD(monster_flags_t, monster_flag_type);
 

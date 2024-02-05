@@ -6405,32 +6405,21 @@ bool monster::angered_by_attacks() const
 
 bool monster::is_band_follower_of(const monster& leader) const
 {
-    if (!testbits(flags, MF_BAND_FOLLOWER)
-        || !props.exists(BAND_LEADER_KEY))
-    {
+    if (!testbits(flags, MF_BAND_FOLLOWER) || !props.exists(BAND_LEADER_KEY))
         return false;
-    }
 
     return leader.mid == static_cast<mid_t>(props[BAND_LEADER_KEY].get_int());
 }
 
 bool monster::is_band_leader_of(const monster& follower) const
 {
-    // Check if we're a leader of anyone at all
-    if (!testbits(flags, MF_BAND_LEADER))
-        return false;
-
     return follower.is_band_follower_of(*this);
 }
 
 monster* monster::get_band_leader() const
 {
-    // Not a band follower
-    if (!testbits(flags, MF_BAND_FOLLOWER)
-        || !props.exists(BAND_LEADER_KEY))
-    {
+    if (!testbits(flags, MF_BAND_FOLLOWER) || !props.exists(BAND_LEADER_KEY))
         return nullptr;
-    }
 
     // Return our leader (if they still exist on this floor)
     mid_t leader_mid = static_cast<mid_t>(props[BAND_LEADER_KEY].get_int());
