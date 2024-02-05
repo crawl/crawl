@@ -3307,26 +3307,52 @@ static void _display_tohit()
 #endif
 }
 
+static int _delay_for(const item_def *weapon)
+{
+    if (!weapon || !is_range_weapon(*weapon))
+        return you.attack_delay_with(nullptr, true, weapon).expected();
+    item_def fake_proj;
+    populate_fake_projectile(*weapon, fake_proj);
+    return you.attack_delay_with(&fake_proj, true, weapon).expected();
+}
+
+static bool _at_min_delay(const item_def *weapon)
+{
+    return weapon
+           && you.skill(item_attack_skill(*weapon))
+              >= weapon_min_delay_skill(*weapon);
+}
+
+static bool _at_min_delay(const item_def *primary,
+                          const item_def *offhand,
+                          int primary_delay, int offhand_delay)
+{
+    const bool primary_mindelayed = _at_min_delay(primary);
+    if (!offhand)
+        return primary_mindelayed;
+
+    const bool offhand_mindelayed = _at_min_delay(offhand);
+    return primary_mindelayed && offhand_mindelayed
+        || primary_delay >= offhand_delay && primary_mindelayed
+        || offhand_delay >= primary_delay && offhand_mindelayed;
+}
+
 /**
  * Print a message indicating the player's attack delay with their current
- * weapon (if applicable).
+ * weapon(s) (if applicable).
  */
-static void _display_attack_delay()
+static void _display_attack_delay(const item_def *offhand)
 {
     const item_def* weapon = you.weapon();
-    int delay;
-    if (weapon && is_range_weapon(*weapon))
-    {
-        item_def fake_proj;
-        populate_fake_projectile(*weapon, fake_proj);
-        delay = you.attack_delay(&fake_proj).expected();
-    }
-    else
-        delay = you.attack_delay(nullptr).expected();
+    const int primary_delay = _delay_for(weapon);
+    const int offhand_delay = offhand ? _delay_for(offhand) : -1;
 
-    const bool at_min_delay = weapon
-                              && you.skill(item_attack_skill(*weapon))
-                                 >= weapon_min_delay_skill(*weapon);
+    const bool at_min_delay = _at_min_delay(weapon, offhand,
+                                            primary_delay, offhand_delay);
+
+    // Assume that we never have a shield penalty with an offhand weapon,
+    // and we only have an armour penalty with the offhand if we do with
+    // the primary.
     const bool shield_penalty = you.adjusted_shield_penalty(2) > 0;
     const bool armour_penalty = is_slowed_by_armour(weapon)
                                 && you.adjusted_body_armour_penalty(2) > 0;
@@ -3342,7 +3368,7 @@ static void _display_attack_delay()
     }
 
     mprf("Your attack delay is about %.1f%s%s.",
-         delay / 10.0f,
+         max(primary_delay, offhand_delay) / 10.0f,
          at_min_delay ?
             " (and cannot be improved with additional weapon skill)" : "",
          penalty_msg.c_str());
@@ -3352,9 +3378,8 @@ static void _display_attack_delay()
  * Print a message listing double the player's best-case damage with their current
  * weapon (if applicable), or with unarmed combat (if not).
  */
-static void _display_damage_rating()
+static void _display_damage_rating(const item_def *weapon)
 {
-    const item_def *weapon = you.weapon();
     string weapon_name;
     if (weapon)
         weapon_name = weapon->name(DESC_YOUR);
@@ -3403,10 +3428,13 @@ void display_char_status()
     if (!cinfo.empty())
         mpr(cinfo);
 
+    const item_def* offhand = you.offhand_weapon();
     _display_movement_speed();
     _display_tohit();
-    _display_attack_delay();
-    _display_damage_rating();
+    _display_attack_delay(offhand);
+    _display_damage_rating(you.weapon());
+    if (offhand)
+        _display_damage_rating(offhand);
 
     // Display base attributes, if necessary.
     if (innate_stat(STAT_STR) != you.strength()
