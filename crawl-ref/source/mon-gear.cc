@@ -2327,7 +2327,6 @@ void give_apostle_equipment(monster* apostle)
     ASSERT(apostle->type == MONS_ORC_APOSTLE);
 
     int pow = apostle->props[APOSTLE_POWER_KEY].get_int();
-    mprf("Pow: %d", pow);
 
     switch (static_cast<apostle_type>(apostle->props[APOSTLE_TYPE_KEY].get_int()))
     {
