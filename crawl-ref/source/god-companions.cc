@@ -9,6 +9,7 @@
 
 #include <algorithm>
 
+#include "ability.h"
 #include "act-iter.h"
 #include "attitude-change.h"
 #include "branch.h"
@@ -22,6 +23,7 @@
 #include "fineff.h"
 #include "ghost.h"
 #include "items.h"
+#include "macro.h"
 #include "message.h"
 #include "mon-death.h"
 #include "mon-gear.h"
@@ -717,7 +719,15 @@ void win_apostle_challenge(monster& apostle)
     mprf(MSGCH_GOD, "Beogh will allow you to induct %s into your service.",
          apostle.name(DESC_THE, true).c_str());
 
-    you.duration[DUR_BEOGH_CAN_ANNOINT] = random_range(20, 30) * BASELINE_DELAY;
+    you.duration[DUR_BEOGH_CAN_ANNOINT] = random_range(30, 45) * BASELINE_DELAY;
+
+    // Remind the player how to do this, if they don't already have an apostle
+    if (companion_list.empty())
+    {
+        mprf("(press <w>%c</w> on the <w>%s</w>bility menu to recruit an apostle)",
+                get_talent(ABIL_BEOGH_RECRUIT_APOSTLE, false).hotkey,
+                command_to_string(CMD_USE_ABILITY).c_str());
+    }
 
     // Remove the rest of the apostle's band
     for (monster_iterator mi; mi; ++mi)
