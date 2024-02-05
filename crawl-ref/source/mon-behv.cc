@@ -1264,24 +1264,8 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (!msg.empty() && mon->visible_to(&you))
         mons_speaks_msg(mon, msg, MSGCH_TALK, silenced(mon->pos()));
 
-    if (mons_offers_beogh_conversion_now(*mon))
-    {
-        const bool first = !you.attribute[ATTR_SEEN_BEOGH];
-        if (first || one_chance_in(10))
-        {
-            mons_speaks_msg(mon, getSpeakString("orc_priest_preaching"),
-                            MSGCH_TALK);
-            if (first)
-            {
-                ASSERT_RANGE(get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey,
-                             'A', 'z' + 1);
-                mprf("(press <w>%c</w> on the <w>%s</w>bility menu to convert to Beogh)",
-                     get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey,
-                     command_to_string(CMD_USE_ABILITY).c_str());
-                you.attribute[ATTR_SEEN_BEOGH] = 1;
-            }
-        }
-    }
+    if (one_chance_in(10) && mons_offers_beogh_conversion_now(*mon))
+        mons_speaks_msg(mon, getSpeakString("orc_priest_preaching"), MSGCH_TALK);
 
     ASSERT(!crawl_state.game_is_arena()
            || mon->foe != MHITYOU && mon->target != you.pos());

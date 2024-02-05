@@ -509,6 +509,8 @@ void player_reacts_to_monsters()
     _update_cowardice();
     if (you_worship(GOD_USKAYAW))
         _handle_uskayaw_time(you.time_taken);
+
+    announce_beogh_conversion_offer();
 }
 
 static bool _check_recite()
