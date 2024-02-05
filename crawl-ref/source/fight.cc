@@ -341,13 +341,13 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             return false;
         }
 
-        if (!attk.attack())
-        {
-            // Attack was cancelled or unsuccessful...
-            if (attk.cancel_attack)
-                you.turn_is_over = false;
+        const bool success = attk.attack();
+        if (attk.cancel_attack)
+            you.turn_is_over = false;
+        else
+            you.time_taken = attk.roll_delay();
+        if (!success)
             return !attk.cancel_attack;
-        }
 
         if (did_hit)
             *did_hit = attk.did_hit;

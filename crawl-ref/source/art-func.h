@@ -1696,10 +1696,6 @@ static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
          attacker->name(DESC_THE).c_str(),
          attacker->is_player() ? "" : "s");
 
-    // Save the time taken by the player before slicing, was set by the
-    // melee_attack that called us or left over from the player's previous turn
-    unwind_var<int> initial_time(you.time_taken);
-
     shuffle_array(targets);
     const size_t max_targets = 4;
     for (size_t i = 0; i < max_targets && i < targets.size(); i++)
