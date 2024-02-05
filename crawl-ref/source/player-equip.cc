@@ -222,9 +222,10 @@ void equip_effect(equipment_type slot, int item_slot, bool unmeld, bool msg)
 
     identify_item(item);
 
+    //TODO handle offhand here?
     if (slot == EQ_WEAPON)
         _equip_weapon_effect(item, msg, unmeld);
-    else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
+    else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR && eq != EQ_WEAPON)
         _equip_armour_effect(item, unmeld, slot);
     else if (slot >= EQ_FIRST_JEWELLERY && slot <= EQ_LAST_JEWELLERY)
         _equip_jewellery_effect(item, unmeld, slot);
@@ -242,9 +243,10 @@ void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg)
 
     const interrupt_block block_meld_interrupts(meld);
 
+    //TODO handle offhand here?
     if (slot == EQ_WEAPON)
         _unequip_weapon_effect(item, msg, meld);
-    else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
+    else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR && eq != EQ_WEAPON)
         _unequip_armour_effect(item, meld, slot);
     else if (slot >= EQ_FIRST_JEWELLERY && slot <= EQ_LAST_JEWELLERY)
         _unequip_jewellery_effect(item, msg, meld, slot);
