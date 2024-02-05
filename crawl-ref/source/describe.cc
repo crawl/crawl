@@ -5885,6 +5885,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     if (mons_species(mi.type) == MONS_SERPENT_OF_HELL)
         db_name += " " + serpent_of_hell_flavour(mi.type);
+    if (mi.type == MONS_ORC_APOSTLE && mi.attitude == ATT_FRIENDLY)
+        db_name = "orc apostle follower";
 
     // This is somewhat hackish, but it's a good way of over-riding monsters'
     // descriptions in Lua vaults by using MonPropsMarker. This is also the

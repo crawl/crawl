@@ -900,9 +900,6 @@ string monster_info::db_name() const
                          ignore_flags);
     }
 
-    if (type == MONS_ORC_APOSTLE && attitude == ATT_FRIENDLY)
-        return "orc apostle follower";
-
     if (type == MONS_SENSED)
         return get_monster_data(base_type)->name;
 
