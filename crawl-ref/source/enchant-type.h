@@ -30,7 +30,9 @@ enum enchant_type
     ENCH_SHAPESHIFTER,
     ENCH_TP,
     ENCH_SLEEP_WARY,
+#if TAG_MAJOR_VERSION == 34
     ENCH_SUBMERGED,
+#endif
     ENCH_SHORT_LIVED,
     ENCH_PARALYSIS,
     ENCH_SICK,

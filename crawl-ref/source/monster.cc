@@ -263,14 +263,6 @@ bool monster::swimming() const
     return feat_is_watery(grid) && mons_primary_habitat(*this) == HT_WATER;
 }
 
-bool monster::submerged() const
-{
-    // FIXME, switch to 4.1's MF_SUBMERGED system which is much cleaner.
-    // Can't find any reference to MF_SUBMERGED anywhere. Don't know what
-    // this means. - abrahamwl
-    return has_ench(ENCH_SUBMERGED);
-}
-
 bool monster::extra_balanced_at(const coord_def p) const
 {
     const dungeon_feature_type grid = env.grid(p);
@@ -2129,9 +2121,6 @@ static string _mon_special_name(const monster& mon, description_level_type desc,
     if (desc == DESC_NONE)
         return "";
 
-    const bool arena_submerged = crawl_state.game_is_arena() && !force_seen
-                                     && mon.submerged();
-
     if (mon.type == MONS_NO_MONSTER)
         return "DEAD MONSTER";
     else if (mon.mid == MID_YOU_FAULTLESS)
@@ -2140,7 +2129,7 @@ static string _mon_special_name(const monster& mon, description_level_type desc,
         return _invalid_monster_str(mon.type);
 
     // Handle non-visible case first.
-    if (!force_seen && !mon.observable() && !arena_submerged)
+    if (!force_seen && !mon.observable())
     {
         switch (desc)
         {
@@ -2601,9 +2590,6 @@ bool monster::fumbles_attack()
 
         return true;
     }
-
-    if (submerged())
-        return true;
 
     return false;
 }
@@ -5001,7 +4987,7 @@ bool monster::visible_to(const actor *looker) const
     const bool seen_by_att = looker->is_player() && (friendly() || pacified());
 
     const bool vis = seen_by_att || physically_vis;
-    return vis && (this == looker || !submerged());
+    return vis;
 }
 
 bool monster::near_foe() const
@@ -5310,13 +5296,6 @@ void monster::apply_location_effects(const coord_def &oldpos,
 
     if (alive())
         mons_check_pool(this, pos(), killer, killernum);
-
-    if (alive()
-        && has_ench(ENCH_SUBMERGED)
-        && !monster_can_submerge(this, env.grid(pos())))
-    {
-        del_ench(ENCH_SUBMERGED);
-    }
 
     if (env.grid(pos()) == DNGN_BINDING_SIGIL)
         trigger_binding_sigil(*this);

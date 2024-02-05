@@ -71,8 +71,7 @@ enum monclass_flag_type : uint64_t
     /// monster digs through rock
     M_BURROWS           = BIT(19),
 
-    /// monster can submerge
-    M_SUBMERGES         = BIT(20),
+                         //BIT(20),
 
     /// monster is a unique
     M_UNIQUE            = BIT(21),

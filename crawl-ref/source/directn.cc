@@ -422,14 +422,14 @@ static cglyph_t _get_ray_glyph(const coord_def& pos, int colour, int glych,
 static bool _mon_exposed_in_water(const monster* mon)
 {
     return env.grid(mon->pos()) == DNGN_SHALLOW_WATER && !mon->airborne()
-           && !mon->submerged() && !cloud_at(mon->pos());
+           && !cloud_at(mon->pos());
 }
 
 static bool _mon_exposed_in_cloud(const monster* mon)
 {
     return cloud_at(mon->pos())
            && is_opaque_cloud(cloud_at(mon->pos())->type)
-           && !mon->submerged() && !mon->is_insubstantial();
+           && !mon->is_insubstantial();
 }
 
 static bool _mon_exposed(const monster* mon)
@@ -2763,10 +2763,6 @@ static bool _mons_is_valid_target(const monster* mon, targ_mode_type mode,
 {
     // Monsters that are no threat to you don't count as monsters.
     if (!mons_is_threatening(*mon) && !mons_class_is_test(mon->type))
-        return false;
-
-    // Don't target submerged monsters.
-    if (mon->submerged())
         return false;
 
     // Don't usually target unseen monsters...

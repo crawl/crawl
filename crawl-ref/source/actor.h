@@ -79,7 +79,6 @@ public:
     virtual bool blink_to(const coord_def &c, bool quiet = false) = 0;
 
     virtual bool      swimming() const = 0;
-    virtual bool      submerged() const = 0;
     virtual bool      floundering() const = 0;
 
     // Returns true if the actor is exceptionally well balanced.

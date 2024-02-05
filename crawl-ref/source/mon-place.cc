@@ -202,31 +202,6 @@ bool monster_habitable_grid(monster_type mt,
     return false;
 }
 
-// Returns true if the monster can submerge in the given grid.
-bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
-{
-    if (!mon->is_habitable_feat(feat))
-        return false;
-    if (mons_class_flag(mon->type, M_SUBMERGES))
-    {
-        switch (mons_habitat(*mon))
-        {
-        case HT_WATER:
-        case HT_AMPHIBIOUS:
-            return feat_is_watery(feat);
-        case HT_LAVA:
-        case HT_AMPHIBIOUS_LAVA:
-            return feat == DNGN_LAVA;
-        case HT_LAND:
-            return feat == DNGN_FLOOR;
-        default:
-            return false;
-        }
-    }
-    else
-        return false;
-}
-
 static int _ood_fuzzspan(level_id &place)
 {
     if (place.branch != BRANCH_DUNGEON || place.depth >= 5)
@@ -1297,9 +1272,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->hit_points     *= mon->blob_size;
         mon->max_hit_points *= mon->blob_size;
     }
-
-    if (monster_can_submerge(mon, env.grid(fpos)) && !summoned)
-        mon->add_ench(ENCH_SUBMERGED);
 
     // Set attitude, behaviour and target.
     mon->attitude  = ATT_HOSTILE;

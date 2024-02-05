@@ -223,25 +223,6 @@ void monster_shout(monster* mons, int shout)
 
         strip_channel_prefix(message, channel);
 
-        // Monster must come up from being submerged if it wants to shout.
-        // XXX: this code is probably unreachable now?
-        if (mons->submerged())
-        {
-            if (!mons->del_ench(ENCH_SUBMERGED))
-            {
-                // Couldn't unsubmerge.
-                return;
-            }
-
-            if (you.can_see(*mons))
-            {
-                mons->seen_context = SC_FISH_SURFACES;
-
-                // Give interrupt message before shout message.
-                handle_seen_interrupt(mons);
-            }
-        }
-
         if (channel != MSGCH_TALK_VISUAL || you.can_see(*mons))
         {
             // Otherwise it can move away with no feedback.

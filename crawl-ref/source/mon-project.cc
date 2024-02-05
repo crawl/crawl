@@ -375,9 +375,7 @@ bool iood_act(monster& mon, bool no_trail)
     const actor *foe = mon.get_foe();
     // If the target is gone, the orb continues on a ballistic course since
     // picking a new one would require intelligence.
-
-    // IOODs can't home in on a submerged creature.
-    if (foe && !foe->submerged())
+    if (foe)
     {
         const coord_def target = foe->pos();
         float dx = target.x - x;
@@ -505,17 +503,16 @@ move_again:
             }
         }
 
-        if (mons && (mons->submerged() || mons->type == MONS_BATTLESPHERE))
+        // TODO make sure this code is still sensible
+        // now that submerge has been removed
+        if (mons && mons->type == MONS_BATTLESPHERE)
         {
-            // Try to swap with the submerged creature.
             if (mon.swap_with(mons))
             {
-                dprf("iood: Swapping with a submerged monster.");
                 return false;
             }
             else // if swap fails, move ahead
             {
-                dprf("iood: Boosting above a submerged monster (can't swap).");
                 mon.lose_energy(EUT_MOVE);
                 goto move_again;
             }

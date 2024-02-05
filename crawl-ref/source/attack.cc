@@ -96,7 +96,6 @@ bool attack::handle_phase_damaged()
     // react to damage.
     if (defender->can_bleed()
         && !defender->is_summoned()
-        && !defender->submerged()
         && in_bounds(defender->pos())
         && !simu)
     {

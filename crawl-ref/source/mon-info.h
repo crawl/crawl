@@ -64,8 +64,8 @@ enum monster_info_flags
 #endif
     MB_SHAPESHIFTER,
     MB_CHAOTIC,
-    MB_SUBMERGED,
 #if TAG_MAJOR_VERSION == 34
+    MB_SUBMERGED,
     MB_BLEEDING,
 #endif
 #if TAG_MAJOR_VERSION == 34

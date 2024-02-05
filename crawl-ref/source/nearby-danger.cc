@@ -207,7 +207,7 @@ static void _announce_monsters(string announcement, vector<monster*> &visible)
 }
 
 // Return all nearby monsters in range (default: LOS) that the player
-// is able to recognise as being monsters (i.e. no submerged creatures.)
+// is able to recognise as being monsters
 //
 // want_move       (??) Somehow affects what monsters are considered dangerous
 // just_check      Return zero or one monsters only
@@ -240,7 +240,6 @@ vector<monster* > get_nearby_monsters(bool want_move,
         {
             if (mon->alive()
                 && (!require_visible || mon->visible_to(&you))
-                && !mon->submerged()
                 && (!dangerous_only || !mons_is_safe(mon, want_move,
                                                      consider_user_options,
                                                      check_dist)))
