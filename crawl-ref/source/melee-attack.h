@@ -176,6 +176,8 @@ private:
     bool _vamp_wants_blood_from_monster(const monster* mon);
 
     bool can_reach();
+
+    bool launched_offhand_attack = false;
 };
 
 string aux_attack_desc(unarmed_attack_type unat, int force_damage = -1);
