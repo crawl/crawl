@@ -78,7 +78,7 @@ int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random)
              && (mid_t)you.props[BULLSEYE_TARGET_KEY].get_int()
                  == defender->mid)
     {
-        modifiers += maybe_random_div(
+        modifiers += maybe_random2_div(
                          calc_spell_power(SPELL_DIMENSIONAL_BULLSEYE),
                          BULLSEYE_TO_HIT_DIV, random);
     }

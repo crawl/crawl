@@ -174,7 +174,7 @@ int attack::calc_pre_roll_to_hit(bool random)
     {
         mhit = 15 + (you.dex() / 2);
         // fighting contribution
-        mhit += maybe_random_div(you.skill(SK_FIGHTING, 100), 100, random);
+        mhit += maybe_random2_div(you.skill(SK_FIGHTING, 100), 100, random);
 
         // weapon skill contribution
         if (using_weapon())
@@ -184,19 +184,19 @@ int attack::calc_pre_roll_to_hit(bool random)
                 if (you.skill(wpn_skill) < 1 && player_in_a_dangerous_place() && random)
                     xom_is_stimulated(10); // Xom thinks that is mildly amusing.
 
-                mhit += maybe_random_div(you.skill(wpn_skill, 100), 100,
+                mhit += maybe_random2_div(you.skill(wpn_skill, 100), 100,
                                          random);
             }
         }
         else if (you.form_uses_xl())
-            mhit += maybe_random_div(you.experience_level * 100, 100, random);
+            mhit += maybe_random2_div(you.experience_level * 100, 100, random);
         else
         {
             // UC gets extra acc to compensate for lack of weapon enchantment.
             if (wpn_skill == SK_UNARMED_COMBAT)
                 mhit += 6;
 
-            mhit += maybe_random_div(you.skill(wpn_skill, 100), 100,
+            mhit += maybe_random2_div(you.skill(wpn_skill, 100), 100,
                                      random);
         }
 
