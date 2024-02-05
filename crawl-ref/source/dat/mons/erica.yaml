@@ -3,14 +3,14 @@ glyph: {char: "x", colour: lightmagenta}
 flags: [speaks, warm_blood, unique, female, no_skeleton]
 xp_mult: 20
 species: octopode
-will: 60
+will: 40
 attacks:
- - {type: hit, damage: 15}
- - {type: constrict, flavour: crush, damage: 4}
+ - {type: hit, damage: 11}
+ - {type: constrict, flavour: crush, damage: 3}
 hd: 9
 hp_10x: 630
 ac: 0
-ev: 14
+ev: 13
 spells: erica
 has_corpse: true
 shout: shout

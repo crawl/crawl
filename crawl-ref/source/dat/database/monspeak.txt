@@ -5665,7 +5665,7 @@ w:2
 %%%%
 _Maurice_common_
 
-VISUAL:@The_monster@ tries to hide in the shadows.
+VISUAL:@The_monster@ tries to stalk through the shadows.
 
 VISUAL:@The_monster@ lashes his vines and gnashes his teeth.
 
@@ -5675,7 +5675,7 @@ VISUAL:@The_monster@ lashes his vines and gnashes his teeth.
 %%%%
 _Maurice_medium_
 
-VISUAL:@The_monster@ looks sneaky.
+VISUAL:@The_monster@ looks lost in thought, consulting taken memories.
 
 @The_monster@ says, "Lost something?"
 
@@ -5706,7 +5706,7 @@ Maurice confused nonstealing
 w:70
 __NONE
 
-@The_monster@ makes a clumsy attempt to grab your valuables.
+@The_monster@ clumsily fails to latch onto your valuables.
 
 @The_monster@ fumbles for your pockets and misses.
 

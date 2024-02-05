@@ -3,7 +3,7 @@ glyph: {char: "f", colour: lightgreen}
 flags: [speaks, warm_blood, unique, fast_regen, male, no_skeleton, always_wand]
 xp_mult: 24
 species: vine_stalker
-will: 20
+will: 40
 attacks:
  - {type: hit, flavour: steal, damage: 9}
  - {type: bite, flavour: antimagic, damage: 9}
