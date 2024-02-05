@@ -1434,7 +1434,7 @@ string yred_cannot_light_torch_reason()
     else if (player_in_branch(BRANCH_BAZAAR) || player_in_branch(BRANCH_TROVE))
         return "There are no souls worth scouring here.";
 
-    if (you.props.exists(YRED_TORCH_USED_KEY))
+    if (!you.props.exists(YRED_TORCH_USED_KEY))
         return "";
 
     CrawlHashTable &levels = you.props[YRED_TORCH_USED_KEY].get_table();
