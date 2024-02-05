@@ -123,5 +123,7 @@ string extra_cloud_info(cloud_type cloud_type);
 string desc_resist(int level, int max = 1,
                    bool immune = false, bool allow_spacing = true);
 
+string player_species_name();
+
 /* Public for testing purposes only: do not use elsewhere. */
 string _monster_habitat_description(const monster_info& mi);

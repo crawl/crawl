@@ -1093,7 +1093,7 @@ void TilesFramework::_send_player(bool force_full)
                    "title");
     _update_int(force_full, c.wizard, you.wizard, "wizard");
     _update_int(force_full, c.explore, you.explore, "explore");
-    _update_string(force_full, c.species, species::name(you.species),
+    _update_string(force_full, c.species, player_species_name(),
                    "species");
     string god = "";
     if (you_worship(GOD_JIYVA))
