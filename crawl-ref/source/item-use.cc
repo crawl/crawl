@@ -1718,8 +1718,9 @@ static string _cant_wear_barding_reason(bool ignore_temporary)
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 {
 
+    const bool weapon = is_weapon(item);
     if ((item.base_type != OBJ_ARMOUR || you.has_mutation(MUT_NO_ARMOUR))
-        && (!you.has_mutation(MUT_WIELD_OFFHAND) || !is_weapon(item)))
+        && (!you.has_mutation(MUT_WIELD_OFFHAND) || !weapon))
     {
         if (verbose)
             mprf(MSGCH_PROMPT, "You can't wear that!");
@@ -1750,7 +1751,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
-    if (sub_type == ARM_BARDING)
+    if (!weapon && sub_type == ARM_BARDING)
     {
         const string reason = _cant_wear_barding_reason(ignore_temporary);
         if (reason == "")
@@ -1760,7 +1761,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
-    const bool offhand = is_offhand(item) || is_weapon(item);
+    const bool offhand = is_offhand(item) || weapon;
     if (you.get_mutation_level(MUT_MISSING_HAND) && offhand)
     {
         if (verbose)
@@ -1800,7 +1801,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
-    if (is_weapon(item))
+    if (weapon)
     {
         if (you.hands_reqd(item) != HANDS_ONE)
         {
