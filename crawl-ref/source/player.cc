@@ -7211,7 +7211,7 @@ bool player::has_usable_offhand() const
 {
     if (get_mutation_level(MUT_MISSING_HAND))
         return false;
-    if (shield())
+    if (shield() || offhand_weapon())
         return false;
 
     const item_def* wp = slot_item(EQ_WEAPON);
