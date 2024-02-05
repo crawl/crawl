@@ -508,9 +508,7 @@ move_again:
         if (mons && mons->type == MONS_BATTLESPHERE)
         {
             if (mon.swap_with(mons))
-            {
                 return false;
-            }
             else // if swap fails, move ahead
             {
                 mon.lose_energy(EUT_MOVE);
