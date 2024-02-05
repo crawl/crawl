@@ -1567,6 +1567,7 @@ bool melee_attack::player_aux_unarmed()
         // the player may be beating up a tentacle, but the main body
         // of the kraken still gets a chance to act and submerge
         // tentacles before we get here.
+        // This should no longer be relevant but I'm scared to remove it
         if (!defender->alive())
             return true;
 

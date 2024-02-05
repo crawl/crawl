@@ -259,7 +259,6 @@ public:
     bool     defined() const { return alive(); }
     bool     swimming() const override;
 
-    bool     submerged() const override;
     bool     can_drown() const;
     bool     floundering_at(const coord_def p) const;
     bool     floundering() const override;

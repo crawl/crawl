@@ -669,8 +669,7 @@ static void _xom_random_item(int sever)
 
 static bool _choose_mutatable_monster(const monster& mon)
 {
-    return mon.alive() && mon.can_safely_mutate()
-           && !mon.submerged();
+    return mon.alive() && mon.can_safely_mutate();
 }
 
 static bool _choose_enchantable_monster(const monster& mon)
@@ -1095,10 +1094,6 @@ bool swap_monsters(monster* m1, monster* m2)
 
     const bool mon1_caught = mon1.caught();
     const bool mon2_caught = mon2.caught();
-
-    // Make submerged monsters unsubmerge.
-    mon1.del_ench(ENCH_SUBMERGED);
-    mon2.del_ench(ENCH_SUBMERGED);
 
     mon1.swap_with(m2);
 

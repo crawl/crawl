@@ -703,9 +703,6 @@ tileidx_t tileidx_tentacle(const monster_info& mon)
 {
     ASSERT(mons_is_tentacle_or_tentacle_segment(mon.type));
 
-    // If the tentacle is submerged, we shouldn't even get here.
-    ASSERT(!mon.is(MB_SUBMERGED));
-
     // Get tentacle position.
     const coord_def t_pos = mon.pos;
     // No parent tentacle, or the connection to the head is unknown.

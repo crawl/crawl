@@ -518,7 +518,7 @@ void debug_mons_scan()
 
     if (in_bounds(you.pos()))
         if (const monster* m = monster_at(you.pos()))
-            if (!m->submerged() && !fedhas_passthrough(m))
+            if (!fedhas_passthrough(m))
             {
                 mprf(MSGCH_ERROR, "Error: player on same spot as monster: %s(%d)",
                       m->name(DESC_PLAIN, true).c_str(), m->mindex());

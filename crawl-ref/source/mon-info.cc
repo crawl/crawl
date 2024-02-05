@@ -242,66 +242,6 @@ static int quantise(int value, int stepsize)
     return value + stepsize - value % stepsize;
 }
 
-// Returns true if using a directional tentacle tile would leak
-// information the player doesn't have about a tentacle segment's
-// current position.
-static bool _tentacle_pos_unknown(const monster *tentacle,
-                                  const coord_def orig_pos)
-{
-    // We can see the segment, no guessing necessary.
-    if (!tentacle->submerged())
-        return false;
-
-    const coord_def t_pos = tentacle->pos();
-
-    // Checks whether there are any positions adjacent to the
-    // original tentacle that might also contain the segment.
-    for (adjacent_iterator ai(orig_pos); ai; ++ai)
-    {
-        if (*ai == t_pos)
-            continue;
-
-        if (!in_bounds(*ai))
-            continue;
-
-        if (you.pos() == *ai)
-            continue;
-
-        // If there's an adjacent deep water tile, the segment
-        // might be there instead.
-        if (env.grid(*ai) == DNGN_DEEP_WATER)
-        {
-            const monster *mon = monster_at(*ai);
-            if (mon && you.can_see(*mon))
-            {
-                // Could originate from the kraken.
-                if (mon->type == MONS_KRAKEN)
-                    return true;
-
-                // Otherwise, we know the segment can't be there.
-                continue;
-            }
-            return true;
-        }
-
-        if (env.grid(*ai) == DNGN_SHALLOW_WATER)
-        {
-            const monster *mon = monster_at(*ai);
-
-            // We know there's no segment there.
-            if (!mon)
-                continue;
-
-            // Disturbance in shallow water -> might be a tentacle.
-            if (mon->type == MONS_KRAKEN || mon->submerged())
-                return true;
-        }
-    }
-
-    // Using a directional tile leaks no information.
-    return false;
-}
-
 static void _translate_tentacle_ref(monster_info& mi, const monster* m,
                                     const string &key)
 {
@@ -315,8 +255,7 @@ static void _translate_tentacle_ref(monster_info& mi, const monster* m,
         // If the tentacle and the other segment are no longer adjacent
         // (distortion etc.), just treat them as not connected.
         if (adjacent(m->pos(), h_pos)
-            && !mons_is_zombified(*other)
-            && !_tentacle_pos_unknown(other, m->pos()))
+            && !mons_is_zombified(*other))
         {
             mi.props[key] = h_pos - m->pos();
         }
@@ -700,9 +639,6 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (m->known_chaos())
         mb.set(MB_CHAOTIC);
-
-    if (m->submerged())
-        mb.set(MB_SUBMERGED);
 
     if (m->type == MONS_DOOM_HOUND
         && (!m->props.exists(DOOM_HOUND_HOWLED_KEY) || !m->props[DOOM_HOUND_HOWLED_KEY])
@@ -1096,9 +1032,6 @@ string monster_info::common_name(description_level_type desc) const
 
     if (props.exists(HELPLESS_KEY))
         ss << "helpless ";
-
-    if (is(MB_SUBMERGED))
-        ss << "submerged ";
 
     if (type == MONS_SPECTRAL_THING && !is(MB_NAME_ZOMBIE) && !nocore)
         ss << "spectral ";

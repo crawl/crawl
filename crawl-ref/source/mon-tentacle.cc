@@ -287,9 +287,6 @@ static void _establish_connection(monster* tentacle,
 
             if (head->holiness() & MH_UNDEAD)
                 connect->flags |= MF_FAKE_UNDEAD;
-
-            if (monster_can_submerge(connect, env.grid(connect->pos())))
-                connect->add_ench(ENCH_SUBMERGED);
         }
         else
         {

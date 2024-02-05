@@ -242,6 +242,7 @@ void SubmergedTileBuffer::add(tileidx_t idx, int x, int y, int z, bool submerged
     int alpha_top = ghost ? 100 : 255;
     int alpha_bottom = ghost ? 0 : 40;
 
+    //TODO: this seems to be unreachable; see if it can be removed
     if (submerged)
     {
         m_below_water.add(idx, x, y, z, ox, oy, m_water_level, ymax,

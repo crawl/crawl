@@ -635,8 +635,7 @@ void move_player_to_grid(const coord_def& p, bool stepped)
     // Really must be clear.
     ASSERT(you.can_pass_through_feat(env.grid(p)));
 
-    // Better not be an unsubmerged monster either.
-    ASSERT(!monster_at(p) || monster_at(p)->submerged()
+    ASSERT(!monster_at(p)
            || fedhas_passthrough(monster_at(p))
            || mons_is_player_shadow(*monster_at(p))
            || mons_is_wrath_avatar(*monster_at(p)));
@@ -1209,8 +1208,7 @@ static bool _mons_inhibits_regen(const monster &m)
 {
     return mons_is_threatening(m)
                 && !m.wont_attack()
-                && !m.neutral()
-                && !m.submerged();
+                && !m.neutral();
 }
 
 /// Is the player's hp regeneration inhibited by nearby monsters?

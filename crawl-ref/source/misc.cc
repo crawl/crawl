@@ -50,9 +50,6 @@ void swap_with_monster(monster* mon_to_swap)
     const bool mon_caught = mon.caught();
     const bool you_caught = you.attribute[ATTR_HELD];
 
-    // If it was submerged, it surfaces first.
-    mon.del_ench(ENCH_SUBMERGED);
-
     mprf("You swap places with %s.", mon.name(DESC_THE).c_str());
 
     mon.move_to_pos(you.pos(), true, true);
