@@ -115,7 +115,7 @@ and spellcasters.
 Steel Elf
 
 Steel Elves forge bonds with weapons, which they can dual-wield, and with foes,
-which have a magnetic attraction to them.
+which have a magnetic attraction to them.
 %%%%
 Troll
 
