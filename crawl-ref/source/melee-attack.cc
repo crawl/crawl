@@ -165,17 +165,6 @@ bool melee_attack::handle_phase_attempted()
 
     if (attacker->is_player())
     {
-        // Set delay now that we know the attack won't be cancelled.
-        if (!is_riposte && !is_multihit && !cleaving
-            && wu_jian_attack == WU_JIAN_ATTACK_NONE)
-        {
-            const int delay = you.attack_delay_with(nullptr, true, weapon).roll();
-            if (is_off_hand)
-                you.time_taken = max(you.time_taken, delay);
-            else
-                you.time_taken = delay;
-        }
-
         const caction_type cact_typ = is_riposte ? CACT_RIPOSTE : CACT_MELEE;
         if (weapon)
         {
@@ -862,6 +851,12 @@ void melee_attack::launch_offhand_attack(item_def &offhand)
         attck.damage_brand = get_weapon_brand(offhand);
     attck.init_attack(SK_UNARMED_COMBAT, attack_number /*hm*/);
     attck.attack();
+}
+
+
+int melee_attack::roll_delay() const
+{
+    return you.attack_delay_with(nullptr, true, weapon).roll();
 }
 
 bool melee_attack::handle_phase_end()

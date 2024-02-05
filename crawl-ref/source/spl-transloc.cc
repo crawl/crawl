@@ -745,7 +745,7 @@ spret electric_charge(int powc, bool fail, const coord_def &target)
 
     // Normally this is 10 aut (times haste, chei etc), but slow weapons
     // take longer. Most relevant for low-skill players and Dark Maul.
-    you.time_taken = max(you.time_taken, base_delay);
+    you.time_taken = max(charge_atk.roll_delay(), base_delay);
 
     return spret::success;
 }
@@ -1276,7 +1276,6 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
     else
         mpr("Space momentarily warps into an impossible shape!");
 
-    const int initial_time = you.time_taken;
     const bool animate = (Options.use_animations & UA_BEAM) != UA_NONE;
 
     shuffle_array(targets);
@@ -1286,10 +1285,6 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
                                       : 1 + div_rand_round(pow, 100);
     for (size_t i = 0; i < max_targets && i < targets.size(); i++)
     {
-        // Somewhat hacky: reset attack delay before each attack so that only the final
-        // attack ends up actually setting time taken. (No quadratic effects.)
-        you.time_taken = initial_time;
-
         if (animate)
             _animate_manass_hit(targets[i]->pos());
 
@@ -1297,9 +1292,14 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
         atk.is_projected = true;
         atk.attack();
 
+        // Only apply delay once, not quadratically.
+        if (i == 0)
+            you.time_taken = atk.roll_delay();
+
         if (you.hp <= 0 || you.pending_revival)
             break;
     }
+
     if (animate)
         animation_delay(50, true);
 
