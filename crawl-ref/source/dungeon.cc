@@ -4432,6 +4432,19 @@ vault_placement *dgn_vault_at(coord_def p)
                                           : env.level_vaults[map_index].get();
 }
 
+vault_placement *dgn_find_layout()
+{
+    // n.b.: following placement code, this checks the tag "overwritable" to
+    // determine whether something is a layout. Weirdly, essentially no code
+    // checks the "layout" tag.
+    // Given these cases, it may be possible for there to be more than one
+    // layout, in which case, this will find the first.
+    for (const auto &vp : env.level_vaults)
+        if (vp && vp->map.is_overwritable_layout())
+            return vp.get();
+    return nullptr;
+}
+
 void dgn_seen_vault_at(coord_def p)
 {
     if (vault_placement *vp = dgn_vault_at(p))
