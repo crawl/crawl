@@ -5904,7 +5904,7 @@ int player::adjusted_body_armour_penalty(int scale) const
  */
 int player::adjusted_shield_penalty(int scale) const
 {
-    const item_def *shield_l = slot_item(EQ_OFFHAND, false);
+    const item_def *shield_l = shield();
     if (!shield_l)
         return 0;
 
