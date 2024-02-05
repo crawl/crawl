@@ -109,29 +109,6 @@ void tile::resize(int new_width, int new_height)
     m_pixels = new tile_colour[m_width * m_height];
 }
 
-void tile::flip_horizontal()
-{
-    for (int y = 0; y < m_height; y++)
-    {
-        for (int x = 0; x < m_width / 2; x++)
-        {
-            tile_colour &r_pixel = get_pixel(m_width - x - 1, y);
-            tile_colour &l_pixel = get_pixel(x,y);
-            tile_colour orig_l_pixel = l_pixel;
-
-            l_pixel.r = r_pixel.r;
-            l_pixel.g = r_pixel.g;
-            l_pixel.b = r_pixel.b;
-            l_pixel.a = r_pixel.a;
-
-            r_pixel.r = orig_l_pixel.r;
-            r_pixel.g = orig_l_pixel.g;
-            r_pixel.b = orig_l_pixel.b;
-            r_pixel.a = orig_l_pixel.a;
-        }
-    }
-}
-
 void tile::add_rim(const tile_colour &rim)
 {
     bool *flags = new bool[m_width * m_height];

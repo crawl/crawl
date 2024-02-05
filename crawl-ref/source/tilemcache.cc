@@ -247,27 +247,69 @@ mcache_monster::mcache_monster(const monster_info& mon)
 
     const item_def* mon_weapon = mon.inv[MSLOT_WEAPON].get();
     m_equ_tile = (mon_weapon != nullptr) ? tilep_equ_weapon(*mon_weapon) : 0;
-    if (!mons_class_wields_two_weapons(mon.type))
+    if (mons_class_wields_two_weapons(mon.type))
+    {
+        const item_def* mon_weapon2 = mon.inv[MSLOT_ALT_WEAPON].get();
+        if (mon_weapon2)
+        {
+            switch (tilep_equ_weapon(*mon_weapon2))
+            {
+                case TILEP_HAND1_DAGGER:
+                    m_shd_tile = TILEP_HAND2_DAGGER;
+                    break;
+                case TILEP_DAGGER_1:
+                    m_shd_tile = TILEP_HAND2_DAGGER_1;
+                    break;
+                case TILEP_HAND1_RAPIER:
+                    m_shd_tile = TILEP_HAND2_RAPIER;
+                    break;
+                case TILEP_RAPIER_1:
+                    m_shd_tile = TILEP_HAND2_RAPIER_1;
+                    break;
+                default:
+                case TILEP_HAND1_SHORT_SWORD_SLANT:
+                    m_shd_tile = TILEP_HAND2_SHORT_SWORD_SLANT;
+                    break;
+                case TILEP_SHORT_SWORD_SLANT_1:
+                    m_shd_tile = TILEP_HAND2_SHORT_SWORD_SLANT_1;
+                    break;
+                case TILEP_HAND1_GREAT_FLAIL:
+                    m_shd_tile = TILEP_HAND2_GREAT_FLAIL;
+                    break;
+                case TILEP_GREAT_FLAIL_1:
+                    m_shd_tile = TILEP_HAND2_GREAT_FLAIL_1;
+                    break;
+                case TILEP_HAND1_GREAT_MACE:
+                    m_shd_tile = TILEP_HAND2_GREAT_MACE;
+                    break;
+                case TILEP_GREAT_MACE_1:
+                    m_shd_tile = TILEP_HAND2_GREAT_MACE_1;
+                    break;
+                case TILEP_HAND1_GIANT_CLUB:
+                    m_shd_tile = TILEP_HAND2_GIANT_CLUB;
+                    break;
+                case TILEP_HAND1_GIANT_CLUB_SLANT:
+                    m_shd_tile = TILEP_HAND2_GIANT_CLUB_SLANT;
+                    break;
+                case TILEP_HAND1_GIANT_CLUB_SPIKE:
+                    m_shd_tile = TILEP_HAND2_GIANT_CLUB_SPIKE;
+                    break;
+                case TILEP_HAND1_GIANT_CLUB_SPIKE_SLANT:
+                    m_shd_tile = TILEP_HAND2_GIANT_CLUB_SPIKE_SLANT;
+                    break;
+                case TILEP_HAND1_GIANT_CLUB_PLAIN:
+                    m_shd_tile = TILEP_HAND2_GIANT_CLUB_PLAIN;
+                    break;
+            };
+        }
+        else
+            m_shd_tile = 0;
+    }
+    else
     {
         const item_def* mon_shield = mon.inv[MSLOT_SHIELD].get();
         m_shd_tile = (mon_shield != nullptr) ? tilep_equ_shield(*mon_shield) : 0;
-        return;
     }
-    const item_def* mon_weapon2 = mon.inv[MSLOT_ALT_WEAPON].get();
-    if (!mon_weapon2)
-    {
-        m_shd_tile = 0;
-        return;
-    }
-
-    const tileidx_t unmirrored = tilep_equ_weapon(*mon_weapon2);
-    if (unmirrored < TILEP_HAND1_FIRST || unmirrored > TILEP_HAND1_LAST)
-    {
-        m_shd_tile = 0;
-        return;
-    }
-
-    m_shd_tile = unmirrored - TILEP_HAND1_FIRST + TILEP_HAND1_MIRROR_FIRST;
 }
 
 // Returns the amount of pixels necessary to shift a wielded weapon
@@ -591,7 +633,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -5;
         break;
     case TILEP_MONS_FRANCES: // left-handed
-                             // TODO: use a mirrored tile instead
         *ofs_x = 20;
         *ofs_y = -1;
         break;
