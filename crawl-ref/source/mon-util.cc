@@ -927,7 +927,7 @@ bool mons_offers_beogh_conversion_now(const monster& mon)
 {
     // Do the expensive LOS check last.
     return mons_offers_beogh_conversion(mon)
-                && you.hp < you.hp_max / 2
+                && you.hp <= you.hp_max / 2
                 && !mon.is_summoned() && !mon.friendly()
                 && !silenced(mon.pos()) && !mon.has_ench(ENCH_MUTE)
                 && !mons_is_confused(mon) && mons_is_seeking(mon)

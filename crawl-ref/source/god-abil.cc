@@ -33,6 +33,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "english.h"
+#include "env.h"
 #include "fight.h"
 #include "files.h"
 #include "fineff.h"
@@ -48,6 +49,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "item-use.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "macro.h"
@@ -2341,14 +2343,46 @@ bool ashenzari_uncurse_item()
 
 bool can_convert_to_beogh()
 {
-    if (silenced(you.pos()))
+    if (!(env.level_state & LSTATE_BEOGH) || you.hp > you.hp_max / 2
+        || silenced(you.pos()))
+    {
         return false;
+    }
 
     for (monster* m : monster_near_iterator(you.pos(), LOS_NO_TRANS))
         if (mons_offers_beogh_conversion_now(*m))
             return true;
 
     return false;
+}
+
+void announce_beogh_conversion_offer()
+{
+    if (you.attribute[ATTR_SEEN_BEOGH]
+        || you.religion != GOD_NO_GOD
+        || !(env.level_state & LSTATE_BEOGH)
+        || you.hp > you.hp_max / 2)
+    {
+        return;
+    }
+
+    for (monster* m : monster_near_iterator(you.pos(), LOS_NO_TRANS))
+    {
+        if (mons_offers_beogh_conversion_now(*m))
+        {
+            mons_speaks_msg(m, getSpeakString("orc_priest_preaching"),
+                            MSGCH_TALK);
+
+            ASSERT_RANGE(get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey,
+                            'A', 'z' + 1);
+            mprf("(press <w>%c</w> on the <w>%s</w>bility menu to convert to Beogh)",
+                    get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey,
+                    command_to_string(CMD_USE_ABILITY).c_str());
+            you.attribute[ATTR_SEEN_BEOGH] = 1;
+
+            return;
+        }
+    }
 }
 
 void spare_beogh_convert()
