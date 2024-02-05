@@ -20,6 +20,7 @@
 #include "directn.h"
 #include "env.h"
 #include "fprop.h"
+#include "god-abil.h"
 #include "god-passive.h"
 #include "monster.h"
 #include "mon-pathfind.h"
@@ -484,6 +485,9 @@ void revive()
 
     if (you.duration[DUR_HEAVENLY_STORM])
         wu_jian_end_heavenly_storm();
+
+    if (you.duration[DUR_FATHOMLESS_SHACKLES])
+        yred_end_blasphemy();
 
     // TODO: this doesn't seem to call any duration end effects?
     for (int dur = 0; dur < NUM_DURATIONS; dur++)
