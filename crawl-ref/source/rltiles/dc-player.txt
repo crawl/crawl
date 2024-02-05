@@ -511,7 +511,7 @@ player/mutations/octopode1 OCTOPODE_SPIKE
 ###Artefacts
 %sdir player/hand1/artefact
 # blades
-bloodbane BLOODBANE
+bloodbane BLOODBANE FIRST
 doom_knight DOOM_KNIGHT
 leech LEECH
 morg MORG
@@ -806,8 +806,14 @@ fire_white2 FIRE_WHITE2
 
 bladehands BLADEHAND
 bladehands_op BLADEHAND_OP
-bladehands_fe BLADEHAND_FE
+bladehands_fe BLADEHAND_FE LAST
 %end_ctg
+
+%parts_ctg HAND1_MIRROR
+%mirror_horizontal
+%repeat_ctg HAND1
+%end_ctg
+%reset_mirror
 
 ### Hand 2
 %parts_ctg HAND2
@@ -921,24 +927,6 @@ pj PJ
 torch2 TORCH2
 
 bladehands BLADEHAND
-
-# The 1-2 "typos" are intentional; the equivalent tiles above have no
-# enums and become TILEP_GREAT_FLAIL_1 and TILEP_GREAT_MACE_1 respectively.
-dagger DAGGER
-dagger2 DAGGER_1
-rapier RAPIER
-rapier2 RAPIER_1
-short_sword_slant SHORT_SWORD_SLANT
-short_sword_slant2 SHORT_SWORD_SLANT_1
-flail_great GREAT_FLAIL
-flail_great2 GREAT_FLAIL_1
-great_mace GREAT_MACE
-great_mace2 GREAT_MACE_1
-giant_club GIANT_CLUB
-giant_club_slant GIANT_CLUB_SLANT
-giant_club_spike GIANT_CLUB_SPIKE
-giant_club_spike_slant GIANT_CLUB_SPIKE_SLANT
-giant_club_plain GIANT_CLUB_PLAIN
 %end_ctg
 
 ###Hair

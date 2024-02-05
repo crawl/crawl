@@ -54,6 +54,7 @@ public:
     bool valid() const;
 
     void resize(int new_width, int new_height);
+    void flip_horizontal();
 
     void add_rim(const tile_colour &rim);
     void corpsify();
