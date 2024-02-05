@@ -2237,8 +2237,9 @@ int player_shield_class()
     if (you.incapacitated())
         return 0;
 
-    if (you.shield())
-        shield += _sh_from_shield(you.inv[you.equip[EQ_OFFHAND]]);
+    const item_def *shield_item = you.shield();
+    if (shield_item)
+        shield += _sh_from_shield(*shield_item);
 
     // mutations
     // +4, +6, +8 (displayed values)
