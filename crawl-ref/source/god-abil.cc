@@ -1526,7 +1526,7 @@ void yred_end_conquest()
     //mprf("Kills: %d, Remain: %d, Ratio: %d", kills, souls_remaining, ratio);
 
     // Cash souls in for piety and print a message about how happy Yred is
-    string msg = "You return your torch's flame to Yredelemnul";
+    string msg = "You return your torch's flame to Yredelemnul,";
     int piety = 0;
 
     if (ratio > 90)

@@ -912,13 +912,13 @@ will blast you into the level above.
 Challenge status
 
 You have been challenged by a chosen Apostle of Beogh, who will know your
-location no matter where on the floor you are. Defeat them and you may recruit
+location no matter where on the floor you are. Defeat them, and you may recruit
 them to join you. If you flee the floor, Beogh will punish you by temporarily
 depriving you of allies.
 %%%%
 Vengeance status
 
-One of your apostles has been killed and you have not yet killed all foes who
+One of your apostles has been killed, and you have not yet killed all foes who
 were involved in their death. If you do so, Beogh will resurrect them sooner.
 %%%%
 Pray status

@@ -238,18 +238,19 @@ especially pious.
 Yredelemnul wishes for their worshippers to pour across the land as an endless
 despoiling tide, and so you will only earn piety for kills made while their
 symbol is lit; its flame will be taken from you the next time you leave the
-floor. They also do not offer second-chances - the torch may only be lit once
+floor. They also do not offer second chances - the torch may only be lit once
 per floor, ever.
 %%%%
 Hurl Torchlight ability
 
-Hurls a gout of umbral fire from the Black Torch which deals irresistible damage
-to living, demonic, and unholy beings. The torchlight will also briefly empower
-any of your undead servants caught in its blast and is harmless to its user.
+Hurls a gout of umbral fire from the Black Torch, which deals irresistible
+damage to living, demonic, and unholy beings. The torchlight will also briefly
+empower any of your undead servants caught in its blast, and is harmless to its
+user.
 
-Can only be used while the torch is lit and doing so will expend a significant
+Can only be used while the torch is lit, and doing so will expend a significant
 amount of its flame - never extinguishing it entirely, but leaving you unable to
-hurl more until you enter a new floor or stoke its flames with a particularly
+hurl more until you enter a new floor, or stoke its flames with a particularly
 remarkable enemy soul.
 %%%%
 Bind Soul ability
@@ -259,7 +260,7 @@ service. If the targeted monster is slain before it leaves your sight, it will
 return as a bound soul, retaining the equipment, spells and abilities it had in
 life.
 
-Only beings who are relatively uninjured may be targeted and the focus required
+Only beings who are relatively uninjured may be targeted, and the focus required
 to keep their soul from escaping will consume 1/3 of the user's current health -
 returning it only upon slaying them. The attempt will fail entirely if the
 targeted monster leaves your sight before the process is complete.
@@ -273,11 +274,11 @@ Fathomless Shackles ability
 
 Engulfs the user's surrounding in the inexorable grip of Yredelemnul. So long as
 you remain within this profane sanctuary, all hostile creatures that share it
-with you will be bound in place and their life force will be continuously
+with you will be bound in place, and their life force will be continuously
 drained to restore your own. Victims who are isolated from their allies will
 take damage at a greatly increased rate.
 
-The affected area will shrink over time and a new one cannot be created until
+The affected area will shrink over time, and a new one cannot be created until
 the old one has fully expired.
 %%%%
 # Okawaru
@@ -471,7 +472,7 @@ in Beogh's name.
 %%%%
 Recruit Apostle ability
 
-Anoints a defeated apostle and welcomes them as a permanent follower. They will
+Anoints a defeated apostle, and welcomes them as a permanent follower. They will
 follow you between floors and into any peril, willingly giving their life for
 the cause and their kin.
 
