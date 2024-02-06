@@ -2672,7 +2672,7 @@ void beogh_ally_healing()
     mprf("%s %s%sinvigorated by your prowess.",
           heal_list.size() == 1 ? heal_list[0]->name(DESC_THE).c_str()
                                 : "Your followers are",
-          heal_list.size() == 1 ? "is" : "",
+          heal_list.size() == 1 ? "is " : "",
           healing_done > 25 ? " greatly " : "");
 }
 

@@ -628,7 +628,7 @@ static const duration_def duration_data[] =
     { DUR_CANINE_FAMILIAR_DEAD, YELLOW, "-Dog", "unable to call your familiar",
       "You are unable to call your canine familiar.", "", D_EXPIRES, {{ "",
         [](){mprf(MSGCH_RECOVERY, "Your familiar recovers from its injuries.");}}}},
-    { DUR_BEOGH_CAN_ANNOINT, LIGHTBLUE, "Recruit", "", "can recruit",
+    { DUR_BEOGH_CAN_RECRUIT, LIGHTBLUE, "Recruit", "", "can recruit",
       "You may recruit a defeated apostle into your service", D_EXPIRES,
        {{ "", end_beogh_recruit_window}}},
 

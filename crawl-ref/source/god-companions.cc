@@ -719,7 +719,7 @@ void win_apostle_challenge(monster& apostle)
     mprf(MSGCH_GOD, "Beogh will allow you to induct %s into your service.",
          apostle.name(DESC_THE, true).c_str());
 
-    you.duration[DUR_BEOGH_CAN_ANNOINT] = random_range(30, 45) * BASELINE_DELAY;
+    you.duration[DUR_BEOGH_CAN_RECRUIT] = random_range(30, 45) * BASELINE_DELAY;
 
     // Remind the player how to do this, if they don't already have an apostle
     if (companion_list.empty())
@@ -768,7 +768,7 @@ string get_apostle_name(int slot, bool with_title)
 }
 
 // Attempt to the recall the recruit immediately next to you (slightly better
-// for wording of annointing them). If this fails, try to at least place them
+// for wording of anointing them). If this fails, try to at least place them
 // SOMEWHERE.
 static bool _try_recall_recruit(monster* mon)
 {
@@ -827,9 +827,9 @@ void beogh_recruit_apostle()
     }
 
     if (msg.length() > 0)
-        msg += "you annoint them with ash and charcoal and welcome them as a companion.";
+        msg += "you anoint them with ash and charcoal and welcome them as a companion.";
     else
-        msg += "You annoint " + real->name(DESC_THE, true) + " with ash and charcoal and welcome them as a companion.";
+        msg += "You anoint " + real->name(DESC_THE, true) + " with ash and charcoal and welcome them as a companion.";
 
     mpr(msg.c_str());
 
@@ -848,7 +848,7 @@ void beogh_recruit_apostle()
 
     _beogh_save_apostle(real, slot);
 
-    you.duration[DUR_BEOGH_CAN_ANNOINT] = 0;
+    you.duration[DUR_BEOGH_CAN_RECRUIT] = 0;
 }
 
 static void _cleanup_apostle_corpse(mid_t mid)

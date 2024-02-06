@@ -2953,7 +2953,7 @@ void excommunication(bool voluntary, god_type new_god)
         you.duration[DUR_BEOGH_DIVINE_CHALLENGE] = 0;
         you.duration[DUR_BLOOD_FOR_BLOOD] = 0;
         you.duration[DUR_BEOGH_SEEKING_VENGEANCE] = 0;
-        you.duration[DUR_BEOGH_CAN_ANNOINT] = 0;
+        you.duration[DUR_BEOGH_CAN_RECRUIT] = 0;
         add_daction(DACT_BEOGH_VENGEANCE_CLEANUP);
 
         env.level_state |= LSTATE_BEOGH;

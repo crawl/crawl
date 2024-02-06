@@ -2157,7 +2157,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     // Note when a recruitable apostle dies during the recruitment window, so that
     // messages about the player reviving them upon recruitment will be correct
     else if (mons.type == MONS_ORC_APOSTLE && !mons.has_ench(ENCH_TOUCH_OF_BEOGH)
-             && you.duration[DUR_BEOGH_CAN_ANNOINT])
+             && you.duration[DUR_BEOGH_CAN_RECRUIT])
     {
         you.props[BEOGH_RECRUITABLE_APOSTLE_DEATH_POS_KEY] = mons.pos();
     }
