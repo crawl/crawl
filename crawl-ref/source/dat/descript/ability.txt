@@ -245,7 +245,7 @@ Hurl Torchlight ability
 
 Hurls a gout of umbral fire from the Black Torch which deals irresistible damage
 to living, demonic, and unholy beings. The torchlight will also briefly empower
-any of your undead servants caught in its blast.
+any of your undead servants caught in its blast and is harmless to its user.
 
 Can only be used while the torch is lit and doing so will expend a significant
 amount of its flame - never extinguishing it entirely, but leaving you unable to
