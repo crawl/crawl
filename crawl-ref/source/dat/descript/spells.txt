@@ -318,7 +318,8 @@ this spell, but fleshless beings (e.g., those made of stone) cannot.
 %%%%
 Cleansing Flame spell
 
-<Cleansing Flame ability>
+Invokes a huge blast of divine fury centered on the user, severely damaging
+undead and demons and dealing damage to all other hostile creatures.
 %%%%
 Cold Breath spell
 

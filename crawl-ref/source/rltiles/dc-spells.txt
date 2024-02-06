@@ -176,13 +176,16 @@ bolt_energy ENERGY_BOLT
 %sdir gui/spells/monster
 generic GENERIC_MONSTER_SPELL
 air_elementals AIR_ELEMENTALS
+awaken_forest AWAKEN_FOREST
 awaken_vines AWAKEN_VINES
 battlecry BATTLECRY
+berserk_other BERSERK_OTHER
 blink_other BLINK_OTHER
 brain_bite BRAIN_BITE
 call_down_damnation CALL_DOWN_DAMNATION
 cantrip CANTRIP
 cold_breath COLD_BREATH
+corrupting_pulse CORRUPTING_PULSE
 create_tentacles CREATE_TENTACLES
 earth_elementals EARTH_ELEMENTALS
 fake_mara_summon FAKE_MARA_SUMMON
@@ -194,10 +197,12 @@ grasping_roots GRASPING_ROOTS
 haste_other HASTE_OTHER
 ink_cloud INK_CLOUD
 iron_elementals IRON_ELEMENTALS
+legendary_destruction LEGENDARY_DESTRUCTION
 malmutate MALMUTATE
 metal_splinters METAL_SPLINTERS
 miasma_breath MIASMA_BREATH
 might MIGHT
+mindburst MINDBURST
 noxious_cloud NOXIOUS_CLOUD
 orb_of_electricity ORB_OF_ELECTRICITY
 petrifying_cloud PETRIFYING_CLOUD
@@ -205,6 +210,7 @@ phantom_mirror PHANTOM_MIRROR
 polymorph POLYMORPH
 porkalator PORKALATOR
 quicksilver_bolt QUICKSILVER_BOLT
+roll ROLL
 seal_doors SEAL_DOORS
 sentinel_mark SENTINEL_MARK
 sleep SLEEP
@@ -218,12 +224,19 @@ sticky_flame_range STICKY_FLAME_RANGE
 strip_willpower STRIP_WILLPOWER
 summon_drakes SUMMON_DRAKES
 summon_eyeballs SUMMON_EYEBALLS
+summon_emperor_scorpions SUMMON_EMPEROR_SCORPIONS
+summon_executioners SUMMON_EXECUTIONERS
 summon_hell_beast SUMMON_HELL_BEAST
+summon_hell_sentinel SUMMON_HELL_SENTINEL
+summon_holies SUMMON_HOLIES
 summon_minor_demon SUMMON_MINOR_DEMON
 summon_mushrooms SUMMON_MUSHROOMS
+summon_scarabs SUMMON_SCARABS
 summon_scorpions SUMMON_SCORPIONS
 summon_spectral_orcs SUMMON_SPECTRAL_ORCS
+summon_spiders SUMMON_SPIDERS
 summon_ufetubus SUMMON_UFETUBUS
+summon_tzitzimitl SUMMON_TZITZIMITL
 summon_undead SUMMON_UNDEAD
 summon_vermin SUMMON_VERMIN
 wall_of_brambles WALL_OF_BRAMBLES
@@ -242,10 +255,15 @@ elyvilon_lesser_healing MINOR_HEALING
 elyvilon_heal_self MAJOR_HEALING
 makhleb_major_destruction MAJOR_DESTRUCTION
 lugonu_banish BANISHMENT
+lugonu_corrupt CORRUPT
 trog_hand TROGS_HAND
 trog_brothers_in_arms BROTHERS_IN_ARMS
 yred_drain_life DRAIN_LIFE
 yred_injury_mirror INJURY_MIRROR
+tso_cleansing_flame CLEANSING_FLAME
+
+%sdir gui/spells/misc
+debugging_ray DEBUGGING_RAY
 
 %sdir gui/spells
 memorise MEMORISE

@@ -276,7 +276,8 @@ Cigotuvi's Dreadful Rot spell
 %%%%
 Cleansing Flame spell
 
-<Cleansing Flame ability>
+激起以使用者为中心的巨大的神怒爆炸，会对亡灵和恶魔造成严重伤害，
+并对所有其他敌对生物造成伤害。
 %%%%
 Cold Breath spell
 
