@@ -760,7 +760,7 @@ void attack::chaos_affects_defender()
         if (you_could_see)
         {
             obvious_effect = beam.obvious_effect;
-            if (!defender->as_monster()->friendly() &&
+            if (!defender->wont_attack() &&
                 (beam.flavour == BEAM_HASTE || beam.flavour == BEAM_MIGHT))
                 xom_is_stimulated(12);
         }
