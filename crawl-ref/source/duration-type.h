@@ -252,7 +252,7 @@ enum duration_type
     DUR_VILE_CLUTCH,
     DUR_ALLY_RESET_TIMER,       // 5-turn buffer to cancel 'stop attack' order
     DUR_BEOGH_DIVINE_CHALLENGE,
-    DUR_BEOGH_CAN_ANNOINT,
+    DUR_BEOGH_CAN_RECRUIT,
     DUR_BEOGH_SEEKING_VENGEANCE,
     DUR_BLOOD_FOR_BLOOD,
     DUR_FATHOMLESS_SHACKLES,

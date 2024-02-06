@@ -1145,7 +1145,7 @@ ability_type fixup_ability(ability_type ability)
         return ability;
 
     case ABIL_BEOGH_RECRUIT_APOSTLE:
-        if (!you.duration[DUR_BEOGH_CAN_ANNOINT])
+        if (!you.duration[DUR_BEOGH_CAN_RECRUIT])
             return ABIL_NON_ABILITY;
         return ability;
 
