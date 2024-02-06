@@ -96,7 +96,7 @@ Orbeogh
 Warbeogh
 %%%%
 # Obvious references to orcs in general
-# (extremely subjective, and 16 at last count)
+# (extremely subjective, and 19 at last count)
 _orcish_name_
 
 Alork
@@ -113,7 +113,11 @@ Marbork
 
 Milork
 
+Orcesus
+
 Ogrik
+
+Orkidu
 
 Okrist
 
@@ -128,6 +132,8 @@ Orkrul
 Orkwin
 
 Oruk
+
+Pellinorc
 
 Urtork
 %%%%
@@ -146,6 +152,8 @@ Arkwar
 Beowulf
 
 Berold
+
+Benkei
 
 Bladwarg
 
@@ -176,8 +184,6 @@ Gorg
 Gorm
 
 Grimold
-
-Harm
 
 Hawl
 
