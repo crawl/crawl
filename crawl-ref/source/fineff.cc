@@ -9,6 +9,7 @@
 #include "fineff.h"
 
 #include "act-iter.h"
+#include "attitude-change.h"
 #include "beam.h"
 #include "bloodspatter.h"
 #include "coordit.h"
@@ -951,6 +952,14 @@ void jinxbite_fineff::fire()
 void beogh_resurrection_fineff::fire()
 {
     beogh_resurrect_followers();
+}
+
+void dismiss_divine_allies_fineff::fire()
+{
+    if (god == GOD_BEOGH)
+        beogh_do_ostracism();
+    else
+        dismiss_god_summons(god);
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

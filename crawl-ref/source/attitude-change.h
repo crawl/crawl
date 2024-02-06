@@ -1,11 +1,13 @@
 #pragma once
 
+#include "god-type.h"
+
 void mons_att_changed(monster* mons);
 
 void fedhas_neutralise(monster* mons);
 void beogh_follower_convert(monster* mons, bool orc_hit = false);
 void slime_convert(monster* mons);
-void make_god_gifts_disappear();
+void dismiss_god_summons(god_type god);
 enum class conv_t
 {
     sight,
