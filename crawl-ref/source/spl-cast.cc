@@ -512,9 +512,14 @@ int calc_spell_power(spell_type spell)
     // apply a stepdown, and scale.
     power = _stepdown_spellpower(power);
 
+    //divine exegesis gives a minimum spellpower of invo*200/27
+    if (you.divine_exegesis)
+        power = max(power, you.skill(SK_INVOCATIONS, 200) / 27);
+    
     const int cap = spell_power_cap(spell);
     if (cap > 0)
         power = min(power, cap);
+
 
     return power;
 }
