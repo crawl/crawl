@@ -620,7 +620,7 @@ static const vector<chaos_effect> chaos_effects = {
     },
     {
         "rage", 5, [](const actor &defender) {
-            return (defender.can_go_berserk() && !defender.clarity());
+            return defender.can_go_berserk() && !defender.clarity();
         }, BEAM_NONE, [](attack &attack) {
             if (attack.defender->is_monster())
             {
@@ -762,7 +762,9 @@ void attack::chaos_affects_defender()
             obvious_effect = beam.obvious_effect;
             if (!defender->wont_attack() &&
                 (beam.flavour == BEAM_HASTE || beam.flavour == BEAM_MIGHT))
+            {
                 xom_is_stimulated(12);
+            }
         }
 
     }
