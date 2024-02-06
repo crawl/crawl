@@ -1705,10 +1705,11 @@ bool yred_can_bind_soul(monster* mon)
            && mon->attitude != ATT_FRIENDLY;
 }
 
-int yred_get_bound_soul_hp(monster_type mt)
+int yred_get_bound_soul_hp(monster_type mt, bool estimate_only)
 {
     return get_monster_data(mt)->avg_hp_10x
-           * (7 + you.skill_rdiv(SK_INVOCATIONS, 1, 5)) / 100
+           * (7 + (estimate_only ? (you.skill(SK_INVOCATIONS) / 5)
+                                 : you.skill_rdiv(SK_INVOCATIONS, 1, 5))) / 100
            + 15;
 }
 
@@ -1756,7 +1757,7 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     // the proper stats from it.
     define_zombie(mon, mon->type, MONS_BOUND_SOUL);
 
-    // Modify phealth based on invocations skill
+    // Modify health based on invocations skill
     mon->max_hit_points = yred_get_bound_soul_hp(orig.type);
     mon->hit_points = mon->max_hit_points;
 
