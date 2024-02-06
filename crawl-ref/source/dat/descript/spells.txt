@@ -1179,6 +1179,11 @@ Quicksilver Bolt spell
 
 <Breathe Dispelling Energy ability>
 %%%%
+Regenerate Other spell
+
+Causes another creature to rapidly regenerate over a short period of time.
+This regeneration is proportional to that creature's maximum health.
+%%%%
 Repel Missiles spell
 
 Reduces the chance of projectile attacks striking the caster, making them

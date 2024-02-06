@@ -908,3 +908,31 @@ Rise status
 
 You are hovering upward toward the ceiling. After a short delay, Ignis' power
 will blast you into the level above.
+%%%%
+Challenge status
+
+You have been challenged by a chosen Apostle of Beogh, who will know your
+location no matter where on the floor you are. Defeat them and you may recruit
+them to join you. If you flee the floor, Beogh will punish you by temporarily
+depriving you of allies.
+%%%%
+Vengeance status
+
+One of your apostles has been killed and you have not yet killed all foes who
+were involved in their death. If you do so, Beogh will resurrect them sooner.
+%%%%
+Pray status
+
+You have invoked divine aid in avenging the death of a fallen apostle. Orcs will
+continuously rally to your side, though your prayer will end more rapidly when
+there are no more foes around to fight.
+%%%%
+Recruit status
+
+An orcish apostle is available to recruit as a permanent companion.
+(Use the Recruit Apostle ability)
+%%%%
+Shackles status
+
+Yredelemnul's grip is engulfing an area in life-stealing chains.
+%%%%
