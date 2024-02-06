@@ -116,7 +116,7 @@ int yred_get_torch_power();
 bool yred_torch_is_raised();
 void yred_feed_torch(const monster* mons);
 void yred_fathomless_shackles_effect(int delay);
-int yred_get_bound_soul_hp(monster_type mt);
+int yred_get_bound_soul_hp(monster_type mt, bool estimate_only = false);
 bool yred_can_bind_soul(monster* mon);
 void yred_make_bound_soul(monster* mon, bool force_hostile = false);
 void yred_make_blasphemy();

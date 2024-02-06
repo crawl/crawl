@@ -2220,7 +2220,7 @@ static vector<string> _desc_bind_soul_hp(const monster_info& mi)
 {
     if (!monster_at(mi.pos) || !yred_can_bind_soul(monster_at(mi.pos)))
         return vector<string>{};
-    return vector<string>{make_stringf("hp as a bound soul: ~%d", yred_get_bound_soul_hp(mi.type))};
+    return vector<string>{make_stringf("hp as a bound soul: ~%d", yred_get_bound_soul_hp(mi.type, true))};
 }
 
 unique_ptr<targeter> find_ability_targeter(ability_type ability)
