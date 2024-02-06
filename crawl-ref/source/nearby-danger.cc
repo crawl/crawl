@@ -490,6 +490,9 @@ void revive()
     if (you.duration[DUR_FATHOMLESS_SHACKLES])
         yred_end_blasphemy();
 
+    if (you.duration[DUR_BLOOD_FOR_BLOOD])
+        beogh_end_blood_for_blood();
+
     // TODO: this doesn't seem to call any duration end effects?
     for (int dur = 0; dur < NUM_DURATIONS; dur++)
     {
