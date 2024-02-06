@@ -249,7 +249,7 @@ any of your undead servants caught in its blast and is harmless to its user.
 
 Can only be used while the torch is lit and doing so will expend a significant
 amount of its flame - never extinguishing it entirely, but leaving you unable to
-hurl more until you enter a new floor or stroke its flames with a particularly
+hurl more until you enter a new floor or stoke its flames with a particularly
 remarkable enemy soul.
 %%%%
 Bind Soul ability
@@ -259,7 +259,7 @@ service. If the targeted monster is slain before it leaves your sight, it will
 return as a bound soul, retaining the equipment, spells and abilities it had in
 life.
 
-Only beings who are relatively uninjured may be targetted and the focus required
+Only beings who are relatively uninjured may be targeted and the focus required
 to keep their soul from escaping will consume 1/3 of the user's current health -
 returning it only upon slaying them. The attempt will fail entirely if the
 targeted monster leaves your sight before the process is complete.
@@ -471,12 +471,12 @@ in Beogh's name.
 %%%%
 Recruit Apostle ability
 
-Annoints a defeated apostle and welcomes them as a permanent follower. They will
+Anoints a defeated apostle and welcomes them as a permanent follower. They will
 follow you between floors and into any peril, willingly giving their life for
 the cause and their kin.
 
 If they die, Beogh will eventually revive them once you gain sufficient piety -
-this process can be greatly accellerated by satisfying Beogh with the slaying of
+this process can be greatly accelerated by satisfying Beogh with the slaying of
 all foes who may have contributed to their apostle's death.
 
 You can have at most 3 followers accompanying you at a time, though you may
@@ -484,7 +484,7 @@ freely dismiss old ones to invite new ones.
 %%%%
 Blood for Blood ability
 
-Beseeches Beogh to grant you an army with which to wreck bloody retribution.
+Beseeches Beogh to grant you an army with which to wreak bloody retribution.
 The user will be immediately surrounded by orcish allies, with more of them
 arriving over time from all directions. The prayer lasts a considerable
 length of time, but will expire far more rapidly once there are no more foes in
