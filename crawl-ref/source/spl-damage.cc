@@ -3681,6 +3681,11 @@ void handle_flame_wave()
         mpr("You finish channelling waves of flame.");
         end_flame_wave();
     }
+    
+    if (you.get_mutation_level(MUT_QUICKCAST) > 0)
+    {
+        you.time_taken = you.time_taken * 4 / 5;
+    }
 }
 
 void end_flame_wave()
@@ -3789,6 +3794,11 @@ void handle_searing_ray()
     {
         mpr("You finish channelling your searing ray.");
         end_searing_ray();
+    }
+
+    if (you.get_mutation_level(MUT_QUICKCAST) > 0)
+    {
+        you.time_taken = you.time_taken * 4 / 5;
     }
 }
 
