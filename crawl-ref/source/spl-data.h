@@ -3750,7 +3750,7 @@ static const struct spell_desc spelldata[] =
     spflag::dir_or_target | spflag::needs_tracer,
     4,
     200,
-    4, 4,
+    5, 5,
     0,
     TILEG_ERROR,
 },

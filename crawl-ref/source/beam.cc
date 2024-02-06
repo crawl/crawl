@@ -1707,7 +1707,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     case BEAM_UMBRAL_TORCHLIGHT:
         if (mons->holiness() & ~(MH_NATURAL | MH_DEMONIC | MH_HOLY))
         {
-            if (doFlavouredEffects)
+            if (doFlavouredEffects && !mons_aligned(mons, pbolt.agent(true)))
                 simple_monster_message(*mons, " completely resists.");
 
             hurted = 0;
@@ -3065,7 +3065,8 @@ bool bolt::harmless_to_player() const
         return mons_att_wont_attack(attitude) || !agent()->can_constrict(you, CONSTRICT_BVC);
 
     case BEAM_UMBRAL_TORCHLIGHT:
-        return (bool)!(you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
+        return agent(true)->is_player()
+               || (bool)!(you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
 
     default:
         return false;
