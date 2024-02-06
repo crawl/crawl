@@ -583,9 +583,9 @@ static bool _try_generate_apostle_challenge(int pow, int band_pow)
 
     // Todo: Make sure not to pick the same name as any existing apostle
 
-    simple_god_message(" speaks to you: \"Beware that a challenger has come"
-                       " seeking you in battle. Prove your devotion to me!"
-                       " Unite all my children beneath one banner!");
+    string challenge_msg = " speaks to you: ";
+    challenge_msg += getSpeakString("Beogh apostle challenge");
+    simple_god_message(challenge_msg.c_str());
 
     you.duration[DUR_BEOGH_DIVINE_CHALLENGE] = 100;
 
