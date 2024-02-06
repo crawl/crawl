@@ -706,6 +706,11 @@ level_id level_above()
 void rise_through_ceiling()
 {
     const level_id whither = level_above();
+    if (you.where_are_you == BRANCH_DUNGEON && you.depth == 1 && player_has_orb())
+    {
+        mpr("With a burst of heat and light, you rocket upward!");
+        floor_transition(DNGN_EXIT_DUNGEON, DNGN_EXIT_DUNGEON, level_id(BRANCH_DUNGEON, 0), true, true, false, false);
+    }
     if (!whither.is_valid())
     {
         mpr("In a burst of heat and light, you rocket briefly upward... "
