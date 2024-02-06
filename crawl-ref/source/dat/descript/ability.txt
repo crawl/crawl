@@ -235,9 +235,9 @@ Yredelemnul will then dispatch multiple temporary undead servants to help begin
 your conquest, with stronger servants being provided to the experienced and
 especially pious.
 
-Yredelemnul wishes for their worshippers to pour across the land as endless
+Yredelemnul wishes for their worshippers to pour across the land as an endless
 despoiling tide, and so you will only earn piety for kills made while their
-symbol is lit and its flame will be taken from you the next time you leave the
+symbol is lit; its flame will be taken from you the next time you leave the
 floor. They also do not offer second-chances - the torch may only be lit once
 per floor, ever.
 %%%%
@@ -264,7 +264,7 @@ to keep their soul from escaping will consume 1/3 of the user's current health -
 returning it only upon slaying them. The attempt will fail entirely if the
 targeted monster leaves your sight before the process is complete.
 
-The bound soul's health is influenced by the user's Invocations skill and will
+The bound soul's health is influenced by the user's Invocations skill. It will
 follow its captor through stairs, and can be recalled from other levels.
 
 Only one soul can be bound at a time.
@@ -274,11 +274,11 @@ Fathomless Shackles ability
 Engulfs the user's surrounding in the inexorable grip of Yredelemnul. So long as
 you remain within this profane sanctuary, all hostile creatures that share it
 with you will be bound in place and their life force will be continuously
-drained to restore your own. Victims that are isolated from their allies will
+drained to restore your own. Victims who are isolated from their allies will
 take damage at a greatly increased rate.
 
 The affected area will shrink over time and a new one cannot be created until
-the old has fully expired.
+the old one has fully expired.
 %%%%
 # Okawaru
 Heroism ability
