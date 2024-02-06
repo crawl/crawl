@@ -1395,6 +1395,11 @@ Steam Ball spell
 
 Throws a ball of hot steam towards a targeted creature.
 %%%%
+Sticks to Snakes spell
+
+Casts forth sticks and transforms them into snakes. Stronger casters will always
+create stronger snakes.
+%%%%
 Sticky Flame spell
 
 Unleashes a short-ranged spray of incendiary goo that clings to an adjacent
