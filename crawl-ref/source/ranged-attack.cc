@@ -435,9 +435,9 @@ bool ranged_attack::ignores_shield(bool verbose)
 special_missile_type ranged_attack::random_chaos_missile_brand()
 {
     special_missile_type brand = SPMSL_NORMAL;
-    // Assuming the chaos to be mildly intelligent, try to avoid brands
-    // that clash with the most basic resists of the defender,
-    // i.e. its holiness.
+    // Assuming chaos always wants to be flashy and fancy, and thus
+    // skip anything that'd be completely ignored by resists.
+    // FIXME: Unite this with chaos melee's chaos_types.
     while (true)
     {
         brand = (random_choose_weighted(
@@ -457,16 +457,24 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
         switch (brand)
         {
         case SPMSL_FLAME:
-            if (defender->is_fiery())
+            if (!defender->is_player() && defender->res_fire() >= 3)
                 susceptible = false;
             break;
         case SPMSL_FROST:
-            if (defender->is_icy())
+            if (!defender->is_player() && defender->res_cold() >= 3)
                 susceptible = false;
             break;
         case SPMSL_POISONED:
-            if (defender->holiness() & MH_UNDEAD)
+        case SPMSL_BLINDING:
+            if (defender->holiness() & (MH_UNDEAD | MH_NONLIVING))
                 susceptible = false;
+            break;
+        case SPMSL_CURARE:
+            if ((defender->is_player() && defender->holiness() & (MH_UNDEAD | MH_NONLIVING))
+               || defender->res_poison() > 0)
+            {
+                susceptible = false;
+            }
             break;
         case SPMSL_DISPERSAL:
             if (defender->no_tele(true))

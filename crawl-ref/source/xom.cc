@@ -583,7 +583,7 @@ static void _try_brand_switch(const int item_index)
         return;
 
     // Only do it some of the time.
-    if (one_chance_in(3))
+    if (one_chance_in(2))
         return;
 
     if (get_weapon_brand(item) == SPWPN_NORMAL)
@@ -714,24 +714,11 @@ static bool _is_chaos_upgradeable(const item_def &item)
             return false;
     }
 
-    // Leave branded items alone, since this is supposed to be an
-    // upgrade.
+    // Don't stuff player inventory slots with chaos throwables.
     if (item.base_type == OBJ_MISSILES)
-    {
-        // Don't make boulders or throwing nets of chaos.
-        if (item.sub_type == MI_LARGE_ROCK
-            || item.sub_type == MI_THROWING_NET)
-        {
-            return false;
-        }
+        return false;
 
-        if (get_ammo_brand(item) == SPMSL_NORMAL)
-            return true;
-    }
-    else if (get_weapon_brand(item) == SPWPN_NORMAL)
-        return true;
-
-    return false;
+    return true;
 }
 
 static bool _choose_chaos_upgrade(const monster& mon)
@@ -756,14 +743,6 @@ static bool _choose_chaos_upgrade(const monster& mon)
     // in their servants' killing the player.
     if (is_good_god(mon.god))
         return false;
-
-    // Beogh presumably doesn't want Xom messing with his orcs, even if
-    // it would give them a better weapon.
-    if (mons_genus(mon.type) == MONS_ORC
-        && (mon.is_priest() || coinflip()))
-    {
-        return false;
-    }
 
     mon_inv_type slots[] = {MSLOT_WEAPON, MSLOT_ALT_WEAPON, MSLOT_MISSILE};
 
