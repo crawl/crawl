@@ -12,6 +12,7 @@ Their extended range of vision also allows them to be seen from further away.
 Deep Elf
 
 Deep Elves have a strong affinity for all kinds of magic, but are very fragile.
+They cast spells a little quicker than others.
 %%%%
 Demigod
 

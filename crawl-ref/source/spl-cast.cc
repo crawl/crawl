@@ -2124,6 +2124,11 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
             do_demonic_magic(spell_difficulty(spell) * 6, demonic_magic);
         }
 
+        if (you.get_mutation_level(MUT_QUICKCAST) > 0)
+        {
+            you.time_taken = you.time_taken * 4 / 5;
+        }
+
         if (you.props.exists(BATTLESPHERE_KEY)
             && (actual_spell || you.divine_exegesis)
             && battlesphere_can_mirror(spell))

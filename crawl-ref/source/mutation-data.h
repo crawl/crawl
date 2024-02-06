@@ -2473,6 +2473,12 @@ static const mutation_def mut_data[] =
   {"You brawl whenever you drink a healing potion.", "", ""},
   {"You no longer brawl whenever you drink a healing potion.", "", ""},
 },
+
+{ MUT_QUICKCAST, 0, 1, mutflag::good, false, "quick casting",
+  {"You cast spells quicker than most.", "", ""},
+  {"You begin to cast spells quicker.", "", ""},
+  {"You cast spells at normal speed.", "", ""},
+},
 };
 
 static const mutation_category_def category_mut_data[] =
