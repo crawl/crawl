@@ -17,6 +17,7 @@
 #include "coordit.h"
 #include "dactions.h"
 #include "database.h"
+#include "delay.h"
 #include "dgn-overview.h"
 #include "env.h"
 #include "files.h"
@@ -629,11 +630,12 @@ static bool _is_invalid_challenge_level()
 // every combination of bad circumstance, but should at least help.
 static bool _is_bad_moment_for_challenge()
 {
-    if (you.hp < you.hp_max / 2)
+    if (you.hp < you.hp_max / 2
+        || player_stair_delay()
+        || get_tension() > 45)
+    {
         return true;
-
-    if (get_tension() > 45)
-        return true;
+    }
 
     return false;
 }
