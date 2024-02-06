@@ -1533,6 +1533,10 @@ static bool _can_rising_flame(bool quiet)
             mpr("You're already rising!");
         return false;
     }
+    if (you.where_are_you == BRANCH_DUNGEON && you.depth == 1 && player_has_orb())
+    {
+        return true;
+    }
     if (!level_above().is_valid())
     {
         if (!quiet)
