@@ -901,8 +901,14 @@ void beogh_dismiss_apostle(int slot)
         level_excursion le;
         le.go_to(companion_list[apostle->mid].level);
         monster* dist_real = monster_by_mid(apostle->mid);
-        remove_companion(dist_real);
-        monster_die(*dist_real, KILL_RESET, -1, true);
+
+        // While this should almost always find the original, sometimes it may
+        // not (eg: if you left them in the Abyss). Let's double-check.
+        if (dist_real)
+        {
+            remove_companion(dist_real);
+            monster_die(*dist_real, KILL_RESET, -1, true);
+        }
     }
     else
     {
