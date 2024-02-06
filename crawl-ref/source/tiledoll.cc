@@ -606,7 +606,7 @@ void save_doll_file(writer &dollf)
     dollf.write(fbuf, strlen(fbuf));
 }
 
-void reveal_bardings(tileidx_t *parts, int (&flags)[TILEP_PART_MAX])
+void reveal_bardings(const tileidx_t *parts, int (&flags)[TILEP_PART_MAX])
 {
     const tileidx_t base = parts[TILEP_PART_BASE];
     if (is_player_tile(base, TILEP_BASE_NAGA)
@@ -620,50 +620,9 @@ void reveal_bardings(tileidx_t *parts, int (&flags)[TILEP_PART_MAX])
 void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
                    int x, int y, bool submerged, bool ghost)
 {
-    // Ordered from back to front.
-    int p_order[TILEP_PART_MAX] =
-    {
-        // background
-        TILEP_PART_SHADOW,
-        TILEP_PART_HALO,
-        TILEP_PART_ENCH,
-        TILEP_PART_DRCWING,
-        TILEP_PART_CLOAK,
-        // player
-        TILEP_PART_BASE,
-        TILEP_PART_BOOTS,
-        TILEP_PART_LEG,
-        TILEP_PART_BODY,
-        TILEP_PART_ARM,
-        TILEP_PART_HAIR,
-        TILEP_PART_BEARD,
-        TILEP_PART_HELM,
-        TILEP_PART_HAND1,
-        TILEP_PART_HAND2
-    };
-
+    int p_order[TILEP_PART_MAX];
     int flags[TILEP_PART_MAX];
-    tilep_calc_flags(doll, flags);
-
-    // For skirts, boots go under the leg armour. For pants, they go over.
-    if (doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
-    {
-        p_order[7] = TILEP_PART_BOOTS;
-        p_order[6] = TILEP_PART_LEG;
-    }
-
-    // Draw scarves above other clothing.
-    if (doll.parts[TILEP_PART_CLOAK] >= TILEP_CLOAK_SCARF_FIRST_NORM)
-    {
-        p_order[4] = p_order[5];
-        p_order[5] = p_order[6];
-        p_order[6] = p_order[7];
-        p_order[7] = p_order[8];
-        p_order[8] = p_order[9];
-        p_order[9] = TILEP_PART_CLOAK;
-    }
-
-    reveal_bardings(doll.parts, flags);
+    tilep_fill_order_and_flags(doll, p_order, flags);
 
     // Set up mcache data based on equipment. We don't need this lookup if both
     // pairs of offsets are defined in Options.
@@ -722,5 +681,26 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
     }
 }
 #endif
+
+// Pack the appropriate tiles to represent a given paperdoll, in the right order
+void pack_tilep_set(vector<tile_def>& tileset, const dolls_data &doll)
+{
+    int p_order[TILEP_PART_MAX];
+    int flags[TILEP_PART_MAX];
+    tilep_fill_order_and_flags(doll, p_order, flags);
+
+    for (int i = 0; i < TILEP_PART_MAX; ++i)
+    {
+        const int p   = p_order[i];
+        const tileidx_t idx = doll.parts[p];
+        if (idx == 0 || idx == TILEP_SHOW_EQUIP || flags[p] == TILEP_FLAG_HIDE)
+            continue;
+
+        ASSERT_RANGE(idx, TILE_MAIN_MAX, TILEP_PLAYER_MAX);
+
+        const int ymax = flags[p] == TILEP_FLAG_CUT_BOTTOM ? 18 : TILE_Y;
+        tileset.emplace_back(idx, ymax);
+    }
+}
 
 #endif

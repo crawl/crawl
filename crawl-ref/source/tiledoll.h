@@ -48,6 +48,8 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
 class SubmergedTileBuffer;
 void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll, int x, int y, bool submerged, bool ghost);
 
-void reveal_bardings(tileidx_t *parts, int (&flags)[TILEP_PART_MAX]);
+void reveal_bardings(const tileidx_t *parts, int (&flags)[TILEP_PART_MAX]);
+
+void pack_tilep_set(vector<tile_def>& tileset, const dolls_data &doll);
 
 #endif

@@ -1074,6 +1074,60 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
     }
 }
 
+// Take a paperdoll and pass out values indicating how and in what order parts
+// should be drawn.
+void tilep_fill_order_and_flags(const dolls_data &doll, int (&order)[TILEP_PART_MAX],
+                                int (&flags)[TILEP_PART_MAX])
+{
+    // Ordered from back to front.
+    static int p_order[TILEP_PART_MAX] =
+    {
+        // background
+        TILEP_PART_SHADOW,
+        TILEP_PART_HALO,
+        TILEP_PART_ENCH,
+        TILEP_PART_DRCWING,
+        TILEP_PART_CLOAK,
+        // player
+        TILEP_PART_BASE,
+        TILEP_PART_BOOTS,
+        TILEP_PART_LEG,
+        TILEP_PART_BODY,
+        TILEP_PART_ARM,
+        TILEP_PART_HAIR,
+        TILEP_PART_BEARD,
+        TILEP_PART_HELM,
+        TILEP_PART_HAND1,
+        TILEP_PART_HAND1_MIRROR,
+        TILEP_PART_HAND2,
+    };
+
+    // Copy default order
+    for (int i = 0; i < TILEP_PART_MAX; ++i)
+        order[i] = p_order[i];
+
+    // For skirts, boots go under the leg armour. For pants, they go over.
+    if (doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
+    {
+        order[7] = TILEP_PART_BOOTS;
+        order[6] = TILEP_PART_LEG;
+    }
+
+    // Draw scarves above other clothing.
+    if (doll.parts[TILEP_PART_CLOAK] >= TILEP_CLOAK_SCARF_FIRST_NORM)
+    {
+        order[4] = order[5];
+        order[5] = order[6];
+        order[6] = order[7];
+        order[7] = order[8];
+        order[8] = order[9];
+        order[9] = TILEP_PART_CLOAK;
+    }
+
+    tilep_calc_flags(doll, flags);
+    reveal_bardings(doll.parts, flags);
+}
+
 // Parts index to string
 static void _tilep_part_to_str(int number, char *buf)
 {

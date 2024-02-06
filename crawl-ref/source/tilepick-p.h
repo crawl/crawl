@@ -8,6 +8,7 @@
 #ifdef USE_TILE
 
 #include "rltiles/tiledef_defines.h"
+#include "rltiles/tiledef-player.h"
 
 struct dolls_data;
 struct item_def;
@@ -31,6 +32,9 @@ void tilep_draconian_init(int sp, int level, tileidx_t *base, tileidx_t *wing);
 void tilep_race_default(int sp, int level, dolls_data *doll);
 void tilep_job_default(int job, dolls_data *doll);
 void tilep_calc_flags(const dolls_data &data, int flag[]);
+
+void tilep_fill_order_and_flags(const dolls_data &doll, int (&order)[TILEP_PART_MAX],
+                                int (&flags)[TILEP_PART_MAX]);
 
 void tilep_scan_parts(char *fbuf, dolls_data &doll, int species, int level);
 void tilep_print_parts(char *fbuf, const dolls_data &doll);

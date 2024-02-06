@@ -36,6 +36,7 @@
  #include "tilebuf.h"
 #endif
 #ifdef USE_TILE
+ #include "tiledoll.h"
  #include "tile-flags.h"
  #include "tile-player-flag-cut.h"
  #include "rltiles/tiledef-dngn.h"
@@ -2559,52 +2560,8 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
     MenuEntry::get_tiles(tileset);
 
     const player_save_info &player = *static_cast<player_save_info*>(data);
-    dolls_data equip_doll = player.doll;
 
-    // FIXME: Implement this logic in one place in e.g. pack_doll_buf().
-    int p_order[TILEP_PART_MAX] =
-    {
-        TILEP_PART_SHADOW,  //  0
-        TILEP_PART_HALO,
-        TILEP_PART_ENCH,
-        TILEP_PART_DRCWING,
-        TILEP_PART_CLOAK,
-        TILEP_PART_BASE,    //  5
-        TILEP_PART_BOOTS,
-        TILEP_PART_LEG,
-        TILEP_PART_BODY,
-        TILEP_PART_ARM,
-        TILEP_PART_HAIR,
-        TILEP_PART_BEARD,
-        TILEP_PART_HELM,
-        TILEP_PART_HAND1,   // 10
-        TILEP_PART_HAND2,
-    };
-
-    int flags[TILEP_PART_MAX];
-    tilep_calc_flags(equip_doll, flags);
-
-    // For skirts, boots go under the leg armour. For pants, they go over.
-    if (equip_doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
-    {
-        p_order[6] = TILEP_PART_BOOTS;
-        p_order[7] = TILEP_PART_LEG;
-    }
-
-    reveal_bardings(equip_doll.parts, flags);
-
-    for (int i = 0; i < TILEP_PART_MAX; ++i)
-    {
-        const int p   = p_order[i];
-        const int idx = equip_doll.parts[p];
-        if (idx == 0 || idx == TILEP_SHOW_EQUIP || flags[p] == TILEP_FLAG_HIDE)
-            continue;
-
-        ASSERT_RANGE(idx, TILE_MAIN_MAX, TILEP_PLAYER_MAX);
-
-        const int ymax = flags[p] == TILEP_FLAG_CUT_BOTTOM ? 18 : TILE_Y;
-        tileset.emplace_back(idx, ymax);
-    }
+    pack_tilep_set(tileset, player.doll);
 
     return true;
 }

@@ -2405,50 +2405,7 @@ PlayerDoll::~PlayerDoll()
 void PlayerDoll::_pack_doll()
 {
     m_tiles.clear();
-    // FIXME: Implement this logic in one place in e.g. pack_doll_buf().
-    int p_order[TILEP_PART_MAX] =
-    {
-        TILEP_PART_SHADOW,  //  0
-        TILEP_PART_HALO,
-        TILEP_PART_ENCH,
-        TILEP_PART_DRCWING,
-        TILEP_PART_CLOAK,
-        TILEP_PART_BASE,    //  5
-        TILEP_PART_BOOTS,
-        TILEP_PART_LEG,
-        TILEP_PART_BODY,
-        TILEP_PART_ARM,
-        TILEP_PART_HAIR,
-        TILEP_PART_BEARD,
-        TILEP_PART_HELM,
-        TILEP_PART_HAND1,   // 10
-        TILEP_PART_HAND2,
-    };
-
-    int flags[TILEP_PART_MAX];
-    tilep_calc_flags(m_save_doll, flags);
-
-    // For skirts, boots go under the leg armour. For pants, they go over.
-    if (m_save_doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
-    {
-        p_order[6] = TILEP_PART_BOOTS;
-        p_order[7] = TILEP_PART_LEG;
-    }
-
-    reveal_bardings(m_save_doll.parts, flags);
-
-    for (int i = 0; i < TILEP_PART_MAX; ++i)
-    {
-        const int p   = p_order[i];
-        const tileidx_t idx = m_save_doll.parts[p];
-        if (idx == 0 || idx == TILEP_SHOW_EQUIP || flags[p] == TILEP_FLAG_HIDE)
-            continue;
-
-        ASSERT_RANGE(idx, TILE_MAIN_MAX, TILEP_PLAYER_MAX);
-
-        const int ymax = flags[p] == TILEP_FLAG_CUT_BOTTOM ? 18 : TILE_Y;
-        m_tiles.emplace_back(idx, ymax);
-    }
+    pack_tilep_set(m_tiles, m_save_doll);
 }
 
 void PlayerDoll::_render()
