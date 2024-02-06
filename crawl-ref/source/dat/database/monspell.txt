@@ -894,7 +894,7 @@ vhi's electric charge cast
 %%%%
 sticks to snakes cast
 
-@The_monster@ drops a branch and it wriggles to life!
+@The_monster@ drops twin branches and they both wriggle to life!
 %%%%
 Vanquished Vanguard Nergalle cast
 

@@ -184,6 +184,7 @@ call_down_damnation CALL_DOWN_DAMNATION
 cantrip CANTRIP
 cold_breath COLD_BREATH
 create_tentacles CREATE_TENTACLES
+divine_armament DIVINE_ARMAMENT
 earth_elementals EARTH_ELEMENTALS
 fake_mara_summon FAKE_MARA_SUMMON
 fake_rakshasa_summon FAKE_RAKSHASA_SUMMON
@@ -215,6 +216,7 @@ sporulate SPORULATE
 sprint SPRINT
 steam_ball STEAM_BALL
 sticky_flame_range STICKY_FLAME_RANGE
+sticks_to_snakes STICKS_TO_SNAKES
 strip_willpower STRIP_WILLPOWER
 summon_drakes SUMMON_DRAKES
 summon_eyeballs SUMMON_EYEBALLS
