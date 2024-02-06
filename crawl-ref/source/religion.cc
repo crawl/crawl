@@ -141,7 +141,7 @@ const vector<vector<god_power>> & get_all_god_powers()
         },
 
         // Yredelemnul
-        {   { 0, ABIL_YRED_LIGHT_THE_TORCH, "light the black torch and reap souls in the name of Yredelemnul" },
+        {   { 0, ABIL_YRED_LIGHT_THE_TORCH, "light the black torch and reap souls in Yredelemnul's name" },
             { 0, ABIL_YRED_RECALL_UNDEAD_HARVEST, "recall your undead harvest" },
             { 2, ABIL_YRED_HURL_TORCHLIGHT, "hurl gouts of umbral torchlight" },
             { 4, ABIL_YRED_BIND_SOUL, "bind living souls" },
