@@ -104,6 +104,14 @@ void remove_all_companions(god_type god)
         else
             ++i;
     }
+
+    // Cleanup apostle data structures on god abandonment
+    if (god == GOD_BEOGH)
+    {
+        CrawlVector& vec = you.props[BEOGH_SAVED_APOSTLES_KEY].get_vector();
+        vec.clear();
+        you.props.erase(BEOGH_NUM_FOLLOWERS_KEY);
+    }
 }
 
 void move_companion_to(const monster* mons, const level_id lid)
