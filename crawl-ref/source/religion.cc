@@ -32,6 +32,7 @@
 #include "dlua.h"
 #include "english.h"
 #include "env.h"
+#include "fineff.h"
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-conduct.h"
@@ -870,8 +871,7 @@ static void _inc_penance(god_type god, int val)
         {
             if (you.duration[DUR_TROGS_HAND])
                 trog_remove_trogs_hand();
-
-            make_god_gifts_disappear();
+            dismiss_divine_allies_fineff::schedule(GOD_TROG);
         }
         else if (god == GOD_ZIN)
         {
@@ -884,8 +884,7 @@ static void _inc_penance(god_type god, int val)
         {
             if (you.duration[DUR_DIVINE_SHIELD])
                 tso_remove_divine_shield();
-
-            make_god_gifts_disappear();
+            dismiss_divine_allies_fineff::schedule(GOD_SHINING_ONE);
         }
         else if (god == GOD_ELYVILON)
         {
@@ -955,7 +954,7 @@ static void _inc_penance(god_type god, int val)
                 okawaru_remove_finesse();
         }
         else if (god == GOD_BEOGH)
-            beogh_do_ostracism();
+            dismiss_divine_allies_fineff::schedule(GOD_BEOGH);
         else if (god == GOD_YREDELEMNUL)
         {
             you.props.erase(YRED_TORCH_POWER_KEY);
@@ -2932,13 +2931,13 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_MAKHLEB:
-        make_god_gifts_disappear();
+        dismiss_divine_allies_fineff::schedule(GOD_MAKHLEB);
         break;
 
     case GOD_TROG:
         if (you.duration[DUR_TROGS_HAND])
             trog_remove_trogs_hand();
-        make_god_gifts_disappear();
+        dismiss_divine_allies_fineff::schedule(GOD_TROG);
         you.skills_to_show.insert(SK_SPELLCASTING);
         break;
 
@@ -2979,7 +2978,7 @@ void excommunication(bool voluntary, god_type new_god)
         if (you.duration[DUR_DIVINE_SHIELD])
             tso_remove_divine_shield();
 
-        make_god_gifts_disappear();
+        dismiss_divine_allies_fineff::schedule(GOD_SHINING_ONE);
         break;
 
     case GOD_ZIN:

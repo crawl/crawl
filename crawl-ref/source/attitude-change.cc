@@ -133,13 +133,9 @@ void fedhas_neutralise(monster* mons)
     }
 }
 
-// Make summoned (temporary) god gifts disappear on penance or when
-// abandoning the god in question.
-void make_god_gifts_disappear()
+// Make divine summons disappear on penance or excommunication from the god in question
+void dismiss_god_summons(god_type god)
 {
-    const god_type god =
-        (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
-                                      : GOD_NO_GOD;
     for (monster_iterator mi; mi; ++mi)
     {
         if (is_follower(**mi)
