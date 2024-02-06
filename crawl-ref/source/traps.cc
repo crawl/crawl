@@ -729,7 +729,7 @@ void trap_def::trigger(actor& triggerer)
         {
         // keep this for messaging purposes
         const bool triggerer_seen = you.can_see(triggerer);
-        const bool triggerer_was_invisible_monster = m && m->has_ench(ENCH_INVIS);
+        const bool triggerer_was_invisible_monster = m && m->has_ench(ENCH_INVIS) && !m->friendly();
 
         // Fire away!
         triggerer.do_shaft();
