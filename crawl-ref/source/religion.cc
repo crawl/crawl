@@ -605,7 +605,7 @@ bool active_penance(god_type god)
            && god != GOD_PAKELLAS
 #endif
            && god != GOD_ELYVILON
-           && (god == you.religion && !is_good_god(god)
+           && (god == you.religion && !(is_good_god(god) || god == GOD_BEOGH)
                || god_hates_your_god(god, you.religion));
 }
 
