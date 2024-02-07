@@ -6290,7 +6290,9 @@ bool monster::is_divine_companion() const
 {
     return attitude == ATT_FRIENDLY
            && !is_summoned()
-           && (mons_is_god_gift(*this, GOD_BEOGH)
+           // Orcs from Blood for Blood still count as god gifts, but should not
+           // be considered companions for most functions - only apostles should
+           && ((mons_is_god_gift(*this, GOD_BEOGH) && type == MONS_ORC_APOSTLE)
                || mons_is_god_gift(*this, GOD_YREDELEMNUL)
                || mons_is_god_gift(*this, GOD_HEPLIAKLQANA))
            && mons_can_use_stairs(*this);
