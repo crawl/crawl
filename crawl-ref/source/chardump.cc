@@ -1335,7 +1335,7 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
         return spell_title((spell_type)subtype);
     case CACT_INVOKE:
     case CACT_ABIL:
-        return ability_name((ability_type)subtype);
+        return ability_name((ability_type)subtype, true);
     case CACT_EVOKE:
         if (subtype >= UNRAND_START && subtype <= UNRAND_LAST)
             return uppercase_first(get_unrand_entry(subtype)->name);
