@@ -774,8 +774,8 @@ void ghost_demon::init_orc_apostle(apostle_type type, int pow)
     ac = stats->AC + div_rand_round(pow, 15);
     move_energy = stats->energy_usage.move;
 
-    // Base hp scales from ~45 at 0 power to ~105 at 100 power
-    max_hp = 65 + pow * 7 / 10;
+    // Base hp scales from ~50 at 0 power to ~150 at 100 power
+    max_hp = 50 + pow * 7 / 10 + (max(0, pow - 40) * 5 / 10);
     xl = 5 + div_rand_round(pow, 7) + random_range(-2, 2);
 
     // Adjust stats based on class
@@ -792,7 +792,11 @@ void ghost_demon::init_orc_apostle(apostle_type type, int pow)
         case APOSTLE_WIZARD:
             max_hp = max_hp * 3 / 4;
             damage = 2 + div_rand_round(pow, 8);
-            xl += 2;    // A little spellpower boost compared to others
+
+            // A little spellpower boost compared to others (but not for the
+            // very earliest challenges)
+            if (xl > 5)
+                xl += 2;
             break;
 
         case APOSTLE_PRIEST:

@@ -362,7 +362,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     }
 
     case ENCH_TOUCH_OF_BEOGH:
-        scale_hp(3, 2);
+        scale_hp(touch_of_beogh_hp_mult(*this), 100);
         break;
 
     default:
@@ -949,7 +949,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_TOUCH_OF_BEOGH:
-        scale_hp(2, 3);
+        scale_hp(100, touch_of_beogh_hp_mult(*this));
         break;
 
     default:

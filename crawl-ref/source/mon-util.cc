@@ -5595,3 +5595,11 @@ bool apply_visible_monsters(monster_func f, const coord_def& where, los_type los
 {
     return _apply_to_monsters(f, radius_iterator(where, los, true));
 }
+
+int touch_of_beogh_hp_mult(const monster& mon)
+{
+    const int pow = mon.props.exists(APOSTLE_POWER_KEY)
+                    ? mon.props[APOSTLE_POWER_KEY].get_int() : 0;
+
+    return 100 + (min(50, pow * 2 / 3));
+}
