@@ -2374,7 +2374,7 @@ void give_apostle_equipment(monster* apostle)
             // boomerangs or javelins.
             if (apostle->spells.size() == 0
                 || apostle->spells[0].spell == SPELL_BATTLECRY
-                && pow >= 20 && one_chance_in(3))
+                && pow >= 25 && one_chance_in(3))
             {
                 if (one_chance_in(3))
                     make_item_for_monster(apostle, OBJ_MISSILES, MI_JAVELIN, 0);
@@ -2399,12 +2399,12 @@ void give_apostle_equipment(monster* apostle)
                                   true, ISFLAG_KNOW_TYPE);
 
             // Slim chance at higher levels of a random ring or orb of energy
-            if (x_chance_in_y(max(0, pow - 40), 500))
+            if (x_chance_in_y(max(0, pow - 40), 350))
             {
                 give_specific_item(apostle, items(false, OBJ_ARMOUR,
                                     ARM_ORB, ISPEC_RANDART, SPARM_ENERGY));
             }
-            else if (x_chance_in_y(pow, 500))
+            else if (x_chance_in_y(pow, 350))
             {
                 make_item_for_monster(apostle, OBJ_JEWELLERY, OBJ_RANDOM,
                                     0, ISPEC_RANDART, ISFLAG_KNOW_TYPE);

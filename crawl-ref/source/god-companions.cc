@@ -664,8 +664,8 @@ bool maybe_generate_apostle_challenge()
     }
 
     // Mostly based on number of apostles you've fought, but capped by xl
-    int pow_cap = div_rand_round((max(1, you.experience_level - 5)) * 10, 22) * 10;
-    int base_pow = min(pow_cap, 10 + min((int)you.num_total_gifts[GOD_BEOGH], 13) * 5);
+    int pow_cap = div_rand_round((max(1, you.experience_level - 7)) * 12, 22) * 10;
+    int base_pow = 10 + min((int)you.num_total_gifts[GOD_BEOGH], 13) * 5;
 
     // Guarenteed no band for the first 2 apostles.
     int band_pow = you.num_total_gifts[GOD_BEOGH] < 3 ? 0 : base_pow;
@@ -679,6 +679,8 @@ bool maybe_generate_apostle_challenge()
         if (one_chance_in(3))
             base_pow += random2avg(div_rand_round(base_pow, 2), 2);
     }
+
+    base_pow = min(pow_cap, base_pow);
 
     return _try_generate_apostle_challenge(base_pow, band_pow);
 }

@@ -744,7 +744,7 @@ monster_info::monster_info(const monster* m, int milev)
              || m->type == MONS_INUGAMI
              || m->type == MONS_ORC_APOSTLE)
     {
-        props[KNOWN_MAX_HP_KEY] = (int)(m->ghost->max_hp);
+        props[KNOWN_MAX_HP_KEY] = (int)(m->max_hit_points);
     }
 
     if (m->has_ghost_brand())
@@ -880,7 +880,15 @@ monster_info::monster_info(const monster* m, int milev)
 string monster_info::get_max_hp_desc() const
 {
     if (props.exists(KNOWN_MAX_HP_KEY))
-        return std::to_string(props[KNOWN_MAX_HP_KEY].get_int());
+    {
+        const int hp = props[KNOWN_MAX_HP_KEY].get_int();
+
+        // Indicate that this apostle's HP has been increased by Beogh
+        if (type == MONS_ORC_APOSTLE && is(MB_TOUCH_OF_BEOGH))
+            return make_stringf("*%d*", hp);
+
+        return std::to_string(hp);
+    }
 
     const int scale = 100;
     const int base_avg_hp = mons_class_is_zombified(type) ?
