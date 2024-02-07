@@ -562,9 +562,6 @@
     <ClCompile Include="..\mon-info.cc">
       <Filter>cc</Filter>
     </ClCompile>
-    <ClCompile Include="..\mon-grow.cc">
-      <Filter>cc</Filter>
-    </ClCompile>
     <ClCompile Include="..\mon-gear.cc">
       <Filter>cc</Filter>
     </ClCompile>
@@ -1567,9 +1564,6 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\mon-gear.h">
-      <Filter>h</Filter>
-    </ClInclude>
-    <ClInclude Include="..\mon-grow.h">
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\mon-holy-type.h">
