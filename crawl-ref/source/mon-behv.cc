@@ -1077,7 +1077,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // If this is a player ally and the source is out of sight, possibly
         // interrupt the player.
         if (!crawl_state.game_is_arena()
-            && mon->friendly() && you.can_see(*mon) && !you.can_see(*src))
+            && mon->friendly() && you.can_see(*mon) && (!src || !you.can_see(*src)))
         {
             interrupt_activity(activity_interrupt::ally_attacked);
         }
