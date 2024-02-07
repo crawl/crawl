@@ -640,6 +640,7 @@ static bool _is_bad_moment_for_challenge()
 {
     if (you.hp < you.hp_max / 2
         || player_stair_delay()
+        || player_on_orb_run()
         || get_tension() > 45)
     {
         return true;
