@@ -2067,7 +2067,7 @@ orc apostle follower
 A favoured child of Beogh, once not so unlike yourself.
 
 Now that you have proven yourself to them, they will fight and die for both you
-and the cause. Shephard them well.
+and the cause. Shepherd them well.
 %%%%
 orc high priest
 
