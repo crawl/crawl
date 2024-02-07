@@ -5533,6 +5533,7 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
 
     case BEAM_INFESTATION:
         rc = (mons_gives_xp(*mon, you) || mon->props.exists(KIKU_WRETCH_KEY))
+             && !mon->friendly()
              && !mon->has_ench(ENCH_INFESTATION);
         break;
 
