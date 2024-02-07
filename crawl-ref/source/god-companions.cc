@@ -378,6 +378,12 @@ static bool _beogh_apostle_is_alive(int slot)
 static void _remove_offlevel_companion(mid_t mid)
 {
     level_excursion le;
+
+    // Level excursions to these are not necessarily safe, and generally we can
+    // assume that the player cannot return to here outside of wizmode anyway.
+    if (!is_connected_branch(companion_list[mid].level))
+        return;
+
     le.go_to(companion_list[mid].level);
     monster* dist_real = monster_by_mid(mid);
     remove_companion(dist_real);
@@ -869,7 +875,7 @@ static void _cleanup_apostle_corpse(mid_t mid)
     const string key = BEOGH_APOSTLE_DEATH_FLOOR_PREFIX + std::to_string(mid);
     level_id floor = you.props[key].get_level_id();
 
-    if (!floor.is_valid())
+    if (!floor.is_valid() || !is_connected_branch(floor))
         return;
 
     level_excursion le;
@@ -907,7 +913,8 @@ void beogh_dismiss_apostle(int slot)
 
     // Remove our follower monster (if they are elsewhere, use an excursion to
     // remove them immediately.)
-    if (companion_is_elsewhere(apostle->mid, true))
+    if (companion_is_elsewhere(apostle->mid, true)
+        && is_connected_branch(companion_list[apostle->mid].level))
     {
         level_excursion le;
         le.go_to(companion_list[apostle->mid].level);
