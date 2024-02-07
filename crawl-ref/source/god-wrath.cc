@@ -700,7 +700,7 @@ static bool _yredelemnul_retribution()
     int count = 0;
     for (int i = 0; i < how_many; ++i)
     {
-        if (yred_random_servant(you.experience_level), true)
+        if (yred_random_servant(you.experience_level, true), true)
             ++count;
     }
 
