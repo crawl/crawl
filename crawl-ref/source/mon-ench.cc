@@ -1816,7 +1816,37 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_SOUL_RIPE:
         if (!cell_see_cell(you.pos(), pos(), LOS_NO_TRANS))
-            del_ench(en, false, true);
+        {
+            // This implies the player *just* lost sight of us, so start the countdown
+            if (me.duration == INFINITE_DURATION)
+            {
+                // XXX: The most awkward way to work around not being able to lower
+                //      duration directly, or decay things with INFINITE_DURATION....
+                mon_enchant timeout(ENCH_SOUL_RIPE, me.degree, &you, 20);
+                del_ench(en, true, false);
+                add_ench(timeout);
+            }
+            else
+            {
+                if (!decay_enchantment(ENCH_SOUL_RIPE)
+                    && me.duration <= 10)
+                {
+                    mprf("Your grip on %s soul is slipping...",
+                         name(DESC_ITS, true).c_str());
+                }
+            }
+
+        }
+        else
+        {
+            if (me.duration < INFINITE_DURATION)
+            {
+                // XXX: See above. I hate it. Surely there's a better way than this.
+                mon_enchant renew(ENCH_SOUL_RIPE, me.degree, &you, INFINITE_DURATION);
+                del_ench(en, true, false);
+                add_ench(renew);
+            }
+        }
         break;
 
     default:
