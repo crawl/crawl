@@ -665,7 +665,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\mon-cast.cc" />
     <ClCompile Include="..\mon-clone.cc" />
     <ClCompile Include="..\mon-gear.cc" />
-    <ClCompile Include="..\mon-grow.cc" />
     <ClCompile Include="..\mon-info.cc" />
     <ClCompile Include="..\mon-movetarget.cc" />
     <ClCompile Include="..\mon-pathfind.cc" />
@@ -1040,7 +1039,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\mon-explode.h" />
     <ClInclude Include="..\mon-flags.h" />
     <ClInclude Include="..\mon-gear.h" />
-    <ClInclude Include="..\mon-grow.h" />
     <ClInclude Include="..\mon-holy-type.h" />
     <ClInclude Include="..\mon-info.h" />
     <ClInclude Include="..\mon-inv-type.h" />
