@@ -157,10 +157,6 @@ void do_player_recall(recall_t type)
         const int mid = entry.first;
         if (companion_is_elsewhere(mid, true))
         {
-            // Recall can't pull monsters out of the Abyss
-            if (entry.second.level.branch == BRANCH_ABYSS)
-                continue;
-
             if (try_recall(mid))
                 did_recall = true;
         }
