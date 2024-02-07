@@ -4959,7 +4959,7 @@ _Ignacio_rare_
 @The_monster@ says @to_foe@, "No gallows around, so decapitation it is."
 ## END Ignacio ##
 %%%%
-############ IJYB ### A twisted goblin
+############ IJYB ### A goblin artificer
 Ijyb
 
 @_Ijyb_common_@
@@ -4971,49 +4971,60 @@ _Ijyb_common_
 
 VISUAL:@The_monster@ grins evilly.
 
-@The_monster@ screams @at_foe@, "Die!"
+VISUAL:@The_monster@ stops to [study|check on] @possessive@ wand.
 
-@The_monster@ screams @at_foe@, "Me kill you!"
+@The_monster@ screams @at_foe@, "Time for continue experiment!"
 
-@The_monster@ screams @at_foe@, "Me stronger than you!"
+@The_monster@ screams @at_foe@, "Me wand stronger than you!"
 
 @The_monster@ screams @at_foe@, "It's all mine!"
 
-@The_monster@ screams @at_foe@, "Get away!"
-
 @The_monster@ screams @at_foe@, "Level is mine! All mine!"
 
-@The_monster@ screams @at_foe@, "You nasty! Big nasty!"
+@The_monster@ screams @at_foe@, "{{
+    if you.skill("Evocations") >= 2 then
+      return "Me learn from your wands next!"
+    else
+      return "You look like good test subject!"
+    end }}" @player_only@
 %%%%
 _Ijyb_rare_
 
-@The_monster@ screams @at_foe@, "I cut your head off!"
+@The_monster@ screams @at_foe@, "Don't stand in way of progress!"
 
-@The_monster@ screams @at_foe@, "I dance on your bones!"
+@The_monster@ screams @at_foe@, "Me am play god!"
 
-@The_monster@ screams @at_foe@, "Me very upset!"
+@The_monster@ screams, "They call me mad!"
 
-@The_monster@ screams @at_foe@, "No! No, no, no, no!"
+w:5
+@The_monster@ screams @at_foe@, "Me yet to meet anyone who can outsmart wand!"
 
 @The_monster@ screams @at_foe@, "I no like you!"
 %%%%
 confused Ijyb
 
-@The_monster@ cowers and screams, "My head! Aaaah! Get out now!"
+@The_monster@ cowers and screams, "Me head! Aaaah! Get out now!"
 
 @The_monster@ screams @at_foe@, "Me give you whole level! Then you leave me be!"
 
-@The_monster@ screams @at_foe@, "Me still stronger! You very nasty!"
+@The_monster@ screams @at_foe@, "Wand still stronger! You very nasty!"
 
-@The_monster@ screams @at_foe@, "Me deserve better than this!"
+w:5
+@The_monster@ screams, "Science deserve better than this!"
 
 @The_monster@ screams @at_foe@, "Me be nice to you! Me promise!"
 
-@The_monster@ screams @at_foe@, "Me back to killing you soon!"
+@The_monster@ screams, "Me go back to drawing board!"
 
 @The_monster@ screams @at_foe@, "No nasty magic on me!"
 
 VISUAL:@The_monster@ clutches @possessive@ head and gibbers rapidly, swaying.
+%%%%
+ijyb triumphant
+
+@The_monster@ screams, "Time for next experiment!"
+
+@The_monster@ screams, "Good help so hard to find!"
 ## END Ijyb ##
 %%%%
 ############ ILSUIW ### a powerful merfolk witch
