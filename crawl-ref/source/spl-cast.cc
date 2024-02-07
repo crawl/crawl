@@ -510,11 +510,11 @@ int calc_spell_power(spell_type spell)
     power = _stepdown_spellpower(power);
 
     // Divine exegesis gives a flat bonus to spell power that scales
-    // linearly with invocations, reaching 100 at max invocations
-    // Also have a minimum spellpower twice that of the bonus
+    // linearly with invocations, reaching 150 at max invocations
+    // Also have a minimum spellpower
     if (you.divine_exegesis)
     {
-        power = max(power + you.skill(SK_INVOCATIONS, 100) / 27,
+        power = max(power + you.skill(SK_INVOCATIONS, 150) / 27,
             you.skill(SK_INVOCATIONS, 200) / 27);
     }
     
