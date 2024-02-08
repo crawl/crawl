@@ -2312,11 +2312,13 @@ static const armour_list APOSTLE_HEAVY_ARMOUR =
 static const armour_list APOSTLE_LIGHT_ARMOUR =
     {   { ARM_LEATHER_ARMOUR,       50 },
         { ARM_RING_MAIL,            40 },
+        { ARM_TROLL_LEATHER_ARMOUR, 7 },
         { ARM_STEAM_DRAGON_ARMOUR,  5 },
+        { ARM_ACID_DRAGON_ARMOUR,   4 },
         };
 
 static const armour_list APOSTLE_ELITE_HEAVY_ARMOUR =
-    {   { ARM_PLATE_ARMOUR,          60 },
+    {   { ARM_PLATE_ARMOUR,          45 },
         { ARM_STORM_DRAGON_ARMOUR,   25 },
         { ARM_SHADOW_DRAGON_ARMOUR,  20 },
         { ARM_GOLD_DRAGON_ARMOUR,    8 },
@@ -2399,15 +2401,25 @@ void give_apostle_equipment(monster* apostle)
                                   true, ISFLAG_KNOW_TYPE);
 
             // Slim chance at higher levels of a random ring or orb of energy
-            if (x_chance_in_y(max(0, pow - 40), 350))
+            if (x_chance_in_y(max(0, pow - 40), 280))
             {
                 give_specific_item(apostle, items(false, OBJ_ARMOUR,
                                     ARM_ORB, ISPEC_RANDART, SPARM_ENERGY));
             }
-            else if (x_chance_in_y(pow, 350))
+            else if (x_chance_in_y(pow, 150))
             {
-                make_item_for_monster(apostle, OBJ_JEWELLERY, OBJ_RANDOM,
-                                    0, ISPEC_RANDART, ISFLAG_KNOW_TYPE);
+                // Many ring types do nothing for monsters, so let's pick through
+                // ones that do.
+                jewellery_type rtype = random_choose(RING_PROTECTION_FROM_FIRE,
+                                                     RING_POISON_RESISTANCE,
+                                                     RING_PROTECTION_FROM_COLD,
+                                                     RING_EVASION,
+                                                     RING_LIFE_PROTECTION,
+                                                     RING_PROTECTION);
+
+                make_item_for_monster(apostle, OBJ_JEWELLERY, rtype, 0,
+                                      x_chance_in_y(pow, 125)? ISPEC_RANDART : 0,
+                                      ISFLAG_KNOW_TYPE);
             }
         }
         break;
