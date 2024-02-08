@@ -6326,8 +6326,6 @@ int monster::spell_hd(spell_type spell) const
         hd *= 2;
     if (has_ench(ENCH_EMPOWERED_SPELLS))
         hd += 5;
-    if (has_ench(ENCH_TOUCH_OF_BEOGH))
-        hd = hd * 3 / 2;
     return hd;
 }
 
