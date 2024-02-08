@@ -838,7 +838,13 @@ VISUAL:@The_monster@ barks [happily|excitedly]!
 
 VISUAL:@The_monster@ runs in silly circles!
 
-VISUAL:@The_monster@ looks up at you expectantly.
+VISUAL:@The_monster@ looks {{
+  if you.race() == "Felid" then
+      return "down"
+  else
+     return "up"
+  end
+}} at you expectantly.
 
 VISUAL:@The_monster@ scratches @possessive@ ear.
 
@@ -858,7 +864,13 @@ w:50
 
 VISUAL:@The_monster@ [plays|frolics] in the surf!
 
-A distinct wet dog smell emanates from @the_monster@.
+{{
+if you.can_smell() then
+    return "VISUAL:A distinct wet dog smell emanates from @the_monster@."
+else
+    return "VISUAL:@The_monster@ motions as if to dry itself off on you."
+end
+}}
 
 w:1
 VISUAL:@The_monster@ hopefully picks up a piece of driftwood and looks at you.
@@ -7414,6 +7426,15 @@ VISUAL:@The_monster@ skips for a moment.
 @The_monster@ says @to_foe@, "Come and play with me!"
 
 @The_monster@ says, "Trust me, I'm a doctor."
+%%%%
+Killer Klown triumphant
+
+VISUAL: @The_monster@ begins to take a bow, but slips on a banana peel.
+
+@The_monster@ honks, delighted.
+
+# Yes, of course they could tie together a tree or a wisp.
+VISUAL: @The_monster@ begins to tie you into a balloon animal.
 ## END Killer Klown ##
 %%%%
 ################## Laughing skull ###########################
@@ -7428,14 +7449,12 @@ laughing skull
 # Kill Six Billion Demons
 @The_monster@ @_laughs_@ at the inescapable nature of violence.
 
-w:20
 __NONE
 %%%%
 friendly laughing skull
 
 @laughing skull@
 
-w:20
 __NONE
 %%%%
 laughing skull triumphant
@@ -7590,7 +7609,7 @@ w:7
 w:1
 @_weeping_skull_rare_@
 
-w:4
+w:3
 __NONE
 %%%%
 _weeping_skull_common_
@@ -7612,9 +7631,8 @@ _weeping_skull_rare_
 # Hollow Knight
 @The_monster@ asks how much longer can this world bear the weight of past lives.
 
-# Don't add literally everything to this one- only the ones with no chance.
-w:1
-@The_monster@ mourns the extinction of [gnomes|halflings|high elves|hill dwarves].
+w:5
+@The_monster@ mourns the many lost in the orcish exodus to the Dungeon.
 
 # The shrieker shrieks.
 w:1
