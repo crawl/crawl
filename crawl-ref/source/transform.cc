@@ -855,7 +855,7 @@ public:
 
     /// Does this form care about skill for UC damage and accuracy, or only XL?
     bool get_unarmed_uses_skill() const override {
-        return you.get_mutation_level(MUT_VAMPIRISM) >= 2;
+        return you.get_mutation_level(MUT_VAMPIRISM) >= 1;
     }
 
     /**
