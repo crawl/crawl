@@ -1367,6 +1367,8 @@ ENDMAP
 NAME:    regret_index_zotdec_zees
 TAGS:    extra transparent zotdec no_rotate no_hmirror no_vmirror
 DEPTH:   Zot
+KFEAT:   t = petrified_tree
+KFEAT:   C = altar_qazlal w:20 / altar_makhleb / altar_xom
 KFEAT:   Z = zot trap
 SHUFFLE: opqrstu
 SUBST:   o = x, p : x., q : x., rs = ., z : xxbbCVG, b : bbc
@@ -1876,35 +1878,35 @@ DEPTH:   Zot
 ITEM:    stone q:1
 KFEAT:   C = altar_jiyva
 SUBST:   < = <<<({[Cd$, > = >dCC
-NSUBST:  p = 4:' / 4 : x' / *:x, q = 4:' / 4 : x' / *:x
+NSUBST:  p = 4:. / 4 = x. / *:x, q = 4:. / 4 = x. / *:x
 NSUBST:  P = 4:. / 2 : c. / *:c, Q = 4:. / 2 : c. / *:c
 NSUBST:  r = 2 : x' / 2 : x' / *:x, s = 2 : x' / 2 : x' / *:x
 CLEAR:   '
 TILE:    m = dngn_transparent_wall_green
 MAP
-   pppppp
- ppppppppp
- pppp......
-ppp..........
-ppp.....cc..r
-pp....ccmcP.r
-pp...cccccP.r
-pp...cccccP.r
-pp..cmccccP.r
+   xxxxxx
+ xxxpppppp
+ xppp......
+xxp..........
+xpp.....cc..r
+xp....ccmcP.r
+xp...cccccP.r
+xp...cccccP.r
+xp..cmccccP.r
  p..ccccccP.rr
   ...PPPPP<..rrrrr.
    ................
    .sssss..>QQQQQ...
         ss.Qcccccc..q
-         s.Qccccmc..qq
-         s.Qccccc...qq
-         s.Qccccc...qq
-         s.Qcmcc....qq
-         s..cc.....qqq
-         ..........qqq
-            .....qqqq
-             qqqqqqqq
-              qqqqq
+         s.Qccccmc..qx
+         s.Qccccc...qx
+         s.Qccccc...qx
+         s.Qcmcc....qx
+         s..cc.....qqx
+         ..........qxx
+            .....qqqx
+             qqqqqxxx
+              xxxxx
 ENDMAP
 
 NAME:    regret_index_zotdec_abyssal_star_handed
@@ -3118,6 +3120,8 @@ NAME:   st_large_dragon_hoard_4
 SUBST:  D = DDD$
 KITEM:  D = $
 KMONS:  1 = nonbase draconian band
+KITEM:  & = dragon-blood talisman / dragon-blood talisman randart / \
+            book of the dragon w:15 / $
 : st_zot_vaults_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -3126,7 +3130,7 @@ x$$$$xx......1....x*$*xxxx...xxx
 xxx+xx..x.........+$|$xxx.....xx
 xxx....xxxx......xx*$*xxx.xx...x
 xx..xxxxxxxxxx..xxxxxxxx.xxx..xx
-xxx..xxxD*Dxxxx...xxxxx..xxxx..x
+xxx..xxxD&Dxxxx...xxxxx..xxxx..x
 xDxx.xx$*Y*$Dxxxx..x....xxxx..xx
 xD$x.xxD$|D$$*xxxx...xxxxxxx..xx
 xxx..xxx*$$$$$xxxxxxx$Dxxxx..xxx
@@ -3144,6 +3148,8 @@ ENDMAP
 NAME:   st_grand_hoard_of_tiamat
 TAGS:   no_monster_gen
 KMONS:  1 = patrolling Tiamat, patrolling golden dragon
+KITEM:  1 = dragon-blood talisman / dragon-blood talisman randart / \
+            book of the dragon w:15
 SUBST:  D = DDD$
 KITEM:  D = $
 KITEM:  $ = gold q:1
@@ -3720,6 +3726,8 @@ KFEAT:   r = c
 SHUFFLE: Gg/Gg/Gg/Hh, Pp/Pp/Pp/Qq
 SUBST:   GP = x, g = r, p = c, HQ = @, hq = .
 COLOUR:  r = red, c = blue
+TILE:    r = dngn_stone_wall_red
+TILE:    c = dngn_stone_wall_blue
 MAP
     xxx                   xxx
    xxrxx                 xxrxx
@@ -3935,9 +3943,9 @@ DEPTH:  Zot
 ORIENT: float
 MONS:   purple draconian, nonbase purple draconian
 MONS:   quicksilver dragon, killer klown
-NSUBST: - = 2:1 / 3=112.. / 1 = 3:1 ., " = 1:1 / 3=122. / 1=34
-NSUBST: ' = 2:1 / 2=12 / 2:3 / 1=34.., ; = 2:1 / 3=112.. / 1=3:1 .
-NSUBST: _ = 1:1 / 3=122. / 1=34, p = 2:1 / 2=12 / 2:3 / 1=34..
+NSUBST: - = 2:1 / 2 = 112.. / 1 = 3:1 ., " = 1:1 / 3 = 122. / 1 = 34
+NSUBST: ' = 2:1 / 2 = 12 / 2:3 / 1=34.., ; = 2:1 / 2 = 112.. / 1 = 3:1 .
+NSUBST: _ = 1:1 / 3 = 122. / 1=34, p = 2:1 / 2=12 / 2:3 / 1=34..
 SUBST:  | = |*
 MAP
       xxxxx xxxxx xxxxx

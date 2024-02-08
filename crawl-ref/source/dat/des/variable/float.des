@@ -2084,9 +2084,9 @@ ENDMAP
 # Another low-level vault - LP
 #
 NAME:    lemuel_reptile_caves
-DEPTH:   D:10-13, Lair:1-, !Lair:$
-ORIENT:  float
 TAGS:    transparent no_pool_fixup
+DEPTH:   D:10-12, Lair:1-, !Lair:$
+ORIENT:  float
 MONS:    frilled lizard, iguana, komodo dragon
 MONS:    rime drake / swamp drake
 MONS:    adder, water moccasin
@@ -3809,7 +3809,8 @@ KMONS:  8 = tengu reaver ; battleaxe ego:flaming | great sword ego:freezing | \
                            halberd ego:electrocution | lajatang ego:heavy . \
                            fire dragon scales | ice dragon scales
 KMONS:  9 = red draconian / white draconian / black draconian
-KMONS:  0 = red draconian monk / white draconian monk / black draconian monk
+KMONS:  0 = red draconian stormcaller / white draconian stormcaller / \
+            black draconian stormcaller
 KMONS:  ! = orb of fire / electric golem / ice fiend / iron giant
 KMONS:  & = ancient lich
 KITEM:  $ = $ no_pickup
@@ -3820,7 +3821,7 @@ KFEAT:  Z = enter_zot
 SUBST:  A = 1 3:14, B = 2 4:14, C = 5:14 6
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 SUBST:  } = Z, ])> = ., 1 = 9
-NSUBST: ! = 2:8 / 2:9
+NSUBST: ! = 1:8 / 1:9 / 2  = 80
 : elseif you.in_branch("Zot") then
 SUBST:  ) = ))>, ] = ]]>, 1 = 9, 4 = 0
 NSUBST: ! = 1:6 / 1:0 / 1:! / 1:&
@@ -4286,7 +4287,7 @@ MAP
 .vh+'2G2'+iv.
 .vvv'''''vvv.
 ..vf'''''gv..
- .vvv'''vvv.
+ .vvv===vvv.
  ..nvv)vvn..
   ...vnv...
     .....
@@ -4673,35 +4674,52 @@ MAP
  ...........
 ENDMAP
 
-NAME: cheibrodos_statue_roulette
-TAGS: no_item_gen no_monster_gen
-DEPTH: D:7-
+NAME:   cheibrodos_statue_roulette
+TAGS:   no_item_gen no_monster_gen vaults_hard
+DEPTH:  D:8-, Vaults, !Vaults:$
+WEIGHT: 5 (Vaults), 10
 ORIENT: float
-: if you.depth() > 12 then
-KMONS: ' = molten gargoyle
-KITEM: ' = % / w:2 *
-KFEAT: " = l
+: if you.in_branch("Vaults") then
+KMONS:  1 = war gargoyle
+KMONS:  2 = vault sentinel
+KFEAT:  G = metal_statue
+KITEM:  12 = % / * w:4
+NSUBST: - = 3:1 / 2:2 / 2 = 1G / *:G
+SUBST:  @ = ., '" = .
+COLOUR: G = silver
+TILE:   G = dngn_silver_statue
+:   set_feature_name("metal_statue", "silver statue")
 : else
-KMONS: ' = gargoyle
-KITEM: ' = %
+:   if you.depth() > 12 then
+KMONS:  1 = molten gargoyle
+KITEM:  1 = % / * w:2
+SUBST:  " = l
+NSUBST: - = 3:1 / 2=1GG / *:G
+: else
+KMONS:  1 = gargoyle
+KITEM:  1 = %
+NSUBST: - = 2:1 / 2=1GG / 1:* / *:G
+:   end
+CLEAR:  '
 : end
-NSUBST: - = 4:' / 2='GG / *:G
 MAP
-   .........
- ...ccccccc...
- .ccc-ccc-ccc.
-..c-cc+.+cc-c..
-.ccc+.....+ccc.
-.cGc.......c-c.
-......"""..+cc.
-@....."G"...cc.
-......"""..+cc.
-.cGc.......c-c.
-.ccc+.....+ccc.
-..c-cc+.+cc-c..
- .ccc-ccc-ccc.
- ...ccccccc...
-   .........
+     ''' '''
+    .........
+  ...ccccccc...
+  .ccc-ccc-ccc.
+ ..c-cc+.+cc-c..
+ .ccc+.....+ccc.
+'.cGc.......c-c.'
+'......"""..+cc.'
+@......"G"...cc.
+'......"""..+cc.'
+'.cGc.......c-c.'
+ .ccc+.....+ccc.
+ ..c-cc+.+cc-c..
+  .ccc-ccc-ccc.
+  ...ccccccc...
+    .........
+      '' ''
 ENDMAP
 
 NAME: cheibrodos_steamvent
@@ -11962,7 +11980,7 @@ NAME:   nicolae_fronds_of_death
 TAGS:   transparent
 DEPTH:  D:12-, Depths
 ORIENT: float
-SUBST:  0 = ....0009, 9 = .....99998, % = %%%%***|
+SUBST:  0 = .....0009, 9 = ....9999, % = %%%%***|
 MAP
 ccccc                 ccccc
 cG%%ccc             ccc%%Gc
@@ -11973,7 +11991,7 @@ ccv...v.+9ccc.ccc9+.v...vcc
  cc+v...v.x.+.+.x.v...v+cc
   c9...0..x.x.x.x..0...9c
   cc+xv...v0x.x0v...vx+cc
-   c9....0..x.x..0....9c
+   c9.......x.x.......9c
    cc+xxv...v0v...vxx+cc
     c0..0..0...0..0...c
    @cc+xxxv.....vxxx+cc@
@@ -11981,7 +11999,7 @@ ccv...v.+9ccc.ccc9+.v...vcc
    @cc+xxxv.....vxxx+cc@
     c0..0..0...0..0..0c
    cc+xxv...v0v...vxx+cc
-   c9....0..x.x..0....9c
+   c9.......x.x.......9c
   cc+xv...v0x.x0v...vx+cc
   c9...0..x.x.x.x..0...9c
  cc+v...v.x.+.+.x.v...v+cc

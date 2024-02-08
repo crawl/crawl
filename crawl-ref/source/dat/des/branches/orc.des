@@ -1793,10 +1793,13 @@ NAME:    st_orc_rangers
 TAGS:    no_rotate no_item_gen no_monster_gen no_pool_fixup transparent
 PLACE:   Orc:$
 ORIENT:  float
-MONS:    orc warrior w:1 ; orcbow . halberd | war axe | morningstar /\
-         orc w:10 ; orcbow . trident | hand axe | mace
-MONS:    orc warrior ; orcbow . glaive | broad axe | battleaxe | great mace
-MONS:    orc knight ; arbalest . glaive | broad axe | great mace
+MONS:    orc warrior w:1 ; orcbow . halberd | war axe | morningstar . \
+                           leather armour | ring mail / \
+         orc w:10 ; orcbow . trident | hand axe | mace . leather armour
+MONS:    orc warrior ; orcbow . glaive | broad axe | battleaxe | great mace . \
+                                leather armour | ring mail
+MONS:    orc knight ; arbalest . glaive | broad axe | great mace . \
+                                 leather armour | ring mail
 MONS:    orc warrior
 MONS:    centaur w:20 / centaur warrior w:1, kobold blastminer
 SUBST:   3 = 23
@@ -1811,8 +1814,8 @@ MAP
 ....5...5..wwwwcccccwwww..5...5....
 ..c....5.wwwwccccSccccwwww.5....c..
 ..c...5.wwwwcccc4.4ccccwwww.5...c..
-........1221...34S43...1221........
-........1221...34S43...1221........
+........1221...34S43....221........
+........122....34S43...1221........
 ..c...5.wwwwcccc4.4ccccwwww.5...c..
 ..c....5.wwwwccccSccccwwww.5....c..
 ....5...5..wwwwcccccwwww..5...5....
@@ -2270,11 +2273,11 @@ cc...cc.....cc...cc
  cc...c..2..c...cc
   cc.4.......4.cc
 ccccc.........ccccc
-..I....A...B....I..
+..I....A.c.B....I..
 ...................
-@4..1...._....1..4@
+@...1..c._.c..1...@
 ...................
-..I....C...D....I..
+..I....C.c.D....I..
 ccccc.........ccccc
   cc.4.......4.cc
  cc...c..3..c...cc
@@ -2293,10 +2296,10 @@ NAME:    pf_orc_diabolical
 TAGS:    patrolling no_item_gen no_monster_gen transparent
 PLACE:   Orc:$
 ORIENT:  float
-MONS:    orc / nothing w:5, orc warrior / nothing w:5
-MONS:    orc priest / nothing w:5, common demon / nothing w:5
+MONS:    orc / nothing w:6, orc warrior / nothing w:6
+MONS:    orc priest / nothing w:6, common demon / nothing w:6
 MONS:    orc knight / kobold blastminer w:1
-MONS:    demonspawn / nothing w:5
+MONS:    demonspawn / nothing w:6
 MONS:    orc high priest / orc sorcerer
 KFEAT:   A = w:20 general shop / distillery shop / scroll shop
 KFEAT:   B = book shop / jewellery shop

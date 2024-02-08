@@ -204,27 +204,28 @@ xx.''..'...xx
 xxxx..@..xxxx
 ENDMAP
 
-# Lair monsters near stair
+# A fair number of these aren't Lair monsters anymore,
+# but the idea still works, so.
 NAME:    dpeg_lair_monsters
 TAGS:    ruin lair_entry transparent
 ORIENT:  float
 MONS:    yak, death yak
-MONS:    iguana w:20 / black bear w:20 / komodo dragon / basilisk w:5
-MONS:    river rat / hell rat / quokka / rat
-MONS:    bullfrog w:40 / blink frog / cane toad
-SHUFFLE: 1345
-NSUBST:  1 = 2:11112 / * = 1..
-NSUBST:  3 = 1:2 / * = 2.., 5 = 1:4 / * = 4:5 .:9
-SUBST:   y = xx.
+MONS:    iguana w:30 / basilisk, komodo dragon
+MONS:    river rat / hell rat / black bear
+MONS:    bullfrog w:30 / blink frog, cane toad
+SHUFFLE: 1356
+NSUBST:  1 = 2 = 12 / 2:1 / 1:. / * = 1.., 3 = 2 = 334 / 2:3 / 1:. / * = 3..
+NSUBST:  5 = 2:5 / 1:. / * = 55., 6 = 2 = 6667 / * = 6:5 .:9
+SUBST:   y = xxx.
 KFEAT:   O = enter_lair
 MAP
 xxxxx...@...y
 x111.........
-x111.y...2...
+x111.y...3...
 x11.y...y...@
 x..yy.O.yy...
 @...y...y....
-...2...y2.yy.
+...3...y3.yy.
 ..........yy.
 y...@........
 ENDMAP

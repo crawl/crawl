@@ -233,8 +233,9 @@ NAME:   nicolae_coc_caina
 TAGS:   transparent
 DEPTH:  Coc, !Coc:$
 ORIENT: centre
-KMONS:  1 = curse skull
-SUBST:  x = 1:5 xx.
+MONS:   curse skull, laughing skull, weeping skull
+NSUBST: x = 2:1 / 1 = 12 / 5 = 2233. / 2:3 / 4:x / 4:. / * = x:4 .:3
+TILE:   x = wall_undead
 MAP
      ..x.x
    .x.......
@@ -518,23 +519,23 @@ MAP
 ENDMAP
 
 NAME:   nicolae_coc_liches_on_tour
-TAGS:   transparent no_pool_fixup
+TAGS:   transparent no_monster_gen no_pool_fixup
 DEPTH:  Coc:2-
 KMONS:  1 = ice fiend
 KMONS:  2 = hellion / tormentor
 KMONS:  3 = ancient lich / dread lich
-NSUBST: M = 2=1 / 3=2 / 3=3 / 123..
+NSUBST: M = 2:1 / 3:2 / 3:3 / 2:. / * = 123..
 SUBST:  ~ = w., - = x.
 MAP
  .........
-...~www~...
-..~wwwww~..
+.M.~www~.M.
+M.~wwwww~.M
 .M~wwwww~M.
 ..M~www~M..
 .M..~~~..M.
-x.M.....M.x
-xM.......Mx
-xxM..{..Mxx
+x.M-...-M.x
+x.-.x.x.-.x
+xx...{...xx
 xxxx~~~xxxx
  xxxxxxxxx
 ENDMAP

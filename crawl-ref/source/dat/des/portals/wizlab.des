@@ -233,7 +233,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
             crawl.one_chance_in(8) then
 
             -- tier 1 spawns
-            if data.count < 9 or data.count < 15 and crawl.one_chance_in(6) then
+            if data.count < 8 or data.count < 15 and crawl.one_chance_in(6) then
                 if crawl.coinflip() then
                     monster = (list_deriv_undead_base_mons[pick_undead_base_mon]
                                .. list_undead_types[pick_undead_type])
@@ -242,7 +242,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                 end
 
             -- tier 2 spawns
-            elseif data.count < 18 or data.count < 23 and crawl.one_chance_in(4) then
+            elseif data.count < 16 or data.count < 23 and crawl.one_chance_in(4) then
                 if crawl.coinflip() then
                     pick_undead_base_mon = pick_undead_base_mon + 3
                     monster = (list_deriv_undead_base_mons[pick_undead_base_mon]
@@ -253,7 +253,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                 end
 
             -- tier 3 spawns
-            elseif data.count < 25 or crawl.x_chance_in_y(11, 14) then
+            elseif data.count < 24 or crawl.x_chance_in_y(11, 14) then
                 if crawl.coinflip() then
                     pick_undead_base_mon = pick_undead_base_mon + 6
                     monster = (list_deriv_undead_base_mons[pick_undead_base_mon]
@@ -1493,20 +1493,22 @@ ENDMAP
 NAME:       wizlab_zonguldrok
 TAGS:       no_rotate patrolling
 MONS:       skeletal warrior, ancient champion, lich
-ITEM:       any scroll / randbook disc:necromancy numspells:1 w:2
+ITEM:       any scroll q:2 w:8 / scroll of enchant weapon ident:type w:2 / \
+            randbook disc:necromancy numspells:1 w:2
 # Shortlist of one-handed skeletal warrior weapons.
-: local d = "ego:draining good_item "
-: local p = "ego:pain good_item "
+: local d = "ego:draining plus:6 "
+: local p = "ego:pain plus:6 "
 : item("morningstar " .. d .. " / morningstar " .. p .. " / war axe " .. d ..
 :      " / war axe " .. p .. " / trident " .. d .. " / trident " .. p ..
 :      " / scimitar " .. d .. " / scimitar " .. p)
 ITEM:       shadow dragon scales good_item / shadow dragon scales randart / \
-            plate armour good_item / plate armour randart / \
+            crystal plate armour good_item / crystal plate armour randart / \
+            plate armour good_item w:15 / plate armour randart w:15 / \
             chain mail good_item / chain mail randart / \
-            kite shield randart w:5 / tower shield randart w:5 / \
-            talisman of death w:5 / talisman of death randart w:1
+            kite shield randart / tower shield randart / \
+            talisman of death / talisman of death randart w:2
 KFEAT:      GW = G
-NSUBST:     Z = Z / ', d = 6:e / 2:f / * = d:20 e:2, G = 27:G / 4 = G. / *:.
+NSUBST:     Z = Z / ', d = 5:e / 3:f / * = d:20 e:2, G = 22:G / 5 = G. / *:.
 {{
 lua_marker("G", portal_desc { grave = 1 })
 lua_marker("R", portal_desc { antique_grave_a = 1 })

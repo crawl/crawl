@@ -356,8 +356,9 @@ end), { weight = 2 }))
 mset(with_props(spec_fn(function ()
   local d = 10 + you.zigs_completed() * 2
   local e = 10 + you.zigs_completed() * 3
-  return "raiju / air elemental / " ..
+  return "raiju w:5 / wind drake w:5 / air elemental / " ..
          "shock serpent w:" .. d .. " / spark wasp w:" .. d .. " / " ..
+         "ironbound thunderhulk w:" .. d .. " / " ..
          "spriggan air mage w:" .. e .. " / storm dragon w:" .. e .. " / " ..
          "titan w:" .. e .. " / electric golem w:" .. e
 end), { weight = 2 }))

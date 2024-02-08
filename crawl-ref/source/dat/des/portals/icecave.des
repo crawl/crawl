@@ -64,7 +64,7 @@ function ice_cave_portal(e)
     e.kfeat("a = x")
     e.rtile("a = wall_ice_block")
     e.colour(".1234 = blue")
-    e.ftile(".12345O+^ = floor_ice")
+    e.ftile(".12345O+^DEFH = floor_ice")
 end
 
 --[[
@@ -452,7 +452,6 @@ end
 #
 ###############################################################################
 
-
 ###############################################################################
 # Entry vaults that place for both ice cave difficulties.
 
@@ -542,7 +541,7 @@ DEPTH:  D:11-13, Lair:3-, Orc
 WEIGHT: 5
 : ice_cave_portal(_G)
 MONS:   wolf, yak, polar bear, rime drake, ice dragon
-SUBST:  D = 12 .:1, E = 2 3:5 .:1, F = 3 4:2, H = 4:2 5:8
+SUBST:  D = 12 .:1, E = 2 3:5 .:1, F = 3 4:2, H = 4:8 5:2
 MAP
 xx    xxxxxxx
 axxxxxxaaaaaxx
