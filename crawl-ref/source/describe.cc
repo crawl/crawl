@@ -5276,8 +5276,10 @@ string _monster_habitat_description(const monster_info& mi)
     switch (mons_habitat_type(type, mi.base_type))
     {
     case HT_AMPHIBIOUS:
-        return uppercase_first(make_stringf("%s can travel through water.\n",
-                               mi.pronoun(PRONOUN_SUBJECTIVE)));
+        return uppercase_first(make_stringf("%s can %s water.\n",
+                               mi.pronoun(PRONOUN_SUBJECTIVE),
+                               mi.type == MONS_ORC_APOSTLE
+                                ? "walk on" : "travel through"));
     case HT_AMPHIBIOUS_LAVA:
         return uppercase_first(make_stringf("%s can travel through lava.\n",
                                mi.pronoun(PRONOUN_SUBJECTIVE)));
