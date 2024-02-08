@@ -16,5 +16,6 @@ shout: shout
 intelligence: human
 uses: starting_equipment
 size: medium
+habitat: amphibious
 shape: humanoid
 tile_variance: mod
