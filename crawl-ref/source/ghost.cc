@@ -608,11 +608,11 @@ static const vector<random_pick_entry<spell_type>> priest_spells =
 static const vector<random_pick_entry<spell_type>> warrior_spells =
 {
   { 0,  50,  175, FALL, SPELL_NO_SPELL },
-  { 45, 150,  50, SEMI, SPELL_HASTE },
-  { 25, 150,  70, SEMI, SPELL_MIGHT },
-  { 15, 100,  90, RISE, SPELL_HARPOON_SHOT },
-  { 35, 100,  80, RISE, SPELL_ELECTRIC_CHARGE },
-  { 55, 100,  80, RISE, SPELL_MANIFOLD_ASSAULT },
+  { 45, 175,  50, SEMI, SPELL_HASTE },
+  { 40, 175,  70, SEMI, SPELL_MIGHT },
+  { 15, 100, 100, RISE, SPELL_HARPOON_SHOT },
+  { 20, 100,  80, RISE, SPELL_ELECTRIC_CHARGE },
+  { 40, 100,  80, RISE, SPELL_MANIFOLD_ASSAULT },
   { 25, 100,  30, FLAT, SPELL_INJURY_BOND },
 };
 
@@ -771,8 +771,9 @@ void ghost_demon::init_orc_apostle(apostle_type type, int pow)
 
     speed = stats->speed;
     ev = stats->ev;
-    ac = stats->AC + div_rand_round(pow, 15);
+    ac = stats->AC + div_rand_round(pow, 10);
     move_energy = stats->energy_usage.move;
+    see_invis = true;
 
     // Base hp scales from ~50 at 0 power to ~150 at 100 power
     max_hp = 50 + pow * 7 / 10 + (max(0, pow - 40) * 5 / 10);
