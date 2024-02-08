@@ -506,7 +506,7 @@ Ignis elemental wrath
 
 “进攻，我最后的坚定仆从！”
 
-伊格尼斯怒号着，狂怒倾泻而出！
+伊格尼斯哀号着，狂怒倾泻而出！
 
 伊格尼斯召唤火之灵来毁灭你！
 
@@ -545,6 +545,10 @@ Cheibriados welcome
 
 切布理亚多说：慢慢来。
 %%%%
+Cheibriados death
+
+切布理亚多欣赏死亡的静止。
+%%%%
 Dithmenos penance
 
 迪斯姆诺说：回到黑暗之中！
@@ -569,6 +573,10 @@ Fedhas welcome
 
 费德哈说：散播生命和死亡。
 %%%%
+Fedhas death
+
+费德哈感谢你对生态系统做出的贡献。
+%%%%
 Gozag welcome
 
 哥萨戈说：贪婪是好的。
@@ -577,9 +585,17 @@ Hepliaklqana welcome
 
 惠普利亚卡纳：你的过去变成了你的现在！
 %%%%
+Hepliaklqana death
+
+惠普利亚卡纳把你带到你的先祖那里。
+%%%%
 Ignis welcome
 
 伊格尼斯的火焰柔和地温暖着你。
+%%%%
+Ignis death
+
+伊格尼斯寂灭了，和你一起走向死亡。
 %%%%
 Jiyva welcome
 
@@ -588,9 +604,41 @@ Jiyva welcome
 w:1
 新肉体万岁！
 %%%%
+Jiyva death corpse
+
+吉瓦派来一个胶冻来消化你的尸体。
+%%%%
+Jiyva death corpse undead
+
+<Jiyva death corpse>
+%%%%
+Jiyva death corpse nonliving
+
+吉瓦派来一个胶冻来消化你的装备。
+%%%%
 Kikubaaqudgha welcome
 
 奇库巴库哈说：散播无尽的折磨和黑暗！
+%%%%
+Kikubaaqudgha death
+
+奇库巴库哈厉声说：你让我失望了！欢迎……死亡！
+%%%%
+Kikubaaqudgha death corpse undead
+
+奇库巴库哈厉声说：你让我失望了！欢迎……湮灭！
+%%%%
+Kikubaaqudgha death corpse nonliving
+
+<Kikubaaqudgha death corpse undead>
+%%%%
+Kikubaaqudgha death undead
+
+<Kikubaaqudgha death corpse undead>
+%%%%
+Kikubaaqudgha death nonliving
+
+<Kikubaaqudgha death corpse undead>
 %%%%
 Lugonu welcome
 
@@ -673,6 +721,10 @@ Ru welcome
 
 入说：切除你虚妄的肉体！
 %%%%
+Ru death
+
+入尊重你的终极舍弃。
+%%%%
 Sif Muna penance
 
 席夫·穆纳说：去寻求更多知识和智慧。
@@ -700,6 +752,18 @@ Trog welcome
 Uskayaw welcome
 
 乌斯卡亚说：让自己沉浸于节奏中！
+%%%%
+Uskayaw death corpse
+
+你的身体随着节奏完美落下。
+%%%%
+Uskayaw death corpse undead
+
+<Uskayaw death corpse>
+%%%%
+Uskayaw death corpse nonliving
+
+<Uskayaw death corpse>
 %%%%
 Vehumet welcome
 
@@ -807,6 +871,22 @@ Yredelemnul penance
 Yredelemnul welcome
 
 伊莱德莱姆努尔说：拿着黑色的火炬！唤醒无所事事的死者！
+%%%%
+Yredelemnul death corpse
+
+你的身体以一个没有意识的丧尸的形式重生了。
+%%%%
+Yredelemnul death corpse undead
+
+你加入了亡灵的收割军团。
+%%%%
+Yredelemnul death corpse nonliving
+
+你的身体化为黑色火炬的燃料。
+%%%%
+Yredelemnul death undead
+
+<Yredelemnul death corpse undead>
 %%%%
 Zin penance
 
