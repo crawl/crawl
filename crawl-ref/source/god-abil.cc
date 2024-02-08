@@ -3953,11 +3953,6 @@ static bool _sac_mut_maybe_valid(mutation_type mut)
         return false;
     }
 
-    // Vampires can't get inhibited regeneration for some reason related
-    // to their existing regen silliness.
-    if (mut == MUT_INHIBITED_REGENERATION && you.has_mutation(MUT_VAMPIRISM))
-        return false;
-
     // demonspawn can't get frail if they have a robust facet
     if (you.species == SP_DEMONSPAWN && mut == MUT_FRAIL
         && any_of(begin(you.demonic_traits), end(you.demonic_traits),
