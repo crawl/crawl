@@ -15,4 +15,5 @@ intelligence: animal
 speed: 4
 size: giant
 shape: snail
-tile: gastronok
+tile: dart_slug
+corpse_tile: elephant_slug
