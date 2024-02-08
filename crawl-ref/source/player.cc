@@ -1255,7 +1255,7 @@ bool regeneration_is_inhibited(const monster *m)
     // used mainly for resting: don't add anything here that can be waited off
     if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
         || you.duration[DUR_COLLAPSE]
-        || (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive))
+        || (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive))
     {
         if (m)
             return _mons_inhibits_regen(*m);
@@ -1281,10 +1281,6 @@ int player_regen()
     // Before applying other effects, make sure that there's something
     // to heal.
     rr = max(1, rr);
-
-    // Bonus regeneration for alive vampires.
-    if (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
-        rr += 20;
 
     if (you.duration[DUR_SICKNESS]
         || !player_regenerates_hp())
@@ -1483,7 +1479,7 @@ int player_res_cold(bool allow_random, bool temp, bool items)
 
         // XX temp?
         if (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive)
-            rc += 2;
+            rc++;
     }
 
     rc += cur_form(temp)->res_cold();
@@ -3373,13 +3369,12 @@ static void _display_vampire_status()
     if (!you.vampire_alive)
     {
         attrib.push_back("are immune to poison");
-        attrib.push_back("significantly resist cold");
+        attrib.push_back("resist cold");
         attrib.push_back("are immune to negative energy");
         attrib.push_back("resist torment");
-        attrib.push_back("do not heal with monsters in sight.");
     }
     else
-        attrib.push_back("heal quickly.");
+        attrib.push_back("do not heal with monsters in sight.");
 
     if (!attrib.empty())
     {
@@ -4125,8 +4120,7 @@ int get_real_hp(bool trans, bool drained)
                 + (you.get_mutation_level(MUT_RUGGED_BROWN_SCALES) ?
                    you.get_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
                 - (you.get_mutation_level(MUT_FRAIL) * 10)
-                - (hep_frail ? 10 : 0)
-                - (!you.vampire_alive ? 20 : 0);
+                - (hep_frail ? 10 : 0);
 
     hitp /= 100;
 
@@ -5436,7 +5430,7 @@ player::player()
     royal_jelly_dead = false;
     transform_uncancellable = false;
     fishtail = false;
-    vampire_alive = true;
+    vampire_alive = false;
 
     pet_target      = MHITNOT;
 

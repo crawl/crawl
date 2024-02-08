@@ -962,18 +962,12 @@ static vector<string> _get_fakemuts(bool terse)
         if (you.vampire_alive)
         {
             result.push_back(terse ? "alive" :
-                _formmut("Your natural rate of healing is accelerated."));
+                _formmut("You do not regenerate."));
         }
         else if (terse)
             result.push_back("bloodless");
         else
         {
-            result.push_back(
-                _formmut("You do not regenerate when monsters are visible."));
-            result.push_back(
-                _formmut("You are frail without blood (-20% HP)."));
-            result.push_back(
-                _formmut("You can heal yourself when you bite living creatures."));
             // XX automatically color this green somehow? Handled below more
             // generally for non-vampires
             result.push_back(_formmut("You are immune to poison."));

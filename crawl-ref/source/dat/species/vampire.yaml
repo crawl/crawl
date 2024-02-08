@@ -7,7 +7,7 @@ difficulty: Advanced
 difficulty_priority: 80
 aptitudes:
   xp: -1
-  hp: 0
+  hp: -1
   mp_mod: 0
   wl: 4
   fighting: -1
@@ -28,7 +28,7 @@ aptitudes:
   hexes: 4
   necromancy: 1
   translocations: -2
-  shapeshifting: 0
+  shapeshifting: False
   fire_magic: -2
   alchemy: 1
   invocations: -1
