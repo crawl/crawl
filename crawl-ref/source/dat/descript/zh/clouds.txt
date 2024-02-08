@@ -92,7 +92,7 @@ thin mist cloud
 %%%%
 seething chaos cloud
 
-一团暴怒混乱云。身处云中会受到各种不可预测的影响，
+一团翻腾的混乱云。身处云中会受到各种不可预测的影响，
 从隐身到狂暴，到完全麻痹。
 %%%%
 rain cloud
