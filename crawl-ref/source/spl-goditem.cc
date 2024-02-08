@@ -1320,14 +1320,18 @@ void majin_bo_vampirism(monster &mon, int damage)
 
     dprf("Majin bo might trigger, dam: %d.", damage);
 
-    if (damage < 1 || !actor_is_susceptible_to_vampirism(mon)
+    const bool include_demonic = you.has_mutation(MUT_VAMPIRISM);
+    
+    if (damage < 1 || !actor_is_susceptible_to_vampirism(mon, include_demonic)
         || you.hp == you.hp_max || you.duration[DUR_DEATHS_DOOR])
     {
         return;
     }
 
     int hp_boost = 1 + random2(damage);
-    hp_boost = resist_adjust_damage(&mon, BEAM_NEG, hp_boost);
+    
+    if(!include_demonic)
+        hp_boost = resist_adjust_damage(&mon, BEAM_NEG, hp_boost);
 
     if (hp_boost)
     {

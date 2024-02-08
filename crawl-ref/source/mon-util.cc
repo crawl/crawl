@@ -1051,9 +1051,10 @@ bool mons_eats_items(const monster& mon)
  * @param only_known Only include information known to the player.
  * @returns True if the actor is susceptible to vampirism, false otherwise.
  */
-bool actor_is_susceptible_to_vampirism(const actor& act, bool only_known)
+bool actor_is_susceptible_to_vampirism(const actor& act, bool include_demonic, bool only_known)
 {
-    if (!(act.holiness() & (MH_NATURAL | MH_PLANT)))
+    if (!(act.holiness() & (MH_NATURAL | MH_PLANT) ||
+        (include_demonic && act.holiness() == MH_DEMONIC)))
         return false;
 
     if (act.is_player())
