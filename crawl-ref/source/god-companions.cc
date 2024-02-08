@@ -985,11 +985,20 @@ void beogh_swear_vegeance(monster& apostle)
         mprf(MSGCH_DURATION, "You swear to avenge %s death!", apostle.name(DESC_ITS, true).c_str());
 
     // Calculate how much additional piety it should cost to resurrect this follower.
-    //
-    // Stronger apostles take more piety to resurrect (helps a little with making
-    // early ones not feel like they're actively slowing everybody else down)
-    you.props[BEOGH_RES_PIETY_NEEDED_KEY].get_int() +=
-        65 + (apostle.props[APOSTLE_POWER_KEY].get_int() / 2);
+    you.props[BEOGH_RES_PIETY_NEEDED_KEY].get_int() += 60;
+
+    // Cap piety required so that repeatedly replacing dead apostles with new
+    // recruits doesn't result in a spiral where you can never revive anyone.
+    if (you.props[BEOGH_RES_PIETY_NEEDED_KEY].get_int() > 150)
+        you.props[BEOGH_RES_PIETY_NEEDED_KEY].get_int() = 150;
+
+    // If an apostle dies with no visible enemy to mark, and you are not already
+    // avenging a different dead, give the bonus process immediately (otherwise
+    // the player may never receive it)
+    if (new_targets || already_avenging)
+        you.props[BEOGH_VENGEANCE_BONUS_KEY].get_int() += 40;
+    else
+        you.props[BEOGH_RES_PIETY_NEEDED_KEY].get_int() -= 40;
 }
 
 void beogh_follower_banished(monster& apostle)
@@ -1021,7 +1030,14 @@ void beogh_progress_vengeance()
             mi->del_ench(ENCH_VENGEANCE_TARGET);
         add_daction(DACT_BEOGH_VENGEANCE_CLEANUP);
 
-        you.props[BEOGH_RES_PIETY_NEEDED_KEY].get_int() /= 4;
+        // XXX: Temporary protection for uninitialized key. Remove before master merge.
+        const int bonus = you.props.exists(BEOGH_VENGEANCE_BONUS_KEY)
+                                ? you.props[BEOGH_VENGEANCE_BONUS_KEY].get_int()
+                                : 50;
+
+        you.props.erase(BEOGH_VENGEANCE_BONUS_KEY);
+
+        you.props[BEOGH_RES_PIETY_GAINED_KEY].get_int() += bonus;
         beogh_progress_resurrection(0);
     }
 }
@@ -1152,6 +1168,7 @@ void beogh_resurrect_followers(bool end_ostracism_only)
     // End vengeance statuses (in case we revived companions without finishing them)
     you.duration[DUR_BEOGH_SEEKING_VENGEANCE] = 0;
     add_daction(DACT_BEOGH_VENGEANCE_CLEANUP);
+    you.props.erase(BEOGH_VENGEANCE_BONUS_KEY);
 
     // Increment how many times vengeance has been declared (so that the daction
     // will only clean up past marks and not future ones)
