@@ -1889,13 +1889,6 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    // Vampires' healing rates depend on their blood level.
-    if (you.has_mutation(MUT_VAMPIRISM)
-        && (mutat == MUT_REGENERATION || mutat == MUT_INHIBITED_REGENERATION))
-    {
-        return true;
-    }
-
     // Today's guru wisdom: octopodes have no hands.
     if (you.has_innate_mutation(MUT_TENTACLE_ARMS) && mutat == MUT_CLAWS)
         return true;
