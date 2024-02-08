@@ -596,11 +596,8 @@ static void _decrement_transform_duration(int delay)
     {
         you.duration[DUR_TRANSFORMATION] = 1;
     }
-    // Vampire bat transformations are permanent (until ended), unless they
-    // are uncancellable (polymorph wand on a full vampire).
-    if (you.get_mutation_level(MUT_VAMPIRISM) < 2
-        || you.form != transformation::bat
-        || you.transform_uncancellable)
+    
+    if (you.transform_uncancellable)
     {
         if (form_can_fly()
             || form_can_swim() && feat_is_water(env.grid(you.pos())))

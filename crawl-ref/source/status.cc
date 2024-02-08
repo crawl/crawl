@@ -1091,7 +1091,7 @@ static void _describe_transform(status_info& inf)
     inf.short_text = form->get_long_name();
     inf.long_text = form->get_description();
 
-    const bool vampbat = (you.get_mutation_level(MUT_VAMPIRISM) >= 2
+    const bool vampbat = (you.get_mutation_level(MUT_VAMPIRISM) >= 1
                           && you.form == transformation::bat);
     const bool expire  = dur_expiring(DUR_TRANSFORMATION) && !vampbat;
 
