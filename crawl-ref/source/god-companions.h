@@ -35,6 +35,7 @@ extern map<mid_t, companion> companion_list;
 #define BEOGH_RES_PIETY_NEEDED_KEY "beogh_resurrection_piety_needed"
 #define BEOGH_RES_PIETY_GAINED_KEY "beogh_resurrection_piety_gained"
 #define BEOGH_VENGEANCE_NUM_KEY "beogh_vengeance_num"
+#define BEOGH_VENGEANCE_BONUS_KEY "beogh_vengeance_bonus"
 #define BEOGH_APOSTLE_DEATH_FLOOR_PREFIX "beogh_apostle_death_floor_"
 #define BEOGH_BFB_VALID_KEY "beogh_bfb_valid"
 #define BEOGH_FOLLOWER_DEATH_PREFIX "beogh_apostle_banished_"
