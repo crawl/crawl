@@ -2612,6 +2612,36 @@ static void _handle_god_wrath(int exp)
     }
 }
 
+/// update vampire blood
+static void _handle_vamp_blood(int exp)
+{
+    //blood gain while alive doesn't use xp
+    if (you.attribute[ATTR_VAMP_BLOOD] >= 100 || you.vampire_alive)
+        return;
+
+    you.attribute[ATTR_VAMP_BLOOD_XP] -= exp;
+    
+    const int xpreq = (exp_needed(you.experience_level + 1)
+             - exp_needed(you.experience_level)) / 100;
+
+    //gain a maximum of x blood per kill
+    int max_gain = 2;
+    while (max_gain > 0 && you.attribute[ATTR_VAMP_BLOOD] < 100
+        && you.attribute[ATTR_VAMP_BLOOD_XP] <= 0)
+    {
+        max_gain --;
+        you.attribute[ATTR_VAMP_BLOOD]++;
+        you.attribute[ATTR_VAMP_BLOOD_XP] += xpreq;
+
+        if (you.attribute[ATTR_VAMP_BLOOD] == 100)
+            mpr("You feel ready to transform.");
+    }
+
+    //excess exp is stored up to the amount needed for 1 blood
+    you.attribute[ATTR_VAMP_BLOOD_XP] = max(-xpreq,
+        you.attribute[ATTR_VAMP_BLOOD_XP]);
+}
+
 unsigned int gain_exp(unsigned int exp_gained)
 {
     if (crawl_state.game_is_arena())
@@ -2656,6 +2686,7 @@ void apply_exp()
     _reduce_abyss_xp_timer(skill_xp);
     _handle_hp_drain(skill_xp);
     _handle_breath_recharge(skill_xp);
+    _handle_vamp_blood(skill_xp);
 
     if (player_under_penance(GOD_HEPLIAKLQANA))
         return; // no xp for you!

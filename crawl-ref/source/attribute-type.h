@@ -105,5 +105,7 @@ enum attribute_type
     ATTR_WALL_JUMP_READY,      // Ready to perform a wall jump.
 #endif
     ATTR_DEATHS_DOOR_HP,       // How much HP we should have under Death's Door
+    ATTR_VAMP_BLOOD,           // How much blood our vampire has
+    ATTR_VAMP_BLOOD_XP,        // XP needed for our vampire to gain 1 blood
     NUM_ATTRIBUTES
 };

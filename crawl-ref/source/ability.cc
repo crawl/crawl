@@ -3883,7 +3883,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_SPIT_POISON:
         return you.get_mutation_level(MUT_SPIT_POISON) == 1;
     case ABIL_REVIVIFY:
-        return you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive;
+        return you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive
+            && you.attribute[ATTR_VAMP_BLOOD] >= 100;
     case ABIL_EXSANGUINATE:
         return you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive;
     case ABIL_BREATHE_FIRE:

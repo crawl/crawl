@@ -364,16 +364,18 @@ bool fill_status_info(int status, status_info& inf)
     case STATUS_ALIVE_STATE:
         if (you.has_mutation(MUT_VAMPIRISM))
         {
+            const int vamp_blood = you.attribute[ATTR_VAMP_BLOOD];
+            
             if (!you.vampire_alive)
             {
-                inf.light_colour = LIGHTRED;
-                inf.light_text = "Bloodless";
+                inf.light_colour = LIGHTGRAY;
+                inf.light_text   = make_stringf("Bloodless (%d)", vamp_blood);
                 inf.short_text = "bloodless";
             }
             else
             {
-                inf.light_colour = GREEN;
-                inf.light_text = "Alive";
+                inf.light_colour = LIGHTRED;
+                inf.light_text   = make_stringf("Alive (%d)", vamp_blood);
             }
         }
         break;
