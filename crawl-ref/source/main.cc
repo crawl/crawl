@@ -1290,7 +1290,9 @@ static void _input()
             _do_berserk_no_combat_penalty();
 
         _do_wait_spells();
-
+        
+        vampire_progress();
+        
         world_reacts();
     }
     else

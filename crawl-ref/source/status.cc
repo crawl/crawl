@@ -2,7 +2,7 @@
 
 #include "status.h"
 
-#include "ability.h"
+#include "ability.h" // REVIVIFY_TURNS_KEY
 #include "areas.h"
 #include "art-enum.h" // bearserk
 #include "artefact.h"
@@ -368,7 +368,8 @@ bool fill_status_info(int status, status_info& inf)
             
             if (!you.vampire_alive)
             {
-                inf.light_colour = LIGHTGRAY;
+                //show as red if we're transforming
+                inf.light_colour = you.props.exists(REVIVIFY_TURNS_KEY) ? RED : LIGHTGRAY;
                 inf.light_text   = make_stringf("Bloodless (%d)", vamp_blood);
                 inf.short_text = "bloodless";
             }

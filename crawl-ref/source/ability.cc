@@ -20,6 +20,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
+#include "bloodspatter.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cleansing-flame-source-type.h"
@@ -356,7 +357,7 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_TRAN_BAT, "Bat Form",
             2, 0, 0, -1, {fail_basis::xl, 45, 2}, abflag::none },
         { ABIL_EXSANGUINATE, "Exsanguinate",
-            0, 0, 0, -1, {}, abflag::delay},
+            0, 0, 0, -1, {}, abflag::none},
         { ABIL_REVIVIFY, "Revivify",
             0, 0, 0, -1, {}, abflag::delay},
         { ABIL_DAMNATION, "Hurl Damnation",
@@ -908,9 +909,6 @@ const string make_cost_description(ability_type ability)
         ret += make_stringf(", Stat Drain (%d each)",
                             VAMPIRE_BAT_FORM_STAT_DRAIN);
     }
-
-    if (ability == ABIL_REVIVIFY)
-        ret += ", Frailty";
 
     if (ability == ABIL_ASHENZARI_CURSE
         && !you.props[CURSE_KNOWLEDGE_KEY].get_vector().empty())
@@ -2616,6 +2614,75 @@ static void _cause_vampire_bat_form_stat_drain()
     lose_stat(STAT_DEX, VAMPIRE_BAT_FORM_STAT_DRAIN);
 }
 
+static void _vampire_exsanguinate(bool force_end = false)
+{
+    if (force_end)
+        blood_spray(you.pos(), MONS_PLAYER, 10);
+    
+    you.vampire_alive = false;
+    you.redraw_status_lights = true;
+    mpr("You feel anemic as the last of your blood leaves you.");
+    vampire_update_transformations();
+
+    //you.attribute[ATTR_VAMP_BLOOD] = 0;
+
+    you.increase_duration(DUR_WEAK,
+                          random2(15) + 15, 50);
+}
+
+static void _vampire_revivify()
+{
+    blood_spray(you.pos(), MONS_PLAYER, 10);
+    
+    you.vampire_alive = true;
+    you.redraw_status_lights = true;
+    mpr("Life gushes and overflows. You are reborn with a terrible thirst!");
+    vampire_update_transformations();
+    
+    you.props.erase(REVIVIFY_TURNS_KEY);
+
+    //heal you for 20%-40% of your max health
+    const int healing = you.hp_max / 5 + random2(you.hp_max / 5);
+    inc_hp(healing);
+}
+
+void vampire_progress()
+{
+    if (!you.has_mutation(MUT_VAMPIRISM))
+        return;
+    
+    if (you.props.exists(REVIVIFY_TURNS_KEY))
+    {
+        const int revivify_turns_left = you.props[REVIVIFY_TURNS_KEY].get_int();
+
+        //interrupt the transformation if you do anything other than wait
+        //but not right after you start transforming
+        if (revivify_turns_left < 2 && crawl_state.prev_cmd != CMD_WAIT)
+        {
+            you.props.erase(REVIVIFY_TURNS_KEY);
+            mpr("You barely contain your bloodthirst.");
+            return;
+        }
+        
+        switch (revivify_turns_left)
+        {
+        case 2:
+            mpr("A pulse ripples across your motionless veins.");
+            break;
+        case 1:
+            mpr("Warmth returns to your vessel as blood surges within.");
+            break;
+        case 0:
+            _vampire_revivify();
+            return;
+        default:
+            break;
+        }
+        
+        you.props[REVIVIFY_TURNS_KEY] = revivify_turns_left - 1;
+    }
+}
+
 static bool _evoke_orb_of_dispater(dist *target)
 {
     int power = you.skill(SK_EVOCATIONS, 8);
@@ -3366,11 +3433,11 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_EXSANGUINATE:
-        start_delay<ExsanguinateDelay>(5);
+        _vampire_exsanguinate(true);
         break;
 
     case ABIL_REVIVIFY:
-        start_delay<RevivifyDelay>(5);
+        you.props[REVIVIFY_TURNS_KEY] = 2;
         break;
 
     case ABIL_JIYVA_SLIMIFY:

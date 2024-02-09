@@ -254,56 +254,6 @@ bool ShaftSelfDelay::try_interrupt(bool /*force*/)
     return true;
 }
 
-bool ExsanguinateDelay::try_interrupt(bool force)
-{
-    bool interrupt = false;
-
-    if (force)
-        interrupt = true;
-    else if (duration > 1 && !was_prompted)
-    {
-        if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !yesno("Keep bloodletting?", false, 0, false))
-        {
-            interrupt = true;
-        }
-        else
-            was_prompted = true;
-    }
-
-    if (interrupt)
-    {
-        mpr("You stop emptying yourself of blood.");
-        return true;
-    }
-    return false;
-}
-
-bool RevivifyDelay::try_interrupt(bool force)
-{
-    bool interrupt = false;
-
-    if (force)
-        interrupt = true;
-    else if (duration > 1 && !was_prompted)
-    {
-        if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !yesno("Continue your ritual?", false, 0, false))
-        {
-            interrupt = true;
-        }
-        else
-            was_prompted = true;
-    }
-
-    if (interrupt)
-    {
-        mpr("You stop revivifying.");
-        return true;
-    }
-    return false;
-}
-
 bool TransformDelay::try_interrupt(bool force)
 {
     bool interrupt = false;
@@ -470,16 +420,6 @@ void PasswallDelay::start()
 void ShaftSelfDelay::start()
 {
     mprf(MSGCH_MULTITURN_ACTION, "You begin to dig a shaft.");
-}
-
-void ExsanguinateDelay::start()
-{
-    mprf(MSGCH_MULTITURN_ACTION, "You begin bloodletting.");
-}
-
-void RevivifyDelay::start()
-{
-    mprf(MSGCH_MULTITURN_ACTION, "You begin the revivification ritual.");
 }
 
 void TransformDelay::start()
@@ -919,25 +859,6 @@ void AscendingStairsDelay::finish()
 void DescendingStairsDelay::finish()
 {
     down_stairs();
-}
-
-void ExsanguinateDelay::finish()
-{
-    blood_spray(you.pos(), MONS_PLAYER, 10);
-    you.vampire_alive = false;
-    you.redraw_status_lights = true;
-    calc_hp(true);
-    mpr("You become bloodless.");
-    vampire_update_transformations();
-}
-
-void RevivifyDelay::finish()
-{
-    you.vampire_alive = true;
-    you.redraw_status_lights = true;
-    mpr("You return to life.");
-    temp_mutate(MUT_FRAIL, "vampire revification");
-    vampire_update_transformations();
 }
 
 bool TransformDelay::invalidated()
