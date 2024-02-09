@@ -2128,7 +2128,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         if (yred_get_torch_power() < 1)
         {
             if (!quiet)
-                mpr("You must stoke the torch's fire more first .");
+                mpr("You must stoke the torch's fire more first.");
             return false;
         }
         return true;
