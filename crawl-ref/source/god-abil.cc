@@ -1500,8 +1500,8 @@ bool yred_light_the_torch()
 }
 
 // Called whenever you leave a floor with the black torch lit.
-// Handles cleanup, prints messages, and gives bonus piety based on how
-// thoroughly the player scoured the floor.
+// Handles cleanup and prints messages based on how thoroughly the player
+// scoured the floor.
 void yred_end_conquest()
 {
     // Calculate how cleared the floor is:
@@ -1523,32 +1523,19 @@ void yred_end_conquest()
 
     int ratio = kills * 100 / (kills + souls_remaining + 1);
 
-    //mprf("Kills: %d, Remain: %d, Ratio: %d", kills, souls_remaining, ratio);
-
-    // Cash souls in for piety and print a message about how happy Yred is
-    string msg = "You return your torch's flame to Yredelemnul,";
-    int piety = 0;
+    // Print a message about how happy Yred is about our performance this floor
+    string msg = "You return your torch's flame to Yredelmnul,";
 
     if (ratio > 90)
-    {
         msg+= " and they are glorified by your conquest!";
-        piety = random_range(3, 5);
-    }
     else if (ratio > 65)
-    {
         msg+= " and they are satisfied with your conquest.";
-        piety = random_range(2, 3);
-    }
     else if (ratio > 30)
-    {
         msg+= " and feel their disappointment in your meagre crusade.";
-        piety = random_range(1, 1);
-    }
     else
         msg+= " and feel their disdain for your failure.";
 
     mprf(MSGCH_GOD, "%s", msg.c_str());
-    gain_piety(piety);
 
     // Actually end the torch effect
     you.props.erase(YRED_TORCH_POWER_KEY);
