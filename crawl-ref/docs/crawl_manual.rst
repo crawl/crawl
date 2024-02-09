@@ -1543,7 +1543,7 @@ Mountain Dwarves (MD)
   Mountain Dwarves are stout and hardy folk, adept at fighting with axes and
   blugeoning weapons, though lacking the dexterity to excel at other forms of
   combat. Their reserves of magic are somewhat poor, though they still make
-  passable spellcasters and their connection with the blood of the earth gives
+  passable spellcasters, and their connection with the blood of the earth gives
   them a particular talent at fire and earth magics. Any dwarven adventurer worth
   their salt also knows how to get the best fit from their armor, letting them to
   be much less encumbered by it than others would be.
