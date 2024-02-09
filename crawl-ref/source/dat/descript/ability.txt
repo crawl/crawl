@@ -272,11 +272,11 @@ Only one soul can be bound at a time.
 %%%%
 Fathomless Shackles ability
 
-Engulfs the user's surroundings in the inexorable grip of Yredelemnul. So long as
-you remain within this profane sanctuary, all hostile creatures that share it
-with you will be bound in place, and their life force will be continuously
-drained to restore your own. Victims who are isolated from their allies will
-take damage at a greatly increased rate.
+Engulfs the user's surroundings in Yredelemnul's inexorable grip. So long as you
+remain within this profane sanctuary, all hostile creatures that share it with
+you will be bound in place, and their life force will be continuously drained to
+restore your own. Victims who are isolated from their allies will take damage at
+a greatly increased rate.
 
 The affected area will shrink over time, and a new one cannot be created until
 the old one has fully expired.
