@@ -813,6 +813,8 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
         return SPELL_BOLT_OF_FIRE;
     case SPELL_DRAGON_CALL:
         return SPELL_SUMMON_DRAGON;
+    case SPELL_ELECTRIC_CHARGE:
+        return SPELL_ELECTROLUNGE;
     default:
         break;
     }

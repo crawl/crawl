@@ -780,7 +780,14 @@ spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target
         return spret::success;
 
     melee_attack charge_atk(&agent, target_actor);
-    charge_atk.charge_pow = powc + 50 * grid_distance(initial_pos, agent.pos());
+
+    // Player Vhi's damage is based on spellpower, distance, and their melee damage
+    if (agent.is_player())
+        charge_atk.charge_pow = powc + 50 * grid_distance(initial_pos, agent.pos());
+    // Monster Vhi's damage is flatly based on their HD
+    else
+        charge_atk.charge_pow = powc;
+
     charge_atk.attack();
 
     // Monsters will already use up attack energy via the melee attack itself,

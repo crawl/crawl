@@ -575,7 +575,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             blink_close(&caster);
         }
     } },
-    { SPELL_ELECTRIC_CHARGE, {
+    { SPELL_ELECTROLUNGE, {
         [](const monster &caster) {
             const actor* foe = caster.get_foe();
             ASSERT(foe);
@@ -583,7 +583,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
                                 !get_electric_charge_landing_spot(caster, foe->pos()).origin());
         },
         [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
-            const int pow = mons_spellpower(caster, SPELL_ELECTRIC_CHARGE);
+            const int pow = mons_spellpower(caster, SPELL_ELECTROLUNGE);
             electric_charge(caster, pow, false, caster.get_foe()->pos());
         }
     } },

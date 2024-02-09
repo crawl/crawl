@@ -1715,6 +1715,14 @@ creatures at their destination. The time taken by the spell is the greater of
 the time normally needed to cast a spell or that needed to launch one melee
 attack.
 %%%%
+Vhi's Electrolunge spell
+
+Sends the caster hurtling at a chosen nearby enemy, launching a high-accuracy
+melee attack on arrival, with additional electrical damage based on spellpower.
+The caster is wrapped in an envelope of twisted space, allowing them to safely
+pass through creatures, traps, and harmful terrain, and to displace creatures at
+their destination.
+%%%%
 Vitrify spell
 
 Renders a creature's body structure as brittle and fragile as glass, increasing
