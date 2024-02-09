@@ -1524,7 +1524,7 @@ void yred_end_conquest()
     int ratio = kills * 100 / (kills + souls_remaining + 1);
 
     // Print a message about how happy Yred is about our performance this floor
-    string msg = "You return your torch's flame to Yredelmnul,";
+    string msg = "You return your torch's flame to Yredelemnul,";
 
     if (ratio > 90)
         msg+= " and they are glorified by your conquest!";
