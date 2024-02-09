@@ -659,9 +659,14 @@ static const like_response _yred_kill_response()
         _piety_bonus_for_holiness(MH_NATURAL), 18, 0,
         nullptr, [] (int &piety, int &, const monster* victim)
         {
-            if (!yred_torch_is_raised() || victim->has_ench(ENCH_SOUL_RIPE))
+            if (!yred_torch_is_raised())
+            {
                 piety = 0;
-            else if (victim)
+                //Print a reminder if the torch isn't lit, but *could* be
+                if (yred_cannot_light_torch_reason().empty())
+                    mprf(MSGCH_GOD, "With your torch unlit, their soul goes wasted...");
+            }
+            else if (victim && !victim->has_ench(ENCH_SOUL_RIPE))
             {
                 mprf(MSGCH_GOD, "%s %ssoul becomes fuel for the torch.",
                                 you.can_see(*victim) ? "Their" : "A",
