@@ -2081,11 +2081,16 @@ TAGS:   no_monster_gen no_trap_gen vaults_hard orient_s
 DEPTH:  Vaults, !Vaults:$
 MONS:   ogre mage, ironbound thunderhulk, dire elephant
 KMONS:  B = bush
+KFEAT:  g = metal_statue
 SUBST:  * = **%
 NSUBST: 1 = 1:1 / 1:1. / 1:2 / 1:2. / *:., 3 = 2:3 / 3 = 3. / .
+COLOUR: g = mist
+TILE:   g = dngn_mystic_cage
+TILE:   G = dngn_statue_elephant
 MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                               pow_max = 100, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = 0 }
+: set_feature_name("metal_statue", "mystic cage")
 MAP
   xxxxxx
   xBxxBx  xxxxxx
@@ -2094,12 +2099,12 @@ MAP
   xB.3B.3...1.1x
 xxx.3..3.....1.x
 xB...33........x
-x.......I..I...x
-xxB...I......I.x
+x.......G..G...x
+xxB...g......g.x
  xxxx....FF....x
     x....FF....x
-    x.I......I.x
-    x...I..I...x
+    x.g......g.x
+    x...G..G...x
      ...........
 ENDMAP
 
@@ -2131,8 +2136,13 @@ ENDMAP
 NAME:   nicolae_vaults_loss_of_containment
 TAGS:   vaults_hard
 KMONS:  S = glowing shapeshifter
-NSUBST: ' = . / xxx., S = 3=S / S..
+ITEM:   large rock q:1
+KFEAT:  G = metal_statue
+NSUBST: ' = 1:d / 2:Gx / * = xxxd, S = 3:S / S..
 SUBST:  - = x.
+COLOUR: G = mist
+TILE:   G = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
 MAP
 ...........
 .---.S.---.

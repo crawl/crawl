@@ -993,6 +993,12 @@ A scintillating statue
 A magically shifting statue seemingly content to glimmer and dance in place,
 dedicated to the ineffable cosmic games of chaos.
 %%%%
+# Menagerie vaults.
+A mystic cage
+
+A sturdy metal cage, inscribed with cryptic magics. Whatever it once held -
+whether person, beast, or experiment - is now just as free as you are.
+%%%%
 # Themed magic branches / portals / vaults.
 An arcane conduit
 

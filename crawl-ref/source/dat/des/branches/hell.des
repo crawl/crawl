@@ -1007,16 +1007,20 @@ NAME:   vestibule_tar_nicolae_cwn_annwn
 TAGS:   vestibule_tar patrolling
 KMONS:  1D = doom hound / nothing
 KFEAT:  D = enter_tartarus
+KFEAT:  G = metal_statue
+COLOUR: G = mist
 TILE:   c = dngn_stone_dark
+TILE:   G = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
 MAP
 ccccccccccccccccccccccccccccccccc
  cccccccccccccc...cccccccccccccc
   ccccccccccc...D...ccccccccccc
-   ccccccccc.........ccccccccc
+   ccccccccG.........Gcccccccc
     ccccccc...........ccccccc
      cccccc..1.....1..cccccc
       cccc....c.1.c....cccc
-       ccc.1..c...c..1.ccc
+       ccc.1.Gc...cG.1.ccc
         cc...cc...cc...cc
          cc..c.....c..cc
           cc.c..1..c.cc

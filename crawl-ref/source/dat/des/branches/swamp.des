@@ -2111,18 +2111,22 @@ Wxx'xxWWW
   WWW
 ENDMAP
 
-NAME:  cheibrodos_swamp_pet_leeches
-TAGS:  no_monster_gen
-MONS:  vampire mage, tyrant leech
-KPROP: .21 = bloody / w:30 nothing
-KPROP: e = bloody
+NAME:   cheibrodos_swamp_pet_leeches
+TAGS:   no_monster_gen
+MONS:   vampire mage, tyrant leech
+KPROP:  .21 = bloody / w:30 nothing
+KPROP:  e = bloody
+SUBST:  G : Gxx
+COLOUR: G = mist
+TILE:   G = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
 : dgn.delayed_decay(_G, 'e', 'human corpse')
 MAP
  ttttt
-tt''ett
+tt%$ett
 txx+xxt
 tx.1.xt
-tx2.2xt
+tG2.2Gt
 tx...xt
 txx+xxt
  tt@tt

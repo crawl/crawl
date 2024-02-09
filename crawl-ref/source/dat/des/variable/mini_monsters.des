@@ -1519,26 +1519,31 @@ MAP
 ENDMAP
 
 # Necromancer has a house with a fridge (and a nice garden) (Eino)
-NAME:  eino_house_with_fridge
-DEPTH: D:9-, Lair:2-
-TAGS:  no_monster_gen no_item_gen transparent
-MONS:  patrolling necromancer, plant
+NAME:   eino_house_with_fridge
+TAGS:   no_monster_gen no_item_gen transparent
+DEPTH:  D:9-, Lair:2-
+MONS:   patrolling necromancer, plant
 : if you.branch() == "Lair" and you.depth() ~= dgn.br_depth(you.branch())
 :   or you.branch() == "D" and you.depth () < 12 then
-MONS:  river rat / wolf / yak / polar bear
-MONS:  river rat simulacrum / wolf simulacrum / \
-       yak simulacrum / polar bear simulacrum
+MONS:   river rat / wolf / yak / polar bear
+MONS:   river rat simulacrum / wolf simulacrum / \
+        yak simulacrum / polar bear simulacrum
 : else
-MONS:  hell rat / elephant / death yak / hydra
-MONS:  hell rat simulacrum / elephant simulacrum / \
-       death yak simulacrum / hydra simulacrum
+MONS:   hell rat / elephant / death yak / hydra
+MONS:   hell rat simulacrum / elephant simulacrum / \
+        death yak simulacrum / hydra simulacrum
 : end
+KFEAT:  G = metal_statue
+SUBST:  G = GG.
+COLOUR: G = mist
+TILE:   G = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
 MAP
 ............
 .xxxxxxxxxx.
 .x444x..%%x.
 .x444+..xxx.
-.x444x....x.
+.x444x...Gx.
 .xxxxx.3.4x.
 .....x.413x.
 .2T2.+....x.
@@ -1593,7 +1598,7 @@ WEIGHT: 5 (Vaults), 10
 TAGS:   no_monster_gen
 MONS:   orc warlord, orc knight w:20 / orc sorcerer
 MONS:   peacekeeper / war gargoyle w:5 / crystal guardian w:5
-SUBST:  w = .
+SUBST:  Gw = .
 : else
 :   if you.absdepth() > 11 then
 MONS:   orc knight, orc w:5 / orc warrior / orc wizard
@@ -1601,7 +1606,11 @@ MONS:   orc knight, orc w:5 / orc warrior / orc wizard
 MONS:   orc warrior, orc / orc wizard
 :   end
 MONS:   warg
-SUBST:  * = %
+KFEAT:  G = metal_statue
+SUBST:  * = %, G : GG.
+COLOUR: G = mist
+TILE:   G = dngn_mystic_cage
+:   set_feature_name("metal_statue", "mystic cage")
 : end
 NSUBST: A = 2 = 122 / *:2, B = 2 = 122 / *:2
 MAP
@@ -1610,7 +1619,7 @@ MAP
 .wxxxxxx++xxxxxxw.
 .wx%...x..x...%xw.
 .wx.AA.x..x.BB.xw.
-.wx.33.+..+.33.xw.
+.wxG33.+..+.33Gxw.
 .wx.AA.x..x.BB.xw.
 .wx*..%x..x%..*xw.
 .wxxxxxxxxxxxxxxw.
@@ -2991,13 +3000,21 @@ DEPTH:  D:13-, Elf, Spider
 MONS:   demonic crawler
 MONS:   vampire mosquito / boulder beetle w:8 / demonic crawler w:2
 NSUBST: 2 = 2:2 / 1:. / * = 22.
+: if you.in_branch("Spider") then
+SUBST:  G = x, m = mx
+: else
+SUBST:  G : GGGx
+COLOUR: G = mist
+TILE:   G = dngn_mystic_cage
+:   set_feature_name("metal_statue", "mystic cage")
+: end
 MAP
 ..........
 .m.mmmmmm.
 .mx.x.x*m.
 .m.x2x2xm.
-.mx2x1x.m.
-.m.x1x2xm.
+.mG2x1x.m.
+.m.x1x2Gm.
 .mx2x2x.m.
 .m*x.x.xm.
 .mmmmmm.m.
@@ -3056,20 +3073,24 @@ DEPTH:  Depths
 KMONS:  1 = kobold demonologist
 KMONS:  2 = w:5 shadow demon / lorocyproca
 KITEM:  1 = | / *, * / %
+KFEAT:  G = metal_statue
 NSUBST: 2 = 1:2 / 4 = 2""" / *:"
-FTILE:  12" = floor_pebble_darkgray
-FTILE:  ' = floor_pebble_lightgray
-COLOUR: 12 = darkgrey
 COLOUR: ' = white
+COLOUR: "12 = darkgrey
+FTILE:  'G = floor_pebble_lightgray
+FTILE:  "12 = floor_pebble_darkgray
+COLOUR: G = mist
+TILE:   G = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
 MAP
     ...
   .'''''.
  .'''''''.
- '''222'''
+ ''G222'''
 .''22222''.
 .''22122''.
 .''22222''.
- '''222'''
+ '''222G''
  .'''''''.
   .'''''.
     ...
@@ -9509,8 +9530,12 @@ KITEM:  Z = any skeleton
 ITEM:   potion of degeneration ident:type, potion of ambrosia ident:type
 ITEM:   scroll of immolation ident:type / % w:20
 KFEAT:  67 = w
+KFEAT:  G = metal_statue
 NSUBST: . = 10:d / 2:e / 8:Z / 3:` / 3:4 / 3 = 45.. / *:.
 KPROP:  ` = bloody
+COLOUR: G = mist
+TILE:   G = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
 MAP
      WWWWWWWWWWWWWW.@.WWWWWWWWWWWWWW
     WWWWWWWWwwwwwww...wWwWwwWWWwwwwwww
@@ -9520,7 +9545,7 @@ wwwwwxxmxmxmxmxmx...`.wwwwwwwwwwwwwwwwwww
 wwwwxxff.f+.....+............wwwwwwwwwwww
 wwwwxf..fxx..4..x...............xxxxwwwwwwww
 wwwxxxxxxxxxxxxxx.....4....>....x.4xxxxwwwwww
-wwxx....x.......+...............x`.`.5xxxxwww
+wwxx.G..x.......+...............x`.`.5xxxxwww
 wwm.....x.......x....xxx........+.4.`.x4.xxwwww
 wwx*12?.xxx+xxxxx....xxx........xxxxxxx.4|xxxww
 wwm.....+...4...+....xxx..4.....+.....+.4xxwww
@@ -9776,21 +9801,25 @@ ENDMAP
 # Wizard's laboratory
 NAME:  laboratory
 MONS:  arcanist, occultist, small abomination, large abomination
+KFEAT:   G = metal_statue
 : if you.branch() ~= "D" then
 SUBST: 1 = 2
 : elseif you.depth() > 12 then
 SUBST: 1 = 12
 : end
+COLOUR:  G = mist
+TILE:    G = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
 MAP
 ccc+cccccc
-c........c
+c.......Gc
 c........c
 c......1.c
-c........c
+cG.......c
 ccccccc+cc
 c***c4343c
 c|**+3334c
-c||*c4433c
+c||*c434Gc
 cccccccccc
 ENDMAP
 

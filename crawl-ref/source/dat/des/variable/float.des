@@ -1958,11 +1958,6 @@ local vamp_def = "vampire knight ; " ..
     " . plate armour good_item | plate armour randart w:5" ..
     "     | shadow dragon scales good_item | shadow dragon scales randart"
 }}
-KITEM:   _ = superb_item
-KFEAT:   _ = altar_yredelemnul / altar_kikubaaqudgha
-SHUFFLE: apqr
-SUBST:   a = +, pqr = x
-NSUBST:  1 = 10=1 / 8=1. / .
 : if you.in_branch("D") then
 :    if you.depth() < 13 then
 MONS:    hell rat / vampire mosquito / skeleton / zombie / spectral thing w:5 \
@@ -1987,7 +1982,7 @@ MONS:    vampire knight
 :    end
 : elseif you.in_branch("Crypt") then
 MONS:    skeleton / zombie / laughing skull / spectral thing / simulacrum
-MONS:    jiangshi / hell beast / doom hound w:2
+MONS:    jiangshi / hell beast / spectral caustic shrike w:2
 MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
 MONS:    spectre place:Crypt:$
 MONS:    vampire mage / deep elf death mage w:5
@@ -1997,7 +1992,7 @@ MONS:    revenant / eidolon / lich w:5
 # Depths
 : else
 MONS:    skeleton / zombie / laughing skull / spectral thing / simulacrum
-MONS:    jiangshi / hell beast / doom hound w:2
+MONS:    jiangshi / hell beast / caustic shrike simulacrum w:2
 MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
 MONS:    spectral golden dragon / golden dragon simulacrum \
          / spectral caustic shrike / caustic shrike simulacrum \
@@ -2006,7 +2001,15 @@ MONS:    vampire mage / deep elf death mage w:5
 MONS:    revenant / eidolon / lich w:5
 : kmons("7 = jory / " .. vamp_def .. ", " .. vamp_def)
 : end
-SUBST:   D = 56
+KITEM:   _ = superb_item
+KFEAT:   _ = altar_yredelemnul / altar_kikubaaqudgha
+KFEAT:   g = metal_statue
+SHUFFLE: apqr
+SUBST:   a = +, pqr = x, D = 56, G : Ggg
+NSUBST:  1 = 10:1 / 8 = 1. / *:.
+COLOUR:  g = mist
+TILE:    g = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
 MAP
 G..wwwwwWwwWwwWwwwww..G
 ..wwwwwWwwwWwwwWwwwww..
@@ -6575,10 +6578,14 @@ KMONS:   F = entropy weaver band
 KMONS:   0 = arcanist / necromancer / very ugly thing
 KMONS:   9 = stone giant / tengu reaver / sphinx
 KMONS:   P = bush
+KFEAT:   G = metal_statue
 SUBST:   @&A = ., Wl = ., c = b
 NSUBST:  1 = 4:1 / 1:12. / 1:% / *:., 2 = 2:2 / 1:% / *:.
-NSUBST:  d = 1:D. / *:., f = 1:F. / *:.
+NSUBST:  d = 1:D. / *:., f = 1:F. / *:., P = 2:G / *:P
 SHUFFLE: DF
+COLOUR:  G = mist
+TILE:    G = dngn_mystic_cage
+:   set_feature_name("metal_statue", "mystic cage")
 CLEAR:   z
 : end
 SUBST:   & : xx@, A : x@@, X = x., P = Pxx...

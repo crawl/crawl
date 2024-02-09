@@ -1636,25 +1636,29 @@ DEPTH:  D:4-8
 : dgn.delayed_decay(_G, '1', 'human corpse')
 KMONS:  2 = hound
 : else
-KMONS:  1 = necrophage
+KMONS:  1 = human skeleton
 KMONS:  2 = hound skeleton
 : end
 KFEAT:  _ = altar_makhleb
+KFEAT:  G = metal_statue
+KFEAT:  X = x
 KPROP:  y' = bloody
-TILE:   c = wall_hall
-SUBST:  ' = .
-SUBST:  y = x
+TILE:   X = wall_hall
+SUBST:  ' = ., y = x, G = GGx
+COLOUR: G = mist
+TILE:   G = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
 MAP
   @@@
  x..'.xxx
  xx...'yxx
  xxxx..'yxx
  xxxxxx.'yx
- xxxxxxy'.x
+ xxxGxxy'.x
 xxxx.'y'.xx
-xcc.12'.xx
-xcA_'.xxx
-xcc..xxx
+xXX.12'.xx
+xXA_'.xxx
+xXX..xxx
 xxxxxx
 ENDMAP
 
@@ -1663,14 +1667,18 @@ TAGS:   uniq_altar_makhleb temple_overflow_1 temple_overflow_makhleb
 TAGS:   no_monster_gen transparent
 # hound depth
 DEPTH:  D:4-7
-KFEAT:  _ = altar_makhleb
 KMONS:  _ = patrolling hound
-TILE:   c = wall_hall
-SUBST:  y = xx.
+KFEAT:  _ = altar_makhleb
+KFEAT:  X = x
+SUBST:  y = xx., G = GXXX
+TILE:   X = wall_hall
+COLOUR: G = mist
+TILE:   G = dngn_mystic_cage
+: set_feature_name("metal_statue", "mystic cage")
 MAP
  xxxxx
-xxcccxx
-xycAcyx
+xxXGXxx
+xyXAXyx
 x.._..x
 xy...yx
  y...y
