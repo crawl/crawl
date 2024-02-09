@@ -173,6 +173,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_ELECTROLUNGE, "Vhi's Electrolunge",
+    spschool::air | spschool::translocation,
+    spflag::noisy | spflag::dir_or_target | spflag::monster,
+    4,
+    100,
+    5, 5,
+    0,
+    TILEG_ELECTRIC_CHARGE,
+},
+
+{
     SPELL_BOLT_OF_MAGMA, "Bolt of Magma",
     spschool::conjuration | spschool::fire | spschool::earth,
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,

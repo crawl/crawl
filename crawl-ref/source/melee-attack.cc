@@ -2607,7 +2607,10 @@ string melee_attack::charge_desc()
     if (!charge_pow || defender->res_elec() > 0)
         return "";
     const string pronoun = defender->pronoun(PRONOUN_OBJECTIVE);
-    return make_stringf(" and electrocute %s", pronoun.c_str());
+    return make_stringf(" and electrocute%s %s",
+                        attacker->is_player() ? "" : "s",
+                        pronoun.c_str());
+
 }
 
 void melee_attack::announce_hit()
@@ -2617,10 +2620,11 @@ void melee_attack::announce_hit()
 
     if (attacker->is_monster())
     {
-        mprf("%s %s %s%s%s%s",
+        mprf("%s %s %s%s%s%s%s",
              atk_name(DESC_THE).c_str(),
              attacker->conj_verb(mons_attack_verb()).c_str(),
              defender_name(true).c_str(),
+             charge_desc().c_str(),
              debug_damage_number().c_str(),
              mons_attack_desc().c_str(),
              attack_strength_punctuation(damage_done).c_str());
@@ -2739,6 +2743,14 @@ bool melee_attack::mons_attack_effects()
                               attacker->damage_type(attack_number)))
     {
         return false;
+    }
+
+    // Vhi's Electrolunge damage
+    if (charge_pow > 0 && defender->alive() && defender->res_elec() <= 0)
+    {
+       int dmg = electrolunge_damage(charge_pow).roll();
+       int hurt = attacker->apply_ac(dmg, 0, ac_type::half);
+       inflict_damage(hurt, BEAM_ELECTRICITY);
     }
 
     const bool slippery = defender->is_player()

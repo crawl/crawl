@@ -4764,3 +4764,8 @@ void do_boulder_impact(monster& boulder, actor& victim)
     // Dealing damage causes the boulder to also take damage.
     boulder.hurt(&boulder, roll_dice(2, 5), BEAM_NONE, KILLED_BY_COLLISION);
 }
+
+dice_def electrolunge_damage(int pow)
+{
+    return dice_def(2, pow / 6);
+}

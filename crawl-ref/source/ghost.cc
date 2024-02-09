@@ -611,7 +611,7 @@ static const vector<random_pick_entry<spell_type>> warrior_spells =
   { 45, 175,  50, SEMI, SPELL_HASTE },
   { 40, 175,  70, SEMI, SPELL_MIGHT },
   { 15, 100, 100, RISE, SPELL_HARPOON_SHOT },
-  { 20, 100,  80, RISE, SPELL_ELECTRIC_CHARGE },
+  { 20, 100,  80, RISE, SPELL_ELECTROLUNGE },
   { 40, 100,  80, RISE, SPELL_MANIFOLD_ASSAULT },
   { 25, 100,  30, FLAT, SPELL_INJURY_BOND },
 };
