@@ -928,6 +928,12 @@ Recruit status
 An orcish apostle is available to recruit as a permanent companion.
 (Use the Recruit Apostle ability)
 %%%%
+Torch status
+
+You have called upon Yredelemnul to light the Black Torch. So long as the torch
+burns, you will gain piety for kills. With sufficient piety, you will be able to
+use its umbral fire to empower your undead servants and damage your enemies.
+%%%%
 Shackles status
 
 Yredelemnul's grip is engulfing an area in life-stealing chains.
