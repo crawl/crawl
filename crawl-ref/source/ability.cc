@@ -2137,7 +2137,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         if (you.duration[DUR_FATHOMLESS_SHACKLES])
         {
             if (!quiet)
-                mpr("You are already invoking the grip of Yredulemnul!");
+                mpr("You are already invoking Yredulemnul's grip!");
             return false;
         }
         return true;
