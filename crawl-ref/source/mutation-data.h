@@ -2474,10 +2474,10 @@ static const mutation_def mut_data[] =
   {"You no longer brawl whenever you drink a healing potion.", "", ""},
 },
 
-{ MUT_ARTIFACT_ENCHANTING, 0, 1, mutflag::good, false, "artifact enchanting",
-  {"You can use scrolls of enchantment on lesser artifacts.", "", ""},
-  {"You can now use scrolls of enchantment on lesser artifacts.", "", ""},
-  {"You can no longer use scrolls of enchantment on lesser artifacts.", "", ""},
+{ MUT_ARTEFACT_ENCHANTING, 0, 1, mutflag::good, false, "artefact enchanting",
+  {"You can use scrolls of enchantment on lesser artefacts.", "", ""},
+  {"You can now use scrolls of enchantment on lesser artefacts.", "", ""},
+  {"You can no longer use scrolls of enchantment on lesser artefacts.", "", ""},
 },
 };
 

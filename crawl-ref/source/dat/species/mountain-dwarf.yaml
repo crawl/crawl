@@ -44,7 +44,7 @@ levelup_stats:
 mutations:
   1:
     MUT_STURDY_FRAME: 3
-    MUT_ARTIFACT_ENCHANTING: 1
+    MUT_ARTEFACT_ENCHANTING: 1
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_MONK

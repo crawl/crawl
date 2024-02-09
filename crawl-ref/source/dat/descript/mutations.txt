@@ -809,12 +809,12 @@ immediate attack against all enemies adjacent to you.
 
 (This includes potions of curing, heal wounds, magic, and ambrosia.)
 %%%%
-artifact enchanting mutation
+artefact enchanting mutation
 
-You can use scrolls of enchant weapon and armour upon random artifacts.
+You can use scrolls of enchant weapon and armour upon random artefacts.
 
 This cannot raise their enchantment above what would normally be possible on a
-mundane item of the same type, and cannot affect especially unusual artifacts
+mundane item of the same type, and cannot affect especially unusual artefacts
 at all.
 %%%%
 # ------ Ru sacrifices ------

@@ -1550,7 +1550,7 @@ Mountain Dwarves (MD)
 
   They are superlative artisans and smiths, employed in ancient times by even the
   gods themselves, and this spiritual history makes them exceptional at invoking
-  divine aid. They can even use enchantment scrolls to improve artifacts that
+  divine aid. They can even use enchantment scrolls to improve artefacts that
   would be beyond the understanding of any other species.
 
 Minotaurs (Mi)
