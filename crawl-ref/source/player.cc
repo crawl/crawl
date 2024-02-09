@@ -2165,8 +2165,13 @@ int player_armour_shield_spell_penalty()
 {
     const int scale = 100;
 
-    const int body_armour_penalty =
+    int body_armour_penalty =
         max(19 * you.adjusted_body_armour_penalty(scale), 0);
+
+    // This is actually cutting the base ER of our armour by half (not 1/4th),
+    // since that ER has already been squared by this point.
+    if (you.has_mutation(MUT_RUNIC_MAGIC))
+        body_armour_penalty /= 4;
 
     const int total_penalty = body_armour_penalty
                  + 19 * you.adjusted_shield_penalty(scale);

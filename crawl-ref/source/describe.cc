@@ -6527,9 +6527,12 @@ string player_species_name()
         return species::name(you.species);
     switch (you.species)
     {
-        // Todo: Hill orcs are not long for this world
+#if TAG_MAJOR_VERSION == 34
         case SP_HILL_ORC:
-            return "Hill Orc";
+            return "Antique Orc";
+#endif
+        case SP_MOUNTAIN_DWARF:
+            return "Mountain Orc";
         case SP_MINOTAUR:
             return "Minotorc";
         case SP_MERFOLK:

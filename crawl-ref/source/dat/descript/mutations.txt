@@ -809,6 +809,22 @@ immediate attack against all enemies adjacent to you.
 
 (This includes potions of curing, heal wounds, magic, and ambrosia.)
 %%%%
+artefact enchanting mutation
+
+You can use scrolls of enchant weapon and armour upon random artefacts.
+
+This cannot raise their enchantment above what would normally be possible on a
+mundane item of the same type, and cannot affect especially unusual artefacts
+at all.
+%%%%
+runic magic mutation
+
+You cast spells with the assistance of glyphs marked upon your armor, greatly
+reducing the complex movements which would otherwise be required.
+
+(The encumberance rating of all armour you wear is reduced by 1/2 for purposes
+of spell success.)
+%%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation
 

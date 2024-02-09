@@ -4115,12 +4115,13 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
         case SP_HUMAN:
 #if TAG_MAJOR_VERSION == 34
         case SP_DEEP_DWARF:
+        case SP_HILL_ORC:
 #endif
             return TILEG_SP_HUMAN;
+        case SP_MOUNTAIN_DWARF:
+            return TILEG_SP_MOUNTAIN_DWARF;
         case SP_DEEP_ELF:
             return TILEG_SP_DEEP_ELF;
-        case SP_HILL_ORC:
-            return TILEG_SP_HILL_ORC;
         case SP_KOBOLD:
             return TILEG_SP_KOBOLD;
         case SP_MUMMY:

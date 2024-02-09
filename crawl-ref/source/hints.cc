@@ -292,7 +292,7 @@ static species_type _get_hints_species(unsigned int type)
     switch (type)
     {
     case HINT_BERSERK_CHAR:
-        return SP_HILL_ORC;
+        return SP_MOUNTAIN_DWARF;
     case HINT_MAGIC_CHAR:
         return SP_DEEP_ELF;
     case HINT_RANGER_CHAR:

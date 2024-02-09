@@ -1185,10 +1185,7 @@ bool item_is_selected(const item_def &i, int selector)
         return is_brandable_weapon(i, true);
 
     case OSEL_ENCHANTABLE_WEAPON:
-        return itype == OBJ_WEAPONS
-               && !is_artefact(i)
-               && (!item_ident(i, ISFLAG_KNOW_PLUSES)
-                   || i.plus < MAX_WPN_ENCHANT);
+        return is_enchantable_weapon(i, true);
 
     case OSEL_BLESSABLE_WEAPON:
         return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE)

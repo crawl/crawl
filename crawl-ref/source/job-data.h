@@ -68,7 +68,7 @@ static const map<job_type, job_def> job_data =
 { JOB_BERSERKER, {
     "Be", "Berserker",
     9, -1, 4,
-    { SP_HILL_ORC, SP_ONI, SP_MERFOLK, SP_MINOTAUR, SP_GARGOYLE, SP_ARMATAUR, },
+    { SP_MOUNTAIN_DWARF, SP_ONI, SP_MERFOLK, SP_MINOTAUR, SP_GARGOYLE, SP_ARMATAUR, },
     { },
     { "animal skin" },
     WCHOICE_PLAIN,
@@ -90,7 +90,7 @@ static const map<job_type, job_def> job_data =
 { JOB_CHAOS_KNIGHT, {
     "CK", "Chaos Knight",
     4, 4, 4,
-    { SP_HILL_ORC, SP_TROLL, SP_GNOLL, SP_MERFOLK, SP_MINOTAUR,
+    { SP_SPRIGGAN, SP_TROLL, SP_GNOLL, SP_MERFOLK, SP_MINOTAUR,
       SP_BASE_DRACONIAN, SP_DEMONSPAWN, },
     { },
     { "leather armour plus:2", "scroll of butterflies no_exclude" },
@@ -102,7 +102,7 @@ static const map<job_type, job_def> job_data =
 { JOB_CINDER_ACOLYTE, {
     "CA", "Cinder Acolyte",
     6, 6, 0,
-    { SP_HILL_ORC, SP_BASE_DRACONIAN, SP_ONI, SP_DJINNI, SP_GNOLL },
+    { SP_MOUNTAIN_DWARF, SP_BASE_DRACONIAN, SP_ONI, SP_DJINNI, SP_GNOLL },
     { SPELL_SCORCH },
     { "robe" },
     WCHOICE_PLAIN,
@@ -163,7 +163,7 @@ static const map<job_type, job_def> job_data =
 { JOB_FIGHTER, {
     "Fi", "Fighter",
     8, 0, 4,
-    { SP_HILL_ORC, SP_TROLL, SP_MINOTAUR, SP_GARGOYLE, SP_ARMATAUR, SP_FORMICID, },
+    { SP_MOUNTAIN_DWARF, SP_TROLL, SP_MINOTAUR, SP_GARGOYLE, SP_ARMATAUR, SP_FORMICID, },
     { },
     { "scale mail", "buckler", "potion of might" },
     WCHOICE_GOOD,
@@ -174,7 +174,7 @@ static const map<job_type, job_def> job_data =
 { JOB_FIRE_ELEMENTALIST, {
     "FE", "Fire Elementalist",
     0, 7, 5,
-    { SP_DEEP_ELF, SP_HILL_ORC, SP_NAGA, SP_TENGU, SP_DEMIGOD, SP_GARGOYLE,
+    { SP_DEEP_ELF, SP_MOUNTAIN_DWARF, SP_NAGA, SP_TENGU, SP_DEMIGOD, SP_GARGOYLE,
       SP_DJINNI, },
     {
         SPELL_FOXFIRE,
@@ -192,7 +192,7 @@ static const map<job_type, job_def> job_data =
 { JOB_GLADIATOR, {
     "Gl", "Gladiator",
     6, 0, 6,
-    { SP_HILL_ORC, SP_MERFOLK, SP_TROLL, SP_GARGOYLE, SP_GNOLL, SP_VINE_STALKER, },
+    { SP_MOUNTAIN_DWARF, SP_MERFOLK, SP_TROLL, SP_GARGOYLE, SP_GNOLL, SP_VINE_STALKER, },
     { },
     { "leather armour", "helmet", "throwing net q:3" },
     WCHOICE_GOOD,
@@ -220,7 +220,7 @@ static const map<job_type, job_def> job_data =
 { JOB_HUNTER, {
     "Hu", "Hunter",
     3, 1, 8,
-    { SP_HILL_ORC, SP_MINOTAUR, SP_GNOLL, SP_KOBOLD, SP_SPRIGGAN, },
+    { SP_MINOTAUR, SP_GNOLL, SP_BARACHI, SP_KOBOLD, SP_SPRIGGAN, },
     { },
     { "leather armour", "scroll of butterflies no_exclude", "shortbow" },
     WCHOICE_NONE,
@@ -259,7 +259,7 @@ static const map<job_type, job_def> job_data =
 { JOB_MONK, {
     "Mo", "Monk",
     3, 2, 7,
-    { SP_HILL_ORC, SP_TROLL, SP_ARMATAUR, SP_MERFOLK, SP_GARGOYLE, SP_DEMONSPAWN, },
+    { SP_MOUNTAIN_DWARF, SP_TROLL, SP_ARMATAUR, SP_MERFOLK, SP_GARGOYLE, SP_DEMONSPAWN, },
     { },
     { "robe", "potion of ambrosia", "orb ego:light" },
     WCHOICE_PLAIN,
@@ -269,7 +269,7 @@ static const map<job_type, job_def> job_data =
 { JOB_NECROMANCER, {
     "Ne", "Necromancer",
     0, 7, 5,
-    { SP_DEEP_ELF, SP_DJINNI, SP_HILL_ORC, SP_DEMONSPAWN, SP_MUMMY,
+    { SP_DEEP_ELF, SP_DJINNI, SP_MOUNTAIN_DWARF, SP_DEMONSPAWN, SP_MUMMY,
       SP_VAMPIRE, },
     {
         SPELL_NECROTISE,
@@ -287,7 +287,7 @@ static const map<job_type, job_def> job_data =
     "Re", "Reaver",
     4, 5, 3,
     { SP_GNOLL, SP_TENGU, SP_BARACHI, SP_DEMONSPAWN, SP_BASE_DRACONIAN,
-      SP_HILL_ORC, },
+      SP_MOUNTAIN_DWARF, },
     {
         SPELL_KISS_OF_DEATH,
         SPELL_MOMENTUM_STRIKE,
@@ -302,7 +302,7 @@ static const map<job_type, job_def> job_data =
 { JOB_SUMMONER, {
     "Su", "Summoner",
     0, 7, 5,
-    { SP_DEEP_ELF, SP_HILL_ORC, SP_VINE_STALKER, SP_MERFOLK, SP_TENGU,
+    { SP_DEEP_ELF, SP_MOUNTAIN_DWARF, SP_VINE_STALKER, SP_MERFOLK, SP_TENGU,
       SP_VAMPIRE, },
     {
         SPELL_SUMMON_SMALL_MAMMAL,
@@ -350,7 +350,7 @@ static const map<job_type, job_def> job_data =
 { JOB_WANDERER, {
     "Wn", "Wanderer",
     0, 0, 0, // Randomised
-    { SP_HILL_ORC, SP_GNOLL, SP_MERFOLK, SP_BASE_DRACONIAN, SP_HUMAN,
+    { SP_MOUNTAIN_DWARF, SP_GNOLL, SP_MERFOLK, SP_BASE_DRACONIAN, SP_HUMAN,
       SP_DEMONSPAWN, SP_BARACHI, },
     { }, // Randomised
     { }, // Randomised
